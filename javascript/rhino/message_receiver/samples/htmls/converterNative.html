@@ -1,0 +1,98 @@
+ <!--Copyright 2005,2006 WSO2, Inc. http://www.wso2.org-->
+
+ <!--Licensed under the Apache License, Version 2.0 (the "License");-->
+ <!--you may not use this file except in compliance with the License.-->
+ <!--You may obtain a copy of the License at-->
+
+      <!--http://www.apache.org/licenses/LICENSE-2.0-->
+
+ <!--Unless required by applicable law or agreed to in writing, software-->
+ <!--distributed under the License is distributed on an "AS IS" BASIS,-->
+ <!--WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.-->
+ <!--See the License for the specific language governing permissions and-->
+ <!--limitations under the Licensed.-->
+<html>
+<head>
+    <script language="javascript" src="https://wso2.org/repos/wso2/wsf/javascript/native/WSRequest.js"></script>
+</head>
+
+<body>
+
+<script language="javascript">
+    var agt = navigator.userAgent.toLowerCase();
+
+    var wsrequest = new WSRequest();
+    function handleSubmit() {
+        var fromCountry = form1.text1.value;
+        var toCountry = form1.text2.value;
+        var amount = form1.text3.value;
+        var result;
+        var payload = "<conversionReq>" +
+                      "<fromCountry>" + fromCountry + "</fromCountry>" +
+                      "<toCountry>" + toCountry + "</toCountry>" +
+                      "<amount>" + amount + "</amount>" +
+                      "</conversionReq>";
+        wsrequest.onreadystatechange = listener;
+        var options = new Array();
+        options["useSOAP"] = 1.1;
+        options['HTTPMethod'] = "POST";
+        if (agt.indexOf("firefox") != -1) {
+            netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead");
+        }
+
+        try {
+            wsrequest.open(options, "http://127.0.0.1:8080/axis2/services/ConverterService/convert", true);
+            wsrequest.send(payload);
+        } catch(e) {
+            alert(e);
+        }
+    }
+
+
+    function listener() {
+        if (wsrequest.readyState == 4) {
+            var str = "Result: ";
+            str += wsrequest.responseXML.firstChild.firstChild.firstChild.textContent;
+            str += " " + wsrequest.responseXML.firstChild.firstChild.lastChild.textContent;
+            alert(str);
+            form1.result.value = wsrequest.responseText;
+        }
+    }
+
+</script>
+
+<p style="font-size:larger;">
+    Currency Converter Client
+</p>
+
+<p style="font-size:smaller;">
+    Note: Please read the README.txt before trying out this sample
+</p>
+
+<form id="form1" name="form1">
+    From Country&nbsp;&nbsp;<input id="text1" type="text" value="Sri Lanka">
+</input>
+    <br>
+    <br>
+    To Country&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="text2" type="text" value="United States">
+</input>
+    <br>
+    <br>
+    Amount&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="text3" type="text" value="100">
+</input>
+
+    <br><br>
+    <table>
+        <tr>
+            <td id="resultCol"></td>
+        </tr>
+    </table>
+    <input type="button" value="Convert" onclick="handleSubmit()">
+    <input type="reset" name="reset" value="Reset">
+    <br><br>
+    Response XML<br><textarea id="result" rows=5 cols=80></textarea><br/>
+
+</form>
+</body>
+
+</html>

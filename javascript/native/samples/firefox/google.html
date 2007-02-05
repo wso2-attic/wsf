@@ -1,0 +1,108 @@
+<HTML>
+<HEAD>
+    <TITLE>WSO2 WSRequest object</TITLE>
+    <h2>WSO2 WSRequest Object Demo-Google spell check</h2>
+    <script language="javascript" src="./WSRequest.js"></script>
+</HEAD>
+<BODY>
+<script language="javascript">
+    var wshttp = new WSRequest();
+
+    function checkSpell()
+    {
+        wshttp.onreadystatechange = test1;
+        var option = new Array();
+
+        option['useSOAP'] = 1.1;
+        option['HTTPMethod'] = "POST";
+
+        netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead");
+        try{
+            wshttp.open(option,"http://api.google.com/search/beta2",true);
+        }catch(ex){
+            alert(ex.toString());
+        }
+
+        var keyVal = key.value;
+        var phrase = pharse.value;
+
+        //create the root node
+        var reqNode = document.createElementNS ("urn:GoogleSearch", "ns1:doSpellingSuggestion" );
+        reqNode.setAttribute ("xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
+
+        //create the node for key
+        var keyNode = document.createElement ("key");
+        keyNode.setAttributeNS("http://www.w3.org/2001/XMLSchema-instance","type","xsd:string" );
+        var keyText = document.createTextNode(keyVal);
+        keyNode.appendChild(keyText);
+
+        //create the node for phrase
+        var phraseNode = document.createElement ("phrase");
+        phraseNode.setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "type", "xsd:string" );
+        var phraseText = document.createTextNode(phrase);
+        phraseNode.appendChild(phraseText);
+
+        //attach nodes
+        reqNode.appendChild (keyNode );
+        reqNode.appendChild (phraseNode);
+
+        //serializing the node in to to text using mozilla api
+        var serializer = new XMLSerializer();
+        var str = serializer.serializeToString(reqNode);
+
+        form1.request.value = str;
+
+        try{
+            wshttp.send(reqNode);
+        }catch(e){
+            alert(e.toString());
+        }
+    }
+    function test1()
+    {
+        if(wshttp.readyState == 0){
+            form1.status.value += "readyState == 0 => UNINILIZED           ";
+
+
+        }
+        if(wshttp.readyState == 1){
+            form1.status.value += "readyState == 1 => OPENED               ";
+
+        }
+        if(wshttp.readyState == 2){
+            form1.status.value += "readyState == 2 => LOADED               ";
+
+        }
+        if(wshttp.readyState == 3){
+            form1.status.value += "readyState == 3 => INTRACTIVE           ";
+
+        }
+        if(wshttp.readyState == 4){
+            form1.status.value += "readyState == 4 => COMPLETED            ";
+            resultCol.innerHTML= "<b><font color=red>Suggestion : " + wshttp.responseText + "</font><b>";
+            form1.result.value = wshttp.responseText;
+        }
+
+    }
+
+</script>
+<form id="form1">
+    <p>Google Key</p>
+    <input  id="key" name="google_key" type="text"  >
+    <p>(Get your google key from here <a href=http://api.google.com/createkey>http://api.google.com/createkey</a>.)</p>
+    <p>Word</p>
+    <input  id="pharse"  name="word" value="tungeteen" type="text"><br><br>
+    <table>
+        <tr>
+            <td id="resultCol"></td>
+        </tr>
+    </table>
+    <input type="button" value="Check spell" onclick="checkSpell()">
+    <input type ="reset" name="reset" value="Reset">
+    <br>
+    your request xml<br><textarea id="request" rows=10 cols=80 ></textarea><br/>
+    your response xml<br><textarea id="result" rows=15 cols=80 ></textarea><br/>
+    status of the invocation<br><textarea id="status" rows=10 cols=40 ></textarea><br/>
+</form>
+</BODY>
+</HTML>

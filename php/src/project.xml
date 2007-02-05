@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<!--
+/*
+  | PHP Version 5                                                        |
+  | Copyright (c) 1997-2005 The PHP Group                                |
+  | This source file is subject to version 3.0 of the PHP license,       |
+  | that is bundled with this package in the file LICENSE, and is        |
+  | available through the world-wide-web at the following url:           |
+  | http://www.php.net/license/3_0.txt.                                  |
+  | If you did not receive a copy of the PHP license and are unable to   |
+  | obtain it through the world-wide-web, please send a note to          |
+  | license@php.net so we can mail you a copy immediately.               |
+  | Author: nabeel@php.net
+*/
+-->
+<project>
+    <name>PHP Axis2</name>
+    <pomVersion>3</pomVersion>
+
+    <!-- a unique name for this project -->
+    <name>PHP Axis2 Extension</name>
+    <id>php_axis2</id>
+    <groupId>php_axis2</groupId>
+    <currentVersion>${php_axis2_version}</currentVersion>
+
+    <!-- details about the organization that 'owns' the project -->
+    <organization>
+        <name>PECL PHP</name>
+        <url>http://pecl.php.net/</url>
+        <logo>http://192.168.1.211/php_axis2/docs/images/pecl-logo.gif</logo>-->
+    </organization>
+
+    <inceptionYear>2006</inceptionYear>
+    <logo>http://192.168.1.211/php_axis2/docs/images/wso2-logo.jpg</logo>-->
+    <description>
+	PHP has become a very popular scripting language mainly due its simplicity of developing enterprise web applications. Apache Axis2 (C) is the next generation SOAP stack built on a flexible pipeline architecture providing greater modularity and extensibility. PHP Axis2 Extension, an enterprise SOAP extension for PHP, is an effort to combine the simplicity of PHP and the power of Apache Axis2 to consume and provide web services through PHP. The next generation SOAP extension is positioned to meet the quality of service requirements (Security, Reliable Messaging, etc) of enterprise PHP applications. While maintaining the inherent simplicity, the extension provides all the features of Axis2 SOAP engine. The development is nearing completion to provide the core runtime functionality of a SOAP engine.	
+	</description>
+    <shortDescription>PHP Axis2</shortDescription>
+    <!-- the project home page -->
+    <url>http://www.wso2.net/php_axis2</url>
+	<!--
+    <issueTrackingUrl>http://issues.apache.org/jira/browse/AXIS2C</issueTrackingUrl>
+    <siteAddress>ws.apache.org/axis2/c</siteAddress>
+    <siteDirectory>/www/ws.apache.org/axis2/c</siteDirectory>
+    <distributionDirectory>/www/ws.apache.org/builds/c</distributionDirectory>
+	-->
+    <!-- repository>
+<connection>scm|svn|http://svn.apache.org/repos/asf/webservices/axis/trunk</connection>
+<developerConnection>scm|svn|https://svn.apache.org/repos/asf/webservices/axis/trunk</developerConnection>
+<url>http://svn.apache.org/viewcvs.cgi/webservices/axis/trunk/?root=Apache-SVN</url>
+</repository -->
+    <mailingLists>
+        <mailingList>
+            <name>PECL PHP Developer List</name>
+            <subscribe>pecl-dev-subscribe@lists.php.net?subject=subscribe</subscribe>
+            <unsubscribe>pecl-dev-unsubscribe@lists.php.net?subject=unsubscribe</unsubscribe>
+            <archive>http://news.php.net/php.pecl.dev</archive>
+        </mailingList>
+    </mailingLists>
+	<!-- ========== -->
+    <!-- Developers -->
+    <!-- ========== -->
+    <developers>
+        <developer>
+            <name>Nabeel Yoosuf</name>
+            <id>nabeel</id>
+            <email>nabeel AT php.net</email>
+            <organization>WSO2</organization>
+        </developer>
+		<developer>
+            <name>Nandika Jayawardena</name>
+            <id>nandika</id>
+            <email>nandika AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+		<developer>
+            <name>Samisa Abesinghe</name>
+            <id>samisa</id>
+            <email>samisa AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+		 <developer>
+            <name>Sanjiva Weerawarana</name>
+            <id>sanjiva</id>
+            <email>sanjiva AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+
+	</developers>
+    <!-- ################################################################ -->
+    <!--        Project dependency section                                -->
+    <!-- ################################################################ -->
+
+    <dependencies/>
+
+
+    <!-- ################################################################ -->
+    <!--        Project build and reports section                         -->
+    <!-- ################################################################ -->
+
+    <build>
+
+        <nagEmailAddress>pecl-dev@lists.php.net</nagEmailAddress>
+        <sourceDirectory>${basedir}/src</sourceDirectory>
+        <unitTestSourceDirectory>${basedir}/src/test</unitTestSourceDirectory>
+
+        <unitTest>
+          <includes>
+            <include>**/_test*.c</include>
+          </includes>
+          <excludes>
+            <exclude>**/*Test*All.c</exclude>
+          </excludes>
+        </unitTest>
+
+        <resources/>  <!-- (OPTIONAL) Resources packaged inside the JAR file. -->
+
+    </build>
+
+    <reports>
+        <!--report>maven-changes-plugin</report>
+        <report>maven-jdepend-plugin</report>
+        <report>maven-checkstyle-plugin</report>
+        <report>maven-pmd-plugin</report>
+        <report>maven-junit-report-plugin</report>
+        <report>maven-clover-plugin</report>
+        <report>maven-changelog-plugin</report>
+        <report>maven-file-activity-plugin</report>
+        <report>maven-developer-activity-plugin</report>
+        <report>maven-file-activity-plugin</report>
+        <report>maven-license-plugin</report>
+        <report>maven-linkcheck-plugin</report>
+        <report>maven-jxr-plugin</report-->
+        <report>maven-changes-plugin</report>
+    </reports>
+
+</project>

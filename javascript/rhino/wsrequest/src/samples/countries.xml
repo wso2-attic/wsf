@@ -1,0 +1,722 @@
+<Countries>
+    <Table>
+        <Name>Afghanistan, Islamic State of</Name>
+    </Table>
+    <Table>
+        <Name>Albania</Name>
+    </Table>
+    <Table>
+        <Name>Algeria</Name>
+    </Table>
+    <Table>
+        <Name>American Samoa</Name>
+    </Table>
+    <Table>
+        <Name>Angola</Name>
+    </Table>
+    <Table>
+        <Name>Anguilla</Name>
+    </Table>
+    <Table>
+        <Name>Antarctica</Name>
+    </Table>
+    <Table>
+        <Name>Antigua and Barbuda</Name>
+    </Table>
+    <Table>
+        <Name>Argentina</Name>
+    </Table>
+    <Table>
+        <Name>Armenia</Name>
+    </Table>
+    <Table>
+        <Name>Aruba</Name>
+    </Table>
+    <Table>
+        <Name>Australia</Name>
+    </Table>
+    <Table>
+        <Name>Austria</Name>
+    </Table>
+    <Table>
+        <Name>Azerbaidjan</Name>
+    </Table>
+    <Table>
+        <Name>Bahamas</Name>
+    </Table>
+    <Table>
+        <Name>Bahrain</Name>
+    </Table>
+    <Table>
+        <Name>Bangladesh</Name>
+    </Table>
+    <Table>
+        <Name>Barbados</Name>
+    </Table>
+    <Table>
+        <Name>Belarus</Name>
+    </Table>
+    <Table>
+        <Name>Belgium</Name>
+    </Table>
+    <Table>
+        <Name>Belize</Name>
+    </Table>
+    <Table>
+        <Name>Benin</Name>
+    </Table>
+    <Table>
+        <Name>Bermuda</Name>
+    </Table>
+    <Table>
+        <Name>Bhutan</Name>
+    </Table>
+    <Table>
+        <Name>Bolivia</Name>
+    </Table>
+    <Table>
+        <Name>Bosnia-Herzegovina</Name>
+    </Table>
+    <Table>
+        <Name>Botswana</Name>
+    </Table>
+    <Table>
+        <Name>Bouvet Island</Name>
+    </Table>
+    <Table>
+        <Name>Brazil</Name>
+    </Table>
+    <Table>
+        <Name>British Indian Ocean Territory</Name>
+    </Table>
+    <Table>
+        <Name>Brunei Darussalam</Name>
+    </Table>
+    <Table>
+        <Name>Bulgaria</Name>
+    </Table>
+    <Table>
+        <Name>Burkina Faso</Name>
+    </Table>
+    <Table>
+        <Name>Burundi</Name>
+    </Table>
+    <Table>
+        <Name>Cambodia, Kingdom of</Name>
+    </Table>
+    <Table>
+        <Name>Cameroon</Name>
+    </Table>
+    <Table>
+        <Name>Canada</Name>
+    </Table>
+    <Table>
+        <Name>Cape Verde</Name>
+    </Table>
+    <Table>
+        <Name>Cayman Islands</Name>
+    </Table>
+    <Table>
+        <Name>Central African Republic</Name>
+    </Table>
+    <Table>
+        <Name>Chad</Name>
+    </Table>
+    <Table>
+        <Name>Chile</Name>
+    </Table>
+    <Table>
+        <Name>China</Name>
+    </Table>
+    <Table>
+        <Name>Christmas Island</Name>
+    </Table>
+    <Table>
+        <Name>Cocos (Keeling) Islands</Name>
+    </Table>
+    <Table>
+        <Name>Colombia</Name>
+    </Table>
+    <Table>
+        <Name>Comoros</Name>
+    </Table>
+    <Table>
+        <Name>Congo</Name>
+    </Table>
+    <Table>
+        <Name>Congo, The Democratic Republic of the</Name>
+    </Table>
+    <Table>
+        <Name>Cook Islands</Name>
+    </Table>
+    <Table>
+        <Name>Costa Rica</Name>
+    </Table>
+    <Table>
+        <Name>Croatia</Name>
+    </Table>
+    <Table>
+        <Name>Cuba</Name>
+    </Table>
+    <Table>
+        <Name>Cyprus</Name>
+    </Table>
+    <Table>
+        <Name>Czech Republic</Name>
+    </Table>
+    <Table>
+        <Name>Denmark</Name>
+    </Table>
+    <Table>
+        <Name>Djibouti</Name>
+    </Table>
+    <Table>
+        <Name>Dominica</Name>
+    </Table>
+    <Table>
+        <Name>Dominican Republic</Name>
+    </Table>
+    <Table>
+        <Name>East Timor</Name>
+    </Table>
+    <Table>
+        <Name>Ecuador</Name>
+    </Table>
+    <Table>
+        <Name>Egypt</Name>
+    </Table>
+    <Table>
+        <Name>El Salvador</Name>
+    </Table>
+    <Table>
+        <Name>Equatorial Guinea</Name>
+    </Table>
+    <Table>
+        <Name>Eritrea</Name>
+    </Table>
+    <Table>
+        <Name>Estonia</Name>
+    </Table>
+    <Table>
+        <Name>Ethiopia</Name>
+    </Table>
+    <Table>
+        <Name>Falkland Islands</Name>
+    </Table>
+    <Table>
+        <Name>Faroe Islands</Name>
+    </Table>
+    <Table>
+        <Name>Fiji</Name>
+    </Table>
+    <Table>
+        <Name>Finland</Name>
+    </Table>
+    <Table>
+        <Name>Former Czechoslovakia</Name>
+    </Table>
+    <Table>
+        <Name>Former USSR</Name>
+    </Table>
+    <Table>
+        <Name>France</Name>
+    </Table>
+    <Table>
+        <Name>France (European Territory)</Name>
+    </Table>
+    <Table>
+        <Name>French Guyana</Name>
+    </Table>
+    <Table>
+        <Name>French Southern Territories</Name>
+    </Table>
+    <Table>
+        <Name>Gabon</Name>
+    </Table>
+    <Table>
+        <Name>Gambia</Name>
+    </Table>
+    <Table>
+        <Name>Georgia</Name>
+    </Table>
+    <Table>
+        <Name>Germany</Name>
+    </Table>
+    <Table>
+        <Name>Ghana</Name>
+    </Table>
+    <Table>
+        <Name>Gibraltar</Name>
+    </Table>
+    <Table>
+        <Name>Great Britain</Name>
+    </Table>
+    <Table>
+        <Name>Greece</Name>
+    </Table>
+    <Table>
+        <Name>Greenland</Name>
+    </Table>
+    <Table>
+        <Name>Grenada</Name>
+    </Table>
+    <Table>
+        <Name>Guadeloupe (French)</Name>
+    </Table>
+    <Table>
+        <Name>Guam (USA)</Name>
+    </Table>
+    <Table>
+        <Name>Guatemala</Name>
+    </Table>
+    <Table>
+        <Name>Guinea</Name>
+    </Table>
+    <Table>
+        <Name>Guinea Bissau</Name>
+    </Table>
+    <Table>
+        <Name>Guyana</Name>
+    </Table>
+    <Table>
+        <Name>Haiti</Name>
+    </Table>
+    <Table>
+        <Name>Heard and McDonald Islands</Name>
+    </Table>
+    <Table>
+        <Name>Holy See (Vatican City State)</Name>
+    </Table>
+    <Table>
+        <Name>Honduras</Name>
+    </Table>
+    <Table>
+        <Name>Hong Kong</Name>
+    </Table>
+    <Table>
+        <Name>Hungary</Name>
+    </Table>
+    <Table>
+        <Name>Iceland</Name>
+    </Table>
+    <Table>
+        <Name>India</Name>
+    </Table>
+    <Table>
+        <Name>Indonesia</Name>
+    </Table>
+    <Table>
+        <Name>Iran</Name>
+    </Table>
+    <Table>
+        <Name>Iraq</Name>
+    </Table>
+    <Table>
+        <Name>Ireland</Name>
+    </Table>
+    <Table>
+        <Name>Israel</Name>
+    </Table>
+    <Table>
+        <Name>Italy</Name>
+    </Table>
+    <Table>
+        <Name>Ivory Coast (Cote D'Ivoire)</Name>
+    </Table>
+    <Table>
+        <Name>Jamaica</Name>
+    </Table>
+    <Table>
+        <Name>Japan</Name>
+    </Table>
+    <Table>
+        <Name>Jordan</Name>
+    </Table>
+    <Table>
+        <Name>Kazakhstan</Name>
+    </Table>
+    <Table>
+        <Name>Kenya</Name>
+    </Table>
+    <Table>
+        <Name>Kiribati</Name>
+    </Table>
+    <Table>
+        <Name>Kuwait</Name>
+    </Table>
+    <Table>
+        <Name>Kyrgyz Republic (Kyrgyzstan)</Name>
+    </Table>
+    <Table>
+        <Name>Laos</Name>
+    </Table>
+    <Table>
+        <Name>Latvia</Name>
+    </Table>
+    <Table>
+        <Name>Lebanon</Name>
+    </Table>
+    <Table>
+        <Name>Lesotho</Name>
+    </Table>
+    <Table>
+        <Name>Liberia</Name>
+    </Table>
+    <Table>
+        <Name>Libya</Name>
+    </Table>
+    <Table>
+        <Name>Liechtenstein</Name>
+    </Table>
+    <Table>
+        <Name>Lithuania</Name>
+    </Table>
+    <Table>
+        <Name>Luxembourg</Name>
+    </Table>
+    <Table>
+        <Name>Macau</Name>
+    </Table>
+    <Table>
+        <Name>Macedonia</Name>
+    </Table>
+    <Table>
+        <Name>Madagascar</Name>
+    </Table>
+    <Table>
+        <Name>Malawi</Name>
+    </Table>
+    <Table>
+        <Name>Malaysia</Name>
+    </Table>
+    <Table>
+        <Name>Maldives</Name>
+    </Table>
+    <Table>
+        <Name>Mali</Name>
+    </Table>
+    <Table>
+        <Name>Malta</Name>
+    </Table>
+    <Table>
+        <Name>Marshall Islands</Name>
+    </Table>
+    <Table>
+        <Name>Martinique (French)</Name>
+    </Table>
+    <Table>
+        <Name>Mauritania</Name>
+    </Table>
+    <Table>
+        <Name>Mauritius</Name>
+    </Table>
+    <Table>
+        <Name>Mayotte</Name>
+    </Table>
+    <Table>
+        <Name>Mexico</Name>
+    </Table>
+    <Table>
+        <Name>Micronesia</Name>
+    </Table>
+    <Table>
+        <Name>Moldavia</Name>
+    </Table>
+    <Table>
+        <Name>Monaco</Name>
+    </Table>
+    <Table>
+        <Name>Mongolia</Name>
+    </Table>
+    <Table>
+        <Name>Montserrat</Name>
+    </Table>
+    <Table>
+        <Name>Morocco</Name>
+    </Table>
+    <Table>
+        <Name>Mozambique</Name>
+    </Table>
+    <Table>
+        <Name>Myanmar</Name>
+    </Table>
+    <Table>
+        <Name>Namibia</Name>
+    </Table>
+    <Table>
+        <Name>Nauru</Name>
+    </Table>
+    <Table>
+        <Name>Nepal</Name>
+    </Table>
+    <Table>
+        <Name>Netherlands</Name>
+    </Table>
+    <Table>
+        <Name>Netherlands Antilles</Name>
+    </Table>
+    <Table>
+        <Name>Neutral Zone</Name>
+    </Table>
+    <Table>
+        <Name>New Caledonia (French)</Name>
+    </Table>
+    <Table>
+        <Name>New Zealand</Name>
+    </Table>
+    <Table>
+        <Name>Nicaragua</Name>
+    </Table>
+    <Table>
+        <Name>Niger</Name>
+    </Table>
+    <Table>
+        <Name>Nigeria</Name>
+    </Table>
+    <Table>
+        <Name>Niue</Name>
+    </Table>
+    <Table>
+        <Name>Norfolk Island</Name>
+    </Table>
+    <Table>
+        <Name>North Korea</Name>
+    </Table>
+    <Table>
+        <Name>Northern Mariana Islands</Name>
+    </Table>
+    <Table>
+        <Name>Norway</Name>
+    </Table>
+    <Table>
+        <Name>Oman</Name>
+    </Table>
+    <Table>
+        <Name>Pakistan</Name>
+    </Table>
+    <Table>
+        <Name>Palau</Name>
+    </Table>
+    <Table>
+        <Name>Panama</Name>
+    </Table>
+    <Table>
+        <Name>Papua New Guinea</Name>
+    </Table>
+    <Table>
+        <Name>Paraguay</Name>
+    </Table>
+    <Table>
+        <Name>Peru</Name>
+    </Table>
+    <Table>
+        <Name>Philippines</Name>
+    </Table>
+    <Table>
+        <Name>Pitcairn Island</Name>
+    </Table>
+    <Table>
+        <Name>Poland</Name>
+    </Table>
+    <Table>
+        <Name>Polynesia (French)</Name>
+    </Table>
+    <Table>
+        <Name>Portugal</Name>
+    </Table>
+    <Table>
+        <Name>Puerto Rico</Name>
+    </Table>
+    <Table>
+        <Name>Qatar</Name>
+    </Table>
+    <Table>
+        <Name>Reunion (French)</Name>
+    </Table>
+    <Table>
+        <Name>Romania</Name>
+    </Table>
+    <Table>
+        <Name>Russian Federation</Name>
+    </Table>
+    <Table>
+        <Name>Rwanda</Name>
+    </Table>
+    <Table>
+        <Name>Saint Helena</Name>
+    </Table>
+    <Table>
+        <Name>Saint Lucia</Name>
+    </Table>
+    <Table>
+        <Name>Saint Pierre and Miquelon</Name>
+    </Table>
+    <Table>
+        <Name>Saint Tome (Sao Tome) and Principe</Name>
+    </Table>
+    <Table>
+        <Name>Samoa</Name>
+    </Table>
+    <Table>
+        <Name>San Marino</Name>
+    </Table>
+    <Table>
+        <Name>Saudi Arabia</Name>
+    </Table>
+    <Table>
+        <Name>Senegal</Name>
+    </Table>
+    <Table>
+        <Name>Seychelles</Name>
+    </Table>
+    <Table>
+        <Name>Sierra Leone</Name>
+    </Table>
+    <Table>
+        <Name>Singapore</Name>
+    </Table>
+    <Table>
+        <Name>Slovak Republic</Name>
+    </Table>
+    <Table>
+        <Name>Slovenia</Name>
+    </Table>
+    <Table>
+        <Name>Solomon Islands</Name>
+    </Table>
+    <Table>
+        <Name>Somalia</Name>
+    </Table>
+    <Table>
+        <Name>South Africa</Name>
+    </Table>
+    <Table>
+        <Name>South Korea</Name>
+    </Table>
+    <Table>
+        <Name>Spain</Name>
+    </Table>
+    <Table>
+        <Name>Sri Lanka</Name>
+    </Table>
+    <Table>
+        <Name>Sudan</Name>
+    </Table>
+    <Table>
+        <Name>Suriname</Name>
+    </Table>
+    <Table>
+        <Name>Svalbard and Jan Mayen Islands</Name>
+    </Table>
+    <Table>
+        <Name>Swaziland</Name>
+    </Table>
+    <Table>
+        <Name>Sweden</Name>
+    </Table>
+    <Table>
+        <Name>Switzerland</Name>
+    </Table>
+    <Table>
+        <Name>Syria</Name>
+    </Table>
+    <Table>
+        <Name>Tadjikistan</Name>
+    </Table>
+    <Table>
+        <Name>Taiwan</Name>
+    </Table>
+    <Table>
+        <Name>Tanzania</Name>
+    </Table>
+    <Table>
+        <Name>Thailand</Name>
+    </Table>
+    <Table>
+        <Name>Togo</Name>
+    </Table>
+    <Table>
+        <Name>Tokelau</Name>
+    </Table>
+    <Table>
+        <Name>Tonga</Name>
+    </Table>
+    <Table>
+        <Name>Trinidad and Tobago</Name>
+    </Table>
+    <Table>
+        <Name>Tunisia</Name>
+    </Table>
+    <Table>
+        <Name>Turkey</Name>
+    </Table>
+    <Table>
+        <Name>Turkmenistan</Name>
+    </Table>
+    <Table>
+        <Name>Turks and Caicos Islands</Name>
+    </Table>
+    <Table>
+        <Name>Tuvalu</Name>
+    </Table>
+    <Table>
+        <Name>Uganda</Name>
+    </Table>
+    <Table>
+        <Name>Ukraine</Name>
+    </Table>
+    <Table>
+        <Name>United Arab Emirates</Name>
+    </Table>
+    <Table>
+        <Name>United Kingdom</Name>
+    </Table>
+    <Table>
+        <Name>United States</Name>
+    </Table>
+    <Table>
+        <Name>Uruguay</Name>
+    </Table>
+    <Table>
+        <Name>USA Minor Outlying Islands</Name>
+    </Table>
+    <Table>
+        <Name>Uzbekistan</Name>
+    </Table>
+    <Table>
+        <Name>Vanuatu</Name>
+    </Table>
+    <Table>
+        <Name>Venezuela</Name>
+    </Table>
+    <Table>
+        <Name>Vietnam</Name>
+    </Table>
+    <Table>
+        <Name>Virgin Islands (British)</Name>
+    </Table>
+    <Table>
+        <Name>Virgin Islands (USA)</Name>
+    </Table>
+    <Table>
+        <Name>Wallis and Futuna Islands</Name>
+    </Table>
+    <Table>
+        <Name>Western Sahara</Name>
+    </Table>
+    <Table>
+        <Name>Yemen</Name>
+    </Table>
+    <Table>
+        <Name>Yugoslavia</Name>
+    </Table>
+    <Table>
+        <Name>Zaire</Name>
+    </Table>
+    <Table>
+        <Name>Zambia</Name>
+    </Table>
+    <Table>
+        <Name>Zimbabwe</Name>
+    </Table>
+</Countries>

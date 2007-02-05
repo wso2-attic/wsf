@@ -1,0 +1,12 @@
+
+DEPTH           = ../../../..
+topsrcdir       = @top_srcdir@
+srcdir          = @srcdir@
+VPATH           = @srcdir@
+
+include $(DEPTH)/config/autoconf.mk
+
+CCFLAGS		= -g
+DIRS            = public src
+
+include $(topsrcdir)/config/rules.mk

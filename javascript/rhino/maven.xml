@@ -1,0 +1,37 @@
+<!--Copyright 2005,2006 WSO2, Inc. http://wso2.com-->
+
+<!--Licensed under the Apache License, Version 2.0 (the "License");-->
+<!--you may not use this file except in compliance with the License.-->
+<!--You may obtain a copy of the License at-->
+
+     <!--http://www.apache.org/licenses/LICENSE-2.0-->
+
+<!--Unless required by applicable law or agreed to in writing, software-->
+<!--distributed under the License is distributed on an "AS IS" BASIS,-->
+<!--WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.-->
+<!--See the License for the specific language governing permissions and-->
+<!--limitations under the License.-->
+
+<project default="all" xmlns:m="jelly:maven" xmlns:ant="jelly:ant">
+
+  <goal name="all">
+    <m:reactor basedir="${basedir}"
+               includes="*/project.xml"
+               goals="jar:jar,jar:install"
+               banner="Building"
+               ignoreFailures="false"/>
+    <attainGoal name="copy" />
+  </goal>
+
+  <goal name="copy">
+    <ant:copy toDir="message_receiver/samples/ConverterService/lib" file="message_receiver/target/js-message-receiver-SNAPSHOT.jar" />
+
+    <ant:copy toDir="message_receiver/samples/ConverterService/lib" file="e4ximpl/target/js-axiom-SNAPSHOT.jar" />
+
+    <ant:copy toDir="message_receiver/samples/ConverterService/lib" file="${maven.repo.local}/org.mozilla.javascript/jars/js-core-SNAPSHOT.jar" />
+
+    <ant:copy toDir="message_receiver/samples/ConverterService/" file="wsrequest/src/WSRequest.js" />
+
+  </goal>
+ 
+</project>

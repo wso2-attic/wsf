@@ -1,0 +1,82 @@
+<html>
+<body>
+
+<script type="application/x-JavaScript">
+
+function setParams (text)
+{
+  /**--------------------------------------------------
+   * xml processing using the js mozilla api
+   *-----------------------------------------------------
+   */
+
+  //create the root node
+  var req_node = document.createElementNS ("http://localhost:9090/axis2/services/echo", "ns1:echoString" );
+
+  //create the node for text 
+  var phrase_node = document.createElement ("text");
+  var phrase_text = document.createTextNode (text);
+  phrase_node. appendChild(phrase_text );
+  
+  //attach nodes
+  req_node. appendChild (phrase_node );
+
+  var reqContent = req_node;
+
+  //serializing the node in to to text using mozilla api
+  var serializer = new XMLSerializer();
+  var str = serializer. serializeToString( reqContent);
+
+  form1.result.innerHTML = "  ----------------request---------------------  ";
+  form1.result.innerHTML += str;
+ 
+  /** ------------------------------------------
+   *  invoke webservice using axis2c api 
+   *  ------------------------------------------
+   */
+
+  var resultContent = callWS( reqContent);
+
+  //serailize the dom tree to string using mozilla api
+  var serializer = new XMLSerializer();
+  var str = serializer. serializeToString( resultContent );
+
+  form1.result.innerHTML += "  ----------------response---------------------  ";
+  form1.result.innerHTML += str;
+}
+
+/**
+  * call echo using axis2c webservice api
+  * params : reqContent- request dom xml
+  * returns : response dom xml
+  */
+
+
+  var req = new WSRequest();
+function callWS(reqContent)
+{
+  netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
+
+  /** ----------------------------------------------------------
+    * open ( method, uri, isAsynchronous )
+    * ----------------------------------------------------------
+    */
+  var option = new Array();
+  option = {useSOAP:false,useWSA:"1.0",Action:"http://ws.apache.org/axis2/c/samples/echoString",From:"http://localost:9090"};
+  req.open(option, "http://localhost:9090/axis2/services/echo",true);
+  req.send (reqContent);
+
+  //responseXML contains response dom 
+  var resultContent = req. responseXML;
+  return resultContent;
+
+}
+</script>
+<form id="form1">
+word to echo<input id="phrase" type="text" value="abundon"></input><br>
+<input type="button" value="check" onclick="setParams( phrase.value)"></input><br>
+<textarea id="result" rows=40 cols=80 ></textarea>
+</form>
+
+
+</body>

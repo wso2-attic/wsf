@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+    <TITLE>WSO2 WSRequest demo</TITLE>
+    <h2>WSO2 WSRequest Object Demo-Google spell check</h2>
+    <script language="javascript" src="./WSRequest.js"></script>
+</HEAD>
+<BODY>
+<script language="javascript">
+    var reqContent;
+    var key;
+    var phrase;
+    var wshttp = null;
+    wshttp = new WSRequest();
+    function search(){
+
+        wshttp.onreadystatechange = callbackResult;
+        var option = new Array();
+        option['HTTPMethod']  = "POST";
+        option['useSOAP'] = 1.1;
+
+        try{
+            wshttp.open(option,"http://api.google.com/search/beta2",true);
+        }catch(ex){
+            alert(ex.description);
+        }
+        var keyValue = form1.key.value;
+        var phraseValue = form1.pharse.value;
+
+        var xmlDoc = new ActiveXObject("MSXML2.DOMDocument.4.0");
+        var reqNode = xmlDoc.createElement("ns1:doSpellingSuggestion");
+
+        var attr1 = xmlDoc.createAttribute("xmlns:ns1");
+        attr1.value = "urn:GoogleSearch";
+        reqNode.setAttributeNode(attr1);
+
+        var attr2 = xmlDoc.createAttribute("xmlns:xsd");
+        attr2.value = "http://www.w3.org/2001/XMLSchema";
+        reqNode.setAttributeNode(attr2);
+
+        xmlDoc.appendChild(reqNode);
+
+        //create the node for key
+        var keyNode = xmlDoc.createElement("KEY");
+        var attr3 = xmlDoc.createAttribute("a0:type");
+        attr3.value =  "xsd:string";
+        keyNode.setAttributeNode(attr3);
+
+        var attr4 = xmlDoc.createAttribute("xmlns:a0");
+        attr4.value =  "http://www.w3.org/2001/XMLSchema-instance";
+        keyNode.setAttributeNode(attr4);
+
+        var keyText = xmlDoc.createTextNode(keyValue);
+        keyNode.appendChild(keyText);
+
+        //create the node for phrase
+        var phraseNode = xmlDoc.createElement("PHRASE");
+        var attr5 = xmlDoc.createAttribute("a1:type");
+        attr5.value = "xsd:string";
+        phraseNode.setAttributeNode(attr5);
+
+        var attr6 = xmlDoc.createAttribute("xmlns:a1");
+        attr6.value = "http://www.w3.org/2001/XMLSchema-instance";
+        phraseNode.setAttributeNode(attr6);
+
+        var phrase_text = xmlDoc.createTextNode(phraseValue);
+        phraseNode.appendChild(phrase_text);
+
+        //attach nodes
+        reqNode.appendChild(keyNode);
+        reqNode.appendChild(phraseNode);
+
+        //serializing the node into string using IE api
+        var str = xmlDoc.xml;
+        form1.request.value = str;
+
+        try{
+            wshttp.send(reqNode);
+        }catch(ex){
+            alert(ex.description);
+        }
+    }
+    function callbackResult(){
+        if(wshttp.readyState == 0){
+            form1.status.value += "readyState == 0 => UNINILIZED        ";
+
+
+        }
+        if(wshttp.readyState == 1){
+            form1.status.value += "readyState == 1 => OPENED             ";
+
+        }
+        if(wshttp.readyState == 2){
+            form1.status.value += "readyState == 2 => LOADED            ";
+
+        }
+        if(wshttp.readyState == 3){
+            form1.status.value += "readyState == 3 => INTRACTIVE         ";
+
+        }
+        if(wshttp.readyState == 4){
+            form1.status.value += "readyState == 4 => COMPLETED          ";
+            resultCol.innerHTML= "<b><font color=red>Suggestion :"  + wshttp.responseText + "</font><b>";
+            form1.result.value = wshttp.responseText;
+        }
+    }
+
+</script>
+<form id="form1">
+    <table>
+        <p>Google Key</p>
+        <input type="text"  id="key" name="google_key">
+        <p>Word</p>
+        <input type="text" id="pharse"  name="word" value="tungesteen"><br><br>
+        <input type="button" value="Check spell" onclick="search()">
+        <input type ="reset" name="reset" value="Reset">
+    </table>
+    <table>
+        <tr>
+            <td id="resultCol"></td>
+        </tr>
+    </table>
+    <br>
+    your request xml<br><textarea id="request" rows=10 cols=80 ></textarea><br/>
+    your response xml<br><textarea id="result" rows=10 cols=80 ></textarea><br/>
+    status of the invocation<br><textarea id="status" rows=10 cols=40 ></textarea><br/>
+</form>
+</BODY>
+</HTML>

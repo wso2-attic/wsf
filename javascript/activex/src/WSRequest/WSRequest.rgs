@@ -1,0 +1,39 @@
+HKCR
+{
+	NoRemove AppID
+	{
+		'%APPID%' = s 'WSRequest'
+		'WSRequest.DLL'
+		{
+			val AppID = s '%APPID%'
+		}
+	}
+}
+
+HKCR
+{
+	WSRequest.1 = s 'WSRequest Class'
+	{
+		CLSID = s '{F3C3309A-9AA4-4EB6-859B-9DAC9C8B62EB}'
+	}
+	WSRequest = s 'WSRequest Class'
+	{
+		CLSID = s '{F3C3309A-9AA4-4EB6-859B-9DAC9C8B62EB}'
+		CurVer = s 'WSRequest.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {F3C3309A-9AA4-4EB6-859B-9DAC9C8B62EB} = s 'WSRequest Class'
+		{
+			ProgID = s 'WSRequest.1'
+			VersionIndependentProgID = s 'WSRequest'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			val AppID = s '%APPID%'
+			'TypeLib' = s '{2DCA4302-E2CB-4C69-B3CB-C5D6AEEAC0C5}'
+		}
+	}
+}

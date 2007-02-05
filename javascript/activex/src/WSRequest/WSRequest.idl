@@ -1,0 +1,70 @@
+/*
+ * Copyright 2005,2006 WSO2, Inc. http://www.wso2.org
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// WSO2.idl : IDL source for WSO2
+
+// This file will be processed by the MIDL tool to
+// produce the type library (WSO2.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	uuid(2BBF90C9-1AAA-4BBF-98D1-887A10A88B88),
+	dual,
+	nonextensible,
+	helpstring("IWSRequest Interface"),
+	pointer_default(unique)
+]
+interface IWSRequest : IDispatch{
+	[id(1), helpstring("Open Method. Initialize the object.")] HRESULT open(VARIANT *method, BSTR sUrl, [optional]VARIANT bAsync, [optional]VARIANT sUserName, [optional]VARIANT sPasswd);
+	[propget, id(2), helpstring("property onreadystatechange.")] HRESULT onreadystatechange([out, retval] VARIANT* pVal);
+	[propput, id(2), helpstring("property onreadystatechange")] HRESULT onreadystatechange([in] VARIANT newVal);
+	[id(3), helpstring("Send the payload")] HRESULT send(VARIANT payLoad);
+	[propget, id(4), helpstring("Get the responseText")] HRESULT responseText([out, retval] BSTR* pVal);
+	[propget, id(5), helpstring("Get the responseXML")] HRESULT responseXML([out, retval] VARIANT* pVal);
+	[propget, id(6), helpstring("Get the readyState")] HRESULT readyState([out, retval] SHORT* pVal);
+	[id(13), helpstring("Not exposed to scripting languages"), restricted] HRESULT change([in]VARIANT newVal);
+};
+[
+	uuid(2DCA4302-E2CB-4C69-B3CB-C5D6AEEAC0C5),
+	version(1.0),
+	helpstring("WSO2 1.0 Type Library")
+]
+library WSO2Lib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(FE361199-4922-47FE-BDB8-319BF973DC90),
+		helpstring("_IWSRequestEvents Interface")
+	]
+	dispinterface _IWSRequestEvents
+	{
+		properties:
+		methods:			
+			[id(1), helpstring("method ReadyStateChange")] HRESULT ReadyStateChange([in] LONG state);			
+	};
+	[
+		uuid(F3C3309A-9AA4-4EB6-859B-9DAC9C8B62EB),
+		helpstring("WSRequest Class")
+	]
+	coclass WSRequest
+	{
+		[default] interface IWSRequest;
+		[default, source] dispinterface _IWSRequestEvents;
+	};
+};

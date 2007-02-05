@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.4.2" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+					http://pear.php.net/dtd/tasks-1.0.xsd
+					http://pear.php.net/dtd/package-2.0
+					http://pear.php.net/dtd/package-2.0.xsd">
+ <name>Axis2</name>
+ <channel>pecl.php.net</channel>
+ <summary>Web Services for PHP</summary>
+ <description>This extension provides a web services implementation using Axis2/C</description>
+ <lead>
+  <name>Nabeel Yoosuf</name>
+  <user>nabeel</user>
+  <email>nabeel@php.net</email>
+  <active>yes</active>
+ </lead>
+
+   <date>2006-05-21</date>
+   <version>
+    <release>0.1.1</release>
+    <api>0.1.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <license uri="http://www.php.net/license">PHP</license>
+   <notes>Fixed the bug of incorrect dependency libraries in package xml. 
+	</notes>
+
+ <contents>
+  <dir name="/">
+   <file name="config.m4" role="src" />
+   <file name="credits" role="doc" />
+   <file name="EXPERIMENTAL" role="doc" />
+   <file name="README.INSTALL" role="doc" />
+   <file name="service_client.c" role="src" />
+   <file name="service_proxy.c" role="src" />
+   <file name="axis2.c" role="src" />
+   <file name="php_axis2.h" role="src" />
+   <file name="axis2_fe.h" role="src" />
+   <file name="axis2_ce.h" role="src" />
+   <file name="axis2_properties.h" role="src" />
+   <file name="axis2_common.h" role="src" />
+   <file name="axis2_php_stream.h" role="src" />
+   <file name="php_stream.c" role="src" />	
+   <file name="fault.c" role="src" />
+   <file name="om_node.c" role="src" />
+   <file name="om_element.c" role="src" />
+   <file name="om_attribute.c" role="src" />
+   <file name="om_comment.c" role="src" />
+   <file name="om_processing_instruction.c" role="src" />
+   <file name="om_doctype.c" role="src" />
+   <file name="om_document.c" role="src" />
+   <file name="om_output.c" role="src" />
+   <file name="om_namespace.c" role="src" />
+   <file name="om_stax_builder.c" role="src" />
+   <file name="om_text.c" role="src" />
+   <file name="param.c" role="src" />
+   <file name="qname.c" role="src" />
+   <file name="soap_body.c" role="src" />
+   <file name="soap_fault.c" role="src" />
+   <file name="soap_header_block.c" role="src" />
+   <file name="soap_header.c" role="src" />
+   <file name="soap_message.c" role="src" />
+   <file name="xml_reader.c" role="src" />
+   <file name="xml_writer.c" role="src" />
+   <dir name="samples/">
+    <file name="echo_client_string_xml_in_out.php" role="test" />
+    <file name="echo_client_string_xml_in_out2.php" role="test" />
+    <file name="echo_client_string_xml_in_out3.php" role="test" />
+    <file name="echo_client_dom_in_out.php" role="test" />
+    <file name="echo_client_dom_in_out2.php" role="test" />
+    <file name="echo_client_simple_xml_in_out.php" role="test" />
+    <file name="echo_client_simple_xml_in_out2.php" role="test" />
+    <file name="google_spell_string_xml_in_out.php" role="test" />
+    <file name="google_search_string_xml_in_out.php" role="test" />
+   </dir> <!-- samples/ -->
+   <dir name="xdocs/">
+    <file name="index.html" role="doc" />	
+    <file name="navigation.xml" role="doc" />	
+    <dir name="docs/">
+     <file name="index.html" role="doc" />	
+     <file name="installationguide.html" role="doc" />	
+     <file name="userguide.html" role="doc" />	
+     <file name="developerguide.html" role="doc" />	
+    </dir> <!-- docs/ -->
+   </dir> <!-- xdocs/ -->
+  </dir> <!-- / -->
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.0.3</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.0</min>
+   </pearinstaller>
+  </required>
+ </dependencies>
+ <providesextension>axis2</providesextension>
+ <extsrcrelease />
+
+ <changelog>
+  <release>
+   <date>2006-05-20</date>
+   <version>
+    <release>0.1.0</release>
+    <api>0.1.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <license uri="http://www.php.net/license">PHP</license>
+   <notes>Initial Release of Axis2. 
+	- Provides an XML in/out model to consume web services
+    - Supports Plain XML, DOM and SimpleXML
+    - Provides module engagement support (WS-Addressing is demonstrated).
+	- Provides SOAP and OM APIs to manipulate XML
+	</notes>
+  </release>
+ </changelog>
+</package>
+
+

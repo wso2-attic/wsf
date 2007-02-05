@@ -1,0 +1,124 @@
+# 
+# ***** BEGIN LICENSE BLOCK *****
+# Version: MPL 1.1/GPL 2.0/LGPL 2.1
+#
+# The contents of this file are subject to the Mozilla Public License Version
+# 1.1 (the "License"); you may not use this file except in compliance with
+# the License. You may obtain a copy of the License at
+# http://www.mozilla.org/MPL/
+#
+# Software distributed under the License is distributed on an "AS IS" basis,
+# WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+# for the specific language governing rights and limitations under the
+# License.
+#
+# Contributor(s):
+#
+# Alternatively, the contents of this file may be used under the terms of
+# either the GNU General Public License Version 2 or later (the "GPL"), or
+# the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+# in which case the provisions of the GPL or the LGPL are applicable instead
+# of those above. If you wish to allow use of your version of this file only
+# under the terms of either the GPL or the LGPL, and not to allow others to
+# use your version of this file under the terms of the MPL, indicate your
+# decision by deleting the provisions above and replace them with the notice
+# and other provisions required by the GPL or the LGPL. If you do not delete
+# the provisions above, a recipient may use your version of this file under
+# the terms of any one of the MPL, the GPL or the LGPL.
+#
+# ***** END LICENSE BLOCK *****
+
+DEPTH           = ../../../../..
+topsrcdir       = @top_srcdir@
+srcdir          = @srcdir@
+VPATH           = @srcdir@
+
+axis_topbuilddir= $(AXIS2C_HOME)
+
+include $(DEPTH)/config/autoconf.mk
+
+MODULE		= tungsten
+XPIDL_MODULE	= tungsten
+LIBRARY_NAME	= tungsten_skel
+EXPORT_LIBRARY  = 1
+ifneq ($(OS_ARCH),WINNT)
+SHORT_LIBNAME	= tungsten_skel
+endif
+IS_COMPONENT	= 1
+MODULE_NAME	= nsTungstenModule
+GRE_MODULE	= 1
+LIBXUL_LIBRARY	= 1
+
+PACKAGE_FILE = tungsten_skel.pkg
+
+REQUIRES	= xpcom \
+		  string \
+		  dom \
+		  js \
+		  content \
+		  widget \
+		  necko \
+		  embedcomponents \
+		  xpconnect \
+		  xmlextras \
+                  plugin \
+		  $(NULL)
+
+CPPSRCS		= nsTungstenModule.cpp
+
+include $(topsrcdir)/config/config.mk
+
+INCLUDES        += -I$(axis_topbuilddir)/include \
+                   $(NULL)
+
+SHARED_LIBRARY_LIBS = \
+	../../../base/util/src/$(LIB_PREFIX)tungstenutil_s.$(LIB_SUFFIX) \
+	../../../base/soap/src/$(LIB_PREFIX)tungstensoap_s.$(LIB_SUFFIX) \
+	$(NULL)
+
+LOCAL_INCLUDES	= \
+		-I$(srcdir)/../../../base/soap/src \
+		-I$(srcdir)/../../../base/util/src \
+		$(NULL)
+
+AXIS2C_LIBS=   \
+        -L$(axis_topbuilddir)/lib \
+        -laxis2_axiom \
+        -laxis2_libxml2 \
+        -laxis2_engine \
+        -laxis2_http_receiver \
+        -laxis2_http_sender \
+        -laxis2_wsdl \
+        -laxis2_parser \
+        -laxis2_util \
+        -laxis2_minizip \
+        -laxis2_wom \
+        -laxis2_xml_schema \
+        -lwoden_wsdl10 \
+        -lwoden_wsdl20 \
+        $(NULL)
+
+EXTRA_LIBS = $(AXIS2C_LIBS) \
+             -lxml2 \
+             -lz \
+	     -lplds4 \
+	     -lplc4 \
+	     -lnspr4 \
+             $(NULL)
+
+EXTRA_DSO_LDOPTS += \
+		$(MOZ_COMPONENT_LIBS) \
+		$(NULL)
+#	        $(XPCOM_FROZEN_LDOPTS) \
+                $(NSPR_LIBS) \
+		$(LIBS_DIR) \
+		$(ZLIB_LIBS) \
+		$(MOZ_JS_LIBS) \
+		$(NULL)
+
+
+include $(topsrcdir)/config/rules.mk
+
+#EXTRA_DSO_LDOPTS += $(MOZ_COMPONENT_LIBS)
+
+#install:: $(TARGETS)

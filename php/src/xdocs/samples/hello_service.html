@@ -1,0 +1,19 @@
+<html><head></head><body><pre class="php"><span style="color: rgb(0, 0, 0); font-weight: bold;">&lt;?php</span>
+&nbsp;
+<span style="color: rgb(0, 0, 0); font-weight: bold;">function</span> greet<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$message</span><span style="color: rgb(102, 204, 102);">)</span> <span style="color: rgb(102, 204, 102);">{</span>
+&nbsp;
+<span style="color: rgb(0, 0, 255);">$responsePayloadString</span> = &lt;&lt;&lt;XML
+	&lt;greetResponse&gt;Hello Client!&lt;/greetResponse&gt;
+XML;
+&nbsp;
+	<span style="color: rgb(0, 0, 255);">$returnMessage</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSMessage<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$responsePayloadString</span><span style="color: rgb(102, 204, 102);">)</span>;
+	
+	<span style="color: rgb(177, 177, 0);">return</span> <span style="color: rgb(0, 0, 255);">$returnMessage</span>;
+<span style="color: rgb(102, 204, 102);">}</span>
+&nbsp;
+<span style="color: rgb(0, 0, 255);">$service</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSService<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"operations"</span> =&gt; <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"greet"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
+&nbsp;
+<span style="color: rgb(0, 0, 255);">$service</span>-&gt;<span style="color: rgb(0, 102, 0);">reply</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(102, 204, 102);">)</span>;
+&nbsp;
+<span style="color: rgb(0, 0, 0); font-weight: bold;">?&gt;</span>
+&nbsp;</pre></body></html>

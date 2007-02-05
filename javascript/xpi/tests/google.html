@@ -1,0 +1,157 @@
+<html><head><title>WSO2 WSF for AJAX XPI</title></head><body onload="SetParams(key.value, phrase.value)">
+
+<script type="application/x-JavaScript">
+
+var reqContent;
+function SetParams (key, phrase)
+{
+  /**--------------------------------------------------
+   * xml processing using the js mozilla api
+   *-----------------------------------------------------
+   */
+  //create the root node
+  var req_node = document.createElementNS ("urn:GoogleSearch", "ns1:doSpellingSuggestion" );
+  req_node. setAttribute ("xmlns:xsd", "http://www.w3.org/2001/XMLSchema" );
+
+  //create the node for key
+  var key_node = document.createElement ("key");
+  key_node. setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "type", "xsd:string" );
+  var key_text = document.createTextNode (key );
+  key_node.appendChild(key_text);
+  
+  //create the node for phrase
+  var phrase_node = document.createElement ("phrase");
+  phrase_node. setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "type", "xsd:string" );
+  var phrase_text = document.createTextNode (phrase);
+  phrase_node. appendChild(phrase_text );
+ 
+  //attach nodes
+  req_node. appendChild (key_node );
+  req_node. appendChild (phrase_node );
+
+  reqContent = req_node;
+
+  //serializing the node in to to text using mozilla api
+  var serializer = new XMLSerializer();
+  var str = serializer. serializeToString( reqContent);
+
+  form1.request.value = str;
+  resultCol.innerHTML= "";
+ 
+}
+
+/**
+  * call google spellcheck using axis2c webservice api
+  * params : reqContent- request dom xml
+  * returns : response dom xml
+  */
+try
+{
+  var req = new WSRequest();
+}
+catch (e )
+{
+  if (confirm("SOAPHttpRequest not defined:|\nClick ok to go to the download page\n"+
+              ""))
+  {
+    alert("please restart the browser after installation");
+    window.location="index.html";
+  }
+  else
+  {
+    alert ("Some of the functionality will not be available without the extension");
+  }
+}
+
+function SpellSuggest()
+{
+ 
+  /** ------------------------------------------
+   *  invoke webservice using axis2c api 
+   *  ------------------------------------------
+   */
+
+  req.onreadystatechange  = listenStatus;
+  /** ----------------------------------------------------------
+    * open ( method, uri, isAsynchronous )
+    * ----------------------------------------------------------
+    */
+   var option = new Array();
+   option = {useSOAP:true,useWSA:true};	
+  req.open(option, "http://api.google.com/search/beta2",false);
+  req.send ( reqContent);
+
+}
+
+function HandleResponse( resultContent)
+{
+  //serailize the dom tree to string using mozilla api
+  var serializer = new XMLSerializer();
+  var str = serializer.serializeToString( resultContent );
+
+  form1.result.value = str;
+  
+  //retrieve the output value
+  var retNode = resultContent.firstChild.firstChild.firstChild.nodeValue;
+  resultCol.innerHTML= "<b><font color=red>Suggestion: " + retNode + "</font><b>";
+}
+
+function listenStatus( )
+{
+  if ( req.readyState == 1 )
+  {
+    form1.status.value += "readyState == 1 => OPENED                    ";
+  }
+  if ( req.readyState == 2 )
+  {
+    form1.status.value += "readyState == 2 => LOADED                    ";
+  }
+  if ( req.readyState == 3 )
+  {
+    form1.status.value += "readyState == 3 => INTERACTIVE               ";
+  }
+  if ( req.readyState == 4 )
+  {
+    form1.status.value += "readyState == 4 => COMPLETED                  ";
+    //responseXML contains response dom 
+    var resultContent = req. responseXML;
+    HandleResponse ( resultContent); 
+  }
+}
+
+</script>
+<!--<h3>Google SetParams</h3>-->
+<form id="form1">
+<h1>WSO2 WSF for AJAX XPI Demo</h1>
+<h3>Google SpellCheck </h3>
+<table>
+<tbody><tr>
+<td>
+Your google Key <input id="key" value="" onkeyup="SetParams(key.value, phrase.value)" type="text">
+You can create a google key from <a href="http://api.google.com/createkey">http://api.google.com/createkey</a>.
+</td>
+</tr>
+<tr>
+<td>
+Word to spell <input id="phrase" value="tungstee" onkeyup="SetParams(key.value, phrase.value)" type="text">
+</td>
+</tr>
+<tr>
+<td id="resultCol"></td>
+</tr>
+</tbody></table>
+<input value="Check Spell" onclick="SpellSuggest()" type="button"><br><br>
+<br>
+<h3>Debugging informations</h3><h3>
+
+<table>
+<tbody><tr>
+<td>
+your request xml<br><textarea id="request" rows="10" cols="80"></textarea><br>
+your response xml<br><textarea id="result" rows="10" cols="80"></textarea><br>
+status of the invocation<br><textarea id="status" rows="10" cols="40"></textarea><br>
+
+
+
+
+</td></tr></tbody></table></h3></form></body></html>

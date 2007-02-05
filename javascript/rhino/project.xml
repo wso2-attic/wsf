@@ -1,0 +1,65 @@
+<!--Copyright 2005,2006 WSO2, Inc. http://wso2.com-->
+
+<!--Licensed under the Apache License, Version 2.0 (the "License");-->
+<!--you may not use this file except in compliance with the License.-->
+<!--You may obtain a copy of the License at-->
+
+      <!--http://www.apache.org/licenses/LICENSE-2.0-->
+        
+ <!--Unless required by applicable law or agreed to in writing, software-->
+<!--distributed under the License is distributed on an "AS IS" BASIS,-->
+<!--WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.-->
+<!--See the License for the specific language governing permissions and-->
+<!--limitations under the License.-->
+
+<project>
+    <pomVersion>3</pomVersion>
+    <id>org.wso2.wsf.javascript.rhino</id>
+    <name>JavaScript Webservices</name>
+    <currentVersion>${js.webservices.version}</currentVersion>
+
+   <!--                                      -->
+   <!-- Project management section           -->
+   <!--                                      -->
+   
+   <!--                                      -->
+   <!-- Project dependency section           -->
+   <!--                                      -->    
+    <dependencies>
+	<dependency>
+            <groupId>org.mozilla.javascript</groupId>
+            <artifactId>js-core</artifactId>
+            <version>${js.core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>stax</groupId>
+            <artifactId>stax-api</artifactId>
+            <version>${stax.api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${stax.impl.groupid}</groupId>
+            <artifactId>${stax.impl.artifactid}</artifactId>
+            <version>${stax.impl.version}</version>
+        </dependency>        
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom</groupId>
+            <artifactId>axiom-api</artifactId>
+            <version>${axiom.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom</groupId>
+            <artifactId>axiom-impl</artifactId>
+            <version>${axiom.version}</version>
+        </dependency>
+    </dependencies>
+
+   <!--                                      -->
+   <!-- Project build and reports section    -->
+   <!--                                      -->    
+    <build>
+        <nagEmailAddress></nagEmailAddress>
+        <sourceDirectory>src</sourceDirectory>
+    </build>
+
+</project>
+

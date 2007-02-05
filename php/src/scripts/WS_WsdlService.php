@@ -1,0 +1,85 @@
+<?php
+/*
+ * Copyright 2005,2006 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+class WS_WsdlService
+{
+
+
+    private $S_name;
+    private $endpoint;
+    
+    function __construct($ser_name, $ep)
+	{
+	    if($ser_name)
+		$this->S_name = $ser_name;
+	    else
+		$this->S_name = "ws_default_service";
+	    
+	    $this->endpoint = $ep;
+	}
+    
+    
+    public function createService(DomDocument $svr_dom,DomElement $svr_root)
+	{
+	    $svr_ele = $svr_dom->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
+						 WS_Wsdlconst::WS_WSDL_SERVICE_ATTR_NAME);
+	    $svr_ele->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME, $this->S_name);
+
+	    $svr_port = $svr_dom->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
+						  WS_WsdlConst::WS_WSDL_PORT_ATTR_NAME);
+	    $svr_port->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME, $this->S_name);
+	    $svr_port->setAttribute(WS_WsdlConst::WS_WSDL_BINDING_ATTR_NAME,
+				    $this->S_name);
+	    
+	    $svr_addr = $svr_dom->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
+						  WS_WsdlConst::WS_WSDL_ADDRESS_ATTR_NAME);
+	    $svr_addr->setAttribute(WS_WsdlConst::WS_WSDL_LOCATION_ATTR_NAME, 
+				    WS_WsdlConst::WS_WSDL_HTTP_ATTR_NAME.$this->endpoint);
+	    
+	    $svr_ele->appendChild($svr_port);
+	    $svr_ele->appendChild($svr_addr);
+	    $svr_root->appendChild($svr_ele);
+	    
+	}
+
+
+    public function createWsdl2Service(DomDocument $svr_dom,DomElement $svr_root)
+	{
+	    $svr_ele = $svr_dom->createElementNS(WS_WsdlConst::WS_WSDL2_NAMESPACE,
+						 WS_WsdlConst::WS_WSDL_SERVICE_ATTR_NAME);
+	    $svr_ele->setAttribute(WS_WsdlConst::WS_WSDL_SERVICE_ATTR_NAME, $this->S_name);
+	    $svr_ele->setAttribute(WS_WsdlConst::WS_WSDL_INTERFACE_ATTR_NAME,
+				   $this->S_name.ucfirst(WS_WsdlConst::WS_WSDL_INTERFACE_ATTR_NAME));
+
+
+	    $svr_port = $svr_dom->createElementNS(WS_WsdlConst::WS_WSDL2_NAMESPACE,
+						  WS_WsdlConst::WS_WSDL_ENDPOINT_ATTR_NAME);
+	    $svr_port->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME, $this->S_name);
+	    $svr_port->setAttribute(WS_WsdlConst::WS_WSDL_BINDING_ATTR_NAME,
+				    "tns".$this->S_name);
+	    
+	    $svr_port->setAttribute(WS_WsdlConst::WS_WSDL_ADDRESS_ATTR_NAME, $this->endpoint);
+	    
+	    $svr_ele->appendChild($svr_port);
+	    $svr_root->appendChild($svr_ele);
+	    
+	}
+}
+
+?>

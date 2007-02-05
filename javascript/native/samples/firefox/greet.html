@@ -1,0 +1,80 @@
+<HTML>
+<HEAD>
+    <TITLE>WSO2 WSRequest object</TITLE>
+    <h2>WSO2 WSRequest Object Demo-Greet of the day</h2>
+    <script language="javascript" src="./WSRequest.js"></script>
+</HEAD>
+<BODY>
+<script language="javascript">
+
+     var wshttp = new WSRequest();
+    function greet(){
+
+        wshttp.onreadystatechange = state;
+        var option = new Array();
+        option['useSOAP'] = 1.1;
+        option['HTTPMethod'] = "POST";
+        option['Action'] = "urn:xmethods-qotd#getQuote";
+
+        netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead");
+        try{
+            wshttp.open(option,"http://webservices.codingtheweb.com/bin/qotd",true);
+        }catch(ex){
+            alert(ex.toString());
+        }
+        var rootNode = document.createElementNS("urn:xmethods-qotd","SI:getQuote");
+        var serializer = new XMLSerializer();
+        var str = serializer.serializeToString(rootNode);
+
+        form1.request.value = str;
+        try{
+            wshttp.send(rootNode);
+
+        }catch(e){
+            alert(e.toString());
+        }
+
+    }
+   function state(){
+         if(wshttp.readyState == 0){
+             form1.status.value += "readyState == 0 => UNINILIZED           ";
+
+
+        }
+        if(wshttp.readyState == 1){
+             form1.status.value += "readyState == 1 => OPENED               ";
+
+        }
+        if(wshttp.readyState == 2){
+             form1.status.value += "readyState == 2 => LOADED               ";
+
+        }
+        if(wshttp.readyState == 3){
+             form1.status.value += "readyState == 3 => INTRACTIVE           ";
+
+        }
+        if(wshttp.readyState == 4){
+            form1.status.value += "readyState == 4 => COMPLETED            ";
+            resultCol.innerHTML= "<b><font color=red>Suggestion : " + wshttp.responseText + "</font><b>";
+            form1.result.value = wshttp.responseText;
+        }
+
+    }
+
+</script>
+<form id="form1">
+    Click to see the greeting of the day
+    <table>
+    <tr>
+    <td id="resultCol"></td>
+    </tr>
+    </table>
+     <input type="button" value="Check greet" onclick="greet()">
+    <input type ="reset" name="reset" value="Reset">
+     <br>
+    your request xml<br><textarea id="request" rows=10 cols=80 ></textarea><br/>
+    your response xml<br><textarea id="result" rows=20 cols=80 ></textarea><br/>
+    status of the invocation<br><textarea id="status" rows=10 cols=40 ></textarea><br/>
+</form>
+</BODY>
+</HTML>

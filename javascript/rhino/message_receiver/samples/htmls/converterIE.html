@@ -1,0 +1,54 @@
+ <!--Copyright 2005,2006 WSO2, Inc. http://www.wso2.org-->
+
+ <!--Licensed under the Apache License, Version 2.0 (the "License");-->
+ <!--you may not use this file except in compliance with the License.-->
+ <!--You may obtain a copy of the License at-->
+
+      <!--http://www.apache.org/licenses/LICENSE-2.0-->
+
+ <!--Unless required by applicable law or agreed to in writing, software-->
+ <!--distributed under the License is distributed on an "AS IS" BASIS,-->
+ <!--WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.-->
+ <!--See the License for the specific language governing permissions and-->
+ <!--limitations under the Licensed.-->
+<html>
+
+<body>
+<script src="converter.js"></script>
+<script type="text/javascript">
+    function handleSubmit(){
+        var fromCountry = form1.text1.value;
+        var toCountry = form1.text2.value;
+        var amount = form1.text3.value;
+        var x = convert(fromCountry, toCountry, amount);
+        x = "result -> " + x.documentElement.firstChild.firstChild.firstChild.nodeValue;
+        alert(x);
+    }
+</script>
+
+<p style="font-size:larger;">
+    Currency Converter Client for IE
+</p>
+
+<p style="font-size:smaller;">
+    Note: Please read the README.txt before trying out this sample
+</p>
+    <form id="form1" name="form1">
+		From Country&nbsp;&nbsp;<input id="text1" type="text" value="Sri Lanka">
+		</input>
+		<br>
+		<br>
+		To Country&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="text2" type="text" value="United States">
+		</input>
+		<br>
+		<br>
+		Amount&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="text3" type="text" value="10">
+		</input>
+		<br><br>
+		<input type="submit" value="Submit" onclick="handleSubmit()">
+        </input>
+        <input type="reset" name="reset" value="Reset">
+    </form>
+</body>
+
+</html>

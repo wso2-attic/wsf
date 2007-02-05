@@ -1,0 +1,98 @@
+<HTML>
+<HEAD>
+    <TITLE>WSO2 WSRequest object</TITLE>
+    <h2>WSO2 WSRequest Object Demo-Distance between two zip codes</h2>
+    <script language="javascript" src="./WSRequest.js"></script>
+</HEAD>
+<BODY>
+<script language="javascript">
+
+    var wshttp = new WSRequest();
+    function test(){
+        var option = new Array();
+        wshttp.onreadystatechange = test1;
+        option['useSOAP'] = 1.2;
+        option['HTTPMethod'] = "POST";
+        option['Action'] = "http://www.tilisoft.com/ws/LocInfo/GetDistance";
+
+        netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead");
+        try{
+             wshttp.open(option,"http://www.tilisoft.com/ws/LocInfo/ZipCode.asmx",true);
+        }catch(ex){
+            alert(ex.toString());
+        }
+        var zipCode1 = zip1.value;
+        var zipCode2 = zip2.value;
+
+        var rootNode = document.createElementNS("http://www.tilisoft.com/ws/LocInfo/literalTypes","s0:GetDistance");
+
+        var zipNode1 = document.createElementNS("http://www.tilisoft.com/ws/LocInfo/literalTypes","s0:ZipCode1");
+        var param1Value = document.createTextNode(zipCode1);
+        zipNode1.appendChild(param1Value);
+
+        var zipnode2 = document.createElementNS("http://www.tilisoft.com/ws/LocInfo/literalTypes","s0:ZipCode2");
+        var param2value = document.createTextNode(zipCode2);
+        zipnode2.appendChild(param2value);
+
+        rootNode.appendChild(zipNode1);
+        rootNode.appendChild(zipnode2);
+
+        var serializer = new XMLSerializer();
+        var str = serializer.serializeToString(rootNode);
+
+        form1.request.value = str;
+
+        try{
+            wshttp.send(rootNode);
+
+        }catch(e){
+            alert(e.toString());
+        }
+
+    }
+    function test1()
+    {
+        if(wshttp.readyState == 0){
+            form1.status.value += "readyState == 0 => UNINILIZED           ";
+        }
+        if(wshttp.readyState == 1){
+            form1.status.value += "readyState == 1 => OPENED               ";
+        }
+        if(wshttp.readyState == 2){
+            form1.status.value += "readyState == 2 => LOADED               ";
+        }
+        if(wshttp.readyState == 3){
+            form1.status.value += "readyState == 3 => INTRACTIVE           ";
+        }
+        if(wshttp.readyState == 4)
+        {
+            resultCol.innerHTML= "<b><font color=red>Suggestion :</font> The distance between two zip codes is <font color=red>"  + wshttp.responseText + "</font><b>";
+            form1.result.value = wshttp.responseText;
+        }
+    }
+
+
+</script>
+<form id="form1">
+    <table>
+        Zip code1
+        <input  id="zip1" name="zip_key" value="90001" type="text">
+        Zip code 2
+        <input  id="zip2" name="zip_key" value="46011" type="text">
+        <br><br>
+        Get your zip code here <a href="http://www.zipinfo.com/search/zipcode.htm"> http://www.zipinfo.com/search/zipcode.htm </a>
+    </table>
+    <table>
+        <tr>
+            <td id="resultCol"></td>
+        </tr>
+    </table>
+    <input type="button" value="Check detail" onclick="test()">
+    <input type ="reset" name="reset" value="Reset">
+    <br>
+    your request xml<br><textarea id="request" rows=10 cols=80 ></textarea><br/>
+    your response xml<br><textarea id="result" rows=20 cols=80 ></textarea><br/>
+    status of the invocation<br><textarea id="status" rows=10 cols=40 ></textarea><br/>
+</form>
+</BODY>
+</HTML>

@@ -1,0 +1,466 @@
+nsWSRequest.o: nsWSRequest.cpp ../../../../../config/gcc_hidden.h \
+  ../../../../../mozilla-config.h nsWSRequest.h \
+  ../../../../../dist/include/xmlextras/nsIXMLHttpRequest.h \
+  ../../../../../dist/include/xpcom/nsISupports.h \
+  ../../../../../dist/include/xpcom/nsrootidl.h \
+  ../../../../../dist/include/xpcom/nscore.h \
+  ../../../../../dist/include/xpcom/xpcom-config.h \
+  ../../../../../dist/include/nspr/prtypes.h \
+  ../../../../../dist/include/nspr/prcpucfg.h \
+  ../../../../../dist/include/system_wrappers/stddef.h \
+  /usr/lib/gcc/i486-linux-gnu/4.0.3/include/stddef.h \
+  ../../../../../dist/include/nspr/obsolete/protypes.h \
+  ../../../../../dist/include/system_wrappers/sys/types.h \
+  /usr/include/sys/types.h \
+  ../../../../../dist/include/system_wrappers/features.h \
+  /usr/include/features.h \
+  ../../../../../dist/include/system_wrappers/sys/cdefs.h \
+  /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h \
+  /usr/include/bits/types.h /usr/include/bits/wordsize.h \
+  /usr/include/bits/typesizes.h \
+  ../../../../../dist/include/system_wrappers/time.h /usr/include/time.h \
+  ../../../../../dist/include/system_wrappers/endian.h \
+  /usr/include/endian.h /usr/include/bits/endian.h \
+  ../../../../../dist/include/system_wrappers/sys/select.h \
+  /usr/include/sys/select.h /usr/include/bits/select.h \
+  /usr/include/bits/sigset.h /usr/include/bits/time.h \
+  /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h \
+  /usr/include/bits/sched.h ../../../../../dist/include/xpcom/nsError.h \
+  ../../../../../dist/include/nspr/prtime.h \
+  ../../../../../dist/include/nspr/prlong.h \
+  ../../../../../dist/include/nspr/prtypes.h \
+  ../../../../../dist/include/xpcom/nsISupportsBase.h \
+  ../../../../../dist/include/xpcom/nsID.h \
+  ../../../../../dist/include/system_wrappers/string.h \
+  /usr/include/string.h /usr/include/xlocale.h \
+  ../../../../../dist/include/xpcom/nsISupportsUtils.h \
+  ../../../../../dist/include/xpcom/nsDebug.h \
+  ../../../../../dist/include/xpcom/nsISupportsImpl.h \
+  ../../../../../dist/include/nspr/prthread.h \
+  ../../../../../dist/include/nspr/prinrval.h \
+  ../../../../../dist/include/nspr/pratom.h \
+  ../../../../../dist/include/nspr/prlock.h \
+  ../../../../../dist/include/xpcom/nsTraceRefcnt.h \
+  ../../../../../dist/include/xpcom/nsIClassInfo.h \
+  ../../../../../dist/include/xpcom/nsIProgrammingLanguage.h \
+  ../../../../../dist/include/tungsten/nsIWSRequest.h \
+  ../../../../../dist/include/xpcom/nsIVariant.h \
+  ../../../../../dist/include/xpcom/nsISupportsUtils.h \
+  ../../../../../dist/include/xpcom/nsCOMPtr.h \
+  ../../../../../dist/include/dom/nsIDOMLoadListener.h \
+  ../../../../../dist/include/dom/nsIDOMEvent.h \
+  ../../../../../dist/include/dom/domstubs.h \
+  ../../../../../dist/include/dom/nsIDOMEventListener.h \
+  ../../../../../dist/include/dom/nsIDOMEventTarget.h \
+  ../../../../../dist/include/dom/nsIDOMDocument.h \
+  ../../../../../dist/include/dom/nsIDOMNode.h \
+  ../../../../../dist/include/necko/nsIURI.h \
+  ../../../../../dist/include/necko/nsIHttpChannel.h \
+  ../../../../../dist/include/necko/nsIChannel.h \
+  ../../../../../dist/include/necko/nsIRequest.h \
+  ../../../../../dist/include/content/nsIDocument.h \
+  ../../../../../dist/include/xpcom/nsISupports.h \
+  ../../../../../dist/include/widget/nsEvent.h \
+  ../../../../../dist/include/string/nsString.h \
+  ../../../../../dist/include/string/nsSubstring.h \
+  ../../../../../dist/include/string/nsAString.h \
+  ../../../../../dist/include/string/nsStringFwd.h \
+  ../../../../../dist/include/string/nsStringIterator.h \
+  ../../../../../dist/include/string/nsCharTraits.h \
+  ../../../../../dist/include/system_wrappers/ctype.h \
+  /usr/include/ctype.h ../../../../../dist/include/xpcom/nsDebug.h \
+  ../../../../../dist/include/string/nsAlgorithm.h \
+  ../../../../../dist/include/string/nsObsoleteAString.h \
+  ../../../../../dist/include/string/string-template-def-unichar.h \
+  ../../../../../dist/include/string/nsTObsoleteAString.h \
+  ../../../../../dist/include/string/string-template-undef.h \
+  ../../../../../dist/include/string/string-template-def-char.h \
+  ../../../../../dist/include/string/nsTAString.h \
+  ../../../../../dist/include/string/nsSubstringTuple.h \
+  ../../../../../dist/include/string/nsTSubstringTuple.h \
+  ../../../../../dist/include/string/nsTSubstring.h \
+  ../../../../../dist/include/string/nsDependentSubstring.h \
+  ../../../../../dist/include/string/nsTDependentSubstring.h \
+  ../../../../../dist/include/string/nsReadableUtils.h \
+  ../../../../../dist/include/system_wrappers/new \
+  /usr/lib/gcc/i486-linux-gnu/4.0.3/../../../../include/c++/4.0.3/new \
+  /usr/lib/gcc/i486-linux-gnu/4.0.3/../../../../include/c++/4.0.3/cstddef \
+  /usr/lib/gcc/i486-linux-gnu/4.0.3/../../../../include/c++/4.0.3/exception \
+  ../../../../../dist/include/string/nsTString.h \
+  ../../../../../dist/include/string/nsDependentString.h \
+  ../../../../../dist/include/string/nsTDependentString.h \
+  ../../../../../dist/include/string/nsLiteralString.h \
+  ../../../../../dist/include/string/nsPromiseFlatString.h \
+  ../../../../../dist/include/string/nsTPromiseFlatString.h \
+  ../../../../../dist/include/xpcom/nsMemory.h \
+  ../../../../../dist/include/xpcom/nsXPCOM.h \
+  ../../../../../dist/include/xpcom/nsXPCOMCID.h \
+  ../../../../../dist/include/xpcom/nsIMemory.h \
+  ../../../../../dist/include/system_wrappers/stdio.h \
+  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
+  ../../../../../dist/include/system_wrappers/wchar.h \
+  /usr/include/wchar.h /usr/include/bits/wchar.h /usr/include/gconv.h \
+  ../../../../../dist/include/system_wrappers/stdarg.h \
+  /usr/lib/gcc/i486-linux-gnu/4.0.3/include/stdarg.h \
+  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
+  ../../../../../dist/include/nspr/plhash.h \
+  ../../../../../dist/include/xpcom/nsCOMArray.h \
+  ../../../../../dist/include/xpcom/nsVoidArray.h \
+  ../../../../../dist/include/string/nsAString.h \
+  ../../../../../dist/include/xpcom/nsISupports.h \
+  ../../../../../dist/include/content/nsIDocumentObserver.h \
+  ../../../../../dist/include/xpcom/nsCOMPtr.h \
+  ../../../../../dist/include/necko/nsIURI.h \
+  ../../../../../dist/include/content/nsIBindingManager.h \
+  ../../../../../dist/include/xpcom/nsWeakPtr.h \
+  ../../../../../dist/include/xpcom/nsIWeakReference.h \
+  ../../../../../dist/include/xpcom/nsIWeakReferenceUtils.h \
+  ../../../../../dist/include/xpcom/nsCOMPtr.h \
+  ../../../../../dist/include/xpcom/nsIWeakReferenceUtils.h \
+  ../../../../../dist/include/necko/nsILoadGroup.h \
+  ../../../../../dist/include/string/nsReadableUtils.h \
+  ../../../../../dist/include/xpcom/nsCRT.h \
+  ../../../../../dist/include/system_wrappers/stdlib.h \
+  /usr/include/stdlib.h /usr/include/bits/waitflags.h \
+  /usr/include/bits/waitstatus.h \
+  ../../../../../dist/include/system_wrappers/alloca.h \
+  /usr/include/alloca.h ../../../../../dist/include/nspr/plstr.h \
+  ../../../../../dist/include/xpcom/nsCppSharedAllocator.h \
+  ../../../../../dist/include/xpcom/nsMemory.h \
+  ../../../../../dist/include/system_wrappers/limits.h \
+  /usr/lib/gcc/i486-linux-gnu/4.0.3/include/limits.h \
+  /usr/lib/gcc/i486-linux-gnu/4.0.3/include/syslimits.h \
+  /usr/include/limits.h /usr/include/bits/posix1_lim.h \
+  /usr/include/bits/local_lim.h \
+  ../../../../../dist/include/system_wrappers/linux/limits.h \
+  /usr/include/linux/limits.h /usr/include/bits/posix2_lim.h \
+  /usr/include/bits/xopen_lim.h \
+  ../../../../../dist/include/content/mozFlushType.h \
+  ../../../../../dist/include/content/nsPropertyTable.h \
+  ../../../../../dist/include/xpcom/nscore.h \
+  ../../../../../dist/include/xpcom/nsHashSets.h \
+  ../../../../../dist/include/xpcom/nsDoubleHashtable.h \
+  ../../../../../dist/include/xpcom/pldhash.h \
+  ../../../../../dist/include/string/nsString.h \
+  ../../../../../dist/include/xpcom/nsHashKeys.h \
+  ../../../../../dist/include/xpcom/nsAutoPtr.h \
+  ../../../../../dist/include/necko/nsIStreamListener.h \
+  ../../../../../dist/include/necko/nsIRequestObserver.h \
+  ../../../../../dist/include/xpcom/nsIEventQueueService.h \
+  ../../../../../dist/include/xpcom/nsIEventQueue.h \
+  ../../../../../dist/include/xpcom/nsIEventTarget.h \
+  ../../../../../dist/include/xpcom/plevent.h \
+  ../../../../../dist/include/nspr/prclist.h \
+  ../../../../../dist/include/nspr/prlock.h \
+  ../../../../../dist/include/nspr/prcvar.h \
+  ../../../../../dist/include/nspr/prmon.h \
+  ../../../../../dist/include/xpcom/nsWeakReference.h \
+  ../../../../../dist/include/xpcom/nsISupportsArray.h \
+  ../../../../../dist/include/xpcom/nsICollection.h \
+  ../../../../../dist/include/xpcom/nsISerializable.h \
+  ../../../../../dist/include/xpcom/nsIEnumerator.h \
+  ../../../../../dist/include/xpcom/nsISimpleEnumerator.h \
+  ../../../../../dist/include/js/jsapi.h \
+  ../../../../../dist/include/js/jspubtd.h \
+  ../../../../../dist/include/js/jstypes.h \
+  ../../../../../dist/include/js/jsautocfg.h \
+  ../../../../../dist/include/js/jsosdep.h \
+  ../../../../../dist/include/js/jsotypes.h \
+  ../../../../../dist/include/js/jscompat.h \
+  ../../../../../dist/include/js/jslong.h \
+  ../../../../../dist/include/dom/nsIScriptContext.h \
+  ../../../../../dist/include/xpcom/nscore.h \
+  ../../../../../dist/include/string/nsString.h \
+  ../../../../../dist/include/xpcom/nsISupports.h \
+  ../../../../../dist/include/xpcom/nsCOMPtr.h \
+  ../../../../../dist/include/js/jsapi.h \
+  ../../../../../dist/include/necko/nsIChannelEventSink.h \
+  ../../../../../dist/include/xpcom/nsIInterfaceRequestor.h \
+  ../../../../../dist/include/necko/nsIHttpHeaderVisitor.h \
+  ../../../../../dist/include/necko/nsIProgressEventSink.h \
+  ../../../../../dist/include/dom/nsIDOMLSProgressEvent.h \
+  ../../../../../dist/include/xpcom/nsIPropertyBag.h \
+  ../../../../../dist/include/xpcom/plevent.h \
+  ../../../../../dist/include/xpcom/nsIEventQueue.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_node.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_env.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_allocator.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_utils_defines.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_error.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_log.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_thread_pool.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_thread.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_utils.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_date_time.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_base64_binary.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_base64.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_attribute.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_qname.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_string.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_namespace.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_output.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_xml_writer.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_child_element_iterator.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_text.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_data_handler.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_array_list.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_children_iterator.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_children_qname_iterator.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_children_with_specific_attribute_iterator.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_comment.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_doctype.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_document.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_element.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_hash.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_navigator.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_processing_instruction.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_stax_builder.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_xml_reader.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_soap.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_soap_body.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_soap_fault.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_soap_const.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_soap_envelope.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_soap_builder.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_soap_fault_code.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_soap_fault_detail.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_soap_fault_node.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_soap_fault_reason.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_soap_fault_role.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_soap_fault_sub_code.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_soap_fault_text.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_soap_fault_value.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_soap_header_block.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_soap_header.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axiom_soap_message.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_client.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_async_result.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_defines.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_msg_ctx.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_ctx.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_property.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_relates_to.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_const.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_param.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_handler_desc.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_param_container.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_phase_rule.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_handler.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_msg_info_headers.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_endpoint_ref.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_any_content_type.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_svc_name.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_callback.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_mep_client.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_op.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_wsdl_op.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_wsdl_component.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_linked_list.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_wsdl_extensible_element.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_wsdl_msg_ref.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_wsdl_extensible_component.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_wsdl_feature.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_wsdl_property.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_wsdl_fault_ref.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_wsdl_svc.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_wsdl_interface.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_wsdl_endpoint.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_wsdl_binding.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_wsdl_binding_op.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_wsdl_binding_msg_ref.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_wsdl_binding_fault.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_svc.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_flow_container.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_flow.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_svc_grp.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_svc_grp_ctx.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_svc_ctx.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_op_ctx.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_phase_resolver.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_phase.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_module_desc.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_conf.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_transport_in_desc.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_phase_meta.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_transport_out_desc.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_transport_sender.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_phases_info.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_msg_recv.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_svc_skeleton.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_svr_callback.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_disp_checker.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_phase_holder.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_wsdl_soap_op.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_wsdl.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/xml_schema.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/xml_schema_defines.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/xml_schema_annotated.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/xml_schema_obj.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/xml_schema_constants.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/xml_schema_external.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_stream.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/xml_schema_element.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/xml_schema_particle.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_description.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_op_client.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_options.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_transport_receiver.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_conf_ctx.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_stub.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_svc_client.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_uri.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_util.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_class_loader.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_dll_desc.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/platforms/axis2_platform_auto_sense.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/platforms/unix/axis2_unix.h \
+  ../../../../../dist/include/system_wrappers/dlfcn.h \
+  /usr/include/dlfcn.h /usr/include/bits/dlfcn.h \
+  ../../../../../dist/include/system_wrappers/sys/time.h \
+  /usr/include/sys/time.h \
+  ../../../../../dist/include/system_wrappers/sys/timeb.h \
+  /usr/include/sys/timeb.h \
+  ../../../../../dist/include/system_wrappers/unistd.h \
+  /usr/include/unistd.h /usr/include/bits/posix_opt.h \
+  /usr/include/bits/environments.h /usr/include/bits/confname.h \
+  ../../../../../dist/include/system_wrappers/getopt.h \
+  /usr/include/getopt.h \
+  ../../../../../dist/include/system_wrappers/errno.h \
+  /usr/include/errno.h /usr/include/bits/errno.h \
+  /usr/include/linux/errno.h /usr/include/asm/errno.h \
+  /usr/include/asm-i386/errno.h \
+  ../../../../../dist/include/system_wrappers/sys/param.h \
+  /usr/include/sys/param.h /usr/include/linux/param.h \
+  /usr/include/asm/param.h /usr/include/asm-i386/param.h \
+  ../../../../../dist/include/system_wrappers/strings.h \
+  /usr/include/strings.h \
+  ../../../../../dist/include/system_wrappers/sys/stat.h \
+  /usr/include/sys/stat.h /usr/include/bits/stat.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/platforms/unix/axis2_uuid_gen_unix.h \
+  ../../../../../dist/include/system_wrappers/netinet/tcp.h \
+  /usr/include/netinet/tcp.h \
+  ../../../../../dist/include/system_wrappers/utime.h \
+  /usr/include/utime.h \
+  ../../../../../dist/include/system_wrappers/sys/socket.h \
+  /usr/include/sys/socket.h \
+  ../../../../../dist/include/system_wrappers/sys/uio.h \
+  /usr/include/sys/uio.h /usr/include/bits/uio.h \
+  /usr/include/bits/socket.h /usr/include/bits/sockaddr.h \
+  /usr/include/asm/socket.h /usr/include/asm-i386/socket.h \
+  /usr/include/asm/sockios.h /usr/include/asm-i386/sockios.h \
+  ../../../../../dist/include/system_wrappers/arpa/inet.h \
+  /usr/include/arpa/inet.h \
+  ../../../../../dist/include/system_wrappers/netinet/in.h \
+  /usr/include/netinet/in.h \
+  ../../../../../dist/include/system_wrappers/stdint.h \
+  /usr/include/stdint.h /usr/include/bits/in.h \
+  /usr/include/bits/byteswap.h \
+  ../../../../../dist/include/system_wrappers/netdb.h \
+  /usr/include/netdb.h /usr/include/rpc/netdb.h \
+  /usr/include/bits/siginfo.h /usr/include/bits/netdb.h \
+  ../../../../../dist/include/system_wrappers/sys/ioctl.h \
+  /usr/include/sys/ioctl.h /usr/include/bits/ioctls.h \
+  /usr/include/asm/ioctls.h /usr/include/asm-i386/ioctls.h \
+  /usr/include/asm/ioctl.h /usr/include/asm-i386/ioctl.h \
+  /usr/include/bits/ioctl-types.h /usr/include/sys/ttydefaults.h \
+  /usr/include/zlib.h /usr/include/zconf.h \
+  ../../../../../dist/include/system_wrappers/fcntl.h \
+  /usr/include/fcntl.h /usr/include/bits/fcntl.h \
+  ../../../../../dist/include/system_wrappers/dirent.h \
+  /usr/include/dirent.h /usr/include/bits/dirent.h \
+  ../../../../../dist/include/system_wrappers/pthread.h \
+  /usr/include/pthread.h /usr/include/sched.h \
+  ../../../../../dist/include/system_wrappers/signal.h \
+  /usr/include/signal.h /usr/include/bits/initspin.h \
+  /usr/include/bits/sigthread.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_dir_handler.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_file.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_file_handler.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_network_handler.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_stack.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_string_util.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_types.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_url.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_uuid_gen.h \
+  /home/rajika/installion/axis2c0.95/axis2c-src-0.95/deploy/include/axis2_http_transport.h \
+  ../../../../../dist/include/xpcom/nsIThread.h \
+  ../../../../../dist/include/xpcom/nsIRunnable.h \
+  ../../../../../dist/include/nspr/nspr.h \
+  ../../../../../dist/include/nspr/pratom.h \
+  ../../../../../dist/include/nspr/prbit.h \
+  ../../../../../dist/include/nspr/prclist.h \
+  ../../../../../dist/include/nspr/prcmon.h \
+  ../../../../../dist/include/nspr/prmon.h \
+  ../../../../../dist/include/nspr/prcvar.h \
+  ../../../../../dist/include/nspr/prdtoa.h \
+  ../../../../../dist/include/nspr/prenv.h \
+  ../../../../../dist/include/nspr/prerror.h \
+  ../../../../../dist/include/nspr/prerr.h \
+  ../../../../../dist/include/nspr/prinet.h \
+  ../../../../../dist/include/nspr/prinit.h \
+  ../../../../../dist/include/nspr/prthread.h \
+  ../../../../../dist/include/nspr/prwin16.h \
+  ../../../../../dist/include/nspr/prio.h \
+  ../../../../../dist/include/nspr/prtime.h \
+  ../../../../../dist/include/nspr/pripcsem.h \
+  ../../../../../dist/include/nspr/prlink.h \
+  ../../../../../dist/include/nspr/prlog.h \
+  ../../../../../dist/include/nspr/prmem.h \
+  ../../../../../dist/include/nspr/prmwait.h \
+  ../../../../../dist/include/nspr/prnetdb.h \
+  ../../../../../dist/include/nspr/prprf.h \
+  ../../../../../dist/include/nspr/prproces.h \
+  ../../../../../dist/include/nspr/prrng.h \
+  ../../../../../dist/include/nspr/prrwlock.h \
+  ../../../../../dist/include/nspr/prshm.h \
+  ../../../../../dist/include/nspr/prshma.h \
+  ../../../../../dist/include/nspr/prsystem.h \
+  ../../../../../dist/include/nspr/prtpool.h \
+  ../../../../../dist/include/nspr/prtrace.h \
+  ../../util/src/nsWSRequestException.h \
+  ../../../../../dist/include/nspr/plstr.h \
+  ../../../../../dist/include/xpcom/nsCOMPtr.h \
+  ../../../../../dist/include/xpcom/nsXPCOM.h \
+  ../../../../../dist/include/xpcom/nsIVariant.h \
+  ../../../../../dist/include/xpcom/nsIComponentManager.h \
+  ../../../../../dist/include/xpcom/nsComponentManagerUtils.h \
+  ../../../../../dist/include/xpcom/nsIFactory.h \
+  ../../../../../dist/include/xpcom/nsComponentManagerUtils.h \
+  ../../../../../dist/include/xpcom/nsMemory.h \
+  ../../../../../dist/include/xpcom/nsCRT.h \
+  ../../../../../dist/include/xpcom/nsIException.h \
+  ../../../../../dist/include/xpcom/nsIServiceManager.h \
+  ../../../../../dist/include/xpcom/nsServiceManagerUtils.h \
+  ../../../../../dist/include/xpcom/nsIServiceManager.h \
+  ../../../../../dist/include/xpcom/nsIServiceManagerObsolete.h \
+  ../../../../../dist/include/xpcom/nsIComponentManager.h \
+  ../../../../../dist/include/xpcom/nsIExceptionService.h \
+  ../../../../../dist/include/xpcom/nsServiceManagerUtils.h \
+  nsLocalDefines.h ../../../../../dist/include/dom/nsIDOMWindow.h \
+  ../../../../../dist/include/xmlextras/nsIDOMSerializer.h \
+  ../../../../../dist/include/xpconnect/nsIXPConnect.h \
+  ../../../../../dist/include/xpconnect/xpccomponents.h \
+  ../../../../../dist/include/xpconnect/xpcexception.h \
+  ../../../../../dist/include/xpconnect/xpcjsid.h \
+  ../../../../../dist/include/xpconnect/nsIScriptableInterfaces.h \
+  ../../../../../dist/include/xpcom/nsIInterfaceInfoManager.h \
+  ../../../../../dist/include/xpcom/nsIInterfaceInfo.h \
+  ../../../../../dist/include/js/jspubtd.h \
+  ../../../../../dist/include/xpcom/xptinfo.h \
+  ../../../../../dist/include/xpcom/xpt_struct.h \
+  ../../../../../dist/include/xpcom/xpt_arena.h \
+  ../../../../../dist/include/xmlextras/nsIDOMParser.h \
+  ../../../../../dist/include/xpconnect/nsIJSContextStack.h \
+  ../../../../../dist/include/string/nsStringAPI.h \
+  ../../../../../dist/include/xpcom/nscore.h \
+  ../../../../../dist/include/string/nsAString.h \
+  ../../../../../dist/include/string/nsString.h \
+  ../../../../../dist/include/string/nsEmbedString.h \
+  ../../../../../dist/include/string/nsStringAPI.h \
+  ../../../../../dist/include/xpcom/nsIProperties.h \
+  ../../../../../dist/include/xpcom/nsDirectoryServiceDefs.h \
+  ../../../../../dist/include/xpcom/nsIFile.h \
+  ../../../../../dist/include/xpcom/nsDirectoryServiceUtils.h \
+  ../../../../../dist/include/xpcom/nsIProperties.h \
+  ../../../../../dist/include/xpcom/nsISimpleEnumerator.h
