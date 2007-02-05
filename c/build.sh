@@ -6,8 +6,8 @@ if [ -d  "axis2" ];then
     svn up;
     cd ..
 else
-    svn co https://svn.apache.org/repos/asf/webservices/axis2/trunk/c
-    mv c axis2;
+#    svn co https://svn.apache.org/repos/asf/webservices/axis2/trunk/c
+#    mv c axis2;
     cp build/axis2/Makefile.am axis2
     cp build/axis2/configure.ac axis2
 fi
@@ -17,8 +17,8 @@ if [ -d  "sandesha2" ];then
     svn up;
     cd ..
 else
-    svn co https://svn.apache.org/repos/asf/webservices/sandesha/trunk/c;
-    mv c sandesha2;
+#    svn co https://svn.apache.org/repos/asf/webservices/sandesha/trunk/c;
+#    mv c sandesha2;
     cp build/sandesha2/Makefile.am sandesha2
     cp build/sandesha2/src/core/Makefile.am sandesha2/src/core
     cp build/sandesha2/src/util/Makefile.am sandesha2/src/util
