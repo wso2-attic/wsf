@@ -1,0 +1,2 @@
+SUBDIRS=${XMPP_DIR}
+EXTRA_DIST=Makefile.am

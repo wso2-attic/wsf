@@ -1,0 +1,26 @@
+datadir=$(prefix)/resources
+logsdir=$(prefix)/logs
+docsdir=$(prefix)/docs
+confdir=$(prefix)
+SUBDIRS = src 
+include_HEADERS=$(top_builddir)/src/*.h
+data_DATA= README \
+	INSTALL CREDITS COPYING NEWS 
+
+logs_DATA=
+docs_DATA=
+data_DATA= resources/echo.xml
+EXTRA_DIST = build.sh autogen.sh CREDITS LICENSE build.sh resources
+dist-hook:
+	rm -rf `find $(distdir)/ -type d -name .svn`
+	rm -rf `find $(distdir)/ -type d -name .deps`
+	rm -rf `find $(distdir)/ -type d -name .libs`
+	tar -chf - wsclient-src-${PACKAGE_VERSION} | gzip -c > wsclient-src-${PACKAGE_VERSION}.tar.gz
+
+bindist: $(bin_PROGRAMS)
+	rm -rf wsclient-bin-${PACKAGE_VERSION}-linux
+	sh bindist.sh
+	mkdir wsclient-bin-${PACKAGE_VERSION}-linux
+	cp -r ${AXIS2C_HOME}/* wsclient-bin-${PACKAGE_VERSION}-linux
+	tar -cf - wsclient-bin-${PACKAGE_VERSION}-linux | gzip -c > wsclient-bin-${PACKAGE_VERSION}-linux.tar.gz
+	rm -rf wsclient-bin-${PACKAGE_VERSION}-linux

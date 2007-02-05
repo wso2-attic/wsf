@@ -1,0 +1,42 @@
+wsclient acts as a Web Service client. Normally, wsclient uses a
+request/response pattern. The XML payload of the request is read from
+stdin and the XML payload of the received reply is written to stdout.
+wsclient supports two different bindings:
+
+  * SOAP. The XML payload is wrapped in a SOAP body element and then in a SOAP envelope element.  With this binding, 
+    wsclient will act as a SOAP-compliant client. Any transport supported by the underlying SOAP engine can be used; 
+    the transport will be inferred from the URI scheme.
+
+  * HTTP. The XML payload is sent as the entity-body of an HTTP message.  With this binding, wsclient will act 
+    as an HTTP-compliant client.  Only HTTP can be used. By default, the POST method will be used.
+
+    The payload is conceptually an XML infoset rather than a
+    byte-stream. By default, the XML infoset is serialized as a plain XML
+    document on input and output, but wsclient also supports the use of
+    XOP to allow the input and output to refer to external binary
+    resources.  When using the SOAP binding, wsclient can also use MTOM
+    for sending and receiving the payload.  Note that the serialization of
+    the XML payload for input and output is independent of the
+    serialization of the payload for sending and receiving.
+
+    Instead of being an XML infoset, the payload can be empty. This is
+    represented on input and output as an empty file (0 bytes).  With the
+    SOAP binding, this corresponds to a SOAP body element with no
+    children. With the HTTP binding, it corresponds to an HTTP message
+    with no entity body.
+
+    By default, wsclient uses the HTTP binding.  The SOAP binding may be
+    used for just the reply or for both the request and the reply.
+     
+     The general form of the command is:
+     wsclient [options] [destURI].
+
+     The destURI argument is required unlesss the --in-reply-to-message option is used.
+
+     With the SOAP binding, if a fault message is recevied as the reply, the fault is output as normal, 
+     but the exit code will be 1 rather than 0.
+
+     For help on options execute.
+     wsclient --help
+
+     Some samples can be found at samples folder

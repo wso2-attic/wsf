@@ -1,0 +1,23 @@
+WSO2 WSF4C (1.0alpha1)
+
+Initial release
+
+1. wsclient command line tool to consume Web services.
+	1. Attachments with MTOM
+
+		* Binary optimized
+		* Non-optimized (Base64 binary)
+
+	2. WS-Addressing
+
+		* Version 1.0
+		* Submission
+
+	3. WS-Security
+
+		* UsernameToken
+
+	4. SSL enabled Transport layer	
+
+-- WSO2 WSF4C team <wsf-c-dev@wso2.org>  Wed, 18 Jan 2007
+

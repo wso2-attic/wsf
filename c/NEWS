@@ -1,0 +1,37 @@
+We are pleased to announce the release of WSO2 WSF for C 1.0alpha1.
+You can download the release from
+http://dist.wso2.net/products/wsf/c/1.0alpha1
+Project home page
+http://www.wso2.net/projects/wsf/c
+
+Key Features
+
+1. wsclient command line tool to consume Web services.
+    1. Attachments with MTOM
+
+        * Binary optimized
+        * Non-optimized (Base64 binary)
+
+    2. WS-Addressing
+
+        * Version 1.0
+        * Submission
+
+    3. WS-Security
+
+        * UsernameToken
+
+    4. SSL enabled Transport layer
+
+What is still to do
+
+    Memory leaks fixing
+    WS-Security Encryption
+    XMPP transport layer
+    WS-Eventing
+    WS-Reliable Messaging
+
+
+We welcome your early feedback on this implementation.
+Thanks for your interest in WSO2 WSF4C.
+
