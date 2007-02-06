@@ -16,138 +16,164 @@
  * limitations under the License.
  */
 
+/**
+ * This class is used to generate Binding elements in the WSDL
+ */
 
-  class WS_WsdlBinding
-   {
+class WS_WsdlBinding
+{
+      
 
+    const WS_WSDL2_BINDING_VERSION_ATTR_VAL = "1.2";
 
-       const WS_WSDL2_BINDING_VERSION_ATTR_VAL = "1.2";
+    private $svr_name;
+    public  $operations;
+    private $wsdl_location;
 
-       private $svr_name;
-       public  $operations;
-       private $wsdl_location;
-
-       function __construct($service_name, $wsdl_ep, $operations = false)
-       {
-	   $this->svr_name = $service_name;
-	   $this->operations = $operations;
-	   $this->wsdl_location = $wsdl_ep;
-       }
-
-
-      public function createDocLitBinding(DomDocument $binding_doc, DomElement $binding_root)
-      {
-          $binding_ele = $binding_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
-				      WS_WsdlConst::WS_WSDL_BINDING_ATTR_NAME);
-	  $binding_ele->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME, $this->svr_name);
-	  $binding_ele->setAttribute(WS_WsdlConst::WS_WSDL_TYPE_ATTR_NAME, 
-				     $this->svr_name);
-	  
-	  $s_binding = $binding_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_SOAP_NAMESPACE,
-					     WS_WsdlConst::WS_WSDL_BINDING_ATTR_NAME);
-	  $s_binding->setAttribute(WS_WsdlConst::WS_WSDL_TRANSPORT_ATTR_NAME, 
-				   WS_WsdlConst::WS_SCHEMA_SOAP_HTTP_NAMESPACE);
-	  $s_binding->setAttribute(WS_WsdlConst::WS_WSDL_STYLE_ATTR_NAME,
-				   WS_WsdlConst::WS_WSDL_DOCUMENT_ATTR_NAME);
-	  $binding_ele->appendChild($s_binding);
-	  
-	  foreach($this->operations as $name => $params) 
-	  {
-	      $op = $binding_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
-					  WS_WsdlConst::WS_WSDL_OPERATION_ATTR_NAME);
-	      $op->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME, $name);
-	      $action_ele = $binding_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_SOAP_NAMESPACE,
-							  WS_WsdlConst::WS_WSDL_OPERATION_ATTR_NAME);
-	      $action_ele->setAttribute(WS_WsdlConst::WS_WSDL_SOAP_ACTION_ATTR_NAME,
-					WS_WsdlConst::WS_WSDL_HTTP_ATTR_NAME.$this->wsdl_location.
-					"/".$name);
-	      $action_ele->setAttribute(WS_WsdlConst::WS_WSDL_STYLE_ATTR_NAME,
-					WS_WsdlConst::WS_WSDL_DOCUMENT_ATTR_NAME);
-	      $op->appendChild($action_ele);
+    /**
+     * The constructor of the WS_WsdlBinding class                    
+     * @param string $service_name Name of the service                    
+     * @param string $wsdl_ep endpoint location(address)of the service     
+     * @param Array $operations Array of operations defined in the service
+     */     
+      
+    function __construct($service_name, $wsdl_ep, $operations = false)
+	{
+	    $this->svr_name = $service_name;
+	    $this->operations = $operations;
+	    $this->wsdl_location = $wsdl_ep;
+	}
+      
+    /**
+     * Function for creating Binding element when the binding style in doc-lit
+     * @param DomDocument $binding_doc DomDocument element of the wsdl document 
+     * @param DomElement $binding_root root element of the document
+     */
+    public function createDocLitBinding(DomDocument $binding_doc,
+					DomElement $binding_root)
+	{
+	    $binding_ele = $binding_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
+							 WS_WsdlConst::WS_WSDL_BINDING_ATTR_NAME);
+	    $binding_ele->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME,
+				       $this->svr_name);
+	    $binding_ele->setAttribute(WS_WsdlConst::WS_WSDL_TYPE_ATTR_NAME, 
+				       $this->svr_name);
 	      
+	    $s_binding = $binding_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_SOAP_NAMESPACE,
+						       WS_WsdlConst::WS_WSDL_BINDING_ATTR_NAME);
+	    $s_binding->setAttribute(WS_WsdlConst::WS_WSDL_TRANSPORT_ATTR_NAME, 
+				     WS_WsdlConst::WS_SCHEMA_SOAP_HTTP_NAMESPACE);
+	    $s_binding->setAttribute(WS_WsdlConst::WS_WSDL_STYLE_ATTR_NAME,
+				     WS_WsdlConst::WS_WSDL_DOCUMENT_ATTR_NAME);
+	    $binding_ele->appendChild($s_binding);
 
-	      foreach(array(WS_WsdlConst::WS_WSDL_INPUT_ATTR_NAME,
-			    WS_WsdlConst::WS_WSDL_OUTPUT_ATTR_NAME) as $type) 
-	      {
-		  $sbinding_ele = $binding_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE, $type);
-		  $s_body = $binding_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_SOAP_NAMESPACE,
-						  WS_WsdlConst::WS_WSDL_BODY_ATTR_NAME);
-		  $s_body->setAttribute(WS_WsdlConst::WS_WSDL_USE_ATTR_NAME, 
-					WS_WsdlConst::WS_WSDL_LITERAL_ATTR_NAME);
-		  $sbinding_ele->appendChild($s_body);
-		  $op->appendChild($sbinding_ele);
-	      }
-	      $binding_ele->appendChild($op);
-	  }
-	  $binding_root->appendChild($binding_ele);
-      }
-
-
-
-
-       public function createRPCBinding(DomDocument $binding_doc, DomElement $binding_root)
-       {
-	   $binding_ele = $binding_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
-							WS_WsdlConst::WS_WSDL_BINDING_ATTR_NAME);
-	   $binding_ele->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME, $this->svr_name);
-	   $binding_ele->setAttribute(WS_WsdlConst::WS_WSDL_TYPE_ATTR_NAME,
-				      $this->svr_name);
-	   
-	   $s_binding = $binding_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_SOAP_NAMESPACE,
-						      WS_WsdlConst::WS_WSDL_BINDING_ATTR_NAME);
-	   $s_binding->setAttribute(WS_WsdlConst::WS_WSDL_STYLE_ATTR_NAME, 
-				    WS_WsdlConst::WS_WSDL_RPC_ATTR_NAME);
-	   $s_binding->setAttribute(WS_WsdlConst::WS_WSDL_TRANSPORT_ATTR_NAME,
-				    WS_WsdlConst::WS_SCHEMA_SOAP_HTTP_NAMESPACE);
-	   $binding_ele->appendChild($s_binding);
-
-	   foreach($this->operations as $name => $params)
-	   {
-	       $op = $binding_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
-						   WS_WsdlConst::WS_WSDL_OPERATION_ATTR_NAME);
-	       $op->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME, $name);
-	       foreach(array(WS_WsdlConst::WS_WSDL_INPUT_ATTR_NAME,
-			     WS_WsdlConst::WS_WSDL_OUTPUT_ATTR_NAME) as $type)
-	       {
-		   $sbinding_ele = $binding_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE, $type);
-		   $s_body = $binding_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_SOAP_NAMESPACE,
-							   WS_WsdlConst::WS_WSDL_BODY_ATTR_NAME);
-		   $s_body->setAttribute(WS_WsdlConst::WS_WSDL_USE_ATTR_NAME,
-					 WS_WsdlConst::WS_WSDL_ENCODED_ATTR_NAME);
-		   $s_body->setAttribute(WS_WsdlConst::WS_WSDL_ENCOD_STYLE_ATTR_NAME,
-					 WS_WsdlConst::WS_SOAP_SCHEMA_ENCODING_NAMESPACE);
-		   $sbinding_ele->appendChild($s_body);
-		   $op->appendChild($sbinding_ele);
-	       }
-	       $binding_ele->appendChild($op);
-	   }
-	   $binding_root->appendChild($binding_ele);
-       }
+	    foreach($this->operations as $name => $params) 
+	    {
+		$op = $binding_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
+						    WS_WsdlConst::WS_WSDL_OPERATION_ATTR_NAME);
+		$op->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME, $name);
+		$action_ele = $binding_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_SOAP_NAMESPACE,
+							    WS_WsdlConst::WS_WSDL_OPERATION_ATTR_NAME);
+		$action_ele->setAttribute(WS_WsdlConst::WS_WSDL_SOAP_ACTION_ATTR_NAME,
+					  WS_WsdlConst::WS_WSDL_HTTP_ATTR_NAME.
+					  $this->wsdl_location."/".$name);
+		$action_ele->setAttribute(WS_WsdlConst::WS_WSDL_STYLE_ATTR_NAME,
+					  WS_WsdlConst::WS_WSDL_DOCUMENT_ATTR_NAME);
+		$op->appendChild($action_ele);
 
 
-       public function createWsdl2Binding(DomDocument $binding_doc, DomElement $binding_root)
-      {
-          $binding_ele = $binding_doc->createElementNS(WS_WsdlConst::WS_WSDL2_NAMESPACE,
-				      WS_WsdlConst::WS_WSDL_BINDING_ATTR_NAME);
-	  $binding_ele->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME, 
-				     $this->svr_name.strtoupper(WS_WsdlConst::WS_WSDL_SOAP_ATTR_NAME).
-				     ucfirst(WS_WsdlConst::WS_WSDL_BINDING_ATTR_NAME));
-	  $binding_ele->setAttribute(WS_WsdlConst::WS_WSDL_TYPE_ATTR_NAME, 
-				     WS_WsdlConst:: WS_WSDL2_WSOAP_ATTR_VAL);
-	  
-	  $binding_ele->setAttribute(WS_WsdlConst::WS_WSDL_INTERFACE_ATTR_NAME,
-				    $this->svr_name.ucfirst(WS_WsdlConst::WS_WSDL_INTERFACE_ATTR_NAME));
-	  $binding_ele->setAttribute(WS_WsdlConst::WS_WSDL_VERSION_ATTR_NAME,
-				     self::WS_WSDL2_BINDING_VERSION_ATTR_VAL);
-	  $binding_ele->setAttribute(WS_WsdlConst::WS_WSDL_PROTOCAL_ATTR_NAME,
-				     WS_WsdlConst:: WS_WSDL2_BINDING_ATTR_VAL);
+		foreach(array(WS_WsdlConst::WS_WSDL_INPUT_ATTR_NAME,
+			      WS_WsdlConst::WS_WSDL_OUTPUT_ATTR_NAME) as $type) 
+		{
+		    $sbinding_ele = $binding_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
+								  $type);
+		    $s_body = $binding_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_SOAP_NAMESPACE,
+							    WS_WsdlConst::WS_WSDL_BODY_ATTR_NAME);
+		    $s_body->setAttribute(WS_WsdlConst::WS_WSDL_USE_ATTR_NAME, 
+					  WS_WsdlConst::WS_WSDL_LITERAL_ATTR_NAME);
+		    $sbinding_ele->appendChild($s_body);
+		    $op->appendChild($sbinding_ele);
+		}
+		$binding_ele->appendChild($op);
+	    }
+	    $binding_root->appendChild($binding_ele);
+	}
 
-	  $binding_root->appendChild($binding_ele);
-      }
+    
+    /**
+     * Function for creating Binding element when the binding style in rpc
+     * @param DomDocument $binding_doc DomDocument element of the wsdl document 
+     * @param DomElement $binding_root root element of the document
+     */
+    public function createRPCBinding(DomDocument $binding_doc, 
+				     DomElement $binding_root)
+	{
+	    $binding_ele = $binding_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
+							 WS_WsdlConst::WS_WSDL_BINDING_ATTR_NAME);
+	    $binding_ele->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME, $this->svr_name);
+	    $binding_ele->setAttribute(WS_WsdlConst::WS_WSDL_TYPE_ATTR_NAME,
+				       $this->svr_name);
+
+	    $s_binding = $binding_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_SOAP_NAMESPACE,
+						       WS_WsdlConst::WS_WSDL_BINDING_ATTR_NAME);
+	    $s_binding->setAttribute(WS_WsdlConst::WS_WSDL_STYLE_ATTR_NAME, 
+				     WS_WsdlConst::WS_WSDL_RPC_ATTR_NAME);
+	    $s_binding->setAttribute(WS_WsdlConst::WS_WSDL_TRANSPORT_ATTR_NAME,
+				     WS_WsdlConst::WS_SCHEMA_SOAP_HTTP_NAMESPACE);
+	    $binding_ele->appendChild($s_binding);
+
+	    foreach($this->operations as $name => $params)
+	    {
+		$op = $binding_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
+						    WS_WsdlConst::WS_WSDL_OPERATION_ATTR_NAME);
+		$op->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME, $name);
+		foreach(array(WS_WsdlConst::WS_WSDL_INPUT_ATTR_NAME,
+			      WS_WsdlConst::WS_WSDL_OUTPUT_ATTR_NAME) as $type)
+		{
+		    $sbinding_ele = $binding_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
+								  $type);
+		    $s_body = $binding_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_SOAP_NAMESPACE,
+							    WS_WsdlConst::WS_WSDL_BODY_ATTR_NAME);
+		    $s_body->setAttribute(WS_WsdlConst::WS_WSDL_USE_ATTR_NAME,
+					  WS_WsdlConst::WS_WSDL_ENCODED_ATTR_NAME);
+		    $s_body->setAttribute(WS_WsdlConst::WS_WSDL_ENCOD_STYLE_ATTR_NAME,
+					  WS_WsdlConst::WS_SOAP_SCHEMA_ENCODING_NAMESPACE);
+		    $sbinding_ele->appendChild($s_body);
+		    $op->appendChild($sbinding_ele);
+		}
+		$binding_ele->appendChild($op);
+	    }
+	    $binding_root->appendChild($binding_ele);
+	}
+
+    /**
+     * Function for creating Binding element in WSDL2.0
+     * @param DomDocument $binding_doc DomDocument element of the wsdl document 
+     * @param DomElement $binding_root root element of the document
+     */
+    public function createWsdl2Binding(DomDocument $binding_doc, DomElement $binding_root)
+	{
+	    $binding_ele = $binding_doc->createElementNS(WS_WsdlConst::WS_WSDL2_NAMESPACE,
+							 WS_WsdlConst::WS_WSDL_BINDING_ATTR_NAME);
+	    $binding_ele->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME, 
+				       $this->svr_name.strtoupper(WS_WsdlConst::WS_WSDL_SOAP_ATTR_NAME).
+				       ucfirst(WS_WsdlConst::WS_WSDL_BINDING_ATTR_NAME));
+	    $binding_ele->setAttribute(WS_WsdlConst::WS_WSDL_TYPE_ATTR_NAME, 
+				       WS_WsdlConst:: WS_WSDL2_WSOAP_ATTR_VAL);
+
+	    $binding_ele->setAttribute(WS_WsdlConst::WS_WSDL_INTERFACE_ATTR_NAME,
+				       $this->svr_name.ucfirst(WS_WsdlConst::WS_WSDL_INTERFACE_ATTR_NAME));
+	    $binding_ele->setAttribute(WS_WsdlConst::WS_WSDL_VERSION_ATTR_NAME,
+				       self::WS_WSDL2_BINDING_VERSION_ATTR_VAL);
+	    $binding_ele->setAttribute(WS_WsdlConst::WS_WSDL_PROTOCAL_ATTR_NAME,
+				       WS_WsdlConst:: WS_WSDL2_BINDING_ATTR_VAL);
+
+	    $binding_root->appendChild($binding_ele);
+	}
 
 
 
-       
+
 }
 
 ?>

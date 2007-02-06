@@ -18,7 +18,7 @@
 
 
 /**
- * This class generates the service eleements in the WSDL
+ * This class generates the service elements in the WSDL
  */
 
 class WS_WsdlService
@@ -30,7 +30,7 @@ class WS_WsdlService
     /*
      * The constructor of the WS_WsdlService class
      * @param string $ser_name Name of the service
-     * @param string $ep endpoint location of the service
+     * @param string $ep endpoint location(address)of the service
      */
     function __construct($ser_name, $ep)
 	{
@@ -55,14 +55,16 @@ class WS_WsdlService
 	    
 	    $svr_port = $svr_dom->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
 						  WS_WsdlConst::WS_WSDL_PORT_ATTR_NAME);
-	    $svr_port->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME, $this->S_name);
+	    $svr_port->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME,
+				    $this->S_name);
 	    $svr_port->setAttribute(WS_WsdlConst::WS_WSDL_BINDING_ATTR_NAME,
 				    $this->S_name);
 	    
 	    $svr_addr = $svr_dom->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
 						  WS_WsdlConst::WS_WSDL_ADDRESS_ATTR_NAME);
 	    $svr_addr->setAttribute(WS_WsdlConst::WS_WSDL_LOCATION_ATTR_NAME, 
-				    WS_WsdlConst::WS_WSDL_HTTP_ATTR_NAME.$this->endpoint);
+				    WS_WsdlConst::WS_WSDL_HTTP_ATTR_NAME.
+				    $this->endpoint);
 	    
 	    $svr_ele->appendChild($svr_port);
 	    $svr_ele->appendChild($svr_addr);
@@ -80,18 +82,21 @@ class WS_WsdlService
 	{
 	    $svr_ele = $svr_dom->createElementNS(WS_WsdlConst::WS_WSDL2_NAMESPACE,
 						 WS_WsdlConst::WS_WSDL_SERVICE_ATTR_NAME);
-	    $svr_ele->setAttribute(WS_WsdlConst::WS_WSDL_SERVICE_ATTR_NAME, $this->S_name);
+	    $svr_ele->setAttribute(WS_WsdlConst::WS_WSDL_SERVICE_ATTR_NAME,
+				   $this->S_name);
 	    $svr_ele->setAttribute(WS_WsdlConst::WS_WSDL_INTERFACE_ATTR_NAME,
 				   $this->S_name.ucfirst(WS_WsdlConst::WS_WSDL_INTERFACE_ATTR_NAME));
 
 
 	    $svr_port = $svr_dom->createElementNS(WS_WsdlConst::WS_WSDL2_NAMESPACE,
 						  WS_WsdlConst::WS_WSDL_ENDPOINT_ATTR_NAME);
-	    $svr_port->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME, $this->S_name);
+	    $svr_port->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME,
+				    $this->S_name);
 	    $svr_port->setAttribute(WS_WsdlConst::WS_WSDL_BINDING_ATTR_NAME,
 				    "tns".$this->S_name);
 	    
-	    $svr_port->setAttribute(WS_WsdlConst::WS_WSDL_ADDRESS_ATTR_NAME, $this->endpoint);
+	    $svr_port->setAttribute(WS_WsdlConst::WS_WSDL_ADDRESS_ATTR_NAME,
+				    $this->endpoint);
 	    
 	    $svr_ele->appendChild($svr_port);
 	    $svr_root->appendChild($svr_ele);
