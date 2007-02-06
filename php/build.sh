@@ -59,6 +59,7 @@ cp build/wsf_c/axis2/rampart/autogen.sh wsf_c/axis2/rampart
 #cp build/wsf_c/sandesha2/src/core/Makefile.am wsf_c/sandesha2/src/core
 #cp build/wsf_c/sandesha2/Makefile.am wsf_c/sandesha2/
 cp build/wsf_c/axis2/Makefile.am wsf_c/axis2/
+cp wsf_c/axis2/samples/server/axis2.xml .
 
 ./autogen.sh && ./configure --with-wsf && make
 
