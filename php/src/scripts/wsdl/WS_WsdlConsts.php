@@ -16,6 +16,11 @@
  * limitations under the License.
  */
 
+/**
+ * This class includes the Attribute names, attribute values and
+ * the namespaces used in wsdl generation scripts
+ */
+
 class WS_WsdlConst
 {
 
@@ -217,5 +222,4 @@ class WS_WsdlConst
                                                          'name' =>'token'));
 }
 
-?>
 ?>

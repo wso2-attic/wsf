@@ -74,4 +74,3 @@ class WS_WsdlPort
 
 
 ?>
-?>

@@ -311,5 +311,5 @@ class WS_WsdlType
 
 
 
-?>
+
 ?>

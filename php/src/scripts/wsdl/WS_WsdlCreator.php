@@ -25,6 +25,12 @@ require_once('WS_WsdlBinding.php');
 require_once('WS_WsdlService.php');
 require_once('WS_WsdlInterface.php');
 
+
+/**
+ * This class does create wsdl by calling the other WS_Wsdl* classes 
+ * and returns a php string which include the wsdl 
+ *
+ */
 class WS_WsdlCreator
 {
     public $namespace;
@@ -34,6 +40,15 @@ class WS_WsdlCreator
     private $Binding_style;
     private $wsdl_version;
 
+    /**
+     * Constructor of the class
+     * @param string $obj_name to determine whether a php class or php function
+     * @param string $service name of the service
+     * @param string $endpoint endpoint location of the service
+     * @param string $binding_style binding style of the service
+     * @param string $ns namespace
+     * @param string $wsdl_ver wsdl_version(wsdl1.1 or wsdl2)
+     */
     function __construct($obj_name, $service, $endpoints,
                          $binding_style,  $ns , $wsdl_ver)
     {
@@ -54,6 +69,9 @@ class WS_WsdlCreator
             $this->wsdl_version = "wsdl2";
     }
 
+    /**
+     * Creates the wsdl document for WSDL1.1
+     */
     private function buildWsdlDom()
     {
         $wsdl_dom = new DomDocument(WS_WsdlConst::WS_DOM_DOCUMENT_VERSION_NO,
@@ -145,6 +163,10 @@ class WS_WsdlCreator
 
     }
 
+    /**
+     * Creates wsdl for WSDL 2.0
+     *
+     */
     private function buildWsdl2Dom()
     {
         $wsdl_dom = new DomDocument(WS_WsdlConst::WS_DOM_DOCUMENT_VERSION_NO,
@@ -199,7 +221,8 @@ class WS_WsdlCreator
                                               $operationsArry);
         $interface_obj->createInterface($wsdl_dom, $wsdl_root_ele);
 
-        $bind_obj = new WS_WsdlBinding($this->service_name);
+        $bind_obj = new WS_WsdlBinding($this->service_name,
+                                       $this->endpoint);
         $bind_obj->createWsdl2Binding($wsdl_dom, $wsdl_root_ele);
 
         $svr_obj = new WS_WsdlService($this->service_name,
@@ -211,6 +234,11 @@ class WS_WsdlCreator
         return $wsdl_dom->saveXML();
 
     }
+
+    /**
+     * Returns the string created from wsdl to c-level
+     *
+     */
 
     public function WS_WsdlOut()
     {
