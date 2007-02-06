@@ -1647,7 +1647,7 @@ PHP_FUNCTION(ws_service_reply)
 		   }
 		}
 		ZVAL_STRING(&func, "ws_generate_wsdl", 1);
-		ZVAL_STRING(params[0], "scripts/WS_WsdlCreator.php", 1); 	
+		ZVAL_STRING(params[0], "scripts/wsdl/WS_WsdlCreator.php", 1); 	
 		ZVAL_STRING(params[1], service_name, 1);
 		ZVAL_ZVAL(params[2], f_val, NULL, NULL);
 		INIT_PZVAL(params[2]);
@@ -1656,7 +1656,7 @@ PHP_FUNCTION(ws_service_reply)
 		ZVAL_STRING(params[5], full_path, 1);
 
 		script.type = ZEND_HANDLE_FP;
-		script.filename = "scripts/WS_WsdlScript.php";
+		script.filename = "scripts/wsf.php";
 		script.opened_path = NULL;
 		script.free_filename = 0;
 

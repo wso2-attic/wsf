@@ -16,16 +16,16 @@
  * limitations under the License.
  */
 
-include 'WS_WsdlConsts.php';
-include 'WS_WsdlOperations.php';
-include 'WS_WsdlType.php';
-include 'WS_WsdlMessage.php';
-include 'WS_WsdlPort.php';
-include 'WS_WsdlBinding.php';
-include 'WS_WsdlService.php';
-include 'WS_WsdlInterface.php';
+require_once('WS_WsdlConsts.php');
+require_once('WS_WsdlOperations.php');
+require_once('WS_WsdlType.php');
+require_once('WS_WsdlMessage.php');
+require_once('WS_WsdlPort.php');
+require_once('WS_WsdlBinding.php');
+require_once('WS_WsdlService.php');
+require_once('WS_WsdlInterface.php');
 
-     class WS_WsdlCreater
+     class WS_WsdlCreator
      {
 	 public $namespace;
 	 private $endpoint;
@@ -121,13 +121,13 @@ include 'WS_WsdlInterface.php';
 
 	      if ($this->Binding_style == "doc-lit")
 	      {
-		  $bind_obj = new WS_WsdlBinding($this->service_name, $operationsArry);
+		  $bind_obj = new WS_WsdlBinding($this->service_name, $this->endpoint,  $operationsArry);
 		  $bind_obj->createDocLitBinding($wsdl_dom, $wsdl_root_ele);
 	      }
 	      
 	      if ($this->Binding_style == "rpc")
 	      {
-		$bind_obj = new WS_WsdlBinding($this->service_name, $operationsArry);
+		$bind_obj = new WS_WsdlBinding($this->service_name, $this->endpoint,  $operationsArry);
 		$bind_obj->createRPCBinding($wsdl_dom, $wsdl_root_ele);
 	       
 	      }
@@ -138,10 +138,6 @@ include 'WS_WsdlInterface.php';
 	      
 	      
 	      $wsdl_dom->appendChild($wsdl_root_ele);
-	      if ($this->Binding_style == "doc-lt")
-		  $wsdl_dom->save("/tmp/doc-lit.wsdl");
-	      if ($this->Binding_style == "rpc")
-		  $wsdl_dom->save("/tmp/rpc.wsdl");
 	      return $wsdl_dom->saveXML();
 	      
 	 }

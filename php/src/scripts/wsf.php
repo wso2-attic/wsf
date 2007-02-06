@@ -78,4 +78,46 @@ function ws_reply($options) {
     $svr->reply();
 }
 
+function ws_generate_wsdl($include_location, $service_name, $fn_arry,
+			  $binding_style, $wsdl_version, $request_uri)
+{
+    require_once($include_location);
+    
+    $Binding_style = NULL;
+
+    if ($binding_style == "rpc-enc")
+    {
+	$Binding_style = "rpc";
+    }
+    else if ($binding_style == "rpc")
+    {
+	$Binding_style = "rpc";
+    }
+    
+    else if ($binding_style == "doc-lit")
+    {
+	$Binding_style = "doc-lit";
+    }
+    else
+    {
+	echo "Wrong binding style\n";
+	exit(0);
+    }
+
+    $namespace = "http://www.wso2.org/php";
+
+    $wsdl = new WS_WsdlCreator($fn_arry ,$service_name, $request_uri, 
+			       $Binding_style,$namespace, $wsdl_version);
+    $wsdl_out = $wsdl->WS_WsdlOut();
+    
+
+    return $wsdl_out; 
+   
+    
+}
+
+
+
+
+
 ?>
