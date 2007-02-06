@@ -94,7 +94,8 @@ require_once('WS_WsdlInterface.php');
 	        
 	      if($this->Binding_style == "doc-lit")
 	      {
-		  $type_obj = new WS_WsdlType($this->namespace, $createdTypeArry, $xsdArry);
+		  $type_obj = new WS_WsdlType($this->namespace, $createdTypeArry,
+					      $xsdArry);
 		  $type_obj->createDocLitType($wsdl_dom, $wsdl_root_ele);
 		  $simple_array = $type_obj->simpleTypes;
 		
@@ -121,13 +122,15 @@ require_once('WS_WsdlInterface.php');
 
 	      if ($this->Binding_style == "doc-lit")
 	      {
-		  $bind_obj = new WS_WsdlBinding($this->service_name, $this->endpoint,  $operationsArry);
+		  $bind_obj = new WS_WsdlBinding($this->service_name,
+						 $this->endpoint, $operationsArry);
 		  $bind_obj->createDocLitBinding($wsdl_dom, $wsdl_root_ele);
 	      }
 	      
 	      if ($this->Binding_style == "rpc")
 	      {
-		$bind_obj = new WS_WsdlBinding($this->service_name, $this->endpoint,  $operationsArry);
+		$bind_obj = new WS_WsdlBinding($this->service_name, $this->endpoint,
+					       $operationsArry);
 		$bind_obj->createRPCBinding($wsdl_dom, $wsdl_root_ele);
 	       
 	      }
@@ -188,21 +191,23 @@ require_once('WS_WsdlInterface.php');
 	      $xsdArry = $oper_obj->xsdTypes;
 
 	      
-	      $type_obj = new WS_WsdlType($this->namespace, $createdTypeArry, $xsdArry);
+	      $type_obj = new WS_WsdlType($this->namespace, $createdTypeArry,
+					  $xsdArry);
 	      $type_obj->createWsdl2Type($wsdl_dom, $wsdl_root_ele);
 
-	      $interface_obj = new WS_WsdlInterface($this->service_name, $operationsArry);
+	      $interface_obj = new WS_WsdlInterface($this->service_name,
+						    $operationsArry);
 	      $interface_obj->createInterface($wsdl_dom, $wsdl_root_ele);
 		      
 	      $bind_obj = new WS_WsdlBinding($this->service_name);
 	      $bind_obj->createWsdl2Binding($wsdl_dom, $wsdl_root_ele);
 
-	      $svr_obj = new WS_WsdlService($this->service_name, $this->endpoint);
+	      $svr_obj = new WS_WsdlService($this->service_name,
+					    $this->endpoint);
 	      $svr_obj->createWsdl2Service($wsdl_dom, $wsdl_root_ele);
 	      
 	      
 	      $wsdl_dom->appendChild($wsdl_root_ele);
-	      /*$wsdl_dom->save("/tmp/wsdl2.wsdl"); */
 	      return $wsdl_dom->saveXML();
 	      
 	 }
