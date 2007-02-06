@@ -18,102 +18,117 @@
 /** The version of this WSO2 WSF for PHP file */
 define('WSF_VERSION', '1.0.0');
 
-function ws_request($payload, $options = array(NULL)) {
+function ws_request($payload, $options = array(NULL))
+{
     $payloadString = $payload;
-    if ($payload instanceof SimpleXMLElement) {
+    if ($payload instanceof SimpleXMLElement)
+    {
         $payloadString = $payload->asXML();
     }
-    else if ($payload instanceof domDocument) {
+    else if ($payload instanceof domDocument)
+    {
         $payloadString = $payload->saveXML();
     }
-    
-    try {
+
+    try
+    {
         $requestMessage = $payload;
-        if (!($payload instanceof WSMessage)) {
+        if (!($payload instanceof WSMessage))
+        {
             $requestMessage = new WSMessage($payloadString);
         }
 
         $client = new WSClient($options);
-        
+
         $resMessage = $client->request($requestMessage);
 
         return $resMessage;
 
-    } catch (Exception $e) {
+    }
+    catch (Exception $e)
+    {
         throw e;
     }
 }
 
-function ws_send($payload, $options = array(NULL)) {
+function ws_send($payload, $options = array(NULL))
+{
     $payloadString = $payload;
-    if ($payload instanceof SimpleXMLElement) {
+    if ($payload instanceof SimpleXMLElement)
+    {
         $payloadString = $payload->asXML();
     }
-    else if ($payload instanceof domDocument) {
+    else if ($payload instanceof domDocument)
+    {
         $payloadString = $payload->saveXML();
     }
-    
-    try {
+
+    try
+    {
         $requestMessage = $payload;
-        if (!($payload instanceof WSMessage)) {
+        if (!($payload instanceof WSMessage))
+        {
             $requestMessage = new WSMessage($payloadString);
         }
 
         $client = new WSClient($options);
-        
+
         $client->send($requestMessage);
 
         return;
 
-    } catch (Exception $e) {
+    }
+    catch (Exception $e)
+    {
         throw e;
     }
 }
 
 
-function ws_reply($options) {
+function ws_reply($options)
+{
 
     $svr = new WSService($options);
-            
+
     $svr->reply();
 }
 
 function ws_generate_wsdl($include_location, $service_name, $fn_arry,
-			  $binding_style, $wsdl_version, $request_uri)
+                          $binding_style, $wsdl_version, $request_uri)
 {
     require_once($include_location);
-    
+
     $Binding_style = NULL;
 
     if ($binding_style == "rpc-enc")
     {
-	$Binding_style = "rpc";
+        $Binding_style = "rpc";
     }
     else if ($binding_style == "rpc")
     {
-	$Binding_style = "rpc";
+        $Binding_style = "rpc";
     }
-    
+
     else if ($binding_style == "doc-lit")
     {
-	$Binding_style = "doc-lit";
+        $Binding_style = "doc-lit";
     }
     else
     {
-	echo "Wrong binding style\n";
-	exit(0);
+        echo "Wrong binding style\n";
+        exit(0);
     }
 
     $namespace = "http://www.wso2.org/php";
 
-    $wsdl = new WS_WsdlCreator($fn_arry ,$service_name, $request_uri, 
-			       $Binding_style,$namespace, $wsdl_version);
+    $wsdl = new WS_WsdlCreator($fn_arry ,$service_name, $request_uri,
+                               $Binding_style,$namespace, $wsdl_version);
     $wsdl_out = $wsdl->WS_WsdlOut();
-    
 
-    return $wsdl_out; 
-   
-    
+
+    return $wsdl_out;
+
+
 }
 
 

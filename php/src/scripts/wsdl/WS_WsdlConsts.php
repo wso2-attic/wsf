@@ -18,7 +18,7 @@
 
 class WS_WsdlConst
 {
-    
+
     const WS_DOM_DOCUMENT_VERSION_NO = '1.0';
     const WS_DOM_DOCUMENT_ENCODING = 'UTF-8';
 
@@ -36,7 +36,7 @@ class WS_WsdlConst
     const WS_WSDL2_WHTTP_ATTR_NAME = "xmlns:whttp";
     const WS_WSDL2_DOCUMENTATION = "documentation";
 
-    
+
     const WS_WSDL2_NAMESPACE = "http://www.w3.org/2006/01/wsdl";
     const WS_WSDL2_WSOAP_ATTR_VAL = "http://www.w3.org/2006/01/wsdl/soap";
     const WS_WSDL2_WSDLX_ATTR_VAL = "http://www.w3.org/2006/01/wsdl-extension";
@@ -53,10 +53,10 @@ class WS_WsdlConst
     const WS_SCHEMA_SOAP_NAMESPACE = 'http://schemas.xmlsoap.org/wsdl/soap/';
     const WS_SCHEMA_WSDL_NAMESPACE = 'http://schemas.xmlsoap.org/wsdl/';
 
-    
+
     const WS_WSDL_DEF_SCHEMA_URI = 'http://www.w3.org/2000/xmlns/';
-    
-    
+
+
     const WS_WSDL_OPERTION_INPUT_TAG = 'input';
     const WS_WSDL_OPERTION_OUTPUT_TAG = 'output';
 
@@ -74,7 +74,7 @@ class WS_WsdlConst
     const WS_WSDL_OUTPUT_ATTR_NAME = 'output';
     const WS_WSDL_TYPE_ATTR_NAME = 'type';
     const WS_WSDL_RETURN_ATTR_NAME = 'return';
-    
+
     const WS_WSDL_MESSAGE_ATTR_NAME = 'message';
     const WS_WSDL_PART_ATTR_NAME = 'part';
     const WS_WSDL_TAG_ATTR_NAME = 'tag';
@@ -91,15 +91,15 @@ class WS_WsdlConst
     const WS_WSDL_LITERAL_ATTR_NAME = 'literal';
     const WS_WSDL_ENCOD_STYLE_ATTR_NAME= 'encodingStyle';
     const WS_WSDL_SOAP_ACTION_ATTR_NAME = 'soapAction';
-    
+
     const WS_WSDL_PROTOCAL_ATTR_NAME = "protocol";
     const WS_WSDL_VERSION_ATTR_NAME = "version";
     //const WS_WSDL_BINDING_VERSION_ATTR_VAL = "1.2";
     const WS_WSDL_SOAP_ATTR_NAME = "soap";
-    
+
     const WS_WSDL_HTTP_ATTR_NAME = "http://";
     const WS_WSDL_PORTTYPE_ATTR_NAME ='portType';
-      
+
     const WS_WSDL_PATTERN_ATTR_NAME = "pattern";
     const WS_WSDL_PARAMETERS_ATTR_NAME = "parameters";
 
@@ -125,96 +125,97 @@ class WS_WsdlConst
     const WS_WSDL_OUT_ATTR_NAME = 'Out';
     const WS_WSDL_ELEMENTFROMDEFAULT_ATTR_NAME = 'elementFromDefault';
     const WS_WSDL_QUALIFIED_ATTR_NAME = 'qualified';
-    
-    
-    
+
+
+
     static public $defaultTypes = array(
-	'string'    => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			     'name' => 'string'),
-	'boolean'  => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			    'name' => 'boolean'),
-	'double' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			  'name' =>'double'),
-	'float'   => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			   'name' =>'float'),
-	'int'    => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			  'name' => 'int'),
-	'integer'  => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			    'name' => 'integer'),
-	'byte' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			'name' =>'byte'),
-	'decimal'   => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			     'name' =>'decimal'),
-	'base64Binary' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-				'name' => 'base64Binary'),
-	'hexBinary' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			     'name' => 'hexBinary'),
-	'anyType' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			   'name' =>'anyType'),
-	'any' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-		       'name' =>'any'),
-	'QName'    => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			    'name' => 'QName'),
-	'dateTime'  => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			     'name' => 'dateTime'),
-	'date' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			'name' =>'date'),
-	'time'   => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			  'name' =>'time'),
-	'unsignedLong'   => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-				  'name' =>'unsignedLong'),
-	'unsignedInt'    => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-				  'name' => 'unsignedInt'),
-	'unsignedShort'  => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-				  'name' => 'unsignedShort'),
-	'unsignedByte' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-				'name' =>'unsignedByte'),
-	'positiveInteger'   => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-				     'name' =>'positiveInteger'),
-	'negativeInteger'    => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-				      'name' => 'negativeInteger'),
-	'nonNegativeInteger'  => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-				       'name' => 'nonnegativeInteger'),
-	'nonPositiveInteger' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-				      'name' =>'nonPositiveInteger'),
-	'gYearMonth'   => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-				'name' =>'gYearMonth'),
-	'gMonthDay' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			     'name' => 'gMonthDay'),
-	'gYear' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			 'name' => 'gYear'),
-	'gDay' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			'name' => 'gDay'),
-	'duration' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			    'name' =>'duration'),
-	'Name' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			'name' =>'Name'),
-	'NCName'    => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			     'name' => 'NCName'),
-	'NMTOKENS'  => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			     'name' => 'NMTOKENS'),
-	'NOTATION' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			    'name' =>'NOTATION'),
-	'NMTOKEN'   => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			     'name' =>'NMTOKEN'),
-	'ENTITY'   => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			    'name' =>'ENTITY'),
-	'ENTITIES' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			    'name' => 'ENTITIES'),
-	'IDREF' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			 'name' =>'IDREF'),
-	'IDREFS' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			  'name' =>'IDREFS'),
-	'anyURI'    => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			  'name' => 'anyURI'),
-	'language'  => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			     'name' => 'language'),
-	'ID' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-		      'name' =>'ID'),
-	'normalizedString'   => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			    'name' =>'normalizedString'),
-	'token'   => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
-			   'name' =>'token'));
+                                      'string'    => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                           'name' => 'string'),
+                                      'boolean'  => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                          'name' => 'boolean'),
+                                      'double' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                        'name' =>'double'),
+                                      'float'   => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                         'name' =>'float'),
+                                      'int'    => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                        'name' => 'int'),
+                                      'integer'  => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                          'name' => 'integer'),
+                                      'byte' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                      'name' =>'byte'),
+                                      'decimal'   => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                           'name' =>'decimal'),
+                                      'base64Binary' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                              'name' => 'base64Binary'),
+                                      'hexBinary' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                           'name' => 'hexBinary'),
+                                      'anyType' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                         'name' =>'anyType'),
+                                      'any' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                     'name' =>'any'),
+                                      'QName'    => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                          'name' => 'QName'),
+                                      'dateTime'  => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                           'name' => 'dateTime'),
+                                      'date' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                      'name' =>'date'),
+                                      'time'   => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                        'name' =>'time'),
+                                      'unsignedLong'   => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                                'name' =>'unsignedLong'),
+                                      'unsignedInt'    => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                                'name' => 'unsignedInt'),
+                                      'unsignedShort'  => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                                'name' => 'unsignedShort'),
+                                      'unsignedByte' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                              'name' =>'unsignedByte'),
+                                      'positiveInteger'   => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                                   'name' =>'positiveInteger'),
+                                      'negativeInteger'    => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                                    'name' => 'negativeInteger'),
+                                      'nonNegativeInteger'  => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                                     'name' => 'nonnegativeInteger'),
+                                      'nonPositiveInteger' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                                    'name' =>'nonPositiveInteger'),
+                                      'gYearMonth'   => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                              'name' =>'gYearMonth'),
+                                      'gMonthDay' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                           'name' => 'gMonthDay'),
+                                      'gYear' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                       'name' => 'gYear'),
+                                      'gDay' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                      'name' => 'gDay'),
+                                      'duration' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                          'name' =>'duration'),
+                                      'Name' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                      'name' =>'Name'),
+                                      'NCName'    => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                           'name' => 'NCName'),
+                                      'NMTOKENS'  => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                           'name' => 'NMTOKENS'),
+                                      'NOTATION' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                          'name' =>'NOTATION'),
+                                      'NMTOKEN'   => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                           'name' =>'NMTOKEN'),
+                                      'ENTITY'   => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                          'name' =>'ENTITY'),
+                                      'ENTITIES' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                          'name' => 'ENTITIES'),
+                                      'IDREF' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                       'name' =>'IDREF'),
+                                      'IDREFS' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                        'name' =>'IDREFS'),
+                                      'anyURI'    => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                           'name' => 'anyURI'),
+                                      'language'  => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                           'name' => 'language'),
+                                      'ID' => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                    'name' =>'ID'),
+                                      'normalizedString'   => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                                    'name' =>'normalizedString'),
+                                      'token'   => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                         'name' =>'token'));
 }
 
+?>
 ?>

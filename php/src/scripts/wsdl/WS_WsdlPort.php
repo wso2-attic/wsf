@@ -25,52 +25,53 @@ class WS_WsdlPort
 
     private $service_name;
     private $operations;
-     
+
     /**
      * The constructor of the class
      * @param string $service Name of the service
      * @param Array $array1 Array of operations defined in the service
      */
     function __construct($service, $array1)
-	{
-	    $this->service_name = $service;
-	    $this->operations = $array1;
-	}
+    {
+        $this->service_name = $service;
+        $this->operations = $array1;
+    }
 
     /**
      * Function that creates portType elements for WSDL1.1
      * @param DomDocument $port_doc DomDocument element of the wsdl document
      * @param DomElement $port_root service dom element
      */
-      
+
     public function createPortType(DomDocument $port_doc, DomElement $port_root)
-	{
-	    $port_el = $port_doc->createElementNS( WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE, 
-						   WS_WsdlConst::WS_WSDL_PORTTYPE_ATTR_NAME);
-	    $port_el->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME, 
-				   $this->service_name);
-	    foreach($this->operations as $name => $params)
-	    {
-		$operation = $port_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
-							WS_WsdlConst::WS_WSDL_OPERATION_ATTR_NAME);
-		$operation->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME, $name);
-		foreach(array(WS_WsdlConst::WS_WSDL_INPUT_ATTR_NAME, WS_WsdlConst::WS_WSDL_OUTPUT_ATTR_NAME)
-			as $type)
-		{
-		    $sel = $port_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
-						      $type);
-		    $sel->setAttribute(WS_WsdlConst::WS_WSDL_MESSAGE_ATTR_NAME,
-				       "$name".ucfirst($type));
-		    $operation->appendChild($sel);
-		}
-		$port_el->appendChild($operation);
-	    }
-	    $port_root->appendChild($port_el);
-	}
-     
+    {
+        $port_el = $port_doc->createElementNS( WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
+                                               WS_WsdlConst::WS_WSDL_PORTTYPE_ATTR_NAME);
+        $port_el->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME,
+                               $this->service_name);
+        foreach($this->operations as $name => $params)
+        {
+            $operation = $port_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
+                                                    WS_WsdlConst::WS_WSDL_OPERATION_ATTR_NAME);
+            $operation->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME, $name);
+            foreach(array(WS_WsdlConst::WS_WSDL_INPUT_ATTR_NAME, WS_WsdlConst::WS_WSDL_OUTPUT_ATTR_NAME)
+                    as $type)
+            {
+                $sel = $port_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
+                                                  $type);
+                $sel->setAttribute(WS_WsdlConst::WS_WSDL_MESSAGE_ATTR_NAME,
+                                   "$name".ucfirst($type));
+                $operation->appendChild($sel);
+            }
+            $port_el->appendChild($operation);
+        }
+        $port_root->appendChild($port_el);
+    }
+
 }
 
 
 
 
+?>
 ?>
