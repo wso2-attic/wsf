@@ -91,6 +91,7 @@ AC_CONFIG_FILES([Makefile \
     src/util/Makefile \
     test/Makefile \
     test/omxmlsec/Makefile \
+    test/c14n/Makefile  \
     test/openssl/Makefile 
     ])
     
