@@ -10,12 +10,9 @@ wsclient_LDADD   = $(LDFLAGS) \
                     -L$(AXIS2C_HOME)/lib \
 		     		../../axis2/util/src/libaxis2_util.la \
 					../../axis2/axiom/src/om/libaxis2_axiom.la \
-					../../axis2/modules/wsdl/libaxis2_wsdl.la \
 					../../axis2/modules/core/engine/libaxis2_engine.la \
 					../../axis2/axiom/src/parser/libxml2/libaxis2_parser.la \
                     -lpthread \
-					../../axis2/woden/src/wsdl20/libwoden.la \
-					../../axis2/xml_schema/src/libaxis2_xml_schema.la \
 					../../axis2/modules/core/transport/http/sender/libaxis2_http_sender.la \
 					../../axis2/modules/core/transport/http/receiver/libaxis2_http_receiver.la \
                     $(GUTHTHILA_LIBS) \

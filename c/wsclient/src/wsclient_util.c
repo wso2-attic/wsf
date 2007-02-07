@@ -546,6 +546,7 @@ wsclient_set_https_transport_parameretes (const axis2_env_t *env,
 	axis2_transport_out_desc_t *transport_out;
 	axis2_transport_sender_t *transport_sender;
 	axis2_param_t *param;
+	AXIS2_TRANSPORT_ENUMS transport_enum;
 
 	if (svc_client)
 		svc_ctx = AXIS2_SVC_CLIENT_GET_SVC_CTX (svc_client, env);
@@ -565,7 +566,7 @@ wsclient_set_https_transport_parameretes (const axis2_env_t *env,
 
 	qname = axis2_qname_create (env, "https", NULL, NULL);
 	if (qname)
-		transport_out = axis2_transport_out_desc_create_with_qname (env, qname);
+		transport_out = axis2_transport_out_desc_create(env, transport_enum);
 	else 
 		return AXIS2_FAILURE;
 
@@ -585,7 +586,7 @@ wsclient_set_https_transport_parameretes (const axis2_env_t *env,
 	{
 		AXIS2_PARAM_CONTAINER_ADD_PARAM(transport_out->param_container, env, param);
 		AXIS2_TRANSPORT_OUT_DESC_SET_SENDER(transport_out, env, transport_sender);
-		AXIS2_CONF_ADD_TRANSPORT_OUT (conf, env, transport_out);
+		AXIS2_CONF_ADD_TRANSPORT_OUT (conf, env, transport_out, AXIS2_TRANSPORT_ENUM_HTTP);
 	}
 	else
 		return AXIS2_FAILURE;
