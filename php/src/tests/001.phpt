@@ -1,7 +1,7 @@
 --TEST--
-Check for axis2 presence
+Check for WSF presence
 --SKIPIF--
-<?php if (!extension_loaded("axis2")) print "skip"; ?>
+<?php if (!extension_loaded("wsf")) print "skip"; ?>
 --FILE--
 <?php 
 echo "axis2 extension is available";
