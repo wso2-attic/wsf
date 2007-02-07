@@ -1,1 +1,1 @@
-SUBDIRS=axis2 wsclient
+SUBDIRS=axis2c wsclient
