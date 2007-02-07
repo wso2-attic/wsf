@@ -147,12 +147,15 @@ int wsf_worker_process_request(
 	
 	axis2_char_t *http_version = NULL;
 	axis2_char_t *soap_action = NULL;
+	axis2_string_t *soap_action_str = NULL;
 	axis2_char_t *ctx_written = NULL;
 	axis2_char_t *encoding_header_value = NULL;
 	axis2_char_t *req_url = NULL;
+	axis2_string_t *req_url_str = NULL;
 	axis2_char_t *body_string = NULL;
 	axis2_char_t *content_type = NULL;
 	axis2_char_t *ctx_uuid = NULL;
+	axis2_string_t *ctx_uuid_str = NULL;
     axis2_char_t *is_class = NULL;
     
     TSRMLS_FETCH();
@@ -172,6 +175,7 @@ int wsf_worker_process_request(
 	content_length = request->content_length;
 	http_version = request->http_protocol;
 	req_url = AXIS2_URL_TO_EXTERNAL_FORM(url, env);
+    req_url_str = axis2_string_create(env, req_url);
     
 	content_type = (axis2_char_t*) request->content_type;
 
@@ -214,8 +218,10 @@ int wsf_worker_process_request(
 	}
     /** generate uuid for context */
 	ctx_uuid = axis2_uuid_gen(env);
-    AXIS2_MSG_CTX_SET_SVC_GRP_CTX_ID(msg_ctx, env, ctx_uuid);
+    ctx_uuid_str = axis2_string_create(env, ctx_uuid);
+    AXIS2_MSG_CTX_SET_SVC_GRP_CTX_ID(msg_ctx, env, ctx_uuid_str);
     AXIS2_FREE(env->allocator, ctx_uuid);
+    axis2_string_free(ctx_uuid_str, env);
     
     /** create transport in description */
 	{
@@ -304,7 +310,9 @@ int wsf_worker_process_request(
 	soap_action = request->soap_action;
     if(soap_action == NULL)
         soap_action = "";
-        
+    
+    soap_action_str = axis2_string_create(env, soap_action);
+    
 	request_body = axis2_stream_create_php(env, request TSRMLS_CC);
 	if(NULL == request_body) {
 		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Error occured in"
@@ -315,7 +323,7 @@ int wsf_worker_process_request(
 	if(0 == strcmp("GET", request->request_method)) {
 		processed = axis2_http_transport_utils_process_http_get_request
 						(env, msg_ctx, request_body, out_stream,
-						content_type ,soap_action,
+						content_type ,soap_action_str,
 						req_url,
 						conf_ctx, 
 						axis2_http_transport_utils_get_request_params(env,
@@ -339,7 +347,7 @@ int wsf_worker_process_request(
 		status = axis2_http_transport_utils_process_http_post_request
 						(env, msg_ctx, request_body, out_stream,
 						content_type , content_length,
-						soap_action,
+						soap_action_str,
 						(axis2_char_t*)req_url);
 	
         if(status == AXIS2_FAILURE) {
@@ -392,6 +400,9 @@ int wsf_worker_process_request(
 			send_status = WS_HTTP_ACCEPTED;
 		}
 	}
+
+    axis2_string_free(soap_action_str, env);
+    
     return send_status;
 }
 

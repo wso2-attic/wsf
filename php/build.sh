@@ -1,6 +1,8 @@
 #!/bin/bash
 #./autogen.sh
 
+set -e
+
 if [ -d  "wsf_c" ];then
     cd wsf_c
     svn up
