@@ -37,7 +37,7 @@
 #include <axis2_http_transport.h>
 #include <axis2_addr.h>
 #include <axiom_util.h>
-/*#include <sandesha2_client.h>*/
+#include "wsf_client.h"
 
 ZEND_DECLARE_MODULE_GLOBALS(wsf)
 
@@ -1052,7 +1052,7 @@ PHP_FUNCTION(ws_client_request)
 	WSF_OBJ_CHECK(env);
 	WSF_GET_THIS(obj);
 	WSF_GET_OBJ(svc_client, obj, axis2_svc_client_t, intern);
-	wsf_util_do_request(obj, param, return_value, env, svc_client, AXIS2_FALSE TSRMLS_CC);
+	wsf_client_do_request(obj, param, return_value, env, svc_client, AXIS2_FALSE TSRMLS_CC);
 }
 /* }}} end request */
 
@@ -1074,7 +1074,7 @@ PHP_FUNCTION(ws_client_send)
 	WSF_OBJ_CHECK(env);
 	WSF_GET_THIS(obj);
 	WSF_GET_OBJ(svc_client, obj, axis2_svc_client_t, intern);
-	wsf_util_do_request(obj, param, return_value, env, svc_client, AXIS2_TRUE TSRMLS_CC);
+	wsf_client_do_request(obj, param, return_value, env, svc_client, AXIS2_TRUE TSRMLS_CC);
 }
 /* }}} end send*/ 
 

@@ -10,7 +10,7 @@
 		CHECK_LIB("axis2_parser.lib", "wsf", PHP_WSF) &&
 		CHECK_LIB("libxml2.lib", "wsf", PHP_WSF)){
 		
-		EXTENSION("wsf", "wsf.c worker.c xml_msg_recv.c stream.c util.c out_transport_info.c");
+		EXTENSION("wsf", "wsf.c worker.c xml_msg_recv.c stream.c util.c out_transport_info.c client.c");
 
 		AC_DEFINE("HAVE_WSF",1,"Have wsf library");
 		ADD_EXTENSION_DEP('dom', 'dom');

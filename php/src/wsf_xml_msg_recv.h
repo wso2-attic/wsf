@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WS_XML_MSG_RECV_H
-#define WS_XML_MSG_RECV_H
+#ifndef WSF_XML_MSG_RECV_H
+#define WSF_XML_MSG_RECV_H
 
 #include "wsf_common.h"
 

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WS_COMMON_H
-#define WS_COMMON_H
+#ifndef WSF_COMMON_H
+#define WSF_COMMON_H
 
 #ifdef PHP_WIN32
 #define WSF_PHP_API __declspec(dllexport)

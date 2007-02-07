@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WS_UTIL_H
-#define WS_UTIL_H
+#ifndef WSF_UTIL_H
+#define WSF_UTIL_H
 
 #include <axis2_env.h>
 #include <axiom.h>
@@ -85,11 +85,6 @@ void wsf_util_get_attachments(
 		zval *cid2str,
 		zval *cid2contentType TSRMLS_DC);  
         
-int wsf_util_set_headers(
-		const axis2_env_t *env,
-		axis2_svc_client_t *svc_client,
-		zval *msg TSRMLS_DC);
-
 char* wsf_util_serialize_om(axis2_env_t *env, axiom_node_t *ret_node);
 
 xmlDocPtr wsf_util_serialize_om_to_doc(axis2_env_t *env, axiom_node_t *ret_node);
@@ -101,25 +96,14 @@ void wsf_env_free(axis2_env_t *env);
 
 axis2_env_t* wsf_env_create_for_client(axis2_char_t *cli_logpath);
 
-int wsf_util_do_request(
-		zval *this_ptr, 
-		zval *param, 
-		zval *return_value,
-		axis2_env_t *env,
-		axis2_svc_client_t *svc_client,
-		int is_oneway TSRMLS_DC);
-
 char* wsf_util_get_algorithm(int algo_suit, int type);
 
-int wsf_util_set_rm_options(
-		zval *zval_client, 
-		zval *zval_msg, 
-		axis2_env_t *env,
-		axis2_options_t *options,
-		axis2_svc_client_t *svc_client,
-		int is_addr_engaged , int is_send TSRMLS_DC);
+axiom_node_t* 
+wsf_util_construct_header_node(
+		const axis2_env_t *env, 
+		zval *header TSRMLS_DC);
 
-void wsf_util_set_security_opts(HashTable *ht, 
-		axis2_env_t *env, axis2_svc_client_t *svc_client TSRMLS_DC);
+char *wsf_util_get_ttl(char *buf, axis2_env_t *env);
 
-#endif /* WS_UTIL_H */
+
+#endif /* WSF_UTIL_H */

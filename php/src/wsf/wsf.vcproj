@@ -46,7 +46,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
-				WarningLevel="1"
+				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
 			/>
@@ -183,6 +183,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath="..\client.c"
+				>
+			</File>
+			<File
 				RelativePath="..\out_transport_info.c"
 				>
 			</File>
@@ -214,6 +218,10 @@
 			>
 			<File
 				RelativePath="..\wsf.h"
+				>
+			</File>
+			<File
+				RelativePath="..\wsf_client.h"
 				>
 			</File>
 			<File
