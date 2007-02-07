@@ -215,6 +215,7 @@ int wsf_worker_process_request(
 
 		AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, AXIS2_TRANSPORT_OUT, 
 			out_stream_prop, AXIS2_FALSE);
+        axis2_msg_ctx_set_transport_out_stream(msg_ctx, env, out_stream);
 	}
     /** generate uuid for context */
 	ctx_uuid = axis2_uuid_gen(env);

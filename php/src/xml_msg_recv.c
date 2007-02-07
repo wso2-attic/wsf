@@ -650,6 +650,7 @@ static axis2_char_t* ws_xml_msg_recv_serialize_om(const axis2_env_t *env,
 	axiom_xml_writer_t *writer = NULL;
 	axiom_output_t *om_output = NULL;
 	axis2_char_t *buffer = NULL, *new_buffer = NULL;
+    unsigned int buffer_len = 0; 
 
 	writer = axiom_xml_writer_create_for_memory(env, NULL, AXIS2_TRUE, 0,
 				AXIS2_XML_PARSER_TYPE_BUFFER);
@@ -657,9 +658,14 @@ static axis2_char_t* ws_xml_msg_recv_serialize_om(const axis2_env_t *env,
 
 	AXIOM_NODE_SERIALIZE (node, env, om_output);
 	buffer = (axis2_char_t*)AXIOM_XML_WRITER_GET_XML(writer, env);
+    buffer_len = axis2_strlen(buffer);
+    
+    new_buffer = AXIS2_MALLOC(env->allocator, sizeof(axis2_char_t)*(buffer_len + 1));
+    memcpy(new_buffer, buffer, buffer_len);
+    new_buffer[buffer_len] = '\0';
 
 	AXIOM_OUTPUT_FREE(om_output, env);
-	return buffer;
+	return new_buffer;
 }
 
 static axiom_node_t* 
