@@ -47,7 +47,7 @@ function ws_request($payload, $options = array(NULL))
     }
     catch (Exception $e)
     {
-        throw e;
+        throw $e;
     }
 }
 
@@ -80,7 +80,7 @@ function ws_send($payload, $options = array(NULL))
     }
     catch (Exception $e)
     {
-        throw e;
+        throw $e;
     }
 }
 

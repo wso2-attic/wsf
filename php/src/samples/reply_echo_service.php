@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-include_once('./wsf.php');
+include_once('./scripts/wsf.php');
 
 function echoFunction($inMessage) {
 
