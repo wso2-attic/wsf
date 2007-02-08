@@ -1,0 +1,24 @@
+<assembly>
+    <id>wso2-wsf-eclipse-plugin</id>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <fileSets>
+        <fileSet>
+            <directory>./target/classes</directory>
+            <outputDirectory>classes</outputDirectory>
+     	</fileSet>
+    </fileSets>
+	<dependencySets>
+        <dependencySet>
+            <outputDirectory>lib</outputDirectory>
+            <includes>
+                <include>org.wso2.wsas:wsas:jar</include>
+                <include>log4j:log4j:jar</include>
+                <include>org.apache.woden:woden:jar</include>
+                <include>ant:ant:jar</include>
+            </includes>
+        </dependencySet>
+	</dependencySets>
+</assembly>

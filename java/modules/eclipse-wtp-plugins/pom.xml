@@ -1,0 +1,169 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.wso2.wsf</groupId>
+    <artifactId>eclipse.plugins</artifactId>
+    <version>SNAPSHOT</version>
+    <name>wso2wsf eclipse wtp plugins</name>
+    <packaging>maven-plugin</packaging>
+    <description>The WSO2 WSF Eclipse WSF Plugin</description>
+    <url>http://maven.apache.org</url>
+    <repositories>
+        <repository>
+            <id>ws-zones</id>
+            <name>ws.zones maven repository</name>
+            <url>http://ws.zones.apache.org/repository2</url>
+        </repository>
+        <repository>
+            <id>eclipse-repo</id>
+            <name>eclipse maven repository</name>
+            <url>http://repo1.maven.org/eclipse</url>
+        </repository>
+        <repository>
+            <id>maven2</id>
+            <name>maven2 repository</name>
+            <url>http://repo1.maven.org/maven2</url>
+        </repository>
+        <repository>
+            <id>wso2 repo</id>
+            <name>wso2 maven2 repository</name>
+            <url>http://dist.wso2.org/maven</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!--Eclipse runtime dependencies -->
+        <dependency>
+            <groupId>org.eclipse.core</groupId>
+            <artifactId>org.eclipse.core.jobs</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.core</groupId>
+            <artifactId>org.eclipse.core.resources</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.core</groupId>
+            <artifactId>org.eclipse.core.runtime</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.equinox</groupId>
+            <artifactId>org.eclipse.equinox.common</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jface</groupId>
+            <artifactId>org.eclipse.jface</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.osgi</groupId>
+            <artifactId>org.eclipse.osgi</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.swt</groupId>
+            <artifactId>org.eclipse.swt</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.swt</groupId>
+            <artifactId>org.eclipse.swt.win32.win32.x86</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.ui</groupId>
+            <artifactId>org.eclipse.ui.ide</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+
+        <!--Eclipse Web Tools Platform dependencies -->
+        <dependency>
+            <groupId>org.eclipse.jdt</groupId>
+            <artifactId>org.eclipse.jdt.core</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jst</groupId>
+            <artifactId>org.eclipse.jst.ws</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jst</groupId>
+            <artifactId>org.eclipse.jst.ws.consumption.ui</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId> org.eclipse.wst</groupId>
+            <artifactId> org.eclipse.wst.ws</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.wst</groupId>
+            <artifactId>org.eclipse.wst.common.environment</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.wst</groupId>
+            <artifactId> org.eclipse.wst.command.env.core</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.wst</groupId>
+            <artifactId> org.eclipse.wst.common.frameworks</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.wst</groupId>
+            <artifactId> org.eclipse.wst.command.env.ui</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.wst</groupId>
+            <artifactId>org.eclipse.wst.command.env</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.emf.common</groupId>
+            <artifactId>org.eclipse.emf.common</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <sourceDirectory>src</sourceDirectory>
+        <testSourceDirectory>test</testSourceDirectory>
+        <resources>
+            <resource>
+                <directory>conf</directory>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.1</version>
+                <executions>
+                    <execution>
+                        <id>distribution-package</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attached</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>./wso2-wsf-eclipse-plugin-assembly.xml</descriptor>
+                            </descriptors>
+                            <finalName>dist</finalName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>
