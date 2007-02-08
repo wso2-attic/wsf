@@ -35,7 +35,7 @@ public class WSASApplicationComponent implements ApplicationComponent, Configura
         // Show dialog with message
         Messages.showMessageDialog(
                 installPath,
-                "Sample",
+                "WSAS Installation Path",
                 Messages.getInformationIcon()
         );
     }

@@ -1,0 +1,82 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.wso2.wsf</groupId>
+    <artifactId>idea.plugins</artifactId>
+    <version>SNAPSHOT</version>
+    <name>wso2wsf idea wtp plugins</name>
+    <packaging>maven-plugin</packaging>
+    <description>The WSO2 WSF IntelliJ Idea WSF Plugin</description>
+    <url>http://maven.apache.org</url>
+    <repositories>
+        <repository>
+            <id>ws-zones</id>
+            <name>ws.zones maven repository</name>
+            <url>http://ws.zones.apache.org/repository2</url>
+        </repository>
+        <repository>
+            <id>maven2</id>
+            <name>maven2 repository</name>
+            <url>http://repo1.maven.org/maven2</url>
+        </repository>
+        <repository>
+            <id>wso2 repo</id>
+            <name>wso2 maven2 repository</name>
+            <url>http://dist.wso2.org/maven</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!--IntelliJ Idea runtime dependencies -->
+        <dependency>
+            <groupId>com.intellij</groupId>
+            <artifactId>openapi</artifactId>
+            <version>5.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.intellij</groupId>
+            <artifactId>extensions</artifactId>
+            <version>5.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jdom</groupId>
+            <artifactId>jdom</artifactId>
+            <version>1.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <sourceDirectory>src</sourceDirectory>
+        <testSourceDirectory>test</testSourceDirectory>
+        <resources>
+            <resource>
+                <directory>conf</directory>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.1</version>
+                <executions>
+                    <execution>
+                        <id>distribution-package</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attached</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>./wso2-wsf-idea-plugin-assembly.xml</descriptor>
+                            </descriptors>
+                            <finalName>dist</finalName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>
