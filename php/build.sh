@@ -7,21 +7,15 @@ if [ -d  "wsf_c" ];then
     cd wsf_c
     svn up
     cd ..
-else
-    svn co https://wso2.org/repos/wso2/wsf/c
-    mv c wsf_c
 fi
 
 cd wsf_c
 
-if [ -d  "axis2" ];then
-    cd axis2;
+if [ -d  "axis2c" ];then
+    cd axis2c;
     svn up;
     cd ..
-else
-    svn co https://svn.apache.org/repos/asf/webservices/axis2/trunk/c
-    mv c axis2;
-    cp build/axis2/Makefile.am axis2
+    cp build/axis2/Makefile.am axis2c
 fi
 
 
