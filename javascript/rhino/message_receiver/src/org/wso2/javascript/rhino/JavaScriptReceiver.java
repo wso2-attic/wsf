@@ -20,9 +20,12 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.OMNode;
+import org.apache.axiom.om.impl.llom.OMSourcedElementImpl;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.json.JSONDataSource;
+import org.apache.axis2.json.JSONBadgerfishDataSource;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
@@ -38,18 +41,40 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 
+/**
+ * Class JavaScriptReceiver implements the AbstractInOutSyncMessageReceiver,
+ * which, is the abstract IN-OUT MEP message receiver.
+ * .
+ */
 public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver
         implements MessageReceiver {
     public static final String LOAD_JSSCRIPTS = "loadJSScripts";
 
-    public void invokeBusinessLogic(MessageContext inMessage, MessageContext outMessage) throws AxisFault {
-
+    public void invokeBusinessLogic(MessageContext inMessage, MessageContext outMessage) throws AxisFault{
         JavaScriptEngine engine = new JavaScriptEngine();
+        //Get the method, arguments and the reader from the MessageContext
+        String method = null;
         try {
-            //Get the method, arguments and the reader from the MessageContext
-            String method = getJSMethod(inMessage);
-            Reader reader = readJS(inMessage);
-            OMElement args = inMessage.getEnvelope().getBody().getFirstElement();
+            method = getJSMethod(inMessage);
+        } catch (XMLStreamException e) {
+            throw new AxisFault(e);
+        }
+        Reader reader = readJS(inMessage);
+            Object x = inMessage.getEnvelope();
+            Object args = ((SOAPEnvelope)x).getBody().getFirstElement();
+            boolean json = false;
+            if (args instanceof OMSourcedElementImpl) {
+                Object datasource = ((OMSourcedElementImpl) args).getDataSource();
+                if (datasource instanceof JSONDataSource) {
+                    args = ((JSONDataSource) datasource).getCompleteJOSNString();
+                    json = true;
+                } else if (datasource instanceof JSONBadgerfishDataSource) {
+                    throw new AxisFault("Badgerfish Convention is not supported");
+                } else {
+                    throw new AxisFault("Unsupported Data Format");
+                }
+            }
+
 
             if (reader == null) throw new AxisFault("Unable to load JavaScript file");
             if (method == null) throw new AxisFault("Unable to read the method");
@@ -83,10 +108,10 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver
 
             if (scripts != null) {
                 //Get the result from executing the javascript file
-                result = engine.call(method, reader, args, scripts);
+                result = engine.call(method, reader, args, scripts, json);
             } else { //Parameter loadJSScripts is not set
                 //Get the result from executing the javascript file
-                result = engine.call(method, reader, args);
+                result = engine.call(method, reader, args, json);
             }
             if (result == null) {
                 throw new AxisFault(Messages.getMessage("JavaScriptNoanswer"));
@@ -100,18 +125,17 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver
                 fac = OMAbstractFactory.getSOAP12Factory();
             }
             SOAPEnvelope envelope = fac.getDefaultEnvelope();
-            String responseNamespace = inMessage.getServiceContext().getAxisService().getSchematargetNamespace();
-            OMNamespace ns = fac.createOMNamespace(responseNamespace, "res");
+            OMNamespace ns;
+            if(json){
+                ns = fac.createOMNamespace("", "");
+            } else {
+                String respNs = inMessage.getServiceContext().getAxisService().getSchematargetNamespace();
+                ns = fac.createOMNamespace(respNs, "res");
+            }
             OMElement responseElement = fac.createOMElement(method + "Response", ns);
             responseElement.addChild(result);
             envelope.getBody().addChild(responseElement);
             outMessage.setEnvelope(envelope);
-
-        } catch (XMLStreamException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 

@@ -18,7 +18,8 @@ package org.wso2.javascript.rhino;
 
 import org.mozilla.javascript.*;
 import org.mozilla.javascript.xmlimpl.XML;
-import org.apache.axiom.om.OMElement;
+import org.apache.axis2.json.JSONOMBuilder;
+import org.apache.axis2.AxisFault;
 import org.apache.axiom.om.OMNode;
 
 import java.io.*;
@@ -49,6 +50,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
 
     /**
      * Implements load functionality as in Rhino's shell
+     *
      * @param cx
      * @param thisObj
      * @param args
@@ -66,7 +68,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
             if (!f.exists()) {
                 // Assumes resource's path is given as absolute
                 f = new File(Context.toString(args[i]));
-                if(!f.exists() && repo != null ) {
+                if (!f.exists() && repo != null) {
                     // Assumes resource's path is given relative to classes folder in Axis2 repository
                     f = new File(repo + File.separator + "classes" + File.separator +
                             Context.toString(args[i]));
@@ -83,6 +85,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
 
     /**
      * Implements print function as in Rhino's shell
+     *
      * @param cx
      * @param thisObj
      * @param args
@@ -100,37 +103,46 @@ public class JavaScriptEngine extends ImporterTopLevel {
         System.out.println();
     }
 
-    public OMNode call(String method, Reader reader, OMElement args) throws Exception {
-        return this.call(method, reader, args, null);
+    public OMNode call(String method, Reader reader, Object args, boolean json) throws AxisFault {
+        return this.call(method, reader, args, null, json);
     }
 
-    public OMNode call(String method, Reader reader, OMElement args, String scripts) throws Exception {
+    public OMNode call(String method, Reader reader, Object args, String scripts, boolean json) throws AxisFault {
         Object result = null;
 
-        try {
-            if (scripts != null) {
-                //Generate load command out of the parameter scripts
-                scripts = "load(" + ("[\"" + scripts + "\"]").replaceAll(",", "\"],[\"") + ")";
-                cx.evaluateString(this, scripts, "Load JavaScripts", 0, null);
-            }
+        if (scripts != null) {
+            //Generate load command out of the parameter scripts
+            scripts = "load(" + ("[\"" + scripts + "\"]").replaceAll(",", "\"],[\"") + ")";
+            cx.evaluateString(this, scripts, "Load JavaScripts", 0, null);
+        }
 
-            //Evaluates the javascript file
-            evaluate(reader);
+        if (json) {
+            args = "var x = " + args + ";";
+            cx.evaluateString(this, (String) args, "Get JSON", 0, null);
+            args = this.get("x", this);
+        }
 
-            //Get the function from the scope the javascript object is in
-            Object fObj = this.get(method, this);
-            if (!(fObj instanceof Function) || (fObj == Scriptable.NOT_FOUND)) {
-                System.out.println("Method " + method + " is undefined or not a function.");
+        // Evaluates the javascript file
+        evaluate(reader);
+
+        // Get the function from the scope the javascript object is in
+        Object fObj = this.get(method, this);
+        if (!(fObj instanceof Function) || (fObj == Scriptable.NOT_FOUND)) {
+            throw new AxisFault("Method " + method + " is undefined or not a function");
+        } else {
+            Object functionArgs[] = {args};
+            Function f = (Function) fObj;
+            result = f.call(cx, this, this, functionArgs);
+            if (json) {
+                result = ((String) result).substring(1, ((String) result).length() - 1);
+                InputStream in = new ByteArrayInputStream(((String) result).getBytes());
+                JSONOMBuilder builder = new JSONOMBuilder();
+                builder.init(in);
+                result = builder.getDocumentElement();
             } else {
-                Object functionArgs[] = {args};
-                Function f = (Function) fObj;
-                result = f.call(cx, this, this, functionArgs);
                 // Get the OMNode inside the resulting object
                 result = ((XML) result).getAxiomFromXML();
             }
-        }
-        catch (Exception e) {
-            System.out.println(e.getMessage());
         }
         return (OMNode) result;
     }

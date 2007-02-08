@@ -15,37 +15,34 @@
  */
 package org.wso2.javascript.rhino;
 
-import org.apache.axis2.description.AxisService;
-import org.apache.axis2.description.Parameter;
-import org.apache.axis2.description.AxisOperation;
-import org.apache.axis2.description.InOutAxisOperation;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
+import org.apache.axis2.description.AxisOperation;
+import org.apache.axis2.description.AxisService;
+import org.apache.axis2.description.InOutAxisOperation;
+import org.apache.axis2.description.Parameter;
 import org.apache.axis2.wsdl.WSDLConstants;
-import org.apache.axis2.engine.MessageReceiver;
 
 import javax.xml.namespace.QName;
 
-public class Utils {
+public class JSUtils {
       public static AxisService createSimpleJSService(
-            QName serviceName, String jsName, QName opName) throws AxisFault {
+            QName serviceName, String jsName) throws AxisFault {
 
-        MessageReceiver jsReceiver = new JavaScriptReceiver();
         AxisService service = new AxisService(serviceName.getLocalPart());
 
         service.setClassLoader(Thread.currentThread().getContextClassLoader());
 
-
         service.addParameter(new Parameter("ServiceJS", jsName));
 
-        AxisOperation axisOp = new InOutAxisOperation(opName);
+        return service;
+    }
 
-        axisOp.setMessageReceiver(jsReceiver);
+    public static void addInOutOperation(AxisService service, QName opName){
+        AxisOperation axisOp = new InOutAxisOperation(opName);
+        axisOp.setMessageReceiver(new JavaScriptReceiver());
         axisOp.setStyle(WSDLConstants.STYLE_DOC);
         service.addOperation(axisOp);
         service.mapActionToOperation(Constants.AXIS2_NAMESPACE_URI + "/" + opName.getLocalPart(), axisOp);
-
-        return service;
-
     }
 }

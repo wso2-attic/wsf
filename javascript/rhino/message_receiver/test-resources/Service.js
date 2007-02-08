@@ -13,6 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-function echo(xmlObj){
-    return new XML(xmlObj);
+
+function echoJSON(param){
+    return param.toSource()
+}
+
+function echo(param){
+    return new XML(param);
 }

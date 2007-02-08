@@ -15,78 +15,85 @@
  */
 package org.wso2.javascript.rhino;
 
+import junit.framework.TestCase;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.axis2.Constants;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.transport.http.SimpleHTTPServer;
-import org.apache.axis2.context.ConfigurationContextFactory;
-import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.AxisFault;
-import org.apache.axiom.om.OMFactory;
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLInputFactory;
 import java.io.ByteArrayInputStream;
 
-import junit.framework.TestCase;
+public class ReceiverIntegrationTest extends TestCase implements ReceiverTestConstants {
 
-public class ReceiverIntegrationTest extends TestCase implements ReceiverTestConstants{
-    private String expectedString = "Hello Echo";
+    private SimpleHTTPServer server;
 
-        private SimpleHTTPServer server;
+    private ConfigurationContext configurationContext;
 
-        private ConfigurationContext configurationContext;
+    private AxisService service;
 
-        public ReceiverIntegrationTest() {
-        }
+    public ReceiverIntegrationTest() {
+    }
 
-        protected void setUp() throws Exception {
+    protected void setUp() throws Exception {
+        configurationContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(
+                null, axis2xml);
+        server = new SimpleHTTPServer(configurationContext, TESTING_PORT);
+        server.start();
 
-            configurationContext = ConfigurationContextFactory
-                    .createConfigurationContextFromFileSystem(null, null);
-            server = new SimpleHTTPServer(configurationContext,TESTING_PORT);
-            try {
-                server.start();
-            } catch(AxisFault af) {
-                af.printStackTrace();
-            }
-            AxisService service = Utils.createSimpleJSService(serviceName,
-                    ("EchoJS.js"), operationName);
-            server.getConfigurationContext().getAxisConfiguration().addService(
-                    service);
-        }
+        service = JSUtils.createSimpleJSService(serviceName, serviceJS);
+        server.getConfigurationContext().getAxisConfiguration().addService(
+                service);
 
-        protected void tearDown() throws Exception {
-            server.stop();
-        }
+    }
 
-        protected static OMElement getEchoOMElement() throws XMLStreamException {
+    protected void tearDown() throws Exception {
+        server.stop();
+    }
 
-            String str = "<echoString>Hello Echo</echoString>";
+    private OMElement buildOMElement(String str) throws XMLStreamException{
+        StAXOMBuilder staxOMBuilder = new StAXOMBuilder(
+                new ByteArrayInputStream(str.getBytes()));
+        return staxOMBuilder.getDocumentElement();
+    }
 
-            XMLStreamReader xmlReader = XMLInputFactory.newInstance().createXMLStreamReader(new
-                    ByteArrayInputStream(str.getBytes()));
-            OMFactory fac = OMAbstractFactory.getOMFactory();
+    private OMElement getJSONEchoOMElement() throws XMLStreamException {
+        String str = "<echoJSON><echoString>JSON echo string</echoString></echoJSON>";
+        return buildOMElement(str);
+    }
 
-            StAXOMBuilder staxOMBuilder = new
-                    StAXOMBuilder(fac, xmlReader);
-            return staxOMBuilder.getDocumentElement();
+     private OMElement getEchoOMElement() throws XMLStreamException {
+        String str = "<echo><echoString>XML echo string</echoString></echo>";
+        return buildOMElement(str);
+    }
 
-        }
+    public void testEchoJSON() throws Exception {
+        JSUtils.addInOutOperation(service, echoJSONOp);
+        OMElement payload = getJSONEchoOMElement();
+        Options options = new Options();
+        options.setTo(serviceEPR);
+        options.setProperty(Constants.Configuration.MESSAGE_TYPE, "application/json");
+        ServiceClient sender = new ServiceClient(configurationContext, null);
+        sender.setOptions(options);
+        OMElement result = sender.sendReceive(payload);
+        TestCase.assertEquals("JSON echo string",
+                result.getFirstElement().getFirstElement().getText());
+    }
 
-        public void testEcho() throws Exception {
-            OMElement payload = getEchoOMElement();
-            Options options = new Options();
-            options.setTo(targetEPR);
-            ServiceClient sender = new ServiceClient(configurationContext, null);
-            options.setAction("urn:echo");
-            sender.setOptions(options);
-            OMElement result = sender.sendReceive(payload);
-            TestCase.assertEquals(expectedString, result.getFirstElement().getText());
-        }
-
+    public void testEcho() throws Exception {
+        JSUtils.addInOutOperation(service, echoOp);
+        OMElement payload = getEchoOMElement();
+        Options options = new Options();
+        options.setTo(serviceEPR);
+        ServiceClient sender = new ServiceClient(configurationContext, null);
+        sender.setOptions(options);
+        OMElement result = sender.sendReceive(payload);
+        TestCase.assertEquals("XML echo string",
+                result.getFirstElement().getFirstElement().getText());
+    }
 }
