@@ -661,78 +661,81 @@ void wsf_util_set_attachments_with_cids(const axis2_env_t *env,
     axiom_node_t *node = NULL;
     axiom_node_t *tmp_node = NULL;
     axiom_element_t *payload_element = NULL;
-    
+    axiom_element_t *ele = NULL;
     if(!payload_node || !attach_ht)
         return;
-    if(AXIOM_NODE_GET_NODE_TYPE(payload_node, env) == AXIOM_ELEMENT)
+
+	if(AXIOM_NODE_GET_NODE_TYPE(payload_node, env) == AXIOM_ELEMENT){
         payload_element = (axiom_element_t *)AXIOM_NODE_GET_DATA_ELEMENT(payload_node, env);     
-    node = AXIOM_NODE_GET_FIRST_CHILD(payload_node, env);
-    if(node && AXIOM_NODE_GET_NODE_TYPE(node, env) == AXIOM_ELEMENT)
-    {
-        axiom_element_t *ele = NULL;
-        ele = (axiom_element_t*)AXIOM_NODE_GET_DATA_ELEMENT(node, env);        
-        if(ele)
-        {
-            axiom_namespace_t *ns = NULL;
-            axis2_char_t *ns_uri = NULL;
-            axis2_char_t *ele_localname = NULL;
-            ele_localname = AXIOM_ELEMENT_GET_LOCALNAME(ele, env);
-            if(ele_localname && AXIS2_STRCMP(ele_localname, "Include") == 0)
-            {
-                ns = AXIOM_ELEMENT_GET_NAMESPACE(ele, env, node);
-                if(ns && (ns_uri = AXIOM_NAMESPACE_GET_URI(ns, env)) &&
-                    AXIS2_STRCMP(ns_uri, "http://www.w3.org/2004/08/xop/include") == 0)
-                {
-                    axis2_char_t *cnt_type = NULL;
-                    /* found a matching xop include element */
-                    axis2_char_t *cid = NULL;
-                    axis2_char_t *pos = NULL;
-                    axis2_char_t *id = NULL;                    
-                    zval **tmp = NULL;
-                    /** look for content type in parent */
-                    cnt_type = AXIOM_ELEMENT_GET_ATTRIBUTE_VALUE_BY_NAME(payload_element, env, 
-                        "xmlmime:contentType");
-                    if(!cnt_type)
-                        cnt_type = default_cnt_type;                                        
-                    
-                    id = AXIOM_ELEMENT_GET_ATTRIBUTE_VALUE_BY_NAME(ele, env, "href");
-                    if(!id)
-                        return;
-                    pos = AXIS2_STRSTR(id, "cid:");
-                    if(pos){
-                        cid = id+4;
-                        if(zend_hash_find(attach_ht , cid, strlen(cid)+1, (void**)&tmp) == SUCCESS &&
-                            Z_TYPE_PP(tmp) == IS_STRING){
-                        
-                            void *binary_data = NULL;
-                            int binary_data_len = 0;
-                            
-                            /* binary_data = Z_STRVAL_PP(tmp); */
-                            binary_data_len = Z_STRLEN_PP(tmp);
-							binary_data = AXIS2_MALLOC(env->allocator, sizeof(char)*binary_data_len);
-							memcpy(binary_data, Z_STRVAL_PP(tmp) , binary_data_len);
-                            if(binary_data)
-                            {
-                                /** detach this node */
-                                axiom_node_t *text_node = NULL;
-                                axiom_text_t *text = NULL;
-                                axiom_data_handler_t *data_handler = NULL;
-								AXIOM_NODE_DETACH(node, env);
-                                data_handler = axiom_data_handler_create(env, NULL, cnt_type);
-								AXIOM_DATA_HANDLER_SET_BINARY_DATA(data_handler, env, binary_data, binary_data_len);
-								text = axiom_text_create_with_data_handler(env, payload_node, data_handler, &text_node);
-                                
-								if (enable_mtom == AXIS2_FALSE){
-							        AXIOM_TEXT_SET_OPTIMIZE(text, env, AXIS2_FALSE);
-						        }
-                                return;
-                            }
-                        }
-                    }
-                }                    
-            }
-        }
-    }
+		axiom_element_get_first_element(payload_element, env, payload_node, &node);
+    
+		if(node && AXIOM_NODE_GET_NODE_TYPE(node, env) == AXIOM_ELEMENT)
+		{
+			
+			ele = (axiom_element_t*)AXIOM_NODE_GET_DATA_ELEMENT(node, env);        
+			if(ele)
+			{
+				axiom_namespace_t *ns = NULL;
+				axis2_char_t *ns_uri = NULL;
+				axis2_char_t *ele_localname = NULL;
+				ele_localname = AXIOM_ELEMENT_GET_LOCALNAME(ele, env);
+				if(ele_localname && AXIS2_STRCMP(ele_localname, "Include") == 0)
+				{
+					ns = AXIOM_ELEMENT_GET_NAMESPACE(ele, env, node);
+					if(ns && (ns_uri = AXIOM_NAMESPACE_GET_URI(ns, env)) &&
+						AXIS2_STRCMP(ns_uri, "http://www.w3.org/2004/08/xop/include") == 0)
+					{
+						axis2_char_t *cnt_type = NULL;
+						/* found a matching xop include element */
+						axis2_char_t *cid = NULL;
+						axis2_char_t *pos = NULL;
+						axis2_char_t *id = NULL;                    
+						zval **tmp = NULL;
+						/** look for content type in parent */
+						cnt_type = AXIOM_ELEMENT_GET_ATTRIBUTE_VALUE_BY_NAME(payload_element, env, 
+							"xmlmime:contentType");
+						if(!cnt_type)
+							cnt_type = default_cnt_type;                                        
+	                    
+						id = AXIOM_ELEMENT_GET_ATTRIBUTE_VALUE_BY_NAME(ele, env, "href");
+						if(!id)
+							return;
+						pos = AXIS2_STRSTR(id, "cid:");
+						if(pos){
+							cid = id+4;
+							if(zend_hash_find(attach_ht , cid, strlen(cid)+1, (void**)&tmp) == SUCCESS &&
+								Z_TYPE_PP(tmp) == IS_STRING){
+	                        
+								void *binary_data = NULL;
+								int binary_data_len = 0;
+	                            
+								/* binary_data = Z_STRVAL_PP(tmp); */
+								binary_data_len = Z_STRLEN_PP(tmp);
+								binary_data = AXIS2_MALLOC(env->allocator, sizeof(char)*binary_data_len);
+								memcpy(binary_data, Z_STRVAL_PP(tmp) , binary_data_len);
+								if(binary_data)
+								{
+									/** detach this node */
+									axiom_node_t *text_node = NULL;
+									axiom_text_t *text = NULL;
+									axiom_data_handler_t *data_handler = NULL;
+									AXIOM_NODE_DETACH(node, env);
+									data_handler = axiom_data_handler_create(env, NULL, cnt_type);
+									AXIOM_DATA_HANDLER_SET_BINARY_DATA(data_handler, env, binary_data, binary_data_len);
+									text = axiom_text_create_with_data_handler(env, payload_node, data_handler, &text_node);
+	                                
+									if (enable_mtom == AXIS2_FALSE){
+										AXIOM_TEXT_SET_OPTIMIZE(text, env, AXIS2_FALSE);
+									}
+									return;
+								}
+							}
+						}
+					}                    
+				}
+			}
+		}
+	}
     tmp_node = AXIOM_NODE_GET_FIRST_CHILD(payload_node, env);
     while(tmp_node)
     {
