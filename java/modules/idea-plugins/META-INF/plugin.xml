@@ -1,0 +1,18 @@
+<!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
+<idea-plugin>
+  <name>WSO2 WSF IntelliJ Idea Plugin</name>
+  <description>WSO2 Web Services Framework IntelliJ Idea Plugin</description>
+  <version>0.1</version>
+  <vendor>WSO2</vendor>
+  <idea-version since-build="4155"/>
+    <application-components>
+        <component>
+            <implementation-class>org.wso2.wsf.idea.ws.WSASApplicationComponent</implementation-class>
+        </component>
+    </application-components>
+    <actions>
+        <action id="WSASConfiguration" class="org.wso2.wsf.idea.ws.WSASConfigurationAction" text="WSAS Configuration ">
+            <add-to-group group-id="WindowMenu" anchor="first"/>
+        </action>
+    </actions>
+</idea-plugin>
