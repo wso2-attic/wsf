@@ -33,12 +33,22 @@
             <artifactId>js-axiom</artifactId>
             <version>${js.axiom.version}</version>
         </dependency>
-        <dependency>
+	<dependency>
+	    <groupId>${jettison.jar.groupid}</groupId>
+	    <artifactId>jettison</artifactId>
+	    <version>${jettison.version}</version>
+	</dependency>
+	<dependency>
             <groupId>${axis2.jar.groupid}</groupId>
             <artifactId>axis2</artifactId>
             <version>${axis2.version}</version>
         </dependency>
-        <dependency>
+	<dependency>
+	    <groupId>${axis2.jar.groupid}</groupId>
+	    <artifactId>axis2-Json</artifactId>
+	    <version>${axis2.version}</version>
+        </dependency>
+	<dependency>
             <groupId>${axis2.mar.groupid}</groupId>
             <artifactId>addressing</artifactId>
             <version>${addressing.version}</version>

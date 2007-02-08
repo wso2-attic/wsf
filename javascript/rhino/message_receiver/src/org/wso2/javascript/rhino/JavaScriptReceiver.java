@@ -44,108 +44,112 @@ import java.net.URL;
 /**
  * Class JavaScriptReceiver implements the AbstractInOutSyncMessageReceiver,
  * which, is the abstract IN-OUT MEP message receiver.
- * .
  */
 public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver
         implements MessageReceiver {
     public static final String LOAD_JSSCRIPTS = "loadJSScripts";
 
-    public void invokeBusinessLogic(MessageContext inMessage, MessageContext outMessage) throws AxisFault{
+    /**
+     * Invokes the Javascript service with the parameters from the inMessage
+     * and sets the outMessage with the response from the service.
+     *
+     * @param inMessage MessageContext object with information about the incoming message
+     * @param outMessage MessageContext object with information about the outgoing message
+     * @throws AxisFault
+     */
+    public void invokeBusinessLogic(MessageContext inMessage, MessageContext outMessage) throws AxisFault {
         JavaScriptEngine engine = new JavaScriptEngine();
         //Get the method, arguments and the reader from the MessageContext
         String method = null;
-        try {
-            method = getJSMethod(inMessage);
-        } catch (XMLStreamException e) {
-            throw new AxisFault(e);
-        }
+        method = getJSMethod(inMessage);
         Reader reader = readJS(inMessage);
-            Object x = inMessage.getEnvelope();
-            Object args = ((SOAPEnvelope)x).getBody().getFirstElement();
-            boolean json = false;
-            if (args instanceof OMSourcedElementImpl) {
-                Object datasource = ((OMSourcedElementImpl) args).getDataSource();
-                if (datasource instanceof JSONDataSource) {
-                    args = ((JSONDataSource) datasource).getCompleteJOSNString();
-                    json = true;
-                } else if (datasource instanceof JSONBadgerfishDataSource) {
-                    throw new AxisFault("Badgerfish Convention is not supported");
-                } else {
-                    throw new AxisFault("Unsupported Data Format");
-                }
+        Object x = inMessage.getEnvelope();
+        Object args = ((SOAPEnvelope) x).getBody().getFirstElement();
+        boolean json = false;
+        if (args instanceof OMSourcedElementImpl) {
+            Object datasource = ((OMSourcedElementImpl) args).getDataSource();
+            if (datasource instanceof JSONDataSource) {
+                args = ((JSONDataSource) datasource).getCompleteJOSNString();
+                json = true;
+            } else if (datasource instanceof JSONBadgerfishDataSource) {
+                throw new AxisFault("Badgerfish Convention is not supported");
+            } else {
+                throw new AxisFault("Unsupported Data Format");
             }
+        }
 
 
-            if (reader == null) throw new AxisFault("Unable to load JavaScript file");
-            if (method == null) throw new AxisFault("Unable to read the method");
+        if (reader == null) throw new AxisFault("Unable to load JavaScript file");
+        if (method == null) throw new AxisFault("Unable to read the method");
 
-            OMNode result;
+        OMNode result;
 
-            String scripts = null;
+        String scripts = null;
 
-            //Get necessary JavaScripts to be loaded from services.xml
-            Parameter param = inMessage.getOperationContext().getAxisOperation().getParameter(LOAD_JSSCRIPTS);
-            if (param != null) {
+        //Get necessary JavaScripts to be loaded from services.xml
+        Parameter param = inMessage.getOperationContext().getAxisOperation().getParameter(LOAD_JSSCRIPTS);
+        if (param != null) {
+            scripts = (String) param.getValue();
+        }
+
+        //Get necessary JavaScripts to be loaded from axis2.xml
+        param = inMessage.getConfigurationContext().getAxisConfiguration().getParameter(LOAD_JSSCRIPTS);
+        if (param != null) {
+            if (scripts == null) {
                 scripts = (String) param.getValue();
-            }
-
-            //Get necessary JavaScripts to be loaded from axis2.xml
-            param = inMessage.getConfigurationContext().getAxisConfiguration().getParameter(LOAD_JSSCRIPTS);
-            if (param != null) {
-                if (scripts == null) {
-                    scripts = (String) param.getValue();
-                } else {
-                    if (!scripts.equals(param.getValue())) { // Avoides loading the same set of script files twice
-                        scripts += "," + param.getValue();
-                    }
+            } else {
+                if (!scripts.equals(param.getValue())) { // Avoides loading the same set of script files twice
+                    scripts += "," + param.getValue();
                 }
             }
+        }
 
-            URL repoURL = inMessage.getConfigurationContext().getAxisConfiguration().getRepository();
-            if (repoURL != null) {
-                JavaScriptEngine.repo = repoURL.getPath();
-            }
+        URL repoURL = inMessage.getConfigurationContext().getAxisConfiguration().getRepository();
+        if (repoURL != null) {
+            JavaScriptEngine.repo = repoURL.getPath();
+        }
 
-            if (scripts != null) {
-                //Get the result from executing the javascript file
-                result = engine.call(method, reader, args, scripts, json);
-            } else { //Parameter loadJSScripts is not set
-                //Get the result from executing the javascript file
-                result = engine.call(method, reader, args, json);
-            }
-            if (result == null) {
-                throw new AxisFault(Messages.getMessage("JavaScriptNoanswer"));
-            }
+        if (scripts != null) {
+            //Get the result from executing the javascript file
+            result = engine.call(method, reader, args, scripts, json);
+        } else { //Parameter loadJSScripts is not set
+            //Get the result from executing the javascript file
+            result = engine.call(method, reader, args, json);
+        }
+        if (result == null) {
+            throw new AxisFault(Messages.getMessage("JavaScriptNoanswer"));
+        }
 
-            //Create the out-going message
-            SOAPFactory fac;
-            if (inMessage.isSOAP11()) {
-                fac = OMAbstractFactory.getSOAP11Factory();
-            } else {
-                fac = OMAbstractFactory.getSOAP12Factory();
-            }
-            SOAPEnvelope envelope = fac.getDefaultEnvelope();
-            OMNamespace ns;
-            if(json){
-                ns = fac.createOMNamespace("", "");
-            } else {
-                String respNs = inMessage.getServiceContext().getAxisService().getSchematargetNamespace();
-                ns = fac.createOMNamespace(respNs, "res");
-            }
-            OMElement responseElement = fac.createOMElement(method + "Response", ns);
-            responseElement.addChild(result);
-            envelope.getBody().addChild(responseElement);
-            outMessage.setEnvelope(envelope);
+        //Create the out-going message
+        SOAPFactory fac;
+        if (inMessage.isSOAP11()) {
+            fac = OMAbstractFactory.getSOAP11Factory();
+        } else {
+            fac = OMAbstractFactory.getSOAP12Factory();
+        }
+        SOAPEnvelope envelope = fac.getDefaultEnvelope();
+        OMNamespace ns;
+        if (json) {
+            ns = fac.createOMNamespace("", "");
+        } else {
+            String respNs = inMessage.getServiceContext().getAxisService().getSchematargetNamespace();
+            ns = fac.createOMNamespace(respNs, "res");
+        }
+        OMElement responseElement = fac.createOMElement(method + "Response", ns);
+        responseElement.addChild(result);
+        envelope.getBody().addChild(responseElement);
+        outMessage.setEnvelope(envelope);
     }
 
 
     /**
-     * @param inMessage
-     * @return the javascript operation to invoke
-     * @throws AxisFault
-     * @throws XMLStreamException
+     * Extracts and returns the anme of the requested operation from the inMessage
+     *
+     * @param inMessage MessageContext object with information about the incoming message
+     * @return the name of the requested operation
+     * @throws AxisFault if the requested operation is not found
      */
-    public String getJSMethod(MessageContext inMessage) throws AxisFault, XMLStreamException {
+    public String getJSMethod(MessageContext inMessage) throws AxisFault {
 
         //Look at the method name. if available this should be a javascript method
         AxisOperation op = inMessage.getOperationContext().getAxisOperation();
@@ -156,9 +160,13 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver
     }
 
     /**
-     * @param inMessage
+     * Loacates the service Javascript associated with ServiceJS parameter and returns
+     * an input stream to it.
+     *
+     * @param inMessage MessageContext object with information about the incoming message
      * @return an input stream to the javascript source file
-     * @throws AxisFault
+     * @throws AxisFault if the parameter ServiceJS is not specified or if the service
+     * implementation is not available
      */
     public Reader readJS(MessageContext inMessage) throws AxisFault {
 
