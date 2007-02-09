@@ -123,6 +123,7 @@ int wsf_worker_process_request(
 		ws_svc_info_t *svc_info)
 {
 	axis2_conf_ctx_t *conf_ctx = NULL;
+	axis2_conf_t *conf = NULL;
 	axis2_msg_ctx_t *msg_ctx = NULL;
     axis2_op_ctx_t *op_ctx = NULL;
 	
@@ -260,12 +261,8 @@ int wsf_worker_process_request(
 	}
     /** use MTOM property */
     if(svc_info->use_mtom == 1){
-	    axis2_property_t *mtom_property = axis2_property_create(env);
-        if (mtom_property){
-            AXIS2_PROPERTY_SET_SCOPE(mtom_property, env, AXIS2_SCOPE_REQUEST);
-            AXIS2_PROPERTY_SET_VALUE(mtom_property, env, AXIS2_STRDUP(AXIS2_VALUE_TRUE, env));
-            AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, AXIS2_ENABLE_MTOM, mtom_property, AXIS2_FALSE);
-        }
+
+        axis2_msg_ctx_set_doing_mtom(msg_ctx, env, AXIS2_TRUE);
     }  
     if(svc_info->secure == 1){
         axis2_property_t *sec_prop = NULL;
