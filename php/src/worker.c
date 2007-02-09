@@ -261,7 +261,6 @@ int wsf_worker_process_request(
 	}
     /** use MTOM property */
     if(svc_info->use_mtom == 1){
-
         axis2_msg_ctx_set_doing_mtom(msg_ctx, env, AXIS2_TRUE);
     }  
     if(svc_info->secure == 1){

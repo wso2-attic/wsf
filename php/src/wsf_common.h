@@ -55,11 +55,12 @@ typedef enum ws_input_types{
 }ws_input_types_t;
 
 
-#define AXIS2_MSG_P_STR "str"
-#define AXIS2_MSG_P_SXML "simpleXML"
-#define AXIS2_MSG_P_DOM "dom"
-#define AXIS2_MSG_P_TYPE "payloadtype"
-#define AXIS2_MSG_TYPE "type"
+#define WS_MSG_PAYLOAD_STR "str"
+#define WS_MSG_PAYLOAD_SXML "simpleXML"
+#define WS_MSG_PAYLOAD_DOM "dom"
+
+#define WS_MSG_PAYLOAD_TYPE "payloadtype"
+#define WS_MSG_TYPE "type"
 
 /** soap header attributes */
 
@@ -161,7 +162,9 @@ typedef enum ws_input_types{
 #define WSF_SANDESHA2_CLIENT_DUMMY_MESSAGE "Sandesha2DummyMessage"
 
 #define WSF_SANDESHA2_SPEC_VERSION_1_0 "Spec_2005_02"
+#define WSF_RM_VERSION_1_0  1
 #define WSF_SANDESHA2_SPEC_VERSION_1_1 "Spec_2006_08"
+#define WSF_RM_VERSION_1_1  2
 
 #define WSF_SANDESHA_CLIENT_PROP "wsf_cli_prop"
 

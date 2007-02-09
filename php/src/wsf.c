@@ -186,12 +186,6 @@ static zval* ws_create_object(void *obj, int obj_type,
 static void ws_object_dtor(void *object, 
         zend_object_handle handle TSRMLS_DC);
   
-
-
-
-
-
-
 /* {{{ ws_worker_dtor() */
 static void ws_worker_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 {
@@ -390,6 +384,7 @@ static void ws_init_globals(zend_wsf_globals *wsf_globals)
 	wsf_globals->enable_exception = 0;
 	wsf_globals->soap_version = AXIOM_SOAP12;
 	wsf_globals->passwd_location = NULL;
+	wsf_globals->soap_uri = NULL;
 	
 }
 /* }}} */
@@ -597,14 +592,12 @@ PHP_METHOD(ws_message, __construct)
 	WSF_OBJ_CHECK(env);
     	
 	if(Z_TYPE_P(payload) == IS_STRING){
-	    add_property_stringl(object , AXIS2_MSG_P_STR, Z_STRVAL_P(payload), Z_STRLEN_P(payload), 1);
-	    add_property_long(object, AXIS2_MSG_P_TYPE, WS_USING_STRING);
-	
+		add_property_stringl(object , WS_MSG_PAYLOAD_STR, Z_STRVAL_P(payload), Z_STRLEN_P(payload), 1);
+		add_property_long(object, WS_MSG_TYPE, WS_USING_STRING);
 	}else if(Z_TYPE_P(payload) == IS_OBJECT && 
 	    instanceof_function(Z_OBJCE_P(payload), dom_node_class_entry TSRMLS_CC)) {
-        add_property_zval(object, AXIS2_MSG_P_DOM, payload);
-        add_property_long(object, AXIS2_MSG_P_TYPE, WS_USING_DOM);
-
+			add_property_zval(object, WS_MSG_PAYLOAD_DOM, payload);
+			add_property_long(object, WS_MSG_TYPE, WS_USING_DOM);
     }
     else {
         return;        
@@ -622,6 +615,7 @@ PHP_METHOD(ws_message, __construct)
 			add_property_stringl(object, "to", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
 		}
 	    
+		/** addressing */
 		if(zend_hash_find(ht, "action", sizeof("action"), (void **)&tmp) == SUCCESS && 
 			Z_TYPE_PP(tmp) == IS_STRING){
 			add_property_stringl(object, "action", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
@@ -638,6 +632,9 @@ PHP_METHOD(ws_message, __construct)
 			Z_TYPE_PP(tmp) == IS_STRING){
 			add_property_stringl(object, "faultTo", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
 		}
+
+
+		/** XOP MTOM */
 		if(zend_hash_find(ht, "usesXOP", sizeof("usesXOP"), (void **)&tmp) == SUCCESS && 
 			Z_TYPE_PP(tmp) == IS_BOOL){
 			add_property_bool(object, "usesXOP", Z_BVAL_PP(tmp));
@@ -645,14 +642,19 @@ PHP_METHOD(ws_message, __construct)
 		else{
 			add_property_bool(object, "usesXOP", 1);
 		}
-	        
 		if(zend_hash_find(ht, "defaultAttachmentContentType", sizeof("defaultAttachmentContentType"), (void **)&tmp) == SUCCESS && 
 			Z_TYPE_PP(tmp) == IS_STRING){
 			add_property_stringl(object, "defaultAttachmentContentType", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp),1);
 		}else{
 			   add_property_string(object, "defaultAttachmentContentType", estrdup("application/octet-stream"),1);
 		}
-	    
+		if(zend_hash_find(ht, "attachments", sizeof("attachments"), (void **)&tmp) == SUCCESS &&
+			Z_TYPE_PP(tmp) == IS_ARRAY){
+				add_property_zval(object, "attachments", *tmp);
+		}
+
+
+		/** security */
 		if(zend_hash_find(ht, "user", sizeof("user"), (void **)&tmp) == SUCCESS && 
 		Z_TYPE_PP(tmp) == IS_STRING){
 			add_property_stringl(object, "user", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
@@ -677,24 +679,6 @@ PHP_METHOD(ws_message, __construct)
 			Z_TYPE_PP(tmp) == IS_STRING) {
 			add_property_stringl(object, "timeToLive", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
 		}
-		if(zend_hash_find(ht, "attachments", sizeof("attachments"), (void **)&tmp) == SUCCESS &&
-			Z_TYPE_PP(tmp) == IS_ARRAY){
-				add_property_zval(object, "attachments", *tmp);
-		}
-		if(zend_hash_find(ht, "secure", sizeof("secure"), (void **)&tmp) == SUCCESS && 
-			Z_TYPE_PP(tmp) == IS_BOOL){
-				add_property_bool(object, "secure", Z_BVAL_PP(tmp));
-		}
-		if(zend_hash_find(ht, "reliable", sizeof("reliable"), (void **)&tmp) == SUCCESS){
-			if(Z_TYPE_PP(tmp) == IS_BOOL){
-				add_property_bool(object, "reliable", Z_BVAL_PP(tmp));
-			}else if(Z_TYPE_PP(tmp) == IS_STRING){
-				add_property_stringl(object, "reliable", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
-			}else if(Z_TYPE_PP(tmp) == IS_LONG){
-				add_property_long(object, "reliable", Z_TYPE_PP(tmp));
-			}
-		}
-
 		if(zend_hash_find(ht, "encrypt", sizeof("encrypt"), (void**)&tmp) == SUCCESS &&
 			Z_TYPE_PP(tmp) == IS_OBJECT && 
 			instanceof_function(Z_OBJCE_PP(tmp),ws_security_token_class_entry TSRMLS_CC)){
@@ -705,7 +689,19 @@ PHP_METHOD(ws_message, __construct)
 			instanceof_function(Z_OBJCE_PP(tmp),ws_security_token_class_entry TSRMLS_CC)){
 				add_property_zval(object, "decrypt", *tmp);
 		}
-		if(WSF_HASH_FIND(ht, "headers", tmp, SUCCESS)){
+
+
+		/** reliable Messaging */
+		if(zend_hash_find(ht, "willContinueSequence", sizeof("willContinueSequence"), (void**)&tmp) == SUCCESS){
+			if(Z_TYPE_PP(tmp) == IS_BOOL){
+				add_property_bool(object, "willContinueSequence", Z_BVAL_PP(tmp));
+			}
+		}
+
+		
+
+		/** adding custom headers */
+		if(zend_hash_find(ht, "headers", sizeof("headers"), (void**)&tmp) == SUCCESS){
 			if(Z_TYPE_PP(tmp) == IS_ARRAY)
 			{
 				add_property_zval(object, "headers", *tmp);
@@ -715,16 +711,18 @@ PHP_METHOD(ws_message, __construct)
 	}
 }
 
+/** desctructor */
 PHP_METHOD(ws_message, __destruct)
 {
 
 }
 
+
 static int get_message_storage_type(zval *this_ptr TSRMLS_DC)
 {
     zval **param_val = NULL;
-	if(zend_hash_find(Z_OBJPROP_P(this_ptr), AXIS2_MSG_P_TYPE, 
-            sizeof(AXIS2_MSG_P_TYPE), (void**)&param_val) == SUCCESS &&
+	if(zend_hash_find(Z_OBJPROP_P(this_ptr), WS_MSG_PAYLOAD_TYPE, 
+		sizeof(WS_MSG_PAYLOAD_TYPE), (void**)&param_val) == SUCCESS &&
             Z_TYPE_PP(param_val) == IS_LONG){
             return Z_LVAL_PP(param_val);
     }   
@@ -750,7 +748,7 @@ PHP_METHOD(ws_message, __get)
 	
 	WSF_GET_THIS(object);
 	
-	if(strcmp(prop_name, AXIS2_MSG_P_STR) == 0){
+	if(strcmp(prop_name, WS_MSG_PAYLOAD_STR) == 0){
 	
 	    if(get_message_storage_type(object TSRMLS_CC) == WS_USING_DOM ||
            get_message_storage_type(object TSRMLS_CC) == WS_USING_SIMPLEXML){
@@ -759,10 +757,10 @@ PHP_METHOD(ws_message, __get)
                 zval **tmp_val = NULL;
                 axiom_xml_reader_t *reader = NULL;
 
-                if((zend_hash_find(Z_OBJPROP_P(object), AXIS2_MSG_P_DOM, 
-                sizeof(AXIS2_MSG_P_DOM), (void**)&tmp_val) == SUCCESS)||
-                    (zend_hash_find(Z_OBJPROP_P(object), AXIS2_MSG_P_SXML, 
-                        sizeof(AXIS2_MSG_P_SXML), (void**)&tmp_val) == SUCCESS)){
+                if((zend_hash_find(Z_OBJPROP_P(object), WS_MSG_PAYLOAD_DOM, 
+					sizeof(WS_MSG_PAYLOAD_DOM), (void**)&tmp_val) == SUCCESS)||
+				(zend_hash_find(Z_OBJPROP_P(object), WS_MSG_PAYLOAD_SXML, 
+                        sizeof(WS_MSG_PAYLOAD_SXML), (void**)&tmp_val) == SUCCESS)){
                         nodep = ws_get_xml_node(*tmp_val);
                         reader = axiom_xml_reader_create_for_memory(env, 
 				            (void*)nodep->doc, 0, "utf-8", AXIS2_XML_PARSER_TYPE_DOC);
@@ -777,21 +775,21 @@ PHP_METHOD(ws_message, __get)
 	                    axis2_char_t *res_text = NULL;
 						res_text = wsf_util_serialize_om(env, payload);
 	                    if(res_text){
-	                        add_property_string(object, AXIS2_MSG_P_STR, res_text, 1);
+							add_property_string(object, WS_MSG_PAYLOAD_STR, res_text, 1);
 	                        RETURN_STRING(res_text, 1);
 	                    }
                         /** todo memory leaks */
 	            }
             }
 	    }
-	}else if(strcmp(prop_name, AXIS2_MSG_P_DOM) == 0){
+	}else if(strcmp(prop_name, WS_MSG_PAYLOAD_DOM) == 0){
 	    if(get_message_storage_type(object TSRMLS_CC) == WS_USING_STRING){
                 axiom_node_t *payload = NULL;
                 zval **tmp_val = NULL;
                 axiom_xml_reader_t *reader = NULL;
 
-                if(zend_hash_find(Z_OBJPROP_P(object), AXIS2_MSG_P_STR, 
-                    sizeof(AXIS2_MSG_P_DOM), (void**)&tmp_val) == SUCCESS){
+                if(zend_hash_find(Z_OBJPROP_P(object), WS_MSG_PAYLOAD_DOM, 
+                    sizeof(WS_MSG_PAYLOAD_DOM), (void**)&tmp_val) == SUCCESS){
                         char *val = Z_STRVAL_PP(tmp_val);
                         if(val){
                         reader = axiom_xml_reader_create_for_memory(env, 
@@ -811,7 +809,7 @@ PHP_METHOD(ws_message, __get)
 	    		                RETURN_NULL();
                             }	    		
                             value = php_dom_create_object((xmlNodePtr)doc, &ret, NULL,  return_value, NULL TSRMLS_CC);
-                            add_property_zval(object, AXIS2_MSG_P_DOM, value);
+							add_property_zval(object, WS_MSG_PAYLOAD_DOM, value);
                             RETURN_ZVAL(value, NULL, NULL);                        
 	                 }
 	            }
@@ -874,18 +872,7 @@ PHP_METHOD(ws_client, __construct)
 
 		if(!ht)
 		    return;
-        if(zend_hash_find(ht, "useWSA", sizeof("useWSA"), (void **)&tmp) == SUCCESS){ 
-            if(Z_TYPE_PP(tmp) == IS_STRING){
-                add_property_stringl(obj, "useWSA", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
-            }else if(Z_TYPE_PP(tmp) == IS_BOOL){
-                add_property_bool(obj, "useWSA", Z_BVAL_PP(tmp)); 
-            }else if(Z_TYPE_PP(tmp) == IS_DOUBLE){
-                add_property_double(obj, "useWSA", Z_DVAL_PP(tmp));
-            }                
-        }
-        else{
-            add_property_string(obj, "useWSA", "1.0", 1);
-        }
+		/** protocol */
         if(zend_hash_find(ht, "useSOAP", sizeof("useSOAP"), (void **)&tmp) == SUCCESS){
             if(Z_TYPE_PP(tmp) == IS_STRING){
                 add_property_stringl(obj, "useSOAP", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);            
@@ -900,15 +887,21 @@ PHP_METHOD(ws_client, __construct)
             add_property_stringl(obj, "HTTPMethod", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
         }
         
-        if(zend_hash_find(ht, "responseXOP", sizeof("responseXOP"), (void **)&tmp) == SUCCESS && 
-            Z_TYPE_PP(tmp) == IS_BOOL){
-            add_property_bool(obj, "responseXOP", Z_BVAL_PP(tmp));
-        }else{
-            add_property_bool(obj, "responseXOP", 0);        
+        
+
+		/** Addressing info */
+		if(zend_hash_find(ht, "useWSA", sizeof("useWSA"), (void **)&tmp) == SUCCESS){ 
+            if(Z_TYPE_PP(tmp) == IS_STRING){
+				/** passed addressing version is a string should be submission */
+                add_property_stringl(obj, "useWSA", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+            }else if(Z_TYPE_PP(tmp) == IS_BOOL){
+                add_property_bool(obj, "useWSA", Z_BVAL_PP(tmp)); 
+            }else if(Z_TYPE_PP(tmp) == IS_DOUBLE){
+                add_property_double(obj, "useWSA", Z_DVAL_PP(tmp));
+            }                
         }
-        if(zend_hash_find(ht, "location", sizeof("location"), (void **)&tmp) == SUCCESS && 
-            Z_TYPE_PP(tmp) == IS_STRING){
-            add_property_stringl(obj, "location", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+        else{
+            add_property_string(obj, "useWSA", "1.0", 1);
         }
         if(zend_hash_find(ht, "to", sizeof("to"), (void **)&tmp) == SUCCESS && 
             Z_TYPE_PP(tmp) == IS_STRING){
@@ -930,17 +923,27 @@ PHP_METHOD(ws_client, __construct)
             Z_TYPE_PP(tmp) == IS_STRING){
             add_property_stringl(obj, "faultTo", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
         }
+
+		/** XOP MTOM */
+		if(zend_hash_find(ht, "responseXOP", sizeof("responseXOP"), (void **)&tmp) == SUCCESS && 
+            Z_TYPE_PP(tmp) == IS_BOOL){
+            add_property_bool(obj, "responseXOP", Z_BVAL_PP(tmp));
+        }else{
+            add_property_bool(obj, "responseXOP", 0);        
+        }
         if(zend_hash_find(ht, "useMTOM", sizeof("useMTOM"), (void **)&tmp) == SUCCESS && 
             Z_TYPE_PP(tmp) == IS_BOOL){
             add_property_bool(obj, "useMTOM", Z_BVAL_PP(tmp));
         }else{
             add_property_bool(obj, "useMTOM", 0);
         }
-        
         if(zend_hash_find(ht, "defaultAttachmentContentType", sizeof("defaultAttachmentContentType"), (void **)&tmp) == SUCCESS && 
             Z_TYPE_PP(tmp) == IS_STRING){
             add_property_stringl(obj, "defaultAttachmentContentType", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp),1);
         }
+
+
+		/** Security */
         if(zend_hash_find(ht, "user", sizeof("user"), (void **)&tmp) == SUCCESS && 
         Z_TYPE_PP(tmp) == IS_STRING){
             add_property_stringl(obj, "user", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
@@ -965,49 +968,29 @@ PHP_METHOD(ws_client, __construct)
 			Z_TYPE_PP(tmp) == IS_BOOL) {
 			add_property_bool(obj, "secure", Z_BVAL_PP(tmp));
         }
+
+
+		/** RM */
 		if(zend_hash_find(ht, "reliable", sizeof("reliable"), (void **)&tmp) == SUCCESS) {
-			if(Z_TYPE_PP(tmp) == IS_BOOL){
-				add_property_bool(obj, "reliable", Z_BVAL_PP(tmp));
-			}else if(Z_TYPE_PP(tmp) == IS_STRING){
-				add_property_stringl(obj, "reliable", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+			if(Z_TYPE_PP(tmp) == IS_BOOL && Z_BVAL_PP(tmp) == 1){
+				add_property_long(obj, "reliable", WSF_RM_VERSION_1_0);
+			}else if(Z_TYPE_PP(tmp) == IS_STRING && strcmp(Z_STRVAL_PP(tmp), "1.1") == 0){
+				add_property_long(obj, "reliable", WSF_RM_VERSION_1_1);
+			}else if(Z_TYPE_PP(tmp) == IS_STRING && strcmp(Z_STRVAL_PP(tmp), "1.0") == 0){
+				add_property_long(obj, "reliable", WSF_RM_VERSION_1_0);
 			}
         }
-		/*
-		if (zend_hash_find(ht, "_login", sizeof("_login"), (void**)&tmp) == SUCCESS &&
-		    Z_TYPE_PP(tmp) == IS_STRING) {
-				add_property_stringl(obj, "_login", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
-				if (zend_hash_find(ht, "_password", sizeof("_password"), (void**)&tmp) == SUCCESS &&
-					Z_TYPE_PP(tmp) == IS_STRING) {
-						add_property_stringl(obj, "_password", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
-				}
-				if (zend_hash_find(ht, "_authentication", sizeof("_authentication"), (void**)&tmp) == SUCCESS &&
-					Z_TYPE_PP(tmp) == IS_LONG &&
-					Z_LVAL_PP(tmp) == SOAP_AUTHENTICATION_DIGEST) {
-					add_property_null(obj, "_digest");
-				}
-		}
-		if (zend_hash_find(ht, "proxy_host", sizeof("proxy_host"), (void**)&tmp) == SUCCESS &&
-		    Z_TYPE_PP(tmp) == IS_STRING) {
-				add_property_stringl(obj, "_proxy_host", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
-			if (zend_hash_find(ht, "proxy_port", sizeof("proxy_port"), (void**)&tmp) == SUCCESS &&
-			    Z_TYPE_PP(tmp) == IS_LONG) {
-					add_property_long(obj, "_proxy_port", Z_LVAL_PP(tmp));
-			}
-			if (zend_hash_find(ht, "proxy_login", sizeof("proxy_login"), (void**)&tmp) == SUCCESS &&
-			    Z_TYPE_PP(tmp) == IS_STRING) {
-					add_property_stringl(obj, "_proxy_login", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
-				if (zend_hash_find(ht, "proxy_password", sizeof("proxy_password"), (void**)&tmp) == SUCCESS &&
-				    Z_TYPE_PP(tmp) == IS_STRING) {
-						add_property_stringl(obj, "_proxy_password", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
-				}
+		if(zend_hash_find(ht, "seq_expiry_time", sizeof("seq_expiry_time"), (void **)&tmp) == SUCCESS){
+			if(Z_TYPE_PP(tmp) == IS_LONG){
+				add_property_long(obj, "seq_expiry_time", Z_LVAL_PP(tmp));
 			}
 		}
-		*/
-		if(zend_hash_find(ht, "offer", sizeof("offer"), (void **)&tmp) == SUCCESS){
+		if(zend_hash_find(ht, "willContinueSequence", sizeof("willContinueSequence"), (void**)&tmp) == SUCCESS) {
 			if(Z_TYPE_PP(tmp) == IS_BOOL){
-				add_property_bool(obj, "offer", Z_BVAL_PP(tmp));
+				add_property_bool(obj, "willContinueSequence", Z_BVAL_PP(tmp));
 			}
 		}
+
 
 		if(zend_hash_find(ht, "wsdl", sizeof("wsdl"), (void **)&tmp) == SUCCESS &&
 		Z_TYPE_PP(tmp) == IS_STRING){

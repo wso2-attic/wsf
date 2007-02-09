@@ -25,6 +25,9 @@
 #include <axiom_util.h>
 #include "wsf_client.h"
 
+#ifdef USE_SANDESHA2
+#include <sandesha2_client.h>
+#endif
 
 static xmlNodePtr wsf_get_xml_node(zval *node TSRMLS_DC)
 {
@@ -280,7 +283,7 @@ void wsf_client_set_security_options(zval *zval_client, zval *zval_msg,
 }
 
 int wsf_client_set_addr_options(zval *zval_client, zval *zval_msg, axis2_env_t *env,
-    axis2_options_t *client_options, axis2_svc_client_t *svc_client  TSRMLS_DC){
+    axis2_options_t *client_options, axis2_svc_client_t *svc_client, int *is_addr_action_present  TSRMLS_DC){
 		
 	zval **tmp = NULL;
     int is_addressing_engaged = AXIS2_FALSE;
@@ -302,9 +305,12 @@ int wsf_client_set_addr_options(zval *zval_client, zval *zval_msg, axis2_env_t *
 
 				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] useWSA is string, value is %s", value);
         }
-	}else{
+	}
+	/*
+	else{
 		return AXIS2_FALSE;	
 	}
+	*/
 	
     if(zval_msg){
 		
@@ -455,7 +461,8 @@ int wsf_client_set_addr_options(zval *zval_client, zval *zval_msg, axis2_env_t *
 					AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] addressing versio is submission");
                 }
             }   
-		}    
+		} 
+	*is_addr_action_present = addr_action_present;
 	return is_addressing_engaged;
 }
 
@@ -464,12 +471,7 @@ int wsf_client_set_options(zval *zval_client, zval *zval_msg, axis2_env_t *env,
 {
     zval **tmp = NULL;
     zval **msg_tmp = NULL;
-    int username_present = AXIS2_FALSE;
-    int password_present = AXIS2_FALSE;
-    int timestamp_present = AXIS2_FALSE;
     int use_soap = 0;
-	int is_addressing_engaged = AXIS2_FALSE;
-	int is_rm_enabled = AXIS2_FALSE;
 
     if(zend_hash_find(Z_OBJPROP_P(zval_client), "useSOAP", sizeof("useSOAP"), 
         (void **)&tmp) == SUCCESS){
@@ -581,18 +583,9 @@ int wsf_client_set_options(zval *zval_client, zval *zval_msg, axis2_env_t *env,
         return AXIS2_FAILURE;
     }
 			
-	is_addressing_engaged = wsf_client_set_addr_options(zval_client, zval_msg,
-				env, client_options, svc_client TSRMLS_CC);
 
 	wsf_client_set_security_options(zval_client, zval_msg, env, client_options, svc_client TSRMLS_CC);
 	
-	{
-	int val = 0;
-	val = wsf_client_set_rm_options(zval_client, zval_msg, env, client_options, svc_client, 
-		is_addressing_engaged, is_send TSRMLS_CC);
-		
-	
-	}
     /*
 	if(zval_msg && zend_hash_find(Z_OBJPROP_P(zval_msg), "reliable", sizeof("reliable"), (void**)&msg_tmp) == SUCCESS
 		&& Z_TYPE_PP(msg_tmp) == IS_BOOL){
@@ -618,6 +611,11 @@ int wsf_client_set_options(zval *zval_client, zval *zval_msg, axis2_env_t *env,
     return AXIS2_SUCCESS;
 }
 
+/**
+this_ptr -> ws_client 
+param    -> payload ( ws_message, string, dom node)
+
+*/
 int wsf_client_do_request(
 		zval *this_ptr, 
 		zval *param, 
@@ -627,65 +625,74 @@ int wsf_client_do_request(
 		int is_oneway TSRMLS_DC)
 {
 /** for dom  */
-	xmlNodePtr nodep;
-	zval **data = NULL;
-	axiom_node_t *payload = NULL;
-    axiom_node_t *res_payload = NULL;
-    axiom_xml_reader_t *reader = NULL;
-	axis2_options_t *client_options = NULL;
-	int call_sandesha2_client_terminate = 0;
-	axis2_char_t *rm_seq_key = NULL;
-
-    /** for iterating this obj properties */
-    zval **this_tmp = NULL;
-    /** for iterating axis2_msg prop */
-    zval **msg_tmp = NULL;
-    int responseXOP = 0;
     int status = AXIS2_SUCCESS;
-    char *str_payload = NULL;
-	int str_payload_len = 0;
     int input_type = WS_USING_INCORRECT_INPUT;
 
+	xmlNodePtr nodep;
+	zval **data = NULL;
+
+	axiom_node_t *request_payload = NULL;
+    axiom_node_t *response_payload = NULL;
+    axiom_xml_reader_t *reader = NULL;
+	axis2_options_t *client_options = NULL;
+
+    zval **client_tmp = NULL;
+    zval **msg_tmp = NULL;
+
+    int responseXOP = 0;
+
+	char *str_payload = NULL;
+	int str_payload_len = 0;
+
+	/** RM OPTION VARIABLES */
+	int ws_client_will_continue_sequence = AXIS2_FALSE;
+	int engage_rm = AXIS2_FALSE;
+	int rm_spec_version = WSF_RM_VERSION_1_0;
+	int is_addressing_engaged = AXIS2_FALSE;
+	int is_addressing_action_present = AXIS2_FALSE;
+	int is_rm_engaged = AXIS2_FALSE;
 
     if(Z_TYPE_P(param) == IS_OBJECT &&
         instanceof_function(Z_OBJCE_P(param), ws_message_class_entry TSRMLS_CC))
     {
         zval **tmp_val = NULL;
-        if(zend_hash_find(Z_OBJPROP_P(param), AXIS2_MSG_P_STR, 
-            sizeof(AXIS2_MSG_P_STR), (void**)&tmp_val) == SUCCESS){
-            
-            str_payload = Z_STRVAL_PP(tmp_val);
-	        str_payload_len = Z_STRLEN_PP(tmp_val);
-       	    reader = axiom_xml_reader_create_for_memory(env, 
-    			str_payload, str_payload_len, "utf-8", AXIS2_XML_PARSER_TYPE_BUFFER);
-        	if (!reader) {
-				zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 1 TSRMLS_CC, 
-	    			"xml reader create failed");
-	        }
+
+		if(zend_hash_find(Z_OBJPROP_P(param), WS_MSG_PAYLOAD_STR, 
+			sizeof(WS_MSG_PAYLOAD_STR), (void**)&tmp_val) == SUCCESS){
+				
+				str_payload = Z_STRVAL_PP(tmp_val);
+				str_payload_len = Z_STRLEN_PP(tmp_val);
+       			reader = axiom_xml_reader_create_for_memory(env, 
+    				str_payload, str_payload_len, "utf-8", AXIS2_XML_PARSER_TYPE_BUFFER);
+
+				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] Input WSMessage - string ");
+
+        		if (!reader) {
+					zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 1 TSRMLS_CC, 
+	    				"xml reader create failed");
+		        }
         }
-        else if((zend_hash_find(Z_OBJPROP_P(param), AXIS2_MSG_P_DOM, 
-            sizeof(AXIS2_MSG_P_DOM), (void**)&tmp_val) == SUCCESS) ||
-                (zend_hash_find(Z_OBJPROP_P(param), AXIS2_MSG_P_SXML, 
-                    sizeof(AXIS2_MSG_P_SXML), (void**)&tmp_val) == SUCCESS)){
-						nodep = wsf_get_xml_node(*tmp_val TSRMLS_CC);
-            reader = axiom_xml_reader_create_for_memory(env, 
-				(void*)nodep->doc, 0, "utf-8", AXIS2_XML_PARSER_TYPE_DOC);
-	        if (!reader) {
-    	    	zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 1 TSRMLS_CC, 
-	    		"xml reader create failed");
-	        }
+		else if((zend_hash_find(Z_OBJPROP_P(param), WS_MSG_PAYLOAD_DOM, sizeof(WS_MSG_PAYLOAD_DOM), 
+			(void**)&tmp_val) == SUCCESS) || 
+			(zend_hash_find(Z_OBJPROP_P(param), WS_MSG_PAYLOAD_SXML, sizeof(WS_MSG_PAYLOAD_SXML), 
+			(void**)&tmp_val) == SUCCESS)){
+						
+				nodep = wsf_get_xml_node(*tmp_val TSRMLS_CC);
+				reader = axiom_xml_reader_create_for_memory(env, (void*)nodep->doc, 
+							0, "utf-8", AXIS2_XML_PARSER_TYPE_DOC);
+
+				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] Input WSMessage - dom node ");
+
+				if (!reader) {
+    	    		zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 1 TSRMLS_CC, 
+	    				"xml reader create failed");
+				}
         }
 	  
         input_type = WS_USING_MSG;
-		{/** hack to make rm work , refactor later */
-			zval **tmp;
-			if(zend_hash_find(Z_OBJPROP_P(param), "sequence_key", sizeof("sequence_key"), (void **)&tmp) == SUCCESS){
-				if(Z_TYPE_PP(tmp) == IS_STRING){
-					rm_seq_key = Z_STRVAL_PP(tmp);		
-				}
-			}
-		}
-                            
+
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] do_request Input type is WSMessage ");
+
     }else if(Z_TYPE_P(param) == IS_STRING){
 	    /** we have an xml string */
 	    str_payload = Z_STRVAL_P(param);
@@ -697,7 +704,10 @@ int wsf_client_do_request(
 		    zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 1 TSRMLS_CC, 
 	    		"xml reader create failed");
 	    }
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] Input Type is a String ");
+
     }else if(Z_TYPE_P(param) == IS_OBJECT && instanceof_function(Z_OBJCE_P(param), dom_node_class_entry TSRMLS_CC)) {
+
 		nodep = wsf_get_xml_node(param TSRMLS_CC);
         reader = axiom_xml_reader_create_for_memory(env, 
 				(void*)nodep->doc, 0, "utf-8", AXIS2_XML_PARSER_TYPE_DOC);
@@ -707,74 +717,169 @@ int wsf_client_do_request(
 	    }
 	    input_type = WS_USING_DOM;    
 
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] Input Type is a Dom Node ");
+
     }       
     	
-	payload = ws_util_read_payload(reader, env);
+	request_payload = ws_util_read_payload(reader, env);
 	
-	if (!payload) {
+	if (!request_payload) {
 		zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 1 TSRMLS_CC, 
-			"payload is empty");
+			"request payload should not be null");
+
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "request payload node is null");
 	}
 	
 	client_options = (axis2_options_t *)AXIS2_SVC_CLIENT_GET_OPTIONS(svc_client, env);
 
     if(input_type == WS_USING_MSG){
-        zval **ztmp = NULL;
-		zval **ztmp_this = NULL;
-        axis2_char_t *default_cnt_type = NULL;
-        
+
+		axis2_char_t *default_cnt_type = NULL;
 		status = wsf_client_set_options(this_ptr, param, env,
             client_options, svc_client, 0 TSRMLS_CC);
-		
-/*		wsf_client_set_headers(env, svc_client, param TSRMLS_CC); */
 
         if(status == AXIS2_FAILURE){
             php_error_docref(NULL TSRMLS_CC, E_ERROR, "service endpoint uri is needed for invocation ");
         }
+
+		is_addressing_engaged = wsf_client_set_addr_options(this_ptr, param, env, 
+			client_options, svc_client, &is_addressing_action_present TSRMLS_CC);
+		/** add set headers function here */
+
+		
         if(zend_hash_find(Z_OBJPROP_P(param), "defaultAttachmentContentType", 
             sizeof("defaultAttachmentContentType"), 
-            (void **)&ztmp) == SUCCESS && Z_TYPE_PP(ztmp) == IS_STRING){
-            default_cnt_type = Z_STRVAL_PP(ztmp);   
+			(void **)&msg_tmp) == SUCCESS && Z_TYPE_PP(msg_tmp) == IS_STRING){
+            default_cnt_type = Z_STRVAL_PP(msg_tmp);   
         }else{
             default_cnt_type = "application/octet-stream";
         }
 		if(zend_hash_find(Z_OBJPROP_P(this_ptr), "responseXOP", 
-            sizeof("responseXOP"), 
-            (void **)&ztmp_this) == SUCCESS && Z_TYPE_PP(ztmp_this) == IS_BOOL){
-            responseXOP = Z_BVAL_PP(ztmp_this);
+				sizeof("responseXOP"), 
+				(void **)&client_tmp) == SUCCESS && Z_TYPE_PP(client_tmp) == IS_BOOL){
+					responseXOP = Z_BVAL_PP(client_tmp);
         }          
                  
         if(zend_hash_find(Z_OBJPROP_P(param), "attachments", sizeof("attachments"), 
-            (void **)&ztmp) == SUCCESS && Z_TYPE_PP(ztmp) == IS_ARRAY){
-            HashTable *ht = NULL;
-			int enable_mtom = AXIS2_TRUE;
-			enable_mtom = AXIS2_OPTIONS_GET_ENABLE_MTOM(client_options, env);
-            ht = Z_ARRVAL_PP(ztmp);
+            (void **)&msg_tmp) == SUCCESS && Z_TYPE_PP(msg_tmp) == IS_ARRAY){
+				HashTable *ht = NULL;
+				int enable_mtom = AXIS2_TRUE;
+				enable_mtom = AXIS2_OPTIONS_GET_ENABLE_MTOM(client_options, env);
+				
+				ht = Z_ARRVAL_PP(msg_tmp);
                 if(ht){
-                    wsf_util_set_attachments_with_cids(env, enable_mtom, payload,
+                    wsf_util_set_attachments_with_cids(env, enable_mtom, request_payload,
                         ht, default_cnt_type TSRMLS_CC);
                 }                    
        }
     }else if(input_type == WS_USING_DOM || input_type == WS_USING_STRING){
-		status = wsf_client_set_options(this_ptr, NULL, env,
-            client_options, svc_client, 0 TSRMLS_CC);
-        if(status == AXIS2_FAILURE){
-        php_error_docref(NULL TSRMLS_CC, E_ERROR, "service enpoint uri is needed for service invocation");
-        }
+
+			status = wsf_client_set_options(this_ptr, NULL, env,
+		        client_options, svc_client, 0 TSRMLS_CC);
+		
+			if(status == AXIS2_FAILURE){
+				php_error_docref(NULL TSRMLS_CC, E_ERROR, "service enpoint uri is needed for service invocation");
+			}
+			is_addressing_engaged = wsf_client_set_addr_options(this_ptr, NULL, env, 
+			client_options, svc_client, &is_addressing_action_present TSRMLS_CC);
+		
     }
 
-	if(AXIS2_OPTIONS_GET_PROPERTY(client_options, env, WSF_SANDESHA_CLIENT_PROP)){
-		call_sandesha2_client_terminate = 1;
-	}
+	{/** RM OPTIONS */
+		
+		/** this value is a long value and is the rm version */
+		if(zend_hash_find(Z_OBJPROP_P(this_ptr), "reliable", sizeof("reliable"),
+			(void**)&client_tmp) == SUCCESS){
+				axis2_property_t *rm_prop = NULL;
+				
+				if(Z_LVAL_PP(client_tmp) == WSF_RM_VERSION_1_0){
+					rm_spec_version = WSF_RM_VERSION_1_0;
+					AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] rm spec version 1.0");
 
+				}else if(Z_LVAL_PP(client_tmp) == WSF_RM_VERSION_1_1){
+					rm_spec_version = WSF_RM_VERSION_1_1;
+					AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] rm spec version 1.1");
+				}
+
+				rm_prop = axis2_property_create_with_args(env, 0, 0, 0, rm_spec_version);
+				AXIS2_OPTIONS_SET_PROPERTY(client_options, env, WSF_SANDESHA2_CLIENT_RM_SPEC_VERSION, rm_prop);
+				engage_rm  = AXIS2_TRUE;
+		}
+		/** engage RM is addressing engaged or addressing action is set */
+		if((is_addressing_engaged || (!is_addressing_engaged && is_addressing_action_present )) && engage_rm){
+			AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "sandesha2");
+			is_rm_engaged = AXIS2_TRUE;
+		
+			/** rm is engaged , process other rm params */
+			if(zend_hash_find(Z_OBJPROP_P(this_ptr), "sequenceExpiryTime", sizeof("sequenceExpiryTime"),
+				(void**)&client_tmp) == SUCCESS){
+					axis2_property_t *seq_exp_time_prop = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
+						0, NULL, Z_LVAL_PP(client_tmp));
+					AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "InactivityTimeout", seq_exp_time_prop); 
+
+					AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] sequenceExpiryTime is %d", Z_LVAL_PP(client_tmp));
+			}
+			if(zend_hash_find(Z_OBJPROP_P(this_ptr), "willContinueSequence", 
+				sizeof("willContinueSequence"), (void **)&client_tmp) == SUCCESS){
+					if(Z_TYPE_PP(client_tmp) && Z_BVAL_PP(client_tmp) == 1){
+						
+						ws_client_will_continue_sequence = 1;
+						
+						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] willContinueSequence true");
+
+					}else{
+						axis2_property_t *last_msg_prop = NULL;
+						ws_client_will_continue_sequence = 0;
+						/** sequence is limited to this app message , if rm version is 1.0
+						we should set last message property here*/
+						if(rm_spec_version == WSF_RM_VERSION_1_0){
+							last_msg_prop = axis2_property_create_with_args(env, 
+												AXIS2_SCOPE_APPLICATION, 0, NULL, AXIS2_VALUE_TRUE);
+							AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "Sandesha2LastMessage", last_msg_prop);
+
+							AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] seting Sandesha2LastMessage");
+						}
+					}
+			}
+			if(ws_client_will_continue_sequence && input_type == WS_USING_MSG){
+				/** if input_type is ws_message and continueSequence is true on client, we should look for 
+					false value in ws_message to end the sequence */
+				if(zend_hash_find(Z_OBJPROP_P(param), "willContinueSequence", sizeof("willContinueSequence"),
+					(void**)&msg_tmp) == SUCCESS){
+						ws_client_will_continue_sequence = 0;
+						if(rm_spec_version == WSF_RM_VERSION_1_0){
+							axis2_property_t *last_msg_prop = axis2_property_create_with_args(env, 
+												AXIS2_SCOPE_APPLICATION, 0, NULL, AXIS2_VALUE_TRUE);
+							AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "Sandesha2LastMessage", last_msg_prop);
+
+							AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] seting Sandesha2LastMessage");
+						}
+				}
+			}
+			if(!is_oneway){
+				char *offered_seq_id = NULL;
+				axis2_property_t *sequence_property = NULL;
+				offered_seq_id = axis2_uuid_gen(env);
+				sequence_property = axis2_property_create(env);
+				AXIS2_PROPERTY_SET_VALUE(sequence_property, env, AXIS2_STRDUP(offered_seq_id, env));
+
+				AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "Sandesha2OfferedSequenceId", sequence_property);
+			
+				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " [wsf-log] Sandesha2OfferedSequenceId is set as property");
+			}
+		}
+	}/** END RM OPTIONS */	
 
 	if(is_oneway)
 	{
 		int ret_val = 0;
 
 
-		ret_val = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
+		ret_val = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, request_payload);
+		if(is_rm_engaged && !ws_client_will_continue_sequence && rm_spec_version == WSF_RM_VERSION_1_1){
+		/**currently there are no callbacks disscuss and implement */
 
+		}
 
 		if(ret_val == 1)
 		{
@@ -784,19 +889,19 @@ int wsf_client_do_request(
 		}
 
 	}else {
-		res_payload = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);	
-		if (res_payload) {
+		response_payload = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, request_payload);	
+		if (response_payload) {
 			axis2_char_t *res_text = NULL;
     		axis2_char_t *fault = NULL;
 	        
-			fault = axiom_util_get_localname(res_payload, env);
+			fault = axiom_util_get_localname(response_payload, env);
 		    
 			if( fault && 0 == strcmp(fault, "Fault"))
 			{
 	    		zval *rfault = NULL;
 				MAKE_STD_ZVAL(rfault);
     			object_init_ex(rfault, ws_fault_class_entry);
-				res_text = wsf_util_serialize_om(env, res_payload);
+				res_text = wsf_util_serialize_om(env, response_payload);
 				add_property_stringl(rfault, "str", res_text, strlen(res_text), 1);
 				ZVAL_ZVAL(return_value, rfault, NULL, NULL);
 			}
@@ -816,14 +921,14 @@ int wsf_client_do_request(
 		            
 		        		array_init(cid2str);
         				array_init(cid2contentType);
-		        		wsf_util_get_attachments(env, res_payload, cid2str, cid2contentType TSRMLS_CC);
+						wsf_util_get_attachments(env, response_payload, cid2str, cid2contentType TSRMLS_CC);
 		            
         				add_property_zval(rmsg, "attachments", cid2str);
         				add_property_zval(rmsg, "cid2contentType", cid2contentType);
 					}
 				}
-				res_text = wsf_util_serialize_om(env , res_payload);
-				add_property_stringl(rmsg, AXIS2_MSG_P_STR, res_text, strlen(res_text), 1); 
+				res_text = wsf_util_serialize_om(env , response_payload);
+				add_property_stringl(rmsg, WS_MSG_PAYLOAD_STR, res_text, strlen(res_text), 1); 
 				ZVAL_ZVAL(return_value, rmsg, NULL, NULL);
 			}
 			
@@ -985,6 +1090,7 @@ void wsf_util_set_security_opts(HashTable *ht, axis2_env_t *env, axis2_svc_clien
 	}
 }
 
+/*
 int wsf_client_set_rm_options(zval *zval_client, zval *zval_msg, 
 		axis2_env_t *env,	axis2_options_t *client_options, axis2_svc_client_t *svc_client,
 		int is_addr_engaged, int is_send TSRMLS_DC){
@@ -1069,7 +1175,7 @@ int wsf_client_set_rm_options(zval *zval_client, zval *zval_msg,
 	}
 	return is_rm_enabled;
 }
-
+*/
 axis2_param_t *wsf_util_create_param_for_rampart(axis2_env_t *env,
 												 HashTable *ht TSRMLS_DC)
 {
