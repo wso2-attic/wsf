@@ -20,7 +20,7 @@
  * This class generates the port type element in WSDL1.1
  */
 
-class WS_WsdlPort
+class WS_WSDL_Port
 {
 
     private $service_name;
@@ -45,21 +45,21 @@ class WS_WsdlPort
 
     public function createPortType(DomDocument $port_doc, DomElement $port_root)
     {
-        $port_el = $port_doc->createElementNS( WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
-                                               WS_WsdlConst::WS_WSDL_PORTTYPE_ATTR_NAME);
-        $port_el->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME,
+        $port_el = $port_doc->createElementNS( WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
+                                               WS_WSDL_Const::WS_WSDL_PORTTYPE_ATTR_NAME);
+        $port_el->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME,
                                $this->service_name);
         foreach($this->operations as $name => $params)
         {
-            $operation = $port_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
-                                                    WS_WsdlConst::WS_WSDL_OPERATION_ATTR_NAME);
-            $operation->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME, $name);
-            foreach(array(WS_WsdlConst::WS_WSDL_INPUT_ATTR_NAME, WS_WsdlConst::WS_WSDL_OUTPUT_ATTR_NAME)
+            $operation = $port_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
+                                                    WS_WSDL_Const::WS_WSDL_OPERATION_ATTR_NAME);
+            $operation->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $name);
+            foreach(array(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME, WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME)
                     as $type)
             {
-                $sel = $port_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
+                $sel = $port_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                                   $type);
-                $sel->setAttribute(WS_WsdlConst::WS_WSDL_MESSAGE_ATTR_NAME,
+                $sel->setAttribute(WS_WSDL_Const::WS_WSDL_MESSAGE_ATTR_NAME,
                                    "$name".ucfirst($type));
                 $operation->appendChild($sel);
             }

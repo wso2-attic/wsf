@@ -16,22 +16,22 @@
  * limitations under the License.
  */
 
-require_once('WS_WsdlConsts.php');
-require_once('WS_WsdlOperations.php');
-require_once('WS_WsdlType.php');
-require_once('WS_WsdlMessage.php');
-require_once('WS_WsdlPort.php');
-require_once('WS_WsdlBinding.php');
-require_once('WS_WsdlService.php');
-require_once('WS_WsdlInterface.php');
+require_once('WS_WSDL_Consts.php');
+require_once('WS_WSDL_Operations.php');
+require_once('WS_WSDL_Type.php');
+require_once('WS_WSDL_Message.php');
+require_once('WS_WSDL_Port.php');
+require_once('WS_WSDL_Binding.php');
+require_once('WS_WSDL_Service.php');
+require_once('WS_WSDL_Interface.php');
 
 
 /**
- * This class does create wsdl by calling the other WS_Wsdl* classes 
+ * This class does create wsdl by calling the other WS_WSDL_* classes 
  * and returns a php string which include the wsdl 
  *
  */
-class WS_WsdlCreator
+class WS_WSDL_Creator
 {
     public $namespace;
     private $endpoint;
@@ -74,37 +74,37 @@ class WS_WsdlCreator
      */
     private function buildWsdlDom()
     {
-        $wsdl_dom = new DomDocument(WS_WsdlConst::WS_DOM_DOCUMENT_VERSION_NO,
-                                    WS_WsdlConst::WS_DOM_DOCUMENT_ENCODING);
+        $wsdl_dom = new DomDocument(WS_WSDL_Const::WS_DOM_DOCUMENT_VERSION_NO,
+                                    WS_WSDL_Const::WS_DOM_DOCUMENT_ENCODING);
 
-        $wsdl_root_ele = $wsdl_dom->createElementNS(WS_Wsdlconst::WS_SCHEMA_WSDL_NAMESPACE,
-                         WS_WsdlConst::WS_WSDL_DEFINITION);
+        $wsdl_root_ele = $wsdl_dom->createElementNS(WS_WSDL_const::WS_SCHEMA_WSDL_NAMESPACE,
+                         WS_WSDL_Const::WS_WSDL_DEFINITION);
 
-        $wsdl_root_ele->setAttributeNS(WS_Wsdlconst::WS_WSDL_DEF_SCHEMA_URI,
-                                       WS_Wsdlconst::WS_WSDL_DEF_XSD_QN,
-                                       WS_Wsdlconst::WS_SOAP_XML_SCHEMA_NAMESPACE);
+        $wsdl_root_ele->setAttributeNS(WS_WSDL_const::WS_WSDL_DEF_SCHEMA_URI,
+                                       WS_WSDL_const::WS_WSDL_DEF_XSD_QN,
+                                       WS_WSDL_const::WS_SOAP_XML_SCHEMA_NAMESPACE);
 
-        $wsdl_root_ele->setAttributeNS(WS_Wsdlconst::WS_WSDL_DEF_SCHEMA_URI,
-                                       WS_Wsdlconst::WS_WSDL_DEF_TNS_QN,
+        $wsdl_root_ele->setAttributeNS(WS_WSDL_const::WS_WSDL_DEF_SCHEMA_URI,
+                                       WS_WSDL_const::WS_WSDL_DEF_TNS_QN,
                                        $this->namespace);
 
-        $wsdl_root_ele->setAttributeNS(WS_Wsdlconst::WS_WSDL_DEF_SCHEMA_URI,
-                                       WS_Wsdlconst::WS_WSDL_DEF_SOAP_ENV_QN,
-                                       WS_Wsdlconst::WS_SCHEMA_SOAP_NAMESPACE);
+        $wsdl_root_ele->setAttributeNS(WS_WSDL_const::WS_WSDL_DEF_SCHEMA_URI,
+                                       WS_WSDL_const::WS_WSDL_DEF_SOAP_ENV_QN,
+                                       WS_WSDL_const::WS_SCHEMA_SOAP_NAMESPACE);
 
-        $wsdl_root_ele->setAttributeNS(WS_Wsdlconst::WS_WSDL_DEF_SCHEMA_URI,
-                                       WS_Wsdlconst::WS_WSDL_DEF_WSDL_QN,
-                                       WS_Wsdlconst::WS_SCHEMA_WSDL_NAMESPACE);
+        $wsdl_root_ele->setAttributeNS(WS_WSDL_const::WS_WSDL_DEF_SCHEMA_URI,
+                                       WS_WSDL_const::WS_WSDL_DEF_WSDL_QN,
+                                       WS_WSDL_const::WS_SCHEMA_WSDL_NAMESPACE);
 
-        $wsdl_root_ele->setAttributeNS(WS_Wsdlconst::WS_WSDL_DEF_SCHEMA_URI,
-                                       WS_Wsdlconst::WS_WSDL_DEF_SOAP_ENC_QN,
-                                       WS_Wsdlconst::WS_SOAP_SCHEMA_ENCODING_NAMESPACE);
+        $wsdl_root_ele->setAttributeNS(WS_WSDL_const::WS_WSDL_DEF_SCHEMA_URI,
+                                       WS_WSDL_const::WS_WSDL_DEF_SOAP_ENC_QN,
+                                       WS_WSDL_const::WS_SOAP_SCHEMA_ENCODING_NAMESPACE);
 
-        $wsdl_root_ele->setAttribute(WS_Wsdlconst::WS_WSDL_DEF_TARGET_NS,
+        $wsdl_root_ele->setAttribute(WS_WSDL_const::WS_WSDL_DEF_TARGET_NS,
                                      $this->namespace);
 
 
-        $oper_obj = new WS_WsdlOperations($this->f_name);
+        $oper_obj = new WS_WSDL_Operations($this->f_name);
         $createdTypeArry = $oper_obj->createdTypes;
         $operationsArry = $oper_obj->operations;
         $xsdArry = $oper_obj->xsdTypes;
@@ -112,48 +112,48 @@ class WS_WsdlCreator
 
         if($this->Binding_style == "doc-lit")
         {
-            $type_obj = new WS_WsdlType($this->namespace, $createdTypeArry,
+            $type_obj = new WS_WSDL_Type($this->namespace, $createdTypeArry,
                                         $xsdArry);
             $type_obj->createDocLitType($wsdl_dom, $wsdl_root_ele);
             $simple_array = $type_obj->simpleTypes;
 
-            $msg_obj = new WS_WsdlMessage($operationsArry, $simple_array);
+            $msg_obj = new WS_WSDL_Message($operationsArry, $simple_array);
             $msg_obj->createDocLitMessage($wsdl_dom,$wsdl_root_ele);
         }
 
         if ($this->Binding_style == "rpc")
         {
-            $type_obj = new WS_WsdlType($this->namespace, $createdTypeArry, $operationsArry);
+            $type_obj = new WS_WSDL_Type($this->namespace, $createdTypeArry, $operationsArry);
             $type_obj->createRPCType($wsdl_dom, $wsdl_root_ele);
             $simple_array = $type_obj->simpleTypes;
 
 
-            $msg_obj = new WS_WsdlMessage($operationsArry, $simple_array);
+            $msg_obj = new WS_WSDL_Message($operationsArry, $simple_array);
             $msg_obj->createRPCMessage($wsdl_dom,$wsdl_root_ele);
 
         }
 
 
 
-        $port_obj = new WS_WsdlPort($this->service_name, $operationsArry);
+        $port_obj = new WS_WSDL_Port($this->service_name, $operationsArry);
         $port_obj->createPortType($wsdl_dom, $wsdl_root_ele);
 
         if ($this->Binding_style == "doc-lit")
         {
-            $bind_obj = new WS_WsdlBinding($this->service_name,
+            $bind_obj = new WS_WSDL_Binding($this->service_name,
                                            $this->endpoint, $operationsArry);
             $bind_obj->createDocLitBinding($wsdl_dom, $wsdl_root_ele);
         }
 
         if ($this->Binding_style == "rpc")
         {
-            $bind_obj = new WS_WsdlBinding($this->service_name, $this->endpoint,
+            $bind_obj = new WS_WSDL_Binding($this->service_name, $this->endpoint,
                                            $operationsArry);
             $bind_obj->createRPCBinding($wsdl_dom, $wsdl_root_ele);
 
         }
 
-        $svr_obj = new WS_WsdlService($this->service_name, $this->endpoint);
+        $svr_obj = new WS_WSDL_Service($this->service_name, $this->endpoint);
         $svr_obj->createService($wsdl_dom, $wsdl_root_ele);
 
 
@@ -169,63 +169,63 @@ class WS_WsdlCreator
      */
     private function buildWsdl2Dom()
     {
-        $wsdl_dom = new DomDocument(WS_WsdlConst::WS_DOM_DOCUMENT_VERSION_NO,
-                                    WS_WsdlConst::WS_DOM_DOCUMENT_ENCODING);
+        $wsdl_dom = new DomDocument(WS_WSDL_Const::WS_DOM_DOCUMENT_VERSION_NO,
+                                    WS_WSDL_Const::WS_DOM_DOCUMENT_ENCODING);
 
-        $wsdl_root_ele = $wsdl_dom->createElementNS(WS_WsdlConst::WS_WSDL2_NAMESPACE,
-                         WS_WsdlConst::WS_WSDL2_DESCRIPTION);
+        $wsdl_root_ele = $wsdl_dom->createElementNS(WS_WSDL_Const::WS_WSDL2_NAMESPACE,
+                         WS_WSDL_Const::WS_WSDL2_DESCRIPTION);
 
 
 
-        $wsdl_root_ele->setAttributeNS(WS_WsdlConst::WS_WSDL_DEF_SCHEMA_URI,
-                                       WS_WsdlConst::WS_WSDL2_WSDLX_ATTR_NAME,
-                                       WS_WsdlConst::WS_WSDL2_WSDLX_ATTR_VAL);
+        $wsdl_root_ele->setAttributeNS(WS_WSDL_Const::WS_WSDL_DEF_SCHEMA_URI,
+                                       WS_WSDL_Const::WS_WSDL2_WSDLX_ATTR_NAME,
+                                       WS_WSDL_Const::WS_WSDL2_WSDLX_ATTR_VAL);
 
-        $wsdl_root_ele->setAttributeNS(WS_WsdlConst::WS_WSDL_DEF_SCHEMA_URI,
-                                       WS_WsdlConst::WS_WSDL_DEF_TNS_QN,
+        $wsdl_root_ele->setAttributeNS(WS_WSDL_Const::WS_WSDL_DEF_SCHEMA_URI,
+                                       WS_WSDL_Const::WS_WSDL_DEF_TNS_QN,
                                        $this->namespace);
 
-        $wsdl_root_ele->setAttributeNS(WS_WsdlConst::WS_WSDL_DEF_SCHEMA_URI,
-                                       WS_WsdlConst::WS_WSDL2_WSOAP_ATTR_NAME,
-                                       WS_WsdlConst::WS_WSDL2_WSOAP_ATTR_VAL);
+        $wsdl_root_ele->setAttributeNS(WS_WSDL_Const::WS_WSDL_DEF_SCHEMA_URI,
+                                       WS_WSDL_Const::WS_WSDL2_WSOAP_ATTR_NAME,
+                                       WS_WSDL_Const::WS_WSDL2_WSOAP_ATTR_VAL);
 
-        $wsdl_root_ele->setAttributeNS(WS_WsdlConst::WS_WSDL_DEF_SCHEMA_URI,
-                                       WS_WsdlConst::WS_WSDL2_WHTTP_ATTR_NAME,
-                                       WS_WsdlConst::WS_WSDL2_WHTTP_ATTR_VAL);
+        $wsdl_root_ele->setAttributeNS(WS_WSDL_Const::WS_WSDL_DEF_SCHEMA_URI,
+                                       WS_WSDL_Const::WS_WSDL2_WHTTP_ATTR_NAME,
+                                       WS_WSDL_Const::WS_WSDL2_WHTTP_ATTR_VAL);
 
-        $wsdl_root_ele->setAttributeNS(WS_WsdlConst::WS_WSDL_DEF_SCHEMA_URI,
-                                       WS_WsdlConst::WS_WSDL_DEF_SOAP_ENC_QN,
-                                       WS_WsdlConst::WS_WSDL2_SOAP_ATTR_VAL);
+        $wsdl_root_ele->setAttributeNS(WS_WSDL_Const::WS_WSDL_DEF_SCHEMA_URI,
+                                       WS_WSDL_Const::WS_WSDL_DEF_SOAP_ENC_QN,
+                                       WS_WSDL_Const::WS_WSDL2_SOAP_ATTR_VAL);
 
-        $wsdl_root_ele->setAttribute(WS_WsdlConst::WS_WSDL_DEF_TARGET_NS,
+        $wsdl_root_ele->setAttribute(WS_WSDL_Const::WS_WSDL_DEF_TARGET_NS,
                                      $this->namespace);
 
 
-        $wsdl_doc_ele = $wsdl_dom->createElement(WS_WsdlConst::WS_WSDL2_DOCUMENTATION);
+        $wsdl_doc_ele = $wsdl_dom->createElement(WS_WSDL_Const::WS_WSDL2_DOCUMENTATION);
         $doc_txt = new DomText("A simple ".$this->service_name." service");
         $wsdl_doc_ele->appendChild($doc_txt);
         $wsdl_root_ele->appendChild($wsdl_doc_ele);
 
 
-        $oper_obj = new WS_WsdlOperations($this->f_name);
+        $oper_obj = new WS_WSDL_Operations($this->f_name);
         $createdTypeArry = $oper_obj->createdTypes;
         $operationsArry = $oper_obj->operations;
         $xsdArry = $oper_obj->xsdTypes;
 
 
-        $type_obj = new WS_WsdlType($this->namespace, $createdTypeArry,
+        $type_obj = new WS_WSDL_Type($this->namespace, $createdTypeArry,
                                     $xsdArry);
         $type_obj->createWsdl2Type($wsdl_dom, $wsdl_root_ele);
 
-        $interface_obj = new WS_WsdlInterface($this->service_name,
+        $interface_obj = new WS_WSDL_Interface($this->service_name,
                                               $operationsArry);
         $interface_obj->createInterface($wsdl_dom, $wsdl_root_ele);
 
-        $bind_obj = new WS_WsdlBinding($this->service_name,
+        $bind_obj = new WS_WSDL_Binding($this->service_name,
                                        $this->endpoint);
         $bind_obj->createWsdl2Binding($wsdl_dom, $wsdl_root_ele);
 
-        $svr_obj = new WS_WsdlService($this->service_name,
+        $svr_obj = new WS_WSDL_Service($this->service_name,
                                       $this->endpoint);
         $svr_obj->createWsdl2Service($wsdl_dom, $wsdl_root_ele);
 
@@ -240,7 +240,7 @@ class WS_WsdlCreator
      *
      */
 
-    public function WS_WsdlOut()
+    public function WS_WSDL_Out()
     {
         if ($this->wsdl_version == "wsdl1")
             $tmp = $this->buildWsdlDom();

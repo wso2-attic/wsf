@@ -20,7 +20,7 @@
  * This class generates message elements in WSDL
  */
 
-class WS_WsdlMessage
+class WS_WSDL_Message
 {
     public $operations;
     private $simpleTypes;
@@ -46,30 +46,30 @@ class WS_WsdlMessage
 
     public function createDocLitMessage(DomDocument $msg_doc, DomElement $msg_root)
     {
-        foreach(array(WS_WsdlConst::WS_WSDL_INPUT_ATTR_NAME,
-                      WS_WsdlConst::WS_WSDL_OUT_ATTR_NAME) as $type)
+        foreach(array(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME,
+                      WS_WSDL_Const::WS_WSDL_OUT_ATTR_NAME) as $type)
         {
 
             foreach($this->operations as $name => $params)
             {
-                $el = $msg_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
-                                                WS_WsdlConst::WS_WSDL_MESSAGE_ATTR_NAME);
-                $el->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME,
+                $el = $msg_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
+                                                WS_WSDL_Const::WS_WSDL_MESSAGE_ATTR_NAME);
+                $el->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME,
                                   "$name".ucfirst($type));
 
-                $part = $msg_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
-                                                  WS_WsdlConst::WS_WSDL_PART_ATTR_NAME);
-                $part->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME,
-                                    WS_WsdlConst::WS_WSDL_PARAMETERS_ATTR_NAME);
+                $part = $msg_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
+                                                  WS_WSDL_Const::WS_WSDL_PART_ATTR_NAME);
+                $part->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME,
+                                    WS_WSDL_Const::WS_WSDL_PARAMETERS_ATTR_NAME);
 
-                if (ucfirst(WS_WsdlConst::WS_WSDL_INPUT_ATTR_NAME) == ucfirst($type))
+                if (ucfirst(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME) == ucfirst($type))
                 {
-                    $part->setAttribute(WS_WsdlConst::WS_WSDL_ELEMENT_ATTR_NAME,
+                    $part->setAttribute(WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME,
                                         $name);
                 }
-                if (ucfirst(WS_WsdlConst::WS_WSDL_OUTPUT_ATTR_NAME) == ucfirst($type))
+                if (ucfirst(WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME) == ucfirst($type))
                 {
-                    $part->setAttribute(WS_WsdlConst::WS_WSDL_ELEMENT_ATTR_NAME,
+                    $part->setAttribute(WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME,
                                         $name.WS_WSDL_REPONSE_ATTR_NAME);
                 }
 
@@ -94,42 +94,42 @@ class WS_WsdlMessage
         {
             foreach($params as $name2 => $params3)
             {
-                $el = $msg_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
-                                                WS_WsdlConst::WS_WSDL_MESSAGE_ATTR_NAME);
-                $el->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME,
+                $el = $msg_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
+                                                WS_WSDL_Const::WS_WSDL_MESSAGE_ATTR_NAME);
+                $el->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME,
                                   "$name1".ucfirst($name2));
-                if ($name2 == WS_WsdlConst::WS_WSDL_INPUT_ATTR_NAME)
+                if ($name2 == WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME)
                 {
                     foreach($params3 as $name3 => $params4)
                     {
-                        $part = $msg_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
-                                                          WS_WsdlConst::WS_WSDL_PART_ATTR_NAME);
+                        $part = $msg_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
+                                                          WS_WSDL_Const::WS_WSDL_PART_ATTR_NAME);
                         foreach ($params4 as $name4 => $param5)
                         {
-                            if ($name4 == WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME)
-                                $part->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME,
+                            if ($name4 == WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME)
+                                $part->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME,
                                                     $param5);
-                            if ($name4 == WS_WsdlConst::WS_WSDL_TYPE_ATTR_NAME)
-                                $part->setAttribute(WS_WsdlConst::WS_WSDL_TYPE_ATTR_NAME,
+                            if ($name4 == WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME)
+                                $part->setAttribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME,
                                                     $param5);
                             $el->appendChild($part);
 
                         }
                     }
                 }
-                if ($name2 == WS_WsdlConst::WS_WSDL_OUTPUT_ATTR_NAME)
+                if ($name2 == WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME)
                 {
                     foreach($params3 as $name3 => $params4)
                     {
-                        $part = $msg_doc->createElementNS(WS_WsdlConst::WS_SCHEMA_WSDL_NAMESPACE,
-                                                          WS_WsdlConst::WS_WSDL_PART_ATTR_NAME);
+                        $part = $msg_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
+                                                          WS_WSDL_Const::WS_WSDL_PART_ATTR_NAME);
                         foreach ($params4 as $name4 => $param5)
                         {
-                            if ($name4 == WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME)
-                                $part->setAttribute(WS_WsdlConst::WS_WSDL_NAME_ATTR_NAME,
+                            if ($name4 == WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME)
+                                $part->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME,
                                                     $param5);
-                            if ($name4 == WS_WsdlConst::WS_WSDL_TYPE_ATTR_NAME)
-                                $part->setAttribute(WS_WsdlConst::WS_WSDL_TYPE_ATTR_NAME,
+                            if ($name4 == WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME)
+                                $part->setAttribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME,
                                                     $param5);
                             $el->appendChild($part);
                         }

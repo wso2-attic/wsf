@@ -1647,7 +1647,7 @@ PHP_FUNCTION(ws_service_reply)
 		   }
 		}
 		ZVAL_STRING(&func, "ws_generate_wsdl", 1);
-		ZVAL_STRING(params[0], "scripts/wsdl/WS_WsdlCreator.php", 1); 	
+		ZVAL_STRING(params[0], "scripts/wsdl/WS_WSDL_Creator.php", 1); 	
 		ZVAL_STRING(params[1], service_name, 1);
 		ZVAL_ZVAL(params[2], f_val, NULL, NULL);
 		INIT_PZVAL(params[2]);

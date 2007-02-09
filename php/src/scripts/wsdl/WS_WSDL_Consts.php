@@ -21,7 +21,7 @@
  * the namespaces used in wsdl generation scripts
  */
 
-class WS_WsdlConst
+class WS_WSDL_Const
 {
 
     const WS_DOM_DOCUMENT_VERSION_NO = '1.0';

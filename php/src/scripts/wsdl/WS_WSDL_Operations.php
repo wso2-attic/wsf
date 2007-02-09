@@ -21,7 +21,7 @@
  * This class retrives the types information from the php function and
  * maps with xsd types 
  */
-class WS_WsdlOperations
+class WS_WSDL_Operations
 {
 
     const WS_OPERATION_INPUT_TAG = 'input';

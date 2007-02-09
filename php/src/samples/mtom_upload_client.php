@@ -24,11 +24,18 @@ $reqPayloadString = <<<XML
 </ns1:upload>
 XML;
 
+// $reqPayloadString = <<<XML
+//                <ns1:image xmlmime:contentType="image/jpeg" xmlns:xmlmime="http://www.w3.org/2004/06/xmlmime">
+//                   <xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="cid:myid1"></xop:Include>
+//                </ns1:image>
+// XML;
+
+
 try {
 	$f = file_get_contents("./resources/axis2.jpg");
     
 	$reqMessage = new WSMessage($reqPayloadString, 
-        array("to" => "http://localhost/mtom_upload_service.php",
+        array("to" => "http://localhost:9090/samples/mtom_upload_service.php",
 		"attachments" => array("myid1" => $f)));
 	
 	$client = new WSClient(array("useMTOM" => TRUE));
