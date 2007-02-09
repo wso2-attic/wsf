@@ -27,7 +27,7 @@ try {
         array("user"=>"Raigama","password"=>"RaigamaPW"));
     
     $client = new WSClient(
-        array("to"=>"http://localhost:9090/samples/echo_service_sec.php"));
+        array("to"=>"http://localhost/echo_service_sec.php"));
 				
     $resMessage = $client->request($msg);
     
