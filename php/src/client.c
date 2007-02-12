@@ -29,6 +29,37 @@
 #include <sandesha2_client.h>
 #endif
 
+int wsf_client_set_rm_db(axis2_env_t *env, 
+						  axis2_svc_client_t *svc_client, axis2_char_t *db_location TSRMLS_DC)
+{
+	axis2_conf_ctx_t *conf_ctx = NULL;
+	axis2_svc_ctx_t *svc_ctx = NULL;
+	axis2_module_desc_t *module_desc = NULL;
+	axis2_conf_t *conf = NULL;
+	axis2_hash_t *modules = NULL;
+	axis2_qname_t *sandesha_qname = NULL;
+	axis2_param_t *rm_db_param = NULL;
+
+	sandesha_qname = axis2_qname_create(env, "sandesha2", NULL, NULL);
+
+	svc_ctx = AXIS2_SVC_CLIENT_GET_SVC_CTX(svc_client, env);
+	conf_ctx = AXIS2_SVC_CTX_GET_CONF_CTX(svc_ctx, env);
+	conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+	module_desc = AXIS2_CONF_GET_MODULE(conf, env, sandesha_qname);
+	if(!module_desc)
+		return AXIS2_FAILURE;
+	rm_db_param = AXIS2_MODULE_DESC_GET_PARAM(module_desc, env, "sandesha2_db");
+	if(!rm_db_param)
+		return AXIS2_FAILURE;
+	axis2_param_set_value(rm_db_param, env, AXIS2_STRDUP(db_location, env));
+
+	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] db path set to param %s", db_location);
+	axis2_qname_free(sandesha_qname, env);
+
+	return AXIS2_SUCCESS;
+}
+
+
 static xmlNodePtr wsf_get_xml_node(zval *node TSRMLS_DC)
 {
 	php_libxml_node_object *object;
@@ -648,6 +679,7 @@ int wsf_client_do_request(
 	int ws_client_will_continue_sequence = AXIS2_FALSE;
 	int engage_rm = AXIS2_FALSE;
 	int rm_spec_version = WSF_RM_VERSION_1_0;
+	char *rm_spec_version_str = WSF_RM_VERSION_1_0_STR;
 	int is_addressing_engaged = AXIS2_FALSE;
 	int is_addressing_action_present = AXIS2_FALSE;
 	int is_rm_engaged = AXIS2_FALSE;
@@ -794,14 +826,16 @@ int wsf_client_do_request(
 				
 				if(Z_LVAL_PP(client_tmp) == WSF_RM_VERSION_1_0){
 					rm_spec_version = WSF_RM_VERSION_1_0;
+					rm_spec_version_str = WSF_RM_VERSION_1_0_STR;
 					AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] rm spec version 1.0");
 
 				}else if(Z_LVAL_PP(client_tmp) == WSF_RM_VERSION_1_1){
 					rm_spec_version = WSF_RM_VERSION_1_1;
+					rm_spec_version_str = WSF_RM_VERSION_1_1_STR;
 					AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] rm spec version 1.1");
 				}
 
-				rm_prop = axis2_property_create_with_args(env, 0, 0, 0, rm_spec_version);
+				rm_prop = axis2_property_create_with_args(env, 0, 0, 0, rm_spec_version_str);
 				AXIS2_OPTIONS_SET_PROPERTY(client_options, env, WSF_SANDESHA2_CLIENT_RM_SPEC_VERSION, rm_prop);
 				engage_rm  = AXIS2_TRUE;
 		}
@@ -809,7 +843,8 @@ int wsf_client_do_request(
 		if((is_addressing_engaged || (!is_addressing_engaged && is_addressing_action_present )) && engage_rm){
 			AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "sandesha2");
 			is_rm_engaged = AXIS2_TRUE;
-		
+			
+			wsf_client_set_rm_db(env, svc_client, WSF_GLOBAL(rm_db_dir) TSRMLS_CC);
 			/** rm is engaged , process other rm params */
 			if(zend_hash_find(Z_OBJPROP_P(this_ptr), "sequenceExpiryTime", sizeof("sequenceExpiryTime"),
 				(void**)&client_tmp) == SUCCESS){

@@ -161,9 +161,9 @@ typedef enum ws_input_types{
 #define WSF_SANDESHA2_CLIENT_RM_SPEC_VERSION "Sandesha2RMSpecVersion"
 #define WSF_SANDESHA2_CLIENT_DUMMY_MESSAGE "Sandesha2DummyMessage"
 
-#define WSF_SANDESHA2_SPEC_VERSION_1_0 "Spec_2005_02"
+#define WSF_RM_VERSION_1_0_STR "Spec_2005_02"
 #define WSF_RM_VERSION_1_0  1
-#define WSF_SANDESHA2_SPEC_VERSION_1_1 "Spec_2006_08"
+#define WSF_RM_VERSION_1_1_STR "Spec_2006_08"
 #define WSF_RM_VERSION_1_1  2
 
 #define WSF_SANDESHA_CLIENT_PROP "wsf_cli_prop"

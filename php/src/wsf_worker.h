@@ -30,14 +30,25 @@ extern "C"
 
 typedef struct wsf_worker_t wsf_worker_t;
 
-wsf_worker_t* wsf_worker_create (const axis2_env_t *env, axis2_char_t *repo_path);
+wsf_worker_t* 
+wsf_worker_create (const axis2_env_t *env, 
+  				   axis2_char_t *repo_path,
+				   axis2_char_t *rm_db_dir);
 
-int wsf_worker_process_request(wsf_worker_t *worker, const axis2_env_t *env,
-							   php_req_info_t *reqinfo, ws_svc_info_t *svc_info);
+int 
+wsf_worker_process_request(wsf_worker_t *worker, 
+						   const axis2_env_t *env,
+						   php_req_info_t *reqinfo, 
+						   ws_svc_info_t *svc_info);
 
-void wsf_worker_free(wsf_worker_t *worker, const axis2_env_t *env);
+void 
+wsf_worker_free(wsf_worker_t *worker, 
+				const axis2_env_t *env);
 
-axis2_conf_ctx_t* wsf_worker_get_conf_ctx(wsf_worker_t *worker, const axis2_env_t *env);
+axis2_conf_ctx_t* 
+wsf_worker_get_conf_ctx(wsf_worker_t *worker, 
+						const axis2_env_t *env);
+
 
 #ifdef __cplusplus
 }

@@ -67,10 +67,10 @@ ZEND_END_ARG_INFO()
 PHP_METHOD(ws_client, __construct);
 PHP_METHOD(ws_client, __destruct);
 PHP_METHOD(ws_client, __call);
-PHP_FUNCTION(ws_client_request);
-PHP_FUNCTION(ws_client_send);
-PHP_FUNCTION(ws_client_get_last_response);
-PHP_FUNCTION(ws_client_get_last_request);
+PHP_METHOD(ws_client,ws_client_request);
+PHP_METHOD(ws_client, ws_client_send);
+PHP_METHOD(ws_client, ws_client_get_last_response);
+PHP_METHOD(ws_client, ws_client_get_last_request);
 /*
 ZEND_BEGIN_ARG_INFO(__ws_client_call_args, 0)
     ZEND_ARG_PASS_INFO(0)
@@ -84,8 +84,8 @@ ZEND_BEGIN_ARG_INFO(ws_client_call_args, 0)
 ZEND_END_ARG_INFO()
     
 /** WSService */
-PHP_FUNCTION(ws_service_set_class);
-PHP_FUNCTION(ws_service_reply);
+PHP_METHOD(ws_service ,ws_service_set_class);
+PHP_METHOD(ws_service ,ws_service_reply);
 PHP_METHOD(ws_service, __construct);
 PHP_METHOD(ws_service, __destruct);
 
@@ -102,7 +102,7 @@ PHP_FUNCTION(ws_public_key_from_file);
 PHP_METHOD(ws_fault, __construct);
 PHP_METHOD(ws_fault, __destruct);
 PHP_METHOD(ws_fault, __get);
-PHP_FUNCTION(ws_fault_get_soap_fault_text);
+PHP_METHOD(ws_fault, ws_fault_get_soap_fault_text);
 
 ZEND_BEGIN_ARG_INFO(__ws_fault_get_args, 0)
     ZEND_ARG_PASS_INFO(0)
@@ -118,10 +118,10 @@ zend_function_entry php_ws_message_class_functions[] ={
 /** client function entry */
 zend_function_entry php_ws_client_class_functions[]=
 {
-	PHP_FALIAS(request, ws_client_request, NULL)
-	PHP_FALIAS(send, ws_client_send, NULL)
-	PHP_FALIAS(getLastResponse, ws_client_get_last_response, NULL)
-	PHP_FALIAS(getLastRequest, ws_client_get_last_request, NULL)
+	PHP_MALIAS(ws_client, request, ws_client_request, NULL,ZEND_ACC_PUBLIC)
+	PHP_MALIAS(ws_client, send, ws_client_send, NULL,ZEND_ACC_PUBLIC)
+	PHP_MALIAS(ws_client,getLastResponse, ws_client_get_last_response, NULL ,ZEND_ACC_PUBLIC)
+	PHP_MALIAS(ws_client, getLastRequest, ws_client_get_last_request , NULL , ZEND_ACC_PUBLIC)
 	PHP_ME(ws_client, __call, ws_client_call_args, ZEND_ACC_PUBLIC)
 	PHP_ME(ws_client, __construct, NULL, ZEND_ACC_PUBLIC)
 	PHP_ME(ws_client, __destruct, NULL, ZEND_ACC_PUBLIC)
@@ -131,8 +131,8 @@ zend_function_entry php_ws_client_class_functions[]=
 /** service function entry */
 zend_function_entry php_ws_service_class_functions[]=
 {
-	PHP_FALIAS(setClass, ws_service_set_class, NULL)
-	PHP_FALIAS(reply, ws_service_reply, NULL)
+	PHP_MALIAS(ws_service , setClass, ws_service_set_class, NULL, ZEND_ACC_PUBLIC)
+	PHP_MALIAS(ws_service , reply, ws_service_reply, NULL, ZEND_ACC_PUBLIC)
 	PHP_ME(ws_service, __construct, NULL, ZEND_ACC_PUBLIC)
 	PHP_ME(ws_service, __destruct, NULL, ZEND_ACC_PUBLIC)
 	{NULL , NULL, NULL}
@@ -141,7 +141,7 @@ zend_function_entry php_ws_service_class_functions[]=
 /** WSFault class entry */
 zend_function_entry php_ws_fault_class_functions[]=
 {
-	PHP_FALIAS(getSoapFaultText, ws_fault_get_soap_fault_text, NULL)
+	PHP_MALIAS(ws_fault ,getSoapFaultText, ws_fault_get_soap_fault_text, NULL, ZEND_ACC_PUBLIC)
    	PHP_ME(ws_fault, __construct, NULL, ZEND_ACC_PUBLIC)
    	PHP_ME(ws_fault, __destruct, NULL, ZEND_ACC_PUBLIC)
    	PHP_ME(ws_fault, __get, __ws_fault_get_args, ZEND_ACC_PUBLIC)
@@ -371,6 +371,8 @@ PHP_INI_BEGIN()
 		enable_trace, zend_wsf_globals, wsf_globals)
 	STD_PHP_INI_ENTRY("wsf.enable_exception", "1", PHP_INI_ALL, OnUpdateBool,
 		enable_exception, zend_wsf_globals, wsf_globals)
+	STD_PHP_INI_ENTRY("wsf.rm_db_dir", "/tmp", PHP_INI_ALL, OnUpdateString,
+		rm_db_dir, zend_wsf_globals, wsf_globals) 
 PHP_INI_END()
 /* }}} */
 
@@ -385,6 +387,7 @@ static void ws_init_globals(zend_wsf_globals *wsf_globals)
 	wsf_globals->soap_version = AXIOM_SOAP12;
 	wsf_globals->passwd_location = NULL;
 	wsf_globals->soap_uri = NULL;
+	wsf_globals->rm_db_dir = NULL;
 	
 }
 /* }}} */
@@ -445,7 +448,7 @@ PHP_MINIT_FUNCTION(wsf)
 
 	ws_env_svr = wsf_env_create_svr(WSF_GLOBAL(log_path));
 
-	worker = wsf_worker_create(ws_env_svr, home_folder);	
+	worker = wsf_worker_create(ws_env_svr, home_folder, WSF_GLOBAL(rm_db_dir));	
 	axiom_xml_reader_init();
     
 	return SUCCESS;
@@ -1019,7 +1022,7 @@ PHP_METHOD(ws_client, __destruct)
 	it would return a string, if the input was a dom node , it returns a dom
 	node.
 	*/
-PHP_FUNCTION(ws_client_request)
+PHP_METHOD(ws_client ,ws_client_request)
 {
 	zval *param = NULL;
    	ws_object_ptr intern = NULL;
@@ -1043,7 +1046,7 @@ PHP_FUNCTION(ws_client_request)
     Sends the given payload in a robust manner.
     Means that SOAP faults are captured and reported.
     */
-PHP_FUNCTION(ws_client_send)
+PHP_METHOD(ws_client ,ws_client_send)
 {
     zval *param = NULL;
     ws_object_ptr intern = NULL;
@@ -1062,7 +1065,7 @@ PHP_FUNCTION(ws_client_send)
 /* }}} end send*/ 
 
 /* {{{ proto getLastResponse() */
-PHP_FUNCTION(ws_client_get_last_response)
+PHP_METHOD(ws_client, ws_client_get_last_response)
 {
     axis2_svc_client_t *svc_client = NULL;
     ws_object_ptr intern = NULL;
@@ -1088,7 +1091,7 @@ PHP_FUNCTION(ws_client_get_last_response)
 /* }}} */
 
 /* {{{ proto getLastRequest() */
-PHP_FUNCTION(ws_client_get_last_request)
+PHP_METHOD(ws_client ,ws_client_get_last_request)
 {
     axis2_svc_client_t *svc_client = NULL;
     ws_object_ptr intern = NULL;
@@ -1204,6 +1207,7 @@ PHP_METHOD(ws_service, __construct)
 				svc_info->use_mtom = Z_BVAL_PP(tmp);
             }else {
                 add_property_bool(obj, "useMTOM", 0);
+				svc_info->use_mtom = 0;
             }
             if(zend_hash_find(ht, "requestXOP", sizeof("requestXOP"), 
                 (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
@@ -1211,6 +1215,7 @@ PHP_METHOD(ws_service, __construct)
 				svc_info->request_xop = Z_BVAL_PP(tmp);
             }else {
                 add_property_bool(obj, "requestXOP", 0);
+				svc_info->request_xop = 0;
             }
             if(zend_hash_find(ht, "secure", sizeof("secure"), 
                 (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
@@ -1393,7 +1398,7 @@ PHP_METHOD(ws_service, __destruct)
 /* {{{ proto long setClass(string classname)
    Set a class to the service
    */
-PHP_FUNCTION(ws_service_set_class)
+PHP_METHOD(ws_service , ws_service_set_class)
 {
 /*
 #ifdef ZEND_ENGINE_2		
@@ -1469,7 +1474,7 @@ PHP_FUNCTION(ws_service_set_class)
 /* {{{ proto long reply([long style])
    reply the SOAP request
    */
-PHP_FUNCTION(ws_service_reply)
+PHP_METHOD(ws_service ,ws_service_reply)
 {
 	ws_object_ptr intern = NULL;
 	zval *obj = NULL;
@@ -1772,10 +1777,10 @@ PHP_METHOD(ws_fault, __destruct)
 {
 }
 /* }}} */
-PHP_FUNCTION(ws_fault_add_fault_header){}
-PHP_FUNCTION(ws_fault_get_fault_headers){}
+PHP_METHOD(ws_fault, ws_fault_add_fault_header){}
+PHP_METHOD(ws_fault, ws_fault_get_fault_headers){}
 /* {{{ proto WSFault::getSoapFaultText [void ] */
-PHP_FUNCTION(ws_fault_get_soap_fault_text)
+PHP_METHOD(ws_fault ,ws_fault_get_soap_fault_text)
 {
     zval **tmp;
     if (zend_hash_find(Z_OBJPROP_P(this_ptr), "faultreason", sizeof("faultreason"), (void **)&tmp) != SUCCESS) {
@@ -1794,7 +1799,7 @@ PHP_FUNCTION(ws_fault_get_soap_fault_text)
 /* }}} */
 
 /* {{{ */
-PHP_FUNCTION(ws_fault_get_fault_code_value)
+PHP_METHOD(ws_fault ,ws_fault_get_fault_code_value)
 {
     zval **tmp;
     if (zend_hash_find(Z_OBJPROP_P(this_ptr), "faultcode", sizeof("faultcode"), (void **)&tmp) != SUCCESS) {
@@ -1817,7 +1822,7 @@ PHP_FUNCTION(ws_fault_get_fault_code_value)
 }
 /* }}} */
 
-PHP_FUNCTION(ws_fault_get_fault_code_subcode_value)
+PHP_METHOD(ws_fault ,ws_fault_get_fault_code_subcode_value)
 {
     zval **tmp;
     if (zend_hash_find(Z_OBJPROP_P(this_ptr), "faultcode", sizeof("faultcode"), (void **)&tmp) != SUCCESS) {

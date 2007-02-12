@@ -40,7 +40,8 @@ struct wsf_worker_t
 };
 
 wsf_worker_t * wsf_worker_create (const axis2_env_t *env, 
-								axis2_char_t *repo_path)
+								  axis2_char_t *repo_path,
+								  axis2_char_t *rm_db_dir)
 {
 	wsf_worker_t *worker = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -59,7 +60,24 @@ wsf_worker_t * wsf_worker_create (const axis2_env_t *env,
 		wsf_worker_free(worker, env);
 		return NULL;
 	}
-	
+	if(rm_db_dir){
+		axis2_conf_t *conf = NULL;
+		axis2_module_desc_t *module_desc = NULL;
+		axis2_param_t *param = NULL;
+		axis2_qname_t *sandesha2_qname = NULL;
+
+		sandesha2_qname = axis2_qname_create(env, "sandesha2", NULL, NULL);
+
+		conf = axis2_conf_ctx_get_conf(worker->conf_ctx, env);
+		module_desc = AXIS2_CONF_GET_MODULE(conf, env, sandesha2_qname);
+		if(module_desc){
+			param = AXIS2_MODULE_DESC_GET_PARAM(module_desc, env, "sandesha2_db");
+			if(param){
+				axis2_param_set_value(param, env, rm_db_dir);	
+				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_svr] rm_db_dir %s", rm_db_dir);
+			}
+		}
+	}
 	return worker;
 }
 

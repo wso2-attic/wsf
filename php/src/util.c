@@ -279,7 +279,8 @@ ws_svc_info_t* ws_svc_info_create()
     svc_info->class_info = NULL;
     svc_info->modules_to_engage = NULL;
     svc_info->php_worker = NULL;
-    svc_info->use_mtom = 1;  /* default is true */
+    svc_info->use_mtom = 0;  /* default is false other wise service side will send mime 
+							 headers which some servers can;t handle*/
     svc_info->request_xop = 0; /* default false */
     svc_info->secure = 0; /* default is false */
     svc_info->ops_to_functions = NULL;

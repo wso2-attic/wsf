@@ -526,6 +526,8 @@ ws_xml_msg_recv_invoke(
 		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Request Payload is NULL");
 		return NULL;
 	}
+
+	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " [wsf_svr] calling php service ");
 zend_try {
 
     MAKE_STD_ZVAL(msg);

@@ -22,8 +22,9 @@ Contents:
     a. Requirements
 
 	You need to download following:
-		libxml2 binary distribution
-	    zlib binary distribution
+
+	libxml2 binary distribution
+        zlib binary distribution
        	iconv binary distribution
         
     b. Using the command prompt            
@@ -43,29 +44,26 @@ Contents:
 
 3. Building WSO2 WSF
                 
-    Before trying this, please refer README.WIN32-BUILD-SYSTEM 
-	file in PHP source distribution and build PHP source under Windows.
+    Before trying this, please refer README.WIN32-BUILD-SYSTEM
+    file in PHP source distribution and build PHP source under Windows.
                 
-    Create a bat file named wsfvars.bat with following entries 
-	using your directory locations.
+    Copy wsf_php folder to php_source/ext directory.
 
-	@SET PATH=%PATH%;<path_to_extract_folder>\axis2c\build\wsf_c\lib;
-	@SET INCLUDE=%INCLUDE%;<path_to_extract_folder>\wsf_c\axis2c\build\wsf_c\include;   
-	@SET LIB=%LIB%;<path_to_extract_folder>\wsf_c\axis2c\build\wsf_c\lib;
- 
-    Then using the same command prompt used to build the PHP source,
-	run the wsfvars.bat file. 
-	
-	Copy wsf_php folder to php_source/ext directory.
+    Run "buildconf.bat" to rebuild the configre.js file.
 
-	Run "buildconf.bat" to rebuild the configre.js file.
 
     "cscript /nologo configure.js --help" will give the configuration options.
     You will find the option --with-wsf.
-	
-	Use "cscript configure.js --with-wsf=shared" to configure the wsf extension as a dll
 
-	"nmake" will build wsf extension.
+    Add following entries to config.nice.bat file.
+	"--with-extra-includes=<Libxml2 bin dir>\include;<Iconv binary dir>\include;<zlib binary dir>\include"
+	"--with-extra-libs=<Libxml2 bin dir>\lib;<Iconv binary dir>\lib;<zlib binary dir>\lib"
+	--with-wsf=shared"
+
+	
+    Now run config.nice.bat file to generate the maefile.
+   
+    "nmake" will build wsf extension.
 
 4. Installing WSO2 WSF as a PHP extension.
 
@@ -91,7 +89,8 @@ Contents:
        [wsf]
        wsf.home="<path_to_extract_folder>\wsf_c"                       
        wsf.log_path="<path_to_extract_folder>\wsf_c\logs"
-      
+       wsf.rm_db_dir="<path_to_extract_folder>\wsf_c>"
+
        extension=php_wsf.dll
      
     5. Create an environment variable PHPRC to point to your php.ini file location.
