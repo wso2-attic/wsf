@@ -103,7 +103,6 @@ public class AxiomNode {
         if (tmpAxiomNode.isText() && (tmpAxiomNode.getOMText().getTextCharacters())[0] == '\n') {
         } else {
             xmlList.addAxiomNode(tmpAxiomNode);
-
         }
     }
 
@@ -182,8 +181,10 @@ public class AxiomNode {
     }
 
     public XMLList getChildElements(XMLName xmlName, XMLList xmlList) {
-        if (!isElement())
-            throw ScriptRuntime.typeError(UNSUPPORTED_OP);
+        if (!isElement()) {
+            //throw ScriptRuntime.typeError(UNSUPPORTED_OP);
+            return null;
+        }
 
         javax.xml.namespace.QName qname = new javax.xml.namespace.QName(xmlName.uri(),
                 xmlName.localName());
@@ -445,20 +446,18 @@ public class AxiomNode {
         if (!isElement())
             throw ScriptRuntime.typeError(UNSUPPORTED_OP);
 
-        nodeMatcher.setVariable(this, xmlList, type);
-
         if (xmlName.localName().equals(XMLName.ANY_NAME) && xmlName.uri() == null) {
-            xmlList = nodeMatcher.matchAnyQName();
+            xmlList = nodeMatcher.matchAnyQName(this, xmlList, type);
             //System.out.println("case 1");
         } else if (xmlName.localName().equals(XMLName.ANY_NAME)) {
-            xmlList = nodeMatcher.matchAnyLocalName(xmlName.uri());
+            xmlList = nodeMatcher.matchAnyLocalName(this, xmlList, type, xmlName.uri());
             //System.out.println("case 2");
         } else if (xmlName.uri() == null || xmlName.uri().equals("")) {
-            xmlList = nodeMatcher.matchAnyNamespace(xmlName.localName(), xmlName.uri());
+            xmlList = nodeMatcher.matchAnyNamespace(this, xmlList, type, xmlName.localName(), xmlName.uri());
             //System.out.println("case 3");
         } else {
-            xmlList = nodeMatcher.matchQName(new javax.xml.namespace.QName(xmlName.uri(), xmlName.localName()));
-            //System.out.println("case 4");
+            xmlList = nodeMatcher.matchQName(this, xmlList, type, new javax.xml.namespace.QName(xmlName.uri(), xmlName.localName()));
+            //System.out.println("case 4");                          ,
         }
         return xmlList;
     }
@@ -522,21 +521,17 @@ public class AxiomNode {
      * Match x.y, x.ns::y, x.@, x.@ns::y expressions
      */
     private static class NodeMatcher implements AxiomNodeMatcher {
-        XMLList xmlList;
-        Iterator iterator;
-        int type;
-        AxiomNode thisAxiomNode;
 
         //match any localName and any namespaceURI
-        public XMLList matchAnyQName() {
+        public synchronized XMLList matchAnyQName(AxiomNode thisAxiomNode, XMLList xmlList, int type) {
+            Iterator iterator = null;
             if (type == AxiomNodeMatcher.CHILDREN) {
                 iterator = thisAxiomNode.getOMElement().getChildren();
 
             } else if (type == AxiomNodeMatcher.ATTRIBUTES) {
                 iterator = thisAxiomNode.getOMElement().getAllAttributes();
-
             }
-
+            
             AxiomNode tmpAxiomNode;
             while (iterator.hasNext()) {
                 tmpAxiomNode = AxiomNode.buildAxiomNode(iterator.next(), thisAxiomNode);
@@ -547,7 +542,8 @@ public class AxiomNode {
         }
 
         //match any localName with a given namespaceURI
-        public XMLList matchAnyLocalName(String namespaceURI) {
+        public synchronized XMLList matchAnyLocalName(AxiomNode thisAxiomNode, XMLList xmlList, int type, String namespaceURI) {
+            Iterator iterator = null;
             if (type == AxiomNodeMatcher.CHILDREN) {
                 iterator = thisAxiomNode.getOMElement().getChildren();
 
@@ -565,18 +561,14 @@ public class AxiomNode {
                         qname.getNamespaceURI().equals(namespaceURI)) || (tmpAxiomNode.isText())) {
                     thisAxiomNode.addToList(tmpAxiomNode, xmlList);
 
-                } /*else if (qname != null && qname.getNamespaceURI().equals(namespaceURI)) {
-                    xmlList.addToList(tmpAxiomNode);
-
-                } else if (tmpAxiomNode.isText()) {
-                    xmlList.addToList(tmpAxiomNode);
-                }*/
+                }
             }
             return xmlList;
         }
 
         //match any namespace with a given localName
-        public XMLList matchAnyNamespace(String localName, String namespaceURI) {
+        public synchronized XMLList matchAnyNamespace(AxiomNode thisAxiomNode, XMLList xmlList, int type, String localName, String namespaceURI) {
+            Iterator iterator = null;
             if (type == AxiomNodeMatcher.CHILDREN) {
                 iterator = thisAxiomNode.getOMElement().getChildren();
 
@@ -593,26 +585,22 @@ public class AxiomNode {
                 if (qname != null && qname.getLocalPart().equals(localName)) {
 
                     if ((namespaceURI == null) || (qname.getNamespaceURI().equals(namespaceURI))) {
-                        //xmlList.addToList(tmpAxiomNode);
                         thisAxiomNode.addToList(tmpAxiomNode, xmlList);
-                    } /*else if (qname.getNamespaceURI().equals(namespaceURI)) {
-                        xmlList.addToList(tmpAxiomNode);
-
-                    }*/
+                    }
                 }
             }
             return xmlList;
         }
 
         //match given QName;
-        public XMLList matchQName(javax.xml.namespace.QName qname) {
+        public synchronized XMLList matchQName(AxiomNode thisAxiomNode, XMLList xmlList, int type, javax.xml.namespace.QName qname) {
             AxiomNode tmpAxiomNode;
+            Iterator iterator;
             if (type == AxiomNodeMatcher.CHILDREN) {
                 iterator = thisAxiomNode.getOMElement().getChildrenWithName(qname);
 
                 while (iterator.hasNext()) {
                     tmpAxiomNode = AxiomNode.buildAxiomNode(iterator.next(), thisAxiomNode);
-                    //xmlList.addToList(tmpAxiomNode);
                     thisAxiomNode.addToList(tmpAxiomNode, xmlList);
                 }
 
@@ -623,18 +611,11 @@ public class AxiomNode {
                     tmpAxiomNode = AxiomNode.buildAxiomNode(iterator.next(), thisAxiomNode);
 
                     if (qname.equals(tmpAxiomNode.getOMAttribute().getQName())) {
-                        //xmlList.addToList(tmpAxiomNode);
                         thisAxiomNode.addToList(tmpAxiomNode, xmlList);
                     }
                 }
             }
             return xmlList;
-        }
-
-        public void setVariable(AxiomNode axiomNode, XMLList xmlList, int type) {
-            this.xmlList = xmlList;
-            this.thisAxiomNode = axiomNode;
-            this.type = type;
         }
     }
 
@@ -643,41 +624,31 @@ public class AxiomNode {
      * Match x..y, x..ns::y, x..* expressions
      */
     private static class DescendantChildrenMatcher implements AxiomNodeMatcher {
-        XMLList xmlList;
-        Iterator iterator;
-        AxiomNode thisAxiomNode;
-
-
         //match any localName and any namespaceURI
-        public XMLList matchAnyQName() {
-            matchAnyQNameRec(thisAxiomNode);
+        public synchronized XMLList matchAnyQName(AxiomNode thisAxiomNode, XMLList xmlList, int type) {
+            matchAnyQNameRec(thisAxiomNode, xmlList, thisAxiomNode);
             return xmlList;
         }
 
         //match any localName with a given namespaceURI
-        public XMLList matchAnyLocalName(String namespaceURI) {
-            matchAnyLocalNameRec(namespaceURI, thisAxiomNode);
+        public synchronized XMLList matchAnyLocalName(AxiomNode thisAxiomNode, XMLList xmlList, int type, String namespaceURI) {
+            matchAnyLocalNameRec(thisAxiomNode, xmlList, namespaceURI, thisAxiomNode);
             return xmlList;
         }
 
         //match any namespace with a given localName
-        public XMLList matchAnyNamespace(String localName, String namespaceURI) {
-            matchAnyNamespaceRec(localName, namespaceURI, thisAxiomNode);
+        public synchronized XMLList matchAnyNamespace(AxiomNode thisAxiomNode, XMLList xmlList, int type, String localName, String namespaceURI) {
+            matchAnyNamespaceRec(thisAxiomNode, xmlList, localName, namespaceURI, thisAxiomNode);
             return xmlList;
         }
 
         //match given QName;
-        public XMLList matchQName(javax.xml.namespace.QName qname) {
-            matchQNameRec(qname, thisAxiomNode);
+        public synchronized XMLList matchQName(AxiomNode thisAxiomNode, XMLList xmlList, int type, javax.xml.namespace.QName qname) {
+            matchQNameRec(thisAxiomNode, xmlList, qname, thisAxiomNode);
             return xmlList;
         }
 
-        public void setVariable(AxiomNode axiomNode, XMLList xmlList, int type) {
-            this.xmlList = xmlList;
-            this.thisAxiomNode = axiomNode;
-        }
-
-        private void matchAnyQNameRec(AxiomNode axiomNode) {
+        private void matchAnyQNameRec(AxiomNode thisAxiomNode, XMLList xmlList, AxiomNode axiomNode) {
             AxiomNode tmpAxiomNode;
             Iterator iterator = axiomNode.getOMElement().getChildren();
             while (iterator.hasNext()) {
@@ -686,12 +657,12 @@ public class AxiomNode {
                 thisAxiomNode.addToList(tmpAxiomNode, xmlList);
 
                 if (tmpAxiomNode.isOMElement) {
-                    matchAnyQNameRec(tmpAxiomNode);
+                    matchAnyQNameRec(thisAxiomNode, xmlList, tmpAxiomNode);
                 }
             }
         }
 
-        private void matchAnyLocalNameRec(String namespaceURI, AxiomNode axiomNode) {
+        private void matchAnyLocalNameRec(AxiomNode thisAxiomNode, XMLList xmlList, String namespaceURI, AxiomNode axiomNode) {
             AxiomNode tmpAxiomNode;
 
             Iterator iterator = axiomNode.getOMElement().getChildren();
@@ -701,23 +672,16 @@ public class AxiomNode {
 
                 if ((namespaceURI.equals("")) || (qname != null &&
                         qname.getNamespaceURI().equals(namespaceURI)) || (tmpAxiomNode.isText())) {
-                    //xmlList.addAxiomNode(tmpAxiomNode);
                     thisAxiomNode.addToList(tmpAxiomNode, xmlList);
-
-                } /*else if (qname != null && qname.getNamespaceURI().equals(namespaceURI)) {
-                    xmlList.addAxiomNode(tmpAxiomNode);
-
-                } else if (tmpAxiomNode.isText()) {
-                    xmlList.addAxiomNode(tmpAxiomNode);
-                }*/
+                }
 
                 if (tmpAxiomNode.isElement()) {
-                    matchAnyLocalNameRec(namespaceURI, tmpAxiomNode);
+                    matchAnyLocalNameRec(thisAxiomNode, xmlList, namespaceURI, tmpAxiomNode);
                 }
             }
         }
 
-        private void matchAnyNamespaceRec(String localName, String namespaceURI, AxiomNode axiomNode) {
+        private void matchAnyNamespaceRec(AxiomNode thisAxiomNode, XMLList xmlList, String localName, String namespaceURI, AxiomNode axiomNode) {
             AxiomNode tmpAxiomNode;
             Iterator iterator = axiomNode.getOMElement().getChildren();
             while (iterator.hasNext()) {
@@ -727,19 +691,15 @@ public class AxiomNode {
 
                 if (qname != null && localName.equals(tmpAxiomNode.getQName().getLocalPart()))
                     if ((namespaceURI == null) || (qname.getNamespaceURI().equals(namespaceURI))) {
-                        //xmlList.addAxiomNode(tmpAxiomNode);
                         thisAxiomNode.addToList(tmpAxiomNode, xmlList);
-                    } /*else if (qname.getNamespaceURI().equals(namespaceURI)) {
-                        xmlList.addAxiomNode(tmpAxiomNode);
-                    }*/
-
+                    }
 
                 if (tmpAxiomNode.isElement())
-                    matchAnyNamespaceRec(localName, namespaceURI, tmpAxiomNode);
+                    matchAnyNamespaceRec(thisAxiomNode, xmlList, localName, namespaceURI, tmpAxiomNode);
             }
         }
 
-        private void matchQNameRec(javax.xml.namespace.QName qname, AxiomNode axiomNode) {
+        private void matchQNameRec(AxiomNode thisAxiomNode, XMLList xmlList, javax.xml.namespace.QName qname, AxiomNode axiomNode) {
             AxiomNode tmpAxiomNode;
             Iterator iterator = axiomNode.getOMElement().getChildren();
             while (iterator.hasNext()) {
@@ -752,7 +712,7 @@ public class AxiomNode {
                 }
 
                 if (tmpAxiomNode.isElement())
-                    matchQNameRec(qname, tmpAxiomNode);
+                    matchQNameRec(thisAxiomNode, xmlList, qname, tmpAxiomNode);
             }
         }
     }
@@ -763,41 +723,32 @@ public class AxiomNode {
      */
     private static class DescendantAttributeMatcher implements AxiomNodeMatcher {
 
-        XMLList xmlList;
-        Iterator iterator;
-        AxiomNode thisAxiomNode;
-
-
         //match any localName and any namespaceURI
-        public XMLList matchAnyQName() {
-            matchAnyQNameRec(thisAxiomNode);
+        public XMLList matchAnyQName(AxiomNode thisAxiomNode, XMLList xmlList, int type) {
+            matchAnyQNameRec(xmlList, thisAxiomNode);
             return xmlList;
         }
 
         //match any localName with a given namespaceURI
-        public XMLList matchAnyLocalName(String namespaceURI) {
-            matchAnyLocalNameRec(namespaceURI, thisAxiomNode);
+        public XMLList matchAnyLocalName(AxiomNode thisAxiomNode, XMLList xmlList, int type, String namespaceURI) {
+            matchAnyLocalNameRec(xmlList, namespaceURI, thisAxiomNode);
             return xmlList;
         }
 
         //match any namespace with a given localName
-        public XMLList matchAnyNamespace(String localName, String namespaceURI) {
-            matchAnyNamespaceRec(localName, namespaceURI, thisAxiomNode);
+        public XMLList matchAnyNamespace(AxiomNode thisAxiomNode, XMLList xmlList, int type, String localName, String namespaceURI) {
+            matchAnyNamespaceRec(xmlList, localName, namespaceURI, thisAxiomNode);
             return xmlList;
         }
 
         //match given QName;
-        public XMLList matchQName(javax.xml.namespace.QName qname) {
-            matchQNameRec(qname, thisAxiomNode);
+        public XMLList matchQName(AxiomNode thisAxiomNode, XMLList xmlList, int type, javax.xml.namespace.QName qname) {
+            matchQNameRec(xmlList, qname, thisAxiomNode);
             return xmlList;
         }
 
-        public void setVariable(AxiomNode axiomNode, XMLList xmlList, int type) {
-            this.xmlList = xmlList;
-            this.thisAxiomNode = axiomNode;
-        }
 
-        private void matchAnyQNameRec(AxiomNode axiomNode) {
+        private void matchAnyQNameRec(XMLList xmlList, AxiomNode axiomNode) {
 
             AxiomNode tmpAxiomNode;
             Iterator iteratoAtr = axiomNode.getOMElement().getAllAttributes();
@@ -810,11 +761,11 @@ public class AxiomNode {
             Iterator iteratorEle = axiomNode.getOMElement().getChildElements();
             while (iteratorEle.hasNext()) {
                 tmpAxiomNode = AxiomNode.buildAxiomNode(iteratorEle.next(), axiomNode);
-                matchAnyQNameRec(tmpAxiomNode);
+                matchAnyQNameRec(xmlList, tmpAxiomNode);
             }
         }
 
-        private void matchAnyLocalNameRec(String namespaceURI, AxiomNode axiomNode) {
+        private void matchAnyLocalNameRec(XMLList xmlList, String namespaceURI, AxiomNode axiomNode) {
             AxiomNode tmpAxiomNode;
 
             Iterator iterator = axiomNode.getOMElement().getAllAttributes();
@@ -830,11 +781,11 @@ public class AxiomNode {
             Iterator iteratorEle = axiomNode.getOMElement().getChildElements();
             while (iteratorEle.hasNext()) {
                 tmpAxiomNode = AxiomNode.buildAxiomNode(iteratorEle.next(), axiomNode);
-                matchAnyLocalNameRec(namespaceURI, tmpAxiomNode);
+                matchAnyLocalNameRec(xmlList, namespaceURI, tmpAxiomNode);
             }
         }
 
-        private void matchAnyNamespaceRec(String localName, String namespaceURI, AxiomNode axiomNode) {
+        private void matchAnyNamespaceRec(XMLList xmlList, String localName, String namespaceURI, AxiomNode axiomNode) {
             AxiomNode tmpAxiomNode;
             Iterator iterator = axiomNode.getOMElement().getAllAttributes();
             while (iterator.hasNext()) {
@@ -853,12 +804,12 @@ public class AxiomNode {
             Iterator iteratorEle = axiomNode.getOMElement().getChildElements();
             while (iteratorEle.hasNext()) {
                 tmpAxiomNode = AxiomNode.buildAxiomNode(iteratorEle.next(), axiomNode);
-                matchAnyNamespaceRec(localName, namespaceURI, tmpAxiomNode);
+                matchAnyNamespaceRec(xmlList, localName, namespaceURI, tmpAxiomNode);
             }
 
         }
 
-        private void matchQNameRec(javax.xml.namespace.QName qname, AxiomNode axiomNode) {
+        private void matchQNameRec(XMLList xmlList, javax.xml.namespace.QName qname, AxiomNode axiomNode) {
             AxiomNode tmpAxiomNode;
             OMAttribute omAttribute = axiomNode.getOMElement().getAttribute(qname);
 
@@ -870,7 +821,7 @@ public class AxiomNode {
             Iterator iterator = axiomNode.getOMElement().getChildElements();
             while (iterator.hasNext()) {
                 tmpAxiomNode = AxiomNode.buildAxiomNode(iterator.next(), axiomNode);
-                matchQNameRec(qname, tmpAxiomNode);
+                matchQNameRec(xmlList, qname, tmpAxiomNode);
             }
         }
     }
