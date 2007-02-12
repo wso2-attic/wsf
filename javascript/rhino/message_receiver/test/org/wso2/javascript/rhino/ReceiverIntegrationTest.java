@@ -29,6 +29,9 @@ import org.apache.axis2.transport.http.SimpleHTTPServer;
 import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayInputStream;
 
+/**
+ * Class ReceiverIntegrationTest tests the Javascript message receiver
+ */
 public class ReceiverIntegrationTest extends TestCase implements ReceiverTestConstants {
 
     private SimpleHTTPServer server;
@@ -72,6 +75,15 @@ public class ReceiverIntegrationTest extends TestCase implements ReceiverTestCon
         return buildOMElement(str);
     }
 
+    /**
+     * Tests the message receiver for its ability to support JSON.
+     * The following JSON string is sent to the service and is echoed
+     * by the service.
+     *
+     * {"echoJSON":{"echoString":"JSON echo string"}}
+     *
+     * @throws Exception
+     */
     public void testEchoJSON() throws Exception {
         JSUtils.addInOutOperation(service, echoJSONOp);
         OMElement payload = getJSONEchoOMElement();
@@ -85,6 +97,15 @@ public class ReceiverIntegrationTest extends TestCase implements ReceiverTestCon
                 result.getFirstElement().getFirstElement().getText());
     }
 
+    /**
+     * Tests the message receiver for its ability to support E4X.
+     * The following XML string is sent to the service and is echoed
+     * by the service.
+     *
+     * &lt;echo&gt;&lt;echoString&gt;XML echo string&lt;/echoString&gt;&lt;/echo&gt;
+     *
+     * @throws Exception
+     */
     public void testEcho() throws Exception {
         JSUtils.addInOutOperation(service, echoOp);
         OMElement payload = getEchoOMElement();

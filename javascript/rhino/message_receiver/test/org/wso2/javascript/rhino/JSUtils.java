@@ -25,8 +25,22 @@ import org.apache.axis2.wsdl.WSDLConstants;
 
 import javax.xml.namespace.QName;
 
+/**
+ * Class JSUtils provides a static method to create an AxisService instance
+ * pointing to a Javascript service implementation and another method to add
+ * In-Out operations to such service.
+ */
 public class JSUtils {
-      public static AxisService createSimpleJSService(
+    /**
+     * Creates and returns an AxisService pointing to the given Javascript service
+     * implementation.
+     *
+     * @param serviceName the name of the service
+     * @param jsName the name of the Javascript file implementing the service
+     * @return an AxisService instance
+     * @throws AxisFault if the service instance generates an AxisFault
+     */
+    public static AxisService createSimpleJSService(
             QName serviceName, String jsName) throws AxisFault {
 
         AxisService service = new AxisService(serviceName.getLocalPart());
@@ -38,7 +52,13 @@ public class JSUtils {
         return service;
     }
 
-    public static void addInOutOperation(AxisService service, QName opName){
+    /**
+     * Adds an In-Out operation to the given AxisService
+     *
+     * @param service the AxisService to which the operation should be added
+     * @param opName the QName representing the operation
+     */
+    public static void addInOutOperation(AxisService service, QName opName) {
         AxisOperation axisOp = new InOutAxisOperation(opName);
         axisOp.setMessageReceiver(new JavaScriptReceiver());
         axisOp.setStyle(WSDLConstants.STYLE_DOC);

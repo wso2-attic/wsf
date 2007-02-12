@@ -24,7 +24,7 @@ public interface ReceiverTestConstants {
     public static int TESTING_PORT = 5555;
 
     public static final EndpointReference serviceEPR = new EndpointReference(
-            "http://127.0.0.1:" + (TESTING_PORT+1)
+            "http://127.0.0.1:" + (TESTING_PORT)
                     + "/axis2/services/JSService/");
 
     public static final QName serviceName = new QName("JSService");
