@@ -33,7 +33,7 @@ cp build/wsf_c/axis2c/rampart/autogen.sh wsf_c/axis2c/rampart
 cp build/wsf_c/sandesha2c/src/core/Makefile.am wsf_c/sandesha2c/src/core
 cp build/wsf_c/sandesha2c/Makefile.am wsf_c/sandesha2c/
 cp build/wsf_c/axis2c/Makefile.am wsf_c/axis2c/
-cp wsf_c/axis2c/samples/server/axis2.xml .
+cp wsf_c/sandesha2/config/axis2.xml .
 
 ./autogen.sh && ./configure --with-wsf --prefix=`php-config --extension-dir`/wsf_c && make
 
