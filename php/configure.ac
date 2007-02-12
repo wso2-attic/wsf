@@ -26,12 +26,12 @@ AC_CHECK_LIB(z, inflate)
 
 axis2_prefix="/usr/local/axxxis2"
 export axis2_prefix
-if test -d $srcdir/wsf_c/axis2; then
-    AC_CONFIG_SUBDIRS(wsf_c/axis2)
+if test -d $srcdir/wsf_c/axis2c; then
+    AC_CONFIG_SUBDIRS(wsf_c/axis2c)
 fi
 
-if test -d $srcdir/wsf_c/sandesha2; then
-    AC_CONFIG_SUBDIRS(wsf_c/sandesha2)
+if test -d $srcdir/wsf_c/sandesha2c; then
+    AC_CONFIG_SUBDIRS(wsf_c/sandesha2c)
 fi
 
 if test -d $srcdir/src; then
