@@ -14,23 +14,23 @@ if test "$PHP_WSF" = "yes"; then
 	fi
 	
 	 dnl # add include path
-	PHP_ADD_INCLUDE(../wsf_c/axis2/include/)
-	PHP_ADD_INCLUDE(../wsf_c/axis2/util/include/)
-	PHP_ADD_INCLUDE(../wsf_c/axis2/axiom/include/)
-	PHP_ADD_INCLUDE(../wsf_c/axis2/xml_schema/include/)
-	PHP_ADD_INCLUDE(../wsf_c/axis2/woden/include/)
-	PHP_ADD_INCLUDE(../wsf_c/axis2/rampart/include/)
+	PHP_ADD_INCLUDE(../wsf_c/axis2c/include/)
+	PHP_ADD_INCLUDE(../wsf_c/axis2c/util/include/)
+	PHP_ADD_INCLUDE(../wsf_c/axis2c/axiom/include/)
+	PHP_ADD_INCLUDE(../wsf_c/axis2c/xml_schema/include/)
+	PHP_ADD_INCLUDE(../wsf_c/axis2c/woden/include/)
+	PHP_ADD_INCLUDE(../wsf_c/axis2c/rampart/include/)
 	PHP_ADD_INCLUDE(/usr/include/libxml2)
   	dnl # check for lib and symbol presence
 
-  	PHP_ADD_LIBRARY_WITH_PATH(axis2_parser, ../wsf_c/axis2/axiom/src/parser/libxml2/.libs, WSF_SHARED_LIBADD)
-  	PHP_ADD_LIBRARY_WITH_PATH(axis2_axiom, ../wsf_c/axis2/axiom/src/om/.libs, WSF_SHARED_LIBADD)
-  	PHP_ADD_LIBRARY_WITH_PATH(axis2_minizip, ../wsf_c/axis2/util/src/minizip/.libs, WSF_SHARED_LIBADD)
+  	PHP_ADD_LIBRARY_WITH_PATH(axis2_parser, ../wsf_c/axis2c/axiom/src/parser/libxml2/.libs, WSF_SHARED_LIBADD)
+  	PHP_ADD_LIBRARY_WITH_PATH(axis2_axiom, ../wsf_c/axis2c/axiom/src/om/.libs, WSF_SHARED_LIBADD)
+  	PHP_ADD_LIBRARY_WITH_PATH(axis2_minizip, ../wsf_c/axis2c/util/src/minizip/.libs, WSF_SHARED_LIBADD)
 	
-	PHP_ADD_LIBRARY_WITH_PATH(axis2_engine, ../wsf_c/axis2/modules/core/engine/.libs, WSF_SHARED_LIBADD)	
-	PHP_ADD_LIBRARY_WITH_PATH(axis2_util, ../wsf_c/axis2/util/src/.libs, WSF_SHARED_LIBADD)	
-	PHP_ADD_LIBRARY_WITH_PATH(axis2_http_sender, ../wsf_c/axis2/modules/core/transport/http/sender/.libs, WSF_SHARED_LIBADD)	
-	PHP_ADD_LIBRARY_WITH_PATH(axis2_http_receiver, ../wsf_c/axis2/modules/core/transport/http/receiver/.libs, WSF_SHARED_LIBADD)	
+	PHP_ADD_LIBRARY_WITH_PATH(axis2_engine, ../wsf_c/axis2c/modules/core/engine/.libs, WSF_SHARED_LIBADD)	
+	PHP_ADD_LIBRARY_WITH_PATH(axis2_util, ../wsf_c/axis2c/util/src/.libs, WSF_SHARED_LIBADD)	
+	PHP_ADD_LIBRARY_WITH_PATH(axis2_http_sender, ../wsf_c/axis2c/modules/core/transport/http/sender/.libs, WSF_SHARED_LIBADD)	
+	PHP_ADD_LIBRARY_WITH_PATH(axis2_http_receiver, ../wsf_c/axis2c/modules/core/transport/http/receiver/.libs, WSF_SHARED_LIBADD)	
 
   	PHP_SUBST(WSF_SHARED_LIBADD)
 
