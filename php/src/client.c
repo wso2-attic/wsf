@@ -839,70 +839,87 @@ int wsf_client_do_request(
 				AXIS2_OPTIONS_SET_PROPERTY(client_options, env, WSF_SANDESHA2_CLIENT_RM_SPEC_VERSION, rm_prop);
 				engage_rm  = AXIS2_TRUE;
 		}
-		/** engage RM is addressing engaged or addressing action is set */
-		if((is_addressing_engaged || (!is_addressing_engaged && is_addressing_action_present )) && engage_rm){
-			AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "sandesha2");
-			is_rm_engaged = AXIS2_TRUE;
+		/**
+				reliable = TRUE
+					1. addressing is engaged by user specifing useWSA and Action
+					2. addressing is not specified by useWSA but action presnt
+							then engage addressing
+					If Addressing is engaged
+					engage RM
+		*/
+		if((is_addressing_engaged || 
+			(!is_addressing_engaged && is_addressing_action_present )) && engage_rm){
 			
-			wsf_client_set_rm_db(env, svc_client, WSF_GLOBAL(rm_db_dir) TSRMLS_CC);
-			/** rm is engaged , process other rm params */
-			if(zend_hash_find(Z_OBJPROP_P(this_ptr), "sequenceExpiryTime", sizeof("sequenceExpiryTime"),
-				(void**)&client_tmp) == SUCCESS){
-					axis2_property_t *seq_exp_time_prop = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
-						0, NULL, Z_LVAL_PP(client_tmp));
-					AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "InactivityTimeout", seq_exp_time_prop); 
+				if(!is_addressing_engaged){
+					AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "addressing");
+					AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] useWSA not specified, addressing engaged since rm is engaed");
+				}
+				AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "sandesha2");
+				is_rm_engaged = AXIS2_TRUE;
+				
+				wsf_client_set_rm_db(env, svc_client, WSF_GLOBAL(rm_db_dir) TSRMLS_CC);
 
-					AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] sequenceExpiryTime is %d", Z_LVAL_PP(client_tmp));
-			}
-			if(zend_hash_find(Z_OBJPROP_P(this_ptr), "willContinueSequence", 
-				sizeof("willContinueSequence"), (void **)&client_tmp) == SUCCESS){
-					if(Z_TYPE_PP(client_tmp) && Z_BVAL_PP(client_tmp) == 1){
+				
+				/** rm is engaged , process other rm params */
+				if(zend_hash_find(Z_OBJPROP_P(this_ptr), "sequenceExpiryTime", sizeof("sequenceExpiryTime"),
+					(void**)&client_tmp) == SUCCESS){
+						axis2_property_t *seq_exp_time_prop = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
+							0, NULL, Z_LVAL_PP(client_tmp));
+						AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "InactivityTimeout", seq_exp_time_prop); 
+
+						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] sequenceExpiryTime is %d", Z_LVAL_PP(client_tmp));
+				}
+				if(zend_hash_find(Z_OBJPROP_P(this_ptr), "willContinueSequence", 
+						sizeof("willContinueSequence"), (void **)&client_tmp) == SUCCESS){
+						if(Z_TYPE_PP(client_tmp) && Z_BVAL_PP(client_tmp) == 1){
 						
-						ws_client_will_continue_sequence = 1;
+							ws_client_will_continue_sequence = 1;
 						
-						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] willContinueSequence true");
-
-					}else{
-						axis2_property_t *last_msg_prop = NULL;
-						ws_client_will_continue_sequence = 0;
-						/** sequence is limited to this app message , if rm version is 1.0
-						we should set last message property here*/
-						if(rm_spec_version == WSF_RM_VERSION_1_0){
-							last_msg_prop = axis2_property_create_with_args(env, 
-												AXIS2_SCOPE_APPLICATION, 0, NULL, AXIS2_VALUE_TRUE);
-							AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "Sandesha2LastMessage", last_msg_prop);
-
-							AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] seting Sandesha2LastMessage");
-						}
-					}
-			}
-			if(ws_client_will_continue_sequence && input_type == WS_USING_MSG){
-				/** if input_type is ws_message and continueSequence is true on client, we should look for 
-					false value in ws_message to end the sequence */
-				if(zend_hash_find(Z_OBJPROP_P(param), "willContinueSequence", sizeof("willContinueSequence"),
-					(void**)&msg_tmp) == SUCCESS){
-						ws_client_will_continue_sequence = 0;
-						if(rm_spec_version == WSF_RM_VERSION_1_0){
-							axis2_property_t *last_msg_prop = axis2_property_create_with_args(env, 
-												AXIS2_SCOPE_APPLICATION, 0, NULL, AXIS2_VALUE_TRUE);
-							AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "Sandesha2LastMessage", last_msg_prop);
-
-							AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] seting Sandesha2LastMessage");
+							AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] willContinueSequence true");
 						}
 				}
-			}
-			if(!is_oneway){
-				char *offered_seq_id = NULL;
-				axis2_property_t *sequence_property = NULL;
-				offered_seq_id = axis2_uuid_gen(env);
-				sequence_property = axis2_property_create(env);
-				AXIS2_PROPERTY_SET_VALUE(sequence_property, env, AXIS2_STRDUP(offered_seq_id, env));
-
-				AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "Sandesha2OfferedSequenceId", sequence_property);
-			
-				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " [wsf-log] Sandesha2OfferedSequenceId is set as property");
-			}
 		}
+		
+		if(ws_client_will_continue_sequence && input_type == WS_USING_MSG){
+			/** if input_type is ws_message and continueSequence is true on client, we should look for 
+				false value in ws_message to end the sequence ,
+				WSMessage only accepts a false value*/
+			if(zend_hash_find(Z_OBJPROP_P(param), "willContinueSequence", sizeof("willContinueSequence"),
+					(void**)&msg_tmp) == SUCCESS){
+			
+					ws_client_will_continue_sequence = 0;
+					if(rm_spec_version == WSF_RM_VERSION_1_0){
+						
+						axis2_property_t *last_msg_prop = axis2_property_create_with_args(env, 
+												AXIS2_SCOPE_APPLICATION, 0, NULL, AXIS2_VALUE_TRUE);
+						AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "Sandesha2LastMessage", last_msg_prop);
+
+						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] seting Sandesha2LastMessage");
+					}
+				
+				}/** END willContinueSequence */
+			
+		}else if(!ws_client_will_continue_sequence){
+				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] setting TreminateSequence property");
+				if(rm_spec_version == WSF_RM_VERSION_1_0){
+					axis2_property_t *last_msg_prop = axis2_property_create_with_args(env, 
+										0, 0, 0, AXIS2_VALUE_TRUE);
+					AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "Sandesha2LastMessage", last_msg_prop);
+
+					AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] setting Sandesha2LastMessage");
+				}
+		}
+
+		if(!is_oneway){
+			char *offered_seq_id = NULL;
+			axis2_property_t *sequence_property = NULL;
+			offered_seq_id = axis2_uuid_gen(env);
+			sequence_property = axis2_property_create(env);
+			AXIS2_PROPERTY_SET_VALUE(sequence_property, env, AXIS2_STRDUP(offered_seq_id, env));
+			AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "Sandesha2OfferedSequenceId", sequence_property);
+			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " [wsf-log] Sandesha2OfferedSequenceId is set as property");
+		}
+
 	}/** END RM OPTIONS */	
 
 	if(is_oneway)
