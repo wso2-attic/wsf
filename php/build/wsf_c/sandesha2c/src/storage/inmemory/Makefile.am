@@ -18,3 +18,5 @@ INCLUDES = -I$(top_builddir)/include \
             -I ../../../../axis2c/xml_schema/include \
             -I ../../../../axis2c/woden/include
 
+EXTRA_DIST=sandesha2_inmemory_bean_mgr.h
+
