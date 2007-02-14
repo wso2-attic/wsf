@@ -864,7 +864,7 @@ int wsf_client_do_request(
 				if(zend_hash_find(Z_OBJPROP_P(this_ptr), "sequenceExpiryTime", sizeof("sequenceExpiryTime"),
 					(void**)&client_tmp) == SUCCESS){
 						axis2_property_t *seq_exp_time_prop = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
-							0, NULL, Z_LVAL_PP(client_tmp));
+							0, NULL, (void*)Z_LVAL_PP(client_tmp));
 						AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "InactivityTimeout", seq_exp_time_prop); 
 
 						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] sequenceExpiryTime is %d", Z_LVAL_PP(client_tmp));
