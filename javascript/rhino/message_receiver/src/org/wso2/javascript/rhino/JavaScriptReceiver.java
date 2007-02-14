@@ -17,24 +17,21 @@
 package org.wso2.javascript.rhino;
 
 import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.OMNode;
 import org.apache.axiom.om.impl.llom.OMSourcedElementImpl;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axis2.AxisFault;
-import org.apache.axis2.json.JSONDataSource;
-import org.apache.axis2.json.JSONBadgerfishDataSource;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.engine.MessageReceiver;
 import org.apache.axis2.i18n.Messages;
+import org.apache.axis2.json.JSONBadgerfishDataSource;
+import org.apache.axis2.json.JSONDataSource;
 import org.apache.axis2.receivers.AbstractInOutSyncMessageReceiver;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -77,7 +74,6 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver
                 throw new AxisFault("Unsupported Data Format");
             }
         }
-
 
         if (reader == null) throw new AxisFault("Unable to load JavaScript file");
         if (method == null) throw new AxisFault("Unable to read the method");
@@ -128,16 +124,7 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver
             fac = OMAbstractFactory.getSOAP12Factory();
         }
         SOAPEnvelope envelope = fac.getDefaultEnvelope();
-        OMNamespace ns;
-        if (json) {
-            ns = fac.createOMNamespace("", "");
-        } else {
-            String respNs = inMessage.getServiceContext().getAxisService().getSchematargetNamespace();
-            ns = fac.createOMNamespace(respNs, "res");
-        }
-        OMElement responseElement = fac.createOMElement(method + "Response", ns);
-        responseElement.addChild(result);
-        envelope.getBody().addChild(responseElement);
+        envelope.getBody().addChild(result);
         outMessage.setEnvelope(envelope);
     }
 

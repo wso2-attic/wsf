@@ -45,7 +45,7 @@
         </dependency>
 	<dependency>
 	    <groupId>${axis2.jar.groupid}</groupId>
-	    <artifactId>axis2-Json</artifactId>
+	    <artifactId>axis2-json</artifactId>
 	    <version>${axis2.version}</version>
         </dependency>
 	<dependency>

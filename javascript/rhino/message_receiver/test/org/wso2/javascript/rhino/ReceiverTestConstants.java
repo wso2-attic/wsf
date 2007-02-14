@@ -32,7 +32,8 @@ public interface ReceiverTestConstants {
     public static final QName echoOp = new QName("echo");
     public static final QName echoJSONOp = new QName("echoJSON");
 
-    public static final String axis2xml = "test-resources" + File.separator + "axis2.xml";
+    public static final String axis2xml = "message_receiver" + File.separator +
+            "test-resources" + File.separator + "axis2.xml";
 
     public static final String serviceJS = "Service.js";
 

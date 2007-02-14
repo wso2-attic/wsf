@@ -16,11 +16,11 @@
 
 package org.wso2.javascript.rhino;
 
+import org.apache.axiom.om.OMNode;
+import org.apache.axis2.AxisFault;
+import org.apache.axis2.json.JSONOMBuilder;
 import org.mozilla.javascript.*;
 import org.mozilla.javascript.xmlimpl.XML;
-import org.apache.axis2.json.JSONOMBuilder;
-import org.apache.axis2.AxisFault;
-import org.apache.axiom.om.OMNode;
 
 import java.io.*;
 import java.net.URL;
@@ -171,10 +171,10 @@ public class JavaScriptEngine extends ImporterTopLevel {
                 result = ((String) result).substring(1, ((String) result).length() - 1);
                 InputStream in = new ByteArrayInputStream(((String) result).getBytes());
                 JSONOMBuilder builder = new JSONOMBuilder();
-                builder.init(in);
+                builder.init(in, null);
                 result = builder.getDocumentElement();
             } else {
-                // Get the OMNode inside the resulting object
+//                 Get the OMNode inside the resulting object
                 result = ((XML) result).getAxiomFromXML();
             }
         }
