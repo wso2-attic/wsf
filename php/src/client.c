@@ -89,14 +89,17 @@ int wsf_client_set_headers(const axis2_env_t *env,
 		zval **tmp = NULL;
 		HashTable *ht = NULL;
 		ht = Z_OBJPROP_P(msg);
-		if(WSF_HASH_FIND(ht, "headers", tmp, SUCCESS)){
+
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] setting header node ");
+
+		if(zend_hash_find(ht, "headers", sizeof("headers"), (void**)&tmp) == SUCCESS){
 			if(Z_TYPE_PP(tmp) == IS_ARRAY){
 				HashPosition pos;
 				HashTable *ht = Z_ARRVAL_PP(tmp);
-				zval *val = NULL;
+				zval **val = NULL;
 				zend_hash_internal_pointer_reset_ex(ht, &pos);
 				while(zend_hash_get_current_data_ex(ht, (void**)&val , &pos) != FAILURE){
-					zval *header = val;
+					zval *header = *val;
 					axiom_node_t *header_node = NULL;
 					header_node = wsf_util_construct_header_node(env, header TSRMLS_CC);
 					if(header_node)
@@ -312,6 +315,8 @@ void wsf_client_set_security_options(zval *zval_client, zval *zval_msg,
 	}
 */		
 }
+
+
 
 int wsf_client_set_addr_options(zval *zval_client, zval *zval_msg, axis2_env_t *env,
     axis2_options_t *client_options, axis2_svc_client_t *svc_client, int *is_addr_action_present  TSRMLS_DC){
@@ -764,6 +769,10 @@ int wsf_client_do_request(
 	
 	client_options = (axis2_options_t *)AXIS2_SVC_CLIENT_GET_OPTIONS(svc_client, env);
 
+	/** add ssl properties */
+	wsf_client_enable_ssl(Z_OBJPROP_P(this_ptr), env, client_options, svc_client TSRMLS_CC);
+
+
     if(input_type == WS_USING_MSG){
 
 		axis2_char_t *default_cnt_type = NULL;
@@ -777,6 +786,8 @@ int wsf_client_do_request(
 		is_addressing_engaged = wsf_client_set_addr_options(this_ptr, param, env, 
 			client_options, svc_client, &is_addressing_action_present TSRMLS_CC);
 		/** add set headers function here */
+
+		wsf_client_set_headers(env, svc_client, param TSRMLS_CC);
 
 		
         if(zend_hash_find(Z_OBJPROP_P(param), "defaultAttachmentContentType", 
@@ -879,38 +890,38 @@ int wsf_client_do_request(
 						}
 				}
 		}
-		
-		if(ws_client_will_continue_sequence && input_type == WS_USING_MSG){
-			/** if input_type is ws_message and continueSequence is true on client, we should look for 
-				false value in ws_message to end the sequence ,
-				WSMessage only accepts a false value*/
-			if(zend_hash_find(Z_OBJPROP_P(param), "willContinueSequence", sizeof("willContinueSequence"),
-					(void**)&msg_tmp) == SUCCESS){
-			
-					ws_client_will_continue_sequence = 0;
+		if(is_rm_engaged){
+			if(ws_client_will_continue_sequence && input_type == WS_USING_MSG){
+				/** if input_type is ws_message and continueSequence is true on client, we should look for 
+					false value in ws_message to end the sequence ,
+					WSMessage only accepts a false value*/
+				if(zend_hash_find(Z_OBJPROP_P(param), "willContinueSequence", sizeof("willContinueSequence"),
+						(void**)&msg_tmp) == SUCCESS){
+				
+						ws_client_will_continue_sequence = 0;
+						if(rm_spec_version == WSF_RM_VERSION_1_0){
+							
+							axis2_property_t *last_msg_prop = axis2_property_create_with_args(env, 
+													AXIS2_SCOPE_APPLICATION, 0, NULL, AXIS2_VALUE_TRUE);
+							AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "Sandesha2LastMessage", last_msg_prop);
+
+							AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] seting Sandesha2LastMessage");
+						}
+					
+					}/** END willContinueSequence */
+				
+			}else if(!ws_client_will_continue_sequence){
+					AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] setting TreminateSequence property");
 					if(rm_spec_version == WSF_RM_VERSION_1_0){
-						
 						axis2_property_t *last_msg_prop = axis2_property_create_with_args(env, 
-												AXIS2_SCOPE_APPLICATION, 0, NULL, AXIS2_VALUE_TRUE);
+											0, 0, 0, AXIS2_VALUE_TRUE);
 						AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "Sandesha2LastMessage", last_msg_prop);
 
-						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] seting Sandesha2LastMessage");
+						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] setting Sandesha2LastMessage");
 					}
-				
-				}/** END willContinueSequence */
-			
-		}else if(!ws_client_will_continue_sequence){
-				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] setting TreminateSequence property");
-				if(rm_spec_version == WSF_RM_VERSION_1_0){
-					axis2_property_t *last_msg_prop = axis2_property_create_with_args(env, 
-										0, 0, 0, AXIS2_VALUE_TRUE);
-					AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "Sandesha2LastMessage", last_msg_prop);
+			}
 
-					AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] setting Sandesha2LastMessage");
-				}
-		}
-
-		if(!is_oneway){
+			if(!is_oneway){
 			char *offered_seq_id = NULL;
 			axis2_property_t *sequence_property = NULL;
 			offered_seq_id = axis2_uuid_gen(env);
@@ -918,8 +929,8 @@ int wsf_client_do_request(
 			AXIS2_PROPERTY_SET_VALUE(sequence_property, env, AXIS2_STRDUP(offered_seq_id, env));
 			AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "Sandesha2OfferedSequenceId", sequence_property);
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " [wsf-log] Sandesha2OfferedSequenceId is set as property");
+			}
 		}
-
 	}/** END RM OPTIONS */	
 
 	if(is_oneway)
@@ -1142,123 +1153,34 @@ void wsf_util_set_security_opts(HashTable *ht, axis2_env_t *env, axis2_svc_clien
 	}
 }
 
-/*
-int wsf_client_set_rm_options(zval *zval_client, zval *zval_msg, 
-		axis2_env_t *env,	axis2_options_t *client_options, axis2_svc_client_t *svc_client,
-		int is_addr_engaged, int is_send TSRMLS_DC){
-
-	zval **tmp = NULL;
-	int is_rm_enabled = 0;
-
-		if(zval_msg && zend_hash_find(Z_OBJPROP_P(zval_msg), 
-			"reliable", sizeof("reliable"), (void**)&tmp) == SUCCESS){
-			if(Z_TYPE_PP(tmp) == IS_BOOL){
-					axis2_property_t *rm_prop = NULL;
-					is_rm_enabled = Z_BVAL_PP(tmp);
-					rm_prop = axis2_property_create_with_args(env, 0, 0, 0, WSF_SANDESHA2_SPEC_VERSION_1_0);
-					if(rm_prop) 
-						AXIS2_OPTIONS_SET_PROPERTY(client_options, env, WSF_SANDESHA2_CLIENT_RM_SPEC_VERSION, rm_prop);	
-			}else if(Z_TYPE_PP(tmp) == IS_STRING){
-				char *val  = Z_STRVAL_PP(tmp);
-				if(strcmp(val,"1.1") == 0){
-					axis2_property_t *rm_prop = NULL;
-					rm_prop = axis2_property_create_with_args(env, 0, 0, 0, WSF_SANDESHA2_SPEC_VERSION_1_1);
-					AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf log ] rm version is 1.1  ");
-					if(rm_prop) {
-						AXIS2_OPTIONS_SET_PROPERTY(client_options, env, WSF_SANDESHA2_CLIENT_RM_SPEC_VERSION, rm_prop);
-						AXIS2_OPTIONS_SET_PROPERTY(client_options, env, WSF_SANDESHA_CLIENT_PROP, rm_prop);
-					}
-				}else{
-					axis2_property_t *rm_prop = NULL;
-					rm_prop = axis2_property_create_with_args(env, 0, 0, 0, WSF_SANDESHA2_SPEC_VERSION_1_0);
-					if(rm_prop) 
-						AXIS2_OPTIONS_SET_PROPERTY(client_options, env, WSF_SANDESHA2_CLIENT_RM_SPEC_VERSION, rm_prop);	
-				}
-			}
-			if(zend_hash_find(Z_OBJPROP_P(zval_msg), "sequence_key", sizeof("sequence_key"), (void**)&tmp) == SUCCESS){
-				if(Z_TYPE_PP(tmp) == IS_STRING){
-					axis2_property_t *seq_key_prop = NULL;
-					char *seq_key = Z_STRVAL_PP(tmp);				
-					seq_key_prop = axis2_property_create(env);
-					AXIS2_PROPERTY_SET_VALUE(seq_key_prop, env, AXIS2_STRDUP(seq_key, env));
-					AXIS2_OPTIONS_SET_PROPERTY(client_options, env, WSF_SANDESHA2_CLIENT_SEQ_KEY, seq_key_prop);
-				}			
-			}
-		}else if(zend_hash_find(Z_OBJPROP_P(zval_client), "reliable", sizeof("reliable"),(void**)&tmp) == SUCCESS){
-			if(Z_TYPE_PP(tmp) == IS_BOOL){
-					axis2_property_t *rm_prop = NULL;
-					is_rm_enabled = Z_BVAL_PP(tmp);
-					rm_prop = axis2_property_create_with_args(env, 0, 0, 0, WSF_SANDESHA2_SPEC_VERSION_1_0);
-					if(rm_prop) 
-						AXIS2_OPTIONS_SET_PROPERTY(client_options, env, WSF_SANDESHA2_CLIENT_RM_SPEC_VERSION, rm_prop);	
-			}else if(Z_TYPE_PP(tmp) == IS_STRING){
-				char *val  = Z_STRVAL_PP(tmp);
-				if(strcmp(val,"1.1") == 0){
-					axis2_property_t *rm_prop = NULL;
-					rm_prop = axis2_property_create_with_args(env, 0, 0, 0, WSF_SANDESHA2_SPEC_VERSION_1_1);
-					if(rm_prop) {
-						AXIS2_OPTIONS_SET_PROPERTY(client_options, env, WSF_SANDESHA_CLIENT_PROP, rm_prop);					
-						AXIS2_OPTIONS_SET_PROPERTY(client_options, env, WSF_SANDESHA2_CLIENT_RM_SPEC_VERSION, rm_prop);
-					}
-				}else{
-					axis2_property_t *rm_prop = NULL;
-					rm_prop = axis2_property_create_with_args(env, 0, 0, 0, WSF_SANDESHA2_SPEC_VERSION_1_0);
-					if(rm_prop) 
-						AXIS2_OPTIONS_SET_PROPERTY(client_options, env, WSF_SANDESHA2_CLIENT_RM_SPEC_VERSION, rm_prop);	
-				}
-			}
-		}
-	
-	if(is_rm_enabled && is_addr_engaged){
-		axis2_property_t *property = NULL;
-		axis2_property_t *seq_prop = NULL;
-		char* offered_seq_id = NULL;
-		offered_seq_id = axis2_uuid_gen(env);
-
-		seq_prop = axis2_property_create(env);
-		AXIS2_PROPERTY_SET_VALUE(seq_prop, env, AXIS2_STRDUP(offered_seq_id, env));
-		AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "Sandesha2OfferedSequenceId", seq_prop);
-		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " [wsf-log] Sandesha2OfferedSequenceId is set as property");
-		property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
-
-		AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "Sandesha2LastMessage", property);
-		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " [wsf-log] setting Sandesha2LastMessage"); 
-		AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "sandesha2");
-	}
-	return is_rm_enabled;
-}
-*/
-axis2_param_t *wsf_util_create_param_for_rampart(axis2_env_t *env,
-												 HashTable *ht TSRMLS_DC)
+void wsf_client_enable_ssl(HashTable *ht, axis2_env_t *env, axis2_options_t *options,
+						   axis2_svc_client_t *svc_client TSRMLS_DC)
 {
-	axis2_param_t *parameter = NULL, *action_param= NULL, *param = NULL ;
+	axis2_property_t *ssl_server_key_prop = NULL;
+	axis2_property_t *ssl_client_key_prop = NULL;
+	axis2_property_t *passphrase_prop = NULL;
 	zval **tmp = NULL;
-	axis2_array_list_t *parameter_vl = NULL, *action_vl = NULL;
-
-	parameter = axis2_param_create(env, "OutflowSecurity", NULL);
-	parameter_vl = axis2_array_list_create(env, 1);
-	axis2_param_set_value_list(param, env, parameter_vl);
+	char *ssl_server_key_filename = NULL;
+	char *ssl_client_key_filename = NULL;
+	char *passphrase = NULL;
 	
-	action_param = axis2_param_create(env, "action", NULL);
-	action_vl = axis2_array_list_create(env, 10);
-	axis2_param_set_param_type(action_param, env, AXIS2_DOM_PARAM);
-	axis2_param_set_value_list(action_param, env, action_vl);
+	if(zend_hash_find(ht, "serverCertificate", sizeof("serverCertificate"), (void **)&tmp) == SUCCESS){
+		ssl_server_key_filename = Z_STRVAL_PP(tmp);		
+	}
+	if(zend_hash_find(ht, "clientCertificate", sizeof("clientCertificate"), (void **)&tmp) == SUCCESS){
+		ssl_client_key_filename = Z_STRVAL_PP(tmp);	
+	}
+	if(zend_hash_find(ht, "passphrase", sizeof("passphrase"), (void **)&tmp) == SUCCESS){
+		passphrase = Z_STRVAL_PP(tmp);		
+	}
 
-	/** set this from hash */
-	
-	param = axis2_param_create(env, "items", "Timestamp");
-	axis2_param_set_param_type(param, env, AXIS2_TEXT_PARAM);
-	axis2_array_list_add(action_vl, env, param);
+	ssl_server_key_prop = axis2_property_create_with_args(env, 0, AXIS2_TRUE, 0, AXIS2_STRDUP(ssl_server_key_filename, env));
+	AXIS2_OPTIONS_SET_PROPERTY(options, env, "SERVER_CERT", ssl_server_key_prop);
 
-	param = axis2_param_create(env, "user", "username");
-	axis2_param_set_param_type(param, env, AXIS2_TEXT_PARAM);
-	axis2_array_list_add(action_vl, env, param);
+	ssl_client_key_prop = axis2_property_create_with_args(env, 0, AXIS2_TRUE, 0, AXIS2_STRDUP(ssl_client_key_filename, env));
+	AXIS2_OPTIONS_SET_PROPERTY(options, env, "KEY_FILE", ssl_client_key_prop);
 
-
-	param = axis2_param_create(env, "passwordType", "text or digest ");
-	axis2_param_set_param_type(param, env, AXIS2_TEXT_PARAM);
-	axis2_array_list_add(action_vl, env, param);
-	
-	return parameter;
+	passphrase_prop = axis2_property_create_with_args(env, 0, AXIS2_TRUE, 0, AXIS2_STRDUP(passphrase, env));
+	AXIS2_OPTIONS_SET_PROPERTY(options, env, "SSL_PASSPHRASE", passphrase_prop);
+					
 }
-
