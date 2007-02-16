@@ -2,7 +2,7 @@ dnl run autogen.sh to generate the configure script.
 
 AC_PREREQ(2.59)
 
-AC_INIT(axis2c-src, 0.96)
+AC_INIT(axis2c-src, 0.95)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE([tar-ustar])
@@ -55,11 +55,24 @@ if test -d $srcdir/axiom; then
     AC_CONFIG_SUBDIRS(axiom)
 fi
 
+if test -d $srcdir/xml_schema; then
+    AC_CONFIG_SUBDIRS(xml_schema)
+fi
+
+if test -d $srcdir/woden; then
+    AC_CONFIG_SUBDIRS(woden)
+fi
+
+if test -d $srcdir/rampart; then
+    AC_CONFIG_SUBDIRS(rampart)
+fi
+
+
 #CFLAGS="$CFLAGS -ansi -Wall -D_LARGEFILE64_SOURCE -Wno-implicit-function-declaration"
 CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 if test "$GCC" = "yes"; then
-    CFLAGS="$CFLAGS -ansi -Wall -Wno-implicit-function-declaration -g"
-#    CFLAGS="$CFLAGS -ansi -Wall -Wno-implicit-function-declaration"
+    CFLAGS="$CFLAGS -ansi -Werror -Wall -Wno-implicit-function-declaration"
+    #CFLAGS="$CFLAGS -ansi -Wall -Wno-implicit-function-declaration"
 fi
 LDFLAGS="$LDFLAGS -lpthread"
 
@@ -111,14 +124,28 @@ AC_ARG_ENABLE(rampart, [  --enable-rampart build ramprt. default=no],
   *)
     AC_MSG_RESULT(yes)
     RAMPART_DIR="rampart"
-    if test -d $srcdir/rampart; then
-        AC_CONFIG_SUBDIRS(rampart)
-    fi
 
     ;;
   esac ],
   AC_MSG_RESULT(no)
 )
+
+AC_MSG_CHECKING(whether to build xmpp server)
+AC_ARG_ENABLE(xmpp, [  --enable-xmpp build simple xmpp server. default=no],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    XMPP_DIR=""
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    XMPP_DIR="xmpp"
+
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+)
+
 
 AC_MSG_CHECKING(whether to build libxml2 xml parser library)
 AC_ARG_ENABLE(libxml2, [  --enable-libxml2    build libxml2 xml parser library wrapper. default=yes],
@@ -306,13 +333,13 @@ AC_SUBST(PARSER_LIBS)
 AC_SUBST(APACHE2INC)
 AC_SUBST(APRINC)
 AC_SUBST(DICLIENT_DIR)
-AC_SUBST(TESTDIR)
 AC_SUBST(SAMPLES)
 AC_SUBST(APACHE2BUILD)
 AC_SUBST(PARSER_DIR)
 AC_SUBST(WRAPPER_DIR)
 AC_SUBST(GUTHTHILA_DIR)
 AC_SUBST(RAMPART_DIR)
+AC_SUBST(XMPP_DIR)
 AC_SUBST(GUTHTHILA_LIBS)
 AM_CONDITIONAL(AXIS2_SSL_ENABLED, test x$ssl_enabled = xtrue)
 #export PARSER_DIR
@@ -328,35 +355,18 @@ AC_CONFIG_FILES([Makefile \
     modules/core/addr/Makefile \
     modules/core/phaseresolver/Makefile \
     modules/core/transport/http/Makefile \
-    modules/core/transport/http/common/Makefile \
-    modules/core/transport/http/util/Makefile \
     modules/core/transport/http/sender/Makefile \
     modules/core/transport/http/sender/ssl/Makefile \
     modules/core/transport/http/receiver/Makefile \
     modules/core/transport/http/server/simple_axis2_server/Makefile \
-    modules/core/transport/http/server/Makefile \
     modules/core/transport/http/server/apache2/Makefile \
+    modules/core/transport/http/server/Makefile \
     modules/core/deployment/Makefile \
     modules/core/clientapi/Makefile \
     modules/core/receivers/Makefile \
     modules/core/util/Makefile \
     modules/mod_addr/Makefile \
     modules/mod_log/Makefile \
-    test/Makefile \
-    test/core/Makefile \
-    test/core/description/Makefile \
-    test/core/clientapi/Makefile \
-    test/core/deployment/Makefile \
-    test/core/context/Makefile \
-    test/core/engine/Makefile \
-    test/core/addr/Makefile \
-    test/core/transport/Makefile\
-    test/core/transport/http/Makefile \
-    test/itest/Makefile \
-    test/itest/whitemesa/Makefile \
-    test/itest/whitemesa/round1/Makefile \
-    test/itest/whitemesa/round2/Makefile \
-    test/tools/Makefile \
     ides/Makefile \
     ides/anjuta/Makefile \
     include/Makefile \
