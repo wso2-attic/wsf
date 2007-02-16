@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd axis2
+cd axis2c
 ./autogen.sh
 cd ../wsclient
 ./autogen.sh
