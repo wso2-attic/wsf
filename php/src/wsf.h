@@ -91,6 +91,7 @@ extern zend_class_entry *ws_message_class_entry;
 extern zend_class_entry *ws_var_class_entry;
 extern zend_class_entry *ws_client_proxy_class_entry;
 extern zend_class_entry *ws_security_token_class_entry;
+extern zend_class_entry *ws_policy_class_entry;
 
 extern wsf_worker_t* worker;
 

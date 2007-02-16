@@ -38,6 +38,8 @@
 #include <axis2_addr.h>
 #include <axiom_util.h>
 #include "wsf_client.h"
+#include "wsf_policy.h"
+
 
 ZEND_DECLARE_MODULE_GLOBALS(wsf)
 
@@ -49,6 +51,8 @@ zend_class_entry *ws_message_class_entry;
 zend_class_entry *ws_var_class_entry;
 zend_class_entry *ws_client_proxy_class_entry;
 zend_class_entry *ws_security_token_class_entry;
+zend_class_entry *ws_policy_class_entry;
+
 
 /* True global values, worker is thread safe */
 static axis2_env_t *env;
@@ -104,6 +108,9 @@ PHP_METHOD(ws_fault, __destruct);
 PHP_METHOD(ws_fault, __get);
 PHP_METHOD(ws_fault, ws_fault_get_soap_fault_text);
 
+/** WSPolicy class functions */
+PHP_METHOD(ws_policy, __construct);
+
 ZEND_BEGIN_ARG_INFO(__ws_fault_get_args, 0)
     ZEND_ARG_PASS_INFO(0)
 ZEND_END_ARG_INFO()
@@ -158,6 +165,10 @@ zend_function_entry php_ws_header_class_functions[] =
 zend_function_entry php_ws_security_token_class_functions[]={
 	PHP_ME(ws_security_token, __construct, NULL, ZEND_ACC_PUBLIC)
 	{NULL, NULL, NULL}
+};
+
+zend_function_entry php_ws_policy_class_functions[]={
+       PHP_ME(ws_policy, __construct, NULL, ZEND_ACC_PUBLIC)
 };
 
 /* {{{ wsf_functions[] */
@@ -431,6 +442,9 @@ PHP_MINIT_FUNCTION(wsf)
 
 	INIT_CLASS_ENTRY(ce, "WSSecurityToken", php_ws_security_token_class_functions);
 	ws_security_token_class_entry = zend_register_internal_class(&ce TSRMLS_CC);
+
+	INIT_CLASS_ENTRY(ce, "WSPolicy", php_ws_policy_class_functions);
+	ws_policy_class_entry = zend_register_internal_class(&ce TSRMLS_CC);
 
 	REGISTER_LONG_CONSTANT("WS_SOAP_ROLE_NEXT", WS_SOAP_ROLE_NEXT, CONST_CS | CONST_PERSISTENT);
 	REGISTER_LONG_CONSTANT("WS_SOAP_ROLE_NONE", WS_SOAP_ROLE_NONE, CONST_CS | CONST_PERSISTENT);
@@ -1006,6 +1020,16 @@ PHP_METHOD(ws_client, __construct)
             add_property_resource(obj , "sdl", ret); 
 			*/
 		}
+
+		/*** for sec_policy intergration*/
+		if(zend_hash_find(ht, "sec_policy", sizeof("sec_policy"), (void**)&tmp) == SUCCESS &&
+		   Z_TYPE_PP(tmp) == IS_STRING)
+		{
+		    add_property_stringl(obj, "sec_policy", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+		}
+
+
+
     }        
 }
 /* }}} */
@@ -1944,3 +1968,45 @@ PHP_FUNCTION(ws_private_key_from_pem_file)
 
 }
 PHP_FUNCTION(ws_public_key_from_file){}
+
+
+/* {{{ WSPolicy::__construct( */
+PHP_METHOD(ws_policy, __construct)
+{
+    zval *object = NULL;
+    zval *payload = NULL;
+    zval *properties = NULL;
+    
+    if (FAILURE == zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|z|a", 
+       &properties)) {
+        php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
+        return;
+    }
+    
+    WSF_GET_THIS(object);
+    WSF_OBJ_CHECK(env);
+
+    /* if the wspolicy object ( option array is presence */
+
+    if( NULL != properties && Z_TYPE_P(properties) == IS_ARRAY)
+    {
+	zval **tmp;
+	HashTable *ht = Z_ARRVAL_P(properties);
+	if(ht)
+	{
+	    set_policy_options(env, ht);
+	}
+	else
+	    php_printf("\n The variable is of type %d", Z_TYPE_P(properties));
+	
+    }
+	
+ 
+}
+
+/* }}} */
+
+
+
+
+
