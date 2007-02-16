@@ -35,13 +35,13 @@
 
     <!--During a fault, stacktrace can be sent with the fault message. The following flag will control -->
     <!--that behaviour.-->
-    <parameter name="sendStacktraceDetailsWithFaults" locked="false">false</parameter>
+    <parameter name="sendStacktraceDetailsWithFaults" locked="false">true</parameter>
 
     <!--If there aren't any information available to find out the fault reason, we set the message of the expcetion-->
     <!--as the faultreason/Reason. But when a fault is thrown from a service or some where, it will be -->
     <!--wrapped by different levels. Due to this the initial exception message can be lost. If this flag-->
     <!--is set then, Axis2 tries to get the first exception and set its message as the faultreason/Reason.-->
-    <parameter name="DrillDownToRootCauseForFaultReason" locked="false">false</parameter>
+    <parameter name="DrillDownToRootCauseForFaultReason" locked="false">true</parameter>
 
     <parameter name="userName" locked="false">admin</parameter>
     <parameter name="password" locked="false">axis2</parameter>

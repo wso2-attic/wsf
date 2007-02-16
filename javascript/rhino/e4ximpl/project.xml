@@ -15,7 +15,7 @@
 <project>
     <pomVersion>3</pomVersion>
     <extend>../project.xml</extend>
-    <groupId>org.wso2.wsf.javascript.rhino</groupId>
+    <groupId>org.wso2.javascript.rhino</groupId>
     <id>js-axiom</id>
     <name>E4X Implementation - Axiom</name>
 

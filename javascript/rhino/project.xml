@@ -14,7 +14,7 @@
 
 <project>
     <pomVersion>3</pomVersion>
-    <id>org.wso2.wsf.javascript.rhino</id>
+    <id>org.wso2.javascript.rhino</id>
     <name>JavaScript Webservices</name>
     <currentVersion>${js.webservices.version}</currentVersion>
 

@@ -15,7 +15,7 @@
 <project>
     <pomVersion>3</pomVersion>
     <extend>../project.xml</extend>
-    <groupId>org.wso2.wsf.javascript.rhino</groupId>
+    <groupId>org.wso2.javascript.rhino</groupId>
     <id>js-message-receiver</id>
     <name>JavaScript Message Receiver</name>
     <currentVersion>${js.webservices.version}</currentVersion>
@@ -29,7 +29,7 @@
     <!--                                      -->
     <dependencies>
         <dependency>
-            <groupId>org.wso2.wsf.javascript.rhino</groupId>
+            <groupId>org.wso2.javascript.rhino</groupId>
             <artifactId>js-axiom</artifactId>
             <version>${js.axiom.version}</version>
         </dependency>
