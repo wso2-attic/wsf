@@ -73,8 +73,7 @@ int set_policy_options(const axis2_env_t *env,
     {
 	/* ***** */
     }
-
-    
+	return 0;
 }
 
 /* Implementation of security policy related things */
@@ -159,7 +158,7 @@ int get_security_policy_options(const axis2_env_t *env,
 /*         AXIS2_FREE(env->allocator, om_str); */
 /*         om_str =  NULL; */
 /*     } */
-
+	return 0;
 }
 
 /* create a policy node since this node is needed every where in the

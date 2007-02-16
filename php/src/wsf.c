@@ -169,6 +169,7 @@ zend_function_entry php_ws_security_token_class_functions[]={
 
 zend_function_entry php_ws_policy_class_functions[]={
        PHP_ME(ws_policy, __construct, NULL, ZEND_ACC_PUBLIC)
+	   {NULL, NULL, NULL}
 };
 
 /* {{{ wsf_functions[] */
