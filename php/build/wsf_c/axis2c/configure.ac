@@ -71,7 +71,7 @@ fi
 #CFLAGS="$CFLAGS -ansi -Wall -D_LARGEFILE64_SOURCE -Wno-implicit-function-declaration"
 CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 if test "$GCC" = "yes"; then
-    CFLAGS="$CFLAGS -ansi -Werror -Wall -Wno-implicit-function-declaration"
+    CFLAGS="$CFLAGS -ansi  -Wall -Wno-implicit-function-declaration"
     #CFLAGS="$CFLAGS -ansi -Wall -Wno-implicit-function-declaration"
 fi
 LDFLAGS="$LDFLAGS -lpthread"
@@ -354,7 +354,10 @@ AC_CONFIG_FILES([Makefile \
     modules/core/engine/Makefile \
     modules/core/addr/Makefile \
     modules/core/phaseresolver/Makefile \
+    modules/core/transport/Makefile \
     modules/core/transport/http/Makefile \
+    modules/core/transport/http/common/Makefile \
+    modules/core/transport/http/util/Makefile \
     modules/core/transport/http/sender/Makefile \
     modules/core/transport/http/sender/ssl/Makefile \
     modules/core/transport/http/receiver/Makefile \
