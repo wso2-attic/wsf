@@ -243,15 +243,8 @@ int wsf_worker_process_request(
     AXIS2_FREE(env->allocator, ctx_uuid);
     axis2_string_free(ctx_uuid_str, env);
     
-    /** create transport in description */
-	{
-		axis2_property_t *trns_in_desc_prop = NULL;
-		php_out_transport_info = wsf_out_transport_info_create(env, request);
-		trns_in_desc_prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, AXIS2_TRUE,
-			wsf_out_transport_info_free_void_arg, php_out_transport_info);
-		AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, AXIS2_HTTP_OUT_TRANSPORT_INFO,
-			trns_in_desc_prop, AXIS2_FALSE);
-	}
+    php_out_transport_info = wsf_out_transport_info_create(env, request);
+    axis2_msg_ctx_set_http_out_transport_info(msg_ctx, env, php_out_transport_info);
    
     /* service path */
 	{
