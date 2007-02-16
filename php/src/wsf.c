@@ -1009,18 +1009,18 @@ PHP_METHOD(ws_client, __construct)
 
 		if(zend_hash_find(ht, WS_SERVER_CERT, sizeof(WS_SERVER_CERT), (void**)&tmp) == SUCCESS){
 			if(Z_TYPE_PP(tmp) == IS_STRING){
-				add_property_string(obj, WS_SERVER_CERT, Z_STRVAL_PP(tmp), 0); 			
+				add_property_string(obj, WS_SERVER_CERT, Z_STRVAL_PP(tmp), 1); 			
 			}
 		}
 
 		if(zend_hash_find(ht, WS_CLIENT_CERT, sizeof(WS_CLIENT_CERT), (void**)&tmp) == SUCCESS){
 			if(Z_TYPE_PP(tmp) == IS_STRING){
-				add_property_string(obj, WS_CLIENT_CERT, Z_STRVAL_PP(tmp), 0);
+				add_property_string(obj, WS_CLIENT_CERT, Z_STRVAL_PP(tmp), 1);
 			}
 		}
 		if(zend_hash_find(ht, WS_PASSPHRASE, sizeof(WS_PASSPHRASE), (void**)&tmp) == SUCCESS){
 			if(Z_TYPE_PP(tmp) == IS_STRING){
-				add_property_string(obj, WS_PASSPHRASE, Z_STRVAL_PP(tmp), 0);
+				add_property_string(obj, WS_PASSPHRASE, Z_STRVAL_PP(tmp), 1);
 			}
 		}
 

@@ -1186,6 +1186,6 @@ void wsf_client_enable_ssl(HashTable *ht, axis2_env_t *env, axis2_options_t *opt
 	passphrase_prop = axis2_property_create_with_args(env, 0, AXIS2_TRUE, 0, AXIS2_STRDUP(passphrase, env));
 	AXIS2_OPTIONS_SET_PROPERTY(options, env, "SSL_PASSPHRASE", passphrase_prop);
 
-	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf-client] setting ssh options ");
+	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf-client] setting ssh options %s -- %s -- %s ", ssl_server_key_filename, ssl_client_key_filename, passphrase);
 					
 }
