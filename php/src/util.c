@@ -32,7 +32,7 @@
 #include <axiom_util.h>
 /*#include <sandesha2_client.h>*/
 
-static int current_ns_count = 0;
+static int curr = 0;
 
 axiom_node_t* 
 wsf_util_construct_header_node(const axis2_env_t *env, 
@@ -49,38 +49,43 @@ wsf_util_construct_header_node(const axis2_env_t *env,
 	int role = 0;
 
 	zval **tmp = NULL;
-	if(zend_hash_find(Z_OBJPROP_P(header), "localname" , 
-		sizeof("localname") ,(void**)&tmp) == SUCCESS){
+
+
+	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " [wsf_log] construct header node ");
+
+	if(zend_hash_find(Z_OBJPROP_P(header), WS_HEADER_LOCALNAME , 
+		sizeof(WS_HEADER_LOCALNAME) ,(void**)&tmp) == SUCCESS){
 			localname = Z_STRVAL_PP(tmp);
 	}else{
 		return NULL;
 	}
-	if(zend_hash_find(Z_OBJPROP_P(header), "namespace", sizeof("namespace"),
+	if(zend_hash_find(Z_OBJPROP_P(header), WS_HEADER_NS, sizeof(WS_HEADER_NS),
 		(void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
 			ns = Z_STRVAL_PP(tmp);
 	}else{
 		return NULL;
 	}
 	
-	sprintf(prefix, "ns%d", current_ns_count++);
+	sprintf(prefix, "ns%d", WSF_GLOBAL(curr_ns_index)++);
 	header_ns = axiom_namespace_create(env, ns, prefix);
 	header_ele = axiom_element_create(env, NULL , localname, header_ns, &header_node);
 	
-	if(zend_hash_find(Z_OBJPROP_P(header), "mustUnderstand", 
-		sizeof("mustUnderstand"), (void**)&tmp) == SUCCESS){
+	if(zend_hash_find(Z_OBJPROP_P(header), WS_HEADER_MUST_UNDERSTAND, 
+		sizeof(WS_HEADER_MUST_UNDERSTAND), (void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
 		axiom_attribute_t *mu_attr = NULL;
 		axiom_namespace_t *env_ns = NULL;
-		if(Z_TYPE_PP(tmp) == ZEND_BOOL){
-			char must_val[2];
-			must_understand = Z_BVAL_PP(tmp);
-			sprintf(must_val,"%d", must_understand);
-			soap_ns = axiom_namespace_create(env, WSF_GLOBAL(soap_uri), "soapenv");
-			mu_attr = axiom_attribute_create(env, "mustUnderstand", must_val, soap_ns);
-			axiom_element_add_attribute(header_ele, env, mu_attr, header_node);
-		}		
+		char must_val[2];
+			
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] must understand value is set");
+		
+	    must_understand = Z_BVAL_PP(tmp);
+		sprintf(must_val,"%d", must_understand);
+		soap_ns = axiom_namespace_create(env, WSF_GLOBAL(soap_uri), "soapenv");
+		mu_attr = axiom_attribute_create(env, "mustUnderstand", must_val, soap_ns);
+		axiom_element_add_attribute(header_ele, env, mu_attr, header_node);
 	}
-	if(zend_hash_find(Z_OBJPROP_P(header), "role", 
-		sizeof("role"), (void**)&tmp) == SUCCESS){
+	if(zend_hash_find(Z_OBJPROP_P(header), WS_HEADER_ROLE, 
+		sizeof(WS_HEADER_ROLE), (void**)&tmp) == SUCCESS){
 			axiom_attribute_t *role_attr = NULL;
 			char *role_val = NULL;
 			if(Z_TYPE_PP(tmp) == IS_LONG){
@@ -98,11 +103,16 @@ wsf_util_construct_header_node(const axis2_env_t *env,
 				soap_ns = axiom_namespace_create(env, WSF_GLOBAL(soap_uri), "soapenv"); 
 			/** role is only valid for soap12, for soap11 use actor, TODO */
 			if(WSF_GLOBAL(soap_version) == AXIOM_SOAP12 && role_val){
-				role_attr = axiom_attribute_create(env, "role", 
+				role_attr = axiom_attribute_create(env, WS_HEADER_ROLE, 
 					role_val, soap_ns);
 				axiom_element_add_attribute(header_ele, env, role_attr, header_node);
 			}
 	}
+	if(zend_hash_find(Z_OBJPROP_P(header), WS_HEADER_DATA, 
+		sizeof(WS_HEADER_DATA), (void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
+			axiom_element_set_text(header_ele, env, Z_STRVAL_PP(tmp), header_node);
+	}
+
 	return header_node;			
 }
 
@@ -542,7 +552,7 @@ int ws_util_engage_module(
 		if(!status){
 			phase_resolver = axis2_phase_resolver_create_with_config(env, conf);
 			if (!phase_resolver){
-				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " ++++++++++++ PHASE RESLOVER NULL");
+				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " [wsf-log] PHASE RESLOVER NULL");
 				return AXIS2_FAILURE;
 			}
 		    status = AXIS2_PHASE_RESOLVER_ENGAGE_MODULE_TO_SVC(phase_resolver, env, svc,

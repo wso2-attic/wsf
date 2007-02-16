@@ -92,12 +92,15 @@ int wsf_client_set_headers(const axis2_env_t *env,
 
 		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] setting header node ");
 
-		if(zend_hash_find(ht, "headers", sizeof("headers"), (void**)&tmp) == SUCCESS){
+		if(zend_hash_find(ht, WS_HEADERS, sizeof(WS_HEADERS), (void**)&tmp) == SUCCESS){
 			if(Z_TYPE_PP(tmp) == IS_ARRAY){
 				HashPosition pos;
 				HashTable *ht = Z_ARRVAL_PP(tmp);
 				zval **val = NULL;
 				zend_hash_internal_pointer_reset_ex(ht, &pos);
+				
+				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] headers found");
+
 				while(zend_hash_get_current_data_ex(ht, (void**)&val , &pos) != FAILURE){
 					zval *header = *val;
 					axiom_node_t *header_node = NULL;
@@ -683,8 +686,8 @@ int wsf_client_do_request(
 	/** RM OPTION VARIABLES */
 	int ws_client_will_continue_sequence = AXIS2_FALSE;
 	int engage_rm = AXIS2_FALSE;
-	int rm_spec_version = WSF_RM_VERSION_1_0;
-	char *rm_spec_version_str = WSF_RM_VERSION_1_0_STR;
+	int rm_spec_version = WS_RM_VERSION_1_0;
+	char *rm_spec_version_str = WS_RM_VERSION_1_0_STR;
 	int is_addressing_engaged = AXIS2_FALSE;
 	int is_addressing_action_present = AXIS2_FALSE;
 	int is_rm_engaged = AXIS2_FALSE;
@@ -790,20 +793,20 @@ int wsf_client_do_request(
 		wsf_client_set_headers(env, svc_client, param TSRMLS_CC);
 
 		
-        if(zend_hash_find(Z_OBJPROP_P(param), "defaultAttachmentContentType", 
-            sizeof("defaultAttachmentContentType"), 
+        if(zend_hash_find(Z_OBJPROP_P(param), WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE, 
+			sizeof(WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE), 
 			(void **)&msg_tmp) == SUCCESS && Z_TYPE_PP(msg_tmp) == IS_STRING){
             default_cnt_type = Z_STRVAL_PP(msg_tmp);   
         }else{
             default_cnt_type = "application/octet-stream";
         }
-		if(zend_hash_find(Z_OBJPROP_P(this_ptr), "responseXOP", 
-				sizeof("responseXOP"), 
+		if(zend_hash_find(Z_OBJPROP_P(this_ptr), WS_RESPONSE_XOP, 
+			sizeof(WS_RESPONSE_XOP), 
 				(void **)&client_tmp) == SUCCESS && Z_TYPE_PP(client_tmp) == IS_BOOL){
 					responseXOP = Z_BVAL_PP(client_tmp);
         }          
                  
-        if(zend_hash_find(Z_OBJPROP_P(param), "attachments", sizeof("attachments"), 
+		if(zend_hash_find(Z_OBJPROP_P(param), WS_ATTACHMENTS, sizeof(WS_ATTACHMENTS), 
             (void **)&msg_tmp) == SUCCESS && Z_TYPE_PP(msg_tmp) == IS_ARRAY){
 				HashTable *ht = NULL;
 				int enable_mtom = AXIS2_TRUE;
@@ -831,23 +834,23 @@ int wsf_client_do_request(
 	{/** RM OPTIONS */
 		
 		/** this value is a long value and is the rm version */
-		if(zend_hash_find(Z_OBJPROP_P(this_ptr), "reliable", sizeof("reliable"),
+		if(zend_hash_find(Z_OBJPROP_P(this_ptr), WS_RELIABLE, sizeof(WS_RELIABLE),
 			(void**)&client_tmp) == SUCCESS){
 				axis2_property_t *rm_prop = NULL;
 				
-				if(Z_LVAL_PP(client_tmp) == WSF_RM_VERSION_1_0){
-					rm_spec_version = WSF_RM_VERSION_1_0;
-					rm_spec_version_str = WSF_RM_VERSION_1_0_STR;
+				if(Z_LVAL_PP(client_tmp) == WS_RM_VERSION_1_0){
+					rm_spec_version = WS_RM_VERSION_1_0;
+					rm_spec_version_str = WS_RM_VERSION_1_0_STR;
 					AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] rm spec version 1.0");
 
-				}else if(Z_LVAL_PP(client_tmp) == WSF_RM_VERSION_1_1){
-					rm_spec_version = WSF_RM_VERSION_1_1;
-					rm_spec_version_str = WSF_RM_VERSION_1_1_STR;
+				}else if(Z_LVAL_PP(client_tmp) == WS_RM_VERSION_1_1){
+					rm_spec_version = WS_RM_VERSION_1_1;
+					rm_spec_version_str = WS_RM_VERSION_1_1_STR;
 					AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] rm spec version 1.1");
 				}
 
 				rm_prop = axis2_property_create_with_args(env, 0, 0, 0, rm_spec_version_str);
-				AXIS2_OPTIONS_SET_PROPERTY(client_options, env, WSF_SANDESHA2_CLIENT_RM_SPEC_VERSION, rm_prop);
+				AXIS2_OPTIONS_SET_PROPERTY(client_options, env, WS_SANDESHA2_CLIENT_RM_SPEC_VERSION, rm_prop);
 				engage_rm  = AXIS2_TRUE;
 		}
 		/**
@@ -872,7 +875,7 @@ int wsf_client_do_request(
 
 				
 				/** rm is engaged , process other rm params */
-				if(zend_hash_find(Z_OBJPROP_P(this_ptr), "sequenceExpiryTime", sizeof("sequenceExpiryTime"),
+				if(zend_hash_find(Z_OBJPROP_P(this_ptr), WS_SEQUENCE_EXPIRY_TIME, sizeof(WS_SEQUENCE_EXPIRY_TIME),
 					(void**)&client_tmp) == SUCCESS){
 						axis2_property_t *seq_exp_time_prop = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
 							0, NULL, (void*)Z_LVAL_PP(client_tmp));
@@ -880,8 +883,8 @@ int wsf_client_do_request(
 
 						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] sequenceExpiryTime is %d", Z_LVAL_PP(client_tmp));
 				}
-				if(zend_hash_find(Z_OBJPROP_P(this_ptr), "willContinueSequence", 
-						sizeof("willContinueSequence"), (void **)&client_tmp) == SUCCESS){
+				if(zend_hash_find(Z_OBJPROP_P(this_ptr), WS_WILL_CONTINUE_SEQUENCE, 
+						sizeof(WS_WILL_CONTINUE_SEQUENCE), (void **)&client_tmp) == SUCCESS){
 						if(Z_TYPE_PP(client_tmp) && Z_BVAL_PP(client_tmp) == 1){
 						
 							ws_client_will_continue_sequence = 1;
@@ -895,11 +898,11 @@ int wsf_client_do_request(
 				/** if input_type is ws_message and continueSequence is true on client, we should look for 
 					false value in ws_message to end the sequence ,
 					WSMessage only accepts a false value*/
-				if(zend_hash_find(Z_OBJPROP_P(param), "willContinueSequence", sizeof("willContinueSequence"),
+				if(zend_hash_find(Z_OBJPROP_P(param), WS_WILL_CONTINUE_SEQUENCE, sizeof(WS_WILL_CONTINUE_SEQUENCE),
 						(void**)&msg_tmp) == SUCCESS){
 				
 						ws_client_will_continue_sequence = 0;
-						if(rm_spec_version == WSF_RM_VERSION_1_0){
+						if(rm_spec_version == WS_RM_VERSION_1_0){
 							
 							axis2_property_t *last_msg_prop = axis2_property_create_with_args(env, 
 													AXIS2_SCOPE_APPLICATION, 0, NULL, AXIS2_VALUE_TRUE);
@@ -912,7 +915,7 @@ int wsf_client_do_request(
 				
 			}else if(!ws_client_will_continue_sequence){
 					AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] setting TreminateSequence property");
-					if(rm_spec_version == WSF_RM_VERSION_1_0){
+					if(rm_spec_version == WS_RM_VERSION_1_0){
 						axis2_property_t *last_msg_prop = axis2_property_create_with_args(env, 
 											0, 0, 0, AXIS2_VALUE_TRUE);
 						AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "Sandesha2LastMessage", last_msg_prop);
@@ -939,7 +942,7 @@ int wsf_client_do_request(
 
 
 		ret_val = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, request_payload);
-		if(is_rm_engaged && !ws_client_will_continue_sequence && rm_spec_version == WSF_RM_VERSION_1_1){
+		if(is_rm_engaged && !ws_client_will_continue_sequence && rm_spec_version == WS_RM_VERSION_1_1){
 		/**currently there are no callbacks disscuss and implement */
 
 		}
@@ -1164,13 +1167,13 @@ void wsf_client_enable_ssl(HashTable *ht, axis2_env_t *env, axis2_options_t *opt
 	char *ssl_client_key_filename = NULL;
 	char *passphrase = NULL;
 	
-	if(zend_hash_find(ht, "serverCertificate", sizeof("serverCertificate"), (void **)&tmp) == SUCCESS){
+	if(zend_hash_find(ht, WS_SERVER_CERT, sizeof(WS_SERVER_CERT), (void **)&tmp) == SUCCESS){
 		ssl_server_key_filename = Z_STRVAL_PP(tmp);		
 	}
-	if(zend_hash_find(ht, "clientCertificate", sizeof("clientCertificate"), (void **)&tmp) == SUCCESS){
+	if(zend_hash_find(ht, WS_CLIENT_CERT, sizeof(WS_CLIENT_CERT), (void **)&tmp) == SUCCESS){
 		ssl_client_key_filename = Z_STRVAL_PP(tmp);	
 	}
-	if(zend_hash_find(ht, "passphrase", sizeof("passphrase"), (void **)&tmp) == SUCCESS){
+	if(zend_hash_find(ht, WS_PASSPHRASE, sizeof(WS_PASSPHRASE), (void **)&tmp) == SUCCESS){
 		passphrase = Z_STRVAL_PP(tmp);		
 	}
 
@@ -1182,5 +1185,7 @@ void wsf_client_enable_ssl(HashTable *ht, axis2_env_t *env, axis2_options_t *opt
 
 	passphrase_prop = axis2_property_create_with_args(env, 0, AXIS2_TRUE, 0, AXIS2_STRDUP(passphrase, env));
 	AXIS2_OPTIONS_SET_PROPERTY(options, env, "SSL_PASSPHRASE", passphrase_prop);
+
+	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf-client] setting ssh options ");
 					
 }

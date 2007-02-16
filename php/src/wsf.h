@@ -104,6 +104,8 @@ ZEND_BEGIN_MODULE_GLOBALS(wsf)
 	char *log_path;
 	char *soap_uri;
 	char *rm_db_dir;
+
+	int curr_ns_index;
 ZEND_END_MODULE_GLOBALS(wsf)
 
 ZEND_EXTERN_MODULE_GLOBALS(wsf)

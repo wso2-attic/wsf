@@ -55,6 +55,52 @@ typedef enum ws_input_types{
 }ws_input_types_t;
 
 
+/** Options array options */
+#define WS_TO			"to"    /** endpoint uri */
+
+#define WS_USE_WSA     "useWSA"
+#define WS_ACTION		"action"		/** addressing options */
+#define WS_FROM		"from"
+#define WS_REPLY_TO		"replyTo"
+#define WS_FAULT_TO		"faultTo"
+
+#define WS_USES_XOP	"usesXOP"	   /** MTOM XOP */
+#define WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE "defaultAttachmentContentType"
+#define WS_ATTACHMENTS "attachments"
+#define WS_RESPONSE_XOP "responseXOP"
+#define WS_REQUEST_XOP  "requestXOP"
+#define WS_USE_MTOM     "useMTOM"
+
+#define WS_WILL_CONTINUE_SEQUENCE "willContinueSequence"  
+#define WS_RELIABLE	"reliable"
+#define WS_SEQUENCE_EXPIRY_TIME "sequenceExpiryTime"
+
+#define WS_USE_SOAP	"useSOAP"
+#define WS_HTTP_METHOD "HTTPMethod"
+
+#define WS_SERVER_CERT "serverCertificate"
+#define WS_CLIENT_CERT "clientCertificate"
+#define WS_PASSPHRASE  "passphrase"
+
+#define WS_BINDING_STYLE "bindingStyle"
+#define WS_WSDL          "wsdl"
+
+#define WS_FAULT_REASON "reason"
+#define WS_FAULT_ROLE   "role"
+#define WS_FAULT_TEXT   "text"
+#define WS_FAULT_CODE   "code"
+#define WS_FAULT_SUBCODE "subcode"
+#define WS_FAULT_DETAIL "detail"
+
+#define WS_HEADERS      "headers"    /** header options */
+#define WS_HEADER_NS    "ns"
+#define WS_HEADER_LOCALNAME "localname"
+#define WS_HEADER_DATA     "data"
+#define WS_HEADER_ROLE     "role"
+#define WS_HEADER_MUST_UNDERSTAND "mustUnderstand"
+
+/** end options */
+
 #define WS_MSG_PAYLOAD_STR "str"
 #define WS_MSG_PAYLOAD_SXML "simpleXML"
 #define WS_MSG_PAYLOAD_DOM "dom"
@@ -75,34 +121,10 @@ typedef enum ws_input_types{
 #define WS_SOAP_1_1_NAMESPACE_URI "http://schemas.xmlsoap.org/soap/envelope/"
 #define WS_SOAP_1_2_NAMESPACE_URI "http://www.w3.org/2003/05/soap-envelope"
 
-#define WS_LOCATION         "location"
-#define WS_USE              "use"
-#define WS_USE_SOAP_IN_OUT  "use_soap_in_out"
-#define WS_STYLE            "style"
-
-/* defaults to WS_SOAP_12 */
-#define WS_SOAP_VERSION  "soap_version" 
-#define WS_SERVICE_NAME  "service_name"
-#define WS_SOAP_ACTION	"soap_action"
-
 /* defaults to true */
 #define WS_THROW_EXCEPTION_ON_FAULT	"throw_exception_on_fault"
-/* defaults to false */
-#define WS_USE_SEPERATE_LISTENER	"use_seperate_listener"
-#define WS_TIME_OUT				"time_out"
 
 
-/* addressing specific properties */
-#define WS_ADDR_ACTION		"ADDR_ACTION"
-#define WS_FAULT_TO			"fault_to"
-#define WS_FROM				"from"
-#define WS_TRANSPORT_IN_PROTOCOL	"transport_in_protocol"
-#define WS_MESSAGE_ID		"message_id"
-#define WS_RELATES_TO		"relates_to"
-#define WS_REPLY_TO			"reply_to"
-#define WS_REFERENCE_PARAMETERS	"reference_parameters"
-#define WS_SENDER_TRANSPORT_PROTOCOL	"sender_transport_protocol"
-#define WS_TO				"to"
 
 #define WS_WSA_NAMESPACE "http://www.w3.org/2005/08/addressing"
 #define WS_WSA_RELATES_TO_RELATIONSHIP_TYPE_DEFAULT_VALUE "http://www.w3.org/2005/08/addressing/reply"
@@ -117,9 +139,6 @@ typedef enum ws_input_types{
 #define WS_WSA_POLICIES "Policies"
 #define WS_WSA_METADATA "Metadata"
 
-
-/* sandesha */
-#define AXIS2_SANDESHA_LAST_MESSAGE "Sandesha2LastMessage"
 
 /* security specific properties */
 #define WS_USER 			"user"
@@ -145,31 +164,23 @@ typedef enum ws_input_types{
 #define WS_ALGORITHM_ASYMMETRIC 161
 #define WS_ALGORITHM_SYMMETRIC	162
 
-/* for annonymous stuff*/
-#define ANON_SERVICE_NAME	"__ANONYMOUS_SERVICE__"
-#define ANON_OUT_ONLY_OP_NAME	"__OPERATION_OUT_ONLY__"
-#define ANON_ROBUST_OUT_ONLY_OP_NAME	"__OPERATION_ROBUST_OUT_ONLY__"
-#define	ANON_OUT_IN_OP_NAME	"__OPERATION_OUT_IN__"
-
 /** sandesha2 */
-#define WSF_SANDESHA2_CLIENT_ACKS_TO "Sandesha2AcksTo"
-#define WSF_SANDESHA2_CLIENT_LAST_MESSAGE "Sandesha2LastMessage"
-#define WSF_SANDESHA2_CLIENT_OFFERED_SEQ_ID "Sandesha2OfferedSequenceId"
-#define WSF_SANDESHA2_CLIENT_DEBUG_MODE "Sandesha2DebugMode"
-#define WSF_SANDESHA2_CLIENT_SEQ_KEY "Sandesha2SequenceKey"
-#define WSF_SANDESHA2_CLIENT_MESSAGE_NUMBER "Sandesha2MessageNumber"
-#define WSF_SANDESHA2_CLIENT_RM_SPEC_VERSION "Sandesha2RMSpecVersion"
-#define WSF_SANDESHA2_CLIENT_DUMMY_MESSAGE "Sandesha2DummyMessage"
+#define WS_SANDESHA2_CLIENT_ACKS_TO "Sandesha2AcksTo"
+#define WS_SANDESHA2_CLIENT_LAST_MESSAGE "Sandesha2LastMessage"
+#define WS_SANDESHA2_CLIENT_OFFERED_SEQ_ID "Sandesha2OfferedSequenceId"
+#define WS_SANDESHA2_CLIENT_DEBUG_MODE "Sandesha2DebugMode"
+#define WS_SANDESHA2_CLIENT_SEQ_KEY "Sandesha2SequenceKey"
+#define WS_SANDESHA2_CLIENT_MESSAGE_NUMBER "Sandesha2MessageNumber"
+#define WS_SANDESHA2_CLIENT_RM_SPEC_VERSION "Sandesha2RMSpecVersion"
+#define WS_SANDESHA2_CLIENT_DUMMY_MESSAGE "Sandesha2DummyMessage"
 
-#define WSF_RM_VERSION_1_0_STR "Spec_2005_02"
-#define WSF_RM_VERSION_1_0  1
-#define WSF_RM_VERSION_1_1_STR "Spec_2006_08"
-#define WSF_RM_VERSION_1_1  2
-
-#define WSF_SANDESHA_CLIENT_PROP "wsf_cli_prop"
+#define WS_RM_VERSION_1_0_STR "Spec_2005_02"
+#define WS_RM_VERSION_1_0  1
+#define WS_RM_VERSION_1_1_STR "Spec_2006_08"
+#define WS_RM_VERSION_1_1  2
 
 /************ engaged module names *****************/
-#define WS_MODULE_ADDRESSING AXIS2_MODULE_ADDRESSING
+#define WS_MODULE_ADDRESSING "addressing"
 #define WS_MODULE_SECURITY   "rampart"
 #define WS_MODULE_RM         "sandesha2"
 
@@ -177,13 +188,15 @@ typedef enum ws_input_types{
 #define WS_MODULE_RM_KEY       "ws_sandesha2"
 #define WS_MODULE_SEC_KEY      "ws_rampart"
 
+
+/** http status codes */
 #define WS_HTTP_OK 200
 
 #define WS_HTTP_INTERNAL_SERVER_ERROR 500
 
 #define WS_HTTP_ACCEPTED 202
 
-#define WS_SVC_INFO "Axis2PHPSvcInfo"
+#define WS_SVC_INFO "WSFPHPSvcInfo"
 
 typedef struct ws_svc_info{
     axis2_svc_t *svc;

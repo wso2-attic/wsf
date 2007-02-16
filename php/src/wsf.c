@@ -246,7 +246,7 @@ void ws_throw_soap_fault(axiom_soap_body_t *soap_body TSRMLS_DC)
         /* TODO free */
         zval *zval_ws_fault = NULL;
         axiom_soap_fault_t *soap_fault = NULL;
-        if(AXIOM_SOAP_BODY_HAS_FAULT(soap_body, env)){
+        if(AXIOM_SOAP_BODY_HAS_FAULT(soap_body, env)){ 
             soap_fault = AXIOM_SOAP_BODY_GET_FAULT(soap_body, env);
             if(soap_fault){   
             /** default soap version */
@@ -397,8 +397,9 @@ static void ws_init_globals(zend_wsf_globals *wsf_globals)
 	wsf_globals->enable_exception = 0;
 	wsf_globals->soap_version = AXIOM_SOAP12;
 	wsf_globals->passwd_location = NULL;
-	wsf_globals->soap_uri = NULL;
+	wsf_globals->soap_uri = AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
 	wsf_globals->rm_db_dir = NULL;
+	wsf_globals->curr_ns_index= 0;
 	
 }
 /* }}} */
@@ -627,47 +628,47 @@ PHP_METHOD(ws_message, __construct)
 		return;
 	}
 		
-		if(zend_hash_find(ht, "to", sizeof("to"), (void **)&tmp) == SUCCESS && 
+		if(zend_hash_find(ht, WS_TO, sizeof(WS_TO), (void **)&tmp) == SUCCESS && 
 			Z_TYPE_PP(tmp) == IS_STRING){
-			add_property_stringl(object, "to", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+				add_property_stringl(object, WS_TO, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
 		}
 	    
 		/** addressing */
-		if(zend_hash_find(ht, "action", sizeof("action"), (void **)&tmp) == SUCCESS && 
+		if(zend_hash_find(ht, WS_ACTION, sizeof(WS_ACTION), (void **)&tmp) == SUCCESS && 
 			Z_TYPE_PP(tmp) == IS_STRING){
-			add_property_stringl(object, "action", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+				add_property_stringl(object, WS_ACTION, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
 		}
-		if(zend_hash_find(ht, "from", sizeof("from"), (void **)&tmp) == SUCCESS && 
+		if(zend_hash_find(ht, WS_FROM, sizeof(WS_FROM), (void **)&tmp) == SUCCESS && 
 			Z_TYPE_PP(tmp) == IS_STRING){
-			add_property_stringl(object, "from", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+				add_property_stringl(object, WS_FROM, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
 		}
-		if(zend_hash_find(ht, "replyTo", sizeof("replyTo"), (void **)&tmp) == SUCCESS && 
+		if(zend_hash_find(ht, WS_REPLY_TO, sizeof(WS_REPLY_TO), (void **)&tmp) == SUCCESS && 
 			Z_TYPE_PP(tmp) == IS_STRING){
-			add_property_stringl(object, "replyTo", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+				add_property_stringl(object, WS_REPLY_TO, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
 		}
-		if(zend_hash_find(ht, "faultTo", sizeof("faultTo"), (void **)&tmp) == SUCCESS && 
+		if(zend_hash_find(ht, WS_FAULT_TO, sizeof(WS_FAULT_TO), (void **)&tmp) == SUCCESS && 
 			Z_TYPE_PP(tmp) == IS_STRING){
-			add_property_stringl(object, "faultTo", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+				add_property_stringl(object, WS_FAULT_TO, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
 		}
 
 
 		/** XOP MTOM */
-		if(zend_hash_find(ht, "usesXOP", sizeof("usesXOP"), (void **)&tmp) == SUCCESS && 
+		if(zend_hash_find(ht, WS_USES_XOP, sizeof(WS_USES_XOP), (void **)&tmp) == SUCCESS && 
 			Z_TYPE_PP(tmp) == IS_BOOL){
-			add_property_bool(object, "usesXOP", Z_BVAL_PP(tmp));
+				add_property_bool(object, WS_USES_XOP, Z_BVAL_PP(tmp));
 		}
 		else{
-			add_property_bool(object, "usesXOP", 1);
+			add_property_bool(object, WS_USES_XOP, 1);
 		}
-		if(zend_hash_find(ht, "defaultAttachmentContentType", sizeof("defaultAttachmentContentType"), (void **)&tmp) == SUCCESS && 
+		if(zend_hash_find(ht, WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE, sizeof(WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE), (void **)&tmp) == SUCCESS && 
 			Z_TYPE_PP(tmp) == IS_STRING){
-			add_property_stringl(object, "defaultAttachmentContentType", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp),1);
+				add_property_stringl(object, WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp),1);
 		}else{
-			   add_property_string(object, "defaultAttachmentContentType", estrdup("application/octet-stream"),1);
+			   add_property_string(object, WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE, estrdup("application/octet-stream"),1);
 		}
-		if(zend_hash_find(ht, "attachments", sizeof("attachments"), (void **)&tmp) == SUCCESS &&
+		if(zend_hash_find(ht, WS_ATTACHMENTS, sizeof(WS_ATTACHMENTS), (void **)&tmp) == SUCCESS &&
 			Z_TYPE_PP(tmp) == IS_ARRAY){
-				add_property_zval(object, "attachments", *tmp);
+				add_property_zval(object, WS_ATTACHMENTS, *tmp);
 		}
 
 
@@ -709,22 +710,19 @@ PHP_METHOD(ws_message, __construct)
 
 
 		/** reliable Messaging */
-		if(zend_hash_find(ht, "willContinueSequence", sizeof("willContinueSequence"), (void**)&tmp) == SUCCESS){
+		if(zend_hash_find(ht, WS_WILL_CONTINUE_SEQUENCE, sizeof(WS_WILL_CONTINUE_SEQUENCE), (void**)&tmp) == SUCCESS){
 			if(Z_TYPE_PP(tmp) == IS_BOOL){
-				add_property_bool(object, "willContinueSequence", Z_BVAL_PP(tmp));
+				add_property_bool(object, WS_WILL_CONTINUE_SEQUENCE, Z_BVAL_PP(tmp));
 			}
 		}
 
-		
-
 		/** adding custom headers */
-		if(zend_hash_find(ht, "headers", sizeof("headers"), (void**)&tmp) == SUCCESS){
+		if(zend_hash_find(ht, WS_HEADERS, sizeof(WS_HEADERS), (void**)&tmp) == SUCCESS){
 			if(Z_TYPE_PP(tmp) == IS_ARRAY)
 			{
-				add_property_zval(object, "headers", *tmp);
+				add_property_zval(object, WS_HEADERS, *tmp);
 			} 
 		}
-		
 	}
 }
 
@@ -890,73 +888,73 @@ PHP_METHOD(ws_client, __construct)
 		if(!ht)
 		    return;
 		/** protocol */
-        if(zend_hash_find(ht, "useSOAP", sizeof("useSOAP"), (void **)&tmp) == SUCCESS){
+		if(zend_hash_find(ht, WS_USE_SOAP, sizeof(WS_USE_SOAP), (void **)&tmp) == SUCCESS){
             if(Z_TYPE_PP(tmp) == IS_STRING){
-                add_property_stringl(obj, "useSOAP", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);            
+                add_property_stringl(obj, WS_USE_SOAP, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);            
             }else if(Z_TYPE_PP(tmp) == IS_DOUBLE){
-                add_property_double(obj, "useSOAP", Z_DVAL_PP(tmp));
+                add_property_double(obj, WS_USE_SOAP, Z_DVAL_PP(tmp));
             }else if(Z_TYPE_PP(tmp) == IS_BOOL){
-                add_property_bool(obj, "useSOAP", Z_BVAL_PP(tmp));
+                add_property_bool(obj, WS_USE_SOAP, Z_BVAL_PP(tmp));
             }
         }                     
-        if(zend_hash_find(ht, "HTTPMethod", sizeof("HTTPMethod"), (void **)&tmp) == SUCCESS && 
+		if(zend_hash_find(ht, WS_HTTP_METHOD, sizeof(WS_HTTP_METHOD), (void **)&tmp) == SUCCESS && 
             Z_TYPE_PP(tmp) == IS_STRING){
-            add_property_stringl(obj, "HTTPMethod", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+            add_property_stringl(obj, WS_HTTP_METHOD, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
         }
         
         
 
 		/** Addressing info */
-		if(zend_hash_find(ht, "useWSA", sizeof("useWSA"), (void **)&tmp) == SUCCESS){ 
+		if(zend_hash_find(ht, WS_USE_WSA, sizeof(WS_USE_WSA), (void **)&tmp) == SUCCESS){ 
             if(Z_TYPE_PP(tmp) == IS_STRING){
 				/** passed addressing version is a string should be submission */
-                add_property_stringl(obj, "useWSA", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+                add_property_stringl(obj, WS_USE_WSA, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
             }else if(Z_TYPE_PP(tmp) == IS_BOOL){
-                add_property_bool(obj, "useWSA", Z_BVAL_PP(tmp)); 
+                add_property_bool(obj, WS_USE_WSA, Z_BVAL_PP(tmp)); 
             }else if(Z_TYPE_PP(tmp) == IS_DOUBLE){
-                add_property_double(obj, "useWSA", Z_DVAL_PP(tmp));
+                add_property_double(obj, WS_USE_WSA, Z_DVAL_PP(tmp));
             }                
         }
         else{
-            add_property_string(obj, "useWSA", "1.0", 1);
+            add_property_string(obj, WS_USE_WSA, "1.0", 1);
         }
-        if(zend_hash_find(ht, "to", sizeof("to"), (void **)&tmp) == SUCCESS && 
+		if(zend_hash_find(ht, WS_TO	, sizeof(WS_TO), (void **)&tmp) == SUCCESS && 
             Z_TYPE_PP(tmp) == IS_STRING){
-            add_property_stringl(obj, "to", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+				add_property_stringl(obj, WS_TO, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
         }
-        if(zend_hash_find(ht, "action", sizeof("action"), (void **)&tmp) == SUCCESS && 
+		if(zend_hash_find(ht, WS_ACTION, sizeof(WS_ACTION), (void **)&tmp) == SUCCESS && 
             Z_TYPE_PP(tmp) == IS_STRING){
-            add_property_stringl(obj, "action", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+				add_property_stringl(obj, WS_ACTION, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
         }
-        if(zend_hash_find(ht, "from", sizeof("from"), (void **)&tmp) == SUCCESS && 
+		if(zend_hash_find(ht, WS_FROM, sizeof(WS_FROM), (void **)&tmp) == SUCCESS && 
             Z_TYPE_PP(tmp) == IS_STRING){
-            add_property_stringl(obj, "from", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+            add_property_stringl(obj, WS_FROM, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
         }
-        if(zend_hash_find(ht, "replyTo", sizeof("replyTo"), (void **)&tmp) == SUCCESS && 
+		if(zend_hash_find(ht, WS_REPLY_TO, sizeof(WS_REPLY_TO), (void **)&tmp) == SUCCESS && 
             Z_TYPE_PP(tmp) == IS_STRING){
-            add_property_stringl(obj, "replyTo", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+				add_property_stringl(obj, WS_REPLY_TO, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
         }
-        if(zend_hash_find(ht, "faultTo", sizeof("faultTo"), (void **)&tmp) == SUCCESS && 
+		if(zend_hash_find(ht, WS_FAULT_TO, sizeof(WS_FAULT_TO), (void **)&tmp) == SUCCESS && 
             Z_TYPE_PP(tmp) == IS_STRING){
-            add_property_stringl(obj, "faultTo", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+				add_property_stringl(obj, WS_FAULT_TO, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
         }
 
 		/** XOP MTOM */
-		if(zend_hash_find(ht, "responseXOP", sizeof("responseXOP"), (void **)&tmp) == SUCCESS && 
+		if(zend_hash_find(ht, WS_RESPONSE_XOP, sizeof(WS_RESPONSE_XOP), (void **)&tmp) == SUCCESS && 
             Z_TYPE_PP(tmp) == IS_BOOL){
-            add_property_bool(obj, "responseXOP", Z_BVAL_PP(tmp));
+				add_property_bool(obj, WS_RESPONSE_XOP, Z_BVAL_PP(tmp));
         }else{
-            add_property_bool(obj, "responseXOP", 0);        
+			add_property_bool(obj, WS_RESPONSE_XOP, 0);        
         }
-        if(zend_hash_find(ht, "useMTOM", sizeof("useMTOM"), (void **)&tmp) == SUCCESS && 
+		if(zend_hash_find(ht, WS_USE_MTOM, sizeof(WS_USE_MTOM), (void **)&tmp) == SUCCESS && 
             Z_TYPE_PP(tmp) == IS_BOOL){
-            add_property_bool(obj, "useMTOM", Z_BVAL_PP(tmp));
+				add_property_bool(obj, WS_USE_MTOM, Z_BVAL_PP(tmp));
         }else{
-            add_property_bool(obj, "useMTOM", 0);
+			add_property_bool(obj, WS_USE_MTOM, 0);
         }
-        if(zend_hash_find(ht, "defaultAttachmentContentType", sizeof("defaultAttachmentContentType"), (void **)&tmp) == SUCCESS && 
+		if(zend_hash_find(ht, WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE, sizeof(WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE), (void **)&tmp) == SUCCESS && 
             Z_TYPE_PP(tmp) == IS_STRING){
-            add_property_stringl(obj, "defaultAttachmentContentType", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp),1);
+				add_property_stringl(obj, WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp),1);
         }
 
 
@@ -988,28 +986,44 @@ PHP_METHOD(ws_client, __construct)
 
 
 		/** RM */
-		if(zend_hash_find(ht, "reliable", sizeof("reliable"), (void **)&tmp) == SUCCESS) {
+		if(zend_hash_find(ht, WS_RELIABLE, sizeof(WS_RELIABLE), (void **)&tmp) == SUCCESS) {
 			if(Z_TYPE_PP(tmp) == IS_BOOL && Z_BVAL_PP(tmp) == 1){
-				add_property_long(obj, "reliable", WSF_RM_VERSION_1_0);
+				add_property_long(obj, WS_RELIABLE, WS_RM_VERSION_1_0);
 			}else if(Z_TYPE_PP(tmp) == IS_STRING && strcmp(Z_STRVAL_PP(tmp), "1.1") == 0){
-				add_property_long(obj, "reliable", WSF_RM_VERSION_1_1);
+				add_property_long(obj, WS_RELIABLE, WS_RM_VERSION_1_1);
 			}else if(Z_TYPE_PP(tmp) == IS_STRING && strcmp(Z_STRVAL_PP(tmp), "1.0") == 0){
-				add_property_long(obj, "reliable", WSF_RM_VERSION_1_0);
+				add_property_long(obj, WS_RELIABLE, WS_RM_VERSION_1_0);
 			}
         }
-		if(zend_hash_find(ht, "seq_expiry_time", sizeof("seq_expiry_time"), (void **)&tmp) == SUCCESS){
+		if(zend_hash_find(ht, WS_SEQUENCE_EXPIRY_TIME, sizeof(WS_SEQUENCE_EXPIRY_TIME), (void **)&tmp) == SUCCESS){
 			if(Z_TYPE_PP(tmp) == IS_LONG){
-				add_property_long(obj, "seq_expiry_time", Z_LVAL_PP(tmp));
+				add_property_long(obj, WS_SEQUENCE_EXPIRY_TIME, Z_LVAL_PP(tmp));
 			}
 		}
-		if(zend_hash_find(ht, "willContinueSequence", sizeof("willContinueSequence"), (void**)&tmp) == SUCCESS) {
+		if(zend_hash_find(ht, WS_WILL_CONTINUE_SEQUENCE, sizeof(WS_WILL_CONTINUE_SEQUENCE), (void**)&tmp) == SUCCESS) {
 			if(Z_TYPE_PP(tmp) == IS_BOOL){
-				add_property_bool(obj, "willContinueSequence", Z_BVAL_PP(tmp));
+				add_property_bool(obj, WS_WILL_CONTINUE_SEQUENCE, Z_BVAL_PP(tmp));
 			}
 		}
 
+		if(zend_hash_find(ht, WS_SERVER_CERT, sizeof(WS_SERVER_CERT), (void**)&tmp) == SUCCESS){
+			if(Z_TYPE_PP(tmp) == IS_STRING){
+				add_property_string(obj, WS_SERVER_CERT, Z_STRVAL_PP(tmp), 0); 			
+			}
+		}
 
-		if(zend_hash_find(ht, "wsdl", sizeof("wsdl"), (void **)&tmp) == SUCCESS &&
+		if(zend_hash_find(ht, WS_CLIENT_CERT, sizeof(WS_CLIENT_CERT), (void**)&tmp) == SUCCESS){
+			if(Z_TYPE_PP(tmp) == IS_STRING){
+				add_property_string(obj, WS_CLIENT_CERT, Z_STRVAL_PP(tmp), 0);
+			}
+		}
+		if(zend_hash_find(ht, WS_PASSPHRASE, sizeof(WS_PASSPHRASE), (void**)&tmp) == SUCCESS){
+			if(Z_TYPE_PP(tmp) == IS_STRING){
+				add_property_string(obj, WS_PASSPHRASE, Z_STRVAL_PP(tmp), 0);
+			}
+		}
+
+		if(zend_hash_find(ht, WS_WSDL, sizeof(WS_WSDL), (void **)&tmp) == SUCCESS &&
 		Z_TYPE_PP(tmp) == IS_STRING){
             /*
 			int wsdl_cache = 0, ret;
@@ -1225,20 +1239,20 @@ PHP_METHOD(ws_service, __construct)
                 (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY){
                 ht_ops_to_funcs = Z_ARRVAL_PP(tmp);
             }
-            if(zend_hash_find(ht, "useMTOM", sizeof("useMTOM"), 
+			if(zend_hash_find(ht, WS_USE_MTOM, sizeof(WS_USE_MTOM), 
                 (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
-                add_property_bool(obj, "useMTOM", Z_BVAL_PP(tmp));
+					add_property_bool(obj, WS_USE_MTOM, Z_BVAL_PP(tmp));
 				svc_info->use_mtom = Z_BVAL_PP(tmp);
             }else {
-                add_property_bool(obj, "useMTOM", 0);
+				add_property_bool(obj, WS_USE_MTOM, 0);
 				svc_info->use_mtom = 0;
             }
-            if(zend_hash_find(ht, "requestXOP", sizeof("requestXOP"), 
+			if(zend_hash_find(ht, WS_REQUEST_XOP, sizeof(WS_REQUEST_XOP), 
                 (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
-                add_property_bool(obj, "requestXOP", Z_BVAL_PP(tmp));
+					add_property_bool(obj, WS_REQUEST_XOP, Z_BVAL_PP(tmp));
 				svc_info->request_xop = Z_BVAL_PP(tmp);
             }else {
-                add_property_bool(obj, "requestXOP", 0);
+				add_property_bool(obj, WS_REQUEST_XOP, 0);
 				svc_info->request_xop = 0;
             }
             if(zend_hash_find(ht, "secure", sizeof("secure"), 
@@ -1249,17 +1263,17 @@ PHP_METHOD(ws_service, __construct)
                     svc_info->modules_to_engage = axis2_array_list_create(ws_env_svr, 3);
 				AXIS2_ARRAY_LIST_ADD(svc_info->modules_to_engage, ws_env_svr, AXIS2_STRDUP("rampart", ws_env_svr));
             }
-	    if(zend_hash_find(ht, "reliable", sizeof("reliable"), 
+			if(zend_hash_find(ht, WS_RELIABLE, sizeof(WS_RELIABLE), 
 		 (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL) {
 		      if(!svc_info->modules_to_engage)
 			 svc_info->modules_to_engage = axis2_array_list_create(ws_env_svr, 3);
 		      AXIS2_ARRAY_LIST_ADD(svc_info->modules_to_engage, ws_env_svr, AXIS2_STRDUP("sandesha2", ws_env_svr));					
 	     }
 
-	    if(zend_hash_find(ht, "bindingStyle", sizeof("bindingStyle"), (void **)&tmp) == SUCCESS &&
+			if(zend_hash_find(ht, WS_BINDING_STYLE, sizeof(WS_BINDING_STYLE), (void **)&tmp) == SUCCESS &&
                  Z_TYPE_PP(tmp) == IS_STRING)
 	    {
-		add_property_stringl(obj, "bindingStyle", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+			add_property_stringl(obj, WS_BINDING_STYLE, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
 	    }
 	}
     }
@@ -1623,7 +1637,7 @@ PHP_METHOD(ws_service ,ws_service_reply)
 		    wsdl_version = strdup("wsdl2.0");
 		
 		/** getting the correct binding style */
-		if ((zend_hash_find(Z_OBJPROP_P(obj), "bindingStyle", sizeof("bindingStyle"),
+		if ((zend_hash_find(Z_OBJPROP_P(obj), WS_BINDING_STYLE, sizeof(WS_BINDING_STYLE),
 				    (void**)&tmpval)) == SUCCESS && Z_TYPE_PP(tmpval) == IS_STRING)
 		{
 		   binding_name = Z_STRVAL_PP(tmpval);
@@ -1787,12 +1801,12 @@ PHP_METHOD(ws_fault, __construct)
             php_error_docref(NULL TSRMLS_CC, E_ERROR, "Code and Reason are mandatory ");
         }
     }
-	add_property_string(this_ptr, "code", sf_code, 1);
-    add_property_string(this_ptr, "reason", sf_reason, 1);
+	add_property_string(this_ptr, WS_FAULT_CODE, sf_code, 1);
+	add_property_string(this_ptr, WS_FAULT_REASON, sf_reason, 1);
 	if(sf_role)
-		add_property_string(this_ptr, "role", sf_role, 1);
+		add_property_string(this_ptr, WS_FAULT_ROLE, sf_role, 1);
 	if(sf_detail)
-		add_property_string(this_ptr, "detail", sf_detail, 1);
+		add_property_string(this_ptr, WS_FAULT_DETAIL, sf_detail, 1);
 }
 /* }}} */
 
@@ -1807,7 +1821,7 @@ PHP_METHOD(ws_fault, ws_fault_get_fault_headers){}
 PHP_METHOD(ws_fault ,ws_fault_get_soap_fault_text)
 {
     zval **tmp;
-    if (zend_hash_find(Z_OBJPROP_P(this_ptr), "faultreason", sizeof("faultreason"), (void **)&tmp) != SUCCESS) {
+	if (zend_hash_find(Z_OBJPROP_P(this_ptr), WS_FAULT_REASON, sizeof(WS_FAULT_REASON), (void **)&tmp) != SUCCESS) {
             php_error_docref(NULL TSRMLS_CC, E_ERROR, " Invalid fault");
           	RETURN_NULL();
 	}
@@ -1826,7 +1840,7 @@ PHP_METHOD(ws_fault ,ws_fault_get_soap_fault_text)
 PHP_METHOD(ws_fault ,ws_fault_get_fault_code_value)
 {
     zval **tmp;
-    if (zend_hash_find(Z_OBJPROP_P(this_ptr), "faultcode", sizeof("faultcode"), (void **)&tmp) != SUCCESS) {
+	if (zend_hash_find(Z_OBJPROP_P(this_ptr), WS_FAULT_CODE, sizeof(WS_FAULT_CODE), (void **)&tmp) != SUCCESS) {
             php_error_docref(NULL TSRMLS_CC, E_ERROR, " Invalid fault");
           	RETURN_NULL();
 	}
@@ -1849,7 +1863,7 @@ PHP_METHOD(ws_fault ,ws_fault_get_fault_code_value)
 PHP_METHOD(ws_fault ,ws_fault_get_fault_code_subcode_value)
 {
     zval **tmp;
-    if (zend_hash_find(Z_OBJPROP_P(this_ptr), "faultcode", sizeof("faultcode"), (void **)&tmp) != SUCCESS) {
+	if (zend_hash_find(Z_OBJPROP_P(this_ptr), WS_FAULT_CODE, sizeof(WS_FAULT_CODE), (void **)&tmp) != SUCCESS) {
             php_error_docref(NULL TSRMLS_CC, E_ERROR, " Invalid fault");
           	RETURN_NULL();
 	}
@@ -1860,7 +1874,7 @@ PHP_METHOD(ws_fault ,ws_fault_get_fault_code_subcode_value)
     {
         zval **zval_tmp;
 		HashTable *ht = Z_ARRVAL_PP(tmp);
-        if(zend_hash_find(ht, "subcode", sizeof("subcode"), (void **)&zval_tmp) == SUCCESS && 
+		if(zend_hash_find(ht, WS_FAULT_SUBCODE, sizeof(WS_FAULT_SUBCODE), (void **)&zval_tmp) == SUCCESS && 
             Z_TYPE_PP(zval_tmp) == IS_STRING){
             RETURN_STRINGL(Z_STRVAL_PP(zval_tmp), Z_STRLEN_PP(zval_tmp), 1);
         }
@@ -1890,25 +1904,28 @@ PHP_METHOD(ws_header, __construct)
 		php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid parameters. Invalid header name.");
 	}
 
-	add_property_stringl(this_ptr, "namespace", ns, ns_len, 1);
-	add_property_stringl(this_ptr, "name", name, name_len, 1);
+	add_property_stringl(this_ptr, WS_HEADER_NS, ns, ns_len, 1);
+	add_property_stringl(this_ptr, WS_HEADER_LOCALNAME, name, name_len, 1);
 	if (data) {
 #ifndef ZEND_ENGINE_2
 		zval_add_ref(&data);
 #endif
-		add_property_zval(this_ptr, "data", data);
+		add_property_zval(this_ptr, WS_HEADER_DATA, data);
 	}
-	add_property_bool(this_ptr, "mustUnderstand", must_understand);
-	if (role == NULL) {
-	} else if (Z_TYPE_P(role) == IS_LONG &&
-		(Z_LVAL_P(role) == WS_SOAP_ROLE_NEXT ||
-		Z_LVAL_P(role) == WS_SOAP_ROLE_NONE ||
-		Z_LVAL_P(role) == WS_SOAP_ROLE_ULTIMATE_RECEIVER)) {
-			add_property_long(this_ptr, "role", Z_LVAL_P(role));
-	} else if (Z_TYPE_P(role) == IS_STRING && Z_STRLEN_P(role) > 0) {
-		add_property_stringl(this_ptr, "role", Z_STRVAL_P(role), Z_STRLEN_P(role), 1);
-	} else {
-		php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid parameters. Invalid role.");
+	if(must_understand){
+		add_property_bool(this_ptr, WS_HEADER_MUST_UNDERSTAND, must_understand);
+	}
+	if(role){
+		if(Z_TYPE_P(role) == IS_LONG &&
+			(Z_LVAL_P(role) == WS_SOAP_ROLE_NEXT ||
+			Z_LVAL_P(role) == WS_SOAP_ROLE_NONE ||
+			Z_LVAL_P(role) == WS_SOAP_ROLE_ULTIMATE_RECEIVER)) {
+				add_property_long(this_ptr, WS_HEADER_ROLE, Z_LVAL_P(role));
+		} else if (Z_TYPE_P(role) == IS_STRING && Z_STRLEN_P(role) > 0) {
+			add_property_stringl(this_ptr, WS_HEADER_ROLE, Z_STRVAL_P(role), Z_STRLEN_P(role), 1);
+		} else {
+			php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid parameters. Invalid role.");
+		}
 	}
 }
 
@@ -2000,8 +2017,6 @@ PHP_METHOD(ws_policy, __construct)
 	    php_printf("\n The variable is of type %d", Z_TYPE_P(properties));
 	
     }
-	
- 
 }
 
 /* }}} */

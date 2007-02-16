@@ -61,4 +61,7 @@ int wsf_client_set_rm_options(
 void wsf_client_set_security_opts(HashTable *ht, 
 		axis2_env_t *env, axis2_svc_client_t *svc_client TSRMLS_DC);
 
+void wsf_client_enable_ssl(HashTable *ht, axis2_env_t *env, axis2_options_t *options,
+						   axis2_svc_client_t *svc_client TSRMLS_DC);
+
 #endif /* WS_UTIL_H */

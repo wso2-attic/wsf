@@ -23,9 +23,7 @@
 #include <axis2_uuid_gen.h>
 #include <axiom_util.h>
 #include "wsf_policy.h"
-
-#define FALSE 0
-#define TRUE 1
+#include <axiom.h>
 
 axiom_node_t *
 create_policy_node(const axis2_env_t *env,
@@ -103,13 +101,15 @@ int get_security_policy_options(const axis2_env_t *env,
 
     axis2_char_t *om_str = NULL;
     FILE *fp = NULL;
+
+	HashTable *ht = NULL;
     
     zval **tmp = NULL;
 
     if (sec_options == NULL)
 	return FALSE;
 
-    HashTable *ht = Z_ARRVAL_PP(sec_options);
+	ht = Z_ARRVAL_PP(sec_options);
     if (!ht)
 	return FALSE;
 
@@ -214,7 +214,7 @@ create_initiator_token(const axis2_env_t *env,
 	token_name = Z_STRVAL_PP(tmp);
 	if (stricmp(token_name, "x509") == 0)
 	{
-	    x509_om_ele = axiom_elemet_create(env, policy_om_node1, "X509Token", sp_ns, &x509_om_node);
+		x509_om_ele = axiom_element_create(env, policy_om_node1, "X509Token", sp_ns, &x509_om_node);
 	    attr = axiom_attribute_create(env, "IncludeToken", "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always",
 					  sp_ns);
 	    AXIOM_ELEMENT_ADD_ATTRIBUTE(x509_om_ele, env, attr, x509_om_node);
