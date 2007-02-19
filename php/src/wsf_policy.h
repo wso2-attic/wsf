@@ -41,6 +41,8 @@
 
 int set_policy_options(const axis2_env_t *env,
                        HashTable *ht TSRMLS_DC);
-axiom_node_t *policy_node;
+
+axiom_node_t *get_security_policy_node();
 
 #endif /* WSF_POLICY_H*/
+
