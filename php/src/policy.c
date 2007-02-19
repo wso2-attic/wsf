@@ -25,60 +25,81 @@
 #include "wsf_policy.h"
 #include <axiom.h>
 
+#define ArrySize 8
+
 axiom_node_t *
 create_policy_node(const axis2_env_t *env,
-                   axiom_node_t *node);
+                   axiom_node_t *node TSRMLS_DC);
 
 axiom_node_t *
 create_initiator_token(const axis2_env_t *env,
                        axiom_node_t *node,
-		       zval **optionVal);
+                       zval **optionVal TSRMLS_DC);
 
 axiom_node_t *
 create_recipient_token(const axis2_env_t *env,
                        axiom_node_t *node,
-		       zval **optionVal);
+                       zval **optionVal TSRMLS_DC);
 
 axiom_node_t*
 create_algorithm_suite(const axis2_env_t *env,
                        axiom_node_t *node,
-		       zval **optionVal);
+                       zval **optionVal TSRMLS_DC);
 
 axiom_node_t *
 create_layout(const axis2_env_t *env,
               axiom_node_t *node,
-	      zval **optionVal);
+              zval **optionVal TSRMLS_DC);
 
-int get_security_policy_options(const axis2_env_t *env,
-				zval **sec_options);
+axiom_node_t *get_security_policy_options(const axis2_env_t *env,
+                                zval **sec_options TSRMLS_DC);
+
+char * algorithmSuite[ArrySize]={
+    BASIC256, BASIC192, BASIC128,
+    TRIPLEDES, BASIC256_RSA15, BASIC192_RSA15,
+    BASIC128_RSA15, TRIPLEDES_RSA15
+};
+    
+axiom_node_t *policy_node ;
+
+
+
 
 int set_policy_options(const axis2_env_t *env,
-		       HashTable *ht)
+                       HashTable *ht TSRMLS_DC)
 {
     zval **tmp = NULL;
+    policy_node = NULL;
 
     if (!ht)
-	return FALSE;
+        return FALSE;
 
-/* for security policy related things */
+    /* for security policy related things */
     if(zend_hash_find(ht, "security", sizeof("security"), (void **)&tmp) == SUCCESS &&
-       Z_TYPE_PP(tmp) == IS_ARRAY)
+            Z_TYPE_PP(tmp) == IS_ARRAY)
     {
-	get_security_policy_options(env, tmp);
+        policy_node = get_security_policy_options(env, tmp);
     }
-    
+
     /** for RM policy */
     if(zend_hash_find(ht, "RM", sizeof("action"), (void **)&tmp) == SUCCESS &&
-       Z_TYPE_PP(tmp) == IS_STRING)
+            Z_TYPE_PP(tmp) == IS_STRING)
     {
-	/* ***** */
+        /* ***** */
     }
+
+
 	return 0;
 }
 
+axiom_node_t *get_security_policy_node()
+{
+    return policy_node;
+}
+
 /* Implementation of security policy related things */
-int get_security_policy_options(const axis2_env_t *env,
-				zval **sec_options)
+axiom_node_t * get_security_policy_options(const axis2_env_t *env,
+                                zval **sec_options TSRMLS_DC)
 {
     axiom_node_t *root_om_node = NULL;
     axiom_node_t* exact_om_node = NULL;
@@ -88,7 +109,8 @@ int get_security_policy_options(const axis2_env_t *env,
     axiom_node_t *init_om_node = NULL;
     axiom_node_t *rec_om_node = NULL;
     axiom_node_t *timestamp_om_node = NULL;
-
+    axiom_node_t *enc_parts_om_node = NULL;
+   
     axiom_element_t* root_om_ele = NULL;
     axiom_element_t * exact_om_ele = NULL;
     axiom_element_t *all_om_ele = NULL;
@@ -101,16 +123,16 @@ int get_security_policy_options(const axis2_env_t *env,
     axis2_char_t *om_str = NULL;
     FILE *fp = NULL;
 
-	HashTable *ht = NULL;
-    
+    HashTable *ht = NULL;
+
     zval **tmp = NULL;
 
     if (sec_options == NULL)
-	return FALSE;
+        return FALSE;
 
-	ht = Z_ARRVAL_PP(sec_options);
+    ht = Z_ARRVAL_PP(sec_options);
     if (!ht)
-	return FALSE;
+        return FALSE;
 
 
     wsp_ns = axiom_namespace_create(env, "http://schemas.xmlsoap.org/ws/2004/09/policy", "wsp");
@@ -127,45 +149,48 @@ int get_security_policy_options(const axis2_env_t *env,
     /*  if the sigining part is included in the user options */
     if (zend_hash_find(ht, "sign", sizeof("sign"), (void **)&tmp) == SUCCESS)
     {
-	create_initiator_token(env, policy_om_node1, tmp);
+        create_initiator_token(env, policy_om_node1, tmp);
     }
 
     /* if the encryption is included */
     if (zend_hash_find(ht, "encrypt", sizeof("encrypt"), (void **)&tmp) == SUCCESS)
     {
-	create_recipient_token(env, policy_om_node1, tmp);
+        create_recipient_token(env, policy_om_node1, tmp);
     }
     /* if algorithm suite is presence in the options */
     if (zend_hash_find(ht, "algorithmSuite", sizeof("algorithmSuite"), (void **)&tmp) == SUCCESS)
     {
-	create_algorithm_suite(env, policy_om_node1, tmp);
+        create_algorithm_suite(env, policy_om_node1, tmp);
     }
     /*if the Layout is presence call this function */
     if (zend_hash_find(ht, "Layout", sizeof("Layout"), (void **)&tmp) == SUCCESS)
     {
-	create_layout(env, policy_om_node1, tmp);
+        create_layout(env, policy_om_node1, tmp);
     }
     /* for timestamp */
     axiom_element_create(env, policy_om_node1, "IncludeTimestamp", sp_ns, &timestamp_om_node);
 
- /*    om_str = AXIOM_NODE_TO_STRING(root_om_node, env); */
-/*     if (om_str) */
-/*     { */
-/*         fp = fopen("new.xml", "w"); */
-/*         fprintf(fp, "%s", om_str); */
+    /* for encryption parts */
+    axiom_element_create(env, policy_om_node1, "OnlySignEntireHeadersAndBody",sp_ns, &enc_parts_om_node);
 
-/*         printf("\n Result OM : %s\n", om_str); */
-/*         AXIS2_FREE(env->allocator, om_str); */
-/*         om_str =  NULL; */
-/*     } */
-	return 0;
+/*        om_str = AXIOM_NODE_TO_STRING(root_om_node, env); */
+/*         if (om_str) */
+/*         { */
+/*             fp = fopen("new.xml", "w"); */
+/*             fprintf(fp, "%s", om_str); */
+
+/*             printf("\n Result OM : %s\n", om_str); */
+/*             AXIS2_FREE(env->allocator, om_str); */
+/*             om_str =  NULL; */
+/*         } */
+	return root_om_node;
 }
 
 /* create a policy node since this node is needed every where in the
  * policy.xml*/
 axiom_node_t *
 create_policy_node(const axis2_env_t *env,
-                   axiom_node_t *parent_om_node)
+                   axiom_node_t *parent_om_node TSRMLS_DC)
 {
     axiom_node_t *policy_om_node = NULL;
     axiom_element_t *policy_om_ele = NULL;
@@ -183,8 +208,8 @@ create_policy_node(const axis2_env_t *env,
    signing */
 axiom_node_t *
 create_initiator_token(const axis2_env_t *env,
-                       axiom_node_t *parent_om_node, 
-		       zval **tmp)
+                       axiom_node_t *parent_om_node,
+                       zval **tmp TSRMLS_DC)
 {
     axiom_node_t *in_token_om_node = NULL;
     axiom_node_t *policy_om_node1 = NULL;
@@ -192,6 +217,8 @@ create_initiator_token(const axis2_env_t *env,
     axiom_node_t *policy_om_node2 = NULL;
     axiom_node_t *incl_token_om_node = NULL;
     axiom_node_t *token_id_om_node = NULL;
+    axiom_node_t *tmp_node = NULL; /* if wrong option is found earlier
+				    * node should be given back */
 
     axiom_element_t *in_token_om_ele = NULL;
     axiom_element_t *x509_om_ele = NULL;
@@ -202,41 +229,62 @@ create_initiator_token(const axis2_env_t *env,
     axiom_namespace_t *sp_ns = NULL;
     char *token_name = NULL;
 
-    sp_ns = axiom_namespace_create(env,"http://schemas.xmlsoap.org/ws/2005/07/securitypolicy", "sp");
+    tmp_node = parent_om_node;
 
-    in_token_om_ele = axiom_element_create(env, parent_om_node, "InitiatorToken", sp_ns, &in_token_om_node);
-    policy_om_node1 = create_policy_node(env, in_token_om_node);
-    
+/*     sp_ns = axiom_namespace_create(env,"http://schemas.xmlsoap.org/ws/2005/07/securitypolicy", "sp"); */
+
+/*     in_token_om_ele = axiom_element_create(env, parent_om_node, "InitiatorToken", sp_ns, &in_token_om_node); */
+/*     policy_om_node1 = create_policy_node(env, in_token_om_node); */
+
     /* for x509 token and kerberose tokens.. can be extend later */
     if( tmp != NULL && Z_TYPE_PP(tmp) == IS_STRING)
     {
-	token_name = Z_STRVAL_PP(tmp);
-	if (stricmp(token_name, "x509") == 0)
+        token_name = Z_STRVAL_PP(tmp);
+        if (stricmp(token_name, "x509") == 0)
+        {
+	    sp_ns = axiom_namespace_create(env,"http://schemas.xmlsoap.org/ws/2005/07/securitypolicy", "sp");
+
+	    in_token_om_ele = axiom_element_create(env, parent_om_node, "InitiatorToken", sp_ns, &in_token_om_node);
+	    policy_om_node1 = create_policy_node(env, in_token_om_node);
+
+            x509_om_ele = axiom_element_create(env, policy_om_node1, "X509Token", sp_ns, &x509_om_node);
+            attr = axiom_attribute_create(env, "IncludeToken", "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always",
+                                          sp_ns);
+            AXIOM_ELEMENT_ADD_ATTRIBUTE(x509_om_ele, env, attr, x509_om_node);
+            policy_om_node2 = create_policy_node(env, x509_om_node);
+            axiom_element_create(env, policy_om_node2, "WssX509V3Token10", sp_ns, &token_id_om_node);
+	    return token_id_om_node;
+        }
+        /** implement for othertoken types */
+
+    }
+
+    if (tmp != NULL && Z_TYPE_PP(tmp) == IS_BOOL)
+    {
+	/* for the default case also it is treated as X509 */
+	if (Z_BVAL_PP(tmp))
 	{
-		x509_om_ele = axiom_element_create(env, policy_om_node1, "X509Token", sp_ns, &x509_om_node);
+	    sp_ns = axiom_namespace_create(env,"http://schemas.xmlsoap.org/ws/2005/07/securitypolicy", "sp");
+	    in_token_om_ele = axiom_element_create(env, parent_om_node, "InitiatorToken", sp_ns, &in_token_om_node);
+	    policy_om_node1 = create_policy_node(env, in_token_om_node);
+
+	    x509_om_ele = axiom_element_create(env, policy_om_node1, "X509Token", sp_ns, &x509_om_node);
+	    
 	    attr = axiom_attribute_create(env, "IncludeToken", "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always",
 					  sp_ns);
 	    AXIOM_ELEMENT_ADD_ATTRIBUTE(x509_om_ele, env, attr, x509_om_node);
 	    policy_om_node2 = create_policy_node(env, x509_om_node);
 	    axiom_element_create(env, policy_om_node2, "WssX509V3Token10", sp_ns, &token_id_om_node);
+	    return token_id_om_node;
 	}
-	/** implement for othertoken types */
+	else
+	{
+	   php_error_docref(NULL TSRMLS_CC, E_WARNING, "sigining is not specified");
+	   return tmp_node;
+	}
+    }
 
-    }
-	
-    if (tmp != NULL && Z_TYPE_PP(tmp) == IS_BOOL)
-    {
-	x509_om_ele = axiom_element_create(env, policy_om_node1, "X509Token", sp_ns, &x509_om_node);
-	
-	attr = axiom_attribute_create(env, "IncludeToken", "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always",
-				      sp_ns);
-	AXIOM_ELEMENT_ADD_ATTRIBUTE(x509_om_ele, env, attr, x509_om_node);
-	policy_om_node2 = create_policy_node(env, x509_om_node);
-	axiom_element_create(env, policy_om_node2, "WssX509V3Token10", sp_ns, &token_id_om_node);
-   
-    }
-    
-    return token_id_om_node;
+    return tmp_node;
 }
 
 
@@ -244,8 +292,8 @@ create_initiator_token(const axis2_env_t *env,
 
 axiom_node_t *
 create_recipient_token(const axis2_env_t *env,
-		       axiom_node_t *parent_om_node,
-		       zval **tmp)
+                       axiom_node_t *parent_om_node,
+                       zval **tmp TSRMLS_DC)
 {
     axiom_node_t *rec_token_om_node = NULL;
     axiom_node_t *policy_om_node1 = NULL;
@@ -253,6 +301,7 @@ create_recipient_token(const axis2_env_t *env,
     axiom_node_t *policy_om_node2 = NULL;
     axiom_node_t *incl_token_om_node = NULL;
     axiom_node_t *token_id_om_node = NULL;
+    axiom_node_t *tmp_node = NULL;
 
     axiom_element_t *rec_token_om_ele = NULL;
     axiom_element_t *x509_om_ele = NULL;
@@ -261,52 +310,82 @@ create_recipient_token(const axis2_env_t *env,
     axiom_attribute_t *attr = NULL;
 
     axiom_namespace_t *sp_ns = NULL;
+    char *token_name = NULL;
 
-    sp_ns = axiom_namespace_create(env,"http://schemas.xmlsoap.org/ws/2005/07/securitypolicy", "sp");
+    tmp_node = parent_om_node;
+    
+    if( tmp != NULL && Z_TYPE_PP(tmp) == IS_STRING)
+    {
+        token_name = Z_STRVAL_PP(tmp);
+        if (stricmp(token_name, "x509") == 0)
+        {
+	
+	    sp_ns = axiom_namespace_create(env,"http://schemas.xmlsoap.org/ws/2005/07/securitypolicy", "sp");
 
-    rec_token_om_ele = axiom_element_create(env, parent_om_node, "RecipientToken", sp_ns, &rec_token_om_node);
-    policy_om_node1 = create_policy_node(env, rec_token_om_node);
-    x509_om_ele = axiom_element_create(env, policy_om_node1, "X509Token", sp_ns, &x509_om_node);
+	    rec_token_om_ele = axiom_element_create(env, parent_om_node, "RecipientToken", sp_ns, &rec_token_om_node);
+	    policy_om_node1 = create_policy_node(env, rec_token_om_node);
+	    x509_om_ele = axiom_element_create(env, policy_om_node1, "X509Token", sp_ns, &x509_om_node);
+	    
+	    /* Here uri may change according to the options difined in policy spec
+	     * e.g - 'Always' may be changed as 'Never'*/
+	    attr = axiom_attribute_create(env, "IncludeToken", "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always",
+					  sp_ns);
+	    AXIOM_ELEMENT_ADD_ATTRIBUTE(x509_om_ele, env, attr, x509_om_node);
+	    policy_om_node2 = create_policy_node(env, x509_om_node);
+	    axiom_element_create(env, policy_om_node2, "WssX509V3Token10", sp_ns, &token_id_om_node);
+	    return token_id_om_node;
+	}
+    }
 
-/* Here uri may change according to the options difined in policy spec
- * e.g - 'Always' may be changed as 'Never'*/
-    attr = axiom_attribute_create(env, "IncludeToken", "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always",
-				  sp_ns);
-    AXIOM_ELEMENT_ADD_ATTRIBUTE(x509_om_ele, env, attr, x509_om_node);
-    policy_om_node2 = create_policy_node(env, x509_om_node);
-    axiom_element_create(env, policy_om_node2, "WssX509V3Token10", sp_ns, &token_id_om_node);
-
-
-    return token_id_om_node;
-
+    return tmp_node;
 }
 
 
 axiom_node_t *
 create_algorithm_suite(const axis2_env_t *env,
                        axiom_node_t *parent_node,
-		       zval **tmp)
+                       zval **tmp TSRMLS_DC)
 {
     axiom_node_t *alg_om_node = NULL;
     axiom_node_t *alg_name_om_node = NULL;
     axiom_node_t *policy_om_node = NULL;
+    axiom_node_t *tmp_node = NULL;
 
     axiom_namespace_t *sp_ns = NULL;
+    char *alg_name = NULL;
 
-    sp_ns = axiom_namespace_create(env, "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy", "sp");
-    axiom_element_create(env, parent_node, "AlgorithmSuite", sp_ns, &alg_om_node);
-    policy_om_node = create_policy_node(env, alg_om_node);
-    axiom_element_create(env, policy_om_node, "Basic256Rsa15", sp_ns, &alg_name_om_node);
+    tmp_node = parent_node;
+    
+/*     sp_ns = axiom_namespace_create(env, "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy", "sp"); */
+/*     axiom_element_create(env, parent_node, "AlgorithmSuite", sp_ns, &alg_om_node); */
+    if ( tmp != NULL && Z_TYPE_PP(tmp) == IS_STRING)
+    {
+	int i ;
+	alg_name = Z_STRVAL_PP(tmp);
+/* 	php_printf("\n Alg_name is %s", alg_name); */
 
-    return alg_name_om_node;
-
+	for (i = 0; i < ArrySize ; i++)
+	{
+	    if ((strcmp(alg_name, algorithmSuite[i]) == 0))
+	    {
+		sp_ns = axiom_namespace_create(env, "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy", "sp");
+		axiom_element_create(env, parent_node, "AlgorithmSuite", sp_ns, &alg_om_node);
+		policy_om_node = create_policy_node(env, alg_om_node);
+		axiom_element_create(env, policy_om_node, algorithmSuite[i], sp_ns, &alg_name_om_node);
+	    
+		return alg_name_om_node;
+	    }
+	}
+    }
+    
+    return tmp_node;
 
 }
 
 axiom_node_t *
 create_layout(const axis2_env_t *env,
               axiom_node_t *parent_node,
-	      zval **tmp)
+              zval **tmp TSRMLS_DC)
 {
     axiom_node_t *layout_om_node = NULL;
     axiom_node_t *policy_om_node = NULL;

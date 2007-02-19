@@ -28,7 +28,19 @@
 #include "ext/libxml/php_libxml.h"
 
 
+#define BASIC256 "Basic256"
+#define BASIC192 "Basic192"
+#define BASIC128 "Basic128"
+#define TRIPLEDES "TripleDes"
+#define BASIC256_RSA15 "Basic256RSA15"
+#define BASIC192_RSA15 "Basic192RSA15"
+#define BASIC128_RSA15 "Basic128RSA15"
+#define TRIPLEDES_RSA15 "TripleDesRSA15"
+
+
+
 int set_policy_options(const axis2_env_t *env,
-			HashTable *ht);
+                       HashTable *ht TSRMLS_DC);
+axiom_node_t *policy_node;
 
 #endif /* WSF_POLICY_H*/

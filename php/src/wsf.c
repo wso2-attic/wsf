@@ -2010,9 +2010,28 @@ PHP_METHOD(ws_policy, __construct)
     {
 	zval **tmp;
 	HashTable *ht = Z_ARRVAL_P(properties);
+	axiom_node_t *policy_root_node = NULL;
+	axis2_char_t *om_str = NULL;
+	FILE *fp = NULL;
+
 	if(ht)
 	{
 	    set_policy_options(env, ht);
+	    policy_root_node = get_security_policy_node();
+/* 	    if (policy_root_node != NULL) */
+/* 	    { */
+/* 		om_str = AXIOM_NODE_TO_STRING(policy_root_node, env); */
+/* 		if (om_str) */
+/* 		{ */
+/* 		    fp = fopen("new.xml", "w"); */
+/* 		    fprintf(fp, "%s", om_str); */
+
+/* 		    printf("\n Result OM : %s\n", om_str); */
+/* 		    AXIS2_FREE(env->allocator, om_str); */
+/* 		    om_str =  NULL; */
+/* 		} */
+
+/* 	    } */
 	}
 	else
 	    php_printf("\n The variable is of type %d", Z_TYPE_P(properties));
