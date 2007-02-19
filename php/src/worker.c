@@ -255,11 +255,7 @@ int wsf_worker_process_request(
 	}
     
     if(request->transfer_encoding){
-		axis2_property_t *tns_enc_prop = NULL;
-        tns_enc_prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST,AXIS2_TRUE,
-			NULL, AXIS2_STRDUP(request->transfer_encoding, env));
-        AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, AXIS2_HTTP_HEADER_TRANSFER_ENCODING,
-			tns_enc_prop, AXIS2_FALSE);
+        axis2_msg_ctx_set_transfer_encoding(msg_ctx, env, AXIS2_STRDUP(request->transfer_encoding, env));
     }
     
     /** store svc_info struct as a property */  
@@ -377,20 +373,7 @@ int wsf_worker_process_request(
 	if(-1 == send_status) {
     
 		op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
-		if(NULL != op_ctx) {
-			axis2_ctx_t *ctx = AXIS2_OP_CTX_GET_BASE(AXIS2_MSG_CTX_GET_OP_CTX(
-									msg_ctx, env), env);
-			if (NULL != ctx) {
-				property = AXIS2_CTX_GET_PROPERTY(ctx, env, 
-											AXIS2_RESPONSE_WRITTEN, AXIS2_FALSE);
-				if(property) {
-					ctx_written = AXIS2_PROPERTY_GET_VALUE(property, env);
-					property = NULL;
-				}
-			}
-		}
-        
-		if(NULL != ctx_written && AXIS2_STRCASECMP(ctx_written, "TRUE") == 0) {
+		if(axis2_op_ctx_get_response_written(op_ctx, env)) {
 			int rlen = 0;
             int readlen = 0;
             void *val = NULL;
