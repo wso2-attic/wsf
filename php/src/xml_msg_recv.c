@@ -633,10 +633,13 @@ zend_try {
         } 
     }
 } zend_catch {
+
+	/*
     if (Z_TYPE_P(EG(exception)) == IS_OBJECT && instanceof_function(Z_OBJCE_P(EG(exception)), 
             ws_fault_class_entry TSRMLS_CC)) {
             ws_xml_msg_recv_set_soap_fault(env, soap_ns,out_msg_ctx, retval TSRMLS_CC);   
-		}
+		
+	}*/
 }zend_end_try();                                                                                
     
 	if (!res_payload){

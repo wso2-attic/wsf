@@ -78,7 +78,7 @@ int set_policy_options(const axis2_env_t *env,
     if(zend_hash_find(ht, "security", sizeof("security"), (void **)&tmp) == SUCCESS &&
             Z_TYPE_PP(tmp) == IS_ARRAY)
     {
-        policy_node = get_security_policy_options(env, tmp);
+		policy_node = get_security_policy_options(env, tmp TSRMLS_CC);
     }
 
     /** for RM policy */
@@ -144,28 +144,28 @@ axiom_node_t * get_security_policy_options(const axis2_env_t *env,
     sp_ns = axiom_namespace_create(env, "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy", "sp");
     asymmetric_om_ele = axiom_element_create(env, all_om_node, "AsymmetricBinding", sp_ns, &asymmetric_om_node);
 
-    policy_om_node1 = create_policy_node(env, asymmetric_om_node);
+	policy_om_node1 = create_policy_node(env, asymmetric_om_node TSRMLS_CC);
 
     /*  if the sigining part is included in the user options */
     if (zend_hash_find(ht, "sign", sizeof("sign"), (void **)&tmp) == SUCCESS)
     {
-        create_initiator_token(env, policy_om_node1, tmp);
+		create_initiator_token(env, policy_om_node1, tmp TSRMLS_CC);
     }
 
     /* if the encryption is included */
     if (zend_hash_find(ht, "encrypt", sizeof("encrypt"), (void **)&tmp) == SUCCESS)
     {
-        create_recipient_token(env, policy_om_node1, tmp);
+		create_recipient_token(env, policy_om_node1, tmp TSRMLS_CC);
     }
     /* if algorithm suite is presence in the options */
     if (zend_hash_find(ht, "algorithmSuite", sizeof("algorithmSuite"), (void **)&tmp) == SUCCESS)
     {
-        create_algorithm_suite(env, policy_om_node1, tmp);
+		create_algorithm_suite(env, policy_om_node1, tmp TSRMLS_CC);
     }
     /*if the Layout is presence call this function */
     if (zend_hash_find(ht, "Layout", sizeof("Layout"), (void **)&tmp) == SUCCESS)
     {
-        create_layout(env, policy_om_node1, tmp);
+		create_layout(env, policy_om_node1, tmp TSRMLS_CC);
     }
     /* for timestamp */
     axiom_element_create(env, policy_om_node1, "IncludeTimestamp", sp_ns, &timestamp_om_node);
@@ -190,7 +190,7 @@ axiom_node_t * get_security_policy_options(const axis2_env_t *env,
  * policy.xml*/
 axiom_node_t *
 create_policy_node(const axis2_env_t *env,
-                   axiom_node_t *parent_om_node TSRMLS_DC)
+                   axiom_node_t *parent_om_node)
 {
     axiom_node_t *policy_om_node = NULL;
     axiom_element_t *policy_om_ele = NULL;
@@ -245,7 +245,7 @@ create_initiator_token(const axis2_env_t *env,
 	    sp_ns = axiom_namespace_create(env,"http://schemas.xmlsoap.org/ws/2005/07/securitypolicy", "sp");
 
 	    in_token_om_ele = axiom_element_create(env, parent_om_node, "InitiatorToken", sp_ns, &in_token_om_node);
-	    policy_om_node1 = create_policy_node(env, in_token_om_node);
+		policy_om_node1 = create_policy_node(env, in_token_om_node);
 
             x509_om_ele = axiom_element_create(env, policy_om_node1, "X509Token", sp_ns, &x509_om_node);
             attr = axiom_attribute_create(env, "IncludeToken", "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always",
