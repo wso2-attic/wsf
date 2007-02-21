@@ -91,35 +91,40 @@ void set_security_policy_options(zval *policy_obj,
 
     }
     
-    if (zend_hash_find(ht_sec, WS_LAYOUT, sizeof(WS_LAYOUT), (void **)&sec_prop) == SUCCESS)
+    if (zend_hash_find(ht_sec, WS_LAYOUT, sizeof(WS_LAYOUT), (void **)&sec_prop) == SUCCESS &&
+	(Z_TYPE_PP(sec_prop) == IS_STRING))
     {
 	add_property_stringl(policy_obj, WS_ALGORITHM, Z_STRVAL_PP(sec_prop), Z_STRLEN_PP(sec_prop), 1 );
 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_policy] layout is enable ");
 
     }
     
-    if (zend_hash_find(ht_sec, WS_TIMESTAMP, sizeof(WS_TIMESTAMP), (void **)&sec_prop) == SUCCESS)
+    if (zend_hash_find(ht_sec, WS_TIMESTAMP, sizeof(WS_TIMESTAMP), (void **)&sec_prop) == SUCCESS &&
+	(Z_TYPE_PP(sec_prop) == IS_BOOL))
     {
 	add_property_bool(policy_obj, WS_TIMESTAMP, Z_BVAL_PP(sec_prop));
 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_policy] timestamp is enable ");
 
     }
     
-    if (zend_hash_find(ht_sec, WS_PROTECTION_ORDER, sizeof(WS_PROTECTION_ORDER), (void **)&sec_prop) == SUCCESS)
+    if (zend_hash_find(ht_sec, WS_PROTECTION_ORDER, sizeof(WS_PROTECTION_ORDER), (void **)&sec_prop) == SUCCESS &&
+	(Z_TYPE_PP(sec_prop) == IS_STRING))
     {
 	add_property_stringl(policy_obj, WS_PROTECTION_ORDER, Z_STRVAL_PP(sec_prop), Z_STRLEN_PP(sec_prop), 1 );
 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_policy] protection order is enable ");
 
     }
     
-    if (zend_hash_find(ht_sec, WS_UT, sizeof(WS_UT), (void **)&sec_prop) == SUCCESS)
+    if (zend_hash_find(ht_sec, WS_UT, sizeof(WS_UT), (void **)&sec_prop) == SUCCESS &&
+	(Z_TYPE_PP(sec_prop) == IS_BOOL))
     {
 	add_property_bool(policy_obj, WS_UT, Z_BVAL_PP(sec_prop));
 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_policy] UsernameToken is enable ");
 
     }
 
-    if (zend_hash_find(ht_sec, WS_TOKEN_REFERENCE, sizeof(WS_TOKEN_REFERENCE), (void **)&sec_prop) == SUCCESS)
+    if (zend_hash_find(ht_sec, WS_TOKEN_REFERENCE, sizeof(WS_TOKEN_REFERENCE), (void **)&sec_prop) == SUCCESS &&
+	(Z_TYPE_PP(sec_prop) == IS_STRING))
     {
 	add_property_stringl(policy_obj, WS_TOKEN_REFERENCE, Z_STRVAL_PP(sec_prop), Z_STRLEN_PP(sec_prop), 1 );
 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_policy] token reference  is enable ");
