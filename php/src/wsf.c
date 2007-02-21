@@ -601,7 +601,7 @@ PHP_METHOD(ws_message, __construct)
     
     zval *payload = NULL;
     zval *properties = NULL;
-    zval *attachments = NULL;
+/*     zval *attachments = NULL; */
     
     if (FAILURE == zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "z|a", &payload , 
         &properties)) {
@@ -752,8 +752,8 @@ PHP_METHOD(ws_message, __get)
     zval *object = NULL;
     char *prop_name = NULL;
     long prop_name_len = 0;
-    zval **param_val = NULL;
-    int msg_payload_type = -1;
+/*     zval **param_val = NULL; */
+/*     int msg_payload_type = -1; */
     
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
 		&prop_name, &prop_name_len) == FAILURE) {
@@ -844,11 +844,11 @@ PHP_METHOD(ws_client, __construct)
 {
     ws_object_ptr intern = NULL;
 	zval *obj = NULL;
-	axis2_char_t *wsdl_path = NULL;    
+/* 	axis2_char_t *wsdl_path = NULL;     */
 	char *home_folder = NULL;
 	axis2_svc_client_t *svc_client = NULL;
-	char *wsdlpath = NULL;
-	int wsdlpath_len = 0;
+/* 	char *wsdlpath = NULL; */
+/* 	int wsdlpath_len = 0; */
 	zval *options = NULL;
 	if (FAILURE == zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|a", 
 			&options)) {
@@ -1158,14 +1158,14 @@ PHP_METHOD(ws_service, __construct)
             char *op_name_to_store = NULL;
             char *op_name = NULL;
             unsigned int op_name_len = 0;
-            zend_function **f = NULL;
-            char *key = NULL;
-            int key_len = 0;
+/*             zend_function **f = NULL; */
+/*             char *key = NULL; */
+/*             int key_len = 0; */
             unsigned long index = i;
             
             
             char *func_name = NULL;
-            long func_name_len = 0;
+/*             long func_name_len = 0; */
             
             zend_hash_get_current_key_ex(ht_ops_to_funcs, &op_name, &op_name_len, &index, 0, &pos);
             zend_hash_move_forward_ex(ht_ops_to_funcs, &pos);
@@ -1874,8 +1874,10 @@ PHP_METHOD(ws_policy, __construct)
 
 	if(ht)
 	{
-		set_policy_options(env, ht TSRMLS_CC);
-	    policy_root_node = get_security_policy_node();
+	    set_policy_options(object, ht, env TSRMLS_CC);
+
+/* 		set_policy_options(env, ht TSRMLS_CC); */
+/* 	    policy_root_node = get_security_policy_node(); */
 /* 	    if (policy_root_node != NULL) */
 /* 	    { */
 /* 		om_str = AXIOM_NODE_TO_STRING(policy_root_node, env); */

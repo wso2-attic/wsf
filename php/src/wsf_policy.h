@@ -28,6 +28,16 @@
 #include "ext/libxml/php_libxml.h"
 
 
+#define WS_SIGN "sign"
+#define WS_ENCRYPT "encrypt"
+#define WS_ALGORITHM "algorithmSuite"
+#define WS_LAYOUT "layOut"
+#define WS_TIMESTAMP "includeTimeStamp"
+#define WS_PROTECTION_ORDER "protectionOrder"
+#define WS_UT "useUsernameToken"
+#define WS_TOKEN_REFERENCE "securityTokenReference"
+
+
 #define BASIC256 "Basic256"
 #define BASIC192 "Basic192"
 #define BASIC128 "Basic128"
@@ -39,10 +49,18 @@
 
 
 
-int set_policy_options(const axis2_env_t *env,
-                       HashTable *ht TSRMLS_DC);
+
+int set_policy_options(zval *this_ptr,
+		       HashTable *ht,
+		       const axis2_env_t *env TSRMLS_DC);
+/* int set_policy_options(const axis2_env_t *env, */
+/*                        HashTable *ht TSRMLS_DC); */
 
 axiom_node_t *get_security_policy_node();
 
 #endif /* WSF_POLICY_H*/
+
+
+
+
 
