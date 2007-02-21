@@ -27,7 +27,7 @@
 #include <TSRM.h>
 #include "ext/libxml/php_libxml.h"
 
-
+/** ws_policy options */
 #define WS_SIGN "sign"
 #define WS_ENCRYPT "encrypt"
 #define WS_ALGORITHM "algorithmSuite"
@@ -37,6 +37,13 @@
 #define WS_UT "useUsernameToken"
 #define WS_TOKEN_REFERENCE "securityTokenReference"
 
+/** ws_security_token options */
+
+#define WS_USER "user"
+#define WS_PUBLICKEY "publicKey"
+#define WS_PASSWORD_TYPE "passwordType"
+#define WS_PASSWORD "password"
+#define WS_PRIVATE_KEY "privateKey"
 
 #define BASIC256 "Basic256"
 #define BASIC192 "Basic192"
@@ -46,8 +53,6 @@
 #define BASIC192_RSA15 "Basic192RSA15"
 #define BASIC128_RSA15 "Basic128RSA15"
 #define TRIPLEDES_RSA15 "TripleDesRSA15"
-
-
 
 
 int set_policy_options(zval *this_ptr,

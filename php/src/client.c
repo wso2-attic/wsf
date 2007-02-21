@@ -1001,9 +1001,8 @@ int wsf_client_do_request(
 				reliable = TRUE
 					1. addressing is engaged by user specifing useWSA and Action
 					2. addressing is not specified by useWSA but action presnt
-							then engage addressing
-					If Addressing is engaged
-					engage RM
+					 then engage addressing
+					If Addressing is engaged engage RM
 		*/
 		if((is_addressing_engaged || 
 			(!is_addressing_engaged && is_addressing_action_present )) && engage_rm){

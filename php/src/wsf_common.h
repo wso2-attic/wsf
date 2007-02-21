@@ -101,6 +101,7 @@ typedef enum ws_input_types{
 
 /** end options */
 
+
 #define WS_MSG_PAYLOAD_STR "str"
 #define WS_MSG_PAYLOAD_SXML "simpleXML"
 #define WS_MSG_PAYLOAD_DOM "dom"
@@ -139,13 +140,6 @@ typedef enum ws_input_types{
 #define WS_WSA_POLICIES "Policies"
 #define WS_WSA_METADATA "Metadata"
 
-
-/* security specific properties */
-#define WS_USER 			"user"
-#define WS_PASSWORD 		"password"
-#define WS_PASSWORD_TYPE	"passwordType"
-#define WS_PASSWORD_TEXT	"passwordText"
-#define WS_PASSWORD_DIGEST	"passwordDigest"
 
 #define WS_Basic256Rsa15	101
 #define WS_Basic192Rsa15	102
