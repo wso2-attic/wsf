@@ -83,59 +83,59 @@ wsf_client_add_properties(zval *this_ptr, HashTable *ht TSRMLS_DC){
         }
 
 		/** XOP MTOM */
-		if(zend_hash_find(ht, WS_RESPONSE_XOP, sizeof(WS_RESPONSE_XOP), (void **)&tmp) == SUCCESS && 
+	if(zend_hash_find(ht, WS_RESPONSE_XOP, sizeof(WS_RESPONSE_XOP), (void **)&tmp) == SUCCESS && 
             Z_TYPE_PP(tmp) == IS_BOOL){
 				add_property_bool(this_ptr, WS_RESPONSE_XOP, Z_BVAL_PP(tmp));
         }else{
 			add_property_bool(this_ptr, WS_RESPONSE_XOP, 0);        
         }
-		if(zend_hash_find(ht, WS_USE_MTOM, sizeof(WS_USE_MTOM), (void **)&tmp) == SUCCESS && 
+	if(zend_hash_find(ht, WS_USE_MTOM, sizeof(WS_USE_MTOM), (void **)&tmp) == SUCCESS && 
             Z_TYPE_PP(tmp) == IS_BOOL){
 				add_property_bool(this_ptr, WS_USE_MTOM, Z_BVAL_PP(tmp));
         }else{
 			add_property_bool(this_ptr, WS_USE_MTOM, 0);
         }
-		if(zend_hash_find(ht, WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE, sizeof(WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE), (void **)&tmp) == SUCCESS && 
+	if(zend_hash_find(ht, WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE, sizeof(WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE), (void **)&tmp) == SUCCESS && 
             Z_TYPE_PP(tmp) == IS_STRING){
 				add_property_stringl(this_ptr, WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp),1);
         }
 
 		/** Security */
         if(zend_hash_find(ht, WS_SECURITY_TOKEN, sizeof(WS_SECURITY_TOKEN), (void **)&tmp) == SUCCESS && 
-        Z_TYPE_PP(tmp) == IS_OBJECT){
+        	Z_TYPE_PP(tmp) == IS_OBJECT){
 			add_property_zval(this_ptr, WS_SECURITY_TOKEN, *tmp);
         }
-		if(zend_hash_find(ht, WS_POLICY, sizeof(WS_POLICY), (void **)&tmp) == SUCCESS &&
-			Z_TYPE_PP(tmp) == IS_OBJECT ) {
-				add_property_zval(this_ptr, WS_POLICY, *tmp);
+	if(zend_hash_find(ht, WS_POLICY, sizeof(WS_POLICY), (void **)&tmp) == SUCCESS &&
+		Z_TYPE_PP(tmp) == IS_OBJECT  || Z_TYPE_PP(tmp) && IS_ARRAY ) {
+			add_property_zval(this_ptr, WS_POLICY, *tmp);
         }
         
-		/** RM */
-		if(zend_hash_find(ht, WS_RELIABLE, sizeof(WS_RELIABLE), (void **)&tmp) == SUCCESS) {
-			if(Z_TYPE_PP(tmp) == IS_BOOL && Z_BVAL_PP(tmp) == 1){
-				add_property_long(this_ptr, WS_RELIABLE, WS_RM_VERSION_1_0);
-			}else if(Z_TYPE_PP(tmp) == IS_STRING && strcmp(Z_STRVAL_PP(tmp), "1.1") == 0){
-				add_property_long(this_ptr, WS_RELIABLE, WS_RM_VERSION_1_1);
-			}else if(Z_TYPE_PP(tmp) == IS_STRING && strcmp(Z_STRVAL_PP(tmp), "1.0") == 0){
-				add_property_long(this_ptr, WS_RELIABLE, WS_RM_VERSION_1_0);
-			}
+	/** RM */
+	if(zend_hash_find(ht, WS_RELIABLE, sizeof(WS_RELIABLE), (void **)&tmp) == SUCCESS) {
+		if(Z_TYPE_PP(tmp) == IS_BOOL && Z_BVAL_PP(tmp) == 1){
+			add_property_long(this_ptr, WS_RELIABLE, WS_RM_VERSION_1_0);
+		}else if(Z_TYPE_PP(tmp) == IS_STRING && strcmp(Z_STRVAL_PP(tmp), "1.1") == 0){
+			add_property_long(this_ptr, WS_RELIABLE, WS_RM_VERSION_1_1);
+		}else if(Z_TYPE_PP(tmp) == IS_STRING && strcmp(Z_STRVAL_PP(tmp), "1.0") == 0){
+			add_property_long(this_ptr, WS_RELIABLE, WS_RM_VERSION_1_0);
+		}
         }
-		if(zend_hash_find(ht, WS_SEQUENCE_EXPIRY_TIME, sizeof(WS_SEQUENCE_EXPIRY_TIME), (void **)&tmp) == SUCCESS){
-			if(Z_TYPE_PP(tmp) == IS_LONG){
-				add_property_long(this_ptr, WS_SEQUENCE_EXPIRY_TIME, Z_LVAL_PP(tmp));
-			}
+	if(zend_hash_find(ht, WS_SEQUENCE_EXPIRY_TIME, sizeof(WS_SEQUENCE_EXPIRY_TIME), (void **)&tmp) == SUCCESS){
+		if(Z_TYPE_PP(tmp) == IS_LONG){
+			add_property_long(this_ptr, WS_SEQUENCE_EXPIRY_TIME, Z_LVAL_PP(tmp));
 		}
-		if(zend_hash_find(ht, WS_WILL_CONTINUE_SEQUENCE, sizeof(WS_WILL_CONTINUE_SEQUENCE), (void**)&tmp) == SUCCESS) {
-			if(Z_TYPE_PP(tmp) == IS_BOOL){
-				add_property_bool(this_ptr, WS_WILL_CONTINUE_SEQUENCE, Z_BVAL_PP(tmp));
-			}
+	}
+	if(zend_hash_find(ht, WS_WILL_CONTINUE_SEQUENCE, sizeof(WS_WILL_CONTINUE_SEQUENCE), (void**)&tmp) == SUCCESS) {
+		if(Z_TYPE_PP(tmp) == IS_BOOL){
+			add_property_bool(this_ptr, WS_WILL_CONTINUE_SEQUENCE, Z_BVAL_PP(tmp));
 		}
+	}
 
-		if(zend_hash_find(ht, WS_SERVER_CERT, sizeof(WS_SERVER_CERT), (void**)&tmp) == SUCCESS){
-			if(Z_TYPE_PP(tmp) == IS_STRING){
-				add_property_string(this_ptr, WS_SERVER_CERT, Z_STRVAL_PP(tmp), 1); 			
-			}
+	if(zend_hash_find(ht, WS_SERVER_CERT, sizeof(WS_SERVER_CERT), (void**)&tmp) == SUCCESS){
+		if(Z_TYPE_PP(tmp) == IS_STRING){
+			add_property_string(this_ptr, WS_SERVER_CERT, Z_STRVAL_PP(tmp), 1); 			
 		}
+	}
 
 		if(zend_hash_find(ht, WS_CLIENT_CERT, sizeof(WS_CLIENT_CERT), (void**)&tmp) == SUCCESS){
 			if(Z_TYPE_PP(tmp) == IS_STRING){
@@ -148,11 +148,6 @@ wsf_client_add_properties(zval *this_ptr, HashTable *ht TSRMLS_DC){
 			}
 		}
 
-		/** for sec_policy intergration*/
-		if(zend_hash_find(ht, "sec_policy", sizeof("sec_policy"), (void**)&tmp) == SUCCESS &&
-		   Z_TYPE_PP(tmp) == IS_STRING){
-		    add_property_stringl(this_ptr, "sec_policy", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
-		}
 }
 
 int 
@@ -261,13 +256,11 @@ wsf_client_set_security_options(
 	
 
 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] wsf_util_set_security_options");
-	if(zend_hash_find(Z_OBJPROP_P(zval_client), WS_SECURITY_TOKEN, sizeof(WS_SECURITY_TOKEN), (void **)&tmp) == SUCCESS && 
-			Z_TYPE_PP(tmp) == IS_OBJECT){
+	if(zend_hash_find(Z_OBJPROP_P(zval_client), WS_SECURITY_TOKEN, sizeof(WS_SECURITY_TOKEN), (void **)&tmp) == SUCCESS 			&& Z_TYPE_PP(tmp) == IS_OBJECT){
 			sec_token = *tmp;
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] security token object found ");
 	}
-	if(zend_hash_find(Z_OBJPROP_P(zval_client), WS_POLICY, sizeof(WS_POLICY), (void **)&tmp) == SUCCESS && 
-		Z_TYPE_PP(tmp) == IS_OBJECT){
+	if(zend_hash_find(Z_OBJPROP_P(zval_client), WS_POLICY, sizeof(WS_POLICY), (void **)&tmp) == SUCCESS){
 			policy = *tmp;
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] policy object found ");
 	}
@@ -581,8 +574,7 @@ int wsf_client_set_options(zval *zval_client, zval *zval_msg, axis2_env_t *env,
     }
 			
 
-
-	wsf_client_set_security_options(zval_client, zval_msg, env, client_options, svc_client TSRMLS_CC);
+    wsf_client_set_security_options(zval_client, zval_msg, env, client_options, svc_client TSRMLS_CC);
 	
     return AXIS2_SUCCESS;
 }
@@ -794,8 +786,9 @@ int wsf_client_do_request(
 				reliable = TRUE
 					1. addressing is engaged by user specifing useWSA and Action
 					2. addressing is not specified by useWSA but action presnt
-					 then engage addressing
-					If Addressing is engaged engage RM
+							then engage addressing
+					If Addressing is engaged
+					engage RM
 		*/
 		if((is_addressing_engaged || 
 			(!is_addressing_engaged && is_addressing_action_present )) && engage_rm){
