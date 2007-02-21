@@ -24,6 +24,7 @@
 #include <axis2_uuid_gen.h>
 #include <axiom_util.h>
 #include "wsf_client.h"
+#include "wsf_policy.h"
 
 #ifdef USE_SANDESHA2
 #include <sandesha2_client.h>
@@ -100,9 +101,9 @@ wsf_client_add_properties(zval *this_ptr, HashTable *ht TSRMLS_DC){
         }
 
 		/** Security */
-        if(zend_hash_find(ht, WS_SECURITY_TOEKN, sizeof(WS_SECURITY_TOEKN), (void **)&tmp) == SUCCESS && 
+        if(zend_hash_find(ht, WS_SECURITY_TOKEN, sizeof(WS_SECURITY_TOKEN), (void **)&tmp) == SUCCESS && 
         Z_TYPE_PP(tmp) == IS_OBJECT){
-			add_property_zval(this_ptr, WS_SECURITY_TOEKN, *tmp);
+			add_property_zval(this_ptr, WS_SECURITY_TOKEN, *tmp);
         }
 		if(zend_hash_find(ht, WS_POLICY, sizeof(WS_POLICY), (void **)&tmp) == SUCCESS &&
 			Z_TYPE_PP(tmp) == IS_OBJECT ) {
@@ -246,204 +247,34 @@ int wsf_client_set_headers(const axis2_env_t *env,
 }
 
 
-void wsf_client_set_security_options(zval *zval_client, zval *zval_msg, 
-	axis2_env_t *env, axis2_options_t *client_options, axis2_svc_client_t *svc_client TSRMLS_DC)
+void 
+wsf_client_set_security_options(
+		zval *zval_client, 
+		zval *zval_msg, 
+		axis2_env_t *env, 
+		axis2_options_t *client_options, 
+		axis2_svc_client_t *svc_client TSRMLS_DC)
 {
 	zval **tmp = NULL;
-	zval **msg_tmp = NULL;
-
-	int username_present = AXIS2_FALSE;
-	int password_present = AXIS2_FALSE;
-	int timestamp_present = AXIS2_FALSE;
+	zval *sec_token = NULL;
+	zval *policy = NULL;
 	
-	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] wsf_util_set_security_options" );
-	if(zval_msg){
-		if(zend_hash_find(Z_OBJPROP_P(zval_msg), "user", sizeof("user"), (void **)&msg_tmp) == SUCCESS && 
-				Z_TYPE_PP(msg_tmp) == IS_STRING){
-				char *username = NULL;
-				axis2_property_t *property = NULL;
-				username = Z_STRVAL_PP(msg_tmp);                
-				property = axis2_property_create(env);
-				AXIS2_PROPERTY_SET_VALUE(property, env, username);
-				AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "user" ,property);
-				username_present = AXIS2_TRUE;
-		}
-		if(zend_hash_find(Z_OBJPROP_P(zval_msg), "password", sizeof("password"), (void **)&msg_tmp) == SUCCESS && 
-			Z_TYPE_PP(msg_tmp) == IS_STRING){
-			char *password = NULL;
-			axis2_property_t *property = NULL;
-			
-			property = axis2_property_create(env);
-			
-			password = Z_STRVAL_PP(msg_tmp);
-			
-			AXIS2_PROPERTY_SET_VALUE(property,
-									 env, 
-									 password);
 
-			AXIS2_OPTIONS_SET_PROPERTY(client_options,  
-										env, 
-										"password", 
-										property);
-			
-			password_present = AXIS2_TRUE;
-
-			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] password present :- %s", password);
-		}
-		if(zend_hash_find(Z_OBJPROP_P(zval_msg), "digest", sizeof("digest"), (void **)&msg_tmp) == SUCCESS && 
-			Z_TYPE_PP(msg_tmp) == IS_BOOL){
-			int use_digest = 0;
-			char *password_type = NULL;
-			axis2_property_t *property = NULL;
-			use_digest = Z_BVAL_PP(msg_tmp);
-			if(use_digest){
-				password_type = "passwordDigest";
-				property = axis2_property_create(env);
-
-				AXIS2_PROPERTY_SET_VALUE(property, env, password_type);
-
-				AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "passwordType" ,property);
-
-				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] password type is digest");
-			}
-		}
-		else if(password_present){
-			char *password_type = NULL;
-				axis2_property_t *property = NULL;
-				password_type = "passwordText";
-				property = axis2_property_create(env);
-				AXIS2_PROPERTY_SET_VALUE(property, env, password_type);
-				AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "passwordType" ,property);
-
-				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] passwordType :- passwordText");
-		}	
-		if(zend_hash_find(Z_OBJPROP_P(zval_msg), "timeToLive", sizeof("timeToLive"), 
-			(void **)&msg_tmp) == SUCCESS && Z_TYPE_PP(msg_tmp) == IS_STRING){
-			char *timeto_live = NULL;
-			axis2_property_t *property = NULL;
-			timeto_live = Z_STRVAL_PP(msg_tmp);
-			if(timeto_live){
-				property = axis2_property_create(env);
-				AXIS2_PROPERTY_SET_VALUE(property, env, wsf_util_get_ttl(timeto_live, env));
-				AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "timeToLive" ,property);
-			}
-			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] timeToLive :- %s", timeto_live);
-
-			timestamp_present = AXIS2_TRUE;
-		}
-		if(username_present && password_present){
-			
-			axis2_property_t *sec_prop = NULL;
-			axis2_property_t *outflow_prop = NULL;
-
-			sec_prop = axis2_property_create(env);
-			if(timestamp_present){
-				
-				AXIS2_PROPERTY_SET_VALUE(sec_prop, env, "UsernameToken Timestamp");        
-				
-				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] seurity properties :- UsernameToken Timestamp");
-			}	
-			else {
-
-				AXIS2_PROPERTY_SET_VALUE(sec_prop, env, "UsernameToken");            
-
-				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] seurity properties :- UsernameToken");
-
-			}	
-
-			outflow_prop = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 0,
-				NULL,"TRUE");
-			
-			AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "OutflowSecurity", outflow_prop);
-
-			AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "items", sec_prop);
-			AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client , env, "rampart");
-		}		
-	}else{
-		username_present = AXIS2_FALSE;
-		password_present = AXIS2_FALSE;
-		
-		if(zend_hash_find(Z_OBJPROP_P(zval_client), "user", sizeof("user"), 
-			(void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
-				char *username = NULL;
-				axis2_property_t *property = NULL;
-				username = Z_STRVAL_PP(tmp);                
-				property = axis2_property_create(env);
-				AXIS2_PROPERTY_SET_VALUE(property, env, username);
-				AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "user" ,property);
-				username_present = AXIS2_TRUE;
-		}
-		if(zend_hash_find(Z_OBJPROP_P(zval_client), "password", sizeof("password"), (void **)&msg_tmp) == SUCCESS && 
-			Z_TYPE_PP(tmp) == IS_STRING){
-			char *password = NULL;
-			axis2_property_t *property = NULL;
-			property = axis2_property_create(env);
-			password = Z_STRVAL_PP(tmp);
-			AXIS2_PROPERTY_SET_VALUE(property,env, password);
-			AXIS2_OPTIONS_SET_PROPERTY(client_options,  env, "password", property);
-			password_present = AXIS2_TRUE;
-		}
-		
-		if(zend_hash_find(Z_OBJPROP_P(zval_client), "digest", sizeof("digest"), (void **)&tmp) == SUCCESS && 
-			Z_TYPE_PP(tmp) == IS_BOOL){
-			int use_digest = 0;
-			char *password_type = NULL;
-			axis2_property_t *property = NULL;
-			use_digest = Z_BVAL_PP(tmp);
-			if(use_digest){
-				password_type = "passwordDigest";
-				property = axis2_property_create(env);
-				AXIS2_PROPERTY_SET_VALUE(property, env, password_type);
-				AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "passwordType" ,property);
-			}
-		}else if(password_present){
-				char *password_type = NULL;
-			axis2_property_t *property = NULL;		
-				password_type = "passwordText";
-				property = axis2_property_create(env);
-				AXIS2_PROPERTY_SET_VALUE(property, env, password_type);
-				AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "passwordType" ,property);
-		}
-		
-		if(zend_hash_find(Z_OBJPROP_P(zval_client), "timeToLive", sizeof("timeToLive"), 
-			(void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING)
-		{
-			char *timeto_live = NULL;
-			axis2_property_t *property = NULL;
-			timeto_live = Z_STRVAL_PP(tmp);
-			if(timeto_live){
-				property = axis2_property_create(env);
-				AXIS2_PROPERTY_SET_VALUE(property, env, wsf_util_get_ttl(timeto_live, env));
-				AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "timeToLive" ,property);
-			}
-			timestamp_present = AXIS2_TRUE;
-		}                    
-		if(username_present && password_present){
-			axis2_property_t *sec_prop = NULL;
-			axis2_property_t *outflow_prop = NULL;
-			sec_prop = axis2_property_create(env);
-			if(timestamp_present){
-				AXIS2_PROPERTY_SET_VALUE(sec_prop, env, "UsernameToken Timestamp");        
-			}else{
-				AXIS2_PROPERTY_SET_VALUE(sec_prop, env, "UsernameToken");
-			}            
-			AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "items", sec_prop);
-			
-			outflow_prop = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 0,
-				NULL, "TRUE");
-			
-			AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "OutflowSecurity", outflow_prop);
-
-			AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client , env, "rampart");
-		}
+	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] wsf_util_set_security_options");
+	if(zend_hash_find(Z_OBJPROP_P(zval_client), WS_SECURITY_TOKEN, sizeof(WS_SECURITY_TOKEN), (void **)&tmp) == SUCCESS && 
+			Z_TYPE_PP(tmp) == IS_OBJECT){
+			sec_token = *tmp;
+			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] security token object found ");
 	}
-/*
-	if(zval_msg){
-		wsf_util_set_security_opts(Z_OBJPROP_P(zval_msg), env, svc_client TSRMLS_CC);
-	}else if(zval_client){
-		wsf_util_set_security_opts(Z_OBJPROP_P(zval_msg), env, svc_client TSRMLS_CC);
+	if(zend_hash_find(Z_OBJPROP_P(zval_client), WS_POLICY, sizeof(WS_POLICY), (void **)&tmp) == SUCCESS && 
+		Z_TYPE_PP(tmp) == IS_OBJECT){
+			policy = *tmp;
+			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] policy object found ");
 	}
-*/		
+
+	if(sec_token && policy) {
+		ws_policy_handle_client_security(sec_token, policy, env, svc_client, client_options TSRMLS_CC);
+	}
 }
 
 
@@ -750,30 +581,9 @@ int wsf_client_set_options(zval *zval_client, zval *zval_msg, axis2_env_t *env,
     }
 			
 
+
 	wsf_client_set_security_options(zval_client, zval_msg, env, client_options, svc_client TSRMLS_CC);
 	
-    /*
-	if(zval_msg && zend_hash_find(Z_OBJPROP_P(zval_msg), "reliable", sizeof("reliable"), (void**)&msg_tmp) == SUCCESS
-		&& Z_TYPE_PP(msg_tmp) == IS_BOOL){
-			is_rm_enabled = Z_BVAL_PP(tmp);
-			
-	}else if(zend_hash_find(Z_OBJPROP_P(zval_client), "reliable", sizeof("reliable"),(void**)&tmp) == SUCCESS 
-		&& Z_TYPE_PP(tmp) == IS_BOOL){
-			is_rm_enabled = Z_BVAL_PP(tmp);
-	}
-	
-	if(is_rm_enabled && is_addressing_engaged){
-		axis2_property_t *rmprop = NULL;
-		rmprop = axis2_property_create(env);
-		AXIS2_PROPERTY_SET_SCOPE(rmprop, env, AXIS2_SCOPE_APPLICATION);
-		AXIS2_PROPERTY_SET_VALUE(rmprop, env, AXIS2_VALUE_TRUE);
-		AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "Sandesha2LastMessage", rmprop);
-        if(!is_send){
-        AXIS2_OPTIONS_SET_USE_SEPARATE_LISTENER(client_options, env, AXIS2_TRUE);
-        }
-		AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "sandesha2");
-	}
-	*/
     return AXIS2_SUCCESS;
 }
 

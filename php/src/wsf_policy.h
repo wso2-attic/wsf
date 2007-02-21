@@ -63,6 +63,12 @@ int set_policy_options(zval *this_ptr,
 
 axiom_node_t *get_security_policy_node();
 
+int ws_policy_handle_client_security(zval *sec_token,
+									 zval *policy,
+									 axis2_env_t *env,
+									 axis2_svc_client_t *svc_client,
+									 axis2_options_t *options TSRMLS_DC);
+
 #endif /* WSF_POLICY_H*/
 
 

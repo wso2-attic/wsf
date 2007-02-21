@@ -586,7 +586,7 @@ PHP_METHOD(ws_message, __construct)
     
     zval *payload = NULL;
     zval *properties = NULL;
-/*     zval *attachments = NULL; */
+/*  zval *attachments = NULL; */
     
     if (FAILURE == zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "z|a", &payload , 
         &properties)) {

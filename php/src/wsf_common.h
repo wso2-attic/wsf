@@ -100,7 +100,7 @@ typedef enum ws_input_types{
 #define WS_HEADER_MUST_UNDERSTAND "mustUnderstand"
 
 #define WS_POLICY "policy"
-#define WS_SECURITY_TOEKN "securityToken"
+#define WS_SECURITY_TOKEN "securityToken"
 
 /** end options */
 

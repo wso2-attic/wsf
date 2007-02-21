@@ -158,10 +158,6 @@ entry = zend_register_internal_class_ex(&ce, parent_ce, NULL TSRMLS_CC);
 #define WSF_HASH_FIND(__ht, __key, __tmp, __status) \
 	(zend_hash_find(__ht, __key, sizeof(__key), (void**)&__tmp) == __status)
 
-
-
-
-
 zval* add_soap_fault(zval *obj, char *fault_code, char *fault_string, char *fault_actor, zval *fault_detail TSRMLS_DC);
 
 #endif	/* WSF_H */

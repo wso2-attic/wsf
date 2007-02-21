@@ -27,6 +27,15 @@
 
 #define ArrySize 8
 
+int ws_policy_handle_client_security(zval *sec_token,
+									 zval *policy,
+									 axis2_env_t *env,
+									 axis2_svc_client_t *svc_client,
+									 axis2_options_t *options TSRMLS_DC){
+return AXIS2_SUCCESS;
+}
+
+
 void set_security_policy_options(zval *policy_obj, 
 				 zval **tmp,
 				 const axis2_env_t *env TSRMLS_DC);
