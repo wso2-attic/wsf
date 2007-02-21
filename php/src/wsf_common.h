@@ -99,6 +99,9 @@ typedef enum ws_input_types{
 #define WS_HEADER_ROLE     "role"
 #define WS_HEADER_MUST_UNDERSTAND "mustUnderstand"
 
+#define WS_POLICY "policy"
+#define WS_SECURITY_TOEKN "securityToken"
+
 /** end options */
 
 
@@ -140,23 +143,6 @@ typedef enum ws_input_types{
 #define WS_WSA_POLICIES "Policies"
 #define WS_WSA_METADATA "Metadata"
 
-
-#define WS_Basic256Rsa15	101
-#define WS_Basic192Rsa15	102
-#define WS_Basic128Rsa15	103
-#define WS_TripleDesRsa15	104
-
-#define WS_Aes128		"http://www.w3.org/2001/04/xmlenc#aes128-cbc"
-#define WS_Aes192		"http://www.w3.org/2001/04/xmlenc#aes192-cbc"
-#define WS_Aes256		"http://www.w3.org/2001/04/xmlenc#aes256-cbc"
-#define WS_TripleDes	"http://www.w3.org/2001/04/xmlenc#tripledes-cbc"
-#define WS_KwRsa15		"http://www.w3.org/2001/04/xmlenc#rsa-1_5"
-
-#define WS_SECURITY_TOKEN_TYPE_ENC 150
-#define WS_SECURITY_TOKEN_TYPE_DEC 151
-
-#define WS_ALGORITHM_ASYMMETRIC 161
-#define WS_ALGORITHM_SYMMETRIC	162
 
 /** sandesha2 */
 #define WS_SANDESHA2_CLIENT_ACKS_TO "Sandesha2AcksTo"

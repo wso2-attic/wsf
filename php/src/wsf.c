@@ -446,12 +446,6 @@ PHP_MINIT_FUNCTION(wsf)
 	REGISTER_LONG_CONSTANT("WS_SOAP_ROLE_NONE", WS_SOAP_ROLE_NONE, CONST_CS | CONST_PERSISTENT);
 	REGISTER_LONG_CONSTANT("WS_SOAP_ROLE_ULTIMATE_RECEIVER", WS_SOAP_ROLE_ULTIMATE_RECEIVER, CONST_CS | CONST_PERSISTENT);
 
-
-	REGISTER_LONG_CONSTANT("WS_Basic256Rsa15", WS_Basic256Rsa15, CONST_CS | CONST_PERSISTENT);
-	REGISTER_LONG_CONSTANT("WS_Basic192Rsa15",WS_Basic192Rsa15, CONST_CS | CONST_PERSISTENT);
-	REGISTER_LONG_CONSTANT("WS_Basic128Rsa15",WS_Basic128Rsa15, CONST_CS | CONST_PERSISTENT);
-	REGISTER_LONG_CONSTANT("WS_TripleDesRsa15", WS_TripleDesRsa15, CONST_CS | CONST_PERSISTENT);
-
 	env = wsf_env_create(WSF_GLOBAL(log_path));
 	if (WSF_GLOBAL(home))
         home_folder = WSF_GLOBAL(home);
@@ -664,44 +658,6 @@ PHP_METHOD(ws_message, __construct)
 			Z_TYPE_PP(tmp) == IS_ARRAY){
 				add_property_zval(object, WS_ATTACHMENTS, *tmp);
 		}
-
-
-		/** security */
-		if(zend_hash_find(ht, "user", sizeof("user"), (void **)&tmp) == SUCCESS && 
-		Z_TYPE_PP(tmp) == IS_STRING){
-			add_property_stringl(object, "user", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
-		}
-		if(zend_hash_find(ht, "password", sizeof("password"), (void **)&tmp) == SUCCESS &&
-		Z_TYPE_PP(tmp) == IS_STRING) {
-			add_property_stringl(object, "password", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
-		}
-		if(zend_hash_find(ht, "timestamp", sizeof("timestamp"), (void **)&tmp) == SUCCESS && 
-		Z_TYPE_PP(tmp) == IS_BOOL){
-			add_property_bool(object, "timestamp", Z_BVAL_PP(tmp));
-		}else{
-			add_property_bool(object, "timestamp", 0);
-		}
-		if(zend_hash_find(ht, "digest", sizeof("digest"), (void **)&tmp) == SUCCESS &&
-			Z_TYPE_PP(tmp) == IS_BOOL) {
-			add_property_bool(object, "digest", Z_BVAL_PP(tmp));
-		}else{
-			add_property_bool(object, "digest", 0);
-		}
-		if(zend_hash_find(ht, "timeToLive", sizeof("timeToLive"), (void **)&tmp) == SUCCESS &&
-			Z_TYPE_PP(tmp) == IS_STRING) {
-			add_property_stringl(object, "timeToLive", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
-		}
-		if(zend_hash_find(ht, "encrypt", sizeof("encrypt"), (void**)&tmp) == SUCCESS &&
-			Z_TYPE_PP(tmp) == IS_OBJECT && 
-			instanceof_function(Z_OBJCE_PP(tmp),ws_security_token_class_entry TSRMLS_CC)){
-				add_property_zval(object, "encrypt", *tmp);
-		}
-		if(zend_hash_find(ht, "decrypt", sizeof("decrypt"), (void**)&tmp) == SUCCESS &&
-			Z_TYPE_PP(tmp) == IS_OBJECT && 
-			instanceof_function(Z_OBJCE_PP(tmp),ws_security_token_class_entry TSRMLS_CC)){
-				add_property_zval(object, "decrypt", *tmp);
-		}
-
 
 		/** reliable Messaging */
 		if(zend_hash_find(ht, WS_WILL_CONTINUE_SEQUENCE, sizeof(WS_WILL_CONTINUE_SEQUENCE), (void**)&tmp) == SUCCESS){
@@ -1055,7 +1011,6 @@ PHP_METHOD(ws_client, get_client)
 	add_property_string(client_proxy_zval, "service", service, 1);
 	add_property_string(client_proxy_zval, "port", port, 1);
 
-	return_value_ptr = client_proxy_zval;
 }
 
 /* {{{ proto void WSService::__construct([ array options])*/

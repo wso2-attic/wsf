@@ -31,8 +31,7 @@
 
 void 
 wsf_client_add_properties(zval *this_ptr, HashTable *ht TSRMLS_DC){
-
-zval **tmp = NULL;
+	zval **tmp = NULL;
 		/** protocol */
 		if(zend_hash_find(ht, WS_USE_SOAP, sizeof(WS_USE_SOAP), (void **)&tmp) == SUCCESS){
             if(Z_TYPE_PP(tmp) == IS_STRING){
@@ -101,31 +100,15 @@ zval **tmp = NULL;
         }
 
 		/** Security */
-        if(zend_hash_find(ht, "user", sizeof("user"), (void **)&tmp) == SUCCESS && 
-        Z_TYPE_PP(tmp) == IS_STRING){
-            add_property_stringl(this_ptr, "user", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+        if(zend_hash_find(ht, WS_SECURITY_TOEKN, sizeof(WS_SECURITY_TOEKN), (void **)&tmp) == SUCCESS && 
+        Z_TYPE_PP(tmp) == IS_OBJECT){
+			add_property_zval(this_ptr, WS_SECURITY_TOEKN, *tmp);
         }
-        if(zend_hash_find(ht, "password", sizeof("password"), (void **)&tmp) == SUCCESS &&
-        Z_TYPE_PP(tmp) == IS_STRING) {
-            add_property_stringl(this_ptr, "password", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+		if(zend_hash_find(ht, WS_POLICY, sizeof(WS_POLICY), (void **)&tmp) == SUCCESS &&
+			Z_TYPE_PP(tmp) == IS_OBJECT ) {
+				add_property_zval(this_ptr, WS_POLICY, *tmp);
         }
-        if(zend_hash_find(ht, "timestamp", sizeof("timestamp"), (void **)&tmp) == SUCCESS && 
-        Z_TYPE_PP(tmp) == IS_STRING){
-            add_property_stringl(this_ptr, "timestamp", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
-        }
-        if(zend_hash_find(ht, "digest", sizeof("digest"), (void **)&tmp) == SUCCESS &&
-        Z_TYPE_PP(tmp) == IS_BOOL) {
-            add_property_bool(this_ptr, "digest", Z_BVAL_PP(tmp));
-        }
-	    if(zend_hash_find(ht, "timeToLive", sizeof("timeToLive"), (void **)&tmp) == SUCCESS &&
-        Z_TYPE_PP(tmp) == IS_STRING) {
-            add_property_stringl(this_ptr, "timeToLive", Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
-        }
-		if(zend_hash_find(ht, "secure", sizeof("secure"), (void **)&tmp) == SUCCESS &&
-			Z_TYPE_PP(tmp) == IS_BOOL) {
-			add_property_bool(this_ptr, "secure", Z_BVAL_PP(tmp));
-        }
-
+        
 		/** RM */
 		if(zend_hash_find(ht, WS_RELIABLE, sizeof(WS_RELIABLE), (void **)&tmp) == SUCCESS) {
 			if(Z_TYPE_PP(tmp) == IS_BOOL && Z_BVAL_PP(tmp) == 1){
@@ -1151,152 +1134,6 @@ int wsf_client_do_request(
 
 void wsf_util_set_security_opts(HashTable *ht, axis2_env_t *env, axis2_svc_client_t *svc_client TSRMLS_DC)
 {
-	zval **tmp = NULL;
-	axis2_param_t *outflow_param = NULL, *outflow_action = NULL;
-	axis2_array_list_t *outflow_vl = NULL, *action_vl = NULL, *param_vl = NULL;
-
-	axis2_param_t *inflow_param = NULL, *inflow_action = NULL, *inflow_params = NULL;
-	axis2_array_list_t *inflow_vl = NULL, *inflow_action_vl = NULL, *inflow_params_vl = NULL;
-
-	int usernametoken	= AXIS2_FALSE;
-	int timestamp	= AXIS2_FALSE;
-	int encrypt				= AXIS2_FALSE;
-	int decrypt				= AXIS2_FALSE;
-	int engage_rampart = AXIS2_TRUE;
-	char *items_value = NULL;
-	axis2_param_t *param = NULL;
-	param_vl = axis2_array_list_create(env, 7);
-
-	if(zend_hash_find(ht, "user", sizeof("user"), (void **)&tmp) == SUCCESS && 
-		Z_TYPE_PP(tmp) == IS_STRING){
-			char *username = NULL;
-			username = Z_STRVAL_PP(tmp); 
-			param = axis2_param_create(env, "user", username);
-			axis2_param_set_param_type(param, env, AXIS2_TEXT_PARAM);
-			axis2_array_list_add(param_vl, env, param);
-			
-			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " [wsf ]  user   %s", username);
-
-		if(zend_hash_find(ht, "password", sizeof("password"), (void **)&tmp) == SUCCESS && 
-			Z_TYPE_PP(tmp) == IS_STRING){
-			char *password = NULL;
-			password = Z_STRVAL_PP(tmp);
-			param = axis2_param_create(env, "password", password);
-			axis2_param_set_param_type(param, env, AXIS2_TEXT_PARAM);
-			axis2_array_list_add(param_vl, env, param);
-			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " [wsf ]  password   %s", password);
-			usernametoken = AXIS2_TRUE;
-			
-			if(zend_hash_find(ht, "digest", sizeof("digest"), (void **)&tmp) == SUCCESS && 
-			Z_TYPE_PP(tmp) == IS_BOOL){
-				int use_digest = 0;
-				char *password_type = NULL;
-				use_digest = Z_BVAL_PP(tmp);
-					if(use_digest){
-						password_type = "passwordDigest";
-					param = axis2_param_create(env, "passwordType", AXIS2_STRDUP("passwordDigest", env));
-					axis2_array_list_add(param_vl, env, param);
-					}
-				}else{
-				char *password_type = NULL;
-				password_type = "passwordText";
-				param = axis2_param_create(env, "passwordType", AXIS2_STRDUP("passwordText", env));
-				axis2_array_list_add(param_vl, env, param);
-				}		
-		}
-	}
-	if(zend_hash_find(ht, "timeToLive", sizeof("timeToLive"), 
-		(void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
-				char *timeto_live = NULL;
-				timeto_live = Z_STRVAL_PP(tmp);
-				if(timeto_live){
-					param = axis2_param_create(env, "timeToLive", wsf_util_get_ttl(timeto_live, env)); 
-					axis2_array_list_add(param_vl, env, param);
-				}
-				timestamp = AXIS2_TRUE;
-	}	
-	
-	if(zend_hash_find(ht, "encrypt", sizeof("encrypt"), (void**)&tmp) == SUCCESS &&
-			Z_TYPE_PP(tmp) == IS_OBJECT && 
-			instanceof_function(Z_OBJCE_PP(tmp), ws_security_token_class_entry TSRMLS_CC)){
-				zval **sec_tmp = NULL;
-				HashTable *secht = Z_OBJPROP_PP(tmp);
-				if(zend_hash_find(secht, "encryption_key", sizeof("encryption_key"), (void**)&sec_tmp) == SUCCESS &&
-					Z_TYPE_PP(sec_tmp) == IS_STRING){
-						axis2_char_t *key = NULL;
-						encrypt = AXIS2_TRUE;
-						key = Z_STRVAL_PP(sec_tmp);
-						param = axis2_param_create(env, "keyBuffer", key);
-						axis2_array_list_add(param_vl, env, param);
-				}
-				if(encrypt){
-					if(zend_hash_find(secht, "encryption_method", sizeof("encryption_method"), 
-						(void**)&sec_tmp) == SUCCESS && Z_TYPE_PP(sec_tmp) == IS_LONG){
-						int algo_suit = -1;
-						char *algorithm_asy = NULL, *algorithm_sym = NULL;
-						algo_suit = Z_LVAL_PP(sec_tmp);
-						algorithm_asy = wsf_util_get_algorithm(algo_suit, WS_ALGORITHM_ASYMMETRIC);
-						param = axis2_param_create(env, "encryptionKeyTransportAlgorithm", algorithm_sym);
-						axis2_array_list_add(param_vl, env, param);
-						algorithm_sym = wsf_util_get_algorithm(algo_suit, WS_ALGORITHM_SYMMETRIC);
-						param = axis2_param_create(env, "encryptionSymAlgorithm", algorithm_sym);
-						axis2_array_list_add(param_vl, env, param);
-					}
-					if(zend_hash_find(secht, "sectoken_ref", sizeof("sectoken_ref"), 
-						(void**)&sec_tmp) == SUCCESS && Z_TYPE_PP(sec_tmp) == IS_STRING){
-						char *security_token_ref = NULL;
-						security_token_ref = Z_STRVAL_PP(sec_tmp);
-						param = axis2_param_create(env, "encryptionKeyIdentifier", security_token_ref);
-						axis2_array_list_add(param_vl, env, param);								
-					}
-				}
-	}		
-	
-	if(usernametoken && timestamp && encrypt)
-	{	
-		items_value = "UsernameToken Timestamp Encrypt";
-	}else if(usernametoken && timestamp){
-		items_value = "UsernameToken Timestamp";
-	}else if(usernametoken && encrypt){
-		items_value = "UsernameToken Encrypt";
-	}else if(timestamp && encrypt){
-		items_value = "Timestamp Encrypt";	
-	}else if(usernametoken){
-		items_value = "UsernameToken";
-		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " [wsf ]  UsernameToken   %s", items_value);
-	}else if(timestamp){
-		items_value = "Timestamp";
-	}else if(encrypt){
-		items_value = "Encrypt";
-	}else {
-		engage_rampart = AXIS2_FALSE;
-	}
-	
-	if(items_value){
-		param = axis2_param_create(env, "items", AXIS2_STRDUP(items_value, env));
-		axis2_array_list_add(param_vl, env, param);
-		
-		outflow_action = axis2_param_create(env, "action", NULL);
-		axis2_param_set_value_list(outflow_action, env, param_vl);
-
-		outflow_vl = axis2_array_list_create(env, 1);
-		axis2_array_list_add(outflow_vl, env, outflow_action);
-		outflow_param = axis2_param_create(env, "OutflowSecurity", NULL);
-		axis2_param_set_value_list(outflow_param, env, outflow_vl);
-	}
-	if(engage_rampart){
-		axis2_svc_ctx_t *svc_ctx = NULL;
-		axis2_conf_ctx_t *conf_ctx = NULL;
-		axis2_conf_t *conf = NULL;
-		axis2_svc_t *svc = NULL;
-		axis2_param_container_t *param_containter = NULL;
-
-		svc_ctx = AXIS2_SVC_CLIENT_GET_SVC_CTX(svc_client, env);
-		conf_ctx = AXIS2_SVC_CTX_GET_CONF_CTX(svc_ctx, env);
-		conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx,env);
-		AXIS2_CONF_ADD_PARAM(conf, env, outflow_param);
-		AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client , env, "rampart");
-	}
 }
 
 void wsf_client_enable_ssl(HashTable *ht, axis2_env_t *env, axis2_options_t *options,
