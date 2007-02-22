@@ -76,6 +76,8 @@ PHP_METHOD(ws_client, send);
 PHP_METHOD(ws_client, get_last_response);
 PHP_METHOD(ws_client, get_last_request);
 PHP_METHOD(ws_client, get_client);
+PHP_METHOD(ws_client, terminate_outgoing_rm);
+
 
 static 
 ZEND_BEGIN_ARG_INFO(ws_client_call_args, 0)
@@ -127,6 +129,7 @@ zend_function_entry php_ws_client_class_functions[]=
 	PHP_MALIAS(ws_client,getLastResponse, get_last_response, NULL ,ZEND_ACC_PUBLIC)
 	PHP_MALIAS(ws_client, getLastRequest, get_last_request , NULL , ZEND_ACC_PUBLIC)
 	PHP_MALIAS(ws_client, getClient, get_client, NULL, ZEND_ACC_PUBLIC)
+	PHP_MALIAS(ws_client, terminateOutgoingRM , terminate_outgoing_rm, NULL, ZEND_ACC_PUBLIC)
 	PHP_ME(ws_client, __call, ws_client_call_args, ZEND_ACC_PUBLIC)
 	PHP_ME(ws_client, __construct, NULL, ZEND_ACC_PUBLIC)
 	PHP_ME(ws_client, __destruct, NULL, ZEND_ACC_PUBLIC)
@@ -660,9 +663,9 @@ PHP_METHOD(ws_message, __construct)
 		}
 
 		/** reliable Messaging */
-		if(zend_hash_find(ht, WS_WILL_CONTINUE_SEQUENCE, sizeof(WS_WILL_CONTINUE_SEQUENCE), (void**)&tmp) == SUCCESS){
+		if(zend_hash_find(ht, WS_LAST_MESSAGE, sizeof(WS_LAST_MESSAGE), (void**)&tmp) == SUCCESS){
 			if(Z_TYPE_PP(tmp) == IS_BOOL){
-				add_property_bool(object, WS_WILL_CONTINUE_SEQUENCE, Z_BVAL_PP(tmp));
+				add_property_bool(object, WS_LAST_MESSAGE, Z_BVAL_PP(tmp));
 			}
 		}
 
@@ -949,6 +952,14 @@ PHP_METHOD(ws_client , get_last_request)
             }
         }
     }
+}
+/* }}} */
+
+/* {{{ proto public WSClient::terminateOutgoingRM() */
+PHP_METHOD(ws_client, terminate_outgoing_rm)
+{
+	zval *object = NULL;
+	WSF_GET_THIS(object);
 }
 /* }}} */
 

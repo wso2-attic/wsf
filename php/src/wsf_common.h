@@ -72,6 +72,7 @@ typedef enum ws_input_types{
 #define WS_USE_MTOM     "useMTOM"
 
 #define WS_WILL_CONTINUE_SEQUENCE "willContinueSequence"  
+#define WS_LAST_MESSAGE "lastMessage"
 #define WS_RELIABLE	"reliable"
 #define WS_SEQUENCE_EXPIRY_TIME "sequenceExpiryTime"
 

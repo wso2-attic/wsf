@@ -28,7 +28,7 @@ try {
 
     $client = new WSClient(array( "to"=>"http://localhost:8080/echo_service_rm.php",
 					    "reliable"=>TRUE));
-    $client->send($msg);
+    $client->request($msg);
 
   
     

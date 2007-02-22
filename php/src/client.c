@@ -827,8 +827,8 @@ int wsf_client_do_request(
 				/** if input_type is ws_message and continueSequence is true on client, we should look for 
 					false value in ws_message to end the sequence ,
 					WSMessage only accepts a false value*/
-				if(zend_hash_find(Z_OBJPROP_P(param), WS_WILL_CONTINUE_SEQUENCE, sizeof(WS_WILL_CONTINUE_SEQUENCE),
-						(void**)&msg_tmp) == SUCCESS){
+				if(zend_hash_find(Z_OBJPROP_P(param), WS_LAST_MESSAGE, sizeof(WS_LAST_MESSAGE),
+					(void**)&msg_tmp) == SUCCESS && Z_BVAL_PP(msg_tmp)== 1){
 				
 						ws_client_will_continue_sequence = 0;
 						if(rm_spec_version == WS_RM_VERSION_1_0){
@@ -970,7 +970,6 @@ void wsf_client_enable_ssl(HashTable *ht, axis2_env_t *env, axis2_options_t *opt
 	AXIS2_OPTIONS_SET_PROPERTY(options, env, "SSL_PASSPHRASE", passphrase_prop);
 
 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf-client] setting ssh options %s -- %s -- %s ", ssl_server_key_filename, ssl_client_key_filename, passphrase);
-					
 }
 
 
