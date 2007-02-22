@@ -28,6 +28,9 @@
 #include "ext/libxml/php_libxml.h"
 
 /** ws_policy options */
+#define WS_IN_POLICY "inpolicy"
+#define WS_OUT_POLICY "outpolicy"
+
 #define WS_SIGN "sign"
 #define WS_ENCRYPT "encrypt"
 #define WS_ALGORITHM "algorithmSuite"
@@ -55,19 +58,17 @@
 #define TRIPLEDES_RSA15 "TripleDesRSA15"
 
 
-int set_policy_options(zval *this_ptr,
-		       HashTable *ht,
-		       const axis2_env_t *env TSRMLS_DC);
-/* int set_policy_options(const axis2_env_t *env, */
-/*                        HashTable *ht TSRMLS_DC); */
+int ws_policy_set_policy_options(zval *this_ptr,
+                       HashTable *ht,
+                       const axis2_env_t *env TSRMLS_DC);
 
 axiom_node_t *get_security_policy_node();
 
 int ws_policy_handle_client_security(zval *sec_token,
-									 zval *policy,
-									 axis2_env_t *env,
-									 axis2_svc_client_t *svc_client,
-									 axis2_options_t *options TSRMLS_DC);
+                                     zval *policy,
+                                     axis2_env_t *env,
+                                     axis2_svc_client_t *svc_client,
+                                     axis2_options_t *options TSRMLS_DC);
 
 #endif /* WSF_POLICY_H*/
 
