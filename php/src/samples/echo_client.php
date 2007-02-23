@@ -24,8 +24,8 @@ XML;
 try {
 
     $client = new WSClient(
-        array("to"=>"http://localhost/samples/echo_service.php"));
-        /*array("to"=>"http://localhost:8080/axis2/services/echo"));*/
+        array("to"=>"http://localhost/echo_service.php"));
+
 				
     $resMessage = $client->request($reqPayloadString);
     
