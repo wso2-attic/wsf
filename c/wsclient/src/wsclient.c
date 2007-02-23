@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-#include "wsclient_option.h"
-#include "wsclient_constants.h"
-#include "wsclient_stub.h"
-#include "wsclient_error.h"
+#include "option.h"
+#include "constants.h"
+#include "stub.h"
+#include "error.h"
 #include <axiom.h>
 
 #define BUFF_SIZE 32
@@ -44,7 +44,7 @@ int main (int argc, char **argv)
 	char *dest_uri = NULL;
 	axis2_array_list_t *array_list;
 	axis2_status_t status;
-	env = axis2_env_create_all ("wsclient.log", AXIS2_LOG_LEVEL_INFO);
+	env = axis2_env_create_all ("wsclient.log", AXIS2_LOG_LEVEL_DEBUG);
 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 					"[wsclient]wsclient initiated ");
 

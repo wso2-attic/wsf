@@ -21,8 +21,8 @@ dnl Checks for libraries.
 AC_CHECK_LIB(dl, dlopen)
 AC_CHECK_LIB(z, inflate)
 
-if test -d $srcdir/axis2; then
-    AC_CONFIG_SUBDIRS(axis2)
+if test -d $srcdir/axis2c; then
+    AC_CONFIG_SUBDIRS(axis2c)
 fi
 
 

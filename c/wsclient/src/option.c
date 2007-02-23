@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#include "wsclient_option.h"
-#include "wsclient_constants.h"
+#include "option.h"
+#include "constants.h"
 
 /* this is a global variable used in wsclient_stub.c */
 int array_size;

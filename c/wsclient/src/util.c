@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#include "wsclient_util.h"
-#include "wsclient_constants.h"
+#include "util.h"
+#include "constants.h"
 #include <axis2_http_client.h>
 #include <axis2_http_transport.h>
 #include <axis2_http_simple_response.h>

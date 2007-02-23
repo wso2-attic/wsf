@@ -33,11 +33,11 @@
 #include <axiom.h>
 #include "rampart_constants.h"
 
-#include "wsclient_constants.h"
-#include "wsclient_util.h"
-#include "wsclient_option.h"
-#include "wsclient_stub.h"
-#include "wsclient_error.h"
+#include "constants.h"
+#include "util.h"
+#include "option.h"
+#include "stub.h"
+#include "error.h"
 
 
 static int is_soap_enabled = 0;
