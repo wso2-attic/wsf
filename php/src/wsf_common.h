@@ -105,7 +105,6 @@ typedef enum ws_input_types{
 
 /** end options */
 
-
 #define WS_MSG_PAYLOAD_STR "str"
 #define WS_MSG_PAYLOAD_SXML "simpleXML"
 #define WS_MSG_PAYLOAD_DOM "dom"

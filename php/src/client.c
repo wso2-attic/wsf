@@ -111,6 +111,11 @@ wsf_client_add_properties(zval *this_ptr, HashTable *ht TSRMLS_DC){
         }
         
 	/** RM */
+
+	/**
+		"reliable"=> TRUE | "1.1" | "1.0" | 1.1 | 1.0 
+
+	*/
 	if(zend_hash_find(ht, WS_RELIABLE, sizeof(WS_RELIABLE), (void **)&tmp) == SUCCESS) {
 		if(Z_TYPE_PP(tmp) == IS_BOOL && Z_BVAL_PP(tmp) == 1){
 			add_property_long(this_ptr, WS_RELIABLE, WS_RM_VERSION_1_0);
@@ -118,8 +123,12 @@ wsf_client_add_properties(zval *this_ptr, HashTable *ht TSRMLS_DC){
 			add_property_long(this_ptr, WS_RELIABLE, WS_RM_VERSION_1_1);
 		}else if(Z_TYPE_PP(tmp) == IS_STRING && strcmp(Z_STRVAL_PP(tmp), "1.0") == 0){
 			add_property_long(this_ptr, WS_RELIABLE, WS_RM_VERSION_1_0);
+		}else if(Z_TYPE_PP(tmp) == IS_DOUBLE && Z_DVAL_PP(tmp) == 1.1){
+			add_property_long(this_ptr, WS_RELIABLE, WS_RM_VERSION_1_1);
+		}else if(Z_TYPE_PP(tmp) == IS_DOUBLE && Z_DVAL_PP(tmp) == 1.0){
+			add_property_long(this_ptr, WS_RELIABLE, WS_RM_VERSION_1_0);
 		}
-        }
+    }
 	if(zend_hash_find(ht, WS_SEQUENCE_EXPIRY_TIME, sizeof(WS_SEQUENCE_EXPIRY_TIME), (void **)&tmp) == SUCCESS){
 		if(Z_TYPE_PP(tmp) == IS_LONG){
 			add_property_long(this_ptr, WS_SEQUENCE_EXPIRY_TIME, Z_LVAL_PP(tmp));
@@ -802,7 +811,6 @@ int wsf_client_do_request(
 				
 				wsf_client_set_rm_db(env, svc_client, WSF_GLOBAL(rm_db_dir) TSRMLS_CC);
 
-				
 				/** rm is engaged , process other rm params */
 				if(zend_hash_find(Z_OBJPROP_P(this_ptr), WS_SEQUENCE_EXPIRY_TIME, sizeof(WS_SEQUENCE_EXPIRY_TIME),
 					(void**)&client_tmp) == SUCCESS){

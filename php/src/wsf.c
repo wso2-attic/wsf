@@ -999,7 +999,6 @@ PHP_METHOD(ws_client, __call)
 	do_soap_call(this_ptr, fn_name, fn_name_len, arg_count, real_args, return_value, NULL,
 		NULL, NULL, NULL, NULL TSRMLS_CC);
 	*/
-
 }
 /* }}} end call */
 PHP_METHOD(ws_client, get_client)
@@ -1021,7 +1020,6 @@ PHP_METHOD(ws_client, get_client)
 	
 	add_property_string(client_proxy_zval, "service", service, 1);
 	add_property_string(client_proxy_zval, "port", port, 1);
-
 }
 
 /* {{{ proto void WSService::__construct([ array options])*/
@@ -1829,7 +1827,7 @@ PHP_METHOD(ws_policy, __construct)
 
 	if(ht)
 	{
-	    set_policy_options(object, ht, env TSRMLS_CC);
+		ws_policy_set_policy_options(object, ht, env TSRMLS_CC);
 
 /* 		set_policy_options(env, ht TSRMLS_CC); */
 /* 	    policy_root_node = get_security_policy_node(); */

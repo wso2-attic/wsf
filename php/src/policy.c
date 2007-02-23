@@ -69,7 +69,7 @@ create_policy_node(const axis2_env_t *env,
 
 axiom_node_t *do_create_client_policy(zval *sec_token,
         zval *policy,
-        axis2_env_t *env);
+		axis2_env_t *env TSRMLS_DC);
 
 int ws_policy_handle_client_security(zval *sec_token,
                                      zval *policy,
@@ -94,12 +94,12 @@ int ws_policy_handle_client_security(zval *sec_token,
 	if (zend_hash_find(ht, WS_IN_POLICY, sizeof(WS_IN_POLICY), (void *)&policy_type) == SUCCESS &&
 	    (Z_TYPE_P(policy_type) == IS_OBJECT ))
 	{
-	    incoming_policy_node = do_create_client_policy(sec_token, policy_type, env);
+		incoming_policy_node = do_create_client_policy(sec_token, policy_type, env TSRMLS_CC);
 	}
 	if (zend_hash_find(ht, WS_OUT_POLICY, sizeof(WS_OUT_POLICY), (void *)&policy_type) == SUCCESS &&
 	    (Z_TYPE_P(policy_type) == IS_OBJECT ))
 	{
-	    outgoing_policy_node = do_create_client_policy(sec_token, policy_type, env);
+		outgoing_policy_node = do_create_client_policy(sec_token, policy_type, env TSRMLS_CC);
 	}
 	
     }
@@ -107,7 +107,7 @@ int ws_policy_handle_client_security(zval *sec_token,
        function */
     if ( Z_TYPE_P(policy) == IS_OBJECT)
     {
-	outgoing_policy_node = do_create_client_policy(sec_token, policy, env);
+		outgoing_policy_node = do_create_client_policy(sec_token, policy, env TSRMLS_CC);
 	incoming_policy_node = outgoing_policy_node;
     }
     
@@ -116,7 +116,7 @@ int ws_policy_handle_client_security(zval *sec_token,
 
 axiom_node_t *do_create_client_policy(zval *sec_token,
         zval *policy,
-        axis2_env_t *env)
+		axis2_env_t *env TSRMLS_DC)
 {
     axiom_node_t *root_om_node = NULL;
     axiom_node_t* exact_om_node = NULL;
