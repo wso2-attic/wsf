@@ -24,8 +24,8 @@ XML;
 try {
 
     $client = new WSClient(array("to"=>"https://10.100.1.143:9090/axis2/services/echo",
-					   "serverCertificate"=>"E:\\\cacert.pem",
-					   "clientCertificate"=>"E:\\\client.pem",
+					   "CACert"=>"E:\\\cacert.pem",
+					   "clientCert"=>"E:\client.pem",
 					   "passphrase"=>"abc1234567890"));
 
     $msg = $client->request($reqPayloadString);
