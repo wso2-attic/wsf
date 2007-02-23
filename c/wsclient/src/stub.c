@@ -616,6 +616,7 @@ wsclient_stub_invoke(
 	axis2_svc_client_t* svc_client = NULL;
 	axiom_node_t *payload = NULL;
 	axiom_node_t *ret_node = NULL;
+	axis2_status_t status = AXIS2_FAILURE;
 
 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 					"[wsclient] payload %s \n", input);
@@ -726,13 +727,24 @@ wsclient_stub_invoke(
 #endif
 		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 						"[wsclient] prepareing for svc client send receive ");
-	    ret_node = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
+
+		if (!is_send_only)
+			ret_node = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
+		else
+			status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
 
 		if (is_soap_dump)
 		{
 			wsclient_soap_out (env, svc_client, 0);
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 							"[wsclient] soap dump successful");
+			return WSCLIENT_SUCCESS;
+		}
+
+		if (is_send_only && (status == AXIS2_SUCCESS))
+		{
+			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+							"[wsclient] soap send successful");
 			return WSCLIENT_SUCCESS;
 		}
 	}
