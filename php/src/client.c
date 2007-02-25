@@ -630,6 +630,8 @@ int wsf_client_do_request(
 	int is_addressing_action_present = AXIS2_FALSE;
 	int is_rm_engaged = AXIS2_FALSE;
 
+	wsf_client_set_rm_db(env, svc_client, WSF_GLOBAL(rm_db_dir) TSRMLS_CC);
+
     if(Z_TYPE_P(param) == IS_OBJECT &&
         instanceof_function(Z_OBJCE_P(param), ws_message_class_entry TSRMLS_CC))
     {

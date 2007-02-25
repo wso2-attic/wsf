@@ -95,30 +95,6 @@ extern zend_class_entry *ws_policy_class_entry;
 
 extern wsf_worker_t* worker;
 
-/************************************/
-
-extern int le_url;
-
-typedef struct _encodeType encodeType, *encodeTypePtr;
-typedef struct _encode encode, *encodePtr;
-
-typedef struct _sdl sdl, *sdlPtr;
-typedef struct _sdlRestrictionInt sdlRestrictionInt, *sdlRestrictionIntPtr;
-typedef struct _sdlRestrictionChar sdlRestrictionChar, *sdlRestrictionCharPtr;
-typedef struct _sdlRestrictions sdlRestrictions, *sdlRestrictionsPtr;
-typedef struct _sdlType sdlType, *sdlTypePtr;
-typedef struct _sdlParam sdlParam, *sdlParamPtr;
-typedef struct _sdlFunction sdlFunction, *sdlFunctionPtr;
-typedef struct _sdlAttribute sdlAttribute, *sdlAttributePtr;
-typedef struct _sdlBinding sdlBinding, *sdlBindingPtr;
-typedef struct _sdlSoapBinding sdlSoapBinding, *sdlSoapBindingPtr;
-typedef struct _sdlSoapBindingFunction sdlSoapBindingFunction, *sdlSoapBindingFunctionPtr;
-typedef struct _sdlSoapBindingFunctionBody sdlSoapBindingFunctionBody, *sdlSoapBindingFunctionBodyPtr;
-
-typedef struct _soapMapping soapMapping, *soapMappingPtr;
-
-/******************************************************/
-
 ZEND_BEGIN_MODULE_GLOBALS(wsf)
 	long  enable_trace;
 	char *passwd_location;

@@ -79,8 +79,8 @@ typedef enum ws_input_types{
 #define WS_USE_SOAP	"useSOAP"
 #define WS_HTTP_METHOD "HTTPMethod"
 
-#define WS_SERVER_CERT "serverCertificate"
-#define WS_CLIENT_CERT "clientCertificate"
+#define WS_SERVER_CERT "CACert"
+#define WS_CLIENT_CERT "clientCert"
 #define WS_PASSPHRASE  "passphrase"
 
 #define WS_BINDING_STYLE "bindingStyle"

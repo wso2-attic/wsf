@@ -67,7 +67,7 @@ create_layout(const axis2_env_t *env,
 
 axiom_node_t *
 create_default_sign(const axis2_env_t *env,
-		    axiom_node_t *node);
+					axiom_node_t *node TSRMLS_DC);
 
 axiom_node_t *
 create_default_encrypt(const axis2_env_t *env,
@@ -252,7 +252,7 @@ axiom_node_t *do_create_client_policy(zval *sec_token,
 	else
 	{
 	    /* Since initiator token is needed for the default case */
-	    create_default_sign(env, policy_om_node);
+		create_default_sign(env, policy_om_node TSRMLS_CC);
 	    
 	}
         /* if the encryption is included */
@@ -294,7 +294,7 @@ axiom_node_t *do_create_client_policy(zval *sec_token,
     {
 	if ( is_default == AXIS2_TRUE)
 	{
-	    create_default_sign(env, policy_om_node);
+		create_default_sign(env, policy_om_node TSRMLS_CC);
 	    create_default_encrypt(env, policy_om_node);
 	    is_default = AXIS2_FALSE;
 	}
@@ -308,7 +308,7 @@ axiom_node_t *do_create_client_policy(zval *sec_token,
     {
 	if ( is_default == AXIS2_TRUE)
 	{
-	    create_default_sign(env, policy_om_node);
+		create_default_sign(env, policy_om_node TSRMLS_CC);
 	    create_default_encrypt(env, policy_om_node);
 	    is_default = AXIS2_FALSE;
 	}
@@ -582,7 +582,7 @@ create_layout(const axis2_env_t *env,
 
 axiom_node_t *
 create_default_sign(const axis2_env_t *env,
-		    axiom_node_t *parent_node)
+					axiom_node_t *parent_node TSRMLS_DC)
 {
     zval *test;
     MAKE_STD_ZVAL(test);
@@ -593,7 +593,7 @@ create_default_sign(const axis2_env_t *env,
 
 axiom_node_t *
 create_default_encrypt(const axis2_env_t *env,
-		       axiom_node_t *parent_node)
+					   axiom_node_t *parent_node TSRMLS_DC)
 {
     zval *test;
     MAKE_STD_ZVAL(test);

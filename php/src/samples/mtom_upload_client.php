@@ -24,13 +24,6 @@ $reqPayloadString = <<<XML
 </ns1:upload>
 XML;
 
-// $reqPayloadString = <<<XML
-//                <ns1:image xmlmime:contentType="image/jpeg" xmlns:xmlmime="http://www.w3.org/2004/06/xmlmime">
-//                   <xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="cid:myid1"></xop:Include>
-//                </ns1:image>
-// XML;
-
-
 try {
 	$f = file_get_contents("./resources/axis2.jpg");
     
