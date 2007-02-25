@@ -21,15 +21,28 @@ function getAttachment($inMessage) {
     $cid2contentMap = $inMessage->cid2contentType;
     $imageName;
     
-    $dom = new DomDocument();
-    $dom->loadXML($resPayload);
-    $images = $dom->documentElement->getElementsByTagName('image');
-    $image= $images->item(0);
-    file_put_contents("base64image.txt",$image->nodeValue);
+    
+    foreach($cid2stringMap as $i=>$value){
+        $f = $cid2stringMap[$i];
+        $contentType = $cid2contentMap[$i];
+        if(strcmp($contentType,"image/jpeg") ==0){
+            $imageName = $i."."."jpg";
+            file_put_contents($imageName, $f);
+        }
+    }
 
-    $resPayload = <<<XML
-     <ns1:response xmlns:ns1="http://php.axis2.org/samples/mtom">Image Saved</ns1:response>
-    XML;
+    $arraysize = count($cid2contentMap);
+    if($arraysize == 0){
+	    $dom = new DomDocument();
+	    $dom->loadXML($inMessage->str);
+	    $images = $dom->documentElement->getElementsByTagName('image');
+	    $image = $images->item(0);
+	    file_put_contents("base64image.txt",$image->nodeValue);
+    }
+
+$resPayload = <<<XML
+<ns1:response xmlns:ns1="http://php.axis2.org/samples/mtom">Image Saved</ns1:response>
+XML;
 
     $returnMessage = new WSMessage($resPayload);
 
