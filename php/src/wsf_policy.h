@@ -28,6 +28,15 @@
 #include "ext/libxml/php_libxml.h"
 
 /** ws_policy options */
+#define WS_POLICY_NAMESPACE_URI "http://schemas.xmlsoap.org/ws/2004/09/policy"
+#define WS_POLICY_NAMESPACE "wsp"
+#define WS_SEC_POLICY_NAMESPACE_URI  "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"
+#define WS_SEC_POLICY_NAMESPACE "sp"
+#define WS_POLICY_ALL "All"
+#define WS_POLICY_EXACTLYONE "ExactlyOne"
+#define WS_POLICY_ASYMMETRIC_BINDING "AsymmetricBinding"
+#define WS_POLICY "policy"
+
 #define WS_IN_POLICY "inpolicy"
 #define WS_OUT_POLICY "outpolicy"
 
@@ -41,12 +50,12 @@
 #define WS_TOKEN_REFERENCE "securityTokenReference"
 
 /** ws_security_token options */
-
 #define WS_USER "user"
 #define WS_PUBLICKEY "publicKey"
 #define WS_PASSWORD_TYPE "passwordType"
 #define WS_PASSWORD "password"
 #define WS_PRIVATE_KEY "privateKey"
+#define WS_TTL "ttl"
 
 #define BASIC256 "Basic256"
 #define BASIC192 "Basic192"

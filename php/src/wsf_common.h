@@ -37,10 +37,10 @@
 /* {{{ axis2 object types */
 typedef enum ws_object_types_t
 {
-  	WS_SVC_CLIENT,
-	WS_SVC,
-	WS_FAULT,
-	WS_PARAM,
+    WS_SVC_CLIENT,
+    WS_SVC,
+    WS_FAULT,
+    WS_PARAM,
     WS_OBJECT_LAST
 }ws_object_types_t;
 /* }}} */
@@ -71,7 +71,7 @@ typedef enum ws_input_types{
 #define WS_REQUEST_XOP  "requestXOP"
 #define WS_USE_MTOM     "useMTOM"
 
-#define WS_WILL_CONTINUE_SEQUENCE "willContinueSequence"  
+#define WS_WILL_CONTINUE_SEQUENCE "willContinueSequence"
 #define WS_LAST_MESSAGE "lastMessage"
 #define WS_RELIABLE	"reliable"
 #define WS_SEQUENCE_EXPIRY_TIME "sequenceExpiryTime"
@@ -178,16 +178,17 @@ typedef enum ws_input_types{
 
 #define WS_SVC_INFO "WSFPHPSvcInfo"
 
-typedef struct ws_svc_info{
+typedef struct ws_svc_info
+{
     axis2_svc_t *svc;
     axis2_msg_recv_t *msg_recv;
     axis2_hash_t *class_info;
     struct wsf_worker_t *php_worker;
-    
+
     axis2_hash_t *ops_to_actions;
     axis2_hash_t *ops_to_functions;
     axis2_array_list_t *modules_to_engage;
-    
+
     int request_xop;
     int use_mtom;
     int is_class;
@@ -196,28 +197,31 @@ typedef struct ws_svc_info{
     char *svc_name;
     char *svc_path;
 
-}ws_svc_info_t;
+}
+ws_svc_info_t;
 
-typedef struct php_req_info{
-	char *svr_name;
-	long svr_port;
-	char *http_protocol;
-	char *content_encoding;
-	char *soap_action;
-	char *request_uri;
-	long content_length;
-	char *content_type;
+typedef struct php_req_info
+{
+    char *svr_name;
+    long svr_port;
+    char *http_protocol;
+    char *content_encoding;
+    char *soap_action;
+    char *request_uri;
+    long content_length;
+    char *content_type;
 
-	char *request_method;
+    char *request_method;
 
-	void *req_data;
+    void *req_data;
     int req_data_length;
 
-	void *result_payload;
+    void *result_payload;
     int result_length;
 
-	char *transfer_encoding;
-}php_req_info_t; 
+    char *transfer_encoding;
+}
+php_req_info_t;
 
 /** functions */
 
