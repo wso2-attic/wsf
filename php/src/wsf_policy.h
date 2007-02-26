@@ -49,6 +49,23 @@
 #define WS_UT "useUsernameToken"
 #define WS_TOKEN_REFERENCE "securityTokenReference"
 
+#define WS_DEFAULT_TOKEN_VAL "X509"
+#define WS_X509_TOKEN_VAL "X509Token"
+#define WS_INITIATOR_VAL "InitiatorToken"
+#define WS_INCLUDE_TOKEN_URI "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always"
+#define WS_INCLUDE_TOKEN "IncludeToken"
+#define WS_RECIPIENT_TOKEN "RecipientToken"
+#define WS_USERNAMETOKEN "UsernameToken"
+#define WS_SIGNSUPPORTING_TOKEN "SignedSupportingTokens"
+#define WS_ALGO_SUITE "AlgorithmSuite"
+#define WS_ONLY_SIGN_HEADER_AND_BODY "OnlySignEntireHeadersAndBody"
+#define WS_ENCRYPTPARTS "EncryptedParts"
+#define WS_BODY "Body"
+#define WS_LAYOUT_VAL "Layout"
+#define WS_STRICT "Strict"
+#define WS_WSS10 "Wss10"
+
+
 /** ws_security_token options */
 #define WS_USER "user"
 #define WS_PUBLICKEY "publicKey"
@@ -66,6 +83,15 @@
 #define BASIC128_RSA15 "Basic128RSA15"
 #define TRIPLEDES_RSA15 "TripleDesRSA15"
 
+#define ISSUER_SERIAL "IssuerSerial"
+#define KEYIDENTIFIER "KeyIdentifier"
+#define EMBEDDEDTOKEN "EmbeddedToken"
+#define THUMBPRINT "Thumbprint"
+#define DIRECT "Direct"
+#define ISSUER_SERIAL_VAL "MustSupportRefIssuerSerial"
+#define KEYIDENTIFIER_VAL "MustSupportRefKeyIdentifier"
+#define EMBEDDEDTOKEN_VAL "MustSupportRefEmbeddedToken"
+#define THUMBPRINT_VAL "MustSupportRefThumbprint"
 
 int ws_policy_set_policy_options(zval *this_ptr,
                        HashTable *ht,
@@ -80,6 +106,16 @@ int ws_policy_handle_client_security(zval *sec_token,
                                      axis2_options_t *options TSRMLS_DC);
 
 #endif /* WSF_POLICY_H*/
+
+
+
+
+
+
+
+
+
+
 
 
 
