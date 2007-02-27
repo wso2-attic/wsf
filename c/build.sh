@@ -45,7 +45,7 @@ cp build/axis2/modules/core/transport/Makefile.am axis2/modules/core/transport
 cp build/axis2/modules/core/Makefile.am axis2/modules/core
 
 ./autogen.sh
-./configure --prefix=`pwd`/deploy --enable-openssl=yes
+./configure --prefix=`pwd`/deploy --enable-openssl=yes --enable-rampart=yes
 make
 
 
