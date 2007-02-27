@@ -94,8 +94,8 @@
 #define THUMBPRINT_VAL "MustSupportRefThumbprint"
 
 int ws_policy_set_policy_options(zval *this_ptr,
-                       HashTable *ht,
-                       const axis2_env_t *env TSRMLS_DC);
+                                 HashTable *ht,
+                                 const axis2_env_t *env TSRMLS_DC);
 
 axiom_node_t *get_security_policy_node();
 
