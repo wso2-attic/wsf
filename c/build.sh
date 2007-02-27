@@ -36,8 +36,6 @@ else
    cp build/sandesha2/autogen.sh sandesha2
 fi
 
-cp build/wsclient/src/Makefile.am wsclient/src
-
 cp -r build/xmpp/xmpp axis2/modules/core/transport
 cp -r build/xmpp/include/*.h axis2/include
 cp build/axis2/modules/core/transport/http/server/simple_axis2_server/Makefile.am axis2/modules/core/transport/http/server/simple_axis2_server/
