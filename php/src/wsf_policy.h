@@ -73,6 +73,12 @@
 #define WS_PASSWORD "password"
 #define WS_PRIVATE_KEY "privateKey"
 #define WS_TTL "ttl"
+#define WS_PUB_KEY_FORMAT "publicKeyFormat"
+#define WS_PVT_KEY_FORMAT "privateKeyFormat"
+#define WS_INFLOW_SECURITY_POLICY  "InflowSecurityPolicy"
+#define WS_OUTFLOW_SECURITY_POLICY "OutflowSecurityPolicy"
+
+
 
 #define BASIC256 "Basic256"
 #define BASIC192 "Basic192"
@@ -92,6 +98,7 @@
 #define KEYIDENTIFIER_VAL "MustSupportRefKeyIdentifier"
 #define EMBEDDEDTOKEN_VAL "MustSupportRefEmbeddedToken"
 #define THUMBPRINT_VAL "MustSupportRefThumbprint"
+
 
 int ws_policy_set_policy_options(zval *this_ptr,
                                  HashTable *ht,
