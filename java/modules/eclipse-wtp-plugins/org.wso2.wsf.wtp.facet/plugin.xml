@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<plugin>
+
+	<extension point="org.eclipse.wst.common.project.facet.core.facets">
+	
+	  <category id="WSAS.category">
+    	<label>WSO2 Web Services Application</label>
+    	<description> Enables Web Services generation through WSO2 Web Services Application Engine.</description>
+  	  </category>
+
+		  <project-facet id="wsas.core">
+			<label>WSAS Web Services Core</label>
+			<description>
+			  Prepare the Project for Web Services generation through WSO2 Web Services Application Server.
+			</description>
+			<category>WSAS.category</category>
+		  </project-facet>
+
+		<project-facet-version facet="WSAS.core" version="1.1">
+		    <constraint>
+      			<requires facet="jst.web" version="2.2,2.3,2.4"/>
+    		</constraint>
+    		<action type="INSTALL">
+      			<delegate class="org.wso2.wsas.wtp.facet.deligate.WSASCoreFacetInstallDelegate"/>
+    		</action>
+    		<action type="UNINSTALL">
+      			<delegate class="org.wso2.wsas.wtp.facet.deligate.WSASCoreFacetUnInstallDelegate"/>
+    		</action>
+  		</project-facet-version>
+
+		  <project-facet id="WSAS.ext">
+			<label>WSAS Web Services Extensions</label>
+			<description>
+			  Prepare the Project for additional Web services support with the WSO2 Web Services Application Server.
+			</description>
+			<category>wsas.category</category>
+		  </project-facet>
+
+		<project-facet-version facet="WSAS.ext" version="1.1">
+		    <constraint>
+      			<requires facet="WSAS.core" version="1.1"/>
+    		</constraint>
+    		<action type="INSTALL">
+      			<delegate class="org.wso2.wsas.wtp.facet.deligate.WSASExtFacetInstallDelegate"/>
+    		</action>
+    		<action type="UNINSTALL">
+      			<delegate class="org.wso2.wsas.wtp.facet.deligate.WSASExtFacetUnInstallDelegate"/>
+    		</action>
+  		</project-facet-version>
+  
+	</extension>
+	
+	<extension point="org.eclipse.wst.common.project.facet.ui.images">
+  		<image facet="WSAS.core" path="icons/wsas-facet-add.gif"/>
+  		<image facet="WSAS.ext" path="icons/wsas-facet-add.gif"/>
+  		<image category="WSAS.category" path="icons/wsas-facet.ico"/>
+	</extension>
+	
+	<extension
+       point="org.eclipse.wst.common.project.facet.core.runtimes">
+    <supported>
+      <runtime-component
+         any="true"/>
+      <facet
+         id="WSAS.core"
+         version="1.1"/>
+      <facet
+         id="WSAS.ext"
+         version="1.1"/>
+    </supported>
+ </extension>
+ 
+
+</plugin>
