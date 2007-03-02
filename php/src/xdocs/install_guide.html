@@ -157,32 +157,29 @@ directory.</p>
 <p>1. Before trying this, please refer README.WIN32-BUILD-SYSTEM file in PHP
 source distribution and build PHP source under MS Windows.</p>
 
-<p>2. Create a bat file named wsfvars.bat with following entries using your
-directory locations.<br />
-</p>
-<pre>        @SET PATH=%PATH%;<path_to_extract_folder>\axis2c\build\wsf_c\lib;
-        @SET INCLUDE=%INCLUDE%;<path_to_extract_folder>\wsf_c\axis2c\build\wsf_c\include;
-        @SET LIB=%LIB%;<path_to_extract_folder>\wsf_c\axis2c\build\wsf_c\lib;</path_to_extract_folder></path_to_extract_folder></path_to_extract_folder></pre>
+<p>2.&nbsp; Copy wsf_php folder to php_source/ext directory.</p>
+    <p>
+        3. Run buildconf.bat file to rebuild the configure.js file.</p>
 
-<p>3. Then using the same command prompt used to build the PHP source, run
-the wsfvars.bat file.<br />
-</p>
-
-<p>4. Copy wsf_php folder to php_source/ext directory.<br />
-</p>
-
-<p>5. Run "buildconf.bat" to rebuild the configre.js file.<br />
-</p>
-
-<p>6. "cscript /nologo configure.js --help" will give the configuration
+<p>4. "cscript /nologo configure.js --help" will give the configuration
 options. You will find the option --with-wsf.<br />
 </p>
+    <p>
+        5. Add following entries to config.nice.bat file.</p>
+    <p>
+        &nbsp; &nbsp; "--with-extra-includes=&lt;Libxml2 bin dir&gt;\include;&lt;iconv bin
+        directory&gt;\include;&lt;zlib bin dir&gt;\include;&lt;wsf-c dir&gt;\include"
+    </p>
+    <p>
+        &nbsp; &nbsp; "-- with-extra-libs=&lt;Libxml2 bin dir&gt;\lib;&lt;iconv bin dir&gt;\lib;&lt;zlib
+        bin dir&gt;\lib;&lt;wsf-c dir&gt;\lib"</p>
+    <p>
+        &nbsp; &nbsp; "--with-wsf=shared"</p>
+    <p>
+        6. Run above config.nice.bat file to configure the wsf extension as a dll.</p>
 
-<p>7. Use "cscript configure.js --with-wsf=shared" to configure the wsf
-extension as a dll<br />
-</p>
-
-<p>8. "nmake" will build wsf extension.<br />
+<p>
+    7. "nmake" will build wsf extension.<br />
 </p>
 <a id="Installing WSO2 WSF As a PHP Extension"></a>
 
