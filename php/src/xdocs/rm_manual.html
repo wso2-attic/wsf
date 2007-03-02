@@ -48,13 +48,12 @@
     <p>
         You can do the same on linux if you have provided read write permisions.</p>
     <h2>
-       <strong id="2">2.0 Writing RM Web Service Client.</strong></h2>
+       <strong id="2">2.0 Writing a sample RM Web Service Client.</strong></h2>
     <p>
         Since WS Addressing is needed WSRM to work, you need to specify the necessary WS
         addressing options along with RM Options. Lets implement the simplest rm client
         that can be written using wsf4php.
     </p>
-    <h2> echo client RM</h2>   
     <p>
         First create a suitable payload to be send to the echo service.</p>
     <p>
@@ -98,12 +97,10 @@
     </p>
     <p>
         Note that we set the addressing action in WSMessage options and "reliable"=&gt;TRUE
-        option in WSClient options to enable RM. Since addressing action</p>
-    <p>
+        option in WSClient options to enable RM. Since addressing action
         is present, Addressing will be enabled with "reliable"=&gt;TRUE option. This client
-        will create an RM Sequence, send its only application message and terminate the</p>
-    <p>
-        sequence.</p>
+        will create an RM Sequence, send its only application message and terminate the sequence.
+    </p>
     <p>
         If you wish to send multiple application messages reliably to the reciving RM Endpoint
         you can configure the above web service client as follows.</p>
@@ -145,8 +142,7 @@
         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $client-&gt;request($msg2);</p>
     <p>
         Since we specified "willContinueSequence"=&gt;TRUE option in WSClient , It will
-        not terminate the sequence after sending the first message. It keeps the</p>
-    <p>
+        not terminate the sequence after sending the first message. It keeps the
         sequence open till a default sequenceExpiryTime. You can configure this value using
         "sequenceExpiryTime" option in WSClient. So we send the $msg2 using the currently
         opened sequence. On $msg3 we specify that this will be the last message that will
@@ -154,7 +150,7 @@
         WSClient will terminate the current sequence after sending $msg2.</p>
     <p>
        </p>
-       <h2><strong id="3">3.0 Writing an RM Service</strong></h2>
+       <h2><strong id="3">3.0 Writing a sample RM Web Service</strong></h2>
     <p>
         Following code demostrate how to write an rm Web Service client. This echo_service_rm.php
         was used as the above client's receiving endpoint.</p>
@@ -180,8 +176,8 @@
     <p>
         $service-&gt;reply();</p>
     <p>
-        Note how we map "echoString" operation to "http://php.axis2.org/samples/echoString"
-        uri which is the same action uri used in above eample client.</p>
+        Note how we map "echoString" operation to "http://php.axis2.org/samples/echoString"&nbsp;
+        which is the same action uri used in above eample client.</p>
     <p>
         On WSService options, "reliable"=&gt;TRUE option is used to tell the service to
         use RM protocol.</p>
