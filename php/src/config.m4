@@ -31,6 +31,8 @@ if test "$PHP_WSF" = "yes"; then
 	PHP_ADD_LIBRARY_WITH_PATH(axis2_util, ../wsf_c/axis2c/util/src/.libs, WSF_SHARED_LIBADD)	
 	PHP_ADD_LIBRARY_WITH_PATH(axis2_http_sender, ../wsf_c/axis2c/modules/core/transport/http/sender/.libs, WSF_SHARED_LIBADD)	
 	PHP_ADD_LIBRARY_WITH_PATH(axis2_http_receiver, ../wsf_c/axis2c/modules/core/transport/http/receiver/.libs, WSF_SHARED_LIBADD)	
+	PHP_ADD_LIBRARY_WITH_PATH(mod_rampart, ../wsf_c/axis2c/rampart/src/core/.libs, WSF_SHARED_LIBADD)	
+	
 
   	PHP_SUBST(WSF_SHARED_LIBADD)
 

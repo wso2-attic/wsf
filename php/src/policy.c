@@ -121,9 +121,9 @@ int set_options_to_rampart_ctx(rampart_context_t *in_rampart_ctx,
                                tokenProperties_t tmp_rampart_ctx);
 
 
-axiom_node_t *do_create_client_policy(zval *sec_token,
-                                      zval *policy,
-                                      axis2_env_t *env TSRMLS_DC);
+axiom_node_t *do_create_policy(zval *sec_token,
+                               zval *policy,
+                               axis2_env_t *env TSRMLS_DC);
 
 
 int ws_policy_handle_client_security(zval *sec_token,
@@ -159,21 +159,21 @@ int ws_policy_handle_client_security(zval *sec_token,
         if (zend_hash_find(ht, WS_IN_POLICY, sizeof(WS_IN_POLICY), (void **)&tmp_type) == SUCCESS &&
                 (Z_TYPE_PP(tmp_type) == IS_ARRAY )) {
             policy_type = *tmp_type;
-            incoming_policy_node = do_create_client_policy(sec_token, policy_type, env TSRMLS_CC);
+            incoming_policy_node = do_create_policy(sec_token, policy_type, env TSRMLS_CC);
             policy_type = NULL;
             tmp_type = NULL;
         }
         if (zend_hash_find(ht, WS_OUT_POLICY, sizeof(WS_OUT_POLICY), (void *)&tmp_type) == SUCCESS &&
                 (Z_TYPE_PP(tmp_type) == IS_ARRAY )) {
             policy_type = *tmp_type;
-            outgoing_policy_node = do_create_client_policy(sec_token, policy_type, env TSRMLS_CC);
+            outgoing_policy_node = do_create_policy(sec_token, policy_type, env TSRMLS_CC);
         }
         is_multiple_flow = AXIS2_SUCCESS;
     }
     /* since creating policy xml is the same procedure use one
        function */
     if ( Z_TYPE_P(policy) == IS_OBJECT && is_multiple_flow == AXIS2_FALSE) {
-        outgoing_policy_node = do_create_client_policy(sec_token, policy, env TSRMLS_CC);
+        outgoing_policy_node = do_create_policy(sec_token, policy, env TSRMLS_CC);
         incoming_policy_node = outgoing_policy_node;
     }
 
@@ -199,6 +199,8 @@ int ws_policy_handle_client_security(zval *sec_token,
     AXIS2_SVC_ADD_PARAM(svc, env, inflow_param);
     AXIS2_SVC_ADD_PARAM(svc, env, outflow_param);
 
+    AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "rampart");
+
     /* for testing only ,should be remove later */
     if (outgoing_policy_node) {
         FILE *fp = NULL;
@@ -217,6 +219,87 @@ int ws_policy_handle_client_security(zval *sec_token,
 
         }
     }
+    return AXIS2_SUCCESS;
+}
+
+int ws_policy_handle_server_security(zval *sec_token,
+                                     zval *policy,
+                                     axis2_env_t *env,
+                                     axis2_options_t *options TSRMLS_DC) {
+    axiom_node_t *outgoing_policy_node = NULL;
+    axiom_node_t *incoming_policy_node = NULL;
+    HashTable *ht = NULL;
+    zval *policy_type = NULL;
+    zval **tmp_type = NULL;
+    int is_multiple_flow = AXIS2_FALSE;
+
+    rampart_context_t *in_rampart_ctx = NULL;
+    rampart_context_t *out_rampart_ctx = NULL;
+
+    tokenProperties_t tmp_rampart_ctx;
+
+
+    if (!sec_token && !policy)
+        return AXIS2_FAILURE;
+
+    /* if incoming policy and outgoing policy are diffrenet from each
+       other */
+    if ( Z_TYPE_P(policy) == IS_OBJECT) {
+        ht = Z_OBJPROP_P(policy);
+        if (zend_hash_find(ht, WS_IN_POLICY, sizeof(WS_IN_POLICY), (void **)&tmp_type) == SUCCESS &&
+                (Z_TYPE_PP(tmp_type) == IS_ARRAY )) {
+            policy_type = *tmp_type;
+            incoming_policy_node = do_create_policy(sec_token, policy_type, env TSRMLS_CC);
+            policy_type = NULL;
+            tmp_type = NULL;
+        }
+        if (zend_hash_find(ht, WS_OUT_POLICY, sizeof(WS_OUT_POLICY), (void *)&tmp_type) == SUCCESS &&
+                (Z_TYPE_PP(tmp_type) == IS_ARRAY )) {
+            policy_type = *tmp_type;
+            outgoing_policy_node = do_create_policy(sec_token, policy_type, env TSRMLS_CC);
+        }
+        is_multiple_flow = AXIS2_SUCCESS;
+    }
+    /* since creating policy xml is the same procedure use one
+       function */
+    if ( Z_TYPE_P(policy) == IS_OBJECT && is_multiple_flow == AXIS2_FALSE) {
+        outgoing_policy_node = do_create_policy(sec_token, policy, env TSRMLS_CC);
+        incoming_policy_node = outgoing_policy_node;
+    }
+
+    /* get the values from the security token object and keep it in a
+       temperary structure */
+    tmp_rampart_ctx = set_tmp_rampart_options(tmp_rampart_ctx, sec_token, policy, env TSRMLS_CC);
+
+    in_rampart_ctx = rampart_context_create(env);
+    out_rampart_ctx = rampart_context_create(env);
+
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy]setting values for in_rampart_ctx... ");
+    set_options_to_rampart_ctx(in_rampart_ctx, env, incoming_policy_node, tmp_rampart_ctx);
+
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy]setting values for out_rampart_ctx... ");
+    set_options_to_rampart_ctx(out_rampart_ctx, env, outgoing_policy_node, tmp_rampart_ctx);
+
+
+    /* for testing only ,should be remove later */
+    if (outgoing_policy_node) {
+        FILE *fp = NULL;
+        axis2_char_t *om_str_in = NULL;
+        axis2_char_t *om_str_out = NULL;
+
+        om_str_out = AXIOM_NODE_TO_STRING(outgoing_policy_node, env);
+        om_str_in = AXIOM_NODE_TO_STRING(incoming_policy_node, env);
+        if (om_str_in && om_str_out) {
+            fp = fopen("/tmp/outgoing_policy.xml", "w");
+            fprintf(fp, "%s", om_str_out );
+            om_str_out = NULL;
+            fp = fopen("/tmp/incoming_policy.xml", "w");
+            fprintf(fp, "%s", om_str_in );
+            om_str_in = NULL;
+
+        }
+    }
+
     return AXIS2_SUCCESS;
 }
 
@@ -328,9 +411,9 @@ int set_options_to_rampart_ctx(rampart_context_t *x_rampart_ctx,
 
 
 
-axiom_node_t *do_create_client_policy(zval *sec_token,
-                                      zval *policy,
-                                      axis2_env_t *env TSRMLS_DC) {
+axiom_node_t *do_create_policy(zval *sec_token,
+                               zval *policy,
+                               axis2_env_t *env TSRMLS_DC) {
     axiom_node_t *root_om_node = NULL;
     axiom_node_t* exact_om_node = NULL;
     axiom_node_t *all_om_node = NULL;
@@ -360,7 +443,7 @@ axiom_node_t *do_create_client_policy(zval *sec_token,
     int is_encrypt = AXIS2_FALSE;
     int is_sign = AXIS2_FALSE;
     int is_default = AXIS2_TRUE; /* for the case when only
-                                      * usernametoken or timestamp enable */
+                                          * usernametoken or timestamp enable */
 
     if (policy == NULL || sec_token == NULL)
         return NULL;
@@ -455,7 +538,7 @@ axiom_node_t *do_create_client_policy(zval *sec_token,
             is_default = AXIS2_FALSE;
         }
 
-        axiom_element_create(env, policy_om_node, WS_TIMESTAMP, sp_ns, &timestamp_om_node);
+        axiom_element_create(env, policy_om_node, "IncludeTimestamp", sp_ns, &timestamp_om_node);
     }
 
     /* for usernameToken */
@@ -504,7 +587,7 @@ create_initiator_token(const axis2_env_t *env,
     axiom_node_t *policy_om_node2 = NULL;
     axiom_node_t *token_id_om_node = NULL;
     axiom_node_t *tmp_node = NULL; /* if wrong option is found earlier
-                                        * node should be given back */
+                                            * node should be given back */
 
     axiom_element_t *in_token_om_ele = NULL;
     axiom_element_t *x509_om_ele = NULL;

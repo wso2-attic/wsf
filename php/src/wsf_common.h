@@ -100,7 +100,7 @@ typedef enum ws_input_types{
 #define WS_HEADER_ROLE     "role"
 #define WS_HEADER_MUST_UNDERSTAND "mustUnderstand"
 
-#define WS_POLICY "policy"
+#define WS_POLICY_NAME "policy"
 #define WS_SECURITY_TOKEN "securityToken"
 
 /** end options */
@@ -178,8 +178,7 @@ typedef enum ws_input_types{
 
 #define WS_SVC_INFO "WSFPHPSvcInfo"
 
-typedef struct ws_svc_info
-{
+typedef struct ws_svc_info {
     axis2_svc_t *svc;
     axis2_msg_recv_t *msg_recv;
     axis2_hash_t *class_info;
@@ -200,8 +199,7 @@ typedef struct ws_svc_info
 }
 ws_svc_info_t;
 
-typedef struct php_req_info
-{
+typedef struct php_req_info {
     char *svr_name;
     long svr_port;
     char *http_protocol;
@@ -226,3 +224,12 @@ php_req_info_t;
 /** functions */
 
 #endif /* WS_COMMON_H */
+
+
+
+
+
+
+
+
+

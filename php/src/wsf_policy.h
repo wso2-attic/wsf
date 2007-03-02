@@ -35,7 +35,7 @@
 #define WS_POLICY_ALL "All"
 #define WS_POLICY_EXACTLYONE "ExactlyOne"
 #define WS_POLICY_ASYMMETRIC_BINDING "AsymmetricBinding"
-#define WS_POLICY "policy"
+#define WS_POLICY "Policy"
 
 #define WS_IN_POLICY "inpolicy"
 #define WS_OUT_POLICY "outpolicy"
@@ -75,8 +75,8 @@
 #define WS_TTL "ttl"
 #define WS_PUB_KEY_FORMAT "publicKeyFormat"
 #define WS_PVT_KEY_FORMAT "privateKeyFormat"
-#define WS_INFLOW_SECURITY_POLICY  "InflowSecurityPolicy"
-#define WS_OUTFLOW_SECURITY_POLICY "OutflowSecurityPolicy"
+#define WS_INFLOW_SECURITY_POLICY  "InflowRampartContext"
+#define WS_OUTFLOW_SECURITY_POLICY "OutflowRampartContext"
 
 
 
@@ -111,6 +111,12 @@ int ws_policy_handle_client_security(zval *sec_token,
                                      axis2_env_t *env,
                                      axis2_svc_client_t *svc_client,
                                      axis2_options_t *options TSRMLS_DC);
+
+int ws_policy_handle_server_security(zval *sec_token,
+                                     zval *policy,
+                                     axis2_env_t *env,
+                                     axis2_options_t *options TSRMLS_DC);
+
 
 #endif /* WSF_POLICY_H*/
 
