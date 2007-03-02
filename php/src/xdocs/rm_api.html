@@ -10,12 +10,13 @@
 
 <body>
 <h1> Reliable Messaging API</h1>
-     <p>   Wsf4php extension supports reliable messaging protocal version 1.0 now.
-        For the beta release, both 1.0 and 1.1 will be supported. One way reliablilty is awailable
+     <p>   Wsf4php extension supports reliable messaging protocol version 1.0 now.
+        For the beta release, both 1.0 and 1.1 will be supported. One way reliablilty is available
          and two way messging reliability
-        is supported through single channel,(messages send from the receiving
+        is supported through single channel (messages sent
+         from the receiving
         rm endpoint will also
-        be comming through the same channel).
+        be coming through the same channel).
      </p>
     <p>
         A user can use following be options to configure
@@ -62,7 +63,7 @@
                 <td style="width: 100px; height: 4px">
                     d+</td>
                 <td style="width: 100px; height: 4px">
-                    Default value is what is used in module.xml in sandesha2 which is 60000 seconds</td>
+                    &nbsp;60 seconds</td>
                 <td style="width: 373px; height: 4px">
                     The current sequence will expire in "sequenceExpiryTime" milliseconds from current
                     time.</td>
@@ -110,16 +111,13 @@
                 FALSE</td>
             <td style="width: 389px">
                 If the user want to do multiple requests using the same sequence this option can
-                be used.<p>
+                be used.
+                <br />
                     The client will check it's "willContinueSequence" option. If it is FALSE ( default
-                    value ) , it will send the message</p>
-                <p>
-                    and terminate the sequence. If client's&nbsp; "willContinueSequence" property is
-                    TRUE , it will check the "LastMessage"</p>
-                <p>
+                    value ) , it will send the message
+                    and terminate the sequence. If client's&nbsp; "willContinueSequence" property is TRUE, it will check the "LastMessage"
                     property of WSMessage. If this is TRUE ( which is default ) it will add the last
-                    message and terminate the sequence.</p>
-            </td>
+                    message and terminate the sequence.</td>
         </tr>
     </table>
     <br />
@@ -152,7 +150,7 @@
             <td style="width: 100px">
                 &nbsp;FALSE</td>
             <td style="width: 375px">
-                When this option is sepcified, reliable messaging will be enabled for the corresponding
+                When this option is specified, reliable messaging will be enabled for the corresponding
                 service.</td>
         </tr>
     </table>
