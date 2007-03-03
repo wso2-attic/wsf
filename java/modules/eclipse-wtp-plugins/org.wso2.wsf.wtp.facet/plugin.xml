@@ -10,7 +10,7 @@
     	<description> Enables Web Services generation through WSO2 Web Services Application Engine.</description>
   	  </category>
 
-		  <project-facet id="wsas.core">
+		  <project-facet id="WSAS.core">
 			<label>WSAS Web Services Core</label>
 			<description>
 			  Prepare the Project for Web Services generation through WSO2 Web Services Application Server.
@@ -35,7 +35,7 @@
 			<description>
 			  Prepare the Project for additional Web services support with the WSO2 Web Services Application Server.
 			</description>
-			<category>wsas.category</category>
+			<category>WSAS.category</category>
 		  </project-facet>
 
 		<project-facet-version facet="WSAS.ext" version="1.1">

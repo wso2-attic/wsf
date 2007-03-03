@@ -2,7 +2,7 @@
   
    <extension point="org.eclipse.ui.preferencePages">     
       <page
-            name="%PREFERENCE_CATEGORY_AXIS2_RUNTIME"
+            name="%PREFERENCE_CATEGORY_WSAS_RUNTIME"
             category="org.eclipse.wst.ws.internal.ui.preferences.name"
             class="org.wso2.wsf.wtp.consumption.ui.preferences.WSASRuntimePreferencePage"
             id="org.wso2.wsf.wtp.consumption.ui.preferences.WSASRuntimePreferencePage">
