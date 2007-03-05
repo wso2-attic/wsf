@@ -39,7 +39,7 @@
 #include <axiom_util.h>
 #include "wsf_client.h"
 #include "wsf_policy.h"
-
+#include <php_main.h>
 
 ZEND_DECLARE_MODULE_GLOBALS(wsf)
 
@@ -124,8 +124,7 @@ zend_function_entry php_ws_message_class_functions[] ={
         };
 
 /** client function entry */
-zend_function_entry php_ws_client_class_functions[]=
-{
+zend_function_entry php_ws_client_class_functions[]={
 	PHP_MALIAS(ws_client, request, request, NULL,ZEND_ACC_PUBLIC)
 	PHP_MALIAS(ws_client, send, send, NULL,ZEND_ACC_PUBLIC)
 	PHP_MALIAS(ws_client,getLastResponse, get_last_response, NULL ,ZEND_ACC_PUBLIC)
@@ -188,13 +187,12 @@ zend_function_entry php_ws_policy_class_functions[]={
 
 /* {{{ wsf_functions[] */
 zend_function_entry wsf_functions[] = {
-                                          PHP_FE(is_ws_fault,	NULL)
-                                          PHP_FE(ws_private_key_from_pem_file, NULL)
-                                          PHP_FE(ws_public_key_from_file, NULL)
-                                          {
-                                              NULL, NULL, NULL
-                                          }	/* Must be the last line in wsf_functions[] */
-                                      };
+	PHP_FE(is_ws_fault,	NULL)
+	PHP_FE(ws_private_key_from_pem_file, NULL)
+	PHP_FE(ws_test_function, NULL)
+	PHP_FE(ws_public_key_from_file, NULL)
+	{ NULL, NULL, NULL }	/* Must be the last line in wsf_functions[] */
+};
 /* }}} */
 
 static zend_object_handlers ws_object_handlers;
@@ -380,20 +378,20 @@ static xmlNodePtr ws_get_xml_node(zval *node)
 /* {{{ wsf_module_entry */
 zend_module_entry wsf_module_entry = {
 #if ZEND_MODULE_API_NO >= 20010901
-                                         STANDARD_MODULE_HEADER,
+    STANDARD_MODULE_HEADER,
 #endif
-                                         "wsf",
-                                         wsf_functions,
-                                         PHP_MINIT(wsf),
-                                         PHP_MSHUTDOWN(wsf),
-                                         PHP_RINIT(wsf),
-                                         PHP_RSHUTDOWN(wsf),
-                                         PHP_MINFO(wsf),
-#if ZEND_MODULE_API_NO >= 20010901
-                                         "0.1", /* Replace with version number for your extension */
+     "wsf",
+     wsf_functions,
+     PHP_MINIT(wsf),
+     PHP_MSHUTDOWN(wsf),
+     PHP_RINIT(wsf),
+     PHP_RSHUTDOWN(wsf),
+     PHP_MINFO(wsf),
+#if ZEND_MODULE_API_NO >= 20010901 
+	 "0.1", /* Replace with version number for your extension */
 #endif
-                                         STANDARD_MODULE_PROPERTIES
-                                     };
+    STANDARD_MODULE_PROPERTIES
+};
 /* }}} */
 
 /*#ifdef COMPILE_DL_AXIS2*/
@@ -470,7 +468,7 @@ PHP_MINIT_FUNCTION(wsf)
     ws_header_class_entry = zend_register_internal_class(&ce TSRMLS_CC);
 
     INIT_CLASS_ENTRY(ce, "WSFault", php_ws_fault_class_functions);
-    /*ws_fault_class_entry = zend_register_internal_class_ex(&ce, zend_exception_get_default(), NULL TSRMLS_CC);*/
+    /**ws_fault_class_entry = zend_register_internal_class_ex(&ce, zend_exception_get_default(), NULL TSRMLS_CC);*/
     ws_fault_class_entry = zend_register_internal_class(&ce TSRMLS_CC);
 
     INIT_CLASS_ENTRY(ce, "WSSecurityToken", php_ws_security_token_class_functions);
@@ -563,8 +561,7 @@ php_ws_object_new_ex(zend_class_entry *class_type ,
                    (copy_ctor_func_t)zval_add_ref, (void *)&tmp, sizeof(void *));
 
     retval.handle = zend_objects_store_put(intern,
-                                           (zend_objects_store_dtor_t)ws_object_dtor,
-                                           NULL, NULL TSRMLS_CC);
+					(zend_objects_store_dtor_t)ws_object_dtor, NULL, NULL TSRMLS_CC);
     retval.handlers = &ws_object_handlers;
     return retval;
 }
@@ -606,13 +603,12 @@ PHP_FUNCTION(is_ws_fault)
 {
     zval *object = NULL;
 
-    if (FAILURE == zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "z", &object))
-    {
+    if (FAILURE == zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "z", &object)){
         php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
         return;
     }
-    if(Z_TYPE_P(object) == IS_OBJECT && instanceof_function(Z_OBJCE_P(object), ws_fault_class_entry TSRMLS_CC))
-    {
+    if(Z_TYPE_P(object) == IS_OBJECT && instanceof_function(Z_OBJCE_P(object), 
+		ws_fault_class_entry TSRMLS_CC)){
         RETURN_TRUE;
     }
     else RETURN_FALSE;
@@ -629,8 +625,7 @@ PHP_METHOD(ws_message, __construct)
     /*  zval *attachments = NULL; */
 
     if (FAILURE == zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "z|a", &payload ,
-                                         &properties))
-    {
+                                         &properties)){
         php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
         return;
     }
@@ -638,38 +633,35 @@ PHP_METHOD(ws_message, __construct)
     WSF_GET_THIS(object);
     WSF_OBJ_CHECK(env);
 
-    if(Z_TYPE_P(payload) == IS_STRING)
-    {
-        add_property_stringl(object , WS_MSG_PAYLOAD_STR, Z_STRVAL_P(payload), Z_STRLEN_P(payload), 1);
+    if(Z_TYPE_P(payload) == IS_STRING){
+		add_property_stringl(object , WS_MSG_PAYLOAD_STR, Z_STRVAL_P(payload), Z_STRLEN_P(payload), 1);
         add_property_long(object, WS_MSG_TYPE, WS_USING_STRING);
     }
     else if(Z_TYPE_P(payload) == IS_OBJECT &&
-            instanceof_function(Z_OBJCE_P(payload), dom_node_class_entry TSRMLS_CC))
-    {
+            instanceof_function(Z_OBJCE_P(payload), dom_node_class_entry TSRMLS_CC)) {
         add_property_zval(object, WS_MSG_PAYLOAD_DOM, payload);
         add_property_long(object, WS_MSG_TYPE, WS_USING_DOM);
     }
-    else
-    {
+    else {
         return;
     }
 
-    if (NULL != properties)
-    {
+    if (NULL != properties) {
         zval **tmp;
         HashTable *ht = Z_ARRVAL_P(properties);
-        if(!ht)
-        {
+        if(!ht){
             return;
         }
+		
+		add_property_zval(object, WS_OPTIONS, properties);
 
+		/*
         if(zend_hash_find(ht, WS_TO, sizeof(WS_TO), (void **)&tmp) == SUCCESS &&
                 Z_TYPE_PP(tmp) == IS_STRING)
         {
             add_property_stringl(object, WS_TO, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
         }
 
-        /** addressing */
         if(zend_hash_find(ht, WS_ACTION, sizeof(WS_ACTION), (void **)&tmp) == SUCCESS &&
                 Z_TYPE_PP(tmp) == IS_STRING)
         {
@@ -692,7 +684,6 @@ PHP_METHOD(ws_message, __construct)
         }
 
 
-		/** reliable Messaging */
 		if(zend_hash_find(ht, WS_LAST_MESSAGE, sizeof(WS_LAST_MESSAGE), (void**)&tmp) == SUCCESS){
 			if(Z_TYPE_PP(tmp) == IS_BOOL){
 				add_property_bool(object, WS_LAST_MESSAGE, Z_BVAL_PP(tmp));
@@ -700,7 +691,6 @@ PHP_METHOD(ws_message, __construct)
 		}
 
 
-        /** XOP MTOM */
         if(zend_hash_find(ht, WS_USES_XOP, sizeof(WS_USES_XOP), (void **)&tmp) == SUCCESS &&
                 Z_TYPE_PP(tmp) == IS_BOOL)
         {
@@ -719,26 +709,17 @@ PHP_METHOD(ws_message, __construct)
         {
             add_property_string(object, WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE, estrdup("application/octet-stream"),1);
         }
+		*/
+
         if(zend_hash_find(ht, WS_ATTACHMENTS, sizeof(WS_ATTACHMENTS), (void **)&tmp) == SUCCESS &&
                 Z_TYPE_PP(tmp) == IS_ARRAY)
         {
             add_property_zval(object, WS_ATTACHMENTS, *tmp);
         }
-
-        /** reliable Messaging */
-        if(zend_hash_find(ht, WS_WILL_CONTINUE_SEQUENCE, sizeof(WS_WILL_CONTINUE_SEQUENCE), (void**)&tmp) == SUCCESS)
-        {
-            if(Z_TYPE_PP(tmp) == IS_BOOL)
-            {
-                add_property_bool(object, WS_WILL_CONTINUE_SEQUENCE, Z_BVAL_PP(tmp));
-            }
-        }
-
+		
         /** adding custom headers */
-        if(zend_hash_find(ht, WS_HEADERS, sizeof(WS_HEADERS), (void**)&tmp) == SUCCESS)
-        {
-            if(Z_TYPE_PP(tmp) == IS_ARRAY)
-            {
+        if(zend_hash_find(ht, WS_HEADERS, sizeof(WS_HEADERS), (void**)&tmp) == SUCCESS){
+            if(Z_TYPE_PP(tmp) == IS_ARRAY){
                 add_property_zval(object, WS_HEADERS, *tmp);
             }
         }
@@ -748,7 +729,9 @@ PHP_METHOD(ws_message, __construct)
 
 /** desctructor */
 PHP_METHOD(ws_message, __destruct)
-{}
+{
+	
+}
 
 
 static int get_message_storage_type(zval *this_ptr TSRMLS_DC)
@@ -921,7 +904,8 @@ PHP_METHOD(ws_client, __construct)
         if(!ht)
             return;
 
-        wsf_client_add_properties(obj , ht TSRMLS_CC);
+		add_property_zval(obj, WS_OPTIONS, options);
+		/**  wsf_client_add_properties(obj , ht TSRMLS_CC); */
 
         if(zend_hash_find(ht, WS_WSDL, sizeof(WS_WSDL), (void **)&tmp) == SUCCESS &&
                 Z_TYPE_PP(tmp) == IS_STRING)
@@ -941,7 +925,8 @@ PHP_METHOD(ws_client, __construct)
 
 /* {{{ WSClient::__destruct() */
 PHP_METHOD(ws_client, __destruct)
-{}
+{
+}
 /* }}} */
 
 /* {{{ proto string request(mixed payload)
@@ -963,7 +948,6 @@ PHP_METHOD(ws_client , request)
         php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
         return;
     }
-
     WSF_OBJ_CHECK(env);
     WSF_GET_THIS(obj);
     WSF_GET_OBJ(svc_client, obj, axis2_svc_client_t, intern);
@@ -986,7 +970,6 @@ PHP_METHOD(ws_client , send)
         php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
         return;
     }
-
     WSF_OBJ_CHECK(env);
     WSF_GET_THIS(obj);
     WSF_GET_OBJ(svc_client, obj, axis2_svc_client_t, intern);
@@ -1030,17 +1013,13 @@ PHP_METHOD(ws_client , get_last_request)
 
     WSF_GET_THIS(obj);
     WSF_GET_OBJ(svc_client, obj, axis2_svc_client_t, intern);
-    if(svc_client)
-    {
+    if(svc_client){
         axis2_op_client_t *op_client = NULL;
         op_client = AXIS2_SVC_CLIENT_GET_OP_CLIENT(svc_client, env);
-        if(op_client)
-        {
-
+        if(op_client){
             axis2_char_t *msg = ws_util_get_soap_msg_from_op_client(op_client, env,
                                 AXIS2_WSDL_MESSAGE_LABEL_OUT);
-            if(msg)
-            {
+            if(msg){
                 RETURN_STRING(msg, 1);
             }
         }
@@ -1107,8 +1086,7 @@ PHP_METHOD(ws_client, get_client)
     int port_len =  0;
 
     if(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss", &service, &service_len,
-                             &port, &port_len) == FAILURE)
-    {
+                             &port, &port_len) == FAILURE){
         php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid Parameters,specify the service and port");
     }
 
@@ -1161,37 +1139,33 @@ PHP_METHOD(ws_service, __construct)
         if(ht)
         {
             if(zend_hash_find(ht, "actions", sizeof("actions"),
-                              (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY)
-            {
+                              (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY) {
                 ht_actions = Z_ARRVAL_PP(tmp);
+				AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting actions ");
             }
             if(zend_hash_find(ht, "operations", sizeof("operations"),
-                              (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY)
-            {
+                              (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY){
                 ht_ops_to_funcs = Z_ARRVAL_PP(tmp);
+				AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting operations");
             }
             if(zend_hash_find(ht, WS_USE_MTOM, sizeof(WS_USE_MTOM),
-                              (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL)
-            {
-                add_property_bool(obj, WS_USE_MTOM, Z_BVAL_PP(tmp));
+                              (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
                 svc_info->use_mtom = Z_BVAL_PP(tmp);
+				AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting mtom property %d", svc_info->use_mtom);
             }
-            else
-            {
-                add_property_bool(obj, WS_USE_MTOM, 0);
+            else{
                 svc_info->use_mtom = 0;
             }
             if(zend_hash_find(ht, WS_REQUEST_XOP, sizeof(WS_REQUEST_XOP),
-                              (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL)
-            {
-                add_property_bool(obj, WS_REQUEST_XOP, Z_BVAL_PP(tmp));
+                              (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
                 svc_info->request_xop = Z_BVAL_PP(tmp);
             }
             else
             {
-                add_property_bool(obj, WS_REQUEST_XOP, 0);
                 svc_info->request_xop = 0;
             }
+			AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] request xop %d", svc_info->request_xop);
+
             if(zend_hash_find(ht, "secure", sizeof("secure"),
                               (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL)
             {
@@ -1202,33 +1176,28 @@ PHP_METHOD(ws_service, __construct)
                 AXIS2_ARRAY_LIST_ADD(svc_info->modules_to_engage, ws_env_svr, AXIS2_STRDUP("rampart", ws_env_svr));
             }
             if(zend_hash_find(ht, WS_RELIABLE, sizeof(WS_RELIABLE),
-                              (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL)
-            {
+                              (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
                 if(!svc_info->modules_to_engage)
                     svc_info->modules_to_engage = axis2_array_list_create(ws_env_svr, 3);
                 AXIS2_ARRAY_LIST_ADD(svc_info->modules_to_engage, ws_env_svr, AXIS2_STRDUP("sandesha2", ws_env_svr));
             }
 
             if(zend_hash_find(ht, WS_BINDING_STYLE, sizeof(WS_BINDING_STYLE), (void **)&tmp) == SUCCESS &&
-                    Z_TYPE_PP(tmp) == IS_STRING)
-            {
+                    Z_TYPE_PP(tmp) == IS_STRING){
                 add_property_stringl(obj, WS_BINDING_STYLE, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
             }
         }
     }
-    if(SG(request_info).request_uri)
-    {
+    if(SG(request_info).request_uri){
         svc_info->svc_name = ws_util_generate_svc_name_from_uri(SG(request_info).request_uri, ws_env_svr);
         ws_util_create_svc_from_svc_info(svc_info , ws_env_svr TSRMLS_CC);
-    }
-    else
-    {
+    }else{
         zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 1 TSRMLS_CC,
                                 "server does not support cli");
     }
 
-    if (ht_ops_to_funcs)
-    {
+    if (ht_ops_to_funcs){
+
         HashPosition pos;
         zval **tmp = NULL;
         int i =0;
@@ -1239,15 +1208,11 @@ PHP_METHOD(ws_service, __construct)
             char *op_name_to_store = NULL;
             char *op_name = NULL;
             unsigned int op_name_len = 0;
-            /*             zend_function **f = NULL; */
-            /*             char *key = NULL; */
-            /*             int key_len = 0; */
             unsigned long index = i;
 
 
             char *func_name = NULL;
-            /*             long func_name_len = 0; */
-
+        
             zend_hash_get_current_key_ex(ht_ops_to_funcs, &op_name, &op_name_len, &index, 0, &pos);
             zend_hash_move_forward_ex(ht_ops_to_funcs, &pos);
 
@@ -1469,7 +1434,7 @@ PHP_METHOD(ws_service , reply)
     axis2_conf_t *conf = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
     ws_svc_info_t *svc_info = NULL;
-    php_req_info_t *req_info = NULL;
+    wsf_req_info_t *req_info = NULL;
     zval **server_vars, **data;
     wsf_worker_t *php_worker = NULL;
     zval **raw_post;
@@ -1551,6 +1516,8 @@ PHP_METHOD(ws_service , reply)
     req_info->content_length = SG(request_info).content_length;
     req_info->content_type = (char*)SG(request_info).content_type;
     req_info->request_method = (char*)SG(request_info).request_method;
+	req_info->query_string = (char*)SG(request_info).query_string;
+
 
     if (zend_hash_find(&EG(symbol_table), "HTTP_RAW_POST_DATA", sizeof("HTTP_RAW_POST_DATA"), (void **) &raw_post)!=FAILURE
             && ((*raw_post)->type==IS_STRING))
@@ -1724,7 +1691,6 @@ PHP_METHOD(ws_service , reply)
             }
         }
     }
-    wsf_php_req_info_free(req_info);
 }
 /* }}} end reply */
 
@@ -1989,7 +1955,6 @@ PHP_METHOD(ws_policy, __construct)
 
     if( NULL != properties && Z_TYPE_P(properties) == IS_ARRAY)
     {
-        zval **tmp;
         HashTable *ht = Z_ARRVAL_P(properties);
         axiom_node_t *policy_root_node = NULL;
         axis2_char_t *om_str = NULL;
@@ -2008,7 +1973,29 @@ PHP_METHOD(ws_policy, __construct)
 
 /* }}} */
 
+PHP_FUNCTION(ws_test_function)
+{
+	char *function_name, *data = NULL;
+	int function_name_length = 0;
+	int data_length = 0;
+	
+	zval *params[1];
+	zval param, ret_val, func;
 
+	if(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss",
+		&function_name, &function_name_length, &data, &data_length) != SUCCESS){
+		php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
+        return;
+	}
+	ZVAL_STRING(&func, function_name, 0);
+	params[0] = &param;
+	ZVAL_STRING(params[0], data, 1);
+	INIT_PZVAL(params[0]);
+	if(call_user_function(EG(function_table) , (zval **)NULL, &func, &ret_val,1, params TSRMLS_CC) == SUCCESS)
+	{
+		php_printf("done ");		
+	}
+}
 
 
 

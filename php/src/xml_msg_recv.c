@@ -539,6 +539,8 @@ zend_try {
         zval *cid2str = NULL;
         zval *cid2contentType = NULL;
 
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_service] requestXOP is TRUE, setting attachements");
+
         MAKE_STD_ZVAL(cid2str);
         MAKE_STD_ZVAL(cid2contentType);
 
@@ -612,14 +614,9 @@ zend_try {
                     wsf_util_set_attachments_with_cids(env, use_mtom, res_om_node, 
                         ht, default_cnt_type TSRMLS_CC);
                     if(use_mtom == 1){
-                        axis2_property_t *property = axis2_property_create(env);
-                        if (property){
-	    	                AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
-    		                AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(AXIS2_VALUE_TRUE, env));
-	    	                AXIS2_MSG_CTX_SET_PROPERTY(out_msg_ctx , env, AXIS2_ENABLE_MTOM, property, AXIS2_FALSE);
+							axis2_msg_ctx_set_doing_mtom(out_msg_ctx, env, AXIS2_TRUE);
 		                }
                     }
-                }
             }
         }else if(Z_TYPE(retval) == IS_STRING){
             res_payload = AXIS2_STRDUP(Z_STRVAL(retval), env);
@@ -737,58 +734,55 @@ ws_xml_msg_recv_set_soap_fault(
     axiom_namespace_t *env_ns = NULL;
     axiom_soap_fault_t *soap_fault = NULL;
     
-	axis2_char_t *fault_value_str = "env:Sender";
-	axis2_char_t *fault_reason_str = NULL;
-	axis2_char_t *err_msg = NULL;
+    axis2_char_t *fault_value_str = "env:Sender";
+    axis2_char_t *fault_reason_str = NULL;
+    axis2_char_t *err_msg = NULL;
 	
-	axis2_char_t *code = NULL;
-	axis2_char_t *reason = NULL;
+    axis2_char_t *code = NULL;
+    axis2_char_t *reason = NULL;
     axis2_char_t *detail = NULL;
     axis2_char_t *role = NULL;
     
     axiom_node_t *detail_node = NULL;
 	
-	int soap_version = AXIOM_SOAP12;
-	zval **tmp;
-        
+     int soap_version = AXIOM_SOAP12;
+     zval **tmp;
          
     if(!soap_ns || !out_msg_ctx)
         return;
-    env_ns = axiom_namespace_create(env, soap_ns, "env"); 
-	if (!env_ns){
-		return;
-	}
-	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " FAINALLy CALLING SET FAULT");
-
-
-    if(zend_hash_find(Z_OBJPROP(zval_soap_fault), "reason", sizeof("reason"), (void **)&tmp) == SUCCESS
+     env_ns = axiom_namespace_create(env, soap_ns, "env"); 
+     if (!env_ns){
+	return;
+     }
+     
+    if(zend_hash_find(Z_OBJPROP(zval_soap_fault), WS_FAULT_REASON, sizeof(WS_FAULT_REASON), (void **)&tmp) == SUCCESS
         && Z_TYPE_PP(tmp) == IS_STRING){
         reason = Z_STRVAL_PP(tmp);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " SETTING FAULT %s", reason);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_service] setting fault reason %s", reason);
 	}else{
             php_error_docref(NULL TSRMLS_CC, E_ERROR, " Invalid fault");
     }
 
-    if(zend_hash_find(Z_OBJPROP(zval_soap_fault), "code", sizeof("code"), (void **)&tmp) == SUCCESS
+    if(zend_hash_find(Z_OBJPROP(zval_soap_fault), WS_FAULT_CODE, sizeof(WS_FAULT_CODE), (void **)&tmp) == SUCCESS
         && Z_TYPE_PP(tmp) == IS_STRING){
         code  = Z_STRVAL_PP(tmp);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " SETTING FAULT %s", code);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_service] setting fault code %s", code);
     }else{
             php_error_docref(NULL TSRMLS_CC, E_ERROR, " Invalid fault");
     }
  
-    if(zend_hash_find(Z_OBJPROP(zval_soap_fault), "role", sizeof("role"), (void **)&tmp) == SUCCESS
+    if(zend_hash_find(Z_OBJPROP(zval_soap_fault), WS_FAULT_ROLE, sizeof(WS_FAULT_ROLE), (void **)&tmp) == SUCCESS
         && Z_TYPE_PP(tmp) == IS_STRING){
         role  = Z_STRVAL_PP(tmp);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " SETTING FAULT %s", role);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_service] setting fault role %s", role);
     }
-    if(zend_hash_find(Z_OBJPROP(zval_soap_fault), "detail", sizeof("detail"), (void **)&tmp) == SUCCESS
+    if(zend_hash_find(Z_OBJPROP(zval_soap_fault), WS_FAULT_DETAIL, sizeof(WS_FAULT_DETAIL), (void **)&tmp) == SUCCESS
         && Z_TYPE_PP(tmp) == IS_STRING){
-		axiom_node_t *text_node = NULL;
+	axiom_node_t *text_node = NULL;
         detail  = Z_STRVAL_PP(tmp);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " SETTING FAULT %s", detail);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_service] setting fault detail %s", detail);
         axiom_element_create(env, NULL, "error", NULL, &detail_node);
-		axiom_text_create(env, detail_node, detail, &text_node);
+	axiom_text_create(env, detail_node, detail, &text_node);
         
     }    
 

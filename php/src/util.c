@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-
-
 #include "php.h"
 #include <axis2_dll_desc.h>
 #include <axis2_msg_recv.h>
@@ -30,13 +28,12 @@
 #include <axis2_log_default.h>
 #include <axis2_uuid_gen.h>
 #include <axiom_util.h>
-/*#include <sandesha2_client.h>*/
 
 static int curr = 0;
 
 axiom_node_t* 
 wsf_util_construct_header_node(const axis2_env_t *env, 
-							   zval *header TSRMLS_DC)
+   			       zval *header TSRMLS_DC)
 {
 	char *ns = NULL;
 	char *localname = NULL;
@@ -124,7 +121,7 @@ static xmlNodePtr wsf_get_xml_node(zval *node TSRMLS_DC)
 
 	object = (php_libxml_node_object *)zend_object_store_get_object(node TSRMLS_CC);
 	nodep = php_libxml_import_node(node TSRMLS_CC);
-    if (!nodep) {
+	    if (!nodep){
 		return NULL;
 	}
 	if (nodep->doc == NULL) {
@@ -139,35 +136,42 @@ static xmlNodePtr wsf_get_xml_node(zval *node TSRMLS_DC)
 }
 
 /* {{{ efree wrapper */
-static void WSF_CALL wsf_free_wrapper_cli(axis2_allocator_t *allocator, void *ptr)
+static void WSF_CALL 
+wsf_free_wrapper_cli(axis2_allocator_t *allocator, 
+					  void *ptr)
 {
 	efree(ptr);
 }
 /* }}} end efree wrapper */
 
 /* {{{ malloc wrapper */
-static void* WSF_CALL  wsf_malloc_wrapper_cli(axis2_allocator_t *allocator, size_t size)
+static void* WSF_CALL  
+wsf_malloc_wrapper_cli(axis2_allocator_t *allocator,
+		      size_t size)
 {
     return emalloc(size);
 }
 /* }}} */
 /* {{{ realloc wrapper */
-static void* WSF_CALL  wsf_realloc_warpper_cli(axis2_allocator_t *allocator,void *ptr, size_t size)
+static void* WSF_CALL  
+wsf_realloc_warpper_cli(axis2_allocator_t *allocator,void *ptr, 
+		        size_t size)
 {
     return erealloc(ptr, size);
 }
 /* }}} */
 
-axis2_env_t *wsf_env_create_for_client(axis2_char_t *logpath)
+axis2_env_t*
+wsf_env_create_for_client(axis2_char_t *logpath)
 {
-	axis2_allocator_t *allocator = NULL;
+    axis2_allocator_t *allocator = NULL;
     axis2_error_t *error = NULL;
     axis2_log_t *log = NULL;
     axis2_char_t client_log[250];
     axis2_thread_pool_t *thread_pool = NULL;
-	const axis2_char_t *LOG_NAME = "wsf.log";
+    const axis2_char_t *LOG_NAME = "wsf.log";
     
-	allocator = emalloc(sizeof(axis2_allocator_t));
+    allocator = emalloc(sizeof(axis2_allocator_t));
     
     allocator->free_fn = wsf_free_wrapper_cli;
     allocator->malloc_fn = wsf_malloc_wrapper_cli;
@@ -189,19 +193,26 @@ axis2_env_t *wsf_env_create_for_client(axis2_char_t *logpath)
 }
 
 /* {{{ malloc wrapper */
-static void* WSF_CALL  wsf_malloc_wrapper(axis2_allocator_t *allocator, size_t size)
+static void* WSF_CALL  
+wsf_malloc_wrapper(axis2_allocator_t *allocator,
+		   size_t size)
 {
     return pemalloc(size,1);
 }
 /* }}} */
 /* {{{ realloc wrapper */
-static void* WSF_CALL  wsf_realloc_warpper(axis2_allocator_t *allocator,void *ptr, size_t size)
+static void* WSF_CALL  
+wsf_realloc_warpper(axis2_allocator_t *allocator,
+		    void *ptr, 
+                    size_t size)
 {
     return perealloc(ptr, size, 1);
 }
 /* }}} */
 /* {{{ free wrapper */
-static  void WSF_CALL wsf_free_wrapper(axis2_allocator_t *allocator, void *ptr)
+static  void WSF_CALL 
+wsf_free_wrapper(axis2_allocator_t *allocator, 
+                 void *ptr)
 {
 	if (ptr)
 		pefree(ptr, 1);
@@ -279,13 +290,13 @@ void wsf_env_free(axis2_env_t *env){
 
 ws_svc_info_t* ws_svc_info_create()
 {
-	ws_svc_info_t *svc_info = NULL;
-	svc_info = emalloc(sizeof(ws_svc_info_t));
-	svc_info->svc = NULL;
-	svc_info->svc_name = NULL;
-	svc_info->is_class = 0;
-	svc_info->msg_recv = NULL;
-	svc_info->svc_path = NULL;
+    ws_svc_info_t *svc_info = NULL;
+    svc_info = emalloc(sizeof(ws_svc_info_t));
+    svc_info->svc = NULL;
+    svc_info->svc_name = NULL;
+    svc_info->is_class = 0;
+    svc_info->msg_recv = NULL;
+    svc_info->svc_path = NULL;
     svc_info->class_info = NULL;
     svc_info->modules_to_engage = NULL;
     svc_info->php_worker = NULL;
@@ -302,27 +313,24 @@ ws_svc_info_t* ws_svc_info_create()
 /* free svc info struct */
 void ws_svc_info_free(ws_svc_info_t *svc_info)
 {
-	if(NULL != svc_info)
-	{
-		if(svc_info->svc_name)
-		{
-		    efree(svc_info->svc_name);
-		    svc_info->svc_name = NULL;
+    if(NULL != svc_info){
+	if(svc_info->svc_name){
+	    efree(svc_info->svc_name);
+	    svc_info->svc_name = NULL;
         }		    
-		if(svc_info->svc_path)
-		{
-			efree(svc_info->svc_path);
-			svc_info->svc_path = NULL;
-		}
-		efree(svc_info); 
+	if(svc_info->svc_path){
+	    efree(svc_info->svc_path);
+	    svc_info->svc_path = NULL;
 	}
+	efree(svc_info); 
+    }
 }
 
 /** create php request info struct */
-php_req_info_t* wsf_php_req_info_create()
+wsf_req_info_t* wsf_php_req_info_create()
 {
-	php_req_info_t *req_info = NULL;
-	req_info = emalloc(sizeof(php_req_info_t));
+	wsf_req_info_t *req_info = NULL;
+	req_info = emalloc(sizeof(wsf_req_info_t));
 	req_info->svr_name = NULL;
 	req_info->svr_port = -1;
 	req_info->http_protocol = NULL;
@@ -334,35 +342,34 @@ php_req_info_t* wsf_php_req_info_create()
 	req_info->request_method = NULL;	
 	req_info->req_data = NULL;
 	req_info->req_data_length = 0;
-    req_info->result_length = 0;
+        req_info->result_length = 0;
 	req_info->result_payload = NULL;
 	req_info->transfer_encoding = NULL;
+	req_info->query_string = NULL;
 	return req_info;
 }
 
-void wsf_php_req_info_free(php_req_info_t *req_info)
+void wsf_php_req_info_free(wsf_req_info_t *req_info)
 {
     if(req_info){
-		/*
-		if(req_info->content_encoding){
-			efree(req_info->content_encoding);
-		}
-		if(req_info->http_protocol){
-			efree(req_info->http_protocol);
-		}
-		if(req_info->request_uri){
-			efree(req_info->request_uri);
-		}
-		if(req_info->result_payload){
-			efree(req_info->result_payload);
-		}
-		if(req_info->result_payload){
-			efree(req_info->result_payload);
-		}
-		if(req_info->content_type){
-			efree(req_info->content_type);
-		}
-		*/
+	if(req_info->content_encoding){
+		efree(req_info->content_encoding);
+	}
+	if(req_info->http_protocol){
+		efree(req_info->http_protocol);
+	}
+	if(req_info->request_uri){
+		efree(req_info->request_uri);
+	}
+	if(req_info->result_payload){
+		efree(req_info->result_payload);
+	}
+	if(req_info->result_payload){
+		efree(req_info->result_payload);
+	}
+	if(req_info->content_type){
+		efree(req_info->content_type);
+	}
         efree(req_info);
     }
 }

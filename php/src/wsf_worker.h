@@ -38,7 +38,7 @@ wsf_worker_create (const axis2_env_t *env,
 int 
 wsf_worker_process_request(wsf_worker_t *worker, 
 						   const axis2_env_t *env,
-						   php_req_info_t *reqinfo, 
+						   wsf_req_info_t *reqinfo, 
 						   ws_svc_info_t *svc_info);
 
 void 

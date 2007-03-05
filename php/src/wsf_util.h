@@ -60,9 +60,9 @@ ws_svc_info_t* ws_svc_info_create();
 
 void ws_svc_info_free(ws_svc_info_t *svc_info);
 
-php_req_info_t* wsf_php_req_info_create();
+wsf_req_info_t* wsf_php_req_info_create();
 
-void wsf_php_req_info_free(php_req_info_t *req_info);
+void wsf_php_req_info_free(wsf_req_info_t *req_info);
 
 void wsf_util_set_attachments_with_cids(
 		const axis2_env_t *env,

@@ -29,8 +29,8 @@
 #include "ext/libxml/php_libxml.h"
 
 int wsf_client_set_options(
-		zval *zval_client, 
-		zval *zval_msg, 
+		HashTable *client_ht, 
+		HashTable *msg_ht, 
 		axis2_env_t *env,
         axis2_options_t *options, 
 		axis2_svc_client_t *svc_client,
@@ -50,19 +50,12 @@ int wsf_client_do_request(
 		axis2_svc_client_t *svc_client,
 		int is_oneway TSRMLS_DC);
 
-int wsf_client_set_rm_options(
-		zval *zval_client, 
-		zval *zval_msg, 
-		axis2_env_t *env,
+void wsf_client_enable_ssl(HashTable *ht, 
+		axis2_env_t *env, 
 		axis2_options_t *options,
-		axis2_svc_client_t *svc_client,
-		int is_addr_engaged , int is_send TSRMLS_DC);
+		axis2_svc_client_t *svc_client TSRMLS_DC);
 
-void wsf_client_set_security_opts(HashTable *ht, 
-		axis2_env_t *env, axis2_svc_client_t *svc_client TSRMLS_DC);
 
-void wsf_client_enable_ssl(HashTable *ht, axis2_env_t *env, axis2_options_t *options,
-						   axis2_svc_client_t *svc_client TSRMLS_DC);
 
 void wsf_client_add_properties(zval *this_ptr , HashTable *ht TSRMLS_DC);
 

@@ -56,6 +56,9 @@ typedef enum ws_input_types{
 
 
 /** Options array options */
+#define WS_OPTIONS "wsfoptions"
+
+
 #define WS_TO			"to"    /** endpoint uri */
 
 #define WS_USE_WSA     "useWSA"
@@ -67,6 +70,7 @@ typedef enum ws_input_types{
 #define WS_USES_XOP	"usesXOP"	   /** MTOM XOP */
 #define WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE "defaultAttachmentContentType"
 #define WS_ATTACHMENTS "attachments"
+#define WS_CID2CONTENT_TYPE "cid2contentType"
 #define WS_RESPONSE_XOP "responseXOP"
 #define WS_REQUEST_XOP  "requestXOP"
 #define WS_USE_MTOM     "useMTOM"
@@ -75,6 +79,9 @@ typedef enum ws_input_types{
 #define WS_LAST_MESSAGE "lastMessage"
 #define WS_RELIABLE	"reliable"
 #define WS_SEQUENCE_EXPIRY_TIME "sequenceExpiryTime"
+#define WS_SEQUENCE_OFFER_ID "sequenceOfferID"
+#define WS_SEQUENCE_KEY      "sequenceKey"
+
 
 #define WS_USE_SOAP	"useSOAP"
 #define WS_HTTP_METHOD "HTTPMethod"
@@ -200,14 +207,18 @@ typedef struct ws_svc_info {
 ws_svc_info_t;
 
 typedef struct php_req_info {
+	long svr_port;
+    
     char *svr_name;
-    long svr_port;
     char *http_protocol;
     char *content_encoding;
     char *soap_action;
-    char *request_uri;
-    long content_length;
-    char *content_type;
+    
+	char *request_uri;
+	char *query_string;
+
+	long content_length;
+	char *content_type;
 
     char *request_method;
 
@@ -218,8 +229,7 @@ typedef struct php_req_info {
     int result_length;
 
     char *transfer_encoding;
-}
-php_req_info_t;
+}wsf_req_info_t;
 
 /** functions */
 

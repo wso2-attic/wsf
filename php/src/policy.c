@@ -27,10 +27,6 @@
 
 #include <rampart_context.h>
 
-/* #ifdef USE_RAMPART */
-/* #include <rampart_context.h> */
-/* #endif */
-
 #define ArrySize 8
 
 
@@ -997,25 +993,3 @@ int set_security_policy_options(zval *policy_obj,
 
     return AXIS2_SUCCESS;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

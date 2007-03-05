@@ -27,7 +27,7 @@ extern "C"
 
 axis2_http_out_transport_info_t* 
 wsf_out_transport_info_create(const axis2_env_t *env,
-               php_req_info_t *req);
+               wsf_req_info_t *req);
 
 WSF_PHP_API axis2_status_t WSF_CALL 
 wsf_out_transport_info_free_void_arg (void *transport_info,

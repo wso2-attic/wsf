@@ -33,6 +33,12 @@
 #include "wsf_util.h"
 
 #define READ_SIZE  32
+#define INTERNET_MAX_PATH_LENGTH        2048
+#define INTERNET_MAX_SCHEME_LENGTH      32          
+#define INTERNET_MAX_URL_LENGTH         (INTERNET_MAX_SCHEME_LENGTH \
+                                        + sizeof("://") \
+                                        + INTERNET_MAX_PATH_LENGTH)
+
 
 struct wsf_worker_t
 {
@@ -137,7 +143,7 @@ void wsf_worker_free(wsf_worker_t *worker,
 int wsf_worker_process_request(
         wsf_worker_t *worker, 
         const axis2_env_t *env, 
-        php_req_info_t *request,
+        wsf_req_info_t *request,
 		ws_svc_info_t *svc_info)
 {
 	axis2_conf_ctx_t *conf_ctx = NULL;
@@ -156,6 +162,7 @@ int wsf_worker_process_request(
 	axiom_soap_envelope_t *soap_envelope = NULL;
     axis2_property_t *property = NULL;
     axis2_url_t *url = NULL;
+	axis2_char_t request_uri_with_query_string[INTERNET_MAX_URL_LENGTH];
 	axis2_qname_t *transport_qname = NULL;
 	
    
@@ -182,9 +189,16 @@ int wsf_worker_process_request(
 	AXIS2_PARAM_CHECK(env->error, request, AXIS2_CRITICAL_FAILURE);
    
 	conf_ctx = worker->conf_ctx;
+	if(request->query_string)
+	{
+		sprintf(request_uri_with_query_string, "%s%s", request->request_uri, request->query_string);
+	}else{
+		sprintf(request_uri_with_query_string,"%s", request->request_uri);
+	}
+
 	url = axis2_url_create(env, "http", request->svr_name, 
-                        request->svr_port, request->request_uri);
-	
+			request->svr_port, request_uri_with_query_string);
+
     if(NULL == conf_ctx) {
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NULL_CONFIGURATION_CONTEXT,
 							AXIS2_FAILURE);
@@ -221,6 +235,7 @@ int wsf_worker_process_request(
 	
     msg_ctx = axis2_msg_ctx_create(env, conf_ctx, in_desc, out_desc);
 	
+
     AXIS2_MSG_CTX_SET_SERVER_SIDE(msg_ctx, env, AXIS2_TRUE);
     
     AXIS2_MSG_CTX_SET_SVC(msg_ctx, env, svc_info->svc); 

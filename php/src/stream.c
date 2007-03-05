@@ -26,7 +26,7 @@ typedef struct wsf_stream_impl wsf_stream_impl_t;
 struct wsf_stream_impl{
     axis2_stream_t stream;
     axis2_stream_type_t stream_type;
-    php_req_info_t *req_info;
+    wsf_req_info_t *req_info;
     axis2_char_t *buffer;
     int current_rlen;
     int buffer_len;
@@ -66,7 +66,7 @@ wsf_stream_skip(
 
 WSF_PHP_API axis2_stream_t * WSF_CALL
 axis2_stream_create_php(const axis2_env_t *env, 
-        php_req_info_t *req_info TSRMLS_DC)
+        wsf_req_info_t *req_info TSRMLS_DC)
 {
     wsf_stream_impl_t *stream_impl = NULL;
     

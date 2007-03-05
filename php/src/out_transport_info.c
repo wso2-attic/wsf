@@ -28,7 +28,7 @@ typedef struct wsf_out_transport_info_impl
 struct wsf_out_transport_info_impl
 {
 	axis2_http_out_transport_info_t out_transport_info;
-	php_req_info_t *request;
+	wsf_req_info_t *request;
 	axis2_char_t *encoding;
 };
 
@@ -59,7 +59,7 @@ wsf_http_out_transport_info_free
 
 axis2_http_out_transport_info_t* 
 wsf_out_transport_info_create(const axis2_env_t *env,
-                        php_req_info_t *request)
+                        wsf_req_info_t *request)
 {
     wsf_out_transport_info_impl_t *info_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);

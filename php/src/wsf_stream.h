@@ -28,7 +28,7 @@ extern "C"
 
 WSF_PHP_API axis2_stream_t * WSF_CALL 
 axis2_stream_create_php(const axis2_env_t *env, 
-        php_req_info_t *req TSRMLS_DC);
+        wsf_req_info_t *req TSRMLS_DC);
 
 #ifdef __cplusplus
 }
