@@ -18,7 +18,8 @@ WSF/PHP extension.</p>
 <a id="pre"></a>
 
 <h2><b>Predefined Classes</b></h2>
-<a id="client"></a>   
+<a id="client"></a>   &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+    &nbsp;&nbsp; &nbsp;&nbsp;
 
 <h2><b>WSClient</b></h2>
 <a id="construct"></a>
@@ -513,14 +514,14 @@ None <br>
 
 <h3><b>Example</b></h3>
 <pre><span style="color: rgb(0, 0, 0); font-weight: bold;">function</span> echoFunction<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$inMessage</span><span style="color: rgb(102, 204, 102);">)</span> <span style="color: rgb(102, 204, 102);">{</span>
- 
+&nbsp;
     <span style="color: rgb(0, 0, 255);">$returnMessage</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSMessage<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$inMessage</span>-&gt;<span style="color: rgb(0, 102, 0);">str</span><span style="color: rgb(102, 204, 102);">)</span>;
- 
+&nbsp;
     <span style="color: rgb(177, 177, 0);">return</span> <span style="color: rgb(0, 0, 255);">$returnMessage</span>;
 <span style="color: rgb(102, 204, 102);">}</span>
- 
+&nbsp;
 <span style="color: rgb(0, 0, 255);">$operations</span> = <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"echoString"</span> =&gt; <span style="color: rgb(255, 0, 0);">"echoFunction"</span><span style="color: rgb(102, 204, 102);">)</span>;
- 
+&nbsp;
 <span style="color: rgb(0, 0, 255);">$svr</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSService<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"operations"</span> =&gt; <span style="color: rgb(0, 0, 255);">$operations</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
         
 <span style="color: rgb(0, 0, 255);">$svr</span>-&gt;<span style="color: rgb(0, 102, 0);">reply</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
@@ -674,22 +675,6 @@ border="1">
       </td>
     </tr>
     <tr valign="top">
-      <td><p>"usesXOP"</p>
-      </td>
-      <td><p>boolean</p>
-      </td>
-      <td><p>TRUE | FALSE</p>
-      </td>
-      <td><p>TRUE</p>
-      </td>
-      <td><p>Indicates whether xop:Include elements would be used to
-        represent attachment data in the payload. If TRUE, attachments would
-        be represented in the attachments property, mapping content IDs to
-        binary data. If FALSE, attachments would be represented in the XML
-        payload itself, as base64 binary.</p>
-      </td>
-    </tr>
-    <tr valign="top">
       <td><p>"defaultAttachmentContentType"</p>
       </td>
       <td><p>string</p>
@@ -794,106 +779,12 @@ border="1">
 
 <h3><b>Member Variables</b></h3>
 <ul>
-  <li><p><b>string to</b></p>
-  </li>
-</ul>
-
-<p>URI representing the service endpoint address. If WS-Addressing is in use,
-this corresponds to the WS-Addressing From header value.</p>
-<ul>
-  <li><p><b>string action</b></p>
-  </li>
-</ul>
-
-<p>WS-Addressing action URI associated with the message.</p>
-<ul>
-  <li><p><b>string from</b></p>
-  </li>
-</ul>
-
-<p>WS-Addressing From. A URI indicating where the response or request came
-from.</p>
-<ul>
-  <li><p><b>string replyTo</b></p>
-  </li>
-</ul>
-
-<p>WS-Addressing ReplyTo. A URI indicating where the response should be sent
-to.</p>
-<ul>
-  <li><p><b>string faultTo</b></p>
-  </li>
-</ul>
-
-<p>WS-Addressing FaultTo. A URI indicating where the fault should be sent to
-in case of an error.</p>
-<ul>
-  <li><p><b>boolean usesXOP</b></p>
-  </li>
-</ul>
-
-<p>Indicates whether xop:Include elements would be used to represent
-attachment data in the payload. If TRUE, attachments would be represented in
-the attachments property, mapping content IDs to binary data. If FALSE,
-attachments would be represented in the XML payload itself, as base64
-binary.</p>
-<ul>
-  <li><p><b>string defaultAttachmentContentType</b></p>
-  </li>
-</ul>
-
-<p>Specify a default MTOM content type to be used with MTOM attachments. User
-can also specify xmlmime:contentType on the xop:Include element, which would
-override this setting.</p>
-<ul>
-  <li><p><b>string user</b></p>
-  </li>
-</ul>
-
-<p>Username for username token. If user is present, that implies that
-WS-Security would be in use.</p>
-<ul>
-  <li><p><b>string password</b></p>
-  </li>
-</ul>
-
-<p>Password corresponding to the given username token.</p>
-<ul>
-  <li><p><b>boolean timestamp</b></p>
-  </li>
-</ul>
-
-<p>If set to TRUE time stamp information would be sent in WS-Security header.
-If FALSE, no time stamp information would be used.</p>
-<ul>
-  <li><p><b>boolean digest</b></p>
-  </li>
-</ul>
-
-<p>If set to TRUE password would be sent as a digest.If FALSE password would
-be sent in plain text.</p>
-<ul>
-  <li><p><b>boolean timeToLive</b></p>
-  </li>
-</ul>
-
-<p>Time to live indicates how long the given WS-Security header would be
-valid. In the time to live value, a number followed by d, h, m or s specifies
-a duration in days, hours, minutes or seconds respectively.</p>
-<ul>
   <li><p><b>string str</b></p>
   </li>
 </ul>
 
 <p>Stores the last SOAP request or response payload sent sent in the message
 as an XML string.</p>
-<ul>
-  <li><p><b>SimpleXMLElement simpleXML</b></p>
-  </li>
-</ul>
-
-<p>Stores the last SOAP request or response payload sent sent in the message
-as a SimpleXMLElement.</p>
 <ul>
   <li><p><b>domDocument dom</b></p>
   </li>
@@ -911,6 +802,22 @@ attachments. e.g.array("cid1" =&gt; $image)) Here "cid1" is the id mentioned
 in the &lt;XOP:Include&gt; element, and $image contains the string
 representation of the binary content to be sent or being received.</p>
 <br>
+<ul>
+  <li><p><b>array cid2contentType</b></p>
+  </li>
+</ul>
+
+<p>An associative array, containing the mapping of cid (content id) to its corresponding
+    &nbsp;attachment. When an attchement is received, this property will be present
+    in the WSMessage object.</p>
+    <p>
+<ul>
+  <li><p><b>array headers</b></p>
+  </li>
+</ul>
+
+<p>An array of SOAP Header objects to be sent or&nbsp; has beed received. </p>
+    <p>
 
 
 <h3><b>Example</b></h3>
@@ -929,7 +836,7 @@ XML;
     <span style="color: rgb(0, 0, 255);">$resMessage</span> = <span style="color: rgb(0, 0, 255);">$client</span>-&gt;<span style="color: rgb(0, 102, 0);">request</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$reqMessage</span><span style="color: rgb(102, 204, 102);">)</span>;
     
     <a href="http://www.php.net/printf"><span style="color: rgb(0, 0, 102);">printf</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"Response = %s <span style="color: rgb(0, 0, 153); font-weight: bold;">\n</span>"</span>, <span style="color: rgb(0, 0, 255);">$resMessage</span>-&gt;<span style="color: rgb(0, 102, 0);">str</span><span style="color: rgb(102, 204, 102);">)</span>;
- 
+&nbsp;
 </pre>
 <a id="fault"></a>
 
@@ -1226,7 +1133,7 @@ border="1">
                 &lt;text&gt;Hello World!&lt;/text&gt;
         &lt;/ns1:notifyString&gt;
 XML;
- 
+&nbsp;
     ws_send<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$reqPayloadString</span>,
                <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"to"</span>=&gt;<span style="color: rgb(255, 0, 0);">"http://localhost/reply_notify_service.php"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
 <br>
