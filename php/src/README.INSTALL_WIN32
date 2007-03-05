@@ -56,12 +56,12 @@ Contents:
     You will find the option --with-wsf.
 
     Add following entries to config.nice.bat file.
-	"--with-extra-includes=<Libxml2 bin dir>\include;<Iconv binary dir>\include;<zlib binary dir>\include"
-	"--with-extra-libs=<Libxml2 bin dir>\lib;<Iconv binary dir>\lib;<zlib binary dir>\lib"
+	"--with-extra-includes=<Libxml2 bin dir>\include;<Iconv bin dir>\include;<zlib bi dir>\include;<wsf-c>\include;"
+	"--with-extra-libs=<Libxml2 bin dir>\lib;<Iconv bin dir>\lib;<zlib bin dir>\lib;<wsf-c>\lib"
 	--with-wsf=shared"
 
 	
-    Now run config.nice.bat file to generate the maefile.
+    Now run config.nice.bat file to generate the makefile.
    
     "nmake" will build wsf extension.
 
