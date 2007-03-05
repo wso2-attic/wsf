@@ -98,4 +98,48 @@ public class RuntimePropertyUtils {
 		return status;
 	}
 
+	public static String getWSASWebappLocation(String wsasDirectory) {
+		String nodes[] = {	WSASCoreUIMessages.DIR_TOMCAT,
+							WSASCoreUIMessages.DIR_WEBAPP, 
+							WSASCoreUIMessages.DIR_ROOT	};
+		String wsasDistPath = FileUtils.addNodesToPath(
+												wsasDirectory,
+												nodes);
+		return wsasDistPath;
+}
+	public static String getWSASWebappLibLocation(String wsasDirectory) {
+		String nodes[] = {WSASCoreUIMessages.DIR_LIB};
+		String wsasDistPath = FileUtils.addNodesToPath(
+												wsasDirectory,
+												nodes);
+		return wsasDistPath;
+	}
+	
+	public static String getWSASWebappConfLocation(String wsasDirectory) {
+		String nodes[] = {WSASCoreUIMessages.DIR_CONF};
+		String wsasDistPath = FileUtils.addNodesToPath(
+												wsasDirectory,
+												nodes);
+		return wsasDistPath;
+	}
+	
+	
+	public static String getWSASWebappDatabaseLocation(String wsasDirectory) {
+		String nodes[] = {WSASCoreUIMessages.DIR_DATABASE};
+		String wsasDistPath = FileUtils.addNodesToPath(
+												wsasDirectory,
+												nodes);
+		return wsasDistPath;
+	}
+	
+	
+	public static String getWSASWebappRepositoryLocation(String wsasDirectory) {
+		String nodes[] = {WSASCoreUIMessages.DIR_REPOSITORY};
+		String wsasDistPath = FileUtils.addNodesToPath(
+												wsasDirectory,
+												nodes);
+		return wsasDistPath;
+	}
+	
+
 }

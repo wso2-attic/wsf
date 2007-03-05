@@ -25,8 +25,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.wso2.wsf.wtp.core.plugin.data.ServerModel;
 import org.wso2.wsf.wtp.core.plugin.messages.WSASCoreUIMessages;
+import org.wso2.wsf.wtp.core.utils.FileUtils;
 import org.wso2.wsf.wtp.core.utils.RuntimePropertyUtils;
-import org.wso2.wsf.wtp.core.utils.WSASCoreUtils;
 
 public class WSASRuntimePreferencePage extends PreferencePage implements
 		IWorkbenchPreferencePage {
@@ -59,13 +59,10 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		wsasPath.setText("");
 		wsasPath.setLocation(110,30);
 		wsasPath.setSize(400, 20);
-		wsasPath.addModifyListener( new ModifyListener()
-		{
-			public void modifyText(ModifyEvent e)
-			{
-				ServerModel.setWSASServerPath( wsasPath.getText() );
-				boolean warExist =runtimeExist(wsasPath.getText());
-				if (warExist) {
+		wsasPath.addModifyListener( new ModifyListener(){
+			public void modifyText(ModifyEvent e){
+				if (runtimeExist(wsasPath.getText())) {
+					ServerModel.setWSASServerPath( wsasPath.getText() );
 					status = RuntimePropertyUtils.writeServerPathToPropertiesFile(
 																wsasPath.getText());
 				}
@@ -99,13 +96,10 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		
 		
 		
-		TabItem codegenPreferencesItem = new TabItem(wsasPreferenceTab, SWT.NONE);
-		codegenPreferencesItem.setText("Codegen Preferences");
+		//TabItem codegenPreferencesItem = new TabItem(wsasPreferenceTab, SWT.NONE);
+		//codegenPreferencesItem.setText("Codegen Preferences");
 		
-		
-
 		wsasPreferenceTab.setSize(600, 300);
-		
 	    return mainComp;
 	}
 
@@ -129,8 +123,10 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 	private void statusUpdate(boolean status){
 		if (status) {
 			statusLabel.setText(WSASCoreUIMessages.LABEL_WSAS_RUNTIME_LOAD);
+			this.setErrorMessage(null);
 		} else {
 			statusLabel.setText(WSASCoreUIMessages.LABEL_WSAS_RUNTIME_LOAD_ERROR);
+			this.setErrorMessage(WSASCoreUIMessages.LABEL_WSAS_RUNTIME_LOAD_ERROR);
 		}
 		
 	}
@@ -138,20 +134,12 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 	private boolean runtimeExist(String path){
 		File wsasHomeDir = new File(path);
 		if (wsasHomeDir.isDirectory()) {
-			String wsasDistPath = WSASCoreUtils.addAnotherNodeToPath(
-													wsasHomeDir.getAbsolutePath(),
-													"dist");
-			if (new File(wsasDistPath).isDirectory()) {
-				String wsasWarPath = WSASCoreUtils.addAnotherNodeToPath(
-						wsasDistPath,
-						"wsas.war");
-				if (new File(wsasWarPath).isFile()) {
+			String wsasDistPath = RuntimePropertyUtils.getWSASWebappLocation(wsasHomeDir.getAbsolutePath());
+			String wsasLibPath = RuntimePropertyUtils.getWSASWebappLibLocation(wsasHomeDir.getAbsolutePath());
+			
+			if (new File(wsasDistPath).isDirectory() && checkWSASLibExsistance(wsasLibPath)) {
 					statusUpdate(true);
 					return true;
-				} else {
-					statusUpdate(false);
-					return false;
-				}
 			} else {
 				statusUpdate(false);
 				return false;
@@ -162,4 +150,12 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		}
 	}
 	
+	private boolean checkWSASLibExsistance(String wsasLibPath){
+		File libDir = new File(wsasLibPath);
+		if(!(libDir.isDirectory())){
+			return false;
+		}else{
+			return FileUtils.checkFileExistanceInsideDirectory(wsasLibPath, ".jar");
+		}
+	}
 }

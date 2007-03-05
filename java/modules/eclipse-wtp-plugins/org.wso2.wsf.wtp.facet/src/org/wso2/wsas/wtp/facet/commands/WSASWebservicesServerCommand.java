@@ -29,7 +29,7 @@ AbstractDataModelOperation {
 		IStatus status = Status.OK_STATUS;
 		
 		ContentCopyUtils contentCopyUtils = new ContentCopyUtils();
-				String runtimeLocation = WSASRuntimeUtils.copyWSASWar(
+				String runtimeLocation = WSASRuntimeUtils.copyWSASWebapp(
 															monitor,
 															WSASCoreUIMessages.PROPERTY_KEY_PATH);
 				status = contentCopyUtils.copyDirectoryRecursivelyIntoWorkspace(

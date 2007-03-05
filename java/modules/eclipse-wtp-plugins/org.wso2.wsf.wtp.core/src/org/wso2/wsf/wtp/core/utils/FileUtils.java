@@ -3,6 +3,7 @@ package org.wso2.wsf.wtp.core.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -138,4 +139,27 @@ public class FileUtils
 		return currentPath + File.separator + newNode;
 	}
 
+	public static String addNodesToPath(String currentPath, String[] newNode) {
+		String returnPath=currentPath;
+		for (int i = 0; i < newNode.length; i++) {
+			returnPath = returnPath + File.separator + newNode[i];
+		}
+		return returnPath;
+}
+
+	public static boolean checkFileExistanceInsideDirectory(String directory, String filetype){
+		final String filterType = filetype;
+		File dir = new File(directory);
+		if (dir.exists() && dir.isDirectory()){
+		    FilenameFilter filter = new FilenameFilter() {
+		        public boolean accept(File dir, String name) {
+		            return !(name.endsWith(filterType));
+		        }
+		    };
+			if((dir.listFiles(filter).length) > 0){
+				return true;
+			}
+		}
+		return false;
+	}
 }

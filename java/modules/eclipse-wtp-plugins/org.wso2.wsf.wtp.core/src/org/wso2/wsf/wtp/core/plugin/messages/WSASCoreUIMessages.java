@@ -22,6 +22,14 @@ public final class WSASCoreUIMessages extends NLS {
 	public static String DIR_DIST;
 	public static String DIR_DOT_METADATA;
 	public static String DIR_DOT_PLUGINS;
+	public static String DIR_TOMCAT;
+	public static String DIR_ROOT;
+	public static String DIR_LIB;
+	public static String DIR_CONF;
+	public static String DIR_DATABASE;
+	public static String DIR_REPOSITORY;
+	public static String DIR_WEBAPP;
+	
 
 	public static String FILE_WSAS_WAR;
 	
