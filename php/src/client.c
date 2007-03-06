@@ -129,7 +129,7 @@ wsf_client_set_security_options(
 			sec_token = *tmp;
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] security token object found ");
 	}
-	if(zend_hash_find(client_ht, WS_POLICY, sizeof(WS_POLICY), (void **)&tmp) == SUCCESS){
+	if(zend_hash_find(client_ht, WS_POLICY, sizeof(WS_POLICY_NAME), (void **)&tmp) == SUCCESS){
 			policy = *tmp;
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] policy object found ");
 	}
