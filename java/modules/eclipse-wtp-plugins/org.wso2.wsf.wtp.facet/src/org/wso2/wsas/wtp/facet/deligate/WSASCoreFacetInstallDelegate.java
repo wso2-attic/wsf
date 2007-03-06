@@ -9,6 +9,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.common.project.facet.core.IDelegate;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 import org.wso2.wsas.wtp.facet.commands.WSASWebservicesServerCommand;
+import org.wso2.wsas.wtp.facet.model.WSASCoreFacetInstallConfig;
 import org.wso2.wsf.wtp.core.plugin.messages.WSASCoreUIMessages;
 import org.wso2.wsf.wtp.core.utils.RuntimePropertyUtils;
 
@@ -16,10 +17,11 @@ public class WSASCoreFacetInstallDelegate implements IDelegate {
 	
 	private IStatus status;
 	
-	public void execute(IProject project, IProjectFacetVersion arg1, Object arg2,
+	public void execute(IProject project, IProjectFacetVersion arg1, Object config,
 			IProgressMonitor monitor) throws CoreException {
 			monitor.beginTask(WSASCoreUIMessages.PROGRESS_INSTALL_WSAS_RUNTIME, 2 );
 	        try {
+	            final WSASCoreFacetInstallConfig cfg = (WSASCoreFacetInstallConfig) config;
 	        	WSASWebservicesServerCommand command = new WSASWebservicesServerCommand(
 	        													project.toString()
 	        												); 

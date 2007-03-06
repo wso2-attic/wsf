@@ -22,15 +22,16 @@
 		    <constraint>
       			<requires facet="jst.web" version="2.2,2.3,2.4"/>
     		</constraint>
-    		<action type="INSTALL">
+    		<action type="INSTALL" id="WSAS.core.install">
       			<delegate class="org.wso2.wsas.wtp.facet.deligate.WSASCoreFacetInstallDelegate"/>
+      			<config-factory class="org.wso2.wsas.wtp.facet.model.WSASCoreFacetInstallConfig$Factory"/>
     		</action>
     		<action type="UNINSTALL">
       			<delegate class="org.wso2.wsas.wtp.facet.deligate.WSASCoreFacetUnInstallDelegate"/>
     		</action>
   		</project-facet-version>
-
-		  <project-facet id="WSAS.ext">
+  		
+  		<project-facet id="WSAS.ext">
 			<label>WSAS Web Services Extensions</label>
 			<description>
 			  Prepare the Project for additional Web services support with the WSO2 Web Services Application Server.
@@ -71,6 +72,13 @@
          version="1.1"/>
     </supported>
  </extension>
+ 
+ 
+ 	<extension point="org.eclipse.wst.common.project.facet.ui.wizardPages">
+  		<wizard-pages action="WSAS.core.install">
+    		<page class="org.wso2.wsas.wtp.facet.ui.WSASFacetInstallPage" />
+  		</wizard-pages>
+	</extension> 
  
 
 </plugin>
