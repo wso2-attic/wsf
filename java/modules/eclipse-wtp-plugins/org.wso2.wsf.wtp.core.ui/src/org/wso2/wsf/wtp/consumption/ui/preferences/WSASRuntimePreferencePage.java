@@ -25,7 +25,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.wso2.wsf.wtp.core.plugin.data.ServerModel;
 import org.wso2.wsf.wtp.core.plugin.messages.WSASCoreUIMessages;
-import org.wso2.wsf.wtp.core.utils.FileUtils;
 import org.wso2.wsf.wtp.core.utils.RuntimePropertyUtils;
 
 public class WSASRuntimePreferencePage extends PreferencePage implements
@@ -56,26 +55,21 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		label.setSize(100,20);
 		
 		wsasPath = new Text( group, SWT.BORDER );
-		wsasPath.setText("");
+		wsasPath.setText((RuntimePropertyUtils.alreadyWSASHomeSet())?
+								ServerModel.getWSASServerPath():"");
 		wsasPath.setLocation(110,30);
 		wsasPath.setSize(400, 20);
 		wsasPath.addModifyListener( new ModifyListener(){
 			public void modifyText(ModifyEvent e){
-				if (runtimeExist(wsasPath.getText())) {
-					ServerModel.setWSASServerPath( wsasPath.getText() );
-					status = RuntimePropertyUtils.writeServerPathToPropertiesFile(
-																wsasPath.getText());
-				}
+				checkAndSetRuntimeCheckField();
 			}
 		});
 		browseButton = new Button( group, SWT.NONE );
 		browseButton.setText(WSASCoreUIMessages.LABEL_BROUSE);
 		browseButton.setLocation(520,30);
 		browseButton.setSize(70, 20);
-		browseButton.addSelectionListener( new SelectionAdapter()
-		{
-			public void widgetSelected(SelectionEvent e)
-			{
+		browseButton.addSelectionListener( new SelectionAdapter(){
+			public void widgetSelected(SelectionEvent e){
 				handleBrowse(mainComp.getShell());
 			}     
 		}); 
@@ -94,7 +88,7 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		statusLabel.setSize(560,40);
 		statusLabel.setAlignment(SWT.CENTER);
 		
-		
+		checkAndSetRuntimeCheckField();
 		
 		//TabItem codegenPreferencesItem = new TabItem(wsasPreferenceTab, SWT.NONE);
 		//codegenPreferencesItem.setText("Codegen Preferences");
@@ -120,8 +114,8 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		}
 	}
 	
-	private void statusUpdate(boolean status){
-		if (status) {
+	private void statusUpdate(boolean inStatus){
+		if (inStatus) {
 			statusLabel.setText(WSASCoreUIMessages.LABEL_WSAS_RUNTIME_LOAD);
 			this.setErrorMessage(null);
 		} else {
@@ -137,7 +131,8 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 			String wsasDistPath = RuntimePropertyUtils.getWSASWebappLocation(wsasHomeDir.getAbsolutePath());
 			String wsasLibPath = RuntimePropertyUtils.getWSASWebappLibLocation(wsasHomeDir.getAbsolutePath());
 			
-			if (new File(wsasDistPath).isDirectory() && checkWSASLibExsistance(wsasLibPath)) {
+			if (new File(wsasDistPath).isDirectory() && 
+					RuntimePropertyUtils.checkWSASLibExsistance(wsasLibPath)) {
 					statusUpdate(true);
 					return true;
 			} else {
@@ -150,12 +145,10 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		}
 	}
 	
-	private boolean checkWSASLibExsistance(String wsasLibPath){
-		File libDir = new File(wsasLibPath);
-		if(!(libDir.isDirectory())){
-			return false;
-		}else{
-			return FileUtils.checkFileExistanceInsideDirectory(wsasLibPath, ".jar");
+	private void checkAndSetRuntimeCheckField(){
+		if (runtimeExist(wsasPath.getText())) {
+			ServerModel.setWSASServerPath( wsasPath.getText() );
 		}
 	}
+	
 }

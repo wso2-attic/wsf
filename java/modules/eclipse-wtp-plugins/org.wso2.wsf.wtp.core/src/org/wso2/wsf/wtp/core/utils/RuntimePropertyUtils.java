@@ -8,6 +8,7 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.wso2.wsf.wtp.core.plugin.data.ServerModel;
 import org.wso2.wsf.wtp.core.plugin.messages.WSASCoreUIMessages;
 
 public class RuntimePropertyUtils {
@@ -141,5 +142,22 @@ public class RuntimePropertyUtils {
 		return wsasDistPath;
 	}
 	
+	public static boolean checkWSASLibExsistance(String wsasLibPath){
+		File libDir = new File(wsasLibPath);
+		if(!(libDir.isDirectory())){
+			return false;
+		}else{
+			return FileUtils.checkFileExistanceInsideDirectory(wsasLibPath, ".jar");
+		}
+	}
+	
+	public static boolean alreadyWSASHomeSet() {
+		String wsasPath = ServerModel.getWSASServerPath();
+		if (wsasPath == null) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 
 }

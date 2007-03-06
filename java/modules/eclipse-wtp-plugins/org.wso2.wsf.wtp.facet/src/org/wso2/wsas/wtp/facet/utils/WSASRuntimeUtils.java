@@ -17,7 +17,12 @@ public class WSASRuntimeUtils {
 	public static String  copyWSASWebapp(IProgressMonitor monitor, String wsasHome) {
 		String tempWarLocation = null;
 		try {
-			if (new File (WSASCoreUtils.tempWSASDirectory()).isDirectory()) {
+			File tempWSASDir = new File (WSASCoreUtils.tempWSASDirectory());
+			if (tempWSASDir.exists()) {
+				tempWSASDir.delete();
+			}
+			tempWSASDir.mkdirs();
+			if (tempWSASDir.isDirectory()) {
 				tempWarLocation = WSASCoreUtils.addAnotherNodeToPath(
 															WSASCoreUtils.tempWSASDirectory(),
 															WSASCoreUIMessages.DIR_TEMPWAR);
@@ -26,29 +31,17 @@ public class WSASRuntimeUtils {
 				tempWarLocationFile.delete();
 			}
 			tempWarLocationFile.mkdirs();
-//			Properties properties = new Properties();
-//			properties.load(new FileInputStream(WSASCoreUtils.tempWSASWebappFileLocation()));
-//				if (properties.containsKey(WSASCoreUIMessages.PROPERTY_KEY_PATH)){
-			
 					
 					//Copy the WSAS Web Application.
 					String wsasWebappLocation = RuntimePropertyUtils.getWSASWebappLocation(
 															ServerModel.getWSASServerPath()
-											 );
-					
+											 	);
 					
 					FileUtils.copyDirectory(new File(wsasWebappLocation), new File(tempWarLocation));
 					
 					String tempWarWEBINFDir = FileUtils.addAnotherNodeToPath(
 															tempWarLocation,	
 																"WEB-INF");
-					
-					  Properties p = new Properties(System.getProperties());
-					  p.setProperty("WSO2WSAS_HOME", tempWarWEBINFDir);
-					  System.setProperties(p);
-				
-					  System.out.println(System.getProperty("WSO2WSAS_HOME"));
-					
 					
 					//Copy the WSAS lib Application.
 					String wsasLibLocation = RuntimePropertyUtils.getWSASWebappLibLocation(
