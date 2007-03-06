@@ -77,17 +77,18 @@
 #define WS_PVT_KEY_FORMAT "privateKeyFormat"
 #define WS_INFLOW_SECURITY_POLICY  "InflowRampartContext"
 #define WS_OUTFLOW_SECURITY_POLICY "OutflowRampartContext"
-
+#define WS_DIGEST "Digest"
+#define WS_PLAINTEXT "plainText"
 
 
 #define BASIC256 "Basic256"
 #define BASIC192 "Basic192"
 #define BASIC128 "Basic128"
 #define TRIPLEDES "TripleDes"
-#define BASIC256_RSA15 "Basic256RSA15"
-#define BASIC192_RSA15 "Basic192RSA15"
-#define BASIC128_RSA15 "Basic128RSA15"
-#define TRIPLEDES_RSA15 "TripleDesRSA15"
+#define BASIC256_RSA15 "Basic256Rsa15"
+#define BASIC192_RSA15 "Basic192Rsa15"
+#define BASIC128_RSA15 "Basic128Rsa15"
+#define TRIPLEDES_RSA15 "TripleDesRsa15"
 
 #define ISSUER_SERIAL "IssuerSerial"
 #define KEYIDENTIFIER "KeyIdentifier"

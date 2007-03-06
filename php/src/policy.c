@@ -26,6 +26,7 @@
 #include <axiom.h>
 
 #include <rampart_context.h>
+#include <axis2_key_type.h>
 
 #define ArrySize 8
 
@@ -163,8 +164,10 @@ int ws_policy_handle_client_security(zval *sec_token,
                 (Z_TYPE_PP(tmp_type) == IS_ARRAY )) {
             policy_type = *tmp_type;
             outgoing_policy_node = do_create_policy(sec_token, policy_type, env TSRMLS_CC);
+            is_multiple_flow = AXIS2_SUCCESS;
+
         }
-        is_multiple_flow = AXIS2_SUCCESS;
+/*         is_multiple_flow = AXIS2_SUCCESS; */
     }
     /* since creating policy xml is the same procedure use one
        function */
@@ -386,9 +389,9 @@ int set_options_to_rampart_ctx(rampart_context_t *x_rampart_ctx,
                                     (void *)token_ctx.publicKey) == AXIS2_SUCCESS)
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pub key ");
 
-    /*     if(rampart_context_set_pub_key_type(x_rampart_ctx, env, */
-    /* 					token_ctx.publicKeyFormat) == AXIS2_SUCCESS) */
-    /* 	    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pub key format "); */
+        if(rampart_context_set_pub_key_type(x_rampart_ctx, env,
+    					AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS)
+    	    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pub key format ");
 
     if (rampart_context_set_user(x_rampart_ctx, env,
                                  (axis2_char_t *)token_ctx.user) == AXIS2_SUCCESS)
@@ -397,6 +400,10 @@ int set_options_to_rampart_ctx(rampart_context_t *x_rampart_ctx,
     if(rampart_context_set_password(x_rampart_ctx, env,
                                     (axis2_char_t *)token_ctx.password) == AXIS2_SUCCESS)
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting password ");
+
+    if(rampart_context_set_password_type(x_rampart_ctx, env,
+                                    (axis2_char_t *)token_ctx.passwordType) == AXIS2_SUCCESS)
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting passwordType ");
 
     if (rampart_context_set_ttl(x_rampart_ctx, env,
                                 token_ctx.ttl) == AXIS2_SUCCESS)
@@ -503,7 +510,7 @@ axiom_node_t *do_create_policy(zval *sec_token,
         /* if the encryption is included */
         if (encrypt_tmp) {
             create_recipient_token(env, policy_om_node, encrypt_tmp TSRMLS_CC);
-            create_encrypt_parts(env, policy_om_node, encrypt_tmp TSRMLS_CC);
+            create_encrypt_parts(env, all_om_node, encrypt_tmp TSRMLS_CC);
         } else {
             /* Since recipient token is needed for the default case */
             create_default_encrypt(env, policy_om_node);
@@ -545,13 +552,13 @@ axiom_node_t *do_create_policy(zval *sec_token,
             create_default_encrypt(env, policy_om_node);
             is_default = AXIS2_FALSE;
         }
-        create_username_token(env, policy_om_node, tmp TSRMLS_CC);
+        create_username_token(env, all_om_node, tmp TSRMLS_CC);
     }
 
     /* for security token reference */
     if (zend_hash_find(ht_policy, WS_TOKEN_REFERENCE, sizeof(WS_TOKEN_REFERENCE), (void **)&tmp) == SUCCESS) {
         if (is_default == AXIS2_FALSE)
-            create_token_reference(env, policy_om_node, tmp TSRMLS_CC);
+            create_token_reference(env, all_om_node, tmp TSRMLS_CC);
     }
 
     return root_om_node;
