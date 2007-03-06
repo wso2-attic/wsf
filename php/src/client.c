@@ -129,7 +129,7 @@ wsf_client_set_security_options(
 			sec_token = *tmp;
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] security token object found ");
 	}
-	if(zend_hash_find(client_ht, WS_POLICY, sizeof(WS_POLICY_NAME), (void **)&tmp) == SUCCESS){
+	if(zend_hash_find(client_ht, WS_POLICY_NAME, sizeof(WS_POLICY_NAME), (void **)&tmp) == SUCCESS){
 			policy = *tmp;
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] policy object found ");
 	}
@@ -290,7 +290,7 @@ wsf_client_get_reader_from_zval(zval **param ,
 								axis2_env_t *env TSRMLS_DC)
 {
 	axis2_char_t *str_payload = NULL;
-	int str_payload_len = NULL;
+	int str_payload_len = 0;
 	axiom_xml_reader_t *reader = NULL;
 	xmlNodePtr nodep;
 
@@ -396,9 +396,9 @@ wsf_client_add_properties(zval *this_ptr, HashTable *ht TSRMLS_DC){
         	Z_TYPE_PP(tmp) == IS_OBJECT){
 			add_property_zval(this_ptr, WS_SECURITY_TOKEN, *tmp);
         }
-	if(zend_hash_find(ht, WS_POLICY, sizeof(WS_POLICY), (void **)&tmp) == SUCCESS &&
+	if(zend_hash_find(ht, WS_POLICY_NAME, sizeof(WS_POLICY_NAME), (void **)&tmp) == SUCCESS &&
 		Z_TYPE_PP(tmp) == IS_OBJECT  || Z_TYPE_PP(tmp) && IS_ARRAY ) {
-			add_property_zval(this_ptr, WS_POLICY, *tmp);
+			add_property_zval(this_ptr, WS_POLICY_NAME, *tmp);
         }
         
 	/** RM */
