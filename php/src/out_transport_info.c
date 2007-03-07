@@ -160,9 +160,9 @@ wsf_http_out_transport_info_set_char_encoding
             const axis2_char_t *encoding)
 {
     wsf_out_transport_info_impl_t *info_impl = NULL;
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    AXIS2_PARAM_CHECK(env->error, encoding, AXIS2_FAILURE);
-   
+	if(!encoding)
+		return AXIS2_FAILURE;
+
     info_impl = AXIS2_INTF_TO_IMPL(info);
    
     if(NULL != info_impl->encoding){

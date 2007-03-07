@@ -32,13 +32,7 @@
 #include "wsf_stream.h"
 #include "wsf_util.h"
 
-#define READ_SIZE  32
-#define INTERNET_MAX_PATH_LENGTH        2048
-#define INTERNET_MAX_SCHEME_LENGTH      32          
-#define INTERNET_MAX_URL_LENGTH         (INTERNET_MAX_SCHEME_LENGTH \
-                                        + sizeof("://") \
-                                        + INTERNET_MAX_PATH_LENGTH)
-
+#define READ_SIZE 32
 
 struct wsf_worker_t
 {
@@ -77,7 +71,7 @@ wsf_worker_t * wsf_worker_create (const axis2_env_t *env,
 		conf = axis2_conf_ctx_get_conf(worker->conf_ctx, env);
 		module_desc = AXIS2_CONF_GET_MODULE(conf, env, sandesha2_qname);
 		if(module_desc){
-			param = AXIS2_MODULE_DESC_GET_PARAM(module_desc, env, "sandesha2_db");
+			param = axis2_module_desc_get_param(module_desc, env, "sandesha2_db");
 			if(param){
 				axis2_param_set_value(param, env, rm_db_dir);	
 				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_svr] rm_db_dir %s", rm_db_dir);
@@ -144,7 +138,7 @@ int wsf_worker_process_request(
         wsf_worker_t *worker, 
         const axis2_env_t *env, 
         wsf_req_info_t *request,
-	ws_svc_info_t *svc_info)
+		ws_svc_info_t *svc_info)
 {
 	axis2_conf_ctx_t *conf_ctx = NULL;
 	axis2_conf_t *conf = NULL;
@@ -181,12 +175,13 @@ int wsf_worker_process_request(
 	axis2_char_t *content_type = NULL;
 	axis2_char_t *ctx_uuid = NULL;
 	axis2_string_t *ctx_uuid_str = NULL;
-    	axis2_char_t *is_class = NULL;
+    axis2_char_t *is_class = NULL;
     
-    	TSRMLS_FETCH();
+    TSRMLS_FETCH();
 	
-	AXIS2_PARAM_CHECK(env->error, request, AXIS2_CRITICAL_FAILURE);
-   
+	if(!request)
+		return -1;
+
 	conf_ctx = worker->conf_ctx;
 	if(request->query_string){       
 		request_uri_with_query_string = malloc((strlen(request->request_uri) + 5 + strlen(request->query_string)));
@@ -206,7 +201,7 @@ int wsf_worker_process_request(
     
 	content_length = request->content_length;
 	http_version = request->http_protocol;
-	req_url = AXIS2_URL_TO_EXTERNAL_FORM(url, env);
+	req_url = axis2_url_to_external_form(url, env);
         req_url_str = axis2_string_create(env, req_url);
     
 	content_type = (axis2_char_t*) request->content_type;
@@ -234,13 +229,13 @@ int wsf_worker_process_request(
 	msg_ctx = axis2_msg_ctx_create(env, conf_ctx, in_desc, out_desc);
 	
 
-	AXIS2_MSG_CTX_SET_SERVER_SIDE(msg_ctx, env, AXIS2_TRUE);
+	axis2_msg_ctx_set_server_side(msg_ctx, env, AXIS2_TRUE);
     
-	AXIS2_MSG_CTX_SET_SVC(msg_ctx, env, svc_info->svc);
+	axis2_msg_ctx_set_svc(msg_ctx, env, svc_info->svc);
 	
 	if(svc_info->op_name){
 		axis2_op_t *op = NULL;
-        	op = AXIS2_SVC_GET_OP_WITH_NAME(svc_info->svc, env, svc_info->op_name);
+        	op = axis2_svc_get_op_with_name(svc_info->svc, env, svc_info->op_name);
 		if(op){
 			axis2_msg_ctx_set_op(msg_ctx, env, op);
 		}
@@ -253,7 +248,7 @@ int wsf_worker_process_request(
 		out_stream_prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST,
 			AXIS2_TRUE ,axis2_stream_free_void_arg, out_stream);
 
-		AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, AXIS2_TRANSPORT_OUT, 
+		axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_TRANSPORT_OUT, 
 			out_stream_prop, AXIS2_FALSE);
         	axis2_msg_ctx_set_transport_out_stream(msg_ctx, env, out_stream);
 	}
@@ -261,7 +256,7 @@ int wsf_worker_process_request(
 	/** generate uuid for context */
 	ctx_uuid = axis2_uuid_gen(env);
     	ctx_uuid_str = axis2_string_create(env, ctx_uuid);
-    	AXIS2_MSG_CTX_SET_SVC_GRP_CTX_ID(msg_ctx, env, ctx_uuid_str);
+    	axis2_msg_ctx_set_svc_grp_ctx_id(msg_ctx, env, ctx_uuid_str);
     	AXIS2_FREE(env->allocator, ctx_uuid);
     	axis2_string_free(ctx_uuid_str, env);
     
@@ -273,7 +268,7 @@ int wsf_worker_process_request(
 		axis2_property_t *svc_path_prop = NULL;
 		svc_path_prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST,
 			AXIS2_TRUE,NULL, AXIS2_STRDUP(svc_info->svc_path, env));
-		AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, "WS_SVC_PATH", svc_path_prop, AXIS2_FALSE);
+		axis2_msg_ctx_set_property(msg_ctx, env, "WS_SVC_PATH", svc_path_prop, AXIS2_FALSE);
 	}
     
     	if(request->transfer_encoding){
@@ -285,7 +280,7 @@ int wsf_worker_process_request(
 		axis2_property_t *svc_info_prop = NULL;
 		svc_info_prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST,
 			AXIS2_TRUE,NULL, svc_info);				
-		AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, WS_SVC_INFO, 
+		axis2_msg_ctx_set_property(msg_ctx, env, WS_SVC_INFO, 
 			svc_info_prop, AXIS2_FALSE);
 	}
     /** use MTOM property */
@@ -366,7 +361,7 @@ int wsf_worker_process_request(
    	}
 	if(-1 == send_status) {
     
-		op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
+		op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
 		if(axis2_op_ctx_get_response_written(op_ctx, env)) {
 			int rlen = 0;
             	

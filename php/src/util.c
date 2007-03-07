@@ -345,7 +345,7 @@ wsf_req_info_t* wsf_php_req_info_create()
 	req_info->request_method = NULL;	
 	req_info->req_data = NULL;
 	req_info->req_data_length = 0;
-        req_info->result_length = 0;
+    req_info->result_length = 0;
 	req_info->result_payload = NULL;
 	req_info->transfer_encoding = NULL;
 	req_info->query_string = NULL;
@@ -392,18 +392,18 @@ axiom_node_t* ws_util_read_payload(
 		return NULL;
 	}
 		
-	document = AXIOM_STAX_BUILDER_GET_DOCUMENT(builder, env);
+	document = axiom_stax_builder_get_document(builder, env);
 		
 	if (!document) {
 		return NULL;
 	}
 		
-	payload = AXIOM_DOCUMENT_GET_ROOT_ELEMENT(document, env);
+	payload = axiom_document_get_root_element(document, env);
 	
 	if (!payload) {
 		return NULL;
 	}
-	AXIOM_DOCUMENT_BUILD_ALL(document, env);
+	axiom_document_build_all(document, env);
 	return payload;
 }
 /* }}} ws_read_payload */
@@ -489,11 +489,11 @@ axis2_char_t *ws_util_get_soap_msg_from_op_client(
 		msg_ctx = AXIS2_OP_CLIENT_GET_MSG_CTX(op_client, env, msg_label);
         if(!msg_ctx)
             return NULL;
-        soap_env = AXIS2_MSG_CTX_GET_SOAP_ENVELOPE(msg_ctx, env);
+        soap_env = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
         if(!soap_env)
             return NULL;
-        node = AXIOM_SOAP_ENVELOPE_GET_BASE_NODE(soap_env, env);
-        return AXIOM_NODE_TO_STRING(node, env);
+        node = axiom_soap_envelope_get_base_node(soap_env, env);
+        return axiom_node_to_string(node, env);
     }
     return NULL;    
 }    
@@ -664,7 +664,7 @@ void ws_util_create_op_and_add_to_svc(
 	
 	if(NULL != svc && NULL != op_name)
 	{
-        op = AXIS2_SVC_GET_OP_WITH_NAME(svc_info->svc, env, op_name);
+        op = axis2_svc_get_op_with_name(svc_info->svc, env, op_name);
         if(!op)
         {   
             axis2_conf_t *conf = NULL;
@@ -683,9 +683,9 @@ void ws_util_create_op_and_add_to_svc(
 
             info = AXIS2_CONF_GET_PHASES_INFO(conf, env);
             AXIS2_PHASES_INFO_SET_OP_PHASES(info, env, op);
-            AXIS2_SVC_ADD_OP(svc_info->svc, env, op);
+            axis2_svc_add_op(svc_info->svc, env, op);
             if(action){
-                AXIS2_SVC_ADD_MAPPING(svc_info->svc, env, AXIS2_STRDUP(action, env), op);
+                axis2_svc_add_mapping(svc_info->svc, env, AXIS2_STRDUP(action, env), op);
             }                
         }
 	}		
@@ -703,24 +703,24 @@ void wsf_util_set_attachments_with_cids(const axis2_env_t *env,
     if(!payload_node || !attach_ht)
         return;
 
-	if(AXIOM_NODE_GET_NODE_TYPE(payload_node, env) == AXIOM_ELEMENT){
-        payload_element = (axiom_element_t *)AXIOM_NODE_GET_DATA_ELEMENT(payload_node, env);     
+	if(axiom_node_get_node_type(payload_node, env) == AXIOM_ELEMENT){
+        payload_element = (axiom_element_t *)axiom_node_get_data_element(payload_node, env);     
 		axiom_element_get_first_element(payload_element, env, payload_node, &node);
     
-		if(node && AXIOM_NODE_GET_NODE_TYPE(node, env) == AXIOM_ELEMENT)
+		if(node && axiom_node_get_node_type(node, env) == AXIOM_ELEMENT)
 		{
 			
-			ele = (axiom_element_t*)AXIOM_NODE_GET_DATA_ELEMENT(node, env);        
+			ele = (axiom_element_t*)axiom_node_get_data_element(node, env);        
 			if(ele)
 			{
 				axiom_namespace_t *ns = NULL;
 				axis2_char_t *ns_uri = NULL;
 				axis2_char_t *ele_localname = NULL;
-				ele_localname = AXIOM_ELEMENT_GET_LOCALNAME(ele, env);
+				ele_localname = axiom_element_get_localname(ele, env);
 				if(ele_localname && AXIS2_STRCMP(ele_localname, "Include") == 0)
 				{
-					ns = AXIOM_ELEMENT_GET_NAMESPACE(ele, env, node);
-					if(ns && (ns_uri = AXIOM_NAMESPACE_GET_URI(ns, env)) &&
+					ns = axiom_element_get_namespace(ele, env, node);
+					if(ns && (ns_uri = axiom_namespace_get_uri(ns, env)) &&
 						AXIS2_STRCMP(ns_uri, "http://www.w3.org/2004/08/xop/include") == 0)
 					{
 						axis2_char_t *cnt_type = NULL;
@@ -730,12 +730,12 @@ void wsf_util_set_attachments_with_cids(const axis2_env_t *env,
 						axis2_char_t *id = NULL;                    
 						zval **tmp = NULL;
 						/** look for content type in parent */
-						cnt_type = AXIOM_ELEMENT_GET_ATTRIBUTE_VALUE_BY_NAME(payload_element, env, 
+						cnt_type = axiom_element_get_attribute_value_by_name(payload_element, env, 
 							"xmlmime:contentType");
 						if(!cnt_type)
 							cnt_type = default_cnt_type;                                        
 	                    
-						id = AXIOM_ELEMENT_GET_ATTRIBUTE_VALUE_BY_NAME(ele, env, "href");
+						id = axiom_element_get_attribute_value_by_name(ele, env, "href");
 						if(!id)
 							return;
 						pos = AXIS2_STRSTR(id, "cid:");
@@ -757,13 +757,13 @@ void wsf_util_set_attachments_with_cids(const axis2_env_t *env,
 									axiom_node_t *text_node = NULL;
 									axiom_text_t *text = NULL;
 									axiom_data_handler_t *data_handler = NULL;
-									AXIOM_NODE_DETACH(node, env);
+									axiom_node_detach(node, env);
 									data_handler = axiom_data_handler_create(env, NULL, cnt_type);
 									AXIOM_DATA_HANDLER_SET_BINARY_DATA(data_handler, env, binary_data, binary_data_len);
 									text = axiom_text_create_with_data_handler(env, payload_node, data_handler, &text_node);
 	                                
 									if (enable_mtom == AXIS2_FALSE){
-										AXIOM_TEXT_SET_OPTIMIZE(text, env, AXIS2_FALSE);
+										axiom_text_set_optimize(text, env, AXIS2_FALSE);
 									}
 									return;
 								}
@@ -774,11 +774,11 @@ void wsf_util_set_attachments_with_cids(const axis2_env_t *env,
 			}
 		}
 	}
-    tmp_node = AXIOM_NODE_GET_FIRST_CHILD(payload_node, env);
+    tmp_node = axiom_node_get_first_child(payload_node, env);
     while(tmp_node)
     {
         wsf_util_set_attachments_with_cids(env, enable_mtom, tmp_node, attach_ht, default_cnt_type TSRMLS_CC);
-        tmp_node = AXIOM_NODE_GET_NEXT_SIBLING(tmp_node, env);
+        tmp_node = axiom_node_get_next_sibling(tmp_node, env);
     }        
     return;    
 }        
@@ -793,18 +793,18 @@ void wsf_util_get_attachments(const axis2_env_t *env,
     if(!payload_node || !cid2contentType || !cid2str)
         return;
 
-    node = AXIOM_NODE_GET_FIRST_CHILD(payload_node, env);
-    if(node && AXIOM_NODE_GET_NODE_TYPE(node, env) == AXIOM_ELEMENT){
+    node = axiom_node_get_first_child(payload_node, env);
+    if(node && axiom_node_get_node_type(node, env) == AXIOM_ELEMENT){
         axiom_element_t *ele = NULL;
-        ele = (axiom_element_t*)AXIOM_NODE_GET_DATA_ELEMENT(node, env);        
+        ele = (axiom_element_t*)axiom_node_get_data_element(node, env);        
         if(ele){
             axiom_namespace_t *ns = NULL;
             axis2_char_t *ns_uri = NULL;
             axis2_char_t *ele_localname = NULL;
-            ele_localname = AXIOM_ELEMENT_GET_LOCALNAME(ele, env);
+            ele_localname = axiom_element_get_localname(ele, env);
             if(ele_localname && AXIS2_STRCMP(ele_localname, "Include") == 0)
             {
-                ns = AXIOM_ELEMENT_GET_NAMESPACE(ele, env, node);
+                ns = axiom_element_get_namespace(ele, env, node);
                 if(ns && (ns_uri = AXIOM_NAMESPACE_GET_URI(ns, env)) &&
                     AXIS2_STRCMP(ns_uri, "http://www.w3.org/2004/08/xop/include") == 0)
                 {
@@ -815,17 +815,17 @@ void wsf_util_get_attachments(const axis2_env_t *env,
                     axis2_char_t *cid = NULL;
                     axiom_data_handler_t *data_handler = NULL;
                     
-                    id = AXIOM_ELEMENT_GET_ATTRIBUTE_VALUE_BY_NAME(ele, env, "href");
+                    id = axiom_element_get_attribute_value_by_name(ele, env, "href");
                     if(!id)
                         return;
                     pos = AXIS2_STRSTR(id, "cid:");
                     if(pos){
                         cid = id+4;
-                        text_node = AXIOM_NODE_GET_FIRST_CHILD(node, env);
-                        if(text_node && AXIOM_NODE_GET_NODE_TYPE(text_node, env) == AXIOM_TEXT){
-                            text = (axiom_text_t*)AXIOM_NODE_GET_DATA_ELEMENT(text_node, env);
+                        text_node = axiom_node_get_first_child(node, env);
+                        if(text_node && axiom_node_get_node_type(text_node, env) == AXIOM_TEXT){
+                            text = (axiom_text_t*)axiom_node_get_data_element(text_node, env);
                             if(text){
-                                data_handler = AXIOM_TEXT_GET_DATA_HANDLER(text, env);
+                                data_handler = axiom_text_get_data_handler(text, env);
                                 if(data_handler){
                                     char *cnt_type = NULL;
                                     char *data = NULL;
@@ -838,7 +838,7 @@ void wsf_util_get_attachments(const axis2_env_t *env,
                                     if(cnt_type){
                                         add_assoc_stringl(cid2contentType, cid, cnt_type, strlen(cnt_type), 1);
                                     }                                        
-                                    AXIOM_TEXT_SET_OPTIMIZE(text, env, AXIS2_TRUE);
+                                    axiom_text_set_optimize(text, env, AXIS2_TRUE);
                                     return;
                                 }
                             }
@@ -881,7 +881,7 @@ xmlDocPtr wsf_util_serialize_om_to_doc(axis2_env_t *env, axiom_node_t *ret_node)
 	writer = axiom_xml_writer_create_for_memory(env, 
 	        NULL, AXIS2_TRUE, 0, AXIS2_XML_PARSER_TYPE_DOC);
 	om_output = axiom_output_create (env, writer);
-	AXIOM_NODE_SERIALIZE (ret_node, env, om_output);
+	axiom_node_serialize (ret_node, env, om_output);
 	doc = (xmlDocPtr)AXIOM_XML_WRITER_GET_XML(writer, env);
 	return doc;
 }

@@ -1187,7 +1187,7 @@ PHP_METHOD(ws_service, __construct)
                               (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
                 if(!svc_info->modules_to_engage)
                     svc_info->modules_to_engage = axis2_array_list_create(ws_env_svr, 3);
-                AXIS2_ARRAY_LIST_ADD(svc_info->modules_to_engage, ws_env_svr, AXIS2_STRDUP("sandesha2", ws_env_svr));
+                axis2_array_list_add(svc_info->modules_to_engage, ws_env_svr, AXIS2_STRDUP("sandesha2", ws_env_svr));
             }
 
             if(zend_hash_find(ht, WS_BINDING_STYLE, sizeof(WS_BINDING_STYLE), (void **)&tmp) == SUCCESS &&
@@ -1655,10 +1655,10 @@ PHP_METHOD(ws_service , reply)
             if(NULL != svc_info->modules_to_engage)
             {
                 int i = 0;
-                int size = AXIS2_ARRAY_LIST_SIZE(svc_info->modules_to_engage, ws_env_svr);
+                int size = axis2_array_list_size(svc_info->modules_to_engage, ws_env_svr);
                 for(i = 0; i < size; i++)
                 {
-                    axis2_char_t *mod_name = (axis2_char_t *)AXIS2_ARRAY_LIST_GET(svc_info->modules_to_engage,
+                    axis2_char_t *mod_name = (axis2_char_t *)axis2_array_list_get(svc_info->modules_to_engage,
                                              ws_env_svr, i);
 
                     ws_util_engage_module(conf, mod_name, ws_env_svr, svc_info->svc);
