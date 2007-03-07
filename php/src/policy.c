@@ -126,8 +126,7 @@ axiom_node_t *do_create_policy(zval *sec_token,
 int ws_policy_handle_client_security(zval *sec_token,
                                      zval *policy,
                                      axis2_env_t *env,
-                                     axis2_svc_client_t *svc_client,
-                                     axis2_options_t *options TSRMLS_DC) {
+                                     axis2_svc_client_t *svc_client TSRMLS_DC) {
 
     axiom_node_t *outgoing_policy_node = NULL;
     axiom_node_t *incoming_policy_node = NULL;
@@ -224,7 +223,7 @@ int ws_policy_handle_client_security(zval *sec_token,
 int ws_policy_handle_server_security(zval *sec_token,
                                      zval *policy,
                                      axis2_env_t *env,
-                                     axis2_options_t *options TSRMLS_DC) {
+                                     ws_svc_info_t *svc_info TSRMLS_DC) {
     axiom_node_t *outgoing_policy_node = NULL;
     axiom_node_t *incoming_policy_node = NULL;
     HashTable *ht = NULL;

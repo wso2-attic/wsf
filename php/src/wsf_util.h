@@ -38,7 +38,8 @@ axis2_char_t *ws_util_get_soap_msg_from_op_client(
 	axis2_wsdl_msg_labels_t message_label);
 
 char* ws_util_generate_svc_name_from_uri(
-    char *req_uri, 
+    char *req_uri,
+    ws_svc_info_t *svc_info, 
     axis2_env_t *env);
 
 void ws_util_create_svc_from_svc_info(
@@ -66,22 +67,22 @@ void wsf_php_req_info_free(wsf_req_info_t *req_info);
 
 void wsf_util_set_attachments_with_cids(
 		const axis2_env_t *env,
-        int enable_mtom, 
+	        int enable_mtom, 
 		axiom_node_t *payload_node,
-        HashTable *attach_ht, 
+        	HashTable *attach_ht, 
 		char *default_cnt_type TSRMLS_DC);
         
 int wsf_util_set_options(
 		zval *zval_client, 
 		zval *zval_msg, 
 		axis2_env_t *env,
-        axis2_options_t *options, 
+	        axis2_options_t *options, 
 		axis2_svc_client_t *svc_client,
 		int is_send TSRMLS_DC);  
         
 void wsf_util_get_attachments(
 		const axis2_env_t *env,
-        axiom_node_t *payload_node, 
+        	axiom_node_t *payload_node, 
 		zval *cid2str,
 		zval *cid2contentType TSRMLS_DC);  
         
@@ -90,6 +91,7 @@ char* wsf_util_serialize_om(axis2_env_t *env, axiom_node_t *ret_node);
 xmlDocPtr wsf_util_serialize_om_to_doc(axis2_env_t *env, axiom_node_t *ret_node);
 
 axis2_env_t* wsf_env_create(axis2_char_t *logpath);
+
 axis2_env_t* wsf_env_create_svr(axis2_char_t *logpath);
 
 void wsf_env_free(axis2_env_t *env);

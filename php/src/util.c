@@ -303,10 +303,13 @@ ws_svc_info_t* ws_svc_info_create()
     svc_info->use_mtom = 0;  /* default is false other wise service side will send mime 
 							 headers which some servers can;t handle*/
     svc_info->request_xop = 0; /* default false */
-    svc_info->secure = 0; /* default is false */
+    svc_info->policy = NULL; 
+    svc_info->security_token = NULL;
+
     svc_info->ops_to_functions = NULL;
     svc_info->ops_to_actions = NULL;
     svc_info->password_location = NULL;
+    svc_info->op_name = NULL;
     return svc_info;
 }
 
@@ -572,21 +575,38 @@ int ws_util_engage_module(
 /* genarate service name from uri */
 char* ws_util_generate_svc_name_from_uri(
     char *req_uri, 
+    ws_svc_info_t *svc_info,
     axis2_env_t *env)
 {
-	char *uri = NULL;
 	char *svc_name = NULL;
-	if(strncmp(req_uri, "/", 1) == 0)
-	{
-		/** start with a / */
-		uri = req_uri + 1;
+	char *temp_string = NULL;
+	char *index = NULL;
+	char *uri = NULL;
+	
+	if(strncmp(req_uri, "/", 1) == 0){
+                /** start with a / */
+                uri = req_uri + 1;
+        }else{
+                uri = req_uri;
+        }
+	
+	temp_string = estrdup(uri);
+	
+	index = strstr(temp_string,".php/");
+	
+	if(index){
+		char *op_index = NULL;
+		index = index +4;
+		op_index = index +1;
+		temp_string[index - temp_string] ='\0';
+		svc_info->op_name = axis2_strdup(op_index, env);
 	}
-	else
-	{
-		uri = req_uri;
-	}
-	svc_name = pestrdup(uri, 1);
-	return AXIS2_REPLACE(env, svc_name, '/', ':');
+	
+	svc_name = axis2_replace(env, temp_string, '/',':');
+	
+	efree(temp_string);
+	
+	return svc_name;
 }
 
 /* create service */
@@ -636,8 +656,8 @@ void ws_util_create_op_and_add_to_svc(
 	axis2_svc_t *svc = NULL;
 	axis2_op_t *op = NULL;
 	axis2_qname_t *op_qname = NULL;
-    HashTable *ht = NULL;
-    zval **tmp = NULL;
+    	HashTable *ht = NULL;
+    	zval **tmp = NULL;
     
 	op_qname = axis2_qname_create(env, op_name, NULL, NULL);
 	svc = svc_info->svc;

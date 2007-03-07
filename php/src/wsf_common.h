@@ -198,10 +198,15 @@ typedef struct ws_svc_info {
     int request_xop;
     int use_mtom;
     int is_class;
-    int secure;
+    zval *policy;
+    zval *security_token;
+    
     char *password_location;
     char *svc_name;
     char *svc_path;
+	
+    /** this is needed in case of request uri dispatching( for rest) */
+    char *op_name;
 
 }
 ws_svc_info_t;

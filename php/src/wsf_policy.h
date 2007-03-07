@@ -20,7 +20,7 @@
 
 #include <axis2_env.h>
 #include <axiom.h>
-#include <axis2_options.h>
+#include <axis2_svc_client.h>
 #include <php.h>
 #include "wsf_common.h"
 #include <axiom_soap_body.h>
@@ -110,13 +110,12 @@ axiom_node_t *get_security_policy_node();
 int ws_policy_handle_client_security(zval *sec_token,
                                      zval *policy,
                                      axis2_env_t *env,
-                                     axis2_svc_client_t *svc_client,
-                                     axis2_options_t *options TSRMLS_DC);
+                                     axis2_svc_client_t *svc_client TSRMLS_DC);
 
 int ws_policy_handle_server_security(zval *sec_token,
                                      zval *policy,
                                      axis2_env_t *env,
-                                     axis2_options_t *options TSRMLS_DC);
+                                     ws_svc_info_t *svc_info TSRMLS_DC);
 
 
 #endif /* WSF_POLICY_H*/

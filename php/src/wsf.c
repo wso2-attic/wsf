@@ -1141,17 +1141,17 @@ PHP_METHOD(ws_service, __construct)
             if(zend_hash_find(ht, "actions", sizeof("actions"),
                               (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY) {
                 ht_actions = Z_ARRVAL_PP(tmp);
-				AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting actions ");
+		AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting actions ");
             }
             if(zend_hash_find(ht, "operations", sizeof("operations"),
                               (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY){
                 ht_ops_to_funcs = Z_ARRVAL_PP(tmp);
-				AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting operations");
+		AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting operations");
             }
             if(zend_hash_find(ht, WS_USE_MTOM, sizeof(WS_USE_MTOM),
                               (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
                 svc_info->use_mtom = Z_BVAL_PP(tmp);
-				AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting mtom property %d", svc_info->use_mtom);
+		AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting mtom property %d", svc_info->use_mtom);
             }
             else{
                 svc_info->use_mtom = 0;
@@ -1164,18 +1164,26 @@ PHP_METHOD(ws_service, __construct)
             {
                 svc_info->request_xop = 0;
             }
-			AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] request xop %d", svc_info->request_xop);
+	    AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] request xop %d", svc_info->request_xop);
 
-            if(zend_hash_find(ht, "secure", sizeof("secure"),
-                              (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL)
-            {
-                svc_info->secure = Z_BVAL_PP(tmp);
-                svc_info->password_location = WSF_GLOBAL(passwd_location);
+            if(zend_hash_find(ht, WS_POLICY_NAME, sizeof(WS_POLICY_NAME),
+				    (void **)&tmp) == SUCCESS ){
+                svc_info->policy = *tmp;
+		AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] policy object present");
+		/*
                 if(!svc_info->modules_to_engage)
                     svc_info->modules_to_engage = axis2_array_list_create(ws_env_svr, 3);
                 AXIS2_ARRAY_LIST_ADD(svc_info->modules_to_engage, ws_env_svr, AXIS2_STRDUP("rampart", ws_env_svr));
+		*/
             }
-            if(zend_hash_find(ht, WS_RELIABLE, sizeof(WS_RELIABLE),
+	    if(zend_hash_find(ht, WS_SECURITY_TOKEN, sizeof(WS_SECURITY_TOKEN), (void**)&tmp) == SUCCESS){
+		svc_info->security_token = *tmp;
+	    	AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] security token object present ");
+	    }		
+ 
+            
+
+	    if(zend_hash_find(ht, WS_RELIABLE, sizeof(WS_RELIABLE),
                               (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
                 if(!svc_info->modules_to_engage)
                     svc_info->modules_to_engage = axis2_array_list_create(ws_env_svr, 3);
@@ -1189,7 +1197,7 @@ PHP_METHOD(ws_service, __construct)
         }
     }
     if(SG(request_info).request_uri){
-        svc_info->svc_name = ws_util_generate_svc_name_from_uri(SG(request_info).request_uri, ws_env_svr);
+        svc_info->svc_name = ws_util_generate_svc_name_from_uri(SG(request_info).request_uri, svc_info, ws_env_svr);
         ws_util_create_svc_from_svc_info(svc_info , ws_env_svr TSRMLS_CC);
     }else{
         zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 1 TSRMLS_CC,
