@@ -201,18 +201,16 @@ int ws_policy_handle_client_security(zval *sec_token,
 
     /* for testing only ,should be remove later */
     if (outgoing_policy_node) {
-        FILE *fp = NULL;
         axis2_char_t *om_str_in = NULL;
         axis2_char_t *om_str_out = NULL;
 
         om_str_out = AXIOM_NODE_TO_STRING(outgoing_policy_node, env);
         om_str_in = AXIOM_NODE_TO_STRING(incoming_policy_node, env);
         if (om_str_in && om_str_out) {
-            fp = fopen("/tmp/outgoing_policy.xml", "w");
-            fprintf(fp, "%s", om_str_out );
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy]creating rampart client outgoing policy node \n\t %s \n", om_str_out);
             om_str_out = NULL;
-            fp = fopen("/tmp/incoming_policy.xml", "w");
-            fprintf(fp, "%s", om_str_in );
+
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy]creating rampart service incoming policy node \n\t %s \n", om_str_out);
             om_str_in = NULL;
 
         }
@@ -236,6 +234,9 @@ int ws_policy_handle_server_security(zval *sec_token,
 
     tokenProperties_t tmp_rampart_ctx;
 
+    axis2_param_t *inflow_param = NULL;
+    axis2_param_t *outflow_param = NULL;
+    axis2_svc_t *svc = NULL;
 
     if (!sec_token && !policy)
         return AXIS2_FAILURE;
@@ -255,8 +256,8 @@ int ws_policy_handle_server_security(zval *sec_token,
                 (Z_TYPE_PP(tmp_type) == IS_ARRAY )) {
             policy_type = *tmp_type;
             outgoing_policy_node = do_create_policy(sec_token, policy_type, env TSRMLS_CC);
+            is_multiple_flow = AXIS2_SUCCESS;
         }
-        is_multiple_flow = AXIS2_SUCCESS;
     }
     /* since creating policy xml is the same procedure use one
        function */
@@ -278,23 +279,37 @@ int ws_policy_handle_server_security(zval *sec_token,
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy]setting values for out_rampart_ctx... ");
     set_options_to_rampart_ctx(out_rampart_ctx, env, outgoing_policy_node, tmp_rampart_ctx);
 
+    if (! svc_info)
+        return AXIS2_FAILURE;
+    
+
+    inflow_param = axis2_param_create(env, WS_INFLOW_SECURITY_POLICY, (void *)in_rampart_ctx) ;
+    outflow_param = axis2_param_create(env, WS_OUTFLOW_SECURITY_POLICY, (void *)out_rampart_ctx);
+    
+    svc = svc_info->svc;
+    
+    if (svc)
+    {
+        AXIS2_SVC_ADD_PARAM(svc, env, inflow_param);
+        AXIS2_SVC_ADD_PARAM(svc, env, outflow_param);
+
+    }
+
+    
 
     /* for testing only ,should be remove later */
-    if (outgoing_policy_node) {
-        FILE *fp = NULL;
+    if (outgoing_policy_node && incoming_policy_node) {
         axis2_char_t *om_str_in = NULL;
         axis2_char_t *om_str_out = NULL;
 
         om_str_out = AXIOM_NODE_TO_STRING(outgoing_policy_node, env);
         om_str_in = AXIOM_NODE_TO_STRING(incoming_policy_node, env);
         if (om_str_in && om_str_out) {
-            fp = fopen("/tmp/outgoing_policy.xml", "w");
-            fprintf(fp, "%s", om_str_out );
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy]creating rampart service outgoing policy node \n\t %s \n", om_str_out);
             om_str_out = NULL;
-            fp = fopen("/tmp/incoming_policy.xml", "w");
-            fprintf(fp, "%s", om_str_in );
-            om_str_in = NULL;
 
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy]creating rampart service incoming policy node \n\t %s \n", om_str_in);
+            om_str_in = NULL;
         }
     }
 
@@ -525,7 +540,8 @@ axiom_node_t *do_create_policy(zval *sec_token,
          * case layout is strict */
         if (zend_hash_find(ht_policy, WS_LAYOUT, sizeof(WS_LAYOUT), (void **)&tmp) == SUCCESS) {
             create_layout(env, policy_om_node, tmp TSRMLS_CC);
-        } else
+        } else /* for user name token default strict is needed. so
+                * problem occurs in timestamp only...... */
             create_layout(env, policy_om_node, tmp TSRMLS_CC);
 
         is_default = AXIS2_FALSE;

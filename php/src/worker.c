@@ -290,7 +290,7 @@ int wsf_worker_process_request(
     	
 	if(svc_info->security_token != NULL && svc_info->policy != NULL){
 		/** TODO call security function here */
-		ws_policy_handle_server_security(svc_info->policy, svc_info->security_token,
+		ws_policy_handle_server_security(svc_info->security_token, svc_info->policy,
 			env, svc_info TSRMLS_CC);
     	}  
           

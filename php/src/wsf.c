@@ -1170,11 +1170,10 @@ PHP_METHOD(ws_service, __construct)
 				    (void **)&tmp) == SUCCESS ){
                 svc_info->policy = *tmp;
 		AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] policy object present");
-		/*
+		
                 if(!svc_info->modules_to_engage)
                     svc_info->modules_to_engage = axis2_array_list_create(ws_env_svr, 3);
                 AXIS2_ARRAY_LIST_ADD(svc_info->modules_to_engage, ws_env_svr, AXIS2_STRDUP("rampart", ws_env_svr));
-		*/
             }
 	    if(zend_hash_find(ht, WS_SECURITY_TOKEN, sizeof(WS_SECURITY_TOKEN), (void**)&tmp) == SUCCESS){
 		svc_info->security_token = *tmp;
