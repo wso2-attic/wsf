@@ -59,20 +59,6 @@
   		<image category="WSAS.category" path="icons/wsas-facet.ico"/>
 	</extension>
 	
-	<extension
-       point="org.eclipse.wst.common.project.facet.core.runtimes">
-    <supported>
-      <runtime-component
-         any="true"/>
-      <facet
-         id="WSAS.core"
-         version="1.1"/>
-      <facet
-         id="WSAS.ext"
-         version="1.1"/>
-    </supported>
- </extension>
- 
  
  	<extension point="org.eclipse.wst.common.project.facet.ui.wizardPages">
   		<wizard-pages action="WSAS.core.install">
@@ -92,6 +78,12 @@
   		</preset>
 	</extension>
 	
- 
-
+	<extension point="org.eclipse.wst.common.project.facet.core.runtimes">
+  		<supported>
+    		<runtime-component id="org.eclipse.jst.server.wsas" version="1.2"/>
+    		 <facet id="WSAS.core"/>
+    		<facet id="WSAS.ext"/>
+  		</supported>
+	</extension>
+	
 </plugin>
