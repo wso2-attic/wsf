@@ -98,8 +98,7 @@ PHP_METHOD(ws_header, __construct);
 PHP_METHOD(ws_security_token, __construct);
 PHP_FUNCTION(ws_security_token_create_for_encryption);
 PHP_FUNCTION(ws_security_token_create_for_decryption);
-PHP_FUNCTION(ws_private_key_from_pem_file);
-PHP_FUNCTION(ws_public_key_from_file);
+PHP_FUNCTION(ws_get_key_from_file);
 
 /** WSFault */
 PHP_METHOD(ws_fault, __construct);
@@ -163,34 +162,26 @@ zend_function_entry php_ws_fault_class_functions[]=
     };
 
 /* {{{ WSHeader class functions */
-zend_function_entry php_ws_header_class_functions[] =
-    {
+zend_function_entry php_ws_header_class_functions[] =   {
         PHP_ME(ws_header, __construct, NULL, ZEND_ACC_PUBLIC)
-        {
-            NULL, NULL, NULL
-        }
+        {  NULL, NULL, NULL  }
     };
 
 zend_function_entry php_ws_security_token_class_functions[]={
             PHP_ME(ws_security_token, __construct, NULL, ZEND_ACC_PUBLIC)
-            {
-                NULL, NULL, NULL
-            }
+            {    NULL, NULL, NULL   }
         };
 
 zend_function_entry php_ws_policy_class_functions[]={
             PHP_ME(ws_policy, __construct, NULL, ZEND_ACC_PUBLIC)
-            {
-                NULL, NULL, NULL
-            }
+            {   NULL, NULL, NULL   }
         };
 
 /* {{{ wsf_functions[] */
 zend_function_entry wsf_functions[] = {
-	PHP_FE(is_ws_fault,	NULL)
-	PHP_FE(ws_private_key_from_pem_file, NULL)
+	PHP_FE(is_ws_fault, NULL)
+	PHP_FE(ws_get_key_from_file, NULL)
 	PHP_FE(ws_test_function, NULL)
-	PHP_FE(ws_public_key_from_file, NULL)
 	{ NULL, NULL, NULL }	/* Must be the last line in wsf_functions[] */
 };
 /* }}} */
@@ -1523,7 +1514,8 @@ PHP_METHOD(ws_service , reply)
     req_info->content_length = SG(request_info).content_length;
     req_info->content_type = (char*)SG(request_info).content_type;
     req_info->request_method = (char*)SG(request_info).request_method;
-	req_info->query_string = (char*)SG(request_info).query_string;
+    req_info->query_string = (char*)SG(request_info).query_string;
+	
 
 
     if (zend_hash_find(&EG(symbol_table), "HTTP_RAW_POST_DATA", sizeof("HTTP_RAW_POST_DATA"), (void **) &raw_post)!=FAILURE
@@ -1532,7 +1524,7 @@ PHP_METHOD(ws_service , reply)
         req_info->req_data = Z_STRVAL_PP(raw_post);
         req_info->req_data_length = Z_STRLEN_PP(raw_post);
     }
-
+    
     /** begin Wsdl Generation */
     if(SG(request_info).query_string && ((stricmp(SG(request_info).query_string, "wsdl") == 0) ||
                                          (stricmp(SG(request_info).query_string, "wsdl2") == 0 )))
@@ -1935,10 +1927,6 @@ PHP_METHOD(ws_security_token, __construct)
 
 /* }}} */
 
-PHP_FUNCTION(ws_private_key_from_pem_file)
-{}
-PHP_FUNCTION(ws_public_key_from_file)
-{}
 
 
 /* {{{ WSPolicy::__construct( */
@@ -1979,6 +1967,77 @@ PHP_METHOD(ws_policy, __construct)
 }
 
 /* }}} */
+
+/* {{{ proto string file_get_contents(string filename)
+    read a pem file and return the key portion of the file as a string */
+PHP_FUNCTION(ws_get_key_from_file)
+{
+	char *filename;
+	int filename_len;
+	char *contents;
+	php_stream *stream;
+	int len, newlen;
+	long offset = -1;
+	long maxlen = PHP_STREAM_COPY_ALL;
+	zval *zcontext = NULL;
+	php_stream_context *context = NULL;
+	char *DELIMITER = "-----";
+	/* Parse arguments */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
+				  &filename, &filename_len) == FAILURE) {
+		return;
+	}
+
+	context = php_stream_context_from_zval(zcontext, 0);
+
+	stream = php_stream_open_wrapper_ex(filename, "rb", 
+				(USE_PATH ) | ENFORCE_SAFE_MODE | REPORT_ERRORS,
+				NULL, context);
+	if (!stream) {
+		RETURN_FALSE;
+	}
+
+	if ((len = php_stream_copy_to_mem(stream, &contents, maxlen, 0)) > 0) {
+		char *key = NULL;
+		char *start_index = NULL;
+		char *end_index = NULL;
+		char *tmp_index = NULL;
+		char *key_len = 0;			
+		tmp_index = strstr(contents, DELIMITER);
+		if(!tmp_index)
+			return;
+		if(len > (tmp_index - contents))
+		{
+			tmp_index += 5; 
+			tmp_index = strstr(tmp_index, DELIMITER);	
+			if(!tmp_index)
+				return;
+			start_index = tmp_index+6;
+			tmp_index[contents - tmp_index] = '\0';
+		}
+		
+		tmp_index = strstr(start_index, DELIMITER);
+		if(!tmp_index)
+			return;
+		tmp_index = tmp_index +1;
+		key_len = tmp_index - start_index;
+
+		start_index[tmp_index - start_index] = '\0';
+				
+		key = estrdup(start_index);
+		
+		efree(contents);
+
+		RETVAL_STRINGL(key,strlen(key), 0);
+	} else if (len == 0) {
+		RETVAL_EMPTY_STRING();
+	} else {
+		RETVAL_FALSE;
+	}
+	php_stream_close(stream);
+}
+/* }}} */
+
 
 PHP_FUNCTION(ws_test_function)
 {
