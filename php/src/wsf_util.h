@@ -90,6 +90,8 @@ char* wsf_util_serialize_om(axis2_env_t *env, axiom_node_t *ret_node);
 
 xmlDocPtr wsf_util_serialize_om_to_doc(axis2_env_t *env, axiom_node_t *ret_node);
 
+xmlNodePtr wsf_util_get_xml_node(zval *node TSRMLS_DC);
+
 axis2_env_t* wsf_env_create(axis2_char_t *logpath);
 
 axis2_env_t* wsf_env_create_svr(axis2_char_t *logpath);

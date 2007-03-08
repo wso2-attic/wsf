@@ -334,7 +334,7 @@ wsf_client_get_reader_from_zval(zval **param ,
 	}else if(Z_TYPE_PP(param) == IS_OBJECT && 
 		instanceof_function(Z_OBJCE_PP(param), dom_node_class_entry TSRMLS_CC)){
 		
-			nodep = wsf_get_xml_node(*param TSRMLS_CC);
+			nodep = wsf_util_get_xml_node(*param TSRMLS_CC);
 		
 		reader = axiom_xml_reader_create_for_memory(env, (void*)nodep->doc, 
 							0, "utf-8", AXIS2_XML_PARSER_TYPE_DOC);
@@ -514,26 +514,7 @@ wsf_client_set_module_param_option(axis2_env_t *env,
 }
 
 
-xmlNodePtr wsf_get_xml_node(zval *node TSRMLS_DC)
-{
-	php_libxml_node_object *object;
-	xmlNodePtr nodep;
 
-	object = (php_libxml_node_object *)zend_object_store_get_object(node TSRMLS_CC);
-	nodep = php_libxml_import_node(node TSRMLS_CC);
-    if (!nodep) {
-		return NULL;
-	}
-	if (nodep->doc == NULL) {
-		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Imported Node must have \
-							associated Document");
-		return NULL;
-	}
-	if (nodep->type == XML_DOCUMENT_NODE || nodep->type == XML_HTML_DOCUMENT_NODE) {
-		nodep = xmlDocGetRootElement((xmlDocPtr) nodep);
-	}
-	return nodep;
-}
 
 int wsf_client_set_headers(const axis2_env_t *env,
 			   axis2_svc_client_t *svc_client, 

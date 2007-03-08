@@ -31,6 +31,27 @@
 
 static int curr = 0;
 
+xmlNodePtr wsf_util_get_xml_node(zval *node TSRMLS_DC)
+{
+	php_libxml_node_object *object;
+	xmlNodePtr nodep;
+
+	object = (php_libxml_node_object *)zend_object_store_get_object(node TSRMLS_CC);
+	nodep = php_libxml_import_node(node TSRMLS_CC);
+    if (!nodep) {
+		return NULL;
+	}
+	if (nodep->doc == NULL) {
+		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Imported Node must have \
+							associated Document");
+		return NULL;
+	}
+	if (nodep->type == XML_DOCUMENT_NODE || nodep->type == XML_HTML_DOCUMENT_NODE) {
+		nodep = xmlDocGetRootElement((xmlDocPtr) nodep);
+	}
+	return nodep;
+}
+
 char*
 wsf_util_read_file_to_buffer(char *filename TSRMLS_DC)
 {
