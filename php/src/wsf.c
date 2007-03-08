@@ -2002,7 +2002,7 @@ PHP_FUNCTION(ws_get_key_from_file)
 		char *start_index = NULL;
 		char *end_index = NULL;
 		char *tmp_index = NULL;
-		char *key_len = 0;			
+	
 		tmp_index = strstr(contents, DELIMITER);
 		if(!tmp_index)
 			return;
@@ -2020,8 +2020,7 @@ PHP_FUNCTION(ws_get_key_from_file)
 		if(!tmp_index)
 			return;
 		tmp_index = tmp_index +1;
-		key_len = tmp_index - start_index;
-
+	
 		start_index[tmp_index - start_index] = '\0';
 				
 		key = estrdup(start_index);
