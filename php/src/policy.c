@@ -909,20 +909,20 @@ char * get_sec_token_Value(char *token_name) {
 
 
 int ws_policy_set_policy_options(zval *this_ptr,
-                                 HashTable *ht,
+                                 zval *property,
                                  const axis2_env_t *env TSRMLS_DC) {
     zval **tmp = NULL;
 
-    if (!ht)
+    if (!property)
         return AXIS2_FAILURE;
 
 
-    /* for security policy related things */
+    /* for security policy related things 
     if(zend_hash_find(ht, "security", sizeof("security"), (void **)&tmp) == SUCCESS &&
             Z_TYPE_PP(tmp) == IS_ARRAY) {
         set_security_policy_options(this_ptr, tmp , env TSRMLS_CC);
     }
-
+    */	
     return AXIS2_SUCCESS;
 
 }
