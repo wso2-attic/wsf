@@ -98,10 +98,7 @@ wsf_client_set_soap_action(HashTable *client_ht,
 	}
 	if(action){
 		axis2_string_t *action_string = axis2_string_create(env, action);
-		
 		AXIS2_OPTIONS_SET_SOAP_ACTION(client_options, env, action_string);
-	
-		axis2_string_free(action_string, env);
 	}
 	return AXIS2_SUCCESS;
 }
@@ -286,7 +283,7 @@ wsf_client_set_addressing_options_to_options(axis2_env_t *env,
 
 		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
 			"[wsf_client] replyTo present :- %s", replyto);
-    }	
+    	}	
 
 	if(zend_hash_find(ht, WS_FAULT_TO, sizeof(WS_FAULT_TO), 
             (void**)&tmp) == SUCCESS) {
@@ -980,22 +977,40 @@ int wsf_client_do_request(
 
 			if(!is_oneway){
 
-				char *offered_seq_id = NULL;
+				char *timeout = NULL;
+				axis2_property_t *timeout_property = NULL;
 				
-				axis2_property_t *sequence_property = NULL;
-
-				if(zend_hash_find(client_ht, WS_SEQUENCE_OFFER_ID, sizeof(WS_SEQUENCE_OFFER_ID), (void **)&client_tmp) == FAILURE){
-				
+				{  /** set sequence offer with is mandatory for 
+					single channel to work */
+					char *offered_seq_id = NULL;
+					axis2_property_t *sequence_property = NULL;
+					
 					offered_seq_id = axis2_uuid_gen(env);
-				
+					
 					sequence_property = axis2_property_create(env);
-				
-					AXIS2_PROPERTY_SET_VALUE(sequence_property, env, AXIS2_STRDUP(offered_seq_id, env));
-				
-					AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "Sandesha2OfferedSequenceId", sequence_property);
-				
-					AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " [wsf-log] Sandesha2OfferedSequenceId is set as property");
+					
+					AXIS2_PROPERTY_SET_VALUE(sequence_property, env, 
+						AXIS2_STRDUP(offered_seq_id, env));
+					
+					AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "Sandesha2OfferedSequenceId", 
+						sequence_property);
+					AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+						" [wsf-log] Sandesha2OfferedSequenceId is set as property");
 				}
+				if(zend_hash_find(client_ht, WS_RM_RESPONSE_TIMEOUT, sizeof(WS_RM_RESPONSE_TIMEOUT),
+					(void**)&client_tmp) == SUCCESS){
+					char *timeout = Z_STRVAL_PP(client_tmp);
+				}else{
+					/** default timeout value is 5 */
+					timeout = WS_RM_DEFAULT_RESPONSE_TIMEOUT;
+				}
+				
+				timeout_property = axis2_property_create_with_args(env, 0, 0, 0, timeout);
+				
+				if(timeout_property){
+				        AXIS2_OPTIONS_SET_PROPERTY(client_options, env, 
+						AXIS2_TIMEOUT_IN_SECONDS, timeout_property);
+    				}
 			}
 		}
 	}/** END RM OPTIONS */	

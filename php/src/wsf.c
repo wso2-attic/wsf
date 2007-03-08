@@ -53,7 +53,6 @@ zend_class_entry *ws_client_proxy_class_entry;
 zend_class_entry *ws_security_token_class_entry;
 zend_class_entry *ws_policy_class_entry;
 
-
 /* True global values, worker is thread safe */
 static axis2_env_t *env;
 static axis2_env_t *ws_env_svr;
@@ -96,8 +95,6 @@ PHP_METHOD(ws_header, __construct);
 
 
 PHP_METHOD(ws_security_token, __construct);
-PHP_FUNCTION(ws_security_token_create_for_encryption);
-PHP_FUNCTION(ws_security_token_create_for_decryption);
 PHP_FUNCTION(ws_get_key_from_file);
 
 /** WSFault */
@@ -625,7 +622,7 @@ PHP_METHOD(ws_message, __construct)
     WSF_OBJ_CHECK(env);
 
     if(Z_TYPE_P(payload) == IS_STRING){
-		add_property_stringl(object , WS_MSG_PAYLOAD_STR, Z_STRVAL_P(payload), Z_STRLEN_P(payload), 1);
+	add_property_stringl(object , WS_MSG_PAYLOAD_STR, Z_STRVAL_P(payload), Z_STRLEN_P(payload), 1);
         add_property_long(object, WS_MSG_TYPE, WS_USING_STRING);
     }
     else if(Z_TYPE_P(payload) == IS_OBJECT &&
@@ -644,63 +641,8 @@ PHP_METHOD(ws_message, __construct)
             return;
         }
 		
-		add_property_zval(object, WS_OPTIONS, properties);
+	add_property_zval(object, WS_OPTIONS, properties);
 
-		/*
-        if(zend_hash_find(ht, WS_TO, sizeof(WS_TO), (void **)&tmp) == SUCCESS &&
-                Z_TYPE_PP(tmp) == IS_STRING)
-        {
-            add_property_stringl(object, WS_TO, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
-        }
-
-        if(zend_hash_find(ht, WS_ACTION, sizeof(WS_ACTION), (void **)&tmp) == SUCCESS &&
-                Z_TYPE_PP(tmp) == IS_STRING)
-        {
-            add_property_stringl(object, WS_ACTION, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
-        }
-        if(zend_hash_find(ht, WS_FROM, sizeof(WS_FROM), (void **)&tmp) == SUCCESS &&
-                Z_TYPE_PP(tmp) == IS_STRING)
-        {
-            add_property_stringl(object, WS_FROM, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
-        }
-        if(zend_hash_find(ht, WS_REPLY_TO, sizeof(WS_REPLY_TO), (void **)&tmp) == SUCCESS &&
-                Z_TYPE_PP(tmp) == IS_STRING)
-        {
-            add_property_stringl(object, WS_REPLY_TO, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
-        }
-        if(zend_hash_find(ht, WS_FAULT_TO, sizeof(WS_FAULT_TO), (void **)&tmp) == SUCCESS &&
-                Z_TYPE_PP(tmp) == IS_STRING)
-        {
-            add_property_stringl(object, WS_FAULT_TO, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
-        }
-
-
-		if(zend_hash_find(ht, WS_LAST_MESSAGE, sizeof(WS_LAST_MESSAGE), (void**)&tmp) == SUCCESS){
-			if(Z_TYPE_PP(tmp) == IS_BOOL){
-				add_property_bool(object, WS_LAST_MESSAGE, Z_BVAL_PP(tmp));
-			}
-		}
-
-
-        if(zend_hash_find(ht, WS_USES_XOP, sizeof(WS_USES_XOP), (void **)&tmp) == SUCCESS &&
-                Z_TYPE_PP(tmp) == IS_BOOL)
-        {
-            add_property_bool(object, WS_USES_XOP, Z_BVAL_PP(tmp));
-        }
-        else
-        {
-            add_property_bool(object, WS_USES_XOP, 1);
-        }
-        if(zend_hash_find(ht, WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE, sizeof(WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE), (void **)&tmp) == SUCCESS &&
-                Z_TYPE_PP(tmp) == IS_STRING)
-        {
-            add_property_stringl(object, WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp),1);
-        }
-        else
-        {
-            add_property_string(object, WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE, estrdup("application/octet-stream"),1);
-        }
-		*/
 
         if(zend_hash_find(ht, WS_ATTACHMENTS, sizeof(WS_ATTACHMENTS), (void **)&tmp) == SUCCESS &&
                 Z_TYPE_PP(tmp) == IS_ARRAY)

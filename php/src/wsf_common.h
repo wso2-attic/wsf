@@ -81,7 +81,6 @@ typedef enum ws_input_types{
 #define WS_LAST_MESSAGE 		"lastMessage"
 #define WS_RELIABLE			"reliable"
 #define WS_SEQUENCE_EXPIRY_TIME 	"sequenceExpiryTime"
-#define WS_SEQUENCE_OFFER_ID 		"sequenceOfferID"
 #define WS_SEQUENCE_KEY      		"sequenceKey"
 
 
@@ -125,7 +124,7 @@ typedef enum ws_input_types{
 
 #define WS_SOAP_ROLE_NONE			1
 #define WS_SOAP_ROLE_NEXT			2
-#define WS_SOAP_ROLE_ULTIMATE_RECEIVER	3
+#define WS_SOAP_ROLE_ULTIMATE_RECEIVER		3
 
 #define WS_SOAP_ROLE_NONE_URI "http://www.w3.org/2003/05/soap-envelope/role/none"
 #define WS_SOAP_ROLE_NEXT_URI "http://www.w3.org/2003/05/soap-envelope/role/next"
@@ -167,6 +166,9 @@ typedef enum ws_input_types{
 #define WS_RM_VERSION_1_0  1
 #define WS_RM_VERSION_1_1_STR "Spec_2006_08"
 #define WS_RM_VERSION_1_1  2
+
+#define WS_RM_RESPONSE_TIMEOUT "responseTimeout"
+#define WS_RM_DEFAULT_RESPONSE_TIMEOUT 5
 
 /************ engaged module names *****************/
 #define WS_MODULE_ADDRESSING "addressing"
