@@ -169,7 +169,6 @@ ws_xml_msg_recv_invoke_business_logic_sync(
 	const axis2_char_t *style = NULL;
 	axis2_char_t *local_name = NULL;
     axis2_char_t *soap_ns = AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
-	axis2_char_t *php_file = NULL;
     axis2_char_t *operation_name = NULL;
 
 

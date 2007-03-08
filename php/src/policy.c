@@ -221,7 +221,8 @@ int ws_policy_handle_client_security(zval *sec_token,
 int ws_policy_handle_server_security(zval *sec_token,
                                      zval *policy,
                                      axis2_env_t *env,
-                                     ws_svc_info_t *svc_info TSRMLS_DC) {
+				     axis2_svc_t *svc,
+				     axis2_conf_t  *conf TSRMLS_DC) {
     axiom_node_t *outgoing_policy_node = NULL;
     axiom_node_t *incoming_policy_node = NULL;
     HashTable *ht = NULL;
@@ -236,9 +237,8 @@ int ws_policy_handle_server_security(zval *sec_token,
 
     axis2_param_t *inflow_param = NULL;
     axis2_param_t *outflow_param = NULL;
-    axis2_svc_t *svc = NULL;
 
-    if (!sec_token && !policy)
+    if (!sec_token && !policy && !svc && !conf)
         return AXIS2_FAILURE;
 
     /* if incoming policy and outgoing policy are diffrenet from each
@@ -279,25 +279,20 @@ int ws_policy_handle_server_security(zval *sec_token,
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy]setting values for out_rampart_ctx... ");
     set_options_to_rampart_ctx(out_rampart_ctx, env, outgoing_policy_node, tmp_rampart_ctx);
 
-    if (! svc_info)
-        return AXIS2_FAILURE;
     
 
     inflow_param = axis2_param_create(env, WS_INFLOW_SECURITY_POLICY, (void *)in_rampart_ctx) ;
     outflow_param = axis2_param_create(env, WS_OUTFLOW_SECURITY_POLICY, (void *)out_rampart_ctx);
     
-    svc = svc_info->svc;
-    
-    if (svc)
-    {
-        AXIS2_SVC_ADD_PARAM(svc, env, inflow_param);
-        AXIS2_SVC_ADD_PARAM(svc, env, outflow_param);
-
-    }
+	
+     /** set inflow and outflow params to svc */
+    AXIS2_SVC_ADD_PARAM(svc, env, inflow_param);
+    AXIS2_SVC_ADD_PARAM(svc, env, outflow_param);
+     /** engage module rampart */
+    ws_util_engage_module(conf, "rampart", env, svc);
 
     
 
-    /* for testing only ,should be remove later */
     if (outgoing_policy_node && incoming_policy_node) {
         axis2_char_t *om_str_in = NULL;
         axis2_char_t *om_str_out = NULL;

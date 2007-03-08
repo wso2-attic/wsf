@@ -107,5 +107,11 @@ wsf_util_construct_header_node(
 
 char *wsf_util_get_ttl(char *buf, axis2_env_t *env);
 
+char*
+wsf_util_read_file_to_buffer(char *filename TSRMLS_DC);
 
+axiom_node_t*
+wsf_util_deserialize_buffer(
+    const axis2_env_t *env,
+    char *buffer);
 #endif /* WSF_UTIL_H */

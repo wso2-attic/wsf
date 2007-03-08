@@ -31,6 +31,35 @@
 
 static int curr = 0;
 
+char*
+wsf_util_read_file_to_buffer(char *filename TSRMLS_DC)
+{
+	char *contents;
+	php_stream *stream;
+	int len;
+	long maxlen = PHP_STREAM_COPY_ALL;
+	zval *zcontext = NULL;
+	php_stream_context *context = NULL;
+
+	context = php_stream_context_from_zval(zcontext, 0);
+
+	stream = php_stream_open_wrapper_ex(filename, "rb", 
+				(USE_PATH ) | ENFORCE_SAFE_MODE | REPORT_ERRORS,
+				NULL, context);
+	if (!stream) {
+		return NULL;
+	}
+
+	len = php_stream_copy_to_mem(stream, &contents, maxlen, 0);
+
+	php_stream_close(stream);
+
+	if(len <= 0 ) {
+		return NULL;
+	} 
+	return	contents;
+}
+
 axiom_node_t* 
 wsf_util_construct_header_node(const axis2_env_t *env, 
    			       zval *header TSRMLS_DC)
@@ -886,5 +915,42 @@ xmlDocPtr wsf_util_serialize_om_to_doc(axis2_env_t *env, axiom_node_t *ret_node)
 	return doc;
 }
 
+axiom_node_t* 
+wsf_util_deserialize_buffer(
+    const axis2_env_t *env,
+    char *buffer)
+{
+	axiom_xml_reader_t *reader = NULL;
+	axiom_stax_builder_t *builder = NULL;
+	axiom_document_t *document = NULL;
+	axiom_node_t *payload = NULL;
+
+	reader = axiom_xml_reader_create_for_memory(env,buffer, axis2_strlen(buffer), "utf-8",
+				AXIS2_XML_PARSER_TYPE_BUFFER);
+	if (!reader) {
+		return NULL;
+	}
+
+	builder = axiom_stax_builder_create(env, reader);
+
+	if (!builder){
+		return NULL;
+	}
+	document = axiom_stax_builder_get_document(builder, env);
+	if (!document) {
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Document is not found");
+		return NULL;
+	}
+
+	payload = axiom_document_get_root_element(document, env);
+
+	if (!payload) {
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Root element of the document \
+				is not found");
+		return NULL;
+	}
+	axiom_document_build_all(document, env);
+	return payload;
+}
 
 

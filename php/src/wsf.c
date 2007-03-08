@@ -192,55 +192,14 @@ static zend_object_value
 php_ws_object_new_ex(zend_class_entry *class_type ,
                      ws_object **obj TSRMLS_DC);
 
+/*
 static zval* ws_create_object(void *obj, int obj_type,
                               zend_class_entry* class_type TSRMLS_DC);
-
+*/
 static void ws_object_dtor(void *object,
-                           zend_object_handle handle TSRMLS_DC);
+            zend_object_handle handle TSRMLS_DC);
 
-/* {{{ ws_worker_dtor() */
-static void ws_worker_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
-{
-    /** TODO free worker */
-}
-/* }}} */
 
-/* {{{ ws_convert_libxml_to_om
-   */
-static axiom_node_t* ws_convert_libxml_to_om(zval *node)
-{
-    axiom_node_t *om_node = NULL;
-    axiom_xml_reader_t *reader = NULL;
-    php_libxml_node_object *object;
-    xmlNodePtr nodep;
-
-    TSRMLS_FETCH();
-    object = (php_libxml_node_object *)zend_object_store_get_object(node TSRMLS_CC);
-    nodep = php_libxml_import_node(node TSRMLS_CC);
-    if (!nodep)
-    {
-        return NULL;
-    }
-    if (nodep->doc == NULL)
-    {
-        php_error_docref(NULL TSRMLS_CC, E_WARNING, "Imported Node must have \
-                         associated Document");
-        return NULL;
-    }
-    if (nodep->type == XML_DOCUMENT_NODE || nodep->type == XML_HTML_DOCUMENT_NODE)
-    {
-        nodep = xmlDocGetRootElement((xmlDocPtr) nodep);
-    }
-    reader = axiom_xml_reader_create_for_memory(env,
-             (void*)nodep->doc, 0, "utf-8", AXIS2_XML_PARSER_TYPE_DOC);
-    if (!reader)
-    {
-        return NULL;
-    }
-    om_node = ws_util_read_payload(reader, env);
-    return om_node;
-}
-/* }}} end ws_convert_libxml_to_om */
 
 /* {{{ proto create an WSFault object */
 void ws_throw_soap_fault(axiom_soap_body_t *soap_body TSRMLS_DC)
@@ -556,6 +515,7 @@ php_ws_object_new_ex(zend_class_entry *class_type ,
 /* }}} */
 
 /* {{{ create an zval with given class type and stores the provide obj */
+/*
 static zval* ws_create_object(void *obj, int obj_type,
                               zend_class_entry* class_type TSRMLS_DC)
 {
@@ -575,6 +535,7 @@ static zval* ws_create_object(void *obj, int obj_type,
     intern->obj_type = obj_type;
     return wrapper;
 }
+*/
 /* }}} */
 
 /* {{{ destructor function for all ws_objects */
@@ -974,7 +935,7 @@ PHP_METHOD(ws_client, __call)
 {
     char *fn_name = NULL;
     long fn_name_len = 0;
-    zval *options = NULL;
+    /* zval *options = NULL; */
     zval *args = NULL;
     zval **real_args = NULL;
     zval **param = NULL;
@@ -997,8 +958,9 @@ PHP_METHOD(ws_client, __call)
                 zend_hash_move_forward_ex(Z_ARRVAL_P(args), &pos))
         {
             if(Z_TYPE_PP(param) == IS_LONG)
-            {
+            {  /*
                 php_printf(" index %d type %d", i, Z_LVAL_PP(param));
+		*/
             }
             real_args[i++] = *param;
         }
@@ -1011,7 +973,7 @@ PHP_METHOD(ws_client, __call)
 /* }}} end call */
 PHP_METHOD(ws_client, get_client)
 {
-    zval *tmp = NULL;
+    /* zval *tmp = NULL; */
     zval *client_proxy_zval  =  NULL;
     char *service = NULL;
     int service_len = 0;
@@ -1036,9 +998,6 @@ PHP_METHOD(ws_service, __construct)
     ws_object_ptr intern = NULL;
     zval *obj = NULL;
     ws_svc_info_t *svc_info = NULL;
-    char *svc_name = NULL;
-    char *location = NULL;
-    int location_len = 0;
     zval *options = NULL;
     axis2_hash_index_t *hi = NULL;
 
@@ -1103,18 +1062,12 @@ PHP_METHOD(ws_service, __construct)
 				    (void **)&tmp) == SUCCESS ){
                 svc_info->policy = *tmp;
 		AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] policy object present");
-		
-                if(!svc_info->modules_to_engage)
-                    svc_info->modules_to_engage = axis2_array_list_create(ws_env_svr, 3);
-                axis2_array_list_add(svc_info->modules_to_engage, ws_env_svr, AXIS2_STRDUP("rampart", ws_env_svr));
             }
 	    if(zend_hash_find(ht, WS_SECURITY_TOKEN, sizeof(WS_SECURITY_TOKEN), (void**)&tmp) == SUCCESS){
 		svc_info->security_token = *tmp;
 	    	AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] security token object present ");
 	    }		
  
-            
-
 	    if(zend_hash_find(ht, WS_RELIABLE, sizeof(WS_RELIABLE),
                               (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
                 if(!svc_info->modules_to_engage)
@@ -1171,7 +1124,6 @@ PHP_METHOD(ws_service, __construct)
     {
         HashPosition pos;
         zval **tmp_function = NULL;
-        zval **zval_tmp = NULL;
 
         zend_hash_internal_pointer_reset_ex(ht_actions, &pos);
         while (zend_hash_get_current_data_ex(ht_actions, (void **)&tmp_function, &pos) != FAILURE)
@@ -1244,7 +1196,6 @@ PHP_METHOD(ws_service, __construct)
             char *function_name = NULL;
             int key_len = 0;
 
-            axis2_char_t *f_name = NULL;
             axis2_hash_this(hi, &k , NULL, &v);
             key = (axis2_char_t*)k;
             val = (axis2_char_t*)v;
@@ -1370,7 +1321,6 @@ PHP_METHOD(ws_service , reply)
 {
     ws_object_ptr intern = NULL;
     zval *obj = NULL;
-    axis2_char_t *svc_name = NULL;
     axis2_conf_t *conf = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
     ws_svc_info_t *svc_info = NULL;
@@ -1379,9 +1329,7 @@ PHP_METHOD(ws_service , reply)
     wsf_worker_t *php_worker = NULL;
     zval **raw_post;
     int status = 0;
-    char *response_str = NULL;
     char content_length[40];
-    int soap_version =0;
     char status_line[100];
     char *content_type = NULL;
 
@@ -1483,7 +1431,6 @@ PHP_METHOD(ws_service , reply)
         zval **tmpval;
         char *binding_name = NULL;
         char *wsdl_version = NULL;
-        char *cwd = emalloc(100);
         char *full_path = emalloc(100);
 
         /* 	full_path = SG(request_info).http */
@@ -1527,10 +1474,6 @@ PHP_METHOD(ws_service , reply)
             {
                 void *v = NULL;
                 const void *k = NULL;
-
-                char *function_name = NULL;
-                int key_len = 0;
-
                 axis2_char_t *f_key = NULL;
                 axis2_char_t *f_name = NULL;
                 axis2_hash_this(hi, &k, NULL, &v);
@@ -1610,7 +1553,7 @@ PHP_METHOD(ws_service , reply)
             sprintf(status_line, "%s 200 OK", req_info->http_protocol);
             sapi_add_header(status_line,strlen(status_line), 1);
 
-            sprintf(content_length,"Content-Length %d", req_info->content_length);
+            sprintf(content_length,"Content-Length %ld", req_info->content_length);
             content_type = AXIS2_MALLOC(ws_env_svr->allocator, strlen(req_info->content_type)*sizeof(char)+20);
             sprintf(content_type, "Content-Type: %s", req_info->content_type);
             sapi_add_header(content_type, strlen(content_type), 1);
@@ -1641,8 +1584,6 @@ PHP_METHOD(ws_service , reply)
 
 PHP_METHOD(ws_fault, __construct)
 {
-    zval *value = NULL;
-    char *name = NULL;
     char *sf_code      = NULL;
     long sf_code_len   = 0;
     char *sf_reason    = NULL;
@@ -1875,7 +1816,6 @@ PHP_METHOD(ws_security_token, __construct)
 PHP_METHOD(ws_policy, __construct)
 {
     zval *object = NULL;
-    zval *payload = NULL;
     zval *properties = NULL;
 
     if (FAILURE == zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|z|a",
@@ -1890,21 +1830,8 @@ PHP_METHOD(ws_policy, __construct)
 
     /* if the wspolicy object ( option array is presence */
 
-    if( NULL != properties && Z_TYPE_P(properties) == IS_ARRAY)
-    {
-        HashTable *ht = Z_ARRVAL_P(properties);
-        axiom_node_t *policy_root_node = NULL;
-        axis2_char_t *om_str = NULL;
-        FILE *fp = NULL;
-
-	if(ht)
-	{
-		ws_policy_set_policy_options(object, ht, env TSRMLS_CC);
-
-        }
-        else
-            php_printf("\n The variable is of type %d", Z_TYPE_P(properties));
-
+    if( NULL != properties){
+	ws_policy_set_policy_options(object, properties, env TSRMLS_CC);
     }
 }
 
@@ -1918,8 +1845,7 @@ PHP_FUNCTION(ws_get_key_from_file)
 	int filename_len;
 	char *contents;
 	php_stream *stream;
-	int len, newlen;
-	long offset = -1;
+	int len;
 	long maxlen = PHP_STREAM_COPY_ALL;
 	zval *zcontext = NULL;
 	php_stream_context *context = NULL;
@@ -1942,7 +1868,6 @@ PHP_FUNCTION(ws_get_key_from_file)
 	if ((len = php_stream_copy_to_mem(stream, &contents, maxlen, 0)) > 0) {
 		char *key = NULL;
 		char *start_index = NULL;
-		char *end_index = NULL;
 		char *tmp_index = NULL;
 	
 		tmp_index = strstr(contents, DELIMITER);

@@ -102,10 +102,8 @@
 
 
 int ws_policy_set_policy_options(zval *this_ptr,
-                                 HashTable *ht,
+                                 zval *property,
                                  const axis2_env_t *env TSRMLS_DC);
-
-axiom_node_t *get_security_policy_node();
 
 int ws_policy_handle_client_security(zval *sec_token,
                                      zval *policy,
@@ -115,7 +113,8 @@ int ws_policy_handle_client_security(zval *sec_token,
 int ws_policy_handle_server_security(zval *sec_token,
                                      zval *policy,
                                      axis2_env_t *env,
-                                     ws_svc_info_t *svc_info TSRMLS_DC);
+                                     axis2_svc_t *svc,
+				     axis2_conf_t *conf TSRMLS_DC);
 
 
 #endif /* WSF_POLICY_H*/

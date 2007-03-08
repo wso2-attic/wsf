@@ -138,7 +138,7 @@ int wsf_worker_process_request(
         wsf_worker_t *worker, 
         const axis2_env_t *env, 
         wsf_req_info_t *request,
-		ws_svc_info_t *svc_info)
+	ws_svc_info_t *svc_info)
 {
 	axis2_conf_ctx_t *conf_ctx = NULL;
 	axis2_conf_t *conf = NULL;
@@ -291,7 +291,8 @@ int wsf_worker_process_request(
 	if(svc_info->security_token != NULL && svc_info->policy != NULL){
 		/** TODO call security function here */
 		ws_policy_handle_server_security(svc_info->security_token, svc_info->policy,
-			env, svc_info TSRMLS_CC);
+			env, svc_info->svc, 
+			axis2_conf_ctx_get_conf(worker->conf_ctx, env) TSRMLS_CC);
     	}  
           
 	soap_action = request->soap_action;
