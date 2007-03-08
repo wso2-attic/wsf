@@ -79,6 +79,19 @@
     		<page class="org.wso2.wsas.wtp.facet.ui.WSASFacetInstallPage" />
   		</wizard-pages>
 	</extension> 
+	
+	
+	<extension point="org.eclipse.wst.common.project.facet.core.facets">
+  		<preset id="WSAS.preset">
+    		<label>WSAS Web Services Project</label>
+    		<description>Creates a web project with WSAS functionality.</description>
+    		<facet id="jst.java" version="5.0"/>
+    		<facet id="jst.web" version="2.2"/>
+    		<facet id="WSAS.core" version="1.1"/>
+    		<facet id="WSAS.ext" version="1.1"/>
+  		</preset>
+	</extension>
+	
  
 
 </plugin>
