@@ -59,65 +59,67 @@ typedef enum ws_input_types{
 #define WS_OPTIONS "wsfoptions"
 
 
-#define WS_TO			"to"    /** endpoint uri */
+#define WS_TO				"to"    /** endpoint uri */
 
-#define WS_USE_WSA     "useWSA"
-#define WS_ACTION		"action"		/** addressing options */
-#define WS_FROM		"from"
-#define WS_REPLY_TO		"replyTo"
-#define WS_FAULT_TO		"faultTo"
+#define WS_USE_WSA     			"useWSA"
+#define WS_ACTION			"action"		/** addressing options */
+#define WS_FROM				"from"
+#define WS_REPLY_TO			"replyTo"
+#define WS_FAULT_TO			"faultTo"
 
-#define WS_USES_XOP	"usesXOP"	   /** MTOM XOP */
+#define WS_SOAP_ACTION                  "SOAPAction"
+
+#define WS_USES_XOP			"usesXOP"	   /** MTOM XOP */
 #define WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE "defaultAttachmentContentType"
-#define WS_ATTACHMENTS "attachments"
-#define WS_CID2CONTENT_TYPE "cid2contentType"
-#define WS_RESPONSE_XOP "responseXOP"
-#define WS_REQUEST_XOP  "requestXOP"
-#define WS_USE_MTOM     "useMTOM"
+#define WS_ATTACHMENTS 			"attachments"
+#define WS_CID2CONTENT_TYPE 		"cid2contentType"
+#define WS_RESPONSE_XOP 		"responseXOP"
+#define WS_REQUEST_XOP  		"requestXOP"
+#define WS_USE_MTOM     		"useMTOM"
 
-#define WS_WILL_CONTINUE_SEQUENCE "willContinueSequence"
-#define WS_LAST_MESSAGE "lastMessage"
-#define WS_RELIABLE	"reliable"
-#define WS_SEQUENCE_EXPIRY_TIME "sequenceExpiryTime"
-#define WS_SEQUENCE_OFFER_ID "sequenceOfferID"
-#define WS_SEQUENCE_KEY      "sequenceKey"
+#define WS_WILL_CONTINUE_SEQUENCE 	"willContinueSequence"
+#define WS_LAST_MESSAGE 		"lastMessage"
+#define WS_RELIABLE			"reliable"
+#define WS_SEQUENCE_EXPIRY_TIME 	"sequenceExpiryTime"
+#define WS_SEQUENCE_OFFER_ID 		"sequenceOfferID"
+#define WS_SEQUENCE_KEY      		"sequenceKey"
 
 
-#define WS_USE_SOAP	"useSOAP"
-#define WS_HTTP_METHOD "HTTPMethod"
+#define WS_USE_SOAP			"useSOAP"
+#define WS_HTTP_METHOD 			"HTTPMethod"
 
-#define WS_SERVER_CERT "CACert"
-#define WS_CLIENT_CERT "clientCert"
-#define WS_PASSPHRASE  "passphrase"
+#define WS_SERVER_CERT 			"CACert"
+#define WS_CLIENT_CERT 			"clientCert"
+#define WS_PASSPHRASE  			"passphrase"
 
-#define WS_BINDING_STYLE "bindingStyle"
-#define WS_WSDL          "wsdl"
+#define WS_BINDING_STYLE 		"bindingStyle"
+#define WS_WSDL          		"wsdl"
 
-#define WS_FAULT_REASON "reason"
-#define WS_FAULT_ROLE   "role"
-#define WS_FAULT_TEXT   "text"
-#define WS_FAULT_CODE   "code"
-#define WS_FAULT_SUBCODE "subcode"
-#define WS_FAULT_DETAIL "detail"
+#define WS_FAULT_REASON 		"reason"
+#define WS_FAULT_ROLE   		"role"
+#define WS_FAULT_TEXT   		"text"
+#define WS_FAULT_CODE   		"code"
+#define WS_FAULT_SUBCODE 		"subcode"
+#define WS_FAULT_DETAIL 		"detail"
 
-#define WS_HEADERS      "headers"    /** header options */
-#define WS_HEADER_NS    "ns"
-#define WS_HEADER_LOCALNAME "localname"
-#define WS_HEADER_DATA     "data"
-#define WS_HEADER_ROLE     "role"
-#define WS_HEADER_MUST_UNDERSTAND "mustUnderstand"
+#define WS_HEADERS      		"headers"    /** header options */
+#define WS_HEADER_NS    		"ns"
+#define WS_HEADER_LOCALNAME 		"localname"
+#define WS_HEADER_DATA     		"data"
+#define WS_HEADER_ROLE     		"role"
+#define WS_HEADER_MUST_UNDERSTAND 	"mustUnderstand"
 
-#define WS_POLICY_NAME "policy"
-#define WS_SECURITY_TOKEN "securityToken"
+#define WS_POLICY_NAME 			"policy"
+#define WS_SECURITY_TOKEN 		"securityToken"
 
 /** end options */
 
-#define WS_MSG_PAYLOAD_STR "str"
-#define WS_MSG_PAYLOAD_SXML "simpleXML"
-#define WS_MSG_PAYLOAD_DOM "dom"
+#define WS_MSG_PAYLOAD_STR 		"str"
+#define WS_MSG_PAYLOAD_SXML 		"simpleXML"
+#define WS_MSG_PAYLOAD_DOM 		"dom"
 
-#define WS_MSG_PAYLOAD_TYPE "payloadtype"
-#define WS_MSG_TYPE "type"
+#define WS_MSG_PAYLOAD_TYPE 		"payloadtype"
+#define WS_MSG_TYPE 			"type"
 
 /** soap header attributes */
 
