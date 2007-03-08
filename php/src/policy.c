@@ -210,7 +210,7 @@ int ws_policy_handle_client_security(zval *sec_token,
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy]creating rampart client outgoing policy node \n\t %s \n", om_str_out);
             om_str_out = NULL;
 
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy]creating rampart service incoming policy node \n\t %s \n", om_str_out);
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy]creating rampart client incoming policy node \n\t %s \n", om_str_in);
             om_str_in = NULL;
 
         }
