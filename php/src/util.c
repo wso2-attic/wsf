@@ -518,8 +518,8 @@ axis2_msg_recv_t* load_msg_recv(axis2_env_t *env, axis2_char_t *home)
 		
 	dll_desc = axis2_dll_desc_create(env);
 	msg_recv_dll_name = 
-	AXIS2_DLL_DESC_CREATE_PLATFORM_SPECIFIC_DLL_NAME(dll_desc, env, 
-		"ws_xml_msg_recv");
+    axis2_dll_desc_create_platform_specific_dll_name(dll_desc, env,
+                                               "ws_xml_msg_recv");
 	repos_name = home;
 	
 	temp_path = AXIS2_STRACAT(repos_name, AXIS2_PATH_SEP_STR, env);
@@ -885,4 +885,6 @@ xmlDocPtr wsf_util_serialize_om_to_doc(axis2_env_t *env, axiom_node_t *ret_node)
 	doc = (xmlDocPtr)AXIOM_XML_WRITER_GET_XML(writer, env);
 	return doc;
 }
+
+
 

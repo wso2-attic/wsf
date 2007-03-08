@@ -471,7 +471,7 @@ wsf_client_set_module_param_option(axis2_env_t *env,
 	if(!module_desc)
 		return AXIS2_FAILURE;
 	
-	param = AXIS2_MODULE_DESC_GET_PARAM(module_desc, env, module_option);
+        param = axis2_module_desc_get_param(module_desc, env, module_option);
 	if(!param)
 		return AXIS2_FAILURE;
 
