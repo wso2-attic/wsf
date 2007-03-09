@@ -1392,12 +1392,14 @@ PHP_METHOD(ws_service , reply)
             req_info->soap_action = Z_STRVAL_PP(data);
 
         }
+        /*
         if((zend_hash_find(Z_ARRVAL_PP(server_vars), "SCRIPT_FILENAME",
                            sizeof("SCRIPT_FILENAME"), (void **)&data) == SUCCESS)
                 &&  Z_TYPE_PP(data) == IS_STRING)
         {
             svc_info->svc_path = Z_STRVAL_PP(data);
         }
+	*/
     }
 
     req_info->request_uri = SG(request_info).request_uri;
@@ -1580,26 +1582,39 @@ PHP_METHOD(ws_service , reply)
 
 /************************* fault *********************************/
 /* {{{ proto void WSFault(mixed fcode, mixed freason,mixed frole, mixed detail) */
-
-
 PHP_METHOD(ws_fault, __construct)
 {
-    char *sf_code      = NULL;
-    long sf_code_len   = 0;
-    char *sf_reason    = NULL;
-    long sf_reason_len = 0;
-    char *sf_role      = NULL;
-    long sf_role_len   = 0;
-    char *sf_detail    = NULL;
-    long sf_detail_len = 0;
+     char *sf_code = NULL, *sf_code_ns = NULL , *sf_reason = NULL, *sf_role = NULL, *value = NULL;
+     int  sf_code_len  = 0,  sf_reason_len = 0, sf_role_len   = 0, value_len = 0;
+     zval *code =  NULL, *details = NULL;	
 
-    if (FAILURE == zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss|ss", &sf_code,
-                                         &sf_code_len, &sf_reason, &sf_reason_len ,&sf_role,
-                                         &sf_role_len ,&sf_detail,&sf_detail_len))
-    {
+    if (FAILURE == zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "zs|s!z!s", &code,
+					 &sf_reason, &sf_reason_len ,
+					 &sf_role, &sf_role_len ,
+					 &details, &value, &value_len)){
         php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid Paramters");
         return;
     }
+
+    if(Z_TYPE_P(code) == IS_STRING){
+	sf_code = Z_STRVAL_P(code);
+	sf_code_len = Z_STRLEN_P(code);
+     }else if(Z_TYPE_P(code) == IS_ARRAY && zend_hash_num_elements(Z_ARRVAL_P(code)) == 2) {
+	        zval **tmp_ns, **tmp_code;
+	        zend_hash_internal_pointer_reset(Z_ARRVAL_P(code));
+        	zend_hash_get_current_data(Z_ARRVAL_P(code), (void**)&tmp_ns);
+	        zend_hash_move_forward(Z_ARRVAL_P(code));
+        	zend_hash_get_current_data(Z_ARRVAL_P(code), (void**)&tmp_code);
+ 	      if (Z_TYPE_PP(tmp_ns) == IS_STRING && Z_TYPE_PP(tmp_code) == IS_STRING) {
+                  sf_code_ns = Z_STRVAL_PP(tmp_ns);
+                  sf_code = Z_STRVAL_PP(tmp_code);
+                  sf_code_len = Z_STRLEN_PP(tmp_code);
+                } else {
+                        php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid parameters. Invalid fault code.");
+                }
+      }else{
+	php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid Parameters, Invalid fault code");
+      }
 
     if(!sf_code || !sf_reason)
     {
@@ -1608,17 +1623,18 @@ PHP_METHOD(ws_fault, __construct)
             php_error_docref(NULL TSRMLS_CC, E_ERROR, "faultcode and faultstring are mandatory ");
             return;
         }
-        else if(WSF_GLOBAL(soap_version) == AXIOM_SOAP12)
-        {
+        else if(WSF_GLOBAL(soap_version) == AXIOM_SOAP12){
             php_error_docref(NULL TSRMLS_CC, E_ERROR, "Code and Reason are mandatory ");
         }
     }
+   /*
     add_property_string(this_ptr, WS_FAULT_CODE, sf_code, 1);
     add_property_string(this_ptr, WS_FAULT_REASON, sf_reason, 1);
     if(sf_role)
         add_property_string(this_ptr, WS_FAULT_ROLE, sf_role, 1);
     if(sf_detail)
         add_property_string(this_ptr, WS_FAULT_DETAIL, sf_detail, 1);
+   */
 }
 /* }}} */
 
