@@ -207,8 +207,6 @@ typedef struct ws_svc_info {
     
     char *password_location;
     char *svc_name;
-    char *svc_path;
-	
     /** this is needed in case of request uri dispatching( for rest) */
     char *op_name;
 
@@ -216,27 +214,20 @@ typedef struct ws_svc_info {
 ws_svc_info_t;
 
 typedef struct php_req_info {
-	long svr_port;
-    
+    long svr_port;
     char *svr_name;
     char *http_protocol;
     char *content_encoding;
     char *soap_action;
-    
-	char *request_uri;
-	char *query_string;
-
-	long content_length;
-	char *content_type;
-
+    char *request_uri;
+    char *query_string;
+    long content_length;
+    char *content_type;
     char *request_method;
-
     void *req_data;
     int req_data_length;
-
     void *result_payload;
     int result_length;
-
     char *transfer_encoding;
 }wsf_req_info_t;
 
