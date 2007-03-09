@@ -656,7 +656,7 @@ void ws_util_create_op_and_add_to_svc(
     	
     	    op = axis2_op_create_with_qname(env, op_qname);
 		
-		    AXIS2_OP_SET_MSG_RECV(op, env, svc_info->msg_recv);
+		    axis2_op_set_msg_recv(op, env, svc_info->msg_recv);
          
 			conf_ctx = wsf_worker_get_conf_ctx(svc_info->php_worker , env);
                   

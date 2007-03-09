@@ -231,7 +231,7 @@ ws_xml_msg_recv_invoke_business_logic_sync(
 
     prop = axis2_msg_ctx_get_property(in_msg_ctx, env, WS_SVC_INFO, AXIS2_FALSE);
     if(prop){
-        ws_svc_info_t *svc_info = (ws_svc_info_t *)AXIS2_PROPERTY_GET_VALUE(prop, env);
+        ws_svc_info_t *svc_info = (ws_svc_info_t *)axis2_property_get_value(prop, env);
         if (svc_info){
             class_info = svc_info->class_info;
             use_mtom   = svc_info->use_mtom;
@@ -270,7 +270,7 @@ ws_xml_msg_recv_invoke_business_logic_sync(
 		
 		    body_content_element = axiom_element_create(env, NULL, res_name, 
 			    						ns, &body_content_node);
-    		AXIOM_NODE_ADD_CHILD(body_content_node, env, result_node);
+    		axiom_node_add_child(body_content_node, env, result_node);
 	    }				
     	else{
     
@@ -347,7 +347,7 @@ ws_xml_msg_recv_invoke_business_logic_sync(
 
 	if (body_content_node){
     
-		AXIOM_NODE_ADD_CHILD(out_node , env, body_content_node);
+		axiom_node_add_child(out_node , env, body_content_node);
 		status = axis2_msg_ctx_set_soap_envelope(out_msg_ctx, env, default_envelope);
 	}
 	else if (soap_fault){
@@ -443,7 +443,7 @@ static axis2_char_t* ws_xml_msg_recv_get_method_name(axis2_msg_ctx_t *msg_ctx,
 		return NULL;
 	}
 
-	qname = AXIS2_OP_GET_QNAME(op, env);
+	qname = axis2_op_get_qname(op, env);
 
 	if (!qname)	{
     
@@ -451,7 +451,7 @@ static axis2_char_t* ws_xml_msg_recv_get_method_name(axis2_msg_ctx_t *msg_ctx,
 		return NULL;
 	}
 
-	name = AXIS2_QNAME_GET_LOCALPART(qname, env);
+	name = axis2_qname_get_localpart(qname, env);
 
 	return name;
 }
@@ -470,14 +470,14 @@ ws_xml_msg_recv_invoke(
     
 	char *req_payload = NULL, *res_payload = NULL;
 	axiom_node_t *res_om_node = NULL;
-    zval func, retval, param;
-    zval *params[1];
-    HashTable *ft = NULL;
-    axis2_char_t *class_name = NULL;
-    zend_class_entry **ce = NULL;
-    void *val = NULL;
-    zval *msg = NULL;
-    
+	    zval func, retval, param;
+	    zval *params[1];
+	    HashTable *ft = NULL;
+	    axis2_char_t *class_name = NULL;
+	    zend_class_entry **ce = NULL;
+	    void *val = NULL;
+	    zval *msg = NULL;
+	    
 	TSRMLS_FETCH();
 	
 	if(!om_node)
@@ -620,7 +620,7 @@ static axis2_char_t* ws_xml_msg_recv_serialize_om(const axis2_env_t *env,
 				AXIS2_XML_PARSER_TYPE_BUFFER);
 	om_output = axiom_output_create (env, writer);
 
-	AXIOM_NODE_SERIALIZE (node, env, om_output);
+    axiom_node_serialize (node, env, om_output);
 	buffer = (axis2_char_t*)AXIOM_XML_WRITER_GET_XML(writer, env);
     buffer_len = axis2_strlen(buffer);
     
@@ -664,7 +664,7 @@ ws_xml_msg_recv_set_soap_fault(
         return;
      env_ns = axiom_namespace_create(env, soap_ns, "env"); 
      if (!env_ns){
-	return;
+	    return;
      }
      
     if(zend_hash_find(Z_OBJPROP(zval_soap_fault), WS_FAULT_REASON, sizeof(WS_FAULT_REASON), (void **)&tmp) == SUCCESS
