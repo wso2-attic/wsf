@@ -820,7 +820,7 @@ create_default_sign(const axis2_env_t *env,
     MAKE_STD_ZVAL(test);
     ZVAL_STRING(test, WS_DEFAULT_TOKEN_VAL, 1);
     create_initiator_token(env, parent_node, &test TSRMLS_CC);
-
+    return NULL;
 }
 
 axiom_node_t *
@@ -830,7 +830,7 @@ create_default_encrypt(const axis2_env_t *env,
     MAKE_STD_ZVAL(test);
     ZVAL_STRING(test, WS_DEFAULT_TOKEN_VAL, 1);
     create_recipient_token(env, parent_node, &test TSRMLS_CC);
-
+    return NULL;
 }
 
 axiom_node_t *
@@ -874,7 +874,6 @@ create_token_reference(const axis2_env_t *env,
     sp_ns = axiom_namespace_create(env, WS_SEC_POLICY_NAMESPACE_URI, WS_SEC_POLICY_NAMESPACE);
 
     if ( tmp != NULL && Z_TYPE_PP(tmp) == IS_STRING) {
-        int i ;
         token_name = Z_STRVAL_PP(tmp);
         if (strcmp(token_name, DIRECT) == 0) {
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_policy] DirectReference is chosen  ");
@@ -902,7 +901,8 @@ char * get_sec_token_Value(char *token_name) {
         return EMBEDDEDTOKEN_VAL;
     if(strcmp(token_name, THUMBPRINT) == 0)
         return THUMBPRINT_VAL;
-
+    
+   return NULL;
 }
 
 
@@ -911,7 +911,7 @@ char * get_sec_token_Value(char *token_name) {
 int ws_policy_set_policy_options(zval *this_ptr,
                                  zval *property,
                                  const axis2_env_t *env TSRMLS_DC) {
-    zval **tmp = NULL;
+    
 
     if (!property)
         return AXIS2_FAILURE;

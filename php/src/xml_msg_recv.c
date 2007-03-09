@@ -64,11 +64,6 @@ ws_xml_msg_recv_get_method_name(
     axis2_msg_ctx_t *msg_ctx,
 	const axis2_env_t *env);
 	
-static axis2_char_t* 
-ws_xml_msg_recv_get_file_path(
-    axis2_msg_ctx_t *msg_ctx,
-	const axis2_env_t *env);
-
 static axiom_node_t* 
 ws_xml_msg_recv_invoke(
     const axis2_env_t *env,
@@ -85,11 +80,6 @@ ws_xml_msg_recv_serialize_om(
     const axis2_env_t *env, 
 	axiom_node_t *node);
 
-static axiom_node_t* 
-ws_xml_msg_recv_deserialize_buffer(
-    const axis2_env_t *env,
-    axis2_char_t *buffer);
-    
 static void 
 ws_xml_msg_recv_set_soap_fault(
     const axis2_env_t *env,
@@ -108,14 +98,13 @@ ws_xml_msg_recv_create(const axis2_env_t *env){
 	AXIS2_ENV_CHECK(env, NULL);
 	msg_recv = axis2_msg_recv_create(env);
 
-    if(NULL == msg_recv){
-		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE); 
-		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, AXIS2_ERROR_GET_MESSAGE(env->error));
+	if(NULL == msg_recv){
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "xml msg recv null");
 		return NULL;
  	}   
 	status = AXIS2_MSG_RECV_SET_SCOPE(msg_recv, env, AXIS2_APPLICATION_SCOPE);
 	
-    if(AXIS2_TRUE != status){
+       if(AXIS2_TRUE != status){
 		AXIS2_MSG_RECV_FREE(msg_recv, env);
 		return NULL;
 	}
@@ -153,41 +142,41 @@ ws_xml_msg_recv_invoke_business_logic_sync(
 	axiom_element_t *body_content_element = NULL;
 	axiom_node_t *out_node = NULL;
 
-	
+
 	axiom_namespace_t *env_ns = NULL;
 	axis2_property_t *prop = NULL;
-
+	/*
 	int is_class = 0;
+	*/
 	int soap_version = AXIOM_SOAP12;
 	axis2_status_t status = AXIS2_SUCCESS;
 	axis2_bool_t skel_invoked = AXIS2_FALSE;
-    int use_mtom = AXIS2_TRUE;
-    int request_xop = AXIS2_FALSE;
+	int use_mtom = AXIS2_TRUE;
+	int request_xop = AXIS2_FALSE;
 
-	axis2_char_t *prop_val =  NULL;
-    axis2_hash_t *class_info = NULL;
+	axis2_hash_t *class_info = NULL;
 	const axis2_char_t *style = NULL;
 	axis2_char_t *local_name = NULL;
-    axis2_char_t *soap_ns = AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
-    axis2_char_t *operation_name = NULL;
+	axis2_char_t *soap_ns = AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
+	axis2_char_t *operation_name = NULL;
 
 
-    /** stote in_msg_ctx envelope */
+	    /** stote in_msg_ctx envelope */
 	axiom_soap_envelope_t *envelope = NULL;
-    
-    /* store out_msg_ctx envelope */
+
+	    /* store out_msg_ctx envelope */
 	axiom_soap_envelope_t *default_envelope = NULL;
-	
+
 	axiom_soap_body_t *out_body = NULL;
 	axiom_soap_header_t *out_header = NULL;
 	axiom_soap_fault_t *soap_fault = NULL;
 
- 
+
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 	AXIS2_PARAM_CHECK(env->error, in_msg_ctx, AXIS2_FAILURE);
 	AXIS2_PARAM_CHECK(env->error, out_msg_ctx, AXIS2_FAILURE);
-	
-	
+
+
 	op_ctx = axis2_msg_ctx_get_op_ctx(in_msg_ctx, env);
 	op_desc = axis2_op_ctx_get_op(op_ctx, env);
 
@@ -467,31 +456,6 @@ static axis2_char_t* ws_xml_msg_recv_get_method_name(axis2_msg_ctx_t *msg_ctx,
 	return name;
 }
 
-
-static axis2_char_t* 
-ws_xml_msg_recv_get_file_path(
-    axis2_msg_ctx_t *msg_ctx,
-    const axis2_env_t *env)
-{
-    
-	axis2_op_ctx_t *op_ctx = NULL;
-	axis2_svc_ctx_t *svc_ctx = NULL;
-	axis2_svc_t *svc = NULL;
-	axis2_param_t *svc_class_param = NULL;
-	axis2_dll_desc_t *dll_desc = NULL;
-	axis2_char_t *svc_class_name = NULL, *ext = NULL, *lib = NULL,
-				 *trimmed_pf = NULL;
-	axis2_property_t *property = NULL;
-	axis2_char_t *filepath = NULL;
-	
-	property = axis2_msg_ctx_get_property(msg_ctx, env, "WS_SVC_PATH", AXIS2_FALSE);
-	if(NULL != property)
-	{
-		filepath = (char*)axis2_property_get_value(property, env);
-	}
-	return filepath;
-}
-
 static axiom_node_t* 
 ws_xml_msg_recv_invoke(
     const axis2_env_t *env, 
@@ -579,7 +543,6 @@ zend_try {
             instanceof_function(Z_OBJCE(retval), ws_message_class_entry TSRMLS_CC)){
             zval **msg_tmp = NULL;
             axis2_char_t *default_cnt_type = NULL;
-			axis2_char_t *action = NULL;
 
             if(zend_hash_find(Z_OBJPROP(retval), "defaultAttachmentContentType",
                 sizeof("defaultAttachmentContentType"), (void **)&msg_tmp) == SUCCESS && 
@@ -601,7 +564,7 @@ zend_try {
                 res_payload = AXIS2_STRDUP(Z_STRVAL_PP(msg_tmp), env);
 				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf log ]response payload %s", res_payload);
                 if(res_payload){
-                    res_om_node = ws_xml_msg_recv_deserialize_buffer(env, res_payload);
+                    res_om_node = wsf_util_deserialize_buffer(env, res_payload);
                 }                    
             }
             if(zend_hash_find(Z_OBJPROP(retval), "attachments", sizeof("attachments"), 
@@ -620,7 +583,7 @@ zend_try {
         }else if(Z_TYPE(retval) == IS_STRING){
             res_payload = AXIS2_STRDUP(Z_STRVAL(retval), env);
             if(res_payload){
-                res_om_node = ws_xml_msg_recv_deserialize_buffer(env, res_payload);
+                res_om_node = wsf_util_deserialize_buffer(env, res_payload);
             }                
         }
         else if( Z_TYPE(retval) == IS_OBJECT &&
@@ -669,57 +632,6 @@ static axis2_char_t* ws_xml_msg_recv_serialize_om(const axis2_env_t *env,
 	return new_buffer;
 }
 
-static axiom_node_t* 
-ws_xml_msg_recv_deserialize_buffer(
-    const axis2_env_t *env,
-	axis2_char_t *buffer)
-{
-    
-	axiom_xml_reader_t *reader = NULL;
-	axiom_stax_builder_t *builder = NULL;
-	axiom_document_t *document = NULL;
-	axiom_node_t *payload = NULL;
-
-	reader = axiom_xml_reader_create_for_memory(env,
-								buffer, axis2_strlen(buffer), "utf-8",
-								AXIS2_XML_PARSER_TYPE_BUFFER);
-	if (!reader) {
-    
-		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE); 
-		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, AXIS2_ERROR_GET_MESSAGE(env->error));
-		return NULL;
-	}
-
-	builder = axiom_stax_builder_create(env, reader);
-
-	if (!builder){
-    
-		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE); 
-		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, AXIS2_ERROR_GET_MESSAGE(env->error));
-		return NULL;
-	}
-
-	document = axiom_stax_builder_get_document(builder, env);
-
-	if (!document) {
-    
-		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Document is not found");
-		return NULL;
-	}
-
-	payload = axiom_document_get_root_element(document, env);
-
-	if (!payload) {
-    
-		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Root element of the document \
-				is not found");
-		return NULL;
-	}
-	
-	axiom_document_build_all(document, env);
-	return payload;
-}
-
 static void 
 ws_xml_msg_recv_set_soap_fault(
     const axis2_env_t *env,
@@ -728,15 +640,16 @@ ws_xml_msg_recv_set_soap_fault(
     zval zval_soap_fault TSRMLS_DC)
 {
     axiom_soap_envelope_t *out_envelope = NULL;
+    /*
     axiom_soap_header_t *out_header = NULL;
     axiom_soap_body_t *out_body = NULL;
+    */
     axiom_namespace_t *env_ns = NULL;
+    /*
     axiom_soap_fault_t *soap_fault = NULL;
-    
     axis2_char_t *fault_value_str = "env:Sender";
     axis2_char_t *fault_reason_str = NULL;
-    axis2_char_t *err_msg = NULL;
-	
+   */	
     axis2_char_t *code = NULL;
     axis2_char_t *reason = NULL;
     axis2_char_t *detail = NULL;
@@ -788,6 +701,6 @@ ws_xml_msg_recv_set_soap_fault(
     out_envelope = axiom_soap_envelope_create_default_soap_fault_envelope(env, code, reason, soap_version,
         NULL, detail_node);
 
-	axis2_msg_ctx_set_soap_envelope(out_msg_ctx, env, out_envelope);
+    axis2_msg_ctx_set_soap_envelope(out_msg_ctx, env, out_envelope);
 
 }    

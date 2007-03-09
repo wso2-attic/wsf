@@ -31,6 +31,7 @@
 #include "wsf_out_transport_info.h"
 #include "wsf_stream.h"
 #include "wsf_util.h"
+#include "wsf_policy.h"
 
 #define READ_SIZE 32
 
@@ -121,27 +122,24 @@ axis2_char_t* wsf_worker_get_bytes(const axis2_env_t *env,
 }
 
 void wsf_worker_free(wsf_worker_t *worker, 
-						const axis2_env_t *env)
+		     const axis2_env_t *env)
 {
 	if(!worker)
 		return;
 	if(worker->conf_ctx != NULL) {
-		/*
-		AXIS2_CONF_CTX_FREE(worker->conf_ctx, env);
+		axis2_conf_ctx_free(worker->conf_ctx, env);
 		worker->conf_ctx = NULL;
-		*/
 	}
 	AXIS2_FREE(env->allocator, worker);
 }
 
 int wsf_worker_process_request(
         wsf_worker_t *worker, 
-        const axis2_env_t *env, 
+        axis2_env_t *env, 
         wsf_req_info_t *request,
 	ws_svc_info_t *svc_info)
 {
 	axis2_conf_ctx_t *conf_ctx = NULL;
-	axis2_conf_t *conf = NULL;
 	axis2_msg_ctx_t *msg_ctx = NULL;
 	axis2_op_ctx_t *op_ctx = NULL;
 	
@@ -153,11 +151,8 @@ int wsf_worker_process_request(
 	axis2_stream_t *request_body = NULL;
 	axis2_stream_t *out_stream = NULL;
 	
-	axiom_soap_envelope_t *soap_envelope = NULL;
-   	axis2_property_t *property = NULL;
     	axis2_url_t *url = NULL;
 	axis2_char_t *request_uri_with_query_string;
-	axis2_qname_t *transport_qname = NULL;
 	
    
 	int content_length = -1;
@@ -167,7 +162,6 @@ int wsf_worker_process_request(
 	axis2_char_t *http_version = NULL;
 	axis2_char_t *soap_action = NULL;
 	axis2_string_t *soap_action_str = NULL;
-	axis2_char_t *ctx_written = NULL;
 	axis2_char_t *encoding_header_value = NULL;
 	axis2_char_t *req_url = NULL;
 	axis2_string_t *req_url_str = NULL;
@@ -175,9 +169,10 @@ int wsf_worker_process_request(
 	axis2_char_t *content_type = NULL;
 	axis2_char_t *ctx_uuid = NULL;
 	axis2_string_t *ctx_uuid_str = NULL;
-    axis2_char_t *is_class = NULL;
-    
-    TSRMLS_FETCH();
+	/*
+	axis2_char_t *is_class = NULL;
+        */
+	TSRMLS_FETCH();
 	
 	if(!request)
 		return -1;
@@ -263,14 +258,6 @@ int wsf_worker_process_request(
     	php_out_transport_info = wsf_out_transport_info_create(env, request);
     	axis2_msg_ctx_set_http_out_transport_info(msg_ctx, env, php_out_transport_info);
    
-    /* service path */
-	{
-		axis2_property_t *svc_path_prop = NULL;
-		svc_path_prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST,
-			AXIS2_TRUE,NULL, AXIS2_STRDUP(svc_info->svc_path, env));
-		axis2_msg_ctx_set_property(msg_ctx, env, "WS_SVC_PATH", svc_path_prop, AXIS2_FALSE);
-	}
-    
     	if(request->transfer_encoding){
         	axis2_msg_ctx_set_transfer_encoding(msg_ctx, env, AXIS2_STRDUP(request->transfer_encoding, env));
     	}
@@ -289,10 +276,11 @@ int wsf_worker_process_request(
     	}  
     	
 	if(svc_info->security_token != NULL && svc_info->policy != NULL){
-		/** TODO call security function here */
+		/**  call security function here */
+		axis2_conf_t *conf = NULL;
+		conf = axis2_conf_ctx_get_conf(worker->conf_ctx, env);
 		ws_policy_handle_server_security(svc_info->security_token, svc_info->policy,
-			env, svc_info->svc, 
-			axis2_conf_ctx_get_conf(worker->conf_ctx, env) TSRMLS_CC);
+			env, svc_info->svc, conf TSRMLS_CC);
     	}  
           
 	soap_action = request->soap_action;
@@ -336,8 +324,6 @@ int wsf_worker_process_request(
 	} else if (0 == strcmp("POST", request->request_method)) {
 		axis2_status_t status = AXIS2_FAILURE;
         	
-		axis2_property_t *prop = NULL;
-        
 		status = axis2_http_transport_utils_process_http_post_request
 						(env, msg_ctx, request_body, out_stream,
 						content_type , content_length,
@@ -365,23 +351,21 @@ int wsf_worker_process_request(
 		op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
 		if(axis2_op_ctx_get_response_written(op_ctx, env)) {
 			int rlen = 0;
+			int readlen = 0;
+            		void *val = NULL;
             	
-		int readlen = 0;
-            	void *val = NULL;
-            	
-		send_status = WS_HTTP_OK;
+			send_status = WS_HTTP_OK;
             
-		rlen = AXIS2_STREAM_BASIC_GET_LEN(out_stream, env);
-            	val = AXIS2_MALLOC(env->allocator, sizeof(char)*(rlen+1));
-		readlen = AXIS2_STREAM_READ(out_stream, env, val, rlen+1);
+			rlen = AXIS2_STREAM_BASIC_GET_LEN(out_stream, env);
+            		val = AXIS2_MALLOC(env->allocator, sizeof(char)*(rlen+1));
+			readlen = AXIS2_STREAM_READ(out_stream, env, val, rlen+1);
             
-            	if(readlen == rlen){
-                	request->result_payload = val;
-                	request->result_length = readlen;
-            	}
-            
+        	    	if(readlen == rlen){
+                		request->result_payload = val;
+                		request->result_length = readlen;
+	            	}
 		}else{
-		send_status = WS_HTTP_ACCEPTED;
+			send_status = WS_HTTP_ACCEPTED;
 		}
     	}	
 

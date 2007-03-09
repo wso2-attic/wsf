@@ -29,8 +29,6 @@
 #include <axis2_uuid_gen.h>
 #include <axiom_util.h>
 
-static int curr = 0;
-
 xmlNodePtr wsf_util_get_xml_node(zval *node TSRMLS_DC)
 {
 	php_libxml_node_object *object;
@@ -93,7 +91,6 @@ wsf_util_construct_header_node(const axis2_env_t *env,
 	axiom_element_t *header_ele = NULL;
 	axiom_namespace_t *soap_ns = NULL;
 	int must_understand = 0;
-	int role = 0;
 
 	zval **tmp = NULL;
 
@@ -120,7 +117,6 @@ wsf_util_construct_header_node(const axis2_env_t *env,
 	if(zend_hash_find(Z_OBJPROP_P(header), WS_HEADER_MUST_UNDERSTAND, 
 		sizeof(WS_HEADER_MUST_UNDERSTAND), (void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
 		axiom_attribute_t *mu_attr = NULL;
-		axiom_namespace_t *env_ns = NULL;
 		char must_val[2];
 			
 		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] must understand value is set");
@@ -164,33 +160,13 @@ wsf_util_construct_header_node(const axis2_env_t *env,
 }
 
 
-static xmlNodePtr wsf_get_xml_node(zval *node TSRMLS_DC)
-{
-	php_libxml_node_object *object;
-	xmlNodePtr nodep;
-
-	object = (php_libxml_node_object *)zend_object_store_get_object(node TSRMLS_CC);
-	nodep = php_libxml_import_node(node TSRMLS_CC);
-	    if (!nodep){
-		return NULL;
-	}
-	if (nodep->doc == NULL) {
-		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Imported Node must have \
-							associated Document");
-		return NULL;
-	}
-	if (nodep->type == XML_DOCUMENT_NODE || nodep->type == XML_HTML_DOCUMENT_NODE) {
-		nodep = xmlDocGetRootElement((xmlDocPtr) nodep);
-	}
-	return nodep;
-}
-
 /* {{{ efree wrapper */
 static void WSF_CALL 
 wsf_free_wrapper_cli(axis2_allocator_t *allocator, 
 					  void *ptr)
-{
-	efree(ptr);
+{	
+	if(ptr)
+		pefree(ptr,1);
 }
 /* }}} end efree wrapper */
 
@@ -199,7 +175,7 @@ static void* WSF_CALL
 wsf_malloc_wrapper_cli(axis2_allocator_t *allocator,
 		      size_t size)
 {
-    return emalloc(size);
+    return pemalloc(size, 1);
 }
 /* }}} */
 /* {{{ realloc wrapper */
@@ -207,40 +183,9 @@ static void* WSF_CALL
 wsf_realloc_warpper_cli(axis2_allocator_t *allocator,void *ptr, 
 		        size_t size)
 {
-    return erealloc(ptr, size);
+    return perealloc(ptr, size,1);
 }
 /* }}} */
-
-axis2_env_t*
-wsf_env_create_for_client(axis2_char_t *logpath)
-{
-    axis2_allocator_t *allocator = NULL;
-    axis2_error_t *error = NULL;
-    axis2_log_t *log = NULL;
-    axis2_char_t client_log[250];
-    axis2_thread_pool_t *thread_pool = NULL;
-    const axis2_char_t *LOG_NAME = "wsf.log";
-    
-    allocator = emalloc(sizeof(axis2_allocator_t));
-    
-    allocator->free_fn = wsf_free_wrapper_cli;
-    allocator->malloc_fn = wsf_malloc_wrapper_cli;
-    allocator->realloc = wsf_realloc_warpper_cli;
-    
-    error = axis2_error_create(allocator);
-	if (logpath && 
-		0 == strcmp(logpath, "") || 
-		0 == strcmp(logpath, ".")||
-		0 == strcmp(logpath, "./")) {
-		snprintf(client_log, 256, "%s", LOG_NAME);
-	} else {
-		snprintf(client_log, 256, "%s/%s", logpath, LOG_NAME);
-	}
-
-    thread_pool = axis2_thread_pool_init(allocator);
-    log = axis2_log_create(allocator, NULL, client_log);
-	return axis2_env_create_with_error_log_thread_pool(allocator, error, log, thread_pool);
-}
 
 /* {{{ malloc wrapper */
 static void* WSF_CALL  
@@ -281,15 +226,15 @@ axis2_env_t* wsf_env_create(axis2_char_t *path_tolog)
 	const axis2_char_t *LOG_NAME = "wsf.log";
     allocator = pemalloc(sizeof(axis2_allocator_t), 1);
     
-    allocator->free_fn = wsf_free_wrapper;
-    allocator->malloc_fn = wsf_malloc_wrapper;
-    allocator->realloc = wsf_realloc_warpper;
+    allocator->free_fn = wsf_free_wrapper_cli;
+    allocator->malloc_fn = wsf_malloc_wrapper_cli;
+    allocator->realloc = wsf_realloc_warpper_cli;
     
     error = axis2_error_create(allocator);
-    if (path_tolog && 
-        0 == strcmp(path_tolog, "") || 
-		0 == strcmp(path_tolog, ".")||
-		0 == strcmp(path_tolog, "./")) {
+    if (path_tolog && (
+	        (0 == strcmp(path_tolog, ""))   || 
+		(0 == strcmp(path_tolog, "."))  ||
+		(0 == strcmp(path_tolog, "./")))) {
 		snprintf(log_path, 256, "%s", LOG_NAME);
 	} else {
 		snprintf(log_path, 256, "%s/%s", path_tolog, LOG_NAME);
@@ -318,10 +263,10 @@ axis2_env_t* wsf_env_create_svr(axis2_char_t *path_tolog)
     allocator->realloc = wsf_realloc_warpper;
     
     error = axis2_error_create(allocator);
-    if (path_tolog && 
-        0 == strcmp(path_tolog, "") || 
-		0 == strcmp(path_tolog, ".")||
-		0 == strcmp(path_tolog, "./")) {
+    if (path_tolog && (
+        	(0 == strcmp(path_tolog, "")) || 
+		(0 == strcmp(path_tolog, ".")) ||
+		(0 == strcmp(path_tolog, "./")))) {
 		snprintf(log_path, 256, "%s", LOG_NAME);
 	} else {
 		snprintf(log_path, 256, "%s/%s", path_tolog, LOG_NAME);
@@ -346,7 +291,6 @@ ws_svc_info_t* ws_svc_info_create()
     svc_info->svc_name = NULL;
     svc_info->is_class = 0;
     svc_info->msg_recv = NULL;
-    svc_info->svc_path = NULL;
     svc_info->class_info = NULL;
     svc_info->modules_to_engage = NULL;
     svc_info->php_worker = NULL;
@@ -371,10 +315,6 @@ void ws_svc_info_free(ws_svc_info_t *svc_info)
 	    efree(svc_info->svc_name);
 	    svc_info->svc_name = NULL;
         }		    
-	if(svc_info->svc_path){
-	    efree(svc_info->svc_path);
-	    svc_info->svc_path = NULL;
-	}
 	efree(svc_info); 
     }
 }
@@ -553,16 +493,13 @@ axis2_char_t *ws_util_get_soap_msg_from_op_client(
 axis2_msg_recv_t* load_msg_recv(axis2_env_t *env, axis2_char_t *home)
 {
  /* msg_receiver default location is home/lib */
-	axis2_char_t *class_name = NULL;
 	axis2_msg_recv_t *msg_recv = NULL;
-	axis2_qname_t *class_qname = NULL;
 	axis2_dll_desc_t *dll_desc = NULL;
 	axis2_char_t *repos_name = NULL;
 	axis2_char_t *dll_name = NULL;
 	axis2_char_t *temp_path = NULL;
 	axis2_char_t *temp_path2 = NULL;
 	axis2_char_t *temp_path3 = NULL;
-	axis2_conf_t *conf = NULL;
 	axis2_char_t *msg_recv_dll_name = NULL;
 	axis2_param_t *impl_info_param = NULL;
 		
@@ -572,25 +509,23 @@ axis2_msg_recv_t* load_msg_recv(axis2_env_t *env, axis2_char_t *home)
                                                "ws_xml_msg_recv");
 	repos_name = home;
 	
-	temp_path = AXIS2_STRACAT(repos_name, AXIS2_PATH_SEP_STR, env);
-	temp_path2 = AXIS2_STRACAT(temp_path, "lib", env);
-	temp_path3 = AXIS2_STRACAT(temp_path2, AXIS2_PATH_SEP_STR, env);
-	dll_name = AXIS2_STRACAT(temp_path3, msg_recv_dll_name, env);
-	AXIS2_DLL_DESC_SET_NAME(dll_desc, env, dll_name);
-	AXIS2_DLL_DESC_SET_TYPE(dll_desc, env, AXIS2_MSG_RECV_DLL);
+	temp_path = axis2_stracat(repos_name, AXIS2_PATH_SEP_STR, env);
+	temp_path2 = axis2_stracat(temp_path, "lib", env);
+	temp_path3 = axis2_stracat(temp_path2, AXIS2_PATH_SEP_STR, env);
+	dll_name = axis2_stracat(temp_path3, msg_recv_dll_name, env);
+	axis2_dll_desc_set_name(dll_desc, env, dll_name);
+	axis2_dll_desc_set_type(dll_desc, env, AXIS2_MSG_RECV_DLL);
 	
 	impl_info_param = axis2_param_create(env, NULL , NULL);
 	if(!impl_info_param)
 	{
 		return NULL;
-	}/*
-	AXIS2_PARAM_SET_VALUE(impl_info_param, env, dll_desc);
-	impl_info_param->ops->value_free = axis2_dll_desc_free_void_arg;
-
+	}
+	axis2_param_set_value(impl_info_param, env, dll_desc);
 	axis2_class_loader_init(env);
+	
 	msg_recv = (axis2_msg_recv_t *) axis2_class_loader_create_dll(env, 
 		impl_info_param);
-	*/
 	return msg_recv;
 }
 
@@ -668,8 +603,6 @@ void ws_util_create_svc_from_svc_info(
 	axis2_svc_t *svc = NULL;
 	axis2_conf_t *conf = NULL;
 	axis2_conf_ctx_t *conf_ctx = NULL;
-	axis2_dll_desc_t *dll_des = NULL;
-	axis2_param_t *param = NULL;
   
 	if(!svc_info->php_worker){
 		php_error_docref(NULL TSRMLS_CC, E_ERROR, "error creating service");
@@ -706,8 +639,6 @@ void ws_util_create_op_and_add_to_svc(
 	axis2_svc_t *svc = NULL;
 	axis2_op_t *op = NULL;
 	axis2_qname_t *op_qname = NULL;
-    	HashTable *ht = NULL;
-    	zval **tmp = NULL;
     
 	op_qname = axis2_qname_create(env, op_name, NULL, NULL);
 	svc = svc_info->svc;
@@ -838,7 +769,6 @@ void wsf_util_get_attachments(const axis2_env_t *env,
 {
     axiom_node_t *node = NULL;
     axiom_node_t *tmp_node = NULL;
-    axiom_element_t *payload_element = NULL;
     
     if(!payload_node || !cid2contentType || !cid2str)
         return;
