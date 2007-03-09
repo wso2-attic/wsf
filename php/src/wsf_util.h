@@ -66,29 +66,31 @@ wsf_req_info_t* wsf_php_req_info_create();
 void wsf_php_req_info_free(wsf_req_info_t *req_info);
 
 void wsf_util_set_attachments_with_cids(
-		const axis2_env_t *env,
-	        int enable_mtom, 
-		axiom_node_t *payload_node,
-        	HashTable *attach_ht, 
-		char *default_cnt_type TSRMLS_DC);
+    const axis2_env_t *env,
+    int enable_mtom, 
+    axiom_node_t *payload_node,
+    HashTable *attach_ht, 
+    char *default_cnt_type TSRMLS_DC);
         
 int wsf_util_set_options(
-		zval *zval_client, 
-		zval *zval_msg, 
-		axis2_env_t *env,
-	        axis2_options_t *options, 
-		axis2_svc_client_t *svc_client,
-		int is_send TSRMLS_DC);  
+    zval *zval_client, 
+    zval *zval_msg, 
+    axis2_env_t *env,
+    axis2_options_t *options, 
+    axis2_svc_client_t *svc_client,
+    int is_send TSRMLS_DC);  
         
 void wsf_util_get_attachments(
-		const axis2_env_t *env,
-        	axiom_node_t *payload_node, 
-		zval *cid2str,
-		zval *cid2contentType TSRMLS_DC);  
+    const axis2_env_t *env,
+    axiom_node_t *payload_node, 
+    zval *cid2str,
+    zval *cid2contentType TSRMLS_DC);  
         
-char* wsf_util_serialize_om(axis2_env_t *env, axiom_node_t *ret_node);
+char* wsf_util_serialize_om(axis2_env_t *env, 
+    axiom_node_t *ret_node);
 
-xmlDocPtr wsf_util_serialize_om_to_doc(axis2_env_t *env, axiom_node_t *ret_node);
+xmlDocPtr wsf_util_serialize_om_to_doc(axis2_env_t *env, 
+    axiom_node_t *ret_node);
 
 xmlNodePtr wsf_util_get_xml_node(zval *node TSRMLS_DC);
 
@@ -102,10 +104,9 @@ axis2_env_t* wsf_env_create_for_client(axis2_char_t *cli_logpath);
 
 char* wsf_util_get_algorithm(int algo_suit, int type);
 
-axiom_node_t* 
-wsf_util_construct_header_node(
-		const axis2_env_t *env, 
-		zval *header TSRMLS_DC);
+axiom_node_t*  wsf_util_construct_header_node(
+	const axis2_env_t *env, 
+	zval *header TSRMLS_DC);
 
 char *wsf_util_get_ttl(char *buf, axis2_env_t *env);
 
