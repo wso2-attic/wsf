@@ -16,6 +16,6 @@
     <parameter name="ServiceJS" locked="false">converterService.js</parameter>
     <parameter name="loadJSScripts" locked="false">WSRequest.js</parameter>
     <operation name="convert">
-        <messageReceiver class="org.sample.javascript.JavaScriptReceiver"/>
+        <messageReceiver class="org.wso2.javascript.rhino.JavaScriptReceiver"/>
     </operation>
 </service>

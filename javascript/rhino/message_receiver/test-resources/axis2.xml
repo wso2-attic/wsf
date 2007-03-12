@@ -132,8 +132,6 @@
                          class="org.apache.axis2.json.JSONBadgerfishOMBuilder"/>
         <messageBuilder contentType="text/javascript"
                          class="org.apache.axis2.json.JSONOMBuilder"/>
-        <messageBuilder contentType="application/soap+xml"
-                         class="org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder"/>
     </messageBuilders>
 
     <!-- ================================================= -->
