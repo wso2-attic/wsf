@@ -486,9 +486,9 @@ wsf_client_set_module_param_option(axis2_env_t *env,
 
 	svc_ctx = AXIS2_SVC_CLIENT_GET_SVC_CTX(svc_client, env);
 
-	conf_ctx = AXIS2_SVC_CTX_GET_CONF_CTX(svc_ctx, env);
+	conf_ctx = axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
 
-	conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+	conf = axis2_conf_ctx_get_conf(conf_ctx, env);
 
 	module_desc = AXIS2_CONF_GET_MODULE(conf, env, module_qname);
 	if(!module_desc)

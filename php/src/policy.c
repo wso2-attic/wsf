@@ -206,7 +206,7 @@ int ws_policy_handle_client_security(zval *sec_token,
     set_options_to_rampart_ctx(out_rampart_ctx, env, outgoing_policy_node, tmp_rampart_ctx);
 
     svc_ctx = AXIS2_SVC_CLIENT_GET_SVC_CTX(svc_client, env);
-    svc = AXIS2_SVC_CTX_GET_SVC(svc_ctx, env);
+    svc = axis2_svc_ctx_get_svc(svc_ctx, env);
 
     inflow_param = axis2_param_create(env, WS_INFLOW_SECURITY_POLICY, (void *)in_rampart_ctx) ;
     outflow_param = axis2_param_create(env, WS_OUTFLOW_SECURITY_POLICY, (void *)out_rampart_ctx);
@@ -420,11 +420,11 @@ int set_options_to_rampart_ctx(rampart_context_t *x_rampart_ctx,
                                          AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS)
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pvt key format ");
 
-    if (rampart_context_set_pub_key(x_rampart_ctx, env,
+    if (rampart_context_set_certificate(x_rampart_ctx, env,
                                     (void *)token_ctx.publicKey) == AXIS2_SUCCESS)
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pub key ");
 
-    if(rampart_context_set_pub_key_type(x_rampart_ctx, env,
+    if(rampart_context_set_certificate_type(x_rampart_ctx, env,
                                         AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS)
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pub key format ");
 

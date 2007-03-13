@@ -611,7 +611,7 @@ void ws_util_create_svc_from_svc_info(
 	
 	conf_ctx = wsf_worker_get_conf_ctx(svc_info->php_worker , env);
 	
-	conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+	conf = axis2_conf_ctx_get_conf(conf_ctx, env);
 	if(!conf){
 		php_error_docref(NULL TSRMLS_CC, E_ERROR, "error creating qname");
 		return;
@@ -660,7 +660,7 @@ void ws_util_create_op_and_add_to_svc(
          
 			conf_ctx = wsf_worker_get_conf_ctx(svc_info->php_worker , env);
                   
-            conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+            conf = axis2_conf_ctx_get_conf(conf_ctx, env);
 
             info = AXIS2_CONF_GET_PHASES_INFO(conf, env);
             AXIS2_PHASES_INFO_SET_OP_PHASES(info, env, op);

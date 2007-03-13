@@ -435,7 +435,7 @@ static axis2_char_t* ws_xml_msg_recv_get_method_name(axis2_msg_ctx_t *msg_ctx,
 		return NULL;
 	}
 
-	op = AXIS2_OP_CTX_GET_OP(op_ctx, env);
+	op = axis2_op_ctx_get_op(op_ctx, env);
 
 	if (!op){
     
@@ -556,7 +556,7 @@ zend_try {
                 Z_TYPE_PP(msg_tmp) == IS_STRING){
                     axis2_char_t *action = NULL;
                     action = Z_STRVAL_PP(msg_tmp);
-                    AXIS2_MSG_CTX_SET_WSA_ACTION(out_msg_ctx, env, action);
+                    axis2_msg_ctx_set_wsa_action(out_msg_ctx, env, action);
             }
 
             if(zend_hash_find(Z_OBJPROP(retval), "str", sizeof("str"), (void**)&msg_tmp) == SUCCESS 

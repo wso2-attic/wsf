@@ -1526,7 +1526,7 @@ PHP_METHOD(ws_service , reply)
     else
     {
 
-        conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, ws_env_svr);
+        conf = axis2_conf_ctx_get_conf(conf_ctx, ws_env_svr);
         if(!AXIS2_CONF_GET_SVC(conf, ws_env_svr, svc_info->svc_name))
         {
             AXIS2_CONF_ADD_SVC(conf, ws_env_svr, svc_info->svc);
@@ -1835,8 +1835,7 @@ PHP_METHOD(ws_policy, __construct)
     zval *properties = NULL;
 
     if (FAILURE == zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|z|a",
-                                         &properties))
-    {
+                                         &properties)){
         php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
         return;
     }

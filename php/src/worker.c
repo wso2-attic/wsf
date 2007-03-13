@@ -214,10 +214,10 @@ int wsf_worker_process_request(
 	
 	encoding_header_value = request->content_encoding;
 
-	out_desc = AXIS2_CONF_GET_TRANSPORT_OUT(AXIS2_CONF_CTX_GET_CONF
+	out_desc = AXIS2_CONF_GET_TRANSPORT_OUT(axis2_conf_ctx_get_conf
 					(worker->conf_ctx, env), env, AXIS2_TRANSPORT_ENUM_HTTP);
 
-	in_desc = AXIS2_CONF_GET_TRANSPORT_IN(AXIS2_CONF_CTX_GET_CONF
+	in_desc = AXIS2_CONF_GET_TRANSPORT_IN(axis2_conf_ctx_get_conf
 				(worker->conf_ctx, env), env, AXIS2_TRANSPORT_ENUM_HTTP);
 	
 
