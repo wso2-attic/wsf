@@ -68,13 +68,15 @@
 
 /** ws_security_token options */
 #define WS_USER "user"
-#define WS_PUBLICKEY "publicKey"
+#define WS_CERTIFICATE "certificate"
 #define WS_PASSWORD_TYPE "passwordType"
 #define WS_PASSWORD "password"
 #define WS_PRIVATE_KEY "privateKey"
 #define WS_TTL "ttl"
-#define WS_PUB_KEY_FORMAT "publicKeyFormat"
+#define WS_CERTIFICATE_FORMAT "certificateFormat"
 #define WS_PVT_KEY_FORMAT "privateKeyFormat"
+#define WS_RECEIVER_CERTIFICATE "receiverCertificate"
+#define WS_RECEIVER_CERTIFICATE_FORMAT "receiverCertificateFormat"
 #define WS_INFLOW_SECURITY_POLICY  "InflowRampartContext"
 #define WS_OUTFLOW_SECURITY_POLICY "OutflowRampartContext"
 #define WS_DIGEST "Digest"
