@@ -95,7 +95,9 @@ PHP_METHOD(ws_header, __construct);
 
 
 PHP_METHOD(ws_security_token, __construct);
+
 PHP_FUNCTION(ws_get_key_from_file);
+PHP_FUNCTION(ws_get_cert_from_file);
 
 /** WSFault */
 PHP_METHOD(ws_fault, __construct);
@@ -178,6 +180,7 @@ zend_function_entry php_ws_policy_class_functions[]={
 zend_function_entry wsf_functions[] = {
 	PHP_FE(is_ws_fault, NULL)
 	PHP_FE(ws_get_key_from_file, NULL)
+    PHP_FE(ws_get_cert_from_file, NULL)
 	PHP_FE(ws_test_function, NULL)
 	{ NULL, NULL, NULL }	/* Must be the last line in wsf_functions[] */
 };
@@ -1627,14 +1630,12 @@ PHP_METHOD(ws_fault, __construct)
             php_error_docref(NULL TSRMLS_CC, E_ERROR, "Code and Reason are mandatory ");
         }
     }
-   /*
-    add_property_string(this_ptr, WS_FAULT_CODE, sf_code, 1);
-    add_property_string(this_ptr, WS_FAULT_REASON, sf_reason, 1);
-    if(sf_role)
-        add_property_string(this_ptr, WS_FAULT_ROLE, sf_role, 1);
-    if(sf_detail)
-        add_property_string(this_ptr, WS_FAULT_DETAIL, sf_detail, 1);
-   */
+
+        add_property_string(this_ptr, WS_FAULT_CODE, sf_code, 1);
+        if(sf_code_ns)
+            add_property_string(this_ptr, WS_FAULT_CODE_NS, sf_code_ns, 1);
+
+        add_property_string(this_ptr, WS_FAULT_REASON, sf_reason, 1);
 }
 /* }}} */
 
@@ -1919,6 +1920,72 @@ PHP_FUNCTION(ws_get_key_from_file)
 }
 /* }}} */
 
+/* {{{ proto string file_get_contents(string filename)
+    read a pem file and return the key portion of the file as a string */
+PHP_FUNCTION(ws_get_cert_from_file)
+{
+	char *filename;
+	int filename_len;
+	char *contents;
+	php_stream *stream;
+	int len;
+	long maxlen = PHP_STREAM_COPY_ALL;
+	zval *zcontext = NULL;
+	php_stream_context *context = NULL;
+	char *DELIMITER = "-----";
+	/* Parse arguments */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
+				  &filename, &filename_len) == FAILURE) {
+		return;
+	}
+
+	context = php_stream_context_from_zval(zcontext, 0);
+
+	stream = php_stream_open_wrapper_ex(filename, "rb", 
+				(USE_PATH ) | ENFORCE_SAFE_MODE | REPORT_ERRORS,
+				NULL, context);
+	if (!stream) {
+		RETURN_FALSE;
+	}
+
+	if ((len = php_stream_copy_to_mem(stream, &contents, maxlen, 0)) > 0) {
+		char *key = NULL;
+		char *start_index = NULL;
+		char *tmp_index = NULL;
+	
+		tmp_index = strstr(contents, DELIMITER);
+		if(!tmp_index)
+			return;
+		if(len > (tmp_index - contents))
+		{
+			tmp_index += 5; 
+			tmp_index = strstr(tmp_index, DELIMITER);	
+			if(!tmp_index)
+				return;
+			start_index = tmp_index+6;
+			tmp_index[contents - tmp_index] = '\0';
+		}
+		
+		tmp_index = strstr(start_index, DELIMITER);
+		if(!tmp_index)
+			return;
+		tmp_index = tmp_index +1;
+	
+		start_index[tmp_index - start_index] = '\0';
+				
+		key = estrdup(start_index);
+		
+		efree(contents);
+
+		RETVAL_STRINGL(key,strlen(key), 0);
+	} else if (len == 0) {
+		RETVAL_EMPTY_STRING();
+	} else {
+		RETVAL_FALSE;
+	}
+	php_stream_close(stream);
+}
+/* }}} */
 
 PHP_FUNCTION(ws_test_function)
 {

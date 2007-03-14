@@ -117,4 +117,11 @@ axiom_node_t*
 wsf_util_deserialize_buffer(
     const axis2_env_t *env,
     char *buffer);
+    
+void 
+wsf_util_get_contents_from_file(
+	 zval *return_value, 
+	 char *filename, 
+	 int filename_len TSRMLS_DC);
+	 
 #endif /* WSF_UTIL_H */

@@ -98,6 +98,7 @@ typedef enum ws_input_types{
 #define WS_FAULT_ROLE   		"role"
 #define WS_FAULT_TEXT   		"text"
 #define WS_FAULT_CODE   		"code"
+#define WS_FAULT_CODE_NS        "codens"
 #define WS_FAULT_SUBCODE 		"subcode"
 #define WS_FAULT_DETAIL 		"detail"
 
