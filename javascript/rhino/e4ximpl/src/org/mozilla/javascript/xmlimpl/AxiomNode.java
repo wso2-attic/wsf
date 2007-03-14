@@ -848,7 +848,7 @@ public class AxiomNode {
 
         private static boolean isOMAttributesEqual(AxiomNode refNode, AxiomNode nodeToCompare) {
             return false;
-
+            
         }
 
         private static boolean isOMElementsEqual(AxiomNode refNode, AxiomNode nodeToCompare) {
