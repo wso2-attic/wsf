@@ -117,11 +117,14 @@ axiom_node_t*
 wsf_util_deserialize_buffer(
     const axis2_env_t *env,
     char *buffer);
-    
+	
 void 
-wsf_util_get_contents_from_file(
-	 zval *return_value, 
-	 char *filename, 
-	 int filename_len TSRMLS_DC);
-	 
+wsf_util_set_soap_fault(zval *this_ptr, 
+        char *fault_code_ns, 
+        char *fault_code, 
+        char *fault_reason,
+        char *fault_role, 
+        zval *fault_detail,
+        char *name TSRMLS_DC);
+
 #endif /* WSF_UTIL_H */

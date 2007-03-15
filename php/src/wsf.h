@@ -164,8 +164,6 @@ struct _soapService {
 
 ZEND_BEGIN_MODULE_GLOBALS(wsf)
 	long  enable_trace;
-	char *passwd_location;
-	int soap_version_num;
 	char *home;
 	long enable_exception;
 	char *log_path;

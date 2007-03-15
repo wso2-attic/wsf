@@ -15,6 +15,7 @@
  */
 
 #include "php.h"
+#include "zend_exceptions.h"
 #include <axis2_dll_desc.h>
 #include <axis2_msg_recv.h>
 #include <axis2_class_loader.h>
@@ -963,4 +964,71 @@ void wsf_util_get_contents_from_file(
 	}
 	php_stream_close(stream);
 
+}
+
+
+void
+wsf_util_set_soap_fault(zval *this_ptr,
+        char *fault_code_ns,
+        char *fault_code,
+        char *fault_reason,
+        char *fault_role,
+        zval *fault_detail,
+        char *name TSRMLS_DC)
+{
+/*    if (Z_TYPE_P(obj) != IS_OBJECT) {
+        object_init_ex(obj, soap_fault_class_entry);
+    }
+*/
+    if(!this_ptr)
+        return;
+
+    if (fault_reason != NULL) {
+        add_property_string(this_ptr, WS_FAULT_REASON, fault_reason, 1);
+#ifdef ZEND_ENGINE_2
+        zend_update_property_string(zend_exception_get_default(TSRMLS_C), this_ptr, "message", sizeof("message")-1, fault_reason TSRMLS_CC);
+#endif
+    }
+    if (fault_code != NULL) {
+        int soap_version = WSF_GLOBAL(soap_version);
+
+        if (fault_code_ns) {
+            add_property_string(this_ptr, WS_FAULT_CODE, fault_code, 1);
+            add_property_string(this_ptr, WS_FAULT_CODE_NS, fault_code_ns, 1);
+        } else {
+            if (soap_version == AXIOM_SOAP11) {
+                add_property_string(this_ptr, WS_FAULT_CODE, fault_code, 1);
+                if (strcmp(fault_code,"Client") == 0 ||
+                    strcmp(fault_code,"Server") == 0 ||
+                    strcmp(fault_code,"VersionMismatch") == 0 ||
+                  strcmp(fault_code,"MustUnderstand") == 0) {
+                    add_property_string(this_ptr, WS_FAULT_CODE_NS, SOAP_1_1_ENV_NAMESPACE, 1);
+                }
+            } else if (soap_version == AXIOM_SOAP12) {
+                if (strcmp(fault_code,"Client") == 0) {
+                    add_property_string(this_ptr, WS_FAULT_CODE, "Sender", 1);
+                    add_property_string(this_ptr, WS_FAULT_CODE_NS, SOAP_1_2_ENV_NAMESPACE, 1);
+                } else if (strcmp(fault_code,"Server") == 0) {
+                    add_property_string(this_ptr, WS_FAULT_CODE, "Receiver", 1);
+                    add_property_string(this_ptr, WS_FAULT_CODE_NS, SOAP_1_2_ENV_NAMESPACE, 1);
+                } else if (strcmp(fault_code,"VersionMismatch") == 0 ||
+                           strcmp(fault_code,"MustUnderstand") == 0 ||
+                           strcmp(fault_code,"DataEncodingUnknown") == 0) {
+                    add_property_string(this_ptr, WS_FAULT_CODE, fault_code, 1);
+                    add_property_string(this_ptr, WS_FAULT_CODE_NS, SOAP_1_2_ENV_NAMESPACE, 1);
+                } else {
+                    add_property_string(this_ptr, WS_FAULT_CODE, fault_code, 1);
+                }
+            }
+        }
+    }
+    if (fault_role != NULL) {
+        add_property_string(this_ptr, WS_FAULT_ROLE, fault_role, 1);
+    }
+    if (fault_detail != NULL) {
+        add_property_zval(this_ptr, WS_FAULT_DETAIL, fault_detail);
+    }
+    if (name != NULL) {
+        add_property_string(this_ptr, "_name", name, 1);
+    }
 }
