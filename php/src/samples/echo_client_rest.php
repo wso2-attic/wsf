@@ -24,7 +24,7 @@ XML;
 try {
 
     $client = new WSClient(
-        array("to"=>"http://localhost/echo_service.php/echoString",
+        array("to"=>"http://localhost/samples/echo_service.php/echoString",
 	      "useSOAP"=>FALSE,
               "HTTPMethod"=>"GET"));
 

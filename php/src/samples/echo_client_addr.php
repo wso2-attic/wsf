@@ -16,15 +16,13 @@
  */
 
 $reqPayloadString = <<<XML
-	<ns1:echo xmlns:ns1="http://php.axis2.org/samples">
-		<text>Hello World!</text>
-	</ns1:echo>
+<ns1:echo xmlns:ns1="http://php.axis2.org/samples"><text>Hello World!</text></ns1:echo>
 XML;
 
 try {
 
     $reqMessage = new WSMessage($reqPayloadString,
-        array("to"=>"http://localhost/echo_service_addr.php",
+        array("to"=>"http://localhost/samples/echo_service_addr.php",
               "action" => "http://php.axis2.org/samples/echoString"));
               
     $client = new WSClient(array("useWSA" => TRUE));

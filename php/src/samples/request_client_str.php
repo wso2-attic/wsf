@@ -26,7 +26,7 @@ XML;
 try {
 
     $resMessage = ws_request($reqPayloadString, 
-                        array("to"=>"http://localhost/reply_echo_service.php"));
+                        array("to"=>"http://localhost/samples/reply_echo_service.php"));
     
     printf("Response = %s <br>", htmlspecialchars($resMessage->str));
 

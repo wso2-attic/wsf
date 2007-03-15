@@ -28,7 +28,7 @@ try {
 	$f = file_get_contents("./resources/axis2.jpg");
     
 	$reqMessage = new WSMessage($reqPayloadString, 
-        array("to" => "http://localhost/mtom_upload_service_base64.php",
+        array("to" => "http://localhost/samples/mtom_upload_service_base64.php",
 		"attachments" => array("myid1" => $f)));
 	
 	$client = new WSClient(array("useMTOM" =>FALSE));

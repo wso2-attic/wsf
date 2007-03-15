@@ -23,7 +23,7 @@ XML;
 
 try {
 
-    $client = new WSClient(array( "to"=>"http://localhost/echo_service.php"));
+    $client = new WSClient(array( "to"=>"http://localhost/samples/echo_service.php"));
 
     $msg = new WSMessage($reqPayloadString ,
 			array("headers" => array(new WSHeader("http://test.org","header1", "value1", true, 1),

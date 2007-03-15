@@ -33,7 +33,7 @@ try
 
     for($i = 0 ; $i < 10; $i++) {
         $msg = new WSMessage($reqPayloadStrings[$i],
-                                      array("to"=>"http://localhost/echo_service.php"));
+                                      array("to"=>"http://localhost/samples/echo_service.php"));
         $resPayload = $serviceClient->request($msg);
         printf("Round %s<br>",$i);
         printf("--------<br>");

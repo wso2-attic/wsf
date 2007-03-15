@@ -26,7 +26,7 @@ try {
     $msg = new WSMessage($reqPayloadString,
 			array("action" => "http://php.axis2.org/samples/echoString"));
 
-    $client = new WSClient(array( "to"=>"http://localhost:8080/echo_service_rm.php",
+    $client = new WSClient(array( "to"=>"http://localhost:8080/samples/echo_service_rm.php",
 					    "reliable"=>TRUE));
     $client->request($msg);
 

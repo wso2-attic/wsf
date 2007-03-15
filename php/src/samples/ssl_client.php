@@ -23,7 +23,7 @@ XML;
 
 try {
 
-    $client = new WSClient(array("to"=>"https://192.168.1.4:9090/axis2/services/echo",
+    $client = new WSClient(array("to"=>"https://localhost:9090/axis2/services/echo",
 					   "CACert"=>"E:\\cacert.pem",
 					   "clientCert"=>"E:\\client.pem",
 					   "passphrase"=>"abc1234567890"));

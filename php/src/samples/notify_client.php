@@ -16,15 +16,13 @@
  */
 
 $reqPayloadString = <<<XML
-	<ns1:notifyString xmlns:ns1="http://php.axis2.org/samples">
-		<text>Hello World!</text>
-	</ns1:notifyString>
+<ns1:notifyString xmlns:ns1="http://php.axis2.org/samples"><text>Hello World!</text></ns1:notifyString>
 XML;
 
 try {
 
     $client = new WSClient(
-        array("to"=>"http://localhost/notify_service.php"));
+        array("to"=>"http://localhost/samples/notify_service.php"));
 				
     $client->send($reqPayloadString);
     
