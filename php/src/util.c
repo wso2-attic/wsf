@@ -627,7 +627,6 @@ void ws_util_create_svc_from_svc_info(
 	svc_qname = axis2_qname_create(env, svc_info->svc_name, NULL, NULL);
 	svc_info->svc = axis2_svc_create_with_qname(env, svc_qname);
 	} 
-	svc_info->msg_recv = ws_xml_msg_recv_create(env);
 	return;
 }
 /** create operation */
@@ -786,7 +785,7 @@ void wsf_util_get_attachments(const axis2_env_t *env,
             if(ele_localname && AXIS2_STRCMP(ele_localname, "Include") == 0)
             {
                 ns = axiom_element_get_namespace(ele, env, node);
-                if(ns && (ns_uri = AXIOM_NAMESPACE_GET_URI(ns, env)) &&
+                if(ns && (ns_uri = axiom_namespace_get_uri(ns, env)) &&
                     AXIS2_STRCMP(ns_uri, "http://www.w3.org/2004/08/xop/include") == 0)
                 {
                     axiom_node_t *text_node = NULL;
@@ -840,17 +839,39 @@ void wsf_util_get_attachments(const axis2_env_t *env,
 } 
 
 
-char* wsf_util_serialize_om(axis2_env_t *env, axiom_node_t *ret_node)
+char* wsf_util_serialize_om(const axis2_env_t *env, axiom_node_t *ret_node)
 {
-	axiom_xml_writer_t *writer = NULL;
+/*	axiom_xml_writer_t *writer = NULL;
 	axiom_output_t *om_output = NULL;
 	axis2_char_t *buffer = NULL;
 	
 	writer = axiom_xml_writer_create_for_memory(env, NULL, AXIS2_TRUE, 0, AXIS2_XML_PARSER_TYPE_BUFFER);
 	om_output = axiom_output_create (env, writer);
-	AXIOM_NODE_SERIALIZE (ret_node, env, om_output);
+	axiom_node_serialize (ret_node, env, om_output);
 	buffer = (axis2_char_t*)AXIOM_XML_WRITER_GET_XML(writer, env);
+    axiom_output_free(om_output, env);
 	return buffer;
+*/
+
+    axiom_xml_writer_t *writer = NULL;
+    axiom_output_t *om_output = NULL;
+    axis2_char_t *buffer = NULL, *new_buffer = NULL;
+    unsigned int buffer_len = 0;
+
+    writer = axiom_xml_writer_create_for_memory(env, NULL, AXIS2_TRUE, 0,
+                AXIS2_XML_PARSER_TYPE_BUFFER);
+    om_output = axiom_output_create (env, writer);
+
+    axiom_node_serialize (ret_node, env, om_output);
+    buffer = (axis2_char_t*)AXIOM_XML_WRITER_GET_XML(writer, env);
+    buffer_len = axis2_strlen(buffer);
+
+    new_buffer = AXIS2_MALLOC(env->allocator, sizeof(axis2_char_t)*(buffer_len + 1));
+    memcpy(new_buffer, buffer, buffer_len);
+    new_buffer[buffer_len] = '\0';
+
+    axiom_output_free(om_output, env);
+    return new_buffer;
 }
 
 xmlDocPtr wsf_util_serialize_om_to_doc(axis2_env_t *env, axiom_node_t *ret_node)

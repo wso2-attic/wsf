@@ -55,7 +55,7 @@ wsf_worker_t * wsf_worker_create (const axis2_env_t *env,
 		return NULL;
 	}
 	worker->conf_ctx = NULL;
-	worker->conf_ctx = build_conf_ctx(env, repo_path);
+	worker->conf_ctx = axis2_build_conf_ctx(env, repo_path);
 
 	if(NULL == worker->conf_ctx) {
 		wsf_worker_free(worker, env);

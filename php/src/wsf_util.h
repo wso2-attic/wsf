@@ -46,6 +46,7 @@ void ws_util_create_svc_from_svc_info(
     ws_svc_info_t *svc_info, 
     axis2_env_t *env TSRMLS_DC);
 
+
 void ws_util_create_op_and_add_to_svc(
     ws_svc_info_t *svc_info, 
     char *options , 
@@ -86,7 +87,7 @@ void wsf_util_get_attachments(
     zval *cid2str,
     zval *cid2contentType TSRMLS_DC);  
         
-char* wsf_util_serialize_om(axis2_env_t *env, 
+char* wsf_util_serialize_om(const axis2_env_t *env, 
     axiom_node_t *ret_node);
 
 xmlDocPtr wsf_util_serialize_om_to_doc(axis2_env_t *env, 

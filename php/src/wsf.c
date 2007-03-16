@@ -39,6 +39,7 @@
 #include <axiom_util.h>
 #include "wsf_client.h"
 #include "wsf_policy.h"
+#include "wsf_xml_msg_recv.h"
 #include <php_main.h>
 
 ZEND_DECLARE_MODULE_GLOBALS(wsf)
@@ -56,6 +57,7 @@ zend_class_entry *ws_policy_class_entry;
 /* True global values, worker is thread safe */
 static axis2_env_t *env;
 static axis2_env_t *ws_env_svr;
+axis2_msg_recv_t *wsf_msg_recv;
 wsf_worker_t *worker;
 
 /** WSMessage functions */
@@ -207,10 +209,9 @@ static void ws_object_dtor(void *object,
 /* {{{ proto create an WSFault object */
 void ws_throw_soap_fault(axiom_soap_body_t *soap_body TSRMLS_DC)
 {
-
+    /*
     if(soap_body)
     {
-        /* TODO free */
         zval *zval_ws_fault = NULL;
         axiom_soap_fault_t *soap_fault = NULL;
         if(AXIOM_SOAP_BODY_HAS_FAULT(soap_body, env))
@@ -218,7 +219,6 @@ void ws_throw_soap_fault(axiom_soap_body_t *soap_body TSRMLS_DC)
             soap_fault = AXIOM_SOAP_BODY_GET_FAULT(soap_body, env);
             if(soap_fault)
             {
-                /** default soap version */
                 int soap_version;
                 axis2_char_t *fault_code = NULL;
                 axiom_soap_fault_code_t *sf_code = NULL;
@@ -294,6 +294,7 @@ void ws_throw_soap_fault(axiom_soap_body_t *soap_body TSRMLS_DC)
                                     "cannot find soap body");
         }
     }
+    */
 }
 
 /* {{{ proto ws_get_xml_node
@@ -433,6 +434,8 @@ PHP_MINIT_FUNCTION(wsf)
         home_folder = WSF_GLOBAL(home);
 
     ws_env_svr = wsf_env_create_svr(WSF_GLOBAL(log_path));
+
+    wsf_msg_recv =  ws_xml_msg_recv_create(ws_env_svr);
 
     worker = wsf_worker_create(ws_env_svr, home_folder, WSF_GLOBAL(rm_db_dir));
     axiom_xml_reader_init();
@@ -1083,6 +1086,7 @@ PHP_METHOD(ws_service, __construct)
     }
     if(SG(request_info).request_uri){
         svc_info->svc_name = ws_util_generate_svc_name_from_uri(SG(request_info).request_uri, svc_info, ws_env_svr);
+        svc_info->msg_recv = wsf_msg_recv;
         ws_util_create_svc_from_svc_info(svc_info , ws_env_svr TSRMLS_CC);
     }else{
         zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 1 TSRMLS_CC,
@@ -1584,7 +1588,6 @@ PHP_METHOD(ws_service , reply)
 /* {{{ proto void WSFault::__construct(string faultcode, string faultreason [,string faultrole [, mixed detail[, string faultname]]]) */
 PHP_METHOD(ws_fault, __construct)
 {
-    zval *obj = NULL;
     char *sf_code = NULL, *sf_code_ns = NULL , *sf_reason = NULL, *sf_role = NULL, *value = NULL;
     int  sf_code_len  = 0,  sf_reason_len = 0, sf_role_len   = 0, value_len = 0;
     zval *code =  NULL, *details = NULL;	
@@ -1628,9 +1631,8 @@ PHP_METHOD(ws_fault, __construct)
             php_error_docref(NULL TSRMLS_CC, E_ERROR, "Code and Reason are mandatory ");
         }
     }
-    WSF_GET_THIS(obj);
     
-    wsf_util_set_soap_fault(obj, sf_code_ns, sf_code, sf_reason, sf_role, details, value TSRMLS_CC);
+    wsf_util_set_soap_fault(this_ptr, sf_code_ns, sf_code, sf_reason, sf_role, details, value TSRMLS_CC);
 
 }
 /* }}} */

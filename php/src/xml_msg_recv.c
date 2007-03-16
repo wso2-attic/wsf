@@ -38,25 +38,6 @@ ws_xml_msg_recv_invoke_business_logic_sync(
 	axis2_msg_ctx_t *in_msg_ctx,
 	axis2_msg_ctx_t *out_msg_ctx);
 
-/************************* Overridden Functions *******************************/
-axis2_svc_skeleton_t * AXIS2_CALL
-ws_xml_msg_recv_make_new_svc_obj(
-    axis2_msg_recv_t *msg_recv,
-	const axis2_env_t *env,
-	struct axis2_msg_ctx *msg_ctx);
-
-axis2_svc_skeleton_t * AXIS2_CALL
-ws_xml_msg_recv_get_impl_obj(
-    axis2_msg_recv_t *msg_recv,
-	const axis2_env_t *env,
-	struct axis2_msg_ctx *msg_ctx);
-
-axis2_status_t AXIS2_CALL
-ws_xml_msg_recv_delete_svc_obj(
-    axis2_msg_recv_t *msg_recv,
-	const axis2_env_t *env,
-	axis2_msg_ctx_t *msg_ctx);
-
 /************************* Private Functions **********************************/
 
 static axis2_char_t* 
@@ -74,11 +55,6 @@ ws_xml_msg_recv_invoke(
 	axis2_hash_t *class_info,
     int enable_mtom,
     int request_xop);
-
-static axis2_char_t* 
-ws_xml_msg_recv_serialize_om(
-    const axis2_env_t *env, 
-	axiom_node_t *node);
 
 static void 
 ws_xml_msg_recv_set_soap_fault(
@@ -102,23 +78,16 @@ ws_xml_msg_recv_create(const axis2_env_t *env){
 		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "xml msg recv null");
 		return NULL;
  	}   
-	status = AXIS2_MSG_RECV_SET_SCOPE(msg_recv, env, AXIS2_APPLICATION_SCOPE);
+	status = axis2_msg_recv_set_scope(msg_recv, env, AXIS2_APPLICATION_SCOPE);
 	
        if(AXIS2_TRUE != status){
-		AXIS2_MSG_RECV_FREE(msg_recv, env);
+		axis2_msg_recv_free(msg_recv, env);
 		return NULL;
 	}
+
+   axis2_msg_recv_set_invoke_business_logic(msg_recv, env, 
+           ws_xml_msg_recv_invoke_business_logic_sync);
     
-	msg_recv->ops->invoke_in_out_business_logic_sync = 
-		ws_xml_msg_recv_invoke_business_logic_sync;
-	msg_recv->ops->make_new_svc_obj = 
-		ws_xml_msg_recv_make_new_svc_obj;
-	msg_recv->ops->get_impl_obj =
-		ws_xml_msg_recv_get_impl_obj;
-	msg_recv->ops->delete_svc_obj =
-		ws_xml_msg_recv_delete_svc_obj;
-	msg_recv->ops->receive = 
-	    msg_recv->ops->receive_sync;
 	return msg_recv;
 }
 
@@ -366,29 +335,6 @@ ws_xml_msg_recv_invoke_business_logic_sync(
 	return AXIS2_SUCCESS;
 }
 
-axis2_svc_skeleton_t * AXIS2_CALL
-ws_xml_msg_recv_make_new_svc_obj(axis2_msg_recv_t *msg_recv,
-	const axis2_env_t *env, struct axis2_msg_ctx *msg_ctx){
-
-	AXIS2_LOG_WARNING(env->log, AXIS2_LOG_SI, "Not Implemented");
-	return NULL;
-}
-
-axis2_svc_skeleton_t * AXIS2_CALL
-ws_xml_msg_recv_get_impl_obj(axis2_msg_recv_t *msg_recv,
-    const axis2_env_t *env, struct axis2_msg_ctx *msg_ctx){
-    
-	AXIS2_LOG_WARNING(env->log, AXIS2_LOG_SI, "Not Implemented");
-	return NULL;
-}
-
-axis2_status_t AXIS2_CALL
-ws_xml_msg_recv_delete_svc_obj(axis2_msg_recv_t *msg_recv,
-	const axis2_env_t *env, axis2_msg_ctx_t *msg_ctx){
-    
-	AXIS2_LOG_WARNING(env->log, AXIS2_LOG_SI, "Not Implemented");
-	return AXIS2_SUCCESS;
-}
 
 /**
  * Following block distinguish the exposed part of the dll.
@@ -482,7 +428,7 @@ ws_xml_msg_recv_invoke(
 	
 	if(!om_node)
         return NULL;
-	req_payload = ws_xml_msg_recv_serialize_om(env, om_node);
+	req_payload = wsf_util_serialize_om(env, om_node);
 
 	if (!req_payload){
     
@@ -608,29 +554,6 @@ zend_try {
 	return res_om_node;
 }
 
-static axis2_char_t* ws_xml_msg_recv_serialize_om(const axis2_env_t *env, 
-	axiom_node_t *node) {
-    
-	axiom_xml_writer_t *writer = NULL;
-	axiom_output_t *om_output = NULL;
-	axis2_char_t *buffer = NULL, *new_buffer = NULL;
-    unsigned int buffer_len = 0; 
-
-	writer = axiom_xml_writer_create_for_memory(env, NULL, AXIS2_TRUE, 0,
-				AXIS2_XML_PARSER_TYPE_BUFFER);
-	om_output = axiom_output_create (env, writer);
-
-    axiom_node_serialize (node, env, om_output);
-	buffer = (axis2_char_t*)AXIOM_XML_WRITER_GET_XML(writer, env);
-    buffer_len = axis2_strlen(buffer);
-    
-    new_buffer = AXIS2_MALLOC(env->allocator, sizeof(axis2_char_t)*(buffer_len + 1));
-    memcpy(new_buffer, buffer, buffer_len);
-    new_buffer[buffer_len] = '\0';
-
-	AXIOM_OUTPUT_FREE(om_output, env);
-	return new_buffer;
-}
 
 static void 
 ws_xml_msg_recv_set_soap_fault(
