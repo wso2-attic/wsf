@@ -128,4 +128,9 @@ wsf_util_set_soap_fault(zval *this_ptr,
         zval *fault_detail,
         char *name TSRMLS_DC);
 
+void 
+wsf_util_set_fault_properties(zval *this_ptr,
+        axiom_node_t *fault_node,
+        axis2_env_t *env TSRMLS_DC); 
+
 #endif /* WSF_UTIL_H */

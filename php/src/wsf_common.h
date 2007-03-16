@@ -94,13 +94,13 @@ typedef enum ws_input_types{
 #define WS_BINDING_STYLE 		"bindingStyle"
 #define WS_WSDL          		"wsdl"
 
-#define WS_FAULT_REASON 		"faultreason"
-#define WS_FAULT_ROLE   		"faultrole"
-#define WS_FAULT_TEXT   		"faulttext"
-#define WS_FAULT_CODE   		"faultcode"
-#define WS_FAULT_CODE_NS        "faultcodens"
-#define WS_FAULT_SUBCODE 		"faultsubcode"
-#define WS_FAULT_DETAIL 		"faultdetail"
+#define WS_FAULT_REASON 		"reason"
+#define WS_FAULT_ROLE   		"role"
+#define WS_FAULT_TEXT   		"text"
+#define WS_FAULT_CODE   		"code"
+#define WS_FAULT_CODE_NS        "codens"
+#define WS_FAULT_SUBCODE 		"subcode"
+#define WS_FAULT_DETAIL 		"detail"
 
 #define WS_HEADERS      		"headers"    /** header options */
 #define WS_HEADER_NS    		"ns"

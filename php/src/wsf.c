@@ -105,7 +105,6 @@ PHP_FUNCTION(ws_get_cert_from_file);
 PHP_METHOD(ws_fault, __construct);
 PHP_METHOD(ws_fault, __destruct);
 PHP_METHOD(ws_fault, __get);
-PHP_METHOD(ws_fault, get_soap_fault_text);
 
 /** WSPolicy class functions */
 PHP_METHOD(ws_policy, __construct);
@@ -139,27 +138,20 @@ zend_function_entry php_ws_client_class_functions[]={
 
 
 /** service function entry */
-zend_function_entry php_ws_service_class_functions[]=
-    {
+zend_function_entry php_ws_service_class_functions[]={
         PHP_MALIAS(ws_service , setClass, set_class, NULL, ZEND_ACC_PUBLIC)
         PHP_MALIAS(ws_service , reply, reply, NULL, ZEND_ACC_PUBLIC)
         PHP_ME(ws_service, __construct, NULL, ZEND_ACC_PUBLIC)
         PHP_ME(ws_service, __destruct, NULL, ZEND_ACC_PUBLIC)
-        {
-            NULL , NULL, NULL
-        }
+        { NULL , NULL, NULL }
     };
 
 /** WSFault class entry */
-zend_function_entry php_ws_fault_class_functions[]=
-    {
-        PHP_MALIAS(ws_fault ,getSoapFaultText, get_soap_fault_text, NULL, ZEND_ACC_PUBLIC)
+zend_function_entry php_ws_fault_class_functions[]={
         PHP_ME(ws_fault, __construct, NULL, ZEND_ACC_PUBLIC)
         PHP_ME(ws_fault, __destruct, NULL, ZEND_ACC_PUBLIC)
         PHP_ME(ws_fault, __get, __ws_fault_get_args, ZEND_ACC_PUBLIC)
-        {
-            NULL , NULL, NULL
-        }
+        {NULL , NULL, NULL}
     };
 
 /* {{{ WSHeader class functions */
@@ -1594,7 +1586,7 @@ PHP_METHOD(ws_fault, __construct)
 
     if (FAILURE == zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "zs|s!z!s", &code,
 					 &sf_reason, &sf_reason_len ,
-					 &sf_role, &sf_role_len ,
+					 &sf_role, &sf_role_len,
 					 &details, &value, &value_len)){
         php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid Paramters");
         return;
@@ -1645,79 +1637,10 @@ PHP_METHOD(ws_fault, ws_fault_add_fault_header)
 {}
 PHP_METHOD(ws_fault, ws_fault_get_fault_headers)
 {}
-/* {{{ proto WSFault::getSoapFaultText [void ] */
-PHP_METHOD(ws_fault , get_soap_fault_text)
-{
-    zval **tmp;
-    if (zend_hash_find(Z_OBJPROP_P(this_ptr), WS_FAULT_REASON, sizeof(WS_FAULT_REASON), (void **)&tmp) != SUCCESS)
-    {
-        php_error_docref(NULL TSRMLS_CC, E_ERROR, " Invalid fault");
-        RETURN_NULL();
-    }
-    if(Z_TYPE_PP(tmp) == IS_STRING)
-    {
-        RETURN_STRINGL(Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
-    }
-    else if(Z_TYPE_PP(tmp) == IS_ARRAY)
-    {}
-    RETURN_NULL();
-}
-/* }}} */
-
-/* {{{ */
-PHP_METHOD(ws_fault ,ws_fault_get_fault_code_value)
-{
-    zval **tmp;
-    if (zend_hash_find(Z_OBJPROP_P(this_ptr), WS_FAULT_CODE, sizeof(WS_FAULT_CODE), (void **)&tmp) != SUCCESS)
-    {
-        php_error_docref(NULL TSRMLS_CC, E_ERROR, " Invalid fault");
-        RETURN_NULL();
-    }
-    if(Z_TYPE_PP(tmp) == IS_STRING)
-    {
-        RETURN_STRINGL(Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
-    }
-    else if(Z_TYPE_PP(tmp) == IS_ARRAY)
-    {
-        zval **zval_tmp;
-        HashTable *ht = Z_ARRVAL_PP(tmp);
-        if(zend_hash_find(ht, "value", sizeof("value"), (void **)&zval_tmp) == SUCCESS &&
-                Z_TYPE_PP(zval_tmp) == IS_STRING)
-        {
-            RETURN_STRINGL(Z_STRVAL_PP(zval_tmp), Z_STRLEN_PP(zval_tmp), 1);
-        }
-    }
-    RETURN_NULL();
-}
-/* }}} */
-
-PHP_METHOD(ws_fault ,ws_fault_get_fault_code_subcode_value)
-{
-    zval **tmp;
-    if (zend_hash_find(Z_OBJPROP_P(this_ptr), WS_FAULT_CODE, sizeof(WS_FAULT_CODE), (void **)&tmp) != SUCCESS)
-    {
-        php_error_docref(NULL TSRMLS_CC, E_ERROR, " Invalid fault");
-        RETURN_NULL();
-    }
-    if(Z_TYPE_PP(tmp) == IS_STRING)
-    {
-        RETURN_STRINGL(Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
-    }
-    else if(Z_TYPE_PP(tmp) == IS_ARRAY)
-    {
-        zval **zval_tmp;
-        HashTable *ht = Z_ARRVAL_PP(tmp);
-        if(zend_hash_find(ht, WS_FAULT_SUBCODE, sizeof(WS_FAULT_SUBCODE), (void **)&zval_tmp) == SUCCESS &&
-                Z_TYPE_PP(zval_tmp) == IS_STRING)
-        {
-            RETURN_STRINGL(Z_STRVAL_PP(zval_tmp), Z_STRLEN_PP(zval_tmp), 1);
-        }
-    }
-    RETURN_NULL();
-}
 
 PHP_METHOD(ws_fault, __get)
-{}
+{
+}
 
 PHP_METHOD(ws_header, __construct)
 {

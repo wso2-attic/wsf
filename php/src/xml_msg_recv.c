@@ -116,9 +116,9 @@ ws_xml_msg_recv_invoke_business_logic_sync(
 	axis2_property_t *prop = NULL;
 	/*
 	int is_class = 0;
-	*/
+    */
 	int soap_version = AXIOM_SOAP12;
-	axis2_status_t status = AXIS2_SUCCESS;
+    axis2_status_t status = AXIS2_SUCCESS;
 	axis2_bool_t skel_invoked = AXIS2_FALSE;
 	int use_mtom = AXIS2_TRUE;
 	int request_xop = AXIS2_FALSE;
@@ -538,7 +538,6 @@ zend_try {
         } 
     }
 } zend_catch {
-
 	/*
     if (Z_TYPE_P(EG(exception)) == IS_OBJECT && instanceof_function(Z_OBJCE_P(EG(exception)), 
             ws_fault_class_entry TSRMLS_CC)) {
@@ -562,14 +561,18 @@ ws_xml_msg_recv_set_soap_fault(
     axis2_msg_ctx_t *out_msg_ctx,
     zval zval_soap_fault TSRMLS_DC)
 {
-    axiom_soap_envelope_t *out_envelope = NULL;
+    int soap_version = AXIOM_SOAP12;
     /*
     axiom_soap_header_t *out_header = NULL;
-    axiom_soap_body_t *out_body = NULL;
     */
+    
+    axiom_soap_envelope_t *out_envelope = NULL;    
+    axiom_soap_body_t *out_body = NULL;
+    axiom_soap_fault_t *out_fault = NULL;
+    axiom_soap_fault_detail_t *fault_detail = NULL;
+    axiom_soap_fault_role_t *fault_role = NULL;
     axiom_namespace_t *env_ns = NULL;
     /*
-    axiom_soap_fault_t *soap_fault = NULL;
     axis2_char_t *fault_value_str = "env:Sender";
     axis2_char_t *fault_reason_str = NULL;
    */	
@@ -580,22 +583,29 @@ ws_xml_msg_recv_set_soap_fault(
     
     axiom_node_t *detail_node = NULL;
 	
-     int soap_version = AXIOM_SOAP12;
      zval **tmp;
          
     if(!soap_ns || !out_msg_ctx)
         return;
-     env_ns = axiom_namespace_create(env, soap_ns, "env"); 
-     if (!env_ns){
-	    return;
-     }
+
+    if(strcmp(soap_ns, AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI) == 0){
+        soap_version = AXIOM_SOAP12;
+    }else if(strcmp(soap_ns, AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI) == 0){
+        soap_version = AXIOM_SOAP11;
+    }else
+        return;
+    
+    env_ns = axiom_namespace_create(env, soap_ns, "env"); 
+    if (!env_ns){
+	   return;
+    }
      
     if(zend_hash_find(Z_OBJPROP(zval_soap_fault), WS_FAULT_REASON, sizeof(WS_FAULT_REASON), (void **)&tmp) == SUCCESS
         && Z_TYPE_PP(tmp) == IS_STRING){
         reason = Z_STRVAL_PP(tmp);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_service] setting fault reason %s", reason);
 	}else{
-            php_error_docref(NULL TSRMLS_CC, E_ERROR, " Invalid fault");
+            php_error_docref(NULL TSRMLS_CC, E_ERROR, "invalid value,  soap fault (reason|string) missing");
     }
 
     if(zend_hash_find(Z_OBJPROP(zval_soap_fault), WS_FAULT_CODE, sizeof(WS_FAULT_CODE), (void **)&tmp) == SUCCESS
@@ -603,7 +613,7 @@ ws_xml_msg_recv_set_soap_fault(
         code  = Z_STRVAL_PP(tmp);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_service] setting fault code %s", code);
     }else{
-            php_error_docref(NULL TSRMLS_CC, E_ERROR, " Invalid fault");
+            php_error_docref(NULL TSRMLS_CC, E_ERROR, " Invalid fault,fault code missing");
     }
  
     if(zend_hash_find(Z_OBJPROP(zval_soap_fault), WS_FAULT_ROLE, sizeof(WS_FAULT_ROLE), (void **)&tmp) == SUCCESS
@@ -613,17 +623,25 @@ ws_xml_msg_recv_set_soap_fault(
     }
     if(zend_hash_find(Z_OBJPROP(zval_soap_fault), WS_FAULT_DETAIL, sizeof(WS_FAULT_DETAIL), (void **)&tmp) == SUCCESS
         && Z_TYPE_PP(tmp) == IS_STRING){
-	axiom_node_t *text_node = NULL;
+	    axiom_node_t *text_node = NULL;
         detail  = Z_STRVAL_PP(tmp);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_service] setting fault detail %s", detail);
         axiom_element_create(env, NULL, "error", NULL, &detail_node);
-	axiom_text_create(env, detail_node, detail, &text_node);
-        
-    }    
+    	axiom_text_create(env, detail_node, detail, &text_node);
+    }
 
-    out_envelope = axiom_soap_envelope_create_default_soap_fault_envelope(env, code, reason, soap_version,
-        NULL, detail_node);
-
+    out_envelope = axiom_soap_envelope_create(env, env_ns);
+    out_body     = axiom_soap_body_create_with_parent(env, out_envelope);
+    out_fault   = axiom_soap_fault_create_default_fault(env, out_body,
+                        code, reason, soap_version);
+    if(detail){
+        fault_detail = axiom_soap_fault_detail_create_with_parent(env, out_fault);
+        axiom_soap_fault_detail_add_detail_entry(fault_detail, env, detail_node);
+    }
+    if(role){
+       fault_role = axiom_soap_fault_role_create_with_parent(env, out_fault);
+       axiom_soap_fault_role_set_role_value(fault_role, env, role);
+    }
     axis2_msg_ctx_set_soap_envelope(out_msg_ctx, env, out_envelope);
 
 }    

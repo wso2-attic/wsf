@@ -998,13 +998,13 @@ int wsf_client_do_request(
 	        
 			fault = axiom_util_get_localname(response_payload, env);
 		    
-			if( fault && 0 == strcmp(fault, "Fault"))
-			{
+			if( fault && 0 == strcmp(fault, "Fault")){
 	    		zval *rfault = NULL;
 				MAKE_STD_ZVAL(rfault);
     			object_init_ex(rfault, ws_fault_class_entry);
 				res_text = wsf_util_serialize_om(env, response_payload);
 				add_property_stringl(rfault, "str", res_text, strlen(res_text), 1);
+                wsf_util_set_fault_properties(rfault, response_payload, env TSRMLS_CC);
 				ZVAL_ZVAL(return_value, rfault, NULL, NULL);
 			}
 			else {
