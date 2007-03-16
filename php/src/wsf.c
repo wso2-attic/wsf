@@ -886,7 +886,7 @@ PHP_METHOD(ws_client, get_last_response)
     if(svc_client)
     {
         axis2_op_client_t *op_client = NULL;
-        op_client = AXIS2_SVC_CLIENT_GET_OP_CLIENT(svc_client, env);
+        op_client = axis2_svc_client_get_op_client(svc_client, env);
 
         if(op_client)
         {
@@ -912,7 +912,7 @@ PHP_METHOD(ws_client , get_last_request)
     WSF_GET_OBJ(svc_client, obj, axis2_svc_client_t, intern);
     if(svc_client){
         axis2_op_client_t *op_client = NULL;
-        op_client = AXIS2_SVC_CLIENT_GET_OP_CLIENT(svc_client, env);
+        op_client = axis2_svc_client_get_op_client(svc_client, env);
         if(op_client){
             axis2_char_t *msg = ws_util_get_soap_msg_from_op_client(op_client, env,
                                 AXIS2_WSDL_MESSAGE_LABEL_OUT);
@@ -1120,8 +1120,8 @@ PHP_METHOD(ws_service, __construct)
                 op_name_to_store = op_name;
             else
                 op_name_to_store = func_name;
-            axis2_hash_set(svc_info->ops_to_functions, AXIS2_STRDUP(op_name_to_store, ws_env_svr) ,
-                           AXIS2_HASH_KEY_STRING,  AXIS2_STRDUP(func_name, ws_env_svr));
+            axis2_hash_set(svc_info->ops_to_functions, axis2_strdup(op_name_to_store, ws_env_svr) ,
+                           AXIS2_HASH_KEY_STRING,  axis2_strdup(func_name, ws_env_svr));
         }
     }
     if(ht_actions)
@@ -1154,8 +1154,8 @@ PHP_METHOD(ws_service, __construct)
             func_name = axis2_hash_get(svc_info->ops_to_functions, Z_STRVAL_PP(tmp_function), AXIS2_HASH_KEY_STRING);
             if(!func_name)
             {
-                axis2_hash_set(svc_info->ops_to_functions, AXIS2_STRDUP(Z_STRVAL_PP(tmp_function), ws_env_svr),
-                               AXIS2_HASH_KEY_STRING, AXIS2_STRDUP(Z_STRVAL_PP(tmp_function), ws_env_svr));
+                axis2_hash_set(svc_info->ops_to_functions, axis2_strdup(Z_STRVAL_PP(tmp_function), ws_env_svr),
+                               AXIS2_HASH_KEY_STRING, axis2_strdup(Z_STRVAL_PP(tmp_function), ws_env_svr));
                 func_name = Z_STRVAL_PP(tmp_function);
             }
             key_len = strlen(func_name);
@@ -1174,8 +1174,8 @@ PHP_METHOD(ws_service, __construct)
                 ws_util_create_op_and_add_to_svc(svc_info, wsa_action,
                                                  ws_env_svr, operation_name TSRMLS_CC);
                 /* keep track of operations with actions */
-                axis2_hash_set(svc_info->ops_to_actions, AXIS2_STRDUP(operation_name, ws_env_svr) ,
-                               AXIS2_HASH_KEY_STRING,  AXIS2_STRDUP(wsa_action, ws_env_svr));
+                axis2_hash_set(svc_info->ops_to_actions, axis2_strdup(operation_name, ws_env_svr) ,
+                               AXIS2_HASH_KEY_STRING,  axis2_strdup(wsa_action, ws_env_svr));
             }
             else
             {
@@ -1531,9 +1531,9 @@ PHP_METHOD(ws_service , reply)
     {
 
         conf = axis2_conf_ctx_get_conf(conf_ctx, ws_env_svr);
-        if(!AXIS2_CONF_GET_SVC(conf, ws_env_svr, svc_info->svc_name))
+        if(!axis2_conf_get_svc(conf, ws_env_svr, svc_info->svc_name))
         {
-            AXIS2_CONF_ADD_SVC(conf, ws_env_svr, svc_info->svc);
+            axis2_conf_add_svc(conf, ws_env_svr, svc_info->svc);
             if(NULL != svc_info->modules_to_engage)
             {
                 int i = 0;

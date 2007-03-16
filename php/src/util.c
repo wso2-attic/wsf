@@ -477,7 +477,7 @@ axis2_char_t *ws_util_get_soap_msg_from_op_client(
         const axis2_msg_ctx_t *msg_ctx = NULL;
         axiom_node_t *node = NULL;
         
-		msg_ctx = AXIS2_OP_CLIENT_GET_MSG_CTX(op_client, env, msg_label);
+		msg_ctx = axis2_op_client_get_msg_ctx(op_client, env, msg_label);
         if(!msg_ctx)
             return NULL;
         soap_env = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
@@ -542,16 +542,16 @@ int ws_util_engage_module(
 	int status = 0;
 	
     mod_qname = axis2_qname_create(env, module_name, NULL, NULL);
-    module = AXIS2_CONF_GET_MODULE(conf, env, mod_qname);
+    module = axis2_conf_get_module(conf, env, mod_qname);
     if (module){
-        status = AXIS2_SVC_ENGAGE_MODULE(svc, env, module, conf);
+        status = axis2_svc_engage_module(svc, env, module, conf);
 		if(!status){
 			phase_resolver = axis2_phase_resolver_create_with_config(env, conf);
 			if (!phase_resolver){
 				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " [wsf-log] PHASE RESLOVER NULL");
 				return AXIS2_FAILURE;
 			}
-		    status = AXIS2_PHASE_RESOLVER_ENGAGE_MODULE_TO_SVC(phase_resolver, env, svc,
+		    status = axis2_phase_resolver_engage_module_to_svc(phase_resolver, env, svc,
 				module);
 		}
 	}
@@ -618,7 +618,7 @@ void ws_util_create_svc_from_svc_info(
 		return;
 	}	
   
-	svc = AXIS2_CONF_GET_SVC(conf, env, svc_info->svc_name);
+	svc = axis2_conf_get_svc(conf, env, svc_info->svc_name);
 	if(NULL != svc){
 		svc_info->svc = svc;
 	}
@@ -662,11 +662,11 @@ void ws_util_create_op_and_add_to_svc(
                   
             conf = axis2_conf_ctx_get_conf(conf_ctx, env);
 
-            info = AXIS2_CONF_GET_PHASES_INFO(conf, env);
-            AXIS2_PHASES_INFO_SET_OP_PHASES(info, env, op);
+            info = axis2_conf_get_phases_info(conf, env);
+            axis2_phases_info_set_op_phases(info, env, op);
             axis2_svc_add_op(svc_info->svc, env, op);
             if(action){
-                axis2_svc_add_mapping(svc_info->svc, env, AXIS2_STRDUP(action, env), op);
+                axis2_svc_add_mapping(svc_info->svc, env, axis2_strdup(action, env), op);
             }                
         }
 	}		
@@ -829,11 +829,11 @@ void wsf_util_get_attachments(const axis2_env_t *env,
         }
     }
     
-    tmp_node = AXIOM_NODE_GET_FIRST_CHILD(payload_node, env);
+    tmp_node = axiom_node_get_first_child(payload_node, env);
     while(tmp_node)
     {
         wsf_util_get_attachments(env, tmp_node, cid2str, cid2contentType TSRMLS_CC);
-        tmp_node = AXIOM_NODE_GET_NEXT_SIBLING(tmp_node, env);
+        tmp_node = axiom_node_get_next_sibling(tmp_node, env);
     }        
     return;    
 } 
@@ -841,18 +841,6 @@ void wsf_util_get_attachments(const axis2_env_t *env,
 
 char* wsf_util_serialize_om(const axis2_env_t *env, axiom_node_t *ret_node)
 {
-/*	axiom_xml_writer_t *writer = NULL;
-	axiom_output_t *om_output = NULL;
-	axis2_char_t *buffer = NULL;
-	
-	writer = axiom_xml_writer_create_for_memory(env, NULL, AXIS2_TRUE, 0, AXIS2_XML_PARSER_TYPE_BUFFER);
-	om_output = axiom_output_create (env, writer);
-	axiom_node_serialize (ret_node, env, om_output);
-	buffer = (axis2_char_t*)AXIOM_XML_WRITER_GET_XML(writer, env);
-    axiom_output_free(om_output, env);
-	return buffer;
-*/
-
     axiom_xml_writer_t *writer = NULL;
     axiom_output_t *om_output = NULL;
     axis2_char_t *buffer = NULL, *new_buffer = NULL;

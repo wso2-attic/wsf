@@ -70,7 +70,7 @@ wsf_worker_t * wsf_worker_create (const axis2_env_t *env,
 		sandesha2_qname = axis2_qname_create(env, "sandesha2", NULL, NULL);
 
 		conf = axis2_conf_ctx_get_conf(worker->conf_ctx, env);
-		module_desc = AXIS2_CONF_GET_MODULE(conf, env, sandesha2_qname);
+		module_desc = axis2_conf_get_module(conf, env, sandesha2_qname);
 		if(module_desc){
 			param = axis2_module_desc_get_param(module_desc, env, "sandesha2_db");
 			if(param){
@@ -214,10 +214,10 @@ int wsf_worker_process_request(
 	
 	encoding_header_value = request->content_encoding;
 
-	out_desc = AXIS2_CONF_GET_TRANSPORT_OUT(axis2_conf_ctx_get_conf
+	out_desc = axis2_conf_get_transport_out(axis2_conf_ctx_get_conf
 					(worker->conf_ctx, env), env, AXIS2_TRANSPORT_ENUM_HTTP);
 
-	in_desc = AXIS2_CONF_GET_TRANSPORT_IN(axis2_conf_ctx_get_conf
+	in_desc =axis2_conf_get_transport_in(axis2_conf_ctx_get_conf
 				(worker->conf_ctx, env), env, AXIS2_TRANSPORT_ENUM_HTTP);
 	
 
@@ -259,7 +259,7 @@ int wsf_worker_process_request(
     	axis2_msg_ctx_set_http_out_transport_info(msg_ctx, env, php_out_transport_info);
    
     	if(request->transfer_encoding){
-        	axis2_msg_ctx_set_transfer_encoding(msg_ctx, env, AXIS2_STRDUP(request->transfer_encoding, env));
+        	axis2_msg_ctx_set_transfer_encoding(msg_ctx, env, axis2_strdup(request->transfer_encoding, env));
     	}
     
     /** store svc_info struct as a property */  
@@ -336,8 +336,8 @@ int wsf_worker_process_request(
 			if(NULL == engine) {
 				send_status =  WS_HTTP_INTERNAL_SERVER_ERROR; 
 			}
-			fault_ctx = AXIS2_ENGINE_CREATE_FAULT_MSG_CTX(engine, env, msg_ctx);
-			AXIS2_ENGINE_SEND_FAULT(engine, env, fault_ctx);
+			fault_ctx = axis2_engine_create_fault_msg_ctx(engine, env, msg_ctx);
+			axis2_engine_send_fault(engine, env, fault_ctx);
 			body_string = wsf_worker_get_bytes(env, out_stream);
 			send_status =  WS_HTTP_INTERNAL_SERVER_ERROR;
 		        if(NULL != body_string){

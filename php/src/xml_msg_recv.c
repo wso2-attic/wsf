@@ -151,7 +151,7 @@ ws_xml_msg_recv_invoke_business_logic_sync(
 
 	style = axis2_op_get_style(op_desc, env);
 	
-	if(0 == AXIS2_STRCMP(AXIS2_STYLE_DOC, style)){
+	if(0 == axis2_strcmp(AXIS2_STYLE_DOC, style)){
     
 		axiom_soap_body_t *body = NULL;
 			
@@ -167,7 +167,7 @@ ws_xml_msg_recv_invoke_business_logic_sync(
 			return AXIS2_FAILURE;
 		}
 	}
-	else if(0 == AXIS2_STRCMP(AXIS2_STYLE_RPC, style)){
+	else if(0 == axis2_strcmp(AXIS2_STYLE_RPC, style)){
 		axiom_soap_body_t *body = NULL;
 		axiom_node_t *op_node = NULL;
 		axiom_element_t *op_element = NULL;
@@ -226,12 +226,12 @@ ws_xml_msg_recv_invoke_business_logic_sync(
     prop = axis2_msg_ctx_get_property(in_msg_ctx, env, WS_SVC_INFO, AXIS2_FALSE);
     if(result_node)
     {
-    	if(0 == AXIS2_STRCMP(style, AXIS2_STYLE_RPC)){
+    	if(0 == axis2_strcmp(style, AXIS2_STYLE_RPC)){
     
 	    	axiom_namespace_t *ns = NULL;
 		    axis2_char_t *res_name = NULL;
 				
-    		res_name = AXIS2_STRACAT(local_name, "Response", env);
+    		res_name = axis2_stracat(local_name, "Response", env);
 	    	ns = axiom_namespace_create(env, "http://soapenc/", "res");
     		if(!ns)	{
     			return AXIS2_FAILURE;
@@ -357,7 +357,7 @@ AXIS2_EXPORT int axis2_remove_instance(struct axis2_msg_recv *inst,
     axis2_status_t status = AXIS2_FAILURE;
 	if (inst){
     
-		status = AXIS2_MSG_RECV_FREE(inst, env);
+		status = axis2_msg_recv_free(inst, env);
 	}
 	return status;
 }
@@ -476,7 +476,7 @@ zend_try {
             ft = &(*ce)->function_table;
             if(call_user_function(ft , (zval**)NULL, &func, &retval, 1, params TSRMLS_CC) == SUCCESS){
                 if(Z_TYPE(retval) == IS_STRING){
-                    res_payload = AXIS2_STRDUP(Z_STRVAL(retval), env);
+                    res_payload = axis2_strdup(Z_STRVAL(retval), env);
                 }
                 else if(Z_TYPE(retval) == IS_OBJECT && 
                     instanceof_function(Z_OBJCE(retval), ws_fault_class_entry TSRMLS_CC)){
@@ -507,7 +507,7 @@ zend_try {
 
             if(zend_hash_find(Z_OBJPROP(retval), "str", sizeof("str"), (void**)&msg_tmp) == SUCCESS 
                 && Z_TYPE_PP(msg_tmp) == IS_STRING ) {
-                res_payload = AXIS2_STRDUP(Z_STRVAL_PP(msg_tmp), env);
+                res_payload = axis2_strdup(Z_STRVAL_PP(msg_tmp), env);
 				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf log ]response payload %s", res_payload);
                 if(res_payload){
                     res_om_node = wsf_util_deserialize_buffer(env, res_payload);
