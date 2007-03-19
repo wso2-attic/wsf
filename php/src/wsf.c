@@ -42,7 +42,6 @@
 #include "wsf_xml_msg_recv.h"
 #include <php_main.h>
 #include <php_sdl.h>
-#include <wsf_soap.h>
 
 ZEND_DECLARE_MODULE_GLOBALS(wsf)
 
@@ -406,8 +405,9 @@ PHP_MINIT_FUNCTION(wsf)
 {
     zend_class_entry ce;
     char *home_folder = NULL;
-
+/*
     wsf_soap_prepare_ws_globals();
+    */
     ZEND_INIT_MODULE_GLOBALS(wsf, ws_init_globals, NULL);
     REGISTER_INI_ENTRIES();
     if (INI_STR("extension_dir"))
@@ -2015,8 +2015,10 @@ PHP_METHOD(ws_client_proxy, __call)
             real_args[i++] = *param;
         }
     }
+    /*
     wsf_soap_do_soap_call(this_ptr, fn_name, fn_name_len, arg_count, real_args, return_value, NULL,
     	NULL, NULL, NULL, NULL, env TSRMLS_CC);
+    */        
 }    
 /* }}} end _call */
 
