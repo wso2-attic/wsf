@@ -223,8 +223,8 @@ int ws_policy_handle_client_security(zval *sec_token,
         axis2_char_t *om_str_in = NULL;
         axis2_char_t *om_str_out = NULL;
 
-        om_str_out = AXIOM_NODE_TO_STRING(outgoing_policy_node, env);
-        om_str_in = AXIOM_NODE_TO_STRING(incoming_policy_node, env);
+        om_str_out = axiom_node_to_string(outgoing_policy_node, env);
+        om_str_in = axiom_node_to_string(incoming_policy_node, env);
 
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy]creating rampart client outgoing policy node \n\t %s \n", om_str_out);
         om_str_out = NULL;
@@ -340,8 +340,8 @@ int ws_policy_handle_server_security(zval *sec_token,
         axis2_char_t *om_str_in = NULL;
         axis2_char_t *om_str_out = NULL;
         
-        om_str_out = AXIOM_NODE_TO_STRING(outgoing_policy_node, env);
-        om_str_in = AXIOM_NODE_TO_STRING(incoming_policy_node, env);
+        om_str_out = axiom_node_to_string(outgoing_policy_node, env);
+        om_str_in = axiom_node_to_string(incoming_policy_node, env);
         
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy]creating rampart service outgoing policy node \n\t %s \n", om_str_out);
         om_str_out = NULL;
@@ -678,7 +678,8 @@ create_initiator_token(const axis2_env_t *env,
             x509_om_ele = axiom_element_create(env, policy_om_node1,  WS_X509_TOKEN_VAL, sp_ns, &x509_om_node);
             attr = axiom_attribute_create(env,WS_INCLUDE_TOKEN, WS_INCLUDE_TOKEN_URI,
                                           sp_ns);
-            AXIOM_ELEMENT_ADD_ATTRIBUTE(x509_om_ele, env, attr, x509_om_node);
+            
+            axiom_element_add_attribute(x509_om_ele, env, attr, x509_om_node);
             policy_om_node2 = create_policy_node(env, x509_om_node);
             axiom_element_create(env, policy_om_node2, "WssX509V3Token10", sp_ns, &token_id_om_node);
             return token_id_om_node;
@@ -698,7 +699,7 @@ create_initiator_token(const axis2_env_t *env,
 
             attr = axiom_attribute_create(env,WS_INCLUDE_TOKEN,  WS_INCLUDE_TOKEN_URI,
                                           sp_ns);
-            AXIOM_ELEMENT_ADD_ATTRIBUTE(x509_om_ele, env, attr, x509_om_node);
+            axiom_element_add_attribute(x509_om_ele, env, attr, x509_om_node);
             policy_om_node2 = create_policy_node(env, x509_om_node);
             axiom_element_create(env, policy_om_node2, "WssX509V3Token10", sp_ns, &token_id_om_node);
             return token_id_om_node;
@@ -750,7 +751,7 @@ create_recipient_token(const axis2_env_t *env,
              * e.g - 'Always' may be changed as 'Never'*/
             attr = axiom_attribute_create(env,WS_INCLUDE_TOKEN,  WS_INCLUDE_TOKEN_URI,
                                           sp_ns);
-            AXIOM_ELEMENT_ADD_ATTRIBUTE(x509_om_ele, env, attr, x509_om_node);
+            axiom_element_add_attribute(x509_om_ele, env, attr, x509_om_node);
             policy_om_node2 = create_policy_node(env, x509_om_node);
             axiom_element_create(env, policy_om_node2, "WssX509V3Token10", sp_ns, &token_id_om_node);
             return token_id_om_node;
@@ -769,7 +770,7 @@ create_recipient_token(const axis2_env_t *env,
              * e.g - 'Always' may be changed as 'Never'*/
             attr = axiom_attribute_create(env,  WS_INCLUDE_TOKEN ,  WS_INCLUDE_TOKEN_URI,
                                           sp_ns);
-            AXIOM_ELEMENT_ADD_ATTRIBUTE(x509_om_ele, env, attr, x509_om_node);
+            axiom_element_add_attribute(x509_om_ele, env, attr, x509_om_node);
             policy_om_node2 = create_policy_node(env, x509_om_node);
             axiom_element_create(env, policy_om_node2, "WssX509V3Token10", sp_ns, &token_id_om_node);
             return token_id_om_node;
@@ -908,7 +909,7 @@ create_username_token(const axis2_env_t *env,
     ele = axiom_element_create(env, policy_om_node, WS_USERNAMETOKEN, sp_ns, &ut_om_node);
     attr = axiom_attribute_create(env,  WS_INCLUDE_TOKEN ,  WS_INCLUDE_TOKEN_URI,
                                   sp_ns);
-    AXIOM_ELEMENT_ADD_ATTRIBUTE(ele, env, attr, ut_om_node);
+    axiom_element_add_attribute(ele, env, attr, ut_om_node);
 
     return ut_om_node;
 

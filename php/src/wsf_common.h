@@ -61,7 +61,7 @@ typedef enum ws_input_types{
 
 #define WS_TO				"to"    /** endpoint uri */
 
-#define WS_USE_WSA     			"useWSA"
+#define WS_USE_WSA     		"useWSA"
 #define WS_ACTION			"action"		/** addressing options */
 #define WS_FROM				"from"
 #define WS_REPLY_TO			"replyTo"
@@ -72,7 +72,7 @@ typedef enum ws_input_types{
 #define WS_USES_XOP			"usesXOP"	   /** MTOM XOP */
 #define WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE "defaultAttachmentContentType"
 #define WS_ATTACHMENTS 			"attachments"
-#define WS_CID2CONTENT_TYPE 		"cid2contentType"
+#define WS_CID2CONTENT_TYPE 	"cid2contentType"
 #define WS_RESPONSE_XOP 		"responseXOP"
 #define WS_REQUEST_XOP  		"requestXOP"
 #define WS_USE_MTOM     		"useMTOM"
@@ -84,7 +84,7 @@ typedef enum ws_input_types{
 #define WS_SEQUENCE_KEY      		"sequenceKey"
 
 
-#define WS_USE_SOAP			"useSOAP"
+#define WS_USE_SOAP			    "useSOAP"
 #define WS_HTTP_METHOD 			"HTTPMethod"
 
 #define WS_SERVER_CERT 			"CACert"
@@ -94,13 +94,13 @@ typedef enum ws_input_types{
 #define WS_BINDING_STYLE 		"bindingStyle"
 #define WS_WSDL          		"wsdl"
 
-#define WS_FAULT_REASON 		"reason"
-#define WS_FAULT_ROLE   		"role"
+#define WS_FAULT_REASON 		"Reason"
+#define WS_FAULT_ROLE   		"Role"
 #define WS_FAULT_TEXT   		"text"
-#define WS_FAULT_CODE   		"code"
+#define WS_FAULT_CODE   		"Code"
 #define WS_FAULT_CODE_NS        "codens"
-#define WS_FAULT_SUBCODE 		"subcode"
-#define WS_FAULT_DETAIL 		"detail"
+#define WS_FAULT_SUBCODE 		"Subcode"
+#define WS_FAULT_DETAIL 		"Detail"
 
 #define WS_HEADERS      		"headers"    /** header options */
 #define WS_HEADER_NS    		"ns"

@@ -367,9 +367,9 @@ int wsf_worker_process_request(
 		}else{
 			send_status = WS_HTTP_ACCEPTED;
 		}
-    	}	
+   	}	
 
-    	axis2_string_free(soap_action_str, env);
+   	axis2_string_free(soap_action_str, env);
     
     return send_status;
 }

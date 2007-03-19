@@ -57,7 +57,11 @@
 #include "ext/libxml/php_libxml.h"
 #include "ext/dom/xml_common.h"
 #include <axiom.h>
-
+#include <axis2_svc_client.h>
+#include <axiom_soap.h>
+#include <axis2_http_transport.h>
+#include <axis2_addr.h>
+#include <axiom_util.h>
 
 PHP_MINIT_FUNCTION(wsf);
 PHP_MSHUTDOWN_FUNCTION(wsf);
@@ -99,6 +103,9 @@ extern wsf_worker_t* worker;
 /************* ext soap stuff ***************************/
 
 extern int le_url;
+extern int le_sdl;
+extern int le_typemap;
+extern HashTable defEnc, defEncIndex, defEncNs;
 
 typedef struct _encodeType encodeType, *encodeTypePtr;
 typedef struct _encode encode, *encodePtr;
@@ -298,6 +305,9 @@ zval* add_soap_fault(zval *obj, char *fault_code, char *fault_string, char *faul
 
 #define soap_error3(severity, format, param1, param2, param3) \
 	php_error(severity, "SOAP-ERROR: " format, param1, param2, param3)
+
+
+
 #endif	/* WSF_H */
 
 

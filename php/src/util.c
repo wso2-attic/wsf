@@ -1048,20 +1048,19 @@ wsf_util_handle_fault_code(zval *fault_obj,
                            axiom_element_t *code_element,
                            axis2_env_t *env TSRMLS_DC)
 {
-
-
-
+    axiom_node_t *code_value = NULL;
+    axiom_element_t *code_value_ele = NULL;
+    char *code = NULL;
+    if(WSF_GLOBAL(soap_version) == AXIOM_SOAP12){
+        code_value_ele = axiom_element_get_first_element(code_element, env, 
+                code_node, &code_value);
+        code = axiom_element_get_text(code_value_ele, env, code_node);
+        if(code){
+            add_property_string(fault_obj, WS_FAULT_CODE, code, 1);
+        }                  
+    }
 }
 
-/*
-static void 
-wsf_util_handle_fault_role(zval *fault_obj,
-                        axiom_node_t *role,
-                        axiom_element_t *element, 
-                        axis2_env_t *env TSRMLS_DC)
-{
-}
-*/
 static void 
 wsf_util_handle_fault_reason(zval *fault_obj,
                        axiom_node_t *reason_node,

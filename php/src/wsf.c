@@ -41,6 +41,8 @@
 #include "wsf_policy.h"
 #include "wsf_xml_msg_recv.h"
 #include <php_main.h>
+#include <php_sdl.h>
+#include <wsf_soap.h>
 
 ZEND_DECLARE_MODULE_GLOBALS(wsf)
 
@@ -53,8 +55,19 @@ zend_class_entry *ws_var_class_entry;
 zend_class_entry *ws_client_proxy_class_entry;
 zend_class_entry *ws_security_token_class_entry;
 zend_class_entry *ws_policy_class_entry;
+zend_class_entry *ws_param_class_entry;
+/** definitions from ext/soap */
 
-/* True global values, worker is thread safe */
+int le_url;
+int le_sdl;
+int le_typemap;
+
+HashTable defEnc, defEncIndex, defEncNs;
+
+/** end definitions from ext/soap */
+
+/* True global values, worker is thread safe,
+ *  message receiver does not have state*/
 static axis2_env_t *env;
 static axis2_env_t *ws_env_svr;
 axis2_msg_recv_t *wsf_msg_recv;
@@ -96,8 +109,8 @@ PHP_METHOD(ws_service, __destruct);
 PHP_METHOD(ws_header, __construct);
 
 
+/* WSSecurityToken class functions */
 PHP_METHOD(ws_security_token, __construct);
-
 PHP_FUNCTION(ws_get_key_from_file);
 PHP_FUNCTION(ws_get_cert_from_file);
 
@@ -109,18 +122,27 @@ PHP_METHOD(ws_fault, __get);
 /** WSPolicy class functions */
 PHP_METHOD(ws_policy, __construct);
 
+/** WSClientProxy class functions */
+
+PHP_METHOD(ws_client_proxy, __construct);
+PHP_METHOD(ws_client_proxy, __call);
+
+static
+ZEND_BEGIN_ARG_INFO(ws_client_proxy_call_args, 0)
+ZEND_ARG_PASS_INFO(0)
+ZEND_ARG_PASS_INFO(0)
+ZEND_END_ARG_INFO()
+
 ZEND_BEGIN_ARG_INFO(__ws_fault_get_args, 0)
 ZEND_ARG_PASS_INFO(0)
 ZEND_END_ARG_INFO()
 
 
 zend_function_entry php_ws_message_class_functions[] ={
-            PHP_ME(ws_message, __construct, NULL, ZEND_ACC_PUBLIC)
-            PHP_ME(ws_message, __get, __ws_message_get_args , ZEND_ACC_PUBLIC)
-            {
-                NULL , NULL, NULL
-            }
-        };
+    PHP_ME(ws_message, __construct, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(ws_message, __get, __ws_message_get_args , ZEND_ACC_PUBLIC)
+    {  NULL , NULL, NULL }
+};
 
 /** client function entry */
 zend_function_entry php_ws_client_class_functions[]={
@@ -136,6 +158,13 @@ zend_function_entry php_ws_client_class_functions[]={
 	{NULL , NULL, NULL}
 };
 
+
+zend_function_entry php_ws_client_proxy_class_functions[]={
+    PHP_ME(ws_client_proxy, __call, ws_client_proxy_call_args, ZEND_ACC_PUBLIC)
+    PHP_ME(ws_client_proxy, __construct, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(ws_client, __destruct, NULL, ZEND_ACC_PUBLIC)
+    {NULL, NULL, NULL}
+};
 
 /** service function entry */
 zend_function_entry php_ws_service_class_functions[]={
@@ -195,8 +224,6 @@ static zval* ws_create_object(void *obj, int obj_type,
 */
 static void ws_object_dtor(void *object,
             zend_object_handle handle TSRMLS_DC);
-
-
 
 /* {{{ proto create an WSFault object */
 void ws_throw_soap_fault(axiom_soap_body_t *soap_body TSRMLS_DC)
@@ -380,6 +407,7 @@ PHP_MINIT_FUNCTION(wsf)
     zend_class_entry ce;
     char *home_folder = NULL;
 
+    wsf_soap_prepare_ws_globals();
     ZEND_INIT_MODULE_GLOBALS(wsf, ws_init_globals, NULL);
     REGISTER_INI_ENTRIES();
     if (INI_STR("extension_dir"))
@@ -430,6 +458,7 @@ PHP_MINIT_FUNCTION(wsf)
     wsf_msg_recv =  ws_xml_msg_recv_create(ws_env_svr);
 
     worker = wsf_worker_create(ws_env_svr, home_folder, WSF_GLOBAL(rm_db_dir));
+
     axiom_xml_reader_init();
 
     return SUCCESS;
@@ -442,6 +471,9 @@ PHP_MSHUTDOWN_FUNCTION(wsf)
 {
     UNREGISTER_INI_ENTRIES();
     axiom_xml_reader_cleanup();
+    
+    wsf_worker_free(worker, ws_env_svr);
+
     return SUCCESS;
 }
 /* }}} */
@@ -744,11 +776,8 @@ PHP_METHOD(ws_client, __construct)
 {
     ws_object_ptr intern = NULL;
     zval *obj = NULL;
-    /* 	axis2_char_t *wsdl_path = NULL;     */
     char *home_folder = NULL;
     axis2_svc_client_t *svc_client = NULL;
-    /* 	char *wsdlpath = NULL; */
-    /* 	int wsdlpath_len = 0; */
     zval *options = NULL;
     if (FAILURE == zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|a",
                                          &options))
@@ -799,14 +828,13 @@ PHP_METHOD(ws_client, __construct)
         if(zend_hash_find(ht, WS_WSDL, sizeof(WS_WSDL), (void **)&tmp) == SUCCESS &&
                 Z_TYPE_PP(tmp) == IS_STRING)
         {
-            /*
             int wsdl_cache = 0, ret;
+            char *wsdl_path = NULL;
             sdlPtr sdl;
             wsdl_path = Z_STRVAL_PP(tmp);
             sdl = get_sdl(obj , wsdl_path, wsdl_cache TSRMLS_CC);
             ret = zend_list_insert(sdl, le_sdl);
             add_property_resource(obj , "sdl", ret); 
-            */
         }
     }
 }
@@ -974,17 +1002,27 @@ PHP_METHOD(ws_client, get_client)
     int service_len = 0;
     char *port = NULL;
     int port_len =  0;
+    zval **tmp = NULL;
 
     if(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss", &service, &service_len,
                              &port, &port_len) == FAILURE){
         php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid Parameters,specify the service and port");
     }
 
-    ALLOC_ZVAL(client_proxy_zval);
+    MAKE_STD_ZVAL(client_proxy_zval);
     object_init_ex(client_proxy_zval, ws_client_proxy_class_entry);
     add_property_string(client_proxy_zval, "service", service, 1);
     add_property_string(client_proxy_zval, "port", port, 1);
+    
+    if(zend_hash_find(Z_OBJPROP_P(this_ptr), "sdl", sizeof("sdl"), (void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_LONG){
+        int ret = Z_LVAL_PP(tmp);
+        add_property_resource(client_proxy_zval, "sdl", ret);
+    }else{
+        php_error_docref(NULL TSRMLS_CC, E_ERROR, "plese specify the wsdl before calling get client");
+    }
 
+    /** TODO implement destructor function */
+    RETURN_ZVAL(client_proxy_zval, NULL, NULL);
 }
 
 /* {{{ proto void WSService::__construct([ array options])*/
@@ -1028,17 +1066,17 @@ PHP_METHOD(ws_service, __construct)
             if(zend_hash_find(ht, "actions", sizeof("actions"),
                               (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY) {
                 ht_actions = Z_ARRVAL_PP(tmp);
-		AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting actions ");
+        		AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting actions ");
             }
             if(zend_hash_find(ht, "operations", sizeof("operations"),
                               (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY){
                 ht_ops_to_funcs = Z_ARRVAL_PP(tmp);
-		AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting operations");
+		        AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting operations");
             }
             if(zend_hash_find(ht, WS_USE_MTOM, sizeof(WS_USE_MTOM),
                               (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
                 svc_info->use_mtom = Z_BVAL_PP(tmp);
-		AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting mtom property %d", svc_info->use_mtom);
+        		AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting mtom property %d", svc_info->use_mtom);
             }
             else{
                 svc_info->use_mtom = 0;
@@ -1051,7 +1089,7 @@ PHP_METHOD(ws_service, __construct)
             {
                 svc_info->request_xop = 0;
             }
-	    AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] request xop %d", svc_info->request_xop);
+	             AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] request xop %d", svc_info->request_xop);
 
             if(zend_hash_find(ht, WS_POLICY_NAME, sizeof(WS_POLICY_NAME),
 				    (void **)&tmp) == SUCCESS ){
@@ -1623,9 +1661,7 @@ PHP_METHOD(ws_fault, __construct)
             php_error_docref(NULL TSRMLS_CC, E_ERROR, "Code and Reason are mandatory ");
         }
     }
-    
     wsf_util_set_soap_fault(this_ptr, sf_code_ns, sf_code, sf_reason, sf_role, details, value TSRMLS_CC);
-
 }
 /* }}} */
 
@@ -1928,6 +1964,62 @@ PHP_FUNCTION(ws_get_cert_from_file)
 }
 /* }}} */
 
+/* {{{  proto  WSClientProxy::__construct(mixed options) */
+PHP_METHOD(ws_client_proxy, __construct)
+{
+
+
+}
+
+/* }}} end WSClient_proxt */
+
+/* {{{ proto void WSClientProxy::__destruct() */
+PHP_METHOD(ws_client_proxy, __destruct)
+{
+
+}
+/* }}} */
+
+/* {{{ proto WSClientProxy::__call() */
+PHP_METHOD(ws_client_proxy, __call)
+{
+     char *fn_name = NULL;
+    long fn_name_len = 0;
+    /* zval *options = NULL; */
+    zval *args = NULL;
+    zval **real_args = NULL;
+    zval **param = NULL;
+    int arg_count = 0;
+    HashPosition pos;
+    int i = 0;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sz",
+                              &fn_name, &fn_name_len, &args ) == FAILURE)
+    {
+        php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
+        return;
+    }
+    arg_count = zend_hash_num_elements(Z_ARRVAL_P(args));
+    if(arg_count > 0)
+    {
+        real_args = safe_emalloc(sizeof(zval *), arg_count, 0);
+        for (zend_hash_internal_pointer_reset_ex(Z_ARRVAL_P(args), &pos);
+                zend_hash_get_current_data_ex(Z_ARRVAL_P(args), (void **) &param, &pos) == SUCCESS;
+                zend_hash_move_forward_ex(Z_ARRVAL_P(args), &pos))
+        {
+            if(Z_TYPE_PP(param) == IS_LONG)
+            {  /*
+                php_printf(" index %d type %d", i, Z_LVAL_PP(param));
+		*/
+            }
+            real_args[i++] = *param;
+        }
+    }
+    wsf_soap_do_soap_call(this_ptr, fn_name, fn_name_len, arg_count, real_args, return_value, NULL,
+    	NULL, NULL, NULL, NULL, env TSRMLS_CC);
+}    
+/* }}} end _call */
+
 PHP_FUNCTION(ws_test_function)
 {
 	char *function_name, *data = NULL;
@@ -1946,8 +2038,7 @@ PHP_FUNCTION(ws_test_function)
 	params[0] = &param;
 	ZVAL_STRING(params[0], data, 1);
 	INIT_PZVAL(params[0]);
-	if(call_user_function(EG(function_table) , (zval **)NULL, &func, &ret_val,1, params TSRMLS_CC) == SUCCESS)
-	{
+	if(call_user_function(EG(function_table) , (zval **)NULL, &func, &ret_val,1, params TSRMLS_CC) == SUCCESS){
 		php_printf("done ");		
 	}
 }
