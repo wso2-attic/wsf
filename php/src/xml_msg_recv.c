@@ -527,7 +527,7 @@ zend_try {
                     }
             }
         }else if(Z_TYPE(retval) == IS_STRING){
-            res_payload = AXIS2_STRDUP(Z_STRVAL(retval), env);
+            res_payload = axis2_strdup(Z_STRVAL(retval), env);
             if(res_payload){
                 res_om_node = wsf_util_deserialize_buffer(env, res_payload);
             }                

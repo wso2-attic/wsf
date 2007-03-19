@@ -698,11 +698,11 @@ void wsf_util_set_attachments_with_cids(const axis2_env_t *env,
 				axis2_char_t *ns_uri = NULL;
 				axis2_char_t *ele_localname = NULL;
 				ele_localname = axiom_element_get_localname(ele, env);
-				if(ele_localname && AXIS2_STRCMP(ele_localname, "Include") == 0)
+				if(ele_localname && axis2_strcmp(ele_localname, "Include") == 0)
 				{
 					ns = axiom_element_get_namespace(ele, env, node);
 					if(ns && (ns_uri = axiom_namespace_get_uri(ns, env)) &&
-						AXIS2_STRCMP(ns_uri, "http://www.w3.org/2004/08/xop/include") == 0)
+						axis2_strcmp(ns_uri, "http://www.w3.org/2004/08/xop/include") == 0)
 					{
 						axis2_char_t *cnt_type = NULL;
 						/* found a matching xop include element */
@@ -719,7 +719,7 @@ void wsf_util_set_attachments_with_cids(const axis2_env_t *env,
 						id = axiom_element_get_attribute_value_by_name(ele, env, "href");
 						if(!id)
 							return;
-						pos = AXIS2_STRSTR(id, "cid:");
+						pos = axis2_strstr(id, "cid:");
 						if(pos){
 							cid = id+4;
 							if(zend_hash_find(attach_ht , cid, strlen(cid)+1, (void**)&tmp) == SUCCESS &&
@@ -782,11 +782,11 @@ void wsf_util_get_attachments(const axis2_env_t *env,
             axis2_char_t *ns_uri = NULL;
             axis2_char_t *ele_localname = NULL;
             ele_localname = axiom_element_get_localname(ele, env);
-            if(ele_localname && AXIS2_STRCMP(ele_localname, "Include") == 0)
+            if(ele_localname && axis2_strcmp(ele_localname, "Include") == 0)
             {
                 ns = axiom_element_get_namespace(ele, env, node);
                 if(ns && (ns_uri = axiom_namespace_get_uri(ns, env)) &&
-                    AXIS2_STRCMP(ns_uri, "http://www.w3.org/2004/08/xop/include") == 0)
+                    axis2_strcmp(ns_uri, "http://www.w3.org/2004/08/xop/include") == 0)
                 {
                     axiom_node_t *text_node = NULL;
                     axiom_text_t *text = NULL;
@@ -798,7 +798,7 @@ void wsf_util_get_attachments(const axis2_env_t *env,
                     id = axiom_element_get_attribute_value_by_name(ele, env, "href");
                     if(!id)
                         return;
-                    pos = AXIS2_STRSTR(id, "cid:");
+                    pos = axis2_strstr(id, "cid:");
                     if(pos){
                         cid = id+4;
                         text_node = axiom_node_get_first_child(node, env);

@@ -141,14 +141,14 @@ wsf_http_out_transport_info_set_content_type
    
    if(NULL != info_impl->encoding){
       
-      tmp1 = AXIS2_STRACAT(content_type, ";charset=", env);
-      tmp2 = AXIS2_STRACAT(tmp1, info_impl->encoding, env);
-        info_impl->request->content_type = AXIS2_STRDUP(tmp2, env);
+      tmp1 = axis2_stracat(content_type, ";charset=", env);
+      tmp2 = axis2_stracat(tmp1, info_impl->encoding, env);
+        info_impl->request->content_type = axis2_strdup(tmp2, env);
       AXIS2_FREE(env->allocator, tmp1);
       AXIS2_FREE(env->allocator, tmp2);      
    }
    else{
-      info_impl->request->content_type = AXIS2_STRDUP(content_type, env); 
+      info_impl->request->content_type = axis2_strdup(content_type, env); 
    }
    return AXIS2_SUCCESS;
 }
@@ -168,6 +168,6 @@ wsf_http_out_transport_info_set_char_encoding
     if(NULL != info_impl->encoding){
       AXIS2_FREE(env->allocator, info_impl->encoding);
     }
-    info_impl->encoding = AXIS2_STRDUP(encoding, env);
+    info_impl->encoding = axis2_strdup(encoding, env);
     return AXIS2_SUCCESS;
 }

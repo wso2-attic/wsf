@@ -1067,7 +1067,7 @@ PHP_METHOD(ws_service, __construct)
                               (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
                 if(!svc_info->modules_to_engage)
                     svc_info->modules_to_engage = axis2_array_list_create(ws_env_svr, 3);
-                axis2_array_list_add(svc_info->modules_to_engage, ws_env_svr, AXIS2_STRDUP("sandesha2", ws_env_svr));
+                axis2_array_list_add(svc_info->modules_to_engage, ws_env_svr, axis2_strdup("sandesha2", ws_env_svr));
             }
 
             if(zend_hash_find(ht, WS_BINDING_STYLE, sizeof(WS_BINDING_STYLE), (void **)&tmp) == SUCCESS &&
@@ -1291,8 +1291,8 @@ PHP_METHOD(ws_service , set_class)
     		while (zend_hash_get_current_data_ex(ft, (void **)&f, &pos) != FAILURE) {
     				if (f->common.fn_flags & ZEND_ACC_PUBLIC) {
     					svc_info->is_class = 1;
-                        axis2_hash_set(svc_info->class_info, AXIS2_STRDUP(f->common.function_name ,env),
-                            AXIS2_HASH_KEY_STRING, AXIS2_STRDUP(Z_STRVAL_PP(argv[0]), env));
+                        axis2_hash_set(svc_info->class_info, axis2_strdup(f->common.function_name ,env),
+                            AXIS2_HASH_KEY_STRING, axis2_strdup(Z_STRVAL_PP(argv[0]), env));
     					
     					ws_util_create_op_and_add_to_svc(svc_info, NULL, 
     					        env ,f->common.function_name TSRMLS_CC);
