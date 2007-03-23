@@ -98,7 +98,7 @@ wsf_client_set_soap_action(HashTable *client_ht,
 	}
 	if(action){
 		axis2_string_t *action_string = axis2_string_create(env, action);
-		AXIS2_OPTIONS_SET_SOAP_ACTION(client_options, env, action_string);
+		axis2_options_set_soap_action(client_options, env, action_string);
 	}
 	return AXIS2_SUCCESS;
 }
@@ -235,7 +235,7 @@ wsf_client_handle_outgoing_attachments(axis2_env_t *env,
 			}
     }
 
-	AXIS2_OPTIONS_SET_ENABLE_MTOM(options, env, enable_mtom);
+	axis2_options_set_enable_mtom(options, env, enable_mtom);
 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] enable mtom %d", enable_mtom);
 	
 	if(zend_hash_find(msg_ht, WS_ATTACHMENTS, sizeof(WS_ATTACHMENTS), 
@@ -264,7 +264,7 @@ wsf_client_set_addressing_options_to_options(axis2_env_t *env,
 
 	if(zend_hash_find(ht , WS_ACTION, sizeof(WS_ACTION), (void**)&tmp) == SUCCESS) {
 
-		AXIS2_OPTIONS_SET_ACTION(client_options, env, Z_STRVAL_PP(tmp));
+		axis2_options_set_action(client_options, env, Z_STRVAL_PP(tmp));
        		 addr_action_present = AXIS2_TRUE;   
 
 		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] addressing action present :- %s", Z_STRVAL_PP(tmp));
@@ -278,7 +278,7 @@ wsf_client_set_addressing_options_to_options(axis2_env_t *env,
 
 		replyto_epr = axis2_endpoint_ref_create(env, replyto);
 
-		AXIS2_OPTIONS_SET_REPLY_TO(client_options, env, replyto_epr);
+		axis2_options_set_reply_to(client_options, env, replyto_epr);
 
 		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
 			"[wsf_client] replyTo present :- %s", replyto);
@@ -293,7 +293,7 @@ wsf_client_set_addressing_options_to_options(axis2_env_t *env,
         
 		faultto_epr = axis2_endpoint_ref_create(env, faultto);
         
-		AXIS2_OPTIONS_SET_FAULT_TO(client_options, env, faultto_epr);
+		axis2_options_set_fault_to(client_options, env, faultto_epr);
 
 		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] faultTo present %s", faultto);
 
@@ -306,7 +306,7 @@ wsf_client_set_addressing_options_to_options(axis2_env_t *env,
 
         from_epr = axis2_endpoint_ref_create(env, from);
         
-		AXIS2_OPTIONS_SET_REPLY_TO(client_options, env, from_epr);
+		axis2_options_set_reply_to(client_options, env, from_epr);
 
 		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] from present %s", from);
     }
@@ -484,13 +484,13 @@ wsf_client_set_module_param_option(axis2_env_t *env,
 
 	module_qname = axis2_qname_create(env, module_name, NULL, NULL);
 
-	svc_ctx = AXIS2_SVC_CLIENT_GET_SVC_CTX(svc_client, env);
+	svc_ctx = axis2_svc_client_get_svc_ctx(svc_client, env);
 
 	conf_ctx = axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
 
 	conf = axis2_conf_ctx_get_conf(conf_ctx, env);
 
-	module_desc = AXIS2_CONF_GET_MODULE(conf, env, module_qname);
+	module_desc = axis2_conf_get_module(conf, env, module_qname);
 	if(!module_desc)
 		return AXIS2_FAILURE;
 	
@@ -498,7 +498,7 @@ wsf_client_set_module_param_option(axis2_env_t *env,
 	if(!param)
 		return AXIS2_FAILURE;
 
-	axis2_param_set_value(param, env, AXIS2_STRDUP(module_option_value, env));
+	axis2_param_set_value(param, env, axis2_strdup(module_option_value, env));
 
 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client setting %s module param %s to %s ",
 		module_name, module_option ,module_option_value);
@@ -539,7 +539,7 @@ int wsf_client_set_headers(const axis2_env_t *env,
 					if(header_node)
 					{
 						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] adding header block to svc_client");
-						AXIS2_SVC_CLIENT_ADD_HEADER(svc_client, env, header_node);					
+						axis2_svc_client_add_header(svc_client, env, header_node);					
 					}
 					zend_hash_move_forward_ex(ht, &pos);
 				}
@@ -612,16 +612,16 @@ int wsf_client_set_addr_options(HashTable *client_ht,
 	if(addr_action_present == AXIS2_TRUE && value){
 		is_addressing_engaged = AXIS2_TRUE;
 				
-        AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "addressing");
+        axis2_svc_client_engage_module(svc_client, env, "addressing");
 			
 		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] engage addressing");
 
 		if(strcmp(value,"submission") == 0){
     
 			axis2_property_t *prop = axis2_property_create_with_args(env, 0, 
-				AXIS2_TRUE, 0, AXIS2_STRDUP(AXIS2_WSA_NAMESPACE_SUBMISSION, env));
+				AXIS2_TRUE, 0, axis2_strdup(AXIS2_WSA_NAMESPACE_SUBMISSION, env));
 
-			AXIS2_OPTIONS_SET_PROPERTY(client_options, env, AXIS2_WSA_VERSION, prop);
+			axis2_options_set_property(client_options, env, AXIS2_WSA_VERSION, prop);
 
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] addressing versio is submission");
 		} 
@@ -678,7 +678,7 @@ int wsf_client_set_options(HashTable *client_ht,
 		}
 
 		if(use_soap){
-			AXIS2_OPTIONS_SET_SOAP_VERSION(client_options, env, soap_version);
+			axis2_options_set_soap_version(client_options, env, soap_version);
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 				"[wsf_client] useSOAP TRUE setting soap version %d", soap_version);
 		}else{
@@ -690,9 +690,9 @@ int wsf_client_set_options(HashTable *client_ht,
 			
 			rest_property = axis2_property_create(env);
 			
-			AXIS2_PROPERTY_SET_VALUE(rest_property, env, axis2_strdup(AXIS2_VALUE_TRUE, env));					
+			axis2_property_set_value(rest_property, env, axis2_strdup(AXIS2_VALUE_TRUE, env));					
 			
-			AXIS2_OPTIONS_SET_PROPERTY(client_options, env, AXIS2_ENABLE_REST,
+			axis2_options_set_property(client_options, env, AXIS2_ENABLE_REST,
             rest_property);
 		}
 
@@ -704,9 +704,9 @@ int wsf_client_set_options(HashTable *client_ht,
 			if(value && (strcmp(value, "GET") == 0 || strcmp(value, "get") == 0)){
 				axis2_property_t* get_property = axis2_property_create(env);
 				
-				AXIS2_PROPERTY_SET_VALUE(get_property, env, axis2_strdup(AXIS2_HTTP_HEADER_GET, env));
+				axis2_property_set_value(get_property, env, axis2_strdup(AXIS2_HTTP_HEADER_GET, env));
 				
-				AXIS2_OPTIONS_SET_PROPERTY(client_options, env, AXIS2_HTTP_METHOD, get_property);
+				axis2_options_set_property(client_options, env, AXIS2_HTTP_METHOD, get_property);
 
 				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] setting http method get property");
 			}
@@ -719,13 +719,13 @@ int wsf_client_set_options(HashTable *client_ht,
 	        axis2_endpoint_ref_t *to_epr = NULL;
         	char *to = Z_STRVAL_PP(msg_tmp);
 	        to_epr = axis2_endpoint_ref_create(env, to);
-	        AXIS2_OPTIONS_SET_TO(client_options, env, to_epr);
+	        axis2_options_set_to(client_options, env, to_epr);
 	}else if(client_ht && zend_hash_find(client_ht, WS_TO, sizeof(WS_TO), 
 	        (void**)&msg_tmp) == SUCCESS) {
         	axis2_endpoint_ref_t *to_epr = NULL;
 	        char *to = Z_STRVAL_PP(msg_tmp);
         	to_epr = axis2_endpoint_ref_create(env, to);
-	        AXIS2_OPTIONS_SET_TO(client_options, env, to_epr);
+	        axis2_options_set_to(client_options, env, to_epr);
     	}else{
 		return AXIS2_FAILURE;
 	}
@@ -813,7 +813,7 @@ int wsf_client_do_request(
 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "request payload node is null");
     }
 	
-    client_options = (axis2_options_t *)AXIS2_SVC_CLIENT_GET_OPTIONS(svc_client, env);
+    client_options = (axis2_options_t *)axis2_svc_client_get_options(svc_client, env);
 
     if(zend_hash_find(Z_OBJPROP_P(this_ptr), WS_OPTIONS, sizeof(WS_OPTIONS), 
 		(void**)&client_tmp) == SUCCESS){
@@ -865,7 +865,7 @@ int wsf_client_do_request(
 		}
 
 		rm_prop = axis2_property_create_with_args(env, 0, 0, 0, rm_spec_version_str);
-		AXIS2_OPTIONS_SET_PROPERTY(client_options, env, WS_SANDESHA2_CLIENT_RM_SPEC_VERSION, rm_prop);
+		axis2_options_set_property(client_options, env, WS_SANDESHA2_CLIENT_RM_SPEC_VERSION, rm_prop);
 		engage_rm  = AXIS2_TRUE;
 	}
 
@@ -879,10 +879,10 @@ int wsf_client_do_request(
 	if((is_addressing_engaged || 
 		(!is_addressing_engaged && is_addressing_action_present )) && engage_rm){
 			if(!is_addressing_engaged){
-				AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "addressing");
+				axis2_svc_client_engage_module(svc_client, env, "addressing");
 				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] useWSA not specified, addressing engaged since rm is engaed");
 			}
-			AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "sandesha2");
+			axis2_svc_client_engage_module(svc_client, env, "sandesha2");
 			is_rm_engaged = AXIS2_TRUE;
 				
 			/** rm is engaged , process other rm params */
@@ -913,7 +913,7 @@ int wsf_client_do_request(
 						if(rm_spec_version == WS_RM_VERSION_1_0){
 							axis2_property_t *last_msg_prop = 
 									axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 0, NULL, AXIS2_VALUE_TRUE);
-							AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "Sandesha2LastMessage", last_msg_prop);
+							axis2_options_set_property(client_options, env, "Sandesha2LastMessage", last_msg_prop);
 							AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] seting Sandesha2LastMessage");
 						}
 					
@@ -925,7 +925,7 @@ int wsf_client_do_request(
 					if(rm_spec_version == WS_RM_VERSION_1_0){
 						axis2_property_t *last_msg_prop = axis2_property_create_with_args(env, 
 											0, 0, 0, AXIS2_VALUE_TRUE);
-						AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "Sandesha2LastMessage", last_msg_prop);
+						axis2_options_set_property(client_options, env, "Sandesha2LastMessage", last_msg_prop);
 						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] setting Sandesha2LastMessage");
 					}
 			}
@@ -944,17 +944,23 @@ int wsf_client_do_request(
 					
 					sequence_property = axis2_property_create(env);
 					
-					AXIS2_PROPERTY_SET_VALUE(sequence_property, env, 
-						AXIS2_STRDUP(offered_seq_id, env));
+					axis2_property_set_value(sequence_property, env, 
+						axis2_strdup(offered_seq_id, env));
 					
-					AXIS2_OPTIONS_SET_PROPERTY(client_options, env, "Sandesha2OfferedSequenceId", 
+					axis2_options_set_property(client_options, env, "Sandesha2OfferedSequenceId", 
 						sequence_property);
 					AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 						" [wsf-log] Sandesha2OfferedSequenceId is set as property");
 				}
 				if(zend_hash_find(client_ht, WS_RM_RESPONSE_TIMEOUT, sizeof(WS_RM_RESPONSE_TIMEOUT),
 					(void**)&client_tmp) == SUCCESS){
-					timeout = Z_STRVAL_PP(client_tmp);
+						if(Z_TYPE_PP(client_tmp) == IS_STRING){
+							timeout = Z_STRVAL_PP(client_tmp);
+						}else{
+							char timeout_value[21];
+							snprintf(timeout_value,20, "%ld", Z_LVAL_PP(client_tmp));
+							timeout = timeout_value;
+						}
 				}else{
 					/** default timeout value is 5 */
 					timeout = WS_RM_DEFAULT_RESPONSE_TIMEOUT;
@@ -963,9 +969,9 @@ int wsf_client_do_request(
 				timeout_property = axis2_property_create_with_args(env, 0, 0, 0, timeout);
 				
 				if(timeout_property){
-				        AXIS2_OPTIONS_SET_PROPERTY(client_options, env, 
+				        axis2_options_set_property(client_options, env, 
 						AXIS2_TIMEOUT_IN_SECONDS, timeout_property);
-    				}
+    			}
 			}
 		}
 	}/** END RM OPTIONS */	
@@ -973,7 +979,7 @@ int wsf_client_do_request(
 	if(is_oneway)
 	{
 		int ret_val = 0;
-		ret_val = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, request_payload);
+		ret_val = axis2_svc_client_send_robust(svc_client, env, request_payload);
 		/** if rm is engaged and spec version is 1.1 send terminate sequence */
 		wsf_client_send_terminate_sequence(is_rm_engaged, ws_client_will_continue_sequence,
 			rm_spec_version, svc_client);
@@ -986,7 +992,7 @@ int wsf_client_do_request(
 		}
 
 	}else {
-		response_payload = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, request_payload);	
+		response_payload = axis2_svc_client_send_receive(svc_client, env, request_payload);	
 
 		/** if rm is engaged and spec version is 1.1 send terminate sequence */
 		wsf_client_send_terminate_sequence(is_rm_engaged, ws_client_will_continue_sequence,
@@ -1054,14 +1060,14 @@ wsf_client_enable_ssl(HashTable *ht,
 		passphrase = Z_STRVAL_PP(tmp);		
 	}
 
-	ssl_server_key_prop = axis2_property_create_with_args(env, 0, AXIS2_TRUE, 0, AXIS2_STRDUP(ssl_server_key_filename, env));
-	AXIS2_OPTIONS_SET_PROPERTY(options, env, "SERVER_CERT", ssl_server_key_prop);
+	ssl_server_key_prop = axis2_property_create_with_args(env, 0, AXIS2_TRUE, 0, axis2_strdup(ssl_server_key_filename, env));
+	axis2_options_set_property(options, env, "SERVER_CERT", ssl_server_key_prop);
 
-	ssl_client_key_prop = axis2_property_create_with_args(env, 0, AXIS2_TRUE, 0, AXIS2_STRDUP(ssl_client_key_filename, env));
-	AXIS2_OPTIONS_SET_PROPERTY(options, env, "KEY_FILE", ssl_client_key_prop);
+	ssl_client_key_prop = axis2_property_create_with_args(env, 0, AXIS2_TRUE, 0, axis2_strdup(ssl_client_key_filename, env));
+	axis2_options_set_property(options, env, "KEY_FILE", ssl_client_key_prop);
 
-	passphrase_prop = axis2_property_create_with_args(env, 0, AXIS2_TRUE, 0, AXIS2_STRDUP(passphrase, env));
-	AXIS2_OPTIONS_SET_PROPERTY(options, env, "SSL_PASSPHRASE", passphrase_prop);
+	passphrase_prop = axis2_property_create_with_args(env, 0, AXIS2_TRUE, 0, axis2_strdup(passphrase, env));
+	axis2_options_set_property(options, env, "SSL_PASSPHRASE", passphrase_prop);
 
 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf-client] setting ssh options %s -- %s -- %s ", ssl_server_key_filename, ssl_client_key_filename, passphrase);
 }

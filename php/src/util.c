@@ -471,7 +471,8 @@ axis2_char_t *ws_util_get_soap_msg_from_op_client(
     axis2_env_t *env, 
 	axis2_wsdl_msg_labels_t msg_label)
 {
-    if(op_client && msg_label)
+    /* if(op_client && msg_label) */
+    if(op_client)
     {
         axiom_soap_envelope_t *soap_env = NULL;
         const axis2_msg_ctx_t *msg_ctx = NULL;

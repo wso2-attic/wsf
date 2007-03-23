@@ -141,6 +141,7 @@ int ws_policy_handle_client_security(zval *sec_token,
     rampart_context_t *out_rampart_ctx = NULL;
 
     tokenProperties_t tmp_rampart_ctx;
+
     axis2_svc_ctx_t *svc_ctx = NULL;
     axis2_svc_t *svc = NULL;
     axis2_param_t *inflow_param = NULL;
@@ -148,6 +149,18 @@ int ws_policy_handle_client_security(zval *sec_token,
     
     char *policy_xml = NULL;
 
+	{	/* initialize tmp_rampart_ctx structure */
+		tmp_rampart_ctx.certificate = NULL;
+		tmp_rampart_ctx.certificateFormat = NULL;
+		tmp_rampart_ctx.password = NULL;
+		tmp_rampart_ctx.passwordType = NULL;
+		tmp_rampart_ctx.pvtKey = NULL;
+		tmp_rampart_ctx.receiverCertificate = NULL;
+		tmp_rampart_ctx.pvtKeyFormat = NULL;
+		tmp_rampart_ctx.user = NULL;
+		tmp_rampart_ctx.receiverCertificateFormat = NULL;
+		tmp_rampart_ctx.ttl =0;
+	}
     if (!sec_token && !policy)
         return AXIS2_FAILURE;
 
@@ -207,16 +220,16 @@ int ws_policy_handle_client_security(zval *sec_token,
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy]setting values for out_rampart_ctx... ");
     set_options_to_rampart_ctx(out_rampart_ctx, env, outgoing_policy_node, tmp_rampart_ctx);
 
-    svc_ctx = AXIS2_SVC_CLIENT_GET_SVC_CTX(svc_client, env);
+    svc_ctx = axis2_svc_client_get_svc_ctx(svc_client, env);
     svc = axis2_svc_ctx_get_svc(svc_ctx, env);
 
     inflow_param = axis2_param_create(env, WS_INFLOW_SECURITY_POLICY, (void *)in_rampart_ctx) ;
     outflow_param = axis2_param_create(env, WS_OUTFLOW_SECURITY_POLICY, (void *)out_rampart_ctx);
 
-    AXIS2_SVC_ADD_PARAM(svc, env, inflow_param);
-    AXIS2_SVC_ADD_PARAM(svc, env, outflow_param);
+    axis2_svc_add_param(svc, env, inflow_param);
+    axis2_svc_add_param(svc, env, outflow_param);
 
-    AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "rampart");
+    axis2_svc_client_engage_module(svc_client, env, "rampart");
 
     /* for testing only ,should be remove later */
     if (outgoing_policy_node) {
@@ -259,6 +272,19 @@ int ws_policy_handle_server_security(zval *sec_token,
     axis2_param_t *outflow_param = NULL;
 
     char *policy_xml = NULL;
+
+	{	/* initialize tmp_rampart_ctx structure */
+		tmp_rampart_ctx.certificate = NULL;
+		tmp_rampart_ctx.certificateFormat = NULL;
+		tmp_rampart_ctx.password = NULL;
+		tmp_rampart_ctx.passwordType = NULL;
+		tmp_rampart_ctx.pvtKey = NULL;
+		tmp_rampart_ctx.receiverCertificate = NULL;
+		tmp_rampart_ctx.pvtKeyFormat = NULL;
+		tmp_rampart_ctx.user = NULL;
+		tmp_rampart_ctx.receiverCertificateFormat = NULL;
+		tmp_rampart_ctx.ttl =0;
+	}
 
     if (!sec_token && !policy && !svc && !conf)
         return AXIS2_FAILURE;
@@ -1101,8 +1127,6 @@ int set_security_policy_options(zval *policy_obj,
         }
 
     }
-
-
     return AXIS2_SUCCESS;
 }
 
