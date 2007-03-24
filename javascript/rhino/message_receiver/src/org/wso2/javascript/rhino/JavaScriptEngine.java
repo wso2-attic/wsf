@@ -171,11 +171,9 @@ public class JavaScriptEngine extends ImporterTopLevel {
                 result = ((String) result).substring(1, ((String) result).length() - 1);
                 InputStream in = new ByteArrayInputStream(((String) result).getBytes());
                 JSONOMBuilder builder = new JSONOMBuilder();
-//                builder.init(in, null);
-//                result = builder.getDocumentElement();
                 result = builder.processDocument(in, null, null);
             } else {
-//                 Get the OMNode inside the resulting object
+                //Get the OMNode inside the resulting object
                 result = ((XML) result).getAxiomFromXML();
             }
         }
