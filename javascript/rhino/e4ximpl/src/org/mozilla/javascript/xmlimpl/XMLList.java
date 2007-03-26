@@ -17,12 +17,17 @@
 
 package org.mozilla.javascript.xmlimpl;
 
-import org.mozilla.javascript.*;
-import org.apache.axiom.om.OMNode;
-
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
+import org.apache.axiom.om.OMNode;
+import org.mozilla.javascript.Callable;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.ScriptRuntime;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.Undefined;
 
 public class XMLList extends XMLObjectImpl implements Function {
 

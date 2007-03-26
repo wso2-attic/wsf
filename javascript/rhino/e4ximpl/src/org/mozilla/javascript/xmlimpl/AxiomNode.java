@@ -17,13 +17,21 @@
 
 package org.mozilla.javascript.xmlimpl;
 
-import org.apache.axiom.om.*;
-import org.mozilla.javascript.ScriptRuntime;
-import org.mozilla.javascript.ObjArray;
-
-import java.util.Iterator;
 import java.util.HashMap;
-import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMAttribute;
+import org.apache.axiom.om.OMComment;
+import org.apache.axiom.om.OMDocument;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNamespace;
+import org.apache.axiom.om.OMNode;
+import org.apache.axiom.om.OMProcessingInstruction;
+import org.apache.axiom.om.OMText;
+import org.mozilla.javascript.ObjArray;
+import org.mozilla.javascript.ScriptRuntime;
 
 /**
  * value of type XML represents an XML element, attribute, comment, processing-instruction or
