@@ -290,7 +290,7 @@ function WSRequest() {
                 this.readyState = 2;
                 var response = sender.sendReceive(payload);
                 this.responseXML = new XML(response);
-                this.responseText = (this.response).toString();
+                this.responseText = response.toString();
                 this.readyState = 4;
             }
             this.onreadystatechange();
@@ -311,7 +311,7 @@ function WSRequest() {
         // get content in SOAP body as a string
         var response = result.getResponseEnvelope().getBody().getFirstElement();
         this.wsrequest.responseText = response.toString();
-        this.wsrequest.responseXMl = new XML(response);
+        this.wsrequest.responseXML = new XML(response);
         this.wsrequest.readyState = 4;
         this.wsrequest.onreadystatechange();
     }
