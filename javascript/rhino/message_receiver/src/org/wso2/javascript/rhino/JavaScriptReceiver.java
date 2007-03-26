@@ -107,7 +107,6 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver
         if (repoURL != null) {
             JavaScriptEngine.repo = repoURL.getPath();
         }
-
         if (scripts != null) {
             //Get the result from executing the javascript file
             result = engine.call(method, reader, args, scripts, json);

@@ -59,7 +59,7 @@ public class ReceiverIntegrationTest extends TestCase implements ReceiverTestCon
         server.stop();
     }
 
-    private OMElement buildOMElement(String str) throws XMLStreamException{
+    private OMElement buildOMElement(String str) throws XMLStreamException {
         StAXOMBuilder staxOMBuilder = new StAXOMBuilder(
                 new ByteArrayInputStream(str.getBytes()));
         return staxOMBuilder.getDocumentElement();
@@ -70,7 +70,7 @@ public class ReceiverIntegrationTest extends TestCase implements ReceiverTestCon
         return buildOMElement(str);
     }
 
-     private OMElement getEchoOMElement() throws XMLStreamException {
+    private OMElement getEchoOMElement() throws XMLStreamException {
         String str = "<echo><echoString>XML echo string</echoString></echo>";
         return buildOMElement(str);
     }
@@ -79,7 +79,7 @@ public class ReceiverIntegrationTest extends TestCase implements ReceiverTestCon
      * Tests the message receiver for its ability to support JSON.
      * The following JSON string is sent to the service and is echoed
      * by the service.
-     *
+     * <p/>
      * {"echoJSON":{"echoString":"JSON echo string"}}
      *
      * @throws Exception
@@ -101,7 +101,7 @@ public class ReceiverIntegrationTest extends TestCase implements ReceiverTestCon
      * Tests the message receiver for its ability to support E4X.
      * The following XML string is sent to the service and is echoed
      * by the service.
-     *
+     * <p/>
      * &lt;echo&gt;&lt;echoString&gt;XML echo string&lt;/echoString&gt;&lt;/echo&gt;
      *
      * @throws Exception

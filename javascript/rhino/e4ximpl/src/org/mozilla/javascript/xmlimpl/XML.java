@@ -203,7 +203,7 @@ public class XML extends XMLObjectImpl {
 
         if (target instanceof XML) {
             XML otherXml = (XML) target;
-                //TODO need to implement equivalance of two XML objects
+            //TODO need to implement equivalance of two XML objects
         } else if (target instanceof XMLList) {
             XMLList otherList = (XMLList) target;
 
@@ -553,7 +553,7 @@ public class XML extends XMLObjectImpl {
 
     Object[] namespaceDeclarations() {
         OMNamespace ns;
-        Object [] list;
+        Object[] list;
         ArrayList nsList = new ArrayList();
         if (axiomNode.isElement()) {
             OMElement element = axiomNode.getOMElement();
@@ -845,6 +845,14 @@ public class XML extends XMLObjectImpl {
             if (value instanceof OMNode) {
                 axiomNode = AxiomNode.buildAxiomNode(value, null);
                 return new XML(lib, axiomNode);
+
+            } else if (value instanceof NativeJavaObject) {
+                Object javaObject = ((NativeJavaObject)value).unwrap();
+                if(javaObject instanceof OMNode){
+                    axiomNode = AxiomNode.buildAxiomNode(javaObject, null);
+                    return new XML(lib, axiomNode);
+                }
+
             }
             throw ScriptRuntime.typeError("Invalid argument");
         }
@@ -891,8 +899,8 @@ public class XML extends XMLObjectImpl {
         return new XML(lib, axiomNode);
     }
 
-    public OMNode getAxiomFromXML(){
-        return (OMNode)getXmlObject();
+    public OMNode getAxiomFromXML() {
+        return (OMNode) getXmlObject();
     }
 
     AxiomNode getAxiomNode() {
