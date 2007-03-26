@@ -59,17 +59,6 @@ function WSRequest() {
     var username = null;
     var passwd = null;
 
-    // private method _createResponseXML()
-    var _createResponseXML = function (responseText){
-        DocumentBuilderFactoryImpl.setDOOMRequired(false);
-        var inStream = new ByteArrayInputStream(responseText.getBytes());
-        var responseXML = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(inStream);
-        inStream.close();
-        return responseXML;
-    }
-
-
-
     /* private function _reset()
     *  resets private variables
     *  invoked by the privileged method open() when readyState equals 4
@@ -299,8 +288,9 @@ function WSRequest() {
                 this.readyState = 2;
             } else { // synchronous call to send()
                 this.readyState = 2;
-                this.responseText = (sender.sendReceive(payload)).toString();
-                this.responseXML = _createResponseXML(this.responseText);
+                var response = sender.sendReceive(payload);
+                this.responseXML = new XML(response);
+                this.responseText = (this.response).toString();
                 this.readyState = 4;
             }
             this.onreadystatechange();
@@ -319,8 +309,9 @@ function WSRequest() {
     // implements onComplete(AsyncResult result) method in org.apache.axis2.converter.CurrencyConverterClient.async.Callback
     function onComplete(result) {
         // get content in SOAP body as a string
-        this.wsrequest.responseText = result.getResponseEnvelope().getBody().getFirstElement().toString();
-        this.wsrequest.responseXMl = _createResponseXML(this.wsrequest.responseText);
+        var response = result.getResponseEnvelope().getBody().getFirstElement();
+        this.wsrequest.responseText = response.toString();
+        this.wsrequest.responseXMl = new XML(response);
         this.wsrequest.readyState = 4;
         this.wsrequest.onreadystatechange();
     }
