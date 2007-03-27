@@ -244,7 +244,7 @@ int wsf_worker_process_request(
 			AXIS2_TRUE ,axis2_stream_free_void_arg, out_stream);
 
 		axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_TRANSPORT_OUT, 
-			out_stream_prop, AXIS2_FALSE);
+			out_stream_prop);
         	axis2_msg_ctx_set_transport_out_stream(msg_ctx, env, out_stream);
 	}
 	
@@ -268,7 +268,7 @@ int wsf_worker_process_request(
 		svc_info_prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST,
 			AXIS2_TRUE,NULL, svc_info);				
 		axis2_msg_ctx_set_property(msg_ctx, env, WS_SVC_INFO, 
-			svc_info_prop, AXIS2_FALSE);
+			svc_info_prop);
 	}
     /** use MTOM property */
     	if(svc_info->use_mtom == 1){

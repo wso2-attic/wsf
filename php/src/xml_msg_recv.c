@@ -198,7 +198,7 @@ ws_xml_msg_recv_invoke_business_logic_sync(
 		soap_version = AXIOM_SOAP11;
 	}
 
-    prop = axis2_msg_ctx_get_property(in_msg_ctx, env, WS_SVC_INFO, AXIS2_FALSE);
+    prop = axis2_msg_ctx_get_property(in_msg_ctx, env, WS_SVC_INFO);
     if(prop){
         ws_svc_info_t *svc_info = (ws_svc_info_t *)axis2_property_get_value(prop, env);
         if (svc_info){
@@ -223,7 +223,7 @@ ws_xml_msg_recv_invoke_business_logic_sync(
 		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf log]response node is not null");
 	}
 
-    prop = axis2_msg_ctx_get_property(in_msg_ctx, env, WS_SVC_INFO, AXIS2_FALSE);
+    prop = axis2_msg_ctx_get_property(in_msg_ctx, env, WS_SVC_INFO);
     if(result_node)
     {
     	if(0 == axis2_strcmp(style, AXIS2_STYLE_RPC)){
@@ -354,12 +354,11 @@ AXIS2_EXPORT int axis2_get_instance(struct axis2_msg_recv **inst,
 AXIS2_EXPORT int axis2_remove_instance(struct axis2_msg_recv *inst,
 							const axis2_env_t *env){
 
-    axis2_status_t status = AXIS2_FAILURE;
 	if (inst){
     
-		status = axis2_msg_recv_free(inst, env);
+		axis2_msg_recv_free(inst, env);
 	}
-	return status;
+	return AXIS2_SUCCESS;
 }
 
 /** 
