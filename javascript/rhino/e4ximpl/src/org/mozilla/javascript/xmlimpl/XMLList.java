@@ -813,7 +813,8 @@ public class XMLList extends XMLObjectImpl implements Function {
                 throw ScriptRuntime.typeError("XML with anonymous tag missing, start or end anonymous tag");
             }
 
-            // need to be changed
+            xmlString = "<parent>" + xmlString + "</parent>";  //Avoid having several top level XML elements
+
             XML xml = XML.toXML(lib, xmlString);
             axiomNodeList = new ArrayList();
             Iterator iterator = xml.getAxiomNode().getOMElement().getChildren();
@@ -824,7 +825,7 @@ public class XMLList extends XMLObjectImpl implements Function {
 
         } else if(value instanceof XMLList){
             xmlList = new XMLList(lib, ((XMLList)value)._axiomNodeList);
-            
+
         }else{
             throw ScriptRuntime.typeError("Invalid argument");
         }

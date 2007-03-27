@@ -38,6 +38,8 @@ import org.mozilla.javascript.NativeJavaObject;
 import org.mozilla.javascript.ScriptRuntime;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.Undefined;
+import org.mozilla.javascript.Wrapper;
+
 
 public class XML extends XMLObjectImpl {
 
@@ -215,10 +217,18 @@ public class XML extends XMLObjectImpl {
 
         if (target instanceof XML) {
             XML otherXml = (XML) target;
+            //TODO This is an inefficient way to check the equality.  It may also not work.
             //TODO need to implement equivalance of two XML objects
+//            XMLComparator ss = new XMLComparator();
+//            try {
+//                result = ss.compare((OMElement)otherXml.getAxiomFromXML(),(OMElement)this.getAxiomFromXML());
+//            } catch (XMLComparisonException e) {
+//                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//            }
+            result = this.toXMLString(0).equals(otherXml.toXMLString(0));
         } else if (target instanceof XMLList) {
             XMLList otherList = (XMLList) target;
-
+            //TODO Check the spec ...
             if (otherList.length() == 1) {
                 result = equivalentXml(otherList.getFromAxiomNodeList(0));
             }
@@ -752,56 +762,72 @@ public class XML extends XMLObjectImpl {
     }
 
     public String toString() {
-        if (axiomNode.isAttribute()) {
-            return axiomNode.getOMAttribute().getAttributeValue();
+        try {
+            if (axiomNode.isAttribute()) {
+                return axiomNode.getOMAttribute().getAttributeValue();
 
-        } else if (axiomNode.isText()) {
-            return axiomNode.getOMText().getText();
+            } else if (axiomNode.isText()) {
+                return axiomNode.getOMText().getText();
 
-        } else if (hasSimpleContent()) {
-            Object obj;
-            StringBuffer stringBuffer = new StringBuffer();
-            if (axiomNode.getOMNode() != null) {
-                Iterator iterator = axiomNode.getOMElement().getChildren();
+            } else if (hasSimpleContent()) {
+                Object obj;
+                StringBuffer stringBuffer = new StringBuffer();
+                if (axiomNode.getOMNode() != null) {
+                    Iterator iterator = axiomNode.getOMElement().getChildren();
 
-                while (iterator.hasNext()) {
-                    if ((obj = iterator.next()) instanceof OMText) {
-                        stringBuffer.append(((OMText) obj).getText());
+                    while (iterator.hasNext()) {
+                        if ((obj = iterator.next()) instanceof OMText) {
+                            stringBuffer.append(((OMText) obj).getText());
+                        }
                     }
                 }
+                return stringBuffer.toString();
+
+            } else {
+                return toXMLString(0);
+
             }
-            return stringBuffer.toString();
+        } catch (OMException e) {
+            throw ScriptRuntime.typeError(e.getMessage());
 
-        } else {
-            return toXMLString(0);
-
+        } catch (Throwable e) {
+            throw ScriptRuntime.typeError(e.getMessage());
         }
     }
 
     String toXMLString(int indent) {
         //TODO handle indentation later
-        String str = "";
-        if (axiomNode.isElement()) {
-            str = axiomNode.getOMNode().toString();
+        try {
+            String str = "";
 
-        } else if (axiomNode.isAttribute()) {
-            str = axiomNode.getOMAttribute().getAttributeValue();
+            if (axiomNode.isElement()) {
+                str = axiomNode.getOMNode().toString();
 
-        } else if (axiomNode.isText()) {
-            str = axiomNode.getOMText().getText();
+            } else if (axiomNode.isAttribute()) {
+                str = axiomNode.getOMAttribute().getAttributeValue();
 
-        } else if (axiomNode.isComment()) {
-            //TODO handle comment serialization
-            str = axiomNode.getOMComment().getValue();
-            return "comment is not handled " + str;
+            } else if (axiomNode.isText()) {
+                str = axiomNode.getOMText().getText();
 
-        } else if (axiomNode.isProcessingInstruction()) {
-            str = axiomNode.getOMProcessingInstruction().getTarget();
-            return "PI is not handled " + str;
-            //TODO handle PI serialization
+            } else if (axiomNode.isComment()) {
+                //TODO handle comment serialization
+                str = axiomNode.getOMComment().getValue();
+                return "comment is not handled " + str;
+
+            } else if (axiomNode.isProcessingInstruction()) {
+                str = axiomNode.getOMProcessingInstruction().getTarget();
+                return "PI is not handled " + str;
+                //TODO handle PI serialization
+            }
+
+            return str;
+
+        } catch (OMException e) {
+            throw ScriptRuntime.typeError(e.getMessage());
+
+        } catch (Throwable e) {
+            throw ScriptRuntime.typeError(e.getMessage());
         }
-
-        return str;
     }
 
     Object valueOf() {
@@ -858,15 +884,14 @@ public class XML extends XMLObjectImpl {
                 axiomNode = AxiomNode.buildAxiomNode(value, null);
                 return new XML(lib, axiomNode);
 
-            } else if (value instanceof NativeJavaObject) {
-                Object javaObject = ((NativeJavaObject)value).unwrap();
-                if(javaObject instanceof OMNode){
-                    axiomNode = AxiomNode.buildAxiomNode(javaObject, null);
+            } else if (value instanceof Wrapper) {
+                Object wrapped = ((Wrapper) value).unwrap();
+                if (wrapped instanceof OMNode) {
+                    axiomNode = AxiomNode.buildAxiomNode(wrapped, null);
                     return new XML(lib, axiomNode);
                 }
-
             }
-            throw ScriptRuntime.typeError("Invalid argument");
+            xmlString = ScriptRuntime.toString(value);
         }
 
         if (xmlString.trim().startsWith("<>")) {
