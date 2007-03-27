@@ -822,7 +822,10 @@ public class XMLList extends XMLObjectImpl implements Function {
             }
             xmlList = new XMLList(lib, axiomNodeList);
 
-        } else {
+        } else if(value instanceof XMLList){
+            xmlList = new XMLList(lib, ((XMLList)value)._axiomNodeList);
+            
+        }else{
             throw ScriptRuntime.typeError("Invalid argument");
         }
 

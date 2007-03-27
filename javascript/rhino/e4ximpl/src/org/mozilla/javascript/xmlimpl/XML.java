@@ -785,7 +785,7 @@ public class XML extends XMLObjectImpl {
             str = axiomNode.getOMNode().toString();
 
         } else if (axiomNode.isAttribute()) {
-            str = axiomNode.getOMAttribute().getQName().toString();
+            str = axiomNode.getOMAttribute().getAttributeValue();
 
         } else if (axiomNode.isText()) {
             str = axiomNode.getOMText().getText();
