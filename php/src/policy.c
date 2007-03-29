@@ -105,9 +105,14 @@ typedef struct tokenProperties {
     char *receiverCertificate;
     char *receiverCertificateFormat;
     int ttl;
+    char *callback_function;
 }
 tokenProperties_t;
 
+axis2_char_t * AXIS2_CALL
+password_provider_function(const axis2_env_t *env,
+                           const axis2_char_t *username,
+                           void *ctx);
 
 tokenProperties_t set_tmp_rampart_options(tokenProperties_t tmp_rampart_ctx,
         zval *sec_token,
@@ -160,6 +165,7 @@ int ws_policy_handle_client_security(zval *sec_token,
 		tmp_rampart_ctx.user = NULL;
 		tmp_rampart_ctx.receiverCertificateFormat = NULL;
 		tmp_rampart_ctx.ttl =0;
+                tmp_rampart_ctx.callback_function = NULL;
 	}
     if (!sec_token && !policy)
         return AXIS2_FAILURE;
@@ -284,6 +290,7 @@ int ws_policy_handle_server_security(zval *sec_token,
 		tmp_rampart_ctx.user = NULL;
 		tmp_rampart_ctx.receiverCertificateFormat = NULL;
 		tmp_rampart_ctx.ttl =0;
+                tmp_rampart_ctx.callback_function = NULL;
 	}
 
     if (!sec_token && !policy && !svc && !conf)
@@ -355,8 +362,8 @@ int ws_policy_handle_server_security(zval *sec_token,
 
 
     /** set inflow and outflow params to svc */
-    AXIS2_SVC_ADD_PARAM(svc, env, inflow_param);
-    AXIS2_SVC_ADD_PARAM(svc, env, outflow_param);
+    axis2_svc_add_param(svc, env, inflow_param);
+    axis2_svc_add_param(svc, env, outflow_param);
     /** engage module rampart */
     ws_util_engage_module(conf, "rampart", env, svc);
 
@@ -439,7 +446,10 @@ tokenProperties_t  set_tmp_rampart_options(tokenProperties_t tmp_rampart_ctx,
             Z_TYPE_PP(token_val) == IS_STRING) {
         tmp_rampart_ctx.receiverCertificateFormat = Z_STRVAL_PP(token_val);
     }
-
+    if (zend_hash_find(ht_token, WS_PASSWORD_CALL_BACK, sizeof(WS_PASSWORD_CALL_BACK), (void **)&token_val) == SUCCESS &&
+        Z_TYPE_PP(token_val) == IS_STRING){
+        tmp_rampart_ctx.callback_function = NULL;
+    }
 
 
 
@@ -495,7 +505,13 @@ int set_options_to_rampart_ctx(rampart_context_t *x_rampart_ctx,
                                 token_ctx.ttl) == AXIS2_SUCCESS)
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy]setting ttl value ");
 
+    if (rampart_context_set_pwcb_function(x_rampart_ctx, env,
+                                          password_provider_function,
+                                          (void *)token_ctx.callback_function) == AXIS2_SUCCESS)
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy]setting callback function");
+    
     return AXIS2_SUCCESS;
+    
 }
 
 
@@ -525,7 +541,6 @@ axiom_node_t *do_create_policy(zval *sec_token,
     /*     zval **policy_val = NULL; */
     /*     zval **token_val = NULL; */
     zval **tmp ;
-    zval **tmp1;
 
     zval **sign_tmp = NULL;
     zval **encrypt_tmp = NULL;
@@ -633,8 +648,7 @@ axiom_node_t *do_create_policy(zval *sec_token,
     }
 
     /* for usernameToken */
-    if (zend_hash_find(ht_policy, WS_UT, sizeof(WS_UT), (void **)&tmp) == SUCCESS &&
-            zend_hash_find(ht_token, WS_USER, sizeof(WS_USER), (void **)&tmp1) == SUCCESS ) {
+    if (zend_hash_find(ht_policy, WS_UT, sizeof(WS_UT), (void **)&tmp) == SUCCESS) {
         if ( is_default == AXIS2_TRUE) {
             create_default_sign(env, policy_om_node TSRMLS_CC);
             create_default_encrypt(env, policy_om_node);
@@ -1100,6 +1114,12 @@ int set_security_policy_options(zval *policy_obj,
 
         }
         
+        if (zend_hash_find(ht_sec, WS_PASSWORD_CALL_BACK, sizeof(WS_PASSWORD_CALL_BACK), (void **)&sec_prop) == SUCCESS &&
+            Z_TYPE_PP(sec_prop) == IS_STRING){
+            add_property_stringl(policy_obj, WS_PASSWORD_CALL_BACK, Z_STRVAL_PP(sec_prop), Z_STRLEN_PP(sec_prop), 1);
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_policy] callback is enable");
+        }
+        
         /* if inflow security and outflow security exits in the array */
         if (zend_hash_find(ht_sec, WS_IN_POLICY, sizeof(WS_IN_POLICY), (void **)&sec_prop) == SUCCESS ){
             if(Z_TYPE_PP(sec_prop) == IS_ARRAY) {
@@ -1125,8 +1145,37 @@ int set_security_policy_options(zval *policy_obj,
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_policy] out policy xml file is enable ");
             }
         }
-
     }
-    return AXIS2_SUCCESS;
+return AXIS2_SUCCESS;
 }
+
+axis2_char_t* AXIS2_CALL
+password_provider_function(const axis2_env_t *env, const axis2_char_t *username, void *ctx)
+{
+    zval func, param1, retval;
+    zval *params[1];
+    char *val = NULL;
+
+
+    TSRMLS_FETCH();
+    params[0] = &param1;
+    ZVAL_STRING(&func, (char* )ctx, 1);
+    ZVAL_STRING(params[0], (char *)username, 1);
+    
+    if (call_user_function(EG(function_table), (zval **)NULL,
+                           &func, &retval, 1, params TSRMLS_CC) == SUCCESS){
+        if ( Z_TYPE_P(&retval) == IS_STRING && Z_TYPE_P(&retval) != IS_NULL){
+            val = estrdup(Z_STRVAL(retval));
+            return val;
+            
+        }
+    }
+    return NULL;
+}
+
+
+
+
+
+
 

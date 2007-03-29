@@ -82,7 +82,7 @@ wsf_out_transport_info_create(const axis2_env_t *env,
 	axis2_http_out_transport_info_set_content_type_func(out_transport_info, env, 
 		wsf_http_out_transport_info_set_content_type);
 	axis2_http_out_transport_info_set_free_func(out_transport_info, env,
-		wsf_http_out_transport_info_free);
+		(void *)wsf_http_out_transport_info_free);
 	return out_transport_info;
 }
 

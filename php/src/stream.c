@@ -89,7 +89,7 @@ axis2_stream_create_php(const axis2_env_t *env,
         return NULL;
     }
     
-    stream_impl->stream.ops->free_fn = wsf_stream_free;
+    stream_impl->stream.ops->free_fn = (void *)wsf_stream_free;
     stream_impl->stream.ops->read = wsf_stream_read;
     stream_impl->stream.ops->write = wsf_stream_write;
     stream_impl->stream.ops->skip = wsf_stream_skip;

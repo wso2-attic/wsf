@@ -81,7 +81,7 @@
 #define WS_OUTFLOW_SECURITY_POLICY "OutflowRampartContext"
 #define WS_DIGEST "Digest"
 #define WS_PLAINTEXT "plainText"
-
+#define WS_PASSWORD_CALL_BACK "password_callback"
 
 #define BASIC256 "Basic256"
 #define BASIC192 "Basic192"
