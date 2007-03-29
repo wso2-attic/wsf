@@ -129,11 +129,16 @@ public class AxiomNode {
         int length = 0;
         OMNode result;
         Iterator iterator = this.getOMElement().getChildren();
+        
         while (iterator.hasNext()) {
             result = (OMNode) iterator.next();
-            if (length == index) {
+
+            if (result.getType() == OMNode.TEXT_NODE && (((OMText) result).getTextCharacters())[0] == '\n')
+                length--;
+
+            if (length == index)
                 return buildAxiomNode(result, this);
-            }
+
             length++;
         }
         return null;
@@ -539,7 +544,7 @@ public class AxiomNode {
             } else if (type == AxiomNodeMatcher.ATTRIBUTES) {
                 iterator = thisAxiomNode.getOMElement().getAllAttributes();
             }
-            
+
             AxiomNode tmpAxiomNode;
             while (iterator.hasNext()) {
                 tmpAxiomNode = AxiomNode.buildAxiomNode(iterator.next(), thisAxiomNode);
@@ -856,7 +861,7 @@ public class AxiomNode {
 
         private static boolean isOMAttributesEqual(AxiomNode refNode, AxiomNode nodeToCompare) {
             return false;
-            
+
         }
 
         private static boolean isOMElementsEqual(AxiomNode refNode, AxiomNode nodeToCompare) {

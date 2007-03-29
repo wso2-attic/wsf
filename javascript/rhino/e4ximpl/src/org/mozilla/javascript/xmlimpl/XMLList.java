@@ -28,6 +28,7 @@ import org.mozilla.javascript.Function;
 import org.mozilla.javascript.ScriptRuntime;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.Undefined;
+import org.mozilla.javascript.xml.XMLObject;
 
 public class XMLList extends XMLObjectImpl implements Function {
 
@@ -39,7 +40,7 @@ public class XMLList extends XMLObjectImpl implements Function {
 
     public XMLList(XMLLibImpl lib) {
         super(lib, lib.xmlListPrototype);
-        _axiomNodeList = new ArrayList(20);
+        _axiomNodeList = new ArrayList();
     }
 
     public XMLList(XMLLibImpl lib, List axiomNodeList) {
@@ -66,7 +67,7 @@ public class XMLList extends XMLObjectImpl implements Function {
         boolean result = false;
         //Has now should return true if the property would have results > 0 or f it's a method name
         String name = xmlName.localName();
-        if ((((XMLList)ecmaGetImpl(xmlName)).length() > 0) ||
+        if ((((XMLList) ecmaGetImpl(xmlName)).length() > 0) ||
                 (getMethod(name) != NOT_FOUND)) {
             result = true;
         }
@@ -99,7 +100,7 @@ public class XMLList extends XMLObjectImpl implements Function {
 
         if (length() > 1) {
             throw ScriptRuntime.typeError(
-                    "Assignment to lists with more that one item is not supported");
+                    "Assignment to lists with more than one item is not supported");
 
         } else if (length() == 0) {
             // Secret sauce for super-expandos.
@@ -199,125 +200,98 @@ public class XMLList extends XMLObjectImpl implements Function {
     public void put(int index, Scriptable start, Object value) {
         //TODO implements the put method
         System.out.println("put called");
+        Object parent = Undefined.instance;
+// Convert text into XML if needed.
+        XMLObject xmlValue;
 
-        /*   Object parent = Undefined.instance;
-       // Convert text into XML if needed.
-       XMLObject xmlValue;
+// Special-case checks for undefined and null
+        if (value == null) {
+            value = "null";
+        } else if (value instanceof Undefined) {
+            value = "undefined";
+        }
 
-       // Special-case checks for undefined and null
-       if (value == null)
-       {
-           value = "null";
-       }
-       else if (value instanceof Undefined)
-       {
-           value = "undefined";
-       }
+        if (value instanceof XMLObject) {
+            xmlValue = (XMLObject) value;
+        } else {
+            if (targetProperty == null) {
+                xmlValue = XML.toXML(lib, value.toString());
+            } else {
+                AxiomNode tmpAxiomNode = AxiomNode.buildAxiomNode(null, null);
+                xmlValue = tmpAxiomNode.getElemetFromText(lib,
+                        XMLName.formProperty(targetProperty.getNamespaceURI(),
+                                targetProperty.getLocalPart()), value.toString());
+            }
+        }
 
-       if (value instanceof XMLObject)
-       {
-           xmlValue = (XMLObject) value;
-       }
-       else
-       {
-           if (targetProperty == null)
-           {
-               xmlValue = XML.toXML(lib, value.toString());
-           }
-           else
-           {
-               xmlValue = XML.getFromText(lib,null, XMLName.formProperty(targetProperty.uri(),
-                       targetProperty.localName()), value.toString());
-           }
-       }
+// Find the parent
+        if (index < length()) {
+            parent = getFromAxiomNodeList(index).parent();
+        } else {
+            // Appending
+            parent = parent();
+        }
 
-       // Find the parent
-       if (index < length())
-       {
-           parent = getFromAxiomNodeList(index).parent();
-       }
-       else
-       {
-           // Appending
-           parent = parent();
-       }
+        if (parent instanceof XML) {
+            // found parent, alter doc
+            XML xmlParent = (XML) parent;
 
-       if (parent instanceof XML)
-       {
-           // found parent, alter doc
-           XML xmlParent = (XML) parent;
+            if (index < length()) {
+                // We're replacing the the node.
+                XML xmlNode = getFromAxiomNodeList(index);
 
-           if (index < length())
-           {
-               // We're replacing the the node.
-               XML xmlNode = getFromAxiomNodeList(index);
+                if (xmlValue instanceof XML) {
+                    //TODO xmlValue should be cast to XML otherwise replace(intdex, object) method will be called
+                    xmlParent.replace(index, xmlValue);
+                    replace(index, (XML)xmlValue);
+                } else if (xmlValue instanceof XMLList) {
+                    // Replace the first one, and add the rest on the list.
+                    XMLList list = (XMLList) xmlValue;
 
-               if (xmlValue instanceof XML)
-               {
-                   //xmlNode.replaceAll((XML) xmlValue);
-                   replace(index, xmlNode);
-               }
-               else if (xmlValue instanceof XMLList)
-               {
-                   // Replace the first one, and add the rest on the list.
-                   XMLList list = (XMLList) xmlValue;
+                    if (list.length() > 0) {
+                        int lastIndexAdded = xmlNode.childIndex();
+                        //xmlNode.replaceAll((XML)list.item(0));
+                        //xmlParent.replace()
+                        replace(index,list.getFromAxiomNodeList(0));
 
-                   if (list.length() > 0)
-                   {
-                       int lastIndexAdded = xmlNode.childIndex();
-                       //xmlNode.replaceAll((XML)list.item(0));
-                       replace(index, (XML)list.getFromAxiomNodeList(0));
+                        for (int i = 1; i < list.length(); i++) {
+                            xmlParent.insertChildAfter(xmlParent.child(lastIndexAdded), list.getFromAxiomNodeList(i));
+                            lastIndexAdded++;
+                            insert(index + i,list.getFromAxiomNodeList(i));
+                        }
+                    }
+                }
+            } else {
+                // Appending
+                xmlParent.appendChild(xmlValue);
+                addToList(AxiomNode.buildAxiomNode(xmlParent.child(index), xmlParent.getAxiomNode()));
+            }
+        } else {
+            // Don't all have same parent, no underlying doc to alter
+            if (index < length()) {
+                /*XML xmlNode = XML.getFromAxiomNode(lib, AxiomNode.buildAxiomNode(_axiomNodeList.get(index),
+                        ((XML)getFromAxiomNodeList(index).parent()).getAxiomNode()));
 
-                       for (int i = 1; i < list.length(); i++)
-                       {
-                           xmlParent.insertChildAfter(xmlParent.getXmlChild(lastIndexAdded), list.item(i));
-                           lastIndexAdded++;
-                           insertAt(index + i, (XML)list.item(i));
-                       }
-                   }
-               }
-           }
-           else
-           {
-               // Appending
-               xmlParent.appendChild(xmlValue);
-               addToList(AxiomNode.buildAxiomNode(xmlParent.child(index)));
-           }
-       }
-       else
-       {
-           // Don't all have same parent, no underlying doc to alter
-           if (index < length())
-           {
-               XML xmlNode = XML.getFromAxiomNode(lib,AxiomNode.buildAxiomNode(_axiomNodeList.get(index)));
+                if (xmlValue instanceof XML) {
+                    xmlNode.(XML) xmlValue);
+                    replace(index, xmlNode);
+                } else if (xmlValue instanceof XMLList) {
+                    // Replace the first one, and add the rest on the list.
+                    XMLList list = (XMLList) xmlValue;
 
-               if (xmlValue instanceof XML)
-               {
-                   xmlNode.replaceAll((XML) xmlValue);
-                   replace(index, xmlNode);
-               }
-               else if (xmlValue instanceof XMLList)
-               {
-                   // Replace the first one, and add the rest on the list.
-                   XMLList list = (XMLList) xmlValue;
+                    if (list.length() > 0) {
+                        xmlNode.replaceAll((XML) list.getFromAxiomNodeList(0));
+                        replace(index, (XML) list.getFromAxiomNodeList(0));
 
-                   if (list.length() > 0)
-                   {
-                       xmlNode.replaceAll((XML)list.item(0));
-                       replace(index, (XML)list.item(0));
-
-                       for (int i = 1; i < list.length(); i++)
-                       {
-                           insertAt(index + i, (XML)list.item(i));
-                       }
-                   }
-               }
-           }
-           else
-           {
-               addToList(xmlValue);
-           }
-       } */
+                        for (int i = 1; i < list.length(); i++) {
+                            insert(index + i, (XML) list.getFromAxiomNodeList(i));
+                        }
+                    }
+                }*/
+            } else {
+                addToList(xmlValue);
+            }
+        }
     }
 
     public Object get(int index, Scriptable start) {
@@ -573,8 +547,40 @@ public class XMLList extends XMLObjectImpl implements Function {
         return null;
     }
 
+    /**
+     * If list is empty, return undefined, if elements have different parents return undefined,
+     * If they all have the same parent, return that parent.
+     *
+     * @return
+     */
     Object parent() {
-        return null;
+        Object sameParent = Undefined.instance;
+
+        if ((length() == 0) && (targetObject != null) && (targetObject instanceof XML))
+        {
+            sameParent = targetObject;
+        }
+        else
+        {
+            for (int i = 0; i < length(); i++)
+            {
+                Object currParent = getFromAxiomNodeList(i).parent();
+
+                if (i == 0)
+                {
+                    // Set the first for the rest to compare to.
+                    sameParent = currParent;
+                }
+                else if (sameParent != currParent)
+                {
+                    sameParent = Undefined.instance;
+                    break;
+                }
+            }
+        }
+
+        // If everything in the list is the sameParent then return that as the parent.
+        return sameParent;
     }
 
     XML prependChild(Object value) {
@@ -702,7 +708,7 @@ public class XMLList extends XMLObjectImpl implements Function {
         return this;
     }
 
-    Object getXmlObject(){
+    Object getXmlObject() {
 
         if (length() == 1) {
             return getFromAxiomNodeList(0).getXmlObject();
@@ -790,6 +796,27 @@ public class XMLList extends XMLObjectImpl implements Function {
         }
     }
 
+    void insert(int index, XML xml) {
+            if (index < length()) {
+                ArrayList axiomNodeList = new ArrayList();
+
+                // Copy upto item to replace.
+                for (int i = 0; i < index; i++) {
+                    axiomNodeList.add(_axiomNodeList.get(i));
+                }
+
+                axiomNodeList.add(xml.getAxiomNode());
+
+                // Skip over old item we're going to replace we've already add new item on above line.
+                for (int i = index; i < length(); i++) {
+                    axiomNodeList.add(_axiomNodeList.get(i));
+                }
+
+                _axiomNodeList = axiomNodeList;
+            }
+        }
+
+
     static XMLList toXMLList(XMLLibImpl lib, Object value) {
         String xmlString;
         List axiomNodeList;
@@ -823,18 +850,18 @@ public class XMLList extends XMLObjectImpl implements Function {
             }
             xmlList = new XMLList(lib, axiomNodeList);
 
-        } else if(value instanceof XMLList){
-            xmlList = new XMLList(lib, ((XMLList)value)._axiomNodeList);
+        } else if (value instanceof XMLList) {
+            xmlList = new XMLList(lib, ((XMLList) value)._axiomNodeList);
 
-        }else{
+        } else {
             throw ScriptRuntime.typeError("Invalid argument");
         }
 
         return xmlList;
     }
 
-    public OMNode getAxiomFromXML(){
-        return (OMNode)getXmlObject();
+    public OMNode getAxiomFromXML() {
+        return (OMNode) getXmlObject();
     }
 
 
