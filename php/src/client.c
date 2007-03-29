@@ -498,7 +498,7 @@ wsf_client_set_module_param_option(axis2_env_t *env,
 	if(!param)
 		return AXIS2_FAILURE;
 
-	axis2_param_set_value(param, env, axis2_strdup(module_option_value, env));
+	axis2_param_set_value(param, env, axis2_strdup(env, module_option_value));
 
 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client setting %s module param %s to %s ",
 		module_name, module_option ,module_option_value);
@@ -619,7 +619,7 @@ int wsf_client_set_addr_options(HashTable *client_ht,
 		if(strcmp(value,"submission") == 0){
     
 			axis2_property_t *prop = axis2_property_create_with_args(env, 0, 
-				AXIS2_TRUE, 0, axis2_strdup(AXIS2_WSA_NAMESPACE_SUBMISSION, env));
+				AXIS2_TRUE, 0, axis2_strdup(env, AXIS2_WSA_NAMESPACE_SUBMISSION));
 
 			axis2_options_set_property(client_options, env, AXIS2_WSA_VERSION, prop);
 
@@ -690,7 +690,7 @@ int wsf_client_set_options(HashTable *client_ht,
 			
 			rest_property = axis2_property_create(env);
 			
-			axis2_property_set_value(rest_property, env, axis2_strdup(AXIS2_VALUE_TRUE, env));					
+			axis2_property_set_value(rest_property, env, axis2_strdup(env, AXIS2_VALUE_TRUE));					
 			
 			axis2_options_set_property(client_options, env, AXIS2_ENABLE_REST,
             rest_property);
@@ -704,7 +704,7 @@ int wsf_client_set_options(HashTable *client_ht,
 			if(value && (strcmp(value, "GET") == 0 || strcmp(value, "get") == 0)){
 				axis2_property_t* get_property = axis2_property_create(env);
 				
-				axis2_property_set_value(get_property, env, axis2_strdup(AXIS2_HTTP_HEADER_GET, env));
+				axis2_property_set_value(get_property, env, axis2_strdup(env, AXIS2_HTTP_HEADER_GET));
 				
 				axis2_options_set_property(client_options, env, AXIS2_HTTP_METHOD, get_property);
 
@@ -945,7 +945,7 @@ int wsf_client_do_request(
 					sequence_property = axis2_property_create(env);
 					
 					axis2_property_set_value(sequence_property, env, 
-						axis2_strdup(offered_seq_id, env));
+						axis2_strdup(env, offered_seq_id));
 					
 					axis2_options_set_property(client_options, env, "Sandesha2OfferedSequenceId", 
 						sequence_property);
@@ -1060,13 +1060,13 @@ wsf_client_enable_ssl(HashTable *ht,
 		passphrase = Z_STRVAL_PP(tmp);		
 	}
 
-	ssl_server_key_prop = axis2_property_create_with_args(env, 0, AXIS2_TRUE, 0, axis2_strdup(ssl_server_key_filename, env));
+	ssl_server_key_prop = axis2_property_create_with_args(env, 0, AXIS2_TRUE, 0, axis2_strdup(env, ssl_server_key_filename));
 	axis2_options_set_property(options, env, "SERVER_CERT", ssl_server_key_prop);
 
-	ssl_client_key_prop = axis2_property_create_with_args(env, 0, AXIS2_TRUE, 0, axis2_strdup(ssl_client_key_filename, env));
+	ssl_client_key_prop = axis2_property_create_with_args(env, 0, AXIS2_TRUE, 0, axis2_strdup(env, ssl_client_key_filename));
 	axis2_options_set_property(options, env, "KEY_FILE", ssl_client_key_prop);
 
-	passphrase_prop = axis2_property_create_with_args(env, 0, AXIS2_TRUE, 0, axis2_strdup(passphrase, env));
+	passphrase_prop = axis2_property_create_with_args(env, 0, AXIS2_TRUE, 0, axis2_strdup(env, passphrase));
 	axis2_options_set_property(options, env, "SSL_PASSPHRASE", passphrase_prop);
 
 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf-client] setting ssh options %s -- %s -- %s ", ssl_server_key_filename, ssl_client_key_filename, passphrase);

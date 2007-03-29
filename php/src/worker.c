@@ -259,7 +259,7 @@ int wsf_worker_process_request(
     	axis2_msg_ctx_set_http_out_transport_info(msg_ctx, env, php_out_transport_info);
    
     	if(request->transfer_encoding){
-        	axis2_msg_ctx_set_transfer_encoding(msg_ctx, env, axis2_strdup(request->transfer_encoding, env));
+        	axis2_msg_ctx_set_transfer_encoding(msg_ctx, env, axis2_strdup(env, request->transfer_encoding));
     	}
     
     /** store svc_info struct as a property */  

@@ -511,10 +511,10 @@ axis2_msg_recv_t* load_msg_recv(axis2_env_t *env, axis2_char_t *home)
                                                "ws_xml_msg_recv");
 	repos_name = home;
 	
-	temp_path = axis2_stracat(repos_name, AXIS2_PATH_SEP_STR, env);
-	temp_path2 = axis2_stracat(temp_path, "lib", env);
-	temp_path3 = axis2_stracat(temp_path2, AXIS2_PATH_SEP_STR, env);
-	dll_name = axis2_stracat(temp_path3, msg_recv_dll_name, env);
+	temp_path = axis2_stracat(env, repos_name, AXIS2_PATH_SEP_STR);
+	temp_path2 = axis2_stracat(env, temp_path, "lib");
+	temp_path3 = axis2_stracat(env, temp_path2, AXIS2_PATH_SEP_STR);
+	dll_name = axis2_stracat(env, temp_path3, msg_recv_dll_name);
 	axis2_dll_desc_set_name(dll_desc, env, dll_name);
 	axis2_dll_desc_set_type(dll_desc, env, AXIS2_MSG_RECV_DLL);
 	
@@ -586,7 +586,7 @@ char* ws_util_generate_svc_name_from_uri(
 		index = index +4;
 		op_index = index +1;
 		temp_string[index - temp_string] ='\0';
-		svc_info->op_name = axis2_strdup(op_index, env);
+		svc_info->op_name = axis2_strdup(env, op_index);
 	}
 	
 	svc_name = axis2_replace(env, temp_string, '/',':');
@@ -667,7 +667,7 @@ void ws_util_create_op_and_add_to_svc(
             axis2_phases_info_set_op_phases(info, env, op);
             axis2_svc_add_op(svc_info->svc, env, op);
             if(action){
-                axis2_svc_add_mapping(svc_info->svc, env, axis2_strdup(action, env), op);
+                axis2_svc_add_mapping(svc_info->svc, env, axis2_strdup(env, action), op);
             }                
         }
 	}		

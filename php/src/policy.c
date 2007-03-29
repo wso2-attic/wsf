@@ -870,7 +870,7 @@ create_sign_parts(const axis2_env_t *env,
     axiom_namespace_t *sp_ns = NULL;
 
     sp_ns = axiom_namespace_create(env, WS_SEC_POLICY_NAMESPACE_URI, WS_SEC_POLICY_NAMESPACE);
-    axiom_element_create(env, parent_node, WS_ONLY_SIGN_HEADER_AND_BODY, sp_ns, &sign_om_node);
+    axiom_element_create(env, parent_node, WS_BODY, sp_ns, &sign_om_node);
     return sign_om_node;
 }
 

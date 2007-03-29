@@ -231,7 +231,7 @@ ws_xml_msg_recv_invoke_business_logic_sync(
 	    	axiom_namespace_t *ns = NULL;
 		    axis2_char_t *res_name = NULL;
 				
-    		res_name = axis2_stracat(local_name, "Response", env);
+    		res_name = axis2_stracat(env, local_name, "Response");
 	    	ns = axiom_namespace_create(env, "http://soapenc/", "res");
     		if(!ns)	{
     			return AXIS2_FAILURE;
@@ -475,7 +475,7 @@ zend_try {
             ft = &(*ce)->function_table;
             if(call_user_function(ft , (zval**)NULL, &func, &retval, 1, params TSRMLS_CC) == SUCCESS){
                 if(Z_TYPE(retval) == IS_STRING){
-                    res_payload = axis2_strdup(Z_STRVAL(retval), env);
+                    res_payload = axis2_strdup(env, Z_STRVAL(retval));
                 }
                 else if(Z_TYPE(retval) == IS_OBJECT && 
                     instanceof_function(Z_OBJCE(retval), ws_fault_class_entry TSRMLS_CC)){
@@ -506,7 +506,7 @@ zend_try {
 
             if(zend_hash_find(Z_OBJPROP(retval), "str", sizeof("str"), (void**)&msg_tmp) == SUCCESS 
                 && Z_TYPE_PP(msg_tmp) == IS_STRING ) {
-                res_payload = axis2_strdup(Z_STRVAL_PP(msg_tmp), env);
+                res_payload = axis2_strdup(env, Z_STRVAL_PP(msg_tmp));
 				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf log ]response payload %s", res_payload);
                 if(res_payload){
                     res_om_node = wsf_util_deserialize_buffer(env, res_payload);
@@ -526,7 +526,7 @@ zend_try {
                     }
             }
         }else if(Z_TYPE(retval) == IS_STRING){
-            res_payload = axis2_strdup(Z_STRVAL(retval), env);
+            res_payload = axis2_strdup(env, Z_STRVAL(retval));
             if(res_payload){
                 res_om_node = wsf_util_deserialize_buffer(env, res_payload);
             }                

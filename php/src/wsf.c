@@ -1105,7 +1105,7 @@ PHP_METHOD(ws_service, __construct)
                               (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
                 if(!svc_info->modules_to_engage)
                     svc_info->modules_to_engage = axis2_array_list_create(ws_env_svr, 3);
-                axis2_array_list_add(svc_info->modules_to_engage, ws_env_svr, axis2_strdup("sandesha2", ws_env_svr));
+                axis2_array_list_add(svc_info->modules_to_engage, ws_env_svr, axis2_strdup(ws_env_svr, "sandesha2"));
             }
 
             if(zend_hash_find(ht, WS_BINDING_STYLE, sizeof(WS_BINDING_STYLE), (void **)&tmp) == SUCCESS &&
@@ -1150,8 +1150,8 @@ PHP_METHOD(ws_service, __construct)
                 op_name_to_store = op_name;
             else
                 op_name_to_store = func_name;
-            axis2_hash_set(svc_info->ops_to_functions, axis2_strdup(op_name_to_store, ws_env_svr) ,
-                           AXIS2_HASH_KEY_STRING,  axis2_strdup(func_name, ws_env_svr));
+            axis2_hash_set(svc_info->ops_to_functions, axis2_strdup(ws_env_svr, op_name_to_store) ,
+                           AXIS2_HASH_KEY_STRING,  axis2_strdup(ws_env_svr, func_name));
         }
     }
     if(ht_actions)
@@ -1184,8 +1184,8 @@ PHP_METHOD(ws_service, __construct)
             func_name = axis2_hash_get(svc_info->ops_to_functions, Z_STRVAL_PP(tmp_function), AXIS2_HASH_KEY_STRING);
             if(!func_name)
             {
-                axis2_hash_set(svc_info->ops_to_functions, axis2_strdup(Z_STRVAL_PP(tmp_function), ws_env_svr),
-                               AXIS2_HASH_KEY_STRING, axis2_strdup(Z_STRVAL_PP(tmp_function), ws_env_svr));
+                axis2_hash_set(svc_info->ops_to_functions, axis2_strdup(ws_env_svr, Z_STRVAL_PP(tmp_function)),
+                               AXIS2_HASH_KEY_STRING, axis2_strdup(ws_env_svr, Z_STRVAL_PP(tmp_function)));
                 func_name = Z_STRVAL_PP(tmp_function);
             }
             key_len = strlen(func_name);
@@ -1204,8 +1204,8 @@ PHP_METHOD(ws_service, __construct)
                 ws_util_create_op_and_add_to_svc(svc_info, wsa_action,
                                                  ws_env_svr, operation_name TSRMLS_CC);
                 /* keep track of operations with actions */
-                axis2_hash_set(svc_info->ops_to_actions, axis2_strdup(operation_name, ws_env_svr) ,
-                               AXIS2_HASH_KEY_STRING,  axis2_strdup(wsa_action, ws_env_svr));
+                axis2_hash_set(svc_info->ops_to_actions, axis2_strdup(ws_env_svr, operation_name) ,
+                               AXIS2_HASH_KEY_STRING,  axis2_strdup(ws_env_svr, wsa_action));
             }
             else
             {
