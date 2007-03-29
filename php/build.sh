@@ -24,6 +24,7 @@ cp build/wsf_c/sandesha2c/autogen.sh wsf_c/sandesha2c
 
 
 cp build/wsf_c/axis2c/configure.ac wsf_c/axis2c
+cp build/wsf_c/axis2c/autogen.sh wsf_c/axis2c
 cp build/wsf_c/axis2c/rampart/samples/Makefile.am wsf_c/axis2c/rampart/samples
 cp build/wsf_c/axis2c/rampart/samples/callback/Makefile.am wsf_c/axis2c/rampart/samples/callback
 cp build/wsf_c/axis2c/rampart/samples/callback/htpasswd_callback/Makefile.am wsf_c/axis2c/rampart/samples/callback/htpasswd_callback
