@@ -150,7 +150,12 @@ public class JavaScriptEngine extends ImporterTopLevel {
             args = "var x = " + args + ";";
             cx.evaluateString(this, (String) args, "Get JSON", 0, null);
             args = this.get("x", this);
+        } else {
+            args = "var x = new XML(" + args + ");";
+            cx.evaluateString(this, (String)args, "Get E4X", 0, null);
+            args = this.get("x", this);
         }
+
 
         // Evaluates the javascript file
         try {

@@ -15,9 +15,9 @@
  */
 
 function echoJSON(param){
-    return param.toSource()
+    return param.toSource();
 }
 
 function echo(param){
-    return new XML(param);
+    return param;
 }

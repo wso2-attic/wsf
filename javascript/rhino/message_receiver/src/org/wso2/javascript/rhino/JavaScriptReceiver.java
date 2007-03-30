@@ -16,15 +16,6 @@
 
 package org.wso2.javascript.rhino;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URL;
-
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMNode;
 import org.apache.axiom.om.impl.llom.OMSourcedElementImpl;
@@ -40,6 +31,9 @@ import org.apache.axis2.i18n.Messages;
 import org.apache.axis2.json.JSONBadgerfishDataSource;
 import org.apache.axis2.json.JSONDataSource;
 import org.apache.axis2.receivers.AbstractInOutSyncMessageReceiver;
+
+import java.io.*;
+import java.net.URL;
 
 /**
  * Class JavaScriptReceiver implements the AbstractInOutSyncMessageReceiver,
@@ -158,7 +152,7 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver
      * implementation is not available
      */
     public Reader readJS(MessageContext inMessage) throws AxisFault {
-    	InputStream jsFileStream;
+        InputStream jsFileStream;
         AxisService service = inMessage.getServiceContext().getAxisService();
         Parameter implInfoParam = service.getParameter("ServiceJS");
         if (implInfoParam == null) {
@@ -166,11 +160,11 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver
         }
         if (implInfoParam.getValue() instanceof File)
         {
-        	try {
-				jsFileStream = new FileInputStream((File)(implInfoParam.getValue()));
-			} catch (FileNotFoundException e) {
-				throw new AxisFault("Unable to load the javaScript, File not Found",e);
-			}
+            try {
+                jsFileStream = new FileInputStream((File)(implInfoParam.getValue()));
+            } catch (FileNotFoundException e) {
+                throw new AxisFault("Unable to load the javaScript, File not Found",e);
+            }
         }else{
          jsFileStream = service.getClassLoader().getResourceAsStream(implInfoParam.getValue().toString());
         if (jsFileStream == null) {
