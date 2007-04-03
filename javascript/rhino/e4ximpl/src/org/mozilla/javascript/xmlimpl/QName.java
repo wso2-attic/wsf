@@ -119,6 +119,29 @@ public class QName extends IdScriptableObject {
         return super.getInstanceIdValue(id);
     }
 
+    public boolean equals(Object obj) {
+        if (!(obj instanceof QName)) return false;
+        return equals((QName) obj);
+    }
+
+    protected Object equivalentValues(Object value) {
+        if (!(value instanceof QName)) return Scriptable.NOT_FOUND;
+        boolean result = equals((QName) value);
+        return result ? Boolean.TRUE : Boolean.FALSE;
+    }
+
+    private boolean equals(QName q) {
+        boolean result;
+
+        if (uriValue == null) {
+            result = q.uriValue == null && localName.equals(q.localName);
+        } else {
+            result = uriValue.equals(q.uriValue) && localName.equals(q.localName);
+        }
+
+        return result;
+    }
+
     void exportAsJSClass(boolean sealed) {
         exportAsJSClass(MAX_PROTOTYPE_ID, lib.globalScope(), sealed);
     }
@@ -240,7 +263,7 @@ public class QName extends IdScriptableObject {
         return uriValue;
     }
 
-    public String prefix(){
+    public String prefix() {
         return prefixValue;
     }
 }

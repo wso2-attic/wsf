@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.axiom.om.OMNode;
+import org.apache.axiom.om.OMText;
 import org.mozilla.javascript.Callable;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
@@ -241,39 +242,40 @@ public class XMLList extends XMLObjectImpl implements Function {
                 XML xmlNode = getFromAxiomNodeList(index);
 
                 if (xmlValue instanceof XML) {
+                    xmlNode.replaceAll((XML) xmlValue);
                     //TODO xmlValue should be cast to XML otherwise replace(intdex, object) method will be called
-                    xmlParent.replace(index, xmlValue);
-                    replace(index, (XML)xmlValue);
+                    replace(index, (XML) xmlValue);
                 } else if (xmlValue instanceof XMLList) {
                     // Replace the first one, and add the rest on the list.
                     XMLList list = (XMLList) xmlValue;
 
                     if (list.length() > 0) {
                         int lastIndexAdded = xmlNode.childIndex();
-                        //xmlNode.replaceAll((XML)list.item(0));
-                        //xmlParent.replace()
-                        replace(index,list.getFromAxiomNodeList(0));
+                        xmlNode.replaceAll(list.getFromAxiomNodeList(0));
+                        replace(index, list.getFromAxiomNodeList(0));
 
                         for (int i = 1; i < list.length(); i++) {
                             xmlParent.insertChildAfter(xmlParent.child(lastIndexAdded), list.getFromAxiomNodeList(i));
                             lastIndexAdded++;
-                            insert(index + i,list.getFromAxiomNodeList(i));
+                            insert(index + i, list.getFromAxiomNodeList(i));
                         }
                     }
                 }
             } else {
                 // Appending
                 xmlParent.appendChild(xmlValue);
-                addToList(AxiomNode.buildAxiomNode(xmlParent.child(index), xmlParent.getAxiomNode()));
+                addToList(xmlParent.child(index));
+//                addToList(AxiomNode.buildAxiomNode(xmlParent.child(index), xmlParent.getAxiomNode()));
             }
         } else {
+            //TODO
             // Don't all have same parent, no underlying doc to alter
             if (index < length()) {
-                /*XML xmlNode = XML.getFromAxiomNode(lib, AxiomNode.buildAxiomNode(_axiomNodeList.get(index),
-                        ((XML)getFromAxiomNodeList(index).parent()).getAxiomNode()));
+                XML xmlNode = XML.getFromAxiomNode(lib, AxiomNode.buildAxiomNode(_axiomNodeList.get(index),
+                        ((XML) getFromAxiomNodeList(index).parent()).getAxiomNode()));
 
                 if (xmlValue instanceof XML) {
-                    xmlNode.(XML) xmlValue);
+                    xmlNode.replaceAll((XML) xmlValue);
                     replace(index, xmlNode);
                 } else if (xmlValue instanceof XMLList) {
                     // Replace the first one, and add the rest on the list.
@@ -287,7 +289,7 @@ public class XMLList extends XMLObjectImpl implements Function {
                             insert(index + i, (XML) list.getFromAxiomNodeList(i));
                         }
                     }
-                }*/
+                }
             } else {
                 addToList(xmlValue);
             }
@@ -556,23 +558,16 @@ public class XMLList extends XMLObjectImpl implements Function {
     Object parent() {
         Object sameParent = Undefined.instance;
 
-        if ((length() == 0) && (targetObject != null) && (targetObject instanceof XML))
-        {
+        if ((length() == 0) && (targetObject != null) && (targetObject instanceof XML)) {
             sameParent = targetObject;
-        }
-        else
-        {
-            for (int i = 0; i < length(); i++)
-            {
+        } else {
+            for (int i = 0; i < length(); i++) {
                 Object currParent = getFromAxiomNodeList(i).parent();
 
-                if (i == 0)
-                {
+                if (i == 0) {
                     // Set the first for the rest to compare to.
                     sameParent = currParent;
-                }
-                else if (sameParent != currParent)
-                {
+                } else if (sameParent != currParent) {
                     sameParent = Undefined.instance;
                     break;
                 }
@@ -797,24 +792,24 @@ public class XMLList extends XMLObjectImpl implements Function {
     }
 
     void insert(int index, XML xml) {
-            if (index < length()) {
-                ArrayList axiomNodeList = new ArrayList();
+        if (index < length()) {
+            ArrayList axiomNodeList = new ArrayList();
 
-                // Copy upto item to replace.
-                for (int i = 0; i < index; i++) {
-                    axiomNodeList.add(_axiomNodeList.get(i));
-                }
-
-                axiomNodeList.add(xml.getAxiomNode());
-
-                // Skip over old item we're going to replace we've already add new item on above line.
-                for (int i = index; i < length(); i++) {
-                    axiomNodeList.add(_axiomNodeList.get(i));
-                }
-
-                _axiomNodeList = axiomNodeList;
+            // Copy upto item to replace.
+            for (int i = 0; i < index; i++) {
+                axiomNodeList.add(_axiomNodeList.get(i));
             }
+
+            axiomNodeList.add(xml.getAxiomNode());
+
+            // Skip over old item we're going to replace we've already add new item on above line.
+            for (int i = index; i < length(); i++) {
+                axiomNodeList.add(_axiomNodeList.get(i));
+            }
+
+            _axiomNodeList = axiomNodeList;
         }
+    }
 
 
     static XMLList toXMLList(XMLLibImpl lib, Object value) {
@@ -844,13 +839,18 @@ public class XMLList extends XMLObjectImpl implements Function {
 
             XML xml = XML.toXML(lib, xmlString);
             axiomNodeList = new ArrayList();
+            OMNode omNode;
             Iterator iterator = xml.getAxiomNode().getOMElement().getChildren();
             while (iterator.hasNext()) {
-                axiomNodeList.add(AxiomNode.buildAxiomNode(iterator.next(), xml.getAxiomNode()));
+                omNode = (OMNode) iterator.next();
+                if (!(omNode.getType() == OMNode.TEXT_NODE && (((OMText) omNode).getTextCharacters())[0] == '\n')) {
+                    axiomNodeList.add(AxiomNode.buildAxiomNode(omNode, xml.getAxiomNode()));
+                }
             }
             xmlList = new XMLList(lib, axiomNodeList);
 
         } else if (value instanceof XMLList) {
+            //TODO handle cloning of axiomNodes
             xmlList = new XMLList(lib, ((XMLList) value)._axiomNodeList);
 
         } else {

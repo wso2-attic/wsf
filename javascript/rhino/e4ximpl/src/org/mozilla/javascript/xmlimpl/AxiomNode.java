@@ -57,6 +57,7 @@ public class AxiomNode {
     XML xmlObject;
     private OMFactory omFactory = null;
     private AxiomNodeMatcher nodeMatcher = null;
+    private static AxiomNodeComparator axiomNodeComparator = new AxiomNodeComparator();
 
     public static final int APPEND_CHILD = 1;
     public static final int PREPEND_CHILD = 2;
@@ -129,7 +130,7 @@ public class AxiomNode {
         int length = 0;
         OMNode result;
         Iterator iterator = this.getOMElement().getChildren();
-        
+
         while (iterator.hasNext()) {
             result = (OMNode) iterator.next();
 
@@ -238,6 +239,9 @@ public class AxiomNode {
 
             while (iterator.hasNext()) {
                 OMNode omNode = (OMNode) iterator.next();
+                if(omNode.getType() == OMNode.TEXT_NODE && isNewlineCharacter((OMText)omNode)){
+                    continue;
+                }
                 childIndex++;
                 if (omNode == this.getOMNode()) {
                     break;
@@ -527,6 +531,14 @@ public class AxiomNode {
         if (parent != null && parent.isOMElement)
             axiomNode.setParentNode(parent);
         return axiomNode;
+    }
+
+    static boolean equivalentAxiomNode(AxiomNode refNode, AxiomNode targetNode) {
+        return AxiomNodeComparator.isOMNodesEqual(refNode, targetNode);
+    }
+
+    static boolean isNewlineCharacter(OMText omText) {
+        return omText.getTextCharacters()[0] == '\n';
     }
 
     /**
@@ -839,68 +851,206 @@ public class AxiomNode {
         }
     }
 
-    private static class AxiomNodeEquality {
+    private static class AxiomNodeComparator {
 
-        public static boolean isOMNodesEqual(AxiomNode refNode, AxiomNode nodeToCompare) {
+        public static boolean isOMNodesEqual(AxiomNode refNode, AxiomNode targetNode) {
             boolean result = false;
 
-            if (refNode.isOMAttribute) {
+            if (refNode.isOMAttribute && targetNode.isOMAttribute) {
+                result = isOMAttributesEqual(refNode.getOMAttribute(), targetNode.getOMAttribute());
 
-            } else if (refNode.isOMElement) {
-                result = isOMElementsEqual(refNode, nodeToCompare);
+            } else if (refNode.isOMElement && targetNode.isOMElement) {
+                result = isOMElementsEqual(refNode.getOMElement(), targetNode.getOMElement());
 
-            } else if (refNode.isOMText) {
+            } else if (refNode.isOMText && targetNode.isOMText) {
+                result = isOMTextsEqual(refNode.getOMText(), targetNode.getOMText());
 
-            } else if (refNode.isOMPI) {
+            } else if (refNode.isOMPI && targetNode.isOMPI) {
+                result = isOMPIsEqual(refNode.getOMProcessingInstruction(), targetNode.getOMProcessingInstruction());
 
-            } else if (refNode.isOMComment) {
+            } else if (refNode.isOMComment && targetNode.isOMComment) {
+                result = isOMCommentsEqual(refNode.getOMComment(), targetNode.getOMComment());
 
             }
             return result;
         }
 
-        private static boolean isOMAttributesEqual(AxiomNode refNode, AxiomNode nodeToCompare) {
-            return false;
-
+        private static boolean isOMAttributesEqual(OMAttribute refAttr, OMAttribute targetAttr) {
+            return targetAttr.getAttributeValue().equals(
+                    refAttr.getAttributeValue());
         }
 
-        private static boolean isOMElementsEqual(AxiomNode refNode, AxiomNode nodeToCompare) {
+        private static boolean isOMTextsEqual(OMText refText, OMText targetText) {
+            return targetText.getText().equals(
+                    refText.getText());
+        }
+
+        private static boolean isOMPIsEqual(OMProcessingInstruction refPI, OMProcessingInstruction targetPI) {
+            return targetPI.getValue().equals(
+                    refPI.getValue());
+        }
+
+        private static boolean isOMCommentsEqual(OMComment refComment, OMComment targetComment) {
+            return targetComment.getValue().equals(
+                    refComment.getValue());
+        }
+
+        private static boolean isOMElementsEqual(OMElement refElement, OMElement targetElement) {
             boolean result = false;
 
-            if (!nodeToCompare.isOMElement)
-                return result;
+            if (!isQNamesEqual(refElement.getQName(), targetElement.getQName()))
+                return false;
 
-            OMElement refEle = refNode.getOMElement();
-            OMElement eletoCompare = nodeToCompare.getOMElement();
+            if (!isAttributeListEqual(refElement, targetElement))
+                return false;
 
-            if (!isQNamesEqual(refEle.getQName(), eletoCompare.getQName()))
-                return result;
+            Iterator refChildIterator = refElement.getChildren();
+            Iterator targetChildIterator = targetElement.getChildren();
 
-            return false;
+            OMNode refChildNode;
+            OMNode targetChildNode = null;
 
+//            while (refChildIterator.hasNext()) {
+////                refChildNode = (OMNode) refChildIterator.next();
+////                targetChildNode = (OMNode) targetChildIterator.next();
+////
+////
+////
+////                if (targetChildNode == null) {
+////                    return false;
+////                }
+////
+////                if (refChildNode.getType() == OMNode.ELEMENT_NODE
+////                        && targetChildNode.getType() == OMNode.ELEMENT_NODE) {
+////
+////                } else if (refChildNode.getType() == OMNode.TEXT_NODE
+////                        && targetChildNode.getType() == OMNode.TEXT_NODE) {
+////
+////                    //TODO new line character check is very common, seperate method will improve the quality of coding
+////
+////                    //TODO need to handle new line characters in this part
+////                    /* if(((OMText)refChildNode).getTextCharacters()[0] == '\n'){
+////
+////                    }*/
+////                } else if (refChildNode.getType() == OMNode.COMMENT_NODE
+////                        && targetChildNode.getType() == OMNode.COMMENT_NODE) {
+////
+////                } else if (refChildNode.getType() == OMNode.PI_NODE
+////                        && targetChildNode.getType() == OMNode.PI_NODE) {
+////
+////                }
+////            }
+////
+////            return true;
+
+            while (true) {
+                refChildNode = getValidNode(refChildIterator);
+                targetChildNode = getValidNode(targetChildIterator);
+
+                if (refChildNode != null && targetChildNode != null) {
+
+                    if (refChildNode.getType() == OMNode.ELEMENT_NODE
+                            && targetChildNode.getType() == OMNode.ELEMENT_NODE) {
+                        result = isOMElementsEqual((OMElement) refChildNode, (OMElement) targetChildNode);
+
+                    } else if (refChildNode.getType() == OMNode.TEXT_NODE
+                            && targetChildNode.getType() == OMNode.TEXT_NODE) {
+                        result = isOMTextsEqual((OMText) refChildNode, (OMText) targetChildNode);
+                        //TODO new line character check is very common, seperate method will improve the quality of coding
+
+                        //TODO need to handle new line characters in this part
+                        /* if(((OMText)refChildNode).getTextCharacters()[0] == '\n'){
+
+                        }*/
+                    } else if (refChildNode.getType() == OMNode.COMMENT_NODE
+                            && targetChildNode.getType() == OMNode.COMMENT_NODE) {
+                        result = isOMCommentsEqual((OMComment) refChildNode, (OMComment) targetChildNode);
+
+                    } else if (refChildNode.getType() == OMNode.PI_NODE
+                            && targetChildNode.getType() == OMNode.PI_NODE) {
+                        result = isOMPIsEqual((OMProcessingInstruction) refChildNode, (OMProcessingInstruction) targetChildNode);
+                    }
+
+                } else if (refChildNode == null && targetChildNode == null) {
+                    result = true;
+                    break;
+                } else {
+                    result = false;
+                }
+                if (!result) {
+                    return false;
+                }
+            }
+            return true;
         }
 
-        private static boolean isOMTextsEqual(AxiomNode refNode, AxiomNode nodeToCompare) {
-            return false;
-        }
-
-        private static boolean isOMPIsEqual(AxiomNode refNode, AxiomNode nodeToCompare) {
-            return false;
-        }
-
-        private static boolean isOMCommentsEqual(AxiomNode refNode, AxiomNode nodeToCompare) {
-            return false;
-        }
-
-        private static boolean isQNamesEqual(javax.xml.namespace.QName refQName,
-                                             javax.xml.namespace.QName QNameToCompare) {
+        private static boolean isAttributeListEqual
+                (OMElement
+                        refElement, OMElement
+                        targetElement) {
             boolean result = false;
+            HashMap refAttrMap = getAttributeMap(refElement);
+            HashMap targetAttrMap = getAttributeMap(targetElement);
 
-            if (refQName.getNamespaceURI().equals(QNameToCompare.getNamespaceURI()) &&
-                    (refQName.getLocalPart().equals(QNameToCompare.getLocalPart())))
+            if (refAttrMap.size() == 0 && targetAttrMap.size() == 0) {
                 return true;
+            } else if (refAttrMap.size() != targetAttrMap.size())
+                return false;
 
+            Iterator keyIterator = refAttrMap.keySet().iterator();
+
+            while (keyIterator.hasNext()) {
+                String attrValue = (String) keyIterator.next();
+
+                if (targetAttrMap.containsKey(attrValue)) {
+                    javax.xml.namespace.QName refQName = (javax.xml.namespace.QName) refAttrMap.get(attrValue);
+                    javax.xml.namespace.QName targetQName = (javax.xml.namespace.QName) targetAttrMap.get(attrValue);
+
+                    if (isQNamesEqual(refQName, targetQName)) {
+                        result = true;
+                    } else {
+                        return false;
+                    }
+
+                } else {
+                    return false;
+                }
+            }
             return result;
+        }
+
+        private static HashMap getAttributeMap
+                (OMElement
+                        element) {
+            HashMap attrMap = new HashMap();
+            Iterator attrIterator = element.getAllAttributes();
+            while (attrIterator.hasNext()) {
+                OMAttribute attribute = (OMAttribute) attrIterator.next();
+                attrMap.put(attribute.getAttributeValue(), attribute.getQName());
+            }
+            return attrMap;
+        }
+
+        private static boolean isQNamesEqual
+                (javax.xml.namespace.QName
+                        refQName,
+                 javax.xml.namespace.QName
+                         targetQName) {
+            boolean result = false;
+
+            return refQName.getNamespaceURI().equals(targetQName.getNamespaceURI()) &&
+                    (refQName.getLocalPart().equals(targetQName.getLocalPart())) || result;
+        }
+
+        private static OMNode getValidNode(Iterator iterator) {
+            OMNode validNode;
+            while (iterator.hasNext()) {
+                validNode = (OMNode) iterator.next();
+                if (!(validNode.getType() == OMNode.TEXT_NODE
+                        && isNewlineCharacter((OMText) validNode)))
+                    return validNode;
+            }
+            return null;
         }
     }
 }

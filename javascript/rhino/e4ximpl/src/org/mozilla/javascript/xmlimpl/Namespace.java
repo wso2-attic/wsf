@@ -147,6 +147,21 @@ public class Namespace extends IdScriptableObject {
         return super.getInstanceIdValue(id);
     }
 
+    protected Object equivalentValues(Object value) {
+        if (!(value instanceof Namespace)) return Scriptable.NOT_FOUND;
+        boolean result = equals((Namespace) value);
+        return result ? Boolean.TRUE : Boolean.FALSE;
+    }
+
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Namespace)) return false;
+        return equals((Namespace) obj);
+    }
+
+    private boolean equals(Namespace n){
+        return uri().equals(n.uri());
+    }
+
     private Namespace realThis(Scriptable thisObj, IdFunctionObject f) {
         if (!(thisObj instanceof Namespace))
             throw incompatibleCallError(f);

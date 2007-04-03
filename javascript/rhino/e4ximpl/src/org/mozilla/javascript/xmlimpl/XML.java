@@ -40,7 +40,6 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.Wrapper;
 
-
 public class XML extends XMLObjectImpl {
 
     private AxiomNode axiomNode;
@@ -197,7 +196,9 @@ public class XML extends XMLObjectImpl {
                             replaceChild(matches.getFromAxiomNodeList(0).getAxiomNode(), xmlToAdd.getAxiomNode());
 
                         } else {
-                            appendChild(xmlToAdd);
+                            XMLList tmpMatches = (XMLList) ecmaGetImpl(xmlName);
+                            insertChild(tmpMatches.getFromAxiomNodeList(i-1).getAxiomNode(),xmlToAdd,AxiomNode.APPEND_CHILD);
+                            //appendChild(xmlToAdd);
                         }
                     }
                 }
@@ -216,25 +217,24 @@ public class XML extends XMLObjectImpl {
         boolean result = false;
 
         if (target instanceof XML) {
-            XML otherXml = (XML) target;
-            //TODO This is an inefficient way to check the equality.  It may also not work.
-            //TODO need to implement equivalance of two XML objects
-//            XMLComparator ss = new XMLComparator();
-//            try {
-//                result = ss.compare((OMElement)otherXml.getAxiomFromXML(),(OMElement)this.getAxiomFromXML());
-//            } catch (XMLComparisonException e) {
-//                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//            }
-            result = this.toXMLString(0).equals(otherXml.toXMLString(0));
+            AxiomNode refNode = this.getAxiomNode();
+            AxiomNode targetNode = ((XML)target).getAxiomNode();
+
+            if(refNode.isAttribute() || refNode.isText() || targetNode.isAttribute() || targetNode.isText()){
+                result = toString().equals(target.toString());
+
+            }else {
+                result = AxiomNode.equivalentAxiomNode(refNode,targetNode);
+            }
+
         } else if (target instanceof XMLList) {
             XMLList otherList = (XMLList) target;
-            //TODO Check the spec ...
-            if (otherList.length() == 1) {
+
+            if (otherList.length() == 1)
                 result = equivalentXml(otherList.getFromAxiomNodeList(0));
-            }
+
         } else if (hasSimpleContent()) {
             String otherStr = ScriptRuntime.toString(target);
-
             result = toString().equals(otherStr);
         }
         return result;
@@ -1002,6 +1002,16 @@ public class XML extends XMLObjectImpl {
         if (nodeToReplace.getOMNode() != null) {
             axiomNode.insertChild(nodeToReplace, nodeToAdd, AxiomNode.PREPEND_CHILD);
             nodeToReplace.detach();
+        }
+    }
+
+    public void replaceAll(XML targetXML){
+        AxiomNode targetNode = AxiomNode.buildAxiomNode(targetXML.getAxiomNode().cloneOMNode(),axiomNode.getParentNode());
+
+        if(axiomNode.getOMNode()!=null){
+            axiomNode.insertChild(axiomNode,targetNode, AxiomNode.PREPEND_CHILD);
+            axiomNode.detach();
+            this.axiomNode = targetNode;
         }
     }
 }
