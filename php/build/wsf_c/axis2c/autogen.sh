@@ -7,14 +7,6 @@ echo 'Running autogen.sh in Axiom'
 cd ../axiom
 sh autogen.sh
 
-echo 'Running autogen.sh in Xml_schema'
-cd ../xml_schema
-sh autogen.sh
-
-echo 'Running autogen.sh in Woden'
-cd ../woden
-sh autogen.sh
-
 echo 'Running autogen.sh in Guththila'
 cd ../guththila
 sh autogen.sh

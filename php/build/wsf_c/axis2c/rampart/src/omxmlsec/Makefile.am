@@ -12,7 +12,6 @@ libomxmlsec_la_LIBADD  = -lssl\
 			${AXIS2C_HOME}/lib \
 			tokens/liboxstokens.la \
 			openssl/libomopenssl.la \
-			c14n/liboxsc14n.la \
 			-lcrypto 
 
 INCLUDES = -I$(top_builddir)/include \
