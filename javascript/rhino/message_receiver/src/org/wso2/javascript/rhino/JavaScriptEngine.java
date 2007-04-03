@@ -151,9 +151,18 @@ public class JavaScriptEngine extends ImporterTopLevel {
             cx.evaluateString(this, (String) args, "Get JSON", 0, null);
             args = this.get("x", this);
         } else {
-            args = "var x = new XML(" + args + ");";
-            cx.evaluateString(this, (String)args, "Get E4X", 0, null);
-            args = this.get("x", this);
+            String sourceStr = "function convertToXML(inputPara){ var x = new XML(inputPara);return x;}";
+            cx.evaluateString(this, sourceStr, "Get E4X", 0, null);
+
+            // Get the function from the scope the javascript object is in
+            Object fObj = this.get("convertToXML", this);
+            if (!(fObj instanceof Function) || (fObj == Scriptable.NOT_FOUND)) {
+                throw new AxisFault("Method " + method + " is undefined or not a function");
+            } else {
+                Object functionArgs[] = {args};
+                Function f = (Function) fObj;
+                args = f.call(cx, this, this, functionArgs);
+            }
         }
 
 
