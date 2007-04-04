@@ -1567,10 +1567,10 @@ PHP_METHOD(ws_service , reply)
             if(NULL != svc_info->modules_to_engage)
             {
                 int i = 0;
-                int size = axis2_array_list_size(svc_info->modules_to_engage, ws_env_svr);
+                int size = axutil_array_list_size(svc_info->modules_to_engage, ws_env_svr);
                 for(i = 0; i < size; i++)
                 {
-                    axis2_char_t *mod_name = (axis2_char_t *)axis2_array_list_get(svc_info->modules_to_engage,
+                    axis2_char_t *mod_name = (axis2_char_t *)axutil_array_list_get(svc_info->modules_to_engage,
                                              ws_env_svr, i);
 
                     ws_util_engage_module(conf, mod_name, ws_env_svr, svc_info->svc);
