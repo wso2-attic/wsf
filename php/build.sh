@@ -21,13 +21,14 @@ cp build/wsf_c/sandesha2c/src/msgprocessors/Makefile.am wsf_c/sandesha2c/src/msg
 cp build/wsf_c/sandesha2c/src/polling/Makefile.am wsf_c/sandesha2c/src/polling
 cp build/wsf_c/sandesha2c/src/workers/Makefile.am wsf_c/sandesha2c/src/workers
 cp build/wsf_c/sandesha2c/autogen.sh wsf_c/sandesha2c
+cp build/wsf_c/axis2c/autogen.sh wsf_c/axis2c
 
 
 cp build/wsf_c/axis2c/configure.ac wsf_c/axis2c
 cp build/wsf_c/axis2c/autogen.sh wsf_c/axis2c
 cp build/wsf_c/axis2c/rampart/src/omxmlsec/tokens/Makefile.am wsf_c/axis2c/rampart/src/omxmlsec/tokens
 cp build/wsf_c/axis2c/rampart/src/omxmlsec/openssl/Makefile.am wsf_c/axis2c/rampart/src/omxmlsec/openssl
-cp build/wsf_c/axis2c/rampart/src/omxmlsec/openssl/Makefile.am wsf_c/axis2c/rampart/src/omxmlsec/c14n
+cp build/wsf_c/axis2c/rampart/src/omxmlsec/c14n/Makefile.am wsf_c/axis2c/rampart/src/omxmlsec/c14n
 cp build/wsf_c/axis2c/rampart/src/secpolicy/model/Makefile.am wsf_c/axis2c/rampart/src/secpolicy/model
 cp build/wsf_c/axis2c/rampart/src/secpolicy/builder/Makefile.am wsf_c/axis2c/rampart/src/secpolicy/builder
 cp build/wsf_c/axis2c/rampart/src/handlers/Makefile.am wsf_c/axis2c/rampart/src/handlers
