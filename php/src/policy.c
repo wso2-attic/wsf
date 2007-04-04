@@ -18,9 +18,9 @@
 #include <axis2_addr.h>
 #include "wsf.h"
 #include "wsf_util.h"
-#include <axis2_error_default.h>
-#include <axis2_log_default.h>
-#include <axis2_uuid_gen.h>
+#include <axutil_error_default.h>
+#include <axutil_log_default.h>
+#include <axutil_uuid_gen.h>
 #include <axiom_util.h>
 #include "wsf_policy.h"
 #include <axiom.h>
@@ -33,57 +33,57 @@
 
 int set_security_policy_options(zval *policy_obj,
                                 zval **tmp,
-                                const axis2_env_t *env TSRMLS_DC);
+                                const axutil_env_t *env TSRMLS_DC);
 
 axiom_node_t *
-create_policy_node(const axis2_env_t *env,
+create_policy_node(const axutil_env_t *env,
                    axiom_node_t *node );
 
 axiom_node_t *
-create_initiator_token(const axis2_env_t *env,
+create_initiator_token(const axutil_env_t *env,
                        axiom_node_t *node,
                        zval **optionVal TSRMLS_DC);
 
 axiom_node_t *
-create_recipient_token(const axis2_env_t *env,
+create_recipient_token(const axutil_env_t *env,
                        axiom_node_t *node,
                        zval **optionVal TSRMLS_DC);
 
 axiom_node_t*
-create_algorithm_suite(const axis2_env_t *env,
+create_algorithm_suite(const axutil_env_t *env,
                        axiom_node_t *node,
                        zval **optionVal TSRMLS_DC);
 
 axiom_node_t *
-create_sign_parts(const axis2_env_t *env,
+create_sign_parts(const axutil_env_t *env,
                   axiom_node_t *parent_node,
                   zval **tmp TSRMLS_DC);
 
 axiom_node_t *
-create_encrypt_parts(const axis2_env_t *env,
+create_encrypt_parts(const axutil_env_t *env,
                      axiom_node_t *parent_node,
                      zval **tmp TSRMLS_DC);
 
 axiom_node_t *
-create_layout(const axis2_env_t *env,
+create_layout(const axutil_env_t *env,
               axiom_node_t *node,
               zval **optionVal TSRMLS_DC);
 
 axiom_node_t *
-create_default_sign(const axis2_env_t *env,
+create_default_sign(const axutil_env_t *env,
                     axiom_node_t *node TSRMLS_DC);
 
 axiom_node_t *
-create_default_encrypt(const axis2_env_t *env,
+create_default_encrypt(const axutil_env_t *env,
                        axiom_node_t *node);
 
 axiom_node_t *
-create_username_token(const axis2_env_t *env,
+create_username_token(const axutil_env_t *env,
                       axiom_node_t *parent_node,
                       zval **tmp TSRMLS_DC);
 
 axiom_node_t *
-create_token_reference(const axis2_env_t *env,
+create_token_reference(const axutil_env_t *env,
                        axiom_node_t *parent_node,
                        zval **tmp TSRMLS_DC);
 
@@ -110,29 +110,29 @@ typedef struct tokenProperties {
 tokenProperties_t;
 
 axis2_char_t * AXIS2_CALL
-password_provider_function(const axis2_env_t *env,
+password_provider_function(const axutil_env_t *env,
                            const axis2_char_t *username,
                            void *ctx);
 
 tokenProperties_t set_tmp_rampart_options(tokenProperties_t tmp_rampart_ctx,
         zval *sec_token,
         zval *policy,
-        axis2_env_t *env TSRMLS_DC);
+        axutil_env_t *env TSRMLS_DC);
 
 int set_options_to_rampart_ctx(rampart_context_t *in_rampart_ctx,
-                               axis2_env_t *env,
+                               axutil_env_t *env,
                                axiom_node_t *incoming_policy_node,
                                tokenProperties_t tmp_rampart_ctx);
 
 
 axiom_node_t *do_create_policy(zval *sec_token,
                                zval *policy,
-                               axis2_env_t *env TSRMLS_DC);
+                               axutil_env_t *env TSRMLS_DC);
 
 
 int ws_policy_handle_client_security(zval *sec_token,
                                      zval *policy,
-                                     axis2_env_t *env,
+                                     axutil_env_t *env,
                                      axis2_svc_client_t *svc_client TSRMLS_DC) 
 {
     axiom_node_t *outgoing_policy_node = NULL;
@@ -149,8 +149,8 @@ int ws_policy_handle_client_security(zval *sec_token,
 
     axis2_svc_ctx_t *svc_ctx = NULL;
     axis2_svc_t *svc = NULL;
-    axis2_param_t *inflow_param = NULL;
-    axis2_param_t *outflow_param = NULL;
+    axutil_param_t *inflow_param = NULL;
+    axutil_param_t *outflow_param = NULL;
     
     char *policy_xml = NULL;
 
@@ -229,8 +229,8 @@ int ws_policy_handle_client_security(zval *sec_token,
     svc_ctx = axis2_svc_client_get_svc_ctx(svc_client, env);
     svc = axis2_svc_ctx_get_svc(svc_ctx, env);
 
-    inflow_param = axis2_param_create(env, WS_INFLOW_SECURITY_POLICY, (void *)in_rampart_ctx) ;
-    outflow_param = axis2_param_create(env, WS_OUTFLOW_SECURITY_POLICY, (void *)out_rampart_ctx);
+    inflow_param = axutil_param_create(env, WS_INFLOW_SECURITY_POLICY, (void *)in_rampart_ctx) ;
+    outflow_param = axutil_param_create(env, WS_OUTFLOW_SECURITY_POLICY, (void *)out_rampart_ctx);
 
     axis2_svc_add_param(svc, env, inflow_param);
     axis2_svc_add_param(svc, env, outflow_param);
@@ -258,7 +258,7 @@ int ws_policy_handle_client_security(zval *sec_token,
 
 int ws_policy_handle_server_security(zval *sec_token,
                                      zval *policy,
-                                     axis2_env_t *env,
+                                     axutil_env_t *env,
                                      axis2_svc_t *svc,
                                      axis2_conf_t  *conf TSRMLS_DC)
 {
@@ -274,8 +274,8 @@ int ws_policy_handle_server_security(zval *sec_token,
 
     tokenProperties_t tmp_rampart_ctx;
 
-    axis2_param_t *inflow_param = NULL;
-    axis2_param_t *outflow_param = NULL;
+    axutil_param_t *inflow_param = NULL;
+    axutil_param_t *outflow_param = NULL;
 
     char *policy_xml = NULL;
 
@@ -357,8 +357,8 @@ int ws_policy_handle_server_security(zval *sec_token,
 
 
 
-    inflow_param = axis2_param_create(env, WS_INFLOW_SECURITY_POLICY, (void *)in_rampart_ctx) ;
-    outflow_param = axis2_param_create(env, WS_OUTFLOW_SECURITY_POLICY, (void *)out_rampart_ctx);
+    inflow_param = axutil_param_create(env, WS_INFLOW_SECURITY_POLICY, (void *)in_rampart_ctx) ;
+    outflow_param = axutil_param_create(env, WS_OUTFLOW_SECURITY_POLICY, (void *)out_rampart_ctx);
 
 
     /** set inflow and outflow params to svc */
@@ -389,7 +389,7 @@ int ws_policy_handle_server_security(zval *sec_token,
 tokenProperties_t  set_tmp_rampart_options(tokenProperties_t tmp_rampart_ctx,
         zval *sec_token,
         zval *policy,
-        axis2_env_t *env TSRMLS_DC)
+        axutil_env_t *env TSRMLS_DC)
 {
     HashTable *ht_policy = NULL;
     HashTable *ht_token = NULL;
@@ -457,7 +457,7 @@ tokenProperties_t  set_tmp_rampart_options(tokenProperties_t tmp_rampart_ctx,
 }
 
 int set_options_to_rampart_ctx(rampart_context_t *x_rampart_ctx,
-                               axis2_env_t *env,
+                               axutil_env_t *env,
                                axiom_node_t *x_policy_node,
                                tokenProperties_t token_ctx)
 {
@@ -518,7 +518,7 @@ int set_options_to_rampart_ctx(rampart_context_t *x_rampart_ctx,
 
 axiom_node_t *do_create_policy(zval *sec_token,
                                zval *policy,
-                               axis2_env_t *env TSRMLS_DC)
+                               axutil_env_t *env TSRMLS_DC)
 {
     axiom_node_t *root_om_node = NULL;
     axiom_node_t* exact_om_node = NULL;
@@ -667,7 +667,7 @@ axiom_node_t *do_create_policy(zval *sec_token,
 }
 
 axiom_node_t *
-create_policy_node(const axis2_env_t *env,
+create_policy_node(const axutil_env_t *env,
                    axiom_node_t *parent_om_node) 
 {
     axiom_node_t *policy_om_node = NULL;
@@ -684,7 +684,7 @@ create_policy_node(const axis2_env_t *env,
 
 
 axiom_node_t *
-create_initiator_token(const axis2_env_t *env,
+create_initiator_token(const axutil_env_t *env,
                        axiom_node_t *parent_om_node,
                        zval **tmp TSRMLS_DC)
 {
@@ -756,7 +756,7 @@ create_initiator_token(const axis2_env_t *env,
 /** for encryption part of the policy file */
 
 axiom_node_t *
-create_recipient_token(const axis2_env_t *env,
+create_recipient_token(const axutil_env_t *env,
                        axiom_node_t *parent_om_node,
                        zval **tmp TSRMLS_DC) 
 {
@@ -825,7 +825,7 @@ create_recipient_token(const axis2_env_t *env,
 
 
 axiom_node_t *
-create_algorithm_suite(const axis2_env_t *env,
+create_algorithm_suite(const axutil_env_t *env,
                        axiom_node_t *parent_node,
                        zval **tmp TSRMLS_DC) 
 {
@@ -861,7 +861,7 @@ create_algorithm_suite(const axis2_env_t *env,
 /* this function is called if only user want to sign the xml
  * message.Now only we have only default case "OnlySignEntireHeadersAndBody */
 axiom_node_t *
-create_sign_parts(const axis2_env_t *env,
+create_sign_parts(const axutil_env_t *env,
                   axiom_node_t *parent_node,
                   zval **tmp TSRMLS_DC)
 {
@@ -875,7 +875,7 @@ create_sign_parts(const axis2_env_t *env,
 }
 
 axiom_node_t *
-create_encrypt_parts(const axis2_env_t *env,
+create_encrypt_parts(const axutil_env_t *env,
                      axiom_node_t *parent_node,
                      zval **tmp TSRMLS_DC)
 {
@@ -891,7 +891,7 @@ create_encrypt_parts(const axis2_env_t *env,
 
 
 axiom_node_t *
-create_layout(const axis2_env_t *env,
+create_layout(const axutil_env_t *env,
               axiom_node_t *parent_node,
               zval **tmp TSRMLS_DC)
 {
@@ -909,7 +909,7 @@ create_layout(const axis2_env_t *env,
 }
 
 axiom_node_t *
-create_default_sign(const axis2_env_t *env,
+create_default_sign(const axutil_env_t *env,
                     axiom_node_t *parent_node TSRMLS_DC)
 {
     zval *test;
@@ -920,7 +920,7 @@ create_default_sign(const axis2_env_t *env,
 }
 
 axiom_node_t *
-create_default_encrypt(const axis2_env_t *env,
+create_default_encrypt(const axutil_env_t *env,
                        axiom_node_t *parent_node TSRMLS_DC)
 {
     zval *test;
@@ -931,7 +931,7 @@ create_default_encrypt(const axis2_env_t *env,
 }
 
 axiom_node_t *
-create_username_token(const axis2_env_t *env,
+create_username_token(const axutil_env_t *env,
                       axiom_node_t *parent_node,
                       zval **tmp TSRMLS_DC)
 {
@@ -958,7 +958,7 @@ create_username_token(const axis2_env_t *env,
 char * get_sec_token_Value(char *token_name);
 
 axiom_node_t *
-create_token_reference(const axis2_env_t *env,
+create_token_reference(const axutil_env_t *env,
                        axiom_node_t *parent_node,
                        zval **tmp TSRMLS_DC)
 {
@@ -1010,7 +1010,7 @@ char * get_sec_token_Value(char *token_name)
 
 int ws_policy_set_policy_options(zval *this_ptr,
                                  zval *property,
-                                 const axis2_env_t *env TSRMLS_DC)
+                                 const axutil_env_t *env TSRMLS_DC)
 {
 
     zval **tmp = NULL;
@@ -1044,7 +1044,7 @@ int ws_policy_set_policy_options(zval *this_ptr,
 
 int set_security_policy_options(zval *policy_obj,
                                 zval **sec_options,
-                                const axis2_env_t *env TSRMLS_DC)
+                                const axutil_env_t *env TSRMLS_DC)
 {
     HashTable *ht_sec = NULL;
     zval **sec_prop = NULL;
@@ -1150,7 +1150,7 @@ return AXIS2_SUCCESS;
 }
 
 axis2_char_t* AXIS2_CALL
-password_provider_function(const axis2_env_t *env, const axis2_char_t *username, void *ctx)
+password_provider_function(const axutil_env_t *env, const axis2_char_t *username, void *ctx)
 {
     zval func, param1, retval;
     zval *params[1];

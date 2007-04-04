@@ -193,12 +193,12 @@ typedef enum ws_input_types{
 typedef struct ws_svc_info {
     axis2_svc_t *svc;
     axis2_msg_recv_t *msg_recv;
-    axis2_hash_t *class_info;
+    axutil_hash_t *class_info;
     struct wsf_worker_t *php_worker;
 
-    axis2_hash_t *ops_to_actions;
-    axis2_hash_t *ops_to_functions;
-    axis2_array_list_t *modules_to_engage;
+    axutil_hash_t *ops_to_actions;
+    axutil_hash_t *ops_to_functions;
+    axutil_array_list_t *modules_to_engage;
 
     int request_xop;
     int use_mtom;

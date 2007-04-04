@@ -18,7 +18,7 @@
 #define WSF_STREAM_H
 
 #include "wsf_common.h"
-#include <axis2_stream.h>
+#include <axutil_stream.h>
 #include <axis2_defines.h>
 
 #ifdef __cplusplus
@@ -26,8 +26,8 @@ extern "C"
 {
 #endif
 
-WSF_PHP_API axis2_stream_t * WSF_CALL 
-axis2_stream_create_php(const axis2_env_t *env, 
+WSF_PHP_API axutil_stream_t * WSF_CALL 
+axis2_stream_create_php(const axutil_env_t *env, 
         wsf_req_info_t *req TSRMLS_DC);
 
 #ifdef __cplusplus

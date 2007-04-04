@@ -16,18 +16,18 @@
 
 #include "php.h"
 #include "zend_exceptions.h"
-#include <axis2_dll_desc.h>
+#include <axutil_dll_desc.h>
 #include <axis2_msg_recv.h>
-#include <axis2_class_loader.h>
+#include <axutil_class_loader.h>
 #include "wsf_worker.h"
 #include "wsf_xml_msg_recv.h"
 #include <axis2_http_transport.h>
 #include <axis2_addr.h>
 #include "wsf.h"
 #include "wsf_util.h"
-#include <axis2_error_default.h>
-#include <axis2_log_default.h>
-#include <axis2_uuid_gen.h>
+#include <axutil_error_default.h>
+#include <axutil_log_default.h>
+#include <axutil_uuid_gen.h>
 #include <axiom_util.h>
 
 xmlNodePtr wsf_util_get_xml_node(zval *node TSRMLS_DC)
@@ -81,7 +81,7 @@ wsf_util_read_file_to_buffer(char *filename TSRMLS_DC)
 }
 
 axiom_node_t* 
-wsf_util_construct_header_node(const axis2_env_t *env, 
+wsf_util_construct_header_node(const axutil_env_t *env, 
    			       zval *header TSRMLS_DC)
 {
 	char *ns = NULL;
@@ -163,7 +163,7 @@ wsf_util_construct_header_node(const axis2_env_t *env,
 
 /* {{{ efree wrapper */
 static void WSF_CALL 
-wsf_free_wrapper_cli(axis2_allocator_t *allocator, 
+wsf_free_wrapper_cli(axutil_allocator_t *allocator, 
 					  void *ptr)
 {	
 	if(ptr)
@@ -173,7 +173,7 @@ wsf_free_wrapper_cli(axis2_allocator_t *allocator,
 
 /* {{{ malloc wrapper */
 static void* WSF_CALL  
-wsf_malloc_wrapper_cli(axis2_allocator_t *allocator,
+wsf_malloc_wrapper_cli(axutil_allocator_t *allocator,
 		      size_t size)
 {
     return pemalloc(size, 1);
@@ -181,7 +181,7 @@ wsf_malloc_wrapper_cli(axis2_allocator_t *allocator,
 /* }}} */
 /* {{{ realloc wrapper */
 static void* WSF_CALL  
-wsf_realloc_warpper_cli(axis2_allocator_t *allocator,void *ptr, 
+wsf_realloc_warpper_cli(axutil_allocator_t *allocator,void *ptr, 
 		        size_t size)
 {
     return perealloc(ptr, size,1);
@@ -190,7 +190,7 @@ wsf_realloc_warpper_cli(axis2_allocator_t *allocator,void *ptr,
 
 /* {{{ malloc wrapper */
 static void* WSF_CALL  
-wsf_malloc_wrapper(axis2_allocator_t *allocator,
+wsf_malloc_wrapper(axutil_allocator_t *allocator,
 		   size_t size)
 {
     return pemalloc(size,1);
@@ -198,7 +198,7 @@ wsf_malloc_wrapper(axis2_allocator_t *allocator,
 /* }}} */
 /* {{{ realloc wrapper */
 static void* WSF_CALL  
-wsf_realloc_warpper(axis2_allocator_t *allocator,
+wsf_realloc_warpper(axutil_allocator_t *allocator,
 		    void *ptr, 
                     size_t size)
 {
@@ -207,7 +207,7 @@ wsf_realloc_warpper(axis2_allocator_t *allocator,
 /* }}} */
 /* {{{ free wrapper */
 static  void WSF_CALL 
-wsf_free_wrapper(axis2_allocator_t *allocator, 
+wsf_free_wrapper(axutil_allocator_t *allocator, 
                  void *ptr)
 {
 	if (ptr)
@@ -216,22 +216,22 @@ wsf_free_wrapper(axis2_allocator_t *allocator,
 /* }}} */
 
 /* {{{ axis2_environment create function */
-axis2_env_t* wsf_env_create(axis2_char_t *path_tolog)
+axutil_env_t* wsf_env_create(axis2_char_t *path_tolog)
 {
-    axis2_allocator_t *allocator = NULL;
-    axis2_error_t *error = NULL;
-    axis2_log_t *log = NULL;
+    axutil_allocator_t *allocator = NULL;
+    axutil_error_t *error = NULL;
+    axutil_log_t *log = NULL;
     axis2_char_t log_path[250];
-    axis2_env_t *env = NULL;
-    axis2_thread_pool_t *thread_pool = NULL;
+    axutil_env_t *env = NULL;
+    axutil_thread_pool_t *thread_pool = NULL;
 	const axis2_char_t *LOG_NAME = "wsf.log";
-    allocator = pemalloc(sizeof(axis2_allocator_t), 1);
+    allocator = pemalloc(sizeof(axutil_allocator_t), 1);
     
     allocator->free_fn = wsf_free_wrapper_cli;
     allocator->malloc_fn = wsf_malloc_wrapper_cli;
     allocator->realloc = wsf_realloc_warpper_cli;
     
-    error = axis2_error_create(allocator);
+    error = axutil_error_create(allocator);
     if (path_tolog && (
 	        (0 == strcmp(path_tolog, ""))   || 
 		(0 == strcmp(path_tolog, "."))  ||
@@ -241,29 +241,29 @@ axis2_env_t* wsf_env_create(axis2_char_t *path_tolog)
 		snprintf(log_path, 256, "%s/%s", path_tolog, LOG_NAME);
 	}
 
-    thread_pool = axis2_thread_pool_init(allocator);
-    log = axis2_log_create(allocator, NULL, log_path);
-    env = axis2_env_create_with_error_log_thread_pool(allocator, error, log, thread_pool);
+    thread_pool = axutil_thread_pool_init(allocator);
+    log = axutil_log_create(allocator, NULL, log_path);
+    env = axutil_env_create_with_error_log_thread_pool(allocator, error, log, thread_pool);
     return env;
 }
 /* }}} */
 /* {{{ axis2_environment create function */
-axis2_env_t* wsf_env_create_svr(axis2_char_t *path_tolog)
+axutil_env_t* wsf_env_create_svr(axis2_char_t *path_tolog)
 {
-    axis2_allocator_t *allocator = NULL;
-    axis2_error_t *error = NULL;
-    axis2_log_t *log = NULL;
+    axutil_allocator_t *allocator = NULL;
+    axutil_error_t *error = NULL;
+    axutil_log_t *log = NULL;
     axis2_char_t log_path[250];
-    axis2_env_t *env = NULL;
-    axis2_thread_pool_t *thread_pool = NULL;
+    axutil_env_t *env = NULL;
+    axutil_thread_pool_t *thread_pool = NULL;
 	const axis2_char_t *LOG_NAME = "wsf_svr.log";
-    allocator = pemalloc(sizeof(axis2_allocator_t), 1);
+    allocator = pemalloc(sizeof(axutil_allocator_t), 1);
     
     allocator->free_fn = wsf_free_wrapper;
     allocator->malloc_fn = wsf_malloc_wrapper;
     allocator->realloc = wsf_realloc_warpper;
     
-    error = axis2_error_create(allocator);
+    error = axutil_error_create(allocator);
     if (path_tolog && (
         	(0 == strcmp(path_tolog, "")) || 
 		(0 == strcmp(path_tolog, ".")) ||
@@ -273,14 +273,14 @@ axis2_env_t* wsf_env_create_svr(axis2_char_t *path_tolog)
 		snprintf(log_path, 256, "%s/%s", path_tolog, LOG_NAME);
 	}
 
-    thread_pool = axis2_thread_pool_init(allocator);
-    log = axis2_log_create(allocator, NULL, log_path);
-    env = axis2_env_create_with_error_log_thread_pool(allocator, error, log, thread_pool);
+    thread_pool = axutil_thread_pool_init(allocator);
+    log = axutil_log_create(allocator, NULL, log_path);
+    env = axutil_env_create_with_error_log_thread_pool(allocator, error, log, thread_pool);
     return env;
 }
 /* }}} */
 
-void wsf_env_free(axis2_env_t *env){
+void wsf_env_free(axutil_env_t *env){
 
 }
 
@@ -371,7 +371,7 @@ void wsf_php_req_info_free(wsf_req_info_t *req_info)
 /* {{{ ws_read_payload */
 axiom_node_t* ws_util_read_payload(
     axiom_xml_reader_t *reader, 
-    axis2_env_t *env)
+    axutil_env_t *env)
 {
 	axiom_stax_builder_t *builder = NULL;
 	axiom_document_t *document = NULL;
@@ -399,7 +399,7 @@ axiom_node_t* ws_util_read_payload(
 }
 /* }}} ws_read_payload */
 
-char*wsf_util_get_ttl(char *buf, axis2_env_t *env)
+char*wsf_util_get_ttl(char *buf, axutil_env_t *env)
 {
     char *tmp_string = NULL;
     char *day = NULL;
@@ -468,7 +468,7 @@ char*wsf_util_get_ttl(char *buf, axis2_env_t *env)
 
 axis2_char_t *ws_util_get_soap_msg_from_op_client(
     axis2_op_client_t *op_client,
-    axis2_env_t *env, 
+    axutil_env_t *env, 
 	axis2_wsdl_msg_labels_t msg_label)
 {
     /* if(op_client && msg_label) */
@@ -492,41 +492,41 @@ axis2_char_t *ws_util_get_soap_msg_from_op_client(
 
 
 /** load message receiver */
-axis2_msg_recv_t* load_msg_recv(axis2_env_t *env, axis2_char_t *home)
+axis2_msg_recv_t* load_msg_recv(axutil_env_t *env, axis2_char_t *home)
 {
  /* msg_receiver default location is home/lib */
 	axis2_msg_recv_t *msg_recv = NULL;
-	axis2_dll_desc_t *dll_desc = NULL;
+	axutil_dll_desc_t *dll_desc = NULL;
 	axis2_char_t *repos_name = NULL;
 	axis2_char_t *dll_name = NULL;
 	axis2_char_t *temp_path = NULL;
 	axis2_char_t *temp_path2 = NULL;
 	axis2_char_t *temp_path3 = NULL;
 	axis2_char_t *msg_recv_dll_name = NULL;
-	axis2_param_t *impl_info_param = NULL;
+	axutil_param_t *impl_info_param = NULL;
 		
-	dll_desc = axis2_dll_desc_create(env);
+	dll_desc = axutil_dll_desc_create(env);
 	msg_recv_dll_name = 
-    axis2_dll_desc_create_platform_specific_dll_name(dll_desc, env,
+    axutil_dll_desc_create_platform_specific_dll_name(dll_desc, env,
                                                "ws_xml_msg_recv");
 	repos_name = home;
 	
-	temp_path = axis2_stracat(env, repos_name, AXIS2_PATH_SEP_STR);
-	temp_path2 = axis2_stracat(env, temp_path, "lib");
-	temp_path3 = axis2_stracat(env, temp_path2, AXIS2_PATH_SEP_STR);
-	dll_name = axis2_stracat(env, temp_path3, msg_recv_dll_name);
-	axis2_dll_desc_set_name(dll_desc, env, dll_name);
-	axis2_dll_desc_set_type(dll_desc, env, AXIS2_MSG_RECV_DLL);
+	temp_path = axutil_stracat(env, repos_name, AXIS2_PATH_SEP_STR);
+	temp_path2 = axutil_stracat(env, temp_path, "lib");
+	temp_path3 = axutil_stracat(env, temp_path2, AXIS2_PATH_SEP_STR);
+	dll_name = axutil_stracat(env, temp_path3, msg_recv_dll_name);
+	axutil_dll_desc_set_name(dll_desc, env, dll_name);
+	axutil_dll_desc_set_type(dll_desc, env, AXIS2_MSG_RECV_DLL);
 	
-	impl_info_param = axis2_param_create(env, NULL , NULL);
+	impl_info_param = axutil_param_create(env, NULL , NULL);
 	if(!impl_info_param)
 	{
 		return NULL;
 	}
-	axis2_param_set_value(impl_info_param, env, dll_desc);
-	axis2_class_loader_init(env);
+	axutil_param_set_value(impl_info_param, env, dll_desc);
+	axutil_class_loader_init(env);
 	
-	msg_recv = (axis2_msg_recv_t *) axis2_class_loader_create_dll(env, 
+	msg_recv = (axis2_msg_recv_t *) axutil_class_loader_create_dll(env, 
 		impl_info_param);
 	return msg_recv;
 }
@@ -534,15 +534,15 @@ axis2_msg_recv_t* load_msg_recv(axis2_env_t *env, axis2_char_t *home)
 int ws_util_engage_module(
     axis2_conf_t *conf, 
     axis2_char_t *module_name, 
-    axis2_env_t *env, 
+    axutil_env_t *env, 
     axis2_svc_t *svc)
 {
     axis2_module_desc_t *module = NULL;
-    axis2_qname_t *mod_qname = NULL;
+    axutil_qname_t *mod_qname = NULL;
 	axis2_phase_resolver_t *phase_resolver = NULL;
 	int status = 0;
 	
-    mod_qname = axis2_qname_create(env, module_name, NULL, NULL);
+    mod_qname = axutil_qname_create(env, module_name, NULL, NULL);
     module = axis2_conf_get_module(conf, env, mod_qname);
     if (module){
         status = axis2_svc_engage_module(svc, env, module, conf);
@@ -563,7 +563,7 @@ int ws_util_engage_module(
 char* ws_util_generate_svc_name_from_uri(
     char *req_uri, 
     ws_svc_info_t *svc_info,
-    axis2_env_t *env)
+    axutil_env_t *env)
 {
 	char *svc_name = NULL;
 	char *temp_string = NULL;
@@ -586,10 +586,10 @@ char* ws_util_generate_svc_name_from_uri(
 		index = index +4;
 		op_index = index +1;
 		temp_string[index - temp_string] ='\0';
-		svc_info->op_name = axis2_strdup(env, op_index);
+		svc_info->op_name = axutil_strdup(env, op_index);
 	}
 	
-	svc_name = axis2_replace(env, temp_string, '/',':');
+	svc_name = axutil_replace(env, temp_string, '/',':');
 	
 	efree(temp_string);
 	
@@ -599,9 +599,9 @@ char* ws_util_generate_svc_name_from_uri(
 /* create service */
 void ws_util_create_svc_from_svc_info(
     ws_svc_info_t *svc_info, 
-    axis2_env_t *env TSRMLS_DC)
+    axutil_env_t *env TSRMLS_DC)
 {
-	axis2_qname_t *svc_qname = NULL;
+	axutil_qname_t *svc_qname = NULL;
 	axis2_svc_t *svc = NULL;
 	axis2_conf_t *conf = NULL;
 	axis2_conf_ctx_t *conf_ctx = NULL;
@@ -625,7 +625,7 @@ void ws_util_create_svc_from_svc_info(
 	}
 	else {
 	
-	svc_qname = axis2_qname_create(env, svc_info->svc_name, NULL, NULL);
+	svc_qname = axutil_qname_create(env, svc_info->svc_name, NULL, NULL);
 	svc_info->svc = axis2_svc_create_with_qname(env, svc_qname);
 	} 
 	return;
@@ -634,14 +634,14 @@ void ws_util_create_svc_from_svc_info(
 void ws_util_create_op_and_add_to_svc(
     ws_svc_info_t *svc_info, 
     char *action,
-    axis2_env_t *env,
+    axutil_env_t *env,
     char *op_name TSRMLS_DC)
 {
 	axis2_svc_t *svc = NULL;
 	axis2_op_t *op = NULL;
-	axis2_qname_t *op_qname = NULL;
+	axutil_qname_t *op_qname = NULL;
     
-	op_qname = axis2_qname_create(env, op_name, NULL, NULL);
+	op_qname = axutil_qname_create(env, op_name, NULL, NULL);
 	svc = svc_info->svc;
 	
 	if(NULL != svc && NULL != op_name)
@@ -653,7 +653,7 @@ void ws_util_create_op_and_add_to_svc(
             axis2_conf_ctx_t *conf_ctx = NULL;
             axis2_phases_info_t *info = NULL;
         
-            op_qname = axis2_qname_create(env, op_name, NULL, NULL);
+            op_qname = axutil_qname_create(env, op_name, NULL, NULL);
     	
     	    op = axis2_op_create_with_qname(env, op_qname);
 		
@@ -667,14 +667,14 @@ void ws_util_create_op_and_add_to_svc(
             axis2_phases_info_set_op_phases(info, env, op);
             axis2_svc_add_op(svc_info->svc, env, op);
             if(action){
-                axis2_svc_add_mapping(svc_info->svc, env, axis2_strdup(env, action), op);
+                axis2_svc_add_mapping(svc_info->svc, env, axutil_strdup(env, action), op);
             }                
         }
 	}		
 	return;
 }
 
-void wsf_util_set_attachments_with_cids(const axis2_env_t *env,
+void wsf_util_set_attachments_with_cids(const axutil_env_t *env,
         int enable_mtom , axiom_node_t *payload_node,
         HashTable *attach_ht, char *default_cnt_type TSRMLS_DC)
 {
@@ -699,11 +699,11 @@ void wsf_util_set_attachments_with_cids(const axis2_env_t *env,
 				axis2_char_t *ns_uri = NULL;
 				axis2_char_t *ele_localname = NULL;
 				ele_localname = axiom_element_get_localname(ele, env);
-				if(ele_localname && axis2_strcmp(ele_localname, "Include") == 0)
+				if(ele_localname && axutil_strcmp(ele_localname, "Include") == 0)
 				{
 					ns = axiom_element_get_namespace(ele, env, node);
 					if(ns && (ns_uri = axiom_namespace_get_uri(ns, env)) &&
-						axis2_strcmp(ns_uri, "http://www.w3.org/2004/08/xop/include") == 0)
+						axutil_strcmp(ns_uri, "http://www.w3.org/2004/08/xop/include") == 0)
 					{
 						axis2_char_t *cnt_type = NULL;
 						/* found a matching xop include element */
@@ -720,7 +720,7 @@ void wsf_util_set_attachments_with_cids(const axis2_env_t *env,
 						id = axiom_element_get_attribute_value_by_name(ele, env, "href");
 						if(!id)
 							return;
-						pos = axis2_strstr(id, "cid:");
+						pos = axutil_strstr(id, "cid:");
 						if(pos){
 							cid = id+4;
 							if(zend_hash_find(attach_ht , cid, strlen(cid)+1, (void**)&tmp) == SUCCESS &&
@@ -741,7 +741,7 @@ void wsf_util_set_attachments_with_cids(const axis2_env_t *env,
 									axiom_data_handler_t *data_handler = NULL;
 									axiom_node_detach(node, env);
 									data_handler = axiom_data_handler_create(env, NULL, cnt_type);
-									AXIOM_DATA_HANDLER_SET_BINARY_DATA(data_handler, env, binary_data, binary_data_len);
+									axiom_data_handler_set_binary_data(data_handler, env, binary_data, binary_data_len);
 									text = axiom_text_create_with_data_handler(env, payload_node, data_handler, &text_node);
 	                                
 									if (enable_mtom == AXIS2_FALSE){
@@ -765,7 +765,7 @@ void wsf_util_set_attachments_with_cids(const axis2_env_t *env,
     return;    
 }        
 
-void wsf_util_get_attachments(const axis2_env_t *env,
+void wsf_util_get_attachments(const axutil_env_t *env,
         axiom_node_t *payload_node, zval *cid2str,zval *cid2contentType TSRMLS_DC)
 {
     axiom_node_t *node = NULL;
@@ -783,11 +783,11 @@ void wsf_util_get_attachments(const axis2_env_t *env,
             axis2_char_t *ns_uri = NULL;
             axis2_char_t *ele_localname = NULL;
             ele_localname = axiom_element_get_localname(ele, env);
-            if(ele_localname && axis2_strcmp(ele_localname, "Include") == 0)
+            if(ele_localname && axutil_strcmp(ele_localname, "Include") == 0)
             {
                 ns = axiom_element_get_namespace(ele, env, node);
                 if(ns && (ns_uri = axiom_namespace_get_uri(ns, env)) &&
-                    axis2_strcmp(ns_uri, "http://www.w3.org/2004/08/xop/include") == 0)
+                    axutil_strcmp(ns_uri, "http://www.w3.org/2004/08/xop/include") == 0)
                 {
                     axiom_node_t *text_node = NULL;
                     axiom_text_t *text = NULL;
@@ -799,7 +799,7 @@ void wsf_util_get_attachments(const axis2_env_t *env,
                     id = axiom_element_get_attribute_value_by_name(ele, env, "href");
                     if(!id)
                         return;
-                    pos = axis2_strstr(id, "cid:");
+                    pos = axutil_strstr(id, "cid:");
                     if(pos){
                         cid = id+4;
                         text_node = axiom_node_get_first_child(node, env);
@@ -811,9 +811,9 @@ void wsf_util_get_attachments(const axis2_env_t *env,
                                     char *cnt_type = NULL;
                                     char *data = NULL;
                                     int data_len = 0;                               
-                                    AXIOM_DATA_HANDLER_READ_FROM(data_handler, env,
+                                    axiom_data_handler_read_from(data_handler, env,
                                         &data, &data_len);
-                                    cnt_type = AXIOM_DATA_HANDLER_GET_CONTENT_TYPE(data_handler, env);
+                                    cnt_type = axiom_data_handler_get_content_type(data_handler, env);
                                     add_assoc_stringl(cid2str, cid, data, data_len, 1); 
                                     
                                     if(cnt_type){
@@ -840,7 +840,7 @@ void wsf_util_get_attachments(const axis2_env_t *env,
 } 
 
 
-char* wsf_util_serialize_om(const axis2_env_t *env, axiom_node_t *ret_node)
+char* wsf_util_serialize_om(const axutil_env_t *env, axiom_node_t *ret_node)
 {
     axiom_xml_writer_t *writer = NULL;
     axiom_output_t *om_output = NULL;
@@ -852,8 +852,8 @@ char* wsf_util_serialize_om(const axis2_env_t *env, axiom_node_t *ret_node)
     om_output = axiom_output_create (env, writer);
 
     axiom_node_serialize (ret_node, env, om_output);
-    buffer = (axis2_char_t*)AXIOM_XML_WRITER_GET_XML(writer, env);
-    buffer_len = axis2_strlen(buffer);
+    buffer = (axis2_char_t*)axiom_xml_writer_get_xml(writer, env);
+    buffer_len = axutil_strlen(buffer);
 
     new_buffer = AXIS2_MALLOC(env->allocator, sizeof(axis2_char_t)*(buffer_len + 1));
     memcpy(new_buffer, buffer, buffer_len);
@@ -863,7 +863,7 @@ char* wsf_util_serialize_om(const axis2_env_t *env, axiom_node_t *ret_node)
     return new_buffer;
 }
 
-xmlDocPtr wsf_util_serialize_om_to_doc(axis2_env_t *env, axiom_node_t *ret_node)
+xmlDocPtr wsf_util_serialize_om_to_doc(axutil_env_t *env, axiom_node_t *ret_node)
 {
 	axiom_xml_writer_t *writer = NULL;
 	axiom_output_t *om_output = NULL;
@@ -873,13 +873,13 @@ xmlDocPtr wsf_util_serialize_om_to_doc(axis2_env_t *env, axiom_node_t *ret_node)
 	        NULL, AXIS2_TRUE, 0, AXIS2_XML_PARSER_TYPE_DOC);
 	om_output = axiom_output_create (env, writer);
 	axiom_node_serialize (ret_node, env, om_output);
-	doc = (xmlDocPtr)AXIOM_XML_WRITER_GET_XML(writer, env);
+	doc = (xmlDocPtr)axiom_xml_writer_get_xml(writer, env);
 	return doc;
 }
 
 axiom_node_t* 
 wsf_util_deserialize_buffer(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     char *buffer)
 {
 	axiom_xml_reader_t *reader = NULL;
@@ -887,7 +887,7 @@ wsf_util_deserialize_buffer(
 	axiom_document_t *document = NULL;
 	axiom_node_t *payload = NULL;
 
-	reader = axiom_xml_reader_create_for_memory(env,buffer, axis2_strlen(buffer), "utf-8",
+	reader = axiom_xml_reader_create_for_memory(env,buffer, axutil_strlen(buffer), "utf-8",
 				AXIS2_XML_PARSER_TYPE_BUFFER);
 	if (!reader) {
 		return NULL;
@@ -1047,7 +1047,7 @@ static void
 wsf_util_handle_fault_code(zval *fault_obj,
                            axiom_node_t *code_node,
                            axiom_element_t *code_element,
-                           axis2_env_t *env TSRMLS_DC)
+                           axutil_env_t *env TSRMLS_DC)
 {
     axiom_node_t *code_value = NULL;
     axiom_element_t *code_value_ele = NULL;
@@ -1066,7 +1066,7 @@ static void
 wsf_util_handle_fault_reason(zval *fault_obj,
                        axiom_node_t *reason_node,
                        axiom_element_t *reason_element,
-                       axis2_env_t *env TSRMLS_DC)
+                       axutil_env_t *env TSRMLS_DC)
 {
     
     if(WSF_GLOBAL(soap_version) == AXIOM_SOAP12){
@@ -1089,7 +1089,7 @@ static void
 wsf_util_handle_fault_detail(zval *fault_obj,
                        axiom_node_t *detail_node,
                        axiom_element_t *reason_element,
-                       axis2_env_t *env TSRMLS_DC)
+                       axutil_env_t *env TSRMLS_DC)
 {
 
 
@@ -1098,7 +1098,7 @@ wsf_util_handle_fault_detail(zval *fault_obj,
 void
 wsf_util_set_fault_properties(zval *fault_obj, 
                         axiom_node_t *fault_node,
-                        axis2_env_t *env TSRMLS_DC)
+                        axutil_env_t *env TSRMLS_DC)
 {
     axiom_element_t *fault_element = NULL;
     axiom_node_t *node = NULL;

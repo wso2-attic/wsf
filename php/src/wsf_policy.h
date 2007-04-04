@@ -18,7 +18,7 @@
 #ifndef WSF_POLICY_H
 #define WSF_POLICY_H
 
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axiom.h>
 #include <axis2_svc_client.h>
 #include <php.h>
@@ -105,16 +105,16 @@
 
 int ws_policy_set_policy_options(zval *this_ptr,
                                  zval *property,
-                                 const axis2_env_t *env TSRMLS_DC);
+                                 const axutil_env_t *env TSRMLS_DC);
 
 int ws_policy_handle_client_security(zval *sec_token,
                                      zval *policy,
-                                     axis2_env_t *env,
+                                     axutil_env_t *env,
                                      axis2_svc_client_t *svc_client TSRMLS_DC);
 
 int ws_policy_handle_server_security(zval *sec_token,
                                      zval *policy,
-                                     axis2_env_t *env,
+                                     axutil_env_t *env,
                                      axis2_svc_t *svc,
 				     axis2_conf_t *conf TSRMLS_DC);
 

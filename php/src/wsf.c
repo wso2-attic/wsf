@@ -28,7 +28,7 @@
 #include "zend_globals.h"
 #include "zend_objects.h"
 #include "wsf_common.h"
-#include <axis2_env.h>
+#include <axutil_env.h>
 
 #include "wsf_util.h"
 
@@ -66,8 +66,8 @@ HashTable defEnc, defEncIndex, defEncNs;
 
 /* True global values, worker is thread safe,
  *  message receiver does not have state*/
-static axis2_env_t *env;
-static axis2_env_t *ws_env_svr;
+static axutil_env_t *env;
+static axutil_env_t *ws_env_svr;
 axis2_msg_recv_t *wsf_msg_recv;
 wsf_worker_t *worker;
 
@@ -1032,7 +1032,7 @@ PHP_METHOD(ws_service, __construct)
     zval *obj = NULL;
     ws_svc_info_t *svc_info = NULL;
     zval *options = NULL;
-    axis2_hash_index_t *hi = NULL;
+    axutil_hash_index_t *hi = NULL;
 
     HashTable *ht_actions = NULL;
     HashTable *ht_ops_to_funcs = NULL;
@@ -1047,11 +1047,11 @@ PHP_METHOD(ws_service, __construct)
     WSF_GET_THIS(obj);
     intern = (ws_object* )zend_object_store_get_object(obj TSRMLS_CC);
     svc_info = ws_svc_info_create();
-    svc_info->class_info = axis2_hash_make(ws_env_svr);
+    svc_info->class_info = axutil_hash_make(ws_env_svr);
 
 
-    svc_info->ops_to_functions = axis2_hash_make(ws_env_svr);
-    svc_info->ops_to_actions = axis2_hash_make(ws_env_svr);
+    svc_info->ops_to_functions = axutil_hash_make(ws_env_svr);
+    svc_info->ops_to_actions = axutil_hash_make(ws_env_svr);
 
     intern->ptr = svc_info;
     svc_info->php_worker = worker;
@@ -1104,8 +1104,8 @@ PHP_METHOD(ws_service, __construct)
 	    if(zend_hash_find(ht, WS_RELIABLE, sizeof(WS_RELIABLE),
                               (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
                 if(!svc_info->modules_to_engage)
-                    svc_info->modules_to_engage = axis2_array_list_create(ws_env_svr, 3);
-                axis2_array_list_add(svc_info->modules_to_engage, ws_env_svr, axis2_strdup(ws_env_svr, "sandesha2"));
+                    svc_info->modules_to_engage = axutil_array_list_create(ws_env_svr, 3);
+                axutil_array_list_add(svc_info->modules_to_engage, ws_env_svr, axutil_strdup(ws_env_svr, "sandesha2"));
             }
 
             if(zend_hash_find(ht, WS_BINDING_STYLE, sizeof(WS_BINDING_STYLE), (void **)&tmp) == SUCCESS &&
@@ -1150,8 +1150,8 @@ PHP_METHOD(ws_service, __construct)
                 op_name_to_store = op_name;
             else
                 op_name_to_store = func_name;
-            axis2_hash_set(svc_info->ops_to_functions, axis2_strdup(ws_env_svr, op_name_to_store) ,
-                           AXIS2_HASH_KEY_STRING,  axis2_strdup(ws_env_svr, func_name));
+            axutil_hash_set(svc_info->ops_to_functions, axutil_strdup(ws_env_svr, op_name_to_store) ,
+                           AXIS2_HASH_KEY_STRING,  axutil_strdup(ws_env_svr, func_name));
         }
     }
     if(ht_actions)
@@ -1181,11 +1181,11 @@ PHP_METHOD(ws_service, __construct)
                 php_error_docref(NULL TSRMLS_CC, E_ERROR, "Tried to add a function that isn't a string");
             }
 
-            func_name = axis2_hash_get(svc_info->ops_to_functions, Z_STRVAL_PP(tmp_function), AXIS2_HASH_KEY_STRING);
+            func_name = axutil_hash_get(svc_info->ops_to_functions, Z_STRVAL_PP(tmp_function), AXIS2_HASH_KEY_STRING);
             if(!func_name)
             {
-                axis2_hash_set(svc_info->ops_to_functions, axis2_strdup(ws_env_svr, Z_STRVAL_PP(tmp_function)),
-                               AXIS2_HASH_KEY_STRING, axis2_strdup(ws_env_svr, Z_STRVAL_PP(tmp_function)));
+                axutil_hash_set(svc_info->ops_to_functions, axutil_strdup(ws_env_svr, Z_STRVAL_PP(tmp_function)),
+                               AXIS2_HASH_KEY_STRING, axutil_strdup(ws_env_svr, Z_STRVAL_PP(tmp_function)));
                 func_name = Z_STRVAL_PP(tmp_function);
             }
             key_len = strlen(func_name);
@@ -1204,8 +1204,8 @@ PHP_METHOD(ws_service, __construct)
                 ws_util_create_op_and_add_to_svc(svc_info, wsa_action,
                                                  ws_env_svr, operation_name TSRMLS_CC);
                 /* keep track of operations with actions */
-                axis2_hash_set(svc_info->ops_to_actions, axis2_strdup(ws_env_svr, operation_name) ,
-                               AXIS2_HASH_KEY_STRING,  axis2_strdup(ws_env_svr, wsa_action));
+                axutil_hash_set(svc_info->ops_to_actions, axutil_strdup(ws_env_svr, operation_name) ,
+                               AXIS2_HASH_KEY_STRING,  axutil_strdup(ws_env_svr, wsa_action));
             }
             else
             {
@@ -1219,8 +1219,8 @@ PHP_METHOD(ws_service, __construct)
 
     if(svc_info->ops_to_functions)
     {
-        for(hi = axis2_hash_first(svc_info->ops_to_functions, ws_env_svr); hi;
-                hi = axis2_hash_next(ws_env_svr, hi))
+        for(hi = axutil_hash_first(svc_info->ops_to_functions, ws_env_svr); hi;
+                hi = axutil_hash_next(ws_env_svr, hi))
         {
             void *v = NULL;
             const void *k = NULL;
@@ -1230,7 +1230,7 @@ PHP_METHOD(ws_service, __construct)
             char *function_name = NULL;
             int key_len = 0;
 
-            axis2_hash_this(hi, &k , NULL, &v);
+            axutil_hash_this(hi, &k , NULL, &v);
             key = (axis2_char_t*)k;
             val = (axis2_char_t*)v;
 
@@ -1255,7 +1255,7 @@ PHP_METHOD(ws_service, __construct)
                 else
                 {
                     char *action_for_op = NULL;
-                    action_for_op = axis2_hash_get(svc_info->ops_to_actions,
+                    action_for_op = axutil_hash_get(svc_info->ops_to_actions,
                                                    key, AXIS2_HASH_KEY_STRING);
                     if (!action_for_op)
                     {
@@ -1329,8 +1329,8 @@ PHP_METHOD(ws_service , set_class)
     		while (zend_hash_get_current_data_ex(ft, (void **)&f, &pos) != FAILURE) {
     				if (f->common.fn_flags & ZEND_ACC_PUBLIC) {
     					svc_info->is_class = 1;
-                        axis2_hash_set(svc_info->class_info, axis2_strdup(f->common.function_name ,env),
-                            AXIS2_HASH_KEY_STRING, axis2_strdup(Z_STRVAL_PP(argv[0]), env));
+                        axutil_hash_set(svc_info->class_info, axutil_strdup(f->common.function_name ,env),
+                            AXIS2_HASH_KEY_STRING, axutil_strdup(Z_STRVAL_PP(argv[0]), env));
     					
     					ws_util_create_op_and_add_to_svc(svc_info, NULL, 
     					        env ,f->common.function_name TSRMLS_CC);
@@ -1459,7 +1459,7 @@ PHP_METHOD(ws_service , reply)
         char *service_name = NULL;
         zval func, retval, param1, param2, param3, param4, param5, param6;
         zval *params[6];
-        axis2_hash_index_t *hi = NULL;
+        axutil_hash_index_t *hi = NULL;
         zval *f_val;
         zend_file_handle script;
         char *val = NULL;
@@ -1505,14 +1505,14 @@ PHP_METHOD(ws_service , reply)
 
         if (svc_info->ops_to_functions)
         {
-            for(hi = axis2_hash_first(svc_info->ops_to_functions, ws_env_svr);
-                    hi; hi = axis2_hash_next(ws_env_svr, hi))
+            for(hi = axutil_hash_first(svc_info->ops_to_functions, ws_env_svr);
+                    hi; hi = axutil_hash_next(ws_env_svr, hi))
             {
                 void *v = NULL;
                 const void *k = NULL;
                 axis2_char_t *f_key = NULL;
                 axis2_char_t *f_name = NULL;
-                axis2_hash_this(hi, &k, NULL, &v);
+                axutil_hash_this(hi, &k, NULL, &v);
                 f_key = (axis2_char_t *)k;
                 f_name = (axis2_char_t *)v;
                 add_next_index_string(f_val, (char *)f_name, 1);

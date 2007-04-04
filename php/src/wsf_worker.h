@@ -19,7 +19,7 @@
 
 #include <axis2_const.h>
 #include <axis2_defines.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axis2_conf_ctx.h>
 #include <SAPI.h>
 #include "wsf_common.h"
@@ -31,24 +31,24 @@ extern "C"
 typedef struct wsf_worker_t wsf_worker_t;
 
 wsf_worker_t* 
-wsf_worker_create (const axis2_env_t *env, 
+wsf_worker_create (const axutil_env_t *env, 
   		   axis2_char_t *repo_path,
 		   axis2_char_t *rm_db_dir);
 
 int 
 wsf_worker_process_request(wsf_worker_t *worker, 
-			   axis2_env_t *env,
+			   axutil_env_t *env,
 			   wsf_req_info_t *reqinfo, 
 			   ws_svc_info_t *svc_info);
 
 void 
 wsf_worker_free(wsf_worker_t *worker, 
-		const axis2_env_t *env);
+		const axutil_env_t *env);
 
 
 axis2_conf_ctx_t* 
 wsf_worker_get_conf_ctx(wsf_worker_t *worker, 
-			const axis2_env_t *env);
+			const axutil_env_t *env);
 
 
 #ifdef __cplusplus

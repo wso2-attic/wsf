@@ -17,7 +17,7 @@
 #ifndef WSF_CLIENT_H
 #define WSF_CLIENT_H
 
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axiom.h>
 #include <axis2_op_client.h>
 #include <axis2_svc_client.h>
@@ -31,13 +31,13 @@
 int wsf_client_set_options(
 		HashTable *client_ht, 
 		HashTable *msg_ht, 
-		axis2_env_t *env,
+		axutil_env_t *env,
         axis2_options_t *options, 
 		axis2_svc_client_t *svc_client,
 		int is_send TSRMLS_DC);  
         
 int wsf_client_set_headers(
-		const axis2_env_t *env,
+		const axutil_env_t *env,
 		axis2_svc_client_t *svc_client,
 		zval *msg TSRMLS_DC);
 
@@ -46,12 +46,12 @@ int wsf_client_do_request(
 		zval *this_ptr, 
 		zval *param, 
 		zval *return_value,
-		axis2_env_t *env,
+		axutil_env_t *env,
 		axis2_svc_client_t *svc_client,
 		int is_oneway TSRMLS_DC);
 
 void wsf_client_enable_ssl(HashTable *ht, 
-		axis2_env_t *env, 
+		axutil_env_t *env, 
 		axis2_options_t *options,
 		axis2_svc_client_t *svc_client TSRMLS_DC);
 

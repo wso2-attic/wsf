@@ -15,7 +15,7 @@
  */
 
 #include "wsf_out_transport_info.h"
-#include <axis2_string.h>
+#include <axutil_string.h>
 #include <axis2_http_transport.h>
 
 
@@ -39,26 +39,26 @@ struct wsf_out_transport_info_impl
 axis2_status_t WSF_CALL 
 wsf_http_out_transport_info_set_content_type 
        (axis2_http_out_transport_info_t *info, 
-		const axis2_env_t *env, 
+		const axutil_env_t *env, 
         const axis2_char_t *content_type);
 
 axis2_status_t WSF_CALL 
 wsf_http_out_transport_info_set_char_encoding 
            (axis2_http_out_transport_info_t *info, 
-			const axis2_env_t *env,
+			const axutil_env_t *env,
             const axis2_char_t *encoding);
     
 axis2_status_t WSF_CALL 
 wsf_http_out_transport_info_free 
            (axis2_http_out_transport_info_t *out_transport_info, 
-            const axis2_env_t *env);
+            const axutil_env_t *env);
 
 
 
 /***************************** End of function headers ************************/
 
 axis2_http_out_transport_info_t* 
-wsf_out_transport_info_create(const axis2_env_t *env,
+wsf_out_transport_info_create(const axutil_env_t *env,
                         wsf_req_info_t *request)
 {
     wsf_out_transport_info_impl_t *info_impl = NULL;
@@ -89,7 +89,7 @@ wsf_out_transport_info_create(const axis2_env_t *env,
 
 axis2_status_t WSF_CALL 
 wsf_http_out_transport_info_free (axis2_http_out_transport_info_t *info, 
-                  const axis2_env_t *env)
+                  const axutil_env_t *env)
 {
     wsf_out_transport_info_impl_t *info_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -106,7 +106,7 @@ wsf_http_out_transport_info_free (axis2_http_out_transport_info_t *info,
 
 axis2_status_t WSF_CALL
 wsf_out_transport_info_free_void_arg (void *transport_info,
-                                             const axis2_env_t *env)
+                                             const axutil_env_t *env)
 {
     axis2_http_out_transport_info_t *transport_info_l = NULL;
     
@@ -117,7 +117,7 @@ wsf_out_transport_info_free_void_arg (void *transport_info,
 
 axis2_status_t WSF_CALL 
 wsf_http_out_transport_info_set_content_type 
-            (axis2_http_out_transport_info_t *info, const axis2_env_t *env, 
+            (axis2_http_out_transport_info_t *info, const axutil_env_t *env, 
             const axis2_char_t *content_type)
 {
    axis2_char_t *tmp1 = NULL;
@@ -131,14 +131,14 @@ wsf_http_out_transport_info_set_content_type
    
    if(NULL != info_impl->encoding){
       
-      tmp1 = axis2_stracat(env, content_type, ";charset=");
-      tmp2 = axis2_stracat(env, tmp1, info_impl->encoding);
-        info_impl->request->content_type = axis2_strdup(env, tmp2);
+      tmp1 = axutil_stracat(env, content_type, ";charset=");
+      tmp2 = axutil_stracat(env, tmp1, info_impl->encoding);
+        info_impl->request->content_type = axutil_strdup(env, tmp2);
       AXIS2_FREE(env->allocator, tmp1);
       AXIS2_FREE(env->allocator, tmp2);      
    }
    else{
-      info_impl->request->content_type = axis2_strdup(env, content_type); 
+      info_impl->request->content_type = axutil_strdup(env, content_type); 
    }
    return AXIS2_SUCCESS;
 }
@@ -146,7 +146,7 @@ wsf_http_out_transport_info_set_content_type
 
 axis2_status_t WSF_CALL 
 wsf_http_out_transport_info_set_char_encoding 
-            (axis2_http_out_transport_info_t *info, const axis2_env_t *env,
+            (axis2_http_out_transport_info_t *info, const axutil_env_t *env,
             const axis2_char_t *encoding)
 {
     wsf_out_transport_info_impl_t *info_impl = NULL;
@@ -158,6 +158,6 @@ wsf_http_out_transport_info_set_char_encoding
     if(NULL != info_impl->encoding){
       AXIS2_FREE(env->allocator, info_impl->encoding);
     }
-    info_impl->encoding = axis2_strdup(env, encoding);
+    info_impl->encoding = axutil_strdup(env, encoding);
     return AXIS2_SUCCESS;
 }

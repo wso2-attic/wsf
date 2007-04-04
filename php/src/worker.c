@@ -17,15 +17,15 @@
 #include "wsf_worker.h"
 #include <axis2_http_transport.h>
 #include <axis2_conf.h>
-#include <axis2_string.h>
+#include <axutil_string.h>
 #include <axis2_msg_ctx.h>
 #include <axis2_http_out_transport_info.h>
 #include <axis2_http_transport_utils.h>
 #include <axis2_op_ctx.h>
 #include <axis2_engine.h>
-#include <axis2_uuid_gen.h>
+#include <axutil_uuid_gen.h>
 #include <axis2_conf_init.h>
-#include <axis2_url.h>
+#include <axutil_url.h>
 #include <axiom_soap_const.h>
 #include <axiom_soap.h>
 #include "wsf_out_transport_info.h"
@@ -40,7 +40,7 @@ struct wsf_worker_t
    axis2_conf_ctx_t *conf_ctx;
 };
 
-wsf_worker_t * wsf_worker_create (const axis2_env_t *env, 
+wsf_worker_t * wsf_worker_create (const axutil_env_t *env, 
 								  axis2_char_t *repo_path,
 								  axis2_char_t *rm_db_dir)
 {
@@ -64,17 +64,17 @@ wsf_worker_t * wsf_worker_create (const axis2_env_t *env,
 	if(rm_db_dir){
 		axis2_conf_t *conf = NULL;
 		axis2_module_desc_t *module_desc = NULL;
-		axis2_param_t *param = NULL;
-		axis2_qname_t *sandesha2_qname = NULL;
+		axutil_param_t *param = NULL;
+		axutil_qname_t *sandesha2_qname = NULL;
 
-		sandesha2_qname = axis2_qname_create(env, "sandesha2", NULL, NULL);
+		sandesha2_qname = axutil_qname_create(env, "sandesha2", NULL, NULL);
 
 		conf = axis2_conf_ctx_get_conf(worker->conf_ctx, env);
 		module_desc = axis2_conf_get_module(conf, env, sandesha2_qname);
 		if(module_desc){
 			param = axis2_module_desc_get_param(module_desc, env, "sandesha2_db");
 			if(param){
-				axis2_param_set_value(param, env, rm_db_dir);	
+				axutil_param_set_value(param, env, rm_db_dir);	
 				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_svr] rm_db_dir %s", rm_db_dir);
 			}
 		}
@@ -82,47 +82,47 @@ wsf_worker_t * wsf_worker_create (const axis2_env_t *env,
 	return worker;
 }
 
-axis2_char_t* wsf_worker_get_bytes(const axis2_env_t *env, 
-                        axis2_stream_t *stream)
+axis2_char_t* wsf_worker_get_bytes(const axutil_env_t *env, 
+                        axutil_stream_t *stream)
 {
     
-	axis2_stream_t *tmp_stream = NULL;
+	axutil_stream_t *tmp_stream = NULL;
 	int return_size = -1;
 	axis2_char_t *buffer = NULL;
     
 	AXIS2_ENV_CHECK(env, NULL);
 	AXIS2_PARAM_CHECK(env->error, stream, NULL);
     
-	tmp_stream = axis2_stream_create_basic(env);
+	tmp_stream = axutil_stream_create_basic(env);
 	while(1) {
 		int read = 0;
 		int write = 0;
         
 		char buf[READ_SIZE];
-		read = AXIS2_STREAM_READ(stream, env, buf, READ_SIZE);
+		read = axutil_stream_read(stream, env, buf, READ_SIZE);
 		if(read < 0) {
 			break;
 		}
-		write = AXIS2_STREAM_WRITE(tmp_stream, env, buf, read);
+		write = axutil_stream_write(tmp_stream, env, buf, read);
 		if(read < (READ_SIZE -1)) {
 			break;
 		}
 	}
-	return_size = AXIS2_STREAM_BASIC_GET_LEN(tmp_stream, env);
+	return_size = axutil_stream_get_len(tmp_stream, env);
 
 	if(return_size > 0) {
 		buffer = (char *)AXIS2_MALLOC(env->allocator, sizeof(char)*
 													(return_size +2));
-		return_size = AXIS2_STREAM_READ(tmp_stream, env, buffer,
+		return_size = axutil_stream_read(tmp_stream, env, buffer,
 													return_size + 1);
 		buffer[return_size + 1] = '\0';
 	}
-	AXIS2_STREAM_FREE(tmp_stream, env);
+	axutil_stream_free(tmp_stream, env);
 	return buffer;
 }
 
 void wsf_worker_free(wsf_worker_t *worker, 
-		     const axis2_env_t *env)
+		     const axutil_env_t *env)
 {
 	if(!worker)
 		return;
@@ -135,7 +135,7 @@ void wsf_worker_free(wsf_worker_t *worker,
 
 int wsf_worker_process_request(
         wsf_worker_t *worker, 
-        axis2_env_t *env, 
+        axutil_env_t *env, 
         wsf_req_info_t *request,
 	ws_svc_info_t *svc_info)
 {
@@ -148,10 +148,10 @@ int wsf_worker_process_request(
 	axis2_transport_in_desc_t *in_desc = NULL;
 	
 	
-	axis2_stream_t *request_body = NULL;
-	axis2_stream_t *out_stream = NULL;
+	axutil_stream_t *request_body = NULL;
+	axutil_stream_t *out_stream = NULL;
 	
-    	axis2_url_t *url = NULL;
+    axutil_url_t *url = NULL;
 	axis2_char_t *request_uri_with_query_string;
 	
    
@@ -161,14 +161,14 @@ int wsf_worker_process_request(
 	
 	axis2_char_t *http_version = NULL;
 	axis2_char_t *soap_action = NULL;
-	axis2_string_t *soap_action_str = NULL;
+	axutil_string_t *soap_action_str = NULL;
 	axis2_char_t *encoding_header_value = NULL;
 	axis2_char_t *req_url = NULL;
-	axis2_string_t *req_url_str = NULL;
+	axutil_string_t *req_url_str = NULL;
 	axis2_char_t *body_string = NULL;
 	axis2_char_t *content_type = NULL;
 	axis2_char_t *ctx_uuid = NULL;
-	axis2_string_t *ctx_uuid_str = NULL;
+	axutil_string_t *ctx_uuid_str = NULL;
 	/*
 	axis2_char_t *is_class = NULL;
         */
@@ -185,7 +185,7 @@ int wsf_worker_process_request(
 		request_uri_with_query_string =  request->request_uri;
 	}
 
-	url = axis2_url_create(env, "http", request->svr_name, 
+	url = axutil_url_create(env, "http", request->svr_name, 
 			request->svr_port, request_uri_with_query_string);
 
         if(NULL == conf_ctx) {
@@ -196,8 +196,8 @@ int wsf_worker_process_request(
     
 	content_length = request->content_length;
 	http_version = request->http_protocol;
-	req_url = axis2_url_to_external_form(url, env);
-        req_url_str = axis2_string_create(env, req_url);
+	req_url = axutil_url_to_external_form(url, env);
+        req_url_str = axutil_string_create(env, req_url);
     
 	content_type = (axis2_char_t*) request->content_type;
 
@@ -207,7 +207,7 @@ int wsf_worker_process_request(
 		return AXIS2_CRITICAL_FAILURE;
 	}
 	
-	out_stream = axis2_stream_create_basic(env);
+	out_stream = axutil_stream_create_basic(env);
 	
 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Client HTTP version %s", 
 						http_version);
@@ -238,10 +238,10 @@ int wsf_worker_process_request(
 	
     	/** create transport out description */
 	{
-		axis2_property_t *out_stream_prop = NULL;
+		axutil_property_t *out_stream_prop = NULL;
 		
-		out_stream_prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST,
-			AXIS2_TRUE ,axis2_stream_free_void_arg, out_stream);
+		out_stream_prop = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST,
+			AXIS2_TRUE ,axutil_stream_free_void_arg, out_stream);
 
 		axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_TRANSPORT_OUT, 
 			out_stream_prop);
@@ -249,23 +249,23 @@ int wsf_worker_process_request(
 	}
 	
 	/** generate uuid for context */
-	ctx_uuid = axis2_uuid_gen(env);
-    	ctx_uuid_str = axis2_string_create(env, ctx_uuid);
+	ctx_uuid = axutil_uuid_gen(env);
+    	ctx_uuid_str = axutil_string_create(env, ctx_uuid);
     	axis2_msg_ctx_set_svc_grp_ctx_id(msg_ctx, env, ctx_uuid_str);
     	AXIS2_FREE(env->allocator, ctx_uuid);
-    	axis2_string_free(ctx_uuid_str, env);
+    	axutil_string_free(ctx_uuid_str, env);
     
     	php_out_transport_info = wsf_out_transport_info_create(env, request);
     	axis2_msg_ctx_set_http_out_transport_info(msg_ctx, env, php_out_transport_info);
    
     	if(request->transfer_encoding){
-        	axis2_msg_ctx_set_transfer_encoding(msg_ctx, env, axis2_strdup(env, request->transfer_encoding));
+        	axis2_msg_ctx_set_transfer_encoding(msg_ctx, env, axutil_strdup(env, request->transfer_encoding));
     	}
     
     /** store svc_info struct as a property */  
 	{
-		axis2_property_t *svc_info_prop = NULL;
-		svc_info_prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST,
+		axutil_property_t *svc_info_prop = NULL;
+		svc_info_prop = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST,
 			AXIS2_TRUE,NULL, svc_info);				
 		axis2_msg_ctx_set_property(msg_ctx, env, WS_SVC_INFO, 
 			svc_info_prop);
@@ -287,7 +287,7 @@ int wsf_worker_process_request(
 	if(soap_action == NULL)
         	soap_action = "";
     
-    	soap_action_str = axis2_string_create(env, soap_action);
+    	soap_action_str = axutil_string_create(env, soap_action);
     
 	request_body = axis2_stream_create_php(env, request TSRMLS_CC);
 	
@@ -356,9 +356,9 @@ int wsf_worker_process_request(
             	
 			send_status = WS_HTTP_OK;
             
-			rlen = AXIS2_STREAM_BASIC_GET_LEN(out_stream, env);
+			rlen = axutil_stream_get_len(out_stream, env);
             		val = AXIS2_MALLOC(env->allocator, sizeof(char)*(rlen+1));
-			readlen = AXIS2_STREAM_READ(out_stream, env, val, rlen+1);
+			readlen = axutil_stream_read(out_stream, env, val, rlen+1);
             
         	    	if(readlen == rlen){
                 		request->result_payload = val;
@@ -376,7 +376,7 @@ int wsf_worker_process_request(
 
 
 axis2_conf_ctx_t* wsf_worker_get_conf_ctx(wsf_worker_t *worker,
-                              const axis2_env_t *env)
+                              const axutil_env_t *env)
 {
 	return worker->conf_ctx;
 }
