@@ -148,7 +148,10 @@ int ws_policy_handle_client_security(zval *sec_token,
     tokenProperties_t tmp_rampart_ctx;
 
     axis2_svc_ctx_t *svc_ctx = NULL;
-    axis2_svc_t *svc = NULL;
+/*     axis2_svc_t *svc = NULL; */
+    axis2_conf_ctx_t *conf_ctx = NULL;
+    axis2_conf_t *conf = NULL;
+
     axutil_param_t *inflow_param = NULL;
     axutil_param_t *outflow_param = NULL;
     
@@ -227,14 +230,18 @@ int ws_policy_handle_client_security(zval *sec_token,
     set_options_to_rampart_ctx(out_rampart_ctx, env, outgoing_policy_node, tmp_rampart_ctx);
 
     svc_ctx = axis2_svc_client_get_svc_ctx(svc_client, env);
-    svc = axis2_svc_ctx_get_svc(svc_ctx, env);
+/*     svc = axis2_svc_ctx_get_svc(svc_ctx, env); */
+    conf_ctx = axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
+    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
 
     inflow_param = axutil_param_create(env, WS_INFLOW_SECURITY_POLICY, (void *)in_rampart_ctx) ;
     outflow_param = axutil_param_create(env, WS_OUTFLOW_SECURITY_POLICY, (void *)out_rampart_ctx);
 
-    axis2_svc_add_param(svc, env, inflow_param);
-    axis2_svc_add_param(svc, env, outflow_param);
-
+/*     axis2_svc_add_param(svc, env, inflow_param); */
+/*     axis2_svc_add_param(svc, env, outflow_param); */
+    axis2_conf_add_param(conf, env, inflow_param);
+    axis2_conf_add_param(conf, env, outflow_param);
+    
     axis2_svc_client_engage_module(svc_client, env, "rampart");
 
     /* for testing only ,should be remove later */
