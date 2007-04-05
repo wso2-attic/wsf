@@ -455,7 +455,7 @@ tokenProperties_t  set_tmp_rampart_options(tokenProperties_t tmp_rampart_ctx,
     }
     if (zend_hash_find(ht_token, WS_PASSWORD_CALL_BACK, sizeof(WS_PASSWORD_CALL_BACK), (void **)&token_val) == SUCCESS &&
         Z_TYPE_PP(token_val) == IS_STRING){
-        tmp_rampart_ctx.callback_function = NULL;
+        tmp_rampart_ctx.callback_function = Z_STRVAL_PP(token_val);
     }
 
 
