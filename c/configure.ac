@@ -25,11 +25,6 @@ if test -d $srcdir/axis2c; then
     AC_CONFIG_SUBDIRS(axis2c)
 fi
 
-
-if test -d $srcdir/wsclient; then
-    AC_CONFIG_SUBDIRS(wsclient)
-fi
-
 #CFLAGS="$CFLAGS -ansi -Wall -D_LARGEFILE64_SOURCE -Wno-implicit-function-declaration"
 CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 if test "$GCC" = "yes"; then

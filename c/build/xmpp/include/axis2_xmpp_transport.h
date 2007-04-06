@@ -18,7 +18,7 @@
 #define AXIS2_XMPP_TRANSPORT_H
 
 #include <axis2_const.h>
-#include <axis2_error.h>
+#include <axutil_error.h>
 
 #ifdef __cplusplus
 extern "C"

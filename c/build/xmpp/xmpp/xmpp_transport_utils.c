@@ -16,12 +16,12 @@
 
 #include <ctype.h>
 #include <string.h>
-#include <axis2_utils.h>
-#include <axis2_hash.h>
-#include <axis2_qname.h>
+#include <axutil_utils.h>
+#include <axutil_hash.h>
+#include <axutil_qname.h>
 #include <axiom_soap.h>
 #include <axiom.h>
-#include <axis2_property.h>
+#include <axutil_property.h>
 #include <axis2_engine.h>
 #include <axis2_endpoint_ref.h>
 
@@ -33,7 +33,7 @@
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 axis2_xmpp_transport_utils_process_message(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_xmpp_session_data_t *session,
     axis2_char_t *soap_msg,
     axis2_char_t *from,
@@ -41,7 +41,7 @@ axis2_xmpp_transport_utils_process_message(
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 axis2_xmpp_transport_utils_process_presence(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_xmpp_session_data_t *session,
     axis2_char_t *presence_str,
     axis2_char_t *request_uri);
@@ -52,7 +52,7 @@ axis2_xmpp_transport_utils_process_presence(
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 axis2_xmpp_transport_utils_process_message(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_xmpp_session_data_t *session,
     axis2_char_t *soap_msg,
     axis2_char_t *from,
@@ -66,11 +66,11 @@ axis2_xmpp_transport_utils_process_message(
     axis2_engine_t *engine = NULL;
     axis2_conf_t *conf = NULL;
     axis2_msg_ctx_t *msg_ctx = NULL;
-    axis2_qname_t *qname = NULL;
+    axutil_qname_t *qname = NULL;
     axis2_transport_out_desc_t *out_desc = NULL;
     axis2_transport_in_desc_t *in_desc = NULL;
-    axis2_hash_t *properties = NULL;
-    axis2_property_t *property = NULL;
+    axutil_hash_t *properties = NULL;
+    axutil_property_t *property = NULL;
     
     reader = axiom_xml_reader_create_for_memory(env, soap_msg,
         AXIS2_STRLEN(soap_msg), NULL, AXIS2_XML_PARSER_TYPE_BUFFER);
@@ -97,10 +97,10 @@ axis2_xmpp_transport_utils_process_message(
 
     /* Find transport in and out descriptions from the conf. We need out context
      * on the sending side */
-    qname = axis2_qname_create(env, AXIS2_TRANSPORT_XMPP, NULL, NULL);
-    conf = AXIS2_CONF_CTX_GET_CONF(session->conf_ctx, env);
-    out_desc = AXIS2_CONF_GET_TRANSPORT_OUT(conf, env, qname);
-    in_desc = AXIS2_CONF_GET_TRANSPORT_IN(conf, env, qname);
+    qname = axutil_qname_create(env, AXIS2_TRANSPORT_XMPP, NULL, NULL);
+    conf = axis2_conf_ctx_get_conf(session->conf_ctx, env);
+    out_desc = axis2_conf_get_transport_out(conf, env, 1);
+    in_desc = axis2_conf_get_transport_in(conf, env, 1);
     AXIS2_QNAME_FREE(qname, env);
     
     /* Create a new message ctx */
@@ -115,7 +115,7 @@ axis2_xmpp_transport_utils_process_message(
     AXIS2_MSG_CTX_SET_TO(msg_ctx, env,
         axis2_endpoint_ref_create(env, request_uri));
 
-    soap_envelope = AXIOM_SOAP_BUILDER_GET_SOAP_ENVELOPE(soap_builder, env);
+    soap_envelope = axiom_soap_builder_get_soap_envelope(soap_builder, env);
     if (!soap_builder)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Failed to build a SOAP envelope "
@@ -130,24 +130,24 @@ axis2_xmpp_transport_utils_process_message(
      * msg ctx to access them inside engine.send(). [Note: we copy this hash table
      * when copying the in-msg ctx to the out-msg ctx] */
 
-    properties = axis2_hash_make(env);
+    properties = axutil_hash_make(env);
     if(properties)
     {
         /* jid of the requesting client */
-        property = axis2_property_create(env);
+        property = axutil_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
         AXIS2_PROPERTY_SET_VALUE(property, env, from);
-        axis2_hash_set(properties, AXIS2_XMPP_CLIENT_JID, AXIS2_HASH_KEY_STRING,
+        axutil_hash_set(properties, AXIS2_XMPP_CLIENT_JID, AXIS2_HASH_KEY_STRING,
             (void*)property);
 
         /* XMPP parser */
-        property = axis2_property_create(env);
+        property = axutil_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
         AXIS2_PROPERTY_SET_VALUE(property, env, session->parser);
-        axis2_hash_set(properties, AXIS2_XMPP_PARSER, AXIS2_HASH_KEY_STRING,
+        axutil_hash_set(properties, AXIS2_XMPP_PARSER, AXIS2_HASH_KEY_STRING,
             (void*)property);
 
-        property = axis2_property_create(env);
+        property = axutil_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
         AXIS2_PROPERTY_SET_VALUE(property, env, properties);
         AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, AXIS2_XMPP_PROPERTIES,
@@ -165,7 +165,7 @@ axis2_xmpp_transport_utils_process_message(
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 axis2_xmpp_transport_utils_process_presence(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_xmpp_session_data_t *session,
     axis2_char_t *presence_str,
     axis2_char_t *request_uri)
@@ -185,7 +185,7 @@ axis2_xmpp_transport_utils_process_presence(
     axis2_engine_t *engine = NULL;
     axis2_conf_t *conf = NULL;
     axis2_msg_ctx_t *msg_ctx = NULL;
-    axis2_qname_t *qname = NULL;
+    axutil_qname_t *qname = NULL;
     axis2_transport_out_desc_t *out_desc = NULL;
     axis2_transport_in_desc_t *in_desc = NULL;
    
@@ -228,7 +228,7 @@ axis2_xmpp_transport_utils_process_presence(
         return AXIS2_FAILURE;
     }
 
-    body_node = AXIOM_SOAP_BODY_GET_BASE_NODE(soap_body, env);
+    body_node = axiom_soap_body_get_base_node(soap_body, env);
     if (!body_node)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Failed to get base node");
@@ -264,7 +264,7 @@ axis2_xmpp_transport_utils_process_presence(
         return AXIS2_FAILURE;
     }
 
-    pres_node = AXIOM_DOCUMENT_BUILD_ALL(doc, env);
+    pres_node = axiom_document_build_all(doc, env);
     if (!pres_node)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Failed to create OM node for "
@@ -277,10 +277,10 @@ axis2_xmpp_transport_utils_process_presence(
 
     /* Find transport in and out descriptions from the conf. We need out context
      * on the sending side */
-    qname = axis2_qname_create(env, AXIS2_TRANSPORT_XMPP, NULL, NULL);
-    conf = AXIS2_CONF_CTX_GET_CONF(session->conf_ctx, env);
-    out_desc = AXIS2_CONF_GET_TRANSPORT_OUT(conf, env, qname);
-    in_desc = AXIS2_CONF_GET_TRANSPORT_IN(conf, env, qname);
+    qname = axutil_qname_create(env, AXIS2_TRANSPORT_XMPP, NULL, NULL);
+    conf = axis2_conf_ctx_get_conf(session->conf_ctx, env);
+    out_desc = axis2_conf_get_transport_out(conf, env, 1);
+    in_desc = axis2_conf_get_transport_in(conf, env, 1);
     AXIS2_QNAME_FREE(qname, env);
     
     /* Create a new message ctx */

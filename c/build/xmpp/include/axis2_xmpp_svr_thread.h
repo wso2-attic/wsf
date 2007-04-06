@@ -30,7 +30,7 @@
 
 #include <axis2_const.h>
 #include <axis2_defines.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 
 #include <axis2_xmpp_worker.h>
 
@@ -59,7 +59,7 @@ extern "C"
         axis2_status_t (AXIS2_CALL *
                 run)(
                     axis2_xmpp_svr_thread_t *svr_thread,
-                    const axis2_env_t *env);
+                    const axutil_env_t *env);
 
         /**
          * @param svr_thread pointer to server thread
@@ -68,7 +68,7 @@ extern "C"
         axis2_status_t (AXIS2_CALL *
                 destroy)(
                     axis2_xmpp_svr_thread_t *svr_thread,
-                    const axis2_env_t *env);
+                    const axutil_env_t *env);
 
         /**
          * @param svr_thread pointer to server thread
@@ -77,7 +77,7 @@ extern "C"
         int (AXIS2_CALL *
                 get_local_port)(
                     const axis2_xmpp_svr_thread_t *svr_thread,
-                    const axis2_env_t *env);
+                    const axutil_env_t *env);
 
         /**
          * @param svr_thread pointer to server thread
@@ -86,7 +86,7 @@ extern "C"
         axis2_bool_t (AXIS2_CALL *
                 is_running)(
                     axis2_xmpp_svr_thread_t *svr_thread,
-                    const axis2_env_t *env);
+                    const axutil_env_t *env);
 
         /**
          * @param svr_thread pointer to server thread
@@ -96,7 +96,7 @@ extern "C"
         axis2_status_t (AXIS2_CALL *
                 set_worker)(
                     axis2_xmpp_svr_thread_t *svr_thread,
-                    const axis2_env_t *env,
+                    const axutil_env_t *env,
                     axis2_xmpp_worker_t *worker);
 
         /**
@@ -106,7 +106,7 @@ extern "C"
         axis2_status_t (AXIS2_CALL *
                 free)(
                     axis2_xmpp_svr_thread_t *svr_thread,
-                    const axis2_env_t *env);
+                    const axutil_env_t *env);
     };
 
     /**
@@ -124,7 +124,7 @@ extern "C"
      */
     AXIS2_EXTERN axis2_xmpp_svr_thread_t *AXIS2_CALL
     axis2_xmpp_svr_thread_create (
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         int port,
         axis2_conf_ctx_t *conf_ctx,
         int use_sasl,

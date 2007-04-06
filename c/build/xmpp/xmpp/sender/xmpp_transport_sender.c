@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#include <axis2_types.h>
-#include <axis2_string.h>
+#include <axutil_types.h>
+#include <axutil_string.h>
 #include <axis2_endpoint_ref.h>
 #include <axis2_addr.h>
 #include <axiom.h>
@@ -47,26 +47,26 @@ axis2_xmpp_transport_sender_impl_t;
 axis2_status_t AXIS2_CALL
 axis2_xmpp_transport_sender_invoke(
     axis2_transport_sender_t *transport_sender,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx);
 
 axis2_status_t AXIS2_CALL
 axis2_xmpp_transport_sender_clean_up(
     axis2_transport_sender_t *transport_sender,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx);
 
 axis2_status_t AXIS2_CALL
 axis2_xmpp_transport_sender_init(
     axis2_transport_sender_t *transport_sender,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
     axis2_transport_out_desc_t *out_desc);
 
 axis2_status_t AXIS2_CALL
 axis2_xmpp_transport_sender_free(
     axis2_transport_sender_t *transport_sender,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 /* End of function headers ****************************************************/
 
@@ -74,7 +74,7 @@ axis2_xmpp_transport_sender_free(
 
 axis2_transport_sender_t *AXIS2_CALL
 axis2_xmpp_transport_sender_create(
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     axis2_xmpp_transport_sender_impl_t *impl = NULL;
     
@@ -110,7 +110,7 @@ axis2_xmpp_transport_sender_create(
 axis2_status_t AXIS2_CALL
 axis2_xmpp_transport_sender_free(
     axis2_transport_sender_t *transport_sender,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     axis2_xmpp_transport_sender_impl_t *impl = NULL;
 
@@ -131,11 +131,11 @@ axis2_xmpp_transport_sender_free(
 axis2_status_t AXIS2_CALL
 axis2_xmpp_transport_sender_invoke(
     axis2_transport_sender_t *transport_sender,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx)
 {
-    axis2_hash_t *properties = NULL;
-    axis2_property_t *property = NULL;
+    axutil_hash_t *properties = NULL;
+    axutil_property_t *property = NULL;
     iksparser *xmpp_parser = NULL;
     char* client_jid = NULL;
     axiom_soap_envelope_t *soap_envelope = NULL;
@@ -167,7 +167,7 @@ axis2_xmpp_transport_sender_invoke(
         return AXIS2_FAILURE;
     }
 
-    property = axis2_hash_get(properties, AXIS2_XMPP_PARSER,
+    property = axutil_hash_get(properties, AXIS2_XMPP_PARSER,
         AXIS2_HASH_KEY_STRING);
     if (!property)
     {
@@ -177,7 +177,7 @@ axis2_xmpp_transport_sender_invoke(
     }
     xmpp_parser = AXIS2_PROPERTY_GET_VALUE(property, env);
 
-    property = axis2_hash_get(properties, AXIS2_XMPP_CLIENT_JID,
+    property = axutil_hash_get(properties, AXIS2_XMPP_CLIENT_JID,
         AXIS2_HASH_KEY_STRING);
     if (!property)
     {
@@ -229,7 +229,7 @@ axis2_xmpp_transport_sender_invoke(
 axis2_status_t AXIS2_CALL
 axis2_xmpp_transport_sender_clean_up(
     axis2_transport_sender_t *transport_sender,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -247,7 +247,7 @@ axis2_xmpp_transport_sender_clean_up(
 axis2_status_t AXIS2_CALL
 axis2_xmpp_transport_sender_init(
     axis2_transport_sender_t *transport_sender,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
     axis2_transport_out_desc_t *out_desc)
 {
@@ -262,7 +262,7 @@ axis2_xmpp_transport_sender_init(
 AXIS2_EXPORT int
 axis2_get_instance(
     struct axis2_transport_sender **inst,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     *inst = axis2_xmpp_transport_sender_create(env);
     if (!(*inst))
@@ -279,7 +279,7 @@ axis2_get_instance(
 AXIS2_EXPORT int
 axis2_remove_instance(
     axis2_transport_sender_t *inst,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     axis2_status_t status = AXIS2_FAILURE;
     if (inst)

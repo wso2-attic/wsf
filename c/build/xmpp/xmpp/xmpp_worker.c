@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-#include <axis2_string.h>
+#include <axutil_string.h>
 #include <axis2_conf.h>
-#include <axis2_string.h>
+#include <axutil_string.h>
 #include <axis2_msg_ctx.h>
 #include <axis2_op_ctx.h>
 #include <axis2_engine.h>
-#include <axis2_uuid_gen.h>
-#include <axis2_url.h>
-#include <axis2_property.h>
+#include <axutil_uuid_gen.h>
+#include <axutil_url.h>
+#include <axutil_property.h>
 
 #include <axis2_xmpp_transport.h>
 #include <axis2_xmpp_transport_utils.h>
@@ -49,17 +49,17 @@ axis2_xmpp_worker_impl_t;
 axis2_status_t AXIS2_CALL
 axis2_xmpp_worker_run(
     axis2_xmpp_worker_t *worker,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL
 axis2_xmpp_worker_free(
     axis2_xmpp_worker_t *xmpp_worker,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL
 axis2_xmpp_worker_set_svr_port(
     axis2_xmpp_worker_t *worker,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     int port);
 
 int axis2_xmpp_worker_on_data(
@@ -106,7 +106,7 @@ axis2_xmpp_session_data_init (
 
 AXIS2_EXTERN axis2_xmpp_worker_t *AXIS2_CALL
 axis2_xmpp_worker_create(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_xmpp_session_data_t *data)
 {
     axis2_xmpp_worker_impl_t *impl = NULL;
@@ -145,7 +145,7 @@ axis2_xmpp_worker_create(
 axis2_status_t AXIS2_CALL
 axis2_xmpp_worker_free(
     axis2_xmpp_worker_t *xmpp_worker,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
@@ -162,7 +162,7 @@ axis2_xmpp_worker_free(
 axis2_status_t AXIS2_CALL
 axis2_xmpp_worker_set_svr_port(
     axis2_xmpp_worker_t *worker,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     int port)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -175,15 +175,15 @@ axis2_xmpp_worker_set_svr_port(
 axis2_status_t AXIS2_CALL
 axis2_xmpp_worker_run(
     axis2_xmpp_worker_t *worker,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     axis2_xmpp_worker_impl_t *impl = NULL;
-    axis2_env_t *thread_env = NULL;
+    axutil_env_t *thread_env = NULL;
     int ret = IKS_OK;
     char* tmp = NULL;
 
 
-    thread_env = axis2_init_thread_env(env);
+    thread_env = axutil_init_thread_env(env);
 
     AXIS2_PARAM_CHECK(thread_env->error, worker, AXIS2_FALSE);
 
@@ -401,7 +401,7 @@ int axis2_xmpp_worker_on_normal_node(
                     }
                     else if (AXIS2_STRCMP(session->subscribe_type, AXIS2_XMPP_SUB_TYPE_ROOM) == 0)
                     {
-                        axis2_char_t *id = axis2_uuid_gen(session->env);
+                        axis2_char_t *id = axutil_uuid_gen(session->env);
 
                         iks *x = iks_make_pres(IKS_SHOW_AVAILABLE, "");
                         iks_insert_attrib(x, "to", session->subscribe_to);
@@ -508,7 +508,7 @@ int axis2_xmpp_worker_on_message(
     ikspak *pak)
 {
     axis2_xmpp_session_data_t *session = NULL;
-    axis2_env_t *env = NULL;
+    axutil_env_t *env = NULL;
     iks* body_elem = NULL;
     iks* soap_elem = NULL;
     char *soap_str = NULL;
@@ -566,7 +566,7 @@ int axis2_xmpp_worker_on_presence(
     ikspak *pak)
 {
     axis2_xmpp_session_data_t *session = NULL;
-    axis2_env_t *env = NULL;
+    axutil_env_t *env = NULL;
     char* presence_str = NULL;
     axis2_status_t status = AXIS2_SUCCESS;
     char request_uri[500] = "";
@@ -598,7 +598,7 @@ int axis2_xmpp_worker_on_subscription(
     ikspak *pak)
 {
     axis2_xmpp_session_data_t *session = NULL;
-    axis2_env_t *env = NULL;
+    axutil_env_t *env = NULL;
 
     session = (axis2_xmpp_session_data_t*)user_data;
     env = session->env;

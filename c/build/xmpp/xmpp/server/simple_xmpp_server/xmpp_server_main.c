@@ -19,29 +19,29 @@
 #include <signal.h>
 #include <ctype.h>
 
-#include <platforms/axis2_platform_auto_sense.h>
+#include <platforms/axutil_platform_auto_sense.h>
 #include <axiom.h>
-#include <axis2_thread_pool.h>
-#include <axis2_types.h>
-#include <axis2_error_default.h>
-#include <axis2_log_default.h>
+#include <axutil_thread_pool.h>
+#include <axutil_types.h>
+#include <axutil_error_default.h>
+#include <axutil_log_default.h>
 
 #include <axis2_xmpp_server.h>
 #include <axis2_xmpp_transport.h>
 #include <axis2_xmpp_worker.h>
 
-axis2_env_t *system_env = NULL;
+axutil_env_t *system_env = NULL;
 axis2_transport_receiver_t *server = NULL;
 
 /* Function headers ***********************************************************/
 
-axis2_env_t *
+axutil_env_t *
 init_syetem_env(
-    axis2_allocator_t *allocator,
+    axutil_allocator_t *allocator,
     const axis2_char_t *log_file);
 
 void system_exit(
-    axis2_env_t *env,
+    axutil_env_t *env,
     int status);
 
 void usage(
@@ -54,18 +54,18 @@ void sig_handler(
 
 /******************************************************************************/
 
-axis2_env_t *
+axutil_env_t *
 init_syetem_env(
-    axis2_allocator_t *allocator,
+    axutil_allocator_t *allocator,
     const axis2_char_t *log_file)
 {
-    axis2_error_t *error = axis2_error_create(allocator);
-    axis2_log_t *log = axis2_log_create(allocator, NULL, log_file);
+    axutil_error_t *error = axutil_error_create(allocator);
+    axutil_log_t *log = axutil_log_create(allocator, NULL, log_file);
 
 	/* if (!log) 
- 	    log = axis2_log_create_default (allocator); */
+ 	    log = axutil_log_create_default (allocator); */
 
-    axis2_thread_pool_t *thread_pool = axis2_thread_pool_init(allocator);
+    axutil_thread_pool_t *thread_pool = axutil_thread_pool_init(allocator);
     
     /* We need to init the parser in main thread before spawning child
      * threads
@@ -73,17 +73,17 @@ init_syetem_env(
     
     axiom_xml_reader_init();
     
-    return axis2_env_create_with_error_log_thread_pool(allocator, error, log,
+    return axutil_env_create_with_error_log_thread_pool(allocator, error, log,
             thread_pool);
 }
 
 /******************************************************************************/
 
 void system_exit(
-    axis2_env_t *env,
+    axutil_env_t *env,
     int status)
 {
-    axis2_allocator_t *allocator = NULL;
+    axutil_allocator_t *allocator = NULL;
     if (server)
     {
         AXIS2_TRANSPORT_RECEIVER_FREE(server,  system_env);
@@ -92,10 +92,10 @@ void system_exit(
     if (env)
     {
         allocator = env->allocator;
-        axis2_env_free(env);
+        axutil_env_free(env);
     }
 
-    /*axis2_allocator_free(allocator);*/
+    /*axutil_allocator_free(allocator);*/
     axiom_xml_reader_cleanup();
     
     _exit(status);
@@ -107,12 +107,12 @@ int main(
     int argc,
     char *argv[])
 {
-    axis2_allocator_t *allocator = NULL;
-    axis2_env_t *env = NULL;
+    axutil_allocator_t *allocator = NULL;
+    axutil_env_t *env = NULL;
     extern char *optarg;
     extern int optopt;
     int c;
-    axis2_log_levels_t log_level = AXIS2_LOG_LEVEL_DEBUG;
+    axutil_log_levels_t log_level = AXIS2_LOG_LEVEL_DEBUG;
     const axis2_char_t *log_file = "axis2.log";
     int port = IKS_JABBER_PORT; /* the default port for xmpp */
     const axis2_char_t *repo_path = "../";
@@ -120,7 +120,7 @@ int main(
     int use_tls = 0;
     int subscribe = 0;
 
-    allocator = axis2_allocator_init(NULL);
+    allocator = axutil_allocator_init(NULL);
 
     if (NULL == allocator)
     {
@@ -131,7 +131,7 @@ int main(
     env = init_syetem_env(allocator, log_file);
     env->log->level = log_level;
 
-    axis2_error_init();
+    axutil_error_init();
     system_env = env;
 
     axis2_xmpp_socket_read_timeout = AXIS2_XMPP_DEFAULT_SO_TIMEOUT;

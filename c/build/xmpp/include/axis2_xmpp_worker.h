@@ -32,7 +32,7 @@
 
 #include <axis2_const.h>
 #include <axis2_defines.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axis2_conf_ctx.h>
 
 
@@ -63,7 +63,7 @@ extern "C"
         int use_tls;            /* Whether to use TLS or not */
         int subscribe;          /* Whether to subscribe for events or not */
 
-        axis2_env_t *env;
+        axutil_env_t *env;
         axis2_conf_ctx_t* conf_ctx;
         axis2_svc_t *svc;
 
@@ -87,7 +87,7 @@ extern "C"
         axis2_status_t (AXIS2_CALL *
             run)(
                 axis2_xmpp_worker_t *worker,
-                const axis2_env_t *env);
+                const axutil_env_t *env);
 
         /**
          * @param xmpp_worker pointer to xmpp worker
@@ -98,7 +98,7 @@ extern "C"
         axis2_status_t (AXIS2_CALL *
                 set_svr_port)(
                     axis2_xmpp_worker_t *xmpp_worker,
-                    const axis2_env_t *env,
+                    const axutil_env_t *env,
                     int port);
 
         /**
@@ -109,7 +109,7 @@ extern "C"
         axis2_status_t (AXIS2_CALL *
                 free)(
                     axis2_xmpp_worker_t *xmpp_worker,
-                    const axis2_env_t *env);
+                    const axutil_env_t *env);
     };
 
     /**
@@ -128,7 +128,7 @@ extern "C"
      */
     AXIS2_EXTERN axis2_xmpp_worker_t * AXIS2_CALL
     axis2_xmpp_worker_create (
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axis2_xmpp_session_data_t *data);
 
     /**

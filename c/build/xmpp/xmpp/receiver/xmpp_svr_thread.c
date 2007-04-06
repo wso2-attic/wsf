@@ -16,14 +16,14 @@
 
 #include <signal.h>
 
-#include <axis2_string.h>
-#include <platforms/axis2_platform_auto_sense.h>
+#include <axutil_string.h>
+#include <platforms/axutil_platform_auto_sense.h>
 #include <axiom.h>
 #include <axiom_soap.h>
-#include <axis2_qname.h>
+#include <axutil_qname.h>
 #include <axis2_svc_ctx.h>
 #include <axis2_engine.h>
-#include <axis2_error_default.h>
+#include <axutil_error_default.h>
 #include <axis2_conf_ctx.h>
 #include <axis2_conf.h>
 #include <axiom_xml_reader.h>
@@ -45,7 +45,7 @@ typedef struct axis2_xmpp_svr_thread_impl
     axis2_xmpp_worker_t *worker;
     int port;
     axis2_conf_ctx_t *conf_ctx;
-    axis2_array_list_t *xmpp_sessions;
+    axutil_array_list_t *xmpp_sessions;
     int use_sasl;
     int use_tls;
     int subscribe;
@@ -54,7 +54,7 @@ axis2_xmpp_svr_thread_impl_t;
 
 typedef struct axis2_xmpp_svr_thd_args
 {
-    const axis2_env_t *env;
+    const axutil_env_t *env;
     axis2_xmpp_worker_t *worker;
 }
 axis2_xmpp_svr_thd_args_t;
@@ -68,53 +68,53 @@ axis2_xmpp_svr_thd_args_t;
 axis2_status_t AXIS2_CALL
 axis2_xmpp_svr_thread_run(
     axis2_xmpp_svr_thread_t *svr_thread,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL
 axis2_xmpp_svr_thread_destroy(
     axis2_xmpp_svr_thread_t *svr_thread,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 int AXIS2_CALL
 axis2_xmpp_svr_thread_get_local_port(
     const axis2_xmpp_svr_thread_t *svr_thread,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_bool_t AXIS2_CALL
 axis2_xmpp_svr_thread_is_running(
     axis2_xmpp_svr_thread_t *svr_thread,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL
 axis2_xmpp_svr_thread_set_worker(
     axis2_xmpp_svr_thread_t *svr_thread,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_xmpp_worker_t *worker);
 
 axis2_status_t AXIS2_CALL
 axis2_xmpp_svr_thread_free(
     axis2_xmpp_svr_thread_t *svr_thread,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
-AXIS2_EXTERN const axis2_env_t *AXIS2_CALL
+AXIS2_EXTERN const axutil_env_t *AXIS2_CALL
 init_thread_env(
-    const axis2_env_t **system_env);
+    const axutil_env_t **system_env);
 
 axis2_status_t AXIS2_CALL
 axis2_xmpp_svr_thread_get_all_xmpp_services(
     axis2_xmpp_svr_thread_t *svr_thread,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 void * AXIS2_THREAD_FUNC
 worker_func(
-    axis2_thread_t *thd,
+    axutil_thread_t *thd,
     void *data);
 
 /***************************** End of function headers ************************/
 
 axis2_xmpp_svr_thread_t *AXIS2_CALL
 axis2_xmpp_svr_thread_create(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     int port,
     axis2_conf_ctx_t *conf_ctx,
     int use_sasl,
@@ -166,7 +166,7 @@ axis2_xmpp_svr_thread_create(
 axis2_status_t AXIS2_CALL
 axis2_xmpp_svr_thread_free(
     axis2_xmpp_svr_thread_t *svr_thread,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     axis2_xmpp_svr_thread_impl_t *svr_thread_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -191,11 +191,11 @@ axis2_xmpp_svr_thread_free(
 axis2_status_t AXIS2_CALL
 axis2_xmpp_svr_thread_run(
     axis2_xmpp_svr_thread_t *svr_thread,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     axis2_xmpp_svr_thread_impl_t *impl = NULL;
     axis2_xmpp_worker_t *worker = NULL;
-    axis2_thread_t *worker_thread = NULL;
+    axutil_thread_t *worker_thread = NULL;
     axis2_xmpp_svr_thd_args_t *args = NULL;
     axis2_status_t status = AXIS2_SUCCESS;
     int svc_count = 0;
@@ -284,7 +284,7 @@ axis2_xmpp_svr_thread_run(
 axis2_status_t AXIS2_CALL
 axis2_xmpp_svr_thread_destroy(
     axis2_xmpp_svr_thread_t *svr_thread,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     axis2_xmpp_svr_thread_impl_t *svr_thread_impl = NULL;
 
@@ -311,7 +311,7 @@ axis2_xmpp_svr_thread_destroy(
 int AXIS2_CALL
 axis2_xmpp_svr_thread_get_local_port(
     const axis2_xmpp_svr_thread_t *svr_thread,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_CRITICAL_FAILURE);
     return AXIS2_INTF_TO_IMPL(svr_thread)->port;
@@ -322,7 +322,7 @@ axis2_xmpp_svr_thread_get_local_port(
 axis2_bool_t AXIS2_CALL
 axis2_xmpp_svr_thread_is_running(
     axis2_xmpp_svr_thread_t *svr_thread,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     return AXIS2_INTF_TO_IMPL(svr_thread)->port;
@@ -333,7 +333,7 @@ axis2_xmpp_svr_thread_is_running(
 axis2_status_t AXIS2_CALL
 axis2_xmpp_svr_thread_set_worker(
     axis2_xmpp_svr_thread_t *svr_thread,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_xmpp_worker_t *worker)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -347,17 +347,17 @@ axis2_xmpp_svr_thread_set_worker(
 axis2_status_t AXIS2_CALL
 axis2_xmpp_svr_thread_get_all_xmpp_services(
     axis2_xmpp_svr_thread_t *svr_thread,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     axis2_xmpp_svr_thread_impl_t *impl = NULL;
     axis2_conf_t *conf = NULL;
-    axis2_hash_t *services = NULL;
+    axutil_hash_t *services = NULL;
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
     impl = AXIS2_INTF_TO_IMPL(svr_thread);
 
-    impl->xmpp_sessions = axis2_array_list_create(env, 0);
+    impl->xmpp_sessions = axutil_array_list_create(env, 0);
 
     if (!impl->xmpp_sessions)
     {
@@ -383,18 +383,18 @@ axis2_xmpp_svr_thread_get_all_xmpp_services(
      * referring to an XMPP ID (i.e. a JID). If so, create an XMPP seesion data 
      * struct and add it to the session list. Later, we make XMPP connections
      * to expose those services */ 
-    axis2_hash_index_t *hi = NULL;
+    axutil_hash_index_t *hi = NULL;
     void *val = NULL;
-    for (hi = axis2_hash_first(services, env); hi; hi = axis2_hash_next(env, hi))
+    for (hi = axutil_hash_first(services, env); hi; hi = axutil_hash_next(env, hi))
     {
         axis2_svc_t *svc = NULL;
-        axis2_param_t *param_jid = NULL;
-        axis2_param_t *param_pw = NULL;
+        axutil_param_t *param_jid = NULL;
+        axutil_param_t *param_pw = NULL;
         axis2_char_t *jid = NULL;
         axis2_char_t *pw = NULL;
         axis2_xmpp_session_data_t *session = NULL;
 
-        axis2_hash_this(hi, NULL, NULL, &val);
+        axutil_hash_this(hi, NULL, NULL, &val);
         svc = (axis2_svc_t*)val;
         if (svc)
         {
@@ -430,7 +430,7 @@ axis2_xmpp_svr_thread_get_all_xmpp_services(
             axis2_xmpp_svr_thread_get_subscribing_ops(svr_thread, env, svc,
                     session);
 
-            axis2_array_list_add(impl->xmpp_sessions, env, (void*)session);
+            axutil_array_list_add(impl->xmpp_sessions, env, (void*)session);
         }
 
         val = NULL;
@@ -444,12 +444,12 @@ axis2_xmpp_svr_thread_get_all_xmpp_services(
 axis2_status_t AXIS2_CALL
 axis2_xmpp_svr_thread_get_subscribing_ops(
     axis2_xmpp_svr_thread_t *svr_thread,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_svc_t *svc,
     axis2_xmpp_session_data_t* session)
 {
     axis2_xmpp_svr_thread_impl_t *impl = NULL;
-    axis2_hash_t *ops = NULL;
+    axutil_hash_t *ops = NULL;
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
@@ -468,19 +468,19 @@ axis2_xmpp_svr_thread_get_subscribing_ops(
      * be given. If both are given, save it in the session with the
      * operation qname */ 
 
-    axis2_hash_index_t *hi = NULL;
+    axutil_hash_index_t *hi = NULL;
     void *val = NULL;
-    for (hi = axis2_hash_first(ops, env); hi; hi = axis2_hash_next(env, hi))
+    for (hi = axutil_hash_first(ops, env); hi; hi = axutil_hash_next(env, hi))
     {
         axis2_op_t *op= NULL;
-        axis2_param_t *param_jid = NULL;
-        axis2_param_t *param_type = NULL;
+        axutil_param_t *param_jid = NULL;
+        axutil_param_t *param_type = NULL;
         axis2_char_t *jid = NULL;
         axis2_char_t *type = NULL;
-        const axis2_qname_t *qname = NULL;
+        const axutil_qname_t *qname = NULL;
         axis2_char_t *op_name = NULL;
 
-        axis2_hash_this(hi, NULL, NULL, &val);
+        axutil_hash_this(hi, NULL, NULL, &val);
         op = (axis2_op_t*)val;
         if (op)
         {
@@ -524,7 +524,7 @@ axis2_xmpp_svr_thread_get_subscribing_ops(
  */
 void * AXIS2_THREAD_FUNC
 worker_func(
-    axis2_thread_t *thd,
+    axutil_thread_t *thd,
     void *data)
 {
     axis2_xmpp_svr_thd_args_t* args = NULL;

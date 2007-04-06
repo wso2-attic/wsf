@@ -1,8 +1,6 @@
 SUBDIRS=ssl
 lib_LTLIBRARIES = libaxis2_http_sender.la
 libaxis2_http_sender_la_SOURCES = http_transport_sender.c\
-                                  soap_over_http_sender.c\
-                                  rest_sender.c\
                                   http_client.c
 
 libaxis2_http_sender_la_LIBADD = $(top_builddir)/modules/core/engine/libaxis2_engine.la \
