@@ -71,7 +71,7 @@ FORCE_SHARED_LIB = 1
 
 include $(topsrcdir)/config/config.mk
 
-INCLUDES        += -I$(axis_topbuilddir)/include \
+INCLUDES        += -I$(axis_topbuilddir)/include/axis2-1.0 \
                    $(NULL)
 
 SHARED_LIBRARY_LIBS = \
@@ -88,19 +88,14 @@ ifneq ($(OS_ARCH),WINNT)
 
 AXIS2C_LIBS=   \
         -L$(axis_topbuilddir)/lib \
+		-laxis2_engine \
         -laxis2_minizip \
-        -laxis2_util \
+        -laxutil \
         -laxis2_parser \
         -laxis2_axiom \
-        -laxis2_xml_schema \
-        -lwoden_wsdl \
-        -lwoden \
-        -laxis2_wsdl \
-        -laxis2_engine \
-        $(NULL)
-        #-laxis2_http_receiver \
+        -laxis2_http_receiver \
         -laxis2_http_sender \
-
+        $(NULL)
 INTE_LIBS = \
              -lxml2 \
              -lz \

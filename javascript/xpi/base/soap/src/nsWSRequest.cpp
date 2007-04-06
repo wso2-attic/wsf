@@ -89,7 +89,7 @@ nsWSRequest::~nsWSRequest()
     if ( client_home ) PL_strfree ( client_home );
 
   /* make sure everything is cleaned */
-    if ( env ) axis2_env_free ( env );
+    if ( env ) axutil_env_free ( env );
 
 }
 
@@ -133,8 +133,9 @@ nsresult nsWSRequest::Init()
   }
 
     //Initializing environment
-    env = axis2_env_create_all("mozilla_client.log", AXIS2_LOG_LEVEL_TRACE);
   
+    env = axutil_env_create_all("mozilla_client.log", AXIS2_LOG_LEVEL_INFO);
+
     //Initializing or retrieving the event queue of main thread 
     nsIEventQueue* eventQ;
     nsCOMPtr<nsIEventQueueService> eventQService =
@@ -145,10 +146,10 @@ nsresult nsWSRequest::Init()
         if ( NS_FAILED(rv) ) 
         {
             rv = eventQService-> CreateThreadEventQueue();
-        if ( NS_FAILED( rv) )
-            return rv;
-        else
-            rv = eventQService-> GetThreadEventQueue( NS_CURRENT_THREAD, &eventQ);
+            if ( NS_FAILED( rv) )
+                return rv;
+            else
+                rv = eventQService-> GetThreadEventQueue( NS_CURRENT_THREAD, &eventQ);
         }
     }
     if (NS_FAILED( rv))
@@ -254,12 +255,12 @@ nsresult nsWSRequest::FindAxis2Home( char** axis2CHome)
       	    NS_CStringInsertData( fullPath, 0,  "/" );
             const char* tempW = path.get ();
       	    NS_CStringInsertData( fullPath, 0, tempW );
-         }
+        }
         else
         {
             const char* tempW = path.get();
             NS_CStringSetData(fullPath, tempW);
-         }
+        }
         theFile-> GetParent(getter_AddRefs(tempF));
         theFile = tempF;
     }
@@ -288,50 +289,63 @@ nsresult nsWSRequest::setOptions(nsIVariant *optionSet)
     getOptionsByKey(WSREQUEST_OPT_USE_SOAP,&useSoap);
     
     // useSOAP = true
-    if(!strcmp(TRUE,useSoap)  && strlen(useSoap) != 0){
-        mSoapVer = WSREQUEST_SOAP_VER_1_1;
+    if(!PL_strcmp(TRUE,useSoap)  && PL_strlen(useSoap) != 0)
+    {
+        mSoapVer = WSREQUEST_SOAP_VER_1_2;
     }
-    // useSOAP = false | user need REST so method is GET 
-    else if(!strcmp(FALSE,useSoap) && strlen(useSoap) != 0){
+    // useSOAP = false | user need REST  
+    else if(!PL_strcmp(FALSE,useSoap) && PL_strlen(useSoap) != 0)
+    {
         restOn = PR_TRUE;
-        mReqMethod = WSREQUEST_HTTP_METHOD_GET;
     }    
                         
-    else if(!strcmp(SOAP_VERSION_1_1,useSoap) && strlen(useSoap) != 0 ){  
+    else if(!PL_strcmp(SOAP_VERSION_1_1,useSoap) && PL_strlen(useSoap) != 0 )
+    {  
          mSoapVer = WSREQUEST_SOAP_VER_1_1;  
     }   
-    else if(!strcmp(SOAP_VERSION_1_2,useSoap) && strlen(useSoap)!= 0){ // default soap ver
+    else if(!PL_strcmp(SOAP_VERSION_1_2,useSoap) && PL_strlen(useSoap)!= 0)
+    { // default soap ver
          mSoapVer = WSREQUEST_SOAP_VER_1_2;
-    } 
-    free(useSoap); //release the memory to heap
+    }
+    if(useSoap)
+    {    
+        PL_strfree(useSoap);
+        useSoap = nsnull; //no wild pointers
+    }    
                 
-	// the http method
-    getOptionsByKey(WSREQUEST_HTTP_METHOD,&method);
-    // check REST enable ?
-    if(restOn == PR_FALSE){
-        if((!strcmp(WSREQUEST_HTTP_METHOD_POST,method) || !strcmp(WSREQUEST_HTTP_METHOD_POST_LOWER,method)) && strlen(method) != 0){
+	 //the http method
+     if(restOn)
+     {
+        getOptionsByKey(WSREQUEST_HTTP_METHOD,&method);
+        if((!PL_strcmp(WSREQUEST_HTTP_METHOD_POST,method) || !PL_strcmp(WSREQUEST_HTTP_METHOD_POST_LOWER,method)) && PL_strlen(method) != 0)
+        {
             mReqMethod = WSREQUEST_HTTP_METHOD_POST;         
-	}
-	if(!strcmp(WSREQUEST_HTTP_METHOD_GET,method)|| !strcmp(WSREQUEST_HTTP_METHOD_GET_LOWER,method) && strlen(method) != 0){
-		mReqMethod = WSREQUEST_HTTP_METHOD_GET;	  	
-	
-    }   
-	free(method); //free the memor 
-    }  
+	    }
+	    if(!PL_strcmp(WSREQUEST_HTTP_METHOD_GET,method)|| !PL_strcmp(WSREQUEST_HTTP_METHOD_GET_LOWER,method) && PL_strlen(method) != 0)
+        {
+	        mReqMethod = WSREQUEST_HTTP_METHOD_GET;	  	
+	    }
+        if(method)
+        {    
+            PL_strfree(method); 
+            method = nsnull;
+        }
+     }
 	//"useWSA" option
     getOptionsByKey(WSREQUEST_OPT_USE_WSA,&useWsa);    
-    if((!strcmp(TRUE,useWsa) || !strcmp(WSREQUEST_WSA_1_0,useWsa)) && strlen(useWsa) != 0 ){
-                // useWSA=true | useWSA=1.0 |useWSA="1.0" |"submission" here
+    if((!PL_strcmp(TRUE,useWsa) || !PL_strcmp(WSREQUEST_WSA_1_0,useWsa)) && PL_strlen(useWsa) != 0 )
+    {
+        // useWSA=true | useWSA=1.0 |useWSA="1.0" |"submission" here
         addressingOn = PR_TRUE;
     }
-    free(useWsa); //free the memory	
+    if(useWsa)
+    {    
+        PL_strfree(useWsa);
+        useWsa = nsnull;
+    }    
     return NS_OK; 
 }
 
-
-/// end of setOption method
-
-/// getOptionByKey  method
 nsresult nsWSRequest::getOptionsByKey(const char *key,char **value)
 {
     nsCOMPtr<nsIVariant> varVal;
@@ -355,10 +369,10 @@ NS_IMETHODIMP nsWSRequest::Open(nsIVariant *optionSet,const nsACString &url)
     if (NS_FAILED(rv))
         return rv;
 
-    //if it is an optionarray
+    
     switch(dataType)
     {    
-
+        //if the option is a string
         case nsIDataType::VTYPE_CHAR_STR:
         case nsIDataType::VTYPE_UTF8STRING:
         case nsIDataType::VTYPE_CSTRING:
@@ -373,6 +387,7 @@ NS_IMETHODIMP nsWSRequest::Open(nsIVariant *optionSet,const nsACString &url)
         break;
         default: 
         {
+            //if the option is an assosiative array
             nsISupports* supports;
             nsIID *iid;
             rv = optionSet->GetAsInterface(&iid, (void**)&supports);
@@ -421,14 +436,14 @@ NS_IMETHODIMP nsWSRequest::Open(nsIVariant *optionSet,const nsACString &url)
         if (NS_FAILED(param))
         return param;
 
-    JSContext* cx;
-    param = cc->GetJSContext(&cx);
-    if (NS_FAILED(param))
-         return param;
+        JSContext* cx;
+        param = cc->GetJSContext(&cx);
+        if (NS_FAILED(param))
+             return param;
 
-    JSBool asyncBool;
-    ::JS_ValueToBoolean(cx, argv[2], &asyncBool);
-    mIsAsync = (PRBool)asyncBool;
+        JSBool asyncBool;
+        ::JS_ValueToBoolean(cx, argv[2], &asyncBool);
+        mIsAsync = (PRBool)asyncBool;
     }
 
     char *urlStr;
@@ -452,22 +467,22 @@ NS_IMETHODIMP nsWSRequest::GetResponseXML(nsIDOMDocument * *aResponseXML)
 {
   /* TODO:string to dom conversion should be removed */
     nsresult rv;
-        if ( mResponseText == NULL )
-        {
-            *aResponseXML = nsnull;
+    if ( mResponseText == NULL )
+    {
+        *aResponseXML = nsnull;
              return WSREQUEST_EXCEPTION ("NULL_RESPONSE" ,
                      "response is not available or null", nsnull,
                       NS_ERROR_NOT_AVAILABLE);
 
-        }
+    }
 
     nsCOMPtr<nsIDOMParser> dom_parser(do_CreateInstance(NS_DOMPARSER_CONTRACTID, &rv ) );
     if (NS_FAILED(rv))
         return rv;
 
-  //build the document
+   //build the document
     nsCOMPtr<nsIDOMDocument> re_dom_doc;
-        rv = dom_parser-> ParseFromBuffer ( ( PRUint8 *)mResponseText,
+    rv = dom_parser-> ParseFromBuffer ( ( PRUint8 *)mResponseText,
 		                       strlen (mResponseText ),
                                        "text/xml",
 		              getter_AddRefs(re_dom_doc ) );
@@ -564,10 +579,9 @@ NS_IMETHODIMP nsWSRequest::Send(nsIVariant *body)
             rv = serializer->SerializeToString(dom_node , serial );
             if ( NS_FAILED( rv))
                return rv;
-          //  break;
         }
         break;
-  }
+    }
     char* bodyContent;
     bodyContent =PL_strdup ( NS_ConvertUTF16toUTF8(serial).get() );
     rv = SendRequest (bodyContent );
@@ -658,11 +672,9 @@ void nsWSRequest::threadProc(void *arg)
     obj->InvokeWS( passedObj -> cont_node);
 }
 
-
 nsresult
 nsWSRequest::InvokeWS( axiom_node_t* cont_node )
 {
-      
     nsresult rv;
     rv = NS_OK;
 
@@ -682,15 +694,15 @@ nsWSRequest::InvokeWS( axiom_node_t* cont_node )
     else
     {
         endpoint_ref = axis2_endpoint_ref_create ( env, mEndpointUri );
-        AXIS2_OPTIONS_SET_TO(options, env, endpoint_ref);
+        axis2_options_set_to(options, env, endpoint_ref);
     }
 
     /* set the version */
-    if(options)
+    if(options && !restOn)
     {
         if( WSREQUEST_COMPARE_SOAP_VERSIONS(mSoapVer, WSREQUEST_SOAP_VER_1_1 ) )
         {
-            AXIS2_OPTIONS_SET_SOAP_VERSION(options, env, AXIOM_SOAP11);
+            axis2_options_set_soap_version(options, env, AXIOM_SOAP11);
         }
     }
     svc_client = axis2_svc_client_create(env, client_home);
@@ -700,84 +712,114 @@ nsWSRequest::InvokeWS( axiom_node_t* cont_node )
                      "axis2 fails to invoke the service", nsnull,
                       NS_ERROR_FAILURE);
     }
-    else if ( NS_SUCCEEDED (rv ) )
+    else if ( NS_SUCCEEDED (rv ))
     {
         /*extract addressing from the list */
-        if ( addressingOn )
+        if(addressingOn  && restOn == PR_FALSE)
         {
         /* Engage addressing module */
-            AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, AXIS2_MODULE_ADDRESSING);
+            axis2_svc_client_engage_module(svc_client, env,AXIS2_MODULE_ADDRESSING);  
             char *wsaAction = nsnull;
             getOptionsByKey(WSPREQUEST_OPT_WSA_ACTION,&wsaAction);
     
-            if (wsaAction == nsnull){
+            if (wsaAction == nsnull)
+            {
                 rv = WSREQUEST_EXCEPTION ("NULL_WSA_ACTION" ,
                      "wsa action missing", nsnull,
                       NS_ERROR_NOT_AVAILABLE);
             }
       
-            else{
- 		char *from = ""; /*need to get the length of the string*/
+            else
+            {
+                char *from = ""; /*need to get the length of the string*/
                 getOptionsByKey(WSREQUEST_OPT_FROM,&from);
-                if(strlen(from) != 0){
-    	        	AXIS2_OPTIONS_SET_FROM(options,env,axis2_endpoint_ref_create(env,from));
-                    if(free){
-	    	            free(from);			
+                if(PL_strlen(from) != 0)
+                {
+                    axis2_options_set_from(options, env,axis2_endpoint_ref_create(env,from));
+                    if(from)
+                    {
+	    	            PL_strfree(from);
+                        from = nsnull;
                     }    
                 }
-		char *replyTo = "";
-		getOptionsByKey(WSREQUEST_OPT_REPLY_TO,&replyTo);
-                if(strlen(replyTo) != 0 ){
-			AXIS2_OPTIONS_SET_REPLY_TO(options,env,axis2_endpoint_ref_create(env,replyTo));
-                if(replyTo){
-            		free(replyTo);
-                }    
-	        }        
+                char *replyTo = "";
+		        getOptionsByKey(WSREQUEST_OPT_REPLY_TO,&replyTo);
+                if(PL_strlen(replyTo) != 0 )
+                {
+                    axis2_options_set_reply_to(options, env,axis2_endpoint_ref_create(env,replyTo));
+                    if(replyTo)
+                    {
+            		    PL_strfree(replyTo);
+                        replyTo = nsnull;
+                    }    
+	            }        
                 char *faultTo = "";
                 getOptionsByKey(WSREQUEST_OPT_FAULT_TO,&faultTo);
-		if(strlen(faultTo) != 0){
-			AXIS2_OPTIONS_SET_FAULT_TO(options,env,axis2_endpoint_ref_create(env,faultTo));
-            if(faultTo){
-			free(faultTo);
-            }
+		        if(PL_strlen(faultTo) != 0)
+                {
+                    axis2_options_set_fault_to(options,env,axis2_endpoint_ref_create(env,faultTo));
+                    if(faultTo)
+                    {
+			            PL_strfree(faultTo);
+                        faultTo = nsnull;
+                    }
             	}   
 	
             }
-      	//wsa action ends here 
-	        AXIS2_OPTIONS_SET_ACTION(options, env, wsaAction);
-        // addressing checking ends here
+            axis2_options_set_action(options, env,wsaAction);
         }
-        if(restOn == PR_TRUE){
-		    AXIS2_OPTIONS_SET_PROPERTY(options,env,AXIS2_ENABLE_REST,AXIS2_VALUE_TRUE);
-        }
-        if(!strcmp(mReqMethod,WSREQUEST_HTTP_METHOD_POST)){
-		AXIS2_OPTIONS_SET_PROPERTY(options,env,AXIS2_HTTP_METHOD,AXIS2_HTTP_HEADER_POST);		
-	}
-        else if(!strcmp(mReqMethod,WSREQUEST_HTTP_METHOD_GET)){
-	        AXIS2_OPTIONS_SET_PROPERTY(options,env,AXIS2_HTTP_METHOD,AXIS2_HTTP_HEADER_GET);
-       	} 
+      
+        //TODO fix this bug in Axis2/c and come here
+        /*if(restOn)
+        {
+            if(!PL_strcmp(mReqMethod,WSREQUEST_HTTP_METHOD_POST))
+            {
+                AXIS2_OPTIONS_SET_PROPERTY(options,env,AXIS2_HTTP_METHOD, AXIS2_HTTP_HEADER_POST);
+	        }
+            else if(!PL_strcmp(mReqMethod,WSREQUEST_HTTP_METHOD_GET))
+            {
+                AXIS2_OPTIONS_SET_PROPERTY(options,env,AXIS2_HTTP_METHOD,AXIS2_HTTP_HEADER_GET);
+       	    }
+        }*/
+        if(restOn)
+        {
+            axutil_property_t *rest_property = NULL;
+            axutil_property_set_value(rest_property,env,axutil_strdup(env,AXIS2_VALUE_TRUE));
+            axis2_options_set_property(options,env,AXIS2_ENABLE_REST,rest_property);
+
+            if(!PL_strcmp(mReqMethod,WSREQUEST_HTTP_METHOD_GET))
+            {
+               // get_property = axis2_property_create(env);
+               // AXIS2_PROPERTY_SET_VALUE(get_property,env,axis2_strdup(AXIS2_HTTP_HEADER_GET,env));
+               // AXIS2_OPTIONS_SET_PROPERTY(options,env,AXIS2_HTTP_METHOD,get_property);
+            }
+
+        }    
         /* Set service client options */
-        AXIS2_SVC_CLIENT_SET_OPTIONS(svc_client, env, options);
+        axis2_svc_client_set_options(svc_client,env,options);
     }
 
   /* Send request */
     if(NS_SUCCEEDED (rv ))
     {
-        ret_node = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, cont_node);
+        ret_node = axis2_svc_client_send_receive(svc_client,env,cont_node);
     }
   
-    if(mResponseText){
+    if(mResponseText)
+    {
         PL_strfree (mResponseText);
 		mResponseText = nsnull;
     }
-    if(!ret_node ){
+    if(!ret_node)
+    {
 	    mResponseText = nsnull;
         mStatus = WSREQUEST_HTTP_STATUS_FAILURE;
 	    rv = WSREQUEST_EXCEPTION ("NULL_RESPONSE" ,
                      "response null", nsnull,
                       NS_ERROR_FAILURE);
     }
-	else{
+	else
+    {
 	        axiom_xml_writer_t *writer = NULL;
         	axiom_output_t *om_output = NULL;
 
@@ -785,24 +827,27 @@ nsWSRequest::InvokeWS( axiom_node_t* cont_node )
 		                  AXIS2_XML_PARSER_TYPE_BUFFER);
         	om_output = axiom_output_create (env, writer);
 
-	        AXIOM_NODE_SERIALIZE (ret_node, env, om_output);
-        	mResponseText = PL_strdup ((char* )AXIOM_XML_WRITER_GET_XML(writer, env) );
+            /*axiom_node_serialize(ret_node,env,om_output);*/
+            axiom_node_serialize_sub_tree(ret_node,env,om_output);
+            
+        	mResponseText = PL_strdup ((char* )axiom_xml_writer_get_xml(writer, env) );
 	        mStatus = WSREQUEST_HTTP_STATUS_SUCCESS;
     }
       
     	/* freeing use objects */
-	if(svc_client) AXIS2_SVC_CLIENT_FREE ( svc_client, env );
-	if(cont_node) AXIOM_NODE_FREE_TREE ( cont_node, env );
-	if(ret_node) AXIOM_NODE_FREE_TREE ( ret_node, env ); 
+	//if(svc_client) AXIS2_SVC_CLIENT_FREE ( svc_client, env );
+	//if(cont_node) AXIOM_NODE_FREE_TREE ( cont_node, env );
+	//if(ret_node) AXIOM_NODE_FREE_TREE ( ret_node, env ); 
 	//if ( endpoint_ref )AXIS2_ENDPOINT_REF_FREE ( endpoint_ref, env );
 
-    //TODO free the wsaAction mem
-	if(mIsAsync){
-        	PostAsynEvent (WSREQUEST_COMPLETED );
+	if(mIsAsync)
+    {
+        	PostAsynEvent (WSREQUEST_COMPLETED);
     }
-    else{
+    else
+    {
     	//Just call script straight
-        	ChangeReadyState( WSREQUEST_COMPLETED );
+        	ChangeReadyState( WSREQUEST_COMPLETED);
     }
     mProcessingSend = PR_FALSE;
     return rv;
@@ -811,20 +856,21 @@ nsWSRequest::InvokeWS( axiom_node_t* cont_node )
 nsresult nsWSRequest::PostAsynEvent ( PRInt32 forState )
 {
 	    //Use native class rather the wrapper
-	PLEventQueue* ntvEventQueue;
+    PLEventQueue* ntvEventQueue;
 	gEventQueue-> GetPLEventQueue(&ntvEventQueue );
 
-	    //create and post an event to the main thread
-    	PL_ENTER_EVENT_QUEUE_MONITOR(ntvEventQueue);
+	   //create and post an event to the main thread
+    PL_ENTER_EVENT_QUEUE_MONITOR(ntvEventQueue);
 
 	    // construct
-    	nsAsyncEvent_t* event;
+    nsAsyncEvent_t* event;
 
-    	event = PR_NEW( nsAsyncEvent_t);
-        if(event == NULL){
+    event = PR_NEW( nsAsyncEvent_t);
+    if(event == NULL)
+    {
         	PL_EXIT_EVENT_QUEUE_MONITOR ( ntvEventQueue );
             	return NS_ERROR_OUT_OF_MEMORY;
-        }
+    }
 
 	  // initialize
 	PL_InitEvent( (PLEvent*)event, this,
@@ -868,19 +914,23 @@ nsresult nsWSRequest::ChangeReadyState( PRInt32 aReadyState )
 	nsCOMPtr<nsIJSContextStack> stack;
     	JSContext *cx = nsnull;
 
-	if(mScriptContext){
+	if(mScriptContext)
+    {
 	        stack = do_GetService("@mozilla.org/js/xpc/ContextStack;1");
 
-        	if(stack){
+        	if(stack)
+            {
             		cx = (JSContext *)mScriptContext->GetNativeContext();
 
-			if(cx){
+			    if(cx)
+                {
         	        	stack->Push(cx);
-            		}
+                }
         	}
    	}
 	mOnreadystatechange ->HandleEvent( );
-	if(cx){
+	if(cx)
+    {
 	        stack->Pop(&cx);
    	}
 	return NS_OK;
@@ -890,7 +940,8 @@ nsresult
 nsWSRequest::GetDocumentFromScriptContext(nsIScriptContext *aScriptContext,
 	       	nsIDocument** ret_doc)
 {
-	if (!aScriptContext){
+	if (!aScriptContext)
+    {
 		*ret_doc = nsnull;
         	return NS_ERROR_FAILURE;
 	}
@@ -898,10 +949,12 @@ nsWSRequest::GetDocumentFromScriptContext(nsIScriptContext *aScriptContext,
 	nsCOMPtr<nsIDOMWindow> window =
         	do_QueryInterface((nsISupports*)aScriptContext->GetGlobalObject());
 	nsIDocument *doc = nsnull;
-	if(window){
+	if(window)
+    {
         	nsCOMPtr<nsIDOMDocument> domdoc;
 	        window->GetDocument(getter_AddRefs(domdoc));
-        	if(domdoc){
+        	if(domdoc)
+            {
 		        CallQueryInterface(domdoc, &doc);
 		        *ret_doc = doc;
              		return NS_OK;
@@ -918,14 +971,16 @@ nsresult nsWSRequest::GetCurrentContext( nsIScriptContext** ret_val)
   // Get JSContext from stack.
 	nsCOMPtr<nsIJSContextStack> stack = do_GetService("@mozilla.org/js/xpc/ContextStack;1");
 
-	if(!stack){
+	if(!stack)
+    {
 		*ret_val = nsnull;
 		return NS_ERROR_FAILURE;
 	}
 
 	JSContext *cx;
 
-	if(NS_FAILED(stack->Peek(&cx)) || !cx){
+	if(NS_FAILED(stack->Peek(&cx)) || !cx)
+    {
 		*ret_val = nsnull;
 	        return NS_ERROR_FAILURE;
 	}
@@ -945,8 +1000,8 @@ nsresult nsWSRequest::PrintNode ( axiom_node_t* node )
 	writer = axiom_xml_writer_create_for_memory(env, NULL, AXIS2_TRUE, 0, 
 		                              AXIS2_XML_PARSER_TYPE_BUFFER);
 	om_output = axiom_output_create (env, writer);
-	AXIOM_NODE_SERIALIZE (node, env, om_output);
-	buffer = (axis2_char_t*) AXIOM_XML_WRITER_GET_XML(writer, env);
+	axiom_node_serialize(node, env, om_output);
+	buffer = (axis2_char_t*) axiom_xml_writer_get_xml(writer, env);
 	printf("%s\n", buffer);
 	free( buffer);
     	return NS_OK;
@@ -970,20 +1025,19 @@ nsWSRequest::CreateOMFromText( axis2_char_t* nodeText,
 
     	om_builder = axiom_stax_builder_create(env, xml_reader);
         if(!om_builder){
-        	AXIOM_XML_READER_FREE(xml_reader, env);
+        	axiom_xml_reader_free(xml_reader, env);
         	return NS_ERROR_FAILURE;
         }
-	document = AXIOM_STAX_BUILDER_GET_DOCUMENT(om_builder, env);
+    document = axiom_stax_builder_get_document(om_builder,env);    
 	if(!document){
-	        AXIOM_STAX_BUILDER_FREE(om_builder, env);
+            axiom_stax_builder_free(om_builder,env);
         	return NS_ERROR_FAILURE;
 	}
-	node = AXIOM_DOCUMENT_GET_ROOT_ELEMENT(document, env);
+    node = axiom_document_get_root_element(document, env);
 	if(!node){
         	return NS_ERROR_FAILURE;
     	}
-
-	AXIOM_DOCUMENT_BUILD_ALL ( document , env );
+     axiom_document_build_all(document, env);
     	*retnode = node;
     	return NS_OK;
 }

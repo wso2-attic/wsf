@@ -121,6 +121,7 @@ protected:
 
   PRBool addressingOn;
   PRBool restOn;
+  PRBool mGet;
   PRBool mProcessingSend;
 
   /* handling response */
@@ -137,12 +138,14 @@ protected:
   
   /* threads events and callbacks */
   PRThread*  mEventThread;
+
   nsIEventQueue *gEventQueue;
   PR_STATIC_CALLBACK(void*) HandleAsync(PLEvent* aEvent);
   PR_STATIC_CALLBACK(void) DestroyAsync(PLEvent* aEvent);
   nsresult PostAsynEvent ( PRInt32 forState );
 
   PR_STATIC_CALLBACK(void) threadProc(void *arg);
+  PR_STATIC_CALLBACK(void) threadProc1(void *arg);
 
   /* javascript context*/
   nsCOMPtr<nsIScriptContext> mScriptContext;
@@ -157,7 +160,7 @@ protected:
   /////////////////////////////////
   // Setting environment/
   
-  axis2_env_t *env ;
+  axutil_env_t *env ;
   axis2_char_t *client_home;
 
   ///////////////////////////////

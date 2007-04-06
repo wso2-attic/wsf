@@ -37,7 +37,7 @@ CPPSRCS =       \
 include $(topsrcdir)/config/config.mk
 
 
-INCLUDES        += -I$(axis_topbuilddir)/include \
+INCLUDES        += -I$(axis_topbuilddir)/include/axis2-1.0 \
                    $(NULL)
 
 LOCAL_INCLUDES +=  \
@@ -51,10 +51,9 @@ AXIS2C_LIBS=   \
         -laxis2_engine \
         -laxis2_http_receiver \
         -laxis2_http_sender \
-        -laxis2_wsdl \
         -laxis2_parser \
         -laxis2_soap \
-        -laxis2_util \
+        -laxutil \
         $(NULL)
 
 EXTRA_LIBS = $(AXIS2C_LIBS) \
