@@ -10,13 +10,10 @@ axis2_http_server_LDADD   =  $(LDFLAGS) \
                             -L$(top_builddir)/modules/core/transport/http/sender \
                             -L$(top_builddir)/modules/core/transport/http/receiver \
 							-L../../../../../../axiom/src/om \
-							../../../../../../util/src/libaxis2_util.la \
+							../../../../../../util/src/libaxutil.la \
 							../../../../../../axiom/src/parser/$(WRAPPER_DIR)/libaxis2_parser.la \
-							$(top_builddir)/woden/src/wsdl20/libwoden.la \
-							$(top_builddir)/xml_schema/src/libaxis2_xml_schema.la \
                             -laxis2_engine \
                             -lpthread \
-                            -laxis2_wsdl \
                             -laxis2_http_sender \
                             -laxis2_http_receiver \
 							-L$(top_builddir)$(GUTHTHILA_LIBS) \
