@@ -918,7 +918,7 @@ public class XML extends XMLObjectImpl {
             OMNode omNode = builder2.getDocumentElement().getFirstOMChild();
             if (omNode == null) {
                 OMFactory omFactory = OMAbstractFactory.getOMFactory();
-                omNode = omFactory.createOMText(" ");
+                omNode = omFactory.createOMText("");
             }
             //TODO need to deel with removing comments,PIs whithe spaces if those are not necessary
             axiomNode = AxiomNode.buildAxiomNode(omNode, null);

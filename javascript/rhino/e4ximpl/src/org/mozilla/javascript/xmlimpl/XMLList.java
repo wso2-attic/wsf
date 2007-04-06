@@ -200,12 +200,10 @@ public class XMLList extends XMLObjectImpl implements Function {
 
     public void put(int index, Scriptable start, Object value) {
         //TODO implements the put method
-        System.out.println("put called");
         Object parent = Undefined.instance;
-// Convert text into XML if needed.
         XMLObject xmlValue;
 
-// Special-case checks for undefined and null
+        // Special-case checks for undefined and null
         if (value == null) {
             value = "null";
         } else if (value instanceof Undefined) {
@@ -225,7 +223,7 @@ public class XMLList extends XMLObjectImpl implements Function {
             }
         }
 
-// Find the parent
+        // Find the parent
         if (index < length()) {
             parent = getFromAxiomNodeList(index).parent();
         } else {
@@ -243,7 +241,7 @@ public class XMLList extends XMLObjectImpl implements Function {
 
                 if (xmlValue instanceof XML) {
                     xmlNode.replaceAll((XML) xmlValue);
-                    //TODO xmlValue should be cast to XML otherwise replace(intdex, object) method will be called
+                    //xmlValue should be cast to XML otherwise replace(intdex, object) method will be called
                     replace(index, (XML) xmlValue);
                 } else if (xmlValue instanceof XMLList) {
                     // Replace the first one, and add the rest on the list.
@@ -265,7 +263,6 @@ public class XMLList extends XMLObjectImpl implements Function {
                 // Appending
                 xmlParent.appendChild(xmlValue);
                 addToList(xmlParent.child(index));
-//                addToList(AxiomNode.buildAxiomNode(xmlParent.child(index), xmlParent.getAxiomNode()));
             }
         } else {
             //TODO
@@ -810,7 +807,6 @@ public class XMLList extends XMLObjectImpl implements Function {
             _axiomNodeList = axiomNodeList;
         }
     }
-
 
     static XMLList toXMLList(XMLLibImpl lib, Object value) {
         String xmlString;

@@ -78,7 +78,7 @@ public final class XMLLibImpl extends XMLLib implements Serializable {
     private void exportToScope(boolean sealed) {
         namespacePrototype = new Namespace(this, "", "");
         qnamePrototype = new QName(this, "", "", "");
-        xmlPrototype = XML.toXML(this, " ");
+        xmlPrototype = XML.toXML(this, "");
         xmlListPrototype = new XMLList(this);
 
         xmlPrototype.exportAsJSClass(sealed);

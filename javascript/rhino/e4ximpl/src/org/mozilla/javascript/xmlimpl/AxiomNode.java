@@ -239,7 +239,7 @@ public class AxiomNode {
 
             while (iterator.hasNext()) {
                 OMNode omNode = (OMNode) iterator.next();
-                if(omNode.getType() == OMNode.TEXT_NODE && isNewlineCharacter((OMText)omNode)){
+                if (omNode.getType() == OMNode.TEXT_NODE && isNewlineCharacter((OMText) omNode)) {
                     continue;
                 }
                 childIndex++;
@@ -369,8 +369,10 @@ public class AxiomNode {
     }
 
     private void insertChild(AxiomNode nodeToInsert, int mode) {
-        if (!isElement())
-            throw ScriptRuntime.typeError(UNSUPPORTED_OP);
+        if (!isElement()) {
+            return;
+        }
+//            throw ScriptRuntime.typeError(UNSUPPORTED_OP);
 
         if (mode == PREPEND_CHILD) {
             AxiomNode refNode = childAt(0);
@@ -461,7 +463,8 @@ public class AxiomNode {
 
     public XMLList matchNodes(XMLName xmlName, XMLList xmlList, int type) {
         if (!isElement())
-            throw ScriptRuntime.typeError(UNSUPPORTED_OP);
+            return null;
+//            throw ScriptRuntime.typeError(UNSUPPORTED_OP);
 
         if (xmlName.localName().equals(XMLName.ANY_NAME) && xmlName.uri() == null) {
             xmlList = nodeMatcher.matchAnyQName(this, xmlList, type);
