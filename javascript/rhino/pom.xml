@@ -1,0 +1,145 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.wso2.javascript.rhino</groupId>
+	<artifactId>js-axiom</artifactId>
+	<packaging>jar</packaging>
+	<version>SNAPSHOT</version>
+	<name>JavaScript Rhino</name>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.mozilla.javascript</groupId>
+			<artifactId>js-core</artifactId>
+			<version>SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>stax</groupId>
+			<artifactId>stax-api</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.woodstox</groupId>
+			<artifactId>wstx</artifactId>
+			<version>asl-3.2.0</version>
+		</dependency>        
+		<dependency>
+			<groupId>org.apache.ws.commons.axiom</groupId>
+			<artifactId>axiom-api</artifactId>
+			<version>SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.ws.commons.axiom</groupId>
+			<artifactId>axiom-impl</artifactId>
+			<version>SNAPSHOT</version>
+		</dependency>
+    </dependencies>
+    <repositories>
+	    <!--<repository>
+		    <id>asankha-m2</id>
+		    <name>asankha-m2</name>
+		    <url>http://people.apache.org/~asankha/maven2/</url>
+		    <releases>
+			    <updatePolicy>never</updatePolicy>
+		    </releases>
+		    <snapshots>
+			    <updatePolicy>interval:1440</updatePolicy>
+		    </snapshots>
+	    </repository>-->
+	    
+		    <repository>
+			    <id>thilina</id>
+			    <name>thilina</name>
+			    <url>http://www-lk.wso2.com/~thilina/repository/</url>
+			    <releases>
+				    <updatePolicy>never</updatePolicy>
+			    </releases>
+			    <layout>legacy</layout>
+			    <snapshots>
+				    <updatePolicy>interval:1440</updatePolicy>
+			    </snapshots>
+		    </repository>
+		    <repository>
+			    <id>ibiblio-m2</id>
+			    <name>Ibiblio Maven 2 Repo</name>
+			    <url>http://www.ibiblio.org/maven2</url>
+			    <releases>
+				    <updatePolicy>never</updatePolicy>
+			    </releases>
+			    <snapshots>
+				    <enabled>false</enabled>
+			    </snapshots>
+		    </repository>
+		    <repository>
+			    <id>Apache Zones</id>
+			    <name>Apache Zones</name>
+			    <layout>legacy</layout>
+			    <url>http://ws.zones.apache.org/repository/</url>
+			    <releases>
+				    <updatePolicy>never</updatePolicy>
+			    </releases>
+			    <snapshots>
+				    <enabled>false</enabled>
+			    </snapshots>
+		    </repository>
+		    <repository>
+			    <id>Apache People</id>
+			    <name>Apache People Repo</name>
+			    <layout>legacy</layout>
+			    <url>http://people.apache.org/repository</url>
+			    <releases>
+				    <updatePolicy>never</updatePolicy>
+			    </releases>
+			    <snapshots>
+				    <enabled>false</enabled>
+			    </snapshots>
+		    </repository>
+		    <repository>
+			    <id>apache-m2-snapshot</id>
+			    <name>Apache Maven 2 Snapshot Repository</name>
+			    <url>http://people.apache.org/repo/m2-snapshot-repository/</url>
+			    <releases>
+				    <updatePolicy>never</updatePolicy>
+			    </releases>
+			    <snapshots>
+				    <updatePolicy>interval:1440</updatePolicy>
+			    </snapshots>
+		    </repository>
+		    <repository>
+			    <id>wso2-m2</id>
+			    <name>WSO2 Maven 2 Repository</name>
+			    <url>http://dist.wso2.org/maven2/</url>
+			    <releases>
+				    <updatePolicy>never</updatePolicy>
+			    </releases>
+			    <snapshots>
+				    <updatePolicy>interval:1440</updatePolicy>
+			    </snapshots>
+		    </repository>
+		    <repository>
+			    <id>maven2</id>
+			    <name>Maven Central Development Repository</name>
+			    <url>http://repo1.maven.org/maven2</url>
+        	</repository>
+		<repository>
+			<id>codehaus.org</id>
+			<name>Maven Repository</name>
+			<url>http://dist.codehaus.org/</url>
+        	</repository>
+		    <repository>
+			    <id>codehaus.org</id>
+			    <name>jettison Central Repository</name>
+			    <url>dav:https://dav.codehaus.org/repository/jettison/</url>
+    		   </repository>
+		   <repository>
+			   <id>codehaus-snapshot</id>
+			   <name>Maven snapshot Repository</name>
+			   <url>http://snapshots.maven.codehaus.org/maven2</url>
+		</repository>
+		<repository>
+			<id>maven2</id>
+			<name>Maven Central Development Repository</name>
+			<url>http://repo1.maven.org/maven2</url>
+		</repository>
+    </repositories>
+</project>

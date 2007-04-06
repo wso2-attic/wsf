@@ -1,0 +1,23 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.wso2.javascript.rhino</groupId>
+	<artifactId>js-axiom</artifactId>
+	<packaging>jar</packaging>
+	<version>SNAPSHOT</version>
+	<name>E4X Implementation - Axiom</name>
+	
+	<parent>
+		<groupId>org.wso2.javascript.rhino</groupId>
+		<artifactId>javaScript</artifactId>
+		<version>SNAPSHOT</version>
+	</parent>
+	
+	<dependencies>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.0.4</version>
+		</dependency>
+    	</dependencies>
+</project>
