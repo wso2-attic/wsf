@@ -82,12 +82,23 @@ axis2_xmpp_server_is_running(
     axis2_transport_receiver_t *server,
     const axutil_env_t *env);
 
-axis2_status_t AXIS2_CALL
+void AXIS2_CALL
 axis2_xmpp_server_free(
     axis2_transport_receiver_t *server,
     const axutil_env_t *env);
 
 /* End of function headers ****************************************************/
+
+static const axis2_transport_receiver_ops_t xmpp_transport_receiver_ops_var = {
+    axis2_xmpp_server_init,
+    axis2_xmpp_server_start,
+    axis2_xmpp_server_get_reply_to_epr,
+    axis2_xmpp_server_get_conf_ctx,
+    axis2_xmpp_server_is_running,
+    axis2_xmpp_server_stop,
+    axis2_xmpp_server_free
+};
+
 
 /******************************************************************************/
 
@@ -120,14 +131,6 @@ axis2_xmpp_server_create(
     impl->use_tls = use_tls;
     impl->subscribe = subscribe;
 
-    impl->xmpp_server.ops = AXIS2_MALLOC(env->allocator,
-            sizeof(axis2_transport_receiver_ops_t));
-    if (!impl->xmpp_server.ops)
-    {
-        axis2_xmpp_server_free((axis2_transport_receiver_t *)impl, env);
-        AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        return NULL;
-    }
 
     if (repo)
     {
@@ -137,7 +140,7 @@ axis2_xmpp_server_create(
          * impl->conf_ctx because it may belong to any other object
          * which may lead to double free
          */
-        impl->conf_ctx_private = build_conf_ctx(env, repo);
+        impl->conf_ctx_private = axis2_build_conf_ctx(env, repo);
         if (!impl->conf_ctx_private)
         {
             axis2_xmpp_server_free((axis2_transport_receiver_t *) impl, env);
@@ -146,20 +149,14 @@ axis2_xmpp_server_create(
         impl->conf_ctx = impl->conf_ctx_private;
     }
 
-    impl->xmpp_server.ops->init = axis2_xmpp_server_init;
-    impl->xmpp_server.ops->start = axis2_xmpp_server_start;
-    impl->xmpp_server.ops->stop = axis2_xmpp_server_stop;
-    impl->xmpp_server.ops->get_reply_to_epr = axis2_xmpp_server_get_reply_to_epr;
-    impl->xmpp_server.ops->get_conf_ctx = axis2_xmpp_server_get_conf_ctx;
-    impl->xmpp_server.ops->is_running = axis2_xmpp_server_is_running;
-    impl->xmpp_server.ops->free = axis2_xmpp_server_free;
+    impl->xmpp_server.ops = &xmpp_transport_receiver_ops_var;
 
     return &(impl->xmpp_server);
 }
 
 /******************************************************************************/
 
-axis2_status_t AXIS2_CALL
+void AXIS2_CALL
 axis2_xmpp_server_free(
     axis2_transport_receiver_t *server,
     const axutil_env_t *env)
@@ -177,7 +174,7 @@ axis2_xmpp_server_free(
 
     if (impl->conf_ctx_private)
     {
-        AXIS2_CONF_CTX_FREE(impl->conf_ctx_private, env);
+        axis2_conf_ctx_free(impl->conf_ctx_private, env);
         impl->conf_ctx_private = NULL;
     }
 
@@ -186,15 +183,11 @@ axis2_xmpp_server_free(
      */
     impl->conf_ctx = NULL;
 
-    if (server->ops)
-    {
-        AXIS2_FREE(env->allocator, server->ops);
-    }
 
     AXIS2_FREE(env->allocator, impl);
-
-    return AXIS2_SUCCESS;
 }
+
+    
 
 
 axis2_status_t AXIS2_CALL
@@ -214,18 +207,16 @@ axis2_xmpp_server_init(
 
     server_impl->conf_ctx = conf_ctx;
 
-    param = (axutil_param_t *)AXIS2_PARAM_CONTAINER_GET_PARAM(
-                in_desc->param_container, env, "port");
+    param = axis2_transport_in_desc_get_param (in_desc, env, "port");
+
     if (param)
     {
-        port_str = AXIS2_PARAM_GET_VALUE(param, env);
+        port_str = axutil_param_get_value(param, env);
     }
-
     if (port_str)
     {
         server_impl->port = atoi(port_str);
     }
-
     return AXIS2_SUCCESS;
 }
 
@@ -293,21 +284,21 @@ axis2_xmpp_server_get_reply_to_epr(
     axis2_endpoint_ref_t *epr = NULL;
     const axis2_char_t *host_address = NULL;
     axis2_char_t *svc_path = NULL;
-    axis2_url_t *url = NULL;
+    axutil_url_t *url = NULL;
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, svc_name, NULL);
 
     host_address = "127.0.0.1"; /* TODO : get from axis2.xml */
-    svc_path = AXIS2_STRACAT("/axis2/services/", svc_name, env);
-    url = axis2_url_create(env, "xmpp", host_address,
+    svc_path = axutil_stracat(env, "/axis2/services/", svc_name);
+    url = axutil_url_create(env, "xmpp", host_address,
             AXIS2_INTF_TO_IMPL(server)->port, svc_path);
     AXIS2_FREE(env->allocator, svc_path);
-    if (NULL == url)
+    if (!url)
     {
         return NULL;
     }
-    epr = axis2_endpoint_ref_create(env, AXIS2_URL_TO_EXTERNAL_FORM(url, env));
-    AXIS2_URL_FREE(url, env);
+    epr = axis2_endpoint_ref_create(env, axutil_url_to_external_form(url, env));
+    axutil_url_free(url, env);
     return epr;
 }
 
@@ -354,7 +345,7 @@ AXIS2_EXPORT int axis2_remove_instance(
     axis2_status_t status = AXIS2_FAILURE;
     if (inst)
     {
-        status = AXIS2_TRANSPORT_RECEIVER_FREE(inst, env);
+        axis2_transport_receiver_free(inst, env);
     }
     return status;
 }

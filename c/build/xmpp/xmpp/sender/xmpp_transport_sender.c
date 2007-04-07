@@ -63,12 +63,19 @@ axis2_xmpp_transport_sender_init(
     axis2_conf_ctx_t *conf_ctx,
     axis2_transport_out_desc_t *out_desc);
 
-axis2_status_t AXIS2_CALL
+void AXIS2_CALL
 axis2_xmpp_transport_sender_free(
     axis2_transport_sender_t *transport_sender,
     const axutil_env_t *env);
 
 /* End of function headers ****************************************************/
+
+static const axis2_transport_sender_ops_t xmpp_transport_sender_ops_var = {
+    axis2_xmpp_transport_sender_init,
+    axis2_xmpp_transport_sender_invoke,
+    axis2_xmpp_transport_sender_clean_up,
+    axis2_xmpp_transport_sender_free
+};
 
 /******************************************************************************/
 
@@ -88,26 +95,12 @@ axis2_xmpp_transport_sender_create(
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
     }
-    
-    impl->sender.ops = AXIS2_MALLOC(env->allocator,
-        sizeof(axis2_transport_sender_ops_t));
-    if (!impl->sender.ops)
-    {
-        axis2_xmpp_transport_sender_free((axis2_transport_sender_t *)impl, env);
-        AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        return NULL;
-    }
-
-    impl->sender.ops->invoke = axis2_xmpp_transport_sender_invoke;
-    impl->sender.ops->cleanup = axis2_xmpp_transport_sender_clean_up;
-    impl->sender.ops->init = axis2_xmpp_transport_sender_init;
-    impl->sender.ops->free = axis2_xmpp_transport_sender_free;
-
+    impl->sender.ops = &xmpp_transport_sender_ops_var;
     return &(impl->sender);
 }
 
 
-axis2_status_t AXIS2_CALL
+void AXIS2_CALL
 axis2_xmpp_transport_sender_free(
     axis2_transport_sender_t *transport_sender,
     const axutil_env_t *env)
@@ -118,12 +111,7 @@ axis2_xmpp_transport_sender_free(
     
     impl = AXIS2_INTF_TO_IMPL(transport_sender);
 
-    if (transport_sender->ops)
-        AXIS2_FREE(env->allocator, transport_sender->ops);
-
     AXIS2_FREE(env->allocator, impl);
-    
-    return AXIS2_SUCCESS;
 }
 
 /*****************************************************************************/
@@ -150,8 +138,8 @@ axis2_xmpp_transport_sender_invoke(
     /* The XMPP parser and the client jid is set inside a hash table, which in
      * turn is set as a property in the msg ctx */
 
-    property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, AXIS2_XMPP_PROPERTIES,
-        AXIS2_FALSE);
+    property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_XMPP_PROPERTIES);
+        
     if (!property)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "XMPP properties not set in "
@@ -159,7 +147,7 @@ axis2_xmpp_transport_sender_invoke(
         return AXIS2_FAILURE;
     }
     
-    properties = AXIS2_PROPERTY_GET_VALUE(property, env);
+    properties = axutil_property_get_value(property, env);
     if (!properties)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "XMPP properties not set in "
@@ -175,7 +163,7 @@ axis2_xmpp_transport_sender_invoke(
             "message context");
         return AXIS2_FAILURE;
     }
-    xmpp_parser = AXIS2_PROPERTY_GET_VALUE(property, env);
+    xmpp_parser = axutil_property_get_value(property, env);
 
     property = axutil_hash_get(properties, AXIS2_XMPP_CLIENT_JID,
         AXIS2_HASH_KEY_STRING);
@@ -185,9 +173,9 @@ axis2_xmpp_transport_sender_invoke(
             "set in message context");
         return AXIS2_FAILURE;
     }
-    client_jid = AXIS2_PROPERTY_GET_VALUE(property, env);
+    client_jid = axutil_property_get_value(property, env);
     
-    soap_envelope = AXIS2_MSG_CTX_GET_SOAP_ENVELOPE(msg_ctx, env);
+    soap_envelope = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
     
     xml_writer = axiom_xml_writer_create_for_memory(env, NULL,
             AXIS2_TRUE, 0, AXIS2_XML_PARSER_TYPE_BUFFER);
@@ -201,14 +189,14 @@ axis2_xmpp_transport_sender_invoke(
     if (NULL == om_output)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Failed to create OM output");
-        AXIOM_XML_WRITER_FREE(xml_writer, env);
+        axiom_xml_writer_free(xml_writer, env);
         xml_writer = NULL;
         return AXIS2_FAILURE;
     }
 
-    AXIOM_SOAP_ENVELOPE_SERIALIZE(soap_envelope, env, om_output, AXIS2_FALSE);
+    axiom_soap_envelope_serialize(soap_envelope, env, om_output, AXIS2_FALSE);
 
-    soap_str = (axis2_char_t *)AXIOM_XML_WRITER_GET_XML(xml_writer, env);
+    soap_str = (axis2_char_t *)axiom_xml_writer_get_xml(xml_writer, env);
     if (!soap_str)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Failed to serialize the SOAP "
@@ -284,7 +272,7 @@ axis2_remove_instance(
     axis2_status_t status = AXIS2_FAILURE;
     if (inst)
     {
-        status = AXIS2_TRANSPORT_SENDER_FREE(inst, env);
+        AXIS2_TRANSPORT_SENDER_FREE(inst, env);
     }
     return status;
 }

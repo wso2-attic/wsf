@@ -394,12 +394,12 @@ int axis2_xmpp_worker_on_normal_node(
                     /* Check whether the type of subscription is user or room
                      * and send the subscription request accordingly */
 
-                    if (AXIS2_STRCMP(session->subscribe_type, AXIS2_XMPP_SUB_TYPE_USER) == 0)
+                    if (axutil_strcmp(session->subscribe_type, AXIS2_XMPP_SUB_TYPE_USER) == 0)
                     {
                         iks_send(session->parser, iks_make_s10n(IKS_TYPE_SUBSCRIBE,
                             session->subscribe_to, ""));
                     }
-                    else if (AXIS2_STRCMP(session->subscribe_type, AXIS2_XMPP_SUB_TYPE_ROOM) == 0)
+                    else if (axutil_strcmp(session->subscribe_type, AXIS2_XMPP_SUB_TYPE_ROOM) == 0)
                     {
                         axis2_char_t *id = axutil_uuid_gen(session->env);
 
@@ -468,7 +468,7 @@ void axis2_xmpp_worker_on_log(
     char* svc_name = NULL;
 
     session = (axis2_xmpp_session_data_t*)user_data;
-    svc_name = (char*)AXIS2_SVC_GET_NAME(session->svc, session->env);
+    svc_name = (char*)axis2_svc_get_name(session->svc, session->env);
 
     memcpy(buf, data, size);
     buf[size] = 0;
@@ -546,7 +546,7 @@ int axis2_xmpp_worker_on_message(
     }
 
     snprintf(request_uri, 500, "xmpp://localhost/axis2/services/%s",
-           AXIS2_SVC_GET_NAME(session->svc, env));
+           axis2_svc_get_name(session->svc, env));
 
     from = iks_find_attrib(pak->x, "from");
     status = axis2_xmpp_transport_utils_process_message(session->env, session,
@@ -583,7 +583,7 @@ int axis2_xmpp_worker_on_presence(
     }
 
     snprintf(request_uri, 500, "xmpp://localhost/axis2/services/%s",
-           AXIS2_SVC_GET_NAME(session->svc, env));
+           axis2_svc_get_name(session->svc, env));
 
     status = axis2_xmpp_transport_utils_process_presence(session->env, session,
         presence_str, request_uri);

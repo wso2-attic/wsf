@@ -73,7 +73,7 @@ axis2_xmpp_transport_utils_process_message(
     axutil_property_t *property = NULL;
     
     reader = axiom_xml_reader_create_for_memory(env, soap_msg,
-        AXIS2_STRLEN(soap_msg), NULL, AXIS2_XML_PARSER_TYPE_BUFFER);
+        axutil_strlen(soap_msg), NULL, AXIS2_XML_PARSER_TYPE_BUFFER);
     if (!reader)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Failed to create XML reader");
@@ -101,7 +101,7 @@ axis2_xmpp_transport_utils_process_message(
     conf = axis2_conf_ctx_get_conf(session->conf_ctx, env);
     out_desc = axis2_conf_get_transport_out(conf, env, 1);
     in_desc = axis2_conf_get_transport_in(conf, env, 1);
-    AXIS2_QNAME_FREE(qname, env);
+    axutil_qname_free(qname, env);
     
     /* Create a new message ctx */
     msg_ctx = axis2_msg_ctx_create(env, session->conf_ctx, in_desc, out_desc);
@@ -110,9 +110,9 @@ axis2_xmpp_transport_utils_process_message(
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Failed to create a message context");
         return AXIS2_FAILURE;
     }
-    AXIS2_MSG_CTX_SET_SERVER_SIDE(msg_ctx, env, AXIS2_TRUE);
+    axis2_msg_ctx_set_server_side(msg_ctx, env, AXIS2_TRUE);
 
-    AXIS2_MSG_CTX_SET_TO(msg_ctx, env,
+    axis2_msg_ctx_set_to(msg_ctx, env,
         axis2_endpoint_ref_create(env, request_uri));
 
     soap_envelope = axiom_soap_builder_get_soap_envelope(soap_builder, env);
@@ -123,7 +123,7 @@ axis2_xmpp_transport_utils_process_message(
         return AXIS2_FAILURE;
     }
 
-    AXIS2_MSG_CTX_SET_SOAP_ENVELOPE(msg_ctx, env, soap_envelope);
+    axis2_msg_ctx_set_soap_envelope(msg_ctx, env, soap_envelope);
 
     /* Create a hash table and attach the jid of the requesting cient and the
      * XMPP parser as values of this table. Then attach the hash table to the
@@ -135,28 +135,28 @@ axis2_xmpp_transport_utils_process_message(
     {
         /* jid of the requesting client */
         property = axutil_property_create(env);
-        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
-        AXIS2_PROPERTY_SET_VALUE(property, env, from);
+        axutil_property_set_scope(property, env, AXIS2_SCOPE_APPLICATION);
+        axutil_property_set_value(property, env, from);
         axutil_hash_set(properties, AXIS2_XMPP_CLIENT_JID, AXIS2_HASH_KEY_STRING,
             (void*)property);
 
         /* XMPP parser */
         property = axutil_property_create(env);
-        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
-        AXIS2_PROPERTY_SET_VALUE(property, env, session->parser);
+        axutil_property_set_scope(property, env, AXIS2_SCOPE_APPLICATION);
+        axutil_property_set_value(property, env, session->parser);
         axutil_hash_set(properties, AXIS2_XMPP_PARSER, AXIS2_HASH_KEY_STRING,
             (void*)property);
 
         property = axutil_property_create(env);
-        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
-        AXIS2_PROPERTY_SET_VALUE(property, env, properties);
-        AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, AXIS2_XMPP_PROPERTIES,
-            property, AXIS2_FALSE);
+        axutil_property_set_scope(property, env, AXIS2_SCOPE_APPLICATION);
+        axutil_property_set_value(property, env, properties);
+        axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_XMPP_PROPERTIES,
+                                   property);
     }    
 
     /* Now pass it to the engine */
     engine = axis2_engine_create(env, session->conf_ctx);
-    status = AXIS2_ENGINE_RECEIVE(engine, env, msg_ctx);
+    status = axis2_engine_receive(engine, env, msg_ctx);
 
     return status;
 }
@@ -243,7 +243,7 @@ axis2_xmpp_transport_utils_process_presence(
         &op_node);
     
     reader = axiom_xml_reader_create_for_memory(env, presence_str, 
-        AXIS2_STRLEN(presence_str), NULL, AXIS2_XML_PARSER_TYPE_BUFFER);
+        axutil_strlen(presence_str), NULL, AXIS2_XML_PARSER_TYPE_BUFFER);
     if (!reader)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Failed to create XML reader");
@@ -272,8 +272,8 @@ axis2_xmpp_transport_utils_process_presence(
         return AXIS2_FAILURE;
     }
 
-    AXIOM_NODE_ADD_CHILD(op_node , env, pres_node);
-    AXIOM_NODE_ADD_CHILD(body_node , env, op_node);
+    axiom_node_add_child(op_node , env, pres_node);
+    axiom_node_add_child(body_node , env, op_node);
 
     /* Find transport in and out descriptions from the conf. We need out context
      * on the sending side */
@@ -281,7 +281,7 @@ axis2_xmpp_transport_utils_process_presence(
     conf = axis2_conf_ctx_get_conf(session->conf_ctx, env);
     out_desc = axis2_conf_get_transport_out(conf, env, 1);
     in_desc = axis2_conf_get_transport_in(conf, env, 1);
-    AXIS2_QNAME_FREE(qname, env);
+    axutil_qname_free(qname, env);
     
     /* Create a new message ctx */
     msg_ctx = axis2_msg_ctx_create(env, session->conf_ctx, in_desc, out_desc);
@@ -290,15 +290,15 @@ axis2_xmpp_transport_utils_process_presence(
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Failed to create a message context");
         return AXIS2_FAILURE;
     }
-    AXIS2_MSG_CTX_SET_SERVER_SIDE(msg_ctx, env, AXIS2_TRUE);
+    axis2_msg_ctx_set_server_side(msg_ctx, env, AXIS2_TRUE);
 
-    AXIS2_MSG_CTX_SET_TO(msg_ctx, env,
+    axis2_msg_ctx_set_to(msg_ctx, env,
         axis2_endpoint_ref_create(env, request_uri));
-    AXIS2_MSG_CTX_SET_SOAP_ENVELOPE(msg_ctx, env, default_envelope);
+    axis2_msg_ctx_set_soap_envelope(msg_ctx, env, default_envelope);
 
     /* Now pass it to the engine */
     engine = axis2_engine_create(env, session->conf_ctx);
-    status = AXIS2_ENGINE_RECEIVE(engine, env, msg_ctx);
+    status = axis2_engine_receive(engine, env, msg_ctx);
 
     return status;
 }

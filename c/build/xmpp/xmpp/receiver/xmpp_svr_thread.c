@@ -221,7 +221,7 @@ axis2_xmpp_svr_thread_run(
 
     args = AXIS2_MALLOC(env->allocator, sizeof(axis2_xmpp_svr_thd_args_t));
 
-    svc_count = AXIS2_ARRAY_LIST_SIZE(impl->xmpp_sessions, env);
+    svc_count = axutil_array_list_size(impl->xmpp_sessions, env);
     if (svc_count <= 0)
     {
         AXIS2_LOG_WARNING(env->log, AXIS2_LOG_SI, "No services to be exposed "
@@ -243,7 +243,7 @@ axis2_xmpp_svr_thread_run(
     {
         axis2_xmpp_session_data_t *session = NULL;
 
-        session = AXIS2_ARRAY_LIST_GET(impl->xmpp_sessions, env, i);
+        session = axutil_array_list_get(impl->xmpp_sessions, env, i);
         session->conf_ctx = impl->conf_ctx;
         worker = axis2_xmpp_worker_create(env, session);
         if (!worker)
@@ -258,7 +258,7 @@ axis2_xmpp_svr_thread_run(
         args->worker = worker;
 
 #ifdef AXIS2_SVR_MULTI_THREADED
-        worker_thread = AXIS2_THREAD_POOL_GET_THREAD(env->thread_pool,
+        worker_thread = axutil_thread_pool_get_thread(env->thread_pool,
             worker_func, (void *)args);
         if (!worker_thread)
         {
@@ -267,9 +267,9 @@ axis2_xmpp_svr_thread_run(
         }
 
         if (i == (svc_count -1)) 
-            AXIS2_THREAD_POOL_JOIN_THREAD(env->thread_pool, worker_thread);
+            axutil_thread_pool_join_thread(env->thread_pool, worker_thread);
         else
-            AXIS2_THREAD_POOL_THREAD_DETACH(env->thread_pool, worker_thread);
+            axutil_thread_pool_thread_detach(env->thread_pool, worker_thread);
 
 #else
         worker_func(NULL, (void*)args);
@@ -365,14 +365,14 @@ axis2_xmpp_svr_thread_get_all_xmpp_services(
         return AXIS2_FAILURE;
     }
 
-    conf = AXIS2_CONF_CTX_GET_CONF(impl->conf_ctx, env);
+    conf = axis2_conf_ctx_get_conf(impl->conf_ctx, env);
     if (!conf)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Failed to get reference to conf");
         return AXIS2_FAILURE;
     }
 
-    services = AXIS2_CONF_GET_ALL_SVCS(conf, env);
+    services = axis2_conf_get_all_svcs(conf, env);
     if (!services)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Failed to get list of services");
@@ -398,7 +398,7 @@ axis2_xmpp_svr_thread_get_all_xmpp_services(
         svc = (axis2_svc_t*)val;
         if (svc)
         {
-            param_jid = AXIS2_SVC_GET_PARAM(svc, env, AXIS2_XMPP_PARAM_ID);
+            param_jid = axis2_svc_get_param(svc, env, AXIS2_XMPP_PARAM_ID);
             if (!param_jid)
             {
                 /* A JID not given for service. No need to create an XMPP
@@ -406,16 +406,16 @@ axis2_xmpp_svr_thread_get_all_xmpp_services(
                 continue;
             }
             
-            param_pw = AXIS2_SVC_GET_PARAM(svc, env, AXIS2_XMPP_PARAM_PASSWORD);
+            param_pw = axis2_svc_get_param(svc, env, AXIS2_XMPP_PARAM_PASSWORD);
             if (!param_pw)
             {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "A JID is given without"
-                    " a password. Service: %s", AXIS2_SVC_GET_NAME(svc, env));
+                    " a password. Service: %s", axis2_svc_get_name(svc, env));
                 continue;
             }
 
-            jid = (axis2_char_t*)AXIS2_PARAM_GET_VALUE(param_jid, env);
-            pw = (axis2_char_t*)AXIS2_PARAM_GET_VALUE(param_pw, env);
+            jid = (axis2_char_t*)axutil_param_get_value(param_jid, env);
+            pw = (axis2_char_t*)axutil_param_get_value(param_pw, env);
 
             session = (axis2_xmpp_session_data_t*)AXIS2_MALLOC(env->allocator,
                     sizeof(axis2_xmpp_session_data_t));
@@ -455,7 +455,7 @@ axis2_xmpp_svr_thread_get_subscribing_ops(
 
     impl = AXIS2_INTF_TO_IMPL(svr_thread);
 
-    ops = AXIS2_SVC_GET_ALL_OPS(svc, env);
+    ops = axis2_svc_get_all_ops(svc, env);
     if (!ops)
     {
         /* No ops in the service */
@@ -484,27 +484,27 @@ axis2_xmpp_svr_thread_get_subscribing_ops(
         op = (axis2_op_t*)val;
         if (op)
         {
-            param_jid = AXIS2_OP_GET_PARAM(op, env, AXIS2_XMPP_PARAM_SUBSCRIBE_TO);
+            param_jid = axis2_op_get_param(op, env, AXIS2_XMPP_PARAM_SUBSCRIBE_TO);
             if (!param_jid)
             {
                 /* No subscription JID */
                 continue;
             }
             
-            qname = AXIS2_OP_GET_QNAME(op, env);
-            op_name = AXIS2_QNAME_GET_LOCALPART(qname, env);
+            qname = axis2_op_get_qname(op, env);
+            op_name = axutil_qname_get_localpart(qname, env);
 
-            param_type  = AXIS2_OP_GET_PARAM(op, env, AXIS2_XMPP_PARAM_SUBSCRIBE_TYPE);
+            param_type  = axis2_op_get_param(op, env, AXIS2_XMPP_PARAM_SUBSCRIBE_TYPE);
             if (!param_type)
             {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "A Subscribe JID is given without"
-                    " the type. Service: %s | Operation: %s", AXIS2_SVC_GET_NAME(svc, env),
+                    " the type. Service: %s | Operation: %s", axis2_svc_get_name(svc, env),
                     op_name);
                 continue;
             }
 
-            jid = (axis2_char_t*)AXIS2_PARAM_GET_VALUE(param_jid, env);
-            type = (axis2_char_t*)AXIS2_PARAM_GET_VALUE(param_type, env);
+            jid = (axis2_char_t*)axutil_param_get_value(param_jid, env);
+            type = (axis2_char_t*)axutil_param_get_value(param_type, env);
 
             session->subscribe_to = jid;
             session->subscribe_type = type;
