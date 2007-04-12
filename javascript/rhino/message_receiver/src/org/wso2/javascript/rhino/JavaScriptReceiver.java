@@ -16,7 +16,18 @@
 
 package org.wso2.javascript.rhino;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URL;
+import java.util.List;
+
 import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNode;
 import org.apache.axiom.om.impl.llom.OMSourcedElementImpl;
 import org.apache.axiom.soap.SOAPEnvelope;
@@ -31,9 +42,6 @@ import org.apache.axis2.i18n.Messages;
 import org.apache.axis2.json.JSONBadgerfishDataSource;
 import org.apache.axis2.json.JSONDataSource;
 import org.apache.axis2.receivers.AbstractInOutSyncMessageReceiver;
-
-import java.io.*;
-import java.net.URL;
 
 /**
  * Class JavaScriptReceiver implements the AbstractInOutSyncMessageReceiver,
@@ -53,6 +61,13 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver
      */
     public void invokeBusinessLogic(MessageContext inMessage, MessageContext outMessage) throws AxisFault {
         JavaScriptEngine engine = new JavaScriptEngine();
+        Parameter parameter=inMessage.getParameter("javascript.hostobjects");
+        if (parameter.getParameterType() ==1)
+        {
+            OMElement paraElement = parameter.getParameterElement();
+            List list = JavaScriptEngineUtils.getHostObjectsMap(paraElement);
+            JavaScriptEngineUtils.loadHostObjects(engine,list);
+        }
         //Get the method, arguments and the reader from the MessageContext
         String method = null;
         method = getJSMethod(inMessage);

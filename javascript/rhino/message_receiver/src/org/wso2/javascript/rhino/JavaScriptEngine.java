@@ -165,7 +165,6 @@ public class JavaScriptEngine extends ImporterTopLevel {
             }
         }
 
-
         // Evaluates the javascript file
         try {
             evaluate(reader);
@@ -177,19 +176,18 @@ public class JavaScriptEngine extends ImporterTopLevel {
         Object fObj = this.get(method, this);
         if (!(fObj instanceof Function) || (fObj == Scriptable.NOT_FOUND)) {
             throw new AxisFault("Method " + method + " is undefined or not a function");
+        }
+        Object functionArgs[] = { args };
+        Function f = (Function) fObj;
+        result = f.call(cx, this, this, functionArgs);
+        if (json) {
+            result = ((String) result).substring(1, ((String) result).length() - 1);
+            InputStream in = new ByteArrayInputStream(((String) result).getBytes());
+            JSONOMBuilder builder = new JSONOMBuilder();
+            result = builder.processDocument(in, null, null);
         } else {
-            Object functionArgs[] = {args};
-            Function f = (Function) fObj;
-            result = f.call(cx, this, this, functionArgs);
-            if (json) {
-                result = ((String) result).substring(1, ((String) result).length() - 1);
-                InputStream in = new ByteArrayInputStream(((String) result).getBytes());
-                JSONOMBuilder builder = new JSONOMBuilder();
-                result = builder.processDocument(in, null, null);
-            } else {
-                //Get the OMNode inside the resulting object
-                result = ((XML) result).getAxiomFromXML();
-            }
+            //Get the OMNode inside the resulting object
+            result = ((XML) result).getAxiomFromXML();
         }
         return (OMNode) result;
     }
