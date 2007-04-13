@@ -20,4 +20,5 @@ INCLUDES = -I$(top_builddir)/include \
             -I ../../../axis2c/include \
             -I ../../../axis2c/axiom/include \
             -I ../../../axis2c/xml_schema/include \
-            -I ../../../axis2c/woden/include
+            -I ../../../axis2c/woden/include \
+			-I/usr/include/mysql

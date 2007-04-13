@@ -704,7 +704,7 @@ int wsf_client_set_options(HashTable *client_ht,
 			if(value && (strcmp(value, "GET") == 0 || strcmp(value, "get") == 0)){
 				axutil_property_t* get_property = axutil_property_create(env);
 				
-				axutil_property_set_value(get_property, env, axutil_strdup(env, AXIS2_HTTP_HEADER_GET));
+				axutil_property_set_value(get_property, env, axutil_strdup(env, AXIS2_HTTP_GET));
 				
 				axis2_options_set_property(client_options, env, AXIS2_HTTP_METHOD, get_property);
 
