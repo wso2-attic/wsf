@@ -17,27 +17,28 @@ package org.wso2.wsf.idea.ws;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.actionSystem.ActionPlaces;
 
 import javax.swing.*;
 
-import org.wso2.wsf.idea.ws.frame.WSASConfigurationFrame;
+import org.wso2.wsf.idea.ws.util.WSASClassLoadingUtil;
+import org.wso2.wsf.idea.ws.util.PopupMessageUtil;
+import org.wso2.wsf.idea.ws.bean.WSASConfigurationBean;
+import org.wso2.wsf.idea.ws.constant.WSASMessageConstant;
+import org.wso2.wsf.idea.ws.constant.WSASConfigurationConstant;
 
-
-public class WSASConfigurationAction extends AnAction {
+public class WSASStartAction extends AnAction {
     private ImageIcon myIcon;
 
     public void actionPerformed(AnActionEvent e) {
-        Application application =
-                ApplicationManager.getApplication();
-        WSASApplicationComponent helloWorldComponent =
-                (WSASApplicationComponent) application.getComponent(
-                        WSASApplicationComponent.class);
-        WSASConfigurationFrame configFrame = new WSASConfigurationFrame();
-        configFrame.showUI();
+        if(WSASConfigurationBean.getWsasInstallationPath().equals( null)){
+            PopupMessageUtil.popupWarningMessageBox(WSASMessageConstant.WARNING_WSAS_PATH_NOT_SET);
+        }else if(WSASConfigurationBean.getWsasInstallationPath().equals(WSASConfigurationConstant.WSAS_DEFAULT_PATH) ){
+            PopupMessageUtil.popupWarningMessageBox(WSASMessageConstant.WARNING_WSAS_PATH_NOT_SET);
+        }
+        WSASClassLoadingUtil.init(WSASConfigurationBean.getWsasInstallationPath());
+        WSASClassLoadingUtil.loadClassFromAntClassLoader(WSASConfigurationConstant.WSAS_MAIN_CLASS);
 
     }
 
@@ -46,7 +47,7 @@ public class WSASConfigurationAction extends AnAction {
         Presentation presentation = event.getPresentation();
         if (ActionPlaces.MAIN_TOOLBAR.equals(event.getPlace())) {
             if (myIcon == null) {
-                java.net.URL resource = WSASConfigurationAction.class.getResource("/icons/wsas.gif");
+                java.net.URL resource = WSASStartAction.class.getResource("/icons/start.gif");
                 myIcon = new ImageIcon(resource);
             }
             presentation.setIcon(myIcon);

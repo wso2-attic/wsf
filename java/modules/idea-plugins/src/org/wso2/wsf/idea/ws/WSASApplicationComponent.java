@@ -1,3 +1,18 @@
+/*
+ * Copyright 2005,2006 WSO2, Inc. http://www.wso2.org
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.wso2.wsf.idea.ws;
 
 import com.intellij.openapi.components.ApplicationComponent;
@@ -12,10 +27,11 @@ import com.intellij.openapi.util.WriteExternalException;
 import javax.swing.*;
 
 import org.jdom.Element;
+import org.wso2.wsf.idea.ws.bean.WSASConfigurationBean;
+import org.wso2.wsf.idea.ws.constant.WSASConfigurationConstant;
 
 public class WSASApplicationComponent implements ApplicationComponent, Configurable, JDOMExternalizable {
 
-    private String installPath = "<WSAS Installation Path>";
     private WSASConfigurationForm form;
 
     public WSASApplicationComponent() {
@@ -28,28 +44,27 @@ public class WSASApplicationComponent implements ApplicationComponent, Configura
     }
 
     public String getComponentName() {
-        return "WSASApplicationComponent";
+        return WSASConfigurationConstant.WSAS_COMPONENT_NAME;
     }
 
-    public void sayHello() {
-        // Show dialog with message
+    public void showInstallationPath() {
         Messages.showMessageDialog(
-                installPath,
+                WSASConfigurationBean.getWsasInstallationPath(),
                 "WSAS Installation Path",
                 Messages.getInformationIcon()
         );
     }
 
     public String getInstallPath() {
-        return installPath;
+        return WSASConfigurationBean.getWsasInstallationPath();
     }
 
     public void setInstallPath(final String installPath) {
-        this.installPath = installPath;
+       WSASConfigurationBean.setWsasInstallationPath(installPath);
     }
     public String getDisplayName() {
         // Return name of configuration icon in Settings dialog
-        return "WSAS Configuration";
+        return WSASConfigurationConstant.WSAS_CONFIGURATION;
     }
     public Icon getIcon() {
         return null;
@@ -80,12 +95,6 @@ public class WSASApplicationComponent implements ApplicationComponent, Configura
     public void disposeUIResources() {
         form = null;
     }
-    public String getPhrase() {
-        return installPath;
-    }
-    public void setPhrase(final String installPath) {
-        this.installPath = installPath;
-    }
 
     public void readExternal(Element element) throws InvalidDataException {
         DefaultJDOMExternalizer.readExternal(this, element);
@@ -94,4 +103,5 @@ public class WSASApplicationComponent implements ApplicationComponent, Configura
     public void writeExternal(Element element) throws WriteExternalException {
         DefaultJDOMExternalizer.writeExternal(this, element);
     }
+
 }
