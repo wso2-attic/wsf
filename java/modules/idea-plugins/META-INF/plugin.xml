@@ -7,31 +7,31 @@
   <idea-version since-build="4155"/>
     <application-components>
         <component>
-            <implementation-class>org.wso2.wsf.idea.ws.WSASApplicationComponent</implementation-class>
+            <implementation-class>org.wso2.wsf.idea.ws.plugin.WSASApplicationComponent</implementation-class>
         </component>
     </application-components>
     <actions>
-        <!--<action id="WSASConfiguration" class="org.wso2.wsf.idea.ws.WSASConfigurationAction" text="WSAS Configuration ">-->
+        <!--<action id="WSASConfiguration" class="org.wso2.wsf.idea.ws.plugin.WSASConfigurationAction" text="WSAS Configuration ">-->
             <!--<add-to-group group-id="WindowMenu" anchor="first"/>-->
         <!--</action>-->
 
         <!-- We use "PluginName.ComponentName.ActionName" notation for "id" to avoid conflicts -->
         <action id="ActionsSample.ActionsPlugin.WSASConfiguration"
-            class="org.wso2.wsf.idea.ws.WSASConfigurationAction"
+            class="org.wso2.wsf.idea.ws.plugin.WSASConfigurationAction"
             text="WSAS Configuration" description="WSO2 WSAS Intellij IDEA Plugin">
             <keyboard-shortcut first-keystroke="alt W" second-keystroke="C" keymap="$default"/>
             <mouse-shortcut keystroke="ctrl alt button2" keymap="$default"/>
         </action>
 
         <action id="ActionsSample.ActionsPlugin.WSASStart"
-            class="org.wso2.wsf.idea.ws.WSASStartAction"
+            class="org.wso2.wsf.idea.ws.plugin.WSASStartAction"
             text="WSAS Start" description="WSO2 WSAS starting ">
             <keyboard-shortcut first-keystroke="alt W" second-keystroke="S" keymap="$default"/>
             <mouse-shortcut keystroke="ctrl alt button2" keymap="$default"/>
         </action>
 
         <action id="ActionsSample.ActionsPlugin.WSASStop"
-            class="org.wso2.wsf.idea.ws.WSASStopAction"
+            class="org.wso2.wsf.idea.ws.plugin.WSASStopAction"
             text="WSAS Stop" description="WSO2 WSAS stopping ">
             <keyboard-shortcut first-keystroke="alt W" second-keystroke="P" keymap="$default"/>
             <mouse-shortcut keystroke="ctrl alt button2" keymap="$default"/>

@@ -87,21 +87,17 @@ public class WSASClassLoadingUtil {
 
 
     public static void visitAllFiles(File dir) {
-        if(!dir.toString().endsWith(WSASConfigurationConstant.DOT_TEXT)){
-            if (dir.isDirectory()) {
-
-                String[] children = dir.list();
-                for (int i=0; i<children.length; i++) {
-                    visitAllFiles(new File(dir, children[i]));
-                }
-
-            } else {
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i=0; i<children.length; i++) {
+                visitAllFiles(new File(dir, children[i]));
+            }
+        } else {
+            if(dir.toString().endsWith(WSASConfigurationConstant.DOT_JAR)){
                 wsasClassPath[libCount]=dir.getAbsolutePath();
                 libCount+=1;
             }
-
         }
-
     }
 
 

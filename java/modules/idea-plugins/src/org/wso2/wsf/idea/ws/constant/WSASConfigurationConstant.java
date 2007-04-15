@@ -22,6 +22,12 @@ public class WSASConfigurationConstant {
     public static String WSAS_CONFIGURATION = "WSAS Configuration";
     public static String LIB = "lib";
     public static String DOT_TEXT = ".txt";
+    public static String DOT_JAR = ".jar";
     public static String WSAS_MAIN_CLASS = "org.wso2.wsas.Main";
+
+    //icon paths
+    public static String ICON_WSAS = "/icons/wsas.gif";
+    public static String ICON_WSAS_START = "/icons/start.gif";
+    public static String ICON_WSAS_STOP = "/icons/stop.gif";
 
 }

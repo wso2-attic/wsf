@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.wsf.idea.ws;
+package org.wso2.wsf.idea.ws.plugin;
 
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.ui.Messages;
@@ -29,6 +29,7 @@ import javax.swing.*;
 import org.jdom.Element;
 import org.wso2.wsf.idea.ws.bean.WSASConfigurationBean;
 import org.wso2.wsf.idea.ws.constant.WSASConfigurationConstant;
+import org.wso2.wsf.idea.ws.WSASConfigurationForm;
 
 public class WSASApplicationComponent implements ApplicationComponent, Configurable, JDOMExternalizable {
 

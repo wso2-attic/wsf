@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.wsf.idea.ws;
+package org.wso2.wsf.idea.ws.plugin;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -25,6 +25,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import javax.swing.*;
 
 import org.wso2.wsf.idea.ws.frame.WSASConfigurationFrame;
+import org.wso2.wsf.idea.ws.constant.WSASConfigurationConstant;
+import org.wso2.wsf.idea.ws.plugin.WSASApplicationComponent;
 
 
 public class WSASConfigurationAction extends AnAction {
@@ -46,7 +48,7 @@ public class WSASConfigurationAction extends AnAction {
         Presentation presentation = event.getPresentation();
         if (ActionPlaces.MAIN_TOOLBAR.equals(event.getPlace())) {
             if (myIcon == null) {
-                java.net.URL resource = WSASConfigurationAction.class.getResource("/icons/wsas.gif");
+                java.net.URL resource = WSASConfigurationAction.class.getResource(WSASConfigurationConstant.ICON_WSAS);
                 myIcon = new ImageIcon(resource);
             }
             presentation.setIcon(myIcon);

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.wsf.idea.ws;
+package org.wso2.wsf.idea.ws.plugin;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -28,6 +28,9 @@ import org.wso2.wsf.idea.ws.bean.WSASConfigurationBean;
 import org.wso2.wsf.idea.ws.constant.WSASMessageConstant;
 import org.wso2.wsf.idea.ws.constant.WSASConfigurationConstant;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
+
 public class WSASStartAction extends AnAction {
     private ImageIcon myIcon;
 
@@ -36,10 +39,25 @@ public class WSASStartAction extends AnAction {
             PopupMessageUtil.popupWarningMessageBox(WSASMessageConstant.WARNING_WSAS_PATH_NOT_SET);
         }else if(WSASConfigurationBean.getWsasInstallationPath().equals(WSASConfigurationConstant.WSAS_DEFAULT_PATH) ){
             PopupMessageUtil.popupWarningMessageBox(WSASMessageConstant.WARNING_WSAS_PATH_NOT_SET);
-        }
-        WSASClassLoadingUtil.init(WSASConfigurationBean.getWsasInstallationPath());
-        WSASClassLoadingUtil.loadClassFromAntClassLoader(WSASConfigurationConstant.WSAS_MAIN_CLASS);
+        }else{
+            WSASClassLoadingUtil.init(WSASConfigurationBean.getWsasInstallationPath());
+            Class wsasMainClass = WSASClassLoadingUtil.loadClassFromAntClassLoader(WSASConfigurationConstant.WSAS_MAIN_CLASS);
+            System.out.println(wsasMainClass.toString());
+            try {
+                Class[] parameterTypes1 = new Class[1];
+                parameterTypes1[0] = String[].class;
+                Method mainMethod =  wsasMainClass.getMethod("main", parameterTypes1);
+                mainMethod.invoke(null, null);
+            } catch (NoSuchMethodException e1) {
+                e1.printStackTrace();
+            } catch (IllegalAccessException e1) {
+                e1.printStackTrace();
+            } catch (InvocationTargetException e1) {
+                e1.printStackTrace();
+            }
 
+
+        }
     }
 
     public void update(AnActionEvent event) {
@@ -47,7 +65,7 @@ public class WSASStartAction extends AnAction {
         Presentation presentation = event.getPresentation();
         if (ActionPlaces.MAIN_TOOLBAR.equals(event.getPlace())) {
             if (myIcon == null) {
-                java.net.URL resource = WSASStartAction.class.getResource("/icons/start.gif");
+                java.net.URL resource = WSASStartAction.class.getResource(WSASConfigurationConstant.ICON_WSAS_START);
                 myIcon = new ImageIcon(resource);
             }
             presentation.setIcon(myIcon);

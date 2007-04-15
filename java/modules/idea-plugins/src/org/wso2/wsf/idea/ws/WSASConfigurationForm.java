@@ -15,6 +15,8 @@
  */
 package org.wso2.wsf.idea.ws;
 
+import org.wso2.wsf.idea.ws.plugin.WSASApplicationComponent;
+
 import javax.swing.*;
 
 /**

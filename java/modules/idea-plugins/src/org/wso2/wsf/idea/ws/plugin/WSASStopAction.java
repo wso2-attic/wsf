@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.wsf.idea.ws;
+package org.wso2.wsf.idea.ws.plugin;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -25,6 +25,7 @@ import javax.swing.*;
 import org.wso2.wsf.idea.ws.bean.WSASConfigurationBean;
 import org.wso2.wsf.idea.ws.util.PopupMessageUtil;
 import org.wso2.wsf.idea.ws.constant.WSASMessageConstant;
+import org.wso2.wsf.idea.ws.constant.WSASConfigurationConstant;
 
 public class WSASStopAction extends AnAction {
     private ImageIcon myIcon;
@@ -40,7 +41,7 @@ public class WSASStopAction extends AnAction {
         Presentation presentation = event.getPresentation();
         if (ActionPlaces.MAIN_TOOLBAR.equals(event.getPlace())) {
             if (myIcon == null) {
-                java.net.URL resource = WSASStopAction.class.getResource("/icons/stop.gif");
+                java.net.URL resource = WSASStopAction.class.getResource(WSASConfigurationConstant.ICON_WSAS_STOP);
                 myIcon = new ImageIcon(resource);
             }
             presentation.setIcon(myIcon);
