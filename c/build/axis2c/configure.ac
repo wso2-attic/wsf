@@ -347,34 +347,35 @@ export WRAPPER_DIR
 export prefix 
 
 AC_CONFIG_FILES([Makefile \
-    modules/Makefile \
-    modules/core/Makefile \
-    modules/core/description/Makefile \
-    modules/core/context/Makefile \
-    modules/core/engine/Makefile \
-    modules/core/addr/Makefile \
-    modules/core/phaseresolver/Makefile \
-    modules/core/transport/Makefile \
-    modules/core/transport/xmpp/Makefile \
-    modules/core/transport/xmpp/server/Makefile \
-    modules/core/transport/xmpp/sender/Makefile \
-    modules/core/transport/xmpp/receiver/Makefile \
-    modules/core/transport/xmpp/server/simple_xmpp_server/Makefile \
-    modules/core/transport/http/Makefile \
-    modules/core/transport/http/sender/Makefile \
-    modules/core/transport/http/sender/ssl/Makefile \
-    modules/core/transport/http/receiver/Makefile \
-    modules/core/transport/http/server/simple_axis2_server/Makefile \
-    modules/core/transport/http/server/apache2/Makefile \
-    modules/core/transport/http/server/Makefile \
-    modules/core/deployment/Makefile \
-    modules/core/clientapi/Makefile \
-    modules/core/receivers/Makefile \
-    modules/core/util/Makefile \
-    modules/wsdl/Makefile \
-    modules/wsdl/builder/Makefile \
-    modules/mod_addr/Makefile \
-    modules/mod_log/Makefile \
+    src/Makefile \
+    src/core/Makefile \
+    src/core/description/Makefile \
+    src/core/context/Makefile \
+    src/core/engine/Makefile \
+    src/core/addr/Makefile \
+    src/core/phaseresolver/Makefile \
+    src/core/transport/Makefile \
+    src/core/transport/xmpp/Makefile \
+    src/core/transport/xmpp/server/Makefile \
+    src/core/transport/xmpp/sender/Makefile \
+    src/core/transport/xmpp/receiver/Makefile \
+    src/core/transport/xmpp/server/simple_xmpp_server/Makefile \
+    src/core/transport/http/Makefile \
+    src/core/transport/http/sender/Makefile \
+    src/core/transport/http/sender/ssl/Makefile \
+    src/core/transport/http/receiver/Makefile \
+    src/core/transport/http/server/simple_axis2_server/Makefile \
+    src/core/transport/http/server/apache2/Makefile \
+    src/core/transport/http/server/Makefile \
+    src/core/deployment/Makefile \
+    src/core/clientapi/Makefile \
+    src/core/receivers/Makefile \
+    src/core/util/Makefile \
+    src/wsdl/Makefile \
+    src/wsdl/builder/Makefile \
+    src/modules/Makefile \
+    src/modules/mod_addr/Makefile \
+    src/modules/mod_log/Makefile \
     ides/Makefile \
     ides/anjuta/Makefile \
     include/Makefile \
