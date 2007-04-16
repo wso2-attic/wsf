@@ -20,7 +20,15 @@
     <p>
         &nbsp; 2 dom node representing the corresponding policy.</p>
     <p>
-        &nbsp; 3 array of policy options.</p>
+        &nbsp; 3 array <br />
+         &nbsp;&nbsp; &nbsp;&nbsp;Array of options can be specified using below syntax.<br />
+           &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;i)  array("security"=>array of security options)<br />
+             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ii)  array("security"=>array( "inpolicy"=> array of security options | xml string | dom node,<br />
+             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
+        &nbsp;"outpolicy"=> array of security options | xml string | dom node));
+    </p>    
+    <p> Here, inpolicy and outpolicy is refered to as the policy to be used for the incoming message and outgoing messages. </p>     
     <p>
         When using WSPolicy, user can use a policy xml file to configue the security options
         to be used. When the user has a policy file he can create a policy object using
@@ -69,7 +77,7 @@
                     If specified "sign"=&gt;TRUE, the body part of the soap message will be signed using
                     X509 Standard. The other avilable option is "Keberose".
                     <br clear="all" />
-                    Signing will be done on the body part of the message. To sign the header parts of
+                    Signing will be done on the body part of the message. To sign the other parts of
                     the message, a &nbsp;policy file should be used.
                 </td>
             </tr>
@@ -240,7 +248,7 @@
             <th class="confluenceTh">
                 Default Value
             </th>
-            <th class="confluenceTh">
+            <th class="confluenceTh" style="width: 415px">
                 Description
             </th>
         </tr>
@@ -257,26 +265,24 @@
             <td class="confluenceTd">
                 none
             </td>
-            <td class="confluenceTd">
+            <td class="confluenceTd" style="width: 415px">
                 Username
             </td>
         </tr>
         <tr>
-            <td class="confluenceTd">
-                publicKey
-            </td>
-            <td class="confluenceTd">
+            <td class="confluenceTd" style="height: 21px">
+                certificate</td>
+            <td class="confluenceTd" style="height: 21px">
                 string
             </td>
-            <td class="confluenceTd">
-                user's public key as a string
+            <td class="confluenceTd" style="height: 21px">
+                string
             </td>
-            <td class="confluenceTd">
+            <td class="confluenceTd" style="height: 21px">
                 none
             </td>
-            <td class="confluenceTd">
-                Public Key used for encryption as a string
-            </td>
+            <td class="confluenceTd" style="width: 415px; height: 21px">
+                User's certificate for sign loaded from thr function get_cert_from_file()</td>
         </tr>
         <tr>
             <td class="confluenceTd">
@@ -291,7 +297,7 @@
             <td class="confluenceTd">
                 Digest
             </td>
-            <td class="confluenceTd">
+            <td class="confluenceTd" style="width: 415px">
                 Password type used in username token
             </td>
         </tr>
@@ -308,45 +314,63 @@
             <td class="confluenceTd">
                 none
             </td>
-            <td class="confluenceTd">
-                User password as a string
+            <td class="confluenceTd" style="width: 415px">
+                User's certificate for sign loaded from the function get_cert_from_file()
             </td>
         </tr>
         <tr>
-            <td class="confluenceTd">
+            <td class="confluenceTd" style="height: 21px">
                 privateKey
             </td>
-            <td class="confluenceTd">
+            <td class="confluenceTd" style="height: 21px">
                 string
             </td>
-            <td class="confluenceTd">
+            <td class="confluenceTd" style="height: 21px">
                 user's private key as a string
             </td>
-            <td class="confluenceTd">
+            <td class="confluenceTd" style="height: 21px">
                 none
             </td>
-            <td class="confluenceTd">
-                User private key as a string
-            </td>
+            <td class="confluenceTd" style="width: 415px; height: 21px">
+                User private key loaded from the function get_key_from_file()</td>
         </tr>
         <tr>
             <td class="confluenceTd">
-                publicKeyFormat
-            </td>
+                receiverCertificate</td>
             <td class="confluenceTd">
                 string
             </td>
             <td class="confluenceTd">
-                key format extension DER, PEM
-                <br clear="all" />
+                string&nbsp;<br clear="all" />
             </td>
             <td class="confluenceTd">
-                PEM
-            </td>
-            <td class="confluenceTd">
-                Public key format
-                <br clear="all" />
-            </td>
+                none</td>
+            <td class="confluenceTd" style="width: 415px">
+                Receiver's certificate for encrypt from the function get_cert_from_file()</td>
+        </tr>
+        <tr>
+            <td class="confluenceTd" style="height: 21px">
+                receiverCertificateFormat</td>
+            <td class="confluenceTd" style="height: 21px">
+                string</td>
+            <td class="confluenceTd" style="height: 21px">
+                certificate format extension PEM</td>
+            <td class="confluenceTd" style="height: 21px">
+                PEM</td>
+            <td class="confluenceTd" style="width: 415px; height: 21px">
+                Receiver's certificate format</td>
+        </tr>
+        <tr>
+            <td class="confluenceTd" style="height: 20px">
+                certificateFormat</td>
+            <td class="confluenceTd" style="height: 20px">
+                string</td>
+            <td class="confluenceTd" style="height: 20px">
+                certificate format extension PEM</td>
+            <td class="confluenceTd" style="height: 20px">
+                PEM</td>
+            <td class="confluenceTd" style="width: 415px; height: 20px">
+                user's certificate format</td>
         </tr>
         <tr>
             <td class="confluenceTd">
@@ -356,14 +380,14 @@
                 string
             </td>
             <td class="confluenceTd">
-                key format extension DER, PEM
+                key format extension PEM
                 <br clear="all" />
             </td>
             <td class="confluenceTd">
                 PEM
                 <br clear="all" />
             </td>
-            <td class="confluenceTd">
+            <td class="confluenceTd" style="width: 415px">
                 Private key format
                 <br clear="all" />
             </td>
@@ -382,7 +406,7 @@
             </td>
             <td class="confluenceTd">
                 &nbsp;</td>
-            <td class="confluenceTd">
+            <td class="confluenceTd" style="width: 415px">
                 Time in milliseconds
                 <br clear="all" />
             </td>
