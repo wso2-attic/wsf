@@ -93,7 +93,7 @@ static void soap_server_fault(char* code, char* string, char *actor, zval* detai
     zend_bailout();
 }
 
-
+/*
 static void delete_url(void *handle)
 {
     php_url_free((php_url*)handle);
@@ -105,18 +105,21 @@ static void delete_hashtable(void *data)
 	zend_hash_destroy(ht);
 	efree(ht);
 }
+*/
 
+/*
 static void function_to_string(sdlFunctionPtr function, smart_str *buf);
-
+*/
 static void type_to_string(sdlTypePtr type, smart_str *buf, int level);
-
 static sdlParamPtr get_param(sdlFunctionPtr function, char *param_name, int index, int);
 
 static sdlFunctionPtr get_function(sdlPtr sdl, const char *function_name);
 
 static sdlFunctionPtr get_doc_function(sdlPtr sdl, xmlNodePtr node);
 
+/*
 static sdlFunctionPtr deserialize_function_call(sdlPtr sdl, xmlDocPtr request, char* actor, zval *function_name, int *num_params, zval **parameters[], int *version, soapHeader **headers TSRMLS_DC);
+*/
 static xmlDocPtr serialize_response_call(sdlFunctionPtr function, char *function_name,char *uri,zval *ret, soapHeader *headers, int version TSRMLS_DC);
 
 static xmlDocPtr serialize_function_call(zval *this_ptr, sdlFunctionPtr function, char *function_name, char *uri, zval **arguments, int arg_count, int version, HashTable *soap_headers TSRMLS_DC);
@@ -373,7 +376,7 @@ void wsf_soap_do_soap_call(zval* this_ptr,
 					php_printf("node null");
 				*/
 				wsf_client_set_options(NULL, NULL, env, client_options, svc_client, 0 TSRMLS_CC);
-				result_node = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, om_node);
+				result_node = axis2_svc_client_send_receive(svc_client, env, om_node);
 				if(!result_node){
 					return;
 				}else{
@@ -381,7 +384,7 @@ void wsf_soap_do_soap_call(zval* this_ptr,
 					axis2_char_t *buffer = NULL;
 					int buffer_length = 0;
 
-					buffer = AXIOM_NODE_TO_STRING(result_node, env);
+					buffer = axiom_node_to_string(result_node, env);
 					if(buffer){
 						buffer_length = strlen(buffer);
                         /*
@@ -597,6 +600,7 @@ static sdlFunctionPtr find_function(sdlPtr sdl, xmlNodePtr func, zval* function_
 	return function;
 }
 
+/*
 static sdlFunctionPtr deserialize_function_call(sdlPtr sdl, xmlDocPtr request, char* actor, zval *function_name, int *num_params, zval ***parameters, int *version, soapHeader **headers TSRMLS_DC)
 {
 	char* envelope_ns = NULL;
@@ -604,7 +608,7 @@ static sdlFunctionPtr deserialize_function_call(sdlPtr sdl, xmlDocPtr request, c
 	xmlAttrPtr attr;
 	sdlFunctionPtr function;
 
-	/* Get <Envelope> element */
+	 Get <Envelope> element 
 	env = NULL;
 	trav = request->children;
 	while (trav != NULL) {
@@ -643,7 +647,7 @@ static sdlFunctionPtr deserialize_function_call(sdlPtr sdl, xmlDocPtr request, c
 		attr = attr->next;
 	}
 
-	/* Get <Header> element */
+	 Get <Header> element 
 	head = NULL;
 	trav = env->children;
 	while (trav != NULL && trav->type != XML_ELEMENT_NODE) {
@@ -654,7 +658,7 @@ static sdlFunctionPtr deserialize_function_call(sdlPtr sdl, xmlDocPtr request, c
 		trav = trav->next;
 	}
 
-	/* Get <Body> element */
+	 Get <Body> element 
 	body = NULL;
 	while (trav != NULL && trav->type != XML_ELEMENT_NODE) {
 		trav = trav->next;
@@ -693,13 +697,14 @@ static sdlFunctionPtr deserialize_function_call(sdlPtr sdl, xmlDocPtr request, c
 	trav = body->children;
 	while (trav != NULL) {
 		if (trav->type == XML_ELEMENT_NODE) {
-/*
+
 			if (func != NULL) {
 				soap_server_fault("Client", "looks like we got \"Body\" with several functions call", NULL, NULL, NULL TSRMLS_CC);
 			}
-*/
+
 			func = trav;
-			break; /* FIXME: the rest of body is ignored */
+			break;
+    /FIXME: the rest of body is ignored 
 		}
 		trav = trav->next;
 	}
@@ -854,7 +859,7 @@ ignore_header:
 	deserialize_parameters(func, function, num_params, parameters);
 	return function;
 }
-
+*/
 static int serialize_response_call2(xmlNodePtr body, sdlFunctionPtr function, char *function_name, char *uri, zval *ret, int version, int main TSRMLS_DC)
 {
 	xmlNodePtr method = NULL, param;
@@ -1492,6 +1497,7 @@ static sdlFunctionPtr get_doc_function(sdlPtr sdl, xmlNodePtr params)
 	return NULL;
 }
 
+/*
 void function_to_string(sdlFunctionPtr function, smart_str *buf)
 {
 	int i = 0;
@@ -1558,6 +1564,7 @@ void function_to_string(sdlFunctionPtr function, smart_str *buf)
 	smart_str_0(buf);
 }
 
+*/
 static void model_to_string(sdlContentModelPtr model, smart_str *buf, int level)
 {
 	int i;

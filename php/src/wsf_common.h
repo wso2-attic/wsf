@@ -190,29 +190,40 @@ typedef enum ws_input_types{
 
 #define WS_SVC_INFO "WSFPHPSvcInfo"
 
-typedef struct ws_svc_info {
+typedef struct wsf_svc_info {
+
     axis2_svc_t *svc;
+    
     axis2_msg_recv_t *msg_recv;
+    
     axutil_hash_t *class_info;
+    
     struct wsf_worker_t *php_worker;
 
     axutil_hash_t *ops_to_actions;
+    
     axutil_hash_t *ops_to_functions;
+    
     axutil_array_list_t *modules_to_engage;
 
     int request_xop;
+    
     int use_mtom;
+    
     int is_class;
+    
     zval *policy;
+    
     zval *security_token;
     
     char *password_location;
+    
     char *svc_name;
     /** this is needed in case of request uri dispatching( for rest) */
     char *op_name;
 
 }
-ws_svc_info_t;
+wsf_svc_info_t;
 
 typedef struct php_req_info {
     long svr_port;

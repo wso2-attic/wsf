@@ -40,6 +40,12 @@ struct wsf_worker_t
    axis2_conf_ctx_t *conf_ctx;
 };
 
+void wsf_worker_dummy_free_function(void *obj,
+                                    const axutil_env_t *env){
+    return;
+}
+
+
 wsf_worker_t * wsf_worker_create (const axutil_env_t *env, 
 								  axis2_char_t *repo_path,
 								  axis2_char_t *rm_db_dir)
@@ -137,7 +143,7 @@ int wsf_worker_process_request(
         wsf_worker_t *worker, 
         axutil_env_t *env, 
         wsf_req_info_t *request,
-	ws_svc_info_t *svc_info)
+	    wsf_svc_info_t *svc_info)
 {
 	axis2_conf_ctx_t *conf_ctx = NULL;
 	axis2_msg_ctx_t *msg_ctx = NULL;
@@ -171,37 +177,47 @@ int wsf_worker_process_request(
 	axutil_string_t *ctx_uuid_str = NULL;
 	/*
 	axis2_char_t *is_class = NULL;
-        */
+    */
+
 	TSRMLS_FETCH();
 	
 	if(!request)
 		return -1;
 
 	conf_ctx = worker->conf_ctx;
-	if(request->query_string){       
+	
+    if(request->query_string){       
+
 		request_uri_with_query_string = malloc((strlen(request->request_uri) + 5 + strlen(request->query_string)));
 		sprintf(request_uri_with_query_string, "%s?%s", request->request_uri, request->query_string);
-	}else{
+	
+    }else{
+
 		request_uri_with_query_string =  request->request_uri;
-	}
+	
+    }
 
 	url = axutil_url_create(env, "http", request->svr_name, 
 			request->svr_port, request_uri_with_query_string);
 
-        if(NULL == conf_ctx) {
+    if(NULL == conf_ctx) {
+
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NULL_CONFIGURATION_CONTEXT,
 							AXIS2_FAILURE);
 		return AXIS2_CRITICAL_FAILURE;
 	}
     
 	content_length = request->content_length;
-	http_version = request->http_protocol;
-	req_url = axutil_url_to_external_form(url, env);
+	
+    http_version = request->http_protocol;
+	
+    req_url = axutil_url_to_external_form(url, env);
         req_url_str = axutil_string_create(env, req_url);
     
 	content_type = (axis2_char_t*) request->content_type;
 
 	if(NULL == http_version) {
+
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NULL_HTTP_VERSION, 
 							AXIS2_FAILURE);
 		return AXIS2_CRITICAL_FAILURE;
@@ -236,44 +252,38 @@ int wsf_worker_process_request(
 		}
 	} 
 	
-    	/** create transport out description */
-	{
-		axutil_property_t *out_stream_prop = NULL;
-		
-		out_stream_prop = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST,
-			AXIS2_TRUE ,axutil_stream_free_void_arg, out_stream);
-
-		axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_TRANSPORT_OUT, 
-			out_stream_prop);
-        	axis2_msg_ctx_set_transport_out_stream(msg_ctx, env, out_stream);
-	}
+   	axis2_msg_ctx_set_transport_out_stream(msg_ctx, env, out_stream);
 	
 	/** generate uuid for context */
 	ctx_uuid = axutil_uuid_gen(env);
+    if(ctx_uuid){
     	ctx_uuid_str = axutil_string_create(env, ctx_uuid);
     	axis2_msg_ctx_set_svc_grp_ctx_id(msg_ctx, env, ctx_uuid_str);
     	AXIS2_FREE(env->allocator, ctx_uuid);
     	axutil_string_free(ctx_uuid_str, env);
+    }
     
-    	php_out_transport_info = wsf_out_transport_info_create(env, request);
-    	axis2_msg_ctx_set_http_out_transport_info(msg_ctx, env, php_out_transport_info);
+    php_out_transport_info = wsf_out_transport_info_create(env, request);
+    axis2_msg_ctx_set_http_out_transport_info(msg_ctx, env, php_out_transport_info);
    
-    	if(request->transfer_encoding){
-        	axis2_msg_ctx_set_transfer_encoding(msg_ctx, env, axutil_strdup(env, request->transfer_encoding));
-    	}
+    if(request->transfer_encoding){
+       	axis2_msg_ctx_set_transfer_encoding(msg_ctx, env, axutil_strdup(env, request->transfer_encoding));
+    }
     
     /** store svc_info struct as a property */  
 	{
 		axutil_property_t *svc_info_prop = NULL;
-		svc_info_prop = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST,
-			AXIS2_TRUE,NULL, svc_info);				
-		axis2_msg_ctx_set_property(msg_ctx, env, WS_SVC_INFO, 
+		
+        svc_info_prop = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST,
+			AXIS2_TRUE, wsf_worker_dummy_free_function, svc_info);				
+		
+        axis2_msg_ctx_set_property(msg_ctx, env, WS_SVC_INFO, 
 			svc_info_prop);
 	}
     /** use MTOM property */
-    	if(svc_info->use_mtom == 1){
-        	axis2_msg_ctx_set_doing_mtom(msg_ctx, env, AXIS2_TRUE);
-    	}  
+    if(svc_info->use_mtom == 1){
+       	axis2_msg_ctx_set_doing_mtom(msg_ctx, env, AXIS2_TRUE);
+    }  
     	
 	if(svc_info->security_token != NULL && svc_info->policy != NULL){
 		/**  call security function here */
@@ -281,13 +291,13 @@ int wsf_worker_process_request(
 		conf = axis2_conf_ctx_get_conf(worker->conf_ctx, env);
 		ws_policy_handle_server_security(svc_info->security_token, svc_info->policy,
 			env, svc_info->svc, conf TSRMLS_CC);
-    	}  
+   	}  
           
 	soap_action = request->soap_action;
 	if(soap_action == NULL)
         	soap_action = "";
     
-    	soap_action_str = axutil_string_create(env, soap_action);
+   	soap_action_str = axutil_string_create(env, soap_action);
     
 	request_body = axis2_stream_create_php(env, request TSRMLS_CC);
 	
@@ -317,12 +327,13 @@ int wsf_worker_process_request(
 			request->content_type = "text/html";
 		  	send_status = WS_HTTP_OK; 
 		}
-        	if(NULL != body_string){
-            		request->result_payload = body_string;
-            		request->result_length = strlen(body_string);
-        	}
+        if(NULL != body_string){
+           		request->result_payload = body_string;
+           		request->result_length = strlen(body_string);
+        }
 	} else if (0 == strcmp("POST", request->request_method)) {
-		axis2_status_t status = AXIS2_FAILURE;
+		
+        axis2_status_t status = AXIS2_FAILURE;
         	
 		status = axis2_http_transport_utils_process_http_post_request
 						(env, msg_ctx, request_body, out_stream,
@@ -330,46 +341,57 @@ int wsf_worker_process_request(
 						soap_action_str,
 						(axis2_char_t*)req_url);
 	
-        	if(status == AXIS2_FAILURE) {
+        if(status == AXIS2_FAILURE) {
 			axis2_msg_ctx_t *fault_ctx = NULL;
 			axis2_engine_t *engine = axis2_engine_create(env, conf_ctx);
-			if(NULL == engine) {
+		    
+            if(NULL == engine) {
 				send_status =  WS_HTTP_INTERNAL_SERVER_ERROR; 
 			}
-			fault_ctx = axis2_engine_create_fault_msg_ctx(engine, env, msg_ctx);
-			axis2_engine_send_fault(engine, env, fault_ctx);
-			body_string = wsf_worker_get_bytes(env, out_stream);
-			send_status =  WS_HTTP_INTERNAL_SERVER_ERROR;
-		        if(NULL != body_string){
-                		request->result_payload = body_string;
-		                request->result_length = strlen(body_string);
-            		}                
+		    
+            fault_ctx = axis2_engine_create_fault_msg_ctx(engine, env, msg_ctx);
+			
+            axis2_engine_send_fault(engine, env, fault_ctx);
+			
+            body_string = wsf_worker_get_bytes(env, out_stream);
+			
+            send_status =  WS_HTTP_INTERNAL_SERVER_ERROR;
+	        
+            if(NULL != body_string){
+               		request->result_payload = body_string;
+	                request->result_length = strlen(body_string);
+       		}                
 		}
    	}
 	if(-1 == send_status) {
     
 		op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
+
 		if(axis2_op_ctx_get_response_written(op_ctx, env)) {
 			int rlen = 0;
 			int readlen = 0;
-            		void *val = NULL;
-            	
+        	void *val = NULL;
 			send_status = WS_HTTP_OK;
             
 			rlen = axutil_stream_get_len(out_stream, env);
-            		val = AXIS2_MALLOC(env->allocator, sizeof(char)*(rlen+1));
-			readlen = axutil_stream_read(out_stream, env, val, rlen+1);
+
+           	val = AXIS2_MALLOC(env->allocator, sizeof(char)*(rlen+1));
+			
+            readlen = axutil_stream_read(out_stream, env, val, rlen+1);
             
-        	    	if(readlen == rlen){
-                		request->result_payload = val;
-                		request->result_length = readlen;
-	            	}
+        	if(readlen == rlen){
+            	request->result_payload = val;
+            	request->result_length = readlen;
+	        }
+
 		}else{
 			send_status = WS_HTTP_ACCEPTED;
 		}
    	}	
 
    	axutil_string_free(soap_action_str, env);
+
+    axis2_msg_ctx_free(msg_ctx, env);
     
     return send_status;
 }

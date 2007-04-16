@@ -778,39 +778,41 @@ int wsf_client_do_request(
     wsf_client_set_module_param_option(env, svc_client, "sandesha2", "sandesha2_db" ,WSF_GLOBAL(rm_db_dir));
 
     if(Z_TYPE_P(param) == IS_OBJECT &&
-        instanceof_function(Z_OBJCE_P(param), ws_message_class_entry TSRMLS_CC))
-    {
+        instanceof_function(Z_OBJCE_P(param), ws_message_class_entry TSRMLS_CC)){
         zval **tmp_val = NULL;
-	if((zend_hash_find(Z_OBJPROP_P(param), WS_MSG_PAYLOAD_STR, 
-		sizeof(WS_MSG_PAYLOAD_STR), (void**)&tmp_val) == SUCCESS) || 
-		(zend_hash_find(Z_OBJPROP_P(param), WS_MSG_PAYLOAD_DOM,
-		sizeof(WS_MSG_PAYLOAD_DOM), (void**)&tmp_val) == SUCCESS) )	{
-			reader = wsf_client_get_reader_from_zval(tmp_val, env TSRMLS_CC);				
-        }
+    	if((zend_hash_find(Z_OBJPROP_P(param), WS_MSG_PAYLOAD_STR, 
+	    	sizeof(WS_MSG_PAYLOAD_STR), (void**)&tmp_val) == SUCCESS) || 
+    		(zend_hash_find(Z_OBJPROP_P(param), WS_MSG_PAYLOAD_DOM,
+    		sizeof(WS_MSG_PAYLOAD_DOM), (void**)&tmp_val) == SUCCESS) )	{
+    			reader = wsf_client_get_reader_from_zval(tmp_val, env TSRMLS_CC);				
+            }
 
-	if(zend_hash_find(Z_OBJPROP_P(param), WS_OPTIONS, sizeof(WS_OPTIONS), (void**)&msg_tmp) == SUCCESS){
-		if(Z_TYPE_PP(msg_tmp) == IS_ARRAY)
-			msg_ht = Z_ARRVAL_PP(msg_tmp);
-	}
+    	if(zend_hash_find(Z_OBJPROP_P(param), WS_OPTIONS, sizeof(WS_OPTIONS), (void**)&msg_tmp) == SUCCESS){
+	    	if(Z_TYPE_PP(msg_tmp) == IS_ARRAY)
+		    msg_ht = Z_ARRVAL_PP(msg_tmp);
+	    }
 		
         input_type = WS_USING_MSG;
-	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] do_request Input type is WSMessage ");
+    	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                "[wsf_client] do_request Input type is WSMessage ");
 
      }else{
         reader = wsf_client_get_reader_from_zval(&param, env TSRMLS_CC);
 	
-  	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] Input  is not WSMessage ");
+      	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] Input  is not WSMessage ");
 		
-	input_type = WS_USING_STRING;
+    	input_type = WS_USING_STRING;
     }       
 
 	/** convert payload to an axiom node */
-    request_payload = ws_util_read_payload(reader, env);
+    request_payload = wsf_util_read_payload(reader, env);
+    
+    axiom_xml_reader_free(reader, env);
 	
     if (!request_payload) {
- 	zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 1 TSRMLS_CC, 
-		"request payload should not be null");
-	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "request payload node is null");
+ 	    zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 1 TSRMLS_CC, 
+		    "request payload should not be null");
+       	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "request payload node is null");
     }
 	
     client_options = (axis2_options_t *)axis2_svc_client_get_options(svc_client, env);
@@ -846,28 +848,28 @@ int wsf_client_do_request(
     }
 
     if(status == AXIS2_FAILURE){
-	php_error_docref(NULL TSRMLS_CC, E_ERROR, "service enpoint uri is needed for service invocation");
+    	php_error_docref(NULL TSRMLS_CC, E_ERROR, "service enpoint uri is needed for service invocation");
     }
 
     if(client_ht){/** RM OPTIONS */
-	axutil_property_t *rm_prop = NULL;
-	int rm_version = wsf_client_get_rm_version(client_ht TSRMLS_CC);
+	    axutil_property_t *rm_prop = NULL;
+    	int rm_version = wsf_client_get_rm_version(client_ht TSRMLS_CC);
 				
-	if(rm_version > 0){
-		if(rm_version == WS_RM_VERSION_1_0){
-			rm_spec_version = WS_RM_VERSION_1_0;
-			rm_spec_version_str = WS_RM_VERSION_1_0_STR;
-			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] rm spec version 1.0");
-		}else if(Z_LVAL_PP(client_tmp) == WS_RM_VERSION_1_1){
-			rm_spec_version = WS_RM_VERSION_1_1;
-			rm_spec_version_str = WS_RM_VERSION_1_1_STR;
-			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] rm spec version 1.1");
-		}
+	    if(rm_version > 0){
+		    if(rm_version == WS_RM_VERSION_1_0){
+			    rm_spec_version = WS_RM_VERSION_1_0;
+    			rm_spec_version_str = WS_RM_VERSION_1_0_STR;
+	    		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] rm spec version 1.0");
+    		}else if(Z_LVAL_PP(client_tmp) == WS_RM_VERSION_1_1){
+	    		rm_spec_version = WS_RM_VERSION_1_1;
+		    	rm_spec_version_str = WS_RM_VERSION_1_1_STR;
+			    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] rm spec version 1.1");
+    		}
 
-		rm_prop = axutil_property_create_with_args(env, 0, 0, 0, rm_spec_version_str);
-		axis2_options_set_property(client_options, env, WS_SANDESHA2_CLIENT_RM_SPEC_VERSION, rm_prop);
-		engage_rm  = AXIS2_TRUE;
-	}
+	    	rm_prop = axutil_property_create_with_args(env, 0, 0, 0, rm_spec_version_str);
+		    axis2_options_set_property(client_options, env, WS_SANDESHA2_CLIENT_RM_SPEC_VERSION, rm_prop);
+    		engage_rm  = AXIS2_TRUE;
+	    }
 
 	/**
 		reliable = TRUE
@@ -1000,7 +1002,7 @@ int wsf_client_do_request(
 		
 		if (response_payload) {
 			axis2_char_t *res_text = NULL;
-	    		axis2_char_t *fault = NULL;
+	    	axis2_char_t *fault = NULL;
 	        
 			fault = axiom_util_get_localname(response_payload, env);
 		    
@@ -1016,8 +1018,8 @@ int wsf_client_do_request(
 			else {
 	    
 				zval *rmsg = NULL;
-    				MAKE_STD_ZVAL(rmsg);
-    				object_init_ex(rmsg, ws_message_class_entry);
+    			MAKE_STD_ZVAL(rmsg);
+    			object_init_ex(rmsg, ws_message_class_entry);
 
 				wsf_client_handle_incoming_attachments(env, client_ht, rmsg, response_payload TSRMLS_CC);
 				res_text = wsf_util_serialize_om(env , response_payload);

@@ -284,10 +284,10 @@ void wsf_env_free(axutil_env_t *env){
 
 }
 
-ws_svc_info_t* ws_svc_info_create()
+wsf_svc_info_t* wsf_svc_info_create()
 {
-    ws_svc_info_t *svc_info = NULL;
-    svc_info = emalloc(sizeof(ws_svc_info_t));
+    wsf_svc_info_t *svc_info = NULL;
+    svc_info = emalloc(sizeof(wsf_svc_info_t));
     svc_info->svc = NULL;
     svc_info->svc_name = NULL;
     svc_info->is_class = 0;
@@ -309,14 +309,14 @@ ws_svc_info_t* ws_svc_info_create()
 }
 
 /* free svc info struct */
-void ws_svc_info_free(ws_svc_info_t *svc_info)
+void wsf_svc_info_free(wsf_svc_info_t *svc_info, axutil_env_t *env)
 {
     if(NULL != svc_info){
-	if(svc_info->svc_name){
-	    efree(svc_info->svc_name);
-	    svc_info->svc_name = NULL;
+    	if(svc_info->svc_name){
+	        AXIS2_FREE(env->allocator, svc_info->svc_name);
+	        svc_info->svc_name = NULL;
         }		    
-	efree(svc_info); 
+    	efree(svc_info); 
     }
 }
 
@@ -369,7 +369,7 @@ void wsf_php_req_info_free(wsf_req_info_t *req_info)
 }
 
 /* {{{ ws_read_payload */
-axiom_node_t* ws_util_read_payload(
+axiom_node_t* wsf_util_read_payload(
     axiom_xml_reader_t *reader, 
     axutil_env_t *env)
 {
@@ -466,7 +466,7 @@ char*wsf_util_get_ttl(char *buf, axutil_env_t *env)
     return buffer;
 }
 
-axis2_char_t *ws_util_get_soap_msg_from_op_client(
+axis2_char_t *wsf_util_get_soap_msg_from_op_client(
     axis2_op_client_t *op_client,
     axutil_env_t *env, 
 	axis2_wsdl_msg_labels_t msg_label)
@@ -531,7 +531,7 @@ axis2_msg_recv_t* load_msg_recv(axutil_env_t *env, axis2_char_t *home)
 	return msg_recv;
 }
 
-int ws_util_engage_module(
+int wsf_util_engage_module(
     axis2_conf_t *conf, 
     axis2_char_t *module_name, 
     axutil_env_t *env, 
@@ -560,9 +560,9 @@ int ws_util_engage_module(
 }
 
 /* genarate service name from uri */
-char* ws_util_generate_svc_name_from_uri(
+char* wsf_util_generate_svc_name_from_uri(
     char *req_uri, 
-    ws_svc_info_t *svc_info,
+    wsf_svc_info_t *svc_info,
     axutil_env_t *env)
 {
 	char *svc_name = NULL;
@@ -597,8 +597,8 @@ char* ws_util_generate_svc_name_from_uri(
 }
 
 /* create service */
-void ws_util_create_svc_from_svc_info(
-    ws_svc_info_t *svc_info, 
+void wsf_util_create_svc_from_svc_info(
+    wsf_svc_info_t *svc_info, 
     axutil_env_t *env TSRMLS_DC)
 {
 	axutil_qname_t *svc_qname = NULL;
@@ -620,19 +620,21 @@ void ws_util_create_svc_from_svc_info(
 	}	
   
 	svc = axis2_conf_get_svc(conf, env, svc_info->svc_name);
-	if(NULL != svc){
-		svc_info->svc = svc;
-	}
-	else {
 	
-	svc_qname = axutil_qname_create(env, svc_info->svc_name, NULL, NULL);
-	svc_info->svc = axis2_svc_create_with_qname(env, svc_qname);
+    if(NULL != svc){
+	
+        svc_info->svc = svc;
+
+	}else {
+    	svc_qname = axutil_qname_create(env, svc_info->svc_name, NULL, NULL);
+	    svc_info->svc = axis2_svc_create_with_qname(env, svc_qname);
+        axutil_qname_free(svc_qname, env);
 	} 
 	return;
 }
 /** create operation */
-void ws_util_create_op_and_add_to_svc(
-    ws_svc_info_t *svc_info, 
+void wsf_util_create_op_and_add_to_svc(
+    wsf_svc_info_t *svc_info, 
     char *action,
     axutil_env_t *env,
     char *op_name TSRMLS_DC)

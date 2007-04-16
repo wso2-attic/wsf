@@ -223,6 +223,9 @@ static zval* ws_create_object(void *obj, int obj_type,
 static void ws_object_dtor(void *object,
             zend_object_handle handle TSRMLS_DC);
 
+static void 
+ws_objects_free_stroage(void *object TSRMLS_DC);
+
 /* {{{ proto create an WSFault object */
 void ws_throw_soap_fault(axiom_soap_body_t *soap_body TSRMLS_DC)
 {
@@ -454,7 +457,7 @@ PHP_MINIT_FUNCTION(wsf)
 
     ws_env_svr = wsf_env_create_svr(WSF_GLOBAL(log_path));
 
-    wsf_msg_recv =  ws_xml_msg_recv_create(ws_env_svr);
+    wsf_msg_recv =  wsf_xml_msg_recv_create(ws_env_svr);
 
     worker = wsf_worker_create(ws_env_svr, home_folder, WSF_GLOBAL(rm_db_dir));
 
@@ -469,8 +472,16 @@ PHP_MINIT_FUNCTION(wsf)
 PHP_MSHUTDOWN_FUNCTION(wsf)
 {
     UNREGISTER_INI_ENTRIES();
-    axiom_xml_reader_cleanup();
     
+    axiom_xml_reader_cleanup();
+
+    axis2_msg_recv_free(wsf_msg_recv, ws_env_svr);
+
+    wsf_worker_free(worker, ws_env_svr);
+
+    axutil_env_free(env);
+
+    axutil_env_free(ws_env_svr);
 
     return SUCCESS;
 }
@@ -533,7 +544,8 @@ php_ws_object_new_ex(zend_class_entry *class_type ,
                    (copy_ctor_func_t)zval_add_ref, (void *)&tmp, sizeof(void *));
 
     retval.handle = zend_objects_store_put(intern,
-					(zend_objects_store_dtor_t)ws_object_dtor, NULL, NULL TSRMLS_CC);
+					    (zend_objects_store_dtor_t)ws_object_dtor, 
+                        (zend_objects_free_object_storage_t )ws_objects_free_stroage, NULL TSRMLS_CC);
     retval.handlers = &ws_object_handlers;
     return retval;
 }
@@ -570,6 +582,26 @@ static void ws_object_dtor(void *object,
     ws_object *intern = (ws_object *)object;
     zend_hash_destroy(intern->std.properties);
     FREE_HASHTABLE(intern->std.properties);
+    if(intern->obj_type == WS_SVC_CLIENT){
+        axis2_svc_client_t *svc_client = NULL;
+        svc_client = (axis2_svc_client_t*)intern->ptr;
+        if(svc_client){
+             axis2_svc_client_free(svc_client, env);
+        }
+    }else if(intern->obj_type == WS_SVC){
+        wsf_svc_info_t *svc_info = NULL;
+        svc_info = (wsf_svc_info_t*)intern->ptr;
+        if(svc_info){
+            wsf_svc_info_free(svc_info, ws_env_svr );    
+        }
+    }
+}
+
+static void
+ws_objects_free_stroage(void *object TSRMLS_DC){
+    ws_object *intern = (ws_object *)object;
+    zend_object_std_dtor(&intern->std TSRMLS_CC);
+    efree(object);
 }
 
 /*** {{{ is_ws_fault(Object obj) */
@@ -710,7 +742,7 @@ PHP_METHOD(ws_message, __get)
                                             "xml reader create failed");
                 }
 
-                payload = ws_util_read_payload(reader, env);
+                payload = wsf_util_read_payload(reader, env);
                 if(payload)
                 {
                     axis2_char_t *res_text = NULL;
@@ -747,7 +779,7 @@ PHP_METHOD(ws_message, __get)
                         zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 1 TSRMLS_CC,
                                                 "reader create failed");
                     }
-                    payload = ws_util_read_payload(reader, env);
+                    payload = wsf_util_read_payload(reader, env);
                     if(payload)
                     {
                         int ret;
@@ -910,7 +942,7 @@ PHP_METHOD(ws_client, get_last_response)
 
         if(op_client)
         {
-            axis2_char_t *msg = ws_util_get_soap_msg_from_op_client(op_client, env,
+            axis2_char_t *msg = wsf_util_get_soap_msg_from_op_client(op_client, env,
                                 AXIS2_WSDL_MESSAGE_LABEL_IN);
             if(msg)
             {
@@ -934,7 +966,7 @@ PHP_METHOD(ws_client , get_last_request)
         axis2_op_client_t *op_client = NULL;
         op_client = axis2_svc_client_get_op_client(svc_client, env);
         if(op_client){
-            axis2_char_t *msg = ws_util_get_soap_msg_from_op_client(op_client, env,
+            axis2_char_t *msg = wsf_util_get_soap_msg_from_op_client(op_client, env,
                                 AXIS2_WSDL_MESSAGE_LABEL_OUT);
             if(msg){
                 RETURN_STRING(msg, 1);
@@ -1030,7 +1062,7 @@ PHP_METHOD(ws_service, __construct)
 {
     ws_object_ptr intern = NULL;
     zval *obj = NULL;
-    ws_svc_info_t *svc_info = NULL;
+    wsf_svc_info_t *svc_info = NULL;
     zval *options = NULL;
     axutil_hash_index_t *hi = NULL;
 
@@ -1046,7 +1078,7 @@ PHP_METHOD(ws_service, __construct)
 
     WSF_GET_THIS(obj);
     intern = (ws_object* )zend_object_store_get_object(obj TSRMLS_CC);
-    svc_info = ws_svc_info_create();
+    svc_info = wsf_svc_info_create();
     svc_info->class_info = axutil_hash_make(ws_env_svr);
 
 
@@ -1054,6 +1086,7 @@ PHP_METHOD(ws_service, __construct)
     svc_info->ops_to_actions = axutil_hash_make(ws_env_svr);
 
     intern->ptr = svc_info;
+    intern->obj_type = WS_SVC;
     svc_info->php_worker = worker;
 
 
@@ -1115,9 +1148,9 @@ PHP_METHOD(ws_service, __construct)
         }
     }
     if(SG(request_info).request_uri){
-        svc_info->svc_name = ws_util_generate_svc_name_from_uri(SG(request_info).request_uri, svc_info, ws_env_svr);
+        svc_info->svc_name = wsf_util_generate_svc_name_from_uri(SG(request_info).request_uri, svc_info, ws_env_svr);
         svc_info->msg_recv = wsf_msg_recv;
-        ws_util_create_svc_from_svc_info(svc_info , ws_env_svr TSRMLS_CC);
+        wsf_util_create_svc_from_svc_info(svc_info , ws_env_svr TSRMLS_CC);
     }else{
         zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 1 TSRMLS_CC,
                                 "server does not support cli");
@@ -1201,7 +1234,7 @@ PHP_METHOD(ws_service, __construct)
 
             if (wsa_action)
             {
-                ws_util_create_op_and_add_to_svc(svc_info, wsa_action,
+                wsf_util_create_op_and_add_to_svc(svc_info, wsa_action,
                                                  ws_env_svr, operation_name TSRMLS_CC);
                 /* keep track of operations with actions */
                 axutil_hash_set(svc_info->ops_to_actions, axutil_strdup(ws_env_svr, operation_name) ,
@@ -1209,7 +1242,7 @@ PHP_METHOD(ws_service, __construct)
             }
             else
             {
-                ws_util_create_op_and_add_to_svc(svc_info, NULL,
+                wsf_util_create_op_and_add_to_svc(svc_info, NULL,
                                                  ws_env_svr, operation_name TSRMLS_CC);
             }
             efree(key);
@@ -1250,7 +1283,7 @@ PHP_METHOD(ws_service, __construct)
                 /* function is there, add the operation to service */
                 if (strcmp(key, val) == 0)
                 {
-                    ws_util_create_op_and_add_to_svc(svc_info, NULL, ws_env_svr, key TSRMLS_CC);
+                    wsf_util_create_op_and_add_to_svc(svc_info, NULL, ws_env_svr, key TSRMLS_CC);
                 }
                 else
                 {
@@ -1261,7 +1294,7 @@ PHP_METHOD(ws_service, __construct)
                     {
                         /* There was no mapping WSA action for this operation.
                            So this operation was not yet added, hence add. */
-                        ws_util_create_op_and_add_to_svc(svc_info, NULL, ws_env_svr, key TSRMLS_CC);
+                        wsf_util_create_op_and_add_to_svc(svc_info, NULL, ws_env_svr, key TSRMLS_CC);
                     }
                 }
             }
@@ -1289,7 +1322,7 @@ PHP_METHOD(ws_service , set_class)
     	
     	ws_object_ptr intern = NULL;
     	zval *obj = NULL;
-    	ws_svc_info_t *svc_info = NULL;	
+    	wsf_svc_info_t *svc_info = NULL;	
     	
     	int found, argc;
     	zval ***argv;
@@ -1297,7 +1330,7 @@ PHP_METHOD(ws_service , set_class)
     	WSF_GET_THIS(obj);
     	
     	intern = (ws_object*)zend_object_store_get_object(obj TSRMLS_CC);
-    	svc_info = (ws_svc_info_t*)(intern->ptr);
+    	svc_info = (wsf_svc_info_t*)(intern->ptr);
      
     	argc = ZEND_NUM_ARGS();
     	argv = safe_emalloc(argc, sizeof(zval **), 0);
@@ -1332,7 +1365,8 @@ PHP_METHOD(ws_service , set_class)
                         axutil_hash_set(svc_info->class_info, axutil_strdup(f->common.function_name ,env),
                             AXIS2_HASH_KEY_STRING, axutil_strdup(Z_STRVAL_PP(argv[0]), env));
     					
-    					ws_util_create_op_and_add_to_svc(svc_info, NULL, 
+    					
+                            ws_util_create_op_and_add_to_svc(svc_info, NULL, 
     					        env ,f->common.function_name TSRMLS_CC);
     				}
     				zend_hash_move_forward_ex(ft, &pos);
@@ -1357,7 +1391,7 @@ PHP_METHOD(ws_service , reply)
     zval *obj = NULL;
     axis2_conf_t *conf = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
-    ws_svc_info_t *svc_info = NULL;
+    wsf_svc_info_t *svc_info = NULL;
     wsf_req_info_t *req_info = NULL;
     zval **server_vars, **data;
     wsf_worker_t *php_worker = NULL;
@@ -1369,7 +1403,7 @@ PHP_METHOD(ws_service , reply)
 
     WSF_GET_THIS(obj);
     intern = (ws_object*)zend_object_store_get_object(obj TSRMLS_CC);
-    svc_info = (ws_svc_info_t *)(intern->ptr);
+    svc_info = (wsf_svc_info_t *)(intern->ptr);
 
     php_worker = svc_info->php_worker;
     conf_ctx = wsf_worker_get_conf_ctx(php_worker, ws_env_svr);
@@ -1573,7 +1607,7 @@ PHP_METHOD(ws_service , reply)
                     axis2_char_t *mod_name = (axis2_char_t *)axutil_array_list_get(svc_info->modules_to_engage,
                                              ws_env_svr, i);
 
-                    ws_util_engage_module(conf, mod_name, ws_env_svr, svc_info->svc);
+                    wsf_util_engage_module(conf, mod_name, ws_env_svr, svc_info->svc);
                 }
             }
         }

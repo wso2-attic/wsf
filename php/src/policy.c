@@ -372,7 +372,7 @@ int ws_policy_handle_server_security(zval *sec_token,
     axis2_svc_add_param(svc, env, inflow_param);
     axis2_svc_add_param(svc, env, outflow_param);
     /** engage module rampart */
-    ws_util_engage_module(conf, "rampart", env, svc);
+    wsf_util_engage_module(conf, "rampart", env, svc);
 
 
 

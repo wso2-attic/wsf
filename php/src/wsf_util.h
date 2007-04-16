@@ -28,39 +28,39 @@
 #include <TSRM.h>
 #include "ext/libxml/php_libxml.h"
 
-axiom_node_t* ws_util_read_payload(
+axiom_node_t* wsf_util_read_payload(
     axiom_xml_reader_t *reader,
     axutil_env_t *env);    
 
-axis2_char_t *ws_util_get_soap_msg_from_op_client(
+axis2_char_t* wsf_util_get_soap_msg_from_op_client(
     axis2_op_client_t *op_client,
     axutil_env_t *env, 
 	axis2_wsdl_msg_labels_t message_label);
 
-char* ws_util_generate_svc_name_from_uri(
+char* wsf_util_generate_svc_name_from_uri(
     char *req_uri,
-    ws_svc_info_t *svc_info, 
+    wsf_svc_info_t *svc_info, 
     axutil_env_t *env);
 
-void ws_util_create_svc_from_svc_info(
-    ws_svc_info_t *svc_info, 
+void wsf_util_create_svc_from_svc_info(
+    wsf_svc_info_t *svc_info, 
     axutil_env_t *env TSRMLS_DC);
 
 
-void ws_util_create_op_and_add_to_svc(
-    ws_svc_info_t *svc_info, 
+void wsf_util_create_op_and_add_to_svc(
+    wsf_svc_info_t *svc_info, 
     char *options , 
     axutil_env_t *env,
     char *op_name TSRMLS_DC);
 
-int ws_util_engage_module(axis2_conf_t *conf, 
+int wsf_util_engage_module(axis2_conf_t *conf, 
     axis2_char_t *module_name,  
     axutil_env_t *env, 
     axis2_svc_t *svc);
     
-ws_svc_info_t* ws_svc_info_create();
+wsf_svc_info_t* wsf_svc_info_create();
 
-void ws_svc_info_free(ws_svc_info_t *svc_info);
+void wsf_svc_info_free(wsf_svc_info_t *svc_info, axutil_env_t *env);
 
 wsf_req_info_t* wsf_php_req_info_create();
 
@@ -111,16 +111,13 @@ axiom_node_t*  wsf_util_construct_header_node(
 
 char *wsf_util_get_ttl(char *buf, axutil_env_t *env);
 
-char*
-wsf_util_read_file_to_buffer(char *filename TSRMLS_DC);
+char* wsf_util_read_file_to_buffer(char *filename TSRMLS_DC);
 
-axiom_node_t*
-wsf_util_deserialize_buffer(
+axiom_node_t* wsf_util_deserialize_buffer(
     const axutil_env_t *env,
     char *buffer);
 	
-void 
-wsf_util_set_soap_fault(zval *this_ptr, 
+void wsf_util_set_soap_fault(zval *this_ptr, 
         char *fault_code_ns, 
         char *fault_code, 
         char *fault_reason,
@@ -128,8 +125,7 @@ wsf_util_set_soap_fault(zval *this_ptr,
         zval *fault_detail,
         char *name TSRMLS_DC);
 
-void 
-wsf_util_set_fault_properties(zval *this_ptr,
+void wsf_util_set_fault_properties(zval *this_ptr,
         axiom_node_t *fault_node,
         axutil_env_t *env TSRMLS_DC); 
 
