@@ -361,6 +361,8 @@ AC_CONFIG_FILES([Makefile \
     src/core/transport/xmpp/receiver/Makefile \
     src/core/transport/xmpp/server/simple_xmpp_server/Makefile \
     src/core/transport/http/Makefile \
+    src/core/transport/http/common/Makefile \
+    src/core/transport/http/util/Makefile \
     src/core/transport/http/sender/Makefile \
     src/core/transport/http/sender/ssl/Makefile \
     src/core/transport/http/receiver/Makefile \

@@ -37,13 +37,13 @@ fi
 #fi
 
 
-cp -r build/xmpp/xmpp axis2c/modules/core/transport
+cp -r build/xmpp/xmpp axis2c/src/core/transport
 cp -r build/xmpp/include/*.h axis2c/include
-cp build/axis2c/modules/core/transport/http/server/simple_axis2_server/Makefile.am axis2c/modules/core/transport/http/server/simple_axis2_server/
-cp build/axis2c/modules/core/transport/http/sender/Makefile.am axis2c/modules/core/transport/http/sender
-cp build/axis2c/modules/core/transport/http/sender/ssl/Makefile.am axis2c/modules/core/transport/http/sender/ssl/
-cp build/axis2c/modules/core/transport/Makefile.am axis2c/modules/core/transport
-cp build/axis2c/modules/core/Makefile.am axis2c/modules/core
+cp build/axis2c/src/core/transport/http/server/simple_axis2_server/Makefile.am axis2c/src/core/transport/http/server/simple_axis2_server/
+cp build/axis2c/src/core/transport/http/sender/Makefile.am axis2c/src/core/transport/http/sender
+cp build/axis2c/src/core/transport/http/sender/ssl/Makefile.am axis2c/src/core/transport/http/sender/ssl/
+cp build/axis2c/src/core/transport/Makefile.am axis2c/src/core/transport
+cp build/axis2c/src/core/Makefile.am axis2c/src/core
 
 ./autogen.sh
 ./configure --prefix=`pwd`/deploy --enable-openssl=yes --enable-rampart=yes
