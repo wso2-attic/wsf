@@ -40,7 +40,7 @@ struct wsf_worker_t
    axis2_conf_ctx_t *conf_ctx;
 };
 
-void wsf_worker_dummy_free_function(void *obj,
+void WSF_CALL wsf_worker_dummy_free_function(void *obj,
                                     const axutil_env_t *env){
     return;
 }
