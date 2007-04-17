@@ -173,11 +173,11 @@ include:</p>
 <p>Following is the implementation of the greet operation:</p>
 <!--code -->
 <pre class="php"><span style="color: rgb(0, 0, 0); font-weight: bold;">function</span> greet<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$message</span><span style="color: rgb(102, 204, 102);">)</span> <span style="color: rgb(102, 204, 102);">{</span>
- 
+&nbsp;
 <span style="color: rgb(0, 0, 255);">$responsePayloadString</span> = &lt;&lt;&lt;XML
         &lt;greetResponse&gt;Hello Client!&lt;/greetResponse&gt;
 XML;
- 
+&nbsp;
         <span style="color: rgb(0, 0, 255);">$returnMessage</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSMessage<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$responsePayloadString</span><span style="color: rgb(102, 204, 102);">)</span>;
         
         <span style="color: rgb(177, 177, 0);">return</span> <span style="color: rgb(0, 0, 255);">$returnMessage</span>;
@@ -343,7 +343,7 @@ of them.</p>
         <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"useSOAP"</span> =&gt; <span style="color: rgb(0, 0, 0); font-weight: bold;">TRUE</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
         <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"useSOAP"</span> =&gt; <span style="color: rgb(204, 102, 204);">1.2</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
         <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"useSOAP"</span> =&gt; <span style="color: rgb(255, 0, 0);">"1.2"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
- 
+&nbsp;
         <span style="color: rgb(128, 128, 128); font-style: italic;">// setting SOAP 1.1 version</span>
         <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"useSOAP"</span> =&gt; <span style="color: rgb(204, 102, 204);">1.1</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
         <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"useSOAP"</span> =&gt; <span style="color: rgb(255, 0, 0);">"1.1"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
@@ -367,7 +367,7 @@ different HTTP methods.</p>
         <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"useSOAP"</span> =&gt; <span style="color: rgb(0, 0, 0); font-weight: bold;">FALSE</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
         <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"useSOAP"</span> =&gt; <span style="color: rgb(0, 0, 0); font-weight: bold;">FALSE</span>, <span style="color: rgb(255, 0, 0);">"HTTPMethod"</span> =&gt; <span style="color: rgb(255, 0, 0);">"POST"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
         <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"useSOAP"</span> =&gt; <span style="color: rgb(0, 0, 0); font-weight: bold;">FALSE</span>, <span style="color: rgb(255, 0, 0);">"HTTPMethod"</span> =&gt; <span style="color: rgb(255, 0, 0);">"post"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
- 
+&nbsp;
          <span style="color: rgb(128, 128, 128); font-style: italic;">// REST with HTTP GET</span>
         <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"useSOAP"</span> =&gt; <span style="color: rgb(0, 0, 0); font-weight: bold;">FALSE</span>, <span style="color: rgb(255, 0, 0);">"HTTPMethod"</span> =&gt; <span style="color: rgb(255, 0, 0);">"GET"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
         <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"useSOAP"</span> =&gt; <span style="color: rgb(0, 0, 0); font-weight: bold;">FALSE</span>, <span style="color: rgb(255, 0, 0);">"HTTPMethod"</span> =&gt; <span style="color: rgb(255, 0, 0);">"get"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
@@ -390,8 +390,8 @@ functions ws_request() and ws_send().</p>
                 &lt;text&gt;Hello World!&lt;/text&gt;
         &lt;/ns1:echoString&gt;
 XML;
- 
- 
+&nbsp;
+&nbsp;
     <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span>
         <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"to"</span>=&gt;<span style="color: rgb(255, 0, 0);">"http://localhost/echo_service.php"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
                                 
@@ -404,9 +404,9 @@ Using a WSMessage instance to represent request payload:</p>
                 &lt;text&gt;Hello World!&lt;/text&gt;
         &lt;/ns1:echoString&gt;
 XML;
- 
+&nbsp;
     <span style="color: rgb(0, 0, 255);">$reqMessage</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSMessage<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$reqPayloadString</span><span style="color: rgb(102, 204, 102);">)</span>;
- 
+&nbsp;
     <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span>
         <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"to"</span>=&gt;<span style="color: rgb(255, 0, 0);">"http://localhost/echo_service.php"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
                                 
@@ -484,7 +484,7 @@ href="http://www.w3.org/Submission/ws-addressing/">submission version</a>.</p>
 with WSO2 WSF/PHP. One is that you have to provide a WS-Addressing action at
 message level. The other is that you have to enable the use of WS-Addressing
 at client level.</p>
-<pre> 
+<pre>&nbsp;
     <span style="color: rgb(0, 0, 255);">$reqMessage</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSMessage<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$reqPayloadString</span>,
         <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"to"</span>=&gt;<span style="color: rgb(255, 0, 0);">"http://localhost/echo_service_addr.php"</span>,
               <span style="color: rgb(255, 0, 0);">"action"</span> =&gt; <span style="color: rgb(255, 0, 0);">"http://php.wsf.wso2.net/samples/echoString"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
@@ -527,30 +527,51 @@ which would decide how to place the order again. WS-Addressing helps us to
 manage the order process, with replies and faults being directed to
 differently addressed endpoints.</p>
 
-<h3><a name="6.6.">6.6. WS-Security UsernameToken</a></h3>
+<h3><a name="6.6.">6.6. WS-Security </a></h3>
 
-<p>With WSClient, you can use WS-Security usernameTokens, along with
+<p>With WSPolicy and WSSecurityToken, you can use WS-Security usernameTokens, encryption,
+        signing, along with
 timestamp, time-to-live and digest support. The simplest form of using
 usernameToken is to provide a username and a password.</p>
-<pre>    <span style="color: rgb(0, 0, 255);">$reqMessage</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSMessage<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$reqPayloadString</span>,
-        <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"to"</span>=&gt; <span style="color: rgb(255, 0, 0);">"http://localhost/echo_service_secure.php"</span>,
+<pre>    <span style="color: rgb(0, 0, 255);">$policy_obj</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSPolicy<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 102);">array</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"useUsernameToken"</span> =&gt; TRUE<span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
+<span style="color: #0000ff">
+    $security_obj</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSSecurityToken<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 102);">array</span><span style="color: rgb(102, 204, 102);">(</span>
               <span style="color: rgb(255, 0, 0);">"user"</span> =&gt; <span style="color: rgb(255, 0, 0);">"john"</span>,
-              <span style="color: rgb(255, 0, 0);">"password"</span> =&gt; <span style="color: rgb(255, 0, 0);">"fred"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
-    </pre>
-
-<p>The "user" option would switch on the secure mode of the client and the
-above code will result in the client sending a usernameToken security SOAP
-header in the request.<br>
-You can also set the other options related to usernameToken as shown
-below.</p>
-<pre>    <span style="color: rgb(0, 0, 255);">$reqMessage</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSMessage<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$reqPayloadString</span>,
-        <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"to"</span>=&gt; <span style="color: rgb(255, 0, 0);">"http://localhost/echo_service_secure.php"</span>,
-              <span style="color: rgb(255, 0, 0);">"user"</span> =&gt; <span style="color: rgb(255, 0, 0);">"john"</span>,
-              <span style="color: rgb(255, 0, 0);">"password"</span> =&gt; <span style="color: rgb(255, 0, 0);">"fred"</span>,
-              <span style="color: rgb(255, 0, 0);">"timestamp"</span> =&gt; <span style="color: rgb(0, 0, 0); font-weight: bold;">TRUE</span>,
-              <span style="color: rgb(255, 0, 0);">"digest"</span> =&gt; <span style="color: rgb(0, 0, 0); font-weight: bold;">TRUE</span>,
-              <span style="color: rgb(255, 0, 0);">"timeToLive"</span> =&gt; <span style="color: rgb(255, 0, 0);">"5m"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
-    </pre>
+              <span style="color: rgb(255, 0, 0);">"password"</span> =&gt; <span style="color: rgb(255, 0, 0);">"fred"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
+Or else user can use the password call back mechanism by using a callback function. 
+    <br />
+    <br />
+    <span style="color: #0000ff"> &nbsp;function <em>passwordFunction</em>($username)<br />
+    {<br />
+    /** some&nbsp; mechanism to retrive the password */<br />
+    <br />
+    }</span><br />
+    <br />
+    Then WSSecurityToken object would be<br />
+    <span style="color: #0000ff">&nbsp; &nbsp; &nbsp; $security_obj</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSSecurityToken<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 102);">array</span><span style="color: rgb(102, 204, 102);">(</span><br />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">
+        "user"</span> =&gt; <span style="color: rgb(255, 0, 0);">"john"</span>,<br />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">
+        "password_callback"</span> =&gt; <span style="color: rgb(255, 0, 0);">"passwordFunction"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;<br />
+    <br />
+    If user wants timetoLive and timestamp , those options also can be specified.<br />
+    <span style="color: rgb(0, 0, 255);">&nbsp; &nbsp;&nbsp; $policy_obj</span> =<span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSPolicy<span style="color: rgb(102, 204, 102);">(<br />
+        &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span>&nbsp;
+        <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span>
+              <span style="color: rgb(255, 0, 0);">"useUsernameToken"</span> =&gt;TRUE,<br />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+              <span style="color: rgb(255, 0, 0);">"includeTimestamp"=&gt;</span>TRUE<span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;<br />
+    <br />
+    <span style="color: #0000ff">&nbsp; &nbsp; $security_obj</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSSecurityToken<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 102);">array</span><span style="color: rgb(102, 204, 102);">(</span><br />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">
+        "user"</span> =&gt; <span style="color: rgb(255, 0, 0);">"john"</span>,<br />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">
+        "password"</span> =&gt; <span style="color: rgb(255, 0, 0);">"fred",<br />
+        </span><span style="color: rgb(102, 204, 102);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            &nbsp; <span style="color: #ff0000">"ttl"</span><span style="color: #111111"> =&gt;
+                300</span>)</span><span style="color: rgb(102, 204, 102);">)</span>;<br />
+    <br />
+    &nbsp; &nbsp;
 
 <h3><a name="6.7.">6.7. One-Way Clients</a></h3>
 
@@ -619,7 +640,7 @@ done, just sending a request without expecting a response.</p>
                 &lt;text&gt;Hello World!&lt;/text&gt;
         &lt;/ns1:notifyString&gt;
 XML;
- 
+&nbsp;
     ws_send<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$reqPayloadString</span>,
                <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"to"</span>=&gt;<span style="color: rgb(255, 0, 0);">"http://localhost/reply_notify_service.php"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
 
@@ -643,13 +664,13 @@ that function and expects that function to return a WSMessage object
 instance.<br>
 Hence the API for a user implemented function mapping to a service operation
 is as follows.</p>
-<pre>  <b>WSMessage user_defined_operation(WSMessage payload)</b></pre>
+<pre>&nbsp; <b>WSMessage user_defined_operation(WSMessage payload)</b></pre>
 
 <p>Following code fragment shows an example:</p>
 <pre><span style="color: rgb(0, 0, 0); font-weight: bold;">function</span> echoFunction<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$inMessage</span><span style="color: rgb(102, 204, 102);">)</span> <span style="color: rgb(102, 204, 102);">{</span>
- 
+&nbsp;
     <span style="color: rgb(0, 0, 255);">$returnMessage</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSMessage<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$inMessage</span>-&gt;<span style="color: rgb(0, 102, 0);">str</span><span style="color: rgb(102, 204, 102);">)</span>;
- 
+&nbsp;
     <span style="color: rgb(177, 177, 0);">return</span> <span style="color: rgb(0, 0, 255);">$returnMessage</span>;
 <span style="color: rgb(102, 204, 102);">}</span></pre>
 
@@ -792,7 +813,7 @@ in the payload itself, as a base64 encoded string.</p>
 <pre> 
 <span style="color: rgb(128, 128, 128); font-style: italic;">// send attachments binary optimized</span>
 <span style="color: rgb(0, 0, 255);">$server</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSService<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"operations"</span> =&gt; <span style="color: rgb(0, 0, 255);">$operations</span>, <span style="color: rgb(255, 0, 0);">"useMTOM"</span> =&gt; <span style="color: rgb(0, 0, 0); font-weight: bold;">TRUE</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
- 
+&nbsp;
 <span style="color: rgb(128, 128, 128); font-style: italic;">// send attachments binary non-optimized</span>
 <span style="color: rgb(0, 0, 255);">$server</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSService<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"operations"</span> =&gt; <span style="color: rgb(0, 0, 255);">$operations</span>, <span style="color: rgb(255, 0, 0);">"useMTOM"</span> =&gt; <span style="color: rgb(0, 0, 0); font-weight: bold;">FALSE</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
 <br>
@@ -820,9 +841,9 @@ them.</p>
 <span style="color: rgb(0, 0, 255);">$resPayload</span> = &lt;&lt;&lt;XML
 &lt;ns1:response xmlns:ns1=<span style="color: rgb(255, 0, 0);">"http://php.wsf.wso2.net/samples/mtom"</span>&gt;Image Saved&lt;/ns1:response&gt;
 XML;
- 
+&nbsp;
     <span style="color: rgb(0, 0, 255);">$returnMessage</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSMessage<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$resPayload</span><span style="color: rgb(102, 204, 102);">)</span>;
- 
+&nbsp;
     <span style="color: rgb(177, 177, 0);">return</span> <span style="color: rgb(0, 0, 255);">$returnMessage</span>;
 <span style="color: rgb(102, 204, 102);">}</span></pre>
 
@@ -840,7 +861,7 @@ WS-Addressing meaningful, one has to specify the WS-Addressing action mapping
 for operations when constructing the service.</p>
 <pre><span style="color: rgb(0, 0, 255);">$operations</span> = <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"echoString"</span> =&gt; <span style="color: rgb(255, 0, 0);">"echoFunction"</span><span style="color: rgb(102, 204, 102);">)</span>;
 <span style="color: rgb(0, 0, 255);">$actions</span> = <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"http://php.wsf.wso2.net/samples/echoString"</span> =&gt; <span style="color: rgb(255, 0, 0);">"echoString"</span><span style="color: rgb(102, 204, 102);">)</span>;
- 
+&nbsp;
 <span style="color: rgb(0, 0, 255);">$server</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSService<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"operations"</span> =&gt; <span style="color: rgb(0, 0, 255);">$operations</span>, 
                               <span style="color: rgb(255, 0, 0);">"actions"</span> =&gt; <span style="color: rgb(0, 0, 255);">$actions</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
 
@@ -873,7 +894,7 @@ a sample of an in-only operation. .</p>
 <pre><span style="color: rgb(0, 0, 0); font-weight: bold;">function</span> notifyFunction<span>(</span><span style="color: rgb(0, 0, 255);">$inMessage</span><span style="color: rgb(102, 204, 102);">)</span> <span style="color: rgb(102, 204, 102);">{</span>
     <span style="color: rgb(128, 128, 128); font-style: italic;">// Do whatever desired processing of the in message here</span>
     <span style="color: rgb(128, 128, 128); font-style: italic;">/* ... */</span>
- 
+&nbsp;
     <span style="color: rgb(177, 177, 0);">return</span>;
 <span style="color: rgb(102, 204, 102);">}</span></pre>
 
