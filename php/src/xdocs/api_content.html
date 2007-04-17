@@ -19,7 +19,7 @@ WSF/PHP extension.</p>
 
 <h2><b>Predefined Classes</b></h2>
 <a id="client"></a>   &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
-    &nbsp;&nbsp; &nbsp;&nbsp;
+    &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
 
 <h2><b>WSClient</b></h2>
 <a id="construct"></a>
@@ -115,15 +115,15 @@ border="1">
       </td>
     </tr>
     <tr valign="top">
-      <td><p>"useMTOM"</p>
+      <td style="height: 51px"><p>"useMTOM"</p>
       </td>
-      <td><p>boolean</p>
+      <td style="height: 51px"><p>boolean</p>
       </td>
-      <td><p>TRUE | FALSE</p>
+      <td style="height: 51px"><p>TRUE | FALSE</p>
       </td>
-      <td><p>TRUE</p>
+      <td style="height: 51px"><p>TRUE</p>
       </td>
-      <td><p>Indicates whether the attachments should be sent MTOM optimized
+      <td style="height: 51px"><p>Indicates whether the attachments should be sent MTOM optimized
         or not. If TRUE, attachments would be sent out of SOAP message,
         optimized, with MIME headers in place. If FALSE,attachments would be
         sent within SOAP payload, as base64 binary.</p>
@@ -168,6 +168,36 @@ border="1">
         addressing headers would be sent.</p>
       </td>
     </tr>
+        <tr valign="top">
+            <td colspan="5">
+                WS-Security Related Options</td>
+        </tr>
+        <tr valign="top">
+            <td colspan="1" style="height: 20px">
+                "policy"</td>
+            <td colspan="1" style="height: 20px">
+                array | string</td>
+            <td colspan="1" style="height: 20px">
+                Array of policy options | string containg policy file</td>
+            <td colspan="1" style="height: 20px">
+                None</td>
+            <td colspan="5" style="height: 20px">
+                Contains the array of policy related options.It may be contains inpolicy and outpolicy
+                arrays seperately or single policy option array. For advance case it&nbsp; may contains
+                the string that representing the policy file.</td>
+        </tr>
+        <tr valign="top">
+            <td colspan="1" style="height: 21px">
+                "securityToken"</td>
+            <td colspan="1" style="height: 21px">
+                array</td>
+            <td colspan="1" style="height: 21px">
+                Array of security policy options</td>
+            <td colspan="1" style="height: 21px">
+                None</td>
+            <td colspan="5" style="height: 21px">
+                Includes an array of security related properties.</td>
+        </tr>
   </tbody>
 </table>
 
@@ -461,26 +491,39 @@ border="1">
       </td>
     </tr>
     <tr>
-      <td colspan="5" valign="top"><p>WS-Security Related Options</p>
+      <td colspan="5" valign="top"><p>WS-Security Related options</p>
       </td>
     </tr>
     <tr valign="top">
-      <td><p>"checkPassword"</p>
+      <td style="height: 38px"><p>
+        "policy"</p>
       </td>
-      <td><p>string</p>
+      <td style="height: 38px"><p>
+        array | string</p>
       </td>
-      <td><p>PHP function name</p>
+      <td style="height: 38px"><p>
+        Array of policy options | string containg policy file</p>
       </td>
-      <td><p>None</p>
+      <td style="height: 38px"><p>None</p>
       </td>
-      <td><p style="margin-bottom: 0in">Setting the "checkPassword" option to
-        a function name, for example say, "my_password_check_function", will
-        cause WS-Security implementation to call out to the PHP function
-        my_password_check_function() to do whatever checking the user wants
-        (e.g. look it up in a database) and validate the given username
-        token.</p>
+      <td style="height: 38px"><p style="margin-bottom: 0in">
+          Contains the array of policy related options.It may be contains inpolicy and outpolicy
+          arrays seperately or single policy option array. For advance case it&nbsp; may contains
+          the string that representing the policy file.</p>
       </td>
     </tr>
+        <tr valign="top">
+            <td>
+                "securityToken"</td>
+            <td>
+                array</td>
+            <td>
+                Array of security policy options</td>
+            <td>
+                None</td>
+            <td>
+                Includes an array of security related properties.</td>
+        </tr>
   </tbody>
 </table>
 
@@ -687,81 +730,6 @@ border="1">
         to be used with MTOM attachments. User can also specify
         xmlmime:contentType on the xop:Include element, which would override
         this setting.</p>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="5" valign="top"><p>WS-Security Related Properties:</p>
-      </td>
-    </tr>
-    <tr valign="top">
-      <td><p>“user”</p>
-      </td>
-      <td><p>string</p>
-      </td>
-      <td><p>A Username</p>
-      </td>
-      <td><p>None</p>
-      </td>
-      <td><p>Username for username token. If user is present, that implies
-        that WS-Security would be in use.</p>
-      </td>
-    </tr>
-    <tr valign="top">
-      <td><p>“password”</p>
-      </td>
-      <td><p>string</p>
-      </td>
-      <td><p>Password string</p>
-      </td>
-      <td><p>None</p>
-      </td>
-      <td><p>Password corresponding to the given username token</p>
-      </td>
-    </tr>
-    <tr valign="top">
-      <td><p>"timestamp"</p>
-      </td>
-      <td><p>boolean</p>
-      </td>
-      <td><p>TRUE | FALSE</p>
-      </td>
-      <td><p>FALSE</p>
-      </td>
-      <td><p>If set to TRUE time stamp information would be sent in
-        WS-Security header. If FALSE, no time stamp information would be
-        used.</p>
-      </td>
-    </tr>
-    <tr valign="top">
-      <td><p>"digest"</p>
-      </td>
-      <td><p>boolean</p>
-      </td>
-      <td><p>TRUE | FALSE</p>
-      </td>
-      <td><p>FALSE</p>
-      </td>
-      <td><p>If set to TRUE password would be sent as a digest.If FALSE
-        password would be sent in plain text.</p>
-      </td>
-    </tr>
-    <tr valign="top">
-      <td><p>"timeToLive"</p>
-      </td>
-      <td><p>string</p>
-      </td>
-      <td><p>A duration that must be non-empty and match the regular
-        expression:</p>
-
-        <p>([0-9]+d)? ([0-9]+h)? ([0-9]+m)? (([0-9]+(\.[0-9]*)|
-        \.[0-9]+?)s)?</p>
-      </td>
-      <td><p>5m</p>
-      </td>
-      <td><p>Time to live indicates how long the given WS-Security header
-        would be valid. In the time to live value, a number followed by d, h,
-        m or s specifies a duration in days, hours, minutes or seconds
-        respectively.</p>
       </td>
     </tr>
   </tbody>
