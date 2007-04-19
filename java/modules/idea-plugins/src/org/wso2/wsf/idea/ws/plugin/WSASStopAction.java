@@ -33,6 +33,9 @@ public class WSASStopAction extends AnAction {
     public void actionPerformed(AnActionEvent e) {
         if(!WSASConfigurationBean.isWsasStartStatus()){
             PopupMessageUtil.popupWarningMessageBox(WSASMessageConstant.WARNING_WSAS_NOT_STARTED);
+        }else{
+            //Shutdown WSAS
+            
         }
     }
 

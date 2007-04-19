@@ -23,11 +23,25 @@ public class WSASConfigurationConstant {
     public static String LIB = "lib";
     public static String DOT_TEXT = ".txt";
     public static String DOT_JAR = ".jar";
+    public static String DOT_PROPERTIES = ".properties";
     public static String WSAS_MAIN_CLASS = "org.wso2.wsas.Main";
 
     //icon paths
     public static String ICON_WSAS = "/icons/wsas.gif";
     public static String ICON_WSAS_START = "/icons/start.gif";
     public static String ICON_WSAS_STOP = "/icons/stop.gif";
+
+    //wsas
+    public static final String WSO2WSAS_HOME = "wso2wsas.home";
+    public static final String WSO2WSAS_SERVER_XML = "server.xml";
+    public static final String WSO2WSAS_START_TIME = "wso2wsas.start.time";
+    public static final String WSO2WSAS_ADMIN_PASSWORD = "wso2wsas.admin.password";
+    public static final String AXIS2_HOME = "axis2.home";
+    public static final String DERBY_HOME = "derby.system.home";
+    public static final String WSO2WSAS_SERVER_XML_PROP = "wso2.wsas.server.xml";
+
+    //log4j
+    public static final String LOG4J_CONFIGURATION = "log4j.configuration";
+
 
 }

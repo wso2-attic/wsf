@@ -36,4 +36,12 @@ public class PopupMessageUtil {
         );
     }
 
+        public static void popupInformationMessageBox(String infoMessage) {
+        Messages.showMessageDialog(
+                infoMessage,
+                WSASMessageConstant.WARNING_WSAS_HEADING,
+                Messages.getInformationIcon()
+        );
+    }
+
 }

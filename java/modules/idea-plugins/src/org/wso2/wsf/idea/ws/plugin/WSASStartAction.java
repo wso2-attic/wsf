@@ -24,6 +24,7 @@ import javax.swing.*;
 
 import org.wso2.wsf.idea.ws.util.WSASClassLoadingUtil;
 import org.wso2.wsf.idea.ws.util.PopupMessageUtil;
+import org.wso2.wsf.idea.ws.util.WSASPropertiesUtil;
 import org.wso2.wsf.idea.ws.bean.WSASConfigurationBean;
 import org.wso2.wsf.idea.ws.constant.WSASMessageConstant;
 import org.wso2.wsf.idea.ws.constant.WSASConfigurationConstant;
@@ -35,28 +36,30 @@ public class WSASStartAction extends AnAction {
     private ImageIcon myIcon;
 
     public void actionPerformed(AnActionEvent e) {
-        if(WSASConfigurationBean.getWsasInstallationPath().equals( null)){
+        if (WSASConfigurationBean.getWsasInstallationPath().equals(null)) {
             PopupMessageUtil.popupWarningMessageBox(WSASMessageConstant.WARNING_WSAS_PATH_NOT_SET);
-        }else if(WSASConfigurationBean.getWsasInstallationPath().equals(WSASConfigurationConstant.WSAS_DEFAULT_PATH) ){
+        } else
+        if (WSASConfigurationBean.getWsasInstallationPath().equals(WSASConfigurationConstant.WSAS_DEFAULT_PATH)) {
             PopupMessageUtil.popupWarningMessageBox(WSASMessageConstant.WARNING_WSAS_PATH_NOT_SET);
-        }else{
+        } else {
+            //Set WSAS system properties
+            WSASPropertiesUtil.setWSASProperties();
             WSASClassLoadingUtil.init(WSASConfigurationBean.getWsasInstallationPath());
             Class wsasMainClass = WSASClassLoadingUtil.loadClassFromAntClassLoader(WSASConfigurationConstant.WSAS_MAIN_CLASS);
-            System.out.println(wsasMainClass.toString());
             try {
-                Class[] parameterTypes1 = new Class[1];
-                parameterTypes1[0] = String[].class;
-                Method mainMethod =  wsasMainClass.getMethod("main", parameterTypes1);
-                mainMethod.invoke(null, null);
+                Method mainMethod = wsasMainClass.getMethod("main", new Class[]{String[].class});
+                String run[] = {"RUN"};
+                Object mainArgs[] = {run};
+                mainMethod.invoke(null, mainArgs);
             } catch (NoSuchMethodException e1) {
                 e1.printStackTrace();
             } catch (IllegalAccessException e1) {
                 e1.printStackTrace();
             } catch (InvocationTargetException e1) {
                 e1.printStackTrace();
+            } finally {
+                WSASClassLoadingUtil.cleanupAntClassLoader();
             }
-
-
         }
     }
 

@@ -79,7 +79,7 @@ public class WSASClassLoadingUtil {
 
     private static String[] getWSASLibs(String wsasPath){
         File wsasLibPath = new File(wsasPath+File.separator+ WSASConfigurationConstant.LIB);
-        wsasClassPath = new String[wsasLibPath.list().length];
+        wsasClassPath = new String[wsasLibPath.list().length+3];
         libCount = 0;
         visitAllFiles(wsasLibPath);
         return wsasClassPath;
@@ -93,11 +93,16 @@ public class WSASClassLoadingUtil {
                 visitAllFiles(new File(dir, children[i]));
             }
         } else {
-            if(dir.toString().endsWith(WSASConfigurationConstant.DOT_JAR)){
+            if(dir.toString().endsWith(WSASConfigurationConstant.DOT_JAR) || dir.toString().endsWith(WSASConfigurationConstant.DOT_PROPERTIES)){
                 wsasClassPath[libCount]=dir.getAbsolutePath();
                 libCount+=1;
             }
         }
+    }
+
+    public static void cleanupAntClassLoader(){
+        wsasClassPath = null;
+        antClassLoader.cleanup();
     }
 
 
