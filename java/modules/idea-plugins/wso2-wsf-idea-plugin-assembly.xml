@@ -1,5 +1,5 @@
 <assembly>
-    <id>wso2-wsf-eclipse-plugin</id>
+    <id>idea-plugin</id>
     <includeBaseDirectory>false</includeBaseDirectory>
     <formats>
         <format>zip</format>
@@ -8,6 +8,10 @@
         <fileSet>
             <directory>./target/classes</directory>
             <outputDirectory>classes</outputDirectory>
+     	</fileSet>
+        <fileSet>
+            <directory>icons</directory>
+            <outputDirectory>icons</outputDirectory>
      	</fileSet>
     </fileSets>
 	<dependencySets>

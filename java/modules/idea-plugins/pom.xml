@@ -70,7 +70,7 @@
                             <descriptors>
                                 <descriptor>./wso2-wsf-idea-plugin-assembly.xml</descriptor>
                             </descriptors>
-                            <finalName>dist</finalName>
+                            <finalName>wso2-wsf</finalName>
                         </configuration>
                     </execution>
                 </executions>
