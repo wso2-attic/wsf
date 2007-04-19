@@ -26,22 +26,16 @@ public class WSASPropertiesUtil {
         System.setProperty(WSASConfigurationConstant.WSO2WSAS_HOME,
                 WSASConfigurationBean.getWsasInstallationPath());
         System.setProperty(
-                WSASConfigurationConstant.DERBY_HOME,
-                getDBHome(WSASConfigurationBean.getWsasInstallationPath())
-        );
-        System.setProperty(
                 WSASConfigurationConstant.LOG4J_CONFIGURATION,
                 getLog4JConfigurationPath(WSASConfigurationBean.getWsasInstallationPath())
         );
     }
 
-    private static String getDBHome(String wsasPath) {
-        return wsasPath + File.separator + "database" + File.separator + "WSO2WSAS_DB";
-    }
-
     private static String getLog4JConfigurationPath(String wsasPath) {
 
-        return wsasPath + File.separator + "conf" + File.separator + "log4j.properties";
+        return wsasPath + File.separator +
+               WSASConfigurationConstant.CONF_FOLDER + File.separator +
+               WSASConfigurationConstant.LOG4J_CONFIGURATION;
     }
 
 

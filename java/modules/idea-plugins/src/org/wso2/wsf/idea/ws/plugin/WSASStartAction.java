@@ -31,6 +31,9 @@ import org.wso2.wsf.idea.ws.constant.WSASConfigurationConstant;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Field;
+import java.lang.reflect.AccessibleObject;
+import java.io.File;
 
 public class WSASStartAction extends AnAction {
     private ImageIcon myIcon;
@@ -45,14 +48,32 @@ public class WSASStartAction extends AnAction {
             //Set WSAS system properties
             WSASPropertiesUtil.setWSASProperties();
             WSASClassLoadingUtil.init(WSASConfigurationBean.getWsasInstallationPath());
-            Class wsasMainClass = WSASClassLoadingUtil.loadClassFromAntClassLoader(WSASConfigurationConstant.WSAS_MAIN_CLASS);
+            Class wsasMainClazz = WSASClassLoadingUtil.loadClassFromClassLoader(WSASConfigurationConstant.WSAS_MAIN_CLASS);
             try {
-                Method mainMethod = wsasMainClass.getMethod("main", new Class[]{String[].class});
-                String run[] = {"RUN"};
-                Object mainArgs[] = {run};
-                mainMethod.invoke(null, mainArgs);
-            } catch (NoSuchMethodException e1) {
-                e1.printStackTrace();
+            Method[] methods = wsasMainClazz.getMethods();
+            Method mainMethod = null;
+            for (int i = 0; i < methods.length; i++) {
+                if (methods[i].getName().equals("main")) {
+                    mainMethod = methods[i];
+                    break;
+                }
+            }
+            Class serviceConfic = WSASClassLoadingUtil.loadClassFromClassLoader(WSASConfigurationConstant.WSAS_SERVER_CONFIG_CLASS);
+            Field[] fields = serviceConfic.getDeclaredFields();
+            AccessibleObject.setAccessible(fields, true);
+
+            for (int i = 0; i < fields.length; i++) {
+                Field f = fields[i];
+                if (f.getName().equals("configurationXMLLocation")) {
+                    System.out.println("FOUND FIELD :: ");
+                    f.set(serviceConfic, WSASConfigurationBean.getWsasInstallationPath() + File.separator + "conf" + File
+                            .separator + "server.xml");
+                    break;
+                }
+            }
+                
+            mainMethod.invoke(null, new Object[]{new String[]{"RUN"}});
+
             } catch (IllegalAccessException e1) {
                 e1.printStackTrace();
             } catch (InvocationTargetException e1) {
