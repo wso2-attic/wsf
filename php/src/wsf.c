@@ -579,6 +579,7 @@ static zval* ws_create_object(void *obj, int obj_type,
 static void ws_object_dtor(void *object,
                            zend_object_handle handle TSRMLS_DC)
 {
+    /*
     ws_object *intern = (ws_object *)object;
     zend_hash_destroy(intern->std.properties);
     FREE_HASHTABLE(intern->std.properties);
@@ -595,13 +596,16 @@ static void ws_object_dtor(void *object,
             wsf_svc_info_free(svc_info, ws_env_svr );    
         }
     }
+    */
 }
 
 static void
 ws_objects_free_stroage(void *object TSRMLS_DC){
+    /*
     ws_object *intern = (ws_object *)object;
     zend_object_std_dtor(&intern->std TSRMLS_CC);
     efree(object);
+    */
 }
 
 /*** {{{ is_ws_fault(Object obj) */
