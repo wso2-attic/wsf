@@ -51,7 +51,8 @@ void wsf_util_create_op_and_add_to_svc(
     wsf_svc_info_t *svc_info, 
     char *options , 
     axutil_env_t *env,
-    char *op_name TSRMLS_DC);
+    char *op_name,
+	HashTable *meps TSRMLS_DC);
 
 int wsf_util_engage_module(axis2_conf_t *conf, 
     axis2_char_t *module_name,  

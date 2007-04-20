@@ -22,6 +22,7 @@
 #include "php_ini.h"
 #include "ext/standard/info.h"
 #include "wsf.h"
+#include "wsf_util.h"
 #include "ext/standard/info.h"
 #include <Zend/zend.h>
 #include "zend_exceptions.h"
@@ -29,9 +30,6 @@
 #include "zend_objects.h"
 #include "wsf_common.h"
 #include <axutil_env.h>
-
-#include "wsf_util.h"
-
 #include <axis2_svc_client.h>
 #include <axiom_soap.h>
 #include <axis2_http_transport.h>
@@ -474,15 +472,16 @@ PHP_MSHUTDOWN_FUNCTION(wsf)
     UNREGISTER_INI_ENTRIES();
     
     axiom_xml_reader_cleanup();
-    
+    /*
     axis2_msg_recv_free(wsf_msg_recv, ws_env_svr);
    
-    /*
+  
     wsf_worker_free(worker, ws_env_svr);
-    */
+    
     axutil_env_free(env);
 
     axutil_env_free(ws_env_svr);
+	*/
     return SUCCESS;
 }
 /* }}} */
@@ -1072,6 +1071,7 @@ PHP_METHOD(ws_service, __construct)
 
     HashTable *ht_actions = NULL;
     HashTable *ht_ops_to_funcs = NULL;
+	HashTable *ht_ops_to_mep = NULL;
 
     if (FAILURE == zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|a",
                                          &options))
@@ -1110,6 +1110,12 @@ PHP_METHOD(ws_service, __construct)
                 ht_ops_to_funcs = Z_ARRVAL_PP(tmp);
 		        AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting operations");
             }
+			if(zend_hash_find(ht, "opMEP", sizeof("opMEP"),
+                              (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY){
+				ht_ops_to_mep = Z_ARRVAL_PP(tmp);
+		        AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting message exchange pattern");
+            }
+
             if(zend_hash_find(ht, WS_USE_MTOM, sizeof(WS_USE_MTOM),
                               (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
                 svc_info->use_mtom = Z_BVAL_PP(tmp);
@@ -1239,7 +1245,7 @@ PHP_METHOD(ws_service, __construct)
             if (wsa_action)
             {
                 wsf_util_create_op_and_add_to_svc(svc_info, wsa_action,
-                                                 ws_env_svr, operation_name TSRMLS_CC);
+					ws_env_svr, operation_name,ht_ops_to_mep TSRMLS_CC);
                 /* keep track of operations with actions */
                 axutil_hash_set(svc_info->ops_to_actions, axutil_strdup(ws_env_svr, operation_name) ,
                                AXIS2_HASH_KEY_STRING,  axutil_strdup(ws_env_svr, wsa_action));
@@ -1247,7 +1253,7 @@ PHP_METHOD(ws_service, __construct)
             else
             {
                 wsf_util_create_op_and_add_to_svc(svc_info, NULL,
-                                                 ws_env_svr, operation_name TSRMLS_CC);
+					ws_env_svr, operation_name,ht_ops_to_mep TSRMLS_CC);
             }
             efree(key);
             zend_hash_move_forward_ex(ht_actions , &pos);
@@ -1287,7 +1293,7 @@ PHP_METHOD(ws_service, __construct)
                 /* function is there, add the operation to service */
                 if (strcmp(key, val) == 0)
                 {
-                    wsf_util_create_op_and_add_to_svc(svc_info, NULL, ws_env_svr, key TSRMLS_CC);
+					wsf_util_create_op_and_add_to_svc(svc_info, NULL, ws_env_svr, key,ht_ops_to_mep TSRMLS_CC);
                 }
                 else
                 {
@@ -1298,7 +1304,7 @@ PHP_METHOD(ws_service, __construct)
                     {
                         /* There was no mapping WSA action for this operation.
                            So this operation was not yet added, hence add. */
-                        wsf_util_create_op_and_add_to_svc(svc_info, NULL, ws_env_svr, key TSRMLS_CC);
+						wsf_util_create_op_and_add_to_svc(svc_info, NULL, ws_env_svr, key,ht_ops_to_mep TSRMLS_CC);
                     }
                 }
             }

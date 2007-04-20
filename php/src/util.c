@@ -628,7 +628,9 @@ void wsf_util_create_svc_from_svc_info(
 	}else {
     	svc_qname = axutil_qname_create(env, svc_info->svc_name, NULL, NULL);
 	    svc_info->svc = axis2_svc_create_with_qname(env, svc_qname);
-        axutil_qname_free(svc_qname, env);
+        /*
+		axutil_qname_free(svc_qname, env);
+		*/
 	} 
 	return;
 }
@@ -637,12 +639,13 @@ void wsf_util_create_op_and_add_to_svc(
     wsf_svc_info_t *svc_info, 
     char *action,
     axutil_env_t *env,
-    char *op_name TSRMLS_DC)
+    char *op_name,
+	HashTable *ht_mep TSRMLS_DC)
 {
 	axis2_svc_t *svc = NULL;
 	axis2_op_t *op = NULL;
 	axutil_qname_t *op_qname = NULL;
-    
+	zval **tmp;
 	op_qname = axutil_qname_create(env, op_name, NULL, NULL);
 	svc = svc_info->svc;
 	
@@ -660,7 +663,7 @@ void wsf_util_create_op_and_add_to_svc(
     	    op = axis2_op_create_with_qname(env, op_qname);
 		
 		    axis2_op_set_msg_recv(op, env, svc_info->msg_recv);
-         
+
 			conf_ctx = wsf_worker_get_conf_ctx(svc_info->php_worker , env);
                   
             conf = axis2_conf_ctx_get_conf(conf_ctx, env);
@@ -668,14 +671,38 @@ void wsf_util_create_op_and_add_to_svc(
             info = axis2_conf_get_phases_info(conf, env);
             axis2_phases_info_set_op_phases(info, env, op);
             axis2_svc_add_op(svc_info->svc, env, op);
+			
+			if(ht_mep){
+                char operation[300];
+
+				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_service] ht mep not null, %s", op_name);
+                sprintf(operation, "%s", op_name);
+				if(zend_hash_find(ht_mep, operation, strlen(operation)+1,
+			              (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
+					char *mep = NULL;
+					mep = Z_STRVAL_PP(tmp);	
+					if(mep){
+						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,"[wsf_service] op mep %s", mep);
+						  if(strcmp(mep, "IN_ONLY") == 0){
+								axis2_op_set_msg_exchange_pattern(op, env, AXIS2_MEP_URI_IN_ONLY);
+								AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_service] AXIS2_MEP_URI_IN_ONLY");
+				
+						  }else if(strcmp(mep, "IN_OUT") == 0){
+							  axis2_op_set_msg_exchange_pattern(op, env, AXIS2_MEP_URI_IN_OUT);
+							  AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_service] AXIS2_MEP_URI_IN_OUT");
+						  }									
+					}
+				}else{
+					AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf service] message exchange pattern for %s not found", op_name);
+				}
+			}
             if(action){
-                axis2_svc_add_mapping(svc_info->svc, env, axutil_strdup(env, action), op);
+                axis2_svc_add_mapping(svc_info->svc, env, action, op);
             }                
         }
 	}		
 	return;
 }
-
 void wsf_util_set_attachments_with_cids(const axutil_env_t *env,
         int enable_mtom , axiom_node_t *payload_node,
         HashTable *attach_ht, char *default_cnt_type TSRMLS_DC)
@@ -861,7 +888,7 @@ char* wsf_util_serialize_om(const axutil_env_t *env, axiom_node_t *ret_node)
     memcpy(new_buffer, buffer, buffer_len);
     new_buffer[buffer_len] = '\0';
 
-    axiom_output_free(om_output, env);
+   /* axiom_output_free(om_output, env); */
     return new_buffer;
 }
 
