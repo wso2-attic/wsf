@@ -27,15 +27,46 @@ import org.wso2.wsf.idea.ws.util.PopupMessageUtil;
 import org.wso2.wsf.idea.ws.constant.WSASMessageConstant;
 import org.wso2.wsf.idea.ws.constant.WSASConfigurationConstant;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
+
 public class WSASStopAction extends AnAction {
     private ImageIcon myIcon;
 
     public void actionPerformed(AnActionEvent e) {
-        if(!WSASConfigurationBean.isWsasStartStatus()){
-            PopupMessageUtil.popupWarningMessageBox(WSASMessageConstant.WARNING_WSAS_NOT_STARTED);
-        }else{
-            //Shutdown WSAS
-            
+        if (WSASConfigurationBean.isWsasStartStatus()) {
+            if (!WSASConfigurationBean.isWsasStartStatus()) {
+                PopupMessageUtil.popupWarningMessageBox(WSASMessageConstant.WARNING_WSAS_NOT_STARTED);
+            } else {
+                Class wsasMainClazz = WSASStartAction.getWSASMainClass();
+                try {
+                    Method[] methods = wsasMainClazz.getMethods();
+                    Method shutdownMethod = null;
+                    for (int i = 0; i < methods.length; i++) {
+                        if (methods[i].getName().equals("main")) {
+                            shutdownMethod = methods[i];
+                            break;
+                        }
+                    }
+
+                    shutdownMethod.invoke(null, new Object[]{new String[]{"STOP"}});
+
+                    //set wsas start status to shutdown
+                    WSASConfigurationBean.setWsasStartStatus(false);
+
+                    PopupMessageUtil.popupInformationMessageBox(WSASMessageConstant.INFO_WSAS_STOP_SUCCESS);
+
+                }  catch (IllegalAccessException e1) {
+                    e1.printStackTrace();
+                    PopupMessageUtil.popupInformationMessageBox(WSASMessageConstant.INFO_WSAS_STOP_FAIL);
+                } catch (InvocationTargetException e1) {
+                    e1.printStackTrace();
+                    PopupMessageUtil.popupInformationMessageBox(WSASMessageConstant.INFO_WSAS_STOP_FAIL);
+                }
+
+            }
+        } else {
+            PopupMessageUtil.popupErrorMessageBox(WSASMessageConstant.ERROR_WSAS_NOT_RUNNING);
         }
     }
 

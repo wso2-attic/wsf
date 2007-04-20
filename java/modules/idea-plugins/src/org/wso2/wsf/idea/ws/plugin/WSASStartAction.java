@@ -29,59 +29,67 @@ import org.wso2.wsf.idea.ws.bean.WSASConfigurationBean;
 import org.wso2.wsf.idea.ws.constant.WSASMessageConstant;
 import org.wso2.wsf.idea.ws.constant.WSASConfigurationConstant;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Field;
-import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.*;
 import java.io.File;
 
 public class WSASStartAction extends AnAction {
     private ImageIcon myIcon;
+    private static Class wsasMainClazz;
 
     public void actionPerformed(AnActionEvent e) {
-        if (WSASConfigurationBean.getWsasInstallationPath().equals(null)) {
-            PopupMessageUtil.popupWarningMessageBox(WSASMessageConstant.WARNING_WSAS_PATH_NOT_SET);
-        } else
-        if (WSASConfigurationBean.getWsasInstallationPath().equals(WSASConfigurationConstant.WSAS_DEFAULT_PATH)) {
-            PopupMessageUtil.popupWarningMessageBox(WSASMessageConstant.WARNING_WSAS_PATH_NOT_SET);
-        } else {
-            //Set WSAS system properties
-            WSASPropertiesUtil.setWSASProperties();
-            WSASClassLoadingUtil.init(WSASConfigurationBean.getWsasInstallationPath());
-            Class wsasMainClazz = WSASClassLoadingUtil.loadClassFromClassLoader(WSASConfigurationConstant.WSAS_MAIN_CLASS);
-            try {
-            Method[] methods = wsasMainClazz.getMethods();
-            Method mainMethod = null;
-            for (int i = 0; i < methods.length; i++) {
-                if (methods[i].getName().equals("main")) {
-                    mainMethod = methods[i];
-                    break;
-                }
-            }
-            Class serviceConfic = WSASClassLoadingUtil.loadClassFromClassLoader(WSASConfigurationConstant.WSAS_SERVER_CONFIG_CLASS);
-            Field[] fields = serviceConfic.getDeclaredFields();
-            AccessibleObject.setAccessible(fields, true);
+       if (!WSASConfigurationBean.isWsasStartStatus()) { 
+            if (WSASConfigurationBean.getWsasInstallationPath().equals(null)) {
+                PopupMessageUtil.popupWarningMessageBox(WSASMessageConstant.WARNING_WSAS_PATH_NOT_SET);
+            } else
+            if (WSASConfigurationBean.getWsasInstallationPath().equals(WSASConfigurationConstant.WSAS_DEFAULT_PATH)) {
+                PopupMessageUtil.popupWarningMessageBox(WSASMessageConstant.WARNING_WSAS_PATH_NOT_SET);
+            } else {
+                //Set WSAS system properties
+                WSASPropertiesUtil.setWSASProperties();
+                WSASClassLoadingUtil.init(WSASConfigurationBean.getWsasInstallationPath());
+                wsasMainClazz = WSASClassLoadingUtil.loadClassFromClassLoader(WSASConfigurationConstant.WSAS_MAIN_CLASS);
+                try {
+                    Method[] methods = wsasMainClazz.getMethods();
+                    Method mainMethod = null;
+                    for (int i = 0; i < methods.length; i++) {
+                        if (methods[i].getName().equals("main")) {
+                            mainMethod = methods[i];
+                            break;
+                        }
+                    }
+                    Class serviceConfic = WSASClassLoadingUtil.loadClassFromClassLoader(WSASConfigurationConstant.WSAS_SERVER_CONFIG_CLASS);
+                    Field[] fields = serviceConfic.getDeclaredFields();
+                    AccessibleObject.setAccessible(fields, true);
 
-            for (int i = 0; i < fields.length; i++) {
-                Field f = fields[i];
-                if (f.getName().equals("configurationXMLLocation")) {
-                    System.out.println("FOUND FIELD :: ");
-                    f.set(serviceConfic, WSASConfigurationBean.getWsasInstallationPath() + File.separator + "conf" + File
-                            .separator + "server.xml");
-                    break;
-                }
-            }
-                
-            mainMethod.invoke(null, new Object[]{new String[]{"RUN"}});
+                    for (int i = 0; i < fields.length; i++) {
+                        Field f = fields[i];
+                        if (f.getName().equals("configurationXMLLocation")) {
+                            f.set(serviceConfic, WSASConfigurationBean.getWsasInstallationPath() + File.separator + "conf" + File
+                                    .separator + "server.xml");
+                            break;
+                        }
+                    }
 
-            } catch (IllegalAccessException e1) {
-                e1.printStackTrace();
-            } catch (InvocationTargetException e1) {
-                e1.printStackTrace();
-            } finally {
-                WSASClassLoadingUtil.cleanupAntClassLoader();
-            }
+                    mainMethod.invoke(null, new Object[]{new String[]{"RUN"}});
+
+                    //set wsas start status to pass
+                    WSASConfigurationBean.setWsasStartStatus(true);
+
+                    PopupMessageUtil.popupInformationMessageBox(WSASMessageConstant.INFO_WSAS_START_SUCCESS);
+
+                } catch (IllegalAccessException e1) {
+                    e1.printStackTrace();
+                    PopupMessageUtil.popupInformationMessageBox(WSASMessageConstant.INFO_WSAS_START_FAIL);
+                } catch (InvocationTargetException e1) {
+                    e1.printStackTrace();
+                    PopupMessageUtil.popupInformationMessageBox(WSASMessageConstant.INFO_WSAS_START_FAIL);
+                } finally {
+                    WSASClassLoadingUtil.cleanupAntClassLoader();
+                }
         }
+       }else{
+           PopupMessageUtil.popupErrorMessageBox(WSASMessageConstant.ERROR_WSAS_ALREADY_RUNNING);
+       }
     }
 
     public void update(AnActionEvent event) {
@@ -94,6 +102,27 @@ public class WSASStartAction extends AnAction {
             }
             presentation.setIcon(myIcon);
         }
+    }
+
+    public static Class getWSASMainClass(){
+        return wsasMainClazz;
+    }
+
+
+    public static Object getWSASMainInstance(){
+        Object wsasInstance = null;
+        try {
+          wsasInstance =  wsasMainClazz.getConstructor(null).newInstance(null);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();  
+        }
+        return wsasInstance;
     }
 
 }
