@@ -19,7 +19,7 @@ WSF/PHP extension.</p>
 
 <h2><b>Predefined Classes</b></h2>
 <a id="client"></a>   &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
-    &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+    &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
 
 <h2><b>WSClient</b></h2>
 <a id="construct"></a>
@@ -209,8 +209,7 @@ border="1">
 <h3><b>Methods</b></h3>
 <a id="pre_WSMessage"></a>
 <ul>
-  <li><p><b>WSMessage WSClient-&gt;request (string message | SimpleXMLElement
-    message | domDocument message | WSMessage message)</b></p>
+  <li><p><b>WSMessage WSClient-&gt;request (string message | domDocument message | WSMessage message)</b></p>
   </li>
 </ul>
 
@@ -236,14 +235,9 @@ border="1">
       <td><p>Request message payload to be sent.The type of the parameter can
         be any one of the following types:</p>
         <ul>
-          <li><p>string</p>
-          </li>
-          <li><p>SimpleXMLElement</p>
-          </li>
-          <li><p>domDocument</p>
-          </li>
-          <li><p>WSMessage</p>
-          </li>
+          <li><p>string</p></li>
+          <li><p>domDocument</p></li>
+          <li><p>WSMessage</p></li>
         </ul>
 
         <p>The message payload is expected to be in valid XML format as
@@ -269,7 +263,7 @@ border="1">
 </p>
 <a id="pre_void_WSClient"></a>
 <ul>
-  <li><p><b>void WSClient -&gt; send(string payload |SimpleXMLElement message
+  <li><p><b>void WSClient -&gt; send(string payload 
     | domDocument message | WSMessage message)</b></p>
   </li>
 </ul>
@@ -297,8 +291,6 @@ border="1">
         can be any one of the following types:</p>
         <ul>
           <li><p>string</p>
-          </li>
-          <li><p>SimpleXMLElement</p>
           </li>
           <li><p>domDocument</p>
           </li>
@@ -945,7 +937,7 @@ operating in at the point the fault occurred.</p>
 <h2><b>Predefined Functions</b></h2>
 <ul>
   <li><h4><a id="ws_request"></a><b>WSMessage ws_request (string payload
-    |SimpleXMLElement payload | domDocument payload | WSMessage payload <br>
+    | domDocument payload | WSMessage payload <br>
     [, array options])</b></h4>
   </li>
 </ul>
@@ -973,8 +965,6 @@ border="1">
         one of the following types:</p>
         <ul>
           <li><p>string</p>
-          </li>
-          <li><p>SimpleXMLElement</p>
           </li>
           <li><p>domDocument</p>
           </li>
@@ -1027,7 +1017,7 @@ XML;
 
 <ul>
   <li><h4><a id="ws_send"></a><b>void ws_send (string payload
-    |SimpleXMLElement payload | domDocument payload | WSMessage payload <br>
+    | domDocument payload | WSMessage payload <br>
     [, array options])</b></h4>
   </li>
 </ul>
@@ -1056,8 +1046,6 @@ border="1">
         one of the following types:</p>
         <ul>
           <li><p>string</p>
-          </li>
-          <li><p>SimpleXMLElement</p>
           </li>
           <li><p>domDocument</p>
           </li>
