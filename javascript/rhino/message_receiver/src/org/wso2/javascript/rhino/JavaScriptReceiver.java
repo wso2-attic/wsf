@@ -59,84 +59,97 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver
      * @param outMessage MessageContext object with information about the outgoing message
      * @throws AxisFault
      */
-    public void invokeBusinessLogic(MessageContext inMessage, MessageContext outMessage) throws AxisFault {
-        JavaScriptEngine engine = new JavaScriptEngine();
-        Parameter parameter=inMessage.getParameter("javascript.hostobjects");
-        if (parameter.getParameterType() ==1)
-        {
-            OMElement paraElement = parameter.getParameterElement();
-            List list = JavaScriptEngineUtils.getHostObjectsMap(paraElement);
-            JavaScriptEngineUtils.loadHostObjects(engine,list);
-        }
-        //Get the method, arguments and the reader from the MessageContext
-        String method = null;
-        method = getJSMethod(inMessage);
-        Reader reader = readJS(inMessage);
-        Object x = inMessage.getEnvelope();
-        Object args = ((SOAPEnvelope) x).getBody().getFirstElement();
-        boolean json = false;
-        if (args instanceof OMSourcedElementImpl) {
-            Object datasource = ((OMSourcedElementImpl) args).getDataSource();
-            if (datasource instanceof JSONDataSource) {
-                args = ((JSONDataSource) datasource).getCompleteJOSNString();
-                json = true;
-            } else if (datasource instanceof JSONBadgerfishDataSource) {
-                throw new AxisFault("Badgerfish Convention is not supported");
-            } else {
-                throw new AxisFault("Unsupported Data Format");
+    public void invokeBusinessLogic(MessageContext inMessage, MessageContext outMessage)
+            throws AxisFault {
+        try {
+            JavaScriptEngine engine = new JavaScriptEngine();
+            Parameter parameter = inMessage.getParameter("javascript.hostobjects");
+            if (parameter.getParameterType() == 2) {
+                OMElement paraElement = parameter.getParameterElement();
+                List list = JavaScriptEngineUtils.getHostObjectsMap(paraElement);
+                JavaScriptEngineUtils.loadHostObjects(engine, list);
             }
-        }
-
-        if (reader == null) throw new AxisFault("Unable to load JavaScript file");
-        if (method == null) throw new AxisFault("Unable to read the method");
-
-        OMNode result;
-
-        String scripts = null;
-
-        //Get necessary JavaScripts to be loaded from services.xml
-        Parameter param = inMessage.getOperationContext().getAxisOperation().getParameter(LOAD_JSSCRIPTS);
-        if (param != null) {
-            scripts = (String) param.getValue();
-        }
-
-        //Get necessary JavaScripts to be loaded from axis2.xml
-        param = inMessage.getConfigurationContext().getAxisConfiguration().getParameter(LOAD_JSSCRIPTS);
-        if (param != null) {
-            if (scripts == null) {
-                scripts = (String) param.getValue();
-            } else {
-                if (!scripts.equals(param.getValue())) { // Avoides loading the same set of script files twice
-                    scripts += "," + param.getValue();
+            // Get the method, arguments and the reader from the MessageContext
+            String method = null;
+            method = getJSMethod(inMessage);
+            Reader reader = readJS(inMessage);
+            Object x = inMessage.getEnvelope();
+            Object args = ((SOAPEnvelope) x).getBody().getFirstElement();
+            boolean json = false;
+            if (args instanceof OMSourcedElementImpl) {
+                Object datasource = ((OMSourcedElementImpl) args).getDataSource();
+                if (datasource instanceof JSONDataSource) {
+                    args = ((JSONDataSource) datasource).getCompleteJOSNString();
+                    json = true;
+                } else if (datasource instanceof JSONBadgerfishDataSource) {
+                    throw new AxisFault("Badgerfish Convention is not supported");
+                } else {
+                    throw new AxisFault("Unsupported Data Format");
                 }
             }
-        }
 
-        URL repoURL = inMessage.getConfigurationContext().getAxisConfiguration().getRepository();
-        if (repoURL != null) {
-            JavaScriptEngine.repo = repoURL.getPath();
-        }
-        if (scripts != null) {
-            //Get the result from executing the javascript file
-            result = engine.call(method, reader, args, scripts, json);
-        } else { //Parameter loadJSScripts is not set
-            //Get the result from executing the javascript file
-            result = engine.call(method, reader, args, json);
-        }
-        if (result == null) {
-            throw new AxisFault(Messages.getMessage("JavaScriptNoanswer"));
-        }
+            if (reader == null)
+                throw new AxisFault("Unable to load JavaScript file");
+            if (method == null)
+                throw new AxisFault("Unable to read the method");
 
-        //Create the out-going message
-        SOAPFactory fac;
-        if (inMessage.isSOAP11()) {
-            fac = OMAbstractFactory.getSOAP11Factory();
-        } else {
-            fac = OMAbstractFactory.getSOAP12Factory();
+            OMNode result;
+
+            String scripts = null;
+
+            // Get necessary JavaScripts to be loaded from services.xml
+            Parameter param = inMessage.getOperationContext().getAxisOperation().getParameter(
+                    LOAD_JSSCRIPTS);
+            if (param != null) {
+                scripts = (String) param.getValue();
+            }
+
+            // Get necessary JavaScripts to be loaded from axis2.xml
+            param = inMessage.getConfigurationContext().getAxisConfiguration().getParameter(
+                    LOAD_JSSCRIPTS);
+            if (param != null) {
+                if (scripts == null) {
+                    scripts = (String) param.getValue();
+                } else {
+                    if (!scripts.equals(param.getValue())) { // Avoides
+                                                                // loading the
+                                                                // same set of
+                                                                // script files
+                                                                // twice
+                        scripts += "," + param.getValue();
+                    }
+                }
+            }
+
+            URL repoURL = inMessage.getConfigurationContext().getAxisConfiguration()
+                    .getRepository();
+            if (repoURL != null) {
+                JavaScriptEngine.repo = repoURL.getPath();
+            }
+            if (scripts != null) {
+                // Get the result from executing the javascript file
+                result = engine.call(method, reader, args, scripts, json);
+            } else { // Parameter loadJSScripts is not set
+                // Get the result from executing the javascript file
+                result = engine.call(method, reader, args, json);
+            }
+            if (result == null) {
+                throw new AxisFault(Messages.getMessage("JavaScriptNoanswer"));
+            }
+
+            // Create the out-going message
+            SOAPFactory fac;
+            if (inMessage.isSOAP11()) {
+                fac = OMAbstractFactory.getSOAP11Factory();
+            } else {
+                fac = OMAbstractFactory.getSOAP12Factory();
+            }
+            SOAPEnvelope envelope = fac.getDefaultEnvelope();
+            envelope.getBody().addChild(result);
+            outMessage.setEnvelope(envelope);
+        } catch (Throwable throwable) {
+            throw AxisFault.makeFault(throwable);
         }
-        SOAPEnvelope envelope = fac.getDefaultEnvelope();
-        envelope.getBody().addChild(result);
-        outMessage.setEnvelope(envelope);
     }
 
 

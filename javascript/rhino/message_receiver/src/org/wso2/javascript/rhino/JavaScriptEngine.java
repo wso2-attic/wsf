@@ -137,58 +137,62 @@ public class JavaScriptEngine extends ImporterTopLevel {
      * @return an OMNode containing the result from executing the operation
      * @throws AxisFault
      */
-    public OMNode call(String method, Reader reader, Object args, String scripts, boolean json) throws AxisFault {
+    public OMNode call(String method, Reader reader, Object args, String scripts, boolean json)
+            throws AxisFault {
         Object result = null;
+        try {
+            if (scripts != null) {
+                // Generate load command out of the parameter scripts
+                scripts = "load(" + ("[\"" + scripts + "\"]").replaceAll(",", "\"],[\"") + ")";
+                cx.evaluateString(this, scripts, "Load JavaScripts", 0, null);
+            }
 
-        if (scripts != null) {
-            //Generate load command out of the parameter scripts
-            scripts = "load(" + ("[\"" + scripts + "\"]").replaceAll(",", "\"],[\"") + ")";
-            cx.evaluateString(this, scripts, "Load JavaScripts", 0, null);
-        }
+            if (json) {
+                args = "var x = " + args + ";";
+                cx.evaluateString(this, (String) args, "Get JSON", 0, null);
+                args = this.get("x", this);
+            } else {
+                String sourceStr = "function convertToXML(inputPara){ var x = new XML(inputPara);return x;}";
+                cx.evaluateString(this, sourceStr, "Get E4X", 0, null);
 
-        if (json) {
-            args = "var x = " + args + ";";
-            cx.evaluateString(this, (String) args, "Get JSON", 0, null);
-            args = this.get("x", this);
-        } else {
-            String sourceStr = "function convertToXML(inputPara){ var x = new XML(inputPara);return x;}";
-            cx.evaluateString(this, sourceStr, "Get E4X", 0, null);
+                // Get the function from the scope the javascript object is in
+                Object fObj = this.get("convertToXML", this);
+                if (!(fObj instanceof Function) || (fObj == Scriptable.NOT_FOUND)) {
+                    throw new AxisFault("Method " + method + " is undefined or not a function");
+                } else {
+                    Object functionArgs[] = { args };
+                    Function f = (Function) fObj;
+                    args = f.call(cx, this, this, functionArgs);
+                }
+            }
+
+            // Evaluates the javascript file
+            try {
+                evaluate(reader);
+            } catch (IOException e) {
+                throw AxisFault.makeFault(e);
+            }
 
             // Get the function from the scope the javascript object is in
-            Object fObj = this.get("convertToXML", this);
+            Object fObj = this.get(method, this);
             if (!(fObj instanceof Function) || (fObj == Scriptable.NOT_FOUND)) {
                 throw new AxisFault("Method " + method + " is undefined or not a function");
-            } else {
-                Object functionArgs[] = {args};
-                Function f = (Function) fObj;
-                args = f.call(cx, this, this, functionArgs);
             }
+            Object functionArgs[] = { args };
+            Function f = (Function) fObj;
+            result = f.call(cx, this, this, functionArgs);
+            if (json) {
+                result = ((String) result).substring(1, ((String) result).length() - 1);
+                InputStream in = new ByteArrayInputStream(((String) result).getBytes());
+                JSONOMBuilder builder = new JSONOMBuilder();
+                result = builder.processDocument(in, null, null);
+            } else {
+                // Get the OMNode inside the resulting object
+                result = ((XML) result).getAxiomFromXML();
+            }
+            return (OMNode) result;
+        } catch (Throwable throwable) {
+            throw AxisFault.makeFault(throwable);
         }
-
-        // Evaluates the javascript file
-        try {
-            evaluate(reader);
-        } catch (IOException e) {
-            throw new AxisFault(e);
-        }
-
-        // Get the function from the scope the javascript object is in
-        Object fObj = this.get(method, this);
-        if (!(fObj instanceof Function) || (fObj == Scriptable.NOT_FOUND)) {
-            throw new AxisFault("Method " + method + " is undefined or not a function");
-        }
-        Object functionArgs[] = { args };
-        Function f = (Function) fObj;
-        result = f.call(cx, this, this, functionArgs);
-        if (json) {
-            result = ((String) result).substring(1, ((String) result).length() - 1);
-            InputStream in = new ByteArrayInputStream(((String) result).getBytes());
-            JSONOMBuilder builder = new JSONOMBuilder();
-            result = builder.processDocument(in, null, null);
-        } else {
-            //Get the OMNode inside the resulting object
-            result = ((XML) result).getAxiomFromXML();
-        }
-        return (OMNode) result;
     }
 }
