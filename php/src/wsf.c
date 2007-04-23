@@ -1627,6 +1627,9 @@ PHP_METHOD(ws_service , reply)
             sprintf(status_line, "%s 202 Accepted", req_info->http_protocol);
             sapi_add_header(status_line, strlen(status_line), 1);
             sapi_add_header("Content-Length: 0",sizeof("Content-Length: 0")-1, 1);
+			content_type = AXIS2_MALLOC(ws_env_svr->allocator, strlen(req_info->content_type)*sizeof(char)+20);
+            sprintf(content_type, "Content-Type: %s", req_info->content_type);
+            sapi_add_header(content_type, strlen(content_type), 1);
         }
         else if(status == WS_HTTP_OK)
         {
