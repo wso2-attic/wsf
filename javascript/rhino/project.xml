@@ -51,6 +51,14 @@
             <artifactId>axiom-impl</artifactId>
             <version>${axiom.version}</version>
         </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>${commons.logging.version}</version>
+            <properties>
+                <module>true</module>
+            </properties>
+        </dependency>
     </dependencies>
 
    <!--                                      -->

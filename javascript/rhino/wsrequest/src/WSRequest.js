@@ -277,7 +277,7 @@ function WSRequest() {
             }
         } else if (payload == undefined) {
             payload = null;
-        } else {
+        }else {
             throw new Error("INVALID_SYNTAX_EXCEPTION");
         }
 
@@ -306,7 +306,6 @@ function WSRequest() {
         this.onError = onError;
     }
 
-    // implements onComplete(AsyncResult result) method in org.apache.axis2.converter.CurrencyConverterClient.async.Callback
     function onComplete(result) {
         // get content in SOAP body as a string
         var response = result.getResponseEnvelope().getBody().getFirstElement();
@@ -316,7 +315,6 @@ function WSRequest() {
         this.wsrequest.onreadystatechange();
     }
 
-    // implements onError(Exception e) method in org.apache.axis2.converter.CurrencyConverterClient.async.Callback
     function onError(e) {
         e.printStackTrace();
     }
