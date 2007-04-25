@@ -64,7 +64,7 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver
         try {
             JavaScriptEngine engine = new JavaScriptEngine();
             Parameter parameter = inMessage.getParameter("javascript.hostobjects");
-            if (parameter.getParameterType() == 2) {
+            if ((parameter!=null) && (parameter.getParameterType() == 2)) {
                 OMElement paraElement = parameter.getParameterElement();
                 List list = JavaScriptEngineUtils.getHostObjectsMap(paraElement);
                 JavaScriptEngineUtils.loadHostObjects(engine, list);

@@ -24,13 +24,6 @@
     <parameter name="hotupdate" locked="false">false</parameter>
     <parameter name="enableMTOM" locked="false">false</parameter>
     <parameter name="enableSwA" locked="false">false</parameter>
-    
-    <parameter name="javascript.hostobjects" locked="false">
-    	<class>org.wso2.javascript.rhino.JavaScriptFileObject</class>
-    	<class>org.wso2.javascript.rhino.JavaScriptTextFileObject</class>
-    	<class>org.wso2.javascript.rhino.WSRequestHostImpl</class>
-    	<class>org.wso2.javascript.rhino.APPClientHostObject</class>
-	</parameter>
 
     <!--Uncomment if you want to enable file caching for attachments -->
     <!--parameter name="cacheAttachments" locked="false">true</parameter>

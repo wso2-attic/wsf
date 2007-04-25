@@ -125,6 +125,12 @@
 					<include>**/*.xml</include>
 				</includes>
 			</resource>
+			<resource>
+				<directory>test</directory>
+				<includes>
+					<include>**/*.js</include>
+				</includes>
+			</resource>
 		</resources>
 		<plugins>
 			<plugin>
