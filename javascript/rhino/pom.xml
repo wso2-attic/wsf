@@ -1,145 +1,292 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.wso2.javascript.rhino</groupId>
-	<artifactId>js-axiom</artifactId>
-	<packaging>jar</packaging>
-	<version>SNAPSHOT</version>
-	<name>JavaScript Rhino</name>
-	
-	<dependencies>
-		<dependency>
-			<groupId>org.mozilla.javascript</groupId>
-			<artifactId>js-core</artifactId>
-			<version>SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>stax</groupId>
-			<artifactId>stax-api</artifactId>
-			<version>1.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.woodstox</groupId>
-			<artifactId>wstx</artifactId>
-			<version>asl-3.2.0</version>
-		</dependency>        
-		<dependency>
-			<groupId>org.apache.ws.commons.axiom</groupId>
-			<artifactId>axiom-api</artifactId>
-			<version>SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.ws.commons.axiom</groupId>
-			<artifactId>axiom-impl</artifactId>
-			<version>SNAPSHOT</version>
+<!--
+  ~ Copyright (c) 2006, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.wso2.wsf.javascript</groupId>
+    <artifactId>wsf-javascript-rhino</artifactId>
+    <packaging>pom</packaging>
+    <version>SNAPSHOT</version>
+    <name>WSO2 Javascript Web Service Framework- Rhino Edition</name>
+    <url>http://wso2.org/repos/wso2/trunk/wsf/javascript/rhino/</url>
+    <licenses>
+        <license>
+            <name>Apache License Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+    <organization>
+        <name>WSO2</name>
+        <url>http://www.wso2.com</url>
+    </organization>
+    <issueManagement>
+        <system>JIRA</system>
+        <url>http://www.wso2.org/jira/browse/WSFJS</url>
+    </issueManagement>
+
+    <mailingLists>
+        <mailingList>
+            <name>WSO2 WSF Javascript Developer List</name>
+            <subscribe>wsf-javascript-dev-request@wso2.org</subscribe>
+            <unsubscribe>wsf-javascript-dev-request@lists.wso2.com</unsubscribe>
+            <archive>http://www.wso2.org/mailarchive/wsf-javascript-dev/</archive>
+        </mailingList>
+        <!-- mailingList>
+            <name>WSO2 WSF Javascript User List</name>
+            <subscribe>wsf-javascript-user-request@wso2.org</subscribe>
+            <unsubscribe>wsf-javascript-user-request@wso2.org</unsubscribe>
+            <archive>http://www.wso2.org/mailarchive/wsf-javascript-user/</archive>
+        </mailingList-->
+    </mailingLists>
+
+ 	<developers>
+		<developer>
+			<name>Sanjiva Weerawarana</name>
+			<id>sanjiva</id>
+			<email>sanjiva AT wso2.com</email>
+			<organization>WSO2 Inc.</organization>
+		</developer>
+		<developer>
+			<name>Jonathan Marsh</name>
+			<id>jonathan</id>
+			<email>jonathan AT wso2.com</email>
+			<organization>WSO2 Inc.</organization>
+		</developer>
+		<developer>
+			<name>Davanum Srinivas</name>
+			<id>dims</id>
+			<email>dims AT wso2.com</email>
+			<organization>WSO2 Inc.</organization>
+		</developer>
+		<developer>
+			<name>Paul Fremantle</name>
+			<id>paul</id>
+			<email>paul AT wso2.com</email>
+			<organization>WSO2 Inc.</organization>
+		</developer>
+		<developer>
+			<name>Thilina Gunarathne</name>
+			<id>thilina</id>
+			<email>thilina AT wso2.com</email>
+			<organization>WSO2 Inc.</organization>
+			<url>http://www.apache.org/~thilina</url>
+		</developer>
+		<developer>
+			<name>Milinda Lakmal</name>
+			<id>Milinda</id>
+			<email>Milinda AT wso2.com</email>
+			<organization>WSO2 Inc.</organization>
+		</developer>
+		<developer>
+			<name>Sameera Jayasoma</name>
+			<id>sameera</id>
+			<email>sameera AT wso2.com</email>
+			<organization>WSO2 Inc.</organization>
+		</developer>
+		<developer>
+			<name>Saliya Ekanayake</name>
+			<id>saliya</id>
+			<email>saliya AT wso2.com</email>
+			<organization>WSO2 Inc.</organization>
+		</developer>
+	</developers>
+
+    <scm>
+        <connection>scm:svn:http://wso2.org/repos/wso2/trunk/wsf/javascript/rhino</connection>
+        <developerConnection>scm:svn:https://wso2.org/repos/wso2/trunk/wsf/javascript/rhino
+        </developerConnection>
+        <url>https://wso2.org/repos/wso2/trunk/esb/java/</url>
+    </scm>
+
+    <repositories>
+        <repository>
+            <id>snapshots</id>
+            <name>Maven Central Development Repository</name>
+            <url>http://snapshots.maven.codehaus.org/maven2</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>dist-wso2</id>
+            <name>WSO2 Repo</name>
+            <url>http://dist.wso2.org/maven2</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>m1-ibiblio-rsync-repository</id>
+            <url>http://people.apache.org/repo/m1-ibiblio-rsync-repository</url>
+            <layout>legacy</layout>
+        </repository>
+        <repository>
+            <id>apache</id>
+            <url>http://www.ibiblio.org/maven2</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+    	<dependency>
+            <groupId>org.mozilla.rhino</groupId>
+            <artifactId>js-core</artifactId>
+            <version>${js.core.version}</version>
+        </dependency>
+        <!-- core Axiom -->
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom</groupId>
+            <artifactId>axiom-api</artifactId>
+            <version>${axiom.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom</groupId>
+            <artifactId>axiom-impl</artifactId>
+            <version>${axiom.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${stax.impl.groupid}</groupId>
+            <artifactId>${stax.impl.artifactid}</artifactId>
+            <version>${stax.impl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>stax</groupId>
+            <artifactId>stax-api</artifactId>
+            <version>${stax.api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>${activation.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>${javamail.version}</version>
+        </dependency>
+
+        <!-- Other Jars -->
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>${commons.logging.version}</version>
+        </dependency>
+        <dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
 		</dependency>
     </dependencies>
-    <repositories>
-	    <!--<repository>
-		    <id>asankha-m2</id>
-		    <name>asankha-m2</name>
-		    <url>http://people.apache.org/~asankha/maven2/</url>
-		    <releases>
-			    <updatePolicy>never</updatePolicy>
-		    </releases>
-		    <snapshots>
-			    <updatePolicy>interval:1440</updatePolicy>
-		    </snapshots>
-	    </repository>-->
-	    
-		    <repository>
-			    <id>thilina</id>
-			    <name>thilina</name>
-			    <url>http://www-lk.wso2.com/~thilina/repository/</url>
-			    <releases>
-				    <updatePolicy>never</updatePolicy>
-			    </releases>
-			    <layout>legacy</layout>
-			    <snapshots>
-				    <updatePolicy>interval:1440</updatePolicy>
-			    </snapshots>
-		    </repository>
-		    <repository>
-			    <id>ibiblio-m2</id>
-			    <name>Ibiblio Maven 2 Repo</name>
-			    <url>http://www.ibiblio.org/maven2</url>
-			    <releases>
-				    <updatePolicy>never</updatePolicy>
-			    </releases>
-			    <snapshots>
-				    <enabled>false</enabled>
-			    </snapshots>
-		    </repository>
-		    <repository>
-			    <id>Apache Zones</id>
-			    <name>Apache Zones</name>
-			    <layout>legacy</layout>
-			    <url>http://ws.zones.apache.org/repository/</url>
-			    <releases>
-				    <updatePolicy>never</updatePolicy>
-			    </releases>
-			    <snapshots>
-				    <enabled>false</enabled>
-			    </snapshots>
-		    </repository>
-		    <repository>
-			    <id>Apache People</id>
-			    <name>Apache People Repo</name>
-			    <layout>legacy</layout>
-			    <url>http://people.apache.org/repository</url>
-			    <releases>
-				    <updatePolicy>never</updatePolicy>
-			    </releases>
-			    <snapshots>
-				    <enabled>false</enabled>
-			    </snapshots>
-		    </repository>
-		    <repository>
-			    <id>apache-m2-snapshot</id>
-			    <name>Apache Maven 2 Snapshot Repository</name>
-			    <url>http://people.apache.org/repo/m2-snapshot-repository/</url>
-			    <releases>
-				    <updatePolicy>never</updatePolicy>
-			    </releases>
-			    <snapshots>
-				    <updatePolicy>interval:1440</updatePolicy>
-			    </snapshots>
-		    </repository>
-		    <repository>
-			    <id>wso2-m2</id>
-			    <name>WSO2 Maven 2 Repository</name>
-			    <url>http://dist.wso2.org/maven2/</url>
-			    <releases>
-				    <updatePolicy>never</updatePolicy>
-			    </releases>
-			    <snapshots>
-				    <updatePolicy>interval:1440</updatePolicy>
-			    </snapshots>
-		    </repository>
-		    <repository>
-			    <id>maven2</id>
-			    <name>Maven Central Development Repository</name>
-			    <url>http://repo1.maven.org/maven2</url>
-        	</repository>
-		<repository>
-			<id>codehaus.org</id>
-			<name>Maven Repository</name>
-			<url>http://dist.codehaus.org/</url>
-        	</repository>
-		    <repository>
-			    <id>codehaus.org</id>
-			    <name>jettison Central Repository</name>
-			    <url>dav:https://dav.codehaus.org/repository/jettison/</url>
-    		   </repository>
-		   <repository>
-			   <id>codehaus-snapshot</id>
-			   <name>Maven snapshot Repository</name>
-			   <url>http://snapshots.maven.codehaus.org/maven2</url>
-		</repository>
-		<repository>
-			<id>maven2</id>
-			<name>Maven Central Development Repository</name>
-			<url>http://repo1.maven.org/maven2</url>
-		</repository>
-    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>snapshot-apache</id>
+            <name>Apache Snapshot repository</name>
+            <url>http://people.apache.org/repo/m2-snapshot-repository</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </pluginRepository>
+
+        <pluginRepository>
+            <id>snapshot</id>
+            <name>Snapshot repository</name>
+            <url>http://snapshots.maven.codehaus.org/maven2/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </pluginRepository>
+
+    </pluginRepositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.0</version>
+                <configuration>
+                    <source>1.4</source>
+                    <target>1.4</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.2</version>
+            </plugin>
+        </plugins>
+    </build>
+
+    <modules>
+        <module>e4ximpl</module>
+        <module>message_receiver</module>
+    </modules>
+
+    <distributionManagement>
+        <repository>
+            <id>wso2-maven2-repository</id>
+            <name>WSO2 Maven2 Repository</name>
+            <url>scp://dist.wso2.org/home/httpd/dist.wso2.org/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>wso2-maven2-snapshot-repository</id>
+            <name>WSO2 Maven2 Repository</name>
+            <url>scp://dist.wso2.org/home/httpd/dist.wso2.org/maven2/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <properties>
+        <axiom.version>SNAPSHOT</axiom.version>                   
+        <stax.impl.groupid>org.codehaus.woodstox</stax.impl.groupid>
+        <stax.impl.artifactid>wstx</stax.impl.artifactid>
+        <stax.impl.version>asl-3.2.0</stax.impl.version>
+        <stax.api.version>1.0.1</stax.api.version>
+        <commons.logging.version>1.1</commons.logging.version>
+        <javamail.version>1.4</javamail.version>
+        <activation.version>1.1</activation.version>
+        <junit.version>3.8.2</junit.version>
+		<axis2.version>SNAPSHOT</axis2.version>
+		<js.core.version>SNAPSHOT</js.core.version>
+		<neethi.version>2.0</neethi.version>
+		<woden.version>1.0-incubating-SNAPSHOT</woden.version>
+		<wsdl4j.version>1.6.1</wsdl4j.version>
+		<jaxen.version>1.1-beta-10</jaxen.version>
+		<stax.impl.groupid>woodstox</stax.impl.groupid>
+		<stax.impl.artifactid>wstx-asl</stax.impl.artifactid>
+		<stax.impl.version>3.1.0</stax.impl.version>
+		<stax.api.version>1.0.1</stax.api.version>
+		<xml.apis.version>1.3.03</xml.apis.version>
+		<commons.codec.version>1.3</commons.codec.version>
+		<commons.httpclient.version>3.0.1</commons.httpclient.version>
+		<backport.util.concurrent.version>
+			2.1
+		</backport.util.concurrent.version>
+		<junit.version>3.8.2</junit.version>
+		<jakarta.httpcore.version>4.0-alpha4</jakarta.httpcore.version>
+		<XmlSchema.version>SNAPSHOT</XmlSchema.version>
+		<commons.io.version>1.1</commons.io.version>
+		<jettison.version>1.0-beta-1</jettison.version>
+    </properties>
 </project>
