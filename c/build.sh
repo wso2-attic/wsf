@@ -12,29 +12,30 @@ else
     cp build/axis2c/configure.ac axis2c
 fi
 
-#if [ -d  "sandesha2" ];then
-#    cd sandesha2;
-#    svn up;
-#    cd ..
-#else
-#    svn co https://svn.apache.org/repos/asf/webservices/sandesha/trunk/c;
-#    mv c sandesha2;
-#    cp build/sandesha2/Makefile.am sandesha2
-#    cp build/sandesha2/src/core/Makefile.am sandesha2/src/core
-#    cp build/sandesha2/src/util/Makefile.am sandesha2/src/util
-#    cp build/sandesha2/src/wsrm/Makefile.am sandesha2/src/wsrm
-#    cp build/sandesha2/src/transport/Makefile.am sandesha2/src/transport
-##    cp build/sandesha2/src/handlers/Makefile.am sandesha2/src/handlers
-#    cp build/sandesha2/src/storage/Makefile.am sandesha2/src/storage
-#    cp build/sandesha2/src/storage/permenant/Makefile.am sandesha2/src/storage/permenant
-#    cp build/sandesha2/src/storage/beans/Makefile.am sandesha2/src/storage/beans
-#    cp build/sandesha2/src/storage/inmemory/Makefile.am sandesha2/src/storage/inmemory
-##    cp build/sandesha2/src/client/Makefile.am sandesha2/src/client
-#    cp build/sandesha2/src/msgprocessors/Makefile.am sandesha2/src/msgprocessors
-#    cp build/sandesha2/src/polling/Makefile.am sandesha2/src/polling
-#    cp build/sandesha2/src/workers/Makefile.am sandesha2/src/workers
-#   cp build/sandesha2/autogen.sh sandesha2
-#fi
+if [ -d  "sandesha2c" ];then
+    cd sandesha2c;
+    svn up;
+    cd ..
+else
+    svn co https://svn.apache.org/repos/asf/webservices/sandesha/trunk/c;
+    mv c sandesha2c;
+    cp build/sandesha2c/src/client/Makefile.am sandesha2c/src/client/
+    cp build/sandesha2c/src/core/Makefile.am sandesha2c/src/core/
+    cp build/sandesha2c/src/handlers/Makefile.am sandesha2c/src/handlers/
+    cp build/sandesha2c/src/msgprocessors/Makefile.am sandesha2c/src/msgprocessors/
+    cp build/sandesha2c/src/polling/Makefile.am sandesha2c/src/polling/
+    cp build/sandesha2c/src/storage/Makefile.am sandesha2c/src/storage/
+    cp build/sandesha2c/src/transport/Makefile.am sandesha2c/src/transport/
+    cp build/sandesha2c/src/util/Makefile.am sandesha2c/src/util/
+    cp build/sandesha2c/src/workers/Makefile.am sandesha2c/src/workers/
+    cp build/sandesha2c/src/wsrm/Makefile.am sandesha2c/src/wsrm/
+    cp build/sandesha2c/src/storage/beans/Makefile.am sandesha2c/src/storage/beans
+    cp build/sandesha2c/src/storage/inmemory/Makefile.am sandesha2c/src/storage/inmemory
+    cp build/sandesha2c/src/storage/mysql/Makefile.am sandesha2c/src/storage/mysql
+    cp build/sandesha2c/src/storage/sqlite/Makefile.am sandesha2c/src/storage/sqlite
+    cp build/sandesha2c/Makefile.am sandesha2c
+    cp build/sandesha2c/autogen.sh sandesha2c
+fi
 
 
 cp -r build/xmpp/xmpp axis2c/src/core/transport
