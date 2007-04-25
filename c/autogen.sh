@@ -2,6 +2,8 @@
 
 cd axis2c
 ./autogen.sh
+cd ../sandesha2c 
+./autogen.sh
 cd ../wsclient
 ./autogen.sh
 cd ..
