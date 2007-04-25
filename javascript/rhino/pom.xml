@@ -123,21 +123,22 @@
             </releases>
         </repository>
         <repository>
+            <id>m2-snapshot-repository</id>
+            <url>http://people.apache.org/repo/m2-snapshot-repository</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
             <id>dist-wso2</id>
             <name>WSO2 Repo</name>
             <url>http://dist.wso2.org/maven2</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-        </repository>
-        <repository>
-            <id>m1-ibiblio-rsync-repository</id>
-            <url>http://people.apache.org/repo/m1-ibiblio-rsync-repository</url>
-            <layout>legacy</layout>
-        </repository>
-        <repository>
-            <id>apache</id>
-            <url>http://www.ibiblio.org/maven2</url>
         </repository>
     </repositories>
 
