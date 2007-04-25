@@ -25,6 +25,10 @@ if test -d $srcdir/axis2c; then
     AC_CONFIG_SUBDIRS(axis2c)
 fi
 
+if test -d $srcdir/sandesha2c; then
+    AC_CONFIG_SUBDIRS(sandesha2c)
+fi
+
 if test -d $srcdir/wsclient; then
     AC_CONFIG_SUBDIRS(wsclient)
 fi
