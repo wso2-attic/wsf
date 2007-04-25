@@ -18,7 +18,7 @@
 		<testSourceDirectory>test</testSourceDirectory>
 		<resources>
 			<resource>
-				<directory>src</directory>
+				<directory>test</directory>
 				<includes>
 					<include>**/*.xml</include>
 					<include>**/*.js</include>
