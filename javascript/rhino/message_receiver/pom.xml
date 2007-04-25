@@ -17,7 +17,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.wso2.javascript.rhino</groupId>
-			<artifactId>js-axiom</artifactId>
+			<artifactId>axiom-e4x</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
 		<!-- Axis2 Jars -->
