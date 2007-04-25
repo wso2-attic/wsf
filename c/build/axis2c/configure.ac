@@ -2,7 +2,7 @@ dnl run autogen.sh to generate the configure script.
 
 AC_PREREQ(2.59)
 
-AC_INIT(axis2c-src, 0.95)
+AC_INIT(axis2c-src, 1.0.0)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE([tar-ustar])
@@ -55,23 +55,10 @@ if test -d $srcdir/axiom; then
     AC_CONFIG_SUBDIRS(axiom)
 fi
 
-if test -d $srcdir/xml_schema; then
-    AC_CONFIG_SUBDIRS(xml_schema)
-fi
-
-if test -d $srcdir/woden; then
-    AC_CONFIG_SUBDIRS(woden)
-fi
-
-if test -d $srcdir/rampart; then
-    AC_CONFIG_SUBDIRS(rampart)
-fi
-
-
 #CFLAGS="$CFLAGS -ansi -Wall -D_LARGEFILE64_SOURCE -Wno-implicit-function-declaration"
 CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 if test "$GCC" = "yes"; then
-    CFLAGS="$CFLAGS -ansi -Wall -Wno-implicit-function-declaration"
+    CFLAGS="$CFLAGS -ansi -Wall -Werror -Wno-implicit-function-declaration -g"
 #    CFLAGS="$CFLAGS -ansi -Wall -Wno-implicit-function-declaration"
 fi
 LDFLAGS="$LDFLAGS -lpthread"
@@ -114,39 +101,6 @@ AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 #AC_CHECK_FUNCS([memmove])
 
-AC_MSG_CHECKING(whether to build rampart )
-AC_ARG_ENABLE(rampart, [  --enable-rampart build ramprt. default=no],
-[ case "${enableval}" in
-  no)
-    AC_MSG_RESULT(no)
-    RAMPART_DIR=""
-    ;;
-  *)
-    AC_MSG_RESULT(yes)
-    RAMPART_DIR="rampart"
-
-    ;;
-  esac ],
-  AC_MSG_RESULT(no)
-)
-
-AC_MSG_CHECKING(whether to build xmpp server)
-AC_ARG_ENABLE(xmpp, [  --enable-xmpp build simple xmpp server. default=no],
-[ case "${enableval}" in
-  no)
-    AC_MSG_RESULT(no)
-    XMPP_DIR=""
-    ;;
-  *)
-    AC_MSG_RESULT(yes)
-    XMPP_DIR="xmpp"
-
-    ;;
-  esac ],
-  AC_MSG_RESULT(no)
-)
-
-
 AC_MSG_CHECKING(whether to build libxml2 xml parser library)
 AC_ARG_ENABLE(libxml2, [  --enable-libxml2    build libxml2 xml parser library wrapper. default=yes],
 [ case "${enableval}" in
@@ -158,8 +112,8 @@ AC_ARG_ENABLE(libxml2, [  --enable-libxml2    build libxml2 xml parser library w
     AC_MSG_RESULT(yes)
     WRAPPER_DIR="libxml2"
     PKG_CHECK_MODULES(PARSER, libxml-2.0)
-    CFLAGS="$CFLAGS $PARSER_LIBS"
-
+    CFLAGS="$CFLAGS $PARSER_CFLAGS"
+    LDFLAGS="$LDFLAGS $PARSER_LIBS"
     ;;
   esac ],
   AC_MSG_RESULT(yes)
@@ -306,6 +260,24 @@ AC_ARG_ENABLE(openssl, [  --enable-openssl  enable ssl. default=no],
   CFLAGS="$CFLAGS"
 )
 
+AC_MSG_CHECKING(whether to use libcurl)
+AC_ARG_ENABLE(libcurl, [  --enable-libcurl  enable libcurl. default=no],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    CFLAGS="$CFLAGS"
+    libcurl_enabled=false
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    CFLAGS="$CFLAGS -DAXIS2_LIBCURL_ENABLED"
+    libcurl_enabled=true
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+  CFLAGS="$CFLAGS"
+)
+
 
 AC_MSG_CHECKING(whether to build dynamic invocation client library)
 AC_ARG_ENABLE(diclient, [  --enable-diclient    build diclient library wrapper. default=no],
@@ -333,15 +305,15 @@ AC_SUBST(PARSER_LIBS)
 AC_SUBST(APACHE2INC)
 AC_SUBST(APRINC)
 AC_SUBST(DICLIENT_DIR)
+AC_SUBST(TESTDIR)
 AC_SUBST(SAMPLES)
 AC_SUBST(APACHE2BUILD)
 AC_SUBST(PARSER_DIR)
 AC_SUBST(WRAPPER_DIR)
 AC_SUBST(GUTHTHILA_DIR)
-AC_SUBST(RAMPART_DIR)
-AC_SUBST(XMPP_DIR)
 AC_SUBST(GUTHTHILA_LIBS)
 AM_CONDITIONAL(AXIS2_SSL_ENABLED, test x$ssl_enabled = xtrue)
+AM_CONDITIONAL(AXIS2_LIBCURL_ENABLED, test x$libcurl_enabled = xtrue)
 #export PARSER_DIR
 export WRAPPER_DIR
 export prefix 
@@ -355,29 +327,38 @@ AC_CONFIG_FILES([Makefile \
     src/core/addr/Makefile \
     src/core/phaseresolver/Makefile \
     src/core/transport/Makefile \
-    src/core/transport/xmpp/Makefile \
-    src/core/transport/xmpp/server/Makefile \
-    src/core/transport/xmpp/sender/Makefile \
-    src/core/transport/xmpp/receiver/Makefile \
-    src/core/transport/xmpp/server/simple_xmpp_server/Makefile \
     src/core/transport/http/Makefile \
     src/core/transport/http/common/Makefile \
     src/core/transport/http/util/Makefile \
     src/core/transport/http/sender/Makefile \
     src/core/transport/http/sender/ssl/Makefile \
+    src/core/transport/http/sender/libcurl/Makefile \
     src/core/transport/http/receiver/Makefile \
     src/core/transport/http/server/simple_axis2_server/Makefile \
-    src/core/transport/http/server/apache2/Makefile \
     src/core/transport/http/server/Makefile \
+    src/core/transport/http/server/apache2/Makefile \
+    src/core/transport/xmpp/Makefile \
+    src/core/transport/xmpp/sender/Makefile \
+    src/core/transport/xmpp/receiver/Makefile \
+    src/core/transport/xmpp/server/Makefile \
+    src/core/transport/xmpp/server/simple_xmpp_server/Makefile \
     src/core/deployment/Makefile \
     src/core/clientapi/Makefile \
     src/core/receivers/Makefile \
     src/core/util/Makefile \
-    src/wsdl/Makefile \
-    src/wsdl/builder/Makefile \
     src/modules/Makefile \
     src/modules/mod_addr/Makefile \
     src/modules/mod_log/Makefile \
+    test/Makefile \
+    test/core/Makefile \
+    test/core/description/Makefile \
+    test/core/clientapi/Makefile \
+    test/core/deployment/Makefile \
+    test/core/context/Makefile \
+    test/core/engine/Makefile \
+    test/core/addr/Makefile \
+    test/core/transport/Makefile\
+    test/core/transport/http/Makefile \
     ides/Makefile \
     ides/anjuta/Makefile \
     include/Makefile \

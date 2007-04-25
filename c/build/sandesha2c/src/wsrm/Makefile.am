@@ -31,9 +31,7 @@ libsandesha2_wsrm_la_SOURCES = ack_final.c\
 							   make_connection.c
 
 INCLUDES = -I$(top_builddir)/include \
-            -I ../../../axis2/util/include \
-            -I ../../../axis2/include \
-            -I ../../../axis2/axiom/include \
-            -I ../../../axis2/xml_schema/include \
-            -I ../../../axis2/woden/include
-
+		-I ../../../axis2c/util/include \
+		-I ../../../axis2c/axiom/include \
+		-I ../../../axis2c/include \
+		   @AXIS2INC@

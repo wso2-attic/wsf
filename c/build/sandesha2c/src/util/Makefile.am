@@ -16,10 +16,7 @@ libsandesha_util_la_SOURCES = \
                             property_mgr.c
 
 INCLUDES = -I$(top_builddir)/include \
-			-I$(top_builddir)/include/sandesha2 \
-            -I ../../../axis2/util/include \
-            -I ../../../axis2/include \
-            -I ../../../axis2/axiom/include \
-            -I ../../../axis2/xml_schema/include \
-            -I ../../../axis2/woden/include
-
+		-I ../../../axis2c/util/include \
+		-I ../../../axis2c/axiom/include \
+		-I ../../../axis2c/include \
+		   	@AXIS2INC@
