@@ -37,7 +37,7 @@ else
     cp build/sandesha2c/autogen.sh sandesha2c
 fi
 
-
+rm -rf axis2c/src/core/transport/xmpp
 cp -r build/xmpp/xmpp axis2c/src/core/transport
 cp -r build/xmpp/include/*.h axis2c/include
 cp build/axis2c/src/core/transport/http/server/simple_axis2_server/Makefile.am axis2c/src/core/transport/http/server/simple_axis2_server/
