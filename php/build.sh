@@ -46,7 +46,9 @@ cp build/wsf_c/sandesha2c/src/core/Makefile.am wsf_c/sandesha2c/src/core
 cp build/wsf_c/sandesha2c/Makefile.am wsf_c/sandesha2c/
 cp build/wsf_c/axis2c/Makefile.am wsf_c/axis2c/
 cp wsf_c/sandesha2c/config/axis2.xml .
-cp wsf_c/sandesha2c/config/sandesha2_schema.sh /tmp
+cp wsf_c/sandesha2c/config/sqlite_schema.sh /tmp
+cp wsf_c/sandesha2c/config/mysql_schema.sh /tmp
+cp wsf_c/sandesha2c/config/init_mysql.sh /tmp
 
 
 for i in `find -name configure.ac`
@@ -54,5 +56,5 @@ do
     sed  's/-Werror//' $i > configure.ac.back;
     mv configure.ac.back $i;
 done
-./autogen.sh && ./configure --with-wsf --prefix=`php-config --extension-dir`/wsf_c && make -j 100
+./autogen.sh && ./configure --with-wsf --prefix=`php-config --extension-dir`/wsf_c && make -j 100 
 
