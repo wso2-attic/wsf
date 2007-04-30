@@ -18,7 +18,6 @@ libsandesha2_la_LIBADD = ../client/libsandesha2_client.la\
                         ../storage/beans/libsandesha2_storage_beans.la\
 						../storage/libsandesha2_storage.la\
                         ../storage/inmemory/libsandesha2_inmemory.la\
-                        ../storage/permanent/libsandesha2_permanent.la\
                         ../transport/libsandesha2_transport.la\
                         ../util/libsandesha_util.la\
                         ../workers/libsandesha2_workers.la\
