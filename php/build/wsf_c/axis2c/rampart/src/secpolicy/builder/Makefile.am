@@ -10,7 +10,7 @@ librp_builder_la_SOURCES = algorithmsuite_builder.c asymmetric_binding_builder.c
 						   wss10_builder.c wss11_builder.c x509_token_builder.c policy_creator.c
 
 
-librp_builder_la_LIBADD  = ${AXIS2C_HOME}/lib
+librp_builder_la_LIBADD  = 
 
 
 INCLUDES = -I$(top_builddir)/include \
