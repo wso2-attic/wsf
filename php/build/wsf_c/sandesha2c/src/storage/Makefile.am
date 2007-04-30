@@ -1,4 +1,4 @@
-SUBDIRS = beans inmemory permanent
+SUBDIRS = beans inmemory $(WRAPPER_DIR)
 noinst_LTLIBRARIES = libsandesha2_storage.la
 
 libsandesha2_storage_la_SOURCES = \
