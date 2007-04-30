@@ -350,7 +350,6 @@ AC_CONFIG_FILES([Makefile \
     src/modules/mod_addr/Makefile \
     src/modules/mod_log/Makefile \
     ides/Makefile \
-    ides/anjuta/Makefile \
     include/Makefile \
     axis2c.pc
     ])
