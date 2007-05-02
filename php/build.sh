@@ -13,7 +13,7 @@ cp build/wsf_c/sandesha2c/src/wsrm/Makefile.am wsf_c/sandesha2c/src/wsrm
 cp build/wsf_c/sandesha2c/src/transport/Makefile.am wsf_c/sandesha2c/src/transport
 cp build/wsf_c/sandesha2c/src/handlers/Makefile.am wsf_c/sandesha2c/src/handlers
 cp build/wsf_c/sandesha2c/src/storage/Makefile.am wsf_c/sandesha2c/src/storage
-cp build/wsf_c/sandesha2c/src/storage/permanent/Makefile.am wsf_c/sandesha2c/src/storage/permanent
+cp build/wsf_c/sandesha2c/src/storage/mysql/Makefile.am wsf_c/sandesha2c/src/storage/mysql
 cp build/wsf_c/sandesha2c/src/storage/sqlite/Makefile.am wsf_c/sandesha2c/src/storage/sqlite
 cp build/wsf_c/sandesha2c/src/storage/beans/Makefile.am wsf_c/sandesha2c/src/storage/beans
 cp build/wsf_c/sandesha2c/src/storage/inmemory/Makefile.am wsf_c/sandesha2c/src/storage/inmemory
