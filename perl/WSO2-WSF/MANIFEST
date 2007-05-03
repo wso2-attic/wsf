@@ -1,0 +1,6 @@
+Changes
+Makefile.PL
+MANIFEST
+README
+t/WSO2-WSF.t
+lib/WSO2/WSF.pm

@@ -1,0 +1,27 @@
+
+            Web Services Framework (Perl extension) - WSF/Perl
+	    --------------------------------------------------
+
+What it is?
+-----------
+
+WSF/Perl is Perl language bindings to WSO2 WSF/C.
+
+Installation
+------------
+
+This extension is still in very early stage of development and is incomplete.
+Here's how you could play around with it if your're still interested.
+
+1.  Edit install.sh with your favourite text editor.
+
+2.  Change LIB and give the folder that you want the Perl libraries to be
+    installed.  Since the extension is in its very early stages in the
+    development it's advisable not to install it to your standard folder
+    that Perl extensions are installed.
+
+3.  Change LIBS to point to the folder you installed WSF/C libraries.
+
+4.  Change INC to point to the folder you installed WSF/C headers.
+
+5.  Execute install.sh script.

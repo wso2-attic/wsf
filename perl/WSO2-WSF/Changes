@@ -1,0 +1,6 @@
+Revision history for Perl extension WSO2::WSF.
+
+0.01  Tue Mar 13 11:55:21 2007
+	- original version; created by h2xs 1.23 with options
+		-AXc -n WSO2::WSF
+
