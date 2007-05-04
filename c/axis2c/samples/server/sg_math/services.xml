@@ -1,0 +1,30 @@
+<serviceGroup name="sg_math">
+    <service name="add">
+        <parameter name="ServiceClass" locked="xsd:false">add</parameter>
+        <description>
+            This is add service, that belongs to the math service group.
+        </description>
+        <operation name="add"/>
+    </service>
+    <service name="sub">
+        <parameter name="ServiceClass" locked="xsd:false">sub</parameter>
+        <description>
+            This is sub service, that belongs to the math service group.
+        </description>
+        <operation name="sub"/>
+    </service>
+    <service name="mul">
+        <parameter name="ServiceClass" locked="xsd:false">mul</parameter>
+        <description>
+            This is mul service, that belongs to the math service group.
+        </description>
+       <operation name="mul"/>
+    </service>
+     <service name="div">
+        <parameter name="ServiceClass" locked="xsd:false">div</parameter>
+        <description>
+            This is div service, that belongs to the math service group.
+        </description>
+       <operation name="div"/>
+    </service>
+</serviceGroup>

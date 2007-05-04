@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://example.org/wsaTestService" xmlns:impl="http://example.org/wsaTestService" xmlns:intf="http://example.org/wsaTestService" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:wsaw="http://www.w3.org/2005/08/addressing/wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns2="http://example.org/notify" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns1="http://example.org/echo">
+  <wsdl:types>
+    <schema elementFormDefault="qualified" targetNamespace="http://example.org/echo" xmlns="http://www.w3.org/2001/XMLSchema">
+			<element name="echoIn" type="xsd:string"/>
+			<element name="echoOut" type="xsd:string"/>
+		</schema>
+    <schema elementFormDefault="qualified" targetNamespace="http://example.org/notify" xmlns="http://www.w3.org/2001/XMLSchema">
+			<element name="notify" type="xsd:string"/>
+		</schema>
+  </wsdl:types>
+  <wsdl:message name="wsaEchoOutMessage">
+    <wsdl:part name="echoIn" element="tns1:echoIn"/>
+  </wsdl:message>
+  <wsdl:message name="wsaNotifyMessage">
+    <wsdl:part name="notify" element="tns2:notify"/>
+  </wsdl:message>
+  <wsdl:message name="wsaEchoInMessage">
+    <wsdl:part name="echoOut" element="tns1:echoOut"/>
+  </wsdl:message>
+  <wsdl:portType name="wsaTestPortType">
+    <wsdl:operation name="echo">
+      <wsdl:input name="echoInRequest" message="impl:wsaEchoOutMessage" wsaw:Action="http://example.org/action/echoIn"/>
+      <wsdl:output name="echoInResponse" message="impl:wsaEchoInMessage" wsaw:Action="http://example.org/action/echoOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="notify">
+      <wsdl:input name="notifyRequest" message="impl:wsaNotifyMessage" wsaw:Action="http://example.org/action/notify"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="wsaTestSoap11Binding" type="impl:wsaTestPortType">
+    <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="echo">
+      <wsdlsoap:operation soapAction="echo" style="document"/>
+      <wsdl:input>
+        <wsdlsoap:body use="literal" namespace="http://org.apache.axis2/"/>
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:body use="literal" namespace="http://org.apache.axis2/"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="notify">
+      <wsdlsoap:operation soapAction="notify" style="document"/>
+      <wsdl:input>
+        <wsdlsoap:body use="literal" namespace="http://org.apache.axis2/"/>
+      </wsdl:input>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="wsaTestService">
+    <wsdl:port name="wsaTestServicePort0" binding="impl:wsaTestSoap11Binding">
+      <wsdlsoap:address location="http://www-lk.wso2.com:5049/axis2/services/wsaTestService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

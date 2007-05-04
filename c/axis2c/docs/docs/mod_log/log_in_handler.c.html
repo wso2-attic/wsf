@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html><head><title>Apache Axis2/C - modules/mod_log/log_in_handler.c</title><style type="text/css" media="all">
+          @import url("../../style/maven-base.css");
+          
+			    @import url("../../style/maven-classic.css");</style><link rel="stylesheet" href="../../style/print.css" type="text/css" media="print"></link><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"></meta></head><body class="composite"><div id="banner"><a href="http://www.apache.org/" id="organizationLogo"><img alt="Apache Software Foundation" src="http://www.apache.org/images/asf-logo.gif"></img></a><a href="http://ws.apache.org/axis2/c" id="projectLogo"><img alt="Apache Axis2/C" src="http://ws.apache.org/axis2/images/axis.jpg"></img></a><div class="clear"><hr></hr></div></div><div id="breadcrumbs"><div class="xleft">
+                	Last published: 03 May 2007
+                  | Doc for 1.0.0</div><div class="xright"></div><div class="clear"><hr></hr></div></div><div id="leftColumn"><div id="navcolumn"><div id="menuApache_Axis2_C"><h5>Apache Axis2/C</h5><ul><li class="none"><a href="../../index.html">Apache Axis2/C Home</a></li><li class="expanded"><a href="../../download.cgi">Download Axis2/C</a><ul><li class="none"><a href="../../download.cgi">Releases</a></li></ul></li><li class="expanded"><a href="../../docs/index.html">Documentation</a><ul><li class="none"><a href="../../docs/installationguide.html">Installation Guide</a></li><li class="none"><a href="../../docs/axis2c_manual.html">Axis2/C manual</a></li></ul></li><li class="expanded"><a href="../../list.html">Get Involved</a><ul><li class="none"><a href="../../lists_issues.html">Mailing Lists &amp; Issue Tracking</a></li><li class="none"><a href="../../svn.html">Checkout Source Code</a></li></ul></li><li class="expanded"><a href="../../coding_conventions.html">Developer Guidelines</a><ul><li class="none"><a href="../../coding_conventions.html">Coding Convention</a></li><li class="none"><a href="../../versioning.html">Versionning</a></li></ul></li><li class="expanded"><a href="../../team-list.html">Project Information</a><ul><li class="none"><a href="../../team-list.html">Project Team</a></li><li class="none"><a href="http://svn.apache.org/viewcvs.cgi/webservices/axis2/trunk/c/" class="externalLink" title="External Link">Source Code</a></li></ul></li></ul></div><a href="http://maven.apache.org/" title="Built by Maven" id="poweredBy"><img alt="Built by Maven" src="../../images/logos/maven-button-1.png"></img></a></div></div><div id="bodyColumn"><div class="contentBox"><div class="section"><font face="Monospace">
+<font color="#808080"><i>/*<br></br>
+ * Licensed to the Apache Software Foundation (ASF) under one or more<br></br>
+ * contributor license agreements.  See the NOTICE file distributed with<br></br>
+ * this work for additional information regarding copyright ownership.<br></br>
+ * The ASF licenses this file to You under the Apache License, Version 2.0<br></br>
+ * (the "License"); you may not use this file except in compliance with<br></br>
+ * the License.  You may obtain a copy of the License at<br></br>
+ *<br></br>
+ *      http://www.apache.org/licenses/LICENSE-2.0<br></br>
+ *<br></br>
+ * Unless required by applicable law or agreed to in writing, software<br></br>
+ * distributed under the License is distributed on an "AS IS" BASIS,<br></br>
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<br></br>
+ * See the License for the specific language governing permissions and<br></br>
+ * limitations under the License.<br></br>
+ */</i></font><br></br>
+<br></br>
+<font color="#008000">#include &lt;axis2_handler_desc.h&gt;<br></br></font>
+<font color="#008000">#include &lt;axutil_array_list.h&gt;<br></br></font>
+<font color="#008000">#include &lt;axiom_soap_const.h&gt;<br></br></font>
+<font color="#008000">#include &lt;axiom_soap_envelope.h&gt;<br></br></font>
+<font color="#008000">#include &lt;axiom_soap_header.h&gt;<br></br></font>
+<font color="#008000">#include &lt;axiom_soap_header_block.h&gt;<br></br></font>
+<font color="#008000">#include &lt;axis2_op.h&gt;<br></br></font>
+<font color="#008000">#include &lt;axis2_msg_ctx.h&gt;<br></br></font>
+<font color="#008000">#include &lt;axis2_conf_ctx.h&gt;<br></br></font>
+<font color="#008000">#include &lt;axis2_msg_info_headers.h&gt;<br></br></font>
+<font color="#008000">#include &lt;axutil_property.h&gt;<br></br></font>
+<br></br>
+<font color="#000000">axis2_status_t</font> <font color="#000000">AXIS2_CALL</font><br></br>
+<font color="#000000">axutil_log_in_handler_invoke</font>(<font color="#000000"><b>struct</b></font> <font color="#000000">axis2_handler</font> *<font color="#000000">handler</font>, <br></br>
+    <font color="#800000">const</font> <font color="#000000">axutil_env_t</font> *<font color="#000000">env</font>,<br></br>
+    <font color="#000000"><b>struct</b></font> <font color="#000000">axis2_msg_ctx</font> *<font color="#000000">msg_ctx</font>);<br></br>
+<br></br>
+<font color="#000000">AXIS2_EXTERN</font> <font color="#000000">axis2_handler_t</font>* <font color="#000000">AXIS2_CALL</font><br></br>
+<font color="#000000">axutil_log_in_handler_create</font>(<font color="#800000">const</font> <font color="#000000">axutil_env_t</font> *<font color="#000000">env</font>, <br></br>
+    <font color="#000000">axutil_string_t</font> *<font color="#000000">name</font>) <br></br>
+{<br></br>
+    <font color="#000000">axis2_handler_t</font> *<font color="#000000">handler</font> = <font color="#000000">NULL</font>;<br></br>
+    <br></br>
+    <font color="#000000">AXIS2_ENV_CHECK</font>(<font color="#000000">env</font>, <font color="#000000">NULL</font>);<br></br>
+    <br></br>
+    <font color="#000000">handler</font> = <font color="#000000">axis2_handler_create</font>(<font color="#000000">env</font>);<br></br>
+    <font color="#000000"><b>if</b></font> (!<font color="#000000">handler</font>)<br></br>
+    {<br></br>
+        <font color="#000000"><b>return</b></font> <font color="#000000">NULL</font>;<br></br>
+    }<br></br>
+   <br></br>
+    <font color="#000000">axis2_handler_set_invoke</font>(<font color="#000000">handler</font>, <font color="#000000">env</font>, <font color="#000000">axutil_log_in_handler_invoke</font>);<br></br>
+<br></br>
+    <font color="#000000"><b>return</b></font> <font color="#000000">handler</font>;<br></br>
+}<br></br>
+<br></br>
+<br></br>
+<font color="#000000">axis2_status_t</font> <font color="#000000">AXIS2_CALL</font><br></br>
+<font color="#000000">axutil_log_in_handler_invoke</font>(<font color="#000000"><b>struct</b></font> <font color="#000000">axis2_handler</font> *<font color="#000000">handler</font>, <br></br>
+    <font color="#800000">const</font> <font color="#000000">axutil_env_t</font> *<font color="#000000">env</font>,<br></br>
+    <font color="#000000"><b>struct</b></font> <font color="#000000">axis2_msg_ctx</font> *<font color="#000000">msg_ctx</font>)<br></br>
+{<br></br>
+    <font color="#000000">axiom_soap_envelope_t</font> *<font color="#000000">soap_envelope</font> = <font color="#000000">NULL</font>;<br></br>
+    <font color="#000000">axiom_node_t</font> *<font color="#000000">ret_node</font> = <font color="#000000">NULL</font>;<br></br>
+<br></br>
+    <font color="#000000">AXIS2_ENV_CHECK</font>( <font color="#000000">env</font>, <font color="#000000">AXIS2_FAILURE</font>);<br></br>
+    <font color="#000000">AXIS2_PARAM_CHECK</font>(<font color="#000000">env</font>-&gt;<font color="#000000">error</font>, <font color="#000000">msg_ctx</font>, <font color="#000000">AXIS2_FAILURE</font>);<br></br>
+    <br></br>
+    <font color="#000000">AXIS2_LOG_INFO</font>(<font color="#000000">env</font>-&gt;<font color="#000000">log</font>, <font color="#FF0000">"Starting logging in handler ........."</font>);<br></br>
+    <br></br>
+    <font color="#000000">soap_envelope</font> =  <font color="#000000">axis2_msg_ctx_get_soap_envelope</font>(<font color="#000000">msg_ctx</font>, <font color="#000000">env</font>);<br></br>
+    <br></br>
+    <font color="#000000"><b>if</b></font> (<font color="#000000">soap_envelope</font>)<br></br>
+    {<br></br>
+        <font color="#808080"><i>/* ensure SOAP buider state is in sync */</i></font><br></br>
+        <font color="#000000">axiom_soap_envelope_get_body</font>(<font color="#000000">soap_envelope</font>, <font color="#000000">env</font>); <br></br>
+        <font color="#000000">ret_node</font> = <font color="#000000">axiom_soap_envelope_get_base_node</font>(<font color="#000000">soap_envelope</font>, <font color="#000000">env</font>);<br></br>
+<br></br>
+        <font color="#000000"><b>if</b></font>(<font color="#000000">ret_node</font>)<br></br>
+        {<br></br>
+            <font color="#000000">axis2_char_t</font> *<font color="#000000">om_str</font> = <font color="#000000">NULL</font>;<br></br>
+            <font color="#000000">om_str</font> = <font color="#000000">axiom_node_to_string</font>(<font color="#000000">ret_node</font>, <font color="#000000">env</font>);<br></br>
+            <font color="#000000"><b>if</b></font>(<font color="#000000">om_str</font>)<br></br>
+            {<br></br>
+                <font color="#000000">AXIS2_LOG_INFO</font>(<font color="#000000">env</font>-&gt;<font color="#000000">log</font>, <font color="#FF0000">"Input message: %s"</font>, <font color="#000000">om_str</font>);<br></br>
+            }<br></br>
+        }<br></br>
+    }<br></br>
+    <br></br>
+    <font color="#000000"><b>return</b></font> <font color="#000000">AXIS2_SUCCESS</font>;<br></br>
+}<br></br>
+<br></br>
+<br></br>
+		</font></div></div></div><div class="clear"><hr></hr></div><div id="footer"><div class="xright">© 2005-2007, Apache Software Foundation</div><div class="clear"><hr></hr></div></div></body></html>

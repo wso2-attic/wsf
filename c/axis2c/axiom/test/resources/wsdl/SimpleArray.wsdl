@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!-- Copyright 2003-2004 The Apache Software Foundation.                      -->
+<!--                                                                          -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License");          -->
+<!-- you may not use this file except in compliance with the License.         -->
+<!-- You may obtain a copy of the License at                                  -->
+<!--                                                                          -->
+<!--        http://www.apache.org/licenses/LICENSE-2.0                        -->
+<!--                                                                          -->
+<!-- Unless required by applicable law or agreed to in writing, software      -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS,        -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and      -->
+<!-- limitations under the License.                                           -->
+
+<definitions name="InteropTest" targetNamespace="http://soapinterop.org/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://soapinterop.org/" xmlns:s="http://soapinterop.org/xsd" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+
+	<types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://soapinterop.org/xsd">
+	                <import namespace = "http://schemas.xmlsoap.org/soap/encoding/"/>
+			
+			<element name="intItem" type="int" />
+			<complexType name="intArrayType">
+			<sequence>
+			<element ref="s:intItem" minOccurs="0" maxOccurs="unbounded" />
+			</sequence>
+			</complexType>
+
+
+		</schema>
+	</types>
+	<message name="echoIntArrayRequest">
+	      <part name ="inputIntArrayType" type="s:intArrayType"/>
+	</message> 
+	<message name="echoIntArrayResponse">
+	       <part name ="return" type="s:intArrayType"/>
+        </message> 
+	
+	<portType name="ArrayTestPortType">
+	        <operation name="echoIntArray" parameterOrder="inputIntArrayType">
+		        <input message="tns:echoIntArrayRequest"/>
+		        <output message="tns:echoIntArrayResponse"/>
+		</operation>			
+		</portType>
+
+	<binding name="ArrayTestSoapBinding" type="tns:ArrayTestPortType">
+		<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+               <operation name="echoIntArray">
+                  <soap:operation soapAction="array#echoIntArray"/>
+                  <input>
+                      <soap:body use="encoded" namespace="http://soapinterop.org/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+                  </input>
+                  <output>
+                      <soap:body use="encoded" namespace="http://soapinterop.org/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+                  </output>
+               </operation>						
+	       
+	</binding>
+ 	<service name="array">
+    		<port binding="tns:ArrayTestSoapBinding" name="arrayTest">
+      		<soap:address location="http://localhost/axis/array"/>
+    		</port>
+  	</service>
+</definitions>

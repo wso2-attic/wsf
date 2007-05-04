@@ -1,0 +1,57 @@
+
+                          Apache Axiom/C
+                         ================
+
+  What is it?
+  -----------
+
+  Axiom stands for AXis Object Model (also known as OM - Object Model) and
+  refers to the XML infoset model that is initially developed for Apache
+  Axis2. This is an effort to implement Apache Axiom in C.
+
+  Please have a look at http://ws.apache.org/axis2/c/docs/om_tutorial.html
+  for an introduction about Apache Axiom/C.
+  
+  As a project of the Apache Software Foundation, the
+  developers aim to collaboratively develop and maintain a robust,
+  commercial-grade, standards-based Web Services stack implementation with
+  freely available source code.
+
+  The Latest Version
+  ------------------
+
+  You can get the latest svn checkout of Apache Axiom/C module from
+
+  https://svn.apache.org/repos/asf/webservices/axis2/trunk/c/axiom
+
+  Installation
+  ------------
+
+  Please see the file called INSTALL. 
+
+  Licensing
+  ---------
+
+  Please see the file called LICENSE.
+
+  Contacts
+  --------
+
+     o If you want freely available support for using Apache Axiom/C please
+       join the Apache Axis2/C user community by subscribing to users mailing
+       list, axis-c-user@ws.apache.org' as described at
+       http://ws.apache.org/axis2/c/mail-lists.html
+
+    o If you have a bug report for Apache Axis2/C Guththila please log-in and create a JIRA issue
+       at http://issues.apache.org/jira/browse/AXIS2C
+
+     o If you want to participate actively in developing Apache Axis2/C Guththila please
+       subscribe to the `axis-c-dev@ws.apache.org' mailing list as described at
+       http://ws.apache.org/axis2/c/mail-lists.html
+
+
+  Acknowledgments
+  ----------------
+
+  Apache Axiom/C relies heavily on the use of autoconf, automake and libtool
+  to provide a build environment.

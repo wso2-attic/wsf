@@ -1,0 +1,13 @@
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope" xmlns:xml="http://www.w3.org/XML/1998/namespace">
+    <env:Header>
+        <test2:echoOk2 xmlns:test2="http://example2.org/ts-tests"
+            env:role="http://www.w3.org/2003/05/soap-envelope/role/ultimateReceiver"
+            env:mustUnderstand="someOtherValue"
+            env:anyAttribute="any value">
+            foo
+        </test2:echoOk2>
+    </env:Header>
+    <env:Body>
+
+    </env:Body>
+</env:Envelope>

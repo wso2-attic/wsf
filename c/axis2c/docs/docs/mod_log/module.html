@@ -1,0 +1,19 @@
+<module name="logging" class="axis2_mod_log">
+    <inflow>
+        <handler name="LoggingInHandler" class="axis2_mod_log">
+            <order phase="PreDispatch"></order>
+        </handler>
+    </inflow>
+
+    <outflow>
+        <handler name="LoggingOutHandler" class="axis2_mod_log">
+            <order phase="MessageOut"></order>
+        </handler>
+    </outflow>
+
+    <Outfaultflow>
+        <handler name="LoggingOutHandler" class="axis2_mod_log">
+            <order phase="MessageOut"></order>
+        </handler>
+    </Outfaultflow>
+</module>

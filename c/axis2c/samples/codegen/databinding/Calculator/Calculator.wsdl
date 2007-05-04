@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2003-2004 The Apache Software Foundation.                      -->
+<!--                                                                          -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License");          -->
+<!-- you may not use this file except in compliance with the License.         -->
+<!-- You may obtain a copy of the License at                                  -->
+<!--                                                                          -->
+<!--        http://www.apache.org/licenses/LICENSE-2.0                        -->
+<!--                                                                          -->
+<!-- Unless required by applicable law or agreed to in writing, software      -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS,        -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and      -->
+<!-- limitations under the License.                                           -->
+
+<wsdl:definitions targetNamespace="http://localhost/axis/Calculator" 
+xmlns="http://schemas.xmlsoap.org/wsdl/" 
+xmlns:apachesoap="http://xml.apache.org/xml-soap"
+xmlns:impl="http://localhost/axis/Calculator"
+xmlns:intf="http://localhost/axis/Calculator"
+xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" 
+xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:message name="addRequest">
+    <wsdl:part name="in0" type="xsd:int"/>
+    <wsdl:part name="in1" type="xsd:int"/>
+  </wsdl:message>
+  <wsdl:message name="addResponse">
+    <wsdl:part name="addReturn" type="xsd:int"/>
+  </wsdl:message>
+  <wsdl:message name="subResponse">
+    <wsdl:part name="subReturn" type="xsd:int"/>
+  </wsdl:message>
+  <wsdl:message name="subRequest">
+    <wsdl:part name="in0" type="xsd:int"/>
+    <wsdl:part name="in1" type="xsd:int"/>
+  </wsdl:message>
+  <wsdl:message name="mulRequest">
+    <wsdl:part name="in0" type="xsd:int"/>
+    <wsdl:part name="in1" type="xsd:int"/>
+  </wsdl:message>
+  <wsdl:message name="mulResponse">
+    <wsdl:part name="addReturn" type="xsd:int"/>
+  </wsdl:message>
+  <wsdl:message name="divRequest">
+    <wsdl:part name="in0" type="xsd:int"/>
+    <wsdl:part name="in1" type="xsd:int"/>
+  </wsdl:message>
+  <wsdl:message name="divResponse">
+    <wsdl:part name="addReturn" type="xsd:int"/>
+  </wsdl:message>
+  <wsdl:portType name="Calculator">
+    <wsdl:operation name="add" parameterOrder="in0 in1">
+      <wsdl:input message="intf:addRequest" name="addRequest"/>
+      <wsdl:output message="intf:addResponse" name="addResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="sub" parameterOrder="in0 in1">
+      <wsdl:input message="intf:subRequest" name="subRequest"/>
+      <wsdl:output message="intf:subResponse" name="subResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="mul" parameterOrder="in0 in1">
+      <wsdl:input message="intf:mulRequest" name="mulRequest"/>
+      <wsdl:output message="intf:mulResponse" name="mulResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="div" parameterOrder="in0 in1">
+      <wsdl:input message="intf:divRequest" name="divRequest"/>
+      <wsdl:output message="intf:divResponse" name="divResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CalculatorSoapBinding" type="intf:Calculator">
+    <wsdlsoap:binding style="rpc" 
+    transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="add">
+      <wsdlsoap:operation soapAction="Calculator#add"/>
+      <wsdl:input name="addRequest">
+        <wsdlsoap:body 
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" 
+        namespace="http://localhost/axis/Calculator" 
+        use="encoded"/>
+      </wsdl:input>
+      <wsdl:output name="addResponse">
+        <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" 
+        namespace="http://localhost/axis/Calculator" 
+        use="encoded"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="sub">
+      <wsdlsoap:operation soapAction="Calculator#sub"/>
+      <wsdl:input name="subRequest">
+        <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" 
+        namespace="http://localhost/axis/Calculator" 
+        use="encoded"/>
+      </wsdl:input>
+      <wsdl:output name="subResponse">
+        <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" 
+        namespace="http://localhost/axis/Calculator" 
+        use="encoded"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="mul">
+      <wsdlsoap:operation soapAction="Calculator#mul"/>
+      <wsdl:input name="mulRequest">
+        <wsdlsoap:body 
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" 
+        namespace="http://localhost/axis/Calculator" 
+        use="encoded"/>
+      </wsdl:input>
+      <wsdl:output name="mulResponse">
+        <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" 
+        namespace="http://localhost/axis/Calculator" 
+        use="encoded"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="div">
+      <wsdlsoap:operation soapAction="Calculator#div"/>
+      <wsdl:input name="divRequest">
+        <wsdlsoap:body 
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" 
+        namespace="http://localhost/axis/Calculator" 
+        use="encoded"/>
+      </wsdl:input>
+      <wsdl:output name="divResponse">
+        <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" 
+        namespace="http://localhost/axis/Calculator" 
+        use="encoded"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>  
+  <wsdl:service name="Calculator">
+    <wsdl:port binding="intf:CalculatorSoapBinding" name="Calculator">
+      <wsdlsoap:address location="http://localhost/axis/Calculator"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

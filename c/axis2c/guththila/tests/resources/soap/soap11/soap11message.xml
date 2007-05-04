@@ -1,0 +1,46 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/03/addressing">
+    <soapenv:Header>
+        <wsa:From soapenv:mustUnderstand="0"
+            soapenv:actor="http://schemas.xmlsoap.org/soap/actor/next">
+            <Address xmlns="http://schemas.xmlsoap.org/ws/2004/03/addressing">
+                http://schemas.xmlsoap.org/ws/2004/03/addressing/role/anonymous
+            </Address>
+        </wsa:From>
+        <test:MessageID xmlns:test="http://example.org/ts-tests"
+            soapenv:mustUnderstand="1"
+            soapenv:actor="http://schemas.xmlsoap.org/soap/actor/next"
+            soapenv:anyAttribute="any value">
+            uuid:920C5190-0B8F-11D9-8CED-F22EDEEBF7E5
+        </test:MessageID>
+        <wsa:To soapenv:mustUnderstand="0"
+            soapenv:anyAttribute="any value">
+            http://localhost:8081/axis/services/BankPort
+        </wsa:To>
+    </soapenv:Header>
+    <soapenv:Body>
+        <soapenv:Fault>
+            <soapenv:faultcode>
+                env:Sender
+            </soapenv:faultcode>
+            <soapenv:faultstring>Sender Timeout</soapenv:faultstring>
+            <soapenv:faultactor>
+                http://schemas.xmlsoap.org/soap/envelope/actor/ultimateReceiver
+            </soapenv:faultactor>
+            <soapenv:detail xmlns:m="http://www.sample.org">
+                Details of error
+                <m:MaxTime m:detail="This is only a test">
+                    P5M
+                </m:MaxTime>
+                <m:AveTime>
+                    <m:Time>
+                        P3M
+                    </m:Time>
+                </m:AveTime>
+            </soapenv:detail>
+        </soapenv:Fault>
+    </soapenv:Body>
+</soapenv:Envelope>
+

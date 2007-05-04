@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html><head><title>Apache Axis2/C - hello_svc.c</title><style type="text/css" media="all">
+          @import url("../../../style/maven-base.css");
+          
+			    @import url("../../../style/maven-classic.css");</style><link rel="stylesheet" href="../../../style/print.css" type="text/css" media="print"></link><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"></meta></head><body class="composite"><div id="banner"><a href="http://www.apache.org/" id="organizationLogo"><img alt="Apache Software Foundation" src="http://www.apache.org/images/asf-logo.gif"></img></a><a href="http://ws.apache.org/axis2/c" id="projectLogo"><img alt="Apache Axis2/C" src="http://ws.apache.org/axis2/images/axis.jpg"></img></a><div class="clear"><hr></hr></div></div><div id="breadcrumbs"><div class="xleft">
+                	Last published: 03 May 2007
+                  | Doc for 1.0.0</div><div class="xright"></div><div class="clear"><hr></hr></div></div><div id="leftColumn"><div id="navcolumn"><div id="menuApache_Axis2_C"><h5>Apache Axis2/C</h5><ul><li class="none"><a href="../../../index.html">Apache Axis2/C Home</a></li><li class="expanded"><a href="../../../download.cgi">Download Axis2/C</a><ul><li class="none"><a href="../../../download.cgi">Releases</a></li></ul></li><li class="expanded"><a href="../../../docs/index.html">Documentation</a><ul><li class="none"><a href="../../../docs/installationguide.html">Installation Guide</a></li><li class="none"><a href="../../../docs/axis2c_manual.html">Axis2/C manual</a></li></ul></li><li class="expanded"><a href="../../../list.html">Get Involved</a><ul><li class="none"><a href="../../../lists_issues.html">Mailing Lists &amp; Issue Tracking</a></li><li class="none"><a href="../../../svn.html">Checkout Source Code</a></li></ul></li><li class="expanded"><a href="../../../coding_conventions.html">Developer Guidelines</a><ul><li class="none"><a href="../../../coding_conventions.html">Coding Convention</a></li><li class="none"><a href="../../../versioning.html">Versionning</a></li></ul></li><li class="expanded"><a href="../../../team-list.html">Project Information</a><ul><li class="none"><a href="../../../team-list.html">Project Team</a></li><li class="none"><a href="http://svn.apache.org/viewcvs.cgi/webservices/axis2/trunk/c/" class="externalLink" title="External Link">Source Code</a></li></ul></li></ul></div><a href="http://maven.apache.org/" title="Built by Maven" id="poweredBy"><img alt="Built by Maven" src="../../../images/logos/maven-button-1.png"></img></a></div></div><div id="bodyColumn"><div class="contentBox"><div class="section"><font face="Monospace">
+<font color="#808080"><i>/*<br></br>
+ * Copyright 2004,2005 The Apache Software Foundation.<br></br>
+ *<br></br>
+ * Licensed under the Apache License, Version 2.0 (the "License");<br></br>
+ * you may not use this file except in compliance with the License.<br></br>
+ * You may obtain a copy of the License at<br></br>
+ *<br></br>
+ *      http://www.apache.org/licenses/LICENSE-2.0<br></br>
+ *<br></br>
+ * Unless required by applicable law or agreed to in writing, software<br></br>
+ * distributed under the License is distributed on an "AS IS" BASIS,<br></br>
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<br></br>
+ * See the License for the specific language governing permissions and<br></br>
+ * limitations under the License.<br></br>
+ */</i></font><br></br>
+<font color="#008000">#include &lt;axis2_svc_skeleton.h&gt;<br></br></font>
+<font color="#008000">#include &lt;axutil_log_default.h&gt;<br></br></font>
+<font color="#008000">#include &lt;axutil_error_default.h&gt;<br></br></font>
+<font color="#008000">#include &lt;axutil_array_list.h&gt;<br></br></font>
+<font color="#008000">#include &lt;axiom_text.h&gt;<br></br></font>
+<font color="#008000">#include &lt;axiom_node.h&gt;<br></br></font>
+<font color="#008000">#include &lt;axiom_element.h&gt;<br></br></font>
+<font color="#008000">#include &lt;stdio.h&gt;<br></br></font>
+<br></br>
+<font color="#000000">axiom_node_t</font> *<font color="#000000">axis2_hello_greet</font>(<font color="#800000">const</font> <font color="#000000">axutil_env_t</font> *<font color="#000000">env</font>,<br></br>
+        <font color="#000000">axiom_node_t</font> *<font color="#000000">node</font>);<br></br>
+<br></br>
+<font color="#800000">int</font> <font color="#000000">AXIS2_CALL</font><br></br>
+<font color="#000000">hello_free</font>(<font color="#000000">axis2_svc_skeleton_t</font> *<font color="#000000">svc_skeleton</font>,<br></br>
+        <font color="#800000">const</font> <font color="#000000">axutil_env_t</font> *<font color="#000000">env</font>);<br></br>
+<br></br>
+<font color="#000000">axiom_node_t</font>* <font color="#000000">AXIS2_CALL</font><br></br>
+<font color="#000000">hello_invoke</font>(<font color="#000000">axis2_svc_skeleton_t</font> *<font color="#000000">svc_skeleton</font>,<br></br>
+        <font color="#800000">const</font> <font color="#000000">axutil_env_t</font> *<font color="#000000">env</font>,<br></br>
+        <font color="#000000">axiom_node_t</font> *<font color="#000000">node</font>,<br></br>
+        <font color="#000000">axis2_msg_ctx_t</font> *<font color="#000000">msg_ctx</font>);<br></br>
+<br></br>
+<br></br>
+<font color="#800000">int</font> <font color="#000000">AXIS2_CALL</font><br></br>
+<font color="#000000">hello_init</font>(<font color="#000000">axis2_svc_skeleton_t</font> *<font color="#000000">svc_skeleton</font>,<br></br>
+        <font color="#800000">const</font> <font color="#000000">axutil_env_t</font> *<font color="#000000">env</font>);<br></br>
+<br></br>
+<font color="#000000">axiom_node_t</font>* <font color="#000000">AXIS2_CALL</font><br></br>
+<font color="#000000">hello_on_fault</font>(<font color="#000000">axis2_svc_skeleton_t</font> *<font color="#000000">svc_skeli</font>,<br></br>
+        <font color="#800000">const</font> <font color="#000000">axutil_env_t</font> *<font color="#000000">env</font>, <font color="#000000">axiom_node_t</font> *<font color="#000000">node</font>);<br></br>
+<br></br>
+<br></br>
+<font color="#000000">axiom_node_t</font> *<br></br>
+<font color="#000000">build_greeting_response</font>(<font color="#800000">const</font> <font color="#000000">axutil_env_t</font> *<font color="#000000">env</font>, <br></br>
+        <font color="#000000">axis2_char_t</font> *<font color="#000000">greeting</font>);<br></br>
+<br></br>
+<font color="#000000">axiom_node_t</font> *<br></br>
+<font color="#000000">axis2_hello_greet</font>(<font color="#800000">const</font> <font color="#000000">axutil_env_t</font> *<font color="#000000">env</font>, <font color="#000000">axiom_node_t</font> *<font color="#000000">node</font>)<br></br>
+{<br></br>
+    <font color="#000000">axiom_node_t</font> *<font color="#000000">client_greeting_node</font> = <font color="#000000">NULL</font>;<br></br>
+    <font color="#000000">axiom_node_t</font> *<font color="#000000">return_node</font> = <font color="#000000">NULL</font>;<br></br>
+<br></br>
+    <font color="#000000">AXIS2_ENV_CHECK</font>(<font color="#000000">env</font>, <font color="#000000">NULL</font>);<br></br>
+<br></br>
+    <font color="#000000"><b>if</b></font> (<font color="#000000">node</font>)<br></br>
+    {<br></br>
+        <font color="#000000">client_greeting_node</font> = <font color="#000000">axiom_node_get_first_child</font>(<font color="#000000">node</font>, <font color="#000000">env</font>);<br></br>
+        <font color="#000000"><b>if</b></font> (<font color="#000000">client_greeting_node</font> &amp;&amp;<br></br>
+                <font color="#000000">axiom_node_get_node_type</font>(<font color="#000000">client_greeting_node</font>, <font color="#000000">env</font>) == <font color="#000000">AXIOM_TEXT</font>)<br></br>
+        {<br></br>
+            <font color="#000000">axiom_text_t</font> *<font color="#000000">greeting</font> = (<font color="#000000">axiom_text_t</font> *)<font color="#000000">axiom_node_get_data_element</font>(<font color="#000000">client_greeting_node</font>, <font color="#000000">env</font>);<br></br>
+            <font color="#000000"><b>if</b></font> (<font color="#000000">greeting</font> &amp;&amp; <font color="#000000">axiom_text_get_value</font>(<font color="#000000">greeting</font> , <font color="#000000">env</font>))<br></br>
+            {<br></br>
+                <font color="#800000">const</font> <font color="#000000">axis2_char_t</font> *<font color="#000000">greeting_str</font> = <font color="#000000">axiom_text_get_value</font>(<font color="#000000">greeting</font>, <font color="#000000">env</font>);<br></br>
+                <font color="#000000">printf</font>(<font color="#FF0000">"Client greeted saying \"%s\" \n"</font>, <font color="#000000">greeting_str</font>);<br></br>
+                <font color="#000000">return_node</font> = <font color="#000000">build_greeting_response</font>(<font color="#000000">env</font>, <font color="#FF0000">"Hello Client!"</font>);<br></br>
+            }<br></br>
+        }<br></br>
+    }<br></br>
+    <font color="#000000"><b>else</b></font><br></br>
+    {<br></br>
+        <font color="#000000">AXIS2_ERROR_SET</font>(<font color="#000000">env</font>-&gt;<font color="#000000">error</font>, <font color="#000000">AXIS2_ERROR_SVC_SKEL_INVALID_XML_FORMAT_IN_REQUEST</font>, <font color="#000000">AXIS2_FAILURE</font>);<br></br>
+        <font color="#000000">printf</font>(<font color="#FF0000">"ERROR: invalid XML in request\n"</font>);<br></br>
+        <font color="#000000">return_node</font> = <font color="#000000">build_greeting_response</font>(<font color="#000000">env</font>, <font color="#FF0000">"Client! Who are you?"</font>);<br></br>
+    }<br></br>
+<br></br>
+    <font color="#000000"><b>return</b></font> <font color="#000000">return_node</font>;<br></br>
+}<br></br>
+<br></br>
+<font color="#000000">axiom_node_t</font> *<br></br>
+<font color="#000000">build_greeting_response</font>(<font color="#800000">const</font> <font color="#000000">axutil_env_t</font> *<font color="#000000">env</font>, <font color="#000000">axis2_char_t</font> *<font color="#000000">greeting</font>)<br></br>
+{<br></br>
+    <font color="#000000">axiom_node_t</font>* <font color="#000000">greeting_om_node</font> = <font color="#000000">NULL</font>;<br></br>
+    <font color="#000000">axiom_element_t</font> * <font color="#000000">greeting_om_ele</font> = <font color="#000000">NULL</font>;<br></br>
+<br></br>
+    <font color="#000000">greeting_om_ele</font> = <font color="#000000">axiom_element_create</font>(<font color="#000000">env</font>, <font color="#000000">NULL</font>, <font color="#FF0000">"greetResponse"</font>, <font color="#000000">NULL</font>, &amp;<font color="#000000">greeting_om_node</font>);<br></br>
+<br></br>
+    <font color="#000000">axiom_element_set_text</font>(<font color="#000000">greeting_om_ele</font>, <font color="#000000">env</font>, <font color="#000000">greeting</font>, <font color="#000000">greeting_om_node</font>);<br></br>
+<br></br>
+    <font color="#000000"><b>return</b></font> <font color="#000000">greeting_om_node</font>;<br></br>
+}<br></br>
+<br></br>
+<font color="#800000">static</font> <font color="#800000">const</font> <font color="#000000">axis2_svc_skeleton_ops_t</font> <font color="#000000">hello_svc_skeleton_ops_var</font> = {<br></br>
+    <font color="#000000">hello_init</font>,<br></br>
+    <font color="#000000">hello_invoke</font>,<br></br>
+    <font color="#000000">hello_on_fault</font>,<br></br>
+    <font color="#000000">hello_free</font><br></br>
+};<br></br>
+<br></br>
+<font color="#000000">axis2_svc_skeleton_t</font> *<br></br>
+<font color="#000000">axis2_hello_create</font>(<font color="#800000">const</font> <font color="#000000">axutil_env_t</font> *<font color="#000000">env</font>)<br></br>
+{<br></br>
+    <font color="#000000">axis2_svc_skeleton_t</font> *<font color="#000000">svc_skeleton</font> = <font color="#000000">NULL</font>;<br></br>
+    <font color="#000000">svc_skeleton</font> = <font color="#000000">AXIS2_MALLOC</font>(<font color="#000000">env</font>-&gt;<font color="#000000">allocator</font>,<br></br>
+            <font color="#000000"><b>sizeof</b></font>(<font color="#000000">axis2_svc_skeleton_t</font>));<br></br>
+<br></br>
+    <font color="#000000">svc_skeleton</font>-&gt;<font color="#000000">ops</font> = &amp;<font color="#000000">hello_svc_skeleton_ops_var</font>;<br></br>
+<br></br>
+    <font color="#000000">svc_skeleton</font>-&gt;<font color="#000000">func_array</font> = <font color="#000000">NULL</font>;<br></br>
+ <br></br>
+    <font color="#000000"><b>return</b></font> <font color="#000000">svc_skeleton</font>;<br></br>
+}<br></br>
+<br></br>
+<font color="#800000">int</font> <font color="#000000">AXIS2_CALL</font><br></br>
+<font color="#000000">hello_init</font>(<font color="#000000">axis2_svc_skeleton_t</font> *<font color="#000000">svc_skeleton</font>,<br></br>
+        <font color="#800000">const</font> <font color="#000000">axutil_env_t</font> *<font color="#000000">env</font>)<br></br>
+{<br></br>
+    <font color="#000000">svc_skeleton</font>-&gt;<font color="#000000">func_array</font> = <font color="#000000">axutil_array_list_create</font>(<font color="#000000">env</font>, <font color="#0000FF">0</font>);<br></br>
+    <font color="#000000">axutil_array_list_add</font>(<font color="#000000">svc_skeleton</font>-&gt;<font color="#000000">func_array</font>, <font color="#000000">env</font>, <font color="#FF0000">"helloString"</font>);<br></br>
+    <font color="#000000"><b>return</b></font> <font color="#000000">AXIS2_SUCCESS</font>;<br></br>
+}<br></br>
+<br></br>
+<font color="#000000">axiom_node_t</font>* <font color="#000000">AXIS2_CALL</font><br></br>
+<font color="#000000">hello_invoke</font>(<font color="#000000">axis2_svc_skeleton_t</font> *<font color="#000000">svc_skeleton</font>,<br></br>
+        <font color="#800000">const</font> <font color="#000000">axutil_env_t</font> *<font color="#000000">env</font>,<br></br>
+        <font color="#000000">axiom_node_t</font> *<font color="#000000">node</font>,<br></br>
+        <font color="#000000">axis2_msg_ctx_t</font> *<font color="#000000">msg_ctx</font>)<br></br>
+{<br></br>
+    <font color="#000000"><b>return</b></font> <font color="#000000">axis2_hello_greet</font>(<font color="#000000">env</font>, <font color="#000000">node</font>);<br></br>
+}<br></br>
+<br></br>
+<font color="#000000">axiom_node_t</font>* <font color="#000000">AXIS2_CALL</font><br></br>
+<font color="#000000">hello_on_fault</font>(<font color="#000000">axis2_svc_skeleton_t</font> *<font color="#000000">svc_skeli</font>,<br></br>
+        <font color="#800000">const</font> <font color="#000000">axutil_env_t</font> *<font color="#000000">env</font>, <font color="#000000">axiom_node_t</font> *<font color="#000000">node</font>)<br></br>
+{<br></br>
+    <font color="#000000">axiom_node_t</font> *<font color="#000000">error_node</font> = <font color="#000000">NULL</font>;<br></br>
+    <font color="#000000">axiom_node_t</font>* <font color="#000000">text_node</font> = <font color="#000000">NULL</font>;<br></br>
+    <font color="#000000">axiom_element_t</font> *<font color="#000000">error_ele</font> = <font color="#000000">NULL</font>;<br></br>
+    <font color="#000000">error_ele</font> = <font color="#000000">axiom_element_create</font>(<font color="#000000">env</font>, <font color="#000000">node</font>, <font color="#FF0000">"EchoServiceError"</font>, <font color="#000000">NULL</font>,<br></br>
+            &amp;<font color="#000000">error_node</font>);<br></br>
+    <font color="#000000">axiom_element_set_text</font>(<font color="#000000">error_ele</font>, <font color="#000000">env</font>, <font color="#FF0000">"Echo service failed "</font>,<br></br>
+            <font color="#000000">text_node</font>);<br></br>
+    <font color="#000000"><b>return</b></font> <font color="#000000">error_node</font>;<br></br>
+}<br></br>
+<br></br>
+<font color="#800000">int</font> <font color="#000000">AXIS2_CALL</font><br></br>
+<font color="#000000">hello_free</font>(<font color="#000000">axis2_svc_skeleton_t</font> *<font color="#000000">svc_skeleton</font>,<br></br>
+        <font color="#800000">const</font> <font color="#000000">axutil_env_t</font> *<font color="#000000">env</font>)<br></br>
+{<br></br>
+    <font color="#000000"><b>if</b></font> (<font color="#000000">svc_skeleton</font>-&gt;<font color="#000000">func_array</font>)<br></br>
+    {<br></br>
+        <font color="#000000">axutil_array_list_free</font>(<font color="#000000">svc_skeleton</font>-&gt;<font color="#000000">func_array</font>, <font color="#000000">env</font>);<br></br>
+        <font color="#000000">svc_skeleton</font>-&gt;<font color="#000000">func_array</font> = <font color="#000000">NULL</font>;<br></br>
+    }<br></br>
+<br></br>
+    <font color="#000000"><b>if</b></font> (<font color="#000000">svc_skeleton</font>)<br></br>
+    {<br></br>
+        <font color="#000000">AXIS2_FREE</font>(<font color="#000000">env</font>-&gt;<font color="#000000">allocator</font>, <font color="#000000">svc_skeleton</font>);<br></br>
+        <font color="#000000">svc_skeleton</font> = <font color="#000000">NULL</font>;<br></br>
+    }<br></br>
+<br></br>
+    <font color="#000000"><b>return</b></font> <font color="#000000">AXIS2_SUCCESS</font>;<br></br>
+}<br></br>
+<br></br>
+<br></br>
+<font color="#000000">AXIS2_EXPORT</font> <font color="#800000">int</font><br></br>
+<font color="#000000">axis2_get_instance</font>(<font color="#000000">axis2_svc_skeleton_t</font> **<font color="#000000">inst</font>,<br></br>
+        <font color="#800000">const</font> <font color="#000000">axutil_env_t</font> *<font color="#000000">env</font>)<br></br>
+{<br></br>
+    *<font color="#000000">inst</font> = <font color="#000000">axis2_hello_create</font>(<font color="#000000">env</font>);<br></br>
+    <font color="#000000"><b>if</b></font> (!(*<font color="#000000">inst</font>))<br></br>
+    {<br></br>
+        <font color="#000000"><b>return</b></font> <font color="#000000">AXIS2_FAILURE</font>;<br></br>
+    }<br></br>
+<br></br>
+    <font color="#000000"><b>return</b></font> <font color="#000000">AXIS2_SUCCESS</font>;<br></br>
+}<br></br>
+<br></br>
+<font color="#000000">AXIS2_EXPORT</font> <font color="#800000">int</font><br></br>
+<font color="#000000">axis2_remove_instance</font>(<font color="#000000">axis2_svc_skeleton_t</font> *<font color="#000000">inst</font>,<br></br>
+        <font color="#800000">const</font> <font color="#000000">axutil_env_t</font> *<font color="#000000">env</font>)<br></br>
+{<br></br>
+    <font color="#000000">axis2_status_t</font> <font color="#000000">status</font> = <font color="#000000">AXIS2_FAILURE</font>;<br></br>
+    <font color="#000000"><b>if</b></font> (<font color="#000000">inst</font>)<br></br>
+    {<br></br>
+        <font color="#000000">status</font> = <font color="#000000">AXIS2_SVC_SKELETON_FREE</font>(<font color="#000000">inst</font>, <font color="#000000">env</font>);<br></br>
+    }<br></br>
+    <font color="#000000"><b>return</b></font> <font color="#000000">status</font>;<br></br>
+}<br></br>
+<br></br>
+<br></br>
+		</font></div></div></div><div class="clear"><hr></hr></div><div id="footer"><div class="xright">© 2005-2007, Apache Software Foundation</div><div class="clear"><hr></hr></div></div></body></html>

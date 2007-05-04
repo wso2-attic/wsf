@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2003-2004 The Apache Software Foundation.                      -->
+<!-- (c) Copyright IBM Corp. 2004, 2005 All Rights Reserved                   -->
+<!--                                                                          -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License");          -->
+<!-- you may not use this file except in compliance with the License.         -->
+<!-- You may obtain a copy of the License at                                  -->
+<!--                                                                          -->
+<!--        http://www.apache.org/licenses/LICENSE-2.0                        -->
+<!--                                                                          -->
+<!-- Unless required by applicable law or agreed to in writing, software      -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS,        -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and      -->
+<!-- limitations under the License.                                           -->
+
+<wsdl:definitions targetNamespace="http://complexissues.test.apache.org" xmlns:impl="http://complexissues.test.apache.org" xmlns:intf="http://complexissues.test.apache.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://complexissues.test.apache.org" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:impl="http://complexissues.test.apache.org" xmlns:intf="http://complexissues.test.apache.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <element name="sendPrimitiveAndArray">
+    <complexType>
+     <sequence>
+      <element name="arg_0_0" type="xsd:int"/>
+      <element maxOccurs="unbounded" minOccurs="0" name="arg_1_0" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <complexType name="ComplexReturn">
+    <sequence>
+     <element name="returnInt" type="xsd:int"/>
+     <element maxOccurs="unbounded" name="returnArray" type="xsd:int"/>
+    </sequence>
+   </complexType>
+   <element name="sendPrimitiveAndArrayResponse">
+    <complexType>
+     <sequence>
+      <element name="sendPrimitiveAndArrayReturn" nillable="true" type="impl:ComplexReturn"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="sendArrayAndPrimitive">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" minOccurs="0" name="arg_0_1" type="xsd:int"/>
+      <element name="arg_1_1" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="sendArrayAndPrimitiveResponse">
+    <complexType>
+     <sequence>
+      <element name="sendArrayAndPrimitiveReturn" nillable="true" type="impl:ComplexReturn"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="sendPrimitiveAndArrayResponse">
+
+      <wsdl:part element="impl:sendPrimitiveAndArrayResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="sendPrimitiveAndArrayRequest">
+
+      <wsdl:part element="impl:sendPrimitiveAndArray" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="sendArrayAndPrimitiveResponse">
+
+      <wsdl:part element="impl:sendArrayAndPrimitiveResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="sendArrayAndPrimitiveRequest">
+
+      <wsdl:part element="impl:sendArrayAndPrimitive" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:portType name="PrimitiveAndArray">
+
+      <wsdl:operation name="sendPrimitiveAndArray">
+
+         <wsdl:input message="impl:sendPrimitiveAndArrayRequest" name="sendPrimitiveAndArrayRequest"/>
+
+         <wsdl:output message="impl:sendPrimitiveAndArrayResponse" name="sendPrimitiveAndArrayResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="sendArrayAndPrimitive">
+
+         <wsdl:input message="impl:sendArrayAndPrimitiveRequest" name="sendArrayAndPrimitiveRequest"/>
+
+         <wsdl:output message="impl:sendArrayAndPrimitiveResponse" name="sendArrayAndPrimitiveResponse"/>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="PrimitiveAndArraySoapBinding" type="impl:PrimitiveAndArray">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="sendPrimitiveAndArray">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="sendPrimitiveAndArrayRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="sendPrimitiveAndArrayResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="sendArrayAndPrimitive">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="sendArrayAndPrimitiveRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="sendArrayAndPrimitiveResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="PrimitiveAndArrayService">
+
+      <wsdl:port binding="impl:PrimitiveAndArraySoapBinding" name="PrimitiveAndArray">
+
+         <wsdlsoap:address location="http://lion:9080/PrimitiveAndArray/services/PrimitiveAndArray"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

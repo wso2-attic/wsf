@@ -1,0 +1,88 @@
+                          Apache Axis2/C
+
+  What is it?
+  -----------
+
+  The Apache Axis2/C is a SOAP engine implementation that can be used 
+  to provide and consume Web Services. Axis2/C is an effort to implement Axis2 
+  architecture, in C. Please have a look at 
+  http://ws.apache.org/axis2/1_0/Axis2ArchitectureGuide.html
+  for an overview on Axis2 architecture.
+  
+  Axis2/C supports both SOAP 1.1 and SOAP 1.2. The soap processing model is
+  built on the AXIOM XML object model. Axis2/C is capable of handling 
+  one-way messaging (In-Only) as well as request response messaging (In-Out).
+  It can be used in both synchronous and asynchronous modes.
+
+  Axis2/C has built in WS-Addressing support. It implements WS-Addressing 1.0
+  specification completely. It also has built in MTOM/XOP support for handling
+  binary attachments.
+  
+  As a project of the Apache Software Foundation, the
+  developers aim to collaboratively develop and maintain a robust,
+  commercial-grade, standards-based Web Services stack implementation with 
+  freely available source code.
+
+  The Latest Version
+  ------------------
+
+  Details of the latest version can be found on the Apache Axis2/C
+  project page under http://ws.apache.org/axis2/c.
+
+  Documentation
+  -------------
+
+  The documentation available as of the date of this release is
+  included in HTML format in the docs/ directory. The most
+  up-to-date documentation can be found at
+  http://ws.apache.org/axis2/c/docs/index.html.
+
+  Installation
+  ------------
+
+  Please see the file called INSTALL. You can also have a look at 
+  docs/installationguide.html.
+
+  Licensing
+  ---------
+
+  Please see the file called LICENSE.
+
+  Contacts
+  --------
+
+     o If you want freely available support for using Apache Axis2/C please 
+       join the Apache Axis2/C user community by subscribing to users mailing 
+       list, axis-c-user@ws.apache.org' as described at 
+       http://ws.apache.org/axis2/c/mail-lists.html
+
+     o If you have a bug report for Apache Axis2/C please go log a Jira issue 
+       at http://issues.apache.org/jira/browse/AXIS2C
+
+     o If you want to participate in actively developing Apache Axis2/C please
+       subscribe to the `axis-c-dev@ws.apache.org' mailing list as described at
+       http://ws.apache.org/axis2/c/mail-lists.html
+
+  Acknowledgements
+  ----------------
+
+  Apache Axis2/C relies heavily on the use of autoconf and libtool to provide
+  a build environment.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

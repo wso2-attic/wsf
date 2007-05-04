@@ -1,0 +1,44 @@
+<definitions targetNamespace="http://w3.ibm.com/schemas/services/2002/11/15/stockquote/wsdl"
+	xmlns="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:tns="http://w3.ibm.com/schemas/services/2002/11/15/stockquote/wsdl" 
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:types="http://w3.ibm.com/schemas/services/2002/11/15/stockquote">
+
+	<import namespace="http://w3.ibm.com/schemas/services/2002/11/15/stockquote" location="StockQuote.xsd" />
+
+	<message name="getStockQuoteReq">
+		<part name="parameters" element="types:getStockQuote" />
+	</message>
+
+	<message name="getStockQuoteResp">
+		<part name="parameters" element="types:getStockQuoteResponse" />
+	</message>
+
+	<portType name="StockQuotePortType">
+		<operation name="getStockQuote">
+			<input message="tns:getStockQuoteReq" />
+			<output message="tns:getStockQuoteResp" />
+		</operation>
+	</portType>
+
+	<binding name="StockQuoteSOAPBinding" type="tns:StockQuotePortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<operation name="getStockQuote">
+			<soap:operation style="document" soapAction="getStockQuote" />
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+		</operation>
+	</binding>
+
+	<service name="StockQuoteService">
+		<port name="StockQuoteSOAPPort" binding="tns:StockQuoteSOAPBinding">
+			<soap:address location="http://localhost:8080/axis2/services/StockQuoteService" />
+		</port>
+	</service>
+
+</definitions>

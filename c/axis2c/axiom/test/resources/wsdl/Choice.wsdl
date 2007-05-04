@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:s1="http://soapinterop.org/xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s0="http://soapinterop.org/" xmlns:s3="http://soapinterop.org/echoheader/" xmlns:soap12enc="http://www.w3.org/2002/06/soap-envelope" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:s2="http://soapinterop.org" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="http://soapinterop.org/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://soapinterop.org/">
+      <s:import namespace="http://soapinterop.org/xsd" />
+      <s:import namespace="http://soapinterop.org/echoheader/" />
+      
+      
+      
+      <s:element name="echoChoice">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputChoice" type="s1:ChoiceComplexType" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="echoChoiceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="return" type="s1:ChoiceComplexType" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      
+    
+      
+    </s:schema> 
+
+    <s:schema elementFormDefault="qualified" targetNamespace="http://soapinterop.org/xsd">
+      <s:import namespace="http://soapinterop.org/" />
+
+    <s:complexType name="ChoiceComplexType">
+        <s:sequence>
+          <s:choice minOccurs="1" maxOccurs="1">
+            <s:element minOccurs="0" maxOccurs="1" name="name0" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="name1" type="s:string" />
+          </s:choice>
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+ 
+  </types>
+  
+  
+  
+  <message name="echoChoiceSoapIn">
+    <part name="parameters" element="s0:echoChoice" />
+  </message>
+  <message name="echoChoiceSoapOut">
+    <part name="parameters" element="s0:echoChoiceResponse" />
+  </message>
+  
+  <portType name="ChoiceTestSoap">
+    
+    
+    <operation name="echoChoice">
+      <input message="s0:echoChoiceSoapIn" />
+      <output message="s0:echoChoiceSoapOut" />
+    </operation>
+    
+  </portType>
+  
+
+  <binding name="ChoiceTestSoap" type="s0:ChoiceTestSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    
+    <operation name="echoChoice">
+      <soap:operation soapAction="Choice#echoChoice" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    
+  </binding>
+  
+<binding name="ChoiceTestSoap12" type="s0:ChoiceTestSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    
+    
+    <operation name="echoChoice">
+      <soap12:operation soapAction="Choice#echoChoice" style="document" />
+      <input>
+        <soap12:body use="literal" />
+      </input>
+      <output>
+        <soap12:body use="literal" />
+      </output>
+    </operation>
+    
+  </binding>
+  
+<service name="ChoiceTest">
+    <documentation>These operations implement DOC/LIT SOAP operations, for interop testing. Please email johnko@microsoft.com with any questions/coments.</documentation>
+    <port name="ChoiceTestSoap" binding="s0:ChoiceTestSoap">
+      <soap:address location="http://localhost:90/axis/Choice" />
+    </port>
+    <port name="ChoiceTestSoap12" binding="s0:ChoiceTestSoap12">
+      <soap12:address location="http://localhost:90/axis/Choice" />
+    </port>
+  </service>
+</definitions>

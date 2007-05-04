@@ -1,0 +1,14 @@
+F
+
+There was 1 failure:
+1) test_format_xml: tcpmon_test.c:28: expected <<input>
+  	check for one step
+  </input>
+  > but was <<input>
+	check for one step
+</input>
+í>
+
+!!!FAILURES!!!
+Runs: 1 Passes: 0 Fails: 1
+

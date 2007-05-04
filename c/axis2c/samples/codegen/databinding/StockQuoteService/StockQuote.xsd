@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://w3.ibm.com/schemas/services/2002/11/15/stockquote"
+        xmlns="http://w3.ibm.com/schemas/services/2002/11/15/stockquote">
+
+    <xsd:complexType name="quote">
+        <xsd:sequence>
+            <xsd:element name="symbol" type="xsd:string"/>
+            <xsd:element name="volume" type="xsd:integer"/>
+            <xsd:element name="lastTrade" type="lastTradeType"/>
+            <xsd:element name="change" type="changeType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="changeType">
+        <xsd:sequence>
+            <xsd:element name="dollar" type="xsd:float"/>
+            <xsd:element name="percent" type="xsd:float"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="lastTradeType">
+        <xsd:sequence>
+            <xsd:element name="price" type="xsd:float"/>
+            <xsd:element name="date" type="xsd:long"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <!-- Methods signatures -->
+    <xsd:element name="getStockQuote">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="symbol" type="xsd:string"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="getStockQuoteResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="returnQuote" type="quote"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+</xsd:schema>

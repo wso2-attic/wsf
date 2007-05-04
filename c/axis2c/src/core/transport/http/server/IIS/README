@@ -1,0 +1,30 @@
+How to Configure IIS Module for Axis2C
+________________________________________
+
+Use the Axis2/C VC project or makefile to buid the component.
+
+In this document it is assumed that the mod_axis2_IIS.dll is in the directory 
+c:\axis2c\lib\mod_axis2_IIS.dll and axis2c_home is c:\axis2c
+
+Add the following key to the registery.
+
+HKEY_LOCAL_MACHINE\SOFTWARE\Apache Axis2c\IIS ISAPI Redirector
+
+Add a string value with the name axis2c_home and a value of c:\axis2c
+
+Add a string value with the name log_file and a value of c:\axis2c\logs\axis2.log
+
+Add a string value with the name log_level. The value can be one of trace, error, info, critical, debug, warning
+
+Using the IIS management console, add a new virtual directory to your IIS/PWS Web site. 
+The name of the virtual directory must be axis2. Its physical path should be the directory 
+where you placed mod_axis2_IIS.dll (in our example it is c:\axis2c\lib). When creating this new 
+virtual directory, assign execute access to it.
+
+By Using the IIS management console, add mod_axis2_IIS.dll as a filter in your IIS/PWS web site and restart the IIS admin service. 
+
+ 
+
+
+
+	

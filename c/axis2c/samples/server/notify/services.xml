@@ -1,0 +1,13 @@
+<service name="notify">
+    <parameter name="ServiceClass" locked="xsd:false">notify</parameter>
+
+   <description>
+        This is a testing service , to test one way service support
+   </description>
+
+    <operation name="notify" mep="http://www.w3.org/2004/08/wsdl/in-only">
+            <!--messageReceiver class="axis2_receivers" /-->
+            <parameter name="wsamapping" >http://example.org/action/notify</parameter>
+    </operation>
+
+</service>
