@@ -292,11 +292,11 @@ axis2_svr_thread_worker_func (
 
     if (thread_env)
     {
-        axutil_free_thread_env(thread_env);
+        /*axutil_free_thread_env(thread_env);*/
         thread_env = NULL;
     }
 #ifdef AXIS2_SVR_MULTI_THREADED
-    axutil_thread_pool_exit_thread(env->thread_pool, thd);
+    /*axutil_thread_pool_exit_thread(env->thread_pool, thd);*/
 #endif
 
     return NULL;
