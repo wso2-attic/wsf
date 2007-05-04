@@ -33,18 +33,18 @@ static void
 print_version ();
 
 static void
-parse_input(const axis2_env_t *env,
+parse_input(const axutil_env_t *env,
 			axis2_char_t **input);
 
 
 int main (int argc, char **argv)
 {
-	const axis2_env_t *env;
+	axutil_env_t *env;
 	char *input[2];
 	char *dest_uri = NULL;
-	axis2_array_list_t *array_list;
+	axutil_array_list_t *array_list;
 	axis2_status_t status;
-	env = axis2_env_create_all ("wsclient.log", AXIS2_LOG_LEVEL_DEBUG);
+	env = axutil_env_create_all ("wsclient.log", AXIS2_LOG_LEVEL_DEBUG);
 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 					"[wsclient]wsclient initiated ");
 
@@ -95,7 +95,7 @@ int main (int argc, char **argv)
 	}
 	else
 	    print_usage ();
-	axis2_env_free ((void *)env);
+	axutil_env_free ((void *)env);
 	return 0;
 }
 
@@ -154,7 +154,7 @@ static void print_version ()
 }
 
 static void
-parse_input(const axis2_env_t *env,
+parse_input(const axutil_env_t *env,
 			axis2_char_t **input)
 {
 	int c, nc, index;
@@ -170,7 +170,7 @@ parse_input(const axis2_env_t *env,
 	    if(index == (BUFF_SIZE - 2))
 	    {
 			buff[BUFF_SIZE - 1] = '\0';
-			*input = axis2_strcat(env, *input, buff, NULL);
+			*input = axutil_strcat(env, *input, buff, NULL);
 			index = 0;
 			c = getchar();
 			continue;
@@ -181,7 +181,7 @@ parse_input(const axis2_env_t *env,
 	if(feof(stdin) && !ferror(stdin))
 	{
 	    buff[index] = '\0';
-	    *input = axis2_strcat(env, *input, buff, NULL);
+	    *input = axutil_strcat(env, *input, buff, NULL);
 	}
 }
 

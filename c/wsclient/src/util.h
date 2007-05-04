@@ -26,47 +26,47 @@
 
 axiom_node_t *
 wsclient_payload (
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     char *input_buffer);
 
 axis2_char_t *
-wsclient_get_password (const axis2_env_t *env, 
+wsclient_get_password (const axutil_env_t *env, 
 					   const axis2_char_t *username,
 					   axis2_char_t *password_file_name);
 
 axis2_status_t
-wsclient_soap_out (const axis2_env_t *env,
+wsclient_soap_out (const axutil_env_t *env,
 				   axis2_svc_client_t *svc_client,
 				   int soap_out);
 
 axis2_status_t
-wsclient_set_attachment (const axis2_env_t *env,
+wsclient_set_attachment (const axutil_env_t *env,
 						 axiom_node_t *payload,
 						 axis2_char_t *base_dir,
 						 int is_mtom_enabled);
 
 axis2_status_t
-wsclient_get_attachment (const axis2_env_t *env,
+wsclient_get_attachment (const axutil_env_t *env,
 						 axiom_node_t *node,
 						 axis2_char_t *base_dir,
 						 int is_mtom_enabled);
 
 axis2_char_t *
-wsclient_get_relative_path (const axis2_env_t *env,
+wsclient_get_relative_path (const axutil_env_t *env,
 							axis2_char_t *pwd,
 							axis2_char_t *guest);
 
 axis2_char_t *
-wsclient_content_type (const axis2_env_t *env,
+wsclient_content_type (const axutil_env_t *env,
 					   axis2_char_t *content_type);
 
 axis2_status_t 
-wsclient_output_http_headers (const axis2_env_t *env,
+wsclient_output_http_headers (const axutil_env_t *env,
 							  axis2_svc_client_t *svc_client,
 							  axis2_char_t *file_name);
 
 axis2_status_t
-wsclient_set_https_transport_parameretes (const axis2_env_t *env,
+wsclient_set_https_transport_parameretes (const axutil_env_t *env,
 										  axis2_svc_client_t *svc_client);
 
 #endif /* WSCLIENT_UTIL_H */

@@ -75,18 +75,18 @@ wsclient_destination (int argc, char **argv)
 }
 
 
-axis2_array_list_t *
+axutil_array_list_t *
 wsclient_process_options (int argc,
 			  char **argv, 
-			  const axis2_env_t *env)
+			  const axutil_env_t *env)
 {
-      axis2_array_list_t *array_list;
+      axutil_array_list_t *array_list;
       wsclient_options_t *options;
       int i = 0;
       int ii = 0;
       char *name = NULL;
 	  char *optional_value;
-      array_list = axis2_array_list_create (env, 3);
+      array_list = axutil_array_list_create (env, 3);
 	  /* array size is a global varialbe */
 	  array_size = array_sizeof (cmd_options_data);
       for (i = 0;i < array_size; i++)
@@ -162,7 +162,7 @@ wsclient_process_options (int argc,
 					  options->has_arg = no_argument;
 				    }
 			      }
-			      AXIS2_ARRAY_LIST_ADD (array_list, env, (void *)options);
+			      axutil_array_list_add (array_list, env, (void *)options);
 			}
 			else 
 			{
@@ -184,7 +184,7 @@ wsclient_process_options (int argc,
 						options->has_arg = no_argument;
 					  }
 				    }
-				    AXIS2_ARRAY_LIST_ADD (array_list, env, (void *)options);
+				    axutil_array_list_add (array_list, env, (void *)options);
 			      }
 			}
 		  }

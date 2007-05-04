@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-#include <axis2_utils.h>
-#include <axis2_types.h>
+#include <axutil_utils.h>
+#include <axutil_types.h>
 #include <axiom_soap.h>
 #include <axis2_client.h>
-#include <axis2_file_handler.h>
-#include <axis2_thread.h>
+#include <axutil_file_handler.h>
+#include <axutil_thread.h>
 #include <axis2_conf_init.h>
 #include <axis2_conf.h>
-#include <axis2_param.h>
+#include <axutil_param.h>
 #include <axis2_transport_receiver.h>
 #include <axis2_http_transport.h>
 #include <axis2_transport_in_desc.h>
@@ -66,7 +66,7 @@ static axis2_char_t *password_file;
 static axis2_char_t *xop_out_dir;
 static axis2_char_t *content_type;
 static int is_contenty_type = 0;
-static axis2_array_list_t *header_list;
+static axutil_array_list_t *header_list;
 static int is_output_http_headers = 0;
 static axis2_char_t *output_filename;
 static axis2_char_t *server_cert;
@@ -76,8 +76,8 @@ extern wsclient_cmd_options_t cmd_options_data[];
 extern int array_size;
 
 static axis2_options_t *
-wsclient_svc_option (const axis2_env_t *env,
-					 axis2_array_list_t *array_list,
+wsclient_svc_option (const axutil_env_t *env,
+					 axutil_array_list_t *array_list,
 					 axiom_node_t *payload)
 {
 	axis2_options_t *options;
@@ -87,25 +87,25 @@ wsclient_svc_option (const axis2_env_t *env,
 	axis2_endpoint_ref_t *fault_to = NULL;
 	axis2_endpoint_ref_t *in_reply_to = NULL;
 	axis2_relates_to_t *relates_to = NULL;
-	axis2_property_t *dump_property ;
-	axis2_property_t *username;
-	axis2_property_t *password;
-	axis2_property_t *pw_type;
-	axis2_property_t *items;
-	axis2_property_t *rest_property;
-	axis2_property_t *get_property;
+	axutil_property_t *dump_property ;
+	axutil_property_t *username;
+	axutil_property_t *password;
+	axutil_property_t *pw_type;
+	axutil_property_t *items;
+	axutil_property_t *rest_property;
+	axutil_property_t *get_property;
 
 	wsclient_options_t *wsclient_options = NULL;
 	int size;
 	int i;
 	int ii;
-	size = AXIS2_ARRAY_LIST_SIZE (array_list, env);
+	size = axutil_array_list_size (array_list, env);
     options = axis2_options_create(env);
-	header_list = axis2_array_list_create (env, 2);
+	header_list = axutil_array_list_create (env, 2);
 	for (i = 0; i < size; i++)
 	{
 	    wsclient_options = (wsclient_options_t *)
-			AXIS2_ARRAY_LIST_GET (array_list, env, i);
+			axutil_array_list_get (array_list, env, i);
 	    if (wsclient_options)
 	    {
 			register char *opt = NULL;
@@ -157,7 +157,7 @@ wsclient_svc_option (const axis2_env_t *env,
 					{
 						is_soap_enabled = 1;
 						/* Set the default soap version of 1.2 */
-						AXIS2_OPTIONS_SET_SOAP_VERSION(options, env, AXIOM_SOAP12);
+						axis2_options_set_soap_version(options, env, AXIOM_SOAP12);
 						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 										"[wsclient] soap 1.2 selected");
 					}
@@ -165,7 +165,7 @@ wsclient_svc_option (const axis2_env_t *env,
 					case SOAP_OLD:
 					{
 						is_soap_enabled = 1;
-						AXIS2_OPTIONS_SET_SOAP_VERSION(options, env, AXIOM_SOAP11);
+						axis2_options_set_soap_version(options, env, AXIOM_SOAP11);
 						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 										"[wsclient] soap 1.1 selected");
 					}
@@ -187,7 +187,7 @@ wsclient_svc_option (const axis2_env_t *env,
 						if (!is_soap_enabled)
 						{
 							is_soap_enabled = 1;
-							AXIS2_OPTIONS_SET_SOAP_VERSION(
+							axis2_options_set_soap_version(
 								options, env, AXIOM_SOAP12);
 						} 
 						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
@@ -200,7 +200,7 @@ wsclient_svc_option (const axis2_env_t *env,
 						is_action = 1;
 						if (wsclient_options->value)
 						{
-							AXIS2_OPTIONS_SET_ACTION(
+							axis2_options_set_action(
 								options,
 								env, 
 								(char *)wsclient_options->value);
@@ -301,10 +301,11 @@ wsclient_svc_option (const axis2_env_t *env,
 					{
 						is_soap_enabled = 1;
 						is_username = 1;
-						username = axis2_property_create (env);
+						username = axutil_property_create (env);
 						username_value = (char *)wsclient_options->value;
-						AXIS2_PROPERTY_SET_VALUE (username, env, AXIS2_STRDUP ((char *)wsclient_options->value, env));
-						AXIS2_OPTIONS_SET_PROPERTY (options, env, RAMPART_ACTION_USER, username);
+						axutil_property_set_value (username, env, 
+                              (void *)axis2_strdup (env, (char *)wsclient_options->value));						
+                        /* AXIS2_OPTIONS_SET_PROPERTY (options, env, RAMPART_ACTION_USER, username); */
 						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 										"[wsclient] security user block ");
 					}
@@ -313,9 +314,10 @@ wsclient_svc_option (const axis2_env_t *env,
 					{
 						is_password = 1;
 						is_soap_enabled = 1;
-						password = axis2_property_create (env);
-						AXIS2_PROPERTY_SET_VALUE (password, env, AXIS2_STRDUP ((char *)wsclient_options->value, env));
-						AXIS2_OPTIONS_SET_PROPERTY (options, env, RAMPART_ACTION_PASSWORD, password);
+						password = axutil_property_create (env);
+						axutil_property_set_value (password, env, 
+                                                   (void *)axis2_strdup (env, (char *)wsclient_options->value));
+/* 						AXIS2_OPTIONS_SET_PROPERTY (options, env, RAMPART_ACTION_PASSWORD, password); */
 						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 										"[wsclient] security password block ");
 					}
@@ -365,18 +367,18 @@ wsclient_svc_option (const axis2_env_t *env,
 					case HTTP_HEADER:
 					{
 						axis2_http_header_t *axis2_header;
-						axis2_property_t *header_property;
+						axutil_property_t *header_property;
 						const char *header = (char *) wsclient_options->value;
 						axis2_header = axis2_http_header_create_by_str (env, header);
-						AXIS2_ARRAY_LIST_ADD (header_list, env, (void *)axis2_header);
+						axutil_array_list_add (header_list, env, (void *)axis2_header);
 						
-						header_property = axis2_property_create(env);
+						header_property = axutil_property_create(env);
 						if (header_property && header_list)
 						{
-							AXIS2_PROPERTY_SET_VALUE(header_property, env, 
+							axutil_property_set_value(header_property, env, 
 													 header_list);
-							AXIS2_PROPERTY_SET_FREE_FUNC (header_property, env, axis2_array_list_free_void_arg);
-							AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_TRANSPORT_HEADER_PROPERTY,
+							axutil_property_set_free_func (header_property, env, axutil_array_list_free_void_arg);
+							axis2_options_set_property(options, env, AXIS2_TRANSPORT_HEADER_PROPERTY,
 													   header_property);
 						}
 						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
@@ -394,14 +396,14 @@ wsclient_svc_option (const axis2_env_t *env,
 					break;
 					case SERVER_CERT:
 					{
-						axis2_property_t *server_cert_property;
+						axutil_property_t *server_cert_property;
 						server_cert = (char *)wsclient_options->value;
-						server_cert_property = axis2_property_create (env);
+						server_cert_property = axutil_property_create (env);
 						if (server_cert_property && server_cert)
 						{
-							AXIS2_PROPERTY_SET_VALUE(server_cert_property, env,
-													 axis2_strdup (server_cert, env));
-							AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_SSL_SERVER_CERT,
+							axutil_property_set_value(server_cert_property, env,
+                                                      (void *)axis2_strdup (server_cert, env));
+							axis2_options_set_property(options, env, AXIS2_SSL_SERVER_CERT,
 													   server_cert_property);
 						}
 						is_server_cert = 1;
@@ -422,17 +424,17 @@ wsclient_svc_option (const axis2_env_t *env,
 		is_wsa_enabled = 0;
  		is_mtom_enabled = 0;
 
-		rest_property = axis2_property_create(env);
-		AXIS2_PROPERTY_SET_VALUE(rest_property, env, 
-								 axis2_strdup (AXIS2_VALUE_TRUE, env));
-		AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_ENABLE_REST,
+		rest_property = axutil_property_create(env);
+		axutil_property_set_value(rest_property, env, 
+                                  (void *)axis2_strdup (AXIS2_VALUE_TRUE, env));
+		axis2_options_set_property(options, env, AXIS2_ENABLE_REST,
 								   rest_property);
 		if (AXIS2_TRUE == is_get_enabled)
 		{
-			get_property = axis2_property_create(env);
-			AXIS2_PROPERTY_SET_VALUE(get_property, env, 
-									 axis2_strdup(AXIS2_HTTP_HEADER_GET, env));
-			AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_HTTP_METHOD,
+			get_property = axutil_property_create(env);
+/* 			AXUTIL_PROPERTY_SET_VALUE(get_property, env,  */
+/* 									 axis2_strdup(AXIS2_HTTP_HEADER_GET, env)); */
+			axis2_options_set_property(options, env, AXIS2_HTTP_METHOD,
 									   get_property);
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 							"[wsclient] set get property ");
@@ -440,21 +442,21 @@ wsclient_svc_option (const axis2_env_t *env,
 
 		if (is_contenty_type)
 		{
-			axis2_hash_t *content_type_hash;
-			axis2_property_t *content_type_property;
-			content_type_hash = axis2_hash_make (env);
+			axutil_hash_t *content_type_hash;
+			axutil_property_t *content_type_property;
+			content_type_hash = axutil_hash_make (env);
 			if(content_type)
 			{
-				axis2_hash_set (content_type_hash, 
+				axutil_hash_set (content_type_hash, 
 								AXIS2_HTTP_HEADER_CONTENT_TYPE, 
 								AXIS2_HASH_KEY_STRING, 
 								wsclient_content_type (env, content_type));
 			}
-			content_type_property = axis2_property_create(env);
-			AXIS2_PROPERTY_SET_VALUE(content_type_property, env, 
+			content_type_property = axutil_property_create(env);
+			axutil_property_set_value(content_type_property, env, 
 									 content_type_hash);
-/* 			AXIS2_PROPERTY_SET_FREE_FUNC (property, env, axis2_hash_free); */
-			AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_USER_DEFINED_HTTP_HEADER_CONTENT_TYPE,
+/* 			AXUTIL_PROPERTY_SET_FREE_FUNC (property, env, axutil_hash_free); */
+			axis2_options_set_property(options, env, AXIS2_USER_DEFINED_HTTP_HEADER_CONTENT_TYPE,
 									   content_type_property);
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 							"[wsclient] set contenty type");
@@ -473,7 +475,7 @@ wsclient_svc_option (const axis2_env_t *env,
 			{
 				reply_to = axis2_endpoint_ref_create(env,
 													 "http://www.w3.org/2005/08/addressing/none");
-				AXIS2_OPTIONS_SET_REPLY_TO(options, env, reply_to);
+				axis2_options_set_reply_to(options, env, reply_to);
 			}
 	    }
 
@@ -483,7 +485,7 @@ wsclient_svc_option (const axis2_env_t *env,
 							"[wsclient] adding \"to\" to options");
 			if (to)
 			{
-				AXIS2_OPTIONS_SET_TO(options, env, to);
+				axis2_options_set_to(options, env, to);
 			}
 	    }
 	    
@@ -493,7 +495,7 @@ wsclient_svc_option (const axis2_env_t *env,
 							"[wsclient] adding from to options");
 			if (from)
 			{
-				AXIS2_OPTIONS_SET_FROM (options, env, from);
+				axis2_options_set_from (options, env, from);
 			}
 	    }
 
@@ -503,7 +505,7 @@ wsclient_svc_option (const axis2_env_t *env,
 							"[wsclient] adding reply-to to options");
 			if (reply_to)
 			{
-				AXIS2_OPTIONS_SET_REPLY_TO (options, env, reply_to);
+				axis2_options_set_reply_to (options, env, reply_to);
 			}
 	    }
 
@@ -514,7 +516,7 @@ wsclient_svc_option (const axis2_env_t *env,
 			if (in_reply_to)
 			{
 			
-				AXIS2_OPTIONS_SET_RELATES_TO (options, env, relates_to);
+				axis2_options_set_relates_to (options, env, relates_to);
 			}
 	    }
 
@@ -524,7 +526,7 @@ wsclient_svc_option (const axis2_env_t *env,
 							"[wsclient] adding fault-to to options");
 			if (fault_to)
 			{
-				AXIS2_OPTIONS_SET_FAULT_TO (options, env, fault_to);
+				axis2_options_set_fault_to (options, env, fault_to);
 			}
 	    }
 	}
@@ -533,11 +535,11 @@ wsclient_svc_option (const axis2_env_t *env,
 	{
 		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 						"[wsclient] setting soap-dump property to options");
-	    dump_property = axis2_property_create (env);
-	    AXIS2_PROPERTY_SET_VALUE (dump_property,
+	    dump_property = axutil_property_create (env);
+	    axutil_property_set_value (dump_property,
 								  env,
-								  AXIS2_STRDUP (AXIS2_VALUE_TRUE, env));
-	    AXIS2_OPTIONS_SET_PROPERTY (options, env, "dump", dump_property);
+                                   (void *)axis2_strdup (AXIS2_VALUE_TRUE, env));
+	    axis2_options_set_property (options, env, "dump", dump_property);
 	}
 
 	if (is_username && is_password)
@@ -553,9 +555,9 @@ wsclient_svc_option (const axis2_env_t *env,
 				{
 				    is_password = 1;
 				    is_soap_enabled = 1;
-				    password = axis2_property_create (env);
-				    AXIS2_PROPERTY_SET_VALUE (password, env, AXIS2_STRDUP (password_buffer, env));
-				    AXIS2_OPTIONS_SET_PROPERTY (options, env, RAMPART_ACTION_PASSWORD, password);
+				    password = axutil_property_create (env);
+				    axutil_property_set_value (password, env, (void *)axis2_strdup (password_buffer, env));
+/* 				    AXIS2_OPTIONS_SET_PROPERTY (options, env, RAMPART_ACTION_PASSWORD, password); */
 				}
 			}
 		}
@@ -564,18 +566,18 @@ wsclient_svc_option (const axis2_env_t *env,
 		{
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 							"[wsclient] adding digest password property");
-			pw_type = axis2_property_create(env);
-			AXIS2_PROPERTY_SET_VALUE(pw_type, env, AXIS2_STRDUP (RAMPART_PASSWORD_DIGEST, env));
-			AXIS2_OPTIONS_SET_PROPERTY(options, env, RAMPART_ACTION_PASSWORD_TYPE, pw_type);
+			pw_type = axutil_property_create(env);
+			axutil_property_set_value(pw_type, env, (void *)axis2_strdup (RAMPART_PASSWORD_DIGEST, env));
+			/* AXIS2_OPTIONS_SET_PROPERTY(options, env, RAMPART_ACTION_PASSWORD_TYPE, pw_type); */
 		  
 	    }
 	    else 
 	    {
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
 							"[wsclient] adding plain text password property");
-			pw_type = axis2_property_create(env);
-			AXIS2_PROPERTY_SET_VALUE(pw_type, env, AXIS2_STRDUP (RAMPART_PASSWORD_TEXT, env));
-			AXIS2_OPTIONS_SET_PROPERTY(options, env, RAMPART_ACTION_PASSWORD_TYPE, pw_type);
+			pw_type = axutil_property_create(env);
+			axutil_property_set_value(pw_type, env, (void *)axis2_strdup (RAMPART_PASSWORD_TEXT, env));
+			/* AXIS2_OPTIONS_SET_PROPERTY(options, env, RAMPART_ACTION_PASSWORD_TYPE, pw_type); */
 	    }
 
 
@@ -583,17 +585,17 @@ wsclient_svc_option (const axis2_env_t *env,
 	    {
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 							"[wsclient] username token timestamp ");
-			items = axis2_property_create(env);
-			AXIS2_PROPERTY_SET_VALUE(items, env, AXIS2_STRDUP ("UsernameToken Timestamp", env));
-			AXIS2_OPTIONS_SET_PROPERTY(options, env, RAMPART_ACTION_ITEMS, items);
+			items = axutil_property_create(env);
+			axutil_property_set_value(items, env, (void *)axis2_strdup ("usernametoken timestamp", env));
+			/* AXIS2_OPTIONS_SET_PROPERTY(options, env, RAMPART_ACTION_ITEMS, items); */
 	    }
 	    else
 	    {
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 							"[wsclient] username token");
-			items = axis2_property_create(env);
-			AXIS2_PROPERTY_SET_VALUE(items, env, AXIS2_STRDUP ("UsernameToken", env));
-			AXIS2_OPTIONS_SET_PROPERTY(options, env, RAMPART_ACTION_ITEMS, items);
+			items = axutil_property_create(env);
+			axutil_property_set_value(items, env, (void *)axis2_strdup ("usernametoken", env));
+/* 			AXIS2_OPTIONS_SET_PROPERTY(options, env, RAMPART_ACTION_ITEMS, items); */
 	    }
 	}
 
@@ -603,8 +605,8 @@ wsclient_svc_option (const axis2_env_t *env,
 
 axis2_status_t AXIS2_CALL
 wsclient_stub_invoke(
-	const axis2_env_t *env,
-	axis2_array_list_t *array_list,
+	const axutil_env_t *env,
+	axutil_array_list_t *array_list,
 	axis2_char_t *dest_uri,
 	axis2_char_t *input)
 {
@@ -667,7 +669,7 @@ wsclient_stub_invoke(
 					"[wsclient] svc client created");
 
 	if (endpoint_ref)
-	    AXIS2_OPTIONS_SET_TO(options, env, endpoint_ref);
+	    axis2_options_set_to(options, env, endpoint_ref);
 	else
 	    return WSCLIENT_FAILURE;
 
@@ -676,22 +678,22 @@ wsclient_stub_invoke(
 		if (is_wsa_enabled)
 		{
 			if (!is_action)
-				AXIS2_OPTIONS_SET_ACTION (options, env, "http://ws.apache.org/axis2/c");
-			AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, AXIS2_MODULE_ADDRESSING);
+				axis2_options_set_action (options, env, "http://ws.apache.org/axis2/c");
+			axis2_svc_client_engage_module(svc_client, env, AXIS2_MODULE_ADDRESSING);
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 							"[wsclient] addressing module engaged");
 		}
 
 		if (is_username && is_password)
 		{
-			AXIS2_SVC_CLIENT_ENGAGE_MODULE (svc_client, env, "rampart");
+			axis2_svc_client_engage_module (svc_client, env, "rampart");
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 							"[wsclient] rampart module engaged");
 		}
 
 		if (is_mtom_enabled)
 		{
-			AXIS2_OPTIONS_SET_ENABLE_MTOM (options, env, AXIS2_TRUE);
+			axis2_options_set_enable_mtom (options, env, AXIS2_TRUE);
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 							"[wsclient] mtom option enabled");
 		}
@@ -699,7 +701,7 @@ wsclient_stub_invoke(
 
 
 	if (svc_client && options)
-	    AXIS2_SVC_CLIENT_SET_OPTIONS(svc_client, env, options);
+	    axis2_svc_client_set_options(svc_client, env, options);
 	else
 	    return WSCLIENT_FAILURE;
 
@@ -729,9 +731,9 @@ wsclient_stub_invoke(
 						"[wsclient] prepareing for svc client send receive ");
 
 		if (!is_send_only)
-			ret_node = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
+			ret_node = axis2_svc_client_send_receive(svc_client, env, payload);
 		else
-			status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
+			status = axis2_svc_client_send_robust(svc_client, env, payload);
 
 		if (is_soap_dump)
 		{
@@ -760,11 +762,11 @@ wsclient_stub_invoke(
 						"[wsclient] response return node found");
 	    if(is_send_only)
 	    {
-			element = AXIOM_NODE_GET_DATA_ELEMENT(ret_node,
+			element = axiom_node_get_data_element(ret_node,
 												  env);
-			node_name = AXIOM_ELEMENT_GET_LOCALNAME(element,
+			node_name = axiom_element_get_localname(element,
 													env);
-			if(0 != AXIS2_STRCASECMP(node_name, "Fault"))
+			if(0 != axis2_strcasecmp(node_name, "fault"))
 			{
 				AXIS2_FREE (env->allocator, node_name);
 				return WSCLIENT_ERROR_RECEIVING_RESPONSE;
@@ -790,7 +792,7 @@ wsclient_stub_invoke(
 	    }
 	    else
 	    {
-			om_str = AXIOM_NODE_TO_STRING(ret_node, env);
+			om_str = axiom_node_to_string(ret_node, env);
 			if (om_str)
 				printf("\nReceived OM : %s\n", om_str);
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
@@ -807,6 +809,6 @@ wsclient_stub_invoke(
 	if (password_buffer)
 	    AXIS2_FREE (env->allocator, password_buffer);
 	if (svc_client)
-		AXIS2_SVC_CLIENT_FREE (svc_client, env);
+		axis2_svc_client_free (svc_client, env);
 	return WSCLIENT_SUCCESS;
 }

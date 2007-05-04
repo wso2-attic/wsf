@@ -76,10 +76,10 @@ wsclient_destination (int argc,
 		      char **argv);
 
 
-axis2_array_list_t *
+axutil_array_list_t *
 wsclient_process_options (int argc,
 			  char **argv,
-			  const axis2_env_t *env);
+			  const axutil_env_t *env);
 
 
 #endif /* WSCLIENT_OPTION_H */

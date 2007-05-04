@@ -18,12 +18,12 @@
 #ifndef AXIS2_WSCLIENT_STUB_H
 #define AXIS2_WSCLIENT_STUB_H
 
-#include <axis2_utils.h>
-#include <axis2_utils_defines.h>
-#include <axis2_env.h>
-#include <axis2_array_list.h>
-#include <axis2_hash.h>
-#include <platforms/axis2_platform_auto_sense.h>
+#include <axutil_utils.h>
+#include <axutil_utils_defines.h>
+#include <axutil_env.h>
+#include <axutil_array_list.h>
+#include <axutil_hash.h>
+#include <platforms/axutil_platform_auto_sense.h>
 #include <axiom_node.h>
 
 
@@ -34,8 +34,8 @@ extern "C"
 
 axis2_status_t AXIS2_CALL
 wsclient_stub_invoke(
-    const axis2_env_t *env,
-    axis2_array_list_t *all_opt_list,
+    const axutil_env_t *env,
+    axutil_array_list_t *all_opt_list,
     axis2_char_t *dest_uri,
     axis2_char_t *input);
 
