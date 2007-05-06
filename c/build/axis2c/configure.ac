@@ -296,7 +296,21 @@ AC_ARG_ENABLE(diclient, [  --enable-diclient    build diclient library wrapper. 
   DICLIENT_DIR="diclient"
 )
 
-
+AC_MSG_CHECKING(whether to build xmpp)
+AC_ARG_ENABLE(xmpp, [  --enable-xmpp  
+                          enable xmpp build (default=no)],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    XMPP_DIR="xmpp" 
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+  CFLAGS="$CFLAGS"
+)
 
 APACHE2INC=$apache2inc
 APRINC=$aprinc
@@ -310,6 +324,7 @@ AC_SUBST(SAMPLES)
 AC_SUBST(APACHE2BUILD)
 AC_SUBST(PARSER_DIR)
 AC_SUBST(WRAPPER_DIR)
+AC_SUBST(XMPP_DIR)
 AC_SUBST(GUTHTHILA_DIR)
 AC_SUBST(GUTHTHILA_LIBS)
 AM_CONDITIONAL(AXIS2_SSL_ENABLED, test x$ssl_enabled = xtrue)
