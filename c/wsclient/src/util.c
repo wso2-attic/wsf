@@ -586,7 +586,7 @@ wsclient_set_https_transport_parameretes (const axutil_env_t *env,
 
 	if (transport_out && conf)
 	{
-		axutil_param_container_add_param(transport_out->param_container, env, param);
+        axis2_transport_out_desc_add_param (transport_out, env, param);
 		axis2_transport_out_desc_set_sender(transport_out, env, transport_sender);
 		axis2_conf_add_transport_out (conf, env, transport_out, AXIS2_TRANSPORT_ENUM_HTTP);
 	}
