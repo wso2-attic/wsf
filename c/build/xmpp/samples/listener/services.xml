@@ -1,0 +1,12 @@
+<service name="listener">
+    <parameter name="ServiceClass" locked="xsd:false">listener</parameter>
+    <parameter name="xmpp_id" locked="xsd:false">test3@localhost</parameter>
+    <parameter name="xmpp_password" locked="xsd:false">g</parameter>
+
+   <operation name="notify">
+           <parameter name="wsamapping">xmpp://ws.apache.org/axis2/c/samples/notify</parameter>
+           <parameter name="xmpp_subscribe_to">test4@localhost</parameter>
+           <parameter name="xmpp_subscribe_type">user</parameter>
+   </operation>
+
+</service>

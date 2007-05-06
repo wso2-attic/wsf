@@ -102,7 +102,8 @@ AC_FUNC_REALLOC
 #AC_CHECK_FUNCS([memmove])
 
 AC_MSG_CHECKING(whether to build libxml2 xml parser library)
-AC_ARG_ENABLE(libxml2, [  --enable-libxml2    build libxml2 xml parser library wrapper. default=yes],
+AC_ARG_ENABLE(libxml2, [  --enable-libxml2    
+                          build Libxml2 XML parser library wrapper (default=yes)],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
@@ -124,7 +125,8 @@ AC_ARG_ENABLE(libxml2, [  --enable-libxml2    build libxml2 xml parser library w
 GUTHTHILA_LIBS=""
 
 AC_MSG_CHECKING(whether to build guththila xml parser library)
-AC_ARG_ENABLE(guththila, [  --enable-guththila    build guththila xml parser library wrapper. default=no],
+AC_ARG_ENABLE(guththila, [  --enable-guththila    
+                          build Guththila XML parser library wrapper (default=no)],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
@@ -146,7 +148,11 @@ AC_ARG_ENABLE(guththila, [  --enable-guththila    build guththila xml parser lib
 
 AC_MSG_CHECKING(whether to use apache2 as server transport)
 AC_ARG_WITH(apache2,
-[  --with-apache2[=PATH]      use apache2 as server transport.],
+[  --with-apache2[=PATH]      Find the Apache2 HTTP Web server header files in 'PATH'.
+    If this option is given, the Apache2 httpd module would be built.
+    'PATH' should point to Apache2 httpd include files location.
+    If you omit the '=PATH' part completely, the configure script will search
+    '/usr/include/apache2' for Apache2 headers.],
 [ case "$withval" in
   no)
     AC_MSG_RESULT(no)
@@ -171,7 +177,13 @@ AC_ARG_WITH(apache2,
 
 AC_MSG_CHECKING(whether to use apr. Note that if you build with apache2 you might need to do this.)
 AC_ARG_WITH(apr,
-[  --with-apr[=PATH]      use apr.],
+[  --with-apr[=PATH]      Find the APR header files in 'PATH'.
+    Some Apache2 distributions, specially development versions, install APR 
+    (Apache Portable Run-time) include files in a separate location. 
+    In that case, to build Apache2 httpd module, this option is also required.
+    'PATH' should point to APR include files location.
+    If you omit the '=PATH' part completely, the configure script will search
+    '/usr/include/apr-0' for APR headers.],
 [ case "$withval" in
   no)
     AC_MSG_RESULT(no)
@@ -193,7 +205,8 @@ AC_ARG_WITH(apr,
 )
 
 AC_MSG_CHECKING(whether to build tests)
-AC_ARG_ENABLE(tests, [  --enable-tests    build tests. default=yes],
+AC_ARG_ENABLE(tests, [  --enable-tests    
+                          build tests (default=yes)],
 [ case "${enableval}" in
   yes)
     AC_MSG_RESULT(yes)
@@ -211,7 +224,8 @@ AC_ARG_ENABLE(tests, [  --enable-tests    build tests. default=yes],
 
 
 AC_MSG_CHECKING(whether to enable trace)
-AC_ARG_ENABLE(trace, [  --enable-trace    enable trace. default=no],
+AC_ARG_ENABLE(trace, [  --enable-trace    
+                          enable logging trace messages, useful when debugging (default=no)],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
@@ -227,7 +241,8 @@ AC_ARG_ENABLE(trace, [  --enable-trace    enable trace. default=no],
 )
 
 AC_MSG_CHECKING(whether to enable multi threading)
-AC_ARG_ENABLE(multi-thread, [  --enable-multi-thread  enable multi thread. default=yes],
+AC_ARG_ENABLE(multi-thread, [  --enable-multi-thread  
+                          enable multi threading (default=yes)],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
@@ -243,7 +258,8 @@ AC_ARG_ENABLE(multi-thread, [  --enable-multi-thread  enable multi thread. defau
 )
 
 AC_MSG_CHECKING(whether to use openssl)
-AC_ARG_ENABLE(openssl, [  --enable-openssl  enable ssl. default=no],
+AC_ARG_ENABLE(openssl, [  --enable-openssl  
+                          enable OpenSSL support in client transport (default=no)],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
@@ -261,7 +277,8 @@ AC_ARG_ENABLE(openssl, [  --enable-openssl  enable ssl. default=no],
 )
 
 AC_MSG_CHECKING(whether to use libcurl)
-AC_ARG_ENABLE(libcurl, [  --enable-libcurl  enable libcurl. default=no],
+AC_ARG_ENABLE(libcurl, [  --enable-libcurl  
+                          enable libcurl based client transport (default=no)],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
@@ -278,34 +295,16 @@ AC_ARG_ENABLE(libcurl, [  --enable-libcurl  enable libcurl. default=no],
   CFLAGS="$CFLAGS"
 )
 
-
-AC_MSG_CHECKING(whether to build dynamic invocation client library)
-AC_ARG_ENABLE(diclient, [  --enable-diclient    build diclient library wrapper. default=no],
-[ case "${enableval}" in
-  no)
-    AC_MSG_RESULT(no)
-    DICLIENT_DIR=""
-    ;;
-  *)
-    AC_MSG_RESULT(yes)
-    DICLIENT_DIR="diclient"
-
-    ;;
-  esac ],
-  AC_MSG_RESULT(yes)
-  DICLIENT_DIR="diclient"
-)
-
 AC_MSG_CHECKING(whether to build xmpp)
 AC_ARG_ENABLE(xmpp, [  --enable-xmpp  
                           enable xmpp build (default=no)],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
-    XMPP_DIR="xmpp" 
     ;;
   *)
     AC_MSG_RESULT(yes)
+    XMPP_DIR="xmpp" 
     ;;
   esac ],
   AC_MSG_RESULT(no)
@@ -375,7 +374,6 @@ AC_CONFIG_FILES([Makefile \
     test/core/transport/Makefile\
     test/core/transport/http/Makefile \
     ides/Makefile \
-    ides/anjuta/Makefile \
     include/Makefile \
     axis2c.pc
     ])
