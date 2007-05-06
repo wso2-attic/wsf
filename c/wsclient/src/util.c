@@ -577,8 +577,8 @@ wsclient_set_https_transport_parameretes (const axutil_env_t *env,
 	param = axutil_param_create (env, NULL, NULL);
 	if (param)
 	{
-		axutil_param_set_name(param, env, (void *)axis2_strdup (env, AXIS2_HTTP_PROTOCOL_VERSION));
-		axutil_param_set_value(param, env, (void *)axis2_strdup (env, AXIS2_HTTP_HEADER_PROTOCOL_11));
+		axutil_param_set_name(param, env, (void *)axutil_strdup (env, AXIS2_HTTP_PROTOCOL_VERSION));
+		axutil_param_set_value(param, env, (void *)axutil_strdup (env, AXIS2_HTTP_HEADER_PROTOCOL_11));
 		axutil_param_set_locked(param, env, AXIS2_FALSE);
 	}
 	else 
