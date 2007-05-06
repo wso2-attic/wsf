@@ -131,6 +131,21 @@ AC_ARG_WITH(axis2_util,
   AC_MSG_RESULT(no)
 )
 
+AC_MSG_CHECKING(whether to build xmpp)
+AC_ARG_ENABLE(xmpp, [  --enable-xmpp  
+                          enable xmpp build (default=no)],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    XMPP_DIR="listener" 
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+  CFLAGS="$CFLAGS"
+)
 
 APACHE2INC=$apache2inc
 AXIOMINC=$axiominc
@@ -147,6 +162,7 @@ AC_SUBST(LIBXML2_DIR)
 AC_SUBST(GUTHTHILA_DIR)
 AC_SUBST(GUTHTHILA_LIBS)
 AC_SUBST(DICLIENT_DIR)
+AC_SUBST(XMPP_DIR)
 
 AC_CONFIG_FILES([Makefile \
     server/Makefile \
@@ -156,6 +172,7 @@ AC_CONFIG_FILES([Makefile \
     server/notify/Makefile \
     server/sg_math/Makefile \
     server/mtom/Makefile \
+    server/listener/Makefile \
     client/Makefile \
     client/echo/Makefile \
     client/math/Makefile \
