@@ -5,6 +5,9 @@ if [ -d  "axis2c" ];then
     cd axis2c;
     svn up;
     cd ..
+    cp build/axis2c/Makefile.am axis2c
+    cp build/axis2c/samples/server/Makefile.am axis2c/samples/server
+    cp build/axis2c/configure.ac axis2c
 else
 #    svn co https://svn.apache.org/repos/asf/webservices/axis2/trunk/c
 #    mv c axis2;
