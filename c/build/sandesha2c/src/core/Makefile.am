@@ -1,4 +1,4 @@
-prglibdir=$(prefix)/sandesha2
+prglibdir=$(prefix)/modules/sandesha2
 prglib_LTLIBRARIES = libsandesha2.la
 
 libsandesha2_la_SOURCES = sandesha2_msg_ctx.c\
