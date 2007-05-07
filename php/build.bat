@@ -44,17 +44,17 @@
 
 @cd ..\..\..\
 
-@mkdir wsfphp-bin-beta
+@mkdir wsfphp-alpha2-bin
 
-@xcopy /E /Q /I wsf_c\axis2c\build\axis2c-bin-1.0.0-win32 wsfphp-bin-beta\wsf_c\axis2c-bin-1.0.0-win32
+@xcopy /E /Q /I wsf_c\axis2c\build\axis2c-bin-1.0.0-win32 wsfphp-alpha2-bin\wsf_c\axis2c-bin-1.0.0-win32
 
-@xcopy /E /Q /I src\scripts wsfphp-bin-beta\scripts
+@xcopy /E /Q /I src\scripts wsfphp-alpha2-bin\scripts
 
-@XCOPY /E /Q /I src\samples wsfphp-bin-beta\samples
+@XCOPY /E /Q /I src\samples wsfphp-alpha2-bin\samples
 
-@copy src\README* wsfphp-bin-beta\
+@copy src\README* wsfphp-alpha2-bin\
 
-@copy src\LICENSE wsfphp-bin-beta\
+@copy src\LICENSE wsfphp-alpha2-bin\
 
 
 
