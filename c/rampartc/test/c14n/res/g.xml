@@ -1,0 +1,10 @@
+<a xmlns:x="urn:xxx" xmlns:y="urn:yyy" xmlns:z="urn:zzz">
+    <b x:attr1="attval1">
+        <x:c>
+            <d z:attr2="attval2">
+            </d>
+        </x:c>
+    </b>
+    <y:e/>
+    <z:f x:attr1="attrval1" z:attr2="attval2"/>
+</a>

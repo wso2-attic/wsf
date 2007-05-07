@@ -1,0 +1,4 @@
+<doc xmlns:test = "urn:test">
+    <e  c:attr="att" xmlns:c="urn:ccc" xmlns:a="urn:zzz"  />
+    <test:f id=''/>
+</doc>
