@@ -4,6 +4,9 @@ cd axis2c
 ./autogen.sh
 cd ../sandesha2c 
 ./autogen.sh
+cd samples
+./autogen.sh
+cd ..
 cd ../wsclient
 ./autogen.sh
 cd ..
