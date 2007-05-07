@@ -29,6 +29,10 @@ if test -d $srcdir/sandesha2c; then
     AC_CONFIG_SUBDIRS(sandesha2c)
 fi
 
+if test -d $srcdir/rampartc; then
+    AC_CONFIG_SUBDIRS(rampartc)
+fi
+
 if test -d $srcdir/wsclient; then
     AC_CONFIG_SUBDIRS(wsclient)
 fi

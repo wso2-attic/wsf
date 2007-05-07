@@ -9,6 +9,8 @@ cd samples
 cd ..
 cd ../wsclient
 ./autogen.sh
+cd ../rampartc
+./autogen.sh
 cd ..
 
 echo -n 'Running libtoolize...'
