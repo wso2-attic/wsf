@@ -6,7 +6,7 @@ libomopenssl_la_LIBADD  = -lssl\
     		-lcrypto
 
 INCLUDES = -I$(top_builddir)/include \
-			-I ../../../../util/include \
-			-I ../../../../include \
-			-I ../../../../axiom/include \
+			-I ../../../../axis2c/util/include \
+			-I ../../../../axis2c/include \
+			-I ../../../../axis2c/axiom/include \
 			@AXIS2INC@
