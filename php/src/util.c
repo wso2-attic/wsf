@@ -1041,20 +1041,20 @@ wsf_util_set_soap_fault(zval *this_ptr,
                     strcmp(fault_code,"Server") == 0 ||
                     strcmp(fault_code,"VersionMismatch") == 0 ||
                   strcmp(fault_code,"MustUnderstand") == 0) {
-                    add_property_string(this_ptr, WS_FAULT_CODE_NS, SOAP_1_1_ENV_NAMESPACE, 1);
+                    add_property_string(this_ptr, WS_FAULT_CODE_NS, WS_SOAP_1_1_NAMESPACE_URI, 1);
                 }
             } else if (soap_version == AXIOM_SOAP12) {
                 if (strcmp(fault_code,"Client") == 0) {
                     add_property_string(this_ptr, WS_FAULT_CODE, "Sender", 1);
-                    add_property_string(this_ptr, WS_FAULT_CODE_NS, SOAP_1_2_ENV_NAMESPACE, 1);
+                    add_property_string(this_ptr, WS_FAULT_CODE_NS, WS_SOAP_1_2_NAMESPACE_URI, 1);
                 } else if (strcmp(fault_code,"Server") == 0) {
                     add_property_string(this_ptr, WS_FAULT_CODE, "Receiver", 1);
-                    add_property_string(this_ptr, WS_FAULT_CODE_NS, SOAP_1_2_ENV_NAMESPACE, 1);
+                    add_property_string(this_ptr, WS_FAULT_CODE_NS, WS_SOAP_1_1_NAMESPACE_URI, 1);
                 } else if (strcmp(fault_code,"VersionMismatch") == 0 ||
                            strcmp(fault_code,"MustUnderstand") == 0 ||
                            strcmp(fault_code,"DataEncodingUnknown") == 0) {
                     add_property_string(this_ptr, WS_FAULT_CODE, fault_code, 1);
-                    add_property_string(this_ptr, WS_FAULT_CODE_NS, SOAP_1_2_ENV_NAMESPACE, 1);
+                    add_property_string(this_ptr, WS_FAULT_CODE_NS, WS_SOAP_1_2_NAMESPACE_URI, 1);
                 } else {
                     add_property_string(this_ptr, WS_FAULT_CODE, fault_code, 1);
                 }

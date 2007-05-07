@@ -52,15 +52,7 @@ zend_class_entry *ws_client_proxy_class_entry;
 zend_class_entry *ws_security_token_class_entry;
 zend_class_entry *ws_policy_class_entry;
 zend_class_entry *ws_param_class_entry;
-/** definitions from ext/soap */
 
-int le_url;
-int le_sdl;
-int le_typemap;
-
-HashTable defEnc, defEncIndex, defEncNs;
-
-/** end definitions from ext/soap */
 
 /* True global values, worker is thread safe,
  *  message receiver does not have state*/
