@@ -42,7 +42,26 @@
 
 @copy /Y sandesha2\init_mysql.bat .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\init_mysql.bat
 
-@cd ..\..\axis2c\build\axis2c-bin-1.0.0-win32\bin
+@cd ..\..\..\
+
+@mkdir wsfphp-bin-beta
+
+@xcopy /E /Q /I wsf_c\axis2c\build\axis2c-bin-1.0.0-win32 wsfphp-bin-beta\wsf_c\axis2c-bin-1.0.0-win32
+
+@xcopy /E /Q /I src\scripts wsfphp-bin-beta\scripts
+
+@XCOPY /E /Q /I src\samples wsfphp-bin-beta\samples
+
+@copy src\README* wsfphp-bin-beta\
+
+@copy src\LICENSE wsfphp-bin-beta\
+
+
+
+
+
+
+
 
 
 
