@@ -11,7 +11,7 @@ INCLUDES = -I$(top_builddir)/include \
 		-I ../../../axis2c/util/include \
 		    @AXIS2INC@
 
-test_c14n_LDADD  = ${AXIS2C_HOME}/lib/libaxutil.la \
-		    	   ${AXIS2C_HOME}/lib/libaxis2_axiom.la \
-		    	   ${AXIS2C_HOME}/lib/libaxis2_libxml2.la \
-				   $(top_builddir)/src/omxmlsec/c14n/liboxsc14n.la 
+test_c14n_LDADD  = ../../../axis2c/util/src/libaxutil.la \
+		    	   ../../../axis2c/axiom/src/om/libaxis2_axiom.la \
+		    	   ../../../axis2c/axiom/src/parser/libxml2/libaxis2_libxml2.la \
+				   ../../src/omxmlsec/c14n/liboxsc14n.la 

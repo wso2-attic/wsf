@@ -19,8 +19,8 @@ test_LDADD   = $(top_builddir)/src/util/librampart_util.la \
                     $(top_builddir)/src/omxmlsec/libomxmlsec.la \
                     $(top_builddir)/src/omxmlsec/openssl/libomopenssl.la \
                     $(top_builddir)/src/omxmlsec/tokens/liboxstokens.la \
-		    ${AXIS2C_HOME}/lib/libaxis2_parser.la \
-		    ${AXIS2C_HOME}/lib/libaxis2_axiom.la \
-		    ${AXIS2C_HOME}/lib/libaxutil.la \
+		    ../../../../axis2c/axiom/src/parser/libxml2/libaxis2_parser.la \
+		    ../../../../axis2c/axiom/src/om/libaxis2_axiom.la \
+		    ../../../../axis2c/util/src/libaxutil.la \
 		-lxml2
 
