@@ -1,5 +1,5 @@
 datadir=$(prefix)/modules/sandesha2
-SUBDIRS = src
+SUBDIRS = src samples
 data_DATA = LICENSE config/module.xml \
 			include/sandesha2_client_constants.h \
 			include/sandesha2_constants.h \
