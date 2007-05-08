@@ -53,11 +53,14 @@ cp -r build/xmpp/samples/listener axis2c/samples/server
 cp build/axis2c/src/core/transport/http/server/simple_axis2_server/Makefile.am axis2c/src/core/transport/http/server/simple_axis2_server/
 cp build/axis2c/src/core/transport/http/sender/Makefile.am axis2c/src/core/transport/http/sender
 cp build/axis2c/src/core/transport/http/sender/ssl/Makefile.am axis2c/src/core/transport/http/sender/ssl/
+cp build/axis2c/src/core/transport/http/Makefile.am axis2c/src/core/transport/http
 cp build/axis2c/src/core/transport/Makefile.am axis2c/src/core/transport
 cp build/axis2c/src/core/Makefile.am axis2c/src/core
 
+cp build/savanc/src/Makefile.am savanc/src/
+
 ./autogen.sh
-./configure --prefix=`pwd`/deploy --enable-openssl=yes --enable-rampart=yes --enable-xmpp=no
+./configure --prefix=`pwd`/deploy --enable-openssl=yes --enable-rampart=yes --enable-xmpp=no 
 make
 
 
