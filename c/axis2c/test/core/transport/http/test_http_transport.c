@@ -194,40 +194,40 @@ void test_https_client(const axutil_env_t *env)
     /* Add an ssl certificate variable */
     /*setenv("AXIS2_SSL_CA_FILE", "cert.pem", 1);*/
     header = axis2_http_header_create(env, "Host", axutil_url_get_server(url, env));
-    AXIS2_HTTP_SIMPLE_REQUEST_ADD_HEADER(request, env, header);
+    axis2_http_simple_request_add_header(request, env, header);
     client = axis2_http_client_create(env, url);
 
     /* if you weant to test the proxy uncomment following */
     /*AXIS2_HTTP_CLIENT_SET_PROXY(client, env, "127.0.0.1", 8080);*/
 
-    status = AXIS2_HTTP_CLIENT_SEND(client, env, request);
+    status = axis2_http_client_send(client, env, request, NULL);
     if (status < 0)
     {
         printf("Test FAILED .........Can't send the request. Status :%d\n", status);
         return;
     }
-    status = AXIS2_HTTP_CLIENT_RECIEVE_HEADER(client, env);
+    status = axis2_http_client_recieve_header(client, env);
     if (status < 0)
     {
         printf("Test FAILED ......... Can't recieve. Status: %d\n", status);
         return;
     }
-    response = AXIS2_HTTP_CLIENT_GET_RESPONSE(client, env);
+    response = axis2_http_client_get_response(client, env);
     if (! response)
     {
         printf("Test Failed : NULL response");
         return;
     }
-    printf("Content Type :%s\n", AXIS2_HTTP_SIMPLE_RESPONSE_GET_CONTENT_TYPE(
+    printf("Content Type :%s\n", axis2_http_simple_response_get_content_type(
                 response, env));
-    printf("Content Length :%d\n", AXIS2_HTTP_SIMPLE_RESPONSE_GET_CONTENT_LENGTH(
+    printf("Content Length :%d\n", axis2_http_simple_response_get_content_length(
                 response, env));
     printf("Status code :%d\n", status);
-    body_bytes_len = AXIS2_HTTP_SIMPLE_RESPONSE_GET_BODY_BYTES(response, env, &body_bytes);
+    body_bytes_len = axis2_http_simple_response_get_body_bytes(response, env, &body_bytes);
 
-    AXIS2_HTTP_CLIENT_FREE(client, env);
-    AXIS2_HTTP_SIMPLE_REQUEST_FREE(request, env);
-    AXIS2_STREAM_FREE(request_body, env);
+    axis2_http_client_free(client, env);
+    axis2_http_simple_request_free(request, env);
+    axutil_stream_free(request_body, env);
     AXIS2_FREE(env->allocator, body_bytes);
     printf("Finished https_client tests ..........\n\n");
 #endif
