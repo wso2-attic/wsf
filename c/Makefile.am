@@ -1,1 +1,1 @@
-SUBDIRS=axis2c sandesha2c rampartc wsclient
+SUBDIRS=axis2c sandesha2c rampartc savanc wsclient
