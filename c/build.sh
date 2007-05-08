@@ -1,6 +1,8 @@
 #!/bin/bash
 #./autogen.sh
 
+set -e 
+
 if [ -d  "axis2c" ];then
     cd axis2c;
     svn up;
@@ -55,7 +57,7 @@ cp build/axis2c/src/core/transport/Makefile.am axis2c/src/core/transport
 cp build/axis2c/src/core/Makefile.am axis2c/src/core
 
 ./autogen.sh
-./configure --prefix=`pwd`/deploy --enable-openssl=yes --enable-rampart=yes --enable-xmpp=yes --with-mysql=/usr/include/mysql 
+./configure --prefix=`pwd`/deploy --enable-openssl=yes --enable-rampart=yes --enable-xmpp=no
 make
 
 
