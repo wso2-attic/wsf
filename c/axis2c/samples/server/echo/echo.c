@@ -42,7 +42,7 @@ axis2_echo_echo(const axutil_env_t *env, axiom_node_t *node)
         return NULL;
     }
 
-    text_parent_node = axiom_node_get_first_child(node, env);
+    text_parent_node = axiom_node_get_first_element(node, env);
     if (!text_parent_node) /* 'text' node */
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_SVC_SKEL_INVALID_XML_FORMAT_IN_REQUEST, AXIS2_FAILURE);
