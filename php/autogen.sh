@@ -3,6 +3,10 @@ cd wsf_c/axis2c
 ./autogen.sh
 cd ../sandesha2c
 ./autogen.sh
+cd ../savanc
+./autogen.sh
+cd ../rampartc
+./autogen.sh
 cd ../../
 echo -n 'Running libtoolize...'
 if libtoolize --force > /dev/null 2>&1; then
