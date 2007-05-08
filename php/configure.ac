@@ -34,6 +34,14 @@ if test -d $srcdir/wsf_c/sandesha2c; then
     AC_CONFIG_SUBDIRS(wsf_c/sandesha2c)
 fi
 
+if test -d $srcdir/wsf_c/rampartc; then
+    AC_CONFIG_SUBDIRS(wsf_c/rampartc)
+fi
+
+if test -d $srcdir/wsf_c/savanc; then
+    AC_CONFIG_SUBDIRS(wsf_c/savanc)
+fi
+
 if test -d $srcdir/src; then
 dnl    AC_CONFIG_SUBDIRS(wsf_php, [$wsf_php_flags --prefix=/usr/local/axxxis])
     AC_CONFIG_SUBDIRS(src)
