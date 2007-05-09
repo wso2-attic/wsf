@@ -11,6 +11,9 @@ cd ../wsclient
 ./autogen.sh
 cd ../rampartc
 ./autogen.sh
+cd ../savanc
+./autogen.sh
+
 cd ..
 
 echo -n 'Running libtoolize...'
