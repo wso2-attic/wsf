@@ -15,3 +15,5 @@ INCLUDES = -I$(top_builddir)/include \
 		-I ../../../axis2c/axiom/include \
 		-I ../../../axis2c/include \
 		   	@AXIS2INC@
+
+EXTRA_DIST=mysql
