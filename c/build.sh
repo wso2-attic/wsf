@@ -58,6 +58,7 @@ cp build/axis2c/src/core/transport/Makefile.am axis2c/src/core/transport
 cp build/axis2c/src/core/Makefile.am axis2c/src/core
 
 cp build/savanc/src/Makefile.am savanc/src/
+cp build/savanc/samples/client/subscriber/ savanc/samples/client/subscriber/
 
 ./autogen.sh
 ./configure --prefix=`pwd`/deploy --enable-openssl=yes --enable-rampart=yes --enable-xmpp=no 
