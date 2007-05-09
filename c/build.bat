@@ -1,0 +1,63 @@
+@echo off
+@call vcvars32.bat /nologo
+
+@cd axis2c\build
+
+@if exist axis2c-bin-1.0.0-win32 rmdir /s /q axis2c-bin-1.0.0-win32
+
+@cd win32
+
+@nmake dist
+
+@cd ..\..\..\rampartc\build\win32
+
+@nmake dist
+
+@cd ..
+
+@xcopy /E /Q /I rampartc-0.9\modules\rampart .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\modules\rampart
+
+@copy /E /Q /I rampartc-0.9\include\*.h .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\include\*.h
+
+
+@copy  rampartc-0.9\modules\rampart\mod_rampart.lib .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\lib\
+@copy  rampartc-0.9\modules\rampart\mod_rampart.dll .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\lib\
+
+
+@cd ..\..\sandesha2c\build\win32
+
+@nmake dist
+
+@cd ..
+
+@xcopy /E /Q /I sandesha2\modules\sandesha2 .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\modules\sandesha2
+
+@xcopy /E /Q /I sandesha2\modules\sandesha2\sandesha2.lib  .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\sandesha2.lib
+
+@xcopy /E /Q /I sandesha2\modules\sandesha2\sandesha2.dll  .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\sandesha2.dll
+
+@copy sandesha2\samples\*.exe .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\bin\samples\
+
+@xcopy /E /Q /I sandesha2\services\RMSampleService .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\services\RMSampleService
+
+
+@copy /Y sandesha2\axis2.xml .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\axis2.xml
+
+@copy /Y sandesha2\include\*.h  .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\include\
+
+@copy /Y sandesha2\mysql_schema.txt .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\mysql_schema.txt
+
+@copy /Y sandesha2\sqlite_schema.bat  .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\sqlite_schema.bat
+
+@copy /Y sandesha2\init_mysql.bat .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\init_mysql.bat
+
+@cd ..\..\
+
+@if not exist wso2-wsf-c-1.0alhpa2-bin mkdir wso2-wsf-c-1.0alhpa2-bin
+
+@xcopy /E /Q /I axis2c\build\axis2c-bin-1.0.0-win32 wso2-wsf-c-1.0alhpa2-bin
+
+
+
+
+
