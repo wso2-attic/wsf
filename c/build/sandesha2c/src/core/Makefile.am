@@ -11,8 +11,7 @@ INCLUDES = -I$(top_builddir)/include \
 		-I ../../../axis2c/include \
             @AXIS2INC@
 
-libsandesha2_la_LIBADD = ../client/libsandesha2_client.la\
-                        ../handlers/libsandesha_handlers.la\
+libsandesha2_la_LIBADD = ../handlers/libsandesha_handlers.la\
                         ../msgprocessors/libsandesha2_msgprocessors.la\
                         ../storage/beans/libsandesha2_storage_beans.la\
 						../storage/libsandesha2_storage.la\
