@@ -18,7 +18,8 @@
 #ifndef WSCLIENT_OPTION_H
 #define WSCLIENT_OPTION_H
 #include <axis2_util.h>
-#include <util.h>
+#include "util.h"
+
 
 #define no_argument 0
 #define required_argument 1

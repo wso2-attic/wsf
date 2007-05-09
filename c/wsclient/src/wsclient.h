@@ -20,7 +20,7 @@
 
 #include <axis2_utils.h>
 #include <axis2_utils_defines.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <platforms/axis2_platform_auto_sense.h>
 #ifdef __cplusplus
 extern "C"
