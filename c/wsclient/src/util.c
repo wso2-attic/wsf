@@ -271,7 +271,7 @@ wsclient_set_attachment (const axutil_env_t *env,
 			}
 		}
 
-		child_node = axiom_node_get_first_child (node, env);
+		child_node = axiom_node_get_first_element (node, env);
 		while (child_node)
 		{
 			wsclient_set_attachment (env, child_node, base_dir, is_mtom_enabled); 
@@ -371,12 +371,12 @@ wsclient_get_attachment (const axutil_env_t *env,
 			}
 		}
 
-		child_node = axiom_node_get_first_child (node, env);
+		child_node = axiom_node_get_first_element (node, env);
 		while (child_node)
 		{
 			wsclient_get_attachment (env, 
 									 child_node, 
-									 base_dir, 
+									 base_dir,
 									 is_mtom_enabled); 
 			child_node = axiom_node_get_next_sibling (child_node, env);
 		}
