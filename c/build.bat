@@ -45,11 +45,7 @@
 
 @copy /Y sandesha2\include\*.h  .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\include\
 
-@copy /Y sandesha2\mysql_schema.txt .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\mysql_schema.txt
-
 @copy /Y sandesha2\sqlite_schema.bat  .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\sqlite_schema.bat
-
-@copy /Y sandesha2\init_mysql.bat .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\init_mysql.bat
 
 @cd ..\..\
 
