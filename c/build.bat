@@ -15,13 +15,13 @@
 
 @cd ..
 
-@xcopy /E /Q /I rampartc-0.9\modules\rampart .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\modules\rampart
+@xcopy /E /Q /I rampartc-0.90\modules\rampart .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\modules\rampart
 
-@copy /Y rampartc-0.9\include\*.h .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\include\
+@copy /Y rampartc-0.90\include\*.h .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\include\
 
 
-@copy  rampartc-0.9\modules\rampart\mod_rampart.lib .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\lib\
-@copy  rampartc-0.9\modules\rampart\mod_rampart.dll .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\lib\
+@copy  rampartc-0.90\modules\rampart\mod_rampart.lib .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\lib\
+@copy  rampartc-0.90\modules\rampart\mod_rampart.dll .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\lib\
 
 
 @cd ..\..\sandesha2c\build\win32
