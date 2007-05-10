@@ -9,19 +9,19 @@
 
 @nmake dist
 
-@cd .\..\..\rampart\build\win32
+@cd .\..\..\..\rampartc\build\win32
 
 @nmake dist
 
 @cd .\..
 
-@xcopy /E /Q /I rampartc-0.9\modules\rampart .\..\..\build\axis2c-bin-1.0.0-win32\modules\rampart
+@xcopy /E /Q /I rampartc-0.9\modules\rampart .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\modules\rampart
 
-@copy  rampartc-0.9\modules\rampart\mod_rampart.lib .\..\..\build\axis2c-bin-1.0.0-win32\lib\
-@copy  rampartc-0.9\modules\rampart\mod_rampart.dll .\..\..\build\axis2c-bin-1.0.0-win32\lib\
+@copy /Y rampartc-0.9\modules\rampart\mod_rampart.lib .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\lib\
+@copy /Y rampartc-0.9\modules\rampart\mod_rampart.dll .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\lib\
 
 
-@cd ..\..\..\sandesha2c\build\win32
+@cd ..\..\sandesha2c\build\win32
 
 @nmake dist
 
@@ -44,23 +44,23 @@ rem @xcopy /E /Q /I sandesha2\samples\bin\RMSampleService .\..\..\axis2c\build\a
 
 @copy /Y sandesha2\init_mysql.bat .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\init_mysql.bat
 
-@copy E:\sqlite-source-3_3_8\sqlite3.dll .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\lib\
+@copy /Y E:\sqlite-source-3_3_8\sqlite3.dll .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\lib\
 
-@copy E:\sqlite-source-3_3_8\sqlite3.exe .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\lib\
+@copy /Y E:\sqlite-source-3_3_8\sqlite3.exe .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\lib\
 
 @cd ..\..\..\
 
-@mkdir wsfphp-alpha2-bin
+@mkdir wso2-wsf-php-1.0alpha2-bin
 
-@xcopy /E /Q /I wsf_c\axis2c\build\axis2c-bin-1.0.0-win32 wsfphp-alpha2-bin\wsf_c\axis2c-bin-1.0.0-win32
+@xcopy /E /Q /I wsf_c\axis2c\build\axis2c-bin-1.0.0-win32 wso2-wsf-php-1.0alpha2-bin\wsf_c
 
-@xcopy /E /Q /I src\scripts wsfphp-alpha2-bin\scripts
+@xcopy /E /Q /I src\scripts wso2-wsf-php-1.0alpha2-bin\scripts
 
-@XCOPY /E /Q /I src\samples wsfphp-alpha2-bin\samples
+@XCOPY /E /Q /I src\samples wso2-wsf-php-1.0alpha2-bin\samples
 
-@copy src\README* wsfphp-alpha2-bin\
+@copy /Y src\README* wso2-wsf-php-1.0alpha2-bin\
 
-@copy src\LICENSE wsfphp-alpha2-bin\
+@copy /Y src\LICENSE wso2-wsf-php-1.0alpha2-bin\
 
 
 
