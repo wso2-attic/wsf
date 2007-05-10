@@ -75,9 +75,9 @@
 @cd ..\..
 
 
-@if not exist wso2-wsf-c-1.0alhpa2-bin mkdir wso2-wsf-c-1.0alhpa2-bin
+@if not exist wso2-wsf-c-bin-1.0alhpa2 mkdir wso2-wsf-c-bin-1.0alhpa2
 
-@xcopy /E /Q /I axis2c\build\axis2c-bin-1.0.0-win32 wso2-wsf-c-1.0alhpa2-bin
+@xcopy /E /Q /I axis2c\build\axis2c-bin-1.0.0-win32 wso2-wsf-c-bin-1.0alhpa2
 
 
 
