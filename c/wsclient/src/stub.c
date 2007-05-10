@@ -93,7 +93,6 @@ wsclient_svc_option (const axutil_env_t *env,
 	axutil_property_t *pw_type;
 	axutil_property_t *items;
 	axutil_property_t *rest_property;
-	axutil_property_t *get_property;
 
 	wsclient_options_t *wsclient_options = NULL;
 	int size;
@@ -431,11 +430,7 @@ wsclient_svc_option (const axutil_env_t *env,
 								   rest_property);
 		if (AXIS2_TRUE == is_get_enabled)
 		{
-			get_property = axutil_property_create(env);
-/* 			AXUTIL_PROPERTY_SET_VALUE(get_property, env,  */
-/* 									 axutil_strdup(AXIS2_HTTP_HEADER_GET, env)); */
-			axis2_options_set_property(options, env, AXIS2_HTTP_METHOD,
-									   get_property);
+            axis2_options_set_http_method(options, env, AXIS2_HTTP_GET);
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 							"[wsclient] set get property ");
 		}
