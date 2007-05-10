@@ -6,6 +6,6 @@ prglib_DATA= services.xml
 EXTRA_DIST = services.xml
 noinst_HEADERS = rm_sample_svc.h
 libRMSampleService_la_SOURCES = rm_sample_svc.c rm_sample_svc_skel.c
-INCLUDES = -I$(AXIS2C_HOME)/include/axis2-1.0 \
+INCLUDES = -I$(prefix)/include/axis2-1.0 \
 			@UTILINC@ \
 			@AXIOMINC@

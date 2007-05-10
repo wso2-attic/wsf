@@ -36,7 +36,7 @@ AC_FUNC_REALLOC
 
 PKG_CHECK_MODULES(LIBXML2, libxml-2.0)
 if test "$GCC" = "yes"; then
-    CFLAGS="$CFLAGS $LIBXML2_CFLAGS $GUTHTHILA_CFLAGS -Werror -g"
+    CFLAGS="$CFLAGS $LIBXML2_CFLAGS $GUTHTHILA_CFLAGS -Wall -g"
 fi
 
 AC_MSG_CHECKING(whether to build dynamic invocation client)

@@ -5,8 +5,8 @@ samples_DATA=rm_echo_1_1.c Makefile.am Makefile.in
 rm_echo_1_1_SOURCES = rm_echo_1_1.c echo_util.c
 
 rm_echo_1_1_LDADD   =  \
-                    -L$(AXIS2C_HOME)/lib \
-                    -L$(AXIS2C_HOME)/modules/sandesha2 \
+                    -L$(prefix)/lib \
+                    -L$(prefix)/modules/sandesha2/libsandesha2.la \
 					-laxutil \
                     -laxis2_axiom \
                     -laxis2_engine \
@@ -18,7 +18,7 @@ rm_echo_1_1_LDADD   =  \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
-INCLUDES = -I$(AXIS2C_HOME)/include/axis2-1.0 \
+INCLUDES = -I$(prefix)/include/axis2-1.0 \
 			-I../../include \
 			@UTILINC@ \
 			@AXIOMINC@
