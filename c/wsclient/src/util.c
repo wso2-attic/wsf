@@ -190,8 +190,6 @@ wsclient_soap_out (const axutil_env_t *env,
 		}
 		else
 			return AXIS2_FAILURE;
-
-		axiom_output_free (om_output, env);
 	}
 	return AXIS2_SUCCESS;
 }
