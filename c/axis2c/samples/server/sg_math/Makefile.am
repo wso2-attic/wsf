@@ -14,6 +14,6 @@ libadd_la_SOURCES = add.c add_skeleton.c
 libsub_la_SOURCES = sub.c sub_skeleton.c
 libmul_la_SOURCES = mul.c mul_skeleton.c
 libdiv_la_SOURCES = div.c div_skeleton.c
-INCLUDES = -I$(AXIS2C_HOME)/include/axis2-1.0 \
+INCLUDES = -I$(prefix)/include/axis2-1.0 \
 			@UTILINC@ \
 			@AXIOMINC@

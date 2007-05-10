@@ -8,6 +8,6 @@ noinst_HEADERS = notify.h
 SUBDIRS =
 libnotify_la_SOURCES = notify.c notify_skeleton.c
 libnotify_la_LIBADD  =
-INCLUDES = -I$(AXIS2C_HOME)/include/axis2-1.0 \
+INCLUDES = -I$(prefix)/include/axis2-1.0 \
 			@UTILINC@ \
 			@AXIOMINC@
