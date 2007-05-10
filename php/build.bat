@@ -38,11 +38,7 @@ rem @xcopy /E /Q /I sandesha2\samples\bin\RMSampleService .\..\..\axis2c\build\a
 
 @copy /Y sandesha2\axis2.xml .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\axis2.xml
 
-@copy /Y sandesha2\mysql_schema.txt .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\mysql_schema.txt
-
 @copy /Y sandesha2\sqlite_schema.bat  .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\sqlite_schema.bat
-
-@copy /Y sandesha2\init_mysql.bat .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\init_mysql.bat
 
 @copy /Y E:\sqlite-source-3_3_8\sqlite3.dll .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\lib\
 
