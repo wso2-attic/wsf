@@ -628,9 +628,7 @@ void wsf_util_create_svc_from_svc_info(
 	}else {
     	svc_qname = axutil_qname_create(env, svc_info->svc_name, NULL, NULL);
 	    svc_info->svc = axis2_svc_create_with_qname(env, svc_qname);
-        /*
 		axutil_qname_free(svc_qname, env);
-		*/
 	} 
 	return;
 }

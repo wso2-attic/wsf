@@ -502,9 +502,7 @@ wsf_client_set_module_param_option(axutil_env_t *env,
 
 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client setting %s module param %s to %s ",
 		module_name, module_option ,module_option_value);
-	/*
 	axutil_qname_free(module_qname, env);
-	*/
 	return AXIS2_SUCCESS;
 }
 
@@ -808,7 +806,7 @@ int wsf_client_do_request(
 	/** convert payload to an axiom node */
     request_payload = wsf_util_read_payload(reader, env);
     
-    /* axiom_xml_reader_free(reader, env); */
+     axiom_xml_reader_free(reader, env); 
 	
     if (!request_payload) {
  	    zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 1 TSRMLS_CC, 
