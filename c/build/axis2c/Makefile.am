@@ -8,7 +8,7 @@ pkgconfig_DATA = axis2c.pc
 
 SUBDIRS = util $(GUTHTHILA_DIR) axiom src $(TESTDIR) include ides
 include_HEADERS=$(top_builddir)/include/*.h
-data_DATA= samples/server/axis2.xml README \
+data_DATA= README \
 	INSTALL CREDITS COPYING NEWS NOTICE 
 
 logs_DATA=
