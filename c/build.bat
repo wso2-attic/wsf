@@ -47,6 +47,9 @@
 
 @copy /Y sandesha2\sqlite_schema.bat  .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\sqlite_schema.bat
 
+@copy /Y  sandesha2\bin\samples .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\bin\samples
+
+
 @cd ..\..\
 
 @cd wsclient
