@@ -5,7 +5,7 @@ samples_DATA=yahoo_client.c Makefile.am Makefile.in
 yahoosearch_SOURCES = yahoo_client.c
 
 yahoosearch_LDADD   =    $(LDFLAGS) \
-                    -L$(AXIS2C_HOME)/lib \
+                    -L$(prefix)/lib \
 					-laxutil \
                     -laxis2_axiom \
                     -laxis2_engine \
@@ -15,7 +15,7 @@ yahoosearch_LDADD   =    $(LDFLAGS) \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
-INCLUDES = -I$(AXIS2C_HOME)/include/axis2-1.0 \
+INCLUDES = -I$(prefix)/include/axis2-1.0 \
 			@UTILINC@ \
 			@AXIOMINC@
 

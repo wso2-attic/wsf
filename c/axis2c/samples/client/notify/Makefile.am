@@ -5,7 +5,7 @@ samples_DATA=notify_client.c Makefile.am Makefile.in
 notify_SOURCES = notify_client.c
 
 notify_LDADD   =  \
-                    -L$(AXIS2C_HOME)/lib \
+                    -L$(prefix)/lib \
 					-laxutil \
                     -laxis2_axiom \
                     -laxis2_engine \
@@ -16,7 +16,7 @@ notify_LDADD   =  \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
-INCLUDES = -I$(AXIS2C_HOME)/include/axis2-1.0 \
+INCLUDES = -I$(prefix)/include/axis2-1.0 \
 			@UTILINC@ \
 			@AXIOMINC@
 

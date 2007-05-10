@@ -5,7 +5,7 @@ samples_DATA=google_client.c Makefile.am README.txt Makefile.in
 google_SOURCES = google_client.c
 
 google_LDADD   =    $(LDFLAGS) \
-                    -L$(AXIS2C_HOME)/lib \
+                    -L$(prefix)/lib \
 					-laxutil \
                     -laxis2_axiom \
                     -laxis2_engine \
@@ -15,7 +15,7 @@ google_LDADD   =    $(LDFLAGS) \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
-INCLUDES = -I$(AXIS2C_HOME)/include/axis2-1.0 \
+INCLUDES = -I$(prefix)/include/axis2-1.0 \
 			@UTILINC@ \
 			@AXIOMINC@
 

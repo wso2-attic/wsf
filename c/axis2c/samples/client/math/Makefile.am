@@ -7,7 +7,7 @@ math_SOURCES = axis2_math_stub.c \
                 math_client.c
 
 math_LDADD   =  \
-                -L$(AXIS2C_HOME)/lib \
+                -L$(prefix)/lib \
 					-laxutil \
                     -laxis2_axiom \
                     -laxis2_engine \
@@ -18,7 +18,7 @@ math_LDADD   =  \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
-INCLUDES = -I$(AXIS2C_HOME)/include/axis2-1.0 \
+INCLUDES = -I$(prefix)/include/axis2-1.0 \
 			@UTILINC@ \
 			@AXIOMINC@
 

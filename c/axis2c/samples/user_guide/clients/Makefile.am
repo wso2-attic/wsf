@@ -13,7 +13,7 @@ echo_non_blocking_dual_SOURCES = echo_non_blocking_dual.c echo_util.c
 echo_blocking_soap11_SOURCES = echo_blocking_soap11.c echo_util.c
 
 LINK_FLAGS = $(LDFLAGS) \
-             -L$(AXIS2C_HOME)/lib \
+             -L$(prefix)/lib \
 			 -laxutil \
              -laxis2_axiom \
              -laxis2_engine \
@@ -32,7 +32,7 @@ echo_blocking_dual_LDADD = $(LINK_FLAGS)
 echo_non_blocking_dual_LDADD = $(LINK_FLAGS)
 echo_blocking_soap11_LDADD = $(LINK_FLAGS)
 
-INCLUDES = -I$(AXIS2C_HOME)/include/axis2-1.0 \
+INCLUDES = -I$(prefix)/include/axis2-1.0 \
 			@UTILINC@ \
 			@AXIOMINC@
 
