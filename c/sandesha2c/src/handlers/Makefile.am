@@ -6,4 +6,6 @@ libsandesha_handlers_la_SOURCES = \
 							sandesha2_out_handler.c
 
 INCLUDES = -I$(top_builddir)/include \
-		   	@AXIS2INC@
+		-I ../../../axis2c/include \
+		-I ../../../axis2c/axiom/include \
+		-I ../../../axis2c/util/include 

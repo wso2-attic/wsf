@@ -9,5 +9,7 @@ libsandesha2_client_la_SOURCES = \
 libsandesha2_client_la_LIBADD = ../core/libsandesha2.la
 
 INCLUDES = -I$(top_builddir)/include \
-		   	@AXIS2INC@
+		-I ../../../axis2c/include \
+		-I ../../../axis2c/util/include \
+		-I ../../../axis2c/axiom/include 
 

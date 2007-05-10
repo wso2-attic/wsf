@@ -14,7 +14,9 @@ libsandesha2_permanent_la_SOURCES = \
 INCLUDES = -I$(top_builddir)/include \
 			-I$(top_builddir)/include/sandesha2 \
 			-I. \
-			@AXIS2INC@ \
+			-I ../../../../axis2c/include \
+			-I ../../../../axis2c/axiom/include \
+			-I ../../../../axis2c/util/include \
 			@SQLITEINC@
 
 EXTRA_DIST=sandesha2_permanent_bean_mgr.h \
