@@ -223,7 +223,7 @@ sandesha2_in_handler_invoke(
     {
         sandesha2_msg_processor_process_in_msg(msg_processor, env, rm_msg_ctx);
     }
-    if(!within_transaction && !rolled_back)
+    if(!within_transaction && !rolled_back && transaction)
     {
         axutil_property_t *prop = NULL;
         sandesha2_transaction_commit(transaction, env);
