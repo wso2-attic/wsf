@@ -8,7 +8,7 @@ data_DATA= README.txt update_n_run.sh deploy_client_repo.sh
 echo_SOURCES = echo.c
 
 echo_LDADD   = $(LDFLAGS) \
-                    -L$(AXIS2C_HOME)/lib \
+                    -L$(prefix)/lib \
 					-laxutil \
                     -laxis2_axiom \
                     -laxis2_engine \
@@ -19,7 +19,7 @@ echo_LDADD   = $(LDFLAGS) \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
-INCLUDES = -I$(AXIS2C_HOME)/include/axis2-1.0 \
+INCLUDES = -I$(prefix)/include/axis2-1.0 \
             -I ../../../include \
 			@UTILINC@ \
 			@AXIOMINC@
