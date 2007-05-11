@@ -71,6 +71,15 @@ wsf_client_set_security_options(
 		axis2_options_t *client_options, 
 		axis2_svc_client_t *svc_client TSRMLS_DC);
 
+void 
+wsf_client_set_savan_client(
+		HashTable *client_ht, 
+		HashTable *msg_ht,
+		axutil_env_t *env, 
+		axis2_options_t *client_options, 
+		axis2_svc_client_t *svc_client TSRMLS_DC);
+
+
 int 
 wsf_client_get_rm_version(HashTable *ht TSRMLS_DC);
 
@@ -80,7 +89,7 @@ wsf_client_set_soap_action(HashTable *client_ht,
 			   axutil_env_t *env,
 			   axis2_options_t *client_options TSRMLS_DC);
 
-int 
+int
 wsf_client_set_soap_action(HashTable *client_ht, 
 	HashTable *msg_ht,
 	axutil_env_t *env,
