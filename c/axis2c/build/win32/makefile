@@ -262,8 +262,6 @@ clean:
 	if exist $(AXIS2_BINDIR) rmdir /S /Q $(AXIS2_BINDIR)
 	if exist $(AXIS2_INTDIR) rmdir /S /Q $(AXIS2_INTDIR)
 	
-clean_make_dir:
-	del *.obj del *.exe del *.exp
 
 axis2_util: 
 	$(CC) $(CFLAGS) $(AXIS2_UTIL_SRC) /Fo$(AXIS2_INTDIR_UTIL)\ /c
@@ -372,13 +370,13 @@ axis2_IIS_module:
 ################ samples ####################
 axis2_mod_log:
 	if not exist $(AXIS2_INTDIR_SAMPLES)\mod_log mkdir $(AXIS2_INTDIR_SAMPLES)\mod_log
-	if not exist $(AXIS2_SAMPLES)\logging mkdir $(AXIS2_SAMPLES)\logging
+	if not exist $(AXIS2_MODULES)\logging mkdir $(AXIS2_MODULES)\logging
 
 	$(CC) $(CFLAGS)  $(AXIS2_SOURCE_DIR)\src\modules\mod_log\*.c /Fo$(AXIS2_INTDIR_SAMPLES)\mod_log\ /c
 	$(LD) $(LDFLAGS) $(AXIS2_INTDIR_SAMPLES)\mod_log\*.obj $(AXUTIL).lib $(AXIOM).lib \
-	$(AXIS2_PARSER).lib $(LIBS) $(AXIS2_ENGINE).lib /DLL /OUT:$(AXIS2_SAMPLES)\logging\axis2_mod_log.dll 
+	$(AXIS2_PARSER).lib $(LIBS) $(AXIS2_ENGINE).lib /DLL /OUT:$(AXIS2_MODULES)\logging\axis2_mod_log.dll 
 	
-	copy $(AXIS2_SOURCE_DIR)\src\modules\mod_log\module.xml $(AXIS2_SAMPLES)\logging
+	copy $(AXIS2_SOURCE_DIR)\src\modules\mod_log\module.xml $(AXIS2_MODULES)\logging
 
 #sample services
 
@@ -815,9 +813,9 @@ axis2:
 	
 ##############################################################################################
 
-build: clean_make_dir clean deploy axis2_core axis2_samples copy_include clean_make_dir 
+build: clean deploy axis2_core axis2_samples copy_include
 
-build_with_guththila : clean_make_dir clean deploy axis2_core_guththila axis2_samples copy_include clean_make_dir
+build_with_guththila : clean deploy axis2_core_guththila axis2_samples copy_include
 
 ##############################################################################################
 

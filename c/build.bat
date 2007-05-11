@@ -70,6 +70,10 @@
 
 @xcopy /E /Q /I savanc\services\listener .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\services\listener
 
+@copy savanc\modules\savan\mod_savan.dll .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\lib\
+
+@copy savanc\modules\savan\mod_savan.lib .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\lib\
+
 @copy savanc\bin\samples\*.exe .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\bin\samples\
 
 @cd ..\..
