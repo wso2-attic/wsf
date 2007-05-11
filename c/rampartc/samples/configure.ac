@@ -93,7 +93,17 @@ AC_CONFIG_FILES([Makefile \
         keys/ahome/Makefile \
         keys/bhome/Makefile \
         keys/xhome/Makefile \
-        keys/yhome/Makefile 
+        keys/yhome/Makefile \
+	secpolicy/Makefile \
+	secpolicy/scenario1/Makefile \
+	secpolicy/scenario2/Makefile \
+	secpolicy/scenario3/Makefile \
+	secpolicy/scenario4/Makefile \
+	secpolicy/scenario5/Makefile \
+	secpolicy/scenario6/Makefile \
+	secpolicy/scenario7/Makefile \
+	secpolicy/scenario8/Makefile \
+	secpolicy/scenario9/Makefile
     ])
     
 AC_OUTPUT
