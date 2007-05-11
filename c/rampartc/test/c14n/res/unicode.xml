@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE doc [ 
+ <!ELEMENT doc (test+)> 
+ <!ELEMENT test (#PCDATA)> 
+ <!ENTITY ccedil "&#231;"> 
+ <!ATTLIST test lang CDATA #IMPLIED> 
+]> 
+<doc> 
+ <test lang="français">UTF-8 character.</test> 
+ <test lang="fran&#231;ais">numeric ref.</test> 
+ <test lang="fran&ccedil;ais">entity ref.</test> 
+</doc>

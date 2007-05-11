@@ -1,0 +1,6 @@
+<a xmlns="urn:def" xmlns:x="urn:xxx">
+    <x:b att1="v"/>
+    <c/>
+    <d x:att2="v" xmlns:x="urn:yyy"/>
+    <x:e x:att3="v"/>
+</a>

@@ -1,0 +1,8 @@
+AXIS2_BIN_DIR = D:\axis2c-bin-1.0.0-win32
+OPENSSL_BIN_DIR = D:\OpenSSL
+DEBUG = 1
+MAJOR_VER = 0
+MINOR_VER = 90
+PATCH_VER =
+
+

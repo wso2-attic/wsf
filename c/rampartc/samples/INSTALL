@@ -1,0 +1,14 @@
+Getting Axis2/C Rampart samples source working on Linux
+=============================================
+Build the source
+This can be done using the following command sequence:
+        ./configure
+        make
+        make install
+        use './configure --help' for options
+
+Please refer the ../INSTALL for more information
+
+
+
+
