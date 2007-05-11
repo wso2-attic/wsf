@@ -15,6 +15,7 @@ wsclient_LDADD   = $(LDFLAGS) \
                     -lpthread \
 					../../axis2c/src/core/transport/http/sender/libaxis2_http_sender.la \
 					../../axis2c/src/core/transport/http/receiver/libaxis2_http_receiver.la \
+				     ../../rampartc/src/core/libmod_rampart.la\
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 

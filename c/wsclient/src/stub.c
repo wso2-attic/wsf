@@ -31,6 +31,7 @@
 #include <axis2_http_header.h>
 #include <axis2_addr.h>
 #include <axiom.h>
+#include <rampart_context.h>
 #include "rampart_constants.h"
 
 #include "constants.h"
@@ -75,8 +76,27 @@ static int is_server_cert = 0;
 extern wsclient_cmd_options_t cmd_options_data[];
 extern int array_size;
 
+
+axiom_node_t *
+create_policy_node(const axutil_env_t *env,
+                   axiom_node_t *node );
+
+axiom_node_t *
+create_recipient_token(const axutil_env_t *env,
+                       axiom_node_t *parent_om_node);
+
+axiom_node_t *
+create_initiator_token(const axutil_env_t *env,
+                       axiom_node_t *parent_om_node);
+
+axiom_node_t *
+create_username_token(const axutil_env_t *env,
+                      axiom_node_t *parent_node);
+
+
 static axis2_options_t *
-wsclient_svc_option (const axutil_env_t *env,
+wsclient_svc_option (axis2_svc_client_t *svc_client,
+                     const axutil_env_t *env,
 					 axutil_array_list_t *array_list,
 					 axiom_node_t *payload)
 {
@@ -88,11 +108,7 @@ wsclient_svc_option (const axutil_env_t *env,
 	axis2_endpoint_ref_t *in_reply_to = NULL;
 	axis2_relates_to_t *relates_to = NULL;
 	axutil_property_t *dump_property ;
-	axutil_property_t *username;
-	axutil_property_t *password;
-	axutil_property_t *pw_type;
-	axutil_property_t *items;
-	axutil_property_t *rest_property;
+    axutil_property_t *rest_property;
 
 	wsclient_options_t *wsclient_options = NULL;
 	int size;
@@ -300,23 +316,14 @@ wsclient_svc_option (const axutil_env_t *env,
 					{
 						is_soap_enabled = 1;
 						is_username = 1;
-						username = axutil_property_create (env);
 						username_value = (char *)wsclient_options->value;
-						axutil_property_set_value (username, env, 
-                              (void *)axutil_strdup (env, (char *)wsclient_options->value));						
-                        /* AXIS2_OPTIONS_SET_PROPERTY (options, env, RAMPART_ACTION_USER, username); */
-						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-										"[wsclient] security user block ");
 					}
 					break;
 					case PASSWORD:
 					{
 						is_password = 1;
 						is_soap_enabled = 1;
-						password = axutil_property_create (env);
-						axutil_property_set_value (password, env, 
-                                                   (void *)axutil_strdup (env, (char *)wsclient_options->value));
-/* 						AXIS2_OPTIONS_SET_PROPERTY (options, env, RAMPART_ACTION_PASSWORD, password); */
+                        password_buffer = (char *) wsclient_options->value;
 						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 										"[wsclient] security password block ");
 					}
@@ -332,6 +339,7 @@ wsclient_svc_option (const axutil_env_t *env,
 					{
 						is_password_file = 1;
 						is_password = 1;
+                        is_username = 1;
 						is_soap_enabled = 1;
 						password_file = (char *) wsclient_options->value;
 						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
@@ -375,7 +383,7 @@ wsclient_svc_option (const axutil_env_t *env,
 						if (header_property && header_list)
 						{
 							axutil_property_set_value(header_property, env, 
-													 header_list);
+                                                      header_list);
 							axutil_property_set_free_func (header_property, env, axutil_array_list_free_void_arg);
 							axis2_options_set_property(options, env, AXIS2_TRANSPORT_HEADER_PROPERTY,
 													   header_property);
@@ -443,13 +451,13 @@ wsclient_svc_option (const axutil_env_t *env,
 			if(content_type)
 			{
 				axutil_hash_set (content_type_hash, 
-								AXIS2_HTTP_HEADER_CONTENT_TYPE, 
-								AXIS2_HASH_KEY_STRING, 
-								wsclient_content_type (env, content_type));
+                                 AXIS2_HTTP_HEADER_CONTENT_TYPE, 
+                                 AXIS2_HASH_KEY_STRING, 
+                                 wsclient_content_type (env, content_type));
 			}
 			content_type_property = axutil_property_create(env);
 			axutil_property_set_value(content_type_property, env, 
-									 content_type_hash);
+                                      content_type_hash);
 /* 			AXUTIL_PROPERTY_SET_FREE_FUNC (property, env, axutil_hash_free); */
 			axis2_options_set_property(options, env, AXIS2_USER_DEFINED_HTTP_HEADER_CONTENT_TYPE,
 									   content_type_property);
@@ -532,16 +540,62 @@ wsclient_svc_option (const axutil_env_t *env,
 						"[wsclient] setting soap-dump property to options");
 	    dump_property = axutil_property_create (env);
 	    axutil_property_set_value (dump_property,
-								  env,
+                                   env,
                                    (void *)axutil_strdup (env, AXIS2_VALUE_TRUE));
 	    axis2_options_set_property (options, env, "dump", dump_property);
 	}
 
 	if (is_username && is_password)
 	{
-		if (is_password_file)
-		{
-			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+        axiom_node_t *root_om_node = NULL;
+        axiom_node_t* exact_om_node = NULL;
+        axiom_node_t *all_om_node = NULL;
+        axiom_node_t *asymmetric_om_node = NULL;
+        axiom_node_t *policy_om_node = NULL;
+    
+        axiom_element_t* root_om_ele = NULL;
+        axiom_element_t * exact_om_ele = NULL;
+        axiom_element_t *all_om_ele = NULL;
+        axiom_element_t *asymmetric_om_ele = NULL;
+
+        axiom_namespace_t *wsp_ns = NULL;
+        axiom_namespace_t *sp_ns = NULL;
+
+        rampart_context_t *out_ctx;
+        axis2_svc_ctx_t *svc_ctx;
+        axis2_conf_ctx_t *conf_ctx;
+        axis2_conf_t *conf;
+
+        axutil_param_t *outflow_param;
+        
+        wsp_ns = axiom_namespace_create(env, WS_POLICY_NAMESPACE_URI, WS_POLICY_NAMESPACE);
+        root_om_ele = axiom_element_create(env, NULL, WS_POLICY, wsp_ns, &root_om_node);
+    
+        exact_om_ele = axiom_element_create(env, root_om_node, WS_POLICY_EXACTLYONE, wsp_ns, &exact_om_node);
+        all_om_ele = axiom_element_create(env, exact_om_node, WS_POLICY_ALL, wsp_ns, &all_om_node);
+    
+        sp_ns = axiom_namespace_create(env, WS_SEC_POLICY_NAMESPACE_URI, WS_SEC_POLICY_NAMESPACE);
+        asymmetric_om_ele = axiom_element_create(env, all_om_node, WS_POLICY_ASYMMETRIC_BINDING, sp_ns, &asymmetric_om_node);
+
+        policy_om_node = create_policy_node(env, asymmetric_om_node );
+        create_initiator_token(env, policy_om_node);
+        create_recipient_token(env, policy_om_node);
+        create_username_token(env, all_om_node);
+
+        out_ctx = rampart_context_create (env);
+    
+        if (rampart_context_set_policy_node(out_ctx, env,
+                                            root_om_node) == AXIS2_SUCCESS)
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting creating policy node ");
+    
+        if (rampart_context_set_user(out_ctx, env,
+                                     (axis2_char_t *)username_value) == AXIS2_SUCCESS)
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting username ");
+    
+    
+        if (is_password_file)
+        {
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 							"[wsclient] processing password file");
 			if (username_value)
 			{
@@ -550,10 +604,7 @@ wsclient_svc_option (const axutil_env_t *env,
 				{
 				    is_password = 1;
 				    is_soap_enabled = 1;
-				    password = axutil_property_create (env);
-				    axutil_property_set_value (password, env, (void *)axutil_strdup (env, password_buffer));
-/* 				    AXIS2_OPTIONS_SET_PROPERTY (options, env, RAMPART_ACTION_PASSWORD, password); */
-				}
+                }
 			}
 		}
 
@@ -561,39 +612,26 @@ wsclient_svc_option (const axutil_env_t *env,
 		{
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 							"[wsclient] adding digest password property");
-			pw_type = axutil_property_create(env);
-			axutil_property_set_value(pw_type, env, (void *)axutil_strdup (env, RAMPART_PASSWORD_DIGEST));
-			/* AXIS2_OPTIONS_SET_PROPERTY(options, env, RAMPART_ACTION_PASSWORD_TYPE, pw_type); */
-		  
-	    }
-	    else 
-	    {
-			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
-							"[wsclient] adding plain text password property");
-			pw_type = axutil_property_create(env);
-			axutil_property_set_value(pw_type, env, (void *)axutil_strdup (env, RAMPART_PASSWORD_TEXT));
-			/* AXIS2_OPTIONS_SET_PROPERTY(options, env, RAMPART_ACTION_PASSWORD_TYPE, pw_type); */
+            if(rampart_context_set_password_type(out_ctx, env,
+                                                 (axis2_char_t *)"Digest") == AXIS2_SUCCESS)
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting passwordType ");
+
 	    }
 
+        if (password_buffer)
+        {
+            if(rampart_context_set_password(out_ctx, env,
+                                            (axis2_char_t *)password_buffer) == AXIS2_SUCCESS)
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting password ");
+        }
 
-	    if (is_user_tok_timestamp)
-	    {
-			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-							"[wsclient] username token timestamp ");
-			items = axutil_property_create(env);
-			axutil_property_set_value(items, env, (void *)axutil_strdup (env, "usernametoken timestamp"));
-			/* AXIS2_OPTIONS_SET_PROPERTY(options, env, RAMPART_ACTION_ITEMS, items); */
-	    }
-	    else
-	    {
-			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-							"[wsclient] username token");
-			items = axutil_property_create(env);
-			axutil_property_set_value(items, env, (void *)axutil_strdup (env, "usernametoken"));
-/* 			AXIS2_OPTIONS_SET_PROPERTY(options, env, RAMPART_ACTION_ITEMS, items); */
-	    }
+        svc_ctx = axis2_svc_client_get_svc_ctx(svc_client, env);
+        conf_ctx = axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
+        conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+    
+        outflow_param = axutil_param_create(env, WS_OUTFLOW_SECURITY_POLICY, (void *)out_ctx);
+        axis2_conf_add_param(conf, env, outflow_param);
 	}
-
 	return options;
 }
 
@@ -659,7 +697,7 @@ wsclient_stub_invoke(
 	    return -1 /* WSCLIENT_ERROR_SENDING_MSG */;
 	}
 
-	options = wsclient_svc_option (env, array_list, payload);
+	options = wsclient_svc_option (svc_client, env, array_list, payload);
 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 					"[wsclient] svc client created");
 
@@ -752,7 +790,7 @@ wsclient_stub_invoke(
 	{
 		axiom_element_t *element; 
 		axis2_char_t *node_name; 
-	    	axis2_char_t *om_str = NULL;
+        axis2_char_t *om_str = NULL;
 		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 						"[wsclient] response return node found");
 	    if(is_send_only)
@@ -806,4 +844,119 @@ wsclient_stub_invoke(
 	if (svc_client)
 		axis2_svc_client_free (svc_client, env);
 	return WSCLIENT_SUCCESS;
+}
+
+axiom_node_t *
+create_policy_node(const axutil_env_t *env,
+                   axiom_node_t *parent_om_node) 
+{
+    axiom_node_t *policy_om_node = NULL;
+    axiom_element_t *policy_om_ele = NULL;
+    axiom_namespace_t *wsp_ns = NULL;
+
+    wsp_ns = axiom_namespace_create(env, WS_POLICY_NAMESPACE_URI, WS_POLICY_NAMESPACE);
+    policy_om_ele = axiom_element_create(env, parent_om_node, WS_POLICY, wsp_ns, &policy_om_node);
+
+    return policy_om_node;
+
+
+}
+
+axiom_node_t *
+create_initiator_token(const axutil_env_t *env,
+                       axiom_node_t *parent_om_node)
+{
+    axiom_node_t *in_token_om_node = NULL;
+    axiom_node_t *policy_om_node1 = NULL;
+    axiom_node_t *x509_om_node = NULL;
+    axiom_node_t *policy_om_node2 = NULL;
+    axiom_node_t *token_id_om_node = NULL;
+    axiom_node_t *tmp_node = NULL; /* if wrong option is found earlier
+                                    * node should be given back */
+
+    axiom_element_t *in_token_om_ele = NULL;
+    axiom_element_t *x509_om_ele = NULL;
+
+    axiom_attribute_t *attr = NULL;
+
+    axiom_namespace_t *sp_ns = NULL;
+    
+    tmp_node = parent_om_node;
+    sp_ns = axiom_namespace_create(env,WS_SEC_POLICY_NAMESPACE_URI,  WS_SEC_POLICY_NAMESPACE);
+    in_token_om_ele = axiom_element_create(env, parent_om_node, WS_INITIATOR_VAL, sp_ns, &in_token_om_node);
+    policy_om_node1 = create_policy_node(env, in_token_om_node);
+
+    x509_om_ele = axiom_element_create(env, policy_om_node1, WS_X509_TOKEN_VAL, sp_ns, &x509_om_node);
+
+    attr = axiom_attribute_create(env,WS_INCLUDE_TOKEN,  WS_INCLUDE_TOKEN_URI,
+                                  sp_ns);
+    axiom_element_add_attribute(x509_om_ele, env, attr, x509_om_node);
+    policy_om_node2 = create_policy_node(env, x509_om_node);
+    axiom_element_create(env, policy_om_node2, "WssX509V3Token10", sp_ns, &token_id_om_node);
+    return token_id_om_node;
+}
+
+
+/** for encryption part of the policy file */
+
+axiom_node_t *
+create_recipient_token(const axutil_env_t *env,
+                       axiom_node_t *parent_om_node)
+
+{
+    axiom_node_t *rec_token_om_node = NULL;
+    axiom_node_t *policy_om_node1 = NULL;
+    axiom_node_t *x509_om_node = NULL;
+    axiom_node_t *policy_om_node2 = NULL;
+    axiom_node_t *token_id_om_node = NULL;
+    axiom_node_t *tmp_node = NULL;
+
+    axiom_element_t *rec_token_om_ele = NULL;
+    axiom_element_t *x509_om_ele = NULL;
+
+    axiom_attribute_t *attr = NULL;
+
+    axiom_namespace_t *sp_ns = NULL;
+    
+    tmp_node = parent_om_node;
+
+
+    sp_ns = axiom_namespace_create(env,WS_SEC_POLICY_NAMESPACE_URI,  WS_SEC_POLICY_NAMESPACE);
+
+    rec_token_om_ele = axiom_element_create(env, parent_om_node,  WS_RECIPIENT_TOKEN, sp_ns, &rec_token_om_node);
+    policy_om_node1 = create_policy_node(env, rec_token_om_node);
+    x509_om_ele = axiom_element_create(env, policy_om_node1, WS_X509_TOKEN_VAL, sp_ns, &x509_om_node);
+
+    /* Here uri may change according to the options difined in policy spec
+     * e.g - 'Always' may be changed as 'Never'*/
+    attr = axiom_attribute_create(env,  WS_INCLUDE_TOKEN ,  WS_INCLUDE_TOKEN_URI,
+                                  sp_ns);
+    axiom_element_add_attribute(x509_om_ele, env, attr, x509_om_node);
+    policy_om_node2 = create_policy_node(env, x509_om_node);
+    axiom_element_create(env, policy_om_node2, "WssX509V3Token10", sp_ns, &token_id_om_node);
+    return token_id_om_node;
+}
+
+axiom_node_t *
+create_username_token(const axutil_env_t *env,
+                      axiom_node_t *parent_node)
+{
+    axiom_node_t *signsupport_om_node = NULL;
+    axiom_node_t *policy_om_node = NULL;
+    axiom_node_t *ut_om_node = NULL;
+
+    axiom_element_t *ele = NULL;
+    axiom_attribute_t *attr = NULL;
+    axiom_namespace_t *sp_ns = NULL;
+
+    sp_ns = axiom_namespace_create(env, WS_SEC_POLICY_NAMESPACE_URI, WS_SEC_POLICY_NAMESPACE);
+    axiom_element_create(env, parent_node, WS_SIGNSUPPORTING_TOKEN, sp_ns, &signsupport_om_node);
+    policy_om_node = create_policy_node(env, signsupport_om_node);
+    ele = axiom_element_create(env, policy_om_node, WS_USERNAMETOKEN, sp_ns, &ut_om_node);
+    attr = axiom_attribute_create(env,  WS_INCLUDE_TOKEN ,  WS_INCLUDE_TOKEN_URI,
+                                  sp_ns);
+    axiom_element_add_attribute(ele, env, attr, ut_om_node);
+
+    return ut_om_node;
+
 }

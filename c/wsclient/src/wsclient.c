@@ -41,7 +41,7 @@ int main (int argc, char **argv)
 {
 	axutil_env_t *env;
 	char *input[2];
-	char *dest_uri = NULL;
+ 	char *dest_uri = NULL;
 	axutil_array_list_t *array_list;
 	axis2_status_t status;
 	env = axutil_env_create_all ("wsclient.log", AXIS2_LOG_LEVEL_DEBUG);
