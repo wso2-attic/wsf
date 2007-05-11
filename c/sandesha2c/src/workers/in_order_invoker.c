@@ -350,7 +350,6 @@ sandesha2_in_order_invoker_worker_func(
                 st_map_bean = axutil_array_list_get(st_map_list, env, j);
                 key = sandesha2_invoker_bean_get_msg_ctx_ref_key(
                     (sandesha2_rm_bean_t *) st_map_bean, env);
-                printf("msg_ref_key:%s\n", key);
                 msg_to_invoke = sandesha2_storage_mgr_retrieve_msg_ctx(
                     storage_mgr, env, key, invoker->conf_ctx, AXIS2_FALSE);
                 if(msg_to_invoke)

@@ -195,7 +195,6 @@ sandesha2_permanent_transaction_create(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "SQL Error %s",
             mysql_error(trans_impl->dbconn));
-        printf("transaction begin error_msg:%s\n", mysql_error(trans_impl->dbconn));
         sandesha2_transaction_free(&(trans_impl->trans), env);
         return NULL;
     }
@@ -275,7 +274,6 @@ sandesha2_permanent_transaction_commit(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
             mysql_error(trans_impl->dbconn));
-        printf("commit error_msg:%s\n", mysql_error(trans_impl->dbconn));
     }
     trans_impl->is_active = AXIS2_FALSE;
     sandesha2_permanent_transaction_release_locks(trans, env);
@@ -300,8 +298,6 @@ sandesha2_permanent_transaction_rollback(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
             mysql_error(trans_impl->dbconn));
-        printf("sql_stmt_rollback:%s\n", "rollback;");
-        printf("rollback error_msg:%s\n", mysql_error(trans_impl->dbconn));
     }
     trans_impl->is_active = AXIS2_FALSE;
     sandesha2_permanent_transaction_release_locks(trans, env);
@@ -391,10 +387,8 @@ sandesha2_permanent_transaction_busy_handler(
     int rc)
 {
     int counter = 0;
-    printf("in busy handler3\n");
     while(rc == SQLITE_BUSY && counter < 512)
     {
-        printf("in busy handler33\n");
         counter++;
 #ifdef WIN32
 		Sleep(100);
@@ -403,7 +397,6 @@ sandesha2_permanent_transaction_busy_handler(
 #endif
         rc = mysql_query(dbconn, sql_stmt, callback_func, args, error_msg);
     }
-    printf("in busy handler4\n");
     return rc;
 }
 */

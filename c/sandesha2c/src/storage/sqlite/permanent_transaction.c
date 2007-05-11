@@ -176,7 +176,6 @@ sandesha2_permanent_transaction_create(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "SQL Error %s",
             error_msg);
-        printf("transaction begin error_msg:%s\n", error_msg);
         sqlite3_free(error_msg);
         sandesha2_transaction_free(&(trans_impl->trans), env);
         return NULL;
@@ -262,7 +261,6 @@ sandesha2_permanent_transaction_commit(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
             error_msg);
-        printf("commit error_msg:%s\n", error_msg);
         sqlite3_free(error_msg);
     }
     sqlite3_close(trans_impl->dbconn);
@@ -292,8 +290,6 @@ sandesha2_permanent_transaction_rollback(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
             error_msg);
-        printf("sql_stmt_rollback:%s\n", "ROLLBACK TRANSACTION;");
-        printf("rollback error_msg:%s\n", error_msg);
         sqlite3_free(error_msg);
     }
     sqlite3_close(trans_impl->dbconn);

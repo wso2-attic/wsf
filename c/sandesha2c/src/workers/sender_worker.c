@@ -280,7 +280,6 @@ sandesha2_sender_worker_worker_func(
     sender_worker_bean = sandesha2_sender_mgr_retrieve(sender_mgr, env, msg_id);
     if(!sender_worker_bean)
     {
-        printf("sender_worker_bean is NULL\n");
         sandesha2_transaction_rollback(transaction, env);
         #ifdef AXIS2_SVR_MULTI_THREADED
             AXIS2_THREAD_POOL_EXIT_THREAD(env->thread_pool, thd);
@@ -298,7 +297,6 @@ sandesha2_sender_worker_worker_func(
     }
     if(!msg_ctx)
     {
-        printf("msg_ctx is not present\n");
         sandesha2_transaction_rollback(transaction, env);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] msg_ctx is "
                     "not present in the store");
@@ -323,7 +321,6 @@ sandesha2_sender_worker_worker_func(
     sandesha2_sender_mgr_update(sender_mgr, env, sender_worker_bean);
     if(!continue_sending)
     {
-        printf("do not continue\n");
         sender_worker->status = AXIS2_FAILURE;
         /* We commit here since we have cleaned the
          * sending side data and that need to commited */
@@ -343,7 +340,6 @@ sandesha2_sender_worker_worker_func(
     if(qualified_for_sending && 0 != axutil_strcmp(
         qualified_for_sending, AXIS2_VALUE_TRUE))
     {
-        printf("not qualified for sending\n");
         sandesha2_transaction_rollback(transaction, env);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2] Message is not qualified for sending");
@@ -378,7 +374,6 @@ sandesha2_sender_worker_worker_func(
         }
         if(continue_sending)
         {
-            printf("continue sending is true\n");
             sandesha2_transaction_rollback(transaction, env);
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Continue "\
                 "Sending is true. So returning from Sender Worker");

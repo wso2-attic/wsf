@@ -263,8 +263,6 @@ sandesha2_permanent_bean_mgr_insert(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql stmt: %s. sql error: %s", 
             sql_stmt_insert, error_msg);
-        printf("sql_stmt_insert:%s\n", sql_stmt_insert);
-        printf("insert error_msg:%s\n", error_msg);
         sqlite3_free(error_msg);
         return AXIS2_FALSE;
     }
@@ -307,8 +305,6 @@ sandesha2_permanent_bean_mgr_remove(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql stmt: %s. sql error: %s",
             sql_stmt_retrieve, error_msg);
-        printf("sql_stmt_retrieve:%s\n", sql_stmt_retrieve);
-        printf("retrieve error_msg:%s\n", error_msg);
         sqlite3_free(error_msg);
         return AXIS2_FALSE;
     }
@@ -334,8 +330,6 @@ sandesha2_permanent_bean_mgr_remove(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql stmt: %s. sql error: %s",
             sql_stmt_remove, error_msg);
-        printf("sql_stmt_remove:%s\n", sql_stmt_remove);
-        printf("remove error_msg:%s\n", error_msg);
         sqlite3_free(error_msg);
         return AXIS2_FALSE;
     }
@@ -377,8 +371,6 @@ sandesha2_permanent_bean_mgr_retrieve(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql stmt: %s. sql error: %s",
             sql_stmt_retrieve, error_msg);
-        printf("sql_stmt_retrieve:%s\n", sql_stmt_retrieve);
-        printf("retrieve error_msg:%s\n", error_msg);
         sqlite3_free(error_msg);
         return AXIS2_FALSE;
     }
@@ -404,8 +396,6 @@ sandesha2_permanent_bean_mgr_retrieve(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
             error_msg);
-        printf("sql_stmt_retrieve:%s\n", sql_stmt_retrieve);
-        printf("retrieve error_msg:%s\n", error_msg);
         sqlite3_free(error_msg);
         return AXIS2_FALSE;
     }
@@ -449,8 +439,6 @@ sandesha2_permanent_bean_mgr_update(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", 
             error_msg);
-        printf("sql_stmt_update:%s\n", sql_stmt_update);
-        printf("update error_msg:%s\n", error_msg);
         sqlite3_free(error_msg);
         return AXIS2_FALSE;
     }
@@ -511,8 +499,6 @@ sandesha2_permanent_bean_mgr_find(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", 
             error_msg);
-        printf("sql_stmt_find:%s\n", sql_stmt_find);
-        printf("retrieve error_msg:%s\n", error_msg);
         sqlite3_free(error_msg);
         return NULL;
     }
@@ -568,8 +554,6 @@ sandesha2_permanent_bean_mgr_find(
                 AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", 
                     error_msg);
-                printf("sql_stmt_count:%s\n", sql_stmt_count);
-                printf("retrieve error_msg:%s\n", error_msg);
                 sqlite3_free(error_msg);
                 return NULL;
             }
@@ -655,8 +639,6 @@ sandesha2_permanent_bean_mgr_retrieve_msg_store_bean(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
             error_msg);
-        printf("sql_stmt_retrieve:%s\n", sql_stmt_retrieve);
-        printf("retrieve error_msg:%s\n", error_msg);
         sqlite3_free(error_msg);
         return AXIS2_FALSE;
     }
@@ -764,8 +746,6 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
             error_msg);
-        printf("sql_stmt_retrieve:%s\n", sql_stmt_retrieve);
-        printf("retrieve error_msg:%s\n", error_msg);
         sqlite3_free(error_msg);
         return AXIS2_FALSE;
     }
@@ -796,8 +776,6 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
                 AXIS2_FAILURE);
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", 
                 error_msg);
-            printf("sql_stmt_update:%s\n", sql_stmt_update);
-            printf("update error_msg:%s\n", error_msg);
             AXIS2_FREE(env->allocator, sql_stmt_update);
             sqlite3_free(error_msg);
             return AXIS2_FALSE;
@@ -825,8 +803,6 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
         axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", error_msg);
-        printf("sql_stmt_insert:%s\n", sql_stmt_insert);
-        printf("insert error_msg:%s\n", error_msg);
         AXIS2_FREE(env->allocator, sql_stmt_insert);
         sqlite3_free(error_msg);
         return AXIS2_FALSE;
@@ -869,8 +845,6 @@ sandesha2_permanent_bean_mgr_remove_msg_store_bean(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
             error_msg);
-        printf("sql_stmt_remove:%s\n", sql_stmt_remove);
-        printf("remove error_msg:%s\n", error_msg);
         sqlite3_free(error_msg);
         return AXIS2_FALSE;
     }
@@ -923,8 +897,6 @@ sandesha2_permanent_bean_mgr_store_response(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", 
             error_msg);
-        printf("sql_stmt_count:%s\n", sql_stmt_count);
-        printf("retrieve error_msg:%s\n", error_msg);
         sqlite3_free(error_msg);
         return AXIS2_FALSE;
     }
@@ -945,8 +917,6 @@ sandesha2_permanent_bean_mgr_store_response(
                 AXIS2_FAILURE);
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", 
                 error_msg);
-            printf("sql_stmt_update:%s\n", sql_stmt_update);
-            printf("update error_msg:%s\n", error_msg);
             AXIS2_FREE(env->allocator, sql_stmt_update);
             sqlite3_free(error_msg);
             return AXIS2_FALSE;
@@ -970,8 +940,6 @@ sandesha2_permanent_bean_mgr_store_response(
             axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", error_msg);
-            printf("sql_stmt_insert:%s\n", sql_stmt_insert);
-            printf("insert error_msg:%s\n", error_msg);
             AXIS2_FREE(env->allocator, sql_stmt_insert);
             sqlite3_free(error_msg);
             return AXIS2_FALSE;
@@ -1017,8 +985,6 @@ sandesha2_permanent_bean_mgr_remove_response(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
             error_msg);
-        printf("sql_stmt_remove:%s\n", sql_stmt_remove);
-        printf("remove error_msg:%s\n", error_msg);
         sqlite3_free(error_msg);
         return AXIS2_FALSE;
     }
@@ -1065,8 +1031,6 @@ sandesha2_permanent_bean_mgr_retrieve_response(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
             error_msg);
-        printf("sql_stmt_retrieve:%s\n", sql_stmt_retrieve);
-        printf("retrieve error_msg:%s\n", error_msg);
         sqlite3_free(error_msg);
         return AXIS2_FALSE;
     }
@@ -1084,10 +1048,8 @@ sandesha2_permanent_bean_mgr_busy_handler(
     int rc)
 {
     int counter = 0;
-    printf("in busy handler1\n");
     while(rc == SQLITE_BUSY && counter < 512)
     {
-        printf("in busy handler\n");
         if(*error_msg)
              sqlite3_free(*error_msg);
         counter++;
@@ -1095,7 +1057,6 @@ sandesha2_permanent_bean_mgr_busy_handler(
         AXIS2_USLEEP(100000);
         rc = sqlite3_exec(dbconn, sql_stmt, callback_func, args, error_msg);
     }
-    printf("in busy handler2\n");
     return rc;
 }
 

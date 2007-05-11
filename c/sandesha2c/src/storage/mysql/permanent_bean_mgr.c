@@ -219,8 +219,6 @@ sandesha2_permanent_bean_mgr_insert(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql stmt: %s. sql error: %s", 
             sql_stmt_insert, mysql_error(dbconn));
-        printf("sql_stmt_insert:%s\n", sql_stmt_insert);
-        printf("insert error_msg:%s\n", mysql_error(dbconn));
         return AXIS2_FALSE;
     }
     return AXIS2_TRUE;
@@ -251,8 +249,6 @@ sandesha2_permanent_bean_mgr_remove(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql stmt: %s. sql error: %s",
             sql_stmt_remove, mysql_error(dbconn));
-        printf("sql_stmt_remove:%s\n", sql_stmt_remove);
-        printf("remove error_msg:%s\n", mysql_error(dbconn));
         return AXIS2_FALSE;
     }
     return AXIS2_TRUE;
@@ -288,8 +284,6 @@ sandesha2_permanent_bean_mgr_retrieve(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql stmt: %s. sql error: %s",
             sql_stmt_retrieve, mysql_error(dbconn));
-        printf("sql_stmt_retrieve:%s\n", sql_stmt_retrieve);
-        printf("retrieve error_msg:%s\n", mysql_error(dbconn));
         return AXIS2_FALSE;
     }
     res = mysql_store_result(dbconn);
@@ -302,7 +296,6 @@ sandesha2_permanent_bean_mgr_retrieve(
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql stmt: %s. sql error: %s",
             sql_stmt_retrieve, mysql_error(dbconn));
-        printf("retrieve error_msg:%s\n", mysql_error(dbconn));
         return AXIS2_FALSE;
     }
     if(args->data)
@@ -340,8 +333,6 @@ sandesha2_permanent_bean_mgr_update(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", 
             mysql_error(dbconn));
-        printf("sql_stmt_update:%s\n", sql_stmt_update);
-        printf("update error_msg:%s\n", mysql_error(dbconn));
         return AXIS2_FALSE;
     }
     return AXIS2_TRUE;
@@ -391,8 +382,6 @@ sandesha2_permanent_bean_mgr_find(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", 
             mysql_error(dbconn));
-        printf("sql_stmt_find:%s\n", sql_stmt_find);
-        printf("retrieve error_msg:%s\n", mysql_error(dbconn));
         return NULL;
     }
     res = mysql_store_result(dbconn);
@@ -438,8 +427,6 @@ sandesha2_permanent_bean_mgr_find(
                 AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", 
                     mysql_error(dbconn));
-                printf("sql_stmt_count:%s\n", sql_stmt_count);
-                printf("retrieve error_msg:%s\n", mysql_error(dbconn));
                 return NULL;
             }
             res = mysql_store_result(dbconn);
@@ -522,8 +509,6 @@ sandesha2_permanent_bean_mgr_retrieve_msg_store_bean(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
             mysql_error(dbconn));
-        printf("sql_stmt_retrieve:%s\n", sql_stmt_retrieve);
-        printf("retrieve error_msg:%s\n", mysql_error(dbconn));
         return AXIS2_FALSE;
     }
     res = mysql_store_result(dbconn);
@@ -634,8 +619,6 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
             mysql_error(dbconn));
-        printf("sql_stmt_retrieve:%s\n", sql_stmt_retrieve);
-        printf("retrieve error_msg:%s\n", mysql_error(dbconn));
         return AXIS2_FALSE;
     }
     res = mysql_store_result(dbconn);
@@ -660,8 +643,6 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
                 AXIS2_FAILURE);
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", 
                 mysql_error(dbconn));
-            printf("sql_stmt_update:%s\n", sql_stmt_update);
-            printf("update error_msg:%s\n", mysql_error(dbconn));
             AXIS2_FREE(env->allocator, sql_stmt_update);
             return AXIS2_FALSE;
         }
@@ -683,8 +664,6 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", mysql_error(dbconn));
-        printf("sql_stmt_insert:%s\n", sql_stmt_insert);
-        printf("insert error_msg:%s\n", mysql_error(dbconn));
         AXIS2_FREE(env->allocator, sql_stmt_insert);
         return AXIS2_FALSE;
     }
@@ -717,8 +696,6 @@ sandesha2_permanent_bean_mgr_remove_msg_store_bean(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
             mysql_error(dbconn));
-        printf("sql_stmt_remove:%s\n", sql_stmt_remove);
-        printf("remove error_msg:%s\n", mysql_error(dbconn));
         return AXIS2_FALSE;
     }
     return AXIS2_TRUE;
@@ -761,8 +738,6 @@ sandesha2_permanent_bean_mgr_store_response(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", 
             mysql_error(dbconn));
-        printf("sql_stmt_count:%s\n", sql_stmt_count);
-        printf("retrieve error_msg:%s\n", mysql_error(dbconn));
         return AXIS2_FALSE;
     }
     res = mysql_store_result(dbconn);
@@ -781,8 +756,6 @@ sandesha2_permanent_bean_mgr_store_response(
                 AXIS2_FAILURE);
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", 
                 mysql_error(dbconn));
-            printf("sql_stmt_update:%s\n", sql_stmt_update);
-            printf("update error_msg:%s\n", mysql_error(dbconn));
             AXIS2_FREE(env->allocator, sql_stmt_update);
             return AXIS2_FALSE;
         }
@@ -800,8 +773,6 @@ sandesha2_permanent_bean_mgr_store_response(
         {
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", mysql_error(dbconn));
-            printf("sql_stmt_insert:%s\n", sql_stmt_insert);
-            printf("insert error_msg:%s\n", mysql_error(dbconn));
             AXIS2_FREE(env->allocator, sql_stmt_insert);
             return AXIS2_FALSE;
         }
@@ -837,8 +808,6 @@ sandesha2_permanent_bean_mgr_remove_response(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
             mysql_error(dbconn));
-        printf("sql_stmt_remove:%s\n", sql_stmt_remove);
-        printf("remove error_msg:%s\n", mysql_error(dbconn));
         return AXIS2_FALSE;
     }
     return AXIS2_TRUE;
@@ -876,8 +845,6 @@ sandesha2_permanent_bean_mgr_retrieve_response(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
             mysql_error(dbconn));
-        printf("sql_stmt_retrieve:%s\n", sql_stmt_retrieve);
-        printf("retrieve error_msg:%s\n", mysql_error(dbconn));
         return AXIS2_FALSE;
     }
     res = mysql_store_result(dbconn);

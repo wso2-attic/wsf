@@ -134,7 +134,6 @@ sandesha2_global_in_handler_invoke(
     if(!soap_action && !wsa_action)
     {
         axiom_soap_envelope_t *envelope = NULL;
-        printf("Look for a WSRM 1.0 sequence header with the lastMessage marker\n");
         envelope = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
         if(envelope)
         {
