@@ -16,14 +16,25 @@
 
 package org.wso2.javascript.rhino;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.net.URL;
+
 import org.apache.axiom.om.OMNode;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.json.JSONOMBuilder;
-import org.mozilla.javascript.*;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.ImporterTopLevel;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.WrappedException;
 import org.mozilla.javascript.xmlimpl.XML;
-
-import java.io.*;
-import java.net.URL;
 
 
 /**
@@ -146,7 +157,6 @@ public class JavaScriptEngine extends ImporterTopLevel {
                 scripts = "load(" + ("[\"" + scripts + "\"]").replaceAll(",", "\"],[\"") + ")";
                 cx.evaluateString(this, scripts, "Load JavaScripts", 0, null);
             }
-
             if (json) {
                 args = "var x = " + args + ";";
                 cx.evaluateString(this, (String) args, "Get JSON", 0, null);
@@ -165,14 +175,13 @@ public class JavaScriptEngine extends ImporterTopLevel {
                     args = f.call(cx, this, this, functionArgs);
                 }
             }
-
             // Evaluates the javascript file
             try {
                 evaluate(reader);
             } catch (IOException e) {
                 throw AxisFault.makeFault(e);
             }
-
+          
             // Get the function from the scope the javascript object is in
             Object fObj = this.get(method, this);
             if (!(fObj instanceof Function) || (fObj == Scriptable.NOT_FOUND)) {
@@ -191,8 +200,15 @@ public class JavaScriptEngine extends ImporterTopLevel {
                 result = ((XML) result).getAxiomFromXML();
             }
             return (OMNode) result;
-        } catch (Throwable throwable) {
-            throw AxisFault.makeFault(throwable);
+        } catch (WrappedException exception){
+            throw AxisFault.makeFault(exception.getCause());
         }
+        catch (Throwable throwable) {
+                throw AxisFault.makeFault(throwable);
+        }
+    }
+
+    public Context getCx() {
+        return cx;
     }
 }

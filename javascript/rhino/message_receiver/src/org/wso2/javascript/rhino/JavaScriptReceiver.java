@@ -42,6 +42,7 @@ import org.apache.axis2.i18n.Messages;
 import org.apache.axis2.json.JSONBadgerfishDataSource;
 import org.apache.axis2.json.JSONDataSource;
 import org.apache.axis2.receivers.AbstractInOutSyncMessageReceiver;
+import org.mozilla.javascript.Context;
 
 /**
  * Class JavaScriptReceiver implements the AbstractInOutSyncMessageReceiver,
@@ -50,7 +51,9 @@ import org.apache.axis2.receivers.AbstractInOutSyncMessageReceiver;
 public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver
         implements MessageReceiver {
     public static final String LOAD_JSSCRIPTS = "loadJSScripts";
-
+   
+    public static final String AXIS2_MESSAGECONTEXT = "messageContext";
+    
     /**
      * Invokes the Javascript service with the parameters from the inMessage
      * and sets the outMessage with the response from the service.
@@ -62,17 +65,12 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver
     public void invokeBusinessLogic(MessageContext inMessage, MessageContext outMessage)
             throws AxisFault {
         try {
-            JavaScriptEngine engine = new JavaScriptEngine();
-            Parameter parameter = inMessage.getParameter("javascript.hostobjects");
-            if ((parameter!=null) && (parameter.getParameterType() == 2)) {
-                OMElement paraElement = parameter.getParameterElement();
-                List list = JavaScriptEngineUtils.getHostObjectsMap(paraElement);
-                JavaScriptEngineUtils.loadHostObjects(engine, list);
-            }
+            JavaScriptEngine engine;
+            engine = getJavaScriptEngine(inMessage);
             // Get the method, arguments and the reader from the MessageContext
             String method = null;
             method = getJSMethod(inMessage);
-            Reader reader = readJS(inMessage);
+            
             Object x = inMessage.getEnvelope();
             Object args = ((SOAPEnvelope) x).getBody().getFirstElement();
             boolean json = false;
@@ -87,7 +85,8 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver
                     throw new AxisFault("Unsupported Data Format");
                 }
             }
-
+            
+            Reader reader = readJS(inMessage);
             if (reader == null)
                 throw new AxisFault("Unable to load JavaScript file");
             if (method == null)
@@ -153,12 +152,33 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver
     }
 
 
+    private JavaScriptEngine getJavaScriptEngine(MessageContext inMessage)
+            throws AxisFault {
+        JavaScriptEngine engine;
+        engine = new JavaScriptEngine();
+        Context context = engine.getCx();
+        context.putThreadLocal(AXIS2_MESSAGECONTEXT, inMessage);
+        
+        Parameter parameter = inMessage.getParameter("javascript.hostobjects");
+        if ((parameter != null) && (parameter.getParameterType() == 2)) {
+            OMElement paraElement = parameter.getParameterElement();
+            List list = JavaScriptEngineUtils.getHostObjectsMap(paraElement);
+            JavaScriptEngineUtils.loadHostObjects(engine, list);
+        }
+        return engine;
+    }
+
+
     /**
-     * Extracts and returns the anme of the requested operation from the inMessage
-     *
-     * @param inMessage MessageContext object with information about the incoming message
+     * Extracts and returns the anme of the requested operation from the
+     * inMessage
+     * 
+     * @param inMessage
+     *            MessageContext object with information about the incoming
+     *            message
      * @return the name of the requested operation
-     * @throws AxisFault if the requested operation is not found
+     * @throws AxisFault
+     *             if the requested operation is not found
      */
     public String getJSMethod(MessageContext inMessage) throws AxisFault {
 
