@@ -15,4 +15,7 @@ librampart_util_la_LIBADD  = -lssl \
 
 INCLUDES = -I$(top_builddir)/include \
 			-I ../../include \
+			-I ../../../axis2c/include \
+			-I ../../../axis2c/util/include \
+			-I ../../../axis2c/axiom/include \
 			@AXIS2INC@

@@ -15,4 +15,7 @@ librp_model_la_LIBADD  = ${AXIS2C_HOME}/lib
 
 INCLUDES = -I$(top_builddir)/include \
 			-I ../../../include \
+			-I ../../../../axis2c/include \
+			-I ../../../../axis2c/util/include \
+			-I ../../../../axis2c/axiom/include \
 			@AXIS2INC@
