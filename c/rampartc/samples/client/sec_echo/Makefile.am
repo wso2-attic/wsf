@@ -9,18 +9,19 @@ echo_SOURCES = echo.c
 
 echo_LDADD   = $(LDFLAGS) \
                     -L$(prefix)/lib \
-					-laxutil \
-                    -laxis2_axiom \
-                    -laxis2_engine \
-                    -laxis2_parser \
+		    $(prefix)/lib/libaxis2_axiom.la \
+		    $(prefix)/lib/libaxutil.la \
+		    $(prefix)/lib/libaxis2_engine.la \
+		    $(prefix)/lib/libaxis2_parser.la \
                     -lpthread \
-                    -laxis2_http_sender \
-                    -laxis2_http_receiver \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
 INCLUDES = -I$(prefix)/include/axis2-1.0 \
             -I ../../../include \
+            -I ../../../../axis2c/include \
+            -I ../../../../axis2c/util/include \
+            -I ../../../../axis2c/axiom/include \
 			@UTILINC@ \
 			@AXIOMINC@
 
