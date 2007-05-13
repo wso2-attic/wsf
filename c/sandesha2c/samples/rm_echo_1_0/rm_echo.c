@@ -79,7 +79,7 @@ int main(int argc, char** argv)
             AXIS2_LOG_LEVEL_TRACE);
 
     /* Set end point reference of echo service */
-    to = "http://127.0.0.1:8888/axis2/services/RMSampleService";
+    to = "http://127.0.0.1:9090/axis2/services/RMSampleService";
     while ((c = AXIS2_GETOPT(argc, argv, ":a:")) != -1)
     {
 
@@ -129,7 +129,7 @@ int main(int argc, char** argv)
     axis2_options_set_soap_action(options, env, soap_action);
     axis2_options_set_action(options, env, "urn:wsrm:EchoString");
     reply_to = axis2_endpoint_ref_create(env, 
-        "http://localhost:7777/axis2/services/__ANONYMOUS_SERVICE__/"\
+        "http://localhost:6060/axis2/services/__ANONYMOUS_SERVICE__/"\
             "__OPERATION_OUT_IN__");
 
     axis2_options_set_reply_to(options, env, reply_to);
@@ -302,7 +302,7 @@ usage(
     fprintf(stdout, " [-a ADDRESS]");
     fprintf(stdout, " Options :\n");
     fprintf(stdout, "\t-a ADDRESS \t endpoint address.. The" \
-        " default is http://127.0.0.1:8888/axis2/services/RMSampleService \n");
+        " default is http://127.0.0.1:9090/axis2/services/RMSampleService \n");
     fprintf(stdout, " Help :\n\t-h \t display this help screen.\n\n");
 }
 

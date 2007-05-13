@@ -57,7 +57,7 @@ int main(int argc, char** argv)
     env = axutil_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_CRITICAL);
 
     /* Set end point reference of echo service */
-    /*address = "http://127.0.0.1:8888/axis2/services/RMSampleService";*/
+    /*address = "http://127.0.0.1:9090/axis2/services/RMSampleService";*/
     /*address = "http://127.0.0.1:5555/axis2/services/RMSampleService";*/
     /*to = "http://127.0.0.1:8080/axis2/services/RMSampleService";*/
     to = "http://127.0.0.1:5555/axis2/services/RMSampleService";

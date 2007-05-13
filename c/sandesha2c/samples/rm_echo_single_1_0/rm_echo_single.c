@@ -80,7 +80,7 @@ int main(int argc, char** argv)
             AXIS2_LOG_LEVEL_DEBUG);
 
     /* Set end point reference of echo service */
-    address = "http://127.0.0.1:8888/axis2/services/RMSampleService";
+    address = "http://127.0.0.1:9090/axis2/services/RMSampleService";
     while ((c = AXIS2_GETOPT(argc, argv, ":a:")) != -1)
     {
 
@@ -356,7 +356,7 @@ usage(
     fprintf(stdout, " [-a ADDRESS]");
     fprintf(stdout, " Options :\n");
     fprintf(stdout, "\t-a ADDRESS \t endpoint address.. The" \
-        " default is http://127.0.0.1:8888/axis2/services/RMSampleService \n");
+        " default is http://127.0.0.1:9090/axis2/services/RMSampleService \n");
     fprintf(stdout, " Help :\n\t-h \t display this help screen.\n\n");
 }
 

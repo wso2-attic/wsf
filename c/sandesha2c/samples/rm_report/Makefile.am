@@ -1,4 +1,4 @@
-prgbindir=$(prefix)/bin/samples
+prgbindir=$(prefix)/bin/samples/sandesha2
 prgbin_PROGRAMS = rm_report
 samplesdir=$(prefix)/samples/client/rm_report
 samples_DATA=report.c Makefile.am Makefile.in
