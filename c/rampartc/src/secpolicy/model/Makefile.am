@@ -10,7 +10,6 @@ librp_model_la_SOURCES = algorithmsuite.c asymmetric_binding.c \
 							symmetric_binding.c transport_binding.c ut.c wss10.c wss11.c x509_token.c
 
 
-librp_model_la_LIBADD  = ${AXIS2C_HOME}/lib
 
 
 INCLUDES = -I$(top_builddir)/include \
