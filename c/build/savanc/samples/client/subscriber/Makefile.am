@@ -1,4 +1,4 @@
-prgbindir=$(prefix)/bin/samples
+prgbindir=$(prefix)/bin/samples/savan
 prgbin_PROGRAMS = subscriber 
 samplesdir=$(prefix)/samples/client/subscriber
 subscriber_SOURCES = subscriber.c
