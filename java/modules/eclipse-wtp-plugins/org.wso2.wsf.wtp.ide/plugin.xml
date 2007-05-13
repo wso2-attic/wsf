@@ -1,0 +1,27 @@
+<plugin>
+
+	<extension point="org.eclipse.ui.actionSets">
+		<actionSet id="org.wso2.wsf.wtp.server.ui" label="WSAS Server"
+			visible="true">
+			<action id="org.wso2.wsf.wtp.server.ui.stop"
+				label="WSAS Stop" 
+				icon="icons/stop.gif" 
+				tooltip="WSAS Server Stop"
+				toolbarPath="Normal/additions"
+				helpContextId="org.wso2.wsf.wtp.server.ui.stop.help"
+				class="org.wso2.wsf.wtp.server.ui.WSASStopDelegate">
+			</action>
+			<action id="org.wso2.wsf.wtp.server.ui.start"
+				label="WSAS Start"
+				icon="icons/start.gif"  
+				style="pulldown"
+				tooltip="WSAS Server Start"
+				toolbarPath="Normal/additions" 
+				helpContextId="org.wso2.wsf.wtp.server.ui.start.help"
+				class="org.wso2.wsf.wtp.server.ui.WSASStartDelegate">
+			</action>
+		</actionSet>
+	</extension>
+
+
+</plugin>
