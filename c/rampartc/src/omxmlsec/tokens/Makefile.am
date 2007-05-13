@@ -10,7 +10,6 @@ liboxstokens_la_SOURCES =  token_encrypted_data.c token_encryption_method.c toke
 						token_transform.c token_transforms.c token_signature.c token_ds_reference.c \
 						token_x509_certificate.c
 
-liboxstokens_la_LIBADD  = ${AXIS2C_HOME}/lib
 
 INCLUDES = -I$(top_builddir)/include \
             -I ../../../../axis2c/util/include \
