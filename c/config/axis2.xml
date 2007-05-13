@@ -25,7 +25,7 @@
     <!-- Transport Ins -->
     <!-- ================================================= -->
     <transportReceiver name="http" class="axis2_http_receiver">
-        <parameter name="port" locked="false">9999</parameter>
+        <parameter name="port" locked="false">6060</parameter>
     </transportReceiver>
 
     <!-- Uncomment this one with the appropriate papameters to enable the SMTP transport Receiver
