@@ -22,3 +22,5 @@ INCLUDES = -I$(prefix)/include/axis2-1.0 \
 			-I../../include \
 			@UTILINC@ \
 			@AXIOMINC@
+
+EXTRA_DIST=mtom_util.h
