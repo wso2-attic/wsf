@@ -1,0 +1,69 @@
+<plugin>
+
+	<extension point="org.eclipse.wst.common.project.facet.core.facets">
+	
+	  <category id="wsas.category">
+    	<label>%WSAS_CATOGERY_LABEL</label>
+    	<description>%WSAS_CATOGERY_DISCRIPTION</description>
+  	  </category>
+
+		  <project-facet id="wsas.core">
+			<label>%WSAS_FACET_CORE_LABEL</label>
+			<description>%WSAS_FACET_CORE_DISCRIPTION</description>
+			<member category="wsas.category "/>
+		  </project-facet>
+
+		<project-facet-version facet="wsas.core" version="1.1">
+		    <constraint>
+      			<requires facet="jst.web" version="2.2,2.3,2.4"/>
+    		</constraint>
+    		<action type="INSTALL">
+      			<delegate class="org.wso2.wsf.ide.facet.deligate.WSASCoreFacetInstallDelegate"/>
+    		</action>
+    		<action type="UNINSTALL">
+      			<delegate class="org.wso2.wsf.ide.facet.deligate.WSASCoreFacetUnInstallDelegate"/>
+    		</action>
+  		</project-facet-version>
+
+		  <project-facet id="wsas.ext">
+			<label>%WSAS_FACET_EXT_LABEL</label>
+			<description>%WSAS_FACET_EXT_DISCRIPTION</description>
+			<member category="wsas.category" />
+		  </project-facet>
+
+		<project-facet-version facet="wsas.ext" version="1.1">
+		    <constraint>
+      			<requires facet="wsas.core" version="1.1"/>
+    		</constraint>
+    		<action type="INSTALL">
+      			<delegate class="org.wso2.wsf.ide.facet.deligate.WSASExtFacetInstallDelegate"/>
+    		</action>
+    		<action type="UNINSTALL">
+      			<delegate class="org.wso2.wsf.ide.facet.deligate.WSASExtFacetUnInstallDelegate"/>
+    		</action>
+  		</project-facet-version>
+  
+	</extension>
+	
+	<extension point="org.eclipse.wst.common.project.facet.ui.images">
+  		<image facet="wsas.core" path="icons/wsas-facet-add.gif"/>
+  		<image facet="wsas.ext" path="icons/wsas-facet-add.gif"/>
+  		<image category="wsas.category" path="icons/wsas-facet.ico"/>
+	</extension>
+	
+	<extension
+       point="org.eclipse.wst.common.project.facet.core.runtimes">
+    <supported>
+      <runtime-component
+         any="true"/>
+      <facet
+         id="wsas.core"
+         version="1.1"/>
+      <facet
+         id="wsas.ext"
+         version="1.1"/>
+    </supported>
+   </extension>
+
+
+</plugin>
