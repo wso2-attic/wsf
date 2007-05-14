@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+	<extension point="org.eclipse.wst.command.env.ui.widgetRegistry">
+      <widgetFactory   
+        id="BeanExampleConfig"
+        insertBeforeCommandId="org.wso2.wsf.ide.creation.core.command.WSASBUCommand"
+        class="org.wso2.wsf.ide.creation.ui.wsrt.WSASBeanConfigWidgetFactory"/>
+    </extension> 
+    
+	<extension point="org.eclipse.wst.command.env.ui.widgetRegistry">
+      <widgetFactory   
+        id="SkelExampleConfig"
+        insertBeforeCommandId="org.wso2.wsf.ide.creation.core.command.WSASTDCommand"
+        class="org.wso2.wsf.ide.creation.ui.wsrt.WSASSkelConfigWidgetFactory" />
+    </extension> 
+    
+    <extension point="org.eclipse.jst.ws.consumption.ui.runtimes">
+      <runtime
+        id="org.wso2.wsf.ide.creation.wsasWebServiceRT"
+        label="%LABEL_RUNTIME_AXIS_2"
+        serverRequired="false"/>
+    </extension>
+
+
+	<!-- define support for WSAS Java bean bottom up and top-down support in web projects -->
+    <extension point="org.eclipse.jst.ws.consumption.ui.serviceRuntimes">
+      <serviceRuntime
+        id="org.wso2.wsf.ide.creation.java" 
+        serviceImplementationTypeId="org.eclipse.jst.ws.wsImpl.java"
+        runtimeId="org.wso2.wsf.ide.creation.wsasWebServiceRT"
+        bottomUp="true"
+        topDown="true"
+        class="org.wso2.wsf.ide.creation.ui.wsrt.WSASWebServiceRuntime">
+
+        <required-facet-version facet="jst.web" version="2.3" allow-newer="true"/>
+        <required-facet-version facet="wsas.core" version="1.1" allow-newer="true" />
+        <required-facet-version facet="wsas.ext" version="1.1" allow-newer="true" />
+
+      </serviceRuntime>
+    </extension>   
+        
+    <!-- define support for Axis Java clients in Web projects -->
+    <extension point="org.eclipse.jst.ws.consumption.ui.clientRuntimes">
+      <clientRuntime
+        id="org.wso2.wsf.ide.consumption.web"
+        clientImplementationTypeId="org.eclipse.jst.ws.client.type.java"
+        runtimeId="org.wso2.wsf.ide.creation.wsasWebServiceRT"
+        class="org.wso2.wsf.ide.creation.ui.wsrt.WSASWebServiceRuntime">
+
+        <required-facet-version facet="jst.web" version="2.3" allow-newer="true" />
+        <required-facet-version facet="wsas.core" version="1.1" allow-newer="true" />
+        <required-facet-version facet="wsas.ext" version="1.1" allow-newer="true" />
+
+      </clientRuntime>
+    </extension>     
+    
+</plugin>
