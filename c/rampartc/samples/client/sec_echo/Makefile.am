@@ -25,4 +25,4 @@ INCLUDES = -I$(prefix)/include/axis2-1.0 \
 			@UTILINC@ \
 			@AXIOMINC@
 
-EXTRA_DIST = README.txt deploy_client_repo.sh update_n_run.sh
+EXTRA_DIST = README.txt deploy_client_repo.sh update_n_run.sh deploy_client_repo.bat update_n_run.bat
