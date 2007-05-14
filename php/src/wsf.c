@@ -569,6 +569,7 @@ static zval* ws_create_object(void *obj, int obj_type,
 static void ws_object_dtor(void *object,
                            zend_object_handle handle TSRMLS_DC)
 {
+	/*
     ws_object *intern = (ws_object *)object;
     zend_hash_destroy(intern->std.properties);
     FREE_HASHTABLE(intern->std.properties);
@@ -576,9 +577,7 @@ static void ws_object_dtor(void *object,
         axis2_svc_client_t *svc_client = NULL;
         svc_client = (axis2_svc_client_t*)intern->ptr;
         if(svc_client){
-			/*
              axis2_svc_client_free(svc_client, env);
-			 */
         }
     }
 	else if(intern->obj_type == WS_SVC){
@@ -588,6 +587,7 @@ static void ws_object_dtor(void *object,
             wsf_svc_info_free(svc_info, ws_env_svr );    
         }
     }
+	*/
 }
 
 static void
