@@ -23,6 +23,10 @@
 @copy  rampartc-0.90\modules\rampart\mod_rampart.lib .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\lib\
 @copy  rampartc-0.90\modules\rampart\mod_rampart.dll .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\lib\
 
+@xcopy /E /I /Q rampartc-0.90\bin\samples .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\bin\samples\rampart
+
+@xcopy /E /I /Q rampartc-0.90\bin\samples\services\sec_echo .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\services\sec_echo
+
 
 @cd ..\..\sandesha2c\build\win32
 
