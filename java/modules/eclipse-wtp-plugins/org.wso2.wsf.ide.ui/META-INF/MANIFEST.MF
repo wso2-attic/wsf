@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %PLUGIN_NAME
+Bundle-SymbolicName: org.wso2.wsf.ide.ui;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: org.wso2.wsf.ide.ui.plugin.WebServiceWSASUIPlugin
+Bundle-Vendor: %PLUGIN_PROVIDER
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.wso2.wsf.ide.core,
+ org.eclipse.jst.ws,
+ org.eclipse.jst.ws.ui
+Eclipse-LazyStart: true
+Export-Package: org.wso2.wsf.ide.consumption.ui.preferences,
+ org.wso2.wsf.ide.ui.plugin
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
