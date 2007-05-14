@@ -171,8 +171,8 @@ download and install libxml2)
 
     Run the wsclient in a new DOS shell
 
-|    cd c:\wsf-c\bin
+    cd c:\wsf-c\bin
 
-    wsclient wsclient.exe
+    wsclient.exe
 
     To see the possible command line options run ./wsclient --help or wsclient.exe -h
