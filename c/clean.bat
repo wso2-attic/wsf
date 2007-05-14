@@ -6,7 +6,7 @@
 
 @if exist savanc\build\savanc rmdir /s /q savanc\build\savanc
 
-@if exist wso2-wsf-c-1.0alhpa2-bin rmdir /S /Q wso2-wsf-c-1.0alhpa2-bin
+@if exist wso2-wsf-c-bin-1.0alhpa2 rmdir /S /Q wso2-wsf-c-bin-1.0alhpa2
 
 
 
