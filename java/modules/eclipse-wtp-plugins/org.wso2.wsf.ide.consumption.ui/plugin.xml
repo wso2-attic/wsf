@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<plugin>
+   
+	<extension point="org.eclipse.wst.command.env.ui.widgetRegistry">
+       <widgetFactory   
+             id="WSASClientConfig"
+             insertBeforeCommandId="org.wso2.wsf.ide.consumption.core.command.WSASWebservicesServerCommand"
+             class="org.wso2.wsf.ide.consumption.ui.wsrt.WSASClientConfigWidgetFactory"/>
+    </extension> 
+    <extension point="org.eclipse.wst.command.env.antDataMapping">
+        <map
+              key="ClientProjectName"
+              operation="org.wso2.wsf.ide.creation.core.command.WSASClientDefaultingCommand"
+              property="ClientProject"
+              transform="org.eclipse.jst.ws.internal.common.StringToIProjectTransformer"/>
+    </extension> 
+
+</plugin>
