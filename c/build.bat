@@ -19,6 +19,11 @@
 
 @copy /Y rampartc-0.90\include\*.h .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\include\
 
+@mkdir .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\docs\ramaprt
+
+@copy rampartc-0.90\INSTALL .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\docs\ramaprt
+
+@copy rampartc-0.90\README .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\docs\ramaprt
 
 @copy  rampartc-0.90\modules\rampart\mod_rampart.lib .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\lib\
 @copy  rampartc-0.90\modules\rampart\mod_rampart.dll .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\lib\
@@ -52,6 +57,12 @@
 @copy /Y sandesha2\sqlite_schema.bat  .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\sqlite_schema.bat
 
 @copy /Y  sandesha2\bin\samples .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\bin\samples
+
+@mkdir .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\docs\sandesha2
+
+@copy sandesha2\README .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\docs\sandesha2
+
+@copy sandesha2\INSTALL .\..\..\axis2c\build\axis2c-bin-1.0.0-win32\docs\sandesha2
 
 
 @cd ..\..\
