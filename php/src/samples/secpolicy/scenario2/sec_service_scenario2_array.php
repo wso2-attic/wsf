@@ -24,10 +24,16 @@ function echoFunction($inMessage) {
 
 $operations = array("echoString" => "echoFunction");
 
-$sec_array = array("includeTimeStamp" => TRUE,
+$sec_array1 = array("includeTimeStamp" => TRUE,
                     "useUsernameToken" => TRUE);
 
-$policy = new WSPolicy(array("security"=>$sec_array));
+
+$sec_array2 = array("includeTimeStamp" => TRUE);
+
+$policy_obj = array("inpolicy"=>$sec_array1,
+		    "outpolicy"=>$sec_array2);
+
+$policy = new WSPolicy(array("security"=>$policy_obj));
 
 $sec_token = new WSSecurityToken(array("user" => "Raigama",
                                        "password" => "RaigamaPW",

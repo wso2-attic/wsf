@@ -23,10 +23,12 @@ $reqPayloadString = <<<XML
     </ns1:echoString>
 XML;
 
-$sec_arry = array("useUsernameToken"=> TRUE,
+$sec_arry1 = array("useUsernameToken"=> TRUE,
                   "includeTimeStamp"=>TRUE );
+$sec_arry2 = array("includeTimeStamp"=>TRUE);
 
-$policy_obj = array("outpolicy"=>$sec_arry);
+$policy_obj = array("outpolicy"=>$sec_arry1,
+                    "inpolicy"=>$sec_arry2);
 
 $policy = new WSPolicy(array("security"=>$policy_obj));
 
