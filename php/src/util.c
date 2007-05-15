@@ -797,13 +797,16 @@ void wsf_util_get_attachments(const axutil_env_t *env,
 {
     axiom_node_t *node = NULL;
     axiom_node_t *tmp_node = NULL;
-    
+    axiom_element_t *payload_element = NULL; 
     if(!payload_node || !cid2contentType || !cid2str)
         return;
-
-    node = axiom_node_get_first_child(payload_node, env);
-    if(node && axiom_node_get_node_type(node, env) == AXIOM_ELEMENT){
-        axiom_element_t *ele = NULL;
+    if(axiom_node_get_node_type(payload_node, env) == AXIOM_ELEMENT)
+    {
+        payload_element = axiom_node_get_data_element(payload_node, env);
+        axiom_element_get_first_element(payload_element, env, payload_node, &node);
+        
+        if(node && axiom_node_get_node_type(node, env) == AXIOM_ELEMENT){
+            axiom_element_t *ele = NULL;
         ele = (axiom_element_t*)axiom_node_get_data_element(node, env);        
         if(ele){
             axiom_namespace_t *ns = NULL;
@@ -856,7 +859,7 @@ void wsf_util_get_attachments(const axutil_env_t *env,
             }
         }
     }
-    
+}
     tmp_node = axiom_node_get_first_child(payload_node, env);
     while(tmp_node)
     {
