@@ -54,44 +54,34 @@ public class WSASWebappUtils {
 					String wsasHomeLocation = (ServerModel.getWsasServerPath()!=null)
 									?ServerModel.getWsasServerPath()
 									:properties.getProperty(WSASCoreUIMessages.PROPERTY_KEY_PATH);
-					String wsasWebappLocation = WSASCoreUtils.addAnotherNodeToPath(
-							wsasHomeLocation,
-							"webapp");
 					String wsasLibFile = WSASCoreUtils.addAnotherNodeToPath(
 							wsasHomeLocation,
 					"lib");
-					String wsasConfFile = WSASCoreUtils.addAnotherNodeToPath(
-							wsasHomeLocation,
-					"conf");
 					String wsasRepositoryFile = WSASCoreUtils.addAnotherNodeToPath(
 							wsasHomeLocation,
 					"repository");
-					String wsasTempWebInfFile = WSASCoreUtils.addAnotherNodeToPath(
+					String wsasTempWebInf = WSASCoreUtils.addAnotherNodeToPath(
 							tempWarLocation,
 					"WEB-INF");
-					String wsasTempWebInfLibFile = WSASCoreUtils.addAnotherNodeToPath(
-							wsasTempWebInfFile,
+					String wsasTempWebInfLib = WSASCoreUtils.addAnotherNodeToPath(
+							wsasTempWebInf,
 					"lib");
-					String wsasTempWebInfConfFile = WSASCoreUtils.addAnotherNodeToPath(
-							wsasTempWebInfFile,
-					"conf");
-					String wsasTempWebBuildFile = WSASCoreUtils.addAnotherNodeToPath(
-							tempWarLocation,
-					"build.xml");
+					
+					File wsasTempWebInfLibFile = new File(wsasTempWebInfLib);
+					if (wsasTempWebInfLibFile.exists()){
+						wsasTempWebInfLibFile.mkdirs();
+					}
 
 					//Copy the webapp content 
-					FileUtils.copyDirectory(new File(wsasWebappLocation), tempWarLocationFile);
-					//delete the build.xml File
-					new File(wsasTempWebBuildFile).delete();
-					//Copy libs 
 					FileUtils.copyDirectory(new File(wsasLibFile),
-											new File(wsasTempWebInfLibFile));
+											wsasTempWebInfLibFile);
 					//copy conf/axis2.xml
-					FileUtils.copyDirectory(new File(wsasConfFile), 
-											new File(wsasTempWebInfConfFile));
+					//FileUtils.copyDirectory(new File(wsasConfFile), 
+					//						new File(wsasTempWebInfConfFile));
+					
 					//Copy modules and services 					
 					FileUtils.copyDirectory(new File(wsasRepositoryFile), 
-											new File(wsasTempWebInfFile));
+											new File(wsasTempWebInf));
 					alreadyWarExist= true;
 				}
 

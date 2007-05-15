@@ -25,13 +25,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.common.frameworks.datamodel.AbstractDataModelOperation;
-import org.wso2.wsf.ide.core.plugin.data.ServerModel;
 import org.wso2.wsf.ide.core.plugin.messages.WSASCoreUIMessages;
 import org.wso2.wsf.ide.core.utils.WSASCoreUtils;
 import org.wso2.wsf.ide.core.utils.FacetContainerUtils;
 import org.wso2.wsf.ide.core.utils.FileUtils;
-import org.wso2.wsf.ide.core.utils.RuntimePropertyUtils;
-import org.wso2.wsf.ide.facet.utils.WSASRuntimeUtils;
 import org.wso2.wsf.ide.facet.utils.WSASWebappUtils;
 import org.wso2.wsf.ide.facet.utils.ContentCopyUtils;
 
@@ -54,17 +51,9 @@ AbstractDataModelOperation {
 		String runtimeLocation = null;
 		ContentCopyUtils contentCopyUtils = new ContentCopyUtils();
 		try {
-			if(ServerModel.isWsasServerPathRepresentsWar() 
-					|| RuntimePropertyUtils.getWarStatusFromPropertiesFile()){
-				runtimeLocation = WSASRuntimeUtils.copyWSASWar(
+			runtimeLocation = WSASWebappUtils.copyWSASWar(
 														monitor,
 														WSASCoreUIMessages.PROPERTY_KEY_PATH);
-			}else{
-
-				runtimeLocation = WSASWebappUtils.copyWSASWar(
-														monitor,
-														WSASCoreUIMessages.PROPERTY_KEY_PATH);
-			}
 		} catch (FileNotFoundException e) {
 			return handleExceptionStatus(e);
 		} catch (IOException e) {
@@ -72,15 +61,19 @@ AbstractDataModelOperation {
 		} catch (Exception e) {
 			return handleExceptionStatus(e);
 		}
+		
+		
+		//Copy all the WSAS libs to the DWP
 		status = contentCopyUtils.copyDirectoryRecursivelyIntoWorkspace(
 				runtimeLocation, 
 				FacetContainerUtils.pathToWebProjectContainer(project), 
 				monitor 
 		);
+		
 		status = Status.OK_STATUS;
 		//clean up tempory files
 		File tempFacetDirectory = new File(runtimeLocation);
-		if (tempFacetDirectory.exists() && ServerModel.isWsasServerPathRepresentsWar()) {
+		if (tempFacetDirectory.exists()) {
 			FileUtils.deleteDir(tempFacetDirectory);
 		}
 		return status;

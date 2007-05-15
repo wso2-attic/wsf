@@ -440,9 +440,4 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		}
 	}
 	
-	private void updateWarStatus(boolean status){
-		ServerModel.setWsasServerPathRepresentsWar(status);
-		RuntimePropertyUtils.writeWarStausToPropertiesFile(status);
-	}
-	
 }

@@ -21,7 +21,6 @@ public class ServerModel {
 	
 	//WSAS Runtime
 	private static String wsasServerPath;
-	private static boolean wsasServerPathRepresentsWar;
 	
 	//WSAS Preferences
 	//Service Codegen Options
@@ -46,14 +45,6 @@ public class ServerModel {
 
 	public static void setWsasServerPath(String wsasServerPathParam) {
 		wsasServerPath = wsasServerPathParam;
-	}
-
-	public static boolean isWsasServerPathRepresentsWar() {
-		return wsasServerPathRepresentsWar;
-}
-	public static void setWsasServerPathRepresentsWar(
-			boolean serverPathRepresentsWar) {
-		ServerModel.wsasServerPathRepresentsWar = serverPathRepresentsWar;
 	}
 
 	public static String getAarExtention() {

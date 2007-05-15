@@ -135,7 +135,7 @@ public class FileUtils
 	public static void copyDirectory(File srcDir, File dstDir) throws IOException {
 		if (srcDir.isDirectory()) {
 			if (!dstDir.exists()) {
-				dstDir.mkdir();
+				dstDir.mkdirs();
 			}
 
 			String[] children = srcDir.list();
