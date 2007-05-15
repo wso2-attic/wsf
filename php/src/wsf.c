@@ -467,8 +467,9 @@ PHP_MSHUTDOWN_FUNCTION(wsf)
 
 	axis2_msg_recv_free(wsf_msg_recv, ws_env_svr);
 
-	wsf_worker_free(worker, ws_env_svr);
-
+	/*
+     * wsf_worker_free(worker, ws_env_svr);
+    */
 	axutil_env_free(env);
 
     axutil_env_free(ws_env_svr);
