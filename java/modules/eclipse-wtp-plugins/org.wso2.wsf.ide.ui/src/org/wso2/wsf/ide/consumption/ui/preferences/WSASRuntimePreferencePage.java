@@ -48,11 +48,11 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 
 	private Button browseButton; 
 	private Text wsasPath; 
-	private Text statusLabel;
+	private Label statusLabel;
 	@SuppressWarnings("unused")
 	private IStatus status = Status.OK_STATUS;
 	private boolean webappExist = false;
-	private boolean isWar = false;
+	//private boolean isWar = false;
 	private String statusBanner = null;
 	
 
@@ -91,11 +91,6 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		}
 
 		webappExist =runtimeExist(serverPath);
-		if(isWar){
-			updateWarStatus(true);
-		}else{
-			updateWarStatus(false);
-		}
 		wsasPath.setLocation(110,30);
 		wsasPath.setSize(400, 20);
 		wsasPath.addModifyListener( new ModifyListener(){
@@ -134,9 +129,10 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		}
 		
 		
-		Text statusLabel = new Text(runtimeGroup,SWT.BACKGROUND | SWT.READ_ONLY | SWT.CENTER);
+		statusLabel = new Label(runtimeGroup,SWT.BACKGROUND | SWT.READ_ONLY | SWT.CENTER);
 		statusLabel.setLocation(20,100);
 		statusLabel.setSize(560,40);
+		statusLabel.setAlignment(SWT.CENTER);
 		
 		if (wsasPath.getText().equals("")) {
 			statusBanner = WSASCoreUIMessages.LABEL_WSAS_RUNTIME_NOT_EXIT;
@@ -393,11 +389,8 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		if (fileName != null) {
 			wsasPath.setText(fileName);
 			ServerModel.setWsasServerPath( wsasPath.getText() );
-			if(isWar){
-				updateWarStatus(true);
-			}else{
-				updateWarStatus(false);
-			}
+			boolean status = runtimeExist(wsasPath.getText());
+			statusUpdate(status);
 		}
 	}
 	
@@ -418,7 +411,6 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 	}
 	
 	private boolean runtimeExist(String path){
-		isWar=false;
 		File wsasHomeDir = new File(path);
 		if (wsasHomeDir.isDirectory()) {
 			String wsasLibPath = WSASCoreUtils.addAnotherNodeToPath(
@@ -435,7 +427,6 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 						path,
 						"wsas.war");
 				if (new File(wsasWarPath).isFile()) {
-					isWar = true;
 					statusUpdate(true);
 					return true;
 				} else {
