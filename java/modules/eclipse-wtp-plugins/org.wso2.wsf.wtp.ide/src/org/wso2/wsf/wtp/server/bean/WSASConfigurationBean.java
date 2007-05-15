@@ -15,14 +15,18 @@
  */
 package org.wso2.wsf.wtp.server.bean;
 
+import org.wso2.wsf.ide.core.plugin.data.ServerModel;
+
 public class WSASConfigurationBean {
 	
-	//private static String wsasInstallationPath = "/home/sandakith/ProjectCheckouts/wso2/wsf/java/modules/eclipse-wtp-plugins/org.wso2.wsas";
-	//private static String wsasInstallationPath = "/media/Sansa m240/wso2wsas-1.2-SNAPSHOT";
-	//private static String wsasInstallationPath = "/media/Sansa m240/wso2wsas-1.2-SNAPSHOT.zip_FILES/wso2wsas-1.2-SNAPSHOT";
-    private static String wsasInstallationPath = "/home/sandakith/Desktop/wso2wsas-1.2-SNAPSHOT";
-    
+    private static String wsasInstallationPath;
     private static boolean wsasStartStatus = false;
+    
+    public static void Init(){
+    	if(ServerModel.getWsasServerPath() != null){
+    		wsasInstallationPath = ServerModel.getWsasServerPath();
+    	}
+    }
 
     public static boolean isWsasStartStatus() {
         return wsasStartStatus;

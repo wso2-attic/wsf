@@ -39,12 +39,15 @@ public class WSASStartDelegate
 	implements IWorkbenchWindowPulldownDelegate {
 
     private static Class wsasMainClazz;
+    MessageBox box = new MessageBox(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 	
 	/**
 	 * @see ActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
 		
+		//Init the Configuration Bean
+		WSASConfigurationBean.Init();
         //Set WSAS system properties
         WSASPropertiesUtil.setWSASProperties();
         WSASClassLoadingUtil.init(WSASConfigurationBean.getWsasInstallationPath());
@@ -78,17 +81,14 @@ public class WSASStartDelegate
             
         } catch (IllegalAccessException e1) {
             e1.printStackTrace();
-            //PopupMessageUtil.popupInformationMessageBox(WSASMessageConstant.INFO_WSAS_START_FAIL);
+            box.setMessage("WSAS Failed to Start ");box.open();
         } catch (InvocationTargetException e1) {
             e1.printStackTrace();
-            //PopupMessageUtil.popupInformationMessageBox(WSASMessageConstant.INFO_WSAS_START_FAIL);
+            box.setMessage("WSAS Failed to Start ");box.open();
         } finally {
             WSASClassLoadingUtil.cleanupAntClassLoader();
         }
 		
-		MessageBox box = new MessageBox(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
-		box.setMessage("WSAS Succesfully Started !! ");
-		box.open();
 	}
 
 	/**
@@ -109,6 +109,10 @@ public class WSASStartDelegate
 	 */
 	public void init(IWorkbenchWindow window) {
 	}
+	
+    public static Class getWSASMainClass(){
+        return wsasMainClazz;
+    }
 
 }
 

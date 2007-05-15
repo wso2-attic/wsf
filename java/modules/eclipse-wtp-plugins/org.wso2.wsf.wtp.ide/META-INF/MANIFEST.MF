@@ -5,5 +5,7 @@ Bundle-SymbolicName: org.wso2.wsf.wtp.ide;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: org.wso2.wsf.wtp.ide.Activator
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.wso2.wsf.ide.ui,
+ org.wso2.wsf.ide.core
 Eclipse-LazyStart: true

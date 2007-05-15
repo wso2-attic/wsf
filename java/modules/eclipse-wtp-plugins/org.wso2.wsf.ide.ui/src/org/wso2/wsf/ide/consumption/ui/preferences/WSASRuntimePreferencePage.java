@@ -426,7 +426,7 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 													"lib");
 			String wsasWebappPath = WSASCoreUtils.addAnotherNodeToPath(
 					wsasHomeDir.getAbsolutePath(),
-					"webapp");
+					"tomcat");
 			if (new File(wsasLibPath).isDirectory() && new File(wsasWebappPath).isDirectory()) {
 				statusUpdate(true);
 				return true;
