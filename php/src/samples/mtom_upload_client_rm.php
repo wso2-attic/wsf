@@ -24,7 +24,7 @@ try {
     $f = file_get_contents("./resources/axis2.jpg");
 
     $reqMessage = new WSMessage($reqPayloadString,
-                                array("to" => "http://localhost:8080/samples/mtom_upload_service_rm.php",
+                                array("to" => "http://localhost/samples/mtom_upload_service_rm.php",
                                       "action" => "http://php.axis2.org/samples/mtom",
                                       "attachments" => array("myid1" => $f)));
 
