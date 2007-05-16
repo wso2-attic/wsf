@@ -16,55 +16,40 @@
 package org.wso2.wsf.wtp.server.ui;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
-import org.wso2.wsf.wtp.server.bean.WSASConfigurationBean;
+import org.wso2.wsf.wtp.server.command.WSASStopCommand;
 
 public class WSASStopDelegate
 	extends ActionDelegate
 	implements IWorkbenchWindowActionDelegate {
 
 	MessageBox box = new MessageBox(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+	IStatus status;
 	
 	/**
 	 * @see ActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
-		
-        if (WSASConfigurationBean.isWsasStartStatus()) {
-            Class wsasMainClazz = WSASStartDelegate.getWSASMainClass();
-           try {
-               Method[] methods = wsasMainClazz.getMethods();
-               Method shutdownMethod = null;
-               for (int i = 0; i < methods.length; i++) {
-                   if (methods[i].getName().equals("main")) {
-                       shutdownMethod = methods[i];
-                       break;
-                   }
-               }
+		try {
+			status = WSASStopCommand.run();
+			if(status.getCode() == 12){
+				box.setMessage(status.getMessage());box.open();
+			}else{
+				box.setMessage("WSO2 Web Services Server Shutdown Successfully !! ");box.open();
+			}
+		} catch (InvocationTargetException e) {
+			status = new Status( IStatus.ERROR,"id",1,e.getMessage(),null );
+			box.setMessage("WSAS Failed to Stop ");box.open();
+		}
 
-               shutdownMethod.invoke(null, new Object[]{new String[]{"STOP"}});
-
-               //set wsas start status to shutdown
-               WSASConfigurationBean.setWsasStartStatus(false);
-               box.setMessage("WSAS Succesfully Stoped !! ");box.open();
-           }  catch (IllegalAccessException e1) {
-               e1.printStackTrace();
-               box.setMessage("WSAS Stopping Action Failed!! ");box.open();
-           } catch (InvocationTargetException e1) {
-               e1.printStackTrace();
-               box.setMessage("WSAS Succesfully Stoped !! ");box.open();
-           }
-        }else{
-            WSASConfigurationBean.setWsasStartStatus(false);
-            box.setMessage("WSAS Not Started !! ");box.open();
-        }
 	}
 
 	/**

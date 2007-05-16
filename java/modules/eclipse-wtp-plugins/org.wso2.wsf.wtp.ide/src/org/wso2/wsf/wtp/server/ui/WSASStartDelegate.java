@@ -15,79 +15,44 @@
  */
 package org.wso2.wsf.wtp.server.ui;
 
-import java.io.File;
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.IWorkbenchWindowPulldownDelegate;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
-import org.wso2.wsf.wtp.server.bean.WSASConfigurationBean;
-import org.wso2.wsf.wtp.server.constant.WSASConfigurationConstant;
-import org.wso2.wsf.wtp.server.util.WSASClassLoadingUtil;
-import org.wso2.wsf.wtp.server.util.WSASPropertiesUtil;
+import org.wso2.wsf.wtp.server.command.WSASStartCommand;
 
 public class WSASStartDelegate
 	extends ActionDelegate
 	implements IWorkbenchWindowPulldownDelegate {
 
-    private static Class wsasMainClazz;
     MessageBox box = new MessageBox(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+    IStatus status;
 	
 	/**
 	 * @see ActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
 		
-		//Init the Configuration Bean
-		WSASConfigurationBean.Init();
-        //Set WSAS system properties
-        WSASPropertiesUtil.setWSASProperties();
-        WSASClassLoadingUtil.init(WSASConfigurationBean.getWsasInstallationPath());
-        wsasMainClazz = WSASClassLoadingUtil.loadClassFromClassLoader(WSASConfigurationConstant.WSAS_MAIN_CLASS);
-        try {
-            Method[] methods = wsasMainClazz.getMethods();
-            Method mainMethod = null;
-            for (int i = 0; i < methods.length; i++) {
-                if (methods[i].getName().equals("main")) {
-                    mainMethod = methods[i];
-                    break;
-                }
-            }
-            Class serviceConfic = WSASClassLoadingUtil.loadClassFromClassLoader(WSASConfigurationConstant.WSAS_SERVER_CONFIG_CLASS);
-            Field[] fields = serviceConfic.getDeclaredFields();
-            AccessibleObject.setAccessible(fields, true);
-
-            for (int i = 0; i < fields.length; i++) {
-                Field f = fields[i];
-                if (f.getName().equals("configurationXMLLocation")) {
-                    f.set(serviceConfic, WSASConfigurationBean.getWsasInstallationPath() + File.separator + "conf" + File
-                            .separator + "server.xml");
-                    break;
-                }
-            }
-
-            mainMethod.invoke(null, new Object[]{new String[]{"RUN"}});
-
-            //set wsas start status to pass
-            WSASConfigurationBean.setWsasStartStatus(true);
-            
-        } catch (IllegalAccessException e1) {
-            e1.printStackTrace();
-            box.setMessage("WSAS Failed to Start ");box.open();
-        } catch (InvocationTargetException e1) {
-            e1.printStackTrace();
-            box.setMessage("WSAS Failed to Start ");box.open();
-        } finally {
-            WSASClassLoadingUtil.cleanupAntClassLoader();
-        }
+		try {
+			status = WSASStartCommand.run();
+			if(status.getCode() == 11){
+				box.setMessage(status.getMessage());box.open();
+			}else{
+				box.setMessage("WSO2 Web Services Server Started Successfully !! ");box.open();
+			}
+		} catch (InvocationTargetException e) {
+			status = new Status( IStatus.ERROR,"id",1,e.getMessage(),null );
+			box.setMessage("WSAS Failed to Start \n"+"Reason"+e.getMessage());box.open();
+		}
 		
 	}
 
@@ -110,9 +75,6 @@ public class WSASStartDelegate
 	public void init(IWorkbenchWindow window) {
 	}
 	
-    public static Class getWSASMainClass(){
-        return wsasMainClazz;
-    }
 
 }
 
