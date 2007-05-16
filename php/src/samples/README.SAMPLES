@@ -48,9 +48,6 @@ request_client_dom.php - Client for reply echo service, using axis2_request()
 request_client_msg.php - Client for reply echo service, using axis2_request() 
                     function with payload in Axis2Message format.
 
-request_client_simplexml.php - Client for reply echo service, using axis2_request() 
-                    function with payload in SimpleXMLElement format.
-
 request_client_str.php - Client for reply echo service, using axis2_request() 
                     function with payload in string format.
 
@@ -62,21 +59,6 @@ send_client_msg.php - Client for notify service, using axis2_send()
 send_client_str.php - Client for notify service, using axis2_send()
                     function with payload in string format.
 
-echo_service_sec.php- Echo service for security samples
-
-echo_client_sec_plaintext.php - Security enable echo client for echo service:
-                                username token with password in plaintext
-
-echo_client_sec_digest.php - Security enable echo client for echo service:
-                             username token with password in digest
-
-echo_client_sec_timestamp.php - Security enable echo client for echo service:
-                            with timestamp enable
-
-passwords (In resources directory)- Password file for security samples.To run security 
-                                    samples user should copy passwords file to the 
-                                    location /usr/local/apache2/passwd.
-                                    
 math_service.php - Math service for add, sub, mul and div operations.Returns the
                    reply for the operations.(In math directory)
 
