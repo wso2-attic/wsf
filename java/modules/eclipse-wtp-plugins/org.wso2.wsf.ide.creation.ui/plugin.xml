@@ -19,7 +19,7 @@
     <extension point="org.eclipse.jst.ws.consumption.ui.runtimes">
       <runtime
         id="org.wso2.wsf.ide.creation.wsasWebServiceRT"
-        label="%LABEL_RUNTIME_AXIS_2"
+        label="%LABEL_RUNTIME_WSAS"
         serverRequired="false"/>
     </extension>
 
