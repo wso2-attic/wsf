@@ -12,16 +12,50 @@
 				class="org.wso2.wsf.wtp.server.ui.WSASStopDelegate">
 			</action>
 			<action id="org.wso2.wsf.wtp.server.ui.start"
-				label="WSAS Start"
-				icon="icons/start.gif"  
+				label="WSAS Start" 
+				icon="icons/start.gif" 
 				style="pulldown"
-				tooltip="WSAS Server Start"
-				toolbarPath="Normal/additions" 
+				tooltip="WSAS Server Start" 
+				toolbarPath="Normal/additions"
 				helpContextId="org.wso2.wsf.wtp.server.ui.start.help"
 				class="org.wso2.wsf.wtp.server.ui.WSASStartDelegate">
 			</action>
 		</actionSet>
 	</extension>
+
+
+
+	<extension point="org.eclipse.ui.actionSets">
+		<actionSet
+			id="org.wso2.wsf.wtp.server.ui.menu"
+			label="WSAS Server"
+			visible="true">
+
+			<menu
+				id="org.wso2.wsf.wtp.server.ui.menu.topLevelMenu"
+				label="WSAS" path="additions">
+				<separator name="WSASGroup" />
+			</menu>
+			
+			<action
+				id="org.wso2.wsf.wtp.server.ui.menu.action"
+				label="WSAS Stop" icon="icons/stop.gif"
+				tooltip="WSAS Server Stop"
+				menubarPath="org.wso2.wsf.wtp.server.ui.menu.topLevelMenu/WSASGroup"
+				class="org.wso2.wsf.wtp.server.ui.WSASStopMenuDelegate">
+			</action>
+			<action
+				id="org.wso2.wsf.wtp.server.ui.menu.action"
+				label="WSAS Start" icon="icons/start.gif"
+				tooltip="WSAS Server Start"
+				menubarPath="org.wso2.wsf.wtp.server.ui.menu.topLevelMenu/WSASGroup"
+				class="org.wso2.wsf.wtp.server.ui.WSASStartMenuDelegate">
+			</action>
+
+		</actionSet>
+	</extension>
+
+
 
 
 </plugin>
