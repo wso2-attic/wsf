@@ -24,8 +24,9 @@ Contents:
 	You need to download following:
 
 	libxml2 binary distribution
-        zlib binary distribution
-       	iconv binary distribution
+      zlib binary distribution
+      iconv binary distribution
+	OpenSSL binary distribution
         
     b. Using the command prompt            
 
@@ -39,8 +40,11 @@ Contents:
 	Now change directory to "wsf_c/axis2c/build/win32" and edit 
 	the configure.in file and set your binary installation 
 	locations of libxml2, zlib and iconv libraries.
+
+	Similarly you will need to edit the configure.in files in rampartc and sandesha2
+	directories. They run the build.bat file in wso2-wsf-php-src-1.0alpha2 directory.
                     
-  	"nmake dist" will build the binary under "wsf_c/axis2c/build" directory.
+  	This will build the binary to wso2-wsf-php-src-1.0alpha2 directory.
 
 3. Building WSO2 WSF
                 
