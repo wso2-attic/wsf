@@ -29,6 +29,7 @@ import org.eclipse.ui.IWorkbenchWindowPulldownDelegate;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
 import org.wso2.wsf.wtp.server.command.WSASStartCommand;
+import org.wso2.wsf.wtp.server.command.WTPInternalBrowserCommand;
 
 public class WSASStartMenuDelegate
 	extends ActionDelegate
@@ -53,6 +54,9 @@ public class WSASStartMenuDelegate
 			status = new Status( IStatus.ERROR,"id",1,e.getMessage(),null );
 			box.setMessage("WSAS Failed to Start \n"+"Reason"+e.getMessage());box.open();
 		}
+		
+		//Pop up the browser with the url
+		WTPInternalBrowserCommand.popUpInrernalBrouwser("http://localhost:9762/");
 
 	}
 
