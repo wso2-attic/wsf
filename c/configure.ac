@@ -78,6 +78,25 @@ AC_ARG_WITH(apache2,
   AC_MSG_RESULT(no)
 )
 
+AC_MSG_CHECKING(whether to use openssl)
+AC_ARG_ENABLE(openssl, [  --enable-openssl
+                          enable OpenSSL support in client transport (default=no)],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    CFLAGS="$CFLAGS"
+    ssl_enabled=false
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    CFLAGS="$CFLAGS -DAXIS2_SSL_ENABLED"
+    ssl_enabled=true
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+  CFLAGS="$CFLAGS"
+)
+
 dnl Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS([stdio.h stdlib.h string.h])
