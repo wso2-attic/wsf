@@ -49,6 +49,35 @@ if test "$GCC" = "yes"; then
 fi
 LDFLAGS="-lpthread"
 
+AC_MSG_CHECKING(whether to use apache2 as server transport)
+AC_ARG_WITH(apache2,
+[  --with-apache2[=PATH]      Find the Apache2 HTTP Web server header files in 'PATH'.
+    If this option is given, the Apache2 httpd module would be built.
+    'PATH' should point to Apache2 httpd include files location.
+    If you omit the '=PATH' part completely, the configure script will search
+    '/usr/include/apache2' for Apache2 headers.],
+[ case "$withval" in
+  no)
+    AC_MSG_RESULT(no)
+    APACHE2BUILD=""
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    dnl Find apache2 include dir in the path pointed by APACHE2_HOME env variable
+    if test -d $withval; then
+        apache2inc="-I$withval"
+    dnl else find the apache2 include dir in /usr/local/apache2
+    elif test -d '/usr/include/apache2'; then
+        apache2inc="-I/usr/include/apache2"
+    else
+        AC_MSG_ERROR(could not find apache2. stop)
+    fi
+    APACHE2BUILD="apache2"
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+)
+
 dnl Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS([stdio.h stdlib.h string.h])
