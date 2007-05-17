@@ -50,10 +50,6 @@ import org.mozilla.javascript.Context;
  */
 public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver
         implements MessageReceiver {
-    public static final String LOAD_JSSCRIPTS = "loadJSScripts";
-   
-    public static final String AXIS2_MESSAGECONTEXT = "messageContext";
-    
     /**
      * Invokes the Javascript service with the parameters from the inMessage
      * and sets the outMessage with the response from the service.
@@ -98,14 +94,14 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver
 
             // Get necessary JavaScripts to be loaded from services.xml
             Parameter param = inMessage.getOperationContext().getAxisOperation().getParameter(
-                    LOAD_JSSCRIPTS);
+                    JavaScriptEngineConstants.LOAD_JSSCRIPTS);
             if (param != null) {
                 scripts = (String) param.getValue();
             }
 
             // Get necessary JavaScripts to be loaded from axis2.xml
             param = inMessage.getConfigurationContext().getAxisConfiguration().getParameter(
-                    LOAD_JSSCRIPTS);
+                    JavaScriptEngineConstants.LOAD_JSSCRIPTS);
             if (param != null) {
                 if (scripts == null) {
                     scripts = (String) param.getValue();
@@ -157,7 +153,7 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver
         JavaScriptEngine engine;
         engine = new JavaScriptEngine();
         Context context = engine.getCx();
-        context.putThreadLocal(AXIS2_MESSAGECONTEXT, inMessage);
+        context.putThreadLocal(JavaScriptEngineConstants.AXIS2_MESSAGECONTEXT, inMessage);
         
         Parameter parameter = inMessage.getParameter("javascript.hostobjects");
         if ((parameter != null) && (parameter.getParameterType() == 2)) {
@@ -202,7 +198,7 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver
     public Reader readJS(MessageContext inMessage) throws AxisFault {
         InputStream jsFileStream;
         AxisService service = inMessage.getServiceContext().getAxisService();
-        Parameter implInfoParam = service.getParameter("ServiceJS");
+        Parameter implInfoParam = service.getParameter(JavaScriptEngineConstants.SERVICE_JS);
         if (implInfoParam == null) {
             throw new AxisFault("Parameter 'ServiceJS' not specified");
         }
