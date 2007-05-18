@@ -52,7 +52,15 @@ zend_class_entry *ws_client_proxy_class_entry;
 zend_class_entry *ws_security_token_class_entry;
 zend_class_entry *ws_policy_class_entry;
 zend_class_entry *ws_param_class_entry;
+/** definitions from ext/soap */
 
+int le_url;
+int le_sdl;
+int le_typemap;
+
+HashTable defEnc, defEncIndex, defEncNs;
+
+/** end definitions from ext/soap */
 
 /* True global values, worker is thread safe,
  *  message receiver does not have state*/
@@ -464,17 +472,17 @@ PHP_MSHUTDOWN_FUNCTION(wsf)
     UNREGISTER_INI_ENTRIES();
     
     axiom_xml_reader_cleanup();
-
-	axis2_msg_recv_free(wsf_msg_recv, ws_env_svr);
-
-	/*
-     * wsf_worker_free(worker, ws_env_svr);
-    */
-	axutil_env_free(env);
+    /*
+    axis2_msg_recv_free(wsf_msg_recv, ws_env_svr);
+   
+  
+    wsf_worker_free(worker, ws_env_svr);
+    
+    axutil_env_free(env);
 
     axutil_env_free(ws_env_svr);
-
-	return SUCCESS;
+	*/
+    return SUCCESS;
 }
 /* }}} */
 
@@ -570,7 +578,7 @@ static zval* ws_create_object(void *obj, int obj_type,
 static void ws_object_dtor(void *object,
                            zend_object_handle handle TSRMLS_DC)
 {
-	/*
+    /*
     ws_object *intern = (ws_object *)object;
     zend_hash_destroy(intern->std.properties);
     FREE_HASHTABLE(intern->std.properties);
@@ -580,15 +588,14 @@ static void ws_object_dtor(void *object,
         if(svc_client){
              axis2_svc_client_free(svc_client, env);
         }
-    }
-	else if(intern->obj_type == WS_SVC){
+    }else if(intern->obj_type == WS_SVC){
         wsf_svc_info_t *svc_info = NULL;
         svc_info = (wsf_svc_info_t*)intern->ptr;
         if(svc_info){
             wsf_svc_info_free(svc_info, ws_env_svr );    
         }
     }
-	*/
+    */
 }
 
 static void
