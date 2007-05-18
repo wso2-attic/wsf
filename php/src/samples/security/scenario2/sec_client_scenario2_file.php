@@ -37,7 +37,7 @@ $sec_token = new WSSecurityToken(array("user" => "Raigama",
                                        "passwordType" => "Digest"));
 				       
 try{
-$client = new WSClient(array("to"=>"http://localhost/samples/secpolicy/scenario2/sec_service_scenario2_file.php",
+$client = new WSClient(array("to"=>"http://localhost/samples/security/scenario2/sec_service_scenario2_file.php",
                              "policy"=>$policy,
 			     "securityToken" => $sec_token));
  

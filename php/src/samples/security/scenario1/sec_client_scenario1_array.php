@@ -31,7 +31,7 @@ $sec_token = new WSSecurityToken(array("ttl" => 60));
 
 
 try {
-    $client = new WSClient(array("to"=>"http://localhost/samples/secpolicy/scenario1/sec_service_scenario1_array.php",
+    $client = new WSClient(array("to"=>"http://localhost/samples/security/scenario1/sec_service_scenario1_array.php",
                                  "policy"=>$policy,
                                  "securityToken" => $sec_token));
 

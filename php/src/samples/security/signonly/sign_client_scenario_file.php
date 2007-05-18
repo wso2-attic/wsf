@@ -36,7 +36,7 @@ $sec_token = new WSSecurityToken(array("ttl" => 60,
                                        "privateKey" => $prvkey ));
 				       
 try{
-$client = new WSClient(array("to"=>"http://localhost/samples/secpolicy/signonly/sign_service_scenario_file.php",
+$client = new WSClient(array("to"=>"http://localhost/samples/security/signonly/sign_service_scenario_file.php",
 			      "policy"=>$policy,
 			     "securityToken" => $sec_token));
 

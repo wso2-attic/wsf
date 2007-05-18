@@ -34,7 +34,7 @@ $sec_token = new WSSecurityToken(array("user" => "buddhika",
                                        "passwordType" => "Digest"));
 
 try{
-$client = new WSClient(array("to"=>"http://localhost/samples/secpolicy/call_back_scenario/sec_service_scenario2_array.php",
+$client = new WSClient(array("to"=>"http://localhost/samples/security/call_back_scenario/sec_service_scenario2_array.php",
                              "policy"=>$policy,
 			     "securityToken" => $sec_token));
  

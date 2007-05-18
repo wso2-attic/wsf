@@ -40,7 +40,7 @@ $sec_token = new WSSecurityToken(array("user" => "Raigama",
                                        "receiverCertificate" => $key));
 
 try {
-    $client = new WSClient(array("to"=>"http://localhost/samples/secpolicy/scenario3/sec_service_scenario3_file.php",
+    $client = new WSClient(array("to"=>"http://localhost/samples/security/scenario3/sec_service_scenario3_file.php",
                                  "policy"=>$policy,
                                  "securityToken" => $sec_token));
 

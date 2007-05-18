@@ -39,7 +39,7 @@ $sec_token = new WSSecurityToken(array("ttl" => 300,
                                        "receiverCertificate" => $key));
 
 try {
-    $client = new WSClient(array("to"=>"http://localhost/samples/secpolicy/encrypt_only/encrypt_service.php",
+    $client = new WSClient(array("to"=>"http://localhost/samples/security/encrypt_only/encrypt_service.php",
                                  "policy"=>$policy,
                                  "securityToken" => $sec_token));
 
