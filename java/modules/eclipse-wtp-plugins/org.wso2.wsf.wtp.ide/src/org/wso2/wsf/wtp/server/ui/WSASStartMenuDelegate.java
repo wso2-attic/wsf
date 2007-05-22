@@ -30,6 +30,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
 import org.wso2.wsf.wtp.server.command.WSASStartCommand;
 import org.wso2.wsf.wtp.server.command.WTPInternalBrowserCommand;
+import org.wso2.wsf.wtp.server.util.WSASUtils;
 
 public class WSASStartMenuDelegate
 	extends ActionDelegate
@@ -56,7 +57,7 @@ public class WSASStartMenuDelegate
 		}
 		
 		//Pop up the browser with the url
-		WTPInternalBrowserCommand.popUpInrernalBrouwser("http://localhost:9762/");
+		WTPInternalBrowserCommand.popUpInrernalBrouwser(WSASUtils.getWSASHTTPSAddtess());
 
 	}
 

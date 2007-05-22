@@ -40,10 +40,16 @@ public class WSASConfigurationConstant {
     public static final String AXIS2_HOME = "axis2.home";
     public static final String DERBY_HOME = "derby.system.home";
     public static final String WSO2WSAS_SERVER_XML_PROP = "wso2.wsas.server.xml";
+    public static final String WSO2WSAS_HTTP_PORT = "9762";
+    public static final String WSO2WSAS_HTTPS_PORT = "9443";
 
     //files and folders
     public static final String LOG4J_CONFIGURATION = "log4j.configuration";
     public static final String CONF_FOLDER = "conf";
+    
+    //Other
+    public static final String HTTP_PREFIX = "http://";
+    public static final String HTTPS_PREFIX = "https://";
 
 
 }
