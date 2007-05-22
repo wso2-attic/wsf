@@ -31,6 +31,7 @@ import org.apache.axis2.json.JSONOMBuilder;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.ImporterTopLevel;
+import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.WrappedException;
@@ -219,6 +220,8 @@ public class JavaScriptEngine extends ImporterTopLevel {
 
         } catch (WrappedException exception) {
             throw AxisFault.makeFault(exception.getCause());
+        }catch (JavaScriptException exception){
+            throw new AxisFault(exception.getValue().toString(),exception);
         }
         catch (Throwable throwable) {
             throw AxisFault.makeFault(throwable);
