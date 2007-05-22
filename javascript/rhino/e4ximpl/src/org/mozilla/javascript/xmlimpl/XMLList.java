@@ -499,7 +499,7 @@ public class XMLList extends XMLObjectImpl implements Function {
         }
     }
 
-    int length() {
+    public int length() {
         return _axiomNodeList.size();
     }
 
@@ -705,7 +705,7 @@ public class XMLList extends XMLObjectImpl implements Function {
         if (length() == 1) {
             return getFromAxiomNodeList(0).getXmlObject();
         } else {
-            throw ScriptRuntime.typeError("getAxiomObject" + LIST_WITH_ONE_ITEM);
+            throw ScriptRuntime.typeError("getAxiomObject " + LIST_WITH_ONE_ITEM);
         }
     }
 

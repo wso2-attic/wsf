@@ -35,6 +35,7 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.WrappedException;
 import org.mozilla.javascript.xmlimpl.XML;
+import org.mozilla.javascript.xmlimpl.XMLList;
 
 
 /**
@@ -61,10 +62,11 @@ public class JavaScriptEngine extends ImporterTopLevel {
 
     /**
      * Evaluates a Reader instance associated to a Javascript source.
+     *
      * @param reader a Reader instance associated to a Javascript source
      * @throws IOException if the Reader instance generates an IOException
      */
-    public void evaluate(Reader reader) throws IOException{
+    public void evaluate(Reader reader) throws IOException {
         cx.evaluateReader(this, reader, "<cmd>", 1, null);
     }
 
@@ -74,8 +76,8 @@ public class JavaScriptEngine extends ImporterTopLevel {
      * search will assume absolute path is given. If fails again then it will
      * search under classes folder in Axis2 repository.
      *
-     * @exception FileNotFoundException if the specifed source cannot be found
-     * @exception IOException if evaluating the source produces an IOException
+     * @throws FileNotFoundException if the specifed source cannot be found
+     * @throws IOException           if evaluating the source produces an IOException
      */
     public static void load(Context cx, Scriptable thisObj,
                             Object[] args, Function funObj)
@@ -123,9 +125,9 @@ public class JavaScriptEngine extends ImporterTopLevel {
      *
      * @param method Javascript operation name
      * @param reader a Reader instance associated with the Javascript service
-     * @param args an Object representing the input to the operation
-     * @param json a boolean parameter indicating whether the service is accepting a JSON input
-     *        or an XML input
+     * @param args   an Object representing the input to the operation
+     * @param json   a boolean parameter indicating whether the service is accepting a JSON input
+     *               or an XML input
      * @return an OMNode containing the result from executing the operation
      * @throws AxisFault
      */
@@ -138,13 +140,13 @@ public class JavaScriptEngine extends ImporterTopLevel {
      * Any Javascript source defined under loadJSScripts parameter is evaluated before
      * evaluating the operation.
      *
-     * @param method Javascript operation name
-     * @param reader a Reader instance associated with the Javascript service
-     * @param args an Object representing the input to the operation
+     * @param method  Javascript operation name
+     * @param reader  a Reader instance associated with the Javascript service
+     * @param args    an Object representing the input to the operation
      * @param scripts a string represnting a set of Javascript files to be evaluated before
-     *        evaluating the service
-     * @param json a boolean parameter indicating whether the service is accepting a JSON input
-     *        or an XML input
+     *                evaluating the service
+     * @param json    a boolean parameter indicating whether the service is accepting a JSON input
+     *                or an XML input
      * @return an OMNode containing the result from executing the operation
      * @throws AxisFault
      */
@@ -170,7 +172,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
                 if (!(fObj instanceof Function) || (fObj == Scriptable.NOT_FOUND)) {
                     throw new AxisFault("Method " + method + " is undefined or not a function");
                 } else {
-                    Object functionArgs[] = { args };
+                    Object functionArgs[] = {args};
                     Function f = (Function) fObj;
                     args = f.call(cx, this, this, functionArgs);
                 }
@@ -181,13 +183,13 @@ public class JavaScriptEngine extends ImporterTopLevel {
             } catch (IOException e) {
                 throw AxisFault.makeFault(e);
             }
-          
+
             // Get the function from the scope the javascript object is in
             Object fObj = this.get(method, this);
             if (!(fObj instanceof Function) || (fObj == Scriptable.NOT_FOUND)) {
                 throw new AxisFault("Method " + method + " is undefined or not a function");
             }
-            Object functionArgs[] = { args };
+            Object functionArgs[] = {args};
             Function f = (Function) fObj;
             result = f.call(cx, this, this, functionArgs);
             if (json) {
@@ -197,14 +199,29 @@ public class JavaScriptEngine extends ImporterTopLevel {
                 result = builder.processDocument(in, null, null);
             } else {
                 // Get the OMNode inside the resulting object
-                result = ((XML) result).getAxiomFromXML();
+                if (result instanceof XML) {
+                    result = ((XML) result).getAxiomFromXML();
+
+                } else if (result instanceof XMLList) {
+                    XMLList list = (XMLList) result;
+
+                    if (list.length() == 1) {
+                        result = list.getAxiomFromXML();
+
+                    } else if (list.length() == 0) {
+                        throw new AxisFault("Function returns an XMLList containing zero node");
+                    } else {
+                        throw new AxisFault("Function returns an XMLList containing more than one node");
+                    }
+                }
             }
             return (OMNode) result;
-        } catch (WrappedException exception){
+
+        } catch (WrappedException exception) {
             throw AxisFault.makeFault(exception.getCause());
         }
         catch (Throwable throwable) {
-                throw AxisFault.makeFault(throwable);
+            throw AxisFault.makeFault(throwable);
         }
     }
 
