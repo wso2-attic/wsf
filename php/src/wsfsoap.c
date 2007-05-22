@@ -80,18 +80,17 @@ void wsf_soap_prepare_ws_globals()
             SOAP_1_2_ENC_NS_PREFIX, sizeof(SOAP_1_2_ENC_NS_PREFIX), NULL);
 } 
 
-
+#ifdef UNCOMMENT
 static void soap_server_fault(char* code, char* string, char *actor, zval* details, char* name TSRMLS_DC)
 {
     zval ret;
 
     INIT_ZVAL(ret);
-    /*
     set_soap_fault(&ret, NULL, code, string, actor, details, name TSRMLS_CC);
     soap_server_fault_ex(NULL, &ret, NULL TSRMLS_CC);
-    */
     zend_bailout();
 }
+#endif
 
 /*
 static void delete_url(void *handle)
@@ -114,14 +113,15 @@ static void type_to_string(sdlTypePtr type, smart_str *buf, int level);
 static sdlParamPtr get_param(sdlFunctionPtr function, char *param_name, int index, int);
 
 static sdlFunctionPtr get_function(sdlPtr sdl, const char *function_name);
-
+/*
 static sdlFunctionPtr get_doc_function(sdlPtr sdl, xmlNodePtr node);
 
-/*
 static sdlFunctionPtr deserialize_function_call(sdlPtr sdl, xmlDocPtr request, char* actor, zval *function_name, int *num_params, zval **parameters[], int *version, soapHeader **headers TSRMLS_DC);
-*/
+
+
 static xmlDocPtr serialize_response_call(sdlFunctionPtr function, char *function_name,char *uri,zval *ret, soapHeader *headers, int version TSRMLS_DC);
 
+*/
 static xmlDocPtr serialize_function_call(zval *this_ptr, sdlFunctionPtr function, char *function_name, char *uri, zval **arguments, int arg_count, int version, HashTable *soap_headers TSRMLS_DC);
 
 static xmlNodePtr serialize_parameter(sdlParamPtr param,zval *param_val,int index,char *name, int style, xmlNodePtr parent TSRMLS_DC);
@@ -239,7 +239,7 @@ void wsf_soap_do_soap_call(zval* this_ptr,
                          char* call_uri,
                          HashTable* soap_headers,
                          zval* output_headers,
-                         axis2_env_t *env
+                         axutil_env_t *env
                          TSRMLS_DC)
 {
 	zval **tmp;
@@ -488,6 +488,7 @@ void wsf_soap_do_soap_call(zval* this_ptr,
 	
 }
 
+#ifdef UNCOMMENT
 
 static void deserialize_parameters(xmlNodePtr params, sdlFunctionPtr function, int *num_params, zval ***parameters)
 {
@@ -575,6 +576,10 @@ static void deserialize_parameters(xmlNodePtr params, sdlFunctionPtr function, i
 	(*num_params) = num_of_params;
 }
 
+#endif
+
+#ifdef UNCOMMENT
+
 static sdlFunctionPtr find_function(sdlPtr sdl, xmlNodePtr func, zval* function_name)
 {
 	sdlFunctionPtr function;
@@ -598,7 +603,10 @@ static sdlFunctionPtr find_function(sdlPtr sdl, xmlNodePtr func, zval* function_
 	}
 
 	return function;
+
 }
+#endif
+
 
 /*
 static sdlFunctionPtr deserialize_function_call(sdlPtr sdl, xmlDocPtr request, char* actor, zval *function_name, int *num_params, zval ***parameters, int *version, soapHeader **headers TSRMLS_DC)
@@ -860,6 +868,9 @@ ignore_header:
 	return function;
 }
 */
+
+#ifdef UNCOMMENT
+
 static int serialize_response_call2(xmlNodePtr body, sdlFunctionPtr function, char *function_name, char *uri, zval *ret, int version, int main TSRMLS_DC)
 {
 	xmlNodePtr method = NULL, param;
@@ -962,7 +973,9 @@ static int serialize_response_call2(xmlNodePtr body, sdlFunctionPtr function, ch
 	}
 	return use;
 }
+#endif
 
+#ifdef UNCOMMENT
 static xmlDocPtr serialize_response_call(sdlFunctionPtr function, char *function_name, char *uri, zval *ret, soapHeader* headers, int version TSRMLS_DC)
 {
 	xmlDocPtr doc;
@@ -1317,6 +1330,9 @@ static xmlDocPtr serialize_response_call(sdlFunctionPtr function, char *function
 	return doc;
 }
 
+#endif
+
+
 static xmlNodePtr serialize_parameter(sdlParamPtr param, zval *param_val, int index, char *name, int style, xmlNodePtr parent TSRMLS_DC)
 {
 	char *paramName;
@@ -1442,6 +1458,8 @@ static sdlFunctionPtr get_function(sdlPtr sdl, const char *function_name)
 	return NULL;
 }
 
+#ifdef UNCOMMENT 
+
 static sdlFunctionPtr get_doc_function(sdlPtr sdl, xmlNodePtr params)
 {
 	if (sdl) {
@@ -1496,6 +1514,7 @@ static sdlFunctionPtr get_doc_function(sdlPtr sdl, xmlNodePtr params)
 	}
 	return NULL;
 }
+#endif
 
 /*
 void function_to_string(sdlFunctionPtr function, smart_str *buf)

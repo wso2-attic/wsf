@@ -31,7 +31,7 @@ void wsf_soap_do_soap_call(zval* this_ptr,
                          char* call_uri,
                          HashTable* soap_headers,
                          zval* output_headers,
-                         axis2_env_t *env
+                         axutil_env_t *env
                          TSRMLS_DC);
 
 #endif /* WSF_SCLIENT_H */

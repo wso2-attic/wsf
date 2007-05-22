@@ -861,7 +861,6 @@ PHP_METHOD(ws_client, __construct)
         if(zend_hash_find(ht, WS_WSDL, sizeof(WS_WSDL), (void **)&tmp) == SUCCESS &&
                 Z_TYPE_PP(tmp) == IS_STRING)
         {
-			/*
             int wsdl_cache = 0, ret;
             char *wsdl_path = NULL;
             sdlPtr sdl;
@@ -869,7 +868,6 @@ PHP_METHOD(ws_client, __construct)
             sdl = get_sdl(obj , wsdl_path, wsdl_cache TSRMLS_CC);
             ret = zend_list_insert(sdl, le_sdl);
             add_property_resource(obj , "sdl", ret); 
-			*/
         }
     }
 }
