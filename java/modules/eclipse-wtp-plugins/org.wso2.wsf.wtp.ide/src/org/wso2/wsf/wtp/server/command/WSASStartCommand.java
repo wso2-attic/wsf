@@ -71,11 +71,6 @@ public class WSASStartCommand {
 				}
 
 				mainMethod.invoke(null, new Object[]{new String[]{"RUN"}});
-
-				//set wsas start status to pass
-				WSASConfigurationBean.setWsasStartStatus(true);
-				
-				//Wait for 20 secoends
 				
 			}catch(IllegalArgumentException e){
 				status = new Status( IStatus.ERROR,"id",0,e.getMessage(),null);

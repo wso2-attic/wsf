@@ -28,15 +28,20 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.IWorkbenchWindowPulldownDelegate;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
+import org.wso2.wsf.wtp.server.bean.WSASConfigurationBean;
 import org.wso2.wsf.wtp.server.command.WSASStartCommand;
 import org.wso2.wsf.wtp.server.command.WTPInternalBrowserCommand;
+import org.wso2.wsf.wtp.server.monitor.WSASUpMonitorThread;
+import org.wso2.wsf.wtp.server.util.WSASUtils;
 
 public class WSASStartDelegate
 	extends ActionDelegate
 	implements IWorkbenchWindowPulldownDelegate {
-
+	
+	
     MessageBox box = new MessageBox(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
-    IStatus status;
+    private IStatus status;
+    private final long interval = 1000;
 	
 	/**
 	 * @see ActionDelegate#run(IAction)
@@ -48,15 +53,25 @@ public class WSASStartDelegate
 			if(status.getCode() == 11){
 				box.setMessage(status.getMessage());box.open();
 			}else{
-				box.setMessage("WSO2 Web Services Server Started Successfully !! ");box.open();
+				WSASUpMonitorThread wsasMonitor = new WSASUpMonitorThread();
+				wsasMonitor.start();
 			}
 		} catch (InvocationTargetException e) {
 			status = new Status( IStatus.ERROR,"id",1,e.getMessage(),null );
 			box.setMessage("WSAS Failed to Start \n"+"Reason"+e.getMessage());box.open();
 		}
-		
-		//Pop up the brouser with the url
-		WTPInternalBrowserCommand.popUpInrernalBrouwser("http://localhost:9762/");
+		while(!WSASConfigurationBean.isWsasStartStatus()){
+			try {
+				Thread.sleep(interval);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		//Kill the WSAS Monitor Thread
+		WSASUpMonitorThread.setAlive(false);
+       	box.setMessage("WSO2 Web Services Server Started Successfully !! ");box.open();
+		//Pop up the browser with the url
+		WTPInternalBrowserCommand.popUpInrernalBrouwser(WSASUtils.getWSASHTTPSAddtess());
 		
 	}
 
