@@ -25,16 +25,17 @@ class WS_WSDL_Port
 
     private $service_name;
     private $operations;
-
+    private $fun_mapping;
     /**
      * The constructor of the class
      * @param string $service Name of the service
      * @param Array $array1 Array of operations defined in the service
      */
-    function __construct($service, $array1)
+    function __construct($service, $array1, $ops_to_functions)
     {
         $this->service_name = $service;
         $this->operations = $array1;
+        $this->fun_mapping = $ops_to_functions;
     }
 
     /**
@@ -53,14 +54,20 @@ class WS_WSDL_Port
         {
             $operation = $port_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                                     WS_WSDL_Const::WS_WSDL_OPERATION_ATTR_NAME);
-            $operation->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $name);
+            foreach ($this->fun_mapping as $key => $value){
+                if ($value == $name)
+                    $operation->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $key);
+            }
             foreach(array(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME, WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME)
                     as $type)
             {
                 $sel = $port_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                                   $type);
-                $sel->setAttribute(WS_WSDL_Const::WS_WSDL_MESSAGE_ATTR_NAME,
-                                   "$name".ucfirst($type));
+                foreach($this->fun_mapping as $key => $value){
+                    if ($value == $name)
+                        $sel->setAttribute(WS_WSDL_Const::WS_WSDL_MESSAGE_ATTR_NAME,
+                                           "$key".ucfirst($type));
+                }
                 $operation->appendChild($sel);
             }
             $port_el->appendChild($operation);

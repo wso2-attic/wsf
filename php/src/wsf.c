@@ -1500,8 +1500,8 @@ PHP_METHOD(ws_service , reply)
     {
 
         char *service_name = NULL;
-        zval func, retval, param1, param2, param3, param4, param5, param6;
-        zval *params[6];
+        zval func, retval, param1, param2, param3, param4, param5, param6, param7;
+        zval *params[7];
         axutil_hash_index_t *hi = NULL;
         zval *f_val;
         zend_file_handle script;
@@ -1511,7 +1511,8 @@ PHP_METHOD(ws_service , reply)
         char *binding_name = NULL;
         char *wsdl_version = NULL;
         char *full_path = emalloc(100);
-
+        zval *op_val;
+        
         /* 	full_path = SG(request_info).http */
         service_name = svc_info->svc_name;
         strcpy(full_path, req_info->svr_name);
@@ -1523,6 +1524,8 @@ PHP_METHOD(ws_service , reply)
         params[3] = &param4;
         params[4] = &param5;
         params[5] = &param6;
+        params[6] = &param7;
+        
         /** for Wsdl version. default is wsdl 1.1*/
         if((stricmp(SG(request_info).query_string, "wsdl")) == 0 )
             wsdl_version = strdup("wsdl1.1");
@@ -1546,6 +1549,9 @@ PHP_METHOD(ws_service , reply)
         MAKE_STD_ZVAL(f_val);
         array_init(f_val);
 
+        MAKE_STD_ZVAL(op_val);
+        array_init(op_val);
+
         if (svc_info->ops_to_functions)
         {
             for(hi = axutil_hash_first(svc_info->ops_to_functions, ws_env_svr);
@@ -1559,6 +1565,8 @@ PHP_METHOD(ws_service , reply)
                 f_key = (axis2_char_t *)k;
                 f_name = (axis2_char_t *)v;
                 add_next_index_string(f_val, (char *)f_name, 1);
+                /* add_next_index_string(op_val, (char *)f_key, 1); */
+                add_assoc_string(op_val, (char *)f_key, (char *)f_name, 1);
             }
         }
         ZVAL_STRING(&func, "ws_generate_wsdl", 1);
@@ -1569,6 +1577,8 @@ PHP_METHOD(ws_service , reply)
         ZVAL_STRING(params[3], binding_name, 1);
         ZVAL_STRING(params[4], wsdl_version, 1);
         ZVAL_STRING(params[5], full_path, 1);
+        ZVAL_ZVAL(params[6], op_val, NULL, NULL);
+        INIT_PZVAL(params[6]);
 
         script.type = ZEND_HANDLE_FP;
         script.filename = "scripts/wsf.php";
@@ -1583,7 +1593,7 @@ PHP_METHOD(ws_service , reply)
         {
             php_execute_script(&script TSRMLS_CC);
             if (call_user_function(CG(function_table), (zval**)NULL,
-                                   &func, &retval, 6, params TSRMLS_CC ) == SUCCESS)
+                                   &func, &retval, 7, params TSRMLS_CC ) == SUCCESS)
             {
                 if (Z_TYPE_P(&retval) == IS_STRING && Z_TYPE_P(&retval) != IS_NULL)
                 {

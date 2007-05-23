@@ -29,6 +29,7 @@ class WS_WSDL_Binding
     private $svr_name;
     public  $operations;
     private $wsdl_location;
+    private $fun_mapping;
 
     /**
      * The constructor of the WS_WSDL_Binding class                    
@@ -37,11 +38,12 @@ class WS_WSDL_Binding
      * @param Array $operations Array of operations defined in the service
      */
 
-    function __construct($service_name, $wsdl_ep, $operations = false)
+    function __construct($service_name, $wsdl_ep, $operations = false, $ops_to_functions)
     {
         $this->svr_name = $service_name;
         $this->operations = $operations;
         $this->wsdl_location = $wsdl_ep;
+        $this->fun_mapping = $ops_to_functions;
     }
 
     /**
@@ -69,9 +71,13 @@ class WS_WSDL_Binding
 
         foreach($this->operations as $name => $params)
         {
+
             $op = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                                 WS_WSDL_Const::WS_WSDL_OPERATION_ATTR_NAME);
-            $op->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $name);
+            foreach($this->fun_mapping as $key => $value){
+                if ($value == $name)
+                $op->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $key);
+            }
             $action_ele = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_SOAP_NAMESPACE,
                           WS_WSDL_Const::WS_WSDL_OPERATION_ATTR_NAME);
             $action_ele->setAttribute(WS_WSDL_Const::WS_WSDL_SOAP_ACTION_ATTR_NAME,
@@ -126,7 +132,10 @@ class WS_WSDL_Binding
         {
             $op = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                                 WS_WSDL_Const::WS_WSDL_OPERATION_ATTR_NAME);
-            $op->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $name);
+            foreach($this->fun_mapping as $key => $value){
+                if ($value == $name)
+                $op->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $key);
+            }
             foreach(array(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME,
                           WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME) as $type)
             {

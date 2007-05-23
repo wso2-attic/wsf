@@ -94,7 +94,7 @@ function ws_reply($options)
 }
 
 function ws_generate_wsdl($include_location, $service_name, $fn_arry,
-                          $binding_style, $wsdl_version, $request_uri)
+                          $binding_style, $wsdl_version, $request_uri, $op_arry)
 {
     require_once($include_location);
 
@@ -122,9 +122,8 @@ function ws_generate_wsdl($include_location, $service_name, $fn_arry,
     $namespace = "http://www.wso2.org/php";
 
     $wsdl = new WS_WSDL_Creator($fn_arry ,$service_name, $request_uri,
-                               $Binding_style,$namespace, $wsdl_version);
+                               $Binding_style,$namespace, $wsdl_version, $op_arry);
     $wsdl_out = $wsdl->WS_WSDL_Out();
-
 
     return $wsdl_out;
 

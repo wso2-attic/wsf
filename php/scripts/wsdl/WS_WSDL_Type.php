@@ -28,7 +28,7 @@ class WS_WSDL_Type
     public $schemaTypes;
     private $ns;
     private $createdTypes;
-
+    private $fun_mapping;
 
     /**
      * Constructor of the class
@@ -36,14 +36,14 @@ class WS_WSDL_Type
      * @param Array $array1 Mapping table of types
      * @param Array $array2 xsd mapping table
      */
-    function __construct($ns, $array1, $array2)
+    function __construct($ns, $array1, $array2, $mapping_array)
     {
         $this->ns = $ns;
         $this->simpleTypes = WS_WSDL_Const::$defaultTypes;
         $this->createdTypes = $array1;
         $this->schemaTypes = $array2;
         $this->createPHPTypes();
-
+        $this->fun_mapping = $mapping_array;
     }
 
 
@@ -127,7 +127,11 @@ class WS_WSDL_Type
                                                  WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME);
                 if ($requestType == WS_WSDL_Const::WS_WSDL_IN_ATTR_NAME)
                 {
-                    $ct->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $function_name);
+                    foreach($this->fun_mapping as $key => $value)
+                    {
+                        if ($value == $function_name)
+                            $ct->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $key);
+                    }
                     $el->appendChild($ct);
                     $comtype = $type_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                                           WS_WSDL_Const::WS_WSDL_COMPLXTYPE_ATTR_NAME);
@@ -147,8 +151,11 @@ class WS_WSDL_Type
                 }
                 if ($requestType == WS_WSDL_Const::WS_WSDL_OUT_ATTR_NAME)
                 {
-                    $ct->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME,
-                                      $function_name.WS_WSDL_Const::WS_WSDL_RESPONSE_ATTR_NAME);
+                    foreach($this->fun_mapping as $key => $value){
+                        if ($value == $function_name)
+                            $ct->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME,
+                                              $key.WS_WSDL_Const::WS_WSDL_RESPONSE_ATTR_NAME);
+                    }
                     $el->appendChild($ct);
                     $comtype = $type_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                                           WS_WSDL_Const::WS_WSDL_COMPLXTYPE_ATTR_NAME);
