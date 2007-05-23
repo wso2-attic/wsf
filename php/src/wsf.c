@@ -405,10 +405,10 @@ PHP_MINIT_FUNCTION(wsf)
 {
     zend_class_entry ce;
     char *home_folder = NULL;
-/*
-    wsf_soap_prepare_ws_globals();
-    */
-    ZEND_INIT_MODULE_GLOBALS(wsf, ws_init_globals, NULL);
+
+	wsf_soap_prepare_ws_globals();
+
+	ZEND_INIT_MODULE_GLOBALS(wsf, ws_init_globals, NULL);
     REGISTER_INI_ENTRIES();
     if (INI_STR("extension_dir"))
     {
@@ -1051,8 +1051,9 @@ PHP_METHOD(ws_client, get_client)
         int ret = Z_LVAL_PP(tmp);
         add_property_resource(client_proxy_zval, "sdl", ret);
     }else{
-        php_error_docref(NULL TSRMLS_CC, E_ERROR, "plese specify the wsdl before calling get client");
+        php_error_docref(NULL TSRMLS_CC, E_ERROR, "please specify the wsdl before calling get client");
     }
+	add_property_zval(client_proxy_zval, "svc_client", this_ptr);
 
     /** TODO implement destructor function */
     RETURN_ZVAL(client_proxy_zval, NULL, NULL);

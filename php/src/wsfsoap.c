@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <wsf_soap.h>
-#include <wsf.h>
-#include <php_sdl.h>
-#include <wsf_client.h>
+#include "wsf_soap.h"
+#include "wsf.h"
+#include "php_sdl.h"
+#include "wsf_client.h"
 
 
 typedef struct _soapHeader {
@@ -161,8 +161,6 @@ static xmlDocPtr serialize_function_call(zval *this_ptr, sdlFunctionPtr function
 			
 			xmlDocSetRootElement(doc, method);
 		
-			
-			
 		if (style == SOAP_RPC) { 
 			xmlNsPtr xmlns = NULL;
 			smart_str prefix = {0};
