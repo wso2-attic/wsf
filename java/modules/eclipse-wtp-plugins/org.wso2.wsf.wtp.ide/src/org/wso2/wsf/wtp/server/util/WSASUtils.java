@@ -15,7 +15,6 @@
  */
 package org.wso2.wsf.wtp.server.util;
 
-import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -50,8 +49,7 @@ public class WSASUtils {
 		String  wsasHTTPSAddress = null;
 		wsasHTTPSAddress = WSASConfigurationConstant.HTTPS_PREFIX + 
 							getIpAddress()+":"+
-							WSASConfigurationConstant.WSO2WSAS_HTTPS_PORT + 
-							File.separator;
+							WSASConfigurationConstant.WSO2WSAS_HTTPS_PORT;
 		return wsasHTTPSAddress;
 	}
 	
@@ -59,8 +57,7 @@ public class WSASUtils {
 		String  wsasHTTPAddress = null;
 		wsasHTTPAddress = WSASConfigurationConstant.HTTP_PREFIX + 
 							getIpAddress()+":"+
-							WSASConfigurationConstant.WSO2WSAS_HTTP_PORT + 
-							File.separator;
+							WSASConfigurationConstant.WSO2WSAS_HTTP_PORT;
 		return wsasHTTPAddress;
 	}
 
