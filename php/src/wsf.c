@@ -39,6 +39,7 @@
 #include "wsf_policy.h"
 #include "wsf_xml_msg_recv.h"
 #include <php_main.h>
+#include "wsf_soap.h"
 
 ZEND_DECLARE_MODULE_GLOBALS(wsf)
 
