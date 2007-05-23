@@ -86,7 +86,7 @@ PHP_METHOD(ws_client, request);
 PHP_METHOD(ws_client, send);
 PHP_METHOD(ws_client, get_last_response);
 PHP_METHOD(ws_client, get_last_request);
-PHP_METHOD(ws_client, get_client);
+PHP_METHOD(ws_client, get_client_proxy);
 PHP_METHOD(ws_client, terminate_outgoing_rm);
 
 
@@ -123,6 +123,9 @@ PHP_METHOD(ws_policy, __construct);
 
 PHP_METHOD(ws_client_proxy, __construct);
 PHP_METHOD(ws_client_proxy, __call);
+PHP_METHOD(ws_client_proxy, __destruct);
+
+
 
 static
 ZEND_BEGIN_ARG_INFO(ws_client_proxy_call_args, 0)
@@ -147,7 +150,7 @@ zend_function_entry php_ws_client_class_functions[]={
 	PHP_MALIAS(ws_client, send, send, NULL,ZEND_ACC_PUBLIC)
 	PHP_MALIAS(ws_client,getLastResponse, get_last_response, NULL ,ZEND_ACC_PUBLIC)
 	PHP_MALIAS(ws_client, getLastRequest, get_last_request , NULL , ZEND_ACC_PUBLIC)
-	PHP_MALIAS(ws_client, getClient, get_client, NULL, ZEND_ACC_PUBLIC)
+	PHP_MALIAS(ws_client, getClientProxy, get_client_proxy, NULL, ZEND_ACC_PUBLIC)
 	PHP_MALIAS(ws_client, terminateOutgoingRM , terminate_outgoing_rm, NULL, ZEND_ACC_PUBLIC)
 	PHP_ME(ws_client, __call, ws_client_call_args, ZEND_ACC_PUBLIC)
 	PHP_ME(ws_client, __construct, NULL, ZEND_ACC_PUBLIC)
@@ -425,6 +428,10 @@ PHP_MINIT_FUNCTION(wsf)
 
     REGISTER_WSF_CLASS(ce, "WSClient", NULL,
                        php_ws_client_class_functions, ws_client_class_entry);
+    
+    REGISTER_WSF_CLASS(ce, "WSClientProxy", NULL,
+                               php_ws_client_proxy_class_functions, ws_client_proxy_class_entry);
+
 
     REGISTER_WSF_CLASS(ce, "WSService", NULL,
                        php_ws_service_class_functions, ws_service_class_entry);
@@ -1028,7 +1035,7 @@ PHP_METHOD(ws_client, __call)
     */
 }
 /* }}} end call */
-PHP_METHOD(ws_client, get_client)
+PHP_METHOD(ws_client, get_client_proxy)
 {
     /* zval *tmp = NULL; */
     zval *client_proxy_zval  =  NULL;
@@ -1036,7 +1043,7 @@ PHP_METHOD(ws_client, get_client)
     int service_len = 0;
     char *port = NULL;
     int port_len =  0;
-    zval **tmp = NULL;
+    /* zval **tmp = NULL; */
 
     if(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss", &service, &service_len,
                              &port, &port_len) == FAILURE){
@@ -1045,6 +1052,7 @@ PHP_METHOD(ws_client, get_client)
 
     MAKE_STD_ZVAL(client_proxy_zval);
     object_init_ex(client_proxy_zval, ws_client_proxy_class_entry);
+    /*
     add_property_string(client_proxy_zval, "service", service, 1);
     add_property_string(client_proxy_zval, "port", port, 1);
     
@@ -1056,8 +1064,8 @@ PHP_METHOD(ws_client, get_client)
     }
 	add_property_zval(client_proxy_zval, "svc_client", this_ptr);
 
-    /** TODO implement destructor function */
     RETURN_ZVAL(client_proxy_zval, NULL, NULL);
+    */
 }
 
 /* {{{ proto void WSService::__construct([ array options])*/
