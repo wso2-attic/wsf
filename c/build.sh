@@ -35,7 +35,7 @@ cp build/savanc/src/Makefile.am savanc/src/
 cp build/savanc/samples/client/subscriber/Makefile.am savanc/samples/client/subscriber/
 
 ./autogen.sh
-./configure --prefix=`pwd`/deploy --enable-openssl=yes --enable-rampart=yes --enable-xmpp=no 
+./configure --prefix=`pwd`/deploy --enable-openssl=yes --enable-rampart=yes --enable-xmpp=no --with-axis2=`pwd`/axis2c/include 
 make
 
 
