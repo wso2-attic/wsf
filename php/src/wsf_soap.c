@@ -92,19 +92,17 @@ static void soap_server_fault(char* code, char* string, char *actor, zval* detai
 }
 #endif
 
-/*
-static void delete_url(void *handle)
+void delete_url(void *handle)
 {
     php_url_free((php_url*)handle);
 }
 
-static void delete_hashtable(void *data)
+void delete_hashtable(void *data)
 {
 	HashTable *ht = (HashTable*)data;
 	zend_hash_destroy(ht);
 	efree(ht);
 }
-*/
 
 /*
 static void function_to_string(sdlFunctionPtr function, smart_str *buf);

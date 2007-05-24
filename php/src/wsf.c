@@ -400,6 +400,14 @@ static void ws_init_globals(zend_wsf_globals *wsf_globals)
     wsf_globals->rm_db_dir = NULL;
     wsf_globals->curr_ns_index= 0;
 
+    /******** ext/soap **********************************/
+
+    wsf_globals->defEncNs = defEncNs;
+    wsf_globals->defEnc = defEnc;
+    wsf_globals->defEncIndex = defEncIndex;
+    wsf_globals->sdl = NULL;
+    wsf_globals->typemap = NULL;
+    wsf_globals->error_code = NULL;
 }
 /* }}} */
 
@@ -424,6 +432,7 @@ PHP_MINIT_FUNCTION(wsf)
 
     memcpy(&ws_object_handlers, zend_get_std_object_handlers(),
            sizeof(zend_object_handlers));
+
     ws_object_handlers.clone_obj = NULL;
 
     REGISTER_WSF_CLASS(ce, "WSClient", NULL,
@@ -431,7 +440,6 @@ PHP_MINIT_FUNCTION(wsf)
     
     REGISTER_WSF_CLASS(ce, "WSClientProxy", NULL,
                                php_ws_client_proxy_class_functions, ws_client_proxy_class_entry);
-
 
     REGISTER_WSF_CLASS(ce, "WSService", NULL,
                        php_ws_service_class_functions, ws_service_class_entry);
@@ -458,14 +466,20 @@ PHP_MINIT_FUNCTION(wsf)
     REGISTER_LONG_CONSTANT("WS_SOAP_ROLE_ULTIMATE_RECEIVER", WS_SOAP_ROLE_ULTIMATE_RECEIVER, CONST_CS | CONST_PERSISTENT);
 
     env = wsf_env_create(WSF_GLOBAL(log_path));
-    if (WSF_GLOBAL(home))
+    
+    if (WSF_GLOBAL(home)){
         home_folder = WSF_GLOBAL(home);
-
+    }
+    
     ws_env_svr = wsf_env_create_svr(WSF_GLOBAL(log_path));
 
     wsf_msg_recv =  wsf_xml_msg_recv_create(ws_env_svr);
 
     worker = wsf_worker_create(ws_env_svr, home_folder, WSF_GLOBAL(rm_db_dir));
+
+    le_sdl = register_list_destructors(delete_sdl, NULL);
+    le_url = register_list_destructors(delete_url, NULL);
+    le_typemap = register_list_destructors(delete_hashtable, NULL);
 
     axiom_xml_reader_init();
 
@@ -586,7 +600,6 @@ static zval* ws_create_object(void *obj, int obj_type,
 static void ws_object_dtor(void *object,
                            zend_object_handle handle TSRMLS_DC)
 {
-    /*
     ws_object *intern = (ws_object *)object;
     zend_hash_destroy(intern->std.properties);
     FREE_HASHTABLE(intern->std.properties);
@@ -603,7 +616,6 @@ static void ws_object_dtor(void *object,
             wsf_svc_info_free(svc_info, ws_env_svr );    
         }
     }
-    */
 }
 
 static void
@@ -1037,35 +1049,31 @@ PHP_METHOD(ws_client, __call)
 /* }}} end call */
 PHP_METHOD(ws_client, get_client_proxy)
 {
-    /* zval *tmp = NULL; */
     zval *client_proxy_zval  =  NULL;
     char *service = NULL;
     int service_len = 0;
     char *port = NULL;
     int port_len =  0;
-    /* zval **tmp = NULL; */
+    zval *obj = NULL;
 
     if(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss", &service, &service_len,
                              &port, &port_len) == FAILURE){
         php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid Parameters,specify the service and port");
     }
 
+    WSF_GET_THIS(obj);
+
     MAKE_STD_ZVAL(client_proxy_zval);
+
     object_init_ex(client_proxy_zval, ws_client_proxy_class_entry);
-    /*
+    
     add_property_string(client_proxy_zval, "service", service, 1);
+    
     add_property_string(client_proxy_zval, "port", port, 1);
     
-    if(zend_hash_find(Z_OBJPROP_P(this_ptr), "sdl", sizeof("sdl"), (void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_LONG){
-        int ret = Z_LVAL_PP(tmp);
-        add_property_resource(client_proxy_zval, "sdl", ret);
-    }else{
-        php_error_docref(NULL TSRMLS_CC, E_ERROR, "please specify the wsdl before calling get client");
-    }
-	add_property_zval(client_proxy_zval, "svc_client", this_ptr);
+	add_property_zval(client_proxy_zval, "client", this_ptr);
 
     RETURN_ZVAL(client_proxy_zval, NULL, NULL);
-    */
 }
 
 /* {{{ proto void WSService::__construct([ array options])*/
