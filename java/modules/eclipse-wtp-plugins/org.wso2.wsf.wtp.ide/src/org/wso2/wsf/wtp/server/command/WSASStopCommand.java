@@ -20,7 +20,6 @@ import java.lang.reflect.Method;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.wso2.wsf.ide.core.plugin.messages.WSASCoreUIMessages;
 import org.wso2.wsf.wtp.server.bean.WSASConfigurationBean;
 
 public class WSASStopCommand {

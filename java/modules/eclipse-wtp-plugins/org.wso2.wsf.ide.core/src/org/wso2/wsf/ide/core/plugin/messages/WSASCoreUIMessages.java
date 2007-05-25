@@ -49,6 +49,7 @@ public final class WSASCoreUIMessages extends NLS {
 	public static String DIR_DOT_METADATA;
 	public static String DIR_WEB_INF;
 	public static String DIR_LIB;
+	public static String DIR_CONF;
 	public static String DIR_DOT_PLUGINS;
 	public static String DIR_UNZIP;
 

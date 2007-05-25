@@ -415,10 +415,10 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		if (wsasHomeDir.isDirectory()) {
 			String wsasLibPath = WSASCoreUtils.addAnotherNodeToPath(
 													wsasHomeDir.getAbsolutePath(),
-													"lib");
+													WSASCoreUIMessages.DIR_LIB);
 			String wsasWebappPath = WSASCoreUtils.addAnotherNodeToPath(
-					wsasHomeDir.getAbsolutePath(),
-					"tomcat");
+													wsasHomeDir.getAbsolutePath(),
+													WSASCoreUIMessages.DIR_CONF);
 			if (new File(wsasLibPath).isDirectory() && new File(wsasWebappPath).isDirectory()) {
 				statusUpdate(true);
 				return true;

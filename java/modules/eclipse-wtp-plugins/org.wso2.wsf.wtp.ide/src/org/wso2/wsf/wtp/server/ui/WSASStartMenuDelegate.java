@@ -31,6 +31,7 @@ import org.eclipse.ui.actions.ActionDelegate;
 import org.wso2.wsf.wtp.server.bean.WSASConfigurationBean;
 import org.wso2.wsf.wtp.server.command.WSASStartCommand;
 import org.wso2.wsf.wtp.server.command.WTPInternalBrowserCommand;
+import org.wso2.wsf.wtp.server.constant.WSASMessageConstant;
 import org.wso2.wsf.wtp.server.monitor.WSASUpMonitorThread;
 import org.wso2.wsf.wtp.server.util.WSASUtils;
 
@@ -57,7 +58,7 @@ public class WSASStartMenuDelegate
 			}
 		} catch (InvocationTargetException e) {
 			status = new Status( IStatus.ERROR,"id",1,e.getMessage(),null );
-			box.setMessage("WSAS Failed to Start \n"+"Reason"+e.getMessage());box.open();
+			box.setMessage(WSASMessageConstant.INFO_WSAS_START_FAIL+"Reason"+e.getMessage());box.open();
 		}
 		while(!WSASConfigurationBean.isWsasStartStatus()){
 			try {
@@ -68,7 +69,7 @@ public class WSASStartMenuDelegate
 		}
 		//Kill the WSAS Monitor Thread
 		WSASUpMonitorThread.setAlive(false);
-       	box.setMessage("WSO2 Web Services Server Started Successfully !! ");box.open();
+       	box.setMessage(WSASMessageConstant.INFO_WSAS_START_SUCCESS);box.open();
 		//Pop up the browser with the url
 		WTPInternalBrowserCommand.popUpInrernalBrouwser(WSASUtils.getWSASHTTPSAddtess());
 

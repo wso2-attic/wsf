@@ -26,6 +26,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
 import org.wso2.wsf.wtp.server.command.WSASStopCommand;
+import org.wso2.wsf.wtp.server.constant.WSASMessageConstant;
 
 public class WSASStopDelegate
 	extends ActionDelegate
@@ -43,11 +44,11 @@ public class WSASStopDelegate
 			if(status.getCode() == 12){
 				box.setMessage(status.getMessage());box.open();
 			}else{
-				box.setMessage("WSO2 Web Services Server Shutdown Successfully !! ");box.open();
+				box.setMessage(WSASMessageConstant.INFO_WSAS_STOP_SUCCESS);box.open();
 			}
 		} catch (InvocationTargetException e) {
 			status = new Status( IStatus.ERROR,"id",1,e.getMessage(),null );
-			box.setMessage("WSAS Failed to Stop ");box.open();
+			box.setMessage(WSASMessageConstant.INFO_WSAS_STOP_FAIL);box.open();
 		}
 
 	}
