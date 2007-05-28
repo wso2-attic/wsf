@@ -291,7 +291,7 @@ WSRequest.util = {
             return payload;
         else if (typeof(payload) == "object")
         {
-            var browser = WSRequest._getBrowser();
+            var browser = WSRequest.util._getBrowser();
             switch (browser)
                     {
                 case "gecko":
