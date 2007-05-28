@@ -27,6 +27,9 @@ import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.description.Parameter;
+import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.util.Loader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -96,4 +99,18 @@ public class JavaScriptEngineUtils {
         }
         return list;
     }
+    
+    public static JavaScriptEngine getJavaScriptEngineWithHostObjects(AxisConfiguration axisConfig)
+            throws AxisFault {
+        JavaScriptEngine engine = new JavaScriptEngine();
+        Parameter hostObjectParameter = axisConfig.getParameter(
+                "javascript.hostobjects");
+        if ((hostObjectParameter != null) && (hostObjectParameter.getParameterType() == 2)) {
+            OMElement paraElement = hostObjectParameter.getParameterElement();
+            List list = JavaScriptEngineUtils.getHostObjectsMap(paraElement);
+            JavaScriptEngineUtils.loadHostObjects(engine, list);
+        }
+        return engine;
+    }
+
 }

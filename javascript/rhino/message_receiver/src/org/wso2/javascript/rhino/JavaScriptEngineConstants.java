@@ -15,7 +15,7 @@
  */
 package org.wso2.javascript.rhino;
 
-public class JavaScriptEngineConstants {
+public interface JavaScriptEngineConstants {
     public static final String SERVICE_JS = "ServiceJS";
     
     public static final String RESOURCES_FOLDER = "ResourcesFolder";
@@ -23,4 +23,6 @@ public class JavaScriptEngineConstants {
     public static final String AXIS2_MESSAGECONTEXT = "messageContext";
 
     public static final String LOAD_JSSCRIPTS = "loadJSScripts";
+    
+    public static final String JS_FUNCTION_NAME = "jsFunctionName";
 }
