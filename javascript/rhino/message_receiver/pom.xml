@@ -149,9 +149,9 @@
 					<argLine>-enableassertions</argLine>
 					<testFailureIgnore>false</testFailureIgnore>
 					<skip>false</skip>
-					<includes>
-						<include>**/*Test.java</include>
-					</includes>
+					<excludes>
+						<exclude>**/*Test.java</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 		</plugins>
