@@ -108,6 +108,11 @@
 			<artifactId>neethi</artifactId>
 			<version>${neethi.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>httpcomponents-httpcore</groupId>
+			<artifactId>jakarta-httpcore</artifactId>
+			<version>${jakarta.httpcore.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
