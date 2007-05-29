@@ -44,11 +44,8 @@ public class JSUtils {
             QName serviceName, String jsName) throws AxisFault {
 
         AxisService service = new AxisService(serviceName.getLocalPart());
-
         service.setClassLoader(Thread.currentThread().getContextClassLoader());
-
         service.addParameter(new Parameter("ServiceJS", jsName));
-
         return service;
     }
 

@@ -108,12 +108,6 @@
 			<artifactId>neethi</artifactId>
 			<version>${neethi.version}</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.mozilla.rhino</groupId>
-			<artifactId>js-core</artifactId>
-			<version>${js.core.version}</version>
-		</dependency>
 	</dependencies>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
@@ -149,9 +143,9 @@
 					<argLine>-enableassertions</argLine>
 					<testFailureIgnore>false</testFailureIgnore>
 					<skip>false</skip>
-					<excludes>
-						<exclude>**/*Test.java</exclude>
-					</excludes>
+					<includes>
+						<include>**/*Test.java</include>
+					</includes>
 				</configuration>
 			</plugin>
 		</plugins>

@@ -58,12 +58,15 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver impleme
             throws AxisFault {
         try {
             //Create JS Engine, Inject HostObjects
-            JavaScriptEngine engine = JavaScriptEngineUtils
-                    .getJavaScriptEngineWithHostObjects(inMessage.getConfigurationContext()
+            JavaScriptEngine engine = new JavaScriptEngine();
+            JavaScriptEngineUtils.loadHostObjects(engine,inMessage.getConfigurationContext()
                             .getAxisConfiguration());
             // Inject the incoming MessageContext to the Rhino Context
             Context context = engine.getCx();
             context.putThreadLocal(AXIS2_MESSAGECONTEXT, inMessage);
+            //Instantiating of some global property objects requires the MessageContext
+            JavaScriptEngineUtils.loadGlobalPropertyObjects(engine, inMessage.getConfigurationContext()
+                    .getAxisConfiguration());
             //JS Engine seems to need the Axis2 repository location to load the imported scripts
             // TODO: Do we really need this (thilina)
             URL repoURL = inMessage.getConfigurationContext().getAxisConfiguration()

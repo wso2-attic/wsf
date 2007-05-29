@@ -150,7 +150,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
                     throw new AxisFault("Unsupported Data Format");
                 }
 
-            } else {
+            } else if (args !=null) {
                 String sourceStr = "function convertToXML(inputPara){ var x = new XML(inputPara);return x;}";
                 cx.evaluateString(this, sourceStr, "Get E4X", 0, null);
 
@@ -162,8 +162,8 @@ public class JavaScriptEngine extends ImporterTopLevel {
                 Object functionArgs[] = { args };
                 Function f = (Function) fObj;
                 args = f.call(cx, this, this, functionArgs);
-
             }
+            
             // Evaluates the javascript file
             evaluate(reader);
 
