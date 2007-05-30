@@ -96,6 +96,40 @@ AC_ARG_ENABLE(openssl, [  --enable-openssl  enable ssl. default=no],
   CFLAGS="$CFLAGS"
 )
 
+AC_MSG_CHECKING(path to use Axis2C . This is a compulsory to build Sandesha2C)
+AC_ARG_WITH(axis2,
+[  --with-axis2[=PATH]      use axis2c.],
+[ case "$withval" in
+  no)
+    AC_MSG_RESULT(no)
+    ;;
+  *)
+    AC_MSG_RESULT($withval)
+    dnl Find axis2 include dir in the path
+    if test -d $withval; then
+        axis2inc="-I$withval"
+    dnl else find the axis2inc include dir in $(AXIS2C_HOME)/include
+    elif test -d '$(AXIS2C_HOME)/include'; then
+        axis2inc="-I$(AXIS2C_HOME)/include"
+    else
+        AC_MSG_ERROR(could not find axis2inc. stop)
+    fi
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+)
+
+AXIS2INC=$axis2inc
+AXIOMINC=$axis2inc/../axiom/include
+UTILINC=$axis2inc/../util/include
+NEETHIINC=$axis2inc/../neethi/include
+
+AC_SUBST(AXIS2INC)
+AC_SUBST(AXIOMINC)
+AC_SUBST(UTILINC)
+AC_SUBST(NEETHIINC)
+
+
 AC_SUBST(TESTDIR)
 AC_SUBST(SAMPLES)
 AM_CONDITIONAL(AXIS2_SSL_ENABLED, test x$ssl_enabled = xtrue)
