@@ -20,10 +20,16 @@ WSRequest = function() {
     this.readyState = 0;
     this.responseText = null;
     this.responseXML = null;
-    this.responseFault = null;
+    this.error = null;
     this.onreadystatechange = null;
     this._xmlhttp = WSRequest.util._createXMLHttpRequestObject();
     this._soapVer = null;
+};
+
+WSError = function() {
+    this.code = null;
+    this.reason = null;
+    this.detail = null;
 };
 
 WSRequest.prototype._async = true;
@@ -60,7 +66,7 @@ WSRequest.prototype.open = function(options, URL, asnycFlag, userName, passWord)
         this.onreadystatechange();
     this.responseText = null;
     this.responseXML = null;
-    this.responseFault = null;
+    this.error = null;
 };
 
 WSRequest.prototype.send = function(payload) {
@@ -140,7 +146,7 @@ WSRequest.prototype.send = function(payload) {
 }
 
 /**
- * @description Set responseText, responseXML, and responseFault of WSRequest.
+ * @description Set responseText, responseXML, and error of WSRequest.
  * @method _processResult
  * @private
  * @static
@@ -149,7 +155,7 @@ WSRequest.prototype._processResult = function () {
     if (this._soapVer == 0) {
         this.responseText = this._xmlhttp.responseText;
         this.responseXML = this._xmlhttp.responseXML;
-        this.responseFault = null;  // How would I tell?
+        this.error = null;  // How would I tell?
     } else {
         var browser = WSRequest.util._getBrowser();
             
@@ -178,18 +184,19 @@ WSRequest.prototype._processResult = function () {
                 newDoc.appendChild(soapBody.firstChild);
             }
 
+            this.responseXML = newDoc;
+            this.responseText = WSRequest.util._serializeToString(newDoc);
             if (newDoc.documentElement.tagName == soapPrefix + "Fault") {
-                this.responseFault = newDoc;
-                this.responseText = "";
-            } else {
-                this.responseXML = newDoc;
-                this.responseText = WSRequest.util._serializeToString(newDoc);
+                this.error = new WSError();
+                this.error.code = newDoc.getElementsByTagName("faultcode")[0].text;
+                this.error.reason = newDoc.getElementsByTagName("faultstring")[0].text;
+                this.error.detail = WSRequest.util._serializeToString(newDoc.getElementsByTagName("detail")[0]);
             }
 
         } else {
             this.responseXML = null;
-            this.responseFault = null; // Should there be a fault for no response?
             this.responseText = "";
+            this.error = null; // Should there be a fault for no response?
         }
     }
 }
