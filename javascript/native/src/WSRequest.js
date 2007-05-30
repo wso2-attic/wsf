@@ -20,18 +20,16 @@ WSRequest = function() {
     this.readyState = 0;
     this.responseText = null;
     this.responseXML = null;
+    this.responseFault = null;
     this.onreadystatechange = null;
     this._xmlhttp = WSRequest.util._createXMLHttpRequestObject();
+    this._soapVer = null;
 };
 
 WSRequest.prototype._async = true;
-
 WSRequest.prototype._optionSet = null;
-
 WSRequest.prototype._uri = null;
-
 WSRequest.prototype._username = null;
-
 WSRequest.prototype._password = null;
 
 WSRequest.prototype.open = function(options, URL, asnycFlag, userName, passWord) {
@@ -62,6 +60,7 @@ WSRequest.prototype.open = function(options, URL, asnycFlag, userName, passWord)
         this.onreadystatechange();
     this.responseText = null;
     this.responseXML = null;
+    this.responseFault = null;
 };
 
 WSRequest.prototype.send = function(payload) {
@@ -76,21 +75,21 @@ WSRequest.prototype.send = function(payload) {
     else
         var method = "POST";
     
-    var soapVer = WSRequest.util._bindingVersion(this._optionSet);
+    this._soapVer = WSRequest.util._bindingVersion(this._optionSet);
    
     if (payload != null)
     {
         // seralize the dom to string
-        var content = WSRequest.util._seralizerToString(payload);
+        var content = WSRequest.util._serializeToString(payload);
         if (content == false) {
             throw new Error("Invalid input argument");
         }
 
         // formulate the message envelope
-        if (soapVer == 0) {
+        if (this._soapVer == 0) {
             req = WSRequest.util._buildHTTPpayload(this._optionSet, this._uri, content);
         } else {
-            req = WSRequest.util._buildSOAPEnvelope(soapVer, this._optionSet, this._uri, content);
+            req = WSRequest.util._buildSOAPEnvelope(this._soapVer, this._optionSet, this._uri, content);
         }
     }
 
@@ -104,7 +103,7 @@ WSRequest.prototype.send = function(payload) {
         alert(e);
     }
     
-    switch (soapVer) {
+    switch (this._soapVer) {
         case 1.1:
             this._xmlhttp.setRequestHeader("SOAPAction",soapAction);
             this._xmlhttp.setRequestHeader("Content-Type","text/xml; charset=UTF-8");
@@ -132,12 +131,7 @@ WSRequest.prototype.send = function(payload) {
             this.onreadystatechange();
         this._xmlhttp.send(req);
 
-        if (soapVer == 0) {
-            var result = this._xmlhttp.responseText;
-        } else { 
-            var result = WSRequest.util._getSoapBody(this._xmlhttp.responseText);
-        }
-        this._setResXMLText(this, result);
+        this._processResult();
         
         this.readyState = 4;
         if (this.onreadystatechange != null)
@@ -145,96 +139,80 @@ WSRequest.prototype.send = function(payload) {
     }
 }
 
-WSRequest.prototype._handleReadyState = function(wsr) {
-    if (this._xmlhttp.readyState == 2)
-    {
-        this.readyState = 2;
-        if (this.onreadystatechange != null)
-            this.onreadystatechange();
-    }
-    if (this._xmlhttp.readyState == 3)
-    {
-        this.readyState = 3;
-        if (this.onreadystatechange != null)
-            this.onreadystatechange();
-    }
-    if (this._xmlhttp.readyState == 4)
-    {
-        var result = WSRequest.util._getSoapBody(this._xmlhttp.responseText);
-        this._setResXMLText(wsr, result);
-        this.readyState = 4;
-        if (this.onreadystatechange != null)
-            this.onreadystatechange();
+/**
+ * @description Set responseText, responseXML, and responseFault of WSRequest.
+ * @method _processResult
+ * @private
+ * @static
+ */
+WSRequest.prototype._processResult = function () {
+    if (this._soapVer == 0) {
+        this.responseText = this._xmlhttp.responseText;
+        this.responseXML = this._xmlhttp.responseXML;
+        this.responseFault = null;  // How would I tell?
+    } else {
+        var browser = WSRequest.util._getBrowser();
+            
+        var response = this._xmlhttp.responseXML.documentElement;
+        var soapPrefix = "";
+        if (browser == "ie" || browser == "ie7") {
+            i = response.tagName.indexOf(':');
+            soapPrefix = (i<0) ? "" : response.tagName.substring(0,i+1);
+        }
+        var soapBody = response.getElementsByTagName(soapPrefix + "Body")[0];
+        if (soapBody.hasChildNodes()) {
+
+            var newDoc; 
+            if (browser == "gecko")
+            {
+                try {
+                    netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead");
+                } catch(e) {
+                }
+                var newDoc = document.implementation.createDocument("","",null);
+                newDoc.appendChild(soapBody.firstChild);
+            }
+
+            if (browser == "ie" || browser == "ie7") {
+                var newDoc = new ActiveXObject("Microsoft.XMLDOM");
+                newDoc.appendChild(soapBody.firstChild);
+            }
+
+            if (newDoc.documentElement.tagName == soapPrefix + "Fault") {
+                this.responseFault = newDoc;
+                this.responseText = "";
+            } else {
+                this.responseXML = newDoc;
+                this.responseText = WSRequest.util._serializeToString(newDoc);
+            }
+
+        } else {
+            this.responseXML = null;
+            this.responseFault = null; // Should there be a fault for no response?
+            this.responseText = "";
+        }
     }
 }
 
 
-/**
- * @description Set responseText and responseXML of WSRequest using the result.
- * @method _setResXML
- * @private
- * @static
- * @param {object} wsr  WSRequest object
- * @param {string} result Result text from the Xhr
- */
-WSRequest.prototype._setResXMLText = function(wsr, result) {
-    var tempBroswer = WSRequest.util._getBrowser();
-
-    if (tempBroswer == "gecko")
-    {
-        try {
-            netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead");
-        } catch(e) {
-
-        }
-        if (result != -1)
-        {
-            wsr.responseText = result;
-            var parser = new DOMParser();
-            wsr.responseXML = parser.parseFromString(result, "text/xml");
-        }
-        else
-        {
-            wsr.responseText = null;
-            wsr.responseXML = null;
-        }
-    }
-    if (tempBroswer == "ie" || tempBroswer == "ie7") {
-        if (result != -1)
-        {
-            wsr.responseText = result;
-
-            var doc = new ActiveXObject("Microsoft.XMLDOM");
-            doc.async = "false";
-            doc.loadXML(result);
-            wsr.responseXML = doc;
-        }
-        else
-        {
-            wsr.responseText = null;
-            wsr.responseXML = null;
-        }
-    }
-};
-
 WSRequest.prototype._handleReadyState = function() {
-    if (this._xmlhttp.readyState == 2)
-    {
+    if (this._xmlhttp.readyState == 2) {
         this.readyState = 2;
         if (this.onreadystatechange != null)
             this.onreadystatechange();
     }
-    if (this._xmlhttp.readyState == 3)
-    {
+
+    if (this._xmlhttp.readyState == 3) {
         this.readyState = 3;
         if (this.onreadystatechange != null)
             this.onreadystatechange();
     }
-    if (this._xmlhttp.readyState == 4)
-    {
+
+    if (this._xmlhttp.readyState == 4) {
         this.readyState = 4;
-        var result = WSRequest.util._getSoapBody(this._xmlhttp.responseText);
-        this._setResXMLText(this, result);
+
+        this._processResult();
+
         if (this.onreadystatechange != null)
             this.onreadystatechange();
     }
@@ -280,20 +258,25 @@ WSRequest.util = {
 
 /**
  * @description Serialize payload to string.
- * @method _seralizerToString
+ * @method _serializeToString
  * @private
  * @static
  * @param {dom} payload   xml payload
  * @return string
  */
-    _seralizerToString : function(payload) {
+    _serializeToString : function(payload) {
         if (typeof(payload) == "string")
             return payload;
         else if (typeof(payload) == "object")
         {
+<<<<<<< .mine
+            var browser = WSRequest.util._getBrowser();
+            switch (browser) {
+=======
             var browser = WSRequest.util._getBrowser();
             switch (browser)
                     {
+>>>>>>> .r3369
                 case "gecko":
                     var serializer = new XMLSerializer();
                     return serializer.serializeToString(payload);
@@ -319,36 +302,6 @@ WSRequest.util = {
             return false;
     },
 
-    _getSoapBody : function(str) {
-        var str1 = str.substring(str.toLowerCase().indexOf(":body>") + 6);
-        var index = str1.toLowerCase().indexOf(":body>");
-        if (str1 != -1 && index != -1) {
-            var foundSla = false;
-            var foundGre = false;
-            var temp1;
-            var temp2;
-            while (true) {
-                var prevousChar = str1.toLowerCase().charAt(index);
-                if (prevousChar == "/") {
-                    foundSla = true;
-                    temp1 = index;
-                }
-                if (prevousChar == "<") {
-
-                    foundGre = true;
-                    temp2 = index;
-                }
-                if (temp2 == temp1 - 1) {
-                    break;
-                }
-                index--;
-            }
-            return str1.substring(0, index);
-        }
-        else {
-            return -1;
-        }
-    },
 
 /**
  * @description Determines which binding to use (SOAP 1.1, SOAP 1.2, or HTTP) from the various options.
