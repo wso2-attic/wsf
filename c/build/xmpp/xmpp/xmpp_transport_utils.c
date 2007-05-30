@@ -99,7 +99,7 @@ axis2_xmpp_transport_utils_process_message(
      * on the sending side */
     qname = axutil_qname_create(env, AXIS2_TRANSPORT_XMPP, NULL, NULL);
     conf = axis2_conf_ctx_get_conf(session->conf_ctx, env);
-    out_desc = axis2_conf_get_transport_out(conf, env, 1);
+    out_desc = axis2_conf_get_transport_out(conf, env, 3);
     in_desc = axis2_conf_get_transport_in(conf, env, 1);
     axutil_qname_free(qname, env);
     

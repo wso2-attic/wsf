@@ -219,7 +219,7 @@ axis2_xmpp_svr_thread_run(
      * http transport which keeps listening, the main thread here is not doing
      * any work */
 
-    args = AXIS2_MALLOC(env->allocator, sizeof(axis2_xmpp_svr_thd_args_t));
+
 
     svc_count = axutil_array_list_size(impl->xmpp_sessions, env);
     if (svc_count <= 0)
@@ -244,6 +244,7 @@ axis2_xmpp_svr_thread_run(
         axis2_xmpp_session_data_t *session = NULL;
 
         session = axutil_array_list_get(impl->xmpp_sessions, env, i);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "session id before thread start %s",session->id_str);
         session->conf_ctx = impl->conf_ctx;
         worker = axis2_xmpp_worker_create(env, session);
         if (!worker)
@@ -254,6 +255,7 @@ axis2_xmpp_svr_thread_run(
     
         AXIS2_XMPP_WORKER_SET_SVR_PORT(worker, env, impl->port);
 
+        args = AXIS2_MALLOC(env->allocator, sizeof(axis2_xmpp_svr_thd_args_t));
         args->env = env;
         args->worker = worker;
 
@@ -265,17 +267,21 @@ axis2_xmpp_svr_thread_run(
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Failed to create worker thread");
             continue;
         }
-
-        if (i == (svc_count -1)) 
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " %s join or detach",session->id_str);
+        if (i == (svc_count -1))
+        {
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " %s join",session->id_str);
             axutil_thread_pool_join_thread(env->thread_pool, worker_thread);
+        }
         else
+        {
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " %s detach",session->id_str);
             axutil_thread_pool_thread_detach(env->thread_pool, worker_thread);
-
+        }
 #else
         worker_func(NULL, (void*)args);
 #endif
     }
-	
     return AXIS2_SUCCESS;
 }
 
@@ -417,6 +423,8 @@ axis2_xmpp_svr_thread_get_all_xmpp_services(
             jid = (axis2_char_t*)axutil_param_get_value(param_jid, env);
             pw = (axis2_char_t*)axutil_param_get_value(param_pw, env);
 
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "found jid %s", jid);
+
             session = (axis2_xmpp_session_data_t*)AXIS2_MALLOC(env->allocator,
                     sizeof(axis2_xmpp_session_data_t));
             axis2_xmpp_session_data_init(session);
@@ -426,7 +434,6 @@ axis2_xmpp_svr_thread_get_all_xmpp_services(
             session->use_tls = impl->use_tls;
             session->subscribe = impl->subscribe;
             session->svc = svc;
-
             axis2_xmpp_svr_thread_get_subscribing_ops(svr_thread, env, svc,
                     session);
 
@@ -506,6 +513,7 @@ axis2_xmpp_svr_thread_get_subscribing_ops(
             jid = (axis2_char_t*)axutil_param_get_value(param_jid, env);
             type = (axis2_char_t*)axutil_param_get_value(param_type, env);
 
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "found jid %s  type %s", jid, type);
             session->subscribe_to = jid;
             session->subscribe_type = type;
             session->subscribe_op = op_name;
@@ -530,7 +538,6 @@ worker_func(
     axis2_xmpp_svr_thd_args_t* args = NULL;
 
     args = (axis2_xmpp_svr_thd_args_t*)data;
-    
     AXIS2_XMPP_WORKER_RUN(args->worker, args->env);
     
     return NULL;
