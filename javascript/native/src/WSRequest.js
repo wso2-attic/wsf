@@ -269,14 +269,9 @@ WSRequest.util = {
             return payload;
         else if (typeof(payload) == "object")
         {
-<<<<<<< .mine
             var browser = WSRequest.util._getBrowser();
             switch (browser) {
-=======
-            var browser = WSRequest.util._getBrowser();
-            switch (browser)
-                    {
->>>>>>> .r3369
+
                 case "gecko":
                     var serializer = new XMLSerializer();
                     return serializer.serializeToString(payload);
