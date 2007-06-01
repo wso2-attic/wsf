@@ -119,6 +119,8 @@ AC_ARG_WITH(axis2,
   AC_MSG_RESULT(no)
 )
 
+AC_DEFINE_UNQUOTED(WSFC_PREFIX, "$prefix",[WSF/C Install Path])
+
 AXIS2INC=$axis2inc
 AXIOMINC=$axis2inc/../axiom/include
 UTILINC=$axis2inc/../util/include

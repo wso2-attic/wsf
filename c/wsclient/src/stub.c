@@ -40,7 +40,6 @@
 #include "stub.h"
 #include "error.h"
 
-
 static int is_soap_enabled = 0;
 static int is_action = 0;
 static int is_soap_out = 0;
@@ -660,14 +659,24 @@ wsclient_stub_invoke(
 	client_home = AXIS2_GETENV("WSFC_HOME");
 	if (!client_home)
 	{
-		printf ("WSFC_HOME environment variable doesn't set properly.Please recheck\n");
-		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-						"[wsclient] WSFC_HOME is empty");
-		return WSCLIENT_FAILURE;
+#ifdef WSFC_PREFIX    
+        client_home = WSFC_PREFIX;
+        if (!client_home)
+        {
+#endif        
+    		printf ("WSFC_HOME environment variable not set properly. Please recheck.\n");
+		    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+		        "[wsclient] WSFC_HOME is empty");
+            return WSCLIENT_FAILURE;
+#ifdef WSFC_PREFIX    
+        }
+        else
+    		printf ("WSFC_HOME environment variable not set properly. Using %s as WSFC_HOME.\n", client_home);
+#endif        
 	}
-	else
-		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-						"[wsclient] WSFC_HOME %s", client_home);
+    
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+        "[wsclient] WSFC_HOME %s", client_home);
 
 	if (dest_uri)
 	{
