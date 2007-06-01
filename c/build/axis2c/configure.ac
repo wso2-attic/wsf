@@ -296,7 +296,7 @@ AC_ARG_ENABLE(libcurl, [  --enable-libcurl
 )
 
 AC_MSG_CHECKING(whether to build xmpp)
-AC_ARG_ENABLE(xmpp, [  --enable-xmpp  
+AC_ARG_ENABLE(xmpp, [  --enable-xmpp
                           enable xmpp build (default=no)],
 [ case "${enableval}" in
   no)
@@ -314,6 +314,7 @@ AC_ARG_ENABLE(xmpp, [  --enable-xmpp
   AC_MSG_RESULT(no)
   CFLAGS="$CFLAGS"
 )
+
 
 APACHE2INC=$apache2inc
 APRINC=$aprinc
@@ -333,6 +334,7 @@ AC_SUBST(GUTHTHILA_LIBS)
 AM_CONDITIONAL(AXIS2_SSL_ENABLED, test x$ssl_enabled = xtrue)
 AM_CONDITIONAL(AXIS2_LIBCURL_ENABLED, test x$libcurl_enabled = xtrue)
 AM_CONDITIONAL(AXIS2_XMPP_ENABLED, test x$xmpp_enabled = xtrue)
+
 #export PARSER_DIR
 export WRAPPER_DIR
 export prefix 
