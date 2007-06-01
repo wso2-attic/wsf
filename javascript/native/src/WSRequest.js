@@ -167,7 +167,10 @@ WSRequest.prototype._processResult = function () {
                 soapPrefix = (i < 0) ? "" : response.tagName.substring(0, i + 1);
             }
             var soapBody = response.getElementsByTagName(soapPrefix + "Body")[0];
+
             if (soapBody != null && soapBody.hasChildNodes()) {
+                // Need to set the prefix for fault handling
+                soapPrefix = response.prefix;
 
                 var newDoc;
                 if (browser == "gecko")
@@ -187,8 +190,8 @@ WSRequest.prototype._processResult = function () {
 
                 this.responseXML = newDoc;
                 this.responseText = WSRequest.util._serializeToString(newDoc);
-                //            f (newDoc.documentElement.tagName == soapPrefix + "Fault")
-                if (newDoc.documentElement.tagName.indexOf(soapPrefix + "Fault") > -1) {
+
+                if (newDoc.documentElement.tagName == soapPrefix + ":Fault") {
                     this.error = new WSError();
                     this.error.code = newDoc.getElementsByTagName("faultcode")[0].firstChild.nodeValue;
                     this.error.reason = newDoc.getElementsByTagName("faultstring")[0].firstChild.nodeValue;
