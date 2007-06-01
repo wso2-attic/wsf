@@ -1,5 +1,7 @@
 #!/usr/bin/sh
-echo $1
+set -e
+export LD_LIBRARY_PATH=$1/lib
+echo $LD_LIBRARY_PATH
 cd axis2c/samples
 ./autogen.sh
 ./configure --prefix=$1
