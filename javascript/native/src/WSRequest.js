@@ -190,8 +190,8 @@ WSRequest.prototype._processResult = function () {
                 //            f (newDoc.documentElement.tagName == soapPrefix + "Fault")
                 if (newDoc.documentElement.tagName.indexOf(soapPrefix + "Fault") > -1) {
                     this.error = new WSError();
-                    this.error.code = newDoc.getElementsByTagName("faultcode")[0].text;
-                    this.error.reason = newDoc.getElementsByTagName("faultstring")[0].text;
+                    this.error.code = newDoc.getElementsByTagName("faultcode")[0].firstChild.nodeValue;
+                    this.error.reason = newDoc.getElementsByTagName("faultstring")[0].firstChild.nodeValue;
                     this.error.detail =
                     WSRequest.util._serializeToString(newDoc.getElementsByTagName("detail")[0]);
                 }
