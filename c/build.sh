@@ -17,6 +17,7 @@ cp -r build/xmpp/xmpp axis2c/src/core/transport
 cp -r build/xmpp/include/*.h axis2c/include
 cp -r build/xmpp/samples/listener axis2c/samples/server
 cp build/rampartc/configure.ac rampartc
+cp build/src/core/engine/Makefile.am src/core/engine/
 
 ./autogen.sh
 ./configure --prefix=`pwd`/deploy --enable-openssl=yes --enable-rampart=yes --enable-xmpp=no --with-axis2=`pwd`/axis2c/include 
