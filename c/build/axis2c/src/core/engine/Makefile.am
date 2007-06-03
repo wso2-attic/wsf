@@ -20,7 +20,8 @@ libaxis2_engine_la_LIBADD=$(top_builddir)/src/core/description/libaxis2_descript
 					$(top_builddir)/src/core/clientapi/libaxis2_clientapi.la \
 					$(top_builddir)/src/core/phaseresolver/libaxis2_phaseresolver.la \
 					$(top_builddir)/src/core/util/libaxis2_core_utils.la \
-	                                $(top_builddir)/util/src/libaxutil.la \
+					$(top_builddir)/util/src/libaxutil.la \
+					$(top_builddir)/neethi/src/libneethi.la \
 					$(top_builddir)/axiom/src/om/libaxis2_axiom.la 
 if AXIS2_XMPP_ENABLED
 libaxis2_engine_la_LIBADD+=$(top_builddir)/src/core/transport/xmpp/receiver/libaxis2_xmpp_receiver.la \
@@ -41,6 +42,7 @@ INCLUDES =  -I$(top_builddir)/include \
             -I$(top_builddir)/src/core/util \
             -I$(top_builddir)/src/core/clientapi \
             -I$(top_builddir)/util/include \
+            -I$(top_builddir)/neethi/include \
             -I$(top_builddir)/axiom/include
 
 EXTRA_DIST=axis2_disp_checker.h

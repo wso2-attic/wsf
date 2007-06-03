@@ -55,6 +55,10 @@ if test -d $srcdir/axiom; then
     AC_CONFIG_SUBDIRS(axiom)
 fi
 
+if test -d $srcdir/neethi; then
+    AC_CONFIG_SUBDIRS(neethi)
+fi
+
 #CFLAGS="$CFLAGS -ansi -Wall -D_LARGEFILE64_SOURCE -Wno-implicit-function-declaration"
 CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 if test "$GCC" = "yes"; then
