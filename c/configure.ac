@@ -97,6 +97,26 @@ AC_ARG_ENABLE(openssl, [  --enable-openssl
   CFLAGS="$CFLAGS"
 )
 
+AC_MSG_CHECKING(whether to build xmpp)
+AC_ARG_ENABLE(xmpp, [  --enable-xmpp  
+                          enable xmpp build (default=no)],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    CFLAGS="$CFLAGS"
+    xmpp_enabled=false
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    XMPP_DIR="xmpp"
+    CFLAGS="$CFLAGS -DAXIS2_XMPP_ENABLED"
+    xmpp_enabled=false
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+  CFLAGS="$CFLAGS"
+)
+
 dnl Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS([stdio.h stdlib.h string.h])
