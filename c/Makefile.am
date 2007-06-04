@@ -1,5 +1,5 @@
 datadir=$(prefix)
-SUBDIRS=axis2c sandesha2c rampartc savanc wsclient
+SUBDIRS=axis2c sandesha2c $(RAMPART_DIR) savanc $(WSCLIENT_DIR)
 data_DATA=config/axis2.xml README \
         INSTALL COPYING NEWS 
 
