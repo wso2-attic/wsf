@@ -22,7 +22,7 @@ cp build/axis2c/src/core/engine/Makefile.am axis2c/src/core/engine/
 cp build/axis2c/src/core/transport/Makefile.am axis2c/src/core/transport/Makefile.am
 
 ./autogen.sh
-./configure --prefix=`pwd`/deploy --enable-openssl=yes --enable-rampart=yes --enable-xmpp=yes --with-axis2=`pwd`/axis2c/include 
+./configure --prefix=`pwd`/deploy --enable-openssl=yes --enable-rampart=yes --enable-xmpp=no --with-axis2=`pwd`/axis2c/include 
 make
 
 
