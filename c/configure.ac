@@ -25,10 +25,6 @@ if test -d $srcdir/axis2c; then
     AC_CONFIG_SUBDIRS(axis2c)
 fi
 
-if test -d $srcdir/sandesha2c; then
-    AC_CONFIG_SUBDIRS(sandesha2c)
-fi
-
 if test -d $srcdir/savanc; then
     AC_CONFIG_SUBDIRS(savanc)
 fi
@@ -151,6 +147,27 @@ AC_ARG_ENABLE(wsclient, [  --enable-wsclient
   AC_MSG_RESULT(no)
 )
 
+AC_MSG_CHECKING(whether to build sandesha)
+AC_ARG_ENABLE(sandesha, [  --enable-sandesha
+                          build sandesha (default=yes)],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    SANDESHA_DIR="sandesha"
+    if test -d $srcdir/sandesha; then
+        AC_CONFIG_SUBDIRS(sandesha)
+    fi
+
+    SANDESHA_DIR="sandesha"
+
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+)
+
 
 dnl Checks for header files.
 AC_HEADER_STDC
@@ -170,6 +187,7 @@ AC_FUNC_REALLOC
 
 AC_SUBST(RAMPART_DIR)
 AC_SUBST(WSCLIENT_DIR)
+AC_SUBST(SANDESHA_DIR)
 
 AC_CONFIG_FILES([Makefile 
     ])
