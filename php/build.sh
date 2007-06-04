@@ -29,6 +29,7 @@ cp build/wsf_c/axis2c/autogen.sh wsf_c/axis2c
 cp build/wsf_c/axis2c/autogen.sh wsf_c/axis2c
 cp build/wsf_c/sandesha2c/src/core/Makefile.am wsf_c/sandesha2c/src/core
 cp build/wsf_c/sandesha2c/Makefile.am wsf_c/sandesha2c/
+cp build/wsf_c/rampartc/configure.ac wsf_c/rampartc/
 #cp build/wsf_c/axis2c/Makefile.am wsf_c/axis2c/
 cp wsf_c/sandesha2c/config/axis2.xml .
 cp wsf_c/sandesha2c/config/sqlite_schema.sh /tmp
@@ -41,5 +42,5 @@ do
     sed  's/-Werror//' $i > configure.ac.back;
     mv configure.ac.back $i;
 done
-./autogen.sh && ./configure --with-wsf --with-apache2=/usr/local/apache2/include --enable-tests=yes --prefix=`php-config --extension-dir`/wsf_c && make -j 100 
+./autogen.sh && ./configure --with-wsf --with-apache2=/usr/local/apache2/include --with-axis2=`pwd`/wsf_c/axis2c/include --enable-tests=yes --prefix=`php-config --extension-dir`/wsf_c && make -j 100 
 
