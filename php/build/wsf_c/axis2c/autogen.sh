@@ -11,6 +11,10 @@ echo 'Running autogen.sh in Guththila'
 cd ../guththila
 sh autogen.sh
 
+echo 'Running autogen.sh in Neethi'
+cd ../neethi
+sh autogen.sh
+
 echo 'Running autogen.sh in Axis2/C'
 cd ..
 
