@@ -29,16 +29,8 @@ if test -d $srcdir/sandesha2c; then
     AC_CONFIG_SUBDIRS(sandesha2c)
 fi
 
-if test -d $srcdir/rampartc; then
-    AC_CONFIG_SUBDIRS(rampartc)
-fi
-
 if test -d $srcdir/savanc; then
     AC_CONFIG_SUBDIRS(savanc)
-fi
-
-if test -d $srcdir/wsclient; then
-    AC_CONFIG_SUBDIRS(wsclient)
 fi
 
 #CFLAGS="$CFLAGS -ansi -Wall -D_LARGEFILE64_SOURCE -Wno-implicit-function-declaration"
@@ -117,6 +109,49 @@ AC_ARG_ENABLE(xmpp, [  --enable-xmpp
   CFLAGS="$CFLAGS"
 )
 
+AC_MSG_CHECKING(whether to build rampart)
+AC_ARG_ENABLE(rampartc, [  --enable-rampart
+                          build rampart (default=yes)],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    RAMPART_DIR="rampartc"
+    if test -d $srcdir/rampartc; then
+        AC_CONFIG_SUBDIRS(rampartc)
+    fi
+
+    RAMPART_DIR="rampartc"
+
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+)
+
+AC_MSG_CHECKING(whether to build wsclient)
+AC_ARG_ENABLE(wsclient, [  --enable-wsclient
+                          build wsclient (default=yes)],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    WSCLIENT_DIR="wsclient"
+    if test -d $srcdir/wsclient; then
+        AC_CONFIG_SUBDIRS(wsclient)
+    fi
+
+    WSCLIENT_DIR="wsclient"
+
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+)
+
+
 dnl Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS([stdio.h stdlib.h string.h])
@@ -133,6 +168,8 @@ AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 #AC_CHECK_FUNCS([memmove])
 
+AC_SUBST(RAMPART_DIR)
+AC_SUBST(WSCLIENT_DIR)
 
 AC_CONFIG_FILES([Makefile 
     ])
