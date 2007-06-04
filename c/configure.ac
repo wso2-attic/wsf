@@ -105,21 +105,21 @@ AC_ARG_ENABLE(xmpp, [  --enable-xmpp
   CFLAGS="$CFLAGS"
 )
 
-AC_MSG_CHECKING(whether to build rampart)
-AC_ARG_ENABLE(rampartc, [  --enable-rampart
-                          build rampart (default=yes)],
+AC_MSG_CHECKING(whether to build )
+AC_ARG_ENABLE(rampart, [  --enable-rampart
+                          build  (default=yes)],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
     ;;
   *)
     AC_MSG_RESULT(yes)
-    RAMPART_DIR="rampartc"
-    if test -d $srcdir/rampartc; then
-        AC_CONFIG_SUBDIRS(rampartc)
+    RAMPART_DIR="c"
+    if test -d $srcdir/c; then
+        AC_CONFIG_SUBDIRS(c)
     fi
 
-    RAMPART_DIR="rampartc"
+    RAMPART_DIR="c"
 
     ;;
   esac ],
