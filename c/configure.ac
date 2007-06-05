@@ -156,12 +156,12 @@ AC_ARG_ENABLE(sandesha, [  --enable-sandesha
     ;;
   *)
     AC_MSG_RESULT(yes)
-    SANDESHA_DIR="sandesha"
-    if test -d $srcdir/sandesha; then
-        AC_CONFIG_SUBDIRS(sandesha)
+    SANDESHA_DIR="sandesha2c"
+    if test -d $srcdir/sandesha2c; then
+        AC_CONFIG_SUBDIRS(sandesha2c)
     fi
 
-    SANDESHA_DIR="sandesha"
+    SANDESHA_DIR="sandesha2c"
 
     ;;
   esac ],
