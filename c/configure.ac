@@ -114,12 +114,12 @@ AC_ARG_ENABLE(rampart, [  --enable-rampart
     ;;
   *)
     AC_MSG_RESULT(yes)
-    RAMPART_DIR="c"
-    if test -d $srcdir/c; then
-        AC_CONFIG_SUBDIRS(c)
+    RAMPART_DIR="rampartc"
+    if test -d $srcdir/rampartc; then
+        AC_CONFIG_SUBDIRS(rampartc)
     fi
 
-    RAMPART_DIR="c"
+    RAMPART_DIR="rampartc"
 
     ;;
   esac ],
