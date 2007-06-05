@@ -170,12 +170,11 @@ WSRequest.prototype._processResult = function () {
             }
             var soapPrefix = "";
             if (browser == "ie" || browser == "ie7") {
-                i = response.tagName.indexOf(':');
-                soapPrefix = (i<0) ? "" : response.tagName.substring(0,i+1);
+                soapPrefix = WSRequest.util._getPrefixWithColen(response);
             }
             var soapBody = response.getElementsByTagName(soapPrefix + "Body")[0];
             if (soapBody != null && soapBody.hasChildNodes()) {
-    
+                soapPrefix = WSRequest.util._getPrefixWithColen(response);
                 var newDoc; 
                 if (browser == "gecko")
                 {
@@ -534,6 +533,18 @@ WSRequest.util = {
         fn._cscope = obj;
         return this._getRealScope(fn);
 
+    },
+/**
+ * @description Return the prefix for the given node with colen ex: "soapevn:" otherwise ""
+ * @method _getPrefixWithColen
+ * @private
+ * @static
+ * @param {node} DOM node element should be given
+ * @retrun String
+ */
+    _getPrefixWithColen : function(node) {
+        i = node.tagName.indexOf(':');
+        return  (i < 0) ? "" : node.tagName.substring(0, i + 1);
     }
 };
 
