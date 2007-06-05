@@ -461,6 +461,12 @@ int axis2_xmpp_worker_on_normal_node(
                 }
             }
         }
+        else
+        {
+            /* Say that we are online */
+            iks_send(session->parser, iks_make_pres(IKS_SHOW_AVAILABLE,
+                                                    "Online"));
+        }
     }
     else if (strcmp("failure", iks_name(node)) == 0)
     {
