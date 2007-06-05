@@ -13,10 +13,9 @@ set -e
 
 #rm -rf axis2c/src/core/transport/xmpp
 rm -rf axis2c/samples/server/listener
-#cp -r build/xmpp/xmpp axis2c/src/core/transport
-cp -r build/xmpp/include/*.h axis2c/include
 cp -r build/xmpp/samples/listener axis2c/samples/server
 cp build/rampartc/configure.ac rampartc
+cp build/savanc/configure.ac savanc
 cp build/axis2c/configure.ac axis2c
 cp build/axis2c/src/core/engine/Makefile.am axis2c/src/core/engine/
 cp build/axis2c/src/core/transport/Makefile.am axis2c/src/core/transport/Makefile.am
