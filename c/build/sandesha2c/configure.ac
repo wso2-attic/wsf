@@ -31,7 +31,7 @@ AC_HEADER_STDC
 AC_CHECK_HEADERS([stdio.h stdlib.h string.h])
 
 dnl Checks for typedefs, structures, and compiler characteristics.
-AC_C_CONST
+dnl AC_C_CONST
 
 dnl Checks for library functions.
 AC_FUNC_MALLOC
