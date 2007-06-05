@@ -1,5 +1,5 @@
 #!/bin/bash
-#./autogen.sh
+./autogen.sh
 
 set -e 
 
