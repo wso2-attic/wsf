@@ -87,7 +87,6 @@ int main (int argc, char **argv)
 			{
 				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 								"[wsclient] wsclient invoke Success !");
-				printf ("\nwsclient invoke Success ! \n");
 			}
 			break;
 		};

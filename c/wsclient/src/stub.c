@@ -671,7 +671,8 @@ wsclient_stub_invoke(
 #ifdef WSFC_PREFIX    
         }
         else
-    		printf ("WSFC_HOME environment variable not set properly. Using %s as WSFC_HOME.\n", client_home);
+    		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                "WSFC_HOME environment variable not set properly. Using %s as WSFC_HOME.\n", client_home);
 #endif        
 	}
     
@@ -751,7 +752,7 @@ wsclient_stub_invoke(
 	if (payload && svc_client)
 	{
 	    if (dest_uri)
-			printf ("Sending request to: %s \n", dest_uri);
+			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Sending request to: %s \n", dest_uri);
 
 #ifdef AXIS2_SSL_ENABLED
 		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
@@ -836,9 +837,11 @@ wsclient_stub_invoke(
 	    {
 			om_str = axiom_node_to_string(ret_node, env);
 			if (om_str)
-				printf("\nReceived OM : %s\n", om_str);
-			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-							"[wsclient] response retrieval successful");
+            {
+				printf("%s\n", om_str);
+			    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+					"[wsclient] response retrieval successful %s", om_str);
+            }
 			ret_node = NULL;
 	    }
 	}
