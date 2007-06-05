@@ -158,57 +158,62 @@ WSRequest.prototype._processResult = function () {
         this.error = null;  // How would I tell?
     } else {
         var browser = WSRequest.util._getBrowser();
-
-        var response = this._xmlhttp.responseXML.documentElement;
-        if (response) {
+            
+        if (this._xmlhttp.responseText != "") {
+            if ((browser == "ie" || browser == "ie7") && this._xmlhttp.responseXML.documentElement == null) {
+                // unrecognized media type (probably application/soap+xml)
+                var responseXMLdoc = new ActiveXObject("Microsoft.XMLDOM");
+                responseXMLdoc.loadXML(this._xmlhttp.responseText);
+                var response = responseXMLdoc.documentElement;
+            } else {
+                var response = this._xmlhttp.responseXML.documentElement;
+            }
             var soapPrefix = "";
             if (browser == "ie" || browser == "ie7") {
                 i = response.tagName.indexOf(':');
-                soapPrefix = (i < 0) ? "" : response.tagName.substring(0, i + 1);
+                soapPrefix = (i<0) ? "" : response.tagName.substring(0,i+1);
             }
             var soapBody = response.getElementsByTagName(soapPrefix + "Body")[0];
-
             if (soapBody != null && soapBody.hasChildNodes()) {
-                // Need to set the prefix for fault handling
-                soapPrefix = response.prefix;
-
-                var newDoc;
+    
+                var newDoc; 
                 if (browser == "gecko")
                 {
                     try {
                         netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead");
                     } catch(e) {
                     }
-                    var newDoc = document.implementation.createDocument("", "", null);
+                    var newDoc = document.implementation.createDocument("","",null);
                     newDoc.appendChild(soapBody.firstChild);
                 }
-
+    
                 if (browser == "ie" || browser == "ie7") {
                     var newDoc = new ActiveXObject("Microsoft.XMLDOM");
                     newDoc.appendChild(soapBody.firstChild);
                 }
-
+    
                 this.responseXML = newDoc;
                 this.responseText = WSRequest.util._serializeToString(newDoc);
-
-                if (newDoc.documentElement.tagName == soapPrefix + ":Fault") {
+                if (newDoc.documentElement.tagName == soapPrefix + "Fault") {
                     this.error = new WSError();
                     this.error.code = newDoc.getElementsByTagName("faultcode")[0].firstChild.nodeValue;
                     this.error.reason = newDoc.getElementsByTagName("faultstring")[0].firstChild.nodeValue;
                     this.error.detail =
                     WSRequest.util._serializeToString(newDoc.getElementsByTagName("detail")[0]);
                 }
-
             } else {
+                // empty SOAP body - not necessarily an error
                 this.responseXML = null;
                 this.responseText = "";
                 this.error = null;
-                // Should there be a fault for no response?
             }
-        }else {
+        } else {
             this.responseXML = null;
             this.responseText = "";
-            this.error = null;
+            this.error = new WSError();
+            this.error.code = "HTTP" + this._xmlhttp.status;
+            this.error.reason = "No SOAP Body.";
+            this.error.detail = this._xmlhttp.statusText;
         }
     }
 }
