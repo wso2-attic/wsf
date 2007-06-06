@@ -103,11 +103,7 @@ WSRequest.prototype.send = function(payload) {
     //  WS-A recommends keeping these two items in sync.
     var soapAction = this._optionSet["action"];
     
-    try {
-        this._xmlhttp.open(method, this._uri, this._async);
-    } catch (e) {
-        alert(e);
-    }
+    this._xmlhttp.open(method, this._uri, this._async);
     
     switch (this._soapVer) {
         case 1.1:
@@ -168,13 +164,13 @@ WSRequest.prototype._processResult = function () {
             } else {
                 var response = this._xmlhttp.responseXML.documentElement;
             }
-            var soapPrefix = "";
-            if (browser == "ie" || browser == "ie7") {
-                soapPrefix = WSRequest.util._getPrefixWithColen(response);
-            }
-            var soapBody = response.getElementsByTagName(soapPrefix + "Body")[0];
+            if (this._soapVer == 1.1)
+                var soapNamespace = "http://schemas.xmlsoap.org/soap/envelope/";
+            else 
+                var soapNamespace = "http://www.w3.org/2003/05/soap-envelope";
+            
+            var soapBody = WSRequest.util._firstElement(response, soapNamespace, "Body");
             if (soapBody != null && soapBody.hasChildNodes()) {
-                soapPrefix = WSRequest.util._getPrefixWithColen(response);
                 var newDoc; 
                 if (browser == "gecko")
                 {
@@ -193,12 +189,21 @@ WSRequest.prototype._processResult = function () {
     
                 this.responseXML = newDoc;
                 this.responseText = WSRequest.util._serializeToString(newDoc);
-                if (newDoc.documentElement.tagName == soapPrefix + "Fault") {
+                
+                fault = WSRequest.util._firstElement(newDoc, soapNamespace, "Fault");
+                if (fault != undefined) {
                     this.error = new WSError();
-                    this.error.code = newDoc.getElementsByTagName("faultcode")[0].firstChild.nodeValue;
-                    this.error.reason = newDoc.getElementsByTagName("faultstring")[0].firstChild.nodeValue;
-                    this.error.detail =
-                    WSRequest.util._serializeToString(newDoc.getElementsByTagName("detail")[0]);
+                    if (this._soapVer == 1.2) {
+                        this.error.code = WSRequest.util._stringValue(WSRequest.util._firstElement(fault, soapNamespace, "Value"));
+                        this.error.reason = WSRequest.util._stringValue(WSRequest.util._firstElement(fault, soapNamespace, "Text"));
+                        this.error.detail =
+                            WSRequest.util._serializeToString(WSRequest.util._firstElement(fault, soapNamespace, "Detail"));
+                    } else {
+                        this.error.code = WSRequest.util._stringValue(fault.getElementsByTagName("faultcode")[0]);
+                        this.error.reason = WSRequest.util._stringValue(fault.getElementsByTagName("faultstring")[0]);
+                        this.error.detail =
+                            WSRequest.util._serializeToString(fault.getElementsByTagName("detail")[0]);
+                    }
                 }
             } else {
                 // empty SOAP body - not necessarily an error
@@ -288,10 +293,9 @@ WSRequest.util = {
  * @return string
  */
     _serializeToString : function(payload) {
-        if (typeof(payload) == "string")
+        if (typeof(payload) == "string") {
             return payload;
-        else if (typeof(payload) == "object")
-        {
+        } else if (typeof(payload) == "object") {
             var browser = WSRequest.util._getBrowser();
             switch (browser) {
 
@@ -315,9 +319,37 @@ WSRequest.util = {
                 case "undefined":
                     throw new Error("XMLHttp object could not be created");
             }
-        }
-        else if (typeof(payload) != "string" || typeof(payload) != "object")
+        } else {
             return false;
+        }
+    },
+
+
+/**
+ * @description get the character element children in a browser-independent way.
+ * @method _stringValue
+ * @private
+ * @static
+ * @param {dom element} node
+ * @return string
+ */
+    _stringValue : function(node) {
+        var browser = WSRequest.util._getBrowser();
+        switch (browser) {
+            case "ie":
+            case "ie7":
+                return node.text;
+                break;
+            case "gecko":
+            case "opera":
+            case "safari":
+            case "undefined":
+                value = "";
+                if (node.nodeType == 3) value = node.nodeValue;
+                else for (c in node.childNodes) value += WSRequest.util._stringValue(node.childNodes[c]);
+                return value;
+                break;
+        }
     },
 
 
@@ -534,18 +566,25 @@ WSRequest.util = {
         return this._getRealScope(fn);
 
     },
-/**
- * @description Return the prefix for the given node with colen ex: "soapevn:" otherwise ""
- * @method _getPrefixWithColen
- * @private
- * @static
- * @param {node} DOM node element should be given
- * @retrun String
- */
-    _getPrefixWithColen : function(node) {
-        i = node.tagName.indexOf(':');
-        return  (i < 0) ? "" : node.tagName.substring(0, i + 1);
+    
+    // workaround for the browser-specific differences in getElementsByTagName
+    _firstElement : function (node, namespace, localName) {
+        var browser = WSRequest.util._getBrowser();
+        if (browser == "ie" || browser == "ie7") {
+            doc = (node.nodeType == 9 ? node : node.ownerDocument);
+            doc.setProperty("SelectionNamespaces", "xmlns:soap='" + namespace + "'");
+            el = node.selectSingleNode(".//soap:" + localName);
+        } else {
+            // Some Firefox DOMs recognize namespaces ...
+            el = node.getElementsByTagNameNS(namespace, localName)[0];
+            if (el == undefined)
+                // ... and some don't.
+                el = node.getElementsByTagName(localName)[0];
+        }
+        return el;
     }
+    
+    
 };
 
 
