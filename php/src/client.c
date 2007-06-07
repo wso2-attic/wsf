@@ -1085,8 +1085,8 @@ wsf_client_enable_proxy(HashTable *ht,
         axis2_char_t *proxy_port = NULL;
         zval **tmp = NULL;
         
-	If(!ht)
-		return;
+	if(!ht)
+	  return;
 	
 	if(zend_hash_find(ht, WS_PROXY_HOST, sizeof(WS_PROXY_HOST), (void **)&tmp) == SUCCESS){
 		proxy_host = Z_STRVAL_PP(tmp);		
@@ -1100,5 +1100,6 @@ wsf_client_enable_proxy(HashTable *ht,
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf-client] setting proxy options %s -- %s -- ", proxy_host, proxy_port);
         }
 }
+
 
 
