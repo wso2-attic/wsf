@@ -88,29 +88,6 @@ AC_ARG_WITH(axis2,
   AC_MSG_RESULT(no)
 )
 
-AC_MSG_CHECKING(path to use Axis2C . This is a compulsory to build Rampart-C)
-AC_ARG_WITH(axis2,
-[  --with-axis2[=PATH]      use axis2c.],
-[ case "$withval" in
-  no)
-    AC_MSG_RESULT(no)
-    ;;
-  *)
-    AC_MSG_RESULT($withval)
-    dnl Find axis2 include dir in the path
-    if test -d $withval; then
-        axis2inc="-I$withval"
-    dnl else find the axis2inc include dir in $(AXIS2C_HOME)/include
-    elif test -d '$(AXIS2C_HOME)/include/axis2-1.0'; then
-        axis2inc="-I$(AXIS2C_HOME)/include/axis2-1.0"
-    else
-        AC_MSG_ERROR(could not find axis2inc. stop)
-    fi
-    ;;
-  esac ],
-  AC_MSG_RESULT(no)
-)
-
 AC_MSG_CHECKING(path to use openssl . This is a compulsory to build Rampart-C)
 AC_ARG_WITH(openssl,
 [  --with-openssl[=PATH]      use openssl.],
