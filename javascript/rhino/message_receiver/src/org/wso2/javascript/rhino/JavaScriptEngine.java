@@ -151,17 +151,12 @@ public class JavaScriptEngine extends ImporterTopLevel {
                 }
 
             } else if (args !=null) {
-                String sourceStr = "function convertToXML(inputPara){ var x = new XML(inputPara);return x;}";
-                cx.evaluateString(this, sourceStr, "Get E4X", 0, null);
-
-                // Get the function from the scope the javascript object is in
-                Object fObj = this.get("convertToXML", this);
-                if (!(fObj instanceof Function) || (fObj == Scriptable.NOT_FOUND)) {
-                    throw new AxisFault("Method " + method + " is undefined or not a function");
-                }
-                Object functionArgs[] = { args };
-                Function f = (Function) fObj;
-                args = f.call(cx, this, this, functionArgs);
+                // Rhino E4X XMLLibImpl object can be instantiated only from within a script
+                // So we instantiate it in here, so that we can use it outside of the script later
+                cx.evaluateString(this, "new XML();", "Instantiate E4X", 0, null);
+                
+                Object[] objects = {args};
+                args = cx.newObject(this, "XML",objects);
             }
             
             // Evaluates the javascript file
