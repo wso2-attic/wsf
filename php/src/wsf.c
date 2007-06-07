@@ -86,7 +86,7 @@ PHP_METHOD(ws_client, request);
 PHP_METHOD(ws_client, send);
 PHP_METHOD(ws_client, get_last_response);
 PHP_METHOD(ws_client, get_last_request);
-PHP_METHOD(ws_client, get_client_proxy);
+PHP_METHOD(ws_client, get_proxy);
 PHP_METHOD(ws_client, terminate_outgoing_rm);
 
 
@@ -150,7 +150,7 @@ zend_function_entry php_ws_client_class_functions[]={
 	PHP_MALIAS(ws_client, send, send, NULL,ZEND_ACC_PUBLIC)
 	PHP_MALIAS(ws_client,getLastResponse, get_last_response, NULL ,ZEND_ACC_PUBLIC)
 	PHP_MALIAS(ws_client, getLastRequest, get_last_request , NULL , ZEND_ACC_PUBLIC)
-	PHP_MALIAS(ws_client, getClientProxy, get_client_proxy, NULL, ZEND_ACC_PUBLIC)
+	PHP_MALIAS(ws_client, getProxy, get_proxy, NULL, ZEND_ACC_PUBLIC)
 	PHP_MALIAS(ws_client, terminateOutgoingRM , terminate_outgoing_rm, NULL, ZEND_ACC_PUBLIC)
 	PHP_ME(ws_client, __call, ws_client_call_args, ZEND_ACC_PUBLIC)
 	PHP_ME(ws_client, __construct, NULL, ZEND_ACC_PUBLIC)
@@ -1047,7 +1047,7 @@ PHP_METHOD(ws_client, __call)
     */
 }
 /* }}} end call */
-PHP_METHOD(ws_client, get_client_proxy)
+PHP_METHOD(ws_client, get_proxy)
 {
     zval *client_proxy_zval  =  NULL;
     char *service = NULL;
@@ -1071,7 +1071,7 @@ PHP_METHOD(ws_client, get_client_proxy)
     
     add_property_string(client_proxy_zval, "port", port, 1);
     
-	add_property_zval(client_proxy_zval, "client", this_ptr);
+	add_property_zval(client_proxy_zval, "wsclient", this_ptr);
 
     RETURN_ZVAL(client_proxy_zval, NULL, NULL);
 }
@@ -2044,8 +2044,6 @@ PHP_FUNCTION(ws_get_cert_from_file)
 /* {{{  proto  WSClientProxy::__construct(mixed options) */
 PHP_METHOD(ws_client_proxy, __construct)
 {
-
-
 }
 
 /* }}} end WSClient_proxt */
@@ -2071,31 +2069,27 @@ PHP_METHOD(ws_client_proxy, __call)
     int i = 0;
 
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sz",
-                              &fn_name, &fn_name_len, &args ) == FAILURE)
-    {
+                              &fn_name, &fn_name_len, &args ) == FAILURE){
         php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
         return;
     }
+
     arg_count = zend_hash_num_elements(Z_ARRVAL_P(args));
-    if(arg_count > 0)
-    {
+    if(arg_count > 0){
         real_args = safe_emalloc(sizeof(zval *), arg_count, 0);
         for (zend_hash_internal_pointer_reset_ex(Z_ARRVAL_P(args), &pos);
-                zend_hash_get_current_data_ex(Z_ARRVAL_P(args), (void **) &param, &pos) == SUCCESS;
-                zend_hash_move_forward_ex(Z_ARRVAL_P(args), &pos))
-        {
-            if(Z_TYPE_PP(param) == IS_LONG)
-            {  /*
-                php_printf(" index %d type %d", i, Z_LVAL_PP(param));
-		*/
-            }
-            real_args[i++] = *param;
+             zend_hash_get_current_data_ex(Z_ARRVAL_P(args), (void **) &param, &pos) == SUCCESS;
+             zend_hash_move_forward_ex(Z_ARRVAL_P(args), &pos)){
+             real_args[i++] = *param;
         }
     }
-    /*
+
     wsf_soap_do_soap_call(this_ptr, fn_name, fn_name_len, arg_count, real_args, return_value, NULL,
     	NULL, NULL, NULL, NULL, env TSRMLS_CC);
-    */        
+
+    if(arg_count){
+        efree(real_args);
+    }
 }    
 /* }}} end _call */
 
