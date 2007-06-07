@@ -820,7 +820,10 @@ int wsf_client_do_request(
 		(void**)&client_tmp) == SUCCESS){
 		client_ht = Z_ARRVAL_PP(client_tmp);
     }
-
+    
+    /** add proxy settings */
+    wsf_client_enable_proxy(client_ht, env, client_options, svc_client TSRMLS_CC);
+    
 	/** add ssl properties */
     wsf_client_enable_ssl(client_ht , env, client_options, svc_client TSRMLS_CC);
 
@@ -1071,6 +1074,31 @@ wsf_client_enable_ssl(HashTable *ht,
 	axis2_options_set_property(options, env, "SSL_PASSPHRASE", passphrase_prop);
 
 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf-client] setting ssh options %s -- %s -- %s ", ssl_server_key_filename, ssl_client_key_filename, passphrase);
+}
+void 
+wsf_client_enable_proxy(HashTable *ht, 
+		      axutil_env_t *env, 
+		      axis2_options_t *options,
+		      axis2_svc_client_t *svc_client TSRMLS_DC)
+{
+        axis2_char_t *proxy_host = NULL;
+        axis2_char_t *proxy_port = NULL;
+        zval **tmp = NULL;
+        
+	If(!ht)
+		return;
+	
+	if(zend_hash_find(ht, WS_PROXY_HOST, sizeof(WS_PROXY_HOST), (void **)&tmp) == SUCCESS){
+		proxy_host = Z_STRVAL_PP(tmp);		
+	}
+	if(zend_hash_find(ht, WS_PROXY_PORT, sizeof(WS_PROXY_PORT), (void **)&tmp) == SUCCESS){
+		proxy_port = Z_STRVAL_PP(tmp);	
+	}
+
+        if (proxy_host && proxy_port){
+            axis2_svc_client_set_proxy(svc_client, env, proxy_host, proxy_port); 
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf-client] setting proxy options %s -- %s -- ", proxy_host, proxy_port);
+        }
 }
 
 
