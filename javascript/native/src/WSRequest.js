@@ -569,6 +569,7 @@ WSRequest.util = {
     
     // workaround for the browser-specific differences in getElementsByTagName
     _firstElement : function (node, namespace, localName) {
+        if (node == null) return null;
         var browser = WSRequest.util._getBrowser();
         if (browser == "ie" || browser == "ie7") {
             doc = (node.nodeType == 9 ? node : node.ownerDocument);
