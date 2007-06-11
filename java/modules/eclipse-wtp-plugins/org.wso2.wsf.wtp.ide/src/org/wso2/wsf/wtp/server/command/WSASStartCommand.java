@@ -38,6 +38,7 @@ public class WSASStartCommand {
 
 		if (WSASConfigurationBean.isWsasStartStatus()) {
 			status = new Status( IStatus.ERROR,"id",11,"WSAS Already Running !!",null);
+			WSASConfigurationBean.setWSASAlreadyRunning(true);
 		}else{
 			//Init the Configuration Bean
 			WSASConfigurationBean.Init();
@@ -71,6 +72,7 @@ public class WSASStartCommand {
 				}
 
 				mainMethod.invoke(null, new Object[]{new String[]{"RUN"}});
+				WSASConfigurationBean.setWSASAlreadyRunning(false);
 				
 			}catch(IllegalArgumentException e){
 				status = new Status( IStatus.ERROR,"id",0,e.getMessage(),null);

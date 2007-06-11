@@ -69,10 +69,11 @@ public class WSASStartMenuDelegate
 		}
 		//Kill the WSAS Monitor Thread
 		WSASUpMonitorThread.setAlive(false);
-       	box.setMessage(WSASMessageConstant.INFO_WSAS_START_SUCCESS);box.open();
-		//Pop up the browser with the url
-		WTPInternalBrowserCommand.popUpInrernalBrouwser(WSASUtils.getWSASHTTPSAddtess());
-
+		if (!WSASConfigurationBean.isWSASAlreadyRunning()) {
+	       	box.setMessage(WSASMessageConstant.INFO_WSAS_START_SUCCESS);box.open();
+			//Pop up the browser with the url
+			WTPInternalBrowserCommand.popUpInrernalBrouwser(WSASUtils.getWSASHTTPSAddtess());
+		}
 	}
 
 	/**

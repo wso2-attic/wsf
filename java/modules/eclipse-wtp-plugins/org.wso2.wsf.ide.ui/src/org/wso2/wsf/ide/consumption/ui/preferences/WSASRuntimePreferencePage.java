@@ -38,7 +38,6 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.wso2.wsf.ide.core.context.Axis2EmitterDefaults;
 import org.wso2.wsf.ide.core.context.WSASEmitterContext;
 import org.wso2.wsf.ide.core.plugin.WebServiceWSASCorePlugin;
 import org.wso2.wsf.ide.core.plugin.data.ServerModel;
