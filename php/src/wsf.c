@@ -851,7 +851,7 @@ PHP_METHOD(ws_client, __construct)
         home_folder = home_dir;
     }
 
-    if (WSF_GLOBAL(home))
+	if (WSF_GLOBAL(home))
         home_folder = WSF_GLOBAL(home);
     svc_client = axis2_svc_client_create(env, home_folder);
 
@@ -1056,7 +1056,7 @@ PHP_METHOD(ws_client, get_proxy)
     int port_len =  0;
     zval *obj = NULL;
 
-    if(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss", &service, &service_len,
+    if(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|ss", &service, &service_len,
                              &port, &port_len) == FAILURE){
         php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid Parameters,specify the service and port");
     }
@@ -1066,12 +1066,15 @@ PHP_METHOD(ws_client, get_proxy)
     MAKE_STD_ZVAL(client_proxy_zval);
 
     object_init_ex(client_proxy_zval, ws_client_proxy_class_entry);
-    
-    add_property_string(client_proxy_zval, "service", service, 1);
-    
-    add_property_string(client_proxy_zval, "port", port, 1);
-    
-	add_property_zval(client_proxy_zval, "wsclient", this_ptr);
+   
+    if(service){
+        add_property_string(client_proxy_zval, "service", service, 1);
+    }
+    if(port){
+        add_property_string(client_proxy_zval, "port", port, 1);
+    }
+	
+    add_property_zval(client_proxy_zval, "wsclient", this_ptr);
 
     RETURN_ZVAL(client_proxy_zval, NULL, NULL);
 }

@@ -37,4 +37,5 @@ void wsf_soap_do_soap_call(zval* this_ptr,
 void delete_url(void *handle);
 void delete_hashtable(void *data);
 
+
 #endif /* WSF_SCLIENT_H */

@@ -14,6 +14,13 @@
  * limitations under the License.
  */
 #include "wsf_soap.h"
+#include <axiom_soap_envelope.h>
+#include <axis2_options.h>
+#include <axis2_conf_ctx.h>
+#include <axis2_msg_ctx.h>
+#include <axiom_xml_reader.h>
+
+
 #include "wsf.h"
 #include "php_sdl.h"
 #include "wsf_client.h"
@@ -127,6 +134,74 @@ static xmlDocPtr serialize_function_call(zval *this_ptr, sdlFunctionPtr function
 static xmlNodePtr serialize_parameter(sdlParamPtr param,zval *param_val,int index,char *name, int style, xmlNodePtr parent TSRMLS_DC);
 
 static xmlNodePtr serialize_zval(zval *val, sdlParamPtr param, char *paramName, int style, xmlNodePtr parent TSRMLS_DC);
+
+axiom_soap_envelope_t*
+create_soap_envelope_from_doc(xmlDocPtr doc, axutil_env_t *env, axis2_options_t *options)
+{
+	const axis2_char_t *soap_version_uri = NULL;
+	axiom_soap_envelope_t *soap_envelope = NULL;
+	axiom_soap_builder_t *soap_builder = NULL;
+	axiom_xml_reader_t *reader = NULL;
+	axiom_stax_builder_t *builder = NULL;
+	
+	soap_version_uri = axis2_options_get_soap_version_uri(options, env);
+
+	reader = axiom_xml_reader_create_for_memory(env, doc, 0, "utf-8", AXIS2_XML_PARSER_TYPE_DOC);
+	
+	builder = axiom_stax_builder_create(env, reader);
+
+	soap_builder = axiom_soap_builder_create(env, builder, soap_version_uri); 
+
+	soap_envelope = axiom_soap_builder_get_soap_envelope(soap_builder, env);
+
+	return soap_envelope;
+}
+
+axiom_soap_envelope_t *
+send_receive_soap_envelope_with_op_client(
+        axutil_env_t *env, 
+        axis2_svc_client_t *svc_client, 
+        axis2_options_t *options,
+        xmlDocPtr doc)
+{
+    axiom_soap_envelope_t *res_envelope = NULL, *req_envelope = NULL;
+    axis2_svc_ctx_t *svc_ctx = NULL;
+    axis2_conf_ctx_t *conf_ctx = NULL;
+    axis2_msg_ctx_t *req_msg_ctx = NULL, *res_msg_ctx = NULL;
+    axutil_qname_t *op_qname = NULL;
+    axis2_op_client_t *op_client = NULL;
+    
+    
+    svc_ctx = axis2_svc_client_get_svc_ctx(svc_client, env);
+
+    conf_ctx = axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
+
+    req_msg_ctx = axis2_msg_ctx_create(env, conf_ctx, NULL, NULL);
+
+    op_qname = axutil_qname_create(env, AXIS2_ANON_OUT_IN_OP, NULL, NULL);
+
+    op_client = axis2_svc_client_create_op_client(svc_client, env, op_qname);
+
+    req_envelope =  create_soap_envelope_from_doc(doc , env, options );                              
+
+    axis2_msg_ctx_set_soap_envelope(req_msg_ctx, env, req_envelope);
+
+    axis2_op_client_add_msg_ctx(op_client, env, req_msg_ctx);
+
+    axis2_op_client_execute(op_client, env, AXIS2_TRUE);
+
+    res_msg_ctx = (axis2_msg_ctx_t *)axis2_op_client_get_msg_ctx(
+                    op_client, env, AXIS2_WSDL_MESSAGE_LABEL_IN);
+
+    if(!res_msg_ctx){
+        return NULL;
+    }else{
+        res_envelope = axis2_msg_ctx_get_soap_envelope(res_msg_ctx, env);
+    }
+    return res_envelope;
+}
+
+
 
 int parse_packet_soap(zval *this_ptr, char *buffer, int buffer_size, sdlFunctionPtr fn, char *fn_name, zval *return_value, zval *soap_headers TSRMLS_DC)
 {
@@ -524,12 +599,10 @@ int parse_packet_soap(zval *this_ptr, char *buffer, int buffer_size, sdlFunction
 
 static xmlDocPtr serialize_function_call(zval *this_ptr, sdlFunctionPtr function, char *function_name, char *uri, zval **arguments, int arg_count, int version, HashTable *soap_headers TSRMLS_DC)
 {
-	xmlDoc *doc;
-	xmlNodePtr method = NULL;
-    
-    /* xmlNodePtr  head = NULL; */
+		xmlDoc *doc;
+	xmlNodePtr envelope = NULL, body, method = NULL, head = NULL;
 	xmlNsPtr ns = NULL;
-	/* zval **zstyle, **zuse; */
+	zval **zstyle, **zuse;
 	int i, style, use;
 	HashTable *hdrs = NULL;
 
@@ -538,7 +611,24 @@ static xmlDocPtr serialize_function_call(zval *this_ptr, sdlFunctionPtr function
 	doc = xmlNewDoc(BAD_CAST("1.0"));
 	doc->encoding = xmlCharStrdup("UTF-8");
 	doc->charset = XML_CHAR_ENCODING_UTF8;
+	if (version == SOAP_1_1) {
+		envelope = xmlNewDocNode(doc, NULL, BAD_CAST("Envelope"), NULL);
+		ns = xmlNewNs(envelope, BAD_CAST(SOAP_1_1_ENV_NAMESPACE), BAD_CAST(SOAP_1_1_ENV_NS_PREFIX));
+		xmlSetNs(envelope, ns);
+	} else if (version == SOAP_1_2) {
+		envelope = xmlNewDocNode(doc, NULL, BAD_CAST("Envelope"), NULL);
+		ns = xmlNewNs(envelope, BAD_CAST(SOAP_1_2_ENV_NAMESPACE), BAD_CAST(SOAP_1_2_ENV_NS_PREFIX));
+		xmlSetNs(envelope, ns);
+	} else {
+		soap_error0(E_ERROR, "Unknown SOAP version");
+	}
+	xmlDocSetRootElement(doc, envelope);
 
+	if (soap_headers) {
+		head = xmlNewChild(envelope, ns, BAD_CAST("Header"), NULL);
+	}
+
+	body = xmlNewChild(envelope, ns, BAD_CAST("Body"), NULL);
 
 	if (function && function->binding->bindingType == BINDING_SOAP) {
 		sdlSoapBindingFunctionPtr fnb = (sdlSoapBindingFunctionPtr)function->bindingAttributes;
@@ -548,36 +638,6 @@ static xmlDocPtr serialize_function_call(zval *this_ptr, sdlFunctionPtr function
 		/*FIXME: how to pass method name if style is SOAP_DOCUMENT */
 		/*style = SOAP_RPC;*/
 		use = fnb->input.use;
-       
-          if(function->requestName) {
-                method = xmlNewDocNode(doc, NULL, BAD_CAST(function->requestName), NULL);
-            } else {
-                method = xmlNewDocNode(doc, NULL, BAD_CAST(function->functionName), NULL);
-            }
-            xmlDocSetRootElement(doc, method);  
-        
-          if (style == SOAP_RPC) { 
-            xmlNsPtr xmlns = NULL;
-            smart_str prefix = {0};
-            
-            int num = ++WSF_GLOBAL(cur_uniq_ns);
-
-
-            smart_str_appendl(&prefix, "ns", 2);
-            smart_str_append_long(&prefix, num);
-            smart_str_0(&prefix);
-            xmlns = xmlNewNs(method, BAD_CAST(fnb->input.ns), BAD_CAST(prefix.c));
-            smart_str_free(&prefix);
-          }
-
-  
-        
-#ifdef UNCOMMENT        
-        if(function->requestName)
-
-    
-
-
 		if (style == SOAP_RPC) {
 			ns = encode_add_ns(body, fnb->input.ns);
 			if (function->requestName) {
@@ -605,8 +665,6 @@ static xmlDocPtr serialize_function_call(zval *this_ptr, sdlFunctionPtr function
 		} else {
 			use = SOAP_ENCODED;
 		}
-#endif
-
 	}
 
 	for (i = 0;i < arg_count;i++) {
@@ -616,8 +674,8 @@ static xmlDocPtr serialize_function_call(zval *this_ptr, sdlFunctionPtr function
 		if (style == SOAP_RPC) {
 			param = serialize_parameter(parameter, arguments[i], i, NULL, use, method TSRMLS_CC);
 		} else if (style == SOAP_DOCUMENT) {
-			param = serialize_parameter(parameter, arguments[i], i, NULL, use, method TSRMLS_CC);
-            if (function && function->binding->bindingType == BINDING_SOAP) {
+			param = serialize_parameter(parameter, arguments[i], i, NULL, use, body TSRMLS_CC);
+			if (function && function->binding->bindingType == BINDING_SOAP) {
 				if (parameter && parameter->element) {
 					ns = encode_add_ns(param, parameter->element->namens);
 					xmlNodeSetName(param, BAD_CAST(parameter->element->name));
@@ -638,7 +696,7 @@ static xmlDocPtr serialize_function_call(zval *this_ptr, sdlFunctionPtr function
 				if (style == SOAP_RPC) {
 					param = serialize_parameter(parameter, NULL, i, NULL, use, method TSRMLS_CC);
 				} else if (style == SOAP_DOCUMENT) {
-					param = serialize_parameter(parameter, NULL, i, NULL, use, method TSRMLS_CC);
+					param = serialize_parameter(parameter, NULL, i, NULL, use, body TSRMLS_CC);
 					if (function && function->binding->bindingType == BINDING_SOAP) {
 						if (parameter && parameter->element) {
 							ns = encode_add_ns(param, parameter->element->namens);
@@ -651,8 +709,6 @@ static xmlDocPtr serialize_function_call(zval *this_ptr, sdlFunctionPtr function
 		}
 	}
 
-
-#ifdef UNCOMMENT    
 	if (head) {
 		zval** header;
 
@@ -734,7 +790,6 @@ static xmlDocPtr serialize_function_call(zval *this_ptr, sdlFunctionPtr function
 		}
 	}
 
-
 	if (use == SOAP_ENCODED) {
 		xmlNewNs(envelope, BAD_CAST(XSD_NAMESPACE), BAD_CAST(XSD_NS_PREFIX));
 		if (version == SOAP_1_1) {
@@ -747,123 +802,9 @@ static xmlDocPtr serialize_function_call(zval *this_ptr, sdlFunctionPtr function
 			}
 		}
 	}
-#endif
-    {
-        xmlChar *val = NULL;
-        xmlBufferPtr buf = xmlBufferCreate();
-        if (style == SOAP_DOCUMENT){
-            xmlNodeDump(buf, doc, doc->children->children, 0,1); 
-        }else{
-            xmlNodeDump(buf, doc, doc->children, 0,1);
-        }
-        val = (xmlChar*) xmlBufferContent(buf);
-        if(val)
-            printf("___________\n %s", val);
-    
-    }
-
 
 	return doc;
 }
-
-#ifdef UNCOMMENT
-static xmlDocPtr serialize_function_call1(zval *this_ptr, sdlFunctionPtr function, char *function_name, char *uri, zval **arguments, int arg_count, int version, HashTable *soap_headers TSRMLS_DC)
-{
-	xmlDoc *doc;
-
-	xmlNodePtr body = NULL, method = NULL;
-/*    
-	xmlNodePtr envelope = NULL, body, method = NULL, head = NULL;
-	xmlNodePtr payload_node = NULL; */
-	xmlNsPtr ns = NULL;
-/*	zval **zstyle , **zuse; */
-	int i, style, use;
-	HashTable *hdrs = NULL;
-	encode_reset_ns();
-	doc = xmlNewDoc(BAD_CAST("1.0"));
-	doc->encoding = xmlCharStrdup("UTF-8");
-	doc->charset = XML_CHAR_ENCODING_UTF8;
-
-	if (function && function->binding->bindingType == BINDING_SOAP) {
-		sdlSoapBindingFunctionPtr fnb = (sdlSoapBindingFunctionPtr)function->bindingAttributes;
-
-		hdrs = fnb->input.headers;
-		style = fnb->style;
-	
-		use = fnb->input.use;
-		/** modified */
-		if (function->requestName) {
-				method = xmlNewDocNode(doc, NULL, BAD_CAST(function->requestName), NULL);
-			} else {
-				method = xmlNewDocNode(doc, NULL, BAD_CAST(function->functionName), NULL);
-			}
-			
-			xmlDocSetRootElement(doc, method);
-		
-		if (style == SOAP_RPC) { 
-			xmlNsPtr xmlns = NULL;
-			smart_str prefix = {0};
-			
-			int num = ++WSF_GLOBAL(cur_uniq_ns);
-
-			
-
-			smart_str_appendl(&prefix, "ns", 2);
-			smart_str_append_long(&prefix, num);
-			smart_str_0(&prefix);
-			xmlns = xmlNewNs(method, BAD_CAST(fnb->input.ns), BAD_CAST(prefix.c));
-			smart_str_free(&prefix);
-			xmlSetNs(method, xmlns);
-		}
-	}
-
-	for (i =  0;i < arg_count;i++) {
-		xmlNodePtr param;
-		sdlParamPtr parameter = get_param(function, NULL, i, FALSE);
-	
-		/** soap document */
-		if (style == SOAP_RPC) {
-			param = serialize_parameter(parameter, arguments[i], i, NULL, use, method TSRMLS_CC);
-		} 
-		else if (style == SOAP_DOCUMENT) {
-			param = serialize_parameter(parameter, arguments[i], i, NULL, use, method TSRMLS_CC);
-			if (function && function->binding->bindingType == BINDING_SOAP) {
-				if (parameter && parameter->element) {
-					ns = encode_add_ns(param, parameter->element->namens);
-					xmlNodeSetName(param, BAD_CAST(parameter->element->name));
-					xmlSetNs(param, ns);
-				}
-			}
-			
-		}
-	}
-
-	if (function && function->requestParameters) {
-		int n = zend_hash_num_elements(function->requestParameters);
-
-		if (n > arg_count) {
-			for (i = arg_count; i < n; i++) {
-				xmlNodePtr param;
-				sdlParamPtr parameter = get_param(function, NULL, i, FALSE);
-
-				if (style == SOAP_RPC) {
-					param = serialize_parameter(parameter, NULL, i, NULL, use, method TSRMLS_CC);
-				} else if (style == SOAP_DOCUMENT) {
-					param = serialize_parameter(parameter, NULL, i, NULL, use, body TSRMLS_CC);
-					if (function && function->binding->bindingType == BINDING_SOAP) {
-						if (parameter && parameter->element) {
-							ns = encode_add_ns(param, parameter->element->namens);
-							xmlNodeSetName(param, BAD_CAST(parameter->element->name));
-							xmlSetNs(param, ns);
-						}
-					}
-				}
-			}
-		}
-	}
-	return doc;
-}
-#endif
 
 void wsf_soap_do_soap_call(zval* this_ptr,
                          char* function,
@@ -893,23 +834,19 @@ void wsf_soap_do_soap_call(zval* this_ptr,
 	int old_features;
 	HashTable *old_typemap, *typemap = NULL;
     zval *client_zval = NULL;
-	axiom_node_t *om_node = NULL;
-    
-    /*
-	axiom_xml_reader_t *reader = NULL;
-	*/
+	
+    axiom_soap_envelope_t *res_envelope = NULL;
+
     axis2_svc_client_t *svc_client = NULL;
     axis2_options_t *client_options = NULL;
 	ws_object_ptr intern= NULL;		
-
-	axiom_node_t *result_node = NULL;
-
+    
     /** find the object type */
     if(instanceof_function(Z_OBJCE_P(this_ptr), ws_client_proxy_class_entry TSRMLS_CC)){
         if(zend_hash_find(Z_OBJPROP_P(this_ptr), "wsclient", sizeof("wsclient"), (void**)&tmp) == SUCCESS){
             client_zval = *tmp;
         }else{
-            /* Fixme:should return error */
+            php_error_docref(NULL TSRMLS_CC, E_ERROR," proxy created without wsclient");
             return;
         }
     }else if(instanceof_function(Z_OBJCE_P(this_ptr), ws_client_class_entry TSRMLS_CC)){
@@ -932,7 +869,7 @@ void wsf_soap_do_soap_call(zval* this_ptr,
 		FETCH_TYPEMAP_RES(typemap,tmp);
 	}
 
-	WSF_GLOBAL(soap_version) = soap_version;
+	soap_version = WSF_GLOBAL(soap_version);
 	old_sdl = WSF_GLOBAL(sdl);
 	WSF_GLOBAL(sdl) = sdl;
 	old_encoding = WSF_GLOBAL(encoding);
@@ -977,7 +914,6 @@ void wsf_soap_do_soap_call(zval* this_ptr,
          wsf_client_set_options(client_ht, NULL, env, client_options, svc_client, 0 TSRMLS_CC); 
     }
 
-
  	if (sdl != NULL) {
  		fn = get_function(sdl, function);
  		if (fn != NULL) {
@@ -997,47 +933,28 @@ void wsf_soap_do_soap_call(zval* this_ptr,
                 axis2_options_set_to(client_options, env, to_epr);
 			}
 			if (binding->bindingType == BINDING_SOAP) {
+				/*
                 xmlChar *buf = NULL;
-				int size;
-                axiom_xml_reader_t *reader = NULL;
-
+                int size;
+                */
 				sdlSoapBindingFunctionPtr fnb = (sdlSoapBindingFunctionPtr)fn->bindingAttributes;
 				request = serialize_function_call(client_zval, fn, NULL, fnb->input.ns, real_args, arg_count, soap_version, soap_headers TSRMLS_CC);
-				
-				xmlDocDumpMemory(request, &buf, &size);
-                /*
-                printf("\n\n%s\n\n", buf);
-                */
-                reader = axiom_xml_reader_create_for_memory(env,
-					(axis2_char_t*)buf, size, "UTF-8", AXIS2_XML_PARSER_TYPE_BUFFER);
-				om_node = wsf_util_read_payload(reader, env);
-                xmlFree(buf);		            
-                /*
-				if(om_node)
-					php_printf("%s", axiom_node_to_string(om_node, env));
-				else
-					php_printf("node null");
-				*/
-                result_node = axis2_svc_client_send_receive(svc_client, env, om_node);
-				if(!result_node){
-					return;
-				}else{
-
-					axis2_char_t *buffer = NULL;
-                    axis2_op_client_t *op_client = NULL;
-					int buffer_length = 0;
-                    op_client = axis2_svc_client_get_op_client(svc_client, env);
-                    if(op_client){
-                        buffer = wsf_util_get_soap_msg_from_op_client(op_client, env,
-                                AXIS2_WSDL_MESSAGE_LABEL_IN);
-
+			
+                res_envelope =  send_receive_soap_envelope_with_op_client(env, svc_client, client_options, request);
+                if(res_envelope){
+                    axis2_char_t *buffer = NULL;
+                    int buffer_length = 0;
+                    axiom_node_t *env_node = NULL;
+                    env_node = axiom_soap_envelope_get_base_node(res_envelope, env);
+                    if(env_node){
+                        buffer = axiom_node_to_string(env_node, env);
 					    if(buffer){
 						    buffer_length = strlen(buffer);
-                            parse_packet_soap(client_zval , buffer, buffer_length , fn, NULL, return_value, NULL TSRMLS_CC);
+                            parse_packet_soap(client_zval , buffer, 
+                                        buffer_length , fn, NULL, return_value, NULL TSRMLS_CC);
                         }
                     }
-
-				}
+                }
  			}
 			xmlFreeDoc(request);
 			zval_dtor(&response);
