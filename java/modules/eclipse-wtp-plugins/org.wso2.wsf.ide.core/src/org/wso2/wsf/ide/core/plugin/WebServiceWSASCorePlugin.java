@@ -17,6 +17,8 @@ package org.wso2.wsf.ide.core.plugin;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
+import org.wso2.wsf.ide.core.context.PersistentWSASEmitterContext;
+import org.wso2.wsf.ide.core.context.WSASEmitterContext;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -28,6 +30,8 @@ public class WebServiceWSASCorePlugin extends Plugin {
 
 	// The shared instance
 	private static WebServiceWSASCorePlugin plugin;
+	
+	private PersistentWSASEmitterContext wsasEmitterContext_;
 	
 	/**
 	 * The constructor
@@ -60,6 +64,12 @@ public class WebServiceWSASCorePlugin extends Plugin {
 	 */
 	public static WebServiceWSASCorePlugin getDefault() {
 		return plugin;
+	}
+	
+	public WSASEmitterContext getWSASEmitterContext(){
+		if (wsasEmitterContext_ == null) 
+			wsasEmitterContext_ = PersistentWSASEmitterContext.getInstance();
+		return wsasEmitterContext_;
 	}
 
 }

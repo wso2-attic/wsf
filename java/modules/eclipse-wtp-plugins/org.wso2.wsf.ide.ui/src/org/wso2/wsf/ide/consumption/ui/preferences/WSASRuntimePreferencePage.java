@@ -38,6 +38,9 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.wso2.wsf.ide.core.context.Axis2EmitterDefaults;
+import org.wso2.wsf.ide.core.context.WSASEmitterContext;
+import org.wso2.wsf.ide.core.plugin.WebServiceWSASCorePlugin;
 import org.wso2.wsf.ide.core.plugin.data.ServerModel;
 import org.wso2.wsf.ide.core.plugin.messages.WSASCoreUIMessages;
 import org.wso2.wsf.ide.core.utils.WSASCoreUtils;
@@ -54,11 +57,12 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 	private boolean webappExist = false;
 	//private boolean isWar = false;
 	private String statusBanner = null;
-	
+	WSASEmitterContext context;
 
 	  
 	protected Control createContents(Composite superparent) {
 		status = Status.OK_STATUS;
+		context = WebServiceWSASCorePlugin.getDefault().getWSASEmitterContext();
 		
 		final Composite  mainComp = new Composite( superparent, SWT.NONE );
 		
@@ -79,23 +83,20 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		label.setSize(100,20);
 		
 		wsasPath = new Text( runtimeGroup, SWT.BORDER );
-		String serverPath = null;
-		if (ServerModel.getWsasServerPath()==null||ServerModel.getWsasServerPath().equals("")){
-			serverPath = (RuntimePropertyUtils.getServerPathFromPropertiesFile() == null) ? "" 
-					: RuntimePropertyUtils.getServerPathFromPropertiesFile();
-			wsasPath.setText(serverPath);
-			ServerModel.setWsasServerPath( serverPath );
-		}else{
-			wsasPath.setText(ServerModel.getWsasServerPath());
-			serverPath = ServerModel.getWsasServerPath();
-		}
-
+	    String serverPath = null;
+	    if (!(context.getWSASRuntimeLocation()==null)){
+	          serverPath = context.getWSASRuntimeLocation();
+	          wsasPath.setText(serverPath);
+	    }else{
+	      //never come here
+	    }
+	    
 		webappExist =runtimeExist(serverPath);
 		wsasPath.setLocation(110,30);
 		wsasPath.setSize(400, 20);
 		wsasPath.addModifyListener( new ModifyListener(){
 			public void modifyText(ModifyEvent e){
-				ServerModel.setWsasServerPath( wsasPath.getText() );
+				 context.setWSASRuntimeLocation( wsasPath.getText() );
 				webappExist =runtimeExist(wsasPath.getText());
 				status = RuntimePropertyUtils.writeServerPathToPropertiesFile(
 						wsasPath.getText());
