@@ -28,6 +28,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.IWorkbenchWindowPulldownDelegate;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
+import org.wso2.wsf.ide.facet.model.FacetModel;
 import org.wso2.wsf.wtp.server.bean.WSASConfigurationBean;
 import org.wso2.wsf.wtp.server.command.WSASStartCommand;
 import org.wso2.wsf.wtp.server.command.WTPInternalBrowserCommand;
@@ -48,32 +49,35 @@ public class WSASStartDelegate
 	 * @see ActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
-		
-		try {
-			status = WSASStartCommand.run();
-			if(status.getCode() == 11){
-				box.setMessage(status.getMessage());box.open();
-			}else{
-				WSASUpMonitorThread wsasMonitor = new WSASUpMonitorThread();
-				wsasMonitor.start();
-			}
-		} catch (InvocationTargetException e) {
-			status = new Status( IStatus.ERROR,"id",1,e.getMessage(),null );
-			box.setMessage(WSASMessageConstant.INFO_WSAS_START_FAIL+"Reason"+e.getMessage());box.open();
-		}
-		while(!WSASConfigurationBean.isWsasStartStatus()){
+		if (!FacetModel.isCorrectWSASPathSet()) {
+			box.setMessage(WSASMessageConstant.WARNING_WSAS_PATH_NOT_SET);box.open();
+		}else{
 			try {
-				Thread.sleep(interval);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+				status = WSASStartCommand.run();
+				if(status.getCode() == 11){
+					box.setMessage(status.getMessage());box.open();
+				}else{
+					WSASUpMonitorThread wsasMonitor = new WSASUpMonitorThread();
+					wsasMonitor.start();
+				}
+			} catch (InvocationTargetException e) {
+				status = new Status( IStatus.ERROR,"id",1,e.getMessage(),null );
+				box.setMessage(WSASMessageConstant.INFO_WSAS_START_FAIL+"Reason"+e.getMessage());box.open();
 			}
-		}
-		//Kill the WSAS Monitor Thread
-		WSASUpMonitorThread.setAlive(false);
-		if (!WSASConfigurationBean.isWSASAlreadyRunning()) {
-	       	box.setMessage(WSASMessageConstant.INFO_WSAS_START_SUCCESS);box.open();
-			//Pop up the browser with the url
-			WTPInternalBrowserCommand.popUpInrernalBrouwser(WSASUtils.getWSASHTTPSAddtess());
+			while(!WSASConfigurationBean.isWsasStartStatus()){
+				try {
+					Thread.sleep(interval);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			//Kill the WSAS Monitor Thread
+			WSASUpMonitorThread.setAlive(false);
+			if (!WSASConfigurationBean.isWSASAlreadyRunning()) {
+				box.setMessage(WSASMessageConstant.INFO_WSAS_START_SUCCESS);box.open();
+				//Pop up the browser with the url
+				WTPInternalBrowserCommand.popUpInrernalBrouwser(WSASUtils.getWSASHTTPSAddtess());
+			}
 		}
 	}
 

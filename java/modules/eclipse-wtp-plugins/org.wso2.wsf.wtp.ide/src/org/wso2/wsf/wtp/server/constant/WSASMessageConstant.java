@@ -19,7 +19,7 @@ public class WSASMessageConstant {
 	
     //warnings
     public static String WARNING_WSAS_HEADING = "WSAS Warning Message";
-    public static String WARNING_WSAS_PATH_NOT_SET = "Please set the Correct WSAS Installation Path !!";
+    public static String WARNING_WSAS_PATH_NOT_SET = "WSAS Runtime location does not point to valid server !! \nPlease set the correct location of the WSAS runtime on WSAS Preferences";
     public static String WARNING_WSAS_NOT_STARTED = "Configured WSAS instance is not active !!";
 
     //errors

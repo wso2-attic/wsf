@@ -42,8 +42,9 @@ import org.wso2.wsf.ide.core.context.WSASEmitterContext;
 import org.wso2.wsf.ide.core.plugin.WebServiceWSASCorePlugin;
 import org.wso2.wsf.ide.core.plugin.data.ServerModel;
 import org.wso2.wsf.ide.core.plugin.messages.WSASCoreUIMessages;
-import org.wso2.wsf.ide.core.utils.WSASCoreUtils;
 import org.wso2.wsf.ide.core.utils.RuntimePropertyUtils;
+import org.wso2.wsf.ide.core.utils.WSASCoreUtils;
+import org.wso2.wsf.ide.facet.model.FacetModel;
 
 public class WSASRuntimePreferencePage extends PreferencePage implements
 		IWorkbenchPreferencePage {
@@ -97,6 +98,7 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 			public void modifyText(ModifyEvent e){
 				 context.setWSASRuntimeLocation( wsasPath.getText() );
 				webappExist =runtimeExist(wsasPath.getText());
+				FacetModel.setCorrectWSASPathSet(webappExist);
 				status = RuntimePropertyUtils.writeServerPathToPropertiesFile(
 						wsasPath.getText());
 				if (webappExist) {

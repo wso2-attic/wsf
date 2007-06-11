@@ -31,5 +31,6 @@ Export-Package: org.wso2.wsf.ide.core.context,
  org.wso2.wsf.ide.core.plugin,
  org.wso2.wsf.ide.core.plugin.data,
  org.wso2.wsf.ide.core.plugin.messages,
- org.wso2.wsf.ide.core.utils
+ org.wso2.wsf.ide.core.utils,
+ org.wso2.wsf.ide.facet.model
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
