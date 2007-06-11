@@ -21,6 +21,8 @@ public interface JavaScriptEngineConstants {
     public static final String RESOURCES_FOLDER = "ResourcesFolder";
 
     public static final String AXIS2_MESSAGECONTEXT = "messageContext";
+    
+    public static final String AXIS2_SERVICE = "axisService";
 
     public static final String LOAD_JSSCRIPTS = "loadJSScripts";
     

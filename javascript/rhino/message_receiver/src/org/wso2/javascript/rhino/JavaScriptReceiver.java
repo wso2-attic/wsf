@@ -57,17 +57,30 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver impleme
     public void invokeBusinessLogic(MessageContext inMessage, MessageContext outMessage)
             throws AxisFault {
         try {
-            //Create JS Engine, Inject HostObjects
+            // Create JS Engine, Inject HostObjects
             JavaScriptEngine engine = new JavaScriptEngine();
-            JavaScriptEngineUtils.loadHostObjects(engine,inMessage.getConfigurationContext()
-                            .getAxisConfiguration());
-            // Inject the incoming MessageContext to the Rhino Context
+            JavaScriptEngineUtils.loadHostObjects(engine, inMessage.getConfigurationContext()
+                    .getAxisConfiguration());
+            
+            // Inject the incoming MessageContext to the Rhino Context. Some
+            // host objects need access to the MessageContext. Eg: FileSystem,
+            // WSRequest
             Context context = engine.getCx();
             context.putThreadLocal(AXIS2_MESSAGECONTEXT, inMessage);
-            //Instantiating of some global property objects requires the MessageContext
-            JavaScriptEngineUtils.loadGlobalPropertyObjects(engine, inMessage.getConfigurationContext()
-                    .getAxisConfiguration());
-            //JS Engine seems to need the Axis2 repository location to load the imported scripts
+            
+            // Some host objects depend on the data we obtain from the
+            // AxisService.. It is possible to get these
+            // date through the MessageContext, but we face problems at the
+            // deployer, where we need to instantiate host objects
+            // in order for the annotations framework to work. It is possible to
+            // inject the AxisService at the message receiver, but not a
+            // MessageContext. For the consistency we inject the AxisService in here too..
+            context.putThreadLocal(AXIS2_SERVICE, inMessage.getAxisService());
+            
+            JavaScriptEngineUtils.loadGlobalPropertyObjects(engine, inMessage
+                    .getConfigurationContext().getAxisConfiguration());
+            // JS Engine seems to need the Axis2 repository location to load the
+            // imported scripts
             // TODO: Do we really need this (thilina)
             URL repoURL = inMessage.getConfigurationContext().getAxisConfiguration()
                     .getRepository();
