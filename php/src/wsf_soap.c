@@ -826,7 +826,7 @@ void wsf_soap_do_soap_call(zval* this_ptr,
  	sdlPtr old_sdl = NULL;
  	sdlFunctionPtr fn;
 	xmlDocPtr request = NULL;
-/*  int ret = FALSE;  */
+    int ret = FALSE;  
 	int soap_version;
 	zval response;
 	xmlCharEncodingHandlerPtr old_encoding;
@@ -969,7 +969,7 @@ void wsf_soap_do_soap_call(zval* this_ptr,
 			smart_str_free(&error);
 		}
 	} else {
-#ifdef NW		
+		
         zval **uri;
 		smart_str action = {0};
 
@@ -981,6 +981,7 @@ void wsf_soap_do_soap_call(zval* this_ptr,
 			if (call_uri == NULL) {
 				call_uri = Z_STRVAL_PP(uri);
 			}
+
 	 		request = serialize_function_call(client_zval, NULL, function, call_uri, real_args, arg_count, soap_version, soap_headers TSRMLS_CC);
 
 	 		if (soap_action == NULL) {
@@ -991,7 +992,23 @@ void wsf_soap_do_soap_call(zval* this_ptr,
 				smart_str_appends(&action, soap_action);
 			}
 			smart_str_0(&action);
+			res_envelope = send_receive_soap_envelope_with_op_client(env, svc_client, client_options, request);
 
+	        if(res_envelope){
+			   axis2_char_t *buffer = NULL;
+				int buffer_length = 0;
+				axiom_node_t *env_node = NULL;
+				env_node = axiom_soap_envelope_get_base_node(res_envelope, env);
+				if(env_node){
+					buffer = axiom_node_to_string(env_node, env);
+					if(buffer){
+						buffer_length = strlen(buffer);
+						parse_packet_soap(client_zval , buffer, 
+                                buffer_length , fn, NULL, return_value, NULL TSRMLS_CC);
+					}
+				}
+            }
+/*
 			ret = do_request(client_zval, request, location, action.c, soap_version, 0, &response TSRMLS_CC);
 
 	 		smart_str_free(&action);
@@ -1002,8 +1019,9 @@ void wsf_soap_do_soap_call(zval* this_ptr,
 			}
 
 			zval_dtor(&response);
+
+*/
 		}
-#endif        
  	}
 /*
 	if (!ret) {
