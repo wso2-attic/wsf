@@ -107,11 +107,11 @@ WSRequest.prototype.send = function(payload) {
     
     switch (this._soapVer) {
         case 1.1:
-            this._xmlhttp.setRequestHeader("SOAPAction",soapAction);
+            this._xmlhttp.setRequestHeader("SOAPAction", soapAction == undefined ? '""' : '"' + soapAction + '"');
             this._xmlhttp.setRequestHeader("Content-Type","text/xml; charset=UTF-8");
             break;
         case 1.2:
-            this._xmlhttp.setRequestHeader("Content-Type","application/soap+xml;charset=UTF-8;action="+ soapAction);
+            this._xmlhttp.setRequestHeader("Content-Type","application/soap+xml;charset=UTF-8" + (soapAction == undefined ? "" : ";action=" + soapAction));
             break;
         case 0:
             if (this._optionSet["HTTPInputSerialization"] != null) {
@@ -480,7 +480,7 @@ WSRequest.util = {
                 standardversion = false;
             } else throw ("Unknown WS-Addressing version '" + useWSA + "': must be '1.0' | 'submission' | true | false.");
             wsaNsDecl = ' xmlns:wsa="' + wsaNs + '"';
-            headers = _buildWSAHeaders(standardversion, options, url);
+            headers = this._buildWSAHeaders(standardversion, options, url);
         }
         
         request = '<?xml version="1.0" encoding="UTF-8"?>\n' +
