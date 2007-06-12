@@ -826,7 +826,7 @@ void wsf_soap_do_soap_call(zval* this_ptr,
  	sdlPtr old_sdl = NULL;
  	sdlFunctionPtr fn;
 	xmlDocPtr request = NULL;
-    int ret = FALSE;  
+        /* int ret = FALSE;   */
 	int soap_version;
 	zval response;
 	xmlCharEncodingHandlerPtr old_encoding;

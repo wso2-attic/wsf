@@ -37,6 +37,11 @@ axis2_char_t* wsf_util_get_soap_msg_from_op_client(
     axutil_env_t *env, 
 	axis2_wsdl_msg_labels_t message_label);
 
+axis2_char_t* wsf_util_get_http_headers_from_op_client(
+    axis2_op_client_t *op_client,
+    axutil_env_t *env, 
+    axis2_wsdl_msg_labels_t message_label);
+
 char* wsf_util_generate_svc_name_from_uri(
     char *req_uri,
     wsf_svc_info_t *svc_info, 
@@ -131,3 +136,4 @@ void wsf_util_set_fault_properties(zval *this_ptr,
         axutil_env_t *env TSRMLS_DC); 
 
 #endif /* WSF_UTIL_H */
+

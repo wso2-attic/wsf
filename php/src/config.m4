@@ -19,6 +19,7 @@ if test "$PHP_WSF" = "yes"; then
 	PHP_ADD_INCLUDE(../wsf_c/axis2c/axiom/include/)
 	PHP_ADD_INCLUDE(../wsf_c/axis2c/neethi/include/)
 	PHP_ADD_INCLUDE(../wsf_c/rampartc/include/)
+        PHP_ADD_INCLUDE(../wsf_c/axis2c/neethi/include)
 	PHP_ADD_INCLUDE(/usr/include/libxml2)
   	dnl # check for lib and symbol presence
 

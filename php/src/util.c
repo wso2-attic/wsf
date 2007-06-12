@@ -29,6 +29,7 @@
 #include <axutil_log_default.h>
 #include <axutil_uuid_gen.h>
 #include <axiom_util.h>
+#include <axis2_http_client.h>
 
 xmlNodePtr wsf_util_get_xml_node(zval *node TSRMLS_DC)
 {
@@ -478,7 +479,7 @@ axis2_char_t *wsf_util_get_soap_msg_from_op_client(
         const axis2_msg_ctx_t *msg_ctx = NULL;
         axiom_node_t *node = NULL;
         
-		msg_ctx = axis2_op_client_get_msg_ctx(op_client, env, msg_label);
+        msg_ctx = axis2_op_client_get_msg_ctx(op_client, env, msg_label);
         if(!msg_ctx)
             return NULL;
         soap_env = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
@@ -486,6 +487,68 @@ axis2_char_t *wsf_util_get_soap_msg_from_op_client(
             return NULL;
         node = axiom_soap_envelope_get_base_node(soap_env, env);
         return axiom_node_to_string(node, env);
+    }
+    return NULL;    
+}    
+
+axis2_char_t *wsf_util_get_http_headers_from_op_client(
+    axis2_op_client_t *op_client,
+    axutil_env_t *env, 
+    axis2_wsdl_msg_labels_t msg_label)
+{
+    if(op_client)
+    {
+        const axis2_msg_ctx_t *msg_ctx = NULL;
+        axutil_property_t *client_property = NULL;
+        axis2_http_client_t *client = NULL;
+        axis2_http_simple_response_t *response = NULL;
+      /*   axis2_http_simple_request_t *request = NULL; */
+        axutil_array_list_t *list = NULL;
+        axis2_http_header_t *header = NULL;
+        int i;
+        char *header_buf = NULL;
+        
+        msg_ctx = axis2_op_client_get_msg_ctx(op_client, env, msg_label);
+        if(!msg_ctx)
+            return NULL;
+        client_property = (axutil_property_t *)axis2_msg_ctx_get_property(
+                          msg_ctx, env,
+                          AXIS2_HTTP_CLIENT);
+
+        if (client_property)
+            client = (axis2_http_client_t *)axutil_property_get_value(
+                client_property,
+                env);
+        else
+            return NULL;
+        
+        if (client && (msg_label == AXIS2_WSDL_MESSAGE_LABEL_OUT)){
+            response = axis2_http_client_get_response(client , env);
+            if(response)
+                list = axis2_http_simple_response_get_headers(response, env);
+            else
+                return NULL;
+        }
+
+      /*   if (client && (msg_label == AXIS2_WSDL_MESSAGE_LABEL_OUT)){ */
+/*             request = axis2_http_client_get_request(client , env); */
+/*             if(request) */
+/*                 list = axis2_http_simple_request_get_headers(request, env); */
+/*             else */
+/*                 return NULL; */
+/*         } */
+        
+        if (list){
+            header_buf = emalloc(500);
+            if(!axutil_array_list_is_empty(list, env)){
+                for(i = 0; i< axutil_array_list_size(list, env); i++){
+                    header = (axis2_http_header_t *)axutil_array_list_get(list, env, i);
+                    strcat(header_buf, axis2_http_header_to_external_form(header, env));
+                }
+                return header_buf;
+            }
+        }
+        
     }
     return NULL;    
 }    

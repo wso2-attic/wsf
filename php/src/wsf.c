@@ -86,6 +86,7 @@ PHP_METHOD(ws_client, request);
 PHP_METHOD(ws_client, send);
 PHP_METHOD(ws_client, get_last_response);
 PHP_METHOD(ws_client, get_last_request);
+PHP_METHOD(ws_client, get_last_response_headers);
 PHP_METHOD(ws_client, get_proxy);
 PHP_METHOD(ws_client, terminate_outgoing_rm);
 
@@ -152,6 +153,7 @@ zend_function_entry php_ws_client_class_functions[]={
 	PHP_MALIAS(ws_client, getLastRequest, get_last_request , NULL , ZEND_ACC_PUBLIC)
 	PHP_MALIAS(ws_client, getProxy, get_proxy, NULL, ZEND_ACC_PUBLIC)
 	PHP_MALIAS(ws_client, terminateOutgoingRM , terminate_outgoing_rm, NULL, ZEND_ACC_PUBLIC)
+        PHP_MALIAS(ws_client, getLastResponseHeaders, get_last_response_headers, NULL, ZEND_ACC_PUBLIC)
 	PHP_ME(ws_client, __call, ws_client_call_args, ZEND_ACC_PUBLIC)
 	PHP_ME(ws_client, __construct, NULL, ZEND_ACC_PUBLIC)
 	PHP_ME(ws_client, __destruct, NULL, ZEND_ACC_PUBLIC)
@@ -1002,6 +1004,33 @@ PHP_METHOD(ws_client, terminate_outgoing_rm)
 {
 	zval *object = NULL;
 	WSF_GET_THIS(object);
+}
+/* }}} */
+
+/* {{{ proto getLastResponseHeaders() */
+PHP_METHOD(ws_client, get_last_response_headers)
+{
+    axis2_svc_client_t *svc_client = NULL;
+    ws_object_ptr intern = NULL;
+    zval *obj = NULL;
+
+    WSF_GET_THIS(obj);
+    WSF_GET_OBJ(svc_client, obj, axis2_svc_client_t, intern);
+    if(svc_client)
+    {
+        axis2_op_client_t *op_client = NULL;
+        op_client = axis2_svc_client_get_op_client(svc_client, env);
+
+        if(op_client)
+        {
+            axis2_char_t *msg = wsf_util_get_http_headers_from_op_client(op_client, env,
+                                AXIS2_WSDL_MESSAGE_LABEL_OUT);
+            if(msg)
+            {
+                RETURN_STRING(msg, 1);
+            }
+        }
+    }
 }
 /* }}} */
 
