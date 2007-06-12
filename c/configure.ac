@@ -105,67 +105,58 @@ AC_ARG_ENABLE(xmpp, [  --enable-xmpp
   CFLAGS="$CFLAGS"
 )
 
-AC_MSG_CHECKING(whether to build )
-AC_ARG_ENABLE(rampart, [  --enable-rampart
-                          build  (default=yes)],
+AC_MSG_CHECKING(whether to build rampart)
+AC_ARG_ENABLE(rampart, [  --enable-rampart    build rampart. default=yes],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
+    RAMPART_DIR=""
     ;;
   *)
     AC_MSG_RESULT(yes)
     RAMPART_DIR="rampartc"
-    if test -d $srcdir/rampartc; then
-        AC_CONFIG_SUBDIRS(rampartc)
-    fi
-
-    RAMPART_DIR="rampartc"
 
     ;;
   esac ],
-  AC_MSG_RESULT(no)
+  AC_MSG_RESULT(yes)
+  RAMPART_DIR="rampartc"
+  AC_CONFIG_SUBDIRS(rampartc)
 )
 
 AC_MSG_CHECKING(whether to build wsclient)
-AC_ARG_ENABLE(wsclient, [  --enable-wsclient
-                          build wsclient (default=yes)],
+AC_ARG_ENABLE(wsclient, [  --enable-wsclient    build wsclient. default=yes],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
+    WSCLIENT_DIR=""
     ;;
   *)
     AC_MSG_RESULT(yes)
     WSCLIENT_DIR="wsclient"
-    if test -d $srcdir/wsclient; then
-        AC_CONFIG_SUBDIRS(wsclient)
-    fi
-
-    WSCLIENT_DIR="wsclient"
 
     ;;
   esac ],
-  AC_MSG_RESULT(no)
+  AC_MSG_RESULT(yes)
+  WSCLIENT_DIR="wsclient"
+  AC_CONFIG_SUBDIRS(wsclient)
 )
 
 AC_MSG_CHECKING(whether to build sandesha)
-AC_ARG_ENABLE(sandesha, [  --enable-sandesha
-                          build sandesha (default=yes)],
+AC_ARG_ENABLE(sandesha, [  --enable-sandesha    build sandesha. default=yes],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
+    SANDESHA_DIR=""
     ;;
   *)
     AC_MSG_RESULT(yes)
     SANDESHA_DIR="sandesha2c"
-    if test -d $srcdir/sandesha2c; then
-        AC_CONFIG_SUBDIRS(sandesha2c)
-    fi
-
-    SANDESHA_DIR="sandesha2c"
 
     ;;
   esac ],
-  AC_MSG_RESULT(no)
+  AC_MSG_RESULT(yes)
+  SANDESHA_DIR="sandesha2c"
+  AC_CONFIG_SUBDIRS(sandesha2c)
 )
 
 
