@@ -19,13 +19,9 @@ wsclient_LDADD   = $(LDFLAGS) \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
-INCLUDES = -I$(AXIS2C_HOME)/include \
-            -I ../../axis2c/util/include \
+INCLUDES =	-I ../../axis2c/util/include \
             -I ../../axis2c/include \
             -I ../../axis2c/axiom/include \
-            -I ../../rampartc/include \
-	    @AXIS2INC@ \
-	    @UTILINC@ \
-	    @AXIOMINC@ \
-	    @NEETHIINC@ 
+            -I ../../axis2c/neethi/include \
+            -I ../../rampartc/include 
 
