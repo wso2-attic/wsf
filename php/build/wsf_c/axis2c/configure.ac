@@ -99,7 +99,7 @@ dnl This is a check to see if we are running MacOS X
 dnl It may be better to do a Darwin check
 AC_CHECK_HEADERS([sys/appleapiopts.h]) 
 dnl Checks for typedefs, structures, and compiler characteristics.
-AC_C_CONST
+dnl AC_C_CONST
 
 dnl Checks for library functions.
 AC_FUNC_MALLOC
