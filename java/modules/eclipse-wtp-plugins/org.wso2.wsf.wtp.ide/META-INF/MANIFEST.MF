@@ -1,11 +1,14 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: WSF WTP IDE Plug-in
+Bundle-Name: %PLUGIN_NAME
 Bundle-SymbolicName: org.wso2.wsf.wtp.ide;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: org.wso2.wsf.wtp.ide.Activator
+Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.wso2.wsf.ide.ui,
  org.wso2.wsf.ide.core
 Eclipse-LazyStart: true
+Bundle-Vendor: %PLUGIN_PROVIDER
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
