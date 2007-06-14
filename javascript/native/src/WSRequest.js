@@ -575,7 +575,10 @@ WSRequest.util = {
         if (node == null) return null;
         var browser = WSRequest.util._getBrowser();
         if (browser == "ie" || browser == "ie7") {
-            doc = (node.nodeType == 9 ? node : node.ownerDocument);
+            if (node.nodeType == 9)
+                var doc = node;
+            else
+                var doc = node.ownerDocument;
             doc.setProperty("SelectionNamespaces", "xmlns:soap='" + namespace + "'");
             el = node.selectSingleNode(".//soap:" + localName);
         } else {
