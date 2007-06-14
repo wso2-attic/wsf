@@ -131,10 +131,13 @@ WSRequest.prototype.send = function(payload) {
         this.readyState = 2;
         if (this.onreadystatechange != null)
             this.onreadystatechange();
+        
         this._xmlhttp.send(req);
 
         this._processResult();
-        
+        if (this.error != null)
+            throw (this.error);
+                   
         this.readyState = 4;
         if (this.onreadystatechange != null)
             this.onreadystatechange();
