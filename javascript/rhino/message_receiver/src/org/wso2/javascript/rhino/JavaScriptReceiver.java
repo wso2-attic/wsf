@@ -24,21 +24,34 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNode;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
+import org.apache.axiom.soap.SOAPBody;
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.wsdl.WSDLConstants;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
+import org.apache.axis2.description.AxisMessage;
 import org.apache.axis2.engine.MessageReceiver;
 import org.apache.axis2.i18n.Messages;
 import org.apache.axis2.receivers.AbstractInOutSyncMessageReceiver;
+import org.apache.ws.commons.schema.XmlSchemaElement;
+import org.apache.ws.commons.schema.XmlSchemaType;
+import org.apache.ws.commons.schema.XmlSchemaComplexType;
+import org.apache.ws.commons.schema.XmlSchemaParticle;
+import org.apache.ws.commons.schema.XmlSchemaSequence;
+import org.apache.ws.commons.schema.constants.Constants;
 import org.mozilla.javascript.Context;
+
+import javax.xml.namespace.QName;
 
 /**
  * Class JavaScriptReceiver implements the AbstractInOutSyncMessageReceiver,
@@ -46,6 +59,11 @@ import org.mozilla.javascript.Context;
  */
 public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver implements
         MessageReceiver, JavaScriptEngineConstants {
+
+    private String UNSUPPORTED_SCHEMA_TYPE =
+            "At the moment we only support WSDL 2.0 RPC style schema, which has a secquence " +
+                    "within a complexType";
+
     /**
      * Invokes the Javascript service with the parameters from the inMessage
      * and sets the outMessage with the response from the service.
@@ -59,6 +77,12 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver impleme
         try {
             // Create JS Engine, Inject HostObjects
             JavaScriptEngine engine = new JavaScriptEngine();
+
+            // Rhino E4X XMLLibImpl object can be instantiated only from within a script
+            // So we instantiate it in here, so that we can use it outside of the script later
+            engine.getCx().evaluateString(engine, "new XML();", "Instantiate E4X", 0, null);
+
+
             JavaScriptEngineUtils.loadHostObjects(engine, inMessage.getConfigurationContext()
                     .getAxisConfiguration());
             
@@ -92,13 +116,51 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver impleme
             String jsFunctionName = inferJavaScriptFunctionName(inMessage);
             String scripts = getImportScriptsList(inMessage);
             SOAPEnvelope soapEnvelope = inMessage.getEnvelope();
+            ArrayList params = new ArrayList();
+            OMNode result = null;
             OMElement payload = soapEnvelope.getBody().getFirstElement();
-            // Get the result by executing the javascript file
-            OMNode result = engine.call(jsFunctionName, reader, payload, scripts);
-
-            if (result == null) {
-                throw new AxisFault(Messages.getMessage("JavaScriptNoanswer"));
+            if (payload != null) {
+                AxisMessage axisMessage =
+                        inMessage.getAxisOperation()
+                                .getMessage(WSDLConstants.MESSAGE_LABEL_IN_VALUE);
+                XmlSchemaElement xmlSchemaElement = axisMessage.getSchemaElement();
+                if (xmlSchemaElement != null) {
+                    XmlSchemaType schemaType = xmlSchemaElement.getSchemaType();
+                    if (schemaType instanceof XmlSchemaComplexType) {
+                        XmlSchemaComplexType complexType = ((XmlSchemaComplexType) schemaType);
+                        XmlSchemaParticle particle = complexType.getParticle();
+                        if (particle instanceof XmlSchemaSequence) {
+                            XmlSchemaSequence xmlSchemaSequence = (XmlSchemaSequence) particle;
+                            Iterator iterator = xmlSchemaSequence.getItems().getIterator();
+                            // now we need to know some information from the binding operation.
+                            while (iterator.hasNext()) {
+                                XmlSchemaElement innerElement = (XmlSchemaElement) iterator.next();
+                                OMElement omElement = payload.getFirstChildWithName(new QName(innerElement.getName()));
+                                if (omElement == null) {
+                                    throw new AxisFault("Required element " + innerElement.getName() +
+                                            " defined in the schema can not be found in the request");
+                                }
+                                params.add(createParam(omElement));
+                            }
+                            Object[] objects = params.toArray();
+                            result = engine.call(jsFunctionName, reader, objects, scripts);
+                        } else {
+                            throw new AxisFault("Unsupported schema type in request");
+                        }
+                    } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANY){
+                        result = engine.call(jsFunctionName, reader, payload, scripts);
+                    }
+                } else {
+                    result = engine.call(jsFunctionName, reader, payload, scripts);
+                }
+            } else {
+                // Get the result by executing the javascript file
+                result = engine.call(jsFunctionName, reader, payload, scripts);
             }
+
+//            if (result == null) {
+//                throw new AxisFault(Messages.getMessage("JavaScriptNoanswer"));
+//            }
 
             // Create the outgoing message
             SOAPFactory fac;
@@ -108,7 +170,47 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver impleme
                 fac = OMAbstractFactory.getSOAP12Factory();
             }
             SOAPEnvelope envelope = fac.getDefaultEnvelope();
-            envelope.getBody().addChild(result);
+            SOAPBody body = envelope.getBody();
+            AxisMessage outAxisMessage =
+                        inMessage.getAxisOperation()
+                                .getMessage(WSDLConstants.MESSAGE_LABEL_OUT_VALUE);
+                XmlSchemaElement xmlSchemaElement = outAxisMessage.getSchemaElement();
+            OMElement outElement;
+            String prefix = "ws";
+            if (xmlSchemaElement != null) {
+                QName elementQName = xmlSchemaElement.getSchemaTypeName();
+                outElement = fac.createOMElement(xmlSchemaElement.getName(), fac.createOMNamespace(elementQName.getNamespaceURI(), prefix));
+                    XmlSchemaType schemaType = xmlSchemaElement.getSchemaType();
+                    if (schemaType instanceof XmlSchemaComplexType) {
+                        XmlSchemaComplexType complexType = ((XmlSchemaComplexType) schemaType);
+                        XmlSchemaParticle particle = complexType.getParticle();
+                        if (particle instanceof XmlSchemaSequence) {
+                            XmlSchemaSequence xmlSchemaSequence = (XmlSchemaSequence) particle;
+                            Iterator iterator = xmlSchemaSequence.getItems().getIterator();
+                            // now we need to know some information from the binding operation.
+                            while (iterator.hasNext()) {
+                                XmlSchemaElement innerElement = (XmlSchemaElement) iterator.next();
+                                QName qName = innerElement.getSchemaTypeName();
+                                if (qName == Constants.XSD_ANY) {
+                                    outElement.addChild(result);
+                                } else {
+                                    OMElement omElement = fac.createOMElement(innerElement.getName(), fac.createOMNamespace(qName.getNamespaceURI(), prefix));
+                                    OMElement element = (OMElement) result;
+                                    omElement.setText(element.getText());
+                                    outElement.addChild(omElement);
+                                }
+                            }
+                            body.addChild(outElement);
+
+                        } else {
+                            throw new AxisFault("Unsupported schema type in request");
+                        }
+                    } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANY){
+                        body.addChild(result);
+                    }
+                } else if (result != null){
+                body.addChild(result);
+            }
             outMessage.setEnvelope(envelope);
         } catch (Throwable throwable) {
             throw AxisFault.makeFault(throwable);
@@ -141,6 +243,11 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver impleme
             }
         }
         return scripts;
+    }
+
+    private Object createParam(OMElement omElement) {
+        // TODO we may need to handle arrays here and also do some type conversion in some cases.
+        return omElement.getText();
     }
 
     /*

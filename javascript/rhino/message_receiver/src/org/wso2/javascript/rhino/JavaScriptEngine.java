@@ -26,6 +26,9 @@ import java.io.Reader;
 import java.net.URL;
 
 import org.apache.axiom.om.OMNode;
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.llom.OMSourcedElementImpl;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.json.JSONBadgerfishDataSource;
@@ -134,6 +137,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
      */
     public OMNode call(String method, Reader reader, Object args) throws AxisFault {
         boolean json = false;
+        Object functionArgs[];
         try {
             // Handle JSON messages
             if (args instanceof OMSourcedElementImpl) {
@@ -143,6 +147,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
                     args = "var x = " + args + ";";
                     cx.evaluateString(this, (String) args, "Get JSON", 0, null);
                     args = this.get("x", this);
+                    functionArgs = new Object [] { args };
                     json = true;
                 } else if (datasource instanceof JSONBadgerfishDataSource) {
                     throw new AxisFault("Badgerfish Convention is not supported");
@@ -150,13 +155,14 @@ public class JavaScriptEngine extends ImporterTopLevel {
                     throw new AxisFault("Unsupported Data Format");
                 }
 
+            } else if (args instanceof Object []) {
+                 functionArgs = (Object [])args;
             } else if (args !=null) {
-                // Rhino E4X XMLLibImpl object can be instantiated only from within a script
-                // So we instantiate it in here, so that we can use it outside of the script later
-                cx.evaluateString(this, "new XML();", "Instantiate E4X", 0, null);
-                
                 Object[] objects = {args};
                 args = cx.newObject(this, "XML",objects);
+                functionArgs = new Object [] { args };
+            } else {
+                functionArgs = new Object [0];
             }
             
             // Evaluates the javascript file
@@ -168,7 +174,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
                 throw new AxisFault("Method " + method + " is undefined or not a function");
             }
             // Invokes the java script function
-            Object functionArgs[] = { args };
+
             Function f = (Function) fObj;
             Object result = f.call(cx, this, this, functionArgs);
 
@@ -191,6 +197,13 @@ public class JavaScriptEngine extends ImporterTopLevel {
                         throw new AxisFault(
                                 "Function returns an XMLList containing more than one node");
                     }
+                } else if (result instanceof String) {
+                    OMFactory fac = OMAbstractFactory.getOMFactory();
+                    OMElement element = fac.createOMElement("return",null);
+                    element.setText((String) result);
+                    result = element;
+                } else {
+                    return null;
                 }
             }
             return (OMNode) result;
@@ -217,9 +230,6 @@ public class JavaScriptEngine extends ImporterTopLevel {
      * @param scripts
      *            a string represnting a set of Javascript files to be evaluated
      *            before evaluating the service
-     * @param json
-     *            a boolean parameter indicating whether the service is
-     *            accepting a JSON input or an XML input
      * @return an OMNode containing the result from executing the operation
      * @throws AxisFault
      */
