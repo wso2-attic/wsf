@@ -1,5 +1,4 @@
 #!/bin/bash
-./autogen.sh
 
 set -e 
 
@@ -17,7 +16,7 @@ cp build/neethi/configure.ac neethi
 cp build/neethi/Makefile.am neethi
 
 ./autogen.sh
-./configure --prefix=`pwd`/deploy --enable-openssl=yes --enable-rampart=yes --enable-wsclient=yes --enable-sandesha=yes --enable-xmpp=no --with-axis2=`pwd`/axis2c/include 
+./configure --prefix=`pwd`/deploy --enable-openssl=yes --enable-xmpp=no --with-axis2=`pwd`/axis2c/include 
 make
 make install
 make samples
