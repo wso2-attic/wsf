@@ -50,6 +50,7 @@ import org.apache.ws.commons.schema.XmlSchemaParticle;
 import org.apache.ws.commons.schema.XmlSchemaSequence;
 import org.apache.ws.commons.schema.constants.Constants;
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.xmlimpl.XML;
 
 import javax.xml.namespace.QName;
 
@@ -140,7 +141,7 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver impleme
                                     throw new AxisFault("Required element " + innerElement.getName() +
                                             " defined in the schema can not be found in the request");
                                 }
-                                params.add(createParam(omElement));
+                                params.add(createParam(omElement, innerElement.getSchemaTypeName(), engine));
                             }
                             Object[] objects = params.toArray();
                             result = engine.call(jsFunctionName, reader, objects, scripts);
@@ -191,7 +192,7 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver impleme
                             while (iterator.hasNext()) {
                                 XmlSchemaElement innerElement = (XmlSchemaElement) iterator.next();
                                 QName qName = innerElement.getSchemaTypeName();
-                                if (qName == Constants.XSD_ANY) {
+                                if (qName == Constants.XSD_ANYTYPE) {
                                     outElement.addChild(result);
                                 } else {
                                     OMElement omElement = fac.createOMElement(innerElement.getName(), fac.createOMNamespace(qName.getNamespaceURI(), prefix));
@@ -245,8 +246,16 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver impleme
         return scripts;
     }
 
-    private Object createParam(OMElement omElement) {
+    private Object createParam(OMElement omElement, QName type, JavaScriptEngine engine) {
         // TODO we may need to handle arrays here and also do some type conversion in some cases.
+
+        if (Constants.XSD_ANYTYPE.equals(type)) {
+            Context context = engine.getCx();
+            OMElement element  = omElement.getFirstElement();
+            Object[] objects = {element};
+            Object args = context.newObject(engine, "XML",objects);
+            return args;
+        }
         return omElement.getText();
     }
 
