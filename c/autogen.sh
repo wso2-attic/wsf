@@ -1,24 +1,32 @@
 #!/bin/bash
 
 cd axis2c
+echo "Running autogen.sh in Axis2/C"
 ./autogen.sh
 
 cd ../sandesha2c 
+echo "Running autogen.sh in Sandesha2/C"
 ./autogen.sh
 
 cd samples
+echo "Running autogen.sh in Sandesha2/C Samples"
 ./autogen.sh
 
 cd ..
 cd ../wsclient
+echo "Running autogen.sh in wsclient"
 ./autogen.sh
 cd ../rampartc
+echo "Running autogen.sh in Rampart/C"
 ./autogen.sh
 cd ../savanc
+echo "Running autogen.sh in Savan/C"
 ./autogen.sh
 
 cd ..
 
+
+echo "Running autogen.sh in WSF/C"
 echo -n 'Running libtoolize...'
 if libtoolize --force > /dev/null 2>&1; then
 	echo 'done.'
