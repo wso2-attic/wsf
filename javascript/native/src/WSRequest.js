@@ -26,7 +26,7 @@ WSRequest = function() {
     this._soapVer = null;
 };
 
-WSError = function() {
+WebServiceError = function() {
     this.code = null;
     this.reason = null;
     this.detail = null;
@@ -195,7 +195,7 @@ WSRequest.prototype._processResult = function () {
 
                 fault = WSRequest.util._firstElement(newDoc, soapNamespace, "Fault");
                 if (fault != undefined) {
-                    this.error = new WSError();
+                    this.error = new WebServiceError();
                     if (this._soapVer == 1.2) {
                         this.error.code = WSRequest.util._stringValue(WSRequest.util._firstElement(fault, soapNamespace, "Value"));
                         this.error.reason = WSRequest.util._stringValue(WSRequest.util._firstElement(fault, soapNamespace, "Text"));
@@ -217,7 +217,7 @@ WSRequest.prototype._processResult = function () {
         } else {
             this.responseXML = null;
             this.responseText = "";
-            this.error = new WSError();
+            this.error = new WebServiceError();
             try {
                 this.error.code = "HTTP" + this._xmlhttp.status;
                 this.error.reason = "No SOAP Body.";
