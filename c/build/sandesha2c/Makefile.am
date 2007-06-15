@@ -1,6 +1,6 @@
 datadir=$(prefix)/modules/sandesha2
 includedir=$(prefix)/include/sandesha2-0.90
-docsdir=$(prefix)/docs
+docsdir=$(prefix)/docs/sandesha2c
 SUBDIRS = src
 docs_DATA=INSTALL
 include_HEADERS= \
