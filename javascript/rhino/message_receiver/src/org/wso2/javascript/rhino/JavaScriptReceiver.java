@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNode;
+import org.apache.axiom.om.OMText;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPBody;
@@ -196,8 +197,12 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver impleme
                                     outElement.addChild(result);
                                 } else {
                                     OMElement omElement = fac.createOMElement(innerElement.getName(), fac.createOMNamespace(qName.getNamespaceURI(), prefix));
-                                    OMElement element = (OMElement) result;
-                                    omElement.setText(element.getText());
+                                    if (result instanceof OMText) {
+                                        omElement.addChild(result);
+                                    } else {
+                                        OMElement element = (OMElement) result;
+                                        omElement.setText(element.getText());
+                                    }
                                     outElement.addChild(omElement);
                                 }
                             }
