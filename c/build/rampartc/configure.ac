@@ -64,6 +64,9 @@ dnl Checks for library functions.
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 #AC_CHECK_FUNCS([memmove])
+abs_top_builddir=`pwd`
+AC_SUBST(abs_top_builddir)
+
 
 AC_MSG_CHECKING(path to use Axis2C . This is a compulsory to build Rampart-C)
 AC_ARG_WITH(axis2,
@@ -78,13 +81,14 @@ AC_ARG_WITH(axis2,
     if test -d $withval; then
         axis2inc="-I$withval"
     dnl else find the axis2inc include dir in $(AXIS2C_HOME)/include
-    elif test -d '$(AXIS2C_HOME)/include/axis2-1.0'; then
-        axis2inc="-I$(AXIS2C_HOME)/include/axis2-1.0"
+    elif test -d './axis2c/include'; then
+            AXIS2INC="-I$abs_top_builddir/../axis2c/include"
     else
         AC_MSG_ERROR(could not find axis2inc. stop)
     fi
     ;;
   esac ],
+  AXIS2INC="-I$abs_top_builddir/../axis2c/include"
   AC_MSG_RESULT(no)
 )
 
@@ -114,13 +118,12 @@ AC_ARG_WITH(openssl,
 
 OPENSSLINC=$opensslinc
 OPENSSLLIB=$openssllib
-AXIS2INC=$axis2inc
-AXIOMINC=$axis2inc/../axiom/include
-UTILINC=$axis2inc/../util/include
-NEETHIINC=$axis2inc/../neethi/include
+AXIOMINC="-I$abs_top_builddir/../axis2c/axiom/include"
+UTILINC="-I$abs_top_builddir/../axis2c/util/include"
 AC_SUBST(AXIS2INC)
 AC_SUBST(AXIOMINC)
 AC_SUBST(UTILINC)
+NEETHIINC="-I$abs_top_builddir/../axis2c/neethi/include"
 AC_SUBST(NEETHIINC)
 AC_SUBST(XMLSCHEMAINC)
 AC_SUBST(OPENSSLINC)
