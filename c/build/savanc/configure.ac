@@ -35,8 +35,8 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 dnl AC_C_CONST
 
 dnl Checks for library functions.
-AC_FUNC_MALLOC
-AC_FUNC_REALLOC
+dnl AC_FUNC_MALLOC
+dnl AC_FUNC_REALLOC
 #AC_CHECK_FUNCS([memmove])
 
 AC_MSG_CHECKING(To Use Axis2 C AXIOM. This is a compulsory module to build Axis2 C)
