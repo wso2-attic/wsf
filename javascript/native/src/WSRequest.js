@@ -104,7 +104,7 @@ WSRequest.prototype.send = function(payload) {
     var soapAction = this._optionSet["action"];
     
     this._xmlhttp.open(method, this._uri, this._async);
-    
+
     switch (this._soapVer) {
         case 1.1:
             this._xmlhttp.setRequestHeader("SOAPAction", soapAction == undefined ? '""' : '"' + soapAction + '"');
@@ -131,13 +131,13 @@ WSRequest.prototype.send = function(payload) {
         this.readyState = 2;
         if (this.onreadystatechange != null)
             this.onreadystatechange();
-        
+
         this._xmlhttp.send(req);
 
         this._processResult();
         if (this.error != null)
             throw (this.error);
-                   
+
         this.readyState = 4;
         if (this.onreadystatechange != null)
             this.onreadystatechange();
@@ -157,7 +157,7 @@ WSRequest.prototype._processResult = function () {
         this.error = null;  // How would I tell?
     } else {
         var browser = WSRequest.util._getBrowser();
-            
+
         if (this._xmlhttp.responseText != "") {
             if ((browser == "ie" || browser == "ie7") && this._xmlhttp.responseXML.documentElement == null) {
                 // unrecognized media type (probably application/soap+xml)
@@ -169,12 +169,12 @@ WSRequest.prototype._processResult = function () {
             }
             if (this._soapVer == 1.1)
                 var soapNamespace = "http://schemas.xmlsoap.org/soap/envelope/";
-            else 
+            else
                 var soapNamespace = "http://www.w3.org/2003/05/soap-envelope";
-            
+
             var soapBody = WSRequest.util._firstElement(response, soapNamespace, "Body");
             if (soapBody != null && soapBody.hasChildNodes()) {
-                var newDoc; 
+                var newDoc;
                 if (browser == "gecko")
                 {
                     try {
@@ -184,15 +184,15 @@ WSRequest.prototype._processResult = function () {
                     var newDoc = document.implementation.createDocument("","",null);
                     newDoc.appendChild(soapBody.firstChild);
                 }
-    
+
                 if (browser == "ie" || browser == "ie7") {
                     var newDoc = new ActiveXObject("Microsoft.XMLDOM");
                     newDoc.appendChild(soapBody.firstChild);
                 }
-    
+
                 this.responseXML = newDoc;
                 this.responseText = WSRequest.util._serializeToString(newDoc);
-                
+
                 fault = WSRequest.util._firstElement(newDoc, soapNamespace, "Fault");
                 if (fault != undefined) {
                     this.error = new WSError();
@@ -218,9 +218,15 @@ WSRequest.prototype._processResult = function () {
             this.responseXML = null;
             this.responseText = "";
             this.error = new WSError();
-            this.error.code = "HTTP" + this._xmlhttp.status;
-            this.error.reason = "No SOAP Body.";
-            this.error.detail = this._xmlhttp.statusText;
+            try {
+                this.error.code = "HTTP" + this._xmlhttp.status;
+                this.error.reason = "No SOAP Body.";
+                this.error.detail = this._xmlhttp.statusText;
+            } catch (e) {
+                this.error.code = null;
+                this.error.reason = "Server connection has failed.";
+                this.error.detail = e.toString();
+            }
         }
     }
 }
