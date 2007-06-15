@@ -15,9 +15,18 @@
  */
 package org.wso2.wsf.ide.core.context;
 
-public class Axis2EmitterDefaults {
+import org.wso2.wsf.ide.core.plugin.messages.WSASCoreUIMessages;
+
+public class WSASEmitterDefaults {
 
 	public static final String PREFERENCE_WSAS_RUNTIME_LOCATION_DEFAULT = "";
+	//Axis2 Preferences
+	//Service Code generation Options
+	public static final String PREFERENCE_SERVICE_DATABINDING_DEFAULT = WSASCoreUIMessages.ADB;
+
+	//Client Code generation Options
+	public static final String PREFERENCE_CLIENT_DATABINDING_DEFAULT  = WSASCoreUIMessages.ADB;
+
 
 	/**
 	 * @return returns the default setting for runtime location.
@@ -25,5 +34,17 @@ public class Axis2EmitterDefaults {
 	public static String getWSASRuntimeLocation() {
 		return PREFERENCE_WSAS_RUNTIME_LOCATION_DEFAULT;
 	}
+	
+	//Service Code generation Options
+
+	public static String getServiceDatabinding(){
+		return PREFERENCE_SERVICE_DATABINDING_DEFAULT;
+	}
+
+	
+	public static String getClientDatabinding(){
+		return PREFERENCE_CLIENT_DATABINDING_DEFAULT;
+	}
+
 
 }

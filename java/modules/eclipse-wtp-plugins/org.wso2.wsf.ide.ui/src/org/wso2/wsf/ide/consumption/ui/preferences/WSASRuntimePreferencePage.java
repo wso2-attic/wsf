@@ -29,6 +29,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
@@ -59,6 +60,8 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 	//private boolean isWar = false;
 	private String statusBanner = null;
 	WSASEmitterContext context;
+	Combo serviceDatabindingCombo;
+	Combo clientDatabindingCombo;
 
 	  
 	protected Control createContents(Composite superparent) {
@@ -195,13 +198,20 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		Label databindingLabel = new Label( codegenGroup, SWT.NONE );
 		databindingLabel.setText( WSASCoreUIMessages.LABEL_DATABINDING);
 		
-		final Text databindingText = new Text( codegenGroup,SWT.BORDER );
-		databindingText.setText(ServerModel.getServiceDatabinding());
-		databindingText.addModifyListener( new ModifyListener() {
-			public void modifyText(ModifyEvent e){
-				ServerModel.setServiceDatabinding( databindingText.getText() );
-			}
-		});
+
+	    //Data binding items
+	    final String[] databindingItems = {context.getServiceDatabinding().toUpperCase()};
+	    
+	    serviceDatabindingCombo = new Combo(codegenGroup,SWT.DROP_DOWN | SWT.BORDER | SWT.READ_ONLY);
+	    serviceDatabindingCombo.setItems(databindingItems);
+	    serviceDatabindingCombo.select(0);
+	    context.setServiceDatabinding(serviceDatabindingCombo.getItem(0));
+	    serviceDatabindingCombo.addSelectionListener(new SelectionAdapter(){
+	        public void widgetSelected(SelectionEvent e) {
+	          context.setServiceDatabinding(serviceDatabindingCombo
+	              .getItem(serviceDatabindingCombo.getSelectionIndex()));
+	        }
+	    });
 		
 		//the server side interface option
 		final Button generateServerSideInterfaceCheckBoxButton = 
@@ -309,13 +319,16 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		Label clientDatabindingLabel = new Label( codegenGroup, SWT.NONE );
 		clientDatabindingLabel.setText( WSASCoreUIMessages.LABEL_DATABINDING);
 		
-		final Text databindingText1 = new Text( codegenGroup, SWT.BORDER );
-		databindingText1.setText(ServerModel.getCleintDatabinding());
-		databindingText1.addModifyListener( new ModifyListener() {
-			public void modifyText(ModifyEvent e){
-				ServerModel.setWsasServerPath( databindingText1.getText() );
-			}
-		});
+	    clientDatabindingCombo = new Combo(codegenGroup,SWT.DROP_DOWN | SWT.BORDER | SWT.READ_ONLY);
+	    clientDatabindingCombo.setItems(databindingItems);
+	    clientDatabindingCombo.select(0);
+	    context.setClientDatabinding(clientDatabindingCombo.getItem(0));
+	    clientDatabindingCombo.addSelectionListener(new SelectionAdapter(){
+	        public void widgetSelected(SelectionEvent e) {
+	            context.setClientDatabinding(clientDatabindingCombo
+	                .getItem(clientDatabindingCombo.getSelectionIndex()));
+	        }
+	    });
 		
 		// generate test case option
 		final Button clientTestCaseCheckBoxButton = new Button(codegenGroup, SWT.CHECK);
@@ -351,7 +364,7 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		//seperator
-		Label seperatorLabel11 = new Label( codegenGroup, SWT.SEPARATOR|SWT.BORDER);
+	    Label seperatorLabel11 = new Label( codegenGroup, SWT.SEPARATOR | SWT.HORIZONTAL );
 	    gd = new GridData(GridData.FILL_HORIZONTAL);
 	    gd.horizontalSpan = 2;
 	    gd.verticalIndent=5;

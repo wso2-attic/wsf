@@ -33,7 +33,10 @@ public class PersistentWSASEmitterContext extends PersistentContext implements
 	}
 	
 	public void load(){
-		setDefault(PREFERENCE_WSAS_RUNTIME_LOCATION, Axis2EmitterDefaults.getWSASRuntimeLocation());
+		setDefault(PREFERENCE_WSAS_RUNTIME_LOCATION, WSASEmitterDefaults.getWSASRuntimeLocation());
+		setDefault(PREFERENCE_SERVICE_DATABINDING, WSASEmitterDefaults.getServiceDatabinding());
+		setDefault(PREFERENCE_CLIENT_DATABINDING, WSASEmitterDefaults.getClientDatabinding());
+		
 	}
 	
 	private PersistentWSASEmitterContext() 	{
@@ -47,5 +50,22 @@ public class PersistentWSASEmitterContext extends PersistentContext implements
 	public void setWSASRuntimeLocation(String runtimeLocation) {
 		setValue(PREFERENCE_WSAS_RUNTIME_LOCATION, runtimeLocation);
 	}
+	
+	public String getServiceDatabinding() {
+		return getValueAsString(PREFERENCE_SERVICE_DATABINDING);
+	}
+
+	public void setServiceDatabinding(String serviceDatabinding) {
+		setValue(PREFERENCE_SERVICE_DATABINDING, serviceDatabinding);
+	}
+
+	public String getClientDatabinding() {
+		return getValueAsString(PREFERENCE_CLIENT_DATABINDING);
+	}
+
+	public void setClientDatabinding(String clientDatabinding) {
+		setValue(PREFERENCE_CLIENT_DATABINDING, clientDatabinding);
+	}
+	
 	
 }

@@ -22,6 +22,12 @@ public interface WSASEmitterContext {
 	 * preference from the plugins local preferences store.
 	 */
 	public static final String PREFERENCE_WSAS_RUNTIME_LOCATION = "wsasRuntimeLocation";
+	//WSAS Preferences
+	//Service Code generation Options
+	public static final String PREFERENCE_SERVICE_DATABINDING = "serviceDatabinding"; 
+	
+	//Client Code generation Options
+	public static final String PREFERENCE_CLIENT_DATABINDING = "cleintDatabinding"; 
 	
 	
 	/**
@@ -34,4 +40,15 @@ public interface WSASEmitterContext {
 	 */
 	public String getWSASRuntimeLocation();
 	
+	//Service Code generation Options
+
+	public void setServiceDatabinding(String serviceDatabinding);
+
+	public String getServiceDatabinding();
+	
+	//Client Code generation Options
+
+	public void setClientDatabinding(String clientDatabinding);
+
+	public String getClientDatabinding();
 }
