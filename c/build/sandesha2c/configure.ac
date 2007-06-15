@@ -52,10 +52,10 @@ AC_ARG_WITH(axis2,
     AC_MSG_RESULT($withval)
     dnl Find axis2 include dir in the path
     if test -d $withval; then
-        axis2inc="-I$withval"
+        AXIS2INC="-I$withval"
     dnl else find the axis2inc include dir in $(AXIS2C_HOME)/include
-    elif [ -d "../axis2c/include" ]; then
-	AXIS2INC="-I$abs_top_builddir/../axis2c/include"
+    elif [ -d "$abs_top_builddir" ]; then
+	    AXIS2INC="-I$abs_top_builddir/../axis2c/include"
     else
 	AC_MSG_ERROR(could not find axis2inc. stop)
     fi
