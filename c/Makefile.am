@@ -1,5 +1,7 @@
 datadir=$(prefix)
+docsdir=$(prefix)/docs
 SUBDIRS=axis2c $(SANDESHA_DIR) $(RAMPART_DIR) savanc $(WSCLIENT_DIR)
+docs_DATA=docs/*
 data_DATA=config/axis2.xml README \
         INSTALL COPYING NEWS 
 
@@ -10,5 +12,5 @@ samples:
 	sh samples.sh $(prefix)
 
 
-EXTRA_DIST=samples.sh config build.bat clean.bat dist.sh
+EXTRA_DIST=samples.sh config build.bat clean.bat dist.sh docs
 
