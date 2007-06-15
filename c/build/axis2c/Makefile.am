@@ -1,6 +1,6 @@
 datadir=$(prefix)
 logsdir=$(prefix)/logs
-docsdir=$(prefix)/docs
+docsdir=$(prefix)/docs/axis2c
 includedir=$(prefix)/include/axis2-1.1
 
 pkgconfigdir = $(libdir)/pkgconfig
