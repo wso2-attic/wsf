@@ -1,4 +1,3 @@
-datadir=$(prefix)/resources
 logsdir=$(prefix)/logs
 docsdir=$(prefix)/docs
 confdir=$(prefix)
@@ -10,7 +9,7 @@ data_DATA= README \
 logs_DATA=
 docs_DATA=
 
-EXTRA_DIST = build.sh autogen.sh CREDITS LICENSE build.sh resources wsclient.mk
+EXTRA_DIST = build.sh autogen.sh CREDITS LICENSE build.sh wsclient.mk
 dist-hook:
 	rm -rf `find $(distdir)/ -type d -name .svn`
 	rm -rf `find $(distdir)/ -type d -name .deps`
