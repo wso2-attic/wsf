@@ -1371,7 +1371,7 @@ PHP_METHOD(ws_service, __construct)
         }
     }
 
-	service = create_soap_service(options TSRMLS_CC);
+	service = create_soap_service(ht_options TSRMLS_CC);
 
 	
 

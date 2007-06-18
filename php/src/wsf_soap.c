@@ -1008,19 +1008,6 @@ void wsf_soap_do_soap_call(zval* this_ptr,
 					}
 				}
             }
-/*
-			ret = do_request(client_zval, request, location, action.c, soap_version, 0, &response TSRMLS_CC);
-
-	 		smart_str_free(&action);
-			xmlFreeDoc(request);
-
-			if (ret && Z_TYPE(response) == IS_STRING) {
-				ret = parse_packet_soap(client_zval, Z_STRVAL(response), Z_STRLEN(response), NULL, function, return_value, output_headers TSRMLS_CC);
-			}
-
-			zval_dtor(&response);
-
-*/
 		}
  	}
 /*
@@ -2374,7 +2361,7 @@ soapServicePtr create_soap_service(HashTable *ht TSRMLS_DC){
 			service->uri = estrndup(Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp));
 	} else if (wsdl == NULL) {
 			php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid arguments. 'uri' option is required in nonWSDL mode.");
-			return;
+			return NULL;
 	}
 
 	if (zend_hash_find(ht, "actor", sizeof("actor"), (void**)&tmp) == SUCCESS &&
@@ -2419,7 +2406,7 @@ soapServicePtr create_soap_service(HashTable *ht TSRMLS_DC){
 		cache_wsdl = Z_LVAL_PP(tmp);
 	}
 	
-	service->version = SOAP_1_2;
+	service->version = soap_version;
 	service->type = SOAP_FUNCTIONS;
 	service->soap_functions.ft = emalloc(sizeof(HashTable));
 	service->soap_functions.functions_all = FALSE;
