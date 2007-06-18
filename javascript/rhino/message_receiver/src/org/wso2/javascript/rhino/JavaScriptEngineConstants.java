@@ -22,9 +22,23 @@ public interface JavaScriptEngineConstants {
 
     public static final String AXIS2_MESSAGECONTEXT = "messageContext";
     
+    /**
+     * AxisService is injected to the Rhino engine as a thread local variable
+     * with the key set to this value. Values from the AxisService is needed by some host
+     * objects at the deployment time as well as in the run time.. In the run
+     * time we would have obtained the AxisService through the injected
+     * MessageContext. But we simply don't have a MessageContext in
+     * the deployment time.
+     */
     public static final String AXIS2_SERVICE = "axisService";
+    
+    /**
+     * ConfigurationContext is injected to the Rhino engine as a thread local variable
+     * with the key set to this value. Reason for doing this is same as the injecting the AxisService.
+     */
+    public static final String AXIS2_CONFIGURATION_CONTEXT = "axisConfigurationContext";
 
     public static final String LOAD_JSSCRIPTS = "loadJSScripts";
-    
+
     public static final String JS_FUNCTION_NAME = "jsFunctionName";
 }

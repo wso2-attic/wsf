@@ -94,14 +94,17 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver impleme
             Context context = engine.getCx();
             context.putThreadLocal(AXIS2_MESSAGECONTEXT, inMessage);
             
-            // Some host objects depend on the data we obtain from the
-            // AxisService.. It is possible to get these
-            // date through the MessageContext, but we face problems at the
-            // deployer, where we need to instantiate host objects
-            // in order for the annotations framework to work. It is possible to
-            // inject the AxisService at the message receiver, but not a
-            // MessageContext. For the consistency we inject the AxisService in here too..
+             /*
+                 * Some host objects depend on the data we obtain from the
+                 * AxisService & ConfigurationContext.. It is possible to get
+                 * these data through the MessageContext. But we face problems
+                 * at the deployer, where we need to instantiate host objects in
+                 * order for the annotations framework to work and the
+                 * MessageContext is not available at that time. For the
+                 * consistency we inject them in here too..
+                 */
             context.putThreadLocal(AXIS2_SERVICE, inMessage.getAxisService());
+            context.putThreadLocal(AXIS2_CONFIGURATION_CONTEXT, inMessage.getConfigurationContext());
             
             JavaScriptEngineUtils.loadGlobalPropertyObjects(engine, inMessage
                     .getConfigurationContext().getAxisConfiguration());
