@@ -39,5 +39,6 @@ void delete_hashtable(void *data);
 
 soapServicePtr create_soap_service(HashTable *ht TSRMLS_DC);
 
+void delete_service(void *data);
 
 #endif /* WSF_SCLIENT_H */

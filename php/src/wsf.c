@@ -58,6 +58,7 @@ zend_class_entry *ws_param_class_entry;
 int le_url;
 int le_sdl;
 int le_typemap;
+int le_service;
 
 HashTable defEnc, defEncIndex, defEncNs;
 
@@ -480,9 +481,12 @@ PHP_MINIT_FUNCTION(wsf)
     worker = wsf_worker_create(ws_env_svr, home_folder, WSF_GLOBAL(rm_db_dir));
 
     le_sdl = register_list_destructors(delete_sdl, NULL);
+    
     le_url = register_list_destructors(delete_url, NULL);
+    
     le_typemap = register_list_destructors(delete_hashtable, NULL);
-
+    
+    le_service = register_list_destructors(delete_service, NULL);
     axiom_xml_reader_init();
 
     return SUCCESS;
@@ -1116,6 +1120,9 @@ PHP_METHOD(ws_service, __construct)
     wsf_svc_info_t *svc_info = NULL;
     zval *options = NULL;
     axutil_hash_index_t *hi = NULL;
+    int soap_version = SOAP_1_2;
+    int cache_wsdl;
+    int ret = 0;
 
 	HashTable *ht_options = NULL;
     HashTable *ht_actions = NULL;
@@ -1173,13 +1180,23 @@ PHP_METHOD(ws_service, __construct)
 				ht_opParams = Z_ARRVAL_PP(tmp);
 		        AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting message operation parameters");
             }
-			if(zend_hash_find(ht_options, "wsdl", sizeof("wsdl"), (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
+			if(zend_hash_find(ht_options, "wsdl", sizeof("wsdl"), (void **)&tmp) == SUCCESS 
+                    && Z_TYPE_PP(tmp) == IS_STRING){
+
 				wsdl = Z_STRVAL_PP(tmp);
 			}
+			if(zend_hash_find(ht_options, "cache_wsdl", sizeof("cache_wsdl"), (void **)&tmp) == SUCCESS 
+                    && Z_TYPE_PP(tmp) == IS_LONG){
+                    cache_wsdl = Z_LVAL_PP(tmp);
+			}
+
+
+
 			if(zend_hash_find(ht_options, WS_USE_MTOM, sizeof(WS_USE_MTOM),
                               (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
                 svc_info->use_mtom = Z_BVAL_PP(tmp);
-        		AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting mtom property %d", svc_info->use_mtom);
+        		AXIS2_LOG_DEBUG(ws_env_svr->log, 
+                        AXIS2_LOG_SI, "[wsf_service] setting mtom property %d", svc_info->use_mtom);
             }
             else{
                 svc_info->use_mtom = 0;
@@ -1372,9 +1389,32 @@ PHP_METHOD(ws_service, __construct)
     }
 
 	service = create_soap_service(ht_options TSRMLS_CC);
+    
+    service->version = soap_version;	
+    service->type = SOAP_FUNCTIONS;
+    service->soap_functions.functions_all = FALSE;
+    service->soap_functions.ft = emalloc(sizeof(HashTable));
+    zend_hash_init(service->soap_functions.ft, 0, NULL, ZVAL_PTR_DTOR, 0);
 
-	
-
+    if (wsdl) {
+        service->sdl = get_sdl(this_ptr, wsdl, cache_wsdl TSRMLS_CC);
+        if (service->uri == NULL) {
+            if (service->sdl->target_ns) {
+                service->uri = estrdup(service->sdl->target_ns);
+            } else {
+                /*FIXME*/
+                service->uri = estrdup("http://unknown-uri/");
+            }
+        }
+    }
+    
+    /*
+    if (typemap_ht) {
+        service->typemap = soap_create_typemap(service->sdl, typemap_ht TSRMLS_CC);
+    }
+   */ 
+    ret = zend_list_insert(service, le_service);
+    add_property_resource(this_ptr, "service", ret);
 
 }
 /* }}} */

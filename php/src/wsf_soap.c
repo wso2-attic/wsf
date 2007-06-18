@@ -2415,3 +2415,48 @@ soapServicePtr create_soap_service(HashTable *ht TSRMLS_DC){
 	return service;
 }
 
+
+void delete_service(void *data)
+{
+    soapServicePtr service = (soapServicePtr)data;
+
+    if (service->soap_functions.ft) {
+        zend_hash_destroy(service->soap_functions.ft);
+        efree(service->soap_functions.ft);
+    }
+
+    if (service->typemap) {
+        zend_hash_destroy(service->typemap);
+        efree(service->typemap);
+    }
+
+    if (service->soap_class.argc) {
+        int i;
+        for (i = 0; i < service->soap_class.argc;i++) {
+            zval_ptr_dtor(&service->soap_class.argv[i]);
+        }
+        efree(service->soap_class.argv);
+    }
+
+    if (service->actor) {
+        efree(service->actor);
+    }
+    if (service->uri) {
+        efree(service->uri);
+    }
+    if (service->sdl) {
+        delete_sdl(service->sdl);
+    }
+    if (service->encoding) {
+        xmlCharEncCloseFunc(service->encoding);
+    }
+    if (service->class_map) {
+        zend_hash_destroy(service->class_map);
+        FREE_HASHTABLE(service->class_map);
+    }
+    if (service->soap_object) {
+        zval_ptr_dtor(&service->soap_object);
+    }
+    efree(service);
+}
+

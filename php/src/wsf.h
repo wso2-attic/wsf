@@ -105,6 +105,8 @@ extern wsf_worker_t* worker;
 extern int le_url;
 extern int le_sdl;
 extern int le_typemap;
+extern int le_service;
+
 extern HashTable defEnc, defEncIndex, defEncNs;
 
 typedef struct _encodeType encodeType, *encodeTypePtr;
