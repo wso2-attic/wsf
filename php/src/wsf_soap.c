@@ -2343,3 +2343,88 @@ static void type_to_string(sdlTypePtr type, smart_str *buf, int level)
 zval* add_soap_fault(zval *obj, char *fault_code, char *fault_string, char *fault_actor, zval *fault_detail TSRMLS_DC){
     return NULL;
 }
+
+soapServicePtr create_soap_service(HashTable *ht TSRMLS_DC){
+	
+	soapServicePtr service;
+	int soap_version = SOAP_1_2;
+	zval **tmp;
+	char *wsdl = NULL;
+	HashTable *typemap_ht = NULL;
+	int cache_wsdl;
+
+	if(!ht)
+		return NULL;
+
+	if(zend_hash_find(ht, "wsdl", sizeof("wsdl"), (void**)&tmp) == SUCCESS){
+		wsdl = Z_STRVAL_PP(tmp);				
+	}else{
+		return NULL;
+	}
+	
+	service = emalloc(sizeof(soapService));
+	memset(service, 0, sizeof(soapService));
+	
+	if (zend_hash_find(ht, "wsdl", sizeof("wsdl"), (void**)&tmp) == SUCCESS &&
+		    Z_TYPE_PP(tmp) == IS_STRING) {
+				wsdl = Z_STRVAL_PP(tmp);
+	}
+	if (zend_hash_find(ht, "uri", sizeof("uri"), (void**)&tmp) == SUCCESS &&
+		    Z_TYPE_PP(tmp) == IS_STRING) {
+			service->uri = estrndup(Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp));
+	} else if (wsdl == NULL) {
+			php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid arguments. 'uri' option is required in nonWSDL mode.");
+			return;
+	}
+
+	if (zend_hash_find(ht, "actor", sizeof("actor"), (void**)&tmp) == SUCCESS &&
+		    Z_TYPE_PP(tmp) == IS_STRING) {
+			service->actor = estrndup(Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp));
+	}
+
+	if (zend_hash_find(ht, "encoding", sizeof("encoding"), (void**)&tmp) == SUCCESS &&
+		    Z_TYPE_PP(tmp) == IS_STRING) {
+		xmlCharEncodingHandlerPtr encoding;
+		
+		encoding = xmlFindCharEncodingHandler(Z_STRVAL_PP(tmp));
+	   	if (encoding == NULL) {
+				php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid arguments. Invalid 'encoding' option - '%s'.", Z_STRVAL_PP(tmp));
+	    } else {
+	      service->encoding = encoding;
+	    }
+	}
+
+	if (zend_hash_find(ht, "classmap", sizeof("classmap"), (void**)&tmp) == SUCCESS &&
+		Z_TYPE_PP(tmp) == IS_ARRAY) {
+		zval *ztmp;
+
+		ALLOC_HASHTABLE(service->class_map);
+		zend_hash_init(service->class_map, zend_hash_num_elements((*tmp)->value.ht), NULL, ZVAL_PTR_DTOR, 0);
+		zend_hash_copy(service->class_map, (*tmp)->value.ht, (copy_ctor_func_t) zval_add_ref, (void *) &ztmp, sizeof(zval *));
+	}
+
+	if (zend_hash_find(ht, "typemap", sizeof("typemap"), (void**)&tmp) == SUCCESS &&
+		Z_TYPE_PP(tmp) == IS_ARRAY &&
+		zend_hash_num_elements(Z_ARRVAL_PP(tmp)) > 0) {
+		typemap_ht = Z_ARRVAL_PP(tmp);
+	}
+
+	if (zend_hash_find(ht, "features", sizeof("features"), (void**)&tmp) == SUCCESS &&
+		Z_TYPE_PP(tmp) == IS_LONG) {
+		service->features = Z_LVAL_PP(tmp);
+	}
+
+	if (zend_hash_find(ht, "cache_wsdl", sizeof("cache_wsdl"), (void**)&tmp) == SUCCESS &&
+	    Z_TYPE_PP(tmp) == IS_LONG) {
+		cache_wsdl = Z_LVAL_PP(tmp);
+	}
+	
+	service->version = SOAP_1_2;
+	service->type = SOAP_FUNCTIONS;
+	service->soap_functions.ft = emalloc(sizeof(HashTable));
+	service->soap_functions.functions_all = FALSE;
+	zend_hash_init(service->soap_functions.ft, 0, NULL, ZVAL_PTR_DTOR, 0);
+	
+	return service;
+}
+

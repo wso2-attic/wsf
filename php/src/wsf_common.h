@@ -224,8 +224,11 @@ typedef struct wsf_svc_info {
     /** this is needed in case of request uri dispatching( for rest) */
     char *op_name;
 
+	void *service;
+
 }
 wsf_svc_info_t;
+
 
 typedef struct php_req_info {
     long svr_port;

@@ -1069,8 +1069,8 @@ PHP_METHOD(ws_client, __call)
             }
             real_args[i++] = *param;
         }
-    }
-    /*
+}
+/*
     do_soap_call(this_ptr, fn_name, fn_name_len, arg_count, real_args, return_value, NULL,
     	NULL, NULL, NULL, NULL TSRMLS_CC);
     */
@@ -1117,9 +1117,14 @@ PHP_METHOD(ws_service, __construct)
     zval *options = NULL;
     axutil_hash_index_t *hi = NULL;
 
+	HashTable *ht_options = NULL;
     HashTable *ht_actions = NULL;
     HashTable *ht_ops_to_funcs = NULL;
 	HashTable *ht_ops_to_mep = NULL;
+	HashTable *ht_opParams = NULL;
+	soapServicePtr service;
+	
+	char *wsdl = NULL;
 
     if (FAILURE == zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|a",
                                          &options))
@@ -1145,26 +1150,33 @@ PHP_METHOD(ws_service, __construct)
     if(options)
     {
         zval **tmp = NULL;
-        HashTable *ht = Z_ARRVAL_P(options);
-        if(ht)
+		ht_options = Z_ARRVAL_P(options);
+		if(ht_options)
         {
-            if(zend_hash_find(ht, "actions", sizeof("actions"),
+			if(zend_hash_find(ht_options, "actions", sizeof("actions"),
                               (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY) {
                 ht_actions = Z_ARRVAL_PP(tmp);
         		AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting actions ");
             }
-            if(zend_hash_find(ht, "operations", sizeof("operations"),
+			if(zend_hash_find(ht_options, "operations", sizeof("operations"),
                               (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY){
                 ht_ops_to_funcs = Z_ARRVAL_PP(tmp);
 		        AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting operations");
             }
-			if(zend_hash_find(ht, "opMEP", sizeof("opMEP"),
+			if(zend_hash_find(ht_options, "opMEP", sizeof("opMEP"),
                               (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY){
 				ht_ops_to_mep = Z_ARRVAL_PP(tmp);
 		        AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting message exchange pattern");
             }
-
-            if(zend_hash_find(ht, WS_USE_MTOM, sizeof(WS_USE_MTOM),
+			if(zend_hash_find(ht_options, "opParams", sizeof("opParams"),
+                              (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY){
+				ht_opParams = Z_ARRVAL_PP(tmp);
+		        AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting message operation parameters");
+            }
+			if(zend_hash_find(ht_options, "wsdl", sizeof("wsdl"), (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
+				wsdl = Z_STRVAL_PP(tmp);
+			}
+			if(zend_hash_find(ht_options, WS_USE_MTOM, sizeof(WS_USE_MTOM),
                               (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
                 svc_info->use_mtom = Z_BVAL_PP(tmp);
         		AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting mtom property %d", svc_info->use_mtom);
@@ -1172,34 +1184,34 @@ PHP_METHOD(ws_service, __construct)
             else{
                 svc_info->use_mtom = 0;
             }
-            if(zend_hash_find(ht, WS_REQUEST_XOP, sizeof(WS_REQUEST_XOP),
+			if(zend_hash_find(ht_options, WS_REQUEST_XOP, sizeof(WS_REQUEST_XOP),
                               (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
                 svc_info->request_xop = Z_BVAL_PP(tmp);
             }
             else
             {
-                svc_info->request_xop = 0;
+	               svc_info->request_xop = 0;
             }
-	             AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] request xop %d", svc_info->request_xop);
+	        AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] request xop %d", svc_info->request_xop);
 
-            if(zend_hash_find(ht, WS_POLICY_NAME, sizeof(WS_POLICY_NAME),
+            if(zend_hash_find(ht_options, WS_POLICY_NAME, sizeof(WS_POLICY_NAME),
 				    (void **)&tmp) == SUCCESS ){
                 svc_info->policy = *tmp;
-		AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] policy object present");
+				AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] policy object present");
             }
-	    if(zend_hash_find(ht, WS_SECURITY_TOKEN, sizeof(WS_SECURITY_TOKEN), (void**)&tmp) == SUCCESS){
-		svc_info->security_token = *tmp;
-	    	AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] security token object present ");
-	    }		
+			if(zend_hash_find(ht_options, WS_SECURITY_TOKEN, sizeof(WS_SECURITY_TOKEN), (void**)&tmp) == SUCCESS){
+				svc_info->security_token = *tmp;
+	    		AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] security token object present ");
+			}		
  
-	    if(zend_hash_find(ht, WS_RELIABLE, sizeof(WS_RELIABLE),
+			if(zend_hash_find(ht_options, WS_RELIABLE, sizeof(WS_RELIABLE),
                               (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
                 if(!svc_info->modules_to_engage)
                     svc_info->modules_to_engage = axutil_array_list_create(ws_env_svr, 3);
                 axutil_array_list_add(svc_info->modules_to_engage, ws_env_svr, axutil_strdup(ws_env_svr, "sandesha2"));
             }
 
-            if(zend_hash_find(ht, WS_BINDING_STYLE, sizeof(WS_BINDING_STYLE), (void **)&tmp) == SUCCESS &&
+			if(zend_hash_find(ht_options, WS_BINDING_STYLE, sizeof(WS_BINDING_STYLE), (void **)&tmp) == SUCCESS &&
                     Z_TYPE_PP(tmp) == IS_STRING){
                 add_property_stringl(obj, WS_BINDING_STYLE, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
             }
@@ -1358,6 +1370,12 @@ PHP_METHOD(ws_service, __construct)
             }
         }
     }
+
+	service = create_soap_service(options TSRMLS_CC);
+
+	
+
+
 }
 /* }}} */
 
