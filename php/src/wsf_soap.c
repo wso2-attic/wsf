@@ -2334,7 +2334,6 @@ zval* add_soap_fault(zval *obj, char *fault_code, char *fault_string, char *faul
 soapServicePtr create_soap_service(HashTable *ht TSRMLS_DC){
 	
 	soapServicePtr service;
-	int soap_version = SOAP_1_2;
 	zval **tmp;
 	char *wsdl = NULL;
 	HashTable *typemap_ht = NULL;
@@ -2405,13 +2404,6 @@ soapServicePtr create_soap_service(HashTable *ht TSRMLS_DC){
 	    Z_TYPE_PP(tmp) == IS_LONG) {
 		cache_wsdl = Z_LVAL_PP(tmp);
 	}
-	
-	service->version = soap_version;
-	service->type = SOAP_FUNCTIONS;
-	service->soap_functions.ft = emalloc(sizeof(HashTable));
-	service->soap_functions.functions_all = FALSE;
-	zend_hash_init(service->soap_functions.ft, 0, NULL, ZVAL_PTR_DTOR, 0);
-	
 	return service;
 }
 
