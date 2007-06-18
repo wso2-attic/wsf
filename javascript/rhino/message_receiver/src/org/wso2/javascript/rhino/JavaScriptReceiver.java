@@ -152,7 +152,7 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver impleme
                         } else {
                             throw new AxisFault("Unsupported schema type in request");
                         }
-                    } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANY){
+                    } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANYTYPE){
                         result = engine.call(jsFunctionName, reader, payload, scripts);
                     }
                 } else {
@@ -214,7 +214,7 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver impleme
                         } else {
                             throw new AxisFault("Unsupported schema type in request");
                         }
-                    } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANY){
+                    } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANYTYPE){
                         body.addChild(result);
                     }
                 } else if (result != null){
