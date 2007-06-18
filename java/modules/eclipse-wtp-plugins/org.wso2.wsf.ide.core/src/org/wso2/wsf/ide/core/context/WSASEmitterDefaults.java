@@ -23,10 +23,18 @@ public class WSASEmitterDefaults {
 	//Axis2 Preferences
 	//Service Code generation Options
 	public static final String PREFERENCE_SERVICE_DATABINDING_DEFAULT = WSASCoreUIMessages.ADB;
+	public static final boolean PREFERENCE_SERVICE_INTERFACE_SKELETON_DEFAULT = false;
+	public static final boolean PREFERENCE_SERVICE_GENERATE_ALL_DEFAULT = false;
 
 	//Client Code generation Options
+	public static final boolean PREFERENCE_CLIENT_SYNC_DEFAULT =  false;
+	public static final boolean PREFERENCE_CLIENT_ASYNC_DEFAULT =  false;
 	public static final String PREFERENCE_CLIENT_DATABINDING_DEFAULT  = WSASCoreUIMessages.ADB;
-
+	public static final boolean PREFERENCE_CLIENT_TESTCASE_DEFAULT = false;
+	public static final boolean PREFERENCE_CLIENT_GENERATE_ALL_DEFAULT = false;
+	
+	//Service Archive Options
+	private static String PREFERENCE_AAR_EXTENTION_DEFAULT  = WSASCoreUIMessages.AAR;	//aarExtention
 
 	/**
 	 * @return returns the default setting for runtime location.
@@ -41,9 +49,38 @@ public class WSASEmitterDefaults {
 		return PREFERENCE_SERVICE_DATABINDING_DEFAULT;
 	}
 
+	public static boolean isServiceInterfaceSkeleton(){
+		return PREFERENCE_SERVICE_INTERFACE_SKELETON_DEFAULT;
+	}
+
+	public static boolean isServiceGenerateAll(){
+		return PREFERENCE_SERVICE_GENERATE_ALL_DEFAULT;
+	}
 	
+	//Client Codegen Oprions
+	public static boolean isClientSync(){
+		return PREFERENCE_CLIENT_SYNC_DEFAULT;
+	}
+
+	public static boolean isClientAsync(){
+		return PREFERENCE_CLIENT_ASYNC_DEFAULT;
+	}
+
 	public static String getClientDatabinding(){
 		return PREFERENCE_CLIENT_DATABINDING_DEFAULT;
+	}
+
+	public static boolean isClientTestCase(){
+		return PREFERENCE_CLIENT_TESTCASE_DEFAULT;
+	}
+
+	public static boolean isClientGenerateAll(){
+		return PREFERENCE_CLIENT_GENERATE_ALL_DEFAULT;
+	}
+
+	//Service AAR Options
+	public static String getAarExtention(){
+		return PREFERENCE_AAR_EXTENTION_DEFAULT;
 	}
 
 

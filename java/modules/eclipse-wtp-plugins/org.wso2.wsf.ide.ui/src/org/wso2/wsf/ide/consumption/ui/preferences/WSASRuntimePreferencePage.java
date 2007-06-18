@@ -62,6 +62,7 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 	WSASEmitterContext context;
 	Combo serviceDatabindingCombo;
 	Combo clientDatabindingCombo;
+	Combo aarExtensionCombo;
 
 	  
 	protected Control createContents(Composite superparent) {
@@ -198,7 +199,6 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		Label databindingLabel = new Label( codegenGroup, SWT.NONE );
 		databindingLabel.setText( WSASCoreUIMessages.LABEL_DATABINDING);
 		
-
 	    //Data binding items
 	    final String[] databindingItems = {context.getServiceDatabinding().toUpperCase()};
 	    
@@ -219,11 +219,11 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		generateServerSideInterfaceCheckBoxButton.setText(
 				WSASCoreUIMessages.LABEL_GENERATE_SERVERSIDE_INTERFACE);
 		generateServerSideInterfaceCheckBoxButton.setSelection(
-									ServerModel.isServiceInterfaceSkeleton());
+				context.isServiceInterfaceSkeleton());
 		generateServerSideInterfaceCheckBoxButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
-				ServerModel.setServiceInterfaceSkeleton(
-						generateServerSideInterfaceCheckBoxButton.getSelection());
+		        context.setServiceInterfaceSkeleton(
+		                generateServerSideInterfaceCheckBoxButton.getSelection());
 			}
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
@@ -234,11 +234,11 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 	    
 		// generate all
 		final Button generateAllCheckBoxButton = new Button(codegenGroup, SWT.CHECK);
-		generateAllCheckBoxButton.setSelection(ServerModel.isServiceGenerateAll());
+		generateAllCheckBoxButton.setSelection(context.isServiceGenerateAll());
 		generateAllCheckBoxButton.setText(WSASCoreUIMessages.LABEL_GENERATE_ALL);
 		generateAllCheckBoxButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
-				ServerModel.setServiceGenerateAll(generateAllCheckBoxButton.getSelection());
+				context.setServiceGenerateAll(generateAllCheckBoxButton.getSelection());
 			}
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
@@ -273,13 +273,13 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		syncAndAsyncRadioButton.setText(WSASCoreUIMessages.LABEL_SYNC_AND_ASYNC);
 		syncAndAsyncRadioButton.setVisible(true);
 		syncAndAsyncRadioButton.setSelection(
-				((ServerModel.isAsync() || ServerModel.isSync())==false)
-				?true
-				:(ServerModel.isAsync() && ServerModel.isSync()));
+		        ((context.isSync() || context.isAsync())==false)
+		        ?true
+		        :(context.isSync()) && context.isAsync());
 		syncAndAsyncRadioButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
-				ServerModel.setSync(syncAndAsyncRadioButton.getSelection());
-				ServerModel.setAsync(syncAndAsyncRadioButton.getSelection());
+		        context.setAsync(syncAndAsyncRadioButton.getSelection());
+		        context.setSync(syncAndAsyncRadioButton.getSelection());
 			}
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
@@ -289,11 +289,11 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 	    
 		final Button syncOnlyRadioButton = new Button(codegenGroup, SWT.RADIO);
 		syncOnlyRadioButton.setText(WSASCoreUIMessages.LABEL_SYNC);
-		syncOnlyRadioButton.setSelection(ServerModel.isSync() && !ServerModel.isAsync() );
+		syncOnlyRadioButton.setSelection(context.isSync() && !context.isAsync());
 		syncOnlyRadioButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
-				ServerModel.setSync(syncOnlyRadioButton.getSelection());
-				ServerModel.setAsync(!syncOnlyRadioButton.getSelection());
+		        context.setAsync(!syncOnlyRadioButton.getSelection());
+		        context.setSync(syncOnlyRadioButton.getSelection());
 			}
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
@@ -303,11 +303,11 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 	    
 		final Button asyncOnlyRadioButton = new Button(codegenGroup, SWT.RADIO);
 		asyncOnlyRadioButton.setText(WSASCoreUIMessages.LABEL_ASYNC);
-		asyncOnlyRadioButton.setSelection(ServerModel.isAsync() && !ServerModel.isSync());
+		asyncOnlyRadioButton.setSelection(context.isAsync() && !context.isSync());
 		asyncOnlyRadioButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
-				ServerModel.setAsync(asyncOnlyRadioButton.getSelection());
-				ServerModel.setSync(!asyncOnlyRadioButton.getSelection());
+		        context.setAsync(asyncOnlyRadioButton.getSelection());
+		        context.setSync(!asyncOnlyRadioButton.getSelection());
 			}
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
@@ -336,9 +336,9 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		clientTestCaseCheckBoxButton.setSelection(ServerModel.isClientTestcase());
 		clientTestCaseCheckBoxButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
-				ServerModel.setClientTestcase(clientTestCaseCheckBoxButton.getSelection());
+	            context.setClientDatabinding(clientDatabindingCombo
+	                    .getItem(clientDatabindingCombo.getSelectionIndex()));
 			}
-
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
@@ -348,11 +348,11 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 
 		// generate all
 		final Button clientGenerateAllCheckBoxButton = new Button(codegenGroup, SWT.CHECK);
-		clientGenerateAllCheckBoxButton.setSelection(ServerModel.isClientGenerateAll());
+		clientGenerateAllCheckBoxButton.setSelection(context.isClientTestCase());
 		clientGenerateAllCheckBoxButton.setText(WSASCoreUIMessages.LABEL_GENERATE_ALL);
 		clientGenerateAllCheckBoxButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
-				ServerModel.setClientGenerateAll(clientGenerateAllCheckBoxButton.getSelection());
+				context.setClientTestCase(clientTestCaseCheckBoxButton.getSelection());
 			}
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
@@ -382,13 +382,19 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		Label aarExtentionLabel = new Label( codegenGroup, SWT.NONE );
 		aarExtentionLabel.setText( WSASCoreUIMessages.LABEL_AAR_EXTENTION);
 		
-		final Text aarExtentionText = new Text( codegenGroup, SWT.BORDER);
-		aarExtentionText.setText(ServerModel.getAarExtention());
-		aarExtentionText.addModifyListener( new ModifyListener() {
-			public void modifyText(ModifyEvent e){
-				ServerModel.setAarExtention( aarExtentionText.getText() );
-			}
-		});
+	    //AAR extention items
+	    final String[] aarExtentionItems = { WSASCoreUIMessages.AAR };
+
+		aarExtensionCombo = new Combo(codegenGroup,SWT.DROP_DOWN | SWT.BORDER | SWT.READ_ONLY);
+	    aarExtensionCombo.setItems(aarExtentionItems);
+	    aarExtensionCombo.select(0);
+	    context.setAarExtention( aarExtensionCombo.getItem(0) );
+	    aarExtensionCombo.addSelectionListener(new SelectionAdapter(){
+	        public void widgetSelected(SelectionEvent e) {
+	            int index = aarExtensionCombo.getSelectionIndex();
+	            context.setAarExtention(aarExtensionCombo.getItem(index));
+	        }
+	    });
 
 	    wsasPreferenceTab.setEnabled(true);
 	    wsasPreferenceTab.setVisible(true);
@@ -400,7 +406,6 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		// TODO Auto-generated method stub
 	}
 	
-	  
 	/**
 	 * Pops up the file browse dialog box
 	 */

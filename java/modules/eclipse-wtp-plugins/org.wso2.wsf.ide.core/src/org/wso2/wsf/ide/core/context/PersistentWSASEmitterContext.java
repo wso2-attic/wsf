@@ -35,7 +35,17 @@ public class PersistentWSASEmitterContext extends PersistentContext implements
 	public void load(){
 		setDefault(PREFERENCE_WSAS_RUNTIME_LOCATION, WSASEmitterDefaults.getWSASRuntimeLocation());
 		setDefault(PREFERENCE_SERVICE_DATABINDING, WSASEmitterDefaults.getServiceDatabinding());
+		setDefault(PREFERENCE_SERVICE_INTERFACE_SKELETON, WSASEmitterDefaults.isServiceInterfaceSkeleton());
+		setDefault(PREFERENCE_SERVICE_GENERATE_ALL, WSASEmitterDefaults.isServiceGenerateAll());
+		//client defaults
+		setDefault(PREFERENCE_CLIENT_SYNC, WSASEmitterDefaults.isClientSync());
+		setDefault(PREFERENCE_CLIENT_ASYNC, WSASEmitterDefaults.isClientAsync());
 		setDefault(PREFERENCE_CLIENT_DATABINDING, WSASEmitterDefaults.getClientDatabinding());
+		setDefault(PREFERENCE_CLIENT_TESTCASE, WSASEmitterDefaults.isClientTestCase());
+		setDefault(PREFERENCE_CLIENT_GENERATE_ALL, WSASEmitterDefaults.isClientGenerateAll());
+		//AAR Defaults
+		setDefault(PREFERENCE_AAR_EXTENTION, WSASEmitterDefaults.getAarExtention());
+
 		
 	}
 	
@@ -51,20 +61,84 @@ public class PersistentWSASEmitterContext extends PersistentContext implements
 		setValue(PREFERENCE_WSAS_RUNTIME_LOCATION, runtimeLocation);
 	}
 	
+	//Service 
+	
 	public String getServiceDatabinding() {
 		return getValueAsString(PREFERENCE_SERVICE_DATABINDING);
 	}
-
+	
 	public void setServiceDatabinding(String serviceDatabinding) {
 		setValue(PREFERENCE_SERVICE_DATABINDING, serviceDatabinding);
 	}
+	
+	public boolean isServiceInterfaceSkeleton() {
+		return getValueAsBoolean(PREFERENCE_SERVICE_INTERFACE_SKELETON);
+	}
+	
+	public void setServiceInterfaceSkeleton(boolean serviceInterfaceSkeleton) {
+		setValue(PREFERENCE_SERVICE_INTERFACE_SKELETON, serviceInterfaceSkeleton);	
+	}	
+		
+	public boolean isServiceGenerateAll() {
+		return getValueAsBoolean(PREFERENCE_SERVICE_GENERATE_ALL);
+	}
+	
+	public void setServiceGenerateAll(boolean serviceGenerateAll) {
+		setValue(PREFERENCE_SERVICE_GENERATE_ALL, serviceGenerateAll);
+	}
+	
+	
+	//Client
+	
+	public boolean isSync() {
+		return getValueAsBoolean(PREFERENCE_CLIENT_SYNC);
+	}
+	
+	public void setSync(boolean clientSync) {
+		setValue(PREFERENCE_CLIENT_SYNC, clientSync);
+	}
 
+	public boolean isAsync() {
+		return getValueAsBoolean(PREFERENCE_CLIENT_ASYNC);
+	}
+	
+	public void setAsync(boolean clientAsync) {
+		setValue(PREFERENCE_CLIENT_ASYNC, clientAsync);
+	}
+	
 	public String getClientDatabinding() {
 		return getValueAsString(PREFERENCE_CLIENT_DATABINDING);
 	}
-
+	
 	public void setClientDatabinding(String clientDatabinding) {
 		setValue(PREFERENCE_CLIENT_DATABINDING, clientDatabinding);
+	}
+	
+	public boolean isClientTestCase() {
+		return getValueAsBoolean(PREFERENCE_CLIENT_TESTCASE);
+	}
+	
+	public void setClientTestCase(boolean clientTestCase) {
+		setValue(PREFERENCE_CLIENT_TESTCASE, clientTestCase);
+	}
+
+	public boolean isClientGenerateAll() {
+		return getValueAsBoolean(PREFERENCE_CLIENT_GENERATE_ALL);
+	}
+
+	public void setClientGenerateAll(boolean clientGenrateAll) {
+		setValue(PREFERENCE_CLIENT_GENERATE_ALL, clientGenrateAll);
+	}
+
+	
+	//AAR Options
+	
+	public String getAarExtention(){
+		return getValueAsString(PREFERENCE_AAR_EXTENTION);
+	}
+	
+	public void setAarExtention(String aarExtention){
+		setValue(PREFERENCE_AAR_EXTENTION, aarExtention);
 	}
 	
 	
