@@ -2,7 +2,7 @@ datadir=$(prefix)/resources
 logsdir=$(prefix)/logs
 docsdir=$(prefix)/docs
 confdir=$(prefix)
-SUBDIRS = src 
+SUBDIRS = src samples
 include_HEADERS=$(top_builddir)/src/*.h
 data_DATA= README \
 	INSTALL CREDITS COPYING NEWS 

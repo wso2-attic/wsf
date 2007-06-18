@@ -137,7 +137,9 @@ AC_SUBST(SAMPLES)
 AM_CONDITIONAL(AXIS2_SSL_ENABLED, test x$ssl_enabled = xtrue)
 
 AC_CONFIG_FILES([Makefile \
-    src/Makefile
+    src/Makefile \
+    samples/Makefile \
+    samples/data/Makefile
     ])
     
 AC_OUTPUT
