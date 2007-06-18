@@ -164,6 +164,27 @@ AC_ARG_ENABLE(sandesha, [  --enable-sandesha    build sandesha. default=yes],
 AC_SUBST(SANDESHA_DIR)
 AC_CONFIG_SUBDIRS(${SANDESHA_DIR})
 
+AC_MSG_CHECKING(whether to build savan)
+AC_ARG_ENABLE(savan, [  --enable-savan    build savan. default=yes],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    SAVAN_DIR=""
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    SAVAN_DIR="savanc"
+
+    ;;
+  esac ],
+  AC_MSG_RESULT(yes)
+  SAVAN_DIR="savanc"
+)
+
+AC_SUBST(SAVAN_DIR)
+AC_CONFIG_SUBDIRS(${SAVAN_DIR})
+
+
 dnl Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS([stdio.h stdlib.h string.h])
