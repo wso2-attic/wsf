@@ -41,6 +41,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.wso2.wsf.ide.core.context.WSASEmitterContext;
+import org.wso2.wsf.ide.core.context.WSASEmitterDefaults;
 import org.wso2.wsf.ide.core.plugin.WebServiceWSASCorePlugin;
 import org.wso2.wsf.ide.core.plugin.data.ServerModel;
 import org.wso2.wsf.ide.core.plugin.messages.WSASCoreUIMessages;
@@ -61,8 +62,15 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 	private String statusBanner = null;
 	WSASEmitterContext context;
 	Combo serviceDatabindingCombo;
+	Button generateServerSideInterfaceCheckBoxButton;
+	Button generateAllCheckBoxButton;
 	Combo clientDatabindingCombo;
+	Button syncAndAsyncRadioButton;
+	Button syncOnlyRadioButton;
+	Button asyncOnlyRadioButton;
 	Combo aarExtensionCombo;
+	Button clientGenerateAllCheckBoxButton;
+	Button clientTestCaseCheckBoxButton;
 
 	  
 	protected Control createContents(Composite superparent) {
@@ -214,7 +222,7 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 	    });
 		
 		//the server side interface option
-		final Button generateServerSideInterfaceCheckBoxButton = 
+		generateServerSideInterfaceCheckBoxButton = 
 							new Button(codegenGroup, SWT.CHECK);
 		generateServerSideInterfaceCheckBoxButton.setText(
 				WSASCoreUIMessages.LABEL_GENERATE_SERVERSIDE_INTERFACE);
@@ -233,7 +241,7 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 	    generateServerSideInterfaceCheckBoxButton.setLayoutData(gd);
 	    
 		// generate all
-		final Button generateAllCheckBoxButton = new Button(codegenGroup, SWT.CHECK);
+	    generateAllCheckBoxButton = new Button(codegenGroup, SWT.CHECK);
 		generateAllCheckBoxButton.setSelection(context.isServiceGenerateAll());
 		generateAllCheckBoxButton.setText(WSASCoreUIMessages.LABEL_GENERATE_ALL);
 		generateAllCheckBoxButton.addSelectionListener(new SelectionListener() {
@@ -269,7 +277,7 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		clientLabel.setText(WSASCoreUIMessages.LABEL_CLIENT_SIDE);
 		
 		//client side buttons
-		final Button syncAndAsyncRadioButton = new Button(codegenGroup, SWT.RADIO);
+		syncAndAsyncRadioButton = new Button(codegenGroup, SWT.RADIO);
 		syncAndAsyncRadioButton.setText(WSASCoreUIMessages.LABEL_SYNC_AND_ASYNC);
 		syncAndAsyncRadioButton.setVisible(true);
 		syncAndAsyncRadioButton.setSelection(
@@ -287,7 +295,7 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 	    // Skip a column
 	    new Label( codegenGroup, SWT.NONE );
 	    
-		final Button syncOnlyRadioButton = new Button(codegenGroup, SWT.RADIO);
+	    syncOnlyRadioButton = new Button(codegenGroup, SWT.RADIO);
 		syncOnlyRadioButton.setText(WSASCoreUIMessages.LABEL_SYNC);
 		syncOnlyRadioButton.setSelection(context.isSync() && !context.isAsync());
 		syncOnlyRadioButton.addSelectionListener(new SelectionListener() {
@@ -301,7 +309,7 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 	    // Skip a column
 	    new Label( codegenGroup, SWT.NONE );
 	    
-		final Button asyncOnlyRadioButton = new Button(codegenGroup, SWT.RADIO);
+	    asyncOnlyRadioButton = new Button(codegenGroup, SWT.RADIO);
 		asyncOnlyRadioButton.setText(WSASCoreUIMessages.LABEL_ASYNC);
 		asyncOnlyRadioButton.setSelection(context.isAsync() && !context.isSync());
 		asyncOnlyRadioButton.addSelectionListener(new SelectionListener() {
@@ -330,7 +338,7 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 	    });
 		
 		// generate test case option
-		final Button clientTestCaseCheckBoxButton = new Button(codegenGroup, SWT.CHECK);
+	    clientTestCaseCheckBoxButton = new Button(codegenGroup, SWT.CHECK);
 		clientTestCaseCheckBoxButton.setText(WSASCoreUIMessages.LABEL_GENERATE_TESTCASE_CAPTION);
 		clientTestCaseCheckBoxButton.setSelection(context.isClientTestCase());
 		clientTestCaseCheckBoxButton.addSelectionListener(new SelectionListener() {
@@ -346,7 +354,7 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 	    clientTestCaseCheckBoxButton.setLayoutData(gd);
 
 		// generate all
-		final Button clientGenerateAllCheckBoxButton = new Button(codegenGroup, SWT.CHECK);
+	    clientGenerateAllCheckBoxButton = new Button(codegenGroup, SWT.CHECK);
 		clientGenerateAllCheckBoxButton.setSelection(context.isClientTestCase());
 		clientGenerateAllCheckBoxButton.setText(WSASCoreUIMessages.LABEL_GENERATE_ALL);
 		clientGenerateAllCheckBoxButton.addSelectionListener(new SelectionListener() {
@@ -464,5 +472,48 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 			return false;
 		}
 	}
+
+	protected void performApply() {
+		super.performApply();
+	}
+
+	public boolean performCancel() {
+		return super.performCancel();
+	}
+
+  /**
+   * Does anything necessary because the default button has been pressed.
+   */
+	protected void performDefaults() {
+		super.performDefaults();
+		initializeDefaults();
+	}
+
+	public boolean performOk() {
+		return super.performOk();
+	}
+	
+	  /**
+	   * Initializes states of the controls using default values
+	   * in the preference store.
+	   */
+	  private void initializeDefaults() {
+		serviceDatabindingCombo.select(0);
+		generateAllCheckBoxButton.setSelection(WSASEmitterDefaults.isServiceGenerateAll());
+		generateServerSideInterfaceCheckBoxButton.setSelection(
+									WSASEmitterDefaults.isServiceInterfaceSkeleton());
+		syncAndAsyncRadioButton.setSelection(
+		        ((WSASEmitterDefaults.isClientSync() || WSASEmitterDefaults.isClientAsync())==false)
+		        ?true
+		        :(WSASEmitterDefaults.isClientSync()) && WSASEmitterDefaults.isClientAsync());
+		syncOnlyRadioButton.setSelection(
+				WSASEmitterDefaults.isClientSync() && !WSASEmitterDefaults.isClientAsync());
+		asyncOnlyRadioButton.setSelection(
+				WSASEmitterDefaults.isClientAsync() && !WSASEmitterDefaults.isClientSync());
+		clientTestCaseCheckBoxButton.setSelection(WSASEmitterDefaults.isClientTestCase());
+		clientGenerateAllCheckBoxButton.setSelection(WSASEmitterDefaults.isClientTestCase());
+		aarExtensionCombo.select(0);
+	  }
+	
 
 }
