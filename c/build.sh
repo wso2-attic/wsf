@@ -13,7 +13,7 @@ cp build/sandesha2c/configure.ac sandesha2c
 cp build/axis2c/src/core/engine/Makefile.am axis2c/src/core/engine/
 cp build/axis2c/src/core/transport/Makefile.am axis2c/src/core/transport/Makefile.am
 cp build/neethi/configure.ac axis2c/neethi
-cp build/neethi/Makefile.am axis2c/neethi
+cp build/neethi/src/Makefile.am axis2c/neethi/src
 
 ./autogen.sh
 ./configure --prefix=`pwd`/deploy --enable-openssl=yes --enable-xmpp=no --with-axis2=`pwd`/axis2c/include --enable-sandesha=yes --enable-rampart=yes --enable-wsclient=yes
