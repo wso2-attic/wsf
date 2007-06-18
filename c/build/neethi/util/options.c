@@ -83,7 +83,7 @@ neethi_options_create(const axutil_env_t *env)
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
     }
-    options->include_timestamp = AXIS2_TRUE;
+    options->include_timestamp = AXIS2_FALSE;
     options->is_username_token = AXIS2_FALSE;
     options->token_protection = AXIS2_FALSE;
     options->signature_protection = AXIS2_FALSE;
