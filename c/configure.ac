@@ -120,8 +120,10 @@ AC_ARG_ENABLE(rampart, [  --enable-rampart    build rampart. default=yes],
   esac ],
   AC_MSG_RESULT(yes)
   RAMPART_DIR="rampartc"
-  AC_CONFIG_SUBDIRS(rampartc)
 )
+
+AC_SUBST(RAMPART_DIR)
+AC_CONFIG_SUBDIRS(${RAMPART_DIR})
 
 AC_MSG_CHECKING(whether to build wsclient)
 AC_ARG_ENABLE(wsclient, [  --enable-wsclient    build wsclient. default=yes],
@@ -138,9 +140,10 @@ AC_ARG_ENABLE(wsclient, [  --enable-wsclient    build wsclient. default=yes],
   esac ],
   AC_MSG_RESULT(yes)
   WSCLIENT_DIR="wsclient"
-  AC_CONFIG_SUBDIRS(wsclient)
 )
 
+AC_SUBST(WSCLIENT_DIR)
+AC_CONFIG_SUBDIRS(${WSCLIENT_DIR})
 AC_MSG_CHECKING(whether to build sandesha)
 AC_ARG_ENABLE(sandesha, [  --enable-sandesha    build sandesha. default=yes],
 [ case "${enableval}" in
@@ -156,9 +159,10 @@ AC_ARG_ENABLE(sandesha, [  --enable-sandesha    build sandesha. default=yes],
   esac ],
   AC_MSG_RESULT(yes)
   SANDESHA_DIR="sandesha2c"
-  AC_CONFIG_SUBDIRS(sandesha2c)
 )
 
+AC_SUBST(SANDESHA_DIR)
+AC_CONFIG_SUBDIRS(${SANDESHA_DIR})
 
 dnl Checks for header files.
 AC_HEADER_STDC
@@ -169,16 +173,13 @@ AC_CHECK_HEADERS([linux/if.h],[],[],
 ])
 
 dnl Checks for typedefs, structures, and compiler characteristics.
-AC_C_CONST
+dnl AC_C_CONST
 
 dnl Checks for library functions.
-AC_FUNC_MALLOC
-AC_FUNC_REALLOC
+dnl AC_FUNC_MALLOC
+dnl AC_FUNC_REALLOC
 #AC_CHECK_FUNCS([memmove])
 
-AC_SUBST(RAMPART_DIR)
-AC_SUBST(WSCLIENT_DIR)
-AC_SUBST(SANDESHA_DIR)
 
 AC_CONFIG_FILES([Makefile 
     ])
