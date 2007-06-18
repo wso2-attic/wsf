@@ -12,7 +12,7 @@ data_DATA= samples/server/axis2.xml README \
 	INSTALL CREDITS COPYING NEWS NOTICE 
 
 logs_DATA=
-docs_DATA=xdocs/*
+#dnl docs_DATA=xdocs/*
 EXTRA_DIST = build.sh autogen.sh CREDITS LICENSE build axis2c_build.sh xdocs guththila tools AUTHORS NOTICE samples
 
 dist-hook:
@@ -37,4 +37,5 @@ bindist: $(bin_PROGRAMS)
 	tar -cf - axis2c-bin-${PACKAGE_VERSION}-linux | gzip -c > axis2c-bin-${PACKAGE_VERSION}-linux.tar.gz
 	rm -rf axis2c-bin-${PACKAGE_VERSION}-linux
 
-
+install-data-hook: 
+	cp -r xdocs/* $(docsdir)
