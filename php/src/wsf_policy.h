@@ -79,6 +79,7 @@
 #define WS_RECEIVER_CERTIFICATE_FORMAT "receiverCertificateFormat"
 #define WS_INFLOW_SECURITY_POLICY  "InflowRampartContext"
 #define WS_OUTFLOW_SECURITY_POLICY "OutflowRampartContext"
+#define WS_RAMPART_CONFIGURATION "RampartConfiguration"
 #define WS_DIGEST "Digest"
 #define WS_PLAINTEXT "plainText"
 #define WS_PASSWORD_CALL_BACK "password_callback"
