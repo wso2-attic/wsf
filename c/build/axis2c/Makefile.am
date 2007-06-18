@@ -38,4 +38,4 @@ bindist: $(bin_PROGRAMS)
 	rm -rf axis2c-bin-${PACKAGE_VERSION}-linux
 
 install-data-hook: 
-	cp -r xdocs/* $(docsdir)
+	cp -rf xdocs/* $(docsdir)

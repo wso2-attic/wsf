@@ -10,6 +10,7 @@ cp build/axis2c/configure.ac axis2c
 cp build/axis2c/Makefile.am axis2c
 cp build/rampartc/Makefile.am rampartc
 cp build/sandesha2c/configure.ac sandesha2c
+cp build/sandesha2c/Makefile.am sandesha2c
 cp build/axis2c/src/core/engine/Makefile.am axis2c/src/core/engine/
 cp build/axis2c/src/core/transport/Makefile.am axis2c/src/core/transport/Makefile.am
 cp build/neethi/configure.ac axis2c/neethi

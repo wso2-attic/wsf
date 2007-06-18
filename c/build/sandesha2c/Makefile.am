@@ -15,4 +15,4 @@ include_HEADERS= \
 data_DATA = LICENSE config/module.xml
 
 install-data-hook: 
-	cp -r xdocs/* $(docsdir)
+	cp -rf xdocs/* $(docsdir)

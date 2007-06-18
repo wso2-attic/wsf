@@ -12,4 +12,4 @@ check:
 	./rampart-tests.sh
 
 install-data-hook: 
-	cp -r xdocs/* $(docsdir)
+	cp -rf xdocs/* $(docsdir)
