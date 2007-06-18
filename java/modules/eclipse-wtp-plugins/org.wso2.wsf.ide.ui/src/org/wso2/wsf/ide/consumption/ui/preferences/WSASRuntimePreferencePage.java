@@ -312,8 +312,7 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
-	    // Skip a column
-	    new Label( codegenGroup, SWT.NONE );
+
 	    
 		//Data binding
 		Label clientDatabindingLabel = new Label( codegenGroup, SWT.NONE );
@@ -333,7 +332,7 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		// generate test case option
 		final Button clientTestCaseCheckBoxButton = new Button(codegenGroup, SWT.CHECK);
 		clientTestCaseCheckBoxButton.setText(WSASCoreUIMessages.LABEL_GENERATE_TESTCASE_CAPTION);
-		clientTestCaseCheckBoxButton.setSelection(ServerModel.isClientTestcase());
+		clientTestCaseCheckBoxButton.setSelection(context.isClientTestCase());
 		clientTestCaseCheckBoxButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 	            context.setClientDatabinding(clientDatabindingCombo

@@ -50,6 +50,8 @@ import org.eclipse.wst.command.internal.env.ui.widgets.WidgetDataEvents;
 import org.wso2.wsf.ide.consumption.core.data.DataModel;
 import org.wso2.wsf.ide.consumption.core.messages.WSASConsumptionUIMessages;
 import org.wso2.wsf.ide.consumption.core.utils.WSDLPropertyReader;
+import org.wso2.wsf.ide.core.context.WSASEmitterContext;
+import org.wso2.wsf.ide.core.plugin.WebServiceWSASCorePlugin;
 import org.wso2.wsf.ide.core.plugin.data.ServerModel;
 import org.wso2.wsf.ide.core.utils.ClassLoadingUtil;
 
@@ -81,11 +83,12 @@ public class WSASProxyWidget extends SimpleWidgetDataContributor {
 	
 	private WSDLPropertyReader reader;
 	private List serviceQNameList = null;
+	WSASEmitterContext context;
 
 
 	public WidgetDataEvents addControls( Composite parent, Listener statusListener )
 	{
-		
+		context = WebServiceWSASCorePlugin.getDefault().getWSASEmitterContext();
 		Composite  mainComp = new Composite( parent, SWT.NONE );
 		GridLayout layout   = new GridLayout();
 		mainComp.setLayout(layout);
@@ -181,9 +184,9 @@ public class WSASProxyWidget extends SimpleWidgetDataContributor {
 		syncAndAsyncRadioButton.setText(WSASConsumptionUIMessages.LABEL_SYNC_AND_ASYNC);
 		syncAndAsyncRadioButton.setVisible(true);
 		syncAndAsyncRadioButton.setSelection(
-				((ServerModel.isAsync() || ServerModel.isSync())==false)
+				((context.isAsync() || context.isSync())==false)
 				?true
-				:(ServerModel.isAsync() && ServerModel.isSync()));
+				:(context.isAsync() && context.isSync()));
 		syncAndAsyncRadioButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				//Because default setting in Axis2 to be both false in thie case
@@ -201,7 +204,7 @@ public class WSASProxyWidget extends SimpleWidgetDataContributor {
 		syncOnlyRadioButton = new Button(mainComp, SWT.RADIO);
 		syncOnlyRadioButton.setLayoutData(gd);
 		syncOnlyRadioButton.setText(WSASConsumptionUIMessages.LABEL_SYNC);
-		syncOnlyRadioButton.setSelection(ServerModel.isSync() && !ServerModel.isAsync());
+		syncOnlyRadioButton.setSelection(context.isSync() && !context.isAsync());
 		syncOnlyRadioButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				model.setSync(syncOnlyRadioButton.getSelection());
@@ -217,7 +220,7 @@ public class WSASProxyWidget extends SimpleWidgetDataContributor {
 		asyncOnlyRadioButton.setLayoutData(gd);
 		asyncOnlyRadioButton
 				.setText(WSASConsumptionUIMessages.LABEL_ASYNC);
-		asyncOnlyRadioButton.setSelection(ServerModel.isAsync() && !ServerModel.isSync());
+		asyncOnlyRadioButton.setSelection(context.isAsync() && !context.isSync());
 		asyncOnlyRadioButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				model.setASync(asyncOnlyRadioButton.getSelection());
@@ -228,8 +231,8 @@ public class WSASProxyWidget extends SimpleWidgetDataContributor {
 		});
 		
 		//Set the sync async to default 
-		model.setSync(ServerModel.isSync());
-		model.setASync(ServerModel.isAsync());
+		model.setSync(context.isSync());
+		model.setASync(context.isAsync());
 		
 		//filling label 
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -243,8 +246,8 @@ public class WSASProxyWidget extends SimpleWidgetDataContributor {
 		testCaseCheckBoxButton = new Button(mainComp, SWT.CHECK);
 		testCaseCheckBoxButton.setLayoutData(gd);
 		testCaseCheckBoxButton.setText(WSASConsumptionUIMessages.LABEL_GENERATE_TESTCASE_CAPTION);
-		testCaseCheckBoxButton.setSelection(ServerModel.isClientTestcase());
-		model.setTestCaseCheck(ServerModel.isClientTestcase());
+		testCaseCheckBoxButton.setSelection(context.isClientTestCase());
+		model.setTestCaseCheck(context.isClientTestCase());
 		testCaseCheckBoxButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				model.setTestCaseCheck(testCaseCheckBoxButton.getSelection());
@@ -259,7 +262,7 @@ public class WSASProxyWidget extends SimpleWidgetDataContributor {
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 3;
 		generateAllCheckBoxButton.setLayoutData(gd);
-		generateAllCheckBoxButton.setSelection(ServerModel.isClientGenerateAll());
+		generateAllCheckBoxButton.setSelection(context.isClientGenerateAll());
 		generateAllCheckBoxButton.setText(WSASConsumptionUIMessages.LABEL_GENERATE_ALL);
 		generateAllCheckBoxButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {

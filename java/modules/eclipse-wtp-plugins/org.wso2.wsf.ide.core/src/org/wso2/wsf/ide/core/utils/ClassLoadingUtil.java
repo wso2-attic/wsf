@@ -101,12 +101,15 @@ public class ClassLoadingUtil {
 	public static void visitAllFiles(File dir) {
 		if(!dir.toString().endsWith(".txt")){
 			if (dir.isDirectory()) {
-
-				String[] children = dir.list();
-				for (int i=0; i<children.length; i++) {
-					visitAllFiles(new File(dir, children[i]));
+				if(dir.getName().toString().equals("tomcat")){
+					//skip
 				}
-
+				else{
+					String[] children = dir.list();
+					for (int i=0; i<children.length; i++) {
+						visitAllFiles(new File(dir, children[i]));
+					}
+				}
 			} else {
 				wsasClassPath[libCount]=dir.getAbsolutePath();
 				libCount+=1;

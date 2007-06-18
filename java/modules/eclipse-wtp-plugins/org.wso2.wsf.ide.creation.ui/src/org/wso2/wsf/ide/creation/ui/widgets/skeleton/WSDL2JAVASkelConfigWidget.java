@@ -47,7 +47,8 @@ import org.eclipse.wst.command.internal.env.core.common.StatusUtils;
 import org.eclipse.wst.command.internal.env.ui.widgets.SimpleWidgetDataContributor;
 import org.eclipse.wst.command.internal.env.ui.widgets.WidgetDataEvents;
 import org.wso2.wsf.ide.consumption.core.utils.WSDLPropertyReader;
-import org.wso2.wsf.ide.core.plugin.data.ServerModel;
+import org.wso2.wsf.ide.core.context.WSASEmitterContext;
+import org.wso2.wsf.ide.core.plugin.WebServiceWSASCorePlugin;
 import org.wso2.wsf.ide.core.utils.ClassLoadingUtil;
 import org.wso2.wsf.ide.creation.core.data.DataModel;
 import org.wso2.wsf.ide.creation.core.messages.WSASCreationUIMessages;
@@ -76,8 +77,11 @@ public class WSDL2JAVASkelConfigWidget extends SimpleWidgetDataContributor
 	//Checkbox to enable the generation of test case classes 
 	// for the generated implementation of the webservice.
 	Label      label, fillLabel, fillLabel1, fillLabel2, fillLabel3, fillLabel4, fillLabel5, fillLabel6;
+	WSASEmitterContext context;
+
 
 	public WSDL2JAVASkelConfigWidget( DataModel model )	{
+		context = WebServiceWSASCorePlugin.getDefault().getWSASEmitterContext();
 		this.model = model;  
 	}
 
@@ -175,23 +179,6 @@ public class WSDL2JAVASkelConfigWidget extends SimpleWidgetDataContributor
 		gd.horizontalSpan = 3;
 		fillLabel4 = new Label(mainComp, SWT.HORIZONTAL | SWT.NULL);
 
-		// generate test case option
-		gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalSpan = 3;
-		testCaseCheckBoxButton = new Button(mainComp, SWT.CHECK);
-		testCaseCheckBoxButton.setLayoutData(gd);
-		testCaseCheckBoxButton
-		.setText(WSASCreationUIMessages.LABEL_GENERATE_TESTCASE_CAPTION);
-		testCaseCheckBoxButton.setSelection(ServerModel.isServiceTestcase());
-		model.setTestCaseCheck(ServerModel.isServiceTestcase());
-		testCaseCheckBoxButton.addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent e) {
-				model.setTestCaseCheck(testCaseCheckBoxButton.getSelection());
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
 
 		model.setServerXMLCheck(true);
 
@@ -201,10 +188,10 @@ public class WSDL2JAVASkelConfigWidget extends SimpleWidgetDataContributor
 		gd.horizontalSpan = 3;
 		generateServerSideInterfaceCheckBoxButton.setLayoutData(gd);
 		generateServerSideInterfaceCheckBoxButton
-							.setSelection(ServerModel.isServiceInterfaceSkeleton());
+						.setSelection(context.isServiceInterfaceSkeleton());
 		generateServerSideInterfaceCheckBoxButton.setText(WSASCreationUIMessages.
-														  LABEL_GENERATE_SERVERSIDE_INTERFACE);
-		model.setGenerateAllCheck(ServerModel.isServiceInterfaceSkeleton());
+									  LABEL_GENERATE_SERVERSIDE_INTERFACE);
+		model.setGenerateAllCheck(context.isServiceInterfaceSkeleton());
 		generateServerSideInterfaceCheckBoxButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				model.setGenerateServerSideInterface(
@@ -219,7 +206,7 @@ public class WSDL2JAVASkelConfigWidget extends SimpleWidgetDataContributor
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 3;
 		generateAllCheckBoxButton.setLayoutData(gd);
-		generateAllCheckBoxButton.setSelection(ServerModel.isServiceGenerateAll());
+		generateAllCheckBoxButton.setSelection(context.isServiceGenerateAll());
 		generateAllCheckBoxButton.setText(WSASCreationUIMessages.LABEL_GENERATE_ALL);
 		generateAllCheckBoxButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
