@@ -487,6 +487,7 @@ PHP_MINIT_FUNCTION(wsf)
     le_typemap = register_list_destructors(delete_hashtable, NULL);
     
     le_service = register_list_destructors(delete_service, NULL);
+   
     axiom_xml_reader_init();
 
     return SUCCESS;
@@ -1388,33 +1389,33 @@ PHP_METHOD(ws_service, __construct)
         }
     }
 
-	service = create_soap_service(ht_options TSRMLS_CC);
+    if(wsdl){
+    	service = create_soap_service(ht_options TSRMLS_CC);
     
-    service->version = soap_version;	
-    service->type = SOAP_FUNCTIONS;
-    service->soap_functions.functions_all = FALSE;
-    service->soap_functions.ft = emalloc(sizeof(HashTable));
-    zend_hash_init(service->soap_functions.ft, 0, NULL, ZVAL_PTR_DTOR, 0);
+        service->version = soap_version;	
+        service->type = SOAP_FUNCTIONS;
+        service->soap_functions.functions_all = FALSE;
+        service->soap_functions.ft = emalloc(sizeof(HashTable));
+        zend_hash_init(service->soap_functions.ft, 0, NULL, ZVAL_PTR_DTOR, 0);
 
-    if (wsdl) {
-        service->sdl = get_sdl(this_ptr, wsdl, cache_wsdl TSRMLS_CC);
-        if (service->uri == NULL) {
-            if (service->sdl->target_ns) {
-                service->uri = estrdup(service->sdl->target_ns);
-            } else {
-                /*FIXME*/
-                service->uri = estrdup("http://unknown-uri/");
+            service->sdl = get_sdl(this_ptr, wsdl, cache_wsdl TSRMLS_CC);
+            if (service->uri == NULL) {
+                if (service->sdl->target_ns) {
+                    service->uri = estrdup(service->sdl->target_ns);
+                } else {
+                    /*FIXME*/
+                    service->uri = estrdup("http://unknown-uri/");
+                }
             }
-        }
-    }
     
     /*
     if (typemap_ht) {
         service->typemap = soap_create_typemap(service->sdl, typemap_ht TSRMLS_CC);
     }
    */ 
-    ret = zend_list_insert(service, le_service);
-    add_property_resource(this_ptr, "service", ret);
+        ret = zend_list_insert(service, le_service);
+        add_property_resource(this_ptr, "service", ret);
+    }
 
 }
 /* }}} */
