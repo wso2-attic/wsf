@@ -6,12 +6,8 @@ SUBDIRS = src
 
 docs_DATA=
 
-include_HEADERS= \
-			include/sandesha2_client_constants.h \
-			include/sandesha2_constants.h \
-			include/sandesha2_client.h \
-			include/sandesha2_seq_report.h \
-			include/sandesha2_report.h
+include_HEADERS= include/*.h
+
 data_DATA = LICENSE config/module.xml
 
 install-data-hook: 
