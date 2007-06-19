@@ -16,12 +16,14 @@ wsclient_LDADD   = $(LDFLAGS) \
 					../../axis2c/src/core/transport/http/sender/libaxis2_http_sender.la \
 					../../axis2c/src/core/transport/http/receiver/libaxis2_http_receiver.la \
 				     ../../rampartc/src/core/libmod_rampart.la\
-                    $(GUTHTHILA_LIBS) \
+					../../axis2c/neethi/src/util/libneethi_util.la \
+					$(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
 INCLUDES =	-I ../../axis2c/util/include \
             -I ../../axis2c/include \
             -I ../../axis2c/axiom/include \
             -I ../../axis2c/neethi/include \
+			-I ../../axis2c/neethi/src/util \
             -I ../../rampartc/include 
 

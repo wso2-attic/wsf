@@ -33,6 +33,7 @@
 #include <axiom.h>
 #include <rampart_context.h>
 #include "rampart_constants.h"
+#include <neethi_options.h>
 
 #include "constants.h"
 #include "util.h"
@@ -71,6 +72,8 @@ static int is_output_http_headers = 0;
 static axis2_char_t *output_filename;
 static axis2_char_t *server_cert;
 static int is_server_cert = 0;
+static neethi_options_t *neethi_options;
+static axis2_bool_t enable_rampart;
 
 extern wsclient_cmd_options_t cmd_options_data[];
 extern int array_size;
@@ -110,11 +113,13 @@ wsclient_svc_option (axis2_svc_client_t *svc_client,
     axutil_property_t *rest_property;
 
 	wsclient_options_t *wsclient_options = NULL;
+    neethi_options_t *neethi_options = NULL;
 	int size;
 	int i;
 	int ii;
 	size = axutil_array_list_size (array_list, env);
     options = axis2_options_create(env);
+    neethi_options = neethi_options_create(env);
 	header_list = axutil_array_list_create (env, 2);
 	for (i = 0; i < size; i++)
 	{
@@ -146,6 +151,7 @@ wsclient_svc_option (axis2_svc_client_t *svc_client,
 			{
 				switch (ii)
 				{
+
 					case GET:
 					{
 						is_get_enabled = 1;
@@ -314,7 +320,9 @@ wsclient_svc_option (axis2_svc_client_t *svc_client,
 					case USER:
 					{
 						is_soap_enabled = 1;
-						is_username = 1;
+                        /*is_username = 1;*/
+                        enable_rampart = AXIS2_TRUE;
+                        neethi_options_set_is_username_token(neethi_options, env, AXIS2_TRUE);
 						username_value = (char *)wsclient_options->value;
 					}
 					break;
@@ -329,7 +337,9 @@ wsclient_svc_option (axis2_svc_client_t *svc_client,
 					break;
 					case TIMESTAMP:
 					{
-						is_user_tok_timestamp = 1;
+						/*is_user_tok_timestamp = 1;*/
+                        enable_rampart = AXIS2_TRUE;
+                        neethi_options_set_include_timestamp(neethi_options, env, AXIS2_TRUE);
 						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 										"[wsclient] security timestamp block ");
 					}
@@ -544,6 +554,7 @@ wsclient_svc_option (axis2_svc_client_t *svc_client,
 	    axis2_options_set_property (options, env, "dump", dump_property);
 	}
 
+/*
 	if (is_username && is_password)
 	{
         axiom_node_t *root_om_node = NULL;
@@ -631,6 +642,7 @@ wsclient_svc_option (axis2_svc_client_t *svc_client,
         outflow_param = axutil_param_create(env, WS_OUTFLOW_SECURITY_POLICY, (void *)out_ctx);
         axis2_conf_add_param(conf, env, outflow_param);
 	}
+*/
 	return options;
 }
 
@@ -727,12 +739,32 @@ wsclient_stub_invoke(
 							"[wsclient] addressing module engaged");
 		}
 
-		if (is_username && is_password)
+		/*if (is_username && is_password)*/
+        if(enable_rampart)
 		{
-			axis2_svc_client_engage_module (svc_client, env, "rampart");
+		    axiom_node_t *root_om_node = NULL;
+
+        	axis2_svc_client_engage_module (svc_client, env, "rampart");
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 							"[wsclient] rampart module engaged");
-		}
+            
+            root_om_node = neethi_options_get_root_node(neethi_options, env);
+
+            if(!root_om_node)
+            {
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                           "[wsclient] Policy Creation failed");
+                return WSCLIENT_FAILURE;
+            }
+
+            status = axis2_svc_client_set_policy_from_om(svc_client, env, root_om_node);            
+            if(status != AXIS2_SUCCESS)
+            {
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                           "[wsclient] Policy Creation failed");
+                return WSCLIENT_FAILURE;
+            }
+        }
 
 		if (is_mtom_enabled)
 		{
