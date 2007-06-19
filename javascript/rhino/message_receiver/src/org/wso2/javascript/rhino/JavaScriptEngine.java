@@ -202,6 +202,12 @@ public class JavaScriptEngine extends ImporterTopLevel {
                     OMElement element = fac.createOMElement("return",null);
                     element.setText((String) result);
                     result = element;
+                } else if (result instanceof Boolean) {
+                    OMFactory fac = OMAbstractFactory.getOMFactory();
+                    OMElement element = fac.createOMElement("return",null);
+                    Boolean boolResult = (Boolean) result;
+                    element.setText(boolResult.toString());
+                    result = element;
                 } else {
                     return null;
                 }

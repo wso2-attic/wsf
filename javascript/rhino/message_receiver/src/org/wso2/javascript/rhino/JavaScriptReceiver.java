@@ -42,8 +42,7 @@ import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.description.AxisMessage;
 import org.apache.axis2.engine.MessageReceiver;
-import org.apache.axis2.i18n.Messages;
-import org.apache.axis2.receivers.AbstractInOutSyncMessageReceiver;
+import org.apache.axis2.receivers.AbstractInOutMessageReceiver;
 import org.apache.ws.commons.schema.XmlSchemaElement;
 import org.apache.ws.commons.schema.XmlSchemaType;
 import org.apache.ws.commons.schema.XmlSchemaComplexType;
@@ -51,7 +50,6 @@ import org.apache.ws.commons.schema.XmlSchemaParticle;
 import org.apache.ws.commons.schema.XmlSchemaSequence;
 import org.apache.ws.commons.schema.constants.Constants;
 import org.mozilla.javascript.Context;
-import org.mozilla.javascript.xmlimpl.XML;
 
 import javax.xml.namespace.QName;
 
@@ -59,7 +57,7 @@ import javax.xml.namespace.QName;
  * Class JavaScriptReceiver implements the AbstractInOutSyncMessageReceiver,
  * which, is the abstract IN-OUT MEP message receiver.
  */
-public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver implements
+public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
         MessageReceiver, JavaScriptEngineConstants {
 
     private String UNSUPPORTED_SCHEMA_TYPE =
@@ -196,18 +194,19 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver impleme
                             while (iterator.hasNext()) {
                                 XmlSchemaElement innerElement = (XmlSchemaElement) iterator.next();
                                 QName qName = innerElement.getSchemaTypeName();
+                                OMElement omElement = fac.createOMElement(innerElement.getName(), fac.createOMNamespace(qName.getNamespaceURI(), prefix));
                                 if (qName == Constants.XSD_ANYTYPE) {
-                                    outElement.addChild(result);
+                                    omElement.addChild(result);
                                 } else {
-                                    OMElement omElement = fac.createOMElement(innerElement.getName(), fac.createOMNamespace(qName.getNamespaceURI(), prefix));
                                     if (result instanceof OMText) {
                                         omElement.addChild(result);
                                     } else {
                                         OMElement element = (OMElement) result;
                                         omElement.setText(element.getText());
                                     }
-                                    outElement.addChild(omElement);
+
                                 }
+                                outElement.addChild(omElement);
                             }
                             body.addChild(outElement);
 
@@ -215,7 +214,9 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver impleme
                             throw new AxisFault("Unsupported schema type in request");
                         }
                     } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANYTYPE){
-                        body.addChild(result);
+                        if (result != null) {
+                            body.addChild(result);
+                        }
                     }
                 } else if (result != null){
                 body.addChild(result);
@@ -263,6 +264,10 @@ public class JavaScriptReceiver extends AbstractInOutSyncMessageReceiver impleme
             Object[] objects = {element};
             Object args = context.newObject(engine, "XML",objects);
             return args;
+        }
+        if (Constants.XSD_BOOLEAN.equals(type)) {
+            String value  = omElement.getText();
+            return Boolean.valueOf(value);
         }
         return omElement.getText();
     }
