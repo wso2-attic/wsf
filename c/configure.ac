@@ -119,7 +119,9 @@ AC_ARG_ENABLE(rampart, [  --enable-rampart    build rampart. default=yes],
 )
 
 AC_SUBST(RAMPART_DIR)
-AC_CONFIG_SUBDIRS(${RAMPART_DIR})
+if test -n ${RAMPART_DIR}; then
+    AC_CONFIG_SUBDIRS(rampartc)
+fi    
 
 AC_MSG_CHECKING(whether to build wsclient)
 AC_ARG_ENABLE(wsclient, [  --enable-wsclient    build wsclient. default=yes],
@@ -139,7 +141,9 @@ AC_ARG_ENABLE(wsclient, [  --enable-wsclient    build wsclient. default=yes],
 )
 
 AC_SUBST(WSCLIENT_DIR)
-AC_CONFIG_SUBDIRS(${WSCLIENT_DIR})
+if test -n ${WSCLIENT_DIR}; then
+    AC_CONFIG_SUBDIRS(wsclient)
+fi
 AC_MSG_CHECKING(whether to build sandesha)
 AC_ARG_ENABLE(sandesha, [  --enable-sandesha    build sandesha. default=yes],
 [ case "${enableval}" in
@@ -158,7 +162,9 @@ AC_ARG_ENABLE(sandesha, [  --enable-sandesha    build sandesha. default=yes],
 )
 
 AC_SUBST(SANDESHA_DIR)
-AC_CONFIG_SUBDIRS(${SANDESHA_DIR})
+if test -n ${SANDESHA_DIR}; then
+    AC_CONFIG_SUBDIRS(sandesha2c)
+fi    
 
 AC_MSG_CHECKING(whether to build savan)
 AC_ARG_ENABLE(savan, [  --enable-savan    build savan. default=yes],
@@ -178,7 +184,9 @@ AC_ARG_ENABLE(savan, [  --enable-savan    build savan. default=yes],
 )
 
 AC_SUBST(SAVAN_DIR)
-AC_CONFIG_SUBDIRS(${SAVAN_DIR})
+if test -n ${SAVAN_DIR}; then
+    AC_CONFIG_SUBDIRS(savanc)
+fi
 
 
 dnl Checks for header files.
