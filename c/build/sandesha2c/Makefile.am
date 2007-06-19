@@ -13,4 +13,4 @@ docs_DATA=
 install-data-hook: 
 	cp -rf xdocs/* $(docsdir)
 
-EXTRA_DIST=LICENSE config xdocs build
+EXTRA_DIST=LICENSE config xdocs build samples
