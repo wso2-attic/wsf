@@ -23,6 +23,9 @@ cp build/wsf_c/sandesha2c/src/polling/Makefile.am wsf_c/sandesha2c/src/polling
 cp build/wsf_c/sandesha2c/src/workers/Makefile.am wsf_c/sandesha2c/src/workers
 cp build/wsf_c/sandesha2c/autogen.sh wsf_c/sandesha2c
 cp build/wsf_c/axis2c/autogen.sh wsf_c/axis2c
+cp wsf_c/build/neethi/src/Makefile.am wsf_c/axis2c/neethi/src
+cp wsf_c/build/neethi/configure.ac wsf_c/axis2c/neethi
+
 
 
 #cp build/wsf_c/axis2c/configure.ac wsf_c/axis2c
