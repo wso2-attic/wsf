@@ -12,5 +12,5 @@ samples: build_samples.sh
 	sh build_samples.sh $(prefix)
 
 
-EXTRA_DIST=samples.sh config build.bat clean.bat dist.sh docs
+EXTRA_DIST=build_samples.sh config build.bat clean.bat dist.sh docs
 
