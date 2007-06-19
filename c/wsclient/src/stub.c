@@ -58,7 +58,6 @@ static int is_username = 0;
 static int is_password = 0;
 static int is_password_file = 0;
 static int is_digest = 0;
-static int is_user_tok_timestamp = 0;
 static int is_xop_in = 0;
 static int is_xop_out = 0;
 static axis2_char_t *password_buffer;
@@ -337,7 +336,6 @@ wsclient_svc_option (axis2_svc_client_t *svc_client,
 					break;
 					case TIMESTAMP:
 					{
-						/*is_user_tok_timestamp = 1;*/
                         enable_rampart = AXIS2_TRUE;
                         neethi_options_set_include_timestamp(neethi_options, env, AXIS2_TRUE);
 						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
