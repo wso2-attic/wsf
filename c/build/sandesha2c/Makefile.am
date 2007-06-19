@@ -12,3 +12,5 @@ data_DATA = LICENSE config/module.xml
 
 install-data-hook: 
 	cp -rf xdocs/* $(docsdir)
+
+EXTRA_DIST=LICENSE config xdocs
