@@ -208,6 +208,12 @@ public class JavaScriptEngine extends ImporterTopLevel {
                     Boolean boolResult = (Boolean) result;
                     element.setText(boolResult.toString());
                     result = element;
+                } else if (result instanceof Double) {
+                    OMFactory fac = OMAbstractFactory.getOMFactory();
+                    OMElement element = fac.createOMElement("return",null);
+                    Double dblResult = (Double) result;
+                    element.setText(dblResult.toString());
+                    result = element;
                 } else {
                     return null;
                 }

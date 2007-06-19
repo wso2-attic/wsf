@@ -269,6 +269,10 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
             String value  = omElement.getText();
             return Boolean.valueOf(value);
         }
+        if (Constants.XSD_DOUBLE.equals(type)) {
+            String value  = omElement.getText();
+            return new Double(value);
+        }
         return omElement.getText();
     }
 
