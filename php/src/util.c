@@ -306,6 +306,7 @@ wsf_svc_info_t* wsf_svc_info_create()
     svc_info->ops_to_actions = NULL;
     svc_info->password_location = NULL;
     svc_info->op_name = NULL;
+    svc_info->ht_opParams = NULL;
     return svc_info;
 }
 

@@ -1179,6 +1179,7 @@ PHP_METHOD(ws_service, __construct)
 			if(zend_hash_find(ht_options, "opParams", sizeof("opParams"),
                               (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY){
 				ht_opParams = Z_ARRVAL_PP(tmp);
+                svc_info->ht_opParams = ht_opParams;
 		        AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_service] setting message operation parameters");
             }
 			if(zend_hash_find(ht_options, "wsdl", sizeof("wsdl"), (void **)&tmp) == SUCCESS 
@@ -1407,7 +1408,6 @@ PHP_METHOD(ws_service, __construct)
                     service->uri = estrdup("http://unknown-uri/");
                 }
             }
-    
     /*
     if (typemap_ht) {
         service->typemap = soap_create_typemap(service->sdl, typemap_ht TSRMLS_CC);
@@ -1416,7 +1416,6 @@ PHP_METHOD(ws_service, __construct)
         ret = zend_list_insert(service, le_service);
         add_property_resource(this_ptr, "service", ret);
     }
-
 }
 /* }}} */
 

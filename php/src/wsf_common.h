@@ -217,6 +217,8 @@ typedef struct wsf_svc_info {
     zval *policy;
     
     zval *security_token;
+
+    HashTable *ht_opParams;
     
     char *password_location;
     
