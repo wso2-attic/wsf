@@ -1,2 +1,2 @@
-SUBDIRS = client handlers msgreceivers subscribers util core
+SUBDIRS = subscribers util client handlers msgreceivers core
 EXTRA_DIST=data
