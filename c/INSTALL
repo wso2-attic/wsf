@@ -4,7 +4,13 @@
 1.1 Using the source release.
 
     The following steps need to be taken to install and run Axis2/C using source 
-    distribution on Linux 
+    distribution on Linux. Build depends on
+
+    a) libssl-dev
+    b) libsqlight3-dev
+    c) libxml2-dev
+    d) pkg-config
+    e) libiksemel-dev (If you enable xmpp)
 
     1. Extract the source tar package to a folder.
     2. Set WSFC_HOME environment variable pointing to the location where you 
