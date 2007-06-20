@@ -2451,4 +2451,10 @@ void delete_service(void *data)
     }
     efree(service);
 }
-
+/*
+axiom_node_t*
+wsf_soap_do_function_call(axutil_env_t *env,
+          wsf_svc_info_t *env,
+          axis2_msg_ctx_t *in_msg_ctx,
+          axis2_msg_ctx_t *out_msg_ctx){}
+*/

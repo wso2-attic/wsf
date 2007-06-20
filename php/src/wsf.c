@@ -896,6 +896,16 @@ PHP_METHOD(ws_client, __construct)
             ret = zend_list_insert(sdl, le_sdl);
             add_property_resource(obj , "sdl", ret); 
         }
+        if (zend_hash_find(ht, "style", sizeof("style"), (void**)&tmp) == SUCCESS &&
+                    Z_TYPE_PP(tmp) == IS_LONG &&
+                    (Z_LVAL_PP(tmp) == SOAP_RPC || Z_LVAL_PP(tmp) == SOAP_DOCUMENT)) {
+                add_property_long(this_ptr, "style", Z_LVAL_PP(tmp));
+        }
+        if (zend_hash_find(ht, "use", sizeof("use"), (void**)&tmp) == SUCCESS &&
+                    Z_TYPE_PP(tmp) == IS_LONG &&
+                    (Z_LVAL_PP(tmp) == SOAP_LITERAL || Z_LVAL_PP(tmp) == SOAP_ENCODED)) {
+                add_property_long(this_ptr, "use", Z_LVAL_PP(tmp));
+        }
     }
 }
 /* }}} */
