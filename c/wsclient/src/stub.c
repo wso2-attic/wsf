@@ -693,7 +693,7 @@ wsclient_stub_invoke(
 	{
 	    address = dest_uri;
 	}
-	else
+else
 	{
 		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 						"[wsclient] destination uri not available");
@@ -741,11 +741,25 @@ wsclient_stub_invoke(
         if(enable_rampart)
 		{
 		    axiom_node_t *root_om_node = NULL;
+            rampart_context_t *rampart_context = NULL;
+            axis2_svc_ctx_t *svc_ctx = NULL;
+            axis2_conf_ctx_t *conf_ctx = NULL;
+            axis2_conf_t *conf = NULL;
+            axutil_param_t *security_param = NULL;
+
+            rampart_context = rampart_context_create(env);
 
         	axis2_svc_client_engage_module (svc_client, env, "rampart");
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 							"[wsclient] rampart module engaged");
+
+            if (!is_action)
+                axis2_options_set_action (options, env, "http://ws.apache.org/axis2/c");
             
+            axis2_svc_client_engage_module(svc_client, env, AXIS2_MODULE_ADDRESSING);
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                            "[wsclient] addressing module engaged");
+
             root_om_node = neethi_options_get_root_node(neethi_options, env);
 
             if(!root_om_node)
@@ -762,6 +776,52 @@ wsclient_stub_invoke(
                            "[wsclient] Policy Creation failed");
                 return WSCLIENT_FAILURE;
             }
+            
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting creating policy node ");
+
+            if (rampart_context_set_user(rampart_context, env,
+                                     (axis2_char_t *)username_value) == AXIS2_SUCCESS)
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting username ");
+
+            if (is_password_file)
+            {
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                            "[wsclient] processing password file");
+                if (username_value)
+                {
+                    password_buffer = wsclient_get_password (env, username_value, password_file);
+                    if (password_buffer)
+                    {
+                        is_password = 1;
+                        is_soap_enabled = 1;
+                    }
+                }
+            }
+
+            if (is_digest)
+            {
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                            "[wsclient] adding digest password property");
+                if(rampart_context_set_password_type(rampart_context, env,
+                                                 (axis2_char_t *)"Digest") == AXIS2_SUCCESS)
+                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting passwordType ");
+            }
+
+            if (password_buffer)
+            {
+                if(rampart_context_set_password(rampart_context, env,
+                                            (axis2_char_t *)password_buffer) == AXIS2_SUCCESS)
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting password ");
+
+            }
+
+            svc_ctx = axis2_svc_client_get_svc_ctx(svc_client, env);
+            conf_ctx = axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
+            conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+
+            security_param = axutil_param_create(env, RAMPART_CONFIGURATION, (void *)rampart_context);
+            axis2_conf_add_param(conf, env, security_param);
+
         }
 
 		if (is_mtom_enabled)
