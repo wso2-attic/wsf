@@ -9,9 +9,10 @@ axis2_xmpp_server_LDADD   =  $(LDFLAGS) \
                             -L$(top_builddir)/src/core/engine \
                             -L$(top_builddir)/src/core/transport/xmpp/sender \
                             -L$(top_builddir)/src/core/transport/xmpp/receiver \
-							$(top_builddir)/axiom/src/om/libaxis2_axiom.la \
-							$(top_builddir)/util/src/libaxutil.la \
-							../../../../../../axiom/src/parser/$(WRAPPER_DIR)/libaxis2_parser.la \
+			$(top_builddir)/axiom/src/om/libaxis2_axiom.la \
+			$(top_builddir)/util/src/libaxutil.la \
+			$(top_builddir)/neethi/src/libneethi.la \
+			../../../../../../axiom/src/parser/$(WRAPPER_DIR)/libaxis2_parser.la \
                             -laxis2_engine \
 							-liksemel \
                             -lpthread \
