@@ -24,35 +24,37 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Iterator;
+
+import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.OMNode;
 import org.apache.axiom.om.OMText;
-import org.apache.axiom.om.OMNamespace;
+import org.apache.axiom.soap.SOAP11Constants;
+import org.apache.axiom.soap.SOAP12Constants;
+import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
-import org.apache.axiom.soap.SOAPBody;
 import org.apache.axis2.AxisFault;
-import org.apache.axis2.wsdl.WSDLConstants;
 import org.apache.axis2.context.MessageContext;
+import org.apache.axis2.description.AxisMessage;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
-import org.apache.axis2.description.AxisMessage;
 import org.apache.axis2.engine.MessageReceiver;
 import org.apache.axis2.receivers.AbstractInOutMessageReceiver;
-import org.apache.ws.commons.schema.XmlSchemaElement;
-import org.apache.ws.commons.schema.XmlSchemaType;
+import org.apache.axis2.wsdl.WSDLConstants;
 import org.apache.ws.commons.schema.XmlSchemaComplexType;
+import org.apache.ws.commons.schema.XmlSchemaElement;
 import org.apache.ws.commons.schema.XmlSchemaParticle;
 import org.apache.ws.commons.schema.XmlSchemaSequence;
+import org.apache.ws.commons.schema.XmlSchemaType;
 import org.apache.ws.commons.schema.constants.Constants;
 import org.mozilla.javascript.Context;
-
-import javax.xml.namespace.QName;
 
 /**
  * Class JavaScriptReceiver implements the AbstractInOutSyncMessageReceiver,
@@ -75,6 +77,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
      */
     public void invokeBusinessLogic(MessageContext inMessage, MessageContext outMessage)
             throws AxisFault {
+        SOAPEnvelope soapEnvelope = inMessage.getEnvelope();
         try {
             // Create JS Engine, Inject HostObjects
             JavaScriptEngine engine = new JavaScriptEngine();
@@ -119,7 +122,6 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
             Reader reader = readJS(inMessage);
             String jsFunctionName = inferJavaScriptFunctionName(inMessage);
             String scripts = getImportScriptsList(inMessage);
-            SOAPEnvelope soapEnvelope = inMessage.getEnvelope();
             ArrayList params = new ArrayList();
             OMNode result = null;
             OMElement payload = soapEnvelope.getBody().getFirstElement();
@@ -161,10 +163,6 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
                 // Get the result by executing the javascript file
                 result = engine.call(jsFunctionName, reader, payload, scripts);
             }
-
-//            if (result == null) {
-//                throw new AxisFault(Messages.getMessage("JavaScriptNoanswer"));
-//            }
 
             // Create the outgoing message
             SOAPFactory fac;
@@ -227,7 +225,13 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
             }
             outMessage.setEnvelope(envelope);
         } catch (Throwable throwable) {
-            throw AxisFault.makeFault(throwable);
+            AxisFault fault= AxisFault.makeFault(throwable);
+            fault.setFaultCode(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(soapEnvelope.getNamespace().getNamespaceURI())
+            ? SOAP12Constants.SOAP_DEFAULT_NAMESPACE_PREFIX + ":"
+            + SOAP12Constants.FAULT_CODE_RECEIVER
+            : SOAP12Constants.SOAP_DEFAULT_NAMESPACE_PREFIX + ":"
+            + SOAP11Constants.FAULT_CODE_RECEIVER);
+            throw fault;
         }
     }
 
