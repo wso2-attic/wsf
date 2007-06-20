@@ -31,6 +31,7 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNode;
 import org.apache.axiom.om.OMText;
+import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPBody;
@@ -182,7 +183,9 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
             String prefix = "ws";
             if (xmlSchemaElement != null) {
                 QName elementQName = xmlSchemaElement.getSchemaTypeName();
-                outElement = fac.createOMElement(xmlSchemaElement.getName(), fac.createOMNamespace(elementQName.getNamespaceURI(), prefix));
+                OMNamespace namespace =
+                        fac.createOMNamespace(elementQName.getNamespaceURI(), prefix);
+                outElement = fac.createOMElement(xmlSchemaElement.getName(), namespace);
                     XmlSchemaType schemaType = xmlSchemaElement.getSchemaType();
                     if (schemaType instanceof XmlSchemaComplexType) {
                         XmlSchemaComplexType complexType = ((XmlSchemaComplexType) schemaType);
@@ -194,7 +197,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
                             while (iterator.hasNext()) {
                                 XmlSchemaElement innerElement = (XmlSchemaElement) iterator.next();
                                 QName qName = innerElement.getSchemaTypeName();
-                                OMElement omElement = fac.createOMElement(innerElement.getName(), fac.createOMNamespace(qName.getNamespaceURI(), prefix));
+                                OMElement omElement = fac.createOMElement(innerElement.getName(), namespace);
                                 if (qName == Constants.XSD_ANYTYPE) {
                                     omElement.addChild(result);
                                 } else {
