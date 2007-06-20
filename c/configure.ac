@@ -25,6 +25,10 @@ if test -d $srcdir/axis2c; then
     AC_CONFIG_SUBDIRS(axis2c)
 fi
 
+if test -d $srcdir/axis2c/tools/tcpmon; then
+    AC_CONFIG_SUBDIRS(axis2c/tools/tcpmon)
+fi
+
 #CFLAGS="$CFLAGS -ansi -Wall -D_LARGEFILE64_SOURCE -Wno-implicit-function-declaration"
 CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 if test "$GCC" = "yes"; then
@@ -63,8 +67,7 @@ AC_ARG_WITH(apache2,
 )
 
 AC_MSG_CHECKING(whether to use openssl)
-AC_ARG_ENABLE(openssl, [  --enable-openssl
-                          enable OpenSSL support in client transport (default=no)],
+AC_ARG_ENABLE(openssl, [  --enable-openssl	enable OpenSSL support in client transport (default=no)],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
@@ -82,8 +85,7 @@ AC_ARG_ENABLE(openssl, [  --enable-openssl
 )
 
 AC_MSG_CHECKING(whether to build xmpp)
-AC_ARG_ENABLE(xmpp, [  --enable-xmpp  
-                          enable xmpp build (default=no)],
+AC_ARG_ENABLE(xmpp, [  --enable-xmpp		enable xmpp build (default=no)],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
@@ -102,7 +104,7 @@ AC_ARG_ENABLE(xmpp, [  --enable-xmpp
 )
 
 AC_MSG_CHECKING(whether to build rampart)
-AC_ARG_ENABLE(rampart, [  --enable-rampart    build rampart. default=yes],
+AC_ARG_ENABLE(rampart, [  --enable-rampart	build rampart. default=yes],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
@@ -124,7 +126,7 @@ if test -n ${RAMPART_DIR}; then
 fi    
 
 AC_MSG_CHECKING(whether to build wsclient)
-AC_ARG_ENABLE(wsclient, [  --enable-wsclient    build wsclient. default=yes],
+AC_ARG_ENABLE(wsclient, [  --enable-wsclient	build wsclient. default=yes],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
@@ -145,7 +147,7 @@ if test -n ${WSCLIENT_DIR}; then
     AC_CONFIG_SUBDIRS(wsclient)
 fi
 AC_MSG_CHECKING(whether to build sandesha)
-AC_ARG_ENABLE(sandesha, [  --enable-sandesha    build sandesha. default=yes],
+AC_ARG_ENABLE(sandesha, [  --enable-sandesha	build sandesha. default=yes],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
@@ -167,7 +169,7 @@ if test -n ${SANDESHA_DIR}; then
 fi    
 
 AC_MSG_CHECKING(whether to build savan)
-AC_ARG_ENABLE(savan, [  --enable-savan    build savan. default=yes],
+AC_ARG_ENABLE(savan, [  --enable-savan	build savan. default=yes],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
