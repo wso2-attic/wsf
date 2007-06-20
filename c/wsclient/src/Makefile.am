@@ -17,6 +17,7 @@ wsclient_LDADD   = $(LDFLAGS) \
 					../../axis2c/src/core/transport/http/receiver/libaxis2_http_receiver.la \
 				     ../../rampartc/src/core/libmod_rampart.la\
 					../../axis2c/neethi/src/util/libneethi_util.la \
+					../../axis2c/neethi/src/libneethi.la \
 					$(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 

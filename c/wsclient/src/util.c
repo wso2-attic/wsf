@@ -546,7 +546,7 @@ wsclient_set_https_transport_parameretes (const axutil_env_t *env,
 	axis2_transport_out_desc_t *transport_out;
 	axis2_transport_sender_t *transport_sender;
 	axutil_param_t *param;
-	AXIS2_TRANSPORT_ENUMS transport_enum;
+	AXIS2_TRANSPORT_ENUMS transport_enum=AXIS2_TRANSPORT_ENUM_HTTP;
 
 	if (svc_client)
 		svc_ctx = axis2_svc_client_get_svc_ctx (svc_client, env);
