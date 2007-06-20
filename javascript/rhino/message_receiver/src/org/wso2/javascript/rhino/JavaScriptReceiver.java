@@ -218,7 +218,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
                         }
                     } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANYTYPE){
                         if (result != null) {
-                            body.addChild(result);
+                            outElement.addChild(result);
+                            body.addChild(outElement);
                         }
                     }
                 } else if (result != null){
