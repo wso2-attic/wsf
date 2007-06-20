@@ -7,11 +7,11 @@
 
 @cd win32
 
-@nmake dist
+@nmake dist 
 
 @cd ..\..\..\rampartc\build\win32
 
-@nmake dist
+@nmake dist AXIS2_BIN_DIR=.\..\..\..\axis2c\build\axis2c-bin-1.1.0-win32
 
 @cd ..
 
@@ -35,7 +35,8 @@
 
 @cd ..\..\sandesha2c\build\win32
 
-@nmake dist
+@nmake dist AXIS2_BIN_DIR=.\..\..\..\axis2c\build\axis2c-bin-1.1.0-win32
+
 
 @cd ..
 
@@ -69,13 +70,14 @@
 
 @cd wsclient
 
-@nmake -f wsclient.mk
+@nmake -f wsclient.mk AXIS2_BIN_DIR=..\axis2c\build\axis2c-bin-1.1.0-win32
 
 @cd ..
 
 @cd savanc\build\win32
 
-@nmake dist
+@nmake dist AXIS2_BIN_DIR=.\..\..\..\axis2c\build\axis2c-bin-1.1.0-win32
+
 
 @cd ..
 
