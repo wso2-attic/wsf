@@ -6,7 +6,7 @@ includedir=$(prefix)/include/axis2-1.1
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = axis2c.pc
 
-SUBDIRS = util $(GUTHTHILA_DIR) axiom neethi src $(TESTDIR) include ides
+SUBDIRS = util $(GUTHTHILA_DIR) axiom neethi src $(TESTDIR) include ides tools/tcpmon
 include_HEADERS=$(top_builddir)/include/*.h
 data_DATA= samples/server/axis2.xml README \
 	INSTALL CREDITS COPYING NEWS NOTICE 
