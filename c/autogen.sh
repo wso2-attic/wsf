@@ -3,8 +3,14 @@
 cd axis2c
 echo "Running autogen.sh in Axis2/C"
 ./autogen.sh
+cd samples
+echo "Running autogen.sh in Axis2/C samples"
+./autogen.sh
+cd ../tools/tcpmon
+echo "Running autogen.sh in tcpmon"
+./autogen.sh
 
-cd ../sandesha2c 
+cd ../../../sandesha2c 
 echo "Running autogen.sh in Sandesha2/C"
 ./autogen.sh
 
@@ -19,7 +25,11 @@ echo "Running autogen.sh in wsclient"
 cd ../rampartc
 echo "Running autogen.sh in Rampart/C"
 ./autogen.sh
-cd ../savanc
+cd samples
+
+echo "Running autogen.sh in Rampart/C samples"
+./autogen.sh
+cd ../../savanc
 echo "Running autogen.sh in Savan/C"
 ./autogen.sh
 
