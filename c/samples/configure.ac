@@ -60,9 +60,13 @@ AC_ARG_WITH(wsfc,
 
 WSFCINC=$wsfcinc
 AXIS2INC="$wsfcinc/axis2-1.1"
+SANDESHA2INC="$wsfcinc/sandesha2-0.90"
+RAMPARTINC="$wsfcinc/rampart-0.90"
 
 AC_SUBST(WSFCINC)
 AC_SUBST(AXIS2INC)
+AC_SUBST(SANDESHA2INC)
+AC_SUBST(RAMPARTINC)
 
 
 export prefix 
