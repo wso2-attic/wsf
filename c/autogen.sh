@@ -78,3 +78,9 @@ else
 fi
 
 echo 'done'
+
+echo "Running autogen.sh in WSF/C samples"
+cd samples
+./autogen.sh
+cd ..
+

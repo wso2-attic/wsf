@@ -35,6 +35,7 @@ AC_CHECK_HEADERS([sys/socket.h])
 export prefix 
 
 AC_CONFIG_FILES([Makefile  \
+    flicker/Makefile
     ])
     
 AC_OUTPUT

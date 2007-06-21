@@ -3,7 +3,7 @@ docsdir=$(prefix)/docs
 SUBDIRS=axis2c $(SANDESHA_DIR) $(RAMPART_DIR) savanc $(WSCLIENT_DIR) 
 docs_DATA=docs/*
 data_DATA=config/axis2.xml README \
-        INSTALL COPYING NEWS 
+        INSTALL COPYING NEWS CREDITS NOTICE
 
 dist-hook:
 	sh dist.sh
