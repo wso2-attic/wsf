@@ -66,7 +66,6 @@ static axis2_char_t *password_file;
 static axis2_char_t *private_key_file;
 static axis2_char_t *certificate_file;
 static axis2_char_t *recipient_certificate_file;
-static axis2_char_t *algorithmsuite;
 static axis2_char_t *xop_out_dir;
 static axis2_char_t *content_type;
 static int is_contenty_type = 0;
@@ -75,10 +74,10 @@ static int is_output_http_headers = 0;
 static axis2_char_t *output_filename;
 static axis2_char_t *server_cert;
 static int is_server_cert = 0;
-static neethi_options_t *neethi_options;
 static axis2_bool_t enable_rampart;
 static axis2_bool_t enable_signature;
 static axis2_bool_t enable_encryption;
+static neethi_options_t *neethi_options;
 
 extern wsclient_cmd_options_t cmd_options_data[];
 extern int array_size;
@@ -118,7 +117,6 @@ wsclient_svc_option (axis2_svc_client_t *svc_client,
     axutil_property_t *rest_property;
 
 	wsclient_options_t *wsclient_options = NULL;
-    neethi_options_t *neethi_options = NULL;
 	int size;
 	int i;
 	int ii;
@@ -328,14 +326,14 @@ wsclient_svc_option (axis2_svc_client_t *svc_client,
                         /*is_username = 1;*/
                         enable_rampart = AXIS2_TRUE;
                         neethi_options_set_is_username_token(neethi_options, env, AXIS2_TRUE);
-						username_value = (char *)wsclient_options->value;
+						username_value = (axis2_char_t *)wsclient_options->value;
 					}
 					break;
 					case PASSWORD:
 					{
 						is_password = 1;
 						is_soap_enabled = 1;
-                        password_buffer = (char *) wsclient_options->value;
+                        password_buffer = (axis2_char_t *) wsclient_options->value;
 						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 										"[wsclient] security password block ");
 					}
@@ -385,7 +383,7 @@ wsclient_svc_option (axis2_svc_client_t *svc_client,
                     case KEY:
                     {
                         enable_rampart = AXIS2_TRUE;
-                        private_key_file = (char *)wsclient_options->value;
+                        private_key_file = (axis2_char_t *)wsclient_options->value;
                         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
                                         "[wsclient] Set Private Key ");
                     }
@@ -393,7 +391,7 @@ wsclient_svc_option (axis2_svc_client_t *svc_client,
                     case CERTIFICATE:
                     {
                         enable_rampart = AXIS2_TRUE;
-                        certificate_file = (char *)wsclient_options->value;
+                        certificate_file = (axis2_char_t *)wsclient_options->value;
                         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
                                         "[wsclient] Set Certificate ");
                     }
@@ -401,7 +399,7 @@ wsclient_svc_option (axis2_svc_client_t *svc_client,
                     case RECIPIENT_CERTIFICATE:
                     {
                         enable_rampart = AXIS2_TRUE;
-                        recipient_certificate_file = (char *)wsclient_options->value;
+                        recipient_certificate_file = (axis2_char_t *)wsclient_options->value;
                         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
                                         "[wsclient] Set receiver Certificate ");
                     }
@@ -409,7 +407,8 @@ wsclient_svc_option (axis2_svc_client_t *svc_client,
                     case ALGORITHMSUITE:
                     {
                         enable_rampart = AXIS2_TRUE;
-                        algorithmsuite = (char *)wsclient_options->value;
+                        neethi_options_set_algorithmsuite(neethi_options, env, 
+                                    (axis2_char_t *)wsclient_options->value);
                         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
                                         "[wsclient] Set Algorithmsuite ");
                     }
@@ -624,95 +623,6 @@ wsclient_svc_option (axis2_svc_client_t *svc_client,
 	    axis2_options_set_property (options, env, "dump", dump_property);
 	}
 
-/*
-	if (is_username && is_password)
-	{
-        axiom_node_t *root_om_node = NULL;
-        axiom_node_t* exact_om_node = NULL;
-        axiom_node_t *all_om_node = NULL;
-        axiom_node_t *asymmetric_om_node = NULL;
-        axiom_node_t *policy_om_node = NULL;
-    
-        axiom_element_t* root_om_ele = NULL;
-        axiom_element_t * exact_om_ele = NULL;
-        axiom_element_t *all_om_ele = NULL;
-        axiom_element_t *asymmetric_om_ele = NULL;
-
-        axiom_namespace_t *wsp_ns = NULL;
-        axiom_namespace_t *sp_ns = NULL;
-
-        rampart_context_t *out_ctx;
-        axis2_svc_ctx_t *svc_ctx;
-        axis2_conf_ctx_t *conf_ctx;
-        axis2_conf_t *conf;
-
-        axutil_param_t *outflow_param;
-        
-        wsp_ns = axiom_namespace_create(env, WS_POLICY_NAMESPACE_URI, WS_POLICY_NAMESPACE);
-        root_om_ele = axiom_element_create(env, NULL, WS_POLICY, wsp_ns, &root_om_node);
-    
-        exact_om_ele = axiom_element_create(env, root_om_node, WS_POLICY_EXACTLYONE, wsp_ns, &exact_om_node);
-        all_om_ele = axiom_element_create(env, exact_om_node, WS_POLICY_ALL, wsp_ns, &all_om_node);
-    
-        sp_ns = axiom_namespace_create(env, WS_SEC_POLICY_NAMESPACE_URI, WS_SEC_POLICY_NAMESPACE);
-        asymmetric_om_ele = axiom_element_create(env, all_om_node, WS_POLICY_ASYMMETRIC_BINDING, sp_ns, &asymmetric_om_node);
-
-        policy_om_node = create_policy_node(env, asymmetric_om_node );
-        create_initiator_token(env, policy_om_node);
-        create_recipient_token(env, policy_om_node);
-        create_username_token(env, all_om_node);
-
-        out_ctx = rampart_context_create (env);
-    
-        if (rampart_context_set_policy_node(out_ctx, env,
-                                            root_om_node) == AXIS2_SUCCESS)
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting creating policy node ");
-    
-        if (rampart_context_set_user(out_ctx, env,
-                                     (axis2_char_t *)username_value) == AXIS2_SUCCESS)
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting username ");
-    
-    
-        if (is_password_file)
-        {
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-							"[wsclient] processing password file");
-			if (username_value)
-			{
-				password_buffer = wsclient_get_password (env, username_value, password_file);
-				if (password_buffer)
-				{
-				    is_password = 1;
-				    is_soap_enabled = 1;
-                }
-			}
-		}
-
-		if (is_digest)
-		{
-			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-							"[wsclient] adding digest password property");
-            if(rampart_context_set_password_type(out_ctx, env,
-                                                 (axis2_char_t *)"Digest") == AXIS2_SUCCESS)
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting passwordType ");
-
-	    }
-
-        if (password_buffer)
-        {
-            if(rampart_context_set_password(out_ctx, env,
-                                            (axis2_char_t *)password_buffer) == AXIS2_SUCCESS)
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting password ");
-        }
-
-        svc_ctx = axis2_svc_client_get_svc_ctx(svc_client, env);
-        conf_ctx = axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
-        conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-    
-        outflow_param = axutil_param_create(env, WS_OUTFLOW_SECURITY_POLICY, (void *)out_ctx);
-        axis2_conf_add_param(conf, env, outflow_param);
-	}
-*/
 	return options;
 }
 
@@ -813,7 +723,6 @@ else
 							"[wsclient] addressing module engaged");
 		}
 
-		/*if (is_username && is_password)*/
         if(enable_rampart)
 		{
 		    axiom_node_t *root_om_node = NULL;
@@ -822,6 +731,7 @@ else
             axis2_conf_ctx_t *conf_ctx = NULL;
             axis2_conf_t *conf = NULL;
             axutil_param_t *security_param = NULL;
+            int defualt_ttl = 300;
 
             rampart_context = rampart_context_create(env);
 
@@ -830,7 +740,7 @@ else
 							"[wsclient] rampart module engaged");
 
             if (!is_action)
-                axis2_options_set_action (options, env, "http://ws.apache.org/axis2/c");
+                axis2_options_set_action (options, env, "http://example.com/ws/2004/09/policy/Test/EchoRequest"/*"http://ws.apache.org/axis2/c"*/);
             
             axis2_svc_client_engage_module(svc_client, env, AXIS2_MODULE_ADDRESSING);
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
@@ -858,6 +768,11 @@ else
             if (rampart_context_set_user(rampart_context, env,
                                      (axis2_char_t *)username_value) == AXIS2_SUCCESS)
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting username ");
+
+            /*We set the default ttl now. This needs to be changed when we process the user given
+            ttl*/
+
+            rampart_context_set_ttl(rampart_context, env, defualt_ttl);            
 
             if (is_password_file)
             {
@@ -912,7 +827,17 @@ else
                 {    
                     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] Certificate file not specified. ");
                     return WSCLIENT_FAILURE;
-                }    
+                }
+                if(recipient_certificate_file)
+                {
+                    rampart_context_set_reciever_certificate_file(
+                                rampart_context, env, recipient_certificate_file);
+                }
+                else
+                {
+                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] Reciever Certificate not specified. ");
+                    return WSCLIENT_FAILURE;
+                }
             }
 
             if(enable_encryption)
