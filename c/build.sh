@@ -19,7 +19,7 @@ cp build/axis2c/tools/tcpmon/configure.ac axis2c/tools/tcpmon
 cp build/savanc/configure.ac savanc
 
 ./autogen.sh
-./configure --prefix=`pwd`/deploy --enable-openssl=yes --enable-xmpp=yes --enable-tests=yes --with-apache2=/usr/local/apache2/include --with-axis2=`pwd`/axis2c/include --enable-sandesha=yes --enable-rampart=yes --enable-wsclient=yes
+./configure --prefix=`pwd`/deploy --enable-openssl=yes --enable-xmpp=no --enable-tests=yes --with-apache2=/usr/local/apache2/include --with-axis2=`pwd`/axis2c/include --enable-sandesha=yes --enable-rampart=yes --enable-wsclient=yes
 make
 make install
 make samples
