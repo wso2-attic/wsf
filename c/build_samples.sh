@@ -8,3 +8,6 @@ fi
 if test -e ../../rampartc/Makefile; then
 cd ../../rampartc/samples; ./configure --prefix=$1  --with-axis2=$1/include/axis2-1.1; make; make install
 fi
+cd ../../samples; ./configure --prefix=$1  --with-wsfc=$1/include; make; make install
+
+
