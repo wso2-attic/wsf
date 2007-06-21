@@ -9,7 +9,6 @@ dist-hook:
 	sh dist.sh
 
 samples: build_samples.sh
-	touch build_samples.sh
 	sh build_samples.sh $(prefix)
 
 
