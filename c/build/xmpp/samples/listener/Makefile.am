@@ -6,6 +6,6 @@ noinst_HEADERS = listener.h
 SUBDIRS =
 liblistener_la_SOURCES = listener.c listener_skeleton.c
 liblistener_la_LIBADD  =
-INCLUDES = -I$(AXIS2C_HOME)/include/axis2-1.0 \
+INCLUDES = -I$(AXIS2C_HOME)/include/axis2-1.1 \
 			@UTILINC@ \
 			@AXIOMINC@
