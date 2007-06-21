@@ -5,7 +5,6 @@ set -e
 rm -rf axis2c/samples/server/listener
 cp -r build/xmpp/samples/listener axis2c/samples/server
 cp build/rampartc/configure.ac rampartc
-cp build/savanc/configure.ac savanc
 cp build/axis2c/configure.ac axis2c
 cp build/axis2c/Makefile.am axis2c
 cp build/rampartc/Makefile.am rampartc
