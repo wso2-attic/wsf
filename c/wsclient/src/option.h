@@ -69,6 +69,14 @@ enum cmd_options_em
 	  XOP_IN, /* {"xop-in", 0, optional_argument}, */
 	  XOP_OUT, /* {"xop-out", 0, optional_argument}, */
 	  SERVER_CERT, /* {"server-cert", 0, required_argument}*/
+      ENCRYPT_PAYLOAD, /* {"encrypt-payload", 0, required_argument}*/
+      SIGN_BODY, /* {"sign-body", 0, required_argument} */
+      ENCRYPT_BEFORE_SIGNING, /*{"encrypt-before-signing", 0, no_argument}*/
+      ENCRYPT_SIGNATURE, /*{"encrypt-signature", 0, no_argument}*/
+      KEY, /*{"key", 0, required_argument}*/
+      CERTIFICATE, /*{"certificate", 0, required_argument}*/
+      RECIPIENT_CERTIFICATE, /*{"recipient-certificate", 0, required_argument}*/
+      ALGORITHMSUITE, /*{"algorithmsuite", 0, required_argument}*/
 };
 
 

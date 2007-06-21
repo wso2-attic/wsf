@@ -63,6 +63,10 @@ static int is_xop_out = 0;
 static axis2_char_t *password_buffer;
 static axis2_char_t *username_value;
 static axis2_char_t *password_file;
+static axis2_char_t *private_key_file;
+static axis2_char_t *certificate_file;
+static axis2_char_t *recipient_certificate_file;
+static axis2_char_t *algorithmsuite;
 static axis2_char_t *xop_out_dir;
 static axis2_char_t *content_type;
 static int is_contenty_type = 0;
@@ -73,6 +77,8 @@ static axis2_char_t *server_cert;
 static int is_server_cert = 0;
 static neethi_options_t *neethi_options;
 static axis2_bool_t enable_rampart;
+static axis2_bool_t enable_signature;
+static axis2_bool_t enable_encryption;
 
 extern wsclient_cmd_options_t cmd_options_data[];
 extern int array_size;
@@ -341,7 +347,73 @@ wsclient_svc_option (axis2_svc_client_t *svc_client,
 						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 										"[wsclient] security timestamp block ");
 					}
+                    break;
+                    case ENCRYPT_PAYLOAD:
+                    {
+                        enable_rampart = AXIS2_TRUE;
+                        enable_encryption = AXIS2_TRUE;
+                        neethi_options_set_encrypt_body(neethi_options, env, AXIS2_TRUE);
+                        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                                        "[wsclient] Set encrypt body ");
+                    }
 					break;
+                    case SIGN_BODY:
+                    {
+                        enable_rampart = AXIS2_TRUE;
+                        enable_signature = AXIS2_TRUE;
+                        neethi_options_set_sign_body(neethi_options, env, AXIS2_TRUE);
+                        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                                        "[wsclient] Set sign body ");
+                    }
+                    break;
+                    case ENCRYPT_BEFORE_SIGNING:
+                    {
+                        enable_rampart = AXIS2_TRUE;
+                        neethi_options_set_encrypt_before_sign(neethi_options, env, AXIS2_TRUE);
+                        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                                        "[wsclient] Set Encrypt Before signing ");
+                    }
+                    break;
+                    case ENCRYPT_SIGNATURE:
+                    {
+                        enable_rampart = AXIS2_TRUE;
+                        neethi_options_set_signature_protection(neethi_options, env, AXIS2_TRUE);
+                        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                                        "[wsclient] Set Signature Protection ");
+                    }
+                    break;
+                    case KEY:
+                    {
+                        enable_rampart = AXIS2_TRUE;
+                        private_key_file = (char *)wsclient_options->value;
+                        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                                        "[wsclient] Set Private Key ");
+                    }
+                    break;
+                    case CERTIFICATE:
+                    {
+                        enable_rampart = AXIS2_TRUE;
+                        certificate_file = (char *)wsclient_options->value;
+                        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                                        "[wsclient] Set Certificate ");
+                    }
+                    break;
+                    case RECIPIENT_CERTIFICATE:
+                    {
+                        enable_rampart = AXIS2_TRUE;
+                        recipient_certificate_file = (char *)wsclient_options->value;
+                        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                                        "[wsclient] Set receiver Certificate ");
+                    }
+                    break;
+                    case ALGORITHMSUITE:
+                    {
+                        enable_rampart = AXIS2_TRUE;
+                        algorithmsuite = (char *)wsclient_options->value;
+                        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                                        "[wsclient] Set Algorithmsuite ");
+                    }
+                    break;
 					case PASSWORD_FILE:
 					{
 						is_password_file = 1;
@@ -662,6 +734,10 @@ wsclient_stub_invoke(
 	axiom_node_t *ret_node = NULL;
 	axis2_status_t status = AXIS2_FAILURE;
 
+    enable_rampart = AXIS2_FALSE;
+    enable_encryption = AXIS2_FALSE;
+    enable_signature = AXIS2_FALSE;    
+
 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 					"[wsclient] payload %s \n", input);
 	payload = wsclient_payload (env, input);
@@ -813,6 +889,54 @@ else
                                             (axis2_char_t *)password_buffer) == AXIS2_SUCCESS)
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting password ");
 
+            }
+
+            if(enable_signature)
+            {
+                if(private_key_file)
+                {
+                    rampart_context_set_private_key_file(
+                                rampart_context, env, private_key_file);   
+                }
+                else
+                {
+                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] Private key file not specified. ");
+                    return WSCLIENT_FAILURE;
+                }
+                if(certificate_file)
+                {
+                    rampart_context_set_certificate_file(
+                                rampart_context, env, certificate_file);
+                }
+                else
+                {    
+                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] Certificate file not specified. ");
+                    return WSCLIENT_FAILURE;
+                }    
+            }
+
+            if(enable_encryption)
+            {
+                if(private_key_file)
+                {
+                    rampart_context_set_private_key_file(
+                                rampart_context, env, private_key_file);
+                }
+                else
+                {    
+                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] Private Key file not specified. ");
+                    return WSCLIENT_FAILURE;
+                }    
+                if(recipient_certificate_file)
+                {
+                    rampart_context_set_reciever_certificate_file(
+                                rampart_context, env, recipient_certificate_file);
+                }
+                else
+                {    
+                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] Reciever Certificate not specified. ");
+                    return WSCLIENT_FAILURE;
+                }    
             }
 
             svc_ctx = axis2_svc_client_get_svc_ctx(svc_client, env);

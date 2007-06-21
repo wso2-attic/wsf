@@ -54,6 +54,14 @@ wsclient_cmd_options_t cmd_options_data [] =
 	  {"xop-in", 0, optional_argument},
 	  {"xop-out", 0, optional_argument},
 	  {"server-cert", 0, required_argument},
+      {"encrypt-payload", 0, no_argument},
+      {"sign-body", 0, no_argument},
+      {"encrypt-before-signing", 0, no_argument},
+      {"encrypt-signature", 0, no_argument},
+      {"key", 0, required_argument},
+      {"certificate", 0, required_argument},
+      {"recipient-certificate", 0, required_argument},
+      {"algorithmsuite", 0, required_argument}
 };
 
 
