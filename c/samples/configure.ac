@@ -32,6 +32,39 @@ AC_HEADER_STDC
 AC_CHECK_HEADERS([stdio.h stdlib.h string.h])
 AC_CHECK_HEADERS([sys/socket.h])
 
+abs_top_builddir=`pwd`
+AC_SUBST(abs_top_builddir)
+
+AC_MSG_CHECKING(To Use WSF/C . This is a compulsory module to build WSF/C samples)
+AC_ARG_WITH(wsfc,
+[  --with-wsfc[=PATH]      use wsfc.],
+[ case "$withval" in
+  no)
+    AC_MSG_RESULT(no)
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    dnl Find axis2_util include dir in the path
+    if test -d $withval; then
+        wsfcinc="-I$withval"
+    dnl else find the axis2_util include dir in $(AXIS2C_HOME)/include
+    elif test -d '$(WSFC_HOME)/include'; then
+        wsfcinc="-I$(WSFC_HOME)/include/"
+    else
+        AC_MSG_ERROR(could not find WSF/C. stop)
+    fi
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+)
+
+WSFCINC=$wsfcinc
+AXIS2INC="$wsfcinc/axis2-1.1"
+
+AC_SUBST(WSFCINC)
+AC_SUBST(AXIS2INC)
+
+
 export prefix 
 
 AC_CONFIG_FILES([Makefile  \
