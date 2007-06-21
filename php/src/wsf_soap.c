@@ -113,9 +113,8 @@ void delete_hashtable(void *data)
 	efree(ht);
 }
 
-/*
 static void function_to_string(sdlFunctionPtr function, smart_str *buf);
-*/
+
 static void type_to_string(sdlTypePtr type, smart_str *buf, int level);
 static sdlParamPtr get_param(sdlFunctionPtr function, char *param_name, int index, int);
 
@@ -204,7 +203,7 @@ send_receive_soap_envelope_with_op_client(
 
 int parse_packet_soap(zval *this_ptr, char *buffer, int buffer_size, sdlFunctionPtr fn, char *fn_name, zval *return_value, zval *soap_headers TSRMLS_DC)
 {
-	char* envelope_ns = NULL;
+        char* envelope_ns = NULL;
 	xmlDocPtr response;
 	xmlNodePtr trav, env, head, body, resp, cur, fault;
 	xmlAttrPtr attr;
@@ -2071,8 +2070,6 @@ static sdlFunctionPtr get_doc_function(sdlPtr sdl, xmlNodePtr params)
 	return NULL;
 }
 
-#ifdef UNCOMMENT
-
 void function_to_string(sdlFunctionPtr function, smart_str *buf)
 {
 	int i = 0;
@@ -2138,7 +2135,6 @@ void function_to_string(sdlFunctionPtr function, smart_str *buf)
 	smart_str_appendc(buf, ')');
 	smart_str_0(buf);
 }
-#endif
 
 static void model_to_string(sdlContentModelPtr model, smart_str *buf, int level)
 {
@@ -2440,6 +2436,47 @@ void delete_service(void *data)
     efree(service);
 }
 
+void wsf_soap_get_functions(zval *this_ptr,
+                            zval *return_value,
+                            axutil_env_t *env
+                            TSRMLS_CC)
+{
+    zval **tmp = NULL;
+    zval *client_zval = NULL;
+    sdlPtr sdl;
+    HashPosition pos;
+
+    if(instanceof_function(Z_OBJCE_P(this_ptr), ws_client_proxy_class_entry TSRMLS_CC)){
+        if(zend_hash_find(Z_OBJPROP_P(this_ptr), "wsclient", sizeof("wsclient"), (void**)&tmp) == SUCCESS){
+            client_zval = *tmp;
+        }else{
+            php_error_docref(NULL TSRMLS_CC, E_ERROR," proxy created without wsclient");
+            return;
+        }
+    }else if(instanceof_function(Z_OBJCE_P(this_ptr), ws_client_class_entry TSRMLS_CC)){
+            client_zval = this_ptr;
+    }
+    
+    if (FIND_SDL_PROPERTY(client_zval,tmp) != FAILURE) {
+            FETCH_SDL_RES(sdl,tmp);
+                }
+    if (sdl) {
+        smart_str buf = {0};
+        sdlFunctionPtr *function;
+
+        array_init(return_value);
+        zend_hash_internal_pointer_reset_ex(&sdl->functions, &pos);
+
+        while (zend_hash_get_current_data_ex(&sdl->functions, (void **)&function, &pos) != FAILURE) {
+            function_to_string((*function), &buf);
+            add_next_index_stringl(return_value, buf.c, buf.len,  1);
+            smart_str_free(&buf);
+            zend_hash_move_forward_ex(&sdl->functions, &pos);
+        }
+    }
+}
+
+
 axiom_node_t*
 wsf_soap_do_function_call(axutil_env_t *env,
           wsf_svc_info_t *svc_info,
@@ -2488,3 +2525,38 @@ wsf_soap_do_function_call(axutil_env_t *env,
 
      return NULL;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

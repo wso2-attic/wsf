@@ -34,6 +34,11 @@ void wsf_soap_do_soap_call(zval* this_ptr,
                          axutil_env_t *env
                          TSRMLS_DC);
 
+void wsf_soap_get_functions(zval* this_ptr,
+                            zval *return_value,
+                            axutil_env_t *env
+                            TSRMLS_DC);
+
 void delete_url(void *handle);
 void delete_hashtable(void *data);
 

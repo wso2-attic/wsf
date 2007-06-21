@@ -91,7 +91,6 @@ PHP_METHOD(ws_client, get_last_response_headers);
 PHP_METHOD(ws_client, get_proxy);
 PHP_METHOD(ws_client, terminate_outgoing_rm);
 
-
 static 
 ZEND_BEGIN_ARG_INFO(ws_client_call_args, 0)
 ZEND_ARG_PASS_INFO(0)
@@ -126,7 +125,7 @@ PHP_METHOD(ws_policy, __construct);
 PHP_METHOD(ws_client_proxy, __construct);
 PHP_METHOD(ws_client_proxy, __call);
 PHP_METHOD(ws_client_proxy, __destruct);
-
+PHP_METHOD(ws_client_proxy, get_functions); 
 
 
 static
@@ -150,7 +149,7 @@ zend_function_entry php_ws_message_class_functions[] ={
 zend_function_entry php_ws_client_class_functions[]={
 	PHP_MALIAS(ws_client, request, request, NULL,ZEND_ACC_PUBLIC)
 	PHP_MALIAS(ws_client, send, send, NULL,ZEND_ACC_PUBLIC)
-	PHP_MALIAS(ws_client,getLastResponse, get_last_response, NULL ,ZEND_ACC_PUBLIC)
+	PHP_MALIAS(ws_client, getLastResponse, get_last_response, NULL ,ZEND_ACC_PUBLIC)
 	PHP_MALIAS(ws_client, getLastRequest, get_last_request , NULL , ZEND_ACC_PUBLIC)
 	PHP_MALIAS(ws_client, getProxy, get_proxy, NULL, ZEND_ACC_PUBLIC)
 	PHP_MALIAS(ws_client, terminateOutgoingRM , terminate_outgoing_rm, NULL, ZEND_ACC_PUBLIC)
@@ -166,6 +165,7 @@ zend_function_entry php_ws_client_proxy_class_functions[]={
     PHP_ME(ws_client_proxy, __call, ws_client_proxy_call_args, ZEND_ACC_PUBLIC)
     PHP_ME(ws_client_proxy, __construct, NULL, ZEND_ACC_PUBLIC)
     PHP_ME(ws_client, __destruct, NULL, ZEND_ACC_PUBLIC)
+    PHP_MALIAS(ws_client_proxy, getFunctions, get_functions, NULL, ZEND_ACC_PUBLIC)
     {NULL, NULL, NULL}
 };
 
@@ -1123,6 +1123,7 @@ PHP_METHOD(ws_client, get_proxy)
     RETURN_ZVAL(client_proxy_zval, NULL, NULL);
 }
 
+
 /* {{{ proto void WSService::__construct([ array options])*/
 PHP_METHOD(ws_service, __construct)
 {
@@ -1488,8 +1489,8 @@ PHP_METHOD(ws_service , set_class)
     #endif
     		zend_hash_internal_pointer_reset_ex(ft, &pos);
     		while (zend_hash_get_current_data_ex(ft, (void **)&f, &pos) != FAILURE) {
-    				if (f->common.fn_flags & ZEND_ACC_PUBLIC) {
-    					svc_info->is_class = 1;
+                if (f->common.fn_flags & ZEND_ACC_PUBLIC) {
+                svc_info->is_class = 1;
                         axutil_hash_set(svc_info->class_info, axutil_strdup(f->common.function_name ,env),
                             AXIS2_HASH_KEY_STRING, axutil_strdup(Z_STRVAL_PP(argv[0]), env));
     					
@@ -2195,6 +2196,16 @@ PHP_METHOD(ws_client_proxy, __call)
 }    
 /* }}} end _call */
 
+/* {{{ proto getFunctions() */
+PHP_METHOD(ws_client_proxy, get_functions)
+{
+    wsf_soap_get_functions(this_ptr, return_value, env TSRMLS_CC);
+    
+
+}
+/* }}} */
+
+
 PHP_FUNCTION(ws_test_function)
 {
 	char *function_name, *data = NULL;
@@ -2217,6 +2228,20 @@ PHP_FUNCTION(ws_test_function)
 		php_printf("done ");		
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
