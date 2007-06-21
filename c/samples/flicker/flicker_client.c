@@ -185,8 +185,7 @@ build_soap_body_content(const axutil_env_t *env,
     axiom_element_t* flicker_om_ele = NULL;
     axiom_node_t* text_om_node = NULL;
     axiom_element_t * text_om_ele = NULL;
-    axiom_namespace_t *ns0 = NULL, *ns1 = NULL, *ns2 = NULL, *ns3 = NULL;
-    axiom_attribute_t* attri1 = NULL;
+    axiom_namespace_t *ns0 = NULL;
     axis2_char_t *buffer = NULL;
 
     ns0 = axiom_namespace_create(env, "urn:flickr", "x");
