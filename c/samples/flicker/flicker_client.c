@@ -51,7 +51,7 @@ int main(int argc, char** argv)
     env = axutil_env_create_all("flicker_client.log", AXIS2_LOG_LEVEL_TRACE);
 
     /* Set end point reference of flicker service */
-    address = "http://api.flicker.com/search/beta2";
+    address = "http://api.flickr.com/services/soap/";
 
     if ((argc > 1) && (axutil_strcmp("-h", argv[1]) == 0))
     {
@@ -131,26 +131,8 @@ int main(int argc, char** argv)
     {
         if (axiom_node_get_node_type(ret_node, env) == AXIOM_ELEMENT)
         {
-            axis2_char_t *result = NULL;
-            axiom_element_t *result_ele = NULL;
-            axiom_node_t *ret_node1 = NULL;
-
-            result_ele = (axiom_element_t*)axiom_node_get_data_element(ret_node, env);
-            if (axutil_strcmp(axiom_element_get_localname(result_ele, env), "doSpellingSuggestionResponse") != 0)
-            {
-                print_invalid_om(env, ret_node);
-                return AXIS2_FAILURE;
-            }
-
-            ret_node1 = axiom_node_get_first_element(ret_node, env); /*return*/
-            if (!ret_node1)
-            {
-                print_invalid_om(env, ret_node);
-                return AXIS2_FAILURE;
-            }
-            result_ele = (axiom_element_t*)axiom_node_get_data_element(ret_node1, env);
-            result = axiom_element_get_text(result_ele, env, ret_node1);
-            printf("\nResult = %s\n", result);
+            axis2_char_t *buffer = axiom_node_to_string(ret_node, env);
+            printf("%s\n", buffer);
         }
         else
         {
