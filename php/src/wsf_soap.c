@@ -89,17 +89,17 @@ void wsf_soap_prepare_ws_globals()
             SOAP_1_2_ENC_NS_PREFIX, sizeof(SOAP_1_2_ENC_NS_PREFIX), NULL);
 } 
 
-#ifdef UNCOMMENT
 static void soap_server_fault(char* code, char* string, char *actor, zval* details, char* name TSRMLS_DC)
 {
     zval ret;
 
     INIT_ZVAL(ret);
+    /*
     set_soap_fault(&ret, NULL, code, string, actor, details, name TSRMLS_CC);
     soap_server_fault_ex(NULL, &ret, NULL TSRMLS_CC);
+    */
     zend_bailout();
 }
-#endif
 
 void delete_url(void *handle)
 {
@@ -120,14 +120,13 @@ static void type_to_string(sdlTypePtr type, smart_str *buf, int level);
 static sdlParamPtr get_param(sdlFunctionPtr function, char *param_name, int index, int);
 
 static sdlFunctionPtr get_function(sdlPtr sdl, const char *function_name);
-/*
+
 static sdlFunctionPtr get_doc_function(sdlPtr sdl, xmlNodePtr node);
 
 static sdlFunctionPtr deserialize_function_call(sdlPtr sdl, xmlDocPtr request, char* actor, zval *function_name, int *num_params, zval **parameters[], int *version, soapHeader **headers TSRMLS_DC);
 
-
+/*
 static xmlDocPtr serialize_response_call(sdlFunctionPtr function, char *function_name,char *uri,zval *ret, soapHeader *headers, int version TSRMLS_DC);
-
 */
 static xmlDocPtr serialize_function_call(zval *this_ptr, sdlFunctionPtr function, char *function_name, char *uri, zval **arguments, int arg_count, int version, HashTable *soap_headers TSRMLS_DC);
 
@@ -1054,7 +1053,6 @@ void wsf_soap_do_soap_call(zval* this_ptr,
 	
 }
 
-#ifdef UNCOMMENT
 
 static void deserialize_parameters(xmlNodePtr params, sdlFunctionPtr function, int *num_params, zval ***parameters)
 {
@@ -1142,9 +1140,6 @@ static void deserialize_parameters(xmlNodePtr params, sdlFunctionPtr function, i
 	(*num_params) = num_of_params;
 }
 
-#endif
-
-#ifdef UNCOMMENT
 
 static sdlFunctionPtr find_function(sdlPtr sdl, xmlNodePtr func, zval* function_name)
 {
@@ -1171,10 +1166,7 @@ static sdlFunctionPtr find_function(sdlPtr sdl, xmlNodePtr func, zval* function_
 	return function;
 
 }
-#endif
 
-
-#ifdef UNCOMMENT
 
 static sdlFunctionPtr deserialize_function_call(sdlPtr sdl, xmlDocPtr request, char* actor, zval *function_name, int *num_params, zval ***parameters, int *version, soapHeader **headers TSRMLS_DC)
 {
@@ -1434,7 +1426,6 @@ ignore_header:
 	deserialize_parameters(func, function, num_params, parameters);
 	return function;
 }
-#endif
 
 #ifdef UNCOMMENT
 
@@ -2025,8 +2016,6 @@ static sdlFunctionPtr get_function(sdlPtr sdl, const char *function_name)
 	return NULL;
 }
 
-#ifdef UNCOMMENT 
-
 static sdlFunctionPtr get_doc_function(sdlPtr sdl, xmlNodePtr params)
 {
 	if (sdl) {
@@ -2081,7 +2070,6 @@ static sdlFunctionPtr get_doc_function(sdlPtr sdl, xmlNodePtr params)
 	}
 	return NULL;
 }
-#endif
 
 #ifdef UNCOMMENT
 
@@ -2451,10 +2439,52 @@ void delete_service(void *data)
     }
     efree(service);
 }
-/*
+
 axiom_node_t*
 wsf_soap_do_function_call(axutil_env_t *env,
-          wsf_svc_info_t *env,
+          wsf_svc_info_t *svc_info,
           axis2_msg_ctx_t *in_msg_ctx,
-          axis2_msg_ctx_t *out_msg_ctx){}
-*/
+          axis2_msg_ctx_t *out_msg_ctx,
+          char *op_name TSRMLS_DC)
+{
+    xmlDocPtr doc_request;
+    zval function_name,  **params;
+    /* , retval; */
+    int num_params =0, soap_version;
+    sdlFunctionPtr function;
+
+    soapHeader *soap_headers = NULL;
+    soapServicePtr service;
+    axiom_soap_envelope_t *soap_envelope = NULL;
+    axiom_node_t *soap_envelope_node = NULL;
+
+    if(!in_msg_ctx)
+        return NULL;
+    
+    if(axis2_msg_ctx_get_is_soap_11(in_msg_ctx, env) == AXIS2_TRUE){
+        soap_version = SOAP_1_1;
+    }else{
+        soap_version = SOAP_1_2;
+    }
+    
+    soap_envelope = axis2_msg_ctx_get_soap_envelope(in_msg_ctx, env); 
+    
+    if(!soap_envelope)
+        return NULL;
+
+    soap_envelope_node = axiom_soap_envelope_get_base_node(soap_envelope, env);
+
+    doc_request = wsf_util_serialize_om_to_doc(env, soap_envelope_node);
+
+    service = (soapServicePtr)svc_info->service;
+
+    function = deserialize_function_call(service->sdl, doc_request, 
+            service->actor, &function_name, &num_params, 
+            &params, &soap_version, &soap_headers TSRMLS_CC);
+
+            
+
+    xmlFreeDoc(doc_request);
+
+     return NULL;
+}

@@ -1422,7 +1422,9 @@ PHP_METHOD(ws_service, __construct)
     if (typemap_ht) {
         service->typemap = soap_create_typemap(service->sdl, typemap_ht TSRMLS_CC);
     }
-   */ 
+   */
+
+        svc_info->service = service;            
         ret = zend_list_insert(service, le_service);
         add_property_resource(this_ptr, "service", ret);
     }
