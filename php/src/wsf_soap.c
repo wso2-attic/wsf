@@ -2471,7 +2471,48 @@ void wsf_soap_get_functions(zval *this_ptr,
         }
     }
 }
+void wsf_soap_get_types(zval *this_ptr,
+                            zval *return_value,
+                            axutil_env_t *env
+                            TSRMLS_CC)
+{
+    zval **tmp = NULL;
+    zval *client_zval = NULL;
+    sdlPtr sdl;
+    HashPosition pos;
+    
+    if(instanceof_function(Z_OBJCE_P(this_ptr), ws_client_proxy_class_entry TSRMLS_CC)){
+        if(zend_hash_find(Z_OBJPROP_P(this_ptr), "wsclient", sizeof("wsclient"), (void**)&tmp) == SUCCESS){
+            client_zval = *tmp;
+        }else{
+            php_error_docref(NULL TSRMLS_CC, E_ERROR," proxy created without wsclient");
+            return;
+        }
+    }else if(instanceof_function(Z_OBJCE_P(this_ptr), ws_client_class_entry TSRMLS_CC)){
+        client_zval = this_ptr;
+    }
+    
+    if (FIND_SDL_PROPERTY(client_zval,tmp) != FAILURE) {
+        FETCH_SDL_RES(sdl,tmp);
+    }
 
+    if (sdl) {
+        sdlTypePtr *type;
+        smart_str buf = {0};
+        
+        array_init(return_value);
+        if (sdl->types) {
+            zend_hash_internal_pointer_reset_ex(sdl->types, &pos);
+            while (zend_hash_get_current_data_ex(sdl->types, (void **)&type, &pos) != FAILURE) {
+                type_to_string((*type), &buf, 0);
+                add_next_index_stringl(return_value, buf.c, buf.len, 1);
+                zend_hash_move_forward_ex(sdl->types, &pos);
+                smart_str_free(&buf);
+            }
+        }
+    }
+    
+}
 
 axiom_node_t*
 wsf_soap_do_function_call(axutil_env_t *env,

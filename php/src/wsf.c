@@ -126,6 +126,7 @@ PHP_METHOD(ws_client_proxy, __construct);
 PHP_METHOD(ws_client_proxy, __call);
 PHP_METHOD(ws_client_proxy, __destruct);
 PHP_METHOD(ws_client_proxy, get_functions); 
+PHP_METHOD(ws_client_proxy, get_types); 
 
 
 static
@@ -166,6 +167,7 @@ zend_function_entry php_ws_client_proxy_class_functions[]={
     PHP_ME(ws_client_proxy, __construct, NULL, ZEND_ACC_PUBLIC)
     PHP_ME(ws_client, __destruct, NULL, ZEND_ACC_PUBLIC)
     PHP_MALIAS(ws_client_proxy, getFunctions, get_functions, NULL, ZEND_ACC_PUBLIC)
+    PHP_MALIAS(ws_client_proxy, getTypes, get_types, NULL, ZEND_ACC_PUBLIC)
     {NULL, NULL, NULL}
 };
 
@@ -2200,6 +2202,15 @@ PHP_METHOD(ws_client_proxy, __call)
 PHP_METHOD(ws_client_proxy, get_functions)
 {
     wsf_soap_get_functions(this_ptr, return_value, env TSRMLS_CC);
+    
+
+}
+/* }}} */
+
+/* {{{ proto getFunctions() */
+PHP_METHOD(ws_client_proxy, get_types)
+{
+    wsf_soap_get_types(this_ptr, return_value, env TSRMLS_CC);
     
 
 }
