@@ -22,19 +22,19 @@ cd ..
 cd ../wsclient
 echo "Running autogen.sh in wsclient"
 ./autogen.sh
+
 cd ../rampartc
 echo "Running autogen.sh in Rampart/C"
 ./autogen.sh
 cd samples
-
 echo "Running autogen.sh in Rampart/C samples"
 ./autogen.sh
+
 cd ../../savanc
 echo "Running autogen.sh in Savan/C"
 ./autogen.sh
 
 cd ..
-
 
 echo "Running autogen.sh in WSF/C"
 echo -n 'Running libtoolize...'
