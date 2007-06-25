@@ -99,10 +99,12 @@
         <!-- After PostDispatch phase, module or service author can add any phase as required  -->
         <!-- User defined phases could be added here -->
         <!--phase name="userphase1"/-->
+        <phase name="SavanPhase"/>
         <phase name="RMPhase"/>
     </phaseOrder>
     <phaseOrder type="outflow">
         <!-- User defined phases could be added here -->
+        <phase name="SavanPhase"/>
         <phase name="RMPhase"/>
         <!--phase name="RMPhase"/-->
         <!--phase name="userphase1"/-->
@@ -118,6 +120,7 @@
         <!-- User defined phases could be added here -->
         <!--phase name="RMPhase"/-->
         <!--phase name="userphase1"/-->
+        <phase name="SavanPhase"/>
         <phase name="MessageOut"/>
     </phaseOrder>
 </axisconfig>
