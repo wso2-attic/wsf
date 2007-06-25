@@ -994,6 +994,13 @@ else
 	    AXIS2_FREE (env->allocator, password_buffer);
 	if (svc_client)
 		axis2_svc_client_free (svc_client, env);
+
+    if(neethi_options)
+    {
+        neethi_options_free(neethi_options, env);
+        neethi_options = NULL;
+    }    
+
 	return WSCLIENT_SUCCESS;
 }
 
