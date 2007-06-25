@@ -96,23 +96,23 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
             Context context = engine.getCx();
             context.putThreadLocal(AXIS2_MESSAGECONTEXT, inMessage);
             
-             /*
-                 * Some host objects depend on the data we obtain from the
-                 * AxisService & ConfigurationContext.. It is possible to get
-                 * these data through the MessageContext. But we face problems
-                 * at the deployer, where we need to instantiate host objects in
-                 * order for the annotations framework to work and the
-                 * MessageContext is not available at that time. For the
-                 * consistency we inject them in here too..
-                 */
+             
+            /*
+             * Some host objects depend on the data we obtain from the
+             * AxisService & ConfigurationContext.. It is possible to get these
+             * data through the MessageContext. But we face problems at the
+             * deployer, where we need to instantiate host objects in order for
+             * the annotations framework to work and the MessageContext is not
+             * available at that time. For the consistency we inject them in
+             * here too..
+             */
             context.putThreadLocal(AXIS2_SERVICE, inMessage.getAxisService());
             context.putThreadLocal(AXIS2_CONFIGURATION_CONTEXT, inMessage.getConfigurationContext());
             
             JavaScriptEngineUtils.loadGlobalPropertyObjects(engine, inMessage
                     .getConfigurationContext().getAxisConfiguration());
             // JS Engine seems to need the Axis2 repository location to load the
-            // imported scripts
-            // TODO: Do we really need this (thilina)
+            // imported scripts. TODO: Do we really need this (thilina)
             URL repoURL = inMessage.getConfigurationContext().getAxisConfiguration()
                     .getRepository();
             if (repoURL != null) {
@@ -121,14 +121,17 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
 
             Reader reader = readJS(inMessage);
             String jsFunctionName = inferJavaScriptFunctionName(inMessage);
+            
+            //support for importing javaScript files using services.xml or the axis2.xml
             String scripts = getImportScriptsList(inMessage);
+            
             ArrayList params = new ArrayList();
             OMNode result = null;
             OMElement payload = soapEnvelope.getBody().getFirstElement();
+            Object args = payload;
             if (payload != null) {
-                AxisMessage axisMessage =
-                        inMessage.getAxisOperation()
-                                .getMessage(WSDLConstants.MESSAGE_LABEL_IN_VALUE);
+                AxisMessage axisMessage = inMessage.getAxisOperation().getMessage(
+                        WSDLConstants.MESSAGE_LABEL_IN_VALUE);
                 XmlSchemaElement xmlSchemaElement = axisMessage.getSchemaElement();
                 if (xmlSchemaElement != null) {
                     XmlSchemaType schemaType = xmlSchemaElement.getSchemaType();
@@ -138,31 +141,44 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
                         if (particle instanceof XmlSchemaSequence) {
                             XmlSchemaSequence xmlSchemaSequence = (XmlSchemaSequence) particle;
                             Iterator iterator = xmlSchemaSequence.getItems().getIterator();
-                            // now we need to know some information from the binding operation.
+                            // now we need to know some information from the
+                            // binding operation.
                             while (iterator.hasNext()) {
                                 XmlSchemaElement innerElement = (XmlSchemaElement) iterator.next();
-                                OMElement omElement = payload.getFirstChildWithName(new QName(innerElement.getName()));
+                                OMElement omElement = payload.getFirstChildWithName(new QName(
+                                        innerElement.getName()));
                                 if (omElement == null) {
-                                    throw new AxisFault("Required element " + innerElement.getName() +
-                                            " defined in the schema can not be found in the request");
+                                    throw new AxisFault(
+                                            "Required element "
+                                                    + innerElement.getName()
+                                                    + " defined in the schema can not be found in the request");
                                 }
-                                params.add(createParam(omElement, innerElement.getSchemaTypeName(), engine));
+                                params.add(createParam(omElement, innerElement.getSchemaTypeName(),
+                                        engine));
                             }
-                            Object[] objects = params.toArray();
-                            result = engine.call(jsFunctionName, reader, objects, scripts);
+                            args = params.toArray();
                         } else {
                             throw new AxisFault("Unsupported schema type in request");
                         }
-                    } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANYTYPE){
-                        result = engine.call(jsFunctionName, reader, payload, scripts);
+                    } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANYTYPE) {
+                        // TODO : Keith > Don't we need to handle the 'else' in here..
+                        args = payload;
                     }
-                } else {
-                    result = engine.call(jsFunctionName, reader, payload, scripts);
                 }
             } else {
-                // Get the result by executing the javascript file
-                result = engine.call(jsFunctionName, reader, payload, scripts);
+                // This validates whether the user has sent a bad SOAP message
+                // with a non-XML payload.
+                if (soapEnvelope.getBody().getFirstOMChild() != null) {
+                    OMText textPayLoad = (OMText) soapEnvelope.getBody().getFirstOMChild();
+                    //we allow only a sequence of spaces
+                    if (textPayLoad.getText().trim().length() > 0) {
+                        throw new AxisFault(
+                                "Non-XML payload is not allowed. PayLoad inside the SOAP body needs to an XML element.");
+                    }
+                }
             }
+            // Get the result by executing the javascript file
+            result = engine.call(jsFunctionName, reader, args, scripts);
 
             // Create the outgoing message
             SOAPFactory fac;
@@ -195,7 +211,10 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
                             while (iterator.hasNext()) {
                                 XmlSchemaElement innerElement = (XmlSchemaElement) iterator.next();
                                 QName qName = innerElement.getSchemaTypeName();
-                                OMElement omElement = fac.createOMElement(innerElement.getName(), namespace);
+                                // Passing Null for the namespace as the WSDL
+                                // which was generated does not have one for
+                                // the 'return' element
+                                OMElement omElement = fac.createOMElement(innerElement.getName(), null);
                                 if (qName == Constants.XSD_ANYTYPE) {
                                     omElement.addChild(result);
                                 } else {
@@ -210,9 +229,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
                                 outElement.addChild(omElement);
                             }
                             body.addChild(outElement);
-
                         } else {
-                            throw new AxisFault("Unsupported schema type in request");
+                            throw new AxisFault("Unsupported schema type in response.");
                         }
                     } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANYTYPE){
                         if (result != null) {
@@ -226,6 +244,9 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
             outMessage.setEnvelope(envelope);
         } catch (Throwable throwable) {
             AxisFault fault= AxisFault.makeFault(throwable);
+            // This is a workaround to avoid Axis2 sending the SOAPFault with a
+            // http-400 code when sending using SOAP1. We explicitly set the
+            // FualtCode to 'Receiver'.
             fault.setFaultCode(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(soapEnvelope.getNamespace().getNamespaceURI())
             ? SOAP12Constants.SOAP_DEFAULT_NAMESPACE_PREFIX + ":"
             + SOAP12Constants.FAULT_CODE_RECEIVER
@@ -235,6 +256,10 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
         }
     }
 
+    /**
+     * Provides support for importing JavaScript files specified in the
+     * Services.xml or the Axis2.xml using the "loadJSScripts" parameter.
+     */
     private String getImportScriptsList(MessageContext inMessage) {
         String scripts = null;
 
@@ -284,9 +309,11 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
         return omElement.getText();
     }
 
-    /*
-     * Extracts and returns the name of the JS function to be invoked from the
-     * inMessage
+    /**
+     * Extracts and returns the name of the JS function associated for the
+     * currently dispatched operation. First we try to retrieve the function
+     * name vis the JS_FUNCTION_NAME parameter of the AxisOperation. If not we
+     * assume the localpart of the operation name to be the function name.
      * 
      * @param inMessage
      *            MessageContext object with information about the incoming
@@ -314,9 +341,9 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
         return jsFunctionName;
     }
 
-    /*
-     * Locates the service Javascript associated with ServiceJS parameter and returns
-     * an input stream to it.
+    /**
+     * Locates the service Javascript file associated with ServiceJS parameter and returns
+     * a Reader for it.
      *
      * @param inMessage MessageContext object with information about the incoming message
      * @return an input stream to the javascript source file
