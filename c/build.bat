@@ -68,6 +68,12 @@
 
 @cd ..\..\
 
+@cd axis2c\neethi\src\util
+
+@nmake -f neethi_util.mk AXIS2_BIN_DIR=..\..\..\build\axis2c-bin-1.1.0-win32
+
+@cd ..\..\..\..\
+
 @cd wsclient
 
 @nmake -f wsclient.mk AXIS2_BIN_DIR=..\axis2c\build\axis2c-bin-1.1.0-win32
