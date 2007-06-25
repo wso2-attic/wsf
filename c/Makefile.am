@@ -8,7 +8,7 @@ data_DATA=config/axis2.xml README \
 dist-hook:
 	sh dist.sh
 
-samples: build_samples.sh
+samples:
 	sh build_samples.sh $(prefix)
 
 
