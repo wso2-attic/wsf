@@ -10,7 +10,7 @@
     b) libsqlight3-dev
     c) libxml2-dev
     d) pkg-config
-    e) libiksemel-dev (If you enable xmpp)
+    e) libiksemel-dev (If you enable XMPP)
 
     1. Extract the source tar package to a folder.
     2. Set WSFC_HOME environment variable pointing to the location where you 
@@ -55,13 +55,15 @@
             Run the wsclient in a new shell
 
             cd /your_path_to_wso2_wsf-c/bin
+            ./wsclient --soap http://localhost:9090/axis2/services/echo < samples/wsclient/data/echo.xml
 
-            ./wsclient
+            You can also run the sample shell scripts given for wsclient
+
+            cd /your_path_to_wso2_wsf-c/bin/samples/wsclient
+            sh echo.sh
 
             To see the possible command line options run ./wsclient --help or ./wsclient -h
 
-            Ex: ./wsclient --soap http://localhost:9090/axis2/services/echo < ../resources/echo.xml
-           
 
 2. Installing and Running on Microsoft Windows (win32)
 ======================================================
