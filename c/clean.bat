@@ -1,4 +1,4 @@
-@if exist axis2c\build\axis2c-bin-1.0.0-win32 rmdir /S /Q axis2c\build\axis2c-bin-1.0.0-win32
+@if exist axis2c\build\axis2c-bin-1.1.0-win32 rmdir /S /Q axis2c\build\axis2c-bin-1.1.0-win32
 
 @if exist sandesha2c\build\sandesha2 rmdir /S /Q sandesha2c\build\sandesha2
 
