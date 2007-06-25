@@ -30,6 +30,7 @@
             *  ./configure --prefix=${WSFC_HOME}
             * make
             * make install
+            * make samples 
 
             Use './configure --help' for possible command line options.
 
