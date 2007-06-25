@@ -60,12 +60,11 @@ import org.mozilla.javascript.Context;
  * Class JavaScriptReceiver implements the AbstractInOutSyncMessageReceiver,
  * which, is the abstract IN-OUT MEP message receiver.
  */
-public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
-        MessageReceiver, JavaScriptEngineConstants {
+public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements MessageReceiver,
+        JavaScriptEngineConstants {
 
-    private String UNSUPPORTED_SCHEMA_TYPE =
-            "At the moment we only support WSDL 2.0 RPC style schema, which has a secquence " +
-                    "within a complexType";
+    private String UNSUPPORTED_SCHEMA_TYPE = "At the moment we only support WSDL 2.0 RPC style schema, which has a secquence "
+            + "within a complexType";
 
     /**
      * Invokes the Javascript service with the parameters from the inMessage
@@ -86,17 +85,15 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
             // So we instantiate it in here, so that we can use it outside of the script later
             engine.getCx().evaluateString(engine, "new XML();", "Instantiate E4X", 0, null);
 
-
             JavaScriptEngineUtils.loadHostObjects(engine, inMessage.getConfigurationContext()
                     .getAxisConfiguration());
-            
+
             // Inject the incoming MessageContext to the Rhino Context. Some
             // host objects need access to the MessageContext. Eg: FileSystem,
             // WSRequest
             Context context = engine.getCx();
             context.putThreadLocal(AXIS2_MESSAGECONTEXT, inMessage);
-            
-             
+
             /*
              * Some host objects depend on the data we obtain from the
              * AxisService & ConfigurationContext.. It is possible to get these
@@ -107,8 +104,9 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
              * here too..
              */
             context.putThreadLocal(AXIS2_SERVICE, inMessage.getAxisService());
-            context.putThreadLocal(AXIS2_CONFIGURATION_CONTEXT, inMessage.getConfigurationContext());
-            
+            context.putThreadLocal(AXIS2_CONFIGURATION_CONTEXT, inMessage
+                            .getConfigurationContext());
+
             JavaScriptEngineUtils.loadGlobalPropertyObjects(engine, inMessage
                     .getConfigurationContext().getAxisConfiguration());
             // JS Engine seems to need the Axis2 repository location to load the
@@ -121,10 +119,10 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
 
             Reader reader = readJS(inMessage);
             String jsFunctionName = inferJavaScriptFunctionName(inMessage);
-            
+
             //support for importing javaScript files using services.xml or the axis2.xml
             String scripts = getImportScriptsList(inMessage);
-            
+
             ArrayList params = new ArrayList();
             OMNode result = null;
             OMElement payload = soapEnvelope.getBody().getFirstElement();
@@ -149,8 +147,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
                                         innerElement.getName()));
                                 if (omElement == null) {
                                     throw new AxisFault(
-                                            "Required element "
-                                                    + innerElement.getName()
+                                            "Required element "+ innerElement.getName()
                                                     + " defined in the schema can not be found in the request");
                                 }
                                 params.add(createParam(omElement, innerElement.getSchemaTypeName(),
@@ -189,69 +186,66 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
             }
             SOAPEnvelope envelope = fac.getDefaultEnvelope();
             SOAPBody body = envelope.getBody();
-            AxisMessage outAxisMessage =
-                        inMessage.getAxisOperation()
-                                .getMessage(WSDLConstants.MESSAGE_LABEL_OUT_VALUE);
-                XmlSchemaElement xmlSchemaElement = outAxisMessage.getSchemaElement();
+            AxisMessage outAxisMessage = inMessage.getAxisOperation().getMessage(
+                    WSDLConstants.MESSAGE_LABEL_OUT_VALUE);
+            XmlSchemaElement xmlSchemaElement = outAxisMessage.getSchemaElement();
             OMElement outElement;
             String prefix = "ws";
             if (xmlSchemaElement != null) {
                 QName elementQName = xmlSchemaElement.getSchemaTypeName();
-                OMNamespace namespace =
-                        fac.createOMNamespace(elementQName.getNamespaceURI(), prefix);
+                OMNamespace namespace = fac.createOMNamespace(elementQName.getNamespaceURI(),
+                        prefix);
                 outElement = fac.createOMElement(xmlSchemaElement.getName(), namespace);
-                    XmlSchemaType schemaType = xmlSchemaElement.getSchemaType();
-                    if (schemaType instanceof XmlSchemaComplexType) {
-                        XmlSchemaComplexType complexType = ((XmlSchemaComplexType) schemaType);
-                        XmlSchemaParticle particle = complexType.getParticle();
-                        if (particle instanceof XmlSchemaSequence) {
-                            XmlSchemaSequence xmlSchemaSequence = (XmlSchemaSequence) particle;
-                            Iterator iterator = xmlSchemaSequence.getItems().getIterator();
-                            // now we need to know some information from the binding operation.
-                            while (iterator.hasNext()) {
-                                XmlSchemaElement innerElement = (XmlSchemaElement) iterator.next();
-                                QName qName = innerElement.getSchemaTypeName();
-                                // Passing Null for the namespace as the WSDL
-                                // which was generated does not have one for
-                                // the 'return' element
-                                OMElement omElement = fac.createOMElement(innerElement.getName(), null);
-                                if (qName == Constants.XSD_ANYTYPE) {
+                XmlSchemaType schemaType = xmlSchemaElement.getSchemaType();
+                if (schemaType instanceof XmlSchemaComplexType) {
+                    XmlSchemaComplexType complexType = ((XmlSchemaComplexType) schemaType);
+                    XmlSchemaParticle particle = complexType.getParticle();
+                    if (particle instanceof XmlSchemaSequence) {
+                        XmlSchemaSequence xmlSchemaSequence = (XmlSchemaSequence) particle;
+                        Iterator iterator = xmlSchemaSequence.getItems().getIterator();
+                        // now we need to know some information from the binding operation.
+                        while (iterator.hasNext()) {
+                            XmlSchemaElement innerElement = (XmlSchemaElement) iterator.next();
+                            QName qName = innerElement.getSchemaTypeName();
+                            // Passing Null for the namespace as the WSDL
+                            // which was generated does not have one for
+                            // the 'return' element
+                            OMElement omElement = fac.createOMElement(innerElement.getName(), null);
+                            if (qName == Constants.XSD_ANYTYPE) {
+                                omElement.addChild(result);
+                            } else {
+                                if (result instanceof OMText) {
                                     omElement.addChild(result);
                                 } else {
-                                    if (result instanceof OMText) {
-                                        omElement.addChild(result);
-                                    } else {
-                                        OMElement element = (OMElement) result;
-                                        omElement.setText(element.getText());
-                                    }
-
+                                    OMElement element = (OMElement) result;
+                                    omElement.setText(element.getText());
                                 }
-                                outElement.addChild(omElement);
                             }
-                            body.addChild(outElement);
-                        } else {
-                            throw new AxisFault("Unsupported schema type in response.");
+                            outElement.addChild(omElement);
                         }
-                    } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANYTYPE){
-                        if (result != null) {
-                            outElement.addChild(result);
-                            body.addChild(outElement);
-                        }
+                        body.addChild(outElement);
+                    } else {
+                        throw new AxisFault("Unsupported schema type in response.");
                     }
-                } else if (result != null){
+                } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANYTYPE) {
+                    if (result != null) {
+                        outElement.addChild(result);
+                        body.addChild(outElement);
+                    }
+                }
+            } else if (result != null) {
                 body.addChild(result);
             }
             outMessage.setEnvelope(envelope);
         } catch (Throwable throwable) {
-            AxisFault fault= AxisFault.makeFault(throwable);
+            AxisFault fault = AxisFault.makeFault(throwable);
             // This is a workaround to avoid Axis2 sending the SOAPFault with a
             // http-400 code when sending using SOAP1. We explicitly set the
             // FualtCode to 'Receiver'.
-            fault.setFaultCode(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(soapEnvelope.getNamespace().getNamespaceURI())
-            ? SOAP12Constants.SOAP_DEFAULT_NAMESPACE_PREFIX + ":"
-            + SOAP12Constants.FAULT_CODE_RECEIVER
-            : SOAP12Constants.SOAP_DEFAULT_NAMESPACE_PREFIX + ":"
-            + SOAP11Constants.FAULT_CODE_RECEIVER);
+            fault.setFaultCode(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(soapEnvelope
+                   .getNamespace().getNamespaceURI()) 
+                       ?SOAP12Constants.SOAP_DEFAULT_NAMESPACE_PREFIX+ ":" + SOAP12Constants.FAULT_CODE_RECEIVER
+                       :SOAP12Constants.SOAP_DEFAULT_NAMESPACE_PREFIX + ":"+ SOAP11Constants.FAULT_CODE_RECEIVER);
             throw fault;
         }
     }
@@ -293,17 +287,17 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements
 
         if (Constants.XSD_ANYTYPE.equals(type)) {
             Context context = engine.getCx();
-            OMElement element  = omElement.getFirstElement();
-            Object[] objects = {element};
-            Object args = context.newObject(engine, "XML",objects);
+            OMElement element = omElement.getFirstElement();
+            Object[] objects = { element };
+            Object args = context.newObject(engine, "XML", objects);
             return args;
         }
         if (Constants.XSD_BOOLEAN.equals(type)) {
-            String value  = omElement.getText();
+            String value = omElement.getText();
             return Boolean.valueOf(value);
         }
         if (Constants.XSD_DOUBLE.equals(type)) {
-            String value  = omElement.getText();
+            String value = omElement.getText();
             return new Double(value);
         }
         return omElement.getText();
