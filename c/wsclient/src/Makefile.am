@@ -28,3 +28,6 @@ INCLUDES =	-I ../../axis2c/util/include \
 			-I ../../axis2c/neethi/src/util \
             -I ../../rampartc/include 
 
+EXTRA_DIST=constants.h error.h option.h stub.h util.h wsclient.h
+
+
