@@ -957,10 +957,10 @@ void wsf_soap_do_soap_call(zval* this_ptr,
                     env_node = axiom_soap_envelope_get_base_node(res_envelope, env);
                     if(env_node){
                         buffer = axiom_node_to_string(env_node, env);
-					    if(buffer){
-						    buffer_length = strlen(buffer);
+                        if(buffer){
+                            buffer_length = strlen(buffer);
                             parse_packet_soap(client_zval , buffer, 
-                                        buffer_length , fn, NULL, return_value, NULL TSRMLS_CC);
+                                              buffer_length , fn, NULL, return_value, NULL TSRMLS_CC);
                         }
                     }
                 }
@@ -2524,6 +2524,60 @@ void wsf_soap_get_types(zval *this_ptr,
     }
     
 }
+
+void wsf_soap_get_location(zval *this_ptr,
+                            zval *return_value,
+                            axutil_env_t *env
+                            TSRMLS_CC)
+{
+    zval **tmp = NULL;
+    zval *client_zval = NULL;
+    sdlPtr sdl;
+    char *location = NULL;
+    sdlFunctionPtr *f_val = NULL;
+    sdlFunctionPtr fn;
+    char *f_name = NULL;
+    sdlBindingPtr binding;
+    
+    if(instanceof_function(Z_OBJCE_P(this_ptr), ws_client_proxy_class_entry TSRMLS_CC)){
+        if(zend_hash_find(Z_OBJPROP_P(this_ptr), "wsclient", sizeof("wsclient"), (void**)&tmp) == SUCCESS){
+            client_zval = *tmp;
+        }else{
+            php_error_docref(NULL TSRMLS_CC, E_ERROR," proxy created without wsclient");
+            return;
+        }
+    }else if(instanceof_function(Z_OBJCE_P(this_ptr), ws_client_class_entry TSRMLS_CC)){
+        client_zval = this_ptr;
+    }
+    
+    if (FIND_SDL_PROPERTY(client_zval,tmp) != FAILURE) {
+        FETCH_SDL_RES(sdl,tmp);
+    }
+
+    if (sdl != NULL) {
+        if (&sdl->functions) {
+            zend_hash_internal_pointer_reset(&sdl->functions);
+            while(zend_hash_get_current_data(&sdl->functions, (void **)&f_val) != FAILURE) {
+                f_name = (*f_val)->functionName;
+                zend_hash_move_forward(&sdl->functions);
+            }
+            if (f_name != NULL) {
+                fn = get_function(sdl, f_name);
+                if (fn != NULL) 
+                    binding = fn->binding;
+                if (binding)
+                    location = binding->location;
+                if (location)
+                {
+                    array_init(return_value);
+                    add_next_index_stringl(return_value, location, strlen(location), 1);
+                }
+            }
+        }
+    }
+}
+
+
 
 axiom_node_t*
 wsf_soap_do_function_call(axutil_env_t *env,
