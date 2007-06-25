@@ -80,7 +80,7 @@ fi
 echo 'done'
 
 echo "Running autogen.sh in WSF/C samples"
-cd samples
+cd examples
 ./autogen.sh
 cd ..
 
