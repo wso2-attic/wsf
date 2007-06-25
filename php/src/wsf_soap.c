@@ -900,17 +900,17 @@ void wsf_soap_do_soap_call(zval* this_ptr,
 		WSF_GLOBAL(features) = 0;
 	}
     
-    {/** set options */
-        HashTable *client_ht = NULL;
-        /* HashTable *message_ht = NULL; */
-        if(zend_hash_find(Z_OBJPROP_P(client_zval), WS_OPTIONS, sizeof(WS_OPTIONS), (void **) &tmp) == SUCCESS){
-            if(Z_TYPE_PP(tmp) == IS_ARRAY){
-                client_ht = Z_ARRVAL_PP(tmp);
-            }   
+/*         {/\** set options *\/ */
+/*         HashTable *client_ht = NULL; */
+/*         /\* HashTable *message_ht = NULL; *\/ */
+/*         if(zend_hash_find(Z_OBJPROP_P(client_zval), WS_OPTIONS, sizeof(WS_OPTIONS), (void **) &tmp) == SUCCESS){ */
+/*             if(Z_TYPE_PP(tmp) == IS_ARRAY){ */
+/*                 client_ht = Z_ARRVAL_PP(tmp); */
+/*             }    */
 
-        }
-         wsf_client_set_options(client_ht, NULL, env, client_options, svc_client, 0 TSRMLS_CC); 
-    }
+/*         } */
+/* /\*          wsf_client_set_options(client_ht, NULL, env, client_options, svc_client, 0 TSRMLS_CC);  *\/ */
+/*     } */
 
  	if (sdl != NULL) {
  		fn = get_function(sdl, function);
@@ -929,6 +929,17 @@ void wsf_soap_do_soap_call(zval* this_ptr,
 				location = binding->location;
                 to_epr = axis2_endpoint_ref_create(env, location);
                 axis2_options_set_to(client_options, env, to_epr);
+                {/** set options */
+                    HashTable *client_ht = NULL;
+                    if(zend_hash_find(Z_OBJPROP_P(client_zval), WS_OPTIONS, sizeof(WS_OPTIONS), (void **) &tmp) == SUCCESS){
+                        if(Z_TYPE_PP(tmp) == IS_ARRAY){
+                            client_ht = Z_ARRVAL_PP(tmp);
+                        }   
+                        
+                    }
+                    wsf_client_set_options(client_ht, NULL, env, client_options, svc_client, 0 TSRMLS_CC);
+                }
+                
 			}
 			if (binding->bindingType == BINDING_SOAP) {
 				/*
