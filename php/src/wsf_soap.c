@@ -948,7 +948,11 @@ void wsf_soap_do_soap_call(zval* this_ptr,
                 */
 				sdlSoapBindingFunctionPtr fnb = (sdlSoapBindingFunctionPtr)fn->bindingAttributes;
 				request = serialize_function_call(client_zval, fn, NULL, fnb->input.ns, real_args, arg_count, soap_version, soap_headers TSRMLS_CC);
-			
+		
+                if(fnb->soapAction){
+                    axutil_string_t *action_string = axutil_string_create(env, fnb->soapAction);
+                    axis2_options_set_soap_action(client_options, env, action_string);
+                }
                 res_envelope =  send_receive_soap_envelope_with_op_client(env, svc_client, client_options, request);
                 if(res_envelope){
                     axis2_char_t *buffer = NULL;
