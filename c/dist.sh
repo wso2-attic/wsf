@@ -11,5 +11,5 @@ mv rampartc/xdocs docs/rampartc
 find -name "*.libs"| xargs rm -rf
 find -name "*.deps"| xargs rm -rf
 find -name "*.svn"| xargs rm -rf
-find -name "*.Makefile"| xargs rm -rf
+find -name "Makefile"| xargs rm -rf
 cd ..
