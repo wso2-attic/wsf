@@ -333,19 +333,19 @@ class WSSoapClient
 	 */
 	public function __getLastResponseHeaders()
 	{
-		if (is_null($this->_options) || is_null($this->_options['trace']) || 
-            $this->_options['trace'] == 0) {
-            $fault = new WSSoapFault('Client',
-                "SoapClient::__getLastResponseHeaders(): Invalid function call. " .
-                "This method only works if trace option is set.");
-            throw $fault; 
-        }
+            if (is_null($this->_options) || is_null($this->_options['trace']) || 
+                $this->_options['trace'] == 0) {
+                $fault = new WSSoapFault('Client',
+                                         "SoapClient::__getLastResponseHeaders(): Invalid function call. " .
+                                         "This method only works if trace option is set.");
+                throw $fault; 
+            }
 	}
-
+        
 	/**
 	 * Returns list of SOAP types. This function works only in WSDL mode.
-     * 
-     * @return array list of SOAP types from WSDL
+         * 
+         * @return array list of SOAP types from WSDL
 	 */
 	public function __getTypes()
 	{
@@ -483,7 +483,6 @@ class WSSoapClient
                 try{
                     $result = $this->_client->request($payload);
                     if($result){
-                        echo "ook:";
                         $doc = new DOMDocument();
                         $doc->loadXML($result->str);
                         return $doc->firstChild->nodeValue;
@@ -495,14 +494,9 @@ class WSSoapClient
                     }else{
                         printf("Message = %s \n", $e->getMessage());
                     }
-                    /* echo "ook"; */
-/*                     $error_msg = 'response message not received '; */
-/*                     return $error_msg; */
                 }
             }
         }
-        
-        
         
      /**
      * Sets the location option (the endpoint URL that will be touched by the
@@ -514,14 +508,23 @@ class WSSoapClient
    	 */
    	public function __setLocation($new_location = null)
    	{
-            $old_location = $this->_clientOptions["to"];
-            if($new_location){
+            if($this->_wsdl && $new_location){
+                $proxy = $this->_client->getProxy();
+                $old_location = $proxy->getLocation();
+                $old_location = $old_location[0];
+                $this->_clientOptions["wsdl"] = $this->_wsdl;
                 $this->_clientOptions["to"] = $new_location;
                 $this->_client = new WSClient($this->_clientOptions);
-
             }
-
-            echo $old_location."\n";
+            else{
+                $old_location = $this->_clientOptions["to"];
+                if($new_location){
+                    $this->_clientOptions["to"] = $new_location;
+                    $this->_client = new WSClient($this->_clientOptions);
+                    
+                }
+            }
+                echo $old_location."\n";
    		
    	}
 
