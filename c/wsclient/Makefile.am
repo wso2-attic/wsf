@@ -8,7 +8,7 @@ data_DATA= README \
 logs_DATA=
 docs_DATA=docs/*
 
-EXTRA_DIST = build.sh autogen.sh CREDITS LICENSE build.sh wsclient.mk 
+EXTRA_DIST = build.sh autogen.sh CREDITS LICENSE build.sh wsclient.mk docs
 dist-hook:
 	rm -rf `find $(distdir)/ -type d -name .svn`
 	rm -rf `find $(distdir)/ -type d -name .deps`
