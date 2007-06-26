@@ -147,6 +147,7 @@ AC_CONFIG_FILES([Makefile \
     src/msgprocessors/Makefile\
     src/storage/Makefile\
     src/storage/beans/Makefile\
+    src/storage/common/Makefile \
     src/storage/inmemory/Makefile\
     src/storage/sqlite/Makefile\
     src/storage/mysql/Makefile\
