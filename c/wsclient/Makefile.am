@@ -1,12 +1,12 @@
 logsdir=$(prefix)/logs
-docsdir=$(prefix)/docs
+docsdir=$(prefix)/docs/wsclient
 confdir=$(prefix)
 SUBDIRS = src samples
 data_DATA= README \
 	INSTALL CREDITS COPYING NEWS 
 
 logs_DATA=
-docs_DATA=
+docs_DATA=docs/*
 
 EXTRA_DIST = build.sh autogen.sh CREDITS LICENSE build.sh wsclient.mk 
 dist-hook:
