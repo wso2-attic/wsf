@@ -668,8 +668,6 @@ int wsf_client_set_options(HashTable *client_ht,
 					soap_version = AXIOM_SOAP11;
 					AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] soap version soap11");
 
-					WSF_GLOBAL(soap_version) = AXIOM_SOAP11;
-					WSF_GLOBAL(soap_uri) = WS_SOAP_1_1_NAMESPACE_URI;
 				}
 			}else if(Z_TYPE_PP(tmp) == IS_BOOL && Z_BVAL_PP(tmp) == 0){
 					use_soap = AXIS2_FALSE;
@@ -677,6 +675,14 @@ int wsf_client_set_options(HashTable *client_ht,
 		}
 
 		if(use_soap){
+            if(soap_version == AXIOM_SOAP11){
+                WSF_GLOBAL(soap_version) = AXIOM_SOAP11;
+                WSF_GLOBAL(soap_uri) = WS_SOAP_1_1_NAMESPACE_URI;
+            }else if(soap_version == AXIOM_SOAP12){
+                WSF_GLOBAL(soap_version) = AXIOM_SOAP12; 
+                WSF_GLOBAL(soap_uri) = WS_SOAP_1_1_NAMESPACE_URI;
+            }
+
 			axis2_options_set_soap_version(client_options, env, soap_version);
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 				"[wsf_client] useSOAP TRUE setting soap version %d", soap_version);
