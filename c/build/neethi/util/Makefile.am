@@ -13,4 +13,4 @@ INCLUDES = -I$(top_builddir)/include \
             -I ../../../axiom/include 
 
 
-EXTRA_DIST=neethi_options.h
+EXTRA_DIST=neethi_options.h neethi_util.mk
