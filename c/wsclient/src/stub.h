@@ -26,7 +26,7 @@
 #include <platforms/axutil_platform_auto_sense.h>
 #include <axiom_node.h>
 
-#include <config.h>
+
 
 #ifdef __cplusplus
 extern "C"
