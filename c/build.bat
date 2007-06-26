@@ -97,7 +97,7 @@
 
 @copy savanc\modules\savan\mod_savan.lib .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
 
-@copy savanc\bin\samples\*.exe .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples\
+@copy savanc\bin\samples\savan\*.exe .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples\
 
 @cd ..\..
 
