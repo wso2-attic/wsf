@@ -957,7 +957,7 @@ char* wsf_util_serialize_om(const axutil_env_t *env, axiom_node_t *ret_node)
     return new_buffer;
 }
 
-xmlDocPtr wsf_util_serialize_om_to_doc(axutil_env_t *env, axiom_node_t *ret_node)
+xmlDocPtr wsf_util_serialize_om_to_doc(const axutil_env_t *env, axiom_node_t *ret_node)
 {
 	axiom_xml_writer_t *writer = NULL;
 	axiom_output_t *om_output = NULL;

@@ -62,4 +62,4 @@ void wsf_client_enable_proxy(HashTable *ht,
 
 void wsf_client_add_properties(zval *this_ptr , HashTable *ht TSRMLS_DC);
 
-#endif /* WS_UTIL_H */
+#endif /* WSF_CLIENT_H */

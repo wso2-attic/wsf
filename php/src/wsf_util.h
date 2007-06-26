@@ -96,7 +96,7 @@ void wsf_util_get_attachments(
 char* wsf_util_serialize_om(const axutil_env_t *env, 
     axiom_node_t *ret_node);
 
-xmlDocPtr wsf_util_serialize_om_to_doc(axutil_env_t *env, 
+xmlDocPtr wsf_util_serialize_om_to_doc(const axutil_env_t *env, 
     axiom_node_t *ret_node);
 
 xmlNodePtr wsf_util_get_xml_node(zval *node TSRMLS_DC);

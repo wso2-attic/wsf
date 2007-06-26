@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WSF_SCLIENT_H
-#define WSF_SCLIENT_H
+#ifndef WSF_SOAP_CLIENT_H
+#define WSF_SOAP_CLIENT_H
 #include "wsf.h"
 
 void wsf_soap_prepare_ws_globals();
@@ -54,4 +54,11 @@ soapServicePtr create_soap_service(HashTable *ht TSRMLS_DC);
 
 void delete_service(void *data);
 
-#endif /* WSF_SCLIENT_H */
+axis2_bool_t 
+wsf_soap_do_function_call(const axutil_env_t *env,
+          wsf_svc_info_t *svc_info,
+          axis2_msg_ctx_t *in_msg_ctx,
+          axis2_msg_ctx_t *out_msg_ctx,
+          char *op_name TSRMLS_DC);
+
+#endif /* WSF_SOAP_CLIENT_H */

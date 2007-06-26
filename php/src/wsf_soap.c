@@ -134,7 +134,7 @@ static xmlNodePtr serialize_parameter(sdlParamPtr param,zval *param_val,int inde
 static xmlNodePtr serialize_zval(zval *val, sdlParamPtr param, char *paramName, int style, xmlNodePtr parent TSRMLS_DC);
 
 axiom_soap_envelope_t*
-create_soap_envelope_from_doc(xmlDocPtr doc, axutil_env_t *env, axis2_char_t *soap_version_uri)
+create_soap_envelope_from_doc(xmlDocPtr doc, const axutil_env_t *env, axis2_char_t *soap_version_uri)
 {
 	axiom_soap_envelope_t *soap_envelope = NULL;
 	axiom_soap_builder_t *soap_builder = NULL;
@@ -2579,8 +2579,8 @@ void wsf_soap_get_location(zval *this_ptr,
 
 
 
-axiom_node_t*
-wsf_soap_do_function_call(axutil_env_t *env,
+axis2_bool_t 
+wsf_soap_do_function_call(const axutil_env_t *env,
           wsf_svc_info_t *svc_info,
           axis2_msg_ctx_t *in_msg_ctx,
           axis2_msg_ctx_t *out_msg_ctx,
@@ -2599,7 +2599,7 @@ wsf_soap_do_function_call(axutil_env_t *env,
     axis2_char_t *soap_version_uri = NULL;
 
     if(!in_msg_ctx || !op_name)
-        return NULL;
+        return AXIS2_FAILURE;
     
     if(axis2_msg_ctx_get_is_soap_11(in_msg_ctx, env) == AXIS2_TRUE){
         soap_version = SOAP_1_1;
@@ -2612,7 +2612,7 @@ wsf_soap_do_function_call(axutil_env_t *env,
     soap_envelope = axis2_msg_ctx_get_soap_envelope(in_msg_ctx, env); 
     
     if(!soap_envelope)
-        return NULL;
+        return AXIS2_FAILURE;
 
     soap_envelope_node = axiom_soap_envelope_get_base_node(soap_envelope, env);
 
@@ -2654,7 +2654,10 @@ wsf_soap_do_function_call(axutil_env_t *env,
     }
 
     res_soap_envelope = create_soap_envelope_from_doc(doc_return, env, soap_version_uri);
-    return NULL;
+
+    axis2_msg_ctx_set_soap_envelope(out_msg_ctx, env, res_soap_envelope);
+
+    return AXIS2_SUCCESS;
 }
 
 
