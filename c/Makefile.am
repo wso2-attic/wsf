@@ -12,5 +12,5 @@ samples:
 	sh build_samples.sh $(prefix)
 
 
-EXTRA_DIST=build_samples.sh config build.bat clean.bat dist.sh docs CREDITS NOTICE examples
+EXTRA_DIST=build_samples.sh config build.bat clean.bat dist.sh docs CREDITS NOTICE examples LICENSE
 
