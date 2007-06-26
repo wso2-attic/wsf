@@ -867,7 +867,6 @@ void wsf_soap_do_soap_call(zval* this_ptr,
 		FETCH_TYPEMAP_RES(typemap,tmp);
 	}
 
-	soap_version = WSF_GLOBAL(soap_version);
 	old_sdl = WSF_GLOBAL(sdl);
 	WSF_GLOBAL(sdl) = sdl;
 	old_encoding = WSF_GLOBAL(encoding);
@@ -900,18 +899,6 @@ void wsf_soap_do_soap_call(zval* this_ptr,
 		WSF_GLOBAL(features) = 0;
 	}
     
-/*         {/\** set options *\/ */
-/*         HashTable *client_ht = NULL; */
-/*         /\* HashTable *message_ht = NULL; *\/ */
-/*         if(zend_hash_find(Z_OBJPROP_P(client_zval), WS_OPTIONS, sizeof(WS_OPTIONS), (void **) &tmp) == SUCCESS){ */
-/*             if(Z_TYPE_PP(tmp) == IS_ARRAY){ */
-/*                 client_ht = Z_ARRVAL_PP(tmp); */
-/*             }    */
-
-/*         } */
-/* /\*          wsf_client_set_options(client_ht, NULL, env, client_options, svc_client, 0 TSRMLS_CC);  *\/ */
-/*     } */
-
  	if (sdl != NULL) {
  		fn = get_function(sdl, function);
  		if (fn != NULL) {
@@ -931,7 +918,7 @@ void wsf_soap_do_soap_call(zval* this_ptr,
                 axis2_options_set_to(client_options, env, to_epr);
                 {/** set options */
                     HashTable *client_ht = NULL;
-                    if(zend_hash_find(Z_OBJPROP_P(client_zval), WS_OPTIONS, sizeof(WS_OPTIONS), (void **) &tmp) == SUCCESS){
+                    if(zend_hash_find(Z_OBJPROP_P(client_zval), WS_OPTIONS, sizeof(WS_OPTIONS), (void **) &tmp) == SUCCESS)                     {
                         if(Z_TYPE_PP(tmp) == IS_ARRAY){
                             client_ht = Z_ARRVAL_PP(tmp);
                         }   
@@ -941,6 +928,8 @@ void wsf_soap_do_soap_call(zval* this_ptr,
                 }
                 
 			}
+
+            soap_version = WSF_GLOBAL(soap_version);
 			if (binding->bindingType == BINDING_SOAP) {
 				/*
                 xmlChar *buf = NULL;
@@ -2602,6 +2591,9 @@ wsf_soap_do_function_call(const axutil_env_t *env,
     axiom_node_t *soap_envelope_node = NULL;
     axis2_char_t *soap_version_uri = NULL;
 
+    char *buff = NULL;
+    int length = 0;
+
     if(!in_msg_ctx || !op_name)
         return AXIS2_FAILURE;
     
@@ -2620,7 +2612,11 @@ wsf_soap_do_function_call(const axutil_env_t *env,
 
     soap_envelope_node = axiom_soap_envelope_get_base_node(soap_envelope, env);
 
-    doc_request = wsf_util_serialize_om_to_doc(env, soap_envelope_node);
+    buff = axiom_node_to_string(soap_envelope_node, env);
+    length = strlen(buff);
+
+
+    doc_request = soap_xmlParseMemory(buff, length);
 
     service = (soapServicePtr)svc_info->service;
 
