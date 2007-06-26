@@ -11,5 +11,3 @@ EXTRA_DIST = LICENSE NOTICE build.sh autogen.sh samples build test xdocs
 check:	
 	./rampart-tests.sh
 
-install-data-hook: 
-	cp -rf xdocs/* $(docsdir)

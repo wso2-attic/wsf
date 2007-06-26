@@ -37,5 +37,3 @@ bindist: $(bin_PROGRAMS)
 	tar -cf - axis2c-bin-${PACKAGE_VERSION}-linux | gzip -c > axis2c-bin-${PACKAGE_VERSION}-linux.tar.gz
 	rm -rf axis2c-bin-${PACKAGE_VERSION}-linux
 
-install-data-hook: 
-	cp -rf xdocs/* $(docsdir)
