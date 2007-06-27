@@ -1,3 +1,5 @@
+AXIS2_BIN_DIR=.\..\axis2c\build\axis2c-bin-1.1.0-win32
+
 wsclient:
 	@echo off
 	@if not exist int.msvc mkdir int.msvc
@@ -5,17 +7,8 @@ wsclient:
 	/I.\..\axis2c\build\axis2c-bin-1.1.0-win32\include /I.\..\axis2c\neethi\include /I.\..\axis2c\neethi\src\util /Foint.msvc\ /c
 
 	@link.exe /LIBPATH:.\..\axis2c\build\axis2c-bin-1.1.0-win32\lib int.msvc\*.obj axutil.lib  axis2_engine.lib \
-	axis2_parser.lib axiom.lib neethi_util.lib axis2_http_sender.lib mod_rampart.lib /OUT:.\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\wsclient.exe
+	axis2_parser.lib axiom.lib neethi_util.lib axis2_http_sender.lib mod_rampart.lib /OUT:$(AXIS2_BIN_DIR)\bin\wsclient.exe
 	@if exist int.msvc rmdir /s /q int.msvc
-	@xcopy samples\* .\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples\wsclient
-
+	@mkdir $(AXIS2_BIN_DIR)\bin\samples\wsclient
+	@xcopy samples\* $(AXIS2_BIN_DIR)\bin\samples\wsclient
 	
-	
-
-
-
-
-
-
-
-
