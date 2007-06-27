@@ -1919,7 +1919,7 @@ static xmlNodePtr serialize_parameter(sdlParamPtr param, zval *param_val, int in
 			paramName = name;
 		}
 	}
-	php_printf("%s", paramName);
+	/* php_printf("%s", paramName); */
 	xmlParam = serialize_zval(param_val, param, paramName, style, parent TSRMLS_CC);
 
 	return xmlParam;
