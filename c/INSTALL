@@ -3,7 +3,7 @@
 
 1.1 Using the source release.
 
-    The following steps need to be taken to install and run Axis2/C using source 
+    The following steps need to be taken to install and run WSF/C using source 
     distribution on Linux. Build depends on
 
     a) libssl-dev
@@ -14,7 +14,7 @@
 
     1. Extract the source tar package to a folder.
     2. Set WSFC_HOME environment variable pointing to the location where you 
-       want to install WSO2 WSF-C. 
+       want to install WSO2 WSF/C. 
 
         * WSFC_HOME='/your_desired_path_to_axis2c_installation'
         * export WSFC_HOME
@@ -37,7 +37,7 @@
            Note :If you do not provide a --prefix configure option, it will 
            by default be installed into /usr/local/wsf_c directory.
 
-     5. Go to where you installed WSO2 WSF-C.
+     5. Go to where you installed WSO2 WSF/C.
 
         Start simple axis server
 
@@ -50,16 +50,16 @@
             Note : If you run into shared library problems, try setting the 
             LD_LIBRARY_PATH
 
-            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/your_path_to_wso2_wsf-c/lib
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/your_path_to_wso2_wsfc/lib
 
             Run the wsclient in a new shell
 
-            cd /your_path_to_wso2_wsf-c/bin
+            cd /your_path_to_wso2_wsfc/bin
             ./wsclient --soap http://localhost:9090/axis2/services/echo < samples/wsclient/data/echo.xml
 
             You can also run the sample shell scripts given for wsclient
 
-            cd /your_path_to_wso2_wsf-c/bin/samples/wsclient
+            cd /your_path_to_wso2_wsfc/bin/samples/wsclient
             sh echo.sh
 
             To see the possible command line options run ./wsclient --help or ./wsclient -h
@@ -93,16 +93,16 @@ download and install libxml2)
 
 2.1.3. Running The Binaries
 
-    1. Copy libxml2.dll, iconv.dll and zlib1.dll downloaded to C:\wsf-c\lib
-    2. Extract the binary distribution to a folder of your choice. (example: C:\wsf-c)
+    1. Copy libxml2.dll, iconv.dll and zlib1.dll downloaded to C:\wsfc\lib
+    2. Extract the binary distribution to a folder of your choice. (example: C:\wsfc)
 
     you need to set a couple of environment variables before you can 
     run the server and wsclient.
 
-        * Set the variable WSFC_HOME to the deploy folder (C:\wsf-c)
+        * Set the variable WSFC_HOME to the deploy folder (C:\wsfc)
         * Add the path to lib directory to the PATH variable (%WSFC_HOME%\lib)
 
-    Now everything is set to run the server (C:\axis2c\bin\>  axis2_http_server.exe)
+    Now everything is set to run the server (C:\wsfc\bin\>  axis2_http_server.exe)
 
     If the server is running successfully you should see the message 
     "Started Simple Axis2 HTTP Server..."
@@ -112,7 +112,7 @@ download and install libxml2)
 
     Run the wsclient in a new DOS shell
 
-    cd c:\wsf-c\bin
+    cd c:\wsfc\bin
 
     wsclient wsclient.exe
 
@@ -152,35 +152,29 @@ download and install libxml2)
 
     The following steps will take you through the source compilation
 
-        Extract the source distribution to a folder of your choice. (Example: C:\axis2c)
+        Extract the source distribution to a folder of your choice. (Example: C:\WSFC)
         Open a DOS shell
-        cd C:\axis2c\build\win32
-
-    to access .Net tools, run
-
-        C:\axis2c\build\win32> vcvars32.bat
+        cd C:\WSFC
+        C:\WSFC>build.bat
 
     (Note: You may need to set the PATH environment variable to vcvars32.bat if 
-    Windows complaints that it cannot find this bat)
-    build the system and create a directory named deploy under build directory:
-
-        C:\axis2c\build\win32>nmake install
+    Windows complaints that it cannot find this bat when running the build.bat file)
 
 2.2.5. Running The Binaries
 
     You need to set couple of environment variables before you can run the 
     server and samples.
-    Set the variable WSFC_HOME to the deploy folder (C:\axis2c\build\deploy)
+    Set the variable WSFC_HOME to the deploy folder (C:\wsfc\deploy)
     Add the path to lib directory to PATH variable (%WSFC_HOME%\lib)
     Copy libxml2.dll, iconv.dll and zlib1.dll to axis2c lib folder (%WSFC_HOME%\lib)
-    Now run the server - C:\axis2c\build\deploy\bin>  axis2_http_server.exe
+    Now run the server - C:\wsfc\deploy\bin>  axis2_http_server.exe
     If server is running successfully you should see the message "Started Simple Axis2 HTTP Server..."
     (Note: you may provide command line options to change the default behaviour. 
     Use the command "axis2_http_server.exe -h" to learn about the usage)
 
     Run the wsclient in a new DOS shell
 
-    cd c:\wsf-c\bin
+    cd c:\wsfc\bin
 
     wsclient.exe
 
