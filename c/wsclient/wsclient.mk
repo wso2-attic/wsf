@@ -10,5 +10,5 @@ wsclient:
 	axis2_parser.lib axiom.lib neethi_util.lib axis2_http_sender.lib mod_rampart.lib /OUT:$(AXIS2_BIN_DIR)\bin\wsclient.exe
 	@if exist int.msvc rmdir /s /q int.msvc
 	@mkdir $(AXIS2_BIN_DIR)\bin\samples\wsclient
-	@xcopy samples\* $(AXIS2_BIN_DIR)\bin\samples\wsclient
+	@xcopy /S /Y samples\* $(AXIS2_BIN_DIR)\bin\samples\wsclient
 	
