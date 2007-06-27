@@ -8,8 +8,10 @@ mv axis2c/xdocs docs/axis2c
 mv savanc/xdocs docs/savanc
 mv sandesha2c/xdocs docs/sandesha2c
 mv rampartc/xdocs docs/rampartc
+mv wsclient/docs docs/wsclient
 find -name "*.libs"| xargs rm -rf
 find -name "*.deps"| xargs rm -rf
 find -name "*.svn"| xargs rm -rf
 find -name "Makefile"| xargs rm -rf
+grep -rl AXIS2C_HOME *| xargs sed -i "s/AXIS2C_HOME/WSFC_HOME/g"
 cd ..
