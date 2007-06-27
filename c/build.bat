@@ -46,7 +46,7 @@
 
 @xcopy /E /Q /I sandesha2\modules\sandesha2\sandesha2.dll  .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
 
-@copy sandesha2\samples\*.exe .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples\
+@copy sandesha2\bin\samples\*.exe .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples\
 
 @xcopy /E /Q /I sandesha2\services\RMSampleService .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\services\RMSampleService
 
