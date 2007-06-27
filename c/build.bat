@@ -104,9 +104,9 @@
 
 @if not exist wso2-wsf-c-bin-1.0 mkdir wso2-wsf-c-bin-1.0
 
-@xcopy /E /Q /I axis2c\build\axis2c-bin-1.1.0-win32 wso2-wsf-c-bin-1.0alhpa2
+@xcopy /E /Q /I axis2c\build\axis2c-bin-1.1.0-win32 wso2-wsf-c-bin-1.0
 
-@copy /Y config\axis2.xml wso2-wsf-c-bin-1.0alhpa2\axis2.xml
+@copy /Y config\axis2.xml wso2-wsf-c-bin-1.0\axis2.xml
 
 @copy /Y INSTALL wso2-wsf-c-bin-1.0
 @copy /Y README wso2-wsf-c-bin-1.0
