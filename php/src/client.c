@@ -91,9 +91,9 @@ wsf_client_set_soap_action(HashTable *client_ht,
 	if(!client_options)
 	   return 0;
 
-	if(msg_ht && zend_hash_find(msg_ht, WS_SOAP_ACTION, sizeof(WS_SOAP_ACTION), (void**)&tmp) == SUCCESS){
+	if(msg_ht && zend_hash_find(msg_ht, WS_ACTION, sizeof(WS_ACTION), (void**)&tmp) == SUCCESS){
 		action = Z_STRVAL_PP(tmp);
-	}else if(client_ht && zend_hash_find(client_ht, WS_SOAP_ACTION, sizeof(WS_SOAP_ACTION), (void**)&tmp) == SUCCESS){
+	}else if(client_ht && zend_hash_find(client_ht, WS_ACTION, sizeof(WS_ACTION), (void**)&tmp) == SUCCESS){
         	action = Z_STRVAL_PP(tmp);
 	}
 	if(action){

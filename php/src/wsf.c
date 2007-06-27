@@ -1531,7 +1531,7 @@ PHP_METHOD(ws_service , reply)
     wsf_worker_t *php_worker = NULL;
     zval **raw_post;
     int status = 0;
-    char content_length[40];
+    char content_length[40]; 
     char status_line[100];
     char *content_type = NULL;
 
@@ -1769,7 +1769,6 @@ PHP_METHOD(ws_service , reply)
         {
             sprintf(status_line, "%s 200 OK", req_info->http_protocol);
             sapi_add_header(status_line,strlen(status_line), 1);
-
             sprintf(content_length,"Content-Length %ld", req_info->content_length);
             content_type = AXIS2_MALLOC(ws_env_svr->allocator, strlen(req_info->content_type)*sizeof(char)+20);
             sprintf(content_type, "Content-Type: %s", req_info->content_type);
