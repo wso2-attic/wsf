@@ -66,7 +66,7 @@ extern "C"
         axutil_env_t *env;
         axis2_conf_ctx_t* conf_ctx;
         axis2_svc_t *svc;
-
+        axis2_msg_ctx_t *response;
     }axis2_xmpp_session_data_t;
 
     /** Type name for struct axis2_xmpp_worker_ops */
@@ -137,6 +137,20 @@ extern "C"
     AXIS2_EXTERN void AXIS2_CALL
     axis2_xmpp_session_data_init (
         axis2_xmpp_session_data_t *data);
+
+    AXIS2_EXTERN int AXIS2_CALL 
+    axis2_xmpp_worker_on_data(
+        void* user_data,
+        int type,
+        iks* node);
+
+    AXIS2_EXTERN void AXIS2_CALL 
+    axis2_xmpp_worker_on_log(
+        void *user_data,
+        const char* data,
+        size_t size,
+        int is_incoming);
+
 
 /* Start of function macros ***************************************************/
 

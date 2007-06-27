@@ -1,10 +1,12 @@
 lib_LTLIBRARIES = libaxis2_xmpp_sender.la
-libaxis2_xmpp_sender_la_SOURCES = xmpp_transport_sender.c
+libaxis2_xmpp_sender_la_SOURCES = xmpp_transport_sender.c \
+                                  xmpp_client.c
 
 libaxis2_xmpp_sender_la_LIBADD = ../../../engine/libaxis2_engine.la \
-								../../../../../axiom/src/om/libaxis2_axiom.la \
-								../../../../../util/src/libaxutil.la \
-								../libaxis2_xmpp.la
+				../../../../../axiom/src/om/libaxis2_axiom.la \
+				../../../../../util/src/libaxutil.la \
+                                -liksemel \
+				../libaxis2_xmpp.la
 
 INCLUDES = -I$(top_builddir)/include \
 	       -I$(top_builddir)/src/wsdl\

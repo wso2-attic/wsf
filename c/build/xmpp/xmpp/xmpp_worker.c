@@ -62,11 +62,6 @@ axis2_xmpp_worker_set_svr_port(
     const axutil_env_t *env,
     int port);
 
-int axis2_xmpp_worker_on_data(
-    void* user_data,
-    int type,
-    iks* node);
-
 int axis2_xmpp_worker_on_start_node(
     axis2_xmpp_session_data_t *session,
     iks* node);
@@ -74,12 +69,6 @@ int axis2_xmpp_worker_on_start_node(
 int axis2_xmpp_worker_on_normal_node(
     axis2_xmpp_session_data_t *session,
     iks* node);
-
-void axis2_xmpp_worker_on_log(
-    void *user_data,
-    const char* data,
-    size_t size,
-    int is_incoming);
 
 void axis2_xmpp_worker_setup_filter(
     axis2_xmpp_session_data_t* session);
@@ -191,14 +180,12 @@ axis2_xmpp_worker_run(
     impl->session->env = thread_env;
 
     printf("Starting %s" , impl->session->id_str);
-/*     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Starting %s",impl->session->id_str); */
     /* Create an iks parser and connect to the XMPP server */
     /* We pass the session as user data, which we can access inside iksemel
      * callbacks */
 
     impl->session->parser = iks_stream_new(IKS_NS_CLIENT, (void*)impl->session,
         axis2_xmpp_worker_on_data);
-/*     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " %s create new stream",impl->session->id_str); */
     if (!impl->session->parser)
     {
         AXIS2_LOG_ERROR(thread_env->log, AXIS2_LOG_SI, "Failed to create XMPP parser");
@@ -208,17 +195,13 @@ axis2_xmpp_worker_run(
     }
 
     iks_set_log_hook(impl->session->parser, axis2_xmpp_worker_on_log);
-/*     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " %s log hook registered",impl->session->id_str); */
     axis2_xmpp_worker_setup_filter(impl->session);
 
     /* Create an iksid using the jid supplied. Give "Default" as the resource
      * if a resource is not given */
 
-/*     AXIS2_LOG_DEBUG(thread_env->log, AXIS2_LOG_SI, "creating session id string %s", impl->session->id_str); */
-
     impl->session->jid = iks_id_new(iks_parser_stack(impl->session->parser), 
                                     impl->session->id_str);
-/*     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " %s get new jid iks_id_new",impl->session->id_str); */
     if ( (!impl->session->jid->server) || (!impl->session->jid->user))
     {
         AXIS2_LOG_ERROR(thread_env->log, AXIS2_LOG_SI, "Server and user name "
@@ -240,7 +223,7 @@ axis2_xmpp_worker_run(
     /* Now connect to the XMPP server */
     ret = iks_connect_tcp(impl->session->parser, impl->session->server,
         IKS_JABBER_PORT);
-/*     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " %s iks_connect_tcp",impl->session->id_str); */
+
     if (ret != IKS_OK)
     {
         AXIS2_LOG_ERROR(thread_env->log, AXIS2_LOG_SI, "Failed to connect to XMPP server. "
@@ -249,19 +232,16 @@ axis2_xmpp_worker_run(
             AXIS2_FAILURE);
 	    return AXIS2_FAILURE; /* exit thread */
     }
-    
+   
 	/* Call iks_recv() in a loop. This will call our on_data hook function as
      * and when data arrives */
 
 	ret = IKS_OK;
     while (1)
     {
-/*         axutil_thread_mutex_lock (impl->session->mutex); */
-/*         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " %s iks_recv mutex locked",impl->session->id_str); */
+
         ret = iks_recv(impl->session->parser, -1);
-/*         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " %s iks_recv",impl->session->id_str); */
-/*         axutil_thread_mutex_unlock (impl->session->mutex); */
-/*         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " %s iks_recv mutex unlocked",impl->session->id_str); */
+
         if (ret != IKS_OK)
         {
             switch(ret)
@@ -294,18 +274,15 @@ int axis2_xmpp_worker_on_data(
     iks* node)
 {
     axis2_xmpp_session_data_t *session = (axis2_xmpp_session_data_t*)user_data;
-/*     AXIS2_LOG_DEBUG(session->env->log, AXIS2_LOG_SI, " %s on_data_node",session->id_str); */
     switch(type)
     {
         case IKS_NODE_START:
         {
-/*             AXIS2_LOG_DEBUG(session->env->log, AXIS2_LOG_SI, " %s iks node start",session->id_str); */
             return axis2_xmpp_worker_on_start_node(session, node);
         }
         break;
         case IKS_NODE_NORMAL:
         {
-/*             AXIS2_LOG_DEBUG(session->env->log, AXIS2_LOG_SI, " %s iks node normal",session->id_str); */
             return axis2_xmpp_worker_on_normal_node(session, node);
         }
         break;
@@ -319,14 +296,12 @@ int axis2_xmpp_worker_on_data(
         case IKS_NODE_ERROR:
         {
             printf("error node: stream error");
-/*             AXIS2_LOG_DEBUG(session->env->log, AXIS2_LOG_SI, " %s error node:stream error",session->id_str); */
             return IKS_HOOK;
         }
         break;
 
         default:
         {
-/*             AXIS2_LOG_DEBUG(session->env->log, AXIS2_LOG_SI, " %s unknow node",session->id_str); */
             printf("unknown node");
             return IKS_HOOK;
         }
@@ -344,17 +319,14 @@ int axis2_xmpp_worker_on_start_node(
     axis2_xmpp_session_data_t *session,
     iks* node)
 {
-/*     AXIS2_LOG_DEBUG(session->env->log, AXIS2_LOG_SI, " %s inside start node",session->id_str); */
     if ( session->use_tls && (!iks_is_secure(session->parser)) )
     {
-/*         AXIS2_LOG_DEBUG(session->env->log, AXIS2_LOG_SI, " %s on start node tls",session->id_str); */
         iks_start_tls(session->parser);
         return IKS_OK;
     }
 
     if (!session->use_sasl) /* basic authentication */
     {
-/*         AXIS2_LOG_DEBUG(session->env->log, AXIS2_LOG_SI, " %s basic authentication",session->id_str); */
         iks *x;
         session->session_id = iks_find_attrib(node, "id"); /* get id given from svr */
         x = iks_make_auth (session->jid, session->password, session->session_id);
@@ -372,14 +344,12 @@ int axis2_xmpp_worker_on_normal_node(
     iks* node)
 {
     iks *t = NULL;
-/*     AXIS2_LOG_DEBUG(session->env->log, AXIS2_LOG_SI, " %s inside normal node",session->id_str); */
     if (strcmp("stream:features", iks_name(node)) == 0) /* features node */
     {
         session->features = iks_stream_features (node); /* save features */
 
         if (session->use_sasl)
         {
-/*             AXIS2_LOG_DEBUG(session->env->log, AXIS2_LOG_SI, " %s use sasl enabled",session->id_str); */
             if (session->use_tls && !iks_is_secure (session->parser))
             {
                 return IKS_HOOK;
@@ -387,32 +357,26 @@ int axis2_xmpp_worker_on_normal_node(
 
             if (session->authorized)
             {
-/*                 AXIS2_LOG_DEBUG(session->env->log, AXIS2_LOG_SI, " %s session authorized",session->id_str); */
                 /* Bind a resource if required */
                 if (session->features & IKS_STREAM_BIND)
                 {
-/*                     AXIS2_LOG_DEBUG(session->env->log, AXIS2_LOG_SI, " %s going to resource bind",session->id_str); */
                     t = iks_make_resource_bind (session->jid);
                     iks_send (session->parser, t);
                     iks_delete (t);
-/*                     AXIS2_LOG_DEBUG(session->env->log, AXIS2_LOG_SI, " %s Resource binded",session->id_str); */
                 }
 
                 /* Send a session if required */
                 if (session->features & IKS_STREAM_SESSION)
                 {
-/*                     AXIS2_LOG_DEBUG(session->env->log, AXIS2_LOG_SI, " %s going to send session",session->id_str); */
                     t = iks_make_session ();
                     iks_insert_attrib (t, "id", "auth");
                     iks_send (session->parser, t);
                     iks_delete (t);
-/*                     AXIS2_LOG_DEBUG(session->env->log, AXIS2_LOG_SI, " %s Session sent",session->id_str); */
                 }
 
                 /* Say that we are online */
                 iks_send(session->parser, iks_make_pres(IKS_SHOW_AVAILABLE,
                     "Online"));
-/*                 AXIS2_LOG_DEBUG(session->env->log, AXIS2_LOG_SI, " %s Send presance",session->id_str); */
 
                 /* Subscribe if the service is configured to do so */
                 if ( (session->subscribe) && (session->subscribe_to) )
@@ -424,7 +388,6 @@ int axis2_xmpp_worker_on_normal_node(
                     {
                         iks_send(session->parser, iks_make_s10n(IKS_TYPE_SUBSCRIBE,
                             session->subscribe_to, ""));
-/*                         AXIS2_LOG_DEBUG(session->env->log, AXIS2_LOG_SI, " %s send subcription to user",session->id_str); */
                     }
                     else if (axutil_strcmp(session->subscribe_type, AXIS2_XMPP_SUB_TYPE_ROOM) == 0)
                     {
@@ -434,7 +397,6 @@ int axis2_xmpp_worker_on_normal_node(
                         iks_insert_attrib(x, "to", session->subscribe_to);
                         iks_insert_attrib(x, "id", id);
                         iks_send(session->parser, x);
-/*                         AXIS2_LOG_DEBUG(session->env->log, AXIS2_LOG_SI, " %s send subscription to room",session->id_str); */
                         AXIS2_FREE(session->env->allocator, id);
                     }
                     else
@@ -449,13 +411,11 @@ int axis2_xmpp_worker_on_normal_node(
             {
                 if (session->features & IKS_STREAM_SASL_MD5)
                 {
-/*                     AXIS2_LOG_DEBUG(session->env->log, AXIS2_LOG_SI, " %s sasl md5",session->id_str); */
                     iks_start_sasl(session->parser, IKS_SASL_DIGEST_MD5,
                         session->jid->user, session->password);
                 }
                 else if (session->features & IKS_STREAM_SASL_PLAIN)
                 {
-/*                     AXIS2_LOG_DEBUG(session->env->log, AXIS2_LOG_SI, " %s sasl plain",session->id_str); */
                     iks_start_sasl (session->parser, IKS_SASL_PLAIN,
                         session->jid->user, session->password);
                 }
@@ -466,6 +426,7 @@ int axis2_xmpp_worker_on_normal_node(
             /* Say that we are online */
             iks_send(session->parser, iks_make_pres(IKS_SHOW_AVAILABLE,
                                                     "Online"));
+            iks_recv (session->parser, -1);
         }
     }
     else if (strcmp("failure", iks_name(node)) == 0)
@@ -478,7 +439,6 @@ int axis2_xmpp_worker_on_normal_node(
         AXIS2_LOG_INFO(session->env->log, "Authentication successful.");
         session->authorized = 1;
         iks_send_header(session->parser, session->server);
-/*         AXIS2_LOG_DEBUG(session->env->log, AXIS2_LOG_SI, " %s Authentication successful",session->id_str); */
     }
     else
     {
@@ -500,18 +460,16 @@ void axis2_xmpp_worker_on_log(
     int is_incoming)
 {
     axis2_xmpp_session_data_t *session = NULL;
-    char *buf = (char*)malloc(size+1);
-    char* svc_name = NULL;
-
     session = (axis2_xmpp_session_data_t*)user_data;
-    svc_name = (char*)axis2_svc_get_name(session->svc, session->env);
-
+    char *buf = (char*)AXIS2_MALLOC (session->env->allocator, (size+1));
     memcpy(buf, data, size);
     buf[size] = 0;
+
     if (is_incoming)
-        printf("\nINCOMING [%s]: %s\n", svc_name, buf);
+        AXIS2_LOG_INFO(session->env->log, "\n[xmpp serer]INCOMING : %s\n", buf);
     else
-        printf("\nOUTGOING [%s]: %s\n", svc_name, buf);
+        AXIS2_LOG_INFO(session->env->log, "\n[xmpp server]OUTGOING : %s\n", buf);
+    AXIS2_FREE (session->env->allocator, buf);
 }
 
 /*****************************************************************************/
@@ -520,7 +478,7 @@ void axis2_xmpp_worker_setup_filter(
     axis2_xmpp_session_data_t* session)
 {
     session->filter = iks_filter_new();
-/*     AXIS2_LOG_DEBUG(session->env->log, AXIS2_LOG_SI, " %s setting up filter",session->id_str); */
+
     /* Handler for 'message' stanzas */
     iks_filter_add_rule(session->filter, axis2_xmpp_worker_on_message, session,
         IKS_RULE_TYPE, IKS_PAK_MESSAGE,
@@ -585,7 +543,7 @@ int axis2_xmpp_worker_on_message(
            axis2_svc_get_name(session->svc, env));
 
     from = iks_find_attrib(pak->x, "from");
-    status = axis2_xmpp_transport_utils_process_message(session->env, session,
+    status = axis2_xmpp_transport_utils_process_message_server(session->env, session,
         soap_str, from, request_uri);
 
     /* TODO: Check whether we need to return IKS_HOOK on failure. I think not,
@@ -621,7 +579,7 @@ int axis2_xmpp_worker_on_presence(
     snprintf(request_uri, 500, "xmpp://localhost/axis2/services/%s",
            axis2_svc_get_name(session->svc, env));
 
-    status = axis2_xmpp_transport_utils_process_presence(session->env, session,
+    status = axis2_xmpp_transport_utils_process_presence_server(session->env, session,
         presence_str, request_uri);
 
     return IKS_FILTER_EAT; /* no need to pass to other filters */

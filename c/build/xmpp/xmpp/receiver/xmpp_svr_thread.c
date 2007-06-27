@@ -222,12 +222,14 @@ axis2_xmpp_svr_thread_run(
 
 
     svc_count = axutil_array_list_size(impl->xmpp_sessions, env);
+
     if (svc_count <= 0)
     {
         AXIS2_LOG_WARNING(env->log, AXIS2_LOG_SI, "No services to be exposed "
                " as XMPP services");
         return AXIS2_FAILURE;
     }
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "%d Services found", svc_count);
 
 #ifndef AXIS2_SVR_MULTI_THREADED
     if (svc_count > 1)

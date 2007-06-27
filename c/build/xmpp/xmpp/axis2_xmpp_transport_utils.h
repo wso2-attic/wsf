@@ -54,7 +54,7 @@ extern "C"
         */
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    axis2_xmpp_transport_utils_process_message(
+    axis2_xmpp_transport_utils_process_message_server(
         const axutil_env_t *env,
         axis2_xmpp_session_data_t *session,
         axis2_char_t *soap_msg,
@@ -62,11 +62,28 @@ extern "C"
         axis2_char_t *request_uri);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    axis2_xmpp_transport_utils_process_presence(
+    axis2_xmpp_transport_utils_process_message_client(
+        const axutil_env_t *env,
+        axis2_xmpp_session_data_t *session,
+        axis2_char_t *soap_msg,
+        axis2_char_t *from,
+        axis2_char_t *request_uri);
+
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    axis2_xmpp_transport_utils_process_presence_server(
         const axutil_env_t *env,
         axis2_xmpp_session_data_t *session,
         axis2_char_t *presence_str,
         axis2_char_t *request_uri);
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    axis2_xmpp_transport_utils_process_presence_client(
+        const axutil_env_t *env,
+        axis2_xmpp_session_data_t *session,
+        axis2_char_t *presence_str,
+        axis2_char_t *request_uri);
+
 /** @} */
 #ifdef __cplusplus
 }
