@@ -16,7 +16,7 @@
     2. Set WSFC_HOME environment variable pointing to the location where you 
        want to install WSO2 WSF/C. 
 
-        * WSFC_HOME='/your_desired_path_to_axis2c_installation'
+        * WSFC_HOME='/your_desired_path_to_wsfc_installation'
         * export WSFC_HOME
 
     3. Then go to the folder where you extracted the source.
@@ -166,7 +166,7 @@ download and install libxml2)
     server and samples.
     Set the variable WSFC_HOME to the deploy folder (C:\wsfc\deploy)
     Add the path to lib directory to PATH variable (%WSFC_HOME%\lib)
-    Copy libxml2.dll, iconv.dll and zlib1.dll to axis2c lib folder (%WSFC_HOME%\lib)
+    Copy libxml2.dll, iconv.dll and zlib1.dll to wsfc lib folder (%WSFC_HOME%\lib)
     Now run the server - C:\wsfc\deploy\bin>  axis2_http_server.exe
     If server is running successfully you should see the message "Started Simple Axis2 HTTP Server..."
     (Note: you may provide command line options to change the default behaviour. 
