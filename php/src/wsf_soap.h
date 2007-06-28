@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WSF_SOAP_CLIENT_H
-#define WSF_SOAP_CLIENT_H
+#ifndef WSF_SOAP_H
+#define WSF_SOAP_H
 #include "wsf.h"
 
 void wsf_soap_prepare_ws_globals();
@@ -61,4 +61,4 @@ wsf_soap_do_function_call(const axutil_env_t *env,
           axis2_msg_ctx_t *out_msg_ctx,
           char *op_name TSRMLS_DC);
 
-#endif /* WSF_SOAP_CLIENT_H */
+#endif /* WSF_SOAP_H */

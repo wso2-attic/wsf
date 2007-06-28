@@ -1433,6 +1433,7 @@ PHP_METHOD(ws_service, __construct)
         svc_info->service = service;            
         ret = zend_list_insert(service, le_service);
         add_property_resource(this_ptr, "service", ret);
+        add_property_long(this_ptr, "wsdlmode", 1);
     }
 }
 /* }}} */
@@ -1522,7 +1523,7 @@ PHP_METHOD(ws_service , set_class)
 PHP_METHOD(ws_service , reply)
 {
     ws_object_ptr intern = NULL;
-    zval *obj = NULL;
+    zval *obj = NULL, **tmp;
     axis2_conf_t *conf = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
     wsf_svc_info_t *svc_info = NULL;
@@ -1534,6 +1535,7 @@ PHP_METHOD(ws_service , reply)
     char content_length[40]; 
     char status_line[100];
     char *content_type = NULL;
+    int in_wsdl_mode = 0;
 
     WSF_GET_THIS(obj);
     intern = (ws_object*)zend_object_store_get_object(obj TSRMLS_CC);
@@ -1611,6 +1613,10 @@ PHP_METHOD(ws_service , reply)
     req_info->query_string = (char*)SG(request_info).query_string;
 	
 
+    if ((zend_hash_find(Z_OBJPROP_P(this_ptr) , "wsdlmode" , sizeof("wsdlmode"),
+                            (void**)&tmp)) == SUCCESS && Z_TYPE_PP(tmp) == IS_LONG){
+            in_wsdl_mode = 1;
+    }
 
     if (zend_hash_find(&EG(symbol_table), "HTTP_RAW_POST_DATA", sizeof("HTTP_RAW_POST_DATA"), (void **) &raw_post)!=FAILURE
             && ((*raw_post)->type==IS_STRING))
@@ -1735,8 +1741,10 @@ PHP_METHOD(ws_service , reply)
         }
         /** end Wsdl generation stuff */
     }
-    else
-    {
+    else if(in_wsdl_mode == 1){
+    
+    
+    }else{
 
         conf = axis2_conf_ctx_get_conf(conf_ctx, ws_env_svr);
         if(!axis2_conf_get_svc(conf, ws_env_svr, svc_info->svc_name))
@@ -1861,12 +1869,14 @@ PHP_METHOD(ws_fault, __get)
 PHP_METHOD(ws_header, __construct)
 {
     zval *data = NULL, *role = NULL;
-    char *name, *ns;
-    int name_len, ns_len;
+    char *name, *ns, *payload;
+    int name_len, ns_len,  payload_len;
+    
     zend_bool must_understand = 0;
+    
 
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss|zbz",
-                              &ns, &ns_len, &name, &name_len, &data, &must_understand, &role) == FAILURE)
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss|zsbz",
+                              &ns, &ns_len, &name, &name_len, &data, &payload, &payload_len , &must_understand, &role) == FAILURE)
     {
         php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
     }
@@ -1887,6 +1897,13 @@ PHP_METHOD(ws_header, __construct)
         zval_add_ref(&data);
 #endif
         add_property_zval(this_ptr, WS_HEADER_DATA, data);
+    }
+    if(payload && payload_len > 0)
+    {
+#ifndef ZEND_ENGINE_2
+        
+#endif
+        add_property_stringl(this_ptr, "payload", payload, payload_len, 1);
     }
     if(must_understand)
     {

@@ -2582,7 +2582,7 @@ wsf_soap_do_function_call(const axutil_env_t *env,
     xmlDocPtr doc_request, doc_return;
     zval function_name,  **params;
     zval func,  retval; 
-    int num_params =0, soap_version, call_status;
+    int num_params =0, soap_version , call_status;
     sdlFunctionPtr function;
 
     soapHeader *soap_headers = NULL;
@@ -2662,17 +2662,59 @@ wsf_soap_do_function_call(const axutil_env_t *env,
 
 
 
+axis2_bool_t 
+wsf_soap_do_function_call1(const axutil_env_t *env,
+          wsf_svc_info_t *svc_info, zval *this_ptr,int soap_version, void *buff, int length TSRMLS_DC)
+{
+    xmlDocPtr doc_request, doc_return;
+    zval function_name,  **params;
+    zval func,  retval; 
+    int num_params =0, call_status;
+    sdlFunctionPtr function;
+
+    soapHeader *soap_headers = NULL;
+    soapServicePtr service;
 
 
+    doc_request = soap_xmlParseMemory((char*)buff, length);
 
+    service = (soapServicePtr)svc_info->service;
 
+    function = deserialize_function_call(service->sdl, doc_request, 
+            service->actor, &function_name, &num_params, 
+            &params, &soap_version, &soap_headers TSRMLS_CC);
 
+    xmlFreeDoc(doc_request);    
 
+    ZVAL_STRING(&func, Z_STRVAL(function_name), 0);
+    call_status = call_user_function(CG(function_table) , (zval**)NULL, &func, &retval, num_params, params TSRMLS_CC);
 
+    if (call_status == SUCCESS) {
+        char *response_name;
+        /*
+        if (Z_TYPE(retval) == IS_OBJECT &&
+            instanceof_function(Z_OBJCE(retval), soap_fault_class_entry TSRMLS_CC)) {
+            php_end_ob_buffer(0, 0 TSRMLS_CC);
+            soap_server_fault_ex(function, &retval, NULL TSRMLS_CC);
+            goto fail;
+        }
+        */
+        if (function && function->responseName) {
+            response_name = estrdup(function->responseName);
+        } else {
+            response_name = emalloc(Z_STRLEN(function_name) + sizeof("Response"));
+            memcpy(response_name,Z_STRVAL(function_name),Z_STRLEN(function_name));
+            memcpy(response_name+Z_STRLEN(function_name),"Response",sizeof("Response"));
+        }
+        doc_return = serialize_response_call(function, response_name, 
+                service->uri, &retval, soap_headers, soap_version TSRMLS_CC);
+        efree(response_name);
+    } else {
+        php_error_docref(NULL TSRMLS_CC, E_ERROR, "Function '%s' call failed", Z_STRVAL(function_name));
+    }
 
-
-
-
+    return AXIS2_SUCCESS;
+}
 
 
 

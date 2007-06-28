@@ -158,6 +158,25 @@ wsf_util_construct_header_node(const axutil_env_t *env,
 			axiom_element_set_text(header_ele, env, Z_STRVAL_PP(tmp), header_node);
 	}
 
+    if(zend_hash_find(Z_OBJPROP_P(header), "payload",
+        sizeof("payload"), (void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
+            char *payload = NULL;
+            axiom_node_t *payload_node = NULL;
+            int payload_len = 0;
+            axiom_xml_reader_t *reader = NULL;
+            payload = Z_STRVAL_PP(tmp);
+            payload_len = Z_STRLEN_PP(tmp);
+            
+            reader = axiom_xml_reader_create_for_memory(env, payload, 
+                    payload_len, "utf-8", AXIS2_XML_PARSER_TYPE_BUFFER);
+            
+            payload_node = wsf_util_read_payload(reader, env);
+
+            axiom_node_add_child(header_node, env, payload_node);
+                            
+    }
+
+
 	return header_node;			
 }
 
@@ -373,7 +392,7 @@ void wsf_php_req_info_free(wsf_req_info_t *req_info)
 /* {{{ ws_read_payload */
 axiom_node_t* wsf_util_read_payload(
     axiom_xml_reader_t *reader, 
-    axutil_env_t *env)
+    const axutil_env_t *env)
 {
 	axiom_stax_builder_t *builder = NULL;
 	axiom_document_t *document = NULL;

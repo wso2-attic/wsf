@@ -30,7 +30,7 @@
 
 axiom_node_t* wsf_util_read_payload(
     axiom_xml_reader_t *reader,
-    axutil_env_t *env);    
+    const axutil_env_t *env);    
 
 axis2_char_t* wsf_util_get_soap_msg_from_op_client(
     axis2_op_client_t *op_client,
