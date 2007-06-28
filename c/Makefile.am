@@ -1,6 +1,6 @@
 datadir=$(prefix)
 docsdir=$(prefix)/docs
-SUBDIRS=axis2c $(SANDESHA_DIR) $(RAMPART_DIR) savanc $(WSCLIENT_DIR) 
+SUBDIRS=axis2c $(SANDESHA_DIR) $(RAMPART_DIR) $(SAVAN_DIR) $(WSCLIENT_DIR) 
 docs_DATA=
 data_DATA=config/axis2.xml README \
         INSTALL COPYING NEWS CREDITS NOTICE
