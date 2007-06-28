@@ -44,12 +44,6 @@ axis2_xmpp_transport_sender_impl_t;
 
 /* Function headers ***********************************************************/
 
-void *
-axis2_msg_ctx_get_property_value(
-    axis2_msg_ctx_t *msg_ctx,
-    const axutil_env_t *env,
-    const axis2_char_t *property_str);
-
 axis2_status_t AXIS2_CALL
 axis2_xmpp_transport_sender_invoke(
     axis2_transport_sender_t *transport_sender,
@@ -189,7 +183,9 @@ axis2_xmpp_transport_sender_invoke(
     /* The XMPP parser and the client jid is set inside a hash table, which in
      * turn is set as a property in the msg ctx */
 
-        properties = axis2_msg_ctx_get_property_value(msg_ctx, env, AXIS2_XMPP_PROPERTIES);
+        properties = (axutil_hash_t *)axis2_msg_ctx_get_property_value(msg_ctx, 
+                                                                       env, 
+                                                                       AXIS2_XMPP_PROPERTIES);
 
         if (!properties)
         {
@@ -333,31 +329,3 @@ axis2_remove_instance(
 }
 
 
-void *
-axis2_msg_ctx_get_property_value(
-    axis2_msg_ctx_t *msg_ctx,
-    const axutil_env_t *env,
-    const axis2_char_t *property_str)
-{
-    axutil_property_t *property;
-    void *property_value = NULL;
-
-    property = axis2_msg_ctx_get_property(msg_ctx, env, property_str);
-    
-    if (!property)
-    {
-        AXIS2_LOG_ERROR(env->log, 
-                        AXIS2_LOG_SI, 
-                        "%s not set in message context", property_str);
-    }
-    
-    property_value = axutil_property_get_value(property, env);
-    if (!property_value)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                        "%s properties not set in message context", 
-                        property_str);
-    }
-
-    return property_value;
-}
