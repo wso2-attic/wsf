@@ -5,7 +5,7 @@ samples_DATA=flicker_client.c Makefile.am README.txt Makefile.in
 flicker_SOURCES = flicker_client.c
 
 flicker_LDADD   =    $(LDFLAGS) \
-                    -L$(AXIS2C_HOME)/lib \
+                    -L$(WSFC_HOME)/lib \
 					-laxutil \
                     -laxis2_axiom \
                     -laxis2_engine \
