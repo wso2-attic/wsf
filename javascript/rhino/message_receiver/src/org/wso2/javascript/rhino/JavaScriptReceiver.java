@@ -183,8 +183,6 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 fac = OMAbstractFactory.getSOAP11Factory();
             } else {
                 fac = OMAbstractFactory.getSOAP12Factory();
-                outMessage.getOptions().setProperty(
-                        org.apache.axis2.Constants.Configuration.DISABLE_SOAP_ACTION,"true");
             }
             SOAPEnvelope envelope = fac.getDefaultEnvelope();
             SOAPBody body = envelope.getBody();
