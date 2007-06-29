@@ -235,8 +235,8 @@ wsf_client_handle_outgoing_attachments(axutil_env_t *env,
 			}
     }
 
-	axis2_options_set_enable_mtom(options, env, enable_mtom);
-	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] enable mtom %d", enable_mtom);
+	/* axis2_options_set_enable_mtom(options, env, enable_mtom); */
+/* 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] enable mtom %d", enable_mtom); */
 	
 	if(zend_hash_find(msg_ht, WS_ATTACHMENTS, sizeof(WS_ATTACHMENTS), 
             (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY){
@@ -244,10 +244,16 @@ wsf_client_handle_outgoing_attachments(axutil_env_t *env,
 	}else if(zend_hash_find(Z_OBJPROP_P(msg), WS_ATTACHMENTS, sizeof(WS_ATTACHMENTS),
 		(void**)&tmp) == SUCCESS){
 			ht = Z_ARRVAL_PP(tmp);		
-	}
-    if(ht){
-        wsf_util_set_attachments_with_cids(env, enable_mtom, request_payload,
-            ht, default_cnt_type TSRMLS_CC);
+	}else
+            return;
+
+        axis2_options_set_enable_mtom(options, env, enable_mtom);
+	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] enable mtom %d", enable_mtom);
+
+
+        if(ht){
+            wsf_util_set_attachments_with_cids(env, enable_mtom, request_payload,
+                                               ht, default_cnt_type TSRMLS_CC);
     }
 }
 
