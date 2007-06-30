@@ -1,4 +1,4 @@
-@echo off
+rem @echo off
 @call vcvars32.bat /nologo
 
 rem Build Apache Axis2/C
@@ -34,8 +34,6 @@ rem Build Apache Sandesha2/C
 @cd ..\..\sandesha2c\build\win32
 @nmake dist AXIS2_BIN_DIR=.\..\..\..\axis2c\build\axis2c-bin-1.1.0-win32
 
-
-if not %ERRORLEVEL% EQU 0 echo sand error
 if not %ERRORLEVEL% EQU 0 goto sandesha2_error
 
 @cd ..
