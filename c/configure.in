@@ -1,0 +1,63 @@
+#############################################################################
+### General Build Configuration Parameters
+
+# To build with debug symbols set DEBUG = 1
+DEBUG = 0
+
+
+#############################################################################
+### Apache Axis2/C Build Configuration Parameters
+
+# Path to libxml2 installation
+LIBXML2_BIN_DIR = E:\libxml2-2.6.23.win32
+
+# Path to iconv installation
+ICONV_BIN_DIR = E:\iconv-1.9.1.win32
+
+# Path to zlib installation
+ZLIB_BIN_DIR=E:\zlib-1.2.3.win32
+
+# Path to Apache2 installation
+APACHE_BIN_DIR = "C:\Program Files\Apache Software Foundation\Apache2.2"
+# Apache httpd version, to use apache 2.0.59 set APACHE_VERSION_IS_2_0_59 = 1
+APACHE_VERSION_IS_2_0_59 = 0
+
+# Enable/disable LibCurl client transport, to enable set ENABLE_LIBCURL = 1
+ENABLE_LIBCURL = 0
+# Path to LibCurl installation, required if LibCurl transport is enabled
+#LIBCURL_BIN_DIR = E:\libcurl-7.15.1-msvc-win32-ssl-0.9.8a-zlib-1.2.3
+
+# Enable/disable SSL client transport, to enable set ENABLE_SSL = 1
+ENABLE_SSL = 0
+# Path to OpenSSL installation, required if SSL transport is enabled
+#OPENSSL_BIN_DIR = D:\OpenSSL
+
+# Enable/disable Guththila parser, to enable set ENABLE_GUTHTHILA = 1
+ENABLE_GUTHTHILA = 0
+
+
+#############################################################################
+### Apache Rampart/C Build Configuration Parameters
+
+# Path to OpenSSL installation
+OPENSSL_BIN_DIR = D:\OpenSSL
+
+
+#############################################################################
+### Apache Sandesha2/C Build Configuration Parameters
+
+# Build with SQLite support for permenent storage, to disable set WITH_SQLITE = 0
+WITH_SQLITE = 1
+# Path to SQLite installation
+SQLITE_BIN_DIR = "E:\sqlite-source-3_3_8"
+# Path to SQLite source
+SQLITE_SRC_DIR = "E:\sqlite-source-3_3_8"
+
+# Build with MySQL support for permenent storage, to enable set WITH_MYSQL = 1
+WITH_MYSQL = 0
+# Path to MySQL installation
+MYSQL_BIN_DIR = "C:\Program Files\MySQL\MySQL Server 5.0"
+
+
+
+
