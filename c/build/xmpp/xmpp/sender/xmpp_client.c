@@ -214,9 +214,9 @@ void axis2_xmpp_client_setup_filter(
         IKS_RULE_TYPE, IKS_PAK_MESSAGE,
         IKS_RULE_DONE);
 
-    iks_filter_add_rule(session->filter, axis2_xmpp_client_on_iq, session,
-        IKS_RULE_TYPE, IKS_PAK_IQ,
-        IKS_RULE_DONE);
+/*     iks_filter_add_rule(session->filter, axis2_xmpp_client_on_iq, session, */
+/*         IKS_RULE_TYPE, IKS_PAK_IQ, */
+/*         IKS_RULE_DONE); */
 
     /* Handler for 'presence' stanzas */
 /*     iks_filter_add_rule(session->filter, axis2_xmpp_client_on_presence, session, */
