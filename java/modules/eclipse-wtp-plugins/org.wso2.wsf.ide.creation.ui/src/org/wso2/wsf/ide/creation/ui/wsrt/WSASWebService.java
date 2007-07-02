@@ -28,7 +28,7 @@ import org.eclipse.wst.ws.internal.wsrt.WebServiceInfo;
 import org.eclipse.wst.ws.internal.wsrt.WebServiceScenario;
 import org.wso2.wsf.ide.creation.core.command.WSASBUCommand;
 import org.wso2.wsf.ide.creation.core.command.WSASBUServiceCreationCommand;
-import org.wso2.wsf.ide.creation.core.command.WSASBUServiceInstallCommand;
+import org.wso2.wsf.ide.creation.core.command.WSASServiceInstallCommand;
 import org.wso2.wsf.ide.creation.core.command.WSASBuildProjectCommand;
 import org.wso2.wsf.ide.creation.core.command.WSASCleanupCommand;
 import org.wso2.wsf.ide.creation.core.command.WSASDefaultingCommand;
@@ -76,7 +76,7 @@ public class WSASWebService extends AbstractWebService
 			commands.add(new WSASServicesXMLValidationCommand());
 			commands.add(new WSASBUServiceCreationCommand(model,this,project));
 			commands.add(new WSASWebservicesServerCommand(model, ctx.getScenario().getValue() ));
-			commands.add(new WSASBUServiceInstallCommand(model, this, project,ctx.getScenario().getValue()));
+			commands.add(new WSASServiceInstallCommand(model, this, project,ctx.getScenario().getValue()));
 		} 
 		else if (ctx.getScenario().getValue() == WebServiceScenario.TOPDOWN) {  
 			commands.add(new WSASDefaultingCommand( model,this, ctx.getScenario().getValue()  ) );
@@ -90,7 +90,7 @@ public class WSASWebService extends AbstractWebService
 			commands.add( new WSASBuildProjectCommand(
 						ResourcesPlugin.getWorkspace().getRoot().getProject(project),true));
 			commands.add(new WSASSkelImplCommand(this.getWebServiceInfo(),model));
-			commands.add(new WSASBUServiceInstallCommand(model, this, project,ctx.getScenario().getValue()));
+			commands.add(new WSASServiceInstallCommand(model, this, project,ctx.getScenario().getValue()));
 			commands.add(new WSASCleanupCommand());
 		} 
 		else 

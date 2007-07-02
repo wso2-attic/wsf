@@ -36,14 +36,14 @@ import org.wso2.wsf.ide.core.utils.WSASCoreUtils;
 import org.wso2.wsf.ide.creation.core.data.DataModel;
 import org.wso2.wsf.ide.creation.core.utils.CommonUtils;
 
-public class WSASBUServiceInstallCommand extends
+public class WSASServiceInstallCommand extends
 		AbstractDataModelOperation {
 	
 	  	private DataModel model;
 		private IWebService ws;
 		private int scenario;
 
-	  public WSASBUServiceInstallCommand( DataModel model,IWebService ws, String project,int scenario )
+	  public WSASServiceInstallCommand( DataModel model,IWebService ws, String project,int scenario )
 	  {
 	    this.model = model;  
 	    this.ws=ws;
