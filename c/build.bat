@@ -9,8 +9,13 @@ rem Build Apache Axis2/C
 @nmake dist AUTOCONF=..\..\..\configure.in
 @if not %ERRORLEVEL% EQU 0 goto end
 
+rem Build Flicker sample
+@cd ../../../examples/flicker
+@nmake -f flicker.mk
+@copy /Y flicker.exe  ..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples
+
 rem Build Apache Rampart/C
-@cd ..\..\..\rampartc\build\win32
+@cd ..\..\rampartc\build\win32
 @nmake dist AUTOCONF=..\..\..\configure.in AXIS2_BIN_DIR=.\..\..\..\axis2c\build\axis2c-bin-1.1.0-win32
 
 @if not %ERRORLEVEL% EQU 0 goto rampart_error
