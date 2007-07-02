@@ -9,6 +9,13 @@ mv savanc/xdocs docs/savanc
 mv sandesha2c/xdocs docs/sandesha2c
 mv rampartc/xdocs docs/rampartc
 mv wsclient/docs docs/wsclient
+
+mv axis2c/samples examples/axis2c
+mv savanc/samples examples/savanc
+mv sandesha2c/samples examples/sandesha2c
+mv rampartc/samples examples/rampartc
+mv wsclient/samples examples/wsclient
+
 find -name "*.libs"| xargs rm -rf
 find -name "*.deps"| xargs rm -rf
 find -name "*.svn"| xargs rm -rf
