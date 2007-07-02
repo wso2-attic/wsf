@@ -320,7 +320,6 @@ public class WSDL2JAVASkelConfigWidget extends SimpleWidgetDataContributor
 		model.setGenerateAllCheck(generateAllCheckBoxButton.getSelection());
 		model.setGenerateServerSideInterface(
 				generateServerSideInterfaceCheckBoxButton.getSelection());
-		model.setTestCaseCheck(testCaseCheckBoxButton.getSelection());
 		model.setNamespaseToPackageMapping(getNs2PkgMapping());
 	}
 

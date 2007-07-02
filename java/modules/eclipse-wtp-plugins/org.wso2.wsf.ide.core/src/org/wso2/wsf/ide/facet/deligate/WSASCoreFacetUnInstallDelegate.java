@@ -40,7 +40,21 @@ public class WSASCoreFacetUnInstallDelegate implements IDelegate {
 			if (webContainerDir.isDirectory()) {
 				FileUtils.deleteDirectories(webContainerDir);
 			}
+
 			// TODO rollback the dynamic web project to the previous state.
+			if(!webContainerDir.exists()){
+				FileUtils.createDirectorys(webContainerDir.getPath());
+			}
+			String web_infDir = FileUtils.addAnotherNodeToPath(webContainerDir.getPath(), "WEB-INF");
+			String meta_infDir = FileUtils.addAnotherNodeToPath(webContainerDir.getPath(), "META-INF");
+			
+			if(!(new File(web_infDir).exists())){
+				FileUtils.createDirectorys(web_infDir);
+			}
+			if(!(new File(meta_infDir).exists())){
+				FileUtils.createDirectorys(meta_infDir);
+			}
+			
 	        status = Status.OK_STATUS;
 			monitor.worked( 1 );
 	}

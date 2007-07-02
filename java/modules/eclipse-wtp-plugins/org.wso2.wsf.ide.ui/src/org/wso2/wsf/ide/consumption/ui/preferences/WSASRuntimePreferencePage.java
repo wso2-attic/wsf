@@ -121,8 +121,8 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		    
 		wsasPath.addModifyListener( new ModifyListener(){
 			public void modifyText(ModifyEvent e){
-				 context.setWSASRuntimeLocation( wsasPath.getText() );
-				webappExist =runtimeExist(wsasPath.getText());
+				context.setWSASRuntimeLocation( wsasPath.getText() );
+				webappExist = runtimeExist(wsasPath.getText());
 				FacetModel.setCorrectWSASPathSet(webappExist);
 				status = RuntimePropertyUtils.writeServerPathToPropertiesFile(
 						wsasPath.getText());

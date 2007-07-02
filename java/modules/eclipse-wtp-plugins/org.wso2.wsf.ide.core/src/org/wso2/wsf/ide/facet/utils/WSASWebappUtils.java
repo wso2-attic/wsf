@@ -57,6 +57,9 @@ public class WSASWebappUtils {
 					String wsasLibFile = WSASCoreUtils.addAnotherNodeToPath(
 							wsasHomeLocation,
 					"lib");
+					String wsasConfFile = WSASCoreUtils.addAnotherNodeToPath(
+							wsasHomeLocation,
+					"conf");
 					String wsasRepositoryFile = WSASCoreUtils.addAnotherNodeToPath(
 							wsasHomeLocation,
 					"repository");
@@ -71,13 +74,26 @@ public class WSASWebappUtils {
 					if (wsasTempWebInfLibFile.exists()){
 						wsasTempWebInfLibFile.mkdirs();
 					}
+					
+					String wsasTempWebInfConf = WSASCoreUtils.addAnotherNodeToPath(
+							wsasTempWebInf,
+					"conf");
+					
+					File wsasTempWebInfConfFile = new File(wsasTempWebInfConf);
+					if (wsasTempWebInfConfFile.exists()){
+						wsasTempWebInfConfFile.mkdirs();
+					}
+					
 
 					//Copy the webapp content 
 					FileUtils.copyDirectory(new File(wsasLibFile),
 											wsasTempWebInfLibFile);
-					//copy conf/axis2.xml
-					//FileUtils.copyDirectory(new File(wsasConfFile), 
-					//						new File(wsasTempWebInfConfFile));
+					//Delete the unwanted tomcat directory in the lib
+					FileUtils.deleteDirectories(FileUtils.addAnotherNodeToPath(wsasTempWebInfLib, "tomcat"));
+
+					//copy conf directory
+					FileUtils.copyDirectory(new File(wsasConfFile), 
+											wsasTempWebInfConfFile);
 					
 					//Copy modules and services 					
 					FileUtils.copyDirectory(new File(wsasRepositoryFile), 

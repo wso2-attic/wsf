@@ -91,7 +91,7 @@ public class ClassLoadingUtil {
 	
 	private static String[] getWSASLibs(String project){
 		File webContainerPath = new File(FacetContainerUtils.pathToWebProjectContainerLib(project));
-		wsasClassPath = new String[webContainerPath.list().length];
+		wsasClassPath = new String[webContainerPath.list().length+10];
 		libCount = 0;
 		visitAllFiles(webContainerPath);
 		return wsasClassPath;
@@ -101,15 +101,15 @@ public class ClassLoadingUtil {
 	public static void visitAllFiles(File dir) {
 		if(!dir.toString().endsWith(".txt")){
 			if (dir.isDirectory()) {
-				if(dir.getName().toString().equals("tomcat")){
+				//if(dir.getName().toString().equals("tomcat")){
 					//skip
-				}
-				else{
+				//}
+				//else{
 					String[] children = dir.list();
 					for (int i=0; i<children.length; i++) {
 						visitAllFiles(new File(dir, children[i]));
 					}
-				}
+				//}
 			} else {
 				wsasClassPath[libCount]=dir.getAbsolutePath();
 				libCount+=1;
