@@ -43,7 +43,6 @@ import org.wso2.wsf.ide.creation.core.data.DataModel;
 public class WSASWebService extends AbstractWebService {
 	
 	DataModel model;
-	
 	public WSASWebService(WebServiceInfo info){
 		super(info);
 	}
@@ -74,13 +73,16 @@ public class WSASWebService extends AbstractWebService {
 		model = new DataModel();
 
 		model.setWebProjectName(project);
-
+		
 		if (ctx.getScenario().getValue() == WebServiceScenario.BOTTOMUP)	{ 
 			commands.add(new WSASDefaultingCommand( model,this, ctx.getScenario().getValue() ) );
 			commands.add(new WSASBUCommand( model ) );
 			commands.add(new WSASServicesXMLValidationCommand());
 			commands.add(new WSASBUServiceCreationCommand(model,this,project));
 			commands.add(new WSASWebservicesServerCommand(model, ctx.getScenario().getValue() ));
+			if (ctx.getDeploy()){
+				commands.add(new WSASServiceInstallCommand(model, this, project,ctx.getScenario().getValue()));
+			}
 		} else if (ctx.getScenario().getValue() == WebServiceScenario.TOPDOWN) {  
 			commands.add(new WSASDefaultingCommand( model,this, ctx.getScenario().getValue()  ) );
 			commands.add(new WSASTDCommand( model) );
@@ -94,6 +96,9 @@ public class WSASWebService extends AbstractWebService {
 						ResourcesPlugin.getWorkspace().getRoot().getProject(project),true));
 			commands.add(new WSASSkelImplCommand(this.getWebServiceInfo(),model));
 			commands.add(new WSASServiceInstallCommand(model, this, project,ctx.getScenario().getValue()));
+			if (ctx.getDeploy()){
+				commands.add(new WSASServiceInstallCommand(model, this, project,ctx.getScenario().getValue()));
+			}
 			commands.add(new WSASCleanupCommand());
 		} 
 		else {

@@ -142,11 +142,17 @@ public class WSASWSDL2JavaCommand extends AbstractDataModelOperation {
 		Object targetNamespace = getTargetNamespaceMethod.invoke(axisServiceInstance, null);
 		
 		
-		Class URLProcessorClass = ClassLoadingUtil
-				.loadClassFromAntClassLoader("org.apache.axis2.util.URLProcessor");
-		Method makePackageNameMethod = URLProcessorClass
-				.getMethod("makePackageName", new Class[]{String.class});
-		Object stringReturn = makePackageNameMethod.invoke(null, new Object[]{targetNamespace});
+		Object stringReturn = null;
+		if (model.getPackageText()!=null) {
+			stringReturn = model.getPackageText();
+		}else{
+			Class URLProcessorClass = ClassLoadingUtil
+					.loadClassFromAntClassLoader("org.apache.axis2.util.URLProcessor");
+			Method makePackageNameMethod = URLProcessorClass.getMethod(
+					"makePackageName", new Class[] { String.class });
+			stringReturn = makePackageNameMethod.invoke(null,
+					new Object[] { targetNamespace });
+		}
 		
 		model.setPackageText(stringReturn.toString());
 		
