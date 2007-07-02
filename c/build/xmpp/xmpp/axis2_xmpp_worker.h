@@ -62,6 +62,8 @@ extern "C"
         int use_sasl;           /* Whether to SASL or not */
         int use_tls;            /* Whether to use TLS or not */
         int subscribe;          /* Whether to subscribe for events or not */
+		int bind;
+		int in_msg;
 
         axutil_env_t *env;
         axis2_conf_ctx_t* conf_ctx;

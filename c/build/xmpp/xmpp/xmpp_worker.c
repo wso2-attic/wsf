@@ -363,6 +363,7 @@ int axis2_xmpp_worker_on_normal_node(
                     t = iks_make_resource_bind (session->jid);
                     iks_send (session->parser, t);
                     iks_delete (t);
+					session->bind = 1;
                 }
 
                 /* Send a session if required */

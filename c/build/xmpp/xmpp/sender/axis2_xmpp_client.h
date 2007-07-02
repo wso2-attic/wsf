@@ -48,5 +48,10 @@ int axis2_xmpp_client_on_subscription(
     void *user_data,
     ikspak *pak);
 
+int axis2_xmpp_client_on_iq(
+    void *user_data,
+    ikspak *pak);
+
+
 
 #endif  /* AXIS2_XMPP_CLIENT */

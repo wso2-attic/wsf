@@ -152,9 +152,13 @@ axis2_xmpp_transport_sender_invoke(
         session->password = (axis2_char_t *)axis2_msg_ctx_get_property_value (msg_ctx, 
                                                                               env, 
                                                                               "XMPP_PASSWORD");
-        session->use_sasl = 0;
+        session->use_sasl = 1;
         session->use_tls = 0;
+		session->authorized = 0;
+		session->bind = 0;
         session->subscribe = 0;
+		session->in_msg = 0;
+
         session->env = (axutil_env_t *)env;
         session->conf_ctx = axis2_msg_ctx_get_conf_ctx (msg_ctx, env);
         session->svc = axis2_msg_ctx_get_svc (msg_ctx, env);
@@ -171,7 +175,8 @@ axis2_xmpp_transport_sender_invoke(
 
         ret = iks_connect_tcp(session->parser, session->server,
                               IKS_JABBER_PORT);
-        ret = iks_recv(session->parser, -1);
+		while (!session->authorized || !session->bind)
+			ret = iks_recv(session->parser, -1);
         xmpp_parser = session->parser;
         client_jid = (axis2_char_t *)axis2_msg_ctx_get_property_value (msg_ctx, 
                                                                        env, 
@@ -254,12 +259,16 @@ axis2_xmpp_transport_sender_invoke(
      */
     if (!is_server)
     {
-        iks_recv (xmpp_parser, -1);
-        response_soap_env = axis2_msg_ctx_get_soap_envelope (session->response, env);
-        if (response_soap_env)
-            axis2_msg_ctx_set_response_soap_envelope (msg_ctx, env, response_soap_env);
-        iks_disconnect (xmpp_parser);
-    }
+		while (!session->in_msg)
+			iks_recv (xmpp_parser, -1);
+		if (session->response)
+		{
+			response_soap_env = axis2_msg_ctx_get_soap_envelope (session->response, env);
+			if (response_soap_env)
+				axis2_msg_ctx_set_response_soap_envelope (msg_ctx, env, response_soap_env);
+			iks_disconnect (xmpp_parser);
+		}
+	}
     return AXIS2_SUCCESS;
 }
 

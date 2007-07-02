@@ -92,6 +92,7 @@ int axis2_xmpp_client_on_normal_node(
                     t = iks_make_resource_bind (session->jid);
                     iks_send (session->parser, t);
                     iks_delete (t);
+					session->bind = 1;
                 }
 
                 /* Send a session if required */
@@ -155,6 +156,7 @@ int axis2_xmpp_client_on_normal_node(
             /* Say that we are online */
             iks_send(session->parser, iks_make_pres(IKS_SHOW_AVAILABLE,
                                                     "Online"));
+			session->authorized = 1;
             iks_recv (session->parser, -1);
         }
     }
@@ -212,15 +214,19 @@ void axis2_xmpp_client_setup_filter(
         IKS_RULE_TYPE, IKS_PAK_MESSAGE,
         IKS_RULE_DONE);
 
-    /* Handler for 'presence' stanzas */
-    iks_filter_add_rule(session->filter, axis2_xmpp_client_on_presence, session,
-        IKS_RULE_TYPE, IKS_PAK_PRESENCE,
+    iks_filter_add_rule(session->filter, axis2_xmpp_client_on_iq, session,
+        IKS_RULE_TYPE, IKS_PAK_IQ,
         IKS_RULE_DONE);
 
+    /* Handler for 'presence' stanzas */
+/*     iks_filter_add_rule(session->filter, axis2_xmpp_client_on_presence, session, */
+/*         IKS_RULE_TYPE, IKS_PAK_PRESENCE, */
+/*         IKS_RULE_DONE); */
+
     /* Handler for 'presence' stanzas which give subscription notifications */
-    iks_filter_add_rule(session->filter, axis2_xmpp_client_on_subscription, session,
-        IKS_RULE_TYPE, IKS_PAK_S10N,
-        IKS_RULE_DONE);
+/*     iks_filter_add_rule(session->filter, axis2_xmpp_client_on_subscription, session, */
+/*         IKS_RULE_TYPE, IKS_PAK_S10N, */
+/*         IKS_RULE_DONE); */
 }
 /*****************************************************************************/
 
@@ -275,6 +281,7 @@ int axis2_xmpp_client_on_message(
     /* TODO: Check whether we need to return IKS_HOOK on failure. I think not,
      * because, failure here means the failure of a single request. We should
      * keep running for other requests */
+	session->in_msg = 1;
 
     return IKS_FILTER_EAT; /* no need to pass to other filters */
 }
@@ -328,6 +335,25 @@ int axis2_xmpp_client_on_subscription(
     if (pak->subtype == IKS_TYPE_SUBSCRIBED)
     {
         AXIS2_LOG_INFO(env->log, "Subscription successful");
+    }
+
+    return IKS_FILTER_EAT; /* no need to pass to other filters */
+}
+
+
+int axis2_xmpp_client_on_iq(
+    void *user_data,
+    ikspak *pak)
+{
+	axis2_xmpp_session_data_t *session = NULL;
+    axutil_env_t *env = NULL;
+
+    session = (axis2_xmpp_session_data_t*)user_data;
+    env = session->env;
+
+    if (pak->subtype == IKS_TYPE_RESULT)
+    {
+        AXIS2_LOG_INFO(env->log, "Result recieved");
     }
 
     return IKS_FILTER_EAT; /* no need to pass to other filters */
