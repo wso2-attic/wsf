@@ -24,7 +24,8 @@ import org.wso2.wsf.wtp.server.bean.WSASConfigurationBean;
 import org.wso2.wsf.wtp.server.util.WSASUtils;
 
 public class WSASUpMonitorThread extends Thread {
-	private final long wsasStartTime = 10000;
+	private final long wsasInitialStartTime = 10000;
+	private final long wsasProcessTime = 5000;
 	private final long inactiveSleepTime = 1000;
 	MessageBox box = new MessageBox(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 	private static boolean alive = true;
@@ -34,13 +35,14 @@ public class WSASUpMonitorThread extends Thread {
         	URLConnection conn = null;
         	
         	while(conn == null){
-        		WSASUpMonitorThread.sleep(wsasStartTime);
+        		WSASUpMonitorThread.sleep(wsasInitialStartTime);
 	            // Create a URLConnection object for a URL
 	            URL url = new URL(WSASUtils.getWSASHTTPAddtess());
 	            conn = url.openConnection();
 	            if(conn != null){
 					//set wsas start status to pass
 					WSASConfigurationBean.setWsasStartStatus(true);
+					Thread.sleep(wsasProcessTime);
 	            }
         	}
         	

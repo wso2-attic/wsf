@@ -26,6 +26,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
 import org.wso2.wsf.wtp.server.command.WSASStopCommand;
+import org.wso2.wsf.wtp.server.command.WTPInternalBrowserCommand;
 import org.wso2.wsf.wtp.server.constant.WSASMessageConstant;
 
 public class WSASStopDelegate
@@ -46,6 +47,7 @@ public class WSASStopDelegate
 			}else{
 				box.setMessage(WSASMessageConstant.INFO_WSAS_STOP_SUCCESS);box.open();
 			}
+			WTPInternalBrowserCommand.closeUpInrernalBrouwser();
 		} catch (InvocationTargetException e) {
 			status = new Status( IStatus.ERROR,"id",1,e.getMessage(),null );
 			box.setMessage(WSASMessageConstant.INFO_WSAS_STOP_FAIL);box.open();

@@ -15,26 +15,20 @@
  */
 package org.wso2.wsf.wtp.server.command;
 
-import java.io.File;
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.wso2.wsf.wtp.server.bean.WSASConfigurationBean;
-import org.wso2.wsf.wtp.server.constant.WSASConfigurationConstant;
-import org.wso2.wsf.wtp.server.util.WSASClassLoadingUtil;
-import org.wso2.wsf.wtp.server.util.WSASPropertiesUtil;
 
 public class WSASStartCommand {
 	
-    private static Class wsasMainClazz;
     private static IStatus status;
+    //private Process wsasProcess = null;
 
-	public static IStatus run() throws InvocationTargetException {
+	public  static IStatus run() throws InvocationTargetException {
 		status = Status.OK_STATUS;
+		Process wsasProcess = null;
 
 		if (WSASConfigurationBean.isWsasStartStatus()) {
 			status = new Status( IStatus.ERROR,"id",11,"WSAS Already Running !!",null);
@@ -42,49 +36,28 @@ public class WSASStartCommand {
 		}else{
 			//Init the Configuration Bean
 			WSASConfigurationBean.Init();
-			//Set WSAS system properties
-			WSASPropertiesUtil.setWSASProperties();
-			WSASClassLoadingUtil.init(WSASConfigurationBean.getWsasInstallationPath());
-			wsasMainClazz = WSASClassLoadingUtil
-							.loadClassFromClassLoader(WSASConfigurationConstant.WSAS_MAIN_CLASS);
-
-			Method[] methods = wsasMainClazz.getMethods();
-			Method mainMethod = null;
-			for (int i = 0; i < methods.length; i++) {
-				if (methods[i].getName().equals("main")) {
-					mainMethod = methods[i];
-					break;
-				}
-			}
-			Class serviceConfic = WSASClassLoadingUtil
-					.loadClassFromClassLoader(WSASConfigurationConstant.WSAS_SERVER_CONFIG_CLASS);
-			Field[] fields = serviceConfic.getDeclaredFields();
-			AccessibleObject.setAccessible(fields, true);
-			try{
-				for (int i = 0; i < fields.length; i++) {
-					Field f = fields[i];
-					if (f.getName().equals("configurationXMLLocation")) {
-						f.set(serviceConfic, WSASConfigurationBean.getWsasInstallationPath()
-								+ File.separator + "conf" + File
-								.separator + "server.xml");
-						break;
+		
+				String wsasInstallationLocation = WSASConfigurationBean.getWsasInstallationPath();
+				try {
+					Runtime runtime = Runtime.getRuntime();
+					String OS = System.getProperty("os.name").toLowerCase();
+					if ((OS.indexOf("windows 9") > -1)
+							|| (OS.indexOf("nt") > -1)
+							|| (OS.indexOf("windows 2000") > -1)
+							|| (OS.indexOf("windows xp") > -1)) {
+						wsasProcess = runtime.exec(wsasInstallationLocation +"\\bin\\startup.bat");
+					} else {
+						wsasProcess = runtime.exec("sh " + wsasInstallationLocation +"\\bin\\startup.sh");
 					}
+					wsasProcess.waitFor();
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-
-				mainMethod.invoke(null, new Object[]{new String[]{"RUN"}});
+				
 				WSASConfigurationBean.setWSASAlreadyRunning(false);
 				
-			}catch(IllegalArgumentException e){
-				status = new Status( IStatus.ERROR,"id",0,e.getMessage(),null);
-			}catch(IllegalAccessException e){
-				status = new Status( IStatus.ERROR,"id",0,e.getMessage(),null);
-			}
 		}
 		return status;
 	}
-	
-    public static Class getWSASMainClass(){
-        return wsasMainClazz;
-    }
 
 }

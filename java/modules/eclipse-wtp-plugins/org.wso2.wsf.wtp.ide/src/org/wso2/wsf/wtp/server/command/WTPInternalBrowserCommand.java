@@ -25,14 +25,13 @@ import org.wso2.wsf.wtp.ide.Activator;
 
 public class WTPInternalBrowserCommand {
 	
+	private static IWebBrowser browser = null;
+	
 	public static void popUpInrernalBrouwser(String inURL) {
 
-//		IWorkbenchBrowserSupport browserSupport = WebServiceConsumptionUIPlugin.getInstance()
-//													.getWorkbench().getBrowserSupport();
 		try {
 			IWorkbenchBrowserSupport browserSupport = Activator.getDefault()
 			.getWorkbench().getBrowserSupport();
-			IWebBrowser browser;
 
 			browser = browserSupport.createBrowser(IWorkbenchBrowserSupport.LOCATION_BAR, 
 					null, null, null);
@@ -43,7 +42,10 @@ public class WTPInternalBrowserCommand {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
-		                        
+	}
+	
+	public static void closeUpInrernalBrouwser(){
+		browser.close();
 	}
 	
 

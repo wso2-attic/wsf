@@ -16,7 +16,6 @@
 package org.wso2.wsf.wtp.server.command;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -24,32 +23,46 @@ import org.wso2.wsf.wtp.server.bean.WSASConfigurationBean;
 
 public class WSASStopCommand {
 	
-    private static Class wsasMainClazz;
+	private WSASStopCommand command;
     private static IStatus status;
+    
+    private WSASStopCommand(){
+    	//private
+    }
+    public WSASStopCommand getWSASStopCommandInstance(){
+    	if(command == null){
+    		return command = new WSASStopCommand();
+    	}else {
+    		return command;
+    	}
+    }
 	
 	public static IStatus run() throws InvocationTargetException {
 		status = Status.OK_STATUS;
 		
 		if (WSASConfigurationBean.isWsasStartStatus()) {
-			wsasMainClazz = WSASStartCommand.getWSASMainClass();
+			
+			Process wsasProcess = null;
+			
+			String wsasInstallationLocation = WSASConfigurationBean.getWsasInstallationPath();
 			try {
-				Method[] methods = wsasMainClazz.getMethods();
-				Method shutdownMethod = null;
-				for (int i = 0; i < methods.length; i++) {
-					if (methods[i].getName().equals("main")) {
-						shutdownMethod = methods[i];
-						break;
-					}
+				Runtime runtime = Runtime.getRuntime();
+				String OS = System.getProperty("os.name").toLowerCase();
+				if ((OS.indexOf("windows 9") > -1)
+						|| (OS.indexOf("nt") > -1)
+						|| (OS.indexOf("windows 2000") > -1)
+						|| (OS.indexOf("windows xp") > -1)) {
+					wsasProcess = runtime.exec(wsasInstallationLocation +"\\bin\\shutdown.bat");
+				} else {
+					wsasProcess = runtime.exec("sh " + wsasInstallationLocation +"\\bin\\shutdown.sh");
 				}
-
-				shutdownMethod.invoke(null, new Object[]{new String[]{"STOP"}});
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 				//set wsas start status to shutdown
 				WSASConfigurationBean.setWsasStartStatus(false);
 
-			}  catch (IllegalAccessException e) {
-				status = new Status( IStatus.ERROR,"id",0,e.getMessage(),null );
-			}
 		}else{
 			status = new Status( IStatus.ERROR,"id",12,"WSAS Instance is not active !!",null ); 
 		}
