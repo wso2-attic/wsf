@@ -28,10 +28,10 @@ import org.eclipse.wst.ws.internal.wsrt.WebServiceInfo;
 import org.eclipse.wst.ws.internal.wsrt.WebServiceScenario;
 import org.wso2.wsf.ide.creation.core.command.WSASBUCommand;
 import org.wso2.wsf.ide.creation.core.command.WSASBUServiceCreationCommand;
-import org.wso2.wsf.ide.creation.core.command.WSASServiceInstallCommand;
 import org.wso2.wsf.ide.creation.core.command.WSASBuildProjectCommand;
 import org.wso2.wsf.ide.creation.core.command.WSASCleanupCommand;
 import org.wso2.wsf.ide.creation.core.command.WSASDefaultingCommand;
+import org.wso2.wsf.ide.creation.core.command.WSASServiceInstallCommand;
 import org.wso2.wsf.ide.creation.core.command.WSASServicesXMLValidationCommand;
 import org.wso2.wsf.ide.creation.core.command.WSASSkelImplCommand;
 import org.wso2.wsf.ide.creation.core.command.WSASTDCommand;
@@ -40,33 +40,38 @@ import org.wso2.wsf.ide.creation.core.command.WSASWSDL2JavaCommand;
 import org.wso2.wsf.ide.creation.core.command.WSASWebservicesServerCommand;
 import org.wso2.wsf.ide.creation.core.data.DataModel;
 
-public class WSASWebService extends AbstractWebService
-{
-//	private WSASWebServiceInfo wsasWebServiceInfo;
-
-	public WSASWebService(WebServiceInfo info)
-	{
+public class WSASWebService extends AbstractWebService {
+	
+	DataModel model;
+	
+	public WSASWebService(WebServiceInfo info){
 		super(info);
 	}
 
 	public ICommandFactory assemble(IEnvironment env, IContext ctx,
-			ISelection sel, String project, String earProject)
-	{
+			ISelection sel, String project, String earProject) 	{
 		return null;
 	}
 
 	public ICommandFactory deploy(IEnvironment env, IContext ctx, ISelection sel,
-			String project, String earProject)
-	{
-		return null;
+			String project, String earProject) {
+		Vector commands = new Vector();
+		commands.add(new WSASServiceInstallCommand(model, this, project,ctx.getScenario().getValue()));
+		if (ctx.getScenario().getValue() == WebServiceScenario.BOTTOMUP)	{ 
+			// Do nothing yet
+		} else if (ctx.getScenario().getValue() == WebServiceScenario.TOPDOWN) {
+			commands.add(new WSASCleanupCommand());
+		} else {
+			return null;
+		}
+
+		return new SimpleCommandFactory(commands);
 	}
 
 	public ICommandFactory develop(IEnvironment env, IContext ctx, ISelection sel,
-			String project, String earProject)
-	{
+			String project, String earProject)	{
 		Vector commands = new Vector();
-		DataModel model = new DataModel();
-		//EclipseEnvironment environment = (EclipseEnvironment)env;
+		model = new DataModel();
 
 		model.setWebProjectName(project);
 
@@ -76,9 +81,7 @@ public class WSASWebService extends AbstractWebService
 			commands.add(new WSASServicesXMLValidationCommand());
 			commands.add(new WSASBUServiceCreationCommand(model,this,project));
 			commands.add(new WSASWebservicesServerCommand(model, ctx.getScenario().getValue() ));
-			commands.add(new WSASServiceInstallCommand(model, this, project,ctx.getScenario().getValue()));
-		} 
-		else if (ctx.getScenario().getValue() == WebServiceScenario.TOPDOWN) {  
+		} else if (ctx.getScenario().getValue() == WebServiceScenario.TOPDOWN) {  
 			commands.add(new WSASDefaultingCommand( model,this, ctx.getScenario().getValue()  ) );
 			commands.add(new WSASTDCommand( model) );
 			commands.add(new WSASWSDL2JavaCommand( model) );
@@ -93,8 +96,7 @@ public class WSASWebService extends AbstractWebService
 			commands.add(new WSASServiceInstallCommand(model, this, project,ctx.getScenario().getValue()));
 			commands.add(new WSASCleanupCommand());
 		} 
-		else 
-		{
+		else {
 			return null;
 		}
 
@@ -102,14 +104,12 @@ public class WSASWebService extends AbstractWebService
 	}
 
 	public ICommandFactory install(IEnvironment env, IContext ctx, ISelection sel,
-			String project, String earProject)
-	{
+			String project, String earProject)	{
 		return null;
 	}
 
 	public ICommandFactory run(IEnvironment env, IContext ctx, ISelection sel,
-			String project, String earProject)
-	{
+			String project, String earProject)	{
 		return null;
 	}
 }
