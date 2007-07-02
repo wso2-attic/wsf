@@ -1,4 +1,4 @@
-rem @echo off
+@echo off
 @call vcvars32.bat /nologo
 
 rem Build Apache Axis2/C
@@ -7,6 +7,7 @@ rem Build Apache Axis2/C
 @if exist axis2c-bin-1.1.0-win32 rmdir /s /q axis2c-bin-1.1.0-win32
 @cd win32
 @nmake dist AUTOCONF=..\..\..\configure.in
+@if not %ERRORLEVEL% EQU 0 goto end
 
 rem Build Apache Rampart/C
 @cd ..\..\..\rampartc\build\win32
@@ -95,3 +96,4 @@ rem Build Apache Savan/C
 @copy /Y COPYING wso2-wsf-c-bin-1.0
 @copy /Y AUTHORS wso2-wsf-c-bin-1.0
 
+:end
