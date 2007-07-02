@@ -66,6 +66,36 @@ AC_ARG_WITH(apache2,
   AC_MSG_RESULT(no)
 )
 
+AC_MSG_CHECKING(path to use sqlite storage .)
+AC_ARG_WITH(sqlite,
+[  --with-sqlite[=PATH]      use sqlite storage.],
+[ case "$withval" in
+  no)
+    AC_MSG_RESULT(no)
+    WRAPPER_DIR=""
+    ;;
+  *)
+    AC_MSG_RESULT($withval)
+    WRAPPER_DIR="sqlite"
+    dnl Find sqlite include dir in the path
+    if test -d $withval; then
+        sqliteinc="-I$withval"
+    dnl else find the sqliteinc include dir in /usr/include
+    elif test -d '/usr/include'; then
+        sqliteinc="-I/usr/include"
+    else
+        AC_MSG_ERROR(could not find sqliteinc. stop)
+    fi
+    WRAPPER_DIR="sqlite"
+    LDFLAGS="$LDFLAGS -lsqlite3"
+    ;;
+  esac ],
+  AC_MSG_RESULT(yes)
+  WRAPPER_DIR="sqlite"
+  sqliteinc="-I/usr/include"
+  LDFLAGS="$LDFLAGS -lsqlite3"
+)
+
 AC_MSG_CHECKING(whether to use openssl)
 AC_ARG_ENABLE(openssl, [  --enable-openssl	enable OpenSSL support in client transport (default=no)],
 [ case "${enableval}" in
@@ -229,6 +259,35 @@ AC_ARG_ENABLE(libxml2, [  --enable-libxml2	build Libxml2 XML parser library wrap
   AC_MSG_RESULT(yes)
   WRAPPER_DIR="libxml2"
 )
+
+AC_MSG_CHECKING(path to use openssl . This is a compulsory to build Rampart-C)
+AC_ARG_WITH(openssl,
+[  --with-openssl[=PATH]      use openssl.],
+[ case "$withval" in
+  no)
+    AC_MSG_RESULT(no)
+    ;;
+  *)
+    AC_MSG_RESULT($withval)
+    dnl Find oprnssl dir in the path
+    if test -d $withval; then
+        opensslinc="-I$withval/include"
+        openssllib="-L$withval/lib"
+    elif test -d '/usr/include/openssl'; then
+        opensslinc="-I/usr/include/openssl"
+        openssllib=""
+    else
+        AC_MSG_ERROR(could not find openssl. stop)
+    fi
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+)
+
+OPENSSLINC=$opensslinc
+OPENSSLLIB=$openssllib
+AC_SUBST(OPENSSLINC)
+AC_SUBST(OPENSSLLIB)
 
 dnl Checks for header files.
 AC_HEADER_STDC
