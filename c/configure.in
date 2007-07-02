@@ -4,7 +4,6 @@
 # To build with debug symbols set DEBUG = 1
 DEBUG = 0
 
-
 #############################################################################
 ### Apache Axis2/C Build Configuration Parameters
 
@@ -49,9 +48,9 @@ OPENSSL_BIN_DIR = D:\OpenSSL
 # Build with SQLite support for permenent storage, to disable set WITH_SQLITE = 0
 WITH_SQLITE = 1
 # Path to SQLite installation
-SQLITE_BIN_DIR = "E:\sqlite-source-3_3_8"
+SQLITE_BIN_DIR = "E:\SQLight"
 # Path to SQLite source
-SQLITE_SRC_DIR = "E:\sqlite-source-3_3_8"
+SQLITE_SRC_DIR = "E:\sqlite-source-3_4_0"
 
 # Build with MySQL support for permenent storage, to enable set WITH_MYSQL = 1
 WITH_MYSQL = 0

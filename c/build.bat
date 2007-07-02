@@ -6,11 +6,11 @@ rem Build Apache Axis2/C
 @cd axis2c\build
 @if exist axis2c-bin-1.1.0-win32 rmdir /s /q axis2c-bin-1.1.0-win32
 @cd win32
-@nmake dist AUTOCONF=configure.in
+@nmake dist AUTOCONF=..\..\..\configure.in
 
 rem Build Apache Rampart/C
 @cd ..\..\..\rampartc\build\win32
-@nmake dist AXIS2_BIN_DIR=.\..\..\..\axis2c\build\axis2c-bin-1.1.0-win32 AUTOCONF=configure.in
+@nmake dist AUTOCONF=..\..\..\configure.in AXIS2_BIN_DIR=.\..\..\..\axis2c\build\axis2c-bin-1.1.0-win32
 
 @if not %ERRORLEVEL% EQU 0 goto rampart_error
 
@@ -24,7 +24,7 @@ rem Build Apache Rampart/C
 @copy /Y rampartc-0.90\modules\rampart\mod_rampart.dll .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
 @xcopy /E /I /Q /Y rampartc-0.90\bin\samples .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples\rampart
 @xcopy /E /I /Q /Y rampartc-0.90\bin\samples\services\sec_echo .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\services\sec_echo
-goto build_sandesha2
+@goto build_sandesha2
 
 :rampart_error
 @cd ..
@@ -32,7 +32,7 @@ goto build_sandesha2
 rem Build Apache Sandesha2/C
 :build_sandesha2
 @cd ..\..\sandesha2c\build\win32
-@nmake dist AXIS2_BIN_DIR=.\..\..\..\axis2c\build\axis2c-bin-1.1.0-win32 AUTOCONF=configure.in
+@nmake dist AXIS2_BIN_DIR=.\..\..\..\axis2c\build\axis2c-bin-1.1.0-win32 AUTOCONF=..\..\..\configure.in
 
 @if not %ERRORLEVEL% EQU 0 goto sandesha2_error
 
@@ -49,7 +49,7 @@ rem Build Apache Sandesha2/C
 @mkdir .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\docs\sandesha2
 @copy /Y sandesha2\README .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\docs\sandesha2
 @copy /Y sandesha2\INSTALL .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\docs\sandesha2
-goto build_neethi_util
+@goto build_neethi_util
 
 :sandesha2_error
 @cd ..
@@ -58,17 +58,17 @@ rem Build Neethi util
 :build_neethi_util
 @cd ..\..\
 @cd axis2c\neethi\src\util
-@nmake -f neethi_util.mk AXIS2_BIN_DIR=..\..\..\build\axis2c-bin-1.1.0-win32 AUTOCONF=configure.in
+@nmake -f neethi_util.mk AXIS2_BIN_DIR=..\..\..\build\axis2c-bin-1.1.0-win32 AUTOCONF=..\..\..\..\configure.in
 @cd ..\..\..\..\
 
 rem Build wsclient
 @cd wsclient
-@nmake -f wsclient.mk AXIS2_BIN_DIR=..\axis2c\build\axis2c-bin-1.1.0-win32 AUTOCONF=configure.in
+@nmake -f wsclient.mk AXIS2_BIN_DIR=..\axis2c\build\axis2c-bin-1.1.0-win32 AUTOCONF=..\configure.in
 @cd ..
 
 rem Build Apache Savan/C
 @cd savanc\build\win32
-@nmake dist AXIS2_BIN_DIR=.\..\..\..\axis2c\build\axis2c-bin-1.1.0-win32 AUTOCONF=configure.in
+@nmake dist AUTOCONF=..\..\..\configure.in AXIS2_BIN_DIR=.\..\..\..\axis2c\build\axis2c-bin-1.1.0-win32
 
 @if not %ERRORLEVEL% EQU 0 goto savan_error
 
@@ -79,7 +79,7 @@ rem Build Apache Savan/C
 @copy /Y savanc\modules\savan\mod_savan.dll .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
 @copy /Y savanc\modules\savan\mod_savan.lib .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
 @copy /Y savanc\bin\samples\savan\*.exe .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples\
-goto pack_wsfc
+@goto pack_wsfc
 
 :savan_error
 @cd ..
