@@ -69,7 +69,7 @@ public class ServicesXMLSelectBeanWidget extends SimpleWidgetDataContributor
 
 		griddata = new GridData( GridData.FILL_HORIZONTAL );
 		griddata.horizontalSpan = 14;
-		haveServicesXML = new Button( mainComp, SWT.CHECK );
+		haveServicesXML = new Button( mainComp, SWT.RADIO );
 		haveServicesXML.setText(WSASCreationUIMessages.LABEL_HAVE_SERVICES_XML_FILE);	
 		haveServicesXML.setLayoutData(griddata);
 		haveServicesXML.addSelectionListener( new SelectionAdapter()
@@ -139,7 +139,7 @@ public class ServicesXMLSelectBeanWidget extends SimpleWidgetDataContributor
 
 		griddata = new GridData( GridData.FILL_HORIZONTAL );
 		griddata.horizontalSpan = 14;
-		generateServicesXML = new Button( mainComp, SWT.CHECK );
+		generateServicesXML = new Button( mainComp, SWT.RADIO );
 		generateServicesXML.setText( WSASCreationUIMessages.LABEL_DEFAULT_SERVICES_XML_FILE );
 		generateServicesXML.setLayoutData(griddata);
 		generateServicesXML.setSelection(true);
