@@ -2664,19 +2664,33 @@ wsf_soap_do_function_call(const axutil_env_t *env,
 
 axis2_bool_t 
 wsf_soap_do_function_call1(const axutil_env_t *env,
-          wsf_svc_info_t *svc_info, zval *this_ptr,int soap_version, void *buff, int length TSRMLS_DC)
+          wsf_svc_info_t *svc_info, zval *this_ptr,void *buff, int length TSRMLS_DC)
 {
     xmlDocPtr doc_request, doc_return;
     zval function_name,  **params;
     zval func,  retval; 
     int num_params =0, call_status;
     sdlFunctionPtr function;
-
+    int soap_version;
     soapHeader *soap_headers = NULL;
     soapServicePtr service;
+    char *operation_name = NULL;
 
 
     doc_request = soap_xmlParseMemory((char*)buff, length);
+
+    if (xmlGetIntSubset(doc_request) != NULL) { 
+        xmlNodePtr env = get_node(doc_request->children,"Envelope");
+        if (env && env->ns) { 
+            if (strcmp((char*)env->ns->href, SOAP_1_1_ENV_NAMESPACE) == 0) {
+                WSF_GLOBAL(soap_version) = SOAP_1_1;
+                soap_version = SOAP_1_1;
+            } else if (strcmp((char*)env->ns->href,SOAP_1_2_ENV_NAMESPACE) == 0) { 
+                WSF_GLOBAL(soap_version) = SOAP_1_2;
+                soap_version = SOAP_1_2;
+            }
+        }
+    }
 
     service = (soapServicePtr)svc_info->service;
 
@@ -2684,9 +2698,26 @@ wsf_soap_do_function_call1(const axutil_env_t *env,
             service->actor, &function_name, &num_params, 
             &params, &soap_version, &soap_headers TSRMLS_CC);
 
-    xmlFreeDoc(doc_request);    
+    xmlFreeDoc(doc_request);   
+    if(svc_info->ops_to_functions){
+        operation_name = axutil_hash_get(svc_info->ops_to_functions, Z_STRVAL(function_name), AXIS2_HASH_KEY_STRING);
+        if(!operation_name)
+            return AXIS2_FALSE;
+    }
 
-    ZVAL_STRING(&func, Z_STRVAL(function_name), 0);
+    if(svc_info->ht_opParams){
+        zval **tmp;
+        char *function_type = NULL;
+        if(zend_hash_find(svc_info->ht_opParams,
+                    operation_name, strlen(operation_name) +1, (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp)== IS_STRING){
+                    function_type = Z_STRVAL_PP(tmp);
+                    if(strcmp(function_type, "MIXED") != 0){
+                        return AXIS2_FALSE;
+                    }
+        }
+    }
+
+    ZVAL_STRING(&func, operation_name, 0);
     call_status = call_user_function(CG(function_table) , (zval**)NULL, &func, &retval, num_params, params TSRMLS_CC);
 
     if (call_status == SUCCESS) {
@@ -2712,6 +2743,35 @@ wsf_soap_do_function_call1(const axutil_env_t *env,
     } else {
         php_error_docref(NULL TSRMLS_CC, E_ERROR, "Function '%s' call failed", Z_STRVAL(function_name));
     }
+
+    if (doc_return) {
+        int size = 0;
+        xmlChar *buf = NULL;
+        char cont_len[30];
+
+        /* xmlDocDumpMemoryEnc(doc_return, &buf, &size, XML_CHAR_ENCODING_UTF8); */
+        xmlDocDumpMemory(doc_return, &buf, &size);
+
+        if (size == 0) {
+            php_error_docref(NULL TSRMLS_CC, E_ERROR, "Dump memory failed");
+        }
+
+        sprintf(cont_len, "Content-Length: %d", size);
+        sapi_add_header(cont_len, strlen(cont_len), 1);
+        if (soap_version == SOAP_1_2) {
+            sapi_add_header("Content-Type: application/soap+xml; charset=utf-8", sizeof("Content-Type: application/soap+xml; charset=utf-8")-1, 1);
+        } else {
+            sapi_add_header("Content-Type: text/xml; charset=utf-8", sizeof("Content-Type: text/xml; charset=utf-8")-1, 1);
+        }
+
+        xmlFreeDoc(doc_return);
+        php_write(buf, size TSRMLS_CC);
+        xmlFree(buf);
+    } else {
+        sapi_add_header("HTTP/1.1 202 Accepted", sizeof("HTTP/1.1 202 Accepted")-1, 1);
+        sapi_add_header("Content-Length: 0", sizeof("Content-Length: 0")-1, 1);
+    }
+ 
 
     return AXIS2_SUCCESS;
 }

@@ -1742,8 +1742,7 @@ PHP_METHOD(ws_service , reply)
         /** end Wsdl generation stuff */
     }
     else if(in_wsdl_mode == 1){
-    
-    
+        wsf_soap_do_function_call1(env, svc_info, this_ptr, req_info->req_data , req_info->req_data_length TSRMLS_DC);
     }else{
 
         conf = axis2_conf_ctx_get_conf(conf_ctx, ws_env_svr);
