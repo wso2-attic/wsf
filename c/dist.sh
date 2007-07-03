@@ -10,21 +10,10 @@ mv sandesha2c/xdocs docs/sandesha2c
 mv rampartc/xdocs docs/rampartc
 mv wsclient/docs docs/wsclient
 
-mkdir examples/axis2c
-mkdir examples/savanc
-mkdir examples/sandesha2c
-mkdir examples/rampartc
-mkdir examples/wsclient
-
-cp -r axis2c/samples/* examples/axis2c
-cp -r savanc/samples/* examples/savanc
-cp -r sandesha2c/samples/* examples/sandesha2c
-cp -r rampartc/samples/* examples/rampartc
-cp -r wsclient/samples/* examples/wsclient
-
 find -name "*.libs"| xargs rm -rf
 find -name "*.deps"| xargs rm -rf
 find -name "*.svn"| xargs rm -rf
 find -name "Makefile"| xargs rm -rf
+find -name "*.o"| xargs rm -rf
 grep -rl AXIS2C_HOME *| xargs sed -i "s/AXIS2C_HOME/WSFC_HOME/g"
 cd ..
