@@ -1,4 +1,4 @@
-prglibdir=$(prefix)/sandesha2
+prglibdir=$(prefix)/lib
 prglib_LTLIBRARIES = libsandesha2_client.la
 
 libsandesha2_client_la_SOURCES = \
@@ -7,10 +7,7 @@ libsandesha2_client_la_SOURCES = \
 							client.c
 
 INCLUDES = -I$(top_builddir)/include \
-			-I$(top_builddir)/include/sandesha2 \
-           -I ../../../axis2c/util/include \
-            -I ../../../axis2c/include \
-            -I ../../../axis2c/axiom/include \
-            -I ../../../axis2c/xml_schema/include \
-            -I ../../../axis2c/woden/include
-
+		   	@AXIS2INC@ \
+		   	@AXIOMINC@ \
+		   	@UTILINC@ \
+			@NEETHIINC@
