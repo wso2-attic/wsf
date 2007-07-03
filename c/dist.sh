@@ -14,6 +14,5 @@ find -name "*.libs"| xargs rm -rf
 find -name "*.deps"| xargs rm -rf
 find -name "*.svn"| xargs rm -rf
 find -name "Makefile"| xargs rm -rf
-find -name "*.o"| xargs rm -rf
 grep -rl AXIS2C_HOME *| xargs sed -i "s/AXIS2C_HOME/WSFC_HOME/g"
 cd ..
