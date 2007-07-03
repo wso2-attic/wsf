@@ -29,6 +29,7 @@ rem Build Apache Rampart/C
 @copy /Y rampartc-0.90\modules\rampart\mod_rampart.lib .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
 @copy /Y rampartc-0.90\modules\rampart\mod_rampart.dll .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
 @xcopy /E /I /Q /Y rampartc-0.90\bin\samples .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples\rampart
+@xcopy /E /I /Q /Y .\..\samples .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\samples\rampart
 @xcopy /E /I /Q /Y rampartc-0.90\bin\samples\services\sec_echo .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\services\sec_echo
 @goto build_sandesha2
 
@@ -49,6 +50,7 @@ rem Build Apache Sandesha2/C
 @mkdir .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples\sandesha2
 @copy /Y sandesha2\bin\samples\*.exe .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples\sandesha2
 @xcopy /E /Q /I /Y sandesha2\services\RMSampleService .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\services\RMSampleService
+@xcopy /E /Q /I /Y sandesha2\samples .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\samples\sandesha2
 @copy /Y sandesha2\axis2.xml .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\axis2.xml
 @copy /Y sandesha2\include\*.h  .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\include\
 @copy /Y sandesha2\sqlite_schema.bat  .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\sqlite_schema.bat
@@ -83,6 +85,7 @@ rem Build Apache Savan/C
 @xcopy /E /Q /I /Y savanc\modules\savan .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\modules\savan
 @xcopy /E /Q /I /Y savanc\services\publisher .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\services\publisher
 @xcopy /E /Q /I /Y savanc\services\listener .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\services\listener
+@xcopy /E /Q /I /Y savanc\samples .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\samples\savan
 @copy /Y savanc\modules\savan\mod_savan.dll .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
 @copy /Y savanc\modules\savan\mod_savan.lib .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
 @mkdir .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples\savan
