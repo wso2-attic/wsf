@@ -46,12 +46,13 @@ rem Build Apache Sandesha2/C
 @xcopy /E /Q /I /Y sandesha2\modules\sandesha2 .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\modules\sandesha2
 @xcopy /E /Q /I /Y sandesha2\modules\sandesha2\sandesha2.lib  .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
 @xcopy /E /Q /I /Y sandesha2\modules\sandesha2\sandesha2.dll  .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
-@copy /Y sandesha2\bin\samples\*.exe .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples\
+@mkdir .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples\sandesha2
+@copy /Y sandesha2\bin\samples\*.exe .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples\sandesha2
 @xcopy /E /Q /I /Y sandesha2\services\RMSampleService .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\services\RMSampleService
 @copy /Y sandesha2\axis2.xml .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\axis2.xml
 @copy /Y sandesha2\include\*.h  .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\include\
 @copy /Y sandesha2\sqlite_schema.bat  .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\sqlite_schema.bat
-@copy /Y  sandesha2\bin\samples\sandesha2 .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples
+@copy /Y  sandesha2\bin\samples\sandesha2 .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples\sandesha2
 @mkdir .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\docs\sandesha2
 @copy /Y sandesha2\README .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\docs\sandesha2
 @copy /Y sandesha2\INSTALL .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\docs\sandesha2
@@ -84,7 +85,8 @@ rem Build Apache Savan/C
 @xcopy /E /Q /I /Y savanc\services\listener .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\services\listener
 @copy /Y savanc\modules\savan\mod_savan.dll .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
 @copy /Y savanc\modules\savan\mod_savan.lib .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
-@copy /Y savanc\bin\samples\savan\*.exe .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples\
+@mkdir .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples\savan
+@copy /Y savanc\bin\samples\savan\*.exe .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples\savan
 @goto pack_wsfc
 
 :savan_error
