@@ -1,129 +1,152 @@
-1. Installing and Running on Linux.
+1. Software Dependencies
+
+1.1. Mandatory
+	- Libxml2 - http://www.xmlsoft.org/
+        - libiconv - http://www.gnu.org/software/libiconv/
+	- zlib - http://www.zlib.net/
+
+1.2. Optional
+	- Apache2 httpd - http://httpd.apache.org/ - Required for deploying services with httpd
+	- OpenSSL - http://www.openssl.org/ - Required for SSL client transport and WS-Security with Apache Rampart/C
+	- Either SQLite - http://www.sqlite.org/ or MySQL - http://www.mysql.org/ - Required for WS-ReliableMessaging with Apache Sandesha2/C
+	- iksemel - http://iksemel.jabberstudio.org/ - Required for XMPP transport
+	
+2. Installing and Running on Linux.
 ===================================
 
-1.1 Using the source release.
+2.1 Using the source release.
 
     The following steps need to be taken to install and run WSF/C using source 
-    distribution on Linux. Build depends on
-
-    a) libssl-dev
-    b) libsqlight3-dev
-    c) libxml2-dev
-    d) pkg-config
-    e) libiksemel-dev (If you enable XMPP)
+    distribution on Linux. You are required to have pkg-config on your system, by default most Linux systems have this tool.
 
     1. Extract the source tar package to a folder.
     2. Set WSFC_HOME environment variable pointing to the location where you 
        want to install WSO2 WSF/C. 
 
-        * WSFC_HOME='/your_desired_path_to_wsfc_installation'
-        * export WSFC_HOME
+	$ WSFC_HOME='/your_desired_path_to_wsfc_installation'
+	$ export WSFC_HOME
 
     3. Then go to the folder where you extracted the source.
         
-        * cd /your_path_to_wsf-c_source
+	$ cd /your_path_to_wsfc_source
 
     4. Build the source
         * This can be done using the following command sequence in the directory 
           where you have extracted the source
 
-            *  ./configure --prefix=${WSFC_HOME}
-            * make
-            * make install
-            * make samples 
+	$  ./configure --prefix=${WSFC_HOME}
+	$ make
+	$ make install
+	$ make samples 
 
-            Use './configure --help' for possible command line options.
+          Use './configure --help' to find out possible configuration options.
 
-           Note :If you do not provide a --prefix configure option, it will 
-           by default be installed into /usr/local/wsf_c directory.
+          Note :If you do not provide a --prefix configure option, it will 
+          by default be installed into /usr/local/wsf_c directory.
 
      5. Go to where you installed WSO2 WSF/C.
 
         Start simple axis server
 
-        * To start the simple axis server on port 9090 run the following command lines
+        * To start the simple axis server on port 9090 run the following commands
 
-            cd ${WSFC_HOME}/bin
-            ./axis2_http_server
+	$ cd ${WSFC_HOME}/bin
+	$ ./axis2_http_server
 
             To see the possible command line options run ./axis2_http_server -h
             Note : If you run into shared library problems, try setting the 
             LD_LIBRARY_PATH
 
-            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/your_path_to_wso2_wsfc/lib
+	$ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${WSFC_HOME}/lib
 
             Run the wsclient in a new shell
 
-            cd /your_path_to_wso2_wsfc/bin
-            ./wsclient --soap http://localhost:9090/axis2/services/echo < samples/wsclient/data/echo.xml
+	$ cd /your_path_to_wso2_wsfc/bin
+	$ ./wsclient --soap http://localhost:9090/axis2/services/echo < samples/wsclient/data/echo.xml
 
             You can also run the sample shell scripts given for wsclient
 
-            cd /your_path_to_wso2_wsfc/bin/samples/wsclient
-            sh echo.sh
+	$ cd /your_path_to_wso2_wsfc/bin/samples/wsclient
+	$ sh echo.sh
 
             To see the possible command line options run ./wsclient --help or ./wsclient -h
 
+2.2. Using the RPM package
+	You can install the RPM package using the following command
+	$ rpm -i <wso2-wsf-c.rpm.file.name>
+	This will install WSO2 WSF/C to /usr/local/wsf_c/
 
-2. Installing and Running on Microsoft Windows (win32)
+	Set the WSFC_HOME environment variable to that location
+	$ WSFC_HOME=/usr/local/wsf_c/
+	$ export WSFC_HOME
+
+	To run and test the installation, you can follow the step 5 in section 2.1. above 
+
+2.3. Using the deb package
+	You can install the deb package using the following command
+	$ dpkg -i <wso2-wsf-c.deb.file.name>
+	This will install WSO2 WSF/C to /usr/local/wsf_c/
+
+	Set the WSFC_HOME environment variable to that location
+	$ WSFC_HOME=/usr/local/wsf_c/
+	$ export WSFC_HOME
+
+	To run and test the installation, you can follow the step 5 in section 2.1. above 
+
+3. Installing and Running on Microsoft Windows (Win32)
 ======================================================
 
 This can be done using either binary or source distribution.
-For both the binary and source distributions, you need to download libxml2.
 
-(NOTE: most Linux systems have libxml2 by default. On MS Windows you need to 
-download and install libxml2)
+3. 1. Using Binary Release
 
-2. 1. Using Binary Release
-
-2.1.1. Requirements
+3.1.1. Requirements
 
     The binaries shipped with this version are compiled with Microsoft Visual 
     Studio Compiler (cl)
 
     (Note: you can download Microsoft VSExpress2005 edition from the Microsoft 
-    Web site and install it to run thse binaries)
+    Web site and install it to run these binaries)
 
-    You also need the following dlls:
+    You also need have a look at and install the dependencies mentioned in section 1. above.
 
-    * libxml2.dll [http://www.xmlsoft.org - download the version >= libxml2-2.6.20.win32]
-    * iconv.dll [http://www.xmlsoft.org - download the version >= iconv-1.9.1.win32]
-    * zlib1.dll [http://www.xmlsoft.org - download the version >= zlib-1.2.3.win32]
-
-    If you want WS-Security to work with Apache Rampart/C, you need OpenSSL.
-    You also need either SQLite or MySQL to get WS-ReliableMessaging to work with Apache Sandesha2/C
-
-
-2.1.3. Running The Binaries
-
-    1. Copy libxml2.dll, iconv.dll and zlib1.dll downloaded to C:\wsfc\lib
-    2. Extract the binary distribution to a folder of your choice. (example: C:\wsfc)
+3.1.2. Installing and Running The Binaries
+    1. Extract the binary distribution to a folder of your choice. (example: C:\wsfc)
+    2. Copy libxml2.dll, iconv.dll and zlib1.dll downloaded to C:\wsfc\lib
 
     you need to set a couple of environment variables before you can 
     run the server and wsclient.
 
         * Set the variable WSFC_HOME to the deploy folder (C:\wsfc)
+		> set WSFC_HOME=C:\wsfc
         * Add the path to lib directory to the PATH variable (%WSFC_HOME%\lib)
-
-    Now everything is set to run the server (C:\wsfc\bin\>  axis2_http_server.exe)
+		> set PATH=%PATH%;%WSFC_HOME%\lib
+    Now everything is set to run the server 
+		> axis2_http_server.exe)
 
     If the server is running successfully you should see the message 
     "Started Simple Axis2 HTTP Server..."
 
-    (Note: You may provide command line options to change the default behaviour. 
+    (Note: You may provide command line options to change the default behavior. 
     Use the command "axis2_http_server.exe -h" to learn about the usage)
 
     Run the wsclient in a new DOS shell
 
-    cd c:\wsfc\bin
+    > cd c:\wsfc\bin
 
-    wsclient wsclient.exe
+    > wsclient --soap http://localhost:9090/axis2/services/echo < samples/wsclient/data/echo.xml
 
-    To see the possible command line options run ./wsclient --help or wsclient.exe -h
+    To see the possible command line options run wsclient --help or wsclient -h
 
-2.2 Using the Source Release
+    You can also run the sample batch scripts given for wsclient
 
-2.2.1. Requirements
+    > cd c:\wsfc\bin\samples\wsclient
+    > echo.bat
+
+
+3.2 Using the Source Release
+
+3.2.1. Requirements
    
     The makefile shipped with this version needs Microsoft Visual Studio 
     Compiler (cl) and nmake build tool.
@@ -132,55 +155,30 @@ download and install libxml2)
     from Microsoft Web site. You will need to add the path to Platform SDK 
     Include and Lib folders to makefile)
 
-    You also need
+    You also need have a look at and install the dependencies mentioned in section 1. above.
 
-    * libxml2 [http://www.xmlsoft.org - download the version >= libxml2-2.6.20.win32]
-    * iconv [http://www.xmlsoft.org - download the version >= iconv-1.9.1.win32]
-    * zlib [http://www.xmlsoft.org - download the version >= zlib-1.2.3.win32]
+3.2.2. Editing configure.in File
 
-2.2.3. Editing configure.in File
+    The configure.in file contains the user specific configuration parameters.
+    Please have a look at this file and set the settings to match your system's settings.
 
-    The default paths for libxml2 and iconv are specified in configure.in
+    Settings for Apache Axis2/C are mandatory. Settings for Apache Rampart/C and Apache Sandesha2/C are optional and needs to be set only if you want to build those.
 
-    Example:Default location for libxml2 is C:\libxml2
+    The comments in the configure.in file explain each setting, please have a look at the comments to get an understanding on what each setting means. 
 
-    You can either extract libxml2 to this folder, in which case folder 
-    structure for C:\libxml2 should look like the following:
+3.2.3. Compiling The Source
 
-    Or extract to a location of your choice and edit the configure.in accordingly.
-
-    You need to have zlib1.dll in a library path. You may copy this dll to libxml2/lib.
-
-2.2.4. Compiling The Source
-
-    The following steps will take you through the source compilation
-
-    Extract the source distribution to a folder of your choice. (Example: C:\WSFC)
+    Extract the source distribution to a folder of your choice. (Example: C:\wsfc)
     Edit the configure.in file and set the configure parameters to match your system.
     Open a DOS shell, and go to where the extracted source is
-        cd C:\WSFC
+        > cd C:\wsfc
     Run the build.sh batch file
-        C:\WSFC>build.bat
+        > build.bat
 
     (Note: You may need to set the PATH environment variable to vcvars32.bat if 
-    Windows complaints that it cannot find this bat when running the build.bat file)
+    Windows complaints that it cannot find this batch file when running the build.bat file)
 
-2.2.5. Running The Binaries
+3.2.4. Running The Binaries
 
-    You need to set couple of environment variables before you can run the 
-    server and samples.
-    Set the variable WSFC_HOME to the deploy folder (C:\wsfc\deploy)
-    Add the path to lib directory to PATH variable (%WSFC_HOME%\lib)
-    Copy libxml2.dll, iconv.dll and zlib1.dll to wsfc lib folder (%WSFC_HOME%\lib)
-    Now run the server - C:\wsfc\deploy\bin>  axis2_http_server.exe
-    If server is running successfully you should see the message "Started Simple Axis2 HTTP Server..."
-    (Note: you may provide command line options to change the default behaviour. 
-    Use the command "axis2_http_server.exe -h" to learn about the usage)
+    Please have a look at the step 2 of section 3.1.2
 
-    Run the wsclient in a new DOS shell
-
-    cd c:\wsfc\bin
-
-    wsclient.exe
-
-    To see the possible command line options run ./wsclient --help or wsclient.exe -h
