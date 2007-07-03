@@ -84,6 +84,7 @@ AC_CONFIG_FILES([Makefile \
     src/handlers/Makefile \
     src/msgreceivers/Makefile\
     src/subscribers/Makefile\
+    src/subs_mgr/Makefile\
     src/data/Makefile\
     src/util/Makefile\
     samples/Makefile\
