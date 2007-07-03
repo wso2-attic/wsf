@@ -170,7 +170,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     //we allow only a sequence of spaces
                     if (textPayLoad.getText().trim().length() > 0) {
                         throw new AxisFault(
-                                "Non-XML payload is not allowed. PayLoad inside the SOAP body needs to an XML element.");
+                                "Non-XML payload is not allowed. PayLoad inside the SOAP body needs to be an XML element.");
                     }
                 }
             }
