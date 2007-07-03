@@ -324,15 +324,13 @@ axis2_xmpp_transport_utils_process_message_client(
     axiom_stax_builder_t *builder = NULL;
     axiom_soap_builder_t *soap_builder = NULL;
     axiom_soap_envelope_t *soap_envelope = NULL;
-    /* axis2_engine_t *engine = NULL; */
+
     axis2_conf_t *conf = NULL;
     axis2_msg_ctx_t *msg_ctx = NULL;
     axutil_qname_t *qname = NULL;
     axis2_transport_out_desc_t *out_desc = NULL;
     axis2_transport_in_desc_t *in_desc = NULL;
-    axutil_hash_t *properties = NULL;
-    axutil_property_t *property = NULL;
-    
+            
     reader = axiom_xml_reader_create_for_memory(env, soap_msg,
         axutil_strlen(soap_msg), NULL, AXIS2_XML_PARSER_TYPE_BUFFER);
     if (!reader)
@@ -385,41 +383,9 @@ axis2_xmpp_transport_utils_process_message_client(
     }
 
     axis2_msg_ctx_set_soap_envelope(msg_ctx, env, soap_envelope);
-    /* Create a hash table and attach the jid of the requesting cient and the
-     * XMPP parser as values of this table. Then attach the hash table to the
-     * msg ctx to access them inside engine.send(). [Note: we copy this hash table
-     * when copying the in-msg ctx to the out-msg ctx] */
 
-    properties = axutil_hash_make(env);
-    if(properties)
-    {
-        /* jid of the requesting client */
-        property = axutil_property_create(env);
-        axutil_property_set_scope(property, env, AXIS2_SCOPE_APPLICATION);
-        axutil_property_set_value(property, env, from);
-        axutil_hash_set(properties, AXIS2_XMPP_CLIENT_JID, AXIS2_HASH_KEY_STRING,
-            (void*)property);
-
-        /* XMPP parser */
-        property = axutil_property_create(env);
-        axutil_property_set_scope(property, env, AXIS2_SCOPE_APPLICATION);
-        axutil_property_set_value(property, env, session->parser);
-        axutil_hash_set(properties, AXIS2_XMPP_PARSER, AXIS2_HASH_KEY_STRING,
-            (void*)property);
-
-        property = axutil_property_create(env);
-        axutil_property_set_scope(property, env, AXIS2_SCOPE_APPLICATION);
-        axutil_property_set_value(property, env, properties);
-        axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_XMPP_PROPERTIES,
-                                   property);
-    }    
-
-    /* Now pass it to the engine */
     session->response = msg_ctx;
     status = AXIS2_SUCCESS;
-/*     engine = axis2_engine_create(env, session->conf_ctx); */
-/*     status = axis2_engine_receive(engine, env, msg_ctx); */
-
     return status;
 }
 
@@ -442,7 +408,6 @@ axis2_xmpp_transport_utils_process_presence_client(
     axiom_node_t *pres_node = NULL;
     axiom_element_t *op_elem = NULL;
     axis2_status_t status = AXIS2_FAILURE;
-/*     axis2_engine_t *engine = NULL; */
     axis2_conf_t *conf = NULL;
     axis2_msg_ctx_t *msg_ctx = NULL;
     axutil_qname_t *qname = NULL;
@@ -556,9 +521,5 @@ axis2_xmpp_transport_utils_process_presence_client(
         axis2_endpoint_ref_create(env, request_uri));
     axis2_msg_ctx_set_soap_envelope(msg_ctx, env, default_envelope);
     session->response = msg_ctx;
-    /* Now pass it to the engine */
-/*     engine = axis2_engine_create(env, session->conf_ctx); */
-/*     status = axis2_engine_receive(engine, env, msg_ctx); */
-
     return status;
 }
