@@ -4,15 +4,21 @@ find . -name "*.c" | xargs sed -i "s/8888/9090/g"
 find . -name "*.c" | xargs sed -i "s/7777/6060/g"
 cd ../../
 cd wso2-wsf-c-src-1.0
-mv axis2c/xdocs docs/axis2c
-mv savanc/xdocs docs/savanc
-mv sandesha2c/xdocs docs/sandesha2c
-mv rampartc/xdocs docs/rampartc
-mv wsclient/docs docs/wsclient
+cp -r axis2c/xdocs docs/axis2c
+cp -r savanc/xdocs docs/savanc
+cp -r sandesha2c/xdocs docs/sandesha2c
+cp -r rampartc/xdocs docs/rampartc
+cp -r wsclient/docs docs/wsclient
 
-find -name "*.libs"| xargs rm -rf
-find -name "*.deps"| xargs rm -rf
-find -name "*.svn"| xargs rm -rf
-find -name "Makefile"| xargs rm -rf
+rm -rf `find . -type d -name .svn`
+rm -rf `find . -type f -name *.la`
+rm -rf `find . -type f -name *.o`
+rm -rf `find . -type f -name *.lo`
+rm -rf `find . -type f -name *.loT`
+rm -rf `find . -type d -name .deps`
+rm -rf `find . -type d -name .libs`
+rm -rf `find . -type f -name Makefile`
+rm -rf `find . -type d -name autom4te.cache`
+
 grep -rl AXIS2C_HOME *| xargs sed -i "s/AXIS2C_HOME/WSFC_HOME/g"
 cd ..
