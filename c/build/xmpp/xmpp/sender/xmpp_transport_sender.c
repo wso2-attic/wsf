@@ -152,12 +152,13 @@ axis2_xmpp_transport_sender_invoke(
         session->password = (axis2_char_t *)axis2_msg_ctx_get_property_value (msg_ctx, 
                                                                               env, 
                                                                               "XMPP_PASSWORD");
-        session->use_sasl = 1;
+        session->use_sasl = 0;
         session->use_tls = 0;
 		session->authorized = 0;
 		session->bind = 0;
         session->subscribe = 0;
 		session->in_msg = 0;
+		session->session = 0;
 
         session->env = (axutil_env_t *)env;
         session->conf_ctx = axis2_msg_ctx_get_conf_ctx (msg_ctx, env);
@@ -175,12 +176,14 @@ axis2_xmpp_transport_sender_invoke(
 
         ret = iks_connect_tcp(session->parser, session->server,
                               IKS_JABBER_PORT);
-		while (!session->authorized || !session->bind)
+		while (!session->authorized || !session->bind || !session->session)
 			ret = iks_recv(session->parser, -1);
         xmpp_parser = session->parser;
         client_jid = (axis2_char_t *)axis2_msg_ctx_get_property_value (msg_ctx, 
                                                                        env, 
                                                                        "XMPP_SVC_JID");
+        iks_send(session->parser, iks_make_pres(IKS_SHOW_AVAILABLE,
+                                                "Online"));
     }
     else
     {
@@ -194,8 +197,8 @@ axis2_xmpp_transport_sender_invoke(
 
         if (!properties)
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "XMPP properties not set in "
-                            "message context");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                            "XMPP properties not set in message context");
             return AXIS2_FAILURE;
         }
 
@@ -203,8 +206,8 @@ axis2_xmpp_transport_sender_invoke(
                                    AXIS2_HASH_KEY_STRING);
         if (!property)
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "XMPP parser not set in "
-                            "message context");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                            "XMPP parser not set in message context");
             return AXIS2_FAILURE;
         }
         xmpp_parser = axutil_property_get_value(property, env);
@@ -214,8 +217,8 @@ axis2_xmpp_transport_sender_invoke(
                                    AXIS2_HASH_KEY_STRING);
         if (!property)
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "JID of requesting client not "
-                            "set in message context");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                            "JID of requesting client not set in message context");
             return AXIS2_FAILURE;
         }
         client_jid = axutil_property_get_value(property, env);
@@ -227,14 +230,16 @@ axis2_xmpp_transport_sender_invoke(
             AXIS2_TRUE, 0, AXIS2_XML_PARSER_TYPE_BUFFER);
     if (NULL == xml_writer)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Failed to create XML writer");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                        "Failed to create XML writer");
         return AXIS2_FAILURE;
     }
 
     om_output = axiom_output_create(env, xml_writer);
     if (!om_output)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Failed to create OM output");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                        "Failed to create OM output");
         axiom_xml_writer_free(xml_writer, env);
         xml_writer = NULL;
         return AXIS2_FAILURE;

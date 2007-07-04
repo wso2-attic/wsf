@@ -64,6 +64,7 @@ extern "C"
         int subscribe;          /* Whether to subscribe for events or not */
 		int bind;
 		int in_msg;
+        int session;
 
         axutil_env_t *env;
         axis2_conf_ctx_t* conf_ctx;
