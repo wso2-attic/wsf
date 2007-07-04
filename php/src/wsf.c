@@ -1210,7 +1210,6 @@ PHP_METHOD(ws_service, __construct)
         return;
     }
 
-    cache_wsdl = WSF_GLOBAL(cache);
 
     WSF_GET_THIS(obj);
     intern = (ws_object* )zend_object_store_get_object(obj TSRMLS_CC);
@@ -1225,6 +1224,7 @@ PHP_METHOD(ws_service, __construct)
     intern->obj_type = WS_SVC;
     svc_info->php_worker = worker;
 
+    cache_wsdl = WSF_GLOBAL(cache);
 
     if(options)
     {
