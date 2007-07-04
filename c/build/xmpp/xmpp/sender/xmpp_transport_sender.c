@@ -125,6 +125,7 @@ axis2_xmpp_transport_sender_free(
  *        to disable  XMPP_SASL value should be "false"
  *
  */
+/*****************************************************************************/
 axis2_status_t AXIS2_CALL
 axis2_xmpp_transport_sender_invoke(
     axis2_transport_sender_t *transport_sender,
@@ -164,6 +165,7 @@ axis2_xmpp_transport_sender_invoke(
         session->id_str = (axis2_char_t *)axis2_msg_ctx_get_property_value (msg_ctx, 
                                                                             env, 
                                                                             "XMPP_JID");
+
         session->password = (axis2_char_t *)axis2_msg_ctx_get_property_value (msg_ctx, 
                                                                               env, 
                                                                               "XMPP_PASSWORD");
@@ -194,16 +196,19 @@ axis2_xmpp_transport_sender_invoke(
         iks_set_log_hook(session->parser, axis2_xmpp_client_on_log);
         axis2_xmpp_client_setup_filter(session);
         session->jid = iks_id_new(iks_parser_stack(session->parser), 
-                                    session->id_str);
+                                  session->id_str);
         session->server = session->jid->server;
         session->user = session->jid->user;
 
-        ret = iks_connect_tcp(session->parser, session->server,
+        ret = iks_connect_tcp(session->parser, 
+                              session->server,
                               IKS_JABBER_PORT);
+
 		while (!session->authorized || !session->session)
 			ret = iks_recv(session->parser, -1);
+
         xmpp_parser = session->parser;
-        client_jid = (axis2_char_t *)axis2_msg_ctx_get_property_value (msg_ctx, 
+        client_jid = (axis2_char_t *)axis2_msg_ctx_get_property_value (msg_ctx,
                                                                        env, 
                                                                        "XMPP_SVC_JID");
     }
@@ -285,6 +290,8 @@ axis2_xmpp_transport_sender_invoke(
      */
     if (!is_server)
     {
+        /* check MEP, SEND_ROBUST and OUT_ONLY method doesnt have any
+         * response, Hence disconnected*/
         if(!axutil_strcmp(mep_uri, AXIS2_MEP_URI_OUT_ONLY)||
            !axutil_strcmp(mep_uri, AXIS2_MEP_URI_ROBUST_OUT_ONLY))
         {

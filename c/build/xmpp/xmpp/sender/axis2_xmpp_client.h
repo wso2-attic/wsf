@@ -14,41 +14,50 @@
 #include <axis2_xmpp_transport_sender.h>
 #include <axis2_xmpp_transport_utils.h>
 
-int axis2_xmpp_client_on_data(
+int 
+axis2_xmpp_client_on_data(
     void* user_data,
     int type,
     iks* node);
 
-int axis2_xmpp_client_on_start_node(
+int 
+axis2_xmpp_client_on_start_node(
     axis2_xmpp_session_data_t *session,
     iks* node);
 
-int axis2_xmpp_client_on_normal_node(
+int 
+axis2_xmpp_client_on_normal_node(
     axis2_xmpp_session_data_t *session,
     iks* node);
 
-void axis2_xmpp_client_on_log(
+void 
+axis2_xmpp_client_on_log(
     void *user_data,
     const char* data,
     size_t size,
     int is_incoming);
 
-void axis2_xmpp_client_setup_filter(
+void 
+axis2_xmpp_client_setup_filter(
     axis2_xmpp_session_data_t* session);
 
-int axis2_xmpp_client_on_message(
+int 
+axis2_xmpp_client_on_message(
     void *user_data,
     ikspak *pak);
 
-int axis2_xmpp_client_on_presence(
+int 
+axis2_xmpp_client_on_presence(
     void *user_data,
     ikspak *pak);
 
-int axis2_xmpp_client_on_subscription(
+int 
+axis2_xmpp_client_on_subscription(
     void *user_data,
     ikspak *pak);
 
-int axis2_xmpp_client_on_iq(
+int 
+axis2_xmpp_client_on_iq(
     void *user_data,
     ikspak *pak);
 

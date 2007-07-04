@@ -3,10 +3,10 @@
 static void 
 xmpp_process_msg (axis2_xmpp_session_data_t *session, iks *node);
 
-int axis2_xmpp_client_on_data(
-    void* user_data,
-    int type,
-    iks* node)
+int 
+axis2_xmpp_client_on_data(void* user_data,
+                          int type,
+                          iks* node)
 {
     axis2_xmpp_session_data_t *session = (axis2_xmpp_session_data_t*)user_data;
     switch(type)
@@ -49,9 +49,9 @@ int axis2_xmpp_client_on_data(
 }
 
 
-int axis2_xmpp_client_on_start_node(
-    axis2_xmpp_session_data_t *session,
-    iks* node)
+int 
+axis2_xmpp_client_on_start_node(axis2_xmpp_session_data_t *session,
+                                iks* node)
 {
     if ( session->use_tls && (!iks_is_secure(session->parser)) )
     {
@@ -63,7 +63,8 @@ int axis2_xmpp_client_on_start_node(
     {
         iks *x;
         session->authorized = 1;
-        session->session_id = iks_find_attrib(node, "id"); /* get id given from svr */
+        /* get id given from svr */
+        session->session_id = iks_find_attrib(node, "id"); 
         x = iks_make_auth (session->jid, session->password, session->session_id);
         iks_insert_attrib (x, "id", "auth");
         iks_send (session->parser, x);
@@ -72,9 +73,10 @@ int axis2_xmpp_client_on_start_node(
     return IKS_OK;
 }
 
-int axis2_xmpp_client_on_normal_node(
-    axis2_xmpp_session_data_t *session,
-    iks* node)
+
+int 
+axis2_xmpp_client_on_normal_node(axis2_xmpp_session_data_t *session,
+                                 iks* node)
 {
     if (strcmp("stream:features", iks_name(node)) == 0) /* features node */
     {
@@ -108,25 +110,25 @@ int axis2_xmpp_client_on_normal_node(
         }
         else
         {
-            if (strcmp("stream:features", iks_name(node)) == 0) /* features node */
+            /* features node */
+            if (strcmp("stream:features", iks_name(node)) == 0) 
             {
                 if (session->authorized)
                     xmpp_process_msg (session, node);
 
             }
-/*             iks_send(session->parser, iks_make_pres(IKS_SHOW_AVAILABLE, */
-/*                                                     "Online")); */
-/*             iks_recv (session->parser, -1); */
         }
     }
     else if (strcmp("failure", iks_name(node)) == 0)
     {
-        AXIS2_LOG_ERROR(session->env->log, AXIS2_LOG_SI, "Authentication failed.");
+        AXIS2_LOG_ERROR(session->env->log, AXIS2_LOG_SI, 
+                        "Authentication failed.");
         return IKS_HOOK;
     }
     else if (strcmp("success", iks_name(node)) == 0)
     {
-        AXIS2_LOG_INFO(session->env->log, "Authentication successful.");
+        AXIS2_LOG_INFO(session->env->log, 
+                       "Authentication successful.");
         session->authorized = 1;
         iks_send_header(session->parser, session->server);
     }
@@ -142,11 +144,11 @@ int axis2_xmpp_client_on_normal_node(
 }
 
 /********************************************************************** */
-void axis2_xmpp_client_on_log(
-    void *user_data,
-    const char* data,
-    size_t size,
-    int is_incoming)
+void 
+axis2_xmpp_client_on_log(void *user_data,
+                         const char* data,
+                         size_t size,
+                         int is_incoming)
 {
     axis2_xmpp_session_data_t *session = NULL;
     session = (axis2_xmpp_session_data_t*)user_data;
@@ -163,14 +165,16 @@ void axis2_xmpp_client_on_log(
 
 
 /*****************************************************************************/
-void axis2_xmpp_client_setup_filter(
-    axis2_xmpp_session_data_t* session)
+void 
+axis2_xmpp_client_setup_filter(axis2_xmpp_session_data_t* session)
 {
     session->filter = iks_filter_new();
 
+    /* Handler for 'iq' stanzas */
     iks_filter_add_rule(session->filter, axis2_xmpp_client_on_iq, session,
                         IKS_RULE_TYPE, IKS_PAK_IQ,
                         IKS_RULE_DONE);
+
     /* Handler for 'message' stanzas */
     iks_filter_add_rule(session->filter, axis2_xmpp_client_on_message, session,
                         IKS_RULE_TYPE, IKS_PAK_MESSAGE,
@@ -178,9 +182,9 @@ void axis2_xmpp_client_setup_filter(
 }
 /*****************************************************************************/
 
-int axis2_xmpp_client_on_message(
-    void *user_data,
-    ikspak *pak)
+int 
+axis2_xmpp_client_on_message(void *user_data,
+                             ikspak *pak)
 {
     axis2_xmpp_session_data_t *session = NULL;
     axutil_env_t *env = NULL;
@@ -194,8 +198,9 @@ int axis2_xmpp_client_on_message(
     session = (axis2_xmpp_session_data_t*)user_data;
     env = session->env;
     /* Serialize the message and pass it up */
-
-    body_elem = iks_find(pak->x, "body"); /* extract the body of message */
+    
+    /* extract the body of message */
+    body_elem = iks_find(pak->x, "body"); 
     if (!body_elem)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Failed to extract body of "
@@ -223,22 +228,24 @@ int axis2_xmpp_client_on_message(
              axis2_svc_get_name(session->svc, env));
 
     from = iks_find_attrib(pak->x, "from");
-    status = axis2_xmpp_transport_utils_process_message_client(session->env, session,
-                                                               soap_str, from, request_uri);
+    status = axis2_xmpp_transport_utils_process_message_client(session->env, 
+                                                               session,
+                                                               soap_str, 
+                                                               from, 
+                                                               request_uri);
 
     /* TODO: Check whether we need to return IKS_HOOK on failure. I think not,
      * because, failure here means the failure of a single request. We should
      * keep running for other requests */
 	session->in_msg = 1;
-
     return IKS_FILTER_EAT; /* no need to pass to other filters */
 }
 
 /*****************************************************************************/
 
-int axis2_xmpp_client_on_presence(
-    void *user_data,
-    ikspak *pak)
+int 
+axis2_xmpp_client_on_presence(void *user_data,
+                              ikspak *pak)
 {
     axis2_xmpp_session_data_t *session = NULL;
     axutil_env_t *env = NULL;
@@ -270,9 +277,9 @@ int axis2_xmpp_client_on_presence(
 
 /*****************************************************************************/
 
-int axis2_xmpp_client_on_subscription(
-    void *user_data,
-    ikspak *pak)
+int 
+axis2_xmpp_client_on_subscription(void *user_data,
+                                  ikspak *pak)
 {
     axis2_xmpp_session_data_t *session = NULL;
     axutil_env_t *env = NULL;
