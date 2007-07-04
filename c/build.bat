@@ -59,7 +59,9 @@ rem Build Apache Sandesha2/C
 @copy /Y sandesha2\README .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\docs\sandesha2
 @copy /Y sandesha2\INSTALL .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\docs\sandesha2
 @mkdir .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\sandesha2
-@copy /Y sandesha2c\config\*.txt sandesha2c\config\*.bat sandesha2c\config\*.sh .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\sandesha2
+@copy /Y ..\config\*.txt .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\sandesha2
+@copy /Y ..\config\*.bat .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\sandesha2
+@copy /Y ..\config\*.sh .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\sandesha2
 @goto build_neethi_util
 
 :sandesha2_error
