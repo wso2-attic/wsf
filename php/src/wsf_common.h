@@ -94,6 +94,8 @@ typedef enum ws_input_types{
 #define WS_BINDING_STYLE 		"bindingStyle"
 #define WS_WSDL          		"wsdl"
 
+#define WS_CACHE_WSDL           "cache_wsdl"
+
 #define WS_FAULT_REASON 		"Reason"
 #define WS_FAULT_ROLE   		"Role"
 #define WS_FAULT_TEXT   		"text"
@@ -192,6 +194,14 @@ typedef enum ws_input_types{
 
 #define WS_SVC_INFO "WSFPHPSvcInfo"
 
+/*************************************************/
+
+#define WS_SOAP_DOCUMENT SOAP_DOCUMENT
+#define WS_SOAP_RPC SOAP_RPC
+
+#define WS_SOAP_ENCODED SOAP_ENCODED
+#define WS_SOAP_LITERAL SOAP_LITERAL
+
 typedef struct wsf_svc_info {
 
     axis2_svc_t *svc;
@@ -253,10 +263,6 @@ typedef struct php_req_info {
 /** functions */
 
 #endif /* WS_COMMON_H */
-
-
-
-
 
 
 

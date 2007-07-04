@@ -374,10 +374,39 @@ zend_module_entry wsf_module_entry = {
 };
 /* }}} */
 
-/*#ifdef COMPILE_DL_AXIS2*/
 #ifdef COMPILE_DL_WSF
 ZEND_GET_MODULE(wsf)
 #endif
+
+
+    
+ZEND_INI_MH(OnUpdateCacheEnabled)
+{
+    long *p;
+#ifndef ZTS
+    char *base = (char *) mh_arg2;
+#else
+    char *base;
+
+    base = (char *) ts_resource(*((int *) mh_arg2));
+#endif
+
+    p = (long*) (base+(size_t) mh_arg1);
+
+    if (new_value_length==2 && strcasecmp("on", new_value)==0) {
+        *p = 1;
+    }
+    else if (new_value_length==3 && strcasecmp("yes", new_value)==0) {
+        *p = 1;
+    }
+    else if (new_value_length==4 && strcasecmp("true", new_value)==0) {
+        *p = 1;
+    }
+    else {
+        *p = (long) (atoi(new_value) != 0);
+    }
+    return SUCCESS;
+}
 
 /* {{{ PHP_INI */
 PHP_INI_BEGIN()
@@ -391,6 +420,16 @@ STD_PHP_INI_ENTRY("wsf.enable_exception", "1", PHP_INI_ALL, OnUpdateBool,
                   enable_exception, zend_wsf_globals, wsf_globals)
 STD_PHP_INI_ENTRY("wsf.rm_db_dir", "/tmp", PHP_INI_ALL, OnUpdateString,
                   rm_db_dir, zend_wsf_globals, wsf_globals)
+STD_PHP_INI_ENTRY("wsf.wsdl_cache_enabled", "1", PHP_INI_ALL, OnUpdateCacheEnabled,
+                          cache, zend_wsf_globals, wsf_globals)
+STD_PHP_INI_ENTRY("wsf.wsdl_cache_dir",         "/tmp", PHP_INI_ALL, OnUpdateString,
+                          cache_dir, zend_wsf_globals, wsf_globals)
+STD_PHP_INI_ENTRY("wsf.wsdl_cache_ttl",         "86400", PHP_INI_ALL, OnUpdateLong,
+                          cache_ttl, zend_wsf_globals, wsf_globals)
+STD_PHP_INI_ENTRY("wsf.wsdl_cache",             "1", PHP_INI_ALL, OnUpdateLong,
+                          cache, zend_wsf_globals, wsf_globals)
+STD_PHP_INI_ENTRY("wsf.wsdl_cache_limit",       "5", PHP_INI_ALL, OnUpdateLong,
+                          cache_limit, zend_wsf_globals, wsf_globals)
 PHP_INI_END()
 /* }}} */
 
@@ -471,6 +510,11 @@ PHP_MINIT_FUNCTION(wsf)
     REGISTER_LONG_CONSTANT("WS_SOAP_ROLE_NEXT", WS_SOAP_ROLE_NEXT, CONST_CS | CONST_PERSISTENT);
     REGISTER_LONG_CONSTANT("WS_SOAP_ROLE_NONE", WS_SOAP_ROLE_NONE, CONST_CS | CONST_PERSISTENT);
     REGISTER_LONG_CONSTANT("WS_SOAP_ROLE_ULTIMATE_RECEIVER", WS_SOAP_ROLE_ULTIMATE_RECEIVER, CONST_CS | CONST_PERSISTENT);
+
+    REGISTER_LONG_CONSTANT("WS_SOAP_DOCUMENT", WS_SOAP_DOCUMENT, CONST_CS | CONST_PERSISTENT);
+    REGISTER_LONG_CONSTANT("WS_SOAP_RPC", WS_SOAP_RPC, CONST_CS | CONST_PERSISTENT);
+    REGISTER_LONG_CONSTANT("WS_SOAP_ENCODED", WS_SOAP_ENCODED, CONST_CS | CONST_PERSISTENT);
+    REGISTER_LONG_CONSTANT("WS_SOAP_LITERAL", WS_SOAP_LITERAL, CONST_CS | CONST_PERSISTENT);
 
     env = wsf_env_create(WSF_GLOBAL(log_path));
     
@@ -614,6 +658,7 @@ static void ws_object_dtor(void *object,
     ws_object *intern = (ws_object *)object;
     zend_hash_destroy(intern->std.properties);
     FREE_HASHTABLE(intern->std.properties);
+    /*
     if(intern->obj_type == WS_SVC_CLIENT){
         axis2_svc_client_t *svc_client = NULL;
         svc_client = (axis2_svc_client_t*)intern->ptr;
@@ -627,6 +672,7 @@ static void ws_object_dtor(void *object,
             wsf_svc_info_free(svc_info, ws_env_svr );    
         }
     }
+    */
 }
 
 static void
@@ -843,6 +889,7 @@ PHP_METHOD(ws_client, __construct)
     char *home_folder = NULL;
     axis2_svc_client_t *svc_client = NULL;
     zval *options = NULL;
+    long cache_wsdl;
     if (FAILURE == zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|a",
                                          &options))
     {
@@ -854,6 +901,8 @@ PHP_METHOD(ws_client, __construct)
     WSF_GET_THIS(obj);
     intern = (ws_object*)zend_object_store_get_object(obj TSRMLS_CC);
 
+    cache_wsdl = WSF_GLOBAL(cache);
+    
     if (INI_STR("extension_dir"))
     {
         char *home_dir = pemalloc(strlen(INI_STR("extension_dir")) + strlen("/wsf_c") + 1, 1);
@@ -888,27 +937,31 @@ PHP_METHOD(ws_client, __construct)
 
 		add_property_zval(obj, WS_OPTIONS, options);
 		/**  wsf_client_add_properties(obj , ht TSRMLS_CC); */
+        if(zend_hash_find(ht, WS_CACHE_WSDL , sizeof(WS_CACHE_WSDL ), (void **)&tmp) == SUCCESS &&
+                                Z_TYPE_PP(tmp) == IS_LONG){
+            cache_wsdl = Z_LVAL_PP(tmp);
+        }
 
         if(zend_hash_find(ht, WS_WSDL, sizeof(WS_WSDL), (void **)&tmp) == SUCCESS &&
                 Z_TYPE_PP(tmp) == IS_STRING)
         {
-            int wsdl_cache = 0, ret;
+            int ret;
             char *wsdl_path = NULL;
             sdlPtr sdl;
             wsdl_path = Z_STRVAL_PP(tmp);
-            sdl = get_sdl(obj , wsdl_path, wsdl_cache TSRMLS_CC);
+            sdl = get_sdl(obj , wsdl_path, cache_wsdl TSRMLS_CC);
             ret = zend_list_insert(sdl, le_sdl);
             add_property_resource(obj , "sdl", ret); 
         }
         if (zend_hash_find(ht, "style", sizeof("style"), (void**)&tmp) == SUCCESS &&
                     Z_TYPE_PP(tmp) == IS_LONG &&
-                    (Z_LVAL_PP(tmp) == SOAP_RPC || Z_LVAL_PP(tmp) == SOAP_DOCUMENT)) {
-                add_property_long(this_ptr, "style", Z_LVAL_PP(tmp));
+                    (Z_LVAL_PP(tmp) == WS_SOAP_RPC || Z_LVAL_PP(tmp) == WS_SOAP_DOCUMENT)) {
+                    add_property_long(this_ptr, "style", Z_LVAL_PP(tmp));
         }
         if (zend_hash_find(ht, "use", sizeof("use"), (void**)&tmp) == SUCCESS &&
                     Z_TYPE_PP(tmp) == IS_LONG &&
-                    (Z_LVAL_PP(tmp) == SOAP_LITERAL || Z_LVAL_PP(tmp) == SOAP_ENCODED)) {
-                add_property_long(this_ptr, "use", Z_LVAL_PP(tmp));
+                    (Z_LVAL_PP(tmp) == WS_SOAP_LITERAL || Z_LVAL_PP(tmp) == WS_SOAP_ENCODED)) {
+                    add_property_long(this_ptr, "use", Z_LVAL_PP(tmp));
         }
     }
 }
@@ -1157,6 +1210,8 @@ PHP_METHOD(ws_service, __construct)
         return;
     }
 
+    cache_wsdl = WSF_GLOBAL(cache);
+
     WSF_GET_THIS(obj);
     intern = (ws_object* )zend_object_store_get_object(obj TSRMLS_CC);
     svc_info = wsf_svc_info_create();
@@ -1203,12 +1258,10 @@ PHP_METHOD(ws_service, __construct)
 
 				wsdl = Z_STRVAL_PP(tmp);
 			}
-			if(zend_hash_find(ht_options, "cache_wsdl", sizeof("cache_wsdl"), (void **)&tmp) == SUCCESS 
+			if(zend_hash_find(ht_options, WS_CACHE_WSDL, sizeof(WS_CACHE_WSDL), (void **)&tmp) == SUCCESS 
                     && Z_TYPE_PP(tmp) == IS_LONG){
                     cache_wsdl = Z_LVAL_PP(tmp);
 			}
-
-
 
 			if(zend_hash_find(ht_options, WS_USE_MTOM, sizeof(WS_USE_MTOM),
                               (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
@@ -1742,7 +1795,7 @@ PHP_METHOD(ws_service , reply)
         /** end Wsdl generation stuff */
     }
     else if(in_wsdl_mode == 1){
-        wsf_soap_do_function_call(env, svc_info, this_ptr, req_info->req_data , req_info->req_data_length TSRMLS_CC);
+        wsf_soap_do_function_call1(env, svc_info, this_ptr, req_info->req_data , req_info->req_data_length TSRMLS_CC);
     }else{
 
         conf = axis2_conf_ctx_get_conf(conf_ctx, ws_env_svr);
