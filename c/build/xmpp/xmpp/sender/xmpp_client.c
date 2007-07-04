@@ -62,8 +62,6 @@ int axis2_xmpp_client_on_start_node(
     if (!session->use_sasl) /* basic authentication */
     {
         iks *x;
-        session->bind = 1;
-        session->session = 1;
         session->authorized = 1;
         session->session_id = iks_find_attrib(node, "id"); /* get id given from svr */
         x = iks_make_auth (session->jid, session->password, session->session_id);
@@ -116,9 +114,9 @@ int axis2_xmpp_client_on_normal_node(
                     xmpp_process_msg (session, node);
 
             }
-            iks_send(session->parser, iks_make_pres(IKS_SHOW_AVAILABLE,
-                                                    "Online"));
-            iks_recv (session->parser, -1);
+/*             iks_send(session->parser, iks_make_pres(IKS_SHOW_AVAILABLE, */
+/*                                                     "Online")); */
+/*             iks_recv (session->parser, -1); */
         }
     }
     else if (strcmp("failure", iks_name(node)) == 0)
@@ -328,7 +326,7 @@ int axis2_xmpp_client_on_iq(
         }
     }
 
-    if (session->bind && session->session)
+    if (session->session)
         iks_send(session->parser, iks_make_pres(IKS_SHOW_AVAILABLE,
                                                 "Online"));
 

@@ -200,7 +200,7 @@ axis2_xmpp_transport_sender_invoke(
 
         ret = iks_connect_tcp(session->parser, session->server,
                               IKS_JABBER_PORT);
-		while (!session->authorized || !session->bind || !session->session)
+		while (!session->authorized || !session->session)
 			ret = iks_recv(session->parser, -1);
         xmpp_parser = session->parser;
         client_jid = (axis2_char_t *)axis2_msg_ctx_get_property_value (msg_ctx, 
@@ -212,10 +212,6 @@ axis2_xmpp_transport_sender_invoke(
 
     /* The XMPP parser and the client jid is set inside a hash table, which in
      * turn is set as a property in the msg ctx */
-		while (!session->authorized || !session->bind || !session->session)
-        iks_send(session->parser, iks_make_pres(IKS_SHOW_AVAILABLE,
-                                                "Online"));
-        
         properties = (axutil_hash_t *)axis2_msg_ctx_get_property_value(msg_ctx, 
                                                                        env, 
                                                                        AXIS2_XMPP_PROPERTIES);
@@ -289,8 +285,8 @@ axis2_xmpp_transport_sender_invoke(
      */
     if (!is_server)
     {
-        if(!axutil_strcmp(mep_uri, AXIS2_MEP_URI_OUT_ONLY) == 0 ||
-           !axutil_strcmp(mep_uri, AXIS2_MEP_URI_ROBUST_OUT_ONLY) == 0)
+        if(!axutil_strcmp(mep_uri, AXIS2_MEP_URI_OUT_ONLY)||
+           !axutil_strcmp(mep_uri, AXIS2_MEP_URI_ROBUST_OUT_ONLY))
         {
             iks_disconnect (xmpp_parser);
         }
