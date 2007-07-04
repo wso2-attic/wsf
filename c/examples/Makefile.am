@@ -1,2 +1,2 @@
-SUBDIRS=flicker
-EXTRA_DIST=flicker trader
+SUBDIRS = flicker trader
+EXTRA_DIST=flicker trader  

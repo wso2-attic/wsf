@@ -71,8 +71,19 @@ AC_SUBST(RAMPARTINC)
 
 export prefix 
 
-AC_CONFIG_FILES([Makefile  \
-    flicker/Makefile
+AC_CONFIG_FILES([Makefile \
+    flicker/Makefile \
+    trader/Makefile \
+    trader/util/Makefile \
+    trader/trader/Makefile \
+    trader/exchange/Makefile \
+    trader/trader/util/Makefile \
+    trader/trader/trader-client/Makefile \
+    trader/trader/trader-exchange/Makefile \
+    trader/exchange/util/Makefile \
+    trader/exchange/exchange-client/Makefile \
+    trader/exchange/exchange-trader/Makefile \
+    trader/client/Makefile
     ])
     
 AC_OUTPUT
