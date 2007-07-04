@@ -104,6 +104,11 @@
 			</exclusion>
 		</exclusions>
         </dependency>
+        <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>org.apache.ant</artifactId>
+            <version>1.6.5</version>
+        </dependency>
 	<!--
         <dependency>
             <groupId>org.eclipse.equinox</groupId>
@@ -186,7 +191,7 @@
         <dependency>
             <groupId>org.wso2.wsf</groupId>
             <artifactId>org.eclipse.wst.common.frameworks</artifactId>
-            <version>1.1.100</version>
+            <version>1.1.102</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.wsf</groupId>
@@ -213,6 +218,27 @@
             <artifactId>org.eclipse.jst.ws</artifactId>
             <version>1.0.203</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.wsf</groupId>
+            <artifactId>org.eclipse.core.commands</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.wsf</groupId>
+            <artifactId>org.apache.ant</artifactId>
+            <version>1.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.wsf</groupId>
+            <artifactId>org.eclipse.ui.workbench</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.wsf</groupId>
+            <artifactId>org.eclipse.wst.command.env</artifactId>
+            <version>1.0.203</version>
+        </dependency>
+
     </dependencies>
 
     <build>
