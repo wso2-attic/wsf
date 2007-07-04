@@ -184,7 +184,8 @@ axis2_xmpp_worker_run(
     impl = (axis2_xmpp_worker_impl_t*)worker;
     impl->session->env = thread_env;
 
-    printf("Starting %s" , impl->session->id_str);
+    AXIS2_LOG_DEBUG(thread_env->log, AXIS2_LOG_SI, 
+                    "Starting %s", impl->session->id_str);
     /* Create an iks parser and connect to the XMPP server */
     /* We pass the session as user data, which we can access inside iksemel
      * callbacks */
