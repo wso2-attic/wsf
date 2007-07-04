@@ -1,5 +1,5 @@
 TESTS =
-
+headerdir=$(prefix)/include/axis2-1.1
 lib_LTLIBRARIES = libneethi_util.la
 
 libneethi_util_la_SOURCES = options.c
@@ -12,5 +12,5 @@ INCLUDES = -I$(top_builddir)/include \
 			-I ../../../util/include \
             -I ../../../axiom/include 
 
-
+header_DATA=neethi_options.h
 EXTRA_DIST=neethi_options.h neethi_util.mk
