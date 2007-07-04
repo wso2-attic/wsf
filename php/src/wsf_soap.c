@@ -822,10 +822,10 @@ void wsf_soap_do_soap_call(zval* this_ptr,
 	zval **trace;
  	sdlPtr sdl = NULL;
  	sdlPtr old_sdl = NULL;
- 	sdlFunctionPtr fn;
+	sdlFunctionPtr fn = NULL;
 	xmlDocPtr request = NULL;
         /* int ret = FALSE;   */
-	int soap_version;
+	int soap_version = 0;
 	zval response;
 	xmlCharEncodingHandlerPtr old_encoding;
 	HashTable *old_class_map;
@@ -2439,7 +2439,7 @@ void delete_service(void *data)
 void wsf_soap_get_functions(zval *this_ptr,
                             zval *return_value,
                             axutil_env_t *env
-                            TSRMLS_CC)
+                            TSRMLS_DC)
 {
     zval **tmp = NULL;
     zval *client_zval = NULL;
@@ -2478,7 +2478,7 @@ void wsf_soap_get_functions(zval *this_ptr,
 void wsf_soap_get_types(zval *this_ptr,
                             zval *return_value,
                             axutil_env_t *env
-                            TSRMLS_CC)
+                            TSRMLS_DC)
 {
     zval **tmp = NULL;
     zval *client_zval = NULL;
@@ -2521,7 +2521,7 @@ void wsf_soap_get_types(zval *this_ptr,
 void wsf_soap_get_location(zval *this_ptr,
                             zval *return_value,
                             axutil_env_t *env
-                            TSRMLS_CC)
+                            TSRMLS_DC)
 {
     zval **tmp = NULL;
     zval *client_zval = NULL;

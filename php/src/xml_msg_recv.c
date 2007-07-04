@@ -150,12 +150,13 @@ wsf_xml_msg_recv_invoke_business_logic_sync(
 	axiom_soap_header_t *out_header = NULL;
 	axiom_soap_fault_t *soap_fault = NULL;
 
+    TSRMLS_FETCH();
 
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 	AXIS2_PARAM_CHECK(env->error, in_msg_ctx, AXIS2_FAILURE);
 	AXIS2_PARAM_CHECK(env->error, out_msg_ctx, AXIS2_FAILURE);
 
-    TSRMLS_FETCH();
+
 
 	op_ctx = axis2_msg_ctx_get_op_ctx(in_msg_ctx, env);
 	op_desc = axis2_op_ctx_get_op(op_ctx, env);
