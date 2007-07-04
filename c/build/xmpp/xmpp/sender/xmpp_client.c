@@ -311,6 +311,12 @@ int axis2_xmpp_client_on_iq(
                 session->bind = 1;
                 AXIS2_LOG_INFO(env->log, "Bind iq recieved");
             }
+            else if (!axutil_strcmp (pak->ns, "urn:ietf:params:xml:ns:xmpp-session"))
+            {
+                session->session = 1;
+                AXIS2_LOG_INFO(env->log, "Session iq recieved");
+            }
+                
         }
         else if (pak->id)
         {
@@ -321,6 +327,10 @@ int axis2_xmpp_client_on_iq(
             }
         }
     }
+
+    if (session->bind && session->session)
+        iks_send(session->parser, iks_make_pres(IKS_SHOW_AVAILABLE,
+                                                "Online"));
 
     return IKS_FILTER_EAT; /* no need to pass to other filters */
 }

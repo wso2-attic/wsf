@@ -115,7 +115,16 @@ axis2_xmpp_transport_sender_free(
 }
 
 /*****************************************************************************/
-
+/* If one using svc client with xmpp transport , there are some
+ * properties that they need to set
+ * 1. XMPP_JID       client's jid that need to authenticate with jabber server.
+ * 2. XMPP_PASSWORD  client's password corresponding to XMPP_JID.
+ * 3. XMMP_SVC_JID   servers JID
+ * 4. XMPP_SASL      enable/disable sasl authentication. default is
+ * enabled  
+ *        to disable  XMPP_SASL value should be "false"
+ *
+ */
 axis2_status_t AXIS2_CALL
 axis2_xmpp_transport_sender_invoke(
     axis2_transport_sender_t *transport_sender,
@@ -135,9 +144,15 @@ axis2_xmpp_transport_sender_invoke(
     axiom_soap_envelope_t *response_soap_env;
     axis2_xmpp_session_data_t *session;
     axis2_bool_t is_server = AXIS2_TRUE;
+    axis2_char_t *sasl;
+    axis2_op_t *op;
+    const axis2_char_t *mep_uri;
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
+
+    op = axis2_msg_ctx_get_op (msg_ctx, env);
+    mep_uri = axis2_op_get_msg_exchange_pattern(op, env);
 
     is_server = axis2_msg_ctx_get_server_side (msg_ctx, env);
     if (!is_server)
@@ -152,13 +167,22 @@ axis2_xmpp_transport_sender_invoke(
         session->password = (axis2_char_t *)axis2_msg_ctx_get_property_value (msg_ctx, 
                                                                               env, 
                                                                               "XMPP_PASSWORD");
-        session->use_sasl = 0;
+
+        sasl = (axis2_char_t *)axis2_msg_ctx_get_property_value (msg_ctx, 
+                                                                 env, 
+                                                                 "XMPP_SASL");
+        if (!axutil_strcmp (sasl, "false"))
+            session->use_sasl = 0;
+        else
+            session->use_sasl = 1;
+
         session->use_tls = 0;
 		session->authorized = 0;
 		session->bind = 0;
         session->subscribe = 0;
 		session->in_msg = 0;
 		session->session = 0;
+        session->response = NULL;
 
         session->env = (axutil_env_t *)env;
         session->conf_ctx = axis2_msg_ctx_get_conf_ctx (msg_ctx, env);
@@ -182,15 +206,16 @@ axis2_xmpp_transport_sender_invoke(
         client_jid = (axis2_char_t *)axis2_msg_ctx_get_property_value (msg_ctx, 
                                                                        env, 
                                                                        "XMPP_SVC_JID");
-        iks_send(session->parser, iks_make_pres(IKS_SHOW_AVAILABLE,
-                                                "Online"));
     }
     else
     {
 
     /* The XMPP parser and the client jid is set inside a hash table, which in
      * turn is set as a property in the msg ctx */
-
+		while (!session->authorized || !session->bind || !session->session)
+        iks_send(session->parser, iks_make_pres(IKS_SHOW_AVAILABLE,
+                                                "Online"));
+        
         properties = (axutil_hash_t *)axis2_msg_ctx_get_property_value(msg_ctx, 
                                                                        env, 
                                                                        AXIS2_XMPP_PROPERTIES);
@@ -264,8 +289,17 @@ axis2_xmpp_transport_sender_invoke(
      */
     if (!is_server)
     {
-		while (!session->in_msg)
-			iks_recv (xmpp_parser, -1);
+        if(!axutil_strcmp(mep_uri, AXIS2_MEP_URI_OUT_ONLY) == 0 ||
+           !axutil_strcmp(mep_uri, AXIS2_MEP_URI_ROBUST_OUT_ONLY) == 0)
+        {
+            iks_disconnect (xmpp_parser);
+        }
+        else
+        {
+            while (!session->in_msg)
+                iks_recv (xmpp_parser, -1);
+        }
+
 		if (session->response)
 		{
 			response_soap_env = axis2_msg_ctx_get_soap_envelope (session->response, env);

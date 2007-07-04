@@ -154,6 +154,12 @@ extern "C"
         size_t size,
         int is_incoming);
 
+    AXIS2_EXTERN int AXIS2_CALL 
+    axis2_xmpp_worker_on_iq(
+        void *user_data,
+        ikspak *pak);
+
+
 
 /* Start of function macros ***************************************************/
 

@@ -85,6 +85,11 @@ int axis2_xmpp_worker_on_subscription(
     void *user_data,
     ikspak *pak);
 
+int axis2_xmpp_worker_on_iq(
+    void *user_data,
+    ikspak *pak);
+
+
 void AXIS2_CALL
 axis2_xmpp_session_data_init (
     axis2_xmpp_session_data_t *data);
@@ -375,9 +380,6 @@ int axis2_xmpp_worker_on_normal_node(
                     iks_delete (t);
                 }
 
-                /* Say that we are online */
-                iks_send(session->parser, iks_make_pres(IKS_SHOW_AVAILABLE,
-                    "Online"));
 
                 /* Subscribe if the service is configured to do so */
                 if ( (session->subscribe) && (session->subscribe_to) )
@@ -421,13 +423,6 @@ int axis2_xmpp_worker_on_normal_node(
                         session->jid->user, session->password);
                 }
             }
-        }
-        else
-        {
-            /* Say that we are online */
-            iks_send(session->parser, iks_make_pres(IKS_SHOW_AVAILABLE,
-                                                    "Online"));
-            iks_recv (session->parser, -1);
         }
     }
     else if (strcmp("failure", iks_name(node)) == 0)
@@ -486,8 +481,13 @@ void axis2_xmpp_worker_setup_filter(
         IKS_RULE_DONE);
 
     /* Handler for 'presence' stanzas */
-    iks_filter_add_rule(session->filter, axis2_xmpp_worker_on_presence, session,
-        IKS_RULE_TYPE, IKS_PAK_PRESENCE,
+/*     iks_filter_add_rule(session->filter, axis2_xmpp_worker_on_presence, session, */
+/*         IKS_RULE_TYPE, IKS_PAK_PRESENCE, */
+/*         IKS_RULE_DONE); */
+
+    /* Handler for 'iq' stanzas */
+    iks_filter_add_rule(session->filter, axis2_xmpp_worker_on_iq, session,
+        IKS_RULE_TYPE, IKS_PAK_IQ,
         IKS_RULE_DONE);
 
     /* Handler for 'presence' stanzas which give subscription notifications */
@@ -568,7 +568,6 @@ int axis2_xmpp_worker_on_presence(
 
     session = (axis2_xmpp_session_data_t*)user_data;
     env = session->env;
-/*     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " %s inside on presance",session->id_str); */
     presence_str = iks_string(iks_stack(pak->x), pak->x);
     if (!presence_str)
     {
@@ -606,6 +605,52 @@ int axis2_xmpp_worker_on_subscription(
     return IKS_FILTER_EAT; /* no need to pass to other filters */
 }
 
+
+int axis2_xmpp_worker_on_iq(
+    void *user_data,
+    ikspak *pak)
+{
+	axis2_xmpp_session_data_t *session = NULL;
+    axutil_env_t *env = NULL;
+
+    session = (axis2_xmpp_session_data_t*)user_data;
+    env = session->env;
+
+    if (pak->subtype == IKS_TYPE_RESULT)
+    {
+
+        if (pak->ns)
+        {
+            if (!axutil_strcmp (pak->ns, "urn:ietf:params:xml:ns:xmpp-bind"))
+            {
+                session->bind = 1;
+                AXIS2_LOG_INFO(env->log, "Bind iq recieved");
+            }
+            else if (!axutil_strcmp (pak->ns, "urn:ietf:params:xml:ns:xmpp-session"))
+            {
+                session->session = 1;
+                AXIS2_LOG_INFO(env->log, "Session iq recieved");
+            }
+                
+        }
+        else if (pak->id)
+        {
+            if (!axutil_strcmp (pak->id, "auth"))
+            {
+                session->session = 1;
+                AXIS2_LOG_INFO(env->log, "Session iq recieved");
+            }
+        }
+    }
+
+    if (session->session)
+        iks_send(session->parser, iks_make_pres(IKS_SHOW_AVAILABLE,
+                                                "Online"));
+
+
+    return IKS_FILTER_EAT; /* no need to pass to other filters */
+}
+
 /*****************************************************************************/
 
 void AXIS2_CALL
@@ -636,3 +681,4 @@ axis2_xmpp_session_data_init (
     data->conf_ctx = NULL;
     data->svc = NULL;
 }
+
