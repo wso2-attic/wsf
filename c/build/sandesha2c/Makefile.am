@@ -15,7 +15,7 @@ docs_DATA=
 
 sysconf_DATA=config/axis2.xml
 
-EXTRA_DIST=LICENSE config xdocs build samples ides
+EXTRA_DIST=LICENSE config xdocs build ides
 
 scripts_DATA=config/*.bat config/*.sh config/*.txt
 
