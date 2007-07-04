@@ -1,4 +1,5 @@
 datadir=$(prefix)
+datadir=$(prefix)/samples/axis2c
 logsdir=$(prefix)/logs
 docsdir=$(prefix)/docs/axis2c
 includedir=$(prefix)/include/axis2-1.1
@@ -36,4 +37,7 @@ bindist: $(bin_PROGRAMS)
 	cp AUTHORS axis2c-bin-${PACKAGE_VERSION}-linux
 	tar -cf - axis2c-bin-${PACKAGE_VERSION}-linux | gzip -c > axis2c-bin-${PACKAGE_VERSION}-linux.tar.gz
 	rm -rf axis2c-bin-${PACKAGE_VERSION}-linux
+
+install-data-hook:
+	cp -rf samples/* $(samplesdir)
 

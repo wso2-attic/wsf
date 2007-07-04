@@ -1,5 +1,6 @@
 SUBDIRS = src 
 docsdir=$(prefix)/docs/rampartc
+samplesdir=$(prefix)/samples/rampartc
 includedir=$(prefix)/include/rampart-0.90
 
 include_HEADERS=$(top_builddir)/include/*.h
@@ -10,4 +11,8 @@ EXTRA_DIST = LICENSE NOTICE build.sh autogen.sh build test xdocs
 
 check:	
 	./rampart-tests.sh
+
+
+install-data-hook:
+	cp -rf samples/* $(samplesdir)
 

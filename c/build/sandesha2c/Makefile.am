@@ -1,4 +1,5 @@
 datadir=$(prefix)/modules/sandesha2
+samplesdir=$(prefix)/samples/sandesha2c
 includedir=$(prefix)/include/sandesha2-0.90
 docsdir=$(prefix)/docs/sandesha2c
 sysconfdir=$(prefix)
@@ -18,4 +19,7 @@ sysconf_DATA=config/axis2.xml
 EXTRA_DIST=LICENSE config xdocs build ides
 
 scripts_DATA=config/*.bat config/*.sh config/*.txt
+
+install-data-hook:
+	cp -rf samples/* $(samplesdir)
 
