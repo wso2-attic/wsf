@@ -221,6 +221,12 @@
 			<resource>
 				<directory>resources</directory>
 			</resource>
+			<resource>
+				<directory>src</directory>
+				<includes>
+					<include>**/*.properties</include>
+				</includes>
+			</resource>
 		</resources>
 
 		<plugins>
@@ -229,33 +235,9 @@
 				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
 					<archive>
-						<manifestFile>
-							META-INF/MANIFEST.MF
-						</manifestFile>
+						<manifestFile>resources/META-INF/MANIFEST.MF</manifestFile>
 					</archive>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.1</version>
-				<executions>
-					<execution>
-						<id>distribution-package</id>
-						<phase>package</phase>
-						<goals>
-							<goal>attached</goal>
-						</goals>
-						<configuration>
-							<descriptors>
-								<descriptor>
-									./org.wso2.wsf.ide.core-plugin-assembly.xml
-								</descriptor>
-							</descriptors>
-							<finalName>dist</finalName>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
