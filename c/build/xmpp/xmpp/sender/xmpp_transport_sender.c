@@ -142,12 +142,12 @@ axis2_xmpp_transport_sender_invoke(
     axiom_output_t *om_output = NULL;
     iks* xmpp_msg = NULL;
     int ret = 0;
-    axiom_soap_envelope_t *response_soap_env;
-    axis2_xmpp_session_data_t *session;
+    axiom_soap_envelope_t *response_soap_env = NULL;
+    axis2_xmpp_session_data_t *session = NULL;
     axis2_bool_t is_server = AXIS2_TRUE;
-    axis2_char_t *sasl;
-    axis2_op_t *op;
-    const axis2_char_t *mep_uri;
+    axis2_char_t *sasl = NULL;
+    axis2_op_t *op = NULL;
+    const axis2_char_t *mep_uri = NULL;
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
