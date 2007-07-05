@@ -65,4 +65,7 @@ axis2_bool_t
 wsf_soap_do_function_call1(const axutil_env_t *env,
           wsf_svc_info_t *svc_info, zval *this_ptr,void *buff, int length TSRMLS_DC);
 
+void
+wsf_soap_send_fault(int version TSRMLS_DC);
+
 #endif /* WSF_SOAP_H */

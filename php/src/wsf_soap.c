@@ -2673,7 +2673,7 @@ wsf_soap_do_function_call1(const axutil_env_t *env,
     soapHeader *soap_headers = NULL;
     soapServicePtr service;
     char *operation_name = NULL;
-
+    
 
     doc_request = soap_xmlParseMemory((char*)buff, length);
 
@@ -2774,23 +2774,48 @@ wsf_soap_do_function_call1(const axutil_env_t *env,
     return AXIS2_SUCCESS;
 }
 
+void 
+wsf_soap_send_fault(int version TSRMLS_DC)
+{
+    char cont_len[40];
+    int size = 0;
+    xmlChar *buf = NULL;
+    xmlDocPtr doc;
+    xmlNodePtr envelope = NULL, body;
+/*               body, param; */
+    xmlNsPtr ns = NULL;
+/*    xmlNodePtr head = NULL; */
 
+    doc = xmlNewDoc(BAD_CAST("1.0"));
+    doc->charset = XML_CHAR_ENCODING_UTF8;
+    doc->encoding = xmlCharStrdup("UTF-8");
 
+    if (version == SOAP_1_1) {
+        envelope = xmlNewDocNode(doc, NULL, BAD_CAST("Envelope"), NULL);
+        ns = xmlNewNs(envelope, BAD_CAST(SOAP_1_1_ENV_NAMESPACE), BAD_CAST(SOAP_1_1_ENV_NS_PREFIX));
+        xmlSetNs(envelope,ns);
+    } else if (version == SOAP_1_2) {
+        envelope = xmlNewDocNode(doc, NULL, BAD_CAST("Envelope"), NULL);
+        ns = xmlNewNs(envelope, BAD_CAST(SOAP_1_2_ENV_NAMESPACE), BAD_CAST(SOAP_1_2_ENV_NS_PREFIX));
+        xmlSetNs(envelope,ns);
+    }
+    xmlDocSetRootElement(doc, envelope);
 
+    body = xmlNewChild(envelope, ns, BAD_CAST("Body"), NULL);
 
+    xmlDocDumpMemory(doc, &buf, &size);
 
+    sapi_add_header("HTTP/1.1 500 Internal Service Error", sizeof("HTTP/1.1 500 Internal Service Error")-1, 1);
+    sprintf(cont_len,"Content-Length: %d", size);
+    sapi_add_header(cont_len, strlen(cont_len), 1);
+    if (version == SOAP_1_2) {
+        sapi_add_header("Content-Type: application/soap+xml; charset=utf-8", sizeof("Content-Type: application/soap+xml; charset=utf-8")-1, 1);
+    } else {
+        sapi_add_header("Content-Type: text/xml; charset=utf-8", sizeof("Content-Type: text/xml; charset=utf-8")-1, 1);
+    }
+    php_write(buf, size TSRMLS_CC);
+    xmlFreeDoc(doc);
+    xmlFree(buf);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return;
+}

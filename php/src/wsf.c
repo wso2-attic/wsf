@@ -1310,8 +1310,13 @@ PHP_METHOD(ws_service, __construct)
         svc_info->msg_recv = wsf_msg_recv;
         wsf_util_create_svc_from_svc_info(svc_info , ws_env_svr TSRMLS_CC);
     }else{
+        wsf_soap_send_fault(WSF_GLOBAL(soap_version) TSRMLS_CC);
+        /*
         zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 1 TSRMLS_CC,
                                 "server does not support cli");
+        *
+        */
+        return;
     }
 
     if (ht_ops_to_funcs){
@@ -1589,6 +1594,7 @@ PHP_METHOD(ws_service , reply)
     char status_line[100];
     char *content_type = NULL;
     int in_wsdl_mode = 0;
+    int raw_post_null = AXIS2_FALSE;
 
     WSF_GET_THIS(obj);
     intern = (ws_object*)zend_object_store_get_object(obj TSRMLS_CC);
@@ -1672,10 +1678,14 @@ PHP_METHOD(ws_service , reply)
     }
 
     if (zend_hash_find(&EG(symbol_table), "HTTP_RAW_POST_DATA", sizeof("HTTP_RAW_POST_DATA"), (void **) &raw_post)!=FAILURE
-            && ((*raw_post)->type==IS_STRING))
-    {
+            && ((*raw_post)->type==IS_STRING)){
+
         req_info->req_data = Z_STRVAL_PP(raw_post);
         req_info->req_data_length = Z_STRLEN_PP(raw_post);
+    
+    }else{
+    
+        raw_post_null = AXIS2_TRUE;
     }
     
     /** begin Wsdl Generation */
@@ -1795,6 +1805,10 @@ PHP_METHOD(ws_service , reply)
         /** end Wsdl generation stuff */
     }
     else if(in_wsdl_mode == 1){
+        if(raw_post_null){
+            wsf_soap_send_fault(WSF_GLOBAL(soap_version) TSRMLS_CC);
+            return;
+        }
         wsf_soap_do_function_call1(env, svc_info, this_ptr, req_info->req_data , req_info->req_data_length TSRMLS_CC);
     }else{
 
