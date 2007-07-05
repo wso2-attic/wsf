@@ -5,6 +5,6 @@ IF "%1" == "" (
     goto end
 )
 
-echo "<x:FlickrRequest xmlns:x='urn:flickr'><method>flickr.test.echo</method><api_key>$1</api_key><name>wsclient</name></x:FlickrRequest>" | %WSFC_HOME%\bin\wsclient --get  http://api.flickr.com/services/rest/?method=flickr.test.echo
+echo "<x:FlickrRequest xmlns:x='urn:flickr'><method>flickr.test.echo</method><api_key>$1</api_key><name>wsclient</name></x:FlickrRequest>" | "%WSFC_HOME%\bin\wsclient" --get  http://api.flickr.com/services/rest/?method=flickr.test.echo
 
 :end
