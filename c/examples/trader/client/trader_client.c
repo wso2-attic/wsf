@@ -92,6 +92,13 @@ int main(int argc, char** argv)
     address = "http://localhost:9090/axis2/services/traderclient";
     if (argc > 1)
         operation = argv[1];
+
+    else
+    {
+        printf("Type ./trader -h for usage\n");
+        return 0;
+    }    
+
     if (axutil_strcmp(operation, "-h") == 0)
     {
         printf("Usage : %s [create-account] [username] [password] [endpoint_url]\n", argv[0]);

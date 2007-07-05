@@ -48,7 +48,13 @@
      #include "axis2_sellRequest.h"
     
 
-		 
+	
+
+        axis2_status_t
+        axis2_skel_TraderClient_init(
+                const axutil_env_t *env);
+       
+
         /**
          * auto generated function declaration
          * for "buy|http://www.wso2.org" operation.
