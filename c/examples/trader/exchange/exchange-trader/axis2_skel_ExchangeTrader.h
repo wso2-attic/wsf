@@ -54,7 +54,11 @@
                                           axis2_loginRequest_t* loginRequest );
      
 
-		 
+        axis2_status_t
+        axis2_skel_ExchangeTrader_init(
+                const axutil_env_t *env);
+        
+
         /**
          * auto generated function declaration
          * for "registerClient|http://www.wso2.org" operation.

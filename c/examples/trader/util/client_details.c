@@ -53,9 +53,9 @@ wsf_client_details_create(
         return NULL;
     }
     
-    wsf_client_details->ssn = ssn;
-    wsf_client_details->name = name;
-    wsf_client_details->password = password;
+    wsf_client_details->ssn = axutil_strdup(env,ssn);
+    wsf_client_details->name = axutil_strdup(env, name);
+    wsf_client_details->password = axutil_strdup(env, password);
     wsf_client_details->credit = 10000;
     wsf_client_details->stock_holdings = NULL;
     wsf_client_details->stock_holdings = axutil_hash_make(env);

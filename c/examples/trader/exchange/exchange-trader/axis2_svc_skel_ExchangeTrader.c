@@ -75,7 +75,7 @@
 	axis2_svc_skel_ExchangeTrader_init(axis2_svc_skeleton_t *svc_skeleton,
 	                        const axutil_env_t *env)
 	{
-	    svc_skeleton->func_array = axutil_array_list_create(env, 10);
+	    /*svc_skeleton->func_array = axutil_array_list_create(env, 10);
         
 	      axutil_array_list_add(svc_skeleton->func_array, env, "buy");
         
@@ -86,8 +86,9 @@
 	      axutil_array_list_add(svc_skeleton->func_array, env, "registerFeedTarget");
         
 	      axutil_array_list_add(svc_skeleton->func_array, env, "sell");
-
+        */
           axis2_skel_ExchangeTrader_init(env);
+          
 
 	    /* Any initialization stuff of axis2_skel_ExchangeTrader goes here */
 	    return AXIS2_SUCCESS;

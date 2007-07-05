@@ -170,18 +170,23 @@ wsf_trader_buy(wsf_trader_t *wsf_trader,
     client_details = wsf_trader_get_client_details(wsf_trader,
             env, user_name, password);
 
+
     if(!client_details)
+    {    
         return AXIS2_FAILURE;        
+    }
 
     if(!axutil_hash_contains_key(wsf_trader->stock_market, env, symbol))
+    {    
         return AXIS2_FAILURE;
-
+    }
     stock_details = (axis2_StockQuote_t *)axutil_hash_get(wsf_trader->stock_market, 
                 symbol, AXIS2_HASH_KEY_STRING);     
 
     if(!stock_details)
+    {    
         return AXIS2_FAILURE;
-
+    }
     credit = wsf_client_details_get_credit(client_details, env);
 
     amount_required = (axis2_StockQuote_get_price(stock_details, env))*qty;
