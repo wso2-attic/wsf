@@ -826,7 +826,6 @@ void wsf_soap_do_soap_call(zval* this_ptr,
 	xmlDocPtr request = NULL;
         /* int ret = FALSE;   */
 	int soap_version = 0;
-	zval response;
 	xmlCharEncodingHandlerPtr old_encoding;
 	HashTable *old_class_map;
 	int old_features;
@@ -959,7 +958,6 @@ void wsf_soap_do_soap_call(zval* this_ptr,
                 }
  			}
 			xmlFreeDoc(request);
-			zval_dtor(&response);
 
  		} else {
  			smart_str error = {0};
