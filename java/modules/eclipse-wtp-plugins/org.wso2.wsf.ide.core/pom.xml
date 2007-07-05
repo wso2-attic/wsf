@@ -24,13 +24,6 @@
 
 	<dependencies>
 		<!--Eclipse runtime dependencies -->
-		<!--
-			<dependency>
-			<groupId>org.eclipse.core</groupId>
-			<artifactId>org.eclipse.core.jobs</artifactId>
-			<version>3.2.0</version>
-			</dependency>
-		-->
 		<dependency>
 			<groupId>org.eclipse.core</groupId>
 			<artifactId>org.eclipse.core.resources</artifactId>
@@ -211,8 +204,20 @@
 			<artifactId>org.eclipse.wst.command.env</artifactId>
 			<version>1.0.203</version>
 		</dependency>
-
 	</dependencies>
+	
+	<distributionManagement>
+		<repository>
+			<id>apache-repo</id>
+			<name>Maven Central Repository</name>
+			<url>scpexe://people.apache.org//www/people.apache.org/repo/m2-ibiblio-rsync-repository</url>
+		</repository>
+		<snapshotRepository>
+			<id>apache-snapshots</id>
+			<name>Apache Development Repository</name>
+			<url>scpexe://people.apache.org//www/people.apache.org/repo/m2-snapshot-repository</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<build>
 		<sourceDirectory>src</sourceDirectory>
