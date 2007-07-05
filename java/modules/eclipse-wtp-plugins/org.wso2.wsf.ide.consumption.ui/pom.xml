@@ -11,7 +11,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.wso2.wsf</groupId>
 	<artifactId>org.wso2.wsf.ide.consumption.ui</artifactId>
-	<version>SNAPSHOT<</version>
+	<version>SNAPSHOT</version>
 	<name>wso2wsf org.wso2.wsf.ide.consumption.ui plugin</name>
 	<packaging>maven-plugin</packaging>
 	<description>WSO2 org.wso2.wsf.ide.consumption.ui Eclipse Plugin</description>
