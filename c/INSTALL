@@ -122,7 +122,7 @@ This can be done using either binary or source distribution.
         * Add the path to lib directory to the PATH variable (%WSFC_HOME%\lib)
 		> set PATH=%PATH%;%WSFC_HOME%\lib
     Now everything is set to run the server 
-		> axis2_http_server.exe)
+		> axis2_http_server.exe
 
     If the server is running successfully you should see the message 
     "Started Simple Axis2 HTTP Server..."
@@ -172,7 +172,7 @@ This can be done using either binary or source distribution.
     Edit the configure.in file and set the configure parameters to match your system.
     Open a DOS shell, and go to where the extracted source is
         > cd C:\wsfc
-    Run the build.sh batch file
+    Run the build.bat batch file
         > build.bat
 
     (Note: You may need to set the PATH environment variable to vcvars32.bat if 
