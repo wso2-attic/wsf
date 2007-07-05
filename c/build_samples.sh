@@ -28,7 +28,8 @@ if test -e ../../sandesha2c/Makefile; then
 cd ../../sandesha2c/samples; ./configure --prefix=$1 --with-axis2=$1/include/axis2-1.1; make; make install; 
 fi
 if test -e ../../rampartc/Makefile; then
-cd ../../rampartc/samples; ./configure --prefix=$1  --with-axis2=$1/include/axis2-1.1; make; make install
+cd ../../rampartc/samples; ./configure --prefix=$1  --with-axis2=$1/include/axis2-1.1; make; make install;
+cd client/sec_echo; sh deploy_client_repo.sh; cd ../../secpolicy; sh deploy.sh scenario5; cd ../
 fi
 cd ../../examples; ./configure --prefix=$1  --with-wsfc=$1/include; make; make install
 
