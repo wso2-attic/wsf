@@ -1,38 +1,64 @@
-We are pleased to announce the release of WSO2 WSF/C 1.0.0.
-You can download the release from
-http://dist.wso2.net/products/wsf/c/1.0.0
-Project home page
-http://wso2.org/projects/wsf/c
 
+WSO2 Web Services Framework (WSF)/C, version v1.0 - Release Note 
+================================================================
+
+WSO2 WSF/C version v1.0 released on : 06th July 2007
+
+WSO2 WSF/C is an Open Source framework released under Apache License v2.0, for providing and consuming Web services.
+It is one of the core implementations of WSO2 Web Services Framework (WSF).
+
+WSO2 WSF/C is released under the Apache License v2.0
+
+Please visit out project home page: http://wso2.org/projects/wsf/c
+
+
+-------------
 Key Features
-
+=============
     1. Attachments with MTOM
         * Binary optimized
         * Non-optimized (Base64 binary)
-
     2. WS-Addressing
         * Version 1.0
         * Submission
-
-    3. WS-Policy 
-    
+    3. WS-Policy     
     4. WS-Security
         * UsernameToken
         * Signing
-        * Encryption
-        
+        * Encryption        
     5. WS-ReliableMessaging
-
     6. WS-Eventing
-
     7. SSL enabled Transport layer
-
     8. XMPP transport layer
-
     9. wsclient command line tool to consume Web services.
+
+--------------
+Known Issues
+==============
+
+------------------
+Upcoming Features
+==================
+
+-------------------
+Reporting Problems
+===================
+Issues can be reported using the public JIRA available at https://wso2.org/jira/browse/WSFC
+
+------------
+Contact Us
+============
+For WSO2 WSF/C User: wsf-c-user@wso2.org
+For WSO2 WSF/C Developer: wsf-c-dev@wso2.org
+
+For mail subscriptions : http://wso2.org/projects/wsf/c#mail
+
+Alternatively, questions can also be raised in the forums:
+For Users : http://wso2.org/forum/182
+For Developers : http://wso2.org/forum/185
 
 
 We welcome your early feedback on this implementation.
-Thanks for your interest in WSO2 WSF/C.
+Thank you for your interest in WSO2 WSF/C.
 
--- WSO2 WSF4C team <wsf-c-dev@wso2.org>  Wed, 18 Jan 2007
+-- WSO2 WSF4C Team
