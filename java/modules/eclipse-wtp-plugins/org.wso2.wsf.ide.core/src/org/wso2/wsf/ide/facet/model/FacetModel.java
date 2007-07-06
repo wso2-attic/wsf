@@ -18,7 +18,6 @@ package org.wso2.wsf.ide.facet.model;
 public class FacetModel {
 
 	private static String webFacetConinerDir;
-	private static boolean correctWSASPathSet = false;
 
 	public static String getWebFacetConinerDir() {
 		return webFacetConinerDir;
@@ -26,14 +25,6 @@ public class FacetModel {
 
 	public static void setWebFacetConinerDir(String inputWebFacetConinerDir) {
 		webFacetConinerDir = inputWebFacetConinerDir;
-	}
-
-	public static boolean isCorrectWSASPathSet() {
-		return correctWSASPathSet;
-	}
-
-	public static void setCorrectWSASPathSet(boolean flag) {
-		correctWSASPathSet = flag;
 	}
 
 }

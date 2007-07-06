@@ -28,7 +28,6 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.IWorkbenchWindowPulldownDelegate;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
-import org.wso2.wsf.ide.facet.model.FacetModel;
 import org.wso2.wsf.ide.wtp.ext.server.bean.WSASConfigurationBean;
 import org.wso2.wsf.ide.wtp.ext.server.command.WSASStartCommand;
 import org.wso2.wsf.ide.wtp.ext.server.command.WTPInternalBrowserCommand;
@@ -48,7 +47,9 @@ public class WSASStartMenuDelegate
 	 * @see ActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
-		if (!FacetModel.isCorrectWSASPathSet()) {
+		//Init the Configuration Bean
+		WSASConfigurationBean.Init();
+		if (!WSASConfigurationBean.isWsasCorrectPathSet()) {
 			box.setMessage(WSASMessageConstant.WARNING_WSAS_PATH_NOT_SET);box.open();
 		}else{	
 			try {

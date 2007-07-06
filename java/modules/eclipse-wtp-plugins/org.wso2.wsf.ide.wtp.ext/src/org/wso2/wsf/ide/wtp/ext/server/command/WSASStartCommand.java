@@ -34,8 +34,6 @@ public class WSASStartCommand {
 			status = new Status( IStatus.ERROR,"id",11,"WSAS Already Running !!",null);
 			WSASConfigurationBean.setWSASAlreadyRunning(true);
 		}else{
-			//Init the Configuration Bean
-			WSASConfigurationBean.Init();
 		
 				String wsasInstallationLocation = WSASConfigurationBean.getWsasInstallationPath();
 				try {

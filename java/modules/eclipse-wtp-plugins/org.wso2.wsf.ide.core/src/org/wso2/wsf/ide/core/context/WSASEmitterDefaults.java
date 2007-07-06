@@ -20,6 +20,8 @@ import org.wso2.wsf.ide.core.plugin.messages.WSASCoreUIMessages;
 public class WSASEmitterDefaults {
 
 	public static final String PREFERENCE_WSAS_RUNTIME_LOCATION_DEFAULT = "";
+	public static final boolean PREFERENCE_WSAS_RUNTIME_SET_DEFAULT = false;
+	
 	//Axis2 Preferences
 	//Service Code generation Options
 	public static final String PREFERENCE_SERVICE_DATABINDING_DEFAULT = WSASCoreUIMessages.ADB;
@@ -41,6 +43,10 @@ public class WSASEmitterDefaults {
 	 */
 	public static String getWSASRuntimeLocation() {
 		return PREFERENCE_WSAS_RUNTIME_LOCATION_DEFAULT;
+	}
+	
+	public static boolean getWSASRuntimeLocationSet() {
+		return PREFERENCE_WSAS_RUNTIME_SET_DEFAULT;
 	}
 	
 	//Service Code generation Options
