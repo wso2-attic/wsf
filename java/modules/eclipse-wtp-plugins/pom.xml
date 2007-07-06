@@ -100,4 +100,10 @@
         </snapshotRepository>
     </distributionManagement>
 
+	<properties>
+
+        	<wso2wsf.version>${pom.version}</wso2wsf.version>
+
+	</properties>
+
 </project>
