@@ -25,7 +25,7 @@
 		<repository>
 			<id>wso2 repo</id>
 			<name>wso2 maven2 repository</name>
-			<url>http://dist.wso2.org/maven</url>
+			<url>http://dist.wso2.org/maven2</url>
 		</repository>
 	</repositories>
 
