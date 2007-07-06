@@ -123,7 +123,8 @@ wsf_trader_create_account(wsf_trader_t *wsf_trader,
 
     if(client_details)
     {
-        axutil_hash_set(wsf_trader->client_data, name, AXIS2_HASH_KEY_STRING, client_details);
+        
+        axutil_hash_set(wsf_trader->client_data, axutil_strdup(env, name), AXIS2_HASH_KEY_STRING, client_details);
     }
     
     exchange_trader_stub = axis2_stub_ExchangeTrader_create(env,
@@ -316,19 +317,20 @@ wsf_trader_get_client_details(wsf_trader_t *wsf_trader,
 {
 
     wsf_client_details_t *client_details = NULL;
+    axis2_char_t *pass = NULL;
 
     if(!user_name && !password)
     {
         return NULL;
     }
-    
+   
+
     client_details = (wsf_client_details_t *)axutil_hash_get(wsf_trader->client_data, 
             user_name, AXIS2_HASH_KEY_STRING);
 
     if(client_details)
     {
-        axis2_char_t *pass = wsf_client_details_get_password(client_details, env);
-
+        pass = wsf_client_details_get_password(client_details, env);
         if(axutil_strcmp(pass, password)==0)
         {
             return client_details;
@@ -337,8 +339,9 @@ wsf_trader_get_client_details(wsf_trader_t *wsf_trader,
             return NULL;
     }
     else 
+    {    
         return NULL;
-
+    }
 }
 
 
