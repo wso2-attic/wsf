@@ -113,32 +113,41 @@ int main(int argc, char** argv)
 
     if(axutil_strcmp(operation, "create-account") == 0)
     {
-        if(argc < 5)
+        if(argc < 4)
         {
             printf("Some arguments are missing\n .use -h for help\n");   
             return 0;
         }  
-        address = argv[4]; 
+        else if(argc > 4)
+        {    
+            address = argv[4]; 
+        }    
         status = create_account(env, argv[2], argv[3], address, client_home);
     }    
     else if(axutil_strcmp(operation, "buy") == 0)
     {
-        if(argc < 7)
-        {
-            printf("Some arguments are missing\n .use -h for help\n");
-            return 0;
-        }    
-        address = argv[6];    
-        status = buy(env, argv[2], argv[3], argv[4], argv[5], address, client_home);
-    }    
-    else if(axutil_strcmp(operation, "sell") == 0)
-    {
-        if(argc < 7)
+        if(argc < 6)
         {
             printf("Some arguments are missing\n .use -h for help\n");
             return 0;
         }
-        address = argv[6];
+        else if(argc > 6)
+        {    
+            address = argv[6];    
+        }    
+        status = buy(env, argv[2], argv[3], argv[4], argv[5], address, client_home);
+    }    
+    else if(axutil_strcmp(operation, "sell") == 0)
+    {
+        if(argc < 6)
+        {
+            printf("Some arguments are missing\n .use -h for help\n");
+            return 0;
+        }
+        else if(argc > 6)
+        {
+            address = argv[6];
+        }    
         status = sell(env, argv[2], argv[3], argv[4], argv[5], address, client_home);
     }    
 
@@ -194,7 +203,7 @@ create_account(const axutil_env_t *env,
 
     if(create_account_resp)
     {
-        printf("\n%s", axis2_createAccountResponse_get_userid(create_account_resp, env));
+        printf("RESULTS : Your User id is %s\n", axis2_createAccountResponse_get_userid(create_account_resp, env));
         return AXIS2_SUCCESS;
     }
     else
@@ -232,8 +241,11 @@ buy(const axutil_env_t *env,
         trade_status = axis2_buyResponse_get_trade_status(buy_response, env);
         if(trade_status)
         {
-            printf("%s\n", axis2_TradeStatus_get_reason(trade_status, env));
-            return AXIS2_SUCCESS;
+            printf("RESULTS : %s\n", axis2_TradeStatus_get_reason(trade_status, env));
+            if(axis2_TradeStatus_get_status(trade_status, env))
+                return AXIS2_SUCCESS;
+            else
+                return AXIS2_FAILURE;
         }
         else 
             return AXIS2_FAILURE;
@@ -271,8 +283,11 @@ sell(const axutil_env_t *env,
         trade_status = axis2_sellResponse_get_trade_status(sell_response, env);
         if(trade_status)
         {
-            printf("%s\n", axis2_TradeStatus_get_reason(trade_status, env));
-            return AXIS2_SUCCESS;
+            printf("RESULTS : %s\n", axis2_TradeStatus_get_reason(trade_status, env));
+            if(axis2_TradeStatus_get_status(trade_status, env))
+                return AXIS2_SUCCESS;
+            else
+                return AXIS2_FAILURE;
         }
         else 
             return AXIS2_FAILURE;
