@@ -7,21 +7,21 @@ cd ../../
 cd axis2c/samples
 make dist
 tar -xf wso2-wsf-c-src-1.0.tar.gz
-mv wso2-wsf-c-src-1.0   ../../wso2-wsf-c-src-1.0/axis2c/samples
+mv wso2-wsf-c-src-1.0   ../../wso2-wsf-c-src-1.0.0/axis2c/samples
 
 cd ../../sandesha2c/samples
 make dist
 tar -xf wso2-wsf-c-src-1.0.tar.gz
-mv wso2-wsf-c-src-1.0   ../../wso2-wsf-c-src-1.0/sandesha2c/samples
+mv wso2-wsf-c-src-1.0   ../../wso2-wsf-c-src-1.0.0/sandesha2c/samples
 
 cd ../../rampartc/samples
 make dist
 tar -xf wso2-wsf-c-src-1.0.tar.gz
-mv wso2-wsf-c-src-1.0   ../../wso2-wsf-c-src-1.0/rampartc/samples
+mv wso2-wsf-c-src-1.0   ../../wso2-wsf-c-src-1.0.0/rampartc/samples
 
 cd ../../
 
-cd wso2-wsf-c-src-1.0
+cd wso2-wsf-c-src-1.0.0
 cp -r axis2c/xdocs docs/axis2c
 cp -r savanc/xdocs docs/savanc
 cp -r sandesha2c/xdocs docs/sandesha2c
