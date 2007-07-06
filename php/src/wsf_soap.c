@@ -2775,14 +2775,13 @@ wsf_soap_do_function_call1(const axutil_env_t *env,
 }
 
 void 
-wsf_soap_send_fault(int version TSRMLS_DC)
+wsf_soap_send_fault(int version,char* code, char* string, char *actor TSRMLS_DC)
 {
     char cont_len[40];
     int size = 0;
     xmlChar *buf = NULL;
     xmlDocPtr doc;
-    xmlNodePtr envelope = NULL, body;
-/*               body, param; */
+    xmlNodePtr envelope = NULL, body, param;
     xmlNsPtr ns = NULL;
 /*    xmlNodePtr head = NULL; */
 
@@ -2802,6 +2801,44 @@ wsf_soap_send_fault(int version TSRMLS_DC)
     xmlDocSetRootElement(doc, envelope);
 
     body = xmlNewChild(envelope, ns, BAD_CAST("Body"), NULL);
+    param = xmlNewChild(body, ns, BAD_CAST("Fault"), NULL);
+    
+    if(version == SOAP_1_1){
+           if (code != NULL) {
+                int new_len;
+                xmlNodePtr node = xmlNewNode(NULL, BAD_CAST("faultcode"));
+                char *str = php_escape_html_entities((unsigned char*)code, strlen(code), &new_len, 0, 0, NULL TSRMLS_CC);
+                xmlAddChild(param, node);
+                /*if (fault_ns) {
+                    xmlNsPtr nsptr = encode_add_ns(node, fault_ns);
+                    xmlChar *code = xmlBuildQName(BAD_CAST(str), nsptr->prefix, NULL, 0);
+                    xmlNodeSetContent(node, code);
+                    xmlFree(code);
+                } else {
+                */
+                xmlNodeSetContentLen(node, BAD_CAST(str), new_len);
+                
+                efree(str);
+            }
+            if (string != NULL) {
+                zval *tmp = NULL;
+                MAKE_STD_ZVAL(tmp);
+                ZVAL_STRING(tmp, string, 0);
+
+                xmlNodePtr node = master_to_xml(get_conversion(IS_STRING), tmp, SOAP_LITERAL, param);
+                xmlNodeSetName(node, BAD_CAST("faultstring"));
+                /* zval_dtor(tmp); */
+            }
+            if (actor != NULL) {
+                zval *tmp = NULL;
+                MAKE_STD_ZVAL(tmp);
+                ZVAL_STRING(tmp, actor, 0);
+                xmlNodePtr node = master_to_xml(get_conversion(IS_STRING), tmp, SOAP_LITERAL, param);
+                xmlNodeSetName(node, BAD_CAST("faultactor"));
+                /* zval_dtor(tmp); */
+            }
+    }
+
 
     xmlDocDumpMemory(doc, &buf, &size);
 

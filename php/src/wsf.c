@@ -1310,7 +1310,7 @@ PHP_METHOD(ws_service, __construct)
         svc_info->msg_recv = wsf_msg_recv;
         wsf_util_create_svc_from_svc_info(svc_info , ws_env_svr TSRMLS_CC);
     }else{
-        wsf_soap_send_fault(WSF_GLOBAL(soap_version) TSRMLS_CC);
+        wsf_soap_send_fault(SOAP_1_1,"SOAP-ENV:Server","Bad Request",NULL TSRMLS_CC);
         /*
         zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 1 TSRMLS_CC,
                                 "server does not support cli");
@@ -1806,7 +1806,8 @@ PHP_METHOD(ws_service , reply)
     }
     else if(in_wsdl_mode == 1){
         if(raw_post_null){
-            wsf_soap_send_fault(WSF_GLOBAL(soap_version) TSRMLS_CC);
+            wsf_soap_send_fault(SOAP_1_1, "SOAP-ENV:Server","Bad Request. Can't find HTTP_RAW_POST_DATA", NULL TSRMLS_CC);
+
             return;
         }
         wsf_soap_do_function_call1(env, svc_info, this_ptr, req_info->req_data , req_info->req_data_length TSRMLS_CC);
