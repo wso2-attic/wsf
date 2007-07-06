@@ -78,9 +78,9 @@
 
 
     <modules>
-	<module>org.wso2.wsf.wtp.ide</module>
         <module>org.wso2.wsf.ide.core</module>
         <module>org.wso2.wsf.ide.ui</module>
+	<module>org.wso2.wsf.ide.wtp.ext</module>
         <module>org.wso2.wsf.ide.creation.core</module>
         <module>org.wso2.wsf.ide.creation.ui</module>
         <module>org.wso2.wsf.ide.consumption.core</module>
