@@ -35,10 +35,8 @@ Key Features
 --------------
 Known Issues
 ==============
-
-------------------
-Upcoming Features
-==================
+   1. There can be memory leaks when using WS-ReliableMessaging. Please refer to the Apache Sandesha2/C README file located in the sandesha2 folder.
+   2. WS-ReliableMessaging and WS-Security does not work with the Guththila parser.
 
 -------------------
 Reporting Problems
