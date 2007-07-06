@@ -10,9 +10,13 @@ rem Build Apache Axis2/C
 @if not %ERRORLEVEL% EQU 0 goto end
 
 rem Build Flicker sample
-@cd ../../../examples/flicker
+@cd ..\..\..\examples\flicker
 @nmake -f flicker.mk
 @copy /Y flicker.exe  ..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples
+
+rem Build Trader sample
+@cd ..\trader
+@nmake -f trader.mk
 
 rem Build Apache Rampart/C
 @cd ..\..\rampartc\build\win32
