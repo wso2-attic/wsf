@@ -23,9 +23,6 @@ rem Build Apache Rampart/C
 @cd ..
 @xcopy /E /Q /I /Y rampartc-0.90\modules\rampart .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\modules\rampart
 @copy /Y rampartc-0.90\include\*.h .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\include\
-@mkdir .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\docs\ramaprt
-@copy /Y rampartc-0.90\INSTALL .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\docs\ramaprt
-@copy /Y rampartc-0.90\README .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\docs\ramaprt
 @copy /Y rampartc-0.90\modules\rampart\mod_rampart.lib .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
 @copy /Y rampartc-0.90\modules\rampart\mod_rampart.dll .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
 @xcopy /E /I /Q /Y rampartc-0.90\bin\samples .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples\rampart
@@ -55,9 +52,6 @@ rem Build Apache Sandesha2/C
 @copy /Y sandesha2\include\*.h  .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\include\
 @copy /Y sandesha2\sqlite_schema.bat  .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\sqlite_schema.bat
 @copy /Y  sandesha2\bin\samples\sandesha2 .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples\sandesha2
-@mkdir .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\docs\sandesha2
-@copy /Y sandesha2\README .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\docs\sandesha2
-@copy /Y sandesha2\INSTALL .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\docs\sandesha2
 @mkdir .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\sandesha2
 @copy /Y ..\config\*.txt .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\sandesha2
 @copy /Y ..\config\*.bat .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\sandesha2
@@ -109,5 +103,6 @@ rem Build Apache Savan/C
 @copy /Y NEWS wso2-wsf-c-bin-1.0
 @copy /Y COPYING wso2-wsf-c-bin-1.0
 @copy /Y AUTHORS wso2-wsf-c-bin-1.0
+@xcopy /E /I /Q /Y docs  wso2-wsf-c-bin-1.0\docs
 
 :end
