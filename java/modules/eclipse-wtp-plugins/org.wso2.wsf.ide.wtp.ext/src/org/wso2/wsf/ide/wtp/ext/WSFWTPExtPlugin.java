@@ -17,22 +17,24 @@ package org.wso2.wsf.ide.wtp.ext;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.wso2.wsf.ide.wtp.ext.server.bean.WSASConfigurationBean;
+import org.wso2.wsf.ide.wtp.ext.server.command.WSASStopCommand;
 
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Activator extends AbstractUIPlugin {
+public class WSFWTPExtPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.wso2.wsf.ide.wtp.ext";
 
 	// The shared instance
-	private static Activator plugin;
+	private static WSFWTPExtPlugin plugin;
 	
 	/**
 	 * The constructor
 	 */
-	public Activator() {
+	public WSFWTPExtPlugin() {
 	}
 
 	/*
@@ -51,6 +53,10 @@ public class Activator extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
+		//Stop WSAS Server if already running 
+		if(WSASConfigurationBean.isWSASAlreadyRunning()){
+			WSASStopCommand.run();
+		}
 	}
 
 	/**
@@ -58,8 +64,8 @@ public class Activator extends AbstractUIPlugin {
 	 *
 	 * @return the shared instance
 	 */
-	public static Activator getDefault() {
+	public static WSFWTPExtPlugin getDefault() {
 		return plugin;
 	}
-
+	
 }

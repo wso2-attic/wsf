@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %PLUGIN_NAME
 Bundle-SymbolicName: org.wso2.wsf.ide.wtp.ext;singleton:=true
 Bundle-Version: 1.0.0
-Bundle-Activator: org.wso2.wsf.ide.wtp.ext.Activator
+Bundle-Activator: org.wso2.wsf.ide.wtp.ext.WSFWTPExtPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
