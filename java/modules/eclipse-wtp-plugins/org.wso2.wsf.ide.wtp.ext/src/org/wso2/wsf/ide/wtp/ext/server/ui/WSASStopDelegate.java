@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
@@ -35,6 +36,7 @@ public class WSASStopDelegate
 
 	MessageBox box = new MessageBox(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 	IStatus status;
+	Shell shell = null;
 	
 	/**
 	 * @see ActionDelegate#run(IAction)
@@ -47,7 +49,9 @@ public class WSASStopDelegate
 			}else{
 				box.setMessage(WSASMessageConstant.INFO_WSAS_STOP_SUCCESS);box.open();
 			}
+			System.setProperty("WSASStartStatus", "wait");
 			WTPInternalBrowserCommand.closeUpInrernalBrouwser();
+			shell.getParent().redraw();
 		} catch (InvocationTargetException e) {
 			status = new Status( IStatus.ERROR,"id",1,e.getMessage(),null );
 			box.setMessage(WSASMessageConstant.INFO_WSAS_STOP_FAIL);box.open();
@@ -65,6 +69,7 @@ public class WSASStopDelegate
 	 * @see IWorkbenchWindowActionDelegate#init(IWorkbenchWindow)
 	 */
 	public void init(IWorkbenchWindow window) {
+		shell = window.getShell();
 	}
 
 }

@@ -23,6 +23,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.IWorkbenchWindowPulldownDelegate;
@@ -42,6 +43,7 @@ public class WSASStartMenuDelegate
     MessageBox box = new MessageBox(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
     private IStatus status;
     private final long interval = 1000;
+    private Shell shell = null;
     
 	/**
 	 * @see ActionDelegate#run(IAction)
@@ -64,6 +66,7 @@ public class WSASStartMenuDelegate
 				status = new Status( IStatus.ERROR,"id",1,e.getMessage(),null );
 				box.setMessage(WSASMessageConstant.INFO_WSAS_START_FAIL+"Reason"+e.getMessage());box.open();
 			}
+			System.setProperty("WSASStartStatus", "done");
 			while(!WSASConfigurationBean.isWsasStartStatus()){
 				try {
 					Thread.sleep(interval);
@@ -77,6 +80,7 @@ public class WSASStartMenuDelegate
 				box.setMessage(WSASMessageConstant.INFO_WSAS_START_SUCCESS);box.open();
 				//Pop up the browser with the url
 				WTPInternalBrowserCommand.popUpInrernalBrouwser(WSASUtils.getWSASHTTPSAddtess());
+				shell.getParent().redraw();
 			}
 		}
 	}
@@ -98,6 +102,7 @@ public class WSASStartMenuDelegate
 	 * @see IWorkbenchWindowActionDelegate#init(IWorkbenchWindow)
 	 */
 	public void init(IWorkbenchWindow window) {
+		shell = window.getShell();
 	}
 	
 }

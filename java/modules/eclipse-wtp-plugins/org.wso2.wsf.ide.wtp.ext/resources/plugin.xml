@@ -10,6 +10,9 @@
 				toolbarPath="Normal/additions"
 				helpContextId="org.wso2.wsf.ide.wtp.ext.server.ui.stop.help"
 				class="org.wso2.wsf.ide.wtp.ext.server.ui.WSASStopDelegate">
+ 				<enablement> 
+           			<systemProperty name="WSASStartStatus" value="done"/> 
+       			</enablement> 
 			</action>
 			<action id="org.wso2.wsf.ide.wtp.ext.server.ui.start"
 				label="WSAS Start" 
@@ -38,20 +41,22 @@
 			</menu>
 			
 			<action
-				id="org.wso2.wsf.ide.wtp.ext.server.ui.menu.action"
+				id="org.wso2.wsf.ide.wtp.ext.server.ui.menu.start.action"
 				label="WSAS Stop" icon="icons/stop.gif"
 				tooltip="WSAS Server Stop"
 				menubarPath="org.wso2.wsf.ide.wtp.ext.server.ui.menu.topLevelMenu/WSASGroup"
 				class="org.wso2.wsf.ide.wtp.ext.server.ui.WSASStopMenuDelegate">
+ 				<enablement> 
+           			<systemProperty name="WSASStartStatus" value="done"/> 
+       			</enablement> 
 			</action>
 			<action
-				id="org.wso2.wsf.ide.wtp.ext.server.ui.menu.action"
+				id="org.wso2.wsf.ide.wtp.ext.server.ui.menu.stop.action"
 				label="WSAS Start" icon="icons/start.gif"
 				tooltip="WSAS Server Start"
 				menubarPath="org.wso2.wsf.ide.wtp.ext.server.ui.menu.topLevelMenu/WSASGroup"
 				class="org.wso2.wsf.ide.wtp.ext.server.ui.WSASStartMenuDelegate">
 			</action>
-
 		</actionSet>
 	</extension>
 

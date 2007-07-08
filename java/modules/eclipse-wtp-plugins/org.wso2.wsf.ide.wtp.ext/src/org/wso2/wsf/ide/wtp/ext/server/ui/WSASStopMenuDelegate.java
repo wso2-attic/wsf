@@ -23,6 +23,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.IWorkbenchWindowPulldownDelegate;
@@ -38,6 +39,7 @@ public class WSASStopMenuDelegate
 
     MessageBox box = new MessageBox(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
     IStatus status;
+    Shell shell = null;
     
 	/**
 	 * @see ActionDelegate#run(IAction)
@@ -51,7 +53,9 @@ public class WSASStopMenuDelegate
 			}else{
 				box.setMessage(WSASMessageConstant.INFO_WSAS_STOP_SUCCESS);box.open();
 			}
+			System.setProperty("WSASStartStatus", "wait");
 			WTPInternalBrowserCommand.closeUpInrernalBrouwser();
+			shell.getParent().redraw();
 		} catch (InvocationTargetException e) {
 			status = new Status( IStatus.ERROR,"id",1,e.getMessage(),null );
 			box.setMessage(WSASMessageConstant.INFO_WSAS_STOP_FAIL);box.open();
@@ -76,6 +80,7 @@ public class WSASStopMenuDelegate
 	 * @see IWorkbenchWindowActionDelegate#init(IWorkbenchWindow)
 	 */
 	public void init(IWorkbenchWindow window) {
+		shell = window.getShell();
 	}
 	
 }
