@@ -21,7 +21,7 @@ import java.net.URL;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
-import org.wso2.wsf.ide.wtp.ext.Activator;
+import org.wso2.wsf.ide.wtp.ext.WSFWTPExtPlugin;
 
 public class WTPInternalBrowserCommand {
 	
@@ -30,7 +30,7 @@ public class WTPInternalBrowserCommand {
 	public static void popUpInrernalBrouwser(String inURL) {
 
 		try {
-			IWorkbenchBrowserSupport browserSupport = Activator.getDefault()
+			IWorkbenchBrowserSupport browserSupport = WSFWTPExtPlugin.getDefault()
 			.getWorkbench().getBrowserSupport();
 
 			browser = browserSupport.createBrowser(IWorkbenchBrowserSupport.LOCATION_BAR, 
