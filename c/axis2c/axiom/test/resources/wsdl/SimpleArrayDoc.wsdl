@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://soapinterop.org" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://soapinterop.org" xmlns:intf="http://soapinterop.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://soapinterop.org" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://soapinterop.org" xmlns:intf="http://soapinterop.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+   <complexType name="intArrayType">
+    <sequence>
+     <element maxOccurs="unbounded" name="intItem" type="xsd:int"/>
+    </sequence>
+   </complexType>
+   <element name="echoIntArray">
+    <complexType>
+     <sequence>
+      <element name="arg_0_0" nillable="true" type="impl:intArrayType"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="echoIntArrayResponse">
+    <complexType>
+     <sequence>
+      <element name="echoIntArrayReturn" nillable="true" type="impl:intArrayType"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="echoIntArrayRequest">
+
+      <wsdl:part element="impl:echoIntArray" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="echoIntArrayResponse">
+
+      <wsdl:part element="impl:echoIntArrayResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:portType name="ArrayTestPortType">
+
+      <wsdl:operation name="echoIntArray">
+
+         <wsdl:input message="impl:echoIntArrayRequest" name="echoIntArrayRequest"/>
+
+         <wsdl:output message="impl:echoIntArrayResponse" name="echoIntArrayResponse"/>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="arrayTestSoapBinding" type="impl:ArrayTestPortType">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="echoIntArray">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="echoIntArrayRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="echoIntArrayResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="array">
+
+      <wsdl:port binding="impl:arrayTestSoapBinding" name="arrayTest">
+
+         <wsdlsoap:address location="http://localhost/axis/array"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

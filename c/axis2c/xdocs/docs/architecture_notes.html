@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=iso-8859-1">
+  <meta content="text/html; charset=iso-8859-1">
+  <meta content="text/html; charset=iso-8859-1">
+  <meta content="text/html; charset=iso-8859-1">
+  <meta content="text/html; charset=iso-8859-1">
+  <meta content="text/html; charset=iso-8859-1" http-equiv="content-type">
+  <title>Architecture Notes</title>
+</head>
+
+<body lang="en">
+<h1>C Specific Architectural Notes on Apache Axis2/C</h1>
+
+<p>Please send your feedback to: <a
+href="mailto:axis-c-dev@ws.apache.org?subject=[Axis2]">axis-c-dev@ws.apache.org</a>
+(Subscription details are available on the <a
+href="http://ws.apache.org/axis2/c/mail-lists.html">Axis2 site</a>.) Prefix
+the subject with [Axis2].</p>
+
+<h2>Contents</h2>
+<ul>
+  <li><a href="#Introduction">Introduction</a></li>
+  <li><a href="#Axis2_Environment">Environment Struct</a></li>
+  <li><a href="#Dynamic_Loading">Dynamic Loading</a></li>
+  <li><a href="#Transport_Abstraction">Transport Abstraction</a></li>
+  <li><a href="#Stream_Abstraction">Stream Abstraction</a></li>
+  <li><a href="#Threading_Model">Threading Model</a></li>
+  <li><a href="#Parser_Abstraction">Parser Abstraction</a></li>
+</ul>
+<a name="Introduction"></a>
+
+<h2>Introduction</h2>
+
+<p>Some of the main design goals of Apache Axis2/C are the usability of the
+library, the ability to be plugged into different platforms, and the ability
+to be embedded in other software systems to provide Web services support.
+There are many features that allow Axis2/C to be pluggable into different
+platforms as well as to enable the extension of the functionality of
+Axis2/C.</p>
+<a name="Axis2_Environment"></a>
+
+<h2>Environment Struct</h2>
+
+<p>Apache Axis2/C defines an environment struct to hold platform specific
+entities such as the memory allocator, the threading mechanism, etc. The
+environment is initialized at the point of starting Axis2/C and will last for
+the lifetime of the Axis2/C run-time. Different sub environments can also be
+created to suit particular needs, for example, each thread can create its own
+environment. The Axis2 environment holds the following entities in order to
+abstract the platform specific implementations.</p>
+
+<h4>Allocator</h4>
+
+<p>Allocator is the wrapper for memory management mechanisms. It defines the
+following primitives:</p>
+<ol>
+  <li><code>malloc</code> - method to allocate a memory block of a given
+  size.</li>
+  <li><code>free</code> - method to free a memory block.</li>
+</ol>
+
+<p>Based on the platform, or the software system into which Axis2/C is
+embedded, these primitives could be provided with concrete
+implementations.</p>
+
+<h4>Error</h4>
+
+<p>Error defines error reporting mechanisms for Axis2/C. All the Axis2/C
+internal functions use the <code>axutil_error</code> struct instance in the
+environment to report errors.</p>
+
+<h4>Log</h4>
+
+<p>The log defines the common logging mechanisms required for the Axis2/C
+library. All internal Axis2/C code use the functions associated with the
+<code>axutil_log</code> struct available in the environment for logging.</p>
+
+<h4>Thread Pool</h4>
+
+<p>The thread pool defines the thread management functions. It hides the
+complex thread pooling functions as well as the platform specific
+implementations of threads. The Axis2/C internal library uses this interface
+to manipulate threads and deal with a common thread type which is defined as
+<code>axutil_thread.</code></p>
+
+<p>The environment struct is the starting point for platform abstraction
+supported by Axis2/C. It can be used to plug platform specific memory
+management, error reporting, logging, and thread pooling mechanisms.</p>
+<a name="Dynamic_Loading"></a>
+
+<h2>Dynamic Loading</h2>
+
+<p>Axis2/C is designed in an extensible manner, so that the users can add
+functionality by implementing new modules. These modules should be compiled
+as Dynamic Shared Objects (DSOs). Services are also loaded dynamically at
+server start up by reading the contents of the services folder and service
+configuration files.</p>
+
+<p>The DSO support for loading Axis2/C services and modules is based on the
+struct named <code>axutil_class_loader</code>. To abstract the
+<code>axutil_class_loader</code> from the DSO loading functionality of the
+underlying operating system, a set of platform independent macros such as
+<code>AXIS2_PLATFORM_LOADLIB</code> and <code>AXIS2_PLATFORM_UNLOADLIB</code>
+are used. These macros will be mapped to platform specific system calls in
+platform specific header files (e.g. <code>axutil_unix.h</code> and
+<code>axutil_windows.h</code>). The file
+<code>axutil_platform_auto_sense.h</code> will include the correct platform
+specific header file, based on the compiler directives available at compile
+time.</p>
+<a name="Transport_Abstraction"></a>
+
+<h2>Transport Abstraction</h2>
+
+<p>One of the key advantages of Axis2/C is the fact that the engine and the
+SOAP processing is independent of the transport aspects. Users can develop
+their own transports and the interface will be defined in:
+<code>axis2_transport_sender.h</code> and
+<code>axis2_transport_receiver.h</code>.</p>
+
+<p>Currently, Axis2/C supports HTTP transport. Axis2/C Apache2 module (<a
+href="installationguide.html#installing-apache2">mod_axis2</a>) is an example
+of the implementation of the <code>axis2_transport_receiver.h</code>
+interface. libcurl based client transport is an example of the implementation
+of the <code>axis2_transport_sender.h</code> interface.</p>
+<a name="Stream_Abstraction"></a>
+
+<h2>Stream Abstraction</h2>
+
+<p>Stream is a representation of a sequence of bytes. Since Axis2/C heavily
+uses streaming mechanisms to read/write XML, an implementation independent
+stream abstraction is required in order to integrate Axis2/C into other
+environments seamlessly. The core components of Axis2/C deal with this
+abstracted stream and does not worry about the implementation specific
+details. <code>axutil_stream.h</code> defines the stream interface.</p>
+<a name="Threading_Model"></a>
+
+<h2>Threading Model</h2>
+
+<p>The Axis2/C core functions such as asynchronous invocation and concurrent
+request processing in simple axis2 server make use of threads. The use of
+threads should be platform independent inside the Axis2/C core components.</p>
+
+<p>An implementation independent interface for threads is provided in the
+<code>axutil_thread.h</code> header file. Platform specific implementations
+of this interface are provided for Windows and Linux.</p>
+<a name="Parser_Abstraction"></a>
+
+<h2>Parser Abstraction</h2>
+
+<p>The Axis2/C architecture depends on the XML pull model when dealing with
+XML payloads. In Java there is StAX API, but in C there is no such standard
+API. Therefore, an XML pull API, that is similar to StAX API, is defined in
+the <code>axiom_xml_reader.h</code> and <code>axiom_xml_writer.h</code>. Any
+implementation of this API can be plugged into the Axis2/C core. If an
+external XML parser needs to be plugged into Axis2/C, a wrapper that maps the
+reading/writing functions to the Axis2/C XML reader/writer API should be
+written.</p>
+</body>
+</html>

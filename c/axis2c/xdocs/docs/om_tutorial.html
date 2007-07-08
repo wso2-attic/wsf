@@ -1,0 +1,784 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+       "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <title>AXOM Tutorial</title>
+</head>
+
+<body>
+<h1>Apache Axis2/C AXIOM Tutorial</h1>
+
+<h2>Contents</h2>
+<ul>
+  <li><a href="#Introduction">Introduction</a>
+    <ul>
+      <li><a href="#What_is_OM">What is AXIOM?</a></li>
+      <li><a href="#For_Whom_is_This_Tutorial">For whom is this
+      tutorial?</a></li>
+      <li><a href="#What_is_Pull_Parsing">What is Pull Parsing?</a></li>
+      <li><a href="#Features_of_OM">Features of AXIOM</a></li>
+      <li><a href="#Where_Does_SOAP_Come_into_Play">Where does SOAP come into
+        play?</a></li>
+    </ul>
+  </li>
+  <li><a href="#Working_with_OM">Working with AXIOM</a>
+    <ul>
+      <li><a href="#Env">Axis2/C Environment</a></li>
+      <li><a href="#Creation">Building AXIOM</a></li>
+      <li><a href="#Addition_and_Detaching_of_Nodes">Adding and Detaching
+        Nodes</a></li>
+      <li><a href="#Traversing">Traversing</a></li>
+      <li><a href="#Serialization">Serialization</a></li>
+      <li><a href="#Reader_and_Writer">Using axiom_xml_reader and
+        axiom_xml_writer</a></li>
+      <li><a href="#Mem_Leaks">How to avoid memory leaks and double frees
+        when using AXIOM</a></li>
+      <li><a href="#Complete_Sample">Complete Sample</a></li>
+    </ul>
+  </li>
+</ul>
+<a id="Introduction"></a>
+
+<h2>Introduction</h2>
+
+<a id="What_is_OM"></a>
+<h3>What is AXIOM?</h3>
+
+<p>AXIOM stands for AXis Object Model and refers to the XML infoset model
+that is developed for Apache Axis2. XML infoset refers to the information
+included inside the XML. For programmatical manipulation, it is convenient to
+have a representation of this XML infoset in a language specific manner. DOM
+and JDOM are two such XML models. AXIOM is conceptually similar to such an
+XML model in its external behavior but deep down it is very different.</p>
+
+<p>The objective of this tutorial is to introduce the basics of AXIOM/C and
+explain the best practices while using AXIOM.</p>
+
+<p>AXIOM/C is a C equivalant of AXIOM/Java. We have done our best to get
+almost the same kind of API in C.</p>
+<a id="For_Whom_is_This_Tutorial"></a>
+
+<h3>For whom is this tutorial?</h3>
+
+<p>This tutorial can be used by anybody who is interested and wants to go
+deeper in to AXIOM/C. Knowledge in similar object models such as DOM will be
+helpful in understanding AXIOM, but such knowledge has not been assumed.
+Several links are listed in the links section that will help you understand
+the basics of XML.</p>
+<a id="What_is_Pull_Parsing"></a>
+
+<h3>What is Pull Parsing ?</h3>
+Pull parsing is a new trend in XML processing. The previously popular XML
+processing frameworks such as DOM were "push-based", which means that the
+control of parsing was with the parser itself. This approach is fine and easy
+to use, but it is not efficient in handling large XML documents since a
+complete memory model will be generated in the memory. Pull parsing inverts
+the control and hence the parser only proceeds at the user's command. The
+user can decide to store or discard events generated from the parser. AXIOM
+is based on pull parsing. To learn more about XML pull parsing, see the <a
+href="http://www.bearcave.com/software/java/xml/xmlpull.html">XML pull
+parsing introduction</a>. <a id="Features_of_OM"></a>
+
+<h3>Features of AXIOM</h3>
+
+<p>AXIOM is a lightweight, differed built XML infoset representation based on
+StAX API derived from <a
+href="http://www.jcp.org/aboutJava/communityprocess/first/jsr173/">JSR
+173</a>, which is the standard streaming pull parser API. AXIOM can be
+manipulated as flexibly as any other object model such as <a
+href="http://www.jdom.org/">JDOM</a>, but underneath, the objects will be
+created only when they are absolutely required. This leads to much less
+memory-intensive programming.</p>
+
+<p>The following is a short feature overview of AXIOM.</p>
+<ul>
+  <li>Lightweight: AXIOM is specifically targeted to be lightweight. This is
+    achieved by reducing the depth of the hierarchy, the number of methods,
+    and the attributes enclosed in the objects. This makes the objects less
+    memory intensive.</li>
+  <li>Differed building: By far, this is the most important feature of AXIOM.
+    The objects are not made unless a need arises for them. This passes the
+    control of building to the object model itself, rather than an external
+    builder.</li>
+  <li>Pull based: For a differed building mechanism, a pull-based parser is
+    required. AXIOM is based on StAX, which is the standard pull parser API.
+    <p>Since different XML parsers offer different kinds of pull parser APIs,
+    we define an API derived from StAX. That API is defined in
+    <code>axiom_xml_reader.h</code>. Similarly, we define an XML writer API
+    in <code>axiom_xml_writer.h</code>. These two APIs work as an abstarction
+    layer between any XML parser and AXIOM. So any parser that is going to be
+    used for AXIOM should implement the <code>axiom_xml_reader</code> API and
+    the <code>axiom_xml_writer</code> API using a wrapper layer.</p>
+    <p></p>
+    <p>Currenly we use <a
+    href="http://xmlsoft.org/downloads.html">Libxml2</a> as our default XML
+    parser.</p>
+    <p></p>
+  </li>
+</ul>
+
+<p class="img"><img alt="" src="images/archi006.jpg" class="img" width="490"
+height="282" /></p>
+
+<p>The AXIOM Builder wraps the raw XML character stream through the
+<code>axiom_xml_reader</code> API. Hence the complexities of the pull event
+stream are hidden from the user.</p>
+<a id="Where_Does_SOAP_Come_into_Play"></a>
+
+<h3>Where does SOAP come into play?</h3>
+
+<p>In a nutshell, SOAP is an information exchange protocol based on XML. SOAP
+has a defined set of XML elements that should be used in messages. Since
+Axis2 is a "SOAP Engine" and AXIOM is designed for Axis2, a SOAP specific API
+was implemented on top of AXIOM. We have defined a number of structs to
+represent SOAP constructs, which wrap general AXIOM structures. Learn more
+about <a href="http://www.w3schools.com/SOAP/soap_intro.asp">SOAP</a>.</p>
+<!--<p>This abstraction provides</p>
+<ul>
+<li>differed building support</li>
+<li>Caching</li>
+</ul>
+<p>AXIOM has the flexibility to plug in any builder which implements the given builders interface.  The upcoming sections of this tutorial deal with the creation and usage of AXIOM for manipulating SOAP (and to some extent nonSOAP) based XML documents.</p>
+-->
+<a id="Working_with_OM"></a>
+
+<h2>Working with AXIOM</h2>
+
+<a id="Env"></a>
+
+<h3>Axis2/C Environment</h3>
+
+<p>Before starting the discussion on AXIOM, it is necessary to get a good
+understanding of the basics of Axis2/C. Axis2/C is designed to be pluggable
+to any system written in C or C++. Therefore, Axis2/C has abstracted the
+functionalities that differ from system to system into a structure
+<code>axutil_env_t</code>, which we refer to as the Axis2 environment. The
+environment holds <code>axutil_allocator_t</code>, which is used for memory
+allocation and deallocation, <code>axutil_error_t</code>, which is used for
+error reporting, <code>axuitl_log_t</code>, which is used for logging
+mechanisms, and <code>axutil_thread_t</code> which is used for threading
+mechanisms.</p>
+
+<p>When creating the Axis2 environment, the first thing is to create the
+allocator.</p>
+
+<p><code>axutil_allocator_t *allocator = NULL;</code></p>
+
+<p><code>allocator = axutil_allocator_init(NULL);</code></p>
+
+<p>We pass <code>NULL</code> to the above function in order to use the
+default allocator functions. Then the allocator functions will use the
+<code>malloc</code>, and <code>free</code> functions for memory management.
+If you have your own allocator structure, with custom malloc and free
+functions, you can pass them instead.</p>
+
+<p>Convenient macros <code>AXIS2_MALLOC</code> and <code>AXIS2_FREE</code>
+are defined to use allocator functions (please have a look at
+<code>axutil_allocator.h</code> for more information).</p>
+
+<p>In a similar fashion, you can create the error and log structures.</p>
+
+<p><code>axuitl_log_t *log = NULL;</code></p>
+
+<p><code>axutil_error_t *error = NULL;</code></p>
+
+<p><code>log = axuitl_log_create(allocator, NULL, NULL);</code></p>
+
+<p><code>log = axuitl_log_create(allocator, NULL, "mylog.log");</code></p>
+
+<p></p>
+
+<p>Now we can create the environment by parsing the allocator, error and log
+to <code>axutil_env_create_with_error_log()</code> function.</p>
+
+<p><code>axutil_env_t *env = NULL;</code></p>
+
+<p><code>env = axutil_env_create_with_error_log(allocator, error,
+log);</code></p>
+
+<p>Apart from the above abstraction, all the other library functions used are
+ANSI C compliant. Further, platform dependent functions are also
+abstracted.</p>
+
+<p>As a rule of thumb, all <code>create</code> functions take a pointer to
+the environment as its first argument, and all the other functions take
+pointer to this particular struct as the first argument, and a pointer to the
+environment as the second argument. (Please refer to our <a
+href="../coding_conventions.html">coding convention page</a> to learn more
+about this.)</p>
+
+<p>Example,</p>
+
+<p><code>axiom_node_t *node = NULL;</code></p>
+
+<p><code>axiom_node_t *child = NULL;</code></p>
+
+<p><code>node = axiom_node_create(env);</code></p>
+
+<p><code>child = axiom_node_get_first_child(node, env);</code></p>
+
+<p>Note that we are passing the node (pointer to <code>axiom_node_t</code> )
+as the first argument and the pointer to the environment as the second.</p>
+<a id="Creation"></a>
+
+<h3>Building AXIOM</h3>
+
+<p>This section explains how AXIOM can be built either from an existing
+document or programmatically. AXIOM provides a notion of a builder to create
+objects. Since AXIOM is tightly bound to StAX, a StAX compliant reader should
+be created first with the desired input stream.</p>
+
+<p>In our AXIOM implementation, we define a struct <code>axiom_node_t</code>
+which acts as the container of the other structs. <code>axiom_node_t</code>
+maintains the links that form the linked list used to hold the AXIOM
+structure.</p>
+
+<p>To traverse this structure, the functions defined in
+<code>axiom_node.h</code> must be used. To access XML information, the 'data
+element' struct stored in <code>axiom_node_t</code> must be obtained using
+the <code>axiom_node_get_data_element</code> function. The type of the struct
+stored in the <code>axiom_node_t</code> struct can be obtained by the
+<code>axiom_node_get_node_type</code> function. When we create
+<code>axiom_element_t</code>, <code>axiom_text_t</code> etc., it is required
+to parse a double pointer to the node struct as the last parameter of the
+<code>create</code> function, so that the corresponding node struct can be
+referenced using that pointer.</p>
+
+<p>Example</p>
+
+<p><code>axiom_node_t *my_node = NULL;</code></p>
+
+<p><code>axiom_element_t *my_ele = NULL;</code></p>
+
+<p><code>my_ele = axiom_element_create(env, NULL, "MY_ELEMENT", NULL,
+&amp;my_node);</code></p>
+
+<p></p>
+
+<p>Now if we call the <code>axiom_node_get_node_type</code> function on the
+<code>my_node</code> pointer, it will return <code>AXIOM_ELEMENT</code>.</p>
+
+<p><b>Code Listing 1</b></p>
+<pre>axiom_xml_reader_t *xml_reader = NULL;<br />
+axiom_stax_builder_t *om_builder = NULL;<br />
+axiom_soap_builder_t *soap_builder = NULL;<br />
+axiom_soap_envelope_t *soap_envelope = NULL;<br />
+<i>/** create the parser */</i><br />
+xml_reader = axiom_xml_reader_create_for_file(env, "test_soap.xml", NULL);<br />
+<i>/** create the AXIOM builder */</i><br />
+om_builder = axiom_stax_builder_create(env, xml_reader);<br />
+<i>/** create SOAP builder */</i><br />
+soap_builder = axiom_soap_builder_create(env, om_builder , AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI);<br />
+<i>/** get soap envelope */</i><br />
+soap_envelope = axiom_soap_builder_get_soap_envelope(soap_builder, env);<br /></pre>
+
+<p>As the example shows, creating an AXIOM from <code>xml_reader</code> is
+pretty straight forward. Elements and nodes can be created programmatically
+to modify the structure as well. Currently AXIOM has two builders, namely the
+<code>axiom_stax_builder_t</code> and the <code>axiom_soap_builder_t</code>.
+These builders provide the necessary information to the XML infoset model to
+build the AXIOM tree.</p>
+
+<p><b>Code Listing 2</b></p>
+<pre class="code">axiom_namespace_t *ns1 = NULL;
+axiom_namespace_t *ns2 = NULL;
+
+axiom_element_t* root_ele = NULL;
+axiom_node_t*    root_ele_node = NULL;
+
+axiom_element_t *ele1      = NULL;
+axiom_node_t *ele1_node = NULL;
+
+ns1 = axiom_namespace_create(env, "bar", "x");
+ns2 = axiom_namespace_create(env, "bar1", "y");
+
+root_ele = axiom_element_create(env, NULL, "root", ns1, &amp;root_ele_node);
+ele1     = axiom_element_create(env, root_node, "foo1", ns2, &amp;ele1_node);</pre>
+
+<p>Several differences exist between a programmatically created
+<code>axiom_node_t</code> and a conventionally built
+<code>axiom_node_t</code>. The most important difference is that the latter
+will have a pointer to its builder, where as the former does not have a
+builder.</p>
+
+<p>The SOAP struct hierarchy is made in the most natural way for a
+programmer. It acts as a wrapper layer on top of the AXIOM implementation.
+The SOAP structs wrap the corresponding <code>axiom_node_t</code> structs to
+store XML information.</p>
+<a id="Addition_and_Detaching_of_Nodes"></a>
+
+<h3>Adding and Detaching Nodes</h3>
+
+<p>Addition and removal methods are defined in the <code>axiom_node.h</code>
+header file.</p>
+
+<p><b>Code Listing 3</b></p>
+
+<p>Add child operation</p>
+<pre class="code">axis2_status_t
+axiom_node_add_child(axiom_node_t *om_node,  
+    const axutil_env_t *env, 
+    axiom_node_t *child_node);</pre>
+
+<p>Detach operation</p>
+<pre class="code">axiom_node_t *
+axiom_node_detach(axiom_node_t *om_node, 
+    const axutil_env_t *env);</pre>
+
+<p>The detach operation resets the links and removes a node from the AXIOM
+tree.</p>
+
+<p>This code segment shows how child addition can be done.</p>
+
+<p><b>Code Listing 4</b></p>
+<pre class="code">axiom_node_t *foo_node = NULL;
+axiom_element_t *foo_ele = NULL;
+axiom_node_t *bar_node = NULL;
+axiom_element_t *bar_ele = NULL;
+
+foo_ele = axiom_element_create(env, NULL, "FOO", NULL, &amp;foo_node);
+bar_ele = axiom_element_create(env, NULL, "BAR", NULL. &amp;bar_node); 
+axiom_node_add_child(foo_node, env, bar_node);</pre>
+
+<p>Alternatively, we can pass the <code>foo_node</code> as the parent node at
+the time of creating the <code>bar_ele</code> as follows.</p>
+<pre> bar_ele = axiom_element_create(env, foo_node, "BAR", NULL, &amp;bar_node);</pre>
+
+<p>The following shows important methods available in
+<code>axiom_element</code> to be used to deal with namespaces.</p>
+
+<p><b>Code Listing 5</b></p>
+<pre class="code">axiom_namespace_t * 
+axiom_element_declare_namespace(axiom_element_t *om_ele,  
+    const axutil_env_t *env, 
+    axiom_node_t *om_node, 
+    axiom_namespace_t *om_ns);
+
+axiom_namespace_t * 
+axiom_element_find_namespace(axiom_element_t *om_ele,
+    const axutil_env_t *env, 
+    axiom_node_t *om_node, 
+    axis2_char_t *uri, 
+    axis2_char_t *prefix);
+
+axiom_namespace_t *
+axiom_element_find_declared_namespace(axiom_element_t *om_element,
+    const axutil_env_t *env,
+    axis2_char_t *uri,
+    axis2_char_t *prefix);
+
+axis2_status_t
+axiom_element_set_namespace(axiom_element_t *om_element,
+    const axutil_env_t *env,
+    axiom_namespace_t *ns,
+    axiom_node_t *element_node);</pre>
+
+<p>An <code>axiom_element</code> has a namespace list, the declared
+namespaces, and a pointer to its own namespace if one exists.</p>
+
+<p>The <code>axiom_element_declare_namespace</code> function is straight
+forward. It adds a namespace to the declared namespace list. Note that a
+namespace that is already declared will not be declared again.</p>
+
+<p><code>axiom_element_find_namespace</code> is a very handy method to locate
+a namespace in the AXIOM tree. It searches for a matching namespace in its
+own declared namespace list and jumps to the parent if it's not found. The
+search progresses up the tree until a matching namespace is found or the root
+has been reached.</p>
+
+<p><code>axiom_element_find_declared_namespace</code> can be used to search
+for a namespace in the current element's declared namespace list.</p>
+
+<p><code>axiom_element_set_namespace</code> sets <code>axiom_element</code>'s
+own namespace. Note that an element's own namespace should be declared in its
+own namespace declaration list or in one of its parent elements. This method
+first searches for a matching namespace using
+<code>axiom_element_find_namespace</code> and if a matching namespace is not
+found, a namespace is declared to this <code>axiom_element</code>'s namespace
+declarations list before setting the own namespace reference.</p>
+
+<p>The following sample code segment shows how the namespaces are dealt with
+in AXIOM.</p>
+
+<p><b>Code Listing 6</b></p>
+<pre class="code">axiom_namespace_t *ns1 = NULL;
+axiom_namespace_t *ns2 = NULL;
+axiom_namespace_t *ns3 = NULL;
+
+axiom_node_t *root_node = NULL;
+axiom_element_t *root_ele = NULL;
+
+axiom_node_t *ele1_node = NULL;
+axiom_element_t *ele1   = NULL;
+
+axiom_node_t *text_node = NULL;
+axiom_text_t *om_text   = NULL;
+
+ns1 = axiom_namespace_create(env, "bar", "x");
+ns2 = axiom_namespace_create(env, "bar1", "y");
+
+root_ele = axiom_element_create(env, NULL , "root", ns1, &amp;root_node);
+ele1     = axiom_element_create(env, root_node, "foo", ns2, &amp;ele1_node);
+om_text  = axiom_text_create(env, ele1_node, "blah", &amp;text_node);</pre>
+
+<p></p>
+
+<p>Serialization of the root element produces the following XML:</p>
+<pre class="xml">&lt;x:root xmlns:x="bar"&gt;
+  &lt;y:foo xmlns:y="bar1"&gt;blah&lt;/y:foo&gt;
+&lt;/x:root&gt;</pre>
+
+<p>If we want to produce</p>
+<pre class="xml">&lt;x:foo xmlns:x="bar" xmlns:y="bar1"&gt;Test&lt;/x:foo&gt;</pre>
+
+<p>we can use set_namespace and declare namespace functions as follows.</p>
+<pre class="code">axiom_node_t *foo_node = NULL;
+axiom_element_t *foo_ele  = NULL;
+axiom_namespace_t *ns1 = NULL;
+axiom_namespace_t *ns2 = NULL;
+
+foo_ele = axiom_element_create(env, NULL,"foo" ,NULL, &amp;foo_node);
+
+ns1 = axiom_namespace_create(env, "bar", "x");
+ns2 = axiom_namespace_create(env, "bar1","y");
+
+axiom_element_set_namespace(foo_ele, env, ns1, foo_node);
+axiom_element_declare_namespace(foo_ele, env, ns2, foo_node);
+axiom_element_set_text(foo_ele, env, "Test", &amp;foo_node);</pre>
+<a id="Traversing"></a>
+
+<h3>Traversing</h3>
+
+<p>Traversing the AXIOM structure can be done by obtaining an iterator
+struct. You can either call the appropriate function on an AXIOM element or
+create the iterator manually. AXIOM/C offers three iterators to traverse the
+AXIOM structure. They are:</p>
+<ul>
+  <li>axiom_children_iterator_t</li>
+  <li>axiom_child_element_iterator_t</li>
+  <li>axiom_children_qname_iterator_t</li>
+</ul>
+
+<p>The iterator supports the 'AXIOM way' of accessing elements and is more
+convenient than a list for sequential access. The following code sample shows
+how the children can be accessed. The children can be of type
+<code>AXIOM_TEXT</code> or <code>AXIOM_ELEMENT</code>.</p>
+
+<p><b>Code Listing 7</b></p>
+<pre class="code">axiom_children_iterator_t *children_iter = NULL;
+children_iter = axiom_element_get_children(om_ele, env, om_node);
+if(NULL != children_iter )
+{
+    while(axiom_children_iterator_has_next(children_iter, env))
+    {
+        axiom_node_t *node = NULL;
+        node = axiom_children_iterator_next(children_iter, env);
+        if(NULL != node)
+        {
+           if(axiom_node_get_node_type(node, env) == AXIOM_ELEMENT)
+           {
+               /* processing logic goes here */
+           }
+        } 
+
+    }
+}</pre>
+
+<p>Apart from this, every <code>axiom_node_t</code> struct has links to its
+siblings. If a thorough navigation is needed, the
+<code>axiom_node_get_next_sibling()</code> and
+<code>axiom_node_get_previous_sibling()</code> functions can be used. A
+restrictive set can be chosen by using
+<code>axiom_element_xxx_with_qname()</code> methods. The
+<code>axiom_element_get_first_child_with_qname()</code> method returns the
+first child that matches the given <code>axutil_qname_t</code> and
+<code>axiom_element_get_children_with_qname()</code> returns
+<code>axiom_children_qname_iterator_t</code> which can be used to traverse
+all the matching children. The advantage of these iterators is that they
+won't build the whole object structure at once; it builds only what is
+required.</p>
+
+<table width="100%">
+  <tbody>
+    <tr>
+      <td><img src="images/OM005.gif" alt="" width="35" height="57" /></td>
+      <td class="special-td">Internally, all iterator implementations stay
+        one step ahead of their apparent location to provide the correct
+        value for the <code>has_next()</code> function . This hidden
+        advancement can build elements that are not intended to be built at
+        all.</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+<!-- End of special section -->
+
+<p></p>
+<a id="Serialization"></a>
+
+<h3><b>Serialization</b></h3>
+
+<p>AXIOM can be serialized using the <code>axiom_node_serialize</code>
+function. The serialization uses <code>axiom_xml_writer.h</code> and
+<code>axiom_output.h</code> APIs.</p>
+
+<p>Here is an example that shows how to write the output to the console (we
+have serialized the SOAP envelope created in code listing 1).</p>
+
+<p><b>Code Listing 8</b></p>
+<pre class="code">axiom_xml_writer_t *xml_writer = NULL;
+axiom_output_t *om_output = NULL;
+axis2_char_t *buffer = NULL;
+
+..............
+
+xml_writer = axiom_xml_writer_create(env, NULL, 0, 0);
+om_output = axiom_output_create(env, xml_writer);
+
+axiom_soap_envelope_serialize(envelope, env, om_output);
+buffer = (axis2_char_t*)axis2_xml_writer_get_xml(xml_writer, env);
+printf("%s ", buffer);</pre>
+
+<p>An easy way to serialize is to use the <code>to_string</code> function in
+<code>om_element</code></p>
+
+<p><b>Code Listing 9</b></p>
+<pre class="code">axis2_char_t *xml_output = NULL; 
+axiom_node_t *foo_node = NULL;
+axiom_element_t *foo_ele = NULL;
+axiom_namespace_t* ns = NULL;
+
+ns = axiom_namespace_create(env, "bar", "x");
+
+foo_ele = axiom_element_create(env, NULL, "foo", ns, &amp;foo_node);
+
+axiom_element_set_text(foo_ele, env, "EASY SERAILIZATION", foo_node);
+
+xml_output = axiom_element_to_string(foo_ele, env, foo_node);
+
+printf("%s", xml_output);
+AXIS2_FREE(env-&gt;allocator, xml_output);</pre>
+
+<p>Note that freeing the returned buffer is the user's responsibility.</p>
+<a id="Reader_and_Writer"></a>
+
+<h3><b>Using axiom_xml_reader and axiom_xml_writer</b></h3>
+
+<p><code>axiom_xml_reader</code> provides three create functions that can be
+used for different XML input sources.</p>
+<ul>
+  <li><code>axiom_xml_reader_create_for_file</code> can be used to read from
+    a file</li>
+  <li><code>axiom_xml_reader_create_for_io</code> uses a user defined
+    callback function to pull XML</li>
+  <li><code>axiom_xml_reader_create_for_memory</code> can be used to read
+    from an XML string that is in a character buffer</li>
+</ul>
+
+<p>Similarly <code>axiom_xml_writer</code> provides two create functions.</p>
+<ul>
+  <li><code>axiom_xml_writer_create_for_file</code> can be used to write to a
+    file</li>
+  <li><code>axiom_xml_writer_create_for_memory</code> can be used to write to
+    an internal memory buffer and obtain the XML string as a character
+  buffer</li>
+</ul>
+
+<p></p>
+
+<p>Please refer to <code>axiom_xml_reader.h</code> and
+<code>axiom_xml_writer.h</code> for more information.</p>
+
+<p></p>
+<a id="Mem_Leaks"></a>
+
+<h3><b>How to Avoid Memory Leaks and Double Frees When Using AXIOM</b></h3>
+
+<p>You have to be extremely careful when using AXIOM, in order to avoid
+memory leaks and double free errors. The following guidelines will be
+extremely useful:</p>
+
+<p>1. The <code>axiom_element</code> struct keeps a list of attributes and a
+list of namespaces, when an <code>axiom_namespace</code> pointer or an
+<code>axiom_attribute</code> pointer is added to these lists, which will be
+freed when the <code>axiom_element</code> is freed. Therefore a pointer to a
+namespace or an attribute should not be freed, once it is used with an
+<code>axiom_element</code>.</p>
+
+<p>To avoid any inconvenience, clone functions have been implemented for both
+the <code>axiom_namespace</code> and <code>axiom_attribute</code>
+structures.</p>
+
+<p>2. AXIOM returns shallow references to its string values. Therefore, when
+you want deep copies of returned values, the <code>axutil_strdup()</code>
+function should be used to avoid double free errors.</p>
+
+<p>Example</p>
+
+<p><code>axiom_namespace_t *ns = NULL;</code></p>
+
+<p><code>axis2_char_t *uri = NULL;</code></p>
+
+<p><code>ns = axiom_namespace_create(env, "http://ws.apache.org",
+"AXIOM");</code></p>
+
+<p><code>uri = axiom_namespace_get_uri(ns, env);</code></p>
+
+<p><code>/* now uri points to the same place where namespace struct's uri <br
+/>
+pointer is pointing. Therefore following will cause a double free
+*/</code></p>
+
+<p><code>AXIS2_FREE(env-&gt;allocator, uri);</code></p>
+
+<p><code>axiom_namespace_free(ns, env);</code></p>
+
+<p>3. When creating AXIOM programatically, if you are declaring a namespace
+with an <code>axiom_element</code>, it is advisable to find whether the
+namespace is already available in the elements scope using the
+<code>axiom_element_find_namespace</code> function. If available, that
+pointer can be used instead of creating another namespace struct instance to
+minimize memory usage.</p>
+
+<p></p>
+<a id="Complete_Sample"></a>
+
+<h3><b>Complete Code for the AXIOM Based Document Building and
+Serialization</b></h3>
+
+<p>The following code segment shows how to use AXIOM for building a document
+completely and then serializing it into text, pushing the output to the
+console.</p>
+
+<p></p>
+
+<p><b>Code Listing 10</b></p>
+<pre>#include &lt;axiom.h&gt;
+#include &lt;axis2_util.h&gt;
+#include &lt;axutil_env.h&gt;
+#include &lt;axuitl_log_default.h&gt;
+#include &lt;axutil_error_default.h&gt;
+#include &lt;stdio.h&gt;
+
+FILE *f = NULL;
+int read_input_callback(char *buffer, int size, void* ctx)
+{
+    <b>return</b> fread(buffer, <b>sizeof</b>(char), size, f);
+}
+int close_input_callback(void *ctx)
+{
+    <b>return</b> fclose(f);
+}
+axutil_env_t * create_environment()
+{
+    axutil_allocator_t *allocator = NULL;
+    axutil_env_t *env = NULL;
+    axuitl_log_t *log = NULL;
+
+    axutil_error_t *error = NULL;
+    allocator = axutil_allocator_init(NULL);
+    log = axuitl_log_create(allocator, NULL, NULL);
+
+    error = axutil_error_create(allocator);
+    env = axutil_env_create_with_error_log(allocator, error, log);
+    <b>return</b> env;
+}
+
+build_and_serialize_om(axutil_env_t *env)
+{
+    axiom_node_t *root_node = NULL;
+
+    axiom_element_t *root_ele = NULL;
+    axiom_document_t *document = NULL;
+    axiom_stax_builder_t *om_builder = NULL;
+
+    axiom_xml_reader_t *xml_reader = NULL;
+    axiom_xml_writer_t *xml_writer = NULL;
+    axiom_output_t *om_output = NULL;
+
+    axis2_char_t *buffer = NULL;
+    
+    f = fopen("test.xml","r");
+    xml_reader = axiom_xml_reader_create_for_io(env, read_input_callback,
+                                                    close_input_callback, NULL, NULL);
+    <b>if</b>(!xml_reader)
+        <b>return</b> -1;
+
+    om_builder = axiom_stax_builder_create(env, xml_reader);
+    <b>if</b>(!om_builder)
+    {
+        AXIOM_XML_READER_FREE(xml_reader, env);
+        <b>return</b> AXIS2_FAILURE;
+    }
+    document = AXIOM_STAX_BUILDER_GET_DOCUMENT(om_builder, env);
+    <b>if</b>(!document)
+    {
+        AXIOM_STAX_BUILDER_FREE(om_builder, env);
+        <b>return</b> AXIS2_FAILURE;
+    }
+    
+    root_node = AXIOM_DOCUMENT_GET_ROOT_ELEMENT(document, env);
+    <b>if</b>(!root_node)
+    {
+        AXIOM_STAX_BUILDER_FREE(om_builder, env);
+        <b>return</b> AXIS2_FAILURE;
+    }        
+    <b>if</b>(root_node)
+    {
+        <b>if</b>(AXIOM_NODE_GET_NODE_TYPE(root_node, env) == AXIOM_ELEMENT)
+        {
+            root_ele = (axiom_element_t*)AXIOM_NODE_GET_DATA_ELEMENT (root_node, env);
+            <b>if</b>(root_ele)
+            {
+                printf(" %s" , AXIOM_ELEMENT_GET_LOCALNAME(root_ele, env));
+            }
+        }
+    }
+    AXIOM_DOCUMENT_BUILD_ALL(document, env);
+    
+    xml_writer = axiom_xml_writer_create_for_memory(env, NULL, AXIS2_TRUE, 0, AXIS2_XML_PARSER_TYPE_BUFFER);
+    
+    om_output = axiom_output_create(env, xml_writer);
+    
+    AXIOM_NODE_SERIALIZE(root_node, env, om_output);
+    buffer = (axis2_char_t*)AXIOM_XML_WRITER_GET_XML(xml_writer, env);
+
+    printf("The output XML is -&gt;&gt;&gt;&gt;\n %s ", buffer);
+
+    
+    <i>/** when om_output is freed xml_writer is also freed */</i>
+    
+    AXIOM_OUTPUT_FREE(om_output, env);
+    
+    <i>/** when om_builder is freed , the builder, om_document and the entire AXIOM structure is freed */</i>
+    AXIOM_STAX_BUILDER_FREE(om_builder, env);
+    
+    AXIS2_FREE(env-&gt;allocator, buffer);
+    
+    <b>return</b> AXIS2_SUCCESS;
+    
+}
+int main()
+{
+    int status = AXIS2_SUCCESS;
+    
+    axutil_env_t *env = NULL;
+    axutil_allocator_t *allocator = NULL;
+    env = create_environment();
+<br />
+    status = build_and_serialize_om(env);
+<br />
+    <b>if</b>(status == AXIS2_FAILURE)
+    {
+        printf(" build AXIOM failed");
+    }
+    
+    axutil_env_free(env);
+    
+    <b>return</b> 0;
+}</pre>
+</body>
+</html>

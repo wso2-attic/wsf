@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2003-2004 The Apache Software Foundation.                      -->
+<!-- (c) Copyright IBM Corp. 2004, 2005 All Rights Reserved                   -->
+<!--                                                                          -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License");          -->
+<!-- you may not use this file except in compliance with the License.         -->
+<!-- You may obtain a copy of the License at                                  -->
+<!--                                                                          -->
+<!--        http://www.apache.org/licenses/LICENSE-2.0                        -->
+<!--                                                                          -->
+<!-- Unless required by applicable law or agreed to in writing, software      -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS,        -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and      -->
+<!-- limitations under the License.                                           -->
+
+<wsdl:definitions targetNamespace="http://nestedcomplex.test.apache.org" xmlns:impl="http://nestedcomplex.test.apache.org" xmlns:intf="http://nestedcomplex.test.apache.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://nestedcomplex.test.apache.org" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:impl="http://nestedcomplex.test.apache.org" xmlns:intf="http://nestedcomplex.test.apache.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <complexType name="ComplexType2">
+    <sequence>
+     <element maxOccurs="unbounded" name="complexType1Array" nillable="true" type="impl:ComplexType1"/>
+    </sequence>
+   </complexType>
+   <complexType name="ComplexType1">
+    <sequence>
+     <element name="simpleArrays" nillable="true" type="impl:SimpleArrays"/>
+     <element name="ct1_string" nillable="true" type="xsd:string"/>
+     <element name="ct1_int" type="xsd:int"/>
+    </sequence>
+   </complexType>
+   <complexType name="SimpleArrays">
+    <sequence>
+     <element maxOccurs="unbounded" name="intArray" type="xsd:int"/>
+     <element maxOccurs="unbounded" name="stringArray" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <element name="echoNestedComplex">
+    <complexType>
+     <sequence>
+      <element name="arg_0_0" nillable="true" type="impl:ComplexType2"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="echoNestedComplexResponse">
+    <complexType>
+     <sequence>
+      <element name="echoNestedComplexReturn" nillable="true" type="impl:ComplexType2"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="echoNestedComplexArray">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" minOccurs="0" name="arg_0_1" type="impl:ComplexType1"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="echoNestedComplexArrayResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" minOccurs="0" name="echoNestedComplexArrayReturn" type="impl:ComplexType1"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="echoNestedComplexArrayResponse">
+      <wsdl:part element="impl:echoNestedComplexArrayResponse" name="parameters"/>
+   </wsdl:message>
+
+   <wsdl:message name="echoNestedComplexArrayRequest">
+      <wsdl:part element="impl:echoNestedComplexArray" name="parameters"/>
+   </wsdl:message>
+
+   <wsdl:message name="echoNestedComplexResponse">
+      <wsdl:part element="impl:echoNestedComplexResponse" name="parameters"/>
+   </wsdl:message>
+
+   <wsdl:message name="echoNestedComplexRequest">
+      <wsdl:part element="impl:echoNestedComplex" name="parameters"/>
+   </wsdl:message>
+
+   <wsdl:portType name="NestedComplex">
+      <wsdl:operation name="echoNestedComplex">
+         <wsdl:input message="impl:echoNestedComplexRequest" name="echoNestedComplexRequest"/>
+         <wsdl:output message="impl:echoNestedComplexResponse" name="echoNestedComplexResponse"/>
+      </wsdl:operation>
+
+      <wsdl:operation name="echoNestedComplexArray">
+         <wsdl:input message="impl:echoNestedComplexArrayRequest" name="echoNestedComplexArrayRequest"/>
+         <wsdl:output message="impl:echoNestedComplexArrayResponse" name="echoNestedComplexArrayResponse"/>
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="NestedComplexSoapBinding" type="impl:NestedComplex">
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="echoNestedComplex">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="echoNestedComplexRequest">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output name="echoNestedComplexResponse">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+
+      <wsdl:operation name="echoNestedComplexArray">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="echoNestedComplexArrayRequest">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output name="echoNestedComplexArrayResponse">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="NestedComplexService">
+      <wsdl:port binding="impl:NestedComplexSoapBinding" name="NestedComplex">
+         <wsdlsoap:address location="http://tiger:7001/NestedComplex/services/NestedComplex"/>
+      </wsdl:port>
+   </wsdl:service>
+
+</wsdl:definitions>
+

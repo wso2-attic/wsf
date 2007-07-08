@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:s1="http://soapinterop.org/xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s0="http://soapinterop.org/" xmlns:s3="http://soapinterop.org/echoheader/" xmlns:soap12enc="http://www.w3.org/2002/06/soap-envelope" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:s2="http://soapinterop.org" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="http://soapinterop.org/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://soapinterop.org/">
+      <s:import namespace="http://soapinterop.org/xsd" />
+      <s:import namespace="http://soapinterop.org/echoheader/" />
+      
+      
+      
+      <s:element name="echoAll">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="inputAll" type="s1:AllComplexType" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="echoAllResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="return" type="s1:AllComplexType" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      
+    
+      
+    </s:schema> 
+
+    <s:schema elementFormDefault="qualified" targetNamespace="http://soapinterop.org/xsd">
+      <s:import namespace="http://soapinterop.org/" />
+
+    <s:complexType name="AllComplexType">
+          <s:all>
+            <s:element minOccurs="0" name="IntValue" type="s:int" />
+            <s:element minOccurs="0" name="StringValue" type="s:string" />
+          </s:all>
+      </s:complexType>
+    </s:schema>
+ 
+  </types>
+  
+  
+  
+  <message name="echoAllSoapIn">
+    <part name="parameters" element="s0:echoAll" />
+  </message>
+  <message name="echoAllSoapOut">
+    <part name="parameters" element="s0:echoAllResponse" />
+  </message>
+  
+  <portType name="AllTestSoap">
+    
+    
+    <operation name="echoAll">
+      <input message="s0:echoAllSoapIn" />
+      <output message="s0:echoAllSoapOut" />
+    </operation>
+    
+  </portType>
+  
+
+  <binding name="AllTestSoap" type="s0:AllTestSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    
+    <operation name="echoAll">
+      <soap:operation soapAction="SimpleAllTest#echoAll" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    
+  </binding>
+  
+<binding name="AllTestSoap12" type="s0:AllTestSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    
+    
+    <operation name="echoAll">
+      <soap12:operation soapAction="All#echoAll" style="document" />
+      <input>
+        <soap12:body use="literal" />
+      </input>
+      <output>
+        <soap12:body use="literal" />
+      </output>
+    </operation>
+    
+  </binding>
+  
+<service name="AllTest">
+    <documentation>These operations implement DOC/LIT SOAP operations, for interop testing. Please email johnko@microsoft.com with any questions/coments.</documentation>
+    <port name="AllTestSoap" binding="s0:AllTestSoap">
+      <soap:address location="http://localhost:90/axis/All" />
+    </port>
+    <port name="AllTestSoap12" binding="s0:AllTestSoap12">
+      <soap12:address location="http://localhost:90/axis/All" />
+    </port>
+  </service>
+</definitions>

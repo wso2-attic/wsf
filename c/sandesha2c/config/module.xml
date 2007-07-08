@@ -1,0 +1,88 @@
+<module name="sandesha2" class="sandesha2">
+
+    <Description>
+        This module implements WS-ReliableMessaging for Axis2C. This implements both the WSRM submitted spec and the new spec being developed under the OASIS WSRX group.
+    </Description>
+    
+    <inflow>
+        <handler name="SandeshaGlobalInHandler" class="sandesha2">
+            <!-- Global In handler should come before instance dispatching -->
+            <order phase="Dispatch" before="InstanceDispatcher" />
+        </handler> 
+        <handler name="SandeshaInHandler" class="sandesha2">
+            <order phase="RMPhase"/>
+        </handler>
+    </inflow>
+
+    <outflow>        
+        <handler name="SandeshaOutHandler" class="sandesha2">
+            <order phase="RMPhase"/>
+        </handler>   
+    </outflow>
+    
+    <INfaultflow>        
+        <handler name="SandeshaGlobalInHandler" class="sandesha2">
+            <!-- Global In handler should come before instance dispatching -->
+            <order phase="Dispatch" before="InstanceDispatcher" />
+        </handler> 
+        <handler name="SandeshaInHandler" class="sandesha2">
+            <order phase="RMPhase"/>
+        </handler>
+    </INfaultflow>
+    
+    <OUTfaultflow>        
+        <handler name="SandeshaOutHandler" class="sandesha2">
+            <order phase="RMPhase"/>
+        </handler>   
+    </OUTfaultflow>
+
+    <operation name="RMInOnlyOperation" mep="http://www.w3.org/2004/08/wsdl/in-only">
+        <messageReceiver class="axis2_receivers"/>
+        <!-- namespaces for the 2005-02 spec -->
+        <actionMapping>http://schemas.xmlsoap.org/ws/2005/02/rm/TerminateSequence</actionMapping>
+        <actionMapping>http://schemas.xmlsoap.org/ws/2005/02/rm/SequenceAcknowledgement</actionMapping>
+        <actionMapping>http://schemas.xmlsoap.org/ws/2005/02/rm/CreateSequenceResponse</actionMapping>
+        <actionMapping>http://schemas.xmlsoap.org/ws/2005/02/rm/AckRequested</actionMapping>
+        <actionMapping>http://schemas.xmlsoap.org/ws/2005/02/rm/LastMessage</actionMapping>
+
+        <!-- namespaces for the 2006-08 spec -->
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200608/SequenceAcknowledgement</actionMapping>
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200608/CreateSequenceResponse</actionMapping>
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200608/AckRequested</actionMapping>
+     </operation>
+ 
+     <operation name="RMInOutOperation" mep="http://www.w3.org/2004/08/wsdl/in-out">
+        <messageReceiver class="axis2_receivers"/>
+        
+        <!-- namespaces for the 2005-02 spec -->
+        <actionMapping>http://schemas.xmlsoap.org/ws/2005/02/rm/CreateSequence</actionMapping>
+
+        <!-- namespaces for the 2006-08 spec -->
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200608/CreateSequence</actionMapping>
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200608/TerminateSequence</actionMapping>
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200608/CloseSequence</actionMapping>
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200608/TerminateSequenceResponse</actionMapping>
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200608/CloseSequenceResponse</actionMapping>
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200608/MakeConnection</actionMapping>
+
+    </operation>
+
+   <!-- Database connection parameters -->
+   <parameter name="sandesha2_db" locked="false">/axis2c/deploy</parameter>
+   <parameter name="db_server" locked="false">localhost</parameter>
+   <parameter name="db_user" locked="false">g</parameter>
+   <parameter name="db_password" locked="false">g</parameter>
+   <!-- General parameters -->
+    <parameter name="ExponentialBackoff" locked="false">AXIS2_FALSE</parameter>
+    <parameter name="RetransmissionInterval" locked="false">1</parameter>
+    <parameter name="AcknowledgementInterval" locked="false">1</parameter><!-- in seconds-->
+    <parameter name="InactivityTimeout" locked="false">10</parameter>
+    <parameter name="StorageManager" locked="false">persistent</parameter>
+    <parameter name="InvokeInOrder" locked="false">AXIS2_FALSE</parameter>
+    <parameter name="MessageTypesToDrop" locked="false">none</parameter>
+    <parameter name="MaxRetransCount" locked="false">10</parameter>
+    <parameter name="SenderSleepTime" locked="false">1</parameter>
+    <parameter name="InvokerSleepTime" locked="false">1</parameter>
+    <parameter name="PollingWaitTime" locked="false">3</parameter>
+
+</module>

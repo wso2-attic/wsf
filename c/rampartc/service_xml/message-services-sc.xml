@@ -1,0 +1,108 @@
+<service name="sec_echo">
+    <parameter name="ServiceClass" locked="xsd:false">sec_echo</parameter>
+
+   <description>
+        This is a testing service , to test the system is working or not
+   </description>
+    <!--Rampart configurations START -->
+    <module ref="rampart"/>
+    <parameter name="OutflowSecurityPolicy">/home/manjula/axis2/c/deploy/services/sec_echo/outgoing-secpolicy.xml</parameter>
+    <parameter name="InflowSecurityPolicy">/home/manjula/axis2/c/deploy/services/sec_echo/incoming-secpolicy.xml</parameter>
+
+    <parameter name="wsdl_path">/home/manjula/Desktop/Round3.wsdl</parameter>
+    <!--Rampart configurations END -->
+
+    <operation name="echoString">
+            <!--messageReceiver class="axis2_receivers" /-->
+        <parameter name="wsamapping" >http://ws.apache.org/axis2/c/samples/sec_echo</parameter>
+        <message label="in">
+            <wsp:Policy wsu:Id="SigEncrMessage" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
+                <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                    <sp:Body/>
+                </sp:SignedParts>
+                <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                    <sp:Body/>
+                </sp:EncryptedParts>
+            </wsp:Policy>
+        </message>
+        <message label="out">
+            <wsp:Policy wsu:Id="SigEncrMessage" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
+                <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                    <sp:Body/>
+                </sp:SignedParts>
+                <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                    <sp:Body/>
+                </sp:EncryptedParts>
+            </wsp:Policy>
+        </message>
+    </operation>
+
+    <wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
+        <wsp:ExactlyOne>
+            <wsp:All>
+                <sp:AsymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                    <wsp:Policy>
+                        <sp:InitiatorToken>
+                            <wsp:Policy>
+                                <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never">
+                                    <wsp:Policy>
+                                        <sp:WssX509V3Token10/>
+                                    </wsp:Policy>
+                                </sp:X509Token>
+                            </wsp:Policy>
+                        </sp:InitiatorToken>
+                        <sp:RecipientToken>
+                            <wsp:Policy>
+                                <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always">
+                                    <wsp:Policy>
+                                        <sp:WssX509V3Token10/>
+                                    </wsp:Policy>
+                                </sp:X509Token>
+                            </wsp:Policy>
+                        </sp:RecipientToken>
+                        <sp:AlgorithmSuite>
+                            <wsp:Policy>
+                                <sp:Basic256Rsa15/>
+                            </wsp:Policy>
+                        </sp:AlgorithmSuite>
+                        <sp:Layout>
+                            <wsp:Policy>
+                                <sp:Strict/>
+                            </wsp:Policy>
+                        </sp:Layout>
+                        <sp:IncludeTimestamp/>
+                        <sp:EncryptBeforeSigning/>
+                    </wsp:Policy>
+                </sp:AsymmetricBinding>
+                <sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                <wsp:Policy>
+                    <sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always"/>
+                </wsp:Policy>
+                </sp:SignedSupportingTokens>
+                <sp:Wss10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                    <wsp:Policy>
+                        <sp:MustSupportRefKeyIdentifier/>
+                        <sp:MustSupportRefEmbeddedToken/>
+                        <sp:MustSupportRefIssuerSerial/>
+                    </wsp:Policy>
+                </sp:Wss10>
+                <!--sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                    <sp:Body/>
+                </sp:EncryptedParts-->
+                <!--sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                    <sp:Body/>
+                </sp:SignedParts-->
+                <rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy">
+                    <rampc:User>Gampola</rampc:User>
+                    <rampc:TimeToLive>360</rampc:TimeToLive>
+                    <rampc:EncryptionUser>b</rampc:EncryptionUser>
+                    <rampc:PasswordType>Digest</rampc:PasswordType>
+                    <rampc:PasswordCallbackClass>/home/manjula/axis2/c/deploy/bin/samples/rampart/callback/libpwcb.so</rampc:PasswordCallbackClass>
+                    <rampc:ReceiverCertificate>/home/manjula/axis2/c/deploy/bin/samples/rampart/keys/bhome/a_cert.cert</rampc:ReceiverCertificate>
+                    <rampc:Certificate>/home/manjula/axis2/c/deploy/bin/samples/rampart/keys/bhome/b_cert.cert</rampc:Certificate>
+                    <rampc:PrivateKey>/home/manjula/axis2/c/deploy/bin/samples/rampart/keys/bhome/b_store.pfx</rampc:PrivateKey>
+                </rampc:RampartConfig>
+            </wsp:All>
+        </wsp:ExactlyOne>
+    </wsp:Policy>
+</service>

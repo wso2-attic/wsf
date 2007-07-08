@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions name='net.xmethods.services.stockquote.StockQuote' 
+    targetNamespace='http://www.themindelectric.com/wsdl/net.xmethods.services.stockquote.StockQuote/' 
+    xmlns:tns='http://www.themindelectric.com/wsdl/net.xmethods.services.stockquote.StockQuote/' 
+    xmlns:electric='http://www.themindelectric.com/' 
+    xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/' 
+    xmlns:xsd='http://www.w3.org/2001/XMLSchema' 
+    xmlns:soapenc='http://schemas.xmlsoap.org/soap/encoding/' 
+    xmlns:wsdl='http://schemas.xmlsoap.org/wsdl/' 
+    xmlns='http://schemas.xmlsoap.org/wsdl/'>
+
+<message name='getQuoteResponse1'>
+    <part name='Result' type='xsd:float'/>
+</message>
+<message name='getQuoteRequest1'>
+    <part name='symbol' type='xsd:string'/>
+</message>
+
+<portType name='net.xmethods.services.stockquote.StockQuotePortType'>
+    <operation name='getQuote' parameterOrder='symbol'>
+        <input message='tns:getQuoteRequest1'/>
+        <output message='tns:getQuoteResponse1'/>
+    </operation>
+</portType>
+
+<binding name='net.xmethods.services.stockquote.StockQuoteBinding' 
+        type='tns:net.xmethods.services.stockquote.StockQuotePortType'>
+    <soap:binding style='rpc' transport='http://schemas.xmlsoap.org/soap/http'/>
+        <operation name='getQuote'>
+                <soap:operation soapAction='urn:xmethods-delayed-quotes#getQuote'/>
+            <input>
+                <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' 
+                        encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+            </input>
+            <output><soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' 
+                    encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+            </output>
+        </operation>
+</binding>
+
+<service name='net.xmethods.services.stockquote.StockQuoteService'>
+    <documentation>net.xmethods.services.stockquote.StockQuote web service</documentation>
+    <port name='net.xmethods.services.stockquote.StockQuotePort' 
+            binding='tns:net.xmethods.services.stockquote.StockQuoteBinding'>
+        <soap:address location='http://64.124.140.30:9090/soap'/>
+    </port></service>
+
+</definitions>

@@ -1,0 +1,9 @@
+<doc xmlns:ietf="http://www.ietf.org" xmlns="http://www.ietf.org" xmlns:w3c="http://www.w3.org">
+    <e1>
+        <e2 xmlns="">
+            <e3 id="E3"/>
+        </e2>
+	</e1>
+<!--(//. | //@* | //namespace::*)[self::e1 or (parent::e1 and not(self::text() or self::e2)) or count(id("E3")|ancestor-or-self::node()) = count(ancestor-or-self::node())]-->
+</doc>
+

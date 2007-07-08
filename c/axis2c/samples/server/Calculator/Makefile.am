@@ -1,0 +1,9 @@
+prglibdir=$(prefix)/services/Calculator
+prglib_LTLIBRARIES = libCalculator.la
+prglib_DATA=services.xml
+EXTRA_DIST = services.xml Calculator.mk calc.h
+noinst_HEADERS = calc.h
+SUBDIRS =
+libCalculator_la_SOURCES = calc.c calc_skeleton.c
+libCalculator_la_LIBADD  =
+INCLUDES = @AXIS2INC@

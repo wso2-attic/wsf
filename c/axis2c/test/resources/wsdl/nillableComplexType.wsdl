@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2003-2004 The Apache Software Foundation.                      -->
+<!--                                                                          -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License");          -->
+<!-- you may not use this file except in compliance with the License.         -->
+<!-- You may obtain a copy of the License at                                  -->
+<!--                                                                          -->
+<!--        http://www.apache.org/licenses/LICENSE-2.0                        -->
+<!--                                                                          -->
+<!-- Unless required by applicable law or agreed to in writing, software      -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS,        -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and      -->
+<!-- limitations under the License.                                           -->
+
+<wsdl:definitions targetNamespace="http://localhost/axis/nillableComplexType" 
+xmlns="http://schemas.xmlsoap.org/wsdl/" 
+xmlns:apachesoap="http://xml.apache.org/xml-soap"
+xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+xmlns:impl="http://localhost/axis/nillableComplexType"
+xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" 
+xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+xmlns:xs="nillableComplexType">
+  <wsdl:types>
+  	<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  	<xsd:import namespace="nillableComplexType" schemaLocation="nillableComplexType.xsd">
+  	</xsd:import>
+  	</xsd:schema>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://localhost/axis/nillableComplexType">
+        	<xsd:element name="ReportReturn">
+        		<xsd:complexType>
+        			<xsd:sequence>
+        				<xsd:element name="ReportReturn"
+        					type="xsd:string">
+        				</xsd:element>
+        			</xsd:sequence>
+        		</xsd:complexType>
+        	</xsd:element>
+        </xsd:schema>
+    </wsdl:types>
+
+  <wsdl:message name="ReportRequest">
+    <wsdl:part name="myClass" type="xs:MyClass"/>
+  </wsdl:message>
+
+  <wsdl:message name="ReportResponse">
+    <wsdl:part name="ReportReturn" element="impl:ReportReturn"/>
+  </wsdl:message>
+
+  <wsdl:portType name="nillableComplexType">
+    <wsdl:operation name="Report">
+      <wsdl:input message="impl:ReportRequest" name="ReportRequest"/>
+      <wsdl:output message="impl:ReportResponse" name="ReportResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+
+  <wsdl:binding name="nillableComplexTypeSoapBinding" type="impl:nillableComplexType">
+    <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Report">
+      <wsdlsoap:operation soapAction="nillableComplexType#Report" style="document"/>
+      <wsdl:input name="ReportRequest">
+        <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" 
+        namespace="http://localhost/axis/nillableComplexType" 
+        use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ReportResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>  
+
+  <wsdl:service name="nillableComplexType">
+    <wsdl:port binding="impl:nillableComplexTypeSoapBinding" name="nillableComplexType">
+      <wsdlsoap:address location="http://localhost/axis/nillableComplexType"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

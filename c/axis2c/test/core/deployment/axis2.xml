@@ -1,0 +1,126 @@
+<axisconfig name="AxisJava2.0">
+    <!-- ================================================= -->
+    <!-- Parameters -->
+    <!-- ================================================= -->
+    <parameter name="hotdeployment" locked="false">true</parameter>
+    <parameter name="hotupdate" locked="false">false</parameter>
+    <parameter name="enableMTOM" locked="false">true</parameter>
+    <!-- Uncomment this to enable REST support -->
+    <!--    <parameter name="enableREST" locked="false">true</parameter>-->
+
+
+    <parameter name="userName" locked="false">admin</parameter>
+    <parameter name="password" locked="false">axis2</parameter>
+
+    <parameter name="seralizeLocation" locked="false">.</parameter>
+
+
+
+    <!--if you want to extract the service archive file and work with that please uncomment this-->
+    <!--else , it wont extract archive file or does not take into consideration if someone drop-->
+    <!--exploded directory into /service directory-->
+    <!--<parameter name="extractServiceArchive" locked="false">true</parameter>-->
+
+
+<!--    The way of adding listener to the system-->
+<!--    <listener class="org.apache.axis2.ObserverIMPL">-->
+<!--        <parameter name="RSS_URL" locked="false">http://127.0.0.1/rss</parameter>-->
+<!--    </listener>-->
+
+    <!--Registering Axis Storage Class if you comment this default one will -->
+    <!--does the job (org.apache.axis2.storage.impl.AxisMemoryStorage) , if you-->
+    <!--want to register new one write a class by extanding AbastractStorage-->
+    <!--and put that name here-->
+    <axisStorage class="org.apache.axis2.storage.impl.AxisMemoryStorage">
+        <parameter name="StoreLocation" locked="false">N:S</parameter>
+    </axisStorage>
+
+
+
+    <!-- ================================================= -->
+    <!-- Message Receivers -->
+    <!-- ================================================= -->
+    <!-- This is the Deafult Message Receiver for the Request Response style Operations -->
+    <messageReceiver mep="INOUT" class="axis2_raw_xml_in_out_msg_recv">
+
+    <!-- ================================================= -->
+    <!-- Transport Ins -->
+    <!-- ================================================= -->
+    <transportReceiver name="http" class="org.apache.axis2.transport.http.SimpleHTTPServer">
+        <parameter name="port" locked="false">6060</parameter>
+    </transportReceiver>
+
+    <!-- Uncomment this one with the appropriate papameters to enable the SMTP transport Receiver
+    <transportReceiver name="mail" class="org.apache.axis2.transport.mail.SimpleMailListener">
+          <parameter name="transport.mail.pop3.host" locked="false">127.0.0.1</parameter>
+          <parameter name="transport.mail.pop3.user" locked="false">axis2</parameter>
+          <parameter name="transport.mail.pop3.password" locked="false">axis2</parameter>
+          <parameter name="transport.mail.pop3.port" locked="false">110</parameter>
+          <parameter name="transport.mail.replyToAddress" locked="false">axis2@127.0.0.1</parameter>
+      </transportReceiver> -->
+
+    <transportReceiver name="tcp" class="org.apache.axis2.transport.tcp.TCPServer">
+        <parameter name="port" locked="false">6060</parameter>
+    </transportReceiver>
+
+    <!-- ================================================= -->
+    <!-- Transport Outs -->
+    <!-- ================================================= -->
+
+    <transportSender name="tcp" class="org.apache.axis2.transport.tcp.TCPTransportSender"/>
+    <transportSender name="local" class="org.apache.axis2.transport.local.LocalTransportSender"/>
+    <transportSender name="http" class="org.apache.axis2.transport.http.CommonsHTTPTransportSender">
+        <parameter name="PROTOCOL" locked="false">HTTP/1.1</parameter>
+    </transportSender>
+    <transportSender name="https" class="org.apache.axis2.transport.http.CommonsHTTPTransportSender">
+        <parameter name="PROTOCOL" locked="false">HTTP/1.1</parameter>
+    </transportSender>
+
+    <!-- Uncomment this one with the appropriate papameters to enable the SMTP transport Receiver
+   <transportSender name="mail" class="org.apache.axis2.transport.mail.MailTransportSender">
+       <parameter name="transport.mail.smtp.host" locked="false">127.0.0.1</parameter>
+       <parameter name="transport.mail.smtp.user" locked="false">axis2</parameter>
+       <parameter name="transport.mail.smtp.password" locked="false">axis2</parameter>
+       <parameter name="transport.mail.smtp.port" locked="false">25</parameter>
+   </transportSender>
+   -->
+
+    <!-- ================================================= -->
+    <!-- Global Modules  -->
+    <!-- ================================================= -->
+    <!-- Comment this to disable Addressing -->
+    <module ref="addressing"/>
+
+
+    <!--Configuring module , providing paramters for modules whether they refer or not-->
+    <!--<moduleConfig name="addressing">-->
+         <!--<parameter name="addressingPara" locked="false">N/A</parameter>-->
+    <!--</moduleConfig>-->
+    
+    <!-- ================================================= -->
+    <!-- Phases  -->
+    <!-- ================================================= -->
+    <phaseOrder type="inflow">
+        <!--  System pre defined phases       -->
+        <phase name="TransportIn"/>
+        <phase name="PreDispatch"/>
+        <phase name="Dispatch"/>
+        <phase name="PostDispatch"/>
+        <!--  System pre defined phases       -->
+        <!--   After Postdispatch phase module author or or service author can add any phase he want      -->
+        <phase name="userphase1"/>
+    </phaseOrder>
+    <phaseOrder type="outflow">
+        <!--      user can add his own phases to this area  -->
+        <phase name="userphase1"/>
+    </phaseOrder>
+    <phaseOrder type="INfaultflow">
+        <!--      user can add his own phases to this area  -->
+        <phase name="userphase1"/>
+    </phaseOrder>
+    <phaseOrder type="Outfaultflow">
+        <!--      user can add his own phases to this area  -->
+        <phase name="userphase1"/>
+    </phaseOrder>
+</axisconfig>
+

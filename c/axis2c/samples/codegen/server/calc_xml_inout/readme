@@ -1,0 +1,8 @@
+This sample demonstrates the use of code generation using Axis2/Java WSDL2Java
+tool (Axis2/Java source revision 414253).
+
+wsdl                 $AXIS2C_HOME/test/resources/wsdl/Calculator.wsdl
+
+Command to execute the code generation: 
+WSDL2Code 
+-uri <wsdl> -l  c -d none -u -ss -sd

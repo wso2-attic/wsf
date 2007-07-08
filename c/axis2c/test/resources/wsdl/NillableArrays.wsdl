@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2003-2004 The Apache Software Foundation.                      -->
+<!-- (c) Copyright IBM Corp. 2004, 2005 All Rights Reserved                   -->
+<!--                                                                          -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License");          -->
+<!-- you may not use this file except in compliance with the License.         -->
+<!-- You may obtain a copy of the License at                                  -->
+<!--                                                                          -->
+<!--        http://www.apache.org/licenses/LICENSE-2.0                        -->
+<!--                                                                          -->
+<!-- Unless required by applicable law or agreed to in writing, software      -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS,        -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and      -->
+<!-- limitations under the License.                                           -->
+
+<wsdl:definitions targetNamespace="http://arrays.test.apache.org" xmlns:impl="http://arrays.test.apache.org" xmlns:intf="http://arrays.test.apache.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://arrays.test.apache.org" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:impl="http://arrays.test.apache.org" xmlns:intf="http://arrays.test.apache.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <element name="echoBooleanArray">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" minOccurs="0" nillable="true" name="arg_0_0" type="xsd:boolean"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="echoBooleanArrayResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" minOccurs="0" nillable="true" name="echoBooleanArrayReturn" type="xsd:boolean"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="echoShortArray">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" minOccurs="0" nillable="true" name="arg_0_2" type="xsd:short"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="echoShortArrayResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" minOccurs="0" nillable="true" name="echoShortArrayReturn" type="xsd:short"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="echoIntArray">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" minOccurs="0" nillable="true" name="arg_0_3" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="echoIntArrayResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" minOccurs="0" nillable="true" name="echoIntArrayReturn" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="echoLongArray">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" minOccurs="0" nillable="true" name="arg_0_4" type="xsd:long"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="echoLongArrayResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" minOccurs="0" nillable="true" name="echoLongArrayReturn" type="xsd:long"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="echoFloatArray">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" minOccurs="0" nillable="true" name="arg_0_5" type="xsd:float"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="echoFloatArrayResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" minOccurs="0" nillable="true" name="echoFloatArrayReturn" type="xsd:float"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="echoDoubleArray">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" minOccurs="0" nillable="true" name="arg_0_6" type="xsd:double"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="echoDoubleArrayResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" minOccurs="0" nillable="true" name="echoDoubleArrayReturn" type="xsd:double"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="echoStringArray">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" minOccurs="0" nillable="true" name="arg_0_7" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="echoStringArrayResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" minOccurs="0" nillable="true" name="echoStringArrayReturn" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+ </wsdl:types>
+   <wsdl:message name="echoDoubleArrayRequest">
+      <wsdl:part element="impl:echoDoubleArray" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="echoIntArrayResponse">
+      <wsdl:part element="impl:echoIntArrayResponse" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="echoShortArrayRequest">
+      <wsdl:part element="impl:echoShortArray" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="echoShortArrayResponse">
+      <wsdl:part element="impl:echoShortArrayResponse" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="echoIntArrayRequest">
+      <wsdl:part element="impl:echoIntArray" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="echoDoubleArrayResponse">
+      <wsdl:part element="impl:echoDoubleArrayResponse" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="echoBooleanArrayResponse">
+      <wsdl:part element="impl:echoBooleanArrayResponse" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="echoBooleanArrayRequest">
+      <wsdl:part element="impl:echoBooleanArray" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="echoLongArrayRequest">
+      <wsdl:part element="impl:echoLongArray" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="echoFloatArrayRequest">
+      <wsdl:part element="impl:echoFloatArray" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="echoStringArrayRequest">
+      <wsdl:part element="impl:echoStringArray" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="echoLongArrayResponse">
+      <wsdl:part element="impl:echoLongArrayResponse" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="echoStringArrayResponse">
+      <wsdl:part element="impl:echoStringArrayResponse" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="echoFloatArrayResponse">
+      <wsdl:part element="impl:echoFloatArrayResponse" name="parameters"/>
+   </wsdl:message>
+
+   <wsdl:portType name="NillableArrays">
+      <wsdl:operation name="echoBooleanArray">
+         <wsdl:input message="impl:echoBooleanArrayRequest" name="echoBooleanArrayRequest"/>
+         <wsdl:output message="impl:echoBooleanArrayResponse" name="echoBooleanArrayResponse"/>
+      </wsdl:operation>
+      <wsdl:operation name="echoShortArray">
+         <wsdl:input message="impl:echoShortArrayRequest" name="echoShortArrayRequest"/>
+         <wsdl:output message="impl:echoShortArrayResponse" name="echoShortArrayResponse"/>
+      </wsdl:operation>
+      <wsdl:operation name="echoIntArray">
+         <wsdl:input message="impl:echoIntArrayRequest" name="echoIntArrayRequest"/>
+         <wsdl:output message="impl:echoIntArrayResponse" name="echoIntArrayResponse"/>
+      </wsdl:operation>
+      <wsdl:operation name="echoLongArray">
+         <wsdl:input message="impl:echoLongArrayRequest" name="echoLongArrayRequest"/>
+         <wsdl:output message="impl:echoLongArrayResponse" name="echoLongArrayResponse"/>
+      </wsdl:operation>
+      <wsdl:operation name="echoFloatArray">
+         <wsdl:input message="impl:echoFloatArrayRequest" name="echoFloatArrayRequest"/>
+         <wsdl:output message="impl:echoFloatArrayResponse" name="echoFloatArrayResponse"/>
+      </wsdl:operation>
+      <wsdl:operation name="echoDoubleArray">
+         <wsdl:input message="impl:echoDoubleArrayRequest" name="echoDoubleArrayRequest"/>
+         <wsdl:output message="impl:echoDoubleArrayResponse" name="echoDoubleArrayResponse"/>
+      </wsdl:operation>
+      <wsdl:operation name="echoStringArray">
+         <wsdl:input message="impl:echoStringArrayRequest" name="echoStringArrayRequest"/>
+         <wsdl:output message="impl:echoStringArrayResponse" name="echoStringArrayResponse"/>
+      </wsdl:operation>
+   </wsdl:portType>
+
+   <wsdl:binding name="NillableArraysSoapBinding" type="impl:NillableArrays">
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="echoBooleanArray">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="echoBooleanArrayRequest">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output name="echoBooleanArrayResponse">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="echoShortArray">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="echoShortArrayRequest">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output name="echoShortArrayResponse">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="echoIntArray">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="echoIntArrayRequest">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output name="echoIntArrayResponse">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="echoLongArray">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="echoLongArrayRequest">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output name="echoLongArrayResponse">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="echoFloatArray">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="echoFloatArrayRequest">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output name="echoFloatArrayResponse">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="echoDoubleArray">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="echoDoubleArrayRequest">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output name="echoDoubleArrayResponse">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="echoStringArray">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="echoStringArrayRequest">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output name="echoStringArrayResponse">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+
+   <wsdl:service name="NillableArraysService">
+      <wsdl:port binding="impl:NillableArraysSoapBinding" name="NillableArraysPort">
+         <wsdlsoap:address location="http://lion:9080/NillableArrays/services/NillableArraysPort"/>
+      </wsdl:port>
+   </wsdl:service>
+</wsdl:definitions>

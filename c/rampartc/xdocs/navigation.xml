@@ -1,0 +1,28 @@
+<!-- Created By Kaushalye Kapuruge -->
+<project name="RampartC">
+  <body>
+      <menu name="Apache Rampart/C">
+        <item name="Apache Rampart/C Home" href="index.html"/>
+        <item name="Download Rampart/C" href="download.cgi">
+            <item name="Releases" href="download.cgi"/>
+        </item>
+        <item name="Documentation" href="docs/index.html">
+	        <item name="Installation Guide" href="docs/installationguide.html"/>
+	        <item name="Rampart/C manual" href="docs/rampartc_manual.html"/>
+		<item name="Configurations guide" href="docs/configurations.html"/>
+        </item>
+        <item name="Get Involved" href="lists_issues.html">
+	        <item name="Mailing Lists &amp; Issue Tracking" href="lists_issues.html"/>
+            <item name="Checkout Source Code" href="svn.html"/>
+        </item>
+        <item name="Developer Guidelines" href="coding_conventions.html">
+	        <item name="Coding Convention" href="coding_conventions.html"/>
+            <item name="Versionning" href="versioning.html"/>
+        </item>
+        <item name="Project Information" href="team-list.html">
+            <item name="Project Team" href="team-list.html"/>
+            <item name="Source Code"  href="http://svn.apache.org/viewcvs.cgi/webservices/rampart/trunk/c/"/>
+        </item>
+    </menu>
+  </body>
+</project>

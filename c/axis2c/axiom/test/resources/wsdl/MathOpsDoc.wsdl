@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2003-2004 The Apache Software Foundation.                      -->
+<!-- (c) Copyright IBM Corp. 2004, 2005 All Rights Reserved                   -->
+<!--                                                                          -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License");          -->
+<!-- you may not use this file except in compliance with the License.         -->
+<!-- You may obtain a copy of the License at                                  -->
+<!--                                                                          -->
+<!--        http://www.apache.org/licenses/LICENSE-2.0                        -->
+<!--                                                                          -->
+<!-- Unless required by applicable law or agreed to in writing, software      -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS,        -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and      -->
+<!-- limitations under the License.                                           -->
+
+<wsdl:definitions targetNamespace="http://soapinterop.org" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://soapinterop.org" xmlns:intf="http://soapinterop.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://soapinterop.org" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://soapinterop.org" xmlns:intf="http://soapinterop.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+   <element name="div">
+    <complexType>
+     <sequence>
+      <element name="arg_0_0" type="xsd:int"/>
+      <element name="arg_1_0" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="divResponse">
+    <complexType>
+     <sequence>
+      <element name="divReturn" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <complexType name="DivByZeroStruct">
+    <sequence>
+     <element name="varString" nillable="true" type="xsd:string"/>
+     <element name="varInt" type="xsd:int"/>
+     <element name="varFloat" type="xsd:float"/>
+    </sequence>
+   </complexType>
+   <element name="DivByZeroStruct" nillable="true" type="impl:DivByZeroStruct"/>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="divRequest">
+
+      <wsdl:part element="impl:div" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="divResponse">
+
+      <wsdl:part element="impl:divResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="DivByZeroStruct">
+
+      <wsdl:part element="impl:DivByZeroStruct" name="fault"/>
+
+   </wsdl:message>
+
+   <wsdl:portType name="MathOps">
+
+      <wsdl:operation name="div">
+
+         <wsdl:input message="impl:divRequest" name="divRequest"/>
+
+         <wsdl:output message="impl:divResponse" name="divResponse"/>
+
+         <wsdl:fault message="impl:DivByZeroStruct" name="DivByZeroStruct"/>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="MathOpsSoapBinding" type="impl:MathOps">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="div">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="divRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="divResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+         <wsdl:fault name="DivByZeroStruct">
+
+            <wsdlsoap:fault name="DivByZeroStruct" use="literal"/>
+
+         </wsdl:fault>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="MathOpsService">
+
+      <wsdl:port binding="impl:MathOpsSoapBinding" name="MathOps">
+
+         <wsdlsoap:address location="http://localhost/axis/MathOps"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

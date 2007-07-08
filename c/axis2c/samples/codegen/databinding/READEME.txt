@@ -1,0 +1,65 @@
+Sample: Data Binding
+====================
+
+Introduction
+------------
+
+These samples demonstrate the use of code generation using Axis2/Java WSDL2Java 
+(http://svn.apache.org/repos/asf/webservices/axis2/trunk/java)tool with Axis Data Binding.
+
+
+Files
+-----
+
+-StockQuoteService
+	Client source       ./StockQuoteService/stock_quote_client.c
+	Service Source		./StockQuoteService/axis2_skel_StockQuoteService.c
+	wsdl				./StockQuoteService/StockQuoteService.wsdl
+
+-Calculator
+	Client source       ./Calculator/CalculatorAdd.c
+	Service Source		./Calculator/axis2_skel_Calculator.c
+	wsdl				./Calculator/Calculator.wsdl
+
+
+Code Generation
+---------------
+
+Use the shell script or batch file available in the ../../../tools/bin directory to generate
+code using following options.(Reade the READEME.txt at ../../../tools/bin directory to learn how to use scripts)
+
+Client side stub generation with Axis Data Binding:
+	Linux: WSDL2C.sh -uri <wsdl path> -g -d adb -u -f -o <output directory> 
+	Win32: WSDL2C.bat -uri <wsdl path> -g -d adb -u -f -o <output directory> 
+
+Server side skeleton generation with Axis Data Binding:
+	Linux: WSDL2C.sh -uri <wsdl path> -sd -ss -d adb -u -f -o <output directory>
+	Win32: WSDL2C.bat -uri <wsdl path> -sd -ss -d adb -u -f -o <output directory>
+
+Description of Options used:
+	
+	-o <output Location> : output file location
+    -ss : Generate server side code (i.e. skeletons). Default is off
+    -sd : Generate service descriptor (i.e. services.xml). Default is off. Valid with -ss
+    -d <databinding> : valid databinding(s) are adb, xmlbeans and jaxme. Default is adb
+    -g : Generates all the classes. valid only with the -ss (This will generate client and server codes)
+    -u : unpacks the databinding classes
+	-f : Generate the source output folder without the src directory
+
+Please refer to the http://ws.apache.org/axis2/tools/1_1/CodegenToolReference.html for further details.
+
+Deploying the Service
+---------------------
+You need to generate the required server side code using command described above and replace 
+the axis2_skel_<service name>.c with given implementation. After building the lib<service name>.so, 
+put it inside $AXIS2C_HOME/services/<service name>/ directory.
+
+You need to then startup the server to deploy the service.
+
+Running the Client
+------------------
+You need to generate the required client side code using command described above and put them inside 
+where client implementations resides. And then build the client and run it.
+
+
+ 

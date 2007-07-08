@@ -1,0 +1,46 @@
+<module name="savan" class="mod_savan">
+    <!--parameter name="SubscriptionMgrName" >subscription</parameter>
+    <parameter name="SubscriptionMgrURL" locked="xsd:false">http://localhost:9090/axis2/services/subscription</parameter-->
+    <inflow>
+        <handler name="SavanInHandler" class="mod_savan">
+            <order phase="SavanPhase"/>
+        </handler>
+    </inflow>
+
+    <outflow>
+        <handler name="SavanOutHandler" class="mod_savan">
+            <order phase="SavanPhase"/>
+        </handler>
+    </outflow>
+
+    <Outfaultflow>
+        <handler name="SavanOutHandler" class="mod_savan">
+            <order phase="SavanPhase"/>
+        </handler>
+    </Outfaultflow>
+
+    <operation name="Subscribe">
+           <!--messageReceiver class="axis2_receivers" /-->
+           <parameter name="wsamapping" >http://schemas.xmlsoap.org/ws/2004/08/eventing/Subscribe</parameter>
+    </operation>
+
+    <operation name="Renew">
+           <!--messageReceiver class="axis2_receivers" /-->
+           <parameter name="wsamapping" >http://schemas.xmlsoap.org/ws/2004/08/eventing/Renew</parameter>
+    </operation>
+
+    <operation name="Unsubscribe">
+           <!--messageReceiver class="axis2_receivers" /-->
+           <parameter name="wsamapping" >http://schemas.xmlsoap.org/ws/2004/08/eventing/Unsubscribe</parameter>
+    </operation>
+
+    <operation name="GetStatus">
+           <!--messageReceiver class="axis2_receivers" /-->
+           <parameter name="wsamapping" >http://schemas.xmlsoap.org/ws/2004/08/eventing/GetStatus</parameter>
+    </operation>
+
+    <operation name="publish">
+           <parameter name="wsamapping" ></parameter>
+    </operation>
+
+</module>

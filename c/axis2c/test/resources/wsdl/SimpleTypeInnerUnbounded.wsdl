@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2003-2004 The Apache Software Foundation.                      -->
+<!-- (c) Copyright IBM Corp. 2004, 2005 All Rights Reserved                   -->
+<!--                                                                          -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License");          -->
+<!-- you may not use this file except in compliance with the License.         -->
+<!-- You may obtain a copy of the License at                                  -->
+<!--                                                                          -->
+<!--        http://www.apache.org/licenses/LICENSE-2.0                        -->
+<!--                                                                          -->
+<!-- Unless required by applicable law or agreed to in writing, software      -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS,        -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and      -->
+<!-- limitations under the License.                                           -->
+
+<definitions targetNamespace="http://simpletypeinnerunbounded.test.apache.org" xmlns:wsi="http://ws-i.org/schemas/conformanceClaim/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://simpletypeinnerunbounded.test.apache.org" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+	<types>
+		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://simpletypeinnerunbounded.test.apache.org" xmlns:tns="http://simpletypeinnerunbounded.test.apache.org">
+
+			<xsd:element name="getInput">
+			<xsd:complexType>
+				<xsd:sequence>
+					<xsd:element name="type" maxOccurs="1" minOccurs="0" type="tns:Type1" />
+				</xsd:sequence>
+			</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="getInputResponse">
+			<xsd:complexType>
+				<xsd:sequence>
+					<xsd:element name="type" maxOccurs="1" minOccurs="0" type="tns:Type1" />					
+				</xsd:sequence>
+			</xsd:complexType>
+			</xsd:element>			
+			
+			<xsd:complexType name="Type1">
+				<xsd:sequence>
+					<xsd:element name="enum_int" maxOccurs="1" minOccurs="0" type="tns:TypeInt" />
+					<xsd:element name="enum_string" maxOccurs="1" minOccurs="0" type="tns:TypeString" />		
+            		<xsd:element maxOccurs="100" minOccurs="1" name="ident">
+                		<xsd:simpleType>
+                    		<xsd:restriction base="xsd:string"/>
+                		</xsd:simpleType>
+            		</xsd:element>								
+				</xsd:sequence>
+				<xsd:attribute name="att_enum_int" type="tns:TypeInt"/> 
+				<xsd:attribute name="att_enum_string" type="tns:TypeString"/> 
+				<xsd:attribute name="att_enum_kind"> 
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:enumeration value="CHEQUE" />
+							<xsd:enumeration value="CREDIT_CARD" />
+							<xsd:enumeration value="TRANSFER" />
+							<xsd:enumeration value="WITHDRAWAL" />
+							<xsd:enumeration value="AUTOMATIC" />
+						</xsd:restriction>
+					</xsd:simpleType>	
+				</xsd:attribute>	
+			</xsd:complexType>
+			
+			<xsd:simpleType name="TypeInt">
+				<xsd:restriction base="xsd:int">
+					<xsd:enumeration value="0" />
+					<xsd:enumeration value="1" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			
+			<xsd:simpleType name="TypeString">
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="one" />
+					<xsd:enumeration value="two" />
+				</xsd:restriction>
+			</xsd:simpleType>			
+
+		</xsd:schema>
+	</types>
+
+
+	<message name="input">
+		<part name="parameters" element="tns:getInput" />
+	</message>
+	
+	<message name="output">
+		<part name="parameters" element="tns:getInputResponse" />
+	</message>	
+
+	<portType name="SimpleTypeInnerUnboundedWS">
+		<operation name="getInput">
+			<input message="tns:input" />
+			<output message="tns:output" />
+		</operation>
+	</portType>
+
+	<binding name="SimpleTypeInnerUnboundedWSBinding" type="tns:SimpleTypeInnerUnboundedWS">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<operation name="getInput">
+			<soap:operation />
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+		</operation>
+	</binding>
+
+	<service name="SimpleTypeInnerUnboundedWSService">
+		<port name="sampleWS" binding="tns:SimpleTypeInnerUnboundedWSBinding">
+			<soap:address location="http://localhost:9080/SimpleTypeInnerUnbounded/services/sampleWS"/>
+		</port>
+	</service>
+</definitions>

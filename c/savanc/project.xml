@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<!--
+/*
+* Copyright 2001-2004 The Apache Software Foundation.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+-->
+
+<project>
+  
+  <name>SavanC</name>
+  <pomVersion>3</pomVersion>
+
+  <!-- a unique name for this project -->
+  <name>Apache Savan/C</name>
+  <id>savanc</id>
+  <groupId>savanc</groupId>
+  <currentVersion>${savanc_version}</currentVersion>
+
+  <!-- details about the organization that 'owns' the project -->
+  <organization>
+    <name>Apache Software Foundation</name>
+    <url>http://www.apache.org/</url>
+    <logo>http://www.apache.org/images/asf-logo.gif</logo>
+  </organization>
+
+  <inceptionYear>2005</inceptionYear>
+  <logo>http://ws.apache.org/savan/c/images/savanc_logo.jpg</logo>
+  <description> 
+    Apache Savan/C is the security module of the Apache Axis2/C
+  </description>
+  <shortDescription>Savan C</shortDescription>
+  <!-- the project home page -->
+  <url>http://ws.apache.org/savan/c</url>
+  <issueTrackingUrl>http://issues.apache.org/jira/browse/RAMPARTC</issueTrackingUrl>
+  <siteAddress>ws.apache.org/savan/c</siteAddress>
+  <siteDirectory>/www/ws.apache.org/savan/c</siteDirectory>
+  <distributionDirectory>/www/ws.apache.org/savan/c</distributionDirectory>
+  <!-- repository>
+       <connection>scm|svn|http://svn.apache.org/repos/asf/webservices/axis/trunk</connection>
+       <developerConnection>scm|svn|https://svn.apache.org/repos/asf/webservices/axis/trunk</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/webservices/axis/trunk/?root=Apache-SVN</url>
+       </repository -->
+  <mailingLists>
+    <mailingList>
+      <name>Savan C Developer List</name>
+      <subscribe>axis-c-dev-subscribe@ws.apache.org?subject=subscribe</subscribe>
+      <unsubscribe>axis-c-dev-unsubscribe@ws.apache.org?subject=unsubscribe</unsubscribe>
+      <archive>http://marc.theaimsgroup.com/?l=axis-c-dev&amp;r=1&amp;w=2</archive>
+    </mailingList>
+    <mailingList>
+      <name>Savan C User List</name>
+      <subscribe>axis-c-user-subscribe@ws.apache.org?subject=subscribe</subscribe>
+      <unsubscribe>axis-c-user-unsubscribe@ws.apache.org?subject=unsubscribe</unsubscribe>
+      <archive>http://marc.theaimsgroup.com/?l=axis-c-user&amp;r=1&amp;w=2</archive>
+    </mailingList>
+  </mailingLists>
+  
+  <!-- ========== -->
+  <!-- Developers -->
+  <!-- ========== -->
+  <developers>
+    <developer>
+      <name>Damitha Kumarage</name>
+      <id>damitha</id>
+      <email>damitha AT wso2.com</email>
+      <organization>WSO2</organization>
+    </developer>
+    <developer>
+      <name>Samisa Abeysinghe</name>
+      <id>samisa</id>
+      <email>samisa AT wso2.com</email>
+      <organization>WSO2</organization>
+    </developer>
+    <developer>
+      <name>Malinda Kaushalye Kapuruge</name>
+      <id>kaushalye</id>
+      <email>kaushalye AT wso2.com</email>
+      <organization>WSO2</organization>
+    </developer>
+    <developer>
+      <name>Sanjaya Rathnaweera</name>
+      <id>pini</id>
+      <email>sanjaya AT wso2.com</email>
+      <organization>WSO2</organization>
+    </developer>
+    <developer>
+      <name>Dushshantha Chandradasa</name>
+      <id>dushshantha</id>
+      <email>dushshantha AT wso2.com</email>
+      <organization>WSO2</organization>
+    </developer>
+    <developer>
+      <name>Nandika Jayawardena</name>
+      <id>nandika</id>
+      <email>nandika AT wso2.com</email>
+      <organization>WSO2</organization>
+    </developer>
+    <developer>
+      <name>Dinesh Premalal</name>
+      <id>dinesh</id>
+      <email>dinesh AT wso2.com</email>
+      <organization>WSO2</organization>
+    </developer>
+  </developers>
+  <contributors>
+    <contributor>
+      <name>Ishan De Silva</name>
+      <email>i_de_silva AT yahoo.com</email>
+      <roles>
+        <role></role>
+      </roles>
+    </contributor>
+    <contributor>
+      <name>Buddika Semasinghe</name>
+      <email>buddhika AT wso2.com</email>
+      <roles>
+        <role></role>
+      </roles>
+    </contributor>
+  </contributors>
+  <!-- ################################################################ -->
+  <!--        Project dependency section                                -->
+  <!-- ################################################################ -->
+
+  <dependencies/>
+
+
+  <!-- ################################################################ -->
+  <!--        Project build and reports section                         -->
+  <!-- ################################################################ -->
+
+  <build>
+    <nagEmailAddress>axis-c-dev@apache.org</nagEmailAddress>
+    <sourceDirectory>${basedir}/src</sourceDirectory>
+    <unitTestSourceDirectory>${basedir}/src/test</unitTestSourceDirectory>
+
+    <unitTest>
+      <includes>
+	<include>**/_test*.c</include>
+      </includes>
+      <excludes>
+	<exclude>**/*Test*All.c</exclude>
+      </excludes>
+    </unitTest>
+
+    <resources/>  <!-- (OPTIONAL) Resources packaged inside the JAR file. -->
+  </build>
+
+  <reports>
+    <!--report>maven-changes-plugin</report>
+	<report>maven-jdepend-plugin</report>
+	<report>maven-checkstyle-plugin</report>
+	<report>maven-pmd-plugin</report>
+	<report>maven-junit-report-plugin</report>
+	<report>maven-clover-plugin</report>
+	<report>maven-changelog-plugin</report>
+	<report>maven-file-activity-plugin</report>
+	<report>maven-developer-activity-plugin</report>
+	<report>maven-file-activity-plugin</report>
+	<report>maven-license-plugin</report>
+	<report>maven-linkcheck-plugin</report>
+	<report>maven-jxr-plugin</report-->
+    <report>maven-changes-plugin</report>
+  </reports>
+
+</project>

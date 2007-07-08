@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+	<head>
+		<title>hello.c</title>
+		<meta name="generator" content="c2html 1.1.0" >
+		<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" >
+		<meta http-equiv="Content-Script-Type" content="text/javascript" >
+		<meta http-equiv="Content-Style-Type" content="text/css" >
+	</head>
+	<body text="#000000">
+		<font face="Monospace">
+<font color="#808080"><i>/*<br>
+&nbsp;*&nbsp;Copyright&nbsp;2004,2005&nbsp;The&nbsp;Apache&nbsp;Software&nbsp;Foundation.<br>
+&nbsp;*<br>
+&nbsp;*&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;(the&nbsp;&quot;License&quot;);<br>
+&nbsp;*&nbsp;you&nbsp;may&nbsp;not&nbsp;use&nbsp;this&nbsp;file&nbsp;except&nbsp;in&nbsp;compliance&nbsp;with&nbsp;the&nbsp;License.<br>
+&nbsp;*&nbsp;You&nbsp;may&nbsp;obtain&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;License&nbsp;at<br>
+&nbsp;*<br>
+&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://www.apache.org/licenses/LICENSE-2.0<br>
+&nbsp;*<br>
+&nbsp;*&nbsp;Unless&nbsp;required&nbsp;by&nbsp;applicable&nbsp;law&nbsp;or&nbsp;agreed&nbsp;to&nbsp;in&nbsp;writing,&nbsp;software<br>
+&nbsp;*&nbsp;distributed&nbsp;under&nbsp;the&nbsp;License&nbsp;is&nbsp;distributed&nbsp;on&nbsp;an&nbsp;&quot;AS&nbsp;IS&quot;&nbsp;BASIS,<br>
+&nbsp;*&nbsp;WITHOUT&nbsp;WARRANTIES&nbsp;OR&nbsp;CONDITIONS&nbsp;OF&nbsp;ANY&nbsp;KIND,&nbsp;either&nbsp;express&nbsp;or&nbsp;implied.<br>
+&nbsp;*&nbsp;See&nbsp;the&nbsp;License&nbsp;for&nbsp;the&nbsp;specific&nbsp;language&nbsp;governing&nbsp;permissions&nbsp;and<br>
+&nbsp;*&nbsp;limitations&nbsp;under&nbsp;the&nbsp;License.<br>
+&nbsp;*/</i></font><br>
+<br>
+<font color="#008000">#include&nbsp;&lt;stdio.h&gt;<br></font>
+<font color="#008000">#include&nbsp;&lt;axiom.h&gt;<br></font>
+<font color="#008000">#include&nbsp;&lt;axis2_util.h&gt;<br></font>
+<font color="#008000">#include&nbsp;&lt;axiom_soap.h&gt;<br></font>
+<font color="#008000">#include&nbsp;&lt;axis2_client.h&gt;<br></font>
+<br>
+<font color="#000000">axiom_node_t</font>&nbsp;*<br>
+<font color="#000000">build_om_request</font>(<font color="#800000">const</font>&nbsp;<font color="#000000">axutil_env_t</font>&nbsp;*<font color="#000000">env</font>);<br>
+<br>
+<font color="#800000">const</font>&nbsp;<font color="#000000">axis2_char_t</font>&nbsp;*<br>
+<font color="#000000">process_om_response</font>(<font color="#800000">const</font>&nbsp;<font color="#000000">axutil_env_t</font>&nbsp;*<font color="#000000">env</font>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">axiom_node_t</font>&nbsp;*<font color="#000000">node</font>);<br>
+<br>
+<font color="#800000">int</font>&nbsp;<font color="#000000">main</font>(<font color="#800000">int</font>&nbsp;<font color="#000000">argc</font>,&nbsp;<font color="#800000">char</font>**&nbsp;<font color="#000000">argv</font>)<br>
+{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#800000">const</font>&nbsp;<font color="#000000">axutil_env_t</font>&nbsp;*<font color="#000000">env</font>&nbsp;=&nbsp;<font color="#000000">NULL</font>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#800000">const</font>&nbsp;<font color="#000000">axis2_char_t</font>&nbsp;*<font color="#000000">address</font>&nbsp;=&nbsp;<font color="#000000">NULL</font>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">axis2_endpoint_ref_t</font>*&nbsp;<font color="#000000">endpoint_ref</font>&nbsp;=&nbsp;<font color="#000000">NULL</font>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">axis2_options_t</font>&nbsp;*<font color="#000000">options</font>&nbsp;=&nbsp;<font color="#000000">NULL</font>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#800000">const</font>&nbsp;<font color="#000000">axis2_char_t</font>&nbsp;*<font color="#000000">client_home</font>&nbsp;=&nbsp;<font color="#000000">NULL</font>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">axis2_svc_client_t</font>*&nbsp;<font color="#000000">svc_client</font>&nbsp;=&nbsp;<font color="#000000">NULL</font>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">axiom_node_t</font>&nbsp;*<font color="#000000">payload</font>&nbsp;=&nbsp;<font color="#000000">NULL</font>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">axiom_node_t</font>&nbsp;*<font color="#000000">ret_node</font>&nbsp;=&nbsp;<font color="#000000">NULL</font>;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">env</font>&nbsp;=&nbsp;<font color="#000000">axutil_env_create_all</font>(<font color="#FF0000">&quot;hello_client.log&quot;</font>,&nbsp;<font color="#000000">AXIS2_LOG_LEVEL_TRACE</font>);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">options</font>&nbsp;=&nbsp;<font color="#000000">axis2_options_create</font>(<font color="#000000">env</font>);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">address</font>&nbsp;=&nbsp;<font color="#FF0000">&quot;http://localhost:9090/axis2/services/hello&quot;</font>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000"><b>if</b></font>&nbsp;(<font color="#000000">argc</font>&nbsp;&gt;&nbsp;<font color="#0000FF">1</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">address</font>&nbsp;=&nbsp;<font color="#000000">argv</font>[<font color="#0000FF">1</font>];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000"><b>if</b></font>&nbsp;(<font color="#000000">axutil_strcmp</font>(<font color="#000000">address</font>,&nbsp;<font color="#FF0000">&quot;-h&quot;</font>)&nbsp;==&nbsp;<font color="#0000FF">0</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">printf</font>(<font color="#FF0000">&quot;Usage&nbsp;:&nbsp;%s&nbsp;[endpoint_url]\n&quot;</font>,&nbsp;<font color="#000000">argv</font>[<font color="#0000FF">0</font>]);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">printf</font>(<font color="#FF0000">&quot;use&nbsp;-h&nbsp;for&nbsp;help\n&quot;</font>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000"><b>return</b></font>&nbsp;<font color="#0000FF">0</font>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">printf</font>(<font color="#FF0000">&quot;Using&nbsp;endpoint&nbsp;:&nbsp;%s\n&quot;</font>,&nbsp;<font color="#000000">address</font>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">endpoint_ref</font>&nbsp;=&nbsp;<font color="#000000">axis2_endpoint_ref_create</font>(<font color="#000000">env</font>,&nbsp;<font color="#000000">address</font>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">axis2_options_set_to</font>(<font color="#000000">options</font>,&nbsp;<font color="#000000">env</font>,&nbsp;<font color="#000000">endpoint_ref</font>);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">client_home</font>&nbsp;=&nbsp;<font color="#000000">AXIS2_GETENV</font>(<font color="#FF0000">&quot;AXIS2C_HOME&quot;</font>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000"><b>if</b></font>&nbsp;(!<font color="#000000">client_home</font>&nbsp;&amp;&amp;&nbsp;!<font color="#000000">strcmp</font>(<font color="#000000">client_home</font>,&nbsp;<font color="#FF0000">&quot;&quot;</font>))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">client_home</font>&nbsp;=&nbsp;<font color="#FF0000">&quot;../..&quot;</font>;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">svc_client</font>&nbsp;=&nbsp;<font color="#000000">axis2_svc_client_create</font>(<font color="#000000">env</font>,&nbsp;<font color="#000000">client_home</font>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000"><b>if</b></font>&nbsp;(!<font color="#000000">svc_client</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">printf</font>(<font color="#FF0000">&quot;Error&nbsp;creating&nbsp;service&nbsp;client\n&quot;</font>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">AXIS2_LOG_ERROR</font>(<font color="#000000">env</font>-&gt;<font color="#000000">log</font>,&nbsp;<font color="#000000">AXIS2_LOG_SI</font>,&nbsp;<font color="#FF0000">&quot;Stub&nbsp;invoke&nbsp;FAILED:&nbsp;Error&nbsp;code:&quot;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#FF0000">&quot;&nbsp;%d&nbsp;::&nbsp;%s&quot;</font>,&nbsp;<font color="#000000">env</font>-&gt;<font color="#000000">error</font>-&gt;<font color="#000000">error_number</font>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">AXIS2_ERROR_GET_MESSAGE</font>(<font color="#000000">env</font>-&gt;<font color="#000000">error</font>));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000"><b>return</b></font>&nbsp;-<font color="#0000FF">1</font>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">axis2_svc_client_set_options</font>(<font color="#000000">svc_client</font>,&nbsp;<font color="#000000">env</font>,&nbsp;<font color="#000000">options</font>);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">payload</font>&nbsp;=&nbsp;<font color="#000000">build_om_request</font>(<font color="#000000">env</font>);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">ret_node</font>&nbsp;=&nbsp;<font color="#000000">axis2_svc_client_send_receive</font>(<font color="#000000">svc_client</font>,&nbsp;<font color="#000000">env</font>,&nbsp;<font color="#000000">payload</font>);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000"><b>if</b></font>&nbsp;(<font color="#000000">ret_node</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#800000">const</font>&nbsp;<font color="#000000">axis2_char_t</font>&nbsp;*<font color="#000000">greeting</font>&nbsp;=&nbsp;<font color="#000000">process_om_response</font>(<font color="#000000">env</font>,&nbsp;<font color="#000000">ret_node</font>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000"><b>if</b></font>&nbsp;(<font color="#000000">greeting</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">printf</font>(<font color="#FF0000">&quot;\nReceived&nbsp;greeting:&nbsp;\&quot;%s\&quot;&nbsp;from&nbsp;service\n&quot;</font>,&nbsp;<font color="#000000">greeting</font>);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">axiom_node_free_tree</font>(<font color="#000000">ret_node</font>,&nbsp;<font color="#000000">env</font>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">ret_node</font>&nbsp;=&nbsp;<font color="#000000">NULL</font>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000"><b>else</b></font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">AXIS2_LOG_ERROR</font>(<font color="#000000">env</font>-&gt;<font color="#000000">log</font>,&nbsp;<font color="#000000">AXIS2_LOG_SI</font>,&nbsp;<font color="#FF0000">&quot;Stub&nbsp;invoke&nbsp;FAILED:&nbsp;Error&nbsp;code:&quot;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#FF0000">&quot;&nbsp;%d&nbsp;::&nbsp;%s&quot;</font>,&nbsp;<font color="#000000">env</font>-&gt;<font color="#000000">error</font>-&gt;<font color="#000000">error_number</font>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">AXIS2_ERROR_GET_MESSAGE</font>(<font color="#000000">env</font>-&gt;<font color="#000000">error</font>));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">printf</font>(<font color="#FF0000">&quot;hello&nbsp;client&nbsp;invoke&nbsp;FAILED!\n&quot;</font>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000"><b>if</b></font>&nbsp;(<font color="#000000">payload</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">axiom_node_free_tree</font>(<font color="#000000">payload</font>,&nbsp;<font color="#000000">env</font>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">payload</font>&nbsp;=&nbsp;<font color="#000000">NULL</font>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000"><b>if</b></font>&nbsp;(<font color="#000000">svc_client</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">axis2_svc_client_free</font>(<font color="#000000">svc_client</font>,&nbsp;<font color="#000000">env</font>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">svc_client</font>&nbsp;=&nbsp;<font color="#000000">NULL</font>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000"><b>if</b></font>&nbsp;(<font color="#000000">env</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">axutil_env_free</font>((<font color="#000000">axutil_env_t</font>&nbsp;*)&nbsp;<font color="#000000">env</font>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">env</font>&nbsp;=&nbsp;<font color="#000000">NULL</font>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000"><b>return</b></font>&nbsp;<font color="#0000FF">0</font>;<br>
+}<br>
+<br>
+<font color="#000000">axiom_node_t</font>&nbsp;*<br>
+<font color="#000000">build_om_request</font>(<font color="#800000">const</font>&nbsp;<font color="#000000">axutil_env_t</font>&nbsp;*<font color="#000000">env</font>)<br>
+{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">axiom_node_t</font>*&nbsp;<font color="#000000">greet_om_node</font>&nbsp;=&nbsp;<font color="#000000">NULL</font>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">axiom_element_t</font>&nbsp;*&nbsp;<font color="#000000">greet_om_ele</font>&nbsp;=&nbsp;<font color="#000000">NULL</font>;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">greet_om_ele</font>&nbsp;=&nbsp;<font color="#000000">axiom_element_create</font>(<font color="#000000">env</font>,&nbsp;<font color="#000000">NULL</font>,&nbsp;<font color="#FF0000">&quot;greet&quot;</font>,&nbsp;<font color="#000000">NULL</font>,&nbsp;&amp;<font color="#000000">greet_om_node</font>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">axiom_element_set_text</font>(<font color="#000000">greet_om_ele</font>,&nbsp;<font color="#000000">env</font>,&nbsp;<font color="#FF0000">&quot;Hello&nbsp;Server!&quot;</font>,&nbsp;<font color="#000000">greet_om_node</font>);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000"><b>return</b></font>&nbsp;<font color="#000000">greet_om_node</font>;<br>
+}<br>
+<br>
+<font color="#800000">const</font>&nbsp;<font color="#000000">axis2_char_t</font>&nbsp;*<br>
+<font color="#000000">process_om_response</font>(<font color="#800000">const</font>&nbsp;<font color="#000000">axutil_env_t</font>&nbsp;*<font color="#000000">env</font>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">axiom_node_t</font>&nbsp;*<font color="#000000">node</font>)<br>
+{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">axiom_node_t</font>&nbsp;*<font color="#000000">service_greeting_node</font>&nbsp;=&nbsp;<font color="#000000">NULL</font>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">axiom_node_t</font>&nbsp;*<font color="#000000">return_node</font>&nbsp;=&nbsp;<font color="#000000">NULL</font>;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000"><b>if</b></font>&nbsp;(<font color="#000000">node</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">service_greeting_node</font>&nbsp;=&nbsp;<font color="#000000">axiom_node_get_first_child</font>(<font color="#000000">node</font>,&nbsp;<font color="#000000">env</font>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000"><b>if</b></font>&nbsp;(<font color="#000000">service_greeting_node</font>&nbsp;&amp;&amp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">axiom_node_get_node_type</font>(<font color="#000000">service_greeting_node</font>,&nbsp;<font color="#000000">env</font>)&nbsp;==&nbsp;<font color="#000000">AXIOM_TEXT</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">axiom_text_t</font>&nbsp;*<font color="#000000">greeting</font>&nbsp;=&nbsp;(<font color="#000000">axiom_text_t</font>&nbsp;*)<font color="#000000">axiom_node_get_data_element</font>(<font color="#000000">service_greeting_node</font>,&nbsp;<font color="#000000">env</font>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000"><b>if</b></font>&nbsp;(<font color="#000000">greeting</font>&nbsp;&amp;&amp;&nbsp;<font color="#000000">axiom_text_get_value</font>(<font color="#000000">greeting</font>&nbsp;,&nbsp;<font color="#000000">env</font>))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000"><b>return</b></font>&nbsp;<font color="#000000">axiom_text_get_value</font>(<font color="#000000">greeting</font>,&nbsp;<font color="#000000">env</font>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000"><b>return</b></font>&nbsp;<font color="#000000">NULL</font>;<br>
+}<br>
+<br>
+		</font>
+	</body>
+</html>

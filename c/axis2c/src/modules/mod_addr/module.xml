@@ -1,0 +1,19 @@
+<module name="addressing" class="axis2_mod_addr">
+    <inflow>
+        <handler name="AddressingInHandler" class="axis2_mod_addr">
+            <order phase="Transport" before="addressing_based_dispatcher"/>
+        </handler>
+    </inflow>
+
+    <outflow>
+        <handler name="AddressingOutHandler" class="axis2_mod_addr">
+            <order phase="MessageOut"/>
+        </handler>
+    </outflow>
+
+    <Outfaultflow>
+        <handler name="AddressingOutHandler" class="axis2_mod_addr">
+            <order phase="MessageOut"/>
+        </handler>
+    </Outfaultflow>
+</module>

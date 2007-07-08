@@ -1,0 +1,28 @@
+<service name="Calculator">
+    <parameter name="ServiceClass" locked="xsd:false">Calculator</parameter>
+
+   <description>
+        This is a testing service, named 'Calculator' to test dynamic client
+   </description>
+
+    <operation name="add">
+            <!--messageReceiver class="axis2_receivers" /-->
+            <parameter name="wsamapping" >Calculator#add</parameter>
+    </operation>
+
+    <operation name="sub">
+            <!--messageReceiver class="axis2_receivers" /-->
+            <parameter name="wsamapping" >Calculator#sub</parameter>
+    </operation>
+
+    <operation name="mul">
+            <!--messageReceiver class="axis2_receivers" /-->
+            <parameter name="wsamapping" >Calculator#mul</parameter>
+    </operation>
+
+    <operation name="div">
+            <!--messageReceiver class="axis2_receivers" /-->
+            <parameter name="wsamapping" >Calculator#div</parameter>
+    </operation>
+
+</service>

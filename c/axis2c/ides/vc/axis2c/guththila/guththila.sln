@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "guththila", "guththila.vcproj", "{81FDD803-8611-4EB4-AB0E-85F498061A2D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "axis2_parser_guththila", "..\axis2_parser_guththila\axis2_parser_guththila.vcproj", "{DC69D297-3B3B-4FA2-A799-51F040708857}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{81FDD803-8611-4EB4-AB0E-85F498061A2D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{81FDD803-8611-4EB4-AB0E-85F498061A2D}.Debug|Win32.Build.0 = Debug|Win32
+		{81FDD803-8611-4EB4-AB0E-85F498061A2D}.Release|Win32.ActiveCfg = Release|Win32
+		{81FDD803-8611-4EB4-AB0E-85F498061A2D}.Release|Win32.Build.0 = Release|Win32
+		{DC69D297-3B3B-4FA2-A799-51F040708857}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DC69D297-3B3B-4FA2-A799-51F040708857}.Debug|Win32.Build.0 = Debug|Win32
+		{DC69D297-3B3B-4FA2-A799-51F040708857}.Release|Win32.ActiveCfg = Release|Win32
+		{DC69D297-3B3B-4FA2-A799-51F040708857}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

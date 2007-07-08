@@ -1,0 +1,14 @@
+ENABLE_SSL = 0
+ENABLE_LIBCURL= 0
+ENABLE_GUTHTHILA = 0
+LIBXML2_BIN_DIR = E:\libxml2-2.6.23.win32
+ICONV_BIN_DIR = E:\iconv-1.9.1.win32
+ZLIB_BIN_DIR=E:\zlib-1.2.3.win32
+APACHE_BIN_DIR = "C:\Program Files\Apache Software Foundation\Apache2.2"
+LIBXSLT_BIN_DIR = E:\libxslt-1.1.17.win32
+APACHE_VERSION_IS_2_0_59 = 0
+OPENSSL_BIN_DIR = E:\OpenSSL
+LIBCURL_BIN_DIR = E:\libcurl-7.15.1-msvc-win32-ssl-0.9.8a-zlib-1.2.3
+
+## to use apache 2.2.3 , use  APACHE_VERSION_IS_2_0_59 = 0
+## to build with debug symbols use DEBUG=1

@@ -1,0 +1,6 @@
+String Hello string
+Float 2.4 float
+HexBinary  6A hexBinary
+Decimal 2.4 decimal
+Integer 5 int
+Date 2005-06-30T12:00:00.0000000-07:00 dateTime

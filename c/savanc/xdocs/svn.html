@@ -1,0 +1,77 @@
+<html>
+<head>
+  <meta http-equiv="content-type" content="">
+  <title>Developing Apache Savan/C</title>
+</head>
+
+<body lang="en">
+<h1>Developing Apache Savan/C</h1>
+
+<p>This document provides information on how to use SVN to get an SVN
+checkout/update and make commits to the source repository.</p>
+
+<h2>Contents</h2>
+<ul>
+  <li><a href="#svn">Working with Subversion (SVN)</a></li>
+  <li><a href="#checkout">Checking-out Savan from Subversion</a></li>
+</ul>
+<a name="svn"></a>
+
+<h2>Working with Subversion (SVN)</h2>
+
+<p>The Apache Savan/C development team uses Subversion (SVN) for source
+control. Subversion is a compelling replacement for CVS, developed under the
+auspices of the Tigris community and is licensed under an Apache compatible
+license. To learn more about Subversion or to download the latest
+distribution, visit the <a href="http:///subversion.tigris.org"
+target="_blank">Subversion project site</a>. If you are looking for
+guidelines on setting up/installing Subversion, please read the ASF <a
+href="http://www.apache.org/dev/version-control.html" target="_blank">Source
+Code Repositories page</a>.</p>
+<a name="checkout"></a>
+
+<h2>Checking-out Apache Savan/C from Subversion</h2>
+
+<p>When checking out the latest version of Apache Savan/C from the Apache
+Foundation's Subversion repository, you must use one of the following URLs,
+depending on your level of access to the Apache Savan/C source code:</p>
+<ul>
+  <li><b>If you are not a committer:</b><a
+    href="http://svn.apache.org/repos/asf/webservices/savan/trunk/c"
+    target="_blank">http://svn.apache.org/repos/asf/webservices/savan/trunk/c</a></li>
+  <li><b>If you are a committer:</b> <a
+    href="https://svn.apache.org/repos/asf/webservices/savan/trunk/c"
+    target="_blank">https://svn.apache.org/repos/asf/webservices/savan/trunk/c</a></li>
+</ul>
+If you are a committer, make sure that you have set your svnpasswd. To do
+this you must log into svn.apache.org.  For more information, please read the
+ASF <a href="http://www.apache.org/dev/version-control.html"
+target="_blank">Source Code Repositories page</a>.
+
+<p>Once you have successfully installed Subversion, you can checkout the
+Savan/C trunk by running the following command:</p>
+
+<p><strong>svn co &lt;repository URL&gt; &lt;folder name&gt;</strong></p>
+
+<p>where 'repository URL' is one of the URLs from the previous list and
+'folder name' is the name of the folder into which the source code is to be
+checked out.</p>
+<br>
+
+
+<p>To update your working copy to the latest version from the repository,
+execute:</p>
+
+<p><strong>svn update</strong></p>
+<br>
+
+
+<p>If you would like to submit a patch, execute:</p>
+
+<p><strong>svn diff</strong></p>
+
+<p>The above command will create a unified diff that can be attached to the
+Apache Savan/C JIRA issue tracker.</p>
+<br>
+</body>
+</html>

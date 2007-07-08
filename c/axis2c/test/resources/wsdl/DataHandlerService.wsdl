@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://datahandler.attachment.test.org" xmlns:impl="http://datahandler.attachment.test.org" xmlns:intf="http://datahandler.attachment.test.org" xmlns:tns2="http://xml.apache.org/xml-soap" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://datahandler.attachment.test.org" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:impl="http://datahandler.attachment.test.org" xmlns:intf="http://datahandler.attachment.test.org" xmlns:tns2="http://xml.apache.org/xml-soap" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://xml.apache.org/xml-soap"/>
+   <element name="getContentType">
+    <complexType>
+     <sequence>
+      <element name="arg_0_0" nillable="true" type="tns2:DataHandler"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getContentTypeResponse">
+    <complexType>
+     <sequence>
+      <element name="getContentTypeReturn" nillable="true" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="saveContent">
+    <complexType>
+     <sequence>
+      <element name="arg_0_1" nillable="true" type="tns2:DataHandler"/>
+      <element name="arg_1_1" nillable="true" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="saveContentResponse">
+    <complexType>
+     <sequence>
+      <element name="saveContentReturn" nillable="true" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="echoContent">
+    <complexType>
+     <sequence>
+      <element name="arg_0_2" nillable="true" type="tns2:DataHandler"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="echoContentResponse">
+    <complexType>
+     <sequence>
+      <element name="echoContentReturn" nillable="true" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getNoOfBytes">
+    <complexType>
+     <sequence>
+      <element name="arg_0_3" nillable="true" type="tns2:DataHandler"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getNoOfBytesResponse">
+    <complexType>
+     <sequence>
+      <element name="getNoOfBytesReturn" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="executeClass">
+    <complexType>
+     <sequence>
+      <element name="arg_0_4" nillable="true" type="tns2:DataHandler"/>
+      <element name="arg_1_4" nillable="true" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="executeClassResponse">
+    <complexType>
+     <sequence>
+      <element name="executeClassReturn" nillable="true" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="echoContentRequest">
+
+      <wsdl:part element="impl:echoContent" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="getContentTypeRequest">
+
+      <wsdl:part element="impl:getContentType" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="getContentTypeResponse">
+
+      <wsdl:part element="impl:getContentTypeResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="executeClassResponse">
+
+      <wsdl:part element="impl:executeClassResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="getNoOfBytesResponse">
+
+      <wsdl:part element="impl:getNoOfBytesResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="executeClassRequest">
+
+      <wsdl:part element="impl:executeClass" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="saveContentResponse">
+
+      <wsdl:part element="impl:saveContentResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="saveContentRequest">
+
+      <wsdl:part element="impl:saveContent" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="getNoOfBytesRequest">
+
+      <wsdl:part element="impl:getNoOfBytes" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="echoContentResponse">
+
+      <wsdl:part element="impl:echoContentResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:portType name="DataHandlerService">
+
+      <wsdl:operation name="getContentType">
+
+         <wsdl:input message="impl:getContentTypeRequest" name="getContentTypeRequest"/>
+
+         <wsdl:output message="impl:getContentTypeResponse" name="getContentTypeResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="saveContent">
+
+         <wsdl:input message="impl:saveContentRequest" name="saveContentRequest"/>
+
+         <wsdl:output message="impl:saveContentResponse" name="saveContentResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="echoContent">
+
+         <wsdl:input message="impl:echoContentRequest" name="echoContentRequest"/>
+
+         <wsdl:output message="impl:echoContentResponse" name="echoContentResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getNoOfBytes">
+
+         <wsdl:input message="impl:getNoOfBytesRequest" name="getNoOfBytesRequest"/>
+
+         <wsdl:output message="impl:getNoOfBytesResponse" name="getNoOfBytesResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="executeClass">
+
+         <wsdl:input message="impl:executeClassRequest" name="executeClassRequest"/>
+
+         <wsdl:output message="impl:executeClassResponse" name="executeClassResponse"/>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="DataHandlerServiceSoapBinding" type="impl:DataHandlerService">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="getContentType">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getContentTypeRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getContentTypeResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="saveContent">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="saveContentRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="saveContentResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="echoContent">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="echoContentRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="echoContentResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getNoOfBytes">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getNoOfBytesRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getNoOfBytesResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="executeClass">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="executeClassRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="executeClassResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="DataHandlerServiceService">
+
+      <wsdl:port binding="impl:DataHandlerServiceSoapBinding" name="DataHandlerService">
+
+         <wsdlsoap:address location="http://localhost:9080/DataHandlerService/services/DataHandlerService"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

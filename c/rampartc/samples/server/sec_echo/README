@@ -1,0 +1,11 @@
+HOW TO CONFIGURE SERVER?
+-----------------------
+Make sure that you have 
+Go to rampart/samples/server/sec_echo and
+Run  %make install
+This will deploy a sec_echo service and copy security enabled services.xml
+file.
+
+Note: You may change the services.xml file to adjust it to your environment. E.g. Changing the passwordCallbackClass parameter.
+
+

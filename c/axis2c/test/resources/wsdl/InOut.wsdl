@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2003-2004 The Apache Software Foundation.                      -->
+<!-- (c) Copyright IBM Corp. 2004, 2005 All Rights Reserved                   -->
+<!--                                                                          -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License");          -->
+<!-- you may not use this file except in compliance with the License.         -->
+<!-- You may obtain a copy of the License at                                  -->
+<!--                                                                          -->
+<!--        http://www.apache.org/licenses/LICENSE-2.0                        -->
+<!--                                                                          -->
+<!-- Unless required by applicable law or agreed to in writing, software      -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS,        -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and      -->
+<!-- limitations under the License.                                           -->
+
+<wsdl:definitions targetNamespace="http://complexissues.test.apache.org" xmlns:impl="http://complexissues.test.apache.org" xmlns:intf="http://complexissues.test.apache.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://complexissues.test.apache.org" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:impl="http://complexissues.test.apache.org" xmlns:intf="http://complexissues.test.apache.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <element name="noParametersNoReturn">
+    <complexType>
+     <sequence/>
+    </complexType>
+   </element>
+   <element name="noParametersNoReturnResponse">
+    <complexType>
+     <sequence/>
+    </complexType>
+   </element>
+   <element name="noParametersIntReturn">
+    <complexType>
+     <sequence/>
+    </complexType>
+   </element>
+   <element name="noParametersIntReturnResponse">
+    <complexType>
+     <sequence>
+      <element name="noParametersIntReturnReturn" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="multiParametersNoReturn">
+    <complexType>
+     <sequence>
+      <element name="arg_0_2" nillable="true" type="xsd:string"/>
+      <element name="arg_1_2" type="xsd:int"/>
+      <element name="arg_2_2" type="xsd:double"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="multiParametersNoReturnResponse">
+    <complexType>
+     <sequence/>
+    </complexType>
+   </element>
+   <element name="multiComplexParametersIntReturn">
+    <complexType>
+     <sequence>
+      <element name="arg_0_3" nillable="true" type="xsd:string"/>
+      <element name="arg_1_3" nillable="true" type="impl:ComplexType1"/>
+      <element name="arg_2_3" type="xsd:int"/>
+      <element name="arg_3_3" type="xsd:double"/>
+      <element maxOccurs="unbounded" name="arg_4_3" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <complexType name="ComplexType1">
+    <sequence>
+     <element name="ctLong" type="xsd:long"/>
+     <element maxOccurs="unbounded" name="ctIntArray" type="xsd:int"/>
+     <element name="ctString" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="ComplexType2">
+    <sequence>
+     <element name="ctLong" type="xsd:long"/>
+     <element maxOccurs="unbounded" name="ctIntArray" type="xsd:int"/>
+     <element name="ctString" nillable="true" type="xsd:string"/>
+     <element name="ctComplex" nillable="true" type="impl:ComplexType1"/>
+    </sequence>
+   </complexType>
+   <element name="complexParameterComplexReturn">
+    <complexType>
+     <sequence>
+      <element name="complexRequest" nillable="true" type="impl:ComplexType2"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="complexParameterComplexReturnResponse">
+    <complexType>
+     <sequence>
+      <element name="complexResponse" nillable="true" type="impl:ComplexType2"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="multiComplexParametersIntReturnResponse">
+    <complexType>
+     <sequence>
+      <element name="multiComplexParametersIntReturnReturn" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="multiComplexParametersNilIntReturn">
+    <complexType>
+     <sequence>
+      <element name="arg_0_4" nillable="true" type="xsd:string"/>
+      <element name="arg_1_4" nillable="true" type="impl:ComplexNilType1"/>
+      <element name="arg_2_4" nillable="true" type="xsd:int"/>
+      <element name="arg_3_4" nillable="true" type="xsd:double"/>
+      <element maxOccurs="unbounded" name="arg_4_4" nillable="true" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <complexType name="ComplexNilType1">
+    <sequence>
+     <element name="ctLong" nillable="true" type="xsd:long"/>
+     <element maxOccurs="unbounded" name="ctIntArray" nillable="true" type="xsd:int"/>
+     <element name="ctString" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <element name="multiComplexParametersNilIntReturnResponse">
+    <complexType>
+     <sequence>
+      <element name="multiComplexParametersNilIntReturnReturn" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="multiArrayParametersIntReturn">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" minOccurs="0" name="arg_0_5" type="xsd:int"/>
+      <element maxOccurs="unbounded" minOccurs="0" name="arg_1_5" type="xsd:double"/>
+      <element maxOccurs="unbounded" minOccurs="0" name="arg_2_5" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="multiArrayParametersIntReturnResponse">
+    <complexType>
+     <sequence>
+      <element name="multiArrayParametersIntReturnReturn" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="noParametersIntReturnResponse">
+
+      <wsdl:part element="impl:noParametersIntReturnResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="noParametersNoReturnRequest">
+
+      <wsdl:part element="impl:noParametersNoReturn" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="multiComplexParametersIntReturnResponse">
+
+      <wsdl:part element="impl:multiComplexParametersIntReturnResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="multiArrayParametersIntReturnRequest">
+
+      <wsdl:part element="impl:multiArrayParametersIntReturn" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="multiComplexParametersNilIntReturnResponse">
+
+      <wsdl:part element="impl:multiComplexParametersNilIntReturnResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="noParametersNoReturnResponse">
+
+      <wsdl:part element="impl:noParametersNoReturnResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="multiParametersNoReturnRequest">
+
+      <wsdl:part element="impl:multiParametersNoReturn" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="complexParameterComplexReturnRequest">
+      <wsdl:part element="impl:complexParameterComplexReturn" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="complexParameterComplexReturnResponse">
+      <wsdl:part element="impl:complexParameterComplexReturnResponse" name="parameters"/>
+   </wsdl:message>
+
+   <wsdl:message name="noParametersIntReturnRequest">
+
+      <wsdl:part element="impl:noParametersIntReturn" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="multiComplexParametersIntReturnRequest">
+
+      <wsdl:part element="impl:multiComplexParametersIntReturn" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="multiComplexParametersNilIntReturnRequest">
+
+      <wsdl:part element="impl:multiComplexParametersNilIntReturn" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="multiArrayParametersIntReturnResponse">
+
+      <wsdl:part element="impl:multiArrayParametersIntReturnResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="multiParametersNoReturnResponse">
+
+      <wsdl:part element="impl:multiParametersNoReturnResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:portType name="InOut">
+
+      <wsdl:operation name="noParametersNoReturn">
+
+         <wsdl:input message="impl:noParametersNoReturnRequest" name="noParametersNoReturnRequest"/>
+
+         <wsdl:output message="impl:noParametersNoReturnResponse" name="noParametersNoReturnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="noParametersIntReturn">
+
+         <wsdl:input message="impl:noParametersIntReturnRequest" name="noParametersIntReturnRequest"/>
+
+         <wsdl:output message="impl:noParametersIntReturnResponse" name="noParametersIntReturnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="multiParametersNoReturn">
+
+         <wsdl:input message="impl:multiParametersNoReturnRequest" name="multiParametersNoReturnRequest"/>
+
+         <wsdl:output message="impl:multiParametersNoReturnResponse" name="multiParametersNoReturnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="complexParameterComplexReturn">
+
+         <wsdl:input message="impl:complexParameterComplexReturnRequest" name="complexParameterComplexReturnRequest"/>
+
+         <wsdl:output message="impl:complexParameterComplexReturnResponse" name="complexParameterComplexReturnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="multiComplexParametersIntReturn">
+
+         <wsdl:input message="impl:multiComplexParametersIntReturnRequest" name="multiComplexParametersIntReturnRequest"/>
+
+         <wsdl:output message="impl:multiComplexParametersIntReturnResponse" name="multiComplexParametersIntReturnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="multiComplexParametersNilIntReturn">
+
+         <wsdl:input message="impl:multiComplexParametersNilIntReturnRequest" name="multiComplexParametersNilIntReturnRequest"/>
+
+         <wsdl:output message="impl:multiComplexParametersNilIntReturnResponse" name="multiComplexParametersNilIntReturnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="multiArrayParametersIntReturn">
+
+         <wsdl:input message="impl:multiArrayParametersIntReturnRequest" name="multiArrayParametersIntReturnRequest"/>
+
+         <wsdl:output message="impl:multiArrayParametersIntReturnResponse" name="multiArrayParametersIntReturnResponse"/>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="InOutSoapBinding" type="impl:InOut">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="noParametersNoReturn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="noParametersNoReturnRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="noParametersNoReturnResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="noParametersIntReturn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="noParametersIntReturnRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="noParametersIntReturnResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="multiParametersNoReturn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="multiParametersNoReturnRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="multiParametersNoReturnResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="complexParameterComplexReturn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="complexParameterComplexReturnRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="complexParameterComplexReturnResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="multiComplexParametersIntReturn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="multiComplexParametersIntReturnRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="multiComplexParametersIntReturnResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="multiComplexParametersNilIntReturn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="multiComplexParametersNilIntReturnRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="multiComplexParametersNilIntReturnResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="multiArrayParametersIntReturn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="multiArrayParametersIntReturnRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="multiArrayParametersIntReturnResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="InOutService">
+
+      <wsdl:port binding="impl:InOutSoapBinding" name="InOut">
+
+         <wsdlsoap:address location="http://localhost:9080/InOut/services/InOut"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>
+

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2003-2004 The Apache Software Foundation.                      -->
+<!-- (c) Copyright IBM Corp. 2004, 2005 All Rights Reserved                   -->
+<!--                                                                          -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License");          -->
+<!-- you may not use this file except in compliance with the License.         -->
+<!-- You may obtain a copy of the License at                                  -->
+<!--                                                                          -->
+<!--        http://www.apache.org/licenses/LICENSE-2.0                        -->
+<!--                                                                          -->
+<!-- Unless required by applicable law or agreed to in writing, software      -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS,        -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and      -->
+<!-- limitations under the License.                                           -->
+
+<wsdl:definitions targetNamespace="http://localhost/axis/MultiOut" 
+	xmlns:apachesoap="http://xml.apache.org/xml-soap" 
+	xmlns:impl="http://localhost/axis/MultiOut" 
+	xmlns:intf="http://localhost/axis/MultiOut" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+ <wsdl:types>
+  <schema elementFormDefault="qualified" 
+	targetNamespace="http://localhost/axis/MultiOut" 
+	xmlns="http://www.w3.org/2001/XMLSchema" 
+	xmlns:apachesoap="http://xml.apache.org/xml-soap" 
+	xmlns:impl="http://localhost/axis/MultiOut" 
+	xmlns:intf="http://localhost/axis/MultiOut" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+   <element name="get0">
+    <complexType>
+     <sequence>
+     </sequence>
+    </complexType>
+   </element>
+
+   <element name="get">
+    <complexType>
+     <sequence>
+      <element name="out1" type="xsd:string"/>
+      <element nillable="true" name="out14" type="xsd:integer"/>
+      <element name="out15" type="xsd:int"/>
+      <element name="out16" type="xsd:long"/>
+      <element name="out17" type="xsd:short"/>
+      <element name="out18" type="xsd:decimal"/>
+      <element name="out19" type="xsd:float"/>
+      <element name="out20" type="xsd:double"/>
+      <element name="out21" type="xsd:boolean"/>
+      <element name="out22" type="xsd:byte"/>
+
+<!--
+      <element name="out1" type="xsd:string"/>
+      <element name="out2" type="xsd:normalizedString"/>
+      <element name="out3" type="xsd:token"/>
+      <element name="out4" type="xsd:language"/>
+      <element name="out5" type="xsd:Name"/>
+      <element name="out6" type="xsd:NCName"/>
+      <element name="out7" type="xsd:ID"/>
+      <element name="out8" type="xsd:IDREF"/>
+      <element name="out9" type="xsd:IDREFS"/>
+      <element name="out10" type="xsd:ENTITY"/>
+      <element name="out11" type="xsd:ENTITIES"/>
+      <element name="out12" type="xsd:NMTOKEN"/>
+      <element name="out13" type="xsd:NMTOKENS"/>
+      <element name="out14" type="xsd:integer"/>
+      <element name="out15" type="xsd:int"/>
+      <element name="out16" type="xsd:long"/>
+      <element name="out17" type="xsd:short"/>
+      <element name="out18" type="xsd:decimal"/>
+      <element name="out19" type="xsd:float"/>
+      <element name="out20" type="xsd:double"/>
+      <element name="out21" type="xsd:boolean"/>
+      <element name="out22" type="xsd:byte"/>
+      <element name="out23" type="xsd:QName"/>
+      <element name="out24" type="xsd:NOTATION"/>
+      <element name="out25" type="xsd:dateTime"/>
+      <element name="out26" type="xsd:date"/>
+      <element name="out27" type="xsd:time"/>
+      <element name="out28" type="xsd:gYearMonth"/>
+      <element name="out29" type="xsd:gYear"/>
+      <element name="out30" type="xsd:gMonthDay"/>
+      <element name="out31" type="xsd:gDay"/>
+      <element name="out32" type="xsd:gMonth"/>
+      <element name="out33" type="xsd:duration"/>
+      <element name="out34" type="xsd:nonNegativeInteger"/>
+      <element name="out35" type="xsd:unsignedByte"/>
+      <element name="out36" type="xsd:unsignedInt"/>
+      <element name="out37" type="xsd:unsignedLong"/>
+      <element name="out38" type="xsd:unsignedShort"/>
+      <element name="out39" type="xsd:nonPositiveInteger"/>
+      <element name="out40" type="xsd:positiveInteger"/>
+      <element name="out41" type="xsd:negativeInteger"/>
+      <element name="out42" type="xsd:base64Binary"/>
+      <element name="out43" type="xsd:hexBinary"/>
+      <element name="out44" type="xsd:anyURI"/>
+-->
+
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="get0">
+      <wsdl:part element="impl:get0" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="get">
+      <wsdl:part element="impl:get" name="parameters"/>
+   </wsdl:message>
+
+   <wsdl:portType name="MultiOut">
+      <wsdl:operation name="get">
+         <wsdl:input message="impl:get0" name="get0"/>
+         <wsdl:output message="impl:get" name="get"/>
+      </wsdl:operation>
+   </wsdl:portType>
+
+   <wsdl:binding name="MultiOutSoapBinding" type="impl:MultiOut">
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="get">
+         <wsdlsoap:operation soapAction="MultiOut#get"/>
+         <wsdl:input name="get0">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output name="get">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+
+   <wsdl:service name="MultiOut">
+      <wsdl:port binding="impl:MultiOutSoapBinding" name="MultiOut">
+         <wsdlsoap:address location="http://localhost/axis/MultiOut"/>
+      </wsdl:port>
+   </wsdl:service>
+</wsdl:definitions>

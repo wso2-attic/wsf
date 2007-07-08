@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2003-2004 The Apache Software Foundation.                      -->
+<!-- (c) Copyright IBM Corp. 2004, 2005 All Rights Reserved                   -->
+<!--                                                                          -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License");          -->
+<!-- you may not use this file except in compliance with the License.         -->
+<!-- You may obtain a copy of the License at                                  -->
+<!--                                                                          -->
+<!--        http://www.apache.org/licenses/LICENSE-2.0                        -->
+<!--                                                                          -->
+<!-- Unless required by applicable law or agreed to in writing, software      -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS,        -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and      -->
+<!-- limitations under the License.                                           -->
+
+<wsdl:definitions 
+	targetNamespace="http://axisbench.test.apache.org" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" 
+	xmlns:intf="http://axisbench.test.apache.org" 
+	xmlns:impl="http://axisbench.test.apache.org"
+	 xmlns:apachesoap="http://xml.apache.org/xml-soap" 
+	 xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <schema 
+    	elementFormDefault="qualified" 
+	    targetNamespace="http://axisbench.test.apache.org" 
+	    xmlns="http://www.w3.org/2001/XMLSchema">
+   <complexType name="BenchBasicDataType">
+    <sequence>
+     <element name="StringType" type="xsd:string"/>
+     <element name="IntType" type="xsd:int"/>
+     <element name="BooleanType" type="xsd:boolean"/>
+     <element name="DoubleType" type="xsd:double"/>
+     <element name="DateTimeType" type="xsd:dateTime"/>
+     <element name="DateType" type="xsd:date"/>
+     <element name="TimeType" type="xsd:time"/>
+     <element name="Base64BinaryType" type="xsd:base64Binary"/>
+     <element name="ByteType" type="xsd:byte"/>
+     <element name="DecimalType" type="xsd:decimal"/>
+     <element name="FloatType" type="xsd:float"/>
+     <element name="HexBinary" type="xsd:hexBinary"/>
+     <element name="IntegerType" type="xsd:integer"/>
+     <element name="LongType" type="xsd:long"/>
+     <element name="QNameType"  type="xsd:QName"/>
+     <element name="ShortType" type="xsd:short"/>
+     
+     <!-- Not tested yet
+	    -->
+     
+    </sequence>
+   </complexType>
+   <complexType name="BenchDataType">
+    <sequence>
+     <element name="count" type="xsd:int"/>
+     <element maxOccurs="unbounded" name="infos" type="impl:BenchBasicDataType"/>
+    </sequence>
+   </complexType>
+
+   <element name="doBenchRequest">
+    <complexType>
+     <sequence>
+      <element name="doBench" type="impl:BenchDataType"/>
+     </sequence>
+    </complexType>
+   </element>
+   
+   <element name="doBenchRequestResponse">
+    <complexType>
+     <sequence>
+      <element name="doBench" nillable="true" type="impl:BenchDataType"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+  </wsdl:types>
+  <wsdl:message name="doBenchRequest">
+    <wsdl:part name="parameters" element="intf:doBenchRequest"/>
+  </wsdl:message>
+  <wsdl:message name="doBenchResponse">
+    <wsdl:part name="parameters" element="intf:doBenchRequestResponse"/>
+  </wsdl:message>
+  <wsdl:portType name="AxisBench">
+    <wsdl:operation name="doBenchRequest">
+      <wsdl:input name="doBenchRequest" message="intf:doBenchRequest"/>
+      <wsdl:output name="doBenchResponse" message="intf:doBenchResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AxisBenchSoapBinding" type="intf:AxisBench">
+    <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="doBenchRequest">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="doBenchRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="doBenchResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AxisBenchSoapSvc">
+    <wsdl:port name="AxisBenchSoapImpl" binding="intf:AxisBenchSoapBinding">
+      <wsdlsoap:address location="http://localhost:9080/AxisBench/services/AxisBenchSoapImpl"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

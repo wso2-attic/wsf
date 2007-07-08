@@ -1,0 +1,9 @@
+<?xml version='1.0' ?>
+<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
+    <env:Header>
+    </env:Header>
+    <env:Body>
+        <axis2:echoVoid xmlns:axis2="http://ws.apache.org/axis2">
+        </axis2:echoVoid>
+    </env:Body>
+</env:Envelope>
