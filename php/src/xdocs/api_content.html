@@ -20,6 +20,7 @@ WSF/PHP extension.</p>
 <h2><b>Predefined Classes</b></h2>
 <a id="client"></a>   &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
     &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+    &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
 
 <h2><b>WSClient</b></h2>
 <a id="construct"></a>
@@ -39,7 +40,7 @@ WSF/PHP extension.</p>
 border="1">
   <col><col><col><col><col><col><thead>
     <tr valign="top">
-      <th><p>Parameter</p>
+      <th style="width: 96px"><p>Parameter</p>
       </th>
       <th colspan="4"><p>Description</p>
       </th>
@@ -47,7 +48,7 @@ border="1">
   </thead>
   <tbody>
     <tr valign="top">
-      <td><p>options</p>
+      <td style="width: 96px"><p>options</p>
       </td>
       <td colspan="4"><p align="left">An associative array of options. Both
         message related properties, defined for WSMessage as well as WSClient
@@ -63,7 +64,7 @@ border="1">
       </td>
     </tr>
     <tr valign="top">
-      <th><p>Option</p>
+      <th style="width: 96px"><p>Option</p>
       </th>
       <th><p>Data Type</p>
       </th>
@@ -80,7 +81,7 @@ border="1">
       </td>
     </tr>
     <tr valign="top">
-      <td><p>"useSOAP"</p>
+      <td style="width: 96px"><p>"useSOAP"</p>
       </td>
       <td><p>boolean | double | string</p>
       </td>
@@ -98,16 +99,16 @@ border="1">
       </td>
     </tr>
     <tr valign="top">
-      <td><p>"HTTPMethod"</p>
+      <td style="width: 96px; height: 55px"><p>"HTTPMethod"</p>
       </td>
-      <td><p>string <br>
+      <td style="height: 55px"><p>string <br>
         case insensitive</p>
       </td>
-      <td><p>"GET" | "POST" | "post" | "get"</p>
+      <td style="height: 55px"><p>"GET" | "POST" | "post" | "get"</p>
       </td>
-      <td><p>"POST"</p>
+      <td style="height: 55px"><p>"POST"</p>
       </td>
-      <td><p>Specifies which HTTP method to be used.</p>
+      <td style="height: 55px"><p>Specifies which HTTP method to be used.</p>
       </td>
     </tr>
     <tr>
@@ -115,7 +116,7 @@ border="1">
       </td>
     </tr>
     <tr valign="top">
-      <td style="height: 51px"><p>"useMTOM"</p>
+      <td style="height: 51px; width: 96px;"><p>"useMTOM"</p>
       </td>
       <td style="height: 51px"><p>boolean</p>
       </td>
@@ -130,7 +131,7 @@ border="1">
       </td>
     </tr>
     <tr valign="top">
-      <td><p>"responseXOP"</p>
+      <td style="width: 96px"><p>"responseXOP"</p>
       </td>
       <td><p>boolean</p>
       </td>
@@ -151,7 +152,7 @@ border="1">
       </td>
     </tr>
     <tr valign="top">
-      <td><p>"useWSA"</p>
+      <td style="width: 96px"><p>"useWSA"</p>
       </td>
       <td><p>boolean | double | string</p>
       </td>
@@ -173,31 +174,74 @@ border="1">
                 WS-Security Related Options</td>
         </tr>
         <tr valign="top">
-            <td colspan="1" style="height: 20px">
+            <td colspan="1" style="height: 20px; width: 96px;">
                 "policy"</td>
             <td colspan="1" style="height: 20px">
-                array | string</td>
+                &nbsp;WSPolicy object</td>
             <td colspan="1" style="height: 20px">
-                Array of policy options | string containg policy file</td>
+                WSPolicy object</td>
             <td colspan="1" style="height: 20px">
                 None</td>
             <td colspan="5" style="height: 20px">
-                Contains the array of policy related options.It may be contains inpolicy and outpolicy
-                arrays seperately or single policy option array. For advance case it&nbsp; may contains
-                the string that representing the policy file.</td>
+                WSPolicy Object</td>
         </tr>
         <tr valign="top">
-            <td colspan="1" style="height: 21px">
+            <td colspan="1" style="height: 21px; width: 96px;">
                 "securityToken"</td>
             <td colspan="1" style="height: 21px">
-                array</td>
+                WSSecurityToken</td>
             <td colspan="1" style="height: 21px">
-                Array of security policy options</td>
+                </td>
             <td colspan="1" style="height: 21px">
                 None</td>
             <td colspan="5" style="height: 21px">
-                Includes an array of security related properties.</td>
+                WSSecurityToken object which contain the security related options</td>
         </tr>
+        <tr valign="top">
+            <td colspan="5">
+                Proxy And SSL settings related properties</td>
+        </tr>
+        <tr valign="top">
+            <td colspan="1" style="height: 20px; width: 96px;">
+                "proxy_host"</td>
+            <td colspan="1" style="height: 20px">
+                string</td>
+            <td colspan="1" style="height: 20px">
+                string</td>
+            <td colspan="1" style="height: 20px">
+                None</td>
+            <td colspan="5" style="height: 20px">
+                proxy host to be used.</td>
+        </tr>
+        <tr valign="top">
+            <td colspan="1" style="height: 21px; width: 96px;">
+                "proxy_port"</td>
+            <td colspan="1" style="height: 21px">
+                string</td>
+            <td colspan="1" style="height: 21px">
+                string</td>
+            <td colspan="1" style="height: 21px">
+                None</td>
+            <td colspan="5" style="height: 21px">
+                proxy port to use.</td>
+        </tr>
+        <tr valign="top">
+            <td colspan="5">
+                WSDL Mode</td>
+        </tr>
+        <tr valign="top">
+            <td colspan="1" style="height: 20px; width: 96px;">
+                "wsdl"</td>
+            <td colspan="1" style="height: 20px">
+                file path or url of a wsdl file</td>
+            <td colspan="1" style="height: 20px">
+                FILE| URL</td>
+            <td colspan="1" style="height: 20px">
+                None</td>
+            <td colspan="5" style="height: 20px">
+                WSDL file can be used to invoke a webservice using dynamic invocation</td>
+        </tr>
+        
   </tbody>
 </table>
 
@@ -414,7 +458,7 @@ border="1">
         <p>A user defined function implementing an operation of a service
         should have the following syntax:<br>
         <br>
-        string | SimpleXMLElement | domDocument function1 (WSMessage
+        string | domDocument function1 (WSMessage
         message);</p>
       </td>
     </tr>
@@ -446,6 +490,60 @@ border="1">
         "function4" respectively</p>
       </td>
     </tr>
+     <tr valign="top">
+      <td><p>
+        "opMEP"</p>
+      </td>
+      <td><p>array</p>
+      </td>
+      <td><p>
+        "IN_ONLY" | "IN_OUT"</p>
+      </td>
+      <td><p>
+        IN_OUT</p>
+      </td>
+      <td><p>Array mapping operation names to the operation's message exchange pattern. This
+        option is only required with using reliable messaging for one way. By default, "IN_OUT"
+        message exchange pattern is assumed. If explicity provided by the user, "IN_ONLY"
+        pattern will be used.</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td><p>
+            "opParams"</p>
+      </td>
+      <td><p>array</p>
+      </td>
+      <td><p>
+            "WSMESSAGE" | "MIXED"</p>
+      </td>
+      <td><p>
+            "WSMESSAGE"</p>
+      </td>
+      <td><p>
+            This option is used to specify what a php function corresponding to the service
+            operation would accept as arguments. This option is only required when writing a
+            service to use in wsdl mode. By default WSMESSAGE is assumed meaning that each function
+            would have a single parameter of type WSMessage.</p>
+      </td>
+    </tr>
+     <tr valign="top">
+      <td><p>
+                "wsdl"</p>
+      </td>
+      <td><p>
+                file path or a url pointing to implementing service's wsdl</p>
+      </td>
+      <td>
+          FILE | URL</td>
+      <td><p>
+          none</p>
+      </td>
+      <td><p>
+            This option is used to specify the wsdl file of the service.</p>
+      </td>
+    </tr>
+   
     <tr>
       <td colspan="5" valign="top"><p>XOP/MTOM Related Options</p>
       </td>
@@ -491,30 +589,27 @@ border="1">
         "policy"</p>
       </td>
       <td style="height: 38px"><p>
-        array | string</p>
+            WSPolicy Object</p>
       </td>
       <td style="height: 38px"><p>
-        Array of policy options | string containg policy file</p>
+            WSPolicy Object</p>
       </td>
       <td style="height: 38px"><p>None</p>
       </td>
-      <td style="height: 38px"><p style="margin-bottom: 0in">
-          Contains the array of policy related options.It may be contains inpolicy and outpolicy
-          arrays seperately or single policy option array. For advance case it&nbsp; may contains
-          the string that representing the policy file.</p>
-      </td>
+      <td style="height: 38px">
+            WSPolicy object</td>
     </tr>
         <tr valign="top">
             <td>
                 "securityToken"</td>
             <td>
-                array</td>
+                WSSecurityToken Object</td>
             <td>
-                Array of security policy options</td>
+                WSSecurityToken</td>
             <td>
                 None</td>
             <td>
-                Includes an array of security related properties.</td>
+                WSSecurityToken object</td>
         </tr>
   </tbody>
 </table>
@@ -573,7 +668,7 @@ properties related to a message. <a id="construct3"></a>
 <h3><b>Constructor</b></h3>
 <a id="message_WSMessage"></a>
 <ul>
-  <li><b>WSMessage (string payload | SimpleXMLElement payload | domDocument
+  <li><b>WSMessage (string payload | domDocument
     payload[, array properties])</b></li>
 </ul>
 
@@ -600,8 +695,6 @@ border="1">
         <ul>
           <li><p>string</p>
           </li>
-          <li><p>SimpleXMLElement</p>
-          </li>
           <li><p>domDocument</p>
           </li>
         </ul>
@@ -626,9 +719,9 @@ border="1">
       </th>
       <th><p>Value Domain</p>
       </th>
-      <th><p>Default Value</p>
+      <th style="width: 109px"><p>Default Value</p>
       </th>
-      <th><p>Description</p>
+      <th style="width: 465px"><p>Description</p>
       </th>
     </tr>
     <tr>
@@ -642,9 +735,9 @@ border="1">
       </td>
       <td><p>A URI</p>
       </td>
-      <td><p>None</p>
+      <td style="width: 109px"><p>None</p>
       </td>
-      <td><p>A URI representing the endpoint URI of the service to be
+      <td style="width: 465px"><p>A URI representing the endpoint URI of the service to be
         consumed. On client side, this must be present. In case WS-Addressing
         is in use, this will be used as the WSA To header</p>
       </td>
@@ -660,10 +753,14 @@ border="1">
       </td>
       <td><p>A URI</p>
       </td>
-      <td><p>None</p>
+      <td style="width: 109px"><p>None</p>
       </td>
-      <td><p>WS-Addressing action. A URI representing the WSA action that
-        helps uniquely identify the operation to be invoked.</p>
+      <td style="width: 465px"><p>
+    xs:anyURI
+    <br clear="all" />
+    The WS-A action to use when constructing the WS-A headers. A URI representing the WSA action that
+        helps uniquely identify the operation to be invoked. This is also
+    used as the SOAP Action regardless of whether useWSA option is specified or not.</p>
       </td>
     </tr>
     <tr valign="top">
@@ -673,10 +770,15 @@ border="1">
       </td>
       <td><p>A URI</p>
       </td>
-      <td><p>None</p>
+      <td style="width: 109px"><p>None</p>
       </td>
-      <td><p>WS-Addressing From. A URI indicating where the response or
-        request came from.</p>
+      <td style="width: 465px"><p>
+          xs:anyURI</p>
+          <p>
+              WS-Addressing From. A URI indicating where the response or
+        request came from.&nbsp;
+              (note: this doesn't support reference parameters.)
+          </p>
       </td>
     </tr>
     <tr valign="top">
@@ -686,10 +788,16 @@ border="1">
       </td>
       <td><p>A URI</p>
       </td>
-      <td><p>None</p>
+      <td style="width: 109px"><p>None</p>
       </td>
-      <td><p>WS-Addressing ReplyTo. A URI indicating where the response
-        should be sent to.</p>
+      <td style="width: 465px"><p>
+          xs:anyURI</p>
+          <p>
+              WS-Addressing ReplyTo. A URI indicating where the response
+        should be sent to. Defaults
+              to the anonymous URI (depending on version). (note: this doesn't support reference
+              parameters.)
+          </p>
       </td>
     </tr>
     <tr valign="top">
@@ -699,10 +807,14 @@ border="1">
       </td>
       <td><p>A URI</p>
       </td>
-      <td><p>None</p>
+      <td style="width: 109px"><p>None</p>
       </td>
-      <td><p>WS-Addressing FaultTo. A URI indicating where the fault should
-        be sent to in case of an error.</p>
+      <td style="width: 465px"><p>
+          xs:anyURI</p>
+          <p>
+              WS-Addressing FaultTo. A URI indicating where the fault should
+        be sent to in case of an error.(note: this doesn't support reference parameters.)
+          </p>
       </td>
     </tr>
     <tr>
@@ -716,9 +828,9 @@ border="1">
       </td>
       <td><p>MTOM content type</p>
       </td>
-      <td><p>"application/octet-stream"</p>
+      <td style="width: 109px"><p>"application/octet-stream"</p>
       </td>
-      <td><p style="margin-bottom: 0in">Specify a default MTOM content type
+      <td style="width: 465px"><p style="margin-bottom: 0in">Specify a default MTOM content type
         to be used with MTOM attachments. User can also specify
         xmlmime:contentType on the xop:Include element, which would override
         this setting.</p>
