@@ -6,18 +6,18 @@ cd ../../
 
 cd axis2c/samples
 make dist
-tar -xf wso2-wsf-c-src-1.0.tar.gz
-mv wso2-wsf-c-src-1.0   ../../wso2-wsf-c-src-1.0.0/axis2c/samples
+tar -xf wso2-wsf-c-src-1.0.0.tar.gz
+mv wso2-wsf-c-src-1.0.0   ../../wso2-wsf-c-src-1.0.0/axis2c/samples
 
 cd ../../sandesha2c/samples
 make dist
-tar -xf wso2-wsf-c-src-1.0.tar.gz
-mv wso2-wsf-c-src-1.0   ../../wso2-wsf-c-src-1.0.0/sandesha2c/samples
+tar -xf wso2-wsf-c-src-1.0.0.tar.gz
+mv wso2-wsf-c-src-1.0.0   ../../wso2-wsf-c-src-1.0.0/sandesha2c/samples
 
 cd ../../rampartc/samples
 make dist
-tar -xf wso2-wsf-c-src-1.0.tar.gz
-mv wso2-wsf-c-src-1.0   ../../wso2-wsf-c-src-1.0.0/rampartc/samples
+tar -xf wso2-wsf-c-src-1.0.0.tar.gz
+mv wso2-wsf-c-src-1.0.0   ../../wso2-wsf-c-src-1.0.0/rampartc/samples
 
 cd ../../
 
