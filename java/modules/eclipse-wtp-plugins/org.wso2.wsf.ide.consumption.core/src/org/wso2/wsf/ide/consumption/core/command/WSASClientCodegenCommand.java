@@ -191,7 +191,7 @@ public class WSASClientCodegenCommand extends AbstractDataModelOperation {
 	} catch (Exception e) {
 		status = StatusUtils.errorStatus(NLS.bind(
 											WSASConsumptionUIMessages.ERROR_CODEGEN_EXCEPTION,
-											new String[]{e.getLocalizedMessage()}),
+											new String[]{" : "+e.getCause().getMessage()}),
 										e);
 		environment.getStatusHandler().reportError(status); 
 	}

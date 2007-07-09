@@ -185,9 +185,8 @@ public class WSASWSDL2JavaCommand extends AbstractDataModelOperation {
 	} catch (Exception e) {
 		status = StatusUtils.errorStatus(NLS.bind(
 											WSASCreationUIMessages.ERROR_CODEGEN_EXCEPTION,
-											new String[]{e.getLocalizedMessage()}),
+											new String[]{" : "+e.getCause().getMessage()}),
 										e);
-		e.printStackTrace();
 		environment.getStatusHandler().reportError(status); 
 	}
 		
