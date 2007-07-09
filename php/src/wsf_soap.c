@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #include "wsf_soap.h"
 #include <axiom_soap_envelope.h>
 #include <axis2_options.h>
@@ -916,6 +917,8 @@ void wsf_soap_do_soap_call(zval* this_ptr,
                 to_epr = axis2_endpoint_ref_create(env, location);
                 axis2_options_set_to(client_options, env, to_epr);
                 {/** set options */
+					wsf_client_set_options(Z_OBJPROP_P(client_zval), NULL, env, client_options, svc_client, 0 TSRMLS_CC);
+					/*
                     HashTable *client_ht = NULL;
                     if(zend_hash_find(Z_OBJPROP_P(client_zval), WS_OPTIONS, sizeof(WS_OPTIONS), (void **) &tmp) == SUCCESS)                     {
                         if(Z_TYPE_PP(tmp) == IS_ARRAY){
@@ -923,9 +926,8 @@ void wsf_soap_do_soap_call(zval* this_ptr,
                         }   
                         
                     }
-                    wsf_client_set_options(client_ht, NULL, env, client_options, svc_client, 0 TSRMLS_CC);
+					*/
                 }
-                
 			}
 
             soap_version = WSF_GLOBAL(soap_version);
@@ -2802,6 +2804,7 @@ wsf_soap_send_fault(int version,char* code, char* string, char *actor TSRMLS_DC)
 
     body = xmlNewChild(envelope, ns, BAD_CAST("Body"), NULL);
     param = xmlNewChild(body, ns, BAD_CAST("Fault"), NULL);
+	WSF_GLOBAL(encoding) = NULL;
     
     if(version == SOAP_1_1){
            if (code != NULL) {
@@ -2818,22 +2821,24 @@ wsf_soap_send_fault(int version,char* code, char* string, char *actor TSRMLS_DC)
                 */
                 xmlNodeSetContentLen(node, BAD_CAST(str), new_len);
                 
-                efree(str);
+                //efree(str);
             }
-            if (string != NULL) {
+	        if (string != NULL) {
                 zval *tmp = NULL;
+				xmlNodePtr node;
                 MAKE_STD_ZVAL(tmp);
                 ZVAL_STRING(tmp, string, 0);
 
-                xmlNodePtr node = master_to_xml(get_conversion(IS_STRING), tmp, SOAP_LITERAL, param);
+                node = master_to_xml(get_conversion(IS_STRING), tmp, SOAP_LITERAL, param);
                 xmlNodeSetName(node, BAD_CAST("faultstring"));
-                /* zval_dtor(tmp); */
+                
             }
-            if (actor != NULL) {
+	        if (actor != NULL) {
                 zval *tmp = NULL;
-                MAKE_STD_ZVAL(tmp);
+                xmlNodePtr node;
+				MAKE_STD_ZVAL(tmp);
                 ZVAL_STRING(tmp, actor, 0);
-                xmlNodePtr node = master_to_xml(get_conversion(IS_STRING), tmp, SOAP_LITERAL, param);
+				node = master_to_xml(get_conversion(IS_STRING), tmp, SOAP_LITERAL, param);
                 xmlNodeSetName(node, BAD_CAST("faultactor"));
                 /* zval_dtor(tmp); */
             }
@@ -2851,8 +2856,6 @@ wsf_soap_send_fault(int version,char* code, char* string, char *actor TSRMLS_DC)
         sapi_add_header("Content-Type: text/xml; charset=utf-8", sizeof("Content-Type: text/xml; charset=utf-8")-1, 1);
     }
     php_write(buf, size TSRMLS_CC);
-    xmlFreeDoc(doc);
-    xmlFree(buf);
-
+    
     return;
 }

@@ -155,7 +155,7 @@ zend_function_entry php_ws_client_class_functions[]={
 	PHP_MALIAS(ws_client, getLastRequest, get_last_request , NULL , ZEND_ACC_PUBLIC)
 	PHP_MALIAS(ws_client, getProxy, get_proxy, NULL, ZEND_ACC_PUBLIC)
 	PHP_MALIAS(ws_client, terminateOutgoingRM , terminate_outgoing_rm, NULL, ZEND_ACC_PUBLIC)
-        PHP_MALIAS(ws_client, getLastResponseHeaders, get_last_response_headers, NULL, ZEND_ACC_PUBLIC)
+    PHP_MALIAS(ws_client, getLastResponseHeaders, get_last_response_headers, NULL, ZEND_ACC_PUBLIC)
 	PHP_ME(ws_client, __call, ws_client_call_args, ZEND_ACC_PUBLIC)
 	PHP_ME(ws_client, __construct, NULL, ZEND_ACC_PUBLIC)
 	PHP_ME(ws_client, __destruct, NULL, ZEND_ACC_PUBLIC)
@@ -180,7 +180,7 @@ zend_function_entry php_ws_service_class_functions[]={
         PHP_ME(ws_service, __construct, NULL, ZEND_ACC_PUBLIC)
         PHP_ME(ws_service, __destruct, NULL, ZEND_ACC_PUBLIC)
         { NULL , NULL, NULL }
-    };
+};
 
 /** WSFault class entry */
 zend_function_entry php_ws_fault_class_functions[]={
@@ -188,23 +188,23 @@ zend_function_entry php_ws_fault_class_functions[]={
         PHP_ME(ws_fault, __destruct, NULL, ZEND_ACC_PUBLIC)
         PHP_ME(ws_fault, __get, __ws_fault_get_args, ZEND_ACC_PUBLIC)
         {NULL , NULL, NULL}
-    };
+};
 
 /* {{{ WSHeader class functions */
 zend_function_entry php_ws_header_class_functions[] =   {
         PHP_ME(ws_header, __construct, NULL, ZEND_ACC_PUBLIC)
         {  NULL, NULL, NULL  }
-    };
+};
 
 zend_function_entry php_ws_security_token_class_functions[]={
             PHP_ME(ws_security_token, __construct, NULL, ZEND_ACC_PUBLIC)
             {    NULL, NULL, NULL   }
-        };
+};
 
 zend_function_entry php_ws_policy_class_functions[]={
             PHP_ME(ws_policy, __construct, NULL, ZEND_ACC_PUBLIC)
             {   NULL, NULL, NULL   }
-        };
+};
 
 /* {{{ wsf_functions[] */
 zend_function_entry wsf_functions[] = {
@@ -354,6 +354,27 @@ static xmlNodePtr ws_get_xml_node(zval *node)
 }
 /* }}} end ws_get_xml_node */
 
+static xmlDocPtr ws_get_xml_doc(zval *node)
+{
+    php_libxml_node_object *object;
+    xmlNodePtr nodep;
+
+    TSRMLS_FETCH();
+    object = (php_libxml_node_object *)zend_object_store_get_object(node TSRMLS_CC);
+    nodep = php_libxml_import_node(node TSRMLS_CC);
+    if (!nodep)
+    {
+        return NULL;
+    }
+    if (nodep->doc == NULL)
+    {
+        php_error_docref(NULL TSRMLS_CC, E_WARNING, "Imported Node must have \
+                         associated Document");
+        return NULL;
+    }
+	return nodep->doc;
+}
+
 
 /* {{{ wsf_module_entry */
 zend_module_entry wsf_module_entry = {
@@ -368,7 +389,7 @@ zend_module_entry wsf_module_entry = {
      PHP_RSHUTDOWN(wsf),
      PHP_MINFO(wsf),
 #if ZEND_MODULE_API_NO >= 20010901 
-	 "0.1", /* Replace with version number for your extension */
+	 "1.0", /* Replace with version number for your extension */
 #endif
     STANDARD_MODULE_PROPERTIES
 };
@@ -454,6 +475,7 @@ static void ws_init_globals(zend_wsf_globals *wsf_globals)
     wsf_globals->sdl = NULL;
     wsf_globals->typemap = NULL;
     wsf_globals->error_code = NULL;
+	wsf_globals->encoding = NULL;
 }
 /* }}} */
 
@@ -482,14 +504,13 @@ PHP_MINIT_FUNCTION(wsf)
     ws_object_handlers.clone_obj = NULL;
 
     REGISTER_WSF_CLASS(ce, "WSClient", NULL,
-                       php_ws_client_class_functions, ws_client_class_entry);
+    php_ws_client_class_functions, ws_client_class_entry);
     
     REGISTER_WSF_CLASS(ce, "WSClientProxy", NULL,
-                               php_ws_client_proxy_class_functions, ws_client_proxy_class_entry);
+    php_ws_client_proxy_class_functions, ws_client_proxy_class_entry);
 
     REGISTER_WSF_CLASS(ce, "WSService", NULL,
-                       php_ws_service_class_functions, ws_service_class_entry);
-
+    php_ws_service_class_functions, ws_service_class_entry);
 
     INIT_CLASS_ENTRY(ce, "WSMessage", php_ws_message_class_functions);
     ws_message_class_entry =  zend_register_internal_class(&ce TSRMLS_CC);
@@ -720,15 +741,14 @@ PHP_METHOD(ws_message, __construct)
     WSF_OBJ_CHECK(env);
 
     if(Z_TYPE_P(payload) == IS_STRING){
-	add_property_stringl(object , WS_MSG_PAYLOAD_STR, Z_STRVAL_P(payload), Z_STRLEN_P(payload), 1);
-        add_property_long(object, WS_MSG_TYPE, WS_USING_STRING);
+		add_property_stringl(object , WS_MSG_PAYLOAD_STR, Z_STRVAL_P(payload), Z_STRLEN_P(payload), 1);
+		add_property_long(object, WS_MSG_TYPE, WS_USING_STRING);
     }
     else if(Z_TYPE_P(payload) == IS_OBJECT &&
             instanceof_function(Z_OBJCE_P(payload), dom_node_class_entry TSRMLS_CC)) {
         add_property_zval(object, WS_MSG_PAYLOAD_DOM, payload);
         add_property_long(object, WS_MSG_TYPE, WS_USING_DOM);
-    }
-    else {
+    }else {
         return;
     }
 
@@ -737,24 +757,22 @@ PHP_METHOD(ws_message, __construct)
         HashTable *ht = Z_ARRVAL_P(properties);
         if(!ht){
             return;
-        }
+		}
 		
-	add_property_zval(object, WS_OPTIONS, properties);
+		add_property_zval(object, WS_OPTIONS, properties);
 
-
-        if(zend_hash_find(ht, WS_ATTACHMENTS, sizeof(WS_ATTACHMENTS), (void **)&tmp) == SUCCESS &&
-                Z_TYPE_PP(tmp) == IS_ARRAY)
-        {
-            add_property_zval(object, WS_ATTACHMENTS, *tmp);
-        }
-		
+	    if(zend_hash_find(ht, WS_ATTACHMENTS, sizeof(WS_ATTACHMENTS), (void **)&tmp) == SUCCESS &&
+            Z_TYPE_PP(tmp) == IS_ARRAY){
+		    add_property_zval(object, WS_ATTACHMENTS, *tmp);
+		}
+	
         /** adding custom headers */
-        if(zend_hash_find(ht, WS_HEADERS, sizeof(WS_HEADERS), (void**)&tmp) == SUCCESS){
-            if(Z_TYPE_PP(tmp) == IS_ARRAY){
-                add_property_zval(object, WS_HEADERS, *tmp);
-            }
-        }
-    }
+		if(zend_hash_find(ht, WS_HEADERS, sizeof(WS_HEADERS), (void**)&tmp) == SUCCESS){
+			if(Z_TYPE_PP(tmp) == IS_ARRAY){
+				add_property_zval(object, WS_HEADERS, *tmp);
+			}
+		}
+	}
 }
 /* }}} */
 
@@ -768,8 +786,8 @@ PHP_METHOD(ws_message, __destruct)
 static int get_message_storage_type(zval *this_ptr TSRMLS_DC)
 {
     zval **param_val = NULL;
-    if(zend_hash_find(Z_OBJPROP_P(this_ptr), WS_MSG_PAYLOAD_TYPE,
-                      sizeof(WS_MSG_PAYLOAD_TYPE), (void**)&param_val) == SUCCESS &&
+    if(zend_hash_find(Z_OBJPROP_P(this_ptr), WS_MSG_TYPE,
+                      sizeof(WS_MSG_TYPE), (void**)&param_val) == SUCCESS &&
             Z_TYPE_PP(param_val) == IS_LONG)
     {
         return Z_LVAL_PP(param_val);
@@ -799,21 +817,30 @@ PHP_METHOD(ws_message, __get)
     WSF_GET_THIS(object);
     if(strcmp(prop_name, WS_MSG_PAYLOAD_STR) == 0)
     {
-        if(get_message_storage_type(object TSRMLS_CC) == WS_USING_DOM ||
-                get_message_storage_type(object TSRMLS_CC) == WS_USING_SIMPLEXML)
+        if(get_message_storage_type(object TSRMLS_CC) == WS_USING_DOM)
         {
-            xmlNodePtr nodep;
+			xmlNodePtr nodep = NULL;			
             axiom_node_t *payload = NULL;
             zval **tmp_val = NULL;
             axiom_xml_reader_t *reader = NULL;
 
             if((zend_hash_find(Z_OBJPROP_P(object), WS_MSG_PAYLOAD_DOM,
-                               sizeof(WS_MSG_PAYLOAD_DOM), (void**)&tmp_val) == SUCCESS)||
-                    (zend_hash_find(Z_OBJPROP_P(object), WS_MSG_PAYLOAD_SXML,
-                                    sizeof(WS_MSG_PAYLOAD_SXML), (void**)&tmp_val) == SUCCESS))
+                               sizeof(WS_MSG_PAYLOAD_DOM), (void**)&tmp_val) == SUCCESS))
             {
-                nodep = ws_get_xml_node(*tmp_val);
-                reader = axiom_xml_reader_create_for_memory(env,
+				/*
+				int size = 0;
+				xmlDocPtr doc;
+				xmlChar *buf = NULL;
+                doc = ws_get_xml_doc(*tmp_val);
+		        xmlDocDumpMemory(doc, &buf, &size);
+				if(buf){
+					add_property_string(object, WS_MSG_PAYLOAD_STR, buf, 1);
+					RETURN_STRING(buf, 1);
+                }
+			    */
+				nodep = ws_get_xml_node(*tmp_val);
+
+				reader = axiom_xml_reader_create_for_memory(env,
                          (void*)nodep->doc, 0, "utf-8", AXIS2_XML_PARSER_TYPE_DOC);
 
                 if (!reader)
@@ -827,53 +854,39 @@ PHP_METHOD(ws_message, __get)
                 {
                     axis2_char_t *res_text = NULL;
                     res_text = wsf_util_serialize_om(env, payload);
+					axiom_node_free_tree(payload, env);
                     if(res_text)
                     {
                         add_property_string(object, WS_MSG_PAYLOAD_STR, res_text, 1);
                         RETURN_STRING(res_text, 1);
                     }
-                    /** todo memory leaks */
+					
                 }
-            }
+			}
         }
     }
     else if(strcmp(prop_name, WS_MSG_PAYLOAD_DOM) == 0)
     {
         if(get_message_storage_type(object TSRMLS_CC) == WS_USING_STRING)
         {
-            axiom_node_t *payload = NULL;
             zval **tmp_val = NULL;
-            axiom_xml_reader_t *reader = NULL;
-
-            if(zend_hash_find(Z_OBJPROP_P(object), WS_MSG_PAYLOAD_DOM,
-                              sizeof(WS_MSG_PAYLOAD_DOM), (void**)&tmp_val) == SUCCESS)
-            {
-                char *val = Z_STRVAL_PP(tmp_val);
-                if(val)
-                {
-                    reader = axiom_xml_reader_create_for_memory(env,
-                             val, 0, "utf-8", AXIS2_XML_PARSER_TYPE_BUFFER);
-
-                    if (!reader)
-                    {
-                        zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 1 TSRMLS_CC,
-                                                "reader create failed");
-                    }
-                    payload = wsf_util_read_payload(reader, env);
-                    if(payload)
-                    {
+			if(zend_hash_find(Z_OBJPROP_P(object), WS_MSG_PAYLOAD_STR,
+				sizeof(WS_MSG_PAYLOAD_STR), (void**)&tmp_val) == SUCCESS) {
+					long length = 0;
+					char *buffer = Z_STRVAL_PP(tmp_val);
+					length = Z_STRLEN_PP(tmp_val);
+					if(buffer){
                         int ret;
                         zval *value = NULL;
                         xmlDocPtr doc = NULL;
-                        doc = wsf_util_serialize_om_to_doc(env, payload);
-                        if (!doc)
-                        {
+						doc = xmlReadMemory	(buffer , length, NULL, "UTF-8", 
+									XML_PARSE_NOBLANKS | XML_PARSE_SAX1); 
+					    if (!doc){
                             RETURN_NULL();
                         }
                         value = php_dom_create_object((xmlNodePtr)doc, &ret, NULL,  return_value, NULL TSRMLS_CC);
                         add_property_zval(object, WS_MSG_PAYLOAD_DOM, value);
                         RETURN_ZVAL(value, NULL, NULL);
-                    }
                 }
             }
         }
@@ -936,6 +949,8 @@ PHP_METHOD(ws_client, __construct)
             return;
 
 		add_property_zval(obj, WS_OPTIONS, options);
+
+		wsf_client_add_properties(obj, ht TSRMLS_CC);
 		/**  wsf_client_add_properties(obj , ht TSRMLS_CC); */
         if(zend_hash_find(ht, WS_CACHE_WSDL , sizeof(WS_CACHE_WSDL ), (void **)&tmp) == SUCCESS &&
                                 Z_TYPE_PP(tmp) == IS_LONG){
@@ -963,6 +978,12 @@ PHP_METHOD(ws_client, __construct)
                     (Z_LVAL_PP(tmp) == WS_SOAP_LITERAL || Z_LVAL_PP(tmp) == WS_SOAP_ENCODED)) {
                     add_property_long(this_ptr, "use", Z_LVAL_PP(tmp));
         }
+		if (zend_hash_find(ht, "_encoding", sizeof("_encoding"), (void **) &tmp) == SUCCESS &&
+				Z_TYPE_PP(tmp) == IS_STRING) {
+				WSF_GLOBAL(encoding) = xmlFindCharEncodingHandler(Z_STRVAL_PP(tmp));
+			} else {
+				WSF_GLOBAL(encoding) = NULL;
+			}
     }
 }
 /* }}} */
@@ -1310,12 +1331,12 @@ PHP_METHOD(ws_service, __construct)
         svc_info->msg_recv = wsf_msg_recv;
         wsf_util_create_svc_from_svc_info(svc_info , ws_env_svr TSRMLS_CC);
     }else{
-        wsf_soap_send_fault(SOAP_1_1,"SOAP-ENV:Server","Bad Request",NULL TSRMLS_CC);
-        /*
+       
+	/*	wsf_soap_send_fault(SOAP_1_1,"SOAP-ENV:Server","Bad Request",NULL TSRMLS_CC); */
+        
         zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 1 TSRMLS_CC,
                                 "server does not support cli");
-        *
-        */
+       
         return;
     }
 

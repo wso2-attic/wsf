@@ -115,8 +115,9 @@ axiom_node_t*  wsf_util_construct_header_node(
 	const axutil_env_t *env, 
 	zval *header TSRMLS_DC);
 
+/*
 char *wsf_util_get_ttl(char *buf, axutil_env_t *env);
-
+*/
 char* wsf_util_read_file_to_buffer(char *filename TSRMLS_DC);
 
 axiom_node_t* wsf_util_deserialize_buffer(

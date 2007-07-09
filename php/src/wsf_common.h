@@ -58,6 +58,9 @@ typedef enum ws_input_types{
 /** Options array options */
 #define WS_OPTIONS "wsfoptions"
 
+#define WS_MEP "mep"
+#define WS_IN_ONLY "IN_ONLY"
+#define WS_IN_OUT "IN_OUT"
 
 #define WS_TO				"to"    /** endpoint uri */
 
@@ -121,9 +124,7 @@ typedef enum ws_input_types{
 #define WS_MSG_PAYLOAD_STR 		"str"
 #define WS_MSG_PAYLOAD_SXML 	"simpleXML"
 #define WS_MSG_PAYLOAD_DOM 		"dom"
-
-#define WS_MSG_PAYLOAD_TYPE 	"payloadtype"
-#define WS_MSG_TYPE 			"type"
+#define WS_MSG_TYPE 			"payloadtype"
 
 /** soap header attributes */
 

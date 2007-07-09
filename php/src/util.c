@@ -176,7 +176,6 @@ wsf_util_construct_header_node(const axutil_env_t *env,
                             
     }
 
-
 	return header_node;			
 }
 
@@ -416,10 +415,14 @@ axiom_node_t* wsf_util_read_payload(
 		return NULL;
 	}
 	axiom_document_build_all(document, env);
+
+	/** free stax builder and associated document only */
+	axiom_stax_builder_free_self(builder, env);
+
 	return payload;
 }
 /* }}} ws_read_payload */
-
+/*
 char*wsf_util_get_ttl(char *buf, axutil_env_t *env)
 {
     char *tmp_string = NULL;
@@ -441,7 +444,6 @@ char*wsf_util_get_ttl(char *buf, axutil_env_t *env)
     index = strchr(tmp_string, 'd');
     if(index)
     {
-        /** find day */
         next = index+1;
         tmp_string[index - tmp_string] = '\0';    
         day = tmp_string;
@@ -486,7 +488,7 @@ char*wsf_util_get_ttl(char *buf, axutil_env_t *env)
     sprintf(buffer, "%d", timetolive);
     return buffer;
 }
-
+*/
 axis2_char_t *wsf_util_get_soap_msg_from_op_client(
     axis2_op_client_t *op_client,
     axutil_env_t *env, 
