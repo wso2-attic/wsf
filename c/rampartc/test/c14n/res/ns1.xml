@@ -1,0 +1,6 @@
+<doc xmlns="urn:def" xmlns:x='urn:xxx'> 
+    <x:a xmlns="" xmlns:x="urn:xyx">
+        <b xmlns="urn:def" xmlns:x="urn:xxx"/>
+        <c xmlns:r="urn:xxx"/>
+    </x:a>
+</doc>

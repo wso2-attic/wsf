@@ -1,0 +1,6 @@
+Apache Axis2/C Util
+
+	* Seperated Util module from Axis2/C
+
+-- Axis2-C team <axis-c-dev@ws.apache.org>  Thu, 18 May 2006 
+

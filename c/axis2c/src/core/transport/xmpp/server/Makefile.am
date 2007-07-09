@@ -1,0 +1,1 @@
+SUBDIRS=simple_xmpp_server

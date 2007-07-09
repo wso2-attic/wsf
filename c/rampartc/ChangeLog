@@ -1,0 +1,7 @@
+Rampart/C 
+
+* Initial release 
+* Usernametoken support
+* Timestamp support
+* Samples for clients and callbacks
+-- Axis2-C team <axis-c-dev@ws.apache.org>  Tue 13 June 2006

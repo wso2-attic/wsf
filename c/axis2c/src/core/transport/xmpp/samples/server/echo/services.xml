@@ -1,0 +1,14 @@
+<service name="echo">
+    <parameter name="ServiceClass" locked="xsd:false">echo</parameter>
+    <parameter name="xmpp_id" locked="xsd:false">echo@localhost/Home</parameter>
+    <parameter name="xmpp_password" locked="xsd:false">123</parameter>
+   <description>
+        This is a testing service , to test the system is working or not
+   </description>
+
+    <operation name="echoString">
+            <!--messageReceiver class="axis2_receivers" /-->
+            <parameter name="wsamapping" >http://ws.apache.org/axis2/c/samples/echoString</parameter>
+    </operation>
+
+</service>

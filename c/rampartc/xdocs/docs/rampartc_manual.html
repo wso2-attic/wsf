@@ -1,0 +1,152 @@
+<html>
+<head>
+  <title>Manual</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+</head>
+
+<body lang="en-US" dir="ltr">
+<h2>Preamble</h2>
+
+<p style="margin-bottom: 0in">This document is intended to be a reference
+manual for <a href="http://ws.apache.org/rampart/c">Apache Rampart/C</a>.</p>
+<p>For further details on Axis2/C please refer the <a href="http://ws.apache.org/axis2/c/docs/axis2c_manual.html">Apache Axis2/C manual</a></p>
+
+<h2>Simplified Architecture</h2>
+
+<p>In a very simple view, Rampart/C consists of a core module and packages
+related to WS-Security and WS-Security Policy. For XML-Encryption and
+Signature Rampart/C uses OMXMLSecurity. Both Rampart/C and OMXMLSecurity uses <a
+href="http://ws.apache.org/axis2/c/docs/om_tutorial.html">Apache AXIOM</a> and
+Axis2-Util libraries. OpenSSL is used as the crypto library in
+OMXMLSecurity.</p>
+<img src="files/rampart_simple_archi.png">
+
+<h2>Interface with Axis2/C</h2>
+
+<p>The interface between Rampart/C and Apache Axis2/C engine is the Rampart
+module called mod_rampart. The module has two handlers, one for the inflow
+and another for the outflow of the Axis2/C engine. Rampart/C directs messages
+to it's other components for further security related processing using these
+handlers. </p>
+
+<p>Handlers are a way of extending capabilities of the core engine. Once the
+Axis2/C engine calls the invoke() method of the handler, the module can do
+the necessary processing over the SOAP message. Rampart/C use this mechanism
+to build/process security related SOAP headers.</p>
+
+<h2>Inside Rampart/C</h2>
+Following is a detailed architecture diagram of Rampart/C
+<p><img src="files/rampart_archi.png"></p>
+
+<h3>Rampart Engine</h3>
+
+<p>Rampart engine is the heart of Rampart/C. It sets security policies that
+defines the behavior of Rampart/C message processing. These policies are
+usually read from a selected policy.xml file depending on the message flow,
+which contains a set of policy assertions.</p>
+
+<h3>Processors and Builders</h3>
+
+<p>Rampart/C processes incoming SOAP message using it's processors. There are
+two processors in Rampart/C.</p>
+<ol>
+  <li><strong>Security Header Processor</strong> : Processes security header
+    of the incoming message and make decisions upon security claims and the
+    security policies.</li>
+  <li><strong>Token Processor</strong> : Processes token claims such as
+    binary security token.</li>
+</ol>
+Similar to processes, Rampart/C uses two builders that builds outgoing
+messages.
+<ol>
+  <li>Security header builder : Builds Security headers of an outgoing
+    message depending on security policies.</li>
+  <li>Token Builder : Builds token claims such as binary security token.</li>
+</ol>
+These builders and processes assemble other components such as encryption,
+signature, UsernameToken together. Decisions are taken in these processes
+would result in further processing of the message or throwing of a  SOAP
+fault.
+
+<h3>Policy</h3>
+
+<p>The policy module of Rampart/C acts as the configuration module in
+Rampart/C. The policy module has a set of models that represents assertions.
+Also there are set of builders that builds these models. <br>
+</p>
+
+<p>Rampart/C is configured using policy assertions defined in WS-Security
+Policy specification 1.1. These policies are defined in policy.xml files.
+There are two policy files for a single Rampart configuration.</p>
+<ol>
+  <li>incoming-secpolicy.xml</li>
+  <li>outgoing-secpolicy.xml</li>
+</ol>
+The former defines how an outgoing message is secured, whilst the latter
+defines how the incoming message should be secured. Apart from the assertions
+mentioned in the specification, Rampart/C uses it's own assertions. (e.g. To
+specify keys and certificates). There are number of such sample policy files
+under rampart/samples/secpolicy.
+
+
+<h3>Rampart utilities</h3>
+
+<p>Rampart utilities groups different entities that cater for different
+purposes.  Following is a brief description of major components inside
+utilities</p>
+<ul>
+  <li><strong>Rampart context:</strong> Keeps configurations for Rampart/C.
+    This includes certificates, keys, passwords, policies etc.</li>
+  <li><strong>UsernameToken: </strong>Provides functionalities to
+    build/process a UsernameToken.</li>
+  <li><strong>TimestampToken: </strong>Provides functionalities to
+    build/process  a TimestampToken.</li>
+  <li><strong>Authentication provider: </strong>The interface for
+    authentication modules that can be plugged into Rampart/C. This allows
+    users to define their own rules for processing user name / passwords.</li>
+  <li><strong>Credentials provider: </strong>An interface for a credentials
+    module to be plugged in. Users can provide custom user name/password
+    pairs to build user name tokens.</li>
+  <li><strong>Password callbacks: </strong>An interface for users to provide
+    password for a given user name.</li>
+</ul>
+
+<h2>OMXMLSecurity</h2>
+
+<p>For XML cryptographic purposes Rampart/C uses OMXMLSecurity, which is a
+library written on top of Apache AXIOM. If a particular SOAP message needs to
+be encrypted or signed, Rampart/C get the work done through the
+OMXMLSecurity. Following are the functionalities of OMXMLSecurity.</p>
+<ol>
+  <li><strong>XML-Encryption / Decryption:</strong> This includes symmetric
+    and asymmetric encryptions. Usually data is encrypted using a symmetric
+    key (or a session key) which is again encrypted using an asymmetric
+    algorithm using a public key.</li>
+  <li><strong>XML-Signature  / Verification:</strong> Allows one or more part
+    of an XML document to be signed using a private key. Also allows these
+    signed parts to be verified.</li>
+  <li><strong>Key management:</strong> To load X509 certificates, Private
+    keys etc, the Key management interface provide a series of functions.
+    Keys might be stored in PEM files, PKCS12 key stores or can be in string
+    buffers.</li>
+  <li><strong>Canonicalization:</strong> Provide Canonicalization (C14N)
+    transform support.</li>
+  <li><strong>Creating/Processing tokens:</strong> There are number of XML
+    elements that are introduced by security specifications. The token base
+    in OMXMLSecurity provides functionalities to create/process such
+  elements.</li>
+</ol>
+<p>Following diagram shows the architecture of OMXMLSecurity</p>
+<img src="files/oxs_archi.png">
+
+
+
+<p style="margin-bottom: 0in">Please send your feedback to the Apache Axis2/C
+developer mailing list (<a
+href="mailto:rampart-c-dev@apache.org">rampart-c-dev@apache.org</a>). Subscription
+details are available on the <a
+href="http://ws.apache.org/rampart/c/mail-lists.html">Rampart site</a>.</p>
+
+
+</body>
+</html>

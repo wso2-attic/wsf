@@ -1,0 +1,9 @@
+prglibdir=$(prefix)/services/echo
+prglib_LTLIBRARIES = libecho.la
+prglib_DATA= services.xml
+EXTRA_DIST = services.xml echo.mk echo.h
+noinst_HEADERS = echo.h
+SUBDIRS =
+libecho_la_SOURCES = echo.c echo_skeleton.c
+libecho_la_LIBADD  =
+INCLUDES = @AXIS2INC@

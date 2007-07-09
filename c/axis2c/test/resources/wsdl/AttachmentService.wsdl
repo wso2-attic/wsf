@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://attachment.test.org" xmlns:impl="http://attachment.test.org" xmlns:intf="http://attachment.test.org" xmlns:tns2="http://xml.apache.org/xml-soap" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://attachment.test.org" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:impl="http://attachment.test.org" xmlns:intf="http://attachment.test.org" xmlns:tns2="http://xml.apache.org/xml-soap" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://xml.apache.org/xml-soap"/>
+   <element name="multiAttachment">
+    <complexType>
+     <sequence>
+      <element name="arg_0_0" nillable="true" type="tns2:DataHandler"/>
+      <element name="arg_1_0" nillable="true" type="tns2:DataHandler"/>
+      <element name="arg_2_0" nillable="true" type="tns2:Image"/>
+      <element name="arg_3_0" nillable="true" type="tns2:DataHandler"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="multiAttachmentResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" minOccurs="0" name="multiAttachmentReturn" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="nillableAttachment">
+    <complexType>
+     <sequence>
+      <element name="arg_0_1" nillable="true" type="tns2:DataHandler"/>
+      <element name="arg_1_1" nillable="true" type="tns2:Image"/>
+      <element name="arg_2_1" nillable="true" type="tns2:Source"/>
+      <element name="arg_3_1" nillable="true" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="nillableAttachmentResponse">
+    <complexType>
+     <sequence>
+      <element name="nillableAttachmentReturn" nillable="true" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="multiAttachmentResponse">
+
+      <wsdl:part element="impl:multiAttachmentResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="nillableAttachmentRequest">
+
+      <wsdl:part element="impl:nillableAttachment" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="nillableAttachmentResponse">
+
+      <wsdl:part element="impl:nillableAttachmentResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="multiAttachmentRequest">
+
+      <wsdl:part element="impl:multiAttachment" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:portType name="AttachmentService">
+
+      <wsdl:operation name="multiAttachment">
+
+         <wsdl:input message="impl:multiAttachmentRequest" name="multiAttachmentRequest"/>
+
+         <wsdl:output message="impl:multiAttachmentResponse" name="multiAttachmentResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="nillableAttachment">
+
+         <wsdl:input message="impl:nillableAttachmentRequest" name="nillableAttachmentRequest"/>
+
+         <wsdl:output message="impl:nillableAttachmentResponse" name="nillableAttachmentResponse"/>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="AttachmentServiceSoapBinding" type="impl:AttachmentService">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="multiAttachment">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="multiAttachmentRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="multiAttachmentResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="nillableAttachment">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="nillableAttachmentRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="nillableAttachmentResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="AttachmentServiceService">
+
+      <wsdl:port binding="impl:AttachmentServiceSoapBinding" name="AttachmentService">
+
+         <wsdlsoap:address location="http://localhost:9080/AttachmentService/services/AttachmentService"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

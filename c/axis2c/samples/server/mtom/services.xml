@@ -1,0 +1,12 @@
+<service name="mtom">
+    <parameter name="ServiceClass" locked="xsd:false">mtom</parameter>
+
+   <description>
+        This is a testing service , to test the system is working or not
+   </description>
+
+    <operation name="mtomSample">
+            <parameter name="wsamapping" >http://ws.apache.org/axis2/c/samples/mtom</parameter>
+    </operation>
+
+</service>

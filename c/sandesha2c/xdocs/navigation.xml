@@ -1,0 +1,26 @@
+<project name="Sandesha2C">
+  <body>
+      <menu name="Apache Sandesha2/C">
+        <item name="Apache Sandesha2/C Home" href="index.html"/>
+        <item name="Download Sandesha2/C" href="download.cgi">
+            <item name="Releases" href="download.cgi"/>
+        </item>
+        <item name="Documentation" href="docs/index.html">
+	        <item name="Installation Guide" href="docs/installationguide.html"/>
+	        <item name="Sandesha2/C manual" href="docs/sandesha2c_manual.html"/>
+        </item>
+        <item name="Get Involved" href="lists_issues.html">
+	        <item name="Mailing Lists &amp; Issue Tracking" href="lists_issues.html"/>
+            <item name="Checkout Source Code" href="svn.html"/>
+        </item>
+        <item name="Developer Guidelines" href="coding_conventions.html">
+	        <item name="Coding Convention" href="coding_conventions.html"/>
+            <item name="Versionning" href="versioning.html"/>
+        </item>
+        <item name="Project Information" href="team-list.html">
+            <item name="Project Team" href="team-list.html"/>
+            <item name="Source Code"  href="http://svn.apache.org/viewvc/webservices/sandesha/trunk/c/"/>
+        </item>
+    </menu>
+  </body>
+</project>

@@ -1,0 +1,12 @@
+<z:doc xmlns:z="urn:zzzz" xmlns='urn:sadjfksdf'> 
+    <x:a xmlns="" xmlns:x="urn:test">
+        <a10 xmlns:x="urn:tst">
+            <a101 xmlns:x="urn:test"/>
+        </a10>
+        <a1 xmlns="" xmlns:x="urn:test">
+            <x:a11 xmlns="urn:NEED" xmlns:x="urn:test">
+                <t/>
+            </x:a11>
+        </a1>
+    </x:a>
+</z:doc>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsp:Policy xmlns:wsp="http://www.w3.org/ns/ws-policy"
+    xmlns:pa="http://ws-policy.example.com/assertion" >
+    <wsp:ExactlyOne>
+        <wsp:All>
+            <pa:Assertion38 marker="38" />
+            <pa:Assertion10 marker="10" />
+        </wsp:All>
+    </wsp:ExactlyOne>
+</wsp:Policy>

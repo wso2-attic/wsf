@@ -1,0 +1,10 @@
+<wsp:Policy wsu:Id="Policy1">
+    <pa:Assertion1 marker="1"/>
+</wsp:Policy>
+    <wsp:Policy wsu:Id="Policy2">
+        <pa:Assertion2 marker="2"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy3">
+        <pa:Assertion3 marker="3"/>
+    </wsp:Policy>
+

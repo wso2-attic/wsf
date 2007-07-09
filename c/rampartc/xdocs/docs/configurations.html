@@ -1,0 +1,404 @@
+<html>
+<head>
+  <title>Rampart configurations</title>
+</head>
+
+<body lang="en-US" dir="ltr">
+<h1>Rampart configurations</h1>
+
+<h2>Engaging Rampart/C</h2>
+<p>
+Rampart/C is deployed in Axis2/C engine as an <a href="http://ws.apache.org/axis2/c/docs/axis2c_manual.html#engaging_module">axis2 module</a>. Just as any other module you have to "engage" the Rampart/C with Axis2/C. All you have to do is to add following line to your descriptor file.</p>
+
+<pre>
+ &lt;module ref="rampart"/&gt;
+</pre>
+<p>
+This allows Rampart/C to intercept messages exchanged via the engine and add/verify security claims. 
+You may find several examples comes with Rampart/C under samples/secpolicy/. There are several identified scenarios that demonstrates Rampart/C features. This includes</p>
+<ol>
+<li>Inclusion of Timestamps and verification
+<li>Inclusion of Username Tokens and authentication
+<li>SOAP message encryption/decryption
+<li>SOAP message signature/verification
+<li>Detecting replays of messages
+</ol>
+
+<h2>Security policy based configurations</h2>
+
+<p>Rampart/C configurations are based on WS Security Policy Language 1.0. Thus, we need to specify these policies in the descriptor file. For the client side we place them in a separate policy file, whilst in the server side we place them within either the services.xml or the axis2.xml.</p>
+
+<h2>Client configurations</h2>
+
+<p>For client side configurations, you need to create a client repository. This is the place where you keep axis2.xml, libraries and modules. When you create your service client, to invoke web services, you can give the client repository as follows.</p>
+<pre>
+svc_client = axis2_svc_client_create(env, "/my/path/to/client/repository");
+</pre>
+<p>In the axis2.xml, you need to engage Rampart/C as follows.</p>
+<pre> 
+ &lt;module ref="rampart"/&gt;
+</pre>
+<p>Then you may place your client's policy file in the client repository. Following is an example of a policy file.</p>
+<pre>
+&lt;wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"&gt;
+    &lt;wsp:ExactlyOne&gt;
+        &lt;wsp:All&gt;
+            &lt;sp:AsymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;wsp:Policy&gt;
+                    &lt;sp:InitiatorToken&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient"&gt;
+                                &lt;wsp:Policy&gt;
+                                    &lt;sp:WssX509V3Token10/&gt;
+                                &lt;/wsp:Policy&gt;
+                            &lt;/sp:X509Token&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:InitiatorToken&gt;
+                    &lt;sp:RecipientToken&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never"&gt;
+                                &lt;wsp:Policy&gt;
+                                    &lt;sp:WssX509V3Token10/&gt;
+                                &lt;/wsp:Policy&gt;
+                            &lt;/sp:X509Token&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:RecipientToken&gt;
+                    &lt;sp:AlgorithmSuite&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:Basic256Rsa15/&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:AlgorithmSuite&gt;
+                    &lt;sp:Layout&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:Strict/&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:Layout&gt;
+                &lt;/wsp:Policy&gt;
+            &lt;/sp:AsymmetricBinding&gt;
+            &lt;sp:Wss10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;wsp:Policy&gt;
+                    &lt;sp:MustSupportRefKeyIdentifier/&gt;
+                    &lt;sp:MustSupportRefEmbeddedToken/&gt;
+                    &lt;sp:MustSupportRefIssuerSerial/&gt;
+                &lt;/wsp:Policy&gt;
+            &lt;/sp:Wss10&gt;
+            &lt;sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;sp:Body/&gt;
+            &lt;/sp:SignedParts&gt;
+            &lt;rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy"&gt;
+                &lt;rampc:User&gt;Bob&lt;/rampc:User&gt;
+                &lt;rampc:EncryptionUser&gt;b&lt;/rampc:EncryptionUser&gt;
+                &lt;rampc:PasswordType&gt;Digest&lt;/rampc:PasswordType&gt;
+                &lt;rampc:PasswordCallbackClass&gt;AXIS2C_HOME/bin/samples/rampart/callback/libpwcb.so&lt;/rampc:PasswordCallbackClass&gt;
+                &lt;rampc:ReceiverCertificate&gt;AXIS2C_HOME/bin/samples/rampart/keys/ahome/bob_cert.cert&lt;/rampc:ReceiverCertificate&gt;
+                &lt;rampc:Certificate&gt;AXIS2C_HOME/bin/samples/rampart/keys/ahome/alice_cert.cert&lt;/rampc:Certificate&gt;
+                &lt;rampc:PrivateKey&gt;AXIS2C_HOME/bin/samples/rampart/keys/ahome/alice_key.pem&lt;/rampc:PrivateKey&gt;
+            &lt;/rampc:RampartConfig&gt;
+        &lt;/wsp:All&gt;
+    &lt;/wsp:ExactlyOne&gt;
+&lt;/wsp:Policy&gt;
+</pre>
+
+<h2>Server configurations</h2>
+
+<p>In order to engage Rampart/C in the server side you need to add following line to your descriptor file. This can be either services.xml (service level) or axis2.xml (global level). </p>
+<pre> 
+&lt;module ref="rampart"/&gt;
+</pre>
+<p>Then we place our policies within the descriptor file as follows. </p>
+<pre>
+&lt;service name="sec_echo"&gt;
+    &lt;parameter name="ServiceClass" locked="xsd:false"&gt;sec_echo&lt;/parameter&gt;
+
+   &lt;description&gt;
+        This is a testing service , to test the system is working or not
+   &lt;/description&gt;
+   &lt;module ref="rampart"/&gt;
+   &lt;operation name="echoString"&gt;
+            &lt;parameter name="wsamapping"&gt;http://example.com/ws/2004/09/policy/Test/EchoRequest&lt;/parameter&gt;
+   &lt;/operation&gt;
+
+    &lt;wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"&gt;
+		&lt;!--Your policies are here--&gt;
+	&lt;/wsp:Policy&gt;
+&lt;/service&gt;
+</pre>
+
+<h2>Explaining policies</h2>
+
+<p>Here we will explain how to explore the various security features available in Rampart/C. We thoroughly recommend you to go through the samples available in Rampart/C in order see how these configurations are combined together. </p>
+
+<h3>Using Timestamps </h3>
+
+<p>To add a Timestamp to the SOAP message, user has to specify it in the policy by adding assertion</p>
+<pre>
+&lt;sp:IncludeTimestamp/&gt;
+</pre>
+<p>Beyond that user has to specify the duration of the validity of the message. This can be done by adding following Rampart/C specific assertion.</p>
+<pre>
+&lt;rampc:TimeToLive&gt;360&lt;/rampc:TimeToLive&gt;
+</pre>
+<p>Here the time duration is specified using seconds. This would add a timestamp as follows to the security header. Note that the time difference is 360 seconds. If the message is not arrived within these limits, an error will be thrown back.</p>
+<pre>
+&lt;wsu:Timestamp xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"&gt;
+            &lt;wsu:Created&gt;2007-06-18T05:10:01.448Z&lt;/wsu:Created&gt;
+            &lt;wsu:Expires&gt;2007-06-18T05:16:01.448Z&lt;/wsu:Expires&gt;
+ &lt;/wsu:Timestamp&gt;
+</pre>
+
+<h3>Using Username tokens</h3>
+
+<p>To add a username token to the SOAP message, user has to specify three things.</p>
+<ol>
+<li>The user
+<li>The password type
+<li>The password callback module
+</ol>
+<p>This can be done using following assertions in the policy file.</p>
+
+<pre>
+ &lt;rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy"&gt;
+                &lt;rampc:User&gt;Alice&lt;/rampc:User&gt;
+                &lt;rampc:PasswordType&gt;Digest&lt;/rampc:PasswordType&gt;
+                &lt;rampc:PasswordCallbackClass&gt;AXIS2C_HOME/bin/samples/rampart/callback/libpwcb.so&lt;/rampc:PasswordCallbackClass&gt;
+&lt;/rampc:RampartConfig&gt;
+</pre>
+
+<p>Also it's necessary to specify inclusion of username token in the policy as follows.</p>
+<pre>
+&lt;sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always"/&gt;
+</pre>
+<p>Password callback modules: User passwords can be stored in different ways for different users. Passwords can be in databases, flat files... etc. Considering this Rampart/C provides an interface for users to write their own password callback modules. User has to assign the password callback function as follows.</p>
+<pre>
+rampart_callback_t* rcb = NULL;
+rcb = AXIS2_MALLOC(env-&gt;allocator,  sizeof(rampart_callback_t));
+rcb-&gt;ops = AXIS2_MALLOC(env-&gt;allocator, sizeof(rampart_callback_ops_t));
+rcb-&gt;ops-&gt;callback_password = get_sample_password;/*Your password callback function*/
+</pre>
+
+<p>The signature of the password callback function is</p>
+<pre>
+axis2_char_t* AXIS2_CALL
+get_sample_password(rampart_callback_t *rcb,
+        const axutil_env_t *env,
+        const axis2_char_t *username,
+        void param) 
+</pre>
+<p>Please see the password callback sample available under samples/callback/pwcb.c for more details.</p>
+
+<h3>SOAP message Encryption</h3>
+
+<p>Specifying encryption options are a bit complex procedure. Thus here we wouldn't try to explain all WS Security Policy assertions. Following is a sample policy file that  is used to encrypt SOAP messages.</p>
+<pre>
+&lt;wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"&gt;
+    &lt;wsp:ExactlyOne&gt;
+        &lt;wsp:All&gt;
+            &lt;sp:AsymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;wsp:Policy&gt;
+                    &lt;sp:InitiatorToken&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient"&gt;
+                                &lt;wsp:Policy&gt;
+                                    &lt;sp:WssX509V3Token10/&gt;
+                                &lt;/wsp:Policy&gt;
+                            &lt;/sp:X509Token&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:InitiatorToken&gt;
+                    &lt;sp:RecipientToken&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never"&gt;
+                                &lt;wsp:Policy&gt;
+                                    &lt;sp:WssX509V3Token10/&gt;
+                                &lt;/wsp:Policy&gt;
+                            &lt;/sp:X509Token&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:RecipientToken&gt;
+                    &lt;sp:AlgorithmSuite&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:Basic256Rsa15/&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:AlgorithmSuite&gt;
+                    &lt;sp:Layout&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:Strict/&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:Layout&gt;
+                &lt;/wsp:Policy&gt;
+            &lt;/sp:AsymmetricBinding&gt;
+            &lt;sp:Wss10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;wsp:Policy&gt;
+                          &lt;sp:MustSupportRefEmbeddedToken/&gt;
+                &lt;/wsp:Policy&gt;
+            &lt;/sp:Wss10&gt;
+            &lt;sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;sp:Body/&gt;
+            &lt;/sp:EncryptedParts&gt;
+            &lt;rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy"&gt;
+                &lt;rampc:User&gt;Bob&lt;/rampc:User&gt;
+                &lt;rampc:EncryptionUser&gt;b&lt;/rampc:EncryptionUser&gt;
+                &lt;rampc:PasswordCallbackClass&gt;AXIS2C_HOME/bin/samples/rampart/callback/libpwcb.so&lt;/rampc:PasswordCallbackClass&gt;
+                &lt;rampc:ReceiverCertificate&gt;AXIS2C_HOME/bin/samples/rampart/keys/ahome/bob_cert.cert&lt;/rampc:ReceiverCertificate&gt;
+                &lt;rampc:Certificate&gt;AXIS2C_HOME/bin/samples/rampart/keys/ahome/alice_cert.cert&lt;/rampc:Certificate&gt;
+                &lt;rampc:PrivateKey&gt;AXIS2C_HOME/bin/samples/rampart/keys/ahome/alice_key.pem&lt;/rampc:PrivateKey&gt;
+            &lt;/rampc:RampartConfig&gt;
+        &lt;/wsp:All&gt;
+    &lt;/wsp:ExactlyOne&gt;
+&lt;/wsp:Policy&gt;
+</pre>
+
+<p>In the above sample file we have specified the algorithm suite to be used for encryption. Here the algorithm suite is  Basic256Rsa15. </p>
+<pre>
+                    &lt;sp:AlgorithmSuite&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:Basic256Rsa15/&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:AlgorithmSuite&gt;
+</pre>
+<p>The parts to be encrypted are specified using following assertion. Here we have specified to encrypt the whole body.</p> 
+<pre>
+            &lt;sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;sp:Body/&gt;
+            &lt;/sp:EncryptedParts&gt;
+</pre>
+<p>The receiver's certificate is specified as follows. Here you have to specify the full path to the certificate. The public key of this certificate is used to encrypt the content.</p>
+<pre>
+&lt;rampc:ReceiverCertificate&gt;AXIS2C_HOME/bin/samples/rampart/keys/ahome/bob_cert.cert&lt;/rampc:ReceiverCertificate&gt;
+</pre>
+<p>To decrypt an incoming message you have to specify your own private as follows. Here you have to specify the full path to the key. </p>
+<pre>
+&lt;rampc:PrivateKey&gt;AXIS2C_HOME/bin/samples/rampart/keys/ahome/alice_key.pem&lt;/rampc:PrivateKey&gt;
+</pre>
+
+<h3>SOAP message Signature </h3>
+
+<p>Similar to the Encryption, to apply the signature we have to specify the signing parts, certificates and keys. Following is a sample policy file that is being used to sign a SOAP message. </p>
+<pre>
+&lt;wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"&gt;
+    &lt;wsp:ExactlyOne&gt;
+        &lt;wsp:All&gt;
+            &lt;sp:AsymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;wsp:Policy&gt;
+                    &lt;sp:InitiatorToken&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient"&gt;
+                                &lt;wsp:Policy&gt;
+                                    &lt;sp:WssX509V3Token10/&gt;
+                                &lt;/wsp:Policy&gt;
+                            &lt;/sp:X509Token&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:InitiatorToken&gt;
+                    &lt;sp:RecipientToken&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never"&gt;
+                                &lt;wsp:Policy&gt;
+                                    &lt;sp:WssX509V3Token10/&gt;
+                                &lt;/wsp:Policy&gt;
+                            &lt;/sp:X509Token&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:RecipientToken&gt;
+                    &lt;sp:AlgorithmSuite&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:Basic256Rsa15/&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:AlgorithmSuite&gt;
+                    &lt;sp:Layout&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:Strict/&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:Layout&gt;
+                &lt;/wsp:Policy&gt;
+            &lt;/sp:AsymmetricBinding&gt;
+            &lt;sp:Wss10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;wsp:Policy&gt;
+                    &lt;sp:MustSupportRefKeyIdentifier/&gt;
+                    &lt;sp:MustSupportRefEmbeddedToken/&gt;
+                    &lt;sp:MustSupportRefIssuerSerial/&gt;
+                &lt;/wsp:Policy&gt;
+            &lt;/sp:Wss10&gt;
+            &lt;sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;sp:Body/&gt;
+            &lt;/sp:SignedParts&gt;
+            &lt;rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy"&gt;
+                &lt;rampc:User&gt;Bob&lt;/rampc:User&gt;
+                &lt;rampc:EncryptionUser&gt;b&lt;/rampc:EncryptionUser&gt;
+                &lt;rampc:PasswordType&gt;Digest&lt;/rampc:PasswordType&gt;
+                &lt;rampc:PasswordCallbackClass&gt;AXIS2C_HOME/bin/samples/rampart/callback/libpwcb.so&lt;/rampc:PasswordCallbackClass&gt;
+                &lt;rampc:ReceiverCertificate&gt;AXIS2C_HOME/bin/samples/rampart/keys/ahome/bob_cert.cert&lt;/rampc:ReceiverCertificate&gt;
+                &lt;rampc:Certificate&gt;AXIS2C_HOME/bin/samples/rampart/keys/ahome/alice_cert.cert&lt;/rampc:Certificate&gt;
+                &lt;rampc:PrivateKey&gt;AXIS2C_HOME/bin/samples/rampart/keys/ahome/alice_key.pem&lt;/rampc:PrivateKey&gt;
+            &lt;/rampc:RampartConfig&gt;
+        &lt;/wsp:All&gt;
+    &lt;/wsp:ExactlyOne&gt;
+&lt;/wsp:Policy&gt;
+</pre>
+<p>To specify which parts of the message to be signed use following assertion. Here we have asked to sign the whole body.</p> 
+<pre>
+      &lt;sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;sp:Body/&gt;
+      &lt;/sp:SignedParts&gt;
+</pre>
+<p>Optionally if you need to sign a header you may use.</p>
+<pre>
+&lt;sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;	
+	&lt;sp:Header Namespace="http://www.w3.org/2005/08/addressing"/&gt;
+&lt;/sp:SignedParts&gt;
+</pre>
+<p>The algorithm suite to be used for signature is specified as follows. Same as encryption.</p>
+<pre>
+                    &lt;sp:AlgorithmSuite&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:Basic192Rsa15/&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:AlgorithmSuite&gt;
+</pre>
+
+<h3>Replay detection </h3>
+
+<p>To detect replay attacks, Rampart/C has it's own Replay Detection module. This module detects if the message is a replay of a previous. By default the RD(Replay Detection) module is turned OFF. All you have to do turn it ON is to add </p>
+<pre>
+&lt;rampc:ReplayDetection&gt;<b>N</b>&lt;/rampc:ReplayDetection&gt;
+</pre>
+<p>policy assertion to your descriptor file. Here N is the number of records that must be kept in memory. Greater the value of N is, greater the chance of detecting a replays. Rampart/C keeps records of messages in a list and process them on arrival of a new message. A record is the concatenation of message id(wsa:msg-id) and the value of the timestamp.</p>
+<p>
+RECORD-ID = MSG-ID + TIMESTAMP
+</p>
+<p>The message ID is considered to be unique to a particular message. But for this, user needs to have the addressing module engaged(which comes with axis2/c). This is NOT a MUST but is the RECOMONDED approach. One can just survive with only the timestamp. But shouldn't forget the chance of generating two message at the same time, which definitely make them suspicious as a replay.</p>
+
+<h2>Rampart/C samples</h2>
+
+<p>There are number of samples available under Rampart/C samples. 
+Following is a brief description of Rampart/C samples</p>
+<p>
+<b><i>Service :</b> samples/services/sec_echo</i><br>
+The security enabled service. Depends on deployed security policy scenario.</p>
+<p>
+<b><i>Client:</b> samples/client/sec_echo</i><br>
+The client to send secured SOAP messages. Depends on deployed security policy scenario.</p>
+<p>
+<b><i>Security policies:</b> samples/secpolicy/scenarioX</i><br>
+Provides several identified scenarios to demonstrate features of Rampart/C.
+Please read the README file under samples/secpolicy to learn more about them.</p>
+<p>
+<b><i>Callbacks :</b> samples/callback</i><br>
+To retrieve passwords for a particular user, Rampart/C uses password callback mechanism.
+Such callback modules can be plugged into Rampart/C by defining them in the policy assertions.
+The sample shows how to write a simple password callback module.</p>
+<p>
+<b><i>Credential Provider:</b> samples/credential_provider</i><br>
+In the client side it's possible to give a username/password pair to the client, using a credential_provider.
+Similar to Callbacks, these can too plugged into Rampart/C by defining them in the policy assertions.
+The sample shows how to write a simple credentials provider.</p>
+<p>
+<b><i>Authentication Provider :</b> samples/authn_provider</i><br>
+In the server side, in order to validate a usernametoken in more application specific way, an authentication module can be used.<br>
+The authentication module gets both the username and the password and returns a status code back to Rampart/C.
+The sample shows how to write a simple authentication provider.</p>
+<p>
+<b><i>Keys :</b> samples/keys</i><br>
+All the certificates, private keys and key stores that are used by samples, placed here.</p>
+<p>
+<b><i>Data :</b> samples/data</i><br>
+Data files that are used by samples, placed here.
+</p>
+</body>
+</html>

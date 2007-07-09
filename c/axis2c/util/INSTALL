@@ -1,0 +1,14 @@
+Getting Axis2/C Utils source working on Linux
+=============================================
+Build the source
+This can be done using the following command sequence:
+        ./configure
+        make
+        make install
+        use './configure --help' for options
+
+NOTE: If you don't provide a --prefix configure option, it will by default 
+install into /usr/local/axis2_util directory.
+
+
+

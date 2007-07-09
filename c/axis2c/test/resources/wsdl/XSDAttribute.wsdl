@@ -1,0 +1,1046 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2003-2004 The Apache Software Foundation.                      -->
+<!-- (c) Copyright IBM Corp. 2004, 2005 All Rights Reserved                   -->
+<!--                                                                          -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License");          -->
+<!-- you may not use this file except in compliance with the License.         -->
+<!-- You may obtain a copy of the License at                                  -->
+<!--                                                                          -->
+<!--        http://www.apache.org/licenses/LICENSE-2.0                        -->
+<!--                                                                          -->
+<!-- Unless required by applicable law or agreed to in writing, software      -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS,        -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and      -->
+<!-- limitations under the License.                                           -->
+
+<wsdl:definitions targetNamespace="http://xsdattribute.test.apache.org" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://xsdattribute.test.apache.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+	<wsdl:types>
+		<schema elementFormDefault="qualified" targetNamespace="http://xsdattribute.test.apache.org" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://xsdattribute.test.apache.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+	
+			<!-- ############################################ -->
+			<!-- Define the operation elements and data types -->
+			<!-- ############################################ -->
+
+			<!-- test boolean as attribute -->
+			<xsd:element name="getDataBoolean">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeBoolean" maxOccurs="1" minOccurs="0" type="impl:BooleanType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getDataBooleanResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeBoolean" maxOccurs="1" minOccurs="0" type="impl:BooleanType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>			
+			<xsd:complexType name="BooleanType">
+				<xsd:attribute name="booleanType" type="xsd:boolean"/> 
+			</xsd:complexType>
+
+			<!-- test byte as attribute -->
+			<xsd:element name="getDataByte">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeByte" maxOccurs="1" minOccurs="0" type="impl:ByteType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getDataByteResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeByte" maxOccurs="1" minOccurs="0" type="impl:ByteType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>			
+			<xsd:complexType name="ByteType">
+				<xsd:attribute name="byteType" type="xsd:byte"/> 
+			</xsd:complexType>
+
+			<!-- test unsigned_byte as attribute -->
+			<xsd:element name="getDataUnsignedByte">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeUnsignedByte" maxOccurs="1" minOccurs="0" type="impl:UnsignedByteType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getDataUnsignedByteResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeUnsignedByte" maxOccurs="1" minOccurs="0" type="impl:UnsignedByteType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>			
+			<xsd:complexType name="UnsignedByteType">
+				<xsd:attribute name="unsignedByteType" type="xsd:unsignedByte"/> 
+			</xsd:complexType>
+
+			<!-- test short as attribute -->
+			<xsd:element name="getDataShort">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeShort" maxOccurs="1" minOccurs="0" type="impl:ShortType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getDataShortResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeShort" maxOccurs="1" minOccurs="0" type="impl:ShortType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>			
+			<xsd:complexType name="ShortType">
+				<xsd:attribute name="shortType" type="xsd:short"/> 
+			</xsd:complexType>
+
+			<!-- test unsigned_short as attribute -->
+			<xsd:element name="getDataUnsignedShort">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeUnsignedShort" maxOccurs="1" minOccurs="0" type="impl:UnsignedShortType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getDataUnsignedShortResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeUnsignedShort" maxOccurs="1" minOccurs="0" type="impl:UnsignedShortType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>			
+			<xsd:complexType name="UnsignedShortType">
+				<xsd:attribute name="unsignedShortType" type="xsd:unsignedShort"/> 
+			</xsd:complexType>
+
+			<!-- test int as attribute -->
+			<xsd:element name="getDataInt">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeInt" maxOccurs="1" minOccurs="0" type="impl:IntType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getDataIntResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeInt" maxOccurs="1" minOccurs="0" type="impl:IntType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>			
+			<xsd:complexType name="IntType">
+				<xsd:attribute name="intType" type="xsd:int"/> 
+			</xsd:complexType>
+
+			<!-- test unsigned_int as attribute -->
+			<xsd:element name="getDataUnsignedInt">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeUnsignedInt" maxOccurs="1" minOccurs="0" type="impl:UnsignedIntType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getDataUnsignedIntResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeUnsignedInt" maxOccurs="1" minOccurs="0" type="impl:UnsignedIntType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>			
+			<xsd:complexType name="UnsignedIntType">
+				<xsd:attribute name="unsignedIntType" type="xsd:unsignedInt"/> 
+			</xsd:complexType>
+
+			<!-- test long as attribute -->
+			<xsd:element name="getDataLong">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeLong" maxOccurs="1" minOccurs="0" type="impl:LongType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getDataLongResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeLong" maxOccurs="1" minOccurs="0" type="impl:LongType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>			
+			<xsd:complexType name="LongType">
+				<xsd:attribute name="longType" type="xsd:long"/> 
+			</xsd:complexType>
+		
+			<!-- test unsigned_long as attribute -->
+			<xsd:element name="getDataUnsignedLong">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeUnsignedLong" maxOccurs="1" minOccurs="0" type="impl:UnsignedLongType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getDataUnsignedLongResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeUnsignedLong" maxOccurs="1" minOccurs="0" type="impl:UnsignedLongType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>			
+			<xsd:complexType name="UnsignedLongType">
+				<xsd:attribute name="unsignedLongType" type="xsd:unsignedLong"/> 
+			</xsd:complexType>
+
+			<!-- test float as attribute -->
+			<xsd:element name="getDataFloat">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeFloat" maxOccurs="1" minOccurs="0" type="impl:FloatType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getDataFloatResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeFloat" maxOccurs="1" minOccurs="0" type="impl:FloatType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>			
+			<xsd:complexType name="FloatType">
+				<xsd:attribute name="floatType" type="xsd:float"/> 
+			</xsd:complexType>
+
+			<!-- test double as attribute -->
+			<xsd:element name="getDataDouble">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeDouble" maxOccurs="1" minOccurs="0" type="impl:DoubleType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getDataDoubleResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeDouble" maxOccurs="1" minOccurs="0" type="impl:DoubleType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>			
+			<xsd:complexType name="DoubleType">
+				<xsd:attribute name="doubleType" type="xsd:double"/> 
+			</xsd:complexType>
+
+			<!-- test string as attribute -->
+			<xsd:element name="getDataString">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeString" maxOccurs="1" minOccurs="0" type="impl:StringType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getDataStringResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeString" maxOccurs="1" minOccurs="0" type="impl:StringType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>			
+			<xsd:complexType name="StringType">
+				<xsd:attribute name="stringType" type="xsd:string"/> 
+			</xsd:complexType>
+
+			<!-- test date as attribute -->
+			<xsd:element name="getDataDate">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeDate" maxOccurs="1" minOccurs="0" type="impl:DateType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getDataDateResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeDate" maxOccurs="1" minOccurs="0" type="impl:DateType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>			
+			<xsd:complexType name="DateType">
+				<xsd:attribute name="dateType" type="xsd:date"/> 
+			</xsd:complexType>
+
+			<!-- test dateTime as attribute -->
+			<xsd:element name="getDataDateTime">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeDateTime" maxOccurs="1" minOccurs="0" type="impl:DateTimeType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getDataDateTimeResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeDateTime" maxOccurs="1" minOccurs="0" type="impl:DateTimeType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>			
+			<xsd:complexType name="DateTimeType">
+				<xsd:attribute name="dateTimeType" type="xsd:dateTime"/> 
+			</xsd:complexType>
+
+			<!-- test time as attribute -->
+			<xsd:element name="getDataTime">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeTime" maxOccurs="1" minOccurs="0" type="impl:TimeType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getDataTimeResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeTime" maxOccurs="1" minOccurs="0" type="impl:TimeType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>			
+			<xsd:complexType name="TimeType">
+				<xsd:attribute name="timeType" type="xsd:time"/> 
+			</xsd:complexType>
+
+
+			<!-- test duration as attribute -->
+<!--
+			<xsd:element name="getDataDuration">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeDuration" maxOccurs="1" minOccurs="0" type="impl:DurationType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getDataDurationResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeDuration" maxOccurs="1" minOccurs="0" type="impl:DurationType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>			
+			<xsd:complexType name="DurationType">
+				<xsd:attribute name="durationType" type="xsd:duration"/> 
+			</xsd:complexType>
+-->
+
+			<!-- test base64Binary as attribute -->
+			<xsd:element name="getDataBase64Binary">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeBase64Binary" maxOccurs="1" minOccurs="0" type="impl:Base64BinaryType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getDataBase64BinaryResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeBase64Binary" maxOccurs="1" minOccurs="0" type="impl:Base64BinaryType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>			
+			<xsd:complexType name="Base64BinaryType">
+				<xsd:attribute name="base64BinaryType" type="xsd:base64Binary"/> 
+			</xsd:complexType>
+
+			<!-- test hexBinary as attribute -->
+			<xsd:element name="getDataHexBinary">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeHexBinary" maxOccurs="1" minOccurs="0" type="impl:HexBinaryType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getDataHexBinaryResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeHexBinary" maxOccurs="1" minOccurs="0" type="impl:HexBinaryType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>			
+			<xsd:complexType name="HexBinaryType">
+				<xsd:attribute name="hexBinaryType" type="xsd:hexBinary"/> 
+			</xsd:complexType>
+
+			<!-- test integer as attribute -->
+			<xsd:element name="getDataInteger">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeInteger" maxOccurs="1" minOccurs="0" type="impl:IntegerType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getDataIntegerResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeInteger" maxOccurs="1" minOccurs="0" type="impl:IntegerType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>			
+			<xsd:complexType name="IntegerType">
+				<xsd:attribute name="integerType" type="xsd:integer"/> 
+			</xsd:complexType>
+
+			<!-- test decimal as attribute -->
+			<xsd:element name="getDataDecimal">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeDecimal" maxOccurs="1" minOccurs="0" type="impl:DecimalType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getDataDecimalResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeDecimal" maxOccurs="1" minOccurs="0" type="impl:DecimalType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>			
+			<xsd:complexType name="DecimalType">
+				<xsd:attribute name="decimalType" type="xsd:decimal"/> 
+			</xsd:complexType>
+
+			<!-- test QName as attribute -->
+			<xsd:element name="getDataQName">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeQName" maxOccurs="1" minOccurs="0" type="impl:QNameType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getDataQNameResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeQName" maxOccurs="1" minOccurs="0" type="impl:QNameType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>			
+			<xsd:complexType name="QNameType">
+				<xsd:attribute name="qnameType" type="xsd:QName"/> 
+			</xsd:complexType>
+
+			<!-- test anyURI as attribute -->
+			<xsd:element name="getDataAnyURI">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeAnyURI" maxOccurs="1" minOccurs="0" type="impl:AnyURIType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getDataAnyURIResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeAnyURI" maxOccurs="1" minOccurs="0" type="impl:AnyURIType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>			
+			<xsd:complexType name="AnyURIType">
+				<xsd:attribute name="anyURIType" type="xsd:anyURI"/> 
+			</xsd:complexType>
+
+		</schema>
+	
+	</wsdl:types>
+
+
+	<!-- ############################################ -->
+	<!-- Define the message elements and data types	-->
+	<!-- ############################################ -->
+
+	<!-- test boolean as attribute -->
+	<wsdl:message name="getDataBooleanRequest">
+		<wsdl:part element="impl:getDataBoolean" name="gdboolean"/>
+	</wsdl:message>
+	<wsdl:message name="getDataBooleanResponse">
+		<wsdl:part element="impl:getDataBooleanResponse" name="gdbooleanr"/>
+	</wsdl:message>
+
+	<!-- test byte as attribute -->
+	<wsdl:message name="getDataByteRequest">
+		<wsdl:part element="impl:getDataByte" name="gdbyte"/>
+	</wsdl:message>
+	<wsdl:message name="getDataByteResponse">
+		<wsdl:part element="impl:getDataByteResponse" name="gdbyter"/>
+	</wsdl:message>
+
+	<!-- test unsigned_byte as attribute -->
+	<wsdl:message name="getDataUnsignedByteRequest">
+		<wsdl:part element="impl:getDataUnsignedByte" name="gdubyte"/>
+	</wsdl:message>
+	<wsdl:message name="getDataUnsignedByteResponse">
+		<wsdl:part element="impl:getDataUnsignedByteResponse" name="gdubyter"/>
+	</wsdl:message>
+
+	<!-- test short as attribute -->
+	<wsdl:message name="getDataShortRequest">
+		<wsdl:part element="impl:getDataShort" name="gdshort"/>
+	</wsdl:message>
+	<wsdl:message name="getDataShortResponse">
+		<wsdl:part element="impl:getDataShortResponse" name="gdshortr"/>
+	</wsdl:message>
+
+	<!-- test unsigned_short as attribute -->
+	<wsdl:message name="getDataUnsignedShortRequest">
+		<wsdl:part element="impl:getDataUnsignedShort" name="gdushort"/>
+	</wsdl:message>
+	<wsdl:message name="getDataUnsignedShortResponse">
+		<wsdl:part element="impl:getDataUnsignedShortResponse" name="gdushortr"/>
+	</wsdl:message>
+
+	<!-- test int as attribute -->
+	<wsdl:message name="getDataIntRequest">
+		<wsdl:part element="impl:getDataInt" name="gdint"/>
+	</wsdl:message>
+	<wsdl:message name="getDataIntResponse">
+		<wsdl:part element="impl:getDataIntResponse" name="gdintr"/>
+	</wsdl:message>
+
+	<!-- test unsigned_int as attribute -->
+	<wsdl:message name="getDataUnsignedIntRequest">
+		<wsdl:part element="impl:getDataUnsignedInt" name="gduint"/>
+	</wsdl:message>
+	<wsdl:message name="getDataUnsignedIntResponse">
+		<wsdl:part element="impl:getDataUnsignedIntResponse" name="gduintr"/>
+	</wsdl:message>
+
+	<!-- test long as attribute -->
+	<wsdl:message name="getDataLongRequest">
+		<wsdl:part element="impl:getDataLong" name="gdlong"/>
+	</wsdl:message>
+	<wsdl:message name="getDataLongResponse">
+		<wsdl:part element="impl:getDataLongResponse" name="gdlongr"/>
+	</wsdl:message>
+
+	<!-- test unsigned_long as attribute -->
+	<wsdl:message name="getDataUnsignedLongRequest">
+		<wsdl:part element="impl:getDataUnsignedLong" name="gdulong"/>
+	</wsdl:message>
+	<wsdl:message name="getDataUnsignedLongResponse">
+		<wsdl:part element="impl:getDataUnsignedLongResponse" name="gdulongr"/>
+	</wsdl:message>
+
+	<!-- test float as attribute -->
+	<wsdl:message name="getDataFloatRequest">
+		<wsdl:part element="impl:getDataFloat" name="gdfloat"/>
+	</wsdl:message>
+	<wsdl:message name="getDataFloatResponse">
+		<wsdl:part element="impl:getDataFloatResponse" name="gdfloatr"/>
+	</wsdl:message>
+
+	<!-- test double as attribute -->
+	<wsdl:message name="getDataDoubleRequest">
+		<wsdl:part element="impl:getDataDouble" name="gddouble"/>
+	</wsdl:message>
+	<wsdl:message name="getDataDoubleResponse">
+		<wsdl:part element="impl:getDataDoubleResponse" name="gddoubler"/>
+	</wsdl:message>
+
+	<!-- test string as attribute -->
+	<wsdl:message name="getDataStringRequest">
+		<wsdl:part element="impl:getDataString" name="gdstring"/>
+	</wsdl:message>
+	<wsdl:message name="getDataStringResponse">
+		<wsdl:part element="impl:getDataStringResponse" name="gdstringr"/>
+	</wsdl:message>
+
+	<!-- test date as attribute -->
+	<wsdl:message name="getDataDateRequest">
+		<wsdl:part element="impl:getDataDate" name="gddate"/>
+	</wsdl:message>
+	<wsdl:message name="getDataDateResponse">
+		<wsdl:part element="impl:getDataDateResponse" name="gddater"/>
+	</wsdl:message>
+
+	<!-- test dateTime as attribute -->
+	<wsdl:message name="getDataDateTimeRequest">
+		<wsdl:part element="impl:getDataDateTime" name="gddatetime"/>
+	</wsdl:message>
+	<wsdl:message name="getDataDateTimeResponse">
+		<wsdl:part element="impl:getDataDateTimeResponse" name="gddatetimer"/>
+	</wsdl:message>
+
+	<!-- test time as attribute -->
+	<wsdl:message name="getDataTimeRequest">
+		<wsdl:part element="impl:getDataTime" name="gdtime"/>
+	</wsdl:message>
+	<wsdl:message name="getDataTimeResponse">
+		<wsdl:part element="impl:getDataTimeResponse" name="gdtimer"/>
+	</wsdl:message>
+
+	<!-- test duration as attribute -->
+<!--
+	<wsdl:message name="getDataDurationRequest">
+		<wsdl:part element="impl:getDataDuration" name="gdduration"/>
+	</wsdl:message>
+	<wsdl:message name="getDataDurationResponse">
+		<wsdl:part element="impl:getDataDurationResponse" name="gddurationr"/>
+	</wsdl:message>
+-->
+
+	<!-- test base64Binary as attribute -->
+	<wsdl:message name="getDataBase64BinaryRequest">
+		<wsdl:part element="impl:getDataBase64Binary" name="gdbase64binary"/>
+	</wsdl:message>
+	<wsdl:message name="getDataBase64BinaryResponse">
+		<wsdl:part element="impl:getDataBase64BinaryResponse" name="gdbase64binaryr"/>
+	</wsdl:message>
+
+	<!-- test hexBinary as attribute -->
+	<wsdl:message name="getDataHexBinaryRequest">
+		<wsdl:part element="impl:getDataHexBinary" name="gdhexbinary"/>
+	</wsdl:message>
+	<wsdl:message name="getDataHexBinaryResponse">
+		<wsdl:part element="impl:getDataHexBinaryResponse" name="gdbhexbinaryr"/>
+	</wsdl:message>
+
+	<!-- test integer as attribute -->
+	<wsdl:message name="getDataIntegerRequest">
+		<wsdl:part element="impl:getDataInteger" name="gdinteger"/>
+	</wsdl:message>
+	<wsdl:message name="getDataIntegerResponse">
+		<wsdl:part element="impl:getDataIntegerResponse" name="gdintegerr"/>
+	</wsdl:message>
+
+	<!-- test decimal as attribute -->
+	<wsdl:message name="getDataDecimalRequest">
+		<wsdl:part element="impl:getDataDecimal" name="gddecimal"/>
+	</wsdl:message>
+	<wsdl:message name="getDataDecimalResponse">
+		<wsdl:part element="impl:getDataDecimalResponse" name="gddecimalr"/>
+	</wsdl:message>
+
+	<!-- test QName as attribute -->
+	<wsdl:message name="getDataQNameRequest">
+		<wsdl:part element="impl:getDataQName" name="gdqname"/>
+	</wsdl:message>
+	<wsdl:message name="getDataQNameResponse">
+		<wsdl:part element="impl:getDataQNameResponse" name="gdqnamer"/>
+	</wsdl:message>
+
+	<!-- test anyURI as attribute -->
+	<wsdl:message name="getDataAnyURIRequest">
+		<wsdl:part element="impl:getDataAnyURI" name="gdanyuri"/>
+	</wsdl:message>
+	<wsdl:message name="getDataAnyURIResponse">
+		<wsdl:part element="impl:getDataAnyURIResponse" name="gdanyurir"/>
+	</wsdl:message>
+
+
+	<!-- ############################################ -->
+	<!-- Define the operations and messages			  -->
+	<!-- ############################################ -->
+
+	<wsdl:portType name="XSDAttribute">
+
+		<!-- test boolean as attribute -->
+		<wsdl:operation name="getDataBoolean">
+			<wsdl:input message="impl:getDataBooleanRequest" name="getDataBooleanRequest"/>
+			<wsdl:output message="impl:getDataBooleanResponse" name="getDataBooleanResponse"/>
+		</wsdl:operation>
+
+		<!-- test byte as attribute -->
+		<wsdl:operation name="getDataByte">
+			<wsdl:input message="impl:getDataByteRequest" name="getDataByteRequest"/>
+			<wsdl:output message="impl:getDataByteResponse" name="getDataByteResponse"/>
+		</wsdl:operation>
+
+		<!-- test unsigned_byte as attribute -->
+		<wsdl:operation name="getDataUnsignedByte">
+			<wsdl:input message="impl:getDataUnsignedByteRequest" name="getDataUnsignedByteRequest"/>
+			<wsdl:output message="impl:getDataUnsignedByteResponse" name="getDataUnsignedByteResponse"/>
+		</wsdl:operation>
+
+		<!-- test short as attribute -->
+		<wsdl:operation name="getDataShort">
+			<wsdl:input message="impl:getDataShortRequest" name="getDataShortRequest"/>
+			<wsdl:output message="impl:getDataShortResponse" name="getDataShortResponse"/>
+		</wsdl:operation>
+
+		<!-- test unsigned_short as attribute -->
+		<wsdl:operation name="getDataUnsignedShort">
+			<wsdl:input message="impl:getDataUnsignedShortRequest" name="getDataUnsignedShortRequest"/>
+			<wsdl:output message="impl:getDataUnsignedShortResponse" name="getDataUnsignedShortResponse"/>
+		</wsdl:operation>
+
+		<!-- test int as attribute -->
+		<wsdl:operation name="getDataInt">
+			<wsdl:input message="impl:getDataIntRequest" name="getDataIntRequest"/>
+			<wsdl:output message="impl:getDataIntResponse" name="getDataIntResponse"/>
+		</wsdl:operation>
+
+		<!-- test unsigned_int as attribute -->
+		<wsdl:operation name="getDataUnsignedInt">
+			<wsdl:input message="impl:getDataUnsignedIntRequest" name="getDataUnsignedIntRequest"/>
+			<wsdl:output message="impl:getDataUnsignedIntResponse" name="getDataUnsignedIntResponse"/>
+		</wsdl:operation>
+
+		<!-- test long as attribute -->
+		<wsdl:operation name="getDataLong">
+			<wsdl:input message="impl:getDataLongRequest" name="getDataLongRequest"/>
+			<wsdl:output message="impl:getDataLongResponse" name="getDataLongResponse"/>
+		</wsdl:operation>
+
+		<!-- test unsigned_long as attribute -->
+		<wsdl:operation name="getDataUnsignedLong">
+			<wsdl:input message="impl:getDataUnsignedLongRequest" name="getDataUnsignedLongRequest"/>
+			<wsdl:output message="impl:getDataUnsignedLongResponse" name="getDataUnsignedLongResponse"/>
+		</wsdl:operation>
+
+		<!-- test float as attribute -->
+		<wsdl:operation name="getDataFloat">
+			<wsdl:input message="impl:getDataFloatRequest" name="getDataFloatRequest"/>
+			<wsdl:output message="impl:getDataFloatResponse" name="getDataFloatResponse"/>
+		</wsdl:operation>
+
+		<!-- test double as attribute -->
+		<wsdl:operation name="getDataDouble">
+			<wsdl:input message="impl:getDataDoubleRequest" name="getDataDoubleRequest"/>
+			<wsdl:output message="impl:getDataDoubleResponse" name="getDataDoubleResponse"/>
+		</wsdl:operation>
+
+		<!-- test string as attribute -->
+		<wsdl:operation name="getDataString">
+			<wsdl:input message="impl:getDataStringRequest" name="getDataStringRequest"/>
+			<wsdl:output message="impl:getDataStringResponse" name="getDataStringResponse"/>
+		</wsdl:operation>
+
+		<!-- test date as attribute -->
+		<wsdl:operation name="getDataDate">
+			<wsdl:input message="impl:getDataDateRequest" name="getDataDateRequest"/>
+			<wsdl:output message="impl:getDataDateResponse" name="getDataDateResponse"/>
+		</wsdl:operation>
+
+		<!-- test dateTime as attribute -->
+		<wsdl:operation name="getDataDateTime">
+			<wsdl:input message="impl:getDataDateTimeRequest" name="getDataDateTimeRequest"/>
+			<wsdl:output message="impl:getDataDateTimeResponse" name="getDataDateTimeResponse"/>
+		</wsdl:operation>
+
+		<!-- test time as attribute -->
+		<wsdl:operation name="getDataTime">
+			<wsdl:input message="impl:getDataTimeRequest" name="getDataTimeRequest"/>
+			<wsdl:output message="impl:getDataTimeResponse" name="getDataTimeResponse"/>
+		</wsdl:operation>
+
+		<!-- test duration as attribute -->
+<!--
+		<wsdl:operation name="getDataDuration">
+			<wsdl:input message="impl:getDataDurationRequest" name="getDataDurationRequest"/>
+			<wsdl:output message="impl:getDataDurationResponse" name="getDataDurationResponse"/>
+		</wsdl:operation>
+-->
+
+		<!-- test base64Binary as attribute -->
+		<wsdl:operation name="getDataBase64Binary">
+			<wsdl:input message="impl:getDataBase64BinaryRequest" name="getDataBase64BinaryRequest"/>
+			<wsdl:output message="impl:getDataBase64BinaryResponse" name="getDataBase64BinaryResponse"/>
+		</wsdl:operation>
+
+		<!-- test hexBinary as attribute -->
+		<wsdl:operation name="getDataHexBinary">
+			<wsdl:input message="impl:getDataHexBinaryRequest" name="getDataHexBinaryRequest"/>
+			<wsdl:output message="impl:getDataHexBinaryResponse" name="getDataHexBinaryResponse"/>
+		</wsdl:operation>
+
+		<!-- test integer as attribute -->
+		<wsdl:operation name="getDataInteger">
+			<wsdl:input message="impl:getDataIntegerRequest" name="getDataIntegerRequest"/>
+			<wsdl:output message="impl:getDataIntegerResponse" name="getDataIntegerResponse"/>
+		</wsdl:operation>
+
+		<!-- test decimal as attribute -->
+		<wsdl:operation name="getDataDecimal">
+			<wsdl:input message="impl:getDataDecimalRequest" name="getDataDecimalRequest"/>
+			<wsdl:output message="impl:getDataDecimalResponse" name="getDataDecimalResponse"/>
+		</wsdl:operation>
+
+		<!-- test QName as attribute -->
+		<wsdl:operation name="getDataQName">
+			<wsdl:input message="impl:getDataQNameRequest" name="getDataQNameRequest"/>
+			<wsdl:output message="impl:getDataQNameResponse" name="getDataQNameResponse"/>
+		</wsdl:operation>
+
+		<!-- test anyURI as attribute -->
+		<wsdl:operation name="getDataAnyURI">
+			<wsdl:input message="impl:getDataAnyURIRequest" name="getDataAnyURIRequest"/>
+			<wsdl:output message="impl:getDataAnyURIResponse" name="getDataAnyURIResponse"/>
+		</wsdl:operation>
+
+	</wsdl:portType>
+
+
+
+	<!-- ############################################ -->
+	<!-- Define the operation bindings					 -->
+	<!-- ############################################ -->
+
+	<wsdl:binding name="XSDAttributeSoapBinding" type="impl:XSDAttribute">
+
+		<wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+		<!-- test boolean as attribute -->
+		<wsdl:operation name="getDataBoolean">
+			<wsdlsoap:operation soapAction=""/>
+			<wsdl:input name="getDataBooleanRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getDataBooleanResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<!-- test byte as attribute -->
+		<wsdl:operation name="getDataByte">
+			<wsdlsoap:operation soapAction=""/>
+			<wsdl:input name="getDataByteRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getDataByteResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<!-- test unsigned_byte as attribute -->
+		<wsdl:operation name="getDataUnsignedByte">
+			<wsdlsoap:operation soapAction=""/>
+			<wsdl:input name="getDataUnsignedByteRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getDataUnsignedByteResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<!-- test short as attribute -->
+		<wsdl:operation name="getDataShort">
+			<wsdlsoap:operation soapAction=""/>
+			<wsdl:input name="getDataShortRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getDataShortResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<!-- test unsigned_short as attribute -->
+		<wsdl:operation name="getDataUnsignedShort">
+			<wsdlsoap:operation soapAction=""/>
+			<wsdl:input name="getDataUnsignedShortRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getDataUnsignedShortResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<!-- test int as attribute -->
+		<wsdl:operation name="getDataInt">
+			<wsdlsoap:operation soapAction=""/>
+			<wsdl:input name="getDataIntRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getDataIntResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<!-- test unsigned_int as attribute -->
+		<wsdl:operation name="getDataUnsignedInt">
+			<wsdlsoap:operation soapAction=""/>
+			<wsdl:input name="getDataUnsignedIntRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getDataUnsignedIntResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<!-- test long as attribute -->
+		<wsdl:operation name="getDataLong">
+			<wsdlsoap:operation soapAction=""/>
+			<wsdl:input name="getDataLongRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getDataLongResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<!-- test unsigned_long as attribute -->
+		<wsdl:operation name="getDataUnsignedLong">
+			<wsdlsoap:operation soapAction=""/>
+			<wsdl:input name="getDataUnsignedLongRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getDataUnsignedLongResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<!-- test float as attribute -->
+		<wsdl:operation name="getDataFloat">
+			<wsdlsoap:operation soapAction=""/>
+			<wsdl:input name="getDataFloatRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getDataFloatResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<!-- test double as attribute -->
+		<wsdl:operation name="getDataDouble">
+			<wsdlsoap:operation soapAction=""/>
+			<wsdl:input name="getDataDoubleRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getDataDoubleResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<!-- test string as attribute -->
+		<wsdl:operation name="getDataString">
+			<wsdlsoap:operation soapAction=""/>
+			<wsdl:input name="getDataStringRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getDataStringResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<!-- test date as attribute -->
+		<wsdl:operation name="getDataDate">
+			<wsdlsoap:operation soapAction=""/>
+			<wsdl:input name="getDataDateRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getDataDateResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<!-- test dateTime as attribute -->
+		<wsdl:operation name="getDataDateTime">
+			<wsdlsoap:operation soapAction=""/>
+			<wsdl:input name="getDataDateTimeRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getDataDateTimeResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<!-- test time as attribute -->
+		<wsdl:operation name="getDataTime">
+			<wsdlsoap:operation soapAction=""/>
+			<wsdl:input name="getDataTimeRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getDataTimeResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<!-- test duration as attribute -->
+<!--
+		<wsdl:operation name="getDataDuration">
+			<wsdlsoap:operation soapAction=""/>
+			<wsdl:input name="getDataDurationRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getDataDurationResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+-->
+
+		<!-- test base64Binary as attribute -->
+		<wsdl:operation name="getDataBase64Binary">
+			<wsdlsoap:operation soapAction=""/>
+			<wsdl:input name="getDataBase64BinaryRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getDataBase64BinaryResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<!-- test hexBinary as attribute -->
+		<wsdl:operation name="getDataHexBinary">
+			<wsdlsoap:operation soapAction=""/>
+			<wsdl:input name="getDataHexBinaryRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getDataHexBinaryResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<!-- test integer as attribute -->
+		<wsdl:operation name="getDataInteger">
+			<wsdlsoap:operation soapAction=""/>
+			<wsdl:input name="getDataIntegerRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getDataIntegerResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<!-- test decimal as attribute -->
+		<wsdl:operation name="getDataDecimal">
+			<wsdlsoap:operation soapAction=""/>
+			<wsdl:input name="getDataDecimalRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getDataDecimalResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<!-- test QName as attribute -->
+		<wsdl:operation name="getDataQName">
+			<wsdlsoap:operation soapAction=""/>
+			<wsdl:input name="getDataQNameRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getDataQNameResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<!-- test anyURI as attribute -->
+		<wsdl:operation name="getDataAnyURI">
+			<wsdlsoap:operation soapAction=""/>
+			<wsdl:input name="getDataAnyURIRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getDataAnyURIResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+	</wsdl:binding>
+
+
+
+	<!-- ############################################ -->
+	<!-- Define the Service                           -->
+	<!-- ############################################ -->
+
+	<wsdl:service name="XSDAttributeService">
+		<wsdl:port binding="impl:XSDAttributeSoapBinding" name="XSDAttributePort">
+			<wsdlsoap:address location="http://localhost:9080/XSDAttribute/services/XSDAttributePort"/>
+		</wsdl:port>
+	</wsdl:service>
+
+</wsdl:definitions>
+

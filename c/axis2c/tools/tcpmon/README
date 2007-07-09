@@ -1,0 +1,21 @@
+					Axis2C TCP Monitor
+                             ====================
+
+What is it?
+-----------
+
+Axis2 TCP monitor project is aimed at capture the SOAP messages sent and received. It works only in command line interface.
+
+How to run the TCP monitor?
+---------------------------
+
+Run the file called tcpmon with the Listen Port, Target port and Host name.
+For instruction run tcpmon -h
+
+
+Installation
+------------
+
+Please see the file called INSTALL. 
+
+

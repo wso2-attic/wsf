@@ -1,0 +1,7 @@
+<service name="hello">
+    <parameter name="ServiceClass" locked="xsd:false">hello</parameter>
+   <description>
+        Quick start guide hello service sample.
+   </description>
+    <operation name="greet"/>
+</service>

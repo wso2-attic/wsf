@@ -1,0 +1,9 @@
+<doc xmlns:test = "urn:test">
+    <e xmlns="urn:a" xmlns:c="urn:ccc" 
+        xmlns:a="urn:zzz" zoo=   "   zoo" xmlns:b="urn:aaa" firstattr="first" 
+        a:attr1="one"         b:attr2='two' a:attr2="three"/>
+    <test:f id=' &apos; &amp;  &#x20;&#13;&#xa;&#9;  &apos; '/>
+    <g> &apos; &amp;  &#x20;&#13;&#xa;&#9;  &apos; </g>
+<!--this is a comment inside-->
+</doc>
+<!--this is a comment outside-->

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2003-2004 The Apache Software Foundation.                      -->
+<!-- (c) Copyright IBM Corp. 2004, 2005 All Rights Reserved                   -->
+<!--                                                                          -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License");          -->
+<!-- you may not use this file except in compliance with the License.         -->
+<!-- You may obtain a copy of the License at                                  -->
+<!--                                                                          -->
+<!--        http://www.apache.org/licenses/LICENSE-2.0                        -->
+<!--                                                                          -->
+<!-- Unless required by applicable law or agreed to in writing, software      -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS,        -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and      -->
+<!-- limitations under the License.                                           -->
+
+<wsdl:definitions targetNamespace="http://complexlist.test.apache.org" xmlns:impl="http://complexlist.test.apache.org" xmlns:intf="http://complexlist.test.apache.org" xmlns:tns2="http://complexlistservice.test.apache.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://complexlistservice.test.apache.org" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:impl="http://complexlistImpl.test.apache.org" xmlns:intf="http://complexlistIntf.test.apache.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <complexType name="m_list">
+    <sequence>
+     <element maxOccurs="unbounded" name="item" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="attrlist">
+    <sequence>
+     <element maxOccurs="unbounded" name="item" nillable="true" type="tns2:namepair"/>
+    </sequence>
+   </complexType>
+   <complexType name="namepair">
+    <sequence>
+     <element name="m_list" nillable="true" type="tns2:m_list"/>
+     <element name="name" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="attrlisterr">
+    <sequence>
+     <element name="attrlist" nillable="true" type="tns2:attrlist"/>
+     <element name="errorcode" type="xsd:int"/>
+     <element name="errortext" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </schema>
+  <schema elementFormDefault="qualified" targetNamespace="http://complexlist.test.apache.org" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:impl="http://complexlistImpl2.test.apache.org" xmlns:intf="http://complexlistIntf2.test.apache.org" xmlns:tns2="http://complexlistservice.test.apache.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://complexlistservice.test.apache.org"/>
+   <element name="multilist">
+    <complexType>
+     <sequence>
+      <element name="arg_0_0" nillable="true" type="tns2:m_list"/>
+      <element name="arg_1_0" nillable="true" type="tns2:attrlist"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="multilistResponse">
+    <complexType>
+     <sequence>
+      <element name="multilistReturn" nillable="true" type="tns2:attrlisterr"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="multilistnil">
+    <complexType>
+     <sequence>
+      <element name="arg_0_3" nillable="true" type="tns2:m_list"/>
+      <element name="arg_1_3" nillable="true" type="tns2:attrlist"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="multilistnilResponse">
+    <complexType>
+     <sequence>
+      <element name="multilistnilReturn" nillable="true" type="tns2:attrlisterr"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="complexlist">
+    <complexType>
+     <sequence>
+      <element name="arg_0_2" nillable="true" type="tns2:attrlist"/>
+      <element name="arg_1_2" nillable="true" type="xsd:string"/>
+      <element name="arg_2_2" nillable="true" type="tns2:attrlist"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="complexlistResponse">
+    <complexType>
+     <sequence>
+      <element name="complexlistReturn" nillable="true" type="tns2:attrlisterr"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="complexlistResponse">
+
+      <wsdl:part element="impl:complexlistResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="complexlistRequest">
+
+      <wsdl:part element="impl:complexlist" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="multilistRequest">
+      <wsdl:part element="impl:multilist" name="parameters"/>
+   </wsdl:message>
+
+   <wsdl:message name="multilistResponse">
+      <wsdl:part element="impl:multilistResponse" name="parameters"/>
+   </wsdl:message>
+
+   <wsdl:message name="multilistnilRequest">
+      <wsdl:part element="impl:multilistnil" name="parameters"/>
+   </wsdl:message>
+
+   <wsdl:message name="multilistnilResponse">
+      <wsdl:part element="impl:multilistnilResponse" name="parameters"/>
+   </wsdl:message>
+
+   <wsdl:portType name="ComplexLists">
+
+      <wsdl:operation name="multilist">
+         <wsdl:input message="impl:multilistRequest" name="multilistRequest"/>
+         <wsdl:output message="impl:multilistResponse" name="multilistResponse"/>
+      </wsdl:operation>
+
+      <wsdl:operation name="multilistnil">
+         <wsdl:input message="impl:multilistnilRequest" name="multilistnilRequest"/>
+         <wsdl:output message="impl:multilistnilResponse" name="multilistnilResponse"/>
+      </wsdl:operation>
+
+      <wsdl:operation name="complexlist">
+
+         <wsdl:input message="impl:complexlistRequest" name="complexlistRequest"/>
+
+         <wsdl:output message="impl:complexlistResponse" name="complexlistResponse"/>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="ComplexListsSoapBinding" type="impl:ComplexLists">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="multilist">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="multilistRequest">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output name="multilistResponse">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+
+      <wsdl:operation name="multilistnil">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="multilistnilRequest">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output name="multilistnilResponse">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+
+      <wsdl:operation name="complexlist">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="complexlistRequest">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output name="complexlistResponse">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="ComplexListsService">
+
+      <wsdl:port binding="impl:ComplexListsSoapBinding" name="ComplexLists">
+
+         <wsdlsoap:address location="http://localhost:9080/ComplexLists/services/ComplexLists"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>
+

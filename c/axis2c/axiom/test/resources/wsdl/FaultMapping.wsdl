@@ -1,0 +1,97 @@
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://soapinterop.org/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://soapinterop.org/types" targetNamespace="http://soapinterop.org/wsdl">
+<!-- Copyright 2003-2004 The Apache Software Foundation.                      -->
+<!--                                                                          -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License");          -->
+<!-- you may not use this file except in compliance with the License.         -->
+<!-- You may obtain a copy of the License at                                  -->
+<!--                                                                          -->
+<!--        http://www.apache.org/licenses/LICENSE-2.0                        -->
+<!--                                                                          -->
+<!-- Unless required by applicable law or agreed to in writing, software      -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS,        -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and      -->
+<!-- limitations under the License.                                           -->
+
+	<types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://soapinterop.org/types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soap-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://soapinterop.org/types">
+			<import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+			<complexType name="DivByZeroStruct">
+				<sequence>
+					<element name="varString" type="xsd:string"/>
+					<element name="varInt" type="xsd:int"/>
+					<element name="varFloat" type="xsd:float"/>
+				</sequence>
+			</complexType>
+                        <complexType name="SpecialDetailStruct">
+                            <sequence>
+                                <element name="varString" type="xsd:string"/>
+                            </sequence>
+                        </complexType>
+                        <complexType name="OutOfBoundStruct">
+                            <sequence>
+                                <element name="varString" type="xsd:string"/>
+                                <element name="varInt" type="xsd:int"/>
+                                <element name="specialDetail" type="tns:SpecialDetailStruct"/>
+                            </sequence>
+                        </complexType>
+		</schema>
+	</types>
+	<message name="DivByZeroFault">
+		<part name="faultstruct1" type="ns2:DivByZeroStruct"/>
+	</message>
+        <message name="OutOfBoundFault">
+                <part name="faultstruct1" type="ns2:OutOfBoundStruct"/>
+        </message>
+        <message name="SpecialDetailFault">
+                <part name="faultstruct1" type="ns2:SpecialDetailStruct"/>
+        </message>
+	<message name="divRequest">
+		<part name="int0" type="xsd:int"/>
+		<part name="int1" type="xsd:int"/>
+	</message>
+	<message name="divResponse">
+		<part name="addReturn" type="xsd:int"/>
+	</message>
+	<portType name="MathOps">
+		<operation name="div" parameterOrder ="int0 int1">
+			<input message="tns:divRequest"/>
+			<output message="tns:divResponse"/>
+			<fault name="DivByZero" message="tns:DivByZeroFault"/>
+                        <fault name="OutOfBound" message="tns:OutOfBoundFault"/>
+                        <fault name="NormalDetail" message="tns:SpecialDetailFault"/>
+		 </operation>
+	</portType>
+	<binding name="MathOpsBinding" type="tns:MathOps">
+		<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="div">
+			  <soap:operation soapAction="MathOps#div"/>
+                <input name="divRequest">
+                    <soap:body 
+                        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" 
+                        namespace="http://localhost/axis/MathOps" 
+                        use="encoded"/>
+                </input>
+                <output name="divResponse">
+                    <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" 
+                        namespace="http://localhost/axis/MathOps" 
+                        use="encoded"/>
+                </output>
+			<fault name="DivByZero">
+				<soap:fault name="DivByZero" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://soapinterop.org/wsdl"/>
+			</fault>
+                        <fault name="OutOfBound">
+                                <soap:fault name="OutOfBound" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://soapinterop.org/wsdl"/>
+                        </fault>
+                        <fault name="NormalDetail">
+                                <soap:fault name="NormalDetail" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://soapinterop.org/wsdl"/>
+                        </fault>
+			</operation>
+		</binding>
+	<service name="MathOpsService">
+		<port name="MathOps" binding="tns:MathOpsBinding">
+			<soap:address location="http://localhost/axis/MathOps"/>
+		</port>
+	</service>
+	<!-- Fault messages -->
+</definitions>

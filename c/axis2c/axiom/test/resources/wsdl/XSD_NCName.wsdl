@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://xsd_NCName.test.apache.org"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="XSD_NCName"
+	targetNamespace="http://xsd_NCName.test.apache.org">
+	<wsdl:types>
+		<xsd:schema
+			targetNamespace="http://xsd_NCName.test.apache.org"
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+			<xsd:element name="asNonNillableElementResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="nonNillableElement"
+							type="xsd:NCName" nillable="false" minOccurs="1" maxOccurs="1" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="AsNonNillableElementRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="nonNillableElement"
+							type="xsd:NCName" nillable="false" minOccurs="1" maxOccurs="1" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="asNillableElementResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="nillableElement"
+							type="xsd:NCName" nillable="true" minOccurs="1" maxOccurs="1" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="asNillableElementRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="nillableElement"
+							type="xsd:NCName" nillable="true" minOccurs="1" maxOccurs="1" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:complexType name="RequiredAttributeElement">
+				<xsd:attribute name="requiredAttribute" type="xsd:NCName"
+					use="required" />
+			</xsd:complexType>
+			<xsd:element name="asRequiredAttributeResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="RequiredAttributeElement"
+							maxOccurs="1" minOccurs="1" type="tns:RequiredAttributeElement" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="asRequiredAttributeRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="RequiredAttributeElement"
+							maxOccurs="1" minOccurs="1" type="tns:RequiredAttributeElement" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:complexType name="OptionalAttributeElement">
+				<xsd:attribute name="optionalAttribute" type="xsd:NCName"
+					use="optional" />
+			</xsd:complexType>
+			<xsd:element name="asOptionalAttributeResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="OptionalAttributeElement"
+							maxOccurs="1" minOccurs="1" type="tns:OptionalAttributeElement" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="asOptionalAttributeRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="OptionalAttributeElement"
+							maxOccurs="1" minOccurs="1" type="tns:OptionalAttributeElement" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="asArrayResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="arrayElement"
+							type="xsd:NCName" nillable="false" minOccurs="1"
+							maxOccurs="unbounded" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="asArrayRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="arrayElement"
+							type="xsd:NCName" nillable="false" minOccurs="1"
+							maxOccurs="unbounded" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:complexType name="SimpleComplexType">
+				<xsd:sequence>
+					<xsd:element name="complexTypeElement"
+						type="xsd:NCName" minOccurs="1" maxOccurs="1" nillable="false" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="asComplexTypeResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="SimpleComplexType"
+							type="tns:SimpleComplexType" nillable="false" minOccurs="1"
+							maxOccurs="1" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="asComplexTypeRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="SimpleComplexType"
+							type="tns:SimpleComplexType" nillable="false" minOccurs="1"
+							maxOccurs="1" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="asNonNillableElementResponse">
+		<wsdl:part element="tns:asNonNillableElementResponse"
+			name="asNonNillableElementResponse" />
+	</wsdl:message>
+	<wsdl:message name="asNonNillableElementRequest">
+		<wsdl:part element="tns:AsNonNillableElementRequest"
+			name="parameters" />
+	</wsdl:message>
+	<wsdl:message name="asNillableElementResponse">
+		<wsdl:part name="asNillableElementResponse"
+			element="tns:asNillableElementResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="asNillableElementRequest">
+		<wsdl:part name="asNillableElementRequest"
+			element="tns:asNillableElementRequest">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="asRequiredAttributeResponse">
+		<wsdl:part name="asRequiredAttributeResponse"
+			element="tns:asRequiredAttributeResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="asRequiredAttributeRequest">
+		<wsdl:part name="asRequiredAttributeRequest"
+			element="tns:asRequiredAttributeRequest">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="asOptionalAttributeResponse">
+		<wsdl:part name="asOptionalAttributeResponse"
+			element="tns:asOptionalAttributeResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="asOptionalAttributeRequest">
+		<wsdl:part name="asOptionalAttributeRequest"
+			element="tns:asOptionalAttributeRequest">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="asArrayResponse">
+		<wsdl:part name="asArrayResponse"
+			element="tns:asArrayResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="asArrayRequest">
+		<wsdl:part name="asArrayRequest" element="tns:asArrayRequest"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="asComplexTypeResponse">
+		<wsdl:part name="asComplexTypeResponse"
+			element="tns:asComplexTypeResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="asComplexTypeRequest">
+		<wsdl:part name="asComplexTypeRequest"
+			element="tns:asComplexTypeRequest">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:portType name="XSD_NCName">
+		<wsdl:operation name="asNonNillableElement">
+			<wsdl:input message="tns:asNonNillableElementRequest"
+				name="asNonNillableElementRequest" />
+			<wsdl:output message="tns:asNonNillableElementResponse"
+				name="asNonNillableElementResponse" />
+		</wsdl:operation>
+		<wsdl:operation name="asNillableElement">
+			<wsdl:input message="tns:asNillableElementRequest"
+				name="asNillableElementRequest">
+			</wsdl:input>
+			<wsdl:output message="tns:asNillableElementResponse"
+				name="asNillableElementResponse">
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="asRequiredAttribute">
+			<wsdl:input message="tns:asRequiredAttributeRequest"></wsdl:input>
+			<wsdl:output message="tns:asRequiredAttributeResponse"></wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="asOptionalAttribute">
+			<wsdl:input message="tns:asOptionalAttributeRequest"></wsdl:input>
+			<wsdl:output message="tns:asOptionalAttributeResponse"></wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="asArray">
+			<wsdl:input message="tns:asArrayRequest"></wsdl:input>
+			<wsdl:output message="tns:asArrayResponse"></wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="asComplexType">
+			<wsdl:input message="tns:asComplexTypeRequest"></wsdl:input>
+			<wsdl:output message="tns:asComplexTypeResponse"></wsdl:output>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="XSD_NCNameSOAP" type="tns:XSD_NCName">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="asNonNillableElement">
+			<soap:operation
+				soapAction="XSD_NCName#asNonNillableElement" style="document" />
+			<wsdl:input name="asNonNillableElementRequest">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="asNonNillableElementResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="asNillableElement">
+			<soap:operation soapAction="XSD_NCName#asNillableElement"
+				style="document" />
+			<wsdl:input name="asNillableElementRequest">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="asNillableElementResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="asRequiredAttribute">
+			<soap:operation
+				soapAction="XSD_NCName#asRequiredAttribute" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="asOptionalAttribute">
+			<soap:operation
+				soapAction="XSD_NCName#asOptionalAttribute" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="asArray">
+			<soap:operation soapAction="XSD_NCName#asArray" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="asComplexType">
+			<soap:operation soapAction="XSD_NCName#asComplexType"
+				style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="XSD_NCName">
+		<wsdl:port binding="tns:XSD_NCNameSOAP"
+			name="XSD_NCNameSOAP">
+			<soap:address
+				location="http://localhost:9080/XSD_NCName/services/XSD_NCName" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

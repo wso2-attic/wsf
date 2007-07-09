@@ -1,0 +1,29 @@
+<service name="subscription">
+   <description>
+        This is a subscription manager service
+   </description>
+    <parameter name="ServiceClass" locked="xsd:false">subscription</parameter>
+    <!--parameter name="loadServiceAtStartup" locked="xsd:false">true</parameter-->
+
+   <operation name="add_subscriber">
+           <!--messageReceiver class="axis2_receivers" /-->
+           <parameter name="wsamapping" >http://ws.apache.org/axis2/c/subscription/add_subscriber</parameter>
+   </operation>
+   <operation name="remove_subscriber">
+           <!--messageReceiver class="axis2_receivers" /-->
+           <parameter name="wsamapping" >http://ws.apache.org/axis2/c/subscription/remove_subscriber</parameter>
+   </operation>
+   <operation name="get_subscriber_list">
+           <!--messageReceiver class="axis2_receivers" /-->
+           <parameter name="wsamapping" >http://ws.apache.org/axis2/c/subscription/get_subscriber_list</parameter>
+   </operation>
+   <operation name="add_topic">
+           <!--messageReceiver class="axis2_receivers" /-->
+           <parameter name="wsamapping" >http://ws.apache.org/axis2/c/subscription/add_topic</parameter>
+   </operation>
+   <operation name="get_topic_list">
+           <!--messageReceiver class="axis2_receivers" /-->
+           <parameter name="wsamapping" >http://ws.apache.org/axis2/c/subscription/get_topic_list</parameter>
+   </operation>
+
+</service>

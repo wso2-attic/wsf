@@ -1,0 +1,21 @@
+<a xmlns="urn:gdfa">
+    <b xmlns="urn:def">
+        <c xmlns="">
+            <d xmlns="urn:def">
+            </d>
+        </c>
+    </b>
+
+<a1 xmlns="">
+    <b1 xmlns="urn:def">
+        <c1 xmlns="">
+            <cc1 xmlns=""/>
+            <d1 xmlns="urn:def">
+                <e1 xmlns="urn:def"/>
+            </d1>
+        </c1>
+    </b1>
+</a1>
+
+
+</a>

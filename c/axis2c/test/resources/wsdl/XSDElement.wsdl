@@ -1,0 +1,1422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2003-2004 The Apache Software Foundation.                      -->
+<!-- (c) Copyright IBM Corp. 2004, 2005 All Rights Reserved                   -->
+<!--                                                                          -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License");          -->
+<!-- you may not use this file except in compliance with the License.         -->
+<!-- You may obtain a copy of the License at                                  -->
+<!--                                                                          -->
+<!--        http://www.apache.org/licenses/LICENSE-2.0                        -->
+<!--                                                                          -->
+<!-- Unless required by applicable law or agreed to in writing, software      -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS,        -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and      -->
+<!-- limitations under the License.                                           -->
+
+<wsdl:definitions targetNamespace="http://xsdelement.test.apache.org" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://xsdelement.test.apache.org" xmlns:intf="http://xsdelement.test.apache.org" xmlns:tns2="http://complextypes.test.apache.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://xsdelement.test.apache.org" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://xsdelement.test.apache.org" xmlns:intf="http://xsdelement.test.apache.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+
+   <element name="setGetDataInt">
+    <complexType>
+     <sequence>
+      <element name="arg_0_2" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setGetDataIntResponse">
+    <complexType>
+     <sequence>
+      <element name="setGetDataIntReturn" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+
+   <element name="setGetDataUnsignedInt">
+    <complexType>
+     <sequence>
+      <element name="arg_0_u2" type="xsd:unsignedInt"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setGetDataUnsignedIntResponse">
+    <complexType>
+     <sequence>
+      <element name="setGetDataUnsignedIntReturn" type="xsd:unsignedInt"/>
+     </sequence>
+    </complexType>
+   </element>
+
+   <element name="setGetDataLong">
+    <complexType>
+     <sequence>
+      <element name="arg_0_5" type="xsd:long"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setGetDataLongResponse">
+    <complexType>
+     <sequence>
+      <element name="setGetDataLongReturn" type="xsd:long"/>
+     </sequence>
+    </complexType>
+   </element>
+
+   <element name="setGetDataUnsignedLong">
+    <complexType>
+     <sequence>
+      <element name="arg_0_u5" type="xsd:unsignedLong"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setGetDataUnsignedLongResponse">
+    <complexType>
+     <sequence>
+      <element name="setGetDataUnsignedLongReturn" type="xsd:unsignedLong"/>
+     </sequence>
+    </complexType>
+   </element>
+
+   <element name="setGetDataByte">
+    <complexType>
+     <sequence>
+      <element name="arg_0_14" type="xsd:byte"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setGetDataByteResponse">
+    <complexType>
+     <sequence>
+      <element name="setGetDataByteReturn" type="xsd:byte"/>
+     </sequence>
+    </complexType>
+   </element>
+
+   <element name="setGetDataUnsignedByte">
+    <complexType>
+     <sequence>
+      <element name="arg_0_u14" type="xsd:unsignedByte"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setGetDataUnsignedByteResponse">
+    <complexType>
+     <sequence>
+      <element name="setGetDataUnsignedByteReturn" type="xsd:unsignedByte"/>
+     </sequence>
+    </complexType>
+   </element>
+
+   <element name="setGetDataShort">
+    <complexType>
+     <sequence>
+      <element name="arg_0_26" type="xsd:short"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setGetDataShortResponse">
+    <complexType>
+     <sequence>
+      <element name="setGetDataShortReturn" type="xsd:short"/>
+     </sequence>
+    </complexType>
+   </element>
+
+   <element name="setGetDataUnsignedShort">
+    <complexType>
+     <sequence>
+      <element name="arg_0_u26" type="xsd:unsignedShort"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setGetDataUnsignedShortResponse">
+    <complexType>
+     <sequence>
+      <element name="setGetDataUnsignedShortReturn" type="xsd:unsignedShort"/>
+     </sequence>
+    </complexType>
+   </element>
+
+   <element name="setGetDataBoolean">
+    <complexType>
+     <sequence>
+      <element name="arg_0_17" type="xsd:boolean"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setGetDataBooleanResponse">
+    <complexType>
+     <sequence>
+      <element name="setGetDataBooleanReturn" type="xsd:boolean"/>
+     </sequence>
+    </complexType>
+   </element>
+
+   <element name="setGetDataDouble">
+    <complexType>
+     <sequence>
+      <element name="arg_0_8" type="xsd:double"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setGetDataDoubleResponse">
+    <complexType>
+     <sequence>
+      <element name="setGetDataDoubleReturn" type="xsd:double"/>
+     </sequence>
+    </complexType>
+   </element>
+
+   <element name="setGetDataFloat">
+    <complexType>
+     <sequence>
+      <element name="arg_0_11" type="xsd:float"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setGetDataFloatResponse">
+    <complexType>
+     <sequence>
+      <element name="setGetDataFloatReturn" type="xsd:float"/>
+     </sequence>
+    </complexType>
+   </element>
+
+   <element name="setGetDataString">
+    <complexType>
+     <sequence>
+      <element name="arg_0_23" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setGetDataStringResponse">
+    <complexType>
+     <sequence>
+      <element name="setGetDataStringReturn" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+
+   <element name="setGetDateTimeType">
+    <complexType>
+     <sequence>
+      <element name="arg_0_32" type="xsd:dateTime"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setGetDateTimeTypeResponse">
+    <complexType>
+     <sequence>
+      <element name="setGetDateTimeTypeReturn" type="xsd:dateTime"/>
+     </sequence>
+    </complexType>
+   </element>
+
+   <element name="setGetDateType">
+    <complexType>
+     <sequence>
+      <element name="arg_0_35" type="xsd:date"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setGetDateTypeResponse">
+    <complexType>
+     <sequence>
+      <element name="setGetDateTypeReturn" type="xsd:date"/>
+     </sequence>
+    </complexType>
+   </element>
+
+   <element name="setGetDataDurationType">
+    <complexType>
+     <sequence>
+      <element name="arg_0_d35" type="xsd:duration"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setGetDataDurationTypeResponse">
+    <complexType>
+     <sequence>
+      <element name="setGetDataDurationTypeReturn" type="xsd:duration"/>
+     </sequence>
+    </complexType>
+   </element>
+
+   <element name="setGetTimeType">
+    <complexType>
+     <sequence>
+      <element name="arg_0_38" type="xsd:time"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setGetTimeTypeResponse">
+    <complexType>
+     <sequence>
+      <element name="setGetTimeTypeReturn" type="xsd:time"/>
+     </sequence>
+    </complexType>
+   </element>
+
+   <element name="setGetBase64BinaryType">
+    <complexType>
+     <sequence>
+      <element name="arg_0_41" type="xsd:base64Binary"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setGetBase64BinaryTypeResponse">
+    <complexType>
+     <sequence>
+      <element name="setGetBase64BinaryTypeReturn" type="xsd:base64Binary"/>
+     </sequence>
+    </complexType>
+   </element>
+
+   <element name="setGetHexBinary">
+    <complexType>
+     <sequence>
+      <element name="arg_0_44" type="xsd:hexBinary"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setGetHexBinaryResponse">
+    <complexType>
+     <sequence>
+      <element name="setGetHexBinaryReturn" type="xsd:hexBinary"/>
+     </sequence>
+    </complexType>
+   </element>
+
+   <element name="setGetDecimalType">
+    <complexType>
+     <sequence>
+      <element name="arg_0_47" type="xsd:decimal"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setGetDecimalTypeResponse">
+    <complexType>
+     <sequence>
+      <element name="setGetDecimalTypeReturn" type="xsd:decimal"/>
+     </sequence>
+    </complexType>
+   </element>
+
+   <element name="setGetIntegerType">
+    <complexType>
+     <sequence>
+      <element name="arg_0_50" type="xsd:integer"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setGetIntegerTypeResponse">
+    <complexType>
+     <sequence>
+      <element name="setGetIntegerTypeReturn" type="xsd:integer"/>
+     </sequence>
+    </complexType>
+   </element>
+
+   <element name="getQNameType">
+    <complexType>
+     <sequence/>
+    </complexType>
+   </element>
+   <element name="getQNameTypeResponse">
+    <complexType>
+     <sequence>
+      <element name="getQNameTypeReturn" type="xsd:QName"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setQNameType">
+    <complexType>
+     <sequence>
+      <element name="arg_0_52" type="xsd:QName"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setQNameTypeResponse">
+    <complexType>
+     <sequence/>
+    </complexType>
+   </element>
+
+   <element name="getAnyURIType">
+    <complexType>
+     <sequence/>
+    </complexType>
+   </element>
+   <element name="getAnyURITypeResponse">
+    <complexType>
+     <sequence>
+      <element name="getAnyURITypeReturn" type="xsd:anyURI"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setAnyURIType">
+    <complexType>
+     <sequence>
+      <element name="arg_0_a52" type="xsd:anyURI"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setAnyURITypeResponse">
+    <complexType>
+     <sequence/>
+    </complexType>
+   </element>
+
+  </schema>
+
+ </wsdl:types>
+
+
+
+   <wsdl:message name="setGetDataIntRequest">
+
+      <wsdl:part element="impl:setGetDataInt" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDataUnsignedIntRequest">
+
+      <wsdl:part element="impl:setGetDataUnsignedInt" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+
+
+   <wsdl:message name="setGetDataIntResponse">
+
+      <wsdl:part element="impl:setGetDataIntResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="setGetDataUnsignedIntResponse">
+
+      <wsdl:part element="impl:setGetDataUnsignedIntResponse" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDataByteRequest">
+
+      <wsdl:part element="impl:setGetDataByte" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDataUnsignedByteRequest">
+
+      <wsdl:part element="impl:setGetDataUnsignedByte" name="parameters"/>
+
+   </wsdl:message>
+
+
+   <wsdl:message name="setGetDataByteResponse">
+
+      <wsdl:part element="impl:setGetDataByteResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="setGetDataUnsignedByteResponse">
+
+      <wsdl:part element="impl:setGetDataUnsignedByteResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="setGetDataLongRequest">
+
+      <wsdl:part element="impl:setGetDataLong" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDataLongResponse">
+
+      <wsdl:part element="impl:setGetDataLongResponse" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDataUnsignedLongRequest">
+
+      <wsdl:part element="impl:setGetDataUnsignedLong" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDataUnsignedLongResponse">
+
+      <wsdl:part element="impl:setGetDataUnsignedLongResponse" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDataShortRequest">
+
+      <wsdl:part element="impl:setGetDataShort" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDataShortResponse">
+
+      <wsdl:part element="impl:setGetDataShortResponse" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDataUnsignedShortRequest">
+
+      <wsdl:part element="impl:setGetDataUnsignedShort" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDataUnsignedShortResponse">
+
+      <wsdl:part element="impl:setGetDataUnsignedShortResponse" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDataBooleanRequest">
+
+      <wsdl:part element="impl:setGetDataBoolean" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDataBooleanResponse">
+
+      <wsdl:part element="impl:setGetDataBooleanResponse" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDataFloatRequest">
+
+      <wsdl:part element="impl:setGetDataFloat" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDataFloatResponse">
+
+      <wsdl:part element="impl:setGetDataFloatResponse" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDataDoubleRequest">
+
+      <wsdl:part element="impl:setGetDataDouble" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDataDoubleResponse">
+
+      <wsdl:part element="impl:setGetDataDoubleResponse" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDecimalTypeRequest">
+
+      <wsdl:part element="impl:setGetDecimalType" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDecimalTypeResponse">
+
+      <wsdl:part element="impl:setGetDecimalTypeResponse" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetHexBinaryRequest">
+
+      <wsdl:part element="impl:setGetHexBinary" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetHexBinaryResponse">
+
+      <wsdl:part element="impl:setGetHexBinaryResponse" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetBase64BinaryTypeRequest">
+
+      <wsdl:part element="impl:setGetBase64BinaryType" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetBase64BinaryTypeResponse">
+
+      <wsdl:part element="impl:setGetBase64BinaryTypeResponse" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDateTimeTypeRequest">
+
+      <wsdl:part element="impl:setGetDateTimeType" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDateTimeTypeResponse">
+
+      <wsdl:part element="impl:setGetDateTimeTypeResponse" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetIntegerTypeRequest">
+
+      <wsdl:part element="impl:setGetIntegerType" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetIntegerTypeResponse">
+
+      <wsdl:part element="impl:setGetIntegerTypeResponse" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDataStringRequest">
+
+      <wsdl:part element="impl:setGetDataString" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDataStringResponse">
+
+      <wsdl:part element="impl:setGetDataStringResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="setAnyURITypeRequest">
+
+      <wsdl:part element="impl:setAnyURIType" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="getAnyURITypeRequest">
+
+      <wsdl:part element="impl:getAnyURIType" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="setAnyURITypeResponse">
+
+      <wsdl:part element="impl:setAnyURITypeResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="getAnyURITypeResponse">
+
+      <wsdl:part element="impl:getAnyURITypeResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="setQNameTypeRequest">
+
+      <wsdl:part element="impl:setQNameType" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="getQNameTypeRequest">
+
+      <wsdl:part element="impl:getQNameType" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="setQNameTypeResponse">
+
+      <wsdl:part element="impl:setQNameTypeResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="getQNameTypeResponse">
+
+      <wsdl:part element="impl:getQNameTypeResponse" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDateTypeRequest">
+
+      <wsdl:part element="impl:setGetDateType" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDateTypeResponse">
+
+      <wsdl:part element="impl:setGetDateTypeResponse" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDataDurationTypeRequest">
+
+      <wsdl:part element="impl:setGetDataDurationType" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetDataDurationTypeResponse">
+
+      <wsdl:part element="impl:setGetDataDurationTypeResponse" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetTimeTypeRequest">
+
+      <wsdl:part element="impl:setGetTimeType" name="parameters"/>
+
+   </wsdl:message>
+
+
+
+   <wsdl:message name="setGetTimeTypeResponse">
+
+      <wsdl:part element="impl:setGetTimeTypeResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:portType name="XSDElement">
+
+
+
+      <wsdl:operation name="setGetDataInt">
+
+         <wsdl:input message="impl:setGetDataIntRequest" name="setGetDataIntRequest"/>
+
+         <wsdl:output message="impl:setGetDataIntResponse" name="setGetDataIntResponse"/>
+
+      </wsdl:operation>
+
+
+
+      <wsdl:operation name="setGetDataUnsignedInt">
+
+         <wsdl:input message="impl:setGetDataUnsignedIntRequest" name="setGetDataUnsignedIntRequest"/>
+
+         <wsdl:output message="impl:setGetDataUnsignedIntResponse" name="setGetDataUnsignedIntResponse"/>
+
+      </wsdl:operation>
+
+
+
+      <wsdl:operation name="setGetDataLong">
+
+         <wsdl:input message="impl:setGetDataLongRequest" name="setGetDataLongRequest"/>
+
+         <wsdl:output message="impl:setGetDataLongResponse" name="setGetDataLongResponse"/>
+
+      </wsdl:operation>
+
+
+
+      <wsdl:operation name="setGetDataUnsignedLong">
+
+         <wsdl:input message="impl:setGetDataUnsignedLongRequest" name="setGetDataUnsignedLongRequest"/>
+
+         <wsdl:output message="impl:setGetDataUnsignedLongResponse" name="setGetDataUnsignedLongResponse"/>
+
+      </wsdl:operation>
+
+
+
+      <wsdl:operation name="setGetDataDouble">
+
+         <wsdl:input message="impl:setGetDataDoubleRequest" name="setGetDataDoubleRequest"/>
+
+         <wsdl:output message="impl:setGetDataDoubleResponse" name="setGetDataDoubleResponse"/>
+
+      </wsdl:operation>
+
+
+
+      <wsdl:operation name="setGetDataFloat">
+
+         <wsdl:input message="impl:setGetDataFloatRequest" name="setGetDataFloatRequest"/>
+
+         <wsdl:output message="impl:setGetDataFloatResponse" name="setGetDataFloatResponse"/>
+
+      </wsdl:operation>
+
+
+
+      <wsdl:operation name="setGetDataByte">
+
+         <wsdl:input message="impl:setGetDataByteRequest" name="setGetDataByteRequest"/>
+
+         <wsdl:output message="impl:setGetDataByteResponse" name="setGetDataByteResponse"/>
+
+      </wsdl:operation>
+
+
+
+      <wsdl:operation name="setGetDataUnsignedByte">
+
+         <wsdl:input message="impl:setGetDataUnsignedByteRequest" name="setGetDataUnsignedByteRequest"/>
+
+         <wsdl:output message="impl:setGetDataUnsignedByteResponse" name="setGetDataUnsignedByteResponse"/>
+
+      </wsdl:operation>
+
+
+
+      <wsdl:operation name="setGetDataBoolean">
+
+         <wsdl:input message="impl:setGetDataBooleanRequest" name="setGetDataBooleanRequest"/>
+
+         <wsdl:output message="impl:setGetDataBooleanResponse" name="setGetDataBooleanResponse"/>
+
+      </wsdl:operation>
+
+
+
+      <wsdl:operation name="setGetDataString">
+
+         <wsdl:input message="impl:setGetDataStringRequest" name="setGetDataStringRequest"/>
+
+         <wsdl:output message="impl:setGetDataStringResponse" name="setGetDataStringResponse"/>
+
+      </wsdl:operation>
+
+
+
+      <wsdl:operation name="setGetDataShort">
+
+         <wsdl:input message="impl:setGetDataShortRequest" name="setGetDataShortRequest"/>
+
+         <wsdl:output message="impl:setGetDataShortResponse" name="setGetDataShortResponse"/>
+
+      </wsdl:operation>
+
+
+
+      <wsdl:operation name="setGetDataUnsignedShort">
+
+         <wsdl:input message="impl:setGetDataUnsignedShortRequest" name="setGetDataUnsignedShortRequest"/>
+
+         <wsdl:output message="impl:setGetDataUnsignedShortResponse" name="setGetDataUnsignedShortResponse"/>
+
+      </wsdl:operation>
+
+
+
+      <wsdl:operation name="setGetDateTimeType">
+
+         <wsdl:input message="impl:setGetDateTimeTypeRequest" name="setGetDateTimeTypeRequest"/>
+
+         <wsdl:output message="impl:setGetDateTimeTypeResponse" name="setGetDateTimeTypeResponse"/>
+
+      </wsdl:operation>
+
+
+
+      <wsdl:operation name="setGetDateType">
+
+         <wsdl:input message="impl:setGetDateTypeRequest" name="setGetDateTypeRequest"/>
+
+         <wsdl:output message="impl:setGetDateTypeResponse" name="setGetDateTypeResponse"/>
+
+      </wsdl:operation>
+
+
+
+      <wsdl:operation name="setGetDataDurationType">
+
+         <wsdl:input message="impl:setGetDataDurationTypeRequest" name="setGetDataDurationTypeRequest"/>
+
+         <wsdl:output message="impl:setGetDataDurationTypeResponse" name="setGetDataDurationTypeResponse"/>
+
+      </wsdl:operation>
+
+
+
+      <wsdl:operation name="setGetTimeType">
+
+         <wsdl:input message="impl:setGetTimeTypeRequest" name="setGetTimeTypeRequest"/>
+
+         <wsdl:output message="impl:setGetTimeTypeResponse" name="setGetTimeTypeResponse"/>
+
+      </wsdl:operation>
+
+
+
+      <wsdl:operation name="setGetBase64BinaryType">
+
+         <wsdl:input message="impl:setGetBase64BinaryTypeRequest" name="setGetBase64BinaryTypeRequest"/>
+
+         <wsdl:output message="impl:setGetBase64BinaryTypeResponse" name="setGetBase64BinaryTypeResponse"/>
+
+      </wsdl:operation>
+
+
+
+      <wsdl:operation name="setGetHexBinary">
+
+         <wsdl:input message="impl:setGetHexBinaryRequest" name="setGetHexBinaryRequest"/>
+
+         <wsdl:output message="impl:setGetHexBinaryResponse" name="setGetHexBinaryResponse"/>
+
+      </wsdl:operation>
+
+
+
+      <wsdl:operation name="setGetDecimalType">
+
+         <wsdl:input message="impl:setGetDecimalTypeRequest" name="setGetDecimalTypeRequest"/>
+
+         <wsdl:output message="impl:setGetDecimalTypeResponse" name="setGetDecimalTypeResponse"/>
+
+      </wsdl:operation>
+
+
+
+      <wsdl:operation name="setGetIntegerType">
+
+         <wsdl:input message="impl:setGetIntegerTypeRequest" name="setGetIntegerTypeRequest"/>
+
+         <wsdl:output message="impl:setGetIntegerTypeResponse" name="setGetIntegerTypeResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setQNameType">
+
+         <wsdl:input message="impl:setQNameTypeRequest" name="setQNameTypeRequest"/>
+
+         <wsdl:output message="impl:setQNameTypeResponse" name="setQNameTypeResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getQNameType">
+
+         <wsdl:input message="impl:getQNameTypeRequest" name="getQNameTypeRequest"/>
+
+         <wsdl:output message="impl:getQNameTypeResponse" name="getQNameTypeResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setAnyURIType">
+
+         <wsdl:input message="impl:setAnyURITypeRequest" name="setAnyURITypeRequest"/>
+
+         <wsdl:output message="impl:setAnyURITypeResponse" name="setAnyURITypeResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getAnyURIType">
+
+         <wsdl:input message="impl:getAnyURITypeRequest" name="getAnyURITypeRequest"/>
+
+         <wsdl:output message="impl:getAnyURITypeResponse" name="getAnyURITypeResponse"/>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="XSDElementSoapBinding" type="impl:XSDElement">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="setGetDataInt">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="setGetDataIntRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="setGetDataIntResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setGetDataUnsignedInt">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="setGetDataUnsignedIntRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="setGetDataUnsignedIntResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setGetDataLong">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="setGetDataLongRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="setGetDataLongResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setGetDataUnsignedLong">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="setGetDataUnsignedLongRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="setGetDataUnsignedLongResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setGetDataDouble">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="setGetDataDoubleRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="setGetDataDoubleResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setGetDataFloat">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="setGetDataFloatRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="setGetDataFloatResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setGetDataByte">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="setGetDataByteRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="setGetDataByteResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setGetDataUnsignedByte">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="setGetDataUnsignedByteRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="setGetDataUnsignedByteResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setGetDataBoolean">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="setGetDataBooleanRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="setGetDataBooleanResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setGetDataString">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="setGetDataStringRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="setGetDataStringResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setGetDataShort">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="setGetDataShortRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="setGetDataShortResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setGetDataUnsignedShort">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="setGetDataUnsignedShortRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="setGetDataUnsignedShortResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setGetDateTimeType">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="setGetDateTimeTypeRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="setGetDateTimeTypeResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setGetDateType">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="setGetDateTypeRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="setGetDateTypeResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setGetDataDurationType">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="setGetDataDurationTypeRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="setGetDataDurationTypeResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setGetTimeType">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="setGetTimeTypeRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="setGetTimeTypeResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setGetBase64BinaryType">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="setGetBase64BinaryTypeRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="setGetBase64BinaryTypeResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setGetHexBinary">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="setGetHexBinaryRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="setGetHexBinaryResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setGetDecimalType">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="setGetDecimalTypeRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="setGetDecimalTypeResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setGetIntegerType">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="setGetIntegerTypeRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="setGetIntegerTypeResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getQNameType">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getQNameTypeRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getQNameTypeResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setQNameType">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="setQNameTypeRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="setQNameTypeResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getAnyURIType">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getAnyURITypeRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getAnyURITypeResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setAnyURIType">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="setAnyURITypeRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="setAnyURITypeResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="XSDElementService">
+
+      <wsdl:port binding="impl:XSDElementSoapBinding" name="XSDElementPort">
+
+         <wsdlsoap:address location="http://localhost:9080/XSDElement/services/XSDElementPort"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

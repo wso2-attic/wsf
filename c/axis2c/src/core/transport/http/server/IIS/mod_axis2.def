@@ -1,0 +1,9 @@
+LIBRARY	"mod_axis2_IIS"
+
+EXPORTS
+	HttpFilterProc
+	GetFilterVersion
+	GetExtensionVersion
+	HttpExtensionProc	
+	TerminateFilter
+	TerminateExtension

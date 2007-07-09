@@ -1,0 +1,13 @@
+#!/usr/bin/perl -w
+use strict;
+
+if ($ARGV[0] == 1)
+{
+    print "compiling writer\n";
+    system "gcc -Wall -g3 -O0  -o writer guththila_writer_main.c -L\$AXIS2C_HOME/lib -I\$AXIS2C_HOME/include -lguththila -laxis2_util";
+}
+else
+{
+    print "compiling reader tests \n";
+    system "gcc -Wall -g3 -O0  -o reader *.c \-L\$AXIS2C_HOME/lib \-I\$AXIS2C_HOME/include -lcheck -lguththila \-laxis2_util";
+}

@@ -1,0 +1,7 @@
+Util module seperated from Axis2/C
+======================================
+Initially this was inside Axis2/C code base as util directory. As the
+project expands it's moved to the top level with the view of making it a
+seperate Apache project called Apache Axis2/C util.
+
+-- Axis2-C team <axis-c-dev@ws.apache.org>  Thu, 18 May 2006

@@ -1,0 +1,46 @@
+Apache Axis2/C Team is pleased to announce the release of Apache Axis2/C version 1.0.0
+You can download this release from
+http://ws.apache.org/axis2/c/download.cgi
+
+Key Features
+
+   1. Support for one-way messaging (In-Only) and request response messaging (In-Out)
+   2. Client APIs: Easy to use service client API and more advanced operation client API
+   3. Transports supported: HTTP
+         a. Inbuilt HTTP server called simple axis server
+         b. Apache2 httpd module called mod_axis2 for server side
+         c. IIS module for server side
+         d. Client transport with ability to enable SSL support
+         e. libcurl based client transport
+   4. Module architecture, mechanism to extend the SOAP processing model
+   5. WS-Addressing support, both the submission (2004/08) and final (2005/08) versions, implemented as a module
+   6. MTOM/XOP support
+   7. AXIOM, an XML object model optimized for SOAP 1.1/1.2 messages; This has complete XML infoset support
+   8. XML parser abstraction
+         a. Libxml2 wrapper
+         b. Guththila pull parser support
+   9. Both directory based and archive based deployment models for deploying services and modules
+  10. Description hierarchy providing access to static data of Axis2/C runtime (configuration, service groups, services, operations and messages)
+  11. Context hierarchy providing access to dynamic Axis2/C runtime information(corresponding contexts to map to each level of description hierarchy)
+  12. Message receiver abstraction
+         a. Inbuilt raw XML message receiver
+  13. Code generation tool for stub and skeleton generation for a given WSDL (based on Java tool)
+         a. Axis Data Binding (ADB) support
+  14. Transport proxy support
+  15. REST support (more POX like) using both HTTP POST and GET
+  16. Comprehensive documentation
+         a. Axis2/C Manual
+
+Major Changes Since Last Release
+
+   1. Many Bug Fixes
+   2. IIS module for server side
+   3. libcurl based client transport
+   4. Improvements to overall API to make it more user friendly, stable and binary compatible
+   5. Transport proxy support
+   6. Memory leak fixes  
+
+We welcome your early feedback on this implementation.
+Thanks for your interest in Axis2/C
+
+-- Apache Axis2/C Team -- 

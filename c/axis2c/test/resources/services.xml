@@ -1,0 +1,22 @@
+<serviceGroup>
+
+  <service name="add_service">
+
+    <parameter name="ServiceClass" locked="xsd:false">add.so</parameter>
+
+    <operation name="add" > 
+          <messageReceiver class="libaxis2_receivers.so" />
+    </operation>
+  </service>
+  
+  <service name="multiply_service">
+  
+    <parameter name="ServiceClass" locked="xsd:false">multiply.so</parameter>
+
+    <operation name="multiply" > 
+          <messageReceiver class="libaxis2_receivers.so" />
+    </operation>
+    
+  </service>
+ 
+</serviceGroup>

@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Round 2 test cases for testing effective policy 
+     computations for policies attached to WSDL 20 policy subjects.
+
+    xmlns:wsp="http://www.w3.org/ns/ws-policy"
+    
+ -->
+ 
+<wsdl20:description xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wsdl20="http://www.w3.org/2006/01/wsdl"
+    xmlns:wsoap="http://www.w3.org/2006/01/wsdl/soap"
+    xmlns:wsp="http://www.w3.org/ns/ws-policy"
+    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+    xmlns:pa="http://ws-policy.example.com/assertion"
+    xmlns:s="http://schema.example.com/test"
+    targetNamespace="http://ws-policy.example.com/test"
+    xmlns:tns="http://ws-policy.example.com/test"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd
+    http://www.w3.org/2006/01/wsdl http://www.w3.org/2006/03/wsdl/wsdl20.xsd
+    http://www.w3.org/2006/01/wsdl/soap http://www.w3.org/2006/03/wsdl/soap.xsd
+    http://www.w3.org/ns/ws-policy http://www.w3.org/2002/ws/policy/ns/ws-policy">
+    
+    <wsp:Policy wsu:Id="Policy1">
+        <pa:Assertion1 marker="1"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy2">
+        <pa:Assertion2 marker="2"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy3">
+        <pa:Assertion3 marker="3"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy4">
+        <pa:Assertion4 marker="4"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy5">
+        <pa:Assertion5 marker="5"/>
+        <wsp:PolicyReference URI="#Policy2"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy6">
+        <pa:Assertion6 marker="6"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy7">
+        <pa:Assertion7 marker="7"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy8">
+        <pa:Assertion8 marker="8"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy9">
+        <pa:Assertion9 marker="9"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy10">
+        <pa:Assertion10 marker="10"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy11">
+        <pa:Assertion11 marker="11"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy12">
+        <pa:Assertion12 marker="12"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy13">
+        <pa:Assertion13 marker="13"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy14">
+        <pa:Assertion14 marker="14"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy15">
+        <pa:Assertion15 marker="15"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy16">
+        <pa:Assertion16 marker="16"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy17">
+        <pa:Assertion17 marker="17"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy18">
+        <pa:Assertion18 marker="18"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy19">
+        <pa:Assertion19 marker="19"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy20">
+        <pa:Assertion20 marker="20"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy21">
+        <pa:Assertion21 marker="21"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy22">
+        <pa:Assertion22 marker="22"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy23">
+        <pa:Assertion23 marker="23"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy24">
+        <pa:Assertion24 marker="24"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy25">
+        <pa:Assertion25 marker="25"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy26">
+        <pa:Assertion26 marker="26"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy27">
+        <pa:Assertion27 marker="27"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy28">
+        <pa:Assertion28 marker="28"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy29">
+        <pa:Assertion29 marker="29"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy30">
+        <pa:Assertion30 marker="30"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy31">
+        <pa:Assertion31 marker="31"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy32">
+        <pa:Assertion32 marker="32"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy33">
+        <pa:Assertion33 marker="33"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy34">
+        <pa:Assertion34 marker="34"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy35">
+        <pa:Assertion35 marker="35"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy36">
+        <pa:Assertion36 marker="36"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy37">
+        <pa:Assertion37 marker="37"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy38">
+        <pa:Assertion38 marker="38"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy39">
+        <pa:Assertion39 marker="39"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy40">
+        <pa:Assertion40 marker="40"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy41">
+        <pa:Assertion41 marker="41"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy42">
+        <pa:Assertion42 marker="42"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy43">
+        <pa:Assertion43 marker="43"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy44">
+        <pa:Assertion44 marker="44"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy45">
+        <pa:Assertion45 marker="45"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy46">
+        <pa:Assertion46 marker="46"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy47">
+        <pa:Assertion47 marker="47"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy48">
+        <pa:Assertion48 marker="48"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy49">
+        <pa:Assertion49 marker="49"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy50">
+        <pa:Assertion50 marker="50"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy51">
+        <pa:Assertion51 marker="51"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy52">
+        <pa:Assertion52 marker="52"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy53">
+        <pa:Assertion53 marker="53"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy54">
+        <pa:Assertion54 marker="54"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy55">
+        <pa:Assertion55 marker="55"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy56">
+        <pa:Assertion56 marker="56"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy57">
+        <pa:Assertion57 marker="57"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy58">
+        <pa:Assertion58 marker="58"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy59">
+        <pa:Assertion59 marker="59"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy60">
+        <pa:Assertion60 marker="60"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy61">
+        <pa:Assertion61 marker="61"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy62">
+        <pa:Assertion62 marker="62"/>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="Policy63">
+        <pa:Assertion63 marker="63"/>
+    </wsp:Policy>
+    
+    <wsdl20:types>
+        <xsd:schema elementFormDefault="qualified" targetNamespace="http://schema.example.com/test">
+            <xsd:element name="SimpleRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="request" nillable="true" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="SimpleResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="response" nillable="true" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="SimpleFault">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="fault" nillable="true" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </wsdl20:types>
+
+    <wsdl20:interface name="Base-Interface">
+        <wsp:PolicyReference URI="#Policy1"></wsp:PolicyReference>
+    </wsdl20:interface>
+    
+    <wsdl20:interface name="Interface-1" extends="tns:Base-Interface">
+        <wsp:PolicyReference URI="#Policy2"></wsp:PolicyReference>
+        <wsdl20:fault name="Fault-1" element="s:SimpleFault">
+            <wsp:PolicyReference URI="#Policy3"></wsp:PolicyReference>
+        </wsdl20:fault>
+        <wsdl20:operation name="Operation-1A" pattern="http://www.w3.org/2006/01/wsdl/in-out">
+            <wsp:PolicyReference URI="#Policy4"></wsp:PolicyReference>
+            <wsdl20:input element="s:SimpleRequest">
+                <wsp:PolicyReference URI="#Policy5"></wsp:PolicyReference>
+            </wsdl20:input>
+            <wsdl20:output element="s:SimpleResponse">
+                <wsp:PolicyReference URI="#Policy6"></wsp:PolicyReference>
+            </wsdl20:output>
+            <wsdl20:outfault ref="tns:Fault-1">
+                <wsp:PolicyReference URI="#Policy7"></wsp:PolicyReference>
+            </wsdl20:outfault>
+        </wsdl20:operation>
+        <wsdl20:operation name="Operation-1B" pattern="http://www.w3.org/2006/01/wsdl/in-out">
+            <wsp:PolicyReference URI="#Policy8"></wsp:PolicyReference>
+            <wsdl20:input element="s:SimpleRequest">
+                <wsp:PolicyReference URI="#Policy9"></wsp:PolicyReference>
+            </wsdl20:input>
+            <wsdl20:output element="s:SimpleResponse">
+                <wsp:PolicyReference URI="#Policy10"></wsp:PolicyReference>
+            </wsdl20:output>
+            <wsdl20:outfault ref="tns:Fault-1">
+                <wsp:PolicyReference URI="#Policy11"></wsp:PolicyReference>
+            </wsdl20:outfault>
+        </wsdl20:operation>        
+    </wsdl20:interface>
+
+    <wsdl20:interface name="Interface-2" extends="tns:Base-Interface">
+        <wsp:PolicyReference URI="#Policy12"></wsp:PolicyReference>
+        <wsdl20:fault name="Fault-2" element="s:SimpleFault">
+            <wsp:PolicyReference URI="#Policy13"></wsp:PolicyReference>
+        </wsdl20:fault>
+        <wsdl20:operation name="Operation-2A" pattern="http://www.w3.org/2006/01/wsdl/in-out">
+            <wsp:PolicyReference URI="#Policy14"></wsp:PolicyReference>
+            <wsdl20:input element="s:SimpleRequest">
+                <wsp:PolicyReference URI="#Policy15"></wsp:PolicyReference>
+            </wsdl20:input>
+            <wsdl20:output element="s:SimpleResponse">
+                <wsp:PolicyReference URI="#Policy16"></wsp:PolicyReference>
+            </wsdl20:output>
+            <wsdl20:outfault ref="tns:Fault-2">
+                <wsp:PolicyReference URI="#Policy17"></wsp:PolicyReference>
+            </wsdl20:outfault>
+        </wsdl20:operation>
+        <wsdl20:operation name="Operation-2B" pattern="http://www.w3.org/2006/01/wsdl/in-out">
+            <wsp:PolicyReference URI="#Policy18"></wsp:PolicyReference>
+            <wsdl20:input element="s:SimpleRequest">
+                <wsp:PolicyReference URI="#Policy19"></wsp:PolicyReference>
+            </wsdl20:input>
+            <wsdl20:output element="s:SimpleResponse">
+                <wsp:PolicyReference URI="#Policy20"></wsp:PolicyReference>
+            </wsdl20:output>
+            <wsdl20:outfault ref="tns:Fault-2">
+                <wsp:PolicyReference URI="#Policy21"></wsp:PolicyReference>
+            </wsdl20:outfault>
+        </wsdl20:operation>        
+    </wsdl20:interface>
+    
+    <wsdl20:binding name="Binding-1A" interface="tns:Interface-1"
+        type="http://www.w3.org/2006/01/wsdl/soap"
+        wsoap:protocol="http://www.w3.org/2003/05/soap/bindings/HTTP/">
+        <wsp:PolicyReference URI="#Policy22"></wsp:PolicyReference>
+        <wsdl20:operation ref="tns:Operation-1A">
+            <wsp:PolicyReference URI="#Policy23"></wsp:PolicyReference>
+            <wsdl20:input>
+                <wsp:PolicyReference URI="#Policy24"></wsp:PolicyReference>
+            </wsdl20:input>
+            <wsdl20:output>
+                <wsp:PolicyReference URI="#Policy25"></wsp:PolicyReference>
+            </wsdl20:output>
+            <wsdl20:outfault ref="tns:Fault-1">
+                <wsp:PolicyReference URI="#Policy26"></wsp:PolicyReference>
+            </wsdl20:outfault>
+        </wsdl20:operation>
+        <wsdl20:operation ref="tns:Operation-1B">
+            <wsp:PolicyReference URI="#Policy27"></wsp:PolicyReference>
+            <wsdl20:input>
+                <wsp:PolicyReference URI="#Policy28"></wsp:PolicyReference>
+            </wsdl20:input>
+            <wsdl20:output>
+                <wsp:PolicyReference URI="#Policy29"></wsp:PolicyReference>
+            </wsdl20:output>
+            <wsdl20:outfault ref="tns:Fault-1">
+                <wsp:PolicyReference URI="#Policy30"></wsp:PolicyReference>
+            </wsdl20:outfault>
+        </wsdl20:operation>
+    </wsdl20:binding>
+
+    <wsdl20:binding name="Binding-1B" interface="tns:Interface-1"
+        type="http://www.w3.org/2006/01/wsdl/soap"
+        wsoap:protocol="http://www.w3.org/2003/05/soap/bindings/HTTP/">
+        <wsp:PolicyReference URI="#Policy31"></wsp:PolicyReference>
+        <wsdl20:operation ref="tns:Operation-1A">
+            <wsp:PolicyReference URI="#Policy32"></wsp:PolicyReference>
+            <wsdl20:input>
+                <wsp:PolicyReference URI="#Policy33"></wsp:PolicyReference>
+            </wsdl20:input>
+            <wsdl20:output>
+                <wsp:PolicyReference URI="#Policy34"></wsp:PolicyReference>
+            </wsdl20:output>
+            <wsdl20:outfault ref="tns:Fault-1">
+                <wsp:PolicyReference URI="#Policy35"></wsp:PolicyReference>
+            </wsdl20:outfault>            
+        </wsdl20:operation>
+        <wsdl20:operation ref="tns:Operation-1B">
+            <wsp:PolicyReference URI="#Policy36"></wsp:PolicyReference>
+            <wsdl20:input>
+                <wsp:PolicyReference URI="#Policy37"></wsp:PolicyReference>
+            </wsdl20:input>
+            <wsdl20:output>
+                <wsp:PolicyReference URI="#Policy38"></wsp:PolicyReference>
+            </wsdl20:output>
+            <wsdl20:outfault ref="tns:Fault-1">
+                <wsp:PolicyReference URI="#Policy39"></wsp:PolicyReference>
+            </wsdl20:outfault>            
+        </wsdl20:operation>
+    </wsdl20:binding>
+
+    <wsdl20:binding name="Binding-2A" interface="tns:Interface-2"
+        type="http://www.w3.org/2006/01/wsdl/soap"
+        wsoap:protocol="http://www.w3.org/2003/05/soap/bindings/HTTP/">
+        <wsp:PolicyReference URI="#Policy40"></wsp:PolicyReference>
+        <wsdl20:operation ref="tns:Operation-2A">
+            <wsp:PolicyReference URI="#Policy41"></wsp:PolicyReference>
+            <wsdl20:input>
+                <wsp:PolicyReference URI="#Policy42"></wsp:PolicyReference>
+            </wsdl20:input>
+            <wsdl20:output>
+                <wsp:PolicyReference URI="#Policy43"></wsp:PolicyReference>
+            </wsdl20:output>
+            <wsdl20:outfault ref="tns:Fault-2">
+                <wsp:PolicyReference URI="#Policy44"></wsp:PolicyReference>
+            </wsdl20:outfault>
+        </wsdl20:operation>
+        <wsdl20:operation ref="tns:Operation-2B">
+            <wsp:PolicyReference URI="#Policy45"></wsp:PolicyReference>
+            <wsdl20:input>
+                <wsp:PolicyReference URI="#Policy46"></wsp:PolicyReference>
+            </wsdl20:input>
+            <wsdl20:output>
+                <wsp:PolicyReference URI="#Policy47"></wsp:PolicyReference>
+            </wsdl20:output>
+            <wsdl20:outfault ref="tns:Fault-2">
+                <wsp:PolicyReference URI="#Policy48"></wsp:PolicyReference>
+            </wsdl20:outfault>
+        </wsdl20:operation>
+    </wsdl20:binding>
+    
+    <wsdl20:binding name="Binding-2B" interface="tns:Interface-2"
+        type="http://www.w3.org/2006/01/wsdl/soap"
+        wsoap:protocol="http://www.w3.org/2003/05/soap/bindings/HTTP/">
+        <wsp:PolicyReference URI="#Policy49"></wsp:PolicyReference>
+        <wsdl20:operation ref="tns:Operation-2A">
+            <wsp:PolicyReference URI="#Policy50"></wsp:PolicyReference>
+            <wsdl20:input>
+                <wsp:PolicyReference URI="#Policy51"></wsp:PolicyReference>
+            </wsdl20:input>
+            <wsdl20:output>
+                <wsp:PolicyReference URI="#Policy52"></wsp:PolicyReference>
+            </wsdl20:output>
+            <wsdl20:outfault ref="tns:Fault-2">
+                <wsp:PolicyReference URI="#Policy53"></wsp:PolicyReference>
+            </wsdl20:outfault>            
+        </wsdl20:operation>
+        <wsdl20:operation ref="tns:Operation-2B">
+            <wsp:PolicyReference URI="#Policy54"></wsp:PolicyReference>
+            <wsdl20:input>
+                <wsp:PolicyReference URI="#Policy55"></wsp:PolicyReference>
+            </wsdl20:input>
+            <wsdl20:output>
+                <wsp:PolicyReference URI="#Policy56"></wsp:PolicyReference>
+            </wsdl20:output>
+            <wsdl20:outfault ref="tns:Fault-2">
+                <wsp:PolicyReference URI="#Policy57"></wsp:PolicyReference>
+            </wsdl20:outfault>            
+        </wsdl20:operation>
+    </wsdl20:binding>
+            
+    <wsdl20:service name="Service-1" interface="tns:Interface-1">
+        <wsp:PolicyReference URI="#Policy58"></wsp:PolicyReference>
+        <wsdl20:endpoint name="Endpoint-1A" binding="Binding-1A">
+            <wsp:PolicyReference URI="#Policy59"></wsp:PolicyReference>
+        </wsdl20:endpoint>
+        <wsdl20:endpoint name="Endpoint-1B" binding="Binding-1B">
+            <wsp:PolicyReference URI="#Policy60"></wsp:PolicyReference>
+        </wsdl20:endpoint>
+    </wsdl20:service>
+    
+    <wsdl20:service name="Service-2" interface="tns:Interface-2">
+        <wsp:PolicyReference URI="#Policy61"></wsp:PolicyReference>
+        <wsdl20:endpoint name="Endpoint-2A" binding="Binding-2A">
+            <wsp:PolicyReference URI="#Policy62"></wsp:PolicyReference>
+        </wsdl20:endpoint>
+        <wsdl20:endpoint name="Endpoint-2B" binding="Binding-2A">
+            <wsp:PolicyReference URI="#Policy63"></wsp:PolicyReference>
+        </wsdl20:endpoint>
+    </wsdl20:service>
+    
+</wsdl20:description>

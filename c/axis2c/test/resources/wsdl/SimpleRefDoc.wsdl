@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2003-2004 The Apache Software Foundation.                      -->
+<!-- (c) Copyright IBM Corp. 2004, 2005 All Rights Reserved                   -->
+<!--                                                                          -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License");          -->
+<!-- you may not use this file except in compliance with the License.         -->
+<!-- You may obtain a copy of the License at                                  -->
+<!--                                                                          -->
+<!--        http://www.apache.org/licenses/LICENSE-2.0                        -->
+<!--                                                                          -->
+<!-- Unless required by applicable law or agreed to in writing, software      -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS,        -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and      -->
+<!-- limitations under the License.                                           -->
+
+<wsdl:definitions targetNamespace="http://soapinterop.org" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://soapinterop.org" xmlns:intf="http://soapinterop.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://soapinterop.org" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://soapinterop.org" xmlns:intf="http://soapinterop.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+   <complexType name="intType">
+    <sequence>
+     <element name="intItem" type="xsd:int"/>
+    </sequence>
+   </complexType>
+   <element name="echoInt">
+    <complexType>
+     <sequence>
+      <element name="arg_0_0" nillable="true" type="impl:intType"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="echoIntResponse">
+    <complexType>
+     <sequence>
+      <element name="echoIntReturn" nillable="true" type="impl:intType"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="echoIntRequest">
+
+      <wsdl:part element="impl:echoInt" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="echoIntResponse">
+
+      <wsdl:part element="impl:echoIntResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:portType name="RefTestPortType">
+
+      <wsdl:operation name="echoInt">
+
+         <wsdl:input message="impl:echoIntRequest" name="echoIntRequest"/>
+
+         <wsdl:output message="impl:echoIntResponse" name="echoIntResponse"/>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="refSoapBinding" type="impl:RefTestPortType">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="echoInt">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="echoIntRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="echoIntResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="ref">
+
+      <wsdl:port binding="impl:refSoapBinding" name="RefTest">
+
+         <wsdlsoap:address location="http://localhost/axis/ref"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

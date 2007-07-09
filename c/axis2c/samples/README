@@ -1,0 +1,51 @@
+
+                          Apache Axis2/C Samples
+                         ------------------------
+
+  What Is It?
+  -----------
+
+  This package consists the samples of Apache Axis2/C.
+  
+  As a project of the Apache Software Foundation, the
+  developers aim to collaboratively develop and maintain a robust,
+  commercial-grade, standards-based Web services stack implementation with 
+  freely available source code.
+
+  The Latest Version
+  ------------------
+
+  You can get the latest svn checkout of Apache Axis2/C samples from
+
+  https://svn.apache.org/repos/asf/webservices/axis2/trunk/c/samples
+
+  Installation
+  ------------
+
+  Please see the file called INSTALL.
+
+  Licensing
+  ---------
+
+  Please see the file called LICENSE.
+
+  Contacts
+  --------
+
+     o If you want freely available support for using Apache Axis2/C samples please
+       join the Apache Axis2/C user community by subscribing to users mailing
+       list, axis-c-user@ws.apache.org' as described at
+       http://ws.apache.org/axis2/c/mail-lists.html
+
+     o If you have a bug report for Apache Axis2/C samples please log-in and create a JIRA issue
+       at http://issues.apache.org/jira/browse/AXIS2C
+
+     o If you want to participate actively in developing Apache Axis2/C samples please
+       subscribe to the `axis-c-dev@ws.apache.org' mailing list as described at
+       http://ws.apache.org/axis2/c/mail-lists.html
+
+  Acknowledgements
+  ----------------
+
+  Apache Axis2/C samples rely heavily on the use of autoconf and libtool to provide
+  a build environment. 

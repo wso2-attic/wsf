@@ -1,0 +1,9 @@
+prglibdir=$(prefix)/services/mtom
+prglib_LTLIBRARIES = libmtom.la
+prglib_DATA= services.xml
+EXTRA_DIST = services.xml mtom.mk mtom.h
+noinst_HEADERS = mtom.h
+SUBDIRS =
+libmtom_la_SOURCES = mtom.c mtom_skeleton.c
+libmtom_la_LIBADD  =
+INCLUDES = @AXIS2INC@

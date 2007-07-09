@@ -1,0 +1,8 @@
+* echoStringArray
+* echoIntegerArray
+* echoFloatArray
+* echoStruct
+* echoStructArray
+* echoVoid
+* echoBase64
+* echoHexBinary

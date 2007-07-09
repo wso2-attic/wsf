@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?> 
+<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa=
+"http://schemas.xmlsoap.org/ws/2004/08/addressing">
+      <soapenv:Header>
+         <wsrm:Sequence xmlns:wsrm="http://schemas.xmlsoap.org/ws/2005/02/rm" soapenv:mustUnderstand="1">
+            <wsrm:Identifier>uuid:967F11455D2EC0EC9411374901147634</wsrm:Identifier>
+            <wsrm:MessageNumber>1</wsrm:MessageNumber>
+            <wsrm:LastMessage />
+         </wsrm:Sequence>
+         <wsa:To xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://127.0.0.1:9090/axis2/services/echo</wsa:To>
+         <wsa:Action xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://127.0.0.1:9090/axis2/services/echo/__OPERATION_OUT_IN__</wsa:Action>
+         <wsa:ReplyTo xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">
+            <wsa:Address>http://192.168.1.217:9090/axis2/services/__ANONYMOUS_SERVICE__/__OPERATION_OUT_IN__</wsa:Address>
+         </wsa:ReplyTo>
+         <wsa:MessageID xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">38DDECF77196B604F511374901138822
+         </wsa:MessageID>
+      </soapenv:Header>
+      <soapenv:Body>
+         <echoString xmlns="">
+            <text xmlns="">echo5</text>
+         </echoString>
+      </soapenv:Body>
+   </soapenv:Envelope>

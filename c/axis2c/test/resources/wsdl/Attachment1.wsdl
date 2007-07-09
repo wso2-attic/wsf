@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://attachment1" 
+	xmlns:impl="http://attachment1" 
+	xmlns:intf="http://attachment1" 
+	xmlns:tns2="http://xml.apache.org/xml-soap" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+ <wsdl:types>
+  <schema elementFormDefault="qualified" 
+	targetNamespace="http://attachment1" 
+	xmlns="http://www.w3.org/2001/XMLSchema" 
+	xmlns:impl="http://attachment1" 
+	xmlns:intf="http://attachment1" 
+	xmlns:tns2="http://xml.apache.org/xml-soap" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://xml.apache.org/xml-soap"/>
+   <element name="put">
+    <complexType>
+     <sequence>
+      <element name="arg1" type="tns2:Image"/>
+      <element name="arg2" type="tns2:PlainText"/>
+      <element name="arg3" type="tns2:Source"/>
+      <element name="arg4" type="tns2:octet-stream"/>
+      <element name="arg5" type="tns2:DataHandler"/>
+      <!-- element name="arg6" type="tns2:MimeMultipart"/ -->
+      <element name="arg7" nillable="true" type="tns2:DataHandler"/>
+      <element name="arg8" nillable="true" type="tns2:DataHandler"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="putResponse">
+    <complexType>
+     <sequence>
+      <element name="putReturn" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="putRequest">
+      <wsdl:part element="impl:put" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="putResponse">
+      <wsdl:part element="impl:putResponse" name="parameters"/>
+   </wsdl:message>
+
+   <wsdl:portType name="AttachmentBindingImpl">
+      <wsdl:operation name="put">
+         <wsdl:input message="impl:putRequest" name="putRequest"/>
+         <wsdl:output message="impl:putResponse" name="putResponse"/>
+      </wsdl:operation>
+   </wsdl:portType>
+
+   <wsdl:binding name="Attachment1SoapBinding" type="impl:AttachmentBindingImpl">
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="put">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="putRequest">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output name="putResponse">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+
+   <wsdl:service name="AttachmentBindingImplService">
+      <wsdl:port binding="impl:Attachment1SoapBinding" name="Attachment1">
+         <wsdlsoap:address location="http://localhost:9080/Attachment1/services/Attachment1"/>
+      </wsdl:port>
+   </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,133 @@
+Axis2/C (1.0.0)
+   * Many Bug Fixes
+   * IIS module for server side
+   * libcurl based client transport
+   * Improvements to overall API to make it more user friendly, stable and binary compatible
+   * Transport proxy support
+   * Memory leak fixes
+-- Axis2/C team <axis-c-dev@ws.apache.org> Mon, 30 April 2007
+
+Axis2/C (0.96)
+   * Major Memory leak fixes
+   * Many Bug Fixes
+   * Improvement to REST processing
+   * Improvement to SOAP-Fault processing
+   * Improvement to mod_axis2 library (plugged with apr pools)
+   * Visual Studio 7.0 project
+-- Axis2/C team <axis-c-dev@ws.apache.org> Thu, 19 December 2006 
+	
+Axis2/C (0.95)
+  * Major Memory leak fixes
+  * Many Bug Fixes
+  * Improved Documentation
+-- Axis2/C team <axis-c-dev@ws.apache.org> Thu, 26 October 2006 
+
+Axis2/C (0.94)
+  * Guththila pull parser support
+  * WSDL2C code generation tool
+  * TCP Monitor - C implementation
+  * Major Memory leak fixes
+  * Fixes to code generation with Java Tool
+  * Many Bug Fixes
+-- Axis2/C team <axis-c-dev@ws.apache.org>  Tue, 3 October 2006 
+	
+Axis2/C (0.93)
+  * REST support for HTTP GET case
+  * XML Schema implementation
+  * Woden/C implementation that supports both WSDL 1.1 and WSDL 2.0
+  * Dynamic client invocation (given a WSDL, consume services dynamically)
+  * Numerous improvements to API and API documentation
+  * Many bug fixes, especially, many paths of execution previously untouched were tested along with Sandesha2/C  implementation
+-- Axis2/C team <axis-c-dev@ws.apache.org>  Thu, 31 August 2006 
+	
+Axis2/C (0.92)
+  * Completed MTOM implementation with multiple attachment support and non-optimize  
+  * Completed service client API with send robust and fire and forget
+  * Added "message" to description hierarchy
+  * Archive based deployment Model (for services and modules)
+  * Code generation for WSDL using Java WSDL2Code tool
+  * ADB support (with Java WSDL2C tool)
+  * WS-Security usernameToken support
+  * Initial implementation of the XML Schema parser (To be used in WSDL parser and REST support)
+  * Initial implementation of WSDL parser (To be used in dynamic invocation)
+  * Changed double pointer environment parameters into pointer parameters
+  to improve efficiency
+ -- Axis2/C team <axis-c-dev@ws.apache.org>  Fri, 16 June 2006 
+	
+Axis2/C (0.91)
+
+  * Full Addressing 1.0 support
+  * Improved fault handling model
+  * SSL client transport
+  * MTOM implementation
+  * Implementation of easy to use service client and operation client APIs for client side programming
+  * REST support (POST case)
+  * Module version support
+  * Service groups
+  * Numerous bug fixes since last release
+ -- Axis2/C team <axis-c-dev@ws.apache.org>  Mon, 15 May 2006 
+
+
+Axis2/C (0.90)
+
+  * Minimal memory leaks
+  * Apache2 module working in Windows
+  * More samples and tests
+  * WSDL Object Model built based on the proposed WSDL 2.0 Component model
+  * Dynamic Invocation
+  * Numerous bug fixes since last release
+ -- Axis2/C team <axis-c-dev@ws.apache.org>  Fri, 31 Mar 2006 
+
+
+Axis2/C (M0.5)
+
+  * Improving code quality by fixing memory leaks and reviewing the code
+  * Apache2 integration
+  * More samples and tests
+  * Initial documentation(User guide, Developer Guide and Installation Guide)
+  * Numerous bug fixes since last release
+ -- Axis2/C team <axis-c-dev@ws.apache.org>  Fri, 10 Mar 2006 
+
+
+Axis2/C (M0.4)
+
+  * Threading support and threaded simple axis server
+  * Module loading support
+  * Addressing module and addressing based dispatching
+  * HTTP chunking support
+  * Improved logging mechanism
+  * Ability to build and run on Windows platform
+ -- Axis2/C team <axis-c-dev@ws.apache.org>  Fri, 17 Feb 2006
+
+
+Axis2/C (M0.3)
+
+  * Core engine in place with deployment, description and context hiarachies and http transport support
+  * Soap processing support
+  * Simple http server
+  * Client API implementation
+  * Couple of working service and client samples
+ -- Axis2/C team <axis-c-dev@ws.apache.org>  Thu, 02 Feb 2006 
+
+
+Axis2/C (M0.2)
+
+  * Improved OM module
+  * libxml2 parser support
+  * PHP binding for OM module
+  * Some test cases for PHP binding
+  * Many memory leaks fixes
+ -- Axis2/C team <axis-c-dev@ws.apache.org>  Thu, 08 Dec 2005
+
+
+Axis2/C (M0.1)
+
+  * Initial release
+
+  * OM module
+  * Guththila pull parser support
+  * libxml2 parser support(only reader is supported as of now)
+  * doxygen documentation support
+  * A sample demonstrating how to use OM
+ -- Axis2/C team <axis-c-dev@ws.apache.org>  Fri, 25 Nov 2005
+
