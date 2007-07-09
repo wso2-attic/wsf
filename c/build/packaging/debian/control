@@ -1,0 +1,12 @@
+Source: wso2-wsf-c
+Section: unknown
+Priority: extra
+Maintainer: Sanjaya Ratnaweera <pini@debian.lk.wso2.com>
+Build-Depends: debhelper (>= 5)
+Standards-Version: 3.7.2
+
+Package: wso2-wsf-c
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: <insert up to 60 chars description>
+ <insert long description, indented with spaces>

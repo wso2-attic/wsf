@@ -1,0 +1,1 @@
+shlibs:Depends=libc6 (>= 2.3.6-6), libiksemel3, libsqlite3-0 (>= 3.3.8), libssl0.9.8 (>= 0.9.8c-1), libxml2 (>= 2.6.27), zlib1g (>= 1:1.2.1)

@@ -1,0 +1,23 @@
+Summary: WSO2 WSF-C
+Name: wso2-wsf-c
+Version: 1.0
+Release: 1
+Source0: wso2-wsf-c-1.0.tar.gz
+License: Apache
+Group: Development/Tools
+%description
+The GNU indent program reformats C code to any of a variety o
+formatting standards, or you can define your own.
+%prep
+%setup -q
+%build
+./configure --enable-openssl=no --with-apache2=/usr/local/apache2/include --enable-xmpp=yes --with-axis2=`pwd`/axis2c/include
+make
+%install
+make install
+make samples
+%files
+%defattr(-,root,root)
+/usr/local/wsf_c
+%doc COPYING AUTHORS README NEWS
+
