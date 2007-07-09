@@ -46,7 +46,7 @@
                 <td style="width: 100px; height: 21px">
                     Boolean String, double</td>
                 <td style="width: 100px; height: 21px">
-                    TRUE | 1.0 | "1.0"</td>
+                    TRUE | 1.1</td>
                 <td style="width: 100px; height: 21px">
                     Default RM version is 1.0</td>
                 <td style="width: 373px; height: 21px">
@@ -67,6 +67,18 @@
                 <td style="width: 373px; height: 4px">
                     The current sequence will expire in "sequenceExpiryTime" milliseconds from current
                     time.</td>
+            </tr>
+              <tr>
+                <td style="width: 100px; height: 4px">
+                    sequenceKey</td>
+                <td style="width: 100px; height: 4px">
+                    string</td>
+                <td style="width: 100px; height: 4px">
+                    string</td>
+                <td style="width: 100px; height: 4px">
+                    &nbsp;</td>
+                <td style="width: 373px; height: 4px">
+                    The sequence key property </td>
             </tr>
             <tr>
                 <td style="width: 100px; height: 4px">
@@ -102,7 +114,7 @@
         </tr>
         <tr>
             <td style="width: 100px">
-                LastMessage</td>
+                lastMessage</td>
             <td style="width: 100px">
                 Boolean</td>
             <td style="width: 100px">
@@ -115,8 +127,8 @@
                 <br />
                     The client will check it's "willContinueSequence" option. If it is FALSE ( default
                     value ) , it will send the message
-                    and terminate the sequence. If client's&nbsp; "willContinueSequence" property is TRUE, it will check the "LastMessage"
-                    property of WSMessage. If this is TRUE ( which is default ) it will add the last
+                    and terminate the sequence. If client's&nbsp; "willContinueSequence" property is TRUE, it will check the "lastMessage"
+                    property of WSMessage. If this is TRUE ( default is FALSE ) it will add the last
                     message and terminate the sequence.</td>
         </tr>
     </table>
