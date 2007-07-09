@@ -1,2 +1,0 @@
-SUBDIRS=@APACHE2BUILD@ simple_axis2_server
-EXTRA_DIST=IIS
