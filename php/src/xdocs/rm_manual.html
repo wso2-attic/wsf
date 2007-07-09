@@ -22,9 +22,13 @@
         We assume that you have installed the wsf4php.
         </p>
     <p>
-        wsf4php uses sqlite3 to store state
-        related to reliable messaging
-        protocol. Therefor you will need to have sqlite3 installed on your machine.
+        To implement reliable messaging wsf-php uses a database system to store state information
+        related to messaging and for that two data base systems supported. They are sqlite3
+        and mysql.&nbsp;</p>
+    <p>
+        <strong>Using wsf3php with sqlite3</strong></p>
+    <p>
+        you will need to have sqlite3 installed on your machine.
     </p>
     <p>
         Note:- On windows binary , sqlite3 binary and and executable will&nbsp; be packed
@@ -48,7 +52,7 @@
     <p>
         You can do the same on linux if you have provided read write permisions.</p>
     <h2>
-       <strong id="2">2.0 Writing a sample RM Web Service Client.</strong></h2>
+       <strong id="2">2.0 Writing a RM Web Service Client.</strong></h2>
     <p>
         Since WS Addressing is needed WSRM to work, you need to specify the necessary WS
         addressing options along with RM Options. Lets implement the simplest rm client
@@ -114,12 +118,13 @@
             style="color: #ff6666">action</span>"=&gt;"<span style="color: #ff6666">http://php.axis2.org/samples/echoString</span>"));</p>
     <p>
         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $msg2 = new WSMessage($reqPayloadString, array("<span
-            style="color: #ff6666">action</span>"=&gt;"<span style="color: #ff6666">http://php.axis2.org/samples/echoString</span>",</p>
-    <p>
+            style="color: #ff6666">action</span>"=&gt;"<span style="color: #ff6666">http://php.axis2.org/samples/echoString</span>",
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "<span style="color: #ff6666">lastMessage</span>"=&gt;TRUE));</p>
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; "<span style="color: #ff6666">lastMessage</span>"=&gt;TRUE));</p>
     <p>
         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $client = new WSClient(array( "<span style="color: #ff6666">to</span>"=&gt;"<span
             style="color: #ff6666">http://localhost:8080/echo_service_rm.php</span>",
@@ -150,7 +155,7 @@
         WSClient will terminate the current sequence after sending $msg2.</p>
     <p>
        </p>
-       <h2><strong id="3">3.0 Writing a sample RM Web Service</strong></h2>
+       <h2><strong id="3">3.0 Writing a&nbsp; RM Web Service</strong></h2>
     <p>
         Following code demostrate how to write an rm Web Service client. This echo_service_rm.php
         was used as the above client's receiving endpoint.</p>
