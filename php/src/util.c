@@ -417,8 +417,9 @@ axiom_node_t* wsf_util_read_payload(
 	axiom_document_build_all(document, env);
 
 	/** free stax builder and associated document only */
-	axiom_stax_builder_free_self(builder, env);
-
+	/*
+    axiom_stax_builder_free_self(builder, env);
+    */
 	return payload;
 }
 /* }}} ws_read_payload */
