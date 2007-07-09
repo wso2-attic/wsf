@@ -24,6 +24,8 @@ import org.wso2.wsf.ide.wtp.ext.server.command.WSASStopCommand;
  * The activator class controls the plug-in life cycle
  */
 public class WSFWTPExtPlugin extends AbstractUIPlugin {
+	
+	private final int WSAS_STOP_TIME_GAP = 1000;
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.wso2.wsf.ide.wtp.ext";
@@ -54,8 +56,9 @@ public class WSFWTPExtPlugin extends AbstractUIPlugin {
 		plugin = null;
 		super.stop(context);
 		//Stop WSAS Server if already running 
-		if(WSASConfigurationBean.isWSASAlreadyRunning()){
+		if(WSASConfigurationBean.isWsasStartStatus()){
 			WSASStopCommand.run();
+			Thread.sleep(WSAS_STOP_TIME_GAP);
 		}
 	}
 
