@@ -8,7 +8,7 @@
 
     <!-- Uncomment following to persist op_ctx, useful with RM -->
     <parameter name="persistOperationContext" locked="false">true</parameter>
-
+    <parameter name="XMPP" JID="xyxmpp@xmpp.ws/Home" PASSWORD="123" SASL="true"/>
     <!--if you want to extract the service archive file and work with that please uncomment this-->
     <!--else , it wont extract archive file or does not take into consideration if someone drop-->
     <!--exploded directory into /service directory-->
