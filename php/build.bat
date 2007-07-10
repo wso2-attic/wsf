@@ -10,7 +10,6 @@
 
 @cd ..
 
-
 @mkdir wso2-wsf-php-bin-1.0
 
 @xcopy /E /Q /I wsf_c\wso2-wsf-c-bin-1.0 wso2-wsf-php-bin-1.0\wsf_c
@@ -20,4 +19,12 @@
 @if exist wso2-wsf-php-bin-1.0\wsf_c\modules\savan rmdir /S /Q wso2-wsf-php-bin-1.0\wsf_c\modules\savan
 
 @if exist wso2-wsf-php-bin-1.0\wsf_c\modules\logging rmdir /S /Q wso2-wsf-php-bin-1.0\wsf_c\modules\logging
+
+@if exist scripts xcopy /Y /I /Q scripts wso2-wsf-php-bin-1.0\scripts
+
+@if exist src\samples xcopy /Y /I /Q wso2-wsf-php-bin-1.0\samples
+
+@if exist src\xdocs xcopy /Y /I /Q wso2-wsf-php-bin-1.0\docs
+
+
 
