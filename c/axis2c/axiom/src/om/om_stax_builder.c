@@ -827,12 +827,59 @@ AXIS2_EXTERN void AXIS2_CALL
 axiom_stax_builder_free_self(axiom_stax_builder_t *om_builder,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    axiom_node_t *temp_node = NULL;
+    axiom_node_t *om_node = NULL;
+    axiom_node_t *nodes[256];
+    int count = 0;
     if (!om_builder)
     {
         return;
     }
-    if (om_builder->declared_namespaces)
+    om_node = om_builder->root_node;
+
+    if(om_node){
+        nodes[count++] = om_node;
+        do {
+                axiom_node_set_builder(om_node, env, NULL);
+                axiom_node_set_document(om_node, env, NULL); 
+                temp_node = axiom_node_get_first_child(om_node, env);
+                if (temp_node)
+                {
+                    om_node = temp_node;
+                    nodes[count++] = om_node;
+                }
+                else
+                {
+                    temp_node = axiom_node_get_next_sibling(om_node, env);
+                    if (temp_node)
+                    {
+                        om_node = temp_node;
+                        nodes[count -1] = om_node;
+                    }
+                    else
+                    {
+                        while (count > 1 && !temp_node)
+                        {
+                            count--;
+                            om_node = nodes[count -1];
+                            temp_node = axiom_node_get_next_sibling(om_node, env);
+                        }   
+                    if (temp_node && count > 1)
+                    {
+                        om_node = temp_node;
+                        nodes[count -1] = om_node;
+                    }
+                    else
+                    {
+                        count--;
+                    }
+                }
+           
+            }
+        } while(count > 0);
+    }
+
+   if (om_builder->declared_namespaces)
     {
         axutil_hash_free(om_builder->declared_namespaces, env);
         om_builder->declared_namespaces = NULL;
@@ -843,14 +890,12 @@ axiom_stax_builder_free_self(axiom_stax_builder_t *om_builder,
         axiom_xml_reader_free(om_builder->parser, env);
         om_builder->parser = NULL;
     }
-	if (om_builder->document)
+    if (om_builder->document)
     {
         axiom_document_free_self(om_builder->document, env);
         om_builder->document = NULL;
     }
-
     AXIS2_FREE(env->allocator, om_builder);
-    
     return;
 }
 
