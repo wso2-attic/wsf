@@ -6,11 +6,16 @@
 	if(PHP_WSF != "no" && PHP_LIBXML == "yes"){
 	if(CHECK_LIB("axis2_engine.lib", "wsf", PHP_WSF) &&
 		CHECK_LIB("axiom.lib", "wsf", PHP_WSF) &&
-		CHECK_LIB("axis2_util.lib", "wsf", PHP_WSF) &&
+		CHECK_LIB("axutil.lib", "wsf", PHP_WSF) &&
 		CHECK_LIB("axis2_parser.lib", "wsf", PHP_WSF) &&
+		CHECK_LIB("mod_rampart.lib", "wsf", PHP_WSF) &&
+		CHECK_LIB("neethi.lib", "wsf", PHP_WSF) &&
+		CHECK_LIB("neethi_util.lib", "wsf", PHP_WSF) &&
+		CHECK_LIB("sandesha2.lib", "wsf", PHP_WSF) &&
+		CHECK_LIB("axis2_http_sender.lib", "wsf", PHP_WSF) &&
 		CHECK_LIB("libxml2.lib", "wsf", PHP_WSF)){
 		
-		EXTENSION("wsf", "wsf.c worker.c xml_msg_recv.c stream.c util.c out_transport_info.c client.c");
+		EXTENSION("wsf", "wsf.c wsf_worker.c wsf_xml_msg_recv.c wsf_stream.c wsf_util.c wsf_out_transport_info.c wsf_client.c php_encoding.c php_schema.c php_xml.c php_http.c php_sdl.c wsf_soap.c wsf_policy.c");
 
 		AC_DEFINE("HAVE_WSF",1,"Have wsf library");
 		ADD_EXTENSION_DEP('dom', 'dom');

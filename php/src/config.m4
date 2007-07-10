@@ -32,12 +32,12 @@ if test "$PHP_WSF" = "yes"; then
 	PHP_ADD_LIBRARY_WITH_PATH(axis2_http_sender, ../wsf_c/axis2c/src/core/transport/http/sender/.libs, WSF_SHARED_LIBADD)	
 	PHP_ADD_LIBRARY_WITH_PATH(axis2_http_receiver, ../wsf_c/axis2c/src/core/transport/http/receiver/.libs, WSF_SHARED_LIBADD)	
 	PHP_ADD_LIBRARY_WITH_PATH(mod_rampart, ../wsf_c/rampartc/src/core/.libs, WSF_SHARED_LIBADD)	
-    PHP_ADD_LIBRARY_WITH_PATH(neethi, ../wsf_c/axis2c/neethi/src/.libs, WSF_SHARED_LIBADD)	
-    PHP_ADD_LIBRARY_WITH_PATH(neethi_util, ../wsf_c/axis2c/neethi/src/util/.libs, WSF_SHARED_LIBADD)
+	PHP_ADD_LIBRARY_WITH_PATH(neethi, ../wsf_c/axis2c/neethi/src/.libs, WSF_SHARED_LIBADD)	
+	PHP_ADD_LIBRARY_WITH_PATH(neethi_util, ../wsf_c/axis2c/neethi/src/util/.libs, WSF_SHARED_LIBADD)
 
   	PHP_SUBST(WSF_SHARED_LIBADD)
 
-	PHP_NEW_EXTENSION(wsf, wsf.c xml_msg_recv.c util.c stream.c worker.c out_transport_info.c client.c  php_encoding.c php_http.c php_sdl.c php_schema.c php_xml.c wsf_soap.c policy.c , $ext_shared)
+	PHP_NEW_EXTENSION(wsf, wsf.c wsf_xml_msg_recv.c wsf_util.c wsf_stream.c wsf_worker.c wsf_out_transport_info.c wsf_client.c  php_encoding.c php_http.c php_sdl.c php_schema.c php_xml.c wsf_soap.c wsf_policy.c , $ext_shared)
 	
 	PHP_ADD_EXTENSION_DEP(wsf, libxml)
 
