@@ -1,0 +1,137 @@
+Using SSL with wsf-php extension
+
+For using secure socket layer transport you should do the following.
+
+1. 
+We assume that you have the certificate authrity's certificate
+and the client certificate.
+
+2. 
+Add your private key to the end of your client certificate and save it
+as .pem file. Example is at the bottom of this page.
+
+3. User options.
+
+To use the SSL layer you need to call to a SSL enabled endpoint.
+
+WSClient has following options to specify the SSL requirements.
+
+"clientCertificate" 
+"serverCertificate"
+"passphrase"
+
+example code.
+
+ $client = new WSClient(array("to"=>"https://10.100.1.143:9090/axis2/services/echo",
+					   "serverCertificate"=>"E:\\\cacert.pem",
+					   "clientCertificate"=>"E:\\\client.pem",
+					   "passphrase"=>"abc1234567890"));
+
+ $msg = $client->request($reqPayloadString);
+ echo $msg->str;
+
+_________________________________________________________________
+
+Here is a an example of a private key.
+
+-----BEGIN RSA PRIVATE KEY-----
+Proc-Type: 4,ENCRYPTED
+DEK-Info: DES-EDE3-CBC,A408BE58F8629A99
+
+thV8JbfyOdUnB19YT/ZJKkRTtzg1sVev0W9rqt2uHXW8NXK43XljEQFe5UF6cZKa
+5dkPzAN1A+kH4e2388Qm4VqEyeJvJgeEhQena1zSYhC5bpNpVRHzXlavKc3gbhIM
+LmEBAAUaqQv67lSuxx47DZvVEKjy0dTRXh6JqpiZxzS9PCpjAi3bAF+SMi3JwKR7
+KZFKg88VbemLgE+Ww8foMPr/Qez60GJTroQ1dmK5xS+/PrSGGwXEwnCS4yVNsy0U
+xA+dYJT3usG3a1JSzVmUv/37ThDHF1SK68YXklQYEwF30zr61t13COXStdQxjFhX
+Ysw2GhBX6DGClT1x9mWttEwlOnxbsopKynh10XhZWqAuCP6PN+OpoU1j3hRom0Nq
+9TYt0tHYbAV/UUbe7d1f7HKGVwMJBZG7/0Y7Wu3tiP1kN6SSYbNuGVCo097Bky+l
+TONx9Xde71JS95Qsm0cEc+kPrK28YIkGltkz2GgTBa5vcMw85e3DKMKWhVlBmnpr
+NzkFvo1QK8cukRjG3ookZ0G9C0dPKXsOb8JloQx6R/3xhf5ixSOWPoPqlbO2Mbrj
+o0zc3qj/mP/pD2ozIEoI2CImoyASfL5yFSFX+4AGAVXyMRJveZfRkQ/ON0MK2PPu
+Q7iYb0D258V4Lh5oggp65m8g3jEYJWCOpkROD5RwpRnT0aP9CJa9RA7WUIh1cXYe
+9bComI73eziO1oU41cJGOeoOtYAwAnOAPwg+eCyIK7/ycCRcfuwEb0ljvBohYQwq
+mhB8B6kiF/dgUiXLa+mQiFqrRhk44DrvV87l45dNWt+Lt8+umdLZJA==
+-----END RSA PRIVATE KEY-----
+
+When added to the certificate the complete file would look as follows.
+
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            d9:bb:b3:c8:a6:eb:f4:14
+        Signature Algorithm: sha1WithRSAEncryption
+        Issuer: C=LK, ST=Western, O=WSO2, OU=Secutiry, CN=Dumindu/emailAddress=dumindu@wso2.com
+        Validity
+            Not Before: Feb 15 11:54:27 2007 GMT
+            Not After : Feb 15 11:54:27 2008 GMT
+        Subject: C=lk, ST=wp, L=colombo, O=wso2, OU=c, CN=nandika/emailAddress=nandika@wso2.com
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+            RSA Public Key: (1024 bit)
+                Modulus (1024 bit):
+                    00:a3:79:ce:13:81:2e:62:2b:cf:f7:2b:63:0f:90:
+                    8f:e2:06:2d:dd:f2:58:8e:cc:0f:f1:ae:d6:18:df:
+                    d6:d7:f5:da:39:8d:27:2f:04:d7:97:b6:ea:f1:36:
+                    79:86:24:58:9c:7f:37:0d:bc:7e:5f:40:df:f7:9d:
+                    12:cc:52:e7:76:97:b9:88:d7:c2:28:a6:25:94:2d:
+                    d5:41:2b:17:18:89:f3:86:51:49:c0:d5:2f:9d:a1:
+                    24:16:aa:9e:df:57:93:54:ca:58:99:1b:77:14:3b:
+                    9c:69:57:c8:bf:2f:1f:ab:ec:64:a5:ca:ac:8f:58:
+                    10:75:6a:5e:4b:02:93:e1:55
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            Netscape Comment: 
+                OpenSSL Generated Certificate
+            X509v3 Subject Key Identifier: 
+                94:1A:55:96:29:76:0F:85:33:73:97:94:F1:17:97:F5:DB:EF:DB:82
+            X509v3 Authority Key Identifier: 
+                keyid:AF:DC:5E:59:99:EF:7D:63:ED:9C:33:CF:86:BD:EA:24:F0:C7:CD:EB
+
+    Signature Algorithm: sha1WithRSAEncryption
+        99:f6:af:17:ac:db:bd:0c:a5:aa:36:66:e7::75:a5:ae0:5bf:
+        24:4d:17:a5:50:62:75:0b:7e:3c:67:42:8d:55:ab:12:ba:18:
+        77:81:e6:ef:b7:07:a3:c8:5a:92:a1:54:68:0f:87:bb:c4:6a:
+        e4:53:18:b1:ab:55:40:53:16:a5:9e:f6:66:aa:32:67:a8:69:
+        74:70:2b:74:09:ea:2f:5a:ee:9b:4c:0c:a0:7c:6b:18:88:94:
+        bf:1c:04:a8:55:33:75:62:ec:bd:c7:1d:f9:54:b8:e3:31:69:
+        3b:5b:6f:a9:b8:79:0d:fc:c5:6a:01:f0:22:0a:c7:e6:87:47:
+        c4:68
+-----BEGIN CERTIFICATE-----
+MIIC5zCCAlCgAwIBAgIJANm7s8im6/QUMA0GCSqGSIb3DQEBBQUAMHQxCzAJBgNV
+BAYTAkxLMRAwDgYDVQQIEwdXZXN0ZXJuMQ0wCwYDVQQKEwRXU08yMREwDwYDVQQL
+EwhTZWN1dGlyeTEQMA4GA1UEAxMHRHVtaW5kdTEfMB0GCSqGSIb3DQEJARYQZHVt
+aW5kdUB3c28yLmNvbTAeFw0wNzAyMTUxMTU0MjdaFw0wODAyMTUxMTU0MjdaMHox
+CzAJBgNVBAYTAmxrMQswCQYDVQQIEwJ3cDEQMA4GA1UEBxMHY29sb21ibzENMAsG
+A1UEChMEd3NvMjEKMAgGA1UECxMBYzEQMA4GA1UEAxMHbmFuZGlrYTEfMB0GCSqG
+SIb3DQEJARYQbmFuZGlrYUB3c28yLmNvbTCBnzANBgkqhkiG9w0BAQEFAAOBjQAw
+gYkCgYEAo3nOE4EuYivP9ytjD5CP4gYt3fJYjswP8a7WGN/W1/XaOY0nLwTXl7bq
+8TZ5hiRYnH83Dbx+X0Df950SzFLndpe5iNfCKKYllC3VQSsXGInzhlFJwNUvnaEk
+Fqqe31eTVMpYmRt3FDucaVfIvy8fq+xkpcqsj1gQdWpeSwKT4VUCAwEAAaN7MHkw
+CQYDVR0TBAIwADAsBglghkgBhvhCAQ0EHxYdT3BlblNTTCBHZW5lcmF0ZWQgQ2Vy
+dGlmaWNhdGUwHQYDVR0OBBYEFJQaVZYpdg+FM3OXlPEXl/Xb79uCMB8GA1UdIwQY
+MBaAFK/cXlmZ731j7Zwzz4a96iTwx83rMA0GCSqGSIb3DQEBBQUAA4GBAJn2rxes
+270Mpao2ZufgW3WlryRNF6VQYnULfjxnQo1VqxK6GHeB5u+3B6PIWpKhVGgPh7vE
+auRTGLGrVUBTFqWe9maqMmeoaXRwK3QJ6i9a7ptMDKB8axiIlL8cBKhVM3Vi7L3H
+HflUuOMxaTtbb6m4eQ38xWoB8CIKx+aHR8Ro
+-----END CERTIFICATE-----
+-----BEGIN RSA PRIVATE KEY-----
+Proc-Type: 4,ENCRYPTED
+DEK-Info: DES-EDE3-CBC,A408BE58F8629A99
+
+thV8JbfyOdUnB19YT/ZJKkRTtzg1sVev0W9rqt2uHXW8NXK43XljEQFe5UF6cZKa
+5dkPzAN1A+kH4e2388Qm4VqEyeJvJgeEhQena1zSYhC5bpNpVRHzXlavKc3gbhIM
+LmEBAAUaqQv67lSuxx47DZvVEKjy0dTRXh6JqpiZxzS9PCpjAi3bAF+SMi3JwKR7
+KZFKg88VbemLgE+Ww8foMPr/Qez60GJTroQ1dmK5xS+/PrSGGwXEwnCS4yVNsy0U
+xA+dYJT3usG3a1JSzVmUv/37ThDHF1SK68YXklQYEwF30zr61t13COXStdQxjFhX
+Ysw2GhBX6DGClT1x9mWttEwlOnxbsopKynh10XhZWqAuCP6PN+OpoU1j3hRom0Nq
+9TYt0tHYbAV/UUbe7d1f7HKGVwMJBZG7/0Y7Wu3tiP1kN6SSYbNuGVCo097Bky+l
+TONx9Xde71JS95Qsm0cEc+kPrK28YIkGltkz2GgTBa5vcMw85e3DKMKWhVlBmnpr
+NzkFvo1QK8cukRjG3ookZ0G9C0dPKXsOb8JloQx6R/3xhf5ixSOWPoPqlbO2Mbrj
+o0zc3qj/mP/pD2ozIEoI2CImoyASfL5yFSFX+4AGAVXyMRJveZfRkQ/ON0MK2PPu
+Q7iYb0D258V4Lh5oggp65m8g3jEYJWCOpkROD5RwpRnT0aP9CJa9RA7WUIh1cXYe
+9bComI73eziO1oU41cJGOeoOtYAwAnOAPwg+eCyIK7/ycCRcfuwEb0ljvBohYQwq
+mhB8B6kiF/dgUiXLa+mQiFqrRhk44DrvV87l45dNWt+Lt8+umdLZJA==
+-----END RSA PRIVATE KEY-----
