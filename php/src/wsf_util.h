@@ -132,9 +132,9 @@ void wsf_util_set_soap_fault(zval *this_ptr,
         zval *fault_detail,
         char *name TSRMLS_DC);
 
-void wsf_util_set_fault_properties(zval *this_ptr,
-        axiom_node_t *fault_node,
-        axutil_env_t *env TSRMLS_DC); 
+/* {{{ proto create an WSFault object */
+void wsf_set_soap_fault_properties(axutil_env_t *env, axiom_soap_fault_t *soap_fault, zval *zfault TSRMLS_DC);
+
 
 #endif /* WSF_UTIL_H */
 

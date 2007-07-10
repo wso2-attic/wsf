@@ -229,6 +229,7 @@ static  void WSF_CALL
 wsf_free_wrapper(axutil_allocator_t *allocator, 
                  void *ptr)
 {
+
 	if (ptr)
 		pefree(ptr, 1);
 }
@@ -417,10 +418,9 @@ axiom_node_t* wsf_util_read_payload(
 	axiom_document_build_all(document, env);
 
 	/** free stax builder and associated document only */
-	/*
     axiom_stax_builder_free_self(builder, env);
-    */
-	return payload;
+	
+    return payload;
 }
 /* }}} ws_read_payload */
 /*
@@ -1159,98 +1159,55 @@ wsf_util_set_soap_fault(zval *this_ptr,
     }
 }
 
-static void 
-wsf_util_handle_fault_code(zval *fault_obj,
-                           axiom_node_t *code_node,
-                           axiom_element_t *code_element,
-                           axutil_env_t *env TSRMLS_DC)
+/* {{{ proto create an WSFault object */
+void wsf_set_soap_fault_properties(axutil_env_t *env, axiom_soap_fault_t *soap_fault, zval *zval_ws_fault TSRMLS_DC)
 {
-    axiom_node_t *code_value = NULL;
-    axiom_element_t *code_value_ele = NULL;
-    char *code = NULL;
-    if(WSF_GLOBAL(soap_version) == AXIOM_SOAP12){
-        code_value_ele = axiom_element_get_first_element(code_element, env, 
-                code_node, &code_value);
-        code = axiom_element_get_text(code_value_ele, env, code_node);
-        if(code){
-            add_property_string(fault_obj, WS_FAULT_CODE, code, 1);
-        }                  
-    }
-}
+    if(soap_fault){
 
-static void 
-wsf_util_handle_fault_reason(zval *fault_obj,
-                       axiom_node_t *reason_node,
-                       axiom_element_t *reason_element,
-                       axutil_env_t *env TSRMLS_DC)
-{
-    
-    if(WSF_GLOBAL(soap_version) == AXIOM_SOAP12){
-        axiom_node_t *text_node = NULL;
-        axis2_char_t *text_value = NULL;
-        axiom_element_t *text_element = NULL;
-        text_element = axiom_element_get_first_element(reason_element, env, reason_node,
-                &text_node);
-        if(text_element){
-            text_value = axiom_element_get_text(text_element, env, text_node);
-            if(text_value){
-                add_property_string(fault_obj, WS_FAULT_REASON, text_value, 1);
+        axis2_char_t *fault_code = NULL;
+        axiom_soap_fault_code_t *sf_code = NULL;
+        axiom_node_t *sf_code_node = NULL;
+        axis2_char_t *fault_reason = NULL;
+        axiom_soap_fault_reason_t *sf_reason = NULL;
+        axiom_node_t *sf_reason_node = NULL;
+        axis2_char_t *fault_role = NULL;
+        axiom_soap_fault_role_t *sf_role = NULL;
+        axiom_node_t *sf_role_node = NULL;
+        axis2_char_t *fault_detail = NULL;
+        axiom_node_t *sf_detail_node = NULL;
+        axiom_soap_fault_detail_t *sf_detail = NULL;
+
+        sf_code = axiom_soap_fault_get_code(soap_fault, env);
+        if(sf_code){
+            sf_code_node = axiom_soap_fault_code_get_base_node(sf_code, env);
+            if(sf_code_node){
+                        fault_code = axiom_node_to_string(sf_code_node, env);
+                        add_property_string(zval_ws_fault, "code", fault_code, 1);
             }
         }
-    }
-}
-
-
-static void
-wsf_util_handle_fault_detail(zval *fault_obj,
-                       axiom_node_t *detail_node,
-                       axiom_element_t *reason_element,
-                       axutil_env_t *env TSRMLS_DC)
-{
-
-
-}
-
-void
-wsf_util_set_fault_properties(zval *fault_obj, 
-                        axiom_node_t *fault_node,
-                        axutil_env_t *env TSRMLS_DC)
-{
-    axiom_element_t *fault_element = NULL;
-    axiom_node_t *node = NULL;
-    axiom_element_t *element = NULL;
-    axiom_child_element_iterator_t *ele_iterator = NULL;
-
-    if(!fault_node) return;
-    
-    fault_element = axiom_node_get_data_element(fault_node, env);
-
-    ele_iterator = axiom_element_get_child_elements(fault_element, env, fault_node);
-
-    if(!ele_iterator)
-        return;
-    while(AXIOM_CHILD_ELEMENT_ITERATOR_HAS_NEXT(ele_iterator, env)){
-        node = AXIOM_CHILD_ELEMENT_ITERATOR_NEXT(ele_iterator, env);
-        if(node){
-            element = axiom_node_get_data_element(node, env);
-            if(element){
-                char *localname = NULL;
-                localname = axiom_element_get_localname(element, env);
-                if(localname){
-                    if(strcmp(localname,"Code") == 0){
-                        wsf_util_handle_fault_code(fault_obj, node, element, env TSRMLS_CC);
-                    }else if((strcmp(localname, "Reason") == 0) || (strcmp(localname,"faultstring") ==0)){
-                        wsf_util_handle_fault_reason(fault_obj, node, element, env TSRMLS_CC);
-                    }else if((strcmp(localname, "Detail")  == 0) || (strcmp(localname, "detail") == 0)){
-                        wsf_util_handle_fault_detail(fault_obj, node, element, env TSRMLS_CC); 
-                    }else if((strcmp(localname, "Role") == 0) ||(strcmp(localname, "faultactor") == 0)){
-                        axis2_char_t *role_uri = NULL;
-                        role_uri = axiom_element_get_text(element, env, node);
-                        if(role_uri)
-                            add_property_string(fault_obj, WS_FAULT_ROLE, role_uri, 1);
-                    }
+        sf_reason = axiom_soap_fault_get_reason(soap_fault, env);
+        if(sf_reason){
+            sf_reason_node = axiom_soap_fault_reason_get_base_node(sf_reason, env);
+            if(sf_reason_node){
+                fault_reason = axiom_node_to_string(sf_reason_node, env);
+                    add_property_string(zval_ws_fault, "reason", fault_reason, 1);
                 }
+        }
+        sf_role = axiom_soap_fault_get_role(soap_fault, env);
+        if(sf_role){
+            sf_role_node = axiom_soap_fault_role_get_base_node(sf_role, env);
+            if(sf_role_node){
+                        fault_role = axiom_node_to_string(sf_role_node, env);
+                        add_property_string(zval_ws_fault, "role", fault_role, 1);
             }
-        }                
+        }
+        sf_detail = axiom_soap_fault_get_detail(soap_fault, env);
+        if(sf_detail){
+            sf_detail_node = axiom_soap_fault_detail_get_base_node(sf_detail, env);
+            if(sf_detail_node){
+                fault_detail = axiom_node_to_string(sf_detail_node, env);
+                add_property_string(zval_ws_fault, "detail", fault_detail, 1);
+            }
+        }
     }
 }

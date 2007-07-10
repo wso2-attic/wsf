@@ -465,7 +465,7 @@ wsf_client_add_properties(zval *this_ptr,
 			add_property_zval(this_ptr, WS_SECURITY_TOKEN, *tmp);
     }
 	if(zend_hash_find(ht, WS_POLICY_NAME, sizeof(WS_POLICY_NAME), (void **)&tmp) == SUCCESS &&
-		(Z_TYPE_PP(tmp) == IS_OBJECT  || Z_TYPE_PP(tmp) && IS_ARRAY )) {
+		(Z_TYPE_PP(tmp) == IS_OBJECT  || Z_TYPE_PP(tmp) == IS_ARRAY)) {
 			add_property_zval(this_ptr, WS_POLICY_NAME, *tmp);
     }
 
@@ -668,7 +668,9 @@ int wsf_client_set_endpoint_and_soap_action(
 	axutil_env_t *env, 
 	axis2_options_t *client_options TSRMLS_DC)
 {
+    /*
     zval **tmp = NULL;
+    */
     zval **msg_tmp = NULL;
 
 	if(msg_ht && zend_hash_find(msg_ht, WS_TO, sizeof(WS_TO), 
@@ -700,8 +702,9 @@ int wsf_client_set_options(HashTable *client_ht,
 		int is_send TSRMLS_DC)
 {
     zval **tmp = NULL;
+    /*
     zval **msg_tmp = NULL;
-
+    */
 	int status = AXIS2_SUCCESS;
 	int use_soap = AXIS2_TRUE;
 	int soap_version = AXIOM_SOAP12;
@@ -978,7 +981,6 @@ int wsf_client_do_request(
 			if(zend_hash_find(client_ht, WS_SEQUENCE_KEY, sizeof(WS_SEQUENCE_KEY),
 				(void**)&client_tmp) == SUCCESS){
 					
-					axutil_property_t *seq_key = NULL;
 					if(Z_TYPE_PP(client_tmp) == IS_STRING){
 						sequence_key = axutil_strdup(env, Z_STRVAL_PP(client_tmp));
 						axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 1, NULL, sequence_key);
@@ -1083,43 +1085,60 @@ int wsf_client_do_request(
 		}
 
 	}else {
-		response_payload = axis2_svc_client_send_receive(svc_client, env, request_payload);	
+        
+        int has_fault = AXIS2_FALSE;
+	    axis2_char_t *res_text = NULL;
+
+        response_payload = axis2_svc_client_send_receive(svc_client, env, request_payload);	
 
 		/** if rm is engaged and spec version is 1.1 send terminate sequence */
 		wsf_client_send_terminate_sequence(env,is_rm_engaged, ws_client_will_continue_sequence,
 			rm_spec_version, sequence_key, svc_client);	
 		
-		if (response_payload) {
-			axis2_char_t *res_text = NULL;
-	    	axis2_char_t *fault = NULL;
-	        
-			fault = axiom_util_get_localname(response_payload, env);
-		    
-			if( fault && 0 == strcmp(fault, "Fault")){
-	    		zval *rfault = NULL;
-				MAKE_STD_ZVAL(rfault);
-    			object_init_ex(rfault, ws_fault_class_entry);
-				res_text = wsf_util_serialize_om(env, response_payload);
-				add_property_stringl(rfault, "str", res_text, strlen(res_text), 1);
-                wsf_util_set_fault_properties(rfault, response_payload, env TSRMLS_CC);
-				ZVAL_ZVAL(return_value, rfault, NULL, NULL);
-			}
-			else {
-	    
-				zval *rmsg = NULL;
-    			MAKE_STD_ZVAL(rmsg);
-    			object_init_ex(rmsg, ws_message_class_entry);
+	    if (axis2_svc_client_get_last_response_has_fault(svc_client, env)){
+                axiom_soap_envelope_t *soap_envelope = NULL;
+                axiom_soap_body_t *soap_body = NULL;
+                axiom_soap_fault_t *soap_fault = NULL;
+		        has_fault = AXIS2_TRUE;
 
-				wsf_client_handle_incoming_attachments(env, client_ht, rmsg, response_payload TSRMLS_CC);
-				res_text = wsf_util_serialize_om(env , response_payload);
-				add_property_stringl(rmsg, WS_MSG_PAYLOAD_STR, res_text, strlen(res_text), 1); 
-				ZVAL_ZVAL(return_value, rmsg, NULL, NULL);
-			}
-			
-		} else {
+                soap_envelope = axis2_svc_client_get_last_response_soap_envelope(svc_client, env);
+                if (soap_envelope)
+                    soap_body = axiom_soap_envelope_get_body(soap_envelope, env);
+                if (soap_body)
+                    soap_fault = axiom_soap_body_get_fault(soap_body, env);
+                if (soap_fault){
+
+                    zval *rfault;
+                    
+                    res_text = axiom_node_to_string(axiom_soap_fault_get_base_node(soap_fault, env) , env);
+				    
+                    MAKE_STD_ZVAL(rfault);
+            		
+                    object_init_ex(rfault, ws_fault_class_entry);
+				    
+                    add_property_stringl(rfault, "str", res_text, strlen(res_text), 1);
+				    
+                    wsf_set_soap_fault_properties(env, soap_fault, rfault TSRMLS_CC);
+                    ZVAL_ZVAL(return_value, rfault, NULL, NULL);
+                }
+        }
+		
+  	    if (response_payload) {
+
+    		zval *rmsg = NULL;
+    		MAKE_STD_ZVAL(rmsg);
+    		object_init_ex(rmsg, ws_message_class_entry);
+
+			wsf_client_handle_incoming_attachments(env, client_ht, rmsg, response_payload TSRMLS_CC);
+			res_text = wsf_util_serialize_om(env , response_payload);
+			add_property_stringl(rmsg, WS_MSG_PAYLOAD_STR, res_text, strlen(res_text), 1); 
+			ZVAL_ZVAL(return_value, rmsg, NULL, NULL);
+	     }
+
+         if(response_payload == NULL && has_fault == AXIS2_FALSE){
 			zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 1 TSRMLS_CC, 
-				"response message not received");
-		}
+				"Error , NO Response Received");
+	     }
 	}
 	return 0;
 }

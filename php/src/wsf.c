@@ -233,7 +233,7 @@ static void ws_object_dtor(void *object,
             zend_object_handle handle TSRMLS_DC);
 
 static void 
-ws_objects_free_stroage(void *object TSRMLS_DC);
+ws_objects_free_storage(void *object TSRMLS_DC);
 
 /* {{{ proto create an WSFault object */
 void ws_throw_soap_fault(axiom_soap_body_t *soap_body TSRMLS_DC)
@@ -268,12 +268,11 @@ void ws_throw_soap_fault(axiom_soap_body_t *soap_body TSRMLS_DC)
                     soap_version = AXIOM_SOAP11;
                 else
                     return;
-
+                
 
                 MAKE_STD_ZVAL(zval_ws_fault);
                 object_init_ex(zval_ws_fault, ws_fault_class_entry);
                 add_property_long(zval_ws_fault, "soap_version", soap_version);
-
                 sf_code = AXIOM_SOAP_FAULT_GET_CODE(soap_fault, env);
                 if(sf_code)
                 {
@@ -323,7 +322,7 @@ void ws_throw_soap_fault(axiom_soap_body_t *soap_body TSRMLS_DC)
                                     "cannot find soap body");
         }
     }
-    */
+*/
 }
 
 /* {{{ proto ws_get_xml_node
@@ -353,7 +352,7 @@ static xmlNodePtr ws_get_xml_node(zval *node)
     return nodep;
 }
 /* }}} end ws_get_xml_node */
-
+/*
 static xmlDocPtr ws_get_xml_doc(zval *node)
 {
     php_libxml_node_object *object;
@@ -374,7 +373,7 @@ static xmlDocPtr ws_get_xml_doc(zval *node)
     }
 	return nodep->doc;
 }
-
+*/
 
 /* {{{ wsf_module_entry */
 zend_module_entry wsf_module_entry = {
@@ -519,9 +518,15 @@ PHP_MINIT_FUNCTION(wsf)
     ws_header_class_entry = zend_register_internal_class(&ce TSRMLS_CC);
 
     INIT_CLASS_ENTRY(ce, "WSFault", php_ws_fault_class_functions);
-    /**ws_fault_class_entry = zend_register_internal_class_ex(&ce, zend_exception_get_default(), NULL TSRMLS_CC);*/
+/*
+ #ifdef ZEND_ENGINE_2    
+    ws_fault_class_entry = zend_register_internal_class_ex(&ce, zend_exception_get_default(TSRMLS_C), NULL TSRMLS_CC);
+#else    
+*/
     ws_fault_class_entry = zend_register_internal_class(&ce TSRMLS_CC);
-
+/*
+#endif
+*/
     INIT_CLASS_ENTRY(ce, "WSSecurityToken", php_ws_security_token_class_functions);
     ws_security_token_class_entry = zend_register_internal_class(&ce TSRMLS_CC);
 
@@ -570,16 +575,15 @@ PHP_MSHUTDOWN_FUNCTION(wsf)
     UNREGISTER_INI_ENTRIES();
     
     axiom_xml_reader_cleanup();
-    /*
+    
     axis2_msg_recv_free(wsf_msg_recv, ws_env_svr);
    
-  
+    /*
     wsf_worker_free(worker, ws_env_svr);
-    
+    */
     axutil_env_free(env);
 
     axutil_env_free(ws_env_svr);
-	*/
     return SUCCESS;
 }
 /* }}} */
@@ -642,7 +646,7 @@ php_ws_object_new_ex(zend_class_entry *class_type ,
 
     retval.handle = zend_objects_store_put(intern,
 					    (zend_objects_store_dtor_t)ws_object_dtor, 
-                        (zend_objects_free_object_storage_t )ws_objects_free_stroage, NULL TSRMLS_CC);
+                        (zend_objects_free_object_storage_t )ws_objects_free_storage, NULL TSRMLS_CC);
     retval.handlers = &ws_object_handlers;
     return retval;
 }
@@ -679,14 +683,15 @@ static void ws_object_dtor(void *object,
     ws_object *intern = (ws_object *)object;
     zend_hash_destroy(intern->std.properties);
     FREE_HASHTABLE(intern->std.properties);
-    /*
     if(intern->obj_type == WS_SVC_CLIENT){
         axis2_svc_client_t *svc_client = NULL;
         svc_client = (axis2_svc_client_t*)intern->ptr;
         if(svc_client){
              axis2_svc_client_free(svc_client, env);
         }
-    }else if(intern->obj_type == WS_SVC){
+    }
+    /*
+    else if(intern->obj_type == WS_SVC){
         wsf_svc_info_t *svc_info = NULL;
         svc_info = (wsf_svc_info_t*)intern->ptr;
         if(svc_info){
@@ -697,12 +702,10 @@ static void ws_object_dtor(void *object,
 }
 
 static void
-ws_objects_free_stroage(void *object TSRMLS_DC){
-    /*
+ws_objects_free_storage(void *object TSRMLS_DC){
     ws_object *intern = (ws_object *)object;
     zend_object_std_dtor(&intern->std TSRMLS_CC);
     efree(object);
-    */
 }
 
 /*** {{{ is_ws_fault(Object obj) */
