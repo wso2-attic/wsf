@@ -25,11 +25,6 @@
 
 #include "savan_subs_mgr.h"
 
-static axis2_char_t *
-get_topic_from_url(
-    const axutil_env_t *env,
-    axis2_char_t *topic_url);
-
 AXIS2_EXTERN axiom_node_t *AXIS2_CALL
 savan_subs_mgr_add_subscriber(
     const axutil_env_t *env,
@@ -102,7 +97,7 @@ savan_subs_mgr_add_subscriber(
     topic_url = axiom_element_get_text(topic_elem, env, topic_node);
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
         "[ML] Subscriber will be added to the topic:%s ", topic_url);
-    topic = get_topic_from_url(env, topic_url);
+    topic = savan_util_get_topic_name_from_topic_url(env, topic_url);
     sub_info = axutil_hash_get(store, topic, AXIS2_HASH_KEY_STRING);
     if(!sub_info)
     {
@@ -250,7 +245,7 @@ savan_subs_mgr_remove_subscriber(
         remove_sub_node, &topic_node);
     axutil_qname_free(qname, env);
     topic_url = axiom_element_get_text(topic_elem, env, topic_node);
-    topic = get_topic_from_url(env, topic_url);
+    topic = savan_util_get_topic_name_from_topic_url(env, topic_url);
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
         "[ML] Subscriber will be removed from the topic:%s ", topic);
     sub_info = axutil_hash_get(store, topic, AXIS2_HASH_KEY_STRING);
@@ -375,7 +370,7 @@ savan_subs_mgr_get_subscriber_list(
         if (topic_text && axiom_text_get_value(topic_text , env))
         {
             topic_url = (axis2_char_t *)axiom_text_get_value(topic_text, env);
-            topic = get_topic_from_url(env, topic_url);
+            topic = savan_util_get_topic_name_from_topic_url(env, topic_url);
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Requested Topic:%s", topic);
         }
     }
@@ -494,13 +489,4 @@ savan_subs_mgr_get_subscriber_list(
     return subs_list_node;
 }
 
-static axis2_char_t *
-get_topic_from_url(
-    const axutil_env_t *env,
-    axis2_char_t *topic_url)
-{
-    axis2_char_t *topic = NULL;
-    topic  = axutil_strdup(env, axutil_rindex(topic_url, '/') + 1);
-    return topic;
-}
 

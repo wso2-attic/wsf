@@ -439,7 +439,6 @@ add_subscriber_to_remote_subs_mgr(
             AXIS2_ERROR_GET_MESSAGE(env->error));
         return AXIS2_FAILURE;
     }
-    axis2_options_set_soap_version(options, env, AXIOM_SOAP11);
     /* Set service client options */
     axis2_svc_client_set_options(svc_client, env, options);    
     
@@ -501,7 +500,6 @@ remove_subscriber_from_remote_subs_mgr(
             AXIS2_ERROR_GET_MESSAGE(env->error));
         return AXIS2_FAILURE;
     }
-    axis2_options_set_soap_version(options, env, AXIOM_SOAP11);
     /* Set service client options */
     axis2_svc_client_set_options(svc_client, env, options);    
     
@@ -551,7 +549,6 @@ savan_util_get_subscriber_list_from_remote_subs_mgr(
     }
     endpoint_ref = axis2_endpoint_ref_create(env, subs_mgr_url);
     axis2_options_set_to(options, env, endpoint_ref);
-    axis2_options_set_soap_version(options, env, AXIOM_SOAP11);
     axis2_svc_client_set_options(svc_client, env, options);    
     
     axis2_svc_client_engage_module(svc_client, env, AXIS2_MODULE_ADDRESSING);
@@ -889,3 +886,14 @@ savan_util_get_renewed_expiry_time(
     
     return NULL;
 }
+
+axis2_char_t *AXIS2_CALL
+savan_util_get_topic_name_from_topic_url(
+    const axutil_env_t *env,
+    axis2_char_t *topic_url)
+{
+    axis2_char_t *topic = NULL;
+    topic  = axutil_strdup(env, axutil_rindex(topic_url, '/') + 1);
+    return topic;
+}
+

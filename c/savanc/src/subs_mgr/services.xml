@@ -3,6 +3,8 @@
         This is a subscription manager service
    </description>
     <parameter name="ServiceClass" locked="xsd:false">subscription</parameter>
+    <parameter name="xmpp_id" locked="xsd:false">subscription@xmpp.us</parameter>
+    <parameter name="xmpp_password" locked="xsd:false">123</parameter>
     <!--parameter name="loadServiceAtStartup" locked="xsd:false">true</parameter-->
 
    <operation name="add_subscriber">

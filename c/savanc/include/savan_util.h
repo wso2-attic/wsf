@@ -153,6 +153,11 @@ extern "C"
         axis2_char_t *topic,
         axis2_char_t *subs_mgr_url);
 
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+    savan_util_get_topic_name_from_topic_url(
+        const axutil_env_t *env,
+        axis2_char_t *topic_url);
+
 /** @} */
 #ifdef __cplusplus
 }
