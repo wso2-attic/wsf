@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: WSO2 WSAS
+Bundle-SymbolicName: org.wso2.wsf.ide.server.wsas;singleton:=true
+Bundle-Version: 2.0
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.jst.server.core,
+ org.eclipse.jst.server.generic.core,
+ org.eclipse.jst.server.generic.ui,
+ org.eclipse.wst.server.core,
+ org.eclipse.wst.common.project.facet.core,
+ org.eclipse.wst.common.project.facet.ui,
+ org.eclipse.jst.server.ui,
+ org.eclipse.jst.common.project.facet.core,
+ org.eclipse.wst.server.ui
+

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:ServerRuntime
+   xmlns:tns="http://eclipse.org/jst/server/generic/ServerTypeDefinition"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   name="WSO2 Web Services Application Server" version="v2.0">
+
+</tns:ServerRuntime>
