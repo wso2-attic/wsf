@@ -49,6 +49,7 @@ typedef struct savan_subs_mgr_info
     axutil_hash_t *list;
     axis2_svc_t *svc;
     axutil_env_t *env;
+    void *svc_client;
 }savan_subs_mgr_info_t;
 
 /* Eventing actions */
