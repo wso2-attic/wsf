@@ -38,16 +38,11 @@ int main(int argc, char** argv)
     axiom_node_t *payload2 = NULL;
     axiom_node_t *ret_node2 = NULL;
 
-    axutil_property_t *xmpp_jid = NULL;
-    axutil_property_t *xmpp_password = NULL;
-    axutil_property_t *xmpp_sasl = NULL;
-    /*axutil_allocator_t *allocator = NULL;*/
-
     /* Set up the environment */
     env = axutil_env_create_all("echo.log", AXIS2_LOG_LEVEL_TRACE);
 
     /* Set end point reference of echo service */
-    address = "xmpp://echo@localhost/axis2/services/echo";
+    address = "xmpp://xyecho@xmpp.ws/axis2/services/echo";
     if (argc > 1)
         address = argv[1];
     if (axutil_strcmp(address, "-h") == 0)
@@ -90,19 +85,6 @@ int main(int argc, char** argv)
     }
 
     /* Set service client options */
-    xmpp_jid = axutil_property_create (env);
-    axutil_property_set_value (xmpp_jid, env, (void *)axutil_strdup (env, "xyxmpp@xmpp.ws/Home"));
-    axis2_options_set_property (options, env, "XMPP_JID", (void *)xmpp_jid);
-
-    xmpp_password = axutil_property_create (env);
-    axutil_property_set_value (xmpp_password, env, (void *)axutil_strdup (env, "123"));
-    axis2_options_set_property (options, env, "XMPP_PASSWORD", (void *)xmpp_password);
-
-    xmpp_sasl = axutil_property_create (env);
-    axutil_property_set_value (xmpp_sasl, env, (void *)axutil_strdup (env, "true"));
-    axis2_options_set_property (options, env, "XMPP_SASL", (void *)xmpp_sasl);
-
-
     axis2_svc_client_set_options(svc_client, env, options);
 
     /* Engage addressing module */

@@ -1,4 +1,5 @@
 #include <axis2_xmpp_client.h>
+#include <axutil_uuid_gen.h>
 
 static void 
 xmpp_process_msg (axis2_xmpp_session_data_t *session, iks *node);
@@ -374,8 +375,8 @@ xmpp_process_msg (axis2_xmpp_session_data_t *session, iks *node)
         }
         else if (axutil_strcmp(session->subscribe_type, AXIS2_XMPP_SUB_TYPE_ROOM) == 0)
         {
-            axis2_char_t *id = (axis2_char_t *)axutil_uuid_gen(session->env);
-
+            axis2_char_t *id = NULL;
+            id = axutil_uuid_gen(session->env);
             iks *x = iks_make_pres(IKS_SHOW_AVAILABLE, "");
             iks_insert_attrib(x, "to", session->subscribe_to);
             iks_insert_attrib(x, "id", id);
