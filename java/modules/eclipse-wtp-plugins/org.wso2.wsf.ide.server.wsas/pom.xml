@@ -1,0 +1,122 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    	<parent>
+        	<groupId>org.wso2.wsf</groupId>
+        	<artifactId>org.wso2.wsf</artifactId>
+        	<version>SNAPSHOT</version>
+    	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.wso2.wsf</groupId>
+	<artifactId>org.wso2.wsf.ide.server.wsas</artifactId>
+	<version>SNAPSHOT</version>
+	<name>wso2wsf org.wso2.wsf.ide.server.wsas</name>
+	<packaging>maven-plugin</packaging>
+	<description>WSO2 org.wso2.wsf.ide.server.wsas Eclipse Plugin</description>
+	<url>http://maven.apache.org</url>
+	<repositories>
+		<repository>
+			<id>eclipse-repo</id>
+			<name>eclipse maven repository</name>
+			<url>http://repo1.maven.org/eclipse</url>
+		</repository>
+		<repository>
+			<id>wso2 repo</id>
+			<name>wso2 maven2 repository</name>
+			<url>http://dist.wso2.org/maven2</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<!--Eclipse runtime dependencies -->
+		<dependency>
+			<groupId>org.wso2.wsf</groupId>
+			<artifactId>org.eclipse.jst.server.core</artifactId>
+			<version>1.0.204</version>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.wsf</groupId>
+			<artifactId>org.eclipse.jst.server.ui</artifactId>
+			<version>1.0.203</version>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.wsf</groupId>
+			<artifactId>org.eclipse.jst.server.generic.core</artifactId>
+			<version>1.0.201</version>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.wsf</groupId>
+			<artifactId>org.eclipse.jst.server.generic.ui</artifactId>
+			<version>1.0.102</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.wso2.wsf</groupId>
+			<artifactId>org.eclipse.jst.common.project.facet.core</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.wso2.wsf</groupId>
+			<artifactId>org.eclipse.wst.server.core</artifactId>
+			<version>1.0.204</version>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.wsf</groupId>
+			<artifactId>org.eclipse.wst.server.core</artifactId>
+			<version>1.0.204</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.wso2.wsf</groupId>
+			<artifactId>org.eclipse.wst.common.project.facet.core</artifactId>
+			<version>1.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.wsf</groupId>
+			<artifactId>org.eclipse.wst.common.project.facet.ui</artifactId>
+			<version>1.2.0</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<!--testSourceDirectory>test</testSourceDirectory-->
+		<resources>
+			<resource>
+				<directory>resources</directory>
+			</resource>
+			<resource>
+				<directory>src</directory>
+				<includes>
+					<include>**/*.properties</include>
+				</includes>
+			</resource>
+		</resources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestFile>resources/META-INF/MANIFEST.MF</manifestFile>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+
+</project>
