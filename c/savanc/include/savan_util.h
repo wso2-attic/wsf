@@ -73,6 +73,9 @@ extern "C"
 
     /**
     * Get the subscriber store from the service
+    * Note that if the subscription manager is a separate service from
+    * the publisher service then both SubscriptionMgrName and SubscriptionMgrURL
+    * must be set in the publishers services.xml
     * @param env pointer to environment struct
     * @param msg_ctx pointer to message context
     * @return the store on success, else NULL
@@ -84,6 +87,9 @@ extern "C"
 
     /**
     * Add the subscriber to subscription manager services' store
+    * Note that if the subscription manager is a separate service from
+    * the publisher service then both SubscriptionMgrName and SubscriptionMgrURL
+    * must be set in the publishers services.xml
     * @param env pointer to environment struct
     * @param msg_ctx pointer to message context
     * @param subscriber
@@ -97,6 +103,9 @@ extern "C"
 
     /**
     * Remove the subscriber from subscription manager services' store
+    * Note that if the subscription manager is a separate service from
+    * the publisher service then both SubscriptionMgrName and SubscriptionMgrURL
+    * must be set in the publishers services.xml
     * @param env pointer to environment struct
     * @param msg_ctx pointer to message context
     * @param subscriber
@@ -136,9 +145,10 @@ extern "C"
     * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE 
     */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL 
-    savan_util_set_sub_store(
+    savan_util_set_store(
         axis2_svc_t *svc,
-        const axutil_env_t *env);
+        const axutil_env_t *env,
+        axis2_char_t *store_name);
 
     /**
     * Get the subscribers registered for a topic

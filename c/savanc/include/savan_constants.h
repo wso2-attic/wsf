@@ -101,6 +101,7 @@ typedef struct savan_subs_mgr_info
 
 #define SAVAN_KEY_SUB_ID            "savan_key_subscriber_id"
 #define SAVAN_SUBSCRIBER_LIST       "savan_subs_list"
+#define SAVAN_TOPIC_LIST       "savan_topic_list"
 
 /** @} */
 #ifdef __cplusplus

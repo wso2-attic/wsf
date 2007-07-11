@@ -284,8 +284,8 @@ savan_msg_recv_handle_unsub_request(
     axiom_element_t *response_elem = NULL;
     savan_subscriber_t *subscriber = NULL;
     
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[savan][msg recv] "
-        "handle unsub request...");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+        "[savan] Start:savan_msg_recv_handle_unsub_request");
 
     
     /* Send a UnsubscribeResponse. This has an empty body. Before sending the
@@ -324,6 +324,8 @@ savan_msg_recv_handle_unsub_request(
     axiom_node_add_child(body_node , env, response_node);
      axis2_msg_ctx_set_soap_envelope(new_msg_ctx, env, default_envelope);
     
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+        "[savan] End:savan_msg_recv_handle_unsub_request");
     return AXIS2_SUCCESS;
 }
 
