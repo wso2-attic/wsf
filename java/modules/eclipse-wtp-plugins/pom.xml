@@ -85,6 +85,7 @@
         <module>org.wso2.wsf.ide.creation.ui</module>
         <module>org.wso2.wsf.ide.consumption.core</module>
         <module>org.wso2.wsf.ide.consumption.ui</module>
+        <module>org.wso2.wsf.ide.server.wsas</module>
     </modules>
 
     <distributionManagement>
