@@ -12,7 +12,7 @@ dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_CPP
-AM_PROG_LIBTOOL
+AC_PROG_LIBTOOL
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
@@ -87,12 +87,8 @@ dnl This is a check to see if we are running MacOS X
 dnl It may be better to do a Darwin check
 AC_CHECK_HEADERS([sys/appleapiopts.h]) 
 dnl Checks for typedefs, structures, and compiler characteristics.
-AC_C_CONST
 
 dnl Checks for library functions.
-AC_FUNC_MALLOC
-AC_FUNC_REALLOC
-#AC_CHECK_FUNCS([memmove])
 
 AC_MSG_CHECKING(whether to build rampart )
 AC_ARG_ENABLE(rampart, [  --enable-rampart build ramprt. default=yes],
