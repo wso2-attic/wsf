@@ -97,8 +97,7 @@ public class FacetContainerUtils {
 	
 	public static String getDeployedWSDLURL(String projectName, String serviceName){
 		//TODO get the hostname and port from eclispe runtime  
-		String[] deployedWSDLURLParts = {projectName.split("Client")[0],
-										 WSASCoreUIMessages.SERVICES,
+		String[] deployedWSDLURLParts = {WSASCoreUIMessages.SERVICES,
 										 serviceName
 										 };
 		//Get the Project URL from this excluding the hard coded URL for the server path.
