@@ -1,13 +1,7 @@
 #!/bin/bash
-cd wsf_c/axis2c
+cd wsf_c
 ./autogen.sh
-cd ../sandesha2c
-./autogen.sh
-cd ../savanc
-./autogen.sh
-cd ../rampartc
-./autogen.sh
-cd ../../
+cd ../
 echo -n 'Running libtoolize...'
 if libtoolize --force > /dev/null 2>&1; then
 	echo 'done.'

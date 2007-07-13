@@ -24,35 +24,15 @@ dnl Checks for libraries.
 AC_CHECK_LIB(dl, dlopen)
 AC_CHECK_LIB(z, inflate)
 
-axis2_prefix="/usr/local/axxxis2"
+axis2_prefix="/usr/local/axis2"
 export axis2_prefix
-if test -d $srcdir/wsf_c/axis2c; then
-    AC_CONFIG_SUBDIRS(wsf_c/axis2c)
+if test -d $srcdir/wsf_c; then
+    AC_CONFIG_SUBDIRS(wsf_c)
 fi
 
-if test -d $srcdir/wsf_c/sandesha2c; then
-    AC_CONFIG_SUBDIRS(wsf_c/sandesha2c)
-fi
-
-if test -d $srcdir/wsf_c/rampartc; then
-    AC_CONFIG_SUBDIRS(wsf_c/rampartc)
-fi
-
-if test -d $srcdir/wsf_c/savanc; then
-    AC_CONFIG_SUBDIRS(wsf_c/savanc)
-fi
-
-if test -d $srcdir/src; then
-dnl    AC_CONFIG_SUBDIRS(wsf_php, [$wsf_php_flags --prefix=/usr/local/axxxis])
-    AC_CONFIG_SUBDIRS(src)
-fi
-
-
-#CFLAGS="$CFLAGS -ansi -Wall -D_LARGEFILE64_SOURCE -Wno-implicit-function-declaration"
 CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 if test "$GCC" = "yes"; then
     CFLAGS="$CFLAGS -ansi -Wall -Wno-implicit-function-declaration "
-#    CFLAGS="$CFLAGS -ansi -Wall -Wno-implicit-function-declaration"
 fi
 LDFLAGS="$LDFLAGS -lpthread"
 
