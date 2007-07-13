@@ -1,7 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <tns:ServerRuntime
    xmlns:tns="http://eclipse.org/jst/server/generic/ServerTypeDefinition"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    name="WSO2 Web Services Application Server" version="v2.0">
+
+	<property id="serverRootDirectory"
+		label="Runtime Directory"
+		type="directory"
+		context="runtime"
+		default="/serverRootDirectory" />
+	<property id="domain"
+		label="Domain Directory"
+		type="directory"
+		context="string"
+		default="domain1" />
+	<property id="autoDeployDirectory"
+		label="Auto Deploy Directory"
+		type="directory"
+		context="server"
+		default="/serverRootDirectory/repository/services" />
+	<property id="wsasScript"
+		label="Start Script"
+		type="file"
+		context="server"
+		default="/serverRootDirectory/bin/wso2wsas.sh" />
+	
+	<property id="port"
+		label="Server Port"
+		type="string"
+		context="server"
+		default="9443" />
+		
+	<property id="debugPort"
+		label="Debug Port"
+		type="string"
+		context="server"
+		default="9009" />
+		
+	<port>
+		<no>${port}</no>
+		<name>Https</name>
+		<protocol>https</protocol>start
+	</port>
+	
+	<module>
+		<type>jst.web</type>
+		<publishDir>${autoDeployDirectory}</publishDir>
+		<publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
+	</module>
+	
+
+	
+	<start>
+		<external>"xterm ${wsasScript}"  "start" </external>
+		<workingDirectory>${serverRootDirectory}/bin</workingDirectory>
+		<debugPort>${debugPort}</debugPort>
+	</start>
+
+	<stop>
+		<external>"${wso2wsas.home}/bin/shutdown.sh</external>
+		<workingDirectory>${serverRootDirectory}/bin</workingDirectory>
+	</stop>
+	
+	<classpath id="wsasPath">
+		<archive path="${serverRootDirectory}/lib" />
+	</classpath>
+	
+	<publisher id="org.eclipse.jst.server.generic.antpublisher">
+		<publisherdata>
+			<dataname>build.file</dataname>
+			<datavalue>wsas.xml</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.publish.jst.web</dataname>
+			<datavalue>deploy.j2ee.web</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.unpublish.jst.web</dataname>
+			<datavalue>undeploy.j2ee.web</datavalue>
+		</publisherdata>
+	</publisher>
 
 </tns:ServerRuntime>

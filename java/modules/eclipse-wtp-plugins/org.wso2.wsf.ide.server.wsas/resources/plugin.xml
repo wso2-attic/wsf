@@ -27,7 +27,7 @@
             class="org.eclipse.jst.server.generic.core.internal.GenericServer"
             behaviourClass="org.eclipse.jst.server.generic.core.internal.ExternalServerBehaviour"
             hasConfiguration="false"
-            initialState="stopped"
+            initialState="started"
             launchConfigId="org.eclipse.jst.server.generic.core.ExternalLaunchConfigurationType"
             launchModes="run,debug"
             startBeforePublish="true"
@@ -53,23 +53,11 @@
          <factory class="org.eclipse.jst.server.core.internal.RuntimeClasspathProvider$Factory"/>
          <type class="org.eclipse.jst.common.project.facet.core.IClasspathProvider"/>
       </adapter>
-	  <adapter>
-	      <runtime-component id="org.wso2.wsf.ide.server.wsas"/>
-	      <factory class="org.eclipse.jst.server.ui.internal.RuntimeLabelProvider$Factory"/>
-	      <type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
-	  </adapter>
-      
       <supported>
-         <runtime-component id="org.wso2.wsf.ide.server.wsas"  version="2.0"/>
- 	      <facet
+         <runtime-component any="true"/>
+          <facet
 	         id="jst.web"
 	         version="2.2,2.3,2.4"/>
-	      <facet
-	         id="wsas.core"
-	         version="1.1"/>
-	      <facet
-	         id="wsas.ext"
-	         version="1.1"/>
 	  </supported>
    </extension>
    <extension

@@ -1,0 +1,13 @@
+<project name="deployextension"  default="deploy.j2ee.web"  basedir=".">
+  <property name="newDeployPause" value="10"/>
+  <property name="reDeployPause"  value="10"/>
+  
+  	<target name="deploy.j2ee.web" >
+  		<!-- Handled by the creation.core plugin -->
+    </target>
+ 	
+    <target name="undeploy.j2ee.web">
+    	<delete file="${server.publish.dir}/${module.name}"/>
+    </target>
+ 
+</project>

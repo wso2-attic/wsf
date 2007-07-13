@@ -12,5 +12,6 @@ Require-Bundle: org.eclipse.jst.server.core,
  org.eclipse.wst.common.project.facet.ui,
  org.eclipse.jst.server.ui,
  org.eclipse.jst.common.project.facet.core,
- org.eclipse.wst.server.ui
+ org.eclipse.wst.server.ui,
+ org.wso2.wsf.ide.core
 
