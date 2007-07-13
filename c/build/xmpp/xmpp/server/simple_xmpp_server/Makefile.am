@@ -15,6 +15,7 @@ axis2_xmpp_server_LDADD   =  $(LDFLAGS) \
 			      $(top_builddir)/neethi/src/libneethi.la \
 			    ../../../../../../axiom/src/parser/$(WRAPPER_DIR)/libaxis2_parser.la \
 			      $(top_builddir)/src/core/engine/libaxis2_engine.la \
+                            -I$ /opt/jabber/iksemel/include \
 	                    -liksemel \
                             -lpthread \
                             -laxis2_xmpp_sender \
