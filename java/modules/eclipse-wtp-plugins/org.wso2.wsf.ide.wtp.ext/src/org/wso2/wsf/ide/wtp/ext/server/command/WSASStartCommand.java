@@ -19,35 +19,40 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.wso2.wsf.ide.core.plugin.messages.WSASCoreUIMessages;
+import org.wso2.wsf.ide.core.utils.FileUtils;
 import org.wso2.wsf.ide.wtp.ext.server.bean.WSASConfigurationBean;
 
 public class WSASStartCommand {
 	
     private static IStatus status;
-    //private Process wsasProcess = null;
 
 	public  static IStatus run() throws InvocationTargetException {
 		status = Status.OK_STATUS;
 		Process wsasProcess = null;
+		String pathNodesStopWin[] = {WSASCoreUIMessages.DIR_BIN, WSASCoreUIMessages.WSAS_START_BAT};
+		String pathNodesStopIx[] = {WSASCoreUIMessages.DIR_BIN, WSASCoreUIMessages.WSAS_START_SH};
 
 		if (WSASConfigurationBean.isWsasStartStatus()) {
-			status = new Status( IStatus.ERROR,"id",11,"WSAS Already Running !!",null);
+			status = new Status( IStatus.ERROR,"id",11,WSASCoreUIMessages.WSAS_ALREADY_RUNNING,null);
 			WSASConfigurationBean.setWSASAlreadyRunning(true);
 		}else{
 		
 				String wsasInstallationLocation = WSASConfigurationBean.getWsasInstallationPath();
 				try {
 					Runtime runtime = Runtime.getRuntime();
-					String OS = System.getProperty("os.name").toLowerCase();
-					if ((OS.indexOf("windows 9") > -1)
-							|| (OS.indexOf("nt") > -1)
-							|| (OS.indexOf("windows 2000") > -1)
-							|| (OS.indexOf("windows xp") > -1)) {
-						wsasProcess = runtime.exec(wsasInstallationLocation +"\\bin\\startup.bat");
+					String OS = System.getProperty(WSASCoreUIMessages.PROPERTIES_OS_NAME).toLowerCase();
+					if ((OS.indexOf(WSASCoreUIMessages.OS_WIN_9) > -1)
+							|| (OS.indexOf(WSASCoreUIMessages.OS_WIN_NT) > -1)
+							|| (OS.indexOf(WSASCoreUIMessages.OS_WIN_2000) > -1)
+							|| (OS.indexOf(WSASCoreUIMessages.OS_WIN_XP) > -1)) {
+						wsasProcess = runtime.exec(FileUtils.addNodesToPath(wsasInstallationLocation, 
+																			pathNodesStopWin));
+						wsasProcess.waitFor();
 					} else {
-						wsasProcess = runtime.exec("sh " + wsasInstallationLocation +"\\bin\\startup.sh");
+						wsasProcess = runtime.exec(WSASCoreUIMessages.XTERM_EXEC + 
+							FileUtils.addNodesToPath(wsasInstallationLocation, pathNodesStopIx));
 					}
-					wsasProcess.waitFor();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

@@ -45,7 +45,7 @@ AbstractDataModelOperation {
 		return Status.OK_STATUS;
 	}
 	
-	public IStatus exexuteOverrride(IProgressMonitor monitor)  {
+	public IStatus exexuteOverride(IProgressMonitor monitor)  {
 		//Copy the wsas libs in to this client project
 		IStatus status =null;
 		String runtimeLocation = null;

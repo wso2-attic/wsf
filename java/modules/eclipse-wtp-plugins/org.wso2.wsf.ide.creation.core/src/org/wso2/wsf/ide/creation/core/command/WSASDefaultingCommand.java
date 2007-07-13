@@ -15,6 +15,7 @@
  */
 package org.wso2.wsf.ide.creation.core.command;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -30,6 +31,8 @@ import org.eclipse.wst.ws.internal.wsrt.IWebService;
 import org.eclipse.wst.ws.internal.wsrt.WebServiceScenario;
 import org.wso2.wsf.ide.consumption.core.utils.DefaultCodegenUtil;
 import org.wso2.wsf.ide.core.context.ServiceContext;
+import org.wso2.wsf.ide.core.context.WSASEmitterContext;
+import org.wso2.wsf.ide.core.plugin.WebServiceWSASCorePlugin;
 import org.wso2.wsf.ide.core.plugin.messages.WSASCoreUIMessages;
 import org.wso2.wsf.ide.core.utils.WSASCoreUtils;
 import org.wso2.wsf.ide.core.utils.FacetContainerUtils;
@@ -98,6 +101,12 @@ public class WSASDefaultingCommand extends AbstractDataModelOperation
 					model.getWebProjectName(),
 					ServiceContext.getInstance().getServiceName());
 		ws.getWebServiceInfo().setWsdlURL(deployedWSDLURL);
+		
+		WSASEmitterContext context = WebServiceWSASCorePlugin.getDefault().getWSASEmitterContext();
+		
+		System.setProperty("javax.net.ssl.trustStore", context.getWSASRuntimeLocation()+File.separator+"conf"+File.separator+"wso2wsas.jks");
+        System.setProperty("javax.net.ssl.trustStorePassword", "wso2wsas");
+        System.setProperty("javax.net.ssl.trustStoreType","wso2wsas");
 		
 		
 		return status;      	

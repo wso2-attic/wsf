@@ -19,6 +19,8 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.wso2.wsf.ide.core.plugin.messages.WSASCoreUIMessages;
+import org.wso2.wsf.ide.core.utils.FileUtils;
 import org.wso2.wsf.ide.wtp.ext.server.bean.WSASConfigurationBean;
 
 public class WSASStopCommand {
@@ -43,18 +45,22 @@ public class WSASStopCommand {
 		if (WSASConfigurationBean.isWsasStartStatus()) {
 			
 			Process wsasProcess = null;
-			
+			String pathNodesStopWin[] = {WSASCoreUIMessages.DIR_BIN, WSASCoreUIMessages.WSAS_STOP_BAT};
+			String pathNodesStopIx[] = {WSASCoreUIMessages.DIR_BIN, WSASCoreUIMessages.WSAS_STOP_SH};
 			String wsasInstallationLocation = WSASConfigurationBean.getWsasInstallationPath();
 			try {
 				Runtime runtime = Runtime.getRuntime();
 				String OS = System.getProperty("os.name").toLowerCase();
-				if ((OS.indexOf("windows 9") > -1)
-						|| (OS.indexOf("nt") > -1)
-						|| (OS.indexOf("windows 2000") > -1)
-						|| (OS.indexOf("windows xp") > -1)) {
-					wsasProcess = runtime.exec(wsasInstallationLocation +"\\bin\\shutdown.bat");
+				if ((OS.indexOf(WSASCoreUIMessages.OS_WIN_9) > -1)
+						|| (OS.indexOf(WSASCoreUIMessages.OS_WIN_NT) > -1)
+						|| (OS.indexOf(WSASCoreUIMessages.OS_WIN_2000) > -1)
+						|| (OS.indexOf(WSASCoreUIMessages.OS_WIN_XP) > -1)) {
+					wsasProcess = runtime.exec(FileUtils.addNodesToPath(wsasInstallationLocation, 
+																		pathNodesStopWin));
+					wsasProcess.waitFor();
 				} else {
-					wsasProcess = runtime.exec("sh " + wsasInstallationLocation +"\\bin\\shutdown.sh");
+					wsasProcess = runtime.exec(WSASCoreUIMessages.SHELL + 
+							FileUtils.addNodesToPath(wsasInstallationLocation, pathNodesStopIx));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -64,7 +70,7 @@ public class WSASStopCommand {
 				WSASConfigurationBean.setWsasStartStatus(false);
 
 		}else{
-			status = new Status( IStatus.ERROR,"id",12,"WSAS Instance is not active !!",null ); 
+			status = new Status( IStatus.ERROR,"id",12,WSASCoreUIMessages.WSAS_NOT_ACTIVE,null ); 
 		}
 		return status;
 	}

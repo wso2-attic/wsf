@@ -20,7 +20,31 @@ import org.eclipse.osgi.util.NLS;
 public final class WSASCoreUIMessages extends NLS {
 
 	private static final String BUNDLE_NAME = 
-			"org.wso2.wsf.ide.core.plugin.messages.WSASCoreUI";//$NON-NLS-1$
+			"org.wso2.wsf.ide.core.plugin.messages.WSASCoreUI";		//$NON-NLS-1$
+	public static final String DIR_BIN = "bin" ; 					//$NON-NLS-1$
+	public static final String WSAS_START_BAT = "wso2wsas.bat" ; 	//$NON-NLS-1$
+	public static final String WSAS_START_SH = "wso2.wsas.sh" ; 	//$NON-NLS-1$
+	public static final String WSAS_STOP_BAT = "shutdown.bat" ; 	//$NON-NLS-1$
+	public static final String WSAS_STOP_SH = "shutdown.sh" ; 		//$NON-NLS-1$
+	
+	public static final String SHELL = "sh " ; 						//$NON-NLS-1$
+	public static final String XTERM_EXEC = "xterm -e sh " ; 		//$NON-NLS-1$
+	public static final String PROPERTIES_OS_NAME = "os.name" ; 	//$NON-NLS-1$
+	
+	
+	public static final String WSAS_ALREADY_RUNNING = "WSAS Already Running !!" ; 	//$NON-NLS-1$
+	public static final String WSAS_NOT_ACTIVE = "WSAS Instance is not active !!" ; 	//$NON-NLS-1$
+	
+	
+	public static final String OS_WIN_9 = "windows 9" ; 			//$NON-NLS-1$
+	public static final String OS_WIN_NT = "nt" ; 					//$NON-NLS-1$
+	public static final String OS_WIN_2000 = "windows 2000" ; 		//$NON-NLS-1$
+	public static final String OS_WIN_XP = "windows xp" ; 			//$NON-NLS-1$
+	
+	
+	
+	
+	
 
 	private WSASCoreUIMessages() {
 		// Do not instantiate

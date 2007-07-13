@@ -87,8 +87,6 @@ public class WSASServiceInstallCommand extends
 			String newNodes[] = {"WebContent", "WEB-INF","services",serviceName};
 			String servicesDirectory = FileUtils.addNodesToPath(currentDynamicWebProjectDir, newNodes);	
 			
-			//Create the 
-			
 			//Copy the directory to wsas
 			FileUtils.copyDirectory(new File(servicesDirectory), new File(wsasRepoLocationOfService));
 		} catch (IOException e) {

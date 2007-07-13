@@ -36,7 +36,7 @@ public class WSASCoreFacetInstallDelegate implements IDelegate {
 	        	WSASWebservicesServerCommand command = new WSASWebservicesServerCommand(
 	        													project.toString()
 	        												); 
-	        	status = command.exexuteOverrride(monitor);
+	        	status = command.exexuteOverride(monitor);
 	        	if (status.getCode() == Status.OK_STATUS.getCode() ){
 	        		RuntimePropertyUtils.writeServerStausToPropertiesFile(
 	        								WSASCoreUIMessages.SERVER_STATUS_PASS);
