@@ -1,7 +1,0 @@
-<service name="listener">
-    <parameter name="ServiceClass" locked="xsd:false">listener</parameter>
-   <operation name="notify">
-           <!--messageReceiver class="axis2_receivers" /-->
-           <parameter name="wsamapping">http://ws.apache.org/axis2/c/samples/notify</parameter>
-   </operation>
-</service>
