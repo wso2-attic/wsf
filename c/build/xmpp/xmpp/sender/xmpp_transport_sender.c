@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      xmpp://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,6 +29,7 @@
 #include <axis2_xmpp_transport_sender.h>
 #include <axis2_xmpp_transport_utils.h>
 #include <axis2_xmpp_client.h>
+
 /**
  * XMPP Transport Sender struct impl
  * Axis2 XMPP Transport Sender impl
@@ -40,9 +41,9 @@ typedef struct axis2_xmpp_transport_sender_impl
 }
 axis2_xmpp_transport_sender_impl_t;
 
-#define AXIS2_INTF_TO_IMPL(transport_sender) \
-                         ((axis2_xmpp_transport_sender_impl_t *)\
-                     (transport_sender))
+#define AXIS2_INTF_TO_IMPL(transport_sender)  \
+    ((axis2_xmpp_transport_sender_impl_t *)   \
+     (transport_sender))
 
 /* Function headers ***********************************************************/
 
@@ -126,8 +127,16 @@ axis2_xmpp_transport_sender_free(
  * enabled  
  *        to disable  XMPP_SASL value should be "false"
  *
- */
-/*****************************************************************************/
+ *or can add parameter to the axis2.xml or services.xml
+ *
+ * <parameter name="XMPP" JID="din@localhost/Home" PASSWORD="123"
+ * SASL="true"/>
+ *
+ *always programmatical method get priority.i.e axis2.xml or
+ *services.xml value overridden by svc_client options.
+ *
+ *
+ *****************************************************************************/
 axis2_status_t AXIS2_CALL
 axis2_xmpp_transport_sender_invoke(
     axis2_transport_sender_t *transport_sender,
@@ -197,7 +206,7 @@ axis2_xmpp_transport_sender_invoke(
                                        "XMPP_SASL");
             
             /* If JID, PASSWORD and SASL didn't give programmatically
-             * then we will get them from axis2.xml  */
+             * then we will get them from services.xml or axis2.xml*/
             if (!(session->id_str && session->password))
             {
                 xmpp_param = axis2_msg_ctx_get_parameter (msg_ctx, env, "XMPP");
@@ -207,7 +216,7 @@ axis2_xmpp_transport_sender_invoke(
                                                 "JID", 
                                                 AXIS2_HASH_KEY_STRING);
                 xmpp_attr = (axiom_attribute_t *)axutil_generic_obj_get_value (xmpp_gen_obj, 
-                                                                           env);
+                                                                               env);
                 session->id_str = axiom_attribute_get_value (xmpp_attr, env);
                 
                 
@@ -252,7 +261,8 @@ axis2_xmpp_transport_sender_invoke(
             if (ret != IKS_OK)
             {
                 AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI,
-                                 "Failed to connect to server %s, error code %d",
+                                 "[xmpp]Failed to connect to server %s,"
+                                 "error code %d",
                                  session->server, ret);
                 return AXIS2_FAILURE;
             }
@@ -260,9 +270,12 @@ axis2_xmpp_transport_sender_invoke(
             while (!session->authorized || !session->session)
                 ret = iks_recv(session->parser, -1);
             
-            xmpp_session = axutil_param_create (env, "XMPP_SESSION", (void *)session);
-            axutil_param_set_value_free (xmpp_session, env, axis2_xmpp_session_free_void_arg);
-            axis2_transport_out_desc_add_param (transport_out, env, xmpp_session);
+            xmpp_session = axutil_param_create (env, "XMPP_SESSION", 
+                                                (void *)session);
+            axutil_param_set_value_free (xmpp_session, env, 
+                                         axis2_xmpp_session_free_void_arg);
+            axis2_transport_out_desc_add_param (transport_out, env, 
+                                                xmpp_session);
         }
 
         xmpp_parser = session->parser;
@@ -287,7 +300,7 @@ axis2_xmpp_transport_sender_invoke(
         if (!properties)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                            "XMPP properties not set in message context");
+                            "[xmpp]XMPP properties not set in message context");
             return AXIS2_FAILURE;
         }
 
@@ -296,7 +309,7 @@ axis2_xmpp_transport_sender_invoke(
         if (!property)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                            "XMPP parser not set in message context");
+                            "[xmpp]XMPP parser not set in message context");
             return AXIS2_FAILURE;
         }
         xmpp_parser = axutil_property_get_value(property, env);
@@ -307,7 +320,8 @@ axis2_xmpp_transport_sender_invoke(
         if (!property)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                            "JID of requesting client not set in message context");
+                            "[xmpp]JID of requesting client not set in message"
+                            "context");
             return AXIS2_FAILURE;
         }
         client_jid = axutil_property_get_value(property, env);
@@ -316,11 +330,12 @@ axis2_xmpp_transport_sender_invoke(
     soap_envelope = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
     
     xml_writer = axiom_xml_writer_create_for_memory(env, NULL,
-            AXIS2_TRUE, 0, AXIS2_XML_PARSER_TYPE_BUFFER);
+                                                    AXIS2_TRUE, 0, 
+                                                    AXIS2_XML_PARSER_TYPE_BUFFER);
     if (NULL == xml_writer)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                        "Failed to create XML writer");
+                        "[xmpp]Failed to create XML writer");
         return AXIS2_FAILURE;
     }
 
@@ -328,7 +343,7 @@ axis2_xmpp_transport_sender_invoke(
     if (!om_output)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                        "Failed to create OM output");
+                        "[xmpp]Failed to create OM output");
         axiom_xml_writer_free(xml_writer, env);
         xml_writer = NULL;
         return AXIS2_FAILURE;
@@ -340,7 +355,7 @@ axis2_xmpp_transport_sender_invoke(
     if (!soap_str)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                        "Failed to serialize the SOAP envelope");
+                        "[xmpp]Failed to serialize the SOAP envelope");
         return AXIS2_FAILURE;
     }
 
@@ -358,7 +373,8 @@ axis2_xmpp_transport_sender_invoke(
         if(!axutil_strcmp(mep_uri, AXIS2_MEP_URI_OUT_ONLY)||
            !axutil_strcmp(mep_uri, AXIS2_MEP_URI_ROBUST_OUT_ONLY))
         {
-            iks_disconnect (xmpp_parser);
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                             "[xmpp]send robust completed.");
         }
         else
         {
@@ -419,7 +435,7 @@ axis2_get_instance(
     *inst = axis2_xmpp_transport_sender_create(env);
     if (!(*inst))
     {
-        printf("transport sender load not success\n");
+        printf("[xmpp]transport sender load not success\n");
         return AXIS2_FAILURE;
     }
 

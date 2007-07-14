@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      xmpp://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -427,9 +427,7 @@ axis2_xmpp_svr_thread_get_all_xmpp_services(
 
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "found jid %s", jid);
 
-            session = (axis2_xmpp_session_data_t*)AXIS2_MALLOC(env->allocator,
-                    sizeof(axis2_xmpp_session_data_t));
-            axis2_xmpp_session_data_init(session);
+            session = axis2_xmpp_session_create (env);
             session->id_str = jid;
             session->password = pw;
             session->use_sasl = impl->use_sasl;
@@ -437,14 +435,11 @@ axis2_xmpp_svr_thread_get_all_xmpp_services(
             session->subscribe = impl->subscribe;
             session->svc = svc;
             axis2_xmpp_svr_thread_get_subscribing_ops(svr_thread, env, svc,
-                    session);
-
+                                                      session);
             axutil_array_list_add(impl->xmpp_sessions, env, (void*)session);
         }
-
         val = NULL;
     }
-
     return AXIS2_SUCCESS;
 }
 

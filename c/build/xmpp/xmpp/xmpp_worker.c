@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      xmpp://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -42,7 +42,7 @@ typedef struct axis2_xmpp_worker_impl
 axis2_xmpp_worker_impl_t;
 
 #define AXIS2_INTF_TO_IMPL(xmpp_worker) ((axis2_xmpp_worker_impl_t *)\
-                                                                (xmpp_worker))
+                                         (xmpp_worker))
 
 /* Function headers ***********************************************************/
 
@@ -175,7 +175,8 @@ axis2_xmpp_worker_run(
     axutil_env_t *thread_env = NULL;
     int ret = IKS_OK;
     char* tmp = NULL;
-
+    int server_len = 0;
+    int user_len = 0;
 
     thread_env = axutil_init_thread_env(env);
 
@@ -185,7 +186,7 @@ axis2_xmpp_worker_run(
     impl->session->env = thread_env;
 
     AXIS2_LOG_DEBUG(thread_env->log, AXIS2_LOG_SI, 
-                    "Starting %s", impl->session->id_str);
+                    "[xmpp]Starting %s", impl->session->id_str);
     /* Create an iks parser and connect to the XMPP server */
     /* We pass the session as user data, which we can access inside iksemel
      * callbacks */
@@ -194,7 +195,8 @@ axis2_xmpp_worker_run(
         axis2_xmpp_worker_on_data);
     if (!impl->session->parser)
     {
-        AXIS2_LOG_ERROR(thread_env->log, AXIS2_LOG_SI, "Failed to create XMPP parser");
+        AXIS2_LOG_ERROR(thread_env->log, AXIS2_LOG_SI, 
+                        "[xmpp]Failed to create XMPP parser");
         AXIS2_ERROR_SET(thread_env->error, AXIS2_XMPP_PARSER_CREATE_FAILED,
             AXIS2_FAILURE);
         return AXIS2_FAILURE; /* exit thread */
@@ -210,7 +212,7 @@ axis2_xmpp_worker_run(
                                     impl->session->id_str);
     if ( (!impl->session->jid->server) || (!impl->session->jid->user))
     {
-        AXIS2_LOG_ERROR(thread_env->log, AXIS2_LOG_SI, "Server and user name "
+        AXIS2_LOG_ERROR(thread_env->log, AXIS2_LOG_SI, "[xmpp]Server and user name "
             "cannot be NULL in JID");
         return AXIS2_FAILURE; /* exit thread */
     }
@@ -220,22 +222,27 @@ axis2_xmpp_worker_run(
 
     if (!impl->session->jid->resource) /* no resource given */
     {
-        tmp = iks_malloc(strlen(impl->session->server) + strlen(impl->session->user) + 7 + 3);
-        sprintf(tmp, "%s@%s/%s", impl->session->user, impl->session->server, "Default");
-        impl->session->jid = iks_id_new(iks_parser_stack(impl->session->parser), tmp);
+        server_len = strlen(impl->session->server);
+        user_len = strlen(impl->session->user);
+        tmp = iks_malloc( server_len + user_len + 7 + 3);
+        sprintf(tmp, "%s@%s/%s", impl->session->user, impl->session->server, 
+                "Default");
+        impl->session->jid = iks_id_new(iks_parser_stack(impl->session->parser),
+                                        tmp);
         iks_free(tmp);
     }
 
     /* Now connect to the XMPP server */
     ret = iks_connect_tcp(impl->session->parser, impl->session->server,
-        IKS_JABBER_PORT);
+                          IKS_JABBER_PORT);
 
     if (ret != IKS_OK)
     {
-        AXIS2_LOG_ERROR(thread_env->log, AXIS2_LOG_SI, "Failed to connect to XMPP server. "
-            "Error code: %d", ret);
+        AXIS2_LOG_ERROR(thread_env->log, AXIS2_LOG_SI, 
+                        "[xmpp]Failed to connect to XMPP server. "
+                        "Error code: %d", ret);
         AXIS2_ERROR_SET(thread_env->error, AXIS2_XMPP_SERVER_CONNECT_FAILED,
-            AXIS2_FAILURE);
+                        AXIS2_FAILURE);
 	    return AXIS2_FAILURE; /* exit thread */
     }
    
@@ -253,18 +260,19 @@ axis2_xmpp_worker_run(
             switch(ret)
             {
             case IKS_HOOK:
-                AXIS2_LOG_ERROR(thread_env->log, AXIS2_LOG_SI, "Hook function "
-                    "returned an error");
-	            return AXIS2_FAILURE; /* exit thread */
+                AXIS2_LOG_ERROR(thread_env->log, AXIS2_LOG_SI, 
+                                "[xmpp]Hook function returned an error");
+	            return AXIS2_FAILURE;
 
             case IKS_NET_TLSFAIL:
-                AXIS2_LOG_ERROR(thread_env->log, AXIS2_LOG_SI, "TLS handshake"
-                    "failed");
-	            return AXIS2_FAILURE; /* exit thread */
+                AXIS2_LOG_ERROR(thread_env->log, AXIS2_LOG_SI, 
+                                "[xmpp]TLS handshake failed");
+	            return AXIS2_FAILURE;
 
             default:
-                AXIS2_LOG_ERROR(thread_env->log, AXIS2_LOG_SI, "I/O error");
-	            return AXIS2_FAILURE; /* exit thread */
+                AXIS2_LOG_ERROR(thread_env->log, AXIS2_LOG_SI, 
+                                "[xmpp]I/O error");
+	            return AXIS2_FAILURE;
             }
         }
     }
@@ -294,21 +302,24 @@ int axis2_xmpp_worker_on_data(
         break;
         case IKS_NODE_STOP:
         {
-            printf("stop node: server disconnected");
+            AXIS2_LOG_ERROR(session->env->log, AXIS2_LOG_SI,
+                            "[xmpp]stop node: server disconnected");
             return IKS_HOOK;
         }
         break;
 
         case IKS_NODE_ERROR:
         {
-            printf("error node: stream error");
+            AXIS2_LOG_ERROR(session->env->log, AXIS2_LOG_SI,
+                            "[xmpp]error node: stream error");
             return IKS_HOOK;
         }
         break;
 
         default:
         {
-            printf("unknown node");
+            AXIS2_LOG_ERROR(session->env->log, AXIS2_LOG_SI,
+                            "[xmpp]unknown node");
             return IKS_HOOK;
         }
     }
@@ -334,7 +345,7 @@ int axis2_xmpp_worker_on_start_node(
     if (!session->use_sasl) /* basic authentication */
     {
         iks *x;
-        session->session_id = iks_find_attrib(node, "id"); /* get id given from svr */
+        session->session_id = iks_find_attrib(node, "id");
         x = iks_make_auth (session->jid, session->password, session->session_id);
         iks_insert_attrib (x, "id", "auth");
         iks_send (session->parser, x);
@@ -350,9 +361,9 @@ int axis2_xmpp_worker_on_normal_node(
     iks* node)
 {
     iks *t = NULL;
-    if (strcmp("stream:features", iks_name(node)) == 0) /* features node */
+    if (!strcmp("stream:features", iks_name(node))) 
     {
-        session->features = iks_stream_features (node); /* save features */
+        session->features = iks_stream_features (node);
 
         if (session->use_sasl)
         {
@@ -388,12 +399,15 @@ int axis2_xmpp_worker_on_normal_node(
                     /* Check whether the type of subscription is user or room
                      * and send the subscription request accordingly */
 
-                    if (axutil_strcmp(session->subscribe_type, AXIS2_XMPP_SUB_TYPE_USER) == 0)
+                    if (!axutil_strcmp(session->subscribe_type, 
+                                       AXIS2_XMPP_SUB_TYPE_USER))
                     {
-                        iks_send(session->parser, iks_make_s10n(IKS_TYPE_SUBSCRIBE,
-                            session->subscribe_to, ""));
+                        iks_send(session->parser, 
+                                 iks_make_s10n(IKS_TYPE_SUBSCRIBE,
+                                               session->subscribe_to, ""));
                     }
-                    else if (axutil_strcmp(session->subscribe_type, AXIS2_XMPP_SUB_TYPE_ROOM) == 0)
+                    else if (!axutil_strcmp(session->subscribe_type, 
+                                            AXIS2_XMPP_SUB_TYPE_ROOM))
                     {
                         axis2_char_t *id = axutil_uuid_gen(session->env);
 
@@ -406,7 +420,8 @@ int axis2_xmpp_worker_on_normal_node(
                     else
                     {
                         AXIS2_LOG_ERROR(session->env->log, AXIS2_LOG_SI,
-                            "Unknown subscription type. No subscription done");
+                            "[xmpp]Unknown subscription type. "
+                                        "No subscription done");
                     }
                 }
 
@@ -426,21 +441,21 @@ int axis2_xmpp_worker_on_normal_node(
             }
         }
     }
-    else if (strcmp("failure", iks_name(node)) == 0)
+    else if (!strcmp("failure", iks_name(node)))
     {
-        AXIS2_LOG_ERROR(session->env->log, AXIS2_LOG_SI, "Authentication failed.");
+        AXIS2_LOG_ERROR(session->env->log, AXIS2_LOG_SI, 
+                        "[xmpp]Authentication failed.");
         return IKS_HOOK;
     }
-    else if (strcmp("success", iks_name(node)) == 0)
+    else if (!strcmp("success", iks_name(node)))
     {
-        AXIS2_LOG_INFO(session->env->log, "Authentication successful.");
+        AXIS2_LOG_INFO(session->env->log, "[xmpp]Authentication successful.");
         session->authorized = 1;
         iks_send_header(session->parser, session->server);
     }
     else
     {
         ikspak *pak;
-
         pak = iks_packet(node);
         iks_filter_packet(session->filter, pak); /* pass for filtering */
     }
@@ -463,7 +478,7 @@ void axis2_xmpp_worker_on_log(
     buf[size] = 0;
 
     if (is_incoming)
-        AXIS2_LOG_INFO(session->env->log, "\n[xmpp serer]INCOMING : %s\n", buf);
+        AXIS2_LOG_INFO(session->env->log, "\n[xmpp server]INCOMING : %s\n", buf);
     else
         AXIS2_LOG_INFO(session->env->log, "\n[xmpp server]OUTGOING : %s\n", buf);
     AXIS2_FREE (session->env->allocator, buf);
@@ -480,11 +495,6 @@ void axis2_xmpp_worker_setup_filter(
     iks_filter_add_rule(session->filter, axis2_xmpp_worker_on_message, session,
         IKS_RULE_TYPE, IKS_PAK_MESSAGE,
         IKS_RULE_DONE);
-
-    /* Handler for 'presence' stanzas */
-/*     iks_filter_add_rule(session->filter, axis2_xmpp_worker_on_presence, session, */
-/*         IKS_RULE_TYPE, IKS_PAK_PRESENCE, */
-/*         IKS_RULE_DONE); */
 
     /* Handler for 'iq' stanzas */
     iks_filter_add_rule(session->filter, axis2_xmpp_worker_on_iq, session,
@@ -514,30 +524,30 @@ int axis2_xmpp_worker_on_message(
     
     session = (axis2_xmpp_session_data_t*)user_data;
     env = session->env;
-/*     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " %s inside on message",session->id_str); */
     /* Serialize the message and pass it up */
 
-    body_elem = iks_find(pak->x, "body"); /* extract the body of message */
+    body_elem = iks_find(pak->x, "body"); 
     if (!body_elem)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Failed to extract body of "
-            "message stanza");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                        "[xmpp]Failed to extract body of message stanza");
         return IKS_FILTER_EAT;
     }
 
     soap_elem = iks_child(body_elem);
     if (!soap_elem)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Failed to extract soap envelope"
-            "from message stanza");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                        "[xmpp]Failed to extract soap envelope"
+                        "from message stanza");
         return IKS_FILTER_EAT;
     }
 
     soap_str = iks_string(iks_stack(soap_elem), soap_elem);
     if (!soap_str)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Failed to serialize the soap "
-            "envelope");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                        "[xmpp]Failed to serialize the soap envelope");
         return IKS_FILTER_EAT;
     }
 
@@ -572,7 +582,7 @@ int axis2_xmpp_worker_on_presence(
     presence_str = iks_string(iks_stack(pak->x), pak->x);
     if (!presence_str)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Failed to serialize the "
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[xmpp]Failed to serialize the"
                 "presence envelope");
         return IKS_FILTER_EAT;
     }
@@ -600,7 +610,7 @@ int axis2_xmpp_worker_on_subscription(
 
     if (pak->subtype == IKS_TYPE_SUBSCRIBED)
     {
-        AXIS2_LOG_INFO(env->log, "Subscription successful");
+        AXIS2_LOG_INFO(env->log, "[xmpp]Subscription successful");
     }
 
     return IKS_FILTER_EAT; /* no need to pass to other filters */
@@ -622,15 +632,15 @@ int axis2_xmpp_worker_on_iq(
 
         if (pak->ns)
         {
-            if (!axutil_strcmp (pak->ns, "urn:ietf:params:xml:ns:xmpp-bind"))
+            if (!axutil_strcmp (pak->ns, IKS_NS_XMPP_BIND))
             {
                 session->bind = 1;
-                AXIS2_LOG_INFO(env->log, "Bind iq recieved");
+                AXIS2_LOG_INFO(env->log, "[xmpp]Bind iq recieved");
             }
-            else if (!axutil_strcmp (pak->ns, "urn:ietf:params:xml:ns:xmpp-session"))
+            else if (!axutil_strcmp (pak->ns, IKS_NS_XMPP_SESSION))
             {
                 session->session = 1;
-                AXIS2_LOG_INFO(env->log, "Session iq recieved");
+                AXIS2_LOG_INFO(env->log, "[xmpp]Session iq recieved");
             }
                 
         }
@@ -639,7 +649,7 @@ int axis2_xmpp_worker_on_iq(
             if (!axutil_strcmp (pak->id, "auth"))
             {
                 session->session = 1;
-                AXIS2_LOG_INFO(env->log, "Session iq recieved");
+                AXIS2_LOG_INFO(env->log, "[xmpp]Session iq recieved");
             }
         }
     }
