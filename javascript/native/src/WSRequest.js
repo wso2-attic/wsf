@@ -215,12 +215,13 @@ WSRequest.prototype._processResult = function () {
                 this.error = null;
             }
         } else {
+            // If this block being executed; it's due to server connection has falied. 
             this.responseXML = null;
             this.responseText = "";
             this.error = new WebServiceError();
             try {
                 this.error.code = "HTTP" + this._xmlhttp.status;
-                this.error.reason = "No SOAP Body.";
+                this.error.reason = "Server connection has failed.";
                 this.error.detail = this._xmlhttp.statusText;
             } catch (e) {
                 this.error.code = null;
