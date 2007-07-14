@@ -249,6 +249,13 @@ axis2_xmpp_transport_sender_invoke(
             ret = iks_connect_tcp(session->parser, 
                                   session->server,
                                   IKS_JABBER_PORT);
+            if (ret != IKS_OK)
+            {
+                AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI,
+                                 "Failed to connect to server %s, error code %d",
+                                 session->server, ret);
+                return AXIS2_FAILURE;
+            }
             
             while (!session->authorized || !session->session)
                 ret = iks_recv(session->parser, -1);
