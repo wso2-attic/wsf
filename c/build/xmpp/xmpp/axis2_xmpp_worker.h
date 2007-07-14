@@ -35,42 +35,12 @@
 #include <axutil_env.h>
 #include <axis2_conf_ctx.h>
 
+#include <axis2_xmpp_session.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
-
-    typedef struct axis2_xmpp_session_data
-    {
-        char* id_str;           /* JID in string form */
-        axis2_char_t *server;   /* XMPP server name */
-        axis2_char_t *user;     /* User ID */
-        axis2_char_t *password;
-
-        char* subscribe_to;     /* JID to subscribe to receive presence */
-        char* subscribe_type;   /* Type of the JID to subscribe (user|room) */
-        char* subscribe_op;     /* Operation to recv presence notifications */
-
-        char* session_id;       /* Session ID returned by server */
-        iksparser *parser;      /* iksemel parser instance */
-        iksfilter *filter;      /* iksemel filter */
-        iksid *jid;             /* JID in iks form */
-
-        int authorized;         /* Whether session authorized or not */
-        int features;           /* Stream features */
-        int use_sasl;           /* Whether to SASL or not */
-        int use_tls;            /* Whether to use TLS or not */
-        int subscribe;          /* Whether to subscribe for events or not */
-		int bind;
-		int in_msg;
-        int session;
-
-        axutil_env_t *env;
-        axis2_conf_ctx_t* conf_ctx;
-        axis2_svc_t *svc;
-        axis2_msg_ctx_t *response;
-    }axis2_xmpp_session_data_t;
 
     /** Type name for struct axis2_xmpp_worker_ops */
     typedef struct axis2_xmpp_worker_ops axis2_xmpp_worker_ops_t;
@@ -137,9 +107,6 @@ extern "C"
     /**
      * @param data pointer to xmpp session data struct
      */
-    AXIS2_EXTERN void AXIS2_CALL
-    axis2_xmpp_session_data_init (
-        axis2_xmpp_session_data_t *data);
 
     AXIS2_EXTERN int AXIS2_CALL 
     axis2_xmpp_worker_on_data(

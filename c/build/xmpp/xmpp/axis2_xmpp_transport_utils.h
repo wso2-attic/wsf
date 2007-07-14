@@ -38,7 +38,7 @@
 #include <axiom.h>
 #include <axiom_soap.h>
 
-#include <axis2_xmpp_worker.h>
+#include <axis2_xmpp_session.h>
 
 #ifdef __cplusplus
 extern "C"

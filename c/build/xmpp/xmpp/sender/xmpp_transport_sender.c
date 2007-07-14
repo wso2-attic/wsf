@@ -157,6 +157,8 @@ axis2_xmpp_transport_sender_invoke(
     axutil_hash_t *xmpp_hash = NULL;
     axutil_generic_obj_t *xmpp_gen_obj = NULL;
     axiom_attribute_t *xmpp_attr = NULL;
+    axutil_param_t *xmpp_session = NULL;
+    axis2_transport_out_desc_t *transport_out = NULL;
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
@@ -165,92 +167,98 @@ axis2_xmpp_transport_sender_invoke(
     mep_uri = axis2_op_get_msg_exchange_pattern(op, env);
 
     is_server = axis2_msg_ctx_get_server_side (msg_ctx, env);
+    
     if (!is_server)
     {
-
-        session = (axis2_xmpp_session_data_t*)AXIS2_MALLOC(env->allocator,
-                                                           sizeof(axis2_xmpp_session_data_t));
-        axis2_xmpp_session_data_init(session);
-        session->id_str = (axis2_char_t *)axis2_msg_ctx_get_property_value (msg_ctx, 
-                                                                            env, 
-                                                                            "XMPP_JID");
-
-        session->password = (axis2_char_t *)axis2_msg_ctx_get_property_value (msg_ctx, 
-                                                                              env, 
-                                                                              "XMPP_PASSWORD");
-
-        sasl = (axis2_char_t *)axis2_msg_ctx_get_property_value (msg_ctx, 
-                                                                 env, 
-                                                                 "XMPP_SASL");
-
-        /* If JID, PASSWORD and SASL didn't give programmatically
-         * then we will get them from axis2.xml  */
-        if (!(session->id_str && session->password))
+        transport_out = axis2_msg_ctx_get_transport_out_desc (msg_ctx, env);
+        xmpp_session = axis2_transport_out_desc_get_param (transport_out, 
+                                                           env, 
+                                                           "XMPP_SESSION");
+        if (xmpp_session)
         {
-            xmpp_param = axis2_msg_ctx_get_parameter (msg_ctx, env, "XMPP");
-            xmpp_hash = axutil_param_get_attributes (xmpp_param, env);
-         
-            xmpp_gen_obj = axutil_hash_get (xmpp_hash, 
-                                            "JID", 
-                                            AXIS2_HASH_KEY_STRING);
-            xmpp_attr = (axiom_attribute_t *)axutil_generic_obj_get_value (xmpp_gen_obj, 
-                                                                           env);
-            session->id_str = axiom_attribute_get_value (xmpp_attr, env);
+            session = (axis2_xmpp_session_data_t *)axutil_param_get_value (xmpp_session, env);
+            axis2_xmpp_session_reset (session, env);
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[xmpp]session reuse ");
+        }
+        else
+        {
 
-
-            xmpp_gen_obj = axutil_hash_get (xmpp_hash, 
-                                            "PASSWORD", 
-                                            AXIS2_HASH_KEY_STRING);
-            xmpp_attr = (axiom_attribute_t *)axutil_generic_obj_get_value (xmpp_gen_obj, 
-                                                                           env);
+            session = axis2_xmpp_session_create (env);
+            session->id_str = (axis2_char_t *)axis2_msg_ctx_get_property_value (msg_ctx, 
+                                                  env, 
+                                                  "XMPP_JID");
             
-            session->password  = axiom_attribute_get_value (xmpp_attr, env);
-
-            xmpp_gen_obj = axutil_hash_get (xmpp_hash, 
-                                            "SASL", 
-                                            AXIS2_HASH_KEY_STRING);
-            xmpp_attr = (axiom_attribute_t *)axutil_generic_obj_get_value (xmpp_gen_obj, 
+            session->password = (axis2_char_t *)axis2_msg_ctx_get_property_value (msg_ctx, 
+                                                    env, 
+                                                    "XMPP_PASSWORD");
+            
+            sasl = (axis2_char_t *)axis2_msg_ctx_get_property_value (msg_ctx, 
+                                       env, 
+                                       "XMPP_SASL");
+            
+            /* If JID, PASSWORD and SASL didn't give programmatically
+             * then we will get them from axis2.xml  */
+            if (!(session->id_str && session->password))
+            {
+                xmpp_param = axis2_msg_ctx_get_parameter (msg_ctx, env, "XMPP");
+                xmpp_hash = axutil_param_get_attributes (xmpp_param, env);
+                
+                xmpp_gen_obj = axutil_hash_get (xmpp_hash, 
+                                                "JID", 
+                                                AXIS2_HASH_KEY_STRING);
+                xmpp_attr = (axiom_attribute_t *)axutil_generic_obj_get_value (xmpp_gen_obj, 
                                                                            env);
-            sasl = axiom_attribute_get_value (xmpp_attr, env);
+                session->id_str = axiom_attribute_get_value (xmpp_attr, env);
+                
+                
+                xmpp_gen_obj = axutil_hash_get (xmpp_hash, 
+                                                "PASSWORD", 
+                                                AXIS2_HASH_KEY_STRING);
+                xmpp_attr = (axiom_attribute_t *)axutil_generic_obj_get_value (xmpp_gen_obj, 
+                                                                               env);
+                
+                session->password  = axiom_attribute_get_value (xmpp_attr, env);
+                
+                xmpp_gen_obj = axutil_hash_get (xmpp_hash, 
+                                                "SASL", 
+                                                AXIS2_HASH_KEY_STRING);
+                xmpp_attr = (axiom_attribute_t *)axutil_generic_obj_get_value (xmpp_gen_obj, 
+                                                                               env);
+                sasl = axiom_attribute_get_value (xmpp_attr, env);
+            }
+            
+            if (!axutil_strcmp (sasl, "false"))
+                session->use_sasl = 0;
+            else
+                session->use_sasl = 1;
+            
+            session->env = (axutil_env_t *)env;
+            session->conf_ctx = axis2_msg_ctx_get_conf_ctx (msg_ctx, env);
+            session->svc = axis2_msg_ctx_get_svc (msg_ctx, env);
+            
+            session->parser = iks_stream_new(IKS_NS_CLIENT, (void*)session,
+                                             axis2_xmpp_client_on_data);
+            
+            iks_set_log_hook(session->parser, axis2_xmpp_client_on_log);
+            axis2_xmpp_client_setup_filter(session);
+            session->jid = iks_id_new(iks_parser_stack(session->parser), 
+                                      session->id_str);
+            session->server = session->jid->server;
+            session->user = session->jid->user;
+            
+            ret = iks_connect_tcp(session->parser, 
+                                  session->server,
+                                  IKS_JABBER_PORT);
+            
+            while (!session->authorized || !session->session)
+                ret = iks_recv(session->parser, -1);
+            
+            xmpp_session = axutil_param_create (env, "XMPP_SESSION", (void *)session);
+            axutil_param_set_value_free (xmpp_session, env, axis2_xmpp_session_free_void_arg);
+            axis2_transport_out_desc_add_param (transport_out, env, xmpp_session);
         }
 
-        if (!axutil_strcmp (sasl, "false"))
-            session->use_sasl = 0;
-        else
-            session->use_sasl = 1;
-
-
-        session->use_tls = 0;
-		session->authorized = 0;
-		session->bind = 0;
-        session->subscribe = 0;
-		session->in_msg = 0;
-		session->session = 0;
-        session->response = NULL;
-
-        session->env = (axutil_env_t *)env;
-        session->conf_ctx = axis2_msg_ctx_get_conf_ctx (msg_ctx, env);
-        session->svc = axis2_msg_ctx_get_svc (msg_ctx, env);
-
-        session->parser = iks_stream_new(IKS_NS_CLIENT, (void*)session,
-        axis2_xmpp_client_on_data);
-
-        iks_set_log_hook(session->parser, axis2_xmpp_client_on_log);
-        axis2_xmpp_client_setup_filter(session);
-        session->jid = iks_id_new(iks_parser_stack(session->parser), 
-                                  session->id_str);
-        session->server = session->jid->server;
-        session->user = session->jid->user;
-
-        ret = iks_connect_tcp(session->parser, 
-                              session->server,
-                              IKS_JABBER_PORT);
-
-		while (!session->authorized || !session->session)
-			ret = iks_recv(session->parser, -1);
-
         xmpp_parser = session->parser;
-
         to = axis2_msg_ctx_get_to (msg_ctx, env);
         if (to)
         {
@@ -259,7 +267,6 @@ axis2_xmpp_transport_sender_invoke(
             if (to_url)
                 client_jid = axutil_url_get_server (to_url, env);
         }
-
     }
     else
     {
@@ -357,8 +364,7 @@ axis2_xmpp_transport_sender_invoke(
 			response_soap_env = axis2_msg_ctx_get_soap_envelope (session->response, env);
 			if (response_soap_env)
 				axis2_msg_ctx_set_response_soap_envelope (msg_ctx, env, response_soap_env);
-			iks_disconnect (xmpp_parser);
-		}
+        }
 	}
     return AXIS2_SUCCESS;
 }

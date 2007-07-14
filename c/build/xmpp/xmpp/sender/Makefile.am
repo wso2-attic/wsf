@@ -15,7 +15,7 @@ INCLUDES = -I$(top_builddir)/include \
            -I$(top_builddir)/src/core/description \
            -I$(top_builddir)/src/core/context \
            -I$(top_builddir)/src/core/phaseresolver \
-           -I$(top_builddir)/src/core/engine 
+           -I$(top_builddir)/src/core/engine \
             -I$ /opt/jabber/iksemel/include \
            -I$(top_builddir)/src/core/deployment \
            -I$(top_builddir)/xml_schema/include \

@@ -25,8 +25,8 @@
 #include <axutil_property.h>
 
 #include <axis2_xmpp_transport.h>
-#include <axis2_xmpp_transport_utils.h>
 #include <axis2_xmpp_worker.h>
+#include <axis2_xmpp_session.h>
 
 /**
  * @brief XMPP Worker struct impl
@@ -654,32 +654,4 @@ int axis2_xmpp_worker_on_iq(
 
 /*****************************************************************************/
 
-void AXIS2_CALL
-axis2_xmpp_session_data_init (
-    axis2_xmpp_session_data_t *data)
-{
-    data->id_str = NULL;
-    data->server = NULL;
-    data->user = NULL;
-    data->password = NULL;
-
-    data->subscribe_to = NULL;
-    data->subscribe_type = NULL;
-    data->subscribe_op = NULL;
-
-    data->session_id = NULL;
-    data->parser = NULL;
-    data->filter = NULL;
-    data->jid = NULL;
-    
-    data->authorized = 0;
-    data->features = 0;
-    data->use_sasl = 0;
-    data->use_tls = 0;
-    data->subscribe = 0;
-
-    data->env = NULL;
-    data->conf_ctx = NULL;
-    data->svc = NULL;
-}
 

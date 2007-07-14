@@ -2,6 +2,7 @@ SUBDIRS = . sender receiver server
 noinst_LTLIBRARIES = libaxis2_xmpp.la
 
 libaxis2_xmpp_la_SOURCES = xmpp_worker.c \
+                           xmpp_session.c \
                            xmpp_transport_utils.c
 
 INCLUDES = -I$(top_builddir)/include \
@@ -12,5 +13,5 @@ INCLUDES = -I$(top_builddir)/include \
             -I$ /opt/jabber/iksemel/include \
             -I$(top_builddir)/axiom/include
 
-EXTRA_DIST=axis2_xmpp_server.h axis2_xmpp_transport.h axis2_xmpp_transport_utils.h axis2_xmpp_svr_thread.h axis2_xmpp_transport_sender.h axis2_xmpp_worker.h samples
+EXTRA_DIST=axis2_xmpp_server.h axis2_xmpp_transport.h axis2_xmpp_transport_utils.h axis2_xmpp_svr_thread.h axis2_xmpp_transport_sender.h axis2_xmpp_worker.h axis2_xmpp_session.h samples
 
