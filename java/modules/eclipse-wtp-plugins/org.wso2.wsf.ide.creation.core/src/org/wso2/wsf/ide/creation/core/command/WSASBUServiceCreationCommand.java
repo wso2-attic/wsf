@@ -32,6 +32,8 @@ import org.eclipse.wst.common.environment.IEnvironment;
 import org.eclipse.wst.common.frameworks.datamodel.AbstractDataModelOperation;
 import org.eclipse.wst.ws.internal.wsrt.IWebService;
 import org.wso2.wsf.ide.core.utils.FileUtils;
+import org.wso2.wsf.ide.core.utils.ServiceImplFilterUtil;
+import org.wso2.wsf.ide.core.utils.WSASCoreUtils;
 import org.wso2.wsf.ide.creation.core.data.DataModel;
 import org.wso2.wsf.ide.creation.core.messages.WSASCreationUIMessages;
 import org.wso2.wsf.ide.creation.core.utils.CommonUtils;
@@ -117,11 +119,30 @@ public class WSASBUServiceCreationCommand extends
             // Copy the classes directory to the sevices directory
 			String defaultClassesSubDirectory = WSASCreationUIMessages.DIR_BUILD +File.separator+ 
 													WSASCreationUIMessages.DIR_CLASSES;
-			//TODO copy only the relevent .classes to the aar
 			String classesDirectory = currentDynamicWebProjectDir + File.separator + 
-									  defaultClassesSubDirectory;
+			                                                        defaultClassesSubDirectory;
+			//Copy only the relevent .classes to the service (Filter mechanism of impl classes)
+			File[] matchingFiles = ServiceImplFilterUtil.getMatchingFiles(classesDirectory,
+					                             serviceName, ".class");
+			//create the package at the destination
+			for (int i = 0; i < matchingFiles.length; i++) {
+				//create the package at the destination
+				String[] result = matchingFiles[i].getAbsolutePath().split(classesDirectory);
+				String packageString = null;
+				if (result.length==2) {
+					packageString = result[1];
+				}
+				String classFileDestination = FileUtils.addAnotherNodeToPath(servicesDirectory, packageString );
+				String[] packageDestination = classFileDestination.split(serviceName+".class");
+				File newClassFile = new File(classFileDestination);
+				if (!newClassFile.exists()){
+					new File(packageDestination[0]).mkdirs();
+					newClassFile.createNewFile();
+				}
+				FileUtils.copy(new File(matchingFiles[i].getAbsolutePath()), new File(classFileDestination));
+			}
+
 			
-			FileUtils.copyDirectory(new File(classesDirectory), new File(servicesDirectory));
 			
 //			//Create the .aar file 
 //			String aarDirString =  FileUtils.addAnotherNodeToPath(webservicesDir, 
