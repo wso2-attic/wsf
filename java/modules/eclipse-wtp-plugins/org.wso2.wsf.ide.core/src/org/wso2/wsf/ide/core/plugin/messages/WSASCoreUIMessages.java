@@ -22,7 +22,7 @@ public final class WSASCoreUIMessages extends NLS {
 	private static final String BUNDLE_NAME = 
 			"org.wso2.wsf.ide.core.plugin.messages.WSASCoreUI";		//$NON-NLS-1$
 	public static final String DIR_BIN = "bin" ; 					//$NON-NLS-1$
-	public static final String WSAS_START_BAT = "wso2wsas.bat" ; 	//$NON-NLS-1$
+	public static final String WSAS_START_BAT = "startup.bat" ; 	//$NON-NLS-1$
 	public static final String WSAS_START_SH = "wso2wsas.sh" ;      //$NON-NLS-1$
 	public static final String WSAS_STOP_BAT = "shutdown.bat" ; 	//$NON-NLS-1$
 	public static final String WSAS_STOP_SH = "shutdown.sh" ; 		//$NON-NLS-1$
