@@ -23,7 +23,7 @@ public final class WSASCoreUIMessages extends NLS {
 			"org.wso2.wsf.ide.core.plugin.messages.WSASCoreUI";		//$NON-NLS-1$
 	public static final String DIR_BIN = "bin" ; 					//$NON-NLS-1$
 	public static final String WSAS_START_BAT = "wso2wsas.bat" ; 	//$NON-NLS-1$
-	public static final String WSAS_START_SH = "wso2.wsas.sh" ; 	//$NON-NLS-1$
+	public static final String WSAS_START_SH = "wso2wsas.sh" ;      //$NON-NLS-1$
 	public static final String WSAS_STOP_BAT = "shutdown.bat" ; 	//$NON-NLS-1$
 	public static final String WSAS_STOP_SH = "shutdown.sh" ; 		//$NON-NLS-1$
 	
@@ -32,8 +32,8 @@ public final class WSASCoreUIMessages extends NLS {
 	public static final String PROPERTIES_OS_NAME = "os.name" ; 	//$NON-NLS-1$
 	
 	
-	public static final String WSAS_ALREADY_RUNNING = "WSAS Already Running !!" ; 	//$NON-NLS-1$
-	public static final String WSAS_NOT_ACTIVE = "WSAS Instance is not active !!" ; 	//$NON-NLS-1$
+	public static final String WSAS_ALREADY_RUNNING = "WSAS Already Running !!" ;   //$NON-NLS-1$
+	public static final String WSAS_NOT_ACTIVE = "WSAS Instance is not active !!";  //$NON-NLS-1$
 	
 	
 	public static final String OS_WIN_9 = "windows 9" ; 			//$NON-NLS-1$
