@@ -24,6 +24,8 @@ dnl Checks for libraries.
 AC_CHECK_LIB(dl, dlopen)
 AC_CHECK_LIB(z, inflate)
 
+AC_CONFIG_SUBDIRS(src)
+
 axis2_prefix="/usr/local/axis2"
 export axis2_prefix
 if test -d $srcdir/wsf_c; then
