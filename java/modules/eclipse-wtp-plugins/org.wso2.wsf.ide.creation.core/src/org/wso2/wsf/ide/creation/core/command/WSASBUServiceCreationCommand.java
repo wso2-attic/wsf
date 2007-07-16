@@ -127,9 +127,13 @@ public class WSASBUServiceCreationCommand extends
 			//create the package at the destination
 			for (int i = 0; i < matchingFiles.length; i++) {
 				//create the package at the destination
-				String[] result = matchingFiles[i].getAbsolutePath().split(classesDirectory);
+				String[] result = new String[2];
 				String packageString = null;
-				if (result.length==2) {
+				if (matchingFiles[i].getAbsolutePath().contains("\\")) {
+					result[0] = matchingFiles[i].getAbsolutePath().substring(classesDirectory.length());
+					packageString = result[0];
+				}else{
+					result = matchingFiles[i].getAbsolutePath().split(classesDirectory);
 					packageString = result[1];
 				}
 				String classFileDestination = FileUtils.addAnotherNodeToPath(servicesDirectory, packageString );
