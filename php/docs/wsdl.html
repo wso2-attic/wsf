@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <title>WS02 WSF WSDL API</title>
+  <link href="style/api_style.css" rel="stylesheet" type="text/css" media="all" />
+</head>
+
+<body>
+<h1>
+    WSDL Mode
+</h1>
+<p>
+    A user can provide a WSDL ( Web Services Description Language) file obtain a proxy&nbsp;
+    and invoke a service. This is a very convenient way of implementing a client.</p>
+    <p>
+        Following options can be used to configure wsdl mode.</p>
+ <p>
+        <strong id="ws_client_options">
+        WSClient Options for WSDL</strong>
+    </p>
+    <table border="1">
+        <tr>
+            <td style="width: 100px; height: 15px">
+                <strong>Option </strong>
+            </td>
+            <td style="width: 100px; height: 15px">
+                <strong>Data Type</strong></td>
+            <td style="width: 100px; height: 15px">
+                <strong>Value Domain</strong></td>
+            <td style="width: 100px; height: 15px">
+                <strong>Default Value</strong></td>
+            <td style="width: 373px; height: 15px">
+                <strong>Description</strong></td>
+        </tr>
+          <tr>
+                <td style="width: 100px; height: 21px">
+                    wsdl</td>
+                <td style="width: 100px; height: 21px">
+                    string</td>
+                <td style="width: 100px; height: 21px">
+                    this should be uri or&nbsp; a filename</td>
+                <td style="width: 100px; height: 21px">
+                    none</td>
+                <td style="width: 373px; height: 21px">
+                    user can provide a wsdl file or a url of the wsdl file for this option.</td>
+            </tr>
+          
+    </table>
+    <br />
+    <strong>Methods<br />
+        <br />
+        getProxy()<br />
+        <br />
+    </strong>Returns a proxy client object which can is used for dynamic invocation.<br />
+    <br />
+</body>
+</html>
