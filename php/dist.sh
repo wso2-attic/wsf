@@ -30,6 +30,8 @@ sed -i "s/wsf_c/wsf_c src/g" Makefile.in
 sed -i "s/ac_default_prefix=\/usr\/local\/wsf_c/ac_default_prefix=\`php-config \-\-extension\-dir\`\/wsf_c/g" configure
 sed -i "s/subdirs wsf_c/subdirs wsf_c src/g" configure
 sed -i "s/savanc//g" wsf_c/configure
+sed -i "s/\tcp -rf samples\/*.*//g" wsf_c/sandesha2c/Makefile.in
+sed -i "s/\tcp -rf samples\/*.*//g" wsf_c/rampartc/Makefile.in
 
 cd ..
 tar czf wso2-wsf-php-1.0.0beta.tar.gz wso2-wsf-php-1.0.0beta
