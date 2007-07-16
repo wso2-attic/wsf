@@ -7,7 +7,7 @@ data_DATA=config/axis2.xml README \
         INSTALL COPYING NEWS CREDITS NOTICE 
 
 dist-hook:
-	sh dist.sh
+	sh dist_hook.sh
 
 samples:
 	sh build_samples.sh $(prefix)
