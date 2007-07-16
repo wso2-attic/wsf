@@ -107,7 +107,8 @@ WSRequest.prototype.send = function(payload) {
 
     switch (this._soapVer) {
         case 1.1:
-            this._xmlhttp.setRequestHeader("SOAPAction", soapAction == undefined ? '""' : '"' + soapAction + '"');
+            soapAction = (soapAction == undefined ? '""' : '"' + soapAction + '"');
+            this._xmlhttp.setRequestHeader("SOAPAction", soapAction);
             this._xmlhttp.setRequestHeader("Content-Type","text/xml; charset=UTF-8");
             break;
         case 1.2:
