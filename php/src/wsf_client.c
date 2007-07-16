@@ -895,6 +895,7 @@ int wsf_client_do_request(
 		client_ht = Z_ARRVAL_PP(client_tmp);
     }
 	*/
+	axis2_options_set_xml_parser_reset(client_options, env, AXIS2_FALSE);
 
 	client_ht = Z_OBJPROP_P(this_ptr);
     

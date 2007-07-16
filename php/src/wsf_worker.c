@@ -389,7 +389,9 @@ int wsf_worker_process_request(
 		}
    	}	
 
+	if(soap_action_str){
    	axutil_string_free(soap_action_str, env);
+	}
    /*  axis2_msg_ctx_free(msg_ctx, env); */
     return send_status;
 }

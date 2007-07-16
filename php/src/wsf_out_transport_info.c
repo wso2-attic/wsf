@@ -133,7 +133,7 @@ wsf_http_out_transport_info_set_content_type
       
       tmp1 = axutil_stracat(env, content_type, ";charset=");
       tmp2 = axutil_stracat(env, tmp1, info_impl->encoding);
-        info_impl->request->content_type = axutil_strdup(env, tmp2);
+      info_impl->request->content_type = axutil_strdup(env, tmp2);
       AXIS2_FREE(env->allocator, tmp1);
       AXIS2_FREE(env->allocator, tmp2);      
    }

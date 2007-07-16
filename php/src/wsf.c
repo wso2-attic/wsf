@@ -573,9 +573,9 @@ PHP_MINIT_FUNCTION(wsf)
 PHP_MSHUTDOWN_FUNCTION(wsf)
 {
     UNREGISTER_INI_ENTRIES();
-    
+    /*
     axiom_xml_reader_cleanup();
-    
+    */
     axis2_msg_recv_free(wsf_msg_recv, ws_env_svr);
    
     /*
@@ -637,6 +637,7 @@ php_ws_object_new_ex(zend_class_entry *class_type ,
     intern = emalloc(sizeof(ws_object));
     memset(intern, 0, sizeof(ws_object));
     intern->std.ce = class_type;
+	intern->obj_type = WS_NONE;
     *obj = intern;
 
     ALLOC_HASHTABLE(intern->std.properties);
@@ -687,10 +688,9 @@ static void ws_object_dtor(void *object,
         axis2_svc_client_t *svc_client = NULL;
         svc_client = (axis2_svc_client_t*)intern->ptr;
         if(svc_client){
-             axis2_svc_client_free(svc_client, env);
+			axis2_svc_client_free(svc_client, env);
         }
     }
-    /*
     else if(intern->obj_type == WS_SVC){
         wsf_svc_info_t *svc_info = NULL;
         svc_info = (wsf_svc_info_t*)intern->ptr;
@@ -698,7 +698,6 @@ static void ws_object_dtor(void *object,
             wsf_svc_info_free(svc_info, ws_env_svr );    
         }
     }
-    */
 }
 
 static void
@@ -1237,7 +1236,7 @@ PHP_METHOD(ws_service, __construct)
 
     WSF_GET_THIS(obj);
     intern = (ws_object* )zend_object_store_get_object(obj TSRMLS_CC);
-    svc_info = wsf_svc_info_create();
+    svc_info = wsf_svc_info_create(ws_env_svr);
     svc_info->class_info = axutil_hash_make(ws_env_svr);
 
 
@@ -1356,7 +1355,6 @@ PHP_METHOD(ws_service, __construct)
             char *op_name = NULL;
             unsigned int op_name_len = 0;
             unsigned long index = i;
-
 
             char *func_name = NULL;
         

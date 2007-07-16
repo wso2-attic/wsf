@@ -304,16 +304,17 @@ void wsf_env_free(axutil_env_t *env){
 
 }
 
-wsf_svc_info_t* wsf_svc_info_create()
+wsf_svc_info_t* wsf_svc_info_create(axutil_env_t *env)
 {
     wsf_svc_info_t *svc_info = NULL;
-    svc_info = emalloc(sizeof(wsf_svc_info_t));
+	svc_info = AXIS2_MALLOC(env->allocator, sizeof(wsf_svc_info_t)); 
+	/* svc_info = emalloc(sizeof(wsf_svc_info_t)); */
+
     svc_info->svc = NULL;
     svc_info->svc_name = NULL;
     svc_info->is_class = 0;
     svc_info->msg_recv = NULL;
     svc_info->class_info = NULL;
-    svc_info->modules_to_engage = NULL;
     svc_info->php_worker = NULL;
     svc_info->use_mtom = 0;  /* default is false other wise service side will send mime 
 							 headers which some servers can;t handle*/
@@ -323,9 +324,10 @@ wsf_svc_info_t* wsf_svc_info_create()
 
     svc_info->ops_to_functions = NULL;
     svc_info->ops_to_actions = NULL;
-    svc_info->password_location = NULL;
-    svc_info->op_name = NULL;
+    svc_info->modules_to_engage = NULL;
     svc_info->ht_opParams = NULL;
+
+	svc_info->op_name = NULL;
     return svc_info;
 }
 
@@ -336,8 +338,20 @@ void wsf_svc_info_free(wsf_svc_info_t *svc_info, axutil_env_t *env)
     	if(svc_info->svc_name){
 	        AXIS2_FREE(env->allocator, svc_info->svc_name);
 	        svc_info->svc_name = NULL;
-        }		    
-    	efree(svc_info); 
+		}
+		if(svc_info->ops_to_functions){
+			axutil_hash_free(svc_info->ops_to_functions, env);
+		}
+		if(svc_info->ops_to_actions){
+			axutil_hash_free(svc_info->ops_to_actions, env);
+		}
+		if(svc_info->modules_to_engage){
+			axutil_array_list_free(svc_info->modules_to_engage, env);
+		}
+		if(svc_info->op_name != NULL){
+			AXIS2_FREE(env->allocator ,svc_info->op_name);
+		}
+		AXIS2_FREE(env->allocator, svc_info); 
     }
 }
 

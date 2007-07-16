@@ -37,6 +37,7 @@
 /* {{{ axis2 object types */
 typedef enum ws_object_types_t
 {
+	WS_NONE,
     WS_SVC_CLIENT,
     WS_SVC,
     WS_FAULT,
@@ -230,8 +231,6 @@ typedef struct wsf_svc_info {
     zval *security_token;
 
     HashTable *ht_opParams;
-    
-    char *password_location;
     
     char *svc_name;
     /** this is needed in case of request uri dispatching( for rest) */
