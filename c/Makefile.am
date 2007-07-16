@@ -17,5 +17,5 @@ install-data-hook:
 	cp -rf examples/* $(samplesdir)
 
 
-EXTRA_DIST=build_samples.sh config build.bat clean.bat dist.sh docs CREDITS NOTICE examples LICENSE configure.in
+EXTRA_DIST=build_samples.sh config build.bat clean.bat docs CREDITS NOTICE examples LICENSE configure.in
 
