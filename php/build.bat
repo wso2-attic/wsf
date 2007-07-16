@@ -12,7 +12,7 @@
 
 @mkdir wso2-wsf-php-bin-1.0.0beta
 
-@xcopy /E /Q /Y /I wsf_c\wso2-wsf-c-bin-1.0.0 wso2-wsf-php-bin-1.0.0beta\wsf_c
+@xcopy /E /Q /Y /I wsf_c\wso2-wsf-c-bin-1.0.1 wso2-wsf-php-bin-1.0.0beta\wsf_c
 
 @if exist wso2-wsf-php-bin-1.0.0beta\wsf_c\services rmdir /S /Q wso2-wsf-php-bin-1.0.0beta\wsf_c\services
 
