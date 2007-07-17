@@ -1,6 +1,6 @@
 <?php
 
-include_once 'soap_ext/soap_ext.php';
+include_once '../soap_ext/soap_ext.php';
 
 $reqPayloadString = <<<XML
 <ns1:greet xmlns:ns1="http://localhost/axis/helloService"><name>Sam</name></ns1:greet>
