@@ -1222,7 +1222,7 @@ PHP_METHOD(ws_service, __construct)
     HashTable *ht_ops_to_funcs = NULL;
 	HashTable *ht_ops_to_mep = NULL;
 	HashTable *ht_opParams = NULL;
-	soapServicePtr service;
+	soapServicePtr service = NULL;
 	
 	char *wsdl = NULL;
 

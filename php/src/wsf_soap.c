@@ -2673,7 +2673,7 @@ wsf_soap_do_function_call1(const axutil_env_t *env,
     sdlFunctionPtr function;
     int soap_version;
     soapHeader *soap_headers = NULL;
-    soapServicePtr service;
+    soapServicePtr service = NULL;
     char *operation_name = NULL;
     
 
@@ -2693,12 +2693,17 @@ wsf_soap_do_function_call1(const axutil_env_t *env,
     }
 
     service = (soapServicePtr)svc_info->service;
-
-    function = deserialize_function_call(service->sdl, doc_request, 
-            service->actor, &function_name, &num_params, 
-            &params, &soap_version, &soap_headers TSRMLS_CC);
-
-    xmlFreeDoc(doc_request);   
+    
+    if(service == NULL){
+        function = deserialize_function_call(NULL, doc_request,
+                          NULL , &function_name, &num_params,
+                          &params, &soap_version, &soap_headers TSRMLS_CC);
+    }else{        
+        function = deserialize_function_call(service->sdl, doc_request, 
+                service->actor, &function_name, &num_params, 
+                &params, &soap_version, &soap_headers TSRMLS_CC);
+                xmlFreeDoc(doc_request);   
+    }
     if(svc_info->ops_to_functions){
         operation_name = axutil_hash_get(svc_info->ops_to_functions, Z_STRVAL(function_name), AXIS2_HASH_KEY_STRING);
         if(!operation_name)
@@ -2737,9 +2742,17 @@ wsf_soap_do_function_call1(const axutil_env_t *env,
             memcpy(response_name,Z_STRVAL(function_name),Z_STRLEN(function_name));
             memcpy(response_name+Z_STRLEN(function_name),"Response",sizeof("Response"));
         }
-        doc_return = serialize_response_call(function, response_name, 
-                service->uri, &retval, soap_headers, soap_version TSRMLS_CC);
+            if(service == NULL){
+                doc_return = serialize_response_call(function, response_name, 
+                        NULL, &retval, soap_headers, soap_version TSRMLS_CC);
+            }else{
+                doc_return = serialize_response_call(function, response_name,
+                        service->uri, &retval, soap_headers, soap_version TSRMLS_CC);  
+            }
+
         efree(response_name);
+
+
     } else {
         php_error_docref(NULL TSRMLS_CC, E_ERROR, "Function '%s' call failed", Z_STRVAL(function_name));
     }

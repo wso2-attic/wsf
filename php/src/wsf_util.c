@@ -326,7 +326,7 @@ wsf_svc_info_t* wsf_svc_info_create(axutil_env_t *env)
     svc_info->ops_to_actions = NULL;
     svc_info->modules_to_engage = NULL;
     svc_info->ht_opParams = NULL;
-
+    svc_info->service = NULL;
 	svc_info->op_name = NULL;
     return svc_info;
 }

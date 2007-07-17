@@ -56,7 +56,7 @@ wsf_xml_msg_recv_invoke_wsmsg(
     int request_xop TSRMLS_DC);
 
 
-
+/*
 static int
 wsf_xml_msg_recv_invoke_mixed(
     const axutil_env_t *env,
@@ -64,7 +64,7 @@ wsf_xml_msg_recv_invoke_mixed(
     axis2_msg_ctx_t *in_msg_ctx,
     axis2_msg_ctx_t *out_msg_ctx,
     axis2_char_t *op_name TSRMLS_DC);
-
+*/
 static void 
 wsf_xml_msg_recv_set_soap_fault(
     const axutil_env_t *env,
@@ -232,9 +232,11 @@ wsf_xml_msg_recv_invoke_business_logic_sync(
                     operation_name, strlen(operation_name) +1, (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp)== IS_STRING){
                     function_type = Z_STRVAL_PP(tmp);
                     if(strcmp(function_type, "MIXED") == 0){
+                        /*
                         wsf_xml_msg_recv_invoke_mixed(env, svc_info  ,in_msg_ctx, out_msg_ctx, operation_name TSRMLS_CC);
                         return AXIS2_SUCCESS;
-
+                        */
+                        return AXIS2_FAILURE;
                     }else if(strcmp(function_type, "WSMESSAGE") == 0){
                         result_node = wsf_xml_msg_recv_invoke_wsmsg(env, soap_ns, operation_name, om_node,
                                         out_msg_ctx, class_info, use_mtom, request_xop TSRMLS_CC);
@@ -429,7 +431,7 @@ static axis2_char_t* wsf_xml_msg_recv_get_method_name(axis2_msg_ctx_t *msg_ctx,
 	return name;
 }
 
-
+/*
 static int 
 wsf_xml_msg_recv_invoke_mixed(
     const axutil_env_t *env,
@@ -442,7 +444,7 @@ wsf_xml_msg_recv_invoke_mixed(
     return wsf_soap_do_function_call(env,
                           svc_info, in_msg_ctx, out_msg_ctx, op_name TSRMLS_CC);
 }
-
+*/
 
 static axiom_node_t* 
 wsf_xml_msg_recv_invoke_wsmsg(
