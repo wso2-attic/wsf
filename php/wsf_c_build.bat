@@ -51,6 +51,7 @@ rem Build Neethi util
 @cd ..\..\
 @cd axis2c\neethi\src\util
 @nmake -f neethi_util.mk AXIS2_BIN_DIR=..\..\..\build\axis2c-bin-1.1.0-win32 AUTOCONF=..\..\..\..\configure.in
+@copy neethi_options.h ..\..\..\build\axis2c-bin-1.1.0-win32\include
 @cd ..\..\..\..\
 
 :pack_wsfc
