@@ -1692,13 +1692,11 @@ PHP_METHOD(ws_service , reply)
     req_info->content_type = (char*)SG(request_info).content_type;
     req_info->request_method = (char*)SG(request_info).request_method;
     req_info->query_string = (char*)SG(request_info).query_string;
-	
 
     if ((zend_hash_find(Z_OBJPROP_P(this_ptr) , "wsdlmode" , sizeof("wsdlmode"),
                             (void**)&tmp)) == SUCCESS && Z_TYPE_PP(tmp) == IS_LONG){
             in_wsdl_mode = 1;
     }
-
     if (zend_hash_find(&EG(symbol_table), "HTTP_RAW_POST_DATA", sizeof("HTTP_RAW_POST_DATA"), (void **) &raw_post)!=FAILURE
             && ((*raw_post)->type==IS_STRING)){
 
@@ -1750,17 +1748,11 @@ PHP_METHOD(ws_service , reply)
 
         /** getting the correct binding style */
         if ((zend_hash_find(Z_OBJPROP_P(obj), WS_BINDING_STYLE, sizeof(WS_BINDING_STYLE),
-                            (void**)&tmpval)) == SUCCESS && Z_TYPE_PP(tmpval) == IS_STRING)
-        {
+                            (void**)&tmpval)) == SUCCESS && Z_TYPE_PP(tmpval) == IS_STRING){
             binding_name = Z_STRVAL_PP(tmpval);
-
-        }
-
-        else
-        {
+        }else{
             binding_name = estrdup("doc-lit");
         }
-
         /** find the functions in the service.php file */
         MAKE_STD_ZVAL(f_val);
         array_init(f_val);
@@ -1768,11 +1760,10 @@ PHP_METHOD(ws_service , reply)
         MAKE_STD_ZVAL(op_val);
         array_init(op_val);
 
-        if (svc_info->ops_to_functions)
-        {
+        if (svc_info->ops_to_functions){
+
             for(hi = axutil_hash_first(svc_info->ops_to_functions, ws_env_svr);
-                    hi; hi = axutil_hash_next(ws_env_svr, hi))
-            {
+                    hi; hi = axutil_hash_next(ws_env_svr, hi)){
                 void *v = NULL;
                 const void *k = NULL;
                 axis2_char_t *f_key = NULL;
@@ -1782,17 +1773,22 @@ PHP_METHOD(ws_service , reply)
                 f_name = (axis2_char_t *)v;
                 add_next_index_string(f_val, (char *)f_name, 1);
                 /* add_next_index_string(op_val, (char *)f_key, 1); */
-                add_assoc_string(op_val, (char *)f_key, (char *)f_name, 1);
+                add_assoc_string(op_val, (char*)f_key, (char *)f_name, 1);
             }
         }
         ZVAL_STRING(&func, "ws_generate_wsdl", 1);
         ZVAL_STRING(params[0], "scripts/wsdl/WS_WSDL_Creator.php", 1);
+        INIT_PZVAL(params[0]);
         ZVAL_STRING(params[1], service_name, 1);
+        INIT_PZVAL(params[1]);
         ZVAL_ZVAL(params[2], f_val, NULL, NULL);
         INIT_PZVAL(params[2]);
         ZVAL_STRING(params[3], binding_name, 1);
+        INIT_PZVAL(params[3]);
         ZVAL_STRING(params[4], wsdl_version, 1);
+        INIT_PZVAL(params[4]);
         ZVAL_STRING(params[5], full_path, 1);
+        INIT_PZVAL(params[5]);
         ZVAL_ZVAL(params[6], op_val, NULL, NULL);
         INIT_PZVAL(params[6]);
 
@@ -1808,7 +1804,7 @@ PHP_METHOD(ws_service , reply)
         else
         {
             php_execute_script(&script TSRMLS_CC);
-            if (call_user_function(CG(function_table), (zval**)NULL,
+            if (call_user_function(EG(function_table), (zval**)NULL,
                                    &func, &retval, 7, params TSRMLS_CC ) == SUCCESS)
             {
                 if (Z_TYPE_P(&retval) == IS_STRING && Z_TYPE_P(&retval) != IS_NULL)
