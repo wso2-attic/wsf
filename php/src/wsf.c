@@ -1822,14 +1822,7 @@ PHP_METHOD(ws_service , reply)
         }
         /** end Wsdl generation stuff */
     }
-    else if(in_wsdl_mode == 1){
-        if(raw_post_null){
-            wsf_soap_send_fault(SOAP_1_1, "SOAP-ENV:Server","Bad Request. Can't find HTTP_RAW_POST_DATA", NULL TSRMLS_CC);
-
-            return;
-        }
-        wsf_soap_do_function_call1(env, svc_info, this_ptr, req_info->req_data , req_info->req_data_length TSRMLS_CC);
-    }else{
+   else{
 
         conf = axis2_conf_ctx_get_conf(conf_ctx, ws_env_svr);
         if(!axis2_conf_get_svc(conf, ws_env_svr, svc_info->svc_name))
@@ -1870,6 +1863,14 @@ PHP_METHOD(ws_service , reply)
         }
         else if(status == WS_HTTP_INTERNAL_SERVER_ERROR)
         {
+			axis2_bool_t status = AXIS2_SUCCESS;
+            if(raw_post_null){
+				wsf_soap_send_fault(SOAP_1_1, "SOAP-ENV:Server","Bad Request. Can't find HTTP_RAW_POST_DATA", NULL TSRMLS_CC);
+                return;
+			}
+			    
+			status = wsf_soap_do_function_call1(env, svc_info, this_ptr, req_info->req_data , req_info->req_data_length TSRMLS_CC);
+		    if(status == AXIS2_FALSE){	
             sprintf(status_line, "%s 500 Internal Server Error", req_info->http_protocol);
             sapi_add_header(status_line,strlen(status_line), 1);
             if(req_info->content_type)
@@ -1882,6 +1883,7 @@ PHP_METHOD(ws_service , reply)
                     php_write(req_info->result_payload, req_info->result_length TSRMLS_CC);
                 }
             }
+			}
         }
     }
 }
