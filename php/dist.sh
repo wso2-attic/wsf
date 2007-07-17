@@ -35,4 +35,6 @@ sed -i "s/\tcp -rf samples\/*.*//g" wsf_c/rampartc/Makefile.in
 
 cd ..
 tar czf wso2-wsf-php-1.0.0beta.tar.gz wso2-wsf-php-1.0.0beta
+zip -rq wso2-wsf-php-1 wso2-wsf-php-1.0.0beta
+mv wso2-wsf-php-1.zip wso2-wsf-php-1.0.0beta.zip
 rm -rf wso2-wsf-php-1.0.0beta
