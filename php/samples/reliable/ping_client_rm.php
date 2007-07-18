@@ -25,7 +25,7 @@ try {
 
     $msg = new WSMessage($reqPayloadString,
 			array(
-			   "to"=>"http://localhost/samples/ping_service_rm.php",
+			   "to"=>"http://localhost/samples/reliable/ping_service_rm.php",
               "action" => "http://php.axis2.org/samples/echoString"));
 
     $client = new WSClient(array("reliable"=>TRUE,"useWSA" => TRUE));
