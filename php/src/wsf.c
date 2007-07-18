@@ -40,8 +40,10 @@
 #include "wsf_xml_msg_recv.h"
 #include <php_main.h>
 #include "wsf_soap.h"
-    ZEND_DECLARE_MODULE_GLOBALS (wsf) 
-    zend_class_entry * ws_client_class_entry;
+
+ZEND_DECLARE_MODULE_GLOBALS (wsf) 
+
+zend_class_entry * ws_client_class_entry;
 zend_class_entry * ws_service_class_entry;
 zend_class_entry * ws_header_class_entry;
 zend_class_entry * ws_fault_class_entry;
@@ -53,34 +55,30 @@ zend_class_entry * ws_policy_class_entry;
 zend_class_entry * ws_param_class_entry;
 
 /** definitions from ext/soap */ 
-    int
-        le_url;
-    int
-        le_sdl;
-    int
-        le_typemap;
-    int
-        le_service;
+int le_url;
+int le_sdl;
+int le_typemap;
+int le_service;
+
 HashTable defEnc, defEncIndex, defEncNs;
 
 /** end definitions from ext/soap */ 
     
 /* True global values, worker is thread safe,
  *  message receiver does not have state*/ 
-    static axutil_env_t *
-        env;
-    static axutil_env_t *
-        ws_env_svr;
+static axutil_env_t *env;
+static axutil_env_t *ws_env_svr;
 axis2_msg_recv_t * wsf_msg_recv;
 wsf_worker_t * worker;
 
 /** WSMessage functions */ 
-    PHP_METHOD (ws_message, __construct);
+PHP_METHOD (ws_message, __construct);
 PHP_METHOD (ws_message, __get);
 ZEND_BEGIN_ARG_INFO (__ws_message_get_args, 0) 
 ZEND_ARG_PASS_INFO (0)  ZEND_END_ARG_INFO ()  
 /** Client functions */ 
-    PHP_METHOD (ws_client, __construct);
+
+PHP_METHOD (ws_client, __construct);
 PHP_METHOD (ws_client, __destruct);
 PHP_METHOD (ws_client, __call);
 PHP_METHOD (ws_client, request);
@@ -90,136 +88,127 @@ PHP_METHOD (ws_client, get_last_request);
 PHP_METHOD (ws_client, get_last_response_headers);
 PHP_METHOD (ws_client, get_proxy);
 PHP_METHOD (ws_client, terminate_outgoing_rm);
-    static 
-    ZEND_BEGIN_ARG_INFO (
-    ws_client_call_args,
-    0) 
-ZEND_ARG_PASS_INFO (
-    0) 
-ZEND_ARG_PASS_INFO (
-    0) 
-ZEND_END_ARG_INFO (
-)  
+
+static 
+ZEND_BEGIN_ARG_INFO (ws_client_call_args, 0) 
+ZEND_ARG_PASS_INFO (0) 
+ZEND_ARG_PASS_INFO (0) 
+ZEND_END_ARG_INFO ()  
 /** WSService */ 
-PHP_METHOD (
-    ws_service,
-    set_class);
+PHP_METHOD (ws_service, set_class);
 PHP_METHOD (ws_service, reply);
 PHP_METHOD (ws_service, __construct);
 PHP_METHOD (ws_service, __destruct);
 
 /** WSHeader class functions */ 
-    PHP_METHOD (ws_header, __construct);
+PHP_METHOD (ws_header, __construct);
 
 /* WSSecurityToken class functions */ 
-    PHP_METHOD (ws_security_token, __construct);
+PHP_METHOD (ws_security_token, __construct);
 PHP_FUNCTION (ws_get_key_from_file);
 PHP_FUNCTION (ws_get_cert_from_file);
 
 /** WSFault */ 
-    PHP_METHOD (ws_fault, __construct);
+PHP_METHOD (ws_fault, __construct);
 PHP_METHOD (ws_fault, __destruct);
 PHP_METHOD (ws_fault, __get);
 
 /** WSPolicy class functions */ 
-    PHP_METHOD (ws_policy, __construct);
+PHP_METHOD (ws_policy, __construct);
 
 /** WSClientProxy class functions */ 
-    PHP_METHOD (ws_client_proxy, __construct);
+PHP_METHOD (ws_client_proxy, __construct);
 PHP_METHOD (ws_client_proxy, __call);
 PHP_METHOD (ws_client_proxy, __destruct);
 PHP_METHOD (ws_client_proxy, get_functions);
 PHP_METHOD (ws_client_proxy, get_types);
 PHP_METHOD (ws_client_proxy, get_location);
-    static 
-    ZEND_BEGIN_ARG_INFO (
-    ws_client_proxy_call_args,
-    0) 
-ZEND_ARG_PASS_INFO (
-    0) 
-ZEND_ARG_PASS_INFO (
-    0) 
-ZEND_END_ARG_INFO (
-)  
-ZEND_BEGIN_ARG_INFO (
-    __ws_fault_get_args,
-    0) 
-ZEND_ARG_PASS_INFO (
-    0) 
-ZEND_END_ARG_INFO (
-)  zend_function_entry php_ws_message_class_functions[] =
-{
+
+static 
+ZEND_BEGIN_ARG_INFO ( ws_client_proxy_call_args, 0) 
+ZEND_ARG_PASS_INFO (0) 
+ZEND_ARG_PASS_INFO (0) 
+ZEND_END_ARG_INFO ()
+
+ZEND_BEGIN_ARG_INFO ( __ws_fault_get_args, 0) 
+ZEND_ARG_PASS_INFO (0) 
+ZEND_END_ARG_INFO ()  
+    
+zend_function_entry php_ws_message_class_functions[] ={
     PHP_ME (ws_message, __construct, NULL, ZEND_ACC_PUBLIC) 
-        PHP_ME (ws_message, __get, __ws_message_get_args, ZEND_ACC_PUBLIC)  {
-NULL, NULL, NULL} };
+    PHP_ME (ws_message, __get, __ws_message_get_args, ZEND_ACC_PUBLIC) 
+    { NULL, NULL, NULL} };
 
 
 /** client function entry */ 
-    zend_function_entry php_ws_client_class_functions[] = {
+zend_function_entry php_ws_client_class_functions[] = {
     PHP_MALIAS (ws_client, request, request, NULL, ZEND_ACC_PUBLIC) 
-        PHP_MALIAS (ws_client, send, send, NULL, ZEND_ACC_PUBLIC) 
-        PHP_MALIAS (ws_client, getLastResponse, get_last_response, NULL,
-        ZEND_ACC_PUBLIC)  PHP_MALIAS (ws_client, getLastRequest,
-        get_last_request, NULL, ZEND_ACC_PUBLIC)  PHP_MALIAS (ws_client,
-        getProxy, get_proxy, NULL, ZEND_ACC_PUBLIC)  PHP_MALIAS (ws_client,
-        terminateOutgoingRM, terminate_outgoing_rm, NULL,
-        ZEND_ACC_PUBLIC)  PHP_MALIAS (ws_client, getLastResponseHeaders,
-        get_last_response_headers, NULL, ZEND_ACC_PUBLIC)  PHP_ME (ws_client,
-        __call, ws_client_call_args, ZEND_ACC_PUBLIC)  PHP_ME (ws_client,
-        __construct, NULL, ZEND_ACC_PUBLIC)  PHP_ME (ws_client, __destruct,
-        NULL, ZEND_ACC_PUBLIC)  {
-NULL, NULL, NULL} };
+    PHP_MALIAS (ws_client, send, send, NULL, ZEND_ACC_PUBLIC) 
+    PHP_MALIAS (ws_client, getLastResponse, get_last_response, NULL, ZEND_ACC_PUBLIC)
+    PHP_MALIAS (ws_client, getLastRequest, get_last_request, NULL, ZEND_ACC_PUBLIC)
+    PHP_MALIAS (ws_client, getProxy, get_proxy, NULL, ZEND_ACC_PUBLIC)
+    PHP_MALIAS (ws_client, terminateOutgoingRM, terminate_outgoing_rm, NULL, ZEND_ACC_PUBLIC)
+    PHP_MALIAS (ws_client, getLastResponseHeaders,get_last_response_headers, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME (ws_client, __call, ws_client_call_args, ZEND_ACC_PUBLIC)
+    PHP_ME (ws_client, __construct, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME (ws_client, __destruct,  NULL, ZEND_ACC_PUBLIC)
+    { NULL, NULL, NULL} 
+};
 
 zend_function_entry php_ws_client_proxy_class_functions[] = {
-    PHP_ME (ws_client_proxy, __call, ws_client_proxy_call_args,
-        ZEND_ACC_PUBLIC)  PHP_ME (ws_client_proxy, __construct, NULL,
-        ZEND_ACC_PUBLIC)  PHP_ME (ws_client, __destruct, NULL,
-        ZEND_ACC_PUBLIC)  PHP_MALIAS (ws_client_proxy, getFunctions,
-        get_functions, NULL, ZEND_ACC_PUBLIC)  PHP_MALIAS (ws_client_proxy,
-        getTypes, get_types, NULL,
-        ZEND_ACC_PUBLIC)  PHP_MALIAS (ws_client_proxy, getLocation,
-        get_location, NULL, ZEND_ACC_PUBLIC)  {
-NULL, NULL, NULL} };
+    PHP_ME (ws_client_proxy, __call, ws_client_proxy_call_args, ZEND_ACC_PUBLIC)
+        PHP_ME (ws_client_proxy, __construct, NULL, ZEND_ACC_PUBLIC)
+        PHP_ME (ws_client, __destruct, NULL, ZEND_ACC_PUBLIC)
+        PHP_MALIAS (ws_client_proxy, getFunctions, get_functions, NULL, ZEND_ACC_PUBLIC)  
+        PHP_MALIAS (ws_client_proxy, getTypes, get_types, NULL, ZEND_ACC_PUBLIC)  
+        PHP_MALIAS (ws_client_proxy, getLocation, get_location, NULL, ZEND_ACC_PUBLIC)  
+        { NULL, NULL, NULL} 
+};
 
 
 /** service function entry */ 
-    zend_function_entry php_ws_service_class_functions[] = {
+zend_function_entry php_ws_service_class_functions[] = {
     PHP_MALIAS (ws_service, setClass, set_class, NULL, ZEND_ACC_PUBLIC) 
-        PHP_MALIAS (ws_service, reply, reply, NULL, ZEND_ACC_PUBLIC) 
-        PHP_ME (ws_service, __construct, NULL, ZEND_ACC_PUBLIC) 
-        PHP_ME (ws_service, __destruct, NULL, ZEND_ACC_PUBLIC)  {
-NULL, NULL, NULL} };
+    PHP_MALIAS (ws_service, reply, reply, NULL, ZEND_ACC_PUBLIC) 
+    PHP_ME (ws_service, __construct, NULL, ZEND_ACC_PUBLIC) 
+    PHP_ME (ws_service, __destruct, NULL, ZEND_ACC_PUBLIC)  
+    { NULL, NULL, NULL} 
+};
 
 
 /** WSFault class entry */ 
-    zend_function_entry php_ws_fault_class_functions[] = {
+zend_function_entry php_ws_fault_class_functions[] = {
     PHP_ME (ws_fault, __construct, NULL, ZEND_ACC_PUBLIC) 
-        PHP_ME (ws_fault, __destruct, NULL, ZEND_ACC_PUBLIC) 
-        PHP_ME (ws_fault, __get, __ws_fault_get_args, ZEND_ACC_PUBLIC)  {
-NULL, NULL, NULL} };
+    PHP_ME (ws_fault, __destruct, NULL, ZEND_ACC_PUBLIC) 
+    PHP_ME (ws_fault, __get, __ws_fault_get_args, ZEND_ACC_PUBLIC)  
+    { NULL, NULL, NULL} 
+};
 
 
 /* {{{ WSHeader class functions */ 
-    zend_function_entry php_ws_header_class_functions[] = {
-    PHP_ME (ws_header, __construct, NULL, ZEND_ACC_PUBLIC)  {
-NULL, NULL, NULL} };
+zend_function_entry php_ws_header_class_functions[] = {
+    PHP_ME (ws_header, __construct, NULL, ZEND_ACC_PUBLIC)  
+    { NULL, NULL, NULL} 
+};
 
 zend_function_entry php_ws_security_token_class_functions[] = {
-    PHP_ME (ws_security_token, __construct, NULL, ZEND_ACC_PUBLIC)  {
-NULL, NULL, NULL} };
+    PHP_ME (ws_security_token, __construct, NULL, ZEND_ACC_PUBLIC)
+    { NULL, NULL, NULL} 
+};
 
 zend_function_entry php_ws_policy_class_functions[] = {
-    PHP_ME (ws_policy, __construct, NULL, ZEND_ACC_PUBLIC)  {
-NULL, NULL, NULL} };
+    PHP_ME (ws_policy, __construct, NULL, ZEND_ACC_PUBLIC)  
+    { NULL, NULL, NULL} 
+};
 
 
 /* {{{ wsf_functions[] */ 
-    zend_function_entry wsf_functions[] = {
+zend_function_entry wsf_functions[] = {
     PHP_FE (is_ws_fault, NULL) 
-        PHP_FE (ws_get_key_from_file, NULL) 
-        PHP_FE (ws_get_cert_from_file, NULL) 
-        PHP_FE (ws_test_function, NULL)  {
-    NULL, NULL, NULL} /* Must be the last line in wsf_functions[] */ 
+    PHP_FE (ws_get_key_from_file, NULL) 
+    PHP_FE (ws_get_cert_from_file, NULL) 
+    PHP_FE (ws_test_function, NULL)  
+    { NULL, NULL, NULL} 
 };
 
 
@@ -227,183 +216,57 @@ NULL, NULL, NULL} };
 static zend_object_handlers ws_object_handlers;
 
 /** object creation and destruction functions */ 
-static zend_object_value  php_ws_object_new (
-    zend_class_entry * class_type TSRMLS_DC);
-static zend_object_value  php_ws_object_new_ex (
-    zend_class_entry * class_type,
-    ws_object ** obj TSRMLS_DC);
+static zend_object_value  
+php_ws_object_new ( zend_class_entry * class_type TSRMLS_DC);
 
-/*
-static zval* ws_create_object(void *obj, int obj_type,
-                              zend_class_entry* class_type TSRMLS_DC);
-static void ws_object_dtor(void *object,
-            zend_object_handle handle TSRMLS_DC);
+static zend_object_value  
+php_ws_object_new_ex ( zend_class_entry * class_type, ws_object ** obj TSRMLS_DC);
 
-*/ 
-static void ws_objects_free_storage (
-    void *object TSRMLS_DC);
-
-/* {{{ proto create an WSFault object */ 
-    void
-ws_throw_soap_fault (
-    axiom_soap_body_t * soap_body TSRMLS_DC) 
-{
-    
-        /*
-           if(soap_body)
-           {
-           zval *zval_ws_fault = NULL;
-           axiom_soap_fault_t *soap_fault = NULL;
-           if(AXIOM_SOAP_BODY_HAS_FAULT(soap_body, env))
-           {
-           soap_fault = AXIOM_SOAP_BODY_GET_FAULT(soap_body, env);
-           if(soap_fault)
-           {
-           int soap_version;
-           axis2_char_t *fault_code = NULL;
-           axiom_soap_fault_code_t *sf_code = NULL;
-           axiom_node_t *sf_code_node = NULL;
-           axis2_char_t *fault_reason = NULL;
-           axiom_soap_fault_reason_t *sf_reason = NULL;
-           axiom_node_t *sf_reason_node = NULL;
-           axis2_char_t *fault_role = NULL;
-           axiom_soap_fault_role_t *sf_role = NULL;
-           axiom_node_t *sf_role_node = NULL;
-           axis2_char_t *fault_detail = NULL;
-           axiom_node_t *sf_detail_node = NULL;
-           axiom_soap_fault_detail_t *sf_detail = NULL;
-           
-           if(AXIOM_SOAP_BODY_GET_SOAP_VERSION(soap_body, env) == AXIOM_SOAP12)
-           soap_version = AXIOM_SOAP12;
-           else if(AXIOM_SOAP_BODY_GET_SOAP_VERSION(soap_body, env) == AXIOM_SOAP11)
-           soap_version = AXIOM_SOAP11;
-           else
-           return;
-           
-           
-           MAKE_STD_ZVAL(zval_ws_fault);
-           object_init_ex(zval_ws_fault, ws_fault_class_entry);
-           add_property_long(zval_ws_fault, "soap_version", soap_version);
-           sf_code = AXIOM_SOAP_FAULT_GET_CODE(soap_fault, env);
-           if(sf_code)
-           {
-           sf_code_node = AXIOM_SOAP_FAULT_CODE_GET_BASE_NODE(sf_code, env);
-           if(sf_code_node)
-           {
-           fault_code = AXIOM_NODE_TO_STRING(sf_code_node, env);
-           add_property_string(zval_ws_fault, "code", fault_code, 1);
-           }
-           }
-           sf_reason = AXIOM_SOAP_FAULT_GET_REASON(soap_fault, env);
-           if(sf_reason)
-           {
-           sf_reason_node = AXIOM_SOAP_FAULT_REASON_GET_BASE_NODE(sf_reason, env);
-           if(sf_reason_node)
-           {
-           fault_reason = AXIOM_NODE_TO_STRING(sf_reason_node, env);
-           add_property_string(zval_ws_fault, "reason", fault_reason, 1);
-           }
-           }
-           sf_role = AXIOM_SOAP_FAULT_GET_ROLE(soap_fault, env);
-           if(sf_role)
-           {
-           sf_role_node = AXIOM_SOAP_FAULT_GET_BASE_NODE(soap_fault, env);
-           if(sf_role_node)
-           {
-           fault_reason = AXIOM_NODE_TO_STRING(sf_role_node, env);
-           add_property_string(zval_ws_fault, "role", fault_role, 1);
-           }
-           }
-           sf_detail = AXIOM_SOAP_FAULT_GET_DETAIL(soap_fault, env);
-           if(sf_detail)
-           {
-           sf_detail_node = AXIOM_SOAP_FAULT_GET_BASE_NODE(soap_fault, env);
-           if(sf_detail_node)
-           {
-           fault_detail = AXIOM_NODE_TO_STRING(sf_detail_node, env);
-           add_property_string(zval_ws_fault, "detail", fault_detail, 1);
-           }
-           }
-           zend_throw_exception_object(zval_ws_fault TSRMLS_CC);
-           }
-           }
-           else
-           {
-           zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 1 TSRMLS_CC,
-           "cannot find soap body");
-           }
-           }
-         */ 
-} 
+static void ws_objects_free_storage (void *object TSRMLS_DC);
 
 /* {{{ proto ws_get_xml_node
 */ 
-    static xmlNodePtr
-ws_get_xml_node (
-    zval * node) 
+static xmlNodePtr
+ws_get_xml_node(zval * node) 
 {
     php_libxml_node_object * object;
     xmlNodePtr nodep;
     TSRMLS_FETCH ();
-    object =
-        (php_libxml_node_object *) zend_object_store_get_object (node
-        TSRMLS_CC);
+    object =  (php_libxml_node_object *) 
+        zend_object_store_get_object (node TSRMLS_CC);
+
     nodep = php_libxml_import_node (node TSRMLS_CC);
-    if (!nodep)
-         {
+    if (!nodep){
         return NULL;
-        }
-    if (nodep->doc == NULL)
-         {
+    }
+    if (nodep->doc == NULL){
         php_error_docref (NULL TSRMLS_CC, E_WARNING,
             "Imported Node must have \
                          associated Document");
         return NULL;
-        }
+    }
     if (nodep->type == XML_DOCUMENT_NODE
-        || nodep->type == XML_HTML_DOCUMENT_NODE)
-         {
+        || nodep->type == XML_HTML_DOCUMENT_NODE){
         nodep = xmlDocGetRootElement ((xmlDocPtr) nodep);
-        }
+    }
     return nodep;
 }
-
-
 /* }}} end ws_get_xml_node */ 
-/*
-static xmlDocPtr ws_get_xml_doc(zval *node)
-{
-    php_libxml_node_object *object;
-    xmlNodePtr nodep;
-
-    TSRMLS_FETCH();
-    object = (php_libxml_node_object *)zend_object_store_get_object(node TSRMLS_CC);
-    nodep = php_libxml_import_node(node TSRMLS_CC);
-    if (!nodep)
-    {
-        return NULL;
-    }
-    if (nodep->doc == NULL)
-    {
-        php_error_docref(NULL TSRMLS_CC, E_WARNING, "Imported Node must have \
-                         associated Document");
-        return NULL;
-    }
-	return nodep->doc;
-}
-*/ 
     
 /* {{{ wsf_module_entry */ 
-    zend_module_entry wsf_module_entry = {
-    
-#if ZEND_MODULE_API_NO >= 20010901
-        STANDARD_MODULE_HEADER, 
-#endif  /*  */
-        "wsf", wsf_functions, PHP_MINIT (wsf), PHP_MSHUTDOWN (wsf),
-        PHP_RINIT (wsf), PHP_RSHUTDOWN (wsf), PHP_MINFO (wsf), 
+zend_module_entry wsf_module_entry = {
 #if ZEND_MODULE_API_NO >= 20010901 
-        "1.0", /* Replace with version number for your extension */ 
+    STANDARD_MODULE_HEADER, 
 #endif  /*  */
+   "wsf", wsf_functions, 
+   PHP_MINIT (wsf), 
+   PHP_MSHUTDOWN (wsf),
+   PHP_RINIT (wsf), 
+   PHP_RSHUTDOWN (wsf), 
+   PHP_MINFO (wsf), 
+#if ZEND_MODULE_API_NO >= 20010901 
+   "1.0", 
+#endif  
 STANDARD_MODULE_PROPERTIES };
 
 
@@ -412,31 +275,25 @@ STANDARD_MODULE_PROPERTIES };
 #ifdef COMPILE_DL_WSF
     ZEND_GET_MODULE (wsf) 
 #endif  /*  */
-    ZEND_INI_MH (OnUpdateCacheEnabled) 
-{
+ZEND_INI_MH (OnUpdateCacheEnabled) {
     long *p;
     
 #ifndef ZTS
     char *base = (char *) mh_arg2;
-    
 #else   /*  */
     char *base;
     base = (char *) ts_resource (*((int *) mh_arg2));
-    
 #endif  /*  */
-        p = (long *) (base + (size_t) mh_arg1);
+    p = (long *) (base + (size_t) mh_arg1);
     if (new_value_length == 2 && strcasecmp ("on", new_value) == 0) {
         *p = 1;
     }
-    
     else if (new_value_length == 3 && strcasecmp ("yes", new_value) == 0) {
         *p = 1;
     }
-    
     else if (new_value_length == 4 && strcasecmp ("true", new_value) == 0) {
         *p = 1;
     }
-    
     else {
         *p = (long) (atoi (new_value) != 0);
     } return SUCCESS;
@@ -444,34 +301,33 @@ STANDARD_MODULE_PROPERTIES };
 
 
 /* {{{ PHP_INI */ 
-    PHP_INI_BEGIN () 
-STD_PHP_INI_ENTRY ("wsf.home", NULL, PHP_INI_ALL, OnUpdateString, home,
-    zend_wsf_globals, wsf_globals)  STD_PHP_INI_ENTRY ("wsf.log_path",
-    "/tmp", PHP_INI_ALL, OnUpdateString, log_path, zend_wsf_globals,
-    wsf_globals)  STD_PHP_INI_ENTRY ("wsf.enable_trace", "1", PHP_INI_ALL,
-    OnUpdateBool, enable_trace, zend_wsf_globals,
-    wsf_globals)  STD_PHP_INI_ENTRY ("wsf.enable_exception", "1",
-    PHP_INI_ALL, OnUpdateBool, enable_exception, zend_wsf_globals,
-    wsf_globals)  STD_PHP_INI_ENTRY ("wsf.rm_db_dir", "/tmp", PHP_INI_ALL,
-    OnUpdateString, rm_db_dir, zend_wsf_globals,
-    wsf_globals)  STD_PHP_INI_ENTRY ("wsf.wsdl_cache_enabled", "1",
-    PHP_INI_ALL, OnUpdateCacheEnabled, cache, zend_wsf_globals,
-    wsf_globals)  STD_PHP_INI_ENTRY ("wsf.wsdl_cache_dir", "/tmp",
-    PHP_INI_ALL, OnUpdateString, cache_dir, zend_wsf_globals,
-    wsf_globals)  STD_PHP_INI_ENTRY ("wsf.wsdl_cache_ttl", "86400",
-    PHP_INI_ALL, OnUpdateLong, cache_ttl, zend_wsf_globals,
-    wsf_globals)  STD_PHP_INI_ENTRY ("wsf.wsdl_cache", "1", PHP_INI_ALL,
-    OnUpdateLong, cache, zend_wsf_globals,
-    wsf_globals)  STD_PHP_INI_ENTRY ("wsf.wsdl_cache_limit", "5",
-    PHP_INI_ALL, OnUpdateLong, cache_limit, zend_wsf_globals,
-    wsf_globals)  PHP_INI_END () 
+PHP_INI_BEGIN () 
+STD_PHP_INI_ENTRY ("wsf.home", NULL, PHP_INI_ALL, 
+        OnUpdateString, home, zend_wsf_globals, wsf_globals)
+STD_PHP_INI_ENTRY ("wsf.log_path", "/tmp", PHP_INI_ALL, 
+        OnUpdateString, log_path, zend_wsf_globals,wsf_globals)
+STD_PHP_INI_ENTRY ("wsf.enable_trace", "1", PHP_INI_ALL, 
+        OnUpdateBool, enable_trace, zend_wsf_globals, wsf_globals)  
+STD_PHP_INI_ENTRY ("wsf.enable_exception", "1", PHP_INI_ALL, 
+        OnUpdateBool, enable_exception, zend_wsf_globals, wsf_globals)  
+STD_PHP_INI_ENTRY ("wsf.rm_db_dir", "/tmp", PHP_INI_ALL,
+    OnUpdateString, rm_db_dir, zend_wsf_globals, wsf_globals)  
+STD_PHP_INI_ENTRY ("wsf.wsdl_cache_enabled", "1", PHP_INI_ALL, 
+        OnUpdateCacheEnabled, cache, zend_wsf_globals, wsf_globals)  
+STD_PHP_INI_ENTRY ("wsf.wsdl_cache_dir", "/tmp", PHP_INI_ALL, 
+        OnUpdateString, cache_dir, zend_wsf_globals, wsf_globals)  
+STD_PHP_INI_ENTRY ("wsf.wsdl_cache_ttl", "86400", PHP_INI_ALL, 
+        OnUpdateLong, cache_ttl, zend_wsf_globals, wsf_globals)  
+STD_PHP_INI_ENTRY ("wsf.wsdl_cache", "1", PHP_INI_ALL, 
+        OnUpdateLong, cache, zend_wsf_globals, wsf_globals)  
+STD_PHP_INI_ENTRY ("wsf.wsdl_cache_limit", "5", PHP_INI_ALL, 
+        OnUpdateLong, cache_limit, zend_wsf_globals, wsf_globals)  
+PHP_INI_END () 
 /* }}} */ 
     
 /* {{{ ws_init_globals
  */ 
-    static void
-    ws_init_globals (
-    zend_wsf_globals * wsf_globals) 
+static void ws_init_globals (zend_wsf_globals * wsf_globals) 
 {
     wsf_globals->home = NULL;
     wsf_globals->log_path = NULL;
@@ -483,7 +339,7 @@ STD_PHP_INI_ENTRY ("wsf.home", NULL, PHP_INI_ALL, OnUpdateString, home,
     wsf_globals->curr_ns_index = 0;
     
     /******** ext/soap **********************************/ 
-        wsf_globals->defEncNs = defEncNs;
+    wsf_globals->defEncNs = defEncNs;
     wsf_globals->defEnc = defEnc;
     wsf_globals->defEncIndex = defEncIndex;
     wsf_globals->sdl = NULL;
@@ -496,82 +352,85 @@ STD_PHP_INI_ENTRY ("wsf.home", NULL, PHP_INI_ALL, OnUpdateString, home,
     
 /* {{{ PHP_MINIT_FUNCTION
  */ 
-    PHP_MINIT_FUNCTION (wsf) 
+PHP_MINIT_FUNCTION (wsf) 
 {
     zend_class_entry ce;
     char *home_folder = NULL;
+
     wsf_soap_prepare_ws_globals ();
+    
     ZEND_INIT_MODULE_GLOBALS (wsf, ws_init_globals, NULL);
+    
     REGISTER_INI_ENTRIES ();
-    if (INI_STR ("extension_dir"))
-         {
-        char *home_dir =
-            pemalloc (strlen (INI_STR ("extension_dir")) + strlen ("/wsf_c") +
-            1, 1);
+    if (INI_STR ("extension_dir")){
+        char *home_dir =  pemalloc (strlen (INI_STR ("extension_dir")) + strlen ("/wsf_c") + 1, 1);
         strcpy (home_dir, INI_STR ("extension_dir"));
         strcat (home_dir, "/wsf_c");
         home_folder = home_dir;
-        }
-    memcpy (&ws_object_handlers, zend_get_std_object_handlers (),
-        sizeof (zend_object_handlers));
+    }
+    
+    memcpy (&ws_object_handlers, zend_get_std_object_handlers (), sizeof (zend_object_handlers));
+
     ws_object_handlers.clone_obj = NULL;
+    
     REGISTER_WSF_CLASS (ce, "WSClient", NULL,
         php_ws_client_class_functions, ws_client_class_entry);
-    INIT_CLASS_ENTRY (ce, "WSClientProxy",
-        php_ws_client_proxy_class_functions);
-    ws_client_proxy_class_entry =
-        zend_register_internal_class (&ce TSRMLS_CC);
-    REGISTER_WSF_CLASS (ce, "WSService", NULL,
-        php_ws_service_class_functions, ws_service_class_entry);
+    
+    INIT_CLASS_ENTRY (ce, "WSClientProxy", php_ws_client_proxy_class_functions);
+    ws_client_proxy_class_entry = zend_register_internal_class (&ce TSRMLS_CC);
+
+    REGISTER_WSF_CLASS (ce, "WSService", NULL, php_ws_service_class_functions, ws_service_class_entry);
+
     INIT_CLASS_ENTRY (ce, "WSMessage", php_ws_message_class_functions);
     ws_message_class_entry = zend_register_internal_class (&ce TSRMLS_CC);
+    
     INIT_CLASS_ENTRY (ce, "WSHeader", php_ws_header_class_functions);
     ws_header_class_entry = zend_register_internal_class (&ce TSRMLS_CC);
-    INIT_CLASS_ENTRY (ce, "WSFault", php_ws_fault_class_functions);
     
+    INIT_CLASS_ENTRY (ce, "WSFault", php_ws_fault_class_functions);
 /*
  #ifdef ZEND_ENGINE_2    
-    ws_fault_class_entry = zend_register_internal_class_ex(&ce, zend_exception_get_default(TSRMLS_C), NULL TSRMLS_CC);
+    ws_fault_class_entry = 
+    zend_register_internal_class_ex(&ce, zend_exception_get_default(TSRMLS_C), NULL TSRMLS_CC);
 #else    
 */ 
         ws_fault_class_entry = zend_register_internal_class (&ce TSRMLS_CC);
-    
 /*
 #endif
 */ 
-        INIT_CLASS_ENTRY (ce, "WSSecurityToken",
-        php_ws_security_token_class_functions);
-    ws_security_token_class_entry =
-        zend_register_internal_class (&ce TSRMLS_CC);
+    INIT_CLASS_ENTRY (ce, "WSSecurityToken", php_ws_security_token_class_functions);
+    ws_security_token_class_entry = zend_register_internal_class (&ce TSRMLS_CC);
+
     INIT_CLASS_ENTRY (ce, "WSPolicy", php_ws_policy_class_functions);
     ws_policy_class_entry = zend_register_internal_class (&ce TSRMLS_CC);
-    REGISTER_LONG_CONSTANT ("WS_SOAP_ROLE_NEXT", WS_SOAP_ROLE_NEXT,
-        CONST_CS | CONST_PERSISTENT);
-    REGISTER_LONG_CONSTANT ("WS_SOAP_ROLE_NONE", WS_SOAP_ROLE_NONE,
-        CONST_CS | CONST_PERSISTENT);
-    REGISTER_LONG_CONSTANT ("WS_SOAP_ROLE_ULTIMATE_RECEIVER",
-        WS_SOAP_ROLE_ULTIMATE_RECEIVER, CONST_CS | CONST_PERSISTENT);
-    REGISTER_LONG_CONSTANT ("WS_SOAP_DOCUMENT", WS_SOAP_DOCUMENT,
-        CONST_CS | CONST_PERSISTENT);
-    REGISTER_LONG_CONSTANT ("WS_SOAP_RPC", WS_SOAP_RPC,
-        CONST_CS | CONST_PERSISTENT);
-    REGISTER_LONG_CONSTANT ("WS_SOAP_ENCODED", WS_SOAP_ENCODED,
-        CONST_CS | CONST_PERSISTENT);
-    REGISTER_LONG_CONSTANT ("WS_SOAP_LITERAL", WS_SOAP_LITERAL,
-        CONST_CS | CONST_PERSISTENT);
-    env = wsf_env_create (WSF_GLOBAL (log_path));
+    
+    REGISTER_LONG_CONSTANT ("WS_SOAP_ROLE_NEXT", WS_SOAP_ROLE_NEXT, CONST_CS | CONST_PERSISTENT);
+    REGISTER_LONG_CONSTANT ("WS_SOAP_ROLE_NONE", WS_SOAP_ROLE_NONE, CONST_CS | CONST_PERSISTENT);
+    REGISTER_LONG_CONSTANT ("WS_SOAP_ROLE_ULTIMATE_RECEIVER", WS_SOAP_ROLE_ULTIMATE_RECEIVER, CONST_CS | CONST_PERSISTENT);
+    REGISTER_LONG_CONSTANT ("WS_SOAP_DOCUMENT", WS_SOAP_DOCUMENT, CONST_CS | CONST_PERSISTENT);
+    REGISTER_LONG_CONSTANT ("WS_SOAP_RPC", WS_SOAP_RPC, CONST_CS | CONST_PERSISTENT);
+    REGISTER_LONG_CONSTANT ("WS_SOAP_ENCODED", WS_SOAP_ENCODED, CONST_CS | CONST_PERSISTENT);
+    REGISTER_LONG_CONSTANT ("WS_SOAP_LITERAL", WS_SOAP_LITERAL, CONST_CS | CONST_PERSISTENT);
+
+    env = wsf_env_create (WSF_GLOBAL (log_path)); 
+    
     if (WSF_GLOBAL (home)) {
         home_folder = WSF_GLOBAL (home);
     }
+    
     ws_env_svr = wsf_env_create_svr (WSF_GLOBAL (log_path));
+    
     wsf_msg_recv = wsf_xml_msg_recv_create (ws_env_svr);
-    worker =
-        wsf_worker_create (ws_env_svr, home_folder, WSF_GLOBAL (rm_db_dir));
+    
+    worker = wsf_worker_create (ws_env_svr, home_folder, WSF_GLOBAL (rm_db_dir));
+
     le_sdl = register_list_destructors (delete_sdl, NULL);
     le_url = register_list_destructors (delete_url, NULL);
     le_typemap = register_list_destructors (delete_hashtable, NULL);
     le_service = register_list_destructors (delete_service, NULL);
+    
     axiom_xml_reader_init ();
+    
     return SUCCESS;
 }
 
@@ -580,8 +439,8 @@ STD_PHP_INI_ENTRY ("wsf.home", NULL, PHP_INI_ALL, OnUpdateString, home,
     
 /* {{{ PHP_MSHUTDOWN_FUNCTION
  */ 
-    PHP_MSHUTDOWN_FUNCTION (wsf) 
-{
+PHP_MSHUTDOWN_FUNCTION (wsf) {
+
     UNREGISTER_INI_ENTRIES ();
     axis2_msg_recv_free (wsf_msg_recv, ws_env_svr);
     axutil_env_free (env);
@@ -594,7 +453,7 @@ STD_PHP_INI_ENTRY ("wsf.home", NULL, PHP_INI_ALL, OnUpdateString, home,
     
 /* {{{ PHP_RINIT_FUNCTION
  */ 
-    PHP_RINIT_FUNCTION (wsf) 
+PHP_RINIT_FUNCTION (wsf) 
 {
     WSF_GLOBAL (soap_version) = AXIOM_SOAP12;
     return SUCCESS;
@@ -605,7 +464,7 @@ STD_PHP_INI_ENTRY ("wsf.home", NULL, PHP_INI_ALL, OnUpdateString, home,
     
 /* {{{ PHP_RSHUTDOWN_FUNCTION
  */ 
-    PHP_RSHUTDOWN_FUNCTION (wsf) 
+PHP_RSHUTDOWN_FUNCTION (wsf) 
 {
     return SUCCESS;
 }
@@ -615,7 +474,7 @@ STD_PHP_INI_ENTRY ("wsf.home", NULL, PHP_INI_ALL, OnUpdateString, home,
     
 /* {{{ PHP_MINFO_FUNCTION
  */ 
-    PHP_MINFO_FUNCTION (wsf) 
+PHP_MINFO_FUNCTION (wsf) 
 {
     php_info_print_table_start ();
     php_info_print_table_header (2, "wsf support", "enabled");
@@ -628,8 +487,7 @@ STD_PHP_INI_ENTRY ("wsf.home", NULL, PHP_INI_ALL, OnUpdateString, home,
     
 /* {{{ ws_object_new */ 
 static zend_object_value 
-php_ws_object_new (
-    zend_class_entry * class_type TSRMLS_DC) 
+php_ws_object_new (zend_class_entry * class_type TSRMLS_DC) 
 {
     ws_object * tmp;
     return php_ws_object_new_ex (class_type, &tmp TSRMLS_CC);
@@ -647,78 +505,29 @@ php_ws_object_new_ex (
     zend_object_value retval;
     ws_object * intern;
     zval * tmp;
+
     intern = emalloc (sizeof (ws_object));
     memset (intern, 0, sizeof (ws_object));
     intern->std.ce = class_type;
     intern->obj_type = WS_NONE;
     *obj = intern;
+    
     zend_object_std_init (&intern->std, class_type TSRMLS_CC);
+    
     zend_hash_copy (intern->std.properties, &class_type->default_properties,
         (copy_ctor_func_t) zval_add_ref, (void *) &tmp, sizeof (void *));
-    retval.handle =
-        zend_objects_store_put (intern,
+    
+    retval.handle = zend_objects_store_put (intern,
         (zend_objects_store_dtor_t) zend_objects_destroy_object,
-        (zend_objects_free_object_storage_t) ws_objects_free_storage,
-        NULL TSRMLS_CC);
+        (zend_objects_free_object_storage_t) ws_objects_free_storage, NULL TSRMLS_CC);
+
     retval.handlers = &ws_object_handlers;
     return retval;
 }
-
-
 /* }}} */ 
     
-/* {{{ create an zval with given class type and stores the provide obj */ 
-/*
-static zval* ws_create_object(void *obj, int obj_type,
-                              zend_class_entry* class_type TSRMLS_DC)
-{
-    zval *wrapper = NULL;
-    zend_class_entry *ce = NULL;
-    ws_object_ptr intern = NULL;
-    if(!obj)
-    {
-        return NULL;
-    }
-    ce = class_type;
-    ALLOC_ZVAL(wrapper);
-    object_init_ex(wrapper, ce);
-    intern = (ws_object_ptr)zend_objects_get_address(wrapper TSRMLS_CC);
-    ZVAL_ADDREF(wrapper);
-    intern->ptr = obj;
-    intern->obj_type = obj_type;
-    return wrapper;
-}
-*/ 
-/* }}} */ 
-    
-/* {{{ destructor function for all ws_objects */ 
-/*
-static void ws_object_dtor(void *object,
-                           zend_object_handle handle TSRMLS_DC)
-{
-    ws_object *intern = (ws_object *)object;
-    zend_hash_destroy(intern->std.properties);
-    FREE_HASHTABLE(intern->std.properties);
-
-    if(intern->obj_type == WS_SVC_CLIENT){
-        axis2_svc_client_t *svc_client = NULL;
-        svc_client = (axis2_svc_client_t*)intern->ptr;
-        if(svc_client){
-			axis2_svc_client_free(svc_client, env);
-        }
-    }
-    else if(intern->obj_type == WS_SVC){
-        wsf_svc_info_t *svc_info = NULL;
-        svc_info = (wsf_svc_info_t*)intern->ptr;
-        if(svc_info){
-            wsf_svc_info_free(svc_info, ws_env_svr );    
-        }
-    }
-}
-*/ 
 static void 
-ws_objects_free_storage (
-    void *object TSRMLS_DC)
+ws_objects_free_storage (void *object TSRMLS_DC)
 {
     ws_object * intern = (ws_object *) object;
     zend_object_std_dtor (&intern->std TSRMLS_CC);
@@ -729,7 +538,6 @@ ws_objects_free_storage (
             axis2_svc_client_free (svc_client, env);
         }
     }
-    
     else if (intern->obj_type == WS_SVC) {
         wsf_svc_info_t * svc_info = NULL;
         svc_info = (wsf_svc_info_t *) intern->ptr;
@@ -741,22 +549,18 @@ ws_objects_free_storage (
     efree (object);
 }
 
-
 /*** {{{ is_ws_fault(Object obj) */ 
-    PHP_FUNCTION (is_ws_fault) 
+PHP_FUNCTION (is_ws_fault) 
 {
     zval * object = NULL;
-    if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "z",
-            &object)) {
+    if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "z", &object)) {
         php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
         return;
     }
-    if (Z_TYPE_P (object) == IS_OBJECT
-        && instanceof_function (Z_OBJCE_P (object),
-            ws_fault_class_entry TSRMLS_CC)) {
+    if (Z_TYPE_P (object) == IS_OBJECT && 
+            instanceof_function (Z_OBJCE_P (object), ws_fault_class_entry TSRMLS_CC)) {
         RETURN_TRUE;
     }
-    
     else
         RETURN_FALSE;
 }
@@ -765,14 +569,14 @@ ws_objects_free_storage (
 /* }}} */ 
     
 /* {{{ proto WSMessage::__construct(mixed payload[, array properties, array cidtostrings) */ 
-    PHP_METHOD (ws_message, __construct) 
+PHP_METHOD (ws_message, __construct) 
 {
     zval * object = NULL;
     zval * payload = NULL;
     zval * properties = NULL;
     
         /*  zval *attachments = NULL; */ 
-        if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC,
+    if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC,
             "z|a", &payload, &properties)) {
         php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
         return;
@@ -780,16 +584,15 @@ ws_objects_free_storage (
     WSF_GET_THIS (object);
     WSF_OBJ_CHECK (env);
     if (Z_TYPE_P (payload) == IS_STRING) {
-        add_property_stringl (object, WS_MSG_PAYLOAD_STR,
-            Z_STRVAL_P (payload), Z_STRLEN_P (payload), 1);
+        add_property_stringl (object, WS_MSG_PAYLOAD_STR, Z_STRVAL_P (payload), Z_STRLEN_P (payload), 1);
         add_property_long (object, WS_MSG_TYPE, WS_USING_STRING);
     }
-    
-    else if (Z_TYPE_P (payload) == IS_OBJECT
-        && instanceof_function (Z_OBJCE_P (payload),
-            dom_node_class_entry TSRMLS_CC)) {
+    else if (Z_TYPE_P (payload) == IS_OBJECT && 
+            instanceof_function (Z_OBJCE_P (payload), dom_node_class_entry TSRMLS_CC)) {
+
         add_property_zval (object, WS_MSG_PAYLOAD_DOM, payload);
         add_property_long (object, WS_MSG_TYPE, WS_USING_DOM);
+
     } else {
         return;
     }
@@ -819,82 +622,73 @@ ws_objects_free_storage (
 /* }}} */ 
     
 /** desctructor */ 
-    PHP_METHOD (ws_message, __destruct) 
+PHP_METHOD (ws_message, __destruct) 
 {
 }
+
 static int
-get_message_storage_type (
-    zval * this_ptr TSRMLS_DC) 
+get_message_storage_type (zval * this_ptr TSRMLS_DC) 
 {
     zval ** param_val = NULL;
     if (zend_hash_find (Z_OBJPROP_P (this_ptr), WS_MSG_TYPE,
-            sizeof (WS_MSG_TYPE), (void **) &param_val) == SUCCESS
-        && Z_TYPE_PP (param_val) == IS_LONG)
-         {
+            sizeof (WS_MSG_TYPE), (void **) &param_val) == SUCCESS && 
+            Z_TYPE_PP (param_val) == IS_LONG){
+            
         return Z_LVAL_PP (param_val);
-        }
+    }
     return -1;
 }
 
 
 /* {{{ WSMessage::__get() */ 
-    PHP_METHOD (ws_message, __get) 
+PHP_METHOD (ws_message, __get) 
 {
     zval * object = NULL;
     char *prop_name = NULL;
     long prop_name_len = 0;
     if (zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "s", &prop_name,
-            &prop_name_len) == FAILURE)
-         {
-        php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
-        }
-    if (prop_name_len <= 0)
-         {
+            &prop_name_len) == FAILURE){
+            php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
+    }
+    if (prop_name_len <= 0){
         php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid property");
-        }
+    }
+
     WSF_GET_THIS (object);
-    if (strcmp (prop_name, WS_MSG_PAYLOAD_STR) == 0)
-         {
-        if (get_message_storage_type (object TSRMLS_CC) == WS_USING_DOM)
-             {
+    
+    if (strcmp (prop_name, WS_MSG_PAYLOAD_STR) == 0) {
+        if (get_message_storage_type (object TSRMLS_CC) == WS_USING_DOM) {
+
             xmlNodePtr nodep = NULL;
             axiom_node_t * payload = NULL;
             zval ** tmp_val = NULL;
             axiom_xml_reader_t * reader = NULL;
             if ((zend_hash_find (Z_OBJPROP_P (object), WS_MSG_PAYLOAD_DOM,
-                        sizeof (WS_MSG_PAYLOAD_DOM),
-                        (void **) &tmp_val) == SUCCESS))
-                 {
+                        sizeof (WS_MSG_PAYLOAD_DOM), (void **) &tmp_val) == SUCCESS)){
                 nodep = ws_get_xml_node (*tmp_val);
                 reader = axiom_xml_reader_create_for_memory (env, 
-                    (void *) nodep->doc, 0, "utf-8",
-                    AXIS2_XML_PARSER_TYPE_DOC);
-                if (!reader)
-                     {
-                    zend_throw_exception_ex (zend_exception_get_default
-                        (TSRMLS_C), 1 TSRMLS_CC, "xml reader create failed");
-                    }
+                    (void *) nodep->doc, 0, "utf-8", AXIS2_XML_PARSER_TYPE_DOC);
+                if (!reader) {
+                    zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C), 
+                            1 TSRMLS_CC, "xml reader create failed");
+                }
+                
                 payload = wsf_util_read_payload (reader, env);
-                if (payload)
-                     {
+                
+                if (payload) {
                     axis2_char_t * res_text = NULL;
                     res_text = wsf_util_serialize_om (env, payload);
                     axiom_node_free_tree (payload, env);
-                    if (res_text)
-                         {
-                        add_property_string (object, WS_MSG_PAYLOAD_STR,
-                            res_text, 1);
+                    if (res_text) {
+                        add_property_string (object, WS_MSG_PAYLOAD_STR, res_text, 1);
                         RETURN_STRING (res_text, 1);
-                        }
                     }
                 }
             }
         }
-    
-    else if (strcmp (prop_name, WS_MSG_PAYLOAD_DOM) == 0)
-         {
-        if (get_message_storage_type (object TSRMLS_CC) == WS_USING_STRING)
-             {
+    }
+    else if (strcmp (prop_name, WS_MSG_PAYLOAD_DOM) == 0) {
+        if (get_message_storage_type (object TSRMLS_CC) == WS_USING_STRING) {
             zval ** tmp_val = NULL;
             if (zend_hash_find (Z_OBJPROP_P (object), WS_MSG_PAYLOAD_STR,
                     sizeof (WS_MSG_PAYLOAD_STR),
@@ -906,28 +700,25 @@ get_message_storage_type (
                     int ret;
                     zval * value = NULL;
                     xmlDocPtr doc = NULL;
-                    doc =
-                        xmlReadMemory (buffer, length, NULL, "UTF-8",
-                        XML_PARSE_NOBLANKS | XML_PARSE_SAX1);
+                    doc =  xmlReadMemory (buffer, length, NULL, "UTF-8",  XML_PARSE_NOBLANKS | XML_PARSE_SAX1);
                     if (!doc) {
                         RETURN_NULL ();
                     }
-                    value =
-                        php_dom_create_object ((xmlNodePtr) doc, &ret, NULL,
+                    value = php_dom_create_object ((xmlNodePtr) doc, &ret, NULL, 
                         return_value, NULL TSRMLS_CC);
                     add_property_zval (object, WS_MSG_PAYLOAD_DOM, value);
                     RETURN_ZVAL (value, 0, 1);
                 }
             }
-            }
         }
+    }
 }
 
 
 /* }}} */ 
     
 /* {{{ proto void WSClient::__construct(string uri[, array options]) */ 
-    PHP_METHOD (ws_client, __construct) 
+PHP_METHOD (ws_client, __construct) 
 {
     ws_object_ptr intern = NULL;
     zval * obj = NULL;
@@ -935,55 +726,57 @@ get_message_storage_type (
     axis2_svc_client_t * svc_client = NULL;
     zval * options = NULL;
     long cache_wsdl;
-    if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "|a",
-            &options))
-         {
+    if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "|a", &options)) {
         php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
         return;
-        }
+    }
+
     WSF_OBJ_CHECK (env);
+    
     WSF_GET_THIS (obj);
+    
     intern = (ws_object *) zend_object_store_get_object (obj TSRMLS_CC);
+    
     cache_wsdl = WSF_GLOBAL (cache);
-    if (INI_STR ("extension_dir"))
-         {
-        char *home_dir =
-            pemalloc (strlen (INI_STR ("extension_dir")) + strlen ("/wsf_c") +
-            1, 1);
+    
+    if (INI_STR ("extension_dir")) {
+        char *home_dir = pemalloc (strlen (INI_STR ("extension_dir")) + strlen ("/wsf_c") + 1, 1);
         strcpy (home_dir, INI_STR ("extension_dir"));
         strcat (home_dir, "/wsf_c");
         home_folder = home_dir;
-        }
+    }
     if (WSF_GLOBAL (home))
         home_folder = WSF_GLOBAL (home);
+    
     svc_client = axis2_svc_client_create (env, home_folder);
-    if (!svc_client)
-         {
-        zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C),
-            1 TSRMLS_CC, "ws client create failed");
-        }
+    
+    if (!svc_client) {
+        zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C), 1 TSRMLS_CC, "ws client create failed");
+    }
+    
     intern->ptr = svc_client;
     intern->obj_type = WS_SVC_CLIENT;
     
-        /*
-           Please refer to API doc for input options processed below. 
-           This implementation adheres to the API doc.
-         */ 
-        if (NULL != options)
-         {
+    /*
+    Please refer to API doc for input options processed below. 
+    This implementation adheres to the API doc.
+    */ 
+    if (NULL != options) {
         zval ** tmp;
         HashTable * ht = Z_ARRVAL_P (options);
         if (!ht)
             return;
         add_property_zval (obj, WS_OPTIONS, options);
         wsf_client_add_properties (obj, ht TSRMLS_CC);
+
         if (zend_hash_find (ht, WS_CACHE_WSDL, sizeof (WS_CACHE_WSDL),
                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_LONG) {
             cache_wsdl = Z_LVAL_PP (tmp);
         }
+
         if (zend_hash_find (ht, WS_WSDL, sizeof (WS_WSDL),
-                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING)
-             {
+                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
+
             int ret;
             char *wsdl_path = NULL;
             sdlPtr sdl;
@@ -991,64 +784,59 @@ get_message_storage_type (
             sdl = get_sdl (obj, wsdl_path, cache_wsdl TSRMLS_CC);
             ret = zend_list_insert (sdl, le_sdl);
             add_property_resource (obj, "sdl", ret);
-            }
+        }
+        
         if (zend_hash_find (ht, "style", sizeof ("style"),
                 (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_LONG
-            && (Z_LVAL_PP (tmp) == WS_SOAP_RPC
-                || Z_LVAL_PP (tmp) == WS_SOAP_DOCUMENT)) {
+            && (Z_LVAL_PP (tmp) == WS_SOAP_RPC || Z_LVAL_PP (tmp) == WS_SOAP_DOCUMENT)) {
             add_property_long (this_ptr, "style", Z_LVAL_PP (tmp));
         }
         if (zend_hash_find (ht, "use", sizeof ("use"),
                 (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_LONG
-            && (Z_LVAL_PP (tmp) == WS_SOAP_LITERAL
-                || Z_LVAL_PP (tmp) == WS_SOAP_ENCODED)) {
+            && (Z_LVAL_PP (tmp) == WS_SOAP_LITERAL || Z_LVAL_PP (tmp) == WS_SOAP_ENCODED)) {
             add_property_long (this_ptr, "use", Z_LVAL_PP (tmp));
         }
         if (zend_hash_find (ht, "_encoding", sizeof ("_encoding"),
-                (void **) & tmp) == SUCCESS
-            && Z_TYPE_PP (tmp) == IS_STRING) {
-            WSF_GLOBAL (encoding) =
-                xmlFindCharEncodingHandler (Z_STRVAL_PP (tmp));
+                (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
+            WSF_GLOBAL (encoding) = xmlFindCharEncodingHandler (Z_STRVAL_PP (tmp));
         } else {
             WSF_GLOBAL (encoding) = NULL;
         }
-        }
+    }
 }
 
 
 /* }}} */ 
     
 /* {{{ WSClient::__destruct() */ 
-    PHP_METHOD (ws_client, __destruct) 
+PHP_METHOD (ws_client, __destruct) 
 {
+
 }
-
-
 /* }}} */ 
     
 /* {{{ proto string request(mixed payload)
-	payload can be a string, dom element or a simple xml element.
+	payload can be a string, dom element .
 	send and receives. if the input was a string or a simple xml element
 	it would return a string, if the input was a dom node , it returns a dom
 	node.
 	*/ 
-    PHP_METHOD (ws_client, request) 
+PHP_METHOD (ws_client, request) 
 {
     zval * param = NULL;
     ws_object_ptr intern = NULL;
     zval * obj = NULL;
     axis2_svc_client_t * svc_client = NULL;
-    if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "z",
-            &param))
-         {
+    if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "z", &param)) {
         php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
         return;
-        }
+    }
+
     WSF_OBJ_CHECK (env);
     WSF_GET_THIS (obj);
     WSF_GET_OBJ (svc_client, obj, axis2_svc_client_t, intern);
-    wsf_client_do_request (obj, param, return_value, env, svc_client,
-        AXIS2_FALSE TSRMLS_CC);
+    
+    wsf_client_do_request (obj, param, return_value, env, svc_client, AXIS2_FALSE TSRMLS_CC);
 }
 
 
@@ -1058,18 +846,17 @@ get_message_storage_type (
     Sends the given payload in a robust manner.
     Means that SOAP faults are captured and reported.
     */ 
-    PHP_METHOD (ws_client, send) 
+PHP_METHOD (ws_client, send) 
 {
     zval * param = NULL;
     ws_object_ptr intern = NULL;
     zval * obj = NULL;
     axis2_svc_client_t * svc_client = NULL;
-    if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "z",
-            &param))
-         {
+
+    if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "z", &param)) {
         php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
         return;
-        }
+    }
     WSF_OBJ_CHECK (env);
     WSF_GET_THIS (obj);
     WSF_GET_OBJ (svc_client, obj, axis2_svc_client_t, intern);
@@ -1081,35 +868,31 @@ get_message_storage_type (
 /* }}} end send*/ 
     
 /* {{{ proto getLastResponse() */ 
-    PHP_METHOD (ws_client, get_last_response) 
+PHP_METHOD (ws_client, get_last_response) 
 {
     axis2_svc_client_t * svc_client = NULL;
     ws_object_ptr intern = NULL;
     zval * obj = NULL;
     WSF_GET_THIS (obj);
     WSF_GET_OBJ (svc_client, obj, axis2_svc_client_t, intern);
-    if (svc_client)
-         {
+
+    if (svc_client) {
         axis2_op_client_t * op_client = NULL;
         op_client = axis2_svc_client_get_op_client (svc_client, env);
-        if (op_client)
-             {
+        if (op_client) {
             axis2_char_t * msg =
                 wsf_util_get_soap_msg_from_op_client (op_client, env,
                 AXIS2_WSDL_MESSAGE_LABEL_IN);
-            if (msg)
-                 {
+            if (msg) {
                 RETURN_STRING (msg, 1);
-                }
             }
         }
+    }
 }
-
-
 /* }}} */ 
     
 /* {{{ proto getLastRequest() */ 
-    PHP_METHOD (ws_client, get_last_request) 
+PHP_METHOD (ws_client, get_last_request) 
 {
     axis2_svc_client_t * svc_client = NULL;
     ws_object_ptr intern = NULL;
@@ -1129,85 +912,76 @@ get_message_storage_type (
         }
     }
 }
-
-
 /* }}} */ 
     
 /* {{{ proto public WSClient::terminateOutgoingRM() */ 
-    PHP_METHOD (ws_client, terminate_outgoing_rm) 
+PHP_METHOD (ws_client, terminate_outgoing_rm) 
 {
     zval * object = NULL;
     WSF_GET_THIS (object);
 }
-
-
 /* }}} */ 
     
 /* {{{ proto getLastResponseHeaders() */ 
-    PHP_METHOD (ws_client, get_last_response_headers) 
+PHP_METHOD (ws_client, get_last_response_headers) 
 {
     axis2_svc_client_t * svc_client = NULL;
     ws_object_ptr intern = NULL;
     zval * obj = NULL;
     WSF_GET_THIS (obj);
     WSF_GET_OBJ (svc_client, obj, axis2_svc_client_t, intern);
-    if (svc_client)
-         {
+    if (svc_client) {
         axis2_op_client_t * op_client = NULL;
         op_client = axis2_svc_client_get_op_client (svc_client, env);
-        if (op_client)
-             {
+        if (op_client) {
             axis2_char_t * msg =
                 wsf_util_get_http_headers_from_op_client (op_client, env,
                 AXIS2_WSDL_MESSAGE_LABEL_OUT);
-            if (msg)
-                 {
+            if (msg){
                 RETURN_STRING (msg, 1);
-                }
             }
         }
+    }
 }
-
-
 /* }}} */ 
     
 /* {{{ WSClient::__call() */ 
-    PHP_METHOD (ws_client, __call) 
+PHP_METHOD (ws_client, __call) 
 {
     char *fn_name = NULL;
     long fn_name_len = 0;
     zval * args = NULL;
+    /*
     zval ** real_args = NULL;
     zval ** param = NULL;
     int arg_count = 0;
     HashPosition pos;
     int i = 0;
+    */
     if (zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "sz", &fn_name,
-            &fn_name_len, &args) == FAILURE)
-         {
+            &fn_name_len, &args) == FAILURE) {
         php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
         return;
-        }
+    }
+    /*
     arg_count = zend_hash_num_elements (Z_ARRVAL_P (args));
-    if (arg_count > 0)
-         {
+    if (arg_count > 0) {
         real_args = safe_emalloc (sizeof (zval *), arg_count, 0);
         for (zend_hash_internal_pointer_reset_ex (Z_ARRVAL_P (args), &pos);
             zend_hash_get_current_data_ex (Z_ARRVAL_P (args),
                 (void **) &param, &pos) == SUCCESS;
-            zend_hash_move_forward_ex (Z_ARRVAL_P (args), &pos))
-             {
-            if (Z_TYPE_PP (param) == IS_LONG)
-                 {
+            zend_hash_move_forward_ex (Z_ARRVAL_P (args), &pos)) {
+            if (Z_TYPE_PP (param) == IS_LONG) {
                 }
             real_args[i++] = *param;
             }
-        }
+    }
+    */
 }
 
 
 /* }}} end call */ 
-    PHP_METHOD (ws_client, get_proxy) 
+PHP_METHOD (ws_client, get_proxy) 
 {
     zval * client_proxy_zval = NULL;
     char *service = NULL;
@@ -1229,13 +1003,15 @@ get_message_storage_type (
     if (port) {
         add_property_string (client_proxy_zval, "port", port, 1);
     }
+    
     add_property_zval (client_proxy_zval, "wsclient", this_ptr);
+
     RETURN_ZVAL (client_proxy_zval, 0, 1);
 }
 
 
 /* {{{ proto void WSService::__construct([ array options])*/ 
-    PHP_METHOD (ws_service, __construct) 
+PHP_METHOD (ws_service, __construct) 
 {
     ws_object_ptr intern = NULL;
     zval * obj = NULL;
@@ -1253,11 +1029,11 @@ get_message_storage_type (
     soapServicePtr service = NULL;
     char *wsdl = NULL;
     if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "|a",
-            &options))
-         {
+            &options)) {
         php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
         return;
-        }
+    }
+
     WSF_GET_THIS (obj);
     intern = (ws_object *) zend_object_store_get_object (obj TSRMLS_CC);
     svc_info = wsf_svc_info_create (ws_env_svr);
@@ -1268,15 +1044,13 @@ get_message_storage_type (
     intern->obj_type = WS_SVC;
     svc_info->php_worker = worker;
     cache_wsdl = WSF_GLOBAL (cache);
-    if (options)
-         {
+    
+    if (options) {
         zval ** tmp = NULL;
         ht_options = Z_ARRVAL_P (options);
-        if (ht_options)
-             {
+        if (ht_options) {
             if (zend_hash_find (ht_options, "actions", sizeof ("actions"), 
-                    (void **) & tmp) == SUCCESS
-                && Z_TYPE_PP (tmp) == IS_ARRAY) {
+                    (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
                 ht_actions = Z_ARRVAL_PP (tmp);
                 AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
                     "[wsf_service] setting actions ");
@@ -1317,12 +1091,12 @@ get_message_storage_type (
             if (zend_hash_find (ht_options, WS_USE_MTOM,
                     sizeof (WS_USE_MTOM), (void **) &tmp) == SUCCESS
                 && Z_TYPE_PP (tmp) == IS_BOOL) {
+
                 svc_info->use_mtom = Z_BVAL_PP (tmp);
                 AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
                     "[wsf_service] setting mtom property %d",
                     svc_info->use_mtom);
             }
-            
             else {
                 svc_info->use_mtom = 0;
             }
@@ -1331,13 +1105,13 @@ get_message_storage_type (
                 && Z_TYPE_PP (tmp) == IS_BOOL) {
                 svc_info->request_xop = Z_BVAL_PP (tmp);
             }
-            
-            else
-                 {
+            else {
                 svc_info->request_xop = 0;
-                }
+            }
+            
             AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
                 "[wsf_service] request xop %d", svc_info->request_xop);
+            
             if (zend_hash_find (ht_options, WS_POLICY_NAME,
                     sizeof (WS_POLICY_NAME), (void **) &tmp) == SUCCESS) {
                 svc_info->policy = *tmp;
@@ -1346,6 +1120,7 @@ get_message_storage_type (
             }
             if (zend_hash_find (ht_options, WS_SECURITY_TOKEN,
                     sizeof (WS_SECURITY_TOKEN), (void **) &tmp) == SUCCESS) {
+            
                 svc_info->security_token = *tmp;
                 AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
                     "[wsf_service] security token object present ");
@@ -1353,9 +1128,9 @@ get_message_storage_type (
             if (zend_hash_find (ht_options, WS_RELIABLE,
                     sizeof (WS_RELIABLE), (void **) &tmp) == SUCCESS
                 && Z_TYPE_PP (tmp) == IS_BOOL) {
+                
                 if (!svc_info->modules_to_engage)
-                    svc_info->modules_to_engage =
-                        axutil_array_list_create (ws_env_svr, 3);
+                    svc_info->modules_to_engage =  axutil_array_list_create (ws_env_svr, 3);
                 axutil_array_list_add (svc_info->modules_to_engage,
                     ws_env_svr, axutil_strdup (ws_env_svr, "sandesha2"));
             }
@@ -1365,8 +1140,9 @@ get_message_storage_type (
                 add_property_stringl (obj, WS_BINDING_STYLE,
                     Z_STRVAL_PP (tmp), Z_STRLEN_PP (tmp), 1);
             }
-            }
         }
+    }
+    
     if (SG (request_info).request_uri) {
         svc_info->svc_name =
             wsf_util_generate_svc_name_from_uri (SG (request_info).
@@ -1558,7 +1334,7 @@ get_message_storage_type (
     
 /* {{{ proto void WSService::__destruct()
    */ 
-    PHP_METHOD (ws_service, __destruct) 
+PHP_METHOD (ws_service, __destruct) 
 {
 }
 
@@ -1566,85 +1342,13 @@ get_message_storage_type (
 /* } }} end WSService::__destruct */ 
     
 /* {{{ proto long setClass(string classname) Set a class to the service */ 
-    PHP_METHOD (ws_service, set_class) 
+PHP_METHOD (ws_service, set_class) 
 {
-    
-        /*
-           #ifdef ZEND_ENGINE_2     
-           zend_class_entry **ce;
-           #else
-           zend_class_entry *ce;
-           
-           #endif
-           
-           ws_object_ptr intern = NULL;
-           zval *obj = NULL;
-           wsf_svc_info_t *svc_info = NULL; 
-           
-           int found, argc;
-           zval ***argv;
-           
-           WSF_GET_THIS(obj);
-           
-           intern = (ws_object*)zend_object_store_get_object(obj TSRMLS_CC);
-           svc_info = (wsf_svc_info_t*)(intern->ptr);
-           
-           argc = ZEND_NUM_ARGS();
-           argv = safe_emalloc(argc, sizeof(zval **), 0);
-           
-           if (argc < 1 || zend_get_parameters_array_ex(argc, argv) == FAILURE) {
-           efree(argv);
-           WRONG_PARAM_COUNT;
-           }
-           
-           if (Z_TYPE_PP(argv[0]) == IS_STRING) {
-           #ifdef ZEND_ENGINE_2     
-           found = zend_lookup_class(Z_STRVAL_PP(argv[0]), Z_STRLEN_PP(argv[0]), &ce TSRMLS_CC);
-           #else
-           char *class_name = estrdup(Z_STRVAL_PP(argv[0]));
-           found = zend_hash_find(EG(class_table), php_strtolower(class_name, Z_STRLEN_PP(argv[0])), Z_STRLEN_PP(argv[0])    + 1, (void **)&ce);
-           efree(class_name);
-           #endif
-           if (found != FAILURE) {
-           zend_function *f;
-           HashTable *ft = NULL;
-           HashPosition pos;
-           
-           #ifdef   ZEND_ENGINE_2
-           ft = &(*ce)->function_table;
-           #else
-           ft = &(ce->function_table);
-           #endif
-           zend_hash_internal_pointer_reset_ex(ft, &pos);
-           while (zend_hash_get_current_data_ex(ft, (void **)&f, &pos) != FAILURE) {
-           if (f->common.fn_flags & ZEND_ACC_PUBLIC) {
-           svc_info->is_class = 1;
-           axutil_hash_set(svc_info->class_info, axutil_strdup(f->common.function_name ,env),
-           AXIS2_HASH_KEY_STRING, axutil_strdup(Z_STRVAL_PP(argv[0]), env));
-           
-           
-           ws_util_create_op_and_add_to_svc(svc_info, NULL, 
-           env ,f->common.function_name TSRMLS_CC);
-           }
-           zend_hash_move_forward_ex(ft, &pos);
-           }        
-           } else {
-           php_error_docref(NULL TSRMLS_CC, E_ERROR, "Tried to set a non existant class (%s)", Z_STRVAL_PP(argv[0]));
-           return;              
-           }
-           } else {
-           php_error_docref(NULL TSRMLS_CC, E_ERROR, "You must pass in a string");
-           return;
-           }
-           efree(argv);
-         */ 
 }
-
-
 /* }}} end setClass */ 
     
 /* {{{ proto long reply([long style]) reply the SOAP request */ 
-    PHP_METHOD (ws_service, reply) 
+PHP_METHOD (ws_service, reply) 
 {
     ws_object_ptr intern = NULL;
     zval * obj = NULL, **tmp;
@@ -1666,69 +1370,61 @@ get_message_storage_type (
     svc_info = (wsf_svc_info_t *) (intern->ptr);
     php_worker = svc_info->php_worker;
     conf_ctx = wsf_worker_get_conf_ctx (php_worker, ws_env_svr);
-    if (!conf_ctx)
-         {
+
+    if (!conf_ctx) {
         php_error_docref (NULL TSRMLS_CC, E_ERROR, "conf ctx missing");
         return;
-        }
+    }
+
     zend_is_auto_global ("_SERVER", sizeof ("_SERVER") - 1 TSRMLS_CC);
     req_info = wsf_php_req_info_create ();
+    
     if (zend_hash_find (&EG (symbol_table), "_SERVER", sizeof ("_SERVER"),
             (void **) & server_vars) == SUCCESS
-        && (Z_TYPE_PP (server_vars) == IS_ARRAY))
-         {
+        && (Z_TYPE_PP (server_vars) == IS_ARRAY)) {
         if ((zend_hash_find (Z_ARRVAL_PP (server_vars),
-                    "HTTP_CONTENT_ENCODING",
+                    "HTTP_CONTENT_ENCODING", 
                     sizeof ("HTTP_CONTENT_ENCODING"),
-                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) ==
-            IS_STRING)
-             {
+                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
             req_info->content_encoding = Z_STRVAL_PP (data);
-            }
+        }
+
         if ((zend_hash_find (Z_ARRVAL_PP (server_vars),
                     "HTTP_TRANSFER_ENCODING",
                     sizeof ("HTTP_TRANSFER_ENCODING"),
-                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) ==
-            IS_STRING)
-             {
+                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
             req_info->transfer_encoding = Z_STRVAL_PP (data);
-            }
+        }
         if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SERVER_NAME",
                     sizeof ("SERVER_NAME"),
-                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) ==
-            IS_STRING)
-             {
+                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
             req_info->svr_name = Z_STRVAL_PP (data);
-            }
+        }
         if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SERVER_PORT",
                     sizeof ("SERVER_PORT"),
-                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) ==
-            IS_STRING)
-             {
+                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
             char *p = NULL;
             p = Z_STRVAL_PP (data);
             req_info->svr_port = atoi (p);
-            }
+        }
         if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SERVER_PROTOCOL",
-                    sizeof ("SERVER_PROTOCOL"),
-                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) ==
-            IS_STRING)
-             {
+                    sizeof ("SERVER_PROTOCOL"), 
+                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) ==  IS_STRING) {
             req_info->http_protocol = Z_STRVAL_PP (data);
-            }
+        }
         if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SOAP_ACTION",
                     sizeof ("SOAP_ACTION"),
-                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) ==
-            IS_STRING)
-             {
+                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
             req_info->soap_action = Z_STRVAL_PP (data);
-            }
         }
+    }
+
     req_info->request_uri = SG (request_info).request_uri;
     req_info->content_length = SG (request_info).content_length;
     req_info->content_type = (char *) SG (request_info).content_type;
     req_info->request_method = (char *) SG (request_info).request_method;
     req_info->query_string = (char *) SG (request_info).query_string;
+    
     if ((zend_hash_find (Z_OBJPROP_P (this_ptr), "wsdlmode",
                 sizeof ("wsdlmode"), (void **) & tmp)) == SUCCESS
         && Z_TYPE_PP (tmp) == IS_LONG) {
@@ -1736,8 +1432,7 @@ get_message_storage_type (
     }
     if (zend_hash_find (&EG (symbol_table), "HTTP_RAW_POST_DATA",
             sizeof ("HTTP_RAW_POST_DATA"),
-            (void **) & raw_post) != FAILURE  &&((*raw_post)->type ==
-            IS_STRING)) {
+            (void **) & raw_post) != FAILURE  &&((*raw_post)->type ==  IS_STRING)) {
         req_info->req_data = Z_STRVAL_PP (raw_post);
         req_info->req_data_length = Z_STRLEN_PP (raw_post);
     } else {
@@ -1745,10 +1440,10 @@ get_message_storage_type (
     }
     
     /** begin WSDL Generation */ 
-        if (SG (request_info).query_string
+   if (SG (request_info).query_string
         && ((stricmp (SG (request_info).query_string, "wsdl") == 0)
-            || (stricmp (SG (request_info).query_string, "wsdl2") == 0)))
-         {
+            || (stricmp (SG (request_info).query_string, "wsdl2") == 0))) {
+
         char *service_name = NULL;
         zval func, retval, param1, param2, param3, param4, param5, param6,
             param7;
@@ -1775,7 +1470,7 @@ get_message_storage_type (
         params[6] = &param7;
         
         /** for Wsdl version. default is wsdl 1.1*/ 
-            if ((stricmp (SG (request_info).query_string, "wsdl")) == 0)
+        if ((stricmp (SG (request_info).query_string, "wsdl")) == 0)
             wsdl_version = strdup ("wsdl1.1");
         
         else
@@ -1949,13 +1644,11 @@ get_message_storage_type (
     }
     wsf_php_req_info_free (req_info);
 }
-
-
 /* }}} end reply */ 
     
 /************************* fault *********************************/ 
 /* {{{ proto void WSFault::__construct(string faultcode, string faultreason [,string faultrole [, mixed detail[, string faultname]]]) */ 
-    PHP_METHOD (ws_fault, __construct) 
+PHP_METHOD (ws_fault, __construct) 
 {
     char *sf_code = NULL, *sf_code_ns = NULL, *sf_reason = NULL, *sf_role =
         NULL, *value = NULL;
@@ -2007,18 +1700,16 @@ get_message_storage_type (
     wsf_util_set_soap_fault (this_ptr, sf_code_ns, sf_code, sf_reason,
         sf_role, details, value TSRMLS_CC);
 }
-
-
 /* }}} */ 
     
 /* {{{ proto */ 
-    PHP_METHOD (ws_fault, __destruct) 
+PHP_METHOD (ws_fault, __destruct) 
 {
 }
 
 
 /* }}} */ 
-    PHP_METHOD (ws_fault, ws_fault_add_fault_header) 
+PHP_METHOD (ws_fault, ws_fault_add_fault_header) 
 {
 }
 
@@ -2038,160 +1729,133 @@ PHP_METHOD (ws_header, __construct)
     zend_bool must_understand = 0;
     if (zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "ss|zsbz", &ns,
             &ns_len, &name, &name_len, &data, &payload, &payload_len,
-            &must_understand, &role) == FAILURE)
-         {
+            &must_understand, &role) == FAILURE) {
         php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
-        }
-    if (ns_len == 0)
-         {
+    }
+    if (ns_len == 0) {
         php_error_docref (NULL TSRMLS_CC, E_ERROR,
             "Invalid parameters. Invalid namespace.");
-        }
-    if (name_len == 0)
-         {
+    }
+    if (name_len == 0) {
         php_error_docref (NULL TSRMLS_CC, E_ERROR,
             "Invalid parameters. Invalid header name.");
-        }
+    }
     add_property_stringl (this_ptr, WS_HEADER_NS, ns, ns_len, 1);
     add_property_stringl (this_ptr, WS_HEADER_LOCALNAME, name, name_len, 1);
-    if (data)
-         {
+    if (data) {
         
 #ifndef ZEND_ENGINE_2
             zval_add_ref (&data);
         
 #endif  /*  */
             add_property_zval (this_ptr, WS_HEADER_DATA, data);
-        }
-    if (payload && payload_len > 0)
-         {
+    }
+    if (payload && payload_len > 0) {
         
 #ifndef ZEND_ENGINE_2
             
 #endif  /*  */
-            add_property_stringl (this_ptr, "payload", payload, payload_len,
-            1);
-        }
-    if (must_understand)
-         {
+        add_property_stringl (this_ptr, "payload", payload, payload_len, 1);
+    }
+    if (must_understand) {
         add_property_bool (this_ptr, WS_HEADER_MUST_UNDERSTAND,
             must_understand);
-        }
-    if (role)
-         {
+    }
+    if (role) {
         if (Z_TYPE_P (role) == IS_LONG && 
             (Z_LVAL_P (role) == WS_SOAP_ROLE_NEXT
                 || Z_LVAL_P (role) == WS_SOAP_ROLE_NONE
-                || Z_LVAL_P (role) == WS_SOAP_ROLE_ULTIMATE_RECEIVER))
-             {
+                || Z_LVAL_P (role) == WS_SOAP_ROLE_ULTIMATE_RECEIVER)) {
             add_property_long (this_ptr, WS_HEADER_ROLE, Z_LVAL_P (role));
-            }
-        
-        else if (Z_TYPE_P (role) == IS_STRING && Z_STRLEN_P (role) > 0)
-             {
+     }
+     else if (Z_TYPE_P (role) == IS_STRING && Z_STRLEN_P (role) > 0) {
             add_property_stringl (this_ptr, WS_HEADER_ROLE,
                 Z_STRVAL_P (role), Z_STRLEN_P (role), 1);
-            }
-        
-        else
-             {
+     }
+     else {
             php_error_docref (NULL TSRMLS_CC, E_ERROR,
                 "Invalid parameters. Invalid role.");
-            }
-        }
+          }
+     }
 }
 
 
 /* {{{ WSSecurityToken::__construct( */ 
-    PHP_METHOD (ws_security_token, __construct) 
+PHP_METHOD (ws_security_token, __construct) 
 {
     zval * object = NULL;
     zval * options = NULL;
     zval ** tmp = NULL;
     if (zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "a",
-            &options) == FAILURE)
-         {
+            &options) == FAILURE) {
         php_error_docref (NULL TSRMLS_CC, E_ERROR,
             "An array should be passed here");
-        }
+    }
+    
     WSF_GET_THIS (object);
-    if (options)
-         {
+    if (options) {
         HashTable * ht = Z_ARRVAL_P (options);
         if (zend_hash_find (ht, WS_USER, sizeof (WS_USER),
-                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING)
-             {
+                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
             add_property_stringl (object, WS_USER, Z_STRVAL_PP (tmp),
                 Z_STRLEN_PP (tmp), 1);
-            }
+        }
         if (zend_hash_find (ht, WS_CERTIFICATE, sizeof (WS_CERTIFICATE),
-                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING)
-             {
+                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
             add_property_stringl (object, WS_CERTIFICATE, Z_STRVAL_PP (tmp),
                 Z_STRLEN_PP (tmp), 1);
-            }
+        }
         if (zend_hash_find (ht, WS_PASSWORD_TYPE, sizeof (WS_PASSWORD_TYPE),
-                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING)
-             {
+                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
             add_property_stringl (object, WS_PASSWORD_TYPE,
                 Z_STRVAL_PP (tmp), Z_STRLEN_PP (tmp), 1);
-            }
+        }
         if (zend_hash_find (ht, WS_PASSWORD, sizeof (WS_PASSWORD),
-                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING)
-             {
+                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
             add_property_string (object, WS_PASSWORD, Z_STRVAL_PP (tmp), 1);
-            }
+        }
         if (zend_hash_find (ht, WS_PRIVATE_KEY, sizeof (WS_PRIVATE_KEY),
-                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING)
-             {
-            add_property_string (object, WS_PRIVATE_KEY, Z_STRVAL_PP (tmp),
-                1);
-            }
+                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
+            add_property_string (object, WS_PRIVATE_KEY, Z_STRVAL_PP (tmp), 1);
+        }
         if (zend_hash_find (ht, WS_PVT_KEY_FORMAT,
-                sizeof (WS_PVT_KEY_FORMAT), (void **) &tmp) == SUCCESS
-            && Z_TYPE_PP (tmp) == IS_STRING)
-             {
-            add_property_string (object, WS_PVT_KEY_FORMAT,
-                Z_STRVAL_PP (tmp), 1);
-            }
+                sizeof (WS_PVT_KEY_FORMAT), (void **) &tmp) == SUCCESS && 
+                Z_TYPE_PP (tmp) == IS_STRING) {
+               add_property_string (object, WS_PVT_KEY_FORMAT,
+               Z_STRVAL_PP (tmp), 1);
+        }
         if (zend_hash_find (ht, WS_CERTIFICATE, sizeof (WS_CERTIFICATE),
-                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING)
-             {
-            add_property_string (object, WS_CERTIFICATE, Z_STRVAL_PP (tmp),
-                1);
-            }
+                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
+            add_property_string (object, WS_CERTIFICATE, Z_STRVAL_PP (tmp), 1);
+        }
         if (zend_hash_find (ht, WS_RECEIVER_CERTIFICATE,
                 sizeof (WS_RECEIVER_CERTIFICATE), (void **) &tmp) == SUCCESS
-            && Z_TYPE_PP (tmp) == IS_STRING)
-             {
+            && Z_TYPE_PP (tmp) == IS_STRING)  {
             add_property_string (object, WS_RECEIVER_CERTIFICATE,
                 Z_STRVAL_PP (tmp), 1);
-            }
+        }
         if (zend_hash_find (ht, WS_RECEIVER_CERTIFICATE_FORMAT,
                 sizeof (WS_RECEIVER_CERTIFICATE_FORMAT),
-                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING)
-             {
+                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
             add_property_string (object, WS_RECEIVER_CERTIFICATE_FORMAT,
                 Z_STRVAL_PP (tmp), 1);
-            }
+        }
         if (zend_hash_find (ht, WS_TTL, sizeof (WS_TTL),
-                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_LONG)
-             {
+                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_LONG) {
             add_property_long (object, WS_TTL, Z_LVAL_PP (tmp));
-            }
+        }
         if (zend_hash_find (ht, WS_PASSWORD_CALL_BACK,
                 sizeof (WS_PASSWORD_CALL_BACK), (void **) tmp) == SUCCESS
             && Z_TYPE_PP (tmp) == IS_STRING) {
-            add_property_string (object, WS_PASSWORD_CALL_BACK,
-                Z_STRVAL_PP (tmp), 1);
+            add_property_string (object, WS_PASSWORD_CALL_BACK, Z_STRVAL_PP (tmp), 1);
         }
-        }
+    }
 } 
 
 /* }}} */ 
     
 /* {{{ WSPolicy::__construct( */ 
-    PHP_METHOD (ws_policy, __construct) 
+PHP_METHOD (ws_policy, __construct) 
 {
     zval * object = NULL;
     zval * properties = NULL;
@@ -2212,7 +1876,7 @@ PHP_METHOD (ws_header, __construct)
     
 /* {{{ proto string file_get_contents(string filename)
     read a pem file and return the key portion of the file as a string */ 
-    PHP_FUNCTION (ws_get_key_from_file) 
+PHP_FUNCTION (ws_get_key_from_file) 
 {
     char *filename;
     int filename_len;
@@ -2225,13 +1889,13 @@ PHP_METHOD (ws_header, __construct)
     char *DELIMITER = "-----";
     
         /* Parse arguments */ 
-        if (zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "s", &filename,
+    if (zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "s", &filename,
             &filename_len) == FAILURE) {
         return;
     }
     context = php_stream_context_from_zval (zcontext, 0);
-    stream = php_stream_open_wrapper_ex (filename, "rb", 
-        (USE_PATH) | ENFORCE_SAFE_MODE | REPORT_ERRORS, NULL, context);
+    stream = php_stream_open_wrapper_ex (filename, "rb",  
+            (USE_PATH) | ENFORCE_SAFE_MODE | REPORT_ERRORS, NULL, context);
     if (!stream) {
         RETURN_FALSE;
     }
@@ -2242,15 +1906,14 @@ PHP_METHOD (ws_header, __construct)
         tmp_index = strstr (contents, DELIMITER);
         if (!tmp_index)
             return;
-        if (len > (tmp_index - contents))
-             {
+        if (len > (tmp_index - contents)) {
             tmp_index += 5;
             tmp_index = strstr (tmp_index, DELIMITER);
             if (!tmp_index)
                 return;
             start_index = tmp_index + 6;
             tmp_index[contents - tmp_index] = '\0';
-            }
+        }
         tmp_index = strstr (start_index, DELIMITER);
         if (!tmp_index)
             return;
@@ -2272,7 +1935,7 @@ PHP_METHOD (ws_header, __construct)
     
 /* {{{ proto string file_get_contents(string filename)
     read a pem file and return the key portion of the file as a string */ 
-    PHP_FUNCTION (ws_get_cert_from_file) 
+PHP_FUNCTION (ws_get_cert_from_file) 
 {
     char *filename;
     int filename_len;
@@ -2285,7 +1948,7 @@ PHP_METHOD (ws_header, __construct)
     char *DELIMITER = "-----";
     
         /* Parse arguments */ 
-        if (zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "s", &filename,
+    if (zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "s", &filename,
             &filename_len) == FAILURE) {
         return;
     }
@@ -2302,15 +1965,14 @@ PHP_METHOD (ws_header, __construct)
         tmp_index = strstr (contents, DELIMITER);
         if (!tmp_index)
             return;
-        if (len > (tmp_index - contents))
-             {
+        if (len > (tmp_index - contents)) {
             tmp_index += 5;
             tmp_index = strstr (tmp_index, DELIMITER);
             if (!tmp_index)
                 return;
             start_index = tmp_index + 6;
             tmp_index[contents - tmp_index] = '\0';
-            }
+        }
         tmp_index = strstr (start_index, DELIMITER);
         if (!tmp_index)
             return;
@@ -2331,7 +1993,7 @@ PHP_METHOD (ws_header, __construct)
 /* }}} */ 
     
 /* {{{  proto  WSClientProxy::__construct(mixed options) */ 
-    PHP_METHOD (ws_client_proxy, __construct) 
+PHP_METHOD (ws_client_proxy, __construct) 
 {
 }
 
@@ -2339,7 +2001,7 @@ PHP_METHOD (ws_header, __construct)
 /* }}} end WSClient_proxt */ 
     
 /* {{{ proto void WSClientProxy::__destruct() */ 
-    PHP_METHOD (ws_client_proxy, __destruct) 
+PHP_METHOD (ws_client_proxy, __destruct) 
 {
 }
 
@@ -2347,7 +2009,7 @@ PHP_METHOD (ws_header, __construct)
 /* }}} */ 
     
 /* {{{ proto WSClientProxy::__call() */ 
-    PHP_METHOD (ws_client_proxy, __call) 
+PHP_METHOD (ws_client_proxy, __call) 
 {
     char *fn_name = NULL;
     long fn_name_len = 0;
@@ -2383,7 +2045,7 @@ PHP_METHOD (ws_header, __construct)
 /* }}} end _call */ 
     
 /* {{{ proto getFunctions() */ 
-    PHP_METHOD (ws_client_proxy, get_functions) 
+PHP_METHOD (ws_client_proxy, get_functions) 
 {
     wsf_soap_get_functions (this_ptr, return_value, env TSRMLS_CC);
 }
@@ -2392,7 +2054,7 @@ PHP_METHOD (ws_header, __construct)
 /* }}} */ 
     
 /* {{{ proto getFunctions() */ 
-    PHP_METHOD (ws_client_proxy, get_types) 
+PHP_METHOD (ws_client_proxy, get_types) 
 {
     wsf_soap_get_types (this_ptr, return_value, env TSRMLS_CC);
 }
@@ -2401,14 +2063,14 @@ PHP_METHOD (ws_header, __construct)
 /* }}} */ 
     
 /* {{{ proto getLocation() */ 
-    PHP_METHOD (ws_client_proxy, get_location) 
+PHP_METHOD (ws_client_proxy, get_location) 
 {
     wsf_soap_get_location (this_ptr, return_value, env TSRMLS_CC);
 }
 
 
 /* }}} end getLocation */ 
-    PHP_FUNCTION (ws_test_function) 
+PHP_FUNCTION (ws_test_function) 
 {
     char *function_name, *data = NULL;
     int function_name_length = 0;
