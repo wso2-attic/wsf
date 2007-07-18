@@ -245,7 +245,7 @@ wsf_policy_handle_client_security(
     return AXIS2_SUCCESS;
 }
 
-int ws_policy_handle_server_security(zval *sec_token,
+int wsf_policy_handle_server_security(zval *sec_token,
                                      zval *policy,
                                      axutil_env_t *env,
                                      axis2_svc_t *svc,
