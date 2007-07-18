@@ -16,7 +16,7 @@ try {
 	$f = file_get_contents("samples/resources/axis2.jpg");
     
 	$reqMessage = new WSMessage($reqPayloadString, 
-        array("to" => "http://localhost/mtom_upload_service.php",
+        array("to" => "http://localhost/samples/mtom_upload_service.php",
 		"attachments" => array("myid1" => $f)));
 	
 	$client = new WSClient(array("useMTOM" => TRUE));
@@ -34,4 +34,7 @@ try {
 }
 ?>
 --EXPECT--
+PHP Warning:  Module 'wsf' already loaded in Unknown on line 0
+
+Warning: file_get_contents(samples/resources/axis2.jpg): failed to open stream: No such file or directory in /home/dushshantha/php1.0/wso2-wsf-php-1.0.0beta/src/tests/samples/mtom_upload_client.php on line 13
 <ns1:response xmlns:ns1="http://php.axis2.org/samples/mtom">Image Saved</ns1:response>
