@@ -113,6 +113,7 @@ typedef enum ws_input_types{
 #define WS_HEADER_LOCALNAME 	"localname"
 #define WS_HEADER_DATA     		"data"
 #define WS_HEADER_ROLE     		"role"
+#define WS_HEADER_ACTOR         "actor"
 #define WS_HEADER_MUST_UNDERSTAND 	"mustUnderstand"
 
 #define WS_POLICY_NAME 			"policy"

@@ -152,6 +152,11 @@ wsf_util_construct_header_node(const axutil_env_t *env,
 					role_val, soap_ns);
 				axiom_element_add_attribute(header_ele, env, role_attr, header_node);
 			}
+			else if(WSF_GLOBAL(soap_version) == AXIOM_SOAP11 && role_val){
+				role_attr = axiom_attribute_create(env, WS_HEADER_ACTOR,
+					role_val, soap_ns);
+				axiom_element_add_attribute(header_ele, env, role_attr, header_node);
+			}
 	}
 	if(zend_hash_find(Z_OBJPROP_P(header), WS_HEADER_DATA, 
 		sizeof(WS_HEADER_DATA), (void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
