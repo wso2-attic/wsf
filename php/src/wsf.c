@@ -2138,7 +2138,7 @@ PHP_METHOD(ws_policy, __construct)
     /* if the wspolicy object ( option array is presence */
 
     if( NULL != properties){
-	ws_policy_set_policy_options(object, properties, env TSRMLS_CC);
+	wsf_policy_set_policy_options(object, properties, env TSRMLS_CC);
     }
 }
 

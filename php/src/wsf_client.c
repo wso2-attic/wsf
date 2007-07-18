@@ -163,7 +163,7 @@ wsf_client_set_security_options(
 	}
 
 	if(sec_token && policy) {
-			ws_policy_handle_client_security(sec_token, policy, env, svc_client TSRMLS_CC); 
+			wsf_policy_handle_client_security(sec_token, policy, env, svc_client TSRMLS_CC); 
 	}
 }
 

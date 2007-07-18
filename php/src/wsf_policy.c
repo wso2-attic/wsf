@@ -34,68 +34,14 @@
 #define ArrySize 8
 
 
-int set_security_policy_options(zval *policy_obj,
+int wsf_set_security_policy_options(zval *policy_obj,
                                 zval **tmp,
                                 const axutil_env_t *env TSRMLS_DC);
 
 axiom_node_t *
-create_policy_node(const axutil_env_t *env,
+wsf_create_policy_node(const axutil_env_t *env,
                    axiom_node_t *node );
 
-axiom_node_t *
-create_initiator_token(const axutil_env_t *env,
-                       axiom_node_t *node,
-                       zval **optionVal TSRMLS_DC);
-
-axiom_node_t *
-create_recipient_token(const axutil_env_t *env,
-                       axiom_node_t *node,
-                       zval **optionVal TSRMLS_DC);
-
-axiom_node_t*
-create_algorithm_suite(const axutil_env_t *env,
-                       axiom_node_t *node,
-                       zval **optionVal TSRMLS_DC);
-
-axiom_node_t *
-create_sign_parts(const axutil_env_t *env,
-                  axiom_node_t *parent_node,
-                  zval **tmp TSRMLS_DC);
-
-axiom_node_t *
-create_encrypt_parts(const axutil_env_t *env,
-                     axiom_node_t *parent_node,
-                     zval **tmp TSRMLS_DC);
-
-axiom_node_t *
-create_layout(const axutil_env_t *env,
-              axiom_node_t *node,
-              zval **optionVal TSRMLS_DC);
-
-axiom_node_t *
-create_default_sign(const axutil_env_t *env,
-                    axiom_node_t *node TSRMLS_DC);
-
-axiom_node_t *
-create_default_encrypt(const axutil_env_t *env,
-                       axiom_node_t *node);
-
-axiom_node_t *
-create_username_token(const axutil_env_t *env,
-                      axiom_node_t *parent_node,
-                      zval **tmp TSRMLS_DC);
-
-axiom_node_t *
-create_token_reference(const axutil_env_t *env,
-                       axiom_node_t *parent_node,
-                       zval **tmp TSRMLS_DC);
-
-
-char * algorithmArry[ArrySize]={
-                                   BASIC256, BASIC192, BASIC128,
-                                   TRIPLEDES, BASIC256_RSA15, BASIC192_RSA15,
-                                   BASIC128_RSA15, TRIPLEDES_RSA15
-                               };
 
 typedef struct tokenProperties {
     char *user;
@@ -113,27 +59,27 @@ typedef struct tokenProperties {
 tokenProperties_t;
 
 axis2_char_t * AXIS2_CALL
-password_provider_function(const axutil_env_t *env,
+wsf_password_provider_function(const axutil_env_t *env,
                            const axis2_char_t *username,
                            void *ctx);
 
-tokenProperties_t set_tmp_rampart_options(tokenProperties_t tmp_rampart_ctx,
+tokenProperties_t wsf_set_tmp_rampart_options(tokenProperties_t tmp_rampart_ctx,
         zval *sec_token,
         zval *policy,
         axutil_env_t *env TSRMLS_DC);
 
-int set_options_to_rampart_ctx(rampart_context_t *in_rampart_ctx,
+int wsf_set_options_to_rampart_ctx(rampart_context_t *in_rampart_ctx,
                                axutil_env_t *env,
                                axiom_node_t *incoming_policy_node,
                                tokenProperties_t tmp_rampart_ctx);
 
 
-axiom_node_t *do_create_policy(zval *sec_token,
+axiom_node_t *wsf_do_create_policy(zval *sec_token,
                                zval *policy,
                                axutil_env_t *env TSRMLS_DC);
 
 
-int ws_policy_handle_client_security(zval *sec_token,
+int wsf_policy_handle_client_security(zval *sec_token,
                                      zval *policy,
                                      axutil_env_t *env,
                                      axis2_svc_client_t *svc_client TSRMLS_DC) 
@@ -186,7 +132,7 @@ int ws_policy_handle_client_security(zval *sec_token,
         if (zend_hash_find(ht, WS_IN_POLICY, sizeof(WS_IN_POLICY), (void **)&tmp_type) == SUCCESS){
             if(Z_TYPE_PP(tmp_type) == IS_ARRAY ) {
                 policy_type = *tmp_type;
-                incoming_policy_node = do_create_policy(sec_token, policy_type, env TSRMLS_CC);
+                incoming_policy_node = wsf_do_create_policy(sec_token, policy_type, env TSRMLS_CC);
             }
             if(Z_TYPE_PP(tmp_type) == IS_STRING){
                 policy_xml = Z_STRVAL_PP(tmp_type);
@@ -198,7 +144,7 @@ int ws_policy_handle_client_security(zval *sec_token,
         if (zend_hash_find(ht, WS_OUT_POLICY, sizeof(WS_OUT_POLICY), (void *)&tmp_type) == SUCCESS){
             if(Z_TYPE_PP(tmp_type) == IS_ARRAY ) {
                 policy_type = *tmp_type;
-                outgoing_policy_node = do_create_policy(sec_token, policy_type, env TSRMLS_CC);
+                outgoing_policy_node = wsf_do_create_policy(sec_token, policy_type, env TSRMLS_CC);
                 is_multiple_flow = AXIS2_SUCCESS;
             }
             if(Z_TYPE_PP(tmp_type) == IS_STRING){
@@ -218,13 +164,13 @@ int ws_policy_handle_client_security(zval *sec_token,
     /* since creating policy xml is the same procedure use one
        function */
     if ( Z_TYPE_P(policy) == IS_OBJECT && is_multiple_flow == AXIS2_FALSE) {
-        outgoing_policy_node = do_create_policy(sec_token, policy, env TSRMLS_CC);
-        incoming_policy_node = do_create_policy(sec_token, policy, env TSRMLS_CC);
+        outgoing_policy_node = wsf_do_create_policy(sec_token, policy, env TSRMLS_CC);
+        incoming_policy_node = wsf_do_create_policy(sec_token, policy, env TSRMLS_CC);
     }
     
     /* get the values from the security token object and keep it in a
        temperary structure */
-    tmp_rampart_ctx = set_tmp_rampart_options(tmp_rampart_ctx, sec_token, policy, env TSRMLS_CC);
+    tmp_rampart_ctx = wsf_set_tmp_rampart_options(tmp_rampart_ctx, sec_token, policy, env TSRMLS_CC);
 
     rampart_ctx = rampart_context_create(env);
 
@@ -259,7 +205,7 @@ int ws_policy_handle_client_security(zval *sec_token,
                 conf_ctx = axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
                 conf = axis2_conf_ctx_get_conf(conf_ctx, env);
 
-                set_options_to_rampart_ctx(rampart_ctx, env, incoming_policy_node, tmp_rampart_ctx);
+                wsf_set_options_to_rampart_ctx(rampart_ctx, env, incoming_policy_node, tmp_rampart_ctx);
                 
                 security_param = axutil_param_create(env,  WS_RAMPART_CONFIGURATION, (void *)rampart_ctx);
                 axis2_conf_add_param(conf, env, security_param);
@@ -337,7 +283,7 @@ int ws_policy_handle_server_security(zval *sec_token,
         if (zend_hash_find(ht, WS_IN_POLICY, sizeof(WS_IN_POLICY), (void **)&tmp_type) == SUCCESS){
             if (Z_TYPE_PP(tmp_type) == IS_ARRAY ) {
                 policy_type = *tmp_type;
-                incoming_policy_node = do_create_policy(sec_token, policy_type, env TSRMLS_CC);
+                incoming_policy_node = wsf_do_create_policy(sec_token, policy_type, env TSRMLS_CC);
                 is_multiple_flow = AXIS2_SUCCESS;
             }
             if (Z_TYPE_PP(tmp_type) ==  IS_STRING) {
@@ -351,7 +297,7 @@ int ws_policy_handle_server_security(zval *sec_token,
         if (zend_hash_find(ht, WS_OUT_POLICY, sizeof(WS_OUT_POLICY), (void *)&tmp_type) == SUCCESS){
             if (Z_TYPE_PP(tmp_type) == IS_ARRAY ) {
                 policy_type = *tmp_type;
-                outgoing_policy_node = do_create_policy(sec_token, policy_type, env TSRMLS_CC);
+                outgoing_policy_node = wsf_do_create_policy(sec_token, policy_type, env TSRMLS_CC);
                 is_multiple_flow = AXIS2_SUCCESS;
             }
             if (Z_TYPE_PP(tmp_type) == IS_STRING){
@@ -372,16 +318,16 @@ int ws_policy_handle_server_security(zval *sec_token,
     /* since creating policy xml is the same procedure use one
        function */
     if ( Z_TYPE_P(policy) == IS_OBJECT && is_multiple_flow == AXIS2_FALSE) {
-        outgoing_policy_node = do_create_policy(sec_token, policy, env TSRMLS_CC);
-        incoming_policy_node = do_create_policy(sec_token, policy, env TSRMLS_CC);
+        outgoing_policy_node = wsf_do_create_policy(sec_token, policy, env TSRMLS_CC);
+        incoming_policy_node = wsf_do_create_policy(sec_token, policy, env TSRMLS_CC);
     }
 
     /* get the values from the security token object and keep it in a
        temperary structure */
 
     rampart_ctx = rampart_context_create(env);
-    tmp_rampart_ctx = set_tmp_rampart_options(tmp_rampart_ctx, sec_token, policy, env TSRMLS_CC);
-    set_options_to_rampart_ctx(rampart_ctx, env, incoming_policy_node, tmp_rampart_ctx);
+    tmp_rampart_ctx = wsf_set_tmp_rampart_options(tmp_rampart_ctx, sec_token, policy, env TSRMLS_CC);
+    wsf_set_options_to_rampart_ctx(rampart_ctx, env, incoming_policy_node, tmp_rampart_ctx);
 
     if (incoming_policy_node){
         if (axiom_node_get_node_type(incoming_policy_node, env) == AXIOM_ELEMENT){
@@ -437,7 +383,7 @@ int ws_policy_handle_server_security(zval *sec_token,
 }
 
 
-tokenProperties_t  set_tmp_rampart_options(tokenProperties_t tmp_rampart_ctx,
+tokenProperties_t  wsf_set_tmp_rampart_options(tokenProperties_t tmp_rampart_ctx,
         zval *sec_token,
         zval *policy,
         axutil_env_t *env TSRMLS_DC)
@@ -507,7 +453,7 @@ tokenProperties_t  set_tmp_rampart_options(tokenProperties_t tmp_rampart_ctx,
     return tmp_rampart_ctx;
 }
 
-int set_options_to_rampart_ctx(rampart_context_t *x_rampart_ctx,
+int wsf_set_options_to_rampart_ctx(rampart_context_t *x_rampart_ctx,
                                axutil_env_t *env,
                                axiom_node_t *x_policy_node,
                                tokenProperties_t token_ctx)
@@ -554,7 +500,7 @@ int set_options_to_rampart_ctx(rampart_context_t *x_rampart_ctx,
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy]setting ttl value ");
 
     if (rampart_context_set_pwcb_function(x_rampart_ctx, env,
-                                          password_provider_function,
+                                          wsf_password_provider_function,
                                           (void *)token_ctx.callback_function) == AXIS2_SUCCESS)
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy]setting callback function");
     
@@ -564,7 +510,7 @@ int set_options_to_rampart_ctx(rampart_context_t *x_rampart_ctx,
 
 
 
-axiom_node_t *do_create_policy(zval *sec_token,
+axiom_node_t *wsf_do_create_policy(zval *sec_token,
                                zval *policy,
                                axutil_env_t *env TSRMLS_DC)
 {
@@ -624,7 +570,7 @@ axiom_node_t *do_create_policy(zval *sec_token,
 
 
 
-int ws_policy_set_policy_options(zval *this_ptr,
+int wsf_policy_set_policy_options(zval *this_ptr,
                                  zval *property,
                                  const axutil_env_t *env TSRMLS_DC)
 {
@@ -642,7 +588,7 @@ int ws_policy_set_policy_options(zval *this_ptr,
         /* for security policy related things  */
         if(zend_hash_find(ht, "security", sizeof("security"), (void **)&tmp) == SUCCESS &&
            Z_TYPE_PP(tmp) == IS_ARRAY){
-            set_security_policy_options(this_ptr, tmp , env TSRMLS_CC);
+            wsf_set_security_policy_options(this_ptr, tmp , env TSRMLS_CC);
             return AXIS2_SUCCESS;
         }
         
@@ -658,7 +604,7 @@ int ws_policy_set_policy_options(zval *this_ptr,
 
 }
 
-int set_security_policy_options(zval *policy_obj,
+int wsf_set_security_policy_options(zval *policy_obj,
                                 zval **sec_options,
                                 const axutil_env_t *env TSRMLS_DC)
 {
@@ -740,7 +686,7 @@ int set_security_policy_options(zval *policy_obj,
         if (zend_hash_find(ht_sec, WS_IN_POLICY, sizeof(WS_IN_POLICY), (void **)&sec_prop) == SUCCESS ){
             if(Z_TYPE_PP(sec_prop) == IS_ARRAY) {
                 add_property_zval(policy_obj, WS_IN_POLICY, *sec_prop );
-                set_security_policy_options(policy_obj, sec_prop , env TSRMLS_CC);
+                wsf_set_security_policy_options(policy_obj, sec_prop , env TSRMLS_CC);
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_policy] in policy array is enable ");
             }
             if(Z_TYPE_PP(sec_prop) == IS_STRING) {
@@ -753,7 +699,7 @@ int set_security_policy_options(zval *policy_obj,
         if (zend_hash_find(ht_sec, WS_OUT_POLICY, sizeof(WS_OUT_POLICY), (void **)&sec_prop) == SUCCESS){
             if(Z_TYPE_PP(sec_prop) == IS_ARRAY) {
                 add_property_zval(policy_obj, WS_OUT_POLICY, *sec_prop );
-                set_security_policy_options(policy_obj, sec_prop , env TSRMLS_CC);
+                wsf_set_security_policy_options(policy_obj, sec_prop , env TSRMLS_CC);
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_policy] out policy array is enable ");
             }
             if(Z_TYPE_PP(sec_prop) == IS_STRING) {
@@ -766,7 +712,7 @@ return AXIS2_SUCCESS;
 }
 
 axis2_char_t* AXIS2_CALL
-password_provider_function(const axutil_env_t *env, const axis2_char_t *username, void *ctx)
+wsf_password_provider_function(const axutil_env_t *env, const axis2_char_t *username, void *ctx)
 {
     zval func, param1, retval;
     zval *params[1];
@@ -788,6 +734,9 @@ password_provider_function(const axutil_env_t *env, const axis2_char_t *username
     }
     return NULL;
 }
+
+
+
 
 
 
