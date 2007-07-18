@@ -455,16 +455,11 @@ int parse_packet_soap(zval *this_ptr, char *buffer, int buffer_size, sdlFunction
 						if (param->element) {
 							name = param->element->name;
 							ns = param->element->namens;
-/*
-							name = param->encode->details.type_str;
-							ns = param->encode->details.ns;
-*/
 						} else {
 							name = param->paramName;
 						}
 					} else {
 						name = fn->responseName;
-						/* ns = ? */
 					}
 
 					/* Get value of parameter */
@@ -499,11 +494,6 @@ int parse_packet_soap(zval *this_ptr, char *buffer, int buffer_size, sdlFunction
 						/* TODO: may be "nil" is not OK? */
 						MAKE_STD_ZVAL(tmp);
 						ZVAL_NULL(tmp);
-/*
-						add_soap_fault(this_ptr, "Client", "Can't find response data", NULL, NULL TSRMLS_CC);
-						xmlFreeDoc(response);
-						return FALSE;
-*/
 					} else {
 						/* Decoding value of parameter */
 						if (param != NULL) {
@@ -918,24 +908,11 @@ void wsf_soap_do_soap_call(zval* this_ptr,
                 axis2_options_set_to(client_options, env, to_epr);
                 {/** set options */
 					wsf_client_set_options(Z_OBJPROP_P(client_zval), NULL, env, client_options, svc_client, 0 TSRMLS_CC);
-					/*
-                    HashTable *client_ht = NULL;
-                    if(zend_hash_find(Z_OBJPROP_P(client_zval), WS_OPTIONS, sizeof(WS_OPTIONS), (void **) &tmp) == SUCCESS)                     {
-                        if(Z_TYPE_PP(tmp) == IS_ARRAY){
-                            client_ht = Z_ARRVAL_PP(tmp);
-                        }   
-                        
-                    }
-					*/
                 }
 			}
 
             soap_version = WSF_GLOBAL(soap_version);
 			if (binding->bindingType == BINDING_SOAP) {
-				/*
-                xmlChar *buf = NULL;
-                int size;
-                */
 				sdlSoapBindingFunctionPtr fnb = (sdlSoapBindingFunctionPtr)fn->bindingAttributes;
 				request = serialize_function_call(client_zval, fn, NULL, fnb->input.ns, real_args, arg_count, soap_version, soap_headers TSRMLS_CC);
 		
@@ -1012,25 +989,6 @@ void wsf_soap_do_soap_call(zval* this_ptr,
             }
 		}
  	}
-/*
-	if (!ret) {
-		zval** fault;
-		if (zend_hash_find(Z_OBJPROP_P(this_ptr), "__soap_fault", sizeof("__soap_fault"), (void **) &fault) == SUCCESS) {
-			*return_value = **fault;
-			zval_copy_ctor(return_value);
-		} else {
-			*return_value = *add_soap_fault(this_ptr, "Client", "Unknown Error", NULL, NULL TSRMLS_CC);
-			zval_copy_ctor(return_value);
-		}
-	} else {
-		zval** fault;
-		if (zend_hash_find(Z_OBJPROP_P(this_ptr), "__soap_fault", sizeof("__soap_fault"), (void **) &fault) == SUCCESS) {
-			*return_value = **fault;
-			zval_copy_ctor(return_value);
-		}
-	}
-*
-*/
 
 #ifdef ZEND_ENGINE_2
 	if (!EG(exception) &&
@@ -1921,7 +1879,6 @@ static xmlNodePtr serialize_parameter(sdlParamPtr param, zval *param_val, int in
 			paramName = name;
 		}
 	}
-	/* php_printf("%s", paramName); */
 	xmlParam = serialize_zval(param_val, param, paramName, style, parent TSRMLS_CC);
 
 	return xmlParam;
@@ -2835,16 +2792,7 @@ wsf_soap_send_fault(int version,char* code, char* string, char *actor TSRMLS_DC)
                 xmlNodePtr node = xmlNewNode(NULL, BAD_CAST("faultcode"));
                 char *str = php_escape_html_entities((unsigned char*)code, strlen(code), &new_len, 0, 0, NULL TSRMLS_CC);
                 xmlAddChild(param, node);
-                /*if (fault_ns) {
-                    xmlNsPtr nsptr = encode_add_ns(node, fault_ns);
-                    xmlChar *code = xmlBuildQName(BAD_CAST(str), nsptr->prefix, NULL, 0);
-                    xmlNodeSetContent(node, code);
-                    xmlFree(code);
-                } else {
-                */
                 xmlNodeSetContentLen(node, BAD_CAST(str), new_len);
-                
-                //efree(str);
             }
 	        if (string != NULL) {
                 zval *tmp = NULL;
@@ -2863,7 +2811,6 @@ wsf_soap_send_fault(int version,char* code, char* string, char *actor TSRMLS_DC)
                 ZVAL_STRING(tmp, actor, 0);
 				node = master_to_xml(get_conversion(IS_STRING), tmp, SOAP_LITERAL, param);
                 xmlNodeSetName(node, BAD_CAST("faultactor"));
-                /* zval_dtor(tmp); */
             }
     }
 
@@ -2882,3 +2829,5 @@ wsf_soap_send_fault(int version,char* code, char* string, char *actor TSRMLS_DC)
     
     return;
 }
+
+
