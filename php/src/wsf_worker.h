@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #ifndef WSF_WORKER_H
 #define WSF_WORKER_H
 
@@ -26,29 +26,30 @@
 
 #ifdef __cplusplus
 extern "C"
+{
 #endif
 
 typedef struct wsf_worker_t wsf_worker_t;
 
-wsf_worker_t* 
-wsf_worker_create (const axutil_env_t *env, 
-  		   axis2_char_t *repo_path,
-		   axis2_char_t *rm_db_dir);
+wsf_worker_t *wsf_worker_create (
+    const axutil_env_t * env,
+    axis2_char_t * repo_path,
+    axis2_char_t * rm_db_dir);
 
-int 
-wsf_worker_process_request(wsf_worker_t *worker, 
-			   axutil_env_t *env,
-			   wsf_req_info_t *reqinfo, 
-			   wsf_svc_info_t *svc_info);
+int wsf_worker_process_request (
+    wsf_worker_t * worker,
+    axutil_env_t * env,
+    wsf_req_info_t * reqinfo,
+    wsf_svc_info_t * svc_info);
 
-void 
-wsf_worker_free(wsf_worker_t *worker, 
-		const axutil_env_t *env);
+void wsf_worker_free (
+    wsf_worker_t * worker,
+    const axutil_env_t * env);
 
 
-axis2_conf_ctx_t* 
-wsf_worker_get_conf_ctx(wsf_worker_t *worker, 
-			const axutil_env_t *env);
+axis2_conf_ctx_t *wsf_worker_get_conf_ctx (
+    wsf_worker_t * worker,
+    const axutil_env_t * env);
 
 
 #ifdef __cplusplus
@@ -56,4 +57,3 @@ wsf_worker_get_conf_ctx(wsf_worker_t *worker,
 #endif
 
 #endif /* WSF_WORKER_H */
-

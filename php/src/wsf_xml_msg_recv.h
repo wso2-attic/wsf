@@ -19,7 +19,7 @@
 
 #include "wsf_common.h"
 
-WSF_PHP_API axis2_msg_recv_t* WSF_CALL
-wsf_xml_msg_recv_create(const axutil_env_t *env);
+WSF_PHP_API axis2_msg_recv_t *WSF_CALL wsf_xml_msg_recv_create (
+    const axutil_env_t * env);
 
 #endif /* WS_XML_MSG_RECV_H */

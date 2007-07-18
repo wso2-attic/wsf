@@ -26,13 +26,12 @@ extern "C"
 {
 #endif
 
-WSF_PHP_API axutil_stream_t * WSF_CALL 
-axis2_stream_create_php(const axutil_env_t *env, 
-        wsf_req_info_t *req TSRMLS_DC);
+    WSF_PHP_API axutil_stream_t *WSF_CALL axis2_stream_create_php (
+        const axutil_env_t * env,
+        wsf_req_info_t * req TSRMLS_DC);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* WSF_STREAM_H */
-
+#endif                          /* WSF_STREAM_H */

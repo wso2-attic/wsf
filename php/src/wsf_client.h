@@ -28,51 +28,56 @@
 #include <TSRM.h>
 #include "ext/libxml/php_libxml.h"
 
-int wsf_client_set_options(
-		HashTable *client_ht, 
-		HashTable *msg_ht, 
-		axutil_env_t *env,
-        axis2_options_t *options, 
-		axis2_svc_client_t *svc_client,
-		int is_send TSRMLS_DC);  
-        
-int wsf_client_set_headers(
-		const axutil_env_t *env,
-		axis2_svc_client_t *svc_client,
-		zval *msg TSRMLS_DC);
+int wsf_client_set_options (
+    HashTable * client_ht,
+    HashTable * msg_ht,
+    axutil_env_t * env,
+    axis2_options_t * options,
+    axis2_svc_client_t * svc_client,
+    int is_send TSRMLS_DC);
+
+int wsf_client_set_headers (
+    const axutil_env_t * env,
+    axis2_svc_client_t * svc_client,
+    zval * msg TSRMLS_DC);
 
 
-int wsf_client_do_request(
-		zval *this_ptr, 
-		zval *param, 
-		zval *return_value,
-		axutil_env_t *env,
-		axis2_svc_client_t *svc_client,
-		int is_oneway TSRMLS_DC);
+int wsf_client_do_request (
+    zval * this_ptr,
+    zval * param,
+    zval * return_value,
+    axutil_env_t * env,
+    axis2_svc_client_t * svc_client,
+    int is_oneway TSRMLS_DC);
 
-void wsf_client_enable_ssl(HashTable *ht, 
-		axutil_env_t *env, 
-		axis2_options_t *options,
-		axis2_svc_client_t *svc_client TSRMLS_DC);
+void wsf_client_enable_ssl (
+    HashTable * ht,
+    axutil_env_t * env,
+    axis2_options_t * options,
+    axis2_svc_client_t * svc_client TSRMLS_DC);
 
-void wsf_client_enable_proxy(HashTable *ht, 
-		axutil_env_t *env, 
-		axis2_options_t *options,
-		axis2_svc_client_t *svc_client TSRMLS_DC);
+void wsf_client_enable_proxy (
+    HashTable * ht,
+    axutil_env_t * env,
+    axis2_options_t * options,
+    axis2_svc_client_t * svc_client TSRMLS_DC);
 
-void wsf_client_add_properties(zval *this_ptr , HashTable *ht TSRMLS_DC);
+void wsf_client_add_properties (
+    zval * this_ptr,
+    HashTable * ht TSRMLS_DC);
 
-int wsf_client_set_endpoint_and_soap_action(HashTable *client_ht, 
-		HashTable *msg_ht, 
-		axutil_env_t *env, 
-		axis2_options_t *client_options TSRMLS_DC);
+int wsf_client_set_endpoint_and_soap_action (
+    HashTable * client_ht,
+    HashTable * msg_ht,
+    axutil_env_t * env,
+    axis2_options_t * client_options TSRMLS_DC);
 
-void
-wsf_client_send_terminate_sequence(axutil_env_t *env,
-	int is_rm_engaged, 
-	int will_continue_sequence,
-	int rm_spec_version,
-	char *sequence_key,
-	axis2_svc_client_t *svc_client);
+void wsf_client_send_terminate_sequence (
+    axutil_env_t * env,
+    int is_rm_engaged,
+    int will_continue_sequence,
+    int rm_spec_version,
+    char *sequence_key,
+    axis2_svc_client_t * svc_client);
 
 #endif /* WSF_CLIENT_H */

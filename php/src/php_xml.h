@@ -30,25 +30,66 @@
 #define node_is_equal(node, name) node_is_equal_ex(node, name, NULL)
 #define attr_is_equal(node, name) attr_is_equal_ex(node, name, NULL)
 
-xmlDocPtr soap_xmlParseFile(const char *filename TSRMLS_DC);
-xmlDocPtr soap_xmlParseMemory(const void *buf, size_t size);
+xmlDocPtr soap_xmlParseFile (
+    const char *filename TSRMLS_DC);
+xmlDocPtr soap_xmlParseMemory (
+    const void *buf,
+    size_t size);
 
-xmlNsPtr attr_find_ns(xmlAttrPtr node);
-xmlNsPtr node_find_ns(xmlNodePtr node);
-int attr_is_equal_ex(xmlAttrPtr node, char *name, char *ns);
-int node_is_equal_ex(xmlNodePtr node, char *name, char *ns);
-xmlAttrPtr get_attribute_ex(xmlAttrPtr node,char *name, char *ns);
-xmlNodePtr get_node_ex(xmlNodePtr node,char *name, char *ns);
-xmlNodePtr get_node_recursive_ex(xmlNodePtr node,char *name, char *ns);
-xmlNodePtr get_node_with_attribute_ex(xmlNodePtr node, char *name, char *name_ns, char *attribute, char *value, char *attr_ns);
-xmlNodePtr get_node_with_attribute_recursive_ex(xmlNodePtr node, char *name, char *name_ns, char *attribute, char *value, char *attr_ns);
-int parse_namespace(const xmlChar *inval,char **value,char **namespace);
+xmlNsPtr attr_find_ns (
+    xmlAttrPtr node);
+xmlNsPtr node_find_ns (
+    xmlNodePtr node);
+int attr_is_equal_ex (
+    xmlAttrPtr node,
+    char *name,
+    char *ns);
+int node_is_equal_ex (
+    xmlNodePtr node,
+    char *name,
+    char *ns);
+xmlAttrPtr get_attribute_ex (
+    xmlAttrPtr node,
+    char *name,
+    char *ns);
+xmlNodePtr get_node_ex (
+    xmlNodePtr node,
+    char *name,
+    char *ns);
+xmlNodePtr get_node_recursive_ex (
+    xmlNodePtr node,
+    char *name,
+    char *ns);
+xmlNodePtr get_node_with_attribute_ex (
+    xmlNodePtr node,
+    char *name,
+    char *name_ns,
+    char *attribute,
+    char *value,
+    char *attr_ns);
+xmlNodePtr get_node_with_attribute_recursive_ex (
+    xmlNodePtr node,
+    char *name,
+    char *name_ns,
+    char *attribute,
+    char *value,
+    char *attr_ns);
+int parse_namespace (
+    const xmlChar * inval,
+    char **value,
+    char **namespace);
 
 #ifndef ZEND_ENGINE_2
-int php_stream_xmlIO_match_wrapper(const char *filename);
-void *php_stream_xmlIO_open_wrapper(const char *filename);
-int php_stream_xmlIO_read(void *context, char *buffer, int len);
-int php_stream_xmlIO_close(void *context);
+int php_stream_xmlIO_match_wrapper (
+    const char *filename);
+void *php_stream_xmlIO_open_wrapper (
+    const char *filename);
+int php_stream_xmlIO_read (
+    void *context,
+    char *buffer,
+    int len);
+int php_stream_xmlIO_close (
+    void *context);
 #endif
 
 #define FOREACHATTRNODE(n,c,i)      FOREACHATTRNODEEX(n,c,NULL,i)

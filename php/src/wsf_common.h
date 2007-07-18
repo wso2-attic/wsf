@@ -37,23 +37,24 @@
 /* {{{ axis2 object types */
 typedef enum ws_object_types_t
 {
-	WS_NONE,
+    WS_NONE,
     WS_SVC_CLIENT,
     WS_SVC,
     WS_FAULT,
     WS_PARAM,
     WS_OBJECT_LAST
-}ws_object_types_t;
+} ws_object_types_t;
 /* }}} */
 
 /** using input */
-typedef enum ws_input_types{
+typedef enum ws_input_types
+{
     WS_USING_DOM = 0,
     WS_USING_SIMPLEXML,
     WS_USING_STRING,
     WS_USING_MSG,
     WS_USING_INCORRECT_INPUT
-}ws_input_types_t;
+} ws_input_types_t;
 
 
 /** Options array options */
@@ -66,14 +67,14 @@ typedef enum ws_input_types{
 #define WS_TO				"to"    /** endpoint uri */
 
 #define WS_USE_WSA     		"useWSA"
-#define WS_ACTION			"action"		/** addressing options */
+#define WS_ACTION			"action"        /** addressing options */
 #define WS_FROM				"from"
 #define WS_REPLY_TO			"replyTo"
 #define WS_FAULT_TO			"faultTo"
 
 #define WS_SOAP_ACTION                  "SOAPAction"
 
-#define WS_USES_XOP			"usesXOP"	   /** MTOM XOP */
+#define WS_USES_XOP			"usesXOP"      /** MTOM XOP */
 #define WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE "defaultAttachmentContentType"
 #define WS_ATTACHMENTS 			"attachments"
 #define WS_CID2CONTENT_TYPE 	"cid2contentType"
@@ -205,45 +206,47 @@ typedef enum ws_input_types{
 #define WS_SOAP_ENCODED SOAP_ENCODED
 #define WS_SOAP_LITERAL SOAP_LITERAL
 
-typedef struct wsf_svc_info {
+typedef struct wsf_svc_info
+{
 
     axis2_svc_t *svc;
-    
+
     axis2_msg_recv_t *msg_recv;
-    
+
     axutil_hash_t *class_info;
-    
+
     struct wsf_worker_t *php_worker;
 
     axutil_hash_t *ops_to_actions;
-    
+
     axutil_hash_t *ops_to_functions;
-    
+
     axutil_array_list_t *modules_to_engage;
 
     int request_xop;
-    
+
     int use_mtom;
-    
+
     int is_class;
-    
+
     zval *policy;
-    
+
     zval *security_token;
 
     HashTable *ht_opParams;
-    
+
     char *svc_name;
     /** this is needed in case of request uri dispatching( for rest) */
     char *op_name;
 
-	void *service;
+    void *service;
 
 }
 wsf_svc_info_t;
 
 
-typedef struct php_req_info {
+typedef struct php_req_info
+{
     long svr_port;
     char *svr_name;
     char *http_protocol;
@@ -259,21 +262,8 @@ typedef struct php_req_info {
     void *result_payload;
     int result_length;
     char *transfer_encoding;
-}wsf_req_info_t;
+} wsf_req_info_t;
 
 /** functions */
 
 #endif /* WS_COMMON_H */
-
-
-
-
-
-
-
-
-
-
-
-
-

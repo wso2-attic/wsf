@@ -104,35 +104,23 @@
 #define THUMBPRINT_VAL "MustSupportRefThumbprint"
 
 
-int wsf_policy_set_policy_options(zval *this_ptr,
-                                 zval *property,
-                                 const axutil_env_t *env TSRMLS_DC);
+int wsf_policy_set_policy_options (
+    zval * this_ptr,
+    zval * property,
+    const axutil_env_t * env TSRMLS_DC);
 
-int wsf_policy_handle_client_security(zval *sec_token,
-                                     zval *policy,
-                                     axutil_env_t *env,
-                                     axis2_svc_client_t *svc_client TSRMLS_DC);
+int wsf_policy_handle_client_security (
+    zval * sec_token,
+    zval * policy,
+    axutil_env_t * env,
+    axis2_svc_client_t * svc_client TSRMLS_DC);
 
-int wsf_policy_handle_server_security(zval *sec_token,
-                                     zval *policy,
-                                     axutil_env_t *env,
-                                     axis2_svc_t *svc,
-				     axis2_conf_t *conf TSRMLS_DC);
-
-
-#endif /* WSF_POLICY_H*/
-
-
+int wsf_policy_handle_server_security (
+    zval * sec_token,
+    zval * policy,
+    axutil_env_t * env,
+    axis2_svc_t * svc,
+    axis2_conf_t * conf TSRMLS_DC);
 
 
-
-
-
-
-
-
-
-
-
-
-
+#endif /* WSF_POLICY_H */
