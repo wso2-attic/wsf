@@ -1,5 +1,5 @@
 --TEST--
-Test for echo_client_sec_timestamp sample
+Test for echo_client_sec_plaintext sample
 --FILE--
 <?php
 $reqPayloadString = <<<XML
@@ -9,12 +9,14 @@ XML;
 try {
 
     $reqMessage = new WSMessage($reqPayloadString,
-                                array("to"=>"http://localhost/samples/security/timestamp/timestamp_service.php",
+                                array("to"=>"http://localhost/samples/security/username_token/username_token_service.php",
                                       "action" => "http://php.axis2.org/samples/echoString"));
 
-    $sec_array = array("includeTimeStamp"=>TRUE );
+    $sec_array = array("useUsernameToken"=>TRUE );
     $policy = new WSPolicy(array("security"=>$sec_array));
-    $sec_token = new WSSecurityToken(array("ttl" => 60));
+    $sec_token = new WSSecurityToken(array("user" => "Raigama",
+                                           "password" => "RaigamaPW",
+                                           "passwordType" => "Digest"));
 
     $client = new WSClient(array("useWSA" => TRUE,
                                  "policy" => $policy,
