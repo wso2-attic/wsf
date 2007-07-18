@@ -308,7 +308,6 @@ wsf_svc_info_t* wsf_svc_info_create(axutil_env_t *env)
 {
     wsf_svc_info_t *svc_info = NULL;
 	svc_info = AXIS2_MALLOC(env->allocator, sizeof(wsf_svc_info_t)); 
-	/* svc_info = emalloc(sizeof(wsf_svc_info_t)); */
 
     svc_info->svc = NULL;
     svc_info->svc_name = NULL;
@@ -316,8 +315,8 @@ wsf_svc_info_t* wsf_svc_info_create(axutil_env_t *env)
     svc_info->msg_recv = NULL;
     svc_info->class_info = NULL;
     svc_info->php_worker = NULL;
-    svc_info->use_mtom = 0;  /* default is false other wise service side will send mime 
-							 headers which some servers can;t handle*/
+    svc_info->use_mtom = 0;  /* default is false otherwise service side will send MIME
+							    headers which some servers can;t handle*/
     svc_info->request_xop = 0; /* default false */
     svc_info->policy = NULL; 
     svc_info->security_token = NULL;
@@ -439,79 +438,12 @@ axiom_node_t* wsf_util_read_payload(
     return payload;
 }
 /* }}} ws_read_payload */
-/*
-char*wsf_util_get_ttl(char *buf, axutil_env_t *env)
-{
-    char *tmp_string = NULL;
-    char *day = NULL;
-    char *hour = NULL;
-    char *minute = NULL;
-    char *sec    = NULL;
-    char *next = NULL;
-    char *index = NULL;
-    char *buffer = NULL;
 
-    int d = 0, h = 0, m = 0;
-    double s = 0.0;
-    double ttl = 0.0;
-    int timetolive = 0;
-    if(!buf)
-        return NULL;    
-    tmp_string = strdup(buf);
-    index = strchr(tmp_string, 'd');
-    if(index)
-    {
-        next = index+1;
-        tmp_string[index - tmp_string] = '\0';    
-        day = tmp_string;
-        tmp_string = next;
-        d = atoi(day);
-    }
-    index = strchr(tmp_string, 'h');
-    if(index)
-    {
-        next = index + 1;
-        tmp_string[index - tmp_string] = '\0';
-        hour = tmp_string;
-        tmp_string = next;
-        h = atoi(hour);
-    }
-    index = strchr(tmp_string, 'm');
-    if(index)
-    {
-        next = index + 1;
-        tmp_string[index - tmp_string] = '\0';
-        minute = tmp_string;
-        tmp_string = next;
-        m = atoi(minute);
-    }
-    index = strchr(tmp_string, 's');
-    if(index)
-    {
-        next = index + 1;
-        tmp_string[index - tmp_string] = '\0';
-        sec = tmp_string;
-        tmp_string = next;
-        s = atof(sec);
-    }
-    
-    ttl =     s
-            + m * 60
-            + h * 60 * 60
-            + d * 24 * 60 * 60 ;
-    
-    timetolive = ttl;
-    buffer = AXIS2_MALLOC(env->allocator, sizeof(char)*33);
-    sprintf(buffer, "%d", timetolive);
-    return buffer;
-}
-*/
 axis2_char_t *wsf_util_get_soap_msg_from_op_client(
     axis2_op_client_t *op_client,
     axutil_env_t *env, 
 	axis2_wsdl_msg_labels_t msg_label)
 {
-    /* if(op_client && msg_label) */
     if(op_client)
     {
         axiom_soap_envelope_t *soap_env = NULL;
@@ -541,7 +473,6 @@ axis2_char_t *wsf_util_get_http_headers_from_op_client(
         axutil_property_t *client_property = NULL;
         axis2_http_client_t *client = NULL;
         axis2_http_simple_response_t *response = NULL;
-      /*   axis2_http_simple_request_t *request = NULL; */
         axutil_array_list_t *list = NULL;
         axis2_http_header_t *header = NULL;
         int i;
@@ -569,14 +500,6 @@ axis2_char_t *wsf_util_get_http_headers_from_op_client(
                 return NULL;
         }
 
-      /*   if (client && (msg_label == AXIS2_WSDL_MESSAGE_LABEL_OUT)){ */
-/*             request = axis2_http_client_get_request(client , env); */
-/*             if(request) */
-/*                 list = axis2_http_simple_request_get_headers(request, env); */
-/*             else */
-/*                 return NULL; */
-/*         } */
-        
         if (list){
             header_buf = emalloc(500);
             if(!axutil_array_list_is_empty(list, env)){
@@ -596,7 +519,6 @@ axis2_char_t *wsf_util_get_http_headers_from_op_client(
 /** load message receiver */
 axis2_msg_recv_t* load_msg_recv(axutil_env_t *env, axis2_char_t *home)
 {
- /* msg_receiver default location is home/lib */
 	axis2_msg_recv_t *msg_recv = NULL;
 	axutil_dll_desc_t *dll_desc = NULL;
 	axis2_char_t *repos_name = NULL;
@@ -858,7 +780,6 @@ void wsf_util_set_attachments_with_cids(const axutil_env_t *env,
 								void *binary_data = NULL;
 								int binary_data_len = 0;
 	                            
-								/* binary_data = Z_STRVAL_PP(tmp); */
 								binary_data_len = Z_STRLEN_PP(tmp);
 								binary_data = AXIS2_MALLOC(env->allocator, sizeof(char)*binary_data_len);
 								memcpy(binary_data, Z_STRVAL_PP(tmp) , binary_data_len);
@@ -991,7 +912,6 @@ char* wsf_util_serialize_om(const axutil_env_t *env, axiom_node_t *ret_node)
     memcpy(new_buffer, buffer, buffer_len);
     new_buffer[buffer_len] = '\0';
 
-   /* axiom_output_free(om_output, env); */
     return new_buffer;
 }
 
@@ -1118,10 +1038,6 @@ wsf_util_set_soap_fault(zval *this_ptr,
         zval *fault_detail,
         char *name TSRMLS_DC)
 {
-/*    if (Z_TYPE_P(obj) != IS_OBJECT) {
-        object_init_ex(obj, soap_fault_class_entry);
-    }
-*/
     if(!this_ptr)
         return;
 
@@ -1227,3 +1143,5 @@ void wsf_set_soap_fault_properties(axutil_env_t *env, axiom_soap_fault_t *soap_f
         }
     }
 }
+
+
