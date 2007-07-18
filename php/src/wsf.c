@@ -228,10 +228,10 @@ php_ws_object_new_ex(zend_class_entry *class_type ,
 /*
 static zval* ws_create_object(void *obj, int obj_type,
                               zend_class_entry* class_type TSRMLS_DC);
-*/
 static void ws_object_dtor(void *object,
             zend_object_handle handle TSRMLS_DC);
 
+*/            
 static void 
 ws_objects_free_storage(void *object TSRMLS_DC);
 
@@ -505,8 +505,8 @@ PHP_MINIT_FUNCTION(wsf)
     REGISTER_WSF_CLASS(ce, "WSClient", NULL,
     php_ws_client_class_functions, ws_client_class_entry);
     
-    REGISTER_WSF_CLASS(ce, "WSClientProxy", NULL,
-    php_ws_client_proxy_class_functions, ws_client_proxy_class_entry);
+    INIT_CLASS_ENTRY(ce, "WSClientProxy", php_ws_client_proxy_class_functions);
+    ws_client_proxy_class_entry = zend_register_internal_class(&ce TSRMLS_CC);
 
     REGISTER_WSF_CLASS(ce, "WSService", NULL,
     php_ws_service_class_functions, ws_service_class_entry);
@@ -640,13 +640,16 @@ php_ws_object_new_ex(zend_class_entry *class_type ,
 	intern->obj_type = WS_NONE;
     *obj = intern;
 
+    zend_object_std_init(&intern->std, class_type TSRMLS_CC);
+    /*
     ALLOC_HASHTABLE(intern->std.properties);
     zend_hash_init(intern->std.properties, 0, NULL, ZVAL_PTR_DTOR, 0);
+    */
     zend_hash_copy(intern->std.properties, &class_type->default_properties,
                    (copy_ctor_func_t)zval_add_ref, (void *)&tmp, sizeof(void *));
 
     retval.handle = zend_objects_store_put(intern,
-					    (zend_objects_store_dtor_t)ws_object_dtor, 
+					    (zend_objects_store_dtor_t)zend_objects_destroy_object, 
                         (zend_objects_free_object_storage_t )ws_objects_free_storage, NULL TSRMLS_CC);
     retval.handlers = &ws_object_handlers;
     return retval;
@@ -678,12 +681,14 @@ static zval* ws_create_object(void *obj, int obj_type,
 /* }}} */
 
 /* {{{ destructor function for all ws_objects */
+/*
 static void ws_object_dtor(void *object,
                            zend_object_handle handle TSRMLS_DC)
 {
     ws_object *intern = (ws_object *)object;
     zend_hash_destroy(intern->std.properties);
     FREE_HASHTABLE(intern->std.properties);
+
     if(intern->obj_type == WS_SVC_CLIENT){
         axis2_svc_client_t *svc_client = NULL;
         svc_client = (axis2_svc_client_t*)intern->ptr;
@@ -699,11 +704,30 @@ static void ws_object_dtor(void *object,
         }
     }
 }
-
+*/
 static void
 ws_objects_free_storage(void *object TSRMLS_DC){
     ws_object *intern = (ws_object *)object;
+    
     zend_object_std_dtor(&intern->std TSRMLS_CC);
+    
+    if(intern->obj_type == WS_SVC_CLIENT){
+        axis2_svc_client_t *svc_client = NULL;
+        svc_client = (axis2_svc_client_t*)intern->ptr;
+        if(svc_client){
+            axis2_svc_client_free(svc_client, env);
+        }
+    }
+    else if(intern->obj_type == WS_SVC){
+        wsf_svc_info_t *svc_info = NULL;
+        svc_info = (wsf_svc_info_t*)intern->ptr;
+        if(svc_info){
+            wsf_svc_info_free(svc_info, ws_env_svr );
+        }
+    }
+    
+    intern->ptr = NULL;
+
     efree(object);
 }
 
@@ -888,7 +912,7 @@ PHP_METHOD(ws_message, __get)
                         }
                         value = php_dom_create_object((xmlNodePtr)doc, &ret, NULL,  return_value, NULL TSRMLS_CC);
                         add_property_zval(object, WS_MSG_PAYLOAD_DOM, value);
-                        RETURN_ZVAL(value, NULL, NULL);
+                        RETURN_ZVAL(value, 0, 1);
                 }
             }
         }
@@ -1186,11 +1210,9 @@ PHP_METHOD(ws_client, get_proxy)
     }
 
     WSF_GET_THIS(obj);
-
     MAKE_STD_ZVAL(client_proxy_zval);
-
     object_init_ex(client_proxy_zval, ws_client_proxy_class_entry);
-   
+
     if(service){
         add_property_string(client_proxy_zval, "service", service, 1);
     }
@@ -1200,7 +1222,7 @@ PHP_METHOD(ws_client, get_proxy)
 	
     add_property_zval(client_proxy_zval, "wsclient", this_ptr);
 
-    RETURN_ZVAL(client_proxy_zval, NULL, NULL);
+    RETURN_ZVAL(client_proxy_zval, 0, 1);
 }
 
 
@@ -1821,8 +1843,20 @@ PHP_METHOD(ws_service , reply)
 
         }
         /** end Wsdl generation stuff */
-    }
-   else{
+    }else if(in_wsdl_mode){
+        axis2_bool_t status = AXIS2_SUCCESS;
+        if(raw_post_null){
+            wsf_soap_send_fault(SOAP_1_1, "SOAP-ENV:Server",
+                "Bad Request. Can't find HTTP_RAW_POST_DATA", NULL TSRMLS_CC);
+                return;
+            }
+            status = wsf_soap_do_function_call1(env, svc_info, 
+                this_ptr, req_info->req_data , req_info->req_data_length TSRMLS_CC);
+            if(status == AXIS2_FALSE){
+            wsf_soap_send_fault(SOAP_1_1, "SOAP-ENV:Server", "Request Handling failed", 
+                NULL TSRMLS_CC);
+            }
+    }else{
 
         conf = axis2_conf_ctx_get_conf(conf_ctx, ws_env_svr);
         if(!axis2_conf_get_svc(conf, ws_env_svr, svc_info->svc_name))
@@ -1863,14 +1897,6 @@ PHP_METHOD(ws_service , reply)
         }
         else if(status == WS_HTTP_INTERNAL_SERVER_ERROR)
         {
-			axis2_bool_t status = AXIS2_SUCCESS;
-            if(raw_post_null){
-				wsf_soap_send_fault(SOAP_1_1, "SOAP-ENV:Server","Bad Request. Can't find HTTP_RAW_POST_DATA", NULL TSRMLS_CC);
-                return;
-			}
-			    
-			status = wsf_soap_do_function_call1(env, svc_info, this_ptr, req_info->req_data , req_info->req_data_length TSRMLS_CC);
-		    if(status == AXIS2_FALSE){	
             sprintf(status_line, "%s 500 Internal Server Error", req_info->http_protocol);
             sapi_add_header(status_line,strlen(status_line), 1);
             if(req_info->content_type)
@@ -1883,9 +1909,9 @@ PHP_METHOD(ws_service , reply)
                     php_write(req_info->result_payload, req_info->result_length TSRMLS_CC);
                 }
             }
-			}
         }
     }
+    wsf_php_req_info_free(req_info);
 }
 /* }}} end reply */
 

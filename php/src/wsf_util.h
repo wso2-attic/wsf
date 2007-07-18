@@ -22,12 +22,9 @@
 #include <axis2_op_client.h>
 #include <axis2_svc_client.h>
 #include <axis2_options.h>
-#include <php.h>
 #include "wsf_common.h"
 #include <axiom_soap_body.h>
-#include <TSRM.h>
 #include "ext/libxml/php_libxml.h"
-
 axiom_node_t* wsf_util_read_payload(
     axiom_xml_reader_t *reader,
     const axutil_env_t *env);    

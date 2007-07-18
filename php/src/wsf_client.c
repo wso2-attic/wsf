@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-#include "php.h"
-#include "zend_exceptions.h"
 #include <axis2_addr.h>
-#include "wsf.h"
 #include "wsf_util.h"
 #include <axutil_error_default.h>
 #include <axis2_http_transport.h>
@@ -26,7 +23,10 @@
 #include <axiom_util.h>
 #include "wsf_client.h"
 #include "wsf_policy.h"
+#include "zend_exceptions.h"
+#include "wsf.h"
 
+#include "zend_variables.h"
 #ifdef USE_SANDESHA2
 #include <sandesha2_client.h>
 #endif
@@ -1120,7 +1120,7 @@ int wsf_client_do_request(
                     add_property_stringl(rfault, "str", res_text, strlen(res_text), 1);
 				    
                     wsf_set_soap_fault_properties(env, soap_fault, rfault TSRMLS_CC);
-                    ZVAL_ZVAL(return_value, rfault, NULL, NULL);
+                    ZVAL_ZVAL(return_value, rfault, 0, 1);
                 }
         }
 		
@@ -1133,7 +1133,7 @@ int wsf_client_do_request(
 			wsf_client_handle_incoming_attachments(env, client_ht, rmsg, response_payload TSRMLS_CC);
 			res_text = wsf_util_serialize_om(env , response_payload);
 			add_property_stringl(rmsg, WS_MSG_PAYLOAD_STR, res_text, strlen(res_text), 1); 
-			ZVAL_ZVAL(return_value, rmsg, NULL, NULL);
+			ZVAL_ZVAL(return_value, rmsg, 0, 1);
 	     }
 
          if(response_payload == NULL && has_fault == AXIS2_FALSE){

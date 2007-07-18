@@ -27,7 +27,7 @@
 #include "wsf_client.h"
 #include "wsf_util.h"
 #include "axis2_svc_client.h"
-
+#include "Zend/zend_exceptions.h"
 
 typedef struct _soapHeader {
     sdlFunctionPtr                    function;
@@ -1029,6 +1029,9 @@ void wsf_soap_do_soap_call(zval* this_ptr,
 			zval_copy_ctor(return_value);
 		}
 	}
+*
+*/
+
 #ifdef ZEND_ENGINE_2
 	if (!EG(exception) &&
 	    Z_TYPE_P(return_value) == IS_OBJECT &&
@@ -1044,7 +1047,6 @@ void wsf_soap_do_soap_call(zval* this_ptr,
 		zend_throw_exception_object(exception TSRMLS_CC);
 	}
 #endif
-*/
 	if (WSF_GLOBAL(encoding) != NULL) {
 		xmlCharEncCloseFunc(WSF_GLOBAL(encoding));
 	}
@@ -2586,7 +2588,7 @@ wsf_soap_do_function_call(const axutil_env_t *env,
     sdlFunctionPtr function;
 
     soapHeader *soap_headers = NULL;
-    soapServicePtr service;
+    soapServicePtr service = NULL;
     axiom_soap_envelope_t *soap_envelope = NULL, *res_soap_envelope = NULL;
     axiom_node_t *soap_envelope_node = NULL;
     axis2_char_t *soap_version_uri = NULL;
@@ -2620,9 +2622,15 @@ wsf_soap_do_function_call(const axutil_env_t *env,
 
     service = (soapServicePtr)svc_info->service;
 
-    function = deserialize_function_call(service->sdl, doc_request, 
-            service->actor, &function_name, &num_params, 
-            &params, &soap_version, &soap_headers TSRMLS_CC);
+    if(service == NULL){
+        function = deserialize_function_call( NULL, doc_request, 
+                NULL, &function_name, &num_params, 
+                &params, &soap_version, &soap_headers TSRMLS_CC);
+    }else{
+       function = deserialize_function_call(service->sdl, doc_request,
+                service->actor, &function_name, &num_params,
+                &params, &soap_version, &soap_headers TSRMLS_CC); 
+    }
 
     xmlFreeDoc(doc_request);    
 
@@ -2646,17 +2654,19 @@ wsf_soap_do_function_call(const axutil_env_t *env,
             memcpy(response_name,Z_STRVAL(function_name),Z_STRLEN(function_name));
             memcpy(response_name+Z_STRLEN(function_name),"Response",sizeof("Response"));
         }
-        doc_return = serialize_response_call(function, response_name, 
+        if(service ==  NULL){
+            doc_return = serialize_response_call(function, response_name, 
+                NULL, &retval, soap_headers, soap_version TSRMLS_CC);
+        }else{
+            doc_return = serialize_response_call(function, response_name,
                 service->uri, &retval, soap_headers, soap_version TSRMLS_CC);
+        }
         efree(response_name);
     } else {
         php_error_docref(NULL TSRMLS_CC, E_ERROR, "Function '%s' call failed", Z_STRVAL(function_name));
     }
-
     res_soap_envelope = create_soap_envelope_from_doc(doc_return, env, soap_version_uri);
-
     axis2_msg_ctx_set_soap_envelope(out_msg_ctx, env, res_soap_envelope);
-
     return AXIS2_SUCCESS;
 }
 

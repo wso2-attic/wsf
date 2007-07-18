@@ -381,6 +381,7 @@ wsf_req_info_t* wsf_php_req_info_create()
 void wsf_php_req_info_free(wsf_req_info_t *req_info)
 {
     if(req_info){
+    /*        
 	if(req_info->content_encoding){
 		efree(req_info->content_encoding);
 	}
@@ -399,6 +400,7 @@ void wsf_php_req_info_free(wsf_req_info_t *req_info)
 	if(req_info->content_type){
 		efree(req_info->content_type);
 	}
+    */
         efree(req_info);
     }
 }
