@@ -110,7 +110,6 @@ wsf_client_send_terminate_sequence(axutil_env_t *env,
 	if(is_rm_engaged && !will_continue_sequence && rm_spec_version == WS_RM_VERSION_1_1){
 #ifdef USE_SANDESHA2
 	{
-	/*	axis2_char_t *current_sequence_id = sandesha2_client_get_seq_id(env, svc_client); */
 		sandesha2_client_terminate_seq_with_svc_client_and_seq_key(env, svc_client, 
 					sequence_key);
 	}
@@ -234,9 +233,6 @@ wsf_client_handle_outgoing_attachments(axutil_env_t *env,
 			}
     }
 
-	/* axis2_options_set_enable_mtom(options, env, enable_mtom); */
-/* 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_client] enable mtom %d", enable_mtom); */
-	
 	if(zend_hash_find(msg_ht, WS_ATTACHMENTS, sizeof(WS_ATTACHMENTS), 
             (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY){
 			ht = Z_ARRVAL_PP(tmp);
@@ -668,9 +664,6 @@ int wsf_client_set_endpoint_and_soap_action(
 	axutil_env_t *env, 
 	axis2_options_t *client_options TSRMLS_DC)
 {
-    /*
-    zval **tmp = NULL;
-    */
     zval **msg_tmp = NULL;
 
 	if(msg_ht && zend_hash_find(msg_ht, WS_TO, sizeof(WS_TO), 
@@ -702,9 +695,6 @@ int wsf_client_set_options(HashTable *client_ht,
 		int is_send TSRMLS_DC)
 {
     zval **tmp = NULL;
-    /*
-    zval **msg_tmp = NULL;
-    */
 	int status = AXIS2_SUCCESS;
 	int use_soap = AXIS2_TRUE;
 	int soap_version = AXIOM_SOAP12;
@@ -785,25 +775,6 @@ int wsf_client_set_options(HashTable *client_ht,
 		}
 	}
    
-/*    
-	if(msg_ht && zend_hash_find(msg_ht, WS_TO, sizeof(WS_TO), 
-        	(void**)&msg_tmp) == SUCCESS) {
-	        axis2_endpoint_ref_t *to_epr = NULL;
-        	char *to = Z_STRVAL_PP(msg_tmp);
-	        to_epr = axis2_endpoint_ref_create(env, to);
-	        axis2_options_set_to(client_options, env, to_epr);
-	}else if(client_ht && zend_hash_find(client_ht, WS_TO, sizeof(WS_TO), 
-	        (void**)&msg_tmp) == SUCCESS) {
-        	axis2_endpoint_ref_t *to_epr = NULL;
-	        char *to = Z_STRVAL_PP(msg_tmp);
-        	to_epr = axis2_endpoint_ref_create(env, to);
-	        axis2_options_set_to(client_options, env, to_epr);
-    	}else{
-		return AXIS2_FAILURE;
-	}
-
-	wsf_client_set_soap_a0ction(client_ht, msg_ht, env, client_options TSRMLS_CC);	
-*/	
 	status = wsf_client_set_endpoint_and_soap_action(client_ht, msg_ht, env, 
 		client_options TSRMLS_CC);
 	if(client_ht)
@@ -812,11 +783,6 @@ int wsf_client_set_options(HashTable *client_ht,
     return status;
 }
 
-/**
-this_ptr -> ws_client 
-param    -> payload ( ws_message, string, dom node)
-
-*/
 int wsf_client_do_request(
 		zval *this_ptr, 
 		zval *param, 
@@ -825,7 +791,7 @@ int wsf_client_do_request(
 		axis2_svc_client_t *svc_client,
 		int is_oneway TSRMLS_DC)
 {
-/** for dom  */
+    /** for dom  */
     int status = AXIS2_SUCCESS;
     int input_type = WS_USING_INCORRECT_INPUT;
 
@@ -889,12 +855,6 @@ int wsf_client_do_request(
     }
 	
     client_options = (axis2_options_t *)axis2_svc_client_get_options(svc_client, env);
-	/**
-    if(zend_hash_find(Z_OBJPROP_P(this_ptr), WS_OPTIONS, sizeof(WS_OPTIONS), 
-		(void**)&client_tmp) == SUCCESS){
-		client_ht = Z_ARRVAL_PP(client_tmp);
-    }
-	*/
 	axis2_options_set_xml_parser_reset(client_options, env, AXIS2_FALSE);
 
 	client_ht = Z_OBJPROP_P(this_ptr);

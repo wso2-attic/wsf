@@ -161,3 +161,4 @@ wsf_http_out_transport_info_set_char_encoding
     info_impl->encoding = axutil_strdup(env, encoding);
     return AXIS2_SUCCESS;
 }
+

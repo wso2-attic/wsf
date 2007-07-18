@@ -34,13 +34,16 @@
 #define ArrySize 8
 
 
-int wsf_set_security_policy_options(zval *policy_obj,
-                                zval **tmp,
-                                const axutil_env_t *env TSRMLS_DC);
+int 
+wsf_set_security_policy_options(
+    zval *policy_obj,
+    zval **tmp,
+    const axutil_env_t *env TSRMLS_DC);
 
 axiom_node_t *
-wsf_create_policy_node(const axutil_env_t *env,
-                   axiom_node_t *node );
+wsf_create_policy_node(
+    const axutil_env_t *env,
+    axiom_node_t *node );
 
 
 typedef struct tokenProperties {
@@ -59,30 +62,38 @@ typedef struct tokenProperties {
 tokenProperties_t;
 
 axis2_char_t * AXIS2_CALL
-wsf_password_provider_function(const axutil_env_t *env,
-                           const axis2_char_t *username,
-                           void *ctx);
+wsf_password_provider_function(
+    const axutil_env_t *env,
+    const axis2_char_t *username,
+    void *ctx);
 
-tokenProperties_t wsf_set_tmp_rampart_options(tokenProperties_t tmp_rampart_ctx,
-        zval *sec_token,
-        zval *policy,
-        axutil_env_t *env TSRMLS_DC);
+tokenProperties_t 
+wsf_set_tmp_rampart_options(
+    tokenProperties_t tmp_rampart_ctx,
+    zval *sec_token,
+    zval *policy,
+    axutil_env_t *env TSRMLS_DC);
 
-int wsf_set_options_to_rampart_ctx(rampart_context_t *in_rampart_ctx,
-                               axutil_env_t *env,
-                               axiom_node_t *incoming_policy_node,
-                               tokenProperties_t tmp_rampart_ctx);
+int 
+wsf_set_options_to_rampart_ctx(
+    rampart_context_t *in_rampart_ctx,
+    axutil_env_t *env,
+    axiom_node_t *incoming_policy_node,
+    tokenProperties_t tmp_rampart_ctx);
+
+axiom_node_t *
+wsf_do_create_policy(
+    zval *sec_token,
+    zval *policy,
+    axutil_env_t *env TSRMLS_DC);
 
 
-axiom_node_t *wsf_do_create_policy(zval *sec_token,
-                               zval *policy,
-                               axutil_env_t *env TSRMLS_DC);
-
-
-int wsf_policy_handle_client_security(zval *sec_token,
-                                     zval *policy,
-                                     axutil_env_t *env,
-                                     axis2_svc_client_t *svc_client TSRMLS_DC) 
+int 
+wsf_policy_handle_client_security(
+    zval *sec_token,
+    zval *policy,
+    axutil_env_t *env,
+    axis2_svc_client_t *svc_client TSRMLS_DC) 
 {
     axiom_node_t *outgoing_policy_node = NULL;
     axiom_node_t *incoming_policy_node = NULL;
@@ -538,10 +549,6 @@ axiom_node_t *wsf_do_create_policy(zval *sec_token,
             if (neethi_options_set_is_username_token(neethi_options, env, AXIS2_TRUE))
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] token reference_enabled ");
             }
-/*         if (zend_hash_find(ht_policy, WS_TOKEN_REFERENCE, sizeof(WS_TOKEN_REFERENCE), (void **)&tmp) == SUCCESS){ */
-/*             if (neethi_options_set_token_protection(neethi_options, env, AXIS2_FALSE)) */
-/*                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] token reference_enabled "); */
-/*             } */
         if (zend_hash_find(ht_policy, WS_ENCRYPT, sizeof(WS_ENCRYPT), (void **)&tmp) == SUCCESS){
             if (neethi_options_set_encrypt_body(neethi_options, env, AXIS2_TRUE))
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] encrypt_enabled ");
@@ -734,13 +741,4 @@ wsf_password_provider_function(const axutil_env_t *env, const axis2_char_t *user
     }
     return NULL;
 }
-
-
-
-
-
-
-
-
-
 

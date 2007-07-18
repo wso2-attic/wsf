@@ -573,14 +573,7 @@ PHP_MINIT_FUNCTION(wsf)
 PHP_MSHUTDOWN_FUNCTION(wsf)
 {
     UNREGISTER_INI_ENTRIES();
-    /*
-    axiom_xml_reader_cleanup();
-    */
     axis2_msg_recv_free(wsf_msg_recv, ws_env_svr);
-   
-    /*
-    wsf_worker_free(worker, ws_env_svr);
-    */
     axutil_env_free(env);
 
     axutil_env_free(ws_env_svr);
@@ -641,10 +634,6 @@ php_ws_object_new_ex(zend_class_entry *class_type ,
     *obj = intern;
 
     zend_object_std_init(&intern->std, class_type TSRMLS_CC);
-    /*
-    ALLOC_HASHTABLE(intern->std.properties);
-    zend_hash_init(intern->std.properties, 0, NULL, ZVAL_PTR_DTOR, 0);
-    */
     zend_hash_copy(intern->std.properties, &class_type->default_properties,
                    (copy_ctor_func_t)zval_add_ref, (void *)&tmp, sizeof(void *));
 
@@ -827,8 +816,6 @@ PHP_METHOD(ws_message, __get)
     zval *object = NULL;
     char *prop_name = NULL;
     long prop_name_len = 0;
-    /*     zval **param_val = NULL; */
-    /*     int msg_payload_type = -1; */
 
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
                               &prop_name, &prop_name_len) == FAILURE)
@@ -853,17 +840,6 @@ PHP_METHOD(ws_message, __get)
             if((zend_hash_find(Z_OBJPROP_P(object), WS_MSG_PAYLOAD_DOM,
                                sizeof(WS_MSG_PAYLOAD_DOM), (void**)&tmp_val) == SUCCESS))
             {
-				/*
-				int size = 0;
-				xmlDocPtr doc;
-				xmlChar *buf = NULL;
-                doc = ws_get_xml_doc(*tmp_val);
-		        xmlDocDumpMemory(doc, &buf, &size);
-				if(buf){
-					add_property_string(object, WS_MSG_PAYLOAD_STR, buf, 1);
-					RETURN_STRING(buf, 1);
-                }
-			    */
 				nodep = ws_get_xml_node(*tmp_val);
 
 				reader = axiom_xml_reader_create_for_memory(env,
@@ -977,7 +953,6 @@ PHP_METHOD(ws_client, __construct)
 		add_property_zval(obj, WS_OPTIONS, options);
 
 		wsf_client_add_properties(obj, ht TSRMLS_CC);
-		/**  wsf_client_add_properties(obj , ht TSRMLS_CC); */
         if(zend_hash_find(ht, WS_CACHE_WSDL , sizeof(WS_CACHE_WSDL ), (void **)&tmp) == SUCCESS &&
                                 Z_TYPE_PP(tmp) == IS_LONG){
             cache_wsdl = Z_LVAL_PP(tmp);
@@ -1159,7 +1134,6 @@ PHP_METHOD(ws_client, __call)
 {
     char *fn_name = NULL;
     long fn_name_len = 0;
-    /* zval *options = NULL; */
     zval *args = NULL;
     zval **real_args = NULL;
     zval **param = NULL;
@@ -1182,17 +1156,11 @@ PHP_METHOD(ws_client, __call)
                 zend_hash_move_forward_ex(Z_ARRVAL_P(args), &pos))
         {
             if(Z_TYPE_PP(param) == IS_LONG)
-            {  /*
-                php_printf(" index %d type %d", i, Z_LVAL_PP(param));
-		*/
+            {  
             }
             real_args[i++] = *param;
         }
 }
-/*
-    do_soap_call(this_ptr, fn_name, fn_name_len, arg_count, real_args, return_value, NULL,
-    	NULL, NULL, NULL, NULL TSRMLS_CC);
-    */
 }
 /* }}} end call */
 PHP_METHOD(ws_client, get_proxy)
@@ -1355,9 +1323,6 @@ PHP_METHOD(ws_service, __construct)
         svc_info->msg_recv = wsf_msg_recv;
         wsf_util_create_svc_from_svc_info(svc_info , ws_env_svr TSRMLS_CC);
     }else{
-       
-	/*	wsf_soap_send_fault(SOAP_1_1,"SOAP-ENV:Server","Bad Request",NULL TSRMLS_CC); */
-        
         zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 1 TSRMLS_CC,
                                 "server does not support cli");
        
@@ -1526,12 +1491,6 @@ PHP_METHOD(ws_service, __construct)
                     service->uri = estrdup("http://unknown-uri/");
                 }
             }
-    /*
-    if (typemap_ht) {
-        service->typemap = soap_create_typemap(service->sdl, typemap_ht TSRMLS_CC);
-    }
-   */
-
         svc_info->service = service;            
         ret = zend_list_insert(service, le_service);
         add_property_resource(this_ptr, "service", ret);
@@ -1699,14 +1658,6 @@ PHP_METHOD(ws_service , reply)
             req_info->soap_action = Z_STRVAL_PP(data);
 
         }
-        /*
-        if((zend_hash_find(Z_ARRVAL_PP(server_vars), "SCRIPT_FILENAME",
-                           sizeof("SCRIPT_FILENAME"), (void **)&data) == SUCCESS)
-                &&  Z_TYPE_PP(data) == IS_STRING)
-        {
-            svc_info->svc_path = Z_STRVAL_PP(data);
-        }
-	*/
     }
 
     req_info->request_uri = SG(request_info).request_uri;
@@ -1730,7 +1681,7 @@ PHP_METHOD(ws_service , reply)
         raw_post_null = AXIS2_TRUE;
     }
     
-    /** begin Wsdl Generation */
+    /** begin WSDL Generation */
     if(SG(request_info).query_string && ((stricmp(SG(request_info).query_string, "wsdl") == 0) ||
                                          (stricmp(SG(request_info).query_string, "wsdl2") == 0 )))
     {
@@ -1749,7 +1700,6 @@ PHP_METHOD(ws_service , reply)
         char *full_path = emalloc(100);
         zval *op_val;
         
-        /* 	full_path = SG(request_info).http */
         service_name = svc_info->svc_name;
         strcpy(full_path, req_info->svr_name);
         strcat(full_path, req_info->request_uri);
@@ -1794,7 +1744,6 @@ PHP_METHOD(ws_service , reply)
                 f_key = (axis2_char_t *)k;
                 f_name = (axis2_char_t *)v;
                 add_next_index_string(f_val, (char *)f_name, 1);
-                /* add_next_index_string(op_val, (char *)f_key, 1); */
                 add_assoc_string(op_val, (char*)f_key, (char *)f_name, 1);
             }
         }
@@ -1842,7 +1791,7 @@ PHP_METHOD(ws_service , reply)
             }
 
         }
-        /** end Wsdl generation stuff */
+        /** end WSDL generation stuff */
     }else if(in_wsdl_mode){
         axis2_bool_t status = AXIS2_SUCCESS;
         if(raw_post_null){
@@ -2135,8 +2084,6 @@ PHP_METHOD(ws_policy, __construct)
     WSF_GET_THIS(object);
     WSF_OBJ_CHECK(env);
 
-    /* if the wspolicy object ( option array is presence */
-
     if( NULL != properties){
 	wsf_policy_set_policy_options(object, properties, env TSRMLS_CC);
     }
@@ -2297,7 +2244,6 @@ PHP_METHOD(ws_client_proxy, __call)
 {
      char *fn_name = NULL;
     long fn_name_len = 0;
-    /* zval *options = NULL; */
     zval *args = NULL;
     zval **real_args = NULL;
     zval **param = NULL;
@@ -2378,20 +2324,5 @@ PHP_FUNCTION(ws_test_function)
 		php_printf("done ");		
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
