@@ -1053,6 +1053,8 @@ wsf_soap_do_soap_call (
     client_options =
         (axis2_options_t *) axis2_svc_client_get_options (svc_client, env);
 
+	axis2_options_set_xml_parser_reset (client_options, env, AXIS2_FALSE);
+
     if (FIND_SDL_PROPERTY (client_zval, tmp) != FAILURE) {
         FETCH_SDL_RES (sdl, tmp);
     }
