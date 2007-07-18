@@ -74,7 +74,9 @@ wsf_xml_msg_recv_set_soap_fault(
 /************************** End of function prototypes ************************/
 
 WSF_PHP_API axis2_msg_recv_t* WSF_CALL
-wsf_xml_msg_recv_create(const axutil_env_t *env){
+wsf_xml_msg_recv_create(
+    const axutil_env_t *env) 
+{
 
 	axis2_msg_recv_t *msg_recv = NULL;
 	axis2_status_t status = AXIS2_FAILURE;
@@ -122,9 +124,6 @@ wsf_xml_msg_recv_invoke_business_logic_sync(
 
 	axiom_namespace_t *env_ns = NULL;
 	axutil_property_t *prop = NULL;
-	/*
-	int is_class = 0;
-    */
 	int soap_version = AXIOM_SOAP12;
     axis2_status_t status = AXIS2_SUCCESS;
 	axis2_bool_t skel_invoked = AXIS2_FALSE;
@@ -139,10 +138,10 @@ wsf_xml_msg_recv_invoke_business_logic_sync(
 
     wsf_svc_info_t *svc_info = NULL;
 
-	    /** stote in_msg_ctx envelope */
+	/** store in_msg_ctx envelope */
 	axiom_soap_envelope_t *envelope = NULL;
 
-	    /* store out_msg_ctx envelope */
+	/* store out_msg_ctx envelope */
 	axiom_soap_envelope_t *default_envelope = NULL;
 
 	axiom_soap_body_t *out_body = NULL;
@@ -319,7 +318,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync(
 	
 	if (status != AXIS2_SUCCESS){
     
-		/* something went wrong. set a SOAP Fault*/
+		/* something went wrong, set a SOAP Fault*/
 		axis2_char_t *fault_value_str = "env:Sender";
 		axis2_char_t *fault_reason_str = NULL;
 		axis2_char_t *err_msg = NULL;
@@ -439,7 +438,7 @@ wsf_xml_msg_recv_invoke_mixed(
 {
 
     return wsf_soap_do_function_call(env,
-                          svc_info, in_msg_ctx, out_msg_ctx, op_name TSRMLS_CC);
+        svc_info, in_msg_ctx, out_msg_ctx, op_name TSRMLS_CC);
 }
 
 static axiom_node_t* 
@@ -477,7 +476,7 @@ wsf_xml_msg_recv_invoke_wsmsg(
 
 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, " [wsf_svr] calling php service ");
 
-zend_try {
+    zend_try {
 
     MAKE_STD_ZVAL(msg);
 	object_init_ex(msg, ws_message_class_entry);
@@ -578,12 +577,7 @@ zend_try {
         } 
     }
 } zend_catch {
-	/*
-    if (Z_TYPE_P(EG(exception)) == IS_OBJECT && instanceof_function(Z_OBJCE_P(EG(exception)), 
-            ws_fault_class_entry TSRMLS_CC)) {
-            ws_xml_msg_recv_set_soap_fault(env, soap_ns,out_msg_ctx, retval TSRMLS_CC);   
-		
-	}*/
+
 }zend_end_try();                                                                                
     
 	if (!res_payload){
@@ -602,9 +596,6 @@ wsf_xml_msg_recv_set_soap_fault(
     zval zval_soap_fault TSRMLS_DC)
 {
     int soap_version = AXIOM_SOAP12;
-    /*
-    axiom_soap_header_t *out_header = NULL;
-    */
     
     axiom_soap_envelope_t *out_envelope = NULL;    
     axiom_soap_body_t *out_body = NULL;
@@ -612,10 +603,6 @@ wsf_xml_msg_recv_set_soap_fault(
     axiom_soap_fault_detail_t *fault_detail = NULL;
     axiom_soap_fault_role_t *fault_role = NULL;
     axiom_namespace_t *env_ns = NULL;
-    /*
-    axis2_char_t *fault_value_str = "env:Sender";
-    axis2_char_t *fault_reason_str = NULL;
-   */	
     axis2_char_t *code = NULL;
     axis2_char_t *reason = NULL;
     axis2_char_t *detail = NULL;
@@ -684,4 +671,6 @@ wsf_xml_msg_recv_set_soap_fault(
     }
     axis2_msg_ctx_set_soap_envelope(out_msg_ctx, env, out_envelope);
 
-}    
+}
+
+
