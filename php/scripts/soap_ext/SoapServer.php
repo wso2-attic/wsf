@@ -71,7 +71,13 @@ class WSSoapServer extends WSService
      * @var array
      */
     private $_operations;
-    
+
+    /**
+     * Service operation Parameters
+     * @var array
+     */
+    private $_opParams;
+
     /**
      * SoapServer constructor.
      * 
@@ -146,11 +152,20 @@ class WSSoapServer extends WSService
         if (is_string($functions)) {
             //$newfunc = create_function("\$m, \$fn = $functions", 
             //            'return new WSMessage("<result><text>".call_user_func($fn, \'sam\')."</result></text>");');
-            $this->_operations[$functions] = 'generic';
+          
+//  $this->_operations[$functions] = 'generic';
+
+            $this->_operations[$functions] = $functions;
+            $this->_opParams[$functions] = 'MIXED';
+            
         }
         
         if (is_array($functions)) {
             $this->_operations = $functions;
+            $i = sizeof($functions);
+            foreach($functions as $i){
+                $this->_opParams[$i] = 'MIXED';
+            }
         }
         
         if ($functions === SOAP_FUNCTIONS_ALL) {
@@ -198,7 +213,7 @@ class WSSoapServer extends WSService
      */
     public function handle($soap_request = null) 
     {
-        $this->_service = new WSService(array('operations' => $this->_operations));
+        $this->_service = new WSService(array('operations' => $this->_operations, "opParams" => $this->_opParams));
         $this->_service->reply();
     }
 

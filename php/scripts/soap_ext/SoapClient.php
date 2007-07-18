@@ -483,9 +483,11 @@ class WSSoapClient
                 try{
                     $result = $this->_client->request($payload);
                     if($result){
-                        $doc = new DOMDocument();
-                        $doc->loadXML($result->str);
-                        return $doc->firstChild->nodeValue;
+/*                         $doc = new DOMDocument(); */
+/*                         $doc->loadXML($result->str); */
+/*                         return $doc->firstChild->nodeValue; */
+//                        var_dump($result->str);
+                        return $result->str;
                     }
                 }
                 catch(Exception $e){
