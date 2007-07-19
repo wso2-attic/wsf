@@ -25,7 +25,7 @@ $reqPayloadString = <<<XML
 XML;
 
 try {
-	$f = file_get_contents("./resources/axis2.jpg");
+	$f = file_get_contents("../resources/axis2.jpg");
     
 	$reqMessage = new WSMessage($reqPayloadString, 
         array("to" => "http://localhost/samples/mtom/mtom_upload_service.php",
