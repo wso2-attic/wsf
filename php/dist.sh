@@ -13,6 +13,7 @@ make dist
 tar xzf wso2-wsf-php-1.0.0beta.tar.gz
 rm wso2-wsf-php-1.0.0beta.tar.gz
 cp -r src samples scripts docs wso2-wsf-php-1.0.0beta
+rm -f wso2-wsf-php-1.0.0beta/src/libtool
 
 cd wso2-wsf-php-1.0.0beta
 
@@ -21,7 +22,7 @@ rm -rf `find . -type f -name *.la`
 rm -rf `find . -type f -name *.o`
 rm -rf `find . -type f -name *.lo`
 rm -rf `find . -type f -name *.loT`
-rm -rf `find . -type d -name .deps`
+rm -rf `find . -name .deps`
 rm -rf `find . -type d -name .libs`
 rm -rf `find . -type f -name Makefile`
 rm -rf `find . -type d -name autom4te.cache`
@@ -35,6 +36,6 @@ sed -i "s/\tcp -rf samples\/*.*//g" wsf_c/rampartc/Makefile.in
 
 cd ..
 tar czf wso2-wsf-php-1.0.0beta.tar.gz wso2-wsf-php-1.0.0beta
-zip -rq wso2-wsf-php-1 wso2-wsf-php-1.0.0beta
+zip -rqy wso2-wsf-php-1 wso2-wsf-php-1.0.0beta
 mv wso2-wsf-php-1.zip wso2-wsf-php-1.0.0beta.zip
 rm -rf wso2-wsf-php-1.0.0beta
