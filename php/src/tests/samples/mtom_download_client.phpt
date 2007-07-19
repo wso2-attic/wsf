@@ -11,7 +11,7 @@ XML;
 try {
 
     $client = new WSClient(
-        array("to"=>"http://localhost/samples/mtom_download_service.php",
+        array("to"=>"http://localhost/samples/mtom/mtom_download_service.php",
                "useMTOM"=>TRUE,
 		   "responseXOP"=>TRUE));
     $reqMessage = new WSMessage($reqPayloadString);					
