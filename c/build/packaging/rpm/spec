@@ -1,8 +1,8 @@
 Summary: WSO2 WSF-C
 Name: wso2-wsf-c
-Version: 1.0
+Version: 1.0.1
 Release: 1
-Source0: wso2-wsf-c-1.0.tar.gz
+Source0: wso2-wsf-c-1.0.1.tar.gz
 License: Apache
 Group: Development/Tools
 %description
