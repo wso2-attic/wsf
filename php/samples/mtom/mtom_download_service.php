@@ -25,7 +25,7 @@ $resPayloadString = <<<XML
                 </ns1:image>
         </ns1:download>
 XML;
-    $f = file_get_contents("./resources/axis2.jpg");                                        
+    $f = file_get_contents("../resources/axis2.jpg");                                        
     $ret_msg = new WSMessage($resPayloadString, 
             array("attachments"=>array("myid1" => $f)));  
     return $ret_msg;    
