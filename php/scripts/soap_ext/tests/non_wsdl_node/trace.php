@@ -1,6 +1,6 @@
 <?php
 
-include_once '../soap_ext/soap_ext.php';
+include_once '../../soap_ext.php';
 
 try {
     $client = new WSSoapClient(null, 

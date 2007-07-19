@@ -1,10 +1,10 @@
 <?php
 
-include_once '../soap_ext/soap_ext.php';
+include_once '../../soap_ext.php';
 
 try {
-    $client = new WSSoapClient("r.wsdl");
-    $test = $client->echoString("my test");
+    $client = new WSSoapClient("sample.wsdl");
+    $test = $client->addFunction(100, 200);
     echo $test;
 
 } catch (Exception $e) {
