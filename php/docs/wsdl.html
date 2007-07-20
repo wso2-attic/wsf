@@ -71,16 +71,18 @@
         <p>
             $value = $proxy-&gt;echoString("Hello World");</p>
         <p>
+            <span style="font-size: 12pt; text-decoration: underline"></span>
             &nbsp;</p>
-        <p>
-            &nbsp;</p>
-        <p>
-            &nbsp;</p>
-        <p>
-            &nbsp;</p>
-        <p>
-            &nbsp;</p>
-        <p>
-            &nbsp;</p>
+             <h3 id="H3_1">
+                 Writing a Service to use WSDL mode</h3>
+        By default, WSF/PHP uses functions that accept WSMessage as the argument for service
+        functions. But when using WSDL mode for server side<br />
+        this is not necessary. User can write functions that will accept multiple arguments
+        for functions. To specify that a perticular function arguement type, there are to
+        types defined as "WSMESSAGE" and "MIXED". When a function is specified as MIXED
+        it means that it it a function that accepts arguements other that WSMESSAGE. For
+        WSDL mode in server side, please use MIXED type functions.<br />
+    Please refer to the sample in wsdl_mode\dynamic_echo_service.php service for an
+    example.
 </body>
 </html>
