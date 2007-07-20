@@ -73,7 +73,7 @@ Contents:
 
     If you have build from the source you should now have the
     	
-	wsf_c binary and the php_wsf.dll.
+	wsf_c binary and the wsf.dll.
 
     If you have extracted the binary you should have the following structure.
 
@@ -81,10 +81,10 @@ Contents:
                 |  
 	    	    +-- wsf_c 
 	            |
-                +-- php_wsf.dll
+                +-- wsf.dll
                       
 
-    1. Copy php_wsf.dll to PHP installation directory.
+    1. Copy wsf.dll to PHP installation directory.
     
     2. Add wsf_c\lib directory to path.
 

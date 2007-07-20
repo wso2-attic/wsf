@@ -17,26 +17,26 @@
          messaging
         is supported using single channel.</p>
     <h2>
-        <strong id="1">1.0 How to configure wsf4php to use reliable messaging</strong></h2>
+        <strong id="1">1.0 How to configure WSO2 WSF/PHP to use reliable messaging</strong></h2>
     <p>
-        We assume that you have installed the wsf4php.
+        We assume that you have installed the WSO2 WSF/PHP.
         </p>
     <p>
         To implement reliable messaging wsf-php uses a database system to store state information
         related to messaging and for that two data base systems supported. They are sqlite3
         and mysql.&nbsp;</p>
     <p>
-        <strong>Using wsf3php with sqlite3</strong></p>
+        <strong>Using WSO2 WSF/PHP with sqlite3</strong></p>
     <p>
         you will need to have sqlite3 installed on your machine.
     </p>
     <p>
         Note:- On windows binary , sqlite3 binary and and executable will&nbsp; be packed
-        with the wsf4php binary. So what you will need is to add &lt;wsf4php&gt;\wsf_c\lib
+        with the WSO2 WSF/PHP binary. So what you will need is to add &lt;WSO2 WSF/PHP&gt;\wsf_c\lib
         directory to path.</p>
     <p>
-        You will find a script (sqlite_schema.sh | sandesha2_schema.bat )&nbsp; for creating
-        the databases that are used by wsf4php in &lt;wsf4php&gt; directory. Make sure to
+        You will find a script (sqlite_schema.sh | sqlite_schema.bat )&nbsp; for creating
+        the databases that are used by WSO2 WSF/PHP in &lt;WSO2 WSF/PHP&gt; directory. Make sure to
         run
         this script before starting the server. When you run these script, it will create
         two database files "sandesha2_client_db" "sandesha2_svr_db" in the direcory where
@@ -56,7 +56,7 @@
     <p>
         Since WS Addressing is needed WSRM to work, you need to specify the necessary WS
         addressing options along with RM Options. Lets implement the simplest rm client
-        that can be written using wsf4php.
+        that can be written using WSO2 WSF/PHP.
     </p>
     <p>
         First create a suitable payload to be send to the echo service.</p>

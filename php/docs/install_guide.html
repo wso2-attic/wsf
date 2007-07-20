@@ -186,7 +186,7 @@ options. You will find the option --with-wsf.<br />
 <h3>Installing WSO2 WSF As a PHP Extension</h3>
 
 <p>1. If you have built from the source you should now have the wsf_c binary
-and the php_wsf.dll.<br />
+and the wsf.dll.<br />
 </p>
 
 <p>2. If you have extracted the binary you should have the following
@@ -196,9 +196,9 @@ structure.</p>
                     |
                     +-- wsf_c
                     |
-                    +-- php_wsf.dll</pre>
+                    +-- wsf.dll</pre>
 
-<p>3. Copy php_wsf.dll to PHP installation directory.</p>
+<p>3. Copy wsf.dll to PHP installation directory.</p>
 
 <p>4. Add wsf_c\lib directory to path.</p>
 
@@ -209,7 +209,7 @@ installation location.<br />
        wsf.home="<path_to_extract_folder>\wsf_c"
        wsf.log_path="<path_to_extract_folder>\wsf_c\logs"
 
-       extension=php_wsf.dll</path_to_extract_folder></path_to_extract_folder></pre>
+       extension=wsf.dll</path_to_extract_folder></path_to_extract_folder></pre>
 
 <p>6. Create an environment variable PHPRC to point to your php.ini file
 location.</p>
