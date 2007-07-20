@@ -53,7 +53,34 @@
         <br />
         getProxy()<br />
         <br />
-    </strong>Returns a proxy client object which can is used for dynamic invocation.<br />
-    <br />
+    </strong>Returns a proxy client object which is used to access a service endpoint
+    coveniently using dynamic invocation.<br />
+
+    <h3 id="wsclientproxy">WSClientProxy </h3>
+    <p>
+    WSClientProxy is a class used as the proxy for invoking services.<p>
+            Following is a sample code demostrating the use of WSClientProxy. Consider we have
+            a wsdl which defines an operation</p>
+        <p>
+            "echoString" which echo a given value.
+        </p>
+        <p>
+            $client = new WSClient(array("wsdl"=&gt;echo.wsdl));</p>
+        <p>
+            $proxy = $client-&gt;getProxy();</p>
+        <p>
+            $value = $proxy-&gt;echoString("Hello World");</p>
+        <p>
+            &nbsp;</p>
+        <p>
+            &nbsp;</p>
+        <p>
+            &nbsp;</p>
+        <p>
+            &nbsp;</p>
+        <p>
+            &nbsp;</p>
+        <p>
+            &nbsp;</p>
 </body>
 </html>
