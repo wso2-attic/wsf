@@ -43,7 +43,7 @@ Divide: <input type="radio" value="div" name="operation">
 <br/><br/>
 <h4>Target Endpoint</h4>
 Endpoint:<input type="text" size="60" maxlength="60" name="epr" 
-          value="http://localhost/math_service.php"><br />
+          value="http://localhost/samples/math_service.php"><br />
 
 <h4>Parameters</h4>
 Parameter 1:<input type="text" size="6" maxlength="10" name="param1" value="10">
