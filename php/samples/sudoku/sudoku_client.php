@@ -54,7 +54,8 @@ Reliable Messaging : <input disabled type="checkbox" value="RM" name="qos[]"><br
 <input type="submit" value="Reset " name="reset">
 </form>
 </td>
-<?
+<?php
+
 if (isset($_POST['submit']) || isset($_GET['imageID'])) {
 if (isset($_GET['imageID'])){
     $imageID = $_GET['imageID'];
