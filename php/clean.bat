@@ -8,5 +8,13 @@
 
 @if exist wsf_c\axis2c\build\win32\int.msvc rmdir /s /q wsf_c\axis2c\build\win32\int.msvc
 
+@if exist wsf_c\rampartc\build\rampartc-0.90 rmdir /s /q wsf_c\rampartc\build\rampartc-0.90
+
+@if exist wsf_c\rampartc\build\win32\int.msvc rmdir /s /q wsf_c\rampartc\build\win32\int.msvc
+
+@if exist wsf_c\sandesha2c\build\sandesha2 rmdir /s /q wsf_c\sandesha2c\build\sandesha2
+
+@if exist wsf_c\sandesha2c\build\win32\int.msvc rmdir /s /q wsf_c\sandesha2c\build\win32\int.msvc
+
 @if exist src\intdir rmdir src\intdir
 

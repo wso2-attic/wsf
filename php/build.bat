@@ -29,7 +29,7 @@
 
 @cd src
 
-@nmake -f build.mk
+@nmake /nologo -f build.mk
 
 @cd ..
 

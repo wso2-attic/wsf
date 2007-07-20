@@ -6,12 +6,12 @@ rem Build Apache Axis2/C
 @cd axis2c\build
 @if exist axis2c-bin-1.1.0-win32 rmdir /s /q axis2c-bin-1.1.0-win32
 @cd win32
-@nmake dist AUTOCONF=..\..\..\configure.in
+@nmake /nologo dist AUTOCONF=..\..\..\configure.in
 @if not %ERRORLEVEL% EQU 0 goto end
 
 rem Build Apache Rampart/C
 @cd ..\..\..\rampartc\build\win32
-@nmake dist_no_samples AUTOCONF=..\..\..\configure.in AXIS2_BIN_DIR=.\..\..\..\axis2c\build\axis2c-bin-1.1.0-win32
+@nmake /nologo dist_no_samples AUTOCONF=..\..\..\configure.in AXIS2_BIN_DIR=.\..\..\..\axis2c\build\axis2c-bin-1.1.0-win32
 
 @if not %ERRORLEVEL% EQU 0 goto rampart_error
 
@@ -28,7 +28,7 @@ rem Build Apache Rampart/C
 rem Build Apache Sandesha2/C
 :build_sandesha2
 @cd ..\..\sandesha2c\build\win32
-@nmake dist_no_samples AXIS2_BIN_DIR=.\..\..\..\axis2c\build\axis2c-bin-1.1.0-win32 AUTOCONF=..\..\..\configure.in
+@nmake /nologo dist_no_samples AXIS2_BIN_DIR=.\..\..\..\axis2c\build\axis2c-bin-1.1.0-win32 AUTOCONF=..\..\..\configure.in
 
 @if not %ERRORLEVEL% EQU 0 goto sandesha2_error
 
@@ -50,7 +50,7 @@ rem Build Neethi util
 :build_neethi_util
 @cd ..\..\
 @cd axis2c\neethi\src\util
-@nmake -f neethi_util.mk AXIS2_BIN_DIR=..\..\..\build\axis2c-bin-1.1.0-win32 AUTOCONF=..\..\..\..\configure.in
+@nmake /nologo -f neethi_util.mk AXIS2_BIN_DIR=..\..\..\build\axis2c-bin-1.1.0-win32 AUTOCONF=..\..\..\..\configure.in
 @copy neethi_options.h ..\..\..\build\axis2c-bin-1.1.0-win32\include
 @cd ..\..\..\..\
 
