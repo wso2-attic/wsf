@@ -5,7 +5,8 @@
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>WSO2 WSF Installation Guide</title>
-<link href="style/api_style.css" rel="stylesheet" type="text/css" media="all" />
+  <link href="style/api_style.css" rel="stylesheet" type="text/css"
+  media="all" />
 </head>
 
 <body>
@@ -16,8 +17,7 @@ Framework/PHP extension and run the server and client samples on Linux and
 Microsoft Windows operating systems.</p>
 
 <p>Please send your feedback to the user mailing list: <a
-href="mailto:wsf-php-user@lists.wso2.net">wsf-php-user@lists.wso2.net</a>.
-Kindly see <a
+href="mailto:wsf-php-user@wso2.org">wsf-php-user@wso2.org</a>. Kindly see <a
 href="https://www-lk.wso2.com/repo/wso2/php_axis2/extension/xdocs/index.html#mail">Home
 page</a> for subscription.</p>
 
@@ -157,29 +157,29 @@ directory.</p>
 <p>1. Before trying this, please refer README.WIN32-BUILD-SYSTEM file in PHP
 source distribution and build PHP source under MS Windows.</p>
 
-<p>2.&nbsp; Copy wsf_php folder to php_source/ext directory.</p>
-    <p>
-        3. Run buildconf.bat file to rebuild the configure.js file.</p>
+<p>2.  Copy wsf_php folder to php_source/ext directory.</p>
+
+<p>3. Run buildconf.bat file to rebuild the configure.js file.</p>
 
 <p>4. "cscript /nologo configure.js --help" will give the configuration
 options. You will find the option --with-wsf.<br />
 </p>
-    <p>
-        5. Add following entries to config.nice.bat file.</p>
-    <p>
-        &nbsp; &nbsp; "--with-extra-includes=&lt;Libxml2 bin dir&gt;\include;&lt;iconv bin
-        directory&gt;\include;&lt;zlib bin dir&gt;\include;&lt;wsf-c dir&gt;\include"
-    </p>
-    <p>
-        &nbsp; &nbsp; "-- with-extra-libs=&lt;Libxml2 bin dir&gt;\lib;&lt;iconv bin dir&gt;\lib;&lt;zlib
-        bin dir&gt;\lib;&lt;wsf-c dir&gt;\lib"</p>
-    <p>
-        &nbsp; &nbsp; "--with-wsf=shared"</p>
-    <p>
-        6. Run above config.nice.bat file to configure the wsf extension as a dll.</p>
 
-<p>
-    7. "nmake" will build wsf extension.<br />
+<p>5. Add following entries to config.nice.bat file.</p>
+
+<p>    "--with-extra-includes=&lt;Libxml2 bin dir&gt;\include;&lt;iconv bin
+directory&gt;\include;&lt;zlib bin dir&gt;\include;&lt;wsf-c dir&gt;\include"
+</p>
+
+<p>    "-- with-extra-libs=&lt;Libxml2 bin dir&gt;\lib;&lt;iconv bin
+dir&gt;\lib;&lt;zlib bin dir&gt;\lib;&lt;wsf-c dir&gt;\lib"</p>
+
+<p>    "--with-wsf=shared"</p>
+
+<p>6. Run above config.nice.bat file to configure the wsf extension as a
+dll.</p>
+
+<p>7. "nmake" will build wsf extension.<br />
 </p>
 <a id="Installing WSO2 WSF As a PHP Extension"></a>
 
@@ -191,8 +191,7 @@ and the wsf.dll.<br />
 
 <p>2. If you have extracted the binary you should have the following
 structure.</p>
-<pre>
-    wso2_wsfphp_1.0.alpha1-bin
+<pre>    wso2_wsfphp_1.0.alpha1-bin
                     |
                     +-- wsf_c
                     |
