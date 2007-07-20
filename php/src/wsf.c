@@ -394,7 +394,7 @@ PHP_MINIT_FUNCTION (wsf)
     zend_register_internal_class_ex(&ce, zend_exception_get_default(TSRMLS_C), NULL TSRMLS_CC);
 #else    
 */ 
-        ws_fault_class_entry = zend_register_internal_class (&ce TSRMLS_CC);
+    ws_fault_class_entry = zend_register_internal_class (&ce TSRMLS_CC);
 /*
 #endif
 */ 
@@ -416,7 +416,9 @@ PHP_MINIT_FUNCTION (wsf)
     
     if (WSF_GLOBAL (home)) {
         home_folder = WSF_GLOBAL (home);
-    }
+	}else{
+		WSF_GLOBAL(home) = home_folder;
+	}
     
     ws_env_svr = wsf_env_create_svr (WSF_GLOBAL (log_path));
     
@@ -1418,6 +1420,21 @@ PHP_METHOD (ws_service, reply)
             req_info->soap_action = Z_STRVAL_PP (data);
         }
     }
+	{
+		zval ret_val, func;
+		zval **tmp_action = NULL;
+		ZVAL_STRING (&func, "apache_request_headers", 1);
+		if (call_user_function (CG (function_table), (zval **) NULL, &func,
+			&ret_val, 0, NULL TSRMLS_CC) == SUCCESS) {
+				if(Z_TYPE(ret_val) == IS_ARRAY){
+						if(zend_hash_find(Z_ARRVAL(ret_val), "SOAPAction", sizeof("SOAPAction"), 
+							(void**)&tmp_action) == SUCCESS && Z_TYPE_PP(tmp_action) == IS_STRING){
+								req_info->soap_action = Z_STRVAL_PP(tmp_action);
+						}
+					}
+			}
+	}
+
 
     req_info->request_uri = SG (request_info).request_uri;
     req_info->content_length = SG (request_info).content_length;
@@ -1446,7 +1463,7 @@ PHP_METHOD (ws_service, reply)
 
         char *service_name = NULL;
         zval func, retval, param1, param2, param3, param4, param5, param6,
-            param7;
+        param7;
         zval * params[7];
         axutil_hash_index_t * hi = NULL;
         zval * f_val;
@@ -1456,7 +1473,7 @@ PHP_METHOD (ws_service, reply)
         zval ** tmpval;
         char *binding_name = NULL;
         char *wsdl_version = NULL;
-        char *full_path = emalloc (100);
+        char *full_path = emalloc (strlen(req_info->svr_name) + strlen(req_info->request_uri)+5);
         zval * op_val;
         service_name = svc_info->svc_name;
         strcpy (full_path, req_info->svr_name);
@@ -1486,7 +1503,7 @@ PHP_METHOD (ws_service, reply)
         }
         
         /** find the functions in the service.php file */ 
-            MAKE_STD_ZVAL (f_val);
+        MAKE_STD_ZVAL (f_val);
         array_init (f_val);
         MAKE_STD_ZVAL (op_val);
         array_init (op_val);

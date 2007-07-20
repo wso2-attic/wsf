@@ -255,9 +255,9 @@ wsf_worker_process_request (
             svc_info->policy, env, svc_info->svc, conf TSRMLS_CC);
     }
     soap_action = request->soap_action;
-    if (soap_action == NULL)
-        soap_action = "";
-    soap_action_str = axutil_string_create (env, soap_action);
+	if (soap_action != NULL){
+	    soap_action_str = axutil_string_create (env, soap_action);
+	}
     request_body = axis2_stream_create_php (env, request TSRMLS_CC);
     if (NULL == request_body) {
         AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "Error occured in" 

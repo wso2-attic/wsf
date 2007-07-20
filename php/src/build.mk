@@ -28,8 +28,8 @@ LDFLAGS = $(LDFLAGS)
 
 wsf.dll :
 	@if not exist intdir mkdir intdir
-	cl.exe $(CFLAGS) $(INCLUDE_PATH) *.c /Fointdir\ /c
-	link.exe $(LDFLAGS) intdir\*.obj $(LIBS) /DLL  /OUT:.\..\wso2-wsf-php-bin-1.0.0beta\wsf.dll
+	@cl.exe $(CFLAGS) $(INCLUDE_PATH) *.c /Fointdir\ /c
+	@link.exe $(LDFLAGS) intdir\*.obj $(LIBS) /DLL  /OUT:.\..\wso2-wsf-php-bin-1.0.0beta\wsf.dll
 
 clean: 
 	@if exist intdir rmdir intdir
