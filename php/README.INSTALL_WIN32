@@ -24,29 +24,32 @@ Contents:
 	You need to download following:
 
 	libxml2 binary distribution
-      zlib binary distribution
-      iconv binary distribution
+        zlib binary distribution
+        iconv binary distribution
 	OpenSSL binary distribution
         
     b. Using the command prompt            
 
-	If you have Visual Studio command prompt, open it and change 
-	directory to "wsf_c/axis2c/build/win32" of the extract folder.
+	If you have Visual Studio command prompt, open it change 
+	directory to wso2-wsf-php-src extract folder.
 	
 	If not, create a new shortcut and set target to:
 	
 	%comspec% /k "C:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\bin\vcvars32.bat"
 	
-	Now change directory to "wsf_c/axis2c/build/win32" and edit 
+	Now change directory to wso2-wsf-php-src extract directory and edit 
 	the configure.in file and set your binary installation 
-	locations of libxml2, zlib and iconv libraries.
+	locations of libxml2, zlib and iconv , OpenSSL.
 
-	Similarly you will need to edit the configure.in files in rampartc and sandesha2
-	directories. They run the build.bat file in wso2-wsf-php-src-1.0alpha2 directory.
-                    
-  	This will build the binary to wso2-wsf-php-src-1.0alpha2 directory.
+	Also you need to specify the php source directory and its binary build location
+	to build the extension along with wsf_c. Please fill the following entries in 
+	configure.in file.
+	PHP_SRC_DIR, PHP_BIN_DIR and WIN32BUILD_DIR
 
-3. Building WSO2 WSF
+	Once you have done it, run build.bat file in  wso2-wsf-php-src extract directory. This
+	will build create the binary distribution.
+
+3. Building WSO2 WSF with php win32 build system
                 
     Before trying this, please refer README.WIN32-BUILD-SYSTEM
     file in PHP source distribution and build PHP source under Windows.
