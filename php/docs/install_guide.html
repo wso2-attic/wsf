@@ -32,12 +32,11 @@ page</a> for subscription.</p>
     and Running on Microsoft Windows (win32)</a>
     <ul>
       <li><a href="#Build PHP on Windows">Build PHP on MS Windows</a></li>
-      <li><a href="#Build WSO2 WSF for C on Windows from Source">Build WSO2
+      <li><a href="#Build WSO2 WSF for C on Windows from Source">Building WSO2
         WSF/C on MS Windows from Source</a>
         <ul>
           <li><a href="#Requirements">Requirements</a></li>
-          <li><a href="#Using the Command Prompt">Using the Command
-          Prompt</a></li>
+          <li><a href="#Building WSF/PHP From Source">Building WSF/PHP From Source</a></li>
         </ul>
       </li>
       <li><a
@@ -130,12 +129,12 @@ distribution.</p>
   <li>zlib binary distribution</li>
   <li>iconv binary distribution</li>
 </ul>
-<a id="Using the Command Prompt"></a>
+<a id="Building WSF/PHP From Source"></a>
 
-<h4>Using the Command Prompt</h4>
+<h3>Building WSF/PHP From Source </h3>
 
 <p>1. If you have Visual Studio command prompt, open it and change directory
-to "wsf_c/axis2c/build/win32" of the extract folder.<br />
+to wso2-wsf-php extract folder.<br />
 </p>
 
 <p>2. If not, create a new shortcut and set target to:<br />
@@ -143,21 +142,26 @@ to "wsf_c/axis2c/build/win32" of the extract folder.<br />
 2003\Vc7\bin\vcvars32.bat"</b><br />
 </p>
 
-<p>3. Now change directory to "wsf_c/axis2c/build/win32" and edit the
-configure.in file and set your binary installation locations of libxml2, zlib
-and iconv libraries.<br />
+<p>3. Now change directory to wso2-wsf-php-src extract directory and edit 
+	the configure.in file and set your binary installation 
+	locations of libxml2, zlib and iconv , OpenSSL<br />
 </p>
 
-<p>4. "nmake dist" will build the binary under "wsf_c/axis2c/build"
-directory.</p>
+<p>4.Also you need to specify the php source directory and its binary build location
+	to build the extension along with wsf_c. Please fill the following entries in 
+	configure.in file. PHP_SRC_DIR, PHP_BIN_DIR and WIN32BUILD_DIR.</p>
+	
+<p>5.Once you have done it, run build.bat file in  wso2-wsf-php-src extract directory. This
+	will build create the binary distribution.</p>
+	
 <a id="Building WSO2 WSF for PHP on Windows from Source"></a>
 
-<h3>Building WSO2 WSF/PHP on MS Windows from Source</h3>
+<h3>Building WSO2 WSF/PHP extension with PHP WIN32 build system</h3>
 
 <p>1. Before trying this, please refer README.WIN32-BUILD-SYSTEM file in PHP
 source distribution and build PHP source under MS Windows.</p>
 
-<p>2.  Copy wsf_php folder to php_source/ext directory.</p>
+<p>2.&nbsp; Copy wsf_php folder to php_source/ext directory.</p>
 
 <p>3. Run buildconf.bat file to rebuild the configure.js file.</p>
 
@@ -167,14 +171,14 @@ options. You will find the option --with-wsf.<br />
 
 <p>5. Add following entries to config.nice.bat file.</p>
 
-<p>    "--with-extra-includes=&lt;Libxml2 bin dir&gt;\include;&lt;iconv bin
+<p>    &nbsp; &nbsp; "--with-extra-includes=&lt;Libxml2 bin dir&gt;\include;&lt;iconv bin
 directory&gt;\include;&lt;zlib bin dir&gt;\include;&lt;wsf-c dir&gt;\include"
 </p>
 
-<p>    "-- with-extra-libs=&lt;Libxml2 bin dir&gt;\lib;&lt;iconv bin
+<p>    &nbsp; &nbsp; "-- with-extra-libs=&lt;Libxml2 bin dir&gt;\lib;&lt;iconv bin
 dir&gt;\lib;&lt;zlib bin dir&gt;\lib;&lt;wsf-c dir&gt;\lib"</p>
 
-<p>    "--with-wsf=shared"</p>
+<p>    &nbsp; &nbsp; "--with-wsf=shared"</p>
 
 <p>6. Run above config.nice.bat file to configure the wsf extension as a
 dll.</p>
