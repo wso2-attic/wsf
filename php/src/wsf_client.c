@@ -31,8 +31,6 @@
 #include <sandesha2_client.h>
 #endif
 
-
-
 xmlNodePtr wsf_get_xml_node (
     zval * node TSRMLS_DC);
 
@@ -74,6 +72,27 @@ int wsf_client_set_soap_action (
     HashTable * msg_ht,
     axutil_env_t * env,
     axis2_options_t * client_options TSRMLS_DC);
+
+int is_addr_action_present_in_options(
+	HashTable *msg_ht, 
+	HashTable *client_ht TSRMLS_DC);
+
+int is_addr_action_present_in_options(
+	HashTable *msg_ht, 
+	HashTable *client_ht TSRMLS_DC)
+{
+	zval **tmp;
+	if (msg_ht
+        && zend_hash_find (msg_ht, WS_ACTION, sizeof (WS_ACTION),
+		(void **) &tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING) {
+			return AXIS2_TRUE;
+	} else if (client_ht
+        && zend_hash_find (client_ht, WS_ACTION, sizeof (WS_ACTION),
+		(void **) &tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING) {
+			return AXIS2_TRUE;
+	}
+	return AXIS2_FALSE;
+}
 
 int
 wsf_client_set_soap_action (
@@ -654,18 +673,13 @@ wsf_client_set_headers (
     return 1;
 }
 
-
-
-
-
 int
 wsf_client_set_addr_options (
     HashTable * client_ht,
     HashTable * msg_ht,
     axutil_env_t * env,
     axis2_options_t * client_options,
-    axis2_svc_client_t * svc_client,
-    int *is_addr_action_present TSRMLS_DC)
+    axis2_svc_client_t * svc_client TSRMLS_DC)
 {
 
     zval **tmp = NULL;
@@ -682,20 +696,17 @@ wsf_client_set_addr_options (
                 (void **) & tmp) == SUCCESS) {
             if (Z_TYPE_PP (tmp) == IS_BOOL) {
                 if (Z_BVAL_PP (tmp) == 1) {
-
                     value = "1.0";
                     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                         "[wsf_client] useWSA true, version 1.0");
-
                 } else {
-                    *is_addr_action_present = AXIS2_FALSE;
                     return AXIS2_FALSE;
                 }
 
-            } else if (Z_TYPE_PP (tmp) == IS_STRING) {
+			} else if (Z_TYPE_PP (tmp) == IS_STRING && 
+				strcmp("submission", Z_STRVAL_PP(tmp)) == 0) {
 
                 value = Z_STRVAL_PP (tmp);
-
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                     "[wsf_client] useWSA is string, value is %s", value);
             } else if (Z_TYPE_PP (tmp) == IS_LONG && Z_LVAL_PP (tmp) == 1) {
@@ -708,21 +719,22 @@ wsf_client_set_addr_options (
         }
     }
 
-    if (msg_ht) {
+	if(value){
+		if (msg_ht) {
 
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_client] ws_message is present setting options using ws_message options");
+			AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+				"[wsf_client] ws_message is present setting options using ws_message options");
 
-        addr_action_present =
-            wsf_client_set_addressing_options_to_options (env, client_options,
-            msg_ht TSRMLS_CC);
-    } else if (client_ht) {
+			addr_action_present =
+				wsf_client_set_addressing_options_to_options (env, client_options,
+				msg_ht TSRMLS_CC);
+		} else if (client_ht) {
 
-        addr_action_present =
-            wsf_client_set_addressing_options_to_options (env, client_options,
-            client_ht TSRMLS_CC);
-    }
-
+			addr_action_present =
+				wsf_client_set_addressing_options_to_options (env, client_options,
+				client_ht TSRMLS_CC);
+		}
+	}
     if (addr_action_present == AXIS2_TRUE && value) {
         is_addressing_engaged = AXIS2_TRUE;
 
@@ -745,7 +757,6 @@ wsf_client_set_addr_options (
                 "[wsf_client] addressing versio is submission");
         }
     }
-    *is_addr_action_present = addr_action_present;
     return is_addressing_engaged;
 }
 
@@ -991,8 +1002,7 @@ wsf_client_do_request (
 
         is_addressing_engaged =
             wsf_client_set_addr_options (client_ht, msg_ht, env,
-            client_options, svc_client,
-            &is_addressing_action_present TSRMLS_CC);
+            client_options, svc_client TSRMLS_CC);
         /** add set headers function here */
 
         wsf_client_set_headers (env, svc_client, param TSRMLS_CC);
@@ -1007,13 +1017,18 @@ wsf_client_do_request (
 
         is_addressing_engaged =
             wsf_client_set_addr_options (client_ht, NULL, env, client_options,
-            svc_client, &is_addressing_action_present TSRMLS_CC);
+            svc_client TSRMLS_CC);
     }
 
     if (status == AXIS2_FAILURE) {
         php_error_docref (NULL TSRMLS_CC, E_ERROR,
             "service enpoint uri is needed for service invocation");
     }
+
+	/** find whether addressing action is present if addressing is not engaged */
+	if(!is_addressing_engaged){
+		is_addressing_action_present = is_addr_action_present_in_options(msg_ht, client_ht TSRMLS_CC);
+	}
 
     if (client_ht) {
                   /** RM OPTIONS */
@@ -1042,7 +1057,7 @@ wsf_client_do_request (
                     WS_SANDESHA2_CLIENT_RM_SPEC_VERSION, rm_prop);
                 engage_rm = AXIS2_TRUE;
             }
-        }
+		}
 
     /**
 		reliable = TRUE
@@ -1230,26 +1245,33 @@ wsf_client_do_request (
                 soap_fault = axiom_soap_body_get_fault (soap_body, env);
             if (soap_fault) {
 
+				int soap_version = 0;
                 zval *rfault;
+				axiom_node_t *fault_node = NULL;
+				soap_version = axis2_options_get_soap_version(client_options, env);
 
-                res_text =
-                    axiom_node_to_string (axiom_soap_fault_get_base_node
-                    (soap_fault, env), env);
+				fault_node = axiom_soap_fault_get_base_node(soap_fault, env);
+				if(fault_node){
+					res_text = axiom_node_to_string ( fault_node, env);
 
-                MAKE_STD_ZVAL (rfault);
+					MAKE_STD_ZVAL (rfault);
+					INIT_PZVAL(rfault);
 
-                object_init_ex (rfault, ws_fault_class_entry);
+					object_init_ex (rfault, ws_fault_class_entry);
 
-                add_property_stringl (rfault, "str", res_text,
-                    strlen (res_text), 1);
+					add_property_stringl (rfault, "str", res_text,
+						strlen (res_text), 1);
 
+					wsf_util_handle_soap_fault(rfault, env, fault_node, soap_version TSRMLS_CC);
+				/*
                 wsf_set_soap_fault_properties (env, soap_fault,
                     rfault TSRMLS_CC);
-                ZVAL_ZVAL (return_value, rfault, 0, 1);
+                ZVAL_ZVAL (return_value, rfault, 0, 1); */
+					zend_throw_exception_object(rfault TSRMLS_CC);
+					return 1;
+				}
             }
-        }
-
-        if (response_payload) {
+        }else if (response_payload) {
 
             zval *rmsg = NULL;
             MAKE_STD_ZVAL (rmsg);
@@ -1261,9 +1283,7 @@ wsf_client_do_request (
             add_property_stringl (rmsg, WS_MSG_PAYLOAD_STR, res_text,
                 strlen (res_text), 1);
             ZVAL_ZVAL (return_value, rmsg, 0, 1);
-        }
-
-        if (response_payload == NULL && has_fault == AXIS2_FALSE) {
+        }else if (response_payload == NULL && has_fault == AXIS2_FALSE) {
             zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C),
                 1 TSRMLS_CC, "Error , NO Response Received");
         }

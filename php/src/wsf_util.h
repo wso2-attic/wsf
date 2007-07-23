@@ -25,6 +25,7 @@
 #include "wsf_common.h"
 #include <axiom_soap_body.h>
 #include "ext/libxml/php_libxml.h"
+
 axiom_node_t *wsf_util_read_payload (
     axiom_xml_reader_t * reader,
     const axutil_env_t * env);
@@ -62,15 +63,13 @@ int wsf_util_engage_module (
     axutil_env_t * env,
     axis2_svc_t * svc);
 
-wsf_svc_info_t *wsf_svc_info_create (
-    );
+wsf_svc_info_t *wsf_svc_info_create ();
 
 void wsf_svc_info_free (
     wsf_svc_info_t * svc_info,
     axutil_env_t * env);
 
-wsf_req_info_t *wsf_php_req_info_create (
-    );
+wsf_req_info_t *wsf_php_req_info_create ();
 
 void wsf_php_req_info_free (
     wsf_req_info_t * req_info);
@@ -81,14 +80,6 @@ void wsf_util_set_attachments_with_cids (
     axiom_node_t * payload_node,
     HashTable * attach_ht,
     char *default_cnt_type TSRMLS_DC);
-
-int wsf_util_set_options (
-    zval * zval_client,
-    zval * zval_msg,
-    axutil_env_t * env,
-    axis2_options_t * options,
-    axis2_svc_client_t * svc_client,
-    int is_send TSRMLS_DC);
 
 void wsf_util_get_attachments (
     const axutil_env_t * env,
@@ -116,20 +107,10 @@ axutil_env_t *wsf_env_create_svr (
 void wsf_env_free (
     axutil_env_t * env);
 
-axutil_env_t *wsf_env_create_for_client (
-    axis2_char_t * cli_logpath);
-
-char *wsf_util_get_algorithm (
-    int algo_suit,
-    int type);
-
 axiom_node_t *wsf_util_construct_header_node (
     const axutil_env_t * env,
     zval * header TSRMLS_DC);
 
-/*
-char *wsf_util_get_ttl(char *buf, axutil_env_t *env);
-*/
 char *wsf_util_read_file_to_buffer (
     char *filename TSRMLS_DC);
 
@@ -146,11 +127,11 @@ void wsf_util_set_soap_fault (
     zval * fault_detail,
     char *name TSRMLS_DC);
 
-/* {{{ proto create an WSFault object */
-void wsf_set_soap_fault_properties (
-    axutil_env_t * env,
-    axiom_soap_fault_t * soap_fault,
-    zval * zfault TSRMLS_DC);
+void wsf_util_handle_soap_fault(
+	zval *fault_zval,
+	axutil_env_t *env,
+	axiom_node_t *fault_node,
+	int soap_version TSRMLS_DC);
 
 
 #endif /* WSF_UTIL_H */

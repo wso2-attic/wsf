@@ -72,7 +72,7 @@ typedef enum ws_input_types
 #define WS_REPLY_TO			"replyTo"
 #define WS_FAULT_TO			"faultTo"
 
-#define WS_SOAP_ACTION                  "SOAPAction"
+#define WS_SOAP_ACTION      "SOAPAction"
 
 #define WS_USES_XOP			"usesXOP"      /** MTOM XOP */
 #define WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE "defaultAttachmentContentType"
@@ -82,25 +82,28 @@ typedef enum ws_input_types
 #define WS_REQUEST_XOP  		"requestXOP"
 #define WS_USE_MTOM     		"useMTOM"
 
+/** Reliable Messaging */
 #define WS_WILL_CONTINUE_SEQUENCE 	"willContinueSequence"
 #define WS_LAST_MESSAGE 		"lastMessage"
 #define WS_RELIABLE			"reliable"
 #define WS_SEQUENCE_EXPIRY_TIME 	"sequenceExpiryTime"
 #define WS_SEQUENCE_KEY      		"sequenceKey"
 
-
+/** protocol */
 #define WS_USE_SOAP			    "useSOAP"
 #define WS_HTTP_METHOD 			"HTTPMethod"
 
+/** SSL certificate */
 #define WS_SERVER_CERT 			"CACert"
 #define WS_CLIENT_CERT 			"clientCert"
 #define WS_PASSPHRASE  			"passphrase"
 
+/** wsdl mode */
 #define WS_BINDING_STYLE 		"bindingStyle"
 #define WS_WSDL          		"wsdl"
-
 #define WS_CACHE_WSDL           "cache_wsdl"
 
+/** soap fault */
 #define WS_FAULT_REASON 		"Reason"
 #define WS_FAULT_ROLE   		"Role"
 #define WS_FAULT_TEXT   		"text"

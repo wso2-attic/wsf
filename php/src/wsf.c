@@ -73,6 +73,7 @@ wsf_worker_t * worker;
 
 /** WSMessage functions */ 
 PHP_METHOD (ws_message, __construct);
+PHP_METHOD (ws_message, __destruct);
 PHP_METHOD (ws_message, __get);
 ZEND_BEGIN_ARG_INFO (__ws_message_get_args, 0) 
 ZEND_ARG_PASS_INFO (0)  ZEND_END_ARG_INFO ()  
@@ -111,7 +112,7 @@ PHP_FUNCTION (ws_get_cert_from_file);
 /** WSFault */ 
 PHP_METHOD (ws_fault, __construct);
 PHP_METHOD (ws_fault, __destruct);
-PHP_METHOD (ws_fault, __get);
+PHP_METHOD (ws_fault, __toString);
 
 /** WSPolicy class functions */ 
 PHP_METHOD (ws_policy, __construct);
@@ -136,6 +137,7 @@ ZEND_END_ARG_INFO ()
     
 zend_function_entry php_ws_message_class_functions[] ={
     PHP_ME (ws_message, __construct, NULL, ZEND_ACC_PUBLIC) 
+	PHP_ME (ws_message, __destruct, NULL, ZEND_ACC_PUBLIC)
     PHP_ME (ws_message, __get, __ws_message_get_args, ZEND_ACC_PUBLIC) 
     { NULL, NULL, NULL} };
 
@@ -180,7 +182,7 @@ zend_function_entry php_ws_service_class_functions[] = {
 zend_function_entry php_ws_fault_class_functions[] = {
     PHP_ME (ws_fault, __construct, NULL, ZEND_ACC_PUBLIC) 
     PHP_ME (ws_fault, __destruct, NULL, ZEND_ACC_PUBLIC) 
-    PHP_ME (ws_fault, __get, __ws_fault_get_args, ZEND_ACC_PUBLIC)  
+    PHP_ME (ws_fault, __toString, NULL, ZEND_ACC_PUBLIC)  
     { NULL, NULL, NULL} 
 };
 
@@ -388,17 +390,14 @@ PHP_MINIT_FUNCTION (wsf)
     ws_header_class_entry = zend_register_internal_class (&ce TSRMLS_CC);
     
     INIT_CLASS_ENTRY (ce, "WSFault", php_ws_fault_class_functions);
-/*
  #ifdef ZEND_ENGINE_2    
     ws_fault_class_entry = 
     zend_register_internal_class_ex(&ce, zend_exception_get_default(TSRMLS_C), NULL TSRMLS_CC);
 #else    
-*/ 
     ws_fault_class_entry = zend_register_internal_class (&ce TSRMLS_CC);
-/*
 #endif
-*/ 
-    INIT_CLASS_ENTRY (ce, "WSSecurityToken", php_ws_security_token_class_functions);
+
+	INIT_CLASS_ENTRY (ce, "WSSecurityToken", php_ws_security_token_class_functions);
     ws_security_token_class_entry = zend_register_internal_class (&ce TSRMLS_CC);
 
     INIT_CLASS_ENTRY (ce, "WSPolicy", php_ws_policy_class_functions);
@@ -514,8 +513,11 @@ php_ws_object_new_ex (
     intern->obj_type = WS_NONE;
     *obj = intern;
     
-    zend_object_std_init (&intern->std, class_type TSRMLS_CC);
-    
+	ALLOC_HASHTABLE(intern->std.properties);
+    zend_hash_init(intern->std.properties, 0, NULL, ZVAL_PTR_DTOR, 0);
+/*    
+	zend_object_std_init (&intern->std, class_type TSRMLS_CC);
+*/    
     zend_hash_copy (intern->std.properties, &class_type->default_properties,
         (copy_ctor_func_t) zval_add_ref, (void *) &tmp, sizeof (void *));
     
@@ -531,8 +533,17 @@ php_ws_object_new_ex (
 static void 
 ws_objects_free_storage (void *object TSRMLS_DC)
 {
-    ws_object * intern = (ws_object *) object;
-    zend_object_std_dtor (&intern->std TSRMLS_CC);
+	ws_object * intern = NULL;
+	intern	= (ws_object *) object;
+	if(!intern) return;
+
+	if(intern->std.properties){
+		zend_hash_destroy(intern->std.properties);
+		FREE_HASHTABLE(intern->std.properties);
+	}
+/*    
+	zend_object_std_dtor (&intern->std TSRMLS_CC);
+*/
     if (intern->obj_type == WS_SVC_CLIENT) {
         axis2_svc_client_t * svc_client = NULL;
         svc_client = (axis2_svc_client_t *) intern->ptr;
@@ -1723,19 +1734,32 @@ PHP_METHOD (ws_fault, __construct)
 PHP_METHOD (ws_fault, __destruct) 
 {
 }
-
-
 /* }}} */ 
-PHP_METHOD (ws_fault, ws_fault_add_fault_header) 
+PHP_METHOD (ws_fault, __toString) 
 {
-}
+	zval *code, *reason,  *detail;
+	char *fault_string;
+	int length;
 
-PHP_METHOD (ws_fault, ws_fault_get_fault_headers) 
-{
-}
+	if(ZEND_NUM_ARGS() > 0){
+		ZEND_WRONG_PARAM_COUNT();
+	}
+	
+	code = zend_read_property(ws_fault_class_entry, this_ptr, 
+				WS_FAULT_CODE, sizeof(WS_FAULT_CODE) -1, 1 TSRMLS_CC);
+	reason = zend_read_property(ws_fault_class_entry, this_ptr, 
+				WS_FAULT_REASON, sizeof(WS_FAULT_REASON) -1, 1 TSRMLS_CC);
+	detail = zend_read_property(ws_fault_class_entry, this_ptr,
+				WS_FAULT_DETAIL, sizeof(WS_FAULT_DETAIL) -1, 1 TSRMLS_CC);
 
-PHP_METHOD (ws_fault, __get) 
-{
+	if(Z_STRVAL_P(detail)){
+	length = spprintf(&fault_string, 0, "WS FAULT exception: [%s] %s %s",
+		Z_STRVAL_P(code), Z_STRVAL_P(reason), Z_STRVAL_P(detail));
+	}else{
+	length = spprintf(&fault_string, 0, "WS FAULT exception: [%s] %s",
+		Z_STRVAL_P(code), Z_STRVAL_P(reason));
+	}
+	RETURN_STRINGL(fault_string, length, 0);
 }
 
 PHP_METHOD (ws_header, __construct) 
@@ -1887,8 +1911,6 @@ PHP_METHOD (ws_policy, __construct)
         wsf_policy_set_policy_options (object, properties, env TSRMLS_CC);
     }
 }
-
-
 /* }}} */ 
     
 /* {{{ proto string file_get_contents(string filename)
@@ -1946,8 +1968,6 @@ PHP_FUNCTION (ws_get_key_from_file)
     }
     php_stream_close (stream);
 }
-
-
 /* }}} */ 
     
 /* {{{ proto string file_get_contents(string filename)
@@ -2005,13 +2025,12 @@ PHP_FUNCTION (ws_get_cert_from_file)
     }
     php_stream_close (stream);
 }
-
-
 /* }}} */ 
     
 /* {{{  proto  WSClientProxy::__construct(mixed options) */ 
 PHP_METHOD (ws_client_proxy, __construct) 
 {
+
 }
 
 
@@ -2020,6 +2039,7 @@ PHP_METHOD (ws_client_proxy, __construct)
 /* {{{ proto void WSClientProxy::__destruct() */ 
 PHP_METHOD (ws_client_proxy, __destruct) 
 {
+
 }
 
 
