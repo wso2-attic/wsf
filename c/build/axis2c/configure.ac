@@ -62,7 +62,7 @@ fi
 #CFLAGS="$CFLAGS -ansi -Wall -D_LARGEFILE64_SOURCE -Wno-implicit-function-declaration"
 CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 if test "$GCC" = "yes"; then
-    CFLAGS="$CFLAGS -ansi -Wall -Werror -Wno-implicit-function-declaration -g"
+    CFLAGS="$CFLAGS -ansi -Wall  -Wno-implicit-function-declaration -g"
 #    CFLAGS="$CFLAGS -ansi -Wall -Wno-implicit-function-declaration"
 fi
 LDFLAGS="$LDFLAGS -lpthread"
@@ -363,6 +363,11 @@ AC_CONFIG_FILES([Makefile \
     src/core/transport/http/server/simple_axis2_server/Makefile \
     src/core/transport/http/server/Makefile \
     src/core/transport/http/server/apache2/Makefile \
+    src/core/transport/tcp/Makefile \
+    src/core/transport/tcp/sender/Makefile \
+    src/core/transport/tcp/receiver/Makefile \
+    src/core/transport/tcp/server/Makefile \
+    src/core/transport/tcp/server/simple_tcp_server/Makefile \
     src/core/transport/xmpp/Makefile \
     src/core/transport/xmpp/sender/Makefile \
     src/core/transport/xmpp/receiver/Makefile \
