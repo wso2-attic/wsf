@@ -1,7 +1,7 @@
 WSO2 Web Services Framework/PHP (WSO2 WSF/PHP) is a PHP extension that could be used 
 to provide and consume Web services. 
 
-It supports SOAP 1.1, SOAP 1.2, MTOM, WS-Addressing, WS-Security UsernameToken 
-as well as REST style invocation.
+It supports SOAP 1.1, SOAP 1.2, MTOM, WS-Addressing, WS-Security, WS-SecurityPolicy, 
+WS-ReliableMessaging as well as REST style invocation.
 
 Please refer docs/manual.html for more information.
