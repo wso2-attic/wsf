@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html xmlns ="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title></title>
@@ -21,6 +21,7 @@ WSF/PHP extension.</p>
 <a id="client"></a>   &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
     &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
     &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+    &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
 
 <h2><b>WSClient</b></h2>
 <a id="construct"></a>
@@ -245,8 +246,7 @@ border="1">
   </tbody>
 </table>
 
-<p><br>
-<br>
+<p><br/><br/>
 </p>
 <a id="method"></a>
 
@@ -264,7 +264,7 @@ format.</p>
 
 <table cellspacing="3" style="page-break-inside: avoid" cellpadding="4"
 border="1">
-  <col><col><thead>
+  <col/><col/><thead>
     <tr valign="top">
       <th><p>Parameter</p>
       </th>
@@ -292,8 +292,7 @@ border="1">
   </tbody>
 </table>
 
-<p><br>
-<br>
+<p><br/><br/>
 </p>
 
 <p>Return Values:</p>
@@ -302,8 +301,7 @@ border="1">
 
 <p>Throws WSFault on error.</p>
 
-<p><br>
-<br>
+<p><br/><br/>
 </p>
 <a id="pre_void_WSClient"></a>
 <ul>
@@ -319,7 +317,7 @@ hence no response would be expected.</p>
 
 <table cellspacing="3" style="page-break-inside: avoid" cellpadding="4"
 border="1">
-  <col><col><thead>
+  <col/><col/><thead>
     <tr valign="top">
       <th><p>Parameter</p>
       </th>
@@ -350,8 +348,7 @@ border="1">
   </tbody>
 </table>
 
-<p><br>
-<br>
+<p><br/><br/>
 </p>
 
 <p>Return Values:</p>
@@ -360,8 +357,7 @@ border="1">
 
 <p>Throws WSFault on error.</p>
 
-<p><br>
-<br>
+<p><br/><br/>
 </p>
 
 <h3><b>Member Variables</b></h3>
@@ -678,7 +674,7 @@ properties related to a message. <a id="construct3"></a>
 
 <table cellspacing="3" style="page-break-inside: avoid" cellpadding="4"
 border="1">
-  <col><col><col><col><col><col><thead>
+  <col/><col/><col/><col/><col/><col/><thead>
     <tr valign="top">
       <th><p>Parameter</p>
       </th>
@@ -839,8 +835,8 @@ border="1">
   </tbody>
 </table>
 
-<p><br>
-<br>
+<p><br/>
+<br/>
 </p>
 <a id="method3"></a>
 
@@ -873,7 +869,7 @@ as a domDocument</p>
 attachments. e.g.array("cid1" =&gt; $image)) Here "cid1" is the id mentioned
 in the &lt;XOP:Include&gt; element, and $image contains the string
 representation of the binary content to be sent or being received.</p>
-<br>
+<br/>
 <ul>
   <li><p><b>array cid2contentType</b></p>
   </li>
@@ -882,14 +878,14 @@ representation of the binary content to be sent or being received.</p>
 <p>An associative array, containing the mapping of cid (content id) to its corresponding
     &nbsp;attachment. When an attchement is received, this property will be present
     in the WSMessage object.</p>
-    <p>
+    
 <ul>
   <li><p><b>array headers</b></p>
   </li>
 </ul>
 
 <p>An array of SOAP Header objects to be sent or&nbsp; has beed received. </p>
-    <p>
+    
 
 
 <h3><b>Example</b></h3>
@@ -1002,51 +998,60 @@ border="1">
   </tbody>
 </table>
 
-<p><br>
-<br>
+<p><br/>
+<br/>
 </p>
 <a id="method2"></a>
 
 <h3><b>Methods</b></h3>
-None
+<a id="A1"></a>
+<ul>
+  <li><p><b>WSFault-&gt;__toString()</b></p>
+    <p>returns the fault information as a string
+     </p>
+  </li>
+</ul>
+<br/>
 
-<p><br>
-</p>
 <a id="member_variables"></a>
 
 <h3><b>Member Variables</b></h3>
 <ul>
-  <li><p><b>string code</b></p>
+  <li><p><b>string Code</b></p>
   </li>
 </ul>
 
 <p>SOAP Fault code. SOAP fault codes are intended to provide a means by which
 faults are classified.</p>
 <ul>
-  <li><p><b>string reason</b></p>
+  <li><p><b>string Reason</b></p>
   </li>
 </ul>
 
 <p>SOAP Fault reason. Provides a human readable explanation of the fault.</p>
 <ul>
-  <li><p><b>string role</b></p>
+  <li><p><b>string Role</b></p>
   </li>
 </ul>
 
 <p>SOAP Fault role. Identifies the role the SOAP processing node was
 operating in at the point the fault occurred.</p>
 <ul>
-  <li><b>string detail</b></li>
+  <li><b>string Detail</b></li>
 </ul>
 
 <p>SOAP Fault detail. Contains application specific error information.</p>
+<br/>
+<ul>
+  <li><b>string str</b></li>
+</ul>
 
-<p><br>
-</p>
-<br>
+<p>Contains the received soap fault as an xml string.</p>
+
 <a id="function"></a>
 
 <h2><b>Predefined Functions</b></h2>
+
 <ul>
   <li><h4><a id="ws_request"></a><b>WSMessage ws_request (string payload
     | domDocument payload | WSMessage payload <br>
@@ -1061,7 +1066,7 @@ Out-In message exchange pattern.</p>
 
 <table cellspacing="3" style="page-break-inside: avoid" cellpadding="4"
 border="1">
-  <col><col><thead>
+  <col/><col/><thead>
     <tr valign="top">
       <th><p>Parameter</p>
       </th>
@@ -1102,16 +1107,14 @@ border="1">
   </tbody>
 </table>
 
-<p><br>
-<br>
-</p>
+<p><br/><br/></p>
 
 <p>Return Values:</p>
 
 <p>WSMessage object instance representing response.</p>
 
 <p>Throws WSFault on error.</p>
-<br>
+<br/>
 
 
 <p>Example</p>
