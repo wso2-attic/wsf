@@ -65,6 +65,8 @@ axis2_char_t *AXIS2_CALL wsf_password_provider_function (
     const axis2_char_t * username,
     void *ctx);
 
+char *wsf_get_rampart_token_value(char *token_ref);
+
 tokenProperties_t wsf_set_tmp_rampart_options (
     tokenProperties_t tmp_rampart_ctx,
     zval * sec_token,
@@ -613,6 +615,7 @@ wsf_do_create_policy (
     axiom_node_t *return_node = NULL;
     zval **tmp = NULL;
     char *algo_suite = NULL;
+    char *token_ref = NULL;
 
     if (!policy)
         return NULL;
@@ -660,9 +663,18 @@ wsf_do_create_policy (
             if (neethi_options_set_sign_body (neethi_options, env,
                     AXIS2_TRUE))
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_sec_policy] encrypt_enabled ");
+                    "[wsf_sec_policy] sign_enabled ");
         }
-
+        if (zend_hash_find (ht_policy, WS_TOKEN_REFERENCE, sizeof (WS_TOKEN_REFERENCE),
+                            (void **) &tmp) == SUCCESS && tmp != NULL
+            && Z_TYPE_PP (tmp) == IS_STRING) {
+            token_ref = wsf_get_rampart_token_value(Z_STRVAL_PP (tmp));
+            if (neethi_options_set_keyidentifier (neethi_options, env,
+                                                  token_ref))
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                                 "[wsf_sec_policy] token_ref_enabled ");
+        }
+        
 
     }
 
@@ -885,3 +897,26 @@ wsf_password_provider_function (
     }
     return NULL;
 }
+
+char *wsf_get_rampart_token_value(char *token_ref)
+{
+    if(strcmp(token_ref, ISSUER_SERIAL) == 0)
+        return RP_REQUIRE_ISSUER_SERIAL_REFERENCE;
+    if(strcmp(token_ref, KEYIDENTIFIER) == 0)
+        return RP_REQUIRE_KEY_IDENTIFIRE_REFERENCE;
+    if(strcmp(token_ref, EMBEDDEDTOKEN) == 0)
+        return RP_REQUIRE_EMBEDDED_TOKEN_REFERENCE;
+    if(strcmp(token_ref, THUMBPRINT) == 0)
+        return RP_REQUIRE_THUMBPRINT_REFERENCE;
+    else
+        return NULL;
+}
+
+
+
+
+
+
+
+
+
