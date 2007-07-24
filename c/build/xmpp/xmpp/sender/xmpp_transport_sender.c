@@ -332,7 +332,7 @@ axis2_xmpp_transport_sender_invoke(
     xml_writer = axiom_xml_writer_create_for_memory(env, NULL,
                                                     AXIS2_TRUE, 0, 
                                                     AXIS2_XML_PARSER_TYPE_BUFFER);
-    if (NULL == xml_writer)
+    if (!xml_writer)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
                         "[xmpp]Failed to create XML writer");
