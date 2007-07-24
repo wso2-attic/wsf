@@ -1,30 +1,64 @@
+WSO2 WSF/C 1.0.1
+================
+
+	1. Attachments with MTOM
+		* Binary optimized
+		* Non-optimized (Base64 binary)
+
+	2. WS-Addressing
+		* Version 1.0
+		* Submission
+
+	3. WS-Policy
+
+	4. WS-Security
+		* UsernameToken
+		* Signing
+		* Encryption
+
+	5. WS-ReliableMessaging
+
+	6. WS-Eventing
+
+	7. SSL enabled Transport layer
+
+	8. XMPP transport layer
+
+	9. TCP transport layer
+
+	10. wsclient command line tool to consume Web services.
+
+
+-- WSO2 WSF4C team <wsf-c-dev@wso2.org>  Tue, 24 Jul 2007
+
+
 WSO2 WSF/C 1.0.0
 ================
 
-    1. Attachments with MTOM
-        * Binary optimized
-        * Non-optimized (Base64 binary)
+	1. Attachments with MTOM
+		* Binary optimized
+		* Non-optimized (Base64 binary)
 
-    2. WS-Addressing
-        * Version 1.0
-        * Submission
+	2. WS-Addressing
+		* Version 1.0
+		* Submission
 
-    3. WS-Policy
+	3. WS-Policy
 
-    4. WS-Security
-        * UsernameToken
-        * Signing
-        * Encryption
+	4. WS-Security
+		* UsernameToken
+		* Signing
+		* Encryption
 
-    5. WS-ReliableMessaging
+	5. WS-ReliableMessaging
 
-    6. WS-Eventing
+	6. WS-Eventing
 
-    7. SSL enabled Transport layer
+	7. SSL enabled Transport layer
 
-    8. XMPP transport layer
+	8. XMPP transport layer
 
-    9. wsclient command line tool to consume Web services.
+	9. wsclient command line tool to consume Web services.
 
 
 -- WSO2 WSF4C team <wsf-c-dev@wso2.org>  Wed, 18 Jan 2007
