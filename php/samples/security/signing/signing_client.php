@@ -30,7 +30,7 @@ try {
     
     $sec_array = array("sign"=>TRUE,
                        "algorithmSuite" => "Basic256Rsa15",
-                       "securityTokenRefernce" => "IssuerSerial");
+                       "securityTokenReference" => "IssuerSerial");
     
     $policy = new WSPolicy(array("security"=>$sec_array));
     $sec_token = new WSSecurityToken(array("privateKey" => $my_key,

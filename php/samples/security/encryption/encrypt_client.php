@@ -29,7 +29,7 @@ try {
     
     $sec_array = array("encrypt"=>TRUE,
                        "algorithmSuite" => "Basic256Rsa15",
-                       "securityTokenRefernce" => "IssuerSerial");
+                       "securityTokenReference" => "IssuerSerial");
     
     $policy = new WSPolicy(array("security"=>$sec_array));
     $sec_token = new WSSecurityToken(array("privateKey" => $pvt_key,
