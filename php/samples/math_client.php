@@ -104,9 +104,9 @@ XML;
   
      catch (Exception $e)
        {
-	    if ($e instanceof Axis2Fault)
+	    if ($e instanceof WSFault)
 	    {
-	     printf("Soap Fault: %s\n", $e->code);
+	     printf("Soap Fault: %s\n", $e->Reason);
 	    }
 	 else
 	   {

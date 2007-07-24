@@ -15,28 +15,15 @@
  * limitations under the License.
  */
 
-$reqPayloadString = <<<XML
-<webSearch><appid>ApacheRestDemo</appid><query>SriLanka</query><form/></webSearch>
-XML;
+function sendFault($inMessage) {
 
-try {
-
-    $client = new WSClient(
-        array("to"=>"http://search.yahooapis.com/WebSearchService/V1/webSearch",
-	      "HTTPMethod"=>GET,
-	      "useSOAP"=>FALSE));
-				
-    $resMessage = $client->request($reqPayloadString);
-    
-    printf("Response = %s <br>", htmlspecialchars($resMessage->str));
-
-} catch (Exception $e) {
-
-	if ($e instanceof WSFault) {
-		printf("Soap Fault: %s\n", $e->Reason);
-	} else {
-		printf("Message = %s\n",$e->getMessage());
-	}
+    return new WSFault("Sender", "Testing WSFault");
 }
+
+$operations = array("getFault" => "sendFault");
+
+$svr = new WSService(array("operations" => $operations));
+        
+$svr->reply();
 
 ?>

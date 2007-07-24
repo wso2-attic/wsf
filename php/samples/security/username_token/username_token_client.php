@@ -42,7 +42,7 @@ try {
 } catch (Exception $e) {
 
 	if ($e instanceof WSFault) {
-		printf("Soap Fault: %s\n", $e->code);
+		printf("Soap Fault: %s\n", $e->Reason);
 	} else {
 		printf("Message = %s\n",$e->getMessage());
 	}

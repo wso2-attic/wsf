@@ -48,12 +48,12 @@ try {
     
     $client->send($msg2);
 
-    sleep(2000);
+    sleep(300);
     
 } catch (Exception $e) {
 
 	if ($e instanceof WSFault) {
-		printf("Soap Fault: %s\n", $e->code);
+		printf("Soap Fault: %s\n", $e->Reason);
 	} else {
 		printf("Message = %s\n",$e->getMessage());
 	}

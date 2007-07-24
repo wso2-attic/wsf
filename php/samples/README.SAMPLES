@@ -11,6 +11,7 @@ echo_client_addr.php - Echo client with WS-Addressing.
 echo_client_multiple_invocation.php - Echo sample showing how to use the
                     same client object instance to do repeated calls
                    
+
 google_search.php - Google search sample. Needs a valid google key.
                     Insert your key in the key element of the payload
                     string given in this sample.
@@ -53,11 +54,6 @@ request_client_str.php - Client for reply echo service, using axis2_request()
 
 reply_notify_service.php - Notify service implemented with axis2_reply() function.
 
-send_client_msg.php - Client for notify service, using axis2_send()
-                    function with payload in Axis2Message format.
-
-send_client_str.php - Client for notify service, using axis2_send()
-                    function with payload in string format.
 
 math_service.php - Math service for add, sub, mul and div operations.Returns the
                    reply for the operations.(In math directory)
