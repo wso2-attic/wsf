@@ -125,5 +125,5 @@ wsdl_mode/dynamic_echo_service.php                 - WSDL mode Service
 Sudoku
 --------
 
-sudoku/sudoku_client.php                           - Web Client demonstrating  Addressing, Security ,MTOM and RM
-sudoku/sudoku_service.php                          - Web Service demonstrating Addressing, security ,MTOM and RM
+sudoku/sudoku_client.php                           - Client demonstrating  Addressing, Security ,MTOM and RM
+sudoku/sudoku_service.php                          - Service demonstrating Addressing, security ,MTOM and RM
