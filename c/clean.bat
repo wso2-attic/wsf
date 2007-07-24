@@ -8,5 +8,10 @@
 
 @if exist wso2-wsf-c-bin-1.0.1 rmdir /S /Q wso2-wsf-c-bin-1.0.1
 
+@if exist axis2c\build\win32\int.msvc rmdir /S /Q axis2c\build\win32\int.msvc
 
+@if exist rampartc\build\win32\int.msvc rmdir /S /Q rampartc\build\win32\int.msvc
 
+@if exist sandesha2c\build\win32\int.msvc rmdir /S /Q sandesha2c\build\win32\int.msvc
+
+@if exist savanc\build\win32\int.msvc rmdir /S /Q savanc\build\win32\int.msvc
