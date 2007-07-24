@@ -10,13 +10,8 @@
 
 <body>
 <h1> Reliable Messaging API</h1>
-     <p>   Wsf4php extension supports reliable messaging protocol version 1.0 now.
-        For the beta release, both 1.0 and 1.1 will be supported. One way reliablilty is available
-         and two way messging reliability
-        is supported through single channel (messages sent
-         from the receiving
-        rm endpoint will also
-        be coming through the same channel).
+     <p>WSO2 WSF/PHP extension supports WS-ReliableMessaging protocol versions 1.0 and 1.1. 
+        One way messages, as well as two way messages can be sent reliably.
      </p>
     <p>
         A user can use following options to configure
@@ -44,16 +39,16 @@
                 <td style="width: 100px; height: 21px">
                     reliable</td>
                 <td style="width: 100px; height: 21px">
-                    Boolean String, double</td>
+                    boolean | string | double</td>
                 <td style="width: 100px; height: 21px">
-                    TRUE | 1.1</td>
+                    TRUE | 1.0 | 1.1 </td>
                 <td style="width: 100px; height: 21px">
                     Default RM version is 1.0</td>
                 <td style="width: 373px; height: 21px">
-                    Defines whether to enable reliable messaging or not. If specified TRUE, then RM
-                    will be enabled with rm version as 1.0.<strong><em>*</em></strong> For rm to be
-                    enabled, user must set the addressing action, so that addressing can be enabled
-                    with rm.<strong>&nbsp;</strong></td>
+                    Defines whether to enable reliable messaging (RM) or not. 
+                    If specified TRUE, then RM
+                    will be enabled with RM version as 1.0. For RM to be
+                    enabled, user must also have set the addressing action.</td>
             </tr>
             <tr>
                 <td style="width: 100px; height: 4px">
@@ -61,11 +56,11 @@
                 <td style="width: 100px; height: 4px">
                     int</td>
                 <td style="width: 100px; height: 4px">
-                    d+</td>
+                    int</td>
                 <td style="width: 100px; height: 4px">
                     &nbsp;60 seconds</td>
                 <td style="width: 373px; height: 4px">
-                    The current sequence will expire in "sequenceExpiryTime" milliseconds from current
+                    The current sequence will expire in "sequenceExpiryTime" seconds from current
                     time.</td>
             </tr>
               <tr>
@@ -76,7 +71,7 @@
                 <td style="width: 100px; height: 4px">
                     string</td>
                 <td style="width: 100px; height: 4px">
-                    &nbsp;</td>
+                    none&nbsp;</td>
                 <td style="width: 373px; height: 4px">
                     The sequence key property </td>
             </tr>
@@ -90,7 +85,8 @@
                 <td style="width: 100px; height: 4px">
                     FALSE</td>
                 <td style="width: 373px; height: 4px">
-                    Default value is FALSE meaning that , sequence will be ended if user does not specify
+                    Wether to continue sequence. Sequence will be terminated by default
+                    if user does not specify
                     "willContinueSequence" =&gt; TRUE.</td>
             </tr>
         </table>
@@ -128,7 +124,7 @@
                     The client will check it's "willContinueSequence" option. If it is FALSE ( default
                     value ) , it will send the message
                     and terminate the sequence. If client's&nbsp; "willContinueSequence" property is TRUE, it will check the "lastMessage"
-                    property of WSMessage. If this is TRUE ( default is FALSE ) it will add the last
+                    property of WSMessage. If "lastMessage" is TRUE ( default is FALSE ) it will add the last
                     message and terminate the sequence.</td>
         </tr>
     </table>
