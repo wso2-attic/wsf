@@ -13,23 +13,21 @@
 <h1>WSO2 Web Services Framework/PHP</h1>
 
 <p>WSO2 Web Services Framework/PHP (WSO2 WSF/PHP) is a next generation SOAP
-stack, based on <a href="http://ws.apache.org/axis2/c/index.html">Apache
-Axis2 C</a>, for providing and consuming Web Services in PHP.</p>
+stack, based on <a href="http://wso2.org/projects/wsf/c/">WSO2 WSF/C</a>, for
+providing and consuming Web Services in PHP.</p>
 
 <p>WSO2 WSF/PHP supports both <a
 href="http://www.w3.org/TR/soap12-part1/">SOAP 1.2</a> and <a
 href="http://www.w3.org/TR/2000/NOTE-SOAP-20000508/">SOAP 1.1</a> as well as
 some of the WS-* stack specifications: <a
 href="http://www.w3.org/TR/soap12-mtom/">SOAP MTOM</a>, <a
-href="http://www.w3.org/2002/ws/addr/">WS-Addressing</a> version 1.0 and <a
-href="http://www.w3.org/Submission/ws-addressing/">submission</a>, and <a
-href="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0.pdf">WS-Security
-UsernameToken</a>.</p>
+href="http://www.w3.org/2002/ws/addr/">WS-Addressing</a> version 1.0 and
+submission, WS-Security, WS-SecurityPolicy and WS-ReliableMessaging</p>
 
 <h2>Mailing Lists</h2>
 
-<p>You can get involved by sending you feedback to the following mailing
-lists.</p>
+<p>You can get involved by sending your feedback, questions and suggestions
+to the following mailing list.</p>
 <a id="mail"></a>
 
 <p>User Mailing List : <a
@@ -52,7 +50,7 @@ WSF/PHP 1.0.0beta</a></b>
       <li>WSClient class with both one way and two way service invocation
         support</li>
       <li>Option of using functions in place of object oriented API with
-        ws_request() and ws_send() functions</li>
+        ws_request and ws_send functions</li>
     </ul>
   </li>
   <li>Service API to provide Web services
@@ -61,7 +59,7 @@ WSF/PHP 1.0.0beta</a></b>
       <li>WSService class with support for both one way and two way
       operations</li>
       <li>Option of using functions in place of object oriented API with
-        ws_reply()</li>
+        ws_reply</li>
     </ul>
   </li>
   <li>Attachments with MTOM
@@ -78,33 +76,40 @@ WSF/PHP 1.0.0beta</a></b>
   </li>
   <li>WS-Security
     <ul>
-    <li>UsernameToken and Timestamp</li>
-    <li>Encryption</li>
-    <li>Signing</li>
-    <li>WS-Security Policy base configarability</li>
+      <li>UsernameToken and Timestamp</li>
+      <li>Encryption</li>
+      <li>Signing</li>
+      <li>WS-Security Policy based configarability</li>
     </ul>
   </li>
   <li>WS-Reliable Messaging
     <ul>
-        <li>Single chaneel Two way and one way reliable messaging</li>
+      <li>Single chaneel two way and one way reliable messaging</li>
     </ul>
   </li>
   <li>WSDL Generation for Server Side
-  <ul><li>WSDL generation based on annotations and function signatures, and
-            Serving on ?wsdl requests
-        </li>
-  </ul>
+    <ul>
+      <li>WSDL generation based on annotations and function signatures, and
+        serving on ?wsdl requests</li>
+    </ul>
   </li>
   <li>REST Support
-  <ul>
-    <li>a single service script both as SOAP and REST service</li>
+    <ul>
+      <li>Expose a single service script both as SOAP and REST service</li>
     </ul>
   </li>
   <li>WSDL mode support for both client and server side
-  <ul>
-    <li>Implement both services and clients by providing just the wsdl and buisness logic</li>
+    <ul>
+      <li>Implement both services and clients by providing just the wsdl and
+        buisness logic</li>
     </ul>
   </li>
+ <li>Backward compatibility with PHP5 SOAP extension
+    <ul>
+      <li>Experimental</li>
+    </ul>
+  </li>
+
 </ol>
 </body>
 </html>
