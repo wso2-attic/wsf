@@ -15,3 +15,5 @@
 @if exist sandesha2c\build\win32\int.msvc rmdir /S /Q sandesha2c\build\win32\int.msvc
 
 @if exist savanc\build\win32\int.msvc rmdir /S /Q savanc\build\win32\int.msvc
+
+@if exist axis2c\build\deploy rmdir /S /Q axis2c\build\deploy
