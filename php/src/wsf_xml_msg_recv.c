@@ -692,7 +692,12 @@ wsf_xml_msg_recv_set_soap_fault (
     if (zend_hash_find
         (Z_OBJPROP_P (zval_soap_fault), WS_FAULT_CODE, sizeof (WS_FAULT_CODE),
             (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-        code = Z_STRVAL_PP (tmp);
+        smart_str fcode = {0};
+        smart_str_appends(&fcode,AXIOM_SOAP_DEFAULT_NAMESPACE_PREFIX);
+        smart_str_appends(&fcode, ":");
+        smart_str_appends(&fcode,Z_STRVAL_PP (tmp));
+        smart_str_0(&fcode);
+        code = fcode.c;
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
             "[wsf_service] setting fault code %s", code);
     } else {

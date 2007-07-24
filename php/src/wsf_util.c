@@ -979,7 +979,7 @@ wsf_util_serialize_om (
         AXIS2_XML_PARSER_TYPE_BUFFER);
     om_output = axiom_output_create (env, writer);
 
-    axiom_node_serialize (ret_node, env, om_output);
+    axiom_node_serialize_sub_tree (ret_node, env, om_output);
     buffer = (axis2_char_t *) axiom_xml_writer_get_xml (writer, env);
     buffer_len = axutil_strlen (buffer);
 

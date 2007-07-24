@@ -1252,7 +1252,7 @@ wsf_client_do_request (
 
 				fault_node = axiom_soap_fault_get_base_node(soap_fault, env);
 				if(fault_node){
-					res_text = axiom_node_to_string ( fault_node, env);
+					res_text = axiom_node_sub_tree_to_string ( fault_node, env);
 
 					MAKE_STD_ZVAL (rfault);
 					INIT_PZVAL(rfault);
