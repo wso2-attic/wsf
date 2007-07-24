@@ -150,6 +150,24 @@ public class PersistentWSASEmitterContext extends PersistentContext implements
 	public void setAarExtention(String aarExtention){
 		setValue(PREFERENCE_AAR_EXTENTION, aarExtention);
 	}
+
+	//Debug Options 
+	public String getDebuPort() {
+		return getValueAsString(PREFERENCE_DEBUG_PORT);
+	}
+
+	public String getDebugHost() {
+		return getValueAsString(PREFERENCE_DEBUG_HOST);
+	}
+
+	public void setDebuPort(String debuPort) {
+		setValue(PREFERENCE_DEBUG_PORT, debuPort);
+		
+	}
+
+	public void setDebugHost(String debugHost) {
+		setValue(PREFERENCE_DEBUG_HOST, debugHost);
+	}
 	
 	
 }
