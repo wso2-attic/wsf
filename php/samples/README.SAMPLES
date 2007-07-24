@@ -4,6 +4,8 @@ echo_service.php - Echo service, accepts a payload and returns the same.
 echo_client.php - Echo client, client for echo service. Sends a request
                     and accepts a reply
 
+echo_client_soap11.php - Client for echo service using SOAP 1.1 protocol
+
 echo_service_addr.php - Echo service with WS-Addressing.
 
 echo_client_addr.php - Echo client with WS-Addressing.
@@ -11,35 +13,24 @@ echo_client_addr.php - Echo client with WS-Addressing.
 echo_client_multiple_invocation.php - Echo sample showing how to use the
                     same client object instance to do repeated calls
                    
-
-google_search.php - Google search sample. Needs a valid google key.
-                    Insert your key in the key element of the payload
-                    string given in this sample.
-google_spell.php - Google spell sample. Needs a valid google key.
-                    Insert your key in the key element of the payload
-                    string given in this sample.
-
-mtom_download_service.php - MTOM sample where the service sends an attachment 
-                    to the client. The image used is located in the resources 
-                    folder.
-                    
-mtom_download_client.php - Client for MTOM download service. Saves the MTOM
-                    attachment sent by the service. You have to save the file 
-                    to a globally writable folder. This sample uses '/tmp'.
-                    
-mtom_upload_service.php - MTOM sample where the service saves an attachment 
-                    sent by the client. You have to save the file to a globally
-                    writable folder. This sample uses '/tmp'. 
-                    
-mtom_upload_client.php - Client for MTOM upload service. Sends a file as an 
-                    attachment to the service. The image used is located in 
-                    the resources folder.
-                    
 notify_service.php - Notify service, accepts a payload, but does not return 
                     a reply. One way (in-only) sample.
                     
 notify_client.php - Client for notify service. Sends a request and do not 
                     expect a response.
+
+fault_client.php  - Client that receives a soap fault
+
+fault_service.php - Service that returns a custom soap fault
+
+math_service.php - Math service for add, sub, mul and div operations.Returns the
+                   reply for the operations.(In math directory)
+
+math_client.php  - Client with GUI for math service.Send the request and accept the 
+                    reply from math service.(In math directory)
+
+Function API Samples
+--------------------
 
 reply_echo_service.php - Echo service implemented with axis2_reply() function.
 
@@ -52,15 +43,66 @@ request_client_msg.php - Client for reply echo service, using axis2_request()
 request_client_str.php - Client for reply echo service, using axis2_request() 
                     function with payload in string format.
 
-reply_notify_service.php - Notify service implemented with axis2_reply() function.
+Accessing Google WebService API
+--------------------------------
+google/google_search.php - Google search sample. Needs a valid google key.
+                    Insert your key in the key element of the payload
+                    string given in this sample.
+
+google/google_spell.php - Google spell sample. Needs a valid google key.
+                    Insert your key in the key element of the payload
+                    string given in this sample.
+
+Accessing Yahoo WebService API
+------------------------------
+yahoo/yahoo_rest_client.php - A client assessing yahoo search using rest
+                     
+
+MTOM / Base64 Attachments
+--------------------------
+
+mtom/mtom_download_service.php - MTOM sample where the service sends an attachment 
+                    to the client. The image used is located in the resources 
+                    folder.
+                    
+mtom/mtom_download_client.php - Client for MTOM download service. Saves the MTOM
+                    attachment sent by the service. You have to save the file 
+                    to a globally writable folder. This sample uses '/tmp'.
+                    
+mtom/mtom_upload_service.php - MTOM sample where the service saves an attachment 
+                    sent by the client. You have to save the file to a globally
+                    writable folder. This sample uses '/tmp'. 
+                    
+mtom/mtom_upload_client.php - Client for MTOM upload service. Sends a file as an 
+                    attachment to the service. The image used is located in 
+                    the resources folder.
+
+mtom/mtom_upload_service_base64.php - A service that receives a base64 string attachement
+		    and saves it to a file.
+
+mtom/mtom_upload_client_base64.php - A client that send a image as a base64 encoded string
+		   to mtom_upload_service_base64.php
+                    
+WSDL generation samples
+-------------------------
+
+wsdl_generation/wsdl_service_doclit.php - WSDL generation sample service for doc-lit style
+
+wsdl_generation/wsdl_service_rpc.php - WSDL generation sample service for rpc style
+
+Security Samples
+-----------------
+
+security/username_token/username_token_client.php  - UsernameToken sample client
+security/username_token/username_token_service.php - UsernameToken sample service
+
+security/timestamp/timestamp_client.php            - Timestamp token client
+security/timestamp/timestamp_service.php           - Timestamp token service
+
+security/encryption/encrypt_client.php             - Encryption Client
+security/encryption/encrypt_service.php            - Encryption Service
+
+security/signing/signing_client.php                - Signing Client 
+security/signing/signing_service.php               - Signing Service
 
 
-math_service.php - Math service for add, sub, mul and div operations.Returns the
-                   reply for the operations.(In math directory)
-
-math_client.php  - Client with GUI for math service.Send the request and accept the 
-                    reply from math service.(In math directory)
-
-wsdl_service_doclit.php - WSDL generation sample service for doc-lit style
-
-wsdl_service_rpc.php - WSDL generation sample service for rpc style
