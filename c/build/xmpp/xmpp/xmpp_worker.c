@@ -438,11 +438,13 @@ int axis2_xmpp_worker_on_normal_node(
                     iks_start_sasl (session->parser, IKS_SASL_PLAIN,
                         session->jid->user, session->password);
                 }
+#ifdef AXIS2_XMPP_GSSAPI
                 else if (session->features & IKS_STREAM_SASL_GSSAPI)
                 {
                     iks_start_sasl (session->parser, IKS_SASL_GSSAPI,
                                     session->jid->user, session->password);
                 }
+#endif  /* AXIS2_XMPP_GSSAPI */
 
             }
         }
