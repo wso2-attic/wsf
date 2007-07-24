@@ -64,7 +64,7 @@ static void wsf_xml_msg_recv_set_soap_fault (
     const axutil_env_t * env,
     axis2_char_t * soap_ns,
     axis2_msg_ctx_t * out_msg_ctx,
-    zval zval_soap_fault TSRMLS_DC);
+    zval *zval_soap_fault TSRMLS_DC);
 
 /************************** End of function prototypes ************************/
 
@@ -473,7 +473,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
     zend_class_entry **ce = NULL;
     void *val = NULL;
     zval *msg = NULL;
-
+    int _bailout = 0;
 
     if (!om_node)
         return NULL;
@@ -539,7 +539,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
                         instanceof_function (Z_OBJCE (retval),
                             ws_fault_class_entry TSRMLS_CC)) {
                         wsf_xml_msg_recv_set_soap_fault (env, soap_ns,
-                            out_msg_ctx, retval TSRMLS_CC);
+                            out_msg_ctx, &retval TSRMLS_CC);
                     }
                 }
             }
@@ -609,14 +609,25 @@ wsf_xml_msg_recv_invoke_wsmsg (
                 instanceof_function (Z_OBJCE (retval),
                     ws_fault_class_entry TSRMLS_CC)) {
                 wsf_xml_msg_recv_set_soap_fault (env, soap_ns, out_msg_ctx,
-                    retval TSRMLS_CC);
+                    &retval TSRMLS_CC);
             }
         }
     }
     zend_catch {
-
+        if (EG(exception) && Z_TYPE_P(EG(exception)) == IS_OBJECT && 
+                instanceof_function(Z_OBJCE_P(EG(exception)), ws_fault_class_entry TSRMLS_CC)) {
+                 wsf_xml_msg_recv_set_soap_fault (env, soap_ns, out_msg_ctx,
+                                             EG(exception) TSRMLS_CC);
+        }else{
+            _bailout = 1;
+        }
+        
     }
     zend_end_try ();
+
+    if(_bailout){
+        zend_bailout();
+    }
 
     if (!res_payload) {
         AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "Response Payload is NULL");
@@ -631,7 +642,7 @@ wsf_xml_msg_recv_set_soap_fault (
     const axutil_env_t * env,
     axis2_char_t * soap_ns,
     axis2_msg_ctx_t * out_msg_ctx,
-    zval zval_soap_fault TSRMLS_DC)
+    zval *zval_soap_fault TSRMLS_DC)
 {
     int soap_version = AXIOM_SOAP12;
 
@@ -667,7 +678,7 @@ wsf_xml_msg_recv_set_soap_fault (
     }
 
     if (zend_hash_find
-        (Z_OBJPROP (zval_soap_fault), WS_FAULT_REASON,
+        (Z_OBJPROP_P (zval_soap_fault), WS_FAULT_REASON,
             sizeof (WS_FAULT_REASON), (void **) &tmp) == SUCCESS
         && Z_TYPE_PP (tmp) == IS_STRING) {
         reason = Z_STRVAL_PP (tmp);
@@ -679,7 +690,7 @@ wsf_xml_msg_recv_set_soap_fault (
     }
 
     if (zend_hash_find
-        (Z_OBJPROP (zval_soap_fault), WS_FAULT_CODE, sizeof (WS_FAULT_CODE),
+        (Z_OBJPROP_P (zval_soap_fault), WS_FAULT_CODE, sizeof (WS_FAULT_CODE),
             (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
         code = Z_STRVAL_PP (tmp);
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
@@ -690,14 +701,14 @@ wsf_xml_msg_recv_set_soap_fault (
     }
 
     if (zend_hash_find
-        (Z_OBJPROP (zval_soap_fault), WS_FAULT_ROLE, sizeof (WS_FAULT_ROLE),
+        (Z_OBJPROP_P (zval_soap_fault), WS_FAULT_ROLE, sizeof (WS_FAULT_ROLE),
             (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
         role = Z_STRVAL_PP (tmp);
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
             "[wsf_service] setting fault role %s", role);
     }
     if (zend_hash_find
-        (Z_OBJPROP (zval_soap_fault), WS_FAULT_DETAIL,
+        (Z_OBJPROP_P (zval_soap_fault), WS_FAULT_DETAIL,
             sizeof (WS_FAULT_DETAIL), (void **) &tmp) == SUCCESS
         && Z_TYPE_PP (tmp) == IS_STRING) {
         axiom_node_t *text_node = NULL;
