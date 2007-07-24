@@ -49,7 +49,7 @@ rem Build Apache Sandesha2/C
 @xcopy /E /Q /I /Y sandesha2\modules\sandesha2\sandesha2.lib  .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
 @xcopy /E /Q /I /Y sandesha2\modules\sandesha2\sandesha2.dll  .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
 @mkdir .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples\sandesha2
-@copy /Y sandesha2\bin\samples\*.exe .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples\sandesha2
+@copy /Y sandesha2\bin\samples\sandesha2\*.exe .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples\sandesha2
 @xcopy /E /Q /I /Y sandesha2\services\RMSampleService .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\services\RMSampleService
 @xcopy /E /Q /I /Y sandesha2\samples .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\samples\sandesha2
 @copy /Y sandesha2\axis2.xml .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\axis2.xml
