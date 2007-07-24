@@ -1,5 +1,5 @@
 set -e
-grep -rl WSFC_HOME *| xargs sed -i "s/WSFC_HOME/WSFC_HOME/g"
+grep -rl AXIS2C_HOME *| xargs sed -i "s/AXIS2C_HOME/WSFC_HOME/g"
 export WSFC_HOME=`pwd`/deploy
 find . -name "*configure.ac" | xargs sed -i "s/-Werror//g"
 make distclean
