@@ -111,13 +111,14 @@ class WSSoapServer extends WSService
             }
             
         } else {
-            $fault = new WSSoapFault('Server',
-                "SoapServer::__construct(): Invalid arguments. " .
-                "WSO2 WSF/PHP does not support WSDL mode yet.");
-            throw $fault;
+            $this->_wsdl = $wsdl;
+/*             $fault = new WSSoapFault('Server', */
+/*                 "SoapServer::__construct(): Invalid arguments. " . */
+/*                 "WSO2 WSF/PHP does not support WSDL mode yet."); */
+/*             throw $fault; */
         }
         
-        $this->_wsdl = $wsdl;
+/*         $this->_wsdl = $wsdl; */
         $this->_options = $options;
         /*
          * None of the options used by SoapServer are used by WSService.
@@ -150,11 +151,8 @@ class WSSoapServer extends WSService
     public function addFunction($functions) 
     {
         if (is_string($functions)) {
-            //$newfunc = create_function("\$m, \$fn = $functions", 
-            //            'return new WSMessage("<result><text>".call_user_func($fn, \'sam\')."</result></text>");');
-          
-//  $this->_operations[$functions] = 'generic';
-
+            //  $this->_operations[$functions] = 'generic';
+            
             $this->_operations[$functions] = $functions;
             $this->_opParams[$functions] = 'MIXED';
             
@@ -162,7 +160,7 @@ class WSSoapServer extends WSService
         
         if (is_array($functions)) {
             $this->_operations = $functions;
-            $i = sizeof($functions);
+//            $i = sizeof($functions);
             foreach($functions as $i){
                 $this->_opParams[$i] = 'MIXED';
             }
@@ -170,12 +168,12 @@ class WSSoapServer extends WSService
         
         if ($functions === SOAP_FUNCTIONS_ALL) {
             $fault = new WSSoapFault('Server',
-                "SoapServer::addFunction(): Invalid arguments. " .
-                "WSO2 WSF/PHP does not support SOAP_FUNCTIONS_ALL yet.");
+                                     "SoapServer::addFunction(): Invalid arguments. " .
+                                     "WSO2 WSF/PHP does not support SOAP_FUNCTIONS_ALL yet.");
             throw $fault;
         } 
     }
-
+    
     /**
      * Issue SoapServer fault indicating an error
      * 
@@ -213,7 +211,10 @@ class WSSoapServer extends WSService
      */
     public function handle($soap_request = null) 
     {
-        $this->_service = new WSService(array('operations' => $this->_operations, "opParams" => $this->_opParams));
+        if(is_null($this->_wsdl))
+            $this->_service = new WSService(array('operations' => $this->_operations, "opParams" => $this->_opParams));
+        else
+            $this->_service = new WSService(array('wsdl' => $this->_wsdl, 'operations' => $this->_operations, "opParams" => $this->_opParams));
         $this->_service->reply();
     }
 

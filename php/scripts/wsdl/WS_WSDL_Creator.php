@@ -112,7 +112,7 @@ class WS_WSDL_Creator
         $xsdArry = $oper_obj->xsdTypes;
 
 
-        if($this->Binding_style == "doc-lit")
+        if($this->Binding_style == "doclit")
         {
             $type_obj = new WS_WSDL_Type($this->namespace, $createdTypeArry,
                                         $xsdArry, $this->ops_to_functions);
@@ -140,7 +140,7 @@ class WS_WSDL_Creator
         $port_obj = new WS_WSDL_Port($this->service_name, $operationsArry, $this->ops_to_functions);
         $port_obj->createPortType($wsdl_dom, $wsdl_root_ele);
 
-        if ($this->Binding_style == "doc-lit")
+        if ($this->Binding_style == "doclit")
         {
             $bind_obj = new WS_WSDL_Binding($this->service_name,
                                            $this->endpoint, $operationsArry, $this->ops_to_functions);

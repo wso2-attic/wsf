@@ -109,9 +109,9 @@ function ws_generate_wsdl($include_location, $service_name, $fn_arry,
         $Binding_style = "rpc";
     }
 
-    else if ($binding_style == "doc-lit")
+    else if ($binding_style == "doclit")
     {
-        $Binding_style = "doc-lit";
+        $Binding_style = "doclit";
     }
     else
     {

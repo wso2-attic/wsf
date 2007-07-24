@@ -1517,7 +1517,7 @@ PHP_METHOD (ws_service, reply)
             && Z_TYPE_PP (tmpval) == IS_STRING) {
             binding_name = Z_STRVAL_PP (tmpval);
         } else {
-            binding_name = estrdup ("doc-lit");
+            binding_name = estrdup ("doclit");
         }
         
         /** find the functions in the service.php file */ 
