@@ -1,3 +1,64 @@
+WSO2 Web Services Framework (WSF)/C v1.0.1 Released
+===================================================
+
+WSO2 WSF/C team is pleased to announce the release of WSO2 WSF/C v1.0.1.
+
+You can download this release from: http://dist.wso2.org/products/wsf/c/1.0.1
+
+WSO2 Web Services Framework/C (WSO2 WSF/C) is a standards compliant, enterprise 
+grade, open source, C library for providing and consuming Web services in C. 
+
+For more information, please visit out project home page: 
+	http://wso2.org/projects/wsf/c
+
+-------------
+Key Features
+=============
+    1. Attachments with MTOM
+        * Binary optimized
+        * Non-optimized (Base64 binary)
+    2. WS-Addressing
+        * Version 1.0
+        * Submission
+    3. WS-Policy     
+    4. WS-Security
+        * UsernameToken
+        * Signing
+        * Encryption        
+    5. WS-ReliableMessaging
+    6. WS-Eventing
+    7. SSL enabled Transport layer
+    8. XMPP transport layer
+    9. XMPP transport layer
+    10.wsclient command line tool to consume Web services
+
+--------------
+Known Issues
+==============
+   1. There can be memory leaks when using WS-ReliableMessaging. Please refer 
+      to the Apache Sandesha2/C README file located in the sandesha2 folder.
+   2. WS-ReliableMessaging and WS-Security does not work with the Guththila 
+      parser.
+
+-------------------
+Reporting Problems
+===================
+Issues can be reported using the public JIRA available at:
+	https://wso2.org/jira/browse/WSFC
+
+------------
+Contact Us
+============
+
+Please subscribe to our user or developer mailing lists. For details on how 
+to subscribe please visit: http://wso2.org/projects/wsf/c#mail
+
+We welcome your early feedback on this implementation.
+Thank you for your interest in WSO2 WSF/C.
+
+-- WSO2 WSF/C Team --
+
+
 WSO2 Web Services Framework (WSF)/C v1.0.0 Released
 ===================================================
 
