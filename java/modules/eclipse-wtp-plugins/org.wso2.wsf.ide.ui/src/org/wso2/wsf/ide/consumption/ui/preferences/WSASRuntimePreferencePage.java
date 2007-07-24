@@ -53,6 +53,8 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 
 	private Button browseButton; 
 	private Text wsasPath; 
+	private Text debugHostText;
+	private Text debugPortText;
 	private Label statusLabel;
 	@SuppressWarnings("unused")
 	private IStatus status = Status.OK_STATUS;
@@ -178,6 +180,72 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		statusLabel.setText(statusBanner);
 		
 		webappExist =runtimeExist(wsasPath.getText());
+		
+	    //seperator
+	    Label seperatorLabel = new Label( runtimeGroup, SWT.SEPARATOR | SWT.HORIZONTAL );
+	    gd = new GridData(GridData.FILL_HORIZONTAL);
+	    gd.horizontalSpan = 3;
+	    gd.verticalIndent=10;
+	    seperatorLabel.setLayoutData(gd);
+	    
+	    //fill label
+	    Label fillLabel61 = new Label( runtimeGroup,SWT.HORIZONTAL );
+	    gd = new GridData(GridData.FILL_HORIZONTAL);
+	    gd.horizontalSpan = 3;
+	    gd.verticalIndent=10;
+	    fillLabel61.setLayoutData(gd);
+	    
+		//Runtime Configuration settings
+		Label runtimeConfigurationLabel = new Label( runtimeGroup, SWT.NONE );
+		runtimeConfigurationLabel.setText( WSASCoreUIMessages.WSAS_RUNTIME_CONFIGURATION );
+	    gd = new GridData();
+	    gd.horizontalSpan = 3;
+	    runtimeConfigurationLabel.setLayoutData( gd );
+	    
+	    //fill label
+	    Label fillLabel62 = new Label( runtimeGroup,SWT.HORIZONTAL );
+	    gd = new GridData(GridData.FILL_HORIZONTAL);
+	    gd.horizontalSpan = 3;
+	    gd.verticalIndent=10;
+	    fillLabel62.setLayoutData(gd);
+
+		//Adding the debug host Label 
+		Label debugHostLabel = new Label( runtimeGroup, SWT.NONE );
+		debugHostLabel.setText( WSASCoreUIMessages.WSAS_DEBUG_HOST );
+		
+		//Adding the debug host Text
+		debugHostText = new Text(runtimeGroup,SWT.NONE);
+		debugHostText.setText( WSASCoreUIMessages.WSAS_DEFAULT_DEBUG_HOST);
+	    gd = new GridData(GridData.FILL_HORIZONTAL);
+	    gd.horizontalSpan = 1;
+	    gd.minimumWidth=100;
+	    debugHostText.setLayoutData(gd);
+	    debugHostText.addModifyListener( new ModifyListener(){
+			public void modifyText(ModifyEvent e){
+				context.setDebugHost( debugHostText.getText() );
+			}
+		});
+	    
+	    Label fillLabel63 = new Label( runtimeGroup,SWT.HORIZONTAL );
+	    fillLabel63.setText("");
+	    
+		//Adding the debug port Label 
+		Label debugPortLabel = new Label( runtimeGroup, SWT.NONE );
+		debugPortLabel.setText( WSASCoreUIMessages.WSAS_DEBUG_PORT );
+		
+		//Adding the debug port Text
+		debugPortText = new Text(runtimeGroup,SWT.NONE);
+		debugPortText.setText( WSASCoreUIMessages.WSAS_DEFAULT_DEBUG_PORT);
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+	    gd.horizontalSpan = 1;
+	    gd.minimumWidth=100;
+	    debugPortText.setLayoutData(gd);
+	    debugPortText.addModifyListener( new ModifyListener(){
+			public void modifyText(ModifyEvent e){
+				context.setDebuPort( debugPortText.getText() );
+			}
+		});
+	    
 		
 		//--------------------------------WSAS Runtime Preferences------------------------------//
 		

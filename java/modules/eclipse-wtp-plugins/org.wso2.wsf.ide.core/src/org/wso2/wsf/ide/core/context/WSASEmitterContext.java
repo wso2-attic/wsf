@@ -24,6 +24,10 @@ public interface WSASEmitterContext {
 	public static final String PREFERENCE_WSAS_RUNTIME_LOCATION = "wsasRuntimeLocation";
 	public static final String PREFERENCE_WSAS_RUNTIME_SET = "wsasRuntimeLocationSet";
 	//WSAS Preferences
+	//Debug Options
+	public static final String PREFERENCE_DEBUG_HOST = "debugHost"; 
+	public static final String PREFERENCE_DEBUG_PORT = "debuPort"; 
+	
 	//Service Code generation Options
 	public static final String PREFERENCE_SERVICE_DATABINDING = "serviceDatabinding"; 
 	public static final String PREFERENCE_SERVICE_INTERFACE_SKELETON = "serviceInterfaceSkeleton"; 
@@ -52,6 +56,15 @@ public interface WSASEmitterContext {
 	public void setCorrectWSASPathSet(boolean runtimeLocationSet);
 
 	public boolean isCorrectWSASPathSet();
+	
+	//Debug Options
+	public void setDebugHost(String debugHost);
+
+	public String getDebugHost();
+	
+	public void setDebuPort(String debuPort);
+
+	public String getDebuPort();
 	
 	//Service Code generation Options
 	public void setServiceDatabinding(String serviceDatabinding);
