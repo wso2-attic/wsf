@@ -1484,7 +1484,14 @@ PHP_METHOD (ws_service, reply)
         zval ** tmpval;
         char *binding_name = NULL;
         char *wsdl_version = NULL;
+        int path_len = 0;
+        smart_str script_path = { 0 };
+        smart_str script_file_name = { 0 };
         char *full_path = emalloc (strlen(req_info->svr_name) + strlen(req_info->request_uri)+5);
+        char *real_path = SG(request_info).path_translated;
+        path_len = strlen(SG(request_info).path_translated)- strlen(req_info->request_uri);
+        real_path[path_len + 1] = '\0';
+        
         zval * op_val;
         service_name = svc_info->svc_name;
         strcpy (full_path, req_info->svr_name);
@@ -1533,8 +1540,17 @@ PHP_METHOD (ws_service, reply)
                 add_assoc_string (op_val, (char *) f_key, (char *) f_name,
                     1);
         } }
+
+        smart_str_appends(&script_path, real_path);
+        smart_str_appends(&script_path, "/scripts/wsdl/WS_WSDL_Creator.php");
+        smart_str_0 (&script_path);
+
+        smart_str_appends(&script_file_name, real_path);
+        smart_str_appends(&script_file_name, "/scripts/wsf.php");
+        smart_str_0 (&script_file_name);
+
         ZVAL_STRING (&func, "ws_generate_wsdl", 1);
-        ZVAL_STRING (params[0], "scripts/wsdl/WS_WSDL_Creator.php", 1);
+        ZVAL_STRING (params[0], script_path.c, 1);
         INIT_PZVAL (params[0]);
         ZVAL_STRING (params[1], service_name, 1);
         INIT_PZVAL (params[1]);
@@ -1549,13 +1565,15 @@ PHP_METHOD (ws_service, reply)
         ZVAL_ZVAL (params[6], op_val, NULL, NULL);
         INIT_PZVAL (params[6]);
         script.type = ZEND_HANDLE_FP;
-        script.filename = "scripts/wsf.php";
+        script.filename = script_file_name.c;
         script.opened_path = NULL;
         script.free_filename = 0;
-        if (!(script.handle.fp = VCWD_FOPEN (script.filename, "rb")))
-             {
-            php_printf ("Unable to open script file or file not found:");
-            }
+        smart_str_free (&script_path);
+        smart_str_free (&script_file_name);
+
+        if (!(script.handle.fp = VCWD_FOPEN (script.filename, "rb"))){
+                 php_printf ("Unable to open script file or file not found:");
+             }
         
         else
              {
