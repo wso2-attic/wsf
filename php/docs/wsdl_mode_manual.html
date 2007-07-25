@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <title>WS02 WSF WSDL MODE MANUAL</title>
+  <link href="style/api_style.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="style/api_style.css" media="all" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <p>
+        <?xml encoding="iso-8859-1" version="1.0" ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"></p>
+    <h1>
+        <span style="font-family: Arial">WSDL MODE API manual</span></h1>
+    <p>
+        In wsdl mode, by providing a wsdl file, You can invoke a service endpoint without
+        having to contruct the payload string. Few simple steps are required to configure
+        the client.</p>
+    <h2>
+        <strong id="1">1.0 Writing a Simple Client to use wsdl mode </strong></h2>
+    <p>
+        The sample.wsdl wsdl provided in the samples\wsdl_mode will be used for the writing
+        the samples in this manual. Please refer to sample.wsdl to understand the operations
+        define there.</p>
+    <p>
+        <strong id="2">First Obtain a WSClientProxy object from ws client as follows.</strong></p>
+    <p>
+        $client = new WSClient(array("<span style="color: #ff3333">wsdl</span>"=&gt;"<span
+            style="color: #ff3333">sample.wsdl</span>"));</p>
+    <p>
+        $proxy = $client-&gt;getProxy();</p>
+    <p>
+        Now you can call any operation defined in sample.wsdl directory on the WSClientProxy
+        object.
+        For examle invoke the echoString &nbsp;operation defined in sample.wsdl,
+        as follows.</p>
+    <p>
+        $value = $proxy-&gt;echoString("Hello");</p>
+    <p>
+        This call will internally construct the correct soap envelope and send it to the
+        endpoint specified in the wsdl.</p>
+   
+        <h3>2.0 Writing a Simple Service to use wsdl mode</h3>
+    <p>
+        We will implement a service to accept the request sent by the above client.</p>
+    <p>
+        First write a functions matching to the operations defined in the wsdl.</p>
+    <p>
+        function echoFunction($value){</p>
+    <p>
+        return $value;</p>
+    <p>
+        }</p>
+    <p>
+        /** Now we can map this function to echoString operation as follows. */</p>
+    <p>
+        $operations = array("<span style="color: #ff3333">echoString</span>"=&gt;"<span style="color: #ff3333">echoFunction</span>");</p>
+    <p>
+        $opparams = array("<span style="color: #ff3333">echoFunction</span>"=&gt;"<span style="color: #ff3333">MIXED</span>");</p>
+    <p>
+        /** Here we are specifing to the service that echoFunction is not a function that
+        accepts WSMessage as an the sole argument. */</p>
+    <p>
+        $service = new WSService(array("<span style="color: #ff3333">wsdl</span>"=&gt;"<span
+            style="color: #ff3333">sample.wsdl</span>", "<span style="color: #ff3333">operations</span>"=&gt;$operations,
+        "<span style="color: #ff3333">opParams</span>"=&gt;$opparams));</p>
+    <p>
+        $service-&gt;reply();</p>
+    <p>
+        &nbsp;</p>
+    <p>
+        &nbsp;</p>
+</body>
+</html>
