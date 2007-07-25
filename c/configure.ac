@@ -114,23 +114,32 @@ AC_ARG_ENABLE(openssl, [  --enable-openssl	enable OpenSSL support in client tran
   CFLAGS="$CFLAGS"
 )
 
-AC_MSG_CHECKING(whether to build xmpp)
-AC_ARG_ENABLE(xmpp, [  --enable-xmpp		enable xmpp build (default=no)],
-[ case "${enableval}" in
+AC_MSG_CHECKING(whether to use apache2 as server transport)
+AC_ARG_WITH(xmpp,
+[  --with-xmpp[=PATH]   Whether to build xmpp   .
+    ],
+[ case "$withval" in
   no)
     AC_MSG_RESULT(no)
-    CFLAGS="$CFLAGS"
-    xmpp_enabled=false
+    XMPP_DIR=""
     ;;
   *)
     AC_MSG_RESULT(yes)
-    XMPP_DIR="xmpp"
-    CFLAGS="$CFLAGS -DAXIS2_XMPP_ENABLED"
-    xmpp_enabled=false
+    dnl Find apache2 include dir in the path pointed by APACHE2_HOME env variable
+    if test -d $withval; then
+        iksemelinc="-I$withval"
+        XMPP_DIR="xmpp"
+    dnl else find the apache2 include dir in /usr/local/apache2
+    elif test -d '/usr/include/apache2'; then
+        iksemelinc="-I/usr/include"
+        XMPP_DIR="xmpp"
+    else
+        AC_MSG_ERROR(could not find apache2. stop)
+    fi
+        XMPP_DIR="xmpp"
     ;;
   esac ],
   AC_MSG_RESULT(no)
-  CFLAGS="$CFLAGS"
 )
 
 AC_MSG_CHECKING(whether to build rampart)
