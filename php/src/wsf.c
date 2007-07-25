@@ -1162,17 +1162,17 @@ PHP_METHOD (ws_service, __construct)
             request_uri, svc_info, ws_env_svr);
         svc_info->msg_recv = wsf_msg_recv;
         wsf_util_create_svc_from_svc_info (svc_info, ws_env_svr TSRMLS_CC);
-    } else 
-        if(SG(request_info).path_translated){
+    } else {
+/*
+		if(SG(request_info).path_translated);
         svc_info->svc_name = wsf_util_generate_svc_name_from_uri (
             SG(request_info).path_translated, svc_info, ws_env_svr);
         svc_info->msg_recv = wsf_msg_recv;
         wsf_util_create_svc_from_svc_info (svc_info, ws_env_svr TSRMLS_CC);
-        /*
         php_printf("%s", SG(request_info).path_translated);
+*/
         zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C),
-            1 TSRMLS_CC, "server does not support cli");
-        */            
+            1 TSRMLS_CC, "server does not support cli yet");
         return;
     }
     if (ht_ops_to_funcs) {
@@ -1386,13 +1386,14 @@ PHP_METHOD (ws_service, reply)
     char *content_type = NULL;
     int in_wsdl_mode = 0;
     int raw_post_null = AXIS2_FALSE;
+	/*
     char *reply_data = NULL;
     int reply_data_len = 0;
 
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|s", &reply_data, &reply_data_len) == FAILURE) {
         php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
     }
-
+	*/
     WSF_GET_THIS (obj);
     intern = (ws_object *) zend_object_store_get_object (obj TSRMLS_CC);
     
@@ -1408,12 +1409,12 @@ PHP_METHOD (ws_service, reply)
     }
 
     zend_is_auto_global ("_SERVER", sizeof ("_SERVER") - 1 TSRMLS_CC);
-
+	/*
     if(ZEND_NUM_ARGS() > 0){
 
     }
     else if(SG(request_info).request_uri){        
-   
+	*/
     req_info = wsf_php_req_info_create ();
     
     if (zend_hash_find (&EG (symbol_table), "_SERVER", sizeof ("_SERVER"),
@@ -1722,7 +1723,6 @@ PHP_METHOD (ws_service, reply)
             }
     }
     wsf_php_req_info_free (req_info);
-    }
 }
 /* }}} end reply */ 
     
