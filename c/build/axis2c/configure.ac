@@ -149,6 +149,22 @@ AC_ARG_ENABLE(guththila, [  --enable-guththila
   AC_MSG_RESULT(no)
 )
 
+AC_MSG_CHECKING(whether to build tcp transport)
+AC_ARG_ENABLE(tcp, [  --enable-tcp
+                          build tcp transport (default=no)],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    TCP_DIR="tcp"
+
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+)
+
 AC_MSG_CHECKING(whether to use apache2 as server transport)
 AC_ARG_WITH(apache2,
 [  --with-apache2[=PATH]      Find the Apache2 HTTP Web server header files in 'PATH'.
@@ -382,6 +398,7 @@ AC_SUBST(APACHE2BUILD)
 AC_SUBST(PARSER_DIR)
 AC_SUBST(WRAPPER_DIR)
 AC_SUBST(XMPP_DIR)
+AC_SUBST(TCP_DIR)
 AC_SUBST(GUTHTHILA_DIR)
 AC_SUBST(GUTHTHILA_LIBS)
 AM_CONDITIONAL(AXIS2_SSL_ENABLED, test x$ssl_enabled = xtrue)
