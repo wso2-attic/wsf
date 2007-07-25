@@ -62,7 +62,7 @@ fi
 #CFLAGS="$CFLAGS -ansi -Wall -D_LARGEFILE64_SOURCE -Wno-implicit-function-declaration"
 CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 if test "$GCC" = "yes"; then
-    CFLAGS="$CFLAGS -ansi -Wall  -Wno-implicit-function-declaration -g"
+    CFLAGS="$CFLAGS -ansi -Wall -Werror -Wno-implicit-function-declaration -g"
 #    CFLAGS="$CFLAGS -ansi -Wall -Wno-implicit-function-declaration"
 fi
 LDFLAGS="$LDFLAGS -lpthread"
@@ -326,6 +326,24 @@ AC_ARG_WITH(xmpp,
   AC_MSG_RESULT(no)
 )
 
+AC_MSG_CHECKING(whether to use gssapi)
+AC_ARG_ENABLE(openssl, [  --enable-gssapi      enable gssapi (default=no)],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    CFLAGS="$CFLAGS"
+    gssapi_enabled=false
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    CFLAGS="$CFLAGS -DAXIS2_XMPP_GSSAPI"
+    gssapi_enabled=true
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+  CFLAGS="$CFLAGS"
+)
+
 #AC_MSG_CHECKING(whether to build xmpp)
 #AC_ARG_ENABLE(xmpp, [  --enable-xmpp
 #                          enable xmpp build (default=no)],
@@ -368,6 +386,7 @@ AC_SUBST(GUTHTHILA_DIR)
 AC_SUBST(GUTHTHILA_LIBS)
 AM_CONDITIONAL(AXIS2_SSL_ENABLED, test x$ssl_enabled = xtrue)
 AM_CONDITIONAL(AXIS2_LIBCURL_ENABLED, test x$libcurl_enabled = xtrue)
+AM_CONDITIONAL(AXIS2_XMPP_GSSAPI, test x$gssapi_enabled = xtrue)
 AM_CONDITIONAL(AXIS2_XMPP_ENABLED, test x$xmpp_enabled = xtrue)
 
 #export PARSER_DIR
