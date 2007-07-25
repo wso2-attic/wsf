@@ -1514,12 +1514,13 @@ PHP_METHOD (ws_service, reply)
         smart_str script_path = { 0 };
         smart_str script_file_name = { 0 };
         smart_str full_path = {0};
+		 zval * op_val;
 
         char *real_path = estrdup(SG(request_info).path_translated);
         path_len = strlen(SG(request_info).path_translated)- strlen(req_info->request_uri);
         real_path[path_len + 1] = '\0';
         
-        zval * op_val;
+       
         service_name = svc_info->svc_name;
 
         smart_str_appends(&full_path, req_info->svr_name);
