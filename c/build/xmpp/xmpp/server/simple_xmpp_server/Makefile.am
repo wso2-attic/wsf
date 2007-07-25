@@ -32,4 +32,5 @@ INCLUDES =  -I$(top_builddir)/include \
             -I$ /opt/jabber/iksemel/include \
             -I$(top_builddir)/util/include \
             -I../../  \
-            -I$(top_builddir)/axiom/include
+            -I$(top_builddir)/axiom/include \
+	    @IKSEMELINC@

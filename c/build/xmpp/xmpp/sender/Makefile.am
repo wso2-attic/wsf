@@ -20,6 +20,7 @@ INCLUDES = -I$(top_builddir)/include \
            -I$(top_builddir)/src/core/deployment \
            -I$(top_builddir)/xml_schema/include \
            -I$(top_builddir)/util/include \
-           -I$(top_builddir)/axiom/include
+           -I$(top_builddir)/axiom/include \
+	   @IKSEMELINC@
 
 EXTRA_DIST=axis2_xmpp_client.h
