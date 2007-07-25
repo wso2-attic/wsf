@@ -35,6 +35,7 @@ public class PersistentWSASEmitterContext extends PersistentContext implements
 	public void load(){
 		setDefault(PREFERENCE_WSAS_RUNTIME_LOCATION, WSASEmitterDefaults.getWSASRuntimeLocation());
 		setDefault(PREFERENCE_WSAS_RUNTIME_SET, WSASEmitterDefaults.getWSASRuntimeLocationSet());
+		setDefault(PREFERENCE_DEBUG_PORT, WSASEmitterDefaults.getDebugPort());
 		
 		setDefault(PREFERENCE_SERVICE_DATABINDING, WSASEmitterDefaults.getServiceDatabinding());
 		setDefault(PREFERENCE_SERVICE_INTERFACE_SKELETON, WSASEmitterDefaults.isServiceInterfaceSkeleton());

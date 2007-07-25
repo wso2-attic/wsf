@@ -14,6 +14,14 @@
            			<systemProperty name="WSASStartStatus" value="done"/> 
        			</enablement> 
 			</action>
+			<action id="org.wso2.wsf.ide.wtp.ext.server.ui.debug"
+                label="WSAS Debug" 
+                icon="icons/debug.gif" 
+                tooltip="WSAS Server Debug" 
+                toolbarPath="Normal/additions"
+                helpContextId="org.wso2.wsf.ide.wtp.ext.server.ui.debug.help"
+                class="org.wso2.wsf.ide.wtp.ext.server.ui.WSASDebugDelegate">
+            </action>
 			<action id="org.wso2.wsf.ide.wtp.ext.server.ui.start"
 				label="WSAS Start" 
 				icon="icons/start.gif" 
@@ -50,6 +58,13 @@
            			<systemProperty name="WSASStartStatus" value="done"/> 
        			</enablement> 
 			</action>
+			<action
+                id="org.wso2.wsf.ide.wtp.ext.server.ui.menu.debug.action"
+                label="WSAS Debug" icon="icons/debug.gif"
+                tooltip="WSAS Server Debug"
+                menubarPath="org.wso2.wsf.ide.wtp.ext.server.ui.menu.topLevelMenu/WSASGroup"
+                class="org.wso2.wsf.ide.wtp.ext.server.ui.WSASDebugMenuDelegate">
+            </action>
 			<action
 				id="org.wso2.wsf.ide.wtp.ext.server.ui.menu.stop.action"
 				label="WSAS Start" icon="icons/start.gif"

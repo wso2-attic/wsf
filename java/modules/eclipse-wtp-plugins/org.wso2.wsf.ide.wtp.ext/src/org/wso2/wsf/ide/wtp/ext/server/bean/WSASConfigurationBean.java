@@ -20,7 +20,8 @@ import org.wso2.wsf.ide.core.plugin.WebServiceWSASCorePlugin;
 
 public class WSASConfigurationBean {
 	
-    private static String wsasInstallationPath;
+	private static String wsasInstallationPath;
+    private static String wsasDebugPort;
     private static boolean wsasCorrectPathSet = false;
     private static boolean wsasStartStatus = false;
     private static boolean wsasAlreadyRunning = false;
@@ -30,6 +31,7 @@ public class WSASConfigurationBean {
     	context = WebServiceWSASCorePlugin.getDefault().getWSASEmitterContext();
     	wsasInstallationPath = context.getWSASRuntimeLocation();
     	wsasCorrectPathSet = context.isCorrectWSASPathSet();
+    	wsasDebugPort = context.getDebuPort();
     }
 
     public static boolean isWsasStartStatus() {
@@ -62,6 +64,14 @@ public class WSASConfigurationBean {
 
 	public static void setWsasCorrectPathSet(boolean wsasCorrectPathSet) {
 		WSASConfigurationBean.wsasCorrectPathSet = wsasCorrectPathSet;
+	}
+
+	public static String getWsasDebugPort() {
+		return wsasDebugPort;
+	}
+
+	public static void setWsasDebugPort(String wsasDebugPort) {
+		WSASConfigurationBean.wsasDebugPort = wsasDebugPort;
 	}
 
 }

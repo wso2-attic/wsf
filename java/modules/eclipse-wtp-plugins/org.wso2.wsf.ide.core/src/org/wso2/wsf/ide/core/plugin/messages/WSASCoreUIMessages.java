@@ -43,7 +43,7 @@ public final class WSASCoreUIMessages extends NLS {
 
 	public static final String WSAS_DEFAULT_DEBUG_HOST = "localhost" ; 		//$NON-NLS-1$
 	public static final String WSAS_DEFAULT_DEBUG_PORT = "8088" ; 			//$NON-NLS-1$
-	
+	public static final String WSAS_DEFAULT_DEBUG_APPENDER = " --debug " ;	//$NON-NLS-1$
 	
 	
 	

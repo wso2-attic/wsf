@@ -21,6 +21,7 @@ public class WSASEmitterDefaults {
 
 	public static final String PREFERENCE_WSAS_RUNTIME_LOCATION_DEFAULT = "";
 	public static final boolean PREFERENCE_WSAS_RUNTIME_SET_DEFAULT = false;
+	public static final String PREFERENCE_WSAS_DEBUG_PORT_DEFAULT = "8088";
 	
 	//Axis2 Preferences
 	//Service Code generation Options
@@ -87,6 +88,10 @@ public class WSASEmitterDefaults {
 	//Service AAR Options
 	public static String getAarExtention(){
 		return PREFERENCE_AAR_EXTENTION_DEFAULT;
+	}
+
+	public static String getDebugPort() {
+		return PREFERENCE_WSAS_DEBUG_PORT_DEFAULT;
 	}
 
 
