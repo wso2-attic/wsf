@@ -1162,9 +1162,17 @@ PHP_METHOD (ws_service, __construct)
             request_uri, svc_info, ws_env_svr);
         svc_info->msg_recv = wsf_msg_recv;
         wsf_util_create_svc_from_svc_info (svc_info, ws_env_svr TSRMLS_CC);
-    } else {
+    } else 
+        if(SG(request_info).path_translated){
+        svc_info->svc_name = wsf_util_generate_svc_name_from_uri (
+            SG(request_info).path_translated, svc_info, ws_env_svr);
+        svc_info->msg_recv = wsf_msg_recv;
+        wsf_util_create_svc_from_svc_info (svc_info, ws_env_svr TSRMLS_CC);
+        /*
+        php_printf("%s", SG(request_info).path_translated);
         zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C),
             1 TSRMLS_CC, "server does not support cli");
+        */            
         return;
     }
     if (ht_ops_to_funcs) {
@@ -1378,10 +1386,20 @@ PHP_METHOD (ws_service, reply)
     char *content_type = NULL;
     int in_wsdl_mode = 0;
     int raw_post_null = AXIS2_FALSE;
+    char *reply_data = NULL;
+    int reply_data_len = 0;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|s", &reply_data, &reply_data_len) == FAILURE) {
+        php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
+    }
+
     WSF_GET_THIS (obj);
     intern = (ws_object *) zend_object_store_get_object (obj TSRMLS_CC);
+    
     svc_info = (wsf_svc_info_t *) (intern->ptr);
+    
     php_worker = svc_info->php_worker;
+    
     conf_ctx = wsf_worker_get_conf_ctx (php_worker, ws_env_svr);
 
     if (!conf_ctx) {
@@ -1390,6 +1408,12 @@ PHP_METHOD (ws_service, reply)
     }
 
     zend_is_auto_global ("_SERVER", sizeof ("_SERVER") - 1 TSRMLS_CC);
+
+    if(ZEND_NUM_ARGS() > 0){
+
+    }
+    else if(SG(request_info).request_uri){        
+   
     req_info = wsf_php_req_info_create ();
     
     if (zend_hash_find (&EG (symbol_table), "_SERVER", sizeof ("_SERVER"),
@@ -1431,6 +1455,7 @@ PHP_METHOD (ws_service, reply)
             req_info->soap_action = Z_STRVAL_PP (data);
         }
     }
+
 	{
 		zval ret_val, func;
 		zval **tmp_action = NULL;
@@ -1487,15 +1512,19 @@ PHP_METHOD (ws_service, reply)
         int path_len = 0;
         smart_str script_path = { 0 };
         smart_str script_file_name = { 0 };
-        char *full_path = emalloc (strlen(req_info->svr_name) + strlen(req_info->request_uri)+5);
-        char *real_path = SG(request_info).path_translated;
+        smart_str full_path = {0};
+
+        char *real_path = estrdup(SG(request_info).path_translated);
         path_len = strlen(SG(request_info).path_translated)- strlen(req_info->request_uri);
         real_path[path_len + 1] = '\0';
         
         zval * op_val;
         service_name = svc_info->svc_name;
-        strcpy (full_path, req_info->svr_name);
-        strcat (full_path, req_info->request_uri);
+
+        smart_str_appends(&full_path, req_info->svr_name);
+        smart_str_appends(&full_path, req_info->request_uri);
+        smart_str_0 (&full_path);
+        
         params[0] = &param1;
         params[1] = &param2;
         params[2] = &param3;
@@ -1542,12 +1571,14 @@ PHP_METHOD (ws_service, reply)
         } }
 
         smart_str_appends(&script_path, real_path);
-        smart_str_appends(&script_path, "/scripts/wsdl/WS_WSDL_Creator.php");
+        smart_str_appends(&script_path, "scripts/wsdl/WS_WSDL_Creator.php");
         smart_str_0 (&script_path);
 
         smart_str_appends(&script_file_name, real_path);
-        smart_str_appends(&script_file_name, "/scripts/wsf.php");
+        smart_str_appends(&script_file_name, "scripts/wsf.php");
         smart_str_0 (&script_file_name);
+
+        efree(real_path);
 
         ZVAL_STRING (&func, "ws_generate_wsdl", 1);
         ZVAL_STRING (params[0], script_path.c, 1);
@@ -1560,23 +1591,22 @@ PHP_METHOD (ws_service, reply)
         INIT_PZVAL (params[3]);
         ZVAL_STRING (params[4], wsdl_version, 1);
         INIT_PZVAL (params[4]);
-        ZVAL_STRING (params[5], full_path, 1);
+        ZVAL_STRING (params[5], full_path.c , 1);
         INIT_PZVAL (params[5]);
         ZVAL_ZVAL (params[6], op_val, NULL, NULL);
         INIT_PZVAL (params[6]);
         script.type = ZEND_HANDLE_FP;
-        script.filename = script_file_name.c;
-        script.opened_path = NULL;
-        script.free_filename = 0;
-        smart_str_free (&script_path);
-        smart_str_free (&script_file_name);
-
-        if (!(script.handle.fp = VCWD_FOPEN (script.filename, "rb"))){
-                 php_printf ("Unable to open script file or file not found:");
-             }
         
-        else
-             {
+        script.filename = script_file_name.c;
+        
+        script.opened_path = NULL;
+        
+        script.free_filename = 0;
+        
+       if (!(script.handle.fp = VCWD_FOPEN (script.filename, "rb"))){
+                 php_printf ("Unable to open script file or file not found:");
+        }
+        else{
             php_execute_script (&script TSRMLS_CC);
             if (call_user_function (EG (function_table), (zval **) NULL,
                     &func, &retval, 7, params TSRMLS_CC) == SUCCESS)
@@ -1594,8 +1624,11 @@ PHP_METHOD (ws_service, reply)
                 else
                     php_printf ("A problem occured");
                 }
-            }
-        
+       }
+        smart_str_free (&script_path);
+        smart_str_free (&script_file_name);
+        smart_str_free(&full_path);
+  
         /** end WSDL generation stuff */ 
     } else if (in_wsdl_mode) {
         axis2_bool_t status = AXIS2_SUCCESS;
@@ -1689,6 +1722,7 @@ PHP_METHOD (ws_service, reply)
             }
     }
     wsf_php_req_info_free (req_info);
+    }
 }
 /* }}} end reply */ 
     

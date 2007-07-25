@@ -288,15 +288,27 @@ wsf_worker_process_request (
             (env, msg_ctx, request_body, out_stream, content_type,
             content_length, soap_action_str, (axis2_char_t *) req_url);
         if (status == AXIS2_FAILURE) {
+            axis2_char_t *fault_code = NULL;
             axis2_msg_ctx_t * fault_ctx = NULL;
             axis2_engine_t * engine = axis2_engine_create (env, conf_ctx);
             if (NULL == engine) {
                 send_status = WS_HTTP_INTERNAL_SERVER_ERROR;
             }
-            fault_ctx =
-                axis2_engine_create_fault_msg_ctx (engine, env, msg_ctx);
+            if ( axis2_msg_ctx_get_is_soap_11 (msg_ctx, env)){
+                fault_code = AXIOM_SOAP_DEFAULT_NAMESPACE_PREFIX ":"
+                    AXIOM_SOAP11_FAULT_CODE_SENDER;
+            }
+            else{
+                fault_code = AXIOM_SOAP_DEFAULT_NAMESPACE_PREFIX ":"
+                    AXIOM_SOAP12_SOAP_FAULT_VALUE_SENDER;
+            }
+
+            fault_ctx = axis2_engine_create_fault_msg_ctx (engine, env, msg_ctx,
+                fault_code, axutil_error_get_message(env->error));
             axis2_engine_send_fault (engine, env, fault_ctx);
-            body_string = wsf_worker_get_bytes (env, out_stream);
+            if(out_stream){
+                body_string = wsf_worker_get_bytes (env, out_stream);
+            }
             send_status = WS_HTTP_INTERNAL_SERVER_ERROR;
             if (NULL != body_string) {
                 request->result_payload = body_string;
