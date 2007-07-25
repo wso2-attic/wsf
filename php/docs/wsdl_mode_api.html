@@ -12,13 +12,12 @@
     WSDL Mode
 </h1>
 <p>
-    A user can provide a WSDL ( Web Services Description Language) file obtain a proxy&nbsp;
+    A user can provide a WSDL (Web Services Description Language) file to obtain a proxy&nbsp;
     and invoke a service. This is a very convenient way of implementing a client.</p>
     <p>
-        Following options can be used to configure wsdl mode.</p>
+        Following options can be used to configure WSDL mode on client side.</p>
  <p>
-        <strong id="ws_client_options">
-        WSClient Options for WSDL</strong>
+        <h2 id="ws_client_options">WSClient Options for WSDL Mode</h2>
     </p>
     <table border="1">
         <tr>
@@ -40,49 +39,55 @@
                 <td style="width: 100px; height: 21px">
                     string</td>
                 <td style="width: 100px; height: 21px">
-                    this should be uri or&nbsp; a filename</td>
+                    this should be a URI or&nbsp; a filename</td>
                 <td style="width: 100px; height: 21px">
                     none</td>
                 <td style="width: 373px; height: 21px">
-                    user can provide a wsdl file or a url of the wsdl file for this option.</td>
+                    user can provide a WSDL file or a URL of the WSDL file for this option</td>
             </tr>
           
     </table>
-    <br />
-    <strong>Methods<br />
-        <br />
-        getProxy()<br />
-        <br />
-    </strong>Returns a proxy client object which is used to access a service endpoint
+    <h2 id="ws_client_methods">WSClient Methods Related to WSDL Mode</h2>
+    <h3>WSClientProxy getProxy()</h3>
+    Returns a client proxy object which can be used to access a service endpoint
     coveniently using dynamic invocation.<br />
 
-    <h3 id="wsclientproxy">WSClientProxy </h3>
+    <h2 id="wsclientproxy">WSClientProxy Class</h2>
     <p>
-    WSClientProxy is a class used as the proxy for invoking services.<p>
+    WSClientProxy is a class that can be used as the proxy for invoking services.<p>
             Following is a sample code demostrating the use of WSClientProxy. Consider we have
-            a wsdl which defines an operation</p>
-        <p>
-            "echoString" which echo a given value.
+            a wsdl which defines an operation
+            "echoString" which echos a given value.
         </p>
-        <p>
-            $client = new WSClient(array("wsdl"=&gt;echo.wsdl));</p>
-        <p>
-            $proxy = $client-&gt;getProxy();</p>
-        <p>
-            $value = $proxy-&gt;echoString("Hello World");</p>
-        <p>
-            <span style="font-size: 12pt; text-decoration: underline"></span>
-            &nbsp;</p>
-             <h3 id="H3_1">
-                 Writing a Service to use WSDL mode</h3>
-        By default, WSF/PHP uses functions that accept WSMessage as the argument for service
-        functions. But when using WSDL mode for server side<br />
+        <pre>
+            $client = new WSClient(array("wsdl"=&gt;"echo.wsdl"));
+            $proxy = $client-&gt;getProxy();
+            $value = $proxy-&gt;echoString("Hello World");
+        </pre>
+     
+     <h2 id="wsservice_wsdl_mode">Writing a Service to use WSDL mode</h2>
+     <p>   By default, WSO2 WSF/PHP uses functions that accepts a 
+        WSMessage instance as the argument for service
+        functions. But when using WSDL mode on server side<br />
         this is not necessary. User can write functions that will accept multiple arguments
-        for functions. To specify that a perticular function arguement type, there are to
-        types defined as "WSMESSAGE" and "MIXED". When a function is specified as MIXED
-        it means that it it a function that accepts arguements other that WSMESSAGE. For
-        WSDL mode in server side, please use MIXED type functions.<br />
-    Please refer to the sample in wsdl_mode\dynamic_echo_service.php service for an
-    example.
+        for functions. To specify the type of arguments that a perticular function takes, 
+        there are two constant values defined as "WSMESSAGE" and "MIXED". When a function is specified as MIXED
+        it means that it is a function that accepts arguements other than a WSMessage instance.
+        For WSDL mode on server side, please use MIXED type functions.</p>
+      Example:
+      <pre>
+    function echoFunction($a) {
+        return $a;
+    }
+
+    $operations = array("echoString" => "echoFunction");
+    $opParams = array("echoFunction"=>"MIXED");
+
+    $svr = new WSService(array("wsdl"=>"sample.wsdl", 
+                               "operations" => $operations,
+                               "opParams"=>$opParams));
+
+    $svr->reply();
+      </pre>
 </body>
 </html>
