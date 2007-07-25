@@ -47,20 +47,29 @@
             </tr>
           
     </table>
-    <h2 id="ws_client_methods">WSClient Methods Related to WSDL Mode</h2>
+    <h4 id="ws_client_methods">WSClient Methods Related to WSDL Mode</h4>
     <h3>WSClientProxy getProxy()</h3>
     Returns a client proxy object which can be used to access a service endpoint
     coveniently using dynamic invocation.<br />
 
     <h2 id="wsclientproxy">WSClientProxy Class</h2>
     <p>
-    WSClientProxy is a class that can be used as the proxy for invoking services.<p>
+    WSClientProxy is a class that can be used as the proxy for invoking services.</p>
+    <h4>Methods</h4>
+        <h5>
+            mixed WSClientProxy::__call(string function_name, array arguments, array options)</h5>
+    <p>
+        In wsdl mode , you can simply call the the operations defined in wsdl as functions
+        of WSClientProxy. This may return one value or multiple values. If only one value
+        is returned, it will simply , it will be a simple value( eg a string or an integer).
+        If multiple values are returned __call will return an associative array of named
+        output parameters.</p>
+    <p>
             Following is a sample code demostrating the use of WSClientProxy. Consider we have
             a wsdl which defines an operation
             "echoString" which echos a given value.
-        </p>
-        <pre>
-            $client = new WSClient(array("wsdl"=&gt;"echo.wsdl"));
+    </p>
+        <pre>            $client = new WSClient(array("wsdl"=&gt;"echo.wsdl"));
             $proxy = $client-&gt;getProxy();
             $value = $proxy-&gt;echoString("Hello World");
         </pre>
@@ -68,7 +77,7 @@
      <h2 id="wsservice_wsdl_mode">Writing a Service to use WSDL mode</h2>
      <p>   By default, WSO2 WSF/PHP uses functions that accepts a 
         WSMessage instance as the argument for service
-        functions. But when using WSDL mode on server side<br />
+        functions. But when using WSDL mode on server side
         this is not necessary. User can write functions that will accept multiple arguments
         for functions. To specify the type of arguments that a perticular function takes, 
         there are two constant values defined as "WSMESSAGE" and "MIXED". When a function is specified as MIXED
@@ -88,6 +97,6 @@
                                "opParams"=>$opParams));
 
     $svr->reply();
-      </pre>
+ </pre>
 </body>
 </html>
