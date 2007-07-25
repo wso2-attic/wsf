@@ -346,4 +346,50 @@ axis2_conf_ctx_t * wsf_worker_get_conf_ctx (wsf_worker_t * worker,
     return worker->conf_ctx;
 }
 
+/*
+char *
+wsf_worker_do_engine_receive(axutil_env_t *env,
+                             wsf_worker_t *worker,
+                             int soap_version,
+                             char *raw_post_envelope,
+                             int raw_post_envelope_len)
+{
+    axutil_stream_t *out_stream = NULL;
+    axutil_stream_t *request_body = NULL;
+    axis2_conf_ctx_t *conf_ctx = NULL;
+    axis2_msg_ctx_t *msg_ctx = NULL;
+    axis2_char_t *soap_uri = NULL;
+    axiom_soap_envelope_t *soap_envelope = NULL;
+    axiom_xml_reader_t *xml_reader = NULL;
+    axiom_stax_builder_t *om_builder = NULL;
+    axiom_soap_builder_t *soap_builder = NULL;
 
+
+
+    out_stream = axutil_stream_create_basic(env);
+
+    if(soap_version == AXIOM_SOAP11){
+        soap_uri = AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI;
+    }else{
+        soap_uri = AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
+    }
+
+    xml_reader = axiom_xml_reader_create_for_memory (env, raw_post_envelope,
+                        raw_post_envelope_len , "utf-8", AXIS2_XML_PARSER_TYPE_BUFFER);
+
+    if (! xml_reader){
+        return AXIS2_FAILURE;
+    }
+
+    om_builder = axiom_stax_builder_create(env, xml_reader);
+    if (! om_builder)
+    {
+        axiom_xml_reader_free(xml_reader, env);
+        xml_reader = NULL;
+        return AXIS2_FAILURE;
+    }
+
+
+return NULL;
+}
+*/

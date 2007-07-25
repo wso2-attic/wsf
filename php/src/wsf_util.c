@@ -1109,25 +1109,6 @@ wsf_util_get_contents_from_file (
 
 }
 
-char * 
-wsf_util_engine_receive(axutil_env_t *env, 
-           axis2_conf_ctx_t *conf_ctx,
-           axis2_char_t *raw_post_envelope,
-           int soap_version)
-{
-
-
-
-
-
-
-
-
-
-
-return 0;
-}
-
 void
 wsf_util_set_soap_fault (
     zval * this_ptr,
