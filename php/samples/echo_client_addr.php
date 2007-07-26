@@ -29,7 +29,7 @@ try {
 				
     $resMessage = $client->request($reqMessage);
     
-    printf("Response = %s \n", $resMessage->str);
+    printf("Response = %s \n", htmlspecialchars($resMessage->str));
 
 } catch (Exception $e) {
 

@@ -48,7 +48,7 @@ try {
     
     $client->send($msg2);
 
-    sleep(300);
+    sleep(20);
     
 } catch (Exception $e) {
 

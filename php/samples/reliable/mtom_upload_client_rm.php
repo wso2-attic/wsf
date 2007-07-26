@@ -35,6 +35,8 @@ try {
 
     echo $resMessage->str;
 
+    sleep(10);
+
 } catch (Exception $e) {
     if ($e instanceof WSFault) {
         printf("Soap Fault: %s\n", $e->code);

@@ -28,9 +28,11 @@ try {
 
     $client = new WSClient(array( "to"=>"http://localhost/samples/reliable/echo_service_rm.php",
 					    "reliable"=>TRUE));
-    $client->request($msg);
-
-  
+    $result = $client->request($msg);
+    if($result){
+	echo $result->str;
+    }
+    sleep(10);  
     
 } catch (Exception $e) {
 
