@@ -29,6 +29,10 @@ math_service.php - Math service for add, sub, mul and div operations.Returns the
 math_client.php  - Client with GUI for math service.Send the request and accept the 
                     reply from math service.(In math directory)
 
+echo_client_rest.php - Client using rest GET call access a service using rest
+
+add_soap_header_client.php - Client that addes costom soap headers
+
 Function API Samples
 --------------------
 
