@@ -82,6 +82,9 @@ mtom/mtom_upload_service_base64.php - A service that receives a base64 string at
 
 mtom/mtom_upload_client_base64.php - A client that send a image as a base64 encoded string
 		   to mtom_upload_service_base64.php
+
+Note: [ In the mtom samples, received image files are saved to /tmp folder. When running samples
+        on windows, please remove this "/tmp/" entry ]
                     
 WSDL generation samples
 -------------------------
