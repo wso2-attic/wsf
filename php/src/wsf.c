@@ -547,8 +547,11 @@ ws_objects_free_storage (void *object TSRMLS_DC)
     if (intern->obj_type == WS_SVC_CLIENT) {
         axis2_svc_client_t * svc_client = NULL;
         svc_client = (axis2_svc_client_t *) intern->ptr;
+		
         if (svc_client) {
-            axis2_svc_client_free (svc_client, env);
+			if(!is_module_engaged_to_svc_client(svc_client, env, "sandesha2")){
+				axis2_svc_client_free (svc_client, env);
+			}
         }
     }
     else if (intern->obj_type == WS_SVC) {

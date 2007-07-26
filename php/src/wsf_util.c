@@ -1385,3 +1385,23 @@ wsf_util_handle_soap_fault(
         }                
     }
 }
+
+
+int is_module_engaged_to_svc_client(
+	const axis2_svc_client_t *svc_client,
+	axutil_env_t *env,
+	char *module_name)
+{
+	axutil_qname_t *mod_qname = NULL;
+	axis2_svc_t *svc = NULL;
+	int status = 0;
+	if(!svc_client || !env || !module_name)
+		return 0;
+	mod_qname = axutil_qname_create(env, module_name, NULL, NULL);
+	svc = axis2_svc_client_get_svc(svc_client, env);
+	if(svc && mod_qname){
+		status = axis2_svc_is_module_engaged(svc, env, mod_qname);
+		axutil_qname_free(mod_qname, env);
+	}
+	return status;	
+}
