@@ -16,5 +16,5 @@
 
 @if exist wsf_c\sandesha2c\build\win32\int.msvc rmdir /s /q wsf_c\sandesha2c\build\win32\int.msvc
 
-@if exist src\intdir rmdir src\intdir
+@if exist src\intdir rmdir /s /q src\intdir
 
