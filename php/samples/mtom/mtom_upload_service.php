@@ -20,19 +20,27 @@ function getAttachment($inMessage) {
     $cid2stringMap = $inMessage->attachments;
     $cid2contentMap = $inMessage->cid2contentType;
     $imageName;
-    
+    $file_saved = 0;
+
     foreach($cid2stringMap as $i=>$value){
         $f = $cid2stringMap[$i];
         $contentType = $cid2contentMap[$i];
         if(strcmp($contentType,"image/jpeg") ==0){
             $imageName = $i."."."jpg";
-            file_put_contents("/tmp/".$imageName, $f);
+        	$file_saved = file_put_contents("/tmp/".$imageName, $f);
         }
     }
     
+if($file_saved){
 $resPayload = <<<XML
 <ns1:response xmlns:ns1="http://php.axis2.org/samples/mtom">Image Saved</ns1:response>
 XML;
+}
+else{
+$resPayload = <<<XML
+<ns1:response xmlns:ns1="http://php.axis2.org/samples/mtom">Image Saving Failed</ns1:response>
+XML;
+}
 
     $returnMessage = new WSMessage($resPayload);
 
