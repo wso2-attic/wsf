@@ -71,6 +71,12 @@ static axutil_env_t *ws_env_svr;
 axis2_msg_recv_t * wsf_msg_recv;
 wsf_worker_t * worker;
 
+#define WSF_RESET_GLOBALS() \
+		WSF_GLOBAL(soap_version) = AXIOM_SOAP12; \
+		WSF_GLOBAL(soap_uri) = AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI; \
+		WSF_GLOBAL(curr_ns_index) = 0; 
+
+
 /** WSMessage functions */ 
 PHP_METHOD (ws_message, __construct);
 PHP_METHOD (ws_message, __destruct);
@@ -853,6 +859,8 @@ PHP_METHOD (ws_client, request)
     WSF_GET_OBJ (svc_client, obj, axis2_svc_client_t, intern);
     
     wsf_client_do_request (obj, param, return_value, env, svc_client, AXIS2_FALSE TSRMLS_CC);
+
+	WSF_RESET_GLOBALS();
 }
 
 
@@ -878,6 +886,8 @@ PHP_METHOD (ws_client, send)
     WSF_GET_OBJ (svc_client, obj, axis2_svc_client_t, intern);
     wsf_client_do_request (obj, param, return_value, env, svc_client,
         AXIS2_TRUE TSRMLS_CC);
+
+	WSF_RESET_GLOBALS();
 }
 
 
