@@ -10,11 +10,11 @@
 
 <body>
 <h1> Reliable Messaging API</h1>
-     <p>WSO2 WSF/PHP extension supports WS-ReliableMessaging protocol versions 1.0 and 1.1. 
-        One way messages, as well as two way messages can be sent reliably.
+     <p>The WSO2 WSF/PHP extension supports WS-ReliableMessaging protocol versions 1.0 and 1.1. 
+        One way messages as well as two way messages can be sent reliably.
      </p>
     <p>
-        A user can use following options to configure
+        You can use the following options to configure
         clients and services to use reliable messaging protocol.</p>
     <p>
         <strong id="ws_client_options">
@@ -48,7 +48,7 @@
                     Defines whether to enable reliable messaging (RM) or not. 
                     If specified TRUE, then RM
                     will be enabled with RM version as 1.0. For RM to be
-                    enabled, user must also have set the addressing action.</td>
+                    enabled, you must also set the addressing action.</td>
             </tr>
             <tr>
                 <td style="width: 100px; height: 4px">
@@ -60,7 +60,7 @@
                 <td style="width: 100px; height: 4px">
                     &nbsp;60 seconds</td>
                 <td style="width: 373px; height: 4px">
-                    The current sequence will expire in "sequenceExpiryTime" seconds from current
+                    The current sequence will expire in "sequenceExpiryTime" seconds from the current
                     time.</td>
             </tr>
               <tr>
@@ -85,8 +85,8 @@
                 <td style="width: 100px; height: 4px">
                     FALSE</td>
                 <td style="width: 373px; height: 4px">
-                    Wether to continue sequence. Sequence will be terminated by default
-                    if user does not specify
+                    Wether to continue the sequence. The sequence will be terminated by default
+                    if the user does not specify
                     "willContinueSequence" =&gt; TRUE.</td>
             </tr>
         </table>
@@ -118,13 +118,13 @@
             <td style="width: 100px">
                 FALSE</td>
             <td style="width: 389px">
-                If the user want to do multiple requests using the same sequence this option can
+                If the user wants to create multiple requests using the same sequence, this option can
                 be used.
                 <br />
-                    The client will check it's "willContinueSequence" option. If it is FALSE ( default
-                    value ) , it will send the message
-                    and terminate the sequence. If client's&nbsp; "willContinueSequence" property is TRUE, it will check the "lastMessage"
-                    property of WSMessage. If "lastMessage" is TRUE ( default is FALSE ) it will add the last
+                    The client will check its "willContinueSequence" option. If it is FALSE (default
+                    value) , it will send a message
+                    and terminate the sequence. If the client's&nbsp; "willContinueSequence" property is TRUE, it will check the "lastMessage"
+                    property of WSMessage. If the "lastMessage" is TRUE (default is FALSE) it will add the last
                     message and terminate the sequence.</td>
         </tr>
     </table>
