@@ -37,7 +37,7 @@ function getAttachment($inMessage) {
 	    $dom->loadXML($inMessage->str);
 	    $images = $dom->documentElement->getElementsByTagName('image');
 	    $image = $images->item(0);
-	    file_put_contents("base64image.txt",$image->nodeValue);
+	    file_put_contents("/tmp/base64image.txt",$image->nodeValue);
     }
 
 $resPayload = <<<XML
