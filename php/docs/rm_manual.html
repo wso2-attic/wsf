@@ -4,34 +4,26 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-  <title>WS02 WSF WSDL MODE MANUAL</title>
+  <title>WS02 WSF/PHP Reliable Messaging Manual</title>
   <link href="style/api_style.css" rel="stylesheet" type="text/css" media="all" />
 </head>
 
 <body>
 <h1> 
-   <span style="font-family: Arial;">Reliable Messaging API manual</span></h1>
-     <p>   Wsf4php extension supports reliable messaging protocal version 1.0 now.
-        For the beta release, both 1.0 and 1.1 will be supported. One way as well as
-        two way reliable
-         messaging
-        is supported using single channel.</p>
+   <span style="font-family: Arial;">9. Reliable Messaging Manual</span></h1>
+     <p>   WSO2 WSF/PHP extension supports reliable messaging (RM) protocal versions 1.0 and 1.1.
+        One way as well as two way reliable messaging is supported.</p>
     <h2>
-        <strong id="1">1.0 How to configure WSO2 WSF/PHP to use reliable messaging</strong></h2>
+        <strong id="1">9.1. How to Configure WSO2 WSF/PHP to use Reliable Messaging</strong></h2>
     <p>
-        We assume that you have installed the WSO2 WSF/PHP.
-        </p>
+        To implement reliable messaging WSO2 WSF/PHP uses a database system to store state information
+        related to messaging. Two DBMS systems are supported, SQLite and MySQL.</p>
+        <h3>Using WSO2 WSF/PHP with SQLite</h3>
     <p>
-        To implement reliable messaging wsf-php uses a database system to store state information
-        related to messaging and for that two data base systems supported. They are sqlite3
-        and mysql.&nbsp;</p>
-    <p>
-        <strong>Using WSO2 WSF/PHP with sqlite3</strong></p>
-    <p>
-        you will need to have sqlite3 installed on your machine.
+        You will need to have SQLite version 3 installed on your machine.
     </p>
     <p>
-        Note:- On windows binary , sqlite3 binary and and executable will&nbsp; be packed
+        Note:- On Windows binary, SQLite3 binary and and executable will be packed
         with the WSO2 WSF/PHP binary. So what you will need is to add &lt;WSO2 WSF/PHP&gt;\wsf_c\lib
         directory to path.</p>
     <p>
@@ -39,10 +31,10 @@
         the databases that are used by WSO2 WSF/PHP in &lt;WSO2 WSF/PHP&gt; directory. Make sure to
         run
         this script before starting the server. When you run these script, it will create
-        two database files "sandesha2_client_db" "sandesha2_svr_db" in the direcory where
-        you executed the script. On linux put these databases to your linux environment's
-        /tmp directory and these files should have the read write permissions for the user
-        that is used to run your server.</p>
+        two database files "sandesha2_client_db" and "sandesha2_svr_db" in the direcory where
+        you executed the script. On Linux put these databases to your Linux environment's
+        /tmp directory and these files should have the read and write permissions for the user
+        that runs your Web server.</p>
     <p>
         On windows add the following php.ini entry.</p>
     <p>
@@ -50,27 +42,26 @@
         wsf.rm_db_dir=&lt;database location&gt; </strong>
     </p>
     <p>
-        You can do the same on linux if you have provided read write permisions.</p>
+        You can do the same on Linux if you have provided proper read and write permisions.</p>
+        
+        <h3>Using WSO2 WSF/PHP with MySQL</h3>
     <p>
-        <strong>Using wsf/php with MySql for reliable messaging</strong></p>
-    <p>
-        You will need to have MySql database installed on your machine. You will find the
-        relevent scripts to create the database tables and user account</p>
-    <p>
+        You will need to have MySQL database installed on your machine. You will find the
+        relevent scripts to create the database tables and user account 
         in &lt;WSO2 WSF/PHP&gt;\wsf_c\bin\sandesha2. First&nbsp; please create a user in
-        MySql using the instructions in create_mysql_user.txt file. There the user account
-        name is refered as 'g'. Then use init_mysql.bat file to create the database tables.
-        Next you will need to build wsf/php with MySql enabled by specifying the optons
-        WITH_MYSQL=1.
+        MySQL using the instructions in create_mysql_user.txt file. There the user account
+        name is refered as 'g'. Then use init_mysql.bat or init_mysql.sh file to create the database tables.
+        Next you will need to build WSO2 WSF/PHP with MySQL enabled by specifying the option
+        WITH_MYSQL=1 on Windows or --enable-mysql on Linux.
     </p>
     <p>
         &nbsp;</p>
     <h2>
-       <strong id="2">2.0 Writing a RM Web Service Client.</strong></h2>
+       <strong id="2">9.2. Writing RM Enabled Web Service Client.</strong></h2>
     <p>
-        Since WS Addressing is needed WSRM to work, you need to specify the necessary WS
-        addressing options along with RM Options. Lets implement the simplest rm client
-        that can be written using WSO2 WSF/PHP.
+        Since WS-Addressing is needed WS-RM to work, you need to specify the necessary 
+        WS-Addressing options along with RM Options. Lets implement a simple RM client
+        that with WSO2 WSF/PHP.
     </p>
     <p>
         First create a suitable payload to be send to the echo service.</p>
@@ -115,13 +106,13 @@
     </p>
     <p>
         Note that we set the addressing action in WSMessage options and "reliable"=&gt;TRUE
-        option in WSClient options to enable RM. Since addressing action
-        is present, Addressing will be enabled with "reliable"=&gt;TRUE option. This client
-        will create an RM Sequence, send its only application message and terminate the sequence.
+        option in WSClient options to enable RM. Since WS-Addressing action
+        is present, addressing will be enabled with "reliable"=&gt;TRUE option. This client
+        will create an RM Sequence, send its application message and terminate the sequence.
     </p>
     <p>
-        If you wish to send multiple application messages reliably to the reciving RM Endpoint
-        you can configure the above web service client as follows.</p>
+        If you wish to send multiple application messages reliably to the reciving RM endpoint,
+        you can configure the above Web service client as follows.</p>
     <p>
         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $msg0 = &nbsp; new WSMessage($reqPayloadString,
         &nbsp;array("<span style="color: #ff6666">action</span>" =&gt; "<span style="color: #ff6666">http://php.axis2.org/samples/echoString</span>")
@@ -162,16 +153,16 @@
     <p>
         Since we specified "willContinueSequence"=&gt;TRUE option in WSClient , It will
         not terminate the sequence after sending the first message. It keeps the
-        sequence open till a default sequenceExpiryTime. You can configure this value using
-        "sequenceExpiryTime" option in WSClient. So we send the $msg2 using the currently
-        opened sequence. On $msg3 we specify that this will be the last message that will
+        sequence open till default sequenceExpiryTime expires. You can configure this value using
+        "sequenceExpiryTime" option in WSClient. So we send the $msg1 using the currently
+        opened sequence. On $msg2 we specify that this will be the last message that will
         be sent using the current sequence using the option "lastMessage"=&gt;TRUE. Now
         WSClient will terminate the current sequence after sending $msg2.</p>
     <p>
        </p>
-       <h2><strong id="3">3.0 Writing a&nbsp; RM Web Service</strong></h2>
+       <h2><strong id="3">9.3. Writing RM Enabled Web Service</strong></h2>
     <p>
-        Following code demostrate how to write an rm Web Service client. This echo_service_rm.php
+        Following code demostrates how to write a RM Web Service. This echo_service_rm.php
         was used as the above client's receiving endpoint.</p>
     <p>
         function echoFunction($inMessage){</p>
@@ -196,7 +187,7 @@
         $service-&gt;reply();</p>
     <p>
         Note how we map "echoString" operation to "http://php.axis2.org/samples/echoString"&nbsp;
-        which is the same action uri used in above eample client.</p>
+        which is the same action URI used in above eample client.</p>
     <p>
         On WSService options, "reliable"=&gt;TRUE option is used to tell the service to
         use RM protocol.</p>
