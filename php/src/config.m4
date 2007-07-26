@@ -10,7 +10,7 @@ if test "$PHP_WSF" = "yes"; then
 	fi	
 
 	if test "$PHP_LIBXML" = "no"; then
-		AC_MSG_ERROR([SimpleXML extension requires LIBXML extension, add --enable-libxml])
+		AC_MSG_ERROR([WSF/PHP extension requires LIBXML extension, add --enable-libxml])
 	fi
 	
 	 dnl # add include path
