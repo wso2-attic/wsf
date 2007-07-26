@@ -1,78 +1,86 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
   <title>WS02 WSF/PHP SECURITY MANUAL</title>
   <link href="style/api_style.css" rel="stylesheet" type="text/css"
-  media="all" />
+  media="all">
 </head>
 
-<body>
+<body lang="en">
 <h1><span style="font-family: Arial;">8. Security Manual</span></h1>
 
 <h2 id="1">8.1. Writing a Secure Web Service Client</h2>
 
 <p>First create a suitable payload to be sent to the echo service.</p>
 
-<p>$req_payload_string =&nbsp; &lt;&lt;&lt;XML &lt;ns1:echoString
+<p>$req_payload_string =  &lt;&lt;&lt;XML &lt;ns1:echoString
 xmlns="http://www.wsf.org/echo/echoString"&gt;&lt;text&gt;Hello
 RM!&lt;/text&gt;&lt;/ns1:echoString&gt;XML;</p>
 
 <p></p>
 
 <p>Note that in order to run security clients or services, you should engage
-WS-Addressing </p>
+WS-Addressing</p>
 
-<p>          $reqMessage =   new WSMessage($reqPayloadString,<br/>  
-                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;array("<span
-                style="color: #ff6666">to</span>" =&gt;"<span
-                style="color:#ff6666">http://localhost/samples/security_service.php</span>",<br/>
-                <span style="color: #ff6666">
-                &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;action</span>" =&gt;"<span
-                style="color:#ff6666">http://php.axis2.org/samples/echoString</span>")); </p>
+<p>          $reqMessage =   new WSMessage($reqPayloadString,<br>
+                array("<span style="color: #ff6666">to</span>" =&gt;"<span
+style="color:#ff6666">http://localhost/samples/security_service.php</span>",<br>
+<span style="color: #ff6666">                 action</span>" =&gt;"<span
+style="color:#ff6666">http://php.axis2.org/samples/echoString</span>"));</p>
 
-<p>Then create a WSPolicy object with the security options to mach your requirements.</p>
-    <p>
-        For example, if you want to include TimeStamp and UsernameToken you can do as follows.</p>
+<p>Then create a WSPolicy object with the security options to match your
+requirements.</p>
 
-<p>$policy = new WSPolicy(array("<span style="color: #ff3333">security</span>" =&gt;
-    array("<span style="color: #ff3333">useUsernameToken</span>" =&gt; TRUE, "<span style="color: #ff3333">includeTimeStamp</span>"
-    =&gt; TRUE))); </p>
+<p>For example, if you want to include TimeStamp and UsernameToken you can do
+as follows.</p>
 
-<p></p>
-
-<p><strong>Note: If you wish to use a policy file instead of an options array you can directly
-    set a policy XML file.</strong></p>
-
-<p>$policy_xml = file_get_contents("<span style="color: #ff3333">policy.xml</span>");</p>
-
-<p>$policy = new WSPolicy(array("<span style="color: #ff3333">security</span>"
-    =&gt;
-$policy_xml));</p>
+<p>$policy = new WSPolicy(array("<span
+style="color: #ff3333">security</span>" =&gt; array("<span
+style="color: #ff3333">useUsernameToken</span>" =&gt; TRUE, "<span
+style="color: #ff3333">includeTimeStamp</span>" =&gt; TRUE)));</p>
 
 <p></p>
 
-<p>Next create a SecurityToken object with appropriate security properties.</p>
+<p><strong>Note: If you wish to use a policy file instead of an options array
+you can directly set a policy XML file.</strong></p>
+
+<p>$policy_xml = file_get_contents("<span
+style="color: #ff3333">policy.xml</span>");</p>
+
+<p>$policy = new WSPolicy(array("<span
+style="color: #ff3333">security</span>" =&gt; $policy_xml));</p>
+
+<p></p>
+
+<p>Next create a SecurityToken object with appropriate security
+properties.</p>
 
 <p>If you want to have the UsernameToken, then the user, password and
-passwordType (optinal) options must be set. For TimeStamp, the ttl option must be
-set. Hence the SecurityToken object is created as</p>
+passwordType (optional) options must be set. For TimeStamp, the ttl option
+must be set. Hence the SecurityToken object is created as</p>
 
-<p>$securityToken = new WSSecurityToken(array("<span style="color: #ff3333">user</span>"
-    =&gt; "<span style="color: #ff3333">bob</span>",<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"<span style="color: #ff3333">password</span>" =&gt; "<span style="color: #ff3333">bob12</span>",<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"<span style="color: #ff3333">passwordType</span>" =&gt; "<span style="color: #ff3333">Digest</span>",<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"ttl" =&gt; 300));</p>
+<p>$securityToken = new WSSecurityToken(array("<span
+style="color: #ff3333">user</span>" =&gt; "<span
+style="color: #ff3333">bob</span>",<br>
+             "<span style="color: #ff3333">password</span>" =&gt; "<span
+style="color: #ff3333">bob12</span>",<br>
+             "<span style="color: #ff3333">passwordType</span>" =&gt; "<span
+style="color: #ff3333">Digest</span>",<br>
+             "ttl" =&gt; 300));</p>
 
 <p></p>
 
-<p>Then create the client using the policy object and security token object.</p>
+<p>Then create the client using the policy object and security token
+object.</p>
 
-<p>$client = new WSClient(array("<span style="color: #ff3333">useWSA</span>" =&gt; TRUE,<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"<span style="color: #ff3333">policy</span>" =&gt; $policy,<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"<span style="color: #ff3333">securityToken</span>" =&gt; $sec_token));<br/>
+<p>$client = new WSClient(array("<span style="color: #ff3333">useWSA</span>"
+=&gt; TRUE,<br>
+             "<span style="color: #ff3333">policy</span>" =&gt; $policy,<br>
+             "<span style="color: #ff3333">securityToken</span>" =&gt;
+$sec_token));<br>
+</p>
 
 <p></p>
 
@@ -84,52 +92,58 @@ set. Hence the SecurityToken object is created as</p>
 
 <p>Make sure that the addressing action is set in WSService.</p>
 
-<p>function echoFunction($inMessage) {<br/>
+<p>function echoFunction($inMessage) {<br>
+</p>
+
 <p>$returnMessage = new WSMessage($inMessage-&gt;str);</p>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return $returnMessage;<br/>
-}</p>
+             return $returnMessage;<br>
+}
 
-<p>$operations = array("<span style="color: #ff3333">echoString</span>" =&gt; "<span
-        style="color: #ff3333">echoFunction</span>");</p>
+<p>$operations = array("<span style="color: #ff3333">echoString</span>" =&gt;
+"<span style="color: #ff3333">echoFunction</span>");</p>
 
-<p>$actions = array("<span style="color: #ff3333">http://php.axis2.org/samples/echoString</span>"
-    =&gt; "<span style="color: #ff3333">echoString</span>");</p>
-
-<p></p>
-
-<p>If the client has specified the username and timestamp, these options should be set
-in the server side also.</p>
-
-<p>$policy = new WSPolicy(array("<span style="color: #ff3333">security</span>"=&gt;array("<span
-        style="color: #ff3333">useUsernameToken</span>" =&gt;
-TRUE,<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"<span style="color: #ff3333">includeTimeStamp</span>" =&gt; TRUE)));</p>
+<p>$actions = array("<span
+style="color: #ff3333">http://php.axis2.org/samples/echoString</span>" =&gt;
+"<span style="color: #ff3333">echoString</span>");</p>
 
 <p></p>
 
-<p><strong>Note: If you wish to use a policy file instead of an options array, you can directly
-    set the policy XML file.</strong></p>
+<p>If the client has specified the username and timestamp, these options
+should be set in the server side also.</p>
 
-<p>$policy_xml = file_get_contents("<span style="color: #ff6633">policy.xml</span>")</p>
+<p>$policy = new WSPolicy(array("<span
+style="color: #ff3333">security</span>"=&gt;array("<span
+style="color: #ff3333">useUsernameToken</span>" =&gt; TRUE,<br>
+             "<span style="color: #ff3333">includeTimeStamp</span>" =&gt;
+TRUE)));</p>
 
-<p>$policy = new WSPolicy(array("<span style="color: #ff3333">security</span>"
-    =&gt;
-$policy_xml));</p>
+<p></p>
+
+<p><strong>Note: If you wish to use a policy file instead of an options
+array, you can directly set the policy XML file.</strong></p>
+
+<p>$policy_xml = file_get_contents("<span
+style="color: #ff6633">policy.xml</span>")</p>
+
+<p>$policy = new WSPolicy(array("<span
+style="color: #ff3333">security</span>" =&gt; $policy_xml));</p>
 
 <p></p>
 
 <p>Username and password must be provided for validation on the server
 side.</p>
 
-<p>$sec_token = new WSSecurityToken(array("<span style="color: #ff3333">user</span>"
-    =&gt; "<span style="color: #ff3333">bob</span>", "<span style="color: #ff3333">password</span>"
-    =&gt; "<span style="color: #ff3333">bob12</span>", "<span style="color: #ff3333">passwordType</span>"
-    =&gt;"Digest',<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;""ttl" =&gt; 100));<br/>
-$svr = new WSService(array("operations" =&gt; $operations,<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"actions" =&gt; $actions,<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"policy" =&gt; $policy,<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"securityToken" =&gt; $sec_token));</p>
+<p>$sec_token = new WSSecurityToken(array("<span
+style="color: #ff3333">user</span>" =&gt; "<span
+style="color: #ff3333">bob</span>", "<span
+style="color: #ff3333">password</span>" =&gt; "<span
+style="color: #ff3333">bob12</span>", "<span
+style="color: #ff3333">passwordType</span>" =&gt;"Digest',<br>
+             ""ttl" =&gt; 100));<br>
+$svr = new WSService(array("operations" =&gt; $operations,<br>
+             "actions" =&gt; $actions,<br>
+             "policy" =&gt; $policy,<br>
+             "securityToken" =&gt; $sec_token));</p>
 
 <p></p>
 
@@ -143,8 +157,8 @@ $svr = new WSService(array("operations" =&gt; $operations,<br/>
 
 <p></p>
 
-<p>For encryption and signing, keys and certificates must be provided using the two
-functions:</p>
+<p>For encryption and signing, keys and certificates must be provided using
+the two functions:</p>
 
 <p>ws_get_cert_from_file();</p>
 
@@ -152,86 +166,79 @@ functions:</p>
 
 <h3>8.3.1. Encryption on the Client Side</h3>
 
-<p>The Receivers certificate (certificate used by the server side) must be set using the
-"receiverCertificate" option and the private key of the client must be set using the
-"privateKey" option with a WSSecurityToken object instance.</p>
+<p>The Receivers certificate (certificate used by the server side) must be
+set using the "receiverCertificate" option and the private key of the client
+must be set using the "privateKey" option with a WSSecurityToken object
+instance.</p>
 
 <p>First load the certificates:</p>
 
-<p>
-$rec_cert = ws_get_cert_from_file("../keys/bob_cert.cert"); <br/>
-$pvt_key = ws_get_key_from_file("../keys/alice_key.pem");
-</p>
+<p>$rec_cert = ws_get_cert_from_file("../keys/bob_cert.cert"); <br>
+$pvt_key = ws_get_key_from_file("../keys/alice_key.pem");</p>
 
-<p>Then the Policy object and the SecurityToken object have to be created. When creating 
-the Policy object, you can also specify the algorithm suite to be used. </p>
+<p>Then the Policy object and the SecurityToken object have to be created.
+When creating the Policy object, you can also specify the algorithm suite to
+be used.</p>
 
-<p>
-$policy = new WSPolicy(array("security"=&gt;array("encrypt"=&gt;TRUE,"algorithmSuite" =&gt;
-"Basic256Rsa15",)));<br/>
-
-$sec_token = new WSSecurityToken(array("privateKey" =&gt; $pvt_key,"receiverCertificate" =&gt; $rec_cert));
-</p>
+<p>$policy = new
+WSPolicy(array("security"=&gt;array("encrypt"=&gt;TRUE,"algorithmSuite" =&gt;
+"Basic256Rsa15",)));<br>
+$sec_token = new WSSecurityToken(array("privateKey" =&gt;
+$pvt_key,"receiverCertificate" =&gt; $rec_cert));</p>
 
 <h3>8.3.2. Encryption on the Server Side</h3>
 
-<p>Here the certificate of the client and
-private key of the server are provided using a WSSecurityToken object instance.</p>
+<p>Here the certificate of the client and private key of the server are
+provided using a WSSecurityToken object instance.</p>
 
-<p>
-$pub_key = ws_get_cert_from_file("../keys/alice_cert.cert");<br/>
-$pvt_key = ws_get_key_from_file("../keys/bob_key.pem");
-</p>
+<p>$pub_key = ws_get_cert_from_file("../keys/alice_cert.cert");<br>
+$pvt_key = ws_get_key_from_file("../keys/bob_key.pem");</p>
 
 <p>Options for WSPolicy object is the same as on the client side.</p>
 
-<p>$policy = new WSPolicy(array("security"=&gt;array("encrypt" =&gt; TRUE, "algorithmSuite" =&gt; "Basic256Rsa15")));<br/>
-$sec_token = new WSSecurityToken(array("privateKey" =&gt; $pvt_key, "receiverCertificate" =&gt;$pub_key));
-</p>
+<p>$policy = new WSPolicy(array("security"=&gt;array("encrypt" =&gt; TRUE,
+"algorithmSuite" =&gt; "Basic256Rsa15")));<br>
+$sec_token = new WSSecurityToken(array("privateKey" =&gt; $pvt_key,
+"receiverCertificate" =&gt;$pub_key));</p>
 
 <p></p>
 
 <h3>8.3.3. Signing on the Client Side</h3>
 
-<p>For signing, the certificate and the key of the client and the certificate of the
-server must be set.</p>
+<p>For signing, the certificate and the key of the client and the certificate
+of the server must be set.</p>
 
-<p>
-$my_cert = ws_get_cert_from_file("../keys/alice_cert.cert");<br/>
-$my_key = ws_get_key_from_file("../keys/alice_key.pem");<br/>
-$rec_cert = ws_get_cert_from_file("../keys/bob_cert.cert");
-</p>
+<p>$my_cert = ws_get_cert_from_file("../keys/alice_cert.cert");<br>
+$my_key = ws_get_key_from_file("../keys/alice_key.pem");<br>
+$rec_cert = ws_get_cert_from_file("../keys/bob_cert.cert");</p>
 
 <p>Then the Policy object and the SecurityToken object can be created:</p>
 
-<p>
-$policy = new WSPolicy(array("security"=&gt;array("sign"=&gt;TRUE,"algorithmSuite" =&gt;
-"Basic256Rsa15",)));<br/>
-$sec_token = new WSSecurityToken(array("privateKey" =&gt; $my_key, "certificate" =&gt; $my_cert, "receiverCertificate" =&gt; $rec_cert));
-</p>
+<p>$policy = new
+WSPolicy(array("security"=&gt;array("sign"=&gt;TRUE,"algorithmSuite" =&gt;
+"Basic256Rsa15",)));<br>
+$sec_token = new WSSecurityToken(array("privateKey" =&gt; $my_key,
+"certificate" =&gt; $my_cert, "receiverCertificate" =&gt; $rec_cert));</p>
 
 <h3>8.3.4. Signing on the Server Side</h3>
 
 <p>Here the certificate and the key of the service side must be set:</p>
 
-<p>
-$cert = ws_get_cert_from_file("../keys/bob_cert.cert");<br/>
-$pvt_key = ws_get_key_from_file("../keys/bob_key.pem");
-</p>
+<p>$cert = ws_get_cert_from_file("../keys/bob_cert.cert");<br>
+$pvt_key = ws_get_key_from_file("../keys/bob_key.pem");</p>
 
-<p>Options for the Policy object and the SecurityToken object are the same as on the client side.</p>
+<p>Options for the Policy object and the SecurityToken object are the same as
+on the client side.</p>
 
 <p>$policy = new WSPolicy(array("security"=&gt;array("sign" =&gt;
-TRUE,"algorithmSuite" =&gt; "Basic256Rsa15")));<br/>
-$sec_token = new WSSecurityToken(array("privateKey" =&gt; $pvt_key, "certificate" =&gt; $cert));
-</p>
+TRUE,"algorithmSuite" =&gt; "Basic256Rsa15")));<br>
+$sec_token = new WSSecurityToken(array("privateKey" =&gt; $pvt_key,
+"certificate" =&gt; $cert));</p>
 
 <h2 id="4">8.4. Code Sample on Encryption</h2>
 
 <h3>Client Code:</h3>
-
-<pre>
-$reqPayloadString = &lt;&lt;&lt;XML
+<pre>$reqPayloadString = &lt;&lt;&lt;XML
 &lt;ns1:echo xmlns:ns1="http://php.axis2.org/samples"&gt;&lt;text&gt;Hello
 World!&lt;/text&gt;&lt;/ns1:echo&gt;
 XML;
@@ -266,13 +273,10 @@ try {
     } else {
         printf("Message = %s\n",$e-&gt;getMessage());
     }
-}
-</pre>
+}</pre>
 
 <h3>Service Code:</h3>
-
-<pre>
-    function echoFunction($inMessage) {
+<pre>    function echoFunction($inMessage) {
         $returnMessage = new WSMessage($inMessage-&gt;str);
         return $returnMessage;
     }
@@ -295,8 +299,6 @@ try {
                                "policy" =&gt; $policy, "securityToken" =&gt; $sec_token)); 
 
     $svr-&gt;reply();
-
 </pre>
-
 </body>
 </html>
