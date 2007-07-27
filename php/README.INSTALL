@@ -32,7 +32,9 @@ Test with a Web browser; as an example access http://localhost/samples/echo_clie
 
 [wsf]
 wsf.home="path to your wsf_c installation directory"
+wsf.log_level = 3
+
+  { Log level is by default set to ERROR. Log levels range from 0 to 4. Log levels are as follows.
+    CRITICAL->  0 , ERROR -> 1 , WARNING -> 2 , INFO -> 3, DEBUG -> 4 }
 
 END of NOTES]
-
-
