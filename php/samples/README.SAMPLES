@@ -132,5 +132,10 @@ wsdl_mode/dynamic_echo_service.php                 - WSDL mode Service
 Sudoku
 --------
 
-sudoku/sudoku_client.php                           - Client demonstrating  Addressing, Security ,MTOM and RM
-sudoku/sudoku_service.php                          - Service demonstrating Addressing, security ,MTOM and RM
+sudoku/sudoku_client.php                           - Client demonstrating  Addressing, MTOM 
+sudoku/sudoku_service.php                          - Service demonstrating Addressing, MTOM
+
+flicker
+--------
+
+filcker/flicker_client.php                         - Client for accessing flicker soap service
