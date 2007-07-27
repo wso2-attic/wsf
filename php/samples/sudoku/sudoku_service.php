@@ -45,3 +45,9 @@ $service = new WSService(array("operations"=>$ops,
 $service->reply();
 
 ?>
+
+
+
+
+
+

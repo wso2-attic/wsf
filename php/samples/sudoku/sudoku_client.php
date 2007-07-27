@@ -3,64 +3,62 @@
 $scenario = $_POST["scenario"];
 $epr = $_POST["epr"];
 $imageID = 1;
+$qosAddr = $_POST["qosAddr"];
+$qosMTOM;
+$qosRM;
+
 session_start();
 $message = "";
 if (!isset($_SESSION['message'])) {
-    $_SESSION['message'] = "";
+		    $_SESSION['message'] = "";
 } else {
     if (isset($_POST['submit']) || !isset($_GET['imageID'])) {
-        $_SESSION['message'] = "";
+       	$_SESSION['message'] = "";
     }
     $message = $_SESSION['message'];
 }
 ?>
 
 <html>
-<head>
-<title>WSF MTOM</title>
-</head>
-<body>
-<form method="post" action="<?php echo $PHP_SELF;?>">
-<table cols="2" border="1" cellpadding="10" cellspacing="0" align="center" width="100%">
-<tr>
-<td>
-<h4>Scenario</h4>
-<!--
-One Way : <input type="radio" value="OneWay" name="scenario">
--->
-Request Reply
-<!--
-: <input type="radio" value="ReqRep" name="scenario" checked><br />
--->
+	<head>
+		<title>WSF/PHP MTOM RM ADDRESSING</title>
+	</head>
+	<body>
+	<form method="post" action="<?php echo $PHP_SELF;?>">
+	<table cols="2" border="1" cellpadding="10" cellspacing="0" align="center" width="100%">
+	<tr>
+	    <td>
+	<h4>Request Reply Senario</h4>
+
 <h4>Target Endpoint</h4>
 Endpoint:<input type="text" size="60" maxlength="60" name="epr" value="http://localhost/samples/sudoku/sudoku_service.php"><br />
-<!--
 <h4>WS-*</h4>
-Addressing : <input type="checkbox" value="Addressing" name="qosAddr">
-XOP/MTOM : <input type="checkbox" value="MTOM" name="qosMTOM">
-Reliable Messaging : <input disabled type="checkbox" value="RM" name="qos[]"><br />
-<h4>XML Document</h4>
-<select name="XMLDoc" size="2">
-<option value="One">Doc One</option>
-<option value="Two">Doc Two</option>
-</select> -->
+Addressing : <input type="checkbox" value="Addressing" name="qosAddr"><br/>
+XOP/MTOM : <input type="checkbox" checked="true" disabled value="MTOM" name="qosMTOM"><br/>
+<!--Reliable Messaging : <input type="checkbox" value="RM" name="qosRM"><br /-->
 <br />
 <br />
 <input type="submit" value="submit" name="submit">
 </form>
 <br/>
 <br/>
-<form method="post" action="http://localhost/samples/sudoku/sudoku_client.php?act=delete">
-<input type="submit" value="Reset " name="reset">
-</form>
-</td>
+<?php
+echo "<form method=\"post\" action=\"http://".$_SERVER['SERVER_NAME'].":".$_SERVER["SERVER_PORT"]."/samples/sudoku/sudoku_client.php?act=delete\">";
+echo "<input type=\"submit\" value=\"Reset \" name=\"reset\">";
+echo "</form>";
+echo "</td>";
+?>
+
 <?php
 
 if (isset($_POST['submit']) || isset($_GET['imageID'])) {
 if (isset($_GET['imageID'])){
     $imageID = $_GET['imageID'];
     $epr = $_GET['epr'];
+    $qosAddr = $_GET['qosAddr'];
 }
+
+
 echo "<td>";
 
 echo "<h2> Here are the Results</h2> <br/><br/>";
@@ -80,16 +78,20 @@ $reqPayloadString = <<<XML
 </ns1:submit>
 XML;
 
+
 try {
     $msg = new WSMessage($reqPayloadString,
 			array("to"=>$epr,
 			"action"=>"http://www.wso2.net/products/wsf_php/demo/submit"));
+    
+    $client_options = array();
+    $client_options["useMTOM"] = TRUE;
+    $client_options["responseXOP"] = TRUE;
+    if($qosAddr){
+    	$client_options["useWSA"] = TRUE;
+    }
 
-    $client = new WSClient(
-			array(
-			"useMTOM"=>TRUE,
-			   "useWSA"=>TRUE,
-			   "responseXOP"=>TRUE));
+    $client = new WSClient($client_options);
 
     $message = $message.">>> Sending SOAP request to ".$epr." requesting for image ".$imageID.".jpg<br/>";
     $resMsg = $client->request($msg);
@@ -122,7 +124,7 @@ try {
         echo "function reload() {";
         echo "window.location=";
         echo "'http://".$_SERVER['SERVER_NAME'].":".$_SERVER["SERVER_PORT"]."/samples/sudoku/sudoku_client.php";
-        echo "?imageID=".$imageID."&epr=".$epr."';}";
+        echo "?imageID=".$imageID."&epr=".$epr."&qosAddr=".$qosAddr."';}";
         echo "setTimeout('reload()',1000)";
         echo "</script>";
     }
@@ -163,3 +165,17 @@ $_SESSION['message'] = $message;
 ?>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
