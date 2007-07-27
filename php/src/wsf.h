@@ -183,6 +183,7 @@ ZEND_BEGIN_MODULE_GLOBALS (wsf)
     char *home;
     long enable_exception;
     char *log_path;
+	int log_level;
     char *soap_uri;
     char *rm_db_dir;
     int curr_ns_index;

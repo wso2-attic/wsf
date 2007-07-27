@@ -314,6 +314,8 @@ STD_PHP_INI_ENTRY ("wsf.home", NULL, PHP_INI_ALL,
         OnUpdateString, home, zend_wsf_globals, wsf_globals)
 STD_PHP_INI_ENTRY ("wsf.log_path", "/tmp", PHP_INI_ALL, 
         OnUpdateString, log_path, zend_wsf_globals,wsf_globals)
+STD_PHP_INI_ENTRY ("wsf.log_level", "0", PHP_INI_ALL, 
+        OnUpdateLong, log_level, zend_wsf_globals, wsf_globals)
 STD_PHP_INI_ENTRY ("wsf.enable_trace", "1", PHP_INI_ALL, 
         OnUpdateBool, enable_trace, zend_wsf_globals, wsf_globals)  
 STD_PHP_INI_ENTRY ("wsf.enable_exception", "1", PHP_INI_ALL, 
@@ -339,6 +341,7 @@ static void ws_init_globals (zend_wsf_globals * wsf_globals)
 {
     wsf_globals->home = NULL;
     wsf_globals->log_path = NULL;
+	wsf_globals->log_level = 0;
     wsf_globals->enable_trace = 0;
     wsf_globals->enable_exception = 0;
     wsf_globals->soap_version = AXIOM_SOAP12;
@@ -417,16 +420,18 @@ PHP_MINIT_FUNCTION (wsf)
     REGISTER_LONG_CONSTANT ("WS_SOAP_ENCODED", WS_SOAP_ENCODED, CONST_CS | CONST_PERSISTENT);
     REGISTER_LONG_CONSTANT ("WS_SOAP_LITERAL", WS_SOAP_LITERAL, CONST_CS | CONST_PERSISTENT);
 
-    env = wsf_env_create (WSF_GLOBAL (log_path)); 
     
     if (WSF_GLOBAL (home)) {
         home_folder = WSF_GLOBAL (home);
 	}else{
 		WSF_GLOBAL(home) = home_folder;
 	}
-    
+    env = wsf_env_create (WSF_GLOBAL (log_path)); 
+	env->log->level = WSF_GLOBAL(log_level);
+
     ws_env_svr = wsf_env_create_svr (WSF_GLOBAL (log_path));
-    
+	ws_env_svr->log->level = WSF_GLOBAL(log_level);
+
     wsf_msg_recv = wsf_xml_msg_recv_create (ws_env_svr);
     
     worker = wsf_worker_create (ws_env_svr, home_folder, WSF_GLOBAL (rm_db_dir));
