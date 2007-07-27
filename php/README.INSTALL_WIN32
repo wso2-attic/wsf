@@ -112,8 +112,8 @@ Contents:
        AddType application/x-httpd-php .php .phtml
        AddType application/x-httpd-php-source .phps
                               
-    7. Copy the wsf.php script and all the samples to your Web server's document root
-    
-    Now you should be able to run the samples in samples directory.         
+    7. Copy the scripts folder and samples folder to your Web server's document root
+       Now you should be able to run the samples in samples directory. 
+       [Note] scripts folder contain the php scripts used for wsdl generation
                          		 	
  
