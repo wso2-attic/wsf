@@ -1,0 +1,8 @@
+Running the sample
+-------------------
+When running the sample on a Linux machine, 
+make sure that the client_resources folder is writtable by httpd
+
+What does it do
+---------------
+This is a sample to demostrate the use of Addressing/MTOM
