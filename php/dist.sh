@@ -26,6 +26,7 @@ rm -rf `find . -name .deps`
 rm -rf `find . -type d -name .libs`
 rm -rf `find . -type f -name Makefile`
 rm -rf `find . -type d -name autom4te.cache`
+rm -rf `find . -type f -name wsf.so`
 
 sed -i "s/wsf_c/wsf_c src/g" Makefile.in
 sed -i "s/ac_default_prefix=\/usr\/local\/wsf_c/ac_default_prefix=\`php-config \-\-extension\-dir\`\/wsf_c/g" configure
