@@ -4,10 +4,10 @@
 					http://pear.php.net/dtd/tasks-1.0.xsd
 					http://pear.php.net/dtd/package-2.0
 					http://pear.php.net/dtd/package-2.0.xsd">
- <name>Axis2</name>
+					<name>WSF/PHP</name>
  <channel>pecl.php.net</channel>
  <summary>Web Services for PHP</summary>
- <description>This extension provides a web services implementation using Axis2/C</description>
+ <description>This extension provides a web services implementation using WSO2 WSF/C Web Services Framework</description>
  <lead>
   <name>Nabeel Yoosuf</name>
   <user>nabeel</user>
@@ -15,18 +15,17 @@
   <active>yes</active>
  </lead>
 
-   <date>2006-05-21</date>
+   <date>2007-07-27</date>
    <version>
-    <release>0.1.1</release>
-    <api>0.1.0</api>
+    <release>1.0.0</release>
+    <api>1.0.0</api>
    </version>
    <stability>
-    <release>beta</release>
-    <api>beta</api>
+    <release>1.0</release>
+    <api>1.0</api>
    </stability>
    <license uri="http://www.php.net/license">PHP</license>
-   <notes>Fixed the bug of incorrect dependency libraries in package xml. 
-	</notes>
+   <notes>1. 0 release </notes>
 
  <contents>
   <dir name="/">
@@ -103,22 +102,62 @@
 
  <changelog>
   <release>
-   <date>2006-05-20</date>
+   <date>2007-07-27</date>
    <version>
-    <release>0.1.0</release>
-    <api>0.1.0</api>
+    <release>1.0.0</release>
+    <api>1.0.0</api>
    </version>
    <stability>
-    <release>beta</release>
-    <api>beta</api>
+    <release>1.0</release>
+    <api>1.0</api>
    </stability>
    <license uri="http://www.php.net/license">PHP</license>
-   <notes>Initial Release of Axis2. 
-	- Provides an XML in/out model to consume web services
-    - Supports Plain XML, DOM and SimpleXML
-    - Provides module engagement support (WS-Addressing is demonstrated).
-	- Provides SOAP and OM APIs to manipulate XML
-	</notes>
+   <notes>1.0 release of wso2-wsf/php. 
+1. Client API to consume Web services
+
+      * WSMessage class to handle message level options
+      * WSClient class with both one way and two way service invocation support
+      * Option of using functions in place of object oriented API with ws_request
+      
+2. Service API to provide Web services
+
+      * WSMessage class to handle message level options
+      * WSService class with support for both one way and two way operations
+      * Option of using functions in place of object oriented API with ws_reply
+
+3. Attachments with MTOM
+
+      * Binary optimized
+      * Non-optimized (Base64 binary)
+
+4. WS-Addressing
+
+      * Version 1.0
+      * Submission
+
+5. WS-Security 
+      * UsernameToken and Timestamp 
+      * Encryption
+      * Signing
+      * WS-SecurityPolicy based configuration  
+         
+6. WS-Reliable Messaging
+      * Single channel two way reliable messaging
+
+7. WSDL Generation for Server Side
+      * WSDL generation based on annotations and function signatures, and 
+        serving on ?wsdl requests
+
+8. REST Support
+      * Expose a single service script both as SOAP and REST service
+
+9. WSDL mode support for both client and server side
+      * Write services and client based on a given WSDL
+
+10. Backward compatibility with PHP5 SOAP extension
+      * Experimental
+
+   </notes>
   </release>
  </changelog>
 </package>

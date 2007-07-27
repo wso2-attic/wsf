@@ -14,14 +14,14 @@
 */
 -->
 <project>
-    <name>PHP Axis2</name>
+    <name>WSO2-WSF/PHP</name>
     <pomVersion>3</pomVersion>
 
     <!-- a unique name for this project -->
-    <name>PHP Axis2 Extension</name>
-    <id>php_axis2</id>
-    <groupId>php_axis2</groupId>
-    <currentVersion>${php_axis2_version}</currentVersion>
+    <name>WSO2-WSF/PHP Extension</name>
+    <id>wsf</id>
+    <groupId>wsf</groupId>
+    <currentVersion>${wsf}</currentVersion>
 
     <!-- details about the organization that 'owns' the project -->
     <organization>
@@ -33,11 +33,11 @@
     <inceptionYear>2006</inceptionYear>
     <logo>http://192.168.1.211/php_axis2/docs/images/wso2-logo.jpg</logo>-->
     <description>
-	PHP has become a very popular scripting language mainly due its simplicity of developing enterprise web applications. Apache Axis2 (C) is the next generation SOAP stack built on a flexible pipeline architecture providing greater modularity and extensibility. PHP Axis2 Extension, an enterprise SOAP extension for PHP, is an effort to combine the simplicity of PHP and the power of Apache Axis2 to consume and provide web services through PHP. The next generation SOAP extension is positioned to meet the quality of service requirements (Security, Reliable Messaging, etc) of enterprise PHP applications. While maintaining the inherent simplicity, the extension provides all the features of Axis2 SOAP engine. The development is nearing completion to provide the core runtime functionality of a SOAP engine.	
+	    PHP has become a very popular scripting language mainly due its simplicity of developing enterprise web applications. Apache Axis2 (C) is the next generation SOAP stack built on a flexible pipeline architecture providing greater modularity and extensibility. WSO2-WSF/PHP Extension, an enterprise SOAP extension for PHP, is an effort to combine the simplicity of PHP and the power of Apache Axis2 to consume and provide web services through PHP. The next generation SOAP extension is positioned to meet the quality of service requirements (Security, Reliable Messaging, etc) of enterprise PHP applications. While maintaining the inherent simplicity, the extension provides all the features of WSO2 WSF/C WebServices Framework.	
 	</description>
-    <shortDescription>PHP Axis2</shortDescription>
+	<shortDescription>WSO2 WSF/PHP</shortDescription>
     <!-- the project home page -->
-    <url>http://www.wso2.net/php_axis2</url>
+    <url>http://www.wso2.net</url>
 	<!--
     <issueTrackingUrl>http://issues.apache.org/jira/browse/AXIS2C</issueTrackingUrl>
     <siteAddress>ws.apache.org/axis2/c</siteAddress>
@@ -67,19 +67,25 @@
             <email>nabeel AT php.net</email>
             <organization>WSO2</organization>
         </developer>
-		<developer>
+	<developer>
             <name>Nandika Jayawardena</name>
             <id>nandika</id>
             <email>nandika AT wso2.com</email>
             <organization>WSO2</organization>
-        </developer>
-		<developer>
+    	</developer>
+	<developer>
+            <name>Buddhika Semasinghe</name>
+            <id>Buddhika</id>
+            <email>buddhika AT wso2.com</email>
+            <organization>WSO2</organization>
+    	</developer>
+	<developer>
             <name>Samisa Abesinghe</name>
             <id>samisa</id>
             <email>samisa AT wso2.com</email>
             <organization>WSO2</organization>
         </developer>
-		 <developer>
+	<developer>
             <name>Sanjiva Weerawarana</name>
             <id>sanjiva</id>
             <email>sanjiva AT wso2.com</email>
