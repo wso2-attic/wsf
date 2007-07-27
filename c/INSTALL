@@ -6,7 +6,6 @@ WSO2 Web Services Framework/C - Install Guide
 1.1. Mandatory
 
     * Libxml2 - http://www.xmlsoft.org/
-    *
     * libiconv - http://www.gnu.org/software/libiconv/
     * zlib - http://www.zlib.net/
 
