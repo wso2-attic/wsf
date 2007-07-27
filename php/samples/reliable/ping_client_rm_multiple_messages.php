@@ -25,7 +25,7 @@ try {
 
     $msg = new WSMessage($reqPayloadString,
 			array(
-			   "to"=>"http://localhost:8080/samples/reliable/ping_service_rm.php",
+			   "to"=>"http://localhost/samples/reliable/ping_service_rm.php",
                      "action" => "http://php.axis2.org/samples/echoString"));
 
     $client = new WSClient(array("reliable"=>TRUE,"useWSA" => TRUE, "willContinueSequence"=>TRUE));
@@ -34,7 +34,7 @@ try {
 
     $msg1 = new WSMessage($reqPayloadString,
 			array(
-			   "to"=>"http://localhost:8080/samples/reliable/ping_service_rm.php",
+			   "to"=>"http://localhost/samples/reliable/ping_service_rm.php",
                      "action" => "http://php.axis2.org/samples/echoString"));
 
     $client->send($msg1);
@@ -42,7 +42,7 @@ try {
 
     $msg2 = new WSMessage($reqPayloadString,
 		array(
-		   "to"=>"http://localhost:8080/samples/reliable/ping_service_rm.php",
+		   "to"=>"http://localhost/samples/reliable/ping_service_rm.php",
                "action" => "http://php.axis2.org/samples/echoString",
                "lastMessage"=>TRUE));
     
