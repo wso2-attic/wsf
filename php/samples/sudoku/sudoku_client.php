@@ -21,7 +21,7 @@ if (!isset($_SESSION['message'])) {
 
 <html>
 	<head>
-		<title>WSF/PHP MTOM RM ADDRESSING</title>
+		<title>WSF/PHP MTOM ADDRESSING</title>
 	</head>
 	<body>
 	<form method="post" action="<?php echo $PHP_SELF;?>">
