@@ -216,7 +216,7 @@ class WS_WSDL_Creator
 
 
         $type_obj = new WS_WSDL_Type($this->namespace, $createdTypeArry,
-                                    $xsdArry);
+                                    $xsdArry, $this->ops_to_functions);
         $type_obj->createWsdl2Type($wsdl_dom, $wsdl_root_ele);
 
         $interface_obj = new WS_WSDL_Interface($this->service_name,
@@ -224,7 +224,7 @@ class WS_WSDL_Creator
         $interface_obj->createInterface($wsdl_dom, $wsdl_root_ele);
 
         $bind_obj = new WS_WSDL_Binding($this->service_name,
-                                       $this->endpoint);
+                                       $this->endpoint,NULL, $this->ops_to_functions);
         $bind_obj->createWsdl2Binding($wsdl_dom, $wsdl_root_ele);
 
         $svr_obj = new WS_WSDL_Service($this->service_name,

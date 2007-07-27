@@ -31,7 +31,7 @@ function purchaseOrder($x,$y)
 
 
 $operations = array("function1"=>"purchaseOrder");
-$svr = new WSService(array("operations"=>$operations, "bindingStyle"=>"doc-lit"));
+$svr = new WSService(array("operations"=>$operations, "bindingStyle"=>"doclit"));
 
 
 $svr->reply();
