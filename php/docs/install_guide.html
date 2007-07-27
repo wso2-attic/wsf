@@ -108,6 +108,8 @@ href=http://localhost/echo_client.php>http://localhost/echo_client.php</h></p>
   <li><i>Note that WSO2 WSF/C will be installed to a folder named "wsf_c" in
     the prefix folder.<br />
     <b>[wsf] wsf.home="path to your wsf_c installation directory"</b><br />
+    <b>
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;wsf.log_level=3</b><br />
     </i></li>
 </ul>
 <a id="2.Installing and Running on Microsoft Windows (win32)"></a>
@@ -163,7 +165,7 @@ extract directory. This will build the binary distribution.</p>
 <p>1. Before trying this, please refer to the README.WIN32-BUILD-SYSTEM file
 in the PHP source distribution, and build the PHP source under MS Windows.</p>
 
-<p>2. Copy wsf_php folder to php_source/ext directory.</p>
+<p>2. Copy wsf_php folder to php_source/ext directory.</p>
 
 <p>3. Run buildconf.bat file to rebuild the configure.js file.</p>
 
@@ -173,14 +175,14 @@ options. You will find the option --with-wsf.<br />
 
 <p>5. Add the following entries to config.nice.bat file.</p>
 
-<p>        "--with-extra-includes=&lt;Libxml2 bin dir&gt;\include;&lt;iconv
+<p>        &nbsp; &nbsp; &nbsp; &nbsp; "--with-extra-includes=&lt;Libxml2 bin dir&gt;\include;&lt;iconv
 bin directory&gt;\include;&lt;zlib bin dir&gt;\include;&lt;wsf-c
 dir&gt;\include" </p>
 
-<p>        "-- with-extra-libs=&lt;Libxml2 bin dir&gt;\lib;&lt;iconv bin
+<p>        &nbsp; &nbsp; &nbsp; &nbsp; "-- with-extra-libs=&lt;Libxml2 bin dir&gt;\lib;&lt;iconv bin
 dir&gt;\lib;&lt;zlib bin dir&gt;\lib;&lt;wsf-c dir&gt;\lib"</p>
 
-<p>        "--with-wsf=shared"</p>
+<p>        &nbsp; &nbsp; &nbsp; &nbsp; "--with-wsf=shared"</p>
 
 <p>6. Run the above config.nice.bat file to configure the wsf extension as a
 dll.</p>
@@ -213,7 +215,7 @@ installation location.<br />
 <pre>       [wsf]
        wsf.home="<path_to_extract_folder>\wsf_c"
        wsf.log_path="<path_to_extract_folder>\wsf_c\logs"
-
+       wsf.log_level=3
        extension=wsf.dll</path_to_extract_folder></path_to_extract_folder></pre>
 
 <p>6. Create an environment variable PHPRC to point to your php.ini file
