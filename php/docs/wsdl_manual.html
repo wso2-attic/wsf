@@ -2,84 +2,88 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head><meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>WS02 WSF WSDL MODE MANUAL</title>
-  <link href="style/api_style.css" rel="stylesheet" type="text/css" media="all" />
-    <link href="style/api_style.css" media="all" rel="stylesheet" type="text/css" />
+  <link href="style/api_style.css" rel="stylesheet" type="text/css"
+  media="all" />
+  <link href="style/api_style.css" media="all" rel="stylesheet"
+  type="text/css" />
 </head>
 
-<body>
-    <h1>10. Using WSDL</h1>
-    <p>
-        In WSDL mode, by providing a WSDL file, you can invoke a service or provide a service, without
-        having to contruct the payload manually. Few simple steps are required to configure either 
-        the client or the service to use WSDL mode.</p>
+<body xml:lang="en" lang="en">
+<h1>10. Using WSDL</h1>
 
-    <h2 id="1">10.1. Writing a Simple Client to use WSDL Mode</h2>
-    <p>
-        The sample.wsdl WSDL file provided in the samples\wsdl_mode folder will be used for 
-        the samples in this manual. Please have a look at the samples\wsdl_mode\sample.wsdl.
-    </p>
-    <p>
-        <strong id="2">First obtain a WSClientProxy object from WSClient as follows:</strong></p>
-    <pre>
-        $client = new WSClient(array("<span style="color: #ff3333">wsdl</span>"=&gt;"<span style="color: #ff3333">sample.wsdl</span>"));
+<p>In the WSDL mode, by providing a WSDL file, you can invoke a service or
+provide a service, without having to construct the payload manually. Few
+simple steps are required to configure either the client or the service to
+use the WSDL mode.</p>
+
+<h2 id="1">10.1. Writing a Simple Client to Use the WSDL Mode</h2>
+
+<p>The sample.wsdl WSDL file provided in the samples\wsdl_mode folder will be
+used for the samples in this manual. Please have a look at the
+samples\wsdl_mode\sample.wsdl.</p>
+
+<p><strong id="2">First obtain a WSClientProxy object from the WSClient as
+follows:</strong></p>
+<pre>        $client = new WSClient(array("<span style="color: #ff3333">wsdl</span>"=&gt;"<span style="color: #ff3333">sample.wsdl</span>"));
         $proxy = $client-&gt;getProxy();
     </pre>
-    <p>
-        Now you can call any operation defined in sample.wsdl WSDL directory on the WSClientProxy
-        object.
-        For examle invoke the echoString operation defined in sample.wsdl,
-        as follows.</p>
-    <pre>
-        $value = $proxy-&gt;echoString("Hello");
+
+<p>Now you can call any operation defined in the sample.wsdl WSDL directory
+on the WSClientProxy object. For example,nvoke the echoString operation
+defined in sample.wsdl, as follows. invoke the echoString operation defined
+in sample.wsdl, as follows.</p>
+<pre>        $value = $proxy-&gt;echoString("Hello");
     </pre>
-    <p>
-        This call will construct the SOAP envelope with required payload and send it to the
-        service endpoint specified in the WSDL.</p>
-   
-        <h3 id="2">10.2. Writing a Simple Service to use WSDL Mode</h3>
-    <p>
-        We will implement a service to accept the request sent by the above client.</p>
-    <p>
-        First write a function correspoding to echoString operation defined in the WSDL.</p>
-    <pre>
-        function echoFunction($value){
+
+<p>This call will construct the SOAP envelope with the required payload and
+send it to the service endpoint specified in the WSDL.</p>
+
+<h3 id="2">10.2. Writing a Simple Service to Use the WSDL Mode</h3>
+
+<p>We will implement a service to accept the request sent by the above
+client.</p>
+
+<p>First write a function corresponding to the echoString operation defined
+in the WSDL.</p>
+<pre>        function echoFunction($value){
             return $value;
         }
     </pre>
-    <p>
-        Now we can map this function to echoString operation as follows. </p>
-    <pre>
-        $operations = array("<span style="color: #ff3333">echoString</span>"=&gt;"<span style="color: #ff3333">echoFunction</span>");
+
+<p>Now we can map this function to the echoString operation as follows.</p>
+<pre>        $operations = array("<span style="color: #ff3333">echoString</span>"=&gt;"<span style="color: #ff3333">echoFunction</span>");
         $opparams = array("<span style="color: #ff3333">echoFunction</span>"=&gt;"<span style="color: #ff3333">MIXED</span>");
     </pre>
-    <p>
-        Here we are specifing to the service that echoFunction is not a function that
-        accepts a WSMessage instance as the sole argument, but a function with mixed arguments.</p>
-    <pre>
-        $service = new WSService(array("<span style="color: #ff3333">wsdl</span>"=&gt;"<span style="color: #ff3333">sample.wsdl</span>", 
+
+<p>Here we are indicating to the service that the echoFunction is not a
+function that accepts a WSMessage instance as the sole argument, but a
+function with mixed arguments.</p>
+<pre>        $service = new WSService(array("<span style="color: #ff3333">wsdl</span>"=&gt;"<span style="color: #ff3333">sample.wsdl</span>", 
             "<span style="color: #ff3333">operations</span>"=&gt;$operations,
             "<span style="color: #ff3333">opParams</span>"=&gt;$opparams));
 
         $service-&gt;reply();
     </pre>
 
-    <h3 id="3">10.3. WSDL Generation for a Given Service</h3>
+<h3 id="3">10.3. WSDL Generation for a Given Service</h3>
 
-    <p>WSDL Generation in WSO2 WSF/PHP is done using PHP reflection and an
-    annotation parser. In order to generate a WSDL from a given WSO2 WSF/PHP
-    service, a '?wsdl' request or a '?wsdl2' request should be sent to the server. 
-    '?wsdl' serves WSDL version 1.1, and '?wsdl2' serves WSDL version 2.0.
-    For example, if you
-    want to generate the WSDL for the service echoService.php, a request should
-    be sent as,</p>
+<p>WSDL Generation in WSO2 WSF/PHP is done using PHP reflection and an
+annotation parser. In order to generate a WSDL from a given WSO2 WSF/PHP
+service, a '?wsdl' request or a '?wsdl2' request should be sent to the
+server. '?wsdl' serves WSDL version 1.1, and '?wsdl2' serves WSDL version
+2.0. For example, if you want to generate the WSDL for the service
+echoService.php, a request should be sent as,</p>
 
-    <p>http://localhost/echoService.php?wsdl</p>
-    <p> or </p>
-    <p>http://localhost/echoService.php?wsdl2</p>
-    
-    <p>For more information on the annotation syntax, please have a look at the
-    <a href="wsdl_generation_api.html">WSDL generation API document</a>. </p>
+<p>http://localhost/echoService.php?wsdl</p>
+
+<p>or</p>
+
+<p>http://localhost/echoService.php?wsdl2</p>
+
+<p>For more information on the annotation syntax, please have a look at the
+<a href="wsdl_generation_api.html">WSDL generation API document</a>.</p>
 </body>
 </html>
