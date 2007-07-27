@@ -242,20 +242,20 @@ get.</p>
 name="5.2.">5.2. Hello Client</a></h2>
 
 <p>Now that you know how to write a service with WSO2 WSF/PHP , let's see how
-you could write a client to consume that service. The request payload that
-the client would be sending to the service was described in the previous
-section. The client has to prepare the payload, send a request to the service
-and then receive and process the response.</p>
+you can write a client to consume that service. The request payload that the
+client will be sending to the service was described in the previous section.
+The client has to prepare the payload, send a request to the service and then
+receive and process the response.</p>
 
 <p>The steps to be followed when implementing a client with WSO2 WSF/PHP
 include:</p>
 <ol>
-  <li><b>Create a WSMessage instance with desired request payload and
+  <li><b>Create a WSMessage instance with the desired request payload and
     options.</b> <br>
-    WSMessage constructor takes an array of options that helps to fine tune
-    the request message sent from the client. As a minimum, you have to set
-    the "to" option, indicating the endpoint reference of the service to be
-    consumed.<br>
+    The WSMessage constructor takes an array of options that help to fine
+    tune the request message sent from the client. As a minimum, you have to
+    set the "to" option, indicating the endpoint reference of the service to
+    be consumed.<br>
   </li>
   <li><b>Create a WSClient instance</b><br>
     You can use the WSClient instance to consume the service.</li>
@@ -269,11 +269,11 @@ include:</p>
     Process the response in line with the client business logic.</li>
 </ol>
 
-<h3><a name="5.2.1.">5.2.1. Preparing Request Message</a></h3>
+<h3><a name="5.2.1.">5.2.1. Preparing the Request Message</a></h3>
 <pre>        <span style="color: rgb(0, 0, 255);">$message</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSMessage<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$requestPayloadString</span>, 
                 <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"to"</span> =&gt; <span style="color: rgb(255, 0, 0);">"http://localhost/hello_service.php"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
 
-<p>In the above code fragment, a WSMessage instance is created with payload
+<p>In the above code fragment, a WSMessage instance is created with a payload
 to be sent in the request and the service endpoint. The "to" element of the
 options array is mapped to the address of the location of the service. In
 other words, the "to" address indicates where the request should be sent
@@ -281,7 +281,8 @@ to.</p>
 <br>
 
 
-<h3><a name="5.2.2.">5.2.2. Sending Request and Receiving Response</a></h3>
+<h3><a name="5.2.2.">5.2.2. Sending a Request and Receiving a
+Response</a></h3>
 <pre>        <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(102, 204, 102);">)</span>;
         
         <span style="color: rgb(0, 0, 255);">$response</span> = <span style="color: rgb(0, 0, 255);">$client</span>-&gt;<span style="color: rgb(0, 102, 0);">request</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$message</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
@@ -295,7 +296,7 @@ payload.</p>
 
 <pre>        <a href="http://www.php.net/echo"><span style="color: rgb(0, 0, 102);">echo</span></a> <span style="color: rgb(0, 0, 255);">$response</span>-&gt;<span style="color: rgb(0, 102, 0);">str</span>;</pre>
 
-<p>In our client sample we access the response payload as a string from the
+<p>In our client sample, we access the response payload as a string from the
 returned message instance and echo it.</p>
 
 <h3><a name="5.2.3.">5.2.3. Full Source</a></h3>
@@ -307,7 +308,7 @@ href="samples/hello_client.html">hello_client.html</a></p>
 
 <h3><a name="5.2.4.">5.2.4. Running the Client</a></h3>
 
-<p>To run the client, copy the client php script to the Web root of your Web
+<p>To run the client, copy the client PHP script to the Web root of your Web
 server, as done for the service script, and access the client from the Web
 browser.</p>
 
@@ -316,7 +317,7 @@ browser.</p>
 <p>For consuming Web services with WSO2 WSF/PHP, using the XML in/out model,
 you need to first find out the request payload format and the response
 payload format. You also need to know the service endpoint URI.<br>
-Once those information is available, you can construct a WSMessage instance
+Once this information is available, you can construct a WSMessage instance
 with the payload and service endpoint URI information. These are the minimum
 requirements for consuming a Web Service. These basics were explained in the
 quick start guide. <br>
@@ -349,17 +350,18 @@ of them.</p>
         <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"useSOAP"</span> =&gt; <span style="color: rgb(204, 102, 204);">1.1</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
         <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"useSOAP"</span> =&gt; <span style="color: rgb(255, 0, 0);">"1.1"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
 
-<p>There is another option named "HTTPMethod", that you could use to specify
+<p>There is another option named "HTTPMethod", that you can use to specify
 the HTTP method to be used. When SOAP is in use, the default HTTP method used
-would be "POST" all the time. If you specify "GET" when SOAP is in use, then
-no request would be sent, because WSO2 WSF/PHP does not support SOAP with
-HTTP GET.</p>
+will be "POST" all the time. If you specify "GET" when SOAP is in use, then
+no request will be sent, because WSO2 WSF/PHP does not support SOAP with HTTP
+GET.</p>
 
 <h3><a name="6.2.">6.2. Using REST</a></h3>
 
 <p>If you want to consume Web services using REST style calls, that can be
-done by setting the "useSOAP" option to false. In case of REST style of
-invocation, you can use either HTTP POST method or HTTP GET method. <br>
+done by setting the "useSOAP" option to False. In case of REST style of
+invocation, you can use either the HTTP POST method or the HTTP GET method.
+<br>
 </p>
 
 <p>The following example shows how to enable a REST style invocation using
@@ -377,13 +379,13 @@ different HTTP methods.</p>
 
 <h3><a name="6.3.">6.3. Payload Formats</a></h3>
 
-<p>When invoking Web services, WSO2 WSF/PHP extension allows you to provide
-the message payload either directly as an XML string or as a WSMessage
-instance with the XML string stored inside it. In the future, you would be
-able to pass the payload in SimpleXMLElement and domDocument formats to the
-send() and request() methods of WSClient class. If you want to use those
-formats of XML as payload with this current release, you have to use the
-functions ws_request() and ws_send().</p>
+<p>When invoking Web services, the WSO2 WSF/PHP extension allows you to
+provide the message payload either directly as an XML string or as a
+WSMessage instance with the XML string stored inside it. In the future, you
+will be able to pass the payload in SimpleXMLElement and domDocument formats
+to the send() and request() methods of WSClient class. If you want to use
+these formats of XML as payload with this current release, you have to use
+the functions ws_request() and ws_send().</p>
 
 <p>Using a string as the request payload:</p>
 <pre><span style="color: rgb(0, 0, 255);">$reqPayloadString</span> = &lt;&lt;&lt;XML
@@ -413,9 +415,9 @@ XML;
                                 
     <span style="color: rgb(0, 0, 255);">$resMessage</span> = <span style="color: rgb(0, 0, 255);">$client</span>-&gt;<span style="color: rgb(0, 102, 0);">request</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$reqMessage</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
 
-<p>WSO2 WSF/PHP extension only supports the XML in/out model for consuming
-services currently. Data binding for PHP would be supported in a future
-release. <br>
+<p>The WSO2 WSF/PHP extension only supports the XML in/out model for
+consuming services currently. Data binding for PHP will be supported in a
+future release. <br>
 </p>
 
 <h3><a name="6.4.">6.4. Attachments with MTOM/XOP</a></h3>
@@ -458,12 +460,12 @@ as was given in the 'Include' element's 'href' attribute in the payload. In
 this sample, we use 'myid1' as the ID.</p>
 
 <p>When sending attachments, you can configure the client either to send the
-attachment in the optimized format or in non optimized format. If the
-attachment is sent in binary optimized format, the file content would be sent
+attachment in the optimized format or in non-optimized format. If the
+attachment is sent in binary optimized format, the file content will be sent
 as it is, out of the SOAP body, using MIME headers and the payload would have
 an XOP:Include element, referring to the MIME part that contains the binary
 attachment.<br>
-In case of binary non optimized format, the attachment content would be sent
+In case of binary non-optimized format, the attachment content will be sent
 in the payload itself, as a base64 encoded string.</p>
 <pre>        <span style="color: rgb(128, 128, 128); font-style: italic;">// send attachments binary optimized</span>
         <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"useMTOM"</span> =&gt; <span style="color: rgb(0, 0, 0); font-weight: bold;">TRUE</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
@@ -481,10 +483,10 @@ use both WS-Addressing <a href="http://www.w3.org/TR/ws-addr-core/">version
 1.0</a> as well as the <a
 href="http://www.w3.org/Submission/ws-addressing/">submission version</a>.</p>
 
-<p>There are two basic requirements for using WS-Addressing on client side
-with WSO2 WSF/PHP. One is that you have to provide a WS-Addressing action at
-message level. The other is that you have to enable the use of WS-Addressing
-at client level.</p>
+<p>There are two basic requirements for using WS-Addressing on the client
+side with WSO2 WSF/PHP. One is that you have to provide a WS-Addressing
+action at message level. The other is that you have to enable the use of
+WS-Addressing at client level.</p>
 <pre> 
     <span style="color: rgb(0, 0, 255);">$reqMessage</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSMessage<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$reqPayloadString</span>,
         <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"to"</span>=&gt;<span style="color: rgb(255, 0, 0);">"http://localhost/echo_service_addr.php"</span>,
@@ -494,7 +496,7 @@ at client level.</p>
 
 <p>In the above shown sample code fragment, the WS-Addressing action is set
 using the "action" array element of the options array passed to the WSMessage
-constructor. WS-Addressing is enabled with the "useWSA" option passed to
+constructor. WS-Addressing is enabled with the "useWSA" option passed to the
 WSClient constructor.</p>
 
 <p>You can choose to use different addressing versions as shown below. You
@@ -508,9 +510,9 @@ have to use one of the possible options shown below.</p>
     <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"useWSA"</span> =&gt; <span style="color: rgb(255, 0, 0);">"submission"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
 
 <p>In addition to the action, there are other WS-Addressing related SOAP
-headers that could be sent in a message. WSO2 WSF/PHP has support to set
-those headers as properties at the message level or as options at the client
-level. An example is shown below.</p>
+headers that can be sent in a message. WSO2 WSF/PHP supports to set those
+headers as properties at the message level or as options at the client level.
+An example is shown below.</p>
 <pre>    <span style="color: rgb(0, 0, 255);">$reqMessage</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSMessage<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$reqPayloadString</span>,
         <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"to"</span> =&gt; <span style="color: rgb(255, 0, 0);">"http://www.company_foo.com/order_processing.php"</span>,
               <span style="color: rgb(255, 0, 0);">"action"</span> =&gt; <span style="color: rgb(255, 0, 0);">"http://php.wsf.wso2.net/samples/order"</span>,
