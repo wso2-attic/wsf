@@ -541,13 +541,13 @@ password.</p>
     $security_obj</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSSecurityToken<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 102);">array</span><span style="color: rgb(102, 204, 102);">(</span>
               <span style="color: rgb(255, 0, 0);">"user"</span> =&gt; <span style="color: rgb(255, 0, 0);">"john"</span>,
               <span style="color: rgb(255, 0, 0);">"password"</span> =&gt; <span style="color: rgb(255, 0, 0);">"fred"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
-Or else user can use the password call back mechanism by using a callback
+Or else, you can use the password call back mechanism by using a callback
 function. <br>
 <br>
 <span style="color: #0000ff">  function
 <em>passwordFunction</em>($username)<br>
 {<br>
-/** some  mechanism to retrive the password */<br>
+/** some  mechanism to retrieve the password */<br>
 <br>
 }</span><br>
 <br>
@@ -565,7 +565,7 @@ style="color: rgb(255, 0, 0);">"passwordFunction"</span><span
 style="color: rgb(102, 204, 102);">)</span><span
 style="color: rgb(102, 204, 102);">)</span>;<br>
 <br>
-If user wants timetoLive and timestamp , those options also can be
+If you want the timetoLive and timestamp , those options also can be
 specified.<br>
 <span style="color: rgb(0, 0, 255);">     $policy_obj</span> =<span
 style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSPolicy<span
@@ -600,9 +600,9 @@ style="color: #ff0000">"ttl"</span><span style="color: #111111"> =&gt;
 adheres to the out-in message exchange patterns. That means, when the client
 sends a request, it expects a response back.<br>
 Out-only message exchange pattern is another popular pattern when consuming
-services. In out-only model, client sends a request but does not expect a
-response back. The send() method of WSClient supports this message exchange
-pattern.</p>
+services. In the out-only model, the client sends a request but does not
+expect a response back. The send() method of WSClient supports this message
+exchange pattern.</p>
 <pre>    <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span>
         <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"to"</span>=&gt;<span style="color: rgb(255, 0, 0);">"http://localhost/notify_service.php"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
                                 
@@ -611,24 +611,24 @@ pattern.</p>
     <a href="http://www.php.net/printf"><span style="color: rgb(0, 0, 102);">printf</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"Request sent<span style="color: rgb(0, 0, 153); font-weight: bold;">\n</span>"</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
 
 <p>In the above sample, the notify service accepts the payload sent by the
-client and consumes it, and would not send any response. The return type of
+client and consumes it, and will not send any response. The return type of
 send() is void. In case of errors, it would throw a fault.</p>
 
-<h3><a name="6.8.">6.8. Consuming Web Services using Function API</a></h3>
+<h3><a name="6.8.">6.8. Consuming Web Services Using Function API</a></h3>
 
 <p>WSO2 WSF/PHP provides a function based API, in addition to the object
 oriented API that you have already seen, to provide and consume services.
-There are two functions that you can use on client side, ws_request() and
+There are two functions that you can use on the client side, ws_request() and
 ws_send().</p>
 
 <p>In order to use these functions, you have to copy the wsf.php file that is
-located in the scripts sub folder of the distribution, to your Web server's
-document root. Once that is done you have to include that script in your
+located in the scripts sub folder of the distribution to your Web server's
+document root. Once that is done, you have to include that script in your
 source, before using the API.</p>
 <pre><span style="color: rgb(177, 177, 0);">include_once</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">'./wsf.php'</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
 
 <p>Once that file is included, you are ready to use the functions.<br>
-The following code fragment shows how a two way client invocation could be
+The following code fragment shows how a two way client invocation can be
 done, sending a request and receiving a response.</p>
 <pre><span style="color: rgb(0, 0, 255);">$reqPayloadString</span> = &lt;&lt;&lt;XML
     &lt;ns1:echoString xmlns:ns1=<span style="color: rgb(255, 0, 0);">"http://php.wsf.wso2.net/samples"</span>&gt;
@@ -654,7 +654,7 @@ the string payload, similar to the way it was done in object oriented code.
     <a href="http://www.php.net/printf"><span style="color: rgb(0, 0, 102);">printf</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"Response = %s &lt;br&gt;"</span>, <a href="http://www.php.net/htmlspecialchars"><span style="color: rgb(0, 0, 102);">htmlspecialchars</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$resMessage</span>-&gt;<span style="color: rgb(0, 102, 0);">str</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
 
 <p><br>
-The following code fragment shows how a one way client invocation could be
+The following code fragment shows how a one way client invocation can be
 done, just sending a request without expecting a response.</p>
 <pre><span style="color: rgb(0, 0, 255);">$reqPayloadString</span> = &lt;&lt;&lt;XML
         &lt;ns1:notifyString xmlns:ns1=<span style="color: rgb(255, 0, 0);">"http://php.wsf.wso2.net/samples"</span>&gt;
@@ -696,12 +696,12 @@ is as follows.</p>
 <span style="color: rgb(102, 204, 102);">}</span></pre>
 
 <p>In the above sample, we just access the payload string in the incoming
-message and place it in the return message and return it. If you want to do
+message and place it in the return message, and return it. If you want to do
 further processing of the incoming payload, you could do that by processing
 the str member of the incoming message.</p>
 
 <p>Once the functions taking care of the business logic processing are
-implemented, those need to be mapped to the operations of the service. There
+implemented, they need to be mapped to the operations of the service. There
 are multiple ways of specifying this mapping.<br>
 The simplest form is to use the "operations" option and just give the
 function name. You have to keep in mind that if you give only the function
@@ -711,7 +711,7 @@ function name. <br>
 <pre><span style="color: rgb(0, 0, 255);">$server</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSService<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"operations"</span> =&gt; <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"echoFunction"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
 
 <p>The importance of the operation name is that, in case WS-Addressing is not
-in use, the Web services engine would resolve the operation to be invoked by
+in use, the Web services engine will resolve the operation to be invoked by
 looking at the local name of the first child element of the request payload.
 So, for the above service to respond to a request, the request payload's root
 element must be "echoFunction".</p>
@@ -721,7 +721,7 @@ element must be "echoFunction".</p>
     &lt;/ns1:echoFunction&gt;
 XML;</pre>
 
-<p>However, if you want the payload look different, you can do so by
+<p>However, if you want the payload to look different, you can do so by
 specifying the operation name.</p>
 <pre><span style="color: rgb(0, 0, 255);">$server</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSService<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"operations"</span> =&gt; <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"echoString"</span> =&gt; <span style="color: rgb(255, 0, 0);">"echoFunction"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
 
@@ -733,47 +733,48 @@ function.</p>
     &lt;/ns1:echoString&gt;
 XML;</pre>
 
-<p>It is also possible to add an operation using "actions" option as shown
-below, by using just the function name. However, "actions" option is really
-meant to be used for mapping WS-Addressing actions to operations. Hence, it
-is recommended not to use this approach.</p>
+<p>It is also possible to add an operation using the "actions" option as
+shown below, by using just the function name. However, the "actions" option
+is really meant to be used for mapping WS-Addressing actions to operations.
+Hence, it is recommended not to use this approach.</p>
 <pre><span style="color: rgb(0, 0, 255);">$server</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSService<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"actions"</span> =&gt; <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"echoFunction"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
 
 <p><br>
 In the context of WSO2 WSF/PHP, a single PHP script with WSService processing
-logic would be treated as a single service. Therefore in a service PHP
-script, there has to be only one call to the reply() method on top of a
-WSService instance. The reply() method triggers the service to start
-processing the request and prepare the response.</p>
+logic will be treated as a single service. Therefore in a service PHP script,
+there has to be only one call to the reply() method on top of a WSService
+instance. The reply() method triggers the service to start processing the
+request and prepare the response.</p>
 <pre><span style="color: rgb(128, 128, 128); font-style: italic;">// create service object instance</span>
 <span style="color: rgb(0, 0, 255);">$server</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSService<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"operations"</span> =&gt; <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"echoString"</span> =&gt; <span style="color: rgb(255, 0, 0);">"echoFunction"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
 <span style="color: rgb(128, 128, 128); font-style: italic;">// trigger request processing, call necessary methods and send a response back</span>
 <span style="color: rgb(0, 0, 255);">$server</span>-&gt;<span style="color: rgb(0, 102, 0);">reply</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
 
 <p><br>
-As a given PHP script would be bound to a single URL, when hosted with a Web
-server, that associated URL would naturally become the service endpoint of
+As a given PHP script will be bound to a single URL, when hosted with a Web
+server, that associated URL will naturally become the service endpoint of
 that PHP script implementing the service logic.</p>
 
-<p>As in the case of client side, WSO2 WSF/PHP extension supports more than
-just SOAP on server side as well. You can use WS-Addressing, XOP/MTOM and
-WS-Security UsernameToken when providing and consuming Web services.</p>
+<p>As in the case of the client side, the WSO2 WSF/PHP extension supports
+more than just SOAP on the server side as well. You can use WS-Addressing,
+XOP/MTOM and WS-Security UsernameToken when providing and consuming Web
+services.</p>
 
-<p>The following sections explains how you can achieve more with the options
+<p>The following sections explain how you can achieve more with the options
 available for WSService.</p>
 
 <h3><a name="7.1.">7.1. Using SOAP</a></h3>
 
 <p>On the server side, you do not have to specify any options to use SOAP,
-rather based on the version of SOAP used in the client request, service would
-reply with the correct SOAP version. Hence when writing service PHP scripts,
-you do not have to bother about the SOAP version. <br>
+rather based on the version of SOAP used in the client request, the service
+will reply with the correct SOAP version. Hence when writing service PHP
+scripts, you do not have to bother about the SOAP version. <br>
 </p>
 
 <h3><a name="7.2.">7.2. Using REST</a></h3>
 
-<p>There is no REST support in the current version of WSO2 WSF, however, it
-this support would be available in a future release.</p>
+<p>There is no REST support in the current version of WSO2 WSF, however, this
+support will be available in a future release.</p>
 
 <h3><a name="7.3.">7.3. Payload Formats</a></h3>
 
@@ -787,11 +788,11 @@ supported by the WSMessage class.</p>
 
 <h3><a name="7.4.">7.4. Attachments with MTOM/XOP</a></h3>
 
-<p>When sending attachments, as in the case of client side, you have to use a
-WSMessage instance to represent payload, and give the binary data as an array
-in the operation implementation function. When receiving attachments, you can
-get the attachments received in the attachments array of the WSMessage
-instance passed to the operation implementation function.</p>
+<p>When sending attachments, as in the case of the client side, you have to
+use a WSMessage instance to represent payload, and give the binary data as an
+array in the operation implementation function. When receiving attachments,
+you can get the attachments received in the attachments array of the
+WSMessage instance passed to the operation implementation function.</p>
 
 <p><br>
 For sending an attachment, you need to specify the element where the
@@ -823,13 +824,13 @@ message. In the attachments associative array, you have to give the same ID
 as was given in the 'Include' element's 'href' attribute in the payload. In
 this sample, we use 'myid1' as the ID.</p>
 
-<p>When sending attachments, you can configure the client either to send the
-attachment in optimized format or in non optimized format. If the attachment
+<p>When sending attachments, you can configure the client to either send the
+attachment in optimized format or in non-optimized format. If the attachment
 is sent in binary optimized format, the file content would be sent as it is,
 out of the SOAP body, using MIME headers and the payload would have an
 XOP:Include element, referring to the MIME part that contains the binary
 attachment.<br>
-In case of binary non optimized format, the attachment content would be sent
+In case of binary non-optimized format, the attachment content will be sent
 in the payload itself, as a base64 encoded string.</p>
 <pre> 
 <span style="color: rgb(128, 128, 128); font-style: italic;">// send attachments binary optimized</span>
@@ -869,46 +870,46 @@ XML;
 <span style="color: rgb(102, 204, 102);">}</span></pre>
 
 <p>In the above sample, the function responsible for processing the
-attachments goes through the attachments array and save each attachment, if
+attachments goes through the attachments array and saves each attachment if
 it is a JPEG file. Once saved, it responds to the invoking client with the
 response payload.</p>
 
 <h3><a name="7.5.">7.5. Using WS-Addressing</a></h3>
 
 <p>Unlike on the client side, there is no need to enable WS-Addressing
-explicitly on server side. If the client request uses WS-Addressing, then the
-server side would respond with WS-Addressing. However, in order to make
-WS-Addressing meaningful, one has to specify the WS-Addressing action mapping
-for operations when constructing the service.</p>
+explicitly on the server side. If the client request uses WS-Addressing, then
+the server side would respond with WS-Addressing. However, in order to make
+WS-Addressing meaningful, you have to specify the WS-Addressing action
+mapping for operations when constructing the service.</p>
 <pre><span style="color: rgb(0, 0, 255);">$operations</span> = <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"echoString"</span> =&gt; <span style="color: rgb(255, 0, 0);">"echoFunction"</span><span style="color: rgb(102, 204, 102);">)</span>;
 <span style="color: rgb(0, 0, 255);">$actions</span> = <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"http://php.wsf.wso2.net/samples/echoString"</span> =&gt; <span style="color: rgb(255, 0, 0);">"echoString"</span><span style="color: rgb(102, 204, 102);">)</span>;
  
 <span style="color: rgb(0, 0, 255);">$server</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSService<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"operations"</span> =&gt; <span style="color: rgb(0, 0, 255);">$operations</span>, 
                               <span style="color: rgb(255, 0, 0);">"actions"</span> =&gt; <span style="color: rgb(0, 0, 255);">$actions</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
 
-<p>In the above shown sample code fragment, the WS-Addressing action mapping
-is set for the echoString operation using the "actions" array. Note that it
-is not to the function name, but to the operation name that the WS-Addressing
-action is mapped.</p>
+<p>In the above sample code fragment, the WS-Addressing action mapping is set
+for the echoString operation using the "actions" array. Note that it is not
+to the function name, but to the operation name that the WS-Addressing action
+is mapped.</p>
 
-<p>The client requests could be using different WS-Addressing versions. The
-service reply would use the correct WS-Addressing version, based on the
+<p>The client requests may be using different WS-Addressing versions. The
+service reply will use the correct WS-Addressing version, based on the
 version used by the client. You do not have to explicitly specify the
 WS-Addressing version in the service script.</p>
 
 <p>In addition to the action, the other WS-Addressing related SOAP headers
 that could be received in a message would be dealt with appropriately by the
-underlying Web services engine. As an example, if there is a replyTo set in
-the incoming message, the reply would be sent to the specified replyTo
+underlying Web services engine. For example, if there is a replyTo set in the
+incoming message, the reply would be sent to the specified replyTo
 endpoint.</p>
 
 <h3><a name="7.6.">7.6. One-Way Operations</a></h3>
 
-<p>You can make your service operations adhere to either in-out message
-exchange pattern or in-only message exchange pattern. If a function mapped to
-an operation returns a WSMessage instance, then that operation is treated as
-an in-out operation. If a function mapped to an operation returns void, then
-that operation is treated as an in-only operation.<br>
+<p>You can make your service operations adhere to either the in-out message
+exchange pattern or the in-only message exchange pattern. If a function
+mapped to an operation returns a WSMessage instance, then that operation is
+treated as an in-out operation. If a function mapped to an operation returns
+void, then that operation is treated as an in-only operation.<br>
 We have seen functions adhering to in-out message exchange pattern in samples
 given in the above sections including the quick start guide. The following is
 a sample of an in-only operation. .</p>
@@ -920,21 +921,21 @@ a sample of an in-only operation. .</p>
 <span style="color: rgb(102, 204, 102);">}</span></pre>
 
 <p>In the above sample, the notify function accepts the payload sent by the
-client and consumes it, and would not send any response.</p>
+client and consumes it, and does not send any response.</p>
 
-<h3><a name="7.7.">7.7. Providing Web Services using Function API</a></h3>
+<h3><a name="7.7.">7.7. Providing Web Services Using Function API</a></h3>
 
-<p>The function based API has a function, namely ws_reply() that you can use
-on a service script to reply to client requests.</p>
+<p>The function based API has a function, ws_reply() that you can use on a
+service script to reply to client requests.</p>
 
 <p>In order to use the function, you have to copy the wsf.php file that is
 located in the scripts sub folder of the distribution to your Web server's
-document root. Once that is done you have to include that script in your
+document root. Once that is done, you have to include that script in your
 source, before using the API.</p>
 <pre><span style="color: rgb(177, 177, 0);">include_once</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">'./wsf.php'</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
 
 <p>Once that file is included, you are ready to use the reply function.<br>
-The following code fragment shows how you could specify the operation mapping
+The following code fragment shows how you can specify the operation mapping
 to use the function.</p>
 <pre>ws_reply<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"operations"</span> =&gt; <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"echoString"</span> =&gt; <span style="color: rgb(255, 0, 0);">"echoFunction"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
 </body>
