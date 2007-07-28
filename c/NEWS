@@ -28,9 +28,9 @@ Key Features
     5. WS-ReliableMessaging
     6. WS-Eventing
     7. SSL enabled Transport layer
-    8. XMPP transport layer
-    9. XMPP transport layer
-    10.wsclient command line tool to consume Web services
+    8. XMPPtransport layer
+    9. TCP transport layer
+   10. wsclient command line tool to consume Web services
 
 --------------
 Known Issues
