@@ -27,6 +27,14 @@
 
 @if exist docs xcopy /Y /I /Q /E docs wso2-wsf-php-bin-1.0.0-win32\docs
 
+@if exist NOTICE copy /Y NOTICE wso2-wsf-php-bin-1.0.0-win32
+
+@if exist README.INSTALL_WIN32 copy /Y README.INSTALL_WIN32 wso2-wsf-php-bin-1.0.0-win32
+
+@if exist README.INSTALL copy /Y README.INSTALL wso2-wsf-php-bin-1.0.0-win32
+
+@if exist LICENSE copy /Y LICENSE wso2-wsf-php-bin-1.0.0-win32
+
 @cd src
 
 @nmake /nologo -f build.mk
