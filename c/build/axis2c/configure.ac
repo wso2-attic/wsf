@@ -314,9 +314,9 @@ AC_ARG_ENABLE(libcurl, [  --enable-libcurl
   CFLAGS="$CFLAGS"
 )
 
-AC_MSG_CHECKING(whether to use apache2 as server transport)
+AC_MSG_CHECKING(whether to use XMPP as a transport)
 AC_ARG_WITH(xmpp,
-[  --with-xmpp[=PATH]   Whether to build xmpp   .
+[  --with-xmpp[=PATH]   Whether to build XMPP transport support.
     ],
 [ case "$withval" in
   no)
@@ -325,16 +325,16 @@ AC_ARG_WITH(xmpp,
     ;;
   *)
     AC_MSG_RESULT(yes)
-    dnl Find apache2 include dir in the path pointed by APACHE2_HOME env variable
+    dnl Find iksemel include dir
     if test -d $withval; then
         iksemelinc="-I$withval"
     	XMPP_DIR="xmpp"
-    dnl else find the apache2 include dir in /usr/local/apache2
-    elif test -d '/usr/include/apache2'; then
+    dnl else find the iksemel include dir in /usr/include
+    elif test -d '/usr/include'; then
         iksemelinc="-I/usr/include"
     	XMPP_DIR="xmpp"
     else
-        AC_MSG_ERROR(could not find apache2. stop)
+        AC_MSG_ERROR(could not find iksemel. stop)
     fi
 	XMPP_DIR="xmpp"
     ;;
