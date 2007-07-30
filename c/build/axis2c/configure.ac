@@ -343,7 +343,7 @@ AC_ARG_WITH(xmpp,
 )
 
 AC_MSG_CHECKING(whether to use gssapi)
-AC_ARG_ENABLE(openssl, [  --enable-gssapi      enable gssapi (default=no)],
+AC_ARG_ENABLE(gssapi, [  --enable-gssapi      enable gssapi (default=no)],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
