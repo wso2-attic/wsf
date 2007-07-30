@@ -36,79 +36,111 @@ href="mailto:wsf-php-user-request@wso2.org?subject=subscribe">Subscribe</a> |
 <a
 href="mailto:wsf-php-user-request@wso2.org?subject=Unsubscribe">Unsubscribe</a></p>
 
-<h2>Latest Release</h2>
+<h2>WSO2 WSF/PHP Features</h2>
 
-<h3>27th July 2007, WSO2 WSF/PHP 1.0.0 Released</h3>
-<b><a href="http://dist.wso2.org/products/wsf/php/1.0.0">Download WSO2
-WSF/PHP 1.0.0</a></b>
+<table border="1" cellpadding="4" cellspacing="0">
+  <colgroup><col width="145" /><col /></colgroup>
+  <thead>
+    <tr valign="top">
+      <th width="145" style="height: 29px"><p><span
+        style="color: black">Feature</span></p>
+      </th>
+      <th width="502" style="height: 29px"><p><span
+        style="color: black">Description</span></p>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr valign="top">
+      <td width="145"><p>Comprehensive Support for Web Services Standards</p>
+      </td>
+      <td width="502"><p>WSO2 WSF/PHP supports the basic Web services
+        standards including SOAP 1.1, SOAP 1.2 ,WSDL 1.1 and WSDL 2.0.</p>
 
-<h4>Key Features</h4>
-<ol>
-  <li>Client API to consume Web services
-    <ul>
-      <li>WSMessage class to handle message level options</li>
-      <li>WSClient class with both one way and two way service invocation
-        support</li>
-      <li>Option of using functions in place of object oriented API with
-        ws_request and ws_send functions</li>
-    </ul>
-  </li>
-  <li>Service API to provide Web services
-    <ul>
-      <li>WSMessage class to handle message level options</li>
-      <li>WSService class with support for both one way and two way
-      operations</li>
-      <li>Option of using functions in place of object oriented API with
-        ws_reply</li>
-    </ul>
-  </li>
-  <li>Attachments with MTOM
-    <ul>
-      <li>Binary optimized</li>
-      <li>Non-optimized (Base64 binary)</li>
-    </ul>
-  </li>
-  <li>WS-Addressing
-    <ul>
-      <li>Version 1.0</li>
-      <li>Submission</li>
-    </ul>
-  </li>
-  <li>WS-Security
-    <ul>
-      <li>UsernameToken and Timestamp</li>
-      <li>Encryption</li>
-      <li>Signing</li>
-      <li>WS-Security Policy based configurability</li>
-    </ul>
-  </li>
-  <li>WS-Reliable Messaging
-    <ul>
-      <li>Single channel two way and one way reliable messaging</li>
-    </ul>
-  </li>
-  <li>WSDL Generation for Server Side
-    <ul>
-      <li>WSDL generation based on annotations and function signatures, and
-        serving on ?wsdl requests</li>
-    </ul>
-  </li>
-  <li>REST Support
-    <ul>
-      <li>Expose a single service script both as SOAP and REST services</li>
-    </ul>
-  </li>
-  <li>WSDL mode support for both client and server side
-    <ul>
-      <li>Implement both services and clients by providing just the WSDL and
-        business logic</li>
-    </ul>
-  </li>
-  <li>Backward compatibility with PHP5 SOAP extension
-    <ul>
-      <li>Experimental</li>
-    </ul>
-  </li>
-</ol>
+        <p>WSF/PHP also supports the following WS-* specifications:</p>
+        <ul>
+          <li><p>SOAP MTOM</p>
+          </li>
+          <li><p>WS-Addressing</p>
+          </li>
+          <li><p>WS-Security</p>
+          </li>
+          <li><p>WS-SecurityPolicy</p>
+          </li>
+          <li><p>WS-ReliableMessaging</p>
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="145"><p>Proven Interoperability</p>
+      </td>
+      <td width="502"><p>WSO2 WSF/PHP features proven interoperability with
+        Microsoft .NET, WSO2 WSAS (Apache Axis2/Java based Web services
+        application server) and other J2EE implementations. The basic SOAP
+        level interoperability as well as WS-* specification implementations
+        have been tested and proven to interoperate.</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="145"><p>Portability and Platform Support</p>
+      </td>
+      <td width="502"><p>WSO2 WSF/PHP has been tested on:</p>
+        <ul>
+          <li><p>Windows XP - Microsoft Visual C++ 7.1</p>
+          </li>
+          <li><p>Windows XP - Microsoft Visual C++ 8.0</p>
+          </li>
+          <li><p>Linux - gcc 4.1.1</p>
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="145">Attachments with Web Services and Clients</td>
+      <td width="502">You can send, receive attachments with SOAP messages
+        both in optimized as well as non optimized formats with MTOM support.</td>
+    </tr>
+    <tr valign="top">
+      <td width="145">Secure Web Services and Clients</td>
+      <td width="502">You can send messages with UsernameToken, and with TimeStamp support. <br />
+        WSO2 WSF/PHP extension also supports advanced WS-Security features including encryption 
+        and signing of SOAP messages.</td>
+    </tr>
+    <tr valign="top">
+      <td width="145">Reliable Web Services and Clients</td>
+      <td width="502">Reliable messaging is supported for both services and
+        clients. Basic SOAP messages as well as messages with attachments can be sent 
+        in a reliable way.</td>
+    </tr>
+    <tr valign="top">
+      <td style="height: 29px" width="145">REST Support</td>
+      <td style="height: 29px" width="502">A single service can be exposed both as a SOAP style as well as 
+        a REST style service. The client API also supports invoking
+        REST services using HTTP GET and POST methods.</td>
+    </tr>
+    <tr valign="top">
+      <td width="145"><p>WSDL Generation</p>
+      </td>
+      <td width="502">WSO2 WSF/PHP can generate WSDL for PHP service scripts. The
+        well known <br />
+        "?wsdl" (for serving WSDL 1.1) as well as "?wsdl2" (for serving WSDL
+        2.0) work for PHP Web services scripts.</td>
+    </tr>
+    <tr valign="top">
+      <td width="145"><p>WSDL Mode</p>
+      </td>
+      <td width="502">WSO2 WSF/PHP extension also supports contract first style of 
+        implementing Web services and clients. A user can simply provide a WSDL and implement Web
+        services and clients based on the interface given in the WSDL.</td>
+    </tr>
+    <tr valign="top">
+      <td width="145">Backward Compatibility for PHP5 SOAP Extension</td>
+      <td width="502">This is an attempt to implement the ext\soap extension's API
+        on top of the WSF/PHP extension. The objective is to use your old Web services code
+        as it is with the WSO2 WSF/PHP.</td>
+    </tr>
+  </tbody>
+</table>
 </body>
 </html>
