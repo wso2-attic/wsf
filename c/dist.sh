@@ -10,15 +10,6 @@ make samples
 make dist
 tar xf wso2-wsf-c-src-1.0.1.tar.gz
 cd wso2-wsf-c-src-1.0.1
-rm -rf `find . -type d -name .svn`
-rm -rf `find . -type f -name *.la`
-rm -rf `find . -type f -name *.o`
-rm -rf `find . -type f -name *.lo`
-rm -rf `find . -type f -name *.loT`
-rm -rf `find . -type d -name .deps`
-rm -rf `find . -type d -name .libs`
-rm -rf `find . -type f -name Makefile`
-rm -rf `find . -type d -name autom4te.cache`
 
 ./configure
 make maintainer-clean
@@ -32,7 +23,20 @@ make maintainer-clean
 cd ../../rampartc/samples
 ./configure
 make maintainer-clean
-cd ../../../
+cd ../../
+
+rm -rf `find . -type d -name .svn`
+rm -rf `find . -type f -name *.la`
+rm -rf `find . -type f -name *.o`
+rm -rf `find . -type f -name *.lo`
+rm -rf `find . -type f -name *.loT`
+rm -rf `find . -type d -name .deps`
+rm -rf `find . -type d -name .libs`
+rm -rf `find . -type f -name Makefile`
+rm -rf `find . -type d -name autom4te.cache`
+
+cd ..
+
 rm -rf wso2-wsf-c-src-1.0.1.tar.gz
 tar -pczf wso2-wsf-c-src-1.0.1.tar.gz wso2-wsf-c-src-1.0.1
 zip -r wso2-wsf-c-src-1.0.1.zip wso2-wsf-c-src-1.0.1
