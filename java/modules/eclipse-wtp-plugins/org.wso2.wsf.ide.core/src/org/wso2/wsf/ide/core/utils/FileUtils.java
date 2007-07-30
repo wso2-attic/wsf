@@ -21,6 +21,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileUtils
 {
@@ -191,5 +193,60 @@ public class FileUtils
 		}
 		return returnPath;
 	}
+	
+    /**
+     * Get the list of file with a prefix of <code>fileNamePrefix</code> &amp; an extension of
+     * <code>extension</code>
+     *
+     * @param sourceDir      The directory in which to search the files
+     * @param fileNamePrefix The prefix to look for
+     * @param extension      The extension to look for
+     * @return The list of file with a prefix of <code>fileNamePrefix</code> &amp; an extension of
+     *         <code>extension</code>
+     */
+    public static File[] getMatchingFiles(String sourceDir, String fileNamePrefix, String extension) {
+        List fileList = new ArrayList();
+        File libDir = new File(sourceDir);
+        String libDirPath = libDir.getAbsolutePath();
+        String[] items = libDir.list();
+        if (items != null) {
+            for (int i = 0; i < items.length; i++) {
+                String item = items[i];
+                if (fileNamePrefix != null && extension != null) {
+                    if (item.startsWith(fileNamePrefix) && item.endsWith(extension)) {
+                        fileList.add(new File(libDirPath + File.separator + item));
+                    }
+                } else if (fileNamePrefix == null && extension != null) {
+                    if (item.endsWith(extension)) {
+                        fileList.add(new File(libDirPath + File.separator + item));
+                    }
+                } else if (fileNamePrefix != null && extension == null) {
+                    if (item.startsWith(fileNamePrefix)) {
+                        fileList.add(new File(libDirPath + File.separator + item));
+                    }
+                } else {
+                    fileList.add(new File(libDirPath + File.separator + item));
+                }
+            }
+            return (File[]) fileList.toArray(new File[fileList.size()]);
+        }
+        return new File[0];
+    }
+    
+    /**
+     * Filter out files inside a <code>sourceDir</code> with matching <codefileNamePrefix></code>
+     * and <code>extension</code>
+     * @param sourceDir 		The directory to filter the files
+     * @param fileNamePrefix	The filtering filename prefix 
+     * @param extension			The filtering file extension
+     */
+    public static void filterOutRestrictedFiles(String sourceDir, String fileNamePrefix, String extension){
+    	File[] resultedMatchingFiles = getMatchingFiles(sourceDir, fileNamePrefix, extension);
+    	for (int i = 0; i < resultedMatchingFiles.length; i++) {
+			File matchingFilePath = new File(resultedMatchingFiles[i].getAbsolutePath());
+			matchingFilePath.delete();
+		}
+    }
+    
 
 }

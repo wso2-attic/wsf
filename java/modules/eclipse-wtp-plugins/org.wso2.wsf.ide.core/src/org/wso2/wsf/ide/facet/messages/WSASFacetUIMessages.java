@@ -21,6 +21,7 @@ public final class WSASFacetUIMessages extends NLS {
 
 	private static final String BUNDLE_NAME = 
 				"org.wso2.wsf.ide.facet.messages.WSASFacetUI";//$NON-NLS-1$
+	public static final String FILE_SERVLET_API="servletapi";//$NON-NLS-1$
 
 	private WSASFacetUIMessages() {
 		// Do not instantiate

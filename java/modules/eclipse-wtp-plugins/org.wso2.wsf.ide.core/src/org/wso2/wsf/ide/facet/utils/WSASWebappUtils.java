@@ -24,8 +24,9 @@ import java.util.Properties;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.wso2.wsf.ide.core.plugin.data.ServerModel;
 import org.wso2.wsf.ide.core.plugin.messages.WSASCoreUIMessages;
-import org.wso2.wsf.ide.core.utils.WSASCoreUtils;
 import org.wso2.wsf.ide.core.utils.FileUtils;
+import org.wso2.wsf.ide.core.utils.WSASCoreUtils;
+import org.wso2.wsf.ide.facet.messages.WSASFacetUIMessages;
 
 public class WSASWebappUtils {
 
@@ -98,6 +99,10 @@ public class WSASWebappUtils {
 					//Copy modules and services 					
 					FileUtils.copyDirectory(new File(wsasRepositoryFile), 
 											new File(wsasTempWebInf));
+					//Filter out the servletapi jars
+					FileUtils.filterOutRestrictedFiles(wsasTempWebInfLibFile.getAbsolutePath(),
+							                           WSASFacetUIMessages.FILE_SERVLET_API,"jar");
+
 					alreadyWarExist= true;
 				}
 
