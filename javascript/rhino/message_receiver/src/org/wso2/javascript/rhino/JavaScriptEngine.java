@@ -24,23 +24,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.URL;
+import java.util.Date;
+import java.util.Calendar;
 
-import org.apache.axiom.om.OMNode;
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.om.OMFactory;
-import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.*;
 import org.apache.axiom.om.impl.llom.OMSourcedElementImpl;
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.databinding.utils.ConverterUtil;
 import org.apache.axis2.json.JSONBadgerfishDataSource;
 import org.apache.axis2.json.JSONDataSource;
 import org.apache.axis2.json.JSONOMBuilder;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Function;
-import org.mozilla.javascript.ImporterTopLevel;
-import org.mozilla.javascript.JavaScriptException;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.WrappedException;
+import org.mozilla.javascript.*;
 import org.mozilla.javascript.xmlimpl.XML;
 import org.mozilla.javascript.xmlimpl.XMLList;
 
@@ -135,7 +129,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
      * @return an OMNode containing the result from executing the operation
      * @throws AxisFault
      */
-    public OMNode call(String method, Reader reader, Object args) throws AxisFault {
+    public OMElement call(String method, Reader reader, Object args) throws AxisFault {
         boolean json = false;
         Object functionArgs[];
         try {
@@ -183,42 +177,10 @@ public class JavaScriptEngine extends ImporterTopLevel {
                 InputStream in = new ByteArrayInputStream(((String) result).getBytes());
                 JSONOMBuilder builder = new JSONOMBuilder();
                 result = builder.processDocument(in, null, null);
-            } else {
-                // Get the OMNode inside the resulting object
-                if (result instanceof XML) {
-                    result = ((XML) result).getAxiomFromXML();
-                } else if (result instanceof XMLList) {
-                    XMLList list = (XMLList) result;
-                    if (list.length() == 1) {
-                        result = list.getAxiomFromXML();
-                    } else if (list.length() == 0) {
-                        throw new AxisFault("Function returns an XMLList containing zero node");
-                    } else {
-                        throw new AxisFault(
-                                "Function returns an XMLList containing more than one node");
-                    }
-                } else if (result instanceof String) {
-                    OMFactory fac = OMAbstractFactory.getOMFactory();
-                    OMElement element = fac.createOMElement("return",null);
-                    element.setText((String) result);
-                    result = element;
-                } else if (result instanceof Boolean) {
-                    OMFactory fac = OMAbstractFactory.getOMFactory();
-                    OMElement element = fac.createOMElement("return",null);
-                    Boolean boolResult = (Boolean) result;
-                    element.setText(boolResult.toString());
-                    result = element;
-                } else if (result instanceof Double) {
-                    OMFactory fac = OMAbstractFactory.getOMFactory();
-                    OMElement element = fac.createOMElement("return",null);
-                    Double dblResult = (Double) result;
-                    element.setText(dblResult.toString());
-                    result = element;
-                } else {
-                    return null;
-                }
             }
-            return (OMNode) result;
+            // Convert the JS return to XML
+            result = jsToXML(result, "return", false);
+            return (OMElement) result;
         } catch (WrappedException exception) {
             throw AxisFault.makeFault(exception.getCause());
         } catch (JavaScriptException exception) {
@@ -245,7 +207,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
      * @return an OMNode containing the result from executing the operation
      * @throws AxisFault
      */
-    public OMNode call(String method, Reader reader, Object args, String scripts) throws AxisFault {
+    public OMElement call(String method, Reader reader, Object args, String scripts) throws AxisFault {
 
         if (scripts != null) {
             // Generate load command out of the parameter scripts
@@ -257,5 +219,101 @@ public class JavaScriptEngine extends ImporterTopLevel {
 
     public Context getCx() {
         return cx;
+    }
+
+    /**
+     * Given a jsObject converts it to corresponding XML
+     * @param jsObject  - The object that needs to be converted
+     * @param elementName - The element name of the wrapper
+     * @param addTypeInfo - Whether type information should be added into the element as an attribute
+     * @return - OMelement which represents the JSObject
+     * @throws AxisFault - Thrown in case an exception occurs during the conversion
+     */
+    private OMElement jsToXML(Object jsObject, String elementName, boolean addTypeInfo) throws AxisFault {
+        String className = jsObject.getClass().getName();
+        OMFactory fac = OMAbstractFactory.getOMFactory();
+        OMNamespace namespace = fac.createOMNamespace("http://www.wso2.org/ns/jstype", "js");
+        OMElement element = fac.createOMElement(elementName, null);
+        // Get the OMNode inside the jsObjecting object
+        if (jsObject instanceof XML) {
+            element.addChild((((XML) jsObject).getAxiomFromXML()));
+            if (addTypeInfo) {
+                element.addAttribute("type", "xml", namespace);
+            }
+        } else if (jsObject instanceof XMLList) {
+            XMLList list = (XMLList) jsObject;
+            if (list.length() == 1) {
+                element.addChild(list.getAxiomFromXML());
+                if (addTypeInfo) {
+                element.addAttribute("type", "xmlList", namespace);
+                }
+            } else if (list.length() == 0) {
+                throw new AxisFault("Function returns an XMLList containing zero node");
+            } else {
+                throw new AxisFault(
+                        "Function returns an XMLList containing more than one node");
+            }
+        } else {
+
+            if (jsObject instanceof String) {
+                element.setText((String) jsObject);
+                if (addTypeInfo) {
+                    element.addAttribute("type", "string", namespace);
+                }
+            } else if (jsObject instanceof Boolean) {
+                Boolean booljsObject = (Boolean) jsObject;
+                element.setText(booljsObject.toString());
+                if (addTypeInfo) {
+                    element.addAttribute("type", "boolean", namespace);
+                }
+            } else if (jsObject instanceof Double) {
+                Double dbljsObject = (Double) jsObject;
+                element.setText(dbljsObject.toString());
+                if (addTypeInfo) {
+                    element.addAttribute("type", "double", namespace);
+                }
+            } else if (jsObject instanceof Date || "org.mozilla.javascript.NativeDate".equals(className)) {
+                Date date = (Date) Context.jsToJava(jsObject, Date.class);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                String dateTime = ConverterUtil.convertToString(calendar);
+                element.setText(dateTime);
+                if (addTypeInfo) {
+                    element.addAttribute("type", "date", namespace);
+                }
+            } else if (jsObject instanceof NativeArray) {
+                element.addAttribute("type", "array", namespace);
+                NativeArray nativeArray = (NativeArray) jsObject;
+                Object[] objects = nativeArray.getAllIds();
+                for (int i = 0; i < objects.length; i++) {
+                    Object object = objects[i];
+                    Object o;
+                    String propertyElementName;
+                    if (object instanceof String) {
+                        String property = (String) object;
+                        if ("length".equals(property)) {
+                            continue;
+                        }
+                        o = nativeArray.get(property, nativeArray);
+                        propertyElementName = property;
+                    } else {
+                        Integer property = (Integer) object;
+                        o = nativeArray.get(property.intValue(), nativeArray);
+                        propertyElementName = "item";
+                    }
+                    OMElement paramElement = jsToXML(o, propertyElementName, true);
+                    element.addChild(paramElement);
+                }
+            } else if (jsObject instanceof Object[]) {
+                element.addAttribute("type", "array", namespace);
+                Object[] objects = (Object[]) jsObject;
+                for (int i = 0; i < objects.length; i++) {
+                    Object object = objects[i];
+                    OMElement paramElement = jsToXML(object, "item", true);
+                    element.addChild(paramElement);
+                }
+            }
+        }
+        return element;
     }
 }

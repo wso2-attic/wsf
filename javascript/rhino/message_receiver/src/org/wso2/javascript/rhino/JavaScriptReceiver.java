@@ -26,13 +26,13 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Calendar;
 
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
-import org.apache.axiom.om.OMNode;
 import org.apache.axiom.om.OMText;
 import org.apache.axiom.soap.SOAP11Constants;
 import org.apache.axiom.soap.SOAP12Constants;
@@ -40,6 +40,7 @@ import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.databinding.utils.ConverterUtil;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.description.AxisMessage;
 import org.apache.axis2.description.AxisOperation;
@@ -62,9 +63,6 @@ import org.mozilla.javascript.Context;
  */
 public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements MessageReceiver,
         JavaScriptEngineConstants {
-
-    private String UNSUPPORTED_SCHEMA_TYPE = "At the moment we only support WSDL 2.0 RPC style schema, which has a secquence "
-            + "within a complexType";
 
     /**
      * Invokes the Javascript service with the parameters from the inMessage
@@ -124,7 +122,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             String scripts = getImportScriptsList(inMessage);
 
             ArrayList params = new ArrayList();
-            OMNode result = null;
+            OMElement result;
             OMElement payload = soapEnvelope.getBody().getFirstElement();
             Object args = payload;
             if (payload != null) {
@@ -143,15 +141,34 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                             // binding operation.
                             while (iterator.hasNext()) {
                                 XmlSchemaElement innerElement = (XmlSchemaElement) iterator.next();
-                                OMElement omElement = payload.getFirstChildWithName(new QName(
-                                        innerElement.getName()));
-                                if (omElement == null) {
-                                    throw new AxisFault(
-                                            "Required element "+ innerElement.getName()
-                                                    + " defined in the schema can not be found in the request");
+                                long maxOccurs = innerElement.getMaxOccurs();
+                                // Check whether the schema advertises this element as an array
+                                if (maxOccurs > 1) {
+                                    // If its an array get all elements with that name and create a sinple parameter out of it
+                                    Iterator iterator1 = payload.getChildrenWithName(new QName(
+                                            innerElement.getName()));
+                                    params.add(handleArray(iterator1, innerElement.getSchemaTypeName(), engine));
+                                } else {
+                                    OMElement omElement = payload.getFirstChildWithName(new QName(
+                                            innerElement.getName()));
+                                    if (omElement == null) {
+                                        // There was no such element in the payload. Therefore we check for minoccurs
+                                        // and if its 0 add null as a parameter (If not we might mess up the parameters
+                                        // we pass into the function).
+                                        if (innerElement.getMinOccurs() == 0) {
+                                            params.add(null);
+                                            continue;
+                                        } else {
+                                            // If minoccurs is not zero throw an exception.
+                                            // Do we need to di strict schema validation?
+                                            throw new AxisFault(
+                                                    "Required element " + innerElement.getName()
+                                                            + " defined in the schema can not be found in the request");
+                                        }
+                                    }
+                                    params.add(createParam(omElement, innerElement.getSchemaTypeName(),
+                                            engine));
                                 }
-                                params.add(createParam(omElement, innerElement.getSchemaTypeName(),
-                                        engine));
                             }
                             args = params.toArray();
                         } else {
@@ -206,22 +223,9 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                         // now we need to know some information from the binding operation.
                         while (iterator.hasNext()) {
                             XmlSchemaElement innerElement = (XmlSchemaElement) iterator.next();
-                            QName qName = innerElement.getSchemaTypeName();
-                            // Passing Null for the namespace as the WSDL
-                            // which was generated does not have one for
-                            // the 'return' element
-                            OMElement omElement = fac.createOMElement(innerElement.getName(), null);
-                            if (qName == Constants.XSD_ANYTYPE) {
-                                omElement.addChild(result);
-                            } else {
-                                if (result instanceof OMText) {
-                                    omElement.addChild(result);
-                                } else {
-                                    OMElement element = (OMElement) result;
-                                    omElement.setText(element.getText());
-                                }
-                            }
-                            outElement.addChild(omElement);
+                            // The name of the element returned should match the schema hence set that name.
+                            result.setLocalName(innerElement.getName());
+                            outElement.addChild(result);
                         }
                         body.addChild(outElement);
                     } else {
@@ -229,12 +233,12 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     }
                 } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANYTYPE) {
                     if (result != null) {
-                        outElement.addChild(result);
+                        outElement.addChild(result.getFirstOMChild());
                         body.addChild(outElement);
                     }
                 }
             } else if (result != null) {
-                body.addChild(result);
+                body.addChild(result.getFirstOMChild());
             }
             outMessage.setEnvelope(envelope);
         } catch (Throwable throwable) {
@@ -253,6 +257,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
     /**
      * Provides support for importing JavaScript files specified in the
      * Services.xml or the Axis2.xml using the "loadJSScripts" parameter.
+     * @param inMessage - The incoming message Context
+     * @return
      */
     private String getImportScriptsList(MessageContext inMessage) {
         String scripts = null;
@@ -282,6 +288,13 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         return scripts;
     }
 
+    /**
+     * Creates an object that can be passed into a javascript function from an OMElement.
+     * @param omElement - The OMElement that the parameter should be created for
+     * @param type - The schemaType of the incoming message element
+     * @param engine - Reference to the javascript engine
+     * @return - An Object that can be passed into a JS function
+     */
     private Object createParam(OMElement omElement, QName type, JavaScriptEngine engine) {
         // TODO we may need to handle arrays here and also do some type conversion in some cases.
 
@@ -289,8 +302,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             Context context = engine.getCx();
             OMElement element = omElement.getFirstElement();
             Object[] objects = { element };
-            Object args = context.newObject(engine, "XML", objects);
-            return args;
+            return context.newObject(engine, "XML", objects);
         }
         if (Constants.XSD_BOOLEAN.equals(type)) {
             String value = omElement.getText();
@@ -300,7 +312,28 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             String value = omElement.getText();
             return new Double(value);
         }
+        if (Constants.XSD_DATETIME.equals(type)) {
+            String value = omElement.getText();
+            Calendar calendar = ConverterUtil.convertToDateTime(value);
+            return calendar.getTime();
+        }
         return omElement.getText();
+    }
+
+    /**
+     * Creates an array object that can be passed into a JS function
+     * @param iterator - Iterator to the omelements that belong to the array
+     * @param type - The schematype of the omelement
+     * @param engine Reference to the javascript engine
+     * @return - An array Object that can be passed into a JS function
+     */
+    private Object handleArray(Iterator iterator, QName type, JavaScriptEngine engine) {
+        ArrayList objectList = new ArrayList();
+        while (iterator.hasNext()) {
+            OMElement omElement = (OMElement) iterator.next();
+            objectList.add(createParam(omElement, type, engine));
+        }
+        return objectList.toArray();
     }
 
     /**
