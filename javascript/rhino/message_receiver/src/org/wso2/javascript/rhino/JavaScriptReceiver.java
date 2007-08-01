@@ -16,20 +16,6 @@
 
 package org.wso2.javascript.rhino;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Calendar;
-
-import javax.xml.namespace.QName;
-
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
@@ -40,8 +26,8 @@ import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axis2.AxisFault;
-import org.apache.axis2.databinding.utils.ConverterUtil;
 import org.apache.axis2.context.MessageContext;
+import org.apache.axis2.databinding.utils.ConverterUtil;
 import org.apache.axis2.description.AxisMessage;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
@@ -56,6 +42,19 @@ import org.apache.ws.commons.schema.XmlSchemaSequence;
 import org.apache.ws.commons.schema.XmlSchemaType;
 import org.apache.ws.commons.schema.constants.Constants;
 import org.mozilla.javascript.Context;
+
+import javax.xml.namespace.QName;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Iterator;
 
 /**
  * Class JavaScriptReceiver implements the AbstractInOutSyncMessageReceiver,
@@ -311,6 +310,10 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         if (Constants.XSD_DOUBLE.equals(type)) {
             String value = omElement.getText();
             return new Double(value);
+        }
+        if (Constants.XSD_FLOAT.equals(type)) {
+            String value = omElement.getText();
+            return new Float(value);
         }
         if (Constants.XSD_DATETIME.equals(type)) {
             String value = omElement.getText();

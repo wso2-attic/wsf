@@ -16,6 +16,28 @@
 
 package org.wso2.javascript.rhino;
 
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNamespace;
+import org.apache.axiom.om.impl.llom.OMSourcedElementImpl;
+import org.apache.axis2.AxisFault;
+import org.apache.axis2.databinding.utils.ConverterUtil;
+import org.apache.axis2.json.JSONBadgerfishDataSource;
+import org.apache.axis2.json.JSONDataSource;
+import org.apache.axis2.json.JSONOMBuilder;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.ImporterTopLevel;
+import org.mozilla.javascript.JavaScriptException;
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.NativeObject;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.WrappedException;
+import org.mozilla.javascript.xmlimpl.XML;
+import org.mozilla.javascript.xmlimpl.XMLList;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,19 +46,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.URL;
-import java.util.Date;
 import java.util.Calendar;
-
-import org.apache.axiom.om.*;
-import org.apache.axiom.om.impl.llom.OMSourcedElementImpl;
-import org.apache.axis2.AxisFault;
-import org.apache.axis2.databinding.utils.ConverterUtil;
-import org.apache.axis2.json.JSONBadgerfishDataSource;
-import org.apache.axis2.json.JSONDataSource;
-import org.apache.axis2.json.JSONOMBuilder;
-import org.mozilla.javascript.*;
-import org.mozilla.javascript.xmlimpl.XML;
-import org.mozilla.javascript.xmlimpl.XMLList;
+import java.util.Date;
 
 /**
  * Class JavaScriptEngine implements a simple Javascript evaluator using Rhino.
@@ -266,11 +277,11 @@ public class JavaScriptEngine extends ImporterTopLevel {
                 if (addTypeInfo) {
                     element.addAttribute("type", "boolean", namespace);
                 }
-            } else if (jsObject instanceof Double) {
-                Double dbljsObject = (Double) jsObject;
+            } else if (jsObject instanceof Number) {
+                Number dbljsObject = (Number) jsObject;
                 element.setText(dbljsObject.toString());
                 if (addTypeInfo) {
-                    element.addAttribute("type", "double", namespace);
+                    element.addAttribute("type", "number", namespace);
                 }
             } else if (jsObject instanceof Date || "org.mozilla.javascript.NativeDate".equals(className)) {
                 Date date = (Date) Context.jsToJava(jsObject, Date.class);
@@ -311,6 +322,20 @@ public class JavaScriptEngine extends ImporterTopLevel {
                     Object object = objects[i];
                     OMElement paramElement = jsToXML(object, "item", true);
                     element.addChild(paramElement);
+                }
+            } else if (jsObject instanceof NativeObject) {
+                element.addAttribute("type", "object", namespace);
+                NativeObject nativeObject = (NativeObject) jsObject;
+                Object[] objects = NativeObject.getPropertyIds(nativeObject);
+                for (int i = 0; i < objects.length; i++) {
+                    Object object = objects[i];
+                    Object o;
+                    if (object instanceof String) {
+                        String property = (String) object;
+                        o = nativeObject.get(property, nativeObject);
+                        OMElement paramElement = jsToXML(o, property, true);
+                        element.addChild(paramElement);
+                    }
                 }
             }
         }
