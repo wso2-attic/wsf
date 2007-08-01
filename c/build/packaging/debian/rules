@@ -9,11 +9,6 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-
-
-
-CFLAGS = -Wall -g
-
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
 	CFLAGS += -O0
 else
@@ -29,7 +24,8 @@ configure-stamp:
 
 
 build: build-stamp
-	./configure --prefix=/usr/local/wsf_c --enable-openssl=yes --enable-xmpp=yes --with-axis2=`pwd`/axis2c/include
+	./configure --prefix=/usr/local/wsf_c --enable-openssl=yes --enable-xmpp=yes --with-axis2=`pwd`/axis2c/include --enable-tests=yes \
+ --with-apache2=/usr/local/apache2/include --enable-sandesha=yes --enable-rampart=yes --enable-wsclient=yes --enable-savan=yes
 	make
 	make install
 	make samples
@@ -67,7 +63,11 @@ install: build
 
 # Build architecture-independent files here.
 binary-indep: build install
-	cp -r deploy/bin/samples $(CURDIR)/debian/wso2-wsf-c/usr/local/wsf_c/bin/
+	cp -r /usr/local/wsf_c/bin/samples $(CURDIR)/debian/wso2-wsf-c/usr/local/wsf_c/bin/
+	cp -r /usr/local/wsf_c/samples $(CURDIR)/debian/wso2-wsf-c/usr/local/wsf_c/
+	cp -r /usr/local/wsf_c/services $(CURDIR)/debian/wso2-wsf-c/usr/local/wsf_c/
+	cp -r /usr/local/wsf_c/client_repo $(CURDIR)/debian/wso2-wsf-c/usr/local/wsf_c/
+	cp -r /usr/local/wsf_c/docs $(CURDIR)/debian/wso2-wsf-c/usr/local/wsf_c/
 # We have nothing to do by default.
 
 # Build architecture-dependent files here.
