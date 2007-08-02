@@ -1,0 +1,11 @@
+Source: wso2-wsf-php
+Section: WSO2-WSF-PHP
+Priority: extra
+Maintainer: Buddhika Semasinghe <buddhika@wso2.com>
+Build-Depends: debhelper (>= 5), autotools-dev
+Standards-Version: 3.7.2
+
+Package: wso2-wsf-php
+Architecture: any
+Depends: phpapi-20051025
+Description: WSO2 Web Services Framework/PHP (WSO2 WSF/PHP) is a PHP extension that could be used to provide and consume Web services.It supports SOAP 1.1, SOAP 1.2, WSDL 1.1, WSDL 2.0, SOAP MTOM, WS-Addressing, WS-Security, WS-SecurityPolicy,WS-ReliableMessaging as well as REST style invocation.
