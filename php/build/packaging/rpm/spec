@@ -1,0 +1,34 @@
+Summary: WSO2 WSF-PHP
+Name: wso2-wsf-php
+Version:1.0.0
+Release: 1
+Source: wso2-wsf-php-1.0.0.tar.gz
+License: Apache
+Group: Development/Tools
+%description
+The GNU indent program reformats C code to any of a variety o
+formatting standards, or you can define your own.
+%prep
+%setup -q
+%build
+./configure --with-axis2=`pwd`/wsf_c/axis2c/include --prefix='/usr/lib/php/modules/wsf_c'
+make
+%install
+make install
+cp -f `php-config --extension-dir`/wsf.so /usr/lib/php/modules/
+mkdir -p /usr/lib/php/modules/wsf_php
+cp -rf scripts /usr/lib/php/modules/wsf_php
+cp -rf samples /usr/lib/php/modules/wsf_php
+%post
+echo ";[wsf]" >> /etc/php.ini
+echo "extension=wsf.so" >> /etc/php.ini
+echo "wsf.home=\"/usr/lib/php/modules/wsf_c\"" >> /etc/php.ini
+echo "wsf.log_path=\"/tmp\"" >> /etc/php.ini
+echo "wsf.rm_db_dir=\"/tmp\"" >> /etc/php.ini
+
+echo "Copy scripts and samples folders in /usr/lib/php/modules/wsf_php to your Web Root"
+
+%files
+%defattr(-,root,root)
+/usr/lib/php/modules
+%doc COPYING AUTHORS README NEWS
