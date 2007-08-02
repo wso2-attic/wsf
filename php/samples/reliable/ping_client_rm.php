@@ -32,6 +32,9 @@ try {
     
 	
     $client->send($msg);
+
+    echo "Message Set";
+
     sleep(10);
 
     
