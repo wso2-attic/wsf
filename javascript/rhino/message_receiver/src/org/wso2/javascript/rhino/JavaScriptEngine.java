@@ -278,12 +278,16 @@ public class JavaScriptEngine extends ImporterTopLevel {
                     element.addAttribute("type", "boolean", namespace);
                 }
             } else if (jsObject instanceof Number) {
-                Number dbljsObject = (Number) jsObject;
-                element.setText(dbljsObject.toString());
+                Number numjsObject = (Number) jsObject;
+                String str = numjsObject.toString();
+                if (str.indexOf("Infinity") >= 0) {
+                    str = str.replace("Infinity", "INF");
+                }
+                element.setText(str);
                 if (addTypeInfo) {
                     element.addAttribute("type", "number", namespace);
                 }
-            } else if (jsObject instanceof Date || "org.mozilla.javascript.NativeDate".equals(className)) {
+            }  else if (jsObject instanceof Date || "org.mozilla.javascript.NativeDate".equals(className)) {
                 Date date = (Date) Context.jsToJava(jsObject, Date.class);
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(date);

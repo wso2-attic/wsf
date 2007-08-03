@@ -309,11 +309,11 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         }
         if (Constants.XSD_DOUBLE.equals(type)) {
             String value = omElement.getText();
-            return new Double(value);
+            return new Double(ConverterUtil.convertToDouble(value));
         }
         if (Constants.XSD_FLOAT.equals(type)) {
             String value = omElement.getText();
-            return new Float(value);
+            return new Float(ConverterUtil.convertToFloat(value));
         }
         if (Constants.XSD_DATETIME.equals(type)) {
             String value = omElement.getText();
