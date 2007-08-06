@@ -11,6 +11,7 @@ formatting standards, or you can define your own.
 %prep
 %setup -q
 %build
+export CFLAGS="-O2"
 ./configure --with-axis2=`pwd`/wsf_c/axis2c/include --prefix='/usr/lib/php/modules/wsf_c'
 make
 %install
