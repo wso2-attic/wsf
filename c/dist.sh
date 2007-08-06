@@ -1,4 +1,5 @@
 set -e
+cp dist.sh dist_hook.sh /tmp
 grep -rl AXIS2C_HOME *| xargs sed -i "s/AXIS2C_HOME/WSFC_HOME/g"
 export WSFC_HOME=`pwd`/deploy
 find . -name "*configure.ac" | xargs sed -i "s/-Werror//g"
@@ -36,6 +37,8 @@ rm -rf `find . -type f -name Makefile`
 rm -rf `find . -type d -name autom4te.cache`
 
 cd ..
+
+cp /tmp/dist.sh /tmp/dist_hook.sh .
 
 rm -rf wso2-wsf-c-src-1.0.1.tar.gz
 tar -pczf wso2-wsf-c-src-1.0.1.tar.gz wso2-wsf-c-src-1.0.1
