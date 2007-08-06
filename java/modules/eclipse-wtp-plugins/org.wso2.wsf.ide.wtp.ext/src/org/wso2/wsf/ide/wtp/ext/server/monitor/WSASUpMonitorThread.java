@@ -31,7 +31,7 @@ public class WSASUpMonitorThread extends Thread {
 	
     public void run() {
         try {
-        	URL url = new URL(WSASUtils.getWSASVersionServiceHTTPAddtess());
+        	URL url = new URL(WSASUtils.getWSASVersionServiceHTTPAddress());
         	
             while (true) {
                 try {

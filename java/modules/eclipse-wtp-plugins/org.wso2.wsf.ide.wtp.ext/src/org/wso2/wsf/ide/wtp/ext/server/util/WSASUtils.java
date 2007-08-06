@@ -65,7 +65,7 @@ public class WSASUtils {
 		return wsasHTTPAddress;
 	}
 	
-	public static String getWSASVersionServiceHTTPAddtess() {
+	public static String getWSASVersionServiceHTTPAddress() {
 		String  wsasHTTPAddress = null;
 		wsasHTTPAddress = WSASConfigurationConstant.HTTP_PREFIX + 
 							getIpAddress()+":"+
