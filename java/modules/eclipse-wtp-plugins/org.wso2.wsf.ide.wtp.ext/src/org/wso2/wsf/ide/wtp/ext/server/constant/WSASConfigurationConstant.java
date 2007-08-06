@@ -42,6 +42,7 @@ public class WSASConfigurationConstant {
     public static final String WSO2WSAS_SERVER_XML_PROP = "wso2.wsas.server.xml";
     public static final String WSO2WSAS_HTTP_PORT = "9762";
     public static final String WSO2WSAS_HTTPS_PORT = "9443";
+    public static final String WSO2WSAS_VERSION_SUFFIX = "9762/services/version";
 
     //files and folders
     public static final String LOG4J_CONFIGURATION = "log4j.configuration";

@@ -15,8 +15,9 @@
  */
 package org.wso2.wsf.ide.wtp.ext.server.monitor;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.PlatformUI;
@@ -24,28 +25,40 @@ import org.wso2.wsf.ide.wtp.ext.server.bean.WSASConfigurationBean;
 import org.wso2.wsf.ide.wtp.ext.server.util.WSASUtils;
 
 public class WSASUpMonitorThread extends Thread {
-	private final long wsasInitialStartTime = 10000;
-	private final long wsasProcessTime = 5000;
-	private final long inactiveSleepTime = 1000;
+	private final long inactiveSleepTime = 2000;
 	MessageBox box = new MessageBox(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 	private static boolean alive = true;
 	
     public void run() {
         try {
-        	URLConnection conn = null;
+        	URL url = new URL(WSASUtils.getWSASVersionServiceHTTPAddtess());
         	
-        	while(conn == null){
-        		WSASUpMonitorThread.sleep(wsasInitialStartTime);
-	            // Create a URLConnection object for a URL
-	            URL url = new URL(WSASUtils.getWSASHTTPAddtess());
-	            conn = url.openConnection();
-	            if(conn != null){
-					//set wsas start status to pass
-					WSASConfigurationBean.setWsasStartStatus(true);
-					Thread.sleep(wsasProcessTime);
-	            }
-        	}
+            while (true) {
+                try {
+                    HttpURLConnection httpCon;
+                    httpCon = (HttpURLConnection) url.openConnection();
+                    httpCon.setDoOutput(true);
+                    httpCon.setDoInput(true);
+                    httpCon.setUseCaches(false);
+                    httpCon.setRequestMethod("GET");
+                    HttpURLConnection.setFollowRedirects(true);
+
+                    httpCon.connect();
+                    httpCon.disconnect();
+                    Thread.sleep(1000);
+                    WSASConfigurationBean.setWsasStartStatus(true);
+                    break;
+                } catch (IOException e) {
+                    try {
+                    	WSASUpMonitorThread.sleep(inactiveSleepTime);
+                    } catch (InterruptedException e1) {
+    					WSASConfigurationBean.setWsasStartStatus(false);
+                        break;
+                    }
+                }
+            }
         	
+     	
         	while(true){
         		if (alive) {
         			WSASUpMonitorThread.sleep(inactiveSleepTime);
@@ -53,6 +66,7 @@ public class WSASUpMonitorThread extends Thread {
 					return;
 				}
         	}
+        	
          
         } catch (Exception e) {
         	e.printStackTrace();

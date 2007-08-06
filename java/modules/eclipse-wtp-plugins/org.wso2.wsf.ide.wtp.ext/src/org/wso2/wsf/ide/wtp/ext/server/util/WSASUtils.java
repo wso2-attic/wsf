@@ -15,7 +15,11 @@
  */
 package org.wso2.wsf.ide.wtp.ext.server.util;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.UnknownHostException;
 
 import org.wso2.wsf.ide.wtp.ext.server.constant.WSASConfigurationConstant;
@@ -60,5 +64,13 @@ public class WSASUtils {
 							WSASConfigurationConstant.WSO2WSAS_HTTP_PORT;
 		return wsasHTTPAddress;
 	}
-
+	
+	public static String getWSASVersionServiceHTTPAddtess() {
+		String  wsasHTTPAddress = null;
+		wsasHTTPAddress = WSASConfigurationConstant.HTTP_PREFIX + 
+							getIpAddress()+":"+
+							WSASConfigurationConstant.WSO2WSAS_VERSION_SUFFIX;
+		return wsasHTTPAddress;
+	}
+	
 }
