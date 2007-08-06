@@ -2,6 +2,9 @@
 
 set -e 
 
+export AXIS2C_HOME=`pwd`/deploy
+export WSFC_HOME=`pwd`/deploy
+
 ./build/copy_build_files.sh
 
 ./autogen.sh
