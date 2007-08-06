@@ -11,10 +11,12 @@ formatting standards, or you can define your own.
 %prep
 %setup -q
 %build
+export CFLAGS="-O2"
 ./configure --enable-openssl=no --with-apache2=/usr/local/apache2/include --enable-xmpp=yes --with-axis2=`pwd`/axis2c/include
 make
 %install
 make install
+strip -g /usr/local/wsf_c/lib/*.so
 make samples
 %files
 %defattr(-,root,root)
