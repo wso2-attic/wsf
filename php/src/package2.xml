@@ -4,7 +4,7 @@
 					http://pear.php.net/dtd/tasks-1.0.xsd
 					http://pear.php.net/dtd/package-2.0
 					http://pear.php.net/dtd/package-2.0.xsd">
-					<name>WSF/PHP</name>
+					<name>wsf</name>
  <channel>pecl.php.net</channel>
  <summary>Web Services for PHP</summary>
  <description>This extension provides a web services implementation using WSO2 WSF/C Web Services Framework</description>
@@ -21,8 +21,8 @@
     <api>1.0.0</api>
    </version>
    <stability>
-    <release>1.0</release>
-    <api>1.0</api>
+    <release>stable</release>
+    <api>stable</api>
    </stability>
    <license uri="http://www.php.net/license">PHP</license>
    <notes>1. 0 release </notes>
@@ -30,61 +30,36 @@
  <contents>
   <dir name="/">
    <file name="config.m4" role="src" />
-   <file name="credits" role="doc" />
-   <file name="EXPERIMENTAL" role="doc" />
-   <file name="README.INSTALL" role="doc" />
-   <file name="service_client.c" role="src" />
-   <file name="service_proxy.c" role="src" />
-   <file name="axis2.c" role="src" />
-   <file name="php_axis2.h" role="src" />
-   <file name="axis2_fe.h" role="src" />
-   <file name="axis2_ce.h" role="src" />
-   <file name="axis2_properties.h" role="src" />
-   <file name="axis2_common.h" role="src" />
-   <file name="axis2_php_stream.h" role="src" />
-   <file name="php_stream.c" role="src" />	
-   <file name="fault.c" role="src" />
-   <file name="om_node.c" role="src" />
-   <file name="om_element.c" role="src" />
-   <file name="om_attribute.c" role="src" />
-   <file name="om_comment.c" role="src" />
-   <file name="om_processing_instruction.c" role="src" />
-   <file name="om_doctype.c" role="src" />
-   <file name="om_document.c" role="src" />
-   <file name="om_output.c" role="src" />
-   <file name="om_namespace.c" role="src" />
-   <file name="om_stax_builder.c" role="src" />
-   <file name="om_text.c" role="src" />
-   <file name="param.c" role="src" />
-   <file name="qname.c" role="src" />
-   <file name="soap_body.c" role="src" />
-   <file name="soap_fault.c" role="src" />
-   <file name="soap_header_block.c" role="src" />
-   <file name="soap_header.c" role="src" />
-   <file name="soap_message.c" role="src" />
-   <file name="xml_reader.c" role="src" />
-   <file name="xml_writer.c" role="src" />
-   <dir name="samples/">
-    <file name="echo_client_string_xml_in_out.php" role="test" />
-    <file name="echo_client_string_xml_in_out2.php" role="test" />
-    <file name="echo_client_string_xml_in_out3.php" role="test" />
-    <file name="echo_client_dom_in_out.php" role="test" />
-    <file name="echo_client_dom_in_out2.php" role="test" />
-    <file name="echo_client_simple_xml_in_out.php" role="test" />
-    <file name="echo_client_simple_xml_in_out2.php" role="test" />
-    <file name="google_spell_string_xml_in_out.php" role="test" />
-    <file name="google_search_string_xml_in_out.php" role="test" />
-   </dir> <!-- samples/ -->
-   <dir name="xdocs/">
-    <file name="index.html" role="doc" />	
-    <file name="navigation.xml" role="doc" />	
-    <dir name="docs/">
-     <file name="index.html" role="doc" />	
-     <file name="installationguide.html" role="doc" />	
-     <file name="userguide.html" role="doc" />	
-     <file name="developerguide.html" role="doc" />	
-    </dir> <!-- docs/ -->
-   </dir> <!-- xdocs/ -->
+   <file name="README.SSL_CLIENT" role="doc" />
+   <file name="wsf.c" role="src" />
+   <file name="wsf_client.c" role="src" />
+   <file name="wsf_client.h" role="src" />
+   <file name="wsf_common.h" role="src" />
+   <file name="wsf.h" role="src" />
+   <file name="wsf_out_transport_info.c" role="src" />
+   <file name="wsf_out_transport_info.h" role="src" />
+   <file name="wsf_policy.c" role="src" />
+   <file name="wsf_policy.h" role="src" />
+   <file name="wsf_soap.c" role="src" />	
+   <file name="wsf_soap.h" role="src" />
+   <file name="wsf_stream.c" role="src" />
+   <file name="wsf_stream.h" role="src" />
+   <file name="wsf_util.c" role="src" />
+   <file name="wsf_util.h" role="src" />
+   <file name="wsf_worker.c" role="src" />
+   <file name="wsf_worker.h" role="src" />
+   <file name="wsf_xml_msg_recv.c" role="src" />
+   <file name="wsf_xml_msg_recv.h" role="src" />
+   <file name="php_encoding.c" role="src" />
+   <file name="php_encoding.h" role="src" />
+   <file name="php_http.c" role="src" />
+   <file name="php_http.h" role="src" />
+   <file name="php_schema.c" role="src" />
+   <file name="php_schema.h" role="src" />
+   <file name="php_sdl.c" role="src" />
+   <file name="php_sdl.h" role="src" />
+   <file name="php_xml.c" role="src" />
+   <file name="php_xml.h" role="src" />
   </dir> <!-- / -->
  </contents>
  <dependencies>
@@ -97,12 +72,12 @@
    </pearinstaller>
   </required>
  </dependencies>
- <providesextension>axis2</providesextension>
+ <providesextension>wsf</providesextension>
  <extsrcrelease />
 
  <changelog>
   <release>
-   <date>2007-07-27</date>
+   <date>2007-08-06</date>
    <version>
     <release>1.0.0</release>
     <api>1.0.0</api>

@@ -4,11 +4,6 @@ PHP_ARG_ENABLE(wsf, whether to eable AXIS2 support,
 if test "$PHP_WSF" = "yes"; then
 	AC_DEFINE(HAVE_WSF, 1, [Whether you have WSO2 WSF for PHP])
 
-	if test -z "AXIS2C_HOME"; then
-		AC_MSG_RESULT([not found])
-		AC_MSG_ERROR(Cannot find Axis2C home. Please set AXIS2C_HOME env variable)
-	fi	
-
 	if test "$PHP_LIBXML" = "no"; then
 		AC_MSG_ERROR([WSF/PHP extension requires LIBXML extension, add --enable-libxml])
 	fi
