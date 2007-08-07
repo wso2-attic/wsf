@@ -357,6 +357,9 @@ static void ws_init_globals (zend_wsf_globals * wsf_globals)
     wsf_globals->typemap = NULL;
     wsf_globals->error_code = NULL;
     wsf_globals->encoding = NULL;
+	wsf_globals->mem_cache = NULL;
+	wsf_globals->error_object = NULL;
+
 } 
 
 /* }}} */ 
@@ -468,7 +471,14 @@ PHP_MSHUTDOWN_FUNCTION (wsf) {
 PHP_RINIT_FUNCTION (wsf) 
 {
     WSF_GLOBAL (soap_version) = AXIOM_SOAP12;
-    return SUCCESS;
+	WSF_GLOBAL(error_code) = NULL;
+	WSF_GLOBAL(error_object) = NULL;
+	WSF_GLOBAL(sdl) = NULL;
+	WSF_GLOBAL(encoding) = NULL;
+	WSF_GLOBAL(class_map) = NULL; 
+	WSF_GLOBAL(features) = NULL;
+	WSF_GLOBAL(typemap) = NULL;
+	return SUCCESS;
 }
 
 
