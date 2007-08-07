@@ -38,8 +38,8 @@ clean:
 	@if exist intdir rmdir /s /q intdir
 		
 copy_sqlite:
-	if exist $(SQLITE_BIN_DIR)\sqlite3.dll copy /Y  $(SQLITE_BIN_DIR)\sqlite3.dll .\..\wso2-wsf-php-bin-1.0.0-win32\wsf_c\lib
-	if exist $(SQLITE_BIN_DIR)\sqlite3.exe copy /Y  $(SQLITE_BIN_DIR)\sqlite3.exe .\..\wso2-wsf-php-bin-1.0.0-win32\wsf_c\lib
+	@if exist $(SQLITE_BIN_DIR)\sqlite3.dll copy /Y  $(SQLITE_BIN_DIR)\sqlite3.dll .\..\wso2-wsf-php-bin-1.0.0-win32\wsf_c\lib
+	@if exist $(SQLITE_BIN_DIR)\sqlite3.exe copy /Y  $(SQLITE_BIN_DIR)\sqlite3.exe .\..\wso2-wsf-php-bin-1.0.0-win32\wsf_c\lib
 
 dist: clean copy_sqlite wsfphp
 
