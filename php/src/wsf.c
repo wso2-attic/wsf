@@ -476,7 +476,7 @@ PHP_RINIT_FUNCTION (wsf)
 	WSF_GLOBAL(sdl) = NULL;
 	WSF_GLOBAL(encoding) = NULL;
 	WSF_GLOBAL(class_map) = NULL; 
-	WSF_GLOBAL(features) = NULL;
+	WSF_GLOBAL(features) = 0;
 	WSF_GLOBAL(typemap) = NULL;
 	return SUCCESS;
 }
