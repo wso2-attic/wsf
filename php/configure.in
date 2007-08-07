@@ -48,7 +48,7 @@ OPENSSL_BIN_DIR = E:\OpenSSL
 # Build with SQLite support for permenent storage, to disable set WITH_SQLITE = 0
 WITH_SQLITE = 0
 # Path to SQLite installation
-SQLITE_BIN_DIR = "E:\SQLite"
+SQLITE_BIN_DIR = "E:\sqlite-source-3_3_8"
 # Path to SQLite source
 SQLITE_SRC_DIR = "E:\sqlite-source-3_3_8"
 

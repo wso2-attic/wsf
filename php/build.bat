@@ -37,7 +37,7 @@
 
 @cd src
 
-@nmake /nologo -f build.mk
+@nmake /nologo -f build.mk dist
 
 @cd ..
 
