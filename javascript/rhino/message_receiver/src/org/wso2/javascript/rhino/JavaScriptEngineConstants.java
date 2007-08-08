@@ -41,4 +41,7 @@ public interface JavaScriptEngineConstants {
     public static final String LOAD_JSSCRIPTS = "loadJSScripts";
 
     public static final String JS_FUNCTION_NAME = "jsFunctionName";
+
+    // Used to keep track of the presence of annotation of the types 
+    public static final String ANNOTATED = "annotated";
 }

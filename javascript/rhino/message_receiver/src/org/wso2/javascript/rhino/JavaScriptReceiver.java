@@ -190,8 +190,15 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     }
                 }
             }
+            AxisMessage outAxisMessage = inMessage.getAxisOperation().getMessage(
+                    WSDLConstants.MESSAGE_LABEL_OUT_VALUE);
             // Get the result by executing the javascript file
-            result = engine.call(jsFunctionName, reader, args, scripts);
+            Boolean annotated = Boolean.FALSE;
+            Parameter parameter = outAxisMessage.getParameter(JavaScriptEngineConstants.ANNOTATED);
+            if (parameter != null) {
+                annotated = (Boolean) parameter.getValue();
+            }
+            result = engine.call(jsFunctionName, reader, args, scripts, annotated);
 
             // Create the outgoing message
             SOAPFactory fac;
@@ -202,8 +209,6 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             }
             SOAPEnvelope envelope = fac.getDefaultEnvelope();
             SOAPBody body = envelope.getBody();
-            AxisMessage outAxisMessage = inMessage.getAxisOperation().getMessage(
-                    WSDLConstants.MESSAGE_LABEL_OUT_VALUE);
             XmlSchemaElement xmlSchemaElement = outAxisMessage.getSchemaElement();
             OMElement outElement;
             String prefix = "ws";

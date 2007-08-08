@@ -140,7 +140,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
      * @return an OMNode containing the result from executing the operation
      * @throws AxisFault
      */
-    public OMElement call(String method, Reader reader, Object args) throws AxisFault {
+    public OMElement call(String method, Reader reader, Object args, Boolean annotated) throws AxisFault {
         boolean json = false;
         Object functionArgs[];
         try {
@@ -190,7 +190,8 @@ public class JavaScriptEngine extends ImporterTopLevel {
                 result = builder.processDocument(in, null, null);
             }
             // Convert the JS return to XML
-            result = jsToXML(result, "return", false);
+            boolean addTypeInfo = !annotated.booleanValue();
+            result = jsToXML(result, "return", addTypeInfo);
             return (OMElement) result;
         } catch (WrappedException exception) {
             throw AxisFault.makeFault(exception.getCause());
@@ -218,14 +219,14 @@ public class JavaScriptEngine extends ImporterTopLevel {
      * @return an OMNode containing the result from executing the operation
      * @throws AxisFault
      */
-    public OMElement call(String method, Reader reader, Object args, String scripts) throws AxisFault {
+    public OMElement call(String method, Reader reader, Object args, String scripts, Boolean annotated) throws AxisFault {
 
         if (scripts != null) {
             // Generate load command out of the parameter scripts
             scripts = "load(" + ("[\"" + scripts + "\"]").replaceAll(",", "\"],[\"") + ")";
             cx.evaluateString(this, scripts, "Load JavaScripts", 0, null);
         }
-        return call(method, reader, args);
+        return call(method, reader, args, annotated);
     }
 
     public Context getCx() {
