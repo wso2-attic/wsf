@@ -61,6 +61,8 @@ public class JavaScriptEngine extends ImporterTopLevel {
 
     private Context cx;
 
+    private boolean json = false;
+
     /**
      * Constructs a new instance of the JavaScriptEngine class
      */
@@ -140,8 +142,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
      * @return an OMNode containing the result from executing the operation
      * @throws AxisFault
      */
-    public OMElement call(String method, Reader reader, Object args, Boolean annotated) throws AxisFault {
-        boolean json = false;
+    public Object call(String method, Reader reader, Object args, Boolean annotated) throws AxisFault {
         Object functionArgs[];
         try {
             // Handle JSON messages
@@ -181,18 +182,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
             // Invokes the java script function
 
             Function f = (Function) fObj;
-            Object result = f.call(cx, this, this, functionArgs);
-
-            if (json) {
-                result = ((String) result).substring(1, ((String) result).length() - 1);
-                InputStream in = new ByteArrayInputStream(((String) result).getBytes());
-                JSONOMBuilder builder = new JSONOMBuilder();
-                result = builder.processDocument(in, null, null);
-            }
-            // Convert the JS return to XML
-            boolean addTypeInfo = !annotated.booleanValue();
-            result = jsToXML(result, "return", addTypeInfo);
-            return (OMElement) result;
+            return f.call(cx, this, this, functionArgs);
         } catch (WrappedException exception) {
             throw AxisFault.makeFault(exception.getCause());
         } catch (JavaScriptException exception) {
@@ -200,7 +190,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
         } catch (Throwable throwable) {
             throw AxisFault.makeFault(throwable);
         }
-    }
+    }    
 
     /**
      * Evaluates the requested operation in the Javascript service
@@ -219,7 +209,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
      * @return an OMNode containing the result from executing the operation
      * @throws AxisFault
      */
-    public OMElement call(String method, Reader reader, Object args, String scripts, Boolean annotated) throws AxisFault {
+    public Object call(String method, Reader reader, Object args, String scripts, Boolean annotated) throws AxisFault {
 
         if (scripts != null) {
             // Generate load command out of the parameter scripts
@@ -233,117 +223,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
         return cx;
     }
 
-    /**
-     * Given a jsObject converts it to corresponding XML
-     * @param jsObject  - The object that needs to be converted
-     * @param elementName - The element name of the wrapper
-     * @param addTypeInfo - Whether type information should be added into the element as an attribute
-     * @return - OMelement which represents the JSObject
-     * @throws AxisFault - Thrown in case an exception occurs during the conversion
-     */
-    private OMElement jsToXML(Object jsObject, String elementName, boolean addTypeInfo) throws AxisFault {
-        String className = jsObject.getClass().getName();
-        OMFactory fac = OMAbstractFactory.getOMFactory();
-        OMNamespace namespace = fac.createOMNamespace("http://www.wso2.org/ns/jstype", "js");
-        OMElement element = fac.createOMElement(elementName, null);
-        // Get the OMNode inside the jsObjecting object
-        if (jsObject instanceof XML) {
-            element.addChild((((XML) jsObject).getAxiomFromXML()));
-            if (addTypeInfo) {
-                element.addAttribute("type", "xml", namespace);
-            }
-        } else if (jsObject instanceof XMLList) {
-            XMLList list = (XMLList) jsObject;
-            if (list.length() == 1) {
-                element.addChild(list.getAxiomFromXML());
-                if (addTypeInfo) {
-                element.addAttribute("type", "xmlList", namespace);
-                }
-            } else if (list.length() == 0) {
-                throw new AxisFault("Function returns an XMLList containing zero node");
-            } else {
-                throw new AxisFault(
-                        "Function returns an XMLList containing more than one node");
-            }
-        } else {
-
-            if (jsObject instanceof String) {
-                element.setText((String) jsObject);
-                if (addTypeInfo) {
-                    element.addAttribute("type", "string", namespace);
-                }
-            } else if (jsObject instanceof Boolean) {
-                Boolean booljsObject = (Boolean) jsObject;
-                element.setText(booljsObject.toString());
-                if (addTypeInfo) {
-                    element.addAttribute("type", "boolean", namespace);
-                }
-            } else if (jsObject instanceof Number) {
-                Number numjsObject = (Number) jsObject;
-                String str = numjsObject.toString();
-                if (str.indexOf("Infinity") >= 0) {
-                    str = str.replace("Infinity", "INF");
-                }
-                element.setText(str);
-                if (addTypeInfo) {
-                    element.addAttribute("type", "number", namespace);
-                }
-            }  else if (jsObject instanceof Date || "org.mozilla.javascript.NativeDate".equals(className)) {
-                Date date = (Date) Context.jsToJava(jsObject, Date.class);
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(date);
-                String dateTime = ConverterUtil.convertToString(calendar);
-                element.setText(dateTime);
-                if (addTypeInfo) {
-                    element.addAttribute("type", "date", namespace);
-                }
-            } else if (jsObject instanceof NativeArray) {
-                element.addAttribute("type", "array", namespace);
-                NativeArray nativeArray = (NativeArray) jsObject;
-                Object[] objects = nativeArray.getAllIds();
-                for (int i = 0; i < objects.length; i++) {
-                    Object object = objects[i];
-                    Object o;
-                    String propertyElementName;
-                    if (object instanceof String) {
-                        String property = (String) object;
-                        if ("length".equals(property)) {
-                            continue;
-                        }
-                        o = nativeArray.get(property, nativeArray);
-                        propertyElementName = property;
-                    } else {
-                        Integer property = (Integer) object;
-                        o = nativeArray.get(property.intValue(), nativeArray);
-                        propertyElementName = "item";
-                    }
-                    OMElement paramElement = jsToXML(o, propertyElementName, true);
-                    element.addChild(paramElement);
-                }
-            } else if (jsObject instanceof Object[]) {
-                element.addAttribute("type", "array", namespace);
-                Object[] objects = (Object[]) jsObject;
-                for (int i = 0; i < objects.length; i++) {
-                    Object object = objects[i];
-                    OMElement paramElement = jsToXML(object, "item", true);
-                    element.addChild(paramElement);
-                }
-            } else if (jsObject instanceof NativeObject) {
-                element.addAttribute("type", "object", namespace);
-                NativeObject nativeObject = (NativeObject) jsObject;
-                Object[] objects = NativeObject.getPropertyIds(nativeObject);
-                for (int i = 0; i < objects.length; i++) {
-                    Object object = objects[i];
-                    Object o;
-                    if (object instanceof String) {
-                        String property = (String) object;
-                        o = nativeObject.get(property, nativeObject);
-                        OMElement paramElement = jsToXML(o, property, true);
-                        element.addChild(paramElement);
-                    }
-                }
-            }
-        }
-        return element;
+    public boolean isJson() {
+        return json;
     }
 }

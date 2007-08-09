@@ -20,12 +20,14 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.OMText;
+import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.soap.SOAP11Constants;
 import org.apache.axiom.soap.SOAP12Constants;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.json.JSONOMBuilder;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.databinding.utils.ConverterUtil;
 import org.apache.axis2.description.AxisMessage;
@@ -42,6 +44,10 @@ import org.apache.ws.commons.schema.XmlSchemaSequence;
 import org.apache.ws.commons.schema.XmlSchemaType;
 import org.apache.ws.commons.schema.constants.Constants;
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.NativeObject;
+import org.mozilla.javascript.xmlimpl.XML;
+import org.mozilla.javascript.xmlimpl.XMLList;
 
 import javax.xml.namespace.QName;
 import java.io.BufferedReader;
@@ -51,10 +57,12 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.Date;
 
 /**
  * Class JavaScriptReceiver implements the AbstractInOutSyncMessageReceiver,
@@ -121,7 +129,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             String scripts = getImportScriptsList(inMessage);
 
             ArrayList params = new ArrayList();
-            OMElement result;
+            OMElement result = null;
             OMElement payload = soapEnvelope.getBody().getFirstElement();
             Object args = payload;
             if (payload != null) {
@@ -198,7 +206,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             if (parameter != null) {
                 annotated = (Boolean) parameter.getValue();
             }
-            result = engine.call(jsFunctionName, reader, args, scripts, annotated);
+            Object response = engine.call(jsFunctionName, reader, args, scripts, annotated);
 
             // Create the outgoing message
             SOAPFactory fac;
@@ -228,7 +236,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                         while (iterator.hasNext()) {
                             XmlSchemaElement innerElement = (XmlSchemaElement) iterator.next();
                             // The name of the element returned should match the schema hence set that name.
-                            result.setLocalName(innerElement.getName());
+                            result = buildResponse(annotated, engine.isJson(), response, innerElement);
                             outElement.addChild(result);
                         }
                         body.addChild(outElement);
@@ -236,13 +244,12 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                         throw new AxisFault("Unsupported schema type in response.");
                     }
                 } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANYTYPE) {
-                    if (result != null) {
-                        outElement.addChild(result.getFirstOMChild());
-                        body.addChild(outElement);
+                    if (response != null) {
+                        body.addChild(buildResponse(annotated, engine.isJson(), response, xmlSchemaElement));
                     }
                 }
-            } else if (result != null) {
-                body.addChild(result.getFirstOMChild());
+            } else if (response != null) {
+                body.addChild(buildResponse(annotated, engine.isJson(), response, xmlSchemaElement));
             }
             outMessage.setEnvelope(envelope);
         } catch (Throwable throwable) {
@@ -406,5 +413,131 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             throw new AxisFault("Unable to load the javaScript");
         }
         return new BufferedReader(new InputStreamReader(jsFileStream));
+    }
+
+    private OMElement buildResponse(Boolean annotated, boolean json, Object result, XmlSchemaElement innerElement) throws AxisFault {
+        if (json) {
+            result = ((String) result).substring(1, ((String) result).length() - 1);
+            InputStream in = new ByteArrayInputStream(((String) result).getBytes());
+            JSONOMBuilder builder = new JSONOMBuilder();
+            result = builder.processDocument(in, null, null);
+        }
+        // Convert the JS return to XML
+        boolean addTypeInfo = !annotated.booleanValue();
+        return createResponseElement(result, innerElement.getName(), addTypeInfo);
+    }
+
+    /**
+     * Given a jsObject converts it to corresponding XML
+     * @param jsObject  - The object that needs to be converted
+     * @param elementName - The element name of the wrapper
+     * @param addTypeInfo - Whether type information should be added into the element as an attribute
+     * @return - OMelement which represents the JSObject
+     * @throws AxisFault - Thrown in case an exception occurs during the conversion
+     */
+    private OMElement createResponseElement(Object jsObject, String elementName, boolean addTypeInfo) throws AxisFault {
+        String className = jsObject.getClass().getName();
+        OMFactory fac = OMAbstractFactory.getOMFactory();
+        OMNamespace namespace = fac.createOMNamespace("http://www.wso2.org/ns/jstype", "js");
+        OMElement element = fac.createOMElement(elementName, null);
+        // Get the OMNode inside the jsObjecting object
+        if (jsObject instanceof XML) {
+            element.addChild((((XML) jsObject).getAxiomFromXML()));
+            if (addTypeInfo) {
+                element.addAttribute("type", "xml", namespace);
+            }
+        } else if (jsObject instanceof XMLList) {
+            XMLList list = (XMLList) jsObject;
+            if (list.length() == 1) {
+                element.addChild(list.getAxiomFromXML());
+                if (addTypeInfo) {
+                element.addAttribute("type", "xmlList", namespace);
+                }
+            } else if (list.length() == 0) {
+                throw new AxisFault("Function returns an XMLList containing zero node");
+            } else {
+                throw new AxisFault(
+                        "Function returns an XMLList containing more than one node");
+            }
+        } else {
+
+            if (jsObject instanceof String) {
+                element.setText((String) jsObject);
+                if (addTypeInfo) {
+                    element.addAttribute("type", "string", namespace);
+                }
+            } else if (jsObject instanceof Boolean) {
+                Boolean booljsObject = (Boolean) jsObject;
+                element.setText(booljsObject.toString());
+                if (addTypeInfo) {
+                    element.addAttribute("type", "boolean", namespace);
+                }
+            } else if (jsObject instanceof Number) {
+                Number numjsObject = (Number) jsObject;
+                String str = numjsObject.toString();
+                if (str.indexOf("Infinity") >= 0) {
+                    str = str.replace("Infinity", "INF");
+                }
+                element.setText(str);
+                if (addTypeInfo) {
+                    element.addAttribute("type", "number", namespace);
+                }
+            }  else if (jsObject instanceof Date || "org.mozilla.javascript.NativeDate".equals(className)) {
+                Date date = (Date) Context.jsToJava(jsObject, Date.class);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                String dateTime = ConverterUtil.convertToString(calendar);
+                element.setText(dateTime);
+                if (addTypeInfo) {
+                    element.addAttribute("type", "date", namespace);
+                }
+            } else if (jsObject instanceof NativeArray) {
+                element.addAttribute("type", "array", namespace);
+                NativeArray nativeArray = (NativeArray) jsObject;
+                Object[] objects = nativeArray.getAllIds();
+                for (int i = 0; i < objects.length; i++) {
+                    Object object = objects[i];
+                    Object o;
+                    String propertyElementName;
+                    if (object instanceof String) {
+                        String property = (String) object;
+                        if ("length".equals(property)) {
+                            continue;
+                        }
+                        o = nativeArray.get(property, nativeArray);
+                        propertyElementName = property;
+                    } else {
+                        Integer property = (Integer) object;
+                        o = nativeArray.get(property.intValue(), nativeArray);
+                        propertyElementName = "item";
+                    }
+                    OMElement paramElement = createResponseElement(o, propertyElementName, true);
+                    element.addChild(paramElement);
+                }
+            } else if (jsObject instanceof Object[]) {
+                element.addAttribute("type", "array", namespace);
+                Object[] objects = (Object[]) jsObject;
+                for (int i = 0; i < objects.length; i++) {
+                    Object object = objects[i];
+                    OMElement paramElement = createResponseElement(object, "item", true);
+                    element.addChild(paramElement);
+                }
+            } else if (jsObject instanceof NativeObject) {
+                element.addAttribute("type", "object", namespace);
+                NativeObject nativeObject = (NativeObject) jsObject;
+                Object[] objects = NativeObject.getPropertyIds(nativeObject);
+                for (int i = 0; i < objects.length; i++) {
+                    Object object = objects[i];
+                    Object o;
+                    if (object instanceof String) {
+                        String property = (String) object;
+                        o = nativeObject.get(property, nativeObject);
+                        OMElement paramElement = createResponseElement(o, property, true);
+                        element.addChild(paramElement);
+                    }
+                }
+            }
+        }
+        return element;
     }
 }
