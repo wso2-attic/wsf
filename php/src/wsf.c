@@ -1191,17 +1191,19 @@ PHP_METHOD (ws_service, __construct)
         svc_info->msg_recv = wsf_msg_recv;
         wsf_util_create_svc_from_svc_info (svc_info, ws_env_svr TSRMLS_CC);
     } else {
-/*
+
 		if(SG(request_info).path_translated);
         svc_info->svc_name = wsf_util_generate_svc_name_from_uri (
             SG(request_info).path_translated, svc_info, ws_env_svr);
         svc_info->msg_recv = wsf_msg_recv;
         wsf_util_create_svc_from_svc_info (svc_info, ws_env_svr TSRMLS_CC);
         php_printf("%s", SG(request_info).path_translated);
-*/
+
+/*
         zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C),
             1 TSRMLS_CC, "server does not support cli yet");
         return;
+*/        
     }
     if (ht_ops_to_funcs) {
         HashPosition pos;
@@ -1414,14 +1416,14 @@ PHP_METHOD (ws_service, reply)
     char *content_type = NULL;
     int in_wsdl_mode = 0;
     int raw_post_null = AXIS2_FALSE;
-	/*
+    
     char *reply_data = NULL;
     int reply_data_len = 0;
 
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|s", &reply_data, &reply_data_len) == FAILURE) {
         php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
     }
-	*/
+
     WSF_GET_THIS (obj);
     intern = (ws_object *) zend_object_store_get_object (obj TSRMLS_CC);
     
@@ -1518,6 +1520,19 @@ PHP_METHOD (ws_service, reply)
         req_info->req_data = Z_STRVAL_PP (raw_post);
         req_info->req_data_length = Z_STRLEN_PP (raw_post);
     } else {
+        /* If we come here, it is not an HTTP post, 
+           rather a command line script execution. 
+           So set some defaults to facilitate standalone execution. */
+        req_info->svr_name = estrdup("localhost");
+        req_info->svr_port = 9999;
+        req_info->req_data = reply_data;
+        req_info->req_data_length = reply_data_len;
+        req_info->http_protocol = estrdup("HTTP");
+        req_info->request_uri = estrdup("http://localhost/axis2/services");
+        req_info->query_string = estrdup("");
+        req_info->request_method = estrdup("POST");
+        req_info->content_type = estrdup("application/soap+xml;charset=UTF-8");
+        req_info->content_length = reply_data_len;
         raw_post_null = AXIS2_TRUE;
     }
     
@@ -1666,7 +1681,7 @@ PHP_METHOD (ws_service, reply)
             wsf_soap_send_fault (SOAP_1_1, "SOAP-ENV:Server",
                 "Bad Request. Can't find HTTP_RAW_POST_DATA",
                 NULL TSRMLS_CC);
-            return;
+            /*return;*/
         }
         status =
             wsf_soap_do_function_call1 (env, svc_info, this_ptr,

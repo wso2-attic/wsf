@@ -15,6 +15,19 @@
  * limitations under the License.
  */
 
+/* sample test payload */
+$reqPayloadString = <<<XML
+<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns1:add xmlns:ns1="http://ws.apache.org/axis2/services/math">
+         <param1>40</param1>
+         <param2>8</param2>
+      </ns1:add>
+   </soapenv:Body>
+</soapenv:Envelope>
+XML;
+
 function addFunction($inMessage) {
 
     
@@ -89,6 +102,6 @@ $operations = array("add" => "addFunction",
 
 $svr = new WSService(array("operations" => $operations));
         
-$svr->reply();
+$svr->reply($reqPayloadString);
 
 ?>
