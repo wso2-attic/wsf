@@ -1,13 +1,14 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-  <meta http-equiv="content-type" content="">
+  <meta http-equiv="content-type" content="" />
   <title>WS Security API</title>
   <link href="style/api_style.css" rel="stylesheet" type="text/css"
-  media="all">
+  media="all" />
 </head>
 
-<body lang="en">
+<body xml:lang="en" lang="en">
 <h1>WS Security API</h1>
 
 <h2>Predefined Classes for WS Security</h2>
@@ -18,18 +19,18 @@
 
 <p><strong>WSPolicy (mixed policy)</strong></p>
 
-<p>Construct a new WSPolicy Object. <br>
+<p>Construct a new WSPolicy Object. <br />
 A policy can be one of following.</p>
 
-<p>  1. XML string representing the corresponding policy.</p>
+<p>1. XML string representing the corresponding policy.</p>
 
-<p>  2. DOM node representing the corresponding policy.</p>
+<p>2. DOM node representing the corresponding policy.</p>
 
-<p>  3. Array <br>
-     An array of options can be specified using the syntax given
-below.<br>
-        array("security"=&gt;array of security options)<br>
-    </p>
+<p>3. Array </p>
+
+<p>An array of options can be specified using the syntax given below.<br />
+array("security"=&gt;array of security options)<br />
+</p>
 
 <p>When using WSPolicy, you can use a policy XML file to configure the
 security options to be used. When the user has a policy file, he or she can
@@ -41,7 +42,7 @@ constructor. The following is a description of the options that can be
 provided in the options array. Examples will be provided on the policy files
 later in this document.</p>
 
-<p> </p>
+<p></p>
 
 <p></p>
 
@@ -60,34 +61,34 @@ later in this document.</p>
       <td style="width: 195px">TRUE | "X509"</td>
       <td>FALSE</td>
       <td>Whether to sign the XML message or not. By default signing is not
-        enabled. <br clear="all">
+        enabled. <br clear="all" />
         If specified "sign"=&gt;TRUE, the body part of the SOAP message will
-        be signed using the X509 standard. <br clear="all">
+        be signed using the X509 standard. <br clear="all" />
         Signing will be done on the body part of the message. To sign other
         parts of the message, a policy file should be used.</td>
     </tr>
     <tr>
       <td>encrypt</td>
       <td>string | boolean</td>
-      <td style="width: 195px">TRUE | "X509" <br clear="all">
+      <td style="width: 195px">TRUE | "X509" <br clear="all" />
       </td>
       <td>FALSE</td>
       <td>Whether to encrypt the XML message or not. By default encryption is
-        not enabled. <br clear="all">
+        not enabled. <br clear="all" />
         If specified "encrypt"=&gt;TRUE, the body part of the SOAP message
-        will be encrypted using the X509 standard. <br clear="all">
+        will be encrypted using the X509 standard. <br clear="all" />
         Encrypting will be done on the body part of the message. To encrypt
         headers, a policy file should be used.</td>
     </tr>
     <tr>
       <td>algorithmSuite</td>
       <td>string</td>
-      <td style="width: 195px">corresponds to Security Policy spec  7.1
-        [Algorithm Suite] definitions <br clear="all">
+      <td style="width: 195px">corresponds to Security Policy spec 7.1
+        [Algorithm Suite] definitions <br clear="all" />
       </td>
       <td>"Basic256Rsa15"</td>
       <td>The symmetric algorithm and asymmetric algorithm will be derived
-        from the algorithmSuite string.   </td>
+        from the algorithmSuite string. </td>
     </tr>
     <tr>
       <td>layout</td>
@@ -129,15 +130,15 @@ later in this document.</p>
       <td>securityTokenReference</td>
       <td>string</td>
       <td style="width: 195px">"IssuerSerial" |
-        "KeyIdentifier"|"EmbeddedToken" <br clear="all">
-        |"Thumbprint"| "Direct" <br clear="all">
+        "KeyIdentifier"|"EmbeddedToken" <br clear="all" />
+        |"Thumbprint"| "Direct" <br clear="all" />
       </td>
-      <td>"KeyIdentifier" <br clear="all">
+      <td>"KeyIdentifier" <br clear="all" />
       </td>
       <td>Defines how the security tokens are sent when using encryption. <br
-        clear="all">
+        clear="all" />
         If you wish to have security token references when signing, you
-        should provide the appropriate policy file. <br clear="all">
+        should provide the appropriate policy file. <br clear="all" />
       </td>
     </tr>
   </tbody>
@@ -207,7 +208,7 @@ following table.</p>
     <tr>
       <td class="confluenceTd">receiverCertificate</td>
       <td class="confluenceTd">string</td>
-      <td class="confluenceTd">string <br clear="all">
+      <td class="confluenceTd">string<br clear="all" />
       </td>
       <td class="confluenceTd">none</td>
       <td class="confluenceTd" style="width: 415px">Receiver's certificate to
@@ -215,15 +216,15 @@ following table.</p>
       get_cert_from_file()</td>
     </tr>
     <tr>
-      <td class="confluenceTd">ttl <br clear="all">
+      <td class="confluenceTd">ttl <br clear="all" />
       </td>
-      <td class="confluenceTd">int <br clear="all">
+      <td class="confluenceTd">int <br clear="all" />
       </td>
-      <td class="confluenceTd">int <br clear="all">
+      <td class="confluenceTd">int <br clear="all" />
       </td>
       <td class="confluenceTd">360</td>
       <td class="confluenceTd" style="width: 415px">The time period within
-        which the message would be valid in seconds <br clear="all">
+        which the message would be valid in seconds <br clear="all" />
       </td>
     </tr>
     <tr>
@@ -237,7 +238,7 @@ following table.</p>
     </tr>
   </tbody>
 </table>
-<br>
+<br />
 
 
 <h2 id="ws_client_svc_options">WSClient and WSService Options for
@@ -270,117 +271,117 @@ Security</h2>
   </tbody>
 </table>
 
-<p><br>
- Only a common subset of security options can be provided as user options.
-For more complex scenarios, you should provide the appropriate policy
-file.</p>
-<br>
+<p><br />
+Only a common subset of security options can be provided as user options. For
+more complex scenarios, you should provide the appropriate policy file.</p>
+<br />
 
 
 <h2 id="sec_policy_sample">WS-SecurityPolicy File Example</h2>
 
 <p><font face="Monospace">&lt;<font color="#000000">wsp</font>:<font
-color="#000000">Policy</font> <font color="#000000">xmlns</font>:<font
+color="#000000">Policy</font><font color="#000000">xmlns</font>:<font
 color="#000000">wsp</font>='http:<font
-color="#808080"><i>//schemas.xmlsoap.org/ws/2004/09/policy'&gt;<br>
-</i></font>   &lt;<font color="#000000">wsp</font>:<font
-color="#000000">ExactlyOne</font>&gt;<br>
-    &lt;<font color="#000000">wsp</font>:<font
-color="#000000">All</font>&gt;<br>
-      &lt;<font color="#000000">sp</font>:<font
-color="#000000">AsymmetricBinding</font> <font
+color="#808080"><i>//schemas.xmlsoap.org/ws/2004/09/policy'&gt;<br />
+</i></font> &lt;<font color="#000000">wsp</font>:<font
+color="#000000">ExactlyOne</font>&gt;<br />
+&lt;<font color="#000000">wsp</font>:<font color="#000000">All</font>&gt;<br
+/>
+&lt;<font color="#000000">sp</font>:<font
+color="#000000">AsymmetricBinding</font><font
 color="#000000">xmlns</font>:<font color="#000000">sp</font>='http:<font
-color="#808080"><i>//schemas.xmlsoap.org/ws/2005/07/securitypolicy'&gt;<br>
-</i></font>         &lt;<font color="#000000">wsp</font>:<font
-color="#000000">Policy</font>&gt;<br>
-          &lt;<font color="#000000">sp</font>:<font
-color="#000000">InitiatorToken</font>&gt;<br>
-            &lt;<font color="#000000">wsp</font>:<font
-color="#000000">Policy</font>&gt;<br>
-              &lt;<font color="#000000">sp</font>:<font
-color="#000000">X509Token</font> <font color="#000000">sp</font>:<font
+color="#808080"><i>//schemas.xmlsoap.org/ws/2005/07/securitypolicy'&gt;<br />
+</i></font> &lt;<font color="#000000">wsp</font>:<font
+color="#000000">Policy</font>&gt;<br />
+&lt;<font color="#000000">sp</font>:<font
+color="#000000">InitiatorToken</font>&gt;<br />
+&lt;<font color="#000000">wsp</font>:<font
+color="#000000">Policy</font>&gt;<br />
+&lt;<font color="#000000">sp</font>:<font
+color="#000000">X509Token</font><font color="#000000">sp</font>:<font
 color="#000000">IncludeToken</font>='<font color="#000000">http</font>:<font
-color="#808080"><i>//schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always'&gt;<br>
-</i></font>                 &lt;<font
-color="#000000">wsp</font>:<font color="#000000">Policy</font>&gt;<br>
-                  &lt;<font color="#000000">sp</font>:<font
-color="#000000">WssX509V3Token10</font> /&gt;<br>
-                &lt;/<font color="#000000">wsp</font>:<font
-color="#000000">Policy</font>&gt;<br>
-              &lt;/<font color="#000000">sp</font>:<font
-color="#000000">X509Token</font>&gt;<br>
-            &lt;/<font color="#000000">wsp</font>:<font
-color="#000000">Policy</font>&gt;<br>
-          &lt;/<font color="#000000">sp</font>:<font
-color="#000000">InitiatorToken</font>&gt;<br>
-          &lt;<font color="#000000">sp</font>:<font
-color="#000000">RecipientToken</font>&gt;<br>
-            &lt;<font color="#000000">wsp</font>:<font
-color="#000000">Policy</font>&gt;<br>
-              &lt;<font color="#000000">sp</font>:<font
-color="#000000">X509Token</font> <font color="#000000">sp</font>:<font
-color="#000000">IncludeToken</font>='<font color="#000000">http</font>:<font
-color="#808080"><i>//schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always'&gt;<br>
-</i></font>                 &lt;<font
-color="#000000">wsp</font>:<font color="#000000">Policy</font>&gt;<br>
-                  &lt;<font color="#000000">sp</font>:<font
-color="#000000">WssX509V3Token10</font> /&gt;<br>
-                &lt;/<font color="#000000">wsp</font>:<font
-color="#000000">Policy</font>&gt;<br>
-              &lt;/<font color="#000000">sp</font>:<font
-color="#000000">X509Token</font>&gt;<br>
-            &lt;/<font color="#000000">wsp</font>:<font
-color="#000000">Policy</font>&gt;<br>
-          &lt;/<font color="#000000">sp</font>:<font
-color="#000000">RecipientToken</font>&gt;<br>
-          &lt;<font color="#000000">sp</font>:<font
-color="#000000">AlgorithmSuite</font>&gt;<br>
-            &lt;<font color="#000000">wsp</font>:<font
-color="#000000">Policy</font>&gt;<br>
-              &lt;<font color="#000000">sp</font>:<font
-color="#000000">Basic256Rsa15</font> /&gt;<br>
-            &lt;/<font color="#000000">wsp</font>:<font
-color="#000000">Policy</font>&gt;<br>
-          &lt;/<font color="#000000">sp</font>:<font
-color="#000000">AlgorithmSuite</font>&gt;<br>
-          &lt;<font color="#000000">sp</font>:<font
-color="#000000">Layout</font>&gt;<br>
-            &lt;<font color="#000000">wsp</font>:<font
-color="#000000">Policy</font>&gt;<br>
-              &lt;<font color="#000000">sp</font>:<font
-color="#000000">Strict</font> /&gt;<br>
-            &lt;/<font color="#000000">wsp</font>:<font
-color="#000000">Policy</font>&gt;<br>
-          &lt;/<font color="#000000">sp</font>:<font
-color="#000000">Layout</font>&gt;<br>
-          &lt;<font color="#000000">sp</font>:<font
-color="#000000">IncludeTimestamp</font> /&gt;<br>
-          &lt;<font color="#000000">sp</font>:<font
-color="#000000">EncryptBeforeSigning</font> /&gt;<br>
-          &lt;<font color="#000000">sp</font>:<font
-color="#000000">OnlySignEntireHeadersAndBody</font> /&gt;<br>
-        &lt;/<font color="#000000">wsp</font>:<font
-color="#000000">Policy</font>&gt;<br>
-      &lt;/<font color="#000000">sp</font>:<font
-color="#000000">AsymmetricBinding</font>&gt;<br>
-      &lt;<font color="#000000">sp</font>:<font
-color="#000000">Wss10</font> <font color="#000000">xmlns</font>:<font
-color="#000000">sp</font>='http:<font
-color="#808080"><i>//schemas.xmlsoap.org/ws/2005/07/securitypolicy'&gt;<br>
-</i></font>         &lt;<font color="#000000">wsp</font>:<font
-color="#000000">Policy</font>&gt;<br>
-          &lt;<font color="#000000">sp</font>:<font
-color="#000000">MustSupportRefIssuerSerial</font> /&gt;<br>
-        &lt;/<font color="#000000">wsp</font>:<font
-color="#000000">Policy</font>&gt;<br>
-      &lt;/<font color="#000000">sp</font>:<font
-color="#000000">Wss10</font>&gt;<br>
-    &lt;/<font color="#000000">wsp</font>:<font
-color="#000000">All</font>&gt;<br>
-  &lt;/<font color="#000000">wsp</font>:<font
-color="#000000">ExactlyOne</font>&gt;<br>
+color="#808080"><i>//schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always'&gt;<br
+/>
+</i></font> &lt;<font color="#000000">wsp</font>:<font
+color="#000000">Policy</font>&gt;<br />
+&lt;<font color="#000000">sp</font>:<font
+color="#000000">WssX509V3Token10</font>/&gt;<br />
 &lt;/<font color="#000000">wsp</font>:<font
-color="#000000">Policy</font>&gt;<br>
+color="#000000">Policy</font>&gt;<br />
+&lt;/<font color="#000000">sp</font>:<font
+color="#000000">X509Token</font>&gt;<br />
+&lt;/<font color="#000000">wsp</font>:<font
+color="#000000">Policy</font>&gt;<br />
+&lt;/<font color="#000000">sp</font>:<font
+color="#000000">InitiatorToken</font>&gt;<br />
+&lt;<font color="#000000">sp</font>:<font
+color="#000000">RecipientToken</font>&gt;<br />
+&lt;<font color="#000000">wsp</font>:<font
+color="#000000">Policy</font>&gt;<br />
+&lt;<font color="#000000">sp</font>:<font
+color="#000000">X509Token</font><font color="#000000">sp</font>:<font
+color="#000000">IncludeToken</font>='<font color="#000000">http</font>:<font
+color="#808080"><i>//schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always'&gt;<br
+/>
+</i></font> &lt;<font color="#000000">wsp</font>:<font
+color="#000000">Policy</font>&gt;<br />
+&lt;<font color="#000000">sp</font>:<font
+color="#000000">WssX509V3Token10</font>/&gt;<br />
+&lt;/<font color="#000000">wsp</font>:<font
+color="#000000">Policy</font>&gt;<br />
+&lt;/<font color="#000000">sp</font>:<font
+color="#000000">X509Token</font>&gt;<br />
+&lt;/<font color="#000000">wsp</font>:<font
+color="#000000">Policy</font>&gt;<br />
+&lt;/<font color="#000000">sp</font>:<font
+color="#000000">RecipientToken</font>&gt;<br />
+&lt;<font color="#000000">sp</font>:<font
+color="#000000">AlgorithmSuite</font>&gt;<br />
+&lt;<font color="#000000">wsp</font>:<font
+color="#000000">Policy</font>&gt;<br />
+&lt;<font color="#000000">sp</font>:<font
+color="#000000">Basic256Rsa15</font>/&gt;<br />
+&lt;/<font color="#000000">wsp</font>:<font
+color="#000000">Policy</font>&gt;<br />
+&lt;/<font color="#000000">sp</font>:<font
+color="#000000">AlgorithmSuite</font>&gt;<br />
+&lt;<font color="#000000">sp</font>:<font
+color="#000000">Layout</font>&gt;<br />
+&lt;<font color="#000000">wsp</font>:<font
+color="#000000">Policy</font>&gt;<br />
+&lt;<font color="#000000">sp</font>:<font
+color="#000000">Strict</font>/&gt;<br />
+&lt;/<font color="#000000">wsp</font>:<font
+color="#000000">Policy</font>&gt;<br />
+&lt;/<font color="#000000">sp</font>:<font
+color="#000000">Layout</font>&gt;<br />
+&lt;<font color="#000000">sp</font>:<font
+color="#000000">IncludeTimestamp</font>/&gt;<br />
+&lt;<font color="#000000">sp</font>:<font
+color="#000000">EncryptBeforeSigning</font>/&gt;<br />
+&lt;<font color="#000000">sp</font>:<font
+color="#000000">OnlySignEntireHeadersAndBody</font>/&gt;<br />
+&lt;/<font color="#000000">wsp</font>:<font
+color="#000000">Policy</font>&gt;<br />
+&lt;/<font color="#000000">sp</font>:<font
+color="#000000">AsymmetricBinding</font>&gt;<br />
+&lt;<font color="#000000">sp</font>:<font color="#000000">Wss10</font><font
+color="#000000">xmlns</font>:<font color="#000000">sp</font>='http:<font
+color="#808080"><i>//schemas.xmlsoap.org/ws/2005/07/securitypolicy'&gt;<br />
+</i></font> &lt;<font color="#000000">wsp</font>:<font
+color="#000000">Policy</font>&gt;<br />
+&lt;<font color="#000000">sp</font>:<font
+color="#000000">MustSupportRefIssuerSerial</font>/&gt;<br />
+&lt;/<font color="#000000">wsp</font>:<font
+color="#000000">Policy</font>&gt;<br />
+&lt;/<font color="#000000">sp</font>:<font
+color="#000000">Wss10</font>&gt;<br />
+&lt;/<font color="#000000">wsp</font>:<font color="#000000">All</font>&gt;<br
+/>
+&lt;/<font color="#000000">wsp</font>:<font
+color="#000000">ExactlyOne</font>&gt;<br />
+&lt;/<font color="#000000">wsp</font>:<font
+color="#000000">Policy</font>&gt;<br />
 </font></p>
 </body>
 </html>
