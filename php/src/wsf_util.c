@@ -874,6 +874,7 @@ wsf_util_set_attachments_with_cids (
     return;
 }
 
+/*
 void
 wsf_util_get_attachments (
     const axutil_env_t * env,
@@ -963,6 +964,96 @@ wsf_util_get_attachments (
     }
     return;
 }
+*/
+
+/*************************/
+void
+wsf_util_get_attachments (
+    const axutil_env_t * env,
+    axiom_node_t * om_node,
+    zval * cid2str,
+    zval * cid2contentType TSRMLS_DC)
+{
+    axiom_node_t *temp_node = NULL;
+    axiom_node_t *nodes[256];
+    int count = 0;
+
+    if (!om_node)
+    {
+        return;
+    }
+
+    nodes[count++] = om_node;
+
+
+    do {
+		if (axiom_node_get_node_type(om_node, env) == AXIOM_TEXT) {
+			axiom_text_t *text = NULL;
+			axiom_data_handler_t *data_handler = NULL;
+			
+			
+			text = (axiom_text_t*)axiom_node_get_data_element(om_node, env);
+			if(text) {
+				data_handler = axiom_text_get_data_handler (text, env);
+                if (data_handler) {
+                    char *cnt_type = NULL;
+                    char *data = NULL;
+                    int data_len = 0;
+					char *cid = NULL;
+
+
+                    axiom_data_handler_read_from (data_handler, env, &data, &data_len);
+                    cnt_type = axiom_data_handler_get_content_type(data_handler, env);
+					cid = axiom_text_get_content_id(text, env);
+					add_assoc_stringl (cid2str, cid, data, data_len, 1);
+
+					if (cnt_type) {
+                        add_assoc_stringl (cid2contentType, cid, 
+                            cnt_type, strlen (cnt_type), 1);
+                    }
+					/* axiom_text_set_optimize (text, env, AXIS2_TRUE); */
+                    return;
+                }			
+			}
+        }
+        temp_node = axiom_node_get_first_child(om_node, env);
+        if (temp_node)
+        {
+            om_node = temp_node;
+            nodes[count++] = om_node;
+        }
+        else
+        {
+            temp_node = axiom_node_get_next_sibling(om_node, env);
+            if (temp_node)
+            {
+                om_node = temp_node;
+                nodes[count -1] = om_node;
+            }
+            else
+            {
+                while (count > 1 && !temp_node)
+                {
+                    count--;
+                    om_node = nodes[count -1];
+                    temp_node = axiom_node_get_next_sibling(om_node, env);
+                }
+               
+                if (temp_node && count > 1)
+                {
+                    om_node = temp_node;
+                    nodes[count -1] = om_node;
+                }
+                else
+                {
+                    count--;
+                }
+            }
+        }
+    } while(count > 0);
+}
+/***************************/
+
 
 
 char *
