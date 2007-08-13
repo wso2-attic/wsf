@@ -1519,6 +1519,7 @@ PHP_METHOD (ws_service, reply)
             (void **) & raw_post) != FAILURE  &&((*raw_post)->type ==  IS_STRING)) {
         req_info->req_data = Z_STRVAL_PP (raw_post);
         req_info->req_data_length = Z_STRLEN_PP (raw_post);
+    } else if(req_info->request_method && strcmp(req_info->request_method, "GET") == 0) {
     } else {
         /* If we come here, it is not an HTTP post, 
            rather a command line script execution. 
