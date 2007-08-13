@@ -16,38 +16,24 @@
 
 package org.wso2.javascript.rhino;
 
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMFactory;
-import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.impl.llom.OMSourcedElementImpl;
 import org.apache.axis2.AxisFault;
-import org.apache.axis2.databinding.utils.ConverterUtil;
 import org.apache.axis2.json.JSONBadgerfishDataSource;
 import org.apache.axis2.json.JSONDataSource;
-import org.apache.axis2.json.JSONOMBuilder;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.ImporterTopLevel;
 import org.mozilla.javascript.JavaScriptException;
-import org.mozilla.javascript.NativeArray;
-import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.WrappedException;
-import org.mozilla.javascript.xmlimpl.XML;
-import org.mozilla.javascript.xmlimpl.XMLList;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Reader;
 import java.net.URL;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Class JavaScriptEngine implements a simple Javascript evaluator using Rhino.
@@ -142,7 +128,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
      * @return an OMNode containing the result from executing the operation
      * @throws AxisFault
      */
-    public Object call(String method, Reader reader, Object args, Boolean annotated) throws AxisFault {
+    public Object call(String method, Reader reader, Object args) throws AxisFault {
         Object functionArgs[];
         try {
             // Handle JSON messages
@@ -209,14 +195,14 @@ public class JavaScriptEngine extends ImporterTopLevel {
      * @return an OMNode containing the result from executing the operation
      * @throws AxisFault
      */
-    public Object call(String method, Reader reader, Object args, String scripts, Boolean annotated) throws AxisFault {
+    public Object call(String method, Reader reader, Object args, String scripts) throws AxisFault {
 
         if (scripts != null) {
             // Generate load command out of the parameter scripts
             scripts = "load(" + ("[\"" + scripts + "\"]").replaceAll(",", "\"],[\"") + ")";
             cx.evaluateString(this, scripts, "Load JavaScripts", 0, null);
         }
-        return call(method, reader, args, annotated);
+        return call(method, reader, args);
     }
 
     public Context getCx() {

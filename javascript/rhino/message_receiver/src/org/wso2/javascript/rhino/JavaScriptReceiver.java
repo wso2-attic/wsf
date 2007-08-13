@@ -18,23 +18,30 @@ package org.wso2.javascript.rhino;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.OMText;
-import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.soap.SOAP11Constants;
 import org.apache.axiom.soap.SOAP12Constants;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axis2.AxisFault;
-import org.apache.axis2.json.JSONOMBuilder;
 import org.apache.axis2.context.MessageContext;
+import org.apache.axis2.databinding.types.Day;
+import org.apache.axis2.databinding.types.Duration;
+import org.apache.axis2.databinding.types.Month;
+import org.apache.axis2.databinding.types.MonthDay;
+import org.apache.axis2.databinding.types.Time;
+import org.apache.axis2.databinding.types.Year;
+import org.apache.axis2.databinding.types.YearMonth;
 import org.apache.axis2.databinding.utils.ConverterUtil;
 import org.apache.axis2.description.AxisMessage;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.engine.MessageReceiver;
+import org.apache.axis2.json.JSONOMBuilder;
 import org.apache.axis2.receivers.AbstractInOutMessageReceiver;
 import org.apache.axis2.wsdl.WSDLConstants;
 import org.apache.ws.commons.schema.XmlSchemaComplexType;
@@ -51,18 +58,19 @@ import org.mozilla.javascript.xmlimpl.XMLList;
 
 import javax.xml.namespace.QName;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.TimeZone;
 
 /**
  * Class JavaScriptReceiver implements the AbstractInOutSyncMessageReceiver,
@@ -201,12 +209,12 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             AxisMessage outAxisMessage = inMessage.getAxisOperation().getMessage(
                     WSDLConstants.MESSAGE_LABEL_OUT_VALUE);
             // Get the result by executing the javascript file
-            Boolean annotated = Boolean.FALSE;
+            boolean annotated = false;
             Parameter parameter = outAxisMessage.getParameter(JavaScriptEngineConstants.ANNOTATED);
             if (parameter != null) {
-                annotated = (Boolean) parameter.getValue();
+                annotated = ((Boolean) parameter.getValue()).booleanValue();
             }
-            Object response = engine.call(jsFunctionName, reader, args, scripts, annotated);
+            Object response = engine.call(jsFunctionName, reader, args, scripts);
 
             // Create the outgoing message
             SOAPFactory fac;
@@ -236,8 +244,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                         while (iterator.hasNext()) {
                             XmlSchemaElement innerElement = (XmlSchemaElement) iterator.next();
                             // The name of the element returned should match the schema hence set that name.
-                            result = buildResponse(annotated, engine.isJson(), response, innerElement);
-                            outElement.addChild(result);
+                            outElement.addChild(handleSchemaType(innerElement, response, fac, annotated, engine.isJson()));
                         }
                         body.addChild(outElement);
                     } else {
@@ -263,6 +270,215 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                        :SOAP12Constants.SOAP_DEFAULT_NAMESPACE_PREFIX + ":"+ SOAP11Constants.FAULT_CODE_RECEIVER);
             throw fault;
         }
+    }
+
+    private OMElement handleSchemaType(XmlSchemaElement innerElement, Object jsObject, OMFactory factory, boolean annotated, boolean json) throws AxisFault {
+        QName qName = innerElement.getSchemaTypeName();
+        OMElement element = factory.createOMElement(innerElement.getName(), null);
+        if (qName.equals(Constants.XSD_ANYTYPE)) {
+            return buildResponse(annotated, json, jsObject, innerElement);
+        }
+        if (qName.equals(Constants.XSD_STRING)) {
+            String str = JSToOMConverter.convertToString(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_FLOAT)) {
+            String str = JSToOMConverter.convertToFloat(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_DOUBLE)) {
+            String str = JSToOMConverter.convertToDouble(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_INTEGER)) {
+            String str = JSToOMConverter.convertToInteger(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_INT)) {
+            String str = JSToOMConverter.convertToInt(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_NONPOSITIVEINTEGER)) {
+            String str = JSToOMConverter.convertToNonPositiveInteger(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_NONNEGATIVEINTEGER)) {
+            String str = JSToOMConverter.convertToNonNegativeInteger(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_POSITIVEINTEGER)) {
+            String str = JSToOMConverter.convertToPositiveInteger(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_NEGATIVEINTEGER)) {
+            String str = JSToOMConverter.convertToNegativeInteger(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_LONG)) {
+            String str = JSToOMConverter.convertToLong(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_SHORT)) {
+            String str = JSToOMConverter.convertToShort(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_BYTE)) {
+            String str = JSToOMConverter.convertToByte(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_UNSIGNEDLONG)) {
+            String str = JSToOMConverter.convertToUnsignedLong(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_UNSIGNEDBYTE)) {
+            String str = JSToOMConverter.convertToUnsignedByte(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_UNSIGNEDINT)) {
+            String str = JSToOMConverter.convertToUnsignedInt(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_UNSIGNEDSHORT)) {
+            String str = JSToOMConverter.convertToUnsignedShort(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_DECIMAL)) {
+            String str = JSToOMConverter.convertToDecimal(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_BOOLEAN)) {
+            String str = JSToOMConverter.convertToBoolean(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_DATETIME)) {
+            String str = JSToOMConverter.convertToDateTime(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_DATE)) {
+            String str = JSToOMConverter.convertToDate(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_TIME)) {
+            String str = JSToOMConverter.convertToTime(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_YEARMONTH)) {
+            String str = JSToOMConverter.convertToGYearMonth(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_MONTHDAY)) {
+            String str = JSToOMConverter.convertToGMonthDay(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_YEAR)) {
+            String str = JSToOMConverter.convertToGYear(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_MONTH)) {
+            String str = JSToOMConverter.convertToGMonth(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_DAY)) {
+            String str = JSToOMConverter.convertToGDay(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_DURATION)) {
+            String str = JSToOMConverter.convertToDuration(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_NMTOKENS)) {
+            String str = JSToOMConverter.convertToNMTOKENS(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_IDREFS)) {
+            String str = JSToOMConverter.convertToIDREFS(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_ENTITIES)) {
+            String str = JSToOMConverter.convertToENTITIES(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_NORMALIZEDSTRING)) {
+            String str = JSToOMConverter.convertToNormalizedString(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_TOKEN)) {
+            String str = JSToOMConverter.convertToToken(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_LANGUAGE)) {
+            String str = JSToOMConverter.convertToLanguage(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_NAME)) {
+            String str = JSToOMConverter.convertToName(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_NCNAME)) {
+            String str = JSToOMConverter.convertToNCName(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_IDREF)) {
+            String str = JSToOMConverter.convertToIDRef(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_NMTOKEN)) {
+            String str = JSToOMConverter.convertToNMTOKEN(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_ENTITY)) {
+            String str = JSToOMConverter.convertToENTITY(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_NOTATION)) {
+            String str = JSToOMConverter.convertToNOTATION(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_ANYURI)) {
+            String str = JSToOMConverter.convertToAnyURI(jsObject);
+            element.setText(str);
+            return element;
+        }
+        return element;
     }
 
     /**
@@ -327,10 +543,145 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             String value = omElement.getText();
             return new Float(ConverterUtil.convertToFloat(value));
         }
+        if (Constants.XSD_INT.equals(type)) {
+            String value = omElement.getText();
+            return new Integer(ConverterUtil.convertToInt(value));
+        }
+        if (Constants.XSD_INTEGER.equals(type)) {
+            String value = omElement.getText();
+            return ConverterUtil.convertToInteger(value);
+        }
+        if (Constants.XSD_POSITIVEINTEGER.equals(type)) {
+            String value = omElement.getText();
+            return ConverterUtil.convertToPositiveInteger(value);
+        }
+        if (Constants.XSD_NEGATIVEINTEGER.equals(type)) {
+            String value = omElement.getText();
+            return ConverterUtil.convertToNegativeInteger(value);
+        }
+        if (Constants.XSD_NONPOSITIVEINTEGER.equals(type)) {
+            String value = omElement.getText();
+            return ConverterUtil.convertToNonPositiveInteger(value);
+        }
+        if (Constants.XSD_NONNEGATIVEINTEGER.equals(type)) {
+            String value = omElement.getText();
+            return ConverterUtil.convertToNonNegativeInteger(value);
+        }
+        if (Constants.XSD_LONG.equals(type)) {
+            String value = omElement.getText();
+            return new Long(ConverterUtil.convertToLong(value));
+        }
+        if (Constants.XSD_SHORT.equals(type)) {
+            String value = omElement.getText();
+            return new Short(ConverterUtil.convertToShort(value));
+        }
+        if (Constants.XSD_BYTE.equals(type)) {
+            String value = omElement.getText();
+            return new Byte(ConverterUtil.convertToByte(value));
+        }
+        if (Constants.XSD_UNSIGNEDINT.equals(type)) {
+            String value = omElement.getText();
+            return ConverterUtil.convertToUnsignedInt(value);
+        }
+        if (Constants.XSD_UNSIGNEDLONG.equals(type)) {
+            String value = omElement.getText();
+            return ConverterUtil.convertToUnsignedLong(value);
+        }
+        if (Constants.XSD_UNSIGNEDSHORT.equals(type)) {
+            String value = omElement.getText();
+            return ConverterUtil.convertToUnsignedShort(value);
+        }
+        if (Constants.XSD_UNSIGNEDBYTE.equals(type)) {
+            String value = omElement.getText();
+            return ConverterUtil.convertToUnsignedByte(value);
+        }
+        if (Constants.XSD_DECIMAL.equals(type)) {
+            String value = omElement.getText();
+            return ConverterUtil.convertToDecimal(value);
+        }
         if (Constants.XSD_DATETIME.equals(type)) {
             String value = omElement.getText();
             Calendar calendar = ConverterUtil.convertToDateTime(value);
             return calendar.getTime();
+        }
+        if (Constants.XSD_DATE.equals(type)) {
+            String value = omElement.getText();
+            return ConverterUtil.convertToDate(value);
+        }
+        if (Constants.XSD_TIME.equals(type)) {
+            String value = omElement.getText();
+            Time time = ConverterUtil.convertToTime(value);
+            return time.getAsCalendar().getTime();
+        }
+        if (Constants.XSD_YEARMONTH.equals(type)) {
+            String value = omElement.getText();
+            YearMonth yearMonth = ConverterUtil.convertToGYearMonth(value);
+            Calendar calendar = Calendar.getInstance();
+            calendar.clear();
+            calendar.set(Calendar.YEAR, yearMonth.getYear());
+            calendar.set(Calendar.MONTH, yearMonth.getMonth());
+            String timezone = yearMonth.getTimezone();
+            if (timezone != null) {
+                calendar.setTimeZone(TimeZone.getTimeZone(timezone));
+            }
+            return calendar.getTime();
+        }
+        if (Constants.XSD_MONTHDAY.equals(type)) {
+            String value = omElement.getText();
+            MonthDay monthDay = ConverterUtil.convertToGMonthDay(value);
+            Calendar calendar = Calendar.getInstance();
+            calendar.clear();
+            calendar.set(Calendar.DAY_OF_MONTH, monthDay.getDay());
+            calendar.set(Calendar.MONTH, monthDay.getMonth());
+            String timezone = monthDay.getTimezone();
+            if (timezone != null) {
+                calendar.setTimeZone(TimeZone.getTimeZone(timezone));
+            }
+            return calendar.getTime();
+        }
+        if (Constants.XSD_YEAR.equals(type)) {
+            String value = omElement.getText();
+            Year year  = ConverterUtil.convertToGYear(value);
+            Calendar calendar = Calendar.getInstance();
+            calendar.clear();
+            calendar.set(Calendar.YEAR, year.getYear());
+            String timezone = year.getTimezone();
+            if (timezone != null) {
+                calendar.setTimeZone(TimeZone.getTimeZone(timezone));
+            }
+            return calendar.getTime();
+        }
+        if (Constants.XSD_MONTH.equals(type)) {
+            String value = omElement.getText();
+            Month month = ConverterUtil.convertToGMonth(value);
+            Calendar calendar = Calendar.getInstance();
+            calendar.clear();
+            calendar.set(Calendar.MONTH, month.getMonth());
+            String timezone = month.getTimezone();
+            if (timezone != null) {
+                calendar.setTimeZone(TimeZone.getTimeZone(timezone));
+            }
+            return calendar.getTime();
+        }
+        if (Constants.XSD_DAY.equals(type)) {
+            String value = omElement.getText();
+            Day day = ConverterUtil.convertToGDay(value);
+            Calendar calendar = Calendar.getInstance();
+            calendar.clear();
+            calendar.set(Calendar.DAY_OF_MONTH, day.getDay());
+            String timezone = day.getTimezone();
+            if (timezone != null) {
+                calendar.setTimeZone(TimeZone.getTimeZone(timezone));
+            }
+            return calendar.getTime();
+        }
+        if (Constants.XSD_DURATION.equals(type)) {
+            String value = omElement.getText();
+            Duration duration= ConverterUtil.convertToDuration(value);
+            Calendar calendar = Calendar.getInstance();
+            calendar.clear();
+            Calendar asCalendar = duration.getAsCalendar(calendar);
+            return asCalendar.getTime();
         }
         return omElement.getText();
     }
@@ -415,7 +766,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         return new BufferedReader(new InputStreamReader(jsFileStream));
     }
 
-    private OMElement buildResponse(Boolean annotated, boolean json, Object result, XmlSchemaElement innerElement) throws AxisFault {
+    private OMElement buildResponse(boolean annotated, boolean json, Object result, XmlSchemaElement innerElement) throws AxisFault {
         if (json) {
             result = ((String) result).substring(1, ((String) result).length() - 1);
             InputStream in = new ByteArrayInputStream(((String) result).getBytes());
@@ -423,8 +774,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             result = builder.processDocument(in, null, null);
         }
         // Convert the JS return to XML
-        boolean addTypeInfo = !annotated.booleanValue();
-        return createResponseElement(result, innerElement.getName(), addTypeInfo);
+        return createResponseElement(result, innerElement.getName(), !annotated);
     }
 
     /**
@@ -485,6 +835,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             }  else if (jsObject instanceof Date || "org.mozilla.javascript.NativeDate".equals(className)) {
                 Date date = (Date) Context.jsToJava(jsObject, Date.class);
                 Calendar calendar = Calendar.getInstance();
+                calendar.clear();
                 calendar.setTime(date);
                 String dateTime = ConverterUtil.convertToString(calendar);
                 element.setText(dateTime);
