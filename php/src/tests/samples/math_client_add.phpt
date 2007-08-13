@@ -1,0 +1,32 @@
+--TEST--
+Check for math_add_client sample
+--FILE--
+<?php
+$reqPayloadString = <<<XML
+      <ns1:add xmlns:ns1="http://ws.apache.org/axis2/php/math">     
+         <param1>10</param1>      
+         <param2>20</param2>
+      </ns1:add>
+XML;
+
+try {
+
+    $client = new WSClient(
+        array("to"=>"http://localhost/samples/math_service.php"));
+				
+    $resMessage = $client->request($reqPayloadString);
+    
+    printf("Response = %s <br>", htmlspecialchars($resMessage->str));
+
+} catch (Exception $e) {
+
+	if ($e instanceof WSFault) {
+		printf("Soap Fault: %s\n", $e->code);
+	} else {
+		printf("Message = %s\n",$e->getMessage());
+	}
+
+}
+?>
+--EXPECT--
+Response = &lt;ns1:result xmlns:ns1=&quot;http://ws.axis2.org/axis2/php/math&quot;&gt;30&lt;/ns1:result&gt; <br>
