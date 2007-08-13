@@ -88,7 +88,8 @@ mtom/mtom_upload_client_base64.php - A client that send a image as a base64 enco
 		   to mtom_upload_service_base64.php
 
 Note: [ In the mtom samples, received image files are saved to /tmp folder. When running samples
-        on windows, please remove this "/tmp/" entry ]
+        on windows, please replace this "/tmp/" entry by some valid location on your file system as given in the example. 
+        E.g.:- C:\\tmp\\ ]
                     
 WSDL generation samples
 -------------------------
