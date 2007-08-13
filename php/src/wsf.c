@@ -1197,9 +1197,8 @@ PHP_METHOD (ws_service, __construct)
             SG(request_info).path_translated, svc_info, ws_env_svr);
         svc_info->msg_recv = wsf_msg_recv;
         wsf_util_create_svc_from_svc_info (svc_info, ws_env_svr TSRMLS_CC);
+/*        
         php_printf("%s", SG(request_info).path_translated);
-
-/*
         zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C),
             1 TSRMLS_CC, "server does not support cli yet");
         return;
@@ -1520,7 +1519,7 @@ PHP_METHOD (ws_service, reply)
         req_info->req_data = Z_STRVAL_PP (raw_post);
         req_info->req_data_length = Z_STRLEN_PP (raw_post);
     } else if(req_info->request_method && strcmp(req_info->request_method, "GET") == 0) {
-    } else {
+    } else if(ZEND_NUM_ARGS() > 0){
         /* If we come here, it is not an HTTP post, 
            rather a command line script execution. 
            So set some defaults to facilitate standalone execution. */
