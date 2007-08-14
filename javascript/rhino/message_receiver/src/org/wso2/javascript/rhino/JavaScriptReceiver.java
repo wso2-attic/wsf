@@ -198,21 +198,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 XmlSchemaType schemaType = xmlSchemaElement.getSchemaType();
                 if (schemaType instanceof XmlSchemaComplexType) {
                     XmlSchemaComplexType complexType = ((XmlSchemaComplexType) schemaType);
-                    XmlSchemaParticle particle = complexType.getParticle();
-                    if (particle instanceof XmlSchemaSequence) {
-                        XmlSchemaSequence xmlSchemaSequence = (XmlSchemaSequence) particle;
-                        XmlSchemaObjectCollection schemaObjectCollection = xmlSchemaSequence.getItems();
-                        Iterator iterator = schemaObjectCollection.getIterator();
-                        // now we need to know some information from the binding operation.
-                        while (iterator.hasNext()) {
-                            XmlSchemaElement innerElement = (XmlSchemaElement) iterator.next();
-                            // The name of the element returned should match the schema hence set that name.
-                            outElement.addChild(handleSchemaTypeinResponse(innerElement, response, fac, annotated, engine.isJson()));
-                        }
-                        body.addChild(outElement);
-                    } else {
-                        throw new AxisFault("Unsupported schema type in response.");
-                    }
+                    handleComplexTypeInResponse(complexType, outElement, response, fac, annotated, engine.isJson());
+                    body.addChild(outElement);
                 } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANYTYPE) {
                     if (response != null) {
                         body.addChild(buildResponse(annotated, engine.isJson(), response, xmlSchemaElement));
@@ -235,7 +222,45 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         }
     }
 
-    private List handleComplexTypeInRequest(XmlSchemaComplexType complexType, OMElement payload, JavaScriptEngine engine, List paramNames) throws AxisFault {
+    private void handleComplexTypeInResponse(XmlSchemaComplexType complexType, OMElement outElement, Object response,
+                                             OMFactory fac, boolean annotated, boolean json) throws AxisFault {
+        XmlSchemaParticle particle = complexType.getParticle();
+        if (particle instanceof XmlSchemaSequence) {
+            XmlSchemaSequence xmlSchemaSequence = (XmlSchemaSequence) particle;
+            XmlSchemaObjectCollection schemaObjectCollection = xmlSchemaSequence.getItems();
+            if (schemaObjectCollection.getCount() > 1) {
+                Iterator iterator = schemaObjectCollection.getIterator();
+                // now we need to know some information from the binding operation.
+                while (iterator.hasNext()) {
+                    XmlSchemaElement innerElement = (XmlSchemaElement) iterator.next();
+                    Scriptable scriptable = null;
+                    try {
+                    scriptable = (Scriptable) response;
+                    } catch(ClassCastException t) {
+                        System.out.println("");
+                    }
+                    String name = innerElement.getName();
+                    Object object = scriptable.get(name, scriptable);
+                    XmlSchemaType schemaType = innerElement.getSchemaType();
+                    if (schemaType instanceof XmlSchemaComplexType) {
+                        XmlSchemaComplexType innerComplexType = (XmlSchemaComplexType) complexType;
+                        OMElement complexTypeElement = fac.createOMElement(name, outElement.getNamespace());
+                        outElement.addChild(complexTypeElement);
+                        handleComplexTypeInResponse(innerComplexType, complexTypeElement, object, fac, annotated, json);
+                    } else {
+                        outElement.addChild(handleSimpleTypeinResponse(innerElement, object, fac, annotated, json));
+                    }
+                }
+            } else {
+                outElement.addChild(handleSimpleTypeinResponse((XmlSchemaElement) schemaObjectCollection.getItem(0), response, fac, annotated, json));
+            }
+        } else {
+            throw new AxisFault("Unsupported schema type in response.");
+        }
+    }
+
+    private List handleComplexTypeInRequest(XmlSchemaComplexType complexType, OMElement payload,
+                                            JavaScriptEngine engine, List paramNames) throws AxisFault {
         XmlSchemaParticle particle = complexType.getParticle();
         List params = new ArrayList();
         if (particle instanceof XmlSchemaSequence) {
@@ -304,7 +329,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         }
     }
 
-    private OMElement handleSchemaTypeinResponse(XmlSchemaElement innerElement, Object jsObject, OMFactory factory, boolean annotated, boolean json) throws AxisFault {
+    private OMElement handleSimpleTypeinResponse(XmlSchemaElement innerElement, Object jsObject, OMFactory factory, boolean annotated, boolean json) throws AxisFault {
         QName qName = innerElement.getSchemaTypeName();
         OMElement element = factory.createOMElement(innerElement.getName(), null);
         if (qName.equals(Constants.XSD_ANYTYPE)) {
