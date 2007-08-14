@@ -110,6 +110,7 @@
         <!--phase name="userphase1"/-->
         <!--system predefined phase-->
         <phase name="MessageOut"/>
+        <phase name="Security"/>
     </phaseOrder>
     <phaseOrder type="INfaultflow">
         <!-- User defined phases could be added here -->
