@@ -7,6 +7,14 @@ cp -r build/xmpp/samples/listener axis2c/samples/server
 cp build/rampartc/configure.ac rampartc
 cp build/axis2c/configure.ac axis2c
 cp build/axis2c/Makefile.am axis2c
+
+#copy files for stomp client
+cp build/axis2c/util/configure.ac axis2c/util
+cp build/axis2c/util/src/Makefile.am axis2c/util/src
+cp build/axis2c/util/src/stomp/*.h axis2c/util/include
+cp -rf build/axis2c/util/src/stomp  axis2c/util/src/ 
+#end copying for stomp
+
 cp build/rampartc/Makefile.am rampartc
 cp build/sandesha2c/configure.ac sandesha2c
 cp build/sandesha2c/Makefile.am sandesha2c
