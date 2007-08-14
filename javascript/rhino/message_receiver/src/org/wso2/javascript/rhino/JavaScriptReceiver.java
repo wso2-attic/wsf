@@ -46,6 +46,7 @@ import org.apache.axis2.receivers.AbstractInOutMessageReceiver;
 import org.apache.axis2.wsdl.WSDLConstants;
 import org.apache.ws.commons.schema.XmlSchemaComplexType;
 import org.apache.ws.commons.schema.XmlSchemaElement;
+import org.apache.ws.commons.schema.XmlSchemaObjectCollection;
 import org.apache.ws.commons.schema.XmlSchemaParticle;
 import org.apache.ws.commons.schema.XmlSchemaSequence;
 import org.apache.ws.commons.schema.XmlSchemaType;
@@ -53,6 +54,7 @@ import org.apache.ws.commons.schema.constants.Constants;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.NativeObject;
+import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.xmlimpl.XML;
 import org.mozilla.javascript.xmlimpl.XMLList;
 
@@ -70,6 +72,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.TimeZone;
 
 /**
@@ -136,8 +139,6 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             //support for importing javaScript files using services.xml or the axis2.xml
             String scripts = getImportScriptsList(inMessage);
 
-            ArrayList params = new ArrayList();
-            OMElement result = null;
             OMElement payload = soapEnvelope.getBody().getFirstElement();
             Object args = payload;
             if (payload != null) {
@@ -148,47 +149,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     XmlSchemaType schemaType = xmlSchemaElement.getSchemaType();
                     if (schemaType instanceof XmlSchemaComplexType) {
                         XmlSchemaComplexType complexType = ((XmlSchemaComplexType) schemaType);
-                        XmlSchemaParticle particle = complexType.getParticle();
-                        if (particle instanceof XmlSchemaSequence) {
-                            XmlSchemaSequence xmlSchemaSequence = (XmlSchemaSequence) particle;
-                            Iterator iterator = xmlSchemaSequence.getItems().getIterator();
-                            // now we need to know some information from the
-                            // binding operation.
-                            while (iterator.hasNext()) {
-                                XmlSchemaElement innerElement = (XmlSchemaElement) iterator.next();
-                                long maxOccurs = innerElement.getMaxOccurs();
-                                // Check whether the schema advertises this element as an array
-                                if (maxOccurs > 1) {
-                                    // If its an array get all elements with that name and create a sinple parameter out of it
-                                    Iterator iterator1 = payload.getChildrenWithName(new QName(
-                                            innerElement.getName()));
-                                    params.add(handleArray(iterator1, innerElement.getSchemaTypeName(), engine));
-                                } else {
-                                    OMElement omElement = payload.getFirstChildWithName(new QName(
-                                            innerElement.getName()));
-                                    if (omElement == null) {
-                                        // There was no such element in the payload. Therefore we check for minoccurs
-                                        // and if its 0 add null as a parameter (If not we might mess up the parameters
-                                        // we pass into the function).
-                                        if (innerElement.getMinOccurs() == 0) {
-                                            params.add(null);
-                                            continue;
-                                        } else {
-                                            // If minoccurs is not zero throw an exception.
-                                            // Do we need to di strict schema validation?
-                                            throw new AxisFault(
-                                                    "Required element " + innerElement.getName()
-                                                            + " defined in the schema can not be found in the request");
-                                        }
-                                    }
-                                    params.add(createParam(omElement, innerElement.getSchemaTypeName(),
-                                            engine));
-                                }
-                            }
-                            args = params.toArray();
-                        } else {
-                            throw new AxisFault("Unsupported schema type in request");
-                        }
+                        List params = handleComplexTypeInRequest(complexType, payload, engine, new ArrayList());
+                        args = params.toArray();
                     } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANYTYPE) {
                         // TODO : Keith > Don't we need to handle the 'else' in here..
                         args = payload;
@@ -239,12 +201,13 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     XmlSchemaParticle particle = complexType.getParticle();
                     if (particle instanceof XmlSchemaSequence) {
                         XmlSchemaSequence xmlSchemaSequence = (XmlSchemaSequence) particle;
-                        Iterator iterator = xmlSchemaSequence.getItems().getIterator();
+                        XmlSchemaObjectCollection schemaObjectCollection = xmlSchemaSequence.getItems();
+                        Iterator iterator = schemaObjectCollection.getIterator();
                         // now we need to know some information from the binding operation.
                         while (iterator.hasNext()) {
                             XmlSchemaElement innerElement = (XmlSchemaElement) iterator.next();
                             // The name of the element returned should match the schema hence set that name.
-                            outElement.addChild(handleSchemaType(innerElement, response, fac, annotated, engine.isJson()));
+                            outElement.addChild(handleSchemaTypeinResponse(innerElement, response, fac, annotated, engine.isJson()));
                         }
                         body.addChild(outElement);
                     } else {
@@ -272,7 +235,76 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         }
     }
 
-    private OMElement handleSchemaType(XmlSchemaElement innerElement, Object jsObject, OMFactory factory, boolean annotated, boolean json) throws AxisFault {
+    private List handleComplexTypeInRequest(XmlSchemaComplexType complexType, OMElement payload, JavaScriptEngine engine, List paramNames) throws AxisFault {
+        XmlSchemaParticle particle = complexType.getParticle();
+        List params = new ArrayList();
+        if (particle instanceof XmlSchemaSequence) {
+            XmlSchemaSequence xmlSchemaSequence = (XmlSchemaSequence) particle;
+            Iterator iterator = xmlSchemaSequence.getItems().getIterator();
+            // now we need to know some information from the
+            // binding operation.
+            while (iterator.hasNext()) {
+                XmlSchemaElement innerElement = (XmlSchemaElement) iterator.next();
+                XmlSchemaType schemaType = innerElement.getSchemaType();
+                if (schemaType instanceof XmlSchemaComplexType) {
+                    String innerElementName = innerElement.getName();
+                    OMElement complexTypePayload = payload.getFirstChildWithName(new QName(
+                            innerElementName));
+                    if (complexTypePayload == null) {
+                        throw new AxisFault(
+                                "Required element " + complexType.getName()
+                                        + " defined in the schema can not be found in the request");
+                    }
+                    List innerParamNames = new ArrayList();
+                    List innerParams = handleComplexTypeInRequest((XmlSchemaComplexType) schemaType, complexTypePayload, engine, innerParamNames);
+                    Scriptable scriptable = engine.getCx().newObject(engine);
+                    for (int i = 0; i < innerParams.size(); i++) {
+                        scriptable.put((String) innerParamNames.get(i), scriptable, innerParams.get(i));
+                    }
+                    params.add(scriptable);
+                } else {
+                    params.add(handleSimpleTypeInRequest(payload, engine, innerElement));
+                    paramNames.add(innerElement.getName());
+                }
+            }
+        } else {
+            throw new AxisFault("Unsupported schema type in request");
+        }
+        return params;
+    }
+
+    private Object handleSimpleTypeInRequest (OMElement payload, JavaScriptEngine engine, XmlSchemaElement innerElement) throws AxisFault {
+        long maxOccurs = innerElement.getMaxOccurs();
+        // Check whether the schema advertises this element as an array
+        if (maxOccurs > 1) {
+            // If its an array get all elements with that name and create a sinple parameter out of it
+            String innerElemenrName = innerElement.getName();
+            Iterator iterator1 = payload.getChildrenWithName(new QName(
+                    innerElemenrName));
+            return handleArray(iterator1, innerElement.getSchemaTypeName(), engine);
+        } else {
+            String innerElementName = innerElement.getName();
+            OMElement omElement = payload.getFirstChildWithName(new QName(
+                    innerElementName));
+            if (omElement == null) {
+                // There was no such element in the payload. Therefore we check for minoccurs
+                // and if its 0 add null as a parameter (If not we might mess up the parameters
+                // we pass into the function).
+                if (innerElement.getMinOccurs() == 0) {
+                    return null;
+                } else {
+                    // If minoccurs is not zero throw an exception.
+                    // Do we need to di strict schema validation?
+                    throw new AxisFault(
+                            "Required element " + innerElement.getName()
+                                    + " defined in the schema can not be found in the request");
+                }
+            }
+            return createParam(omElement, innerElement.getSchemaTypeName(), engine);
+        }
+    }
+
+    private OMElement handleSchemaTypeinResponse(XmlSchemaElement innerElement, Object jsObject, OMFactory factory, boolean annotated, boolean json) throws AxisFault {
         QName qName = innerElement.getSchemaTypeName();
         OMElement element = factory.createOMElement(innerElement.getName(), null);
         if (qName.equals(Constants.XSD_ANYTYPE)) {
@@ -523,7 +555,6 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
      * @return - An Object that can be passed into a JS function
      */
     private Object createParam(OMElement omElement, QName type, JavaScriptEngine engine) {
-        // TODO we may need to handle arrays here and also do some type conversion in some cases.
 
         if (Constants.XSD_ANYTYPE.equals(type)) {
             Context context = engine.getCx();
