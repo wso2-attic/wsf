@@ -4,7 +4,7 @@ Test for google sample
 <?php
 $reqPayloadString = <<<XML
 <ns1:doGoogleSearch x:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns1="urn:GoogleSearch" xmlns:x="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance" xmlns:xsd="http://www.w3.org/1999/XMLSchema">
-	<key xsi:type="xsd:string">wCumFQpQFHL7+coIxlNKUGtyVsgrVAnb</key>
+	<key xsi:type="xsd:string">your_key_here</key>
 	<q xsi:type="xsd:string">temperature</q>
 	<start xsi:type="xsd:int">0</start>
 	<maxResults xsi:type="xsd:int">10</maxResults>
