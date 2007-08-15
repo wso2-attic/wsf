@@ -562,7 +562,7 @@ wsf_util_get_http_headers_from_op_client (
         }
 
         if (list) {
-            header_buf = emalloc (500);
+            header_buf = pemalloc (500,1);
             if (!axutil_array_list_is_empty (list, env)) {
                 for (i = 0; i < axutil_array_list_size (list, env); i++) {
                     header =
