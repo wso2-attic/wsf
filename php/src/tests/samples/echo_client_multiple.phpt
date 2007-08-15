@@ -40,7 +40,6 @@ try
 }
 ?>
 --EXPECT--
-PHP Warning:  Module 'wsf' already loaded in Unknown on line 0
 Round 0<br>--------<br>Response = &lt;ns1:echoString xmlns:ns1=&quot;http://ws.apache.org/axis2/c/samples&quot;&gt;
    &lt;text&gt;Hello World 0&lt;/text&gt;
 &lt;/ns1:echoString&gt; <br><br>Last Request = &lt;soapenv:Envelope xmlns:soapenv=&quot;http://www.w3.org/2003/05/soap-envelope&quot;&gt;&lt;soapenv:Header&gt;&lt;/soapenv:Header&gt;&lt;soapenv:Body&gt;&lt;ns1:echoString xmlns:ns1=&quot;http://ws.apache.org/axis2/c/samples&quot;&gt;

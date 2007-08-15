@@ -1,5 +1,5 @@
 --TEST--
-Check for flicker sample
+Test for flicker sample
 --FILE--
 <?php
 

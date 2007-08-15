@@ -1,5 +1,5 @@
 --TEST--
-Check for Yahoo sample
+Test for Yahoo sample
 --FILE--
 <?php
 $reqPayloadString = <<<XML

@@ -12,7 +12,7 @@ XML;
 try {
 
     $client = new WSClient(
-        array("to"=>"http://localhost/notify_service.php"));
+        array("to"=>"http://localhost/samples/notify_service.php"));
 				
     $client->send($reqPayloadString);
     
@@ -29,5 +29,4 @@ try {
 }
 ?>
 --EXPECT--
-PHP Warning:  Module 'wsf' already loaded in Unknown on line 0
 Request sent

@@ -1,5 +1,5 @@
 --TEST--
-Test for encrypt_client_layout_Strict sample
+Test for encrypt_service_encrypt_TRUE sample
 --FILE--
 <?php
 /*
@@ -27,13 +27,12 @@ try {
     $pvt_key = ws_get_key_from_file("C:/Apache2.2/htdocs/samples/security/keys/alice_key.pem");
     
     $reqMessage = new WSMessage($reqPayloadString,
-                                array("to"=>"http://localhost/samples/security/encryption/encrypt_service_layout_Lax.php",
+                                array("to"=>"http://localhost/samples/security/encryption/encrypt_service.php",
                                       "action" => "http://php.axis2.org/samples/echoString"));
     
     $sec_array = array("encrypt"=>TRUE,
-                       "algorithmSuite" => "Basic128Rsa15",
-                       "layout" => "Strict",
-                       "securityTokenReference" => "IssuerSerial");
+                       "algorithmSuite" => "Basic256Rsa15",
+                       "securityTokenRefernce" => "IssuerSerial");
     
     $policy = new WSPolicy(array("security"=>$sec_array));
     $sec_token = new WSSecurityToken(array("privateKey" => $pvt_key,

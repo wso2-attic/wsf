@@ -4,27 +4,33 @@ Test for echo_client_sec_digest sample
 <?php
 
 $reqPayloadString = <<<XML
-	<ns1:echoString xmlns:ns1="http://php.axis2.org/samples">
-		<text>Hello World!</text>
-	</ns1:echoString>
+<ns1:echo xmlns:ns1="http://php.axis2.org/samples"><text>Hello World!</text></ns1:echo>
 XML;
 
 try {
 
-    $msg = new WSMessage($reqPayloadString,
-        array("user"=>"Raigama","password"=>"RaigamaPW","digest"=>TRUE));
+    $reqMessage = new WSMessage($reqPayloadString,
+                                array("to"=>"http://localhost/samples/security/username_token/username_token_service.php",
+                                      "action" => "http://php.axis2.org/samples/echoString"));
     
-    $client = new WSClient(
-        array("to"=>"http://localhost/echo_service_sec.php"));
+    $sec_array = array("useUsernameToken"=>TRUE );
+    $policy = new WSPolicy(array("security"=>$sec_array));
+    $sec_token = new WSSecurityToken(array("user" => "Raigama",
+                                           "password" => "RaigamaPW",
+                                           "passwordType" => "Digest"));
+    
+    $client = new WSClient(array("useWSA" => TRUE,
+                                 "policy" => $policy,
+                                 "securityToken" => $sec_token));
 				
-    $resMessage = $client->request($msg);
+    $resMessage = $client->request($reqMessage);
     
-    printf("Response = %s <br>", htmlspecialchars($resMessage->str));
+    printf("Response = %s \n", $resMessage->str);
 
 } catch (Exception $e) {
 
 	if ($e instanceof WSFault) {
-		printf("Soap Fault: %s\n", $e->code);
+		printf("Soap Fault: %s\n", $e->Reason);
 	} else {
 		printf("Message = %s\n",$e->getMessage());
 	}
@@ -32,7 +38,6 @@ try {
 }
 ?>
 --EXPECT--
-Response = &lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echoString&gt; <br>
-
+Response = <ns1:echo xmlns:ns1="http://php.axis2.org/samples"><text>Hello World!</text></ns1:echo>
 
 

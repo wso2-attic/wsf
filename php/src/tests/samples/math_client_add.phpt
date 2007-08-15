@@ -1,5 +1,5 @@
 --TEST--
-Check for math_add_client sample
+Test for math_add_client sample
 --FILE--
 <?php
 $reqPayloadString = <<<XML

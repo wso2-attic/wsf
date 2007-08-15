@@ -1,5 +1,5 @@
 --TEST--
-Check for google sample
+Test for google sample
 --FILE--
 <?php
 $reqPayloadString = <<<XML

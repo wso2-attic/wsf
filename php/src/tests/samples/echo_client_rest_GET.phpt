@@ -1,5 +1,5 @@
 --TEST--
-Check for echo_client_rest_GET sample
+Test for echo_client_rest_GET sample
 --FILE--
 <?php
 

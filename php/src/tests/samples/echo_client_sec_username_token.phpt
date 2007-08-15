@@ -1,5 +1,5 @@
 --TEST--
-Test for echo_client_sec_plaintext sample
+Test for echo_client_sec_username_token sample
 --FILE--
 <?php
 $reqPayloadString = <<<XML
@@ -38,5 +38,4 @@ try {
 
 ?>
 --EXPECT--
-PHP Warning:  Module 'wsf' already loaded in Unknown on line 0
 Response = <ns1:echo xmlns:ns1="http://php.axis2.org/samples"><text>Hello World!</text></ns1:echo>

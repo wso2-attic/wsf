@@ -28,7 +28,7 @@ try {
       	  $contentType = $cid2contentMap[$i];
 	        if(strcmp($contentType,"image/jpeg") ==0){
       	      $imageName = $i."."."jpg";
-	            file_put_contents("/tmp/".$imageName, $f);
+	            file_put_contents("C:/Apache2.2/htdocs/".$imageName, $f);
       	  }
 	    }
 	}else{
@@ -45,10 +45,6 @@ try {
 }
 ?>
 --EXPECT--
-PHP Warning:  Module 'wsf' already loaded in Unknown on line 0
-Response = <ns1:download xmlns:ns1="http://php.axis2.org/samples/mtom">
+$strlen(Response = <ns1:download xmlns:ns1="http://php.axis2.org/samples/mtom">
             <ns1:fileName>test.jpg</ns1:fileName>
-                <ns1:image xmlmime:contentType="image/jpeg" xmlns:xmlmime="http://www.w3.org/2004/06/xmlmime">
-                    
-                <xop:Include href="cid:1.2d1e7b0c-34ed-1dc1-396c-001302c29070@apache.org" xmlns:xop="http://www.w3.org/2004/08/xop/include"><xop:Include href="cid:1.2d1ef56e-34ed-1dc1-2f7b-001302c29070@apache.org" xmlns:xop="http://www.w3.org/2004/08/xop/include"></xop:Include></xop:Include></ns1:image>
-        </ns1:download>
+                <ns1:image xmlmime:contentType="image/jpeg" xmlns:xmlmime="http://www.w3.org/2004/06/xmlmime">)

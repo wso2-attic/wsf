@@ -3,7 +3,7 @@ Test for request_client_msg sample
 --FILE--
 <?php
 
-include_once('../scripts/wsf.php');
+include_once('C:\Apache2.2\htdocs\scripts\wsf.php');
 
 $reqPayloadString = <<<XML
     <ns1:echoString xmlns:ns1="http://php.axis2.org/samples">
@@ -31,7 +31,6 @@ try {
 
 ?>
 --EXPECT--
-PHP Warning:  Module 'wsf' already loaded in Unknown on line 0
 Response = &lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;
         &lt;text&gt;Hello World!&lt;/text&gt;
     &lt;/ns1:echoString&gt; <br>
