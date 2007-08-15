@@ -1092,59 +1092,60 @@ PHP_METHOD (ws_service, __construct)
         if (ht_options) {
             if (zend_hash_find (ht_options, "actions", sizeof ("actions"), 
                     (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
+                
                 ht_actions = Z_ARRVAL_PP (tmp);
                 AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
                     "[wsf_service] setting actions ");
             }
             if (zend_hash_find (ht_options, "operations",
                     sizeof ("operations"), (void **) & tmp) == SUCCESS
-                && Z_TYPE_PP (tmp) == IS_ARRAY) {
+                        && Z_TYPE_PP (tmp) == IS_ARRAY) {
+
                 ht_ops_to_funcs = Z_ARRVAL_PP (tmp);
                 AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
                     "[wsf_service] setting operations");
             }
             if (zend_hash_find (ht_options, "opMEP", sizeof ("opMEP"), 
-                    (void **) & tmp) == SUCCESS
-                && Z_TYPE_PP (tmp) == IS_ARRAY) {
+                    (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
+
                 ht_ops_to_mep = Z_ARRVAL_PP (tmp);
                 AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
                     "[wsf_service] setting message exchange pattern");
             }
             if (zend_hash_find (ht_options, "opParams", sizeof ("opParams"),
-                    (void **) & tmp) == SUCCESS
-                && Z_TYPE_PP (tmp) == IS_ARRAY) {
+                    (void **) & tmp) == SUCCESS  && Z_TYPE_PP (tmp) == IS_ARRAY) {
+
                 ht_opParams = Z_ARRVAL_PP (tmp);
                 svc_info->ht_opParams = ht_opParams;
                 AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
                     "[wsf_service] setting message operation parameters");
             }
             if (zend_hash_find (ht_options, "wsdl", sizeof ("wsdl"),
-                    (void **) & tmp) == SUCCESS  &&Z_TYPE_PP (tmp) ==
-                IS_STRING) {
+                    (void **) & tmp) == SUCCESS  &&Z_TYPE_PP (tmp) == IS_STRING) {
                 wsdl = Z_STRVAL_PP (tmp);
             }
             if (zend_hash_find (ht_options, WS_CACHE_WSDL,
-                    sizeof (WS_CACHE_WSDL),
-                    (void **) &tmp) == SUCCESS  &&Z_TYPE_PP (tmp) ==
-                IS_LONG) {
+                    sizeof (WS_CACHE_WSDL),(void **) &tmp) == SUCCESS  
+                        && Z_TYPE_PP (tmp) == IS_LONG) {
                 cache_wsdl = Z_LVAL_PP (tmp);
             }
             if (zend_hash_find (ht_options, WS_USE_MTOM,
                     sizeof (WS_USE_MTOM), (void **) &tmp) == SUCCESS
-                && Z_TYPE_PP (tmp) == IS_BOOL) {
+                        && Z_TYPE_PP (tmp) == IS_BOOL) {
 
                 svc_info->use_mtom = Z_BVAL_PP (tmp);
                 AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
                     "[wsf_service] setting mtom property %d",
-                    svc_info->use_mtom);
+                        svc_info->use_mtom);
             }
             else {
                 svc_info->use_mtom = 0;
             }
             if (zend_hash_find (ht_options, WS_REQUEST_XOP,
                     sizeof (WS_REQUEST_XOP), (void **) &tmp) == SUCCESS
-                && Z_TYPE_PP (tmp) == IS_BOOL) {
-                svc_info->request_xop = Z_BVAL_PP (tmp);
+                        && Z_TYPE_PP (tmp) == IS_BOOL) {
+                
+                    svc_info->request_xop = Z_BVAL_PP (tmp);
             }
             else {
                 svc_info->request_xop = 0;
@@ -1155,6 +1156,7 @@ PHP_METHOD (ws_service, __construct)
             
             if (zend_hash_find (ht_options, WS_POLICY_NAME,
                     sizeof (WS_POLICY_NAME), (void **) &tmp) == SUCCESS) {
+
                 svc_info->policy = *tmp;
                 AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
                     "[wsf_service] policy object present");
@@ -1177,17 +1179,17 @@ PHP_METHOD (ws_service, __construct)
             }
             if (zend_hash_find (ht_options, WS_BINDING_STYLE,
                     sizeof (WS_BINDING_STYLE), (void **) &tmp) == SUCCESS
-                && Z_TYPE_PP (tmp) == IS_STRING) {
+                        && Z_TYPE_PP (tmp) == IS_STRING) {
+
                 add_property_stringl (obj, WS_BINDING_STYLE,
-                    Z_STRVAL_PP (tmp), Z_STRLEN_PP (tmp), 1);
+                Z_STRVAL_PP (tmp), Z_STRLEN_PP (tmp), 1);
             }
         }
     }
     
     if (SG (request_info).request_uri) {
-        svc_info->svc_name =
-            wsf_util_generate_svc_name_from_uri (SG (request_info).
-            request_uri, svc_info, ws_env_svr);
+        svc_info->svc_name = wsf_util_generate_svc_name_from_uri (SG (request_info).
+                                request_uri, svc_info, ws_env_svr);
         svc_info->msg_recv = wsf_msg_recv;
         wsf_util_create_svc_from_svc_info (svc_info, ws_env_svr TSRMLS_CC);
     } else {
@@ -1197,12 +1199,6 @@ PHP_METHOD (ws_service, __construct)
             SG(request_info).path_translated, svc_info, ws_env_svr);
         svc_info->msg_recv = wsf_msg_recv;
         wsf_util_create_svc_from_svc_info (svc_info, ws_env_svr TSRMLS_CC);
-/*        
-        php_printf("%s", SG(request_info).path_translated);
-        zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C),
-            1 TSRMLS_CC, "server does not support cli yet");
-        return;
-*/        
     }
     if (ht_ops_to_funcs) {
         HashPosition pos;
@@ -1210,8 +1206,8 @@ PHP_METHOD (ws_service, __construct)
         int i = 0;
         zend_hash_internal_pointer_reset_ex (ht_ops_to_funcs, &pos);
         while (zend_hash_get_current_data_ex (ht_ops_to_funcs,
-                (void **) &tmp, &pos) != FAILURE)
-             {
+                (void **) &tmp, &pos) != FAILURE) {
+
             char *op_name_to_store = NULL;
             char *op_name = NULL;
             unsigned int op_name_len = 0;
@@ -1222,15 +1218,15 @@ PHP_METHOD (ws_service, __construct)
             zend_hash_move_forward_ex (ht_ops_to_funcs, &pos);
             i++;
             func_name = Z_STRVAL_PP (tmp);
-            if (op_name)
+            if (op_name){
                 op_name_to_store = op_name;
-            
-            else
+            } else {
                 op_name_to_store = func_name;
-            axutil_hash_set (svc_info->ops_to_functions,
+            }
+            
+            axutil_hash_set (svc_info->ops_to_functions, 
                 axutil_strdup (ws_env_svr, op_name_to_store),
-                AXIS2_HASH_KEY_STRING, axutil_strdup (ws_env_svr,
-                    func_name));
+                    AXIS2_HASH_KEY_STRING, axutil_strdup (ws_env_svr, func_name));
             }
     }
     if (ht_actions)
@@ -1301,11 +1297,10 @@ PHP_METHOD (ws_service, __construct)
             zend_hash_move_forward_ex (ht_actions, &pos);
             }
         }
-    if (svc_info->ops_to_functions)
-         {
+    if (svc_info->ops_to_functions) {
         for (hi = axutil_hash_first (svc_info->ops_to_functions, ws_env_svr);
-            hi; hi = axutil_hash_next (ws_env_svr, hi))
-             {
+            hi; hi = axutil_hash_next (ws_env_svr, hi)) {
+
             void *v = NULL;
             const void *k = NULL;
             char *key = NULL;
@@ -1313,39 +1308,35 @@ PHP_METHOD (ws_service, __construct)
             zend_function * f;
             char *function_name = NULL;
             int key_len = 0;
+
             axutil_hash_this (hi, &k, NULL, &v);
             key = (axis2_char_t *) k;
             val = (axis2_char_t *) v;
-            if (key && val)
-                 {
+            if (key && val) {
                 
-                    /* check if the function is there */ 
-                    key_len = strlen (val);
+                /* check if the function is there */ 
+                key_len = strlen (val);
                 function_name = emalloc (key_len + 1);
                 zend_str_tolower_copy (function_name, val, key_len);
                 if (zend_hash_find (EG (function_table), function_name,
-                        key_len + 1, (void **) &f) == FAILURE)
-                     {
+                        key_len + 1, (void **) &f) == FAILURE) {
+
                     php_error_docref (NULL TSRMLS_CC, E_ERROR,
                         "Named function not in function table");
                     continue;
-                    }
+                 }
                 
                     /* function is there, add the operation to service */ 
-                    if (strcmp (key, val) == 0)
-                     {
+                 if (strcmp (key, val) == 0) {
                     wsf_util_create_op_and_add_to_svc (svc_info, NULL,
                         ws_env_svr, key, ht_ops_to_mep TSRMLS_CC);
-                    }
-                
-                else
-                     {
-                    char *action_for_op = NULL;
-                    action_for_op =
-                        axutil_hash_get (svc_info->ops_to_actions, key,
+                 } else {
+                    
+                     char *action_for_op = NULL;
+                    action_for_op = axutil_hash_get (svc_info->ops_to_actions, key,
                         AXIS2_HASH_KEY_STRING);
-                    if (!action_for_op)
-                         {
+
+                    if (!action_for_op) {
                         
                             /* There was no mapping WSA action for this operation.
                                So this operation was not yet added, hence add. */ 
@@ -1354,6 +1345,7 @@ PHP_METHOD (ws_service, __construct)
                         }
                     }
                 }
+                efree(function_name);
             }
         }
     if (wsdl) {

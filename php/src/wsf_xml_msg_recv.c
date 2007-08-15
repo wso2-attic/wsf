@@ -477,10 +477,10 @@ wsf_xml_msg_recv_invoke_wsmsg (
 
     if (!om_node)
         return NULL;
+
     req_payload = wsf_util_serialize_om (env, om_node);
 
     if (!req_payload) {
-
         AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "Request Payload is NULL");
         return NULL;
     }
@@ -612,6 +612,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
                     &retval TSRMLS_CC);
             }
         }
+        zval_ptr_dtor(&msg);
     }
     zend_catch {
         if (EG(exception) && Z_TYPE_P(EG(exception)) == IS_OBJECT && 
