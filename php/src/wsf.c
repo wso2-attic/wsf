@@ -1396,151 +1396,9 @@ PHP_METHOD (ws_service, set_class)
 {
 }
 /* }}} end setClass */ 
-    
-/* {{{ proto long reply([long style]) reply the SOAP request */ 
-PHP_METHOD (ws_service, reply) 
+
+static void generate_wsdl_for_service(zval *svc_zval, wsf_svc_info_t *svc_info, wsf_req_info_t *req_info TSRMLS_DC)
 {
-    ws_object_ptr intern = NULL;
-    zval * obj = NULL, **tmp;
-    axis2_conf_t * conf = NULL;
-    axis2_conf_ctx_t * conf_ctx = NULL;
-    wsf_svc_info_t * svc_info = NULL;
-    wsf_req_info_t * req_info = NULL;
-    zval ** server_vars, **data;
-    wsf_worker_t * php_worker = NULL;
-    zval ** raw_post;
-    int status = 0;
-    char content_length[40];
-    char status_line[100];
-    char *content_type = NULL;
-    int in_wsdl_mode = 0;
-    int raw_post_null = AXIS2_FALSE;
-    
-    char *reply_data = NULL;
-    int reply_data_len = 0;
-
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|s", &reply_data, &reply_data_len) == FAILURE) {
-        php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
-    }
-
-    WSF_GET_THIS (obj);
-    intern = (ws_object *) zend_object_store_get_object (obj TSRMLS_CC);
-    
-    svc_info = (wsf_svc_info_t *) (intern->ptr);
-    
-    php_worker = svc_info->php_worker;
-    
-    conf_ctx = wsf_worker_get_conf_ctx (php_worker, ws_env_svr);
-
-    if (!conf_ctx) {
-        php_error_docref (NULL TSRMLS_CC, E_ERROR, "conf ctx missing");
-        return;
-    }
-
-    zend_is_auto_global ("_SERVER", sizeof ("_SERVER") - 1 TSRMLS_CC);
-	/*
-    if(ZEND_NUM_ARGS() > 0){
-
-    }
-    else if(SG(request_info).request_uri){        
-	*/
-    req_info = wsf_php_req_info_create ();
-    
-    if (zend_hash_find (&EG (symbol_table), "_SERVER", sizeof ("_SERVER"),
-            (void **) & server_vars) == SUCCESS
-        && (Z_TYPE_PP (server_vars) == IS_ARRAY)) {
-        if ((zend_hash_find (Z_ARRVAL_PP (server_vars),
-                    "HTTP_CONTENT_ENCODING", 
-                    sizeof ("HTTP_CONTENT_ENCODING"),
-                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
-            req_info->content_encoding = Z_STRVAL_PP (data);
-        }
-
-        if ((zend_hash_find (Z_ARRVAL_PP (server_vars),
-                    "HTTP_TRANSFER_ENCODING",
-                    sizeof ("HTTP_TRANSFER_ENCODING"),
-                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
-            req_info->transfer_encoding = Z_STRVAL_PP (data);
-        }
-        if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SERVER_NAME",
-                    sizeof ("SERVER_NAME"),
-                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
-            req_info->svr_name = Z_STRVAL_PP (data);
-        }
-        if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SERVER_PORT",
-                    sizeof ("SERVER_PORT"),
-                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
-            char *p = NULL;
-            p = Z_STRVAL_PP (data);
-            req_info->svr_port = atoi (p);
-        }
-        if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SERVER_PROTOCOL",
-                    sizeof ("SERVER_PROTOCOL"), 
-                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) ==  IS_STRING) {
-            req_info->http_protocol = Z_STRVAL_PP (data);
-        }
-        if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SOAP_ACTION",
-                    sizeof ("SOAP_ACTION"),
-                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
-            req_info->soap_action = Z_STRVAL_PP (data);
-        }
-    }
-
-	{
-		zval ret_val, func;
-		zval **tmp_action = NULL;
-		ZVAL_STRING (&func, "apache_request_headers", 1);
-		if (call_user_function (CG (function_table), (zval **) NULL, &func,
-			&ret_val, 0, NULL TSRMLS_CC) == SUCCESS) {
-				if(Z_TYPE(ret_val) == IS_ARRAY){
-						if(zend_hash_find(Z_ARRVAL(ret_val), "SOAPAction", sizeof("SOAPAction"), 
-							(void**)&tmp_action) == SUCCESS && Z_TYPE_PP(tmp_action) == IS_STRING){
-								req_info->soap_action = Z_STRVAL_PP(tmp_action);
-						}
-					}
-			}
-	}
-
-
-    req_info->request_uri = SG (request_info).request_uri;
-    req_info->content_length = SG (request_info).content_length;
-    req_info->content_type = (char *) SG (request_info).content_type;
-    req_info->request_method = (char *) SG (request_info).request_method;
-    req_info->query_string = (char *) SG (request_info).query_string;
-    
-    if ((zend_hash_find (Z_OBJPROP_P (this_ptr), "wsdlmode",
-                sizeof ("wsdlmode"), (void **) & tmp)) == SUCCESS
-        && Z_TYPE_PP (tmp) == IS_LONG) {
-        in_wsdl_mode = 1;
-    }
-    if (zend_hash_find (&EG (symbol_table), "HTTP_RAW_POST_DATA",
-            sizeof ("HTTP_RAW_POST_DATA"),
-            (void **) & raw_post) != FAILURE  &&((*raw_post)->type ==  IS_STRING)) {
-        req_info->req_data = Z_STRVAL_PP (raw_post);
-        req_info->req_data_length = Z_STRLEN_PP (raw_post);
-    } else if(req_info->request_method && strcmp(req_info->request_method, "GET") == 0) {
-    } else if(ZEND_NUM_ARGS() > 0){
-        /* If we come here, it is not an HTTP post, 
-           rather a command line script execution. 
-           So set some defaults to facilitate standalone execution. */
-        req_info->svr_name = estrdup("localhost");
-        req_info->svr_port = 9999;
-        req_info->req_data = reply_data;
-        req_info->req_data_length = reply_data_len;
-        req_info->http_protocol = estrdup("HTTP");
-        req_info->request_uri = estrdup("http://localhost/axis2/services");
-        req_info->query_string = estrdup("");
-        req_info->request_method = estrdup("POST");
-        req_info->content_type = estrdup("application/soap+xml;charset=UTF-8");
-        req_info->content_length = reply_data_len;
-        raw_post_null = AXIS2_TRUE;
-    }
-    
-    /** begin WSDL Generation */ 
-   if (SG (request_info).query_string
-        && ((stricmp (SG (request_info).query_string, "wsdl") == 0)
-            || (stricmp (SG (request_info).query_string, "wsdl2") == 0))) {
-
         char *service_name = NULL;
         zval func, retval, param1, param2, param3, param4, param5, param6,
         param7;
@@ -1586,7 +1444,7 @@ PHP_METHOD (ws_service, reply)
             wsdl_version = strdup ("wsdl2.0");
         
         /** getting the correct binding style */ 
-            if ((zend_hash_find (Z_OBJPROP_P (obj), WS_BINDING_STYLE,
+            if ((zend_hash_find (Z_OBJPROP_P (svc_zval), WS_BINDING_STYLE,
                     sizeof (WS_BINDING_STYLE), (void **) &tmpval)) == SUCCESS
             && Z_TYPE_PP (tmpval) == IS_STRING) {
             binding_name = Z_STRVAL_PP (tmpval);
@@ -1675,6 +1533,155 @@ PHP_METHOD (ws_service, reply)
         smart_str_free(&full_path);
   
         /** end WSDL generation stuff */ 
+
+}
+    
+/* {{{ proto long reply([long style]) reply the SOAP request */ 
+PHP_METHOD (ws_service, reply) 
+{
+    ws_object_ptr intern = NULL;
+    zval * obj = NULL, **tmp;
+    axis2_conf_t * conf = NULL;
+    axis2_conf_ctx_t * conf_ctx = NULL;
+    wsf_svc_info_t * svc_info = NULL;
+    wsf_req_info_t * req_info = NULL;
+    zval ** server_vars, **data;
+    wsf_worker_t * php_worker = NULL;
+    zval ** raw_post;
+    int status = 0;
+    char content_length[40];
+    char status_line[100];
+    char *content_type = NULL;
+    int in_wsdl_mode = 0;
+    int raw_post_null = AXIS2_FALSE;
+    
+    char *reply_data = NULL;
+    int reply_data_len = 0;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|s", &reply_data, &reply_data_len) == FAILURE) {
+        php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
+    }
+
+    WSF_GET_THIS (obj);
+    intern = (ws_object *) zend_object_store_get_object (obj TSRMLS_CC);
+    
+    svc_info = (wsf_svc_info_t *) (intern->ptr);
+    
+    php_worker = svc_info->php_worker;
+    
+    conf_ctx = wsf_worker_get_conf_ctx (php_worker, ws_env_svr);
+
+    if (!conf_ctx) {
+        php_error_docref (NULL TSRMLS_CC, E_ERROR, "conf ctx missing");
+        return;
+    }
+
+    zend_is_auto_global ("_SERVER", sizeof ("_SERVER") - 1 TSRMLS_CC);
+    
+    req_info = wsf_php_req_info_create ();
+    
+    if(SG(request_info).request_uri){        
+    
+        if (zend_hash_find (&EG (symbol_table), "_SERVER", sizeof ("_SERVER"),
+            (void **) & server_vars) == SUCCESS
+        && (Z_TYPE_PP (server_vars) == IS_ARRAY)) {
+        if ((zend_hash_find (Z_ARRVAL_PP (server_vars),
+                    "HTTP_CONTENT_ENCODING", 
+                    sizeof ("HTTP_CONTENT_ENCODING"),
+                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
+            req_info->content_encoding = Z_STRVAL_PP (data);
+        }
+
+        if ((zend_hash_find (Z_ARRVAL_PP (server_vars),
+                    "HTTP_TRANSFER_ENCODING",
+                    sizeof ("HTTP_TRANSFER_ENCODING"),
+                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
+            req_info->transfer_encoding = Z_STRVAL_PP (data);
+        }
+        if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SERVER_NAME",
+                    sizeof ("SERVER_NAME"),
+                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
+            req_info->svr_name = Z_STRVAL_PP (data);
+        }
+        if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SERVER_PORT",
+                    sizeof ("SERVER_PORT"),
+                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
+            char *p = NULL;
+            p = Z_STRVAL_PP (data);
+            req_info->svr_port = atoi (p);
+        }
+        if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SERVER_PROTOCOL",
+                    sizeof ("SERVER_PROTOCOL"), 
+                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) ==  IS_STRING) {
+            req_info->http_protocol = Z_STRVAL_PP (data);
+        }
+        if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SOAP_ACTION",
+                    sizeof ("SOAP_ACTION"),
+                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
+            req_info->soap_action = Z_STRVAL_PP (data);
+        }
+    }
+
+	{
+		zval ret_val, func;
+		zval **tmp_action = NULL;
+		ZVAL_STRING (&func, "apache_request_headers", 1);
+		if (call_user_function (CG (function_table), (zval **) NULL, &func,
+			&ret_val, 0, NULL TSRMLS_CC) == SUCCESS) {
+				if(Z_TYPE(ret_val) == IS_ARRAY){
+						if(zend_hash_find(Z_ARRVAL(ret_val), "SOAPAction", sizeof("SOAPAction"), 
+							(void**)&tmp_action) == SUCCESS && Z_TYPE_PP(tmp_action) == IS_STRING){
+								req_info->soap_action = Z_STRVAL_PP(tmp_action);
+						}
+					}
+			}
+	}
+
+    
+    req_info->request_uri = SG (request_info).request_uri;
+    req_info->content_length = SG (request_info).content_length;
+    req_info->content_type = (char *) SG (request_info).content_type;
+    req_info->request_method = (char *) SG (request_info).request_method;
+    req_info->query_string = (char *) SG (request_info).query_string;
+    
+    if ((zend_hash_find (Z_OBJPROP_P (this_ptr), "wsdlmode",
+                sizeof ("wsdlmode"), (void **) & tmp)) == SUCCESS
+        && Z_TYPE_PP (tmp) == IS_LONG) {
+        in_wsdl_mode = 1;
+    }
+    if (zend_hash_find (&EG (symbol_table), "HTTP_RAW_POST_DATA",
+            sizeof ("HTTP_RAW_POST_DATA"),
+            (void **) & raw_post) != FAILURE  &&((*raw_post)->type ==  IS_STRING)) {
+        req_info->req_data = Z_STRVAL_PP (raw_post);
+        req_info->req_data_length = Z_STRLEN_PP (raw_post);
+    } 
+    
+    } else if(ZEND_NUM_ARGS() > 0 && reply_data_len > 0){
+        /* If we come here, it is not an HTTP post, 
+           rather a command line script execution. 
+           So set some defaults to facilitate standalone execution. */
+        req_info->svr_name = strdup("localhost");
+        req_info->svr_port = 9999;
+        req_info->req_data = reply_data;
+        req_info->req_data_length = reply_data_len;
+        req_info->http_protocol = strdup("HTTP");
+        req_info->request_uri = svc_info->svc_name;
+        req_info->request_method = strdup("POST");
+        req_info->content_type = strdup("application/soap+xml;charset=UTF-8");
+        req_info->content_length = reply_data_len;
+        raw_post_null = AXIS2_TRUE;
+          
+    }else{
+        php_printf("please provide reply function's argument soap envelope xml string\n");
+        return;
+    }
+    
+    /** begin WSDL Generation */ 
+   if (SG (request_info).query_string
+        && ((stricmp (SG (request_info).query_string, "wsdl") == 0)
+            || (stricmp (SG (request_info).query_string, "wsdl2") == 0))) {
+       generate_wsdl_for_service(obj ,svc_info, req_info TSRMLS_CC);
+
     } else if (in_wsdl_mode) {
         axis2_bool_t status = AXIS2_SUCCESS;
         if (raw_post_null) {
