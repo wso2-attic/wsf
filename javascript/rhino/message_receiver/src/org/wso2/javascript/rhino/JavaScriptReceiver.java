@@ -238,16 +238,16 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     String name = innerElement.getName();
                     Object object = scriptable.get(name, scriptable);
                     XmlSchemaType schemaType = innerElement.getSchemaType();
+                    if (object == null || object instanceof UniqueTag) {
+                        if (innerElement.getMinOccurs() == 0) {
+                            continue;
+                        }
+                        throw new AxisFault("As this operation has multiple return values it should be " +
+                                "returning an object rather then a javascript simple type. Object :" + name +
+                                " was not found in the avlue retruned");
+                    }
                     if (schemaType instanceof XmlSchemaComplexType) {
                         XmlSchemaComplexType innerComplexType = (XmlSchemaComplexType) schemaType;
-                        if (object == null || object instanceof UniqueTag) {
-                            if (innerElement.getMinOccurs() == 0) {
-                                continue;
-                            }
-                            throw new AxisFault("As this operation has multiple return values it should be " +
-                                    "returning an object rather then a javascript simple type. Object :" + name +
-                                    " was not found in the avlue retruned");
-                        }
                         OMElement complexTypeElement = fac.createOMElement(name, outElement.getNamespace());
                         outElement.addChild(complexTypeElement);
                         handleComplexTypeInResponse(innerComplexType, complexTypeElement, object, fac, annotated, json);
