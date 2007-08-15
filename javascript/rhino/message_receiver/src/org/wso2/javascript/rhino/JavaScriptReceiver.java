@@ -55,6 +55,7 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.UniqueTag;
 import org.mozilla.javascript.xmlimpl.XML;
 import org.mozilla.javascript.xmlimpl.XMLList;
 
@@ -230,20 +231,23 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             XmlSchemaObjectCollection schemaObjectCollection = xmlSchemaSequence.getItems();
             if (schemaObjectCollection.getCount() > 1) {
                 Iterator iterator = schemaObjectCollection.getIterator();
+                Scriptable scriptable = (Scriptable) response;;
                 // now we need to know some information from the binding operation.
                 while (iterator.hasNext()) {
                     XmlSchemaElement innerElement = (XmlSchemaElement) iterator.next();
-                    Scriptable scriptable = null;
-                    try {
-                    scriptable = (Scriptable) response;
-                    } catch(ClassCastException t) {
-                        System.out.println("");
-                    }
                     String name = innerElement.getName();
                     Object object = scriptable.get(name, scriptable);
                     XmlSchemaType schemaType = innerElement.getSchemaType();
                     if (schemaType instanceof XmlSchemaComplexType) {
-                        XmlSchemaComplexType innerComplexType = (XmlSchemaComplexType) complexType;
+                        XmlSchemaComplexType innerComplexType = (XmlSchemaComplexType) schemaType;
+                        if (object == null || object instanceof UniqueTag) {
+                            if (innerElement.getMinOccurs() == 0) {
+                                continue;
+                            }
+                            throw new AxisFault("As this operation has multiple return values it should be " +
+                                    "returning an object rather then a javascript simple type. Object :" + name +
+                                    " was not found in the avlue retruned");
+                        }
                         OMElement complexTypeElement = fac.createOMElement(name, outElement.getNamespace());
                         outElement.addChild(complexTypeElement);
                         handleComplexTypeInResponse(innerComplexType, complexTypeElement, object, fac, annotated, json);
