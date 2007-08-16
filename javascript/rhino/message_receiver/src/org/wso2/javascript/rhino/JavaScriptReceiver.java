@@ -56,6 +56,7 @@ import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.UniqueTag;
+import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.xmlimpl.XML;
 import org.mozilla.javascript.xmlimpl.XMLList;
 
@@ -75,7 +76,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
-
+                                                                                                               
 /**
  * Class JavaScriptReceiver implements the AbstractInOutSyncMessageReceiver,
  * which, is the abstract IN-OUT MEP message receiver.
@@ -143,17 +144,23 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             OMElement payload = soapEnvelope.getBody().getFirstElement();
             Object args = payload;
             if (payload != null) {
+
+                // We neet to get the Axis Message from the incomming message so that we can get its schema.
+                // We need the schema in order to unwrap the parameters.
                 AxisMessage axisMessage = inMessage.getAxisOperation().getMessage(
                         WSDLConstants.MESSAGE_LABEL_IN_VALUE);
                 XmlSchemaElement xmlSchemaElement = axisMessage.getSchemaElement();
                 if (xmlSchemaElement != null) {
+
+                    // Once the schema is obtauned we iterate through the schema looking for the elemants in the payload.
+                    // for Each element we extract its value and create a parameter which can be passed into the
+                    // javascript function.
                     XmlSchemaType schemaType = xmlSchemaElement.getSchemaType();
                     if (schemaType instanceof XmlSchemaComplexType) {
                         XmlSchemaComplexType complexType = ((XmlSchemaComplexType) schemaType);
                         List params = handleComplexTypeInRequest(complexType, payload, engine, new ArrayList());
                         args = params.toArray();
                     } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANYTYPE) {
-                        // TODO : Keith > Don't we need to handle the 'else' in here..
                         args = payload;
                     }
                 }
@@ -199,7 +206,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 XmlSchemaType schemaType = xmlSchemaElement.getSchemaType();
                 if (schemaType instanceof XmlSchemaComplexType) {
                     XmlSchemaComplexType complexType = ((XmlSchemaComplexType) schemaType);
-                    handleComplexTypeInResponse(complexType, outElement, response, fac, annotated, engine.isJson());
+                    handleComplexTypeInResponse(complexType, outElement, response, fac, annotated, engine.isJson(), false);
                     body.addChild(outElement);
                 } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANYTYPE) {
                     if (response != null) {
@@ -224,43 +231,57 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
     }
 
     private void handleComplexTypeInResponse(XmlSchemaComplexType complexType, OMElement outElement, Object response,
-                                             OMFactory fac, boolean annotated, boolean json) throws AxisFault {
+                                             OMFactory fac, boolean annotated, boolean json, boolean isInnerParam) throws AxisFault {
         XmlSchemaParticle particle = complexType.getParticle();
         if (particle instanceof XmlSchemaSequence) {
             XmlSchemaSequence xmlSchemaSequence = (XmlSchemaSequence) particle;
             XmlSchemaObjectCollection schemaObjectCollection = xmlSchemaSequence.getItems();
-            if (schemaObjectCollection.getCount() > 1) {
-                Iterator iterator = schemaObjectCollection.getIterator();
-                Scriptable scriptable = (Scriptable) response;;
-                // now we need to know some information from the binding operation.
-                while (iterator.hasNext()) {
-                    XmlSchemaElement innerElement = (XmlSchemaElement) iterator.next();
-                    String name = innerElement.getName();
+            int count = schemaObjectCollection.getCount();
+            Iterator iterator = schemaObjectCollection.getIterator();
+            // now we need to know some information from the binding operation.
+            while (iterator.hasNext()) {
+                XmlSchemaElement innerElement = (XmlSchemaElement) iterator.next();
+                String name = innerElement.getName();
+                XmlSchemaType schemaType = innerElement.getSchemaType();
+                if (schemaType instanceof XmlSchemaComplexType) {
+                    Scriptable scriptable = (Scriptable) response;
                     Object object = scriptable.get(name, scriptable);
-                    XmlSchemaType schemaType = innerElement.getSchemaType();
-                    if (object == null || object instanceof UniqueTag) {
-                        if (innerElement.getMinOccurs() == 0) {
-                            continue;
-                        }
-                        throw new AxisFault("As this operation has multiple return values it should be " +
-                                "returning an object rather then a javascript simple type. Object :" + name +
-                                " was not found in the avlue retruned");
+                    if (isNotNull(innerElement.getMinOccurs(), name, object)) {
+                        continue;
                     }
-                    if (schemaType instanceof XmlSchemaComplexType) {
-                        XmlSchemaComplexType innerComplexType = (XmlSchemaComplexType) schemaType;
-                        OMElement complexTypeElement = fac.createOMElement(name, outElement.getNamespace());
-                        outElement.addChild(complexTypeElement);
-                        handleComplexTypeInResponse(innerComplexType, complexTypeElement, object, fac, annotated, json);
+                    XmlSchemaComplexType innerComplexType = (XmlSchemaComplexType) schemaType;
+                    OMElement complexTypeElement = fac.createOMElement(name, outElement.getNamespace());
+                    outElement.addChild(complexTypeElement);
+                    handleComplexTypeInResponse(innerComplexType, complexTypeElement, object, fac, annotated, json, true);
+                } else {
+                    Object object;
+                    if (isInnerParam || count > 1) {
+                        Scriptable scriptable = (Scriptable) response;
+                        object = scriptable.get(name, scriptable);
                     } else {
-                        handleSimpleTypeinResponse(innerElement, object, fac, annotated, json, outElement);
+                        object = response;
                     }
+                    if (isNotNull(innerElement.getMinOccurs(), name, object)) {
+                        continue;
+                    }
+                    handleSimpleTypeinResponse(innerElement, object, fac, annotated, json, outElement);
                 }
-            } else {
-                handleSimpleTypeinResponse((XmlSchemaElement) schemaObjectCollection.getItem(0), response, fac, annotated, json, outElement);
             }
         } else {
             throw new AxisFault("Unsupported schema type in response.");
         }
+    }
+
+    private boolean isNotNull(long minOccurs, String name, Object object) throws AxisFault {
+        if (object == null || object instanceof UniqueTag || object instanceof Undefined) {
+            if (minOccurs == 0) {
+                return true;
+            }
+            throw new AxisFault("As this operation has multiple return values it should be " +
+                    "returning an object rather then a javascript simple type. Object :" + name +
+                    " was not found in the avlue retruned");
+        }
+        return false;
     }
 
     private List handleComplexTypeInRequest(XmlSchemaComplexType complexType, OMElement payload,
@@ -320,7 +341,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 // and if its 0 add null as a parameter (If not we might mess up the parameters
                 // we pass into the function).
                 if (innerElement.getMinOccurs() == 0) {
-                    return null;
+                    return Undefined.instance;
                 } else {
                     // If minoccurs is not zero throw an exception.
                     // Do we need to di strict schema validation?
@@ -567,7 +588,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
      * Provides support for importing JavaScript files specified in the
      * Services.xml or the Axis2.xml using the "loadJSScripts" parameter.
      * @param inMessage - The incoming message Context
-     * @return
+     * @return String
      */
     private String getImportScriptsList(MessageContext inMessage) {
         String scripts = null;
@@ -859,7 +880,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
     }
 
     /**
-     * Given a jsObject converts it to corresponding XML
+     * Given a jsObject converts it to corresponding OMElement
      * @param jsObject  - The object that needs to be converted
      * @param elementName - The element name of the wrapper
      * @param addTypeInfo - Whether type information should be added into the element as an attribute
