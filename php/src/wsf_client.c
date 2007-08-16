@@ -214,9 +214,11 @@ wsf_client_handle_incoming_attachments (
     axiom_node_t * response_payload TSRMLS_DC)
 {
     zval **tmp = NULL;
+	int attachments_found = 0;
     int responseXOP = AXIS2_FALSE;
-    if (!client_ht)
-        return;
+    
+	if (!client_ht)
+        return 0;
 
     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
         "[wsf_client] handle incomming attachments");
@@ -230,8 +232,6 @@ wsf_client_handle_incoming_attachments (
     }
 
     if (responseXOP == 1) {
-        int attachments_found = 0;
-        
         array_init (cid2str);
         array_init (cid2contentType);
         attachments_found = wsf_util_get_attachments (env, response_payload, cid2str,
@@ -239,6 +239,7 @@ wsf_client_handle_incoming_attachments (
             add_property_zval (msg, WS_ATTACHMENTS, cid2str);
             add_property_zval (msg, WS_CID2CONTENT_TYPE, cid2contentType);
     }
+	return attachments_found;
 }
 
 
@@ -1273,9 +1274,10 @@ wsf_client_do_request (
         }else if (response_payload) {
             int attachments_found = 0;
             zval *rmsg = NULL;
-            MAKE_STD_ZVAL (rmsg);
-            zval *cid2str = NULL;
+			zval *cid2str = NULL;
             zval *cid2contentType = NULL;
+            
+			MAKE_STD_ZVAL (rmsg);
             
             object_init_ex (rmsg, ws_message_class_entry);
             MAKE_STD_ZVAL(cid2str);
