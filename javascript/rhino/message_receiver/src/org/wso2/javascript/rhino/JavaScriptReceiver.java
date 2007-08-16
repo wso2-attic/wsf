@@ -209,11 +209,11 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     handleComplexTypeInResponse(complexType, outElement, response, fac, annotated, engine.isJson(), false);
                     body.addChild(outElement);
                 } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANYTYPE) {
-                    if (response != null) {
+                    if (!isNull(response)) {
                         body.addChild(buildResponse(annotated, engine.isJson(), response, xmlSchemaElement));
                     }
                 }
-            } else if (response != null) {
+            } else if (!isNull(response)) {
                 body.addChild(buildResponse(annotated, engine.isJson(), response, xmlSchemaElement));
             }
             outMessage.setEnvelope(envelope);
@@ -246,7 +246,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 if (schemaType instanceof XmlSchemaComplexType) {
                     Scriptable scriptable = (Scriptable) response;
                     Object object = scriptable.get(name, scriptable);
-                    if (isNotNull(innerElement.getMinOccurs(), name, object)) {
+                    if (checkRequired(innerElement.getMinOccurs(), name, object)) {
                         continue;
                     }
                     XmlSchemaComplexType innerComplexType = (XmlSchemaComplexType) schemaType;
@@ -261,7 +261,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     } else {
                         object = response;
                     }
-                    if (isNotNull(innerElement.getMinOccurs(), name, object)) {
+                    if (checkRequired(innerElement.getMinOccurs(), name, object)) {
                         continue;
                     }
                     handleSimpleTypeinResponse(innerElement, object, fac, annotated, json, outElement);
@@ -272,8 +272,15 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         }
     }
 
-    private boolean isNotNull(long minOccurs, String name, Object object) throws AxisFault {
+    private boolean isNull(Object object) throws AxisFault {
         if (object == null || object instanceof UniqueTag || object instanceof Undefined) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkRequired(long minOccurs, String name, Object object) throws AxisFault {
+        if (isNull(object)) {
             if (minOccurs == 0) {
                 return true;
             }
