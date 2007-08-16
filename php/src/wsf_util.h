@@ -81,7 +81,7 @@ void wsf_util_set_attachments_with_cids (
     HashTable * attach_ht,
     char *default_cnt_type TSRMLS_DC);
 
-void wsf_util_get_attachments (
+int wsf_util_get_attachments (
     const axutil_env_t * env,
     axiom_node_t * payload_node,
     zval * cid2str,

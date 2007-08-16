@@ -51,10 +51,12 @@ void wsf_client_handle_outgoing_attachments (
     axiom_node_t * request_payload,
     axis2_options_t * options TSRMLS_DC);
 
-void wsf_client_handle_incoming_attachments (
+int wsf_client_handle_incoming_attachments (
     axutil_env_t * env,
     HashTable * client_ht,
     zval * msg,
+    zval *cid2str,
+    zval *cid2contentType,
     axiom_node_t * response_payload TSRMLS_DC);
 
 void wsf_client_set_security_options (
@@ -202,11 +204,13 @@ wsf_client_set_security_options (
     }
 }
 
-void
+int 
 wsf_client_handle_incoming_attachments (
     axutil_env_t * env,
     HashTable * client_ht,
     zval * msg,
+    zval *cid2str,
+    zval *cid2contentType,
     axiom_node_t * response_payload TSRMLS_DC)
 {
     zval **tmp = NULL;
@@ -226,19 +230,14 @@ wsf_client_handle_incoming_attachments (
     }
 
     if (responseXOP == 1) {
-        zval *cid2str = NULL;
-        zval *cid2contentType = NULL;
-
-        MAKE_STD_ZVAL (cid2str);
-        MAKE_STD_ZVAL (cid2contentType);
-
+        int attachments_found = 0;
+        
         array_init (cid2str);
         array_init (cid2contentType);
-        wsf_util_get_attachments (env, response_payload, cid2str,
+        attachments_found = wsf_util_get_attachments (env, response_payload, cid2str,
             cid2contentType TSRMLS_CC);
-
-        add_property_zval (msg, WS_ATTACHMENTS, cid2str);
-        add_property_zval (msg, WS_CID2CONTENT_TYPE, cid2contentType);
+            add_property_zval (msg, WS_ATTACHMENTS, cid2str);
+            add_property_zval (msg, WS_CID2CONTENT_TYPE, cid2contentType);
     }
 }
 
@@ -1272,17 +1271,30 @@ wsf_client_do_request (
 				}
             }
         }else if (response_payload) {
-
+            int attachments_found = 0;
             zval *rmsg = NULL;
             MAKE_STD_ZVAL (rmsg);
+            zval *cid2str = NULL;
+            zval *cid2contentType = NULL;
+            
             object_init_ex (rmsg, ws_message_class_entry);
+            MAKE_STD_ZVAL(cid2str);
+            MAKE_STD_ZVAL(cid2contentType);
 
-            wsf_client_handle_incoming_attachments (env, client_ht, rmsg,
-                response_payload TSRMLS_CC);
+            attachments_found = wsf_client_handle_incoming_attachments (env, client_ht, rmsg,
+                    cid2str, cid2contentType, response_payload TSRMLS_CC);
+            
             res_text = wsf_util_serialize_om (env, response_payload);
+            
             add_property_stringl (rmsg, WS_MSG_PAYLOAD_STR, res_text,
                 strlen (res_text), 1);
+            
             ZVAL_ZVAL (return_value, rmsg, 0, 1);
+
+            zval_ptr_dtor(&rmsg);
+            zval_ptr_dtor(&cid2str);
+            zval_ptr_dtor(&cid2contentType);
+
         }else if (response_payload == NULL && has_fault == AXIS2_FALSE) {
             zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C),
                 1 TSRMLS_CC, "Error , NO Response Received");

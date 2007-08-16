@@ -967,7 +967,7 @@ wsf_util_get_attachments (
 */
 
 /*************************/
-void
+int
 wsf_util_get_attachments (
     const axutil_env_t * env,
     axiom_node_t * om_node,
@@ -977,10 +977,11 @@ wsf_util_get_attachments (
     axiom_node_t *temp_node = NULL;
     axiom_node_t *nodes[256];
     int count = 0;
+    int attachments_found = 0;
 
     if (!om_node)
     {
-        return;
+        return 0;
     }
 
     nodes[count++] = om_node;
@@ -1001,18 +1002,15 @@ wsf_util_get_attachments (
                     int data_len = 0;
 					char *cid = NULL;
 
-
                     axiom_data_handler_read_from (data_handler, env, &data, &data_len);
                     cnt_type = axiom_data_handler_get_content_type(data_handler, env);
 					cid = axiom_text_get_content_id(text, env);
 					add_assoc_stringl (cid2str, cid, data, data_len, 1);
-
+                    attachments_found = 1;
 					if (cnt_type) {
                         add_assoc_stringl (cid2contentType, cid, 
                             cnt_type, strlen (cnt_type), 1);
                     }
-					/* axiom_text_set_optimize (text, env, AXIS2_TRUE); */
-                    return;
                 }			
 			}
         }
@@ -1051,7 +1049,10 @@ wsf_util_get_attachments (
             }
         }
     } while(count > 0);
+    
+    return attachments_found;
 }
+
 /***************************/
 
 

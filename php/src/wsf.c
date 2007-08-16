@@ -1389,7 +1389,10 @@ PHP_METHOD (ws_service, set_class)
 }
 /* }}} end setClass */ 
 
-static void generate_wsdl_for_service(zval *svc_zval, wsf_svc_info_t *svc_info, wsf_req_info_t *req_info TSRMLS_DC)
+static void generate_wsdl_for_service(zval *svc_zval, 
+        wsf_svc_info_t *svc_info, 
+        wsf_req_info_t *req_info, char *wsdl_ver_str,
+        int in_cmd TSRMLS_DC)
 {
         char *service_name = NULL;
         zval func, retval, param1, param2, param3, param4, param5, param6,
@@ -1409,17 +1412,26 @@ static void generate_wsdl_for_service(zval *svc_zval, wsf_svc_info_t *svc_info, 
         smart_str full_path = {0};
 		 zval * op_val;
 
-        char *real_path = estrdup(SG(request_info).path_translated);
-        path_len = strlen(SG(request_info).path_translated)- strlen(req_info->request_uri);
-        real_path[path_len + 1] = '\0';
-        
+        char *real_path = NULL;
+            
+        if(!in_cmd){
+            real_path = estrdup(SG(request_info).path_translated);
+            path_len = strlen(SG(request_info).path_translated)- strlen(req_info->request_uri);
+            real_path[path_len + 1] = '\0';
+        }else{
+            real_path = ".";
+        }
        
         service_name = svc_info->svc_name;
-
-        smart_str_appends(&full_path, req_info->svr_name);
-        smart_str_appends(&full_path, req_info->request_uri);
-        smart_str_0 (&full_path);
         
+        if(!in_cmd){
+            smart_str_appends(&full_path, req_info->svr_name);
+            smart_str_appends(&full_path, req_info->request_uri);
+            smart_str_0 (&full_path);
+        }else{
+            smart_str_appends(&full_path, SG(request_info).path_translated); 
+            smart_str_0 (&full_path);
+        }
         params[0] = &param1;
         params[1] = &param2;
         params[2] = &param3;
@@ -1429,7 +1441,7 @@ static void generate_wsdl_for_service(zval *svc_zval, wsf_svc_info_t *svc_info, 
         params[6] = &param7;
         
         /** for Wsdl version. default is wsdl 1.1*/ 
-        if ((stricmp (SG (request_info).query_string, "wsdl")) == 0)
+        if ((stricmp (wsdl_ver_str , "wsdl")) == 0)
             wsdl_version = strdup ("wsdl1.1");
         
         else
@@ -1465,15 +1477,24 @@ static void generate_wsdl_for_service(zval *svc_zval, wsf_svc_info_t *svc_info, 
                     1);
         } }
 
-        smart_str_appends(&script_path, real_path);
-        smart_str_appends(&script_path, "scripts/wsdl/WS_WSDL_Creator.php");
-        smart_str_0 (&script_path);
+        if(!in_cmd){
+            smart_str_appends(&script_path, real_path);
+            smart_str_appends(&script_path, "scripts/wsdl/WS_WSDL_Creator.php");
+            smart_str_0 (&script_path);
 
-        smart_str_appends(&script_file_name, real_path);
-        smart_str_appends(&script_file_name, "scripts/wsf.php");
-        smart_str_0 (&script_file_name);
+            smart_str_appends(&script_file_name, real_path);
+            smart_str_appends(&script_file_name, "scripts/wsf.php");
+            smart_str_0 (&script_file_name);
 
-        efree(real_path);
+            efree(real_path);
+        }else{
+    
+            smart_str_appends(&script_path, "scripts/wsdl/WS_WSDL_Creator.php");
+            smart_str_0 (&script_path);
+
+            smart_str_appends(&script_file_name, "scripts/wsf.php");
+            smart_str_0 (&script_file_name);
+        }
 
         ZVAL_STRING (&func, "ws_generate_wsdl", 1);
         ZVAL_STRING (params[0], script_path.c, 1);
@@ -1547,10 +1568,10 @@ PHP_METHOD (ws_service, reply)
     int in_wsdl_mode = 0;
     int raw_post_null = AXIS2_FALSE;
     
-    char *reply_data = NULL;
-    int reply_data_len = 0;
+    char *arg_data = NULL;
+    int arg_data_len = 0;
 
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|s", &reply_data, &reply_data_len) == FAILURE) {
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|s", &arg_data, &arg_data_len) == FAILURE) {
         php_error_docref(NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
     }
 
@@ -1648,19 +1669,26 @@ PHP_METHOD (ws_service, reply)
         req_info->req_data_length = Z_STRLEN_PP (raw_post);
     } 
     
-    } else if(ZEND_NUM_ARGS() > 0 && reply_data_len > 0){
+    } else if(ZEND_NUM_ARGS() > 0 && arg_data_len > 0){
         /* If we come here, it is not an HTTP post, 
            rather a command line script execution. 
            So set some defaults to facilitate standalone execution. */
+        if((arg_data_len == 4 || arg_data_len == 5) && (stricmp (arg_data , "wsdl") || stricmp(arg_data, "wsdl2"))){
+            req_info->request_uri = svc_info->svc_name;
+            req_info->svr_name = estrdup("localhost");
+            generate_wsdl_for_service(obj ,svc_info, req_info, arg_data , 1 TSRMLS_CC);
+            efree(req_info->svr_name);
+            return;
+        }
         req_info->svr_name = strdup("localhost");
         req_info->svr_port = 9999;
-        req_info->req_data = reply_data;
-        req_info->req_data_length = reply_data_len;
+        req_info->req_data = arg_data;
+        req_info->req_data_length = arg_data_len;
         req_info->http_protocol = strdup("HTTP");
         req_info->request_uri = svc_info->svc_name;
         req_info->request_method = strdup("POST");
         req_info->content_type = strdup("application/soap+xml;charset=UTF-8");
-        req_info->content_length = reply_data_len;
+        req_info->content_length = arg_data_len;
         raw_post_null = AXIS2_TRUE;
           
     }else{
@@ -1672,7 +1700,7 @@ PHP_METHOD (ws_service, reply)
    if (SG (request_info).query_string
         && ((stricmp (SG (request_info).query_string, "wsdl") == 0)
             || (stricmp (SG (request_info).query_string, "wsdl2") == 0))) {
-       generate_wsdl_for_service(obj ,svc_info, req_info TSRMLS_CC);
+       generate_wsdl_for_service(obj ,svc_info, req_info, SG(request_info).query_string , 0 TSRMLS_CC);
 
     } else if (in_wsdl_mode) {
         axis2_bool_t status = AXIS2_SUCCESS;
