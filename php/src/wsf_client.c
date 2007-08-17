@@ -703,13 +703,17 @@ wsf_client_set_addr_options (
                     return AXIS2_FALSE;
                 }
 
-			} else if (Z_TYPE_PP (tmp) == IS_STRING && 
-				strcmp("submission", Z_STRVAL_PP(tmp)) == 0) {
-
-                value = Z_STRVAL_PP (tmp);
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+			} else if (Z_TYPE_PP (tmp) == IS_STRING ) {
+                if(strcmp("submission", Z_STRVAL_PP(tmp)) == 0){ 
+                    value = Z_STRVAL_PP (tmp);
+                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                     "[wsf_client] useWSA is string, value is %s", value);
-            } else if (Z_TYPE_PP (tmp) == IS_LONG && Z_LVAL_PP (tmp) == 1) {
+                }else if(strcmp("1.0", Z_STRVAL_PP(tmp)) == 0){
+                    value = Z_STRVAL_PP (tmp);
+                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                    "[wsf_client] useWSA is string, value is %s", value);
+                }
+            } else if (Z_TYPE_PP (tmp) == IS_DOUBLE && Z_DVAL_PP (tmp) == 1.0) {
 
                 value = "1.0";
 
