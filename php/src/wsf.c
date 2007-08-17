@@ -744,7 +744,8 @@ PHP_METHOD (ws_message, __get)
                     value = php_dom_create_object ((xmlNodePtr) doc, &ret, NULL, 
                         return_value, NULL TSRMLS_CC);
                     add_property_zval (object, WS_MSG_PAYLOAD_DOM, value);
-                    RETURN_ZVAL (value, 0, 1);
+                    
+                    RETURN_ZVAL (value, 0, 0);
                 }
             }
         }
