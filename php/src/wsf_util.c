@@ -411,11 +411,13 @@ wsf_svc_info_free (
 }
 
 /** create php request info struct */
-wsf_req_info_t *
-wsf_php_req_info_create ()
+void 
+wsf_php_req_info_init (wsf_req_info_t *req_info)
 {
+    /*
     wsf_req_info_t *req_info = NULL;
     req_info = emalloc (sizeof (wsf_req_info_t));
+    */
     req_info->svr_name = NULL;
     req_info->svr_port = -1;
     req_info->http_protocol = NULL;
@@ -431,7 +433,7 @@ wsf_php_req_info_create ()
     req_info->result_payload = NULL;
     req_info->transfer_encoding = NULL;
     req_info->query_string = NULL;
-    return req_info;
+    return;
 }
 
 void

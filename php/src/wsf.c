@@ -1400,7 +1400,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
         param7;
         zval * params[7];
         axutil_hash_index_t * hi = NULL;
-        zval * f_val;
+        zval * functions;
         zend_file_handle script;
         char *val = NULL;
         int len = 0;
@@ -1454,12 +1454,12 @@ static void generate_wsdl_for_service(zval *svc_zval,
             && Z_TYPE_PP (tmpval) == IS_STRING) {
             binding_name = Z_STRVAL_PP (tmpval);
         } else {
-            binding_name = estrdup ("doclit");
+            binding_name ="doclit";  /* estrdup ("doclit"); */
         }
         
         /** find the functions in the service.php file */ 
-        MAKE_STD_ZVAL (f_val);
-        array_init (f_val);
+        MAKE_STD_ZVAL (functions);
+        array_init (functions);
         MAKE_STD_ZVAL (op_val);
         array_init (op_val);
         if (svc_info->ops_to_functions) {
@@ -1473,7 +1473,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
                 axutil_hash_this (hi, &k, NULL, &v);
                 f_key = (axis2_char_t *) k;
                 f_name = (axis2_char_t *) v;
-                add_next_index_string (f_val, (char *) f_name, 1);
+                add_next_index_string (functions, (char *) f_name, 1);
                 add_assoc_string (op_val, (char *) f_key, (char *) f_name,
                     1);
         } }
@@ -1497,18 +1497,18 @@ static void generate_wsdl_for_service(zval *svc_zval,
             smart_str_0 (&script_file_name);
         }
 
-        ZVAL_STRING (&func, "ws_generate_wsdl", 1);
-        ZVAL_STRING (params[0], script_path.c, 1);
+        ZVAL_STRING (&func, "ws_generate_wsdl", 0);
+        ZVAL_STRING (params[0], script_path.c, 0);
         INIT_PZVAL (params[0]);
-        ZVAL_STRING (params[1], service_name, 1);
+        ZVAL_STRING (params[1], service_name, 0);
         INIT_PZVAL (params[1]);
-        ZVAL_ZVAL (params[2], f_val, NULL, NULL);
+        ZVAL_ZVAL (params[2], functions, NULL, NULL);
         INIT_PZVAL (params[2]);
-        ZVAL_STRING (params[3], binding_name, 1);
+        ZVAL_STRING (params[3], binding_name, 0);
         INIT_PZVAL (params[3]);
-        ZVAL_STRING (params[4], wsdl_version, 1);
+        ZVAL_STRING (params[4], wsdl_version, 0);
         INIT_PZVAL (params[4]);
-        ZVAL_STRING (params[5], full_path.c , 1);
+        ZVAL_STRING (params[5], full_path.c , 0);
         INIT_PZVAL (params[5]);
         ZVAL_ZVAL (params[6], op_val, NULL, NULL);
         INIT_PZVAL (params[6]);
@@ -1526,26 +1526,26 @@ static void generate_wsdl_for_service(zval *svc_zval,
         else{
             php_execute_script (&script TSRMLS_CC);
             if (call_user_function (EG (function_table), (zval **) NULL,
-                    &func, &retval, 7, params TSRMLS_CC) == SUCCESS)
-                 {
-                if (Z_TYPE_P (&retval) == IS_STRING
-                    && Z_TYPE_P (&retval) != IS_NULL)
-                     {
+                    &func, &retval, 7, params TSRMLS_CC) == SUCCESS){
+
+                if (Z_TYPE_P (&retval) == IS_STRING && Z_TYPE_P (&retval) != IS_NULL){
                     val = estrdup (Z_STRVAL (retval));
                     len = Z_STRLEN (retval);
                     sapi_add_header ("Content-Type:application/xml",
                         sizeof ("Content-Type:application/xml"), 1);
                     php_write (val, len TSRMLS_CC);
+                    if(val){
+                        efree(val);
                     }
-                
-                else
-                    php_printf ("A problem occured");
-                }
+                }else
+                    php_printf ("WSDL Generation Failed");
+            }
        }
-        smart_str_free (&script_path);
-        smart_str_free (&script_file_name);
-        smart_str_free(&full_path);
-  
+       smart_str_free (&script_path);
+       smart_str_free (&script_file_name);
+       smart_str_free(&full_path);
+       zval_ptr_dtor(&op_val);
+       zval_ptr_dtor(&functions); 
         /** end WSDL generation stuff */ 
 
 }
@@ -1558,7 +1558,7 @@ PHP_METHOD (ws_service, reply)
     axis2_conf_t * conf = NULL;
     axis2_conf_ctx_t * conf_ctx = NULL;
     wsf_svc_info_t * svc_info = NULL;
-    wsf_req_info_t * req_info = NULL;
+    wsf_req_info_t  req_info;
     zval ** server_vars, **data;
     wsf_worker_t * php_worker = NULL;
     zval ** raw_post;
@@ -1592,7 +1592,7 @@ PHP_METHOD (ws_service, reply)
 
     zend_is_auto_global ("_SERVER", sizeof ("_SERVER") - 1 TSRMLS_CC);
     
-    req_info = wsf_php_req_info_create ();
+    wsf_php_req_info_init (&req_info);
     
     if(SG(request_info).request_uri){        
     
@@ -1603,36 +1603,36 @@ PHP_METHOD (ws_service, reply)
                     "HTTP_CONTENT_ENCODING", 
                     sizeof ("HTTP_CONTENT_ENCODING"),
                     (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
-            req_info->content_encoding = Z_STRVAL_PP (data);
+            req_info.content_encoding = Z_STRVAL_PP (data);
         }
 
         if ((zend_hash_find (Z_ARRVAL_PP (server_vars),
                     "HTTP_TRANSFER_ENCODING",
                     sizeof ("HTTP_TRANSFER_ENCODING"),
                     (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
-            req_info->transfer_encoding = Z_STRVAL_PP (data);
+            req_info.transfer_encoding = Z_STRVAL_PP (data);
         }
         if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SERVER_NAME",
                     sizeof ("SERVER_NAME"),
                     (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
-            req_info->svr_name = Z_STRVAL_PP (data);
+            req_info.svr_name = Z_STRVAL_PP (data);
         }
         if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SERVER_PORT",
                     sizeof ("SERVER_PORT"),
                     (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
             char *p = NULL;
             p = Z_STRVAL_PP (data);
-            req_info->svr_port = atoi (p);
+            req_info.svr_port = atoi (p);
         }
         if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SERVER_PROTOCOL",
                     sizeof ("SERVER_PROTOCOL"), 
                     (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) ==  IS_STRING) {
-            req_info->http_protocol = Z_STRVAL_PP (data);
+            req_info.http_protocol = Z_STRVAL_PP (data);
         }
         if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SOAP_ACTION",
                     sizeof ("SOAP_ACTION"),
                     (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
-            req_info->soap_action = Z_STRVAL_PP (data);
+            req_info.soap_action = Z_STRVAL_PP (data);
         }
     }
 
@@ -1645,18 +1645,18 @@ PHP_METHOD (ws_service, reply)
 				if(Z_TYPE(ret_val) == IS_ARRAY){
 						if(zend_hash_find(Z_ARRVAL(ret_val), "SOAPAction", sizeof("SOAPAction"), 
 							(void**)&tmp_action) == SUCCESS && Z_TYPE_PP(tmp_action) == IS_STRING){
-								req_info->soap_action = Z_STRVAL_PP(tmp_action);
+								req_info.soap_action = Z_STRVAL_PP(tmp_action);
 						}
 					}
 			}
 	}
 
     
-    req_info->request_uri = SG (request_info).request_uri;
-    req_info->content_length = SG (request_info).content_length;
-    req_info->content_type = (char *) SG (request_info).content_type;
-    req_info->request_method = (char *) SG (request_info).request_method;
-    req_info->query_string = (char *) SG (request_info).query_string;
+    req_info.request_uri = SG (request_info).request_uri;
+    req_info.content_length = SG (request_info).content_length;
+    req_info.content_type = (char *) SG (request_info).content_type;
+    req_info.request_method = (char *) SG (request_info).request_method;
+    req_info.query_string = (char *) SG (request_info).query_string;
     
     if ((zend_hash_find (Z_OBJPROP_P (this_ptr), "wsdlmode",
                 sizeof ("wsdlmode"), (void **) & tmp)) == SUCCESS
@@ -1666,8 +1666,8 @@ PHP_METHOD (ws_service, reply)
     if (zend_hash_find (&EG (symbol_table), "HTTP_RAW_POST_DATA",
             sizeof ("HTTP_RAW_POST_DATA"),
             (void **) & raw_post) != FAILURE  &&((*raw_post)->type ==  IS_STRING)) {
-        req_info->req_data = Z_STRVAL_PP (raw_post);
-        req_info->req_data_length = Z_STRLEN_PP (raw_post);
+        req_info.req_data = Z_STRVAL_PP (raw_post);
+        req_info.req_data_length = Z_STRLEN_PP (raw_post);
     } 
     
     } else if(ZEND_NUM_ARGS() > 0 && arg_data_len > 0){
@@ -1675,21 +1675,21 @@ PHP_METHOD (ws_service, reply)
            rather a command line script execution. 
            So set some defaults to facilitate standalone execution. */
         if((arg_data_len == 4 || arg_data_len == 5) && (stricmp (arg_data , "wsdl") || stricmp(arg_data, "wsdl2"))){
-            req_info->request_uri = svc_info->svc_name;
-            req_info->svr_name = estrdup("localhost");
-            generate_wsdl_for_service(obj ,svc_info, req_info, arg_data , 1 TSRMLS_CC);
-            efree(req_info->svr_name);
+            req_info.request_uri = svc_info->svc_name;
+            req_info.svr_name = estrdup("localhost");
+            generate_wsdl_for_service(obj ,svc_info, &req_info, arg_data , 1 TSRMLS_CC);
+            efree(req_info.svr_name);
             return;
         }
-        req_info->svr_name = strdup("localhost");
-        req_info->svr_port = 9999;
-        req_info->req_data = arg_data;
-        req_info->req_data_length = arg_data_len;
-        req_info->http_protocol = strdup("HTTP");
-        req_info->request_uri = svc_info->svc_name;
-        req_info->request_method = strdup("POST");
-        req_info->content_type = strdup("application/soap+xml;charset=UTF-8");
-        req_info->content_length = arg_data_len;
+        req_info.svr_name = strdup("localhost");
+        req_info.svr_port = 9999;
+        req_info.req_data = arg_data;
+        req_info.req_data_length = arg_data_len;
+        req_info.http_protocol = strdup("HTTP");
+        req_info.request_uri = svc_info->svc_name;
+        req_info.request_method = strdup("POST");
+        req_info.content_type = strdup("application/soap+xml;charset=UTF-8");
+        req_info.content_length = arg_data_len;
         raw_post_null = AXIS2_TRUE;
           
     }else{
@@ -1701,7 +1701,7 @@ PHP_METHOD (ws_service, reply)
    if (SG (request_info).query_string
         && ((stricmp (SG (request_info).query_string, "wsdl") == 0)
             || (stricmp (SG (request_info).query_string, "wsdl2") == 0))) {
-       generate_wsdl_for_service(obj ,svc_info, req_info, SG(request_info).query_string , 0 TSRMLS_CC);
+       generate_wsdl_for_service(obj ,svc_info, &req_info, SG(request_info).query_string , 0 TSRMLS_CC);
 
     } else if (in_wsdl_mode) {
         axis2_bool_t status = AXIS2_SUCCESS;
@@ -1713,7 +1713,7 @@ PHP_METHOD (ws_service, reply)
         }
         status =
             wsf_soap_do_function_call1 (env, svc_info, this_ptr,
-            req_info->req_data, req_info->req_data_length TSRMLS_CC);
+            req_info.req_data, req_info.req_data_length TSRMLS_CC);
         if (status == AXIS2_FALSE) {
             wsf_soap_send_fault (SOAP_1_1, "SOAP-ENV:Server",
                 "Request Handling failed", NULL TSRMLS_CC);
@@ -1740,61 +1740,60 @@ PHP_METHOD (ws_service, reply)
                 }
             }
         status =
-            wsf_worker_process_request (php_worker, ws_env_svr, req_info,
+            wsf_worker_process_request (php_worker, ws_env_svr, &req_info,
             svc_info);
         if (status == WS_HTTP_ACCEPTED)
              {
             sprintf (status_line, "%s 202 Accepted",
-                req_info->http_protocol);
+                req_info.http_protocol);
             sapi_add_header (status_line, strlen (status_line), 1);
             sapi_add_header ("Content-Length: 0",
                 sizeof ("Content-Length: 0") - 1, 1);
             content_type =
                 AXIS2_MALLOC (ws_env_svr->allocator,
-                strlen (req_info->content_type) * sizeof (char) + 20);
+                strlen (req_info.content_type) * sizeof (char) + 20);
             sprintf (content_type, "Content-Type: %s",
-                req_info->content_type);
+                req_info.content_type);
             sapi_add_header (content_type, strlen (content_type), 1);
             }
         
         else if (status == WS_HTTP_OK)
              {
-            sprintf (status_line, "%s 200 OK", req_info->http_protocol);
+            sprintf (status_line, "%s 200 OK", req_info.http_protocol);
             sapi_add_header (status_line, strlen (status_line), 1);
             sprintf (content_length, "Content-Length %ld",
-                req_info->content_length);
+                req_info.content_length);
             content_type =
                 AXIS2_MALLOC (ws_env_svr->allocator,
-                strlen (req_info->content_type) * sizeof (char) + 20);
+                strlen (req_info.content_type) * sizeof (char) + 20);
             sprintf (content_type, "Content-Type: %s",
-                req_info->content_type);
+                req_info.content_type);
             sapi_add_header (content_type, strlen (content_type), 1);
-            php_write (req_info->result_payload,
-                req_info->result_length TSRMLS_CC);
+            php_write (req_info.result_payload,
+                req_info.result_length TSRMLS_CC);
             }
         
         else if (status == WS_HTTP_INTERNAL_SERVER_ERROR)
              {
             sprintf (status_line, "%s 500 Internal Server Error",
-                req_info->http_protocol);
+                req_info.http_protocol);
             sapi_add_header (status_line, strlen (status_line), 1);
-            if (req_info->content_type)
+            if (req_info.content_type)
                  {
                 content_type =
                     AXIS2_MALLOC (ws_env_svr->allocator,
-                    strlen (req_info->content_type) * sizeof (char) + 20);
+                    strlen (req_info.content_type) * sizeof (char) + 20);
                 sprintf (content_type, "Content-Type: %s",
-                    req_info->content_type);
+                    req_info.content_type);
                 if (content_type)
                      {
                     sapi_add_header (content_type, strlen (content_type), 1);
-                    php_write (req_info->result_payload,
-                        req_info->result_length TSRMLS_CC);
+                    php_write (req_info.result_payload,
+                        req_info.result_length TSRMLS_CC);
                     }
                 }
             }
     }
-    wsf_php_req_info_free (req_info);
 }
 /* }}} end reply */ 
     

@@ -1296,13 +1296,12 @@ wsf_client_do_request (
             
             add_property_stringl (rmsg, WS_MSG_PAYLOAD_STR, res_text,
                 strlen (res_text), 1);
-            
 			RETURN_ZVAL(rmsg, 0, 1);
-			/*
-            ZVAL_ZVAL (return_value, rmsg, 0, 1);
+            /*
+            ZVAL_ZVAL (return_value, rmsg, 0, 0);
 
             zval_ptr_dtor(&rmsg);
-			*/
+            */
             zval_ptr_dtor(&cid2str);
             zval_ptr_dtor(&cid2contentType);
 

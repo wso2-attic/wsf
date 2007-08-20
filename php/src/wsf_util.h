@@ -69,7 +69,7 @@ void wsf_svc_info_free (
     wsf_svc_info_t * svc_info,
     axutil_env_t * env);
 
-wsf_req_info_t *wsf_php_req_info_create ();
+void wsf_php_req_info_init (wsf_req_info_t * req_info);
 
 void wsf_php_req_info_free (
     wsf_req_info_t * req_info);
