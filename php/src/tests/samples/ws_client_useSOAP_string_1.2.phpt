@@ -1,5 +1,5 @@
 --TEST--
-Test for ws_message_useSOAP_double_1.2 sample
+Test for ws_message_useSOAP_string_1.2 sample
 --FILE--
 <?php
 $reqPayloadString = <<<XML
