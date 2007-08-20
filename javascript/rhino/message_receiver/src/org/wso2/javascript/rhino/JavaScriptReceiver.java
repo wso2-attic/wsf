@@ -632,7 +632,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
      * @param engine - Reference to the javascript engine
      * @return - An Object that can be passed into a JS function
      */
-    private Object createParam(OMElement omElement, QName type, JavaScriptEngine engine) {
+    private Object createParam(OMElement omElement, QName type, JavaScriptEngine engine) throws AxisFault {
 
         if (Constants.XSD_ANYTYPE.equals(type)) {
             Context context = engine.getCx();
@@ -640,90 +640,73 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             Object[] objects = { element };
             return context.newObject(engine, "XML", objects);
         }
+        String value = omElement.getText();
+        if (value == null) {
+            throw new AxisFault("The value of Element " + omElement.getLocalName() + " cannot be null");
+        }
         if (Constants.XSD_BOOLEAN.equals(type)) {
-            String value = omElement.getText();
             return Boolean.valueOf(value);
         }
         if (Constants.XSD_DOUBLE.equals(type)) {
-            String value = omElement.getText();
             return new Double(ConverterUtil.convertToDouble(value));
         }
         if (Constants.XSD_FLOAT.equals(type)) {
-            String value = omElement.getText();
             return new Float(ConverterUtil.convertToFloat(value));
         }
         if (Constants.XSD_INT.equals(type)) {
-            String value = omElement.getText();
             return new Integer(ConverterUtil.convertToInt(value));
         }
         if (Constants.XSD_INTEGER.equals(type)) {
-            String value = omElement.getText();
             return ConverterUtil.convertToInteger(value);
         }
         if (Constants.XSD_POSITIVEINTEGER.equals(type)) {
-            String value = omElement.getText();
             return ConverterUtil.convertToPositiveInteger(value);
         }
         if (Constants.XSD_NEGATIVEINTEGER.equals(type)) {
-            String value = omElement.getText();
             return ConverterUtil.convertToNegativeInteger(value);
         }
         if (Constants.XSD_NONPOSITIVEINTEGER.equals(type)) {
-            String value = omElement.getText();
             return ConverterUtil.convertToNonPositiveInteger(value);
         }
         if (Constants.XSD_NONNEGATIVEINTEGER.equals(type)) {
-            String value = omElement.getText();
             return ConverterUtil.convertToNonNegativeInteger(value);
         }
         if (Constants.XSD_LONG.equals(type)) {
-            String value = omElement.getText();
             return new Long(ConverterUtil.convertToLong(value));
         }
         if (Constants.XSD_SHORT.equals(type)) {
-            String value = omElement.getText();
             return new Short(ConverterUtil.convertToShort(value));
         }
         if (Constants.XSD_BYTE.equals(type)) {
-            String value = omElement.getText();
             return new Byte(ConverterUtil.convertToByte(value));
         }
         if (Constants.XSD_UNSIGNEDINT.equals(type)) {
-            String value = omElement.getText();
             return ConverterUtil.convertToUnsignedInt(value);
         }
         if (Constants.XSD_UNSIGNEDLONG.equals(type)) {
-            String value = omElement.getText();
             return ConverterUtil.convertToUnsignedLong(value);
         }
         if (Constants.XSD_UNSIGNEDSHORT.equals(type)) {
-            String value = omElement.getText();
             return ConverterUtil.convertToUnsignedShort(value);
         }
         if (Constants.XSD_UNSIGNEDBYTE.equals(type)) {
-            String value = omElement.getText();
             return ConverterUtil.convertToUnsignedByte(value);
         }
         if (Constants.XSD_DECIMAL.equals(type)) {
-            String value = omElement.getText();
             return ConverterUtil.convertToDecimal(value);
         }
         if (Constants.XSD_DATETIME.equals(type)) {
-            String value = omElement.getText();
             Calendar calendar = ConverterUtil.convertToDateTime(value);
             return calendar.getTime();
         }
         if (Constants.XSD_DATE.equals(type)) {
-            String value = omElement.getText();
             return ConverterUtil.convertToDate(value);
         }
         if (Constants.XSD_TIME.equals(type)) {
-            String value = omElement.getText();
             Time time = ConverterUtil.convertToTime(value);
             return time.getAsCalendar().getTime();
         }
         if (Constants.XSD_YEARMONTH.equals(type)) {
-            String value = omElement.getText();
             YearMonth yearMonth = ConverterUtil.convertToGYearMonth(value);
             Calendar calendar = Calendar.getInstance();
             calendar.clear();
@@ -736,7 +719,6 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             return calendar.getTime();
         }
         if (Constants.XSD_MONTHDAY.equals(type)) {
-            String value = omElement.getText();
             MonthDay monthDay = ConverterUtil.convertToGMonthDay(value);
             Calendar calendar = Calendar.getInstance();
             calendar.clear();
@@ -749,7 +731,6 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             return calendar.getTime();
         }
         if (Constants.XSD_YEAR.equals(type)) {
-            String value = omElement.getText();
             Year year  = ConverterUtil.convertToGYear(value);
             Calendar calendar = Calendar.getInstance();
             calendar.clear();
@@ -761,7 +742,6 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             return calendar.getTime();
         }
         if (Constants.XSD_MONTH.equals(type)) {
-            String value = omElement.getText();
             Month month = ConverterUtil.convertToGMonth(value);
             Calendar calendar = Calendar.getInstance();
             calendar.clear();
@@ -773,7 +753,6 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             return calendar.getTime();
         }
         if (Constants.XSD_DAY.equals(type)) {
-            String value = omElement.getText();
             Day day = ConverterUtil.convertToGDay(value);
             Calendar calendar = Calendar.getInstance();
             calendar.clear();
@@ -785,7 +764,6 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             return calendar.getTime();
         }
         if (Constants.XSD_DURATION.equals(type)) {
-            String value = omElement.getText();
             Duration duration= ConverterUtil.convertToDuration(value);
             Calendar calendar = Calendar.getInstance();
             calendar.clear();
@@ -802,7 +780,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
      * @param engine Reference to the javascript engine
      * @return - An array Object that can be passed into a JS function
      */
-    private Object handleArray(Iterator iterator, QName type, JavaScriptEngine engine) {
+    private Object handleArray(Iterator iterator, QName type, JavaScriptEngine engine) throws AxisFault {
         ArrayList objectList = new ArrayList();
         while (iterator.hasNext()) {
             OMElement omElement = (OMElement) iterator.next();
