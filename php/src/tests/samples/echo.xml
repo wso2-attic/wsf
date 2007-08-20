@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ns1:echoString xmlns:ns1="http://ws.apache.org/axis2/c/samples">
+   <text>Hello World!</text>
+</ns1:echoString>
