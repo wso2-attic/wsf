@@ -273,10 +273,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
     }
 
     private boolean isNull(Object object) throws AxisFault {
-        if (object == null || object instanceof UniqueTag || object instanceof Undefined) {
-            return true;
-        }
-        return false;
+        return object == null || object instanceof UniqueTag || object instanceof Undefined;
     }
 
     private boolean checkRequired(long minOccurs, String name, Object object) throws AxisFault {
@@ -631,6 +628,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
      * @param type - The schemaType of the incoming message element
      * @param engine - Reference to the javascript engine
      * @return - An Object that can be passed into a JS function
+     * @throws AxisFault - In case an exception occurs
      */
     private Object createParam(OMElement omElement, QName type, JavaScriptEngine engine) throws AxisFault {
 
@@ -779,6 +777,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
      * @param type - The schematype of the omelement
      * @param engine Reference to the javascript engine
      * @return - An array Object that can be passed into a JS function
+     * @throws AxisFault - In case an exception occurs
      */
     private Object handleArray(Iterator iterator, QName type, JavaScriptEngine engine) throws AxisFault {
         ArrayList objectList = new ArrayList();
