@@ -906,7 +906,7 @@ wsf_client_set_options (
     return status;
 }
 
-int
+void
 wsf_client_do_request (
     zval * this_ptr,
     zval * param,
@@ -1272,7 +1272,7 @@ wsf_client_do_request (
                     rfault TSRMLS_CC);
                 ZVAL_ZVAL (return_value, rfault, 0, 1); */
 					zend_throw_exception_object(rfault TSRMLS_CC);
-					return 1;
+					return ;
 				}
             }
         }else if (response_payload) {
@@ -1311,7 +1311,7 @@ wsf_client_do_request (
                 1 TSRMLS_CC, "Error , NO Response Received");
         }
     }
-    return 0;
+    return ;
 }
 
 void

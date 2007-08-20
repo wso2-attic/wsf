@@ -42,7 +42,7 @@ int wsf_client_set_headers (
     zval * msg TSRMLS_DC);
 
 
-int wsf_client_do_request (
+void wsf_client_do_request (
     zval * this_ptr,
     zval * param,
     zval * return_value,
