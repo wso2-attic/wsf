@@ -1,5 +1,5 @@
 --TEST--
-Test for ws_message_useWSA_string_1.0 sample
+Test for ws_message_useWSA_string_submission sample
 --FILE--
 <?php
 $reqPayloadString = <<<XML
