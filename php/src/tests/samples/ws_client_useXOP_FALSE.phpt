@@ -1,5 +1,5 @@
 --TEST--
-Test for mtom download client sample
+Test for ws_client_useXOP_FALSE sample
 --FILE--
 <?php
 

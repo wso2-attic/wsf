@@ -1,5 +1,5 @@
 --TEST--
-Test for fault_client sample
+Test for ws_fault_client.phpt sample
 --FILE--
 <?php
 
@@ -10,7 +10,7 @@ XML;
 try {
 
     $client = new WSClient(
-        array("to"=>"http://localhost/samples/fault_service.php"));
+        array("to"=>"http://localhost/samples/fault_service_role&detail.php"));
 
 				
     $resMessage = $client->request($reqPayloadString);
@@ -31,5 +31,5 @@ try {
 --EXPECT--
 Soap Fault Reason: Testing WSFault
 Soap Fault Code: soapenv:Sender 
-Soap Fault Role: Soap Role 
-Soap Fault Detail: <error>Soap Detail</error>
+Soap Fault Role: Fault Role 
+Soap Fault Detail: <error>Fault Detail</error>

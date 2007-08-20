@@ -1,5 +1,5 @@
 --TEST--
-Test for mtom download client sample
+Test for mtom_download_client_base64 client sample
 --FILE--
 <?php
 
