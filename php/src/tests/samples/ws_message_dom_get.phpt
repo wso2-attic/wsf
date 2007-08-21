@@ -1,5 +1,5 @@
 --TEST--
-Test for ws_message_dom_get_echo_client.phpt sample
+Test for ws_message_dom_get sample
 --FILE--
 
 <?php
@@ -7,15 +7,9 @@ Test for ws_message_dom_get_echo_client.phpt sample
 $reqPayloadString = <<<XML
 <ns1:echo xmlns:ns1="http://php.axis2.org/samples"><text>Hello World!</text></ns1:echo>
 XML;
-/*
-$doc = new DOMDocument();
-$doc->loadXML($reqPayloadString);
-$req = new WSMessage($doc);
-echo $req->str;
-*/
 
-$msg = new WSMessage($reqPayloadString);
-echo $msg->dom->saveXML();
+$messge = new WSMessage($reqPayloadString);
+echo $messge->dom->saveXML();
 
 ?>
 
