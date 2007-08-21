@@ -10,7 +10,7 @@ dist-hook:
 	sh dist_hook.sh
 
 samples:
-#	sh build_samples.sh $(prefix)
+	sh build_samples.sh $(prefix)
 
 install-data-hook:
 	cp -rf docs/* $(docsdir)
