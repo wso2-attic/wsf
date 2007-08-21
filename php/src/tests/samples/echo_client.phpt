@@ -11,7 +11,7 @@ XML;
 try {
 
     $client = new WSClient(
-        array("to"=>"http://localhost:8081/samples/echo_service.php"));
+        array("to"=>"http://localhost/samples/echo_service.php"));
 				
     $resMessage = $client->request($reqPayloadString);
     
