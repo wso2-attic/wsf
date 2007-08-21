@@ -364,6 +364,12 @@ public class WSASProxyWidget extends SimpleWidgetDataContributor {
             }
           });
         
+        namespace2packageTable.addListener(SWT.MouseExit, new Listener() {
+        	public void handleEvent(Event event) {
+        		model.setNamespaseToPackageMapping(getNs2PkgMapping());
+        	}
+        });
+        
 
 //		UIUtils      uiUtils  = new UIUtils( pluginId_ );
 //		parent.setToolTipText( Axis2ConsumptionUIMessages.TOOLTIP_PPAE_PAGE );

@@ -306,6 +306,12 @@ public class WSDL2JAVASkelConfigWidget extends SimpleWidgetDataContributor
             }
           });
         
+        namespace2packageTable.addListener(SWT.MouseExit, new Listener() {
+        	public void handleEvent(Event event) {
+        		model.setNamespaseToPackageMapping(getNs2PkgMapping());
+        	}
+        });
+        
 		populateParamsFromWSDL();
 		populateModel();
 
