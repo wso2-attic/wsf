@@ -14,8 +14,9 @@ try {
         array("to"=>"http://localhost/samples/echo_service_addr.php",
               "action" => "http://php.axis2.org/samples/echoString"));
               
-    $client = new WSClient(array("useWSA" => "1.0"));
-				
+  
+	$client = new WSClient(10);			
+   
     $resMessage = $client->request($reqMessage);
     
     printf("Response = %s \n", $resMessage->str);
