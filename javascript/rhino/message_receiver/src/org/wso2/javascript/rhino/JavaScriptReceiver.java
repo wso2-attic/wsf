@@ -21,6 +21,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.OMText;
+import org.apache.axiom.om.OMNode;
 import org.apache.axiom.soap.SOAP11Constants;
 import org.apache.axiom.soap.SOAP12Constants;
 import org.apache.axiom.soap.SOAPBody;
@@ -924,16 +925,20 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             }
         } else if (jsObject instanceof XMLList) {
             XMLList list = (XMLList) jsObject;
-            if (list.length() == 1) {
-                element.addChild(list.getAxiomFromXML());
-                if (addTypeInfo) {
-                element.addAttribute("type", "xmlList", namespace);
-                }
-            } else if (list.length() == 0) {
-                throw new AxisFault("Function returns an XMLList containing zero node");
+            OMNode[] omNodes = list.getAxiomFromXML();
+            if (omNodes.length == 1) {
+                element.addChild(omNodes[0]);
+            } else if (omNodes.length == 0) {
+                return element;
             } else {
-                throw new AxisFault(
-                        "Function returns an XMLList containing more than one node");
+                OMElement wrapperElement = fac.createOMElement("return", null);
+                for (int i = 0; i < omNodes.length; i++) {
+                    wrapperElement.addChild(omNodes[i]);
+                }
+                element.addChild(wrapperElement);
+            }
+            if (addTypeInfo) {
+                element.addAttribute("type", "xmlList", namespace);
             }
         } else {
 
