@@ -428,8 +428,7 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 		clientTestCaseCheckBoxButton.setSelection(context.isClientTestCase());
 		clientTestCaseCheckBoxButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
-	            context.setClientDatabinding(clientDatabindingCombo
-	                    .getItem(clientDatabindingCombo.getSelectionIndex()));
+	            context.setClientTestCase(clientTestCaseCheckBoxButton.getSelection());
 			}
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
@@ -440,11 +439,11 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 
 		// generate all
 	    clientGenerateAllCheckBoxButton = new Button(codegenGroup, SWT.CHECK);
-		clientGenerateAllCheckBoxButton.setSelection(context.isClientTestCase());
+		clientGenerateAllCheckBoxButton.setSelection(context.isClientGenerateAll());
 		clientGenerateAllCheckBoxButton.setText(WSASCoreUIMessages.LABEL_GENERATE_ALL);
 		clientGenerateAllCheckBoxButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
-				context.setClientTestCase(clientTestCaseCheckBoxButton.getSelection());
+				context.setClientGenerateAll(clientGenerateAllCheckBoxButton.getSelection());
 			}
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
