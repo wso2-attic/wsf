@@ -702,11 +702,12 @@ public class XMLList extends XMLObjectImpl implements Function {
 
     Object getXmlObject() {
 
-        if (length() == 1) {
-            return getFromAxiomNodeList(0).getXmlObject();
-        } else {
-            throw ScriptRuntime.typeError("getAxiomObject " + LIST_WITH_ONE_ITEM);
+        int length = length();
+        OMNode[] omNodes = new OMNode[length];
+        for (int i = 0; i < length; i++) {
+            omNodes[i] = (OMNode) getFromAxiomNodeList(i).getXmlObject();
         }
+        return omNodes;
     }
 
     public void addAxiomNode(AxiomNode axiomNode) {
@@ -856,8 +857,8 @@ public class XMLList extends XMLObjectImpl implements Function {
         return xmlList;
     }
 
-    public OMNode getAxiomFromXML() {
-        return (OMNode) getXmlObject();
+    public OMNode[] getAxiomFromXML() {
+        return (OMNode[]) getXmlObject();
     }
 
 
