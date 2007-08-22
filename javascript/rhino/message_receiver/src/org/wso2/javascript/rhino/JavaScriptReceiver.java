@@ -50,6 +50,10 @@ import org.apache.ws.commons.schema.XmlSchemaObjectCollection;
 import org.apache.ws.commons.schema.XmlSchemaParticle;
 import org.apache.ws.commons.schema.XmlSchemaSequence;
 import org.apache.ws.commons.schema.XmlSchemaType;
+import org.apache.ws.commons.schema.XmlSchemaSimpleType;
+import org.apache.ws.commons.schema.XmlSchemaSimpleTypeContent;
+import org.apache.ws.commons.schema.XmlSchemaSimpleTypeRestriction;
+import org.apache.ws.commons.schema.XmlSchemaEnumerationFacet;
 import org.apache.ws.commons.schema.constants.Constants;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeArray;
@@ -310,16 +314,48 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                                         + " defined in the schema can not be found in the request");
                     }
                     List innerParamNames = new ArrayList();
-                    List innerParams = handleComplexTypeInRequest((XmlSchemaComplexType) schemaType, complexTypePayload, engine, innerParamNames);
+                    List innerParams = handleComplexTypeInRequest((XmlSchemaComplexType) schemaType, complexTypePayload,
+                            engine, innerParamNames);
                     Scriptable scriptable = engine.getCx().newObject(engine);
                     for (int i = 0; i < innerParams.size(); i++) {
                         scriptable.put((String) innerParamNames.get(i), scriptable, innerParams.get(i));
                     }
                     params.add(scriptable);
+                } else if (schemaType instanceof XmlSchemaSimpleType) {
+                    // Handle enumerations in here.
+                    XmlSchemaSimpleType xmlSchemaSimpleType = (XmlSchemaSimpleType) schemaType;
+                    XmlSchemaSimpleTypeContent content = xmlSchemaSimpleType.getContent();
+                    if (content instanceof XmlSchemaSimpleTypeRestriction) {
+                        // We only support restriction on xs:string.
+                        XmlSchemaSimpleTypeRestriction simpleTypeRestriction = (XmlSchemaSimpleTypeRestriction) content;
+                        String elementName = innerElement.getName();
+                        Object object = handleSimpleElement(payload, engine, elementName, innerElement.getMinOccurs(),
+                                simpleTypeRestriction.getBaseTypeName());
+                        XmlSchemaObjectCollection facets = simpleTypeRestriction.getFacets();
+                        Iterator iterator1 = facets.getIterator();
+                        // Used to check whether the incoming value of the enumeration matches one thats defined in the
+                        // schema.
+                        boolean valueFound = false;
+                        while (iterator1.hasNext()) {
+                            XmlSchemaEnumerationFacet enumerationFacet = (XmlSchemaEnumerationFacet)iterator1.next();
+                            if (enumerationFacet.getValue().equals(object)) {
+                                valueFound = true;
+                                break;
+                            }
+                        }
+                        if (!valueFound) {
+                            throw new AxisFault("The element " + innerElement.getName() + " is an enumeration of " +
+                                    "strings. The input " + object + " does not match the defined enumeration.");
+                        }
+                        params.add(object);
+                        paramNames.add(elementName);
+                    } else {
+                        throw new AxisFault("Unsupported restriction in Schema");
+                    }
                 } else {
-                    params.add(handleSimpleTypeInRequest(payload, engine, innerElement));
-                    paramNames.add(innerElement.getName());
-                }
+                        params.add(handleSimpleTypeInRequest(payload, engine, innerElement));
+                        paramNames.add(innerElement.getName());
+                    }
             }
         } else {
             throw new AxisFault("Unsupported schema type in request");
@@ -337,26 +373,30 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     innerElemenrName));
             return handleArray(iterator1, innerElement.getSchemaTypeName(), engine);
         } else {
-            String innerElementName = innerElement.getName();
-            OMElement omElement = payload.getFirstChildWithName(new QName(
-                    innerElementName));
-            if (omElement == null) {
-                // There was no such element in the payload. Therefore we check for minoccurs
-                // and if its 0 add null as a parameter (If not we might mess up the parameters
-                // we pass into the function).
-                if (innerElement.getMinOccurs() == 0) {
-                    return Undefined.instance;
-                } else {
-                    // If minoccurs is not zero throw an exception.
-                    // Do we need to di strict schema validation?
-                    throw new AxisFault(
-                            "Required element " + innerElement.getName()
-                                    + " defined in the schema can not be found in the request");
-                }
-            }
-            return createParam(omElement, innerElement.getSchemaTypeName(), engine);
+            return handleSimpleElement(payload, engine, innerElement.getName(), innerElement.getMinOccurs(), innerElement.getSchemaTypeName());
         }
     }
+
+    private Object handleSimpleElement(OMElement payload, JavaScriptEngine engine, String innerElementName, long minOccurs, QName schemaType) throws AxisFault {
+        OMElement omElement = payload.getFirstChildWithName(new QName(
+                innerElementName));
+        if (omElement == null) {
+            // There was no such element in the payload. Therefore we check for minoccurs
+            // and if its 0 add null as a parameter (If not we might mess up the parameters
+            // we pass into the function).
+            if (minOccurs == 0) {
+                return Undefined.instance;
+            } else {
+                // If minoccurs is not zero throw an exception.
+                // Do we need to di strict schema validation?
+                throw new AxisFault(
+                        "Required element " + innerElementName
+                                + " defined in the schema can not be found in the request");
+            }
+        }
+        return createParam(omElement, schemaType, engine);
+    }
+
     private void handleSimpleTypeinResponse(XmlSchemaElement innerElement, Object jsObject, OMFactory factory, boolean annotated, boolean json, OMElement outElement) throws AxisFault {
         long maxOccurs = innerElement.getMaxOccurs();
         if (maxOccurs > 1 && !innerElement.getSchemaTypeName().equals(Constants.XSD_ANYTYPE)) {
