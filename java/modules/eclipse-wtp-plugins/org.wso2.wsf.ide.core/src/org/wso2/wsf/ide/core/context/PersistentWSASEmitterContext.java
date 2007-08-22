@@ -46,6 +46,7 @@ public class PersistentWSASEmitterContext extends PersistentContext implements
 		setDefault(PREFERENCE_CLIENT_DATABINDING, WSASEmitterDefaults.getClientDatabinding());
 		setDefault(PREFERENCE_CLIENT_TESTCASE, WSASEmitterDefaults.isClientTestCase());
 		setDefault(PREFERENCE_CLIENT_GENERATE_ALL, WSASEmitterDefaults.isClientGenerateAll());
+		setDefault(PREFERENCE_CLIENT_UNPACK_CLASSES, WSASEmitterDefaults.isClientUnpackClasses());
 		//AAR Defaults
 		setDefault(PREFERENCE_AAR_EXTENTION, WSASEmitterDefaults.getAarExtention());
 
@@ -140,7 +141,14 @@ public class PersistentWSASEmitterContext extends PersistentContext implements
 	public void setClientGenerateAll(boolean clientGenrateAll) {
 		setValue(PREFERENCE_CLIENT_GENERATE_ALL, clientGenrateAll);
 	}
+	
+	public boolean isClientUnpackClasses() {
+		return getValueAsBoolean(PREFERENCE_CLIENT_UNPACK_CLASSES);
+	}
 
+	public void setClientUnpackClasses(boolean clientUnpackClasses) {
+		setValue(PREFERENCE_CLIENT_UNPACK_CLASSES, clientUnpackClasses);
+	}
 	
 	//AAR Options
 	
@@ -169,6 +177,5 @@ public class PersistentWSASEmitterContext extends PersistentContext implements
 	public void setDebugHost(String debugHost) {
 		setValue(PREFERENCE_DEBUG_HOST, debugHost);
 	}
-	
-	
+
 }

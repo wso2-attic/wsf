@@ -35,6 +35,7 @@ public class WSASEmitterDefaults {
 	public static final String PREFERENCE_CLIENT_DATABINDING_DEFAULT  = WSASCoreUIMessages.ADB;
 	public static final boolean PREFERENCE_CLIENT_TESTCASE_DEFAULT = false;
 	public static final boolean PREFERENCE_CLIENT_GENERATE_ALL_DEFAULT = false;
+	public static final boolean PREFERENCE_CLIENT_UNPACK_CLASSES_DEFAULT = false;
 	
 	//Service Archive Options
 	private static String PREFERENCE_AAR_EXTENTION_DEFAULT  = WSASCoreUIMessages.AAR;	//aarExtention
@@ -83,6 +84,10 @@ public class WSASEmitterDefaults {
 
 	public static boolean isClientGenerateAll(){
 		return PREFERENCE_CLIENT_GENERATE_ALL_DEFAULT;
+	}
+	
+	public static boolean isClientUnpackClasses(){
+		return PREFERENCE_CLIENT_UNPACK_CLASSES_DEFAULT;
 	}
 
 	//Service AAR Options

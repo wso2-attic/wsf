@@ -52,7 +52,7 @@ import org.wso2.wsf.ide.consumption.core.messages.WSASConsumptionUIMessages;
 import org.wso2.wsf.ide.consumption.core.utils.WSDLPropertyReader;
 import org.wso2.wsf.ide.core.context.WSASEmitterContext;
 import org.wso2.wsf.ide.core.plugin.WebServiceWSASCorePlugin;
-import org.wso2.wsf.ide.core.plugin.data.ServerModel;
+import org.wso2.wsf.ide.core.plugin.messages.WSASCoreUIMessages;
 import org.wso2.wsf.ide.core.utils.ClassLoadingUtil;
 
 public class WSASProxyWidget extends SimpleWidgetDataContributor {
@@ -241,13 +241,13 @@ public class WSASProxyWidget extends SimpleWidgetDataContributor {
 		fillLabel = new Label(mainComp, SWT.HORIZONTAL | SWT.NULL);
 		fillLabel.setLayoutData(gd);
 		
-		// generate all
+		// unpack classes
 		unpackClassesCheckBoxButton = new Button(mainComp, SWT.CHECK);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 3;
 		unpackClassesCheckBoxButton.setLayoutData(gd);
-		unpackClassesCheckBoxButton.setSelection(false);
-		unpackClassesCheckBoxButton.setText(WSASConsumptionUIMessages.LABEL_UNPACK_CLASSES);
+		unpackClassesCheckBoxButton.setSelection(context.isClientUnpackClasses());
+		unpackClassesCheckBoxButton.setText(WSASCoreUIMessages.LABEL_UNPACK_CLASSES);
 		unpackClassesCheckBoxButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				model.setUnpackClasses(unpackClassesCheckBoxButton.getSelection());
@@ -462,6 +462,7 @@ public class WSASProxyWidget extends SimpleWidgetDataContributor {
 		model.setGenerateAllCheck(generateAllCheckBoxButton.getSelection());
 		model.setTestCaseCheck(testCaseCheckBoxButton.getSelection());
 		model.setNamespaseToPackageMapping(getNs2PkgMapping());
+		model.setUnpackClasses(unpackClassesCheckBoxButton.getSelection());
 	}
 
 	/* (non-Javadoc)

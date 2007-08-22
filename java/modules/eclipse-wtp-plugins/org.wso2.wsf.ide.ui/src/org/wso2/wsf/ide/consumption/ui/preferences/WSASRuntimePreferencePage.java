@@ -71,6 +71,7 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 	Button asyncOnlyRadioButton;
 	Combo aarExtensionCombo;
 	Button clientGenerateAllCheckBoxButton;
+	Button clientUnpackClassesCheckBoxButton;
 	Button clientTestCaseCheckBoxButton;
 
 	  
@@ -405,6 +406,21 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 	                .getItem(clientDatabindingCombo.getSelectionIndex()));
 	        }
 	    });
+	    
+		// Client Unpack Classes
+	    clientUnpackClassesCheckBoxButton = new Button(codegenGroup, SWT.CHECK);
+	    clientUnpackClassesCheckBoxButton.setSelection(context.isClientUnpackClasses());
+	    clientUnpackClassesCheckBoxButton.setText(WSASCoreUIMessages.LABEL_UNPACK_CLASSES);
+	    clientUnpackClassesCheckBoxButton.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				context.setClientUnpackClasses(clientUnpackClassesCheckBoxButton.getSelection());
+			}
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+	    gd = new GridData(GridData.FILL_HORIZONTAL);
+	    gd.horizontalSpan = 2;
+	    clientUnpackClassesCheckBoxButton.setLayoutData(gd);
 		
 		// generate test case option
 	    clientTestCaseCheckBoxButton = new Button(codegenGroup, SWT.CHECK);
@@ -581,6 +597,7 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 				WSASEmitterDefaults.isClientAsync() && !WSASEmitterDefaults.isClientSync());
 		clientTestCaseCheckBoxButton.setSelection(WSASEmitterDefaults.isClientTestCase());
 		clientGenerateAllCheckBoxButton.setSelection(WSASEmitterDefaults.isClientTestCase());
+		clientUnpackClassesCheckBoxButton.setSelection(WSASEmitterDefaults.isClientUnpackClasses());
 		aarExtensionCombo.select(0);
 	  }
 	

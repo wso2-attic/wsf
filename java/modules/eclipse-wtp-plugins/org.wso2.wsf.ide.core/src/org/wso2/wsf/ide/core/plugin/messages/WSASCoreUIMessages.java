@@ -69,6 +69,7 @@ public final class WSASCoreUIMessages extends NLS {
 	public static String LABEL_SYNC_AND_ASYNC;
 	public static String LABEL_SYNC;
 	public static String LABEL_ASYNC;
+	public static String LABEL_UNPACK_CLASSES;
 	
 	public static String DIR_WEBCONTENT;
 	public static String DIR_TEMPWAR;

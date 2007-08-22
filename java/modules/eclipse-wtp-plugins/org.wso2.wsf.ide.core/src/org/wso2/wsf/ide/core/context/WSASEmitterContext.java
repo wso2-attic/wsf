@@ -39,6 +39,7 @@ public interface WSASEmitterContext {
 	public static final String PREFERENCE_CLIENT_DATABINDING = "cleintDatabinding";
 	public static final String PREFERENCE_CLIENT_TESTCASE = "clientTestcase"; 
 	public static final String PREFERENCE_CLIENT_GENERATE_ALL = "clientGenerateAll"; 
+	public static final String PREFERENCE_CLIENT_UNPACK_CLASSES = "clientUnpackClasses"; 
 	
 	//Service Archive Options
 	public static final String PREFERENCE_AAR_EXTENTION  = "aarExtention";
@@ -99,6 +100,10 @@ public interface WSASEmitterContext {
 	public void setClientGenerateAll(boolean clientGenerateAll);
 
 	public boolean isClientGenerateAll();
+	
+	public void setClientUnpackClasses(boolean clientUnpackClasses);
+
+	public boolean isClientUnpackClasses();
 
 	//AAR Options
 	public void setAarExtention(String aarExtention);
