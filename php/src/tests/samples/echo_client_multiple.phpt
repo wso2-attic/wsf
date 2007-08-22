@@ -29,6 +29,7 @@ try
         printf("Response = %s <br><br>", htmlspecialchars($resPayload->str));
         printf("Last Request = %s<br><br>",htmlspecialchars($serviceClient->getLastRequest()));
         printf("Last Response = %s<br><br>",htmlspecialchars($serviceClient->getLastResponse()));
+        printf("Last Response Headers = %s<br><br>",htmlspecialchars($serviceClient->getLastResponseHeaders()));
     
     }
 
