@@ -102,7 +102,8 @@ public class WSASClientCodegenCommand extends AbstractDataModelOperation {
             "java",
             tempCodegenOutputLocation,
             model.getNamespaseToPackageMapping(),
-            false	//Serverside interface always false
+            false,	//Serverside interface always false
+            model.isUnpackClasses()
            ); 
       
         //CodeGenConfiguration codegenConfig = new CodeGenConfiguration(service, optionsMap);

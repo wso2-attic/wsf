@@ -79,6 +79,7 @@ public class WSASProxyWidget extends SimpleWidgetDataContributor {
 	//private java.util.List serviceQNameList2 = null;
 	private Table namespace2packageTable = null;
 	private Button generateAllCheckBoxButton;
+	private Button unpackClassesCheckBoxButton;
 	private Button testCaseCheckBoxButton;
 	
 	private WSDLPropertyReader reader;
@@ -239,6 +240,21 @@ public class WSASProxyWidget extends SimpleWidgetDataContributor {
 		gd.horizontalSpan = 3;
 		fillLabel = new Label(mainComp, SWT.HORIZONTAL | SWT.NULL);
 		fillLabel.setLayoutData(gd);
+		
+		// generate all
+		unpackClassesCheckBoxButton = new Button(mainComp, SWT.CHECK);
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 3;
+		unpackClassesCheckBoxButton.setLayoutData(gd);
+		unpackClassesCheckBoxButton.setSelection(false);
+		unpackClassesCheckBoxButton.setText(WSASConsumptionUIMessages.LABEL_UNPACK_CLASSES);
+		unpackClassesCheckBoxButton.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				model.setUnpackClasses(unpackClassesCheckBoxButton.getSelection());
+			}
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
 		
 		// generate test case option
 		gd = new GridData(GridData.FILL_HORIZONTAL);

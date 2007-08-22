@@ -88,7 +88,8 @@ public class WSASWSDL2JavaCommand extends AbstractDataModelOperation {
             "java",
             tempCodegenOutputLocation,
             model.getNamespaseToPackageMapping(),
-            model.isGenerateServerSideInterface()
+            model.isGenerateServerSideInterface(),
+            false //No unpacking in the server side
           );
         
         

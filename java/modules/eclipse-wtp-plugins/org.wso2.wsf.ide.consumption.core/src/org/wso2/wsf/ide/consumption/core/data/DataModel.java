@@ -27,6 +27,7 @@ public class DataModel extends Model{
 	private boolean	ASync = false;
 	private boolean generateAllCheck = false;
 	private boolean testCaseCheck = false;
+	private boolean unpackClasses = false;
 
 	
 	public String getDatabindingType() {
@@ -104,6 +105,12 @@ public class DataModel extends Model{
 	}
 	public void setTestCaseCheck(boolean testCaseCheck) {
 		this.testCaseCheck = testCaseCheck;
+	}
+	public boolean isUnpackClasses() {
+		return unpackClasses;
+	}
+	public void setUnpackClasses(boolean unpackClasses) {
+		this.unpackClasses = unpackClasses;
 	}
 
 }

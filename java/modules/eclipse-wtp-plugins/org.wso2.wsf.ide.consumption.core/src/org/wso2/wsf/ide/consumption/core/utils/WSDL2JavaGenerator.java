@@ -60,7 +60,8 @@ public class WSDL2JavaGenerator {
             		  String selectedLanguage,
             		  String outputLocation,
             		  String namespace2packageList,
-            		  boolean isServerSideInterface
+            		  boolean isServerSideInterface,
+            		  boolean isUnpackClasses
             		  ){
        Map optionMap = new HashMap();
        
@@ -274,6 +275,19 @@ public class WSDL2JavaGenerator {
     		optionMap.put((String)SERVER_SIDE_INTERFACE_OPTION_FIELD.get(String.class),
     				CommandLineOptionConstructor.newInstance(
     					new Object[]{(String)SERVER_SIDE_INTERFACE_OPTION_FIELD.get(String.class),
+    					new String[0]}));
+       }
+       //unpack classes mapping
+       if (isUnpackClasses){
+							//	       optionMap.put(CommandLineOptionConstants.WSDL2JavaConstants.UNPACK_CLASSES_OPTION,
+							//	    		   new CommandLineOption(
+							//	    		   CommandLineOptionConstants.WSDL2JavaConstants.UNPACK_CLASSES_OPTION,
+							//	    		   new String[0]));
+     		Field UNPACK_CLASSES_OPTION_FIELD = CommandLineOptionConstantsClass
+     											.getField("UNPACK_CLASSES_OPTION");
+    		optionMap.put((String)UNPACK_CLASSES_OPTION_FIELD.get(String.class),
+    				CommandLineOptionConstructor.newInstance(
+    					new Object[]{(String)UNPACK_CLASSES_OPTION_FIELD.get(String.class),
     					new String[0]}));
        }
        

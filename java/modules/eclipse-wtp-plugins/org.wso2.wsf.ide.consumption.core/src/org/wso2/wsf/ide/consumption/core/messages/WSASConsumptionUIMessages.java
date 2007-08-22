@@ -39,6 +39,7 @@ public final class WSASConsumptionUIMessages extends NLS {
 	public static String LABEL_SYNC;
 	public static String LABEL_ASYNC;
 	public static String LABEL_DATA_MODEL;
+	public static String LABEL_UNPACK_CLASSES;
 	
 	public static String PAGE_TITLE_WS_WSAS_PROXY;
 	public static String PAGE_DESC_WS_WSAS_PROXY;
