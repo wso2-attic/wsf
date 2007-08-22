@@ -51,14 +51,12 @@ wsf_worker_t * wsf_worker_create (const axutil_env_t * env,
 {
     wsf_worker_t * worker = NULL;
     AXIS2_ENV_CHECK (env, NULL);
-    worker =
-        (wsf_worker_t *) AXIS2_MALLOC (env->allocator,
-        sizeof (wsf_worker_t));
-    if (!worker)
-         {
+    worker = (wsf_worker_t *) AXIS2_MALLOC (env->allocator,
+                sizeof (wsf_worker_t));
+    if (!worker){
         AXIS2_ERROR_SET (env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
-        }
+    }
     worker->conf_ctx = NULL;
     worker->conf_ctx = axis2_build_conf_ctx (env, repo_path);
     if (NULL == worker->conf_ctx) {
@@ -70,14 +68,13 @@ wsf_worker_t * wsf_worker_create (const axutil_env_t * env,
         axis2_module_desc_t * module_desc = NULL;
         axutil_param_t * param = NULL;
         axutil_qname_t * sandesha2_qname = NULL;
-        sandesha2_qname =
-            axutil_qname_create (env, "sandesha2", NULL, NULL);
+        
+        sandesha2_qname = axutil_qname_create (env, "sandesha2", NULL, NULL);
+
         conf = axis2_conf_ctx_get_conf (worker->conf_ctx, env);
         module_desc = axis2_conf_get_module (conf, env, sandesha2_qname);
         if (module_desc) {
-            param =
-                axis2_module_desc_get_param (module_desc, env,
-                "sandesha2_db");
+            param = axis2_module_desc_get_param (module_desc, env, "sandesha2_db");
             if (param) {
                 axutil_param_set_value (param, env, rm_db_dir);
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
@@ -112,8 +109,7 @@ axis2_char_t * wsf_worker_get_bytes (const axutil_env_t * env,
     }
     return_size = axutil_stream_get_len (tmp_stream, env);
     if (return_size > 0) {
-        buffer = (char *) AXIS2_MALLOC (env->allocator, sizeof (char) * 
-            (return_size + 2));
+        buffer = (char *) AXIS2_MALLOC (env->allocator, sizeof (char) * (return_size + 2));
         return_size =
             axutil_stream_read (tmp_stream, env, buffer, return_size + 1);
         buffer[return_size + 1] = '\0';

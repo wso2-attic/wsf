@@ -437,7 +437,8 @@ PHP_MINIT_FUNCTION (wsf)
 
     wsf_msg_recv = wsf_xml_msg_recv_create (ws_env_svr);
     
-    worker = wsf_worker_create (ws_env_svr, home_folder, WSF_GLOBAL (rm_db_dir));
+    worker = wsf_worker_create (ws_env_svr, axutil_strdup( ws_env_svr, home_folder),
+                    axutil_strdup(ws_env_svr, WSF_GLOBAL (rm_db_dir)));
 
     le_sdl = register_list_destructors (delete_sdl, NULL);
     le_url = register_list_destructors (delete_url, NULL);
@@ -457,6 +458,7 @@ PHP_MINIT_FUNCTION (wsf)
 PHP_MSHUTDOWN_FUNCTION (wsf) {
 
     UNREGISTER_INI_ENTRIES ();
+    wsf_worker_free(worker, ws_env_svr);
     axis2_msg_recv_free (wsf_msg_recv, ws_env_svr);
     axutil_env_free (env);
     axutil_env_free (ws_env_svr);
@@ -728,8 +730,7 @@ PHP_METHOD (ws_message, __get)
         if (get_message_storage_type (object TSRMLS_CC) == WS_USING_STRING) {
             zval ** tmp_val = NULL;
             if (zend_hash_find (Z_OBJPROP_P (object), WS_MSG_PAYLOAD_STR,
-                    sizeof (WS_MSG_PAYLOAD_STR),
-                    (void **) &tmp_val) == SUCCESS) {
+                    sizeof (WS_MSG_PAYLOAD_STR), (void **) &tmp_val) == SUCCESS) {
                 long length = 0;
                 char *buffer = Z_STRVAL_PP (tmp_val);
                 length = Z_STRLEN_PP (tmp_val);
@@ -744,15 +745,12 @@ PHP_METHOD (ws_message, __get)
                     value = php_dom_create_object ((xmlNodePtr) doc, &ret, NULL, 
                         return_value, NULL TSRMLS_CC);
                     add_property_zval (object, WS_MSG_PAYLOAD_DOM, value);
-                    
                     RETURN_ZVAL (value, 0, 0);
                 }
             }
         }
     }
 }
-
-
 /* }}} */ 
     
 /* {{{ proto void WSClient::__construct(string uri[, array options]) */ 
@@ -873,9 +871,7 @@ PHP_METHOD (ws_client, request)
     WSF_OBJ_CHECK (env);
     WSF_GET_THIS (obj);
     WSF_GET_OBJ (svc_client, obj, axis2_svc_client_t, intern);
-    
     wsf_client_do_request (obj, param, return_value, env, svc_client, AXIS2_FALSE TSRMLS_CC);
-
 	WSF_RESET_GLOBALS();
 }
 
