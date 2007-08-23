@@ -265,7 +265,7 @@
         <junit.version>3.8.2</junit.version>
 		<axis2.version>SNAPSHOT</axis2.version>
 		<js.core.version>SNAPSHOT</js.core.version>
-		<neethi.version>2.0</neethi.version>
+		<neethi.version>SNAPSHOT</neethi.version>
 		<woden.version>1.0-incubating-SNAPSHOT</woden.version>
 		<wsdl4j.version>1.6.1</wsdl4j.version>
 		<jaxen.version>1.1-beta-10</jaxen.version>
@@ -280,7 +280,7 @@
 			2.1
 		</backport.util.concurrent.version>
 		<junit.version>3.8.2</junit.version>
-		<jakarta.httpcore.version>4.0-alpha4</jakarta.httpcore.version>
+		<jakarta.httpcore.version>4.0-alpha5</jakarta.httpcore.version>
 		<XmlSchema.version>SNAPSHOT</XmlSchema.version>
 		<commons.io.version>1.1</commons.io.version>
 		<jettison.version>1.0-beta-1</jettison.version>

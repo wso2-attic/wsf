@@ -109,8 +109,8 @@
 			<version>${neethi.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>httpcomponents-httpcore</groupId>
-			<artifactId>jakarta-httpcore</artifactId>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
 			<version>${jakarta.httpcore.version}</version>
 		</dependency>
 	</dependencies>
