@@ -16,7 +16,7 @@ $actions = array("http://php.axis2.org/samples/echoString" => "echoString");
 $svr = new WSService(array("operations" => $operations, 
                               "actions" => $actions));
         
-$svr->reply(array("echoString" => "echoFunction"));
+$svr->reply();
 
 ?>
 --EXPECT--
