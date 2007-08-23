@@ -16,7 +16,7 @@ XML;
 
 function sendFault($inMessage) {
     
-return new WSFault(array("getFault" => "sendFault"));
+    return new WSFault(10, "Fault Detail");
 }
 
 $operations = array("getFault" => "sendFault");
