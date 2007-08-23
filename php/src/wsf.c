@@ -369,8 +369,8 @@ static void ws_init_globals (zend_wsf_globals * wsf_globals)
 PHP_MINIT_FUNCTION (wsf) 
 {
     zend_class_entry ce;
-    char *home_folder = NULL;
 
+    char *home_folder = NULL;
     wsf_soap_prepare_ws_globals ();
     
     ZEND_INIT_MODULE_GLOBALS (wsf, ws_init_globals, NULL);
@@ -439,12 +439,15 @@ PHP_MINIT_FUNCTION (wsf)
     
     worker = wsf_worker_create (ws_env_svr, home_folder,
                     axutil_strdup(ws_env_svr, WSF_GLOBAL (rm_db_dir)));
-
     le_sdl = register_list_destructors (delete_sdl, NULL);
     le_url = register_list_destructors (delete_url, NULL);
     le_typemap = register_list_destructors (delete_hashtable, NULL);
     le_service = register_list_destructors (delete_service, NULL);
     
+    if(home_folder){
+        pefree(home_folder, 1);
+    }
+   
     axiom_xml_reader_init ();
     
     return SUCCESS;
@@ -457,11 +460,19 @@ PHP_MINIT_FUNCTION (wsf)
  */ 
 PHP_MSHUTDOWN_FUNCTION (wsf) {
 
-    UNREGISTER_INI_ENTRIES ();
+    zend_hash_destroy(&WSF_GLOBAL(defEnc));
+    zend_hash_destroy(&WSF_GLOBAL(defEncIndex));
+    zend_hash_destroy(&WSF_GLOBAL(defEncNs));
+    if (WSF_GLOBAL(mem_cache)) {
+        zend_hash_destroy(WSF_GLOBAL(mem_cache));
+        free(WSF_GLOBAL(mem_cache));
+    }
     wsf_worker_free(worker, ws_env_svr);
     axis2_msg_recv_free (wsf_msg_recv, ws_env_svr);
     axutil_env_free (env);
     axutil_env_free (ws_env_svr);
+    axiom_xml_reader_cleanup();
+    UNREGISTER_INI_ENTRIES ();
     return SUCCESS;
 }
 

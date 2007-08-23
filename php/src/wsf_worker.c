@@ -40,8 +40,7 @@ struct wsf_worker_t
 };
 void WSF_CALL
 wsf_worker_dummy_free_function (
-    void *obj,
-    const axutil_env_t * env)
+    void *obj, const axutil_env_t * env)
 {
     return;
 }
@@ -70,8 +69,11 @@ wsf_worker_t * wsf_worker_create (const axutil_env_t * env,
         axutil_qname_t * sandesha2_qname = NULL;
         
         sandesha2_qname = axutil_qname_create (env, "sandesha2", NULL, NULL);
+
         conf = axis2_conf_ctx_get_conf (worker->conf_ctx, env);
+        
         module_desc = axis2_conf_get_module (conf, env, sandesha2_qname);
+        
         if (module_desc) {
             param = axis2_module_desc_get_param (module_desc, env, "sandesha2_db");
             if (param) {
@@ -80,6 +82,7 @@ wsf_worker_t * wsf_worker_create (const axutil_env_t * env,
                     "[wsf_svr] rm_db_dir %s", rm_db_dir);
             }
         }
+        
         axutil_qname_free(sandesha2_qname, env);
     }
     return worker;
