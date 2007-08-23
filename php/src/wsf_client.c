@@ -1299,8 +1299,10 @@ wsf_client_do_request (
             
             ZVAL_ZVAL (return_value, rmsg, 1, 0);
             zval_ptr_dtor(&rmsg);
+			/*
             zval_ptr_dtor(&cid2str);
             zval_ptr_dtor(&cid2contentType);
+			*/
 
         }else if (response_payload == NULL && has_fault == AXIS2_FALSE) {
             zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C),

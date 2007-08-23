@@ -444,10 +444,6 @@ PHP_MINIT_FUNCTION (wsf)
     le_typemap = register_list_destructors (delete_hashtable, NULL);
     le_service = register_list_destructors (delete_service, NULL);
     
-    if(home_folder){
-        pefree(home_folder, 1);
-    }
-   
     axiom_xml_reader_init ();
     
     return SUCCESS;
