@@ -6,8 +6,7 @@ Source: wso2-wsf-php-1.0.0.tar.gz
 License: Apache
 Group: Development/Tools
 %description
-The GNU indent program reformats C code to any of a variety o
-formatting standards, or you can define your own.
+WSO2 WSF/PHP Extension
 %prep
 %setup -q
 %build
