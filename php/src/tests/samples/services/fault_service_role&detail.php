@@ -27,8 +27,9 @@ $reqPayloadString = <<<XML
 XML;
 
 function sendFault($inMessage) {
-
+    
     return new WSFault("Sender", "Testing WSFault", "Fault Role", "Fault Detail");
+    /*return new WSFault(array("operations" => $operations));*/
 }
 
 $operations = array("getFault" => "sendFault");
