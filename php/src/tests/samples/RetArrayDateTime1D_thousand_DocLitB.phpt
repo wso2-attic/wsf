@@ -7,9 +7,8 @@ Test for RetArrayDateTime1D_thousand sample
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"http://131.107.72.15/SoapWsdl_ComplexDataTypes_XmlFormatter_Service_Indigo/ComplexDataTypesDocLitB.svc?wsdl",
-                                 "useSOAP" => "1.1",
-                                 "to" => "http://localhost:9090/SoapWsdl_ComplexDataTypes_XmlFormatter_Service_Indigo/ComplexDataTypesDocLitB.svc"));
+    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitB.wsdl",
+                                 "useSOAP" => "1.1"));
     $proxy = $client->getProxy();	
     $date_array = array();
     for($i =0; $i<1000; $i++){

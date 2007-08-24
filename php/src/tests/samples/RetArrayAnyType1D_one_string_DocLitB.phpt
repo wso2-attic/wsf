@@ -6,9 +6,8 @@ Test for RetArrayAnyType1D_one_string sample
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"ComplexDataTypesDocLitB.wsdl",
-                                 "useSOAP" => "1.1",
-                                 "to" => "http://localhost:9090/SoapWsdl_ComplexDataTypes_XmlFormatter_Service_Indigo/ComplexDataTypesDocLitB.svc"));
+    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitB.wsdl",
+                                 "useSOAP" => "1.1"));
     $proxy = $client->getProxy();	
     $empty_any= array("Hello World");
     $val =  $proxy->RetArrayAnyType1D(array($empty_any));    

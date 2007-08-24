@@ -8,9 +8,8 @@ Test for RetArrayAnyType1D_one_string sample
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"http://131.107.72.15/SoapWsdl_ComplexDataTypes_XmlFormatter_Service_Indigo/ComplexDataTypesDocLitB.svc?wsdl",
-                                 "useSOAP" => "1.1",
-                                 "to" => "http://localhost:9090/SoapWsdl_ComplexDataTypes_XmlFormatter_Service_Indigo/ComplexDataTypesDocLitB.svc"));
+    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitB.wsdl",
+                                 "useSOAP" => "1.1"));
     $proxy = $client->getProxy();	
     $s1_array = array("name" => "WSO2 PHP developer");
     $val =  $proxy->RetStructS1($s1_array);    
