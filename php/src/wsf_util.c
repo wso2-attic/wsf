@@ -1083,6 +1083,8 @@ wsf_util_serialize_om (
     memcpy (new_buffer, buffer, buffer_len);
     new_buffer[buffer_len] = '\0';
 
+	axiom_output_free(om_output, env);
+
     return new_buffer;
 }
 
