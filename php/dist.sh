@@ -1,8 +1,8 @@
 cd wsf_c
 grep -rl AXIS2C_HOME *| xargs sed -i "s/AXIS2C_HOME/WSFC_HOME/g"
 export WSFC_HOME=`pwd`/deploy
-./configure --prefix=$WSFC_HOME;
-make
+./configure --with-wsf --with-apache2=/usr/local/apache2/include --with-axis2=`pwd`/wsf_c/axis2c/include --enable-tests=yes --enable-savan=no --prefix=`php-config --extension-dir`/wsf_c 
+make -j 100
 make install
 make samples
 cd ..
