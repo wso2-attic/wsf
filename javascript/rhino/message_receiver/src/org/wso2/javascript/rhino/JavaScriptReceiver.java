@@ -215,11 +215,17 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     body.addChild(outElement);
                 } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANY) {
                     if (!isNull(response)) {
-                        body.addChild(buildResponse(annotated, engine.isJson(), response, xmlSchemaElement));
+                        OMElement element = buildResponse(annotated, engine.isJson(), response, xmlSchemaElement);
+                        if (element != null) {
+                            body.addChild(element);
+                        }
                     }
                 }
             } else if (!isNull(response)) {
-                body.addChild(buildResponse(annotated, engine.isJson(), response, xmlSchemaElement));
+                OMElement element = buildResponse(annotated, engine.isJson(), response, xmlSchemaElement);
+                if (element != null) {
+                    body.addChild(element);
+                }
             }
             outMessage.setEnvelope(envelope);
         } catch (Throwable throwable) {
@@ -901,7 +907,28 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             result = builder.processDocument(in, null, null);
         }
         // Convert the JS return to XML
-        return createResponseElement(result, innerElement.getName(), !annotated);
+
+        // Check whether the innerElement is null.
+        if (innerElement != null) {
+            return createResponseElement(result, innerElement.getName(), !annotated);
+        } else {
+
+            // wrap the response in a wrapper element called return. If the wrapper contains an OMElemet return the
+            // OMElement (There is no use in the wrapper). 
+            // There are occations when the function returns a js type which is not XML.
+            // Therefore we need the wrapper element tp wrap it. What if the service returned null? just return null.
+            OMElement element = createResponseElement(result, "return", !annotated);
+            OMElement omElement = element.getFirstElement();
+            if (omElement == null) {
+                String elementText = element.getText();
+                if (elementText == null || elementText == "") {
+                    return null;
+                }
+                return element;
+            } else {
+                return omElement;
+            }
+        }
     }
 
     /**
@@ -920,9 +947,6 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         // Get the OMNode inside the jsObjecting object
         if (jsObject instanceof XML) {
             element.addChild((((XML) jsObject).getAxiomFromXML()));
-            if (addTypeInfo) {
-                element.addAttribute("type", "xml", namespace);
-            }
         } else if (jsObject instanceof XMLList) {
             XMLList list = (XMLList) jsObject;
             OMNode[] omNodes = list.getAxiomFromXML();
@@ -936,9 +960,9 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     wrapperElement.addChild(omNodes[i]);
                 }
                 element.addChild(wrapperElement);
-            }
-            if (addTypeInfo) {
-                element.addAttribute("type", "xmlList", namespace);
+                if (addTypeInfo) {
+                    wrapperElement.addAttribute("type", "xmlList", namespace);
+                }
             }
         } else {
 
