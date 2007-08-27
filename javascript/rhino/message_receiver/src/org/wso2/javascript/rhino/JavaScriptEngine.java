@@ -53,7 +53,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
      * Constructs a new instance of the JavaScriptEngine class
      */
     public JavaScriptEngine() {
-        super(Context.enter());
+        super(new AxiomE4XContextFactory().enter());
         cx = Context.getCurrentContext();
         String[] names = { "load", "print" };
         defineFunctionProperties(names, JavaScriptEngine.class, ScriptableObject.DONTENUM);

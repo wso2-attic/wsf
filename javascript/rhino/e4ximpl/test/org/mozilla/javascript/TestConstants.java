@@ -1,4 +1,4 @@
-package org.mozilla.javascript;
+package org.wso2.javascript;
 /*
 * Copyright 2005,2006 WSO2, Inc. http://wso2.com
 *

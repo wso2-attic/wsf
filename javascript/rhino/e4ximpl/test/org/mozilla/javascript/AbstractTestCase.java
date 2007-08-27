@@ -15,11 +15,16 @@
 *
 */
 
-package org.mozilla.javascript;
+package org.wso2.javascript;
 
 import junit.framework.TestCase;
 import java.io.File;
 import java.net.URL;
+
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ContextFactory;
+import org.mozilla.javascript.xml.XMLLib;
 
 public abstract class AbstractTestCase extends TestCase {
 
@@ -39,7 +44,19 @@ public abstract class AbstractTestCase extends TestCase {
     }
 
     public void setUp(){
+        if (!ContextFactory.hasExplicitGlobal()) {
+            ContextFactory.initGlobal(new AxiomFactory());
+        }
         cx = Context.enter();
         scope = cx.initStandardObjects();
+    }
+
+    class AxiomFactory extends ContextFactory {
+
+        protected XMLLib.Factory getE4xImplementationFactory() {
+            return org.mozilla.javascript.xml.XMLLib.Factory.create(
+				"org.wso2.javascript.xmlimpl.XMLLibImpl"
+			);
+        }
     }
 }

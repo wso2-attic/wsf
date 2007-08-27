@@ -62,8 +62,8 @@ import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.UniqueTag;
 import org.mozilla.javascript.Undefined;
-import org.mozilla.javascript.xmlimpl.XML;
-import org.mozilla.javascript.xmlimpl.XMLList;
+import org.wso2.javascript.xmlimpl.XML;
+import org.wso2.javascript.xmlimpl.XMLList;
 
 import javax.xml.namespace.QName;
 import java.io.BufferedReader;

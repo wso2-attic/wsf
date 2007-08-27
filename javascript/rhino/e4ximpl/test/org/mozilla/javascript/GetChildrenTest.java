@@ -15,7 +15,7 @@
 *
 */
 
-package org.mozilla.javascript;
+package org.wso2.javascript;
 
 import java.io.File;
 import java.io.FileReader;
