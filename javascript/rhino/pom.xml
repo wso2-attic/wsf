@@ -276,9 +276,7 @@
 		<xml.apis.version>1.3.03</xml.apis.version>
 		<commons.codec.version>1.3</commons.codec.version>
 		<commons.httpclient.version>3.0.1</commons.httpclient.version>
-		<backport.util.concurrent.version>
-			2.1
-		</backport.util.concurrent.version>
+		<backport.util.concurrent.version>2.1</backport.util.concurrent.version>
 		<junit.version>3.8.2</junit.version>
 		<jakarta.httpcore.version>4.0-alpha5</jakarta.httpcore.version>
 		<XmlSchema.version>SNAPSHOT</XmlSchema.version>
