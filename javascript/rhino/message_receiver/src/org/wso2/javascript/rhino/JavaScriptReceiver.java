@@ -577,11 +577,6 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             element.setText(str);
             return element;
         }
-        if (qName.equals(Constants.XSD_ENTITIES)) {
-            String str = JSToOMConverter.convertToENTITIES(jsObject);
-            element.setText(str);
-            return element;
-        }
         if (qName.equals(Constants.XSD_NORMALIZEDSTRING)) {
             String str = JSToOMConverter.convertToNormalizedString(jsObject);
             element.setText(str);

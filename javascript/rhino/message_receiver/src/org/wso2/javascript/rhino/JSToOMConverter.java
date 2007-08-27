@@ -232,11 +232,6 @@ public class JSToOMConverter {
         return new IDRefs(str).toString();
     }
 
-    public static String convertToENTITIES(Object jsObject) {
-        String str = (String) jsObject;
-        return new Entities(str).toString();
-    }
-
     public static String convertToNormalizedString(Object jsObject) {
         String str = (String) jsObject;
         return new NormalizedString(str).toString();
