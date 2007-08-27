@@ -443,8 +443,10 @@ public class WSASProxyWidget extends SimpleWidgetDataContributor {
 	 * Fill the combo with proper databinding names
 	 */
 	private void fillDatabinderCombo() {
-		databindingTypeCombo.add(WSASConsumptionUIMessages.DATA_BINDING_ADB);
-		databindingTypeCombo.add(WSASConsumptionUIMessages.DATA_BINDING_NONE);
+		databindingTypeCombo.add(WSASCoreUIMessages.DATA_BINDING_ADB);
+		databindingTypeCombo.add(WSASCoreUIMessages.DATA_BINDING_XMLBEANS);
+		databindingTypeCombo.add(WSASCoreUIMessages.DATA_BINDING_JIBX);
+		databindingTypeCombo.add(WSASCoreUIMessages.DATA_BINDING_NONE);
 		databindingTypeCombo.select(0);
 	}
 	

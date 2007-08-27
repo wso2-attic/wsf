@@ -104,6 +104,10 @@ public final class WSASCoreUIMessages extends NLS {
 	public static String SERVICES;
 	public static String WSAS_RUNTIME_LOCATION;
 	public static String WSAS_RUNTIME_PREFERENCES;
+	public static String DATA_BINDING_ADB;
+	public static String DATA_BINDING_XMLBEANS;
+	public static String DATA_BINDING_JIBX;
+	public static String DATA_BINDING_NONE;
 
 	public static String SERVER_STATUS_PASS;
 	public static String SERVER_STATUS_FAIL;

@@ -72,8 +72,6 @@ public class WSASCreationUIMessages extends NLS {
 	public static String JAR_TASK;
 	public static String WSAS_PROJECT;
 	public static String CODEGEN_RESULTS;
-	public static String DATA_BINDING_ADB;
-	public static String DATA_BINDING_NONE;
 	public static String SKELETON_SUFFIX;
 
 	static {

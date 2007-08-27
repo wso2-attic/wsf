@@ -37,7 +37,6 @@ import org.wso2.wsf.ide.core.plugin.messages.WSASCoreUIMessages;
 import org.wso2.wsf.ide.core.utils.WSASCoreUtils;
 import org.wso2.wsf.ide.core.utils.FacetContainerUtils;
 import org.wso2.wsf.ide.creation.core.data.DataModel;
-import org.wso2.wsf.ide.creation.core.messages.WSASCreationUIMessages;
 import org.wso2.wsf.ide.creation.core.utils.CommonUtils;
 
 public class WSASDefaultingCommand extends AbstractDataModelOperation 
@@ -75,7 +74,7 @@ public class WSASDefaultingCommand extends AbstractDataModelOperation
 		
 		if (scenario == WebServiceScenario.TOPDOWN) {
 			model.setWsdlURI(ws.getWebServiceInfo().getWsdlURL());
-			model.setDatabindingType(WSASCreationUIMessages.DATA_BINDING_ADB);
+			model.setDatabindingType(WSASCoreUIMessages.DATA_BINDING_ADB);
 			DefaultCodegenUtil defaultCodegenUtil = new DefaultCodegenUtil(model);
 			defaultCodegenUtil.populateModelParamsFromWSDL();
 			model.setServicesXML(true);

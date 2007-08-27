@@ -49,6 +49,7 @@ import org.eclipse.wst.command.internal.env.ui.widgets.WidgetDataEvents;
 import org.wso2.wsf.ide.consumption.core.utils.WSDLPropertyReader;
 import org.wso2.wsf.ide.core.context.WSASEmitterContext;
 import org.wso2.wsf.ide.core.plugin.WebServiceWSASCorePlugin;
+import org.wso2.wsf.ide.core.plugin.messages.WSASCoreUIMessages;
 import org.wso2.wsf.ide.core.utils.ClassLoadingUtil;
 import org.wso2.wsf.ide.creation.core.data.DataModel;
 import org.wso2.wsf.ide.creation.core.messages.WSASCreationUIMessages;
@@ -418,8 +419,10 @@ public class WSDL2JAVASkelConfigWidget extends SimpleWidgetDataContributor
 	 * Fill the combo with proper databinding names
 	 */
 	private void fillDatabinderCombo() {
-		databindingTypeCombo.add(WSASCreationUIMessages.DATA_BINDING_ADB);
-		databindingTypeCombo.add(WSASCreationUIMessages.DATA_BINDING_NONE);
+		databindingTypeCombo.add(WSASCoreUIMessages.DATA_BINDING_ADB);
+		databindingTypeCombo.add(WSASCoreUIMessages.DATA_BINDING_XMLBEANS);
+		databindingTypeCombo.add(WSASCoreUIMessages.DATA_BINDING_JIBX);
+		databindingTypeCombo.add(WSASCoreUIMessages.DATA_BINDING_NONE);
 		databindingTypeCombo.select(0);
 	}
 	

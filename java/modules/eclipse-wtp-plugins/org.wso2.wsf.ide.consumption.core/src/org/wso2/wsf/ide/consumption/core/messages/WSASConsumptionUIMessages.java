@@ -53,8 +53,6 @@ public final class WSASConsumptionUIMessages extends NLS {
 	public static String WSAS_PROJECT;
 	public static String CODEGEN_RESULTS;
 	
-	public static String DATA_BINDING_ADB;
-	public static String DATA_BINDING_NONE;
 	
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, WSASConsumptionUIMessages.class);

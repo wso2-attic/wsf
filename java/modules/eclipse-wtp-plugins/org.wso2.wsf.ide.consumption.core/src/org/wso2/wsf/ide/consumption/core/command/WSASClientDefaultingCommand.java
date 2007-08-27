@@ -23,9 +23,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.common.frameworks.datamodel.AbstractDataModelOperation;
 import org.eclipse.wst.ws.internal.wsrt.IWebServiceClient;
 import org.wso2.wsf.ide.consumption.core.data.DataModel;
-import org.wso2.wsf.ide.consumption.core.messages.WSASConsumptionUIMessages;
 import org.wso2.wsf.ide.consumption.core.utils.DefaultCodegenUtil;
 import org.wso2.wsf.ide.core.context.ServiceContext;
+import org.wso2.wsf.ide.core.plugin.messages.WSASCoreUIMessages;
 import org.wso2.wsf.ide.core.utils.FacetContainerUtils;
 
 public class WSASClientDefaultingCommand extends AbstractDataModelOperation {
@@ -56,7 +56,7 @@ public class WSASClientDefaultingCommand extends AbstractDataModelOperation {
 		// WSE with Client alone. 
 		ws.getWebServiceClientInfo().setWsdlURL(deployedWSDLURL);
 		
-		model.setDatabindingType(WSASConsumptionUIMessages.DATA_BINDING_ADB);
+		model.setDatabindingType(WSASCoreUIMessages.DATA_BINDING_ADB);
 		model.setASync(false);
 		model.setSync(false);
 		
