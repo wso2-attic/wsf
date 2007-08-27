@@ -655,6 +655,7 @@ wsf_xml_msg_recv_set_soap_fault (
     int soap_version = AXIOM_SOAP12;
 
     axiom_soap_envelope_t *out_envelope = NULL;
+    axiom_soap_header_t *out_header = NULL;
     axiom_soap_body_t *out_body = NULL;
     axiom_soap_fault_t *out_fault = NULL;
     axiom_soap_fault_detail_t *fault_detail = NULL;
@@ -733,6 +734,7 @@ wsf_xml_msg_recv_set_soap_fault (
     }
 
     out_envelope = axiom_soap_envelope_create (env, env_ns);
+    out_header = axiom_soap_header_create_with_parent(env, out_envelope);
     out_body = axiom_soap_body_create_with_parent (env, out_envelope);
     out_fault = axiom_soap_fault_create_default_fault (env, out_body,
         code, reason, soap_version);
