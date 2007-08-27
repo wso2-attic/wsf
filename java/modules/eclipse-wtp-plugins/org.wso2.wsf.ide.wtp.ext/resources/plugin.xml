@@ -75,7 +75,72 @@
 		</actionSet>
 	</extension>
 
+       <extension point="org.eclipse.ui.actionSets">
+        <actionSet id="org.wso2.wsf.ide.wtp.ext.wsas.tools" label="WSAS Tools"
+            visible="true">
+            <action id="org.wso2.wsf.ide.wtp.ext.server.tools.dumpaar"
+                label="Dump AAR" 
+                icon="icons/test.gif" 
+                tooltip="Dump WSAS Archive"
+                toolbarPath="Normal/additions"
+                helpContextId="org.wso2.wsf.ide.wtp.ext.server.tools.dumpaar.help"
+                class="org.wso2.wsf.ide.wtp.ext.dumpaar.delegate.DumpAARDelegate">
+            </action>
+            <action id="org.wso2.wsf.ide.wtp.ext.server.tools.validate.service"
+                label="Validate services.xml" 
+                icon="icons/test.gif" 
+                tooltip="Validate Services XML File" 
+                toolbarPath="Normal/additions"
+                helpContextId="org.wso2.wsf.ide.wtp.ext.server.tools.validate.service.help"
+                class="org.wso2.wsf.ide.wtp.ext.validate.service.delegate.ValidateServiceDelegate">
+            </action>
+            
+             <action id="org.wso2.wsf.ide.wtp.ext.server.tools.validate.wsdl"
+                label="Validate WSDL" 
+                icon="icons/test.gif" 
+                tooltip="Validate WSDL File" 
+                toolbarPath="Normal/additions"
+                helpContextId="org.wso2.wsf.ide.wtp.ext.server.tools.validate.wsdl.help"
+                class="org.wso2.wsf.ide.wtp.ext.validate.wsdl.delegate.ValidateWSDLDelegate">
+            </action>
+        </actionSet>
+    </extension>
+    
+    <extension point="org.eclipse.ui.actionSets">
+        <actionSet
+            id="org.wso2.wsf.ide.wtp.ext.server.wsas.tools.menu"
+            label="WSAS Tools Menu"
+            visible="true">
 
+            <menu
+                id="org.wso2.wsf.ide.wtp.ext.server.tools.menu.topLevelMenu"
+                label="WSASTools" path="additions">
+                <groupMarker name="WSASToolsGroup" />
+             </menu>
+            
+            <action
+                id="org.wso2.wsf.ide.wtp.ext.tools.menu.dumpaar"
+                label="Dump WSAS Archive" icon="icons/test.gif"
+                tooltip="Dump WSAS Archive"
+                menubarPath="org.wso2.wsf.ide.wtp.ext.server.tools.menu.topLevelMenu/WSASToolsGroup"
+                class="org.wso2.wsf.ide.wtp.ext.dumpaar.delegate.DumpAARDelegate">
+            </action>
+            <action
+                id="org.wso2.wsf.ide.wtp.ext.tools.menu.validate.service"
+                label="Validate services.xml" icon="icons/test.gif"
+                tooltip="Validate Services XML File"
+                menubarPath="org.wso2.wsf.ide.wtp.ext.server.tools.menu.topLevelMenu/WSASToolsGroup"
+                class="org.wso2.wsf.ide.wtp.ext.validate.service.delegate.ValidateServiceDelegate">
+            </action>
+            <action
+                id="org.wso2.wsf.ide.wtp.ext.tools.menu.validate.wsdl"
+                label="Validate WSDL" icon="icons/test.gif"
+                tooltip="Validate WSDL File"
+                menubarPath="org.wso2.wsf.ide.wtp.ext.server.tools.menu.topLevelMenu/WSASToolsGroup"
+                class="org.wso2.wsf.ide.wtp.ext.validate.wsdl.delegate.ValidateWSDLDelegate">
+            </action>
+        </actionSet>
+    </extension>
 
 
 </plugin>
