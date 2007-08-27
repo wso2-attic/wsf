@@ -15,7 +15,7 @@
 *
 */
 
-package org.mozilla.javascript.xmlimpl;
+package org.wso2.javascript.xmlimpl;
 
 public interface AxiomNodeMatcher {
 

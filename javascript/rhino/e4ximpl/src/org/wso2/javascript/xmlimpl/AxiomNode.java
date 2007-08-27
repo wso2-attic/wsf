@@ -15,7 +15,7 @@
 *
 */
 
-package org.mozilla.javascript.xmlimpl;
+package org.wso2.javascript.xmlimpl;
 
 import java.util.HashMap;
 import java.util.Iterator;

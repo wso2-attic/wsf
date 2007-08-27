@@ -14,7 +14,7 @@
 * limitations under the License.
 *
 */
-package org.mozilla.javascript.xmlimpl;
+package org.wso2.javascript.xmlimpl;
 
 import java.io.StringReader;
 import java.util.ArrayList;

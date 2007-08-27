@@ -39,7 +39,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-package org.mozilla.javascript.xmlimpl;
+package org.wso2.javascript.xmlimpl;
 
 import org.mozilla.javascript.xml.*;
 import org.mozilla.javascript.NativeWith;

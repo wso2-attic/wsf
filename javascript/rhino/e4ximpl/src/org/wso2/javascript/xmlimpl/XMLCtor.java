@@ -35,7 +35,7 @@
  * file under either the MPL or the GPL.
  *
  * ***** END LICENSE BLOCK ***** */
-package org.mozilla.javascript.xmlimpl;
+package org.wso2.javascript.xmlimpl;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.IdFunctionObject;

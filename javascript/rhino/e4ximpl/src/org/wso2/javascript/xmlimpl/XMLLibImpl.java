@@ -15,7 +15,7 @@
 *
 */
 
-package org.mozilla.javascript.xmlimpl;
+package org.wso2.javascript.xmlimpl;
 
 import java.io.Serializable;
 
@@ -158,9 +158,9 @@ public final class XMLLibImpl extends XMLLib implements Serializable {
         omElement.addAttribute(omAttribute);
 
         String elementText = omElement.toString();
-        int begin = elementText.indexOf('"');
+        int begin = elementText.indexOf('"') + 1;
         int end = elementText.lastIndexOf('"');
-        return elementText.substring(begin, end + 1);
+        return (begin < end) ? elementText.substring(begin, end) : "";
     }
 
     /**
