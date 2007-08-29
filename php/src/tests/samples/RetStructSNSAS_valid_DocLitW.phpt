@@ -6,8 +6,9 @@ Test for RetStructSNSAS_valid_DocLitW sample
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitW.wsdl",
-                                 "useSOAP" => "1.1"));
+    $client = new WSClient(array("wsdl"=>"tests/samples/misc_files/ComplexDataTypesDocLitW.wsdl",
+                                 "useSOAP" => "1.1",
+                                 "to" => "http://localhost/samples/DocLitW_Service.php"));
     $proxy = $client->getProxy();	
     $snsas_array = array("inStructSNSAS" => array("members" => NULL, "name" => "WSO2"));
     $val =  $proxy->RetStructSNSAS($snsas_array);    
@@ -20,9 +21,15 @@ try {
 }
 ?>
 --EXPECT--
-Response = <ns1:echo xmlns:ns1="http://php.axis2.org/samples">
-		<text>Hello World!</text>
-	</ns1:echo>
+object(stdClass)#3 (1) {
+  ["RetStructSNSASResult"]=>
+  object(stdClass)#4 (2) {
+    ["members"]=>
+    NULL
+    ["name"]=>
+    string(4) "WSO2"
+  }
+}
 
 
 

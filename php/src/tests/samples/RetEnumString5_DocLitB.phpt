@@ -8,8 +8,9 @@ Test for RetArrayAnyType1D_one_string sample
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitB.wsdl",
-                                 "useSOAP" => "1.1"));
+    $client = new WSClient(array("wsdl"=>"tests/samples/misc_files/ComplexDataTypesDocLitB.wsdl",
+                                 "useSOAP" => "1.1",
+                                 "to" => "http://localhost/samples/DocLitB_Service.php"));
     $proxy = $client->getProxy();	
     $val =  $proxy->RetEnumString("BitFive");    
     echo "\n";
@@ -22,9 +23,7 @@ try {
 ?>
 
 --EXPECT--
-Response = <ns1:echo xmlns:ns1="http://php.axis2.org/samples">
-		<text>Hello World!</text>
-	</ns1:echo>
+string(5) "Array"
 
 
 

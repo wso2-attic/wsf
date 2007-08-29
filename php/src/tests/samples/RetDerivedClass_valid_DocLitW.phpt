@@ -7,8 +7,9 @@ Test for RetDerivedClass_valid_DocLitW sample
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitW.wsdl",
-                                 "useSOAP" => "1.1"));
+    $client = new WSClient(array("wsdl"=>"tests/samples/misc_files/ComplexDataTypesDocLitW.wsdl",
+                                 "useSOAP" => "1.1",
+                                 "to" => "http://localhost/samples/DocLitW_Service.php"));
     $proxy = $client->getProxy();	
     $der_array = array("color" => "Pink", "price" => 123.34, "seatingCapacity" => 234);
     $val =  $proxy->RetDerivedClass(array("inDerivedClass" => $der_array));    
@@ -21,9 +22,17 @@ try {
 }
 ?>
 --EXPECT--
-Response = <ns1:echo xmlns:ns1="http://php.axis2.org/samples">
-		<text>Hello World!</text>
-	</ns1:echo>
+object(stdClass)#3 (1) {
+  ["RetDerivedClassResult"]=>
+  object(stdClass)#4 (3) {
+    ["color"]=>
+    string(4) "Pink"
+    ["price"]=>
+    float(123.34)
+    ["seatingCapacity"]=>
+    int(234)
+  }
+}
 
 
 

@@ -7,8 +7,9 @@ Test for RetArrayDateTime1D_thousand sample
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitB.wsdl",
-                                 "useSOAP" => "1.1"));
+    $client = new WSClient(array("wsdl"=>"tests/samples/misc_files/ComplexDataTypesDocLitB.wsdl",
+                                 "useSOAP" => "1.1",
+                                 "to" => "http://localhost/samples/DocLitB_Service.php"));
     $proxy = $client->getProxy();	
     $date_array = array();
     for($i =0; $i<1000; $i++){
@@ -25,9 +26,8 @@ try {
 ?>
 
 --EXPECT--
-Response = <ns1:echo xmlns:ns1="http://php.axis2.org/samples">
-		<text>Hello World!</text>
-	</ns1:echo>
+object(stdClass)#3 (0) {
+}
 
 
 

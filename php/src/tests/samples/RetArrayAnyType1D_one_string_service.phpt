@@ -6,8 +6,9 @@ Test for RetArrayAnyType1D_one_string_service sample
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitW.wsdl",
-                                 "useSOAP" => "1.1"));
+    $client = new WSClient(array("wsdl"=>"tests/samples/misc_files/ComplexDataTypesDocLitW.wsdl",
+                                 "useSOAP" => "1.1",
+                                 "to" => "http://localhost/samples/DocLitW_Service.php"));
     $proxy = $client->getProxy();	
     $empty_any= array("inArrayAnyType1D" =>array("Hello World"));
     $val =  $proxy->RetArrayAnyType1D($empty_any);    
@@ -22,10 +23,13 @@ try {
 
 
 --EXPECT--
-Response = <ns1:echo xmlns:ns1="http://php.axis2.org/samples">
-		<text>Hello World!</text>
-	</ns1:echo>
-
+object(stdClass)#3 (1) {
+  ["RetArrayAnyType1DResult"]=>
+  object(stdClass)#4 (1) {
+    ["anyType"]=>
+    string(11) "Hello World"
+  }
+}
 
 
 

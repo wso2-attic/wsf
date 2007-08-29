@@ -8,7 +8,7 @@ Test for RetArrayString1D_service sample
 try {
 
     $client = new WSClient(
-        array("wsdl"=>"misc_files/ComplexDataTypesDocLitW.wsdl",
+        array("wsdl"=>"tests/samples/misc_files/ComplexDataTypesDocLitW.wsdl",
               "useSOAP" => "1.1",
               "to" => $argv[1]));
     $proxy = $client->getProxy();	
@@ -92,6 +92,10 @@ try {
 ?>
 
 --EXPECT--
-Response = <ns1:echo xmlns:ns1="http://php.axis2.org/samples">
-		<text>Hello World!</text>
-	</ns1:echo>
+object(stdClass)#3 (1) {
+  ["RetArrayString1DResult"]=>
+  object(stdClass)#4 (1) {
+    ["string"]=>
+    NULL
+  }
+}

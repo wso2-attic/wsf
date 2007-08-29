@@ -8,8 +8,9 @@ Test for RetArrayAnyType1D_one_string sample
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitB.wsdl",
-                                 "useSOAP" => "1.1"));
+    $client = new WSClient(array("wsdl"=>"tests/samples/misc_files/ComplexDataTypesDocLitB.wsdl",
+                                 "useSOAP" => "1.1",
+                                 "to" => "http://localhost/samples/DocLitW_Service.php"));
     $proxy = $client->getProxy();
     $person_array = array("Age" => 25, "ID" => 203.56, "Male" => TRUE, "Name" => "WSO2 PHP DEVELOPER");
     $num_array = array(1, 0, 1);

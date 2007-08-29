@@ -5,11 +5,11 @@ Test for RetArrayString2D_mix_service sample
 
 <?php
 
-
 try {
 
-    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitW.wsdl",
-                                 "useSOAP" => "1.1"));
+    $client = new WSClient(array("wsdl"=>"http://localhost:8081/samples/misc_files/ComplexDataTypesDocLitW.wsdl",
+                                 "useSOAP" => "1.1",
+                                 "to" => "http://localhost/samples/DocLitW_Service.php"));
     $proxy = $client->getProxy();
     $string_2D_array = array();
 
@@ -35,14 +35,53 @@ try {
 ?>
 
 --EXPECT--
-Response = <ns1:echo xmlns:ns1="http://php.axis2.org/samples">
-		<text>Hello World!</text>
-	</ns1:echo>
-
-
-
-
-
-
-
-
+object(stdClass)#3 (1) {
+  ["RetArrayString2DResult"]=>
+  object(stdClass)#4 (1) {
+    ["ArrayOfstring"]=>
+    array(5) {
+      [0]=>
+      object(stdClass)#5 (1) {
+        ["string"]=>
+        array(5) {
+          [0]=>
+          string(3) "1,1"
+          [1]=>
+          string(3) "1,2"
+          [2]=>
+          string(3) "1,3"
+          [3]=>
+          string(3) "1,4"
+          [4]=>
+          string(3) "1,5"
+        }
+      }
+      [1]=>
+      object(stdClass)#6 (1) {
+        ["string"]=>
+        string(3) "2,1"
+      }
+      [2]=>
+      object(stdClass)#7 (0) {
+      }
+      [3]=>
+      NULL
+      [4]=>
+      object(stdClass)#8 (1) {
+        ["string"]=>
+        array(5) {
+          [0]=>
+          string(3) "5,1"
+          [1]=>
+          string(3) "5,2"
+          [2]=>
+          NULL
+          [3]=>
+          string(3) "5,4"
+          [4]=>
+          NULL
+        }
+      }
+    }
+  }
+}

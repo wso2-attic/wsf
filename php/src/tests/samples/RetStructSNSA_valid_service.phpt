@@ -7,7 +7,7 @@ Test for RetStructSNSA_valid_service sample
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitW.wsdl",
+    $client = new WSClient(array("wsdl"=>"tests/samples/misc_files/ComplexDataTypesDocLitW.wsdl",
                                  "useSOAP" => "1.1"));
     $proxy = $client->getProxy();
     $person_array = array("Age" => 25, "ID" => 203.56, "Male" => TRUE, "Name" => "WSO2 PHP DEVELOPER");

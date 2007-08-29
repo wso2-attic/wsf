@@ -7,8 +7,9 @@ Test for RetStructS1_valid_service sample
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitW.wsdl",
-                                 "useSOAP" => "1.1"));
+    $client = new WSClient(array("wsdl"=>"tests/samples/misc_files/ComplexDataTypesDocLitW.wsdl",
+                                 "useSOAP" => "1.1",
+                                 "to" => "http://localhost/samples/DocLitW_Service.php"));
     $proxy = $client->getProxy();	
     $s1_array = array("inStructS1" => array("name" => "WSO2 PHP developer"));
     $val =  $proxy->RetStructS1($s1_array);    

@@ -7,8 +7,9 @@ Test for RetArrayAnyType1D_one_string sample
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitB.wsdl",
-                                 "useSOAP" => "1.1"));
+    $client = new WSClient(array("wsdl"=>"tests/samples/misc_files/ComplexDataTypesDocLitB.wsdl",
+                                 "useSOAP" => "1.1",
+                                 "to" => "http://localhost/samples/DocLitB_Service.php"));
     $proxy = $client->getProxy();	
     $sn_array = array("Age" => 34, "ID" => 123.45, "Male" => TRUE, "Name" => "WSO2 PHP Developer");
     $val =  $proxy->RetStructSN($sn_array);    
@@ -23,9 +24,8 @@ try {
 
 
 --EXPECT--
-Response = <ns1:echo xmlns:ns1="http://php.axis2.org/samples">
-		<text>Hello World!</text>
-	</ns1:echo>
+object(stdClass)#3 (0) {
+}
 
 
 
