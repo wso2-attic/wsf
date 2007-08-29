@@ -55,8 +55,6 @@ int wsf_client_handle_incoming_attachments (
     axutil_env_t * env,
     HashTable * client_ht,
     zval * msg,
-    zval *cid2str,
-    zval *cid2contentType,
     axiom_node_t * response_payload TSRMLS_DC);
 
 void wsf_client_set_security_options (
@@ -209,14 +207,17 @@ wsf_client_handle_incoming_attachments (
     axutil_env_t * env,
     HashTable * client_ht,
     zval * msg,
-    zval *cid2str,
-    zval *cid2contentType,
     axiom_node_t * response_payload TSRMLS_DC)
 {
     zval **tmp = NULL;
 	int attachments_found = 0;
+    zval *cid2str = NULL;
+    zval *cid2contentType = NULL;
+            
+
     int responseXOP = AXIS2_FALSE;
     
+   
 	if (!client_ht)
         return 0;
 
@@ -232,12 +233,21 @@ wsf_client_handle_incoming_attachments (
     }
 
     if (responseXOP == 1) {
+
+        MAKE_STD_ZVAL(cid2str);
+        INIT_PZVAL(cid2str);
+        MAKE_STD_ZVAL(cid2contentType);
+        INIT_PZVAL(cid2contentType);
+
         array_init (cid2str);
         array_init (cid2contentType);
         attachments_found = wsf_util_get_attachments (env, response_payload, cid2str,
             cid2contentType TSRMLS_CC);
-            add_property_zval (msg, WS_ATTACHMENTS, cid2str);
-            add_property_zval (msg, WS_CID2CONTENT_TYPE, cid2contentType);
+        add_property_zval (msg, WS_ATTACHMENTS, cid2str);
+        add_property_zval (msg, WS_CID2CONTENT_TYPE, cid2contentType);
+        zval_ptr_dtor(&cid2str);
+        zval_ptr_dtor(&cid2contentType);
+
     }
 	return attachments_found;
 }
@@ -556,18 +566,18 @@ wsf_client_add_properties (
         }
     }
     if (zend_hash_find (ht, WS_SEQUENCE_EXPIRY_TIME,
-            sizeof (WS_SEQUENCE_EXPIRY_TIME), (void **) &tmp) == SUCCESS) {
-        if (Z_TYPE_PP (tmp) == IS_LONG) {
-            add_property_long (this_ptr, WS_SEQUENCE_EXPIRY_TIME,
-                Z_LVAL_PP (tmp));
-        }
+        sizeof (WS_SEQUENCE_EXPIRY_TIME), (void **) &tmp) == SUCCESS) {
+		if (Z_TYPE_PP (tmp) == IS_LONG) {
+			add_property_long (this_ptr, WS_SEQUENCE_EXPIRY_TIME,
+				Z_LVAL_PP (tmp));
+		}
     }
     if (zend_hash_find (ht, WS_WILL_CONTINUE_SEQUENCE,
-            sizeof (WS_WILL_CONTINUE_SEQUENCE), (void **) &tmp) == SUCCESS) {
-        if (Z_TYPE_PP (tmp) == IS_BOOL) {
-            add_property_bool (this_ptr, WS_WILL_CONTINUE_SEQUENCE,
-                Z_BVAL_PP (tmp));
-        }
+        sizeof (WS_WILL_CONTINUE_SEQUENCE), (void **) &tmp) == SUCCESS) {
+		if (Z_TYPE_PP (tmp) == IS_BOOL) {
+			add_property_bool (this_ptr, WS_WILL_CONTINUE_SEQUENCE,
+				Z_BVAL_PP (tmp));
+		}
     }
     if (zend_hash_find (ht, WS_SEQUENCE_KEY, sizeof (WS_SEQUENCE_KEY),
             (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
@@ -955,11 +965,7 @@ wsf_client_do_request (
             reader = wsf_client_get_reader_from_zval (tmp_val, env TSRMLS_CC);
         }
 
-        if (zend_hash_find (Z_OBJPROP_P (param), WS_OPTIONS,
-                sizeof (WS_OPTIONS), (void **) &msg_tmp) == SUCCESS) {
-            if (Z_TYPE_PP (msg_tmp) == IS_ARRAY)
-                msg_ht = Z_ARRVAL_PP (msg_tmp);
-        }
+		msg_ht = Z_OBJPROP_P(param);
 
         input_type = WS_USING_MSG;
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
@@ -1278,19 +1284,11 @@ wsf_client_do_request (
         }else if (response_payload) {
             int attachments_found = 0;
             zval *rmsg = NULL;
-			zval *cid2str = NULL;
-            zval *cid2contentType = NULL;
-            
 			MAKE_STD_ZVAL (rmsg);
             
             object_init_ex (rmsg, ws_message_class_entry);
-            MAKE_STD_ZVAL(cid2str);
-			INIT_PZVAL(cid2str);
-            MAKE_STD_ZVAL(cid2contentType);
-			INIT_PZVAL(cid2contentType);
-
             attachments_found = wsf_client_handle_incoming_attachments (env, client_ht, rmsg,
-                    cid2str, cid2contentType, response_payload TSRMLS_CC);
+                response_payload TSRMLS_CC);
             
             res_text = wsf_util_serialize_om (env, response_payload);
             
@@ -1299,10 +1297,6 @@ wsf_client_do_request (
             
             ZVAL_ZVAL (return_value, rmsg, 1, 0);
             zval_ptr_dtor(&rmsg);
-			/*
-            zval_ptr_dtor(&cid2str);
-            zval_ptr_dtor(&cid2contentType);
-			*/
 
         }else if (response_payload == NULL && has_fault == AXIS2_FALSE) {
             zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C),

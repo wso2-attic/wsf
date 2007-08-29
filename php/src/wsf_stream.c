@@ -39,7 +39,8 @@ axis2_status_t WSF_CALL wsf_stream_free (
     axutil_stream_t * stream,
     const axutil_env_t * env);
 
-axutil_stream_type_t WSF_CALL wsf_stream_get_type (
+axutil_stream_type_t WSF_CALL 
+wsf_stream_get_type (
     axutil_stream_t * stream,
     const axutil_env_t * env);
 
@@ -61,7 +62,7 @@ int WSF_CALL wsf_stream_skip (
     int count);
 
 WSF_PHP_API axutil_stream_t *WSF_CALL
-axis2_stream_create_php (
+wsf_stream_create (
     const axutil_env_t * env,
     wsf_req_info_t * req_info TSRMLS_DC)
 {
@@ -79,13 +80,11 @@ axis2_stream_create_php (
     axutil_stream_set_write (&(stream_impl->stream), env, wsf_stream_write);
     axutil_stream_set_skip (&(stream_impl->stream), env, wsf_stream_skip);
 
-
     stream_impl->req_info = req_info;
     stream_impl->buffer = NULL;
     stream_impl->buffer_len = 0;
     stream_impl->current_rlen = 0;
-    stream_impl->buffer =
-        AXIS2_MALLOC (env->allocator,
+    stream_impl->buffer = AXIS2_MALLOC (env->allocator,
         sizeof (axis2_char_t) * req_info->req_data_length);
 
     memcpy (stream_impl->buffer, req_info->req_data,
@@ -109,7 +108,7 @@ wsf_stream_free (
         stream_impl->buffer = NULL;
     }
 
-    AXIS2_FREE (env->allocator, stream_impl);
+	AXIS2_FREE (env->allocator, stream_impl);
     return AXIS2_SUCCESS;
 }
 

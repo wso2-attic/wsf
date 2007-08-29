@@ -40,7 +40,7 @@ int wsf_worker_process_request (
     wsf_worker_t * worker,
     axutil_env_t * env,
     wsf_req_info_t * reqinfo,
-    wsf_svc_info_t * svc_info);
+    wsf_svc_info_t * svc_info TSRMLS_DC);
 
 void wsf_worker_free (
     wsf_worker_t * worker,

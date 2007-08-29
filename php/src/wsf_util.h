@@ -71,8 +71,9 @@ void wsf_svc_info_free (
 
 void wsf_php_req_info_init (wsf_req_info_t * req_info);
 
-void wsf_php_req_info_free (
-    wsf_req_info_t * req_info);
+void wsf_php_req_info_cleanup (
+    wsf_req_info_t * req_info,
+	axutil_env_t *env);
 
 void wsf_util_set_attachments_with_cids (
     const axutil_env_t * env,

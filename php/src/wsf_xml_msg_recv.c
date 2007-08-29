@@ -562,38 +562,25 @@ wsf_xml_msg_recv_invoke_wsmsg (
                     default_cnt_type = "application/octet-stream";
                 }
                 
-                if (zend_hash_find (Z_OBJPROP (retval), WS_OPTIONS,
-                   sizeof (WS_OPTIONS), (void **) &msg_tmp) == SUCCESS) {
-                    HashTable *msg_ht = NULL;
-                    zval **tmp = NULL;
-                    if (Z_TYPE_PP (msg_tmp) == IS_ARRAY)
-                        msg_ht = Z_ARRVAL_PP (msg_tmp);
-                    if (msg_ht
-                        && zend_hash_find (msg_ht, WS_ACTION, sizeof (WS_ACTION),
-                		(void **) &tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING) {
+				if (zend_hash_find (Z_OBJPROP(retval), WS_ACTION, sizeof (WS_ACTION),
+                	(void **) &msg_tmp) == SUCCESS && Z_TYPE_PP(msg_tmp) == IS_STRING) {
                         axis2_char_t *action = NULL;
-                        action = Z_STRVAL_PP (tmp);
+                        action = Z_STRVAL_PP (msg_tmp);
                         axis2_msg_ctx_set_wsa_action (out_msg_ctx, env, action);
-                	}
                 }
 
-                if (zend_hash_find
-                    (Z_OBJPROP (retval), "str", sizeof ("str"),
-                        (void **) & msg_tmp) == SUCCESS
-                    && Z_TYPE_PP (msg_tmp) == IS_STRING) {
-                    res_payload = axutil_strdup (env, Z_STRVAL_PP (msg_tmp));
-                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                        "[wsf log ]response payload %s", res_payload);
-                    if (res_payload) {
-                        res_om_node =
-                            wsf_util_deserialize_buffer (env, res_payload);
-                    }
+                if (zend_hash_find (Z_OBJPROP (retval), "str", sizeof ("str"),
+                   (void **) & msg_tmp) == SUCCESS && Z_TYPE_PP (msg_tmp) == IS_STRING) {
+
+						res_payload = Z_STRVAL_PP (msg_tmp);
+						AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+							"[wsf log ]response payload %s", res_payload);
+						if (res_payload) {
+							res_om_node = wsf_util_deserialize_buffer (env, res_payload);
+						}
                 }
-                if (zend_hash_find
-                    (Z_OBJPROP (retval), "attachments",
-                        sizeof ("attachments"),
-                        (void **) & msg_tmp) == SUCCESS
-                    && Z_TYPE_PP (msg_tmp) == IS_ARRAY) {
+                if (zend_hash_find (Z_OBJPROP (retval), "attachments", sizeof ("attachments"),
+                   (void **) & msg_tmp) == SUCCESS && Z_TYPE_PP (msg_tmp) == IS_ARRAY) {
 
                     HashTable *ht = NULL;
                     ht = Z_ARRVAL_PP (msg_tmp);
@@ -607,10 +594,9 @@ wsf_xml_msg_recv_invoke_wsmsg (
                     }
                 }
             } else if (Z_TYPE (retval) == IS_STRING) {
-                res_payload = axutil_strdup (env, Z_STRVAL (retval));
+                res_payload =  Z_STRVAL (retval);
                 if (res_payload) {
-                    res_om_node =
-                        wsf_util_deserialize_buffer (env, res_payload);
+                    res_om_node = wsf_util_deserialize_buffer (env, res_payload);
                 }
             } else if (Z_TYPE (retval) == IS_OBJECT &&
                 instanceof_function (Z_OBJCE (retval),
@@ -636,6 +622,9 @@ wsf_xml_msg_recv_invoke_wsmsg (
     if(_bailout){
         zend_bailout();
     }
+	if(req_payload){
+		AXIS2_FREE(env->allocator, req_payload);
+	}
 
     if (!res_payload) {
         AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "Response Payload is NULL");

@@ -188,17 +188,12 @@ wsf_util_construct_header_node (
         char *payload = NULL;
         axiom_node_t *payload_node = NULL;
         int payload_len = 0;
-        axiom_xml_reader_t *reader = NULL;
         payload = Z_STRVAL_PP (tmp);
         payload_len = Z_STRLEN_PP (tmp);
-
-        reader = axiom_xml_reader_create_for_memory (env, payload,
-            payload_len, "utf-8", AXIS2_XML_PARSER_TYPE_BUFFER);
-
-        payload_node = wsf_util_read_payload (reader, env);
-
-        axiom_node_add_child (header_node, env, payload_node);
-
+		if(payload_len >0){
+			payload_node = wsf_util_deserialize_buffer(env, payload);
+	        axiom_node_add_child (header_node, env, payload_node);
+		}
     }
 
     return header_node;
@@ -437,31 +432,16 @@ wsf_php_req_info_init (wsf_req_info_t *req_info)
 }
 
 void
-wsf_php_req_info_free (
-    wsf_req_info_t * req_info)
+wsf_php_req_info_cleanup (
+    wsf_req_info_t * req_info,
+	axutil_env_t *env)
 {
+	/**note request info is not malloced, so should not be freed */
     if (req_info) {
-        /*        
-           if(req_info->content_encoding){
-           efree(req_info->content_encoding);
-           }
-           if(req_info->http_protocol){
-           efree(req_info->http_protocol);
-           }
-           if(req_info->request_uri){
-           efree(req_info->request_uri);
-           }
-           if(req_info->result_payload){
-           efree(req_info->result_payload);
-           }
-           if(req_info->result_payload){
-           efree(req_info->result_payload);
-           }
-           if(req_info->content_type){
-           efree(req_info->content_type);
-           }
-         */
-        efree (req_info);
+		if(req_info->result_payload){
+			/** This is always allocated by axis2 */
+			AXIS2_FREE(env->allocator, req_info->result_payload);
+		}
     }
 }
 
@@ -764,6 +744,10 @@ wsf_util_create_op_and_add_to_svc (
             }
         }
     }
+	if(op_qname){
+		axutil_qname_free(op_qname, env);
+	}
+
     return;
 }
 
@@ -875,98 +859,6 @@ wsf_util_set_attachments_with_cids (
     }
     return;
 }
-
-/*
-void
-wsf_util_get_attachments (
-    const axutil_env_t * env,
-    axiom_node_t * payload_node,
-    zval * cid2str,
-    zval * cid2contentType TSRMLS_DC)
-{
-    axiom_node_t *node = NULL;
-    axiom_node_t *tmp_node = NULL;
-    axiom_element_t *payload_element = NULL;
-    if (!payload_node || !cid2contentType || !cid2str)
-        return;
-    if (axiom_node_get_node_type (payload_node, env) == AXIOM_ELEMENT) {
-        payload_element = axiom_node_get_data_element (payload_node, env);
-        axiom_element_get_first_element (payload_element, env, payload_node,
-            &node);
-
-        if (node && axiom_node_get_node_type (node, env) == AXIOM_ELEMENT) {
-            axiom_element_t *ele = NULL;
-            ele = (axiom_element_t *) axiom_node_get_data_element (node, env);
-            if (ele) {
-                axiom_namespace_t *ns = NULL;
-                axis2_char_t *ns_uri = NULL;
-                axis2_char_t *ele_localname = NULL;
-                ele_localname = axiom_element_get_localname (ele, env);
-                if (ele_localname
-                    && axutil_strcmp (ele_localname, "Include") == 0) {
-                    ns = axiom_element_get_namespace (ele, env, node);
-                    if (ns && (ns_uri = axiom_namespace_get_uri (ns, env)) &&
-                        axutil_strcmp (ns_uri,
-                            "http://www.w3.org/2004/08/xop/include") == 0) {
-                        axiom_node_t *text_node = NULL;
-                        axiom_text_t *text = NULL;
-                        axis2_char_t *id = NULL;
-                        axis2_char_t *pos = NULL;
-                        axis2_char_t *cid = NULL;
-                        axiom_data_handler_t *data_handler = NULL;
-
-                        id = axiom_element_get_attribute_value_by_name (ele,
-                            env, "href");
-                        if (!id)
-                            return;
-                        pos = axutil_strstr (id, "cid:");
-                        if (pos) {
-                            cid = id + 4;
-                            text_node =
-                                axiom_node_get_first_child (node, env);
-                            if (text_node
-                                && axiom_node_get_node_type (text_node,
-                                    env) == AXIOM_TEXT) {
-                                text =
-                                    (axiom_text_t *)
-                                    axiom_node_get_data_element (text_node,
-                                    env);
-                                if (text) {
-                                    data_handler = axiom_text_get_data_handler (text, env);
-                                    if (data_handler) {
-                                        char *cnt_type = NULL;
-                                        char *data = NULL;
-                                        int data_len = 0;
-                                        axiom_data_handler_read_from
-                                            (data_handler, env, &data,
-                                            &data_len);
-                                        cnt_type = axiom_data_handler_get_content_type(data_handler, env);
-                                        add_assoc_stringl (cid2str, cid, data, data_len, 1);
-
-                                        if (cnt_type) {
-                                            add_assoc_stringl (cid2contentType, cid, 
-                                                cnt_type, strlen (cnt_type), 1);
-                                        }
-                                        axiom_text_set_optimize (text, env, AXIS2_TRUE);
-                                        return;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    tmp_node = axiom_node_get_first_child (payload_node, env);
-    while (tmp_node) {
-        wsf_util_get_attachments (env, tmp_node, cid2str,
-            cid2contentType TSRMLS_CC);
-        tmp_node = axiom_node_get_next_sibling (tmp_node, env);
-    }
-    return;
-}
-*/
 
 /*************************/
 int
@@ -1142,6 +1034,9 @@ wsf_util_deserialize_buffer (
         return NULL;
     }
     axiom_document_build_all (document, env);
+  
+	axiom_stax_builder_free_self (builder, env);
+
     return payload;
 }
 

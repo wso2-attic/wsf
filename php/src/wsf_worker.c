@@ -138,7 +138,7 @@ wsf_worker_process_request (
     wsf_worker_t * worker,
     axutil_env_t * env,
     wsf_req_info_t * request,
-    wsf_svc_info_t * svc_info) 
+    wsf_svc_info_t * svc_info TSRMLS_DC) 
 {
     axis2_conf_ctx_t * conf_ctx = NULL;
     axis2_msg_ctx_t * msg_ctx = NULL;
@@ -157,36 +157,50 @@ wsf_worker_process_request (
     axutil_string_t * soap_action_str = NULL;
     axis2_char_t * encoding_header_value = NULL;
     axis2_char_t * req_url = NULL;
-    axutil_string_t * req_url_str = NULL;
     axis2_char_t * body_string = NULL;
     axis2_char_t * content_type = NULL;
     axis2_char_t * ctx_uuid = NULL;
     axutil_string_t * ctx_uuid_str = NULL;
-    TSRMLS_FETCH ();
+
+
     if (!request)
-        return -1;
-    conf_ctx = worker->conf_ctx;
+		return -1;
+
+	conf_ctx = worker->conf_ctx;
+	
     if (request->query_string) {
-        request_uri_with_query_string =
-            malloc ((strlen (request->request_uri) + 5 +
-                strlen (request->query_string)));
-        sprintf (request_uri_with_query_string, "%s?%s",
+        request_uri_with_query_string = AXIS2_MALLOC (env->allocator,
+			(strlen (request->request_uri) + 5 + strlen (request->query_string)));
+        
+		sprintf (request_uri_with_query_string, "%s?%s",
             request->request_uri, request->query_string);
+
+		url = axutil_url_create (env, "http" , request->svr_name, request->svr_port,
+				request_uri_with_query_string);
+		if(request_uri_with_query_string){
+			AXIS2_FREE(env->allocator, request_uri_with_query_string);
+		}
     } else {
-        request_uri_with_query_string = request->request_uri;
-    }
-    url =
-        axutil_url_create (env, "http", request->svr_name, request->svr_port,
-        request_uri_with_query_string);
-    if (NULL == conf_ctx) {
+		url = axutil_url_create (env, "http" , request->svr_name, request->svr_port,
+			request->request_uri);
+	}
+    
+    req_url = axutil_url_to_external_form (url, env);
+
+	if(url){
+		axutil_url_free(url, env);
+	}
+
+	if (NULL == conf_ctx) {
+		AXIS2_LOG_CRITICAL(env->log, AXIS2_LOG_SI, "[wsf worker ] configuration ctx null");
         AXIS2_ERROR_SET (env->error, AXIS2_ERROR_NULL_CONFIGURATION_CONTEXT,
             AXIS2_FAILURE);
         return AXIS2_CRITICAL_FAILURE;
     }
+
     content_length = request->content_length;
     http_version = request->http_protocol;
-    req_url = axutil_url_to_external_form (url, env);
-    req_url_str = axutil_string_create (env, req_url);
+
     content_type = (axis2_char_t *) request->content_type;
     if (NULL == http_version) {
         AXIS2_ERROR_SET (env->error, AXIS2_ERROR_NULL_HTTP_VERSION,
@@ -257,7 +271,7 @@ wsf_worker_process_request (
 	if (soap_action != NULL){
 	    soap_action_str = axutil_string_create (env, soap_action);
 	}
-    request_body = axis2_stream_create_php (env, request TSRMLS_CC);
+	request_body = wsf_stream_create (env, request TSRMLS_CC);
     if (NULL == request_body) {
         AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "Error occured in" 
             " creating input stream.");
@@ -272,8 +286,7 @@ wsf_worker_process_request (
             axis2_http_transport_utils_get_request_params (env,
                 (axis2_char_t *) req_url) );
         if (AXIS2_FALSE == processed) {
-            body_string =
-                axis2_http_transport_utils_get_services_html (env, conf_ctx);
+            body_string = axis2_http_transport_utils_get_services_html (env, conf_ctx);
             request->content_type = "text/html";
             send_status = WS_HTTP_OK;
         }
@@ -305,37 +318,81 @@ wsf_worker_process_request (
             fault_ctx = axis2_engine_create_fault_msg_ctx (engine, env, msg_ctx,
                 fault_code, axutil_error_get_message(env->error));
             axis2_engine_send_fault (engine, env, fault_ctx);
-            if(out_stream){
+            
+			if(out_stream){
                 body_string = wsf_worker_get_bytes (env, out_stream);
             }
             send_status = WS_HTTP_INTERNAL_SERVER_ERROR;
-            if (NULL != body_string) {
+            if (body_string) {
                 request->result_payload = body_string;
                 request->result_length = strlen (body_string);
             }
         }
     }
+
+	op_ctx =  axis2_msg_ctx_get_op_ctx(msg_ctx, env);
     if (-1 == send_status) {
-        op_ctx = axis2_msg_ctx_get_op_ctx (msg_ctx, env);
         if (axis2_op_ctx_get_response_written (op_ctx, env)) {
-            int rlen = 0;
-            int readlen = 0;
-            void *val = NULL;
-            send_status = WS_HTTP_OK;
-            rlen = axutil_stream_get_len (out_stream, env);
-            val = AXIS2_MALLOC (env->allocator, sizeof (char) * (rlen + 1));
-            readlen = axutil_stream_read (out_stream, env, val, rlen + 1);
-            if (readlen == rlen) {
-                request->result_payload = val;
-                request->result_length = readlen;
+			body_string = wsf_worker_get_bytes(env, out_stream);
+			if (body_string) {
+				request->result_payload = body_string;
+				request->result_length = strlen(body_string);
+				send_status = WS_HTTP_OK;
             }
         } else {
             send_status = WS_HTTP_ACCEPTED;
         }
     }
+    if (op_ctx) 
+    {
+        axis2_msg_ctx_t *out_msg_ctx = NULL, *in_msg_ctx = NULL;
+        axis2_msg_ctx_t **msg_ctx_map = NULL;
+        axis2_char_t *msg_id = NULL;
+        axis2_conf_ctx_t *conf_ctx = NULL;
+        msg_ctx_map =  axis2_op_ctx_get_msg_ctx_map(op_ctx, env);
+
+        out_msg_ctx = msg_ctx_map[AXIS2_WSDL_MESSAGE_LABEL_OUT];
+        in_msg_ctx = msg_ctx_map[AXIS2_WSDL_MESSAGE_LABEL_IN];
+
+        if (out_msg_ctx)
+        {
+            axis2_msg_ctx_free(out_msg_ctx, env);
+            out_msg_ctx = NULL;
+            msg_ctx_map[AXIS2_WSDL_MESSAGE_LABEL_OUT] = NULL;
+        }
+
+        if (in_msg_ctx)
+        {
+            msg_id = axutil_strdup(env, axis2_msg_ctx_get_msg_id(in_msg_ctx, env));
+            conf_ctx = axis2_msg_ctx_get_conf_ctx(in_msg_ctx, env);
+        
+            axis2_msg_ctx_free(in_msg_ctx, env);
+            in_msg_ctx = NULL;
+            msg_ctx_map[AXIS2_WSDL_MESSAGE_LABEL_IN] = NULL;
+        }
+
+        if(!axis2_op_ctx_is_in_use(op_ctx, env))
+        {
+            axis2_op_ctx_destroy_mutex(op_ctx, env);
+            if (conf_ctx && msg_id)
+            {
+                axis2_conf_ctx_register_op_ctx(conf_ctx, env, msg_id, NULL);
+                AXIS2_FREE(env->allocator, msg_id);
+            }
+            axis2_op_ctx_free(op_ctx, env);
+        }
+        
+    } /* Done freeing message contexts */
     if (soap_action_str) {
         axutil_string_free (soap_action_str, env);
     }
+	if(request_body){
+		wsf_stream_free(request_body, env);
+	}
+	if(req_url){
+		AXIS2_FREE(env->allocator, req_url);
+	}
+
     return send_status;
 }
 
@@ -345,50 +402,3 @@ axis2_conf_ctx_t * wsf_worker_get_conf_ctx (wsf_worker_t * worker,
     return worker->conf_ctx;
 }
 
-/*
-char *
-wsf_worker_do_engine_receive(axutil_env_t *env,
-                             wsf_worker_t *worker,
-                             int soap_version,
-                             char *raw_post_envelope,
-                             int raw_post_envelope_len)
-{
-    axutil_stream_t *out_stream = NULL;
-    axutil_stream_t *request_body = NULL;
-    axis2_conf_ctx_t *conf_ctx = NULL;
-    axis2_msg_ctx_t *msg_ctx = NULL;
-    axis2_char_t *soap_uri = NULL;
-    axiom_soap_envelope_t *soap_envelope = NULL;
-    axiom_xml_reader_t *xml_reader = NULL;
-    axiom_stax_builder_t *om_builder = NULL;
-    axiom_soap_builder_t *soap_builder = NULL;
-
-
-
-    out_stream = axutil_stream_create_basic(env);
-
-    if(soap_version == AXIOM_SOAP11){
-        soap_uri = AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI;
-    }else{
-        soap_uri = AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
-    }
-
-    xml_reader = axiom_xml_reader_create_for_memory (env, raw_post_envelope,
-                        raw_post_envelope_len , "utf-8", AXIS2_XML_PARSER_TYPE_BUFFER);
-
-    if (! xml_reader){
-        return AXIS2_FAILURE;
-    }
-
-    om_builder = axiom_stax_builder_create(env, xml_reader);
-    if (! om_builder)
-    {
-        axiom_xml_reader_free(xml_reader, env);
-        xml_reader = NULL;
-        return AXIS2_FAILURE;
-    }
-
-
-return NULL;
-}
-*/
