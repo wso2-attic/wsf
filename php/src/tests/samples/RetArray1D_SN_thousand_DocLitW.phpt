@@ -7,9 +7,8 @@ Test for RetArrayAnyType1D_one_string sample
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"ComplexDataTypesDocLitW.wsdl",
-                                 "useSOAP" => "1.1",
-                                 "to" => "http://localhost:9090/SoapWsdl_ComplexDataTypes_XmlFormatter_Service_Indigo/ComplexDataTypesDocLitW.svc"));
+    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitW.wsdl",
+                                 "useSOAP" => "1.1"));
     $proxy = $client->getProxy();	
     
     for($i = 0; $i <1000; $i++){
