@@ -4,7 +4,7 @@ Test for echo_client sample
 <?php
 
 $reqPayloadDomDoc = new DOMDocument();
-$xmlFile = 'C:/WSO2-Projects/WSF_PHP/wso2-wsf-php-1.0.0/src/tests/samples/echo.xml';
+$xmlFile = 'tests/samples/misc_files/echo.xml';
 
 $reqPayloadDomDoc->load($xmlFile);
 
