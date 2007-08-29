@@ -6,7 +6,7 @@ Test for RetArrayAnyType1D_one_string_DocLitW sample
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitB.wsdl",
+    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitW.wsdl",
                                  "useSOAP" => "1.1"));
     $proxy = $client->getProxy();	
     $empty_any= array("inArrayAnyType1D" =>array("Hello World"));

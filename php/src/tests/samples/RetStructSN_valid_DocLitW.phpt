@@ -6,7 +6,7 @@ Test for RetStructSN_valid_DocLitW sample
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitB.wsdl",
+    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitW.wsdl",
                                  "useSOAP" => "1.1"));
     $proxy = $client->getProxy();	
     $sn_array = array("inStructSN" => array("Age" => 34, "ID" => 123.45, "Male" => TRUE, "Name" => "WSO2 PHP Developer"));

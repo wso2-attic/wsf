@@ -7,7 +7,7 @@ Test for RetEnumInt5_DocLitW sample
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitB.wsdl",
+    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitW.wsdl",
                                  "useSOAP" => "1.1"));
     $proxy = $client->getProxy();	
     $val =  $proxy->RetEnumInt(array("inEnumInt" => -5));    

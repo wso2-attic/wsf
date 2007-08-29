@@ -7,7 +7,7 @@ Test for RetArrayInt1D_valid_values_DocLitW sample
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitB.wsdl",
+    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitW.wsdl",
                                  "useSOAP" => "1.1"));
     $proxy = $client->getProxy();	
     $int_array = array(2147483647, -2147483647, 0, 1, -1, 50);

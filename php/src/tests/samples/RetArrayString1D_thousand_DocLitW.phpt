@@ -6,7 +6,7 @@ Test for RetArrayString1D_thousand_DocLitW sample
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitB.wsdl",
+    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitW.wsdl",
                                  "useSOAP" => "1.1"));
     $proxy = $client->getProxy();	
     for($i = 0; $i<1000; $i++){

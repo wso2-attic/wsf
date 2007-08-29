@@ -7,7 +7,7 @@ Test for RetDerivedClass_valid_DocLitW sample
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitB.wsdl",
+    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitW.wsdl",
                                  "useSOAP" => "1.1"));
     $proxy = $client->getProxy();	
     $der_array = array("color" => "Pink", "price" => 123.34, "seatingCapacity" => 234);

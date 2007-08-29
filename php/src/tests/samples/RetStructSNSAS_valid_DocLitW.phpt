@@ -6,7 +6,7 @@ Test for RetStructSNSAS_valid_DocLitW sample
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitB.wsdl",
+    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitW.wsdl",
                                  "useSOAP" => "1.1"));
     $proxy = $client->getProxy();	
     $snsas_array = array("inStructSNSAS" => array("members" => NULL, "name" => "WSO2"));
