@@ -21,6 +21,10 @@
 #include <neethi_constants.h>
 #include <rp_defines.h>
 
+
+axiom_namespace_t *sp_ns;
+axiom_namespace_t *wsp_ns;
+
 struct neethi_options_t
 {
     axis2_bool_t include_timestamp;
@@ -332,10 +336,14 @@ neethi_options_get_root_node(
     axiom_element_t * exact_om_ele = NULL;
     axiom_element_t *all_om_ele = NULL;
 
-    axiom_namespace_t *wsp_ns = NULL;
     axis2_status_t status = AXIS2_SUCCESS;
 
+    sp_ns = NULL;
+    wsp_ns = NULL;
+
     wsp_ns = axiom_namespace_create(env, NEETHI_NAMESPACE, NEETHI_PREFIX);
+    sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);
+
     root_om_ele = axiom_element_create(env, NULL, NEETHI_POLICY, wsp_ns, &root_om_node);
 
     exact_om_ele = axiom_element_create(env, root_om_node, NEETHI_EXACTLYONE, wsp_ns, &exact_om_node);
@@ -393,11 +401,8 @@ neethi_options_create_asym_node(
 
     axiom_element_t *asymmetric_om_ele = NULL;
 
-    axiom_namespace_t *sp_ns = NULL;
-
     axis2_status_t status = AXIS2_FAILURE;
 
-    sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);
     asymmetric_om_ele = axiom_element_create(env, parent_node, RP_ASYMMETRIC_BINDING, sp_ns, &asymmetric_om_node);
     if(!asymmetric_om_ele)
     {
@@ -433,7 +438,7 @@ neethi_options_create_asym_node(
         axiom_node_t *ts_node = NULL;
         axiom_element_t *ts_ele = NULL;
 
-        sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);
+        /*sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);*/
         ts_ele = axiom_element_create(env, policy_asym_node, RP_INCLUDE_TIMESTAMP, sp_ns, &ts_node);
         if(!ts_ele)
         {
@@ -445,7 +450,7 @@ neethi_options_create_asym_node(
         axiom_node_t *ebs_node = NULL;
         axiom_element_t *ebs_ele = NULL;
 
-        sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);
+        /*sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);*/
         ebs_ele = axiom_element_create(env, policy_asym_node, RP_ENCRYPT_BEFORE_SIGNING, sp_ns, &ebs_node);
         if(!ebs_ele)
         {
@@ -457,7 +462,7 @@ neethi_options_create_asym_node(
         axiom_node_t *sigpro_node = NULL;
         axiom_element_t *sigpro_ele = NULL;
 
-        sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);
+        /*sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);*/
         sigpro_ele = axiom_element_create(env, policy_asym_node, RP_ENCRYPT_SIGNATURE, sp_ns, &sigpro_node);
         if(!sigpro_ele)
         {
@@ -469,7 +474,7 @@ neethi_options_create_asym_node(
         axiom_node_t *tokpro_node = NULL;
         axiom_element_t *tokpro_ele = NULL;
 
-        sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);
+        /*sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);*/
         tokpro_ele = axiom_element_create(env, policy_asym_node, RP_PROTECT_TOKENS, sp_ns, &tokpro_node);
         if(!tokpro_ele)
         {
@@ -487,9 +492,9 @@ neethi_options_create_policy_node(
 
     axiom_node_t *policy_node = NULL;
     axiom_element_t *policy_ele = NULL;
-    axiom_namespace_t *wsp_ns = NULL;
+    /*axiom_namespace_t *wsp_ns = NULL;*/
 
-    wsp_ns = axiom_namespace_create(env, NEETHI_NAMESPACE, NEETHI_PREFIX);
+    /*wsp_ns = axiom_namespace_create(env, NEETHI_NAMESPACE, NEETHI_PREFIX);*/
     policy_ele = axiom_element_create(env, parent_node, NEETHI_POLICY, wsp_ns, &policy_node);
 
     return policy_node;
@@ -506,15 +511,25 @@ create_initiator_node(neethi_options_t *options,
     axiom_node_t *x509_node = NULL;
     axiom_node_t *x509_policy_node = NULL;
     axiom_node_t *x509_type_node = NULL;
+    axiom_element_t *parent_ele = NULL;
 
     axiom_element_t *in_token_ele = NULL;
     axiom_element_t *x509_ele = NULL;
 
     axiom_attribute_t *attr = NULL;
 
-    axiom_namespace_t *sp_ns = NULL;
+    /*axiom_namespace_t *sp_ns = NULL;*/
 
-    sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);
+    /*sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);*/
+    parent_ele = axiom_node_get_data_element(parent_node, env);
+    if(!parent_ele)
+    {
+        return AXIS2_FAILURE;
+    }    
+
+    /*sp_ns = axiom_element_find_namespace(
+            parent_ele, env, parent_node, RP_SP_NS, RP_SP_PREFIX);   */
+
     in_token_ele = axiom_element_create(env, parent_node, RP_INITIATOR_TOKEN, sp_ns, &in_token_node);
     if(!in_token_ele)
     {
@@ -552,12 +567,24 @@ create_recipient_node(neethi_options_t *options,
 
     axiom_element_t *rec_token_ele = NULL;
     axiom_element_t *x509_ele = NULL;
+    axiom_element_t *parent_ele = NULL;
 
     axiom_attribute_t *attr = NULL;
 
-    axiom_namespace_t *sp_ns = NULL;
+    /*axiom_namespace_t *sp_ns = NULL;*/
 
-    sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);
+    /*sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);*/
+
+    parent_ele = axiom_node_get_data_element(parent_node, env);
+    if(!parent_ele)
+    {
+        return AXIS2_FAILURE;
+    }
+
+    /*sp_ns = axiom_element_find_namespace(
+            parent_ele, env, parent_node, RP_SP_NS, RP_SP_PREFIX);*/
+    
+
     rec_token_ele = axiom_element_create(env, parent_node, RP_RECIPIENT_TOKEN, sp_ns, &rec_token_node);
     if(!rec_token_ele)
     {
@@ -603,9 +630,9 @@ create_algo_node(neethi_options_t *options,
     axiom_element_t *algo_ele = NULL;
     axiom_element_t *algo_name_ele = NULL;
 
-    axiom_namespace_t *sp_ns = NULL;
+    /*axiom_namespace_t *sp_ns = NULL;*/
 
-    sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);
+    /*sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);*/
 
     algo_ele = axiom_element_create(env, parent_node, RP_ALGORITHM_SUITE, sp_ns, &algo_node);
     if(!algo_ele)
@@ -642,9 +669,9 @@ create_layout_node(neethi_options_t *options,
     axiom_element_t *layout_ele = NULL;
     axiom_element_t *layout_name_ele = NULL;
 
-    axiom_namespace_t *sp_ns = NULL;
+    /*axiom_namespace_t *sp_ns = NULL;*/
 
-    sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);
+    /*sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);*/
 
     layout_ele = axiom_element_create(env, parent_node, RP_LAYOUT, sp_ns, &layout_node);
     if(!layout_ele)
@@ -673,9 +700,9 @@ create_username_node(neethi_options_t *options,
 
     axiom_element_t *ut_ele = NULL;
     axiom_attribute_t *attr = NULL;
-    axiom_namespace_t *sp_ns = NULL;
+    /*axiom_namespace_t *sp_ns = NULL;*/
 
-    sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);
+    /*sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);*/
     axiom_element_create(env, parent_node, RP_SIGNED_SUPPORTING_TOKENS, sp_ns, &signsupport_node);
     signsupport_policy_node = neethi_options_create_policy_node(env, signsupport_node);
     ut_ele = axiom_element_create(env, signsupport_policy_node, RP_USERNAME_TOKEN, sp_ns, &ut_node);
@@ -704,10 +731,10 @@ create_wss10_node(neethi_options_t *options,
     axiom_node_t *must_issuer_node = NULL;
     axiom_node_t *must_embedded_node = NULL;
 
-    axiom_namespace_t *sp_ns = NULL;
+    /*axiom_namespace_t *sp_ns = NULL;*/
     axiom_element_t *wss10_ele = NULL;
 
-    sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);
+    /*sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);*/
     wss10_ele = axiom_element_create(env, parent_node, RP_WSS10, sp_ns, &wss10_node);
     if(wss10_ele)
     {
@@ -735,10 +762,10 @@ neethi_options_create_signed_parts_node(
     axiom_node_t *signed_parts_node = NULL;
     axiom_node_t *body_node = NULL;
     
-    axiom_namespace_t *sp_ns = NULL;
+    /*axiom_namespace_t *sp_ns = NULL;*/
     axiom_element_t *signed_parts_ele = NULL;
 
-    sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);
+    /*sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);*/
     signed_parts_ele = axiom_element_create(env, parent_node, RP_SIGNED_PARTS, sp_ns, &signed_parts_node);
     if(signed_parts_ele)
     {
@@ -764,10 +791,10 @@ neethi_options_create_encrypted_parts_node(
     axiom_node_t *encrypted_parts_node = NULL;
     axiom_node_t *body_node = NULL;
     
-    axiom_namespace_t *sp_ns = NULL;
+    /*axiom_namespace_t *sp_ns = NULL;*/
     axiom_element_t *encrypted_parts_ele = NULL;
 
-    sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);
+    /*sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);*/
     encrypted_parts_ele = axiom_element_create(env, parent_node, RP_ENCRYPTED_PARTS, sp_ns, &encrypted_parts_node);
     if(encrypted_parts_ele)
     {
