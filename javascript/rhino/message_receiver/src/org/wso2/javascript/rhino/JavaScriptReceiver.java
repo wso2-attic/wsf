@@ -102,7 +102,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         SOAPEnvelope soapEnvelope = inMessage.getEnvelope();
         try {
             // Create JS Engine, Inject HostObjects
-            JavaScriptEngine engine = new JavaScriptEngine();
+            JavaScriptEngine engine = new JavaScriptEngine(inMessage.getAxisService().getName());
 
             // Rhino E4X XMLLibImpl object can be instantiated only from within a script
             // So we instantiate it in here, so that we can use it outside of the script later

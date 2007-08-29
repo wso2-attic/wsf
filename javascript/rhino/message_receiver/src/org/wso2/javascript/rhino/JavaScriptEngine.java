@@ -49,11 +49,15 @@ public class JavaScriptEngine extends ImporterTopLevel {
 
     private boolean json = false;
 
+    private String scriptName;
+
     /**
      * Constructs a new instance of the JavaScriptEngine class
+     * @param scriptName - Used to display error and warning messages
      */
-    public JavaScriptEngine() {
+    public JavaScriptEngine(String scriptName) {
         super(new AxiomE4XContextFactory().enter());
+        this.scriptName = scriptName;
         cx = Context.getCurrentContext();
         cx.setErrorReporter(new JavaScriptErrorReporter());
         String[] names = { "load", "print" };
@@ -67,7 +71,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
      * @throws IOException if the Reader instance generates an IOException
      */
     public void evaluate(Reader reader) throws IOException {
-        cx.evaluateReader(this, reader, "<cmd>", 1, null);
+        cx.evaluateReader(this, reader, scriptName, 1, null);
     }
 
     /**

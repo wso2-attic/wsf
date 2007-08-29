@@ -23,6 +23,8 @@ import java.io.IOException;
 
 public class GetChildrenTest extends AbstractTestCase {
 
+    String scriptName = "getChildren";
+
     public GetChildrenTest(String testName) {
         super(testName);
     }
@@ -32,11 +34,11 @@ public class GetChildrenTest extends AbstractTestCase {
     }
 
     public void testChildrenCount() {
-        File testFile = getTestResourceFile("getChildren.js");
+        File testFile = getTestResourceFile(scriptName + ".js");
         Object result;
 
         try {
-            cx.evaluateReader(scope, new FileReader(testFile), "<cmd>", 1, null);
+            cx.evaluateReader(scope, new FileReader(testFile), scriptName, 1, null);
             String command1 = "xml.*.length();";
             result = cx.evaluateString(scope, command1, "<cmd>", 1, null);
             assertEquals(Integer.parseInt(result.toString()), 2);
@@ -51,7 +53,7 @@ public class GetChildrenTest extends AbstractTestCase {
         Object result;
 
         try {
-            cx.evaluateReader(scope, new FileReader(testFile), "<cmd>", 1, null);
+            cx.evaluateReader(scope, new FileReader(testFile), scriptName, 1, null);
             String command1 = "xml..*.length();";
             result = cx.evaluateString(scope, command1, "<cmd>", 1, null);
             assertEquals(Integer.parseInt(result.toString()), 44);
