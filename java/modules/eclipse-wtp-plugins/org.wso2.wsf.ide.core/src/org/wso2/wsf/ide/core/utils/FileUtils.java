@@ -24,6 +24,9 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+
 public class FileUtils
 {
 	public FileUtils(){
@@ -248,5 +251,29 @@ public class FileUtils
 		}
     }
     
-
+    /**
+     * Returns the immediate directories within the <code>sourceDir</code>
+     * @param sourceDir : source directory to check the directories
+     * @return List of the Directories
+     */
+    public static List<IPath> getDirsOnly(String sourceDir) {
+    	List<IPath> resultList = new ArrayList<IPath>();
+    	File srcDir = new File(sourceDir);
+    	if (srcDir.exists()) {
+    		File[] listOfFilesAndDirs = srcDir.listFiles();
+    		for (int i = 0; i < listOfFilesAndDirs.length; i++) {
+    			Path pathInstance = new Path(listOfFilesAndDirs[i].getAbsolutePath());
+    			if (listOfFilesAndDirs[i].getAbsolutePath()!= null 
+    					&& new File(listOfFilesAndDirs[i].getAbsolutePath()).isDirectory()) {
+    				IPath pathWithOutLastSegment = pathInstance.removeLastSegments(1);
+    				if (pathWithOutLastSegment != null &&
+    						pathWithOutLastSegment.toOSString().equals(sourceDir)) {
+    					resultList.add(pathInstance);
+    				}
+    			}
+    		}
+    	}
+    	return resultList;
+    }
+   
 }
