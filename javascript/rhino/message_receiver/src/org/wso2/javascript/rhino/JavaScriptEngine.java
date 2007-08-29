@@ -55,6 +55,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
     public JavaScriptEngine() {
         super(new AxiomE4XContextFactory().enter());
         cx = Context.getCurrentContext();
+        cx.setErrorReporter(new JavaScriptErrorReporter());
         String[] names = { "load", "print" };
         defineFunctionProperties(names, JavaScriptEngine.class, ScriptableObject.DONTENUM);
     }
