@@ -165,6 +165,15 @@
         </wizard>
     </extension>
     
+    <extension point="org.eclipse.ui.newWizards">
+        <category name="WSAS Wizards" id="WSAS_Wizards"></category>
+        <wizard name="WSAS JAVA 2 WSDL" icon="icons/test.gif"
+            category="WSAS_Wizards"
+            class="org.wso2.wsf.ide.wtp.ext.java2wsdl.WSASJAVA2WSDLWizard"
+            id="org.wso2.wsf.ide.wtp.ext.java2wsdl.java2wsdlWizard">
+        </wizard>
+    </extension>
+    
     <extension point="org.eclipse.help.toc">
         <toc file="help_toc.xml" primary="true" />
     </extension>
