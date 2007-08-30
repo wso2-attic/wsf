@@ -102,6 +102,14 @@
                 helpContextId="org.wso2.wsf.ide.wtp.ext.server.tools.dumpaar.help"
                 class="org.wso2.wsf.ide.wtp.ext.dumpaar.delegate.DumpAARDelegate">
             </action>
+            <action id="org.wso2.wsf.ide.wtp.ext.server.tools.java2wsdl"
+                label="WSO2 WSAS JAVA2WSDL" 
+                icon="icons/test.gif" 
+                tooltip="WSO2 WSAS JAVA2WSDL Tool"
+                toolbarPath="Normal/additions"
+                helpContextId="org.wso2.wsf.ide.wtp.ext.server.tools.java2wsdl.help"
+                class="org.wso2.wsf.ide.wtp.ext.java2wsdl.delegate.JAVA2WSDLDelegate">
+            </action>
         </actionSet>
     </extension>
     
@@ -137,6 +145,13 @@
                 tooltip="Dump WSAS Archive"
                 menubarPath="org.wso2.wsf.ide.wtp.ext.server.tools.menu.topLevelMenu/WSASToolsGroup"
                 class="org.wso2.wsf.ide.wtp.ext.dumpaar.delegate.DumpAARDelegate">
+            </action>
+            <action
+                id="org.wso2.wsf.ide.wtp.ext.tools.menu.java2wsdl"
+                label="WSO2 WSAS JAVA2WSDL" icon="icons/test.gif"
+                tooltip="WSO2 WSAS JAVA2WSDL Tool"
+                menubarPath="org.wso2.wsf.ide.wtp.ext.server.tools.menu.topLevelMenu/WSASToolsGroup"
+                class="org.wso2.wsf.ide.wtp.ext.java2wsdl.delegate.JAVA2WSDLDelegate">
             </action>
         </actionSet>
     </extension>
