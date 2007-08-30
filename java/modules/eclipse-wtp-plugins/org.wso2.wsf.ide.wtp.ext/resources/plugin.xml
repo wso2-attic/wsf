@@ -141,6 +141,19 @@
             </action>
         </actionSet>
     </extension>
+    
+    <extension point="org.eclipse.ui.newWizards">
+        <category name="WSAS Wizards" id="WSAS_Wizards"></category>
+        <wizard name="WSAS Dump Service Archiver" icon="icons/test.gif"
+            category="WSAS_Wizards"
+            class="org.wso2.wsf.ide.wtp.ext.dumpaar.WSASDumpArchiverWizard"
+            id="org.wso2.wsf.ide.wtp.ext.dumpaar.dumpArchiverWizard">
+        </wizard>
+    </extension>
+    
+    <extension point="org.eclipse.help.toc">
+        <toc file="help_toc.xml" primary="true" />
+    </extension>
 
 
 </plugin>
