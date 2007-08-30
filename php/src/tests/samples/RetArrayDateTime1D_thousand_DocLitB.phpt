@@ -1,5 +1,5 @@
 --TEST--
-Test for RetArrayDateTime1D_thousand sample
+Test for RetArrayDateTime1D_thousand_DocLitB sample
 --FILE--
 
 <?php

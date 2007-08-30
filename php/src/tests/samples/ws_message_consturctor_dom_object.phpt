@@ -1,5 +1,5 @@
 --TEST--
-Test for echo_client_addr sample
+Test for ws_message_consturctor_dom_object sample
 --FILE--
 <?php
 

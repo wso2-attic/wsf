@@ -1,5 +1,5 @@
 --TEST--
-Test for RetArrayAnyType1D_one_string sample
+Test for RetArrayAnyType1D_one_string_DocLitB sample
 --FILE--
 
 <?php

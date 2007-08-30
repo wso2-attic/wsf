@@ -1,5 +1,5 @@
 --TEST--
-Test for encrypt_client_IssuerSerial sample
+Test for echo_encrypt_client_IssuerSerial sample
 --FILE--
 <?php
 

@@ -1,5 +1,5 @@
 --TEST--
-Test for wsdl_mode sample
+Test for ws_cache_wsdl sample
 --FILE--
 
 <?php

@@ -1,5 +1,5 @@
 --TEST--
-Test for echo_client sample
+Test for echo_client_dom_document sample
 --FILE--
 <?php
 

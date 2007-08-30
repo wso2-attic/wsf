@@ -1,5 +1,5 @@
 --TEST--
-Test for ws_fault_constructor_IS_ARRAY sample
+Test for ws_fault_constructor_IS_ARRAY_invalid_faultcode sample
 --FILE--
 
 <?php

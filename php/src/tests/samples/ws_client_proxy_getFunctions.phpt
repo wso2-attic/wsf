@@ -1,5 +1,5 @@
 --TEST--
-Test for ws_client_proxy_getFunctions.phpt sample
+Test for ws_client_proxy_getFunctions sample
 --FILE--
 <?php
 

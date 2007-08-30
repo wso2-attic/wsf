@@ -1,5 +1,5 @@
 --TEST--
-Test for ws_client_HTTPMethod_get.phpt sample
+Test for ws_client_HTTPMethod_get sample
 --FILE--
 <?php
 

@@ -1,5 +1,5 @@
 --TEST--
-Test for echo_client_addr sample
+Test for ws_service_consturctor_invalid_param sample
 --FILE--
 <?php
 

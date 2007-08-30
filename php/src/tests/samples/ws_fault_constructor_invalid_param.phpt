@@ -1,5 +1,5 @@
 --TEST--
-Test for ws_fault_constructor sample
+Test for ws_fault_constructor_invalid_param sample
 --FILE--
 
 <?php

@@ -1,5 +1,5 @@
 --TEST--
-Test for echo_client sample
+Test for RetArrayString1D_client_Rpc sample
 --FILE--
 
 <?php
@@ -10,7 +10,7 @@ try {
     $client = new WSClient(
         array("wsdl"=>"tests/samples/misc_files/RpcLit_Service.wsdl",
               "useSOAP" => "1.1",
-              "to" => $argv[1]));
+              "to" => "http://localhost/samples/RpcLit_Service.php"));
     $proxy = $client->getProxy();	
     
     $string1 = NULL;

@@ -1,5 +1,5 @@
 --TEST--
-Test for ws_fault_client.phpt sample
+Test for ws_fault_client sample
 --FILE--
 <?php
 

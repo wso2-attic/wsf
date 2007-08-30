@@ -1,5 +1,5 @@
 --TEST--
-Test for RetArrayString1D_service sample
+Test for RetArrayString1D_client sample
 --FILE--
 
 <?php
@@ -10,7 +10,7 @@ try {
     $client = new WSClient(
         array("wsdl"=>"tests/samples/misc_files/ComplexDataTypesDocLitW.wsdl",
               "useSOAP" => "1.1",
-              "to" => $argv[1]));
+              "to" => "http://localhost/samples/DocLitW_Service.php"));
     $proxy = $client->getProxy();	
     
     $string1 = NULL;

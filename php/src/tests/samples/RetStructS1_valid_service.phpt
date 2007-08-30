@@ -23,9 +23,13 @@ try {
 ?>
 
 --EXPECT--
-Response = <ns1:echo xmlns:ns1="http://php.axis2.org/samples">
-		<text>Hello World!</text>
-	</ns1:echo>
+object(stdClass)#3 (1) {
+  ["RetStructS1Result"]=>
+  object(stdClass)#4 (1) {
+    ["name"]=>
+    string(18) "WSO2 PHP developer"
+  }
+}
 
 
 

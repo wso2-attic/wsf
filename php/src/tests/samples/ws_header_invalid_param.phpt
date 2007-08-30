@@ -1,5 +1,5 @@
 --TEST--
-Test for add_soap_header_client sample
+Test for ws_header_invalid_param sample
 --FILE--
 <?php
 $reqPayloadString = <<<XML

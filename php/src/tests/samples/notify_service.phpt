@@ -1,5 +1,5 @@
 --TEST--
-Test for echo_service sample
+Test for notify_service sample
 --FILE--
 <?php
 

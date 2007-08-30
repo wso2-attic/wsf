@@ -1,5 +1,5 @@
 --TEST--
-Test for math_add_service.phpt sample
+Test for math_sub_service sample
 --FILE--
 <?php
 

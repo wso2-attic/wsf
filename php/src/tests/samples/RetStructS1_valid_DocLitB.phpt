@@ -1,5 +1,5 @@
 --TEST--
-Test for RetArrayAnyType1D_one_string sample
+Test for RetStructS1_valid_DocLitB sample
 --FILE--
 
 

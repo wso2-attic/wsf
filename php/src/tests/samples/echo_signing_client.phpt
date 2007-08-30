@@ -1,5 +1,5 @@
 --TEST--
-Test for signing_client sample
+Test for echo_signing_client sample
 --FILE--
 <?php
 

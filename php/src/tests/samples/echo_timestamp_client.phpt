@@ -1,5 +1,5 @@
 --TEST--
-Test for timestamp_service sample
+Test for echo_timestamp_client sample
 --FILE--
 <?php
 

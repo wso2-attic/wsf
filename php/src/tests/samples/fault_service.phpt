@@ -5,7 +5,6 @@ Test for fault_service sample
 
 $reqPayloadString = <<<XML
 <soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope">
-   <soapenv:Header/>
    <soapenv:Body>
       <ns1:getFault xmlns:ns1="http://php.axis2.org/samples">
          <text>Hello World!</text>

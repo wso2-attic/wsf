@@ -1,5 +1,5 @@
 --TEST--
-Test for echo_client sample
+Test for ws_client_call sample
 --FILE--
 <?php
 $reqPayloadString = <<<XML

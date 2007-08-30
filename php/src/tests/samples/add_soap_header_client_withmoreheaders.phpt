@@ -1,5 +1,5 @@
 --TEST--
-Test for add_soap_header_client_withmoreheaders.phpt sample
+Test for add_soap_header_client_withmoreheaders sample
 --FILE--
 <?php
 $reqPayloadString = <<<XML
