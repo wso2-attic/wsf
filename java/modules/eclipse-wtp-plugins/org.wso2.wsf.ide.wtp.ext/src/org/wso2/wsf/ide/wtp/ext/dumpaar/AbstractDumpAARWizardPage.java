@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.wsf.ide.wtp.ext;
+package org.wso2.wsf.ide.wtp.ext.dumpaar;
 
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.WizardPage;
-import org.wso2.wsf.ide.wtp.ext.dumpaar.WSASDumpAARPlugin;
 import org.wso2.wsf.ide.wtp.ext.java2wsdl.WSASJAVA2WSDLPlugin;
 import org.wso2.wsf.ide.wtp.ext.java2wsdl.util.SettingsConstants;
 
 
-public abstract class AbstractWizardPage extends WizardPage implements SettingsConstants{
+public abstract class AbstractDumpAARWizardPage extends WizardPage implements SettingsConstants{
     protected IDialogSettings settings;
     protected boolean restoredFromPreviousSettings = false;
     
-    public AbstractWizardPage(String pageName){
+    public AbstractDumpAARWizardPage(String pageName){
         super(pageName+".name");
         init(pageName);
     }
@@ -63,11 +62,17 @@ public abstract class AbstractWizardPage extends WizardPage implements SettingsC
 
     protected abstract void initializeDefaultSettings(); 
     
-    public abstract boolean getWizardComplete(); 
-    
     //Default implementation
     public boolean isSkipNext(){
         return false;
+    }
+    
+    /**
+     * a convenient method to get the wizard
+     * @return
+     */
+    public WSASDumpArchiverWizard getCodegenWizard(){
+    	return (WSASDumpArchiverWizard)getWizard();
     }
     
 }

@@ -28,10 +28,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.wso2.wsf.ide.core.utils.FileUtils;
-import org.wso2.wsf.ide.wtp.ext.AbstractWizardPage;
 import org.wso2.wsf.ide.wtp.ext.server.bean.WSASConfigurationBean;
 
-public class WSASDumpAARSelectionPage extends AbstractWizardPage{
+public class WSASDumpAARSelectionPage extends AbstractDumpAARWizardPage{
 	
     private Combo serviceSelectionCombo;
    

@@ -20,7 +20,6 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import org.wso2.wsf.ide.wtp.ext.AbstractWizardPage;
 import org.wso2.wsf.ide.wtp.ext.java2wsdl.JAVA2WSDLOptionsPage;
 
 
@@ -41,11 +40,11 @@ public class WSASDumpArchiverWizard extends Wizard implements INewWizard{
 	
     public boolean canFinish() {
         IWizardPage[] pages = getPages();
-        AbstractWizardPage wizardPage = null;
+        AbstractDumpAARWizardPage wizardPage = null;
         for (int i = 0; i < pages.length; i++) {
-            wizardPage = (AbstractWizardPage) pages[i];
+            wizardPage = (AbstractDumpAARWizardPage) pages[i];
             if (wizardPage.getName().equals("page4.name")){
-	            if (!wizardPage.getWizardComplete() ) {
+	            if (!wizardPage.isPageComplete()) {
 	                    return false;
 	            }
             }
@@ -57,12 +56,12 @@ public class WSASDumpArchiverWizard extends Wizard implements INewWizard{
      * @see org.eclipse.jface.wizard.IWizard#getNextPage(org.eclipse.jface.wizard.IWizardPage)
      */
     public IWizardPage getNextPage(IWizardPage page) {
-    	AbstractWizardPage thisPage = (AbstractWizardPage)page;
-    	AbstractWizardPage nextPage = (AbstractWizardPage)super.getNextPage(page);
+    	AbstractDumpAARWizardPage thisPage = (AbstractDumpAARWizardPage)page;
+    	AbstractDumpAARWizardPage nextPage = (AbstractDumpAARWizardPage)super.getNextPage(page);
         while (thisPage!=null && thisPage.isSkipNext()) {
             if (nextPage!=null) {
                 thisPage = nextPage;
-                nextPage = (AbstractWizardPage)super.getNextPage(nextPage);
+                nextPage = (AbstractDumpAARWizardPage)super.getNextPage(nextPage);
             }else{
                 break;
             }
@@ -75,9 +74,7 @@ public class WSASDumpArchiverWizard extends Wizard implements INewWizard{
      */
     public void addPages() {
     	dumpAARSelectionPage = new WSASDumpAARSelectionPage();
-        java2WSDLOptionsPage = new JAVA2WSDLOptionsPage();
         this.addPage(dumpAARSelectionPage);
-        this.addPage(java2WSDLOptionsPage);
     }
 
     /* (non-Javadobc)
