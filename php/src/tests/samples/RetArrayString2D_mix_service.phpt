@@ -7,7 +7,7 @@ Test for RetArrayString2D_mix_service sample
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"http://localhost:8081/samples/misc_files/ComplexDataTypesDocLitW.wsdl",
+    $client = new WSClient(array("wsdl"=>"tests/samples/misc_files/ComplexDataTypesDocLitW.wsdl",
                                  "useSOAP" => "1.1",
                                  "to" => "http://localhost/samples/DocLitW_Service.php"));
     $proxy = $client->getProxy();
