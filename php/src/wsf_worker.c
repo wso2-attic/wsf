@@ -333,7 +333,7 @@ wsf_worker_process_request (
 	op_ctx =  axis2_msg_ctx_get_op_ctx(msg_ctx, env);
     if (-1 == send_status) {
         if (axis2_op_ctx_get_response_written (op_ctx, env)) {
-			/*           
+			           
 			int rlen = 0;
             int readlen = 0;
             void *val = NULL;
@@ -344,13 +344,6 @@ wsf_worker_process_request (
             if (val) {
 				request->result_payload = val;
 				request->result_length = rlen;
-				send_status = WS_HTTP_OK;
-            }
-			*/
-			body_string = wsf_worker_get_bytes(env, out_stream);
-			if (body_string) {
-				request->result_payload = body_string;
-				request->result_length = strlen(body_string);
 				send_status = WS_HTTP_OK;
             }
         } else {
