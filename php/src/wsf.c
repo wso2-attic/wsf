@@ -1529,7 +1529,7 @@ PHP_METHOD (ws_service, reply)
     wsf_worker_t * php_worker = NULL;
     zval ** raw_post;
     int status = 0;
-    char content_length[40];
+  /*  Char content_length[40]; */
     char status_line[100];
     char *content_type = NULL;
     int in_wsdl_mode = 0;
