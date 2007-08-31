@@ -268,11 +268,11 @@ wsf_worker_process_request (
             svc_info->policy, env, svc_info->svc, conf TSRMLS_CC);
     }
     soap_action = request->soap_action;
-	if (soap_action != NULL){
+	if (soap_action){
 	    soap_action_str = axutil_string_create (env, soap_action);
 	}
 	request_body = wsf_stream_create (env, request TSRMLS_CC);
-    if (NULL == request_body) {
+    if (!request_body) {
         AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "Error occured in" 
             " creating input stream.");
         return AXIS2_CRITICAL_FAILURE;
@@ -287,10 +287,10 @@ wsf_worker_process_request (
                 (axis2_char_t *) req_url) );
         if (AXIS2_FALSE == processed) {
             body_string = axis2_http_transport_utils_get_services_html (env, conf_ctx);
-            request->content_type = "text/html";
+			request->out_content_type = axutil_strdup(env,"text/html");
             send_status = WS_HTTP_OK;
         }
-        if (NULL != body_string) {
+        if (body_string) {
             request->result_payload = body_string;
             request->result_length = strlen (body_string);
         }
@@ -303,7 +303,7 @@ wsf_worker_process_request (
             axis2_char_t *fault_code = NULL;
             axis2_msg_ctx_t * fault_ctx = NULL;
             axis2_engine_t * engine = axis2_engine_create (env, conf_ctx);
-            if (NULL == engine) {
+            if (engine) {
                 send_status = WS_HTTP_INTERNAL_SERVER_ERROR;
             }
             if ( axis2_msg_ctx_get_is_soap_11 (msg_ctx, env)){
@@ -333,6 +333,20 @@ wsf_worker_process_request (
 	op_ctx =  axis2_msg_ctx_get_op_ctx(msg_ctx, env);
     if (-1 == send_status) {
         if (axis2_op_ctx_get_response_written (op_ctx, env)) {
+			/*           
+			int rlen = 0;
+            int readlen = 0;
+            void *val = NULL;
+            send_status = WS_HTTP_OK;
+            rlen = axutil_stream_get_len (out_stream, env);
+            val = AXIS2_MALLOC (env->allocator, sizeof (char) * (rlen + 1));
+            readlen = axutil_stream_read (out_stream, env, val, rlen + 1);
+            if (val) {
+				request->result_payload = val;
+				request->result_length = rlen;
+				send_status = WS_HTTP_OK;
+            }
+			*/
 			body_string = wsf_worker_get_bytes(env, out_stream);
 			if (body_string) {
 				request->result_payload = body_string;

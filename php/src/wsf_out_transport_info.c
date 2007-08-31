@@ -132,11 +132,11 @@ axis2_status_t WSF_CALL wsf_http_out_transport_info_set_content_type (
 
         tmp1 = axutil_stracat (env, content_type, ";charset=");
         tmp2 = axutil_stracat (env, tmp1, info_impl->encoding);
-        info_impl->request->content_type = axutil_strdup (env, tmp2);
+        info_impl->request->out_content_type = axutil_strdup (env, tmp2);
         AXIS2_FREE (env->allocator, tmp1);
         AXIS2_FREE (env->allocator, tmp2);
     } else {
-        info_impl->request->content_type = axutil_strdup (env, content_type);
+        info_impl->request->out_content_type = axutil_strdup (env, content_type);
     }
     return AXIS2_SUCCESS;
 }

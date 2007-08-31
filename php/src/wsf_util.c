@@ -428,6 +428,8 @@ wsf_php_req_info_init (wsf_req_info_t *req_info)
     req_info->result_payload = NULL;
     req_info->transfer_encoding = NULL;
     req_info->query_string = NULL;
+	req_info->out_content_type = NULL;
+
     return;
 }
 
@@ -441,6 +443,10 @@ wsf_php_req_info_cleanup (
 		if(req_info->result_payload){
 			/** This is always allocated by axis2 */
 			AXIS2_FREE(env->allocator, req_info->result_payload);
+		}
+		if(req_info->out_content_type){
+			AXIS2_FREE(env->allocator, req_info->out_content_type);
+			req_info->out_content_type = NULL;
 		}
     }
 }

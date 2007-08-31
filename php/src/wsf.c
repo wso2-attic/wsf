@@ -1719,10 +1719,9 @@ PHP_METHOD (ws_service, reply)
 		}else if (status == WS_HTTP_OK) {
             sprintf (status_line, "%s 200 OK", req_info.http_protocol);
             sapi_add_header (status_line, strlen (status_line), 1);
-            sprintf (content_length, "Content-Length %ld", req_info.content_length);
-            content_type = emalloc(strlen (req_info.content_type) * sizeof (char) + 20);
-            sprintf (content_type, "Content-Type: %s", req_info.content_type);
-            sapi_add_header (content_type, strlen (content_type), 1);
+			content_type = emalloc(strlen (req_info.out_content_type) * sizeof (char) + 20);
+            sprintf (content_type, "Content-Type: %s", req_info.out_content_type);
+			sapi_add_header (content_type, strlen (content_type), 1);
             php_write (req_info.result_payload,
                 req_info.result_length TSRMLS_CC);
         
@@ -1731,8 +1730,8 @@ PHP_METHOD (ws_service, reply)
             sprintf (status_line, "%s 500 Internal Server Error", req_info.http_protocol);
             sapi_add_header (status_line, strlen (status_line), 1);
             if (req_info.content_type){
-                content_type = emalloc(strlen (req_info.content_type) * sizeof (char) + 20);
-                sprintf (content_type, "Content-Type: %s", req_info.content_type);
+                content_type = emalloc(strlen (req_info.out_content_type) * sizeof (char) + 20);
+                sprintf (content_type, "Content-Type: %s", req_info.out_content_type);
                 if (content_type){
                     sapi_add_header (content_type, strlen (content_type), 1);
                     php_write (req_info.result_payload, req_info.result_length TSRMLS_CC);

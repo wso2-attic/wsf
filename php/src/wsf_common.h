@@ -265,6 +265,7 @@ typedef struct php_req_info
     void *result_payload;
     int result_length;
     char *transfer_encoding;
+	char *out_content_type;
 } wsf_req_info_t;
 
 /** functions */
