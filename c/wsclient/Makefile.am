@@ -11,7 +11,6 @@ dist-hook:
 	rm -rf `find $(distdir)/ -type d -name .svn`
 	rm -rf `find $(distdir)/ -type d -name .deps`
 	rm -rf `find $(distdir)/ -type d -name .libs`
-	tar -chf - wsclient-src-${PACKAGE_VERSION} | gzip -c > wsclient-src-${PACKAGE_VERSION}.tar.gz
 
 bindist: $(bin_PROGRAMS)
 	rm -rf wsclient-bin-${PACKAGE_VERSION}-linux
