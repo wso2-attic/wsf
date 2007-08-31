@@ -60,14 +60,15 @@ class WS_WSDL_Service
         $svr_port->setAttribute(WS_WSDL_Const::WS_WSDL_BINDING_ATTR_NAME,
                                 $this->S_name);
 
-        $svr_addr = $svr_dom->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
+        $svr_addr = $svr_dom->createElementNS(WS_WSDL_Const::WS_SCHEMA_SOAP_NAMESPACE,
                                               WS_WSDL_Const::WS_WSDL_ADDRESS_ATTR_NAME);
+
         $svr_addr->setAttribute(WS_WSDL_Const::WS_WSDL_LOCATION_ATTR_NAME,
                                 WS_WSDL_Const::WS_WSDL_HTTP_ATTR_NAME.
                                 $this->endpoint);
 
+        $svr_port->appendChild($svr_addr);
         $svr_ele->appendChild($svr_port);
-        $svr_ele->appendChild($svr_addr);
         $svr_root->appendChild($svr_ele);
 
     }
