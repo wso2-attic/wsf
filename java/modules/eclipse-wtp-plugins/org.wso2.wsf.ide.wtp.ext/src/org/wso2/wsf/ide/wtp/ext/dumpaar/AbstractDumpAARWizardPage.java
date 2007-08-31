@@ -18,7 +18,6 @@ package org.wso2.wsf.ide.wtp.ext.dumpaar;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.WizardPage;
-import org.wso2.wsf.ide.wtp.ext.java2wsdl.WSASJAVA2WSDLPlugin;
 import org.wso2.wsf.ide.wtp.ext.java2wsdl.util.SettingsConstants;
 
 
@@ -40,7 +39,7 @@ public abstract class AbstractDumpAARWizardPage extends WizardPage implements Se
          * Get the settings for this page. If there is no section in the
          * Plugin's settings for this OptionsPage, create a new section
          */
-        IDialogSettings rootSettings = WSASJAVA2WSDLPlugin.getDefault()
+        IDialogSettings rootSettings = WSASDumpAARPlugin.getDefault()
                 .getDialogSettings();
         IDialogSettings section = rootSettings.getSection(this.getClass()
                 .getName());

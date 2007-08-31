@@ -17,6 +17,8 @@ package org.wso2.wsf.ide.wtp.ext;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.wso2.wsf.ide.wtp.ext.dumpaar.WSASDumpAARPlugin;
+import org.wso2.wsf.ide.wtp.ext.java2wsdl.WSASJAVA2WSDLPlugin;
 import org.wso2.wsf.ide.wtp.ext.server.bean.WSASConfigurationBean;
 import org.wso2.wsf.ide.wtp.ext.server.command.WSASStopCommand;
 
@@ -45,6 +47,8 @@ public class WSFWTPExtPlugin extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		WSASDumpAARPlugin.getDefault().start(context);
+		WSASJAVA2WSDLPlugin.getDefault().start(context);
 		plugin = this;
 	}
 
@@ -60,6 +64,8 @@ public class WSFWTPExtPlugin extends AbstractUIPlugin {
 			WSASStopCommand.run();
 			Thread.sleep(WSAS_STOP_TIME_GAP);
 		}
+		WSASDumpAARPlugin.getDefault().stop(context);
+		WSASJAVA2WSDLPlugin.getDefault().stop(context);
 	}
 
 	/**

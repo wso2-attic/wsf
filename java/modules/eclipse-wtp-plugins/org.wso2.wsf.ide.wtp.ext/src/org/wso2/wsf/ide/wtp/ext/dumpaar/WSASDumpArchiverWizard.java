@@ -43,11 +43,9 @@ public class WSASDumpArchiverWizard extends Wizard implements INewWizard{
         AbstractDumpAARWizardPage wizardPage = null;
         for (int i = 0; i < pages.length; i++) {
             wizardPage = (AbstractDumpAARWizardPage) pages[i];
-            if (wizardPage.getName().equals("page4.name")){
 	            if (!wizardPage.isPageComplete()) {
 	                    return false;
 	            }
-            }
         }
         return true;
 	}

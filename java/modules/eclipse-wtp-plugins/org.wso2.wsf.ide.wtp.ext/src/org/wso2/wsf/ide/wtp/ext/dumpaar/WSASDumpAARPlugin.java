@@ -94,7 +94,7 @@ public class WSASDumpAARPlugin extends AbstractUIPlugin {
         if (wizardImageDescriptor == null) {
             wizardImageDescriptor =
             	WSASDumpAARPlugin.imageDescriptorFromPlugin(
-                            "WSAS_Dump_Archive_Wizard", "icons/test.gif");
+                            "org.wso2.wsf.ide.wtp.ext.dumpaar.dumpArchiverWizard", "icons/test.gif");
         }
         return wizardImageDescriptor;
     }
