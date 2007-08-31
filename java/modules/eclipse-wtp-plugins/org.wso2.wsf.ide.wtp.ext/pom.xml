@@ -115,6 +115,11 @@
 			<artifactId>org.eclipse.ui</artifactId>
 			<version>3.3.0</version>
 		</dependency>
+                <dependency>
+                        <groupId>org.wso2.wsf</groupId>
+                        <artifactId>org.eclipse.ui.ide</artifactId>
+                        <version>3.3.0</version>
+                </dependency>
 		<dependency>
 			<groupId>org.wso2.wsf</groupId>
 			<artifactId>org.eclipse.jem</artifactId>
