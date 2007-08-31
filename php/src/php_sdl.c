@@ -3909,8 +3909,6 @@ get_sdl (
         proxy_authentication (this_ptr, &headers TSRMLS_CC);
     }
 
-    basic_authentication (this_ptr, &headers TSRMLS_CC);
-
     if (headers.len > 0) {
         zval *str_headers;
 
