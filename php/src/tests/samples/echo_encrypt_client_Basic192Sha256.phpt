@@ -13,7 +13,7 @@ try {
     $pvt_key = ws_get_key_from_file("tests/samples/keys/alice_key.pem");
     
     $reqMessage = new WSMessage($reqPayloadString,
-                                array("to"=>"http://localhost/samples/security/encryption/encrypt_service_Basic128Rsa15.php",
+                                array("to"=>"http://localhost/samples/security/encryption/encrypt_service_Basic192Sha256.php",
                                       "action" => "http://php.axis2.org/samples/echoString"));
     
     $sec_array = array("encrypt"=>TRUE,

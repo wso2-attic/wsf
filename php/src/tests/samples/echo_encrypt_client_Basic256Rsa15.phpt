@@ -9,8 +9,8 @@ $reqPayloadString = <<<XML
 XML;
 
 try {
-    $rec_cert = ws_get_cert_from_file("keys/bob_cert.cert");
-    $pvt_key = ws_get_key_from_file("keys/alice_key.pem");
+    $rec_cert = ws_get_cert_from_file("tests/samples/keys/bob_cert.cert");
+    $pvt_key = ws_get_key_from_file("tests/samples/keys/alice_key.pem");
     
     $reqMessage = new WSMessage($reqPayloadString,
                                 array("to"=>"http://localhost/samples/security/encryption/encrypt_service_Basic256Rsa15.php",
