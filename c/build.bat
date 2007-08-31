@@ -99,14 +99,14 @@ rem Build Apache Savan/C
 
 :pack_wsfc
 @cd ..\..
-@if not exist wso2-wsf-c-bin-1.0.1 mkdir wso2-wsf-c-bin-1.0.1
-@xcopy /E /Q /I /Y axis2c\build\axis2c-bin-1.1.0-win32 wso2-wsf-c-bin-1.0.1
-@copy /Y config\axis2.xml wso2-wsf-c-bin-1.0.1\axis2.xml
-@copy /Y INSTALL wso2-wsf-c-bin-1.0.1
-@copy /Y README wso2-wsf-c-bin-1.0.1
-@copy /Y NEWS wso2-wsf-c-bin-1.0.1
-@copy /Y COPYING wso2-wsf-c-bin-1.0.1
-@copy /Y AUTHORS wso2-wsf-c-bin-1.0.1
-@xcopy /E /I /Q /Y docs  wso2-wsf-c-bin-1.0.1\docs
+@if not exist wso2-wsf-c-bin-1.1.0 mkdir wso2-wsf-c-bin-1.1.0
+@xcopy /E /Q /I /Y axis2c\build\axis2c-bin-1.1.0-win32 wso2-wsf-c-bin-1.1.0
+@copy /Y config\axis2.xml wso2-wsf-c-bin-1.1.0\axis2.xml
+@copy /Y INSTALL wso2-wsf-c-bin-1.1.0
+@copy /Y README wso2-wsf-c-bin-1.1.0
+@copy /Y NEWS wso2-wsf-c-bin-1.1.0
+@copy /Y COPYING wso2-wsf-c-bin-1.1.0
+@copy /Y AUTHORS wso2-wsf-c-bin-1.1.0
+@xcopy /E /I /Q /Y docs  wso2-wsf-c-bin-1.1.0\docs
 
 :end

@@ -9,8 +9,8 @@ make
 make install
 make samples
 make dist
-tar xf wso2-wsf-c-src-1.0.1.tar.gz
-cd wso2-wsf-c-src-1.0.1
+tar xf wso2-wsf-c-src-1.1.0.tar.gz
+cd wso2-wsf-c-src-1.1.0
 
 ./configure
 make maintainer-clean
@@ -40,7 +40,7 @@ cd ..
 
 cp /tmp/dist.sh /tmp/dist_hook.sh .
 
-rm -rf wso2-wsf-c-src-1.0.1.tar.gz
-tar -pczf wso2-wsf-c-src-1.0.1.tar.gz wso2-wsf-c-src-1.0.1
-zip -r wso2-wsf-c-src-1.0.1.zip wso2-wsf-c-src-1.0.1
-rm -rf wso2-wsf-c-src-1.0.1
+rm -rf wso2-wsf-c-src-1.1.0.tar.gz
+tar -pczf wso2-wsf-c-src-1.1.0.tar.gz wso2-wsf-c-src-1.1.0
+zip -r wso2-wsf-c-src-1.1.0.zip wso2-wsf-c-src-1.1.0
+rm -rf wso2-wsf-c-src-1.1.0
