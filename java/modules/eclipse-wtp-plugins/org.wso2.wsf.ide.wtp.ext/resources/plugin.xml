@@ -104,7 +104,7 @@
             </action>
             <action id="org.wso2.wsf.ide.wtp.ext.server.tools.java2wsdl"
                 label="WSO2 WSAS JAVA2WSDL" 
-                icon="icons/test.gif" 
+                icon="icons/java2wsdl.gif" 
                 tooltip="WSO2 WSAS JAVA2WSDL Tool"
                 toolbarPath="Normal/additions"
                 helpContextId="org.wso2.wsf.ide.wtp.ext.server.tools.java2wsdl.help"
@@ -148,7 +148,7 @@
             </action>
             <action
                 id="org.wso2.wsf.ide.wtp.ext.tools.menu.java2wsdl"
-                label="WSO2 WSAS JAVA2WSDL" icon="icons/test.gif"
+                label="WSO2 WSAS JAVA2WSDL" icon="icons/java2wsdl.gif"
                 tooltip="WSO2 WSAS JAVA2WSDL Tool"
                 menubarPath="org.wso2.wsf.ide.wtp.ext.server.tools.menu.topLevelMenu/WSASToolsGroup"
                 class="org.wso2.wsf.ide.wtp.ext.java2wsdl.delegate.JAVA2WSDLDelegate">
@@ -167,7 +167,7 @@
     
     <extension point="org.eclipse.ui.newWizards">
         <category name="WSAS Wizards" id="WSAS_Wizards"></category>
-        <wizard name="WSAS JAVA 2 WSDL" icon="icons/test.gif"
+        <wizard name="WSAS JAVA 2 WSDL" icon="icons/java2wsdl.gif"
             category="WSAS_Wizards"
             class="org.wso2.wsf.ide.wtp.ext.java2wsdl.WSASJAVA2WSDLWizard"
             id="org.wso2.wsf.ide.wtp.ext.java2wsdl.java2wsdlWizard">
