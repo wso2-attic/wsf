@@ -69,7 +69,7 @@ public class WSASWSDL2JavaCommand extends AbstractDataModelOperation {
         
 	try {
 		//service = generator.getAxisService(model.getWsdlURI());
-		ClassLoadingUtil.init(model.getWebProjectName());
+		ClassLoadingUtil.init();
 		axisServiceInstance = generator.getAxisService(model.getWsdlURI());
         Map optionsMap = generator.fillOptionMap(	
         	false,  //async always false

@@ -46,7 +46,7 @@ public class WSDLPropertyReader {
 
 	public void readWSDL(String projectName, String filepath) throws Exception {
 		
-		ClassLoadingUtil.init(projectName);
+		ClassLoadingUtil.init();
 		
 		DefinitionClass = ClassLoadingUtil.loadClassFromAntClassLoader("javax.wsdl.Definition");
 		

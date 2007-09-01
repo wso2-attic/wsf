@@ -83,7 +83,7 @@ public class WSASClientCodegenCommand extends AbstractDataModelOperation {
 		//service = generator.getAxisService(model.getWsdlURI());
 		ClassLoadingUtil.setInitByClient(true);
 		ClassLoadingUtil.cleanAntClassLoader();
-		ClassLoadingUtil.init(model.getWebProjectName());
+		ClassLoadingUtil.init();
 		axisServiceInstance = generator.getAxisService(model.getWsdlURI());
 		Map optionsMap = generator.fillOptionMap(	
 			model.isASync(), //async
