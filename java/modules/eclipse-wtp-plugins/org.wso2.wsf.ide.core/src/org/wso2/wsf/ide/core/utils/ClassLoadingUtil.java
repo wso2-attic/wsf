@@ -22,6 +22,9 @@ import java.net.URL;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
+import org.wso2.wsf.ide.core.context.WSASEmitterContext;
+import org.wso2.wsf.ide.core.plugin.WebServiceWSASCorePlugin;
+import org.wso2.wsf.ide.core.plugin.messages.WSASCoreUIMessages;
 
 public class ClassLoadingUtil {
 
@@ -34,7 +37,7 @@ public class ClassLoadingUtil {
 	private static boolean alreadyInit = false;
 	private static boolean initByClient = false;
 	
-	public static void init(String project) {
+	public static void init() {
 		if (!alreadyInit) {
 
 		//Obtain a ant class loader instance
@@ -46,7 +49,7 @@ public class ClassLoadingUtil {
 		antClassLoader.setParentFirst(false);
 		
 			if (!(wsasClassPath ==null) || !libsLoaded){
-				classLoadPath = getWSASLibs(project);
+				classLoadPath = getWSASLibs();
 			}
 			
 			if(urls == null){
@@ -89,11 +92,17 @@ public class ClassLoadingUtil {
 	}
 	
 	
-	private static String[] getWSASLibs(String project){
-		File webContainerPath = new File(FacetContainerUtils.pathToWebProjectContainerLib(project));
-		wsasClassPath = new String[webContainerPath.list().length+10];
-		libCount = 0;
-		visitAllFiles(webContainerPath);
+	private static String[] getWSASLibs(){
+		WSASEmitterContext context = WebServiceWSASCorePlugin.getDefault().getWSASEmitterContext();
+		if(context.isCorrectWSASPathSet()){
+			File libraryPath = new File(FileUtils.addAnotherNodeToPath(
+					context.getWSASRuntimeLocation(), WSASCoreUIMessages.DIR_LIB));
+	    	wsasClassPath = new String[libraryPath.list().length+10];
+			libCount = 0;
+			visitAllFiles(libraryPath);
+    	}else{
+    		//TODO Throw and error
+    	}
 		return wsasClassPath;
 	}
 
@@ -101,15 +110,17 @@ public class ClassLoadingUtil {
 	public static void visitAllFiles(File dir) {
 		if(!dir.toString().endsWith(".txt")){
 			if (dir.isDirectory()) {
-				//if(dir.getName().toString().equals("tomcat")){
-					//skip
-				//}
-				//else{
+				if(dir.getName().toString().equals("tomcat") 
+						|| dir.getName().toString().equals("wsf") 
+						|| dir.getName().toString().equals("patches") ){
+					//skip these libraris being loaded
+				}
+				else{
 					String[] children = dir.list();
 					for (int i=0; i<children.length; i++) {
 						visitAllFiles(new File(dir, children[i]));
 					}
-				//}
+				}
 			} else {
 				wsasClassPath[libCount]=dir.getAbsolutePath();
 				libCount+=1;
