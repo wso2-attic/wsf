@@ -27,7 +27,7 @@ import org.eclipse.ui.IWorkbenchWindowPulldownDelegate;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
 
-public class ValidateServiceDelegate
+public class ArchiveValidaterDelegate
 	extends ActionDelegate
 	implements IWorkbenchWindowPulldownDelegate {
 	

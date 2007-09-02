@@ -84,7 +84,7 @@
                 tooltip="Validate Services XML File" 
                 toolbarPath="Normal/additions"
                 helpContextId="org.wso2.wsf.ide.wtp.ext.server.tools.validate.service.help"
-                class="org.wso2.wsf.ide.wtp.ext.validate.service.delegate.ValidateServiceDelegate">
+                class="org.wso2.wsf.ide.wtp.ext.validate.service.delegate.ArchiveValidaterDelegate">
             </action>
             <action id="org.wso2.wsf.ide.wtp.ext.server.tools.dumpaar"
                 label="Dump AAR" 
@@ -122,7 +122,7 @@
                 label="Validate services.xml" icon="icons/services.gif"
                 tooltip="Validate Services XML File"
                 menubarPath="org.wso2.wsf.ide.wtp.ext.server.tools.menu.topLevelMenu/WSASToolsGroup"
-                class="org.wso2.wsf.ide.wtp.ext.validate.service.delegate.ValidateServiceDelegate">
+                class="org.wso2.wsf.ide.wtp.ext.validate.service.delegate.ArchiveValidaterDelegate">
             </action>
             <action
                 id="org.wso2.wsf.ide.wtp.ext.tools.menu.dumpaar"
