@@ -86,14 +86,6 @@
                 helpContextId="org.wso2.wsf.ide.wtp.ext.server.tools.validate.service.help"
                 class="org.wso2.wsf.ide.wtp.ext.validate.service.delegate.ValidateServiceDelegate">
             </action>
-             <action id="org.wso2.wsf.ide.wtp.ext.server.tools.validate.wsdl"
-                label="Validate WSDL" 
-                icon="icons/test.gif" 
-                tooltip="Validate WSDL File" 
-                toolbarPath="Normal/additions"
-                helpContextId="org.wso2.wsf.ide.wtp.ext.server.tools.validate.wsdl.help"
-                class="org.wso2.wsf.ide.wtp.ext.validate.wsdl.delegate.ValidateWSDLDelegate">
-            </action>
             <action id="org.wso2.wsf.ide.wtp.ext.server.tools.dumpaar"
                 label="Dump AAR" 
                 icon="icons/test.gif" 
@@ -131,13 +123,6 @@
                 tooltip="Validate Services XML File"
                 menubarPath="org.wso2.wsf.ide.wtp.ext.server.tools.menu.topLevelMenu/WSASToolsGroup"
                 class="org.wso2.wsf.ide.wtp.ext.validate.service.delegate.ValidateServiceDelegate">
-            </action>
-            <action
-                id="org.wso2.wsf.ide.wtp.ext.tools.menu.validate.wsdl"
-                label="Validate WSDL" icon="icons/test.gif"
-                tooltip="Validate WSDL File"
-                menubarPath="org.wso2.wsf.ide.wtp.ext.server.tools.menu.topLevelMenu/WSASToolsGroup"
-                class="org.wso2.wsf.ide.wtp.ext.validate.wsdl.delegate.ValidateWSDLDelegate">
             </action>
             <action
                 id="org.wso2.wsf.ide.wtp.ext.tools.menu.dumpaar"
