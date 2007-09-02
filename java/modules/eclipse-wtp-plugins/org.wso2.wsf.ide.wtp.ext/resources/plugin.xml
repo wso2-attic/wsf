@@ -80,7 +80,7 @@
             visible="true">
             <action id="org.wso2.wsf.ide.wtp.ext.server.tools.validate.service"
                 label="Validate services.xml" 
-                icon="icons/test.gif" 
+                icon="icons/services.gif" 
                 tooltip="Validate Services XML File" 
                 toolbarPath="Normal/additions"
                 helpContextId="org.wso2.wsf.ide.wtp.ext.server.tools.validate.service.help"
@@ -119,7 +119,7 @@
             
             <action
                 id="org.wso2.wsf.ide.wtp.ext.tools.menu.validate.service"
-                label="Validate services.xml" icon="icons/test.gif"
+                label="Validate services.xml" icon="icons/services.gif"
                 tooltip="Validate Services XML File"
                 menubarPath="org.wso2.wsf.ide.wtp.ext.server.tools.menu.topLevelMenu/WSASToolsGroup"
                 class="org.wso2.wsf.ide.wtp.ext.validate.service.delegate.ValidateServiceDelegate">
