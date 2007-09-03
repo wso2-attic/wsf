@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.wsf.ide.wtp.ext.validate.wsdl.delegate;
+package org.wso2.wsf.ide.wtp.ext.validate.module.delegate;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.widgets.Control;
@@ -27,7 +27,7 @@ import org.eclipse.ui.IWorkbenchWindowPulldownDelegate;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
 
-public class ValidateWSDLDelegate
+public class ModuleValidaterDelegate
 	extends ActionDelegate
 	implements IWorkbenchWindowPulldownDelegate {
 	
@@ -61,7 +61,6 @@ public class ValidateWSDLDelegate
 	public void init(IWorkbenchWindow window) {
 		shell = window.getShell();
 	}
-	
 
 }
 
