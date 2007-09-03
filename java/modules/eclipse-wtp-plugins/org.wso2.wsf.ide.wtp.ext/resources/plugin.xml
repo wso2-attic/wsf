@@ -78,6 +78,14 @@
        <extension point="org.eclipse.ui.actionSets">
         <actionSet id="org.wso2.wsf.ide.wtp.ext.wsas.tools" label="WSAS Tools"
             visible="true">
+            <action id="org.wso2.wsf.ide.wtp.ext.server.tools.wsdl.converter"
+                label="WSDL Converter" 
+                icon="icons/converter.gif" 
+                tooltip="Convert WSDL 1.1 to 2.0" 
+                toolbarPath="Normal/additions"
+                helpContextId="org.wso2.wsf.ide.wtp.ext.server.tools.wsdl.converter.help"
+                class="org.wso2.wsf.ide.wtp.ext.wsdl.converter.delegate.WSDLConverterDelegate">
+            </action>
             <action id="org.wso2.wsf.ide.wtp.ext.server.tools.validate.module"
                 label="Validate module.xml" 
                 icon="icons/modules.gif" 
@@ -125,6 +133,13 @@
                 <groupMarker name="WSASToolsGroup" />
              </menu>
              
+             <action
+                id="org.wso2.wsf.ide.wtp.ext.tools.menu.wsdl.converter"
+                label="WSDL Converter" icon="icons/converter.gif"
+                tooltip="Convert WSDL 1.1 to 2.0"
+                menubarPath="org.wso2.wsf.ide.wtp.ext.server.tools.menu.topLevelMenu/WSASToolsGroup"
+                class="org.wso2.wsf.ide.wtp.ext.wsdl.converter.delegate.WSDLConverterDelegate">
+            </action>
             <action
                 id="org.wso2.wsf.ide.wtp.ext.tools.menu.validate.module"
                 label="Validate modules.xml" icon="icons/modules.gif"
