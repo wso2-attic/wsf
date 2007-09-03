@@ -21,6 +21,7 @@ import org.wso2.wsf.ide.wtp.ext.dumpaar.WSASDumpAARPlugin;
 import org.wso2.wsf.ide.wtp.ext.java2wsdl.WSASJAVA2WSDLPlugin;
 import org.wso2.wsf.ide.wtp.ext.server.bean.WSASConfigurationBean;
 import org.wso2.wsf.ide.wtp.ext.server.command.WSASStopCommand;
+import org.wso2.wsf.ide.wtp.ext.validate.service.WSASArchiveValidatePlugin;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -49,6 +50,7 @@ public class WSFWTPExtPlugin extends AbstractUIPlugin {
 		super.start(context);
 		WSASDumpAARPlugin.getDefault().start(context);
 		WSASJAVA2WSDLPlugin.getDefault().start(context);
+		WSASArchiveValidatePlugin.getDefault().start(context);
 		plugin = this;
 	}
 
@@ -66,6 +68,7 @@ public class WSFWTPExtPlugin extends AbstractUIPlugin {
 		}
 		WSASDumpAARPlugin.getDefault().stop(context);
 		WSASJAVA2WSDLPlugin.getDefault().stop(context);
+		WSASArchiveValidatePlugin.getDefault().stop(context);
 	}
 
 	/**
