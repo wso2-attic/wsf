@@ -2,6 +2,8 @@
 
 set -e
 
+echo ${AXIS2C_HOME}
+
 # specify a folder to install WSF/Perl to a non standard
 # folder on your system
 LIB=""
@@ -30,7 +32,7 @@ echo "Running SWIG..."
 swig -Wall -perl -o WSFC_wrap.c swig/WSFC.i
 
 echo "Generating Makefile..."
-perl Makefile.PL LIB="$LIB" LIBS="-L$LIBS" INC="-I$INC"
+perl Makefile.PL PREFIX="$LIB" LIB="$LIB" verbose
 
 echo "Running Make..."
 make
