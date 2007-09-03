@@ -23,6 +23,7 @@ import org.wso2.wsf.ide.wtp.ext.server.bean.WSASConfigurationBean;
 import org.wso2.wsf.ide.wtp.ext.server.command.WSASStopCommand;
 import org.wso2.wsf.ide.wtp.ext.validate.module.WSASModuleValidatePlugin;
 import org.wso2.wsf.ide.wtp.ext.validate.service.WSASArchiveValidatePlugin;
+import org.wso2.wsf.ide.wtp.ext.wsdl.converter.WSASWSDLConverterPlugin;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -53,6 +54,7 @@ public class WSFWTPExtPlugin extends AbstractUIPlugin {
 		WSASJAVA2WSDLPlugin.getDefault().start(context);
 		WSASArchiveValidatePlugin.getDefault().start(context);
 		WSASModuleValidatePlugin.getDefault().start(context);
+		WSASWSDLConverterPlugin.getDefault().start(context);
 		plugin = this;
 	}
 
@@ -72,6 +74,7 @@ public class WSFWTPExtPlugin extends AbstractUIPlugin {
 		WSASJAVA2WSDLPlugin.getDefault().stop(context);
 		WSASArchiveValidatePlugin.getDefault().stop(context);
 		WSASModuleValidatePlugin.getDefault().stop(context);
+		WSASWSDLConverterPlugin.getDefault().stop(context);
 	}
 
 	/**

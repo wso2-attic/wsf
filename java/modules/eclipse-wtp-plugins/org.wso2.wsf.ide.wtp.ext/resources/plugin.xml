@@ -173,7 +173,7 @@
     
     <extension point="org.eclipse.ui.newWizards">
         <category name="WSAS Wizards" id="WSAS_Wizards"></category>
-        <wizard name="WSAS WSDL Converter" icon="icons/modules.gif"
+        <wizard name="WSAS WSDL Converter" icon="icons/converter.gif"
             category="WSAS_Wizards"
             class="org.wso2.wsf.ide.wtp.ext.wsdl.converter.WSASWSDLConverterWizard"
             id="org.wso2.wsf.ide.wtp.ext.wsdl.converter.wsdlConverterWizard">
