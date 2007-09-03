@@ -17,15 +17,15 @@
 package org.wso2.wsf.ide.wtp.ext.validate.module.delegate;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.IWorkbenchWindowPulldownDelegate;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
+import org.wso2.wsf.ide.wtp.ext.validate.module.WSASModuleValidaterWizard;
 
 public class ModuleValidaterDelegate
 	extends ActionDelegate
@@ -33,13 +33,13 @@ public class ModuleValidaterDelegate
 	
 	Shell shell = null;
 	
-    MessageBox box = new MessageBox(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
-	
 	/**
 	 * @see ActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
-		box.setMessage("Invoked !! ");box.open();
+		WSASModuleValidaterWizard moduleValidaterWizard = new WSASModuleValidaterWizard();
+		WizardDialog dialog = new WizardDialog(shell, moduleValidaterWizard);
+		dialog.open();
 	}
 
 	/**
