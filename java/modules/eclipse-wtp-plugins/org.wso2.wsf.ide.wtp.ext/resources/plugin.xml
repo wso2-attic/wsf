@@ -78,6 +78,14 @@
        <extension point="org.eclipse.ui.actionSets">
         <actionSet id="org.wso2.wsf.ide.wtp.ext.wsas.tools" label="WSAS Tools"
             visible="true">
+            <action id="org.wso2.wsf.ide.wtp.ext.server.tools.validate.module"
+                label="Validate module.xml" 
+                icon="icons/modules.gif" 
+                tooltip="Validate Module XML File" 
+                toolbarPath="Normal/additions"
+                helpContextId="org.wso2.wsf.ide.wtp.ext.server.tools.validate.service.help"
+                class="org.wso2.wsf.ide.wtp.ext.validate.module.delegate.ModuleValidaterDelegate">
+            </action>
             <action id="org.wso2.wsf.ide.wtp.ext.server.tools.validate.service"
                 label="Validate services.xml" 
                 icon="icons/services.gif" 
@@ -116,7 +124,14 @@
                 label="WSASTools" path="additions">
                 <groupMarker name="WSASToolsGroup" />
              </menu>
-            
+             
+            <action
+                id="org.wso2.wsf.ide.wtp.ext.tools.menu.validate.module"
+                label="Validate modules.xml" icon="icons/modules.gif"
+                tooltip="Validate module XML File"
+                menubarPath="org.wso2.wsf.ide.wtp.ext.server.tools.menu.topLevelMenu/WSASToolsGroup"
+                class="org.wso2.wsf.ide.wtp.ext.validate.module.delegate.ModuleValidaterDelegate">
+            </action>
             <action
                 id="org.wso2.wsf.ide.wtp.ext.tools.menu.validate.service"
                 label="Validate services.xml" icon="icons/services.gif"
