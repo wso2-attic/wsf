@@ -158,6 +158,15 @@
     
     <extension point="org.eclipse.ui.newWizards">
         <category name="WSAS Wizards" id="WSAS_Wizards"></category>
+        <wizard name="WSAS Module Validater" icon="icons/modules.gif"
+            category="WSAS_Wizards"
+            class="org.wso2.wsf.ide.wtp.ext.validate.module.WSASModuleValidaterWizard"
+            id="org.wso2.wsf.ide.wtp.ext.validate.module.moduleValidaterWizard">
+        </wizard>
+    </extension>
+    
+    <extension point="org.eclipse.ui.newWizards">
+        <category name="WSAS Wizards" id="WSAS_Wizards"></category>
         <wizard name="WSAS Archive Validater" icon="icons/services.gif"
             category="WSAS_Wizards"
             class="org.wso2.wsf.ide.wtp.ext.validate.service.WSASArchiveValidaterWizard"
