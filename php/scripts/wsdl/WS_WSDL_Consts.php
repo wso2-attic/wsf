@@ -34,6 +34,9 @@ class WS_WSDL_Const
     const WS_WSDL_DEF_WSDL_QN = 'xmlns:wsdl';
     const WS_WSDL_DEF_SOAP_ENC_QN = 'xmlns:soapenc';
     const WS_WSDL_DEF_TARGET_NS = 'targetNamespace';
+    const WS_WSDL_DEF_HTTP_QN = 'xmlns:http';
+    const WS_WSDL_DEF_SCHEMA_PREFIX = 'xmlns:ns0';
+
 
     const WS_WSDL2_DESCRIPTION = "description";
     const WS_WSDL2_WSOAP_ATTR_NAME = "xmlns:wsoap";
@@ -57,7 +60,8 @@ class WS_WSDL_Const
     const WS_SCHEMA_SOAP_HTTP_NAMESPACE = 'http://schemas.xmlsoap.org/soap/http';
     const WS_SCHEMA_SOAP_NAMESPACE = 'http://schemas.xmlsoap.org/wsdl/soap/';
     const WS_SCHEMA_WSDL_NAMESPACE = 'http://schemas.xmlsoap.org/wsdl/';
-
+    
+    const WS_WSDL_HTTP12_NAMESPACE  = 'http://www.w3.org/2003/05/soap/bindings/HTTP/';
 
     const WS_WSDL_DEF_SCHEMA_URI = 'http://www.w3.org/2000/xmlns/';
 
@@ -130,7 +134,8 @@ class WS_WSDL_Const
     const WS_WSDL_OUT_ATTR_NAME = 'Out';
     const WS_WSDL_ELEMENTFROMDEFAULT_ATTR_NAME = 'elementFromDefault';
     const WS_WSDL_QUALIFIED_ATTR_NAME = 'qualified';
-
+    const WS_WSDL_DEFAULT_SCHEMA_ATTR_NAME = 'ns0';
+    const WS_WSDL_TNS_ATTR_NAME = 'tns';
 
 
     static public $defaultTypes = array(

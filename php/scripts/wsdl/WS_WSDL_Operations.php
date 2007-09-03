@@ -112,8 +112,8 @@ class WS_WSDL_Operations
             foreach($operation->getParameters() as $i => $param)
             {
                 $match[2] = $param->getName();
-                $match[1] = "any";
-                $this->xsdTypes[$operationName]["In"][$match[2]] = "any";
+                $match[1] = "anyType";
+                $this->xsdTypes[$operationName]["In"][$match[2]] = "anyType";
 
 
                 $this->createdTypes[$match[1]] = 2;
@@ -123,7 +123,7 @@ class WS_WSDL_Operations
             }
 
 
-            $this->xsdTypes[$operationName]["Out"]["returnVal"] = "any";
+            $this->xsdTypes[$operationName]["Out"]["returnVal"] = "anyType";
 
             $this->createdTypes[$match[1]] = 2;
             $this->operations[$operationName][self::WS_OPERATION_OUTPUT_TAG][] =

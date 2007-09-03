@@ -70,7 +70,7 @@ class WS_WSDL_Message
                     foreach($this->fun_mapping as $key => $value){
                         if($value == $name)
                             $part->setAttribute(WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME,
-                                                $key);
+                                               WS_WSDL_COnst::WS_WSDL_DEFAULT_SCHEMA_ATTR_NAME.":". $key);
                     }
                 }
                 if (ucfirst(WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME) == ucfirst($type))
@@ -78,7 +78,7 @@ class WS_WSDL_Message
                     foreach($this->fun_mapping as $key => $value){
                         if($value == $name)
                             $part->setAttribute(WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME,
-                                                $key.WS_WSDL_Const::WS_WSDL_RESPONSE_ATTR_NAME);
+                                                WS_WSDL_COnst::WS_WSDL_DEFAULT_SCHEMA_ATTR_NAME.":".$key.WS_WSDL_Const::WS_WSDL_RESPONSE_ATTR_NAME);
                     }
                 }
 
@@ -123,7 +123,7 @@ class WS_WSDL_Message
                                                     $param5);
                             if ($name4 == WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME)
                                 $part->setAttribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME,
-                                                    $param5);
+                                                    WS_WSDL_Const::WS_WSDL_XSD_ATTR_NAME.$param5);
                             $el->appendChild($part);
 
                         }
@@ -142,7 +142,7 @@ class WS_WSDL_Message
                                                     $param5);
                             if ($name4 == WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME)
                                 $part->setAttribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME,
-                                                    $param5);
+                                                    WS_WSDL_Const::WS_WSDL_XSD_ATTR_NAME.$param5);
                             $el->appendChild($part);
                         }
                     }

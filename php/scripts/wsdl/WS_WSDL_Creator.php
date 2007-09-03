@@ -80,7 +80,7 @@ class WS_WSDL_Creator
                                     WS_WSDL_Const::WS_DOM_DOCUMENT_ENCODING);
 
         $wsdl_root_ele = $wsdl_dom->createElementNS(WS_WSDL_const::WS_SCHEMA_WSDL_NAMESPACE,
-                         WS_WSDL_Const::WS_WSDL_DEFINITION);
+                                                    WS_WSDL_const::WS_WSDL_DEFINITION);
 
         $wsdl_root_ele->setAttributeNS(WS_WSDL_const::WS_WSDL_DEF_SCHEMA_URI,
                                        WS_WSDL_const::WS_WSDL_DEF_XSD_QN,
@@ -102,6 +102,14 @@ class WS_WSDL_Creator
                                        WS_WSDL_const::WS_WSDL_DEF_SOAP_ENC_QN,
                                        WS_WSDL_const::WS_SOAP_SCHEMA_ENCODING_NAMESPACE);
 
+        $wsdl_root_ele->setAttributeNS(WS_WSDL_const::WS_WSDL_DEF_SCHEMA_URI,
+                                       WS_WSDL_const::WS_WSDL_DEF_HTTP_QN,
+                                       WS_WSDL_const::WS_WSDL_HTTP12_NAMESPACE);
+
+        $wsdl_root_ele->setAttributeNS(WS_WSDL_const::WS_WSDL_DEF_SCHEMA_URI,
+                                       WS_WSDL_const::WS_WSDL_DEF_SCHEMA_PREFIX,
+                                       $this->namespace."/xsd");
+        
         $wsdl_root_ele->setAttribute(WS_WSDL_const::WS_WSDL_DEF_TARGET_NS,
                                      $this->namespace);
 

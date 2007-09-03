@@ -59,7 +59,7 @@ class WS_WSDL_Binding
         $binding_ele->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME,
                                    $this->svr_name);
         $binding_ele->setAttribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME,
-                                   $this->svr_name);
+                                  WS_WSDL_Const::WS_WSDL_TNS_ATTR_NAME.":".$this->svr_name);
 
         $s_binding = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_SOAP_NAMESPACE,
                      WS_WSDL_Const::WS_WSDL_BINDING_ATTR_NAME);
@@ -118,7 +118,7 @@ class WS_WSDL_Binding
                        WS_WSDL_Const::WS_WSDL_BINDING_ATTR_NAME);
         $binding_ele->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $this->svr_name);
         $binding_ele->setAttribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME,
-                                   $this->svr_name);
+                                    WS_WSDL_Const::WS_WSDL_TNS_ATTR_NAME.":".$this->svr_name);
 
         $s_binding = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_SOAP_NAMESPACE,
                      WS_WSDL_Const::WS_WSDL_BINDING_ATTR_NAME);

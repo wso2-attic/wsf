@@ -66,7 +66,7 @@ class WS_WSDL_Port
                 foreach($this->fun_mapping as $key => $value){
                     if ($value == $name)
                         $sel->setAttribute(WS_WSDL_Const::WS_WSDL_MESSAGE_ATTR_NAME,
-                                           "$key".ucfirst($type));
+                                           WS_WSDL_Const::WS_WSDL_TNS_ATTR_NAME.":"."$key".ucfirst($type));
                 }
                 $operation->appendChild($sel);
             }
