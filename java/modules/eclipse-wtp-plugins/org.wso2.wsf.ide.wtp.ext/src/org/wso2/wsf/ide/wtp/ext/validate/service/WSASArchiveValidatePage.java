@@ -106,7 +106,7 @@ public class WSASArchiveValidatePage extends AbstractArchiveValidateWizardPage{
         gd = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
         serviceXMLGroup.setLayoutData(gd);
         
-        final Text servicesXMlPathText = new Text(serviceXMLGroup,SWT.NONE);
+        servicesXMlPathText = new Text(serviceXMLGroup,SWT.NONE);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan=13;
         servicesXMlPathText.setLayoutData(gd);
