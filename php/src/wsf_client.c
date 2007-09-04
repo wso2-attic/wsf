@@ -1294,6 +1294,7 @@ wsf_client_do_request (
             
             add_property_stringl (rmsg, WS_MSG_PAYLOAD_STR, res_text,
                 strlen (res_text), 1);
+	    add_property_long (rmsg, WS_MSG_TYPE, WS_USING_STRING);
             
             ZVAL_ZVAL (return_value, rmsg, 1, 0);
             zval_ptr_dtor(&rmsg);
