@@ -15,11 +15,18 @@
  */
 package org.wso2.wsf.ide.wtp.ext.dumpaar;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.wso2.wsf.ide.core.utils.ArchiveManipulator;
+import org.wso2.wsf.ide.core.utils.FileUtils;
 import org.wso2.wsf.ide.wtp.ext.java2wsdl.JAVA2WSDLOptionsPage;
 
 
@@ -27,6 +34,10 @@ public class WSASDumpArchiverWizard extends Wizard implements INewWizard{
 
 	WSASDumpAARSelectionPage dumpAARSelectionPage;
 	JAVA2WSDLOptionsPage java2WSDLOptionsPage;
+	boolean alreadyInit;
+	IPath systemDirPath;
+	IPath dumpAARPath;
+	IPath dumpAARTargetPath;
 	
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 	}
@@ -79,12 +90,47 @@ public class WSASDumpArchiverWizard extends Wizard implements INewWizard{
      * @see org.eclipse.jface.wizard.IWizard#performFinish()
      */
     public boolean performFinish() {
+    	String serviceToDump = dumpAARSelectionPage.getSelectedService();
+    	if(!alreadyInit){
+    		initFolderStructure();
+    	}
+    	IPath selectedServicePath = dumpAARPath.append(serviceToDump);
+    	File selectedServiceFile = new File(selectedServicePath.toOSString());
+    	if(selectedServiceFile.exists()){
+    		FileUtils.deleteDirectories(selectedServiceFile);
+    	}
+    	FileUtils.createDirectorys(selectedServiceFile.getAbsolutePath());
+    	
+    	//Copy the service (src and classes) of the IDE Created Service
+    	try {
+			FileUtils.copyDirectory(
+				new File(dumpAARSelectionPage.getWSASRepoPath().append(serviceToDump).toOSString()),
+				selectedServiceFile);
+	
+		ArchiveManipulator archiveManipulator = new ArchiveManipulator();
+		archiveManipulator.archiveDir(serviceToDump+".aar", selectedServicePath.toOSString());
+		
+		File archiveLocation = new File(systemDirPath.append(serviceToDump+".aar").toOSString());
+		IPath archiveDestLocation = new Path(dumpAARTargetPath.toOSString());
+		archiveDestLocation = archiveDestLocation.append(serviceToDump+".aar");
+		FileUtils.copyFile(archiveLocation.getAbsolutePath(), archiveDestLocation.toOSString());
+		archiveLocation.delete();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
+    	//TODO Populate the ant build using the Script builder 
+    	
     	return true;
     }
-
-
-
-
-
+    
+    private void initFolderStructure() {
+    	systemDirPath = new Path(System.getProperty("user.dir"));
+    	dumpAARPath = systemDirPath.append("dumpAAR");
+    	dumpAARTargetPath = new Path(dumpAARPath.append("target").toOSString());
+    	FileUtils.createDirectorys(dumpAARPath.toOSString());
+    	FileUtils.createDirectorys(dumpAARTargetPath.toOSString());
+    	alreadyInit = true;
+    }
 
 }
