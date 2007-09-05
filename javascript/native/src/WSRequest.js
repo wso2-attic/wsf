@@ -308,12 +308,12 @@ WSRequest.util = {
  * @return string
  */
     _serializeToString : function(payload) {
+        if (payload == null) return null;
         if (typeof(payload) == "string") {
             return payload;
         } else if (typeof(payload) == "object") {
             var browser = WSRequest.util._getBrowser();
             switch (browser) {
-
                 case "gecko":
                     var serializer = new XMLSerializer();
                     return serializer.serializeToString(payload);
