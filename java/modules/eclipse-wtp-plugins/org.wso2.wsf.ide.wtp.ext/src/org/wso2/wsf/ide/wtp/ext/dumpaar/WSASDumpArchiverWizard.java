@@ -16,7 +16,10 @@
 package org.wso2.wsf.ide.wtp.ext.dumpaar;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -27,6 +30,9 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.wso2.wsf.ide.core.utils.ArchiveManipulator;
 import org.wso2.wsf.ide.core.utils.FileUtils;
+import org.wso2.wsf.ide.core.utils.ScriptBuilder;
+import org.wso2.wsf.ide.wtp.ext.dumpaar.script.AntBuildDTO;
+import org.wso2.wsf.ide.wtp.ext.dumpaar.script.AntMapBuilder;
 import org.wso2.wsf.ide.wtp.ext.java2wsdl.JAVA2WSDLOptionsPage;
 
 
@@ -119,8 +125,46 @@ public class WSASDumpArchiverWizard extends Wizard implements INewWizard{
 			e.printStackTrace();
 		}
     	
-    	//TODO Populate the ant build using the Script builder 
-    	
+    	if (dumpAARSelectionPage.getBuildCheckBoxSelection()) {
+			//Make the Ant Build DTO 
+			AntBuildDTO antBuildDTO = new AntBuildDTO();
+			antBuildDTO.setServiceName(serviceToDump);
+			antBuildDTO.setTargetPath(dumpAARTargetPath.toOSString());
+			
+			//Generate the Map using the DTO
+			AntMapBuilder antMapBuilder = new AntMapBuilder();
+			antMapBuilder.buildAntBuildMap(antBuildDTO);
+			
+			try {
+				//Make the ant build from transform
+				ScriptBuilder scriptBuilder = new ScriptBuilder();
+				FileInputStream inStream = new FileInputStream(antMapBuilder
+						.getBuildFileLocation().toOSString());
+				IPath antBuildLocation = new Path(antBuildDTO.getTargetPath());
+				antBuildLocation = antBuildLocation.removeLastSegments(1);
+				antBuildLocation = antBuildLocation.append(antBuildDTO
+						.getServiceName()
+						+ "AntBuild.xml");
+				FileOutputStream outStream = new FileOutputStream(
+						antBuildLocation.toOSString());
+				InputStream xslStream = getClass()
+						.getResourceAsStream(
+								"org/wso2/wsf/ide/wtp/ext/dumpaar/xsl/AntBuildTemplate.xsl");
+				if (xslStream == null) {
+					xslStream = Thread
+							.currentThread()
+							.getContextClassLoader()
+							.getResourceAsStream(
+									"org/wso2/wsf/ide/wtp/ext/dumpaar/xsl/AntBuildTemplate.xsl");
+				}
+				scriptBuilder.parseXMLFile(inStream, outStream, xslStream);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+	    			
+			//Print the resulting message from a popup dialog 
+		} 
+		
     	return true;
     }
     
