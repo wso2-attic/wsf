@@ -1,0 +1,142 @@
+<HTML>
+<HEAD>
+    <TITLE>WSO2 WSRequest demo</TITLE>
+    <h2>WSO2 WSRequest Object Demo-UTube search for motor sports</h2>
+    <script language="javascript" src="../../src/WSRequest.js"></script>
+</HEAD>
+<BODY>
+<script language="javascript">
+    var wshttp = null;
+    wshttp = new WSRequest();
+    function search(){
+
+        wshttp.onreadystatechange = callbackResult;
+        var option = new Array();
+        option['useSOAP'] = false;
+        option['HTTPMethod'] = "GET";
+		option["HTTPInputSerialization"] = "application/x-www-form-urlencoded";
+		option["HTTPLocation"] = "?method=youtube.videos.list_by_category_and_tag&dev_id={DeveloperId}&category_id={CategoryId}&tag={TagId}";
+		option["HTTPLocationIgnoreUncited"] = false;
+		
+        var devId = form1.utDevId.value;
+        var categoryId = "2";
+        var tagId = form1.utSearchStr.value;
+		var endPoint = "http://www.youtube.com/api2_rest";
+
+        try{
+            wshttp.open(option,endPoint,true);
+        }catch(ex){
+            alert(ex.description);
+        }
+
+        var xmlDoc = new ActiveXObject("MSXML2.DOMDocument.4.0");
+        var reqNode = xmlDoc.createElement("ns1:doSpellingSuggestion");
+
+        var attr1 = xmlDoc.createAttribute("xmlns:ns1");
+        attr1.value = "urn:GoogleSearch";
+        reqNode.setAttributeNode(attr1);
+
+        var attr2 = xmlDoc.createAttribute("xmlns:xsd");
+        attr2.value = "http://www.w3.org/2001/XMLSchema";
+        reqNode.setAttributeNode(attr2);
+
+        xmlDoc.appendChild(reqNode);
+
+        //create the node for key
+        var devNode = xmlDoc.createElement("DeveloperId");
+        var attr3 = xmlDoc.createAttribute("a0:type");
+        attr3.value =  "xsd:string";
+        devNode.setAttributeNode(attr3);
+
+        var attr4 = xmlDoc.createAttribute("xmlns:a0");
+        attr4.value =  "http://www.w3.org/2001/XMLSchema-instance";
+        devNode.setAttributeNode(attr4);
+
+        var devText = xmlDoc.createTextNode(devId);
+        devNode.appendChild(devText);
+
+        //create the node for phrase
+        var catNode = xmlDoc.createElement("CategoryId");
+        var attr5 = xmlDoc.createAttribute("a1:type");
+        attr5.value = "xsd:string";
+        catNode.setAttributeNode(attr5);
+
+        var attr6 = xmlDoc.createAttribute("xmlns:a1");
+        attr6.value = "http://www.w3.org/2001/XMLSchema-instance";
+        catNode.setAttributeNode(attr6);
+
+        var cat_text = xmlDoc.createTextNode(categoryId);
+        catNode.appendChild(cat_text);
+
+        //create the node for search
+        var tagNode = xmlDoc.createElement("TagId");
+        var attr7 = xmlDoc.createAttribute("a2:type");
+        attr7.value = "xsd:string";
+        tagNode.setAttributeNode(attr7);
+
+        var attr8 = xmlDoc.createAttribute("xmlns:a2");
+        attr8.value = "http://www.w3.org/2001/XMLSchema-instance";
+        tagNode.setAttributeNode(attr8);
+
+        var tag_text = xmlDoc.createTextNode(tagId);
+        tagNode.appendChild(tag_text);
+        
+        //attach nodes
+        reqNode.appendChild(devNode);
+        reqNode.appendChild(catNode);
+        reqNode.appendChild(tagNode);
+
+        //serializing the node into string using IE api
+        var str = xmlDoc.xml;
+        form1.request.value = str;
+
+        try{
+            wshttp.send(reqNode);
+        }catch(ex){
+            alert(ex.description);
+        }
+    }
+    function callbackResult(){
+        if(wshttp.readyState == 0){
+            form1.status.value += "readyState == 0 => UNINILIZED        ";
+
+
+        }
+        if(wshttp.readyState == 1){
+            form1.status.value += "readyState == 1 => OPENED             ";
+
+        }
+        if(wshttp.readyState == 2){
+            form1.status.value += "readyState == 2 => LOADED            ";
+
+        }
+        if(wshttp.readyState == 3){
+            form1.status.value += "readyState == 3 => INTRACTIVE         ";
+
+        }
+        if(wshttp.readyState == 4){
+            form1.status.value += "readyState == 4 => COMPLETED          ";
+            resultCol.innerHTML= "Result :"  + wshttp.responseText;
+            form1.result.value = wshttp.responseText;
+        }
+    }
+
+</script>
+<form id="form1">
+    <table>
+		<tr><td>UTube Developer ID</td><td><input type="text"  id="utDevId" name="utube_developerId"></td></tr>
+		<tr><td>Race Info</td><td><input type="text"  id="utSearchStr" name="utube_search"></td></tr>        
+		<tr><td><input type="button" value="Search" onclick="search()"></td><td><input type ="reset" name="reset" value="Reset"></td></tr>        
+    </table>
+    <table>
+        <tr>
+            <td id="resultCol"></td>
+        </tr>
+    </table>
+    <br>
+    your request xml<br><textarea id="request" rows=10 cols=80 ></textarea><br/>
+    your response xml<br><textarea id="result" rows=10 cols=80 ></textarea><br/>
+    status of the invocation<br><textarea id="status" rows=10 cols=40 ></textarea><br/>
+</form>
+</BODY>
+</HTML>
