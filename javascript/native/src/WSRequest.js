@@ -74,15 +74,16 @@ WSRequest.prototype.send = function(payload) {
         return new Error("Invalid input argument");
     }
 
-    var req = null;        // string to be sent
-    
+    var req = null;
+    // string to be sent
+
     if (this._optionSet["HTTPMethod"] != null)
         var method = this._optionSet["HTTPMethod"];
     else
         var method = "POST";
-    
+
     this._soapVer = WSRequest.util._bindingVersion(this._optionSet);
-   
+
     if (payload != null)
     {
         // seralize the dom to string
@@ -93,7 +94,9 @@ WSRequest.prototype.send = function(payload) {
 
         // formulate the message envelope
         if (this._soapVer == 0) {
-            req = WSRequest.util._buildHTTPpayload(this._optionSet, this._uri, content);
+            processed = WSRequest.util._buildHTTPpayload(this._optionSet, this._uri, content);
+            req = processed["body"];
+            this._uri = processed["url"];
         } else {
             req = WSRequest.util._buildSOAPEnvelope(this._soapVer, this._optionSet, this._uri, content);
         }
@@ -102,17 +105,17 @@ WSRequest.prototype.send = function(payload) {
     // Note that we infer soapAction from the "action" parameter - also used for wsa:Action.
     //  WS-A recommends keeping these two items in sync.
     var soapAction = this._optionSet["action"];
-    
+
     this._xmlhttp.open(method, this._uri, this._async);
 
     switch (this._soapVer) {
         case 1.1:
             soapAction = (soapAction == undefined ? '""' : '"' + soapAction + '"');
             this._xmlhttp.setRequestHeader("SOAPAction", soapAction);
-            this._xmlhttp.setRequestHeader("Content-Type","text/xml; charset=UTF-8");
+            this._xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=UTF-8");
             break;
         case 1.2:
-            this._xmlhttp.setRequestHeader("Content-Type","application/soap+xml;charset=UTF-8" + (soapAction == undefined ? "" : ";action=" + soapAction));
+            this._xmlhttp.setRequestHeader("Content-Type", "application/soap+xml;charset=UTF-8" + (soapAction == undefined ? "" : ";action=" + soapAction));
             break;
         case 0:
             if (this._optionSet["HTTPInputSerialization"] != null) {
@@ -155,7 +158,8 @@ WSRequest.prototype._processResult = function () {
     if (this._soapVer == 0) {
         this.responseText = this._xmlhttp.responseText;
         this.responseXML = this._xmlhttp.responseXML;
-        this.error = null;  // How would I tell?
+        this.error = null;
+        // How would I tell?
     } else {
         var browser = WSRequest.util._getBrowser();
 
@@ -182,7 +186,7 @@ WSRequest.prototype._processResult = function () {
                         netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead");
                     } catch(e) {
                     }
-                    var newDoc = document.implementation.createDocument("","",null);
+                    var newDoc = document.implementation.createDocument("", "", null);
                     newDoc.appendChild(soapBody.firstChild);
                 }
 
@@ -201,12 +205,12 @@ WSRequest.prototype._processResult = function () {
                         this.error.code = WSRequest.util._stringValue(WSRequest.util._firstElement(fault, soapNamespace, "Value"));
                         this.error.reason = WSRequest.util._stringValue(WSRequest.util._firstElement(fault, soapNamespace, "Text"));
                         this.error.detail =
-                            WSRequest.util._serializeToString(WSRequest.util._firstElement(fault, soapNamespace, "Detail"));
+                        WSRequest.util._serializeToString(WSRequest.util._firstElement(fault, soapNamespace, "Detail"));
                     } else {
                         this.error.code = WSRequest.util._stringValue(fault.getElementsByTagName("faultcode")[0]);
                         this.error.reason = WSRequest.util._stringValue(fault.getElementsByTagName("faultstring")[0]);
                         this.error.detail =
-                            WSRequest.util._serializeToString(fault.getElementsByTagName("detail")[0]);
+                        WSRequest.util._serializeToString(fault.getElementsByTagName("detail")[0]);
                     }
                 }
             } else {
@@ -447,17 +451,167 @@ WSRequest.util = {
  * @method _buildHTTPpayload
  * @private
  * @static
- * @param {Array} options   Options given by user
+ * @param {Array} options Options given by user
  * @param {string} url Address the request will be sent to.
- * @param {string} content SOAP payload
- * @return string
+ * @param {string} content SOAP payload in string format.
+ * @return {array} Containing the processed URL and request body.
  */
     _buildHTTPpayload : function(options, url, content) {
-        // For now, we only support stuffing the XML into the body.  
-        //    Eventually, we can support splitting the payload between
-        //    body and url here.
-        return content;
+        var resultValues = new Array();
+        resultValues["url"] = "";
+        resultValues["body"] = "";
+        var paramSeparator = "&";
+
+        var HTTPQueryParameterSeparator = "HTTPQueryParameterSeparator";
+        var HTTPInputSerialization = "HTTPInputSerialization";
+        var HTTPLocation = "HTTPLocation";
+
+        // If a parameter separator has been identified, use it instead of the default &.
+        if (options[HTTPQueryParameterSeparator] != null) {
+            paramSeparator = options[HTTPQueryParameterSeparator];
+        }
+
+        // If serialization options have been specified and the content has been provided, build the payload.
+        if (options[HTTPInputSerialization] != null && resultValues["url"] != null) {
+            //create new document from string
+            var xmlDoc;
+
+            // Parser is browser specific.
+            var browser = WSRequest.util._getBrowser();
+            if (browser == "ie" || browser == "ie7") {
+                //create a DOM from content string.
+                xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+                xmlDoc.loadXML(content);
+            } else {
+                //create a DOMParser to get DOM from content string.
+                var xmlParser = new DOMParser();
+                xmlDoc = xmlParser.parseFromString(content, "text/xml");
+            }
+
+            // If the payload is to be URL encoded, other options have to be examined.
+            if (options[HTTPInputSerialization] == "application/x-www-form-urlencoded") {
+
+                // If templates are specified and a valid payload is available, process.
+                if (options[HTTPLocation] != null && xmlDoc != null && xmlDoc.hasChildNodes()) {
+                    // Ideally .documentElement should be used instead of .firstChild, but this does not work.
+                    var rootNode = xmlDoc.firstChild;
+                    resultValues["url"] = options[HTTPLocation];
+
+                    // Process payload, distributing content across the URL and body as specified.
+                    resultValues = WSRequest.util._processNode(options, resultValues, rootNode, paramSeparator);
+
+                    // Globally replace any remaining template tags with empty strings.
+                    var allTemplateRegex = new RegExp("\{.*\}", "ig");
+                    resultValues["url"] = resultValues["url"].replace(allTemplateRegex, "");
+
+                    // Append processed HTTPLocation value to URL.
+                    resultValues["url"] = WSRequest.util._joinUrlToLocation(url, resultValues["url"]);
+                }
+            } else if (options[HTTPInputSerialization] == "application/xml") {
+                // Sending the XML in the request body.
+                resultValues["body"] += content;
+            } else if (options[HTTPInputSerialization] == "multipart/form-data") {
+                // Just throw an exception for now - will try to use browser features in a later release.
+                throw new Error("Unsupported serialization option.");
+            }
+        }
+        return resultValues;
     },
+
+/**
+ * @description Traverse the DOM tree below a given node, retreiving the content of each node and appending it to the
+ *  URL or the body of the request based on the options specified.
+ * @method _processNode
+ * @private
+ * @static
+ * @param {Array} options Options given by user.
+ * @param {Array} resultValues HTTP Location content and request body.
+ * @param {XML} node SOAP payload as an XML object.
+ * @param {string} paramSeparator Separator character for URI parameters.
+ * @return {array} Containing the processed HTTP Location content and request body.
+ */
+    _processNode : function(options, resultValues, node, paramSeparator) {
+        var queryStringSep = '?';
+        var HTTPLocationIgnoreUncited = "HTTPLocationIgnoreUncited";
+        var HTTPMethod = "HTTPMethod";
+
+        // Traverse the XML and add the contents of each node to the URL or body.
+        do {
+
+            // Recurse if node has children.
+            if (node.hasChildNodes())
+            {
+                resultValues = WSRequest.util._processNode(options, resultValues, node.firstChild, paramSeparator);
+            }
+
+            // Check for availability of node name and data before processing.
+            if (node.nodeValue != null) {
+                var tokenName = WSRequest.util._nameForValue(node);
+
+                // Create a regex to look for the token.
+                var templateRegex = new RegExp("\{" + tokenName + "\}", "i");
+                var unencTmpltRegex = new RegExp("\{!" + tokenName + "\}", "i");
+                var tokenLocn;
+
+                // If the token is in the URL - swap tokens with values.
+                if ((tokenLocn = resultValues["url"].search(templateRegex)) != -1) {
+                    // Replace the token with the URL encoded node value.
+                    var isQuery = resultValues["url"].substring(0, tokenLocn).indexOf('?') != -1;
+                    resultValues["url"] = resultValues["url"].replace(templateRegex,
+                            WSRequest.util._encodeString(node.nodeValue, isQuery));
+                } else if (resultValues["url"].search(unencTmpltRegex) != -1) {
+                    // Replace the token with the node value, witout encoding.
+                    resultValues["url"] = resultValues["url"].replace(templateRegex, node.nodeValue);
+                } else {
+                    var parameter = "";
+
+                    // If the node has a list, create a bunch of name/value pairs, otherwise a single pair.
+                    var typeVal = node.parentNode.attributes[0].nodeValue;
+                    if (typeVal == "xsd:list") {
+                        var valueList = new Array();
+                        valueList = node.nodeValue.split(' ');
+                        for (var valueNum = 0; valueNum < valueList.length; valueNum++) {
+                            parameter = parameter + tokenName + "=" + WSRequest.util._encodeString(valueList[valueNum],
+                                    true);
+
+                            // Add the parameter separator after each list value except the last.
+                            if (valueNum < (valueList.length - 1)) {
+                                parameter += paramSeparator;
+                            }
+                        }
+                    } else {
+                        parameter = tokenName + "=" + WSRequest.util._encodeString(node.nodeValue, true);
+                    }
+
+                    // If ignore uncited option has been set, append parameter to URL else to the body.
+                    if (options[HTTPLocationIgnoreUncited] != null && options[HTTPLocationIgnoreUncited] == false) {
+
+                        // If he URL does not contain ? add it and then the parameter.
+                        if (resultValues["url"].indexOf(queryStringSep) == -1) {
+                            resultValues["url"] = resultValues["url"] + queryStringSep + parameter;
+                        } else {
+                            // ...otherwise just append the uncited value.
+                            resultValues["url"] = resultValues["url"] + paramSeparator + parameter;
+                        }
+                    } else {
+                        // Add to body if the request type allows it.
+                        if (options[HTTPMethod] == "POST" || options[HTTPMethod] == "PUT") {
+                            // Assign or append additional parameters.
+                            if (resultValues["body"] == "") {
+                                // Just adding the content - may need to be prefixed with request info.
+                                resultValues["body"] = parameter;
+                            } else {
+                                resultValues["body"] = resultValues["body"] + paramSeparator + parameter;
+                            }
+                        }
+                    }
+                }
+            }
+        } while (node = node.nextSibling)
+
+        return resultValues;
+    }
+    ,
 
 /**
  * @description Build soap message using given parameters.
@@ -473,9 +627,9 @@ WSRequest.util = {
     _buildSOAPEnvelope : function(soapVer, options, url, content) {
         if (soapVer == 1.1)
             ns = "http://schemas.xmlsoap.org/soap/envelope/";
-        else 
+        else
             ns = "http://www.w3.org/2003/05/soap-envelope";
-        
+
         var headers = "";
 
         // addressing version/namespace
@@ -493,7 +647,7 @@ WSRequest.util = {
             wsaNsDecl = ' xmlns:wsa="' + wsaNs + '"';
             headers = this._buildWSAHeaders(standardversion, options, url);
         }
-        
+
         request = '<?xml version="1.0" encoding="UTF-8"?>\n' +
                   '<s:Envelope xmlns:s="' + ns + '"' +
                   wsaNsDecl + '>\n' +
@@ -501,7 +655,8 @@ WSRequest.util = {
                   '<s:Body>' + content + '</s:Body>\n' +
                   '</s:Envelope>';
         return request;
-    },
+    }
+    ,
 
 /**
  * @description Build WS-Addressing headers using given parameters.
@@ -516,7 +671,7 @@ WSRequest.util = {
     _buildWSAHeaders : function(standardversion, options, address) {
         if (options['action'] == null)
             throw("'Action' option must be specified when WS-Addressing is engaged.");
-        
+
         // wsa:To (required)
         var headers = "<wsa:To>" + address + "</wsa:To>\n";
 
@@ -524,7 +679,7 @@ WSRequest.util = {
         // Note: reference parameters and metadata aren't supported.
         if (options['from'] != null)
             headers += "<wsa:From><wsa:Address>" + options['From'] + "</wsa:Address></wsa:From>\n";
-        
+
         // wsa:ReplyTo (optional)
         // Note: reference parameters and metadata aren't supported.
         // Note: No way to specify that wsa:ReplyTo should be omitted (e.g., only in-out MEPs are supported).
@@ -533,14 +688,14 @@ WSRequest.util = {
         } else {
             // Note: although wsa:ReplyTo is optional on in-out MEPs in the standard version, we put it in
             //  explicitly for convenience.
-            headers += "<wsa:ReplyTo><wsa:Address>" + 
-            ( standardversion ? 
-                "http://www.w3.org/2005/08/addressing/anonymous" : 
-                "http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous"
-            ) + 
-            "</wsa:Address></wsa:ReplyTo>\n";
+            headers += "<wsa:ReplyTo><wsa:Address>" +
+                       ( standardversion ?
+                         "http://www.w3.org/2005/08/addressing/anonymous" :
+                         "http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous"
+                               ) +
+                       "</wsa:Address></wsa:ReplyTo>\n";
         }
-        
+
         // wsa:MessageID (required if a response is expected, e.g. wsa:ReplyTo is specified, which is always for us.)
         // If user doesn't supply an identifier, we'll make one up.
         if (options['messageid'] != null) {
@@ -548,7 +703,7 @@ WSRequest.util = {
         } else {
             // coin a unique identifier based on the time (in milliseconds) and a 10-digit random number.
             now = (new Date()).valueOf();
-            randomToken = Math.floor(Math.random()*10000000000);
+            randomToken = Math.floor(Math.random() * 10000000000);
             id = "http://identifiers.wso2.com/messageid/" + now + "/" + randomToken;
         }
         headers += "<wsa:MessageID>" + id + "</wsa:MessageID>\n";
@@ -560,9 +715,10 @@ WSRequest.util = {
 
         // wsa:Action (required)
         headers += "<wsa:Action>" + options['action'] + "</wsa:Action>\n"
-        
+
         return headers;
-    },
+    }
+    ,
 
     _getRealScope : function(fn) {
         var scope = window;
@@ -570,15 +726,17 @@ WSRequest.util = {
         return function() {
             return fn.apply(scope, arguments);
         }
-    },
+    }
+    ,
 
     _bind : function(fn, obj) {
         fn._cscope = obj;
         return this._getRealScope(fn);
 
-    },
-    
-    // workaround for the browser-specific differences in getElementsByTagName
+    }
+    ,
+
+// workaround for the browser-specific differences in getElementsByTagName
     _firstElement : function (node, namespace, localName) {
         if (node == null) return null;
         var browser = WSRequest.util._getBrowser();
@@ -593,14 +751,102 @@ WSRequest.util = {
             // Some Firefox DOMs recognize namespaces ...
             el = node.getElementsByTagNameNS(namespace, localName)[0];
             if (el == undefined)
-                // ... and some don't.
+            // ... and some don't.
                 el = node.getElementsByTagName(localName)[0];
         }
         return el;
     }
-    
-    
-};
+    ,
+
+// Returns the name of a given DOM text node, managing browser issues.
+    _nameForValue : function(node) {
+        var browser = WSRequest.util._getBrowser();
+        var nodeNameVal;
+
+        // IE localName property does not work, so extract from node name.
+        if (browser == "ie" || browser == "ie7") {
+            var fullName = WSRequest.util._isEmpty(node.nodeName) ? node.parentNode.nodeName : node.nodeName;
+            nodeNameVal = fullName.substring(fullName.indexOf(":") + 1, fullName.length);
+        } else {
+            nodeNameVal = WSRequest.util._isEmpty(node.localName) ? node.parentNode.localName : node.localName;
+        }
+        return nodeNameVal;
+    }
+    ,
+
+// Returns true if string value is null or empty.
+    _isEmpty : function(value) {
+        // Regex for determining if a given string is empty.
+        var emptyRegEx = /^[\s]*$/;
+
+        // Short circuit if null, otherwise check for empty.
+        return (value == null || value == "#text" || emptyRegEx.test(value));
+    }
+    ,
+
+/**
+ * @description Appends the template string to the URI, ensuring that the two are separated by a ? or a /.
+ * @method _joinUrlToLocation
+ * @private
+ * @static
+ * @param {string} endpointUri Base URI.
+ * @param {string} templateString Processed contents of the HTTPLocation option.
+ * @return string URI with the template string appended.
+ */
+    _joinUrlToLocation : function(endpointUri, templateString) {
+        var endWithFwdSlash = new RegExp("/$");
+        var startsWithFwdSlash = new RegExp("^/");
+
+        if (templateString.indexOf('?') == 0) {
+            endpointUri += templateString;
+        } else if (endpointUri.search(endWithFwdSlash) != -1) {
+            if (templateString.search(startsWithFwdSlash) != -1) {
+                endpointUri += templateString.substring(1, templateString.length);
+            } else {
+                endpointUri += templateString;
+            }
+        } else {
+            if (templateString.search(startsWithFwdSlash) != -1) {
+                endpointUri += templateString;
+            } else {
+                endpointUri = endpointUri + "/" + templateString;
+            }
+        }
+        return endpointUri;
+    }
+    ,
+
+/**
+ * @description Encodes a given string in either path or query parameter format.
+ * @method _encodeString
+ * @private
+ * @static
+ * @param {string} srcString String to be encoded.
+ * @param {boolean} queryParm Indicates that the string is a query parameter and not a part of the path.
+ * @return string URL encoded string.
+ */
+    _encodeString : function (srcString, queryParm) {
+        var legalInPath = "-._~!$'()*+,;=:@";
+        var legalInQuery = "-._~!$'()*+,;=:@/?";
+
+        var legal = queryParm ? legalInQuery : legalInPath;
+        var encodedString = "";
+        for (var i = 0; i < srcString.length; i++) {
+            var ch = srcString.charAt(i);
+            if ((ch >= 'a' && ch <= 'z')
+                    || (ch >= 'A' && ch <= 'Z')
+                    || (ch >= '0' && ch <= '9')
+                    || legal.indexOf(ch) > -1) {
+                encodedString += ch;
+            } else {
+                // Function encodeURIComponent will not encode ~!*()' but they are legal anyway.
+                encodedString += encodeURIComponent(ch);
+            }
+        }
+        return encodedString;
+    }
+}
+        ;
 
 
 
