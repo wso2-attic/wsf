@@ -29,6 +29,7 @@ rem Build Apache Rampart/C
 @copy /Y rampartc-1.0\include\*.h .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\include\
 @copy /Y rampartc-1.0\modules\rampart\mod_rampart.lib .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
 @copy /Y rampartc-1.0\modules\rampart\mod_rampart.dll .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
+@copy /Y rampartc-1.0\bin\samples\services\sec_echo\server_axis2.xml .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\axis2.xml
 @xcopy /E /I /Q /Y rampartc-1.0\bin\samples .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\bin\samples\rampart
 @xcopy /E /I /Q /Y .\..\samples .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\samples\rampart
 @xcopy /E /I /Q /Y rampartc-1.0\bin\samples\services\sec_echo .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\services\sec_echo
