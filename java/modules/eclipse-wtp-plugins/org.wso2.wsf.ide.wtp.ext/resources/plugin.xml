@@ -104,7 +104,7 @@
             </action>
             <action id="org.wso2.wsf.ide.wtp.ext.server.tools.dumpaar"
                 label="Dump AAR" 
-                icon="icons/test.gif" 
+                icon="icons/dump_aar.gif" 
                 tooltip="Dump WSAS Archive"
                 toolbarPath="Normal/additions"
                 helpContextId="org.wso2.wsf.ide.wtp.ext.server.tools.dumpaar.help"
@@ -156,7 +156,7 @@
             </action>
             <action
                 id="org.wso2.wsf.ide.wtp.ext.tools.menu.dumpaar"
-                label="Dump WSAS Archive" icon="icons/test.gif"
+                label="Dump WSAS Archive" icon="icons/dump_aar.gif"
                 tooltip="Dump WSAS Archive"
                 menubarPath="org.wso2.wsf.ide.wtp.ext.server.tools.menu.topLevelMenu/WSASToolsGroup"
                 class="org.wso2.wsf.ide.wtp.ext.dumpaar.delegate.DumpAARDelegate">
@@ -200,7 +200,7 @@
     
     <extension point="org.eclipse.ui.newWizards">
         <category name="WSAS Wizards" id="WSAS_Wizards"></category>
-        <wizard name="WSAS Dump Service Archiver" icon="icons/test.gif"
+        <wizard name="WSAS Dump Service Archiver" icon="icons/dump_aar.gif"
             category="WSAS_Wizards"
             class="org.wso2.wsf.ide.wtp.ext.dumpaar.WSASDumpArchiverWizard"
             id="org.wso2.wsf.ide.wtp.ext.dumpaar.dumpArchiverWizard">
