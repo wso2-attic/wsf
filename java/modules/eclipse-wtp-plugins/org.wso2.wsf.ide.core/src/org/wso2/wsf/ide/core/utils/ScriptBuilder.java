@@ -18,6 +18,8 @@ package org.wso2.wsf.ide.core.utils;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -55,8 +57,8 @@ public class ScriptBuilder {
      * @param outStream
      * @param xslStream
      */
-    public void parseXMLFile(FileInputStream inStream, FileOutputStream outStream, 
-    		FileInputStream xslStream) {
+    public void parseXMLFile(InputStream inStream, OutputStream outStream, 
+    		InputStream xslStream) {
         try {
             // Create transformer factory
             TransformerFactory factory = TransformerFactory.newInstance();
