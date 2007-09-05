@@ -64,7 +64,8 @@ public class WSASDumpAARSelectionPage extends AbstractDumpAARWizardPage{
 		serviceSelectionCombo.setLayoutData(gd);
 		fillSrviceSelectionCombo();
 		serviceSelectionCombo.select(0);
-		setSelectedService(serviceSelectionCombo.getItem(0));
+		setSelectedService((serviceSelectionCombo.getItemCount()!=0)?
+				serviceSelectionCombo.getItem(0):null);
 		serviceSelectionCombo.addSelectionListener(new SelectionListener(){
 			public void widgetSelected(SelectionEvent e) {
 				handleModify(serviceSelectionCombo.getText());
