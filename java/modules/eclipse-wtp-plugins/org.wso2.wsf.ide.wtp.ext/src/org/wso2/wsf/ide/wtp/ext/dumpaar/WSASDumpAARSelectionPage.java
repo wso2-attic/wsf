@@ -25,6 +25,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.wso2.wsf.ide.core.utils.FileUtils;
@@ -34,6 +35,7 @@ public class WSASDumpAARSelectionPage extends AbstractDumpAARWizardPage{
 	
     private Combo serviceSelectionCombo;
     private String selectedService;
+    private Button antBuildCreationCheck;
     IPath wsasRepoPath;
    
     public WSASDumpAARSelectionPage(){
@@ -52,12 +54,12 @@ public class WSASDumpAARSelectionPage extends AbstractDumpAARWizardPage{
     public void createControl(Composite parent) {
         Composite container = new Composite(parent, SWT.NULL);
         GridLayout layout = new GridLayout();
-        layout.numColumns=3;
+        layout.numColumns=1;
         layout.verticalSpacing = 9;
         
         container.setLayout(layout);
         GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		
+        
 		serviceSelectionCombo = new Combo(container,SWT.NONE | SWT.READ_ONLY);
 		serviceSelectionCombo.setLayoutData(gd);
 		fillSrviceSelectionCombo();
@@ -71,6 +73,16 @@ public class WSASDumpAARSelectionPage extends AbstractDumpAARWizardPage{
 			}
 		});
 		
+		antBuildCreationCheck = new Button(container,SWT.CHECK);
+		antBuildCreationCheck.setLayoutData(gd);
+		antBuildCreationCheck.setText(WSASDumpAARPlugin.getResourceString("page1.build.check"));
+		antBuildCreationCheck.setSelection(true);
+		antBuildCreationCheck.addSelectionListener(new SelectionListener(){
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+			public void widgetSelected(SelectionEvent e) {
+			}
+		});
 		setControl(container);
 		
 		//call the handle modify method if the settings are restored
@@ -119,6 +131,10 @@ public class WSASDumpAARSelectionPage extends AbstractDumpAARWizardPage{
 	
 	public IPath getWSASRepoPath() {
 		return wsasRepoPath;
+	}
+	
+	public boolean getBuildCheckBoxSelection() {
+		return antBuildCreationCheck.getSelection();
 	}
 
 }
