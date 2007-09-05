@@ -23,6 +23,7 @@ import java.io.InputStream;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
@@ -163,6 +164,9 @@ public class WSASDumpArchiverWizard extends Wizard implements INewWizard{
 			}
 	    			
 			//Print the resulting message from a popup dialog 
+			MessageDialog.openInformation(this.getShell(), 
+					WSASDumpAARPlugin.getResourceString("page1.name"),
+					WSASDumpAARPlugin.getResourceString("page1.success"));
 		} 
 		
     	return true;
