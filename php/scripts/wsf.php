@@ -21,11 +21,8 @@ define('WSF_VERSION', '1.0.0');
 function ws_request($payload, $options = array(NULL))
 {
     $payloadString = $payload;
-    if ($payload instanceof SimpleXMLElement)
-    {
-        $payloadString = $payload->asXML();
-    }
-    else if ($payload instanceof domDocument)
+    
+    if ($payload instanceof domDocument)
     {
         $payloadString = $payload->saveXML();
     }
@@ -54,11 +51,8 @@ function ws_request($payload, $options = array(NULL))
 function ws_send($payload, $options = array(NULL))
 {
     $payloadString = $payload;
-    if ($payload instanceof SimpleXMLElement)
-    {
-        $payloadString = $payload->asXML();
-    }
-    else if ($payload instanceof domDocument)
+    
+    if ($payload instanceof domDocument)
     {
         $payloadString = $payload->saveXML();
     }
