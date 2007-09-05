@@ -32,7 +32,7 @@ if test "$PHP_WSF" = "yes"; then
 
   	PHP_SUBST(WSF_SHARED_LIBADD)
 
-	PHP_NEW_EXTENSION(wsf, wsf.c wsf_xml_msg_recv.c wsf_util.c wsf_stream.c wsf_worker.c wsf_out_transport_info.c wsf_client.c  php_encoding.c php_sdl.c php_schema.c php_xml.c wsf_soap.c wsf_policy.c , $ext_shared)
+	PHP_NEW_EXTENSION(wsf, wsf.c wsf_xml_msg_recv.c wsf_util.c wsf_stream.c wsf_worker.c wsf_out_transport_info.c wsf_client.c  php_encoding.c php_sdl.c php_http.c php_schema.c php_xml.c wsf_soap.c wsf_policy.c , $ext_shared)
 	
 	PHP_ADD_EXTENSION_DEP(wsf, libxml)
 
