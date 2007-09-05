@@ -38,6 +38,8 @@
 #include "wsf_client.h"
 #include "wsf_policy.h"
 #include "wsf_xml_msg_recv.h"
+#include "wsf_version.h"
+#include "php_version.h"
 #include <php_main.h>
 #include "wsf_soap.h"
 
@@ -249,7 +251,20 @@ ws_get_xml_node(zval * node)
     }
     return nodep;
 }
-/* }}} end ws_get_xml_node */ 
+/* }}} end ws_get_xml_node */
+
+/* {{{ proto wsf_log_version_string 
+ */
+void wsf_log_version_string(axutil_env_t *env)
+{
+    if(!env || !env->log)
+        return;
+    
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "wsf version - %s " , WSF_VERSION_STRING);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "php version - %s " , PHP_VERSION);
+
+}
+/* }}} */
     
 /* {{{ wsf_module_entry */ 
 zend_module_entry wsf_module_entry = {
@@ -304,7 +319,7 @@ STD_PHP_INI_ENTRY ("wsf.home", NULL, PHP_INI_ALL,
         OnUpdateString, home, zend_wsf_globals, wsf_globals)
 STD_PHP_INI_ENTRY ("wsf.log_path", "/tmp", PHP_INI_ALL, 
         OnUpdateString, log_path, zend_wsf_globals,wsf_globals)
-STD_PHP_INI_ENTRY ("wsf.log_level", "1", PHP_INI_ALL, 
+STD_PHP_INI_ENTRY ("wsf.log_level", "4", PHP_INI_ALL, 
         OnUpdateLong, log_level, zend_wsf_globals, wsf_globals)
 STD_PHP_INI_ENTRY ("wsf.enable_trace", "1", PHP_INI_ALL, 
         OnUpdateBool, enable_trace, zend_wsf_globals, wsf_globals)  
@@ -436,7 +451,10 @@ PHP_MINIT_FUNCTION (wsf)
     le_service = register_list_destructors (delete_service, NULL);
     
     axiom_xml_reader_init ();
-    
+
+    wsf_log_version_string(ws_env_svr);
+    wsf_log_version_string(env);
+
     return SUCCESS;
 }
 
