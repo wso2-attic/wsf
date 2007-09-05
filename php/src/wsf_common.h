@@ -123,8 +123,8 @@ typedef enum ws_input_types
 #define WS_POLICY_NAME 			"policy"
 #define WS_SECURITY_TOKEN 		"securityToken"
 
-#define WS_PROXY_HOST           "proxy_host"
-#define WS_PROXY_PORT           "proxy_port"
+#define WS_PROXY_HOST           "proxyHost"
+#define WS_PROXY_PORT           "proxyPort"
 /** end options */
 
 #define WS_MSG_PAYLOAD_STR 		"str"

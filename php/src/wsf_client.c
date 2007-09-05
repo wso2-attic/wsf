@@ -1383,6 +1383,17 @@ wsf_client_enable_proxy (
             (void **) &tmp) == SUCCESS) {
         proxy_port = Z_STRVAL_PP (tmp);
     }
+   /** bellow are deprecated options, should be removed in next version */
+    if (!proxy_host && !proxy_port) {
+        if (zend_hash_find (ht, "proxy_host", sizeof ("proxy_host"),
+                (void **) &tmp) == SUCCESS) {
+            proxy_host = Z_STRVAL_PP (tmp);
+        }
+        if (zend_hash_find (ht, "proxy_port", sizeof ("proxy_port"),
+                (void **) &tmp) == SUCCESS) {
+            proxy_port = Z_STRVAL_PP (tmp);
+        }
+    }
 
     if (proxy_host && proxy_port) {
         axis2_svc_client_set_proxy (svc_client, env, proxy_host, proxy_port);
