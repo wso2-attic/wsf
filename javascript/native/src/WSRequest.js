@@ -94,7 +94,7 @@ WSRequest.prototype.send = function(payload) {
 
         // formulate the message envelope
         if (this._soapVer == 0) {
-            processed = WSRequest.util._buildHTTPpayload(this._optionSet, this._uri, content);
+            var processed = WSRequest.util._buildHTTPpayload(this._optionSet, this._uri, content);
             req = processed["body"];
             this._uri = processed["url"];
         } else {
@@ -121,7 +121,11 @@ WSRequest.prototype.send = function(payload) {
             if (this._optionSet["HTTPInputSerialization"] != null) {
                 contentType = this._optionSet["HTTPInputSerialization"]
             } else {
-                contentType = "application/xml";
+                if (method == "GET" | method == "DELETE") {
+                    contentType = "application/x-www-form-urlencoded";
+                } else {
+                    contentType = "application/xml";
+                }
             }
             this._xmlhttp.setRequestHeader("Content-Type", contentType);
             break;
@@ -461,18 +465,31 @@ WSRequest.util = {
         resultValues["url"] = "";
         resultValues["body"] = "";
         var paramSeparator = "&";
+        var inputSerialization;
 
         var HTTPQueryParameterSeparator = "HTTPQueryParameterSeparator";
         var HTTPInputSerialization = "HTTPInputSerialization";
         var HTTPLocation = "HTTPLocation";
+        var HTTPMethod = "HTTPMethod";
 
         // If a parameter separator has been identified, use it instead of the default &.
         if (options[HTTPQueryParameterSeparator] != null) {
             paramSeparator = options[HTTPQueryParameterSeparator];
         }
 
+        // If input serialization is not specified, default based on HTTP Method.
+        if (options[HTTPInputSerialization] == null) {
+            if (options[HTTPMethod] == "GET" | options[HTTPMethod] == "DELETE") {
+                inputSerialization = "application/x-www-form-urlencoded";
+            } else {
+                inputSerialization = "application/xml";
+            }
+        } else {
+            inputSerialization = options[HTTPInputSerialization];
+        }
+
         // If serialization options have been specified and the content has been provided, build the payload.
-        if (options[HTTPInputSerialization] != null && resultValues["url"] != null) {
+        if (resultValues["url"] != null) {
             //create new document from string
             var xmlDoc;
 
@@ -489,7 +506,7 @@ WSRequest.util = {
             }
 
             // If the payload is to be URL encoded, other options have to be examined.
-            if (options[HTTPInputSerialization] == "application/x-www-form-urlencoded") {
+            if (inputSerialization == "application/x-www-form-urlencoded") {
 
                 // If templates are specified and a valid payload is available, process.
                 if (options[HTTPLocation] != null && xmlDoc != null && xmlDoc.hasChildNodes()) {
@@ -507,10 +524,11 @@ WSRequest.util = {
                     // Append processed HTTPLocation value to URL.
                     resultValues["url"] = WSRequest.util._joinUrlToLocation(url, resultValues["url"]);
                 }
-            } else if (options[HTTPInputSerialization] == "application/xml") {
+            } else if (inputSerialization == "application/xml") {
                 // Sending the XML in the request body.
+                resultValues["url"] = url; 
                 resultValues["body"] += content;
-            } else if (options[HTTPInputSerialization] == "multipart/form-data") {
+            } else if (inputSerialization == "multipart/form-data") {
                 // Just throw an exception for now - will try to use browser features in a later release.
                 throw new Error("Unsupported serialization option.");
             }
