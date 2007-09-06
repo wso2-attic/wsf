@@ -461,6 +461,7 @@ WSRequest.util = {
  * @return {array} Containing the processed URL and request body.
  */
     _buildHTTPpayload : function(options, url, content) {
+        // Create array to hold request uri and body.
         var resultValues = new Array();
         resultValues["url"] = "";
         resultValues["body"] = "";
@@ -506,16 +507,17 @@ WSRequest.util = {
             }
 
             // If the payload is to be URL encoded, other options have to be examined.
-            if (inputSerialization == "application/x-www-form-urlencoded") {
+            if (inputSerialization == "application/x-www-form-urlencoded" || inputSerialization == "application/xml") {
 
-                // If templates are specified and a valid payload is available, process.
+                // If templates are specified and a valid payload is available, process, else just return original URI.
                 if (options[HTTPLocation] != null && xmlDoc != null && xmlDoc.hasChildNodes()) {
                     // Ideally .documentElement should be used instead of .firstChild, but this does not work.
                     var rootNode = xmlDoc.firstChild;
                     resultValues["url"] = options[HTTPLocation];
 
                     // Process payload, distributing content across the URL and body as specified.
-                    resultValues = WSRequest.util._processNode(options, resultValues, rootNode, paramSeparator);
+                    resultValues = WSRequest.util._processNode(options, resultValues, rootNode, paramSeparator,
+                            inputSerialization);
 
                     // Globally replace any remaining template tags with empty strings.
                     var allTemplateRegex = new RegExp("\{.*\}", "ig");
@@ -523,11 +525,14 @@ WSRequest.util = {
 
                     // Append processed HTTPLocation value to URL.
                     resultValues["url"] = WSRequest.util._joinUrlToLocation(url, resultValues["url"]);
+                } else {
+                    resultValues["url"] = url;
                 }
-            } else if (inputSerialization == "application/xml") {
+
                 // Sending the XML in the request body.
-                resultValues["url"] = url; 
-                resultValues["body"] += content;
+                if (inputSerialization == "application/xml") {
+                    resultValues["body"] = content;
+                }
             } else if (inputSerialization == "multipart/form-data") {
                 // Just throw an exception for now - will try to use browser features in a later release.
                 throw new Error("Unsupported serialization option.");
@@ -548,7 +553,7 @@ WSRequest.util = {
  * @param {string} paramSeparator Separator character for URI parameters.
  * @return {array} Containing the processed HTTP Location content and request body.
  */
-    _processNode : function(options, resultValues, node, paramSeparator) {
+    _processNode : function(options, resultValues, node, paramSeparator, inputSerialization) {
         var queryStringSep = '?';
         var HTTPLocationIgnoreUncited = "HTTPLocationIgnoreUncited";
         var HTTPMethod = "HTTPMethod";
@@ -559,7 +564,8 @@ WSRequest.util = {
             // Recurse if node has children.
             if (node.hasChildNodes())
             {
-                resultValues = WSRequest.util._processNode(options, resultValues, node.firstChild, paramSeparator);
+                resultValues = WSRequest.util._processNode(options, resultValues, node.firstChild, paramSeparator,
+                        inputSerialization);
             }
 
             // Check for availability of node name and data before processing.
@@ -612,11 +618,12 @@ WSRequest.util = {
                             resultValues["url"] = resultValues["url"] + paramSeparator + parameter;
                         }
                     } else {
-                        // Add to body if the request type allows it.
-                        if (options[HTTPMethod] == "POST" || options[HTTPMethod] == "PUT") {
+                        // Add to request body if the serialization option and request type allows it.
+                        if (inputSerialization == "application/x-www-form-urlencoded" && (options[HTTPMethod] == "POST"
+                                || options[HTTPMethod] == "PUT")) {
+                            
                             // Assign or append additional parameters.
                             if (resultValues["body"] == "") {
-                                // Just adding the content - may need to be prefixed with request info.
                                 resultValues["body"] = parameter;
                             } else {
                                 resultValues["body"] = resultValues["body"] + paramSeparator + parameter;
@@ -803,7 +810,9 @@ WSRequest.util = {
     ,
 
 /**
- * @description Appends the template string to the URI, ensuring that the two are separated by a ? or a /.
+ * @description Appends the template string to the URI, ensuring that the two are separated by a ? or a /. Performs a
+ * merge if the start of the template is the same as the end of the URI, which will resolve at joining until a 
+ * full resolution function can be developed.
  * @method _joinUrlToLocation
  * @private
  * @static
@@ -827,7 +836,17 @@ WSRequest.util = {
             if (templateString.search(startsWithFwdSlash) != -1) {
                 endpointUri += templateString;
             } else {
-                endpointUri = endpointUri + "/" + templateString;
+                // Extract beginning of HTTPLocation path segment.
+                var firstSegment = templateString.substring(0, templateString.indexOf('/'));
+                var endsWith = new RegExp("/" + firstSegment + "$");
+
+                // If the end of the URL matches the start of the HTTPLocation's path, merge strings, else append.
+                if (firstSegment != "" && firstSegment.indexOf('?') == -1 && endpointUri.search(endsWith) != -1) {
+                    endpointUri = endpointUri + templateString.substring(templateString.indexOf('/'),
+                            templateString.length);
+                } else {
+                    endpointUri = endpointUri + "/" + templateString;
+                }
             }
         }
         return endpointUri;
