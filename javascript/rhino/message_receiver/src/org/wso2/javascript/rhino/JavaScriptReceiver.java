@@ -294,7 +294,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             }
             throw new AxisFault("As this operation has multiple return values it should be " +
                     "returning an object rather then a javascript simple type. Object :" + name +
-                    " was not found in the avlue retruned");
+                    " was not found in the value retruned");
         }
         return false;
     }
