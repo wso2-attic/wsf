@@ -19,7 +19,15 @@ rem @call clean.bat
 
 @if exist wso2-wsf-php-bin-1.1.0-win32\wsf_c\modules\savan rmdir /S /Q wso2-wsf-php-bin-1.1.0-win32\wsf_c\modules\savan
 
-@if exist wso2-wsf-php-bin-1.1.0-win32\wsf_c\modules\sandesha2 rmdir /S /Q wso2-wsf-php-bin-1.1.0-win32\wsf_c\modules\sandesha2
+@if exist wso2-wsf-php-bin-1.1.0-win32\wsf_c\samples rmdir /S /Q wso2-wsf-php-bin-1.1.0-win32\wsf_c\samples
+
+@if exist wso2-wsf-php-bin-1.1.0-win32\wsf_c\ides rmdir /S /Q wso2-wsf-php-bin-1.1.0-win32\wsf_c\ides
+
+@if exist wso2-wsf-php-bin-1.1.0-win32\wsf_c\bin\samples rmdir /S /Q wso2-wsf-php-bin-1.1.0-win32\wsf_c\bin\samples
+
+@if exist wso2-wsf-php-bin-1.1.0-win32\wsf_c\bin\tools rmdir /S /Q wso2-wsf-php-bin-1.1.0-win32\wsf_c\bin\tools
+
+@if exist wso2-wsf-php-bin-1.1.0-win32\wsf_c\bin\docs rmdir /S /Q wso2-wsf-php-bin-1.1.0-win32\wsf_c\bin\docs
 
 @if exist wso2-wsf-php-bin-1.1.0-win32\wsf_c\modules\logging rmdir /S /Q wso2-wsf-php-bin-1.1.0-win32\wsf_c\modules\logging
 
