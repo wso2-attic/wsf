@@ -2,11 +2,11 @@
 
 @if exist sandesha2c\build\sandesha2 rmdir /S /Q sandesha2c\build\sandesha2
 
-@if exist rampartc\build\rampartc-0.90 rmdir /S /Q rampartc\build\rampartc-0.90
+@if exist rampartc\build\rampartc-1.0 rmdir /S /Q rampartc\build\rampartc-1.0
 
 @if exist savanc\build\savanc rmdir /S /Q savanc\build\savanc
 
-@if exist wso2-wsf-c-bin-1.0.1 rmdir /S /Q wso2-wsf-c-bin-1.0.1
+@if exist wso2-wsf-c-bin-1.1.0 rmdir /S /Q wso2-wsf-c-bin-1.1.0
 
 @if exist axis2c\build\win32\int.msvc rmdir /S /Q axis2c\build\win32\int.msvc
 
