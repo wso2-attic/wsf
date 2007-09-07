@@ -15,7 +15,7 @@
         option['useSOAP'] = false;
         option['HTTPMethod'] = "GET";
 		option["HTTPInputSerialization"] = "application/x-www-form-urlencoded";
-		option["HTTPLocation"] = "?method=youtube.videos.list_by_category_and_tag&dev_id={DeveloperId}&category_id={CategoryId}&tag={TagId}";
+		option["httpLocation"] = "?method=youtube.videos.list_by_category_and_tag&dev_id={DeveloperId}&category_id={CategoryId}&tag={TagId}";
 		option["HTTPLocationIgnoreUncited"] = false;
 		
         var devId = form1.utDevId.value;
@@ -30,7 +30,7 @@
         }
 
         var xmlDoc = new ActiveXObject("MSXML2.DOMDocument.4.0");
-        var reqNode = xmlDoc.createElement("ns1:doSpellingSuggestion");
+        var reqNode = xmlDoc.createElement("ns1:getVideoList");
 
         var attr1 = xmlDoc.createAttribute("xmlns:ns1");
         attr1.value = "urn:GoogleSearch";
