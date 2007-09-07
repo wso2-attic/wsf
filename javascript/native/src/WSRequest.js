@@ -470,7 +470,7 @@ WSRequest.util = {
 
         var HTTPQueryParameterSeparator = "HTTPQueryParameterSeparator";
         var HTTPInputSerialization = "HTTPInputSerialization";
-        var HTTPLocation = "HTTPLocation";
+        var HTTPLocation = "httpLocation";
         var HTTPMethod = "HTTPMethod";
 
         // If a parameter separator has been identified, use it instead of the default &.
@@ -590,8 +590,7 @@ WSRequest.util = {
                     var parameter = "";
 
                     // If the node has a list, create a bunch of name/value pairs, otherwise a single pair.
-                    var typeVal = node.parentNode.attributes[0].nodeValue;
-                    if (typeVal == "xsd:list") {
+                    if (WSRequest.util._attributesContain(node.parentNode, "xsd:list")) {
                         var valueList = new Array();
                         valueList = node.nodeValue.split(' ');
                         for (var valueNum = 0; valueNum < valueList.length; valueNum++) {
@@ -809,6 +808,23 @@ WSRequest.util = {
     }
     ,
 
+// Returns true if the attributes of the node contain a given value.
+    _attributesContain : function(node, value) {
+        var hasValue = false;
+
+        // If node has attributes...
+        if (node.attributes.length > 0) {
+            // ...cycle through them and check for the value.
+            for (var attNum = 0; attNum < node.attributes.length; attNum++) {
+                if (node.attributes[attNum].nodeValue == value) {
+                    hasValue = true;
+                    break;
+                }
+            }
+        }
+        return hasValue;
+    }
+    ,
 /**
  * @description Appends the template string to the URI, ensuring that the two are separated by a ? or a /. Performs a
  * merge if the start of the template is the same as the end of the URI, which will resolve at joining until a 
