@@ -23,14 +23,14 @@ XML;
 try {
     // Create message with request payload and options
     $reqMessage = new WSMessage($reqPayloadString,
-                         array("to" => "http://localhost/samples/security/username_token/username_token_service.php",
+                         array("to" => "http://localhost/samples/security/username_token/username_token_service_file.php",
                                "action" => "http://php.axis2.org/samples/echoString"));
    
     // Set up security options
-    $security_options = array("useUsernameToken" => TRUE );
-    $policy = new WSPolicy(array("security" => $security_options));
-    $security_token = new WSSecurityToken(array("user" => "Raigama",
-                                                "password" => "RaigamaPW",
+    $policy_xml = file_get_contents("policy.xml");
+    $policy = new WSPolicy($policy_xml);
+    $security_token = new WSSecurityToken(array("user" => "Alice",
+                                                "password" => "abcd!123",
                                                 "passwordType" => "Digest"));
     
     // Create client with options
