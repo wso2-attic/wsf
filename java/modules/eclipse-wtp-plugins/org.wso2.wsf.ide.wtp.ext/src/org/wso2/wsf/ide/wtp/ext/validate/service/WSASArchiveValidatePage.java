@@ -24,7 +24,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -75,21 +75,13 @@ public class WSASArchiveValidatePage extends AbstractArchiveValidateWizardPage{
         validateAARBrowseButton.setLayoutData(gd);
         validateAARBrowseButton.addSelectionListener( new SelectionAdapter(){
 			public void widgetSelected(SelectionEvent e){
+				setPathVisible(servicesXMlPathText,false);
+				setPathVisible(aarPathText,true);
 				handleBrowse(container, aarPathText);
 			}     
 		}); 
        
-        Button validateAARButton = new Button(aarGroup,SWT.NONE);
-        validateAARButton.setText("Validate");
-        gd = new GridData();
-        gd.horizontalSpan = 1;
-        validateAARButton.setLayoutData(gd);
-        validateAARButton.addSelectionListener( new SelectionAdapter(){
-			public void widgetSelected(SelectionEvent e){
-				//TODO Call validate Mechanism
-			}     
-		}); 
-        
+
         /////////////////////////////////////////////////////////////////////////////////
         
 	    Label separator = new Label( container, SWT.NONE);  // Leave some vertical space.
@@ -122,21 +114,13 @@ public class WSASArchiveValidatePage extends AbstractArchiveValidateWizardPage{
         validateServicesXmlBrowseButton.setLayoutData(gd);
         validateServicesXmlBrowseButton.addSelectionListener( new SelectionAdapter(){
 			public void widgetSelected(SelectionEvent e){
+				setPathVisible(servicesXMlPathText,true);
+				setPathVisible(aarPathText,false);
 				handleBrowse(container, servicesXMlPathText);
 			}     
 		}); 
         
-        Button validateServicesXmlButton = new Button(serviceXMLGroup,SWT.NONE);
-        validateServicesXmlButton.setText("Validate");
-        gd = new GridData();
-        gd.horizontalSpan = 1;
-        validateServicesXmlButton.setLayoutData(gd);
-        validateServicesXmlButton.addSelectionListener( new SelectionAdapter(){
-			public void widgetSelected(SelectionEvent e){
-				//TODO Call validate Mechanism
-			}     
-		}); 
-        
+        setPageComplete(false);
 		setControl(container);
 		
 		//call the handle modify method if the settings are restored
@@ -158,11 +142,35 @@ public class WSASArchiveValidatePage extends AbstractArchiveValidateWizardPage{
 	 * Pops up the file browse dialog box
 	 */
 	private void handleBrowse(Composite parent, Text pathText) {
-		DirectoryDialog fileDialog = new DirectoryDialog(parent.getShell());
+		
+		FileDialog fileDialog = new FileDialog(parent.getShell());
 		String fileName = fileDialog.open();
 		if (fileName != null) {
 			pathText.setText(fileName);
+			updateStatus(null);
 		}
+	}
+	
+	public void updateWizardPageStatus(String message){
+		updateStatus(message);
+	}
+
+	public String getServicesXMlPathText() {
+		return servicesXMlPathText.getText();
+	}
+
+	public String getAarPathText() {
+		return aarPathText.getText();
+	}
+	
+	/**
+	 * Toggle the path component visibility
+	 * @param pathComponemt
+	 * @param value
+	 */
+	public void setPathVisible(Text pathComponemt, boolean value){
+		pathComponemt.setEditable(value);
+		pathComponemt.setEnabled(value);
 	}
 
 }
