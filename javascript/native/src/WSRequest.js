@@ -470,7 +470,7 @@ WSRequest.util = {
 
         var HTTPQueryParameterSeparator = "HTTPQueryParameterSeparator";
         var HTTPInputSerialization = "HTTPInputSerialization";
-        var HTTPLocation = "httpLocation";
+        var HTTPLocation = "HTTPLocation";
         var HTTPMethod = "HTTPMethod";
 
         // If a parameter separator has been identified, use it instead of the default &.
