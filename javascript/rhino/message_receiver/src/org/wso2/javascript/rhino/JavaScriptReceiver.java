@@ -942,6 +942,9 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         // Get the OMNode inside the jsObjecting object
         if (jsObject instanceof XML) {
             element.addChild((((XML) jsObject).getAxiomFromXML()));
+            if (addTypeInfo) {
+                element.addAttribute("type", "xml", namespace);
+            }
         } else if (jsObject instanceof XMLList) {
             XMLList list = (XMLList) jsObject;
             OMNode[] omNodes = list.getAxiomFromXML();
