@@ -677,8 +677,12 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         if (Constants.XSD_ANYTYPE.equals(type)) {
             Context context = engine.getCx();
             OMElement element = omElement.getFirstElement();
+            if (element != null) {
             Object[] objects = { element };
             return context.newObject(engine, "XML", objects);
+            } else {
+                throw new AxisFault("The content of element " + omElement.getLocalName() + " cannot be null");
+            }
         }
         String value = omElement.getText();
         if (value == null) {
