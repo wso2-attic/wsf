@@ -916,7 +916,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             OMElement omElement = element.getFirstElement();
             if (omElement == null) {
                 String elementText = element.getText();
-                if (elementText == null || elementText == "") {
+                if (elementText == null || "".equals(elementText)) {
                     return null;
                 }
                 return element;
@@ -1040,7 +1040,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                         element.addChild(paramElement);
                     }
                 }
-            }
+            }                                       
         }
         return element;
     }

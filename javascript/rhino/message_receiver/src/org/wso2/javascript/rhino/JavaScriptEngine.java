@@ -217,4 +217,12 @@ public class JavaScriptEngine extends ImporterTopLevel {
     public boolean isJson() {
         return json;
     }
+
+    public String getScriptName() {
+        return scriptName;
+    }
+
+    public void setScriptName(String scriptName) {
+        this.scriptName = scriptName;
+    }
 }
