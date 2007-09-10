@@ -33,5 +33,17 @@ public class WSASMessageConstant {
     public static String INFO_WSAS_START_FAIL = "Error Occured while starting WSO2 Web Services Application Server instance";
     public static String INFO_WSAS_STOP_SUCCESS = "WSO2 Web Services Application Server instance stoped successfully";
     public static String INFO_WSAS_STOP_FAIL = "Error Occured while stopping WSO2 Web Services Application Server instance";
+    
+    //EndPoints of Services
+    public static String host = "http://localhost:";
+    public static String port = "9762";
+    
+    public static String generalServiceEndPoint = host+port+"/services/GeneralServices";
+    public static String validateServiceEndpoint = host+port+"/services/Service";
+    public static String validateModuleEndpoint = host+port+"/services/Module";
+	
+    public static String serviceXMLEndOperation = "validateServicesXML";
+    public static String moduleXMLEndOperation = "validateModuleXML";
+    public static String archiveEndOperation = "validate";
 
 }
