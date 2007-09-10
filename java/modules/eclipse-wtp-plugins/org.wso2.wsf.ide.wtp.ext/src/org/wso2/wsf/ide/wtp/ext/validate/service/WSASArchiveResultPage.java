@@ -25,14 +25,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
 
 public class WSASArchiveResultPage extends AbstractArchiveValidateWizardPage{
 	
 	Browser browser;
 	Button browserPopUpCheck;
-	boolean correctURLSet;
-	URL browserURL;
 	
     public WSASArchiveResultPage(){
         super("page2");
@@ -52,56 +49,57 @@ public class WSASArchiveResultPage extends AbstractArchiveValidateWizardPage{
         GridLayout lo = new GridLayout(1,true);
         container.setLayout(lo);
         
-        Group resultsGroup = new Group(container, SWT.NONE);
-        resultsGroup.setText("Validation Results : ");
         GridLayout layout = new GridLayout();
         layout.numColumns = 14;
-        resultsGroup.setLayout(layout);
         GridData gd = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
-        resultsGroup.setLayoutData(gd);
-        
-        Browser browser = new Browser(resultsGroup, SWT.NONE);
-        gd = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
-        gd.horizontalSpan = 14;
-        browser.setLayoutData(gd);
         
         browserPopUpCheck = new Button(container,SWT.CHECK);
 		browserPopUpCheck.setLayoutData(gd);
 		browserPopUpCheck.setText(WSASArchiveValidatePlugin.getResourceString("page2.browser.check"));
-		browserPopUpCheck.setSelection(true);
+		browserPopUpCheck.setSelection(false);
 		browserPopUpCheck.addSelectionListener(new SelectionListener(){
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 			public void widgetSelected(SelectionEvent e) {
 			}
 		});
+		
+        gd = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
+        gd.horizontalSpan = 14;
+        gd.verticalSpan=1;
+        browserPopUpCheck.setLayoutData(gd);
+        
+        browser = new Browser(container, SWT.BORDER);
+        gd = new GridData(GridData.FILL_BOTH | GridData.VERTICAL_ALIGN_FILL);
+        gd.horizontalSpan = 14;
+        gd.verticalSpan=3;
+        browser.setLayoutData(gd);
         
         setPageComplete(false);
         setControl(container);
 		
         fillBrowserWithResults();
-		
     }
     
     
 	public boolean getWizardComplete() {
-		return false;
+		return true;
 	}
 	
-	private void fillBrowserWithResults(){
-		if(correctURLSet){
-			browser.setUrl(browserURL.toString());
-			updateStatus(null);
-		}else{
-			updateStatus("Error Occured Displaying Results !!");
+	public boolean getBrowserPopUpCheck(){
+		return browserPopUpCheck.getSelection();
+	}
+	
+	public void fillBrowserWithResults(){
+		if(WSASArchiveValidatePlugin.getDefault().isGoAheadValidation()){
+				URL url = WSASArchiveValidatePlugin.getDefault().getValidateURL();
+				if(browser.setUrl(url.toString())){
+					updateStatus(null);
+				}else{
+					updateStatus("Error Occured Displaying Results !!");
+				}
+				WSASArchiveValidatePlugin.getDefault().setGoAheadValidation(false);
 		}
 	}
-	
-	public void setBrowserURL(URL url){
-		this.browserURL = url;
-		correctURLSet = true;
-	}
-	
-	
 	
 }
