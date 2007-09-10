@@ -261,7 +261,7 @@
                 <dependency>
                         <groupId>org.apache.axis2</groupId>
                         <artifactId>axis2-kernel</artifactId>
-                        <version>${version}</version>
+                        <version>${axis2.version}</version>
                 </dependency>
 		<dependency>
 			<groupId>${stax.impl.groupid}</groupId>
