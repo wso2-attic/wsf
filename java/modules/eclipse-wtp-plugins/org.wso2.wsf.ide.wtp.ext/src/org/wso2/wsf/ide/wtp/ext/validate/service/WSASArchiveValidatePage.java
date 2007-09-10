@@ -15,6 +15,8 @@
  */
 package org.wso2.wsf.ide.wtp.ext.validate.service;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -28,11 +30,14 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.wso2.wsf.ide.wtp.ext.validate.service.util.WSASUoloadServiceRequestUtil;
 
 public class WSASArchiveValidatePage extends AbstractArchiveValidateWizardPage{
 	
 	Text servicesXMlPathText;
 	Text aarPathText;
+	String fileType;
+	
     public WSASArchiveValidatePage(){
         super("page1");
     }
@@ -80,7 +85,6 @@ public class WSASArchiveValidatePage extends AbstractArchiveValidateWizardPage{
 				handleBrowse(container, aarPathText);
 			}     
 		}); 
-       
 
         /////////////////////////////////////////////////////////////////////////////////
         
@@ -142,12 +146,24 @@ public class WSASArchiveValidatePage extends AbstractArchiveValidateWizardPage{
 	 * Pops up the file browse dialog box
 	 */
 	private void handleBrowse(Composite parent, Text pathText) {
-		
+		WSASUoloadServiceRequestUtil uploadUtil = WSASUoloadServiceRequestUtil.getInstance();
+		uploadUtil.reset();
+		uploadUtil.setService(true);
 		FileDialog fileDialog = new FileDialog(parent.getShell());
 		String fileName = fileDialog.open();
 		if (fileName != null) {
 			pathText.setText(fileName);
 			updateStatus(null);
+			WSASArchiveValidatePlugin.getDefault().setGoAheadValidation(true);
+			IPath filePath = new Path(fileName);
+			setFileType(filePath.getFileExtension());
+			if (fileName.endsWith(".zip")||fileName.endsWith(".jar")||fileName.endsWith(".aar")) {
+				uploadUtil.setArchive(true);
+			}else if(fileName.endsWith(".xml")){
+				uploadUtil.setXml(true);
+			}else{
+				updateStatus("File Type Invalid !!, Valid Types {aar,zip,jar,xml'}");
+			}
 		}
 	}
 	
@@ -163,6 +179,14 @@ public class WSASArchiveValidatePage extends AbstractArchiveValidateWizardPage{
 		return aarPathText.getText();
 	}
 	
+	public boolean getServicesXMlPathEnabled() {
+		return servicesXMlPathText.getEnabled();
+	}
+
+	public boolean getAarPathEnabled() {
+		return aarPathText.getEnabled();
+	}
+	
 	/**
 	 * Toggle the path component visibility
 	 * @param pathComponemt
@@ -171,6 +195,14 @@ public class WSASArchiveValidatePage extends AbstractArchiveValidateWizardPage{
 	public void setPathVisible(Text pathComponemt, boolean value){
 		pathComponemt.setEditable(value);
 		pathComponemt.setEnabled(value);
+	}
+
+	public String getFileType() {
+		return fileType;
+	}
+
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
 	}
 
 }
