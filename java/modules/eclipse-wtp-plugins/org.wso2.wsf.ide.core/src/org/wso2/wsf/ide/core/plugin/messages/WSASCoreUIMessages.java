@@ -101,6 +101,7 @@ public final class WSASCoreUIMessages extends NLS {
 	public static String PROPERTY_KEY_PATH;
 	public static String PROPERTY_KEY_STATUS;
 	public static String LOCAL_SERVER_PORT;
+	public static String LOCAL_SERVER_PORT_HTTPS;
 	public static String SERVICES;
 	public static String WSAS_RUNTIME_LOCATION;
 	public static String WSAS_RUNTIME_PREFERENCES;
