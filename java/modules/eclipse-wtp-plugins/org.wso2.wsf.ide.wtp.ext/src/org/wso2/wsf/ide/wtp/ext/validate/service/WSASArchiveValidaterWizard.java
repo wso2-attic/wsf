@@ -15,16 +15,24 @@
  */
 package org.wso2.wsf.ide.wtp.ext.validate.service;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.wso2.wsf.ide.core.plugin.messages.WSASCoreUIMessages;
+import org.wso2.wsf.ide.wtp.ext.validate.service.util.WSASUoloadServiceRequestUtil;
 
 
 public class WSASArchiveValidaterWizard extends Wizard implements INewWizard{
 
+	WSASUoloadServiceRequestUtil util = WSASUoloadServiceRequestUtil.getInstance();
 	WSASArchiveValidatePage archiveValidatePage;
+	WSASArchiveResultPage archiveResultPage;
 	
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 	}
@@ -62,6 +70,24 @@ public class WSASArchiveValidaterWizard extends Wizard implements INewWizard{
                 break;
             }
         }
+    	if (WSASArchiveValidatePlugin.getDefault().isGoAheadValidation()) {
+    		try {
+    			File resourceFile = null;
+    			if (archiveValidatePage.getAarPathEnabled()) {
+					resourceFile = new File(archiveValidatePage.getAarPathText());
+				}
+    			if(archiveValidatePage.getServicesXMlPathEnabled()){
+    				resourceFile = new File(archiveValidatePage.getServicesXMlPathText());
+    			}
+				URL resultURL = new URL(
+						WSASCoreUIMessages.LOCAL_SERVER_PORT_HTTPS
+						+goAheadVelidation(resourceFile));
+				WSASArchiveValidatePlugin.getDefault().setValidateURL(resultURL);
+				archiveResultPage.fillBrowserWithResults();
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+		}
         return nextPage;
     }
 
@@ -71,13 +97,23 @@ public class WSASArchiveValidaterWizard extends Wizard implements INewWizard{
     public void addPages() {
     	archiveValidatePage = new WSASArchiveValidatePage();
         this.addPage(archiveValidatePage);
+        archiveResultPage = new WSASArchiveResultPage();
+        this.addPage(archiveResultPage);
     }
 
     /* (non-Javadobc)
      * @see org.eclipse.jface.wizard.IWizard#performFinish()
      */
     public boolean performFinish() {
+    	//Popup the browser upon user request
+    	if (archiveResultPage.getBrowserPopUpCheck()) {
+			util.popupInternalBrowser(WSASArchiveValidatePlugin.getDefault().getValidateURL());
+		}
     	return true;
     }
-
+    
+    private String goAheadVelidation(File resourceFile){
+		return util.requestValidate(resourceFile,archiveValidatePage.getFileType());
+    }
+    
 }
