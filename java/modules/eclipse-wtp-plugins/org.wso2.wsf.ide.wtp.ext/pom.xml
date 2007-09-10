@@ -240,7 +240,64 @@
 			<groupId>org.wso2.wsf</groupId>
 			<artifactId>org.wso2.wsf.ide.ui</artifactId>
 			<version>${wso2wsf.version}</version>
-		</dependency>					
+		</dependency>
+
+		<!-- New Axis2 Dependencies -->
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>activation</artifactId>
+			<version>${activation.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>${commons.logging.version}</version>
+		</dependency>
+                <dependency>
+                        <groupId>javax.mail</groupId>
+                        <artifactId>mail</artifactId>
+                        <version>${mail.version}</version>
+                </dependency>
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2</artifactId>
+			<version>${version}</version>
+		</dependency>
+                <dependency>
+                        <groupId>org.apache.axis2</groupId>
+                        <artifactId>axis2-kernel</artifactId>
+                        <version>${version}</version>
+                </dependency>
+		<dependency>
+			<groupId>${stax.impl.groupid}</groupId>
+			<artifactId>${stax.impl.artifactid}</artifactId>
+			<version>${stax.impl.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.ws.commons.schema</groupId>
+			<artifactId>XmlSchema</artifactId>
+			<version>${xmlschema.version}</version>
+		</dependency>
+                <dependency>
+                        <groupId>commons-httpclient</groupId>
+                        <artifactId>commons-httpclient</artifactId>
+                        <version>${commons.httpclient.version}</version>
+                </dependency>
+                <dependency>
+                        <groupId>commons-codec</groupId>
+                        <artifactId>commons-codec</artifactId>
+                        <version>${commons.codec.version}</version>
+                </dependency>
+                <dependency>
+                        <groupId>org.apache.axis2</groupId>
+                        <artifactId>axis2-saaj</artifactId>
+                        <version>${axis2-saaj.version}</version>
+                </dependency>
+                <dependency>
+                        <groupId>org.apache.axis2</groupId>
+                        <artifactId>axis2-saaj-api</artifactId>
+                        <version>${axis2-saaj-api.version}</version>
+                </dependency>
 		
 	</dependencies>
 
