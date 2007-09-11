@@ -1973,7 +1973,7 @@ PHP_METHOD (ws_security_token, __construct)
             add_property_long (object, WS_TTL, Z_LVAL_PP (tmp));
         }
         if (zend_hash_find (ht, WS_PASSWORD_CALL_BACK,
-                sizeof (WS_PASSWORD_CALL_BACK), (void **) tmp) == SUCCESS
+                sizeof (WS_PASSWORD_CALL_BACK), (void **) &tmp) == SUCCESS
             && Z_TYPE_PP (tmp) == IS_STRING) {
             add_property_string (object, WS_PASSWORD_CALL_BACK, Z_STRVAL_PP (tmp), 1);
         }
