@@ -8,13 +8,20 @@ use base 'Exporter';
 sub new {
 	my $this = shift;
 	my $payload = shift;
-	my $self = shift;
+	my $self = shift; # options
 
 	$self = {} unless( defined( $self ) );
 
 	unless( defined( $payload ) ) {
 		die "ERROR:  Payload cannot be null";
 	}
+
+	if( ( scalar( $payload ) =~ /HASH/ ) or
+	    ( scalar( $payload ) =~ /ARRAY/ ) ) {
+		die "ERROR:  Payload should be a string";
+	}
+
+	$this->{"payload"} = $payload;
 
 	if( defined( $self ) ) {
 		foreach my $k (keys (%{$self})) {
