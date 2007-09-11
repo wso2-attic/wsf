@@ -167,9 +167,20 @@ extern "C"
 
 	AXIS2_EXTERN axis2_status_t AXIS2_CALL
 	neethi_options_create_asym_node(
-    neethi_options_t *options,
-    const axutil_env_t *env,
-    axiom_node_t *parent_node);
+        neethi_options_t *options,
+        const axutil_env_t *env,
+        axiom_node_t *parent_node);
+
+    AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+    neethi_options_get_server_side(
+        neethi_options_t *options,
+        const axutil_env_t *env);
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    neethi_options_set_server_side(
+        neethi_options_t *options,
+        const axutil_env_t *env,
+        axis2_bool_t server_side);
 
 
     /** @} */

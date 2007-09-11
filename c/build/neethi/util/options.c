@@ -36,6 +36,7 @@ struct neethi_options_t
     axis2_bool_t encrypt_body;
     axis2_char_t *algorithmsuite;
     axis2_char_t *keyidentifier;
+    axis2_bool_t server_side;
     /*Sign and encrypt headers need to be added.*/
 };
 
@@ -96,6 +97,7 @@ neethi_options_create(const axutil_env_t *env)
     options->encrypt_body = AXIS2_FALSE;
     options->algorithmsuite = RP_ALGO_SUITE_BASIC256_RSA15;
     options->keyidentifier = NULL;
+    options->server_side = AXIS2_FALSE;
 
     return options;
 }
@@ -274,6 +276,29 @@ neethi_options_set_encrypt_body(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     options->encrypt_body = encrypt_body; 
+    return AXIS2_SUCCESS;
+}
+
+
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+neethi_options_get_server_side(
+    neethi_options_t *options,
+    const axutil_env_t *env)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+
+    return options->server_side;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+neethi_options_set_server_side(
+    neethi_options_t *options,
+    const axutil_env_t *env,
+    axis2_bool_t server_side)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+
+    options->server_side = server_side;
     return AXIS2_SUCCESS;
 }
 
@@ -549,6 +574,16 @@ create_initiator_node(neethi_options_t *options,
                                   sp_ns);
     axiom_element_add_attribute(x509_ele, env, attr, x509_node);
     x509_policy_node = neethi_options_create_policy_node(env, x509_node);
+
+    if(x509_policy_node)
+    {
+        if(options->keyidentifier && options->server_side)
+        {
+            axiom_node_t *key_identifier_node = NULL;
+            axiom_element_create(env, x509_policy_node, options->keyidentifier, sp_ns, &key_identifier_node);
+        }
+    }
+
     axiom_element_create(env, x509_policy_node, RP_WSS_X509_V3_TOKEN_10, sp_ns, &x509_type_node);
     return AXIS2_SUCCESS;
 }
@@ -606,7 +641,7 @@ create_recipient_node(neethi_options_t *options,
     x509_policy_node = neethi_options_create_policy_node(env, x509_node);
     if(x509_policy_node)
     {
-        if(options->keyidentifier)
+        if(options->keyidentifier && !(options->server_side))
         {
             axiom_node_t *key_identifier_node = NULL;
             axiom_element_create(env, x509_policy_node, options->keyidentifier, sp_ns, &key_identifier_node);
