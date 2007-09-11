@@ -1946,12 +1946,12 @@ PHP_METHOD (ws_security_token, __construct)
                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
             add_property_string (object, WS_PRIVATE_KEY, Z_STRVAL_PP (tmp), 1);
         }
-        if (zend_hash_find (ht, WS_PVT_KEY_FORMAT,
-                sizeof (WS_PVT_KEY_FORMAT), (void **) &tmp) == SUCCESS && 
-                Z_TYPE_PP (tmp) == IS_STRING) {
-               add_property_string (object, WS_PVT_KEY_FORMAT,
-               Z_STRVAL_PP (tmp), 1);
-        }
+/*         if (zend_hash_find (ht, WS_PVT_KEY_FORMAT, */
+/*                 sizeof (WS_PVT_KEY_FORMAT), (void **) &tmp) == SUCCESS &&  */
+/*                 Z_TYPE_PP (tmp) == IS_STRING) { */
+/*                add_property_string (object, WS_PVT_KEY_FORMAT, */
+/*                Z_STRVAL_PP (tmp), 1); */
+/*         } */
         if (zend_hash_find (ht, WS_CERTIFICATE, sizeof (WS_CERTIFICATE),
                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
             add_property_string (object, WS_CERTIFICATE, Z_STRVAL_PP (tmp), 1);
@@ -1962,12 +1962,12 @@ PHP_METHOD (ws_security_token, __construct)
             add_property_string (object, WS_RECEIVER_CERTIFICATE,
                 Z_STRVAL_PP (tmp), 1);
         }
-        if (zend_hash_find (ht, WS_RECEIVER_CERTIFICATE_FORMAT,
-                sizeof (WS_RECEIVER_CERTIFICATE_FORMAT),
-                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-            add_property_string (object, WS_RECEIVER_CERTIFICATE_FORMAT,
-                Z_STRVAL_PP (tmp), 1);
-        }
+/*         if (zend_hash_find (ht, WS_RECEIVER_CERTIFICATE_FORMAT, */
+/*                 sizeof (WS_RECEIVER_CERTIFICATE_FORMAT), */
+/*                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) { */
+/*             add_property_string (object, WS_RECEIVER_CERTIFICATE_FORMAT, */
+/*                 Z_STRVAL_PP (tmp), 1); */
+/*         } */
         if (zend_hash_find (ht, WS_TTL, sizeof (WS_TTL),
                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_LONG) {
             add_property_long (object, WS_TTL, Z_LVAL_PP (tmp));

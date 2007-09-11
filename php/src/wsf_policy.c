@@ -507,22 +507,22 @@ wsf_set_tmp_rampart_options (
         && Z_TYPE_PP (token_val) == IS_STRING) {
         tmp_rampart_ctx.password = Z_STRVAL_PP (token_val);
     }
-    if (zend_hash_find (ht_token, WS_CERTIFICATE_FORMAT,
-            sizeof (WS_CERTIFICATE_FORMAT), (void **) &token_val) == SUCCESS
-        && Z_TYPE_PP (token_val) == IS_STRING) {
-        tmp_rampart_ctx.certificateFormat = Z_STRVAL_PP (token_val);
-    }
-    if (zend_hash_find (ht_token, WS_PVT_KEY_FORMAT,
-            sizeof (WS_PVT_KEY_FORMAT), (void **) &token_val) == SUCCESS
-        && Z_TYPE_PP (token_val) == IS_STRING) {
-        tmp_rampart_ctx.pvtKeyFormat = Z_STRVAL_PP (token_val);
-    }
-    if (zend_hash_find (ht_token, WS_RECEIVER_CERTIFICATE_FORMAT,
-            sizeof (WS_RECEIVER_CERTIFICATE_FORMAT),
-            (void **) &token_val) == SUCCESS
-        && Z_TYPE_PP (token_val) == IS_STRING) {
-        tmp_rampart_ctx.receiverCertificateFormat = Z_STRVAL_PP (token_val);
-    }
+/*     if (zend_hash_find (ht_token, WS_CERTIFICATE_FORMAT, */
+/*             sizeof (WS_CERTIFICATE_FORMAT), (void **) &token_val) == SUCCESS */
+/*         && Z_TYPE_PP (token_val) == IS_STRING) { */
+/*         tmp_rampart_ctx.certificateFormat = Z_STRVAL_PP (token_val); */
+/*     } */
+/*     if (zend_hash_find (ht_token, WS_PVT_KEY_FORMAT, */
+/*             sizeof (WS_PVT_KEY_FORMAT), (void **) &token_val) == SUCCESS */
+/*         && Z_TYPE_PP (token_val) == IS_STRING) { */
+/*         tmp_rampart_ctx.pvtKeyFormat = Z_STRVAL_PP (token_val); */
+/*     } */
+/*     if (zend_hash_find (ht_token, WS_RECEIVER_CERTIFICATE_FORMAT, */
+/*             sizeof (WS_RECEIVER_CERTIFICATE_FORMAT), */
+/*             (void **) &token_val) == SUCCESS */
+/*         && Z_TYPE_PP (token_val) == IS_STRING) { */
+/*         tmp_rampart_ctx.receiverCertificateFormat = Z_STRVAL_PP (token_val); */
+/*     } */
     if (zend_hash_find (ht_token, WS_PASSWORD_CALL_BACK,
             sizeof (WS_PASSWORD_CALL_BACK), (void **) &token_val) == SUCCESS
         && Z_TYPE_PP (token_val) == IS_STRING) {
@@ -616,6 +616,7 @@ wsf_do_create_policy (
     zval **tmp = NULL;
     char *algo_suite = NULL;
     char *token_ref = NULL;
+    char *protection_order = NULL;
 
     if (!policy)
         return NULL;
@@ -675,7 +676,36 @@ wsf_do_create_policy (
                                  "[wsf_sec_policy] token_ref_enabled ");
         }
         
+        if (zend_hash_find (ht_policy, WS_ENCRYPT_SIGNATURE,
+                            sizeof (WS_ENCRYPT_SIGNATURE), (void **) &tmp) == SUCCESS) {
+            if (neethi_options_set_signature_protection(neethi_options, env,
+                                              AXIS2_TRUE))
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                                 "[wsf_sec_policy] encrypt_sign_enabled ");
+        }
 
+        if (zend_hash_find (ht_policy, WS_PROTECTION_ORDER, 
+                            sizeof (WS_PROTECTION_ORDER), (void **) &tmp) == SUCCESS && tmp != NULL
+            && Z_TYPE_PP (tmp) == IS_STRING) {
+            protection_order = Z_STRVAL_PP (tmp);
+            if(strcmp(protection_order, ENCRYPT_BEFORE) == 0){
+                 if (neethi_options_set_encrypt_before_sign (neethi_options, env,
+                                                       AXIS2_TRUE))
+                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                                     "[wsf_sec_policy]  encrypt_before_sign_enabled");
+            }
+            else if(strcmp(protection_order, SIGN_BEFORE) == 0){
+                if (neethi_options_set_encrypt_before_sign (neethi_options, env,
+                                                            AXIS2_FALSE))
+                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                                     "[wsf_sec_policy]  sign_before_encrption_enabled");
+            }
+            else
+                php_error_docref (NULL TSRMLS_CC, E_ERROR,
+                                  "Wrong option for protection order");
+        
+        }
+        
     }
 
     if (neethi_options) {
@@ -830,6 +860,15 @@ wsf_set_security_policy_options (
                 Z_STRVAL_PP (sec_prop), Z_STRLEN_PP (sec_prop), 1);
             AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                 "[wsf_policy] callback is enable");
+        }
+
+        if (zend_hash_find (ht_sec, WS_ENCRYPT_SIGNATURE, 
+                            sizeof (WS_ENCRYPT_SIGNATURE),(void **) &sec_prop) == SUCCESS
+            && (Z_TYPE_PP (sec_prop) == IS_STRING
+                || Z_TYPE_PP (sec_prop) == IS_BOOL)) {
+            add_property_zval (policy_obj, WS_ENCRYPT_SIGNATURE, *sec_prop);
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                             "[wsf_policy] signature encryption is enable ");
         }
 
         /* if inflow security and outflow security exits in the array */

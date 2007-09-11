@@ -28,13 +28,13 @@
 #include "ext/libxml/php_libxml.h"
 
 /** ws_policy options */
-#define WS_POLICY_NAMESPACE_URI "http://schemas.xmlsoap.org/ws/2004/09/policy"
-#define WS_POLICY_NAMESPACE "wsp"
-#define WS_SEC_POLICY_NAMESPACE_URI  "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"
-#define WS_SEC_POLICY_NAMESPACE "sp"
-#define WS_POLICY_ALL "All"
-#define WS_POLICY_EXACTLYONE "ExactlyOne"
-#define WS_POLICY_ASYMMETRIC_BINDING "AsymmetricBinding"
+/* #define WS_POLICY_NAMESPACE_URI "http://schemas.xmlsoap.org/ws/2004/09/policy" */
+/* #define WS_POLICY_NAMESPACE "wsp" */
+/* #define WS_SEC_POLICY_NAMESPACE_URI  "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy" */
+/* #define WS_SEC_POLICY_NAMESPACE "sp" */
+/* #define WS_POLICY_ALL "All" */
+/* #define WS_POLICY_EXACTLYONE "ExactlyOne" */
+/* #define WS_POLICY_ASYMMETRIC_BINDING "AsymmetricBinding" */
 #define WS_POLICY "Policy"
 
 #define WS_IN_POLICY "inpolicy"
@@ -48,6 +48,7 @@
 #define WS_PROTECTION_ORDER "protectionOrder"
 #define WS_UT "useUsernameToken"
 #define WS_TOKEN_REFERENCE "securityTokenReference"
+#define WS_ENCRYPT_SIGNATURE "encryptSignature"
 
 #define WS_DEFAULT_TOKEN_VAL "X509"
 #define WS_X509_TOKEN_VAL "X509Token"
@@ -73,16 +74,16 @@
 #define WS_PASSWORD "password"
 #define WS_PRIVATE_KEY "privateKey"
 #define WS_TTL "ttl"
-#define WS_CERTIFICATE_FORMAT "certificateFormat"
-#define WS_PVT_KEY_FORMAT "privateKeyFormat"
+/* #define WS_CERTIFICATE_FORMAT "certificateFormat" */
+/* #define WS_PVT_KEY_FORMAT "privateKeyFormat" */
 #define WS_RECEIVER_CERTIFICATE "receiverCertificate"
-#define WS_RECEIVER_CERTIFICATE_FORMAT "receiverCertificateFormat"
-#define WS_INFLOW_SECURITY_POLICY  "InflowRampartContext"
-#define WS_OUTFLOW_SECURITY_POLICY "OutflowRampartContext"
+/* #define WS_RECEIVER_CERTIFICATE_FORMAT "receiverCertificateFormat" */
+/* #define WS_INFLOW_SECURITY_POLICY  "InflowRampartContext" */
+/* #define WS_OUTFLOW_SECURITY_POLICY "OutflowRampartContext" */
 #define WS_RAMPART_CONFIGURATION "RampartConfiguration"
 #define WS_DIGEST "Digest"
 #define WS_PLAINTEXT "plainText"
-#define WS_PASSWORD_CALL_BACK "password_callback"
+#define WS_PASSWORD_CALL_BACK "passwordCallback"
 
 #define BASIC256 "Basic256"
 #define BASIC192 "Basic192"
@@ -103,6 +104,8 @@
 #define EMBEDDEDTOKEN_VAL "MustSupportRefEmbeddedToken"
 #define THUMBPRINT_VAL "MustSupportRefThumbprint"
 
+#define SIGN_BEFORE "SignBeforeEncrypt"
+#define ENCRYPT_BEFORE "EncryptBeforeSigning"
 
 int wsf_policy_set_policy_options (
     zval * this_ptr,
