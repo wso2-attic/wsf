@@ -30,17 +30,11 @@ import org.apache.axis2.databinding.types.MonthDay;
 import org.apache.axis2.databinding.types.Year;
 import org.apache.axis2.databinding.types.Day;
 import org.apache.axis2.databinding.types.Month;
-import org.apache.axis2.databinding.types.NMTokens;
-import org.apache.axis2.databinding.types.IDRefs;
-import org.apache.axis2.databinding.types.Entities;
 import org.apache.axis2.databinding.types.NormalizedString;
 import org.apache.axis2.databinding.types.Token;
 import org.apache.axis2.databinding.types.Language;
 import org.apache.axis2.databinding.types.Name;
 import org.apache.axis2.databinding.types.NCName;
-import org.apache.axis2.databinding.types.IDRef;
-import org.apache.axis2.databinding.types.NMToken;
-import org.apache.axis2.databinding.types.Entity;
 import org.apache.axis2.databinding.types.Notation;
 import org.apache.axis2.databinding.types.Duration;
 import org.mozilla.javascript.Context;
@@ -222,16 +216,6 @@ public class JSToOMConverter {
         return ConverterUtil.convertToString(month);
     }
 
-    public static String convertToNMTOKENS(Object jsObject) {
-        String str = (String) jsObject;
-        return new NMTokens(str).toString();
-    }
-
-    public static String convertToIDREFS(Object jsObject) {
-        String str = (String) jsObject;
-        return new IDRefs(str).toString();
-    }
-
     public static String convertToNormalizedString(Object jsObject) {
         String str = (String) jsObject;
         return new NormalizedString(str).toString();
@@ -257,21 +241,6 @@ public class JSToOMConverter {
         return new NCName(str).toString();
     }
 
-    public static String convertToIDRef(Object jsObject) {
-        String str = (String) jsObject;
-        return new IDRef(str).toString();
-    }
-
-    public static String convertToNMTOKEN(Object jsObject) {
-        String str = (String) jsObject;
-        return new NMToken(str).toString();
-    }
-
-    public static String convertToENTITY(Object jsObject) {
-        String str = (String) jsObject;
-        return new Entity(str).toString();
-    }
-
     public static String convertToNOTATION(Object jsObject) {
         String str = (String) jsObject;
         Notation notation = new Notation();
@@ -283,5 +252,4 @@ public class JSToOMConverter {
         String str = (String) jsObject;
         return ConverterUtil.convertToAnyURI(str).toString();
     }
-
 }

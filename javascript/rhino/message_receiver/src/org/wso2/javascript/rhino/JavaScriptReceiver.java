@@ -567,16 +567,6 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             element.setText(str);
             return element;
         }
-        if (qName.equals(Constants.XSD_NMTOKENS)) {
-            String str = JSToOMConverter.convertToNMTOKENS(jsObject);
-            element.setText(str);
-            return element;
-        }
-        if (qName.equals(Constants.XSD_IDREFS)) {
-            String str = JSToOMConverter.convertToIDREFS(jsObject);
-            element.setText(str);
-            return element;
-        }
         if (qName.equals(Constants.XSD_NORMALIZEDSTRING)) {
             String str = JSToOMConverter.convertToNormalizedString(jsObject);
             element.setText(str);
@@ -599,21 +589,6 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         }
         if (qName.equals(Constants.XSD_NCNAME)) {
             String str = JSToOMConverter.convertToNCName(jsObject);
-            element.setText(str);
-            return element;
-        }
-        if (qName.equals(Constants.XSD_IDREF)) {
-            String str = JSToOMConverter.convertToIDRef(jsObject);
-            element.setText(str);
-            return element;
-        }
-        if (qName.equals(Constants.XSD_NMTOKEN)) {
-            String str = JSToOMConverter.convertToNMTOKEN(jsObject);
-            element.setText(str);
-            return element;
-        }
-        if (qName.equals(Constants.XSD_ENTITY)) {
-            String str = JSToOMConverter.convertToENTITY(jsObject);
             element.setText(str);
             return element;
         }
