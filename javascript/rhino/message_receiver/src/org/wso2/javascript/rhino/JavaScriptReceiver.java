@@ -602,6 +602,21 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             element.setText(str);
             return element;
         }
+        if (qName.equals(Constants.XSD_QNAME)) {
+            String str = JSToOMConverter.convertToQName(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_HEXBIN)) {
+            String str = JSToOMConverter.convertToHexBinary(jsObject);
+            element.setText(str);
+            return element;
+        }
+        if (qName.equals(Constants.XSD_BASE64)) {
+            String str = JSToOMConverter.convertToBase64Binary(jsObject);
+            element.setText(str);
+            return element;
+        }
         return element;
     }
 
@@ -788,6 +803,12 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             calendar.clear();
             Calendar asCalendar = duration.getAsCalendar(calendar);
             return asCalendar.getTime();
+        }if (Constants.XSD_QNAME.equals(type)) {
+            return ConverterUtil.convertToString(value);
+        }if (Constants.XSD_HEXBIN.equals(type)) {
+            return ConverterUtil.convertToString(value);
+        }if (Constants.XSD_BASE64.equals(type)) {
+            return ConverterUtil.convertToString(value);
         }
         return omElement.getText();
     }

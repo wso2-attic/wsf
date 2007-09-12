@@ -252,4 +252,17 @@ public class JSToOMConverter {
         String str = (String) jsObject;
         return ConverterUtil.convertToAnyURI(str).toString();
     }
+
+    public static String convertToQName(Object jsObject) {
+        return (String) jsObject;
+    }
+
+    public static String convertToHexBinary(Object jsObject) {
+        String str = (String) jsObject;
+        return ConverterUtil.convertToHexBinary(str).toString();
+    }
+
+    public static String convertToBase64Binary(Object jsObject) {
+        return (String) jsObject;
+    }
 }
