@@ -1574,6 +1574,11 @@ PHP_METHOD (ws_service, reply)
         return;
     }
 
+	if (php_start_ob_buffer(NULL, 0, 0 TSRMLS_CC) != SUCCESS) {
+		php_error_docref(NULL TSRMLS_CC, E_ERROR,"ob_start failed");
+	}
+
+
     zend_is_auto_global ("_SERVER", sizeof ("_SERVER") - 1 TSRMLS_CC);
     
     wsf_php_req_info_init (&req_info);
@@ -1581,78 +1586,82 @@ PHP_METHOD (ws_service, reply)
     if(SG(request_info).request_uri){        
     
         if (zend_hash_find (&EG (symbol_table), "_SERVER", sizeof ("_SERVER"),
-            (void **) & server_vars) == SUCCESS
-        && (Z_TYPE_PP (server_vars) == IS_ARRAY)) {
-        if ((zend_hash_find (Z_ARRVAL_PP (server_vars),
-                    "HTTP_CONTENT_ENCODING", 
-                    sizeof ("HTTP_CONTENT_ENCODING"),
-                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
-            req_info.content_encoding = Z_STRVAL_PP (data);
-        }
-
-        if ((zend_hash_find (Z_ARRVAL_PP (server_vars),
-                    "HTTP_TRANSFER_ENCODING",
-                    sizeof ("HTTP_TRANSFER_ENCODING"),
-                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
-            req_info.transfer_encoding = Z_STRVAL_PP (data);
-        }
-        if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SERVER_NAME",
-                    sizeof ("SERVER_NAME"),
-                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
-            req_info.svr_name = Z_STRVAL_PP (data);
-        }
-        if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SERVER_PORT",
-                    sizeof ("SERVER_PORT"),
-                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
-            char *p = NULL;
-            p = Z_STRVAL_PP (data);
-            req_info.svr_port = atoi (p);
-        }
-        if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SERVER_PROTOCOL",
-                    sizeof ("SERVER_PROTOCOL"), 
-                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) ==  IS_STRING) {
-            req_info.http_protocol = Z_STRVAL_PP (data);
-        }
-        if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SOAP_ACTION",
-                    sizeof ("SOAP_ACTION"),
-                    (void **) & data) == SUCCESS)  &&Z_TYPE_PP (data) == IS_STRING) {
-            req_info.soap_action = Z_STRVAL_PP (data);
-        }
-    }
-
-	{
-		zval ret_val, func;
-		zval **tmp_action = NULL;
-		ZVAL_STRING (&func, "apache_request_headers", 1);
-		if (call_user_function (CG (function_table), (zval **) NULL, &func,
-			&ret_val, 0, NULL TSRMLS_CC) == SUCCESS) {
-				if(Z_TYPE(ret_val) == IS_ARRAY){
-						if(zend_hash_find(Z_ARRVAL(ret_val), "SOAPAction", sizeof("SOAPAction"), 
-							(void**)&tmp_action) == SUCCESS && Z_TYPE_PP(tmp_action) == IS_STRING){
-								req_info.soap_action = Z_STRVAL_PP(tmp_action);
-						}
-					}
+            (void **) & server_vars) == SUCCESS && (Z_TYPE_PP (server_vars) == IS_ARRAY)) {
+			
+			if ((zend_hash_find (Z_ARRVAL_PP (server_vars),
+                    "HTTP_CONTENT_ENCODING", sizeof ("HTTP_CONTENT_ENCODING"),
+                    (void **) & data) == SUCCESS)  && Z_TYPE_PP (data) == IS_STRING) {
+				req_info.content_encoding = Z_STRVAL_PP (data);
 			}
-	}
+
+			if ((zend_hash_find (Z_ARRVAL_PP (server_vars),
+                    "HTTP_TRANSFER_ENCODING", sizeof ("HTTP_TRANSFER_ENCODING"),
+                    (void **) & data) == SUCCESS)  && Z_TYPE_PP (data) == IS_STRING) {
+				req_info.transfer_encoding = Z_STRVAL_PP (data);
+			}
+			if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SERVER_NAME",
+                    sizeof ("SERVER_NAME"), (void **)&data) == SUCCESS)  && 
+					Z_TYPE_PP (data) == IS_STRING) {
+				req_info.svr_name = Z_STRVAL_PP (data);
+			}
+			if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SERVER_PORT",
+                    sizeof ("SERVER_PORT"), (void **)&data) == SUCCESS)  && 
+					Z_TYPE_PP (data) == IS_STRING) {
+				char *p = NULL;
+				p = Z_STRVAL_PP (data);
+				req_info.svr_port = atoi (p);
+			}
+			if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SERVER_PROTOCOL",
+                    sizeof ("SERVER_PROTOCOL"), (void **)&data) == SUCCESS)  && 
+					Z_TYPE_PP (data) ==  IS_STRING) {
+				req_info.http_protocol = Z_STRVAL_PP (data);
+			}
+			if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SOAP_ACTION",
+                    sizeof ("SOAP_ACTION"), (void **)&data) == SUCCESS)  &&
+					Z_TYPE_PP (data) == IS_STRING) {
+				req_info.soap_action = Z_STRVAL_PP (data);
+			}
+		}
+		
+		req_info.request_uri = SG (request_info).request_uri;
+		req_info.content_length = SG (request_info).content_length;
+		req_info.content_type = (char *) SG (request_info).content_type;
+		req_info.request_method = (char *) SG (request_info).request_method;
+		req_info.query_string = (char *) SG (request_info).query_string;
+    	
+		if (zend_hash_find (&EG(symbol_table), "HTTP_RAW_POST_DATA", sizeof ("HTTP_RAW_POST_DATA"), (void **)&raw_post) != FAILURE  && 
+			((*raw_post)->type ==  IS_STRING)){
+			req_info.req_data = Z_STRVAL_PP (raw_post);
+			req_info.req_data_length = Z_STRLEN_PP (raw_post);
+		}else {
+			AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "raw post data not found");
+			if(req_info.request_method && strcmp(req_info.request_method,"POST") == 0){
+				php_error_docref(NULL TSRMLS_CC, E_ERROR, "raw post data not found");
+			}
+		}	
+		{
+			zval ret_val, func;
+			zval **tmp_action = NULL;
+			ZVAL_STRING (&func, "apache_request_headers", 1);
+			if (call_user_function (CG (function_table), (zval **) NULL, &func,
+				&ret_val, 0, NULL TSRMLS_CC) == SUCCESS) {
+				if(Z_TYPE(ret_val) == IS_ARRAY){
+					if(zend_hash_find(Z_ARRVAL(ret_val), "SOAPAction", sizeof("SOAPAction"), 
+							(void**)&tmp_action) == SUCCESS && Z_TYPE_PP(tmp_action) == IS_STRING){
+									req_info.soap_action = Z_STRVAL_PP(tmp_action);
+							}
+					}
+				}
+		}
 
     
-    req_info.request_uri = SG (request_info).request_uri;
-    req_info.content_length = SG (request_info).content_length;
-    req_info.content_type = (char *) SG (request_info).content_type;
-    req_info.request_method = (char *) SG (request_info).request_method;
-    req_info.query_string = (char *) SG (request_info).query_string;
     
     if ((zend_hash_find (Z_OBJPROP_P (this_ptr), "wsdlmode",
                 sizeof ("wsdlmode"), (void **) & tmp)) == SUCCESS
         && Z_TYPE_PP (tmp) == IS_LONG) {
         in_wsdl_mode = 1;
     }
-    if (zend_hash_find (&EG (symbol_table), "HTTP_RAW_POST_DATA",
-            sizeof ("HTTP_RAW_POST_DATA"),
-            (void **) & raw_post) != FAILURE  &&((*raw_post)->type ==  IS_STRING)) {
-        req_info.req_data = Z_STRVAL_PP (raw_post);
-        req_info.req_data_length = Z_STRLEN_PP (raw_post);
-	} 
+    
     } else if(ZEND_NUM_ARGS() > 0 && arg_data_len > 0){
         /* If we come here, it is not an HTTP post, 
            rather a command line script execution. 
@@ -1725,6 +1734,9 @@ PHP_METHOD (ws_service, reply)
             }
         
 		status = wsf_worker_process_request (php_worker, ws_env_svr, &req_info, svc_info TSRMLS_CC);
+
+		php_end_ob_buffer(0, 0 TSRMLS_CC);
+
         if (status == WS_HTTP_ACCEPTED){
             sprintf (status_line, "%s 202 Accepted", req_info.http_protocol);
             sapi_add_header (status_line, strlen (status_line), 1);

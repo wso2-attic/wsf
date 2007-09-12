@@ -3344,6 +3344,8 @@ wsf_soap_do_function_call1 (
             "Function '%s' call failed", Z_STRVAL (function_name));
     }
 
+	php_end_ob_buffer(0, 0 TSRMLS_CC);
+
     if (doc_return) {
         int size = 0;
         xmlChar *buf = NULL;
@@ -3355,6 +3357,7 @@ wsf_soap_do_function_call1 (
         if (size == 0) {
             php_error_docref (NULL TSRMLS_CC, E_ERROR, "Dump memory failed");
         }
+		
 
         sprintf (cont_len, "Content-Length: %d", size);
         sapi_add_header (cont_len, strlen (cont_len), 1);
