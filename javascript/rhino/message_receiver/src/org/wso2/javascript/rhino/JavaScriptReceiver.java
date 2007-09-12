@@ -668,10 +668,12 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             Context context = engine.getCx();
             OMElement element = omElement.getFirstElement();
             if (element != null) {
-            Object[] objects = { element };
-            return context.newObject(engine, "XML", objects);
+                Object[] objects = {element};
+                return context.newObject(engine, "XML", objects);
+            } else if (omElement.getText() != null) {
+                return omElement.getText();
             } else {
-                throw new AxisFault("The content of element " + omElement.getLocalName() + " cannot be null");
+                return Undefined.instance;
             }
         }
         String value = omElement.getText();
