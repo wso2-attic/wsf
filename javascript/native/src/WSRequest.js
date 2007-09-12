@@ -26,10 +26,11 @@ WSRequest = function() {
     this._soapVer = null;
 };
 
-WebServiceError = function() {
-    this.code = null;
-    this.reason = null;
-    this.detail = null;
+WebServiceError = function(reason, detail, code) {
+    this.reason = reason;
+    this.detail = detail;
+    this.code = code;
+    this.toString = function() { return this.reason; };
 };
 
 WSRequest.prototype._async = true;
@@ -41,7 +42,7 @@ WSRequest.prototype._password = null;
 WSRequest.prototype.open = function(options, URL, asnycFlag, userName, passWord) {
     if (arguments.length < 2 || arguments.length > 6)
     {
-        throw new Error("Invalid input argument");
+        throw new WebServiceError("Invalid input argument", "WSRequest.open method requires 2 to 6 arguments, but " + arguments.length + (arguments.length == 1 ? " was" : " were") + " specified.");
     }
 
     if (typeof(options) == "string") {
@@ -54,7 +55,7 @@ WSRequest.prototype.open = function(options, URL, asnycFlag, userName, passWord)
     this._uri = URL;
     this._async = asnycFlag;
     if (userName != null && passWord == null)
-        throw new Error("User name should have a password");
+        throw new WebServiceError("User name should have a password", "WSRequest.open invocation specified userName: '" + userName + "' without a corresponding password.");
     else
     {
         this._username = userName;
@@ -71,7 +72,7 @@ WSRequest.prototype.open = function(options, URL, asnycFlag, userName, passWord)
 
 WSRequest.prototype.send = function(payload) {
     if (arguments.length > 1) {
-        return new Error("Invalid input argument");
+        throw new WebServiceError("Invalid input argument.", "WSRequest.send() only accepts a single argument, " + arguments.length + " were specified.");
     }
 
     var req = null;
@@ -89,7 +90,7 @@ WSRequest.prototype.send = function(payload) {
         // seralize the dom to string
         var content = WSRequest.util._serializeToString(payload);
         if (content == false) {
-            throw new Error("Invalid input argument");
+            throw new WebServiceError("Invalid input argument.", "WSRequest.send() unable to serialize XML payload.");
         }
 
         // formulate the message envelope
@@ -334,9 +335,9 @@ WSRequest.util = {
                     break;
                 case "safari":
                 // use the safari method
-                    throw new Error("Not implemented");
+                    throw new WebServiceError("Not implemented", "WSRequest.util._serializeToString doesn't support Safari browser.");
                 case "undefined":
-                    throw new Error("XMLHttp object could not be created");
+                    throw new WebServiceError("Unknown browser", "WSRequest.util._serializeToString doesn't recognize the browser, to invoke browser-specific serialization code.");
             }
         } else {
             return false;
@@ -535,7 +536,7 @@ WSRequest.util = {
                 }
             } else if (inputSerialization == "multipart/form-data") {
                 // Just throw an exception for now - will try to use browser features in a later release.
-                throw new Error("Unsupported serialization option.");
+                throw new WebServiceError("Unsupported serialization option.", "WSRequest.util._buildHTTPpayload doesn't yet support multipart/form-data serialization.");
             }
         }
         return resultValues;
