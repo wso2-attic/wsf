@@ -861,7 +861,7 @@ wsf_client_set_options (
                 WSF_GLOBAL (soap_uri) = WS_SOAP_1_1_NAMESPACE_URI;
             } else if (soap_version == AXIOM_SOAP12) {
                 WSF_GLOBAL (soap_version) = AXIOM_SOAP12;
-                WSF_GLOBAL (soap_uri) = WS_SOAP_1_1_NAMESPACE_URI;
+				WSF_GLOBAL (soap_uri) = WS_SOAP_1_2_NAMESPACE_URI;
             }
 
             axis2_options_set_soap_version (client_options, env,
