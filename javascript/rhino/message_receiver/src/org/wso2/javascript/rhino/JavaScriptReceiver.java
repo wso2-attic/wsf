@@ -257,7 +257,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 if (schemaType instanceof XmlSchemaComplexType) {
                     Scriptable scriptable = (Scriptable) response;
                     Object object = scriptable.get(name, scriptable);
-                    if (checkRequired(innerElement.getMinOccurs(), name, object)) {
+                    if (checkRequired(innerElement, object)) {
                         continue;
                     }
                     XmlSchemaComplexType innerComplexType = (XmlSchemaComplexType) schemaType;
@@ -272,7 +272,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     } else {
                         object = response;
                     }
-                    if (checkRequired(innerElement.getMinOccurs(), name, object)) {
+                    if (checkRequired(innerElement, object)) {
                         continue;
                     }
                     handleSimpleTypeinResponse(innerElement, object, fac, annotated, json, outElement);
@@ -287,13 +287,13 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         return object == null || object instanceof UniqueTag || object instanceof Undefined;
     }
 
-    private boolean checkRequired(long minOccurs, String name, Object object) throws AxisFault {
+    private boolean checkRequired(XmlSchemaElement innerElement, Object object) throws AxisFault {
         if (isNull(object)) {
-            if (minOccurs == 0) {
+            if (innerElement.getSchemaTypeName() == Constants.XSD_ANYTYPE || innerElement.getMinOccurs() == 0) {
                 return true;
             }
             throw new AxisFault("As this operation has multiple return values it should be " +
-                    "returning an object rather then a javascript simple type. Object :" + name +
+                    "returning an object rather then a javascript simple type. Object :" + innerElement.getName() +
                     " was not found in the value returned");
         }
         return false;
@@ -1042,7 +1042,11 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                         element.addChild(paramElement);
                     }
                 }
-            }                                       
+            } else if (jsObject instanceof Undefined || jsObject instanceof UniqueTag) {
+                if (addTypeInfo) {
+                    element.addAttribute("type", "boolean", namespace);
+                }
+            }
         }
         return element;
     }
