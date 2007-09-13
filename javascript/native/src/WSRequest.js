@@ -608,7 +608,7 @@ WSRequest.util = {
                     }
 
                     // If ignore uncited option has been set, append parameter to URL else to the body.
-                    if (options[HTTPLocationIgnoreUncited] != null && options[HTTPLocationIgnoreUncited] == false) {
+                    if (options[HTTPLocationIgnoreUncited] == null && options[HTTPLocationIgnoreUncited] != false) {
 
                         // If he URL does not contain ? add it and then the parameter.
                         if (resultValues["url"].indexOf(queryStringSep) == -1) {
