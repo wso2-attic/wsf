@@ -37,7 +37,9 @@ import org.apache.axis2.databinding.types.Name;
 import org.apache.axis2.databinding.types.NCName;
 import org.apache.axis2.databinding.types.Notation;
 import org.apache.axis2.databinding.types.Duration;
+import org.apache.axis2.AxisFault;
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.EvaluatorException;
 
 import java.math.BigInteger;
 import java.math.BigDecimal;
@@ -51,215 +53,369 @@ public class JSToOMConverter {
         return jsObject.toString();
     }
 
-    public static String convertToFloat(Object jsObject) {
-        Float floatObject = (Float) jsObject;
-        return ConverterUtil.convertToString(floatObject);
-    }
-
-    public static String convertToDouble(Object jsObject) {
-        Double doubleObject = (Double) jsObject;
-        String str = ConverterUtil.convertToString(doubleObject);
-        if (str.indexOf("Infinity") >= 0) {
-            str = str.replace("Infinity", "INF");
+    public static String convertToFloat(Object jsObject) throws AxisFault {
+        try {
+            Float floatObject = (Float) jsObject;
+            return ConverterUtil.convertToString(floatObject);
+        } catch (Exception e) {
+            throw new AxisFault("Unable to convert the return value to float");
         }
-        return str;
     }
 
-    public static String convertToInteger(Object jsObject) {
-        BigInteger bigInteger = (BigInteger) jsObject;
-        return ConverterUtil.convertToString(bigInteger);
+    public static String convertToDouble(Object jsObject) throws AxisFault {
+        try {
+            Double doubleObject = (Double) jsObject;
+            String str = ConverterUtil.convertToString(doubleObject);
+            if (str.indexOf("Infinity") >= 0) {
+                str = str.replace("Infinity", "INF");
+            }
+            return str;
+        } catch (Exception e) {
+            throw new AxisFault("Unable to convert the return value to double");
+        }
     }
 
-    public static String convertToInt(Object jsObject) {
-        Integer integer = (Integer) jsObject;
-        return ConverterUtil.convertToString(integer);
+    public static String convertToInteger(Object jsObject) throws AxisFault {
+        try {
+            BigInteger bigInteger = (BigInteger) jsObject;
+            return ConverterUtil.convertToString(bigInteger);
+        } catch (Exception e) {
+            throw new AxisFault("Unable to convert the return value to integer");
+        }
     }
 
-    public static String convertToNonPositiveInteger(Object jsObject) {
-        NonPositiveInteger integer = ConverterUtil.convertToNonPositiveInteger(jsObject.toString());
-        return integer.toString();
+    public static String convertToInt(Object jsObject) throws AxisFault {
+        try {
+            Integer integer = (Integer) jsObject;
+            return ConverterUtil.convertToString(integer);
+        } catch (Exception e) {
+            throw new AxisFault("Unable to convert the return value to int");
+        }
     }
 
-    public static String convertToNonNegativeInteger(Object jsObject) {
-        NonNegativeInteger integer = ConverterUtil.convertToNonNegativeInteger(jsObject.toString());
-        return integer.toString();
+    public static String convertToNonPositiveInteger(Object jsObject) throws AxisFault {
+        try {
+            NonPositiveInteger integer = ConverterUtil.convertToNonPositiveInteger(jsObject.toString());
+            return integer.toString();
+        } catch (Exception e) {
+            throw new AxisFault("Unable to convert the return value to non positive integer");
+        }
     }
 
-    public static String convertToPositiveInteger(Object jsObject) {
-        PositiveInteger integer = ConverterUtil.convertToPositiveInteger(jsObject.toString());
-        return integer.toString();
+    public static String convertToNonNegativeInteger(Object jsObject) throws AxisFault {
+        try {
+            NonNegativeInteger integer = ConverterUtil.convertToNonNegativeInteger(jsObject.toString());
+            return integer.toString();
+        } catch (Exception e) {
+            throw new AxisFault("Unable to convert the return value to non negative integer");
+        }
     }
 
-    public static String convertToNegativeInteger(Object jsObject) {
-        NegativeInteger integer = ConverterUtil.convertToNegativeInteger(jsObject.toString());
-        return integer.toString();
+    public static String convertToPositiveInteger(Object jsObject) throws AxisFault {
+        try {
+            PositiveInteger integer = ConverterUtil.convertToPositiveInteger(jsObject.toString());
+            return integer.toString();
+        } catch (Exception e) {
+            throw new AxisFault("Unable to convert the return value to positive integer");
+        }
     }
 
-    public static String convertToLong(Object jsObject) {
-        Long longvalue = (Long) jsObject;
-        return ConverterUtil.convertToString(longvalue);
+    public static String convertToNegativeInteger(Object jsObject) throws AxisFault {
+        try {
+            NegativeInteger integer = ConverterUtil.convertToNegativeInteger(jsObject.toString());
+            return integer.toString();
+        } catch (Exception e) {
+            throw new AxisFault("Unable to convert the return value to negative integer");
+        }
     }
 
-    public static String convertToShort(Object jsObject) {
-        Short shortvalue = (Short) jsObject;
-        return ConverterUtil.convertToString(shortvalue);
+    public static String convertToLong(Object jsObject) throws AxisFault {
+        try {
+            Long longvalue = (Long) jsObject;
+            return ConverterUtil.convertToString(longvalue);
+        } catch (Exception e) {
+            throw new AxisFault("Unable to convert the return value to long");
+        }
     }
 
-    public static String convertToByte(Object jsObject) {
-        Byte bytevalue = (Byte) jsObject;
-        return ConverterUtil.convertToString(bytevalue);
+    public static String convertToShort(Object jsObject) throws AxisFault {
+        try {
+            Short shortvalue = (Short) jsObject;
+            return ConverterUtil.convertToString(shortvalue);
+        } catch (Exception e) {
+            throw new AxisFault("Unable to convert the return value to short");
+        }
     }
 
-    public static String convertToUnsignedLong(Object jsObject) {
-        UnsignedLong unsignedLong = (UnsignedLong) jsObject;
-        return ConverterUtil.convertToString(unsignedLong);
+    public static String convertToByte(Object jsObject) throws AxisFault {
+        try {
+            Byte bytevalue = (Byte) jsObject;
+            return ConverterUtil.convertToString(bytevalue);
+        } catch (Exception e) {
+            throw new AxisFault("Unable to convert the return value to byte");
+        }
     }
 
-    public static String convertToUnsignedInt(Object jsObject) {
-        UnsignedInt unsignedInt = (UnsignedInt) jsObject;
-        return ConverterUtil.convertToString(unsignedInt);
+    public static String convertToUnsignedLong(Object jsObject) throws AxisFault {
+        try {
+            UnsignedLong unsignedLong = (UnsignedLong) jsObject;
+            return ConverterUtil.convertToString(unsignedLong);
+        } catch (Exception e) {
+            throw new AxisFault("Unable to convert the return value to unsigned long");
+        }
     }
 
-    public static String convertToUnsignedShort(Object jsObject) {
-        UnsignedShort unsignedShort = (UnsignedShort) jsObject;
-        return ConverterUtil.convertToString(unsignedShort);
+    public static String convertToUnsignedInt(Object jsObject) throws AxisFault {
+        try {
+            UnsignedInt unsignedInt = (UnsignedInt) jsObject;
+            return ConverterUtil.convertToString(unsignedInt);
+        } catch (Exception e) {
+            throw new AxisFault("Unable to convert the return value to unsigned int");
+        }
     }
 
-    public static String convertToUnsignedByte(Object jsObject) {
-        UnsignedByte unsignedByte = (UnsignedByte) jsObject;
-        return ConverterUtil.convertToString(unsignedByte);
+    public static String convertToUnsignedShort(Object jsObject) throws AxisFault {
+        try {
+            UnsignedShort unsignedShort = (UnsignedShort) jsObject;
+            return ConverterUtil.convertToString(unsignedShort);
+        } catch (Exception e) {
+            throw new AxisFault("Unable to convert the return value to unsigned short");
+        }
     }
 
-    public static String convertToDecimal(Object jsObject) {
-        BigDecimal bigDecimal = (BigDecimal) jsObject;
-        return ConverterUtil.convertToString(bigDecimal);
+    public static String convertToUnsignedByte(Object jsObject) throws AxisFault {
+        try {
+            UnsignedByte unsignedByte = (UnsignedByte) jsObject;
+            return ConverterUtil.convertToString(unsignedByte);
+        } catch (Exception e) {
+            throw new AxisFault("Unable to convert the return value to unsigned byte");
+        }
     }
 
-    public static String convertToBoolean(Object jsObject) {
-        Boolean booleanValue = (Boolean) jsObject;
-        return ConverterUtil.convertToString(booleanValue);
+    public static String convertToDecimal(Object jsObject) throws AxisFault {
+        try {
+            BigDecimal bigDecimal = (BigDecimal) jsObject;
+            return ConverterUtil.convertToString(bigDecimal);
+        } catch (Exception e) {
+            throw new AxisFault("Unable to convert the return value to decimal");
+        }
     }
 
-    public static String convertToDateTime(Object jsObject) {
-        Date date = (Date) Context.jsToJava(jsObject, Date.class);
-        Calendar calendar = Calendar.getInstance();
-        calendar.clear();
-        calendar.setTime(date);
-        return ConverterUtil.convertToString(calendar);
+    public static String convertToBoolean(Object jsObject) throws AxisFault {
+        try {
+            Boolean booleanValue = (Boolean) jsObject;
+            return ConverterUtil.convertToString(booleanValue);
+        } catch (Exception e) {
+            throw new AxisFault("Unable to convert the return value to boolean");
+        }
     }
 
-    public static String convertToDate(Object jsObject) {
-        Date date = (Date) Context.jsToJava(jsObject, Date.class);
-        return ConverterUtil.convertToString(date);
+    public static String convertToDateTime(Object jsObject) throws AxisFault {
+        try {
+            Date date = (Date) Context.jsToJava(jsObject, Date.class);
+            Calendar calendar = Calendar.getInstance();
+            calendar.clear();
+            calendar.setTime(date);
+            return ConverterUtil.convertToString(calendar);
+        } catch (EvaluatorException e) {
+            throw new AxisFault("Unable to convert the return value to date");
+        }
     }
 
-    public static String convertToTime(Object jsObject) {
-        Date date = (Date) Context.jsToJava(jsObject, Date.class);
-        Calendar calendar = Calendar.getInstance();
-        calendar.clear();
-        calendar.setTime(date);
-        Time time = new Time(calendar);
-        return ConverterUtil.convertToString(time);
+    public static String convertToDate(Object jsObject) throws AxisFault {
+        try {
+            Date date = (Date) Context.jsToJava(jsObject, Date.class);
+            return ConverterUtil.convertToString(date);
+        } catch (EvaluatorException e) {
+            throw new AxisFault("Unable to convert the return value to date");
+        }
     }
 
-    public static String convertToGYearMonth(Object jsObject) {
-        Date date = (Date) Context.jsToJava(jsObject, Date.class);
-        Calendar calendar = Calendar.getInstance();
-        calendar.clear();
-        calendar.setTime(date);
-        YearMonth yearMonth = new YearMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
-        return ConverterUtil.convertToString(yearMonth);
+    public static String convertToTime(Object jsObject) throws AxisFault {
+        try {
+            Date date = (Date) Context.jsToJava(jsObject, Date.class);
+            Calendar calendar = Calendar.getInstance();
+            calendar.clear();
+            calendar.setTime(date);
+            Time time = new Time(calendar);
+            return ConverterUtil.convertToString(time);
+        } catch (EvaluatorException e) {
+            throw new AxisFault("Unable to convert the return value to time");
+        }
     }
 
-    public static String convertToGMonthDay(Object jsObject) {
-        Date date = (Date) Context.jsToJava(jsObject, Date.class);
-        Calendar calendar = Calendar.getInstance();
-        calendar.clear();
-        calendar.setTime(date);
-        MonthDay monthDay = new MonthDay(calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-        return ConverterUtil.convertToString(monthDay);
+    public static String convertToGYearMonth(Object jsObject) throws AxisFault {
+        try {
+            Date date = (Date) Context.jsToJava(jsObject, Date.class);
+            Calendar calendar = Calendar.getInstance();
+            calendar.clear();
+            calendar.setTime(date);
+            YearMonth yearMonth = new YearMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
+            return ConverterUtil.convertToString(yearMonth);
+        } catch (EvaluatorException e) {
+            throw new AxisFault("Unable to convert the return value to yearMonth");
+        } catch (NumberFormatException e) {
+            throw new AxisFault("Unable to convert the return value to yearMonth");
+        }
     }
 
-    public static String convertToGYear(Object jsObject) {
-        Date date = (Date) Context.jsToJava(jsObject, Date.class);
-        Calendar calendar = Calendar.getInstance();
-        calendar.clear();
-        calendar.setTime(date);
-        Year year = new Year(calendar.get(Calendar.YEAR));
-        return ConverterUtil.convertToString(year);
+    public static String convertToGMonthDay(Object jsObject) throws AxisFault {
+        try {
+            Date date = (Date) Context.jsToJava(jsObject, Date.class);
+            Calendar calendar = Calendar.getInstance();
+            calendar.clear();
+            calendar.setTime(date);
+            MonthDay monthDay = new MonthDay(calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+            return ConverterUtil.convertToString(monthDay);
+        } catch (EvaluatorException e) {
+            throw new AxisFault("Unable to convert the return value to monthDay");
+        } catch (NumberFormatException e) {
+            throw new AxisFault("Unable to convert the return value to monthDay");
+        }
     }
 
-    public static String convertToGDay(Object jsObject) {
-        Date date = (Date) Context.jsToJava(jsObject, Date.class);
-        Calendar calendar = Calendar.getInstance();
-        calendar.clear();
-        calendar.setTime(date);
-        Day day = new Day(calendar.get(Calendar.DAY_OF_MONTH));
-        return ConverterUtil.convertToString(day);
+    public static String convertToGYear(Object jsObject) throws AxisFault {
+        try {
+            Date date = (Date) Context.jsToJava(jsObject, Date.class);
+            Calendar calendar = Calendar.getInstance();
+            calendar.clear();
+            calendar.setTime(date);
+            Year year = new Year(calendar.get(Calendar.YEAR));
+            return ConverterUtil.convertToString(year);
+        } catch (EvaluatorException e) {
+            throw new AxisFault("Unable to convert the return value to year");
+        } catch (NumberFormatException e) {
+            throw new AxisFault("Unable to convert the return value to day");
+        }
     }
 
-    public static String convertToDuration(Object jsObject) {
-        String str = (String) jsObject;
-        Duration duration = ConverterUtil.convertToDuration(str);
-        return ConverterUtil.convertToString(duration);
+    public static String convertToGDay(Object jsObject) throws AxisFault {
+        try {
+            Date date = (Date) Context.jsToJava(jsObject, Date.class);
+            Calendar calendar = Calendar.getInstance();
+            calendar.clear();
+            calendar.setTime(date);
+            Day day = new Day(calendar.get(Calendar.DAY_OF_MONTH));
+            return ConverterUtil.convertToString(day);
+        } catch (EvaluatorException e) {
+            throw new AxisFault("Unable to convert the return value to day");
+        } catch (NumberFormatException e) {
+            throw new AxisFault("Unable to convert the return value to day");
+        }
     }
 
-    public static String convertToGMonth(Object jsObject) {
-        Date date = (Date) Context.jsToJava(jsObject, Date.class);
-        Calendar calendar = Calendar.getInstance();
-        calendar.clear();
-        calendar.setTime(date);
-        Month month = new Month(calendar.get(Calendar.MONTH));
-        return ConverterUtil.convertToString(month);
+    public static String convertToDuration(Object jsObject) throws AxisFault {
+        try {
+            String str = (String) jsObject;
+            Duration duration = ConverterUtil.convertToDuration(str);
+            return ConverterUtil.convertToString(duration);
+        } catch (Exception e) {
+            throw new AxisFault("Unable to convert the return value to duration");
+        }
     }
 
-    public static String convertToNormalizedString(Object jsObject) {
-        String str = (String) jsObject;
-        return new NormalizedString(str).toString();
+    public static String convertToGMonth(Object jsObject) throws AxisFault {
+        try {
+            Date date = (Date) Context.jsToJava(jsObject, Date.class);
+            Calendar calendar = Calendar.getInstance();
+            calendar.clear();
+            calendar.setTime(date);
+            Month month = new Month(calendar.get(Calendar.MONTH));
+            return ConverterUtil.convertToString(month);
+        } catch (EvaluatorException e) {
+            throw new AxisFault("Unable to convert the return value to month");
+        } catch (NumberFormatException e) {
+            throw new AxisFault("Unable to convert the return value to month");
+        }
     }
 
-    public static String convertToToken(Object jsObject) {
-        String str = (String) jsObject;
-        return new Token(str).toString();
+    public static String convertToNormalizedString(Object jsObject) throws AxisFault {
+        try {
+            String str = (String) jsObject;
+            return new NormalizedString(str).toString();
+        } catch (IllegalArgumentException e) {
+            throw new AxisFault("Unable to convert the return value to normalized string");
+        }
     }
 
-    public static String convertToLanguage(Object jsObject) {
-        String str = (String) jsObject;
-        return new Language(str).toString();
+    public static String convertToToken(Object jsObject) throws AxisFault {
+        try {
+            String str = (String) jsObject;
+            return new Token(str).toString();
+        } catch (IllegalArgumentException e) {
+            throw new AxisFault("Unable to convert the return value to token");
+        }
     }
 
-    public static String convertToName(Object jsObject) {
-        String str = (String) jsObject;
-        return new Name(str).toString();
+    public static String convertToLanguage(Object jsObject) throws AxisFault {
+        try {
+            String str = (String) jsObject;
+            return new Language(str).toString();
+        } catch (IllegalArgumentException e) {
+            throw new AxisFault("Unable to convert the return value to language");
+        }
     }
 
-    public static String convertToNCName(Object jsObject) {
-        String str = (String) jsObject;
-        return new NCName(str).toString();
+    public static String convertToName(Object jsObject) throws AxisFault {
+        try {
+            String str = (String) jsObject;
+            return new Name(str).toString();
+        } catch (IllegalArgumentException e) {
+            throw new AxisFault("Unable to convert the return value to name");
+        }
     }
 
-    public static String convertToNOTATION(Object jsObject) {
-        String str = (String) jsObject;
-        Notation notation = new Notation();
-        notation.setName(new NCName(str));
-        return notation.toString();
+    public static String convertToNCName(Object jsObject) throws AxisFault {
+        try {
+            String str = (String) jsObject;
+            return new NCName(str).toString();
+        } catch (IllegalArgumentException e) {
+            throw new AxisFault("Unable to convert the return value to NCName");
+        }
     }
 
-    public static String convertToAnyURI(Object jsObject) {
-        String str = (String) jsObject;
-        return ConverterUtil.convertToAnyURI(str).toString();
+    public static String convertToNOTATION(Object jsObject) throws AxisFault {
+        try {
+            String str = (String) jsObject;
+            Notation notation = new Notation();
+            notation.setName(new NCName(str));
+            return notation.toString();
+        } catch (IllegalArgumentException e) {
+            throw new AxisFault("Unable to convert the return value to NOTATION");
+        }
     }
 
-    public static String convertToQName(Object jsObject) {
-        return (String) jsObject;
+    public static String convertToAnyURI(Object jsObject) throws AxisFault {
+        try {
+            String str = (String) jsObject;
+            return ConverterUtil.convertToAnyURI(str).toString();
+        } catch (Exception e) {
+            throw new AxisFault("Unable to convert the return value to anyURI");
+        }
     }
 
-    public static String convertToHexBinary(Object jsObject) {
-        String str = (String) jsObject;
-        return ConverterUtil.convertToHexBinary(str).toString();
+    public static String convertToQName(Object jsObject) throws AxisFault {
+        try {
+            return (String) jsObject;
+        } catch (Exception e) {
+            throw new AxisFault("Unable to convert the return value to QName");
+        }
     }
 
-    public static String convertToBase64Binary(Object jsObject) {
-        return (String) jsObject;
+    public static String convertToHexBinary(Object jsObject) throws AxisFault {
+        try {
+            String str = (String) jsObject;
+            return ConverterUtil.convertToHexBinary(str).toString();
+        } catch (Exception e) {
+            throw new AxisFault("Unable to convert the return value to hexBinary");
+        }
+    }
+
+    public static String convertToBase64Binary(Object jsObject) throws AxisFault {
+        try {
+            return (String) jsObject;
+        } catch (Exception e) {
+            throw new AxisFault("Unable to convert the return value to base64Binary");
+        }
     }
 }

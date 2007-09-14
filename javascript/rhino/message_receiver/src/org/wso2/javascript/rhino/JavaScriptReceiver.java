@@ -683,134 +683,250 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             throw new AxisFault("The value of Element " + omElement.getLocalName() + " cannot be null");
         }
         if (Constants.XSD_BOOLEAN.equals(type)) {
-            return Boolean.valueOf(value);
+            try {
+                return Boolean.valueOf(ConverterUtil.convertToBoolean(value));
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "boolean"));
+            }
         }
         if (Constants.XSD_DOUBLE.equals(type)) {
-            return new Double(ConverterUtil.convertToDouble(value));
+            try {
+                return new Double(ConverterUtil.convertToDouble(value));
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "double"));
+            }
         }
         if (Constants.XSD_FLOAT.equals(type)) {
-            return new Float(ConverterUtil.convertToFloat(value));
+            try {
+                return new Float(ConverterUtil.convertToFloat(value));
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "float"));
+            }
         }
         if (Constants.XSD_INT.equals(type)) {
-            return new Integer(ConverterUtil.convertToInt(value));
+            try {
+                return new Integer(ConverterUtil.convertToInt(value));
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "int"));
+            }
         }
         if (Constants.XSD_INTEGER.equals(type)) {
-            return ConverterUtil.convertToInteger(value);
+            try {
+                return ConverterUtil.convertToInteger(value);
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "integer"));
+            }
         }
         if (Constants.XSD_POSITIVEINTEGER.equals(type)) {
-            return ConverterUtil.convertToPositiveInteger(value);
+            try {
+                return ConverterUtil.convertToPositiveInteger(value);
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "positive integer"));
+            }
         }
         if (Constants.XSD_NEGATIVEINTEGER.equals(type)) {
-            return ConverterUtil.convertToNegativeInteger(value);
+            try {
+                return ConverterUtil.convertToNegativeInteger(value);
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "negative integer"));
+            }
         }
         if (Constants.XSD_NONPOSITIVEINTEGER.equals(type)) {
-            return ConverterUtil.convertToNonPositiveInteger(value);
+            try {
+                return ConverterUtil.convertToNonPositiveInteger(value);
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "non-positive integer"));
+            }
         }
         if (Constants.XSD_NONNEGATIVEINTEGER.equals(type)) {
-            return ConverterUtil.convertToNonNegativeInteger(value);
+            try {
+                return ConverterUtil.convertToNonNegativeInteger(value);
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "non-negative integer"));
+            }
         }
         if (Constants.XSD_LONG.equals(type)) {
-            return new Long(ConverterUtil.convertToLong(value));
+            try {
+                return new Long(ConverterUtil.convertToLong(value));
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "long"));
+            }
         }
         if (Constants.XSD_SHORT.equals(type)) {
-            return new Short(ConverterUtil.convertToShort(value));
+            try {
+                return new Short(ConverterUtil.convertToShort(value));
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "short"));
+            }
         }
         if (Constants.XSD_BYTE.equals(type)) {
-            return new Byte(ConverterUtil.convertToByte(value));
+            try {
+                return new Byte(ConverterUtil.convertToByte(value));
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "byte"));
+            }
         }
         if (Constants.XSD_UNSIGNEDINT.equals(type)) {
-            return ConverterUtil.convertToUnsignedInt(value);
+            try {
+                return ConverterUtil.convertToUnsignedInt(value);
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "unsigned int"));
+            }
         }
         if (Constants.XSD_UNSIGNEDLONG.equals(type)) {
-            return ConverterUtil.convertToUnsignedLong(value);
+            try {
+                return ConverterUtil.convertToUnsignedLong(value);
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "unsigned long"));
+            }
         }
         if (Constants.XSD_UNSIGNEDSHORT.equals(type)) {
-            return ConverterUtil.convertToUnsignedShort(value);
+            try {
+                return ConverterUtil.convertToUnsignedShort(value);
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "unsigned short"));
+            }
         }
         if (Constants.XSD_UNSIGNEDBYTE.equals(type)) {
-            return ConverterUtil.convertToUnsignedByte(value);
+            try {
+                return ConverterUtil.convertToUnsignedByte(value);
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "unsigned byte"));
+            }
         }
         if (Constants.XSD_DECIMAL.equals(type)) {
-            return ConverterUtil.convertToDecimal(value);
+            try {
+                return ConverterUtil.convertToDecimal(value);
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "decimal"));
+            }
         }
         if (Constants.XSD_DATETIME.equals(type)) {
-            Calendar calendar = ConverterUtil.convertToDateTime(value);
-            return calendar.getTime();
+            try {
+                Calendar calendar = ConverterUtil.convertToDateTime(value);
+                return calendar.getTime();
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "date time"));
+            }
         }
         if (Constants.XSD_DATE.equals(type)) {
-            return ConverterUtil.convertToDate(value);
+            try {
+                return ConverterUtil.convertToDate(value);
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "date"));
+            }
         }
         if (Constants.XSD_TIME.equals(type)) {
-            Time time = ConverterUtil.convertToTime(value);
-            return time.getAsCalendar().getTime();
+            try {
+                Time time = ConverterUtil.convertToTime(value);
+                return time.getAsCalendar().getTime();
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "time"));
+            }
         }
         if (Constants.XSD_YEARMONTH.equals(type)) {
-            YearMonth yearMonth = ConverterUtil.convertToGYearMonth(value);
-            Calendar calendar = Calendar.getInstance();
-            calendar.clear();
-            calendar.set(Calendar.YEAR, yearMonth.getYear());
-            calendar.set(Calendar.MONTH, yearMonth.getMonth());
-            String timezone = yearMonth.getTimezone();
-            if (timezone != null) {
-                calendar.setTimeZone(TimeZone.getTimeZone(timezone));
+            try {
+                YearMonth yearMonth = ConverterUtil.convertToGYearMonth(value);
+                Calendar calendar = Calendar.getInstance();
+                calendar.clear();
+                calendar.set(Calendar.YEAR, yearMonth.getYear());
+                calendar.set(Calendar.MONTH, yearMonth.getMonth());
+                String timezone = yearMonth.getTimezone();
+                if (timezone != null) {
+                    calendar.setTimeZone(TimeZone.getTimeZone(timezone));
+                }
+                return calendar.getTime();
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "yearMonth"));
             }
-            return calendar.getTime();
         }
         if (Constants.XSD_MONTHDAY.equals(type)) {
-            MonthDay monthDay = ConverterUtil.convertToGMonthDay(value);
-            Calendar calendar = Calendar.getInstance();
-            calendar.clear();
-            calendar.set(Calendar.DAY_OF_MONTH, monthDay.getDay());
-            calendar.set(Calendar.MONTH, monthDay.getMonth());
-            String timezone = monthDay.getTimezone();
-            if (timezone != null) {
-                calendar.setTimeZone(TimeZone.getTimeZone(timezone));
+            try {
+                MonthDay monthDay = ConverterUtil.convertToGMonthDay(value);
+                Calendar calendar = Calendar.getInstance();
+                calendar.clear();
+                calendar.set(Calendar.DAY_OF_MONTH, monthDay.getDay());
+                calendar.set(Calendar.MONTH, monthDay.getMonth());
+                String timezone = monthDay.getTimezone();
+                if (timezone != null) {
+                    calendar.setTimeZone(TimeZone.getTimeZone(timezone));
+                }
+                return calendar.getTime();
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "MonthDay"));
             }
-            return calendar.getTime();
         }
         if (Constants.XSD_YEAR.equals(type)) {
-            Year year  = ConverterUtil.convertToGYear(value);
-            Calendar calendar = Calendar.getInstance();
-            calendar.clear();
-            calendar.set(Calendar.YEAR, year.getYear());
-            String timezone = year.getTimezone();
-            if (timezone != null) {
-                calendar.setTimeZone(TimeZone.getTimeZone(timezone));
+            try {
+                Year year  = ConverterUtil.convertToGYear(value);
+                Calendar calendar = Calendar.getInstance();
+                calendar.clear();
+                calendar.set(Calendar.YEAR, year.getYear());
+                String timezone = year.getTimezone();
+                if (timezone != null) {
+                    calendar.setTimeZone(TimeZone.getTimeZone(timezone));
+                }
+                return calendar.getTime();
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "year"));
             }
-            return calendar.getTime();
         }
         if (Constants.XSD_MONTH.equals(type)) {
-            Month month = ConverterUtil.convertToGMonth(value);
-            Calendar calendar = Calendar.getInstance();
-            calendar.clear();
-            calendar.set(Calendar.MONTH, month.getMonth());
-            String timezone = month.getTimezone();
-            if (timezone != null) {
-                calendar.setTimeZone(TimeZone.getTimeZone(timezone));
+            try {
+                Month month = ConverterUtil.convertToGMonth(value);
+                Calendar calendar = Calendar.getInstance();
+                calendar.clear();
+                calendar.set(Calendar.MONTH, month.getMonth());
+                String timezone = month.getTimezone();
+                if (timezone != null) {
+                    calendar.setTimeZone(TimeZone.getTimeZone(timezone));
+                }
+                return calendar.getTime();
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "month"));
             }
-            return calendar.getTime();
         }
         if (Constants.XSD_DAY.equals(type)) {
-            Day day = ConverterUtil.convertToGDay(value);
-            Calendar calendar = Calendar.getInstance();
-            calendar.clear();
-            calendar.set(Calendar.DAY_OF_MONTH, day.getDay());
-            String timezone = day.getTimezone();
-            if (timezone != null) {
-                calendar.setTimeZone(TimeZone.getTimeZone(timezone));
+            try {
+                Day day = ConverterUtil.convertToGDay(value);
+                Calendar calendar = Calendar.getInstance();
+                calendar.clear();
+                calendar.set(Calendar.DAY_OF_MONTH, day.getDay());
+                String timezone = day.getTimezone();
+                if (timezone != null) {
+                    calendar.setTimeZone(TimeZone.getTimeZone(timezone));
+                }
+                return calendar.getTime();
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "day"));
             }
-            return calendar.getTime();
         }
         if (Constants.XSD_DURATION.equals(type)) {
-            Duration duration= ConverterUtil.convertToDuration(value);
-            return duration.toString();
+            try {
+                Duration duration= ConverterUtil.convertToDuration(value);
+                return duration.toString();
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "duration"));
+            }
         }if (Constants.XSD_QNAME.equals(type)) {
+        try {
             return ConverterUtil.convertToString(value);
-        }if (Constants.XSD_HEXBIN.equals(type)) {
-            return ConverterUtil.convertToString(value);
-        }if (Constants.XSD_BASE64.equals(type)) {
-            return ConverterUtil.convertToString(value);
+        } catch (Exception e) {
+            throw new AxisFault(getFaultString(value, "string"));
         }
+    }if (Constants.XSD_HEXBIN.equals(type)) {
+        try {
+            return ConverterUtil.convertToString(value);
+        } catch (Exception e) {
+            throw new AxisFault(getFaultString(value, "hexBinary"));
+        }
+    }if (Constants.XSD_BASE64.equals(type)) {
+        try {
+            return ConverterUtil.convertToString(value);
+        } catch (Exception e) {
+            throw new AxisFault(getFaultString(value, "base64Binary"));
+        }
+    }
         return omElement.getText();
     }
 
@@ -1048,5 +1164,9 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             }
         }
         return element;
+    }
+
+    private String getFaultString(String value, String type) {
+         return "Unable to convert value \"" + value + "\" to " + type;
     }
 }
