@@ -43,6 +43,7 @@ import java.math.BigInteger;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class JSToOMConverter {
 
@@ -198,12 +199,8 @@ public class JSToOMConverter {
     }
 
     public static String convertToDuration(Object jsObject) {
-        Date date = (Date) Context.jsToJava(jsObject, Date.class);
-        Calendar calendar = Calendar.getInstance();
-        calendar.clear();
-        calendar.setTime(date);
-        // Need to figure out how to capture the isNegative flag
-        Duration duration = new Duration(false, calendar);
+        String str = (String) jsObject;
+        Duration duration = ConverterUtil.convertToDuration(str);
         return ConverterUtil.convertToString(duration);
     }
 

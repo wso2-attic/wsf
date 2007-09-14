@@ -801,10 +801,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         }
         if (Constants.XSD_DURATION.equals(type)) {
             Duration duration= ConverterUtil.convertToDuration(value);
-            Calendar calendar = Calendar.getInstance();
-            calendar.clear();
-            Calendar asCalendar = duration.getAsCalendar(calendar);
-            return asCalendar.getTime();
+            return duration.toString();
         }if (Constants.XSD_QNAME.equals(type)) {
             return ConverterUtil.convertToString(value);
         }if (Constants.XSD_HEXBIN.equals(type)) {
