@@ -1863,12 +1863,11 @@ PHP_METHOD (ws_fault, __toString)
 PHP_METHOD (ws_header, __construct) 
 {
     zval * data = NULL, *role = NULL;
-    char *name, *ns, *payload;
-    int name_len, ns_len, payload_len;
+    char *name, *ns;
+    int name_len, ns_len;
     zend_bool must_understand = 0;
-    if (zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "ss|zsbz", &ns,
-            &ns_len, &name, &name_len, &data, &payload, &payload_len,
-            &must_understand, &role) == FAILURE) {
+    if (zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "ss|zbz", &ns,
+            &ns_len, &name, &name_len, &data, &must_understand, &role) == FAILURE) {
         php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
     }
     if (ns_len == 0) {
@@ -1889,13 +1888,8 @@ PHP_METHOD (ws_header, __construct)
 #endif  /*  */
             add_property_zval (this_ptr, WS_HEADER_DATA, data);
     }
-    if (payload && payload_len > 0) {
         
-#ifndef ZEND_ENGINE_2
             
-#endif  /*  */
-        add_property_stringl (this_ptr, "payload", payload, payload_len, 1);
-    }
     if (must_understand) {
         add_property_bool (this_ptr, WS_HEADER_MUST_UNDERSTAND,
             must_understand);

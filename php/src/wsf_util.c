@@ -181,7 +181,7 @@ wsf_util_construct_header_node (
         axiom_element_set_text (header_ele, env, Z_STRVAL_PP (tmp),
             header_node);
     }
-
+	/*
     if (zend_hash_find (Z_OBJPROP_P (header), "payload",
             sizeof ("payload"), (void **) & tmp) == SUCCESS
         && Z_TYPE_PP (tmp) == IS_STRING) {
@@ -195,6 +195,7 @@ wsf_util_construct_header_node (
 	        axiom_node_add_child (header_node, env, payload_node);
 		}
     }
+	*/
 
     return header_node;
 }
