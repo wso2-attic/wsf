@@ -273,7 +273,9 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                         object = response;
                     }
                     if (checkRequired(innerElement, object)) {
-                        continue;
+                        if (innerElement.getSchemaTypeName() != Constants.XSD_ANYTYPE) {
+                            continue;
+                        }
                     }
                     handleSimpleTypeinResponse(innerElement, object, fac, annotated, json, outElement);
                 }
@@ -1041,7 +1043,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 }
             } else if (jsObject instanceof Undefined || jsObject instanceof UniqueTag) {
                 if (addTypeInfo) {
-                    element.addAttribute("type", "boolean", namespace);
+                    element.addAttribute("type", "undefined", namespace);
                 }
             }
         }
