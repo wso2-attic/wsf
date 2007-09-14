@@ -10,8 +10,9 @@ use WSO2::WSF::C;
 
 # WSClient constructor
 sub new {
-       	my $this = shift;
-	my $args = shift;
+       	my $class = shift;
+	my $this = ref( $class ) || $class;
+	my $args = { @_ };
 
 	$args = {} unless( defined( $args ) );
 
@@ -26,9 +27,10 @@ sub new {
 }
 
 sub request {
-	my $this = "WSO2::WSF::WSClient";
-	shift;
+	my $class = shift;
+	my $this = ref( $class ) || $class;
 	my $args = shift;
+	
 	my $is_wsmessage = 0;
 
 	if( $args =~ /WSMessage/ ) {
@@ -79,8 +81,8 @@ sub request {
 	} else {
 		$reader = WSO2::WSF::C::axiom_xml_reader_create_for_memory_new(
 			$this->{env}, 
-			$args->{payload},
-			length( $args->{payload} ),
+			$this->{payload},
+			length( $this->{payload} ),
 			"utf-8",
 			$WSO2::WSF::C::AXIS2_XML_PARSER_TYPE_BUFFER );
 	}
@@ -99,50 +101,51 @@ sub request {
 			$this->{env} );
 
 	# adding proxy settings
-	if ( defined( $args->{proxy_host} ) && defined( $args->{proxy_port} ) ) {
+	if ( defined( $this->{proxy_host} ) && defined( $this->{proxy_port} ) ) {
 		WSO2::WSF::C::axis2_svc_client_set_proxy( 
 			$this->{svc_client},
 			$this->{env},
-			$args->{proxy_host},
-			$args->{proxy_port} );
+			$this->{proxy_host},
+			$this->{proxy_port} );
 	}
 
 	# adding ssl properties
-	if ( defined( $args->{ssl_server_key_filename} ) &&
-	     defined( $args->{ssl_client_key_filename} ) &&
-	     defined( $args->{passphrase} ) ) {
+	if ( defined( $this->{ssl_server_key_filename} ) &&
+	     defined( $this->{ssl_client_key_filename} ) &&
+	     defined( $this->{passphrase} ) ) {
 
 		my $ssl_server_key_prop = WSO2::WSF::C::axutil_property_create_with_args( 
 			$this->{env},
 			0,
 			&WSO2::WSF::C::AXIS2_TRUE,
 			0,
-			WSO2::WSF::C::axutil_strdup($this->{env}, $args->{ssl_server_key_filename}) );
+			WSO2::WSF::C::axutil_strdup($this->{env}, $this->{ssl_server_key_filename}) );
 		my $ssl_client_key_prop = WSO2::WSF::C::axutil_property_create_with_args( 
 			$this->{env},
 			0,
 			&WSO2::WSF::C::AXIS2_TRUE,
 			0,
-			WSO2::WSF::C::axutil_strdup($this->{env}, $args->{ssl_client_key_filename}) );
+			WSO2::WSF::C::axutil_strdup($this->{env}, $this->{ssl_client_key_filename}) );
 		my $passphrase_prop = WSO2::WSF::C::axutil_property_create_with_args( 
 			$this->{env},
 			0,
 			&WSO2::WSF::C::AXIS2_TRUE,
 			0,
-			WSO2::WSF::C::axutil_strdup($this->{evn}, $args->{passphrase}) );
+			WSO2::WSF::C::axutil_strdup($this->{evn}, $this->{passphrase}) );
         }
 
-	# assuming payload is a string
+	# assuming payload is a string, setting client options
 
 	my $soap_version = "1.2";
-	$soap_version = $args->{"useSOAP"} if ( defined( $args->{"useSOAP"} ) );
+	$soap_version = $this->{"useSOAP"} if ( defined( $this->{"useSOAP"} ) );
 
 	if( ( $soap_version ne "1.2" ) or ( $soap_version ne "1.1" ) ) {
 		$soap_version = 0;
 	}
 
 	if( $soap_version ) {
-		WSO2::WSF::C::axis2_options_set_soap_version($client_options,
+		WSO2::WSF::C::axis2_options_set_soap_version(
+			$client_options,
 			$this->{env},
 			int( $soap_version ) );
 	} else {
@@ -164,7 +167,7 @@ sub request {
 	}
 
 	# default header type is post, only setting the HTTP_METHOD if GET
-	if( defined( $args->{HTTPMethod}) and ( $args->{HTTPMethod} eq "GET" ) ) {
+	if( defined( $this->{HTTPMethod}) and ( $this->{HTTPMethod} eq "GET" ) ) {
 		my $get_property = WSO2::WSF::C::axutil_property_create( $this->{env} );
 
 		WSO2::WSF::C::axutil_property_set_value_new(
@@ -182,21 +185,105 @@ sub request {
 	}
 
 	# setting end point
-	my $to_epr = WSO2::WSF::C::axis2_endpoint_ref_create( $this->{env}, $args->{to} );
+	my $to_epr = WSO2::WSF::C::axis2_endpoint_ref_create( $this->{env}, $this->{to} );
 	WSO2::WSF::C::axis2_options_set_to( $client_options, $this->{env}, $to_epr );
 
 	# setting the SOAP action
-	print $args->{to}, "\n";
-	if( defined( $args->{action} ) ) {
+	if( defined( $this->{action} ) ) {
 		my $action_string = WSO2::WSF::C::axutil_string_create( 
 			$this->{env}, 
-			$args->{action} );
+			$this->{action} );
 		WSO2::WSF::C::axis2_options_set_soap_action(
 			$client_options, 
 			$this->{env}, 
-			$args->{action} );
-		print "\n***\n";
+			$this->{action} );
 	}
+
+	# addressing
+	my $addr_action_present = 0;
+
+	# setting addressing options
+	if( defined( $this->{useWSA} ) && ( ( $this->{useWSA} == "1.0" ) ||
+					    ( $this->{useWSA} == "submission" ) ||
+					    ( $this->{useWSA} == "TRUE" ) ) ) {
+
+		if( defined( $this->{to} ) ) {
+			WSO2::WSF::C::axis2_options_set_action(
+				$client_options,
+				$this->{env},
+				$this->{to} );
+			
+			# need to engage addressing
+			$addr_action_present = 1;
+		}
+
+		if( defined( $this->{replyTo} ) ) {
+			my $replyto_epr = WSO2::WSF::C::axis2_endpoint_ref_create(
+				$this->{env},
+				$this->{replyTo} );
+			WSO2::WSF::C::axis2_options_set_reply_to(
+				$client_options,
+				$this->{env},
+				$replyto_epr );
+		}
+
+		if( defined( $this->{faultTo} ) ) {
+			my $faultto_epr = WSO2::WSF::C::axis2_endpoint_ref_create(
+				$this->{env},
+				$this->{faultTo} );
+			WSO2::WSF::C::axis2_options_set_fault_to(
+				$client_options,
+				$this->{env},
+				$faultto_epr );
+		}
+
+		if( defined( $this->{from} ) ) {
+			my $from_epr = WSO2::WSF::C::axis2_endpoint_ref_create(
+				$this->{env},
+				$this->{from} );
+			WSO2::WSF::C::axis2_options_set_reply_to(
+				$client_options,
+				$this->{env},
+				$from_epr );
+		}
+
+		if( $addr_action_present == 1 ) {
+			WSO2::WSF::C::axis2_svc_client_engage_module(
+				$this->{svc_client},
+				$this->{env},
+				"addressing" );
+		}
+
+		if( $this->{useWSA} == "submission" ) {
+			my $prop = WSO2::WSF::C::axutil_property_create_with_args(
+				$this->{env},
+				0,
+				&WSO2::WSF::C::AXIS2_TRUE,
+				0,
+				WSO2::WSF::C::axutil_strdup( 
+					$this->{env},
+					&WSO2::WSF::C::AXIS2_WSA_NAMESPACE_SUBMISSION ) );
+			WSO2::WSF::C::axis2_options_set_property(
+				$client_options,
+				$this->{env},
+				&WSO2::WSF::C::AXIS2_WSA_VERSION,
+				$prop );
+		}
+
+	} else {
+		# either a wrong value or FALSE
+	}
+
+	# setting headers
+	
+	# outgoing attachments
+
+	my $response_payload = WSO2::WSF::C::axis2_svc_client_send_receive(
+		$this->{svc_client},
+		$this->{env},
+		$request_payload );
+
+	
 }
 
 sub wsf_util_read_payload {
