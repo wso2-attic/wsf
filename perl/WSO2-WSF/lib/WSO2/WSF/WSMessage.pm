@@ -6,22 +6,20 @@ use warnings;
 use base 'Exporter';
 
 sub new {
-	my $this = shift;
-	my $payload = shift;
+	my $class = shift;
+	my $this = ref( $class ) || $class;
 	my $self = shift; # options
 
-	$self = {} unless( defined( $self ) );
+	# $self = {} unless( defined( $self ) );
 
-	unless( defined( $payload ) ) {
+	unless( defined( $self->{payload} ) ) {
 		die "ERROR:  Payload cannot be null";
 	}
 
-	if( ( scalar( $payload ) =~ /HASH/ ) or
-	    ( scalar( $payload ) =~ /ARRAY/ ) ) {
+	if( ( scalar( $self->{payload} ) =~ /HASH/ ) or
+	    ( scalar( $self->{payload} ) =~ /ARRAY/ ) ) {
 		die "ERROR:  Payload should be a string";
 	}
-
-	$this->{"payload"} = $payload;
 
 	if( defined( $self ) ) {
 		foreach my $k (keys (%{$self})) {
