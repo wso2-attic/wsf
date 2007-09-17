@@ -109,6 +109,7 @@ rem Build Apache Savan/C
 @copy /Y NEWS wso2-wsf-c-bin-1.1.0
 @copy /Y COPYING wso2-wsf-c-bin-1.1.0
 @copy /Y AUTHORS wso2-wsf-c-bin-1.1.0
+@copy /Y NOTICE wso2-wsf-c-bin-1.1.0
 @xcopy /E /I /Q /Y docs  wso2-wsf-c-bin-1.1.0\docs
 
 :end
