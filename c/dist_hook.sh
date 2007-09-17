@@ -19,6 +19,11 @@ make dist
 tar -xf wso2-wsf-c-src-1.1.0.tar.gz
 mv wso2-wsf-c-src-1.1.0   ../../wso2-wsf-c-src-1.1.0/rampartc/samples
 
+cd ../../savanc/samples
+make dist
+tar -xf wso2-wsf-c-src-1.1.0.tar.gz
+mv wso2-wsf-c-src-1.1.0   ../../wso2-wsf-c-src-1.1.0/savanc/samples
+
 cd ../../
 
 cd wso2-wsf-c-src-1.1.0
