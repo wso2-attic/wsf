@@ -88,6 +88,7 @@ rem Build Apache Savan/C
 @xcopy /E /Q /I /Y savanc\modules\savan .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\modules\savan
 @xcopy /E /Q /I /Y savanc\services\publisher .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\services\publisher
 @xcopy /E /Q /I /Y savanc\services\listener .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\services\listener
+@xcopy /E /Q /I /Y savanc\services\subscription .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\services\subscription
 @xcopy /E /Q /I /Y savanc\samples .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\samples\savan
 @copy /Y savanc\modules\savan\mod_savan.dll .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
 @copy /Y savanc\modules\savan\mod_savan.lib .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
