@@ -24,6 +24,10 @@ make maintainer-clean
 cd ../../rampartc/samples
 ./configure
 make maintainer-clean
+cd ../../savanc/samples
+./configure
+make maintainer-clean
+
 cd ../../
 
 rm -rf `find . -type d -name .svn`
