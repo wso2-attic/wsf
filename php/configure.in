@@ -18,8 +18,8 @@ ZLIB_BIN_DIR=E:\zlib-1.2.3.win32
 
 # Path to Apache2 installation
 APACHE_BIN_DIR = "E:\Apache22"
-# Apache httpd version, to use apache 2.0.59 set APACHE_VERSION_IS_2_0_59 = 1
-APACHE_VERSION_IS_2_0_59 = 0
+# Apache httpd version, to use apache 2.0.x set APACHE_VERSION_2_0_X = 1
+APACHE_VERSION_2_0_X = 0
 
 # Enable/disable LibCurl client transport, to enable set ENABLE_LIBCURL = 1
 ENABLE_LIBCURL = 0
