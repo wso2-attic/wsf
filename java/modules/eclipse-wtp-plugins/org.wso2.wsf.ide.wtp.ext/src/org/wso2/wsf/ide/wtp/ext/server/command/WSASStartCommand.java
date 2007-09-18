@@ -22,6 +22,8 @@ import org.eclipse.core.runtime.Status;
 import org.wso2.wsf.ide.core.plugin.messages.WSASCoreUIMessages;
 import org.wso2.wsf.ide.core.utils.FileUtils;
 import org.wso2.wsf.ide.wtp.ext.server.bean.WSASConfigurationBean;
+import org.wso2.wsf.ide.wtp.ext.server.util.WSASPing;
+import org.wso2.wsf.ide.wtp.ext.server.util.WSASUtils;
 
 public class WSASStartCommand {
 	
@@ -29,15 +31,28 @@ public class WSASStartCommand {
 
 	public  static IStatus run() throws InvocationTargetException {
 		status = Status.OK_STATUS;
+
+		if (WSASConfigurationBean.isWsasStartStatus()) {
+			WSASPing pingUtil = new WSASPing();
+			if(pingUtil.pingWSASService(WSASUtils.getWSASVersionServiceHTTPAddress())){
+				status = new Status(IStatus.ERROR,"id",11,WSASCoreUIMessages.WSAS_ALREADY_RUNNING,null);
+				WSASConfigurationBean.setWSASAlreadyRunning(true);
+			}else{
+				WSASConfigurationBean.setWsasStartStatus(false);
+				//Close the browser
+				WTPInternalBrowserCommand.closeUpInrernalBrouwser();
+				startWSAS();
+			}
+		}else{
+			startWSAS();
+		}
+		return status;
+	}
+	
+	private static void startWSAS(){
 		Process wsasProcess = null;
 		String pathNodesStopWin[] = {WSASCoreUIMessages.DIR_BIN, WSASCoreUIMessages.WSAS_START_BAT};
 		String pathNodesStopIx[] = {WSASCoreUIMessages.DIR_BIN, WSASCoreUIMessages.WSAS_START_SH};
-
-		if (WSASConfigurationBean.isWsasStartStatus()) {
-			status = new Status( IStatus.ERROR,"id",11,WSASCoreUIMessages.WSAS_ALREADY_RUNNING,null);
-			WSASConfigurationBean.setWSASAlreadyRunning(true);
-		}else{
-		
 				String wsasInstallationLocation = WSASConfigurationBean.getWsasInstallationPath();
 				try {
 					Runtime runtime = Runtime.getRuntime();
@@ -58,9 +73,6 @@ public class WSASStartCommand {
 				}
 				
 				WSASConfigurationBean.setWSASAlreadyRunning(false);
-				
-		}
-		return status;
 	}
 
 }
