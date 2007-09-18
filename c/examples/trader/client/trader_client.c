@@ -198,9 +198,12 @@ create_account(const axutil_env_t *env,
 
     trader_client = axis2_stub_TraderClient_create(env, client_home, epr);
 
-    create_account_resp = axis2_stub_TraderClient_createAccount(
+    if (trader_client)
+    {
+        create_account_resp = axis2_stub_TraderClient_createAccount(
             trader_client, env, create_account_req);
-
+    }
+    
     if(create_account_resp)
     {
         printf("RESULTS : Your User id is %s\n", axis2_createAccountResponse_get_userid(create_account_resp, env));

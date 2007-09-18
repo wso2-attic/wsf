@@ -30,7 +30,8 @@
          endpoint_ref = axis2_endpoint_ref_create(env, endpoint_uri);
 
          stub = axis2_stub_create_with_endpoint_ref_and_client_home ( env, endpoint_ref, client_home );
-         axis2_stub_TraderClient_populate_services( stub, env );
+         if (stub)
+             axis2_stub_TraderClient_populate_services( stub, env );
          return stub;
       }
 
