@@ -12,7 +12,7 @@ use WSO2::WSF::C;
 sub new {
        	my $class = shift;
 	my $this = ref( $class ) || $class;
-	my $args = { @_ };
+	my $args = shift;
 
 	$args = {} unless( defined( $args ) );
 
@@ -31,12 +31,13 @@ sub request {
 	my $this = ref( $class ) || $class;
 	my $args = shift;
 	
+	$args = {} unless( defined( $args ) );
+
 	my $is_wsmessage = 0;
 
 	if( $args =~ /WSMessage/ ) {
 		foreach my $k ( keys %{$args} ) {
 			$this->{$k} = $args->{$k};
-			print $k, " => ", $args->{$k}, "\n";
 		}
 
 		$is_wsmessage = 1;
@@ -117,19 +118,19 @@ sub request {
 		my $ssl_server_key_prop = WSO2::WSF::C::axutil_property_create_with_args( 
 			$this->{env},
 			0,
-			&WSO2::WSF::C::AXIS2_TRUE,
+			$WSO2::WSF::C::AXIS2_TRUE,
 			0,
 			WSO2::WSF::C::axutil_strdup($this->{env}, $this->{ssl_server_key_filename}) );
 		my $ssl_client_key_prop = WSO2::WSF::C::axutil_property_create_with_args( 
 			$this->{env},
 			0,
-			&WSO2::WSF::C::AXIS2_TRUE,
+			$WSO2::WSF::C::AXIS2_TRUE,
 			0,
 			WSO2::WSF::C::axutil_strdup($this->{env}, $this->{ssl_client_key_filename}) );
 		my $passphrase_prop = WSO2::WSF::C::axutil_property_create_with_args( 
 			$this->{env},
 			0,
-			&WSO2::WSF::C::AXIS2_TRUE,
+			$WSO2::WSF::C::AXIS2_TRUE,
 			0,
 			WSO2::WSF::C::axutil_strdup($this->{evn}, $this->{passphrase}) );
         }
@@ -162,7 +163,7 @@ sub request {
 			$client_options,
 			$this->{env},
 			$WSO2::WSF::C::AXIS2_ENABLE_REST,
-			"$rest_property");
+			$rest_property);
 
 	}
 
@@ -258,15 +259,15 @@ sub request {
 			my $prop = WSO2::WSF::C::axutil_property_create_with_args(
 				$this->{env},
 				0,
-				&WSO2::WSF::C::AXIS2_TRUE,
+				$WSO2::WSF::C::AXIS2_TRUE,
 				0,
 				WSO2::WSF::C::axutil_strdup( 
 					$this->{env},
-					&WSO2::WSF::C::AXIS2_WSA_NAMESPACE_SUBMISSION ) );
+					$WSO2::WSF::C::AXIS2_WSA_NAMESPACE_SUBMISSION ) );
 			WSO2::WSF::C::axis2_options_set_property(
 				$client_options,
 				$this->{env},
-				&WSO2::WSF::C::AXIS2_WSA_VERSION,
+				$WSO2::WSF::C::AXIS2_WSA_VERSION,
 				$prop );
 		}
 
@@ -283,7 +284,69 @@ sub request {
 		$this->{env},
 		$request_payload );
 
-	
+	if( WSO2::WSF::C::axis2_svc_client_get_last_response_has_fault( 
+			$this->{svc_client}, 
+			$this->{env} ) ) {
+		my $soap_envelop = WSO2::WSF::C::axis2_svc_client_get_last_response_soap_envelope(
+                                        $this->{svc_client}, 
+					$this->{env} );
+                
+                my $soap_body;
+		my $soap_fault;
+
+                if( $soap_envelop ) {
+                        $soap_body = WSO2::WSF::C::axiom_soap_envelope_get_body( 
+					$soap_envelop, 
+					$this->{env} );
+		}
+		
+		if( $soap_body ) {
+			$soap_fault = WSO2::WSF::C::axiom_soap_body_get_fault( 
+					$soap_body, 
+					$this->{env} );
+		}
+
+		if( $soap_fault ) {
+			my $soap_version = 0;
+			$soap_version = WSO2::WSF::C::axis2_options_get_soap_version(
+					$client_options,
+					$this->{env} );
+
+			my $fault_node = WSO2::WSF::C::axiom_soap_fault_get_base_node(
+					$soap_fault,
+					$this->{env} );
+
+			if( $fault_node ) {
+				# contruct a WSFault object and throw an exception
+			}
+		}
+	} elsif( $response_payload ) {
+		# handle attachments
+		
+		my $writer = WSO2::WSF::C::axiom_xml_writer_create_for_memory(
+			$this->{env},
+			undef,
+			$WSO2::WSF::C::AXIS2_TRUE,
+			0,
+			$WSO2::WSF::C::AXIS2_XML_PARSER_TYPE_BUFFER );
+
+		my $om_output = WSO2::WSF::C::axiom_output_create(
+			$this->{env},
+			$writer );
+
+		WSO2::WSF::C::axiom_node_serialize(
+			$response_payload,
+			$this->{env},
+			$om_output );
+
+		my $buffer = WSO2::WSF::C::axiom_xml_writer_get_xml_new(
+			$writer,
+			$this->{env} );
+
+		$res_msg = new WSO2::WSF::WSMessage( { 'payload' => $this->{payload},
+						       'str' 	 => $buffer } );
+		return $res_msg;
+	}
 }
 
 sub wsf_util_read_payload {
@@ -303,12 +366,6 @@ sub wsf_util_read_payload {
 	WSO2::WSF::C::axiom_document_build_all($document, $args->{env});
 	return $payload;
 
-}
-
-sub ws_util_serilize_om {
-	my $args = shift;
-
-	my $builder = WSO2::WSF::C::axiom_stax_builder_create($args->{env}, $args->{reader});
 }
 
 # helper method to set options, sholdn't be calling this directly though
