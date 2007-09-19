@@ -15,7 +15,7 @@ extension=wsf.so
 
 Now you are ready to use WSO2 WSF/PHP.
 Copy the scripts folder to your Web server's document root.
-Also copy all the samples folder to your Web server's document root.
+Also copy the samples folder to your Web server's document root.
 Test with a Web browser; as an example access http://localhost/samples/echo_client.php
 
 [NOTES:
