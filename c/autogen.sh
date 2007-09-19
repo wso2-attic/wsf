@@ -33,8 +33,11 @@ echo "Running autogen.sh in Rampart/C samples"
 cd ../../savanc
 echo "Running autogen.sh in Savan/C"
 ./autogen.sh
+cd samples
+echo "Running autogen.sh in Savan/C samples"
+./autogen.sh
 
-cd ..
+cd ../../
 
 echo "Running autogen.sh in WSF/C"
 echo -n 'Running libtoolize...'
