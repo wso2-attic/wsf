@@ -137,18 +137,24 @@ sub request {
 
 	# assuming payload is a string, setting client options
 
-	my $soap_version = "1.2";
-	$soap_version = $this->{"useSOAP"} if ( defined( $this->{"useSOAP"} ) );
+	my $soap_version = $WSO2::WSF::C::AXIOM_SOAP12;
+	my $use_soap = $WSO2::WSF::C::AXIS2_TRUE;
 
-	if( ( $soap_version ne "1.2" ) or ( $soap_version ne "1.1" ) ) {
-		$soap_version = 0;
+	if( defined( $this->{useSOAP} ) ) {
+		for( $this->{useSOAP} ) {
+			if	( /^1\.2$/ )  { $soap_version = $WSO2::WSF::C::AXIOM_SOAP12; }
+			elsif 	( /^1\.1$/ )  { $soap_version = $WSO2::WSF::C::AXIOM_SOAP11; }
+			elsif	( /^TRUE$/ )  { $soap_version = $WSO2::WSF::C::AXIOM_SOAP12; }
+			elsif	( /^FALSE$/ ) { $use_soap = 0; }
+			else		      { $soap_version = $WSO2::WSF::C::AXIOM_SOAP12; }
+		}
 	}
 
-	if( $soap_version ) {
+	if( $use_soap == $WSO2::WSF::C::AXIS2_TRUE ) {
 		WSO2::WSF::C::axis2_options_set_soap_version(
 			$client_options,
 			$this->{env},
-			int( $soap_version ) );
+			$soap_version );
 	} else {
 		my $rest_property = WSO2::WSF::C::axutil_property_create($this->{env});
 
@@ -164,7 +170,7 @@ sub request {
 			$this->{env},
 			$WSO2::WSF::C::AXIS2_ENABLE_REST,
 			$rest_property);
-
+	
 	}
 
 	# default header type is post, only setting the HTTP_METHOD if GET
