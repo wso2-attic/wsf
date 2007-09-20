@@ -35,7 +35,7 @@ public abstract class AbstractJAVA2WSDLWizardPage extends WizardPage implements 
     
     protected void init(String pageName){
         setTitle("WSO2 WSAS JAVA 2 WSDL Tool");
-        setDescription("Select the nessesary details on the page and click Next and finally Finish");
+        setDescription("Select the necessary details on the page and click Next and finally Finish");
         setImageDescriptor(WSASDumpAARPlugin.getWizardImageDescriptor());
         
         /*
