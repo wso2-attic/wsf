@@ -5,8 +5,10 @@ use 5.008008;
 use warnings;
 use base qw(WSO2::WSF);
 
-# require WSO2::WSF::C;
 use WSO2::WSF::C;
+use WSO2::WSF::WSMessage;
+
+our @EXPORT = qw( new );
 
 # WSClient constructor
 sub new {
@@ -35,13 +37,11 @@ sub request {
 
 	my $is_wsmessage = 0;
 
-	if( $args =~ /WSMessage/ ) {
-		foreach my $k ( keys %{$args} ) {
-			$this->{$k} = $args->{$k};
-		}
-
-		$is_wsmessage = 1;
+	foreach my $k ( keys %{$args} ) {
+		$this->{$k} = $args->{$k};
 	}
+
+	$is_wsmessage = 1  if( $args =~ /WSMessage/ );
 
         unless( defined $this->{axis2c_home} ) {
                 die( "ERROR:  Axis2/C home is not given");
@@ -95,11 +95,18 @@ sub request {
 	my $request_payload = wsf_util_read_payload( { 'reader'	=> $reader, 
 						       'env'	=> $this->{env} } );
 
+	die( "ERROR:  Request payload should not be null" ) unless( defined( $request_payload ) );
+
 	WSO2::WSF::C::axiom_xml_reader_free( $reader, $this->{env} );
 
 	my $client_options = WSO2::WSF::C::axis2_svc_client_get_options(
 			$this->{svc_client}, 
 			$this->{env} );
+	WSO2::WSF::C::axis2_options_set_xml_parser_reset(
+			$client_options,
+			$this->{env},
+			$WSO2::WSF::C::AXIS2_TRUE );
+	
 
 	# adding proxy settings
 	if ( defined( $this->{proxy_host} ) && defined( $this->{proxy_port} ) ) {
@@ -145,7 +152,7 @@ sub request {
 			if	( /^1\.2$/ )  { $soap_version = $WSO2::WSF::C::AXIOM_SOAP12; }
 			elsif 	( /^1\.1$/ )  { $soap_version = $WSO2::WSF::C::AXIOM_SOAP11; }
 			elsif	( /^TRUE$/ )  { $soap_version = $WSO2::WSF::C::AXIOM_SOAP12; }
-			elsif	( /^FALSE$/ ) { $use_soap = 0; }
+			elsif	( /^FALSE$/ ) { $use_soap = $WSO2::WSF::C::AXIS2_FALSE; }
 			else		      { $soap_version = $WSO2::WSF::C::AXIOM_SOAP12; }
 		}
 	}
@@ -156,21 +163,18 @@ sub request {
 			$this->{env},
 			$soap_version );
 	} else {
-		my $rest_property = WSO2::WSF::C::axutil_property_create($this->{env});
+		my $rest_property = WSO2::WSF::C::axutil_property_create( $this->{env} );
 
 		WSO2::WSF::C::axutil_property_set_value_new(
 			$rest_property,
 			$this->{env},
-			WSO2::WSF::C::axutil_strdup_new(
-				$this->{env},
-				"$WSO2::WSF::C::AXIS2_TRUE") );
+			$WSO2::WSF::C::AXIS2_VALUE_TRUE );
 
 		WSO2::WSF::C::axis2_options_set_property_new(
 			$client_options,
 			$this->{env},
 			$WSO2::WSF::C::AXIS2_ENABLE_REST,
-			$rest_property);
-	
+			$rest_property );
 	}
 
 	# default header type is post, only setting the HTTP_METHOD if GET
@@ -180,15 +184,14 @@ sub request {
 		WSO2::WSF::C::axutil_property_set_value_new(
 			$get_property,
 			$this->{env},
-			WSO2::WSF::C::axutil_strdup_new( 
-				$this->{env},
-				$WSO2::WSF::C::AXIS2_HTTP_GET) );
+			$WSO2::WSF::C::AXIS2_HTTP_GET );
 
 		WSO2::WSF::C::axis2_options_set_property_new(
 			$client_options,
 			$this->{env},
 			$WSO2::WSF::C::AXIS2_HTTP_METHOD,
-			$get_property);
+			$get_property );
+
 	}
 
 	# setting end point
@@ -203,16 +206,16 @@ sub request {
 		WSO2::WSF::C::axis2_options_set_soap_action(
 			$client_options, 
 			$this->{env}, 
-			$this->{action} );
+			$action_string );
 	}
 
 	# addressing
 	my $addr_action_present = 0;
 
 	# setting addressing options
-	if( defined( $this->{useWSA} ) && ( ( $this->{useWSA} == "1.0" ) ||
-					    ( $this->{useWSA} == "submission" ) ||
-					    ( $this->{useWSA} == "TRUE" ) ) ) {
+	if( defined( $this->{useWSA} ) && ( ( $this->{useWSA} eq "1.0" ) ||
+					    ( $this->{useWSA} eq "submission" ) ||
+					    ( $this->{useWSA} eq "TRUE" ) ) ) {
 
 		if( defined( $this->{to} ) ) {
 			WSO2::WSF::C::axis2_options_set_action(
@@ -261,7 +264,7 @@ sub request {
 				"addressing" );
 		}
 
-		if( $this->{useWSA} == "submission" ) {
+		if( $this->{useWSA} eq "submission" ) {
 			my $prop = WSO2::WSF::C::axutil_property_create_with_args(
 				$this->{env},
 				0,
