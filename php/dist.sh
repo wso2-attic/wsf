@@ -10,12 +10,12 @@ cp wsf_c_dist_hook.sh wsf_c/dist_hook.sh
 sed -i "s/src//g" Makefile.am
 ./configure --with-wsf --enable-openssl --with-apache2=/usr/local/apache2/include --with-axis2=`pwd`/wsf_c/axis2c/include --enable-tests=yes --enable-savan=no --with-xmpp --prefix=`php-config --extension-dir`/wsf_c
 make dist
-tar xzf wso2-wsf-php-1.1.0.tar.gz
-rm wso2-wsf-php-1.1.0.tar.gz
-cp -r src samples scripts docs wso2-wsf-php-1.1.0
-rm -f wso2-wsf-php-1.1.0/src/libtool
+tar xzf wso2-wsf-php-src-1.1.0.tar.gz
+rm wso2-wsf-php-src-1.1.0.tar.gz
+cp -r src samples scripts docs wso2-wsf-php-src-1.1.0
+rm -f wso2-wsf-php-src-1.1.0/src/libtool
 
-cd wso2-wsf-php-1.1.0
+cd wso2-wsf-php-src-1.1.0
 
 rm -rf `find . -type d -name .svn`
 rm -rf `find . -type f -name *.la`
@@ -36,7 +36,7 @@ sed -i "s/\tcp -rf samples\/*.*//g" wsf_c/sandesha2c/Makefile.in
 sed -i "s/\tcp -rf samples\/*.*//g" wsf_c/rampartc/Makefile.in
 
 cd ..
-tar czf wso2-wsf-php-1.1.0.tar.gz wso2-wsf-php-1.1.0
-zip -rq wso2-wsf-php-1 wso2-wsf-php-1.1.0
-mv wso2-wsf-php-1.zip wso2-wsf-php-1.1.0.zip
-rm -rf wso2-wsf-php-1.1.0
+tar czf wso2-wsf-php-src-1.1.0.tar.gz wso2-wsf-php-src-1.1.0
+zip -rq wso2-wsf-php-src-1 wso2-wsf-php-src-1.1.0
+mv wso2-wsf-php-src-1.zip wso2-wsf-php-src-1.1.0.zip
+rm -rf wso2-wsf-php-src-1.1.0
