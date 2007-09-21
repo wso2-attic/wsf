@@ -43,24 +43,31 @@ sub request {
 
 	$is_wsmessage = 1  if( $args =~ /WSMessage/ );
 
-        unless( defined $this->{axis2c_home} ) {
-                die( "ERROR:  Axis2/C home is not given");
-        }
 
         $this->{env} = WSO2::WSF::C::axutil_env_create_all(
 			"/tmp/wsf-perl.log", 
 			$WSO2::WSF::C::AXIS2_LOG_LEVEL_TRACE );
 	
-        unless( defined $this->{env} ) {
-                die( "ERROR:  Failed to create WSF/C environment" );
+	unless( defined( $this->{env} ) ) {
+		die( "ERROR:  Failed to create WSF/C environment" );
+	}
+
+        unless( defined( $this->{axis2c_home} ) ) {
+		WSO2::WSF::C::axis2_log_debug(
+			$this->{env},
+			"[wsf-perl] Location where WSF/C installed is not specified" );
+                die( "ERROR:  Axis2/C home is not given" );
         }
 
 	$this->{svc_client} = WSO2::WSF::C::axis2_svc_client_create(
 			$this->{env}, 
 			$this->{axis2c_home} );
 
-	unless( defined $this->{svc_client} ) {
-	       die( "ERROR:  Failed to create service client" );
+	unless( defined( $this->{svc_client} ) ) {
+		WSO2::WSF::C::axis2_log_debug(
+			$this->{env},
+			"[wsf-perl] Service client creation failed" );
+		die( "ERROR:  Failed to create service client" );
 	}
 
 	# skipping sandesha for the moment
@@ -88,12 +95,30 @@ sub request {
 			$WSO2::WSF::C::AXIS2_XML_PARSER_TYPE_BUFFER );
 	}
 
+	unless( defined( $reader ) ) {
+		WSO2::WSF::C::axis2_log_debug(
+			$this->{env},
+			"[wsf-perl] Failed to create xml_reader_for_memory" );
+	}
+
 	# convert $reader to an axiom node
 	my $builder = WSO2::WSF::C::axiom_stax_builder_create( $this->{env}, $reader );
+
+	unless( defined( $builder ) ) {
+		WSO2::WSF::C::axis2_log_debug(
+			$this->{env},
+			"[wsf-perl] Axiom node conversion failed" );
+	}
 
 	# convert payload to an axiom node
 	my $request_payload = wsf_util_read_payload( { 'reader'	=> $reader, 
 						       'env'	=> $this->{env} } );
+
+	unless( defined( $request_payload ) ) {
+		WSO2::WSF::C::axis2_log_debug(
+			$this->{env},
+			"[wsf-perl] Failed to convert payload to an axiom node" );
+	}
 
 	die( "ERROR:  Request payload should not be null" ) unless( defined( $request_payload ) );
 
@@ -216,6 +241,10 @@ sub request {
 	if( defined( $this->{useWSA} ) && ( ( $this->{useWSA} eq "1.0" ) ||
 					    ( $this->{useWSA} eq "submission" ) ||
 					    ( $this->{useWSA} eq "TRUE" ) ) ) {
+
+		WSO2::WSF::C::axis2_log_debug(
+			$this->{env},
+			"[wsf-perl] useWSA is specified, value = $this->{useWSA}" );
 
 		if( defined( $this->{to} ) ) {
 			WSO2::WSF::C::axis2_options_set_action(
