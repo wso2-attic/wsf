@@ -65,6 +65,7 @@ axutil_stomp_frame_set_command (axutil_stomp_frame_t *frame,
     AXIS2_PARAM_CHECK (env->error, frame, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK (env->error, command, AXIS2_FAILURE);
     frame->command = command;
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "%s stomp command is set", command);
     return AXIS2_SUCCESS;
 }
 
@@ -83,6 +84,8 @@ axutil_stomp_frame_set_header (axutil_stomp_frame_t *frame,
     axis2_char_t *stomp_header = NULL;
     stomp_header = axutil_strcat (env, header, ":", value, NULL);
     axutil_array_list_add (frame->headers, env, (void *)stomp_header);
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, 
+        "%s stomp header is set, value is %s", header, value);
     return AXIS2_SUCCESS;
 }
 
@@ -96,6 +99,7 @@ axutil_stomp_frame_set_body (axutil_stomp_frame_t *frame,
     AXIS2_PARAM_CHECK (env->error, frame, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK (env->error, body, AXIS2_FAILURE);
     frame->body = body;
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "%s stomp body is set", body);
     return AXIS2_SUCCESS;
 }
 
@@ -110,7 +114,7 @@ axutil_stomp_frame_write (axutil_stomp_frame_t *frame,
     /* command */
     total += axutil_stream_write (stream, env, frame->command, strlen (frame->command));
     total += axutil_stream_write (stream, env, "\n", 1);
-    
+
     /* headers */
     int size = 0;
     int i = 0;
@@ -133,7 +137,8 @@ axutil_stomp_frame_write (axutil_stomp_frame_t *frame,
         total += axutil_stream_write (stream, env, frame->body, strlen (frame->body));
     }
     total += axutil_stream_write (stream, env, "\0\n", 2);
-
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, 
+                     "stomp frame is write to stream %d of total bytes", total);
     return total;
 }
 

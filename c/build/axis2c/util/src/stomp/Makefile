@@ -145,7 +145,7 @@ host_cpu = i686
 host_os = linux-gnu
 host_vendor = pc
 htmldir = ${docdir}
-includedir = ${prefix}/include
+includedir = $(prefix)/include/axis2-1.1
 infodir = ${datarootdir}/info
 install_sh = /home/dinesh/wsf_c/axis2c/util/install-sh
 libdir = ${exec_prefix}/lib
@@ -167,7 +167,7 @@ target_alias =
 target_cpu = i686
 target_os = linux-gnu
 target_vendor = pc
-EXTRA_DIST = axutil_stomp_frame.h axis2_stomp.h frame.c stomp.c main.c
+EXTRA_DIST = axutil_stomp_frame.h axutil_stomp.h frame.c stomp.c main.c
 all: all-am
 
 .SUFFIXES:
