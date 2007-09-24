@@ -1,4 +1,4 @@
-Using SSL with wsf-php extension
+Using SSL with WSO2 WSF/PHP extension
 
 For using secure socket layer transport you should do the following.
 
@@ -16,15 +16,15 @@ To use the SSL layer you need to call to a SSL enabled endpoint.
 
 WSClient has following options to specify the SSL requirements.
 
-"clientCertificate" 
-"serverCertificate"
+"CACert" 
+"clientCert"
 "passphrase"
 
 example code.
 
  $client = new WSClient(array("to"=>"https://10.100.1.143:9090/axis2/services/echo",
-					   "serverCertificate"=>"E:\\\cacert.pem",
-					   "clientCertificate"=>"E:\\\client.pem",
+					   "CACert"=>"E:\\\cacert.pem",
+					   "clientCert"=>"E:\\\client.pem",
 					   "passphrase"=>"abc1234567890"));
 
  $msg = $client->request($reqPayloadString);
