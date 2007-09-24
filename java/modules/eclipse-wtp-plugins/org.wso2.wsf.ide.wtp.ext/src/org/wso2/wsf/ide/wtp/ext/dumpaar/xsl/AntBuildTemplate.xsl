@@ -27,19 +27,54 @@
         */
         </xsl:comment>
         <project default="build.archive">
-            
+             
             <xsl:attribute name="name">
-                <xsl:variable name="key" select="entry[@key='serviceName']/@value"/>
-                <xsl:text><xsl:value-of select="$key"/>AARBuild</xsl:text>
+            	<xsl:variable name="key" select="Entry[@key='serviceName']/@value" />
+                <xsl:text><xsl:value-of select="$key" /></xsl:text>
+                 <xsl:text>AARBuild</xsl:text>
             </xsl:attribute>
-            
+
+            <property name="projectName">
+            	<xsl:attribute name="location">
+            		<xsl:variable name="key" select="Entry[@key='serviceName']/@value" />
+            		<xsl:text><xsl:value-of select="$key"/></xsl:text>
+            	</xsl:attribute>
+            </property>
+
+            <xsl:comment>==================================</xsl:comment>
+            <xsl:comment>        COMPILE ARCHIVE           </xsl:comment>
+            <xsl:comment>==================================</xsl:comment>
+
+            <target name="compile" description="compile the source ">
+            	<xsl:comment> Compile the java code </xsl:comment>
+            	<javac>
+            		<xsl:attribute name="srcdir">
+            			<xsl:variable name="key" select="Entry[@key='serviceName']/@value" />
+            			<xsl:text>./<xsl:value-of select="$key"/></xsl:text>
+            		</xsl:attribute>
+            		<xsl:attribute name="destdir">
+            			<xsl:variable name="key" select="Entry[@key='serviceName']/@value" />
+            			<xsl:text>./<xsl:value-of select="$key"/></xsl:text>
+            		</xsl:attribute>
+            	</javac>
+            </target>
+
             <xsl:comment>==================================</xsl:comment>
             <xsl:comment>         BUILD ARCHIVE            </xsl:comment>
             <xsl:comment>==================================</xsl:comment>
 
-            <target name="build.archive">
-                <zip destfile="./target/TestThis.aar"
-                     basedir="./TestThis" />
+            <target name="build.archive" depends="clean, compile" >
+                <zip destfile="./target/${projectName}.aar" basedir="./${projectName}" >
+                    <xsl:attribute name="destfile">
+                    	<xsl:variable name="key" select="Entry[@key='serviceName']/@value" />
+                    	<xsl:text>./target/<xsl:value-of select="$key"/></xsl:text>
+                    	<xsl:text>.aar</xsl:text>
+                    </xsl:attribute>
+            		<xsl:attribute name="basedir">
+            			<xsl:variable name="key" select="Entry[@key='serviceName']/@value" />
+            			<xsl:text>./<xsl:value-of select="$key"/></xsl:text>
+            		</xsl:attribute>
+                </zip>
             </target>
 
             <xsl:comment>==================================</xsl:comment>
@@ -47,7 +82,13 @@
             <xsl:comment>==================================</xsl:comment>
 
             <target name="clean">
-                <delete file="./target/TestThis.aar"/>
+                <delete>
+                	<xsl:attribute name="file">
+                		<xsl:variable name="key" select="Entry[@key='serviceName']/@value" />
+                		<xsl:text>./target/<xsl:value-of select="$key"/></xsl:text>
+                    	<xsl:text>.aar</xsl:text>
+                	</xsl:attribute>
+                </delete>
             </target>
 
         </project>

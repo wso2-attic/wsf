@@ -21,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -45,6 +46,7 @@ public class WSASDumpArchiverWizard extends Wizard implements INewWizard{
 	IPath systemDirPath;
 	IPath dumpAARPath;
 	IPath dumpAARTargetPath;
+	IPath workspacePath;
 	
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 	}
@@ -113,6 +115,10 @@ public class WSASDumpArchiverWizard extends Wizard implements INewWizard{
 			FileUtils.copyDirectory(
 				new File(dumpAARSelectionPage.getWSASRepoPath().append(serviceToDump).toOSString()),
 				selectedServiceFile);
+			//Add the source also to the classes
+			FileUtils.copyDirectory(
+					new File(workspacePath.append(serviceToDump).append("src").toOSString()),
+					selectedServiceFile);
 	
 		ArchiveManipulator archiveManipulator = new ArchiveManipulator();
 		archiveManipulator.archiveDir(serviceToDump+".aar", selectedServicePath.toOSString());
@@ -178,6 +184,7 @@ public class WSASDumpArchiverWizard extends Wizard implements INewWizard{
     	dumpAARTargetPath = new Path(dumpAARPath.append("target").toOSString());
     	FileUtils.createDirectorys(dumpAARPath.toOSString());
     	FileUtils.createDirectorys(dumpAARTargetPath.toOSString());
+    	workspacePath=ResourcesPlugin.getWorkspace().getRoot().getRawLocation();
     	alreadyInit = true;
     }
 
