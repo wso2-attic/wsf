@@ -1,10 +1,17 @@
+WSO2 WSF/PHP 1.1.0
+* Bug fixes related to MTOM, Security
+* Memory Leaks fixed
+
+
+
+
 WSO2 WSF/PHP 1.0.0
 ======================
 
 Major changes since last release
-    * WSDL generation support
-    * WSDL mode support for both client and server side
-    * Documentation Improvements
-    * Numerous bug fixes from the previous release
-    * Backward compatibility with PHP5 SOAP extension
+* WSDL generation support
+* WSDL mode support for both client and server side
+* Documentation Improvements
+* Numerous bug fixes from the previous release
+* Backward compatibility with PHP5 SOAP extension
 
