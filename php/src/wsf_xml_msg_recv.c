@@ -657,6 +657,8 @@ wsf_xml_msg_recv_set_soap_fault (
 
     axiom_node_t *detail_node = NULL;
 
+
+    smart_str fcode = {0};
     zval **tmp;
 
     if (!soap_ns || !out_msg_ctx)
@@ -690,7 +692,6 @@ wsf_xml_msg_recv_set_soap_fault (
     if (zend_hash_find
         (Z_OBJPROP_P (zval_soap_fault), WS_FAULT_CODE, sizeof (WS_FAULT_CODE),
             (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-        smart_str fcode = {0};
         smart_str_appends(&fcode,AXIOM_SOAP_DEFAULT_NAMESPACE_PREFIX);
         smart_str_appends(&fcode, ":");
         smart_str_appends(&fcode,Z_STRVAL_PP (tmp));
@@ -739,5 +740,6 @@ wsf_xml_msg_recv_set_soap_fault (
         axiom_soap_fault_role_set_role_value (fault_role, env, role);
     }
     axis2_msg_ctx_set_soap_envelope (out_msg_ctx, env, out_envelope);
+    smart_str_free(&fcode);
 
 }

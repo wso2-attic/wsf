@@ -1642,7 +1642,7 @@ PHP_METHOD (ws_service, reply)
 		{
 			zval ret_val, func;
 			zval **tmp_action = NULL;
-			ZVAL_STRING (&func, "apache_request_headers", 1);
+			ZVAL_STRING (&func, "apache_request_headers", 0);
 			if (call_user_function (CG (function_table), (zval **) NULL, &func,
 				&ret_val, 0, NULL TSRMLS_CC) == SUCCESS) {
 				if(Z_TYPE(ret_val) == IS_ARRAY){
@@ -1651,7 +1651,8 @@ PHP_METHOD (ws_service, reply)
 									req_info.soap_action = Z_STRVAL_PP(tmp_action);
 							}
 					}
-				}
+			}
+           
 		}
 
     
