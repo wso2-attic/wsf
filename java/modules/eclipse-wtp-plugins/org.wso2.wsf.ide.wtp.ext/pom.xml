@@ -308,6 +308,7 @@
 				<directory>src</directory>
 				<includes>
 					<include>**/*.properties</include>
+					<include>**/*.xsl</include>
 				</includes>
 			</resource>
 		</resources>
