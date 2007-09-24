@@ -89,7 +89,7 @@ WSRequest.prototype.send = function(payload) {
     {
         // seralize the dom to string
         var content = WSRequest.util._serializeToString(payload);
-        if (content == false) {
+        if (typeof(content) == "boolean" && content == false) {
             throw new WebServiceError("Invalid input argument.", "WSRequest.send() unable to serialize XML payload.");
         }
 
