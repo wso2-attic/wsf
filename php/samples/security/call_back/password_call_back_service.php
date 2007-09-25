@@ -36,7 +36,7 @@ $actions = array("http://php.axis2.org/samples/echoString" => "echoString");
 $sec_array = array("useUsernameToken" => TRUE);
 
 $policy = new WSPolicy(array("security"=>$sec_array));
-$sec_token = new WSSecurityToken(array("password_callback" => "get_my_password_function",
+$sec_token = new WSSecurityToken(array("passwordCallback" => "get_my_password_function",
                                        "passwordType" => "Digest"));
 
 $svr = new WSService(array("operations" => $operations,
