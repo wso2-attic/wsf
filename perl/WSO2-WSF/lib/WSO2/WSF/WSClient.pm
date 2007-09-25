@@ -8,8 +8,6 @@ use base qw(WSO2::WSF);
 use WSO2::WSF::C;
 use WSO2::WSF::WSMessage;
 
-our @EXPORT = qw( new );
-
 # WSClient constructor
 sub new {
        	my $class = shift;
@@ -203,7 +201,7 @@ sub request {
 	}
 
 	# default header type is post, only setting the HTTP_METHOD if GET
-	if( defined( $this->{HTTPMethod}) and ( $this->{HTTPMethod} eq "GET" ) ) {
+	if( defined( $this->{HTTPMethod}) and ( $this->{HTTPMethod} =~ /^GET$/i ) ) {
 		my $get_property = WSO2::WSF::C::axutil_property_create( $this->{env} );
 
 		WSO2::WSF::C::axutil_property_set_value_new(
@@ -426,3 +424,98 @@ sub wsf_client_set_module_param_options {
 	# function not complete yet
 }
 1;
+__END__
+
+=head1 NAME
+
+WSO2::WSF::WSClient - Perl interface to consume Web services using WSF/C.
+
+=head1 SYNOPSIS
+
+  use WSO2::WSF::WSClient;
+
+  my $client = new WSO2::WSF::WSClient();
+
+  my $client = new WSO2::WSF::WSClient( { WSCLIENT_OPTIONS } );
+
+  my $response = $client->request( { 'payload' => 'your payload in XML' } );
+
+  my $message = new WSO2::WSF::WSMessage( { WSMESSAGE_OPTIONS } );
+  my $response = $client->request( $message );
+
+=head1 DESCRIPTION
+
+This module provide a simple interface in Perl to WSO2 WSF/C.  It's based on 
+Apache Axis2/C project and bundle several other related projects (Sandesha2/C,
+Rampart/C, Savan ...) in to a single distribution.
+
+You could give options to WSClient contructor when creating a new client
+or you could construct a WSMessage object and pass it to the request method
+after creating the client.
+
+=head1 WSCLIENT_OPTIONS
+
+=over 4
+
+=item axis2c_home
+
+This is a mandatory argument that should contain the absolute URL of the
+folder you installed Axis2/C or WSF/C.
+
+=item useSOAP
+
+Valid options, 'TRUE', 'FALSE', '1.1', '1.2'.  Default value is 'TRUE'.
+If this is set SOAP bindings will be used.  Otherwise REST style invocation
+will be used along with the method given by HTTPMethod option.  By default
+SOAP 1.2 message style will be used.
+
+=item HTTPMethod
+
+Specifies which HTTP method to use. Valid values are 'GET', 'get', 'POST' and
+'post'.  Defaults to 'POST'.
+
+=item useWSA
+
+Tell whether to use WS-Addressing.  Valid values are 'TRUE', 'FALSE', '1.0'
+and 'submission'.  If 'submission' is specified 'action' must be present.
+
+=head1 METHODS
+
+=over 4
+
+=item request( { 'payload' => 'payload in XML' } );
+
+=item request( $message );
+
+This is an instance method.  You could either give the payload as an XML
+string or you could construct a WSMessage object and give that.
+
+=head1 SEE ALSO
+
+Look at WSO2::WSF::WSMessage for how to construct a WSMessage object with
+various message related options.
+
+Mailing list, bug tracker, svn info can be found on the project web site at
+http://wso2.org/projects/wsf/perl
+
+=head1 AUTHOR
+
+Chintana Wilamuna, E<lt>chintana@wso2.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2007 by WSO2
+
+Licensed under the Apache License, Version 2.0 (the "License");             
+you may not use this file except in compliance with the License.            
+You may obtain a copy of the License at                                     
+                                                                            
+      http://www.apache.org/licenses/LICENSE-2.0                             
+                                                                            
+Unless required by applicable law or agreed to in writing, software         
+distributed under the License is distributed on an "AS IS" BASIS,           
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.    
+See the License for the specific language governing permissions and         
+limitations under the License.     
+
+=cut
