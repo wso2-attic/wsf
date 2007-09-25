@@ -1,8 +1,8 @@
 Summary: WSO2 WSF-PHP
 Name: wso2-wsf-php
-Version:1.0.0
-Release: 1
-Source: wso2-wsf-php-1.0.0.tar.gz
+Version:1.1.0
+Release: 1.1
+Source: wso2-wsf-php-1.1.0.tar.gz
 License: Apache
 Group: Development/Tools
 %description
@@ -21,7 +21,7 @@ mkdir -p /usr/lib/php/modules/wsf_php
 cp -rf scripts /usr/lib/php/modules/wsf_php
 cp -rf samples /usr/lib/php/modules/wsf_php
 %post
-echo ";[wsf]" >> /etc/php.ini
+echo "[wsf]" >> /etc/php.ini
 echo "extension=wsf.so" >> /etc/php.ini
 echo "wsf.home=\"/usr/lib/php/modules/wsf_c\"" >> /etc/php.ini
 echo "wsf.log_path=\"/tmp\"" >> /etc/php.ini
