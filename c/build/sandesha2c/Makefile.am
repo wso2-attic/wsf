@@ -1,6 +1,6 @@
 datadir=$(prefix)/modules/sandesha2
 samplesdir=$(prefix)/samples/sandesha2c
-includedir=$(prefix)/include/sandesha2-0.90
+includedir=$(prefix)/include/sandesha2-0.91
 docsdir=$(prefix)/docs/sandesha2c
 sysconfdir=$(prefix)
 samplesdir=$(prefix)/samples/sandesha2
