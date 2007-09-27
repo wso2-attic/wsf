@@ -45,22 +45,22 @@ OPENSSL_BIN_DIR = E:\OpenSSL
 #############################################################################
 ### Apache Sandesha2/C Build Configuration Parameters
 
-# Build with SQLite support for permenent storage, to disable set WITH_SQLITE = 0
-WITH_SQLITE = 0
+# Build with SQLite support for permanent storage, to disable set WITH_SQLITE = 0
+WITH_SQLITE = 1
 # Path to SQLite installation
 SQLITE_BIN_DIR = "E:\sqlite-source-3_3_8"
 # Path to SQLite source
 SQLITE_SRC_DIR = "E:\sqlite-source-3_3_8"
 
-# Build with MySQL support for permenent storage, to enable set WITH_MYSQL = 1
-WITH_MYSQL = 1
+# Build with MySQL support for permanent storage, to enable set WITH_MYSQL = 1
+WITH_MYSQL = 0
 # Path to MySQL installation
 MYSQL_BIN_DIR = "C:\Program Files\MySQL\MySQL Server 5.0"
 
 #############################################################################
-# Configuration params for building wsf/php extension using its own build
-PHP_SRC_DIR = E:\php\php-5.2.0
-PHP_BIN_DIR = E:\php\php5.2.0-bin
+# Configuration for building wsf/php extension using its own build
+PHP_SRC_DIR = E:\php\php-5.2.4
+PHP_BIN_DIR = E:\php\php-5.2.4-Win32
 WIN32BUILD_DIR = E:\php\win32build
 
 
