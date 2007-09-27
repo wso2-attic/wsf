@@ -8,7 +8,7 @@
 
 @if exist wsf_c\axis2c\build\win32\int.msvc rmdir /s /q wsf_c\axis2c\build\win32\int.msvc
 
-@if exist wsf_c\rampartc\build\rampartc-1.0 rmdir /s /q wsf_c\rampartc\build\rampartc-1.0
+@if exist wsf_c\rampartc\build\rampartc-1.0.0 rmdir /s /q wsf_c\rampartc\build\rampartc-1.0.0
 
 @if exist wsf_c\rampartc\build\win32\int.msvc rmdir /s /q wsf_c\rampartc\build\win32\int.msvc
 

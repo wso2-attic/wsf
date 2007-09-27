@@ -16,10 +16,10 @@ rem Build Apache Rampart/C
 @if not %ERRORLEVEL% EQU 0 goto rampart_error
 
 @cd ..
-@xcopy /E /Q /I /Y rampartc-1.0\modules\rampart .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\modules\rampart
-@copy /Y rampartc-1.0\include\*.h .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\include\
-@copy /Y rampartc-1.0\modules\rampart\mod_rampart.lib .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
-@copy /Y rampartc-1.0\modules\rampart\mod_rampart.dll .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
+@xcopy /E /Q /I /Y rampartc-1.0.0\modules\rampart .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\modules\rampart
+@copy /Y rampartc-1.0.0\include\*.h .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\include\
+@copy /Y rampartc-1.0.0\modules\rampart\mod_rampart.lib .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
+@copy /Y rampartc-1.0.0\modules\rampart\mod_rampart.dll .\..\..\axis2c\build\axis2c-bin-1.1.0-win32\lib\
 @goto build_sandesha2
 
 :rampart_error

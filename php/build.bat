@@ -45,6 +45,9 @@ rem @call clean.bat
 
 @if exist LICENSE copy /Y LICENSE wso2-wsf-php-bin-1.1.0-win32
 
+@if exist NEWS copy /Y NEWS wso2-wsf-php-bin-1.1.0-win32
+
+
 @cd src
 
 @nmake /nologo -f build.mk dist
