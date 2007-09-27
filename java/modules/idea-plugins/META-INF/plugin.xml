@@ -7,47 +7,56 @@
   <idea-version since-build="4155"/>
     <application-components>
         <component>
-            <implementation-class>org.wso2.wsf.idea.ws.plugin.WSASApplicationComponent</implementation-class>
+            <implementation-class>org.wso2.wsf.idea.server.plugin.WSASApplicationComponent</implementation-class>
+        </component>
+        <component>
+            <implementation-class>org.wso2.wsf.idea.project.WSASDynamicWebProject</implementation-class>
         </component>
     </application-components>
     <actions>
-        <!--<action id="WSASConfiguration" class="org.wso2.wsf.idea.ws.plugin.WSASConfigurationAction" text="WSAS Configuration ">-->
+        <!--<action id="WSASConfiguration" class="org.wso2.wsf.idea.server.plugin.WSASConfigurationAction" text="WSAS Configuration ">-->
             <!--<add-to-group group-id="WindowMenu" anchor="first"/>-->
         <!--</action>-->
 
         <!-- We use "PluginName.ComponentName.ActionName" notation for "id" to avoid conflicts -->
-        <action id="ActionsSample.ActionsPlugin.WSASConfiguration"
-            class="org.wso2.wsf.idea.ws.plugin.WSASConfigurationAction"
+        <action id="WSASConfiguration"
+            class="org.wso2.wsf.idea.server.plugin.WSASConfigurationAction"
             text="WSAS Configuration" description="WSO2 WSAS Intellij IDEA Plugin">
             <keyboard-shortcut first-keystroke="alt W" second-keystroke="C" keymap="$default"/>
             <mouse-shortcut keystroke="ctrl alt button2" keymap="$default"/>
+            <add-to-group group-id="WindowMenu" anchor="first"/>
         </action>
 
-        <action id="ActionsSample.ActionsPlugin.WSASStart"
-            class="org.wso2.wsf.idea.ws.plugin.WSASStartAction"
+        <action id="WSASStart"
+            class="org.wso2.wsf.idea.server.plugin.WSASStartAction"
             text="WSAS Start" description="WSO2 WSAS starting ">
             <keyboard-shortcut first-keystroke="alt W" second-keystroke="S" keymap="$default"/>
             <mouse-shortcut keystroke="ctrl alt button2" keymap="$default"/>
         </action>
 
-        <action id="ActionsSample.ActionsPlugin.WSASStop"
-            class="org.wso2.wsf.idea.ws.plugin.WSASStopAction"
+        <action id="WSASStop"
+            class="org.wso2.wsf.idea.server.plugin.WSASStopAction"
             text="WSAS Stop" description="WSO2 WSAS stopping ">
             <keyboard-shortcut first-keystroke="alt W" second-keystroke="P" keymap="$default"/>
             <mouse-shortcut keystroke="ctrl alt button2" keymap="$default"/>
         </action>
 
-        <group id="Actions.ActionsPlugin.WSASGroup" text="WSAS" description="WSAS Group">
-            <reference id="ActionsSample.ActionsPlugin.WSASConfiguration"/>
-            <reference id="ActionsSample.ActionsPlugin.WSASStart"/>
-            <reference id="ActionsSample.ActionsPlugin.WSASStop"/>
+        <action id="WSASDebug"
+                class="org.wso2.wsf.idea.server.plugin.WSASDebugAction" text="Debug WSAS"
+                description="Starts A WSAS Instance For Debugging"/>
+
+        <group id="WSASGroup" text="WSAS" description="WSAS Group">
+            <reference id="WSASConfiguration"/>
+            <reference id="WSASStart"/>
+            <reference id="WSASStop"/>
+            <reference id="WSASDebug"/>
             <separator/>
             <add-to-group group-id="MainMenu" anchor="after" relative-to-action="WindowMenu"/>
             <add-to-group group-id="MainToolBar" anchor="before" relative-to-action="HelpTopics"/>
         </group>
 
         <group>
-            <reference id="ActionsSample.ActionsPlugin.WSASConfiguration"/>
+            <reference id="WSASConfiguration"/>
             <!--the group is added to the editor popup menu-->
             <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="CutCopyPasteGroup"/>
         </group>
