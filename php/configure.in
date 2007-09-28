@@ -2,7 +2,7 @@
 ### General Build Configuration Parameters
 
 # To build with debug symbols set DEBUG = 1
-DEBUG = 1
+DEBUG = 0
 
 #############################################################################
 ### Apache Axis2/C Build Configuration Parameters
