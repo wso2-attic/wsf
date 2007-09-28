@@ -30,7 +30,7 @@ function purchaseOrder($x,$y)
 }
 
 
-$operations = array("function1"=>"purchaseOrder");
+$operations = array("purchaseOrder"=>"purchaseOrder");
 $svr = new WSService(array("operations"=>$operations, "bindingStyle"=>"doclit"));
 
 
