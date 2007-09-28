@@ -25,7 +25,7 @@ try {
     $rec_cert = ws_get_cert_from_file("../keys/bob_cert.cert");
     
     $reqMessage = new WSMessage($reqPayloadString,
-                                array("to"=>"http://localhost:9090/samples/security/signing/signing_service.php",
+                                array("to"=>"http://localhost/samples/security/signing/signing_service.php",
                                       "action" => "http://php.axis2.org/samples/echoString"));
     
     $policy_xml = file_get_contents("policy.xml"); 
