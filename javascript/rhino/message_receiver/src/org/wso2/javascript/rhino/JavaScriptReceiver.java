@@ -285,7 +285,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         }
     }
 
-    private boolean isNull(Object object) throws AxisFault {
+    private boolean isNull(Object object) {
         return object == null || object instanceof UniqueTag || object instanceof Undefined;
     }
 

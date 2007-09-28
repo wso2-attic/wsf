@@ -85,7 +85,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
      * @throws IOException           if evaluating the source produces an IOException
      */
     public static void load(Context cx, Scriptable thisObj, Object[] args, Function funObj)
-            throws FileNotFoundException, IOException {
+            throws IOException {
 
         JavaScriptEngine engine = (JavaScriptEngine) getTopLevelScope(thisObj);
 
@@ -131,9 +131,9 @@ public class JavaScriptEngine extends ImporterTopLevel {
      * @param reader a Reader instance associated with the Javascript service
      * @param args   an Object representing the input to the operation
      * @return an OMNode containing the result from executing the operation
-     * @throws AxisFault
+     * @throws AxisFault- Thrown in case an exception occurs
      */
-    public Object call(String method, Reader reader, Object args) throws AxisFault {
+    private Object call(String method, Reader reader, Object args) throws AxisFault {
         Object functionArgs[];
         try {
             // Handle JSON messages
@@ -198,7 +198,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
      *            a string represnting a set of Javascript files to be evaluated
      *            before evaluating the service
      * @return an OMNode containing the result from executing the operation
-     * @throws AxisFault
+     * @throws AxisFault - Thrown in case an exception occurs
      */
     public Object call(String method, Reader reader, Object args, String scripts) throws AxisFault {
 

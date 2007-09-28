@@ -75,7 +75,7 @@ public class JavaScriptEngineUtils {
         }
     }
 
-    public static Class loadClass(final String className) throws PrivilegedActionException {
+    private static Class loadClass(final String className) throws PrivilegedActionException {
         return (Class) org.apache.axis2.java.security.AccessController
                 .doPrivileged(new PrivilegedExceptionAction() {
                     public Object run() throws AxisFault {
@@ -99,7 +99,7 @@ public class JavaScriptEngineUtils {
     }
 
     public static void loadGlobalPropertyObjects(JavaScriptEngine engine,
-            AxisConfiguration axisConfig) throws AxisFault {
+            AxisConfiguration axisConfig) {
         Parameter propertyObjectParameter = axisConfig
                 .getParameter("javascript.global.propertyobjects");
         if ((propertyObjectParameter != null) && (propertyObjectParameter.getParameterType() == 2)) {
