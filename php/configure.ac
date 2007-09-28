@@ -234,7 +234,7 @@ AC_ARG_ENABLE(multi-thread, [  --enable-multi-thread  enable multi thread. defau
 )
 
 AC_MSG_CHECKING(whether to use openssl)
-AC_ARG_ENABLE(openssl, [  --enable-openssl  enable ssl. default=no],
+AC_ARG_ENABLE(openssl, [  --enable-openssl  enable ssl. default=yes],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
