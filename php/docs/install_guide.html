@@ -199,15 +199,15 @@ and the wsf.dll.<br />
 
 <p>2. If you have extracted the binary, you should have the following
 structure.</p>
-<pre>    wso2_wsfphp_1.0.alpha1-bin
-                    |
+<pre>    wso2-wsf-php-bin-1.1.0-win32
+	           |
                     +-- wsf_c
                     |
                     +-- wsf.dll</pre>
 
 <p>3. Copy wsf.dll to the PHP installation directory.</p>
 
-<p>4. Add wsf_c\lib directory to the path.</p>
+<p>4. Add wso2-wsf-php-bin-1.1.0-win32\wsf_c\lib directory to the PATH environment variable.</p>
 
 <p>5. Add the following entries to your php.ini file which is in your PHP
 installation location.<br />
@@ -218,17 +218,19 @@ installation location.<br />
        wsf.log_level=3
        extension=wsf.dll</path_to_extract_folder></path_to_extract_folder></pre>
 
-<p>6. Create an environment variable PHPRC to point to your php.ini file
-location.</p>
-
-<p>7. Configure the Apache2 Web server with PHP as follows.<br />
+<p>6. Configure the Apache2 Web server with PHP as follows.<br />
 </p>
 
-<p>8. Copy php5apache2.dll to Apache2/modules directory. Add the following
-entries in httpd.conf file.<br />
+<p>7. Copy php5apache2.dll to Apache2/modules directory. </br>
+</p>
+<p>
+	Add the following entries in httpd.conf file.<br />
 </p>
 
-<p>9. LoadModule php5_module modules/php5apache2.dll <br />
+<p>8. LoadModule php5_module modules/php5apache2.dll <br />
+</p>
+
+<p>9. PHPIniDir " < your php.ini file location> "<br />
 </p>
 
 <p>10. AddType application/x-httpd-php .php .phtml<br />
