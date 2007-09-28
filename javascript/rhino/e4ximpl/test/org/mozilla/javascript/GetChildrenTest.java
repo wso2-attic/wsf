@@ -40,7 +40,7 @@ public class GetChildrenTest extends AbstractTestCase {
         try {
             cx.evaluateReader(scope, new FileReader(testFile), scriptName, 1, null);
             String command1 = "xml.*.length();";
-            result = cx.evaluateString(scope, command1, "<cmd>", 1, null);
+            result = cx.evaluateString(scope, command1, scriptName, 1, null);
             assertEquals(Integer.parseInt(result.toString()), 2);
             
         } catch (IOException e) {
@@ -55,7 +55,7 @@ public class GetChildrenTest extends AbstractTestCase {
         try {
             cx.evaluateReader(scope, new FileReader(testFile), scriptName, 1, null);
             String command1 = "xml..*.length();";
-            result = cx.evaluateString(scope, command1, "<cmd>", 1, null);
+            result = cx.evaluateString(scope, command1, scriptName, 1, null);
             assertEquals(Integer.parseInt(result.toString()), 44);
 
         } catch (IOException e) {

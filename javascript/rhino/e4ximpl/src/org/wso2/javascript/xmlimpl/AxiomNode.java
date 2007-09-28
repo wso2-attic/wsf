@@ -1,5 +1,5 @@
 /*
-* Copyright 2005,2006 WSO2, Inc. http://wso2.com
+* Copyright 2007 WSO2, Inc. http://wso2.com
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -397,7 +397,7 @@ public class AxiomNode {
                     OMNode prevSibling = refNode.getOMNode().getPreviousOMSibling();
 
                     if (prevSibling == null) {
-                        refNode.getParentNode().getOMElement().setFirstChild(nodeToInsert.cloneOMNode());
+                        refNode.getOMElement().insertSiblingBefore(nodeToInsert.cloneOMNode());
                         nodeToInsert.getOMNode().insertSiblingAfter(refNode.getOMNode());
 
                     } else {
