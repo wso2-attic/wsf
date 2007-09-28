@@ -57,6 +57,10 @@ Key Features
 10. Backward compatibility with PHP5 SOAP extension
       * Experimental
 
+11. Many memory leaks fixed
+
+12. Many bugs fixed since last release 
+ 
 -------------------
 Reporting Problems
 ===================
