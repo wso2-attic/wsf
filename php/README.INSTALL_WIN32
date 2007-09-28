@@ -80,16 +80,20 @@ Contents:
 
     If you have extracted the binary you should have the following structure.
 
-    wso2_wsf_1.0.alpha1-bin
+    wso2-wsf-php-bin-1.1.0-win32
                 |  
-	    	    +-- wsf_c 
-	            |
+	    	+-- wsf_c
+                |
                 +-- wsf.dll
+	        |
+                +-- samples
+                |
+		+-- scripts
                       
 
     1. Copy wsf.dll to PHP installation directory.
     
-    2. Add wsf_c\lib directory to path.
+    2. Add wsf_c\lib directory to PATH environment variable.
 
     3. Add the following entries to your php.ini file which is in your PHP 
        installation location.
@@ -103,19 +107,22 @@ Contents:
        [Note] Log level is by default set to INFO. Log levels range from 0 to 4. Log levels are as follows.
 	      CRITICAL->  0 , ERROR -> 1 , WARNING -> 2 , INFO -> 3, DEBUG -> 4
      
-    5. Create an environment variable PHPRC to point to your php.ini file location.
-
-    6. Configure the Apache2 Web server with PHP as follows.
+    4. Configure the Apache2 Web server with PHP as follows.
        
-       Copy php5apache2.dll to Apache2/modules directory.
+       Copy php5apache2.dll to Apache2/modules directory (If your Apache2 service is of Apache 2.2.X family, use
+	php5apache2_2.dll) .
+
        Add following entries in httpd.conf file.
 
        LoadModule php5_module modules/php5apache2.dll
        
+       PHPIniDir <your php.ini file location>
+       
        AddType application/x-httpd-php .php .phtml
        AddType application/x-httpd-php-source .phps
                               
-    7. Copy the scripts folder and samples folder to your Web server's document root
+    5. Copy the scripts folder and the samples folder to your Web server's document root
+
        Now you should be able to run the samples in samples directory. 
        [Note] scripts folder contain the php scripts used for wsdl generation
                          		 	
