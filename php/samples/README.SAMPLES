@@ -36,15 +36,15 @@ add_soap_header_client.php - Client that addes costom soap headers
 Function API Samples
 --------------------
 
-reply_echo_service.php - Echo service implemented with axis2_reply() function.
+reply_echo_service.php - Echo service implemented with ws_reply() function.
 
-request_client_dom.php - Client for reply echo service, using axis2_request() 
+request_client_dom.php - Client for reply echo service, using ws_request() 
                     function with payload in domDocument format.
                     
-request_client_msg.php - Client for reply echo service, using axis2_request() 
+request_client_msg.php - Client for reply echo service, using ws_request() 
                     function with payload in Axis2Message format.
 
-request_client_str.php - Client for reply echo service, using axis2_request() 
+request_client_str.php - Client for reply echo service, using ws_request() 
                     function with payload in string format.
 
 Accessing Google WebService API
