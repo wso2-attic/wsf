@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/evn perl
 
 use WSO2::WSF;
 

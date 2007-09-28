@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 use WSO2::WSF;
 use WSO2::WSF::WSClient;
