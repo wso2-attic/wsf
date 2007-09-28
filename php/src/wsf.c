@@ -1508,7 +1508,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
                  php_printf ("Unable to open script file or file not found:");
         }
         else{
-            php_execute_script (&script TSRMLS_CC);
+			php_lint_script (&script TSRMLS_CC);
             if (call_user_function (EG (function_table), (zval **) NULL,
                     &func, &retval, 7, params TSRMLS_CC) == SUCCESS){
 
