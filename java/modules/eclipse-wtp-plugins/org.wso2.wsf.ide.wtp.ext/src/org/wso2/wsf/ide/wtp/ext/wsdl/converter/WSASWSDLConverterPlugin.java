@@ -15,6 +15,7 @@
  */
 package org.wso2.wsf.ide.wtp.ext.wsdl.converter;
 
+import java.net.URL;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -31,6 +32,9 @@ public class WSASWSDLConverterPlugin extends AbstractUIPlugin {
     //Resource bundle.
     private ResourceBundle resourceBundle;
     private static ImageDescriptor wizardImageDescriptor;
+    private boolean goAheadConversion;
+    private boolean validURL;
+    private URL resultURL;
 
     /**
      * The constructor.
@@ -99,4 +103,28 @@ public class WSASWSDLConverterPlugin extends AbstractUIPlugin {
         }
         return wizardImageDescriptor;
     }
+
+	public boolean isGoAheadConversion() {
+		return goAheadConversion;
+	}
+
+	public void setGoAheadConvertion(boolean goAheadConversion) {
+		this.goAheadConversion = goAheadConversion;
+	}
+
+	public URL getValidateURL() {
+		return resultURL;
+	}
+
+	public void setValidateURL(URL validateURLSet) {
+		this.resultURL = validateURLSet;
+	}
+
+	public boolean isValidURL() {
+		return validURL;
+	}
+
+	public void setValidURL(boolean validURL) {
+		this.validURL = validURL;
+	}
 }

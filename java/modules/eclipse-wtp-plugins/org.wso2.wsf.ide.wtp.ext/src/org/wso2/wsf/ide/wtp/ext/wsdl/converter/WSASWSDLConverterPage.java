@@ -15,6 +15,8 @@
  */
 package org.wso2.wsf.ide.wtp.ext.wsdl.converter;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -24,13 +26,18 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
+import org.wso2.wsf.ide.wtp.ext.server.bean.WSASConfigurationBean;
+import org.wso2.wsf.ide.wtp.ext.server.constant.WSASMessageConstant;
+import org.wso2.wsf.ide.wtp.ext.validate.service.util.WSASUoloadServiceRequestUtil;
 
 public class WSASWSDLConverterPage extends AbstractWSDLConverterWizardPage{
 	
 	Text wsdlPathText;
+	String fileType;
+	Button wsdlBrowseButton;
 	
     public WSASWSDLConverterPage(){
         super("page1");
@@ -58,7 +65,7 @@ public class WSASWSDLConverterPage extends AbstractWSDLConverterWizardPage{
         GridData gd = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
         wsdlGroup.setLayoutData(gd);
         
-        wsdlPathText = new Text(wsdlGroup,SWT.NONE);
+        wsdlPathText = new Text(wsdlGroup,SWT.BORDER);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan=13;
         wsdlPathText.setLayoutData(gd);
@@ -67,7 +74,7 @@ public class WSASWSDLConverterPage extends AbstractWSDLConverterWizardPage{
 			}
         });
         
-        Button wsdlBrowseButton = new Button(wsdlGroup,SWT.NONE);
+        wsdlBrowseButton = new Button(wsdlGroup,SWT.NONE);
         wsdlBrowseButton.setText("Upload");
         gd = new GridData();
         gd.horizontalSpan = 1;
@@ -78,17 +85,15 @@ public class WSASWSDLConverterPage extends AbstractWSDLConverterWizardPage{
 			}     
 		}); 
        
-        Button convertButton = new Button(wsdlGroup,SWT.NONE);
-        convertButton.setText("Convert to WSDL 2.0");
-        gd = new GridData();
-        gd.horizontalSpan = 1;
-        convertButton.setLayoutData(gd);
-        convertButton.addSelectionListener( new SelectionAdapter(){
-			public void widgetSelected(SelectionEvent e){
-				//TODO Call convert Mechanism
-			}     
-		}); 		
+        setPageComplete(false);
 		setControl(container);
+		
+    	if (!WSASConfigurationBean.isWsasCorrectPathSet() || !WSASConfigurationBean.isWsasStartStatus()){
+    		updateStatus(WSASMessageConstant.WARNING_WSAS_NOT_STARTED);
+    		toggleControls(false);
+    	}else{
+    		toggleControls(true);
+		}     
 		
 		//call the handle modify method if the settings are restored
 		if (restoredFromPreviousSettings){
@@ -109,11 +114,39 @@ public class WSASWSDLConverterPage extends AbstractWSDLConverterWizardPage{
 	 * Pops up the file browse dialog box
 	 */
 	private void handleBrowse(Composite parent) {
-		DirectoryDialog fileDialog = new DirectoryDialog(parent.getShell());
+		WSASUoloadServiceRequestUtil uploadUtil = WSASUoloadServiceRequestUtil.getInstance();
+		uploadUtil.reset();
+		FileDialog fileDialog = new FileDialog(parent.getShell());
 		String fileName = fileDialog.open();
 		if (fileName != null) {
 			wsdlPathText.setText(fileName);
+			updateStatus(null);
+			IPath filePath = new Path(fileName);
+			setFileType(filePath.getFileExtension());
+			if (fileName.endsWith(".wsdl")||fileName.endsWith(".xml")) {
+				WSASWSDLConverterPlugin.getDefault().setGoAheadConvertion(true);
+				uploadUtil.setWSDL(true);
+			}else{
+				updateStatus("File Type Invalid !!, Valid Types {aar,zip,jar,xml'}");
 		}
+		}
+	}
+	
+	public String getWSDLPathText(){
+		return this.wsdlPathText.getText();
+	}
+	
+	public String getFileType() {
+		return fileType;
+	}
+
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
+	}
+	
+	private void toggleControls(boolean toggleValue){
+		wsdlPathText.setEnabled(toggleValue);
+		wsdlBrowseButton.setEnabled(toggleValue);
 	}
 
 }
