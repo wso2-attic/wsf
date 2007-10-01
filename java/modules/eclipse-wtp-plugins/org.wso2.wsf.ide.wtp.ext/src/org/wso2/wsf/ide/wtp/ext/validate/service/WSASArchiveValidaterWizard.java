@@ -80,7 +80,7 @@ public class WSASArchiveValidaterWizard extends Wizard implements INewWizard{
     				resourceFile = new File(archiveValidatePage.getServicesXMlPathText());
     			}
 				URL resultURL = new URL(
-						WSASCoreUIMessages.LOCAL_SERVER_PORT_HTTPS
+						WSASCoreUIMessages.LOCAL_SERVER_PORT
 						+goAheadVelidation(resourceFile));
 				WSASArchiveValidatePlugin.getDefault().setValidateURL(resultURL);
 				archiveResultPage.fillBrowserWithResults();

@@ -50,6 +50,7 @@ public class WSASUoloadServiceRequestUtil {
 	private boolean isArchive;
 	private boolean isService;
 	private boolean isModule;
+	private boolean isWSDL;
 	private boolean alredyInit;
 	
 	//Private constructor
@@ -98,6 +99,10 @@ public class WSASUoloadServiceRequestUtil {
 						WSASMessageConstant.validateModuleEndpoint, 
 						WSASMessageConstant.archiveEndOperation);
 			}
+		}else if (isWSDL){
+			returnUUID = sendUploadFileToWSAS(resourceFile,fileType,
+					WSASMessageConstant.wsdlConversionEndpoint, 
+					WSASMessageConstant.wsdlConversionEndOperation);
 		}
 		return returnUUID;
 	}
@@ -184,8 +189,8 @@ public class WSASUoloadServiceRequestUtil {
 				SOAPElement uploadElement = soapFactory.createElement(uploadQName);
 		
 				//Add type element
-				QName attachmentId = new QName("fileId");
-				SOAPElement attachmentIdEle = soapFactory.createElement(attachmentId);
+				QName qnameEle = new QName("fileId");
+				SOAPElement attachmentIdEle = soapFactory.createElement(qnameEle);
 				attachmentIdEle.addTextNode(uuid);
 				uploadElement.addChildElement(attachmentIdEle);
 				
@@ -243,6 +248,11 @@ public class WSASUoloadServiceRequestUtil {
 		this.isService = false;
 		this.isXml = false;
 		this.isArchive = false;
+		this.isWSDL = false ;
+	}
+
+	public void setWSDL(boolean isWSDL) {
+		this.isWSDL = isWSDL;
 	}
 
 }

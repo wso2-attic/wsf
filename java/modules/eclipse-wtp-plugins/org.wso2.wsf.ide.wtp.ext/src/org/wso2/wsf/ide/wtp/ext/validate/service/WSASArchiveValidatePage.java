@@ -27,9 +27,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.wso2.wsf.ide.wtp.ext.server.bean.WSASConfigurationBean;
+import org.wso2.wsf.ide.wtp.ext.server.constant.WSASMessageConstant;
 import org.wso2.wsf.ide.wtp.ext.validate.service.util.WSASUoloadServiceRequestUtil;
 
 public class WSASArchiveValidatePage extends AbstractArchiveValidateWizardPage{
@@ -37,6 +38,10 @@ public class WSASArchiveValidatePage extends AbstractArchiveValidateWizardPage{
 	Text servicesXMlPathText;
 	Text aarPathText;
 	String fileType;
+	Button validateAARBrowseButton;
+	Button validateServicesXmlBrowseButton;
+	Button validateAARRadioButton;
+	Button validateServicesXmlRadioButton;
 	
     public WSASArchiveValidatePage(){
         super("page1");
@@ -53,18 +58,26 @@ public class WSASArchiveValidatePage extends AbstractArchiveValidateWizardPage{
      */
     public void createControl(Composite parent) {
         final Composite container = new Composite(parent, SWT.NULL);
-        GridLayout lo = new GridLayout(1,true);
-        container.setLayout(lo);
-        
-        Group aarGroup = new Group(container, SWT.NONE);
-        aarGroup.setText("Select AAR (Service Archive)");
-        GridLayout layout = new GridLayout();
+       GridLayout layout = new GridLayout();
         layout.numColumns = 14;
-        aarGroup.setLayout(layout);
+        container.setLayout(layout);
         GridData gd = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
-        aarGroup.setLayoutData(gd);
+        container.setLayoutData(gd);
         
-        aarPathText = new Text(aarGroup,SWT.NONE);
+        validateAARRadioButton = new Button(container,SWT.RADIO);
+        validateAARRadioButton.setText("Select AAR (Service Archive)");
+        gd = new GridData();
+        gd.horizontalSpan = 14;
+        validateAARRadioButton.setLayoutData(gd);
+        validateAARRadioButton.addSelectionListener( new SelectionAdapter(){
+			public void widgetSelected(SelectionEvent e){
+				setPathVisible(servicesXMlPathText,false);
+				setPathVisible(aarPathText,true);
+				toggleValidateAAR(true);
+			}     
+		}); 
+        
+        aarPathText = new Text(container,SWT.BORDER);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan=13;
         aarPathText.setLayoutData(gd);
@@ -73,15 +86,13 @@ public class WSASArchiveValidatePage extends AbstractArchiveValidateWizardPage{
 			}
         });
         
-        Button validateAARBrowseButton = new Button(aarGroup,SWT.NONE);
+        validateAARBrowseButton = new Button(container,SWT.NONE);
         validateAARBrowseButton.setText("Browse");
         gd = new GridData();
         gd.horizontalSpan = 1;
         validateAARBrowseButton.setLayoutData(gd);
         validateAARBrowseButton.addSelectionListener( new SelectionAdapter(){
 			public void widgetSelected(SelectionEvent e){
-				setPathVisible(servicesXMlPathText,false);
-				setPathVisible(aarPathText,true);
 				handleBrowse(container, aarPathText);
 			}     
 		}); 
@@ -94,15 +105,20 @@ public class WSASArchiveValidatePage extends AbstractArchiveValidateWizardPage{
 	    separator.setText( " " );
 	    separator.setLayoutData( gd );
 	    
-        Group serviceXMLGroup = new Group(container, SWT.NONE);
-        serviceXMLGroup.setText("Select Services.xml");
-        GridLayout layout1 = new GridLayout();
-        layout1.numColumns = 14;
-        serviceXMLGroup.setLayout(layout);
-        gd = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
-        serviceXMLGroup.setLayoutData(gd);
+        validateServicesXmlRadioButton = new Button(container,SWT.RADIO);
+        validateServicesXmlRadioButton.setText("Select Services.xml");
+        gd = new GridData();
+        gd.horizontalSpan = 14;
+        validateServicesXmlRadioButton.setLayoutData(gd);
+        validateServicesXmlRadioButton.addSelectionListener( new SelectionAdapter(){
+			public void widgetSelected(SelectionEvent e){
+				setPathVisible(servicesXMlPathText,true);
+				setPathVisible(aarPathText,false);
+				toggleValidateServicesXml(true);
+			}     
+		}); 
         
-        servicesXMlPathText = new Text(serviceXMLGroup,SWT.NONE);
+        servicesXMlPathText = new Text(container,SWT.BORDER);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan=13;
         servicesXMlPathText.setLayoutData(gd);
@@ -111,21 +127,29 @@ public class WSASArchiveValidatePage extends AbstractArchiveValidateWizardPage{
 			}
         });
         
-        Button validateServicesXmlBrowseButton = new Button(serviceXMLGroup,SWT.NONE);
+        validateServicesXmlBrowseButton = new Button(container,SWT.NONE);
         validateServicesXmlBrowseButton.setText("Browse");
         gd = new GridData();
         gd.horizontalSpan = 1;
         validateServicesXmlBrowseButton.setLayoutData(gd);
         validateServicesXmlBrowseButton.addSelectionListener( new SelectionAdapter(){
 			public void widgetSelected(SelectionEvent e){
-				setPathVisible(servicesXMlPathText,true);
-				setPathVisible(aarPathText,false);
 				handleBrowse(container, servicesXMlPathText);
 			}     
 		}); 
         
         setPageComplete(false);
 		setControl(container);
+
+    	if (!WSASConfigurationBean.isWsasCorrectPathSet() || !WSASConfigurationBean.isWsasStartStatus()){
+    		updateStatus(WSASMessageConstant.WARNING_WSAS_NOT_STARTED);
+    		toggleControls(false);
+    	}else{
+    		toggleControls(true);
+    		toggleValidateAAR(true);
+			setPathVisible(servicesXMlPathText,false);
+			setPathVisible(aarPathText,true);
+    	}
 		
 		//call the handle modify method if the settings are restored
 		if (restoredFromPreviousSettings){
@@ -154,12 +178,13 @@ public class WSASArchiveValidatePage extends AbstractArchiveValidateWizardPage{
 		if (fileName != null) {
 			pathText.setText(fileName);
 			updateStatus(null);
-			WSASArchiveValidatePlugin.getDefault().setGoAheadValidation(true);
 			IPath filePath = new Path(fileName);
 			setFileType(filePath.getFileExtension());
 			if (fileName.endsWith(".zip")||fileName.endsWith(".jar")||fileName.endsWith(".aar")) {
+				WSASArchiveValidatePlugin.getDefault().setGoAheadValidation(true);
 				uploadUtil.setArchive(true);
 			}else if(fileName.endsWith(".xml")){
+				WSASArchiveValidatePlugin.getDefault().setGoAheadValidation(true);
 				uploadUtil.setXml(true);
 			}else{
 				updateStatus("File Type Invalid !!, Valid Types {aar,zip,jar,xml'}");
@@ -205,4 +230,29 @@ public class WSASArchiveValidatePage extends AbstractArchiveValidateWizardPage{
 		this.fileType = fileType;
 	}
 
+	private void toggleControls(boolean toggleValue){
+		setPathVisible(aarPathText,toggleValue);
+		setPathVisible(servicesXMlPathText, toggleValue);
+		validateAARBrowseButton.setEnabled(toggleValue);
+		validateServicesXmlBrowseButton.setEnabled(toggleValue);
+		validateAARRadioButton.setEnabled(toggleValue);
+		validateServicesXmlRadioButton.setEnabled(toggleValue);
+	}
+
+	private void toggleValidateAAR(boolean toggleValue){
+		validateServicesXmlBrowseButton.setEnabled(!toggleValue);
+		validateAARBrowseButton.setEnabled(toggleValue);
+		validateServicesXmlRadioButton.setSelection(!toggleValue);
+		servicesXMlPathText.clearSelection();
+		validateAARRadioButton.setSelection(toggleValue);
+	}
+	
+	private void toggleValidateServicesXml(boolean toggleValue){
+		validateServicesXmlBrowseButton.setEnabled(toggleValue);
+		validateAARBrowseButton.setEnabled(!toggleValue);
+		validateAARRadioButton.setSelection(!toggleValue);
+		aarPathText.clearSelection();
+		validateServicesXmlRadioButton.setSelection(toggleValue);
+	}
+	
 }
