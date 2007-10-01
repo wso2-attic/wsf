@@ -1,5 +1,5 @@
 <assembly>
-    <!--id>wsf.ide.wtp.ext-plugin</id-->
+    <id>plugin</id>
     <includeBaseDirectory>false</includeBaseDirectory>
     <formats>
         <format>jar</format>
@@ -7,78 +7,138 @@
     <fileSets>
         <fileSet>
             <directory>./target/classes</directory>
-            <outputDirectory>classes</outputDirectory>
+            <excludes>
+                <exclude>**/**.MF</exclude>
+            </excludes>
+            <outputDirectory>/</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>resources/properties</directory>
+            <outputDirectory>/</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>resources/icons</directory>
+            <outputDirectory>icons</outputDirectory>
         </fileSet>
     </fileSets>
         <dependencySets>
         <dependencySet>
-                <outputFileNameMapping>${artifactId}-${commons.logging.version}.${extension}</outputFileNameMapping>
+                <outputFileNameMapping>${artifactId}-${activation_version}.${extension}</outputFileNameMapping>
                 <outputDirectory>lib</outputDirectory>
                 <includes>
                         <include>javax.activation:activation:jar</include>
                 </includes>
         </dependencySet> 
         <dependencySet>
-                <outputFileNameMapping>${artifactId}-${version}.${extension}</outputFileNameMapping>
+                <outputFileNameMapping>${artifactId}-${commons_logging_version}.${extension}</outputFileNameMapping>
                 <outputDirectory>lib</outputDirectory>
                 <includes>
                         <include>commons-logging:commons-logging:jar</include>
                 </includes>
         </dependencySet> 
         <dependencySet>
-                <outputFileNameMapping>${artifactId}-${log4j.version}.${extension}</outputFileNameMapping>
+                <outputFileNameMapping>${artifactId}-${mail_version}.${extension}</outputFileNameMapping>
                 <outputDirectory>lib</outputDirectory>
                 <includes>
                         <include>javax.mail:mail:jar</include>
                 </includes>
         </dependencySet>
         <dependencySet>
-                <outputFileNameMapping>${artifactId}-${ant.version}.${extension}</outputFileNameMapping>
+                <outputFileNameMapping>${artifactId}-${stax_impl_version}.${extension}</outputFileNameMapping>
                 <outputDirectory>lib</outputDirectory>
                 <includes>
-                        <include>${stax.impl.groupid}:${stax.impl.artifactid}:jar</include>
+                        <include>${stax_impl_groupid}:${stax_impl_artifactid}:jar</include>
                 </includes>
         </dependencySet>
         <dependencySet>
-                <outputFileNameMapping>${artifactId}-${ant.version}.${extension}</outputFileNameMapping>
+                <outputFileNameMapping>${artifactId}-${axis2_version}.${extension}</outputFileNameMapping>
                 <outputDirectory>lib</outputDirectory>
                 <includes>
                         <include>org.apache.axis2:axis2-kernel:jar</include>
                 </includes>
         </dependencySet>
         <dependencySet>
-                <outputFileNameMapping>${artifactId}-${ant.version}.${extension}</outputFileNameMapping>
+                <outputFileNameMapping>${artifactId}-${xmlshema_version}.${extension}</outputFileNameMapping>
                 <outputDirectory>lib</outputDirectory>
                 <includes>
                         <include>org.apache.ws.commons.schema:XmlSchema:jar</include>
                 </includes>
         </dependencySet>
         <dependencySet>
-                <outputFileNameMapping>${artifactId}-${ant.version}.${extension}</outputFileNameMapping>
+                <outputFileNameMapping>${artifactId}-${commons_httpclient_version}.${extension}</outputFileNameMapping>
                 <outputDirectory>lib</outputDirectory>
                 <includes>
                         <include>commons-httpclient:commons-httpclient:jar</include>
                 </includes>
         </dependencySet>
         <dependencySet>
-                <outputFileNameMapping>${artifactId}-${ant.version}.${extension}</outputFileNameMapping>
+                <outputFileNameMapping>${artifactId}-${commons_codec_version}.${extension}</outputFileNameMapping>
                 <outputDirectory>lib</outputDirectory>
                 <includes>
                         <include>commons-codec:commons-codec:jar</include>
                 </includes>
         </dependencySet>
         <dependencySet>
-                <outputFileNameMapping>${artifactId}-${ant.version}.${extension}</outputFileNameMapping>
+                <outputFileNameMapping>${artifactId}-${axis2_saaj_version}.${extension}</outputFileNameMapping>
                 <outputDirectory>lib</outputDirectory>
                 <includes>
                         <include>org.apache.axis2:axis2-saaj:jar</include>
                 </includes>
         </dependencySet>
         <dependencySet>
-                <outputFileNameMapping>${artifactId}-${ant.version}.${extension}</outputFileNameMapping>
+                <outputFileNameMapping>${artifactId}-${axis2_saaj_api_version}.${extension}</outputFileNameMapping>
                 <outputDirectory>lib</outputDirectory>
                 <includes>
                         <include>org.apache.axis2:axis2-saaj-api:jar</include>
+                </includes>
+        </dependencySet>
+        <dependencySet>
+                <outputFileNameMapping>${artifactId}-${axiom_version}.${extension}</outputFileNameMapping>
+                <outputDirectory>lib</outputDirectory>
+                <includes>
+                        <include>org.apache.ws.commons.axiom:axiom-api:jar</include>
+                </includes>
+        </dependencySet>
+        <dependencySet>
+                <outputFileNameMapping>${artifactId}-${axiom_version}.${extension}</outputFileNameMapping>
+                <outputDirectory>lib</outputDirectory>
+                <includes>
+                        <include>org.apache.ws.commons.axiom:axiom-dom:jar</include>
+                </includes>
+        </dependencySet>
+        <dependencySet>
+                <outputFileNameMapping>${artifactId}-${axiom_version}.${extension}</outputFileNameMapping>
+                <outputDirectory>lib</outputDirectory>
+                <includes>
+                        <include>org.apache.ws.commons.axiom:axiom-impl:jar</include>
+                </includes>
+        </dependencySet>
+        <dependencySet>
+                <outputFileNameMapping>${artifactId}-${stax_api_version}.${extension}</outputFileNameMapping>
+                <outputDirectory>lib</outputDirectory>
+                <includes>
+                        <include>stax:stax-api:jar</include>
+                </includes>
+        </dependencySet>
+        <dependencySet>
+                <outputFileNameMapping>${artifactId}-${commons_io_version}.${extension}</outputFileNameMapping>
+                <outputDirectory>lib</outputDirectory>
+                <includes>
+                        <include>commons-io:commons-io:jar</include>
+                </includes>
+        </dependencySet>
+        <dependencySet>
+                <outputFileNameMapping>${artifactId}-${wsdl4j_verison}.${extension}</outputFileNameMapping>
+                <outputDirectory>lib</outputDirectory>
+                <includes>
+                        <include>wsdl4j:wsdl4j:jar</include>
+                </includes>
+        </dependencySet>
+        <dependencySet>
+                <outputFileNameMapping>${artifactId}-${xerces_verison}.${extension}</outputFileNameMapping>
+                <outputDirectory>lib</outputDirectory>
+                <includes>
+                        <include>xerces:xercesImpl:jar</include>
                 </includes>
         </dependencySet>
         </dependencySets>

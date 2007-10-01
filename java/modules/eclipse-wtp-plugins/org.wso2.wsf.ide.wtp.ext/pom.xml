@@ -9,11 +9,9 @@
     	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.wso2.wsf</groupId>
 	<artifactId>org.wso2.wsf.ide.wtp.ext</artifactId>
-	<version>SNAPSHOT</version>
 	<name>wso2wsf org.wso2.wsf.ide.wtp.ext plugin</name>
-	<packaging>maven-plugin</packaging>
+	<packaging>jar</packaging>
 	<description>WSO2 org.wso2.wsf.ide.wtp.ext Eclipse Plugin</description>
 	<url>http://maven.apache.org</url>
 	<repositories>
@@ -246,54 +244,63 @@
 		<dependency>
 			<groupId>javax.activation</groupId>
 			<artifactId>activation</artifactId>
-			<version>${activation.version}</version>
+			<version>${activation_version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
-			<version>${commons.logging.version}</version>
+			<version>${commons_logging_version}</version>
 		</dependency>
                 <dependency>
                         <groupId>javax.mail</groupId>
                         <artifactId>mail</artifactId>
-                        <version>${mail.version}</version>
+                        <version>${mail_version}</version>
                 </dependency>
                 <dependency>
                         <groupId>org.apache.axis2</groupId>
                         <artifactId>axis2-kernel</artifactId>
-                        <version>${axis2.version}</version>
+                        <version>${axis2_version}</version>
                 </dependency>
 		<dependency>
-			<groupId>${stax.impl.groupid}</groupId>
-			<artifactId>${stax.impl.artifactid}</artifactId>
-			<version>${stax.impl.version}</version>
+			<groupId>${stax_impl_groupid}</groupId>
+			<artifactId>${stax_impl_artifactid}</artifactId>
+			<version>${stax_impl_version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.ws.commons.schema</groupId>
 			<artifactId>XmlSchema</artifactId>
-			<version>${xmlschema.version}</version>
+			<version>${xmlshema_version}</version>
 		</dependency>
                 <dependency>
                         <groupId>commons-httpclient</groupId>
                         <artifactId>commons-httpclient</artifactId>
-                        <version>${commons.httpclient.version}</version>
+                        <version>${commons_httpclient_version}</version>
                 </dependency>
                 <dependency>
                         <groupId>commons-codec</groupId>
                         <artifactId>commons-codec</artifactId>
-                        <version>${commons.codec.version}</version>
+                        <version>${commons_codec_version}</version>
                 </dependency>
                 <dependency>
                         <groupId>org.apache.axis2</groupId>
                         <artifactId>axis2-saaj</artifactId>
-                        <version>${axis2-saaj.version}</version>
+                        <version>${axis2_saaj_version}</version>
                 </dependency>
                 <dependency>
                         <groupId>org.apache.axis2</groupId>
                         <artifactId>axis2-saaj-api</artifactId>
-                        <version>${axis2-saaj-api.version}</version>
+                        <version>${axis2_saaj_api_version}</version>
                 </dependency>
-
+                <dependency>
+                        <groupId>wsdl4j</groupId>
+                        <artifactId>wsdl4j</artifactId>
+                        <version>${wsdl4j_verison}</version>
+                </dependency>
+                <dependency>
+                        <groupId>xerces</groupId>
+                        <artifactId>xercesImpl</artifactId>
+                        <version>${xerces_verison}</version>
+                </dependency>
 		
 	</dependencies>
 
@@ -302,7 +309,12 @@
 		<!--testSourceDirectory>test</testSourceDirectory-->
 		<resources>
 			<resource>
-				<directory>resources</directory>
+				<directory>resources/META-INF</directory>
+                                <filtering>true</filtering>
+			</resource>
+			<resource>
+				<directory>resources/plugin</directory>
+                                <filtering>true</filtering>
 			</resource>
 			<resource>
 				<directory>src</directory>
@@ -322,7 +334,7 @@
 					<target>1.5</target>
 				</configuration>
 			</plugin>
-			<plugin>
+			<!--plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
@@ -330,7 +342,7 @@
 						<manifestFile>resources/META-INF/MANIFEST.MF</manifestFile>
 					</archive>
 				</configuration>
-			</plugin>
+			</plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -342,102 +354,18 @@
 							<goal>attached</goal>
 						</goals>
 						<configuration>
+						<archive>
+							<manifestFile>target/classes/MANIFEST.MF</manifestFile>
+						</archive>
 							<descriptors>
 								<descriptor>${pom.basedir}/wsf.ide.wtp.ext.assembly.xml</descriptor>
 							</descriptors>
-							<finalName>dist</finalName>
+							<finalName>${org.wso2.wsf.ide.wtp.ext}</finalName>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>package</id>
-						<phase>package</phase>
-						<configuration>
-							<tasks>
-								<!--Filter tockens for the copy command to filter the versions of external dependencies -->
-								<filter token="version" value="${version}"/>
-								<filter token="axis2.version" value="${axis2.version}"/>
-								<filter token="xmlschema.version" value="${xmlschema.version}"/>
-								<filter token="commons.codec.version" value="${commons.codec.version}"/>
-								<filter token="commons.httpclient.version" value="${commons.httpclient.version}"/>
-								<filter token="commons.logging.versio" value="${commons.logging.versio}"/>
-								<filter token="commons.logging.version" value="${commons.logging.version}"/>
-								<filter token="axis2-saaj.version" value="${axis2-saaj.version}"/>
-								<filter token="axis2-saaj-api.version" value="${axis2-saaj-api.version}"/>
-								<filter token="stax.api.version" value="${stax.api.version}"/>
-								<filter token="stax.impl.artifactid" value="${stax.impl.artifactid}"/>
-								<filter token="stax.impl.groupid" value="${stax.impl.groupid}"/>
-								<filter token="stax.impl.version" value="${stax.impl.version}"/>
-								<filter token="mail.version" value="${mail.version}"/>
-								<filter token="activation.version" value="${activation.version}"/>
 
-								
-								<delete dir="./target/dist"/>
-								<delete dir="./target/temp"/>
-								<delete dir="./target/plugin"/>
-								<mkdir dir="./target/dist/org.wso2.wsf.ide.wtp.ext-${version}"/>
-								<mkdir dir="./target/temp/org.wso2.wsf.ide.wtp.ext-${version}"/>
-								<mkdir dir="./target/plugin/org.wso2.wsf.ide.wtp.ext-${version}"/>
-
-								<unzip src="./target/dist.jar" dest="./target/dist/org.wso2.wsf.ide.wtp.ext-${version}"/>
-								<unzip src="./target/org.wso2.wsf.ide.wtp.ext-${version}.jar" dest="./target/temp/org.wso2.wsf.ide.wtp.ext-${version}"/>
-
-								<!-- Copy to the same position with the filtering on-->
-								<copy todir="./target/plugin/org.wso2.wsf.ide.wtp.ext-${version}" filtering="on">
-									<fileset dir="./target/temp/org.wso2.wsf.ide.wtp.ext-${version}">
-										<include name="plugin.xml"/>
-										<include name="build.properties"/>
-										<include name="plugin.properties"/>
-										<include name="META-INF/MANIFEST.MF"/>
-									</fileset>
-								</copy>
-								<!-- copy the  icons-->
-								<mkdir dir="./target/plugin/org.wso2.wsf.ide.wtp.ext-${version}/icons"/>
-								<copy todir="./target/plugin/org.wso2.wsf.ide.wtp.ext-${version}/icons">
-									<fileset dir="./target/temp/org.wso2.wsf.ide.wtp.ext-${version}/icons"/>
-								</copy>
-                                                                <!-- copy the lib files -->
-                                                                <mkdir dir="./target/plugin/org.wso2.wsf.ide.wtp.ext-${version}/lib"/>
-                                                                <copy todir="./target/plugin/org.wso2.wsf.ide.wtp.ext-${version}/lib">
-                                                                        <fileset dir="./target/dist/org.wso2.wsf.ide.wtp.ext-${version}/lib"/>
-                                                                </copy>
-							
-								<!-- copy the classes to classes directory-->
-								<mkdir dir="./target/plugin/org.wso2.wsf.ide.wtp.ext-${version}/org"/>
-								<copy todir="./target/plugin/org.wso2.wsf.ide.wtp.ext-${version}/org">
-									<fileset dir="./target/temp/org.wso2.wsf.ide.wtp.ext-${version}/org">
-										<include name="**/wso2/**"/>
-									</fileset>
-								</copy>
-								<delete file="./target/org.wso2.wsf.ide.wtp.ext-${version}.jar"/>
-								<delete file="./target/dist.jar"/>
-								<!--Zip the eclipse plugin to the target directory -->
-								<zip destfile="./target/plugin/org.wso2.wsf.ide.wtp.ext-${version}.jar" basedir="./target/plugin" update="true"/>
-								<delete dir="./target/temp"/>
-								<delete dir="./target/dist"/>
-								<copy todir="./target" >
-									<fileset dir="./target/plugin/" />
-								</copy>
-								<copy toFile="./target/dist.jar" >
-									<fileset file="./target/plugin/org.wso2.wsf.ide.wtp.ext-${version}.jar" />
-								</copy>
-								<delete dir="./target/org.wso2.wsf.ide.wtp.ext-${version}"/>
-								<delete dir="./target/plugin"/>
-								<delete dir="./target/classes"/>
-								 
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
 
