@@ -105,21 +105,42 @@
 
 		<wso2wsf.version>${pom.version}</wso2wsf.version>
 
-	     	<axis2.version>1.3</axis2.version>
-		<axiom.version>1.2.5</axiom.version>
-	        <xmlschema.version>1.3.2</xmlschema.version>
-	       	<javamail.version>1.4</javamail.version>
-        	<commons.codec.version>1.3</commons.codec.version>
-        	<commons.httpclient.version>3.0.1</commons.httpclient.version>
-        	<commons.logging.version>1.1</commons.logging.version>
-        	<axis2-saaj.version>1.3</axis2-saaj.version>
-        	<axis2-saaj-api.version>1.3</axis2-saaj-api.version>
-        	<stax.api.version>1.0.1</stax.api.version>
-        	<stax.impl.artifactid>wstx-asl</stax.impl.artifactid>
-        	<stax.impl.groupid>org.codehaus.woodstox</stax.impl.groupid>
-        	<stax.impl.version>3.2.1</stax.impl.version>
-		<mail.version>1.4</mail.version>
-		<activation.version>1.1</activation.version>
+	     	<axis2_version>1.3</axis2_version>
+		<axiom_version>1.2.5</axiom_version>
+	        <xmlshema_version>1.3.2</xmlshema_version>
+	       	<javamail_version>1.4</javamail_version>
+        	<commons_codec_version>1.3</commons_codec_version>
+        	<commons_httpclient_version>3.0.1</commons_httpclient_version>
+        	<commons_logging_version>1.1</commons_logging_version>
+        	<commons_io_version>1.2</commons_io_version>
+        	<axis2_saaj_version>1.3</axis2_saaj_version>
+        	<axis2_saaj_api_version>1.3</axis2_saaj_api_version>
+        	<stax_api_version>1.0.1</stax_api_version>
+        	<stax_impl_artifactid>wstx-asl</stax_impl_artifactid>
+        	<stax_impl_groupid>org.codehaus.woodstox</stax_impl_groupid>
+        	<stax_impl_version>3.2.1</stax_impl_version>
+		<mail_version>1.4</mail_version>
+		<activation_version>1.1</activation_version>
+		<wsdl4j_verison>1.6.2</wsdl4j_verison>
+		<xerces_verison>2.8.1</xerces_verison>
 	</properties>
+
+    <mailingLists>
+        <mailingList>
+            <name>WSO2 WSF Users' list</name>
+            <post>mailto:wsf-java-user@wso2.org</post>
+            <archive>http://www.wso2.org/mailarchive/wsf-java-user/</archive>
+            <subscribe>mailto:wsf-java-user-request@wso2.org?subject=subscribe</subscribe>
+            <unsubscribe>mailto:wsf-java-user-request@wso2.org?subject=unsubscribe</unsubscribe>
+        </mailingList>
+        <mailingList>
+            <name>WSO2 WSF Developers' List</name>
+            <post>mailto:wsf-java-dev@wso2.org</post>
+            <archive>http://www.wso2.org/mailarchive/wsf-java-dev/</archive>
+            <subscribe>mailto:wsf-java-dev-request@wso2.org?subject=subscribe</subscribe>
+            <unsubscribe>mailto:wsf-java-dev-request@wso2.org?subject=unsubscribe</unsubscribe>
+        </mailingList>
+    </mailingLists>
+
 
  	</project>
