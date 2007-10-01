@@ -15,6 +15,7 @@
  */
 package org.wso2.wsf.ide.wtp.ext.validate.module;
 
+import java.net.URL;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -31,6 +32,9 @@ public class WSASModuleValidatePlugin extends AbstractUIPlugin {
     //Resource bundle.
     private ResourceBundle resourceBundle;
     private static ImageDescriptor wizardImageDescriptor;
+    private boolean goAheadValidation;
+    private boolean validURL;
+    private URL resultURL;
 
     /**
      * The constructor.
@@ -99,4 +103,29 @@ public class WSASModuleValidatePlugin extends AbstractUIPlugin {
         }
         return wizardImageDescriptor;
     }
+    
+	public boolean isGoAheadValidation() {
+		return goAheadValidation;
+	}
+
+	public void setGoAheadValidation(boolean goAheadValidation) {
+		this.goAheadValidation = goAheadValidation;
+	}
+
+	public URL getValidateURL() {
+		return resultURL;
+	}
+
+	public void setValidateURL(URL validateURLSet) {
+		this.resultURL = validateURLSet;
+	}
+
+	public boolean isValidURL() {
+		return validURL;
+	}
+
+	public void setValidURL(boolean validURL) {
+		this.validURL = validURL;
+	}
+
 }

@@ -15,6 +15,8 @@
  */
 package org.wso2.wsf.ide.wtp.ext.validate.module;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -24,15 +26,22 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.wso2.wsf.ide.wtp.ext.server.bean.WSASConfigurationBean;
+import org.wso2.wsf.ide.wtp.ext.server.constant.WSASMessageConstant;
+import org.wso2.wsf.ide.wtp.ext.validate.service.util.WSASUoloadServiceRequestUtil;
 
 public class WSASModuleValidatePage extends AbstractModuleValidateWizardPage{
 	
 	Text moduleXMlPathText;
 	Text marPathText;
+	String fileType;
+	Button validateMARBrowseButton;
+	Button validateModuleXmlBrowseButton;
+	Button validateMARRadioButton;
+	Button validateModuleXmlRadioButton;
    
     public WSASModuleValidatePage(){
         super("page1");
@@ -49,18 +58,26 @@ public class WSASModuleValidatePage extends AbstractModuleValidateWizardPage{
      */
     public void createControl(Composite parent) {
         final Composite container = new Composite(parent, SWT.NULL);
-        GridLayout lo = new GridLayout(1,true);
-        container.setLayout(lo);
-        
-        Group marGroup = new Group(container, SWT.NONE);
-        marGroup.setText("Select MAR (Module Archive)");
         GridLayout layout = new GridLayout();
         layout.numColumns = 14;
-        marGroup.setLayout(layout);
+        container.setLayout(layout);
         GridData gd = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
-        marGroup.setLayoutData(gd);
+        container.setLayoutData(gd);
         
-        marPathText = new Text(marGroup,SWT.NONE);
+        validateMARRadioButton = new Button(container,SWT.RADIO);
+        validateMARRadioButton.setText("Select MAR (Module Archive)");
+        gd = new GridData();
+        gd.horizontalSpan = 14;
+        validateMARRadioButton.setLayoutData(gd);
+        validateMARRadioButton.addSelectionListener( new SelectionAdapter(){
+			public void widgetSelected(SelectionEvent e){
+				setPathVisible(moduleXMlPathText,false);
+				setPathVisible(marPathText,true);;
+				toggleValidateMAR(true);
+			}     
+		}); 
+        
+        marPathText = new Text(container,SWT.BORDER);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan=13;
         marPathText.setLayoutData(gd);
@@ -69,7 +86,7 @@ public class WSASModuleValidatePage extends AbstractModuleValidateWizardPage{
 			}
         });
         
-        Button validateMARBrowseButton = new Button(marGroup,SWT.NONE);
+        validateMARBrowseButton = new Button(container,SWT.NONE);
         validateMARBrowseButton.setText("Browse");
         gd = new GridData();
         gd.horizontalSpan = 1;
@@ -80,17 +97,7 @@ public class WSASModuleValidatePage extends AbstractModuleValidateWizardPage{
 			}     
 		}); 
        
-        Button validateMARButton = new Button(marGroup,SWT.NONE);
-        validateMARButton.setText("Validate");
-        gd = new GridData();
-        gd.horizontalSpan = 1;
-        validateMARButton.setLayoutData(gd);
-        validateMARButton.addSelectionListener( new SelectionAdapter(){
-			public void widgetSelected(SelectionEvent e){
-				//TODO Call validate Mechanism
-			}     
-		}); 
-        
+       
         /////////////////////////////////////////////////////////////////////////////////
         
 	    Label separator = new Label( container, SWT.NONE);  // Leave some vertical space.
@@ -99,15 +106,20 @@ public class WSASModuleValidatePage extends AbstractModuleValidateWizardPage{
 	    separator.setText( " " );
 	    separator.setLayoutData( gd );
 	    
-        Group moduleXMLGroup = new Group(container, SWT.NONE);
-        moduleXMLGroup.setText("Select Module.xml");
-        GridLayout layout1 = new GridLayout();
-        layout1.numColumns = 14;
-        moduleXMLGroup.setLayout(layout);
-        gd = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
-        moduleXMLGroup.setLayoutData(gd);
+	    validateModuleXmlRadioButton = new Button(container,SWT.RADIO);
+	    validateModuleXmlRadioButton.setText("Select Module.xml");
+        gd = new GridData();
+        gd.horizontalSpan = 14;
+        validateModuleXmlRadioButton.setLayoutData(gd);
+        validateModuleXmlRadioButton.addSelectionListener( new SelectionAdapter(){
+			public void widgetSelected(SelectionEvent e){
+				setPathVisible(moduleXMlPathText,true);
+				setPathVisible(marPathText,false);
+				toggleValidateModuleXml(true);
+			}     
+		}); 
         
-        moduleXMlPathText = new Text(moduleXMLGroup,SWT.NONE);
+        moduleXMlPathText = new Text(container,SWT.BORDER);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan=13;
         moduleXMlPathText.setLayoutData(gd);
@@ -116,28 +128,29 @@ public class WSASModuleValidatePage extends AbstractModuleValidateWizardPage{
 			}
         });
         
-        Button validateServicesXmlBrowseButton = new Button(moduleXMLGroup,SWT.NONE);
-        validateServicesXmlBrowseButton.setText("Browse");
+        validateModuleXmlBrowseButton = new Button(container,SWT.NONE);
+        validateModuleXmlBrowseButton.setText("Browse");
         gd = new GridData();
         gd.horizontalSpan = 1;
-        validateServicesXmlBrowseButton.setLayoutData(gd);
-        validateServicesXmlBrowseButton.addSelectionListener( new SelectionAdapter(){
+        validateModuleXmlBrowseButton.setLayoutData(gd);
+        validateModuleXmlBrowseButton.addSelectionListener( new SelectionAdapter(){
 			public void widgetSelected(SelectionEvent e){
 				handleBrowse(container, moduleXMlPathText);
 			}     
 		}); 
         
-        Button validateModulesXmlButton = new Button(moduleXMLGroup,SWT.NONE);
-        validateModulesXmlButton.setText("Validate");
-        gd = new GridData();
-        gd.horizontalSpan = 1;
-        validateModulesXmlButton.setLayoutData(gd);
-        validateModulesXmlButton.addSelectionListener( new SelectionAdapter(){
-			public void widgetSelected(SelectionEvent e){
-				//TODO Call validate Mechanism
-			}     
-		}); 
+        setPageComplete(false);
     	setControl(container);
+
+    	if (!WSASConfigurationBean.isWsasCorrectPathSet() || !WSASConfigurationBean.isWsasStartStatus()){
+    		updateStatus(WSASMessageConstant.WARNING_WSAS_NOT_STARTED);
+    		toggleControls(false);
+    	}else{
+    		toggleControls(true);
+    		toggleValidateMAR(true);
+			setPathVisible(moduleXMlPathText,false);
+			setPathVisible(marPathText,true);;
+    	}
 		
 		//call the handle modify method if the settings are restored
 		if (restoredFromPreviousSettings){
@@ -158,11 +171,89 @@ public class WSASModuleValidatePage extends AbstractModuleValidateWizardPage{
 	 * Pops up the file browse dialog box
 	 */
 	private void handleBrowse(Composite parent, Text pathText) {
-		DirectoryDialog fileDialog = new DirectoryDialog(parent.getShell());
+		WSASUoloadServiceRequestUtil uploadUtil = WSASUoloadServiceRequestUtil.getInstance();
+		uploadUtil.reset();
+		uploadUtil.setModule(true);
+		FileDialog fileDialog = new FileDialog(parent.getShell());
 		String fileName = fileDialog.open();
 		if (fileName != null) {
 			pathText.setText(fileName);
+			updateStatus(null);
+			IPath filePath = new Path(fileName);
+			setFileType(filePath.getFileExtension());
+			if (fileName.endsWith(".zip")||fileName.endsWith(".jar")||fileName.endsWith(".mar")) {
+				WSASModuleValidatePlugin.getDefault().setGoAheadValidation(true);
+				uploadUtil.setModule(true);
+			}else if(fileName.endsWith(".xml")){
+				WSASModuleValidatePlugin.getDefault().setGoAheadValidation(true);
+				uploadUtil.setXml(true);
+			}else{
+				updateStatus("File Type Invalid !!, Valid Types {mar,zip,jar,xml'}");
 		}
+		}
+	}
+	
+	public void updateWizardPageStatus(String message){
+		updateStatus(message);
+	}
+
+	public String getModuleXMlPathText() {
+		return moduleXMlPathText.getText();
+	}
+
+	public String getMarPathText() {
+		return marPathText.getText();
+	}
+	
+	public boolean getModuleXMlPathEnabled() {
+		return moduleXMlPathText.getEnabled();
+	}
+
+	public boolean getMarPathEnabled() {
+		return marPathText.getEnabled();
+	}
+	
+	/**
+	 * Toggle the path component visibility
+	 * @param pathComponemt
+	 * @param value
+	 */
+	public void setPathVisible(Text pathComponemt, boolean value){
+		pathComponemt.setEditable(value);
+		pathComponemt.setEnabled(value);
+	}
+
+	public String getFileType() {
+		return fileType;
+	}
+
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
+	}
+	
+	private void toggleControls(boolean toggleValue){
+		setPathVisible(moduleXMlPathText,toggleValue);
+		setPathVisible(marPathText, toggleValue);
+		validateModuleXmlBrowseButton.setEnabled(toggleValue);
+		validateMARBrowseButton.setEnabled(toggleValue);
+		validateMARRadioButton.setEnabled(toggleValue);
+		validateModuleXmlRadioButton.setEnabled(toggleValue);
+	}
+	
+	private void toggleValidateMAR(boolean toggleValue){
+		validateModuleXmlBrowseButton.setEnabled(!toggleValue);
+		validateMARBrowseButton.setEnabled(toggleValue);
+		validateModuleXmlRadioButton.setSelection(!toggleValue);
+		moduleXMlPathText.clearSelection();
+		validateMARRadioButton.setSelection(toggleValue);
+	}
+	
+	private void toggleValidateModuleXml(boolean toggleValue){
+		validateModuleXmlBrowseButton.setEnabled(toggleValue);
+		validateMARBrowseButton.setEnabled(!toggleValue);
+		validateModuleXmlRadioButton.setSelection(toggleValue);
+		marPathText.clearSelection();
+		validateMARRadioButton.setSelection(!toggleValue);
 	}
 
 }
