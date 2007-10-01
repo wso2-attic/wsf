@@ -30,6 +30,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.wso2.wsf.ide.core.context.ServiceContext;
 import org.wso2.wsf.ide.core.utils.ArchiveManipulator;
 import org.wso2.wsf.ide.core.utils.FileUtils;
 import org.wso2.wsf.ide.core.utils.ScriptBuilder;
@@ -116,8 +117,9 @@ public class WSASDumpArchiverWizard extends Wizard implements INewWizard{
 				new File(dumpAARSelectionPage.getWSASRepoPath().append(serviceToDump).toOSString()),
 				selectedServiceFile);
 			//Add the source also to the classes
+			ServiceContext context = ServiceContext.getInstance();
 			FileUtils.copyDirectory(
-					new File(workspacePath.append(serviceToDump).append("src").toOSString()),
+					new File(workspacePath.append(context.getProjectName()).append("src").toOSString()),
 					selectedServiceFile);
 	
 		ArchiveManipulator archiveManipulator = new ArchiveManipulator();

@@ -20,7 +20,7 @@ public class WSASMessageConstant {
     //warnings
     public static String WARNING_WSAS_HEADING = "WSAS Warning Message";
     public static String WARNING_WSAS_PATH_NOT_SET = "WSAS Runtime location does not point to valid server !! \nPlease set the correct location of the WSAS runtime on WSAS Preferences";
-    public static String WARNING_WSAS_NOT_STARTED = "Configured WSAS instance is not active !!";
+    public static String WARNING_WSAS_NOT_STARTED = "Configured WSAS instance is not active !! Please Start the server";
 
     //errors
     public static String ERROR_WSAS_ALREADY_RUNNING = "WSO2 Web Services Application Server instance is already running, \n" +
@@ -41,9 +41,12 @@ public class WSASMessageConstant {
     public static String generalServiceEndPoint = host+port+"/services/GeneralServices";
     public static String validateServiceEndpoint = host+port+"/services/Service";
     public static String validateModuleEndpoint = host+port+"/services/Module";
+    public static String wsdlConversionEndpoint = host+port+"/services/WSDLConverter";
 	
     public static String serviceXMLEndOperation = "validateServicesXML";
     public static String moduleXMLEndOperation = "validateModuleXML";
     public static String archiveEndOperation = "validate";
+    public static String wsdlConversionEndOperation = "convert";
+    
 
 }
