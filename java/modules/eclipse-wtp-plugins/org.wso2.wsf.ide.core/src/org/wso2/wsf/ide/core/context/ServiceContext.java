@@ -18,7 +18,8 @@ package org.wso2.wsf.ide.core.context;
 public class ServiceContext {
 	
 	private static ServiceContext instance;
-	private static String serviceName; 
+	private String serviceName; 
+	private String projectName;
 	
 	//singleton
 	private ServiceContext(){}
@@ -35,7 +36,15 @@ public class ServiceContext {
 	}
 
 	public void setServiceName(String serviceName) {
-		ServiceContext.serviceName = serviceName;
+		this.serviceName = serviceName;
+	}
+
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
 	}
 	
 	
