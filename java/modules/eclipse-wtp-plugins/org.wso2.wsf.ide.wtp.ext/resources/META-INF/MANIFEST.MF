@@ -10,7 +10,27 @@ Require-Bundle: org.eclipse.ui,
  org.wso2.wsf.ide.ui,
  org.wso2.wsf.ide.core,
  org.eclipse.core.resources,
- org.eclipse.ui.ide
+ org.eclipse.ui.ide,
+ javax.wsdl
 Eclipse-LazyStart: true
 Bundle-Vendor: %PLUGIN_PROVIDER
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ClassPath: resources/,
+ .,
+ lib/activation-@activation_version@.jar,
+ lib/axis2-kernel-@axis2_version@.jar,
+ lib/axis2-saaj-@axis2_saaj_version@.jar,
+ lib/axis2-saaj-api-@axis2_saaj_api_version@.jar,
+ lib/commons-codec-@commons_codec_version@.jar,
+ lib/commons-httpclient-@commons_httpclient_version@.jar,
+ lib/commons-logging-@commons_logging_version@.jar,
+ lib/mail-@mail_version@.jar,
+ lib/stax-api-@stax_api_version@.jar,
+ lib/wstx-asl-@stax_impl_version@.jar,
+ lib/XmlSchema-@xmlshema_version@.jar,
+ lib/commons-io-@commons_io_version@.jar,
+ lib/axiom-api-@axiom_version@.jar,
+ lib/axiom-dom-@axiom_version@.jar,
+ lib/axiom-impl-@axiom_version@.jar,
+ lib/wsdl4j-@wsdl4j_verison@.jar,
+ lib/xercesImpl-@xerces_verison@.jar

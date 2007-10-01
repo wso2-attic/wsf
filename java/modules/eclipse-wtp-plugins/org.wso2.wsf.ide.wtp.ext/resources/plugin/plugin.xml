@@ -1,5 +1,59 @@
 <plugin>
 
+   <runtime>
+      <library name="">
+         <export name="*"/>
+      </library>
+       <library name="lib/axis2-kernel-@axis2_version@.jar">
+           <export name="*"/>
+       </library>
+       <library name="lib/axis2-saaj-@axis2_saaj_version@.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/axis2-saaj-api-@axis2_saaj_api_version@.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/commons-codec-@commons_codec_version@.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/commons-httpclient-@commons_httpclient_version@.jar">
+         <export name="*"/>
+      </library>
+       <library name="lib/commons-logging-@commons_logging_version@.jar">
+           <export name="*"/>
+       </library>
+       <library name="lib/mail-@mail_version@.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/stax-api-@stax_api_version@.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/wstx-asl-@stax_impl_version@.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/XmlSchema-@xmlshema_version@.jar">
+         <export name="*"/>
+      </library>
+       <library name="lib/commons-io-@commons_io_version@.jar">
+           <export name="*"/>
+       </library>
+       <library name="lib/axiom-api-@axiom_version@.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/axiom-dom-@axiom_version@.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/axiom-impl-@axiom_version@.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/wsdl4j-@wsdl4j_verison@.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/xercesImpl-@xerces_verison@.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
 	<extension point="org.eclipse.ui.actionSets">
 		<actionSet id="org.wso2.wsf.ide.wtp.ext.server.ui" label="WSAS Server"
 			visible="true">
@@ -45,14 +99,61 @@
 			<menu
 				id="org.wso2.wsf.ide.wtp.ext.server.ui.menu.topLevelMenu"
 				label="WSAS" path="additions">
-				<separator name="WSASGroup" />
+			</menu>
+			
+			<menu
+				id="org.wso2.wsf.ide.wtp.ext.server.ui.menu.toolLevelMenu"
+				label="WSAS Server Tools" path="org.wso2.wsf.ide.wtp.ext.server.ui.menu.topLevelMenu/additions">
+				<separator name="WSASToolGroup" />
+			</menu>
+			
+			<action
+                id="org.wso2.wsf.ide.wtp.ext.tools.menu.wsdl.converter"
+                label="WSDL Converter" icon="icons/converter.gif"
+                tooltip="Convert WSDL 1.1 to 2.0"
+				menubarPath="org.wso2.wsf.ide.wtp.ext.server.ui.menu.topLevelMenu/org.wso2.wsf.ide.wtp.ext.server.ui.menu.toolLevelMenu/WSASToolGroup"
+                class="org.wso2.wsf.ide.wtp.ext.wsdl.converter.delegate.WSDLConverterDelegate">
+            </action>
+            <action
+                id="org.wso2.wsf.ide.wtp.ext.tools.menu.validate.module"
+                label="Validate modules.xml" icon="icons/modules.gif"
+                tooltip="Validate module XML File"
+				menubarPath="org.wso2.wsf.ide.wtp.ext.server.ui.menu.topLevelMenu/org.wso2.wsf.ide.wtp.ext.server.ui.menu.toolLevelMenu/WSASToolGroup"
+                class="org.wso2.wsf.ide.wtp.ext.validate.module.delegate.ModuleValidaterDelegate">
+            </action>
+            <action
+                id="org.wso2.wsf.ide.wtp.ext.tools.menu.validate.service"
+                label="Validate services.xml" icon="icons/services.gif"
+                tooltip="Validate Services XML File"
+				menubarPath="org.wso2.wsf.ide.wtp.ext.server.ui.menu.topLevelMenu/org.wso2.wsf.ide.wtp.ext.server.ui.menu.toolLevelMenu/WSASToolGroup"
+                class="org.wso2.wsf.ide.wtp.ext.validate.service.delegate.ArchiveValidaterDelegate">
+            </action>
+            <action
+                id="org.wso2.wsf.ide.wtp.ext.tools.menu.dumpaar"
+                label="Dump WSAS Archive" icon="icons/dump_aar.gif"
+                tooltip="Dump WSAS Archive"
+ 				menubarPath="org.wso2.wsf.ide.wtp.ext.server.ui.menu.topLevelMenu/org.wso2.wsf.ide.wtp.ext.server.ui.menu.toolLevelMenu/WSASToolGroup"
+                class="org.wso2.wsf.ide.wtp.ext.dumpaar.delegate.DumpAARDelegate">
+            </action>
+            <action
+                id="org.wso2.wsf.ide.wtp.ext.tools.menu.java2wsdl"
+                label="WSO2 WSAS JAVA2WSDL" icon="icons/java2wsdl.gif"
+                tooltip="WSO2 WSAS JAVA2WSDL Tool"
+				menubarPath="org.wso2.wsf.ide.wtp.ext.server.ui.menu.topLevelMenu/org.wso2.wsf.ide.wtp.ext.server.ui.menu.toolLevelMenu/WSASToolGroup"
+                class="org.wso2.wsf.ide.wtp.ext.java2wsdl.delegate.JAVA2WSDLDelegate">
+            </action>
+			
+			<menu
+				id="org.wso2.wsf.ide.wtp.ext.server.ui.menu.subLevelMenu"
+				label="WSAS Server" path="org.wso2.wsf.ide.wtp.ext.server.ui.menu.topLevelMenu/additions">
+				<separator name="WSASToolGroup" />
 			</menu>
 			
 			<action
 				id="org.wso2.wsf.ide.wtp.ext.server.ui.menu.start.action"
 				label="WSAS Stop" icon="icons/stop.gif"
 				tooltip="WSAS Server Stop"
-				menubarPath="org.wso2.wsf.ide.wtp.ext.server.ui.menu.topLevelMenu/WSASGroup"
+				menubarPath="org.wso2.wsf.ide.wtp.ext.server.ui.menu.topLevelMenu/org.wso2.wsf.ide.wtp.ext.server.ui.menu.subLevelMenu/WSASToolGroup"
 				class="org.wso2.wsf.ide.wtp.ext.server.ui.WSASStopMenuDelegate">
  				<enablement> 
            			<systemProperty name="WSASStartStatus" value="done"/> 
@@ -62,14 +163,14 @@
                 id="org.wso2.wsf.ide.wtp.ext.server.ui.menu.debug.action"
                 label="WSAS Debug" icon="icons/debug.gif"
                 tooltip="WSAS Server Debug"
-                menubarPath="org.wso2.wsf.ide.wtp.ext.server.ui.menu.topLevelMenu/WSASGroup"
+				menubarPath="org.wso2.wsf.ide.wtp.ext.server.ui.menu.topLevelMenu/org.wso2.wsf.ide.wtp.ext.server.ui.menu.subLevelMenu/WSASToolGroup"
                 class="org.wso2.wsf.ide.wtp.ext.server.ui.WSASDebugMenuDelegate">
             </action>
 			<action
 				id="org.wso2.wsf.ide.wtp.ext.server.ui.menu.stop.action"
 				label="WSAS Start" icon="icons/start.gif"
 				tooltip="WSAS Server Start"
-				menubarPath="org.wso2.wsf.ide.wtp.ext.server.ui.menu.topLevelMenu/WSASGroup"
+				menubarPath="org.wso2.wsf.ide.wtp.ext.server.ui.menu.topLevelMenu/org.wso2.wsf.ide.wtp.ext.server.ui.menu.subLevelMenu/WSASToolGroup"
 				class="org.wso2.wsf.ide.wtp.ext.server.ui.WSASStartMenuDelegate">
 			</action>
 		</actionSet>
@@ -116,56 +217,6 @@
                 tooltip="WSO2 WSAS JAVA2WSDL Tool"
                 toolbarPath="Normal/additions"
                 helpContextId="org.wso2.wsf.ide.wtp.ext.server.tools.java2wsdl.help"
-                class="org.wso2.wsf.ide.wtp.ext.java2wsdl.delegate.JAVA2WSDLDelegate">
-            </action>
-        </actionSet>
-    </extension>
-    
-    <extension point="org.eclipse.ui.actionSets">
-        <actionSet
-            id="org.wso2.wsf.ide.wtp.ext.server.wsas.tools.menu"
-            label="WSAS Tools Menu"
-            visible="true">
-
-            <menu
-                id="org.wso2.wsf.ide.wtp.ext.server.tools.menu.topLevelMenu"
-                label="WSASTools" path="additions">
-                <groupMarker name="WSASToolsGroup" />
-             </menu>
-             
-             <action
-                id="org.wso2.wsf.ide.wtp.ext.tools.menu.wsdl.converter"
-                label="WSDL Converter" icon="icons/converter.gif"
-                tooltip="Convert WSDL 1.1 to 2.0"
-                menubarPath="org.wso2.wsf.ide.wtp.ext.server.tools.menu.topLevelMenu/WSASToolsGroup"
-                class="org.wso2.wsf.ide.wtp.ext.wsdl.converter.delegate.WSDLConverterDelegate">
-            </action>
-            <action
-                id="org.wso2.wsf.ide.wtp.ext.tools.menu.validate.module"
-                label="Validate modules.xml" icon="icons/modules.gif"
-                tooltip="Validate module XML File"
-                menubarPath="org.wso2.wsf.ide.wtp.ext.server.tools.menu.topLevelMenu/WSASToolsGroup"
-                class="org.wso2.wsf.ide.wtp.ext.validate.module.delegate.ModuleValidaterDelegate">
-            </action>
-            <action
-                id="org.wso2.wsf.ide.wtp.ext.tools.menu.validate.service"
-                label="Validate services.xml" icon="icons/services.gif"
-                tooltip="Validate Services XML File"
-                menubarPath="org.wso2.wsf.ide.wtp.ext.server.tools.menu.topLevelMenu/WSASToolsGroup"
-                class="org.wso2.wsf.ide.wtp.ext.validate.service.delegate.ArchiveValidaterDelegate">
-            </action>
-            <action
-                id="org.wso2.wsf.ide.wtp.ext.tools.menu.dumpaar"
-                label="Dump WSAS Archive" icon="icons/dump_aar.gif"
-                tooltip="Dump WSAS Archive"
-                menubarPath="org.wso2.wsf.ide.wtp.ext.server.tools.menu.topLevelMenu/WSASToolsGroup"
-                class="org.wso2.wsf.ide.wtp.ext.dumpaar.delegate.DumpAARDelegate">
-            </action>
-            <action
-                id="org.wso2.wsf.ide.wtp.ext.tools.menu.java2wsdl"
-                label="WSO2 WSAS JAVA2WSDL" icon="icons/java2wsdl.gif"
-                tooltip="WSO2 WSAS JAVA2WSDL Tool"
-                menubarPath="org.wso2.wsf.ide.wtp.ext.server.tools.menu.topLevelMenu/WSASToolsGroup"
                 class="org.wso2.wsf.ide.wtp.ext.java2wsdl.delegate.JAVA2WSDLDelegate">
             </action>
         </actionSet>
