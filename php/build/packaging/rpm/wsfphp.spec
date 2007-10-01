@@ -1,12 +1,13 @@
-Summary: WSO2 WSF-PHP
+Summary: WSO2 WSF/PHP
 Name: wso2-wsf-php
+Vendor: WSO2 Inc.
 Version:1.1.0
-Release: 1.1
+Release: 1
 Source: wso2-wsf-php-1.1.0.tar.gz
-License: Apache
+License: Apache License V2.0
 Group: Development/Tools
 %description
-WSO2 WSF/PHP Extension
+WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into PHP is a PHP extension for providing and consuming Web Services in PHP. WSO2 WSF/PHP supports SOAP 1.1, SOAP 1.2, WSDL 1.1, WSDL 2.0, REST style invocation as well as some of the key WS-* stack specifications such as: SOAP MTOM, WS-Addressing, WS-Security, WS-SecurityPolicy and WS-ReliableMessaging.
 %prep
 %setup -q
 %build
