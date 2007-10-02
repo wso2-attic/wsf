@@ -21,6 +21,7 @@ cp -f `php-config --extension-dir`/wsf.so /usr/lib/php/modules/
 mkdir -p /usr/lib/php/modules/wsf_php
 cp -rf scripts /usr/lib/php/modules/wsf_php
 cp -rf samples /usr/lib/php/modules/wsf_php
+cp -rf docs /usr/lib/php/modules/wsf_php
 %post
 echo "[wsf]" >> /etc/php.ini
 echo "extension=wsf.so" >> /etc/php.ini

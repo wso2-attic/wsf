@@ -27,7 +27,7 @@ ENABLE_LIBCURL = 0
 #LIBCURL_BIN_DIR = E:\libcurl-7.15.1-msvc-win32-ssl-0.9.8a-zlib-1.2.3
 
 # Enable/disable SSL client transport, to enable set ENABLE_SSL = 1
-ENABLE_SSL = 0
+ENABLE_SSL = 1
 # Path to OpenSSL installation, required if SSL transport is enabled
 #OPENSSL_BIN_DIR = D:\OpenSSL
 
