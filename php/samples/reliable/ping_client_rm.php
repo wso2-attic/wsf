@@ -33,7 +33,7 @@ try {
 	
     $client->send($msg);
 
-    echo "Message Set";
+    echo "Message Sent";
 
     sleep(10);
 

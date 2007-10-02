@@ -25,7 +25,7 @@ $actions = array("http://php.axis2.org/samples/echoString" => "echoString");
 $meps = array("echoString"=>"IN_ONLY");
 
 $svr = new WSService(array("operations" => $operations,
-				   "opMEP"=>$meps,
+			   "opMEP"=>$meps,
 			   "reliable"=>TRUE));
 $svr->reply();
 
