@@ -1037,6 +1037,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     return null;
                 }
                 return element;
+            } else if (omElement.getNextOMSibling() != null){
+                return element;
             } else {
                 return omElement;
             }
