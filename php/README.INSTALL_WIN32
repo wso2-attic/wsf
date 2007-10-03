@@ -102,7 +102,7 @@ Contents:
        wsf.log_path="<path_to_extract_folder>\wsf_c\logs"
        wsf.rm_db_dir="<path_to_extract_folder>\wsf_c>"
        wsf.log_level = 3
-       extension=php_wsf.dll
+       extension=wsf.dll
 
        [Note] Log level is by default set to INFO. Log levels range from 0 to 4. Log levels are as follows.
 	      CRITICAL->  0 , ERROR -> 1 , WARNING -> 2 , INFO -> 3, DEBUG -> 4
