@@ -26,6 +26,7 @@ int main(int argc, char *argv[])
     axutil_stomp_write (stomp, env);
 
     frame = axutil_stomp_frame_read (env, stomp->stream);
+    if (frame)  
     printf ("%s\n", frame->command);
 
     axutil_stomp_set_command (stomp, env, AXIS2_STOMP_SUBSCRIBE);
@@ -38,6 +39,7 @@ int main(int argc, char *argv[])
     axutil_stomp_write (stomp, env);
 
     frame = axutil_stomp_frame_read (env, stomp->stream);
+    if (frame)
     printf ("%s\n", frame->body);
 
 

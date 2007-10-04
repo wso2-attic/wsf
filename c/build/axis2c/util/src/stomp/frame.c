@@ -154,7 +154,7 @@ read_stomp_buffer (const axutil_env_t *env,
     int i = 0;
     int len = 0;
 
-    while (1)
+    while (1 && stream)
     {
         len = axutil_stream_read (stream, env, &buff, 1);
         if (len > 0)
