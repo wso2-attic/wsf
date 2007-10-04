@@ -32,7 +32,7 @@ public abstract class AbstractDumpAARWizardPage extends WizardPage implements Se
     
     protected void init(String pageName){
         setTitle("WSAS Dump Archiver");
-        setDescription("Select the custom AAR to Dump");
+        setDescription("Select the IDE created custom Web service to Dump");
         setImageDescriptor(WSASDumpAARPlugin.getWizardImageDescriptor());
         
         /*
