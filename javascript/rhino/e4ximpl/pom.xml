@@ -15,56 +15,56 @@
   -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-	<parent>
-		<groupId>org.wso2.wsf.javascript</groupId>
-		<artifactId>wsf-javascript-rhino</artifactId>
-		<version>SNAPSHOT</version>
-	</parent>
+    <parent>
+        <groupId>org.wso2.wsf.javascript</groupId>
+        <artifactId>wsf-javascript-rhino</artifactId>
+        <version>SNAPSHOT</version>
+    </parent>
 
-	<modelVersion>4.0.0</modelVersion>
-	<artifactId>axiom-e4x</artifactId>
-	<packaging>jar</packaging>
-	<version>SNAPSHOT</version>
-	<name>WSO2 Javascript Web Service Framework- Rhino - AXIOM E4X implementation</name>
-	<build>
-		<sourceDirectory>src</sourceDirectory>
-		<testSourceDirectory>test</testSourceDirectory>
-		<resources>
-			<resource>
-				<directory>test</directory>
-				<includes>
-					<include>**/*.xml</include>
-					<include>**/*.js</include>
-				</includes>
-			</resource>
-		</resources>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.4</source>
-					<target>1.4</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<inherited>true</inherited>
-				<configuration>
-					<!--<forkMode>pertest</forkMode>-->
-					<argLine>-enableassertions</argLine>
-					<testFailureIgnore>false</testFailureIgnore>
-					<skip>false</skip>
-					<includes>
-						<include>**/*Test.java</include>
-					</includes>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>axiom-e4x</artifactId>
+    <packaging>jar</packaging>
+    <version>SNAPSHOT</version>
+    <name>WSO2 Javascript Web Service Framework- Rhino - AXIOM E4X implementation</name>
+    <build>
+        <sourceDirectory>src</sourceDirectory>
+        <testSourceDirectory>test</testSourceDirectory>
+        <resources>
+            <resource>
+                <directory>test</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>**/*.js</include>
+                </includes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.4</source>
+                    <target>1.4</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <inherited>true</inherited>
+                <configuration>
+                    <!--<forkMode>pertest</forkMode>-->
+                    <argLine>-enableassertions</argLine>
+                    <testFailureIgnore>false</testFailureIgnore>
+                    <skip>false</skip>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <distributionManagement>
         <repository>
