@@ -20,8 +20,8 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
-import org.apache.axiom.om.OMText;
 import org.apache.axiom.om.OMNode;
+import org.apache.axiom.om.OMText;
 import org.apache.axiom.soap.SOAP11Constants;
 import org.apache.axiom.soap.SOAP12Constants;
 import org.apache.axiom.soap.SOAPBody;
@@ -47,21 +47,21 @@ import org.apache.axis2.receivers.AbstractInOutMessageReceiver;
 import org.apache.axis2.wsdl.WSDLConstants;
 import org.apache.ws.commons.schema.XmlSchemaComplexType;
 import org.apache.ws.commons.schema.XmlSchemaElement;
+import org.apache.ws.commons.schema.XmlSchemaEnumerationFacet;
 import org.apache.ws.commons.schema.XmlSchemaObjectCollection;
 import org.apache.ws.commons.schema.XmlSchemaParticle;
 import org.apache.ws.commons.schema.XmlSchemaSequence;
-import org.apache.ws.commons.schema.XmlSchemaType;
 import org.apache.ws.commons.schema.XmlSchemaSimpleType;
 import org.apache.ws.commons.schema.XmlSchemaSimpleTypeContent;
 import org.apache.ws.commons.schema.XmlSchemaSimpleTypeRestriction;
-import org.apache.ws.commons.schema.XmlSchemaEnumerationFacet;
+import org.apache.ws.commons.schema.XmlSchemaType;
 import org.apache.ws.commons.schema.constants.Constants;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.UniqueTag;
 import org.mozilla.javascript.Undefined;
+import org.mozilla.javascript.UniqueTag;
 import org.wso2.javascript.xmlimpl.XML;
 import org.wso2.javascript.xmlimpl.XMLList;
 
@@ -81,7 +81,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
-                                                                                                               
+
 /**
  * Class JavaScriptReceiver implements the AbstractInOutSyncMessageReceiver,
  * which, is the abstract IN-OUT MEP message receiver.
@@ -93,7 +93,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
      * Invokes the Javascript service with the parameters from the inMessage
      * and sets the outMessage with the response from the service.
      *
-     * @param inMessage MessageContext object with information about the incoming message
+     * @param inMessage  MessageContext object with information about the incoming message
      * @param outMessage MessageContext object with information about the outgoing message
      * @throws AxisFault
      */
@@ -128,7 +128,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
              */
             context.putThreadLocal(AXIS2_SERVICE, inMessage.getAxisService());
             context.putThreadLocal(AXIS2_CONFIGURATION_CONTEXT, inMessage
-                            .getConfigurationContext());
+                    .getConfigurationContext());
 
             JavaScriptEngineUtils.loadGlobalPropertyObjects(engine, inMessage
                     .getConfigurationContext().getAxisConfiguration());
@@ -163,7 +163,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     XmlSchemaType schemaType = xmlSchemaElement.getSchemaType();
                     if (schemaType instanceof XmlSchemaComplexType) {
                         XmlSchemaComplexType complexType = ((XmlSchemaComplexType) schemaType);
-                        List params = handleComplexTypeInRequest(complexType, payload, engine, new ArrayList());
+                        List params = handleComplexTypeInRequest(complexType, payload, engine,
+                                                                 new ArrayList());
                         args = params.toArray();
                     } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANYTYPE) {
                         args = payload;
@@ -206,23 +207,26 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             if (xmlSchemaElement != null) {
                 QName elementQName = xmlSchemaElement.getSchemaTypeName();
                 OMNamespace namespace = fac.createOMNamespace(elementQName.getNamespaceURI(),
-                        prefix);
+                                                              prefix);
                 outElement = fac.createOMElement(xmlSchemaElement.getName(), namespace);
                 XmlSchemaType schemaType = xmlSchemaElement.getSchemaType();
                 if (schemaType instanceof XmlSchemaComplexType) {
                     XmlSchemaComplexType complexType = ((XmlSchemaComplexType) schemaType);
-                    handleComplexTypeInResponse(complexType, outElement, response, fac, annotated, engine.isJson(), false);
+                    handleComplexTypeInResponse(complexType, outElement, response, fac, annotated,
+                                                engine.isJson(), false);
                     body.addChild(outElement);
                 } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANYTYPE) {
                     if (!isNull(response)) {
-                        OMElement element = buildResponse(annotated, engine.isJson(), response, xmlSchemaElement);
+                        OMElement element = buildResponse(annotated, engine.isJson(), response,
+                                                          xmlSchemaElement);
                         if (element != null) {
                             body.addChild(element);
                         }
                     }
                 }
             } else if (!isNull(response)) {
-                OMElement element = buildResponse(annotated, engine.isJson(), response, xmlSchemaElement);
+                OMElement element =
+                        buildResponse(annotated, engine.isJson(), response, xmlSchemaElement);
                 if (element != null) {
                     body.addChild(element);
                 }
@@ -234,15 +238,19 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             // http-400 code when sending using SOAP1. We explicitly set the
             // FualtCode to 'Receiver'.
             fault.setFaultCode(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(soapEnvelope
-                   .getNamespace().getNamespaceURI()) 
-                       ?SOAP12Constants.SOAP_DEFAULT_NAMESPACE_PREFIX+ ":" + SOAP12Constants.FAULT_CODE_RECEIVER
-                       :SOAP12Constants.SOAP_DEFAULT_NAMESPACE_PREFIX + ":"+ SOAP11Constants.FAULT_CODE_RECEIVER);
+                    .getNamespace().getNamespaceURI())
+                    ? SOAP12Constants.SOAP_DEFAULT_NAMESPACE_PREFIX + ":" + SOAP12Constants
+                    .FAULT_CODE_RECEIVER
+                    : SOAP12Constants.SOAP_DEFAULT_NAMESPACE_PREFIX + ":" + SOAP11Constants
+                    .FAULT_CODE_RECEIVER);
             throw fault;
         }
     }
 
-    private void handleComplexTypeInResponse(XmlSchemaComplexType complexType, OMElement outElement, Object response,
-                                             OMFactory fac, boolean annotated, boolean json, boolean isInnerParam) throws AxisFault {
+    private void handleComplexTypeInResponse(XmlSchemaComplexType complexType, OMElement outElement,
+                                             Object response,
+                                             OMFactory fac, boolean annotated, boolean json,
+                                             boolean isInnerParam) throws AxisFault {
         XmlSchemaParticle particle = complexType.getParticle();
         if (particle instanceof XmlSchemaSequence) {
             XmlSchemaSequence xmlSchemaSequence = (XmlSchemaSequence) particle;
@@ -261,9 +269,11 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                         continue;
                     }
                     XmlSchemaComplexType innerComplexType = (XmlSchemaComplexType) schemaType;
-                    OMElement complexTypeElement = fac.createOMElement(name, outElement.getNamespace());
+                    OMElement complexTypeElement =
+                            fac.createOMElement(name, outElement.getNamespace());
                     outElement.addChild(complexTypeElement);
-                    handleComplexTypeInResponse(innerComplexType, complexTypeElement, object, fac, annotated, json, true);
+                    handleComplexTypeInResponse(innerComplexType, complexTypeElement, object, fac,
+                                                annotated, json, true);
                 } else {
                     Object object;
                     if (isInnerParam || count > 1) {
@@ -277,7 +287,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                             continue;
                         }
                     }
-                    handleSimpleTypeinResponse(innerElement, object, fac, annotated, json, outElement);
+                    handleSimpleTypeinResponse(innerElement, object, fac, annotated, json,
+                                               outElement);
                 }
             }
         } else {
@@ -291,18 +302,21 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
 
     private boolean checkRequired(XmlSchemaElement innerElement, Object object) throws AxisFault {
         if (isNull(object)) {
-            if (innerElement.getSchemaTypeName() == Constants.XSD_ANYTYPE || innerElement.getMinOccurs() == 0) {
+            if (innerElement.getSchemaTypeName() == Constants.XSD_ANYTYPE ||
+                    innerElement.getMinOccurs() == 0) {
                 return true;
             }
             throw new AxisFault("As this operation has multiple return values it should be " +
-                    "returning an object rather then a javascript simple type. Object :" + innerElement.getName() +
+                    "returning an object rather then a javascript simple type. Object :" +
+                    innerElement.getName() +
                     " was not found in the value returned");
         }
         return false;
     }
 
     private List handleComplexTypeInRequest(XmlSchemaComplexType complexType, OMElement payload,
-                                            JavaScriptEngine engine, List paramNames) throws AxisFault {
+                                            JavaScriptEngine engine, List paramNames)
+            throws AxisFault {
         XmlSchemaParticle particle = complexType.getParticle();
         List params = new ArrayList();
         if (particle instanceof XmlSchemaSequence) {
@@ -323,11 +337,13 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                                         + " defined in the schema can not be found in the request");
                     }
                     List innerParamNames = new ArrayList();
-                    List innerParams = handleComplexTypeInRequest((XmlSchemaComplexType) schemaType, complexTypePayload,
-                            engine, innerParamNames);
+                    List innerParams = handleComplexTypeInRequest((XmlSchemaComplexType) schemaType,
+                                                                  complexTypePayload,
+                                                                  engine, innerParamNames);
                     Scriptable scriptable = engine.getCx().newObject(engine);
                     for (int i = 0; i < innerParams.size(); i++) {
-                        scriptable.put((String) innerParamNames.get(i), scriptable, innerParams.get(i));
+                        scriptable.put((String) innerParamNames.get(i), scriptable,
+                                       innerParams.get(i));
                     }
                     params.add(scriptable);
                 } else if (schemaType instanceof XmlSchemaSimpleType) {
@@ -336,25 +352,30 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     XmlSchemaSimpleTypeContent content = xmlSchemaSimpleType.getContent();
                     if (content instanceof XmlSchemaSimpleTypeRestriction) {
                         // We only support restriction on xs:string.
-                        XmlSchemaSimpleTypeRestriction simpleTypeRestriction = (XmlSchemaSimpleTypeRestriction) content;
+                        XmlSchemaSimpleTypeRestriction simpleTypeRestriction =
+                                (XmlSchemaSimpleTypeRestriction) content;
                         String elementName = innerElement.getName();
-                        Object object = handleSimpleElement(payload, engine, elementName, innerElement.getMinOccurs(),
-                                simpleTypeRestriction.getBaseTypeName());
+                        Object object = handleSimpleElement(payload, engine, elementName,
+                                                            innerElement.getMinOccurs(),
+                                                            simpleTypeRestriction.getBaseTypeName());
                         XmlSchemaObjectCollection facets = simpleTypeRestriction.getFacets();
                         Iterator iterator1 = facets.getIterator();
                         // Used to check whether the incoming value of the enumeration matches one thats defined in the
                         // schema.
                         boolean valueFound = false;
                         while (iterator1.hasNext()) {
-                            XmlSchemaEnumerationFacet enumerationFacet = (XmlSchemaEnumerationFacet)iterator1.next();
+                            XmlSchemaEnumerationFacet enumerationFacet =
+                                    (XmlSchemaEnumerationFacet) iterator1.next();
                             if (enumerationFacet.getValue().equals(object)) {
                                 valueFound = true;
                                 break;
                             }
                         }
                         if (!valueFound) {
-                            throw new AxisFault("The element " + innerElement.getName() + " is an enumeration of " +
-                                    "strings. The input " + object + " does not match the defined enumeration.");
+                            throw new AxisFault("The element " + innerElement.getName() +
+                                    " is an enumeration of " +
+                                    "strings. The input " + object +
+                                    " does not match the defined enumeration.");
                         }
                         params.add(object);
                         paramNames.add(elementName);
@@ -362,9 +383,9 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                         throw new AxisFault("Unsupported restriction in Schema");
                     }
                 } else {
-                        params.add(handleSimpleTypeInRequest(payload, engine, innerElement));
-                        paramNames.add(innerElement.getName());
-                    }
+                    params.add(handleSimpleTypeInRequest(payload, engine, innerElement));
+                    paramNames.add(innerElement.getName());
+                }
             }
         } else {
             throw new AxisFault("Unsupported schema type in request");
@@ -372,7 +393,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         return params;
     }
 
-    private Object handleSimpleTypeInRequest (OMElement payload, JavaScriptEngine engine, XmlSchemaElement innerElement) throws AxisFault {
+    private Object handleSimpleTypeInRequest(OMElement payload, JavaScriptEngine engine,
+                                             XmlSchemaElement innerElement) throws AxisFault {
         long maxOccurs = innerElement.getMaxOccurs();
         // Check whether the schema advertises this element as an array
         if (maxOccurs > 1) {
@@ -382,11 +404,15 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     innerElemenrName));
             return handleArray(iterator1, innerElement.getSchemaTypeName(), engine);
         } else {
-            return handleSimpleElement(payload, engine, innerElement.getName(), innerElement.getMinOccurs(), innerElement.getSchemaTypeName());
+            return handleSimpleElement(payload, engine, innerElement.getName(),
+                                       innerElement.getMinOccurs(),
+                                       innerElement.getSchemaTypeName());
         }
     }
 
-    private Object handleSimpleElement(OMElement payload, JavaScriptEngine engine, String innerElementName, long minOccurs, QName schemaType) throws AxisFault {
+    private Object handleSimpleElement(OMElement payload, JavaScriptEngine engine,
+                                       String innerElementName, long minOccurs, QName schemaType)
+            throws AxisFault {
         OMElement omElement = payload.getFirstChildWithName(new QName(
                 innerElementName));
         if (omElement == null) {
@@ -406,29 +432,37 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         return createParam(omElement, schemaType, engine);
     }
 
-    private void handleSimpleTypeinResponse(XmlSchemaElement innerElement, Object jsObject, OMFactory factory, boolean annotated, boolean json, OMElement outElement) throws AxisFault {
+    private void handleSimpleTypeinResponse(XmlSchemaElement innerElement, Object jsObject,
+                                            OMFactory factory, boolean annotated, boolean json,
+                                            OMElement outElement) throws AxisFault {
         long maxOccurs = innerElement.getMaxOccurs();
         if (maxOccurs > 1 && !innerElement.getSchemaTypeName().equals(Constants.XSD_ANYTYPE)) {
             if (jsObject instanceof Object[]) {
                 Object[] objects = (Object[]) jsObject;
                 for (int i = 0; i < objects.length; i++) {
-                    outElement.addChild(handleSchemaTypeinResponse(innerElement,  objects[i], factory, annotated, json));
+                    outElement.addChild(handleSchemaTypeinResponse(innerElement, objects[i],
+                                                                   factory, annotated, json));
                 }
             } else if (jsObject instanceof NativeArray) {
-                NativeArray nativeArray = (NativeArray)jsObject;
+                NativeArray nativeArray = (NativeArray) jsObject;
                 Object[] objects = nativeArray.getAllIds();
                 for (int i = 0; i < objects.length; i++) {
-                    outElement.addChild(handleSchemaTypeinResponse(innerElement,  objects[i], factory, annotated, json));
+                    outElement.addChild(handleSchemaTypeinResponse(innerElement, objects[i],
+                                                                   factory, annotated, json));
                 }
             } else {
-               outElement.addChild(handleSchemaTypeinResponse(innerElement,  jsObject, factory, annotated, json));
+                outElement.addChild(handleSchemaTypeinResponse(innerElement, jsObject, factory,
+                                                               annotated, json));
             }
             return;
         }
-        outElement.addChild(handleSchemaTypeinResponse(innerElement,  jsObject, factory, annotated, json));
+        outElement.addChild(
+                handleSchemaTypeinResponse(innerElement, jsObject, factory, annotated, json));
     }
 
-    private OMElement handleSchemaTypeinResponse(XmlSchemaElement innerElement, Object jsObject, OMFactory factory, boolean annotated, boolean json) throws AxisFault {
+    private OMElement handleSchemaTypeinResponse(XmlSchemaElement innerElement, Object jsObject,
+                                                 OMFactory factory, boolean annotated, boolean json)
+            throws AxisFault {
         QName qName = innerElement.getSchemaTypeName();
         OMElement element = factory.createOMElement(innerElement.getName(), null);
         if (qName.equals(Constants.XSD_ANYTYPE)) {
@@ -625,6 +659,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
     /**
      * Provides support for importing JavaScript files specified in the
      * Services.xml or the Axis2.xml using the "loadJSScripts" parameter.
+     *
      * @param inMessage - The incoming message Context
      * @return String
      */
@@ -639,7 +674,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         }
 
         /**** TODO We might not need the following code since getting a parameter
-        from an Operation covers this(thilina) ****/
+         from an Operation covers this(thilina) ****/
         // Get necessary JavaScripts to be loaded from axis2.xml
         param = inMessage.getConfigurationContext().getAxisConfiguration().getParameter(
                 JavaScriptEngineConstants.LOAD_JSSCRIPTS);
@@ -658,19 +693,21 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
 
     /**
      * Creates an object that can be passed into a javascript function from an OMElement.
+     *
      * @param omElement - The OMElement that the parameter should be created for
-     * @param type - The schemaType of the incoming message element
-     * @param engine - Reference to the javascript engine
+     * @param type      - The schemaType of the incoming message element
+     * @param engine    - Reference to the javascript engine
      * @return - An Object that can be passed into a JS function
      * @throws AxisFault - In case an exception occurs
      */
-    private Object createParam(OMElement omElement, QName type, JavaScriptEngine engine) throws AxisFault {
+    private Object createParam(OMElement omElement, QName type, JavaScriptEngine engine)
+            throws AxisFault {
 
         if (Constants.XSD_ANYTYPE.equals(type)) {
             Context context = engine.getCx();
             OMElement element = omElement.getFirstElement();
             if (element != null) {
-                Object[] objects = {element};
+                Object[] objects = { element };
                 return context.newObject(engine, "XML", objects);
             } else if (omElement.getText() != null) {
                 return omElement.getText();
@@ -680,7 +717,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         }
         String value = omElement.getText();
         if (value == null) {
-            throw new AxisFault("The value of Element " + omElement.getLocalName() + " cannot be null");
+            throw new AxisFault(
+                    "The value of Element " + omElement.getLocalName() + " cannot be null");
         }
         if (Constants.XSD_BOOLEAN.equals(type)) {
             try {
@@ -858,7 +896,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         }
         if (Constants.XSD_YEAR.equals(type)) {
             try {
-                Year year  = ConverterUtil.convertToGYear(value);
+                Year year = ConverterUtil.convertToGYear(value);
                 Calendar calendar = Calendar.getInstance();
                 calendar.clear();
                 calendar.set(Calendar.YEAR, year.getYear());
@@ -903,42 +941,47 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         }
         if (Constants.XSD_DURATION.equals(type)) {
             try {
-                Duration duration= ConverterUtil.convertToDuration(value);
+                Duration duration = ConverterUtil.convertToDuration(value);
                 return duration.toString();
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "duration"));
             }
-        }if (Constants.XSD_QNAME.equals(type)) {
-        try {
-            return ConverterUtil.convertToString(value);
-        } catch (Exception e) {
-            throw new AxisFault(getFaultString(value, "string"));
         }
-    }if (Constants.XSD_HEXBIN.equals(type)) {
-        try {
-            return ConverterUtil.convertToString(value);
-        } catch (Exception e) {
-            throw new AxisFault(getFaultString(value, "hexBinary"));
+        if (Constants.XSD_QNAME.equals(type)) {
+            try {
+                return ConverterUtil.convertToString(value);
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "string"));
+            }
         }
-    }if (Constants.XSD_BASE64.equals(type)) {
-        try {
-            return ConverterUtil.convertToString(value);
-        } catch (Exception e) {
-            throw new AxisFault(getFaultString(value, "base64Binary"));
+        if (Constants.XSD_HEXBIN.equals(type)) {
+            try {
+                return ConverterUtil.convertToString(value);
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "hexBinary"));
+            }
         }
-    }
+        if (Constants.XSD_BASE64.equals(type)) {
+            try {
+                return ConverterUtil.convertToString(value);
+            } catch (Exception e) {
+                throw new AxisFault(getFaultString(value, "base64Binary"));
+            }
+        }
         return omElement.getText();
     }
 
     /**
      * Creates an array object that can be passed into a JS function
+     *
      * @param iterator - Iterator to the omelements that belong to the array
-     * @param type - The schematype of the omelement
-     * @param engine Reference to the javascript engine
+     * @param type     - The schematype of the omelement
+     * @param engine   Reference to the javascript engine
      * @return - An array Object that can be passed into a JS function
      * @throws AxisFault - In case an exception occurs
      */
-    private Object handleArray(Iterator iterator, QName type, JavaScriptEngine engine) throws AxisFault {
+    private Object handleArray(Iterator iterator, QName type, JavaScriptEngine engine)
+            throws AxisFault {
         ArrayList objectList = new ArrayList();
         while (iterator.hasNext()) {
             OMElement omElement = (OMElement) iterator.next();
@@ -952,13 +995,11 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
      * currently dispatched operation. First we try to retrieve the function
      * name vis the JS_FUNCTION_NAME parameter of the AxisOperation. If not we
      * assume the localpart of the operation name to be the function name.
-     * 
-     * @param inMessage
-     *            MessageContext object with information about the incoming
-     *            message
+     *
+     * @param inMessage MessageContext object with information about the incoming
+     *                  message
      * @return the name of the requested JS function
-     * @throws AxisFault
-     *             if the function name cannot be inferred.
+     * @throws AxisFault if the function name cannot be inferred.
      */
     private String inferJavaScriptFunctionName(MessageContext inMessage) throws AxisFault {
         //Look at the method name. if available this should be a javascript method
@@ -986,7 +1027,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
      * @param inMessage MessageContext object with information about the incoming message
      * @return an input stream to the javascript source file
      * @throws AxisFault if the parameter ServiceJS is not specified or if the service
-     * implementation is not available
+     *                   implementation is not available
      */
     private Reader readJS(MessageContext inMessage) throws AxisFault {
         InputStream jsFileStream;
@@ -1011,7 +1052,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         return new BufferedReader(new InputStreamReader(jsFileStream));
     }
 
-    private OMElement buildResponse(boolean annotated, boolean json, Object result, XmlSchemaElement innerElement) throws AxisFault {
+    private OMElement buildResponse(boolean annotated, boolean json, Object result,
+                                    XmlSchemaElement innerElement) throws AxisFault {
         if (json) {
             result = ((String) result).substring(1, ((String) result).length() - 1);
             InputStream in = new ByteArrayInputStream(((String) result).getBytes());
@@ -1037,7 +1079,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     return null;
                 }
                 return element;
-            } else if (omElement.getNextOMSibling() != null){
+            } else if (omElement.getNextOMSibling() != null) {
                 return element;
             } else {
                 return omElement;
@@ -1047,13 +1089,15 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
 
     /**
      * Given a jsObject converts it to corresponding OMElement
-     * @param jsObject  - The object that needs to be converted
+     *
+     * @param jsObject    - The object that needs to be converted
      * @param elementName - The element name of the wrapper
      * @param addTypeInfo - Whether type information should be added into the element as an attribute
      * @return - OMelement which represents the JSObject
      * @throws AxisFault - Thrown in case an exception occurs during the conversion
      */
-    private OMElement createResponseElement(Object jsObject, String elementName, boolean addTypeInfo) throws AxisFault {
+    private OMElement createResponseElement(Object jsObject, String elementName,
+                                            boolean addTypeInfo) throws AxisFault {
         String className = jsObject.getClass().getName();
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace namespace = fac.createOMNamespace("http://www.wso2.org/ns/jstype", "js");
@@ -1104,7 +1148,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 if (addTypeInfo) {
                     element.addAttribute("type", "number", namespace);
                 }
-            }  else if (jsObject instanceof Date || "org.mozilla.javascript.NativeDate".equals(className)) {
+            } else
+            if (jsObject instanceof Date || "org.mozilla.javascript.NativeDate".equals(className)) {
                 Date date = (Date) Context.jsToJava(jsObject, Date.class);
                 Calendar calendar = Calendar.getInstance();
                 calendar.clear();
@@ -1169,6 +1214,6 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
     }
 
     private String getFaultString(String value, String type) {
-         return "Unable to convert value \"" + value + "\" to " + type;
+        return "Unable to convert value \"" + value + "\" to " + type;
     }
 }

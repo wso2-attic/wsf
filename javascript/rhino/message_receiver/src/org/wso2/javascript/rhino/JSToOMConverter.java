@@ -15,37 +15,36 @@
  */
 package org.wso2.javascript.rhino;
 
-import org.apache.axis2.databinding.utils.ConverterUtil;
+import org.apache.axis2.AxisFault;
+import org.apache.axis2.databinding.types.Day;
+import org.apache.axis2.databinding.types.Duration;
+import org.apache.axis2.databinding.types.Language;
+import org.apache.axis2.databinding.types.Month;
+import org.apache.axis2.databinding.types.MonthDay;
+import org.apache.axis2.databinding.types.NCName;
+import org.apache.axis2.databinding.types.Name;
+import org.apache.axis2.databinding.types.NegativeInteger;
 import org.apache.axis2.databinding.types.NonNegativeInteger;
 import org.apache.axis2.databinding.types.NonPositiveInteger;
-import org.apache.axis2.databinding.types.PositiveInteger;
-import org.apache.axis2.databinding.types.NegativeInteger;
-import org.apache.axis2.databinding.types.UnsignedLong;
-import org.apache.axis2.databinding.types.UnsignedInt;
-import org.apache.axis2.databinding.types.UnsignedShort;
-import org.apache.axis2.databinding.types.UnsignedByte;
-import org.apache.axis2.databinding.types.Time;
-import org.apache.axis2.databinding.types.YearMonth;
-import org.apache.axis2.databinding.types.MonthDay;
-import org.apache.axis2.databinding.types.Year;
-import org.apache.axis2.databinding.types.Day;
-import org.apache.axis2.databinding.types.Month;
 import org.apache.axis2.databinding.types.NormalizedString;
-import org.apache.axis2.databinding.types.Token;
-import org.apache.axis2.databinding.types.Language;
-import org.apache.axis2.databinding.types.Name;
-import org.apache.axis2.databinding.types.NCName;
 import org.apache.axis2.databinding.types.Notation;
-import org.apache.axis2.databinding.types.Duration;
-import org.apache.axis2.AxisFault;
+import org.apache.axis2.databinding.types.PositiveInteger;
+import org.apache.axis2.databinding.types.Time;
+import org.apache.axis2.databinding.types.Token;
+import org.apache.axis2.databinding.types.UnsignedByte;
+import org.apache.axis2.databinding.types.UnsignedInt;
+import org.apache.axis2.databinding.types.UnsignedLong;
+import org.apache.axis2.databinding.types.UnsignedShort;
+import org.apache.axis2.databinding.types.Year;
+import org.apache.axis2.databinding.types.YearMonth;
+import org.apache.axis2.databinding.utils.ConverterUtil;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EvaluatorException;
 
-import java.math.BigInteger;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.math.BigInteger;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.Date;
 
 public class JSToOMConverter {
 
@@ -95,7 +94,8 @@ public class JSToOMConverter {
 
     public static String convertToNonPositiveInteger(Object jsObject) throws AxisFault {
         try {
-            NonPositiveInteger integer = ConverterUtil.convertToNonPositiveInteger(jsObject.toString());
+            NonPositiveInteger integer =
+                    ConverterUtil.convertToNonPositiveInteger(jsObject.toString());
             return integer.toString();
         } catch (Exception e) {
             throw new AxisFault("Unable to convert the return value to non positive integer");
@@ -104,7 +104,8 @@ public class JSToOMConverter {
 
     public static String convertToNonNegativeInteger(Object jsObject) throws AxisFault {
         try {
-            NonNegativeInteger integer = ConverterUtil.convertToNonNegativeInteger(jsObject.toString());
+            NonNegativeInteger integer =
+                    ConverterUtil.convertToNonNegativeInteger(jsObject.toString());
             return integer.toString();
         } catch (Exception e) {
             throw new AxisFault("Unable to convert the return value to non negative integer");
@@ -250,7 +251,8 @@ public class JSToOMConverter {
             Calendar calendar = Calendar.getInstance();
             calendar.clear();
             calendar.setTime(date);
-            YearMonth yearMonth = new YearMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
+            YearMonth yearMonth =
+                    new YearMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
             return ConverterUtil.convertToString(yearMonth);
         } catch (EvaluatorException e) {
             throw new AxisFault("Unable to convert the return value to yearMonth");
@@ -265,7 +267,8 @@ public class JSToOMConverter {
             Calendar calendar = Calendar.getInstance();
             calendar.clear();
             calendar.setTime(date);
-            MonthDay monthDay = new MonthDay(calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+            MonthDay monthDay =
+                    new MonthDay(calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
             return ConverterUtil.convertToString(monthDay);
         } catch (EvaluatorException e) {
             throw new AxisFault("Unable to convert the return value to monthDay");

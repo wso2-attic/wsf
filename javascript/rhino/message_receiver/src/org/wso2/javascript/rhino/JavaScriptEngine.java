@@ -53,6 +53,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
 
     /**
      * Constructs a new instance of the JavaScriptEngine class
+     *
      * @param scriptName - Used to display error and warning messages
      */
     public JavaScriptEngine(String scriptName) {
@@ -79,8 +80,9 @@ public class JavaScriptEngine extends ImporterTopLevel {
      * are searched relative to the service archive. If not found then the
      * search will assume absolute path is given. If fails again then it will
      * search under classes folder in Axis2 repository.
-     *
+     * <p/>
      * <strong>We load this method to the JS Engine to be used internally by the java scripts.</strong>
+     *
      * @throws FileNotFoundException if the specified source cannot be found
      * @throws IOException           if evaluating the source produces an IOException
      */
@@ -144,7 +146,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
                     args = "var x = " + args + ";";
                     cx.evaluateString(this, (String) args, "Get JSON", 0, null);
                     args = this.get("x", this);
-                    functionArgs = new Object [] { args };
+                    functionArgs = new Object[] { args };
                     json = true;
                 } else if (datasource instanceof JSONBadgerfishDataSource) {
                     throw new AxisFault("Badgerfish Convention is not supported");
@@ -152,16 +154,16 @@ public class JavaScriptEngine extends ImporterTopLevel {
                     throw new AxisFault("Unsupported Data Format");
                 }
 
-            } else if (args instanceof Object []) {
-                 functionArgs = (Object [])args;
-            } else if (args !=null) {
-                Object[] objects = {args};
-                args = cx.newObject(this, "XML",objects);
-                functionArgs = new Object [] { args };
+            } else if (args instanceof Object[]) {
+                functionArgs = (Object[]) args;
+            } else if (args != null) {
+                Object[] objects = { args };
+                args = cx.newObject(this, "XML", objects);
+                functionArgs = new Object[] { args };
             } else {
-                functionArgs = new Object [0];
+                functionArgs = new Object[0];
             }
-            
+
             // Evaluates the javascript file
             evaluate(reader);
 
@@ -181,22 +183,18 @@ public class JavaScriptEngine extends ImporterTopLevel {
         } catch (Throwable throwable) {
             throw AxisFault.makeFault(throwable);
         }
-    }    
+    }
 
     /**
      * Evaluates the requested operation in the Javascript service
      * implementation. Any Javascript source defined under loadJSScripts
      * parameter is evaluated before evaluating the operation.
-     * 
-     * @param method
-     *            Javascript operation name
-     * @param reader
-     *            a Reader instance associated with the Javascript service
-     * @param args
-     *            an Object representing the input to the operation
-     * @param scripts
-     *            a string represnting a set of Javascript files to be evaluated
-     *            before evaluating the service
+     *
+     * @param method  Javascript operation name
+     * @param reader  a Reader instance associated with the Javascript service
+     * @param args    an Object representing the input to the operation
+     * @param scripts a string represnting a set of Javascript files to be evaluated
+     *                before evaluating the service
      * @return an OMNode containing the result from executing the operation
      * @throws AxisFault - Thrown in case an exception occurs
      */

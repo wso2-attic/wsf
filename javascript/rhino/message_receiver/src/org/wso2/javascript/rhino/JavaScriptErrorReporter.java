@@ -16,28 +16,35 @@
 
 package org.wso2.javascript.rhino;
 
+import org.apache.log4j.Logger;
 import org.mozilla.javascript.ErrorReporter;
 import org.mozilla.javascript.EvaluatorException;
-import org.apache.log4j.Logger;
 
 public class JavaScriptErrorReporter implements ErrorReporter {
 
     private static Logger log = Logger.getLogger(JavaScriptErrorReporter.class);
-    public void warning(String message, String sourceName, int line, String lineSource, int lineOffset) {
-        String messageString = message + " in file " + sourceName + " at line " + line + " column " + lineOffset
-                + " in line :" + lineSource;
+
+    public void warning(String message, String sourceName, int line, String lineSource,
+                        int lineOffset) {
+        String messageString =
+                message + " in file " + sourceName + " at line " + line + " column " + lineOffset
+                        + " in line :" + lineSource;
         log.warn(messageString);
     }
 
-    public void error(String message, String sourceName, int line, String lineSource, int lineOffset) {
-        String messageString = message + " in file " + sourceName + " at line " + line + " column " + lineOffset
-                + " in line :" + lineSource;
+    public void error(String message, String sourceName, int line, String lineSource,
+                      int lineOffset) {
+        String messageString =
+                message + " in file " + sourceName + " at line " + line + " column " + lineOffset
+                        + " in line :" + lineSource;
         log.error(messageString);
     }
 
-    public EvaluatorException runtimeError(String message, String sourceName, int line, String lineSource, int lineOffset) {
-        String messageString = message + " in file " + sourceName + " at line " + line + " column " + lineOffset
-                + " in line :" + lineSource;
+    public EvaluatorException runtimeError(String message, String sourceName, int line,
+                                           String lineSource, int lineOffset) {
+        String messageString =
+                message + " in file " + sourceName + " at line " + line + " column " + lineOffset
+                        + " in line :" + lineSource;
         log.error(messageString);
         return new EvaluatorException(message, sourceName, line, lineSource, lineOffset);
     }

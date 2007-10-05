@@ -36,7 +36,7 @@ public class JSUtils {
      * implementation.
      *
      * @param serviceName the name of the service
-     * @param jsName the name of the Javascript file implementing the service
+     * @param jsName      the name of the Javascript file implementing the service
      * @return an AxisService instance
      * @throws AxisFault if the service instance generates an AxisFault
      */
@@ -53,13 +53,14 @@ public class JSUtils {
      * Adds an In-Out operation to the given AxisService
      *
      * @param service the AxisService to which the operation should be added
-     * @param opName the QName representing the operation
+     * @param opName  the QName representing the operation
      */
     public static void addInOutOperation(AxisService service, QName opName) {
         AxisOperation axisOp = new InOutAxisOperation(opName);
         axisOp.setMessageReceiver(new JavaScriptReceiver());
         axisOp.setStyle(WSDLConstants.STYLE_DOC);
         service.addOperation(axisOp);
-        service.mapActionToOperation(Constants.AXIS2_NAMESPACE_URI + "/" + opName.getLocalPart(), axisOp);
+        service.mapActionToOperation(Constants.AXIS2_NAMESPACE_URI + "/" + opName.getLocalPart(),
+                                     axisOp);
     }
 }

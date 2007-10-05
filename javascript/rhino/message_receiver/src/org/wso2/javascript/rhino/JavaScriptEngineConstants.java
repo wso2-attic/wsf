@@ -17,11 +17,11 @@ package org.wso2.javascript.rhino;
 
 public interface JavaScriptEngineConstants {
     public static final String SERVICE_JS = "ServiceJS";
-    
+
     public static final String RESOURCES_FOLDER = "ResourcesFolder";
 
     public static final String AXIS2_MESSAGECONTEXT = "messageContext";
-    
+
     /**
      * AxisService is injected to the Rhino engine as a thread local variable
      * with the key set to this value. Values from the AxisService is needed by some host
@@ -31,7 +31,7 @@ public interface JavaScriptEngineConstants {
      * the deployment time.
      */
     public static final String AXIS2_SERVICE = "axisService";
-    
+
     /**
      * ConfigurationContext is injected to the Rhino engine as a thread local variable
      * with the key set to this value. Reason for doing this is same as the injecting the AxisService.

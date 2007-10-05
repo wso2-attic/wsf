@@ -16,13 +16,6 @@
 
 package org.wso2.javascript.rhino;
 
-import java.lang.reflect.InvocationTargetException;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
-import java.util.Iterator;
-
-import javax.xml.namespace.QName;
-
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.description.Parameter;
@@ -33,15 +26,21 @@ import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
+import javax.xml.namespace.QName;
+import java.lang.reflect.InvocationTargetException;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
+import java.util.Iterator;
+
 public class JavaScriptEngineUtils {
-    
+
     /*
-     * setup for logging
-     */
+    * setup for logging
+    */
     private static final Log log = LogFactory.getLog(JavaScriptEngineUtils.class);
 
     public static void loadHostObjects(JavaScriptEngine engine,
-            AxisConfiguration axisConfig) throws AxisFault {
+                                       AxisConfiguration axisConfig) throws AxisFault {
 
         Parameter hostObjectParameter = axisConfig.getParameter("javascript.hostobjects");
         if ((hostObjectParameter != null) && (hostObjectParameter.getParameterType() == 2)) {
@@ -49,8 +48,9 @@ public class JavaScriptEngineUtils {
             JavaScriptEngineUtils.getHostObjectsList(paraElement, engine);
         }
     }
-    
-    private static void getHostObjectsList(OMElement hostObjectElement,JavaScriptEngine cx) throws AxisFault {
+
+    private static void getHostObjectsList(OMElement hostObjectElement, JavaScriptEngine cx)
+            throws AxisFault {
         Iterator iterator = hostObjectElement.getChildrenWithName(new QName("class"));
         while (iterator.hasNext()) {
             OMElement element = (OMElement) iterator.next();
@@ -60,16 +60,20 @@ public class JavaScriptEngineUtils {
                     ScriptableObject.defineClass(cx, loadClass(className));
                 } catch (PrivilegedActionException e) {
                     log.fatal(e);
-                    throw new AxisFault("Error occured while loading the host object :" + className, e);
+                    throw new AxisFault("Error occured while loading the host object :" + className,
+                                        e);
                 } catch (IllegalAccessException e) {
                     log.fatal(e);
-                    throw new AxisFault("Error occured while loading the host object :" + className, e);
+                    throw new AxisFault("Error occured while loading the host object :" + className,
+                                        e);
                 } catch (InstantiationException e) {
                     log.fatal(e);
-                    throw new AxisFault("Error occured while loading the host object :" + className, e);
+                    throw new AxisFault("Error occured while loading the host object :" + className,
+                                        e);
                 } catch (InvocationTargetException e) {
                     log.fatal(e);
-                    throw new AxisFault("Error occured while loading the host object :" + className, e);
+                    throw new AxisFault("Error occured while loading the host object :" + className,
+                                        e);
                 }
             }
         }
@@ -99,15 +103,16 @@ public class JavaScriptEngineUtils {
     }
 
     public static void loadGlobalPropertyObjects(JavaScriptEngine engine,
-            AxisConfiguration axisConfig) {
+                                                 AxisConfiguration axisConfig) {
         Parameter propertyObjectParameter = axisConfig
                 .getParameter("javascript.global.propertyobjects");
-        if ((propertyObjectParameter != null) && (propertyObjectParameter.getParameterType() == 2)) {
+        if ((propertyObjectParameter != null) &&
+                (propertyObjectParameter.getParameterType() == 2)) {
             OMElement paraElement = propertyObjectParameter.getParameterElement();
             loadGlobalProperties(paraElement, engine);
         }
     }
-    
+
     private static void loadGlobalProperties(OMElement hostObjectElement, JavaScriptEngine engine) {
         Iterator iterator = hostObjectElement.getChildrenWithName(new QName("global.property"));
         while (iterator.hasNext()) {
@@ -117,7 +122,7 @@ public class JavaScriptEngineUtils {
             if ((objectName != null) & (!objectName.equals("")) & (hostObject != null)
                     & (!hostObject.equals(""))) {
                 Scriptable entryHostObject = engine.getCx().newObject(engine, hostObject,
-                        new Object[0]);
+                                                                      new Object[0]);
                 engine.defineProperty(objectName, entryHostObject, ScriptableObject.READONLY);
             }
         }

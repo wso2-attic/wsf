@@ -15,12 +15,7 @@
  */
 package org.wso2.javascript.rhino;
 
-import java.io.ByteArrayInputStream;
-
-import javax.xml.stream.XMLStreamException;
-
 import junit.framework.TestCase;
-
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.client.Options;
@@ -29,6 +24,9 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.transport.http.SimpleHTTPServer;
+
+import javax.xml.stream.XMLStreamException;
+import java.io.ByteArrayInputStream;
 
 /**
  * Class ReceiverIntegrationTest tests the Javascript message receiver
@@ -116,6 +114,6 @@ public class ReceiverIntegrationTest extends TestCase implements ReceiverTestCon
         sender.setOptions(options);
         OMElement result = sender.sendReceive(payload);
         TestCase.assertEquals("XML echo string",
-                result.getFirstElement().getText());
+                              result.getFirstElement().getText());
     }
 }
