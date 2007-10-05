@@ -52,8 +52,9 @@ AbstractDataModelOperation {
 		ContentCopyUtils contentCopyUtils = new ContentCopyUtils();
 		try {
 			runtimeLocation = WSASWebappUtils.copyWSASWar(
-														monitor,
-														WSASCoreUIMessages.PROPERTY_KEY_PATH);
+					monitor,
+					WSASCoreUIMessages.PROPERTY_KEY_PATH,
+					project);
 		} catch (FileNotFoundException e) {
 			return handleExceptionStatus(e);
 		} catch (IOException e) {

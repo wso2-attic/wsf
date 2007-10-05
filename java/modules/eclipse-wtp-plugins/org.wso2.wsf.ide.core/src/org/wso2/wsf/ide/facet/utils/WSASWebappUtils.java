@@ -32,10 +32,12 @@ public class WSASWebappUtils {
 
 	private static String tempWarLocation = null;
 	private static boolean alreadyWarExist = false;
+	private static String previousProject;
 
-	public static String  copyWSASWar(IProgressMonitor monitor, String wsasHome)
+	public static String  copyWSASWar(IProgressMonitor monitor, String wsasHome, String project)
 										throws FileNotFoundException, IOException{
-		if(!alreadyWarExist){
+		if(!alreadyWarExist || !project.equals(previousProject)){
+			previousProject = project;
 			File tempWSASDirectory = new File (WSASCoreUtils.tempWSASDirectory());
 			if(!tempWSASDirectory.exists()){
 				tempWSASDirectory.mkdirs();
