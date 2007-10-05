@@ -42,6 +42,8 @@
 #include "php_version.h"
 #include <php_main.h>
 #include "wsf_soap.h"
+#include "wsf_wsdl.h"
+
 
 ZEND_DECLARE_MODULE_GLOBALS (wsf) 
 
@@ -847,13 +849,15 @@ PHP_METHOD (ws_client, __construct)
 
         if (zend_hash_find (ht, WS_WSDL, sizeof (WS_WSDL), 
 			(void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-				int ret;
-				char *wsdl_path = NULL;
-				sdlPtr sdl;
-				wsdl_path = Z_STRVAL_PP (tmp);
-				sdl = get_sdl (obj, wsdl_path, cache_wsdl TSRMLS_CC);
-				ret = zend_list_insert (sdl, le_sdl);
-				add_property_resource (obj, "sdl", ret);
+            add_property_stringl (this_ptr, WS_WSDL, Z_STRVAL_PP (tmp),
+                                  Z_STRLEN_PP (tmp), 1);
+/* 				int ret; */
+/* 				char *wsdl_path = NULL; */
+/* 				sdlPtr sdl; */
+/* 				wsdl_path = Z_STRVAL_PP (tmp); */
+/* 				sdl = get_sdl (obj, wsdl_path, cache_wsdl TSRMLS_CC); */
+/* 				ret = zend_list_insert (sdl, le_sdl); */
+/* 				add_property_resource (obj, "sdl", ret); */
         }
         
         if (zend_hash_find (ht, "style", sizeof ("style"),
@@ -871,8 +875,14 @@ PHP_METHOD (ws_client, __construct)
            (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
 				WSF_GLOBAL (encoding) = xmlFindCharEncodingHandler (Z_STRVAL_PP (tmp));
         } else {
-				WSF_GLOBAL (encoding) = NULL;
+            WSF_GLOBAL (encoding) = NULL;
         }
+        
+        if (zend_hash_find (ht, "classmap", sizeof ("classmap"),
+           (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
+            add_property_zval(this_ptr, "classmap", *tmp);
+        }
+
     }
 }
 
@@ -1508,7 +1518,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
                  php_printf ("Unable to open script file or file not found:");
         }
         else{
-			php_lint_script (&script TSRMLS_CC);
+            php_lint_script (&script TSRMLS_CC);
             if (call_user_function (EG (function_table), (zval **) NULL,
                     &func, &retval, 7, params TSRMLS_CC) == SUCCESS){
 
@@ -2137,6 +2147,109 @@ PHP_METHOD (ws_client_proxy, __destruct)
 
 
 /* }}} */ 
+
+/* static void create_dynamic_client(zval *this_ptr, char *function, int function_len, */
+/*                                   int arg_count, zval * args, zval * return_value, */
+/*                                   axutil_env_t * env TSRMLS_DC) */
+/* { */
+/*     zval *client_zval = NULL; */
+/*     zval **tmp; */
+/*     zval **wsdl_location; */
+/*     zval func, retval, param1, param2, param3, param4; */
+/*     zend_file_handle script;     */
+/*     smart_str script_file_name = { 0 }; */
+/*     zval *params[4]; */
+/* /\*     zval *fn_array; *\/ */
+
+
+    
+/*     if (instanceof_function (Z_OBJCE_P (this_ptr), */
+/*                              ws_client_proxy_class_entry TSRMLS_CC)) { */
+/*         if (zend_hash_find (Z_OBJPROP_P (this_ptr), "wsclient", */
+/*                             sizeof ("wsclient"), (void **) & tmp) == SUCCESS) { */
+/*             client_zval = *tmp; */
+/*         } else { */
+/*             php_error_docref (NULL TSRMLS_CC, E_ERROR, */
+/*                               " proxy created without wsclient"); */
+/*             return; */
+/*         } */
+/*     } else if (instanceof_function (Z_OBJCE_P (this_ptr), */
+/*                                     ws_client_class_entry TSRMLS_CC)) { */
+/*         client_zval = this_ptr; */
+/*     } */
+
+/*     if ( zend_hash_find ( Z_OBJPROP_P (client_zval), "wsdl", sizeof ("wsdl"), */
+/*                           (void **) &wsdl_location) == SUCCESS  */
+/*          && Z_TYPE_PP (wsdl_location) == IS_STRING){ */
+/*          smart_str_appends(&script_file_name, "/home/buddhika/development/work/php/scripts/wsf.php"); */
+/*          smart_str_0 (&script_file_name); */
+
+/*          params[0] = &param1; */
+/*          params[1] = &param2; */
+/*          params[2] = &param3; */
+/*          params[3] = &param4; */
+
+/*          ZVAL_STRING (&func, "wsf_create_payload", 0); */
+/*          ZVAL_STRING (params[0], Z_STRVAL_PP(wsdl_location), 0); */
+/*          INIT_PZVAL (params[0]); */
+/*          ZVAL_STRING (params[1], function, 0); */
+/*          INIT_PZVAL (params[1]); */
+/*          ZVAL_LONG (params[2], arg_count); */
+/*          INIT_PZVAL (params[2]); */
+/*          ZVAL_ZVAL (params[3], args, NULL, NULL); */
+/*          INIT_PZVAL (params[3]); */
+
+/*          script.type = ZEND_HANDLE_FP; */
+/*          script.filename = script_file_name.c; */
+/*          script.opened_path = NULL; */
+/*          script.free_filename = 0; */
+/*          if (!(script.handle.fp = VCWD_FOPEN (script.filename, "rb"))){ */
+/*              php_printf ("Unable to open script file or file not found:"); */
+/*          } */
+/*          else{ */
+/*              php_execute_script (&script TSRMLS_CC); */
+/*              if (call_user_function (EG (function_table), (zval **) NULL, */
+/*                                      &func, &retval, 4, params TSRMLS_CC) == SUCCESS){ */
+/*                  if (Z_TYPE_P (&retval) == IS_STRING && Z_TYPE_P (&retval) != IS_NULL){ */
+/*                      char *ret_val = Z_STRVAL_P(&retval); */
+/*                      php_printf("\n output is %s", ret_val); */
+/*                  } */
+/*                  if (Z_TYPE_P(&retval) == IS_ARRAY && Z_TYPE_P (&retval) != IS_NULL){ */
+/*                      HashTable *ht_return = Z_ARRVAL_P(&retval); */
+/*                      zval **tmp_options = NULL; */
+/*                      if(zend_hash_find(ht_return, "endpoint_uri", sizeof("endpoint_uri"), */
+/*                                        (void **)&tmp_options) == SUCCESS ){ */
+/*                          char *uri = Z_STRVAL_PP(tmp_options); */
+/*                          php_printf("\n\n end point is %s", uri); */
+/*                      } */
+
+/*                      if(zend_hash_find(ht_return, "soap_action", sizeof("soap_action"), */
+/*                                        (void **)&tmp_options) == SUCCESS ){ */
+/*                          char *sa = Z_STRVAL_PP(tmp_options); */
+/*                          php_printf("\n\n soap action is %s", sa); */
+/*                      } */
+
+/*                      if(zend_hash_find(ht_return, "request_payload", sizeof("request_payload"), */
+/*                                        (void **)&tmp_options) == SUCCESS ){ */
+/*                          char *req_pay = Z_STRVAL_PP(tmp_options); */
+/*                          php_printf("\n\n request_payload is %s", req_pay); */
+/*                      } */
+
+/*                      if(zend_hash_find(ht_return, "policy_node", sizeof("policy_node"), */
+/*                                        (void **)&tmp_options) == SUCCESS ){ */
+/*                          char *policy_node = Z_STRVAL_PP(tmp_options); */
+/*                          php_printf("\n\n policy node is %s", policy_node); */
+/*                      } */
+
+                     
+/*                  } */
+/*              } */
+/*          } */
+/*     } */
+/* } */
+
+
+
     
 /* {{{ proto WSClientProxy::__call() */ 
 PHP_METHOD (ws_client_proxy, __call) 
@@ -2163,9 +2276,12 @@ PHP_METHOD (ws_client_proxy, __call)
             zend_hash_move_forward_ex (Z_ARRVAL_P (args), &pos)) {
             real_args[i++] = *param;
     } }
-    wsf_soap_do_soap_call (this_ptr, fn_name, fn_name_len, arg_count,
-        real_args, return_value, NULL, NULL, NULL, NULL, NULL,
-        env TSRMLS_CC);
+   /*  wsf_soap_do_soap_call (this_ptr, fn_name, fn_name_len, arg_count, */
+/*         real_args, return_value, NULL, NULL, NULL, NULL, NULL, */
+/*         env TSRMLS_CC); */
+    create_dynamic_client(this_ptr, fn_name, fn_name_len, arg_count,
+                          args, return_value, env TSRMLS_CC);
+
     if (arg_count) {
         efree (real_args);
     }

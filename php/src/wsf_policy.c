@@ -44,21 +44,21 @@ axiom_node_t *wsf_create_policy_node (
     axiom_node_t * node);
 
 
-typedef struct tokenProperties
-{
-    char *user;
-    char *certificate;
-    char *passwordType;
-    char *password;
-    char *pvtKey;
-    char *certificateFormat;
-    char *pvtKeyFormat;
-    char *receiverCertificate;
-    char *receiverCertificateFormat;
-    int ttl;
-    char *callback_function;
-}
-tokenProperties_t;
+/* typedef struct tokenProperties */
+/* { */
+/*     char *user; */
+/*     char *certificate; */
+/*     char *passwordType; */
+/*     char *password; */
+/*     char *pvtKey; */
+/*     char *certificateFormat; */
+/*     char *pvtKeyFormat; */
+/*     char *receiverCertificate; */
+/*     char *receiverCertificateFormat; */
+/*     int ttl; */
+/*     char *callback_function; */
+/* } */
+/* tokenProperties_t; */
 
 axis2_char_t *AXIS2_CALL wsf_password_provider_function (
     const axutil_env_t * env,
@@ -67,17 +67,17 @@ axis2_char_t *AXIS2_CALL wsf_password_provider_function (
 
 char *wsf_get_rampart_token_value(char *token_ref);
 
-tokenProperties_t wsf_set_tmp_rampart_options (
-    tokenProperties_t tmp_rampart_ctx,
-    zval * sec_token,
-    zval * policy,
-    axutil_env_t * env TSRMLS_DC);
+/* tokenProperties_t wsf_set_tmp_rampart_options ( */
+/*     tokenProperties_t tmp_rampart_ctx, */
+/*     zval * sec_token, */
+/*     zval * policy, */
+/*     axutil_env_t * env TSRMLS_DC); */
 
-int wsf_set_options_to_rampart_ctx (
-    rampart_context_t * in_rampart_ctx,
-    axutil_env_t * env,
-    axiom_node_t * incoming_policy_node,
-    tokenProperties_t tmp_rampart_ctx);
+/* int wsf_set_options_to_rampart_ctx ( */
+/*     rampart_context_t * in_rampart_ctx, */
+/*     axutil_env_t * env, */
+/*     axiom_node_t * incoming_policy_node, */
+/*     tokenProperties_t tmp_rampart_ctx); */
 
 axiom_node_t *wsf_do_create_policy (
     zval * sec_token,
@@ -460,17 +460,21 @@ wsf_set_tmp_rampart_options (
     HashTable *ht_token = NULL;
     zval **token_val = NULL;
 
-    if (Z_TYPE_P (policy) == IS_OBJECT)
-        ht_policy = Z_OBJPROP_P (policy);
-    else
-        ht_policy = Z_ARRVAL_P (policy);
+    // need to remove this
+    if(policy){
+        if (Z_TYPE_P (policy) == IS_OBJECT)
+            ht_policy = Z_OBJPROP_P (policy);
+        else
+            ht_policy = Z_ARRVAL_P (policy);
+    }
+
 
     ht_token = Z_OBJPROP_P (sec_token);
-
+    
     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-        "[wsf_policy] creating tmp rampart ctx ");
-
-
+                     "[wsf_policy] creating tmp rampart ctx ");
+    
+    
     if (zend_hash_find (ht_token, WS_TTL, sizeof (WS_TTL),
             (void **) &token_val) == SUCCESS
         && Z_TYPE_PP (token_val) == IS_LONG) {
