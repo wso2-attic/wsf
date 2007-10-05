@@ -17,8 +17,6 @@
 
 package org.wso2.javascript.xmlimpl;
 
-import java.io.Serializable;
-
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
@@ -34,6 +32,8 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.xml.XMLLib;
 import org.mozilla.javascript.xml.XMLObject;
+
+import java.io.Serializable;
 
 public final class XMLLibImpl extends XMLLib implements Serializable {
     private Scriptable globalScope;
@@ -427,7 +427,7 @@ public final class XMLLibImpl extends XMLLib implements Serializable {
         if (nameValue instanceof QName) {
             QName qname = (QName) nameValue;
             result = new QName(this, qname.uri(), qname.localName(),
-                    qname.prefix());
+                               qname.prefix());
 
         } else {
             String localName = ScriptRuntime.toString(nameValue);

@@ -18,13 +18,13 @@
 package org.wso2.javascript;
 
 import junit.framework.TestCase;
-import java.io.File;
-import java.net.URL;
-
-import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
+import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.xml.XMLLib;
+
+import java.io.File;
+import java.net.URL;
 
 public abstract class AbstractTestCase extends TestCase {
 
@@ -43,7 +43,7 @@ public abstract class AbstractTestCase extends TestCase {
         return new File(url.getPath());
     }
 
-    public void setUp(){
+    public void setUp() {
         if (!ContextFactory.hasExplicitGlobal()) {
             ContextFactory.initGlobal(new AxiomFactory());
         }
@@ -55,8 +55,8 @@ public abstract class AbstractTestCase extends TestCase {
 
         protected XMLLib.Factory getE4xImplementationFactory() {
             return org.mozilla.javascript.xml.XMLLib.Factory.create(
-				"org.wso2.javascript.xmlimpl.XMLLibImpl"
-			);
+                    "org.wso2.javascript.xmlimpl.XMLLibImpl"
+            );
         }
     }
 }

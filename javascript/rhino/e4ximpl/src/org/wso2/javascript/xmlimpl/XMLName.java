@@ -39,7 +39,11 @@
 
 package org.wso2.javascript.xmlimpl;
 
-import org.mozilla.javascript.*;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Kit;
+import org.mozilla.javascript.Ref;
+import org.mozilla.javascript.ScriptRuntime;
+import org.mozilla.javascript.Undefined;
 
 public class XMLName extends Ref {
     private String uri;
@@ -113,8 +117,8 @@ public class XMLName extends Ref {
 
         if (xmlObject == null) {
             throw ScriptRuntime.undefWriteError(Undefined.instance,
-                    toString(),
-                    value);
+                                                toString(),
+                                                value);
         }
         // Assignment to descendants causes parse error on bad reference
         // and this should not be called

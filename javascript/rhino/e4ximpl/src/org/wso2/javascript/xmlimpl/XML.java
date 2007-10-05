@@ -16,14 +16,6 @@
 */
 package org.wso2.javascript.xmlimpl;
 
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
@@ -34,11 +26,17 @@ import org.apache.axiom.om.OMNode;
 import org.apache.axiom.om.OMText;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.mozilla.javascript.Context;
-import org.mozilla.javascript.NativeJavaObject;
 import org.mozilla.javascript.ScriptRuntime;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.Wrapper;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class XML extends XMLObjectImpl {
 
@@ -116,7 +114,8 @@ public class XML extends XMLObjectImpl {
 
             //Implements x.y, x.ns::y etc,
         } else {
-            javax.xml.namespace.QName qname = new javax.xml.namespace.QName(xmlName.uri(), xmlName.localName());
+            javax.xml.namespace.QName qname =
+                    new javax.xml.namespace.QName(xmlName.uri(), xmlName.localName());
             xmlList.setTargets(this, qname);
             axiomNode.setNodeMatcher(AxiomNode.NODE_MATCHER);
             axiomNode.matchNodes(xmlName, xmlList, AxiomNodeMatcher.CHILDREN);
@@ -158,11 +157,14 @@ public class XML extends XMLObjectImpl {
                         XML xml = ((XMLList) xmlValue).getFromAxiomNodeList(i);
 
                         if (xml.axiomNode.isAttribute())
-                            ((XMLList) xmlValue).replace(i, axiomNode.getElemetFromText(lib, xmlName, xmlValue.toString()));
+                            ((XMLList) xmlValue).replace(i, axiomNode.getElemetFromText(lib,
+                                                                                        xmlName,
+                                                                                        xmlValue.toString()));
                     }
 
                 } else {
-                    xmlValue = axiomNode.getElemetFromText(lib, xmlName, ScriptRuntime.toString(value));
+                    xmlValue = axiomNode
+                            .getElemetFromText(lib, xmlName, ScriptRuntime.toString(value));
                 }
 
                 XMLList matches = (XMLList) ecmaGetImpl(xmlName);
@@ -188,16 +190,20 @@ public class XML extends XMLObjectImpl {
                         }
 
                         // If it's an attribute or text node, make text node.
-                        if (xmlToAdd.getAxiomNode().isAttribute() || xmlToAdd.getAxiomNode().isText())
-                            xmlToAdd = axiomNode.getElemetFromText(lib, xmlName, xmlToAdd.toString());
+                        if (xmlToAdd.getAxiomNode().isAttribute() ||
+                                xmlToAdd.getAxiomNode().isText())
+                            xmlToAdd =
+                                    axiomNode.getElemetFromText(lib, xmlName, xmlToAdd.toString());
 
                         if (i == 0) {
                             // 1st assignment is replaceChild all others are appendChild
-                            replaceChild(matches.getFromAxiomNodeList(0).getAxiomNode(), xmlToAdd.getAxiomNode());
+                            replaceChild(matches.getFromAxiomNodeList(0).getAxiomNode(),
+                                         xmlToAdd.getAxiomNode());
 
                         } else {
                             XMLList tmpMatches = (XMLList) ecmaGetImpl(xmlName);
-                            insertChild(tmpMatches.getFromAxiomNodeList(i-1).getAxiomNode(),xmlToAdd,AxiomNode.APPEND_CHILD);
+                            insertChild(tmpMatches.getFromAxiomNodeList(i - 1).getAxiomNode(),
+                                        xmlToAdd, AxiomNode.APPEND_CHILD);
                             //appendChild(xmlToAdd);
                         }
                     }
@@ -218,13 +224,14 @@ public class XML extends XMLObjectImpl {
 
         if (target instanceof XML) {
             AxiomNode refNode = this.getAxiomNode();
-            AxiomNode targetNode = ((XML)target).getAxiomNode();
+            AxiomNode targetNode = ((XML) target).getAxiomNode();
 
-            if(refNode.isAttribute() || refNode.isText() || targetNode.isAttribute() || targetNode.isText()){
+            if (refNode.isAttribute() || refNode.isText() || targetNode.isAttribute() ||
+                    targetNode.isText()) {
                 result = toString().equals(target.toString());
 
-            }else {
-                result = AxiomNode.equivalentAxiomNode(refNode,targetNode);
+            } else {
+                result = AxiomNode.equivalentAxiomNode(refNode, targetNode);
             }
 
         } else if (target instanceof XMLList) {
@@ -543,7 +550,7 @@ public class XML extends XMLObjectImpl {
         }*/
         javax.xml.namespace.QName qname = axiomNode.getQName();
         QName resultQName = new QName(lib, qname.getNamespaceURI(),
-                qname.getLocalPart(), qname.getPrefix());
+                                      qname.getLocalPart(), qname.getPrefix());
         return resultQName;
     }
 
@@ -910,10 +917,12 @@ public class XML extends XMLObjectImpl {
 
         }
 
-        xmlString = "<parent xmlns=\"" + defaultNamespace.uri() + "\" >" + xmlString.trim() + "</parent>";
+        xmlString = "<parent xmlns=\"" + defaultNamespace.uri() + "\" >" + xmlString.trim() +
+                "</parent>";
 
         try {
-            XMLStreamReader parser2 = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(xmlString));
+            XMLStreamReader parser2 = XMLInputFactory.newInstance()
+                    .createXMLStreamReader(new StringReader(xmlString));
             StAXOMBuilder builder2 = new StAXOMBuilder(parser2);
             OMNode omNode = builder2.getDocumentElement().getFirstOMChild();
             if (omNode == null) {
@@ -1005,11 +1014,12 @@ public class XML extends XMLObjectImpl {
         }
     }
 
-    public void replaceAll(XML targetXML){
-        AxiomNode targetNode = AxiomNode.buildAxiomNode(targetXML.getAxiomNode().cloneOMNode(),axiomNode.getParentNode());
+    public void replaceAll(XML targetXML) {
+        AxiomNode targetNode = AxiomNode
+                .buildAxiomNode(targetXML.getAxiomNode().cloneOMNode(), axiomNode.getParentNode());
 
-        if(axiomNode.getOMNode()!=null){
-            axiomNode.insertChild(axiomNode,targetNode, AxiomNode.PREPEND_CHILD);
+        if (axiomNode.getOMNode() != null) {
+            axiomNode.insertChild(axiomNode, targetNode, AxiomNode.PREPEND_CHILD);
             axiomNode.detach();
             this.axiomNode = targetNode;
         }

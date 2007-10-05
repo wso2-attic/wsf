@@ -17,10 +17,6 @@
 
 package org.wso2.javascript.xmlimpl;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.axiom.om.OMNode;
 import org.apache.axiom.om.OMText;
 import org.mozilla.javascript.Callable;
@@ -30,6 +26,10 @@ import org.mozilla.javascript.ScriptRuntime;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.xml.XMLObject;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class XMLList extends XMLObjectImpl implements Function {
 
@@ -113,8 +113,10 @@ public class XMLList extends XMLObjectImpl implements Function {
                 //TODO Change this imple
                 AxiomNode tmpAxiomNode = AxiomNode.buildAxiomNode(null, null);
                 XML xmlValue = tmpAxiomNode.getElemetFromText(lib,
-                        XMLName.formProperty(targetProperty.getNamespaceURI(),
-                                targetProperty.getLocalPart()), "");
+                                                              XMLName.formProperty(
+                                                                      targetProperty.getNamespaceURI(),
+                                                                      targetProperty.getLocalPart()),
+                                                              "");
                 addToList(xmlValue);
 
                 if (xmlName.isAttributeName()) {
@@ -130,7 +132,7 @@ public class XMLList extends XMLObjectImpl implements Function {
 
                 // Now add us to our parent
                 XMLName name2 = XMLName.formProperty(targetProperty.getNamespaceURI(),
-                        targetProperty.getLocalPart());
+                                                     targetProperty.getLocalPart());
                 targetObject.ecmaPutImpl(name2, this);
             } else {
                 throw ScriptRuntime.typeError(
@@ -218,8 +220,10 @@ public class XMLList extends XMLObjectImpl implements Function {
             } else {
                 AxiomNode tmpAxiomNode = AxiomNode.buildAxiomNode(null, null);
                 xmlValue = tmpAxiomNode.getElemetFromText(lib,
-                        XMLName.formProperty(targetProperty.getNamespaceURI(),
-                                targetProperty.getLocalPart()), value.toString());
+                                                          XMLName.formProperty(
+                                                                  targetProperty.getNamespaceURI(),
+                                                                  targetProperty.getLocalPart()),
+                                                          value.toString());
             }
         }
 
@@ -253,7 +257,8 @@ public class XMLList extends XMLObjectImpl implements Function {
                         replace(index, list.getFromAxiomNodeList(0));
 
                         for (int i = 1; i < list.length(); i++) {
-                            xmlParent.insertChildAfter(xmlParent.child(lastIndexAdded), list.getFromAxiomNodeList(i));
+                            xmlParent.insertChildAfter(xmlParent.child(lastIndexAdded),
+                                                       list.getFromAxiomNodeList(i));
                             lastIndexAdded++;
                             insert(index + i, list.getFromAxiomNodeList(i));
                         }
@@ -268,7 +273,8 @@ public class XMLList extends XMLObjectImpl implements Function {
             //TODO
             // Don't all have same parent, no underlying doc to alter
             if (index < length()) {
-                XML xmlNode = XML.getFromAxiomNode(lib, AxiomNode.buildAxiomNode(_axiomNodeList.get(index),
+                XML xmlNode = XML.getFromAxiomNode(lib, AxiomNode.buildAxiomNode(
+                        _axiomNodeList.get(index),
                         ((XML) getFromAxiomNodeList(index).parent()).getAxiomNode()));
 
                 if (xmlValue instanceof XML) {
@@ -349,7 +355,7 @@ public class XMLList extends XMLObjectImpl implements Function {
         if (!(thisObj instanceof XMLList) ||
                 ((XMLList) thisObj).targetProperty == null)
             throw ScriptRuntime.typeError1("msg.isnt.function",
-                    methodName);
+                                           methodName);
 
         return ScriptRuntime.applyOrCall(isApply, cx, scope, thisObj, args);
     }
@@ -829,10 +835,12 @@ public class XMLList extends XMLObjectImpl implements Function {
                 xmlString = xmlString.substring(2, xmlString.length() - 3);
 
             } else if (xmlString.startsWith("<>") || xmlString.endsWith("</>")) {
-                throw ScriptRuntime.typeError("XML with anonymous tag missing, start or end anonymous tag");
+                throw ScriptRuntime
+                        .typeError("XML with anonymous tag missing, start or end anonymous tag");
             }
 
-            xmlString = "<parent>" + xmlString + "</parent>";  //Avoid having several top level XML elements
+            xmlString = "<parent>" + xmlString +
+                    "</parent>";  //Avoid having several top level XML elements
 
             XML xml = XML.toXML(lib, xmlString);
             axiomNodeList = new ArrayList();
@@ -840,7 +848,8 @@ public class XMLList extends XMLObjectImpl implements Function {
             Iterator iterator = xml.getAxiomNode().getOMElement().getChildren();
             while (iterator.hasNext()) {
                 omNode = (OMNode) iterator.next();
-                if (!(omNode.getType() == OMNode.TEXT_NODE && (((OMText) omNode).getTextCharacters())[0] == '\n')) {
+                if (!(omNode.getType() == OMNode.TEXT_NODE &&
+                        (((OMText) omNode).getTextCharacters())[0] == '\n')) {
                     axiomNodeList.add(AxiomNode.buildAxiomNode(omNode, xml.getAxiomNode()));
                 }
             }

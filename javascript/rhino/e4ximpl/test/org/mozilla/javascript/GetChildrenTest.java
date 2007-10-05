@@ -42,7 +42,7 @@ public class GetChildrenTest extends AbstractTestCase {
             String command1 = "xml.*.length();";
             result = cx.evaluateString(scope, command1, scriptName, 1, null);
             assertEquals(Integer.parseInt(result.toString()), 2);
-            
+
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

@@ -41,9 +41,9 @@
 
 package org.wso2.javascript.xmlimpl;
 
-import org.mozilla.javascript.xml.*;
 import org.mozilla.javascript.NativeWith;
 import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.xml.XMLObject;
 
 final class XMLWithScope extends NativeWith {
     private XMLLibImpl lib;

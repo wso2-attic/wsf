@@ -26,11 +26,14 @@ public interface AxiomNodeMatcher {
     public XMLList matchAnyQName(AxiomNode axiomNode, XMLList xmlList, int type);
 
     //match any localName with a given namespaceURI
-    public XMLList matchAnyLocalName(AxiomNode axiomNode, XMLList xmlList, int type, String namespaceURI);
+    public XMLList matchAnyLocalName(AxiomNode axiomNode, XMLList xmlList, int type,
+                                     String namespaceURI);
 
     //match any namespace with a given localName
-    public XMLList matchAnyNamespace(AxiomNode axiomNode, XMLList xmlList, int type, String LocalName, String namespaceURI);
+    public XMLList matchAnyNamespace(AxiomNode axiomNode, XMLList xmlList, int type,
+                                     String LocalName, String namespaceURI);
 
     //match given QName;
-    public XMLList matchQName(AxiomNode axiomNode, XMLList xmlList, int type, javax.xml.namespace.QName qname);
+    public XMLList matchQName(AxiomNode axiomNode, XMLList xmlList, int type,
+                              javax.xml.namespace.QName qname);
 }
