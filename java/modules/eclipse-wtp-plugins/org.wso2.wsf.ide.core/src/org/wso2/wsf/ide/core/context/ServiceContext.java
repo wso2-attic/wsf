@@ -15,11 +15,15 @@
  */
 package org.wso2.wsf.ide.core.context;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ServiceContext {
 	
 	private static ServiceContext instance;
 	private String serviceName; 
 	private String projectName;
+	private Map<String, String> serviceToProjectMap;
 	
 	//singleton
 	private ServiceContext(){}
@@ -45,6 +49,17 @@ public class ServiceContext {
 
 	public void setProjectName(String projectName) {
 		this.projectName = projectName;
+	}
+
+	public Map<String, String> getServiceToProjectMap() {
+		return serviceToProjectMap;
+	}
+
+	public void addServiceToProjectMap(String service, String project) {
+		if (serviceToProjectMap == null) {
+			serviceToProjectMap = new HashMap<String, String>();
+		}
+		this.serviceToProjectMap.put(service, project);
 	}
 	
 	

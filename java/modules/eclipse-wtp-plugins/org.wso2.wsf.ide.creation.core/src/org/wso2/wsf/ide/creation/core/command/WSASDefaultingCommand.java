@@ -71,7 +71,7 @@ public class WSASDefaultingCommand extends AbstractDataModelOperation
 			status = StatusUtils.errorStatus(WSASCoreUIMessages.ERROR_INVALID_FILE_READ_WRITEL+
 												WSASCoreUIMessages.ERROR_SERVER_IS_NOT_SET);
 		}
-		
+		ServiceContext serviceContext = ServiceContext.getInstance();
 		if (scenario == WebServiceScenario.TOPDOWN) {
 			model.setWsdlURI(ws.getWebServiceInfo().getWsdlURL());
 			model.setDatabindingType(WSASCoreUIMessages.DATA_BINDING_ADB);
@@ -79,11 +79,11 @@ public class WSASDefaultingCommand extends AbstractDataModelOperation
 			defaultCodegenUtil.populateModelParamsFromWSDL();
 			model.setServicesXML(true);
 			model.setServerXMLCheck(true);
-			ServiceContext.getInstance().setServiceName(model.getServiceName());
+			serviceContext.setServiceName(model.getServiceName());
 		}else if (scenario == WebServiceScenario.BOTTOMUP) {
 			model.setServiceClass(ws.getWebServiceInfo().getImplURL());
 			//set the service name inside BUServiceContext for used by client if invoke together
-			ServiceContext.getInstance().setServiceName(
+			serviceContext.setServiceName(
 					CommonUtils.classNameFromQualifiedName(ws.getWebServiceInfo().getImplURL())
 					);
 			
@@ -91,14 +91,15 @@ public class WSASDefaultingCommand extends AbstractDataModelOperation
 		}else{
 			//never come here
 		}
-		
+		serviceContext.addServiceToProjectMap(serviceContext.getServiceName(), model.getWebProjectName());
+
 		// Fix for the Bugzilla Bug 175030
 		// Axis2: WSDL representing Web service not passed to Axis2 client
 		// After setting the initial wsdlURL return from the framework to the data model,
 		// replace it with the deployed wsdlURL
 		String deployedWSDLURL = FacetContainerUtils.getDeployedWSDLURL(
 					model.getWebProjectName(),
-					ServiceContext.getInstance().getServiceName());
+					serviceContext.getServiceName());
 		ws.getWebServiceInfo().setWsdlURL(deployedWSDLURL);
 		
 		WSASEmitterContext context = WebServiceWSASCorePlugin.getDefault().getWSASEmitterContext();

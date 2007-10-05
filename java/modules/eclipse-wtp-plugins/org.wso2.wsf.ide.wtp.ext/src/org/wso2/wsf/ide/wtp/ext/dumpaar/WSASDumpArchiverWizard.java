@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
@@ -118,8 +119,9 @@ public class WSASDumpArchiverWizard extends Wizard implements INewWizard{
 				selectedServiceFile);
 			//Add the source also to the classes
 			ServiceContext context = ServiceContext.getInstance();
+			String projectName = getProjectForService(serviceToDump,context.getServiceToProjectMap());
 			FileUtils.copyDirectory(
-					new File(workspacePath.append(context.getProjectName()).append("src").toOSString()),
+					new File(workspacePath.append(projectName).append("src").toOSString()),
 					selectedServiceFile);
 	
 		ArchiveManipulator archiveManipulator = new ArchiveManipulator();
@@ -188,6 +190,14 @@ public class WSASDumpArchiverWizard extends Wizard implements INewWizard{
     	FileUtils.createDirectorys(dumpAARTargetPath.toOSString());
     	workspacePath=ResourcesPlugin.getWorkspace().getRoot().getRawLocation();
     	alreadyInit = true;
+    }
+    
+    private String getProjectForService(String service, Map<String, String> serviceToProjectMap){
+    	String mappedProjectName = null;
+    	if (serviceToProjectMap.containsKey(service)) {
+    		mappedProjectName = serviceToProjectMap.get(service);
+		}
+    	return mappedProjectName;
     }
 
 }
