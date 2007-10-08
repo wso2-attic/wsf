@@ -71,13 +71,6 @@ axutil_stomp_frame_set_command(
 {
     AXIS2_PARAM_CHECK(env->error, frame, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, command, AXIS2_FAILURE);
-    if (!frame->command)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[stomp]stomp command is not found");
-        return AXIS2_FAILURE;
-    }
-
     frame->command = command;
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[stomp]%s stomp command is set",
                     command);
@@ -102,8 +95,6 @@ axutil_stomp_frame_set_header(
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
                     "[stomp] %s stomp header is set, value is %s", header,
                     value);
-    AXIS2_FREE(env->allocator, header);
-    AXIS2_FREE(env->allocator, value);
     return AXIS2_SUCCESS;
 }
 
@@ -116,11 +107,6 @@ axutil_stomp_frame_set_body(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, frame, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, body, AXIS2_FAILURE);
-    if (!frame->body)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[stomp]stomp body is not set");
-        return AXIS2_FAILURE;
-    }
     frame->body = body;
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "%s stomp body is set", body);
     return AXIS2_SUCCESS;
@@ -138,14 +124,18 @@ axutil_stomp_frame_write(
     int size = 0;
     int i = 0;
     axis2_char_t *header = NULL;
-
+    int len = 0;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, frame, AXIS2_FAILURE);
 
     /* command */
-    total +=
-        axutil_stream_write(stream, env, frame->command,
-                            strlen(frame->command));
+    if (frame->command)
+    {
+        len = strlen (frame->command);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "%s stomp command length %d", frame->command, len);
+    }
+    total += axutil_stream_write(stream, env, frame->command, len);
+    len = 0;
     total += axutil_stream_write(stream, env, "\n", 1);
 
     size = axutil_array_list_size(frame->headers, env);
@@ -164,8 +154,9 @@ axutil_stomp_frame_write(
     /* body */
     if (frame->body)
     {
+        len = strlen (frame->body);
         total +=
-            axutil_stream_write(stream, env, frame->body, strlen(frame->body));
+            axutil_stream_write(stream, env, frame->body, len);
     }
     total += axutil_stream_write(stream, env, "\0\n", 2);
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
@@ -204,10 +195,7 @@ read_stomp_buffer(
                 axis2_char_t *new_buffer =
                     (axis2_char_t *) AXIS2_MALLOC(env->allocator,
                                                   (size_t) size);
-                if (size > 0)
-                {
-                    size <<= 2;
-                }
+                size <<= 2;
                 memcpy(new_buffer, tmp_buffer, (size_t) size);
                 AXIS2_FREE(env->allocator, tmp_buffer);
                 tmp_buffer = new_buffer;
