@@ -187,6 +187,20 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
     zval **policy_options = NULL;
     char *response_sig_model_string = NULL;
 
+    axiom_node_t *env_node = NULL;
+    int has_fault = AXIS2_FALSE;
+    axis2_char_t *res_text = NULL;
+    axiom_soap_body_t *soap_body = NULL;
+    axiom_soap_fault_t *soap_fault = NULL;
+    axiom_node_t *body_base_node = NULL;
+    axiom_node_t *fault_node = NULL;
+    zval *rfault;
+    
+    zval response_function, *res_retval, res_param1, res_param2, res_param3;
+    zval *res_params[3];
+    axiom_node_t *axiom_soap_base_node = NULL;
+    zval *response_parameters;
+
     HashTable *ht_return = Z_ARRVAL_P(function_return_value);
     zval **tmp_options = NULL;
 
@@ -275,11 +289,11 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
     }
 
     if (soap_version){
-    axis2_options_set_soap_version (client_options, env,
-                                    soap_version);
-    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                     "[wsf_wsdl]soap version in wsdl mode is %d",
-                     soap_version);
+        axis2_options_set_soap_version (client_options, env,
+                                        soap_version);
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                         "[wsf_wsdl]soap version in wsdl mode is %d",
+                         soap_version);
     }
 
     if(!php_payload){
@@ -299,15 +313,8 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
         wsf_wsdl_send_receive_soap_envelope_with_op_client (env,
                                                    svc_client, client_options, request_doc);
     if (response_envelope) {
-        axiom_node_t *env_node = NULL;
-        int has_fault = AXIS2_FALSE;
-        axis2_char_t *res_text = NULL;
-    
         env_node =
             axiom_soap_envelope_get_base_node (response_envelope, env);
-
-        axiom_soap_body_t *soap_body = NULL;
-        axiom_soap_fault_t *soap_fault = NULL;
         has_fault = AXIS2_TRUE;
                 
         if (response_envelope)
@@ -315,14 +322,12 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
         if (soap_body)
             soap_fault = axiom_soap_body_get_fault (soap_body, env);
         if (soap_fault) {
-            int soap_version = 0;
-            axiom_node_t *fault_node = NULL;
-            zval *rfault;
-
             soap_version = axis2_options_get_soap_version(client_options, env);
             fault_node = axiom_soap_fault_get_base_node(soap_fault, env);
             if(fault_node){
                 res_text = axiom_node_to_string ( fault_node, env);
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                                 "[wsf_wsdl]Fault payload is %s", res_text);
                 MAKE_STD_ZVAL (rfault);
                 INIT_PZVAL(rfault);
 
@@ -337,16 +342,9 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
             }
             
         }
-        axiom_node_t *body_base_node = NULL;
         if (soap_body)
             body_base_node = axiom_soap_body_get_base_node(soap_body, env);
         if (body_base_node && !soap_fault){
-            zval response_function, *res_retval, res_param1, res_param2, res_param3;
-            zval *res_params[3];
-            axiom_node_t *axiom_soap_base_node = NULL;
-            zval *response_parameters;
-
-            
             axiom_soap_base_node = axiom_soap_envelope_get_base_node(response_envelope, env);
             res_params[0] = &res_param1;
             res_params[1] = &res_param2;
@@ -354,6 +352,9 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
                 
             axis2_char_t *response_buffer = NULL;
             response_buffer = axiom_node_to_string (axiom_soap_base_node, env);
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                             "[wsf_wsdl]Response buffer is %s", response_buffer);
+
             MAKE_STD_ZVAL(response_parameters);
             array_init(response_parameters);
             if(g_classmap)
