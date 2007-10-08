@@ -17,7 +17,7 @@ axutil_stomp_frame_create(
 {
     axutil_stomp_frame_t *frame = NULL;
     frame = AXIS2_MALLOC(env->allocator, sizeof(axutil_stomp_frame_t));
-    MEM_ZERO(frame);
+    memset((void *)frame, 0, sizeof (axutil_stomp_frame_t));
     frame->headers = axutil_array_list_create(env, 3);
     return frame;
 }
@@ -134,8 +134,8 @@ axutil_stomp_frame_write(
         len = strlen (frame->command);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "%s stomp command length %d", frame->command, len);
     }
+
     total += axutil_stream_write(stream, env, frame->command, len);
-    len = 0;
     total += axutil_stream_write(stream, env, "\n", 1);
 
     size = axutil_array_list_size(frame->headers, env);
@@ -145,7 +145,13 @@ axutil_stomp_frame_write(
         {
             header =
                 (axis2_char_t *) axutil_array_list_get(frame->headers, env, i);
-            total += axutil_stream_write(stream, env, header, strlen(header));
+            if (header)
+            {
+                len = 0;
+                len = strlen (header);
+            }
+
+            total += axutil_stream_write(stream, env, header, len);
             total += axutil_stream_write(stream, env, "\n", 1);
         }
     }
@@ -154,6 +160,7 @@ axutil_stomp_frame_write(
     /* body */
     if (frame->body)
     {
+        len = 0;
         len = strlen (frame->body);
         total +=
             axutil_stream_write(stream, env, frame->body, len);

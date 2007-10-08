@@ -12,6 +12,7 @@ axutil_stomp_create(
 
     AXIS2_ENV_CHECK(env->error, NULL);
     stomp = AXIS2_MALLOC(env->allocator, sizeof(axutil_stomp_t));
+    memset ((void *)stomp, 0, sizeof (axutil_stomp_t));
     stomp->socket = axutil_network_handler_open_socket(env, host, port);
 
     if (stomp->socket == -1)
@@ -24,7 +25,6 @@ axutil_stomp_create(
     }
 
     stomp->stream = axutil_stream_create_socket(env, stomp->socket);
-
     if (!stomp->stream)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
@@ -35,7 +35,6 @@ axutil_stomp_create(
     }
 
     stomp->frame = axutil_stomp_frame_create(env);
-
     if (!stomp->frame)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
@@ -91,7 +90,6 @@ axutil_stomp_write(
     AXIS2_PARAM_CHECK(env->error, stomp, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, stomp->frame, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, stomp->stream, AXIS2_FAILURE);
-
     return axutil_stomp_frame_write(stomp->frame, env, stomp->stream);
 }
 

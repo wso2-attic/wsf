@@ -12,12 +12,12 @@ main (int argc, char *argv[])
   int len = 0;
   axis2_char_t buffer[500];
   axis2_socket_t socket;
-  axis2_char_t *command;
-  axis2_char_t *header;
-  axis2_char_t *body;
+  axis2_char_t *command = NULL;
+  axis2_char_t *header = NULL;
+  axis2_char_t *body = NULL;
 
-  axutil_stomp_frame_t *frame;
-  axutil_stomp_t *stomp;
+  axutil_stomp_frame_t *frame = NULL;
+  axutil_stomp_t *stomp = NULL;
 
   env = axutil_env_create_all ("stomp.log", AXIS2_LOG_LEVEL_DEBUG);
   stomp = axutil_stomp_create (env, "localhost", 61613);
