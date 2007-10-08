@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+/*
 define("WSF_WSDL", "wsdl");
 define("WSF_ENDPOINT", "endpoint");
 define("WSF_INVOKE_FUNCTION", "invoke_function");
@@ -70,12 +70,15 @@ define("WSF_TNS", "tns");
 define("WSF_PORT", "port");
 define("WSF_LOCATION", "location");
 define("WSF_XSLT_LOCATION", "xslt_location");
+define("WSF_TYPES", "types");
 
 define("WSF_WSDL2_NAMESPACE", "http://www.w3.org/ns/wsdl");
 define("WSF_WSDL_NAMESPACE", "http://schemas.xmlsoap.org/wsdl/");
 define("WSF_POLICY_REFERENCE_NAMESPACE_URI", "http://schemas.xmlsoap.org/ws/2004/09/policy");
 define("WSF_POLICY_NAMESPACE_URI", "http://www.w3.org/ns/ws-policy");
 define("WSF_POLICY_ID_NAMESPACE_URI", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd");
+*/
+
 
 /**
  * This function is called from call_user_function in C level.
@@ -89,6 +92,8 @@ define("WSF_POLICY_ID_NAMESPACE_URI", "http://docs.oasis-open.org/wss/2004/01/oa
  */
 function wsf_process_wsdl($user_parameters, $function_parameters)
 {
+    require_once('wsf_wsdl_consts.php');
+
     global $is_wsdl_11;
     global $wsdl_11_dom;
 
@@ -125,6 +130,11 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
         return "error creating WSDL Dom Document";
     
     $sig_model_dom = wsf_get_sig_model_dom($wsdl_dom, $xslt_location);
+
+    if ($is_wsdl_11 == TRUE && $wsdl_11_dom )
+        $schema_node = wsf_get_schema_node($wsdl_11_dom);
+    else
+        $schema_node = wsf_get_schema_node($wsdl_dom);
     
     if(!$sig_model_dom)
         return "error creating intermediate model";
@@ -170,8 +180,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     }
  
     if($sig_method)
-        $payload = wsf_create_payload($sig_method, $is_doc_lit, $operation_name, $arg_count, $arguments, $class_map);
-
+        $payload = wsf_create_payload($sig_method, $is_doc_lit, $operation_name, $arg_count, $arguments, $class_map, $schema_node);
     if($sig_method)
         $return_node = wsf_get_response_parameters($sig_method);
     
@@ -193,8 +202,10 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
  * @param string $wsdl_location 
  * @return DomDocument $wsdl_dom DomDocument of WSDL2.0 
  */
-function wsf_get_wsdl_dom($wsdl_location, $xslt_location){
-    
+function wsf_get_wsdl_dom($wsdl_location, $xslt_location)
+{
+    require_once('wsf_wsdl_consts.php');
+
     $wsdl_dom = new DOMDocument();
     $xslt_wsdl_20_dom = new DOMDocument();
     $xslt_11_to_20_dom = new DOMDocument();
@@ -236,6 +247,8 @@ function wsf_get_wsdl_dom($wsdl_location, $xslt_location){
 
 function wsf_get_sig_model_dom(DomDocument $wsdl_dom, $xslt_location)
 {
+    require_once('wsf_wsdl_consts.php');
+
     $xslt_dom  = new DOMDocument();
     $xsl = new XSLTProcessor();
 
@@ -255,6 +268,8 @@ function wsf_get_sig_model_dom(DomDocument $wsdl_dom, $xslt_location)
 
 function wsf_get_endpoint_address(DomDocument $sig_model_dom)
 {
+    require_once('wsf_wsdl_consts.php');
+
     $services_node = $sig_model_dom->firstChild;
     $service_node = $services_node->firstChild;
     $service_attr = $service_node->attributes;
@@ -271,6 +286,8 @@ function wsf_get_endpoint_address(DomDocument $sig_model_dom)
  */
 function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $endpoint_address)
 {
+    require_once('wsf_wsdl_consts.php');
+
     $operation = NULL;
     $services_node = $sig_model_dom->firstChild;
     $services_childs_list = $services_node->childNodes;
@@ -318,12 +335,16 @@ function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $endpoi
  * @param int $arg_count No of arguments in the function
  * @param array $argument array of arguments of the function to be invoked
  * @param array $class_map array of class mappings for complex types 
+ * @param DomNode $schema_node schema for the given WSDL
  */
-function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $arg_count, $arguments, array $class_map = NULL)
+function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $arg_count, $arguments, array $class_map = NULL, $schema_node)
 {
+    require_once('wsf_wsdl_consts.php');
+
+
     $np1= "ns0";
     $np2= "ns";
-    
+    if(!$class_map){    
     if(($is_doc == TRUE)  && $signature_node){
         if($signature_node->firstChild->tagName == WSF_PARAMS){
             if($signature_node->firstChild->hasAttributes()){
@@ -450,9 +471,146 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
                     return $return_val;
                 }                    
             }
-          }
+        }
+    }
+    }
+    else{
+        $temp_param_struct = array();
+
+        if(($is_doc == TRUE)  && $signature_node){
+            if($signature_node->firstChild->tagName == WSF_PARAMS){ /* TODO - what if it is not a wrapper element */
+                if($signature_node->firstChild->hasAttributes()){
+                    $params_attr = $signature_node->firstChild->attributes;
+                    $ele_name = $params_attr->getNamedItem(WSF_WRAPPER_ELEMENT)->value;
+                    if($ele_name == $operation_name){
+                        /** this is wrapper element */
+                        $child_array = array();
+                        $ele_ns = $params_attr->getNamedItem(WSF_WRAPPER_ELEMENT_NS)->value;
+                        $child_array[WSF_NS] = $ele_ns;
+                    }
+                }
+            }
+        }
+        if($signature_node->firstChild->hasChildNodes()){
+            $param_child_list = $signature_node->firstChild->childNodes;
+            foreach($param_child_list as $param_node){
+                $wrap_type = $param_node->attributes->getNamedItem('simple')->value;
+                $param_name = $param_node->attributes->getNamedItem(WSF_NAME)->value;
+                if($wrap_type == "no"){// get from WSDL DOM
+                    $rec_array = array();
+                    $param_ns = $param_node->attributes->getNamedItem('targetNamespace')->value;
+                    $param_type = $param_node->attributes->getNamedItem(WSF_TYPE)->value;
+                    $child_array[$param_name] = create_recursive_struct($schema_node, $param_type);
+                } 
+                else{
+                    $simple_array = array();
+                    $param_type = $param_node->attributes->getNamedItem(WSF_TYPE)->value;
+                    $param_ns = $param_node->attributes->getNamedItem('targetNamespace')->value;
+                    /** min occurs max occurs */
+                    $simple_array[WSF_TYPE] = $param_type;
+                    $simple_array[WSF_NS] = $param_ns;
+                    $child_array[$param_name]= $simple_array;
+                }
+            }
+        }
+        $temp_param_struct[$operation_name] = $child_array;
+        $payload_dom = new DOMDocument('1.0', 'iso-8859-1');
+        $element = $payload_dom->createElementNS($temp_param_struct[$operation_name][WSF_NS], "ns1:".$operation_name);
+
+        $value_array = $temp_param_struct[$operation_name];
+        if(is_object($arguments[0])){
+            $new_obj = $arguments[0];
+            recursive_payload($payload_dom, $value_array, $element, $new_obj);
+        }
+        
+        $payload_dom->appendChild($element);
+        $payload_node = $payload_dom->firstChild;
+        $clone_node = $payload_node->cloneNode(TRUE);
+        return $payload_dom->saveXML($clone_node);
+    } 
+}
+
+/**
+ * Recursive function to create payload 
+ * @param DomDocument $payload_dom 
+ * @param array $value_array Array that include payload details
+ * @param DomNode $element 
+ * @param mixed $new_obj call_map object
+ */
+
+function recursive_payload(DomDocument $payload_dom, $value_array, DomNode $element, $new_obj)
+{
+    require_once('wsf_wsdl_consts.php');
+
+    foreach($value_array as $val => $value){
+        if($val != WSF_NS && is_array($value)){
+            // type of complex type
+            if($value[WSF_NS]){
+                if ($value[WSF_TYPE]){// for one element in wrapper
+                    $element_2 = $payload_dom->createElementNS($value[WSF_NS], $val, $new_obj->$val);
+                }
+                else{
+                    $element_2 = $payload_dom->createElementNS($value['ns'], "ns2:".$val);
+                    $new_obj = $new_obj->$val;
+                    recursive_payload($payload_dom, $value, $element_2, $new_obj);
+                }
+            }
+            else {
+                $element_2 = $payload_dom->createElement($val, $new_obj->$val);
+            }
+            $element->appendChild($element_2);
+        }
+        
     }
 }
+
+/**
+ * Recursive function to create temperaly structure
+ * @param DomNode $types_node schema node of the WSDL
+ * @param string $param_type Type of the parameter
+ */
+
+function create_recursive_struct(DomNode $types_node, $param_type)
+{
+    require_once('wsf_wsdl_consts.php');
+
+    $rec_array = array();
+    $schema_list = $types_node->childNodes;
+    foreach($schema_list as $schema){
+        $ns = $schema->attributes->getNamedItem(WSF_TARGETNAMESPACE)->value;
+        $complexType_list = $schema->childNodes;
+        foreach($complexType_list as $complexType){
+            if($complexType->attributes->getNamedItem(WSF_NAME)->value == $param_type){
+                $rec_array[WSF_NS] = $ns;
+                $sequence_node = $complexType->firstChild;
+                if($sequence_node->localName == "sequence" && $sequence_node->hasChildNodes()){// for now handling only sequence elements all? choice?
+                    $element_list = $sequence_node->childNodes;
+                    foreach($element_list as $element){
+                        if($element->localName == "element" && $element->hasAttributes()){
+                            $ele_type = $element->attributes->getNamedItem(WSF_TYPE)->value;
+                            $ele_name = $element->attributes->getNamedItem(WSF_NAME)->value;
+                            if(substr($ele_type, 0, 3) == "xs:" || substr($ele_type, 0, 4) == "xsd:"){
+                                $simple_array = array();
+                                $param_type = substr(strstr($ele_type, ':'), 1);
+                                /** min occurs max occurs and nillable */
+                                $simple_array[WSF_TYPE] = $param_type;
+                                $simple_array[WSF_NS] = $ns;
+                                $rec_array[$ele_name]= $simple_array;
+
+                            }
+                            else
+                                $rec_array[$ele_name] = create_recursive_struct($types_node, $ele_type);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return $rec_array;
+}
+
+
 
 /**
  * Returns the binding node corresponding to the given endpoint address.
@@ -463,6 +621,8 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
  */
 function wsf_get_binding(DomDocument $wsdl_dom, $endpoint_address, $is_wsdl_11 = FALSE)
 {
+    require_once('wsf_wsdl_consts.php');
+
     if($is_wsdl_11 == FALSE){
          $root_node = $wsdl_dom->firstChild;
          $root_child_list = $root_node->childNodes;
@@ -563,6 +723,8 @@ function wsf_get_binding(DomDocument $wsdl_dom, $endpoint_address, $is_wsdl_11 =
  */
 function wsf_get_all_policies(DomDocument $wsdl_dom, DomNode $binding_node, $operation_name, $is_wsdl_11 = FALSE)
 {
+    require_once('wsf_wsdl_consts.php');
+
     $policy_array = array();
     if(!$binding_node)
         return NULL;
@@ -588,7 +750,6 @@ function wsf_get_all_policies(DomDocument $wsdl_dom, DomNode $binding_node, $ope
             $operation_attr = $binding_child->attributes;
             $operation_ref = $operation_attr->getNamedItem(WSF_REF)->value;
             if(substr(strstr($operation_ref, ":"), 1) == $operation_name && $binding_child->hasChildNodes()){
-                var_dump($binding_child->firstChild);
                 foreach($binding_child->childNodes as $input_output){
                     if($input_output->firstChild->localName == WSF_POLICY_REFERENCE){  /* there may be several chidren */
                         $input_output_attr = $input_output->firstChild->attributes;
@@ -629,6 +790,8 @@ function wsf_get_all_policies(DomDocument $wsdl_dom, DomNode $binding_node, $ope
 
 function get_policy_node(DomDocument $wsdl_dom, $policy_uri)
 {
+    require_once('wsf_wsdl_consts.php');
+
     $root_node = $wsdl_dom->firstChild;
     $root_child_list = $root_node->childNodes;
     foreach($root_child_list as $child){
@@ -664,6 +827,8 @@ function get_policy_node(DomDocument $wsdl_dom, $policy_uri)
  */
 function wsf_get_binding_details(DomNode $operation_node)
 {
+    require_once('wsf_wsdl_consts.php');
+
     $binding_array = array();
     $soap_version = 2;
 
@@ -705,6 +870,8 @@ function wsf_get_binding_details(DomNode $operation_node)
  */
 function wsf_get_response_parameters(DomNode $signature_node)
 {
+    require_once('wsf_wsdl_consts.php');
+
     $signature_child_list = $signature_node->childNodes;
     foreach($signature_child_list as $signature_child){
         if($signature_child->tagName == WSF_RETURNS){
@@ -724,6 +891,8 @@ function wsf_get_response_parameters(DomNode $signature_node)
  */
 function wsf_process_response($response_payload_string, $response_sig_model_string, $response_parameters)
 {
+    require_once('wsf_wsdl_consts.php');
+
     $envelope_dom = new DomDocument(); 
     $sig_model_dom = new DomDocument();
     
@@ -765,8 +934,6 @@ function wsf_process_response($response_payload_string, $response_sig_model_stri
    
     if ($class_map)
         $class = new ReflectionClass($class_map[$ret_value_name]);
-     
-        
     
     $param_child_list = $returns_node->childNodes;
     foreach($param_child_list as $param_child){
@@ -846,4 +1013,30 @@ function wsf_process_response($response_payload_string, $response_sig_model_stri
     }
 }
 
+/**
+ * Returns schema node 
+ * @param DomDocument $wsdl_dom WSDL2.0 DomDocument
+ * @return DomNode $schema_node Cloned schema node
+ */
+function wsf_get_schema_node($wsdl_dom)
+{
+    require_once('wsf_wsdl_consts.php');
+
+    $root_node = $wsdl_dom->firstChild;
+    $root_child_list = $root_node->childNodes;
+
+
+    foreach($root_child_list as $childs){
+        if($childs->localName == WSF_TYPES){
+            $tmp_node = $childs;
+            $schema_node = $tmp_node->cloneNode(TRUE);
+            return $schema_node;
+        }
+    }
+
+}
+
+
 ?>
+
+
