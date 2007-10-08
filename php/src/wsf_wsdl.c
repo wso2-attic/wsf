@@ -159,7 +159,7 @@ void create_dynamic_client(zval *this_ptr, char *function, int function_len,
             return;
         }
         else{
-            php_execute_script (&script TSRMLS_CC);
+            php_lint_script (&script TSRMLS_CC);
             if (call_user_function (EG (function_table), (zval **) NULL,
                                     &request_function, &retval, 2, params TSRMLS_CC) == SUCCESS ){
                 if (Z_TYPE_P(&retval) == IS_ARRAY && Z_TYPE_P (&retval) != IS_NULL)
@@ -370,6 +370,8 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
             ZVAL_ZVAL(res_params[2], response_parameters, NULL, NULL);
             INIT_PZVAL(res_params[2]);
 
+            MAKE_STD_ZVAL(res_retval);
+            INIT_PZVAL(res_retval);
             if (call_user_function (EG (function_table), (zval **) NULL,
                                     &response_function, res_retval, 3, res_params TSRMLS_CC) == SUCCESS ){
                 if (Z_TYPE_P(res_retval) == IS_STRING)
