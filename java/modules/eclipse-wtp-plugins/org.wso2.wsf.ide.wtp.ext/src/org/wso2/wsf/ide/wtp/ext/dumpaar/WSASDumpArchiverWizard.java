@@ -172,12 +172,12 @@ public class WSASDumpArchiverWizard extends Wizard implements INewWizard{
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-	    			
-			//Print the resulting message from a popup dialog 
-			MessageDialog.openInformation(this.getShell(), 
-					WSASDumpAARPlugin.getResourceString("page1.name"),
-					WSASDumpAARPlugin.getResourceString("page1.success"));
-		} 
+		}
+    	
+		//Print the resulting message from a popup dialog 
+		MessageDialog.openInformation(this.getShell(), 
+				WSASDumpAARPlugin.getResourceString("page1.name"),
+				WSASDumpAARPlugin.getResourceString("page1.success"));
 		
     	return true;
     }
