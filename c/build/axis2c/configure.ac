@@ -291,8 +291,9 @@ AC_ARG_ENABLE(openssl, [  --enable-openssl
     ssl_enabled=true
     ;;
   esac ],
-  AC_MSG_RESULT(no)
-  CFLAGS="$CFLAGS"
+    AC_MSG_RESULT(yes)
+    CFLAGS="$CFLAGS -DAXIS2_SSL_ENABLED"
+    ssl_enabled=true
 )
 
 AC_MSG_CHECKING(whether to use libcurl)
