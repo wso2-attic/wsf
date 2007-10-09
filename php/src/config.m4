@@ -1,8 +1,8 @@
-PHP_ARG_ENABLE(wsf, whether to eable AXIS2 support,
-[ --with-wsf Enable WSO2 WSF for PHP support])
+PHP_ARG_ENABLE(wsf, Whether to enable WSF/PHP Support,
+[ --with-wsf Enable WSO2 WSF/PHP Support])
 
 if test "$PHP_WSF" = "yes"; then
-	AC_DEFINE(HAVE_WSF, 1, [Whether you have WSO2 WSF for PHP])
+	AC_DEFINE(HAVE_WSF, 1, [Whether you have WSO2 WSF/PHP])
 
 	if test "$PHP_LIBXML" = "no"; then
 		AC_MSG_ERROR([WSF/PHP extension requires LIBXML extension, add --enable-libxml])
@@ -37,7 +37,5 @@ if test "$PHP_WSF" = "yes"; then
 	PHP_ADD_EXTENSION_DEP(wsf, libxml)
 
 	PHP_ADD_EXTENSION_DEP(wsf, dom)
-
-	dnl PHP_ADD_EXTENSION_DEP(axis2, simplexml)
 
 fi
