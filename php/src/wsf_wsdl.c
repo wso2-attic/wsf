@@ -15,7 +15,7 @@
  */
 
 #include "php.h"
-#include <axis2_addr.h>
+#include "axis2_addr.h"
 #include "wsf.h"
 #include "wsf_util.h"
 #include <axutil_error_default.h>
@@ -345,12 +345,13 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
         if (soap_body)
             body_base_node = axiom_soap_body_get_base_node(soap_body, env);
         if (body_base_node && !soap_fault){
+			axis2_char_t *response_buffer = NULL;
             axiom_soap_base_node = axiom_soap_envelope_get_base_node(response_envelope, env);
             res_params[0] = &res_param1;
             res_params[1] = &res_param2;
             res_params[2] = &res_param3;
                 
-            axis2_char_t *response_buffer = NULL;
+            
             response_buffer = axiom_node_to_string (axiom_soap_base_node, env);
             AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                              "[wsf_wsdl]Response buffer is %s", response_buffer);
