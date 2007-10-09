@@ -38,8 +38,11 @@ import org.apache.axis2.databinding.types.UnsignedShort;
 import org.apache.axis2.databinding.types.Year;
 import org.apache.axis2.databinding.types.YearMonth;
 import org.apache.axis2.databinding.utils.ConverterUtil;
+import org.apache.axis2.databinding.utils.BeanUtil;
+import org.apache.axiom.om.OMElement;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EvaluatorException;
+import org.wso2.javascript.xmlimpl.QName;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -397,9 +400,26 @@ public class JSToOMConverter {
         }
     }
 
-    public static String convertToQName(Object jsObject) throws AxisFault {
+    public static String convertToQName(Object jsObject, OMElement omElement) throws AxisFault {
         try {
-            return (String) jsObject;
+            QName qName = (QName)jsObject;
+            Object uri = qName.get("uri", qName);
+            Object localName = qName.get("localName", qName);
+            Object prefix = qName.get("prefix", qName);
+            String prefixString, localNameString;
+            if (!JavaScriptEngine.isNull(uri)) {
+                if (JavaScriptEngine.isNull(prefix) || "".equals(prefix)) {
+                    prefixString = BeanUtil.getUniquePrefix();
+                }else {
+                    prefixString = (String)prefix;
+                }
+                omElement.declareNamespace(((String)uri), prefixString);
+                localNameString = prefixString + ":" + localName;
+            } else {
+                localNameString = (String) localName;
+            }
+
+            return localNameString;
         } catch (Exception e) {
             throw new AxisFault("Unable to convert the return value to QName");
         }

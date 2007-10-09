@@ -217,7 +217,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                                                 engine.isJson(), false);
                     body.addChild(outElement);
                 } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANYTYPE) {
-                    if (!isNull(response)) {
+                    if (!JavaScriptEngine.isNull(response)) {
                         OMElement element = buildResponse(annotated, engine.isJson(), response,
                                                           xmlSchemaElement);
                         if (element != null) {
@@ -225,7 +225,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                         }
                     }
                 }
-            } else if (!isNull(response)) {
+            } else if (!JavaScriptEngine.isNull(response)) {
                 OMElement element =
                         buildResponse(annotated, engine.isJson(), response, xmlSchemaElement);
                 if (element != null) {
@@ -297,12 +297,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         }
     }
 
-    private boolean isNull(Object object) {
-        return object == null || object instanceof UniqueTag || object instanceof Undefined;
-    }
-
     private boolean checkRequired(XmlSchemaElement innerElement, Object object) throws AxisFault {
-        if (isNull(object)) {
+        if (JavaScriptEngine.isNull(object)) {
             if (innerElement.getSchemaTypeName() == Constants.XSD_ANYTYPE ||
                     innerElement.getMinOccurs() == 0) {
                 return true;
@@ -640,7 +636,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             return element;
         }
         if (qName.equals(Constants.XSD_QNAME)) {
-            String str = JSToOMConverter.convertToQName(jsObject);
+            String str = JSToOMConverter.convertToQName(jsObject, element);
             element.setText(str);
             return element;
         }
@@ -966,7 +962,20 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         }
         if (Constants.XSD_QNAME.equals(type)) {
             try {
-                return ConverterUtil.convertToString(value);
+                int index = value.indexOf(":");
+                String prefix = "";
+                if (index > -1) {
+                   prefix = value.substring(0, index);
+                    value = value.substring(index+1);
+                }
+                String namespaceURI = omElement.getXMLStreamReader().getNamespaceURI(prefix);
+                Object[] namespaceObjects = { prefix,
+                        namespaceURI};
+                Scriptable e4xNamespace =
+                        engine.getCx().newObject(engine, "Namespace", namespaceObjects);
+                Object[] qnameObjects = { e4xNamespace,
+                        value };
+                return engine.getCx().newObject(engine, "QName", qnameObjects);
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "string"));
             }

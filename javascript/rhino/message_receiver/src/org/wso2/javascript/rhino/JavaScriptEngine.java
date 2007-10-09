@@ -27,6 +27,8 @@ import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.WrappedException;
+import org.mozilla.javascript.UniqueTag;
+import org.mozilla.javascript.Undefined;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -222,5 +224,9 @@ public class JavaScriptEngine extends ImporterTopLevel {
 
     public void setScriptName(String scriptName) {
         this.scriptName = scriptName;
+    }
+
+    public static boolean isNull(Object object) {
+        return object == null || object instanceof UniqueTag || object instanceof Undefined;
     }
 }
