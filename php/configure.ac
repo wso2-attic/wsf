@@ -247,8 +247,9 @@ AC_ARG_ENABLE(openssl, [  --enable-openssl  enable ssl. default=yes],
     ssl_enabled=true
     ;;
   esac ],
-  AC_MSG_RESULT(no)
-  CFLAGS="$CFLAGS"
+    AC_MSG_RESULT(yes)
+    CFLAGS="$CFLAGS -DAXIS2_SSL_ENABLED"
+    ssl_enabled=true
 )
 
 
