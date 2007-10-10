@@ -33,5 +33,7 @@ echo "Copy scripts and samples folders in /usr/lib/php/modules/wsf_php to your W
 
 %files
 %defattr(-,root,root)
-/usr/lib/php/modules
+/usr/lib/php/modules/wsf.so
+/usr/lib/php/modules/wsf_php
+/usr/lib/php/modules/wsf_c
 %doc COPYING AUTHORS README NEWS
