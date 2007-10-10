@@ -1,4 +1,4 @@
-SUBDIRS = secpolicy 
+SUBDIRS = secpolicy util
 lib_LTLIBRARIES=libneethi.la
 
 libneethi_la_SOURCES= all.c   \
