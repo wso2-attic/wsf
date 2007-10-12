@@ -23,7 +23,8 @@ axutil_stomp_create(
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[stomp]stomp client is unable to open socket for%s host and %d port",
                         host, port);
-        return stomp;
+        axutil_stomp_free (stomp, env);
+        return NULL;
     }
 
     stomp->stream = axutil_stream_create_socket(env, stomp->socket);
@@ -31,17 +32,17 @@ axutil_stomp_create(
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[stomp]stomp client is unable to create stream for socket with %s host and %d port", host, port);
-
-        return stomp;
+        axutil_stomp_free (stomp, env);
+        return NULL;
     }
 
     stomp->frame = axutil_stomp_frame_create(env);
     if (!stomp->frame)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[stomp]stomp client is unable to create frame for",
-                        "socket with %s host and %d port", host, port);
-        return stomp;
+                        "[stomp]stomp client is unable to create frame for socket with %s host and %d port", host, port); 
+        axutil_stomp_free (stomp, env);
+        return NULL;
     }
 
     return stomp;
