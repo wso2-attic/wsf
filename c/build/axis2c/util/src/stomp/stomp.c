@@ -21,7 +21,7 @@ axutil_stomp_create(
     if (stomp->socket == -1)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[stomp]stomp client is unable to open socket for%s host and %d port",
+                        "[stomp]stomp client is unable to open socket for host %s and port %d ",
                         host, port);
         axutil_stomp_free (stomp, env);
         return NULL;
