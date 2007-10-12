@@ -1,6 +1,9 @@
 #include <stdlib.h>
 #include <strings.h>
-#include <axutil_stomp.h>
+#include <axutil_network_handler.h>
+#include "axutil_stomp_frame.h"
+#include "axutil_stomp.h"
+
 
 axutil_stomp_t *
 axutil_stomp_create(
@@ -18,8 +21,7 @@ axutil_stomp_create(
     if (stomp->socket == -1)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[stomp]stomp client is unable to open socket for",
-                        "%s host and %d port",
+                        "[stomp]stomp client is unable to open socket for%s host and %d port",
                         host, port);
         return stomp;
     }
@@ -28,8 +30,7 @@ axutil_stomp_create(
     if (!stomp->stream)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[stomp]stomp client is unable to create stream for",
-                        "socket with %s host and %d port", host, port);
+                        "[stomp]stomp client is unable to create stream for socket with %s host and %d port", host, port);
 
         return stomp;
     }
@@ -106,4 +107,32 @@ axutil_stomp_read(
         stomp->frame = frame;
     }
     return stomp->frame;
+}
+
+
+void 
+axutil_stomp_free (
+    axutil_stomp_t *stomp,
+    const axutil_env_t *env)
+{
+    if (!stomp)
+        return;
+
+    if (stomp->frame)
+    {
+        axutil_stomp_frame_free(stomp->frame, env);
+    }
+
+    if (stomp->stream)
+    {
+        axutil_stream_close (stomp->stream, env);
+        axutil_stream_free (stomp->stream, env);
+    }
+
+    if (stomp->socket)
+    {
+        axutil_network_handler_close_socket (env, stomp->socket);
+    }
+
+    AXIS2_FREE (env->allocator, stomp);
 }

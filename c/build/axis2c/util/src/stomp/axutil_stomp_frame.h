@@ -36,17 +36,15 @@ extern "C" {
         const axutil_env_t *env);
 
     void
-    axutil_stomp_fram_free (
+    axutil_stomp_frame_free (
         axutil_stomp_frame_t *frame,
         const axutil_env_t *env);
 
-    
     axis2_status_t
     axutil_stomp_frame_set_command (
         axutil_stomp_frame_t *frame,
         const axutil_env_t *env,
         axis2_char_t *command);
-    
     
     axis2_status_t
     axutil_stomp_frame_set_header (
@@ -54,7 +52,6 @@ extern "C" {
         const axutil_env_t *env,
         axis2_char_t *header,
         axis2_char_t *value);
-    
     
     axis2_status_t 
     axutil_stomp_frame_set_body (
@@ -72,6 +69,11 @@ extern "C" {
     axutil_stomp_frame_read (
         const axutil_env_t *env,
         axutil_stream_t *stream);
+
+    void
+    axutil_stomp_frame_reset (
+        axutil_stomp_frame_t *frame,
+        const axutil_env_t *env);
 
 
 

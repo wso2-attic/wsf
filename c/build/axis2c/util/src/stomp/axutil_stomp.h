@@ -53,6 +53,17 @@ extern "C" {
         axutil_stomp_t *stomp,
         const axutil_env_t *env);
 
+    void
+    axutil_stomp_reset (
+        axutil_stomp_t *stomp,
+        const axutil_env_t *env);
+
+    void 
+    axutil_stomp_free (
+        axutil_stomp_t *stomp,
+        const axutil_env_t *env);
+
+
 
 
 

@@ -24,7 +24,7 @@ axutil_stomp_frame_create(
 
 void
 axutil_stomp_frame_free(
-    axutil_stomp_frame_t * frame,
+    axutil_stomp_frame_t *frame,
     const axutil_env_t * env)
 {
     void *headers;
@@ -55,7 +55,7 @@ axutil_stomp_frame_free(
     {
         for (i = 0; i < size; i++)
         {
-            headers = axutil_array_list_get(frame->headers, env, i);
+            headers = axutil_array_list_remove(frame->headers, env, (size - i));
             AXIS2_FREE(env->allocator, headers);
         }
     }
@@ -192,7 +192,8 @@ read_stomp_buffer(
     memset((void *) tmp_buffer, 0, (size_t) size);
     if (!stream)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[stomp]stream is NULL");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                        "[stomp]stream is NULL");
         return tmp_buffer;
     }
 
@@ -243,6 +244,14 @@ axutil_stomp_frame_read(
 
     frame = axutil_stomp_frame_create(env);
     buffer = read_stomp_buffer(env, stream);
+
+    if (!buffer)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                        "[stomp]read buffer is empty");
+        return frame;
+    }
+
     p = strstr(buffer, "\n");
     h = p - buffer;
     if (!p)
@@ -257,7 +266,8 @@ axutil_stomp_frame_read(
     *p = 0;
     if (buffer)
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[stomp]read command %s", buffer);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                        "[stomp]read command %s", buffer);
     }
     frame->command = buffer;
 
@@ -267,15 +277,68 @@ axutil_stomp_frame_read(
         p = strstr(buffer, "\n");
         h = p - buffer;
         *p = 0;
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[stomp]read header %s", buffer);
-        axutil_array_list_add(frame->headers, env, (void *) buffer);
+        if (buffer)
+        {
+            AXIS2_LOG_DEBUG(env->log, 
+                            AXIS2_LOG_SI, 
+                            "[stomp]read header %s", buffer);
+            axutil_array_list_add(frame->headers, env, (void *) buffer);
+        }
         buffer = p + 1;
     }
 
     if (buffer)
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[stomp]read body %d length message", strlen (buffer));
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                        "[stomp]read body %d length message", 
+                        strlen (buffer));
     }
     frame->body = buffer;
     return frame;
+}
+
+
+void
+axutil_stomp_frame_reset (axutil_stomp_frame_t *frame,
+                          const axutil_env_t *env)
+{
+    int i = 0;
+    int size = 0;
+    axis2_char_t *header = NULL;
+
+    if (!frame)
+    {
+        return;
+    }
+
+    if (frame->command)
+    {
+/*         AXIS2_FREE (env->allocator, frame->command); */
+        frame->command = NULL;
+    }
+
+    if (frame->body)
+    {
+/*         AXIS2_FREE (env->allocator, frame->body); */
+        frame->body = NULL;
+    }
+
+    if (frame->headers)
+    {
+        size = axutil_array_list_size(frame->headers, env);
+        if (size > 0)
+        {
+            for (i = 0; i < size; i++)
+            {
+                header =
+                    (axis2_char_t *) axutil_array_list_remove(frame->headers, env, 0);
+                if (header)
+                {
+/*                     AXIS2_FREE (env->allocator, header); */
+                    header = NULL;
+         
+                }
+            }
+        }
+    }
 }
