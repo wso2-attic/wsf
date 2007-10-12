@@ -405,14 +405,9 @@ public class JSToOMConverter {
             QName qName = (QName)jsObject;
             Object uri = qName.get("uri", qName);
             Object localName = qName.get("localName", qName);
-            Object prefix = qName.get("prefix", qName);
             String prefixString, localNameString;
             if (!JavaScriptEngine.isNull(uri)) {
-                if (JavaScriptEngine.isNull(prefix) || "".equals(prefix)) {
-                    prefixString = BeanUtil.getUniquePrefix();
-                }else {
-                    prefixString = (String)prefix;
-                }
+                prefixString = BeanUtil.getUniquePrefix();
                 omElement.declareNamespace(((String)uri), prefixString);
                 localNameString = prefixString + ":" + localName;
             } else {

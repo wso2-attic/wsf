@@ -968,7 +968,11 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                    prefix = value.substring(0, index);
                     value = value.substring(index+1);
                 }
-                String namespaceURI = omElement.getXMLStreamReader().getNamespaceURI(prefix);
+                OMNamespace namespace = omElement.findNamespaceURI(prefix);
+                String namespaceURI = null;
+                if (namespace != null) {
+                    namespaceURI = namespace.getNamespaceURI();
+                }
                 Object[] namespaceObjects = { prefix,
                         namespaceURI};
                 Scriptable e4xNamespace =
