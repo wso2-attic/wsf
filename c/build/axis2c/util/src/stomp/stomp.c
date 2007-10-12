@@ -127,7 +127,6 @@ axutil_stomp_free (
     if (stomp->stream)
     {
         axutil_stream_close (stomp->stream, env);
-        axutil_stream_free (stomp->stream, env);
     }
 
     if (stomp->socket)
