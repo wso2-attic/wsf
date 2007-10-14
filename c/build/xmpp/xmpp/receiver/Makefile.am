@@ -14,8 +14,7 @@ INCLUDES = -I$(top_builddir)/include \
            -I$(top_builddir)/src/core/phaseresolver \
            -I$(top_builddir)/src/core/engine \
            -I$(top_builddir)/src/core/deployment \
-            -I$ /opt/jabber/iksemel/include \
            -I$(top_builddir)/xml_schema/include \
            -I$(top_builddir)/util/include \
            -I$(top_builddir)/axiom/include \
-	   @IKSEMELINC@
+	   		@IKSEMELINC@
