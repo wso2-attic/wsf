@@ -328,11 +328,13 @@ AC_ARG_WITH(xmpp,
     AC_MSG_RESULT(yes)
     dnl Find iksemel include dir
     if test -d $withval; then
-        iksemelinc="-I$withval"
+        iksemelinc="-I$withval/include"
+        iksemellib="-L$withval/lib -liksemel"
     	XMPP_DIR="xmpp"
     dnl else find the iksemel include dir in /usr/include
-    elif test -d '/usr/include'; then
+    elif test -d '/usr'; then
         iksemelinc="-I/usr/include"
+        iksemellib="-L/usr/lib -liksemel"
     	XMPP_DIR="xmpp"
     else
         AC_MSG_ERROR(could not find iksemel. stop)
@@ -384,6 +386,7 @@ AC_ARG_ENABLE(gssapi, [  --enable-gssapi      enable gssapi (default=no)],
 
 APACHE2INC=$apache2inc
 IKSEMELINC=$iksemelinc
+IKSEMELLIB=$iksemellib
 APRINC=$aprinc
 VERSION_NO="1:0:1"
 
@@ -391,6 +394,7 @@ AC_SUBST(VERSION_NO)
 AC_SUBST(PARSER_LIBS)
 AC_SUBST(APACHE2INC)
 AC_SUBST(IKSEMELINC)
+AC_SUBST(IKSEMELLIB)
 AC_SUBST(APRINC)
 AC_SUBST(DICLIENT_DIR)
 AC_SUBST(TESTDIR)
