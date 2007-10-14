@@ -5,7 +5,7 @@ libaxis2_xmpp_sender_la_SOURCES = xmpp_transport_sender.c \
 libaxis2_xmpp_sender_la_LIBADD = ../../../engine/libaxis2_engine.la \
 				../../../../../axiom/src/om/libaxis2_axiom.la \
 				../../../../../util/src/libaxutil.la \
-                                -liksemel \
+                @IKSEMELLIB@ \
 				../libaxis2_xmpp.la
 
 INCLUDES = -I$(top_builddir)/include \
@@ -21,6 +21,6 @@ INCLUDES = -I$(top_builddir)/include \
            -I$(top_builddir)/xml_schema/include \
            -I$(top_builddir)/util/include \
            -I$(top_builddir)/axiom/include \
-	   @IKSEMELINC@
+	   		@IKSEMELINC@
 
 EXTRA_DIST=axis2_xmpp_client.h
