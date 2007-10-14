@@ -127,11 +127,13 @@ AC_ARG_WITH(xmpp,
     AC_MSG_RESULT(yes)
     dnl Find iksemel XMPP include dir 
     if test -d $withval; then
-        iksemelinc="-I$withval"
+        iksemelinc="-I$withval/include"
+        iksemellib="-L$withval/lib -liksemel"
         XMPP_DIR="xmpp"
     dnl else find the iksemel include dir in /usr/include
-    elif test -d '/usr/include'; then
+    elif test -d '/usr'; then
         iksemelinc="-I/usr/include"
+        iksemellib="-L/usr/lib -liksemel"
         XMPP_DIR="xmpp"
     else
         AC_MSG_ERROR(Could not find XMPP. stop)
@@ -293,6 +295,11 @@ AC_ARG_WITH(openssl,
   AC_MSG_RESULT(no)
 )
 
+IKSEMELINC=$iksemelinc
+IKSEMELLIB=$iksemellib
+
+AC_SUBST(IKSEMELINC)
+AC_SUBST(IKSEMELLIB)
 OPENSSLINC=$opensslinc
 OPENSSLLIB=$openssllib
 AC_SUBST(OPENSSLINC)
