@@ -2,7 +2,9 @@
 ### General Build Configuration Parameters
 
 # To build with debug symbols set DEBUG = 1
-DEBUG = 0
+DEBUG = 1 
+#CRUNTIME Library (Use /MD or /MT)
+CRUNTIME=/MD
 
 #############################################################################
 ### Apache Axis2/C Build Configuration Parameters
