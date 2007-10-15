@@ -51,7 +51,12 @@ public class WSASStopDelegate
 			}
 			System.setProperty("WSASStartStatus", "wait");
 			WTPInternalBrowserCommand.closeUpInrernalBrouwser();
-			shell.getParent().redraw();
+			if (shell == null) {
+				box.setMessage(WSASMessageConstant.INFO_LINUX_SHELL_INIT_FAIL + 
+						WSASMessageConstant.INFO_WSAS_STOP_FAIL );box.open();
+			}else{
+				shell.getParent().redraw();
+			}
 		} catch (InvocationTargetException e) {
 			status = new Status( IStatus.ERROR,"id",1,e.getMessage(),null );
 			box.setMessage(WSASMessageConstant.INFO_WSAS_STOP_FAIL);box.open();

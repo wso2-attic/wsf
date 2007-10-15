@@ -33,7 +33,7 @@ public class WSASMessageConstant {
     public static String INFO_WSAS_START_FAIL = "Error Occured while starting WSO2 Web Services Application Server instance";
     public static String INFO_WSAS_STOP_SUCCESS = "WSO2 Web Services Application Server instance stoped successfully";
     public static String INFO_WSAS_STOP_FAIL = "Error Occured while stopping WSO2 Web Services Application Server instance";
-    
+    public static String INFO_LINUX_SHELL_INIT_FAIL = "The Shell environment initiation failed, \nPlease make sure you have started eclipse with a attached shell environment\n";
     //EndPoints of Services
     public static String host = "http://localhost:";
     public static String port = "9762";
