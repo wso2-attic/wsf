@@ -6,14 +6,14 @@ then
 		mkdir /etc/opt/wso2
 	fi
 
-	if [ ! -d /etc/opt/wso2/wsfc ]
+	if [ ! -d /etc/opt/wso2/wsf_c ]
 	then
-		mkdir /etc/opt/wso2/wsfc
+		mkdir /etc/opt/wso2/wsf_c
 	fi
 
-	if [ ! -f /etc/opt/wso2/wsfc/axis2.xml ]
+	if [ ! -f /etc/opt/wso2/wsf_c/axis2.xml ]
 	then
-		ln -s $1/axis2.xml /etc/opt/wso2/wsfc/axis2.xml
+		ln -s $1/axis2.xml /etc/opt/wso2/wsf_c/axis2.xml
 	fi
 else
 	exit 0

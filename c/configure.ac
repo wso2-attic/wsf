@@ -6,7 +6,7 @@ AC_INIT(wso2-wsf-c-src, 1.1.0)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE([tar-ustar])
-AC_PREFIX_DEFAULT(/opt/wso2/wsfc)
+AC_PREFIX_DEFAULT(/opt/wso2/wsf_c)
 
 dnl Checks for programs.
 AC_PROG_CC

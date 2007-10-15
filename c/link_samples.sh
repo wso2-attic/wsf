@@ -1,215 +1,215 @@
 #!/bin/bash
 if [ -w /etc/opt ]
 then
-	if [ ! -d /etc/opt/wso2/wsfc/services ]
+	if [ ! -d /etc/opt/wso2/wsf_c/services ]
 	then
-		mkdir /etc/opt/wso2/wsfc/services
+		mkdir /etc/opt/wso2/wsf_c/services
 	fi
 
-	if [ ! -d /etc/opt/wso2/wsfc/services/echo ]
+	if [ ! -d /etc/opt/wso2/wsf_c/services/echo ]
 	then
-		mkdir /etc/opt/wso2/wsfc/services/echo
+		mkdir /etc/opt/wso2/wsf_c/services/echo
 	fi
 
-	if [ ! -f /etc/opt/wso2/wsfc/services/echo/services.xml ]
+	if [ ! -f /etc/opt/wso2/wsf_c/services/echo/services.xml ]
 	then
-		ln -s $1/services/echo/services.xml /etc/opt/wso2/wsfc/services/echo/services.xml
+		ln -s $1/services/echo/services.xml /etc/opt/wso2/wsf_c/services/echo/services.xml
 	fi
 
-	if [ ! -d /etc/opt/wso2/wsfc/services/math ]
+	if [ ! -d /etc/opt/wso2/wsf_c/services/math ]
 	then
-		mkdir /etc/opt/wso2/wsfc/services/math
+		mkdir /etc/opt/wso2/wsf_c/services/math
 	fi
 
-	if [ ! -f /etc/opt/wso2/wsfc/services/math/services.xml ]
+	if [ ! -f /etc/opt/wso2/wsf_c/services/math/services.xml ]
 	then
-		ln -s $1/services/math/services.xml /etc/opt/wso2/wsfc/services/math/services.xml
+		ln -s $1/services/math/services.xml /etc/opt/wso2/wsf_c/services/math/services.xml
 	fi
 
-	if [ ! -d /etc/opt/wso2/wsfc/services/mtom ]
+	if [ ! -d /etc/opt/wso2/wsf_c/services/mtom ]
 	then
-		mkdir /etc/opt/wso2/wsfc/services/mtom
+		mkdir /etc/opt/wso2/wsf_c/services/mtom
 	fi
 
-	if [ ! -f /etc/opt/wso2/wsfc/services/mtom/services.xml ]
+	if [ ! -f /etc/opt/wso2/wsf_c/services/mtom/services.xml ]
 	then
-		ln -s $1/services/mtom/services.xml /etc/opt/wso2/wsfc/services/mtom/services.xml
+		ln -s $1/services/mtom/services.xml /etc/opt/wso2/wsf_c/services/mtom/services.xml
 	fi
 
-	if [ ! -d /etc/opt/wso2/wsfc/services/sg_math ]
+	if [ ! -d /etc/opt/wso2/wsf_c/services/sg_math ]
 	then
-		mkdir /etc/opt/wso2/wsfc/services/sg_math
+		mkdir /etc/opt/wso2/wsf_c/services/sg_math
 	fi
 
-	if [ ! -f /etc/opt/wso2/wsfc/services/sg_math/services.xml ]
+	if [ ! -f /etc/opt/wso2/wsf_c/services/sg_math/services.xml ]
 	then
-		ln -s $1/services/sg_math/services.xml /etc/opt/wso2/wsfc/services/sg_math/services.xml
+		ln -s $1/services/sg_math/services.xml /etc/opt/wso2/wsf_c/services/sg_math/services.xml
 	fi
 
-	if [ ! -d /etc/opt/wso2/wsfc/services/Calculator ]
+	if [ ! -d /etc/opt/wso2/wsf_c/services/Calculator ]
 	then
-		mkdir /etc/opt/wso2/wsfc/services/Calculator
+		mkdir /etc/opt/wso2/wsf_c/services/Calculator
 	fi
 
-	if [ ! -f /etc/opt/wso2/wsfc/services/Calculator/services.xml ]
+	if [ ! -f /etc/opt/wso2/wsf_c/services/Calculator/services.xml ]
 	then
-		ln -s $1/services/Calculator/services.xml /etc/opt/wso2/wsfc/services/Calculator/services.xml
+		ln -s $1/services/Calculator/services.xml /etc/opt/wso2/wsf_c/services/Calculator/services.xml
 	fi
 
-	if [ ! -d /etc/opt/wso2/wsfc/services/exchangeclient ]
+	if [ ! -d /etc/opt/wso2/wsf_c/services/exchangeclient ]
 	then
-		mkdir /etc/opt/wso2/wsfc/services/exchangeclient
+		mkdir /etc/opt/wso2/wsf_c/services/exchangeclient
 	fi
 
-	if [ ! -f /etc/opt/wso2/wsfc/services/exchangeclient/services.xml ]
+	if [ ! -f /etc/opt/wso2/wsf_c/services/exchangeclient/services.xml ]
 	then
-		ln -s $1/services/exchangeclient/services.xml /etc/opt/wso2/wsfc/services/exchangeclient/services.xml
+		ln -s $1/services/exchangeclient/services.xml /etc/opt/wso2/wsf_c/services/exchangeclient/services.xml
 	fi
 
-	if [ ! -d /etc/opt/wso2/wsfc/services/exchangetrader ]
+	if [ ! -d /etc/opt/wso2/wsf_c/services/exchangetrader ]
 	then
-		mkdir /etc/opt/wso2/wsfc/services/exchangetrader
+		mkdir /etc/opt/wso2/wsf_c/services/exchangetrader
 	fi
 
-	if [ ! -f /etc/opt/wso2/wsfc/services/exchangetrader/services.xml ]
+	if [ ! -f /etc/opt/wso2/wsf_c/services/exchangetrader/services.xml ]
 	then
-		ln -s $1/services/exchangetrader/services.xml /etc/opt/wso2/wsfc/services/exchangetrader/services.xml
+		ln -s $1/services/exchangetrader/services.xml /etc/opt/wso2/wsf_c/services/exchangetrader/services.xml
 	fi
 
-	if [ ! -d /etc/opt/wso2/wsfc/services/listener ]
+	if [ ! -d /etc/opt/wso2/wsf_c/services/listener ]
 	then
-		mkdir /etc/opt/wso2/wsfc/services/listener
+		mkdir /etc/opt/wso2/wsf_c/services/listener
 	fi
 
-	if [ ! -f /etc/opt/wso2/wsfc/services/listener/services.xml ]
+	if [ ! -f /etc/opt/wso2/wsf_c/services/listener/services.xml ]
 	then
-		ln -s $1/services/listener/services.xml /etc/opt/wso2/wsfc/services/listener/services.xml
+		ln -s $1/services/listener/services.xml /etc/opt/wso2/wsf_c/services/listener/services.xml
 	fi
 
-	if [ ! -d /etc/opt/wso2/wsfc/services/notify ]
+	if [ ! -d /etc/opt/wso2/wsf_c/services/notify ]
 	then
-		mkdir /etc/opt/wso2/wsfc/services/notify
+		mkdir /etc/opt/wso2/wsf_c/services/notify
 	fi
 
-	if [ ! -f /etc/opt/wso2/wsfc/services/notify/services.xml ]
+	if [ ! -f /etc/opt/wso2/wsf_c/services/notify/services.xml ]
 	then
-		ln -s $1/services/notify/services.xml /etc/opt/wso2/wsfc/services/notify/services.xml
+		ln -s $1/services/notify/services.xml /etc/opt/wso2/wsf_c/services/notify/services.xml
 	fi
 
-	if [ ! -d /etc/opt/wso2/wsfc/services/publisher ]
+	if [ ! -d /etc/opt/wso2/wsf_c/services/publisher ]
 	then
-		mkdir /etc/opt/wso2/wsfc/services/publisher
+		mkdir /etc/opt/wso2/wsf_c/services/publisher
 	fi
 
-	if [ ! -f /etc/opt/wso2/wsfc/services/publisher/services.xml ]
+	if [ ! -f /etc/opt/wso2/wsf_c/services/publisher/services.xml ]
 	then
-		ln -s $1/services/publisher/services.xml /etc/opt/wso2/wsfc/services/publisher/services.xml
+		ln -s $1/services/publisher/services.xml /etc/opt/wso2/wsf_c/services/publisher/services.xml
 	fi
 
-	if [ ! -d /etc/opt/wso2/wsfc/services/RMSampleService ]
+	if [ ! -d /etc/opt/wso2/wsf_c/services/RMSampleService ]
 	then
-		mkdir /etc/opt/wso2/wsfc/services/RMSampleService
+		mkdir /etc/opt/wso2/wsf_c/services/RMSampleService
 	fi
 
-	if [ ! -f /etc/opt/wso2/wsfc/services/RMSampleService/services.xml ]
+	if [ ! -f /etc/opt/wso2/wsf_c/services/RMSampleService/services.xml ]
 	then
-		ln -s $1/services/RMSampleService/services.xml /etc/opt/wso2/wsfc/services/RMSampleService/services.xml
+		ln -s $1/services/RMSampleService/services.xml /etc/opt/wso2/wsf_c/services/RMSampleService/services.xml
 	fi
 
-	if [ ! -d /etc/opt/wso2/wsfc/services/sec_echo ]
+	if [ ! -d /etc/opt/wso2/wsf_c/services/sec_echo ]
 	then
-		mkdir /etc/opt/wso2/wsfc/services/sec_echo
+		mkdir /etc/opt/wso2/wsf_c/services/sec_echo
 	fi
 
-	if [ ! -f /etc/opt/wso2/wsfc/services/sec_echo/services.xml ]
+	if [ ! -f /etc/opt/wso2/wsf_c/services/sec_echo/services.xml ]
 	then
-		ln -s $1/services/sec_echo/services.xml /etc/opt/wso2/wsfc/services/sec_echo/services.xml
+		ln -s $1/services/sec_echo/services.xml /etc/opt/wso2/wsf_c/services/sec_echo/services.xml
 	fi
 
-	if [ ! -d /etc/opt/wso2/wsfc/services/subscription ]
+	if [ ! -d /etc/opt/wso2/wsf_c/services/subscription ]
 	then
-		mkdir /etc/opt/wso2/wsfc/services/subscription
+		mkdir /etc/opt/wso2/wsf_c/services/subscription
 	fi
 
-	if [ ! -f /etc/opt/wso2/wsfc/services/subscription/services.xml ]
+	if [ ! -f /etc/opt/wso2/wsf_c/services/subscription/services.xml ]
 	then
-		ln -s $1/services/subscription/services.xml /etc/opt/wso2/wsfc/services/subscription/services.xml
+		ln -s $1/services/subscription/services.xml /etc/opt/wso2/wsf_c/services/subscription/services.xml
 	fi
 
-	if [ ! -d /etc/opt/wso2/wsfc/services/traderclient ]
+	if [ ! -d /etc/opt/wso2/wsf_c/services/traderclient ]
 	then
-		mkdir /etc/opt/wso2/wsfc/services/traderclient
+		mkdir /etc/opt/wso2/wsf_c/services/traderclient
 	fi
 
-	if [ ! -f /etc/opt/wso2/wsfc/services/traderclient/services.xml ]
+	if [ ! -f /etc/opt/wso2/wsf_c/services/traderclient/services.xml ]
 	then
-		ln -s $1/services/traderclient/services.xml /etc/opt/wso2/wsfc/services/traderclient/services.xml
+		ln -s $1/services/traderclient/services.xml /etc/opt/wso2/wsf_c/services/traderclient/services.xml
 	fi
 
-	if [ ! -d /etc/opt/wso2/wsfc/services/traderexchange ]
+	if [ ! -d /etc/opt/wso2/wsf_c/services/traderexchange ]
 	then
-		mkdir /etc/opt/wso2/wsfc/services/traderexchange
+		mkdir /etc/opt/wso2/wsf_c/services/traderexchange
 	fi
 
-	if [ ! -f /etc/opt/wso2/wsfc/services/traderexchange/services.xml ]
+	if [ ! -f /etc/opt/wso2/wsf_c/services/traderexchange/services.xml ]
 	then
-		ln -s $1/services/traderexchange/services.xml /etc/opt/wso2/wsfc/services/traderexchange/services.xml
+		ln -s $1/services/traderexchange/services.xml /etc/opt/wso2/wsf_c/services/traderexchange/services.xml
 	fi
 
 
-	if [ ! -d /etc/opt/wso2/wsfc/modules ]
+	if [ ! -d /etc/opt/wso2/wsf_c/modules ]
 	then
-		mkdir /etc/opt/wso2/wsfc/modules
+		mkdir /etc/opt/wso2/wsf_c/modules
 	fi
 
-	if [ ! -d /etc/opt/wso2/wsfc/modules/addressing ]
+	if [ ! -d /etc/opt/wso2/wsf_c/modules/addressing ]
 	then
-		mkdir /etc/opt/wso2/wsfc/modules/addressing
+		mkdir /etc/opt/wso2/wsf_c/modules/addressing
 	fi
 
-	if [ ! -f /etc/opt/wso2/wsfc/modules/addressing/module.xml ]
+	if [ ! -f /etc/opt/wso2/wsf_c/modules/addressing/module.xml ]
 	then
-		ln -s $1/modules/addressing/module.xml /etc/opt/wso2/wsfc/modules/addressing/module.xml
+		ln -s $1/modules/addressing/module.xml /etc/opt/wso2/wsf_c/modules/addressing/module.xml
 	fi
 
-	if [ ! -d /etc/opt/wso2/wsfc/modules/logging ]
+	if [ ! -d /etc/opt/wso2/wsf_c/modules/logging ]
 	then
-		mkdir /etc/opt/wso2/wsfc/modules/logging
+		mkdir /etc/opt/wso2/wsf_c/modules/logging
 	fi
 
-	if [ ! -f /etc/opt/wso2/wsfc/modules/logging/module.xml ]
+	if [ ! -f /etc/opt/wso2/wsf_c/modules/logging/module.xml ]
 	then
-		ln -s $1/modules/logging/module.xml /etc/opt/wso2/wsfc/modules/logging/module.xml
+		ln -s $1/modules/logging/module.xml /etc/opt/wso2/wsf_c/modules/logging/module.xml
 	fi
 
-	if [ ! -d /etc/opt/wso2/wsfc/modules/rampart ]
+	if [ ! -d /etc/opt/wso2/wsf_c/modules/rampart ]
 	then
-		mkdir /etc/opt/wso2/wsfc/modules/rampart
+		mkdir /etc/opt/wso2/wsf_c/modules/rampart
 	fi
 
-	if [ ! -f /etc/opt/wso2/wsfc/modules/rampart/module.xml ]
+	if [ ! -f /etc/opt/wso2/wsf_c/modules/rampart/module.xml ]
 	then
-		ln -s $1/modules/rampart/module.xml /etc/opt/wso2/wsfc/modules/rampart/module.xml
+		ln -s $1/modules/rampart/module.xml /etc/opt/wso2/wsf_c/modules/rampart/module.xml
 	fi
 
-	if [ ! -d /etc/opt/wso2/wsfc/modules/sandesha2 ]
+	if [ ! -d /etc/opt/wso2/wsf_c/modules/sandesha2 ]
 	then
-		mkdir /etc/opt/wso2/wsfc/modules/sandesha2
+		mkdir /etc/opt/wso2/wsf_c/modules/sandesha2
 	fi
 
-	if [ ! -f /etc/opt/wso2/wsfc/modules/sandesha2/module.xml ]
+	if [ ! -f /etc/opt/wso2/wsf_c/modules/sandesha2/module.xml ]
 	then
-		ln -s $1/modules/sandesha2/module.xml /etc/opt/wso2/wsfc/modules/sandesha2/module.xml
+		ln -s $1/modules/sandesha2/module.xml /etc/opt/wso2/wsf_c/modules/sandesha2/module.xml
 	fi
 
-	if [ ! -d /etc/opt/wso2/wsfc/modules/savan ]
+	if [ ! -d /etc/opt/wso2/wsf_c/modules/savan ]
 	then
-		mkdir /etc/opt/wso2/wsfc/modules/savan
+		mkdir /etc/opt/wso2/wsf_c/modules/savan
 	fi
 
-	if [ ! -f /etc/opt/wso2/wsfc/modules/savan/module.xml ]
+	if [ ! -f /etc/opt/wso2/wsf_c/modules/savan/module.xml ]
 	then
-		ln -s $1/modules/savan/module.xml /etc/opt/wso2/wsfc/modules/savan/module.xml
+		ln -s $1/modules/savan/module.xml /etc/opt/wso2/wsf_c/modules/savan/module.xml
 	fi
 else
 	exit 0
