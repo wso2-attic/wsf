@@ -154,7 +154,9 @@ AC_ARG_ENABLE(rampart, [  --enable-rampart	build rampart. default=yes],
   *)
     AC_MSG_RESULT(yes)
     RAMPART_DIR="rampartc"
-
+    CFLAGS="$CFLAGS -DWSF_RAMPART_ENABLED"
+    RAMPART_LIBS="../../rampartc/src/core/libmod_rampart.la"
+    OMXMLSEC_LIBS="../../rampartc/src/omxmlsec/libomxmlsec.la"
     ;;
   esac ],
   AC_MSG_RESULT(yes)
@@ -304,7 +306,8 @@ OPENSSLINC=$opensslinc
 OPENSSLLIB=$openssllib
 AC_SUBST(OPENSSLINC)
 AC_SUBST(OPENSSLLIB)
-
+AC_SUBST(OMXMLSEC_LIBS)
+AC_SUBST(RAMPART_LIBS)
 dnl Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS([stdio.h stdlib.h string.h])

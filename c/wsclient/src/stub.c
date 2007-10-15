@@ -31,8 +31,10 @@
 #include <axis2_http_header.h>
 #include <axis2_addr.h>
 #include <axiom.h>
+#ifdef WSF_RAMPART_ENABLED
 #include <rampart_context.h>
 #include "rampart_constants.h"
+#endif
 #include <neethi_options.h>
 
 #include "constants.h"
@@ -725,6 +727,7 @@ else
 
         if(enable_rampart)
 		{
+#ifdef WSF_RAMPART_ENABLED
 		    axiom_node_t *root_om_node = NULL;
             rampart_context_t *rampart_context = NULL;
             axis2_svc_ctx_t *svc_ctx = NULL;
@@ -870,7 +873,7 @@ else
 
             security_param = axutil_param_create(env, RAMPART_CONFIGURATION, (void *)rampart_context);
             axis2_conf_add_param(conf, env, security_param);
-
+#endif
         }
 
 		if (is_mtom_enabled)
