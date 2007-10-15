@@ -54,6 +54,11 @@ define("WSF_PORT", "port");
 define("WSF_LOCATION", "location");
 define("WSF_XSLT_LOCATION", "xslt_location");
 define("WSF_TYPES", "types");
+define("WSF_WSDL_DOM", "wsdl_dom");
+define("WSF_WSDL_SIMPLE", "simple");
+define("WSF_WSDL_COMPLEX_TYPE", "complexType");
+
+
 
 define("WSF_WSDL2_NAMESPACE", "http://www.w3.org/ns/wsdl");
 define("WSF_WSDL_NAMESPACE", "http://schemas.xmlsoap.org/wsdl/");

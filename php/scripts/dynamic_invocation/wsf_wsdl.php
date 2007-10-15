@@ -15,69 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
-define("WSF_WSDL", "wsdl");
-define("WSF_ENDPOINT", "endpoint");
-define("WSF_INVOKE_FUNCTION", "invoke_function");
-define("WSF_ARG_COUNT", "arg_count");
-define("WSF_ARG_ARRAY", "arg_array");
-define("WSF_SIGNATURE", "signature");
-define("WSF_METHOD", "method");
-define("WSF_INFERENCE", "inference");
-define("WSF_RPC", "rpc");
-define("WSF_ENDPOINT_URI", "endpoint_uri");
-define("WSF_BINDING_DETAILS", "binding_details");
-define("WSF_REQUEST_PAYLOAD", "request_payload");
-define("WSF_POLICY_NODE", "policy_node");
-
-define("WSF_DEFINITION", "definitions");
-define("WSF_DESCRIPTION", "description");
-define("WSF_OPERATIONS", "operations");
-define("WSF_OPERATION" , "operation");
-define("WSF_ADDRESS", "address");
-define("WSF_NAME" , "name");
-define("WSF_TYPE", "type");
-define("WSF_ID", "Id");
-define("WSF_SERVICE", "service");
-define("WSF_BINDING", "binding");
-define("WSF_POLICY_REFERENCE", "PolicyReference");
-define("WSF_POLICY", "Policy");
-define("WSF_REF", "ref");
-define("WSF_URI", "URI");
-define("WSF_PARAMS", "params");
-define("WSF_PARAM" , "param");
-define("WSF_WRAPPER_ELEMENT", "wrapper-element");
-define("WSF_WRAPPER_ELEMENT_NS", "wrapper-element-ns");
-define("WSF_TARGETNAMESPACE", "targetNamespace");
-define("WSF_BINDINDG_DETAILS", "binding-details");
-define("WSF_WSAWAACTION", "wsawaction");
-define("WSF_SOAPACTION", "soapaction");
-define("WSF_WSA", "wsa");
-define("WSF_SOAP", "soap");
-define("WSF_SOAP11", "SOAP11");
-define("WSF_SOAP12", "SOAP12");
-define("WSF_SOAP_VERSION", "soap_version");
-define("WSF_RETURNS", "returns");
-define("WSF_RESPONSE_SIG_MODEL", "response_sig_model");
-define("WSF_ENVELOPE", "envelope");
-define("WSF_BODY", "body");
-define("WSF_RETURNS", "returns");
-define("WSF_TYPE_NAMESPACE", "type-namespace");
-define("WSF_CLASSMAP", "classmap");
-define("WSF_NS", "ns");
-define("WSF_TYPE_NS", "type_ns");
-define("WSF_TNS", "tns");
-define("WSF_PORT", "port");
-define("WSF_LOCATION", "location");
-define("WSF_XSLT_LOCATION", "xslt_location");
-define("WSF_TYPES", "types");
-
-define("WSF_WSDL2_NAMESPACE", "http://www.w3.org/ns/wsdl");
-define("WSF_WSDL_NAMESPACE", "http://schemas.xmlsoap.org/wsdl/");
-define("WSF_POLICY_REFERENCE_NAMESPACE_URI", "http://schemas.xmlsoap.org/ws/2004/09/policy");
-define("WSF_POLICY_NAMESPACE_URI", "http://www.w3.org/ns/ws-policy");
-define("WSF_POLICY_ID_NAMESPACE_URI", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd");
-*/
 
 
 /**
@@ -120,7 +57,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
 
     $sig_model_dom->preserveWhiteSpace = false;
     $wsdl_dom->preserveWhiteSpace = false;
-    
+       
     if(!$wsdl_location)
         return "WSDL is not found";
     
@@ -138,7 +75,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     
     if(!$sig_model_dom)
         return "error creating intermediate model";
-
+   
     if(!$endpoint_address)
         $endpoint_address = wsf_get_endpoint_address($sig_model_dom);
 
@@ -186,12 +123,17 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     
     $return_sig_model_string = $sig_model_dom->saveXML($return_node);
 
+    if ($is_wsdl_11 == TRUE && $wsdl_11_dom)
+        $wsdl_dom = $wsdl_11_dom;
+    
+    $wsdl_dom_string = $wsdl_dom->saveXML();
+    
     $return_value = array(WSF_ENDPOINT_URI=> $endpoint_address,
                           WSF_BINDING_DETAILS=> $binding_array,
                           WSF_REQUEST_PAYLOAD=> $payload,
                           WSF_POLICY_NODE=> $policy_array,
-                          WSF_RESPONSE_SIG_MODEL => $return_sig_model_string);
-    
+                          WSF_RESPONSE_SIG_MODEL => $return_sig_model_string,
+                          WSF_WSDL_DOM => $wsdl_dom_string);
     
     return $return_value;
 }
@@ -494,17 +436,20 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
         if($signature_node->firstChild->hasChildNodes()){
             $param_child_list = $signature_node->firstChild->childNodes;
             foreach($param_child_list as $param_node){
+                $is_xsd = FALSE;
                 $wrap_type = $param_node->attributes->getNamedItem('simple')->value;
                 $param_name = $param_node->attributes->getNamedItem(WSF_NAME)->value;
-                if($wrap_type == "no"){// get from WSDL DOM
+                $param_type = $param_node->attributes->getNamedItem(WSF_TYPE)->value;
+                $is_xsd = is_xsd_type($param_type);
+//                var_dump($is_xsd);
+                if($wrap_type == "no" && $is_xsd == FALSE){// get from WSDL DOM
                     $rec_array = array();
                     $param_ns = $param_node->attributes->getNamedItem('targetNamespace')->value;
-                    $param_type = $param_node->attributes->getNamedItem(WSF_TYPE)->value;
+                    //    $param_type = $param_node->attributes->getNamedItem(WSF_TYPE)->value;
                     $child_array[$param_name] = create_recursive_struct($schema_node, $param_type);
                 } 
                 else{
                     $simple_array = array();
-                    $param_type = $param_node->attributes->getNamedItem(WSF_TYPE)->value;
                     $param_ns = $param_node->attributes->getNamedItem('targetNamespace')->value;
                     /** min occurs max occurs */
                     $simple_array[WSF_TYPE] = $param_type;
@@ -573,7 +518,7 @@ function recursive_payload(DomDocument $payload_dom, $value_array, DomNode $elem
 function create_recursive_struct(DomNode $types_node, $param_type)
 {
     require_once('wsf_wsdl_consts.php');
-
+    
     $rec_array = array();
     $schema_list = $types_node->childNodes;
     foreach($schema_list as $schema){
@@ -598,15 +543,48 @@ function create_recursive_struct(DomNode $types_node, $param_type)
                                 $rec_array[$ele_name]= $simple_array;
 
                             }
-                            else
-                                $rec_array[$ele_name] = create_recursive_struct($types_node, $ele_type);
+                            else{
+                                $rec_array[$ele_name] = create_recursive_struct($types_node, substr(strstr($ele_type, ':'),1));
+                            }
                         }
                     }
+                }
+                else if ($sequence_node->localName == "complexContent"){
+                    // echo "\ngoing in right direction\n";
+                    $complexContent_node = $sequence_node->firstChild;// it is complex content
+                    $complexContent_base_type = $complexContent_node->attributes->getNamedItem('base')->value;
+                    $rec_array['complexContent'] = create_recursive_struct($types_node, substr(strstr($complexContent_base_type, ':'), 1));
+                    //begin
+                    if($complexContent_node->firstChild->localName == "sequence" && $complexContent_node->firstChild->hasChildNodes()){
+                        $element_list = $complexContent_node->firstChild->childNodes;
+                        foreach($element_list as $element){
+                            if($element->localName == "element" && $element->hasAttributes()){
+                                $ele_type = $element->attributes->getNamedItem(WSF_TYPE)->value;
+                                $ele_name = $element->attributes->getNamedItem(WSF_NAME)->value;
+                                if(substr($ele_type, 0, 3) == "xs:" || substr($ele_type, 0, 4) == "xsd:"){
+                                    $simple_array = array();
+                                    $param_type = substr(strstr($ele_type, ':'), 1);
+                                    /** min occurs max occurs and
+                                     //nillable */
+                                    $simple_array[WSF_TYPE] = $param_type;
+                                    $simple_array[WSF_NS] = $ns;
+                                    $rec_array[$ele_name]= $simple_array;
+
+                                }
+                                else{
+                                    $rec_array[$ele_name] = create_recursive_struct($types_node, substr(strstr($ele_type, ':'),1));
+                                }
+                            }
+                        }
+                    }
+
+                    //end
+                                        
                 }
             }
         }
     }
-
+    
     return $rec_array;
 }
 
@@ -889,12 +867,13 @@ function wsf_get_response_parameters(DomNode $signature_node)
  * @return mixed an object, an array or a simple type in line with the 
  * expected format of the response
  */
-function wsf_process_response($response_payload_string, $response_sig_model_string, $response_parameters)
+function wsf_process_response($response_payload_string, $response_sig_model_string, $response_parameters, $wsdldom_string)
 {
     require_once('wsf_wsdl_consts.php');
 
     $envelope_dom = new DomDocument(); 
     $sig_model_dom = new DomDocument();
+    $wsdl_dom = new DomDocument();
     
     $has_return = FALSE;
     $is_wrapper = FALSE;
@@ -903,11 +882,13 @@ function wsf_process_response($response_payload_string, $response_sig_model_stri
 
     $envelope_dom->preserveWhiteSpace = false;
     $sig_model_dom->preserveWhiteSpace = false;
+    $wsdl_dom->preserveWhiteSpace = false;
 
     $envelope_dom->loadXML($response_payload_string);
     $sig_model_dom->loadXML($response_sig_model_string);
+    $wsdl_dom->loadXML($wsdldom_string);
     
-    
+    //  var_dump($response_payload_string);
     /** get SOAP body DOM tree to compare with Sig model */
     $env_node = $envelope_dom->firstChild; 
     $env_child_list = $env_node->childNodes;
@@ -929,11 +910,6 @@ function wsf_process_response($response_payload_string, $response_sig_model_stri
         }
     }
 
-    if(isset($response_parameters[WSF_CLASSMAP]))
-        $class_map = $response_parameters[WSF_CLASSMAP];
-   
-    if ($class_map)
-        $class = new ReflectionClass($class_map[$ret_value_name]);
     
     $param_child_list = $returns_node->childNodes;
     foreach($param_child_list as $param_child){
@@ -946,24 +922,35 @@ function wsf_process_response($response_payload_string, $response_sig_model_stri
                 $param_attribute_type = $param_child->attributes->getNamedItem(WSF_TYPE)->value;
                 $param_attribute_type_ns = $param_child->attributes->getNamedItem(WSF_TYPE_NAMESPACE)->value;
                 $param_attribute_target_ns = $param_child->attributes->getNamedItem(WSF_TARGETNAMESPACE)->value;
-                /* TODO min occurs, max occrs and nillable should be handled */
-                $body_child_array = array();
-                $body_child_array[WSF_TYPE] = $param_attribute_type;
-                $body_child_array[WSF_TYPE_NS] = $param_attribute_type_ns;
-                $body_child_array[WSF_TNS] = $param_attribute_target_ns;
-                $body_array[$param_attribute_name] = $body_child_array;
-              
-                if($class){
-                    $property = $class->getProperty($param_attribute_name);
-                    if (class_exists($class_map[$ret_value_name]))
-                        $response_class = new $class_map[$ret_value_name];
-                   
+                $param_attribute_simple = $param_child->attributes->getNamedItem(WSF_WSDL_SIMPLE)->value;
+//                $param_attribute_simple = $param_child->attribute->getNamedItem(WSF_WSDL_SIMPLE)->value;
+
+                if($param_attribute_simple == "no"){
+                    $body_child_array = array();
+                    $body_child_array[WSF_TYPE] = $param_attribute_type;
+                    $body_child_array[WSF_TYPE_NS] = $param_attribute_type_ns;
+                    $body_child_array[WSF_TNS] = $param_attribute_target_ns;
+
+                    $schema_node = wsf_get_schema_node($wsdl_dom);
+                    $recursive_array = create_recursive_response_struct($schema_node, $param_attribute_type);
+                    $complex_array = array();
+                    $complex_array[WSF_NS] = $param_attribute_target_ns;
+                    $complex_array[$param_attribute_type] = $recursive_array;
+                    $body_array[$param_attribute_name] = $complex_array;    
+                }
+                else{
+                    $body_child_array = array();
+                    $body_child_array[WSF_TYPE] = $param_attribute_type;
+                    $body_child_array[WSF_TYPE_NS] = $param_attribute_type_ns;
+                    $body_child_array[WSF_TNS] = $param_attribute_target_ns;
+                    $body_array[$param_attribute_name] = $body_child_array;
+                    
                 }
             }
             
         }
     }
-
+    
     if($is_wrapper == TRUE)
         $created_sig_array[$ret_value_name] = $body_array;
     else
@@ -979,32 +966,42 @@ function wsf_process_response($response_payload_string, $response_sig_model_stri
     }
 
     $response_child_list = $response_node->childNodes;
+    if(isset($response_parameters[WSF_CLASSMAP]))
+        $class_map = $response_parameters[WSF_CLASSMAP];
+    
     if($response_child_list){
+//        recursive_validation($response_child_list, $class_map, $created_sig_array, $response_node);
         foreach($response_child_list as $child){
             foreach($created_sig_array[$response_node->localName] as $key => $val){
                 if($key == $child->localName){
-                    if ($child->hasChildNodes() && $child->firstChild->nodeType != XML_TEXT_NODE){
-                        // TODO - this is where recursive logic is needed after complex within 
-                        // complex is supported
-                        if($val[WSF_TYPE] == "anyType" && $child->firstChild->nodeType == XML_ELEMENT_NODE){
-                            if($property && $response_class){
-                                $property->setValue($response_class, $child->firstChild->tagName);
-                                return $response_class;
-                            }
-                        }
-                    }
-                    else if($child->firstChild->nodeType == XML_TEXT_NODE) {
-                        /* it is a simple type */
-                        if($property && $response_class){
-                            $property->setValue($response_class, $child->firstChild->wholeText); 
-                            return $response_class;
-                        }
-                        else
-                            return $child->firstChild->wholeText;
-                    }
+                    wsf_set_values($val, $class_map, $child);
                 }
+                
             }
+            
         }
+
+        $return_value  = new $class_map[$response_node->localName];
+        return $return_value;
+                    /* if ($child->hasChildNodes() && $child->firstChild->nodeType != XML_TEXT_NODE){ */
+/*                         // TODO - this is where recursive logic is needed after complex within */
+/*                         // complex is supported */
+/*                         if($val[WSF_TYPE] == "anyType" && $child->firstChild->nodeType == XML_ELEMENT_NODE){ */
+/*                             if($property && $response_class){ */
+/*                                 $property->setValue($response_class, $child->firstChild->tagName); */
+/*                                 return $response_class; */
+/*                             } */
+/*                         } */
+/*                     } */
+/*                     else if($child->firstChild->nodeType == XML_TEXT_NODE) { */
+/*                         /\* it is a simple type *\/ */
+/*                         if($property && $response_class){ */
+/*                             $property->setValue($response_class, $child->firstChild->wholeText); */
+/*                             return $response_class; */
+/*                         } */
+/*                         else */
+/*                             return $child->firstChild->wholeText; */
+/*                     } */
     }
     else{
         if (count($created_sig_array[$response_node->tagName]) == 1){
@@ -1037,6 +1034,201 @@ function wsf_get_schema_node($wsdl_dom)
 }
 
 
+
+/**
+ * Recursive function to create response temperary structure
+ * @param DomNode $types_node schema node of the WSDL
+ * @param string $param_type Type of the parameter
+ */
+
+function create_recursive_response_struct(DomNode $types_node, $param_type)
+{
+    
+    require_once('wsf_wsdl_consts.php');
+    $rec_array = array();
+    $schema_list = $types_node->childNodes;
+    foreach($schema_list as $schema){
+        $ns = $schema->attributes->getNamedItem(WSF_TARGETNAMESPACE)->value;
+        $complexType_list = $schema->childNodes;
+        foreach($complexType_list as $complexType){
+            if($complexType->localName == WSF_WSDL_COMPLEX_TYPE && $complexType->attributes->getNamedItem(WSF_NAME)->value == $param_type){
+                $sequence_node = $complexType->firstChild;
+                if($sequence_node->localName != "restriction"){
+                    $rec_array['class'] = 1;
+                    $rec_array[WSF_NS] = $ns;
+                }
+                $sequence_node = $complexType->firstChild;
+                if($sequence_node->localName == "sequence" && $sequence_node->hasChildNodes()){// for now handling only sequence elements all? choice?
+                    $element_list = $sequence_node->childNodes;
+                    foreach($element_list as $element){
+                        if($element->localName == "element" && $element->hasAttributes()){
+                            $ele_type = $element->attributes->getNamedItem(WSF_TYPE)->value;
+                            $ele_name = $element->attributes->getNamedItem(WSF_NAME)->value;
+                            if(substr($ele_type, 0, 3) == "xs:" || substr($ele_type, 0, 4) == "xsd:"){
+                                $simple_array = array();
+                                $param_type = substr(strstr($ele_type, ':'), 1);
+                                /** min occurs max occurs and nillable */
+                                $simple_array[WSF_TYPE] = $param_type;
+                                $simple_array[WSF_NS] = $ns;
+                                $rec_array[$ele_name]= $simple_array;
+
+                            }
+                            else{
+/*                                 to determine whether it is simple type */
+                                $temp_arry = create_recursive_response_struct($types_node, substr(strstr($ele_type, ':'),1));
+                                 if($temp_arry['simpleType'])
+                                     $rec_array[$ele_name] = $temp_arry;
+                                 else
+                                     $rec_array[substr(strstr($ele_type, ':'),1)] = $temp_arry;
+                            }
+                        }
+                    }
+                }
+                else if ($sequence_node->localName == "complexContent"){
+                    $complexContent_node = $sequence_node->firstChild;
+                    $complexContent_base_type = $complexContent_node->attributes->getNamedItem('base')->value;
+                    $rec_array[substr(strstr($complexContent_base_type, ':'), 1)] = create_recursive_response_struct($types_node, substr(strstr($complexContent_base_type, ':'), 1));
+                    //begin
+                    if($complexContent_node->firstChild->localName == "sequence" && $complexContent_node->firstChild->hasChildNodes()){
+                        $element_list = $complexContent_node->firstChild->childNodes;
+                        foreach($element_list as $element){
+                            if($element->localName == "element" && $element->hasAttributes()){
+                                $ele_type = $element->attributes->getNamedItem(WSF_TYPE)->value;
+                                $ele_name = $element->attributes->getNamedItem(WSF_NAME)->value;
+                                if(substr($ele_type, 0, 3) == "xs:" || substr($ele_type, 0, 4) == "xsd:"){
+                                    $simple_array = array();
+                                    $param_type = substr(strstr($ele_type, ':'), 1);
+                                    /** min occurs max occurs and
+                                     //nillable */
+                                    $simple_array[WSF_TYPE] = $param_type;
+                                    $simple_array[WSF_NS] = $ns;
+                                    $rec_array[$ele_name]= $simple_array;
+
+                                }
+                                else{
+                                    $rec_array[$ele_name] = create_recursive_response_struct($types_node, substr(strstr($ele_type, ':'),1));
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        /* TODO - restriction base */
+                      }
+                }
+            }
+            else if ($complexType->localName == "simpleType" && $complexType->attributes->getNamedItem(WSF_NAME)->value == $param_type) {
+                $restriction_node = $complexType->firstChild;
+                if($restriction_node->localName == "restriction"){
+                    $rec_array[WSF_TYPE] = $restriction_node->attributes->getNamedItem('base')->value;
+                    $rec_array[WSF_NS] = $ns;
+                    $rec_array['simpleType'] = 1;
+                }
+
+                
+            }
+        }
+    }
+    return $rec_array;
+}
+
+
+/* function recursive_validation($response_child_list, $class_map, $created_sig_array, $response_node) */
+/* { */
+/*         foreach($response_child_list as $child){ */
+/*             foreach($created_sig_array[$response_node->localName] as $key => $val){ */
+/*                 if($key == $child->localName){ */
+/*                     wsf_set_values($val, $class_map, $child); */
+/*                 } */
+                
+/*             } */
+            
+/*         } */
+/* } */
+
+function wsf_set_values($val, $class_map, $child, $prev_class = NULL)
+{
+    if(is_array($val) && !isset($val[WSF_TYPE])){
+        foreach($val as $key2 => $val2){
+            if(is_array($val2) && !isset($val2[WSF_TYPE])){
+                foreach($val2 as $key3){
+                    if($key3 == 1){
+                        $class_name = $key2;
+                        $class1 = new $class_map[$class_name];
+                        $class_name = $class_map[$class_name];
+                        $child = $child->firstChild;
+                    }
+                }
+            }
+            else{
+                $var_name = NULL;
+                if($key2 != WSF_NS && $key2 != 'class'){
+                    $var_name = $key2;
+                }
+                if ($var_name != NULL){
+                    if ($var_name == $child->localName){
+                        if (class_exists($prev_class))
+                            $response_class = new $prev_class;
+
+
+                        $ref_class = new ReflectionClass($prev_class);
+                        if($ref_class){
+                            $property = $ref_class->getProperty($var_name);
+/*                             if($property) */
+/*                                 $property->setValue($response_class, "Ddd"); */
+                        }
+
+                        $child = $child->nextSibling;
+                    }else if($val2['simpleType'] == 1){
+                        $child = $child->nextSibling;
+                    }
+/*                     else */
+/*                         echo "\n".$var_name." =>:".$child->localName."\n"; */
+                }
+            }
+            wsf_set_values($val2, $class_map, $child, $class_name);
+        }
+    }
+    else{
+        // set values
+    }
+
+    
+}
+
+function is_xsd_type($param_type)
+{
+    
+    $xsd_array = array("string", "boolean", "double", "boolean", "double", 
+                          "float", "int", "integer", "byte", "decimal", 
+                          "base64Binary", "hexBinary", "any", "QName", "dateTime", 
+                          "date", "time", "unsignedLong", "unsignedInt", "unsignedShort",
+                          "unsignedByte" , "positiveInteger", "negativeInteger", "nonNegativeInteger",
+                          "nonPositiveInteger", "gYearMonth", "gMonthDay", "gYear", "gMonth", 
+                          "gDay", "duration", "Name", "NCName", "NMTOKEN", "NOTATION", "NMTOKENS", "ENTITY",
+                          "ENTITIES", "IDREF", "IDREFS", "anyURI", "language", "ID", "normalizedString", "token");
+
+    return in_array($param_type, $xsd_array);
+}
+
+
+
 ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

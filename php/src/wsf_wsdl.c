@@ -164,6 +164,9 @@ void create_dynamic_client(zval *this_ptr, char *function, int function_len,
                                     &request_function, &retval, 2, params TSRMLS_CC) == SUCCESS ){
                 if (Z_TYPE_P(&retval) == IS_ARRAY && Z_TYPE_P (&retval) != IS_NULL)
                     wsf_wsdl_do_request(client_zval, &retval, return_value,  env TSRMLS_CC);
+                else if (Z_TYPE_P(&retval) == IS_STRING){
+                    php_error_docref(NULL TSRMLS_CC, E_ERROR, "Error occured in script: %s", Z_STRVAL_P(&retval));
+                }
             }
         }
     }
@@ -186,6 +189,7 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
     int soap_version = 2; 
     zval **policy_options = NULL;
     char *response_sig_model_string = NULL;
+    char *wsdl_dom_string = NULL;
 
     axiom_node_t *env_node = NULL;
     int has_fault = AXIS2_FALSE;
@@ -196,8 +200,8 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
     axiom_node_t *fault_node = NULL;
     zval *rfault;
     
-    zval response_function, *res_retval, res_param1, res_param2, res_param3;
-    zval *res_params[3];
+    zval response_function, *res_retval, res_param1, res_param2, res_param3, res_param4;
+    zval *res_params[4];
     axiom_node_t *axiom_soap_base_node = NULL;
     zval *response_parameters;
 
@@ -254,7 +258,13 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_wsdl] response sig model :- %s",
                          response_sig_model_string);
     }
-    
+
+    if(zend_hash_find(ht_return, WS_WSDL_DOM, sizeof(WS_WSDL_DOM),
+                      (void **)&tmp_options) == SUCCESS && Z_TYPE_PP(tmp_options) == IS_STRING ){
+        wsdl_dom_string = Z_STRVAL_PP(tmp_options);
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_wsdl] WSDL DOM string found");
+    }
+
     WSF_GET_OBJ (svc_client, client_zval, axis2_svc_client_t, intern);
     client_options =
         (axis2_options_t *) axis2_svc_client_get_options (svc_client, env);
@@ -350,8 +360,8 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
             res_params[0] = &res_param1;
             res_params[1] = &res_param2;
             res_params[2] = &res_param3;
-                
-            
+            res_params[3] = &res_param4;
+                       
             response_buffer = axiom_node_to_string (axiom_soap_base_node, env);
             AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                              "[wsf_wsdl]Response buffer is %s", response_buffer);
@@ -370,11 +380,13 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
             INIT_PZVAL(res_params[1]);
             ZVAL_ZVAL(res_params[2], response_parameters, NULL, NULL);
             INIT_PZVAL(res_params[2]);
+            ZVAL_STRING(res_params[3], wsdl_dom_string, 0);
+            INIT_PZVAL(res_params[3]);
 
             MAKE_STD_ZVAL(res_retval);
             INIT_PZVAL(res_retval);
             if (call_user_function (EG (function_table), (zval **) NULL,
-                                    &response_function, res_retval, 3, res_params TSRMLS_CC) == SUCCESS ){
+                                    &response_function, res_retval, 4, res_params TSRMLS_CC) == SUCCESS ){
                 if (Z_TYPE_P(res_retval) == IS_STRING)
                     ZVAL_ZVAL(return_value, res_retval, 0, 0);
                 if (Z_TYPE_P(res_retval) == IS_OBJECT)

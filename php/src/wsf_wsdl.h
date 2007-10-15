@@ -60,9 +60,10 @@ void create_dynamic_client(zval *this_ptr, char *fn_name, int fn_name_len, int a
 #define WS_WSDL_IN_POLICY       "input_policy"
 #define WS_WSDL_OUT_POLICY      "output_policy"
 
-#define WS_WSDL_ENV_UTF             "UTF-8"
+#define WS_WSDL_ENV_UTF         "UTF-8"
 #define WS_WSDL_ENV_1_0         "1.0"
 
+#define WS_WSDL_DOM          "wsdl_dom"
 
 #endif /* WSF_WSDL_H */
 
