@@ -44,18 +44,7 @@ class WSClient
     # Set SOAP settings
     use_soap = @options.has_key?(:use_soap) ? @options[:use_soap].to_s.upcase : "TRUE"
 
-    puts use_soap   
- 
     if use_soap.eql? "FALSE" then # REST style
-      #rest_property = WSFC::axutil_property_create(@env)
-      #WSFC::axutil_property_set_value(rest_property,
-      #                                @env,
-      #                                WSFC::AXIS2_VALUE_TRUE)
-      #WSFC::axis2_options_set_property(@client_options,
-      #                                 @env,
-      #                                 WSFC::AXIS2_ENABLE_REST,
-      #                                 rest_property)
-      puts "REST Style"
       WSFC::axis2_options_set_enable_rest(@client_options, @env, WSFC::AXIS2_TRUE)
     else # SOAP style
       soap_version = use_soap.eql?("1.1") ? WSFC::AXIOM_SOAP11 : WSFC::AXIOM_SOAP12
@@ -66,17 +55,7 @@ class WSClient
     http_method = @options.has_key?(:http_method) ? @options[:http_method].to_s.upcase : "POST"
 
     if http_method.eql? "GET" then
-      #http_get_property = WSFC::axutil_property_create(@env)
-      #WSFC::axutil_property_set_value(http_get_property,
-      #                                @env,
-      #                                WSFC::AXIS2_HTTP_GET)
-      #WSFC::axis2_options_set_property(@client_options,
-      #                                 @env,
-      #                                 WSFC::AXIS2_HTTP_METHOD,
-      #                                 http_get_property)
-      
       WSFC::axis2_options_set_http_method(@client_options, @env, WSFC::AXIS2_HTTP_GET)
-      
     end
   end
 
