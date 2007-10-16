@@ -43,16 +43,20 @@ class WSClient
 
     # Set SOAP settings
     use_soap = @options.has_key?(:use_soap) ? @options[:use_soap].to_s.upcase : "TRUE"
-    
+
+    puts use_soap   
+ 
     if use_soap.eql? "FALSE" then # REST style
-      rest_property = WSFC::axutil_property_create(@env)
-      WSFC::axutil_property_set_value(rest_property,
-                                      @env,
-                                      WSFC::AXIS2_VALUE_TRUE)
-      WSFC::axis2_options_set_property(@client_options,
-                                       @env,
-                                       WSFC::AXIS2_ENABLE_REST,
-                                       rest_property) 
+      #rest_property = WSFC::axutil_property_create(@env)
+      #WSFC::axutil_property_set_value(rest_property,
+      #                                @env,
+      #                                WSFC::AXIS2_VALUE_TRUE)
+      #WSFC::axis2_options_set_property(@client_options,
+      #                                 @env,
+      #                                 WSFC::AXIS2_ENABLE_REST,
+      #                                 rest_property)
+      puts "REST Style"
+      WSFC::axis2_options_set_enable_rest(@client_options, @env, WSFC::AXIS2_TRUE)
     else # SOAP style
       soap_version = use_soap.eql?("1.1") ? WSFC::AXIOM_SOAP11 : WSFC::AXIOM_SOAP12
       WSFC::axis2_options_set_soap_version(@client_options, @env, soap_version)
@@ -62,14 +66,16 @@ class WSClient
     http_method = @options.has_key?(:http_method) ? @options[:http_method].to_s.upcase : "POST"
 
     if http_method.eql? "GET" then
-      http_get_property = WSFC::axutil_property_create(@env)
-      WSFC::axutil_property_set_value(http_get_property,
-                                      @env,
-                                      WSFC::AXIS2_HTTP_GET)
-      WSFC::axis2_options_set_property(@client_options,
-                                       @env,
-                                       WSFC::AXIS2_HTTP_METHOD,
-                                       http_get_property) 
+      #http_get_property = WSFC::axutil_property_create(@env)
+      #WSFC::axutil_property_set_value(http_get_property,
+      #                                @env,
+      #                                WSFC::AXIS2_HTTP_GET)
+      #WSFC::axis2_options_set_property(@client_options,
+      #                                 @env,
+      #                                 WSFC::AXIS2_HTTP_METHOD,
+      #                                 http_get_property)
+      
+      WSFC::axis2_options_set_http_method(@client_options, @env, WSFC::AXIS2_HTTP_GET)
       
     end
   end
@@ -89,7 +95,7 @@ class WSClient
    
     # Set end point 
     to = message_property(:to, message)
-    if to.nil? then
+    if to.empty? then
       WSFC::axis2_log_error(@env, "[wsf-ruby] Can not find end point for request")
       return nil
     end
@@ -99,33 +105,33 @@ class WSClient
     
     # Set SOAP action
     soap_action = message_property(:action, message)
-    if soap_action then
+    begin
       soap_action_str = WSFC::axutil_string_create(@env, soap_action)
       WSFC::axis2_options_set_soap_action(@client_options, @env, soap_action_str)
-    end
+    end unless soap_action.empty?
 
     # Set Addressing options
     use_wsa = message_property(:use_wsa, message)
     if use_wsa.eql? "1.0" or use_wsa.eql? "submission" or use_wsa.eql? "TRUE" then
-      WSFC::axis2_options_set_action(@client_options, @env, to)
-
+      WSFC::axis2_options_set_action(@client_options, @env, soap_action)
+      
       from = message_property(:from, message)
-      if from then
+      begin
         from_end_point_ref = WSFC::axis2_endpoint_ref_create(@env, from)
         WSFC::axis2_options_set_from(@client_options, @env, from_end_point_ref)
-      end
+      end unless from.empty?
       
       reply_to = message_property(:reply_to, message)
-      if reply_to then
+      begin
         reply_to_end_point_ref = WSFC::axis2_endpoint_ref_create(@env, reply_to)
         WSFC::axis2_options_set_reply_to(@client_options, @env, reply_to_end_point_ref)
-      end
+      end unless reply_to.empty?
       
       fault_to = message_property(:fault_to, message)
-      if fault_to then
+      begin
         fault_to_end_point_ref = WSFC::axis2_endpoint_ref_create(@env, fault_to)
         WSFC::axis2_options_set_fault_to(@client_options, @env, fault_to_end_point_ref)
-      end
+      end unless fault_to.empty?
       
       WSFC::axis2_svc_client_engage_module(@svc_client, @env, "addressing")
 
@@ -221,8 +227,10 @@ class WSClient
 
 
   def message_property(property_name, message)
-    msg_property = message.property(property_name) if message.kind_of? WSMessage
-    return msg_property unless msg_property.nil?
+    if message.kind_of? WSMessage then
+      msg_property = message.property(property_name)
+      return msg_property unless msg_property.empty?
+    end
     
     return @options.has_key?(property_name) ? @options[property_name] : ""
   end

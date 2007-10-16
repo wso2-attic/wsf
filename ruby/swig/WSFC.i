@@ -51,10 +51,25 @@ axis2_options_set_to(struct axis2_options       *options,
                      const axutil_env_t          *env,
                      axis2_endpoint_ref_t       *to);
 
+axis2_status_t
+axis2_options_set_from(axis2_options_t *options,
+                       const axutil_env_t *env,
+                       axis2_endpoint_ref_t *from);
+
 void
 axis2_options_set_action(axis2_options_t        *options,
                          const axutil_env_t      *env,
                          const axis2_char_t     *action);
+
+axis2_status_t
+axis2_options_set_enable_rest(axis2_options_t *options,
+                              const axutil_env_t *env,
+                              const axis2_bool_t enable_rest);
+
+axis2_status_t
+axis2_options_set_http_method(axis2_options_t *options,
+                              const axutil_env_t *env,
+                              const axis2_char_t *http_method);
 
 axis2_svc_client_t *
 axis2_svc_client_create(const axutil_env_t       *env,
