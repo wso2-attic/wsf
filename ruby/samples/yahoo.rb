@@ -25,7 +25,6 @@ req_payload_string = <<XML
 XML
 
 begin
-  options = Hash.new
   options = {:to => "http://search.yahooapis.com/WebSearchService/V1/webSearch",
              :http_method => "GET",
              :use_soap => false}

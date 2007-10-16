@@ -28,7 +28,6 @@ req_payload_string = <<XML
 XML
 
 begin
-  options = Hash.new
   options = {:to => "http://webservices.amazon.com/onca/xml",
              :http_method => "GET",
              :use_soap => false}
