@@ -17,7 +17,11 @@
 require 'wsf'
 
 req_payload_string = <<XML
-<webSearch><appid>ApacheRestDemo</appid><query>SriLanka</query><form/></webSearch>
+<webSearch>
+  <appid>ApacheRestDemo</appid>
+  <query>Sri Lanka</query>
+  <form/>
+</webSearch>
 XML
 
 begin
