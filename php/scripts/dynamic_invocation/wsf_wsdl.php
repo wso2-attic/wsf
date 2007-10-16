@@ -964,18 +964,23 @@ function wsf_process_response($response_payload_string, $response_sig_model_stri
     if(isset($response_parameters[WSF_CLASSMAP]))
         $class_map = $response_parameters[WSF_CLASSMAP];
 
+    $response_class = new $class_map[$response_node->localName];
+    $ref_class = new ReflectionClass($response_class);
     if($response_child_list){
         foreach($response_child_list as $child){
             foreach($created_sig_array[$response_node->localName] as $key => $val){
                 if($key == $child->localName){
-                 $ret_val =   wsf_set_values($val, $class_map, $child, NULL);
+                    $ret_val =   wsf_set_values($val, $class_map, $child, NULL);
+                    if($ref_class)
+                        $ref_property = $ref_class->getProperty($key);
+                    if($ref_property)
+                        $ref_property->setValue($response_class, $ret_val);
                 }
-                
             }
             
         }
 
-        return $ret_val;
+        return $response_class;
     }
     else{
         if (count($created_sig_array[$response_node->tagName]) == 1){
@@ -1146,8 +1151,9 @@ function wsf_set_values($val, $class_map, $child, $prev_class)
                     }else if($val2['simpleType'] == 1){
                         $child = $child->nextSibling;
                     }
-                    else
-/*                         echo "\n".$var_name." =>:".$child->localName."\n"; */
+                    else{
+                        echo "\n".$var_name."=>:".$child->localName."\n";
+                    }
                 }
             }
             wsf_set_values($val2, $class_map, $child, $class1);
