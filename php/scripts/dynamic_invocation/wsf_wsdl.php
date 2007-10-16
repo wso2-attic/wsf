@@ -441,7 +441,6 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
                 $param_name = $param_node->attributes->getNamedItem(WSF_NAME)->value;
                 $param_type = $param_node->attributes->getNamedItem(WSF_TYPE)->value;
                 $is_xsd = is_xsd_type($param_type);
-//                var_dump($is_xsd);
                 if($wrap_type == "no" && $is_xsd == FALSE){// get from WSDL DOM
                     $rec_array = array();
                     $param_ns = $param_node->attributes->getNamedItem('targetNamespace')->value;
@@ -550,11 +549,9 @@ function create_recursive_struct(DomNode $types_node, $param_type)
                     }
                 }
                 else if ($sequence_node->localName == "complexContent"){
-                    // echo "\ngoing in right direction\n";
                     $complexContent_node = $sequence_node->firstChild;// it is complex content
                     $complexContent_base_type = $complexContent_node->attributes->getNamedItem('base')->value;
                     $rec_array['complexContent'] = create_recursive_struct($types_node, substr(strstr($complexContent_base_type, ':'), 1));
-                    //begin
                     if($complexContent_node->firstChild->localName == "sequence" && $complexContent_node->firstChild->hasChildNodes()){
                         $element_list = $complexContent_node->firstChild->childNodes;
                         foreach($element_list as $element){
@@ -888,7 +885,6 @@ function wsf_process_response($response_payload_string, $response_sig_model_stri
     $sig_model_dom->loadXML($response_sig_model_string);
     $wsdl_dom->loadXML($wsdldom_string);
     
-    //  var_dump($response_payload_string);
     /** get SOAP body DOM tree to compare with Sig model */
     $env_node = $envelope_dom->firstChild; 
     $env_child_list = $env_node->childNodes;
@@ -923,7 +919,6 @@ function wsf_process_response($response_payload_string, $response_sig_model_stri
                 $param_attribute_type_ns = $param_child->attributes->getNamedItem(WSF_TYPE_NAMESPACE)->value;
                 $param_attribute_target_ns = $param_child->attributes->getNamedItem(WSF_TARGETNAMESPACE)->value;
                 $param_attribute_simple = $param_child->attributes->getNamedItem(WSF_WSDL_SIMPLE)->value;
-//                $param_attribute_simple = $param_child->attribute->getNamedItem(WSF_WSDL_SIMPLE)->value;
 
                 if($param_attribute_simple == "no"){
                     $body_child_array = array();
@@ -968,40 +963,19 @@ function wsf_process_response($response_payload_string, $response_sig_model_stri
     $response_child_list = $response_node->childNodes;
     if(isset($response_parameters[WSF_CLASSMAP]))
         $class_map = $response_parameters[WSF_CLASSMAP];
-    
+
     if($response_child_list){
-//        recursive_validation($response_child_list, $class_map, $created_sig_array, $response_node);
         foreach($response_child_list as $child){
             foreach($created_sig_array[$response_node->localName] as $key => $val){
                 if($key == $child->localName){
-                    wsf_set_values($val, $class_map, $child);
+                 $ret_val =   wsf_set_values($val, $class_map, $child, NULL);
                 }
                 
             }
             
         }
 
-        $return_value  = new $class_map[$response_node->localName];
-        return $return_value;
-                    /* if ($child->hasChildNodes() && $child->firstChild->nodeType != XML_TEXT_NODE){ */
-/*                         // TODO - this is where recursive logic is needed after complex within */
-/*                         // complex is supported */
-/*                         if($val[WSF_TYPE] == "anyType" && $child->firstChild->nodeType == XML_ELEMENT_NODE){ */
-/*                             if($property && $response_class){ */
-/*                                 $property->setValue($response_class, $child->firstChild->tagName); */
-/*                                 return $response_class; */
-/*                             } */
-/*                         } */
-/*                     } */
-/*                     else if($child->firstChild->nodeType == XML_TEXT_NODE) { */
-/*                         /\* it is a simple type *\/ */
-/*                         if($property && $response_class){ */
-/*                             $property->setValue($response_class, $child->firstChild->wholeText); */
-/*                             return $response_class; */
-/*                         } */
-/*                         else */
-/*                             return $child->firstChild->wholeText; */
-/*                     } */
+        return $ret_val;
     }
     else{
         if (count($created_sig_array[$response_node->tagName]) == 1){
@@ -1078,8 +1052,9 @@ function create_recursive_response_struct(DomNode $types_node, $param_type)
                                 $temp_arry = create_recursive_response_struct($types_node, substr(strstr($ele_type, ':'),1));
                                  if($temp_arry['simpleType'])
                                      $rec_array[$ele_name] = $temp_arry;
-                                 else
+                                 else{
                                      $rec_array[substr(strstr($ele_type, ':'),1)] = $temp_arry;
+                                 }
                             }
                         }
                     }
@@ -1131,21 +1106,7 @@ function create_recursive_response_struct(DomNode $types_node, $param_type)
     return $rec_array;
 }
 
-
-/* function recursive_validation($response_child_list, $class_map, $created_sig_array, $response_node) */
-/* { */
-/*         foreach($response_child_list as $child){ */
-/*             foreach($created_sig_array[$response_node->localName] as $key => $val){ */
-/*                 if($key == $child->localName){ */
-/*                     wsf_set_values($val, $class_map, $child); */
-/*                 } */
-                
-/*             } */
-            
-/*         } */
-/* } */
-
-function wsf_set_values($val, $class_map, $child, $prev_class = NULL)
+function wsf_set_values($val, $class_map, $child, $prev_class)
 {
     if(is_array($val) && !isset($val[WSF_TYPE])){
         foreach($val as $key2 => $val2){
@@ -1155,7 +1116,14 @@ function wsf_set_values($val, $class_map, $child, $prev_class = NULL)
                         $class_name = $key2;
                         $class1 = new $class_map[$class_name];
                         $class_name = $class_map[$class_name];
-                        $child = $child->firstChild;
+                        if($prev_class){
+                            $refle_class = new ReflectionClass($prev_class);
+                            if($refle_class)
+                                $refle_property = $refle_class->getProperty($child->localName);
+                            if($refle_property)
+                                $refle_property->setValue($prev_class, $class1);
+                        }
+                            $child = $child->firstChild;
                     }
                 }
             }
@@ -1166,33 +1134,30 @@ function wsf_set_values($val, $class_map, $child, $prev_class = NULL)
                 }
                 if ($var_name != NULL){
                     if ($var_name == $child->localName){
-                        if (class_exists($prev_class))
-                            $response_class = new $prev_class;
-
-
                         $ref_class = new ReflectionClass($prev_class);
-                        if($ref_class){
+                        if($ref_class)
                             $property = $ref_class->getProperty($var_name);
-/*                             if($property) */
-/*                                 $property->setValue($response_class, "Ddd"); */
+                        if($property){
+                            if($child->firstChild->nodeType == XML_TEXT_NODE){
+                                $property->setValue($prev_class, $child->firstChild->wholeText);
+                            }
                         }
-
                         $child = $child->nextSibling;
                     }else if($val2['simpleType'] == 1){
                         $child = $child->nextSibling;
                     }
-/*                     else */
+                    else
 /*                         echo "\n".$var_name." =>:".$child->localName."\n"; */
                 }
             }
-            wsf_set_values($val2, $class_map, $child, $class_name);
+            wsf_set_values($val2, $class_map, $child, $class1);
         }
     }
     else{
         // set values
     }
 
-    
+    return $class1;
 }
 
 function is_xsd_type($param_type)
