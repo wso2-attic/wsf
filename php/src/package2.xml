@@ -1,43 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package packagerversion="1.4.2" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
- <name>wsf</name>
- <channel>10.100.1.175</channel>
- <summary>Web Services for PHP</summary>
- <description>WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into PHP is a PHP extension for providing and consuming Web Services in PHP. WSO2 WSF/PHP supports SOAP 1.1, SOAP 1.2, WSDL 1.1, WSDL 2.0, REST style invocation as well as some of the key WS-* stack specifications such as: SOAP MTOM, WS-Addressing, WS-Security, WS-SecurityPolicy and WS-ReliableMessaging.</description>
- <lead>
-  <name>Nabeel Yoosuf</name>
-  <user>nabeel</user>
-  <email>nabeel@php.net</email>
-  <active>yes</active>
- </lead>
- <lead>
- <name>Nandika Jayawardana</name>
-  <user>nandika</user>
-  <email>nandika@wso2.com</email>
-  <active>yes</active>
- </lead>
- <lead>
-     <name>Buddhika Semasinghe</name>
-     <user>buddhika</user>
-     <email>buddhika@wso2.com</email>
-     <active>yes</active>                                                                                                  </lead>
 
-   <date>2007-10-16</date>
-   <version>
-    <release>1.1.0</release>
-    <api>1.1.0</api>
-   </version>
-   <stability>
-    <release>stable</release>
-    <api>stable</api>
-   </stability>
-   <license uri="http://www.php.net/license">PHP</license>
-   <notes>1. 1 release </notes>
+<name>wsfphp</name>
+<channel>ww2.wso2.org</channel>
+<summary>Web Services for PHP</summary>
+<description>
+WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into PHP is a PHP extension for providing and consuming Web Services in PHP. WSO2 WSF/PHP supports SOAP 1.1, SOAP 1.2, WSDL 1.1, WSDL 2.0, REST style invocation as well as some of the key WS-* stack specifications such as: SOAP MTOM, WS-Addressing, WS-Security, WS-SecurityPolicy and WS-ReliableMessaging.
+</description>
+<lead>
+	<name>Nabeel Yoosuf</name>
+	<user>nabeel</user>
+	<email>nabeel@php.net</email>
+	<active>yes</active>
+</lead>
+<lead>
+	<name>Nandika Jayawardana</name>
+	<user>nandika</user>
+	<email>nandika@wso2.com</email>
+	<active>yes</active>
+</lead>
+<lead>
+	<name>Buddhika Semasinghe</name>
+	<user>buddhika</user>
+	<email>buddhika@wso2.com</email>
+	<active>yes</active>
+</lead>
+<lead>
+	<name>Samisa Abeysinghe</name>
+	<user>Samisa</user>
+	<email>samisa@wso2.com</email>
+	<active>yes</active>
+</lead>
 
- <contents>
+<date>2007-10-16</date>
+<version>
+	<release>1.1.0</release>
+	<api>1.1.0</api>
+</version>
+<stability>
+	<release>stable</release>
+	<api>stable</api>
+</stability>
+<license uri="http://apache.org/licenses/LICENSE-2.0">Apache2</license>
+<notes>1.1.0 release </notes>
+
+<contents>
   <dir name="/">
    <file name="config.m4" role="src" />
-   <file name="README.SSL_CLIENT" role="doc" />
    <file name="wsf.c" role="src" />
    <file name="wsf_client.c" role="src" />
    <file name="wsf_client.h" role="src" />
@@ -71,8 +80,8 @@
    <file name="wsf_wsdl.c" role="src" />
    <file name="wsf_version.h" role="src" />
   </dir> <!-- / -->
- </contents>
- <dependencies>
+</contents>
+<dependencies>
   <required>
    <php>
     <min>5.0.3</min>
@@ -96,7 +105,7 @@
     <release>1.1</release>
     <api>1.1</api>
    </stability>
-   <license uri="http://www.php.net/license">PHP</license>
+   <license uri="http://apache.org/licenses/LICENSE-2.0">Apache2</license>
    <notes>1.1 release of wso2-wsf/php. 
 1. Client API to consume Web services
 
@@ -141,10 +150,7 @@
 
 10. Backward compatibility with PHP5 SOAP extension
       * Experimental
-
-   </notes>
-  </release>
- </changelog>
+</notes>
+</release>
+</changelog>
 </package>
-
-
