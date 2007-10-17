@@ -92,8 +92,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
             return  NULL;
         $policy_array = wsf_get_all_policies($wsdl_dom, $binding_node, $operation_name);
     }
-        
-    
+       
     $operation = wsf_find_operation($sig_model_dom, $operation_name, $endpoint_address);
 
     if(!$operation){
@@ -1000,16 +999,89 @@ function wsf_get_schema_node($wsdl_dom)
 
     $root_node = $wsdl_dom->firstChild;
     $root_child_list = $root_node->childNodes;
-
-
     foreach($root_child_list as $childs){
+        /* this is for inline schema */
+        $tmp_node = $childs;
+        $schema_node = $tmp_node->cloneNode(TRUE);
+        /* end inline schema */
+        
         if($childs->localName == WSF_TYPES){
-            $tmp_node = $childs;
-            $schema_node = $tmp_node->cloneNode(TRUE);
+            $schema_list = $childs->childNodes;
+            // to find import schemas
+            foreach($schema_list as $schema_child){
+                $schema = array();
+                $i = 0;
+                $import_child_list = $schema_child->childNodes;
+                foreach($import_child_list as $import_child){
+                    if($import_child->localName == "import" && $import_child->attributes->getNamedItem('schemaLocation')){
+                        $schema["schema".$i]= $import_child->attributes->getNamedItem('schemaLocation')->value;
+                        $i++;
+                    }
+                }
+            }
+
+            if($schema){
+                $schema_dom = new DomDocument();
+                $schema_dom->preserveWhiteSpace = false;
+                foreach($schema as $key => $val){
+                    $schema_dom->load($val);
+                    $import_schema_child_list = $schema_dom->childNodes;
+                    foreach($import_schema_child_list as $import_schema_child){
+                        if($import_schema_child->localName == 'schema'){
+                            $tmp_import_schema_node = $import_schema_child;
+                            $cloned_import_schema_node = $tmp_import_schema_node->cloneNode(TRUE);
+                            wsf_schema_appendNode($schema_node, $tmp_import_schema_node, $wsdl_dom);
+                                     
+                        }
+                    }
+                }
+            }
             return $schema_node;
         }
     }
 
+}
+
+
+/**
+ * Recursive function to create schema from import schema
+ * @param DomNode $parent parent dom node 
+ * @param DomNode $child dom node of import schema
+ * @param DomDocument $doc DomDocument of parent DomNode
+ */
+
+function wsf_schema_appendNode( $parent, $child, $doc )
+{
+    if( $child == NULL)
+    {
+        return;
+    }
+    $newChild = NULL;
+    if( $child-> nodeType == XML_TEXT_NODE )
+    {
+        $newChild = $doc-> createTextNode($child->nodeValue);
+        //echo $newChild->nodeValue."\n";
+    }
+    else if( $child-> nodeType == XML_ELEMENT_NODE)
+    {
+        $childTag = $child->tagName;
+        
+        $newChild = $doc-> createElementNS($child->namespaceURI, $childTag);
+
+        foreach( $child->attributes as $attribute)
+            {
+                $newChild->setAttribute($attribute->name, $attribute->value);
+            }
+
+        foreach ( $child->childNodes as $childsChild)
+            {
+                wsf_schema_appendNode( $newChild, $childsChild, $doc);
+            }
+    }
+    if( $newChild != NULL)
+    {
+        $parent-> appendChild( $newChild);
+    }
 }
 
 
