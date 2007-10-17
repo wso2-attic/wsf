@@ -46,7 +46,7 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
 
 <contents>
     <dir name="/">
-        <file name="config.m4" role="src" />
+      <file name="config.m4" role="src" />
    <dir name="src">
    <file name="wsf.c" role="src" />
    <file name="wsf_client.c" role="src" />
@@ -81,6 +81,96 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
    <file name="wsf_wsdl.c" role="src" />
    <file name="wsf_version.h" role="src" />
    </dir>
+   <dir name="samples">
+        <file name="add_soap_header_client.php" role="test"/>
+        <file name="echo_client_addr.php" role="test"/>
+        <file name="echo_client_multiple_invocation.php" role="test"/>
+        <file name="echo_client.php" role="test"/>
+        <file name="echo_client_rest.php" role="test"/>
+        <file name="echo_client_soap11.php" role="test"/>
+        <file name="echo_service_addr.php" role="test"/>
+        <file name="echo_service.php" role="test"/>
+        <file name="fault_client.php" role="test"/>
+        <file name="fault_service.php" role="test"/>
+        <file name="math_client.php" role="test"/>
+        <file name="math_service.php" role="test"/>
+        <file name="notify_service.php" role="test"/>
+        <file name="notify_client.php" role="test"/>
+        <file name="reply_echo_service.php" role="test"/>
+        <file name="request_client_dom.php" role="test"/>
+        <file name="request_client_msg.php" role="test"/>
+        <file name="request_client_str.php" role="test"/>
+        <file name="ssl_client.php" role="test"/>
+        <dir name="mtom">
+            <file name="mtom_download_client.php" role="test"/>
+            <file name="mtom_download_service.php" role="test"/>
+            <file name="mtom_upload_client_base64.php" role="test"/>
+            <file name="mtom_upload_client.php" role="test"/>
+            <file name="mtom_upload_service_base64.php" role="test"/>
+            <file name="mtom_upload_service.php" role="test"/>
+        </dir>
+        <dir name="reliable">
+            <file name="echo_client_rm.php"  role="test"/>
+            <file name="echo_service_rm.php"  role="test"/>
+            <file name="mtom_upload_client_rm.php"  role="test"/>
+            <file name="mtom_upload_service_rm.php"  role="test"/>
+            <file name="ping_client_rm_multiple_messages.php"  role="test"/>
+            <file name="ping_client_rm.php"  role="test"/>
+            <file name="ping_service_rm.php"  role="test"/>
+        </dir>
+        <dir name="google">
+            <file name="google_search.php" role="test"/>
+            <file name="google_spell.php" role="test"/>
+        </dir>
+        <dir name="flicker">
+            <file name="flicker_client.php" role="test"/>
+        </dir>
+        <dir name="security">
+            <dir name="complete">
+                <file name="complete_scenario_client.php" role="test"/>
+                <file name="complete_scenario_service.php" role="test"/>
+                <file name="policy.xml" role="test"/>
+            </dir>
+            <dir name="call_back">
+                <file name="password_call_back_client.php" role="test"/>
+                <file name="password_call_back_service.php" role="test"/>
+            </dir>
+            <dir name="signing">
+                <file name="policy.xml" role="test"/>
+                <file name="signing_client_file.php" role="test"/>
+                <file name="signing_client.php" role="test"/>
+                <file name="signing_service_file.php" role="test"/>
+                <file name="signing_service.php" role="test"/>
+            </dir>
+            <dir name="encryption">
+                <file name="policy.xml" role="test"/>
+                <file name="encrypt_client_file.php" role="test"/>
+                <file name="encrypt_client.php" role="test"/>
+                <file name="encrypt_service_file.php" role="test"/>
+                <file name="encrypt_service.php" role="test"/>
+            </dir>
+            <dir name="timestamp">
+                <file name="policy.xml" role="test"/>
+                <file name="timestamp_client_file.php" role="test"/>
+                <file name="timestamp_client.php" role="test"/>
+                <file name="timestamp_service_file.php" role="test"/>
+                <file name="timestamp_service.php" role="test"/>
+            </dir>
+            <dir name="username_token">
+                <file name="policy.xml" role="test"/>
+                <file name="username_token_client_file.php" role="test"/>
+                <file name="username_token_client.php" role="test"/>
+                <file name="username_token_service_file.php" role="test"/>
+                <file name="username_token_service.php" role="test"/>
+            </dir>
+            <dir name="keys">
+                <file name="alice_cert.cert" role="test"/>
+                <file name="alice_key.pem" role="test"/>
+                <file name="bob_cert.cert" role="test"/>
+                <file name="bob_key.pem" role="test"/>
+            </dir> 
+        </dir>
+    </dir>
   </dir>
 </contents>
 <dependencies>
