@@ -278,14 +278,14 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
         <file name="wsdl_manual.html" role="doc"/>
         <file name="wsdl_mode_api.html" role="doc"/>
    
-        <!--dir name="samples">
+        <dir name="samples">
             <file name="google_spell.html" role="doc"/>
             <file name="hello_client.html" role="doc"/>
             <file name="hello_service.html" role="doc"/>
         </dir>
-        <dir>
-            <file name="api_stype.css" role="doc"/>
-        </dir -->
+        <dir name="style">
+            <file name="api_style.css" role="doc"/>
+        </dir>
     </dir>
   </dir>
 </contents>
