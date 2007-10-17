@@ -24,7 +24,7 @@ class WSMessage
   
   
   def property(property_name)
-    return @properties.has_key?(property_name) ? @properties[property_name] : ""
+    return @properties.has_key?(property_name) ? @properties[property_name] : nil
   end
 
 end

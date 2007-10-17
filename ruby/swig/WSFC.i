@@ -377,6 +377,10 @@ axiom_children_iterator_t *
 axiom_soap_fault_detail_get_all_detail_entries(axiom_soap_fault_detail_t *fault_detail,
                                                const axutil_env_t *env);
 
+axiom_node_t *
+axiom_children_iterator_next(axiom_children_iterator_t *iterator,
+                             const axutil_env_t *env);
+
 int 
 axis2_options_get_soap_version(const axis2_options_t    *options,
                                const axutil_env_t       *env);
