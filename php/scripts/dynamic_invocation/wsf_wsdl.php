@@ -444,7 +444,7 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
                     $rec_array = array();
                     $param_ns = $param_node->attributes->getNamedItem('targetNamespace')->value;
                     //    $param_type = $param_node->attributes->getNamedItem(WSF_TYPE)->value;
-                    $child_array[$param_name] = create_recursive_struct($schema_node, $param_type);
+                    $child_array[$param_name] = create_recursive_struct($schema_node, $param_type, $param_ns);
                 } 
                 else{
                     $simple_array = array();
@@ -484,17 +484,18 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
 function recursive_payload(DomDocument $payload_dom, $value_array, DomNode $element, $new_obj)
 {
     require_once('wsf_wsdl_consts.php');
-
+    static $i = 2;
     foreach($value_array as $val => $value){
         if($val != WSF_NS && is_array($value)){
             // type of complex type
             if($value[WSF_NS]){
                 if ($value[WSF_TYPE]){// for one element in wrapper
-                    $element_2 = $payload_dom->createElementNS($value[WSF_NS], $val, $new_obj->$val);
+                    $element_2 = $payload_dom->createElementNS($value[WSF_NS], "ns".$i.":".$val, $new_obj->$val);
                 }
-                else{
-                    $element_2 = $payload_dom->createElementNS($value['ns'], "ns2:".$val);
+                else{    
+                    $element_2 = $payload_dom->createElementNS($value['ns'], "ns".$i.":".$val);
                     $new_obj = $new_obj->$val;
+                    $i++;
                     recursive_payload($payload_dom, $value, $element_2, $new_obj);
                 }
             }
@@ -513,7 +514,7 @@ function recursive_payload(DomDocument $payload_dom, $value_array, DomNode $elem
  * @param string $param_type Type of the parameter
  */
 
-function create_recursive_struct(DomNode $types_node, $param_type)
+function create_recursive_struct(DomNode $types_node, $param_type, $prev_ns)
 {
     require_once('wsf_wsdl_consts.php');
     
@@ -524,7 +525,10 @@ function create_recursive_struct(DomNode $types_node, $param_type)
         $complexType_list = $schema->childNodes;
         foreach($complexType_list as $complexType){
             if($complexType->attributes->getNamedItem(WSF_NAME)->value == $param_type){
-                $rec_array[WSF_NS] = $ns;
+            //if($prev_ns = NULL)
+            //      $prev_ns = $ns;
+                $rec_array[WSF_NS] = $prev_ns;
+                $prev_ns = $ns;
                 $sequence_node = $complexType->firstChild;
                 if($sequence_node->localName == "sequence" && $sequence_node->hasChildNodes()){// for now handling only sequence elements all? choice?
                     $element_list = $sequence_node->childNodes;
@@ -542,7 +546,7 @@ function create_recursive_struct(DomNode $types_node, $param_type)
 
                             }
                             else{
-                                $rec_array[$ele_name] = create_recursive_struct($types_node, substr(strstr($ele_type, ':'),1));
+                                $rec_array[$ele_name] = create_recursive_struct($types_node, substr(strstr($ele_type, ':'),1), $prev_ns);
                             }
                         }
                     }
@@ -550,7 +554,7 @@ function create_recursive_struct(DomNode $types_node, $param_type)
                 else if ($sequence_node->localName == "complexContent"){
                     $complexContent_node = $sequence_node->firstChild;// it is complex content
                     $complexContent_base_type = $complexContent_node->attributes->getNamedItem('base')->value;
-                    $rec_array['complexContent'] = create_recursive_struct($types_node, substr(strstr($complexContent_base_type, ':'), 1));
+                    $rec_array['complexContent'] = create_recursive_struct($types_node, substr(strstr($complexContent_base_type, ':'), 1), $prev_ns);
                     if($complexContent_node->firstChild->localName == "sequence" && $complexContent_node->firstChild->hasChildNodes()){
                         $element_list = $complexContent_node->firstChild->childNodes;
                         foreach($element_list as $element){
@@ -568,7 +572,7 @@ function create_recursive_struct(DomNode $types_node, $param_type)
 
                                 }
                                 else{
-                                    $rec_array[$ele_name] = create_recursive_struct($types_node, substr(strstr($ele_type, ':'),1));
+                                    $rec_array[$ele_name] = create_recursive_struct($types_node, substr(strstr($ele_type, ':'),1), $prev_ns);
                                 }
                             }
                         }
