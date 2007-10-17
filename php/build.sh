@@ -1,9 +1,6 @@
 #!/bin/bash
 
 set -e
-
-cp build/config.m4 src/
-
 cd wsf_c
 build/copy_build_files.sh
 cd ..
