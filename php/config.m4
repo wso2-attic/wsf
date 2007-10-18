@@ -39,6 +39,7 @@ src/php_encoding.c \
 src/php_http.c \
 src/php_schema.c \
 src/php_xml.c \
+src/php_sdl.c \
 src/wsf_soap.c \
 src/wsf_policy.c \
 src/wsf_wsdl.c"
