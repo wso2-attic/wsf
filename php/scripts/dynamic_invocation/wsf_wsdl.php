@@ -60,14 +60,25 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
        
     if(!$wsdl_location)
         return "WSDL is not found";
-    
-    $wsdl_dom = wsf_get_wsdl_dom($wsdl_location, $xslt_location);
-    
-    if(!$wsdl_dom)
-        return "error creating WSDL Dom Document";
-    
-    $sig_model_dom = wsf_get_sig_model_dom($wsdl_dom, $xslt_location);
+    $is_multiple_interfaces = FALSE;
+/* changing code for processing mutiple port types in wsdl 1.1 */
+    $is_multiple_interfaces = wsf_is_mutiple_port_types($wsdl_location);
 
+    if ($is_multiple_interfaces == FALSE){
+        $wsdl_dom = wsf_get_wsdl_dom($wsdl_location, $xslt_location);
+        
+        if(!$wsdl_dom)
+            return "error creating WSDL Dom Document";
+        
+        $sig_model_dom = wsf_get_sig_model_dom($wsdl_dom, $xslt_location);
+    }
+    else {
+        $wsdl_dom = wsf_get_wsdl_dom($wsdl_location, $xslt_location);
+        $sig_model_dom = wsf_get_sig_model_dom($wsdl_dom, $xslt_location);
+        
+        $sig_model_dom = wsf_process_multiple_interfaces($wsdl_dom, $sig_model_dom, $xslt_location);
+    }
+        
     if ($is_wsdl_11 == TRUE && $wsdl_11_dom )
         $schema_node = wsf_get_schema_node($wsdl_11_dom);
     else
@@ -93,7 +104,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
         $policy_array = wsf_get_all_policies($wsdl_dom, $binding_node, $operation_name);
     }
        
-    $operation = wsf_find_operation($sig_model_dom, $operation_name, $endpoint_address);
+    $operation = wsf_find_operation($sig_model_dom, $operation_name, $endpoint_address, $is_multiple_interfaces);
 
     if(!$operation){
         echo "\noperation not found";
@@ -114,7 +125,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
             
         }
     }
- 
+     
     if($sig_method)
         $payload = wsf_create_payload($sig_method, $is_doc_lit, $operation_name, $arg_count, $arguments, $class_map, $schema_node);
     if($sig_method)
@@ -133,8 +144,88 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
                           WSF_POLICY_NODE=> $policy_array,
                           WSF_RESPONSE_SIG_MODEL => $return_sig_model_string,
                           WSF_WSDL_DOM => $wsdl_dom_string);
-    
     return $return_value;
+}
+
+function wsf_is_mutiple_port_types($wsdl_location)
+{
+    $wsdl_dom = new DOMDocument();
+    $wsdl_dom->preserveWhiteSpace = false;
+    if($wsdl_dom->load($wsdl_location)){
+        $child_list = $wsdl_dom->childNodes;
+        foreach($child_list as $child){
+            if ($child->localName == WSF_DESCRIPTION)
+                return FALSE;
+            else if ($child->localName == WSF_DEFINITION){
+                $wsdl_11_child_list = $child->childNodes;
+                $i = 0;
+                foreach($wsdl_11_child_list as $wsdl_11_child){
+                    if ($wsdl_11_child->localName == 'portType')
+                        $i++;
+                }
+                if($i > 1)
+                    return TRUE;
+                return FALSE; 
+            }
+        }
+    }
+}
+
+function wsf_process_multiple_interfaces($wsdl_dom, $sig_model_dom, $xslt_location)
+{
+    $wsdl_2_0_child_list = $wsdl_dom->firstChild->childNodes;
+    $interface_array = array();
+    $i = 1 ;
+    foreach($wsdl_2_0_child_list as $interface_child){
+        if($interface_child->localName == 'interface'){
+            $interface_array[$i] = $interface_child->attributes->getNamedItem('name')->value;
+            $i++;    
+        }
+    }
+    $sig_service_array = array();
+    $no_of_interfaces = count($interface_array);
+    for($j = 1 ; $j <= $no_of_interfaces; $j++){
+         $wsdl_dom1 = new DomDocument();
+        $wsdl_dom1->preserveWhiteSpace = false;
+        $wsdl_dom1->loadXML($wsdl_dom->saveXML());
+        //echo $wsdl_dom1->saveXML();
+        $wsdl_2_0_child_list1 = $wsdl_dom1->firstChild->childNodes;
+        foreach($wsdl_2_0_child_list1 as $service_child){
+            if($service_child->localName == 'service'){
+                $old_attr = $service_child->getAttribute('interface');
+                $service_child->removeAttribute($old_attr);
+                $service_child->setAttribute('interface', "tns:".$interface_array[$j]);
+            }
+        }
+        $tmp_sig_model = wsf_get_sig_model_dom($wsdl_dom1, $xslt_location);
+        //echo $tmp_sig_model->saveXML()."\nelement".$j."\n\n";
+        $services_node = $tmp_sig_model->firstChild;
+        $service_child_list = $services_node->childNodes;
+        foreach($service_child_list as $service_child){
+            if($service_child->localName == 'service' && $service_child->hasAttributes()){
+                $service_endpoint = $service_child->attributes->getNamedItem('endpoint')->value;
+                $operations_child_list = $service_child->childNodes;
+                foreach($operations_child_list as $operations_child){
+                    if($operations_child->localName == 'operations'){
+                        $operations_name = $operations_child->attributes->getNamedItem('name')->value;
+                        if(strstr($service_endpoint, $operations_name)){
+                            //     $sig_service_array[strstr($service_endpoint, $operations_name)] = $tmp_sig_model->saveXML($service_child);
+                            $sig_service_array[strstr($service_endpoint, $operations_name)] = $service_child;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    $created_sig_dom = new DOMDocument('1.0', 'iso-8859-1');
+    $element = $created_sig_dom->createElement('services');
+    $created_sig_dom->appendChild($element);
+    foreach($sig_service_array as $value){
+        wsf_schema_appendNode($element, $value, $created_sig_dom);
+    }
+    return $created_sig_dom;
+//    echo $created_sig_dom->saveXML();
+    
 }
 
 /**
@@ -156,24 +247,29 @@ function wsf_get_wsdl_dom($wsdl_location, $xslt_location)
     global $wsdl_11_dom, $is_wsdl_11;
    
     if($wsdl_dom->load($wsdl_location)){
-        if($wsdl_dom->firstChild->localName == WSF_DEFINITION){ 
-            /* first element local name is definitions, so this is a 
-               version 1.1 WSDL */
-            if(!($xslt_wsdl_20_dom->load($xslt_location."/wsdl11to20.xsl10.xsl")))
-                return "WSDL 1.1 to 2.0 converting stylesheet not found";
-            $xslt->importStyleSheet($xslt_wsdl_20_dom);
-            $xslt_11_to_20_dom->loadXML($xslt->transformToXML($wsdl_dom));
-            $is_wsdl_11 = TRUE;
-            $wsdl_11_dom = $wsdl_dom;
-            return $xslt_11_to_20_dom;
-        }
-        else if ($wsdl_dom->firstChild->localName == WSF_DESCRIPTION) {
+        $child_list = $wsdl_dom->childNodes;
+        foreach($child_list as $child){
+            if($child->localName == WSF_DEFINITION){ 
+                /* first element local name is definitions, so this is a 
+                   version 1.1 WSDL */
+                if(!($xslt_wsdl_20_dom->load($xslt_location."/wsdl11to20.xsl10.xsl")))
+                    return "WSDL 1.1 to 2.0 converting stylesheet not found";
+                $xslt->importStyleSheet($xslt_wsdl_20_dom);
+                $xslt_11_to_20_dom->loadXML($xslt->transformToXML($wsdl_dom));
+                $is_wsdl_11 = TRUE;
+                $wsdl_11_dom = $wsdl_dom;
+                return $xslt_11_to_20_dom;
+            }
+            else if ($child->localName == WSF_DESCRIPTION) {
             /* first element local name is description, so this is a 
                version 2.0 WSDL */
-            return $wsdl_dom;
+                return $wsdl_dom;
+            }
+            else{
+                echo "Not a valid WSDL";
+                return NULL;
+            }
         }
-        else
-            return NULL;
     }
     else
         return NULL;
@@ -225,47 +321,80 @@ function wsf_get_endpoint_address(DomDocument $sig_model_dom)
  * @param string $endpoint_address service endpoint address
  * @return DomNode operation DomNode of the Sig model
  */
-function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $endpoint_address)
+function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $endpoint_address, $is_multiple)
 {
     require_once('wsf_wsdl_consts.php');
 
-    $operation = NULL;
-    $services_node = $sig_model_dom->firstChild;
-    $services_childs_list = $services_node->childNodes;
-    
-    foreach($services_childs_list as $child){
-        if($child->tagName == WSF_SERVICE && $child->attributes->getNamedItem(WSF_ADDRESS)->value == $endpoint_address){
-            $service_node = $child;
-            break;
+    if ($is_multiple == FALSE){
+        $operation = NULL;
+        $services_node = $sig_model_dom->firstChild;
+        $services_childs_list = $services_node->childNodes;
+        
+        foreach($services_childs_list as $child){
+            if($child->tagName == WSF_SERVICE && $child->attributes->getNamedItem(WSF_ADDRESS)->value == $endpoint_address){
+                $service_node = $child;
+                break;
+            }
         }
-    }
-
-    if(!$service_node)
-        return NULL;
-    
-    $service_child_list = $service_node->childNodes;
-    /* search the operations element of the sig */
-    foreach($service_child_list as $service_child){
-        if($service_child->tagName == WSF_OPERATIONS){
-            $operations_node = $service_child;
-            break;
+        
+        if(!$service_node)
+            return NULL;
+        
+        $service_child_list = $service_node->childNodes;
+        /* search the operations element of the sig */
+        foreach($service_child_list as $service_child){
+            if($service_child->tagName == WSF_OPERATIONS){
+                $operations_node = $service_child;
+                break;
+            }
         }
+        
+        /* search the operation element of sig */
+        if($operations_node){
+            foreach($operations_node->childNodes as $operations_child){
+                if($operations_child->tagName == WSF_OPERATION){
+                    $operation_node = $operations_child->attributes;
+                    if($operation_node->getNamedItem(WSF_NAME)->value == $operation_name){
+                        $operation = $operations_child;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        return $operation;
     }
-
-    /* search the operation element of sig */
-    if($operations_node){
-        foreach($operations_node->childNodes as $operations_child){
-            if($operations_child->tagName == WSF_OPERATION){
-                $operation_node = $operations_child->attributes;
-                if($operation_node->getNamedItem(WSF_NAME)->value == $operation_name){
-                    $operation = $operations_child;
-                    break;
+    else{
+        $operation = NULL;
+        $services_node = $sig_model_dom->firstChild;
+        $services_childs_list = $services_node->childNodes;
+//        echo $sig_model_dom->saveXML();
+        foreach($services_childs_list as $child){
+            if($child->tagName == WSF_SERVICE && $child->attributes->getNamedItem(WSF_ADDRESS)->value == $endpoint_address){
+                $service_node = $child;
+                if(!$service_node)
+                    return NULL;
+                $service_child_list = $service_node->childNodes;
+                /* search the operations element of the sig */
+                foreach($service_child_list as $service_child){
+                    if($service_child->tagName == WSF_OPERATIONS){
+                        $operations_node = $service_child;
+                        if($operations_node){
+                            foreach($operations_node->childNodes as $operations_child){
+                                if($operations_child->tagName == WSF_OPERATION){
+                                    $operation_node = $operations_child->attributes;
+                                    if($operation_node->getNamedItem(WSF_NAME)->value == $operation_name){
+                                        $operation = $operations_child;
+                                        return $operation;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
     }
-    
-    return $operation;
 }
 
 /**
@@ -281,7 +410,7 @@ function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $endpoi
 function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $arg_count, $arguments, array $class_map = NULL, $schema_node)
 {
     require_once('wsf_wsdl_consts.php');
-
+    
 
     $np1= "ns0";
     $np2= "ns";
@@ -423,12 +552,12 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
                 if($signature_node->firstChild->hasAttributes()){
                     $params_attr = $signature_node->firstChild->attributes;
                     $ele_name = $params_attr->getNamedItem(WSF_WRAPPER_ELEMENT)->value;
-                    if($ele_name == $operation_name){
+                    // if($ele_name == $operation_name){//echo "sdfdsf";
                         /** this is wrapper element */
-                        $child_array = array();
-                        $ele_ns = $params_attr->getNamedItem(WSF_WRAPPER_ELEMENT_NS)->value;
-                        $child_array[WSF_NS] = $ele_ns;
-                    }
+                    $child_array = array();
+                    $ele_ns = $params_attr->getNamedItem(WSF_WRAPPER_ELEMENT_NS)->value;
+                    $child_array[WSF_NS] = $ele_ns;
+                        // }
                 }
             }
         }
@@ -456,11 +585,11 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
                 }
             }
         }
-        $temp_param_struct[$operation_name] = $child_array;
+        $temp_param_struct[$ele_name] = $child_array;
         $payload_dom = new DOMDocument('1.0', 'iso-8859-1');
-        $element = $payload_dom->createElementNS($temp_param_struct[$operation_name][WSF_NS], "ns1:".$operation_name);
-
-        $value_array = $temp_param_struct[$operation_name];
+        $element = $payload_dom->createElementNS($temp_param_struct[$ele_name][WSF_NS], "ns1:".$ele_name);
+        
+        $value_array = $temp_param_struct[$ele_name];
         if(is_object($arguments[0])){
             $new_obj = $arguments[0];
             recursive_payload($payload_dom, $value_array, $element, $new_obj);
@@ -489,7 +618,7 @@ function recursive_payload(DomDocument $payload_dom, $value_array, DomNode $elem
         if($val != WSF_NS && is_array($value)){
             // type of complex type
             if($value[WSF_NS]){
-                if ($value[WSF_TYPE]){// for one element in wrapper
+                if ($value[WSF_TYPE]){
                     $element_2 = $payload_dom->createElementNS($value[WSF_NS], "ns".$i.":".$val, $new_obj->$val);
                 }
                 else{    
@@ -966,7 +1095,7 @@ function wsf_process_response($response_payload_string, $response_sig_model_stri
     $response_child_list = $response_node->childNodes;
     if(isset($response_parameters[WSF_CLASSMAP]))
         $class_map = $response_parameters[WSF_CLASSMAP];
-
+   
     $response_class = new $class_map[$response_node->localName];
     $ref_class = new ReflectionClass($response_class);
     if($response_child_list){
@@ -1187,24 +1316,27 @@ function create_recursive_response_struct(DomNode $types_node, $param_type)
     return $rec_array;
 }
 
-function wsf_set_values($val, $class_map, $child, $prev_class)
+function wsf_set_values($val, $class_map, &$child, $prev_class)
 {
     if(is_array($val) && !isset($val[WSF_TYPE])){
         foreach($val as $key2 => $val2){
             if(is_array($val2) && !isset($val2[WSF_TYPE])){
-                foreach($val2 as $key3){
-                    if($key3 == 1){
+                $val1 = $val2;
+                foreach($val1 as $key3 => $val3){
+                    if($val3 == 1){
                         $class_name = $key2;
                         $class1 = new $class_map[$class_name];
                         $class_name = $class_map[$class_name];
                         if($prev_class){
                             $refle_class = new ReflectionClass($prev_class);
-                            if($refle_class)
+                            if($refle_class && $refle_class->hasProperty($child->localName))
                                 $refle_property = $refle_class->getProperty($child->localName);
                             if($refle_property)
                                 $refle_property->setValue($prev_class, $class1);
                         }
-                            $child = $child->firstChild;
+                        $child = $child->firstChild;
+                        wsf_set_values($val2, $class_map, $child, $class1);
+                        break;
                     }
                 }
             }
@@ -1216,23 +1348,31 @@ function wsf_set_values($val, $class_map, $child, $prev_class)
                 if ($var_name != NULL){
                     if ($var_name == $child->localName){
                         $ref_class = new ReflectionClass($prev_class);
-                        if($ref_class)
+                        if($ref_class && $ref_class->hasProperty($var_name))
                             $property = $ref_class->getProperty($var_name);
                         if($property){
                             if($child->firstChild->nodeType == XML_TEXT_NODE){
                                 $property->setValue($prev_class, $child->firstChild->wholeText);
                             }
                         }
-                        $child = $child->nextSibling;
+                        if($child->nextSibling == NULL){
+                            $child = $child->parentNode->nextSibling;
+                        }
+                        else
+                            $child = $child->nextSibling;
+                        
                     }else if($val2['simpleType'] == 1){
-                        $child = $child->nextSibling;
+                        if($child->nextSibling == NULL){
+                            $child = $child->parentNode->nextSibling;
+                        }
+                        else
+                            $child = $child->nextSibling;
                     }
-                    else{
-                        echo "\n".$var_name."=>:".$child->localName."\n";
+                    else{                        
+/*                         echo "\n".$var_name."=>:".$child->localName."\n"; */
                     }
                 }
             }
-            wsf_set_values($val2, $class_map, $child, $class1);
         }
     }
     else{
