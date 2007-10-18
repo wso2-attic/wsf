@@ -667,8 +667,8 @@ PHP_METHOD (ws_message, __construct)
 		}
 
 		if(zend_hash_find(ht, WS_LAST_MESSAGE, sizeof(WS_LAST_MESSAGE),
-			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
-				add_property_stringl(object, WS_LAST_MESSAGE, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp) ,1);
+			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
+				add_property_bool(object, WS_LAST_MESSAGE, Z_BVAL_PP(tmp));
 		}
 
 		if(zend_hash_find(ht, WS_TO, sizeof(WS_TO), 

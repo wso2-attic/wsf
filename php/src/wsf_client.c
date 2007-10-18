@@ -1129,11 +1129,12 @@ wsf_client_do_request (
                 && input_type == WS_USING_MSG) {
                 /** if input_type is ws_message and continueSequence is true on client, we should look for 
 					false value in ws_message to end the sequence */
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                        "[wsf_client] willContinueSeq TRUE, Input type Message");
+
                 if (zend_hash_find (msg_ht, WS_LAST_MESSAGE,
                         sizeof (WS_LAST_MESSAGE),
-                        (void **) &msg_tmp) == SUCCESS
-                    && Z_BVAL_PP (msg_tmp) == 1) {
-
+                        (void **) &msg_tmp) == SUCCESS && Z_BVAL_PP (msg_tmp) == 1){
                     ws_client_will_continue_sequence = 0;
                     if (rm_spec_version == WS_RM_VERSION_1_0) {
                         axutil_property_t *last_msg_prop =
@@ -1145,7 +1146,6 @@ wsf_client_do_request (
                         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                             "[wsf_client] seting Sandesha2LastMessage");
                     }
-
                 }
                          /** END LastMessage */
             } else if (!ws_client_will_continue_sequence) {
