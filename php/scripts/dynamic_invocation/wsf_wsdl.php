@@ -61,11 +61,18 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     if(!$wsdl_location)
         return "WSDL is not found";
     $is_multiple_interfaces = FALSE;
+
+    // Load WSDL as DOM
+    $wsdl_dom = new DOMDocument();
+    if(!$wsdl_dom->load($wsdl_location))
+        return "WSDL could not be loaded.";
+   
+    $wsdl_dom->preserveWhiteSpace = false;
 /* changing code for processing mutiple port types in wsdl 1.1 */
-    $is_multiple_interfaces = wsf_is_mutiple_port_types($wsdl_location);
+    $is_multiple_interfaces = wsf_is_mutiple_port_types($wsdl_dom);
 
     if ($is_multiple_interfaces == FALSE){
-        $wsdl_dom = wsf_get_wsdl_dom($wsdl_location, $xslt_location);
+        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $xslt_location);
         
         if(!$wsdl_dom)
             return "error creating WSDL Dom Document";
@@ -73,17 +80,18 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
         $sig_model_dom = wsf_get_sig_model_dom($wsdl_dom, $xslt_location);
     }
     else {
-        $wsdl_dom = wsf_get_wsdl_dom($wsdl_location, $xslt_location);
+        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $xslt_location);
         $sig_model_dom = wsf_get_sig_model_dom($wsdl_dom, $xslt_location);
-        
+        $schema_node = wsf_get_schema_node($wsdl_11_dom, $wsdl_dom); 
+
         $sig_model_dom = wsf_process_multiple_interfaces($wsdl_dom, $sig_model_dom, $xslt_location);
     }
-        
-    if ($is_wsdl_11 == TRUE && $wsdl_11_dom )
-        $schema_node = wsf_get_schema_node($wsdl_11_dom);
-    else
-        $schema_node = wsf_get_schema_node($wsdl_dom);
-    
+
+/*     if ($is_wsdl_11 == TRUE && $wsdl_11_dom ) */
+/*         $schema_node = wsf_get_schema_node($wsdl_11_dom); */
+    if ($is_wsdl_11 == FALSE && !$wsdl_11_dom )
+         $schema_node = wsf_get_schema_node($wsdl_dom); 
+
     if(!$sig_model_dom)
         return "error creating intermediate model";
    
@@ -103,7 +111,6 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
             return  NULL;
         $policy_array = wsf_get_all_policies($wsdl_dom, $binding_node, $operation_name);
     }
-       
     $operation = wsf_find_operation($sig_model_dom, $operation_name, $endpoint_address, $is_multiple_interfaces);
 
     if(!$operation){
@@ -147,11 +154,9 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     return $return_value;
 }
 
-function wsf_is_mutiple_port_types($wsdl_location)
+function wsf_is_mutiple_port_types($wsdl_dom)
 {
-    $wsdl_dom = new DOMDocument();
-    $wsdl_dom->preserveWhiteSpace = false;
-    if($wsdl_dom->load($wsdl_location)){
+    if($wsdl_dom){
         $child_list = $wsdl_dom->childNodes;
         foreach($child_list as $child){
             if ($child->localName == WSF_DESCRIPTION)
@@ -173,9 +178,11 @@ function wsf_is_mutiple_port_types($wsdl_location)
 
 function wsf_process_multiple_interfaces($wsdl_dom, $sig_model_dom, $xslt_location)
 {
+
     $wsdl_2_0_child_list = $wsdl_dom->firstChild->childNodes;
     $interface_array = array();
     $i = 1 ;
+  
     foreach($wsdl_2_0_child_list as $interface_child){
         if($interface_child->localName == 'interface'){
             $interface_array[$i] = $interface_child->attributes->getNamedItem('name')->value;
@@ -184,12 +191,16 @@ function wsf_process_multiple_interfaces($wsdl_dom, $sig_model_dom, $xslt_locati
     }
     $sig_service_array = array();
     $no_of_interfaces = count($interface_array);
-    for($j = 1 ; $j <= $no_of_interfaces; $j++){
-         $wsdl_dom1 = new DomDocument();
-        $wsdl_dom1->preserveWhiteSpace = false;
-        $wsdl_dom1->loadXML($wsdl_dom->saveXML());
-        //echo $wsdl_dom1->saveXML();
-        $wsdl_2_0_child_list1 = $wsdl_dom1->firstChild->childNodes;
+  
+
+    $wsdl_dom2 = new DomDocument();
+    $wsdl_dom2->preserveWhiteSpace = false;
+    $wsdl_dom2->loadXML($wsdl_dom->saveXML());
+
+    $wsdl_2_0_child_list2 = $wsdl_dom2->firstChild->childNodes;
+    
+  for($j = 1 ; $j <= $no_of_interfaces; $j++){
+      $wsdl_2_0_child_list1 = $wsdl_dom2->firstChild->childNodes;
         foreach($wsdl_2_0_child_list1 as $service_child){
             if($service_child->localName == 'service'){
                 $old_attr = $service_child->getAttribute('interface');
@@ -197,19 +208,21 @@ function wsf_process_multiple_interfaces($wsdl_dom, $sig_model_dom, $xslt_locati
                 $service_child->setAttribute('interface', "tns:".$interface_array[$j]);
             }
         }
-        $tmp_sig_model = wsf_get_sig_model_dom($wsdl_dom1, $xslt_location);
-        //echo $tmp_sig_model->saveXML()."\nelement".$j."\n\n";
+      
+        $tmp_sig_model = wsf_get_sig_model_dom($wsdl_dom2, $xslt_location);
+      
+      
         $services_node = $tmp_sig_model->firstChild;
         $service_child_list = $services_node->childNodes;
         foreach($service_child_list as $service_child){
             if($service_child->localName == 'service' && $service_child->hasAttributes()){
                 $service_endpoint = $service_child->attributes->getNamedItem('endpoint')->value;
                 $operations_child_list = $service_child->childNodes;
+                
                 foreach($operations_child_list as $operations_child){
                     if($operations_child->localName == 'operations'){
                         $operations_name = $operations_child->attributes->getNamedItem('name')->value;
                         if(strstr($service_endpoint, $operations_name)){
-                            //     $sig_service_array[strstr($service_endpoint, $operations_name)] = $tmp_sig_model->saveXML($service_child);
                             $sig_service_array[strstr($service_endpoint, $operations_name)] = $service_child;
                         }
                     }
@@ -217,14 +230,14 @@ function wsf_process_multiple_interfaces($wsdl_dom, $sig_model_dom, $xslt_locati
             }
         }
     }
-    $created_sig_dom = new DOMDocument('1.0', 'iso-8859-1');
-    $element = $created_sig_dom->createElement('services');
-    $created_sig_dom->appendChild($element);
-    foreach($sig_service_array as $value){
-        wsf_schema_appendNode($element, $value, $created_sig_dom);
-    }
+  $created_sig_dom = new DOMDocument('1.0', 'iso-8859-1');
+  $element = $created_sig_dom->createElement('services');
+  $created_sig_dom->appendChild($element);
+  foreach($sig_service_array as $value){
+      wsf_schema_appendNode($element, $value, $created_sig_dom);
+  }
+  
     return $created_sig_dom;
-//    echo $created_sig_dom->saveXML();
     
 }
 
@@ -234,19 +247,17 @@ function wsf_process_multiple_interfaces($wsdl_dom, $sig_model_dom, $xslt_locati
  * @param string $wsdl_location 
  * @return DomDocument $wsdl_dom DomDocument of WSDL2.0 
  */
-function wsf_get_wsdl_dom($wsdl_location, $xslt_location)
+function wsf_get_wsdl_dom($wsdl_dom, $xslt_location)
 {
     require_once('wsf_wsdl_consts.php');
-
-    $wsdl_dom = new DOMDocument();
+   
     $xslt_wsdl_20_dom = new DOMDocument();
     $xslt_11_to_20_dom = new DOMDocument();
     $xslt_11_to_20_dom->preserveWhiteSpace = false;
-    $wsdl_dom->preserveWhiteSpace = false;
     $xslt = new XSLTProcessor();
     global $wsdl_11_dom, $is_wsdl_11;
    
-    if($wsdl_dom->load($wsdl_location)){
+    if($wsdl_dom){
         $child_list = $wsdl_dom->childNodes;
         foreach($child_list as $child){
             if($child->localName == WSF_DEFINITION){ 
@@ -288,7 +299,6 @@ function wsf_get_sig_model_dom(DomDocument $wsdl_dom, $xslt_location)
 
     $xslt_dom  = new DOMDocument();
     $xsl = new XSLTProcessor();
-
     if($xslt_dom->load($xslt_location."/wsdl2sig.xslt")){
         $xsl->importStyleSheet($xslt_dom);
         return $xsl->transformToDoc($wsdl_dom);
@@ -368,7 +378,7 @@ function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $endpoi
         $operation = NULL;
         $services_node = $sig_model_dom->firstChild;
         $services_childs_list = $services_node->childNodes;
-//        echo $sig_model_dom->saveXML();
+
         foreach($services_childs_list as $child){
             if($child->tagName == WSF_SERVICE && $child->attributes->getNamedItem(WSF_ADDRESS)->value == $endpoint_address){
                 $service_node = $child;
@@ -547,13 +557,12 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
     else{
         $temp_param_struct = array();
 
-        if(($is_doc == TRUE)  && $signature_node){
+        if(($is_doc == TRUE)  && $signature_node){;
             if($signature_node->firstChild->tagName == WSF_PARAMS){ /* TODO - what if it is not a wrapper element */
                 if($signature_node->firstChild->hasAttributes()){
                     $params_attr = $signature_node->firstChild->attributes;
                     $ele_name = $params_attr->getNamedItem(WSF_WRAPPER_ELEMENT)->value;
-                    // if($ele_name == $operation_name){//echo "sdfdsf";
-                        /** this is wrapper element */
+                    /** this is wrapper element */
                     $child_array = array();
                     $ele_ns = $params_attr->getNamedItem(WSF_WRAPPER_ELEMENT_NS)->value;
                     $child_array[WSF_NS] = $ele_ns;
@@ -1126,10 +1135,16 @@ function wsf_process_response($response_payload_string, $response_sig_model_stri
  * @param DomDocument $wsdl_dom WSDL2.0 DomDocument
  * @return DomNode $schema_node Cloned schema node
  */
-function wsf_get_schema_node($wsdl_dom)
+function wsf_get_schema_node(&$wsdl_dom, &$wsdl_dom2 = NULL)
 {
     require_once('wsf_wsdl_consts.php');
 
+    
+    static $schema_node = NULL;
+    
+    if ($schema_node != NULL)
+        return $schema_node; // Asume it is a single WSDL
+   
     $root_node = $wsdl_dom->firstChild;
     $root_child_list = $root_node->childNodes;
     foreach($root_child_list as $childs){
@@ -1164,7 +1179,64 @@ function wsf_get_schema_node($wsdl_dom)
                             $tmp_import_schema_node = $import_schema_child;
                             $cloned_import_schema_node = $tmp_import_schema_node->cloneNode(TRUE);
                             wsf_schema_appendNode($schema_node, $tmp_import_schema_node, $wsdl_dom);
-                                     
+                        }
+                    }
+                }
+            }
+            $wsdl_2_0_child_list2 = $wsdl_dom->firstChild->childNodes;
+            foreach($wsdl_2_0_child_list2 as $types_child){
+                if($types_child->localName == 'types'){
+                    $types_child_list = $types_child->childNodes;
+                    foreach($types_child_list as $schema_child){
+                        if($schema_child->localName == 'schema'){
+                            $schema_child_list = $schema_child->childNodes;
+                                for ($i = $schema_child_list->length; $i >= 0; $i--) {
+                                    $import_child = $schema_child_list->item($i);
+                                    if($import_child->localName == 'import' && $import_child->attributes->getNamedItem('schemaLocation')){
+                                        $schema_child->removeChild($import_child);
+                                        
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            
+          if($wsdl_dom2){
+                $wsdl_2_0_child_list = $wsdl_dom2->firstChild->childNodes;
+                foreach($wsdl_2_0_child_list as $types_child){
+                    if($types_child->localName == 'types'){
+                        $types_child_list = $types_child->childNodes;
+                        foreach($types_child_list as $schema_child){
+                            if($schema_child->localName == 'schema'){
+                                $types_child->removeChild($schema_child);
+                                foreach($schema_node->childNodes as $schema3_child)
+                                    wsf_schema_appendNode($types_child, $schema3_child, $wsdl_dom2);
+                                
+                            }
+                        }
+
+                    }
+                }
+          }
+
+            if($wsdl_dom2){
+                $wsdl_2_0_child_list = $wsdl_dom2->firstChild->childNodes;
+                foreach($wsdl_2_0_child_list as $types_child){
+                    if($types_child->localName == 'types'){
+                        $types_child_list = $types_child->childNodes;
+                        foreach($types_child_list as $schema_child){
+                            if($schema_child->localName == 'schema'){
+                                $schema_child_list = $schema_child->childNodes;
+                                for ($i = $schema_child_list->length; $i >= 0; $i--) {
+                                    //foreach($schema_child_list as $import_child){
+                                    $import_child = $schema_child_list->item($i);
+                                    if($import_child->localName == 'import' && $import_child->attributes->getNamedItem('schemaLocation')){
+                                        $schema_child->removeChild($import_child);
+                                        
+                                }
+                                }
+                            }
                         }
                     }
                 }
