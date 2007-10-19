@@ -107,6 +107,10 @@ WSRequest.prototype.send = function(payload) {
     //  WS-A recommends keeping these two items in sync.
     var soapAction = this._optionSet["action"];
 
+    try {
+        netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead");
+    } catch(e) {
+    }
     this._xmlhttp.open(method, this._uri, this._async);
 
     switch (this._soapVer) {
@@ -183,7 +187,10 @@ WSRequest.prototype._processResult = function () {
                 responseXMLdoc.loadXML(this._xmlhttp.responseText);
                 var response = responseXMLdoc.documentElement;
             } else {
-                var response = this._xmlhttp.responseXML.documentElement;
+                var parser = new DOMParser();
+                var responseXMLdoc = parser.parseFromString(this._xmlhttp.responseText,"text/xml");
+                var response = responseXMLdoc.documentElement;
+                response.normalize();  //fixes data getting truncated at 4096 characters
             }
             if (this._soapVer == 1.1)
                 var soapNamespace = "http://schemas.xmlsoap.org/soap/envelope/";
@@ -195,10 +202,6 @@ WSRequest.prototype._processResult = function () {
                 var newDoc;
                 if (browser == "gecko")
                 {
-                    try {
-                        netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead");
-                    } catch(e) {
-                    }
                     var newDoc = document.implementation.createDocument("", "", null);
                     newDoc.appendChild(soapBody.firstChild);
                 }
