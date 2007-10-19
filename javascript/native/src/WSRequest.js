@@ -163,8 +163,16 @@ WSRequest.prototype._processResult = function () {
     if (this._soapVer == 0) {
         this.responseText = this._xmlhttp.responseText;
         this.responseXML = this._xmlhttp.responseXML;
-        this.error = null;
-        // How would I tell?
+
+        var httpstatus = this._xmlhttp.status;
+        if (httpstatus == '200' || httpstatus == '202') {
+            this.error = null;
+        } else {
+            this.error = new WebServiceError();
+            this.error.code = "HTTP " + this._xmlhttp.status;
+            this.error.reason = "Server connection has failed.";
+            this.error.detail = this._xmlhttp.statusText;
+        }
     } else {
         var browser = WSRequest.util._getBrowser();
 
@@ -209,13 +217,11 @@ WSRequest.prototype._processResult = function () {
                     if (this._soapVer == 1.2) {
                         this.error.code = WSRequest.util._stringValue(WSRequest.util._firstElement(fault, soapNamespace, "Value"));
                         this.error.reason = WSRequest.util._stringValue(WSRequest.util._firstElement(fault, soapNamespace, "Text"));
-                        this.error.detail =
-                        WSRequest.util._serializeToString(WSRequest.util._firstElement(fault, soapNamespace, "Detail"));
+                        this.error.detail = WSRequest.util._firstElement(fault, soapNamespace, "Detail");
                     } else {
                         this.error.code = WSRequest.util._stringValue(fault.getElementsByTagName("faultcode")[0]);
                         this.error.reason = WSRequest.util._stringValue(fault.getElementsByTagName("faultstring")[0]);
-                        this.error.detail =
-                        WSRequest.util._serializeToString(fault.getElementsByTagName("detail")[0]);
+                        this.error.detail = fault.getElementsByTagName("detail")[0];
                     }
                 }
             } else {
@@ -228,12 +234,18 @@ WSRequest.prototype._processResult = function () {
             // If this block being executed; it's due to server connection has falied. 
             this.responseXML = null;
             this.responseText = "";
-            this.error = new WebServiceError();
             try {
-                this.error.code = "HTTP" + this._xmlhttp.status;
-                this.error.reason = "Server connection has failed.";
-                this.error.detail = this._xmlhttp.statusText;
+                var httpstatus = this._xmlhttp.status;
+                if (httpstatus == '200' || httpstatus == '202') {
+                    this.error = null;
+                } else {
+                    this.error = new WebServiceError();
+                    this.error.code = "HTTP " + this._xmlhttp.status;
+                    this.error.reason = "Server connection has failed.";
+                    this.error.detail = this._xmlhttp.statusText;
+                }
             } catch (e) {
+                this.error = new WebServiceError();
                 this.error.code = null;
                 this.error.reason = "Server connection has failed.";
                 this.error.detail = e.toString();
