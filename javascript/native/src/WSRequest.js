@@ -200,14 +200,11 @@ WSRequest.prototype._processResult = function () {
             var soapBody = WSRequest.util._firstElement(response, soapNamespace, "Body");
             if (soapBody != null && soapBody.hasChildNodes()) {
                 var newDoc;
-                if (browser == "gecko")
-                {
-                    var newDoc = document.implementation.createDocument("", "", null);
-                    newDoc.appendChild(soapBody.firstChild);
-                }
-
                 if (browser == "ie" || browser == "ie7") {
-                    var newDoc = new ActiveXObject("Microsoft.XMLDOM");
+                    newDoc = new ActiveXObject("Microsoft.XMLDOM");
+                    newDoc.appendChild(soapBody.firstChild);
+                } else {
+                    newDoc = document.implementation.createDocument("", "", null);
                     newDoc.appendChild(soapBody.firstChild);
                 }
 
