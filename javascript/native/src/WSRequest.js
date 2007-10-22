@@ -172,24 +172,26 @@ WSRequest.prototype._processResult = function () {
         if (httpstatus == '200' || httpstatus == '202') {
             this.error = null;
         } else {
-            this.error = new WebServiceError();
-            this.error.code = "HTTP " + this._xmlhttp.status;
-            this.error.reason = "Server connection has failed.";
-            this.error.detail = this._xmlhttp.statusText;
+            this.error = new WebServiceError(this._xmlhttp.statusText, this.responseText, "HTTP " + this._xmlhttp.status);
         }
     } else {
         var browser = WSRequest.util._getBrowser();
 
         if (this._xmlhttp.responseText != "") {
-            if ((browser == "ie" || browser == "ie7") && this._xmlhttp.responseXML.documentElement == null) {
-                // unrecognized media type (probably application/soap+xml)
-                var responseXMLdoc = new ActiveXObject("Microsoft.XMLDOM");
-                responseXMLdoc.loadXML(this._xmlhttp.responseText);
-                var response = responseXMLdoc.documentElement;
+            var response;
+            if (browser == "ie" || browser == "ie7") {
+                if (this._xmlhttp.responseXML.documentElement == null) {
+                    // unrecognized media type (probably application/soap+xml)
+                    var responseXMLdoc = new ActiveXObject("Microsoft.XMLDOM");
+                    responseXMLdoc.loadXML(this._xmlhttp.responseText);
+                    response = responseXMLdoc.documentElement;
+                } else {
+                    response = this._xmlhttp.responseXML.documentElement;
+                }
             } else {
                 var parser = new DOMParser();
                 var responseXMLdoc = parser.parseFromString(this._xmlhttp.responseText,"text/xml");
-                var response = responseXMLdoc.documentElement;
+                response = responseXMLdoc.documentElement;
                 response.normalize();  //fixes data getting truncated at 4096 characters
             }
             if (this._soapVer == 1.1)
@@ -502,54 +504,52 @@ WSRequest.util = {
             inputSerialization = options[HTTPInputSerialization];
         }
 
-        // If serialization options have been specified and the content has been provided, build the payload.
-        if (resultValues["url"] != null) {
-            //create new document from string
-            var xmlDoc;
+        //create new document from string
+        var xmlDoc;
 
-            // Parser is browser specific.
-            var browser = WSRequest.util._getBrowser();
-            if (browser == "ie" || browser == "ie7") {
-                //create a DOM from content string.
-                xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+        // Parser is browser specific.
+        var browser = WSRequest.util._getBrowser();
+        if (browser == "ie" || browser == "ie7") {
+            //create a DOM from content string.
+            xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+            if (content != "")
                 xmlDoc.loadXML(content);
-            } else {
-                //create a DOMParser to get DOM from content string.
-                var xmlParser = new DOMParser();
+        } else {
+            //create a DOMParser to get DOM from content string.
+            var xmlParser = new DOMParser();
+            if (content != "")
                 xmlDoc = xmlParser.parseFromString(content, "text/xml");
+        }
+
+        // If the payload is to be URL encoded, other options have to be examined.
+        if (inputSerialization == "application/x-www-form-urlencoded" || inputSerialization == "application/xml") {
+
+            resultValues["url"] = options[HTTPLocation];
+
+            // If templates are specified and a valid payload is available, process, else just return original URI.
+            if (options[HTTPLocation] != null && xmlDoc != null && xmlDoc.hasChildNodes()) {
+                // Ideally .documentElement should be used instead of .firstChild, but this does not work.
+                var rootNode = xmlDoc.firstChild;
+
+                // Process payload, distributing content across the URL and body as specified.
+                resultValues = WSRequest.util._processNode(options, resultValues, rootNode, paramSeparator,
+                        inputSerialization);
+
             }
+            // Globally replace any remaining template tags with empty strings.
+            var allTemplateRegex = new RegExp("\{.*\}", "ig");
+            resultValues["url"] = resultValues["url"].replace(allTemplateRegex, "");
 
-            // If the payload is to be URL encoded, other options have to be examined.
-            if (inputSerialization == "application/x-www-form-urlencoded" || inputSerialization == "application/xml") {
+            // Append processed HTTPLocation value to URL.
+            resultValues["url"] = WSRequest.util._joinUrlToLocation(url, resultValues["url"]);
 
-                // If templates are specified and a valid payload is available, process, else just return original URI.
-                if (options[HTTPLocation] != null && xmlDoc != null && xmlDoc.hasChildNodes()) {
-                    // Ideally .documentElement should be used instead of .firstChild, but this does not work.
-                    var rootNode = xmlDoc.firstChild;
-                    resultValues["url"] = options[HTTPLocation];
-
-                    // Process payload, distributing content across the URL and body as specified.
-                    resultValues = WSRequest.util._processNode(options, resultValues, rootNode, paramSeparator,
-                            inputSerialization);
-
-                    // Globally replace any remaining template tags with empty strings.
-                    var allTemplateRegex = new RegExp("\{.*\}", "ig");
-                    resultValues["url"] = resultValues["url"].replace(allTemplateRegex, "");
-
-                    // Append processed HTTPLocation value to URL.
-                    resultValues["url"] = WSRequest.util._joinUrlToLocation(url, resultValues["url"]);
-                } else {
-                    resultValues["url"] = url;
-                }
-
-                // Sending the XML in the request body.
-                if (inputSerialization == "application/xml") {
-                    resultValues["body"] = content;
-                }
-            } else if (inputSerialization == "multipart/form-data") {
-                // Just throw an exception for now - will try to use browser features in a later release.
-                throw new WebServiceError("Unsupported serialization option.", "WSRequest.util._buildHTTPpayload doesn't yet support multipart/form-data serialization.");
+            // Sending the XML in the request body.
+            if (inputSerialization == "application/xml") {
+                resultValues["body"] = content;
             }
+        } else if (inputSerialization == "multipart/form-data") {
+            // Just throw an exception for now - will try to use browser features in a later release.
+            throw new WebServiceError("Unsupported serialization option.", "WSRequest.util._buildHTTPpayload doesn't yet support multipart/form-data serialization.");
         }
         return resultValues;
     },
