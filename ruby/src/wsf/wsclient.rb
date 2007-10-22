@@ -5,7 +5,10 @@ require 'rexml/document'
 
 class WSClient
 
-  def initialize (options)
+  # Create a new WSClient object.
+  # All the instance level initialization is done here
+  
+  def initialize(options)
     # Create Environment
     log_file_name = options.has_key?(:log_file_name) ? options[:log_file_name] : "wsf_ruby_client.log"
     @env = WSFC::axutil_env_create_all(log_file_name, WSFC::AXIS2_LOG_LEVEL_TRACE)
@@ -57,17 +60,20 @@ class WSClient
     end
   end
 
+  # This method is used to do a blocking request call.
+  # message can be an XML string, a REXML object or a WSMessage.
+  # A WSFault is thown if an error occurs while a message is being sent.
 
-  def request (message)
+  def request(message)
     if @svc_client.nil? then
       WSFC::axis2_log_error(@env, "[wsf-ruby] Service client not created")
       return nil
     end
    
     # Create request payload 
-    request_axiom_node = message_to_axiom_node(message)
-    if request_axiom_node.nil? then
-      WSFC::axis2_log_error(@env, "[wsf-ruby] Failed to create a valid AXIOM node for request")
+    request_axiom_payload = message_to_axiom_node(message)
+    if request_axiom_payload.nil? then
+      WSFC::axis2_log_error(@env, "[wsf-ruby] Failed to create a valid AXIOM payload for request")
       return nil
     end
    
@@ -88,49 +94,13 @@ class WSClient
       WSFC::axis2_options_set_soap_action(@client_options, @env, soap_action_str)
     end unless action.empty?
 
-    # Set Addressing options
-    use_wsa = message_property(:use_wsa, message).to_s.upcase
-    if (use_wsa.eql? "1.0" or use_wsa.eql? "SUBMISSION" or use_wsa.eql? "TRUE") and (!action.empty?) then
-      # Action
-      WSFC::axis2_options_set_action(@client_options, @env, action)
-      
-      # From
-      from = message_property(:from, message).to_s
-      begin
-        from_end_point_ref = WSFC::axis2_endpoint_ref_create(@env, from)
-        WSFC::axis2_options_set_from(@client_options, @env, from_end_point_ref)
-      end unless from.empty?
-     
-      # Reply_to
-      reply_to = message_property(:reply_to, message).to_s
-      begin
-        reply_to_end_point_ref = WSFC::axis2_endpoint_ref_create(@env, reply_to)
-        WSFC::axis2_options_set_reply_to(@client_options, @env, reply_to_end_point_ref)
-      end unless reply_to.empty?
-      
-      # Fault_to
-      fault_to = message_property(:fault_to, message).to_s
-      begin
-        fault_to_end_point_ref = WSFC::axis2_endpoint_ref_create(@env, fault_to)
-        WSFC::axis2_options_set_fault_to(@client_options, @env, fault_to_end_point_ref)
-      end unless fault_to.empty?
-      
-      WSFC::axis2_svc_client_engage_module(@svc_client, @env, WSFC::AXIS2_MODULE_ADDRESSING)
+    # Handle Addressing options
+    handle_addressing(message)
 
-      if use_wsa.eql? "SUBMISSION" then
-        property = WSFC::axutil_property_create_with_args(@env,
-                                                          0,
-                                                          WSFC::AXIS2_TRUE,
-                                                          0,
-                                                          WSFC::axutil_strdup(@env, WSFC::AXIS2_WSA_NAMESPACE_SUBMISSION))
-        WSFC::axis2_options_set_property(@client_options,
-                                         @env,
-                                         WSFC::AXIS2_WSA_VERSION,
-                                         property)
-      end
-    end
-
-    response_axiom_node = WSFC::axis2_svc_client_send_receive(@svc_client, @env, request_axiom_node)
+    # Handle outgoing attachments
+    handle_outgoing_attachments(message, request_axiom_payload)
+ 
+    response_axiom_payload = WSFC::axis2_svc_client_send_receive(@svc_client, @env, request_axiom_payload)
 
     if WSFC::axis2_svc_client_get_last_response_has_fault(@svc_client, @env) == WSFC::AXIS2_TRUE then # SOAP fault occurred
       last_soap_fault_e = last_soap_fault_exception
@@ -141,21 +111,75 @@ class WSClient
         raise last_soap_fault_e
       end
     else
-      if response_axiom_node.nil? then # No response from the server
+      if response_axiom_payload.nil? then # No response from the server
         raise WSFault.new("NULL-REPLY", "No response from the server")
       else
-        return axiom_node_to_message(response_axiom_node)
+        return axiom_node_to_message(response_axiom_payload)
       end
     end
   end
 
+  # This method is used to do a send call.
+  # message can be an XML string, a REXML object or a WSMessage.
+  # A WSFault is thown if an error occurs while a message is being sent.
  
-  def send (message)
+  def send(message)
+    if @svc_client.nil? then
+      WSFC::axis2_log_error(@env, "[wsf-ruby] Service client not created")
+      return
+    end
+   
+    # Create request payload 
+    request_axiom_payload = message_to_axiom_node(message)
+    if request_axiom_payload.nil? then
+      WSFC::axis2_log_error(@env, "[wsf-ruby] Failed to create a valid AXIOM node for request")
+      return
+    end
+   
+    # Set end point 
+    to = message_property(:to, message).to_s
+    if to.empty? then
+      WSFC::axis2_log_error(@env, "[wsf-ruby] Can not find end point for request")
+      return
+    end
     
+    to_end_point_ref = WSFC::axis2_endpoint_ref_create(@env, to)
+    WSFC::axis2_options_set_to(@client_options, @env, to_end_point_ref)
+    
+    # Set SOAP action
+    action = message_property(:action, message).to_s
+    begin
+      soap_action_str = WSFC::axutil_string_create(@env, action)
+      WSFC::axis2_options_set_soap_action(@client_options, @env, soap_action_str)
+    end unless action.empty?
+
+    # Hadle Addressing options
+    handle_addressing(message)
+
+    # Handle outgoing attachments
+    handle_outgoing_attachments(message, request_axiom_payload)
+
+    status = WSFC::axis2_svc_client_send_robust(@svc_client, @env, request_axiom_payload)
+
+    if WSFC::axis2_svc_client_get_last_response_has_fault(@svc_client, @env) == WSFC::AXIS2_TRUE then # SOAP fault occurred
+      last_soap_fault_e = last_soap_fault_exception
+      
+      if last_soap_fault_e.nil? then
+        raise WSFault.new("SOAP-FAULT-ERROR", "Malformatted SOAP fault message")
+      else
+        raise last_soap_fault_e
+      end
+    else
+      if status == WSFC::AXIS2_FALSE then
+        raise WSFault.new("SEND-ERROR", "Error occurred while sending message")
+      end
+    end
   end
 
+  # This method is used to create an AXIOM node with respect to a message.
+  # message can be an XML string, a REXML object or a WSMessage.
   
-  def message_to_axiom_node (message)
+  def message_to_axiom_node(message)
     str_payload = ""
     
     if message.kind_of? String then
@@ -206,18 +230,10 @@ class WSClient
     return axiom_node
   end
 
-
-  def message_property(property_name, message)
-    if message.kind_of? WSMessage then
-      msg_property = message.property(property_name)
-      return msg_property unless msg_property.nil?
-    end
-    
-    return @options.has_key?(property_name) ? @options[property_name] : nil
-  end
-
+  # This method is used to create a WSMessage with respect to a given AXIOM node
+  # This is used to create the response message in a request call
   
-  def axiom_node_to_message (axiom_node)
+  def axiom_node_to_message(axiom_node)
     # Create XML writer
     xml_writer = WSFC::axiom_xml_writer_create_for_memory(@env,
                                                           "utf-8",
@@ -238,6 +254,30 @@ class WSClient
     return message
   end
 
+  # This method is used to get the value of the property with the given name
+  # which is spcified when the client is created
+
+  def client_property(property_name)
+    return @options.has_key?(property_name) ? @options[property_name] : nil
+  end
+
+  # This method is used to get the value of property with the given name.
+  # The given property can be something spcified when the client is created
+  # If the message is of type WSMessage, the propery may be specified in the message
+  # and in which case, that value gets the priority
+
+  def message_property(property_name, message)
+    if message.kind_of? WSMessage then
+      msg_property = message.property(property_name)
+      return msg_property unless msg_property.nil?
+    end
+    
+    return @options.has_key?(property_name) ? @options[property_name] : nil
+  end
+
+  # This method is used to create a WSFault object when a SOAP fault occurs
+  # It is required to throw a WSFault instance when a SOAP fault happens while
+  # sending or requesting
  
   def last_soap_fault_exception
     soap_envelope = WSFC::axis2_svc_client_get_last_response_soap_envelope(@svc_client, @env)
@@ -284,9 +324,100 @@ class WSClient
     return WSFault.new(code, reason, role, detail, xml)
   end
 
+  # This method is used to engage WS-Addressing specifications
+  # All addressing specific manipulations have to be done inside this method
+  
+  def handle_addressing(message)
+    return unless message.kind_of? WSMessage    
+
+    use_wsa = client_property(:use_wsa).to_s.upcase
+    action = message_property(:action, message).to_s
+
+    if (use_wsa.eql? "1.0" or use_wsa.eql? "SUBMISSION" or use_wsa.eql? "TRUE") and (!action.empty?) then
+      # Action
+      WSFC::axis2_options_set_action(@client_options, @env, action)
+      
+      # From
+      from = message_property(:from, message).to_s
+      begin
+        from_end_point_ref = WSFC::axis2_endpoint_ref_create(@env, from)
+        WSFC::axis2_options_set_from(@client_options, @env, from_end_point_ref)
+      end unless from.empty?
+     
+      # Reply_to
+      reply_to = message_property(:reply_to, message).to_s
+      begin
+        reply_to_end_point_ref = WSFC::axis2_endpoint_ref_create(@env, reply_to)
+        WSFC::axis2_options_set_reply_to(@client_options, @env, reply_to_end_point_ref)
+      end unless reply_to.empty?
+      
+      # Fault_to
+      fault_to = message_property(:fault_to, message).to_s
+      begin
+        fault_to_end_point_ref = WSFC::axis2_endpoint_ref_create(@env, fault_to)
+        WSFC::axis2_options_set_fault_to(@client_options, @env, fault_to_end_point_ref)
+      end unless fault_to.empty?
+      
+      WSFC::axis2_svc_client_engage_module(@svc_client, @env, WSFC::AXIS2_MODULE_ADDRESSING)
+
+      if use_wsa.eql? "SUBMISSION" then
+        property = WSFC::axutil_property_create_with_args(@env,
+                                                          0,
+                                                          WSFC::AXIS2_TRUE,
+                                                          0,
+                                                          WSFC::axutil_strdup(@env, WSFC::AXIS2_WSA_NAMESPACE_SUBMISSION))
+        WSFC::axis2_options_set_property(@client_options,
+                                         @env,
+                                         WSFC::AXIS2_WSA_VERSION,
+                                         property)
+      end
+    end
+  end
+
+  # This method is used to handle attachments sent with a message
+  # All MTOM/XOP specific manipulations have to be done inside this method
+
+  def handle_outgoing_attachments(message, axiom_payload)
+    return unless message.kind_of? WSMessage
+
+    attachments = message_property(:attachments)
+    return if attachments.nil?
+    return unless attachments.kind_of? Hash
+    
+    enable_mtom = client_property(:use_mtom).to_s.upcase.eql?("FALSE") ? WSFC::AXIS2_FALSE : WSFC::AXIS2_TRUE
+    
+    default_content_type_ref = message_property(:default_attachment_content_type, message)
+    default_content_type = default_content_type_ref.nil? ? "application/octet-stream" : default_content_type_ref.to_s
+
+    WSFC::axis2_options_set_enable_mtom(@client_options, @env, enable_mtom)
+
+    pack_attachments(axiom_payload, attachments, enable_mtom, default_content_type)  
+  end  
+
+  # This method is used to pack attachments specified using the ":attachments" property
+  # in the outgoing payload according to cid information specified in "Include" tags
+
+  def pack_attachments(payload_node, attachments, enable_mtom, default_content_type)
+    if WSFC::axiom_node_get_node_type(payload_node, @env) == WSFC::AXIOM_ELEMENT then
+      
+    end
+  end
+
+  # This method is used to handle attachments received with a message
+  # All MTOM/XOP specific manipulations have to be done inside this method
+
+  def handle_incoming_attachments(message)
+    
+  end  
+
   private :message_to_axiom_node
-  private :message_property
   private :axiom_node_to_message
+  private :client_property
+  private :message_property
   private :last_soap_fault_exception
+  private :handle_addressing
+  private :handle_outgoing_attachments
+  private :pack_attachments
+  private :handle_incoming_attachments
 
 end

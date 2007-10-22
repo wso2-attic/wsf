@@ -29,6 +29,19 @@ typedef enum soap_version
     AXIOM_SOAP12
 } axiom_soap_version;
 
+typedef enum axiom_types_t
+{
+    AXIOM_INVALID = 0,
+    AXIOM_DOCUMENT,
+    AXIOM_ELEMENT,
+    AXIOM_DOCTYPE,
+    AXIOM_COMMENT,
+    AXIOM_ATTRIBUTE,
+    AXIOM_NAMESPACE,
+    AXIOM_PROCESSING_INSTRUCTION,
+    AXIOM_TEXT,
+    AXIOM_DATA_SOURCE
+} axiom_types_t;
 
 /* AXIS2_TRANSPORT_H */
 
