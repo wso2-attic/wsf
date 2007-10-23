@@ -366,7 +366,7 @@ wsf_client_set_addressing_options_to_options (
 
         from_epr = axis2_endpoint_ref_create (env, from);
 
-        axis2_options_set_reply_to (client_options, env, from_epr);
+        axis2_options_set_from (client_options, env, from_epr);
 
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
             "[wsf_client] from present %s", from);
