@@ -1,0 +1,20 @@
+Please follow the steps below to execute the "Flickr Sample"
+
+1. Execute following to generate a rails application.
+
+ rails ./script/generate controller index
+ rails ./script/generate controller search
+
+2. Replace following files in your rails application directory.
+
+ controllers/flickr_client.rb
+ controllers/flickr_controller.rb
+ views/flickr/index.rhtml
+ views/flickr/search.rhtml
+
+3. Edit the application.rb in your rails applications controller directory and add the following line.
+
+ ENV["AXIS2C_HOME"] = "/your/path/to/axis2c/deployment"
+
+
+
