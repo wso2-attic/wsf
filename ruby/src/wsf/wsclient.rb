@@ -381,8 +381,8 @@ class WSClient
     return unless message.kind_of? WSMessage
 
     attachments = message_property(:attachments, message)
-    #return if attachments.nil?
-    #return unless attachments.kind_of? Hash
+    return if attachments.nil?
+    return unless attachments.kind_of? Hash
     
     enable_mtom = client_property(:use_mtom).to_s.upcase.eql?("FALSE") ? WSFC::AXIS2_FALSE : WSFC::AXIS2_TRUE
     
@@ -398,7 +398,6 @@ class WSClient
   # in the outgoing payload according to cid information specified in "Include" tags
 
   def pack_attachments(node, attachments, enable_mtom, default_content_type)
-    puts "pack_attachments CALLED "
     if WSFC::axiom_node_get_node_type(node, @env) == WSFC::AXIOM_ELEMENT then
       node_element = WSFC::axiom_node_get_data_element_new(node, @env)
       return if node_element.nil?
@@ -424,10 +423,21 @@ class WSClient
             end
 
             href = WSFC::axiom_element_get_attribute_value_by_name(node_element, @env, "href")
-            if !href.nil? then
+            href.lstrip!
+            href.rstrip!
+
+            if href.length > 4 then
             
-             puts "************* href found ************" 
-            
+              cid = href[4..href.length - 1]
+
+              content = attachments[cid]
+
+              if !content.nil? then
+                
+                
+                
+              end
+
             end
 
           end

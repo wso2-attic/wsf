@@ -6,7 +6,7 @@ class WSMessage
     @str_payload = ""
     @rexml_payload = nil
     @properties = Hash.new
-    @attachments = Hash.new
+    #@attachments = Hash.new
     @cid_2_content_type = Hash.new
     @soap_headers = Array.new
 
