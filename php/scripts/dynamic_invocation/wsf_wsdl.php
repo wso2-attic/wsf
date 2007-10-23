@@ -81,7 +81,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     }
     else {
         $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $xslt_location);
-        $sig_model_dom = wsf_get_sig_model_dom($wsdl_dom, $xslt_location);
+//        $sig_model_dom = wsf_get_sig_model_dom($wsdl_dom, $xslt_location);/* this function is called inside wsf_process_multiple_interfaces .so no needed */
         $schema_node = wsf_get_schema_node($wsdl_11_dom, $wsdl_dom); 
 
         $sig_model_dom = wsf_process_multiple_interfaces($wsdl_dom, $sig_model_dom, $xslt_location);
