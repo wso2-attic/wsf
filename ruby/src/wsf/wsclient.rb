@@ -380,9 +380,9 @@ class WSClient
   def handle_outgoing_attachments(message, axiom_payload)
     return unless message.kind_of? WSMessage
 
-    attachments = message_property(:attachments)
-    return if attachments.nil?
-    return unless attachments.kind_of? Hash
+    attachments = message_property(:attachments, message)
+    #return if attachments.nil?
+    #return unless attachments.kind_of? Hash
     
     enable_mtom = client_property(:use_mtom).to_s.upcase.eql?("FALSE") ? WSFC::AXIS2_FALSE : WSFC::AXIS2_TRUE
     
@@ -397,9 +397,54 @@ class WSClient
   # This method is used to pack attachments specified using the ":attachments" property
   # in the outgoing payload according to cid information specified in "Include" tags
 
-  def pack_attachments(payload_node, attachments, enable_mtom, default_content_type)
-    if WSFC::axiom_node_get_node_type(payload_node, @env) == WSFC::AXIOM_ELEMENT then
+  def pack_attachments(node, attachments, enable_mtom, default_content_type)
+    puts "pack_attachments CALLED "
+    if WSFC::axiom_node_get_node_type(node, @env) == WSFC::AXIOM_ELEMENT then
+      node_element = WSFC::axiom_node_get_data_element_new(node, @env)
+      return if node_element.nil?
       
+      # Process current node
+      element_localname = WSFC::axiom_element_get_localname(node_element, @env)
+      if !element_localname.nil? and  WSFC::axutil_strcmp_new(element_localname, "Include") == WSFC::AXIS2_TRUE then
+      
+        namespace = WSFC::axiom_element_get_namespace(node_element, @env, node)
+        if !namespace.nil? then
+        
+          namespace_uri = WSFC::axiom_namespace_get_uri(namespace, @env)
+          if !namespace_uri.nil? and WSFC::axutil_strcmp_new(namespace_uri, "http://www.w3.org/2004/08/xop/include") == WSFC::AXIS2_TRUE then
+            
+            content_type = default_content_type          
+
+            parent_element = WSFC::axiom_node_get_parent_element(node, @env)
+            if !parent_element.nil? then
+              
+              cnt_type = WSFC::axiom_element_get_attribute_value_by_name(parent_element, @env, "xmlmime:contentType")
+              content_type = cnt_type unless cnt_type.nil?
+
+            end
+
+            href = WSFC::axiom_element_get_attribute_value_by_name(node_element, @env, "href")
+            if !href.nil? then
+            
+             puts "************* href found ************" 
+            
+            end
+
+          end
+
+        end
+
+      end
+
+      child_element_ite = WSFC::axiom_element_get_child_elements(node_element, @env, node)
+      return if child_element_ite.nil?
+
+      child_node = WSFC::axiom_child_element_iterator_next(child_element_ite, @env)
+      while !child_node.nil? do
+        pack_attachments(child_node, attachments, enable_mtom, default_content_type)
+        
+        child_node = WSFC::axiom_child_element_iterator_next(child_element_ite, @env)
+      end
     end
   end
 

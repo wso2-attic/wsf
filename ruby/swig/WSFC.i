@@ -139,6 +139,52 @@ axiom_types_t
 axiom_node_get_node_type(axiom_node_t       *om_node,
                          const axutil_env_t *env);
 
+%inline %{
+axiom_element_t *
+axiom_node_get_parent_element(axiom_node_t       *om_node,
+                              const axutil_env_t *env)
+{
+  axiom_node_t* parent_node = axiom_node_get_parent(om_node, env);
+  return (parent_node ? (axiom_element_t *)axiom_node_get_data_element(parent_node, env) : NULL);
+}
+%}
+
+%inline %{
+axiom_element_t *
+axiom_node_get_data_element_new(axiom_node_t  *om_node,
+                                const axutil_env_t *env)
+{
+  return (axiom_element_t *)axiom_node_get_data_element(om_node, env);
+}
+%}
+
+axiom_child_element_iterator_t *
+axiom_element_get_child_elements(axiom_element_t    *om_element,
+                                 const axutil_env_t *env,
+                                 axiom_node_t       *element_node);
+
+axiom_node_t *
+axiom_child_element_iterator_next(axiom_child_element_iterator_t *iterator,
+                                  const axutil_env_t             *env);
+
+axis2_char_t *
+axiom_element_get_localname(axiom_element_t    *om_element,
+                            const axutil_env_t *env);
+
+axiom_namespace_t *
+axiom_element_get_namespace(axiom_element_t    *om_element,
+                            const axutil_env_t *env,
+                            axiom_node_t       *ele_node);
+
+axis2_char_t *
+axiom_namespace_get_uri(axiom_namespace_t  *om_namespace,
+                        const axutil_env_t *env);
+
+axis2_char_t *
+axiom_element_get_attribute_value_by_name(axiom_element_t    *om_ele,
+                                          const axutil_env_t *env,
+                                          axis2_char_t       *attr_name);
+
 axiom_node_t * 
 axis2_svc_client_send_receive(axis2_svc_client_t *svc_client,
                               const axutil_env_t *env,
@@ -269,6 +315,15 @@ axutil_strdup_new(const axutil_env_t *env,
                   axis2_char_t       *ptr)
 {
   return (void *)axutil_strdup(env, (void *)ptr);        
+}
+%}
+
+%inline %{
+int
+axutil_strcmp_new(const axis2_char_t * s1,
+                  const axis2_char_t * s2)
+{
+  return ((axutil_strcmp(s1, s2) == 0) ? AXIS2_TRUE : AXIS2_FALSE);
 }
 %}
 
