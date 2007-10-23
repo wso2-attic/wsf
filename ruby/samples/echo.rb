@@ -16,7 +16,7 @@ begin
 
   res_message = client.request(req_payload_string)
 
-  if not res_message.empty? then
+  if not res_message.nil? then
     puts "Received OM: "<< "\n" << res_message.payload_to_s << "\n\n"
     puts "echo client invoke SUCCESSFUL!"
   else
@@ -36,5 +36,8 @@ rescue WSFault => wsfault
   puts "----------"
   puts wsfault.detail
   puts "----------"
+rescue => exception
+  puts "echo client invoke FAILED!\n"
+  puts "Exception : " << exception
 end
 

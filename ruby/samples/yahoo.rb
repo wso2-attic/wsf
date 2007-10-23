@@ -45,5 +45,6 @@ rescue WSFault => wsfault
   puts "----------"
   puts wsfault.detail
   puts "----------"
-
+rescue => exception
+  puts "Exception : " << exception
 end
