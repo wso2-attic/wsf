@@ -85,16 +85,6 @@
             <version>${stax.api.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.woden</groupId>
-            <artifactId>woden-api</artifactId>
-            <version>${woden.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.woden</groupId>
-            <artifactId>woden-impl-dom</artifactId>
-            <version>${woden.version}</version>
-        </dependency>
-        <dependency>
             <groupId>wsdl4j</groupId>
             <artifactId>wsdl4j</artifactId>
             <version>${wsdl4j.version}</version>
