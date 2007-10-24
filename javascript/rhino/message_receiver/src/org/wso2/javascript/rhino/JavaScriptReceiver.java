@@ -62,7 +62,6 @@ import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.UniqueTag;
-import org.mozilla.javascript.WrapFactory;
 import org.wso2.javascript.xmlimpl.XML;
 import org.wso2.javascript.xmlimpl.XMLList;
 
@@ -839,9 +838,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         if (Constants.XSD_DATETIME.equals(type)) {
             try {
                 Calendar calendar = ConverterUtil.convertToDateTime(value);
-                WrapFactory wrapFactory = new WrapFactory();
-                Date date = calendar.getTime();
-                return wrapFactory.wrapAsJavaObject(engine.getCx(), engine, date, Date.class);
+                return engine.getCx().newObject(engine, "Date", new Object[] { new Long(calendar.getTimeInMillis()) });
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "date time"));
             }
@@ -849,8 +846,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         if (Constants.XSD_DATE.equals(type)) {
             try {
                 Date date = ConverterUtil.convertToDate(value);
-                WrapFactory wrapFactory = new WrapFactory();
-                return wrapFactory.wrapAsJavaObject(engine.getCx(), engine, date, Date.class);
+                return engine.getCx().newObject(engine, "Date", new Object[] { new Long(date.getTime()) });
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "date"));
             }
@@ -858,9 +854,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         if (Constants.XSD_TIME.equals(type)) {
             try {
                 Time time = ConverterUtil.convertToTime(value);
-                Date date = time.getAsCalendar().getTime();
-                WrapFactory wrapFactory = new WrapFactory();
-                return wrapFactory.wrapAsJavaObject(engine.getCx(), engine, date, Date.class);
+                return engine.getCx().newObject(engine, "Date", new Object[] { new Long(time.getAsCalendar().getTimeInMillis()) });
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "time"));
             }
@@ -876,9 +870,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 if (timezone != null) {
                     calendar.setTimeZone(TimeZone.getTimeZone(timezone));
                 }
-                Date date = calendar.getTime();
-                WrapFactory wrapFactory = new WrapFactory();
-                return wrapFactory.wrapAsJavaObject(engine.getCx(), engine, date, Date.class);
+                return engine.getCx().newObject(engine, "Date", new Object[] { new Long(calendar.getTimeInMillis()) });
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "yearMonth"));
             }
@@ -894,9 +886,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 if (timezone != null) {
                     calendar.setTimeZone(TimeZone.getTimeZone(timezone));
                 }
-                Date date = calendar.getTime();
-                WrapFactory wrapFactory = new WrapFactory();
-                return wrapFactory.wrapAsJavaObject(engine.getCx(), engine, date, Date.class);
+                return engine.getCx().newObject(engine, "Date", new Object[] { new Long(calendar.getTimeInMillis()) });
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "MonthDay"));
             }
@@ -911,9 +901,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 if (timezone != null) {
                     calendar.setTimeZone(TimeZone.getTimeZone(timezone));
                 }
-                Date date = calendar.getTime();
-                WrapFactory wrapFactory = new WrapFactory();
-                return wrapFactory.wrapAsJavaObject(engine.getCx(), engine, date, Date.class);
+                return engine.getCx().newObject(engine, "Date", new Object[] { new Long(calendar.getTimeInMillis()) });
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "year"));
             }
@@ -928,9 +916,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 if (timezone != null) {
                     calendar.setTimeZone(TimeZone.getTimeZone(timezone));
                 }
-                Date date = calendar.getTime();
-                WrapFactory wrapFactory = new WrapFactory();
-                return wrapFactory.wrapAsJavaObject(engine.getCx(), engine, date, Date.class);
+                return engine.getCx().newObject(engine, "Date", new Object[] { new Long(calendar.getTimeInMillis()) });
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "month"));
             }
@@ -945,9 +931,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 if (timezone != null) {
                     calendar.setTimeZone(TimeZone.getTimeZone(timezone));
                 }
-                Date date = calendar.getTime();
-                WrapFactory wrapFactory = new WrapFactory();
-                return wrapFactory.wrapAsJavaObject(engine.getCx(), engine, date, Date.class);
+                return engine.getCx().newObject(engine, "Date", new Object[] { new Long(calendar.getTimeInMillis()) });
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "day"));
             }
