@@ -9,7 +9,7 @@ class WSFault < StandardError
   end
 
   def to_s
-    "[" + @code + "]" + @reason + "|" + @role + "|" + @detail
+    return "[" + @code + "]" + @reason + "|" + @role + "|" + @detail
   end
 
   attr_reader :code, :reason, :role, :detail, :xml

@@ -139,20 +139,14 @@ axiom_types_t
 axiom_node_get_node_type(axiom_node_t       *om_node,
                          const axutil_env_t *env);
 
-%inline %{
-axiom_element_t *
-axiom_node_get_parent_element(axiom_node_t       *om_node,
-                              const axutil_env_t *env)
-{
-  axiom_node_t* parent_node = axiom_node_get_parent(om_node, env);
-  return (parent_node ? (axiom_element_t *)axiom_node_get_data_element(parent_node, env) : NULL);
-}
-%}
+axiom_node_t *
+axiom_node_get_parent(axiom_node_t       *om_node,
+                      const axutil_env_t *env);
 
 %inline %{
 axiom_element_t *
-axiom_node_get_data_element_new(axiom_node_t  *om_node,
-                                const axutil_env_t *env)
+ruby_axiom_node_get_data_element(axiom_node_t       *om_node,
+                                 const axutil_env_t *env)
 {
   return (axiom_element_t *)axiom_node_get_data_element(om_node, env);
 }
@@ -185,6 +179,69 @@ axiom_element_get_attribute_value_by_name(axiom_element_t    *om_ele,
                                           const axutil_env_t *env,
                                           axis2_char_t       *attr_name);
 
+axiom_node_t *
+axiom_node_detach(axiom_node_t       *om_node,
+                  const axutil_env_t *env);
+
+axiom_data_handler_t *
+axiom_data_handler_create(const axutil_env_t *env,
+                          const axis2_char_t *file_name,
+                          const axis2_char_t *mime_type);
+
+%inline %{
+axis2_status_t
+ruby_axiom_data_handler_set_binary_data(axiom_data_handler_t *data_handler,
+                                        const axutil_env_t   *env,
+                                        axis2_byte_t         *input_stream,
+                                        int                   input_stream_len)
+{
+  return axiom_data_handler_set_binary_data(data_handler, env, input_stream, input_stream_len);
+}
+%}
+
+axiom_text_t *
+axiom_text_create_with_data_handler(const axutil_env_t   *env,
+                                    axiom_node_t         *parent,
+                                    axiom_data_handler_t *data_handler,
+                                    axiom_node_t         **node);
+
+axis2_status_t
+axiom_text_set_optimize(struct axiom_text  *om_text,
+                        const axutil_env_t *env,
+                        axis2_bool_t        optimize);
+
+%inline %{
+void
+ruby_axiom_attach_content(const axutil_env_t *env,
+                          axiom_node_t       *node,
+                          axiom_node_t       *parent_node,
+                          axis2_bool_t        enable_mtom,
+                          axis2_char_t       *content_type,
+                          const char         *content,
+                          int                 content_length)
+{
+  void *data_buffer = AXIS2_MALLOC (env->allocator, sizeof (char) * content_length);
+  if (data_buffer == NULL)
+    return;
+
+  memcpy (data_buffer, (void*)content, content_length);
+
+  axiom_data_handler_t *data_handler = axiom_data_handler_create (env, NULL, content_type);
+  if (data_handler == NULL)
+    return;
+
+  axiom_data_handler_set_binary_data (data_handler, env, (axis2_byte_t *)content, content_length);
+
+  axiom_node_t *text_node = NULL;
+  axiom_text_t *text = axiom_text_create_with_data_handler (env, parent_node, data_handler, &text_node);
+
+  if (enable_mtom == AXIS2_FALSE)
+    axiom_text_set_optimize (text, env, AXIS2_FALSE);
+
+  axiom_node_detach (node, env);
+}
+%}
+
 axiom_node_t * 
 axis2_svc_client_send_receive(axis2_svc_client_t *svc_client,
                               const axutil_env_t *env,
@@ -211,11 +268,11 @@ axiom_xml_reader_create_for_memory(const axutil_env_t *env,
 
 %inline %{
 axiom_xml_reader_t *
-axiom_xml_reader_create_for_memory_new(const axutil_env_t *env,
-                                       char               *container,
-                                       int                size,
-                                       const axis2_char_t *encoding,
-                                       int                type)
+ruby_axiom_xml_reader_create_for_memory(const axutil_env_t *env,
+                                        char               *container,
+                                        int                size,
+                                        const axis2_char_t *encoding,
+                                        int                type)
 {
   axiom_xml_reader_create_for_memory(env, container, size, encoding, type);
 }
@@ -228,6 +285,10 @@ axiom_stax_builder_create(const axutil_env_t *env,
 axiom_document_t * 
 axiom_stax_builder_get_document(axiom_stax_builder_t *builder,
                                 const axutil_env_t   *env);
+
+void
+axiom_stax_builder_free_self(axiom_stax_builder_t *builder,
+                             const axutil_env_t   *env);
 
 axiom_node_t *
 axiom_document_get_root_element(axiom_document_t   *document,
@@ -311,8 +372,8 @@ axutil_property_create_with_args(const axutil_env_t  *env,
 
 %inline %{
 axis2_char_t *
-axutil_strdup_new(const axutil_env_t *env,
-                  axis2_char_t       *ptr)
+ruby_axutil_strdup(const axutil_env_t *env,
+                   axis2_char_t       *ptr)
 {
   return (void *)axutil_strdup(env, (void *)ptr);        
 }
@@ -320,8 +381,8 @@ axutil_strdup_new(const axutil_env_t *env,
 
 %inline %{
 int
-axutil_strcmp_new(const axis2_char_t * s1,
-                  const axis2_char_t * s2)
+ruby_axutil_strcmp(const axis2_char_t * s1,
+                   const axis2_char_t * s2)
 {
   return ((axutil_strcmp(s1, s2) == 0) ? AXIS2_TRUE : AXIS2_FALSE);
 }
@@ -337,9 +398,9 @@ axutil_property_set_value(axutil_property_t  *property,
 
 %inline %{
 axis2_status_t
-axutil_property_set_value_new(axutil_property_t  *property,
-                              const axutil_env_t *env,
-                              axis2_char_t       *value)
+ruby_axutil_property_set_value(axutil_property_t  *property,
+                               const axutil_env_t *env,
+                               axis2_char_t       *value)
 {
   return axutil_property_set_value(property, env, value);
 }
@@ -353,10 +414,10 @@ axis2_options_set_property(axis2_options_t    *options,
 
 %inline %{
 axis2_status_t
-axis2_options_set_property_new(axis2_options_t *options,
-                           const axutil_env_t  *env,
-                           const axis2_char_t  *property_key,
-                           axutil_property_t   *property)
+ruby_axis2_options_set_property(axis2_options_t *options,
+                                const axutil_env_t  *env,
+                                const axis2_char_t  *property_key,
+                                axutil_property_t   *property)
 {
   return axis2_options_set_property(options, env, property_key, (void *)property);
 }
@@ -448,8 +509,8 @@ axiom_xml_writer_get_xml(axiom_xml_writer_t *writer,
 
 %inline %{
 axis2_char_t *
-axiom_xml_writer_get_xml_new(axiom_xml_writer_t *writer,
-                             const axutil_env_t *env)
+ruby_axiom_xml_writer_get_xml(axiom_xml_writer_t *writer,
+                              const axutil_env_t *env)
 {
   return (axis2_char_t *)axiom_xml_writer_get_xml(writer, env);
 }

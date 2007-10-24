@@ -196,11 +196,11 @@ class WSClient
     end
 
     # Create XML reader
-    xml_reader = WSFC::axiom_xml_reader_create_for_memory_new(@env,
-                                                              str_payload,
-                                                              str_payload.length,
-                                                              "utf-8",
-                                                              WSFC::AXIS2_XML_PARSER_TYPE_BUFFER)
+    xml_reader = WSFC::ruby_axiom_xml_reader_create_for_memory(@env,
+                                                               str_payload,
+                                                               str_payload.length,
+                                                               "utf-8",
+                                                               WSFC::AXIS2_XML_PARSER_TYPE_BUFFER)
     if xml_reader.nil? then
       WSFC::axis2_log_error(@env, "[wsf-ruby] Failed to create AXIOM XML reader")
       return nil
@@ -247,7 +247,7 @@ class WSClient
 
     WSFC::axiom_node_serialize(axiom_node, @env, axiom_output)
  
-    str_payload = WSFC::axiom_xml_writer_get_xml_new(xml_writer, @env)
+    str_payload = WSFC::ruby_axiom_xml_writer_get_xml(xml_writer, @env)
 
     message = WSMessage.new(str_payload)
     
@@ -399,43 +399,53 @@ class WSClient
 
   def pack_attachments(node, attachments, enable_mtom, default_content_type)
     if WSFC::axiom_node_get_node_type(node, @env) == WSFC::AXIOM_ELEMENT then
-      node_element = WSFC::axiom_node_get_data_element_new(node, @env)
+      node_element = WSFC::ruby_axiom_node_get_data_element(node, @env)
       return if node_element.nil?
       
-      # Process current node
-      element_localname = WSFC::axiom_element_get_localname(node_element, @env)
-      if !element_localname.nil? and  WSFC::axutil_strcmp_new(element_localname, "Include") == WSFC::AXIS2_TRUE then
-      
-        namespace = WSFC::axiom_element_get_namespace(node_element, @env, node)
-        if !namespace.nil? then
+      parent_node = WSFC::axiom_node_get_parent(node, @env)
+      if !parent_node.nil? then
+
+        # Process current node
+        element_localname = WSFC::axiom_element_get_localname(node_element, @env)
+        if !element_localname.nil? and  WSFC::ruby_axutil_strcmp(element_localname, "Include") == WSFC::AXIS2_TRUE then
         
-          namespace_uri = WSFC::axiom_namespace_get_uri(namespace, @env)
-          if !namespace_uri.nil? and WSFC::axutil_strcmp_new(namespace_uri, "http://www.w3.org/2004/08/xop/include") == WSFC::AXIS2_TRUE then
+          namespace = WSFC::axiom_element_get_namespace(node_element, @env, node)
+          if !namespace.nil? then
+          
+            namespace_uri = WSFC::axiom_namespace_get_uri(namespace, @env)
+            if !namespace_uri.nil? and WSFC::ruby_axutil_strcmp(namespace_uri, "http://www.w3.org/2004/08/xop/include") == WSFC::AXIS2_TRUE then
             
-            content_type = default_content_type          
+              content_type = default_content_type          
 
-            parent_element = WSFC::axiom_node_get_parent_element(node, @env)
-            if !parent_element.nil? then
+              parent_element = WSFC::ruby_axiom_node_get_data_element(parent_node, @env)
+              if !parent_element.nil? then
               
-              cnt_type = WSFC::axiom_element_get_attribute_value_by_name(parent_element, @env, "xmlmime:contentType")
-              content_type = cnt_type unless cnt_type.nil?
+                cnt_type = WSFC::axiom_element_get_attribute_value_by_name(parent_element, @env, "xmlmime:contentType")
+                content_type = cnt_type unless cnt_type.nil?
 
-            end
+              end
 
-            href = WSFC::axiom_element_get_attribute_value_by_name(node_element, @env, "href")
-            href.lstrip!
-            href.rstrip!
+              href = WSFC::axiom_element_get_attribute_value_by_name(node_element, @env, "href")
+              href.lstrip!
+              href.rstrip!
 
-            if href.length > 4 then
+              if href.length > 4 then
             
-              cid = href[4..href.length - 1]
+                cid = href[4..href.length - 1]
 
-              content = attachments[cid]
+                content = attachments[cid]
+                if !content.nil? then
+                
+                  WSFC::ruby_axiom_attach_content(@env,
+                                                  node,
+                                                  parent_node,
+                                                  enable_mtom,
+                                                  content_type,
+                                                  content,
+                                                  content.length)
+                
+                end
 
-              if !content.nil? then
-                
-                
-                
               end
 
             end
