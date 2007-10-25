@@ -93,14 +93,14 @@ WSRequest.prototype.send = function(payload) {
             throw new WebServiceError("Invalid input argument.", "WSRequest.send() unable to serialize XML payload.");
         }
 
-        // formulate the message envelope
-        if (this._soapVer == 0) {
-            var processed = WSRequest.util._buildHTTPpayload(this._optionSet, this._uri, content);
-            req = processed["body"];
-            this._uri = processed["url"];
-        } else {
-            req = WSRequest.util._buildSOAPEnvelope(this._soapVer, this._optionSet, this._uri, content);
-        }
+    }
+    // formulate the message envelope
+    if (this._soapVer == 0) {
+        var processed = WSRequest.util._buildHTTPpayload(this._optionSet, this._uri, content);
+        req = processed["body"];
+        this._uri = processed["url"];
+    } else {
+        req = WSRequest.util._buildSOAPEnvelope(this._soapVer, this._optionSet, this._uri, content);
     }
 
     // Note that we infer soapAction from the "action" parameter - also used for wsa:Action.
@@ -512,12 +512,12 @@ WSRequest.util = {
         if (browser == "ie" || browser == "ie7") {
             //create a DOM from content string.
             xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
-            if (content != "")
+            if (content != null && content != "")
                 xmlDoc.loadXML(content);
         } else {
             //create a DOMParser to get DOM from content string.
             var xmlParser = new DOMParser();
-            if (content != "")
+            if (content != null && content != "")
                 xmlDoc = xmlParser.parseFromString(content, "text/xml");
         }
 
@@ -544,7 +544,7 @@ WSRequest.util = {
             resultValues["url"] = WSRequest.util._joinUrlToLocation(url, resultValues["url"]);
 
             // Sending the XML in the request body.
-            if (inputSerialization == "application/xml") {
+            if (content != null && inputSerialization == "application/xml") {
                 resultValues["body"] = content;
             }
         } else if (inputSerialization == "multipart/form-data") {
@@ -689,7 +689,7 @@ WSRequest.util = {
                   '<s:Envelope xmlns:s="' + ns + '"' +
                   wsaNsDecl + '>\n' +
                   '<s:Header>' + headers + '</s:Header>\n' +
-                  '<s:Body>' + content + '</s:Body>\n' +
+                  '<s:Body>' + (content != null ? content : '') + '</s:Body>\n' +
                   '</s:Envelope>';
         return request;
     }
