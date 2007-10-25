@@ -78,6 +78,8 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
             return "error creating WSDL Dom Document";
         
         $sig_model_dom = wsf_get_sig_model_dom($wsdl_dom, $xslt_location);
+        $schema_node = wsf_get_schema_node($wsdl_dom); 
+
     }
     else {
         $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $xslt_location);
@@ -619,7 +621,7 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
  * @param mixed $new_obj call_map object
  */
 
-function recursive_payload(DomDocument $payload_dom, $value_array, DomNode $element, $new_obj)
+function recursive_payload(DomDocument $payload_dom, $value_array, DomNode $element, $new_obj, $prev_obj = NULL)
 {
     require_once('wsf_wsdl_consts.php');
     static $i = 2;
@@ -628,13 +630,18 @@ function recursive_payload(DomDocument $payload_dom, $value_array, DomNode $elem
             // type of complex type
             if($value[WSF_NS]){
                 if ($value[WSF_TYPE]){
-                    $element_2 = $payload_dom->createElementNS($value[WSF_NS], "ns".$i.":".$val, $new_obj->$val);
+                    if($new_obj->$val)
+                        $obj_value = $new_obj->$val;
+                    else
+                        $obj_value = $prev_obj->$val;
+                    $element_2 = $payload_dom->createElementNS($value[WSF_NS], "ns".$i.":".$val, $obj_value);
                 }
-                else{    
+                else{ 
                     $element_2 = $payload_dom->createElementNS($value['ns'], "ns".$i.":".$val);
+                    $prev_obj = $new_obj;// this is a ugly hack
                     $new_obj = $new_obj->$val;
                     $i++;
-                    recursive_payload($payload_dom, $value, $element_2, $new_obj);
+                    recursive_payload($payload_dom, $value, $element_2, $new_obj, $prev_obj);
                 }
             }
             else {
@@ -642,7 +649,6 @@ function recursive_payload(DomDocument $payload_dom, $value_array, DomNode $elem
             }
             $element->appendChild($element_2);
         }
-        
     }
 }
 
@@ -715,9 +721,15 @@ function create_recursive_struct(DomNode $types_node, $param_type, $prev_ns)
                             }
                         }
                     }
-
-                    //end
                                         
+                }
+                else if ($complexType->localName == "simpleType" && $complexType->attributes->getNamedItem(WSF_NAME)->value == $param_type) {
+                    $restriction_node = $complexType->firstChild;
+                    if($restriction_node->localName == "restriction"){
+                        $rec_array[WSF_TYPE] = $restriction_node->attributes->getNamedItem('base')->value;
+                        $rec_array[WSF_NS] = $ns;
+                        $rec_array['simpleType'] = 1;
+                    }
                 }
             }
         }
@@ -1031,6 +1043,8 @@ function wsf_process_response($response_payload_string, $response_sig_model_stri
     $env_child_list = $env_node->childNodes;
     foreach($env_child_list as $env_child){
         if (strtolower($env_child->localName) == WSF_BODY){
+            if(!$env_child->hasChildNodes())
+                return;
             $clone_body_node = $env_child->firstChild->cloneNode(TRUE);
             $response_node = $clone_body_node; 
         }
