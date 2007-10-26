@@ -112,12 +112,25 @@ axiom_node_t *
 axiom_node_get_parent(axiom_node_t       *om_node,
                       const axutil_env_t *env);
 
+axiom_node_t *
+axiom_node_get_next_sibling(axiom_node_t       *om_node,
+                            const axutil_env_t *env);   
+
 %inline %{
 axiom_element_t *
 ruby_axiom_node_get_data_element(axiom_node_t       *om_node,
                                  const axutil_env_t *env)
 {
   return (axiom_element_t *)axiom_node_get_data_element(om_node, env);
+}
+%}
+
+%inline %{
+axiom_text_t *
+ruby_axiom_node_get_text_element(axiom_node_t       *om_node,
+                                 const axutil_env_t *env)
+{
+  return (axiom_text_t *)axiom_node_get_data_element(om_node, env);
 }
 %}
 
@@ -157,6 +170,10 @@ axiom_data_handler_create(const axutil_env_t *env,
                           const axis2_char_t *file_name,
                           const axis2_char_t *mime_type);
 
+axiom_data_handler_t *
+axiom_text_get_data_handler(struct axiom_text  *om_text,
+                            const axutil_env_t *env);
+
 %inline %{
 void
 ruby_axiom_attach_content(const axutil_env_t *env,
@@ -188,6 +205,28 @@ ruby_axiom_attach_content(const axutil_env_t *env,
   axiom_node_detach (node, env);
 }
 %}
+
+%inline %{
+axis2_char_t *
+ruby_axiom_data_handler_get_content(axiom_data_handler_t *data_handler,
+                                    const axutil_env_t   *env)
+{
+  char *content = NULL;
+  int   content_length = 0;
+
+  axiom_data_handler_read_from (data_handler, env, &content, &content_length);
+
+  return (axis2_char_t *)content;
+}
+%}
+
+axis2_char_t *
+axiom_data_handler_get_content_type(axiom_data_handler_t *data_handler,
+                                    const axutil_env_t   *env);
+
+axis2_char_t *
+axiom_text_get_content_id(struct axiom_text  *om_text,
+                          const axutil_env_t *env);
 
 axiom_node_t * 
 axis2_svc_client_send_receive(axis2_svc_client_t *svc_client,

@@ -248,9 +248,13 @@ class WSClient
     WSFC::axiom_node_serialize(axiom_node, @env, axiom_output)
  
     str_payload = WSFC::ruby_axiom_xml_writer_get_xml(xml_writer, @env)
-
-    message = WSMessage.new(str_payload)
     
+    # Has to create a new buffer and assign that to the message
+    
+    message = WSMessage.new(str_payload)
+
+    handle_incoming_attachments(message, axiom_node)
+
     return message
   end
 
@@ -398,52 +402,57 @@ class WSClient
   # in the outgoing payload according to cid information specified in "Include" tags
 
   def pack_attachments(node, attachments, enable_mtom, default_content_type)
+    return if node.nil?
+
     if WSFC::axiom_node_get_node_type(node, @env) == WSFC::AXIOM_ELEMENT then
-      node_element = WSFC::ruby_axiom_node_get_data_element(node, @env)
-      return if node_element.nil?
       
-      parent_node = WSFC::axiom_node_get_parent(node, @env)
-      if !parent_node.nil? then
+      node_element = WSFC::ruby_axiom_node_get_data_element(node, @env)
+      if !node_element.nil? then
+      
+        parent_node = WSFC::axiom_node_get_parent(node, @env)
+        if !parent_node.nil? then
 
-        # Process current node
-        element_localname = WSFC::axiom_element_get_localname(node_element, @env)
-        if !element_localname.nil? and  WSFC::ruby_axutil_strcmp(element_localname, "Include") == WSFC::AXIS2_TRUE then
+          # Process current node
+          element_localname = WSFC::axiom_element_get_localname(node_element, @env)
+          if !element_localname.nil? and  WSFC::ruby_axutil_strcmp(element_localname, "Include") == WSFC::AXIS2_TRUE then
         
-          namespace = WSFC::axiom_element_get_namespace(node_element, @env, node)
-          if !namespace.nil? then
+            namespace = WSFC::axiom_element_get_namespace(node_element, @env, node)
+            if !namespace.nil? then
           
-            namespace_uri = WSFC::axiom_namespace_get_uri(namespace, @env)
-            if !namespace_uri.nil? and WSFC::ruby_axutil_strcmp(namespace_uri, "http://www.w3.org/2004/08/xop/include") == WSFC::AXIS2_TRUE then
+              namespace_uri = WSFC::axiom_namespace_get_uri(namespace, @env)
+              if !namespace_uri.nil? and WSFC::ruby_axutil_strcmp(namespace_uri, "http://www.w3.org/2004/08/xop/include") == WSFC::AXIS2_TRUE then
             
-              content_type = default_content_type          
+                content_type = default_content_type          
 
-              parent_element = WSFC::ruby_axiom_node_get_data_element(parent_node, @env)
-              if !parent_element.nil? then
+                parent_element = WSFC::ruby_axiom_node_get_data_element(parent_node, @env)
+                if !parent_element.nil? then
               
-                cnt_type = WSFC::axiom_element_get_attribute_value_by_name(parent_element, @env, "xmlmime:contentType")
-                content_type = cnt_type unless cnt_type.nil?
+                  cnt_type = WSFC::axiom_element_get_attribute_value_by_name(parent_element, @env, "xmlmime:contentType")
+                  content_type = cnt_type unless cnt_type.nil?
 
-              end
+                end
 
-              href = WSFC::axiom_element_get_attribute_value_by_name(node_element, @env, "href")
-              href.lstrip!
-              href.rstrip!
+                href = WSFC::axiom_element_get_attribute_value_by_name(node_element, @env, "href")
+                href.lstrip!
+                href.rstrip!
 
-              if href.length > 4 then
+                if href.length > 4 then
             
-                cid = href[4..href.length - 1]
+                  cid = href[4..href.length - 1]
 
-                content = attachments[cid]
-                if !content.nil? then
+                  content = attachments[cid]
+                  if !content.nil? then
                 
-                  WSFC::ruby_axiom_attach_content(@env,
-                                                  node,
-                                                  parent_node,
-                                                  enable_mtom,
-                                                  content_type,
-                                                  content,
-                                                  content.length)
+                    WSFC::ruby_axiom_attach_content(@env,
+                                                    node,
+                                                    parent_node,
+                                                    enable_mtom,
+                                                    content_type,
+                                                    content,
+                                                    content.length)
                 
+                  end
+
                 end
 
               end
@@ -455,25 +464,94 @@ class WSClient
         end
 
       end
-
+      
+      # Process child nodes
       child_element_ite = WSFC::axiom_element_get_child_elements(node_element, @env, node)
-      return if child_element_ite.nil?
+      if !child_element_ite.nil? then
 
-      child_node = WSFC::axiom_child_element_iterator_next(child_element_ite, @env)
-      while !child_node.nil? do
-        pack_attachments(child_node, attachments, enable_mtom, default_content_type)
-        
         child_node = WSFC::axiom_child_element_iterator_next(child_element_ite, @env)
+        while !child_node.nil? do
+          pack_attachments(child_node, attachments, enable_mtom, default_content_type)
+        
+          child_node = WSFC::axiom_child_element_iterator_next(child_element_ite, @env)
+        end
+
       end
+
     end
+
+    # Process next sibling
+    next_sibling_node = WSFC::axiom_node_get_next_sibling(node, @env)
+    pack_attachments(next_sibling_node, attachments, enable_mtom, default_content_type)
   end
 
   # This method is used to handle attachments received with a message
   # All MTOM/XOP specific manipulations have to be done inside this method
 
-  def handle_incoming_attachments(message)
-    # Att 
-  end  
+  def handle_incoming_attachments(message, axiom_payload)
+    return unless message.kind_of? WSMessage
+    
+    response_xop = client_property(:response_xop).to_s.upcase.eql?("TRUE") ? WSFC::AXIS2_TRUE : WSFC::AXIS2_FALSE
+    
+    unpack_attachments(axiom_payload, message) if response_xop == WSFC::AXIS2_TRUE 
+  end
+
+  # This method is used to unpack attachments received with the payload
+  # The received attachments are saved as strings against the content id's
+  # The content type is saved against the content id as well
+
+  def unpack_attachments(node, message)
+    return if node.nil?
+
+    # Process current node
+    if WSFC::axiom_node_get_node_type(node, @env) == WSFC::AXIOM_TEXT then
+      
+      text_element = WSFC::ruby_axiom_node_get_text_element(node, @env)
+      if !text_element.nil? then
+        
+        data_handler = WSFC::axiom_text_get_data_handler(text_element, @env)
+        if !data_handler.nil? then
+          
+          content = WSFC::ruby_axiom_data_handler_get_content(data_handler, @env)
+          content_type = WSFC::axiom_data_handler_get_content_type(data_handler, @env)
+          cid = WSFC::axiom_text_get_content_id(text_element, @env)
+
+          message.add_attachment_content(cid, content)
+          message.add_content_type(cid, content_type)
+          
+        end
+        
+      end
+      
+    end
+    
+    # Process child nodes
+    if WSFC::axiom_node_get_node_type(node, @env) == WSFC::AXIOM_ELEMENT then
+      
+      node_element = WSFC::ruby_axiom_node_get_data_element(node, @env)
+      if !node_element.nil? then
+      
+        child_element_ite = WSFC::axiom_element_get_child_elements(node_element, @env, node)
+        if !child_element_ite.nil? then
+
+          child_node = WSFC::axiom_child_element_iterator_next(child_element_ite, @env)
+          while !child_node.nil? do
+            unpack_attachments(child_node, message)
+        
+            child_node = WSFC::axiom_child_element_iterator_next(child_element_ite, @env)
+          end
+
+        end
+      
+      end
+      
+    end
+
+    # Process next sibling
+    next_sibling_node = WSFC::axiom_node_get_next_sibling(node, @env)
+    unpack_attachments(next_sibling_node, message)
+    
+  end
 
   private :message_to_axiom_node
   private :axiom_node_to_message
@@ -484,5 +562,6 @@ class WSClient
   private :handle_outgoing_attachments
   private :pack_attachments
   private :handle_incoming_attachments
+  private :unpack_attachments
 
 end
