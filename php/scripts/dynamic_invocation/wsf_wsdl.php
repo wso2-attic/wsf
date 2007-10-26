@@ -668,9 +668,7 @@ function create_recursive_struct(DomNode $types_node, $param_type, $prev_ns)
         $ns = $schema->attributes->getNamedItem(WSF_TARGETNAMESPACE)->value;
         $complexType_list = $schema->childNodes;
         foreach($complexType_list as $complexType){
-            if($complexType->attributes->getNamedItem(WSF_NAME)->value == $param_type){
-            //if($prev_ns = NULL)
-            //      $prev_ns = $ns;
+            if($complexType->localName == WSF_WSDL_COMPLEX_TYPE && $complexType->attributes->getNamedItem(WSF_NAME)->value == $param_type){
                 $rec_array[WSF_NS] = $prev_ns;
                 $prev_ns = $ns;
                 $sequence_node = $complexType->firstChild;
@@ -723,14 +721,15 @@ function create_recursive_struct(DomNode $types_node, $param_type, $prev_ns)
                     }
                                         
                 }
-                else if ($complexType->localName == "simpleType" && $complexType->attributes->getNamedItem(WSF_NAME)->value == $param_type) {
+                
+            }
+            else if ($complexType->localName == "simpleType" && $complexType->attributes->getNamedItem(WSF_NAME)->value == $param_type) {
                     $restriction_node = $complexType->firstChild;
                     if($restriction_node->localName == "restriction"){
                         $rec_array[WSF_TYPE] = $restriction_node->attributes->getNamedItem('base')->value;
-                        $rec_array[WSF_NS] = $ns;
+                        $rec_array[WSF_NS] = $prev_ns;
                         $rec_array['simpleType'] = 1;
                     }
-                }
             }
         }
     }
