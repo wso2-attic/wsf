@@ -472,7 +472,7 @@ class WSClient
   # All MTOM/XOP specific manipulations have to be done inside this method
 
   def handle_incoming_attachments(message)
-    
+    # Att 
   end  
 
   private :message_to_axiom_node
