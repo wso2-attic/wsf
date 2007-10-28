@@ -19,8 +19,9 @@ public class ServiceImplFilterUtil {
             if (itemFile.exists() && itemFile.isDirectory()) {
             	visitAllFiles(itemFile,fileNamePrefix, extension);
 			}
-            else if (itemFile.exists() && itemFile.isFile() && item.contains(fileNamePrefix) 
-            		 && item.endsWith(extension)) {
+            else if (itemFile.exists() && itemFile.isFile() 
+            		&& ((fileNamePrefix != null)?item.contains(fileNamePrefix):true) 
+            		&& ((extension != null)?item.endsWith(extension):true)) {
                 fileList.add(new File(FileUtils.addAnotherNodeToPath(sourceDir,item)));
             }
         }

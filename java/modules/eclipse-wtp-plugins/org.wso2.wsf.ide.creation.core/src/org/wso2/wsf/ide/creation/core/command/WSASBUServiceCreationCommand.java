@@ -19,12 +19,17 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.command.internal.env.core.common.StatusUtils;
@@ -33,7 +38,6 @@ import org.eclipse.wst.common.frameworks.datamodel.AbstractDataModelOperation;
 import org.eclipse.wst.ws.internal.wsrt.IWebService;
 import org.wso2.wsf.ide.core.utils.FileUtils;
 import org.wso2.wsf.ide.core.utils.ServiceImplFilterUtil;
-import org.wso2.wsf.ide.core.utils.WSASCoreUtils;
 import org.wso2.wsf.ide.creation.core.data.DataModel;
 import org.wso2.wsf.ide.creation.core.messages.WSASCreationUIMessages;
 import org.wso2.wsf.ide.creation.core.utils.CommonUtils;
@@ -44,6 +48,8 @@ public class WSASBUServiceCreationCommand extends
 	
 	  	private DataModel model;
 		private IWebService ws;
+		//This Map contains the service include class list as <Class,[Package,Location]>
+		private Map<String,String[]> serviceIncludeClassList = new HashMap<String, String[]>();
 
 	  public WSASBUServiceCreationCommand( DataModel model,IWebService ws, String project )
 	  {
@@ -122,41 +128,73 @@ public class WSASBUServiceCreationCommand extends
 			String classesDirectory = currentDynamicWebProjectDir + File.separator + 
 			                                                        defaultClassesSubDirectory;
 			//Copy only the relevent .classes to the service (Filter mechanism of impl classes)
-			File[] matchingFiles = ServiceImplFilterUtil.getMatchingFiles(classesDirectory,
+			File[] matchingPossibleServiceFiles = ServiceImplFilterUtil.getMatchingFiles(classesDirectory,
 					                             serviceName, ".class");
-			//create the package at the destination
-			for (int i = 0; i < matchingFiles.length; i++) {
-				//create the package at the destination
+
+			// TODO : Also add the imported classes fix
+			String classFileDestination = null;
+			String mainPackage = null;
+			String packageString = null;
+			//This loop searches for the exact match of the service class
+			//And identifies its main package
+			for (int i = 0; i < matchingPossibleServiceFiles.length; i++) {
+				if (matchingPossibleServiceFiles[i].getName().toString().equals(serviceName+".class")) {
 				String[] result = new String[2];
-				String packageString = null;
-				if (matchingFiles[i].getAbsolutePath().contains("\\")) {
-					result[0] = matchingFiles[i].getAbsolutePath().substring(classesDirectory.length());
+					if (matchingPossibleServiceFiles[i].getAbsolutePath().contains("\\")) {
+						result[0] = matchingPossibleServiceFiles[i].getAbsolutePath()
+										.substring(classesDirectory.length());
 					packageString = result[0];
 				}else{
-					result = matchingFiles[i].getAbsolutePath().split(classesDirectory);
+						result = matchingPossibleServiceFiles[i].getAbsolutePath().split(classesDirectory);
 					packageString = result[1];
 				}
-				String classFileDestination = FileUtils.addAnotherNodeToPath(servicesDirectory, packageString );
+					classFileDestination = FileUtils.addAnotherNodeToPath(servicesDirectory, packageString );
 				String[] packageDestination = classFileDestination.split(serviceName+".class");
-				File newClassFile = new File(classFileDestination);
-				if (!newClassFile.exists()){
-					new File(packageDestination[0]).mkdirs();
-					newClassFile.createNewFile();
+					mainPackage = packageDestination[0];
+					serviceIncludeClassList.put(serviceName, 
+							new String[]{mainPackage,matchingPossibleServiceFiles[i].getAbsolutePath()});
+					break;
 				}
-				FileUtils.copy(new File(matchingFiles[i].getAbsolutePath()), new File(classFileDestination));
 			}
-
 			
+			//Matching other class files within the same package
+			IPath servicePacakeDirLocation = new Path(classesDirectory);
+			servicePacakeDirLocation = servicePacakeDirLocation.append(packageString);
+			String servicePacakeDir[] = servicePacakeDirLocation.toOSString().split(serviceName+".class");
+			File[] matchingPossibleRelatedFiles = ServiceImplFilterUtil.getMatchingFiles(servicePacakeDir[0],
+                    null, ".class");
 			
-//			//Create the .aar file 
-//			String aarDirString =  FileUtils.addAnotherNodeToPath(webservicesDir, 
-//			WSASCreationUIMessages.DIR_AAR);
-//			File aarDir = new File(aarDirString);
-//			FileUtils.createDirectorys(aarDirString);
-//			AARFileWriter aarFileWriter = new AARFileWriter();
-//			File serviseDir = new File(servicesDirectory);
-//			aarFileWriter.writeAARFile(aarDir, serviceName + 
-//			WSASCreationUIMessages.FILE_AAR, serviseDir);
+			//Adding other possible classes to the service include list
+			for (int i = 0; i < matchingPossibleRelatedFiles.length; i++) {
+				if (!(matchingPossibleRelatedFiles[i].getName().toString().equals(serviceName+".class"))) {
+					serviceIncludeClassList.put(matchingPossibleRelatedFiles[i].getName(), 
+							new String[]{mainPackage,matchingPossibleRelatedFiles[i].getAbsolutePath()});
+				}
+			}
+			
+			//By Looking at the class include list add all classes in to the service
+			if(!serviceIncludeClassList.isEmpty()){
+				Iterator it = serviceIncludeClassList.entrySet().iterator();
+				while (it.hasNext()) {
+					 Map.Entry pairs = (Map.Entry)it.next();
+					 String[] value = (String[])pairs.getValue();
+					 String PackageNewLocation = value[0].toString();
+					 IPath classFileNewLocation = new Path(PackageNewLocation);
+					 classFileNewLocation = classFileNewLocation.append(
+							 (pairs.getKey().toString().endsWith(".class")?
+									(pairs.getKey().toString()):
+									(pairs.getKey().toString()+".class"))
+							);
+						File newClassFile = new File(classFileNewLocation.toOSString());
+				if (!newClassFile.exists()){
+							new File(PackageNewLocation).mkdirs();
+					newClassFile.createNewFile();
+							FileUtils.copy(new File(value[1].toString()), newClassFile);
+						}
+					
+				}
+			}
+			
 			
 			//Import all the stuff form the .matadata directory to inside the current web project
 			} catch (IOException e) {
