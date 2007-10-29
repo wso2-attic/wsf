@@ -44,7 +44,6 @@ define("WSF_RETURNS", "returns");
 define("WSF_RESPONSE_SIG_MODEL", "response_sig_model");
 define("WSF_ENVELOPE", "envelope");
 define("WSF_BODY", "body");
-define("WSF_RETURNS", "returns");
 define("WSF_TYPE_NAMESPACE", "type-namespace");
 define("WSF_CLASSMAP", "classmap");
 define("WSF_NS", "ns");

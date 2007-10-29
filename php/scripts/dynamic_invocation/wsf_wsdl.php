@@ -48,7 +48,12 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
         $endpoint_address = $user_parameters[WSF_ENDPOINT];
     else
         $endpoint_address = NULL;
-    $class_map = $user_parameters[WSF_CLASSMAP];
+   
+    if (isset($user_parameters[WSF_CLASSMAP]))
+        $class_map = $user_parameters[WSF_CLASSMAP];
+    else
+        $class_map = NULL;
+
     $xslt_location = $user_parameters[WSF_XSLT_LOCATION];
 
     $operation_name = $function_parameters[WSF_INVOKE_FUNCTION];
@@ -364,7 +369,7 @@ function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $endpoi
         /* search the operation element of sig */
         if($operations_node){
             foreach($operations_node->childNodes as $operations_child){
-                if($operations_child->tagName == WSF_OPERATION){
+                if($operations_child->nodeType == XML_ELEMENT_NODE && $operations_child->tagName == WSF_OPERATION){
                     $operation_node = $operations_child->attributes;
                     if($operation_node->getNamedItem(WSF_NAME)->value == $operation_name){
                         $operation = $operations_child;
@@ -894,7 +899,7 @@ function wsf_get_all_policies(DomDocument $wsdl_dom, DomNode $binding_node, $ope
             $op_name = $operation_attr->getNamedItem(WSF_NAME)->value;
             if($op_name == $operation_name && $binding_child->hasChildNodes()){
                 foreach($binding_child->childNodes as $input_output){
-                    if($input_output->firstChild->localName == WSF_POLICY_REFERENCE){  /* there may be several children */
+                    if($input_output->firstChild && $input_output->firstChild->localName == WSF_POLICY_REFERENCE){  /* there may be several children */
                         $input_output_attr = $input_output->firstChild->attributes;
                         $msg_policy_uri =  $input_output_attr->getNamedItem(WSF_URI)->value;
                         $msg_policy = get_policy_node($wsdl_dom, $msg_policy_uri);
@@ -1205,9 +1210,8 @@ function wsf_get_schema_node(&$wsdl_dom, &$wsdl_dom2 = NULL)
                             $schema_child_list = $schema_child->childNodes;
                                 for ($i = $schema_child_list->length; $i >= 0; $i--) {
                                     $import_child = $schema_child_list->item($i);
-                                    if($import_child->localName == 'import' && $import_child->attributes->getNamedItem('schemaLocation')){
-                                        $schema_child->removeChild($import_child);
-                                        
+                                        if($import_child && $import_child->localName == 'import' && $import_child->attributes->getNamedItem('schemaLocation')){
+                                            $schema_child->removeChild($import_child);
                                     }
                                 }
                             }
