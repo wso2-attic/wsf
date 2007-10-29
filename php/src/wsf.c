@@ -442,6 +442,9 @@ PHP_MINIT_FUNCTION (wsf)
     ws_env_svr = wsf_env_create_svr (WSF_GLOBAL (log_path));
 	ws_env_svr->log->level = WSF_GLOBAL(log_level);
 
+    wsf_log_version_string(ws_env_svr);
+    wsf_log_version_string(env);
+
     wsf_msg_recv = wsf_xml_msg_recv_create (ws_env_svr);
     
     worker = wsf_worker_create (ws_env_svr, home_folder,
@@ -454,8 +457,6 @@ PHP_MINIT_FUNCTION (wsf)
     
     axiom_xml_reader_init ();
 
-    wsf_log_version_string(ws_env_svr);
-    wsf_log_version_string(env);
 
     return SUCCESS;
 }
