@@ -634,7 +634,7 @@ function recursive_payload(DomDocument $payload_dom, $value_array, DomNode $elem
         if($val != WSF_NS && is_array($value)){
             // type of complex type
             if($value[WSF_NS]){
-                if ($value[WSF_TYPE]){
+                if (isset($value[WSF_TYPE]) && $value[WSF_TYPE]){
                     if($new_obj->$val)
                         $obj_value = $new_obj->$val;
                     else
@@ -1407,6 +1407,7 @@ function create_recursive_response_struct(DomNode $types_node, $param_type)
 
 function wsf_set_values($val, $class_map, &$child, $prev_class)
 {
+    $class1 = NULL;
     if(is_array($val) && !isset($val[WSF_TYPE])){
         foreach($val as $key2 => $val2){
             if(is_array($val2) && !isset($val2[WSF_TYPE])){
@@ -1464,11 +1465,10 @@ function wsf_set_values($val, $class_map, &$child, $prev_class)
             }
         }
     }
-    else{
-        // set values
-    }
-
-    return $class1;
+    if($class1)
+        return $class1;
+    else
+        return NULL;
 }
 
 function is_xsd_type($param_type)
