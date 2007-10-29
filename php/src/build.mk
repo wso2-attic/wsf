@@ -19,10 +19,10 @@ INCLUDE_PATH = /I$(PHP_SRC_DIR) /I$(PHP_SRC_DIR)\main /I$(PHP_SRC_DIR)\regex \
 	       /I$(ICONV_BIN_DIR)\include 
 
 !if "$(DEBUG)" == "1"
-CFLAGS = $(CFLAGS) /D "_DEBUG" /Od /Z7 /MTd
+CFLAGS = $(CFLAGS) /D "_DEBUG" /Od /Z7 $(CRUNTIME)d
 LDFLAGS = $(LDFLAGS) /DEBUG
 !else
-CFLAGS = $(CFLAGS) /D "NDEBUG" /O2 /MT
+CFLAGS = $(CFLAGS) /D "NDEBUG" /O2 $(CRUNTIME)
 LDFLAGS = $(LDFLAGS)
 !endif
 
