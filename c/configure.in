@@ -5,6 +5,8 @@
 DEBUG = 0
 #CRUNTIME Library ( Use /MD or /MT)
 CRUNTIME=/MD
+# Visual Studio version
+VC_VERSION_2005_OR_ABOVE=0
 
 #############################################################################
 ### Apache Axis2/C Build Configuration Parameters
