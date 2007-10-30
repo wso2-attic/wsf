@@ -450,7 +450,7 @@ class WSClient
                                                       content,
                                                       content.length)
 
-                     attachment_done = true
+                      attachment_done = true
                 
                     end
 
@@ -508,13 +508,11 @@ class WSClient
         data_handler = WSFC::axiom_text_get_data_handler(text_element, @env)
         if !data_handler.nil? then
           
-          content = WSFC::ruby_axiom_data_handler_get_content(data_handler, @env)
+          base64_content = WSFC::ruby_axiom_data_handler_get_base64_content(data_handler, @env)
           content_type = WSFC::axiom_data_handler_get_content_type(data_handler, @env)
           cid = WSFC::axiom_text_get_content_id(text_element, @env)
 
-          puts content.length
-
-          message.add_attachment_content(cid, content)
+	  message.add_attachment_content(cid, base64_content)
           message.add_content_type(cid, content_type)
 
         end

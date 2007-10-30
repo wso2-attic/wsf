@@ -12,6 +12,7 @@ system('rsync -r --exclude=.svn ../src/* lib')
 
 # Add Build Rules
 dir_config('WSFC', '/home/danushka/wsf/axis2c/include/axis2-1.1', '/home/danushka/wsf/axis2c/lib')
+#dir_config('WSFC')
 
 have_library('axutil')
 have_library('axis2_minizip')

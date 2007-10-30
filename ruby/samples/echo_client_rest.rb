@@ -1,9 +1,10 @@
-#!/usr/bin/env ruby         
+#!/usr/bin/env ruby
 
-# Copyright 2005,2006,2007 WSO2, Inc. http://wso2.com
+# Copyright 2005,2006 WSO2, Inc. http://wso2.com
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
+#
 # You may obtain a copy of the License at
 #
 # http://www.apache.org/licenses/LICENSE-2.0
@@ -17,22 +18,31 @@
 require 'wsf'
 
 req_payload_string = <<XML
-<x:FlickrRequest xmlns:x="urn:flickr">
-  <method>flickr.photos.search</method>
-  <api_key>d55214533d60aa9e18d75fe2409799d3</api_key>
-  <text>sri lanka</text>
-</x:FlickrRequest>
+<ns1:echoString xmlns:ns1="http://ws.apache.org/axis2/services/echo">
+    <text>Hello World!</text>
+</ns1:echoString>
 XML
 
 begin
   client = WSClient.new({"axis2c_home" => "/home/danushka/wsf/axis2c",
-                         "to" => "http://api.flickr.com/services/soap"})
+                         "to" => "http://localhost:9090/axis2/services/echo",
+                         "use_soap" => false,
+                         "http_method" => "GET"})
+
+  puts "Using endpoint : http://localhost:9090/axis2/services/echo"
+  puts "Sending OM : " << "\n" << req_payload_string << "\n" 
 
   res_message = client.request(req_payload_string)
 
-  puts res_message.payload_to_s
-
+  if not res_message.nil? then
+    puts "Received OM: "<< "\n" << res_message.payload_to_s << "\n\n"
+    puts "echo client invoke SUCCESSFUL!"
+  else
+    puts "echo client invoke FAILED!"
+  end
 rescue WSFault => wsfault
+  puts "echo client invoke FAILED!\n"
+  puts "WSFault : "
   puts wsfault.xml
   puts "----------"
   puts wsfault.code
@@ -44,5 +54,6 @@ rescue WSFault => wsfault
   puts wsfault.detail
   puts "----------"
 rescue => exception
+  puts "echo client invoke FAILED!\n"
   puts "Exception : " << exception
-end 
+end

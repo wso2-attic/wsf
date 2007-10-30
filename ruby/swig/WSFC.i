@@ -109,8 +109,8 @@ axiom_node_get_node_type(axiom_node_t       *om_node,
                          const axutil_env_t *env);
 
 axiom_node_t *
-axiom_node_get_parent(axiom_node_t       *om_node,
-                      const axutil_env_t *env);
+axiom_node_get_first_child(axiom_node_t       *om_node,
+                           const axutil_env_t *env);
 
 axiom_node_t *
 axiom_node_get_next_sibling(axiom_node_t       *om_node,
@@ -171,7 +171,7 @@ axiom_data_handler_create(const axutil_env_t *env,
                           const axis2_char_t *mime_type);
 
 axiom_data_handler_t *
-axiom_text_get_data_handler(struct axiom_text  *om_text,
+axiom_text_get_data_handler(axiom_text_t       *om_text,
                             const axutil_env_t *env);
 
 %inline %{
@@ -208,15 +208,55 @@ ruby_axiom_attach_content(const axutil_env_t *env,
 
 %inline %{
 axis2_char_t *
-ruby_axiom_data_handler_get_content(axiom_data_handler_t *data_handler,
-                                    const axutil_env_t   *env)
+ruby_axiom_data_handler_get_base64_content(axiom_data_handler_t *data_handler,
+                                           const axutil_env_t   *env)
 {
-  char *content = NULL;
-  int   content_length = 0;
+  axis2_char_t *content = NULL;
+  int           content_length = 0;
 
   axiom_data_handler_read_from (data_handler, env, &content, &content_length);
 
-  return (axis2_char_t *)content;
+  if (content == NULL)
+    return NULL;
+
+  int encoded_length = axutil_base64_encode_len(content_length);
+  axis2_char_t *encoded_str = AXIS2_MALLOC(env->allocator, encoded_length + 2);
+                
+  if (encoded_str == NULL)
+    return NULL;
+
+  encoded_length = axutil_base64_encode(encoded_str, content, content_length);
+  encoded_str[encoded_length] = '\0';
+
+  return encoded_str;
+}
+%}
+
+%inline %{
+int
+ruby_file_put_base64_content(const char *file_name,
+                             const char *base64_content)
+{
+  int decoded_length = axutil_base64_decode_len(base64_content);
+  
+  char *decoded_content = (char*)malloc(decoded_length);
+  if (decoded_content == NULL)
+    return 0;
+
+  decoded_length = axutil_base64_decode(decoded_content, base64_content);
+  if (decoded_content == NULL)
+    return 0;
+
+  FILE *file = fopen(file_name, "w");
+  if (file == NULL)
+    return 0;
+
+  fwrite(decoded_content, sizeof(char), decoded_length, file);
+  fclose(file);
+
+  free(decoded_content);
+
+  return 1;
 }
 %}
 
@@ -225,7 +265,7 @@ axiom_data_handler_get_content_type(axiom_data_handler_t *data_handler,
                                     const axutil_env_t   *env);
 
 axis2_char_t *
-axiom_text_get_content_id(struct axiom_text  *om_text,
+axiom_text_get_content_id(axiom_text_t       *om_text,
                           const axutil_env_t *env);
 
 axiom_node_t * 

@@ -23,7 +23,7 @@ include REXML
 class FlickrClient
    def initialize(key)
       @key = key
-      @client = WSClient.new(Hash[:to => "http://api.flickr.com/services/soap"])
+      @client = WSClient.new(Hash["to" => "http://api.flickr.com/services/soap"])
    end
 
    def query(text)

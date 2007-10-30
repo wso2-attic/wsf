@@ -4,3 +4,5 @@
 require 'wsf/wsfault'
 require 'wsf/wsmessage'
 require 'wsf/wsclient'
+
+require 'util/wsutil'
