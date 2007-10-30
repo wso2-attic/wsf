@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby         
+
 # Copyright 2005,2006,2007 WSO2, Inc. http://wso2.com
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,8 +13,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-#
 
 require 'wsf'
 require 'rexml/document'
@@ -23,7 +22,8 @@ include REXML
 class FlickrClient
    def initialize(key)
       @key = key
-      @client = WSClient.new(Hash["to" => "http://api.flickr.com/services/soap"])
+      @client = WSClient.new({"axis2c_home" => "/home/danushka/wsf/axis2c",
+                              "to" => "http://api.flickr.com/services/soap"})
    end
 
    def query(text)

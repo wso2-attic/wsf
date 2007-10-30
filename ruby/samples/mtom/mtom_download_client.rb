@@ -21,10 +21,10 @@ req_payload_string = <<XML
 <download/>
 XML
 
-client = WSClient.new(Hash["axis2c_home" => "/home/danushka/wsf/axis2c",
-                           "to" => "http://localhost:9090/samples/mtom/mtom_download_service.php",
-                           "use_mtom" => "TRUE",
-                           "response_xop" => "TRUE"])
+client = WSClient.new({"axis2c_home" => "/home/danushka/wsf/axis2c",
+                       "to" => "http://localhost:9090/samples/mtom/mtom_download_service.php",
+                       "use_mtom" => "TRUE",
+                       "response_xop" => "TRUE"})
 
 req_message = WSMessage.new(req_payload_string)
 
