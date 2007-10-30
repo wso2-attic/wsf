@@ -20,6 +20,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -27,6 +29,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -39,10 +43,19 @@ import org.wso2.wsf.ide.creation.core.messages.WSASCreationUIMessages;
 public class ServicesXMLSelectBeanWidget extends SimpleWidgetDataContributor 
 {
 	private DataModel 	model;
-	private Button	 	browseButton;
+	private Button	 	xmlBrowseButton;
 	private Text 		servicesXMLPath;
 	private Button 		generateServicesXML;
 	private Button 		haveServicesXML;
+
+	private Text 		libraryNameText;
+	private Button 		libBrowseButton;
+	private Button 		addLibrariesButton;
+	private Button 		addButton;
+	private Button 		removeButton;
+	private List 		jarFileList;
+	private Label 		jarFilecountLabel;
+	private Label 		fillLabel;
 
 	public ServicesXMLSelectBeanWidget( DataModel model )
 	{
@@ -121,14 +134,14 @@ public class ServicesXMLSelectBeanWidget extends SimpleWidgetDataContributor
 		griddata.horizontalSpan = 1;
 		griddata.minimumWidth = 50;
 		griddata.grabExcessHorizontalSpace = true;
-		browseButton = new Button( mainComp, SWT.NULL );
-		browseButton.setText(WSASCreationUIMessages.LABEL_BROWSE);
-		browseButton.setLayoutData(griddata);
-		browseButton.addSelectionListener( new SelectionAdapter()
+		xmlBrowseButton = new Button( mainComp, SWT.NULL );
+		xmlBrowseButton.setText(WSASCreationUIMessages.LABEL_BROWSE);
+		xmlBrowseButton.setLayoutData(griddata);
+		xmlBrowseButton.addSelectionListener( new SelectionAdapter()
 		{
 			public void widgetSelected(SelectionEvent e)
 			{
-				handleBrowse(mainComp.getShell());
+				handleXMLBrowse(mainComp.getShell());
 				// Need to trigger a validation at this point to ensure
 				// that the next button is enabled properly just in case
 				// this is the last page in the wizard.
@@ -170,6 +183,105 @@ public class ServicesXMLSelectBeanWidget extends SimpleWidgetDataContributor
 
 		disableServicesXMLBrowse();
 
+
+		//filling label 
+		griddata = new GridData(GridData.FILL_HORIZONTAL);
+		griddata.horizontalSpan = 14;
+		fillLabel = new Label(mainComp, SWT.HORIZONTAL | SWT.NULL);
+
+		// Seperator Label
+		griddata = new GridData(GridData.FILL_HORIZONTAL);
+		griddata.horizontalSpan = 14;
+		fillLabel = new Label(mainComp,SWT.HORIZONTAL | SWT.SEPARATOR);
+		fillLabel.setLayoutData(griddata);
+
+		//filling label 
+		griddata = new GridData(GridData.FILL_HORIZONTAL);
+		griddata.horizontalSpan = 14;
+		fillLabel = new Label(mainComp, SWT.HORIZONTAL | SWT.NULL);
+
+		griddata = new GridData( GridData.FILL_HORIZONTAL );
+		griddata.horizontalSpan = 14;
+		addLibrariesButton = new Button( mainComp, SWT.CHECK );
+		addLibrariesButton.setText( "Add External Libraries to the Service" );
+		addLibrariesButton.setLayoutData(griddata);
+		addLibrariesButton.setSelection(false);
+		addLibrariesButton.addSelectionListener( new SelectionAdapter()	{
+			public void widgetSelected(SelectionEvent e){
+				toggleLibraryBrowse(addLibrariesButton.getSelection());
+				model.setIncludeExtLibs(addLibrariesButton.getSelection());
+			}     
+		}); 
+
+		libraryNameText = new Text(mainComp,SWT.BORDER);
+		griddata.horizontalSpan =14;
+		libraryNameText.setLayoutData(griddata);
+		libraryNameText.setText("");
+		libraryNameText.addModifyListener(new ModifyListener(){
+			public void modifyText(ModifyEvent e){
+			}
+		});
+
+
+		griddata = new GridData(GridData.FILL_HORIZONTAL);
+		griddata.horizontalSpan =6;
+		libBrowseButton = new Button(mainComp,SWT.PUSH);
+		libBrowseButton.setLayoutData(griddata);
+		libBrowseButton.setText("Browse...");
+		libBrowseButton.setLayoutData(griddata);
+		libBrowseButton.addMouseListener(new MouseAdapter(){
+			public void mouseUp(MouseEvent e) {
+				handleJARBrowse(mainComp.getShell());
+			}
+		});
+
+		griddata = new GridData(GridData.FILL_HORIZONTAL);
+		griddata.horizontalSpan =4;
+		addButton = new Button(mainComp,SWT.PUSH);
+		addButton.setLayoutData(griddata);
+		addButton.setText("Add    ->");
+		addButton.setLayoutData(griddata);
+		addButton.addMouseListener(new MouseAdapter(){
+			public void mouseUp(MouseEvent e) {
+				handleAdd();
+			}
+
+
+		});
+
+		griddata = new GridData(GridData.FILL_HORIZONTAL);
+		griddata.horizontalSpan =4;
+		removeButton = new Button(mainComp,SWT.PUSH);
+		removeButton.setLayoutData(griddata);
+		removeButton.setText("Remove <-");
+		removeButton.setLayoutData(griddata);
+		removeButton.addMouseListener(new MouseAdapter(){
+			public void mouseUp(MouseEvent e) {
+				handleRemove();
+			}
+		});
+
+		griddata = new GridData(GridData.FILL_HORIZONTAL);
+		griddata.horizontalSpan = 7;
+		Label dummyLabel = new Label(mainComp,SWT.NONE);
+		dummyLabel.setText("Added libraries");
+		dummyLabel.setLayoutData(griddata);
+
+		// Label for the count
+		griddata = new GridData(GridData.FILL_HORIZONTAL);
+		griddata.horizontalSpan = 7;
+		jarFilecountLabel = new Label(mainComp,SWT.NONE);
+		jarFilecountLabel.setLayoutData(griddata);
+
+		griddata = new GridData(GridData.FILL_BOTH);
+		griddata.horizontalSpan = 14;
+		griddata.verticalSpan = 5;
+		jarFileList = new List(mainComp,SWT.BORDER|SWT.MULTI|SWT.V_SCROLL);
+		jarFileList.setItems(new String[]{});
+		jarFileList.setLayoutData(griddata);
+		
+		toggleLibraryBrowse(false);
+		
 		return this;
 	}
 
@@ -196,7 +308,7 @@ public class ServicesXMLSelectBeanWidget extends SimpleWidgetDataContributor
 	 * enable the services.xml text and browse button
 	 */
 	private void enableServicesXMLBrowse(){
-		browseButton.setEnabled(true);
+		xmlBrowseButton.setEnabled(true);
 		servicesXMLPath.setEnabled(true);
 	}
 
@@ -204,14 +316,28 @@ public class ServicesXMLSelectBeanWidget extends SimpleWidgetDataContributor
 	 * disable the services.xml text and browse button
 	 */
 	private void disableServicesXMLBrowse(){
-		browseButton.setEnabled(false);
+		xmlBrowseButton.setEnabled(false);
 		servicesXMLPath.setEnabled(false);
+	}
+	
+
+	/**
+	 * Toggle the library browse
+	 */
+	private void toggleLibraryBrowse(boolean toggle){
+	    libraryNameText.setEnabled(toggle);;
+	    libBrowseButton.setEnabled(toggle);;
+	    addButton.setEnabled(toggle);;
+	    removeButton.setEnabled(toggle);;
+	    jarFileList.setEnabled(toggle);;
+	    jarFilecountLabel.setEnabled(toggle);;
+		
 	}
 
 	/**
 	 * Pops up the file browse dialog box
 	 */
-	private void handleBrowse(Shell parent) {
+	private void handleXMLBrowse(Shell parent) {
 		FileDialog fileDialog = new FileDialog(parent);
 		fileDialog.setFilterExtensions(new String[] { WSASCreationUIMessages.FILE_XML });
 		String fileName = fileDialog.open();
@@ -220,6 +346,43 @@ public class ServicesXMLSelectBeanWidget extends SimpleWidgetDataContributor
 			model.setPathToServicesXML( servicesXMLPath.getText() );
 		}
 	}
+
+
+
+    private void handleJARBrowse(Shell parent){
+        FileDialog fileDialog = new FileDialog(parent);
+        fileDialog.setFilterExtensions(new String[]{"*.jar"});
+        String returnFileName = fileDialog.open() ;
+        if (returnFileName!=null){
+            this.libraryNameText.setText(returnFileName);
+        }
+    }
+    
+    private void handleAdd() {
+        String libName = libraryNameText.getText().trim();
+        if (!libName.equals("")){
+            //add the libs to the list
+            jarFileList.add(libName);
+            updateList();
+            libraryNameText.setText("");
+        }
+    }
+    
+    private void handleRemove() {
+        int selectedIndex = jarFileList.getSelectionIndex();
+        //-1 is returned when nothing is selected
+        if (selectedIndex!=-1){
+           jarFileList.remove(selectedIndex);
+           updateList();
+        }
+    }
+    
+    private void updateList(){
+        jarFilecountLabel.setText(" : " + jarFileList.getItemCount() + " " + "jars in list");
+        model.setExternalLibFileSet(jarFileList.getItems());
+    }
+    
+
 }
 
 

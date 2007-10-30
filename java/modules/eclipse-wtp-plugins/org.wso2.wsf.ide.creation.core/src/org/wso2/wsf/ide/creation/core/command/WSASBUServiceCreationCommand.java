@@ -36,6 +36,7 @@ import org.eclipse.wst.command.internal.env.core.common.StatusUtils;
 import org.eclipse.wst.common.environment.IEnvironment;
 import org.eclipse.wst.common.frameworks.datamodel.AbstractDataModelOperation;
 import org.eclipse.wst.ws.internal.wsrt.IWebService;
+import org.wso2.wsf.ide.core.plugin.messages.WSASCoreUIMessages;
 import org.wso2.wsf.ide.core.utils.FileUtils;
 import org.wso2.wsf.ide.core.utils.ServiceImplFilterUtil;
 import org.wso2.wsf.ide.creation.core.data.DataModel;
@@ -131,7 +132,29 @@ public class WSASBUServiceCreationCommand extends
 			File[] matchingPossibleServiceFiles = ServiceImplFilterUtil.getMatchingFiles(classesDirectory,
 					                             serviceName, ".class");
 
-			// TODO : Also add the imported classes fix
+			if (model.isIncludeExtLibs()){
+				//create the lib directory and copy the libraries from the list
+				String[] includeLibList = model.getExternalLibFileSet();
+				if (includeLibList != null) {
+					for (int i = 0; i < includeLibList.length; i++) {
+						IPath serviceLibDirectory = new Path(servicesDirectory);
+						serviceLibDirectory = serviceLibDirectory
+								.append(WSASCoreUIMessages.DIR_LIB);
+						File serviceLibDir = new File(serviceLibDirectory
+								.toOSString());
+						if (!serviceLibDir.exists()) {
+							serviceLibDir.mkdirs();
+						}
+						File actualJARFile = new File(includeLibList[i]);
+						IPath newLibFile = new Path(serviceLibDir.getAbsolutePath());
+						newLibFile = newLibFile.append(actualJARFile.getName());
+						File newJARFile = new File(newLibFile.toOSString());
+						newJARFile.createNewFile();
+						FileUtils.copy(actualJARFile, newJARFile);
+					}
+				}
+			}
+			
 			String classFileDestination = null;
 			String mainPackage = null;
 			String packageString = null;
@@ -213,4 +236,6 @@ public class WSASBUServiceCreationCommand extends
 	    
 	    return status;
 	}
+
+
 }

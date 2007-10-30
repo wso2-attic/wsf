@@ -34,6 +34,8 @@ public class DataModel extends Model{
 	private boolean testCaseCheck;
 	private String databindingType;
 	private String namespaseToPackageMapping;
+	private String[] externalLibFileSet;
+	private boolean includeExtLibs;
 
 
 	public boolean isGenerateServicesXML(){
@@ -162,6 +164,22 @@ public class DataModel extends Model{
 
 	public void setNamespaseToPackageMapping(String namespaseToPackageMapping) {
 		this.namespaseToPackageMapping = namespaseToPackageMapping;
+	}
+
+	public String[] getExternalLibFileSet() {
+		return externalLibFileSet;
+	}
+
+	public void setExternalLibFileSet(String[] externalLibFileSet) {
+		this.externalLibFileSet = externalLibFileSet;
+	}
+
+	public boolean isIncludeExtLibs() {
+		return includeExtLibs;
+	}
+
+	public void setIncludeExtLibs(boolean includeExtLibs) {
+		this.includeExtLibs = includeExtLibs;
 	}
 
 }
