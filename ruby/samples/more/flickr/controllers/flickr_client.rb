@@ -22,8 +22,13 @@ include REXML
 class FlickrClient
    def initialize(key)
       @key = key
-      @client = WSClient.new({"axis2c_home" => "/home/danushka/wsf/axis2c",
-                              "to" => "http://api.flickr.com/services/soap"})
+      
+      axis2c_home = "/home/danushka/wsf/axis2c"
+      log_file_name = "/tmp/ruby_rails_flicker_client.log"
+
+      @client = WSClient.new({"to" => "http://api.flickr.com/services/soap"},
+                             axis2c_home,
+                             log_file_name)
    end
 
    def query(text)

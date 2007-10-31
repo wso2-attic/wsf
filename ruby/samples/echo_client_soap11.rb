@@ -26,8 +26,9 @@ XML
 begin
   axis2c_home = "/home/danushka/wsf/axis2c"
   log_file_name = "/tmp/ruby_echo_client_soap11.log"
+  end_point = "http://localhost:9090/axis2/services/echo"
 
-  client = WSClient.new({"to" => "http://localhost:9090/axis2/services/echo",
+  client = WSClient.new({"to" => end_point,
                          "use_soap" => 1.1},
                         axis2c_home,
                         log_file_name)

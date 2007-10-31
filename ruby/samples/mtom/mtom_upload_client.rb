@@ -21,22 +21,37 @@ req_payload_string = <<XML
 <ns1:mtomSample xmlns:ns1="http://ws.apache.org/axis2/c/samples/mtom"><ns1:fileName>test.jpg</ns1:fileName><ns1:image><xop:Include href="cid:myid1" xmlns:xop="http://www.w3.org/2004/08/xop/include"/></ns1:image></ns1:mtomSample>
 XML
 
-content = IO.read("resources/axis2.jpg")
-
-req_message = WSMessage.new(req_payload_string, nil, {"attachments" => {"myid1" => content}});
-
-client = WSClient.new({"axis2c_home" => "/home/danushka/wsf/axis2c",
-                       "to" => "http://localhost:9090/axis2/services/mtom",
-                       "action" => "http://ws.apache.org/axis2/c/samples/mtomSample",
-                       "use_mtom" => "TRUE",
-                       "use_wsa" => "TRUE"})
-
 begin
+  axis2c_home = "/home/danushka/wsf/axis2c"
+  log_file_name = "/tmp/ruby_mtom_upload_client.log"
+  end_point = "http://localhost:9090/axis2/services/mtom"
+
+  content = IO.read("resources/axis2.jpg")
+
+  client = WSClient.new({"to" => end_point,
+                         "action" => "http://ws.apache.org/axis2/c/samples/mtomSample",
+                         "use_mtom" => "TRUE",
+                         "use_wsa" => "TRUE"},
+                        axis2c_home,
+                        log_file_name)
+
+  req_message = WSMessage.new(req_payload_string,
+                              nil,
+                              {"attachments" => {"myid1" => content}});
+
+  puts "Sending OM : " << "\n" << req_payload_string << "\n"
+
   res_message = client.request(req_message)
   
-  puts res_message.payload_to_s
+  if not res_message.nil? then
+    puts "Received OM: "<< "\n" << res_message.payload_to_s << "\n\n"
+    puts "Client invocation SUCCESSFUL !!!"
+  else
+    puts "Client invocation FAILED !!!"
+  end
 rescue WSFault => wsfault
-  puts "WSFault error..."
+  puts "Client invocation FAILED !!!\n"
+  puts "WSFault : "
   puts wsfault.xml
   puts "----------"
   puts wsfault.code
@@ -47,4 +62,7 @@ rescue WSFault => wsfault
   puts "----------"
   puts wsfault.detail
   puts "----------"
+rescue => exception
+  puts "Client invocation FAILED !!!\n"
+  puts "Exception : " << exception
 end
