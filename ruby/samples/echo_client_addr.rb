@@ -24,25 +24,31 @@ req_payload_string = <<XML
 XML
 
 begin
-  req_message = WSMessage.new(req_payload_string, nil, {"to" => "http://localhost:9090/axis2/services/echo",
-                                                        "action" => "http://ws.apache.org/axis2/c/samples/echoString"})
+  axis2c_home = "/home/danushka/wsf/axis2c"
+  log_file_name = "/tmp/ruby_echo_client_addr.log"
+  end_point = "http://localhost:9090/axis2/services/echo"
 
-  client = WSClient.new({"axis2c_home" => "/home/danushka/wsf/axis2c",
-                         "use_wsa" => "TRUE"})
+  client = WSClient.new({"use_wsa" => "TRUE"},
+                        axis2c_home,
+                        log_file_name)
 
-  puts "Using endpoint : http://localhost:9090/axis2/services/echo"
+  req_message = WSMessage.new(req_payload_string,
+                              nil,
+                              {"to" => end_point,
+                               "action" => "http://ws.apache.org/axis2/c/samples/echoString"})
+
   puts "Sending OM : " << "\n" << req_payload_string << "\n" 
 
   res_message = client.request(req_message)
 
   if not res_message.nil? then
     puts "Received OM: "<< "\n" << res_message.payload_to_s << "\n\n"
-    puts "echo client invoke SUCCESSFUL!"
+    puts "Client invocation SUCCESSFUL !!!"
   else
-    puts "echo client invoke FAILED!"
+    puts "Client invocation FAILED !!!"
   end
 rescue WSFault => wsfault
-  puts "echo client invoke FAILED!\n"
+  puts "Client invocation FAILED !!!\n"
   puts "WSFault : "
   puts wsfault.xml
   puts "----------"
@@ -55,6 +61,6 @@ rescue WSFault => wsfault
   puts wsfault.detail
   puts "----------"
 rescue => exception
-  puts "echo client invoke FAILED!\n"
+  puts "Client invocation FAILED !!!\n"
   puts "Exception : " << exception
 end

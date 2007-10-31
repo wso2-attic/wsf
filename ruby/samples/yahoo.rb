@@ -25,17 +25,28 @@ req_payload_string = <<XML
 XML
 
 begin
-  options = {"axis2c_home" => "/home/danushka/wsf/axis2c",
-             "to" => "http://search.yahooapis.com/WebSearchService/V1/webSearch",
-             "http_method" => "GET",
-             "use_soap" => false}
-  client = WSClient.new(options)
+  axis2c_home = "/home/danushka/wsf/axis2c"
+  log_file_name = "/tmp/ruby_yahoo.log"
+
+  client = WSClient.new({"to" => "http://search.yahooapis.com/WebSearchService/V1/webSearch",
+                         "http_method" => "GET",
+                         "use_soap" => false},
+                        axis2c_home,
+                        log_file_name)
+
+  puts "Sending OM : " << "\n" << req_payload_string << "\n"
 
   res_message = client.request(req_payload_string)
   
-  puts res_message.payload_to_s
-
+  if not res_message.nil? then
+    puts "Received OM: "<< "\n" << res_message.payload_to_s << "\n\n"
+    puts "Client invocation SUCCESSFUL !!!"
+  else
+    puts "Client invocation FAILED !!!"
+  end
 rescue WSFault => wsfault
+  puts "Client invocation FAILED !!!\n"
+  puts "WSFault : "
   puts wsfault.xml
   puts "----------"
   puts wsfault.code
@@ -47,5 +58,6 @@ rescue WSFault => wsfault
   puts wsfault.detail
   puts "----------"
 rescue => exception
+  puts "Client invocation FAILED !!!\n"
   puts "Exception : " << exception
 end

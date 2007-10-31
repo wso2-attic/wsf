@@ -22,19 +22,17 @@ class WSClient
   # Create a new WSClient instance.
   # All instance level initialization is done here.
   
-  def initialize(options)
+  def initialize(options, axis2c_home = "/opt/wso2/wsf", log_file_name = "/tmp/wsf_ruby_client.log")
     # Create Environment
-    log_file_name = options.has_key?("log_file_name") ? options["log_file_name"].to_s : "wsf_ruby_client.log"
     @env = WSFC::axutil_env_create_all(log_file_name, WSFC::AXIS2_LOG_LEVEL_TRACE)
     if @env.nil? then
-      WSFC::axis2_log_critical(@env, "[wsf-ruby] Failed to create WSF/C environment" )
+      puts "[critical][wsf-ruby] Failed to create WSF/C environment..."
       return
     end
 
-    # Check if axis2c_home is specified
-    axis2c_home = options.has_key?("axis2c_home") ? options["axis2c_home"].to_s : ""
-    if axis2c_home.empty? then
-      WSFC::axis2_log_critical(@env, "[wsf-ruby] 'axis2c_home' is not specified")
+    # Check if axis2c_home is valid
+    if !axis2c_home.kind_of?(String) or axis2c_home.empty? then
+      WSFC::axis2_log_critical(@env, "[wsf-ruby] 'axis2c_home' is invalid")
       return
     end
 

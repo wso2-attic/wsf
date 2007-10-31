@@ -21,44 +21,56 @@ req_payload_string = <<XML
 <download/>
 XML
 
-client = WSClient.new({"axis2c_home" => "/home/danushka/wsf/axis2c",
-                       "to" => "http://localhost:9090/samples/mtom/mtom_download_service.php",
-                       "use_mtom" => "TRUE",
-                       "response_xop" => "TRUE"})
-
-req_message = WSMessage.new(req_payload_string)
-
 begin
+  axis2c_home = "/home/danushka/wsf/axis2c"
+  log_file_name = "/tmp/ruby_mtom_download_client.log"
+  end_point = "http://localhost:9090/samples/mtom/mtom_download_service.php"
+
+  client = WSClient.new({"to" => end_point,
+                         "use_mtom" => "TRUE",
+                         "response_xop" => "TRUE"},
+                        axis2c_home,
+                        log_file_name)
+
+  puts "Sending OM : " << "\n" << req_payload_string << "\n"
+
+  req_message = WSMessage.new(req_payload_string)
+
   res_message = client.request(req_message)
-  return if res_message.nil?  
 
-  puts res_message.payload_to_s
-
-  # Save image/jpeg files
-  attachments = res_message.property "attachments"
-  cid_2_content_type = res_message.property "cid_2_content_type"
+  if not res_message.nil? then
+    puts "Received OM: "<< "\n" << res_message.payload_to_s << "\n\n"
+    
+    # Save image/jpeg files
+    attachments = res_message.property "attachments"
+    cid_2_content_type = res_message.property "cid_2_content_type"
   
-  if attachments and cid_2_content_type then
+    if attachments and cid_2_content_type then
 
-    cid_2_content_type.each_pair {|cid, content_type|
-      
-      content = attachments[cid]
-      if content then
+      cid_2_content_type.each_pair {|cid, content_type|
+        content = attachments[cid]
+        if content then
 
-        if WSUtil.file_put_base64_content(cid, content, content_type) then
-          puts "File saved SUCCESSFULLY !!!"
-        else
-          puts "Failed to save file !!!"
+          if WSUtil.file_put_base64_content(cid, content, content_type) then
+            puts "cid = " + cid + " | " + "content type = " + content_type + " : File saved SUCCESSFULLY !!!"
+          else
+            puts "cid = " + cid + " | " + "content type = " + content_type + " : Failed to save file !!!"
+          end
+
         end
+      }
 
-      end
-    }    
-
+    else
+      puts "Attachments not found !!!"
+    end
+    
+    puts "Client invocation SUCCESSFUL !!!"
   else
-    puts "Attachments not found !!!"
+    puts "Client invocation FAILED !!!"
   end
 rescue WSFault => wsfault
-  puts "WSFault error..."
+  puts "Client invocation FAILED !!!\n"
+  puts "WSFault : "
   puts wsfault.xml
   puts "----------"
   puts wsfault.code
@@ -69,5 +81,8 @@ rescue WSFault => wsfault
   puts "----------"
   puts wsfault.detail
   puts "----------"
+rescue => exception
+  puts "Client invocation FAILED !!!\n"
+  puts "Exception : " << exception
 end
 
