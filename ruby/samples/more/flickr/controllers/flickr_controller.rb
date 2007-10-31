@@ -4,7 +4,8 @@ class FlickrController < ApplicationController
      if params[:query].nil?
       @result = nil
      else
-        client = FlickrClient.new('d55214533d60aa9e18d75fe2409799d3')
+        key = ""
+        client = FlickrClient.new(key)
         @result = client.query(params[:query])
      end  
   rescue => exception

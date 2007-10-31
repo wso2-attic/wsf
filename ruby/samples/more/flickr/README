@@ -19,3 +19,5 @@ Please follow the steps below to execute the "Flickr Sample"
 
 4. Set "axis2c_home"[Line 26] and "log_file_name"[Line 27] variables in 
    flickr_client.rb in your rails applications controller directory.
+
+5. Set "key"[Line 7] variable in flickr_controller.rb in your rails applications controller directory.

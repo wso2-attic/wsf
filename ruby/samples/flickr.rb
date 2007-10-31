@@ -16,10 +16,12 @@
 
 require 'wsf'
 
+key = ""
+
 req_payload_string = <<XML
 <x:FlickrRequest xmlns:x="urn:flickr">
   <method>flickr.photos.search</method>
-  <api_key>d55214533d60aa9e18d75fe2409799d3</api_key>
+  <api_key>#{key}</api_key>
   <text>sri lanka</text>
 </x:FlickrRequest>
 XML
