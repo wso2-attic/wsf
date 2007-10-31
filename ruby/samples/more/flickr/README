@@ -12,9 +12,10 @@ Please follow the steps below to execute the "Flickr Sample"
  views/flickr/index.rhtml
  views/flickr/search.rhtml
 
-3. Edit the application.rb in your rails applications controller directory and add the following line.
+3. Edit the application.rb in your rails applications controller directory 
+   and add the following line.
 
  ENV["AXIS2C_HOME"] = "/your/path/to/axis2c/deployment"
 
-
-
+4. Set "axis2c_home"[Line 26] and "log_file_name"[Line 27] variables in 
+   flickr_client.rb in your rails applications controller directory.
