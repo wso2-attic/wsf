@@ -1072,7 +1072,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             result = ((String) result).substring(1, ((String) result).length() - 1);
             InputStream in = new ByteArrayInputStream(((String) result).getBytes());
             JSONOMBuilder builder = new JSONOMBuilder();
-            result = builder.processDocument(in, null, null);
+            return builder.processDocument(in, null, null);
         }
         // Convert the JS return to XML
 
