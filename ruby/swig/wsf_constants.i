@@ -299,7 +299,6 @@ typedef enum axis2_wsdl_msg_labels
 
 /******************************************************************************/
 
-#define AXIS2_VALUE_TRUE "true"
 #define AXIS2_VALUE_FALSE "false"
 #define AXIS2_CONTAINER_MANAGED "ContainerManaged"
 #define AXIS2_RESPONSE_WRITTEN "CONTENT_WRITTEN"

@@ -336,12 +336,14 @@ axis2_svc_client_set_proxy(axis2_svc_client_t *svc_client,
                            axis2_char_t       *proxy_host,
                            axis2_char_t       *proxy_port);
 
+%inline %{
 axutil_property_t *
-axutil_property_create_with_args(const axutil_env_t  *env,
-                                 axis2_scope_t        scope,
-                                 axis2_bool_t         own_value,
-                                 AXIS2_FREE_VOID_ARG  free_func,
-                                 void                *value);
+ruby_axutil_property_create_with_args(const axutil_env_t *env,
+                                      char               *value)
+{
+  return axutil_property_create_with_args(env, 0, AXIS2_TRUE, 0, (void *)value);
+}
+%}
 
 %inline %{
 int
@@ -352,15 +354,29 @@ ruby_axutil_strcmp(const axis2_char_t *s1,
 }
 %}
 
+%inline %{
 axis2_status_t
-axis2_options_set_property(axis2_options_t    *options,
-                           const axutil_env_t *env,
-                           const axis2_char_t *property_key,
-                           const void         *property);
+ruby_axis2_options_set_property(axis2_options_t    *options,
+                                const axutil_env_t *env,
+                                const axis2_char_t *property_key,
+                                axutil_property_t  *property)
+{
+  return axis2_options_set_property(options, env, property_key, (void *)property);
+}
+%}
 
 axutil_string_t * 
 axutil_string_create(const axutil_env_t *env,
                      const axis2_char_t *str);
+
+%inline %{
+char *
+ruby_axutil_strdup(const axutil_env_t *env,
+                   const char         *ptr)
+{
+  return (char *)axutil_strdup(env, (void *)ptr);
+}
+%}
 
 axis2_bool_t 
 axis2_svc_client_get_last_response_has_fault(const axis2_svc_client_t *svc_client,

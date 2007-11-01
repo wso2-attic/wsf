@@ -48,13 +48,21 @@ class WSClient
     @options = Hash.new
     options.each_pair {|k,v| @options.store(k,v)} if options.kind_of? Hash
 
-    # Set proxy settings
+    # Set client level settings
+    set_client_options()
+  end
+  
+  # This method is used to set client level settings according to 
+  # the options specified when the client is created.
+  
+  def set_client_options
+    # Proxy settings
     WSFC::axis2_svc_client_set_proxy(@svc_client,
                                      @env,
                                      @options["proxy_host"].to_s,
                                      @options["proxy_port"].to_s) if @options.has_key?("proxy_host") and @options.has_key?("proxy_port")
 
-    # Set SOAP settings
+    # SOAP settings
     use_soap = @options.has_key?("use_soap") ? @options["use_soap"].to_s.upcase : "TRUE"
 
     if use_soap.eql? "FALSE" then # REST style
@@ -70,6 +78,35 @@ class WSClient
     if http_method.eql? "GET" then
       WSFC::axis2_options_set_http_method(@client_options, @env, WSFC::AXIS2_HTTP_GET)
     end
+    
+    # SSL settings
+    ca_cert = @options.has_key?("ca_cert") ? @options["ca_cert"].to_s : ""
+    client_cert = @options.has_key?("client_cert") ? @options["client_cert"].to_s : ""
+    pass_phrase = @options.has_key?("pass_phrase") ? @options["pass_phrase"].to_s : ""
+
+    ca_cert_property = WSFC::ruby_axutil_property_create_with_args(@env,
+                                                                   WSFC::ruby_axutil_strdup(@env, ca_cert))
+    
+    client_cert_property = WSFC::ruby_axutil_property_create_with_args(@env,
+                                                                       WSFC::ruby_axutil_strdup(@env, client_cert))
+    
+    pass_phrase_property = WSFC::ruby_axutil_property_create_with_args(@env,
+                                                                       WSFC::ruby_axutil_strdup(@env, pass_phrase))
+    
+    WSFC::ruby_axis2_options_set_property(@client_options,
+                                          @env,
+                                          "SERVER_CERT",
+                                          ca_cert_property)
+
+    WSFC::ruby_axis2_options_set_property(@client_options,
+                                          @env,
+                                          "KEY_FILE",
+                                          client_cert_property)
+
+    WSFC::ruby_axis2_options_set_property(@client_options,
+                                          @env,
+                                          "SSL_PASSPHRASE",
+                                          pass_phrase_property)
   end
 
   # This method is used to do a blocking request call.
@@ -378,15 +415,12 @@ class WSClient
       WSFC::axis2_svc_client_engage_module(@svc_client, @env, WSFC::AXIS2_MODULE_ADDRESSING)
 
       if use_wsa.eql? "SUBMISSION" then
-        property = WSFC::axutil_property_create_with_args(@env,
-                                                          0,
-                                                          WSFC::AXIS2_TRUE,
-                                                          0,
-                                                          WSFC::axutil_strdup(@env, WSFC::AXIS2_WSA_NAMESPACE_SUBMISSION))
-        WSFC::axis2_options_set_property(@client_options,
-                                         @env,
-                                         WSFC::AXIS2_WSA_VERSION,
-                                         property)
+        property = WSFC::ruby_axutil_property_create_with_args(@env,
+                                                               WSFC::ruby_axutil_strdup(@env, WSFC::AXIS2_WSA_NAMESPACE_SUBMISSION))
+        WSFC::ruby_axis2_options_set_property(@client_options,
+                                              @env,
+                                              WSFC::AXIS2_WSA_VERSION,
+                                              property)
       end
     end
   end
