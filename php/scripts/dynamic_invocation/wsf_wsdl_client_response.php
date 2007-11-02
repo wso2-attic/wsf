@@ -83,28 +83,41 @@ function wsf_client_response_and_validate(DomDocument $envelope_dom, DomDocument
     $response_child_list = $response_node->childNodes;
     if(isset($response_parameters[WSF_CLASSMAP]))
         $class_map = $response_parameters[WSF_CLASSMAP];
-   
-    $response_class = new $class_map[$response_node->localName];
-    $ref_class = new ReflectionClass($response_class);
-    if($response_child_list){
-        foreach($response_child_list as $child){
-            foreach($tmp_param_struct[$response_node->localName] as $key => $val){
-                if($key == $child->localName){
-                    $ret_val = wsf_set_values_to_class_obj($val, $class_map, $child, NULL);
-                    if($ref_class)
-                        $ref_property = $ref_class->getProperty($key);
-                    if($ref_property)
-                        $ref_property->setValue($response_class, $ret_val);
+
+    if($class_map){
+        $response_class = new $class_map[$response_node->localName];
+        $ref_class = new ReflectionClass($response_class);
+        if($response_child_list){
+            foreach($response_child_list as $child){
+                foreach($tmp_param_struct[$response_node->localName] as $key => $val){
+                    if($key == $child->localName){
+                        $ret_val = wsf_set_values_to_class_obj($val, $class_map, $child, NULL);
+                        if($ref_class)
+                            $ref_property = $ref_class->getProperty($key);
+                        if($ref_property)
+                            $ref_property->setValue($response_class, $ret_val);
+                    }
                 }
+                
             }
             
+            return $response_class;
         }
-
-        return $response_class;
+        else{
+            if (count($tmp_param_struct[$response_node->tagName]) == 1){
+                return; /* response has empty playload */
+            }
+        }
     }
     else{
-        if (count($tmp_param_struct[$response_node->tagName]) == 1){
-            return; /* response has empty playload */
+        if($response_child_list){
+            foreach($response_child_list as $child){
+                foreach($tmp_param_struct[$response_node->localName] as $key => $val){
+                    if($key == $child->localName){
+            
+                    }
+                }
+            }
         }
     }
 }
