@@ -341,7 +341,10 @@ function wsf_create_payload_for_array(DomDocument $payload_dom, $parameter_struc
             }
         }else if($key == WSF_TYPE && is_xsd_type($value)){
             /* TODO multiple values */
-            $element_2 = $payload_dom->createTextNode($argument_array[0]);
+            if($value == 'boolean' && !$argument_array[0])
+                $element_2 = $payload_dom->createTextNode(0);
+            else
+                $element_2 = $payload_dom->createTextNode($argument_array[0]);
             $root_ele->appendChild($element_2);
         }
     }
