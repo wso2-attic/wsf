@@ -133,6 +133,7 @@ function wsf_get_response_parameters(DomNode $signature_node)
 function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $arg_count, $arguments, array $class_map = NULL)
 {
     $tmp_param_struct = array();
+    $is_wrapper = FALSE;
     
     if(($is_doc == TRUE)  && $signature_node){
         $params_node = $signature_node->firstChild;
@@ -144,6 +145,7 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
                 $ele_ns = $params_attr->getNamedItem(WSF_WRAPPER_ELEMENT_NS)->value;
                 $child_array =  array();
                 $child_array[WSF_NS] = $ele_ns;
+                $is_wrapper = TRUE;
                             
                 $param_child_list = $params_node->childNodes;
                 foreach($param_child_list as $param_child){
@@ -153,8 +155,23 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
                     $child_array[$param_name] = wsf_create_temp_struct($param_child); 
                 }
             }
+            else{
+                /* No wrapper element in the request */
+                $child_array =  array();
+                $param_child_list = $params_node->childNodes;
+                foreach($param_child_list as $param_child){
+                    $param_attr = $param_child->attributes;
+                    $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
+                    $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
+                    $child_array[$param_name] = wsf_create_temp_struct($param_child);
+                    $ele_name = $param_name;
+                }
+            }
         }
-        $tmp_param_struct[$ele_name] = $child_array;
+        if ($is_wrapper == TRUE)
+            $tmp_param_struct[$ele_name] = $child_array;
+        else
+            $tmp_param_struct = $child_array;
     }
     $payload_dom = new DOMDocument('1.0', 'iso-8859-1');
     $element = $payload_dom->createElementNS($tmp_param_struct[$ele_name][WSF_NS], $ele_name);
@@ -169,8 +186,13 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
         return $payload_dom->saveXML($clone_node);
     }
     else {
-        /* array type implemenation */
-        
+        /* array type implementation */
+        $parameter_structure = $tmp_param_struct[$ele_name];
+        wsf_create_payload_for_array($payload_dom, $parameter_structure, $element, $arguments[0]);
+        $payload_dom->appendChild($element);
+        $payload_node = $payload_dom->firstChild;
+        $clone_node = $payload_node->cloneNode(TRUE);
+        return $payload_dom->saveXML($clone_node);
     }
 
 }
@@ -186,6 +208,8 @@ function wsf_create_temp_struct(DomNode $param_child)
 {
     $rec_array = array();
     $param_nil = NULL;
+    $param_min = NULL;
+    $param_max = NULL;
 
     $param_attr = $param_child->attributes;
     if($param_attr->getNamedItem(WSF_WSDL_SIMPLE))
@@ -273,7 +297,6 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom, $parameter_s
                     }
                     else{
                         if(!isset($value['class_map_name'])){
-                            echo "value is ";
                             $element_2 = $payload_dom->createElementNS($value['ns'], "ns".$i.":".$val);
                             $prev_class_obj = $classmap_obj;
                             $new_obj = $classmap_obj->$val;
@@ -287,6 +310,44 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom, $parameter_s
         }
     }
 }
+
+function wsf_create_payload_for_array(DomDocument $payload_dom, $parameter_struct, DomNode $root_ele, $argument_array)
+{
+    static $i = 2;
+    foreach($parameter_struct as $key => $value){
+        if(is_array($value)){
+            if($value[WSF_NS]){
+                if (isset($value[WSF_TYPE]) && $value[WSF_TYPE]){
+                    foreach($argument_array as $arg_key => $arg_val){
+                        if($key == $arg_key){
+                            /* type conversion is needed */
+                            $element_2 = $payload_dom->createElementNS($value[WSF_NS], "ns".$i.":".$key, $arg_val);
+                            $root_ele->appendChild($element_2);
+                            $i++;
+                        }
+                    }
+                }
+                else {
+                    foreach($argument_array as $arg_key => $arg_val){
+                        if($key == $arg_key){
+                            $element_2 = $payload_dom->createElementNS($value[WSF_NS], "ns".$i.":".$key);
+                            wsf_create_payload_for_array($payload_dom, $value, $element_2, $arg_val);
+                            $root_ele->appendChild($element_2);
+                            $i++;
+                        }
+                    }
+             
+                }
+            }
+        }else if($key == WSF_TYPE && is_xsd_type($value)){
+            /* TODO multiple values */
+            $element_2 = $payload_dom->createTextNode($argument_array[0]);
+            $root_ele->appendChild($element_2);
+        }
+    }
+
+}
+
 
 
 ?>
