@@ -244,62 +244,19 @@ class WSClient
       return nil
     end
 
-    # Create XML reader
-    xml_reader = WSFC::ruby_axiom_xml_reader_create_for_memory(@env,
-                                                               str_payload,
-                                                               str_payload.length,
-                                                               "utf-8",
-                                                               WSFC::AXIS2_XML_PARSER_TYPE_BUFFER)
-    if xml_reader.nil? then
-      WSFC::axis2_log_error(@env, "[wsf-ruby] Failed to create AXIOM XML reader")
-      return nil
-    end
-   
-    # Create StAX builder
-    stax_builder = WSFC::axiom_stax_builder_create(@env, xml_reader)
-    if stax_builder.nil? then
-      WSFC::axis2_log_error(@env, "[wsf-ruby] Failed to create StAX builder")
-      return nil
-    end
-
-    # Create document
-    document = WSFC::axiom_stax_builder_get_document(stax_builder, @env)
-    if document.nil? then
-      WSFC::axis2_log_error(@env, "[wsf-ruby] Failed to create StAX builder document")
-      return nil
-    end
-
-    # Create AXIOM node
-    axiom_node = WSFC::axiom_document_get_root_element(document, @env)
-    WSFC::axiom_document_build_all(document, @env) unless axiom_node.nil?
-
-    #WSFC::axiom_xml_reader_free(xml_reader, @env)
-    #WSFC::axis2_options_set_xml_parser_reset(@client_options, @env, WSFC::AXIS2_TRUE)
-    WSFC::axiom_stax_builder_free_self(stax_builder, @env)
-    
-    return axiom_node
+    return WSFC::ruby_str_to_axiom_node(@env, str_payload, str_payload.length)
   end
 
   # This method is used to create a WSMessage with respect to a given AXIOM node
   # This is used to create the response message in a request call
   
   def axiom_node_to_message(axiom_node)
-    # Create XML writer
-    xml_writer = WSFC::axiom_xml_writer_create_for_memory(@env,
-                                                          "utf-8",
-                                                          WSFC::AXIS2_TRUE,
-                                                          0,
-                                                          WSFC::AXIS2_XML_PARSER_TYPE_BUFFER)
-    return nil if xml_writer.nil?
-    
-    axiom_output = WSFC::axiom_output_create(@env, xml_writer)
-    return nil if axiom_output.nil?
-
-    WSFC::axiom_node_serialize(axiom_node, @env, axiom_output)
- 
-    str_payload = WSFC::ruby_axiom_xml_writer_get_xml(xml_writer, @env)
-    
-    # Has to create a new buffer and assign that to the message
+    str_payload = WSFC::ruby_axiom_node_to_str(@env, axiom_node)
+	
+	if str_payload.empty? then
+      WSFC::axis2_log_error(@env, "[wsf-ruby] Failed to generate payload string from axiom node")
+	  return nil
+	end
     
     message = WSMessage.new(str_payload)
 

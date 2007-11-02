@@ -29,10 +29,6 @@ typedef int          axis2_scope_t;
 typedef unsigned int axis2_ssize_t;
 typedef char         axis2_byte_t;
 
-axiom_node_t * 
-axiom_document_build_all(axiom_document_t   *INOUT,
-                         const axutil_env_t *INOUT);
-
 axutil_env_t *
 axutil_env_create_all(const axis2_char_t        *log_file,
                       const axutil_log_levels_t  log_level);
@@ -207,6 +203,64 @@ ruby_axiom_attach_content(const axutil_env_t *env,
 %}
 
 %inline %{
+axiom_node_t *
+ruby_str_to_axiom_node(const axutil_env_t *env,
+                       char               *container,
+                       int                 size)
+{
+  axiom_xml_reader_t *xml_reader = axiom_xml_reader_create_for_memory(env, container, size, "utf-8", AXIS2_XML_PARSER_TYPE_BUFFER);
+  if (xml_reader == NULL)
+    return NULL;
+
+  axiom_stax_builder_t *stax_builder = axiom_stax_builder_create(env, xml_reader);
+  if (stax_builder == NULL)
+    return NULL;
+
+  axiom_document_t *document = axiom_stax_builder_get_document(stax_builder, env);
+  if (document == NULL)
+    return NULL;
+
+  axiom_node_t *axiom_node = axiom_document_get_root_element(document, env);
+  if (axiom_node == NULL)
+    return NULL;
+
+  axiom_document_build_all(document, env);
+
+  axiom_stax_builder_free_self(stax_builder, env);
+
+  return axiom_node;
+}
+%}
+
+%inline %{
+axis2_char_t *
+ruby_axiom_node_to_str(const axutil_env_t *env,
+                       axiom_node_t       *axiom_node)
+{
+  axiom_xml_writer_t *xml_writer = axiom_xml_writer_create_for_memory(env, NULL, AXIS2_TRUE, 0, AXIS2_XML_PARSER_TYPE_BUFFER);
+  if (xml_writer == NULL)
+    return NULL;
+    
+  axiom_output_t *axiom_output = axiom_output_create(env, xml_writer);
+  if (axiom_output == NULL)
+    return NULL;
+    
+  axiom_node_serialize(axiom_node, env, axiom_output);
+  
+  axis2_char_t *buffer = (axis2_char_t *) axiom_xml_writer_get_xml (xml_writer, env);
+  unsigned int buffer_length = axutil_strlen (buffer);
+  
+  axis2_char_t *new_buffer = AXIS2_MALLOC (env->allocator, sizeof (axis2_char_t) * (buffer_length + 1));
+  memcpy (new_buffer, buffer, buffer_length);
+  new_buffer[buffer_length] = '\0';
+  
+  axiom_output_free(axiom_output, env);
+  
+  return new_buffer;
+}
+%}
+
+%inline %{
 axis2_char_t *
 ruby_axiom_data_handler_get_base64_content(axiom_data_handler_t *data_handler,
                                            const axutil_env_t   *env)
@@ -277,50 +331,6 @@ axis2_status_t
 axis2_svc_client_send_robust(axis2_svc_client_t *svc_client,
                              const axutil_env_t *env,
                              const axiom_node_t *payload);
-
-%inline %{
-axiom_xml_reader_t *
-ruby_axiom_xml_reader_create_for_memory(const axutil_env_t *env,
-                                        char               *container,
-                                        int                size,
-                                        const axis2_char_t *encoding,
-                                        int                type)
-{
-  return axiom_xml_reader_create_for_memory(env, container, size, encoding, type);
-}
-%}
-
-axiom_stax_builder_t * 
-axiom_stax_builder_create(const axutil_env_t *env,
-                          axiom_xml_reader_t *parser);
-
-axiom_document_t * 
-axiom_stax_builder_get_document(axiom_stax_builder_t *builder,
-                                const axutil_env_t   *env);
-
-void
-axiom_stax_builder_free_self(axiom_stax_builder_t *builder,
-                             const axutil_env_t   *env);
-
-axiom_node_t *
-axiom_document_get_root_element(axiom_document_t   *document,
-                                const axutil_env_t *env);
-
-axis2_status_t 
-axiom_node_serialize (axiom_node_t       *om_node,
-                      const axutil_env_t *env,
-                      axiom_output_t     *om_output);
-
-axiom_xml_writer_t * 
-axiom_xml_writer_create_for_memory(const axutil_env_t *env,
-                                   axis2_char_t       *encoding,
-                                   int                 is_prefix_default,
-                                   int                 compression,
-                                   int                 type);
-
-axiom_output_t * 
-axiom_output_create(const axutil_env_t  *env,
-                     axiom_xml_writer_t *xml_writer);
 
 axis2_options_t *
 axis2_svc_client_get_options(const axis2_svc_client_t *svc_client,
@@ -449,15 +459,6 @@ axiom_children_iterator_next(axiom_children_iterator_t *iterator,
 axiom_node_t * 
 axiom_soap_fault_get_base_node(axiom_soap_fault_t *fault,
                                const axutil_env_t *env);
-
-%inline %{
-axis2_char_t *
-ruby_axiom_xml_writer_get_xml(axiom_xml_writer_t *writer,
-                              const axutil_env_t *env)
-{
-  return (axis2_char_t *)axiom_xml_writer_get_xml(writer, env);
-}
-%}
 
 axis2_status_t 
 axis2_options_set_xml_parser_reset(axis2_options_t    *options,
