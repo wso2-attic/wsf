@@ -113,6 +113,8 @@ function wsf_create_response_struct(DomNode $param_child)
 {
     $rec_array = array();
     $param_nil = NULL;
+    $param_min = NULL;
+    $param_max = NULL;
 
     $param_attr = $param_child->attributes;
     if($param_attr->getNamedItem(WSF_WSDL_SIMPLE))
