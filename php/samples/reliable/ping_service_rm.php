@@ -15,14 +15,14 @@
  * limitations under the License.
  */
 
-function echoFunction($inMessage) {
+function pingFunction($inMessage) {
 
     return ;
 }
 
-$operations = array("echoString" => "echoFunction");
-$actions = array("http://php.axis2.org/samples/echoString" => "echoString");
-$meps = array("echoString"=>"IN_ONLY");
+$operations = array("pingString" => "pingFunction");
+$actions = array("http://php.axis2.org/samples/pingString" => "pingString");
+$meps = array("pingString"=>"IN_ONLY");
 
 $svr = new WSService(array("operations" => $operations,
 			   "opMEP"=>$meps,
