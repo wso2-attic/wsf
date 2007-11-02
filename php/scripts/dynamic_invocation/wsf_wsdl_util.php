@@ -618,7 +618,7 @@ function is_xsd_type($param_type)
                           "unsignedByte" , "positiveInteger", "negativeInteger", "nonNegativeInteger",
                           "nonPositiveInteger", "gYearMonth", "gMonthDay", "gYear", "gMonth", 
                           "gDay", "duration", "Name", "NCName", "NMTOKEN", "NOTATION", "NMTOKENS", "ENTITY",
-                          "ENTITIES", "IDREF", "IDREFS", "anyURI", "language", "ID", "normalizedString", "token");
+                          "ENTITIES", "IDREF", "IDREFS", "anyURI", "language", "ID", "normalizedString", "token", "short");
 
     return in_array($param_type, $xsd_array);
 }
