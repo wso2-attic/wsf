@@ -624,6 +624,72 @@ function is_xsd_type($param_type)
 }
 
 
+function wsf_wsdl_util_convert_value($xsd_type, $data_value)
+{
+    $xsd_php_mapping_table = array(
+        "string"         =>  "string",
+        "boolean"        =>  "boolean",
+        "double"         =>  "float",
+        "float"          =>  "float",
+        "int"            =>  "integer",
+        "short"          =>  "integer",
+        "byte"           =>  "integer",
+        "long"           =>  "interger",
+        "decimal"        =>  "integer",
+        "interger"       =>  "integer",
+        "base64Binary"   =>  "string",
+        "hexBinary"      =>  "string",
+        "anyType"        =>  "mixed",
+        "QName"          =>  "string",
+        "dateTime"       =>  "string",
+        "date"           =>  "string",
+        "time"           =>  "string",
+        "unsignedLong"   =>  "interger",
+        "unsignedInt"    =>  "integer",
+        "unsignedShort"  =>  "integer",
+        "unsignedByte"   =>  "integer",
+        "positiveInteger"=>  "integer",
+        "negativeInteger"=>  "integer",
+        "nonNegativeInteger"=>"integer",
+        "gYearMonth"     =>  "string",
+        "gMonthDate"     =>  "string",
+        "gYear"          =>  "string",
+        "gMonth"         =>  "string",
+        "gDay"           =>  "string",
+        "duration"       =>  "string",
+        "Name"           =>  "string",
+        "NCName"         =>  "string",
+        "NMTOKEN"        =>  "string",
+        "NOTATION"       =>  "string",
+        "NMTOKENS"       =>  "string",
+        "ENTITY"         =>  "string",
+        "ENTITIES"       =>  "string",
+        "IDREF"          =>  "string",
+        "IDREFS"         =>  "string",
+        "anyURI"         =>  "string",
+        "language"       =>  "string",
+        "normalizedString"=> "string",
+        "token"          => "string");
+
+
+    foreach($xsd_php_mapping_table as $key => $value){
+        if ($key == $xsd_type){
+            if($value == 'integer')
+                $converted_value = (int)($data_value);
+            else if ($value == 'float')
+                $converted_value = (float)($data_value);
+            else if ($value == 'boolean')
+                $converted_value = (boolean)($data_value);
+            else if ($value == 'string')
+                $converted_value = $data_value;
+            else
+                $converted_value = $data_value;
+        }
+    }
+    
+    return $converted_value;
+}
+
 ?>
 
 

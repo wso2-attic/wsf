@@ -31,6 +31,7 @@ function wsf_client_response_and_validate(DomDocument $envelope_dom, DomDocument
     $has_return = FALSE;
     $is_wrapper = FALSE;
     $tmp_param_struct = array();
+    $class_map = NULL;
     
     /** get SOAP body DOM tree to compare with Sig model */
     $env_node = $envelope_dom->firstChild; 
@@ -79,7 +80,7 @@ function wsf_client_response_and_validate(DomDocument $envelope_dom, DomDocument
     if ($is_wrapper == FALSE && $response_node->firstChild->nodeType == XML_TEXT_NODE ){
         return $response_node->firstChild->wholeText;        
     }
-
+    
     $response_child_list = $response_node->childNodes;
     if(isset($response_parameters[WSF_CLASSMAP]))
         $class_map = $response_parameters[WSF_CLASSMAP];
@@ -110,14 +111,16 @@ function wsf_client_response_and_validate(DomDocument $envelope_dom, DomDocument
         }
     }
     else{
+        $return_array = array();
         if($response_child_list){
             foreach($response_child_list as $child){
                 foreach($tmp_param_struct[$response_node->localName] as $key => $val){
                     if($key == $child->localName){
-            
+                        $return_array[$response_node->localName] = wsf_set_values_to_array($val, $child->firstChild);
                     }
                 }
             }
+            return $return_array;
         }
     }
 }
@@ -258,6 +261,33 @@ function wsf_set_values_to_class_obj($val, $class_map, &$child, $prev_user_obj)
         return $user_level_obj;
     else
         return NULL;
+
+}
+
+function wsf_set_values_to_array($response_struct, $child)
+{
+    $data_array = array();
+    if(is_array($response_struct) && !isset($response_struct[WSF_TYPE])){
+        foreach($response_struct as $key => $value){
+            if(is_array($value) && !isset($value[WSF_TYPE])){
+                if($key == $child->localName)
+                    $data_array [$key] = wsf_set_values_to_array($value, $child->firstChild);
+                $child = $child->nextSibling;
+            }
+            else if(is_array($value) && isset($value[WSF_TYPE])){
+                if ($key == $child->localName){
+                    if($child->firstChild->nodeType == XML_TEXT_NODE){
+                        $converted_value =  wsf_wsdl_util_convert_value($value[WSF_TYPE], $child->firstChild->wholeText);
+                        $data_array [$key] = $converted_value;
+                    }
+                    else
+                        $data_array [$key] = $child->firstChild;//any type may be an xml
+                    $child = $child->nextSibling;
+                }
+            }
+        }
+    }
+    return $data_array;
 
 }
 
