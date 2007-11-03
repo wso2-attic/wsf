@@ -76,7 +76,7 @@ function wsf_client_response_and_validate(DomDocument $envelope_dom, DomDocument
         echo "return operation not found";
         return;
     }
-    
+   
     if ($is_wrapper == FALSE && $response_node->firstChild->nodeType == XML_TEXT_NODE ){
         return $response_node->firstChild->wholeText;        
     }
@@ -213,21 +213,20 @@ function wsf_set_values_to_class_obj($val, $class_map, &$child, $prev_user_obj)
                             if($prev_user_obj){
                                 if($refle_class && $refle_class->hasProperty($child->parentNode->localName))
                                     $refle_property = $refle_class->getProperty($child->parentNode->localName);
-
+                       
                                 $result_obj = wsf_set_values_to_class_obj($val2, $class_map, $child, $prev_user_obj);
                                 if($refle_property)
                                     $refle_property->setValue($prev_user_obj, $result_obj);
                                 
                             }
                             else{
-                                if($refle_class && $refle_class->hasProperty($child->localName))
-                                    $refle_property = $refle_class->getProperty($child->localName);
+                                if($refle_class && $refle_class->hasProperty($child->parentNode->localName))
+                                    $refle_property = $refle_class->getProperty($child->parentNode->localName);
 
                                 $prev_user_obj = $user_level_obj;
                                 $result_obj = wsf_set_values_to_class_obj($val2, $class_map, $child, $prev_user_obj);
                                 if($refle_property)
                                     $refle_property->setValue($user_level_obj, $result_obj);
-                                
                             }
                         }
                         else{
@@ -248,7 +247,7 @@ function wsf_set_values_to_class_obj($val, $class_map, &$child, $prev_user_obj)
                 }
             }
             else if($key2 != WSF_NS && $key2 != 'class_map_name' && $key2 != 'nillable'){
-                //echo "one here ".$key2."==>".$child->localName."\n";
+                //echo $key2."\n";
             }
             
         }

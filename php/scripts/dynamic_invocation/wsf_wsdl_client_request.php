@@ -228,7 +228,6 @@ function wsf_create_temp_struct(DomNode $param_child)
         $param_nil = $param_attr->getNamedItem('nillable')->value;
 
     if($wrap_type == 'yes'){
-        $is_xsd = is_xsd_type($param_type);
         $rec_array[WSF_NS] = $param_ns;
         $rec_array[WSF_TYPE] = $param_type;
         if($param_min)
@@ -239,20 +238,36 @@ function wsf_create_temp_struct(DomNode $param_child)
             $rec_array['nillable'] = $param_nil; 
     }
     else{
-        $rec_array[WSF_NS] = $param_ns;
-        $rec_array['class_map_name'] = $param_type;
-        if($param_min)
-            $rec_array['minOccurs'] = $param_min; 
-        if($param_max != 1)
-            $rec_array['maxOccurs'] = $param_max; 
-        if($param_nil)
+        
+        /* for some WSDL sig model gives simple type no even there are
+         * xsd types in the parameter. So this check is needed */
+        
+        if (is_xsd_type($param_type)){
+            $rec_array[WSF_NS] = $param_ns;
+            $rec_array[WSF_TYPE] = $param_type;
+            if($param_min)
+                $rec_array['minOccurs'] = $param_min; 
+            if($param_max != 1)
+                $rec_array['maxOccurs'] = $param_max; 
+            if($param_nil)
+                $rec_array['nillable'] = $param_nil; 
+        }
+        else{
+            $rec_array[WSF_NS] = $param_ns;
+            $rec_array['class_map_name'] = $param_type;
+            if($param_min)
+                $rec_array['minOccurs'] = $param_min; 
+            if($param_max != 1)
+                $rec_array['maxOccurs'] = $param_max; 
+            if($param_nil)
             $rec_array['nillable'] = $param_nil; 
-
-        $param_child_list_level2 = $param_child->childNodes;
-        foreach($param_child_list_level2 as $param_child_level2){
-            $param_child_level2_attr = $param_child_level2->attributes;
+            
+            $param_child_list_level2 = $param_child->childNodes;
+            foreach($param_child_list_level2 as $param_child_level2){
+                $param_child_level2_attr = $param_child_level2->attributes;
             $param_level2_name = $param_child_level2_attr->getNamedItem(WSF_NAME)->value;
             $rec_array[$param_level2_name] = wsf_create_temp_struct($param_child_level2);
+            }
         }
     }
 
