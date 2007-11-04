@@ -15,6 +15,8 @@
  */
 package org.wso2.wsf.ide.wtp.ext.server.command;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.IStatus;
@@ -22,16 +24,20 @@ import org.eclipse.core.runtime.Status;
 import org.wso2.wsf.ide.core.plugin.messages.WSASCoreUIMessages;
 import org.wso2.wsf.ide.core.utils.FileUtils;
 import org.wso2.wsf.ide.wtp.ext.server.bean.WSASConfigurationBean;
+import org.wso2.wsf.ide.wtp.ext.server.util.WSASDebugUtil;
 
 public class WSASDebugCommand {
 	
     private static IStatus status;
 
 	public  static IStatus run() throws InvocationTargetException {
+	 try{
 		status = Status.OK_STATUS;
 		Process wsasProcess = null;
-		String pathNodesStopWin[] = {WSASCoreUIMessages.DIR_BIN, WSASCoreUIMessages.WSAS_START_BAT};
+		String pathNodesStopWin[] = {WSASCoreUIMessages.DIR_BIN, WSASCoreUIMessages.WSAS_DEBUG_BAT};
 		String pathNodesStopIx[] = {WSASCoreUIMessages.DIR_BIN, WSASCoreUIMessages.WSAS_START_SH};
+		WSASDebugUtil debugUtil = new WSASDebugUtil();
+		File runnerFile = debugUtil.createWindowsDebugRunnerFile();
 
 		if (WSASConfigurationBean.isWsasStartStatus()) {
 			status = new Status( IStatus.ERROR,"id",11,WSASCoreUIMessages.WSAS_ALREADY_RUNNING,null);
@@ -39,7 +45,6 @@ public class WSASDebugCommand {
 		}else{
 		
 				String wsasInstallationLocation = WSASConfigurationBean.getWsasInstallationPath();
-				try {
 					Runtime runtime = Runtime.getRuntime();
 					String OS = System.getProperty(WSASCoreUIMessages.PROPERTIES_OS_NAME).toLowerCase();
 					String debugAppender = WSASCoreUIMessages.WSAS_DEFAULT_DEBUG_APPENDER +
@@ -48,7 +53,8 @@ public class WSASDebugCommand {
 							|| (OS.indexOf(WSASCoreUIMessages.OS_WIN_NT) > -1)
 							|| (OS.indexOf(WSASCoreUIMessages.OS_WIN_2000) > -1)
 							|| (OS.indexOf(WSASCoreUIMessages.OS_WIN_XP) > -1)) {
-						wsasProcess = runtime.exec(FileUtils.addNodesToPath(wsasInstallationLocation, 
+						wsasProcess = runtime.exec(runnerFile.getAbsolutePath() + " "+ 
+													FileUtils.addNodesToPath(wsasInstallationLocation, 
 																			pathNodesStopWin) 
 																			+debugAppender);
 						wsasProcess.waitFor();
@@ -57,12 +63,11 @@ public class WSASDebugCommand {
 							FileUtils.addNodesToPath(wsasInstallationLocation, pathNodesStopIx) 
 						              +debugAppender);
 					}
+				WSASConfigurationBean.setWSASAlreadyRunning(false);
+		}
+		runnerFile.delete();
 				} catch (Exception e) {
 					e.printStackTrace();
-				}
-				
-				WSASConfigurationBean.setWSASAlreadyRunning(false);
-				
 		}
 		return status;
 	}
