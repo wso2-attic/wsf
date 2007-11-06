@@ -40,25 +40,6 @@ try {
    echo "\n\n Received message \n";
    echo htmlspecialchars($recvMsg);
 
-
-   $msg = new WSMessage($reqPayloadString ,
-       array("headers" => array(
-           new WSHeader("http://test.org","header1", "value1", true, 1),
-            new WSHeader("http://test.org","header2", "value2", true, 2))));
-
-   $client->request($msg);
-
-   $sentMsg = $client->getLastRequest();
-   $recvMsg = $client->getLastResponse();        
-
-   echo "\nSent message \n";
-   echo htmlspecialchars($sentMsg);
-   
-   echo "\n\n Received message \n";
-   echo htmlspecialchars($recvMsg);
-
-
-
 } catch (Exception $e) {
 	if ($e instanceof WSFault) {
 		printf("Soap Fault: %s\n", $e->Reason);
