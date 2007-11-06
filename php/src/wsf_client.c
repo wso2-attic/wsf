@@ -668,7 +668,7 @@ wsf_client_set_headers (
                     axiom_node_t *header_node = NULL;
                     header_node =
                         wsf_util_construct_header_node (env,
-                        header TSRMLS_CC);
+                                NULL, header TSRMLS_CC);
                     if (header_node) {
                         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                             "[wsf_client] adding header block to svc_client");
