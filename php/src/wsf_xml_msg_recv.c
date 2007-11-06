@@ -28,7 +28,6 @@
 #include <php.h>
 #include <string.h>
 #include "wsf.h"
-#include "wsf_soap.h"
 
 axis2_status_t AXIS2_CALL wsf_xml_msg_recv_invoke_business_logic_sync (
     axis2_msg_recv_t * msg_recv,
@@ -448,8 +447,7 @@ wsf_xml_msg_recv_invoke_mixed (
     axis2_char_t * op_name TSRMLS_DC)
 {
 
-    return wsf_soap_do_function_call (env,
-        svc_info, in_msg_ctx, out_msg_ctx, op_name TSRMLS_CC);
+    return 0;
 }
 
 static axiom_node_t *

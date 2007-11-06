@@ -203,11 +203,11 @@ typedef enum ws_input_types
 
 /*************************************************/
 
-#define WS_SOAP_DOCUMENT SOAP_DOCUMENT
-#define WS_SOAP_RPC SOAP_RPC
+#define WS_SOAP_DOCUMENT 1
+#define WS_SOAP_RPC 2
 
-#define WS_SOAP_ENCODED SOAP_ENCODED
-#define WS_SOAP_LITERAL SOAP_LITERAL
+#define WS_SOAP_ENCODED 1
+#define WS_SOAP_LITERAL 2
 
 typedef struct wsf_svc_info
 {
