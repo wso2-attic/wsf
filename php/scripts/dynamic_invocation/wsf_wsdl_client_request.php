@@ -183,6 +183,7 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
         $payload_dom->appendChild($element);
         $payload_node = $payload_dom->firstChild;
         $clone_node = $payload_node->cloneNode(TRUE);
+//        echo $payload_dom->saveXML($clone_node);exit(0);
         return $payload_dom->saveXML($clone_node);
     }
     else {
@@ -287,6 +288,7 @@ function wsf_create_temp_struct(DomNode $param_child)
 function wsf_create_payload_for_class_map(DomDocument $payload_dom, $parameter_struct, DomNode $root_ele, $classmap_obj, $prev_class_obj = NULL)
 {
     static $i = 2;
+    $element_2 = NULL;
     foreach($parameter_struct as $val => $value){
         if(is_array($value)){
             if($value[WSF_NS]){
@@ -300,6 +302,13 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom, $parameter_s
                 else {
                     if(isset($value['nillable'])){
                         if(isset($value['maxOccurs'])){
+                            /*logic should be changed for more elemnts*/ 
+                            $element_2 = $payload_dom->createElementNS($value['ns'], "ns".$i.":".$val);
+                            $prev_class_obj = $classmap_obj;
+                            $new_obj = $classmap_obj->$val;
+                            $i++;
+                            wsf_create_payload_for_class_map($payload_dom, $value, $element_2, $new_obj, $prev_class_obj);
+             
                         }
                         else{
                             $element_2 = $payload_dom->createElementNS($value['ns'], "ns".$i.":".$val);
@@ -321,7 +330,8 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom, $parameter_s
                     }
                 }
             }
-            $root_ele->appendChild($element_2);
+            if($element_2)
+                $root_ele->appendChild($element_2);
         }
     }
 }

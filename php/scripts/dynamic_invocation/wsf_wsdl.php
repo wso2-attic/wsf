@@ -142,9 +142,9 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
      
     if($sig_method)
         $payload = wsf_create_payload($sig_method, $is_doc_lit, $operation_name, $arg_count, $arguments, $class_map);
+
     if($sig_method)
         $return_node = wsf_get_response_parameters($sig_method);
-
     $return_sig_model_string = $sig_model_dom->saveXML($return_node);
 
     if ($is_wsdl_11 == TRUE && $wsdl_11_dom)

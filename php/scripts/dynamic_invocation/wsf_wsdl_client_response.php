@@ -207,25 +207,25 @@ function wsf_set_values_to_class_obj($val, $class_map, &$child, $prev_user_obj)
                         
                         if($child->firstChild != NULL && $child->firstChild->nodeType == XML_ELEMENT_NODE)
                             $child = $child->firstChild;
+
                         $refle_class = new ReflectionClass($user_level_obj);
 
                         if(!isset($val2[WSF_TYPE])){
                             if($prev_user_obj){
-                                if($refle_class && $refle_class->hasProperty($child->parentNode->localName))
-                                    $refle_property = $refle_class->getProperty($child->parentNode->localName);
-                       
+                                if($refle_class && $refle_class->hasProperty($child->localName))
+                                    $refle_property = $refle_class->getProperty($child->localName);
+                                                          
                                 $result_obj = wsf_set_values_to_class_obj($val2, $class_map, $child, $prev_user_obj);
-                                if($refle_property)
-                                    $refle_property->setValue($prev_user_obj, $result_obj);
-                                
+                                if(isset($refle_property))
+                                    $refle_property->setValue($user_level_obj, $result_obj);
                             }
                             else{
-                                if($refle_class && $refle_class->hasProperty($child->parentNode->localName))
-                                    $refle_property = $refle_class->getProperty($child->parentNode->localName);
+                                if($refle_class && $refle_class->hasProperty($child->localName))
+                                    $refle_property = $refle_class->getProperty($child->localName);
 
                                 $prev_user_obj = $user_level_obj;
                                 $result_obj = wsf_set_values_to_class_obj($val2, $class_map, $child, $prev_user_obj);
-                                if($refle_property)
+                                if(isset($refle_property))
                                     $refle_property->setValue($user_level_obj, $result_obj);
                             }
                         }
@@ -237,10 +237,16 @@ function wsf_set_values_to_class_obj($val, $class_map, &$child, $prev_user_obj)
                                     $property->setValue($user_level_obj, $child->firstChild->wholeText);
                                 }
                             }
+
                             if($child->nextSibling != NULL)
                                 $child = $child->nextSibling;
                             else{
+                                $parent = $child->parentNode;
                                 $child = $child->parentNode->nextSibling;
+                                if(!$child){
+                                    $child = $parent->parentNode->nextSibling;
+                                    /** need a recursive loop */
+                                }
                             }
                         }
                     }
@@ -290,6 +296,7 @@ function wsf_set_values_to_array($response_struct, $child)
 
 }
 
+    
 
 
 ?>
