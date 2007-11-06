@@ -793,25 +793,6 @@ PHP_METHOD (ws_client, __construct)
 			(void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
             add_property_stringl (this_ptr, WS_WSDL, Z_STRVAL_PP (tmp),
                                   Z_STRLEN_PP (tmp), 1);
-/* 				int ret; */
-/* 				char *wsdl_path = NULL; */
-/* 				sdlPtr sdl; */
-/* 				wsdl_path = Z_STRVAL_PP (tmp); */
-/* 				sdl = get_sdl (obj, wsdl_path, cache_wsdl TSRMLS_CC); */
-/* 				ret = zend_list_insert (sdl, le_sdl); */
-/* 				add_property_resource (obj, "sdl", ret); */
-        }
-        
-        if (zend_hash_find (ht, "style", sizeof ("style"),
-           (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_LONG
-		    && (Z_LVAL_PP (tmp) == WS_SOAP_RPC || Z_LVAL_PP (tmp) == WS_SOAP_DOCUMENT)) {
-			    add_property_long (this_ptr, "style", Z_LVAL_PP (tmp));
-        }
-        if (zend_hash_find (ht, "use", sizeof ("use"),
-            (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_LONG
-            && (Z_LVAL_PP (tmp) == WS_SOAP_LITERAL || Z_LVAL_PP (tmp) == WS_SOAP_ENCODED)) {
-				
-				add_property_long (this_ptr, "use", Z_LVAL_PP (tmp));
         }
         
         if (zend_hash_find (ht, "classmap", sizeof ("classmap"),
@@ -1000,13 +981,14 @@ PHP_METHOD (ws_service, __construct)
     wsf_svc_info_t * svc_info = NULL;
     zval * options = NULL;
     axutil_hash_index_t * hi = NULL;
-    /* int soap_version = AXIOM_SOAP12; */
     HashTable * ht_options = NULL;
     HashTable * ht_actions = NULL;
     HashTable * ht_ops_to_funcs = NULL;
     HashTable * ht_ops_to_mep = NULL;
     HashTable * ht_opParams = NULL;
+    
     char *wsdl = NULL;
+    
     if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "|a",
             &options)) {
         php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
@@ -1054,10 +1036,16 @@ PHP_METHOD (ws_service, __construct)
 					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
 						"[wsf_service] setting message operation parameters");
 			}
+            
             if (zend_hash_find (ht_options, "wsdl", sizeof ("wsdl"),
                (void **) & tmp) == SUCCESS  &&Z_TYPE_PP (tmp) == IS_STRING) {
 				    wsdl = Z_STRVAL_PP (tmp);
             }
+            if (zend_hash_find (ht_options , "classmap", sizeof ("classmap"),
+                   (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
+                    add_property_zval(this_ptr, "classmap", *tmp);
+            }
+
             if (zend_hash_find (ht_options, WS_USE_MTOM, sizeof (WS_USE_MTOM), 
 				(void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_BOOL) {
 
@@ -1546,7 +1534,8 @@ PHP_METHOD (ws_service, reply)
 		req_info.request_method = (char *) SG (request_info).request_method;
 		req_info.query_string = (char *) SG (request_info).query_string;
     	
-		if (zend_hash_find (&EG(symbol_table), "HTTP_RAW_POST_DATA", sizeof ("HTTP_RAW_POST_DATA"), (void **)&raw_post) != FAILURE  && ((*raw_post)->type ==  IS_STRING)){
+		if (zend_hash_find (&EG(symbol_table), "HTTP_RAW_POST_DATA", sizeof ("HTTP_RAW_POST_DATA"), 
+                    (void **)&raw_post) != FAILURE  && ((*raw_post)->type ==  IS_STRING)){
 			req_info.req_data = Z_STRVAL_PP (raw_post);
 			req_info.req_data_length = Z_STRLEN_PP (raw_post);
 		}else {
@@ -1570,14 +1559,6 @@ PHP_METHOD (ws_service, reply)
 			}
            
 		}
-
-    
-    
-    if ((zend_hash_find (Z_OBJPROP_P (this_ptr), "wsdlmode",
-                sizeof ("wsdlmode"), (void **) & tmp)) == SUCCESS
-        && Z_TYPE_PP (tmp) == IS_LONG) {
-        in_wsdl_mode = 1;
-    }
     
     } else if(ZEND_NUM_ARGS() > 0 && arg_data_len > 0){
         /* If we come here, it is not an HTTP post, 
@@ -1613,23 +1594,7 @@ PHP_METHOD (ws_service, reply)
 		/** begin WSDL Generation */ 
 		generate_wsdl_for_service(obj ,svc_info, &req_info, SG(request_info).query_string , 0 TSRMLS_CC);
 
-   } /*
-        else if (in_wsdl_mode) {
-        axis2_bool_t status = AXIS2_SUCCESS;
-        if (raw_post_null) {
-            wsf_soap_send_fault (SOAP_1_1, "SOAP-ENV:Server",
-                "Bad Request. Can't find HTTP_RAW_POST_DATA",
-                NULL TSRMLS_CC);
-        }
-        status =
-            wsf_soap_do_function_call1 (env, svc_info, this_ptr,
-            req_info.req_data, req_info.req_data_length TSRMLS_CC);
-        if (status == AXIS2_FALSE) {
-            wsf_soap_send_fault (SOAP_1_1, "SOAP-ENV:Server",
-                "Request Handling failed", NULL TSRMLS_CC);
-        }
-    } */
-    else {
+   }else {
         conf = axis2_conf_ctx_get_conf (conf_ctx, ws_env_svr);
         if (!axis2_conf_get_svc (conf, ws_env_svr, svc_info->svc_name))
              {
@@ -2077,9 +2042,7 @@ PHP_METHOD (ws_client_proxy, __call)
             zend_hash_move_forward_ex (Z_ARRVAL_P (args), &pos)) {
             real_args[i++] = *param;
     } }
-   /*  wsf_soap_do_soap_call (this_ptr, fn_name, fn_name_len, arg_count, */
-/*         real_args, return_value, NULL, NULL, NULL, NULL, NULL, */
-/*         env TSRMLS_CC); */
+    
     create_dynamic_client(this_ptr, fn_name, fn_name_len, arg_count,
                           args, return_value, env TSRMLS_CC);
 
