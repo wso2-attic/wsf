@@ -1441,7 +1441,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
 PHP_METHOD (ws_service, reply) 
 {
     ws_object_ptr intern = NULL;
-    zval * obj = NULL, **tmp;
+    zval * obj = NULL; /* **tmp; */
     axis2_conf_t * conf = NULL;
     axis2_conf_ctx_t * conf_ctx = NULL;
     wsf_svc_info_t * svc_info = NULL;
@@ -1455,7 +1455,7 @@ PHP_METHOD (ws_service, reply)
 
     char status_line[100];
     char *content_type = NULL;
-    int in_wsdl_mode = 0;
+/*     int in_wsdl_mode = 0; */
     int raw_post_null = AXIS2_FALSE;
     
     char *arg_data = NULL;

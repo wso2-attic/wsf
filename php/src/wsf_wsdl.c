@@ -391,6 +391,8 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
                     ZVAL_ZVAL(return_value, res_retval, 0, 0);
                 if (Z_TYPE_P(res_retval) == IS_OBJECT)
                     ZVAL_ZVAL(return_value, res_retval, 0, 0); 
+                if (Z_TYPE_P(res_retval) == IS_ARRAY)
+                    ZVAL_ZVAL(return_value, res_retval, 0, 0);
             }
         }
     }
