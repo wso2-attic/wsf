@@ -45,13 +45,17 @@ class WSClient
     
     @options = Hash.new
     options.each_pair {|k,v| @options.store(k,v)} if options.kind_of? Hash
+
+	# Set client level options
+	client_options = WSFC::axis2_svc_client_get_options(@svc_client, @env)
+	set_client_options(client_options)
   end
   
   # This method is used to set client level settings according to 
   # the options specified when the client is created.
   
-  def set_client_options(message, client_options)
-    # Proxy settings
+  def set_client_options(client_options)
+	# Proxy settings
     WSFC::axis2_svc_client_set_proxy(@svc_client,
                                      @env,
                                      @options["proxy_host"].to_s,
@@ -65,13 +69,6 @@ class WSClient
     else # SOAP style
       soap_version = use_soap.eql?("1.1") ? WSFC::AXIOM_SOAP11 : WSFC::AXIOM_SOAP12
       WSFC::axis2_options_set_soap_version(client_options, @env, soap_version)
-
-	  # Set SOAP action
-      action = message_property("action", message).to_s
-      begin
-        soap_action = WSFC::axutil_string_create(@env, action)
-        WSFC::axis2_options_set_soap_action(client_options, @env, soap_action)
-      end unless action.empty?
     end
     
     # HTTP method
@@ -111,6 +108,24 @@ class WSClient
                                           pass_phrase_property)
   end
 
+  # This method is used to set transaction level settings.
+  # This is called for every request/send call.
+  
+  def set_transaction_options(message, client_options)
+    WSFC::axis2_options_set_xml_parser_reset(client_options, @env, WSFC::AXIS2_FALSE)
+	
+	# Set SOAP action
+    use_soap = @options.has_key?("use_soap") ? @options["use_soap"].to_s.upcase : "TRUE"
+
+    if !use_soap.eql?("FALSE") then # SOAP style
+      action = message_property("action", message).to_s
+      begin
+        soap_action = WSFC::axutil_string_create(@env, action)
+        WSFC::axis2_options_set_soap_action(client_options, @env, soap_action)
+      end unless action.empty?
+    end
+  end
+
   # This method is used to do a blocking request call.
   # message can be an XML string, a REXML object or a WSMessage.
   # A WSFault is thown if an error occurs while a message is being sent.
@@ -140,8 +155,8 @@ class WSClient
       return nil
     end
    
-	# Set client options
-    set_client_options(message, client_options)
+	# Set transaction level options
+    set_transaction_options(message, client_options)
 
     # Handle Addressing options
     handle_addressing(message, client_options)
@@ -197,8 +212,8 @@ class WSClient
       return
     end
    
-	# Set client options
-    set_client_options(message, client_options)
+	# Set transaction level options
+    set_transaction_options(message, client_options)
 
     # Hadle Addressing options
     handle_addressing(message, client_options)
@@ -532,6 +547,7 @@ class WSClient
   end
 
   private :set_client_options
+  private :set_transaction_options
   private :message_to_axiom_node
   private :axiom_node_to_message
   private :client_property
