@@ -18,5 +18,6 @@
 require 'wsf/wsfault'
 require 'wsf/wsmessage'
 require 'wsf/wsclient'
-
+require 'wsf/wspolicy'
+require 'wsf/wssecuritytoken'
 require 'util/wsutil'

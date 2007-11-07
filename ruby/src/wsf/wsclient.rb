@@ -135,7 +135,7 @@ class WSClient
       WSFC::axis2_log_error(@env, "[wsf-ruby] Service client not created")
       return nil
     end
-   
+    
     client_options = WSFC::axis2_svc_client_get_options(@svc_client, @env)
     
 	# Set end point 
@@ -155,8 +155,11 @@ class WSClient
       return nil
     end
    
-	# Set transaction level options
+    # Set transaction level options
     set_transaction_options(message, client_options)
+
+    # Handle Security
+    handle_security
 
     # Handle Addressing options
     handle_addressing(message, client_options)
@@ -215,12 +218,16 @@ class WSClient
 	# Set transaction level options
     set_transaction_options(message, client_options)
 
-    # Hadle Addressing options
+    # Handle Security
+    handle_security
+
+    # Handle Addressing options
     handle_addressing(message, client_options)
 
     # Handle outgoing attachments
     handle_outgoing_attachments(message, client_options, request_axiom_payload)
 
+    puts "before send robust"
     status = WSFC::axis2_svc_client_send_robust(@svc_client, @env, request_axiom_payload)
 
     if WSFC::axis2_svc_client_get_last_response_has_fault(@svc_client, @env) == WSFC::AXIS2_TRUE then # SOAP fault occurred
@@ -347,6 +354,111 @@ class WSClient
     
     return WSFault.new(code, reason, role, detail, xml)
   end
+
+  # This method is used to handle security
+  # All secuirty specific manipulations to be done inside this method.
+  
+  def handle_security
+     policy = client_property("policy")
+     sec_token = client_property("security_token")
+
+     return unless !policy.nil? # and !sec_token.nil?
+     
+     incoming_policy_node = policy.get_policy_as_axiom_node(@env)
+
+     if not incoming_policy_node.nil?
+        if WSFC::axiom_node_get_node_type(incoming_policy_node, @env) == WSFC::AXIOM_ELEMENT then
+     	   root = WSFC::ruby_axiom_node_get_data_element(incoming_policy_node, @env)
+           if not root.nil?
+              neethi_policy = WSFC::neethi_engine_get_policy(@env, incoming_policy_node, root)
+              svc = WSFC::axis2_svc_client_get_svc(@svc_client, @env)
+              desc = WSFC::axis2_svc_get_base(svc, @env)
+              policy_include = WSFC::axis2_desc_get_policy_include(desc, @env)
+              WSFC::axis2_policy_include_add_policy_element(policy_include, @env, WSFC::AXIS2_SERVICE_POLICY, neethi_policy)
+              svc_ctx = WSFC::axis2_svc_client_get_svc_ctx(@svc_client, @env)
+              conf_ctx = WSFC::axis2_svc_ctx_get_conf_ctx(svc_ctx, @env)
+              conf = WSFC::axis2_conf_ctx_get_conf(conf_ctx, @env)
+              rampart_ctx = WSFC::rampart_context_create(@env)
+              set_security_token_data_to_rampart_context(rampart_ctx, sec_token)
+     	      security_param = WSFC::ruby_axutil_security_param_create(@env, WSFC::WS_RAMPART_CONFIGURATION, rampart_ctx)
+ 	      WSFC::axis2_conf_add_param(conf, @env, security_param)
+     	   end
+     	end
+     end
+     
+     WSFC::axis2_svc_client_engage_module(@svc_client, @env, "rampart")
+  rescue => exception
+     puts "Exception : #{exception}"
+  end
+
+  def set_security_token_data_to_rampart_context(rampart_context, sec_token)
+    return if sec_token.nil?
+    
+    option = sec_token.option("private_key") 
+    if not option.nil?
+       if (WSFC::ruby_rampart_context_set_prv_key(rampart_context, @env, option) == WSFC::AXIS2_SUCCESS) then
+          WSFC::axis2_log_debug(@env, "[wsf_sec_policy] setting pvt key  ")
+       end
+       if (WSFC::rampart_context_set_prv_key_type(rampart_context, @env, WSFC::AXIS2_KEY_TYPE_PEM) == WSFC::AXIS2_SUCCESS) then 
+          WSFC::axis2_log_debug(@env, "[wsf_sec_policy] setting pvt key format ")
+       end
+    end
+   
+    option = sec_token.option("certificate")
+    if not option.nil?
+       if (WSFC::ruby_rampart_context_set_certificate(rampart_context, @env, option) == WSFC::AXIS2_SUCCESS) then
+          WSFC::axis2_log_debug(@env, "[wsf_sec_policy] setting pub key  ")
+       end
+       if (WSFC::rampart_context_set_certificate_type(rampart_context, @env, WSFC::AXIS2_KEY_TYPE_PEM) == WSFC::AXIS2_SUCCESS) then
+          WSFC::axis2_log_debug(@env, "[wsf_sec_policy] setting pub key type ")
+       end
+    end
+
+    option = sec_token.option("receiver_certificate")
+    if not option.nil?
+       if (WSFC::ruby_rampart_context_set_receiver_certificate(rampart_context, @env, option) == WSFC::AXIS2_SUCCESS) then
+          WSFC::axis2_log_debug(@env, "[wsf_sec_policy] setting receiver pub key")
+       end 
+       if (WSFC::rampart_context_set_receiver_certificate_type(rampart_context, @env, WSFC::AXIS2_KEY_TYPE_PEM) == WSFC::AXIS2_SUCCESS) then
+          WSFC::axis2_log_debug(@env, "[wsf_sec_policy] setting receiver pub key format")
+       end
+    end
+
+    option = sec_token.option("user")
+    if not option.nil?
+       if (WSFC::rampart_context_set_user(rampart_context, @env, option) == WSFC::AXIS2_SUCCESS) then
+          WSFC::axis2_log_debug(@env, "[wsf_sec_policy] setting username ")
+       end 
+    end
+
+    option = sec_token.option("password")
+    if not option.nil?
+       if (WSFC::rampart_context_set_password(rampart_context, @env, option) == WSFC::AXIS2_SUCCESS) then
+          WSFC::axis2_log_debug(@env, "[wsf_sec_policy] setting password ")
+       end
+    end
+
+    option = sec_token.option("password_type")
+    if not option.nil?
+       if (WSFC::rampart_context_set_password_type(rampart_context, @env, option) == WSFC::AXIS2_SUCCESS) then
+          WSFC::axis2_log_debug(@env, "[wsf_sec_policy] setting password type ")
+       end
+    end
+
+    option = sec_token.option("ttl")
+    if not option.nil?
+       if (WSFC::rampart_context_set_ttl(rampart_context, @env, option) == WSFC::AXIS2_SUCCESS) then
+          WSFC::axis2_log_debug(@env, "[wsf_sec_policy) setting ttl")
+       end
+    end
+
+    #option = sec_token.option("password_callback")
+    #if not option.nil?
+    #   if (WSFC::ruby_rampart_context_set_pwcb_function(rampart_context, @env, nil, option) == WSFC::AXIS2_SUCCESS) then
+    #      WSFC::axis2_log_debug(@env, "[wsf_sec_policy] setting callback function")
+    #   end
+    #end
+  end  
 
   # This method is used to engage WS-Addressing specifications
   # All addressing specific manipulations have to be done inside this method
