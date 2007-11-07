@@ -1107,8 +1107,11 @@ wsf_client_do_request (
                 if (Z_TYPE_PP (client_tmp) == IS_STRING) {
                     sequence_key =
                         axutil_strdup (env, Z_STRVAL_PP (client_tmp));
+		    axutil_property_t *seq_property = 
                     axutil_property_create_with_args (env,
                         AXIS2_SCOPE_REQUEST, 1, NULL, sequence_key);
+		    axis2_options_set_property(client_options, env, 
+			WS_SANDESHA2_CLIENT_SEQ_KEY, seq_property);
                     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                         "[wsf_client] sequence key is %d",
                         Z_STRVAL_PP (client_tmp));
@@ -1255,16 +1258,15 @@ wsf_client_do_request (
                 soap_fault = axiom_soap_body_get_fault (soap_body, env);
             if (soap_fault) {
 
-				int soap_version = 0;
-                zval *rfault;
-				axiom_node_t *fault_node = NULL;
-				soap_version = axis2_options_get_soap_version(client_options, env);
-
-				fault_node = axiom_soap_fault_get_base_node(soap_fault, env);
-				if(fault_node){
-                    /*
-                    res_text = axiom_node_sub_tree_to_string ( fault_node, env);
-                    */
+		int soap_version = 0;
+		zval *rfault;
+		axiom_node_t *fault_node = NULL;
+		soap_version = axis2_options_get_soap_version(client_options, env);
+		fault_node = axiom_soap_fault_get_base_node(soap_fault, env);
+		if(fault_node){
+                /*
+                res_text = axiom_node_sub_tree_to_string ( fault_node, env);
+               */
 					res_text = axiom_node_to_string ( fault_node, env);
 					MAKE_STD_ZVAL (rfault);
 					INIT_PZVAL(rfault);

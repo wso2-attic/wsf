@@ -26,9 +26,18 @@ CFLAGS = $(CFLAGS) /D "NDEBUG" /O2 $(CRUNTIME)
 LDFLAGS = $(LDFLAGS)
 !endif
 
+WSFPHP_SRC= wsf.c \
+	    wsf_util.c \
+	    wsf_client.c \
+	    wsf_worker.c \
+	    wsf_wsdl.c \
+	    wsf_xml_msg_recv.c \
+	    wsf_out_transport_info.c \
+	    wsf_policy.c 
+
 wsf.dll :
 	@if not exist intdir mkdir intdir
-	@cl.exe $(CFLAGS) $(INCLUDE_PATH) *.c /Fointdir\ /c
+	@cl.exe $(CFLAGS) $(INCLUDE_PATH) $(WSFPHP_SRC) /Fointdir\ /c
 	@rc.exe /r /fo "intdir/wsf.res" wsf.rc
 	@link.exe $(LDFLAGS) intdir\*.obj intdir\wsf.res $(LIBS) /DLL  /OUT:.\..\wso2-wsf-php-bin-1.1.0-win32\wsf.dll
 
