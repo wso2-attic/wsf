@@ -15,6 +15,18 @@
 #include "axis2_svc_client.h"
 #include "axutil_qname.h"
 #include "axutil_log.h"
+#include "axis2_key_type.h"
+#include "axis2_conf.h"
+#include "axutil_param.h"
+#include "axis2_svc_ctx.h"
+#include "axis2_desc.h"
+#include "axis2_policy_include.h"
+#include "rampart_context.h"
+#include "axiom_document.h"
+#include "axutil_utils_defines.h"
+#include "axutil_param.h"
+#include "neethi_options.h"
+#include "rp_defines.h"
 %}
 
 %include wsf_constants.i
@@ -489,5 +501,226 @@ axis2_log_error(axutil_env_t *env,
                 axis2_char_t *str)
 {
   AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, str);
+}
+%}
+
+axis2_status_t 
+axis2_conf_add_param(axis2_conf_t * conf,
+                     const axutil_env_t * env,
+                     axutil_param_t * param);
+
+
+
+axutil_param_t *
+axutil_param_create(const axutil_env_t * env,
+                    axis2_char_t * name,
+                    void *value);
+
+%inline %{
+axutil_param_t *
+ruby_axutil_security_param_create(const axutil_env_t* env,
+                                  axis2_char_t * name,
+                                  rampart_context_t* rampart_context)
+{
+   return axutil_param_create(env, name, (void *)rampart_context);
+}
+%}
+
+axis2_svc_t *
+axis2_svc_client_get_svc(const axis2_svc_client_t * svc_client,
+        const axutil_env_t * env);
+
+axis2_desc_t *
+axis2_svc_get_base(const axis2_svc_t * svc,
+        const axutil_env_t * env);
+
+axis2_svc_ctx_t *
+axis2_svc_client_get_svc_ctx(const axis2_svc_client_t * svc_client,
+        const axutil_env_t * env);
+
+axis2_conf_ctx_t *
+axis2_svc_ctx_get_conf_ctx(const axis2_svc_ctx_t * svc_ctx,
+                    const axutil_env_t * env);
+
+axis2_conf_t *
+axis2_conf_ctx_get_conf(const axis2_conf_ctx_t * conf_ctx,
+        const axutil_env_t * env);
+
+
+axis2_policy_include_t *
+axis2_desc_get_policy_include(axis2_desc_t * desc,
+                    const axutil_env_t * env);
+
+axis2_status_t 
+axis2_policy_include_add_policy_element(axis2_policy_include_t * policy_include,
+        const axutil_env_t * env,
+        int type,
+        neethi_policy_t * policy);
+
+neethi_options_t *
+neethi_options_create(const axutil_env_t *env);
+
+axis2_status_t 
+neethi_options_set_include_timestamp(neethi_options_t *options,
+        const axutil_env_t *env,
+        axis2_bool_t include_timestamp);
+
+axis2_status_t
+neethi_options_set_is_username_token(neethi_options_t *options,
+        const axutil_env_t *env,
+        axis2_bool_t is_username_token);
+
+axis2_status_t 
+neethi_options_set_encrypt_body(neethi_options_t *options,
+        const axutil_env_t *env,
+        axis2_bool_t encrypt_body);
+
+axis2_status_t 
+neethi_options_set_algorithmsuite(neethi_options_t *options,
+        const axutil_env_t *env,
+        axis2_char_t *algorithmsuite);
+
+axis2_status_t 
+neethi_options_set_keyidentifier(neethi_options_t *options,
+        const axutil_env_t *env,
+        axis2_char_t *keyidentifier);
+
+axis2_status_t 
+neethi_options_set_sign_body(neethi_options_t *options,
+        const axutil_env_t *env,
+        axis2_bool_t sign_body);
+
+axis2_status_t 
+neethi_options_set_signature_protection(neethi_options_t *options,
+        const axutil_env_t *env,
+        axis2_bool_t signature_protection);
+
+axis2_status_t 
+neethi_options_set_encrypt_before_sign(neethi_options_t *options,
+        const axutil_env_t *env,
+        axis2_bool_t encrypt_before_sign);
+
+axiom_node_t *
+neethi_options_get_root_node(neethi_options_t *options,
+        const axutil_env_t *env);
+
+neethi_policy_t *
+neethi_engine_get_policy(const axutil_env_t * env,
+        axiom_node_t * node,
+        axiom_element_t * element);
+
+rampart_context_t *
+rampart_context_create(const axutil_env_t *env);
+
+axis2_status_t
+rampart_context_set_prv_key(rampart_context_t *rampart_context,
+                                const axutil_env_t *env,
+                                void *prv_key);
+
+%inline %{
+axis2_status_t
+ruby_rampart_context_set_prv_key(rampart_context_t *rampart_context,
+                                 const axutil_env_t *env,
+                                 axis2_char_t *prv_key)
+{
+    return rampart_context_set_prv_key(rampart_context, env, (void *)prv_key);
+}
+%}
+
+axis2_status_t 
+rampart_context_set_prv_key_type(rampart_context_t *rampart_context,
+                                     const axutil_env_t *env,
+                                     axis2_key_type_t type);
+
+%inline %{
+axis2_status_t
+ruby_rampart_context_set_certificate(rampart_context_t* rampart_context,
+                                     const axutil_env_t *env,
+                                     axis2_char_t *certificate)
+{
+   return rampart_context_set_certificate(rampart_context, env, (void *)certificate);
+}
+%}
+
+axis2_status_t 
+rampart_context_set_certificate(rampart_context_t *rampart_context,
+                                    const axutil_env_t *env,
+                                    void *certificate);
+
+axis2_status_t 
+rampart_context_set_certificate_type(rampart_context_t *rampart_context,
+                                         const axutil_env_t *env,
+                                         axis2_key_type_t type);
+%inline %{
+axis2_status_t
+ruby_rampart_context_set_receiver_certificate(rampart_context_t *rampart_context,
+            const axutil_env_t *env,
+            axis2_char_t *receiver_certificate)
+{
+   return rampart_context_set_receiver_certificate(rampart_context, env, (void *)receiver_certificate);
+}
+%}
+
+axis2_status_t
+rampart_context_set_receiver_certificate(rampart_context_t *rampart_context,
+            const axutil_env_t *env,
+            void *receiver_certificate);
+
+axis2_status_t 
+rampart_context_set_receiver_certificate_type(rampart_context_t *rampart_context,
+            const axutil_env_t *env,
+            axis2_key_type_t type);
+
+axis2_status_t
+rampart_context_set_user(rampart_context_t *rampart_context,
+                             const axutil_env_t *env,
+                             axis2_char_t *user);
+
+axis2_status_t 
+rampart_context_set_password(rampart_context_t *rampart_context,
+                                 const axutil_env_t *env,
+                                 axis2_char_t *password);
+
+axis2_status_t 
+rampart_context_set_password_type(rampart_context_t *rampart_context,
+                                      const axutil_env_t *env,
+                                      axis2_char_t *password_type);
+
+axis2_status_t 
+rampart_context_set_ttl(rampart_context_t *rampart_context,
+                            const axutil_env_t *env,
+                            int ttl);
+
+%inline %{
+axis2_status_t 
+ruby_rampart_context_set_pwcb_function(rampart_context_t *rampart_context,
+                                      const axutil_env_t *env,
+                                      password_callback_fn pwcb_function,
+                                      axis2_char_t *ctx)
+{
+    return rampart_context_set_pwcb_function(rampart_context, env, pwcb_function, (void *)ctx);
+}
+%}
+
+axis2_status_t 
+rampart_context_set_pwcb_function(rampart_context_t *rampart_context,
+                                      const axutil_env_t *env,
+                                      password_callback_fn pwcb_function,
+                                      void *ctx);
+
+%inline %{
+char *
+wsf_get_rampart_token_value(char *token_ref)
+{
+    if(strcmp(token_ref, "IssuerSerial") == 0)
+        return RP_REQUIRE_ISSUER_SERIAL_REFERENCE;
+    if(strcmp(token_ref, "KeyIdentifier") == 0)
+        return RP_REQUIRE_KEY_IDENTIFIRE_REFERENCE;
+    if(strcmp(token_ref, "EmbeddedToken") == 0)
+        return RP_REQUIRE_EMBEDDED_TOKEN_REFERENCE;
+    if(strcmp(token_ref, "Thumbprint") == 0)
+        return RP_REQUIRE_THUMBPRINT_REFERENCE;
+    else
+        return NULL;
 }
 %}

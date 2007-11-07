@@ -1,3 +1,14 @@
+enum axis2_status_codes
+{
+    /** Critical Failure state */
+    AXIS2_CRITICAL_FAILURE = -1,
+
+    /** Failure state */
+    AXIS2_FAILURE,
+
+    /** Success state */
+    AXIS2_SUCCESS
+};
 
 typedef enum axutil_log_levels
 {
@@ -42,6 +53,36 @@ typedef enum axiom_types_t
     AXIOM_TEXT,
     AXIOM_DATA_SOURCE
 } axiom_types_t;
+
+typedef enum axis2_policy_types
+{
+     AXIS2_POLICY = 0,
+     AXIS2_MODULE_POLICY,
+     AXIS2_SERVICE_POLICY,
+     AXIS2_OPERATION_POLICY,
+     AXIS2_MESSAGE_POLICY,
+     AXIS2_PORT_POLICY,
+     AXIS2_PORT_TYPE_POLICY,
+     AXIS2_BINDING_POLICY,
+     AXIS2_BINDING_OPERATION_POLICY,
+     AXIS2_INPUT_POLICY,
+     AXIS2_OUTPUT_POLICY,
+     AXIS2_BINDING_INPUT_POLICY,
+     AXIS2_BINDING_OUTPUT_POLICY,
+     AXIS2_MODULE_OPERATION_POLICY,
+     AXIS2_POLICY_REF,
+     AXIS2_ANON_POLICY
+} axis2_policy_types_t;
+
+/****************************** rampart ***************************************/
+
+typedef enum axis2_key_type_t
+{
+    AXIS2_KEY_TYPE_UNKNOWN = 0,
+    AXIS2_KEY_TYPE_PEM,
+    AXIS2_KEY_TYPE_DER
+} axis2_key_type_t;
+ 
 
 /* AXIS2_TRANSPORT_H */
 
@@ -327,4 +368,84 @@ typedef enum axis2_wsdl_msg_labels
 
 #define AXIS2_RESPONSE_SOAP_ENVELOPE "Axis2ResponseEnvelope"    
 #define AXIS2_HANDLER_ALREADY_VISITED "handler_already_visited"
+
+
+/**************************  WS_POLICY ***************************************/
+#define WS_POLICY "Policy"
+
+#define WS_IN_POLICY "inpolicy"
+#define WS_OUT_POLICY "outpolicy"
+
+#define WS_SIGN "sign"
+#define WS_ENCRYPT "encrypt"
+#define WS_ALGORITHM "algorithmSuite"
+#define WS_LAYOUT "layOut"
+#define WS_TIMESTAMP "includeTimeStamp"
+#define WS_PROTECTION_ORDER "protectionOrder"
+#define WS_UT "useUsernameToken"
+#define WS_TOKEN_REFERENCE "securityTokenReference"
+#define WS_ENCRYPT_SIGNATURE "encryptSignature"
+
+#define WS_DEFAULT_TOKEN_VAL "X509"
+#define WS_X509_TOKEN_VAL "X509Token"
+#define WS_INITIATOR_VAL "InitiatorToken"
+#define WS_INCLUDE_TOKEN_URI "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always"
+#define WS_INCLUDE_TOKEN "IncludeToken"
+#define WS_RECIPIENT_TOKEN "RecipientToken"
+#define WS_USERNAMETOKEN "UsernameToken"
+#define WS_SIGNSUPPORTING_TOKEN "SignedSupportingTokens"
+#define WS_ALGO_SUITE "AlgorithmSuite"
+#define WS_ONLY_SIGN_HEADER_AND_BODY "OnlySignEntireHeadersAndBody"
+#define WS_ENCRYPTPARTS "EncryptedParts"
+#define WS_BODY "Body"
+#define WS_LAYOUT_VAL "Layout"
+#define WS_STRICT "Strict"
+#define WS_WSS10 "Wss10"
+
+
+/** ws_security_token options */
+#define WS_USER "user"
+#define WS_CERTIFICATE "certificate"
+#define WS_PASSWORD_TYPE "passwordType"
+#define WS_PASSWORD "password"
+#define WS_PRIVATE_KEY "privateKey"
+#define WS_TTL "ttl"
+/* #define WS_CERTIFICATE_FORMAT "certificateFormat" */
+/* #define WS_PVT_KEY_FORMAT "privateKeyFormat" */
+#define WS_RECEIVER_CERTIFICATE "receiverCertificate"
+/* #define WS_RECEIVER_CERTIFICATE_FORMAT "receiverCertificateFormat" */
+/* #define WS_INFLOW_SECURITY_POLICY  "InflowRampartContext" */
+/* #define WS_OUTFLOW_SECURITY_POLICY "OutflowRampartContext" */
+#define WS_RAMPART_CONFIGURATION "RampartConfiguration"
+#define WS_DIGEST "Digest"
+#define WS_PLAINTEXT "plainText"
+#define WS_PASSWORD_CALL_BACK "passwordCallback"
+
+#define BASIC256 "Basic256"
+#define BASIC192 "Basic192"
+#define BASIC128 "Basic128"
+#define TRIPLEDES "TripleDes"
+#define BASIC256_RSA15 "Basic256Rsa15"
+#define BASIC192_RSA15 "Basic192Rsa15"
+#define BASIC128_RSA15 "Basic128Rsa15"
+#define TRIPLEDES_RSA15 "TripleDesRsa15"
+
+#define ISSUER_SERIAL "IssuerSerial"
+#define KEYIDENTIFIER "KeyIdentifier"
+#define EMBEDDEDTOKEN "EmbeddedToken"
+#define THUMBPRINT "Thumbprint"
+#define DIRECT "Direct"
+#define ISSUER_SERIAL_VAL "MustSupportRefIssuerSerial"
+#define KEYIDENTIFIER_VAL "MustSupportRefKeyIdentifier"
+#define EMBEDDEDTOKEN_VAL "MustSupportRefEmbeddedToken"
+#define THUMBPRINT_VAL "MustSupportRefThumbprint"
+
+#define SIGN_BEFORE "SignBeforeEncrypt"
+#define ENCRYPT_BEFORE "EncryptBeforeSigning"
+
+#define RP_REQUIRE_KEY_IDENTIFIRE_REFERENCE "RequireKeyIdentifireReference"
+#define RP_REQUIRE_ISSUER_SERIAL_REFERENCE "RequireIssuerSerialReference"
+#define RP_REQUIRE_EMBEDDED_TOKEN_REFERENCE "RequireEmbeddedTokenReference"
+#define RP_REQUIRE_THUMBPRINT_REFERENCE "RequireThumbprintReference"
+#define RP_REQUIRE_DERIVED_KEYS "RequireDerivedKeys"
 
