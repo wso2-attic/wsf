@@ -33,4 +33,27 @@ class WSUtil
 
   end
 
+  def WSUtil.ws_get_cert_from_file(file_name)
+    return extract_content_from_file(file_name, "-----BEGIN CERTIFICATE-----", "-----END CERTIFICATE-----") 
+  end
+
+  def WSUtil.ws_get_key_from_file(file_name)
+    return extract_content_from_file(file_name, "-----BEGIN RSA PRIVATE KEY-----", "-----END RSA PRIVATE KEY-----") 
+  end
+
+  def WSUtil.extract_content_from_file(filename, prefix, suffix)
+    input = File.new(filename)
+    str = input.read
+   
+    prefix_index = str.index(prefix)
+    suffix_index = str.index(suffix)
+   
+    return nil if prefix_index.nil?
+    return nil if suffix_index.nil?
+
+    content = str[prefix_index + prefix.length + 1, suffix_index - prefix_index - prefix.length - 2]
+    return content 
+  end
 end
+
+
