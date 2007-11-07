@@ -40,9 +40,9 @@ begin
 
    policy = WSPolicy.new({"security" => policy_content})
 
-   security_options = {"user" => "Alice",
-                       "password" => "abcd!1234",
-                       "password_type" => "Digest"}
+   security_options = {"private_key" => my_key,
+                       "certificate" => my_cert,
+                       "receiver_certificate" => rec_cert}
  
    security_token = WSSecurityToken.new(security_options)
 
@@ -50,7 +50,7 @@ begin
               "policy" => policy,
               "security_token" => security_token}
    
-   client = WSClient.new(options, "/home/janapriya/deploy/wsfc/", "/home/janapriya/dev/wsf_ext/ruby/samples/rampart/sec_echo.log")
+   client = WSClient.new(options, "/home/janapriya/deploy/wsfc/", "/home/janapriya/dev/wsfext/ruby/samples/rampart/signing/sec_echo.log")
 
    res_message = client.request(payload)
 
