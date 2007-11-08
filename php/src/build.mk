@@ -33,7 +33,9 @@ WSFPHP_SRC= wsf.c \
 	    wsf_wsdl.c \
 	    wsf_xml_msg_recv.c \
 	    wsf_out_transport_info.c \
-	    wsf_policy.c 
+	    wsf_policy.c \
+	    wsf_stream.c
+
 
 wsf.dll :
 	@if not exist intdir mkdir intdir
