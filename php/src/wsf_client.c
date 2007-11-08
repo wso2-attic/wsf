@@ -1105,16 +1105,15 @@ wsf_client_do_request (
                     (void **) &client_tmp) == SUCCESS) {
 
                 if (Z_TYPE_PP (client_tmp) == IS_STRING) {
-                    sequence_key =
-                        axutil_strdup (env, Z_STRVAL_PP (client_tmp));
-		    axutil_property_t *seq_property = 
-                    axutil_property_create_with_args (env,
+				axutil_property_t *seq_property = NULL;
+                sequence_key =axutil_strdup (env, Z_STRVAL_PP (client_tmp));
+				seq_property =  axutil_property_create_with_args (env,
                         AXIS2_SCOPE_REQUEST, 1, NULL, sequence_key);
-		    axis2_options_set_property(client_options, env, 
-			WS_SANDESHA2_CLIENT_SEQ_KEY, seq_property);
-                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                        "[wsf_client] sequence key is %d",
-                        Z_STRVAL_PP (client_tmp));
+				axis2_options_set_property(client_options, env, 
+				WS_SANDESHA2_CLIENT_SEQ_KEY, seq_property);
+					    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+						    "[wsf_client] sequence key is %d",
+							Z_STRVAL_PP (client_tmp));
                 }
             }
             if (zend_hash_find (client_ht, WS_WILL_CONTINUE_SEQUENCE,
