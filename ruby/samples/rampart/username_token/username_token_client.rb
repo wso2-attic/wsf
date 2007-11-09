@@ -22,14 +22,6 @@ req_payload = <<XML
 <ns1:echo xmlns:ns1="http://php.axis2.org/samples"><text>Hello World!</text></ns1:echo>
 XML
 
-def load_policy_from_file(filename)
-   #returns REXML::Element
-   input = File.new(filename)
-   doc = Document.new(input)
-   root_element = doc.root
-   return root_element
-end
-
 begin
    message_properties = {"to" => "http://localhost:9090/axis2/services/sec_echo/echoString",
                          "action" =>  "http://php.axis2.org/samples/echoString"}

@@ -23,11 +23,16 @@ req_payload = <<XML
 XML
 
 def load_policy_from_file(filename)
-   #returns REXML::Element
+   return nil unless filename.kind_of? String
    input = File.new(filename)
-   doc = Document.new(input)
-   root_element = doc.root
-   return root_element
+   unless input.nil?
+     doc = Document.new(input)
+     unless doc.nil?
+       root_element = doc.root
+       return root_element
+     end
+   end
+   return nil
 end
 
 begin
@@ -44,7 +49,7 @@ begin
    policy_content = load_policy_from_file("policy.xml")
 
    if policy_content.nil? then 
-      puts "Policy load failed!"
+      puts "Policy file load failed!"
       return 
    end   
 
