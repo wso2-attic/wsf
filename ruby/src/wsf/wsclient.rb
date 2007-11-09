@@ -55,7 +55,8 @@ class WSClient
   # the options specified when the client is created.
   
   def set_client_options(client_options)
-	# Proxy settings
+    
+    # Proxy settings
     WSFC::axis2_svc_client_set_proxy(@svc_client,
                                      @env,
                                      @options["proxy_host"].to_s,
@@ -385,8 +386,7 @@ class WSClient
      end
      
      WSFC::axis2_svc_client_engage_module(@svc_client, @env, "rampart")
-  rescue => exception
-     puts "Exception : #{exception}"
+
   end
 
   def set_security_token_data_to_rampart_context(rampart_context, sec_token)
@@ -530,7 +530,7 @@ class WSClient
 
   def pack_attachments(node, attachments, enable_mtom, default_content_type)
     return if node.nil?
-
+    
     if WSFC::axiom_node_get_node_type(node, @env) == WSFC::AXIOM_ELEMENT then
       
       node_element = WSFC::ruby_axiom_node_get_data_element(node, @env)

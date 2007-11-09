@@ -30,10 +30,8 @@ class WSPolicy
 
       @policy = policy
    end
-   
     
-   # Returns the policy as an AXIOM node
-  
+   
    def get_policy_as_axiom_node(env)
       if @policy.kind_of? String
          return create_policy_from_string(@policy, env) 
@@ -44,6 +42,7 @@ class WSPolicy
       end
       return nil
    end
+
 
    private
 
@@ -119,13 +118,16 @@ class WSPolicy
        return WSFC::neethi_options_get_root_node(neethi_options, env)
      end
      return nil
-  end  # def create_policy_from_hash()
+  end  
+
 
   def create_policy_from_string(policy, env)
      return nil if policy.nil?
      return nil unless policy.kind_of? String
+     
      return WSFC::ruby_str_to_axiom_node(env, policy, policy.length)   
-  end  # def create_policy_from_string()
+  end  
+
 
   def get_rampart_token_value(option)
      if option == "IssuerSerial" then 
@@ -139,5 +141,6 @@ class WSPolicy
      else
         return nil
      end
-  end # def get_rampart_token_value(option)
+  end
+
 end    
