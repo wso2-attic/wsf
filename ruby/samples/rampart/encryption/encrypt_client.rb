@@ -16,27 +16,22 @@
 require 'wsf'
 require 'rexml/document'
 
-include REXML
-
 req_payload = <<XML
 <ns1:echo xmlns:ns1="http://php.axis2.org/samples"><text>Hello World!</text></ns1:echo>
 XML
 
-def load_policy_from_file(filename)
-   #returns REXML::Element
-   input = File.new(filename)
-   doc = Document.new(input)
-   root_element = doc.root
-   return root_element
-end
-
 begin
+   WSFC_HOME = "/your/path/to/wsfc/home"
+   LOG_FILE = "/tmp/security_sample.log"
+   ACTION = "http://php.axis2.org/samples/echoString"
+   END_POINT = "http://localhost:9090/axis2/services/sec_echo/echoString"
+
+   message_properties = {"to" => END_POINT,
+                         "action" => ACTION}
+
    rec_cert = WSUtil::ws_get_cert_from_file("../keys/bob_cert.cert")
    pvt_key = WSUtil::ws_get_key_from_file("../keys/alice_key.pem")
   
- 
-   message_properties = {"to" => "http://localhost:9090/axis2/services/sec_echo/echoString",
-                         "action" =>  "http://php.axis2.org/samples/echoString"}
    payload = WSMessage.new(req_payload, 
                            nil, 
                            message_properties)
@@ -56,7 +51,7 @@ begin
               "policy" => policy,
               "security_token" => security_token}
    
-   client = WSClient.new(options, "/home/janapriya/deploy/wsfc/", "/home/janapriya/dev/wsf_ext/ruby/samples/rampart/sec_echo.log")
+   client = WSClient.new(options, WSFC_HOME, LOG_FILE)
 
    res_message = client.request(payload)
 

@@ -23,7 +23,6 @@ req_payload = <<XML
 XML
 
 def load_policy_from_file(filename)
-   #returns REXML::Element
    input = File.new(filename)
    doc = Document.new(input)
    root_element = doc.root
@@ -31,8 +30,14 @@ def load_policy_from_file(filename)
 end
 
 begin
-   message_properties = {"to" => "http://localhost:9090/axis2/services/sec_echo/echoString",
-                         "action" =>  "http://php.axis2.org/samples/echoString"}
+   WSFC_HOME = "/your/path/to/wsfc/home"
+   LOG_FILE = "/tmp/security_sample.log"
+   ACTION = "http://php.axis2.org/samples/echoString"
+   END_POINT = "http://localhost:9090/axis2/services/sec_echo/echoString"
+
+   message_properties = {"to" => END_POINT,
+                         "action" => ACTION}
+
    payload = WSMessage.new(req_payload, 
                            nil, 
                            message_properties)
@@ -47,8 +52,8 @@ begin
    policy = WSPolicy.new(policy_content)
 
    security_options = {"user" => "Alice",
-              "password" => "abcd!1234",
-              "password_type" => "Digest"}
+                       "password" => "abcd!1234",
+                       "password_type" => "Digest"}
  
    security_token = WSSecurityToken.new(security_options)
 
@@ -56,7 +61,7 @@ begin
               "policy" => policy,
               "security_token" => security_token}
    
-   client = WSClient.new(options, "/home/janapriya/deploy/wsfc/", "/home/janapriya/dev/wsf_ext/ruby/samples/rampart/sec_echo.log")
+   client = WSClient.new(options, WSFC_HOME, LOG_FILE)
 
    res_message = client.request(payload)
 
