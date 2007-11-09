@@ -1,0 +1,44 @@
+
+            WSO2 WSF/Ruby
+	    =============
+
+VERSION
+-------
+1.0.0 - Alpha release
+
+
+INTRODUCTION
+------------
+- WSF/Ruby is the Ruby language extension to WSO2 WSF/C
+  [http://www.wso2.org/projects/wsf/c]. This initial version enables you 
+  to write client applications to consume an existing Web Service.
+
+
+INSTALLATION
+------------
+1. It is required to have WSO2 WSF/C installed in your machine 
+   to compile and use this extension module.
+
+2. Run 'configure.rb' to configure the source tree.
+   
+   You have to specify the WSF/C include and library locations as given below
+   if they are not installed into a standarad location
+
+   ./configure.rb --with-WSFC-include=/your/axis2c/include/axis2-1.1 
+                  --with-WSFC-lib=/your/axis2c/lib
+
+3. make
+
+4. sudo make install
+
+
+FEATURES
+--------
+- Support for WS-Addressing
+- Support for SOAP MTOM
+
+
+THINGS TO FOLLOW VERY SOON
+--------------------------
+- Support for WS-Security (with Rampart)
+- Support for WS-ReliableMessaging (with Sandesha)

@@ -1,0 +1,90 @@
+Accessing Amazon Web Service API
+--------------------------------
+amazon.rb -
+  
+  A client assessing Amazon search using REST.
+  Set the following variables to match your case.
+  - axis2c_home[Line 30].
+  - log_file_name[Line 31].
+
+
+Echo
+----
+echo_client_addr.rb -
+  
+  Echo client with WS-Addressing.
+  Set the following variables to match your case.
+  - axis2c_home[Line 27].
+  - log_file_name[Line 28].
+  - end_point[Line 29].
+
+echo_client.rb -
+  
+  Echo client, client for echo service.
+  Sends a request and accepts a reply.
+  Set the following variables to match your case.
+  - axis2c_home[Line 27].
+  - log_file_name[Line 28].
+  - end_point[Line 29].
+
+echo_client_rest.rb -
+  
+  Client using rest GET call access a service using REST.
+  Set the following variables to match your case.
+  - axis2c_home[Line 27].
+  - log_file_name[Line 28].
+  - end_point[Line 29].
+
+echo_client_soap11.rb -
+
+  Client for echo service using SOAP 1.1 protocol.
+  Set the following variables to match your case.
+  - axis2c_home[Line 27].
+  - log_file_name[Line 28].
+  - end_point[Line 29].
+
+
+Accessing Yahoo WebService API
+------------------------------
+yahoo.rb -
+  A client assessing Yahoo search using REST.
+  Set the following variables to match your case.
+  - axis2c_home[Line 28].
+  - log_file_name[Line 29].
+                     
+
+MTOM / Base64 Attachments
+--------------------------
+mtom/mtom_download_client.rb -
+  Client for MTOM download service. Saves the MTOM
+  attachment sent by the service. You have to save the file 
+  to a globally writable folder. This sample uses the current folder.
+  Set the following variables to match your case.
+  - axis2c_home[Line 25].
+  - log_file_name[Line 26].
+  - end_point[Line 27].
+                    
+mtom/mtom_upload_client_base64.rb -
+  A client that sends an image as a base64 encoded string.
+  Set the following variables to match your case.
+  - axis2c_home[Line 25].
+  - log_file_name[Line 26].
+  - end_point[Line 27].
+
+mtom/mtom_upload_client.rb -
+  Client for MTOM upload service. Sends a file as an attachment to the service.
+  The image used is located in the "resources" folder.
+  Set the following variables to match your case.
+  - axis2c_home[Line 25].
+  - log_file_name[Line 26].
+  - end_point[Line 27].
+
+                    
+Flicker
+-------
+filckr.rb -
+  Client for accessing flicker SOAP service.
+  Set the following variables to match your case.
+  - key[Line 19].
+  - axis2c_home[Line 28].
+  - log_file_name[Line 29].
