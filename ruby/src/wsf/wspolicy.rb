@@ -95,8 +95,9 @@ class WSPolicy
        option = options.has_key?("security_token_reference")? options["security_token_reference"] : nil
        if not option.nil?
           if option.kind_of? String
-             token_ref = wsf_get_rampart_token_value(option)
-             WSFC::neethi_options_set_keyidentifier(neethi_options, env, token_ref)
+             token_ref = get_rampart_token_value(option)
+
+             WSFC::neethi_options_set_keyidentifier(neethi_options, env, token_ref) unless token_ref.nil?
           end
        end
  
@@ -126,45 +127,17 @@ class WSPolicy
      return WSFC::ruby_str_to_axiom_node(env, policy, policy.length)   
   end  # def create_policy_from_string()
 
-  def generate_axiom_node_from_string(str, env)
-     return nil unless str.kind_of? String  
-   
-     if str.empty? then
-       WSFC::axis2_log_error(env, "[wsf-ruby] Payload not found")
-       return nil
+  def get_rampart_token_value(option)
+     if option == "IssuerSerial" then 
+        return WSFC::RP_REQUIRE_ISSUER_SERIAL_REFERENCE
+     elsif option == "KeyIdentifier" then
+        return WSFC::RP_REQUIRE_KEY_IDENTIFIRE_REFERENCE
+     elsif option == "EmbeddedToken" then
+        return WSFC:: RP_REQUIRE_EMBEDDED_TOKEN_REFERENCE
+     elsif option == "Thumbprint" then
+        return WSFC::RP_REQUIRE_THUMBPRINT_REFERENCE
+     else
+        return nil
      end
-
-     # Create XML reader
-     xml_reader = WSFC::ruby_axiom_xml_reader_create_for_memory(env,
-                                                               str,
-                                                               str.length,
-                                                               "utf-8",
-                                                               WSFC::AXIS2_XML_PARSER_TYPE_BUFFER)
-     if xml_reader.nil? then
-       WSFC::axis2_log_error(env, "[wsf-ruby] Failed to create AXIOM XML reader")
-       return nil
-     end
-   
-     # Create StAX builder
-     stax_builder = WSFC::axiom_stax_builder_create(env, xml_reader)
-     if stax_builder.nil? then
-       WSFC::axis2_log_error(env, "[wsf-ruby] Failed to create StAX builder")
-       return nil
-     end
-
-     # Create document
-     document = WSFC::axiom_stax_builder_get_document(stax_builder, env)
-     if document.nil? then
-       WSFC::axis2_log_error(env, "[wsf-ruby] Failed to create StAX builder document")
-       return nil
-     end
-
-     # Create AXIOM node
-     axiom_node = WSFC::axiom_document_get_root_element(document, env)
-     WSFC::axiom_document_build_all(document, env) unless axiom_node.nil?
- 
-     WSFC::axiom_stax_builder_free_self(stax_builder, env)
-    
-     return axiom_node
-  end # def generate_axiom_node_from_string(str)
+  end # def get_rampart_token_value(option)
 end    

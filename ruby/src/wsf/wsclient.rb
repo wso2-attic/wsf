@@ -227,7 +227,6 @@ class WSClient
     # Handle outgoing attachments
     handle_outgoing_attachments(message, client_options, request_axiom_payload)
 
-    puts "before send robust"
     status = WSFC::axis2_svc_client_send_robust(@svc_client, @env, request_axiom_payload)
 
     if WSFC::axis2_svc_client_get_last_response_has_fault(@svc_client, @env) == WSFC::AXIS2_TRUE then # SOAP fault occurred
@@ -356,7 +355,6 @@ class WSClient
   end
 
   # This method is used to handle security
-  # All secuirty specific manipulations to be done inside this method.
   
   def handle_security
      policy = client_property("policy")
