@@ -1,5 +1,5 @@
 WSRequest.js is a SOAP wrapper for famous XMLHttpRequest object.This javscript libarary can be used to consume web services.
-Works in IE5+,opera7.6+,mozilla firefox , browsers which have implemented the XMLHttpRequest object.
+Works in IE5+, opera7.6+, mozilla firefox, browsers which have implemented the XMLHttpRequest object.
 
 ./samples/firefox - contains the firefox samples
 ./samples/ie - contains the IE samples
