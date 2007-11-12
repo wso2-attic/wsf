@@ -15,7 +15,11 @@
 require 'WSFC'
 
 class WSUtil
-
+  EXTRACT_CONTENT_BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----"
+  EXTRACT_CONTENT_END_CERTIFICATE = "-----END CERTIFICATE-----"
+  EXTRACT_CONTENT_BEGIN_RSA_PVT_KEY = "-----BEGIN RSA PRIVATE KEY-----" 
+  EXTRACT_CONTENT_END_RSA_PVT_KEY = "-----END RSA PRIVATE KEY-----"
+  
   def WSUtil.file_put_base64_content(file_name, base64_content, content_type = "application/octet-stream")
 
     return false unless file_name.kind_of? String and
@@ -34,11 +38,15 @@ class WSUtil
   end
 
   def WSUtil.ws_get_cert_from_file(file_name)
-    return extract_content_from_file(file_name, "-----BEGIN CERTIFICATE-----", "-----END CERTIFICATE-----") 
+    return nil unless file_name.kind_of? String
+    
+    return extract_content_from_file(file_name, EXTRACT_CONTENT_BEGIN_CERTIFICATE, EXTRACT_CONTENT_END_CERTIFICATE) 
   end
 
   def WSUtil.ws_get_key_from_file(file_name)
-    return extract_content_from_file(file_name, "-----BEGIN RSA PRIVATE KEY-----", "-----END RSA PRIVATE KEY-----") 
+    return nil unless file_name.kind_of? String
+
+    return extract_content_from_file(file_name, EXTRACT_CONTENT_BEGIN_RSA_PVT_KEY, EXTRACT_CONTENT_END_RSA_PVT_KEY) 
   end
 
   def WSUtil.extract_content_from_file(filename, prefix, suffix)
@@ -48,8 +56,7 @@ class WSUtil
     prefix_index = str.index(prefix)
     suffix_index = str.index(suffix)
    
-    return nil if prefix_index.nil?
-    return nil if suffix_index.nil?
+    return nil if prefix_index.nil? or suffix_index.nil?
 
     content = str[prefix_index + prefix.length + 1, suffix_index - prefix_index - prefix.length - 2]
     return content 
