@@ -1387,7 +1387,7 @@ wsf_util_handle_soap_fault(
 }
 
 
-int is_module_engaged_to_svc_client(
+int wsf_util_is_module_engaged_to_svc_client(
 	const axis2_svc_client_t *svc_client,
 	axutil_env_t *env,
 	char *module_name)
@@ -1406,3 +1406,25 @@ int is_module_engaged_to_svc_client(
 	return status;	
 }
 
+void wsf_util_engage_modules_to_svc(
+    axutil_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    wsf_svc_info_t *svc_info)
+{
+    axis2_conf_t *conf = NULL;
+    conf = axis2_conf_ctx_get_conf (conf_ctx, env);
+    if (conf && !axis2_conf_get_svc (conf, env, svc_info->svc_name)){
+        axis2_conf_add_svc (conf, env, svc_info->svc);
+        if (NULL != svc_info->modules_to_engage){
+            int i = 0;
+            int size = axutil_array_list_size (svc_info->modules_to_engage,
+                env);
+            for (i = 0; i < size; i++){
+                axis2_char_t * mod_name = (axis2_char_t *) axutil_array_list_get (
+                    svc_info->modules_to_engage, env, i);
+                    wsf_util_engage_module (conf, mod_name, env,
+                        svc_info->svc);
+            }
+        }
+    }
+}

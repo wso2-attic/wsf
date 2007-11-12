@@ -533,7 +533,7 @@ ws_objects_free_storage (void *object TSRMLS_DC)
         svc_client = (axis2_svc_client_t *) intern->ptr;
 		
         if (svc_client) {
-			if(!is_module_engaged_to_svc_client(svc_client, env, "sandesha2")){
+			if(!wsf_util_is_module_engaged_to_svc_client(svc_client, env, "sandesha2")){
 				axis2_svc_client_free (svc_client, env);
 			}
         }
@@ -1259,6 +1259,9 @@ PHP_METHOD (ws_service, __construct)
                 efree(function_name);
             }
         }
+
+    wsf_util_engage_modules_to_svc(ws_env_svr, wsf_worker_get_conf_ctx(worker, ws_env_svr),
+    svc_info);
 }
 
 
@@ -1444,7 +1447,7 @@ PHP_METHOD (ws_service, reply)
 {
     ws_object_ptr intern = NULL;
     zval * obj = NULL, **tmp;
-    axis2_conf_t * conf = NULL;
+/*    axis2_conf_t * conf = NULL; */
     axis2_conf_ctx_t * conf_ctx = NULL;
     wsf_svc_info_t * svc_info = NULL;
     wsf_req_info_t  req_info;
@@ -1597,6 +1600,7 @@ PHP_METHOD (ws_service, reply)
 		generate_wsdl_for_service(obj ,svc_info, &req_info, SG(request_info).query_string , 0 TSRMLS_CC);
 
    }else {
+       /*
         conf = axis2_conf_ctx_get_conf (conf_ctx, ws_env_svr);
         if (!axis2_conf_get_svc (conf, ws_env_svr, svc_info->svc_name))
              {
@@ -1617,10 +1621,10 @@ PHP_METHOD (ws_service, reply)
                     }
                 }
             }
-        
+        */
         if(zend_hash_find(Z_OBJPROP_P(this_ptr), WS_WSDL,
                           sizeof(WS_WSDL), (void **)&tmp) == SUCCESS){
-            wsf_wsdl_process_service(this_ptr, &req_info, svc_info, ws_env_svr);
+            wsf_wsdl_process_service(this_ptr, &req_info, svc_info, ws_env_svr TSRMLS_CC);
         }
         status = wsf_worker_process_request (php_worker, ws_env_svr, &req_info, svc_info TSRMLS_CC);
         

@@ -135,9 +135,16 @@ void wsf_util_handle_soap_fault(
 	axiom_node_t *fault_node,
 	int soap_version TSRMLS_DC);
 
-int is_module_engaged_to_svc_client(
+int wsf_util_is_module_engaged_to_svc_client(
 	const axis2_svc_client_t *svc_client,
 	axutil_env_t *env,
 	char *module_name);
+
+void wsf_util_engage_modules_to_svc(
+    axutil_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    wsf_svc_info_t *svc_info);
+
+    
 
 #endif /* WSF_UTIL_H */
