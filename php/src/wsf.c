@@ -1040,6 +1040,8 @@ PHP_METHOD (ws_service, __construct)
             if (zend_hash_find (ht_options, "wsdl", sizeof ("wsdl"),
                (void **) & tmp) == SUCCESS  &&Z_TYPE_PP (tmp) == IS_STRING) {
 				    wsdl = Z_STRVAL_PP (tmp);
+                                    add_property_stringl (this_ptr, WS_WSDL, Z_STRVAL_PP (tmp),
+                                                          Z_STRLEN_PP (tmp), 1);
             }
             if (zend_hash_find (ht_options , "classmap", sizeof ("classmap"),
                    (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
@@ -1298,7 +1300,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
         smart_str script_path = { 0 };
         smart_str script_file_name = { 0 };
         smart_str full_path = {0};
-		 zval * op_val;
+        zval * op_val;
 
         char *real_path = NULL;
             
@@ -1441,7 +1443,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
 PHP_METHOD (ws_service, reply) 
 {
     ws_object_ptr intern = NULL;
-    zval * obj = NULL; /* **tmp; */
+    zval * obj = NULL, **tmp;
     axis2_conf_t * conf = NULL;
     axis2_conf_ctx_t * conf_ctx = NULL;
     wsf_svc_info_t * svc_info = NULL;
@@ -1616,9 +1618,13 @@ PHP_METHOD (ws_service, reply)
                 }
             }
         
-		status = wsf_worker_process_request (php_worker, ws_env_svr, &req_info, svc_info TSRMLS_CC);
-
-		php_end_ob_buffer(0, 0 TSRMLS_CC);
+        if(zend_hash_find(Z_OBJPROP_P(this_ptr), WS_WSDL,
+                          sizeof(WS_WSDL), (void **)&tmp) == SUCCESS){
+            wsf_wsdl_process_service(this_ptr, &req_info, svc_info, ws_env_svr);
+        }
+        status = wsf_worker_process_request (php_worker, ws_env_svr, &req_info, svc_info TSRMLS_CC);
+        
+        php_end_ob_buffer(0, 0 TSRMLS_CC);
 
         if (status == WS_HTTP_ACCEPTED){
             sprintf (status_line, "%s 202 Accepted", req_info.http_protocol);

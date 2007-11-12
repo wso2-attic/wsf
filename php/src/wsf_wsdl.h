@@ -32,6 +32,8 @@
 void create_dynamic_client(zval *this_ptr, char *fn_name, int fn_name_len, int arg_count,
                       zval *args, zval *return_value, axutil_env_t * env TSRMLS_DC);
 
+void wsf_wsdl_process_service(zval *this_ptr, wsf_req_info_t * reqinfo, wsf_svc_info_t *svc_info, axutil_env_t *env TSRMLS_DC);
+
 #define WS_WSDL_FILE_PATH       "/scripts/dynamic_invocation/wsf_wsdl.php"
 #define WS_WSDL_XSLT_PATH            "/scripts/dynamic_invocation/xslt"
 
@@ -45,6 +47,8 @@ void create_dynamic_client(zval *this_ptr, char *fn_name, int fn_name_len, int a
 
 #define WS_WSDL_REQ_FUNCTION    "wsf_process_wsdl"
 #define WS_WSDL_RES_FUNCTION    "wsf_process_response"
+
+#define WS_WSDL_SERVICE_REQ_FUNCTION "wsf_process_wsdl_for_service"
 
 #define WS_WSDL_ENDPOINT_URI    "endpoint_uri"
 #define WS_WSDL_BINDING_DETAILS "binding_details"

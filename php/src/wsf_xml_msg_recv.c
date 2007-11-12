@@ -28,6 +28,7 @@
 #include <php.h>
 #include <string.h>
 #include "wsf.h"
+#include <php_main.h>
 
 axis2_status_t AXIS2_CALL wsf_xml_msg_recv_invoke_business_logic_sync (
     axis2_msg_recv_t * msg_recv,
@@ -444,9 +445,125 @@ wsf_xml_msg_recv_invoke_mixed (
     wsf_svc_info_t * svc_info,
     axis2_msg_ctx_t * in_msg_ctx,
     axis2_msg_ctx_t * out_msg_ctx,
-    axis2_char_t * op_name TSRMLS_DC)
+    axis2_char_t * function_name TSRMLS_DC)
 {
+    axiom_soap_envelope_t *soap_envelope = NULL;
+/*     axis2_char_t *soap_version_uri = NULL; */
+    axiom_soap_body_t *soap_body = NULL;
+    axiom_node_t *soap_body_node = NULL;
+    char *in_msg_body_string = NULL;
+    char *operation_name = NULL;
+    axutil_hash_index_t * hi = NULL;
 
+    char *real_path = NULL;
+    int path_len = 0;
+    smart_str script_file_name = { 0 };
+    zval *params[1];
+    zval request_function, retval, param1;
+    zval *param_array;
+/*     zend_file_handle script; */
+    
+    
+    if (!in_msg_ctx || !function_name)
+        return AXIS2_FAILURE;
+
+/*     if (axis2_msg_ctx_get_is_soap_11 (in_msg_ctx, env) == AXIS2_TRUE) { */
+/*         soap_version = SOAP_1_1; */
+/*         soap_version_uri = AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI; */
+/*     } else { */
+/*         soap_version = SOAP_1_2; */
+/*         soap_version_uri = AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI; */
+/*     } */
+
+    soap_envelope = axis2_msg_ctx_get_soap_envelope (in_msg_ctx, env);
+    if(!soap_envelope){
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI,
+                         "[wsf_wsdl] soap envelope not found");
+        return AXIS2_FAILURE;
+    }
+    
+    soap_body = axiom_soap_envelope_get_body(soap_envelope, env);
+    if(!soap_body){
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI,
+                         "[wsf_wsdl] soap body not found");
+        return AXIS2_FAILURE;
+    }
+    soap_body_node = axiom_soap_body_get_base_node(soap_body, env);
+    if(!soap_body_node){
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI,
+                         "[wsf_wsdl] soap body base node not found");
+        return AXIS2_FAILURE;
+    }
+    in_msg_body_string = axiom_node_to_string(soap_body_node, env);
+    if(in_msg_body_string){
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                     "[wsf_wsdl]Input soap body is \t %s \n", in_msg_body_string);
+    }
+    
+    if(svc_info->sig_model_string){
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                         "[wsf_wsdl]sig model string found is \t \n %s \n", svc_info->sig_model_string);
+    }
+
+    real_path = estrdup(SG(request_info).path_translated);
+    path_len = strlen(SG(request_info).path_translated)- strlen(SG(request_info).request_uri);
+    real_path[path_len + 1] = '\0';
+
+    /* find the operation name */
+    if (svc_info->ops_to_functions) {
+        for (hi = axutil_hash_first (svc_info->ops_to_functions, env);hi;
+             hi = axutil_hash_next (env, hi)) {
+            void *v = NULL;
+            const void *k = NULL;
+            axutil_hash_this (hi, &k, NULL, &v);
+            if(strcmp(function_name, (axis2_char_t *) k) == 0){
+                operation_name = (axis2_char_t *) v;
+                break;
+            }
+        } 
+    }
+
+
+    smart_str_appends(&script_file_name, real_path);
+    smart_str_appends(&script_file_name, "scripts/dynamic_invocation/wsf_wsdl.php");
+    smart_str_0 (&script_file_name);
+
+    params[0] = &param1;
+
+    MAKE_STD_ZVAL(param_array);
+    array_init(param_array);
+
+    add_assoc_string(param_array, "sig_model_string",  svc_info->sig_model_string, 1);
+    add_assoc_string(param_array, "payload_string", in_msg_body_string, 1);
+    add_assoc_string(param_array, "operation_name", operation_name, 1);
+    add_assoc_string(param_array, "function_name", function_name, 1);
+    
+
+    ZVAL_STRING(&request_function, "wsf_wsdl_process_in_msg", 0);
+    ZVAL_ZVAL(params[0], param_array, NULL, NULL);
+    INIT_PZVAL(params[0]);
+        
+   /*  script.type = ZEND_HANDLE_FP; */
+/*     script.filename = script_file_name.c; */
+/*     script.opened_path = NULL; */
+/*     script.free_filename = 0; */
+/*     if (!(script.handle.fp = VCWD_FOPEN (script.filename, "rb"))){ */
+/*         php_error_docref (NULL TSRMLS_CC, E_ERROR, "Unable to open script file: %s", script.filename); */
+/*         return 0; */
+/*     }else{ */
+/*         php_lint_script (&script TSRMLS_CC); */
+        if (call_user_function (EG (function_table), (zval **) NULL,
+                                &request_function, &retval, 1, params TSRMLS_CC) == SUCCESS ){
+            if(Z_TYPE_P(&retval) == IS_STRING){
+                char *res_payload_str = Z_STRVAL_P(&retval);
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                                 "[wsf_wsdl]return payload string is\t %s", res_payload_str);
+
+            }
+        }
+
+/* } */
+    
     return 0;
 }
 

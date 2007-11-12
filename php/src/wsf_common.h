@@ -244,6 +244,7 @@ typedef struct wsf_svc_info
 
     void *service;
 
+    char *sig_model_string;
 }
 wsf_svc_info_t;
 

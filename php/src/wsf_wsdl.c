@@ -355,7 +355,7 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
         if (soap_body)
             body_base_node = axiom_soap_body_get_base_node(soap_body, env);
         if (body_base_node && !soap_fault){
-			axis2_char_t *response_buffer = NULL;
+            axis2_char_t *response_buffer = NULL;
             axiom_soap_base_node = axiom_soap_envelope_get_base_node(response_envelope, env);
             res_params[0] = &res_param1;
             res_params[1] = &res_param2;
@@ -719,17 +719,73 @@ void wsf_wsdl_handle_client_security(HashTable *client_ht,
 
 }
 
+void wsf_wsdl_process_service(zval *this_ptr, wsf_req_info_t *request_info, wsf_svc_info_t *svc_info, axutil_env_t *env TSRMLS_DC)
+{
+    char *real_path = NULL;
+    int path_len = 0;
+    smart_str script_file_name = { 0 };
+    smart_str xslt_location = { 0 };
+    zval **wsdl_location = NULL;
+    zval *params[1];
+    zval retval, param1;
+    zval *param_array;
+    zval **class_map;
+    zend_file_handle script;
+    zval request_function;
 
+    real_path = estrdup(SG(request_info).path_translated);
+    path_len = strlen(SG(request_info).path_translated)- strlen(SG(request_info).request_uri);
+    real_path[path_len + 1] = '\0';
 
+    smart_str_appends(&script_file_name, real_path);
+    smart_str_appends(&xslt_location, real_path);
 
+    zend_hash_find(Z_OBJPROP_P(this_ptr), WS_WSDL, sizeof(WS_WSDL), (void **)&wsdl_location);
 
+    smart_str_appends(&script_file_name, WS_WSDL_FILE_PATH);
+    smart_str_0 (&script_file_name);
+    
+    smart_str_appends(&xslt_location, WS_WSDL_XSLT_PATH);
+    smart_str_0(&xslt_location);
 
+    params[0] = &param1;
+    
+    MAKE_STD_ZVAL(param_array);
+    array_init(param_array);
+    add_assoc_string(param_array, WS_WSDL, Z_STRVAL_PP(wsdl_location), 1);
+    
+    if ( zend_hash_find ( Z_OBJPROP_P (this_ptr), WS_WSDL_CLASSMAP, sizeof (WS_WSDL_CLASSMAP),
+                          (void **) &class_map) == SUCCESS
+         && Z_TYPE_PP (class_map) == IS_ARRAY){
+        add_assoc_zval(param_array, WS_WSDL_CLASSMAP, *class_map);
+        
+    }
+    
+    ZVAL_STRING(&request_function, WS_WSDL_SERVICE_REQ_FUNCTION, 0);
+    add_assoc_string(param_array, WS_WSDL_XSLT_LOCATION, xslt_location.c, 1);
+    ZVAL_ZVAL(params[0], param_array, NULL, NULL);
+    INIT_PZVAL(params[0]);
 
-
-
-
-
-
+    script.type = ZEND_HANDLE_FP;
+    script.filename = script_file_name.c;
+    script.opened_path = NULL;
+    script.free_filename = 0;
+    if (!(script.handle.fp = VCWD_FOPEN (script.filename, "rb"))){
+        php_error_docref (NULL TSRMLS_CC, E_ERROR, "Unable to open script file: %s", script.filename);
+        return;
+    }
+    else{
+        php_lint_script (&script TSRMLS_CC);
+        if (call_user_function (EG (function_table), (zval **) NULL,
+                                &request_function, &retval, 1, params TSRMLS_CC) == SUCCESS ){
+            if (Z_TYPE_P(&retval) == IS_STRING){
+                svc_info->sig_model_string = Z_STRVAL_P(&retval);
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                         "[wsf_wsdl]received data from scripts");
+            }
+        }
+    }
+}
 
 
 

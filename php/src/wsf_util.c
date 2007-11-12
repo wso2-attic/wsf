@@ -376,6 +376,8 @@ wsf_svc_info_create (
     svc_info->ht_opParams = NULL;
     svc_info->service = NULL;
     svc_info->op_name = NULL;
+    
+    svc_info->sig_model_string = NULL;
     return svc_info;
 }
 
