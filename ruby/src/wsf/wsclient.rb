@@ -402,26 +402,48 @@ class WSClient
      policy = client_property("policy")
      sec_token = client_property("security_token")
 
-     return unless !policy.nil? # and !sec_token.nil?
+     return if policy.nil? 
      
      incoming_policy_node = policy.get_policy_as_axiom_node(@env)
 
-     if not incoming_policy_node.nil?
+     if !incoming_policy_node.nil? then
+        
         if WSFC::axiom_node_get_node_type(incoming_policy_node, @env) == WSFC::AXIOM_ELEMENT then
-     	   root = WSFC::ruby_axiom_node_get_data_element(incoming_policy_node, @env)
-           if not root.nil?
+     	
+           root = WSFC::ruby_axiom_node_get_data_element(incoming_policy_node, @env)
+           if !root.nil? then
+        
               neethi_policy = WSFC::neethi_engine_get_policy(@env, incoming_policy_node, root)
-              svc = WSFC::axis2_svc_client_get_svc(@svc_client, @env)
-              desc = WSFC::axis2_svc_get_base(svc, @env)
-              policy_include = WSFC::axis2_desc_get_policy_include(desc, @env)
-              WSFC::axis2_policy_include_add_policy_element(policy_include, @env, WSFC::AXIS2_SERVICE_POLICY, neethi_policy)
-              svc_ctx = WSFC::axis2_svc_client_get_svc_ctx(@svc_client, @env)
-              conf_ctx = WSFC::axis2_svc_ctx_get_conf_ctx(svc_ctx, @env)
-              conf = WSFC::axis2_conf_ctx_get_conf(conf_ctx, @env)
-              rampart_ctx = WSFC::rampart_context_create(@env)
-              set_security_token_data_to_rampart_context(rampart_ctx, sec_token)
-     	      security_param = WSFC::ruby_axutil_security_param_create(@env, WSFC::WS_RAMPART_CONFIGURATION, rampart_ctx)
- 	      WSFC::axis2_conf_add_param(conf, @env, security_param)
+              if !neethi_policy.nil? then
+        
+                 svc = WSFC::axis2_svc_client_get_svc(@svc_client, @env)
+                 if !svc.nil? then
+        
+                    desc = WSFC::axis2_svc_get_base(svc, @env)
+                    policy_include = WSFC::axis2_desc_get_policy_include(desc, @env)
+              
+                    WSFC::axis2_policy_include_add_policy_element(policy_include, @env, WSFC::AXIS2_SERVICE_POLICY, neethi_policy)
+              
+                    svc_ctx = WSFC::axis2_svc_client_get_svc_ctx(@svc_client, @env)
+                    if !svc_ctx.nil? then
+        
+                       conf_ctx = WSFC::axis2_svc_ctx_get_conf_ctx(svc_ctx, @env)
+                       if !conf_ctx.nil? then
+        
+                          conf = WSFC::axis2_conf_ctx_get_conf(conf_ctx, @env)
+                          if !conf.nil? then
+                             rampart_ctx = WSFC::rampart_context_create(@env)
+              
+                             set_security_token_data_to_rampart_context(rampart_ctx, sec_token)
+     	      
+                             security_param = WSFC::ruby_axutil_security_param_create(@env, WSFC::WS_RAMPART_CONFIGURATION, rampart_ctx)
+ 	      
+                             WSFC::axis2_conf_add_param(conf, @env, security_param) unless security_param.nil?
+                          end
+                       end
+                    end
+                 end
+              end
      	   end
      	end
      end
@@ -429,6 +451,8 @@ class WSClient
      WSFC::axis2_svc_client_engage_module(@svc_client, @env, "rampart")
 
   end
+
+  # This method is used to add security token parameters to the rampart context  
 
   def set_security_token_data_to_rampart_context(rampart_context, sec_token)
     return if sec_token.nil?
