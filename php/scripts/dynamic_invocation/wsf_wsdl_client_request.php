@@ -152,7 +152,7 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
                     $param_attr = $param_child->attributes;
                     $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
                     $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
-                    $child_array[$param_name] = wsf_create_temp_struct($param_child); 
+                    $child_array[$param_name] = wsf_create_temp_struct($param_child, $ele_ns); 
                 }
             }
             else{
@@ -163,7 +163,7 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
                     $param_attr = $param_child->attributes;
                     $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
                     $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
-                    $child_array[$param_name] = wsf_create_temp_struct($param_child);
+                    $child_array[$param_name] = wsf_create_temp_struct($param_child, $ele_ns);
                     $ele_name = $param_name;
                 }
             }
@@ -183,7 +183,6 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
         $payload_dom->appendChild($element);
         $payload_node = $payload_dom->firstChild;
         $clone_node = $payload_node->cloneNode(TRUE);
-//        echo $payload_dom->saveXML($clone_node);exit(0);
         return $payload_dom->saveXML($clone_node);
     }
     else {
@@ -205,13 +204,14 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
  */
 
 
-function wsf_create_temp_struct(DomNode $param_child)
+function wsf_create_temp_struct(DomNode $param_child, $wrapper_ns)
 {
     $rec_array = array();
     $param_nil = NULL;
     $param_min = NULL;
     $param_max = NULL;
-
+    $param_ns = NULL;
+   
     $param_attr = $param_child->attributes;
     if($param_attr->getNamedItem(WSF_WSDL_SIMPLE))
         $wrap_type = $param_attr->getNamedItem(WSF_WSDL_SIMPLE)->value;
@@ -229,7 +229,11 @@ function wsf_create_temp_struct(DomNode $param_child)
         $param_nil = $param_attr->getNamedItem('nillable')->value;
 
     if($wrap_type == 'yes'){
-        $rec_array[WSF_NS] = $param_ns;
+        if($param_ns == NULL)
+            $rec_array[WSF_NS] = $wrapper_ns;
+        else
+            $rec_array[WSF_NS] = $param_ns;
+
         $rec_array[WSF_TYPE] = $param_type;
         if($param_min)
             $rec_array['minOccurs'] = $param_min; 
@@ -242,9 +246,12 @@ function wsf_create_temp_struct(DomNode $param_child)
         
         /* for some WSDL sig model gives simple type no even there are
          * xsd types in the parameter. So this check is needed */
-        
         if (is_xsd_type($param_type)){
-            $rec_array[WSF_NS] = $param_ns;
+            if($param_ns == NULL)
+                $rec_array[WSF_NS] = $wrapper_ns;
+            else
+                $rec_array[WSF_NS] = $param_ns;
+
             $rec_array[WSF_TYPE] = $param_type;
             if($param_min)
                 $rec_array['minOccurs'] = $param_min; 
@@ -254,6 +261,11 @@ function wsf_create_temp_struct(DomNode $param_child)
                 $rec_array['nillable'] = $param_nil; 
         }
         else{
+            if($param_ns == NULL)
+                $rec_array[WSF_NS] = $wrapper_ns;
+            else
+                $rec_array[WSF_NS] = $param_ns;
+
             $rec_array[WSF_NS] = $param_ns;
             $rec_array['class_map_name'] = $param_type;
             if($param_min)
@@ -261,13 +273,13 @@ function wsf_create_temp_struct(DomNode $param_child)
             if($param_max != 1)
                 $rec_array['maxOccurs'] = $param_max; 
             if($param_nil)
-            $rec_array['nillable'] = $param_nil; 
+                $rec_array['nillable'] = $param_nil; 
             
             $param_child_list_level2 = $param_child->childNodes;
             foreach($param_child_list_level2 as $param_child_level2){
                 $param_child_level2_attr = $param_child_level2->attributes;
             $param_level2_name = $param_child_level2_attr->getNamedItem(WSF_NAME)->value;
-            $rec_array[$param_level2_name] = wsf_create_temp_struct($param_child_level2);
+            $rec_array[$param_level2_name] = wsf_create_temp_struct($param_child_level2, $wrapper_ns);
             }
         }
     }

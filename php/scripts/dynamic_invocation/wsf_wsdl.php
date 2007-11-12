@@ -190,6 +190,83 @@ function wsf_process_response($response_payload_string, $response_sig_model_stri
     $response_class = wsf_client_response_and_validate($envelope_dom, $sig_model_dom, $response_parameters);
     return $response_class;
 }
+
+function wsf_process_wsdl_for_service($parameters)
+{
+    require_once('wsf_wsdl_consts.php');
+    require_once('wsf_wsdl_util.php');
+    require_once('wsf_wsdl_service.php');
+
+    $wsdl_dom = new DomDocument();
+    $sig_model_dom  = new DOMDocument();
+    $sig_model_dom->preserveWhiteSpace = false;
+    $wsdl_dom->preserveWhiteSpace = false;
+
+    
+    $wsdl_location = $parameters[WSF_WSDL];
+    $xslt_location = $parameters[WSF_XSLT_LOCATION];
+    
+    $sig_model_dom->preserveWhiteSpace = false;
+    $wsdl_dom->preserveWhiteSpace = false;
+
+    if(!$wsdl_location)
+        return "WSDL is not found";
+    $is_multiple_interfaces = FALSE;
+
+    // Load WSDL as DOM
+    $wsdl_dom = new DOMDocument();
+    if(!$wsdl_dom->load($wsdl_location))
+        return "WSDL could not be loaded.";
+
+/* changing code for processing mutiple port types in wsdl 1.1 */
+    $is_multiple_interfaces = wsf_is_mutiple_port_types($wsdl_dom);
+    
+    if ($is_multiple_interfaces == FALSE){
+        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $xslt_location);
+        
+        if(!$wsdl_dom)
+            return "error creating WSDL Dom Document";
+        
+        $sig_model_dom = wsf_get_sig_model_dom($wsdl_dom, $xslt_location);
+    }
+    else {
+        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $xslt_location);
+//        $schema_node = wsf_get_schema_node($wsdl_11_dom, $wsdl_dom);
+        $sig_model_dom = wsf_process_multiple_interfaces($wsdl_dom, $sig_model_dom, $xslt_location);
+    }
+
+    if(!$sig_model_dom)
+        return "error creating intermediate model";
+
+    /** For now we do not processing policy */
+    
+    $sig_model_string = $sig_model_dom->saveXML();
+    return $sig_model_string;
+}
+
+function wsf_wsdl_process_in_msg($parameters)
+{
+   
+    $payload_dom = new DomDocument();
+    $sig_model_dom = new DomDocument();
+
+    $payload_dom->preserveWhiteSpace = false;
+    $sig_model_dom->preserveWhiteSpace = false;
+   
+    $sig_model_string = $parameters["sig_model_string"];
+    $payload_string = $parameters["payload_string"];
+    // $operation = $parameters["operation_name"];
+    $operation = "asdsad";
+    //  $payload_dom->loadXML($payload_string);
+    //$sig_model_dom->loadXML($sig_model_string);
+
+//    $endpoint_address = wsf_get_endpoint_address($sig_model_dom);
+//    $operation = wsf_find_operation($sig_model_dom, $operation_name, $endpoint_address, $is_multiple_interfaces);
+
+    return $operation;
+}
+
+
 ?>
 
 

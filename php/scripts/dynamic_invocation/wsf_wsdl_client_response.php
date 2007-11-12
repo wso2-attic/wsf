@@ -62,7 +62,7 @@ function wsf_client_response_and_validate(DomDocument $envelope_dom, DomDocument
         $param_attr = $param_child->attributes;
         $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
         $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
-        $body_array[$param_name] = wsf_create_response_struct($param_child);
+        $body_array[$param_name] = wsf_create_response_struct($param_child, $ret_value_namespace);
 
     }
     
@@ -125,12 +125,13 @@ function wsf_client_response_and_validate(DomDocument $envelope_dom, DomDocument
     }
 }
 
-function wsf_create_response_struct(DomNode $param_child)
+function wsf_create_response_struct(DomNode $param_child, $wrapper_ns)
 {
     $rec_array = array();
     $param_nil = NULL;
     $param_min = NULL;
     $param_max = NULL;
+    $param_ns = NULL;
 
     $param_attr = $param_child->attributes;
     if($param_attr->getNamedItem(WSF_WSDL_SIMPLE))
@@ -150,7 +151,11 @@ function wsf_create_response_struct(DomNode $param_child)
 
     if($wrap_type == 'yes'){
         $is_xsd = is_xsd_type($param_type);
-        $rec_array[WSF_NS] = $param_ns;
+        if($param_ns == NULL)
+            $rec_array[WSF_NS] = $wrapper_ns;
+        else
+            $rec_array[WSF_NS] = $param_ns;
+
         $rec_array[WSF_TYPE] = $param_type;
         if($param_min)
             $rec_array['minOccurs'] = $param_min;
@@ -160,7 +165,11 @@ function wsf_create_response_struct(DomNode $param_child)
             $rec_array['nillable'] = $param_nil;
     }
     else{
-        $rec_array[WSF_NS] = $param_ns;
+        if($param_ns == NULL)
+            $rec_array[WSF_NS] = $wrapper_ns;
+        else
+            $rec_array[WSF_NS] = $param_ns;
+        
         $rec_array['class_map_name'] = $param_type;
         if($param_min)
             $rec_array['minOccurs'] = $param_min;
@@ -173,7 +182,7 @@ function wsf_create_response_struct(DomNode $param_child)
         foreach($param_child_list_level2 as $param_child_level2){
             $param_child_level2_attr = $param_child_level2->attributes;
             $param_level2_name = $param_child_level2_attr->getNamedItem(WSF_NAME)->value;
-            $rec_array[$param_level2_name] = wsf_create_temp_struct($param_child_level2);
+            $rec_array[$param_level2_name] = wsf_create_temp_struct($param_child_level2, $wrapper_ns);
         }
     }
     
@@ -291,6 +300,12 @@ function wsf_set_values_to_array($response_struct, $child)
                 }
             }
         }
+    }else{
+        if($child->nodeType == XML_TEXT_NODE){
+            $converted_value =  wsf_wsdl_util_convert_value($response_struct[WSF_TYPE], $child->wholeText);
+            $data_array [$child->parentNode->localName] = $converted_value;
+        }
+
     }
     return $data_array;
 

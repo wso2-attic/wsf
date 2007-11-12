@@ -16,6 +16,11 @@
  * limitations under the License.
  */
 
+function wsf_wsd_process_in_msg($parameters)
+{
+    return $parameters["operation_name"];
+}
+
 
 
 ?>
