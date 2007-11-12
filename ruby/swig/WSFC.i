@@ -739,36 +739,66 @@ rampart_context_set_ttl(rampart_context_t *rampart_context,
                             const axutil_env_t *env,
                             int ttl);
 
-%inline %{
-axis2_status_t 
-ruby_rampart_context_set_pwcb_function(rampart_context_t *rampart_context,
-                                      const axutil_env_t *env,
-                                      password_callback_fn pwcb_function,
-                                      axis2_char_t *ctx)
-{
-    return rampart_context_set_pwcb_function(rampart_context, env, pwcb_function, (void *)ctx);
-}
-%}
-
 axis2_status_t 
 rampart_context_set_pwcb_function(rampart_context_t *rampart_context,
                                       const axutil_env_t *env,
                                       password_callback_fn pwcb_function,
                                       void *ctx);
 
-%inline %{
+%{
+typedef char *(*callback_t) (void *user_data, const char *other_data);
+
+callback_t mycallback = NULL;
+void* myuserdata = NULL;
+%}
+
+%{
 char *
-wsf_get_rampart_token_value(char *token_ref)
+wrap_callback(void *user_data, const char *other_data)
 {
-    if(strcmp(token_ref, "IssuerSerial") == 0)
-        return RP_REQUIRE_ISSUER_SERIAL_REFERENCE;
-    if(strcmp(token_ref, "KeyIdentifier") == 0)
-        return RP_REQUIRE_KEY_IDENTIFIRE_REFERENCE;
-    if(strcmp(token_ref, "EmbeddedToken") == 0)
-        return RP_REQUIRE_EMBEDDED_TOKEN_REFERENCE;
-    if(strcmp(token_ref, "Thumbprint") == 0)
-        return RP_REQUIRE_THUMBPRINT_REFERENCE;
-    else
-        return NULL;
+  VALUE proc = (VALUE)user_data;
+  VALUE password = rb_funcall(proc, rb_intern("call"), 1, rb_str_new2(other_data));
+  return RSTRING(password)->ptr;
 }
 %}
+
+%typemap(in) char *(callback_t callback, void *user_data)
+{
+  $1 = wrap_callback;
+  $2 = (void *)$input;
+}
+
+%inline %{
+axis2_char_t *
+ruby_password_callback_fn(const axutil_env_t *env,
+                          const axis2_char_t *username,
+                          void *ctx)
+{
+   if (mycallback != NULL)
+   {
+      axis2_char_t* password =  mycallback(myuserdata, username);
+      AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf-ruby] ruby_password_callback_fn");
+      AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, password);
+      return password
+   }   
+   else
+      return NULL;
+}
+%}
+
+%inline %{
+axis2_status_t
+ruby_rampart_context_set_pwcb_function(rampart_context_t *rampart_context,
+                                      const axutil_env_t *env,
+                                      callback_t callback,
+                                      void *ctx)
+{
+   mycallback = callback;
+   myuserdata = ctx;
+   
+   AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf-ruby] ruby_rampart_context_set_pwcb_function");
+    
+   return rampart_context_set_pwcb_function(rampart_context, env, ruby_password_callback_fn, (void *)NULL);
+}
+%}
+
