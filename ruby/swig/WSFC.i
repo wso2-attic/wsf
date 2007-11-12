@@ -108,6 +108,46 @@ axis2_svc_client_engage_module(axis2_svc_client_t *svc_client,
                                const axutil_env_t *env,
                                const axis2_char_t *module_name);
 
+%inline %{
+int
+ruby_set_module_param_value(axutil_env_t       *env,
+                            axis2_svc_client_t *svc_client,
+                            axis2_char_t       *module_name,
+                            axis2_char_t       *param_name,
+                            axis2_char_t       *param_value)
+{
+  axis2_svc_ctx_t *svc_ctx = axis2_svc_client_get_svc_ctx(svc_client, env);
+  if (svc_ctx == NULL)
+    return AXIS2_FAILURE;
+    
+  axis2_conf_ctx_t *conf_ctx = axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
+  if (conf_ctx == NULL)
+    return AXIS2_FAILURE;
+    
+  axis2_conf_t *conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+  if (conf == NULL)
+    return AXIS2_FAILURE;
+
+  axutil_qname_t *module_qname = axutil_qname_create(env, module_name, NULL, NULL);
+  if (module_qname == NULL)
+    return AXIS2_FAILURE;
+    
+  axis2_module_desc_t *module_desc = axis2_conf_get_module(conf, env, module_qname);
+  if (module_desc == NULL)
+    return AXIS2_FAILURE;
+    
+  axutil_param_t *param = axis2_module_desc_get_param(module_desc, env, param_name);
+  if (param == NULL)
+    return AXIS2_FAILURE;
+    
+  axutil_param_set_value(param, env, axutil_strdup (env, param_value));
+  
+  axutil_qname_free(module_qname, env);
+  
+  return AXIS2_SUCCESS;
+}
+%}
+
 axis2_char_t * 
 axiom_node_to_string(axiom_node_t       *om_node,
                      const axutil_env_t *env);
@@ -141,6 +181,35 @@ ruby_axiom_node_get_text_element(axiom_node_t       *om_node,
   return (axiom_text_t *)axiom_node_get_data_element(om_node, env);
 }
 %}
+
+%inline %{
+axiom_node_t *
+ruby_axiom_element_get_first_node(axiom_element_t    *element,
+                                  axiom_node_t       *element_node,
+                                  const axutil_env_t *env)
+{
+  axiom_node_t *child_node = axiom_node_get_first_child(element_node, env);
+
+  while (child_node)
+  {
+    if (axiom_node_get_node_type(child_node, env) == AXIOM_ELEMENT)
+      return child_node;
+    else
+      child_node = axiom_node_get_next_sibling(child_node, env);
+  }
+
+  return NULL;
+}
+%}
+
+axiom_node_t *
+axiom_node_get_first_element(axiom_node_t       *om_node,
+                             const axutil_env_t *env);
+
+axis2_char_t *
+axiom_element_get_text(axiom_element_t    *om_element,
+                       const axutil_env_t *env,
+                       axiom_node_t       *element_node);
 
 axiom_child_element_iterator_t *
 axiom_element_get_child_elements(axiom_element_t    *om_element,
@@ -348,6 +417,14 @@ axis2_options_t *
 axis2_svc_client_get_options(const axis2_svc_client_t *svc_client,
                              const axutil_env_t       *env);
 
+axis2_options_t *
+axis2_options_create(const axutil_env_t *env);
+
+axis2_status_t
+axis2_svc_client_set_options(axis2_svc_client_t    *svc_client,
+                             const axutil_env_t    *env,
+                             const axis2_options_t *options);
+
 void 
 axiom_xml_reader_free(axiom_xml_reader_t *parser,
                       const axutil_env_t *env);
@@ -361,9 +438,24 @@ axis2_svc_client_set_proxy(axis2_svc_client_t *svc_client,
 %inline %{
 axutil_property_t *
 ruby_axutil_property_create_with_args(const axutil_env_t *env,
+                                      axis2_scope_t       scope,
+                                      axis2_bool_t        own_value,
                                       char               *value)
 {
-  return axutil_property_create_with_args(env, 0, AXIS2_TRUE, 0, (void *)value);
+  return axutil_property_create_with_args(env, scope, own_value, 0, (void *)value);
+}
+%}
+
+axutil_property_t *
+axutil_property_create(const axutil_env_t *env);
+
+%inline %{
+axis2_status_t
+ruby_axutil_property_set_value(axutil_property_t  *property,
+                               const axutil_env_t *env,
+                               char               *value)
+{
+  return axutil_property_set_value(property, env, (void *)value);
 }
 %}
 
@@ -400,77 +492,33 @@ ruby_axutil_strdup(const axutil_env_t *env,
 }
 %}
 
+axis2_char_t *
+axutil_uuid_gen(const axutil_env_t *env);
+
 axis2_bool_t 
 axis2_svc_client_get_last_response_has_fault(const axis2_svc_client_t *svc_client,
                                              const axutil_env_t       *env);
 
-axiom_soap_envelope_t *
-axis2_svc_client_get_last_response_soap_envelope(const axis2_svc_client_t *svc_client,
-                                                 const axutil_env_t       *env);
-
-axiom_soap_body_t * 
-axiom_soap_envelope_get_body(axiom_soap_envelope_t *envelope,
-                             const axutil_env_t    *env);
-
-axiom_node_t * 
-axiom_soap_body_get_base_node(axiom_soap_body_t  *body,
-                              const axutil_env_t *env);
-
-axiom_soap_fault_t * 
-axiom_soap_body_get_fault(axiom_soap_body_t  *body,
-                          const axutil_env_t *env);
-
-/* SOAP fault CODE */
-axiom_soap_fault_code_t *
-axiom_soap_fault_get_code(axiom_soap_fault_t *fault,
-                          const axutil_env_t *env);
-
-axiom_soap_fault_value_t *
-axiom_soap_fault_code_get_value(axiom_soap_fault_code_t *fault_code,
-                                const axutil_env_t      *env);
-
-axis2_char_t *
-axiom_soap_fault_value_get_text(axiom_soap_fault_value_t *fault_value,
-                                const axutil_env_t       *env);
-
-/* SOAP fault REASON */
-axiom_soap_fault_reason_t *
-axiom_soap_fault_get_reason(axiom_soap_fault_t *fault,
-                            const axutil_env_t *env);
-
-axiom_soap_fault_text_t *
-axiom_soap_fault_reason_get_first_soap_fault_text(axiom_soap_fault_reason_t *fault_reason,
-                                                  const axutil_env_t        *env);
-
-axis2_char_t *
-axiom_soap_fault_text_get_text(axiom_soap_fault_text_t *fault_text,
-                               const axutil_env_t      *env);
-
-/* SOAP fault ROLE */
-axiom_soap_fault_role_t *
-axiom_soap_fault_get_role(axiom_soap_fault_t *fault,
-                          const axutil_env_t *env);
-
-axis2_char_t *
-axiom_soap_fault_role_get_role_value(axiom_soap_fault_role_t *fault_role,
-                                     const axutil_env_t      *env);
-
-/* SOAP fault DETAIL */
-axiom_soap_fault_detail_t *
-axiom_soap_fault_get_detail(axiom_soap_fault_t *fault,
-                            const axutil_env_t *env);
-
-axiom_children_iterator_t *
-axiom_soap_fault_detail_get_all_detail_entries(axiom_soap_fault_detail_t *fault_detail,
-                                               const axutil_env_t        *env);
-
+%inline %{
 axiom_node_t *
-axiom_children_iterator_next(axiom_children_iterator_t *iterator,
-                             const axutil_env_t        *env);
+ruby_get_last_soap_fault_base_node(const axis2_svc_client_t *svc_client,
+                                   const axutil_env_t       *env)
+{
+  axiom_soap_envelope_t *soap_envelope = axis2_svc_client_get_last_response_soap_envelope(svc_client, env);
+  if (soap_envelope == NULL)
+    return NULL;
+    
+  axiom_soap_body_t *soap_body = axiom_soap_envelope_get_body(soap_envelope, env);
+  if (soap_body == NULL)
+    return NULL;
+    
+  axiom_soap_fault_t *soap_fault = axiom_soap_body_get_fault(soap_body, env);
+  if (soap_fault == NULL)
+    return NULL;
 
-axiom_node_t * 
-axiom_soap_fault_get_base_node(axiom_soap_fault_t *fault,
-                               const axutil_env_t *env);
+  return axiom_soap_fault_get_base_node(soap_fault, env);
+}
+%}
 
 axis2_status_t 
 axis2_options_set_xml_parser_reset(axis2_options_t    *options,

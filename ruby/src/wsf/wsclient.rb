@@ -22,8 +22,11 @@ class WSClient
   # Create a new WSClient instance.
   # All instance level initialization is done here.
   
-  def initialize(options, axis2c_home = "/opt/wso2/wsf", log_file_name = "/tmp/wsf_ruby_client.log")
-    # Create Environment
+  def initialize(options, axis2c_home = WSFC::AXIS2C_HOME, log_file_name = WSFC::DEFAULT_LOG_FILE)
+	@svc_client = nil
+	@options = nil
+
+	# Create Environment
     @env = WSFC::axutil_env_create_all(log_file_name, WSFC::AXIS2_LOG_LEVEL_TRACE)
     if @env.nil? then
       puts "[critical][wsf-ruby] Failed to create WSF/C environment..."
@@ -42,12 +45,18 @@ class WSClient
       WSFC::axis2_log_critical(@env, "[wsf-ruby] Failed to create service client")
       return
     end
-    
-    @options = Hash.new
+   
+	@options = Hash.new
     options.each_pair {|k,v| @options.store(k,v)} if options.kind_of? Hash
 
 	# Set client level options
 	client_options = WSFC::axis2_svc_client_get_options(@svc_client, @env)
+	
+	if client_options.nil? then
+      client_options = WSFC::axis2_options_create(@env)
+	  WSFC::axis2_svc_client_set_options(@svc_client, @env, client_options)
+	end
+
 	set_client_options(client_options)
   end
   
@@ -55,8 +64,7 @@ class WSClient
   # the options specified when the client is created.
   
   def set_client_options(client_options)
-    
-    # Proxy settings
+	# Proxy settings
     WSFC::axis2_svc_client_set_proxy(@svc_client,
                                      @env,
                                      @options["proxy_host"].to_s,
@@ -85,12 +93,18 @@ class WSClient
     pass_phrase = @options.has_key?("pass_phrase") ? @options["pass_phrase"].to_s : ""
 
     ca_cert_property = WSFC::ruby_axutil_property_create_with_args(@env,
+																   WSFC::AXIS2_SCOPE_APPLICATION,
+																   WSFC::AXIS2_TRUE,
                                                                    WSFC::ruby_axutil_strdup(@env, ca_cert))
     
     client_cert_property = WSFC::ruby_axutil_property_create_with_args(@env,
+																	   WSFC::AXIS2_SCOPE_APPLICATION,
+																	   WSFC::AXIS2_TRUE,
                                                                        WSFC::ruby_axutil_strdup(@env, client_cert))
     
     pass_phrase_property = WSFC::ruby_axutil_property_create_with_args(@env,
+																	   WSFC::AXIS2_SCOPE_APPLICATION,
+																	   WSFC::AXIS2_TRUE,
                                                                        WSFC::ruby_axutil_strdup(@env, pass_phrase))
     
     WSFC::ruby_axis2_options_set_property(client_options,
@@ -115,7 +129,7 @@ class WSClient
   def set_transaction_options(message, client_options)
     WSFC::axis2_options_set_xml_parser_reset(client_options, @env, WSFC::AXIS2_FALSE)
 	
-	# Set SOAP action
+	# SOAP settings
     use_soap = @options.has_key?("use_soap") ? @options["use_soap"].to_s.upcase : "TRUE"
 
     if !use_soap.eql?("FALSE") then # SOAP style
@@ -136,7 +150,7 @@ class WSClient
       WSFC::axis2_log_error(@env, "[wsf-ruby] Service client not created")
       return nil
     end
-    
+   
     client_options = WSFC::axis2_svc_client_get_options(@svc_client, @env)
     
 	# Set end point 
@@ -156,14 +170,17 @@ class WSClient
       return nil
     end
    
-    # Set transaction level options
+	# Set transaction level options
     set_transaction_options(message, client_options)
 
     # Handle Security
     handle_security
 
     # Handle Addressing options
-    handle_addressing(message, client_options)
+    addressing_engaged = handle_addressing(message, client_options)
+
+	# Handle RM options
+    handle_reliable_messaging(message, client_options, addressing_engaged, false)
 
     # Handle outgoing attachments
     handle_outgoing_attachments(message, client_options, request_axiom_payload)
@@ -222,8 +239,11 @@ class WSClient
     # Handle Security
     handle_security
 
-    # Handle Addressing options
-    handle_addressing(message, client_options)
+    # Hadle Addressing options
+    addressing_engaged = handle_addressing(message, client_options)
+
+	# Handle RM options
+	handle_reliable_messaging(message, client_options, addressing_engaged, true)
 
     # Handle outgoing attachments
     handle_outgoing_attachments(message, client_options, request_axiom_payload)
@@ -311,46 +331,67 @@ class WSClient
   # sending or requesting
  
   def last_soap_fault_exception
-    soap_envelope = WSFC::axis2_svc_client_get_last_response_soap_envelope(@svc_client, @env)
-    return nil if soap_envelope.nil?
+	soap_fault_base_node = WSFC::ruby_get_last_soap_fault_base_node(@svc_client, @env)
+	return nil if soap_fault_base_node.nil?
+   
+    fault_element = WSFC::ruby_axiom_node_get_data_element(soap_fault_base_node, @env)
+	child_element_ite = WSFC::axiom_element_get_child_elements(fault_element, @env, soap_fault_base_node)
 
-    soap_body = WSFC::axiom_soap_envelope_get_body(soap_envelope, @env)
-    return nil if soap_body.nil?
+	code, reason, role, detail = "", "", "", ""
 
-    soap_fault = WSFC::axiom_soap_body_get_fault(soap_body, @env)
-    return nil if soap_fault.nil?
-    
-    # code
-    soap_fault_code = WSFC::axiom_soap_fault_get_code(soap_fault, @env)
-    soap_fault_code_value = soap_fault_code.nil? ? nil : WSFC::axiom_soap_fault_code_get_value(soap_fault_code, @env)
-    code = soap_fault_code_value.nil? ? "" : WSFC::axiom_soap_fault_value_get_text(soap_fault_code_value, @env)
+	begin
+      child_node = WSFC::axiom_child_element_iterator_next(child_element_ite, @env)
+	  while !child_node.nil?
+	    child_element = WSFC::ruby_axiom_node_get_data_element(child_node, @env)
 
-    # reason
-    soap_fault_reason = WSFC::axiom_soap_fault_get_reason(soap_fault, @env)
-    first_soap_fault_text = soap_fault_reason.nil? ? nil : WSFC::axiom_soap_fault_reason_get_first_soap_fault_text(soap_fault_reason, @env)
-    reason = first_soap_fault_text.nil? ? "" : WSFC::axiom_soap_fault_text_get_text(first_soap_fault_text, @env)
+		begin
+		  localname = WSFC::axiom_element_get_localname(child_element, @env)
+		  if localname.eql?("Code") then #code
+		  
+		    code_node = WSFC::ruby_axiom_element_get_first_node(child_element, child_node, @env)
+			if !code_node.nil? then
+			  
+              code_element = WSFC::ruby_axiom_node_get_data_element(code_node, @env)
+              code = WSFC::axiom_element_get_text(code_element, @env, code_node) unless code_element.nil?
 
-    # role
-    soap_fault_role = WSFC::axiom_soap_fault_get_role(soap_fault, @env)
-    role = soap_fault_role.nil? ? "" : WSFC::axiom_soap_fault_role_get_role_value(soap_fault_role, @env)
+			end
 
-    # detail
-    soap_fault_detail = WSFC::axiom_soap_fault_get_detail(soap_fault, @env)
-    fault_detail_ite = soap_fault_detail.nil? ? nil : WSFC::axiom_soap_fault_detail_get_all_detail_entries(soap_fault_detail, @env)
-    
-    detail = ""
-    begin
-      next_detail_node = WSFC::axiom_children_iterator_next(fault_detail_ite, @env)
-      while !next_detail_node.nil?
-        detail << WSFC::axiom_node_to_string(next_detail_node, @env)
-        
-        next_detail_node = WSFC::axiom_children_iterator_next(fault_detail_ite, @env)
-      end
-    end unless fault_detail_ite.nil?
+		  elsif localname.eql?("faultcode") then
+
+		    code = WSFC::axiom_element_get_text(child_element, @env, child_node)
+
+		  elsif localname.eql?("Reason") then #reason
+
+		    reason_node = WSFC::ruby_axiom_element_get_first_node(child_element, child_node, @env)
+			if !reason_node.nil? then
+
+			  reason_element = WSFC::ruby_axiom_node_get_data_element(reason_node, @env)
+			  reason = WSFC::axiom_element_get_text(reason_element, @env, reason_node) unless reason_element.nil?
+
+			end
+
+		  elsif localname.eql?("faultstring") then
+
+		    reason = WSFC::axiom_element_get_text(child_element, @env, child_node)
+
+		  elsif localname.eql?("Detail") or localname.eql?("detail") then #detail
+
+            detail_node = WSFC::axiom_node_get_first_element(child_node, @env)
+			detail = WSFC::axiom_node_to_string(detail_node, @env) unless detail_node.nil?
+
+		  elsif localname.eql?("Role") or localname.eql?("faultactor") then #role
+
+            role = WSFC::axiom_element_get_text(child_element, @env, child_node)
+
+		  end
+		end unless child_element.nil?
+
+	    child_node = WSFC::axiom_child_element_iterator_next(child_element_ite, @env)
+	  end
+    end unless child_element_ite.nil?
 
     # xml
-    soap_fault_base_node = WSFC::axiom_soap_fault_get_base_node(soap_fault, @env)
-    xml = soap_fault_base_node.nil? ? "" : WSFC::axiom_node_to_string(soap_fault_base_node, @env)
+    xml = WSFC::axiom_node_to_string(soap_fault_base_node, @env)
     
     return WSFault.new(code, reason, role, detail, xml)
   end
@@ -462,10 +503,12 @@ class WSClient
   # All addressing specific manipulations have to be done inside this method
   
   def handle_addressing(message, client_options)
-    return unless message.kind_of? WSMessage    
+    return false unless message.kind_of? WSMessage
 
     use_wsa = client_property("use_wsa").to_s.upcase
     action = message_property("action", message).to_s
+
+	status = false
 
     if (use_wsa.eql? "1.0" or use_wsa.eql? "SUBMISSION" or use_wsa.eql? "TRUE") and (!action.empty?) then
       # Action
@@ -496,13 +539,19 @@ class WSClient
 
       if use_wsa.eql? "SUBMISSION" then
         property = WSFC::ruby_axutil_property_create_with_args(@env,
+															   WSFC::AXIS2_SCOPE_REQUEST,
+															   WSFC::AXIS2_TRUE,
                                                                WSFC::ruby_axutil_strdup(@env, WSFC::AXIS2_WSA_NAMESPACE_SUBMISSION))
         WSFC::ruby_axis2_options_set_property(client_options,
                                               @env,
                                               WSFC::AXIS2_WSA_VERSION,
                                               property)
       end
+
+	  status = true
     end
+
+	return status
   end
 
   # This method is used to handle attachments sent with a message
@@ -518,7 +567,7 @@ class WSClient
     enable_mtom = client_property("use_mtom").to_s.upcase.eql?("FALSE") ? WSFC::AXIS2_FALSE : WSFC::AXIS2_TRUE
     
     default_content_type_ref = message_property("default_attachment_content_type", message)
-    default_content_type = default_content_type_ref.nil? ? "application/octet-stream" : default_content_type_ref.to_s
+    default_content_type = default_content_type_ref.nil? ? WSFC::DEFAULT_CONTENT_TYPE : default_content_type_ref.to_s
 
     WSFC::axis2_options_set_enable_mtom(client_options, @env, enable_mtom)
 
@@ -530,7 +579,7 @@ class WSClient
 
   def pack_attachments(node, attachments, enable_mtom, default_content_type)
     return if node.nil?
-    
+
     if WSFC::axiom_node_get_node_type(node, @env) == WSFC::AXIOM_ELEMENT then
       
       node_element = WSFC::ruby_axiom_node_get_data_element(node, @env)
@@ -546,18 +595,18 @@ class WSClient
             child_element = WSFC::ruby_axiom_node_get_data_element(child_node, @env)
 
             element_localname = WSFC::axiom_element_get_localname(child_element, @env)
-            if !element_localname.nil? and  WSFC::ruby_axutil_strcmp(element_localname, "Include") == WSFC::AXIS2_TRUE then
+            if !element_localname.nil? and  WSFC::ruby_axutil_strcmp(element_localname, WSFC::AXIS2_ELEMENT_LN_INCLUDE) == WSFC::AXIS2_TRUE then
         
               element_namespace = WSFC::axiom_element_get_namespace(child_element, @env, child_node)
               if !element_namespace.nil? then
           
                 namespace_uri = WSFC::axiom_namespace_get_uri(element_namespace, @env)
-                if !namespace_uri.nil? and WSFC::ruby_axutil_strcmp(namespace_uri, "http://www.w3.org/2004/08/xop/include") == WSFC::AXIS2_TRUE then
+                if !namespace_uri.nil? and WSFC::ruby_axutil_strcmp(namespace_uri, WSFC::AXIS2_NAMESPACE_URI_INCLUDE) == WSFC::AXIS2_TRUE then
             
-                  cnt_type = WSFC::axiom_element_get_attribute_value_by_name(node_element, @env, "xmlmime:contentType")
+                  cnt_type = WSFC::axiom_element_get_attribute_value_by_name(node_element, @env, WSFC::AXIS2_ELEMENT_ATTR_NAME_CONTENT_TYPE)
                   content_type = cnt_type.nil? ? default_content_type : cnt_type
 
-                  href = WSFC::axiom_element_get_attribute_value_by_name(child_element, @env, "href")
+                  href = WSFC::axiom_element_get_attribute_value_by_name(child_element, @env, WSFC::AXIS2_ELEMENT_ATTR_NAME_HREF)
                   href.lstrip!
                   href.rstrip!
 
@@ -656,6 +705,117 @@ class WSClient
     end
   end
 
+  # This method is used to engage WS-ReliableMessaging specifications
+  # All RM specific manipulations have to be done inside this method
+  
+  def handle_reliable_messaging(message, client_options, addressing_engaged, one_way)
+    reliable = client_property("reliable").to_s.upcase
+
+    if reliable.eql?("TRUE") or reliable.eql?("1.0") or reliable.eql?("1.1") then
+	  
+	  # Set RM version
+	  rm_version = reliable.eql?("1.1") ? WSFC::WS_RM_VERSION_1_1 : WSFC::WS_RM_VERSION_1_0
+	  rm_version_str = reliable.eql?("1.1") ? WSFC::WS_RM_VERSION_1_1_STR : WSFC::WS_RM_VERSION_1_0_STR
+
+      rm_property = WSFC::ruby_axutil_property_create_with_args(@env,
+																WSFC::AXIS2_SCOPE_REQUEST,
+																WSFC::AXIS2_FALSE,
+															    WSFC::ruby_axutil_strdup(@env, rm_version_str))
+
+	  WSFC::ruby_axis2_options_set_property(client_options,
+											@env,
+											WSFC::WS_SANDESHA2_CLIENT_RM_SPEC_VERSION,
+											rm_property)
+
+	  # Engage Addressing if not engaged already
+	  action = message_property("action", message).to_s
+	  need_to_engage_addressing = (!addressing_engaged) and (!action.empty?)
+
+	  WSFC::axis2_svc_client_engage_module(@svc_client, @env, WSFC::AXIS2_MODULE_ADDRESSING) if need_to_engage_addressing
+
+	  # Engage Sandesha2
+	  WSFC::axis2_svc_client_engage_module(@svc_client, @env, WSFC::AXIS2_MODULE_SANDESHA2)
+
+	  # Set Sequence Expiry Time
+	  sequence_expiry_time = client_property("sequence_expiry_time").to_s
+      WSFC::ruby_set_module_param_value(@env,
+										@svc_client,
+										"sandesha2",
+										WSFC::WS_SANDESHA2_CLIENT_INACT_TIMEOUT,
+										sequence_expiry_time) unless sequence_expiry_time.empty?
+
+	  # Set Sequence Key
+	  sequence_key = client_property("sequence_key").to_s
+	  sequence_key_property = WSFC::ruby_axutil_property_create_with_args(@env,
+												                          WSFC::AXIS2_SCOPE_REQUEST,
+												                          WSFC::AXIS2_TRUE,
+												                          WSFC::ruby_axutil_strdup(@env, sequence_key))
+
+	  WSFC::ruby_axis2_options_set_property(client_options,
+											@env,
+											WSFC::WS_SANDESHA2_CLIENT_SEQ_KEY,
+										    sequence_key_property)
+
+	  # Mark last message
+	  last_msg = true
+	  will_continue_sequence = client_property("will_continue_sequence").to_s.upcase
+
+	  if will_continue_sequence.eql?("TRUE") and message.kind_of?(WSMessage) then
+	    
+          last_message = message_property("last_message", message).to_s.upcase
+		  last_msg = false unless last_message.eql? "TRUE"
+	  
+	  end
+
+	  if (last_msg) and (rm_version == 1) then
+		  
+	    last_msg_property =  WSFC::ruby_axutil_property_create_with_args(@env,
+																	     WSFC::AXIS2_SCOPE_REQUEST,
+																		 WSFC::AXIS2_FALSE,
+																		 WSFC::ruby_axutil_strdup(@env, WSFC::AXIS2_VALUE_TRUE))
+
+		WSFC::ruby_axis2_options_set_property(client_options,
+											  @env,
+											  WSFC::WS_SANDESHA2_CLIENT_LAST_MESSAGE,
+											  last_msg_property)
+
+	  end
+
+	  if (!one_way) then
+
+		# Set offered sequence id
+        offered_sequence_id = WSFC::axutil_uuid_gen(@env)
+
+		sequence_property = WSFC::axutil_property_create(@env)
+        WSFC::ruby_axutil_property_set_value(sequence_property,
+											 @env,
+											 WSFC::ruby_axutil_strdup(@env, offered_sequence_id))
+
+		WSFC::ruby_axis2_options_set_property(client_options,
+											  @env,
+											  WSFC::WS_SANDESHA2_CLIENT_OFFERED_SEQ_ID,
+											  sequence_property)
+		
+		# Set time out
+		response_time_out = client_property("response_time_out").to_s
+		time_out = response_time_out.empty? ? WSFC::WS_SANDESHA2_CLIENT_DEFAULT_TIME_OUT : response_time_out
+
+        time_out_property = WSFC::ruby_axutil_property_create_with_args(@env,
+																        WSFC::AXIS2_SCOPE_REQUEST,
+																        WSFC::AXIS2_FALSE,
+                                                                        WSFC::ruby_axutil_strdup(@env, time_out))
+		
+		WSFC::ruby_axis2_options_set_property(client_options,
+											  @env,
+											  WSFC::WS_SANDESHA2_CLIENT_TIME_OUT,
+											  time_out_property)
+
+	  end
+	  
+	end
+
+  end
+
   private :set_client_options
   private :set_transaction_options
   private :message_to_axiom_node
@@ -668,5 +828,6 @@ class WSClient
   private :pack_attachments
   private :handle_incoming_attachments
   private :unpack_attachments
+  private :handle_reliable_messaging
 
 end

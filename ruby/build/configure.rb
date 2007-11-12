@@ -12,6 +12,7 @@ system('rsync -r --exclude=.svn ../src/* lib')
 
 # Add Build Rules
 dir_config('WSFC', '/home/danushka/wsf/axis2c/include/axis2-1.1', '/home/danushka/wsf/axis2c/lib')
+dir_config('Rampart', '/home/danushka/wsf/axis2c/include/rampart-1.0.0', '/home/danushka/wsf/axis2c/lib')
 
 have_library('axutil')
 have_library('axis2_minizip')
@@ -22,6 +23,11 @@ have_library('axis2_engine')
 have_library('axis2_http_common')
 have_library('axis2_http_sender')
 have_library('axis2_http_receiver')
-have_library('axis2_engine')
+have_library('omxmlsec')
+have_library('oxstokens')
+have_library('saml')
+have_library('neethi')
+have_library('neethi_util')
+have_library('omopenssl')
 
 create_makefile('WSFC')

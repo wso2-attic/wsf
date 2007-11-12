@@ -40,6 +40,13 @@ typedef enum soap_version
     AXIOM_SOAP12
 } axiom_soap_version;
 
+typedef enum axis2_scopes
+{
+    AXIS2_SCOPE_REQUEST = 0,
+    AXIS2_SCOPE_SESSION,
+    AXIS2_SCOPE_APPLICATION
+};
+
 typedef enum axiom_types_t
 {
     AXIOM_INVALID = 0,
@@ -82,7 +89,29 @@ typedef enum axis2_key_type_t
     AXIS2_KEY_TYPE_PEM,
     AXIS2_KEY_TYPE_DER
 } axis2_key_type_t;
- 
+
+#define AXIS2C_HOME             "/opt/wso2/wsf"
+#define DEFAULT_LOG_FILE        "/tmp/wsf_ruby_client.log"
+#define DEFAULT_CONTENT_TYPE    "application/octet-stream"
+
+#define AXIS2_ELEMENT_LN_INCLUDE             "Include"
+#define AXIS2_NAMESPACE_URI_INCLUDE          "http://www.w3.org/2004/08/xop/include"
+#define AXIS2_ELEMENT_ATTR_NAME_CONTENT_TYPE "xmlmime:contentType"
+#define AXIS2_ELEMENT_ATTR_NAME_HREF         "href"
+
+#define WS_RM_VERSION_1_0_STR "Spec_2005_02"
+#define WS_RM_VERSION_1_0  1
+#define WS_RM_VERSION_1_1_STR "Spec_2006_08"
+#define WS_RM_VERSION_1_1  2
+
+#define WS_SANDESHA2_CLIENT_RM_SPEC_VERSION "Sandesha2RMSpecVersion"
+#define WS_SANDESHA2_CLIENT_INACT_TIMEOUT   "InactivityTimeout"
+#define WS_SANDESHA2_CLIENT_SEQ_KEY         "Sandesha2SequenceKey"
+#define WS_SANDESHA2_CLIENT_LAST_MESSAGE    "Sandesha2LastMessage"
+#define WS_SANDESHA2_CLIENT_OFFERED_SEQ_ID  "Sandesha2OfferedSequenceId"
+#define WS_SANDESHA2_CLIENT_TIME_OUT         "time_out"
+
+#define WS_SANDESHA2_CLIENT_DEFAULT_TIME_OUT "5"
 
 /* AXIS2_TRANSPORT_H */
 
@@ -225,6 +254,7 @@ typedef enum
  * Field Available modules
  */
 #define AXIS2_MODULE_ADDRESSING "addressing"
+#define AXIS2_MODULE_SANDESHA2  "sandesha2"
 
 #define AXIS2_USER_NAME "userName"
 #define AXIS2_PASSWORD "password"
