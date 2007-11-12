@@ -113,6 +113,55 @@ typedef enum axis2_key_type_t
 
 #define WS_SANDESHA2_CLIENT_DEFAULT_TIME_OUT "5"
 
+#define WS_CP_PROXY_HOST    "proxy_host"
+#define WS_CP_PROXY_PORT    "proxy_port"
+#define WS_CP_USE_SOAP      "use_soap"
+#define WS_CP_HTTP_METHOD   "http_method"
+#define WS_CP_CA_CERT       "ca_cert"
+#define WS_CP_CLIENT_CERT   "client_cert"
+#define WS_CP_PASS_PHRASE   "pass_phrase"
+#define WS_CP_USE_WSA       "use_wsa"
+#define WS_CP_USE_MTOM      "use_mtom"
+#define WS_CP_POLICY        "policy"
+#define WS_CP_SEC_TOKEN     "security_token"
+#define WS_CP_RES_XOP       "response_xop"
+#define WS_CP_RELIABLE      "reliable"
+#define WS_CP_SEQ_EXP_TIME  "sequence_expiry_time"
+#define WS_CP_SEQ_KEY       "sequence_key"
+#define WS_CP_WILL_CON_SEQ  "will_continue_sequence"
+#define WS_CP_RES_TIME_OUT  "response_time_out"
+
+#define WS_MP_TO            "to"
+#define WS_MP_ACTION        "action"
+#define WS_MP_FROM          "from"
+#define WS_MP_REPLY_TO      "reply_to"
+#define WS_MP_FAULT_TO      "fault_to"
+#define WS_MP_ATTACHMENTS   "attachments"
+#define WS_MP_DEF_ATT_CON_TYPE "default_attachment_content_type"
+#define WS_MP_LAST_MSG      "last_message"
+
+#define WS_PROP_NAME_SERVER_CERT    "SERVER_CERT"
+#define WS_PROP_NAME_KEY_FILE       "KEY_FILE"
+#define WS_PROP_NAME_SSL_PASSPHRASE "SSL_PASSPHRASE"
+
+#define WS_ELEMENT_LN_SOAP12_FAULT_CODE    "Code"
+#define WS_ELEMENT_LN_SOAP12_FAULT_REASON  "Reason"
+#define WS_ELEMENT_LN_SOAP12_FAULT_DETAIL  "Detail"
+#define WS_ELEMENT_LN_SOAP12_FAULT_ROLE    "Role"
+
+#define WS_ELEMENT_LN_SOAP11_FAULT_CODE    "faultcode"
+#define WS_ELEMENT_LN_SOAP11_FAULT_REASON  "faultstring"
+#define WS_ELEMENT_LN_SOAP11_FAULT_DETAIL  "detail"
+#define WS_ELEMENT_LN_SOAP11_FAULT_ROLE    "faultactor"
+
+#define WS_SEC_TOK_OPT_PRIVATE_KEY  "private_key"
+#define WS_SEC_TOK_OPT_CERT         "certificate"
+#define WS_SEC_TOK_OPT_REC_CERT     "receiver_certificate"
+#define WS_SEC_TOK_OPT_USER         "user"
+#define WS_SEC_TOK_OPT_PWD          "password"
+#define WS_SEC_TOK_OPT_PWD_TYPE     "password_type"
+#define WS_SEC_TOK_OPT_TTL          "ttl"
+
 /* AXIS2_TRANSPORT_H */
 
 #define AXIS2_HTTP_GET          "GET"
@@ -255,6 +304,7 @@ typedef enum
  */
 #define AXIS2_MODULE_ADDRESSING "addressing"
 #define AXIS2_MODULE_SANDESHA2  "sandesha2"
+#define AXIS2_MODULE_RAMPART    "rampart"
 
 #define AXIS2_USER_NAME "userName"
 #define AXIS2_PASSWORD "password"
