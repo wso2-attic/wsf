@@ -535,44 +535,44 @@ class WSClient
     status = false
 
     if (use_wsa.eql? "1.0" or use_wsa.eql? "SUBMISSION" or use_wsa.eql? "TRUE") and (!action.empty?) then
-        # Action
-        WSFC::axis2_options_set_action(client_options, @env, action)
+      # Action
+      WSFC::axis2_options_set_action(client_options, @env, action)
       
-        # From
-        from = message_property(WSFC::WS_MP_FROM, message).to_s
-        begin
-           from_end_point_ref = WSFC::axis2_endpoint_ref_create(@env, from)
-           WSFC::axis2_options_set_from(client_options, @env, from_end_point_ref)
-        end unless from.empty?
+      # From
+      from = message_property(WSFC::WS_MP_FROM, message).to_s
+      begin
+        from_end_point_ref = WSFC::axis2_endpoint_ref_create(@env, from)
+        WSFC::axis2_options_set_from(client_options, @env, from_end_point_ref)
+      end unless from.empty?
      
-        # Reply_to
-        reply_to = message_property(WSFC::WS_MP_REPLY_TO, message).to_s
-        begin
-           reply_to_end_point_ref = WSFC::axis2_endpoint_ref_create(@env, reply_to)
-           WSFC::axis2_options_set_reply_to(client_options, @env, reply_to_end_point_ref)
-        end unless reply_to.empty?
+      # Reply_to
+      reply_to = message_property(WSFC::WS_MP_REPLY_TO, message).to_s
+      begin
+        reply_to_end_point_ref = WSFC::axis2_endpoint_ref_create(@env, reply_to)
+        WSFC::axis2_options_set_reply_to(client_options, @env, reply_to_end_point_ref)
+      end unless reply_to.empty?
       
-        # Fault_to
-        fault_to = message_property(WSFC::WS_MP_FAULT_TO, message).to_s
-        begin
-           fault_to_end_point_ref = WSFC::axis2_endpoint_ref_create(@env, fault_to)
-           WSFC::axis2_options_set_fault_to(client_options, @env, fault_to_end_point_ref)
-        end unless fault_to.empty?
+      # Fault_to
+      fault_to = message_property(WSFC::WS_MP_FAULT_TO, message).to_s
+      begin
+        fault_to_end_point_ref = WSFC::axis2_endpoint_ref_create(@env, fault_to)
+        WSFC::axis2_options_set_fault_to(client_options, @env, fault_to_end_point_ref)
+      end unless fault_to.empty?
       
-        WSFC::axis2_svc_client_engage_module(@svc_client, @env, WSFC::AXIS2_MODULE_ADDRESSING)
+      WSFC::axis2_svc_client_engage_module(@svc_client, @env, WSFC::AXIS2_MODULE_ADDRESSING)
 
-        if use_wsa.eql? "SUBMISSION" then
-           property = WSFC::ruby_axutil_property_create_with_args(@env,
-								   WSFC::AXIS2_SCOPE_REQUEST,
-								   WSFC::AXIS2_TRUE,
-                                                                   WSFC::ruby_axutil_strdup(@env, WSFC::AXIS2_WSA_NAMESPACE_SUBMISSION))
-           WSFC::ruby_axis2_options_set_property(client_options,
-                                                 @env,
-                                                 WSFC::AXIS2_WSA_VERSION,
-                                                 property)
-        end
+      if use_wsa.eql? "SUBMISSION" then
+        property = WSFC::ruby_axutil_property_create_with_args(@env,
+						                                       WSFC::AXIS2_SCOPE_REQUEST,
+						                                       WSFC::AXIS2_TRUE,
+                                                               WSFC::ruby_axutil_strdup(@env, WSFC::AXIS2_WSA_NAMESPACE_SUBMISSION))
+        WSFC::ruby_axis2_options_set_property(client_options,
+                                              @env,
+                                              WSFC::AXIS2_WSA_VERSION,
+                                              property)
+      end
 
-	status = true
+	  status = true
     end
 
     return status
@@ -741,15 +741,15 @@ class WSClient
 	  rm_version = reliable.eql?("1.1") ? WSFC::WS_RM_VERSION_1_1 : WSFC::WS_RM_VERSION_1_0
 	  rm_version_str = reliable.eql?("1.1") ? WSFC::WS_RM_VERSION_1_1_STR : WSFC::WS_RM_VERSION_1_0_STR
 
-          rm_property = WSFC::ruby_axutil_property_create_with_args(@env,
-	     							    WSFC::AXIS2_SCOPE_REQUEST,
-								    WSFC::AXIS2_FALSE,
-								    WSFC::ruby_axutil_strdup(@env, rm_version_str))
+      rm_property = WSFC::ruby_axutil_property_create_with_args(@env,
+	     							                            WSFC::AXIS2_SCOPE_REQUEST,
+								                                WSFC::AXIS2_FALSE,
+								                                WSFC::ruby_axutil_strdup(@env, rm_version_str))
 
 	  WSFC::ruby_axis2_options_set_property(client_options,
-						@env,
-						WSFC::WS_SANDESHA2_CLIENT_RM_SPEC_VERSION,
-						rm_property)
+											@env,
+											WSFC::WS_SANDESHA2_CLIENT_RM_SPEC_VERSION,
+											rm_property)
 
 	  # Engage Addressing if not engaged already
 	  action = message_property(WSFC::WS_MP_ACTION, message).to_s
@@ -762,23 +762,23 @@ class WSClient
 
 	  # Set Sequence Expiry Time
 	  sequence_expiry_time = client_property(WSFC::WS_CP_SEQ_EXP_TIME).to_s
-          WSFC::ruby_set_module_param_value(@env,
-			   		    @svc_client,
-					    WSFC::AXIS2_MODULE_SANDESHA2,
-					    WSFC::WS_SANDESHA2_CLIENT_INACT_TIMEOUT,
-					    sequence_expiry_time) unless sequence_expiry_time.empty?
+      WSFC::ruby_set_module_param_value(@env,
+										@svc_client,
+										WSFC::AXIS2_MODULE_SANDESHA2,
+										WSFC::WS_SANDESHA2_CLIENT_INACT_TIMEOUT,
+										sequence_expiry_time) unless sequence_expiry_time.empty?
 
 	  # Set Sequence Key
 	  sequence_key = client_property(WSFC::WS_CP_SEQ_KEY).to_s
 	  sequence_key_property = WSFC::ruby_axutil_property_create_with_args(@env,
-					 	                              WSFC::AXIS2_SCOPE_REQUEST,
-									      WSFC::AXIS2_TRUE,
-									      WSFC::ruby_axutil_strdup(@env, sequence_key))
+																		  WSFC::AXIS2_SCOPE_REQUEST,
+																		  WSFC::AXIS2_TRUE,
+																		  WSFC::ruby_axutil_strdup(@env, sequence_key))
 
 	  WSFC::ruby_axis2_options_set_property(client_options,
-						@env,
-						WSFC::WS_SANDESHA2_CLIENT_SEQ_KEY,
-				 	        sequence_key_property)
+											@env,
+											WSFC::WS_SANDESHA2_CLIENT_SEQ_KEY,
+											sequence_key_property)
 
 	  # Mark last message
 	  last_msg = true
@@ -786,53 +786,53 @@ class WSClient
 
 	  if will_continue_sequence.eql?("TRUE") and message.kind_of?(WSMessage) then
 	    
-          last_message = message_property(WSFC::WS_MP_LAST_MSG, message).to_s.upcase
-		  last_msg = false unless last_message.eql? "TRUE"
+        last_message = message_property(WSFC::WS_MP_LAST_MSG, message).to_s.upcase
+		last_msg = false unless last_message.eql? "TRUE"
 	  
 	  end
 
 	  if (last_msg) and (rm_version == 1) then
 		  
-	     last_msg_property =  WSFC::ruby_axutil_property_create_with_args(@env,
-									     WSFC::AXIS2_SCOPE_REQUEST,
-						 			     WSFC::AXIS2_FALSE,
-									     WSFC::ruby_axutil_strdup(@env, WSFC::AXIS2_VALUE_TRUE))
+	    last_msg_property =  WSFC::ruby_axutil_property_create_with_args(@env,
+																		 WSFC::AXIS2_SCOPE_REQUEST,
+																		 WSFC::AXIS2_FALSE,
+																		 WSFC::ruby_axutil_strdup(@env, WSFC::AXIS2_VALUE_TRUE))
 
-	     WSFC::ruby_axis2_options_set_property(client_options,
-	 				           @env,
-						   WSFC::WS_SANDESHA2_CLIENT_LAST_MESSAGE,
-						   last_msg_property)
+	    WSFC::ruby_axis2_options_set_property(client_options,
+											  @env,
+											  WSFC::WS_SANDESHA2_CLIENT_LAST_MESSAGE,
+											  last_msg_property)
 
 	  end
 
 	  if (!one_way) then
 
-	     # Set offered sequence id
-             offered_sequence_id = WSFC::axutil_uuid_gen(@env)
+	    # Set offered sequence id
+        offered_sequence_id = WSFC::axutil_uuid_gen(@env)
 
-	     sequence_property = WSFC::axutil_property_create(@env)
-             WSFC::ruby_axutil_property_set_value(sequence_property,
-	 					  @env,
-	  			                  WSFC::ruby_axutil_strdup(@env, offered_sequence_id))
+	    sequence_property = WSFC::axutil_property_create(@env)
+        WSFC::ruby_axutil_property_set_value(sequence_property,
+										     @env,
+										     WSFC::ruby_axutil_strdup(@env, offered_sequence_id))
 
-	     WSFC::ruby_axis2_options_set_property(client_options,
-						   @env,
-						   WSFC::WS_SANDESHA2_CLIENT_OFFERED_SEQ_ID,
-						   sequence_property)
+	    WSFC::ruby_axis2_options_set_property(client_options,
+										      @env,
+										      WSFC::WS_SANDESHA2_CLIENT_OFFERED_SEQ_ID,
+										      sequence_property)
 		
-	     # Set time out
-	     response_time_out = client_property(WSFC::WS_CP_RES_TIME_OUT).to_s
-	     time_out = response_time_out.empty? ? WSFC::WS_SANDESHA2_CLIENT_DEFAULT_TIME_OUT : response_time_out
+	    # Set time out
+	    response_time_out = client_property(WSFC::WS_CP_RES_TIME_OUT).to_s
+	    time_out = response_time_out.empty? ? WSFC::WS_SANDESHA2_CLIENT_DEFAULT_TIME_OUT : response_time_out
 
-             time_out_property = WSFC::ruby_axutil_property_create_with_args(@env,
-								             WSFC::AXIS2_SCOPE_REQUEST,
-								             WSFC::AXIS2_FALSE,
-                                                                             WSFC::ruby_axutil_strdup(@env, time_out))
+        time_out_property = WSFC::ruby_axutil_property_create_with_args(@env,
+																	    WSFC::AXIS2_SCOPE_REQUEST,
+																	    WSFC::AXIS2_FALSE,
+																	    WSFC::ruby_axutil_strdup(@env, time_out))
 		
-             WSFC::ruby_axis2_options_set_property(client_options,
-						   @env,
-						   WSFC::WS_SANDESHA2_CLIENT_TIME_OUT,
-						   time_out_property)
+        WSFC::ruby_axis2_options_set_property(client_options,
+										      @env,
+										      WSFC::WS_SANDESHA2_CLIENT_TIME_OUT,
+										      time_out_property)
 
 	  end
 	  
