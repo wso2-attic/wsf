@@ -25,14 +25,15 @@ req_payload_string = <<XML
 XML
 
 begin
-  axis2c_home = "/home/danushka/wsf/axis2c"
-  log_file_name = "/tmp/ruby_yahoo.log"
+  AXIS2C_HOME = "/home/danushka/wsf/axis2c"
+  LOG_FILE_NAME = "/tmp/ruby_yahoo.log"
+  END_POINT = "http://search.yahooapis.com/WebSearchService/V1/webSearch"
 
-  client = WSClient.new({"to" => "http://search.yahooapis.com/WebSearchService/V1/webSearch",
+  client = WSClient.new({"to" => END_POINT,
                          "http_method" => "GET",
                          "use_soap" => false},
-                        axis2c_home,
-                        log_file_name)
+                        AXIS2C_HOME,
+                        LOG_FILE_NAME)
 
   puts "Sending OM : " << "\n" << req_payload_string << "\n"
 

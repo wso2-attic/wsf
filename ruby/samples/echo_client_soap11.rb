@@ -24,14 +24,14 @@ req_payload_string = <<XML
 XML
 
 begin
-  axis2c_home = "/home/danushka/wsf/axis2c"
-  log_file_name = "/tmp/ruby_echo_client_soap11.log"
-  end_point = "http://localhost:9090/axis2/services/echo"
+  AXIS2C_HOME = "/home/danushka/wsf/axis2c"
+  LOG_FILE_NAME = "/tmp/ruby_echo_client_soap11.log"
+  END_POINT = "http://localhost:9090/axis2/services/echo"
 
-  client = WSClient.new({"to" => end_point,
+  client = WSClient.new({"to" => END_POINT,
                          "use_soap" => 1.1},
-                        axis2c_home,
-                        log_file_name)
+                        AXIS2C_HOME,
+                        LOG_FILE_NAME)
 
   puts "Sending OM : " << "\n" << req_payload_string << "\n" 
 

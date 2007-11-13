@@ -341,53 +341,53 @@ class WSClient
     code, reason, role, detail = "", "", "", ""
 
     begin
-       child_node = WSFC::axiom_child_element_iterator_next(child_element_ite, @env)
-       while !child_node.nil?
-	  child_element = WSFC::ruby_axiom_node_get_data_element(child_node, @env)
+      child_node = WSFC::axiom_child_element_iterator_next(child_element_ite, @env)
+      while !child_node.nil?
+	    child_element = WSFC::ruby_axiom_node_get_data_element(child_node, @env)
 
-	     begin
-		localname = WSFC::axiom_element_get_localname(child_element, @env)
-		if localname.eql?(WSFC::WS_ELEMENT_LN_SOAP12_FAULT_CODE) then #code
+	    begin
+		  localname = WSFC::axiom_element_get_localname(child_element, @env)
+		  if localname.eql?(WSFC::WS_ELEMENT_LN_SOAP12_FAULT_CODE) then #code
 		  
-		code_node = WSFC::ruby_axiom_element_get_first_node(child_element, child_node, @env)
+		    code_node = WSFC::ruby_axiom_element_get_first_node(child_element, child_node, @env)
 	        if !code_node.nil? then
 			  
-                   code_element = WSFC::ruby_axiom_node_get_data_element(code_node, @env)
-                   code = WSFC::axiom_element_get_text(code_element, @env, code_node) unless code_element.nil?
+              code_element = WSFC::ruby_axiom_node_get_data_element(code_node, @env)
+              code = WSFC::axiom_element_get_text(code_element, @env, code_node) unless code_element.nil?
 
-		end
+		    end
 
-		elsif localname.eql?(WSFC::WS_ELEMENT_LN_SOAP11_FAULT_CODE) then
+		  elsif localname.eql?(WSFC::WS_ELEMENT_LN_SOAP11_FAULT_CODE) then
 
-		   code = WSFC::axiom_element_get_text(child_element, @env, child_node)
+	        code = WSFC::axiom_element_get_text(child_element, @env, child_node)
 
-		elsif localname.eql?(WSFC::WS_ELEMENT_LN_SOAP12_FAULT_REASON) then #reason
+		  elsif localname.eql?(WSFC::WS_ELEMENT_LN_SOAP12_FAULT_REASON) then #reason
 
-		   reason_node = WSFC::ruby_axiom_element_get_first_node(child_element, child_node, @env)
-		   if !reason_node.nil? then
+		    reason_node = WSFC::ruby_axiom_element_get_first_node(child_element, child_node, @env)
+		    if !reason_node.nil? then
 
 		      reason_element = WSFC::ruby_axiom_node_get_data_element(reason_node, @env)
-	              reason = WSFC::axiom_element_get_text(reason_element, @env, reason_node) unless reason_element.nil?
+	          reason = WSFC::axiom_element_get_text(reason_element, @env, reason_node) unless reason_element.nil?
 
-		   end
+		    end
 
-	        elsif localname.eql?(WSFC::WS_ELEMENT_LN_SOAP11_FAULT_REASON) then
+	      elsif localname.eql?(WSFC::WS_ELEMENT_LN_SOAP11_FAULT_REASON) then
 
-		   reason = WSFC::axiom_element_get_text(child_element, @env, child_node)
+		    reason = WSFC::axiom_element_get_text(child_element, @env, child_node)
 
-		elsif localname.eql?(WSFC::WS_ELEMENT_LN_SOAP12_FAULT_DETAIL) or localname.eql?(WSFC::WS_ELEMENT_LN_SOAP11_FAULT_DETAIL) then #detail
+		  elsif localname.eql?(WSFC::WS_ELEMENT_LN_SOAP12_FAULT_DETAIL) or localname.eql?(WSFC::WS_ELEMENT_LN_SOAP11_FAULT_DETAIL) then #detail
 
-                   detail_node = WSFC::axiom_node_get_first_element(child_node, @env)
-	           detail = WSFC::axiom_node_to_string(detail_node, @env) unless detail_node.nil?
+            detail_node = WSFC::axiom_node_get_first_element(child_node, @env)
+	        detail = WSFC::axiom_node_to_string(detail_node, @env) unless detail_node.nil?
 
-		elsif localname.eql?(WSFC::WS_ELEMENT_LN_SOAP12_FAULT_ROLE) or localname.eql?(WSFC::WS_ELEMENT_LN_SOAP11_FAULT_ROLE) then #role
+		  elsif localname.eql?(WSFC::WS_ELEMENT_LN_SOAP12_FAULT_ROLE) or localname.eql?(WSFC::WS_ELEMENT_LN_SOAP11_FAULT_ROLE) then #role
 
-                   role = WSFC::axiom_element_get_text(child_element, @env, child_node)
+            role = WSFC::axiom_element_get_text(child_element, @env, child_node)
 
-		end
-	     end unless child_element.nil?
+		  end
+	    end unless child_element.nil?
 
-	     child_node = WSFC::axiom_child_element_iterator_next(child_element_ite, @env)
+	    child_node = WSFC::axiom_child_element_iterator_next(child_element_ite, @env)
 	  end
     end unless child_element_ite.nil?
 
