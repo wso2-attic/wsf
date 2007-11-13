@@ -18,6 +18,7 @@ class WSSecurityToken
 
    def initialize(policy)
       return unless policy.kind_of? Hash
+      @policy = policy
    end
 
    

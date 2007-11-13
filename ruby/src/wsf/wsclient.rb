@@ -171,7 +171,7 @@ class WSClient
       return nil
     end
    
-	# Set transaction level options
+    # Set transaction level options
     set_transaction_options(message, client_options)
 
     # Handle Security
@@ -180,12 +180,14 @@ class WSClient
     # Handle Addressing options
     addressing_engaged = handle_addressing(message, client_options)
 
-	# Handle RM options
+    # Handle RM options
     handle_reliable_messaging(message, client_options, addressing_engaged, false)
 
     # Handle outgoing attachments
     handle_outgoing_attachments(message, client_options, request_axiom_payload)
  
+    puts "handle outgoint attachments"
+
     response_axiom_payload = WSFC::axis2_svc_client_send_receive(@svc_client, @env, request_axiom_payload)
 
     if WSFC::axis2_svc_client_get_last_response_has_fault(@svc_client, @env) == WSFC::AXIS2_TRUE then # SOAP fault occurred
@@ -409,7 +411,7 @@ class WSClient
 
      if !incoming_policy_node.nil? then
         
-        if WSFC::axiom_node_get_node_type(incoming_policy_node, @env) == WSFC::AXIOM_ELEMENT then
+         if WSFC::axiom_node_get_node_type(incoming_policy_node, @env) == WSFC::AXIOM_ELEMENT then
      	
            root = WSFC::ruby_axiom_node_get_data_element(incoming_policy_node, @env)
            if !root.nil? then
@@ -456,7 +458,7 @@ class WSClient
 
   def set_security_token_data_to_rampart_context(rampart_context, sec_token)
     return if sec_token.nil?
-    
+   
     option = sec_token.option(WSFC::WS_SEC_TOK_OPT_PRIVATE_KEY) 
     if not option.nil?
        if (WSFC::ruby_rampart_context_set_prv_key(rampart_context, @env, option) == WSFC::AXIS2_SUCCESS) then
@@ -466,7 +468,7 @@ class WSClient
           WSFC::axis2_log_debug(@env, "[wsf_sec_policy] setting pvt key format ")
        end
     end
-   
+  
     option = sec_token.option(WSFC::WS_SEC_TOK_OPT_CERT)
     if not option.nil?
        if (WSFC::ruby_rampart_context_set_certificate(rampart_context, @env, option) == WSFC::AXIS2_SUCCESS) then
