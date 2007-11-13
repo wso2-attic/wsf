@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <title>WS02 WSF/Ruby SECURITY MANUAL</title>
+
+
+  <link href="style/api_style.css" rel="stylesheet" type="text/css" media="all" />
+
+</head>
+
+
+<body lang="en">
+
+<h1><span style="font-family: Arial;">8. Security
+Manual</span></h1>
+
+<h2 id="1">8.1. Writing a Secure Web Service Client</h2>
+
+<p>First create a suitable payload to be sent to the echo service.</p>
+
+<p>$req_payload_string =&nbsp; &lt;&lt;&lt;XML
+&lt;ns1:echoString
+xmlns="http://www.wsf.org/echo/echoString"&gt;&lt;text&gt;Hello
+RM!&lt;/text&gt;&lt;/ns1:echoString&gt;XML;</p>
+
+<p></p>
+
+<p>Note that in order to run security clients or services, you
+should engage
+WS-Addressing</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+$reqMessage =&nbsp;&nbsp; new WSMessage($reqPayloadString,<br />
+
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp;array("<span style="color: rgb(255, 102, 102);">to</span>"
+=&gt;"<span style="color: rgb(255, 102, 102);">http://localhost/samples/security_service.php</span>",<br />
+
+<span style="color: rgb(255, 102, 102);">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp;action</span>" =&gt;"<span style="color: rgb(255, 102, 102);">http://php.axis2.org/samples/echoString</span>"));</p>
+
+<p>Then create a WSPolicy object with the security options to
+match your
+requirements.</p>
+
+<p>For example, if you want to include TimeStamp and
+UsernameToken you can do
+as follows.</p>
+
+<p>policy =&nbsp;WSPolicy.new(Hash.new("<span style="color: rgb(255, 51, 51);">security</span>"
+=&gt; Hash.new("<span style="color: rgb(255, 51, 51);">use_username_token</span>"
+=&gt; true, "<span style="color: rgb(255, 51, 51);">include_time_stamp</span>"
+=&gt; true)));</p>
+
+<p></p>
+
+<p><strong>Note: If you wish to use a policy file instead
+of an options array
+you can directly set a policy XML file.</strong></p>
+
+<p>policy_xml = file_get_contents("<span style="color: rgb(255, 51, 51);">policy.xml</span>");</p>
+
+<p>policy =&nbsp;WSPolicy.new(Hash.new("<span style="color: rgb(255, 51, 51);">security</span>"
+=&gt;&nbsp;policy_xml));</p>
+
+<p></p>
+
+<p>Next create a SecurityToken object with appropriate security
+properties.</p>
+
+<p>If you want to have the UsernameToken, then the user, password
+and
+password_type (optional) options must be set. For TimeStamp, the ttl
+option
+must be set. Hence the SecurityToken object is created as</p>
+
+<p>securityToken =&nbsp;WSSecurityToken.new(Hash.new("<span style="color: rgb(255, 51, 51);">user</span>"
+=&gt; "<span style="color: rgb(255, 51, 51);">bob</span>",<br />
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp;"<span style="color: rgb(255, 51, 51);">password</span>"
+=&gt; "<span style="color: rgb(255, 51, 51);">bob12</span>",<br />
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp;"<span style="color: rgb(255, 51, 51);">password_type</span>"
+=&gt; "<span style="color: rgb(255, 51, 51);">Digest</span>",<br />
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp;"ttl" =&gt; 300));</p>
+
+<p></p>
+
+<p>Then create the client using the policy object and security
+token
+object.</p>
+
+<p>client =&nbsp;WSClient.new(Hash.new("<span style="color: rgb(255, 51, 51);">use_wsa</span>"
+=&gt; true,<br />
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp;"<span style="color: rgb(255, 51, 51);">policy</span>"
+=&gt;&nbsp;policy,<br />
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp;"<span style="color: rgb(255, 51, 51);">security_token</span>"
+=&gt;&nbsp;sec_token));<br />
+
+</p>
+
+<p></p>
+
+<p>res_message =&nbsp;client.request(req_message);</p>
+
+<br />
+
+<h2 id="3">8.3. Encryption and Signing</h2>
+
+<p>For encryption and signing, keys and certificates must be
+provided using
+the two functions:</p>
+
+<p>WSUtil::ws_get_cert_from_file();</p>
+
+<p>WSUtil::ws_get_key_from_file();</p>
+
+<h3>8.3.1. Encryption on the Client Side</h3>
+
+<p>The Receivers certificate (certificate used by the server
+side) must be
+set using the "receiver_certificate" option and the private key of the
+client
+must be set using the "private_key" option with a WSSecurityToken
+object
+instance.</p>
+
+<p>First load the certificates:</p>
+
+<p>rec_cert =
+WSUtil::ws_get_cert_from_file("../keys/bob_cert.cert"); <br />
+
+pvt_key = WSUtil::ws_get_key_from_file("../keys/alice_key.pem");</p>
+
+<p>Then the Policy object and the SecurityToken object have to be
+created.
+When creating the Policy object, you can also specify the algorithm
+suite to
+be used.</p>
+
+<p>policy
+=&nbsp;WSPolicy.new(Hash.new("security"=&gt;Hash.new("encrypt"=&gt;true,"algorithm_suite"
+=&gt;
+"Basic256Rsa15")));<br />
+
+sec_token =&nbsp;WSSecurityToken.new(Hash.new("private_key"
+=&gt;&nbsp;pvt_key, "receiver_certificate"
+=&gt;&nbsp;rec_cert));</p>
+
+<h3>8.3.2. Signing on the Client Side</h3>
+
+<p>For signing, the certificate and the key of the client and the
+certificate
+of the server must be set.</p>
+
+<p>my_cert =
+WSUtil::ws_get_cert_from_file("../keys/alice_cert.cert");<br />
+
+my_key = WSUtil::ws_get_key_from_file("../keys/alice_key.pem");<br />
+
+rec_cert = WSUtil::ws_get_cert_from_file("../keys/bob_cert.cert");</p>
+
+<p>Then the Policy object and the SecurityToken object can be
+created:</p>
+
+<p>policy
+=&nbsp;WSPolicy.new(Hash.new("security"=&gt;Hash.new("sign"=&gt;true,
+"algorithm_suite" =&gt;
+"Basic256Rsa15",)));<br />
+
+sec_token =&nbsp;WSSecurityToken.new(Hash.new("private_key"
+=&gt;&nbsp;my_key,
+"certificate" =&gt;&nbsp;my_cert, "receiver_certificate"
+=&gt;&nbsp;rec_cert));</p>
+
+<p></p>
+
+<h2 id="4">8.4. Code Sample on Encryption</h2>
+
+<h3>Client Code:</h3>
+
+<pre>req_payload = &lt;&lt;XML<br />&lt;ns1:echo xmlns:ns1="http://php.axis2.org/samples"&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;<br />XML<br /><br />begin<br /> WSFC_HOME = "/your/path/to/wsfc/home"<br /> LOG_FILE = "/tmp/security_sample.log"<br /> ACTION = "http://php.axis2.org/samples/echoString"<br /> END_POINT = "http://localhost:9090/axis2/services/sec_echo/echoString"<br /><br /> message_properties = {"to" =&gt; END_POINT,<br /> "action" =&gt; ACTION}<br /><br /> rec_cert = WSUtil::ws_get_cert_from_file("../keys/bob_cert.cert")<br /> pvt_key = WSUtil::ws_get_key_from_file("../keys/alice_key.pem")<br /> <br /> payload = WSMessage.new(req_payload, <br /> nil, <br /> message_properties)<br /><br /> policy_content = {"encrypt"=&gt; true,<br /> "algorithm_suite" =&gt; "Basic256Rsa15",<br /> "security_token_reference" =&gt; "IssuerSerial"}<br /><br /> policy = WSPolicy.new({"security" =&gt; policy_content})<br /><br /> security_options = {"private_key" =&gt; pvt_key,<br /> "receiver_certificate" =&gt; rec_cert}<br /> <br /> security_token = WSSecurityToken.new(security_options)<br /><br /> options = {"use_wsa" =&gt; true,<br /> "policy" =&gt; policy,<br /> "security_token" =&gt; security_token}<br /><br /> client = WSClient.new(options, WSFC_HOME, LOG_FILE)<br /><br /> res_message = client.request(payload)<br /><br /> if not res_message.nil? then<br /> puts "Received OM: "&lt;&lt; "\n" &lt;&lt; res_message.payload_to_s &lt;&lt; "\n\n"<br /> puts "Client invocation SUCCESSFUL !!!"<br /> else<br /> puts "Client invocation FAILED !!!"<br /> end<br /><br />rescue WSFault =&gt; wsfault<br /> puts "Client invocation FAILED !!!\n"<br /> puts "WSFault : "<br /> puts wsfault.xml<br /> puts "----------"<br /> puts wsfault.code<br /> puts "----------"<br /> puts wsfault.reason<br /> puts "----------"<br /> puts wsfault.role<br /> puts "----------"<br /> puts wsfault.detail<br /> puts "----------"<br /><br />rescue =&gt; exception<br /> puts "Client invocation FAILED !!!\n"<br /> puts "Exception : " &lt;&lt; exception<br />end<br /><br /></pre>
+
+<br />
+
+</body>
+</html>

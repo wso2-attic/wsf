@@ -802,3 +802,82 @@ ruby_rampart_context_set_pwcb_function(rampart_context_t *rampart_context,
 }
 %}
 
+%inline %{
+axis2_status_t
+ruby_set_security_token_data_to_rampart_context(const axutil_env_t * env,
+                                                rampart_context_t *rampart_context,
+                                                VALUE security_token)
+{
+   char* prv_key = get_option_from_ruby_security_token_string(security_token, WS_SEC_TOK_OPT_PRIVATE_KEY);
+
+   if (rampart_context_set_prv_key(rampart_context, env, (void *)prv_key) == AXIS2_SUCCESS)
+       AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pvt key  ");
+   
+   if (rampart_context_set_prv_key_type(rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS)
+       AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pvt key format ");
+
+   char* certificate = get_option_from_ruby_security_token_string(security_token, WS_SEC_TOK_OPT_CERT);
+   
+   if (rampart_context_set_certificate(rampart_context, env, (void *)certificate) == AXIS2_SUCCESS)
+       AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pub key  ");
+   if (rampart_context_set_certificate_type(rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS)
+       AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pub key type ");
+
+   char* receiver_certificate = get_option_from_ruby_security_token_string(security_token, WS_SEC_TOK_OPT_REC_CERT);
+    
+   if (rampart_context_set_receiver_certificate(rampart_context, env, receiver_certificate) == AXIS2_SUCCESS)
+       AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting receiver pub key");
+   if (rampart_context_set_receiver_certificate_type(rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS) 
+       AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting receiver pub key format");
+
+   
+   char* username = get_option_from_ruby_security_token_string(security_token, WS_SEC_TOK_OPT_USER);
+
+   if (rampart_context_set_user(rampart_context, env, username) == AXIS2_SUCCESS) 
+       AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting username ");
+
+   char* password = get_option_from_ruby_security_token_string(security_token, WS_SEC_TOK_OPT_PWD);
+
+   if (rampart_context_set_password(rampart_context, env, password) == AXIS2_SUCCESS) 
+       AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting password ");
+
+   char* password_type = get_option_from_ruby_security_token_string(security_token, WS_SEC_TOK_OPT_PWD_TYPE);
+
+   if (rampart_context_set_password_type(rampart_context, env, password_type) == AXIS2_SUCCESS)
+       AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting password type ");
+
+   int ttl = get_option_from_ruby_security_token(security_token_number, WS_SEC_TOK_OPT_TTL);
+
+   if (rampart_context_set_ttl(rampart_context, env, ttl) == AXIS2_SUCCESS) 
+       AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy) setting ttl");
+   
+   /*#option = sec_token.option("password_callback")
+    #if not option.nil?
+    #   if (WSFC::ruby_rampart_context_set_pwcb_function(rampart_context, @env, nil, option) == WSFC::AXIS2_SUCCESS) then
+    #      WSFC::axis2_log_debug(@env, "[wsf_sec_policy] setting callback function")
+    #   end
+    #endn */
+
+   return AXIS2_SUCCESS;
+
+}
+%}
+
+%inline %{
+char*
+get_option_from_ruby_security_token_string(VALUE security_token, const char* security_option)
+{
+   VALUE sec_option = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2(security_option));
+   return RSTRING(sec_option)->ptr;
+}
+%}
+
+%inline %{
+int
+get_option_from_ruby_security_token_number(VALUE security_token, const char* security_option)
+{
+   VALUE sec_option = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2(security_option));
+   return NUM2INT(sec_option);
+}
+%}
+

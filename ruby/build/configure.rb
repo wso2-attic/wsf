@@ -11,7 +11,7 @@ Dir.mkdir('lib') unless (FileTest.exist?('lib') && FileTest.directory?('lib'))
 system('rsync -r --exclude=.svn ../src/* lib')
 
 # Add Build Rules
-dir_config('WSFC', '/home/danushka/wsf/axis2c/include/axis2-1.1', '/home/danushka/wsf/axis2c/lib')
+dir_config('WSFC', '/home/janapriya/deploy/wsfc/include/axis2-1.1:/home/janapriya/deploy/wsfc/include/rampart-1.0', '/home/janapriya/deploy/wsfc/lib:/home/janapriya/deploy/wsfc/modules/rampart')
 dir_config('Rampart', '/home/danushka/wsf/axis2c/include/rampart-1.0.0', '/home/danushka/wsf/axis2c/lib')
 
 have_library('axutil')
@@ -29,5 +29,8 @@ have_library('saml')
 have_library('neethi')
 have_library('neethi_util')
 have_library('omopenssl')
+have_library('neethi')
+have_library('neethi_util')
+have_library('mod_rampart')
 
 create_makefile('WSFC')

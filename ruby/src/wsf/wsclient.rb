@@ -94,18 +94,18 @@ class WSClient
     pass_phrase = @options.has_key?(WSFC::WS_CP_PASS_PHRASE) ? @options[WSFC::WS_CP_PASS_PHRASE].to_s : ""
 
     ca_cert_property = WSFC::ruby_axutil_property_create_with_args(@env,
-																   WSFC::AXIS2_SCOPE_APPLICATION,
-																   WSFC::AXIS2_TRUE,
+  							           WSFC::AXIS2_SCOPE_APPLICATION,
+							           WSFC::AXIS2_TRUE,
                                                                    WSFC::ruby_axutil_strdup(@env, ca_cert))
     
     client_cert_property = WSFC::ruby_axutil_property_create_with_args(@env,
-																	   WSFC::AXIS2_SCOPE_APPLICATION,
-																	   WSFC::AXIS2_TRUE,
+						                       WSFC::AXIS2_SCOPE_APPLICATION,
+								       WSFC::AXIS2_TRUE,
                                                                        WSFC::ruby_axutil_strdup(@env, client_cert))
     
     pass_phrase_property = WSFC::ruby_axutil_property_create_with_args(@env,
-																	   WSFC::AXIS2_SCOPE_APPLICATION,
-																	   WSFC::AXIS2_TRUE,
+								       WSFC::AXIS2_SCOPE_APPLICATION,
+								       WSFC::AXIS2_TRUE,
                                                                        WSFC::ruby_axutil_strdup(@env, pass_phrase))
     
     WSFC::ruby_axis2_options_set_property(client_options,
@@ -332,62 +332,62 @@ class WSClient
   # sending or requesting
  
   def last_soap_fault_exception
-	soap_fault_base_node = WSFC::ruby_get_last_soap_fault_base_node(@svc_client, @env)
-	return nil if soap_fault_base_node.nil?
+    soap_fault_base_node = WSFC::ruby_get_last_soap_fault_base_node(@svc_client, @env)
+    return nil if soap_fault_base_node.nil?
    
     fault_element = WSFC::ruby_axiom_node_get_data_element(soap_fault_base_node, @env)
-	child_element_ite = WSFC::axiom_element_get_child_elements(fault_element, @env, soap_fault_base_node)
+    child_element_ite = WSFC::axiom_element_get_child_elements(fault_element, @env, soap_fault_base_node)
 
-	code, reason, role, detail = "", "", "", ""
+    code, reason, role, detail = "", "", "", ""
 
-	begin
-      child_node = WSFC::axiom_child_element_iterator_next(child_element_ite, @env)
-	  while !child_node.nil?
-	    child_element = WSFC::ruby_axiom_node_get_data_element(child_node, @env)
+    begin
+       child_node = WSFC::axiom_child_element_iterator_next(child_element_ite, @env)
+       while !child_node.nil?
+	  child_element = WSFC::ruby_axiom_node_get_data_element(child_node, @env)
 
-		begin
-		  localname = WSFC::axiom_element_get_localname(child_element, @env)
-		  if localname.eql?(WSFC::WS_ELEMENT_LN_SOAP12_FAULT_CODE) then #code
+	     begin
+		localname = WSFC::axiom_element_get_localname(child_element, @env)
+		if localname.eql?(WSFC::WS_ELEMENT_LN_SOAP12_FAULT_CODE) then #code
 		  
-		    code_node = WSFC::ruby_axiom_element_get_first_node(child_element, child_node, @env)
-			if !code_node.nil? then
+		code_node = WSFC::ruby_axiom_element_get_first_node(child_element, child_node, @env)
+	        if !code_node.nil? then
 			  
-              code_element = WSFC::ruby_axiom_node_get_data_element(code_node, @env)
-              code = WSFC::axiom_element_get_text(code_element, @env, code_node) unless code_element.nil?
+                   code_element = WSFC::ruby_axiom_node_get_data_element(code_node, @env)
+                   code = WSFC::axiom_element_get_text(code_element, @env, code_node) unless code_element.nil?
 
-			end
+		end
 
-		  elsif localname.eql?(WSFC::WS_ELEMENT_LN_SOAP11_FAULT_CODE) then
+		elsif localname.eql?(WSFC::WS_ELEMENT_LN_SOAP11_FAULT_CODE) then
 
-		    code = WSFC::axiom_element_get_text(child_element, @env, child_node)
+		   code = WSFC::axiom_element_get_text(child_element, @env, child_node)
 
-		  elsif localname.eql?(WSFC::WS_ELEMENT_LN_SOAP12_FAULT_REASON) then #reason
+		elsif localname.eql?(WSFC::WS_ELEMENT_LN_SOAP12_FAULT_REASON) then #reason
 
-		    reason_node = WSFC::ruby_axiom_element_get_first_node(child_element, child_node, @env)
-			if !reason_node.nil? then
+		   reason_node = WSFC::ruby_axiom_element_get_first_node(child_element, child_node, @env)
+		   if !reason_node.nil? then
 
-			  reason_element = WSFC::ruby_axiom_node_get_data_element(reason_node, @env)
-			  reason = WSFC::axiom_element_get_text(reason_element, @env, reason_node) unless reason_element.nil?
+		      reason_element = WSFC::ruby_axiom_node_get_data_element(reason_node, @env)
+	              reason = WSFC::axiom_element_get_text(reason_element, @env, reason_node) unless reason_element.nil?
 
-			end
+		   end
 
-		  elsif localname.eql?(WSFC::WS_ELEMENT_LN_SOAP11_FAULT_REASON) then
+	        elsif localname.eql?(WSFC::WS_ELEMENT_LN_SOAP11_FAULT_REASON) then
 
-		    reason = WSFC::axiom_element_get_text(child_element, @env, child_node)
+		   reason = WSFC::axiom_element_get_text(child_element, @env, child_node)
 
-		  elsif localname.eql?(WSFC::WS_ELEMENT_LN_SOAP12_FAULT_DETAIL) or localname.eql?(WSFC::WS_ELEMENT_LN_SOAP11_FAULT_DETAIL) then #detail
+		elsif localname.eql?(WSFC::WS_ELEMENT_LN_SOAP12_FAULT_DETAIL) or localname.eql?(WSFC::WS_ELEMENT_LN_SOAP11_FAULT_DETAIL) then #detail
 
-            detail_node = WSFC::axiom_node_get_first_element(child_node, @env)
-			detail = WSFC::axiom_node_to_string(detail_node, @env) unless detail_node.nil?
+                   detail_node = WSFC::axiom_node_get_first_element(child_node, @env)
+	           detail = WSFC::axiom_node_to_string(detail_node, @env) unless detail_node.nil?
 
-		  elsif localname.eql?(WSFC::WS_ELEMENT_LN_SOAP12_FAULT_ROLE) or localname.eql?(WSFC::WS_ELEMENT_LN_SOAP11_FAULT_ROLE) then #role
+		elsif localname.eql?(WSFC::WS_ELEMENT_LN_SOAP12_FAULT_ROLE) or localname.eql?(WSFC::WS_ELEMENT_LN_SOAP11_FAULT_ROLE) then #role
 
-            role = WSFC::axiom_element_get_text(child_element, @env, child_node)
+                   role = WSFC::axiom_element_get_text(child_element, @env, child_node)
 
-		  end
-		end unless child_element.nil?
+		end
+	     end unless child_element.nil?
 
-	    child_node = WSFC::axiom_child_element_iterator_next(child_element_ite, @env)
+	     child_node = WSFC::axiom_child_element_iterator_next(child_element_ite, @env)
 	  end
     end unless child_element_ite.nil?
 
@@ -399,7 +399,7 @@ class WSClient
 
   # This method is used to handle security
   
-    def handle_security
+  def handle_security
      policy = client_property(WSFC::WS_CP_POLICY)
      sec_token = client_property(WSFC::WS_CP_SEC_TOKEN)
 
@@ -532,50 +532,50 @@ class WSClient
     use_wsa = client_property(WSFC::WS_CP_USE_WSA).to_s.upcase
     action = message_property(WSFC::WS_MP_ACTION, message).to_s
 
-	status = false
+    status = false
 
     if (use_wsa.eql? "1.0" or use_wsa.eql? "SUBMISSION" or use_wsa.eql? "TRUE") and (!action.empty?) then
-      # Action
-      WSFC::axis2_options_set_action(client_options, @env, action)
+        # Action
+        WSFC::axis2_options_set_action(client_options, @env, action)
       
-      # From
-      from = message_property(WSFC::WS_MP_FROM, message).to_s
-      begin
-        from_end_point_ref = WSFC::axis2_endpoint_ref_create(@env, from)
-        WSFC::axis2_options_set_from(client_options, @env, from_end_point_ref)
-      end unless from.empty?
+        # From
+        from = message_property(WSFC::WS_MP_FROM, message).to_s
+        begin
+           from_end_point_ref = WSFC::axis2_endpoint_ref_create(@env, from)
+           WSFC::axis2_options_set_from(client_options, @env, from_end_point_ref)
+        end unless from.empty?
      
-      # Reply_to
-      reply_to = message_property(WSFC::WS_MP_REPLY_TO, message).to_s
-      begin
-        reply_to_end_point_ref = WSFC::axis2_endpoint_ref_create(@env, reply_to)
-        WSFC::axis2_options_set_reply_to(client_options, @env, reply_to_end_point_ref)
-      end unless reply_to.empty?
+        # Reply_to
+        reply_to = message_property(WSFC::WS_MP_REPLY_TO, message).to_s
+        begin
+           reply_to_end_point_ref = WSFC::axis2_endpoint_ref_create(@env, reply_to)
+           WSFC::axis2_options_set_reply_to(client_options, @env, reply_to_end_point_ref)
+        end unless reply_to.empty?
       
-      # Fault_to
-      fault_to = message_property(WSFC::WS_MP_FAULT_TO, message).to_s
-      begin
-        fault_to_end_point_ref = WSFC::axis2_endpoint_ref_create(@env, fault_to)
-        WSFC::axis2_options_set_fault_to(client_options, @env, fault_to_end_point_ref)
-      end unless fault_to.empty?
+        # Fault_to
+        fault_to = message_property(WSFC::WS_MP_FAULT_TO, message).to_s
+        begin
+           fault_to_end_point_ref = WSFC::axis2_endpoint_ref_create(@env, fault_to)
+           WSFC::axis2_options_set_fault_to(client_options, @env, fault_to_end_point_ref)
+        end unless fault_to.empty?
       
-      WSFC::axis2_svc_client_engage_module(@svc_client, @env, WSFC::AXIS2_MODULE_ADDRESSING)
+        WSFC::axis2_svc_client_engage_module(@svc_client, @env, WSFC::AXIS2_MODULE_ADDRESSING)
 
-      if use_wsa.eql? "SUBMISSION" then
-        property = WSFC::ruby_axutil_property_create_with_args(@env,
-															   WSFC::AXIS2_SCOPE_REQUEST,
-															   WSFC::AXIS2_TRUE,
-                                                               WSFC::ruby_axutil_strdup(@env, WSFC::AXIS2_WSA_NAMESPACE_SUBMISSION))
-        WSFC::ruby_axis2_options_set_property(client_options,
-                                              @env,
-                                              WSFC::AXIS2_WSA_VERSION,
-                                              property)
-      end
+        if use_wsa.eql? "SUBMISSION" then
+           property = WSFC::ruby_axutil_property_create_with_args(@env,
+								   WSFC::AXIS2_SCOPE_REQUEST,
+								   WSFC::AXIS2_TRUE,
+                                                                   WSFC::ruby_axutil_strdup(@env, WSFC::AXIS2_WSA_NAMESPACE_SUBMISSION))
+           WSFC::ruby_axis2_options_set_property(client_options,
+                                                 @env,
+                                                 WSFC::AXIS2_WSA_VERSION,
+                                                 property)
+        end
 
-	  status = true
+	status = true
     end
 
-	return status
+    return status
   end
 
   # This method is used to handle attachments sent with a message
@@ -741,15 +741,15 @@ class WSClient
 	  rm_version = reliable.eql?("1.1") ? WSFC::WS_RM_VERSION_1_1 : WSFC::WS_RM_VERSION_1_0
 	  rm_version_str = reliable.eql?("1.1") ? WSFC::WS_RM_VERSION_1_1_STR : WSFC::WS_RM_VERSION_1_0_STR
 
-      rm_property = WSFC::ruby_axutil_property_create_with_args(@env,
-																WSFC::AXIS2_SCOPE_REQUEST,
-																WSFC::AXIS2_FALSE,
-															    WSFC::ruby_axutil_strdup(@env, rm_version_str))
+          rm_property = WSFC::ruby_axutil_property_create_with_args(@env,
+	     							    WSFC::AXIS2_SCOPE_REQUEST,
+								    WSFC::AXIS2_FALSE,
+								    WSFC::ruby_axutil_strdup(@env, rm_version_str))
 
 	  WSFC::ruby_axis2_options_set_property(client_options,
-											@env,
-											WSFC::WS_SANDESHA2_CLIENT_RM_SPEC_VERSION,
-											rm_property)
+						@env,
+						WSFC::WS_SANDESHA2_CLIENT_RM_SPEC_VERSION,
+						rm_property)
 
 	  # Engage Addressing if not engaged already
 	  action = message_property(WSFC::WS_MP_ACTION, message).to_s
@@ -762,23 +762,23 @@ class WSClient
 
 	  # Set Sequence Expiry Time
 	  sequence_expiry_time = client_property(WSFC::WS_CP_SEQ_EXP_TIME).to_s
-      WSFC::ruby_set_module_param_value(@env,
-										@svc_client,
-										WSFC::AXIS2_MODULE_SANDESHA2,
-										WSFC::WS_SANDESHA2_CLIENT_INACT_TIMEOUT,
-										sequence_expiry_time) unless sequence_expiry_time.empty?
+          WSFC::ruby_set_module_param_value(@env,
+			   		    @svc_client,
+					    WSFC::AXIS2_MODULE_SANDESHA2,
+					    WSFC::WS_SANDESHA2_CLIENT_INACT_TIMEOUT,
+					    sequence_expiry_time) unless sequence_expiry_time.empty?
 
 	  # Set Sequence Key
 	  sequence_key = client_property(WSFC::WS_CP_SEQ_KEY).to_s
 	  sequence_key_property = WSFC::ruby_axutil_property_create_with_args(@env,
-												                          WSFC::AXIS2_SCOPE_REQUEST,
-												                          WSFC::AXIS2_TRUE,
-												                          WSFC::ruby_axutil_strdup(@env, sequence_key))
+					 	                              WSFC::AXIS2_SCOPE_REQUEST,
+									      WSFC::AXIS2_TRUE,
+									      WSFC::ruby_axutil_strdup(@env, sequence_key))
 
 	  WSFC::ruby_axis2_options_set_property(client_options,
-											@env,
-											WSFC::WS_SANDESHA2_CLIENT_SEQ_KEY,
-										    sequence_key_property)
+						@env,
+						WSFC::WS_SANDESHA2_CLIENT_SEQ_KEY,
+				 	        sequence_key_property)
 
 	  # Mark last message
 	  last_msg = true
@@ -793,46 +793,46 @@ class WSClient
 
 	  if (last_msg) and (rm_version == 1) then
 		  
-	    last_msg_property =  WSFC::ruby_axutil_property_create_with_args(@env,
-																	     WSFC::AXIS2_SCOPE_REQUEST,
-																		 WSFC::AXIS2_FALSE,
-																		 WSFC::ruby_axutil_strdup(@env, WSFC::AXIS2_VALUE_TRUE))
+	     last_msg_property =  WSFC::ruby_axutil_property_create_with_args(@env,
+									     WSFC::AXIS2_SCOPE_REQUEST,
+						 			     WSFC::AXIS2_FALSE,
+									     WSFC::ruby_axutil_strdup(@env, WSFC::AXIS2_VALUE_TRUE))
 
-		WSFC::ruby_axis2_options_set_property(client_options,
-											  @env,
-											  WSFC::WS_SANDESHA2_CLIENT_LAST_MESSAGE,
-											  last_msg_property)
+	     WSFC::ruby_axis2_options_set_property(client_options,
+	 				           @env,
+						   WSFC::WS_SANDESHA2_CLIENT_LAST_MESSAGE,
+						   last_msg_property)
 
 	  end
 
 	  if (!one_way) then
 
-		# Set offered sequence id
-        offered_sequence_id = WSFC::axutil_uuid_gen(@env)
+	     # Set offered sequence id
+             offered_sequence_id = WSFC::axutil_uuid_gen(@env)
 
-		sequence_property = WSFC::axutil_property_create(@env)
-        WSFC::ruby_axutil_property_set_value(sequence_property,
-											 @env,
-											 WSFC::ruby_axutil_strdup(@env, offered_sequence_id))
+	     sequence_property = WSFC::axutil_property_create(@env)
+             WSFC::ruby_axutil_property_set_value(sequence_property,
+	 					  @env,
+	  			                  WSFC::ruby_axutil_strdup(@env, offered_sequence_id))
 
-		WSFC::ruby_axis2_options_set_property(client_options,
-											  @env,
-											  WSFC::WS_SANDESHA2_CLIENT_OFFERED_SEQ_ID,
-											  sequence_property)
+	     WSFC::ruby_axis2_options_set_property(client_options,
+						   @env,
+						   WSFC::WS_SANDESHA2_CLIENT_OFFERED_SEQ_ID,
+						   sequence_property)
 		
-		# Set time out
-		response_time_out = client_property(WSFC::WS_CP_RES_TIME_OUT).to_s
-		time_out = response_time_out.empty? ? WSFC::WS_SANDESHA2_CLIENT_DEFAULT_TIME_OUT : response_time_out
+	     # Set time out
+	     response_time_out = client_property(WSFC::WS_CP_RES_TIME_OUT).to_s
+	     time_out = response_time_out.empty? ? WSFC::WS_SANDESHA2_CLIENT_DEFAULT_TIME_OUT : response_time_out
 
-        time_out_property = WSFC::ruby_axutil_property_create_with_args(@env,
-																        WSFC::AXIS2_SCOPE_REQUEST,
-																        WSFC::AXIS2_FALSE,
-                                                                        WSFC::ruby_axutil_strdup(@env, time_out))
+             time_out_property = WSFC::ruby_axutil_property_create_with_args(@env,
+								             WSFC::AXIS2_SCOPE_REQUEST,
+								             WSFC::AXIS2_FALSE,
+                                                                             WSFC::ruby_axutil_strdup(@env, time_out))
 		
-		WSFC::ruby_axis2_options_set_property(client_options,
-											  @env,
-											  WSFC::WS_SANDESHA2_CLIENT_TIME_OUT,
-											  time_out_property)
+             WSFC::ruby_axis2_options_set_property(client_options,
+						   @env,
+						   WSFC::WS_SANDESHA2_CLIENT_TIME_OUT,
+						   time_out_property)
 
 	  end
 	  
