@@ -32,6 +32,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     require_once('wsf_wsdl_consts.php');
     require_once('wsf_wsdl_util.php');
     require_once('wsf_wsdl_client_request.php');
+    require_once('wsf_wsdl_client_response.php');
 
     global $is_wsdl_11;
     global $wsdl_11_dom;
@@ -246,7 +247,11 @@ function wsf_process_wsdl_for_service($parameters)
 
 function wsf_wsdl_process_in_msg($parameters)
 {
-   
+    require_once('wsf_wsdl_consts.php');
+    require_once('wsf_wsdl_util.php');
+    require_once('wsf_wsdl_client_request.php');
+    require_once('wsf_wsdl_service.php');
+
     $payload_dom = new DomDocument();
     $sig_model_dom = new DomDocument();
 
@@ -255,35 +260,25 @@ function wsf_wsdl_process_in_msg($parameters)
    
     $sig_model_string = $parameters["sig_model_string"];
     $payload_string = $parameters["payload_string"];
-    // $operation = $parameters["operation_name"];
-    $operation = "asdsad";
-    //  $payload_dom->loadXML($payload_string);
-    //$sig_model_dom->loadXML($sig_model_string);
+    $operation_name = $parameters["operation_name"];
+    $function_name = $parameters["function_name"];
 
-//    $endpoint_address = wsf_get_endpoint_address($sig_model_dom);
-//    $operation = wsf_find_operation($sig_model_dom, $operation_name, $endpoint_address, $is_multiple_interfaces);
+    //$operation = "asdsad";
+     $payload_dom->loadXML($payload_string);
+    $sig_model_dom->loadXML($sig_model_string);
 
-    return $operation;
+    $endpoint_address = wsf_get_endpoint_address($sig_model_dom);
+    $is_multiple_interfaces = NULL;
+    $operation_node = wsf_find_operation($sig_model_dom, $operation_name, $endpoint_address, $is_multiple_interfaces);
+    
+    if(!$operation_node){
+        $operation = "\noperation not found";
+    }
+    // $return_payload_string = "haaai";
+    $return_payload_string = wsf_serivce_invoke_function($operation_node, $function_name, $payload_dom->firstChild);
+    
+    return $return_payload_string;
 }
 
 
 ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

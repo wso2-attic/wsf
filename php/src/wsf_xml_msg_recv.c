@@ -53,7 +53,7 @@ static axiom_node_t *wsf_xml_msg_recv_invoke_wsmsg (
     int request_xop TSRMLS_DC);
 
 
-static int wsf_xml_msg_recv_invoke_mixed (
+static axiom_node_t *wsf_xml_msg_recv_invoke_mixed (
     const axutil_env_t * env,
     wsf_svc_info_t * svc_info,
     axis2_msg_ctx_t * in_msg_ctx,
@@ -228,10 +228,8 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
             function_type = Z_STRVAL_PP (tmp);
             if (strcmp (function_type, "MIXED") == 0) {
-                int status = AXIS2_SUCCESS;
-                status = wsf_xml_msg_recv_invoke_mixed (env, svc_info,
+                result_node = wsf_xml_msg_recv_invoke_mixed (env, svc_info,
                     in_msg_ctx, out_msg_ctx, operation_name TSRMLS_CC);
-                return status;
             } else if (strcmp (function_type, "WSMESSAGE") == 0) {
                 result_node =
                     wsf_xml_msg_recv_invoke_wsmsg (env, soap_ns,
@@ -439,7 +437,7 @@ wsf_xml_msg_recv_get_method_name (
     return name;
 }
 
-static int
+static axiom_node_t *
 wsf_xml_msg_recv_invoke_mixed (
     const axutil_env_t * env,
     wsf_svc_info_t * svc_info,
@@ -461,7 +459,8 @@ wsf_xml_msg_recv_invoke_mixed (
     zval *params[1];
     zval request_function, retval, param1;
     zval *param_array;
-/*     zend_file_handle script; */
+    char *res_payload_str = NULL;
+    axiom_node_t *res_om_node = NULL;
     
     
     if (!in_msg_ctx || !function_name)
@@ -494,7 +493,8 @@ wsf_xml_msg_recv_invoke_mixed (
                          "[wsf_wsdl] soap body base node not found");
         return AXIS2_FAILURE;
     }
-    in_msg_body_string = axiom_node_to_string(soap_body_node, env);
+    axiom_node_t *soap_env_node = axiom_soap_envelope_get_base_node(soap_envelope, env);
+    in_msg_body_string = wsf_util_serialize_om(env, soap_env_node);
     if(in_msg_body_string){
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                      "[wsf_wsdl]Input soap body is \t %s \n", in_msg_body_string);
@@ -516,8 +516,8 @@ wsf_xml_msg_recv_invoke_mixed (
             void *v = NULL;
             const void *k = NULL;
             axutil_hash_this (hi, &k, NULL, &v);
-            if(strcmp(function_name, (axis2_char_t *) k) == 0){
-                operation_name = (axis2_char_t *) v;
+            if(strcmp(function_name, (axis2_char_t *) v) == 0){
+                operation_name = (axis2_char_t *) k;
                 break;
             }
         } 
@@ -543,28 +543,26 @@ wsf_xml_msg_recv_invoke_mixed (
     ZVAL_ZVAL(params[0], param_array, NULL, NULL);
     INIT_PZVAL(params[0]);
         
-   /*  script.type = ZEND_HANDLE_FP; */
-/*     script.filename = script_file_name.c; */
-/*     script.opened_path = NULL; */
-/*     script.free_filename = 0; */
-/*     if (!(script.handle.fp = VCWD_FOPEN (script.filename, "rb"))){ */
-/*         php_error_docref (NULL TSRMLS_CC, E_ERROR, "Unable to open script file: %s", script.filename); */
-/*         return 0; */
-/*     }else{ */
-/*         php_lint_script (&script TSRMLS_CC); */
-        if (call_user_function (EG (function_table), (zval **) NULL,
-                                &request_function, &retval, 1, params TSRMLS_CC) == SUCCESS ){
-            if(Z_TYPE_P(&retval) == IS_STRING){
-                char *res_payload_str = Z_STRVAL_P(&retval);
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                                 "[wsf_wsdl]return payload string is\t %s", res_payload_str);
-
-            }
+    if (call_user_function (EG (function_table), (zval **) NULL,
+                            &request_function, &retval, 1, params TSRMLS_CC) == SUCCESS ){
+        if(Z_TYPE_P(&retval) == IS_STRING){
+            res_payload_str = Z_STRVAL_P(&retval);
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                             "[wsf_wsdl]return payload string is\t %s", res_payload_str);
+            
         }
-
-/* } */
+    }
     
-    return 0;
+    if(!res_payload_str)
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI,
+                         "[wsf_wsdl] response payload string not found");
+    
+    res_om_node = wsf_util_deserialize_buffer(env, res_payload_str);
+        
+    if(res_om_node)
+        return res_om_node; 
+    else
+        return NULL;
 }
 
 static axiom_node_t *
