@@ -1303,6 +1303,11 @@ wsf_client_do_request (
             zval_ptr_dtor(&rmsg);
 
         }else if (response_payload == NULL && has_fault == AXIS2_FALSE) {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                    "Response Payload NULL( Error number and code) => :" " %d :: %s",
+                     env->error->error_number,
+                     AXIS2_ERROR_GET_MESSAGE(env->error));
+
             zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C),
                 1 TSRMLS_CC, "Error , NO Response Received");
         }
@@ -1386,18 +1391,6 @@ wsf_client_enable_proxy (
             (void **) &tmp) == SUCCESS) {
         proxy_port = Z_STRVAL_PP (tmp);
     }
-   /** bellow are deprecated options, should be removed in next version */
-    if (!proxy_host && !proxy_port) {
-        if (zend_hash_find (ht, "proxy_host", sizeof ("proxy_host"),
-                (void **) &tmp) == SUCCESS) {
-            proxy_host = Z_STRVAL_PP (tmp);
-        }
-        if (zend_hash_find (ht, "proxy_port", sizeof ("proxy_port"),
-                (void **) &tmp) == SUCCESS) {
-            proxy_port = Z_STRVAL_PP (tmp);
-        }
-    }
-
     if (proxy_host && proxy_port) {
         axis2_svc_client_set_proxy (svc_client, env, proxy_host, proxy_port);
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,

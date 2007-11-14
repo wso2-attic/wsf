@@ -35,8 +35,6 @@
 #include <neethi_engine.h>
 
 
-
-
 zval *g_arguments;
 zval *g_classmap;
 

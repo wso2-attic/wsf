@@ -374,7 +374,6 @@ wsf_svc_info_create (
     svc_info->ops_to_actions = NULL;
     svc_info->modules_to_engage = NULL;
     svc_info->ht_opParams = NULL;
-    svc_info->service = NULL;
     svc_info->op_name = NULL;
     
     svc_info->sig_model_string = NULL;
@@ -869,7 +868,6 @@ wsf_util_set_attachments_with_cids (
     return;
 }
 
-/*************************/
 int
 wsf_util_get_attachments (
     const axutil_env_t * env,
@@ -955,10 +953,6 @@ wsf_util_get_attachments (
     
     return attachments_found;
 }
-
-/***************************/
-
-
 
 char *
 wsf_util_serialize_om (
@@ -1183,69 +1177,6 @@ wsf_util_set_soap_fault (
     }
 }
 
-/*
-void
-wsf_set_soap_fault_properties (
-    axutil_env_t * env,
-    axiom_soap_fault_t * soap_fault,
-    zval * zval_ws_fault TSRMLS_DC)
-{
-    if (soap_fault) {
-
-        axis2_char_t *fault_code = NULL;
-        axiom_soap_fault_code_t *sf_code = NULL;
-        axiom_node_t *sf_code_node = NULL;
-        axis2_char_t *fault_reason = NULL;
-        axiom_soap_fault_reason_t *sf_reason = NULL;
-        axiom_node_t *sf_reason_node = NULL;
-        axis2_char_t *fault_role = NULL;
-        axiom_soap_fault_role_t *sf_role = NULL;
-        axiom_node_t *sf_role_node = NULL;
-        axis2_char_t *fault_detail = NULL;
-        axiom_node_t *sf_detail_node = NULL;
-        axiom_soap_fault_detail_t *sf_detail = NULL;
-
-        sf_code = axiom_soap_fault_get_code (soap_fault, env);
-        if (sf_code) {
-            sf_code_node = axiom_soap_fault_code_get_base_node (sf_code, env);
-            if (sf_code_node) {
-                fault_code = axiom_node_to_string (sf_code_node, env);
-                add_property_string (zval_ws_fault, "code", fault_code, 1);
-            }
-        }
-        sf_reason = axiom_soap_fault_get_reason (soap_fault, env);
-        if (sf_reason) {
-            sf_reason_node =
-                axiom_soap_fault_reason_get_base_node (sf_reason, env);
-            if (sf_reason_node) {
-                fault_reason = axiom_node_to_string (sf_reason_node, env);
-                add_property_string (zval_ws_fault, "reason", fault_reason,
-                    1);
-            }
-        }
-        sf_role = axiom_soap_fault_get_role (soap_fault, env);
-        if (sf_role) {
-            sf_role_node = axiom_soap_fault_role_get_base_node (sf_role, env);
-            if (sf_role_node) {
-                fault_role = axiom_node_to_string (sf_role_node, env);
-                add_property_string (zval_ws_fault, "role", fault_role, 1);
-            }
-        }
-        sf_detail = axiom_soap_fault_get_detail (soap_fault, env);
-        if (sf_detail) {
-            sf_detail_node =
-                axiom_soap_fault_detail_get_base_node (sf_detail, env);
-            if (sf_detail_node) {
-                fault_detail = axiom_node_to_string (sf_detail_node, env);
-                add_property_string (zval_ws_fault, "detail", fault_detail,
-                    1);
-            }
-        }
-    }
-	
-}
-*/
-
 static void 
 wsf_util_handle_fault_code(
    zval *fault_obj,
@@ -1428,3 +1359,157 @@ void wsf_util_engage_modules_to_svc(
         }
     }
 }
+
+void wsf_util_process_ws_service_operations_and_actions(
+        HashTable *ht_ops_to_funcs,
+        HashTable *ht_actions,
+        HashTable *ht_ops_to_mep,
+        wsf_svc_info_t *svc_info,
+        axutil_env_t *ws_env_svr TSRMLS_DC)
+{
+    axutil_hash_index_t * hi = NULL;
+    if (ht_ops_to_funcs) {
+        HashPosition pos;
+        zval ** tmp = NULL;
+        int i = 0;
+        zend_hash_internal_pointer_reset_ex (ht_ops_to_funcs, &pos);
+        while (zend_hash_get_current_data_ex (ht_ops_to_funcs,
+               (void **) &tmp, &pos) != FAILURE) {
+
+            char *op_name_to_store = NULL;
+            char *op_name = NULL;
+            unsigned int op_name_len = 0;
+            unsigned long index = i;
+            char *func_name = NULL;
+            zend_hash_get_current_key_ex (ht_ops_to_funcs, &op_name, &op_name_len, &index, 0, &pos);
+            zend_hash_move_forward_ex (ht_ops_to_funcs, &pos);
+            i++;
+            func_name = Z_STRVAL_PP (tmp);
+            if (op_name){
+                op_name_to_store = op_name;
+            } else {
+                op_name_to_store = func_name;
+            }
+
+            axutil_hash_set (svc_info->ops_to_functions,
+                axutil_strdup (ws_env_svr, op_name_to_store),
+                    AXIS2_HASH_KEY_STRING, axutil_strdup (ws_env_svr, func_name));
+        }
+    }
+    if (ht_actions){
+
+        HashPosition pos;
+        zval ** tmp_function = NULL;
+        zend_hash_internal_pointer_reset_ex (ht_actions, &pos);
+
+        while (zend_hash_get_current_data_ex (ht_actions,
+              (void **) &tmp_function, &pos) != FAILURE){
+
+            char *func_name = NULL;
+            char *key = NULL;
+            int key_len = 0;
+            zend_function * f;
+            char *wsa_action = NULL;
+            uint str_length = 0;
+            ulong num_index = 0;
+            char *operation_name = NULL;
+            operation_name = Z_STRVAL_PP (tmp_function);
+
+            if (zend_hash_get_current_key_ex (ht_actions, &wsa_action,
+                    &str_length, &num_index, AXIS2_TRUE, &pos) == FAILURE){
+
+            }
+            if (Z_TYPE_PP (tmp_function) != IS_STRING){
+                php_error_docref (NULL TSRMLS_CC, E_ERROR,
+                    "Tried to add a function that isn't a string");
+            }
+
+            func_name = axutil_hash_get (svc_info->ops_to_functions,
+                Z_STRVAL_PP (tmp_function), AXIS2_HASH_KEY_STRING);
+
+            if (!func_name){
+
+                axutil_hash_set (svc_info->ops_to_functions,
+                        axutil_strdup (ws_env_svr, Z_STRVAL_PP (tmp_function)),
+                    AXIS2_HASH_KEY_STRING, axutil_strdup (ws_env_svr, Z_STRVAL_PP (tmp_function)));
+                func_name = Z_STRVAL_PP (tmp_function);
+            }
+
+            key_len = strlen (func_name);
+
+            key = emalloc (key_len + 1);
+
+            zend_str_tolower_copy (key, func_name, key_len);
+
+            if (zend_hash_find (EG (function_table), key, key_len + 1, (void **) &f) == FAILURE){
+                php_error_docref (NULL TSRMLS_CC, E_ERROR, "Named function not in function table");
+                continue;
+            }
+            if (wsa_action) {
+                wsf_util_create_op_and_add_to_svc (svc_info, wsa_action,
+                    ws_env_svr, operation_name, ht_ops_to_mep TSRMLS_CC);
+
+                    /* keep track of operations with actions */
+                    axutil_hash_set (svc_info->ops_to_actions, axutil_strdup (ws_env_svr, operation_name),
+                    AXIS2_HASH_KEY_STRING, axutil_strdup (ws_env_svr, wsa_action));
+            }else {
+                wsf_util_create_op_and_add_to_svc (svc_info, NULL, ws_env_svr,
+                        operation_name, ht_ops_to_mep TSRMLS_CC);
+            }
+            efree (key);
+            zend_hash_move_forward_ex (ht_actions, &pos);
+        }
+    }
+
+    if (svc_info->ops_to_functions) {
+        for (hi = axutil_hash_first (svc_info->ops_to_functions, ws_env_svr);
+            hi; hi = axutil_hash_next (ws_env_svr, hi)) {
+
+            void *v = NULL;
+            const void *k = NULL;
+            char *key = NULL;
+            char *val = NULL;
+            zend_function * f;
+            char *function_name = NULL;
+            int key_len = 0;
+
+            axutil_hash_this (hi, &k, NULL, &v);
+            key = (axis2_char_t *) k;
+            val = (axis2_char_t *) v;
+
+            if (key && val) {
+
+                /* check if the function is there */
+                key_len = strlen (val);
+                function_name = emalloc (key_len + 1);
+                zend_str_tolower_copy (function_name, val, key_len);
+                if (zend_hash_find (EG (function_table), function_name,
+                        key_len + 1, (void **) &f) == FAILURE) {
+
+                    php_error_docref (NULL TSRMLS_CC, E_ERROR, "Named function not in function table");
+                    continue;
+                 }
+                    /* function is there, add the operation to service */
+                 if (strcmp (key, val) == 0) {
+                    wsf_util_create_op_and_add_to_svc (svc_info, NULL, ws_env_svr,
+                            key, ht_ops_to_mep TSRMLS_CC);
+                 } else {
+
+                    char *action_for_op = NULL;
+                    action_for_op = axutil_hash_get (svc_info->ops_to_actions, key,
+                        AXIS2_HASH_KEY_STRING);
+                     if (!action_for_op) {
+
+                            /* There was no mapping WSA action for this operation.
+                               So this operation was not yet added, hence add. */
+                            wsf_util_create_op_and_add_to_svc (svc_info, NULL,
+                            ws_env_svr, key, ht_ops_to_mep TSRMLS_CC);
+                    }
+                }
+            }
+            efree(function_name);
+        }
+    }
+
+}
+

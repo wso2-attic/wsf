@@ -56,11 +56,19 @@ typedef enum ws_input_types
     WS_USING_INCORRECT_INPUT
 } ws_input_types_t;
 
+/** options for services array */
+
+#define WS_ACTIONS      "actions"
+#define WS_OPERATIONS  "operations"
+#define WS_OP_MEP      "opMEP"
+#define WS_OP_PARAMS    "opParams"
+#define WS_WSDL         "wsdl"
+#define WS_CLASSMAP     "classmap"
+#define WS_CLASS      "class"
+#define WS_CLASS_ARGS "classargs"
 
 /** Options array options */
-#define WS_OPTIONS "wsfoptions"
 
-#define WS_MEP "mep"
 #define WS_IN_ONLY "IN_ONLY"
 #define WS_IN_OUT "IN_OUT"
 
@@ -84,8 +92,8 @@ typedef enum ws_input_types
 
 /** Reliable Messaging */
 #define WS_WILL_CONTINUE_SEQUENCE 	"willContinueSequence"
-#define WS_LAST_MESSAGE 		"lastMessage"
-#define WS_RELIABLE			"reliable"
+#define WS_LAST_MESSAGE 		    "lastMessage"
+#define WS_RELIABLE			        "reliable"
 #define WS_SEQUENCE_EXPIRY_TIME 	"sequenceExpiryTime"
 #define WS_SEQUENCE_KEY      		"sequenceKey"
 
@@ -112,7 +120,10 @@ typedef enum ws_input_types
 #define WS_FAULT_SUBCODE 		"Subcode"
 #define WS_FAULT_DETAIL 		"Detail"
 
-#define WS_HEADERS      		"headers"    /** header options */
+/** header options */
+#define WS_INPUT_HEADERS        "inputHeaders"
+#define WS_OUTPUT_HEADERS       "outputHeaders"
+#define WS_HEADERS      		"headers"   
 #define WS_HEADER_NS    		"ns"
 #define WS_HEADER_LOCALNAME 	"localname"
 #define WS_HEADER_DATA     		"data"
@@ -120,6 +131,7 @@ typedef enum ws_input_types
 #define WS_HEADER_ACTOR         "actor"
 #define WS_HEADER_MUST_UNDERSTAND 	"mustUnderstand"
 
+/** security policy */
 #define WS_POLICY_NAME 			"policy"
 #define WS_SECURITY_TOKEN 		"securityToken"
 
@@ -134,8 +146,8 @@ typedef enum ws_input_types
 
 /** soap header attributes */
 
-#define WS_SOAP_ROLE_NONE			1
-#define WS_SOAP_ROLE_NEXT			2
+#define WS_SOAP_ROLE_NONE			        1
+#define WS_SOAP_ROLE_NEXT			        2
 #define WS_SOAP_ROLE_ULTIMATE_RECEIVER		3
 
 #define WS_SOAP_ROLE_NONE_URI "http://www.w3.org/2003/05/soap-envelope/role/none"
@@ -144,25 +156,6 @@ typedef enum ws_input_types
 
 #define WS_SOAP_1_1_NAMESPACE_URI "http://schemas.xmlsoap.org/soap/envelope/"
 #define WS_SOAP_1_2_NAMESPACE_URI "http://www.w3.org/2003/05/soap-envelope"
-
-/* defaults to true */
-#define WS_THROW_EXCEPTION_ON_FAULT	"throw_exception_on_fault"
-
-
-
-#define WS_WSA_NAMESPACE "http://www.w3.org/2005/08/addressing"
-#define WS_WSA_RELATES_TO_RELATIONSHIP_TYPE_DEFAULT_VALUE "http://www.w3.org/2005/08/addressing/reply"
-#define WS_WSA_ANONYMOUS_URL "http://www.w3.org/2005/08/addressing/anonymous"
-#define WS_WSA_NONE_URL "http://www.w3.org/2005/08/addressing/none"
-
-#define WS_WSA_IS_REFERENCE_PARAMETER_ATTRIBUTE "IsReferenceParameter"
-#define WS_WSA_TYPE_ATTRIBUTE_VALUE "true"
-
-#define WS_WSA_INTERFACE_NAME "InterfaceName"
-#define WS_WSA_SERVICE_NAME_ENDPOINT_NAME "EndpointName"
-#define WS_WSA_POLICIES "Policies"
-#define WS_WSA_METADATA "Metadata"
-
 
 /** sandesha2 */
 #define WS_SANDESHA2_CLIENT_ACKS_TO "Sandesha2AcksTo"
@@ -182,15 +175,12 @@ typedef enum ws_input_types
 #define WS_RM_RESPONSE_TIMEOUT "responseTimeout"
 #define WS_RM_DEFAULT_RESPONSE_TIMEOUT "5"
 
+
+
 /************ engaged module names *****************/
 #define WS_MODULE_ADDRESSING "addressing"
 #define WS_MODULE_SECURITY   "rampart"
 #define WS_MODULE_RM         "sandesha2"
-
-#define WS_MODULE_ADDR_KEY     "ws_addressing"
-#define WS_MODULE_RM_KEY       "ws_sandesha2"
-#define WS_MODULE_SEC_KEY      "ws_rampart"
-
 
 /** http status codes */
 #define WS_HTTP_OK 200
@@ -241,8 +231,6 @@ typedef struct wsf_svc_info
     char *svc_name;
     /** this is needed in case of request uri dispatching( for rest) */
     char *op_name;
-
-    void *service;
 
     char *sig_model_string;
 }

@@ -145,6 +145,11 @@ void wsf_util_engage_modules_to_svc(
     axis2_conf_ctx_t *conf_ctx,
     wsf_svc_info_t *svc_info);
 
-    
+void wsf_util_process_ws_service_operations_and_actions(
+        HashTable *ht_ops_to_funcs,
+        HashTable *ht_actions,
+        HashTable *ht_ops_to_mep,
+        wsf_svc_info_t *svc_info,
+        axutil_env_t *ws_env_svr TSRMLS_DC);
 
 #endif /* WSF_UTIL_H */
