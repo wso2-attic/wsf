@@ -461,7 +461,7 @@ wsf_xml_msg_recv_invoke_mixed (
     zval *param_array;
     char *res_payload_str = NULL;
     axiom_node_t *res_om_node = NULL;
-    
+    axiom_node_t *soap_env_node = NULL;   
     
     if (!in_msg_ctx || !function_name)
         return AXIS2_FAILURE;
@@ -493,7 +493,7 @@ wsf_xml_msg_recv_invoke_mixed (
                          "[wsf_wsdl] soap body base node not found");
         return AXIS2_FAILURE;
     }
-    axiom_node_t *soap_env_node = axiom_soap_envelope_get_base_node(soap_envelope, env);
+    soap_env_node = axiom_soap_envelope_get_base_node(soap_envelope, env);
     in_msg_body_string = wsf_util_serialize_om(env, soap_env_node);
     if(in_msg_body_string){
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
