@@ -12,20 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class WSFault < StandardError
-  
-  def initialize (code, reason, role = "", detail = "", xml = "")
-    @code = code
-    @reason = reason
-    @role = role
-    @detail = detail
-    @xml = xml
-  end
+module WSO2
 
-  def to_s
-    return "[" + @code + "]" + @reason + "|" + @role + "|" + @detail
-  end
+  module WSF
 
-  attr_reader :code, :reason, :role, :detail, :xml
+    class WSFault < StandardError
+      
+      def initialize (code, reason, role = "", detail = "", xml = "")
+	@code = code
+	@reason = reason
+	@role = role
+	@detail = detail
+	@xml = xml
+      end
+
+      def to_s
+	return "[" + @code + "]" + @reason + "|" + @role + "|" + @detail
+      end
+
+      attr_reader :code, :reason, :role, :detail, :xml
+
+    end
+
+  end
 
 end

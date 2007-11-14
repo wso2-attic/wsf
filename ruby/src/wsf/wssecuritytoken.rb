@@ -14,16 +14,24 @@
 
 require 'WSFC'
 
-class WSSecurityToken
+module WSO2
 
-   def initialize(policy)
-      return unless policy.kind_of? Hash
-      @policy = policy
-   end
+  module WSF
 
-   
-   def option(option_name)
-      return @policy.has_key?(option_name) ? @policy[option_name] : nil
-   end 
+    class WSSecurityToken
 
-end    
+       def initialize(policy)
+	  return unless policy.kind_of? Hash
+	  @policy = policy
+       end
+
+       
+       def option(option_name)
+	  return @policy.has_key?(option_name) ? @policy[option_name] : nil
+       end 
+
+    end   
+
+  end
+
+end 
