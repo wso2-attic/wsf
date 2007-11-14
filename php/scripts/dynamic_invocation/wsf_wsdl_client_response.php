@@ -116,10 +116,11 @@ function wsf_client_response_and_validate(DomDocument $envelope_dom, DomDocument
             foreach($response_child_list as $child){
                 foreach($tmp_param_struct[$response_node->localName] as $key => $val){
                     if($key == $child->localName){
-                        $return_array[$response_node->localName] = wsf_set_values_to_array($val, $child->firstChild);
+                        $return_ele_array[$key] = wsf_set_values_to_array($val, $child->firstChild); 
                     }
                 }
             }
+            $return_array[$response_node->localName] = $return_ele_array;
             return $return_array;
         }
     }

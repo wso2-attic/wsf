@@ -348,8 +348,10 @@ function wsf_get_all_policies(DomDocument $wsdl_dom, DomNode $binding_node, $ope
         }
 
         if($binding_child->localName == WSF_OPERATION && $is_wsdl_11 = TRUE){
-            $operation_attr = $binding_child->attributes;
-            $op_name = $operation_attr->getNamedItem(WSF_NAME)->value;
+            $op_name = NULL;
+	    $operation_attr = $binding_child->attributes;
+	    if($operation_attr->getNamedItem(WSF_NAME))
+           	 $op_name = $operation_attr->getNamedItem(WSF_NAME)->value;
             if($op_name == $operation_name && $binding_child->hasChildNodes()){
                 foreach($binding_child->childNodes as $input_output){
                     if($input_output->firstChild && $input_output->firstChild->localName == WSF_POLICY_REFERENCE){  /* there may be several children */
@@ -416,12 +418,16 @@ function wsf_get_binding_details(DomNode $operation_node)
 
     $binding_array = array();
     $soap_version = 2;
+    $wsa_action = NULL;
+    $soap_action = NULL;
 
     $operation_child_list = $operation_node->childNodes;
     foreach($operation_child_list as $operation_child){
         if($operation_child->localName == WSF_BINDINDG_DETAILS && $operation_child->hasAttributes()){
-            $wsa_action = $operation_child->attributes->getNamedItem(WSF_WSAWAACTION)->value;
-            $soap_action = $operation_child->attributes->getNamedItem(WSF_SOAPACTION)->value;
+            if($operation_child->attributes->getNamedItem(WSF_WSAWAACTION))
+		$wsa_action = $operation_child->attributes->getNamedItem(WSF_WSAWAACTION)->value;
+       	    if($operation_child->attributes->getNamedItem(WSF_SOAPACTION))    
+		$soap_action = $operation_child->attributes->getNamedItem(WSF_SOAPACTION)->value;
             if($wsa_action)
                 $binding_array[WSF_WSA] = $wsa_action;
             if($soap_action)
