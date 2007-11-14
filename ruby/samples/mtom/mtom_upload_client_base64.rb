@@ -17,6 +17,8 @@
 
 require 'wsf'
 
+include WSO2::WSF
+
 req_payload_string = <<XML
 <ns1:mtomSample xmlns:ns1="http://ws.apache.org/axis2/c/samples/mtom"><ns1:fileName>test.jpg</ns1:fileName><ns1:image><xop:Include href="cid:myid1" xmlns:xop="http://www.w3.org/2004/08/xop/include"/></ns1:image></ns1:mtomSample>
 XML

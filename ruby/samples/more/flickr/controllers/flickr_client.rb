@@ -18,6 +18,7 @@ require 'wsf'
 require 'rexml/document'
 
 include REXML
+include WSO2::WSF
 
 class FlickrClient
    def initialize(key)

@@ -15,12 +15,14 @@
 
 require 'wsf'
 
+include WSO2::WSF
+
 req_payload = <<XML
 <ns1:echo xmlns:ns1="http://php.axis2.org/samples"><text>Hello World!</text></ns1:echo>
 XML
 
 begin
-   WSFC_HOME = "/your/path/to/wsfc/home"
+   WSFC_HOME = "/home/janapriya/deploy/wsfc/"
    LOG_FILE = "/tmp/security_sample.log"
    ACTION = "http://php.axis2.org/samples/echoString"
    END_POINT = "http://localhost:9090/axis2/services/sec_echo/echoString"
@@ -36,9 +38,7 @@ begin
 
    policy = WSPolicy.new({"security" => policy_content})
 
-   security_options = {"user" => "Alice",
-                       "password" => "abcd!1234",
-                       "password_type" => "Digest"}
+   security_options = {"ttl" => 60}
  
    security_token = WSSecurityToken.new(security_options)
 

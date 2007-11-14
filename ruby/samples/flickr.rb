@@ -16,6 +16,8 @@
 
 require 'wsf'
 
+include WSO2::WSF
+
 key = ""
 
 req_payload_string = <<XML

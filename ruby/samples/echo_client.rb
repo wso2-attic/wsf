@@ -17,6 +17,8 @@
 
 require 'wsf'
 
+include WSO2::WSF
+
 req_payload_string = <<XML
 <ns1:echoString xmlns:ns1="http://ws.apache.org/axis2/services/echo">
     <text>Hello World!</text>

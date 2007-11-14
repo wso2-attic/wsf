@@ -16,6 +16,8 @@
 
 require 'wsf'
 
+include WSO2::WSF
+
 req_payload_string = <<XML
 <ItemSearch>
   <Service>AWSECommerceService</Service> 

@@ -17,6 +17,7 @@ require 'wsf'
 require 'rexml/document'
 
 include REXML
+include WSO2::WSF
 
 req_payload = <<XML
 <ns1:echo xmlns:ns1="http://php.axis2.org/samples"><text>Hello World!</text></ns1:echo>
@@ -30,7 +31,7 @@ def load_policy_from_file(filename)
 end
 
 begin
-   WSFC_HOME = "/your/path/to/wsfc/home"
+   WSFC_HOME = "/home/janapriya/deploy/wsfc/"
    LOG_FILE = "/tmp/security_sample.log"
    ACTION = "http://php.axis2.org/samples/echoString"
    END_POINT = "http://localhost:9090/axis2/services/sec_echo/echoString"

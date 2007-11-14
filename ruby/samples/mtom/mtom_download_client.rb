@@ -17,6 +17,8 @@
 
 require 'wsf'
 
+include WSO2::WSF
+
 req_payload_string = <<XML
 <download/>
 XML
