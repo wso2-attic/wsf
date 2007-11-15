@@ -18,7 +18,7 @@
 function QueryPurchaseOrderFunction($pro_name, $quantity, $date, $orderNo) {
     
     
-    $return_value = array("shipTo" => array("name" => "NandikaJayawardana", "street" => "YorkStreet", "city" => "colombo", "state" => "Sri Lanka", "zip" => 32343),
+    $return_value = array("shipTo" => array("name" => "Jane Smith", "street" => "YorkStreet", "city" => "colombo", "state" => "Sri Lanka", "zip" => 32343),
                           "billTo" => array("name" => "John Smith", "street" => "Maple Street", "city" => "LA", "state" => "USA", "zip" => 55432),
                           "product" => array("productId" => 2344, "shippingDate" => 2008-01-01, "status" => TRUE));
     return $return_value;
