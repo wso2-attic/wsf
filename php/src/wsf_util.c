@@ -360,9 +360,7 @@ wsf_svc_info_create (
 
     svc_info->svc = NULL;
     svc_info->svc_name = NULL;
-    svc_info->is_class = 0;
     svc_info->msg_recv = NULL;
-    svc_info->class_info = NULL;
     svc_info->php_worker = NULL;
     svc_info->use_mtom = 0;     /* default is false otherwise service side will send MIME
                                    headers which some servers can;t handle */
@@ -373,7 +371,7 @@ wsf_svc_info_create (
     svc_info->ops_to_functions = NULL;
     svc_info->ops_to_actions = NULL;
     svc_info->modules_to_engage = NULL;
-    svc_info->ht_opParams = NULL;
+    svc_info->ht_op_params = NULL;
     svc_info->op_name = NULL;
     
     svc_info->sig_model_string = NULL;
@@ -1513,3 +1511,55 @@ void wsf_util_process_ws_service_operations_and_actions(
 
 }
 
+
+void wsf_util_process_ws_service_classes(
+	HashTable *ht_classes,
+	wsf_svc_info_t *svc_info,
+	axutil_env_t *ws_env_svr TSRMLS_DC)
+{
+	zval **tmp;
+	HashPosition pos;
+
+    zend_hash_internal_pointer_reset_ex (ht_classes, &pos);
+	while(zend_hash_get_current_data_ex(ht_classes, (void**)&tmp, &pos) != FAILURE){
+		HashTable *ht_ops_to_functions = NULL;
+		HashTable *ht_actions = NULL;
+		HashTable *ht_ops_to_mep = NULL;
+		
+		char *classname = NULL;
+		zval **tmpval = NULL;
+
+		if(Z_TYPE_PP(tmp) == IS_STRING){
+			/** only classname is given "classes"=>array("foo") */
+			classname = Z_STRVAL_PP(tmp);
+			AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "classname -> %s", classname);
+		}else if(Z_TYPE_PP(tmp) == IS_ARRAY){
+			/** data value is an array 	"classes"=>array("foo"=>array($ops, $actions,..)" */
+			HashTable *values = NULL;
+            uint str_length = 0;
+            ulong num_index = 0;
+            
+            if (zend_hash_get_current_key_ex (ht_actions, &classname,
+                    &str_length, &num_index, AXIS2_TRUE, &pos) != FAILURE){
+				AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "classname -> %s", classname);
+            }
+			values = Z_ARRVAL_PP(tmp);
+			if(values){
+				if(zend_hash_find(values, WS_OPERATIONS, sizeof(WS_OPERATIONS), (void**)&tmpval) == SUCCESS
+					&& Z_TYPE_PP(tmpval) == IS_ARRAY){
+						ht_ops_to_functions = Z_ARRVAL_PP(tmpval);
+				}
+				if(zend_hash_find(values, WS_ACTIONS, sizeof(WS_ACTIONS), (void**)&tmpval) == SUCCESS
+					&& Z_TYPE_PP(tmpval) == IS_ARRAY){
+						ht_actions = Z_ARRVAL_PP(tmpval);				
+				}
+				if(zend_hash_find(values, WS_CONS_ARGS, sizeof(WS_CONS_ARGS), (void**)&tmpval) == SUCCESS){
+					
+				
+				}
+			}
+		}
+		
+
+	}
+}

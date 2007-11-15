@@ -64,8 +64,9 @@ typedef enum ws_input_types
 #define WS_OP_PARAMS    "opParams"
 #define WS_WSDL         "wsdl"
 #define WS_CLASSMAP     "classmap"
-#define WS_CLASS      "class"
-#define WS_CLASS_ARGS "classargs"
+#define WS_CLASSES      "classes"
+#define WS_CONS_ARGS    "args"
+
 
 /** Options array options */
 
@@ -206,7 +207,7 @@ typedef struct wsf_svc_info
 
     axis2_msg_recv_t *msg_recv;
 
-    axutil_hash_t *class_info;
+	
 
     struct wsf_worker_t *php_worker;
 
@@ -216,17 +217,19 @@ typedef struct wsf_svc_info
 
     axutil_array_list_t *modules_to_engage;
 
+	axutil_hash_t *ops_to_classes;
+
+	HashTable *ht_class_args;
+
+    HashTable *ht_op_params;
+
     int request_xop;
 
     int use_mtom;
 
-    int is_class;
-
     zval *policy;
 
     zval *security_token;
-
-    HashTable *ht_opParams;
 
     char *svc_name;
     /** this is needed in case of request uri dispatching( for rest) */

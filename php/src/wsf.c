@@ -985,9 +985,8 @@ PHP_METHOD (ws_service, __construct)
     HashTable * ht_ops_to_funcs = NULL;
     HashTable * ht_ops_to_mep = NULL;
     HashTable * ht_opParams = NULL;
+	HashTable * ht_classes = NULL;
     char *wsdl = NULL;
-    char *classname = NULL;
-    zval *classargs = NULL;
     
     if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "|a",
             &options)) {
@@ -1038,7 +1037,7 @@ PHP_METHOD (ws_service, __construct)
                (void **) & tmp) == SUCCESS  && Z_TYPE_PP (tmp) == IS_ARRAY) {
 
 	                ht_opParams = Z_ARRVAL_PP (tmp);
-					svc_info->ht_opParams = ht_opParams;
+					svc_info->ht_op_params = ht_opParams;
 					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
 						"[wsf_service] setting message operation parameters");
 			}
@@ -1103,14 +1102,11 @@ PHP_METHOD (ws_service, __construct)
 					add_property_stringl (obj, WS_BINDING_STYLE,
 					Z_STRVAL_PP (tmp), Z_STRLEN_PP (tmp), 1);
             }
-            if(zend_hash_find(ht_options, WS_CLASS, sizeof(WS_CLASS),
-                (void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
-                classname = Z_STRVAL_PP(tmp);
+            if(zend_hash_find(ht_options, WS_CLASSES, sizeof(WS_CLASSES),
+				(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY){
+					ht_classes = Z_ARRVAL_PP(tmp);
+
             }
-            if(zend_hash_find(ht_options, WS_CLASS_ARGS, sizeof(WS_CLASS_ARGS),
-                (void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY){
-                classargs =  *tmp;
-            }                        
         }
     }
     
@@ -1125,12 +1121,17 @@ PHP_METHOD (ws_service, __construct)
         svc_info->msg_recv = wsf_msg_recv;
         wsf_util_create_svc_from_svc_info (svc_info, ws_env_svr TSRMLS_CC);
     }
-    
+
+	if(ht_classes){
+		wsf_util_process_ws_service_classes(ht_classes, svc_info, ws_env_svr TSRMLS_CC);
+	}
     wsf_util_process_ws_service_operations_and_actions(ht_ops_to_funcs,
             ht_actions, ht_ops_to_mep, svc_info, ws_env_svr TSRMLS_CC);
 
     wsf_util_engage_modules_to_svc(ws_env_svr, 
             wsf_worker_get_conf_ctx(worker, ws_env_svr), svc_info);
+
+
 }
 
 

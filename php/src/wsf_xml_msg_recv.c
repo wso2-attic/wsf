@@ -207,7 +207,6 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
     if (prop) {
         svc_info = (wsf_svc_info_t *) axutil_property_get_value (prop, env);
         if (svc_info) {
-            class_info = svc_info->class_info;
             use_mtom = svc_info->use_mtom;
             request_xop = svc_info->request_xop;
             operation_name =
@@ -220,10 +219,10 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
         }
     }
 
-    if (svc_info->ht_opParams) {
+    if (svc_info->ht_op_params) {
         zval **tmp;
         char *function_type = NULL;
-        if (zend_hash_find (svc_info->ht_opParams,
+        if (zend_hash_find (svc_info->ht_op_params,
                 operation_name, strlen (operation_name) + 1,
                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
             function_type = Z_STRVAL_PP (tmp);
@@ -633,7 +632,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
         params[0] = &param;
         ZVAL_ZVAL (params[0], msg, NULL, NULL);
         INIT_PZVAL (params[0]);
-
+/*
         if (NULL != class_info
             && NULL != (val =
                 axutil_hash_get (class_info, op_name,
@@ -656,7 +655,9 @@ wsf_xml_msg_recv_invoke_wsmsg (
                     }
                 }
             }
-        } else if (call_user_function
+        } else 
+*/		
+		if (call_user_function
             (CG (function_table), (zval **) NULL, &func, &retval, 1,
                 params TSRMLS_CC) == SUCCESS) {
             if (Z_TYPE (retval) == IS_OBJECT

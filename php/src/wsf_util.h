@@ -152,4 +152,9 @@ void wsf_util_process_ws_service_operations_and_actions(
         wsf_svc_info_t *svc_info,
         axutil_env_t *ws_env_svr TSRMLS_DC);
 
+void wsf_util_process_ws_service_classes(
+	HashTable *ht_classes,
+	wsf_svc_info_t *svc_info,
+	axutil_env_t *ws_env_svr TSRMLS_DC);
+
 #endif /* WSF_UTIL_H */
