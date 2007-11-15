@@ -29,6 +29,7 @@
 #include "rp_defines.h"
 %}
 
+%include wsf_ruby.i
 %include wsf_constants.i
 
 %include "cpointer.i"
@@ -110,7 +111,7 @@ axis2_svc_client_engage_module(axis2_svc_client_t *svc_client,
 
 %inline %{
 int
-ruby_set_module_param_value(axutil_env_t       *env,
+wsf_set_module_param_value(axutil_env_t       *env,
                             axis2_svc_client_t *svc_client,
                             axis2_char_t       *module_name,
                             axis2_char_t       *param_name,
@@ -166,7 +167,7 @@ axiom_node_get_next_sibling(axiom_node_t       *om_node,
 
 %inline %{
 axiom_element_t *
-ruby_axiom_node_get_data_element(axiom_node_t       *om_node,
+wsf_axiom_node_get_data_element(axiom_node_t       *om_node,
                                  const axutil_env_t *env)
 {
   return (axiom_element_t *)axiom_node_get_data_element(om_node, env);
@@ -175,7 +176,7 @@ ruby_axiom_node_get_data_element(axiom_node_t       *om_node,
 
 %inline %{
 axiom_text_t *
-ruby_axiom_node_get_text_element(axiom_node_t       *om_node,
+wsf_axiom_node_get_text_element(axiom_node_t       *om_node,
                                  const axutil_env_t *env)
 {
   return (axiom_text_t *)axiom_node_get_data_element(om_node, env);
@@ -184,7 +185,7 @@ ruby_axiom_node_get_text_element(axiom_node_t       *om_node,
 
 %inline %{
 axiom_node_t *
-ruby_axiom_element_get_first_node(axiom_element_t    *element,
+wsf_axiom_element_get_first_node(axiom_element_t    *element,
                                   axiom_node_t       *element_node,
                                   const axutil_env_t *env)
 {
@@ -253,7 +254,7 @@ axiom_text_get_data_handler(axiom_text_t       *om_text,
 
 %inline %{
 void
-ruby_axiom_attach_content(const axutil_env_t *env,
+wsf_axiom_attach_content(const axutil_env_t *env,
                           axiom_node_t       *node,
                           axiom_node_t       *parent_node,
                           axis2_bool_t        enable_mtom,
@@ -285,7 +286,7 @@ ruby_axiom_attach_content(const axutil_env_t *env,
 
 %inline %{
 axiom_node_t *
-ruby_str_to_axiom_node(const axutil_env_t *env,
+wsf_str_to_axiom_node(const axutil_env_t *env,
                        char               *container,
                        int                 size)
 {
@@ -315,7 +316,7 @@ ruby_str_to_axiom_node(const axutil_env_t *env,
 
 %inline %{
 axis2_char_t *
-ruby_axiom_node_to_str(const axutil_env_t *env,
+wsf_axiom_node_to_str(const axutil_env_t *env,
                        axiom_node_t       *axiom_node)
 {
   axiom_xml_writer_t *xml_writer = axiom_xml_writer_create_for_memory(env, NULL, AXIS2_TRUE, 0, AXIS2_XML_PARSER_TYPE_BUFFER);
@@ -343,7 +344,7 @@ ruby_axiom_node_to_str(const axutil_env_t *env,
 
 %inline %{
 axis2_char_t *
-ruby_axiom_data_handler_get_base64_content(axiom_data_handler_t *data_handler,
+wsf_axiom_data_handler_get_base64_content(axiom_data_handler_t *data_handler,
                                            const axutil_env_t   *env)
 {
   axis2_char_t *content = NULL;
@@ -369,7 +370,7 @@ ruby_axiom_data_handler_get_base64_content(axiom_data_handler_t *data_handler,
 
 %inline %{
 int
-ruby_file_put_base64_content(const char *file_name,
+wsf_file_put_base64_content(const char *file_name,
                              const char *base64_content)
 {
   int decoded_length = axutil_base64_decode_len(base64_content);
@@ -437,7 +438,7 @@ axis2_svc_client_set_proxy(axis2_svc_client_t *svc_client,
 
 %inline %{
 axutil_property_t *
-ruby_axutil_property_create_with_args(const axutil_env_t *env,
+wsf_axutil_property_create_with_args(const axutil_env_t *env,
                                       axis2_scope_t       scope,
                                       axis2_bool_t        own_value,
                                       char               *value)
@@ -451,7 +452,7 @@ axutil_property_create(const axutil_env_t *env);
 
 %inline %{
 axis2_status_t
-ruby_axutil_property_set_value(axutil_property_t  *property,
+wsf_axutil_property_set_value(axutil_property_t  *property,
                                const axutil_env_t *env,
                                char               *value)
 {
@@ -461,7 +462,7 @@ ruby_axutil_property_set_value(axutil_property_t  *property,
 
 %inline %{
 int
-ruby_axutil_strcmp(const axis2_char_t *s1,
+wsf_axutil_strcmp(const axis2_char_t *s1,
                    const axis2_char_t *s2)
 {
   return ((axutil_strcmp(s1, s2) == 0) ? AXIS2_TRUE : AXIS2_FALSE);
@@ -470,7 +471,7 @@ ruby_axutil_strcmp(const axis2_char_t *s1,
 
 %inline %{
 axis2_status_t
-ruby_axis2_options_set_property(axis2_options_t    *options,
+wsf_axis2_options_set_property(axis2_options_t    *options,
                                 const axutil_env_t *env,
                                 const axis2_char_t *property_key,
                                 axutil_property_t  *property)
@@ -485,7 +486,7 @@ axutil_string_create(const axutil_env_t *env,
 
 %inline %{
 char *
-ruby_axutil_strdup(const axutil_env_t *env,
+wsf_axutil_strdup(const axutil_env_t *env,
                    const char         *ptr)
 {
   return (char *)axutil_strdup(env, (void *)ptr);
@@ -501,7 +502,7 @@ axis2_svc_client_get_last_response_has_fault(const axis2_svc_client_t *svc_clien
 
 %inline %{
 axiom_node_t *
-ruby_get_last_soap_fault_base_node(const axis2_svc_client_t *svc_client,
+wsf_get_last_soap_fault_base_node(const axis2_svc_client_t *svc_client,
                                    const axutil_env_t       *env)
 {
   axiom_soap_envelope_t *soap_envelope = axis2_svc_client_get_last_response_soap_envelope(svc_client, env);
@@ -566,7 +567,7 @@ axutil_param_create(const axutil_env_t * env,
 
 %inline %{
 axutil_param_t *
-ruby_axutil_security_param_create(const axutil_env_t* env,
+wsf_axutil_security_param_create(const axutil_env_t* env,
                                   axis2_char_t * name,
                                   rampart_context_t* rampart_context)
 {
@@ -667,7 +668,7 @@ rampart_context_set_prv_key(rampart_context_t *rampart_context,
 
 %inline %{
 axis2_status_t
-ruby_rampart_context_set_prv_key(rampart_context_t *rampart_context,
+wsf_rampart_context_set_prv_key(rampart_context_t *rampart_context,
                                  const axutil_env_t *env,
                                  axis2_char_t *prv_key)
 {
@@ -682,7 +683,7 @@ rampart_context_set_prv_key_type(rampart_context_t *rampart_context,
 
 %inline %{
 axis2_status_t
-ruby_rampart_context_set_certificate(rampart_context_t* rampart_context,
+wsf_rampart_context_set_certificate(rampart_context_t* rampart_context,
                                      const axutil_env_t *env,
                                      axis2_char_t *certificate)
 {
@@ -701,7 +702,7 @@ rampart_context_set_certificate_type(rampart_context_t *rampart_context,
                                          axis2_key_type_t type);
 %inline %{
 axis2_status_t
-ruby_rampart_context_set_receiver_certificate(rampart_context_t *rampart_context,
+wsf_rampart_context_set_receiver_certificate(rampart_context_t *rampart_context,
             const axutil_env_t *env,
             axis2_char_t *receiver_certificate)
 {
@@ -745,32 +746,16 @@ rampart_context_set_pwcb_function(rampart_context_t *rampart_context,
                                       password_callback_fn pwcb_function,
                                       void *ctx);
 
-%{
-typedef char *(*callback_t) (void *user_data, const char *other_data);
-
-callback_t mycallback = NULL;
-void* myuserdata = NULL;
-%}
-
-%{
-char *
-wrap_callback(void *user_data, const char *other_data)
-{
-  VALUE proc = (VALUE)user_data;
-  VALUE password = rb_funcall(proc, rb_intern("call"), 1, rb_str_new2(other_data));
-  return RSTRING(password)->ptr;
-}
-%}
-
 %typemap(in) char *(callback_t callback, void *user_data)
 {
   $1 = wrap_callback;
   $2 = (void *)$input;
 }
 
+
 %inline %{
 axis2_char_t *
-ruby_password_callback_fn(const axutil_env_t *env,
+wsf_password_callback_fn(const axutil_env_t *env,
                           const axis2_char_t *username,
                           void *ctx)
 {
@@ -779,7 +764,7 @@ ruby_password_callback_fn(const axutil_env_t *env,
       axis2_char_t* password =  mycallback(myuserdata, username);
       AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf-ruby] ruby_password_callback_fn");
       AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, password);
-      return password
+      return password;
    }   
    else
       return NULL;
@@ -788,7 +773,7 @@ ruby_password_callback_fn(const axutil_env_t *env,
 
 %inline %{
 axis2_status_t
-ruby_rampart_context_set_pwcb_function(rampart_context_t *rampart_context,
+wsf_rampart_context_set_pwcb_function(rampart_context_t *rampart_context,
                                       const axutil_env_t *env,
                                       callback_t callback,
                                       void *ctx)
@@ -798,86 +783,8 @@ ruby_rampart_context_set_pwcb_function(rampart_context_t *rampart_context,
    
    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf-ruby] ruby_rampart_context_set_pwcb_function");
     
-   return rampart_context_set_pwcb_function(rampart_context, env, ruby_password_callback_fn, (void *)NULL);
+   return rampart_context_set_pwcb_function(rampart_context, env, wsf_password_callback_fn, (void *)NULL);
 }
 %}
 
-%inline %{
-axis2_status_t
-ruby_set_security_token_data_to_rampart_context(const axutil_env_t * env,
-                                                rampart_context_t *rampart_context,
-                                                VALUE security_token)
-{
-   char* prv_key = get_option_from_ruby_security_token_string(security_token, WS_SEC_TOK_OPT_PRIVATE_KEY);
-
-   if (rampart_context_set_prv_key(rampart_context, env, (void *)prv_key) == AXIS2_SUCCESS)
-       AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pvt key  ");
-   
-   if (rampart_context_set_prv_key_type(rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS)
-       AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pvt key format ");
-
-   char* certificate = get_option_from_ruby_security_token_string(security_token, WS_SEC_TOK_OPT_CERT);
-   
-   if (rampart_context_set_certificate(rampart_context, env, (void *)certificate) == AXIS2_SUCCESS)
-       AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pub key  ");
-   if (rampart_context_set_certificate_type(rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS)
-       AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pub key type ");
-
-   char* receiver_certificate = get_option_from_ruby_security_token_string(security_token, WS_SEC_TOK_OPT_REC_CERT);
-    
-   if (rampart_context_set_receiver_certificate(rampart_context, env, receiver_certificate) == AXIS2_SUCCESS)
-       AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting receiver pub key");
-   if (rampart_context_set_receiver_certificate_type(rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS) 
-       AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting receiver pub key format");
-
-   
-   char* username = get_option_from_ruby_security_token_string(security_token, WS_SEC_TOK_OPT_USER);
-
-   if (rampart_context_set_user(rampart_context, env, username) == AXIS2_SUCCESS) 
-       AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting username ");
-
-   char* password = get_option_from_ruby_security_token_string(security_token, WS_SEC_TOK_OPT_PWD);
-
-   if (rampart_context_set_password(rampart_context, env, password) == AXIS2_SUCCESS) 
-       AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting password ");
-
-   char* password_type = get_option_from_ruby_security_token_string(security_token, WS_SEC_TOK_OPT_PWD_TYPE);
-
-   if (rampart_context_set_password_type(rampart_context, env, password_type) == AXIS2_SUCCESS)
-       AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting password type ");
-
-   int ttl = get_option_from_ruby_security_token(security_token_number, WS_SEC_TOK_OPT_TTL);
-
-   if (rampart_context_set_ttl(rampart_context, env, ttl) == AXIS2_SUCCESS) 
-       AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy) setting ttl");
-   
-   /*#option = sec_token.option("password_callback")
-    #if not option.nil?
-    #   if (WSFC::ruby_rampart_context_set_pwcb_function(rampart_context, @env, nil, option) == WSFC::AXIS2_SUCCESS) then
-    #      WSFC::axis2_log_debug(@env, "[wsf_sec_policy] setting callback function")
-    #   end
-    #endn */
-
-   return AXIS2_SUCCESS;
-
-}
-%}
-
-%inline %{
-char*
-get_option_from_ruby_security_token_string(VALUE security_token, const char* security_option)
-{
-   VALUE sec_option = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2(security_option));
-   return RSTRING(sec_option)->ptr;
-}
-%}
-
-%inline %{
-int
-get_option_from_ruby_security_token_number(VALUE security_token, const char* security_option)
-{
-   VALUE sec_option = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2(security_option));
-   return NUM2INT(sec_option);
-}
-%}
 
