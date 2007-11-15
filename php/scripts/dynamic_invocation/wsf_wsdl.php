@@ -105,6 +105,13 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
    
     if(!$endpoint_address)
         $endpoint_address = wsf_get_endpoint_address($sig_model_dom);
+    else{
+    	$multiple_ep = TRUE;
+    	$multiple_ep = wsf_is_multiple_endpoints($sig_model_dom);
+    	if(!$multiple_ep)
+    		$endpoint_address = wsf_get_endpoint_address($sig_model_dom);
+    }
+	
 
     if ($is_wsdl_11 == TRUE && $wsdl_11_dom ){
         $binding_node = wsf_get_binding($wsdl_11_dom, $endpoint_address, $is_wsdl_11);

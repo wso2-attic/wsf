@@ -197,6 +197,17 @@ function wsf_get_endpoint_address(DomDocument $sig_model_dom)
     return $service_attr->getNamedItem(WSF_ADDRESS)->value;
 }
 
+function wsf_is_multiple_endpoints(DomDocument $sig_model_dom)
+{
+	$services_node = $sig_model_dom->firstChild;
+	$no_of_ep = $services_node->childNodes->length;
+	if($no_of_ep == 1)
+		return FALSE;
+	else
+		return TRUE;	
+}
+
+
 /**
  * Returns the binding node corresponding to the given endpoint address.
  * @param DomDocument $wsdl_dom WSDL2.0 DomDocument
