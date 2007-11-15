@@ -14,6 +14,8 @@
 
 require 'WSFC'
 
+module WSF
+
 class WSUtil
   EXTRACT_CONTENT_BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----"
   EXTRACT_CONTENT_END_CERTIFICATE = "-----END CERTIFICATE-----"
@@ -63,4 +65,4 @@ class WSUtil
   end
 end
 
-
+end
