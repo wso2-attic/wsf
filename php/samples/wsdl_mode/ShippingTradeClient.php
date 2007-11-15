@@ -15,16 +15,22 @@
  * limitations under the License.
  */
 
-function echoFunction($a) {
+try {
 
-    return $a;
+    $client = new WSClient(array("wsdl"=>"ShippingTrade.wsdl",
+                                 // "to"=> "http://localhost:9090/samples/wsdl_mode/ShippingTradeService.php"
+                                 ));
+
+    $proxy = $client->getProxy();	
+
+    $val =  $proxy->QueryPurchaseOrder(array("productName"=> "Testing",
+                                             "quantity" => 234,
+                                             "date" => "2003-12-34",
+                                             "orderNo" => 345));    
+    var_dump($val);
+
+} catch (Exception $e) {
+
+		printf("Message = %s\n",$e->getMessage());
 }
-
-$operations = array("echoString" => "echoFunction");
-$opParams = array("echoFunction"=>"MIXED");
-
-$svr = new WSService(array("wsdl"=>"sample.wsdl", "operations" => $operations,"opParams"=>$opParams));
-        
-$svr->reply();
-
 ?>

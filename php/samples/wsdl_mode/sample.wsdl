@@ -1,135 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<definitions name="SampleEchoService" 
-    targetNamespace="http://wso2.org/php/wsdl" 
-    xmlns="http://schemas.xmlsoap.org/wsdl/" 
-    xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" 
-    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
-    xmlns:tns="http://wso2.org/php/wsdl" 
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-    xmlns:xsd1="http://wso2.org/xsd"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <types>
-        <schema targetNamespace="http://wso2.org/xsd"
-            xmlns="http://www.w3.org/2001/XMLSchema" 
-            xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-            elementFormDefault="qualified">
-            <complexType name="ArrayOfstring_literal">
-                <sequence>
-                    <element maxOccurs="unbounded" minOccurs="1" name="string" type="xsd:string"/>
-                </sequence>
-            </complexType>
-	    <complexType name="SOAPStruct">
-                <all>
-                    <element name="varFloat" type="xsd:float"/>
-                    <element name="varInt" type="xsd:int"/>
-                    <element name="varString" type="xsd:string"/>
-                </all>
-            </complexType>
-  
-            <element name="echoStringParam" type="xsd:string"/>
-         
-            <element name="echoStringReturn" type="xsd:string"/>
-            <element name="echoStringArrayParam" type="xsd1:ArrayOfstring_literal"/>
-                
-            <element name="echoStringArrayReturn" type="xsd1:ArrayOfstring_literal"/>
-               
-            <element name="echoStructParam" type="xsd1:SOAPStruct"/>
-                   
-            <element name="echoStructReturn" type="xsd1:SOAPStruct"/>
-        </schema>
-    </types>
-    <message name="echoString">
-        <part element="xsd1:echoStringParam" name="a"/>
-    </message>
-    <message name="echoStringResponse">
-        <part element="xsd1:echoStringReturn" name="result"/>
-    </message>
-    <message name="echoStringArray">
-        <part element="xsd1:echoStringArrayParam" name="a"/>
-    </message>
-    <message name="echoStringArrayResponse">
-        <part element="xsd1:echoStringArrayReturn" name="result"/>
-    </message>
-    <message name="echoStruct">
-        <part element="xsd1:echoStructParam" name="a"/>
-    </message>
-    <message name="echoStructResponse">
-        <part element="xsd1:echoStructReturn" name="result"/>
-    </message>
-    <message name="echoVoid"/>
-    <message name="echoVoidResponse"/>
-
-    <portType name="SampleEchoServicePortType">
-        <operation name="echoString">
-            <input message="tns:echoString" name="echoString"/>
-            <output message="tns:echoStringResponse" name="echoStringResponse"/>
-        </operation>
-        <operation name="echoStringArray">
-            <input message="tns:echoStringArray" name="echoStringArray"/>
-            <output message="tns:echoStringArrayResponse" name="echoStringArrayResponse"/>
-        </operation>
-        <operation name="echoStruct">
-            <input message="tns:echoStruct" name="echoStruct"/>
-            <output message="tns:echoStructResponse" name="echoStructResponse"/>
-        </operation>
-        <operation name="echoVoid">
-            <input message="tns:echoVoid" name="echoVoid"/>
-            <output message="tns:echoVoidResponse" name="echoVoidResponse"/>
-        </operation>
-    </portType>
-    <binding name="SampleEchoServicePortBinding" 
-        type="tns:SampleEchoServicePortType">
-        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
-        <operation name="echoString">
-            <soap:operation soapAction="http://wso2.org/" style="document"/>
-            <input name="echoString">
-                <soap:body namespace="http://wso2.org/php/wsdl" 
-                    use="literal"/>
-            </input>
-            <output name="echoStringResponse">
-                <soap:body namespace="http://wso2.org/php/wsdl" 
-                    use="literal"/>
-            </output>
-        </operation>
-        <operation name="echoStringArray">
-            <soap:operation soapAction="http://wso2.org/php" style="document"/>
-            <input name="echoStringArray">
-                <soap:body namespace="http://wso2.org/php/wsdl" 
-                    use="literal"/>
-            </input>
-            <output name="echoStringArrayResponse">
-                <soap:body namespace="http://wso2.org/php/wsdl" 
-                    use="literal"/>
-            </output>
-        </operation>
-        <operation name="echoStruct">
-            <soap:operation soapAction="http://wso2.org/php" style="document"/>
-            <input name="echoStruct">
-                <soap:body namespace="http://wso2.org/php/wsdl" 
-                    use="literal"/>
-            </input>
-            <output name="echoStructResponse">
-                <soap:body namespace="http://wso2.org/php/wsdl" 
-                    use="literal"/>
-            </output>
-        </operation>
-        <operation name="echoVoid">
-            <soap:operation soapAction="http://wso2.org/php" style="document"/>
-            <input name="echoVoid">
-                <soap:body namespace="http://wso2.org/php/wsdl" 
-                    use="literal"/>
-            </input>
-            <output name="echoVoidResponse">
-                <soap:body namespace="http://wso2.org/php/wsdl" 
-                    use="literal"/>
-            </output>
-        </operation>
-    </binding>
-    <service name="SampleEchoService">
-        <port binding="tns:SampleEchoServicePortBinding" 
-            name="SampleEchoServicePort">
-            <soap:address 
-                location="http://localhost/samples/wsdl_mode/dynamic_echo_service.php"/>
-		</port>
-	</service>
-</definitions>
+<description xmlns="http://www.w3.org/ns/wsdl" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://www.example.org/sample/" targetNamespace="http://www.example.org/sample/">
+    <!-- 
+			
+			Documentation at:
+			http://esw.w3.org/topic/WsdlConverter
+			
+			To report problems, please refer to:
+			http://esw.w3.org/topic/WsdlConverterFeedback
+			
+			Generated by the WSDL converter version:
+			2006-02-20
+			
+		-->
+    <types><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/sample/"><xsd:element name="GetPriceRequest"><xsd:complexType><xsd:sequence><xsd:element name="ProductType" type="xsd:string"/><xsd:element name="ItemNo" type="xsd:int"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name="GetPriceResponse"><xsd:complexType><xsd:sequence><xsd:element name="Price" type="xsd:float"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name="QueryItemRequest"><xsd:complexType><xsd:sequence><xsd:element name="ProductName" type="xsd:string"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name="QueryResult"><xsd:complexType><xsd:sequence><xsd:element name="ProductID" type="xsd:int"/><xsd:element name="manufacuterDate" type="xsd:dateTime"/></xsd:sequence></xsd:complexType></xsd:element></xsd:schema></types><interface name="MyServicePort"><operation name="GetPrice" pattern="http://www.w3.org/ns/wsdl/in-out"><input element="tns:GetPriceRequest"/><output element="tns:GetPriceResponse"/></operation><operation name="QueryItem" pattern="http://www.w3.org/ns/wsdl/in-out"><input element="tns:QueryItemRequest"/><output element="tns:QueryResult"/></operation></interface><binding xmlns:ns_1="http://www.w3.org/ns/wsdl/soap" name="MyServiceBinding" interface="tns:MyServicePort" type="http://www.w3.org/ns/wsdl/soap" ns_1:version="1.1" ns_1:protocol="http://www.w3.org/2006/01/soap11/bindings/HTTP/"><operation ref="tns:GetPrice" ns_1:action="http://www.example.org/sample/GetPrice"/><operation ref="tns:QueryItem" ns_1:action="http://www.example.org/sample/QueryItem"/></binding><service name="MyService" interface="tns:MyServicePort"><endpoint name="MyServicePort" binding="tns:MyServiceBinding" address="http://localhost/samples/wsdl_mode/dynamic_service.php"/></service></description>

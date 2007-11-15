@@ -15,24 +15,21 @@
  * limitations under the License.
  */
 
-try {
+function GetPriceFunction($arg1, $arg2) {
+    
+    
+    // $return_value = "first argument is ...".$arg1."\t and the second is ".($arg2+1);
+    $return_value = array("Price" => 234.431);
+    return $return_value;
+}
 
-    $client = new WSClient(array("wsdl"=>"sample.wsdl",
-                                 "to" => "http://localhost/samples/wsdl_mode/dynamic_service.php"));
+$operations = array("GetPrice" => "GetPriceFunction");
+$opParams = array("GetPriceFunction"=>"MIXED");
 
-    $proxy = $client->getProxy();	
-
-    $val =  $proxy->GetPrice(array("ProductType"=> "Testing",
-                                   "ItemNo" => 234));    
-    var_dump($val);
-
-} catch (Exception $e) {
-    if ($e instanceof WSFault) {
-        printf("Soap Fault Reason: %s\n", $e->Reason);
-        printf("Soap Fault Code: %s \n", $e->Code);
+$svr = new WSService(array("wsdl"=>"sample.wsdl", 
+                           "operations" => $operations,
+                           "opParams"=>$opParams));
         
-    } else {
-        printf("Message = %s\n",$e->getMessage());
-    }
-  }
+$svr->reply();
+
 ?>
