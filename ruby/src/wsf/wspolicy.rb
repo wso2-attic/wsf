@@ -129,7 +129,7 @@ module WSO2
 	 return nil if policy.nil?
 	 return nil unless policy.kind_of? String
 	 
-	 return WSFC::ruby_str_to_axiom_node(env, policy, policy.length)   
+	 return WSFC::wsf_str_to_axiom_node(env, policy, policy.length)   
       end  
 
 
