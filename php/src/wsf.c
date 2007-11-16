@@ -987,6 +987,7 @@ PHP_METHOD (ws_service, __construct)
     HashTable * ht_opParams = NULL;
 	HashTable * ht_classes = NULL;
     char *wsdl = NULL;
+	zval **wsdl_tmp = NULL;
     
     if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "|a",
             &options)) {
@@ -1102,6 +1103,7 @@ PHP_METHOD (ws_service, __construct)
 					add_property_stringl (obj, WS_BINDING_STYLE,
 					Z_STRVAL_PP (tmp), Z_STRLEN_PP (tmp), 1);
             }
+
             if(zend_hash_find(ht_options, WS_CLASSES, sizeof(WS_CLASSES),
 				(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY){
 					ht_classes = Z_ARRVAL_PP(tmp);
@@ -1126,11 +1128,17 @@ PHP_METHOD (ws_service, __construct)
 		wsf_util_process_ws_service_classes(ht_classes, svc_info, ws_env_svr TSRMLS_CC);
 	}
     wsf_util_process_ws_service_operations_and_actions(ht_ops_to_funcs,
-            ht_actions, ht_ops_to_mep, svc_info, ws_env_svr TSRMLS_CC);
-
+                                                       ht_actions, ht_ops_to_mep, svc_info, ws_env_svr TSRMLS_CC);
+    
     wsf_util_engage_modules_to_svc(ws_env_svr, 
-            wsf_worker_get_conf_ctx(worker, ws_env_svr), svc_info);
-
+                                   wsf_worker_get_conf_ctx(worker, ws_env_svr), svc_info);
+    
+    
+							
+    if(zend_hash_find(Z_OBJPROP_P(this_ptr), WS_WSDL,
+                      sizeof(WS_WSDL), (void **)&wsdl_tmp) == SUCCESS){
+        wsf_wsdl_process_service(this_ptr, NULL, svc_info, ws_env_svr TSRMLS_CC);
+    }
 
 }
 
@@ -1316,7 +1324,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
 PHP_METHOD (ws_service, reply) 
 {
     ws_object_ptr intern = NULL;
-    zval * obj = NULL, **tmp;
+    zval * obj = NULL;
 /*  axis2_conf_t * conf = NULL; */
     axis2_conf_ctx_t * conf_ctx = NULL;
     wsf_svc_info_t * svc_info = NULL;
@@ -1491,10 +1499,11 @@ PHP_METHOD (ws_service, reply)
                 }
             }
         */
-        if(zend_hash_find(Z_OBJPROP_P(this_ptr), WS_WSDL,
-                          sizeof(WS_WSDL), (void **)&tmp) == SUCCESS){
-            wsf_wsdl_process_service(this_ptr, &req_info, svc_info, ws_env_svr TSRMLS_CC);
-        }
+/*         if(zend_hash_find(Z_OBJPROP_P(this_ptr), WS_WSDL,
+ *                           sizeof(WS_WSDL), (void **)&tmp) == SUCCESS){
+ *             wsf_wsdl_process_service(this_ptr, &req_info, svc_info, ws_env_svr TSRMLS_CC);
+ *         }
+ */
         status = wsf_worker_process_request (php_worker, ws_env_svr, &req_info, svc_info TSRMLS_CC);
         
         php_end_ob_buffer(0, 0 TSRMLS_CC);

@@ -1524,8 +1524,6 @@ void wsf_util_process_ws_service_classes(
 	while(zend_hash_get_current_data_ex(ht_classes, (void**)&tmp, &pos) != FAILURE){
 		HashTable *ht_ops_to_functions = NULL;
 		HashTable *ht_actions = NULL;
-		HashTable *ht_ops_to_mep = NULL;
-		
 		char *classname = NULL;
 		zval **tmpval = NULL;
 

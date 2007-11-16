@@ -580,10 +580,6 @@ wsf_xml_msg_recv_invoke_wsmsg (
     axiom_node_t *res_om_node = NULL;
     zval func, retval, param;
     zval *params[1];
-    HashTable *ft = NULL;
-    axis2_char_t *class_name = NULL;
-    zend_class_entry **ce = NULL;
-    void *val = NULL;
     zval *msg = NULL;
     int _bailout = 0;
 
