@@ -4,73 +4,93 @@ If you need any help with building or installation , send a
 mail to wsf-PHP-user@lists.wso2.net
 ===========================================================
 Contents:
-1. How to build PHP under Windows
-2. How to build wsf_c under Windows from source
+1. How to build WSF/PHP under Windows from source
     a. Requirements
-    b. Using command prompt.
-3. Building WSF extension
-4. Installing WSF extension as a PHP extension.
+    b. Building the extension.
+    c. Building the extension using PHP build system.
+2. Installing WSF/PHP extension as a PHP extension.
 
 ===========================================================
 
-1. How to build PHP under Windows.
-    Please refer to README.WIN32-BUILD-SYSTEM file that comes 
-    with PHP source distribution.
-
-2. How to build wsf_c under Windows from source
+1. How to build WSF/PHP under Windows from source
 
     a. Requirements
 
-	You need to download following:
+	You need to download following dependency libraries:
 
-	libxml2 binary distribution
+	libxml2 binary distribution   
         zlib binary distribution
         iconv binary distribution
 	OpenSSL binary distribution
+	PHP Source
+	PHP Binary
+	Win32build [ win32 buildtools for PHP ]
+	Mysql Server 5 [When using Reliable Messaging With MySql Database ]
+
+	In addition you need to have visual studio installed on your system.
+	
+	obtain libxml2, zlib, and iconv win32 binaries from [1].
+	obtain OpenSSL binary from [2].
+	obtain MySql Server from [3].
+	obtain PHP Source and Bianry from [4].
+	obtain Win32Build from [5].
+
+
+	[1] http://www.zlatkovic.com/pub/libxml/
+	[2] http://www.slproweb.com/products/Win32OpenSSL.html
+	[3] http://dev.mysql.com/downloads/
+	[4] http://www.php.net/downloads.php
+	[5] http://www.php.net/extra/win32build.zip. 
+
         
-    b. Using the command prompt            
-
-	If you have Visual Studio command prompt, open it change 
-	directory to wso2-wsf-php-src extract folder.
+    b. WSF/PHP extension is build on top of WSF/C Web Services Framework. The extension source code
+       is packaged with WSF/C code. When you download the wso2-wsf-php-src.zip file, it will contain
+       following dirctory structure.
 	
-	If not, create a new shortcut and set target to:
+       wso2-wsf-php-src
+         |
+         +--- src
+	 |
+	 +--- wsf_c
+	 |
+	 +--- docs
+	 |
+	 +--- samples
+	 |
+	 +--- scripts
+         
+       In the wso2-wsf-php-src directory you will find a file named configure.in file. Open this file
+       and set your dependency directory locations to relevent entries. You can build with debug symbol
+       by setting DEBUG=1 option.
 	
-	%comspec% /k "C:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\bin\vcvars32.bat"
-	
-	Now change directory to wso2-wsf-php-src extract directory and edit 
-	the configure.in file and set your binary installation 
-	locations of libxml2, zlib and iconv , OpenSSL.
+       Next run the build.bat file located in wso2-wsf-php-src directory. It should build the binary dist pack
+       to the same directory.
 
-	Also you need to specify the php source directory and its binary build location
-	to build the extension along with wsf_c. Please fill the following entries in 
-	configure.in file.
-	PHP_SRC_DIR, PHP_BIN_DIR and WIN32BUILD_DIR
+     c. Building WSO2 WSF with php win32 build system
+ 
+       There is another way of building the WSF/PHP extension. For this you will first need to build php
+       from source under windows.please refer README.WIN32-BUILD-SYSTEM
+       file in PHP source distribution and build PHP source under Windows.
 
-	Once you have done it, run build.bat file in  wso2-wsf-php-src extract directory. This
-	will build create the binary distribution.
-
-3. Building WSO2 WSF with php win32 build system
+       You will also need wso2-wsf-c binary in order to build using this technique.
                 
-    Before trying this, please refer README.WIN32-BUILD-SYSTEM
-    file in PHP source distribution and build PHP source under Windows.
-                
-    Copy wsf_php folder to php_source/ext directory.
+       Copy wsf_php folder to php_source/ext directory.
 
-    Run "buildconf.bat" to rebuild the configre.js file.
+       Run "buildconf.bat" to rebuild the configre.js file.
 
 
-    "cscript /nologo configure.js --help" will give the configuration options.
-    You will find the option --with-wsf.
+       "cscript /nologo configure.js --help" will give the configuration options.
+       You will find the option --with-wsf.
 
-    Add following entries to config.nice.bat file.
-	"--with-extra-includes=<Libxml2 bin dir>\include;<Iconv bin dir>\include;<zlib bi dir>\include;<wsf-c>\include;"
-	"--with-extra-libs=<Libxml2 bin dir>\lib;<Iconv bin dir>\lib;<zlib bin dir>\lib;<wsf-c>\lib"
+       Add following entries to config.nice.bat file.
+	"--with-extra-includes=<Libxml2 bin dir>\include;<Iconv bin dir>\include;<zlib bi dir>\include;<wsf-c>\include;
+		<wsf-c-bin>\include;"
+	"--with-extra-libs=<Libxml2 bin dir>\lib;<Iconv bin dir>\lib;<zlib bin dir>\lib;<wsf-c>\lib;<wsf-c-bin>\lib"
 	--with-wsf=shared"
 
-	
-    Now run config.nice.bat file to generate the makefile.
+	Now run config.nice.bat file to generate the makefile.
    
-    "nmake" will build wsf extension.
+	"nmake" will build wsf extension.
 
 4. Installing WSO2 WSF as a PHP extension.
 
