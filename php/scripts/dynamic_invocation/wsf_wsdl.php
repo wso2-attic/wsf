@@ -199,21 +199,24 @@ function wsf_process_response($response_payload_string, $response_sig_model_stri
     return $response_class;
 }
 
-function wsf_process_wsdl_for_service($parameters)
+function wsf_process_wsdl_for_service($parameters, $operation_array)
 {
     require_once('wsf_wsdl_consts.php');
     require_once('wsf_wsdl_util.php');
     require_once('wsf_wsdl_service.php');
 
+	global $is_wsdl_11;
+    global $wsdl_11_dom;
+	
     $wsdl_dom = new DomDocument();
     $sig_model_dom  = new DOMDocument();
     $sig_model_dom->preserveWhiteSpace = false;
     $wsdl_dom->preserveWhiteSpace = false;
-
+	
     
     $wsdl_location = $parameters[WSF_WSDL];
     $xslt_location = $parameters[WSF_XSLT_LOCATION];
-    
+		    
     $sig_model_dom->preserveWhiteSpace = false;
     $wsdl_dom->preserveWhiteSpace = false;
 
@@ -245,11 +248,37 @@ function wsf_process_wsdl_for_service($parameters)
 
     if(!$sig_model_dom)
         return "error creating intermediate model";
-
-    /** For now we do not processing policy */
-    
-    $sig_model_string = $sig_model_dom->saveXML();
-    return $sig_model_string;
+	
+	$sig_model_string = $sig_model_dom->saveXML();
+	
+	/* creating policy array */
+	$policy_array = array();
+	$endpoint_address = wsf_get_endpoint_address($sig_model_dom);
+	
+	if ($is_wsdl_11 == TRUE && $wsdl_11_dom ){
+        $binding_node = wsf_get_binding($wsdl_11_dom, $endpoint_address, $is_wsdl_11);
+        if(!$binding_node)
+            return  NULL;
+		foreach($operation_array as $value){
+        	$policy_array[$value] = wsf_get_all_policies($wsdl_11_dom, $binding_node, $value, $is_wsdl_11);
+ 		} 
+				
+    }
+    else{
+        $binding_node = wsf_get_binding($wsdl_dom, $endpoint_address);
+        if(!$binding_node)
+            return  NULL;
+		foreach($operation_array as $value){
+			$policy_array[$value] = wsf_get_all_policies($wsdl_dom, $binding_node, $value);
+		}
+    }
+	
+	$return_array = array();
+	$return_array["sig_model_string"] = $sig_model_string;
+	$return_array["policies"] = $policy_array;
+	
+	//	file_put_contents("/tmp/my.txt", print_r($policy_array, TRUE));
+    return $return_array;
 }
 
 function wsf_wsdl_process_in_msg($parameters)
@@ -281,7 +310,7 @@ function wsf_wsdl_process_in_msg($parameters)
     if(!$operation_node){
         $operation = "\noperation not found";
     }
-    // $return_payload_string = "haaai";
+
     $return_payload_string = wsf_serivce_invoke_function($operation_node, $function_name, $payload_dom->firstChild);
     
     return $return_payload_string;
