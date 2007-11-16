@@ -1125,7 +1125,7 @@ PHP_METHOD (ws_service, __construct)
     }
 
 	if(ht_classes){
-		wsf_util_process_ws_service_classes(ht_classes, svc_info, ws_env_svr TSRMLS_CC);
+		wsf_util_process_ws_service_classes(ht_classes, ht_ops_to_mep,svc_info, ws_env_svr TSRMLS_CC);
 	}
     wsf_util_process_ws_service_operations_and_actions(ht_ops_to_funcs,
                                                        ht_actions, ht_ops_to_mep, svc_info, ws_env_svr TSRMLS_CC);
@@ -1139,7 +1139,6 @@ PHP_METHOD (ws_service, __construct)
                       sizeof(WS_WSDL), (void **)&wsdl_tmp) == SUCCESS){
         wsf_wsdl_process_service(this_ptr, NULL, svc_info, ws_env_svr TSRMLS_CC);
     }
-
 }
 
 

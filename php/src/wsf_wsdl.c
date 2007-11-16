@@ -869,11 +869,12 @@ void wsf_wsdl_process_service(zval *this_ptr, wsf_req_info_t *request_info1, wsf
                                  "[wsf_wsdl]received data from scripts");
             }
             else if(Z_TYPE_P(&retval) == IS_ARRAY){
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
-                                "[wsf_wsdl]received array from scripts");
-                HashTable *ht_return = Z_ARRVAL_P(&retval);
-                zval **tmp = NULL;
+				zval **tmp = NULL;
                 zval **policy_options = NULL;
+                HashTable *ht_return = Z_ARRVAL_P(&retval);
+   			    
+				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                                "[wsf_wsdl]received array from scripts");
                 if(zend_hash_find(ht_return, "sig_model_string", 
                                   sizeof("sig_model_string"), (void **)&tmp) == SUCCESS &&
                    Z_TYPE_PP(tmp) == IS_STRING){
@@ -887,7 +888,7 @@ void wsf_wsdl_process_service(zval *this_ptr, wsf_req_info_t *request_info1, wsf
                                                     "[wsf_wsdl]policies found");
                                     policy_options = tmp;
                                     wsf_wsdl_handle_server_security(svc_info, policy_options,
-                                                                    env);
+										env TSRMLS_CC);
 				}
                                 
             }
@@ -924,14 +925,18 @@ void wsf_wsdl_handle_server_security(wsf_svc_info_t *svc_info,
     neethi_policy_t *normalized_input_neethi_policy = NULL;
     
     neethi_policy_t *merged_input_neethi_policy = NULL;
-	
+	int i = 0;
+	axutil_param_t *security_param = NULL;
+	axis2_conf_t *conf = NULL;
+    wsf_worker_t *worker = NULL;
+
     if(!op_policies)
         return;
     operations = Z_ARRVAL_PP(op_policies);
     if(!operations)
         return;
     
-    int i = 0;
+  
     zend_hash_internal_pointer_reset_ex (operations, &pos);
     while (zend_hash_get_current_data_ex (operations,
                                           (void **) &tmp, &pos) != FAILURE) {
@@ -943,6 +948,12 @@ void wsf_wsdl_handle_server_security(wsf_svc_info_t *svc_info,
         i++;
         ht_policy = Z_ARRVAL_PP (tmp);
         if (op_name){
+
+			axis2_op_t *op = NULL;
+            axutil_qname_t *op_qname = NULL;
+            axis2_desc_t *desc = NULL;
+            
+            axis2_policy_include_t *policy_include = NULL;
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "operation name is %s", op_name);
             /* begin_line */
             
@@ -1048,11 +1059,7 @@ void wsf_wsdl_handle_server_security(wsf_svc_info_t *svc_info,
             /* end line */
 				
             
-            axis2_op_t *op = NULL;
-            axutil_qname_t *op_qname = NULL;
-            axis2_desc_t *desc = NULL;
-            
-            axis2_policy_include_t *policy_include = NULL;
+         
             
             op_qname = axutil_qname_create (env, op_name, NULL, NULL);
             
@@ -1069,7 +1076,7 @@ void wsf_wsdl_handle_server_security(wsf_svc_info_t *svc_info,
     }	
     
 		/* no need to change so many things just want to public some functions in wsf_policy.c */
-    axutil_param_t *security_param = NULL;
+  
     
     tmp_rampart_ctx.certificate = NULL;
     tmp_rampart_ctx.password = NULL;
@@ -1097,8 +1104,7 @@ void wsf_wsdl_handle_server_security(wsf_svc_info_t *svc_info,
     axis2_svc_add_param (svc_info->svc, env, security_param);
     
     /** engage module rampart */
-    axis2_conf_t *conf = NULL;
-    wsf_worker_t *worker = NULL;
+
     
     worker = svc_info->php_worker;
 				

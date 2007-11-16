@@ -207,8 +207,6 @@ typedef struct wsf_svc_info
 
     axis2_msg_recv_t *msg_recv;
 
-	
-
     struct wsf_worker_t *php_worker;
 
     axutil_hash_t *ops_to_actions;
@@ -219,7 +217,7 @@ typedef struct wsf_svc_info
 
 	axutil_hash_t *ops_to_classes;
 
-	HashTable *ht_class_args;
+	zval *class_args;
 
     HashTable *ht_op_params;
 

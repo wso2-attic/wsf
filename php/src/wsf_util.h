@@ -154,6 +154,7 @@ void wsf_util_process_ws_service_operations_and_actions(
 
 void wsf_util_process_ws_service_classes(
 	HashTable *ht_classes,
+	HashTable *ht_ops_to_mep,
 	wsf_svc_info_t *svc_info,
 	axutil_env_t *ws_env_svr TSRMLS_DC);
 
