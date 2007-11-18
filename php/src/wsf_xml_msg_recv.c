@@ -212,7 +212,8 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
         } else {
             return AXIS2_FAILURE;
         }
-		classname = axutil_hash_get(svc_info->ops_to_classes, local_name, AXIS2_HASH_KEY_STRING);
+		if(svc_info->ops_to_classes)
+			classname = axutil_hash_get(svc_info->ops_to_classes, local_name, AXIS2_HASH_KEY_STRING);
 
 
     }
@@ -580,7 +581,6 @@ wsf_xml_msg_recv_invoke_wsmsg (
     zval *params[1];
     HashTable *ft = NULL;
     zend_class_entry **ce = NULL;
-    void *val = NULL;
     zval *msg = NULL;
     int _bailout = 0;
 

@@ -1562,7 +1562,6 @@ void wsf_util_process_ws_service_operations_and_actions_for_classes(
               (void **) &tmp_function, &pos) != FAILURE){
 
             char *func_name = NULL;
-            zend_function * f;
             char *wsa_action = NULL;
             uint str_length = 0;
             ulong num_index = 0;
@@ -1612,7 +1611,6 @@ void wsf_util_process_ws_service_operations_and_actions_for_classes(
             const void *k = NULL;
             char *key = NULL;
             char *val = NULL;
-            int key_len = 0;
 
             axutil_hash_this (hi, &k, NULL, &v);
             key = (axis2_char_t *) k;
