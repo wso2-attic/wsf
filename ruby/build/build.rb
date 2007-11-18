@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 
-system(%{./configure.rb;
+system(%{ruby configure.rb;
         make;
         make install;
         cd wsservice;
-        ./configure.rb;
+        ruby configure.rb;
         make;
         make install;})
