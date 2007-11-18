@@ -214,7 +214,8 @@ function wsf_set_values_to_class_obj($val, $class_map, &$child, $prev_user_obj)
                     if($class_map[$val['class_map_name']]){
                         if(!$user_level_obj)
                             $user_level_obj = new $class_map[$val['class_map_name']];
-                        
+                 		if(!$child)
+                                    continue;
                         if($child->firstChild != NULL && $child->firstChild->nodeType == XML_ELEMENT_NODE)
                             $child = $child->firstChild;
 

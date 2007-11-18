@@ -174,7 +174,7 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
             $tmp_param_struct = $child_array;
     }
     $payload_dom = new DOMDocument('1.0', 'iso-8859-1');
-    $element = $payload_dom->createElementNS($tmp_param_struct[$ele_name][WSF_NS], $ele_name);
+    $element = $payload_dom->createElementNS($tmp_param_struct[$ele_name][WSF_NS], "ns1:".$ele_name);
     if(is_object($arguments[0])){
         /* this is class map support */
         $new_obj = $arguments[0];
@@ -230,12 +230,12 @@ function wsf_create_temp_struct(DomNode $param_child, $wrapper_ns)
 
     if($wrap_type == 'yes'){
         if($param_ns == NULL)
-            $rec_array[WSF_NS] = $wrapper_ns;
+            $rec_array[WSF_NS] = "NULL";//$wrapper_ns;
         else
             $rec_array[WSF_NS] = $param_ns;
 
         $rec_array[WSF_TYPE] = $param_type;
-        if($param_min)
+        if($param_min != 1)
             $rec_array['minOccurs'] = $param_min; 
         if($param_max != 1)
             $rec_array['maxOccurs'] = $param_max; 
@@ -309,7 +309,10 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom, $parameter_s
                         $obj_value = $classmap_obj->$val;
                     else
                         $obj_value = $prev_class_obj->$val;
-                    $element_2 = $payload_dom->createElementNS($value[WSF_NS], "ns".$i.":".$val, $obj_value);
+                    if($value[WSF_NS] == "NULL")
+                        $element_2 = $payload_dom->createElement($val, $obj_value);
+                    else
+                        $element_2 = $payload_dom->createElementNS($value[WSF_NS], "ns".$i.":".$val, $obj_value);
                 }
                 else {
                     if(isset($value['nillable'])){
