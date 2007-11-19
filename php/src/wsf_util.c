@@ -1523,8 +1523,8 @@ void wsf_util_process_ws_service_operations_and_actions_for_classes(
 		char *classname,
         axutil_env_t *ws_env_svr TSRMLS_DC)
 {
-    axutil_hash_index_t * hi = NULL;
-    if (ht_ops_to_funcs) {
+        axutil_hash_index_t * hi = NULL;
+        if (ht_ops_to_funcs) {
         HashPosition pos;
         zval ** tmp = NULL;
         int i = 0;
@@ -1542,14 +1542,15 @@ void wsf_util_process_ws_service_operations_and_actions_for_classes(
             i++;
             func_name = Z_STRVAL_PP (tmp);
             if (op_name){
-                op_name_to_store = op_name;
+                op_name_to_store = axutil_strdup (ws_env_svr, op_name);
             } else {
-                op_name_to_store = func_name;
+                op_name_to_store = axutil_strdup (ws_env_svr,func_name);
             }
 
             axutil_hash_set (svc_info->ops_to_functions,
-                axutil_strdup (ws_env_svr, op_name_to_store),
-                    AXIS2_HASH_KEY_STRING, axutil_strdup (ws_env_svr, func_name));
+                 op_name_to_store, AXIS2_HASH_KEY_STRING, axutil_strdup (ws_env_svr, func_name));
+
+				axutil_hash_set(svc_info->ops_to_classes , op_name_to_store , AXIS2_HASH_KEY_STRING, classname);
         }
     }
     if (ht_actions){
@@ -1618,7 +1619,6 @@ void wsf_util_process_ws_service_operations_and_actions_for_classes(
 			
             if (key && val) {
 		
-				axutil_hash_set(svc_info->ops_to_classes , key, AXIS2_HASH_KEY_STRING, val);
 
                  /* function is there, add the operation to service */
                  if (strcmp (key, val) == 0) {
@@ -1650,36 +1650,28 @@ void wsf_util_process_ws_service_classes(
 {
 	zval **tmp;
 	HashPosition pos;
-#ifdef ZEND_ENGINE_2		
 	zend_class_entry **ce;
-#else
-	zend_class_entry *ce;
-#endif
 
     zend_hash_internal_pointer_reset_ex (ht_classes, &pos);
 	while(zend_hash_get_current_data_ex(ht_classes, (void**)&tmp, &pos) != FAILURE){
 		HashTable *ht_ops_to_functions = NULL;
 		HashTable *ht_actions = NULL;
 		char *classname = NULL;
+		uint str_length = 0;
 		zval **tmpval = NULL;
 		int class_exists = 0;
-/*
-		if(Z_TYPE_PP(tmp) == IS_STRING){
-			classname = Z_STRVAL_PP(tmp);
-			AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "classname -> %s", classname);
-		}else 
-*/		
-		if(Z_TYPE_PP(tmp) == IS_ARRAY){
+		
+        if(Z_TYPE_PP(tmp) == IS_ARRAY){
 			/** data value is an array 	"classes"=>array("foo"=>array($ops, $actions,..)" */
 			HashTable *values = NULL;
-            uint str_length = 0;
+           
             ulong num_index = 0;
             
-            if (zend_hash_get_current_key_ex (ht_actions, &classname,
+			values = Z_ARRVAL_PP(tmp);
+            if (zend_hash_get_current_key_ex (values, &classname,
                     &str_length, &num_index, AXIS2_TRUE, &pos) != FAILURE){
 				AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "classname -> %s", classname);
             }
-			values = Z_ARRVAL_PP(tmp);
 			if(values){
 				if(zend_hash_find(values, WS_OPERATIONS, sizeof(WS_OPERATIONS), (void**)&tmpval) == SUCCESS
 					&& Z_TYPE_PP(tmpval) == IS_ARRAY){
@@ -1701,13 +1693,7 @@ void wsf_util_process_ws_service_classes(
 			}
 		}
 
-#ifdef ZEND_ENGINE_2		
-		class_exists = zend_lookup_class(classname, strlen(classname), &ce TSRMLS_CC);
-#else
-		char *class_name = estrdup(classname);
-		class_exists = zend_hash_find(EG(class_table), php_strtolower(class_name, strlen(class_name)), strlen(class_name)	 + 1, (void **)&ce);
-		efree(class_name);
-#endif
+		class_exists = zend_lookup_class(classname, str_length, &ce TSRMLS_CC);
 		if(class_exists){
 			if(!svc_info->ops_to_classes){
 				svc_info->ops_to_classes = axutil_hash_make(ws_env_svr);
@@ -1715,5 +1701,7 @@ void wsf_util_process_ws_service_classes(
 			wsf_util_process_ws_service_operations_and_actions_for_classes(ht_ops_to_functions, ht_actions,
 				ht_ops_to_mep, svc_info, classname, ws_env_svr TSRMLS_CC);
 		}
+
+		zend_hash_move_forward_ex (ht_classes, &pos);
 	}
 }

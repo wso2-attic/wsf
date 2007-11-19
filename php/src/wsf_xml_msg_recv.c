@@ -49,6 +49,7 @@ static axiom_node_t *wsf_xml_msg_recv_invoke_wsmsg (
     axiom_node_t * om_node,
     axis2_msg_ctx_t * out_msg_ctx,
     char * classname,
+	wsf_svc_info_t *svc_info,
     int enable_mtom,
     int request_xop TSRMLS_DC);
 
@@ -200,7 +201,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
 
     prop = axis2_msg_ctx_get_property (in_msg_ctx, env, WS_SVC_INFO);
     if (prop) {
-        svc_info = (wsf_svc_info_t *) axutil_property_get_value (prop, env);
+		svc_info = (wsf_svc_info_t *) axutil_property_get_value (prop, env);
         if (svc_info) {
             use_mtom = svc_info->use_mtom;
             request_xop = svc_info->request_xop;
@@ -212,10 +213,9 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
         } else {
             return AXIS2_FAILURE;
         }
-		if(svc_info->ops_to_classes)
-			classname = axutil_hash_get(svc_info->ops_to_classes, local_name, AXIS2_HASH_KEY_STRING);
-
-
+	    if(svc_info->ops_to_classes){
+            classname = axutil_hash_get(svc_info->ops_to_classes, local_name, AXIS2_HASH_KEY_STRING);
+        }
     }
 
     if (svc_info->ht_op_params) {
@@ -233,14 +233,14 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
                     wsf_xml_msg_recv_invoke_wsmsg (env, soap_ns,
                     operation_name,
                     om_node, out_msg_ctx,
-                    classname, use_mtom, request_xop TSRMLS_CC);
+                    classname,svc_info, use_mtom, request_xop TSRMLS_CC);
             }
         }
     } else {
         result_node =
             wsf_xml_msg_recv_invoke_wsmsg (env, soap_ns, operation_name,
             om_node, out_msg_ctx,
-            classname, use_mtom, request_xop TSRMLS_CC);
+			classname,svc_info, use_mtom, request_xop TSRMLS_CC);
     }
     if (!result_node) {
 
@@ -571,6 +571,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
     axiom_node_t * om_node,
     axis2_msg_ctx_t * out_msg_ctx,
     char * class_name,
+	wsf_svc_info_t *svc_info,
     int use_mtom,
     int request_xop TSRMLS_DC)
 {
@@ -631,15 +632,60 @@ wsf_xml_msg_recv_invoke_wsmsg (
         INIT_PZVAL (params[0]);
 
 		if (class_name){
+			zval **argv = NULL;
+            zval **tmp = NULL;
+			int argc =0;
+
             zend_lookup_class (class_name, strlen (class_name), &ce TSRMLS_CC);
-            if (ce) {
-                ft = &(*ce)->function_table;
-				if (call_user_function(ft, (zval **) NULL, &func, &retval, 1, params TSRMLS_CC) != SUCCESS) {
-					AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_xml_msg_recv] call_user_function failed ");
-					return NULL;
-                }
+			if(class_name && svc_info->class_args){
+				if(zend_hash_find(Z_ARRVAL_P(svc_info->class_args), class_name, 
+                    strlen(class_name)+1, (void**)&tmp) == SUCCESS){
+    				if(Z_TYPE_PP(tmp) == IS_ARRAY){
+                        zval **tmp1 = NULL;
+                        HashPosition pos;
+                        int i =0;
+	    				argc = zend_hash_num_elements(Z_ARRVAL_PP(tmp));
+                        argv = safe_emalloc(sizeof(zval), argc, 0);
+
+                        zend_hash_internal_pointer_reset_ex (Z_ARRVAL_PP(tmp), &pos);
+                        while(zend_hash_get_current_data_ex(Z_ARRVAL_PP(tmp), (void**)&tmp1, &pos) != FAILURE){
+                            argv[i] = *tmp1;
+                            i++;
+                            zend_hash_move_forward_ex (Z_ARRVAL_PP(tmp), &pos);
+                        }
+		    		}
+			   	}
 			}
-		}else if (call_user_function(CG (function_table), (zval **) NULL, &func, &retval, 1, params TSRMLS_CC) != SUCCESS) {
+            if (*ce) {
+				/* call constuctor function */
+				zval *tmp_cls_obj;
+				MAKE_STD_ZVAL(tmp_cls_obj);
+				object_init_ex(tmp_cls_obj, *ce);
+				
+				if(zend_hash_exists(&Z_OBJCE_P(tmp_cls_obj)->function_table, 
+					class_name, strlen(class_name)) == SUCCESS){
+						zval c_ret, constructor;
+						INIT_ZVAL(c_ret);
+						INIT_ZVAL(constructor);
+
+						ZVAL_STRING(&constructor, class_name, 1);
+						if(call_user_function(NULL, &tmp_cls_obj, &constructor, &c_ret, argc, argv TSRMLS_CC) == FAILURE){
+							php_error_docref(NULL TSRMLS_CC, E_ERROR, "Error Calling the constructor ");	
+						}
+						zval_dtor(&constructor);
+						zval_dtor(&c_ret);
+				}
+				
+                ft = &(*ce)->function_table;
+				if(zend_hash_exists(ft, op_name, strlen(op_name)) == SUCCESS){
+					if (call_user_function(NULL, &tmp_cls_obj, &func, &retval, 1, params TSRMLS_CC) != SUCCESS) {
+					    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_xml_msg_recv] call_user_function failed ");
+    					return NULL;
+                    }
+				}
+			}
+		}else if (call_user_function(CG (function_table), (zval **) NULL, &func, 
+                    &retval, 1, params TSRMLS_CC) != SUCCESS) {
 			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_xml_msg_recv] call_user_function failed ");
 			return NULL;
 		}

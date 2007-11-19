@@ -1124,17 +1124,16 @@ PHP_METHOD (ws_service, __construct)
         wsf_util_create_svc_from_svc_info (svc_info, ws_env_svr TSRMLS_CC);
     }
 
+    wsf_util_process_ws_service_operations_and_actions(ht_ops_to_funcs,
+                                                       ht_actions, ht_ops_to_mep, svc_info, ws_env_svr TSRMLS_CC);
+
 	if(ht_classes){
 		wsf_util_process_ws_service_classes(ht_classes, ht_ops_to_mep,svc_info, ws_env_svr TSRMLS_CC);
 	}
-    wsf_util_process_ws_service_operations_and_actions(ht_ops_to_funcs,
-                                                       ht_actions, ht_ops_to_mep, svc_info, ws_env_svr TSRMLS_CC);
-    
+ 
     wsf_util_engage_modules_to_svc(ws_env_svr, 
                                    wsf_worker_get_conf_ctx(worker, ws_env_svr), svc_info);
     
-    
-							
     if(zend_hash_find(Z_OBJPROP_P(this_ptr), WS_WSDL,
                       sizeof(WS_WSDL), (void **)&wsdl_tmp) == SUCCESS){
         wsf_wsdl_process_service(this_ptr, NULL, svc_info, ws_env_svr TSRMLS_CC);
