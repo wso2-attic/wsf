@@ -24,12 +24,10 @@ class FlickrClient
    def initialize(key)
       @key = key
       
-      axis2c_home = "/home/danushka/wsf/axis2c"
-      log_file_name = "/tmp/ruby_rails_flicker_client.log"
+      LOG_FILE_NAME = "ruby_rails_flicker_client.log"
 
       @client = WSClient.new({"to" => "http://api.flickr.com/services/soap"},
-                             axis2c_home,
-                             log_file_name)
+                             LOG_FILE_NAME)
    end
 
    def query(text)

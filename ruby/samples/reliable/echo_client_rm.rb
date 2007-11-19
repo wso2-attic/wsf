@@ -20,22 +20,28 @@ require 'wsf'
 include WSO2::WSF
 
 req_payload_string = <<XML
-<ns1:echoString xmlns:ns1="http://ws.apache.org/axis2/services/echo">
-    <text>Hello World!</text>
+<ns1:echoString xmlns:ns1="http://tempuri.org/">
+    <ns1:Text>Hello World !!!</ns1:Text>
 </ns1:echoString>
 XML
 
 begin
-  LOG_FILE_NAME = "ruby_echo_client_soap11.log"
-  END_POINT = "http://localhost:9090/axis2/services/echo"
+  LOG_FILE_NAME = "ruby_echo_client_rm.log"
+  END_POINT = "http://127.0.0.1:9090/axis2/services/RMSampleService"
+  ACTION = "urn:wsrm:EchoString"
 
-  client = WSClient.new({"to" => END_POINT,
-                         "use_soap" => 1.1},
+  client = WSClient.new({"use_wsa" => "TRUE",
+                         "reliable" => "TRUE"},
                         LOG_FILE_NAME)
+
+  req_message = WSMessage.new(req_payload_string,
+                              nil,
+                              {"to" => END_POINT,
+                               "action" => ACTION})
 
   puts "Sending OM : " << "\n" << req_payload_string << "\n" 
 
-  res_message = client.request(req_payload_string)
+  res_message = client.request(req_message)
 
   if not res_message.nil? then
     puts "Received OM: "<< "\n" << res_message.payload_to_s << "\n\n"
@@ -43,6 +49,8 @@ begin
   else
     puts "Client invocation FAILED !!!"
   end
+
+  sleep(10)
 rescue WSFault => wsfault
   puts "Client invocation FAILED !!!\n"
   puts "WSFault : "

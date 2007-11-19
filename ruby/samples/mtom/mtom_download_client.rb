@@ -18,20 +18,19 @@
 require 'wsf'
 
 include WSO2::WSF
+include WSO2::Util
 
 req_payload_string = <<XML
 <download/>
 XML
 
 begin
-  AXIS2C_HOME = "/home/danushka/wsf/axis2c"
-  LOG_FILE_NAME = "/tmp/ruby_mtom_download_client.log"
+  LOG_FILE_NAME = "ruby_mtom_download_client.log"
   END_POINT = "http://localhost:9090/samples/mtom/mtom_download_service.php"
 
   client = WSClient.new({"to" => END_POINT,
                          "use_mtom" => "TRUE",
                          "response_xop" => "TRUE"},
-                        AXIS2C_HOME,
                         LOG_FILE_NAME)
 
   puts "Sending OM : " << "\n" << req_payload_string << "\n"

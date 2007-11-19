@@ -29,12 +29,10 @@ req_payload_string = <<XML
 XML
 
 begin
-  AXIS2C_HOME = "/home/danushka/wsf/axis2c"
-  LOG_FILE_NAME = "/tmp/ruby_flicker.log"
+  LOG_FILE_NAME = "ruby_flicker.log"
   END_POINT = "http://api.flickr.com/services/soap"
 
   client = WSClient.new({"to" => END_POINT},
-                        AXIS2C_HOME,
                         LOG_FILE_NAME)
 
   puts "Sending OM : " << "\n" << req_payload_string << "\n"

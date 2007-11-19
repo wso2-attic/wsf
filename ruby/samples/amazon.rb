@@ -29,13 +29,11 @@ req_payload_string = <<XML
 XML
 
 begin
-  AXIS2C_HOME = "/home/danushka/wsf/axis2c"
-  LOG_FILE_NAME = "/tmp/ruby_amazon.log"
+  LOG_FILE_NAME = "ruby_amazon.log"
 
   client = WSClient.new({"to" => "http://webservices.amazon.com/onca/xml",
                          "http_method" => "GET",
                          "use_soap" => false},
-                        AXIS2C_HOME,
                         LOG_FILE_NAME)
 
   puts "Sending OM : " << "\n" << req_payload_string << "\n"

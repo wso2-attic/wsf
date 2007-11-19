@@ -24,8 +24,7 @@ req_payload_string = <<XML
 XML
 
 begin
-  AXIS2C_HOME = "/home/danushka/wsf/axis2c"
-  LOG_FILE_NAME = "/tmp/ruby_mtom_upload_client_base64.log"
+  LOG_FILE_NAME = "ruby_mtom_upload_client_base64.log"
   END_POINT = "http://localhost:9090/axis2/services/mtom"
   ACTION = "http://ws.apache.org/axis2/c/samples/mtomSample"
 
@@ -35,7 +34,6 @@ begin
                          "action" => ACTION,
                          "use_mtom" => "FALSE",
                          "use_wsa" => "TRUE"},
-                        AXIS2C_HOME,
                         LOG_FILE_NAME)
 
   req_message = WSMessage.new(req_payload_string,

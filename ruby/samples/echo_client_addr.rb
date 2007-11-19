@@ -26,13 +26,11 @@ req_payload_string = <<XML
 XML
 
 begin
-  AXIS2C_HOME = "/home/danushka/wsf/axis2c"
-  LOG_FILE_NAME = "/tmp/ruby_echo_client_addr.log"
+  LOG_FILE_NAME = "ruby_echo_client_addr.log"
   END_POINT = "http://localhost:9090/axis2/services/echo"
   ACTION = "http://ws.apache.org/axis2/c/samples/echoString"
 
   client = WSClient.new({"use_wsa" => "TRUE"},
-                        AXIS2C_HOME,
                         LOG_FILE_NAME)
 
   req_message = WSMessage.new(req_payload_string,
