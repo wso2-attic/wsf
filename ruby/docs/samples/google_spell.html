@@ -1,0 +1,28 @@
+<html><head></head><body><pre class="php"><span style="color: rgb(0, 0, 0); font-weight: bold;">&lt;?php</span>
+&nbsp;
+<span style="color: rgb(0, 0, 255);">$reqPayloadString</span> = &lt;&lt;&lt;XML
+&lt;ns1:doSpellingSuggestion x:encodingStyle=<span style="color: rgb(255, 0, 0);">"http://schemas.xmlsoap.org/soap/encoding/"</span> xmlns:ns1=<span style="color: rgb(255, 0, 0);">"urn:GoogleSearch"</span> xmlns:x=<span style="color: rgb(255, 0, 0);">"http://schemas.xmlsoap.org/soap/envelope/"</span> xmlns:xsi=<span style="color: rgb(255, 0, 0);">"http://www.w3.org/1999/XMLSchema-instance"</span> xmlns:xsd=<span style="color: rgb(255, 0, 0);">"http://www.w3.org/1999/XMLSchema"</span>&gt;
+	&lt;key xsi:type=<span style="color: rgb(255, 0, 0);">"xsd:string"</span>&gt;your_key_here&lt;/key&gt;
+	&lt;phrase xsi:type=<span style="color: rgb(255, 0, 0);">"xsd:string"</span>&gt;tamperature&lt;/phrase&gt;
+&lt;/ns1:doSpellingSuggestion&gt;
+XML;
+&nbsp;
+try <span style="color: rgb(102, 204, 102);">{</span>
+&nbsp;
+	<span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"to"</span> =&gt; <span style="color: rgb(255, 0, 0);">"http://api.google.com/search/beta2"</span>, 
+		<span style="color: rgb(255, 0, 0);">"useSOAP"</span> =&gt; <span style="color: rgb(204, 102, 204);">1.1</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>; 
+        
+	<span style="color: rgb(0, 0, 255);">$resMessage</span> = <span style="color: rgb(0, 0, 255);">$client</span>-&gt;<span style="color: rgb(0, 102, 0);">request</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$reqPayloadString</span><span style="color: rgb(102, 204, 102);">)</span>;
+    
+	<a href="http://www.php.net/printf"><span style="color: rgb(0, 0, 102);">printf</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"Response = %s &lt;br/&gt;<span style="color: rgb(0, 0, 153); font-weight: bold;">\n</span>"</span>, <a href="http://www.php.net/htmlspecialchars"><span style="color: rgb(0, 0, 102);">htmlspecialchars</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$resMessage</span>-&gt;<span style="color: rgb(0, 102, 0);">str</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
+    
+<span style="color: rgb(102, 204, 102);">}</span> catch <span style="color: rgb(102, 204, 102);">(</span>Exception <span style="color: rgb(0, 0, 255);">$e</span><span style="color: rgb(102, 204, 102);">)</span> <span style="color: rgb(102, 204, 102);">{</span>
+	<span style="color: rgb(177, 177, 0);">if</span> <span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$e</span> instanceof WSFault<span style="color: rgb(102, 204, 102);">)</span> <span style="color: rgb(102, 204, 102);">{</span>
+		<a href="http://www.php.net/printf"><span style="color: rgb(0, 0, 102);">printf</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"Soap Fault: %s<span style="color: rgb(0, 0, 153); font-weight: bold;">\n</span>"</span>, <span style="color: rgb(0, 0, 255);">$e</span>-&gt;<span style="color: rgb(0, 102, 0);">code</span><span style="color: rgb(102, 204, 102);">)</span>;
+	<span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(177, 177, 0);">else</span> <span style="color: rgb(102, 204, 102);">{</span>
+		<a href="http://www.php.net/printf"><span style="color: rgb(0, 0, 102);">printf</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"Message = %s<span style="color: rgb(0, 0, 153); font-weight: bold;">\n</span>"</span>,<span style="color: rgb(0, 0, 255);">$e</span>-&gt;<span style="color: rgb(0, 102, 0);">getMessage</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
+	<span style="color: rgb(102, 204, 102);">}</span>
+<span style="color: rgb(102, 204, 102);">}</span>
+&nbsp;
+<span style="color: rgb(0, 0, 0); font-weight: bold;">?&gt;</span>
+&nbsp;</pre></body></html>
