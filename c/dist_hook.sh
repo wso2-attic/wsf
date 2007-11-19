@@ -6,27 +6,27 @@ cd ../../
 
 cd axis2c/samples
 make dist
-tar -xf wso2-wsf-c-src-1.1.0.tar.gz
-mv wso2-wsf-c-src-1.1.0   ../../wso2-wsf-c-src-1.1.0/axis2c/samples
+tar -xf wso2-wsf-c-src-1.2.0.tar.gz
+mv wso2-wsf-c-src-1.2.0   ../../wso2-wsf-c-src-1.2.0/axis2c/samples
 
 cd ../../sandesha2c/samples
 make dist
-tar -xf wso2-wsf-c-src-1.1.0.tar.gz
-mv wso2-wsf-c-src-1.1.0   ../../wso2-wsf-c-src-1.1.0/sandesha2c/samples
+tar -xf wso2-wsf-c-src-1.2.0.tar.gz
+mv wso2-wsf-c-src-1.2.0   ../../wso2-wsf-c-src-1.2.0/sandesha2c/samples
 
 cd ../../rampartc/samples
 make dist
-tar -xf wso2-wsf-c-src-1.1.0.tar.gz
-mv wso2-wsf-c-src-1.1.0   ../../wso2-wsf-c-src-1.1.0/rampartc/samples
+tar -xf wso2-wsf-c-src-1.2.0.tar.gz
+mv wso2-wsf-c-src-1.2.0   ../../wso2-wsf-c-src-1.2.0/rampartc/samples
 
 cd ../../savanc/samples
 make dist
-tar -xf wso2-wsf-c-src-1.1.0.tar.gz
-mv wso2-wsf-c-src-1.1.0   ../../wso2-wsf-c-src-1.1.0/savanc/samples
+tar -xf wso2-wsf-c-src-1.2.0.tar.gz
+mv wso2-wsf-c-src-1.2.0   ../../wso2-wsf-c-src-1.2.0/savanc/samples
 
 cd ../../
 
-cd wso2-wsf-c-src-1.1.0
+cd wso2-wsf-c-src-1.2.0
 cp -r axis2c/xdocs docs/axis2c
 cp -r savanc/xdocs docs/savanc
 cp -r sandesha2c/xdocs docs/sandesha2c
@@ -43,5 +43,5 @@ rm -rf `find . -type d -name .libs`
 rm -rf `find . -type f -name Makefile`
 rm -rf `find . -type d -name autom4te.cache`
 
-grep -rl AXIS2C_HOME *| xargs sed -i "s/AXIS2C_HOME/WSFC_HOME/g"
+grep -rl WSFC_HOME *| xargs sed -i "s/WSFC_HOME/WSFC_HOME/g"
 cd ..
