@@ -13,7 +13,8 @@ libwso2_wsf_la_SOURCES= AxisFault.cpp \
 			OMNamespace.cpp \
 			OMText.cpp \
 			Property.cpp \
-			WSRESTClient.cpp
+			WSRESTClient.cpp \
+			NeethiPolicy.cpp
 
 INCLUDES = -I$(top_builddir)/include \
 		@AXIS2INC@

@@ -27,12 +27,14 @@
 #include <axis2_svc.h>
 #include <axis2_const.h>
 #include <axis2_http_transport.h>
+#include <platforms/axutil_platform_auto_sense.h>
 #include <AxisObject.h>
 #include <AxisFault.h>
 #include <ICallback.h>
 #include <Options.h>
 #include <OMElement.h>
 #include <OMNamespace.h>
+#include <NeethiPolicy.h>
 
 /**
  * @brief namespace wso2wsf Namespace of WSO2 Web Services Framework.
@@ -95,6 +97,12 @@ namespace wso2wsf
          * composite Options object.
          */
         Options * _options;
+
+	/**
+         * @var _policy private variable holds reference for
+         * associated policy object.
+         */
+        NeethiPolicy * _policy;
 
         /**
          * @var _endpoint_address private variable holds reference of the
@@ -211,10 +219,10 @@ namespace wso2wsf
 
         /**
          * Set the given policy object to the description hierarchy.
-         * @param policy neethi_policy_t to a policy struct.
+         * @param policy pointer to a policy struct.
          * @return true on success or false on failure.
          */
-        bool setPolicy(OMElement * policy);
+        bool setPolicy(NeethiPolicy * policy);
 
         /**
          * This method is used to interact with a service operation whose MEP is Robust Out-Only.

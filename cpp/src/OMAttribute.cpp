@@ -54,7 +54,7 @@ axiom_attribute_t * OMAttribute::getAxiomAttribute()
   */
  OMAttribute::OMAttribute(std::string name, std::string value)
 {
-    OMAttribute(name, value, NULL);
+    _wsf_axiom_attribute = axiom_attribute_create(getEnv(), name.c_str(), value.c_str(), NULL);
 }
 
 /** @brief OMAttribute
@@ -63,7 +63,8 @@ axiom_attribute_t * OMAttribute::getAxiomAttribute()
   */
  OMAttribute::OMAttribute(OMAttribute & attribute)
 {
-    OMAttribute(attribute.getName(), attribute.getValue(), attribute.getNamespace());
+    _wsf_axiom_attribute = axiom_attribute_create(getEnv(), (attribute.getName()).c_str(), 
+        (attribute.getValue()).c_str(), (attribute.getNamespace())->getAxiomNamespace());
 }
 
 /** @brief ~OMAttribute

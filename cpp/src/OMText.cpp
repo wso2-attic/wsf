@@ -268,7 +268,18 @@ bool OMText::setValue(std::string value)
   */
  OMText::OMText(OMDataHandler * data_handler)
 {
-    OMText(NULL, data_handler);
+    axiom_node_t * node;
+    axiom_data_handler_t * data_handler_c = NULL;
+    if (data_handler != NULL)
+    {
+        data_handler_c = data_handler->getAxiomDataHandler();
+    }
+    _wsf_axiom_text = axiom_text_create_with_data_handler(getEnv(), NULL, data_handler_c, &node);
+    if (_wsf_axiom_text)
+    {
+        setAxiomNode(node);
+        _parent = NULL;
+    }
 }
 
 /** @brief OMText
@@ -312,7 +323,20 @@ bool OMText::setValue(std::string value)
   */
  OMText::OMText(std::string value)
 {
-    OMText(NULL, value);
+    axiom_node_t * node;
+    if (value == "")
+    {
+        _wsf_axiom_text = axiom_text_create(getEnv(), NULL, NULL, &node);
+    }
+    else
+    {
+        _wsf_axiom_text = axiom_text_create(getEnv(), NULL, value.c_str(), &node);
+    }
+    if (_wsf_axiom_text)
+    {
+        setAxiomNode(node);
+        _parent = NULL;
+    }
 }
 
 /** @brief OMText

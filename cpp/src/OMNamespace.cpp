@@ -43,7 +43,7 @@ axiom_namespace_t * OMNamespace::getAxiomNamespace()
   */
  OMNamespace::OMNamespace(OMNamespace & ns)
 {
-    OMNamespace(ns.getURI(), ns.getPrefix());
+    _wsf_axiom_namespace = axiom_namespace_create(getEnv(), (ns.getURI()).c_str(), (ns.getPrefix()).c_str());
 }
 
 /** @brief ~OMNamespace

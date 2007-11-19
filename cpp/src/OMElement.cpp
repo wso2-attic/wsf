@@ -482,7 +482,15 @@ bool OMElement::setNamespace(OMNamespace * ns, bool no_find)
   */
  OMElement::OMElement(std::string localname)
 {
-    OMElement(NULL, localname, NULL);
+    _default_namespace = NULL;
+    axiom_node_t * node;
+    _wsf_axiom_element = axiom_element_create(getEnv(), NULL, localname.c_str(), NULL, &node);
+    if (_wsf_axiom_element)
+    {
+        setAxiomNode(node);
+        _parent = NULL;
+        _namespace = NULL;
+    }
 }
 
 /** @brief OMElement
@@ -491,7 +499,20 @@ bool OMElement::setNamespace(OMNamespace * ns, bool no_find)
   */
  OMElement::OMElement(std::string localname, OMNamespace * ns)
 {
-    OMElement(NULL, localname, ns);
+    _default_namespace = NULL;
+    axiom_node_t * node;
+    axiom_namespace_t * ns_c = NULL;
+    if (ns != NULL)
+    {
+        ns_c = ns->getAxiomNamespace();
+    }
+    _wsf_axiom_element = axiom_element_create(getEnv(), NULL, localname.c_str(), ns_c, &node);
+    if (_wsf_axiom_element)
+    {
+        setAxiomNode(node);
+        _parent = NULL;
+        _namespace = ns;
+    }
 }
 
 /** @brief detach

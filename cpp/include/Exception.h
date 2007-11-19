@@ -50,7 +50,7 @@ namespace wso2wsf
          * @param e exception object.
          * @return a modified output stream is returned.
          */
-        friend std::ostream &operator<<(std::ostream & str, Exception const & e);
+        friend std::ostream & operator <<(std::ostream & str, Exception const & e);
 
     private:
         /**
@@ -86,7 +86,7 @@ namespace wso2wsf
     };
     /** @} */
 
-    inline std::ostream &operator<<(std::ostream & str, Exception const & e)
+    inline std::ostream & operator <<(std::ostream & str, Exception const & e)
     {
         return str << e.operator std::string();
     }
