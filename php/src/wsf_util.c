@@ -374,7 +374,7 @@ wsf_svc_info_create (
     svc_info->modules_to_engage = NULL;
     svc_info->ht_op_params = NULL;
     svc_info->op_name = NULL;
-    
+    svc_info->class_args = NULL;
     svc_info->sig_model_string = NULL;
     return svc_info;
 }
