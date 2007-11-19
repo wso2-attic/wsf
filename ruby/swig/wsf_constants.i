@@ -90,9 +90,9 @@ typedef enum axis2_key_type_t
     AXIS2_KEY_TYPE_DER
 } axis2_key_type_t;
 
-#define AXIS2C_HOME             "/opt/wso2/wsf"
-#define DEFAULT_LOG_FILE        "/tmp/wsf_ruby_client.log"
-#define DEFAULT_CONTENT_TYPE    "application/octet-stream"
+#define WSF_DEFAULT_WSF_HOME        "/opt/wso2/wsf"
+#define WSF_DEFAULT_LOG_FILE_NAME   "wsf_ruby_client.log"
+#define WSF_DEFAULT_CONTENT_TYPE    "application/octet-stream"
 
 #define AXIS2_ELEMENT_LN_INCLUDE             "Include"
 #define AXIS2_NAMESPACE_URI_INCLUDE          "http://www.w3.org/2004/08/xop/include"
@@ -161,6 +161,10 @@ typedef enum axis2_key_type_t
 #define WSF_SEC_TOK_OPT_PWD          "password"
 #define WSF_SEC_TOK_OPT_PWD_TYPE     "password_type"
 #define WSF_SEC_TOK_OPT_TTL          "ttl"
+
+#define WSF_CONF_LOG_DIR    "WSF_LOG_DIR"
+#define WSF_CONF_LOG_LEVEL  "WSF_LOG_LEVEL"
+#define WSF_CONF_WSFC_HOME  "WSFC_HOME"
 
 /* AXIS2_TRANSPORT_H */
 

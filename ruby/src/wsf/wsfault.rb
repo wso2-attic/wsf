@@ -19,15 +19,15 @@ module WSO2
     class WSFault < StandardError
       
       def initialize (code, reason, role = "", detail = "", xml = "")
-	@code = code
-	@reason = reason
-	@role = role
-	@detail = detail
-	@xml = xml
+	    @code = code.to_s
+	    @reason = reason.to_s
+	    @role = role.to_s
+	    @detail = detail.to_s
+	    @xml = xml.to_s
       end
 
       def to_s
-	return "[" + @code + "]" + @reason + "|" + @role + "|" + @detail
+	    return "[" + @code + "]" + @reason + "|" + @role + "|" + @detail
       end
 
       attr_reader :code, :reason, :role, :detail, :xml

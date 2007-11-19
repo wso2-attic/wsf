@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'WSFC'
-
 module WSO2
 
   module WSF
@@ -21,13 +19,13 @@ module WSO2
     class WSSecurityToken
 
        def initialize(policy)
-	  return unless policy.kind_of? Hash
-	  @policy = policy
+	     return unless policy.kind_of? Hash
+	     @policy = policy
        end
 
        
        def option(option_name)
-	  return @policy.has_key?(option_name) ? @policy[option_name] : nil
+	     return @policy.has_key?(option_name) ? @policy[option_name] : nil
        end 
 
     end   
