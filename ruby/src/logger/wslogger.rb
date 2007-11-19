@@ -27,7 +27,7 @@ module WSO2
 		return unless file_name.kind_of? String
 		return if (log_level < 0) or (log_level > 4)
 
-		@@file_logger = Logger.new(file_name)
+		@@file_logger = ::Logger.new(file_name)
 		@@file_logger.level = log_level
 	  end
 

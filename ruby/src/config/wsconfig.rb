@@ -48,7 +48,7 @@ module WSO2
 	  def WSConfig.read_bool(key)
 	    value = read_string(key).upcase
 
-		return WSF_CONF_TRUE.include? value
+		return WSF_CONF_TRUE.include?(value)
 	  end
 
 	  # Read Directory
