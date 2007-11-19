@@ -347,7 +347,7 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
     if(!php_payload){
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                          "[wsf_wsdl]request payload is not found");
-        return;
+       /* return; */
     }
     
     request_doc = wsf_wsdl_create_request_envelope(php_payload, soap_version, 
@@ -474,18 +474,21 @@ xmlDocPtr wsf_wsdl_create_request_envelope(char *php_payload,
     
         head = xmlNewChild (envelope, ns, 
                             BAD_CAST (AXIOM_SOAP_HEADER_LOCAL_NAME), NULL);
-        payload_doc = xmlParseMemory(php_payload, strlen(php_payload) + 1);
-        if(!payload_doc)
-            return NULL;
-        
-        payload = xmlDocGetRootElement(payload_doc);
-
-        if(!payload)
-            return NULL;
-        body = xmlNewChild (envelope, ns, BAD_CAST (AXIOM_SOAP_BODY_LOCAL_NAME),
+		body = xmlNewChild (envelope, ns, BAD_CAST (AXIOM_SOAP_BODY_LOCAL_NAME),
                             NULL);
+	
+		if(php_payload){
+        	payload_doc = xmlParseMemory(php_payload, strlen(php_payload) + 1);
+        	if(!payload_doc)
+            	return NULL;
         
-        xmlAddChild(body, payload);
+        	payload = xmlDocGetRootElement(payload_doc);
+
+        	if(!payload)
+            	return NULL;
+      
+          	xmlAddChild(body, payload);
+		}
         return doc;
 }
 

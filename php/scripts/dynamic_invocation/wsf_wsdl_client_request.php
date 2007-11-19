@@ -173,6 +173,10 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
         else
             $tmp_param_struct = $child_array;
     }
+    /* no wrapper elements most probably getter functions */
+    if(count($tmp_param_struct) == 0)
+        return NULL;
+
     $payload_dom = new DOMDocument('1.0', 'iso-8859-1');
     $element = $payload_dom->createElementNS($tmp_param_struct[$ele_name][WSF_NS], "ns1:".$ele_name);
     if(is_object($arguments[0])){
