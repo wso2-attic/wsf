@@ -13,6 +13,10 @@
 #include <axiom_util.h>
 #include "wsf_xml_msg_recv.h"
 
+#ifndef RSTRING_PTR
+    #define RSTRING_PTR(x) (RSTRING(x)->ptr)
+#endif
+
 static axutil_env_t *ws_env_svr;
 static axis2_msg_recv_t * wsf_msg_recv;
 static wsf_worker_t * worker;
@@ -236,7 +240,7 @@ hash_each_action(VALUE key, VALUE value, VALUE arg)
     svc_info = wsservice->svc_info;
     
     operation_name = RSTRING_PTR(value);
-    wsa_action = RSTRING_PTR(wsa_action);
+    wsa_action = RSTRING_PTR(key);
 
     func_name = axutil_hash_get (svc_info->ops_to_functions,
             operation_name, AXIS2_HASH_KEY_STRING);
@@ -301,61 +305,70 @@ wsf_ruby_req_info_fill(wsf_req_info_t *req_info, VALUE request)
         if (temp != Qnil) 
         {
             req_info->request_uri = RSTRING_PTR(temp);
-            printf("%s\n", req_info->request_uri);
+            AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                          "[wsf_service] request uri: %s",req_info->request_uri);
         }
 
         temp = rb_hash_aref(renv, rb_str_new2("HTTP_CONTENT_ENCODING"));
         if( temp != Qnil)
         {
             req_info->content_encoding = RSTRING_PTR(temp);
-            printf("%s\n", req_info->content_encoding);
+            AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                          "[wsf_service] request http content encoding: %s",req_info->content_encoding);
         }
         temp = rb_hash_aref(renv, rb_str_new2("HTTP_TRANSFER_ENCODING"));
         if( temp != Qnil)
         {
             req_info->transfer_encoding = RSTRING_PTR(temp);
-            printf("%s\n", req_info->transfer_encoding);
+            AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                          "[wsf_service] request transfer encoding : %s",req_info->transfer_encoding);
         }
         temp = rb_hash_aref(renv, rb_str_new2("SERVER_NAME"));
         if( temp != Qnil)
         {
             req_info->svr_name = RSTRING_PTR(temp);
-            printf("%s\n", req_info->svr_name);
+            AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                          "[wsf_service] request server name: %s",req_info->svr_name);
         }
 
         temp = rb_hash_aref(renv, rb_str_new2("SERVER_PORT"));
         if( temp != Qnil)
         {
             req_info->svr_port = atoi(RSTRING_PTR(temp));
-            printf("%d\n", req_info->svr_port);
+            AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                          "[wsf_service] request server port: %s",req_info->svr_port);
         }
 
         temp = rb_hash_aref(renv, rb_str_new2("SERVER_PROTOCOL"));
         if( temp != Qnil)
         {
             req_info->http_protocol = RSTRING_PTR(temp);
-            printf("%s\n", req_info->http_protocol);
+            AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                          "[wsf_service] request server protocol: %s",req_info->http_protocol);
         }
 
         temp = rb_hash_aref(renv, rb_str_new2("CONTENT_TYPE"));
         if( temp != Qnil)
         {
             req_info->content_type = RSTRING_PTR(temp);
-            printf("%s\n", req_info->content_type);
+            AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                          "[wsf_service] request content type: %s",req_info->content_type);
         }
 
         temp = rb_hash_aref(renv, rb_str_new2("SOAP_ACTION"));
         if( temp != Qnil)
         {
             req_info->soap_action = RSTRING_PTR(temp);
-            printf("%s\n", req_info->soap_action);
+            AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                          "[wsf_service] request soap action: %s",req_info->soap_action);
         }
 
         temp = rb_hash_aref(renv, rb_str_new2("REQUEST_METHOD"));
         if( temp != Qnil)
         {
             req_info->request_method = RSTRING_PTR(temp);
-            printf("%s\n", req_info->request_method);
+            AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                          "[wsf_service] request method: %s",req_info->request_method);
         }
 
         /* get content and content length */
@@ -363,14 +376,17 @@ wsf_ruby_req_info_fill(wsf_req_info_t *req_info, VALUE request)
         if( temp != Qnil)
         {
             request_envelope_len= atoi(RSTRING_PTR(temp));
+            AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                          "[wsf_service] request htp content length: %d",request_envelope_len);
         }
         
         v_rawpost = rb_funcall(request, rb_intern("raw_post"), 0);
-        if(v_rawpost)
+        if(v_rawpost != Qnil)
         {
             request_envelope = RSTRING_PTR(v_rawpost);
-            printf("%s\n", request_envelope);
-            request_envelope_len = strlen(request_envelope);
+            AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                          "[wsf_service] request raw post data: %s",request_envelope);
+            /* request_envelope_len = strlen(request_envelope); */
         }
         else
         {
@@ -607,10 +623,13 @@ wsservice_reply(VALUE self, VALUE request, VALUE response)
 void
 Init_wsservice()
 {
-    VALUE wsf_home;
-    VALUE log_path;
-    VALUE log_level;
+    VALUE v_wsf_home;
+    VALUE v_log_path;
+    VALUE v_log_level;
     VALUE rm_db_dir;
+    int log_level;
+    axis2_char_t *wsf_home;
+    axis2_char_t *log_path;
 
 
     rb_mWSO2 = rb_define_module("WSO2");
@@ -626,20 +645,62 @@ Init_wsservice()
    
     rb_require("rbconfig");
     
-    wsf_home = rb_eval_string("Config::CONFIG['WSFC_HOME']");
-    printf("%s\n", RSTRING_PTR(wsf_home));
+    v_wsf_home = rb_eval_string("Config::CONFIG['WSFC_HOME']");
+    if(v_wsf_home == Qnil)
+    {
+        return;
+    }
+    wsf_home = RSTRING_PTR(v_wsf_home);
 
-    log_path = rb_eval_string("Config::CONFIG['WSFC_LOG_PATH']");
-    printf("%s\n", RSTRING_PTR(log_path));
+    v_log_path = rb_eval_string("Config::CONFIG['WSFC_LOG_PATH']");
+    if(v_log_path == Qnil)
+    {
+        log_path = "/tmp";
+    }
+    else
+    {
+        log_path = RSTRING_PTR(v_log_path);
+    }
 
-    log_level = rb_eval_string("Config::CONFIG['WSFC_LOG_LEVEL']");
-    printf("%s\n", RSTRING_PTR(log_level));
+    v_log_level = rb_eval_string("Config::CONFIG['WSFC_LOG_LEVEL']");
+    if(v_log_level == Qnil)
+    {
+        log_level = 3;
+    }
+    else
+    {
+        log_level = atoi(RSTRING_PTR(v_log_path));
+    }
 
-    ws_env_svr = wsf_env_create_svr(RSTRING_PTR(log_path), 
-                                    atoi(RSTRING_PTR(log_level)));
+    ws_env_svr = wsf_env_create_svr(log_path, 
+                                    log_level);
+
+    if(v_wsf_home == Qnil)
+    {
+        AXIS2_LOG_ERROR (ws_env_svr->log, AXIS2_LOG_SI, 
+                          "[wsf_service] WSFC_HOME is not set");
+        return;
+    }
+    AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                          "[wsf_service] Using WSFC_HOME: %s", wsf_home);
+    if(v_log_path == Qnil)
+    {
+        AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI, 
+                          "[wsf_service] WSFC_LOG_PATH is not set, using /tmp as default log path");
+    }
+    AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                          "[wsf_service] Using WSFC_LOG_PATH: %s", log_path);
+
+    if(v_log_level == Qnil)
+    {
+        AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI, 
+                          "[wsf_service] WSFC_LOG_LEVEL is not set, using 3 as the default log level");
+    }
+    AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                          "[wsf_service] Using WSFC_LOG_LEVEL: %d", log_level);
   
     wsf_msg_recv = wsf_xml_msg_recv_create(ws_env_svr);
-    worker = wsf_worker_create(ws_env_svr, RSTRING_PTR(wsf_home), NULL);
+    worker = wsf_worker_create(ws_env_svr, wsf_home, NULL);
     axiom_xml_reader_init ();
         
 }

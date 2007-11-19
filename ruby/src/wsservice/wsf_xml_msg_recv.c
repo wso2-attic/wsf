@@ -27,6 +27,10 @@
 #include <string.h>
 #include <ruby.h>
 
+#ifndef RSTRING_PTR
+    #define RSTRING_PTR(x) (RSTRING(x)->ptr)
+#endif
+
 axis2_status_t AXIS2_CALL wsf_xml_msg_recv_invoke_business_logic_sync (
     axis2_msg_recv_t * msg_recv,
     const axutil_env_t * env,
@@ -603,7 +607,9 @@ wsf_xml_msg_recv_invoke_wsmsg (
 
         else
         {
+            
             res = rb_funcall(T_NIL, rb_intern(op_name), 1, msg);
+
             if(res != Qnil)
             {
                 if(rb_obj_is_kind_of(res, msg_klass))
@@ -632,7 +638,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
                     axis2_msg_ctx_set_wsa_action(out_msg_ctx, env, action);
              
                     res_payload = RSTRING_PTR(rb_hash_aref(properties, ID2SYM(rb_intern("str"))));
-						        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+					AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
 							            "[wsf log ]response payload %s", res_payload);
 
                     if(res_payload)

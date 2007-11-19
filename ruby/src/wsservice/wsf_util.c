@@ -300,7 +300,7 @@ wsf_env_create_svr (
     axis2_char_t log_path[250];
     axutil_env_t *env = NULL;
     axutil_thread_pool_t *thread_pool = NULL;
-    const axis2_char_t *LOG_NAME = "wsf_ruby_svr.log";
+    const axis2_char_t *LOG_NAME = "wsf_ruby_server.log";
     allocator = malloc (sizeof (axutil_allocator_t));
 
     allocator->free_fn = wsf_free_wrapper;
