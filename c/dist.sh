@@ -1,6 +1,6 @@
 set -e
 cp dist.sh dist_hook.sh /tmp
-grep -rl AXIS2C_HOME *| xargs sed -i "s/AXIS2C_HOME/WSFC_HOME/g"
+grep -rl WSFC_HOME *| xargs sed -i "s/WSFC_HOME/WSFC_HOME/g"
 export WSFC_HOME=`pwd`/deploy
 find . -name "*configure.ac" | xargs sed -i "s/-Werror//g"
 make distclean
@@ -9,8 +9,8 @@ make
 make install
 make samples
 make dist
-tar xf wso2-wsf-c-src-1.1.0.tar.gz
-cd wso2-wsf-c-src-1.1.0
+tar xf wso2-wsf-c-src-1.2.0.tar.gz
+cd wso2-wsf-c-src-1.2.0
 
 ./configure
 make maintainer-clean
