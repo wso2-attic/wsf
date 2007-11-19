@@ -94,7 +94,7 @@ void create_dynamic_client(zval *this_ptr, char *function, int function_len,
     
     smart_str_appends(&script_file_name, real_path);
     smart_str_appends(&xslt_location, real_path);
-    
+   
     if (instanceof_function (Z_OBJCE_P (this_ptr),
                              ws_client_proxy_class_entry TSRMLS_CC)) {
         if (zend_hash_find (Z_OBJPROP_P (this_ptr), WS_WSDL_WSCLIENT,
@@ -571,7 +571,10 @@ void wsf_wsdl_handle_client_security(HashTable *client_ht,
                                      axis2_svc_client_t * svc_client TSRMLS_DC)
 {
     zval *sec_token = NULL;
+    zval *policy = NULL;
     zval **tmp = NULL;
+    HashTable *policy_ht = NULL;
+    
     axiom_node_t *binding_policy_node = NULL;
     axiom_node_t *input_policy_node = NULL;
     axiom_node_t *output_policy_node = NULL;
@@ -598,46 +601,66 @@ void wsf_wsdl_handle_client_security(HashTable *client_ht,
     axis2_policy_include_t *policy_include = NULL;
     axis2_svc_t *svc = NULL;
 
-    
+    char *policy_xml = NULL;
 
-
-    HashTable *ht_policy = Z_ARRVAL_PP(policy_array);
-    if(!ht_policy)
-        return;
-
-    if(zend_hash_find(ht_policy, WS_WSDL_OP_POLICY, sizeof(WS_WSDL_OP_POLICY), 
-					  (void **)&policy_options) == SUCCESS
-       && Z_TYPE_PP(policy_options) == IS_STRING){
-        binding_policy_node = 
-            wsf_util_deserialize_buffer (env, Z_STRVAL_PP(policy_options));
+	/* If there are user defined policies it well be set instead of policies in WSDL */
+	
+    if (zend_hash_find (client_ht, WS_POLICY_NAME, sizeof (WS_POLICY_NAME),
+                        (void **) &tmp) == SUCCESS) {
+        policy = *tmp;
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                         "[wsf_wsdl]operation policy xml is  \n\t %s \n",
-                         Z_STRVAL_PP(policy_options));
+                         "[wsf_client] policy object found ");
+		
+        if (Z_TYPE_P (policy) == IS_OBJECT) {
+            policy_ht = Z_OBJPROP_P (policy);
+            if (zend_hash_find (policy_ht, "policy_xml", sizeof ("policy_xml"),
+                	(void **) &tmp) == SUCCESS
+            	&& (Z_TYPE_PP (tmp) == IS_STRING)) {
+            	policy_xml = Z_STRVAL_PP (tmp);
+              	input_policy_node = wsf_util_deserialize_buffer (env, policy_xml);
+            }
+            else
+                input_policy_node = wsf_do_create_policy (NULL, policy, env TSRMLS_CC);
+        }
+	
     }
-    
-    if(zend_hash_find(ht_policy, WS_WSDL_IN_POLICY, sizeof(WS_WSDL_IN_POLICY), 
-                      (void **)&policy_options) == SUCCESS
-       && Z_TYPE_PP(policy_options) == IS_STRING){
-        input_policy_node = 
-            wsf_util_deserialize_buffer (env, Z_STRVAL_PP(policy_options));
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                         "[wsf_wsdl]input policy xml is  \n\t %s \n",
-                         Z_STRVAL_PP(policy_options));
+    else{
+    	HashTable *ht_policy = Z_ARRVAL_PP(policy_array);
+        if(!ht_policy)
+            return;
+        
+    	if(zend_hash_find(ht_policy, WS_WSDL_OP_POLICY, sizeof(WS_WSDL_OP_POLICY), 
+                          (void **)&policy_options) == SUCCESS
+           && Z_TYPE_PP(policy_options) == IS_STRING){
+            binding_policy_node = 
+            	wsf_util_deserialize_buffer (env, Z_STRVAL_PP(policy_options));
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                             "[wsf_wsdl]operation policy xml is  \n\t %s \n",
+                             Z_STRVAL_PP(policy_options));
+    	}
+        
+    	if(zend_hash_find(ht_policy, WS_WSDL_IN_POLICY, sizeof(WS_WSDL_IN_POLICY), 
+            	          (void **)&policy_options) == SUCCESS
+           && Z_TYPE_PP(policy_options) == IS_STRING){
+            input_policy_node = 
+            	wsf_util_deserialize_buffer (env, Z_STRVAL_PP(policy_options));
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                             "[wsf_wsdl]input policy xml is  \n\t %s \n",
+                             Z_STRVAL_PP(policy_options));
+    	}
+        
+    	if(zend_hash_find(ht_policy, WS_WSDL_OUT_POLICY, sizeof(WS_WSDL_OUT_POLICY),
+                          (void **)&policy_options) == SUCCESS
+           && Z_TYPE_PP(policy_options) == IS_STRING){
+            output_policy_node = 
+            	wsf_util_deserialize_buffer (env, Z_STRVAL_PP(policy_options));
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                             "[wsf_wsdl]output policy xml is  \n\t %s \n",
+            	             Z_STRVAL_PP(policy_options));
+    	}
     }
-    
-    if(zend_hash_find(ht_policy, WS_WSDL_OUT_POLICY, sizeof(WS_WSDL_OUT_POLICY),
-                      (void **)&policy_options) == SUCCESS
-       && Z_TYPE_PP(policy_options) == IS_STRING){
-        output_policy_node = 
-            wsf_util_deserialize_buffer (env, Z_STRVAL_PP(policy_options));
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                         "[wsf_wsdl]output policy xml is  \n\t %s \n",
-                         Z_STRVAL_PP(policy_options));
-
-    }
-    
     /* no need to change so many things just want to public some functions in wsf_policy.c */
-
+    
     {                          
         tmp_rampart_ctx.certificate = NULL;
         tmp_rampart_ctx.password = NULL;
@@ -649,7 +672,7 @@ void wsf_wsdl_handle_client_security(HashTable *client_ht,
         tmp_rampart_ctx.callback_function = NULL;
     }
     
-
+    
     if (zend_hash_find (client_ht, WS_SECURITY_TOKEN,
                         sizeof (WS_SECURITY_TOKEN), (void **) &tmp) == SUCCESS
         && Z_TYPE_PP (tmp) == IS_OBJECT) {
@@ -703,13 +726,13 @@ void wsf_wsdl_handle_client_security(HashTable *client_ht,
                                               input_policy_root_ele);
                 normalized_input_neethi_policy = 
                     neethi_engine_get_normalize(env, AXIS2_FALSE, 
-												input_neethi_policy);
+                                                input_neethi_policy);
                 neethi_policy_free(input_neethi_policy, env);
                 input_neethi_policy = NULL;
-           } 
+            } 
         }
     }
-
+    
     if(normalized_input_neethi_policy && normalized_binding_neethi_policy ){
         merged_input_neethi_policy = 
             neethi_engine_merge(env, normalized_input_neethi_policy, 
@@ -1105,7 +1128,6 @@ void wsf_wsdl_handle_server_security(wsf_svc_info_t *svc_info,
     
     /** engage module rampart */
 
-    
     worker = svc_info->php_worker;
 				
     conf = axis2_conf_ctx_get_conf (wsf_worker_get_conf_ctx(worker, env), env);

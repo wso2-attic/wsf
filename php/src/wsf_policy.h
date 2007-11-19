@@ -29,14 +29,6 @@
 #include <rampart_context.h>
 
 
-/** ws_policy options */
-/* #define WS_POLICY_NAMESPACE_URI "http://schemas.xmlsoap.org/ws/2004/09/policy" */
-/* #define WS_POLICY_NAMESPACE "wsp" */
-/* #define WS_SEC_POLICY_NAMESPACE_URI  "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy" */
-/* #define WS_SEC_POLICY_NAMESPACE "sp" */
-/* #define WS_POLICY_ALL "All" */
-/* #define WS_POLICY_EXACTLYONE "ExactlyOne" */
-/* #define WS_POLICY_ASYMMETRIC_BINDING "AsymmetricBinding" */
 #define WS_POLICY "Policy"
 
 #define WS_IN_POLICY "inpolicy"
@@ -76,12 +68,7 @@
 #define WS_PASSWORD "password"
 #define WS_PRIVATE_KEY "privateKey"
 #define WS_TTL "ttl"
-/* #define WS_CERTIFICATE_FORMAT "certificateFormat" */
-/* #define WS_PVT_KEY_FORMAT "privateKeyFormat" */
 #define WS_RECEIVER_CERTIFICATE "receiverCertificate"
-/* #define WS_RECEIVER_CERTIFICATE_FORMAT "receiverCertificateFormat" */
-/* #define WS_INFLOW_SECURITY_POLICY  "InflowRampartContext" */
-/* #define WS_OUTFLOW_SECURITY_POLICY "OutflowRampartContext" */
 #define WS_RAMPART_CONFIGURATION "RampartConfiguration"
 #define WS_DIGEST "Digest"
 #define WS_PLAINTEXT "plainText"
@@ -156,7 +143,10 @@ int wsf_set_options_to_rampart_ctx (rampart_context_t * in_rampart_ctx,
                                     axiom_node_t * incoming_policy_node,
                                     tokenProperties_t tmp_rampart_ctx);
 
-
+axiom_node_t *wsf_do_create_policy (
+    zval * sec_token,
+    zval * policy,
+    axutil_env_t * env TSRMLS_DC);
 
 
 
