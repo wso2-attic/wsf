@@ -222,7 +222,9 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
 
     HashTable *ht_return = Z_ARRVAL_P(function_return_value);
     zval **tmp_options = NULL;
-
+    axis2_char_t *proxy_host = NULL;
+    axis2_char_t *proxy_port = NULL;
+    
     if(zend_hash_find(ht_return, WS_WSDL_ENDPOINT_URI, 
 					  sizeof(WS_WSDL_ENDPOINT_URI),
 					  (void **)&tmp_options) == SUCCESS && 
@@ -320,6 +322,23 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
     to_epr = axis2_endpoint_ref_create (env, endpoint_address);
     axis2_options_set_to (client_options, env, to_epr);
     
+/** add proxy options **/
+
+    if (zend_hash_find (Z_OBJPROP_P (client_zval), WS_PROXY_HOST, sizeof (WS_PROXY_HOST),
+                        (void **)&tmp_options) == SUCCESS) {
+        proxy_host = Z_STRVAL_PP (tmp_options);
+    }
+    if (zend_hash_find (Z_OBJPROP_P (client_zval), WS_PROXY_PORT, sizeof (WS_PROXY_PORT),
+                        (void **)&tmp_options) == SUCCESS) {
+        proxy_port = Z_STRVAL_PP (tmp_options);
+    }
+    if (proxy_host && proxy_port) {
+        axis2_svc_client_set_proxy (svc_client, env, proxy_host, proxy_port);
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                         "[wsf_wsdl_client] setting proxy options %s -- %s -- ", proxy_host,
+                         proxy_port);
+    }
+
     if(soap_action){
         axutil_string_t *action_string = axutil_string_create (env, soap_action);
         axis2_options_set_soap_action (client_options, env, action_string);
