@@ -1,12 +1,25 @@
+WSO2 WSF/C 1.2.0
+================
+	On top of the 1.1.0 features, the following were added:
+	1. WS-Security
+		* Signature confirmation support
+		* HMAC-SHA1 support
+		* Key derivation module
+		* X509 Thumbprint support
+
+-- WSO2 WSF/C team <wsf-c-dev@wso2.org>  Tuesday, 20th November 2007
+
+
+
 WSO2 WSF/C 1.0.1
 ================
-    On top of the 1.0.0 features, the following were added:
+	On top of the 1.0.0 features, the following were added:
 	1. TCP transport layer (in Axis2/C)
 	2. Some bug fixes (Please see https://wso2.org/jira/browse/WSFC 
-                       for detailed information on the bug fixes)
+	for detailed information on the bug fixes)
 
 
--- WSO2 WSF4C team <wsf-c-dev@wso2.org>  Monday, 30th July 2007
+-- WSO2 WSF/C team <wsf-c-dev@wso2.org>  Monday, 30th July 2007
 
 
 WSO2 WSF/C 1.0.0
@@ -38,5 +51,5 @@ WSO2 WSF/C 1.0.0
 	9. wsclient command line tool to consume Web services.
 
 
--- WSO2 WSF4C team <wsf-c-dev@wso2.org>  Wed, 18 Jan 2007
+-- WSO2 WSF/C team <wsf-c-dev@wso2.org>  Wed, 18 Jan 2007
 
