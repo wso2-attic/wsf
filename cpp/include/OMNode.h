@@ -48,6 +48,22 @@ namespace wso2wsf
      */
     class OMNode : public AxisObject
     {
+        /**
+         * Overloaded insertion operator, is used for printing the node onto a console.
+         * @param str existing stream.
+         * @param node OMNode object.
+         * @return a modified output stream is returned.
+         */
+        friend std::ostream & operator <<(std::ostream & str, OMNode const & node);
+
+        /**
+         * Overloaded insertion operator, is used for printing the node onto a console.
+         * @param str existing stream.
+         * @param node OMNode object.
+         * @return a modified output stream is returned.
+         */
+        friend std::ostream & operator <<(std::ostream & str, OMNode const * node);
+
     private:
         /**
          * @var _wsf_axiom_node protected variable holds reference for
@@ -112,18 +128,6 @@ namespace wso2wsf
          */
         virtual bool insertSiblingBefore(OMNode * to_insert);
 
-        //        /**
-        //        * Serializes the given node. This op makes the node go
-        //        * through its children and  serialize them in order.
-        //        * @param node node to be serialized.  cannot be NULL.
-        //        * @param om_output AXIOM output handler to be used in serializing
-        //        * @return satus of the op. AXIS2_SUCCESS on success else AXIS2_FAILURE
-        //        */
-        //        AXIS2_EXTERN axis2_status_t AXIS2_CALL
-        //        axinode_serialize(axinode_t * node,
-        //            const axutil_env_t * env,
-        //            struct axiom_output *om_output);
-
         /**
          * Detaches given node from the parent and reset the links.
          * @return a pointer to detached node,returns NULL on error with error
@@ -159,33 +163,6 @@ namespace wso2wsf
          */
         virtual axiom_types_t nodeType() = 0;
 
-        //       /**
-        //        * get the struct contained in the node
-        //        * IF the node is on type AXIOM_ELEMENT , this method returns
-        //        * a pointer to  axiom_element_t struct contained
-        //        * @param node node
-        //        * @returns pointer to struct contained in the node
-        //        * returns NULL if no struct is contained
-        //        */
-        //        AXIS2_EXTERN void *AXIS2_CALL
-        //        axinode_get_data_element(wsf_axinode node);
-
-//                    /**
-//                     * returns the associated document,
-//                     * only valid if built using builder and for a node of type
-//                     * AXIOM_ELEMENT
-//                     * returns null if no document is available
-//                     * @param node
-//                     * @return the associated document
-//                     */
-//                    wsf_axiom_document get_document(OMNode * node);
-
-        //        AXIS2_EXTERN axis2_status_t AXIS2_CALL
-        //        axinode_serialize_sub_tree(
-        //            axinode_t * node,
-        //            const axutil_env_t * env,
-        //            struct axiom_output *om_output);
-
         /**
          * Converts sub tree starting from given node to string.
          * @return converted node as string.
@@ -193,5 +170,15 @@ namespace wso2wsf
         virtual std::string subTreeToString();
     };
     /** @} */
+
+    inline std::ostream & operator <<(std::ostream & str, OMNode const & node)
+    {
+        return str << const_cast<OMNode &>(node).toString();
+    }
+
+    inline std::ostream & operator <<(std::ostream & str, OMNode const * node)
+    {
+        return str << const_cast<OMNode *>(node)->toString();
+    }
 }
 #endif // OMNODE_H

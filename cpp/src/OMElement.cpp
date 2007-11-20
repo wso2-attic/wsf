@@ -386,17 +386,18 @@ OMNamespace * OMElement::getNamespace(bool is_default)
         }
         return _default_namespace;
     }
+    if (_namespace)
+    {
+        return _namespace;
+    }
     axiom_namespace_t * ns =
         axiom_element_get_namespace(_wsf_axiom_element, getEnv(), getAxiomNode());
     if(!ns)
     {
         return NULL;
     }
-    if (!_namespace)
-    {
-        _namespace = new OMNamespace(axiom_namespace_get_uri(ns, getEnv()),
-            axiom_namespace_get_prefix(ns, getEnv()));
-    }
+    _namespace = new OMNamespace(axiom_namespace_get_uri(ns, getEnv()),
+        axiom_namespace_get_prefix(ns, getEnv()));
     return _namespace;
 }
 
@@ -612,16 +613,6 @@ bool OMElement::build()
     return (status == AXIS2_SUCCESS);
 }
 
-/** @brief toString
-  *
-  * @todo: document this function
-  */
-string OMElement::toString()
-{
-    return axiom_node_to_string(getAxiomNode(), getEnv());
-    //return axiom_element_to_string(_wsf_axiom_element, getEnv(), getAxiomNode());
-}
-
 /** @brief getChildElement
   *
   * @todo: document this function
@@ -652,7 +643,29 @@ OMElement * OMElement::getChildElement(std::string localname, OMNamespace * ns)
   */
  OMElement::OMElement(OMNode * parent, std::string localname)
 {
-    OMElement(parent, localname, NULL);
+    axiom_node_t * node;
+    axiom_node_t * parent_c = NULL;
+    if (parent != NULL)
+    {
+        parent_c = parent->getAxiomNode();
+    }
+    _wsf_axiom_element = axiom_element_create(getEnv(), parent_c, localname.c_str(), NULL, &node);
+    if (_wsf_axiom_element)
+    {
+        setAxiomNode(node);
+        _parent = parent;
+        if (_parent != NULL)
+        {
+            try
+            {
+                OMElement * dp = dynamic_cast<OMElement *>(_parent);
+                dp->addChildLocal(this);
+            }
+            catch(bad_cast)
+            {}
+        }
+        _namespace = NULL;
+    }
 }
 
 /** @brief addChild

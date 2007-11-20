@@ -44,6 +44,22 @@ namespace wso2wsf
      */
     class OMAttribute : public AxisObject
     {
+        /**
+         * Overloaded insertion operator, is used for printing the attribute onto a console.
+         * @param str existing stream.
+         * @param attribute OMAttribute object.
+         * @return a modified output stream is returned.
+         */
+        friend std::ostream & operator <<(std::ostream & str, OMAttribute const & attribute);
+
+        /**
+         * Overloaded insertion operator, is used for printing the attribute onto a console.
+         * @param str existing stream.
+         * @param attribute OMAttribute object.
+         * @return a modified output stream is returned.
+         */
+        friend std::ostream & operator <<(std::ostream & str, OMAttribute const * attribute);
+
     private:
         /**
          * @var _wsf_axiom_attribute protected variable holds reference for
@@ -140,5 +156,15 @@ namespace wso2wsf
         virtual std::string toString();
     };
     /** @} */
+
+    inline std::ostream & operator <<(std::ostream & str, OMAttribute const & attribute)
+    {
+        return str << const_cast<OMAttribute &>(attribute).toString();
+    }
+
+    inline std::ostream & operator <<(std::ostream & str, OMAttribute const * attribute)
+    {
+        return str << const_cast<OMAttribute *>(attribute)->toString();
+    }
 }
 #endif // OMATTRIBUTE_H

@@ -46,6 +46,22 @@ namespace wso2wsf
      */
     class OMNamespace : public AxisObject
     {
+        /**
+         * Overloaded insertion operator, is used for printing the namespace onto a console.
+         * @param str existing stream.
+         * @param ns OMNamespace object.
+         * @return a modified output stream is returned.
+         */
+        friend std::ostream & operator <<(std::ostream & str, OMNamespace const & ns);
+
+        /**
+         * Overloaded insertion operator, is used for printing the namespace onto a console.
+         * @param str existing stream.
+         * @param ns OMNamespace object.
+         * @return a modified output stream is returned.
+         */
+        friend std::ostream & operator <<(std::ostream & str, OMNamespace const * ns);
+
     private:
         /**
          * @var _wsf_axiom_namespace protected variable holds reference for
@@ -110,5 +126,15 @@ namespace wso2wsf
         virtual std::string toString();
     };
     /** @} */
+
+    inline std::ostream & operator <<(std::ostream & str, OMNamespace const & ns)
+    {
+        return str << const_cast<OMNamespace &>(ns).toString();
+    }
+
+    inline std::ostream & operator <<(std::ostream & str, OMNamespace const * ns)
+    {
+        return str << const_cast<OMNamespace *>(ns)->toString();
+    }
 }
 #endif // OMNAMESPACE_H

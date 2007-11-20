@@ -310,12 +310,6 @@ namespace wso2wsf
         OMElement * getChildElement(std::string localname, OMNamespace * ns);
 
         /**
-         * returns the serilized text of this element and its children.
-         * @return a string of xml, returns NULL on error.
-         */
-        std::string toString();
-
-        /**
          * builds this om_element_node completely, This is only possible
          * if the om_stax_builder is associated with the om_element_node,
          * @return true if this element node was successfully completed,
