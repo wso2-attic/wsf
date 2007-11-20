@@ -299,7 +299,7 @@ wsf_ruby_req_info_fill(wsf_req_info_t *req_info, VALUE request)
 
     if (request && strcmp(rails_class, rb_class2name(CLASS_OF(request))) == 0) 
     {
-        /* we're inside Rails, weee! */
+        /* we're inside Rails, wheee! */
         renv = rb_funcall(request, rb_intern("env"), 0); /* request.env */
         temp = rb_hash_aref(renv, rb_str_new2("REQUEST_URI"));
         if (temp != Qnil) 
@@ -654,7 +654,7 @@ Init_wsservice()
     v_wsf_home = rb_eval_string("Config::CONFIG['WSFC_HOME']");
     if(v_wsf_home == Qnil)
     {
-        return;
+        rb_raise(rb_eException, "Please set WSFC_HOME, I cannot continue without it");
     }
     wsf_home = RSTRING_PTR(v_wsf_home);
 
@@ -681,6 +681,11 @@ Init_wsservice()
     ws_env_svr = wsf_env_create_svr(log_path, 
                                     log_level);
 
+    if(ws_env_svr == Qnil)
+    {
+        rb_raise(rb_eException, "Error creating ws_env_svr");
+    }
+    
     if(v_wsf_home == Qnil)
     {
         AXIS2_LOG_ERROR (ws_env_svr->log, AXIS2_LOG_SI, 
