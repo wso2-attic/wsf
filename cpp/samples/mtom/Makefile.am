@@ -1,4 +1,5 @@
-prgbindir=$(prefix)/bin/samples
+SUBDIRS=resources
+prgbindir=$(prefix)/bin/samples/mtom
 prgbin_PROGRAMS = mtom
 mtom_SOURCES = mtom.cpp
 
@@ -15,7 +16,14 @@ mtom_LDADD   = $(LDFLAGS) \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
-INCLUDES =	-I$(top_builddir)/include \
-		@AXIS2INC@
+INCLUDES = -I ../../include \
+                -I ../../wsf_c/axis2c/include \
+                -I ../../wsf_c/axis2c/neethi/include \
+                -I ../../wsf_c/axis2c/axiom/include \
+                -I ../../wsf_c/axis2c/util/include \
+                -I ../../wsf_c/rampartc/include \
+                -I ../../wsf_c/sandesha2c/include \
+                -I ../../wsf_c/savanc/include
+
 
 EXTRA_DIST=resources

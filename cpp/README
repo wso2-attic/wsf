@@ -1,0 +1,43 @@
+             WSO2 WSF/C++
+	    ==============
+
+VERSION
+-------
+1.0.0
+
+
+INTRODUCTION
+------------
+- WSO2 Web Services Framework for C++ (WSF/C++) is an extension to WSO2
+  Web Services Framework for C (WSF/C) wrapping the existing API. More on
+  WSF/C can be read at [http://www.wso2.org/projects/wsf/c]. This version
+  enables you to write client applications to consume Web Services.
+
+
+PREREQUISITES
+-------------
+- It is required to have WSO2 WSF/C installed on your machine in order to
+  compile and use this extension module.
+
+
+INSTALLATION
+------------
+- Read the installation guide (INSTALL).
+
+
+RUNNING SAMPLES
+---------------
+- Read README.SAMPLES for more information.
+
+FEATURES
+--------
+- Client
+  - Support for SOAP 1.1
+  - Support for SOAP 1.2
+  - Support for WS-Addressing
+  - Support for SOAP MTOM
+  - Support for WS-Security (with Rampart)
+  - Support for WS-Policy
+  - Support for WS-SecurityPolicy
+  - Support for REST style invocations
+

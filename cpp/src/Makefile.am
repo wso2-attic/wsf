@@ -14,9 +14,19 @@ libwso2_wsf_la_SOURCES= AxisFault.cpp \
 			OMText.cpp \
 			Property.cpp \
 			WSRESTClient.cpp \
-			NeethiPolicy.cpp
+			NeethiPolicy.cpp \
+			NeethiException.cpp \
+			NeethiObject.cpp \
+			OMException.cpp \
+			OMObject.cpp
 
-INCLUDES = -I$(top_builddir)/include \
-		@AXIS2INC@
+INCLUDES = -I ../include \
+		-I ../wsf_c/axis2c/include \
+		-I ../wsf_c/axis2c/neethi/include \
+		-I ../wsf_c/axis2c/axiom/include \
+		-I ../wsf_c/axis2c/util/include \
+		-I ../wsf_c/rampartc/include \
+		-I ../wsf_c/sandesha2c/include \
+		-I ../wsf_c/savanc/include 
 
 

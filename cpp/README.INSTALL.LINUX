@@ -1,0 +1,18 @@
+Building and Installing WSO2 WSF/C++ from Source on Linux.
+==========================================================
+
+Go to the directory where you have extracted the source distribution.
+Run the following:    
+    ./configure
+    make
+    make install
+
+Now you are ready to use WSO2 WSF/C++.
+
+Notes:
+ - You may require super user privileges to run 'make install' on your system.
+ - You may optionally specify the path in which the installation should be 
+   deployed using './configure --prefix=PATH'.
+ - If you don't provide the --prefix configure option, WSO2 WSF/C++ will by 
+   default be installed into, '/opt/wso2/wsf_cpp'
+ - You may run './configure --help' for more information on configure options.

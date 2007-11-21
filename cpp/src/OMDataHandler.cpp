@@ -109,27 +109,39 @@ string OMDataHandler::getContentType()
   *
   * @todo: document this function
   */
- OMDataHandler::OMDataHandler()
+ OMDataHandler::OMDataHandler() throw (OMException)
 {
     _wsf_axiom_data_handler = axiom_data_handler_create(getEnv(), NULL, NULL);
+    if (!_wsf_axiom_data_handler)
+    {
+        throw OMException("Unable to create OMDataHandler object");
+    }
 }
 
 /** @brief OMDataHandler
   *
   * @todo: document this function
   */
- OMDataHandler::OMDataHandler(std::string mime_type)
+ OMDataHandler::OMDataHandler(std::string mime_type) throw (OMException)
 {
     _wsf_axiom_data_handler = axiom_data_handler_create(getEnv(), NULL, mime_type.c_str());
+    if (!_wsf_axiom_data_handler)
+    {
+        throw OMException("Unable to create OMDataHandler object");
+    }
 }
 
 /** @brief OMDataHandler
   *
   * @todo: document this function
   */
- OMDataHandler::OMDataHandler(std::string file_name, std::string mime_type)
+ OMDataHandler::OMDataHandler(std::string file_name, std::string mime_type) throw (OMException)
 {
     _wsf_axiom_data_handler = axiom_data_handler_create(getEnv(), file_name.c_str(), mime_type.c_str());
+    if (!_wsf_axiom_data_handler)
+    {
+        throw OMException("Unable to create OMDataHandler object");
+    }
 }
 
 /** @brief getAxiomDataHandler

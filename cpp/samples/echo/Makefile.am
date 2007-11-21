@@ -1,4 +1,4 @@
-prgbindir=$(prefix)/bin/samples
+prgbindir=$(prefix)/bin/samples/echo
 prgbin_PROGRAMS = echo echo_rest echo_blocking echo_blocking_addr echo_blocking_soap11 echo_blocking_dual echo_non_blocking echo_non_blocking_dual echo_security
 echo_SOURCES = echo.cpp
 echo_rest_SOURCES = echo_rest.cpp
@@ -128,6 +128,14 @@ echo_security_LDADD   = $(LDFLAGS) \
                     $(LIBXML2_LIBS)
 
 
-INCLUDES =	-I$(top_builddir)/include \
+INCLUDES =	-I ../../include \
+                -I ../../wsf_c/axis2c/include \
+                -I ../../wsf_c/axis2c/neethi/include \
+                -I ../../wsf_c/axis2c/axiom/include \
+                -I ../../wsf_c/axis2c/util/include \
+                -I ../../wsf_c/rampartc/include \
+                -I ../../wsf_c/sandesha2c/include \
+                -I ../../wsf_c/savanc/include
+
 		@AXIS2INC@
 

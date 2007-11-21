@@ -17,10 +17,11 @@
 #ifndef NEETHIPOLICY_H
 #define NEETHIPOLICY_H
 
-#include <AxisObject.h>
+#include <NeethiObject.h>
 #include <OMElement.h>
 #include <neethi_policy.h>
 #include <neethi_util.h>
+#include <NeethiException.h>
 
 /**
  * @file NeethiPolicy.h
@@ -42,7 +43,7 @@ namespace wso2wsf
      * provide WS-Policy information. This is a wrapper to the XML policy
      * advertisement used in security, QoS etc.
      */
-    class NeethiPolicy : public AxisObject
+    class NeethiPolicy : public NeethiObject
     {
     private:
         /**
@@ -67,14 +68,18 @@ namespace wso2wsf
         /**
          * Creates a neethi_policy struct.
          * @param file_name file name.
+         * @exception NeethiException an exception is thrown if something goes wrong
+         * while creating the object.
          */
-        NeethiPolicy(std::string file_name);
+        NeethiPolicy(std::string file_name) throw(NeethiException);
 
         /**
          * Creates a neethi_policy struct.
          * @param element OM element which is the root of WS-Policy XML.
+         * @exception NeethiException an exception is thrown if something goes wrong
+         * while creating the object.
          */
-        NeethiPolicy(OMElement * element);
+        NeethiPolicy(OMElement * element) throw(NeethiException);
 
         /**
          * desctructor that frees resources.

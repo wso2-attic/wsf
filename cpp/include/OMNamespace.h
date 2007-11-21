@@ -19,9 +19,10 @@
 
 #include <stdio.h>
 #include <string>
-#include <AxisObject.h>
+#include <OMObject.h>
 #include <axiom_namespace.h>
 #include <AxisFault.h>
+#include <OMException.h>
 
 /**
  * @file OMNamespace.h
@@ -44,7 +45,7 @@ namespace wso2wsf
      * which identifies the particular occurance. This class provides an abstraction to
      * namespace associated with the XML model.
      */
-    class OMNamespace : public AxisObject
+    class OMNamespace : public OMObject
     {
         /**
          * Overloaded insertion operator, is used for printing the namespace onto a console.
@@ -86,14 +87,18 @@ namespace wso2wsf
          * Creates a namespace struct.
          * @param uri namespace URI.
          * @param prefix namespace prefix.
+         * @exception OMException an exception is thrown if something goes wrong
+         * while creating the object.
          */
-        OMNamespace(std::string uri, std::string prefix);
+        OMNamespace(std::string uri, std::string prefix) throw(OMException);
 
         /**
          * Copy Constructor.
          * @param om_namespace namespace to be cloned.
+         * @exception OMException an exception is thrown if something goes wrong
+         * while creating the object.
          */
-        OMNamespace(OMNamespace & om_namespace);
+        OMNamespace(OMNamespace & om_namespace) throw(OMException);
 
         /**
          * desctructor that frees resources.

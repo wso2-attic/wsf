@@ -32,7 +32,7 @@ axiom_attribute_t * OMAttribute::getAxiomAttribute()
   *
   * @todo: document this function
   */
- OMAttribute::OMAttribute(std::string name, std::string value, OMNamespace * ns)
+ OMAttribute::OMAttribute(std::string name, std::string value, OMNamespace * ns) throw(OMException)
 {
     if (!ns)
     {
@@ -41,10 +41,14 @@ axiom_attribute_t * OMAttribute::getAxiomAttribute()
     else
     {
         _wsf_axiom_attribute = axiom_attribute_create(getEnv(), name.c_str(), value.c_str(), ns->getAxiomNamespace());
-        if (!_wsf_axiom_attribute)
+        if (_wsf_axiom_attribute)
         {
             _namespace = ns;
         }
+    }
+    if (!_wsf_axiom_attribute)
+    {
+        throw OMException("Unable to create OMAttribute object");
     }
 }
 
@@ -52,19 +56,27 @@ axiom_attribute_t * OMAttribute::getAxiomAttribute()
   *
   * @todo: document this function
   */
- OMAttribute::OMAttribute(std::string name, std::string value)
+ OMAttribute::OMAttribute(std::string name, std::string value) throw(OMException)
 {
     _wsf_axiom_attribute = axiom_attribute_create(getEnv(), name.c_str(), value.c_str(), NULL);
+    if (!_wsf_axiom_attribute)
+    {
+        throw OMException("Unable to create OMAttribute object");
+    }
 }
 
 /** @brief OMAttribute
   *
   * @todo: document this function
   */
- OMAttribute::OMAttribute(OMAttribute & attribute)
+ OMAttribute::OMAttribute(OMAttribute & attribute) throw(OMException)
 {
-    _wsf_axiom_attribute = axiom_attribute_create(getEnv(), (attribute.getName()).c_str(), 
+    _wsf_axiom_attribute = axiom_attribute_create(getEnv(), (attribute.getName()).c_str(),
         (attribute.getValue()).c_str(), (attribute.getNamespace())->getAxiomNamespace());
+    if (!_wsf_axiom_attribute)
+    {
+        throw OMException("Unable to create OMAttribute object");
+    }
 }
 
 /** @brief ~OMAttribute

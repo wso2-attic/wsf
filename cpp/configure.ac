@@ -6,7 +6,7 @@ AC_INIT(wso2-wsf-cpp, 0.1)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE([tar-ustar])
-AC_PREFIX_DEFAULT(/usr/local/axis2c)
+AC_PREFIX_DEFAULT(/opt/wso2/wsf_cpp)
 
 dnl Checks for programs.
 AC_PROG_CC
@@ -45,6 +45,10 @@ fi
 
 dnl Checks for libraries.
 AC_CHECK_LIB(dl, dlopen)
+
+if test -d $srcdir/wsf_c; then
+    AC_CONFIG_SUBDIRS(wsf_c)
+fi
 
 
 CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
@@ -131,8 +135,17 @@ AC_CONFIG_FILES([Makefile \
 	samples/google/Makefile \
 	samples/math/Makefile \
 	samples/mtom/Makefile \
+	samples/mtom/resources/Makefile \
 	samples/notify/Makefile \
 	samples/yahoo/Makefile \
+	samples/secpolicy/Makefile  \
+	samples/secpolicy/scenario1/Makefile  \
+	samples/secpolicy/scenario2/Makefile  \
+	samples/secpolicy/scenario3/Makefile  \
+	samples/secpolicy/scenario4/Makefile  \
+	samples/secpolicy/scenario5/Makefile  \
+	samples/secpolicy/scenario6/Makefile  \
+	samples/secpolicy/scenario7/Makefile  \
 	samples/flickr/Makefile 
     ])
     

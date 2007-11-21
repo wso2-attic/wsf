@@ -18,8 +18,9 @@
 #define OMATTRIBUTE_H
 
 #include <OMNamespace.h>
-#include <AxisObject.h>
+#include <OMObject.h>
 #include <axiom_attribute.h>
+#include <OMException.h>
 
 /**
  * @file OMAttribute.h
@@ -42,7 +43,7 @@ namespace wso2wsf
      * This class provides an abstraction to occurances of attributes associated
      * with the XML model.
      */
-    class OMAttribute : public AxisObject
+    class OMAttribute : public OMObject
     {
         /**
          * Overloaded insertion operator, is used for printing the attribute onto a console.
@@ -91,21 +92,27 @@ namespace wso2wsf
          * @param name attribute Name.
          * @param value attribute Value.
          * @param ns namespace.
+         * @exception OMException an exception is thrown if something goes wrong
+         * while creating the object.
          */
-        OMAttribute(std::string name, std::string value, OMNamespace * ns);
+        OMAttribute(std::string name, std::string value, OMNamespace * ns) throw(OMException);
 
         /**
          * Creates a attribute struct.
          * @param name attribute Name.
          * @param value attribute Value.
+         * @exception OMException an exception is thrown if something goes wrong
+         * while creating the object.
          */
-        OMAttribute(std::string name, std::string value);
+        OMAttribute(std::string name, std::string value) throw(OMException);
 
         /**
          * Copy Constructor.
          * @param attribute attribute to be cloned.
+         * @exception OMException an exception is thrown if something goes wrong
+         * while creating the object.
          */
-        OMAttribute(OMAttribute & attribute);
+        OMAttribute(OMAttribute & attribute) throw(OMException);
 
         /**
          * desctructor that frees resources.

@@ -21,7 +21,7 @@
 #include <OMNode.h>
 #include <OMElement.h>
 #include <OMDataHandler.h>
-
+#include <OMException.h>
 /**
  * @file OMText.h
  */
@@ -65,39 +65,51 @@ namespace wso2wsf
          * Creates an om text struct.
          * @param parent parent element.
          * @param value Text value. Optinal, can be NULL.
+         * @exception OMException an exception is thrown if something goes wrong
+         * while creating the object.
          */
-        OMText(OMNode * parent, std::string value);
+        OMText(OMNode * parent, std::string value) throw(OMException);
 
         /**
          * Creates an om text struct.
          * @param value Text value. Optinal, can be NULL.
+         * @exception OMException an exception is thrown if something goes wrong
+         * while creating the object.
          */
-        OMText(std::string value);
+        OMText(std::string value) throw(OMException);
 
         /**
          * Creates an om text struct.
          * @param parent parent element.
          * @param value Text value. Optinal, can be NULL.
+         * @exception OMException an exception is thrown if something goes wrong
+         * while creating the object.
          */
-        OMText(OMNode * parent, OMDataHandler * data_handler);
+        OMText(OMNode * parent, OMDataHandler * data_handler) throw(OMException);
 
         /**
          * Creates an om text struct.
          * @param data_handler the data handler. Optinal, can be NULL.
+         * @exception OMException an exception is thrown if something goes wrong
+         * while creating the object.
          */
-        OMText(OMDataHandler * data_handler);
+        OMText(OMDataHandler * data_handler) throw(OMException);
 
         /**
          * Creates an om text struct.
+         * @exception OMException an exception is thrown if something goes wrong
+         * while creating the object.
          */
-        OMText();
+        OMText() throw(OMException);
 
         /**
          * Creates an om text struct.
          * @param parent parent element.
          * @param node node used to build the element. cannot be NULL.
+         * @exception OMException an exception is thrown if something goes wrong
+         * while creating the object.
          */
-        OMText(OMNode * parent, axiom_node_t * node);
+        OMText(OMNode * parent, axiom_node_t * node) throw(OMException);
 
         /**
          * Desctructor that frees resources.

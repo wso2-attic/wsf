@@ -1,4 +1,4 @@
-prgbindir=$(prefix)/bin/samples
+prgbindir=$(prefix)/bin/samples/math
 prgbin_PROGRAMS = math 
 math_SOURCES = math.cpp
 
@@ -15,6 +15,13 @@ math_LDADD   = $(LDFLAGS) \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
-INCLUDES =	-I$(top_builddir)/include \
-		@AXIS2INC@
+INCLUDES =	-I ../../include \
+                -I ../../wsf_c/axis2c/include \
+                -I ../../wsf_c/axis2c/neethi/include \
+                -I ../../wsf_c/axis2c/axiom/include \
+                -I ../../wsf_c/axis2c/util/include \
+                -I ../../wsf_c/rampartc/include \
+                -I ../../wsf_c/sandesha2c/include \
+                -I ../../wsf_c/savanc/include
+
 

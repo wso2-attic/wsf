@@ -1,1 +1,1 @@
-SUBDIRS=src samples
+SUBDIRS=wsf_c src samples

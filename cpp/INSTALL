@@ -1,1 +1,9 @@
-Install
+Installing WSO2 WSF/C++
+=======================
+
+On Linux based systems:
+    Please have a look at README.INSTALL.LINUX file
+
+
+On Windows based systems:
+    Please have a look at README.INSTALL.WIN32 file

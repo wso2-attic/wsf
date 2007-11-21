@@ -30,11 +30,16 @@ using namespace wso2wsf;
   *
   * @todo: document this function
   */
- NeethiPolicy::NeethiPolicy(OMElement * element)
+ NeethiPolicy::NeethiPolicy(OMElement * element) throw (NeethiException)
 {
+    _wsf_neethi_policy = NULL;
     if (element && (element->getAxiomNode()))
     {
         _wsf_neethi_policy = neethi_util_create_policy_from_om(getEnv(), element->getAxiomNode());
+    }
+    if (!_wsf_neethi_policy)
+    {
+        throw NeethiException("Unable to create NeethiPolicy object");
     }
 }
 
@@ -42,12 +47,17 @@ using namespace wso2wsf;
   *
   * @todo: document this function
   */
- NeethiPolicy::NeethiPolicy(std::string file_name)
+ NeethiPolicy::NeethiPolicy(std::string file_name) throw (NeethiException)
 {
+    _wsf_neethi_policy = NULL;
     if (file_name != "")
     {
 // TODO (senaka#4#): report bug 2 axis and remove const_cast
         _wsf_neethi_policy = neethi_util_create_policy_from_file(getEnv(), const_cast<char *>(file_name.c_str()));
+    }
+    if (!_wsf_neethi_policy)
+    {
+        throw NeethiException("Unable to create NeethiPolicy object");
     }
 }
 

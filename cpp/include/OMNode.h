@@ -18,11 +18,12 @@
 #define OMNODE_H
 
 #include <stdio.h>
-#include <AxisObject.h>
+#include <OMObject.h>
 #include <axutil_utils.h>
 #include <axiom_node.h>
 #include <AxisFault.h>
 #include <string>
+#include <OMException.h>
 
 /**
  * @file OMNode.h
@@ -46,7 +47,7 @@ namespace wso2wsf
      * not a particular node has been fully parsed. A node may not be fully parsed, for
      * example, if all of the children of an element have not yet been parsed.
      */
-    class OMNode : public AxisObject
+    class OMNode : public OMObject
     {
         /**
          * Overloaded insertion operator, is used for printing the node onto a console.
@@ -94,8 +95,10 @@ namespace wso2wsf
 
         /**
          * Creates a node struct.
+         * @exception OMException an exception is thrown if something goes wrong
+         * while creating the object.
          */
-        OMNode();
+        OMNode() throw(OMException);
 
         /**
          * desctructor that can be overriden.

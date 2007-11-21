@@ -18,7 +18,8 @@
 #define OMDATAHANDLER_H
 
 #include <axiom_data_handler.h>
-#include <AxisObject.h>
+#include <OMObject.h>
+#include <OMException.h>
 
 /**
  * @file OMDataHandler.h
@@ -41,7 +42,7 @@ namespace wso2wsf
      * and writing to files etc. This class has a great deal of importance with respect
      * to attachments.
      */
-    class OMDataHandler : public AxisObject
+    class OMDataHandler : public OMObject
     {
     private:
         /**
@@ -55,20 +56,26 @@ namespace wso2wsf
          * Creates data_handler struct.
          * @param file_name associated file name.
          * @param mime_type mime type.
+         * @exception OMException an exception is thrown if something goes wrong
+         * while creating the object.
          */
-        OMDataHandler(std::string file_name, std::string mime_type);
+        OMDataHandler(std::string file_name, std::string mime_type) throw(OMException);
 
         /**
          * Creates data_handler struct.
          * @param mime_type mime type.
+         * @exception OMException an exception is thrown if something goes wrong
+         * while creating the object.
          */
-        OMDataHandler(std::string mime_type);
+        OMDataHandler(std::string mime_type) throw(OMException);
 
         /**
          * Creates data_handler struct.
          * @param mime_type mime type.
+         * @exception OMException an exception is thrown if something goes wrong
+         * while creating the object.
          */
-        OMDataHandler();
+        OMDataHandler() throw(OMException);
 
         /**
          * Desctructor that frees resources.

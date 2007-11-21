@@ -23,6 +23,7 @@
 #include <axiom_element.h>
 #include <string>
 #include <vector>
+#include <OMException.h>
 
 /**
  * @brief namespace wso2wsf Namespace of WSO2 Web Services Framework.
@@ -130,36 +131,46 @@ namespace wso2wsf
          * Creates an om element struct.
          * @param parent parent element.
          * @param node node used to build the element. cannot be NULL.
+         * @exception OMException an exception is thrown if something goes wrong
+         * while creating the object.
          */
-        OMElement(OMNode * parent, axiom_node_t * node);
+        OMElement(OMNode * parent, axiom_node_t * node) throw(OMException);
 
         /**
          * Creates an om element struct.
          * @param parent parent element.
          * @param localname local name of the elment. cannot be NULL.
          * @param ns namespace of the element. can be NULL.
+         * @exception OMException an exception is thrown if something goes wrong
+         * while creating the object.
          */
-        OMElement(OMNode * parent, std::string localname, OMNamespace * ns);
+        OMElement(OMNode * parent, std::string localname, OMNamespace * ns) throw(OMException);
 
         /**
          * Creates an om element struct.
          * @param parent parent element.
          * @param localname local name of the elment. cannot be NULL.
+         * @exception OMException an exception is thrown if something goes wrong
+         * while creating the object.
          */
-        OMElement(OMNode * parent, std::string localname);
+        OMElement(OMNode * parent, std::string localname) throw(OMException);
 
         /**
          * Creates an om element struct.
          * @param localname local name of the elment. cannot be NULL.
          * @param ns namespace of the element. can be NULL.
+         * @exception OMException an exception is thrown if something goes wrong
+         * while creating the object.
          */
-        OMElement(std::string localname, OMNamespace * ns);
+        OMElement(std::string localname, OMNamespace * ns) throw(OMException);
 
         /**
          * Creates an om element struct.
          * @param localname local name of the elment. cannot be NULL.
+         * @exception OMException an exception is thrown if something goes wrong
+         * while creating the object.
          */
-        OMElement(std::string localname);
+        OMElement(std::string localname) throw(OMException);
 
         /**
          * desctructor that frees resources. Please note that all associated attributes,
