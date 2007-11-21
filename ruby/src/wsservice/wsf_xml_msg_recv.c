@@ -560,12 +560,12 @@ wsf_xml_msg_recv_invoke_wsmsg (
             VALUE method_exists;
             
             user_klass = rb_define_class(classname, rb_cObject);
-            user_obj = rb_class_new_instance(0, NULL, user_klass);
+            user_obj = rb_class_new_instance(0, Qnil, user_klass);
 
             if(user_obj != Qnil)
             {
             
-                method_exists = rb_funcall(user_klass, rb_intern("respond_to?"), 1, rb_str_new2(op_name));
+                method_exists = rb_funcall(user_obj, rb_intern("respond_to?"), 2, rb_str_new2(op_name), Qtrue);
                 if(method_exists == Qtrue)
                 {
                     res = rb_funcall(user_obj, rb_intern(op_name), 1, msg);
