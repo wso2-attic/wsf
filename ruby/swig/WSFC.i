@@ -25,6 +25,9 @@
 #include "axiom_document.h"
 #include "axutil_utils_defines.h"
 #include "axutil_param.h"
+#ifdef WIN32
+   #include "neethi_engine.h"
+#endif
 #include "neethi_options.h"
 #include "rp_defines.h"
 %}
@@ -117,27 +120,34 @@ wsf_set_module_param_value(axutil_env_t       *env,
                             axis2_char_t       *param_name,
                             axis2_char_t       *param_value)
 {
-  axis2_svc_ctx_t *svc_ctx = axis2_svc_client_get_svc_ctx(svc_client, env);
+  axis2_svc_ctx_t *svc_ctx = NULL;
+  axis2_conf_ctx_t *conf_ctx = NULL;
+  axis2_conf_t *conf = NULL;
+  axutil_qname_t *module_qname = NULL;
+  axis2_module_desc_t *module_desc = NULL;
+  axutil_param_t *param = NULL;
+  
+  svc_ctx = axis2_svc_client_get_svc_ctx(svc_client, env);
   if (svc_ctx == NULL)
     return AXIS2_FAILURE;
     
-  axis2_conf_ctx_t *conf_ctx = axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
+  conf_ctx = axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
   if (conf_ctx == NULL)
     return AXIS2_FAILURE;
     
-  axis2_conf_t *conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+  conf = axis2_conf_ctx_get_conf(conf_ctx, env);
   if (conf == NULL)
     return AXIS2_FAILURE;
 
-  axutil_qname_t *module_qname = axutil_qname_create(env, module_name, NULL, NULL);
+  module_qname = axutil_qname_create(env, module_name, NULL, NULL);
   if (module_qname == NULL)
     return AXIS2_FAILURE;
     
-  axis2_module_desc_t *module_desc = axis2_conf_get_module(conf, env, module_qname);
+  module_desc = axis2_conf_get_module(conf, env, module_qname);
   if (module_desc == NULL)
     return AXIS2_FAILURE;
     
-  axutil_param_t *param = axis2_module_desc_get_param(module_desc, env, param_name);
+  param = axis2_module_desc_get_param(module_desc, env, param_name);
   if (param == NULL)
     return AXIS2_FAILURE;
     
@@ -262,20 +272,24 @@ wsf_axiom_attach_content(const axutil_env_t *env,
                           const char         *content,
                           int                 content_length)
 {
-  void *data_buffer = AXIS2_MALLOC (env->allocator, sizeof (char) * content_length);
+  void *data_buffer = NULL;
+  axiom_data_handler_t *data_handler = NULL;
+  axiom_node_t *text_node = NULL;
+  axiom_text_t *text = NULL;
+  
+  data_buffer = AXIS2_MALLOC (env->allocator, sizeof (char) * content_length);
   if (data_buffer == NULL)
     return;
 
   memcpy (data_buffer, (void*)content, content_length);
 
-  axiom_data_handler_t *data_handler = axiom_data_handler_create (env, NULL, content_type);
+  data_handler = axiom_data_handler_create (env, NULL, content_type);
   if (data_handler == NULL)
     return;
 
   axiom_data_handler_set_binary_data (data_handler, env, (axis2_byte_t *)content, content_length);
 
-  axiom_node_t *text_node = NULL;
-  axiom_text_t *text = axiom_text_create_with_data_handler (env, parent_node, data_handler, &text_node);
+  text = axiom_text_create_with_data_handler (env, parent_node, data_handler, &text_node);
 
   if (enable_mtom == AXIS2_FALSE)
     axiom_text_set_optimize (text, env, AXIS2_FALSE);
@@ -290,19 +304,24 @@ wsf_str_to_axiom_node(const axutil_env_t *env,
                        char               *container,
                        int                 size)
 {
-  axiom_xml_reader_t *xml_reader = axiom_xml_reader_create_for_memory(env, container, size, "utf-8", AXIS2_XML_PARSER_TYPE_BUFFER);
+  axiom_xml_reader_t *xml_reader = NULL;
+  axiom_stax_builder_t *stax_builder = NULL;
+  axiom_document_t *document = NULL;
+  axiom_node_t *axiom_node = NULL;
+    
+  xml_reader = axiom_xml_reader_create_for_memory(env, container, size, "utf-8", AXIS2_XML_PARSER_TYPE_BUFFER);
   if (xml_reader == NULL)
     return NULL;
 
-  axiom_stax_builder_t *stax_builder = axiom_stax_builder_create(env, xml_reader);
+  stax_builder = axiom_stax_builder_create(env, xml_reader);
   if (stax_builder == NULL)
     return NULL;
 
-  axiom_document_t *document = axiom_stax_builder_get_document(stax_builder, env);
+  document = axiom_stax_builder_get_document(stax_builder, env);
   if (document == NULL)
     return NULL;
 
-  axiom_node_t *axiom_node = axiom_document_get_root_element(document, env);
+  axiom_node = axiom_document_get_root_element(document, env);
   if (axiom_node == NULL)
     return NULL;
 
@@ -319,20 +338,26 @@ axis2_char_t *
 wsf_axiom_node_to_str(const axutil_env_t *env,
                        axiom_node_t       *axiom_node)
 {
-  axiom_xml_writer_t *xml_writer = axiom_xml_writer_create_for_memory(env, NULL, AXIS2_TRUE, 0, AXIS2_XML_PARSER_TYPE_BUFFER);
+  axiom_xml_writer_t *xml_writer = NULL;
+  axiom_output_t *axiom_output = NULL;
+  axis2_char_t *buffer = NULL;
+  unsigned int buffer_length = 0;
+  axis2_char_t *new_buffer = NULL;
+  
+  xml_writer = axiom_xml_writer_create_for_memory(env, NULL, AXIS2_TRUE, 0, AXIS2_XML_PARSER_TYPE_BUFFER);
   if (xml_writer == NULL)
     return NULL;
     
-  axiom_output_t *axiom_output = axiom_output_create(env, xml_writer);
+  axiom_output = axiom_output_create(env, xml_writer);
   if (axiom_output == NULL)
     return NULL;
     
   axiom_node_serialize(axiom_node, env, axiom_output);
   
-  axis2_char_t *buffer = (axis2_char_t *) axiom_xml_writer_get_xml (xml_writer, env);
-  unsigned int buffer_length = axutil_strlen (buffer);
+  buffer = (axis2_char_t *) axiom_xml_writer_get_xml (xml_writer, env);
+  buffer_length = axutil_strlen (buffer);
   
-  axis2_char_t *new_buffer = AXIS2_MALLOC (env->allocator, sizeof (axis2_char_t) * (buffer_length + 1));
+  new_buffer = AXIS2_MALLOC (env->allocator, sizeof (axis2_char_t) * (buffer_length + 1));
   memcpy (new_buffer, buffer, buffer_length);
   new_buffer[buffer_length] = '\0';
   
@@ -349,14 +374,16 @@ wsf_axiom_data_handler_get_base64_content(axiom_data_handler_t *data_handler,
 {
   axis2_char_t *content = NULL;
   int           content_length = 0;
-
+  int encoded_length  = 0;
+  axis2_char_t *encoded_str = NULL;
+  
   axiom_data_handler_read_from (data_handler, env, &content, &content_length);
 
   if (content == NULL)
     return NULL;
 
-  int encoded_length = axutil_base64_encode_len(content_length);
-  axis2_char_t *encoded_str = AXIS2_MALLOC(env->allocator, encoded_length + 2);
+  encoded_length = axutil_base64_encode_len(content_length);
+  encoded_str = AXIS2_MALLOC(env->allocator, encoded_length + 2);
                 
   if (encoded_str == NULL)
     return NULL;
@@ -373,9 +400,13 @@ int
 wsf_file_put_base64_content(const char *file_name,
                              const char *base64_content)
 {
-  int decoded_length = axutil_base64_decode_len(base64_content);
+  int decoded_length = 0;
+  char *decoded_content = NULL;
+  FILE *file = NULL;
   
-  char *decoded_content = (char*)malloc(decoded_length);
+  decoded_length = axutil_base64_decode_len(base64_content);
+  
+  decoded_content = (char*)malloc(decoded_length);
   if (decoded_content == NULL)
     return 0;
 
@@ -383,7 +414,7 @@ wsf_file_put_base64_content(const char *file_name,
   if (decoded_content == NULL)
     return 0;
 
-  FILE *file = fopen(file_name, "w");
+  file = fopen(file_name, "w");
   if (file == NULL)
     return 0;
 
@@ -505,15 +536,19 @@ axiom_node_t *
 wsf_get_last_soap_fault_base_node(const axis2_svc_client_t *svc_client,
                                    const axutil_env_t       *env)
 {
-  axiom_soap_envelope_t *soap_envelope = axis2_svc_client_get_last_response_soap_envelope(svc_client, env);
+  axiom_soap_envelope_t *soap_envelope = NULL;
+  axiom_soap_body_t *soap_body = NULL;
+  axiom_soap_fault_t *soap_fault = NULL;
+  
+  soap_envelope = axis2_svc_client_get_last_response_soap_envelope(svc_client, env);
   if (soap_envelope == NULL)
     return NULL;
     
-  axiom_soap_body_t *soap_body = axiom_soap_envelope_get_body(soap_envelope, env);
+  soap_body = axiom_soap_envelope_get_body(soap_envelope, env);
   if (soap_body == NULL)
     return NULL;
     
-  axiom_soap_fault_t *soap_fault = axiom_soap_body_get_fault(soap_body, env);
+  soap_fault = axiom_soap_body_get_fault(soap_body, env);
   if (soap_fault == NULL)
     return NULL;
 
@@ -746,45 +781,5 @@ rampart_context_set_pwcb_function(rampart_context_t *rampart_context,
                                       password_callback_fn pwcb_function,
                                       void *ctx);
 
-%typemap(in) char *(callback_t callback, void *user_data)
-{
-  $1 = wrap_callback;
-  $2 = (void *)$input;
-}
-
-
-%inline %{
-axis2_char_t *
-wsf_password_callback_fn(const axutil_env_t *env,
-                          const axis2_char_t *username,
-                          void *ctx)
-{
-   if (mycallback != NULL)
-   {
-      axis2_char_t* password =  mycallback(myuserdata, username);
-      AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf-ruby] ruby_password_callback_fn");
-      AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, password);
-      return password;
-   }   
-   else
-      return NULL;
-}
-%}
-
-%inline %{
-axis2_status_t
-wsf_rampart_context_set_pwcb_function(rampart_context_t *rampart_context,
-                                      const axutil_env_t *env,
-                                      callback_t callback,
-                                      void *ctx)
-{
-   mycallback = callback;
-   myuserdata = ctx;
-   
-   AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf-ruby] ruby_rampart_context_set_pwcb_function");
-    
-   return rampart_context_set_pwcb_function(rampart_context, env, wsf_password_callback_fn, (void *)NULL);
-}
-%}
 
 

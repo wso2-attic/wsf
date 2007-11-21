@@ -1,20 +1,3 @@
-%{
-typedef char *(*callback_t) (void *user_data, const char *other_data);
-
-callback_t mycallback = NULL;
-void* myuserdata = NULL;
-%}
-
-%inline %{
-char *
-wrap_callback(void *user_data, const char *other_data)
-{
-  VALUE proc = (VALUE)user_data;
-  VALUE password = rb_funcall(proc, rb_intern("call"), 1, rb_str_new2(other_data));
-  return RSTRING(password)->ptr;
-}
-%}
-
 %inline %{
 axis2_status_t
 wsf_set_security_token_data_to_rampart_context(const axutil_env_t * env,
@@ -22,7 +5,23 @@ wsf_set_security_token_data_to_rampart_context(const axutil_env_t * env,
                                                 VALUE security_token)
 {
    char* prv_key = NULL;
-   VALUE private_key = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("private_key"));
+   VALUE private_key = Qnil;
+   char* certificate = NULL;
+   VALUE cert = Qnil;
+   char* receiver_certificate = NULL;
+   VALUE rec_cert = Qnil;
+   char* username = NULL;
+   VALUE usr = Qnil;
+   char* password = NULL;
+   VALUE pwd = Qnil;
+   char* password_type = NULL;
+   VALUE pwd_type = Qnil;
+   int ttl = -1;
+   VALUE time_to_live = Qnil;
+   char* callback_function_name = NULL;
+   VALUE callback_fn = Qnil;
+   
+   private_key = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("private_key"));
    if (!NIL_P(private_key) && (TYPE(private_key) == T_STRING))
    {
         prv_key = RSTRING(private_key)->ptr;
@@ -37,8 +36,7 @@ wsf_set_security_token_data_to_rampart_context(const axutil_env_t * env,
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pvt key format ");
    }
 
-   char* certificate = NULL;
-   VALUE cert = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("certificate"));
+   cert = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("certificate"));
    if (!NIL_P(cert) && (TYPE(cert) == T_STRING))
    {
         certificate = RSTRING(cert)->ptr;
@@ -50,8 +48,7 @@ wsf_set_security_token_data_to_rampart_context(const axutil_env_t * env,
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pub key type ");
    }
 
-   char* receiver_certificate = NULL;
-   VALUE rec_cert = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("receiver_certificate"));
+   rec_cert = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("receiver_certificate"));
    if (!NIL_P(rec_cert) && (TYPE(rec_cert) == T_STRING))
    {
         receiver_certificate = RSTRING(rec_cert)->ptr;
@@ -63,8 +60,7 @@ wsf_set_security_token_data_to_rampart_context(const axutil_env_t * env,
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting receiver pub key format");
    }
 
-   char* username = NULL;
-   VALUE usr = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("user"));
+   usr = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("user"));
    if (!NIL_P(usr) && (TYPE(usr) == T_STRING))
    {
         username = RSTRING(usr)->ptr;
@@ -73,8 +69,7 @@ wsf_set_security_token_data_to_rampart_context(const axutil_env_t * env,
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting username ");
    }
 
-   char* password = NULL;
-   VALUE pwd = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("password"));
+   pwd = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("password"));
    if (!NIL_P(pwd) && (TYPE(pwd) == T_STRING))
    {
         password = RSTRING(pwd)->ptr;
@@ -83,8 +78,7 @@ wsf_set_security_token_data_to_rampart_context(const axutil_env_t * env,
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting password ");
    }
 
-   char* password_type = NULL;
-   VALUE pwd_type = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("password_type"));
+   pwd_type = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("password_type"));
    if (!NIL_P(pwd_type) && (TYPE(pwd_type) == T_STRING))
    {
         password_type = RSTRING(pwd_type)->ptr;
@@ -93,8 +87,7 @@ wsf_set_security_token_data_to_rampart_context(const axutil_env_t * env,
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting password type ");
    }
 
-   int ttl = -1;
-   VALUE time_to_live = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("ttl"));
+   time_to_live = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("ttl"));
    if (!NIL_P(time_to_live) && (TYPE(time_to_live) == T_FIXNUM))
    {
         ttl = FIX2INT(time_to_live);
@@ -103,8 +96,7 @@ wsf_set_security_token_data_to_rampart_context(const axutil_env_t * env,
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy) setting ttl");
    }
    
-   char* callback_function_name = NULL;
-   VALUE callback_fn =  rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("password_callback"));
+   /*callback_fn =  rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("password_callback"));
    if (!NIL_P(callback_fn) && (TYPE(callback_fn) == T_STRING))
    {
         callback_function_name = RSTRING(callback_fn)->ptr;
@@ -114,7 +106,7 @@ wsf_set_security_token_data_to_rampart_context(const axutil_env_t * env,
        
         //if ((password_type != NULL) && (rampart_context_set_password_type(rampart_context, env, password_type) == AXIS2_SUCCESS))
         //        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting password type ");
-   }
+   }*/
 
    /*#option = sec_token.option("password_callback")
     #if not option.nil?
