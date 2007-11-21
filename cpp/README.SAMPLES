@@ -1,0 +1,204 @@
+Echo Samples
+------------
+echo -
+
+  Echo client with WS-Addressing, and dual invocation.
+  Set the following variables to match your case.
+  - end_point[Line 11]. default: http://localhost:9090/axis2/services/echo
+  - log_file_name[Line 12]. default: echo.log
+  - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
+
+echo_blocking -
+
+  Echo client with most basic options.
+  Set the following variables to match your case.
+  - end_point[Line 11]. default: http://localhost:9090/axis2/services/echo
+  - log_file_name[Line 12]. default: echo_blocking.log
+  - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
+
+echo_blocking_dual -
+
+  Echo client using seperate listner, and different ReplyTo.
+  Set the following variables to match your case.
+  - end_point[Line 11]. default: http://localhost:9090/axis2/services/echo
+  - reply_to[Line 16]. default: http://localhost:6060/axis2/services/
+    __ANONYMOUS_SERVICE__/__OPERATION_OUT_IN__
+  - log_file_name[Line 12]. default: echo_blocking_dual.log
+  - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
+
+echo_blocking_addr -
+
+  Echo client with WS-Addressing.
+  Set the following variables to match your case.
+  - end_point[Line 11]. default: http://localhost:9090/axis2/services/echo
+  - log_file_name[Line 12]. default: echo_blocking_addr.log
+  - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
+
+echo_blocking_soap11 -
+
+  Echo client with SOAP 1.1 support.
+  Set the following variables to match your case.
+  - end_point[Line 11]. default: http://localhost:9090/axis2/services/echo
+  - log_file_name[Line 12]. default: echo_blocking_soap11.log
+  - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
+
+echo_rest -
+
+  Echo client with REST style invocation support.
+  Set the following variables to match your case.
+  - end_point[Line 11]. default: http://localhost:9090/axis2/services/echo
+  - log_file_name[Line 12]. default: echo_rest.log
+  - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
+
+echo_non_blocking -
+
+  Echo client with non-blocking (asynchronous) operations.
+  Set the following variables to match your case.
+  - end_point[Line 39]. default: http://localhost:9090/axis2/services/echo
+  - log_file_name[Line 40]. default: echo_non_blocking.log
+  - log_level[Line 40]. default: AXIS2_LOG_LEVEL_TRACE
+
+echo_non_blocking_dual -
+
+  Echo client using seperate listner, and different ReplyTo in a non-blocking
+  (asynchronous) operation.
+  Set the following variables to match your case.
+  - end_point[Line 39]. default: http://localhost:9090/axis2/services/echo
+  - reply_to[Line 44]. default: http://localhost:6060/axis2/services/
+    __ANONYMOUS_SERVICE__/__OPERATION_OUT_IN__
+  - log_file_name[Line 40]. default: echo_non_blocking_dual.log
+  - log_level[Line 40]. default: AXIS2_LOG_LEVEL_TRACE
+
+echo_security -
+
+  Echo client with WS-SecurityPolicy.
+  Set the following variables to match your case.
+  - client_repo[Line 11]. default: ../client_repo
+  - end_point[Line 11]. default: http://localhost:9090/axis2/services/sec_echo
+  - log_file_name[Line 12]. default: echo_security.log
+  - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
+  - policy_file[Line 14]. default: ../client_repo/policy.xml
+
+  * Please note that the echo_security sample will not work unless you set the
+  client_repo, and the policy_file variables.
+  
+
+Accessing Yahoo WebService API
+------------------------------
+yahoo -
+
+  A client assessing Yahoo search using REST.
+  Set the following variables to match your case.
+  - log_file_name[Line 12]. default: yahoo_rest_search.log
+  - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
+
+
+Accessing Google WebService API
+-------------------------------
+google -
+  
+  A client assessing Google SOAP 1.1 search.
+  Set the following variables to match your case.
+  - log_file_name[Line 12]. default: google_client.log
+  - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
+  - google_api_key[Line 30]. default: 00000000000000000000000000000000
+
+  * A valid api key would return a response, and an invalid key would return a
+  fault. The default key is invalid.
+
+
+Accessing Flickr WebService API
+-------------------------------
+flickr -
+
+  A client assessing Flickr photo search.
+  Set the following variables to match your case.
+  - log_file_name[Line 12]. default: flickr_client.log
+  - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
+  - flickr_api_key[Line 30]. default: 00000000000000000000000000000000
+
+  * A valid api key would return a response, and an invalid key would return a
+  fault. The default key is invalid.
+                     
+
+MTOM / Base64 Attachments
+-------------------------
+mtom -
+
+  Client for uploading JPEG image files using MTOM.
+  Set the following variables to match your case.
+  - end_point[Line 11]. default: http://localhost:9090/axis2/services/mtom
+  - log_file_name[Line 12]. default: mtom.log
+  - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
+  - file_name[Line 26]. default: resources/axis2.jpg
+
+
+Math Client
+-----------
+math -
+
+  Client providing four mathematical operations
+    - add: Addition
+    - sub: Subtraction
+    - mul: Multiplication
+    - div: Division
+  Set the following variables to match your case.
+  - end_point[Line 11]. default: http://localhost:9090/axis2/services/math
+  - log_file_name[Line 12]. default: math_blocking.log
+  - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
+  - operation[Line 16]. default: add
+
+
+Notify Client
+-------------
+notify -
+
+  Client demonstrating one-way operation.
+  Set the following variables to match your case.
+  - end_point[Line 11]. default: http://localhost:9090/axis2/services/notify
+  - log_file_name[Line 12]. default: notify.log
+  - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
+
+
+Security Policy Samples
+-----------------------
+secpolicy -
+
+  Set of scenarios that be used to generate various policy files and invoke the
+  echo_security sample.
+  There are three invocation models
+    - deploy and run
+      - deploy policy (run deploy.sh)
+      - usage: deploy.sh scenarioX
+      - restart server
+      - run echo_security
+    - deploy, update and run
+      - deploy policy (run deploy.sh)
+      - usage: deploy.sh scenarioX
+      - update and run (run update.sh)
+      - usage: update_n_run.sh
+    - run all
+      - usage: run_all.sh
+  Seven scenarios are provided demonstrating various possibilities.
+    - Timestamp
+    - UsernameToken
+    - Encryption
+    - Signature
+    - A complete scenario to show: Timestamp, UsernameToken, Encrypt,
+      The protection order is Sign->Encrypt Signature is Encrypted
+    - A complete scenario to show: Timestamp, UsernameToken, Encrypt,
+      The protection order is Encrypt->Sign Signature is Encrypted
+    - Replay detection
+
+
+Monitoring Payload
+------------------
+tcpmon -
+
+  You may monitor the exchanged payload using the tcpmon utility provided in WSF/C.
+  This tool can be found in [wsf_c/axis2c/tools/tcpmon].
+
+
+Contacting us
+-------------
+Refer README for more information.

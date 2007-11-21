@@ -182,7 +182,7 @@ axis2_status_t AXIS2_CALL callbackOnFault(axis2_callback_t * callback, const axu
 {
     _conf_ctx = NULL;
     _endpoint_address = endpoint_address;
-    _repo_home = string(AXIS2_GETENV("AXIS2C_HOME"));
+    _repo_home = string(AXIS2_GETENV("WSFC_HOME"));
 }
 
 /** @brief InitializeClient

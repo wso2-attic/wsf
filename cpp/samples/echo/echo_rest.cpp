@@ -24,14 +24,14 @@ int main()
         try
         {
             response = sc->request(payload, "http://ws.apache.org/axis2/c/samples/echo/soap_action");
+            if (response)
+            {
+                cout << endl << "Response: " << response->toString() << endl;
+            }
         }
         catch (AxisFault e)
         {
             cout << endl << "Response: " << (sc->getLastSOAPFault())->toString() << endl;
-        }
-        if (response)
-        {
-            cout << endl << "Response: " << response->toString() << endl;
         }
         delete payload;
     }

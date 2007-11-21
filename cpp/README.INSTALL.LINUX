@@ -3,6 +3,7 @@ Building and Installing WSO2 WSF/C++ from Source on Linux.
 
 Go to the directory where you have extracted the source distribution.
 Run the following:    
+    ./autogen.sh
     ./configure
     make
     make install

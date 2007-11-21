@@ -8,10 +8,10 @@ using namespace wso2wsf;
 
 int main()
 {
-    WSSOAPClient * sc = new WSSOAPClient("/home/senaka/wsf/c/deploy/client_repo","http://localhost:9090/axis2/services/sec_echo");
+    WSSOAPClient * sc = new WSSOAPClient("../client_repo","http://localhost:9090/axis2/services/sec_echo");
     sc->initializeClient("echo_security.log", AXIS2_LOG_LEVEL_TRACE);
     sc->engageModule(AXIS2_MODULE_ADDRESSING);
-    sc->setPolicy(new NeethiPolicy("/home/senaka/wsf/c/deploy/client_repo/policy.xml"));
+    sc->setPolicy(new NeethiPolicy("../client_repo/policy.xml"));
     {
         OMNamespace * ns = new OMNamespace("http://ws.apache.org/rampart/c/samples", "ns1");
         OMElement * payload = new OMElement(NULL,"echoIn", ns);

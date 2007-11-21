@@ -22,14 +22,14 @@ int main()
         try
         {
             response = sc->request(payload, "http://ws.apache.org/axis2/c/samples/echoString");
+            if (response)
+            {
+                cout << endl << "Response: " << (response->getFirstElement())->toString() << endl;
+            }
         }
         catch (AxisFault e)
         {
             cout << endl << "Response: " << (sc->getLastSOAPFault())->toString() << endl;
-        }
-        if (response)
-        {
-            cout << endl << "Response: " << response->toString() << endl;
         }
         delete payload;
     }
@@ -44,14 +44,14 @@ int main()
         try
         {
             response = sc->request(payload, "");
+            if (response)
+            {
+                cout << endl << "Response: " << (response->getFirstElement())->toString() << endl;
+            }
         }
         catch (AxisFault e)
         {
             cout << endl << "Response: " << (sc->getLastSOAPFault())->toString() << endl;
-        }
-        if (response)
-        {
-            cout << endl << "Response: " << (response->getFirstElement())->toString() << endl;
         }
         delete payload;
     }

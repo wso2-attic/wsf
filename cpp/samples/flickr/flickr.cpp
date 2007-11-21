@@ -25,16 +25,16 @@ int main()
         try
         {
             response = sc->request(payload, "");
+            if (response)
+            {
+                cout << endl << "Response: " << response->toString() << endl;
+                cout << endl << "Response: " << sc->getLastResponseSoapEnvelopeString() << endl;
+            }
         }
         catch (AxisFault e)
         {
             cout << endl << "Response: " << sc->getLastResponseSoapEnvelopeString() << endl;
             cout << endl << "Response: " << (sc->getLastSOAPFault())->toString() << endl;
-        }
-        if (response)
-        {
-            cout << endl << "Response: " << response->toString() << endl;
-            cout << endl << "Response: " << sc->getLastResponseSoapEnvelopeString() << endl;
         }
         delete payload;
     }
