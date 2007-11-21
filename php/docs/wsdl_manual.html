@@ -32,11 +32,13 @@ follows:</strong></p>
     </pre>
 
 <p>Now you can call any operation defined in the sample.wsdl WSDL directory
-on the WSClientProxy object. For example,nvoke the echoString operation
-defined in sample.wsdl, as follows. invoke the echoString operation defined
+on the WSClientProxy object. For example,invoke the GetPrice operation
+defined in sample.wsdl, as follows. invoke the GetPrice operation defined
 in sample.wsdl, as follows.</p>
-<pre>        $value = $proxy-&gt;echoString("Hello");
-    </pre>
+<pre>        $value = $proxy-&gt;GetPrice(array("ProductType"=> "Testing",
+                                   "ItemNo" => 234));
+</pre>
+
 
 <p>This call will construct the SOAP envelope with the required payload and
 send it to the service endpoint specified in the WSDL.</p>
@@ -46,16 +48,15 @@ send it to the service endpoint specified in the WSDL.</p>
 <p>We will implement a service to accept the request sent by the above
 client.</p>
 
-<p>First write a function corresponding to the echoString operation defined
-in the WSDL.</p>
-<pre>        function echoFunction($value){
-            return $value;
+<p>First write a function corresponding to the GetPrice operation defined in the WSDL.</p>
+<pre>        function GetPriceFunction($arg1, $arg2){
+            return array("Price" => 234.431);
         }
-    </pre>
+</pre>
 
 <p>Now we can map this function to the echoString operation as follows.</p>
-<pre>        $operations = array("<span style="color: #ff3333">echoString</span>"=&gt;"<span style="color: #ff3333">echoFunction</span>");
-        $opparams = array("<span style="color: #ff3333">echoFunction</span>"=&gt;"<span style="color: #ff3333">MIXED</span>");
+<pre>   $operations = array("<span style="color: #ff3333">GetPrice</span>"=&gt;"<span style="color: #ff3333">GetPriceFunction</span>");
+        $opparams = array("<span style="color: #ff3333">GetPriceFunction</span>"=&gt;"<span style="color: #ff3333">MIXED</span>");
     </pre>
 
 <p>Here we are indicating to the service that the echoFunction is not a

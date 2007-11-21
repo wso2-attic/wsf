@@ -42,6 +42,14 @@ side.</p>
       <td style="width: 373px; height: 21px">You can provide a WSDL file or a
         URL of the WSDL file for this option</td>
     </tr>
+    <tr>
+      <td style="width: 100px; height: 21px">classmap</td>
+      <td style="width: 100px; height: 21px">array</td>
+      <td style="width: 100px; height: 21px">array of class names </td>
+      <td style="width: 100px; height: 21px">none</td>
+      <td style="width: 373px; height: 21px">maps some WSDL complex types to PHP classes. 
+      This option must be an array with WSDL types as keys and names of PHP classes as values.</td>
+    </tr>
   </tbody>
 </table>
 
@@ -59,11 +67,11 @@ services.</p>
 
 <h4>Methods</h4>
 
-<h5>mixed WSClientProxy::__call(string function_name, array arguments, array
-options)</h5>
+<h5>mixed WSClientProxy::__call(argument array or class object)</h5>
 
 <p>In the WSDL mode, you can simply call the operations defined in WSDL as
-functions of WSClientProxy. This may return one value or multiple values. If
+functions of WSClientProxy. You can simply pass the arguements as an array or object
+of the class defined in class map.This may return one value or multiple values. If
 only one value is returned, it will be a simple value (e.g., a string or an
 integer). If multiple values are returned __call will return an associative
 array of named output parameters.</p>
@@ -73,7 +81,7 @@ Consider we have a WSDL which defines the operation "echoString" which echoes
 a given value.</p>
 <pre>            $client = new WSClient(array("wsdl"=&gt;"echo.wsdl"));
             $proxy = $client-&gt;getProxy();
-            $value = $proxy-&gt;echoString("Hello World");
+            $value = $proxy-&gt;echoString(array("Hello World"));
         </pre>
 
 <h2 id="wsservice_wsdl_mode">Writing a Service to use WSDL mode</h2>
