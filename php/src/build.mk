@@ -41,22 +41,22 @@ wsf.dll :
 	@if not exist intdir mkdir intdir
 	@cl.exe $(CFLAGS) $(INCLUDE_PATH) $(WSFPHP_SRC) /Fointdir\ /c
 	@rc.exe /r /fo "intdir/wsf.res" wsf.rc
-	@link.exe $(LDFLAGS) intdir\*.obj intdir\wsf.res $(LIBS) /DLL  /OUT:.\..\wso2-wsf-php-bin-1.1.0-win32\wsf.dll
+	@link.exe $(LDFLAGS) intdir\*.obj intdir\wsf.res $(LIBS) /DLL  /OUT:.\..\wso2-wsf-php-bin-1.2.0-win32\wsf.dll
 
 wsfphp: wsf.dll
 
 cleanint:
-	@if exist .\..\wso2-wsf-php-bin-1.1.0-win32\wsf.lib del .\..\wso2-wsf-php-bin-1.1.0-win32\wsf.lib
-	@if exist .\..\wso2-wsf-php-bin-1.1.0-win32\wsf.ilk del .\..\wso2-wsf-php-bin-1.1.0-win32\wsf.ilk
-	@if exist .\..\wso2-wsf-php-bin-1.1.0-win32\wsf.exp del .\..\wso2-wsf-php-bin-1.1.0-win32\wsf.exp
+	@if exist .\..\wso2-wsf-php-bin-1.2.0-win32\wsf.lib del .\..\wso2-wsf-php-bin-1.2.0-win32\wsf.lib
+	@if exist .\..\wso2-wsf-php-bin-1.2.0-win32\wsf.ilk del .\..\wso2-wsf-php-bin-1.2.0-win32\wsf.ilk
+	@if exist .\..\wso2-wsf-php-bin-1.2.0-win32\wsf.exp del .\..\wso2-wsf-php-bin-1.2.0-win32\wsf.exp
 
 
 clean: 
 	@if exist intdir rmdir /s /q intdir
 		
 copy_sqlite:
-	@if exist $(SQLITE_BIN_DIR)\sqlite3.dll copy /Y  $(SQLITE_BIN_DIR)\sqlite3.dll .\..\wso2-wsf-php-bin-1.1.0-win32\wsf_c\lib
-	@if exist $(SQLITE_BIN_DIR)\sqlite3.exe copy /Y  $(SQLITE_BIN_DIR)\sqlite3.exe .\..\wso2-wsf-php-bin-1.1.0-win32\wsf_c\lib
+	@if exist $(SQLITE_BIN_DIR)\sqlite3.dll copy /Y  $(SQLITE_BIN_DIR)\sqlite3.dll .\..\wso2-wsf-php-bin-1.2.0-win32\wsf_c\lib
+	@if exist $(SQLITE_BIN_DIR)\sqlite3.exe copy /Y  $(SQLITE_BIN_DIR)\sqlite3.exe .\..\wso2-wsf-php-bin-1.2.0-win32\wsf_c\lib
 
 dist: clean copy_sqlite wsfphp cleanint
 
