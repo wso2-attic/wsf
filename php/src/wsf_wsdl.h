@@ -29,10 +29,23 @@
 #include "ext/libxml/php_libxml.h"
 
 
-void create_dynamic_client(zval *this_ptr, char *fn_name, int fn_name_len, int arg_count,
-                      zval *args, zval *return_value, axutil_env_t * env TSRMLS_DC);
+void create_dynamic_client(zval *this_ptr, 
+                           char *fn_name, 
+                           int fn_name_len, 
+                           int arg_count,
+                           zval *args, 
+                           zval *return_value, 
+                           axutil_env_t * env TSRMLS_DC);
 
-void wsf_wsdl_process_service(zval *this_ptr, wsf_req_info_t * reqinfo, wsf_svc_info_t *svc_info, axutil_env_t *env TSRMLS_DC);
+void wsf_wsdl_process_service(zval *this_ptr, 
+                              wsf_req_info_t * reqinfo, 
+                              wsf_svc_info_t *svc_info, 
+                              axutil_env_t *env TSRMLS_DC);
+
+void wsf_wsdl_set_sig_model(char* wsdl_path,
+                            wsf_svc_info_t *svc_info,
+                            const axutil_env_t *env TSRMLS_DC);
+
 
 #define WS_WSDL_FILE_PATH       "/scripts/dynamic_invocation/wsf_wsdl.php"
 #define WS_WSDL_XSLT_PATH            "/scripts/dynamic_invocation/xslt"

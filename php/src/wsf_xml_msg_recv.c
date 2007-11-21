@@ -29,6 +29,7 @@
 #include <string.h>
 #include "wsf.h"
 #include <php_main.h>
+#include "wsf_wsdl.h"
 
 axis2_status_t AXIS2_CALL wsf_xml_msg_recv_invoke_business_logic_sync (
     axis2_msg_recv_t * msg_recv,
@@ -464,13 +465,6 @@ wsf_xml_msg_recv_invoke_mixed (
     if (!in_msg_ctx || !function_name)
 		return NULL;
 
-/*     if (axis2_msg_ctx_get_is_soap_11 (in_msg_ctx, env) == AXIS2_TRUE) { */
-/*         soap_version = SOAP_1_1; */
-/*         soap_version_uri = AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI; */
-/*     } else { */
-/*         soap_version = SOAP_1_2; */
-/*         soap_version_uri = AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI; */
-/*     } */
 
     soap_envelope = axis2_msg_ctx_get_soap_envelope (in_msg_ctx, env);
     if(!soap_envelope){
@@ -502,6 +496,39 @@ wsf_xml_msg_recv_invoke_mixed (
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                          "[wsf_wsdl]sig model string found is \t \n %s \n", svc_info->sig_model_string);
     }
+    else{
+        zval ** server_vars, **data;
+        char *server_name = NULL;
+        char *port = NULL;
+        smart_str req_uri = { 0 };
+
+        if(SG(request_info).request_uri){
+            if (zend_hash_find (&EG (symbol_table), "_SERVER", sizeof ("_SERVER"),
+                                (void **) & server_vars) == SUCCESS && (Z_TYPE_PP (server_vars) == IS_ARRAY)) {
+                if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SERVER_NAME",
+                                     sizeof ("SERVER_NAME"), (void **)&data) == SUCCESS)  &&
+                    Z_TYPE_PP (data) == IS_STRING) {
+                    server_name = Z_STRVAL_PP (data);
+                }
+                if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SERVER_PORT",
+                                     sizeof ("SERVER_PORT"), (void **)&data) == SUCCESS)  &&
+                    Z_TYPE_PP (data) == IS_STRING) {
+                    port = Z_STRVAL_PP (data);
+                }
+            }
+            
+            smart_str_appends(&req_uri, "http://");
+            smart_str_appends(&req_uri, server_name);
+            smart_str_appends(&req_uri, ":");
+            smart_str_appends(&req_uri, port);
+            smart_str_appends(&req_uri, SG(request_info).request_uri);
+            smart_str_appends(&req_uri, "?wsdl");
+
+            smart_str_0(&req_uri);
+            wsf_wsdl_set_sig_model(req_uri.c, svc_info, env TSRMLS_CC);
+        }
+    }
+
 
     real_path = estrdup(SG(request_info).path_translated);
     path_len = strlen(SG(request_info).path_translated)- strlen(SG(request_info).request_uri);
