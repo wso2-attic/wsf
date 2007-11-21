@@ -140,7 +140,6 @@ AC_CONFIG_FILES([Makefile \
     src/data/Makefile \
     src/handlers/Makefile \
     src/core/Makefile \
-    src/trust/Makefile \
     src/util/Makefile \
     test/Makefile \
     test/omxmlsec/Makefile \
