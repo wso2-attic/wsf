@@ -48,6 +48,15 @@ typedef enum ws_input_types
     WS_USING_INCORRECT_INPUT
 } ws_input_types_t;
 
+/** options for services array */
+#define WS_ACTIONS      "actions"
+#define WS_OPERATIONS  "operations"
+#define WS_OP_MEP      "opMEP"
+#define WS_OP_PARAMS    "opParams"
+#define WS_WSDL         "wsdl"
+#define WS_CLASSMAP     "classmap"
+#define WS_CLASSES      "classes"
+#define WS_CONS_ARGS    "args"
 
 /** Options array options */
 #define WS_OPTIONS "wsfoptions"
@@ -191,7 +200,7 @@ typedef enum ws_input_types
 
 #define WS_HTTP_ACCEPTED 202
 
-#define WS_SVC_INFO "WSFPHPSvcInfo"
+#define WS_SVC_INFO "WSFRubySvcInfo"
 
 /*************************************************/
 
@@ -208,13 +217,13 @@ typedef struct wsf_svc_info
 
     axis2_msg_recv_t *msg_recv;
 
-    axutil_hash_t *class_info;
-
     struct wsf_worker_t *ruby_worker;
 
     axutil_hash_t *ops_to_actions;
 
     axutil_hash_t *ops_to_functions;
+    
+    axutil_hash_t *ops_to_classes;
 
     axutil_array_list_t *modules_to_engage;
 

@@ -25,6 +25,25 @@
 #include "wsf_common.h"
 #include <axiom_soap_body.h>
 
+#include <ruby.h>
+
+typedef struct wsservice
+{
+    wsf_svc_info_t *svc_info;
+    axutil_env_t *ws_env_svr;
+
+    char *request_uri;
+
+    VALUE ht_actions;
+    VALUE ht_ops_to_funcs;
+    VALUE ht_ops_to_mep;
+    VALUE ht_op_params;
+    VALUE ht_classes;
+
+    axis2_char_t *temp_ops_class;
+
+} wsservice_t;
+
 axiom_node_t *wsf_util_read_payload (
     axiom_xml_reader_t * reader,
     const axutil_env_t * env);
@@ -141,9 +160,15 @@ void wsf_util_handle_soap_fault(
 	int soap_version TSRMLS_DC);
 */
 
-int is_module_engaged_to_svc_client(
-	const axis2_svc_client_t *svc_client,
-	axutil_env_t *env,
-	char *module_name);
+void wsf_util_process_ws_service_operations_and_actions(VALUE self);
+
+
+void wsf_util_engage_modules_to_svc(
+    axutil_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    wsf_svc_info_t *svc_info);
+
+
+void wsf_util_process_ws_service_classes(VALUE self);
 
 #endif /* WSF_UTIL_H */

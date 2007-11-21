@@ -346,7 +346,6 @@ wsf_svc_info_create (
     svc_info->svc_name = NULL;
     svc_info->is_class = 0;
     svc_info->msg_recv = NULL;
-    svc_info->class_info = NULL;
     svc_info->ruby_worker = NULL;
     svc_info->use_mtom = 0;     /* default is false otherwise service side will send MIME
                                    headers which some servers can;t handle */
@@ -355,9 +354,9 @@ wsf_svc_info_create (
     /* svc_info->security_token = NULL; */
 
     svc_info->ops_to_functions = NULL;
+    svc_info->ops_to_classes = NULL;
     svc_info->ops_to_actions = NULL;
     svc_info->modules_to_engage = NULL;
-    svc_info->ht_op_params;
     svc_info->service = NULL;
     svc_info->op_name = NULL;
     return svc_info;
@@ -698,27 +697,21 @@ wsf_util_create_op_and_add_to_svc (
             axis2_svc_add_op (svc_info->svc, env, op);
 
             if (ht_mep) {
-                char operation[300];
-
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_service] ht mep not null, %s", op_name);
-                sprintf (operation, "%s", op_name);
-                /* CHANGED */
-                /*if (zend_hash_find (ht_mep, operation, strlen (operation) + 1,
-                        (void **) &tmp) == SUCCESS
-                    && Z_TYPE_PP (tmp) == IS_STRING) {
-                    char *mep = NULL;
-                    mep = Z_STRVAL_PP (tmp); */
+                  char operation[300];
                   VALUE mep_value;
                   char *mep;
+
+                  AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                    "[wsf_service] ht mep not null, %s", op_name);
+                  sprintf (operation, "%s", op_name);
                   if(TYPE(ht_mep) == T_HASH)
                   {
                     mep_value = rb_hash_aref(ht_mep, ID2SYM(rb_intern(operation)));
                   }
                   if(mep_value == Qnil)
                   {
-                    mep = RSTRING_PTR(mep_value);
-                    if (mep) {
+                     mep = RSTRING_PTR(mep_value);
+                     if (mep) {
                         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                             "[wsf_service] op mep %s", mep);
                         if (strcmp (mep, "IN_ONLY") == 0) {
@@ -733,12 +726,13 @@ wsf_util_create_op_and_add_to_svc (
                             AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                                 "[wsf_service] AXIS2_MEP_URI_IN_OUT");
                         }
-                    }
-                } else {
+                     }
+                  }
+                  else {
                     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                         "[wsf service] message exchange pattern for %s not found",
                         op_name);
-                }
+                  }
             }
             if (action) {
                 axis2_svc_add_mapping (svc_info->svc, env, action, op);
@@ -1387,22 +1381,312 @@ wsf_util_handle_soap_fault(
 
 */
 
-int is_module_engaged_to_svc_client(
-	const axis2_svc_client_t *svc_client,
-	axutil_env_t *env,
-	char *module_name)
+void wsf_util_engage_modules_to_svc(
+    axutil_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    wsf_svc_info_t *svc_info)
 {
-	axutil_qname_t *mod_qname = NULL;
-	axis2_svc_t *svc = NULL;
-	int status = 0;
-	if(!svc_client || !env || !module_name)
-		return 0;
-	mod_qname = axutil_qname_create(env, module_name, NULL, NULL);
-	svc = axis2_svc_client_get_svc(svc_client, env);
-	if(svc && mod_qname){
-		status = axis2_svc_is_module_engaged(svc, env, mod_qname);
-		axutil_qname_free(mod_qname, env);
-	}
-	return status;	
+    axis2_conf_t *conf = NULL;
+    conf = axis2_conf_ctx_get_conf (conf_ctx, env);
+    if (conf && !axis2_conf_get_svc (conf, env, svc_info->svc_name)){
+        axis2_conf_add_svc (conf, env, svc_info->svc);
+        if (NULL != svc_info->modules_to_engage){
+            int i = 0;
+            int size = axutil_array_list_size (svc_info->modules_to_engage,
+                env);
+            for (i = 0; i < size; i++){
+                axis2_char_t * mod_name = (axis2_char_t *) axutil_array_list_get (
+                    svc_info->modules_to_engage, env, i);
+                    wsf_util_engage_module (conf, mod_name, env,
+                        svc_info->svc);
+            }
+        }
+    }
 }
 
+static int
+wsf_util_hash_each_ops_to_funcs(VALUE key, VALUE value, VALUE arg)
+{
+    char *op_name_to_store = NULL;
+    char *op_name = NULL;
+    unsigned int op_name_len = 0;
+    char *func_name = NULL;
+    wsservice_t *wsservice;
+
+    wsf_svc_info_t *svc_info;
+
+    Data_Get_Struct(arg, wsservice_t, wsservice);
+
+    svc_info = wsservice->svc_info;
+
+    func_name = RSTRING_PTR(value);
+    op_name = RSTRING_PTR(key);
+
+    if (op_name)
+    {
+        op_name_to_store = op_name;
+    }
+    else 
+    {
+        op_name_to_store = func_name;
+    }
+
+    axutil_hash_set (svc_info->ops_to_functions,
+        axutil_strdup (wsservice->ws_env_svr, op_name_to_store),
+        AXIS2_HASH_KEY_STRING,
+        axutil_strdup (wsservice->ws_env_svr, func_name));
+
+}
+
+static int
+wsf_util_hash_each_action(VALUE key, VALUE value, VALUE arg)
+{
+    char *func_name = NULL;
+    char *wsa_action = NULL;
+    uint str_length = 0;
+    char *operation_name = NULL;
+    VALUE f;
+    wsservice_t *wsservice;
+
+    wsf_svc_info_t *svc_info;
+
+    Data_Get_Struct(arg, wsservice_t, wsservice);
+
+    svc_info = wsservice->svc_info;
+    
+    operation_name = RSTRING_PTR(value);
+    wsa_action = RSTRING_PTR(key);
+
+    func_name = axutil_hash_get (svc_info->ops_to_functions,
+            operation_name, AXIS2_HASH_KEY_STRING);
+    if (!func_name)
+    {
+        axutil_hash_set (svc_info->ops_to_functions,
+                            axutil_strdup (wsservice->ws_env_svr, operation_name),
+                                AXIS2_HASH_KEY_STRING, axutil_strdup (wsservice->ws_env_svr,
+                                operation_name));
+        func_name = operation_name;
+    }
+   
+    /* 
+    key = rb_str_new2(axutil_string_tolower(func_name));
+    */
+
+    if (wsa_action)
+    {
+        wsf_util_create_op_and_add_to_svc (svc_info, wsa_action,
+                    wsservice->ws_env_svr, operation_name, wsservice->ht_ops_to_mep);
+
+        /* keep track of operations with actions */
+        axutil_hash_set (svc_info->ops_to_actions,
+                    axutil_strdup (wsservice->ws_env_svr, operation_name),
+                    AXIS2_HASH_KEY_STRING, axutil_strdup (wsservice->ws_env_svr,
+                        wsa_action));
+    }
+
+    else
+    {
+        wsf_util_create_op_and_add_to_svc (svc_info, NULL,
+                    wsservice->ws_env_svr, operation_name, wsservice->ht_ops_to_mep);
+    }
+}
+
+void wsf_util_process_ws_service_operations_and_actions(VALUE self)
+{
+    wsservice_t *wsservice;
+
+    VALUE ht_ops_to_funcs;
+    VALUE ht_actions;
+    VALUE ht_ops_to_mep;
+    wsf_svc_info_t *svc_info;
+    axutil_env_t *ws_env_svr;
+    VALUE ht_classes;
+
+    axutil_hash_index_t *hi;
+    
+    Data_Get_Struct(self, wsservice_t, wsservice);
+    svc_info = wsservice->svc_info;
+
+    ht_ops_to_funcs = wsservice->ht_ops_to_funcs;
+    ht_actions = wsservice->ht_actions;
+    ht_ops_to_mep = wsservice->ht_ops_to_mep;
+    ht_classes = wsservice->ht_classes;
+
+    svc_info = wsservice->svc_info;
+    ws_env_svr = wsservice->ws_env_svr;
+
+
+    if(ht_ops_to_funcs != Qnil)
+    {
+        rb_hash_foreach(ht_ops_to_funcs, wsf_util_hash_each_ops_to_funcs, self);
+    }
+
+    if(ht_classes != Qnil)
+    {
+        wsf_util_process_ws_service_classes(self);
+    }
+
+    if(ht_actions != Qnil)
+    {
+        rb_hash_foreach(ht_actions, wsf_util_hash_each_action, self);
+    }
+
+    if (svc_info->ops_to_functions) 
+    {
+        for (hi = axutil_hash_first (svc_info->ops_to_functions, ws_env_svr);
+            hi; hi = axutil_hash_next (ws_env_svr, hi)) {
+
+            void *v = NULL;
+            const void *k = NULL;
+            char *key = NULL;
+            char *val = NULL;
+            char *function_name = NULL;
+            int key_len = 0;
+
+            axutil_hash_this (hi, &k, NULL, &v);
+            key = (axis2_char_t *) k;
+            val = (axis2_char_t *) v;
+            if (key && val) {
+
+                /* function is there, add the operation to service */
+                if (strcmp (key, val) == 0) {
+                    wsf_util_create_op_and_add_to_svc (svc_info, NULL,
+                        ws_env_svr, key, ht_ops_to_mep);
+                }
+                else {
+                    char *action_for_op = NULL;
+                    action_for_op = axutil_hash_get (svc_info->ops_to_actions, key,
+                        AXIS2_HASH_KEY_STRING);
+
+                    if (!action_for_op) {
+                        /* There was no mapping WSA action for this operation.
+                        So this operation was not yet added, hence add. */
+                        wsf_util_create_op_and_add_to_svc (svc_info, NULL,
+                        ws_env_svr, key, ht_ops_to_mep);
+                    }
+                }
+            }
+        }
+    }
+}
+
+static int
+wsf_util_resolve_op_to_func(VALUE key, VALUE value, VALUE self)
+{
+    axis2_char_t *op_name;
+    axis2_char_t *func_name;
+    axis2_char_t *class_name;
+
+    wsservice_t *wsservice;
+    wsf_svc_info_t *svc_info;
+
+    /* retrieving key */
+    if(TYPE(key) == T_STRING)
+    {
+        op_name = RSTRING_PTR(key);
+    }
+    else if(TYPE(key) == T_SYMBOL)
+    {
+        op_name = rb_id2name(SYM2ID(key));
+    }
+    else
+    {
+        return 0;
+    }
+
+    /* retrieving value */
+    if(TYPE(value) == T_STRING)
+    {
+        func_name = RSTRING_PTR(value);
+    }
+    else if(TYPE(value) == T_SYMBOL)
+    {
+        func_name = rb_id2name(SYM2ID(key));
+    }
+    else
+    {
+        return 0;
+    }
+
+    Data_Get_Struct(self, wsservice_t, wsservice);
+    svc_info = wsservice->svc_info;
+
+    class_name = wsservice->temp_ops_class;
+
+    axutil_hash_set (svc_info->ops_to_classes,
+        axutil_strdup (wsservice->ws_env_svr, op_name),
+        AXIS2_HASH_KEY_STRING,
+        axutil_strdup (wsservice->ws_env_svr, class_name));
+
+    axutil_hash_set (svc_info->ops_to_functions,
+        axutil_strdup (wsservice->ws_env_svr, op_name),
+        AXIS2_HASH_KEY_STRING,
+        axutil_strdup (wsservice->ws_env_svr, func_name));
+
+}
+
+static int
+wsf_util_resolve_class_ops(VALUE key, VALUE value, VALUE self)
+{
+    axis2_char_t *class_name;
+    wsservice_t *wsservice;
+    VALUE func_hash;
+
+    Data_Get_Struct(self, wsservice_t, wsservice);
+
+    func_hash = value;
+    
+    if(TYPE(key) == T_STRING)
+    {
+        class_name = RSTRING_PTR(key);
+    }
+    else if(TYPE(key) == T_SYMBOL)
+    {
+        class_name = rb_id2name(SYM2ID(key));
+    }
+    else
+    {
+        return 0;
+    }
+    wsservice->temp_ops_class = class_name;
+
+    if(TYPE(func_hash) == T_HASH)
+    {  
+        /* operation to function map */
+        rb_hash_foreach(func_hash, wsf_util_resolve_op_to_func, self);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+void wsf_util_process_ws_service_classes(VALUE self)
+{
+    VALUE ht_calsses;
+    VALUE ht_ops_to_mep;
+    /*HashTable *ht_classes,
+    HashTable *ht_ops_to_mep, */
+    wsf_svc_info_t *svc_info;
+    axutil_env_t *ws_env_svr;
+
+    VALUE class_hash;
+
+    wsservice_t *wsservice;
+
+    Data_Get_Struct(self, wsservice_t, wsservice);
+    svc_info = wsservice->svc_info;
+
+    if(TYPE(wsservice->ht_classes) == T_ARRAY)
+    {
+        /* classes array */
+        while(Qnil != (class_hash = rb_ary_shift(wsservice->ht_classes)))
+        {
+            /* class_hash has the class_name=>(ops) map */
+            if(TYPE(class_hash) == T_HASH)
+            {
+                rb_hash_foreach(class_hash, wsf_util_resolve_class_ops, self);
+            }
+        }
+    }
+}

@@ -33,18 +33,6 @@ wsf_ruby_req_info_fill(wsf_req_info_t *req_info, VALUE request);
 static void
 wsf_ruby_res_info_fill(VALUE response, axis2_char_t *status_line);
 
-typedef struct wsservice
-{
-    wsf_svc_info_t *svc_info;
-
-    char *request_uri;
-
-    VALUE ht_actions;
-    VALUE ht_ops_to_funcs;
-    VALUE ht_ops_to_mep;
-    VALUE ht_op_params;
-
-} wsservice_t;
 
 static VALUE rb_mWSO2;
 static VALUE rb_mWSF;
@@ -71,6 +59,7 @@ wsservice_allocate(VALUE klass)
     wsservice_t *w;
         
     w =(wsservice_t*)malloc(sizeof(wsservice_t));
+    w->ws_env_svr = ws_env_svr;
  
     return Data_Wrap_Struct(klass, wsservice_mark, wsservice_free, w);
 }
@@ -86,6 +75,7 @@ wsservice_initialize(VALUE self, VALUE options)
     VALUE request_xop;
     VALUE security_token;
     VALUE use_reliable;
+    VALUE ht_classes;
 
     VALUE v_use_mtom;
     VALUE key = Qnil;
@@ -95,10 +85,10 @@ wsservice_initialize(VALUE self, VALUE options)
 
     wsf_svc_info_t *svc_info;
 
-    
     svc_info = wsf_svc_info_create (ws_env_svr);
     svc_info->ops_to_functions = axutil_hash_make (ws_env_svr);
     svc_info->ops_to_actions = axutil_hash_make (ws_env_svr);
+    svc_info->ops_to_classes = axutil_hash_make (ws_env_svr);
     svc_info->ruby_worker = worker;
 
     if(TYPE(options) == T_HASH)
@@ -108,11 +98,21 @@ wsservice_initialize(VALUE self, VALUE options)
         {
             ht_actions = rb_hash_aref(options, rb_str_new2("actions"));
         }
+        if(ht_actions != Qnil)
+        {
+            AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                                "[wsf_service] setting actions ");
+        }
 
         ht_ops_to_funcs = rb_hash_aref(options, ID2SYM(rb_intern("operations")));
         if(ht_ops_to_funcs == Qnil)
         {
             ht_ops_to_funcs = rb_hash_aref(options, rb_str_new2("operations"));
+        }
+        if(ht_ops_to_funcs != Qnil)
+        {
+            AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                                "[wsf_service] setting operation to ruby function map");
         }
         
         ht_ops_to_mep = rb_hash_aref(options, ID2SYM(rb_intern("op_mep")));
@@ -120,11 +120,21 @@ wsservice_initialize(VALUE self, VALUE options)
         {
             ht_ops_to_mep = rb_hash_aref(options, rb_str_new2("op_mep"));
         }
+        if(ht_ops_to_mep != Qnil)
+        {
+            AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                                "[wsf_service] setting operation to mep map");
+        }
         
         ht_op_params = rb_hash_aref(options, ID2SYM(rb_intern("op_params")));
         if(ht_op_params == Qnil)
         {
             ht_op_params = rb_hash_aref(options, rb_str_new2("op_params"));
+        }
+        if(ht_op_params != Qnil)
+        {
+            AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                                "[wsf_service] setting message operation parameters");
         }
         svc_info->ht_op_params = ht_op_params;
 
@@ -134,7 +144,7 @@ wsservice_initialize(VALUE self, VALUE options)
             v_use_mtom = rb_hash_aref(options, rb_str_new2(WS_USE_MTOM));
         }
 
-        if(TYPE(v_use_mtom) == T_TRUE)
+        if(v_use_mtom == Qtrue)
         {
             svc_info->use_mtom  = 1;
         }
@@ -142,6 +152,10 @@ wsservice_initialize(VALUE self, VALUE options)
         {
             svc_info->use_mtom  = 0;
         }
+
+        AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                                  "[wsf_service] setting mtom property %d",
+                                  svc_info->use_mtom);
         
         request_xop = rb_hash_aref(options, ID2SYM(rb_intern(WS_REQUEST_XOP)));
         if(request_xop == Qnil)
@@ -168,7 +182,7 @@ wsservice_initialize(VALUE self, VALUE options)
         }
 
         use_reliable = rb_hash_aref(options, ID2SYM(rb_intern(WS_RELIABLE)));
-        if(TYPE(use_reliable) == T_TRUE)
+        if(use_reliable == Qtrue)
         {
             if (!svc_info->modules_to_engage)
             {
@@ -177,6 +191,19 @@ wsservice_initialize(VALUE self, VALUE options)
             
             axutil_array_list_add (svc_info->modules_to_engage, 
                 ws_env_svr, axutil_strdup (ws_env_svr, "sandesha2"));
+        }
+        AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                          "[wsf_service] Use reliable is set to %b",use_reliable == Qtrue);
+        
+        ht_classes = rb_hash_aref(options, ID2SYM(rb_intern(WS_CLASSES)));
+        if(ht_classes == Qnil)
+        {
+            ht_classes = rb_hash_aref(options, rb_str_new2(WS_CLASSES));
+        }
+        if(ht_classes != Qnil)
+        {
+            AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                          "[wsf_service] ht_classes object present");
         }
     }
 
@@ -187,94 +214,11 @@ wsservice_initialize(VALUE self, VALUE options)
     wsservice->ht_ops_to_funcs = ht_ops_to_funcs;
     wsservice->ht_ops_to_mep = ht_ops_to_mep;
     wsservice->ht_op_params = ht_op_params;
+    wsservice->ht_classes = ht_classes;
 
     wsservice->request_uri = NULL;
-
 }
 
-static int
-hash_each_ops_to_funcs(VALUE key, VALUE value, VALUE arg)
-{
-    char *op_name_to_store = NULL;
-    char *op_name = NULL;
-    unsigned int op_name_len = 0;
-    char *func_name = NULL;
-    wsservice_t *wsservice;
-
-    wsf_svc_info_t *svc_info;
-
-    Data_Get_Struct(arg, wsservice_t, wsservice);
-
-    svc_info = wsservice->svc_info;
-
-    func_name = RSTRING_PTR(value);
-    op_name = RSTRING_PTR(key);
-
-    if (op_name)
-    {
-        op_name_to_store = op_name;
-    } else 
-    {
-        op_name_to_store = func_name;
-    }
-
-    axutil_hash_set (svc_info->ops_to_functions,
-        axutil_strdup (ws_env_svr, op_name_to_store),
-        AXIS2_HASH_KEY_STRING, axutil_strdup (ws_env_svr, func_name));
-}
-
-static int
-hash_each_action(VALUE key, VALUE value, VALUE arg)
-{
-    char *func_name = NULL;
-    char *wsa_action = NULL;
-    uint str_length = 0;
-    char *operation_name = NULL;
-    VALUE f;
-    wsservice_t *wsservice;
-
-    wsf_svc_info_t *svc_info;
-
-    Data_Get_Struct(arg, wsservice_t, wsservice);
-
-    svc_info = wsservice->svc_info;
-    
-    operation_name = RSTRING_PTR(value);
-    wsa_action = RSTRING_PTR(key);
-
-    func_name = axutil_hash_get (svc_info->ops_to_functions,
-            operation_name, AXIS2_HASH_KEY_STRING);
-    if (!func_name)
-    {
-        axutil_hash_set (svc_info->ops_to_functions,
-                            axutil_strdup (ws_env_svr, operation_name),
-                                AXIS2_HASH_KEY_STRING, axutil_strdup (ws_env_svr,
-                                operation_name));
-        func_name = operation_name;
-    }
-   
-    /* 
-    key = rb_str_new2(axutil_string_tolower(func_name));
-    */
-
-    if (wsa_action)
-    {
-        wsf_util_create_op_and_add_to_svc (svc_info, wsa_action,
-                    ws_env_svr, operation_name, wsservice->ht_ops_to_mep);
-
-        /* keep track of operations with actions */
-        axutil_hash_set (svc_info->ops_to_actions,
-                    axutil_strdup (ws_env_svr, operation_name),
-                    AXIS2_HASH_KEY_STRING, axutil_strdup (ws_env_svr,
-                        wsa_action));
-    }
-
-    else
-    {
-        wsf_util_create_op_and_add_to_svc (svc_info, NULL,
-                    ws_env_svr, operation_name, wsservice->ht_ops_to_mep);
-    }
-}
 
 static void
 wsf_ruby_res_info_fill(VALUE response, axis2_char_t *status_line)
@@ -392,7 +336,7 @@ wsf_ruby_req_info_fill(wsf_req_info_t *req_info, VALUE request)
             request_envelope = RSTRING_PTR(v_rawpost);
             AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
                           "[wsf_service] request raw post data: %s",request_envelope);
-            /* request_envelope_len = strlen(request_envelope); */
+            request_envelope_len = strlen(request_envelope); 
         }
         else
         {
@@ -434,7 +378,6 @@ wsf_ruby_req_info_fill(wsf_req_info_t *req_info, VALUE request)
 
     */
 
-
 }
     
 
@@ -450,11 +393,9 @@ wsservice_reply(VALUE self, VALUE request, VALUE response)
     axis2_conf_ctx_t * conf_ctx = NULL;
     wsf_svc_info_t * svc_info = NULL;
     wsf_req_info_t  req_info; 
-    wsf_worker_t * ruby_worker = NULL;
+    wsf_worker_t *ruby_worker = NULL;
     int status = 0;
 
-    axutil_hash_index_t *hi;
-    
     char status_line[100];
     char *content_type = NULL;
     int in_wsdl_mode = 0;
@@ -491,53 +432,7 @@ wsservice_reply(VALUE self, VALUE request, VALUE response)
         svc_info->msg_recv = wsf_msg_recv;
         wsf_util_create_svc_from_svc_info (svc_info, ws_env_svr);
 
-        if(ht_ops_to_funcs != Qnil)
-        {
-            rb_hash_foreach(ht_ops_to_funcs, hash_each_ops_to_funcs, self);
-        }
-
-        if(ht_actions != Qnil)
-        {
-            rb_hash_foreach(ht_actions, hash_each_action, self);
-        }
-
-        if (svc_info->ops_to_functions) 
-        {
-            for (hi = axutil_hash_first (svc_info->ops_to_functions, ws_env_svr);
-                hi; hi = axutil_hash_next (ws_env_svr, hi)) {
-
-                void *v = NULL;
-                const void *k = NULL;
-                char *key = NULL;
-                char *val = NULL;
-                char *function_name = NULL;
-                int key_len = 0;
-
-                axutil_hash_this (hi, &k, NULL, &v);
-                key = (axis2_char_t *) k;
-                val = (axis2_char_t *) v;
-                if (key && val) {
-
-                    /* function is there, add the operation to service */
-                    if (strcmp (key, val) == 0) {
-                        wsf_util_create_op_and_add_to_svc (svc_info, NULL,
-                            ws_env_svr, key, ht_ops_to_mep);
-                    }
-                    else {
-                        char *action_for_op = NULL;
-                        action_for_op = axutil_hash_get (svc_info->ops_to_actions, key,
-                            AXIS2_HASH_KEY_STRING);
-
-                        if (!action_for_op) {
-                            /* There was no mapping WSA action for this operation.
-                            So this operation was not yet added, hence add. */
-                            wsf_util_create_op_and_add_to_svc (svc_info, NULL,
-                            ws_env_svr, key, ht_ops_to_mep);
-                        }
-                    }
-                }
-            }
-        }
+        wsf_util_process_ws_service_operations_and_actions(self);
     }
 
     ruby_worker = svc_info->ruby_worker;
@@ -549,7 +444,6 @@ wsservice_reply(VALUE self, VALUE request, VALUE response)
         return;
     }
 
-    
     conf = axis2_conf_ctx_get_conf (conf_ctx, ws_env_svr); 
     if (!axis2_conf_get_svc (conf, ws_env_svr, svc_info->svc_name))
     {
@@ -681,7 +575,7 @@ Init_wsservice()
     ws_env_svr = wsf_env_create_svr(log_path, 
                                     log_level);
 
-    if(ws_env_svr == Qnil)
+    if(ws_env_svr == NULL)
     {
         rb_raise(rb_eException, "Error creating ws_env_svr");
     }

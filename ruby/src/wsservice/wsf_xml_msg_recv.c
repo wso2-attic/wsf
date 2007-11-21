@@ -26,6 +26,7 @@
 #include "wsf_util.h"
 #include <string.h>
 #include <ruby.h>
+#include "wsf_common.h"
 
 #ifndef RSTRING_PTR
     #define RSTRING_PTR(x) (RSTRING(x)->ptr)
@@ -59,7 +60,7 @@ static axiom_node_t *wsf_xml_msg_recv_invoke_wsmsg (
     axis2_char_t * op_name,
     axiom_node_t * om_node,
     axis2_msg_ctx_t * out_msg_ctx,
-    axutil_hash_t * class_info,
+    axis2_char_t *classname,
     int enable_mtom,
     int request_xop );
 
@@ -137,16 +138,17 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
     int use_mtom = AXIS2_TRUE;
     int request_xop = AXIS2_FALSE;
 
-    axutil_hash_t *class_info = NULL;
     const axis2_char_t *style = NULL;
     axis2_char_t *local_name = NULL;
     axis2_char_t *soap_ns = AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
     axis2_char_t *operation_name = NULL;
+    axis2_char_t *classname = NULL;
 
     wsf_svc_info_t *svc_info = NULL;
 
     /** store in_msg_ctx envelope */
     axiom_soap_envelope_t *envelope = NULL;
+    axiom_soap_body_t *body = NULL;
 
     /* store out_msg_ctx envelope */
     axiom_soap_envelope_t *default_envelope = NULL;
@@ -155,7 +157,6 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
     axiom_soap_header_t *out_header = NULL;
     axiom_soap_fault_t *soap_fault = NULL;
 
-    AXIS2_ENV_CHECK (env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK (env->error, in_msg_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK (env->error, out_msg_ctx, AXIS2_FAILURE);
 
@@ -165,12 +166,12 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
 
     style = axis2_op_get_style (op_desc, env);
 
+    envelope = axis2_msg_ctx_get_soap_envelope (in_msg_ctx, env);
+    body = axiom_soap_envelope_get_body (envelope, env);
+
     if (0 == axutil_strcmp (AXIS2_STYLE_DOC, style)) {
 
-        axiom_soap_body_t *body = NULL;
 
-        envelope = axis2_msg_ctx_get_soap_envelope (in_msg_ctx, env);
-        body = axiom_soap_envelope_get_body (envelope, env);
         om_node = axiom_soap_body_get_base_node (body, env);
         om_element = axiom_node_get_data_element (om_node, env);
         om_node = axiom_node_get_first_child (om_node, env);
@@ -185,8 +186,6 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
         axiom_node_t *op_node = NULL;
         axiom_element_t *op_element = NULL;
 
-        envelope = axis2_msg_ctx_get_soap_envelope (in_msg_ctx, env);
-        body = axiom_soap_envelope_get_body (envelope, env);
         op_node = axiom_soap_body_get_base_node (body, env);
         op_element = axiom_node_get_data_element (op_node, env);
 
@@ -215,7 +214,6 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
     if (prop) {
         svc_info = (wsf_svc_info_t *) axutil_property_get_value (prop, env);
         if (svc_info) {
-            class_info = svc_info->class_info;
             use_mtom = svc_info->use_mtom;
             request_xop = svc_info->request_xop;
             operation_name =
@@ -226,6 +224,15 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
         } else {
             return AXIS2_FAILURE;
         }
+        if(svc_info->ops_to_classes) {
+            classname = axutil_hash_get(svc_info->ops_to_classes, local_name, AXIS2_HASH_KEY_STRING);
+        }
+    }
+    else
+    {
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI,
+            "[wsf log] unable to access the msg ctx properties");
+        return AXIS2_FAILURE;
     }
 
     if (svc_info->ht_op_params != Qnil) {
@@ -246,14 +253,14 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
                     wsf_xml_msg_recv_invoke_wsmsg (env, soap_ns,
                     operation_name,
                     om_node, out_msg_ctx,
-                    class_info, use_mtom, request_xop);
+                    classname, use_mtom, request_xop);
             }
         }
     } else {
         result_node =
             wsf_xml_msg_recv_invoke_wsmsg (env, soap_ns, operation_name,
             om_node, out_msg_ctx,
-            class_info, use_mtom, request_xop);
+            classname, use_mtom, request_xop);
     }
     if (!result_node) {
 
@@ -341,11 +348,10 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
         err_msg = (char *) AXIS2_ERROR_GET_MESSAGE (env->error);
 
         if (err_msg) {
-
             fault_reason_str = err_msg;
         } else {
 
-            fault_reason_str = "Something went wrong";
+            fault_reason_str = "Error occured while processing SOAP message";
         }
 
         soap_fault = axiom_soap_fault_create_default_fault (env, out_body,
@@ -468,22 +474,16 @@ wsf_xml_msg_recv_invoke_wsmsg (
     axis2_char_t * op_name,
     axiom_node_t * om_node,
     axis2_msg_ctx_t * out_msg_ctx,
-    axutil_hash_t * class_info,
+    axis2_char_t* classname,
     int use_mtom,
     int request_xop)
 {
 
     char *req_payload = NULL, *res_payload = NULL;
     axiom_node_t *res_om_node = NULL;
-    axis2_char_t *class_name = NULL;
     void *val = NULL;
     int _bailout = 0;
 
-    /* zval func, retval, param;
-    HashTable *ft = NULL;
-    zend_class_entry **ce = NULL;
-    zval *params[1];
-    zval *msg = NULL; */
     VALUE msg;
     VALUE msg_klass;
     VALUE fault_klass;
@@ -512,7 +512,6 @@ wsf_xml_msg_recv_invoke_wsmsg (
         " [wsf_svr] calling ruby service ");
 
     /* zend_try { */
-
         msg_klass = rb_define_class("WSMessage", rb_cObject);
         /* msg_params[0] = rb_str_new2(req_payload); */
         msg = rb_str_new2(req_payload);
@@ -556,17 +555,29 @@ wsf_xml_msg_recv_invoke_wsmsg (
         INIT_PZVAL (params[0]);
         */
 
-        if (NULL != class_info
-            && NULL != (val =
-                axutil_hash_get (class_info, op_name,
-                    AXIS2_HASH_KEY_STRING))) {
-            class_name = (axis2_char_t *) val;
-            user_klass = rb_define_class(class_name, rb_cObject);
+        if (NULL != classname)
+        { 
+            VALUE method_exists;
+            
+            user_klass = rb_define_class(classname, rb_cObject);
             user_obj = rb_class_new_instance(0, NULL, user_klass);
 
             if(user_obj != Qnil)
             {
-                res = rb_funcall(user_obj, rb_intern(op_name), 1, msg);
+            
+                method_exists = rb_funcall(user_klass, rb_intern("respond_to?"), 1, rb_str_new2(op_name));
+                if(method_exists == Qtrue)
+                {
+                    res = rb_funcall(user_obj, rb_intern(op_name), 1, msg);
+                }
+                else
+                {
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                            "[wsf log ]The method %s doesnt exist", op_name);
+
+                    return NULL;
+                }
+
                 if(res != Qnil)
                 {
                     if(TYPE(res) == T_STRING)
@@ -587,7 +598,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
             }
         }
             /*
-            zend_lookup_class (class_name, strlen (class_name),
+            zend_lookup_class (classname, strlen (classname),
                 &ce TSRMLS_CC);
             if (ce) { 
                 if (call_user_function
@@ -607,8 +618,18 @@ wsf_xml_msg_recv_invoke_wsmsg (
 
         else
         {
-            
-            res = rb_funcall(T_NIL, rb_intern(op_name), 1, msg);
+            VALUE method_exists = rb_funcall(rb_cObject, rb_intern("respond_to?"), 2, rb_str_new2(op_name), Qtrue);
+            if(method_exists == Qtrue)
+            {
+                res = rb_funcall(T_NIL, rb_intern(op_name), 1, msg);
+            }
+            else
+            {
+		        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+							            "[wsf log ]The method %s doesnt exist", op_name);
+
+                return NULL;
+            }
 
             if(res != Qnil)
             {
