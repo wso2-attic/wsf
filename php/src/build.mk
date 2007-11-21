@@ -5,7 +5,7 @@ CFLAGS = /nologo /w /D "WIN32" /D "_WINDOWS" /D "ZTS" /D "PHP_WIN32" /D "COMPILE
 	 /D "_USE_32BIT_TIME_T=1" /D "USE_SANDESHA2" /D "ZEND_WIN32" /D "ZEND_DEBUG=0" \
 	 /D "_MBCS" 
 
-LDFLAGS = /nologo /LIBPATH:.\..\wso2-wsf-php-bin-1.1.0-win32\wsf_c\lib /LIBPATH:$(PHP_BIN_DIR)\dev \
+LDFLAGS = /nologo /LIBPATH:.\..\wso2-wsf-php-bin-1.2.0-win32\wsf_c\lib /LIBPATH:$(PHP_BIN_DIR)\dev \
 	  /LIBPATH:$(LIBXML2_BIN_DIR)\lib
 
 LIBS = php5ts.lib axutil.lib axis2_engine.lib axis2_parser.lib \
@@ -14,7 +14,7 @@ LIBS = php5ts.lib axutil.lib axis2_engine.lib axis2_parser.lib \
 
 INCLUDE_PATH = /I$(PHP_SRC_DIR) /I$(PHP_SRC_DIR)\main /I$(PHP_SRC_DIR)\regex \
 	       /I$(PHP_SRC_DIR)\ext /I$(PHP_SRC_DIR)\sapi /I$(PHP_SRC_DIR)\Zend \
-	       /I$(PHP_SRC_DIR)\TSRM /I.\..\wso2-wsf-php-bin-1.1.0-win32\wsf_c\include \
+	       /I$(PHP_SRC_DIR)\TSRM /I.\..\wso2-wsf-php-bin-1.2.0-win32\wsf_c\include \
 	       /I$(LIBXML2_BIN_DIR)\include /I$(WIN32BUILD_DIR)\include \
 	       /I$(ICONV_BIN_DIR)\include 
 
