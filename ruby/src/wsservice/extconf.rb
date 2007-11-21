@@ -11,18 +11,19 @@ if(WSFC_HOME == nil)
   exit(-1)
 end
 
-dir_config("wsservice", WSFC_HOME + '/include/axis2-1.1', WSFC_HOME + '/lib')
+dir_config("wsservice", WSFC_HOME + '/include', WSFC_HOME + '/lib')
 
 have_library('axutil')
 have_library('axis2_minizip')
 have_library('axis2_parser')
-have_library('axis2_libxml2')
-have_library('axis2_axiom')
+have_library('libxml2')
+have_library('axiom')
 have_library('axis2_engine')
 have_library('axis2_http_common')
 have_library('axis2_http_sender')
 have_library('axis2_http_receiver')
 have_library('axis2_engine')
 
+$CFLAGS = $CFLAGS + "-DWIN32 -DSWIG_NOINCLUDE"
 
 create_makefile("wsservice")

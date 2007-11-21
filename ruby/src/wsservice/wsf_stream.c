@@ -62,7 +62,7 @@ int WSF_CALL wsf_stream_skip (
     const axutil_env_t * env,
     int count);
 
-axutil_stream_t *WSF_CALL
+axutil_stream_t *
 wsf_stream_create (
     const axutil_env_t * env,
     wsf_req_info_t * req_info)
@@ -96,7 +96,7 @@ wsf_stream_create (
     return &(stream_impl->stream);
 }
 
-axis2_status_t WSF_CALL
+axis2_status_t 
 wsf_stream_free (
     axutil_stream_t * stream,
     const axutil_env_t * env)

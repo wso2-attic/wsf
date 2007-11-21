@@ -17,14 +17,21 @@
 #ifndef WSF_COMMON_H
 #define WSF_COMMON_H
 
+#ifdef WIN32
+#include <winsock2.h>
+#endif
+
 #include <axis2_svc.h>
 #include <axis2_msg_recv.h>
 #include <axiom.h>
 #include <ruby.h>
 #include <axutil_utils_defines.h>
 
+#ifdef WIN32
+#define WSF_CALL	__stdcall
+#else
 #define WSF_CALL
-
+#endif
 
 /* {{{ axis2 object types */
 typedef enum ws_object_types_t

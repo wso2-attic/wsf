@@ -29,8 +29,9 @@
 #include <axiom_soap_const.h>
 #include <axiom_soap.h>
 #include "wsf_out_transport_info.h"
-#include "wsf_stream.h"
+
 #include "wsf_util.h"
+#include "wsf_stream.h"
 /* #include "wsf_policy.h" */
     
 #define READ_SIZE 32

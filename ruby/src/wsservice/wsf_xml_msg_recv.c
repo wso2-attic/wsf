@@ -462,9 +462,11 @@ wsf_xml_msg_recv_invoke_mixed (
     axis2_msg_ctx_t * out_msg_ctx,
     axis2_char_t * op_name)
 {
-
+/*
     return wsf_soap_do_function_call (env,
         svc_info, in_msg_ctx, out_msg_ctx, op_name);
+*/
+	  return 0;
 }
 
 static axiom_node_t *
@@ -670,7 +672,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
                     attachments = rb_hash_aref(properties, ID2SYM(rb_intern("attachments")));
 
                     if(TYPE(attachments) == T_ARRAY)
-                    {
+                    {/*
                         wsf_util_set_attachments_with_cids (env, use_mtom,
                             res_om_node, attachments, default_cnt_type);
                         if (use_mtom == 1) 
@@ -678,6 +680,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
                             axis2_msg_ctx_set_doing_mtom (out_msg_ctx, env,
                                 AXIS2_TRUE);
                         }
+						*/
                     }
                 }
                 else if(TYPE(res) == T_STRING)

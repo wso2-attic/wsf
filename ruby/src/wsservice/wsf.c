@@ -1,3 +1,6 @@
+#ifdef WIN32
+	#include "winsock2.h"   // hack to avoid errors winsock redefinitions
+#endif
 #include "ruby.h"
 
 #include "axis2_util.h"

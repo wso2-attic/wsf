@@ -1443,7 +1443,7 @@ wsf_util_hash_each_action(VALUE key, VALUE value, VALUE arg)
 {
     char *func_name = NULL;
     char *wsa_action = NULL;
-    uint str_length = 0;
+    unsigned int str_length = 0;
     char *operation_name = NULL;
     VALUE f;
     wsservice_t *wsservice;
