@@ -393,10 +393,10 @@ wsf_client_get_reader_from_zval (
             AXIS2_XML_PARSER_TYPE_BUFFER);
 
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsflog] %s", str_payload);
-    } else if (Z_TYPE_PP (param) == IS_OBJECT &&
-        instanceof_function (Z_OBJCE_PP (param),
-            dom_node_class_entry TSRMLS_CC)) {
-
+    } else if (Z_TYPE_PP (param) == IS_OBJECT){
+#ifdef HAVE_DOM        
+        if(instanceof_function (Z_OBJCE_PP (param),dom_node_class_entry TSRMLS_CC)) {
+#endif
         nodep = wsf_util_get_xml_node (*param TSRMLS_CC);
 
         reader = axiom_xml_reader_create_for_memory (env, (void *) nodep->doc,
@@ -404,6 +404,9 @@ wsf_client_get_reader_from_zval (
 
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
             "[wsf_client] Input WSMessage - dom node ");
+#ifdef HAVE_DOM        
+        }
+#endif        
     }
 
     if (!reader) {
