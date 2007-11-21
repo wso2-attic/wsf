@@ -1,0 +1,96 @@
+/* CSS Document */
+
+/* tab images when not selected */
+.bl {background: url(../images/bl.gif) 0 100% no-repeat} 
+.br {background: url(../images/br.gif) 100% 100% no-repeat} 
+.tl {background: url(../images/tl.gif) 0 0 no-repeat } 
+.tr {background: url(../images/tr.gif) 100% 0 no-repeat; padding:25px} 
+.ttr {background: url(../images/tr.gif) 100% 0 no-repeat; padding:5px} 
+
+.bl2 {background: url(../images/border/bl.gif) 0 100% no-repeat} 
+.br2 {background: url(../images/border/br.gif) 100% 100% no-repeat} 
+.tl2 {background: url(../images/border/tl.gif) 0 0 no-repeat } 
+.tr2 {background: url(../images/border/tr.gif) 100% 0 no-repeat; padding:25px} 
+.ttr2 {background: url(../images/border/tr.gif) 100% 0 no-repeat; padding:5px} 
+.tttr2 {background: url(../images/border/tr.gif) 100% 0 no-repeat; padding:5px }
+
+.rounded_inner_container{ padding:25px;}
+
+.left2 {
+ background:url(../images/border/left.gif) 0 0 repeat-y
+}
+.rright2 {
+ background:url(../images/border/right.gif) 100% 0 repeat-y 
+}
+.top2 {
+ background:url(../images/border/top.gif) 0 0 repeat-x; z-index:5
+}
+.bottom2 {
+ background:url(../images/border/bot.gif) 0 100% repeat-x #ffffff;
+ width: 100%;
+ text-align: center;
+ }
+
+
+.left {
+ background:url(../images/left.gif) 0 0 repeat-y
+}
+.rright {
+ background:url(../images/right.gif) 100% 0 repeat-y 
+}
+.top {
+ background:url(../images/top.gif) 0 0 repeat-x; z-index:5
+}
+.bottom {
+ background:url(../images/bottom.gif) 0 100% repeat-x #ffffff;
+ width: 100%;
+ text-align: center;
+ }
+ 
+.bbottom {
+ background:url(../images/bottom.gif) 0 100% repeat-x #ffffff;
+ width: 100%;
+ text-align: center;
+ cursor:pointer;
+ }
+.clear {font-size: 1px; height: 1px}
+
+/* tab images when selected */
+.left_selected{
+ background:url(../images/left_selected.gif) 0 0 repeat-y;
+}
+.top_selected {
+ background:url(../images/top_selected.gif) 0 0 repeat-x
+}
+.bottom_selected{
+ background:#f8f8f8;
+ width: 100%;
+ cursor:pointer;
+}
+.tl_selected {
+ background: url(../images/tl_selected.gif) 0 0 no-repeat
+} 
+.tr_selected {
+ background: url(../images/tr_selected.gif) 100% 0 no-repeat; padding:5px
+} 
+
+/* tab images to build the remaining */
+ 
+.bottomremaining {
+  background:url(../images/bottom.gif) 0 100% repeat-x;
+  padding:5px;
+}
+ 
+/* images for tab menu */
+.bottombody {
+ background:url(../images/bottom.gif) 0 100% repeat-x;
+}
+ 
+.leftbody {
+  background:url(../images/left.gif) 0 0 repeat-y;
+}
+
+.blbody {
+ background: url(../images/bl.gif) 0 100% no-repeat;
+ padding:5px;
+}
