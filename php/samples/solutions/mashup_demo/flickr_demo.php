@@ -2,8 +2,9 @@
     
     /* Extract the arguments from HTTP GET request */
     $flickr_query = $_GET["flickr_query"];
-    $flickr_method = $_GET["flickr_method"];
-
+    $flickr_method = $_GET["flickr_method"];        
+    $flickr_key = $_GET["flickr_key"];
+	
     $taken_start_year= $_GET["taken_start_year"];
     $taken_start_month= $_GET["taken_start_month"];
     $taken_start_day= $_GET["taken_start_day"];
@@ -51,11 +52,11 @@
     }
 
     /* Call service only if the query is set, ignore otherwise */
-    if(isset($flickr_query) && !empty($flickr_query)) {
+if(isset($flickr_query) && !empty($flickr_query) && isset($flickr_key)) {
         /* Include the required class */
-        require_once("../../../scripts/wso2/flickr/FlickrClient.php");
-        $flickr_client = new FlickrClient("your key");
-
+        require_once("../../../scripts/wso2/flickr/FlickrClient.php");  
+	
+	$flickr_client = new FlickrClient($flickr_key);
         if($flickr_method === "text") {
             $res = $flickr_client->photosTextSearch($flickr_query, $options);
         }

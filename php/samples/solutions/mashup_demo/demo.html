@@ -10,6 +10,8 @@
 
 <script language="javascript">
     var flickrTabPanel;
+    var flickrKey;
+    var amazonKey;
 
     var currentFlickrTab;
     var currentYahooTab;
@@ -57,7 +59,8 @@
     function flickrRequest(page)
     {
         var query = document.getElementById("flickr_query").value;
-        
+	var key = document.getElementById("flickr_key").value;
+
         method = "";
         setTo = flickrTabBody;
         if(currentFlickrTab.id == 1)
@@ -111,7 +114,10 @@
 
                                     "flickr_method",
                                     method,
-
+				    
+				    "flickr_key",
+				    key,
+				    
                                     "page",
                                     page]);
             
@@ -126,6 +132,9 @@
 
                                             "flickr_method",
                                             method,
+					    
+					    "flickr_key",
+					    key,
 
                                             "page",
                                             page],
@@ -177,14 +186,18 @@
     {
         var query = document.getElementById("amazon_query").value;
         var index = document.getElementById("amazon_index").value;
-        
+        var key   = document.getElementById("amazon_key").value;
+
         Ajax.request("amazon_demo.php",{ params: [
                                             "amazon_query",
                                             query,
 
                                             "amazon_index",
                                             index,
-                                            
+
+                                            "amazon_key",
+                                            key,
+
                                             "page",
                                             page],
                                           set_to: "amazonResult"});
@@ -319,9 +332,11 @@
                                                        Flickr Search
                                                     </div>
                                                     <div class="rounded_inner_container">
-<div style="text-align:center; padding: 5px">
-    <input id="flickr_query" onchange="flickrRequest()" name="flickr_query" type="text"></input>
-    <input type="button" onclick="flickrRequest()" value="Search"></input>
+<div style="text-align:left; padding: 5px">
+	<input id="flickr_query" onchange="flickrRequest()" name="flickr_query" type="text"></input>
+	<input type="button" onclick="flickrRequest()" value="Search"></input>
+	<input id="flickr_key" onchange="filckrRequest()"
+	name="flickr_key" type="text"></input><strong>  key</strong>
 </div>
 <div style="text-align:center; padding: 5px">
 </div>
@@ -389,7 +404,7 @@
                                                     </div>
                                                     <div class="rounded_inner_container">
 
-<div style="text-align:center; padding: 5px">
+<div style="text-align:left; padding: 5px">
     <select id="amazon_index">
         <option value="All">All</option>
         <option value="Apparel">Apparel</option>
@@ -434,9 +449,13 @@
         <option value="WirelessAccessories">Wireless Accessories</option>
     </select>
 </div>
-<div style="text-align:center; padding: 5px">
+<div style="text-align:left; padding: 5px">
     <input id="amazon_query" onchange="amazonRequest(1)" name="amazon_query" type="text"></input>
-    <input type="button" value="Search" onclick="amazonRequest(1)"></input>
+    <input type="button" value="Search"
+    onclick="amazonRequest(1)"></input>
+    <input id="amazon_key" onchange="amazonRequest(1)" name="amazon_key" type="text"></input>
+    <strong>  key</strong>
+  
 </div>
 <div style="text-align:center; padding: 5px">
 <div id="amazonResult" style="height:500px; overflow:auto;">

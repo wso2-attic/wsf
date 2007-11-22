@@ -3,14 +3,15 @@
     /* Extract the arguments from HTTP GET request */
     $amazon_query = $_GET["amazon_query"];
     $amazon_index = $_GET["amazon_index"];
+    $amazon_key   = $_GET["amazon_key"];
 
     $page = $_GET["page"];
 
     /* Call service only if the query is set, ignore otherwise */
-    if (isset($amazon_query) && !empty($amazon_query)) {
+    if (isset($amazon_query) && !empty($amazon_query) && isset($amazon_key)) {
 
         require_once("../../../scripts/wso2/amazon/AmazonClient.php");
-        $amazon_client = new AmazonClient("your key");
+        $amazon_client = new AmazonClient($amazon_key);
 
         $res = $amazon_client->itemSearch($amazon_query, $amazon_index, $page);
 
