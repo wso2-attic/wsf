@@ -180,25 +180,4 @@ function wsf_service_create_response_payload_for_array(DomDocument $payload_dom,
 }
 
 
-
-
 ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
