@@ -27,7 +27,7 @@ function QueryPurchaseOrderFunction($pro_name, $quantity, $date, $orderNo) {
 $operations = array("QueryPurchaseOrder" => "QueryPurchaseOrderFunction");
 $opParams = array("QueryPurchaseOrderFunction"=>"MIXED");
 
-$svr = new WSService(array("wsdl"=>"ShippingTrade.xml", 
+$svr = new WSService(array("wsdl"=>"ShippingTrade.wsdl", 
                            "operations" => $operations,
                            "opParams"=>$opParams));
         

@@ -18,7 +18,6 @@
 try {
 
     $client = new WSClient(array("wsdl"=>"ShippingTrade.wsdl",
-                                 // "to"=> "http://localhost:9090/samples/wsdl_mode/ShippingTradeService.php"
                                  ));
 
     $proxy = $client->getProxy();	
