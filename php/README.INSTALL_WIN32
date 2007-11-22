@@ -40,7 +40,7 @@ Contents:
 	[2] http://www.slproweb.com/products/Win32OpenSSL.html
 	[3] http://dev.mysql.com/downloads/
 	[4] http://www.php.net/downloads.php
-	[5] http://www.php.net/extra/win32build.zip. 
+	[5] http://www.php.net/extra/win32build.zip 
 
         
     b. WSF/PHP extension is build on top of WSF/C Web Services Framework. The extension source code
@@ -94,11 +94,8 @@ Contents:
 
 4. Installing WSO2 WSF as a PHP extension.
 
-    If you have build from the source you should now have the
-    	
-	wsf_c binary and the wsf.dll.
-
-    If you have extracted the binary you should have the following structure.
+    Now you should have the wso2-wsf-php binary pack with following structure.
+    ( you can get the binary from the .zip binary pack or building from the source )
 
     wso2-wsf-php-bin-1.1.0-win32
                 |  
