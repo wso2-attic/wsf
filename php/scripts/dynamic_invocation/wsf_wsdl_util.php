@@ -151,7 +151,7 @@ function wsf_get_wsdl_dom($wsdl_dom, $xslt_location)
                 return $wsdl_dom;
             }
             else{
-                echo "Not a valid WSDL";
+		    /* echo "Not a valid WSDL"; */
                 return NULL;
             }
         }
@@ -232,7 +232,7 @@ function wsf_get_binding(DomDocument $wsdl_dom, $endpoint_address, $is_wsdl_11 =
          }
          
          if(!$service_node){
-             echo "serivice node not found";
+		 /* echo "serivice node not found"; */
              return;
          }
          
@@ -247,7 +247,7 @@ function wsf_get_binding(DomDocument $wsdl_dom, $endpoint_address, $is_wsdl_11 =
          }
          
          if(!$binding_name){
-             echo "binding_name not found";
+		 /* echo "binding_name not found"; */
              return;
          }
          
@@ -274,7 +274,7 @@ function wsf_get_binding(DomDocument $wsdl_dom, $endpoint_address, $is_wsdl_11 =
         }
         
         if(!$service_node){
-             echo "service node not found";
+		/* echo "service node not found"; */
              return;
         }
         
@@ -293,7 +293,7 @@ function wsf_get_binding(DomDocument $wsdl_dom, $endpoint_address, $is_wsdl_11 =
         }
         
         if(!$binding_name){
-            echo "binding_name not found";
+		/* echo "binding_name not found"; */
              return;
         }
         
@@ -402,7 +402,7 @@ function get_policy_node(DomDocument $wsdl_dom, $policy_uri)
                     break;
                 }
             } else {/* TODO- get policy from another WSDL */
-                printf("Policy is not found in the given WSDL");
+		    /* printf("Policy is not found in the given WSDL"); */
                 return;
             }
         }
@@ -708,22 +708,3 @@ function wsf_wsdl_util_convert_value($xsd_type, $data_value)
 }
 
 ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
