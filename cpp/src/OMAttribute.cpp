@@ -48,7 +48,7 @@ axiom_attribute_t * OMAttribute::getAxiomAttribute()
     }
     if (!_wsf_axiom_attribute)
     {
-        throw OMException("Unable to create OMAttribute object");
+        throw OMException("Unable to create OMAttribute object", this);
     }
 }
 
@@ -61,7 +61,7 @@ axiom_attribute_t * OMAttribute::getAxiomAttribute()
     _wsf_axiom_attribute = axiom_attribute_create(getEnv(), name.c_str(), value.c_str(), NULL);
     if (!_wsf_axiom_attribute)
     {
-        throw OMException("Unable to create OMAttribute object");
+        throw OMException("Unable to create OMAttribute object", this);
     }
 }
 
@@ -75,7 +75,7 @@ axiom_attribute_t * OMAttribute::getAxiomAttribute()
         (attribute.getValue()).c_str(), (attribute.getNamespace())->getAxiomNamespace());
     if (!_wsf_axiom_attribute)
     {
-        throw OMException("Unable to create OMAttribute object");
+        throw OMException("Unable to create OMAttribute object", this);
     }
 }
 

@@ -166,7 +166,7 @@ bool OMElement::declareDefaultNamespace(std::string uri)
     }
     else
     {
-        throw OMException("Unable to create OMElement object");
+        throw OMException("Unable to create OMElement object", this);
     }
     axiom_node_t * node_new = NULL;
     axiom_children_iterator_t * children_iterator = NULL;
@@ -241,7 +241,7 @@ bool OMElement::declareDefaultNamespace(std::string uri)
     }
     else
     {
-        throw OMException("Unable to create OMElement object");
+        throw OMException("Unable to create OMElement object", this);
     }
 }
 
@@ -502,7 +502,7 @@ bool OMElement::setNamespace(OMNamespace * ns, bool no_find)
     }
     else
     {
-        throw OMException("Unable to create OMElement object");
+        throw OMException("Unable to create OMElement object", this);
     }
 }
 
@@ -528,7 +528,7 @@ bool OMElement::setNamespace(OMNamespace * ns, bool no_find)
     }
     else
     {
-        throw OMException("Unable to create OMElement object");
+        throw OMException("Unable to create OMElement object", this);
     }
 }
 
@@ -684,7 +684,7 @@ OMElement * OMElement::getChildElement(std::string localname, OMNamespace * ns)
     }
     else
     {
-        throw OMException("Unable to create OMElement object");
+        throw OMException("Unable to create OMElement object", this);
     }
 }
 

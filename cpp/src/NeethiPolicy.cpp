@@ -39,7 +39,7 @@ using namespace wso2wsf;
     }
     if (!_wsf_neethi_policy)
     {
-        throw NeethiException("Unable to create NeethiPolicy object");
+        throw NeethiException("Unable to create NeethiPolicy object", this);
     }
 }
 
@@ -57,7 +57,7 @@ using namespace wso2wsf;
     }
     if (!_wsf_neethi_policy)
     {
-        throw NeethiException("Unable to create NeethiPolicy object");
+        throw NeethiException("Unable to create NeethiPolicy object", this);
     }
 }
 

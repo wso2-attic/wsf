@@ -247,7 +247,7 @@ bool OMText::setValue(std::string value)
     }
     else
     {
-        throw OMException("Unable to create OMText object");
+        throw OMException("Unable to create OMText object", this);
     }
 }
 
@@ -266,7 +266,7 @@ bool OMText::setValue(std::string value)
     }
     else
     {
-        throw OMException("Unable to create OMText object");
+        throw OMException("Unable to create OMText object", this);
     }
 }
 
@@ -290,7 +290,7 @@ bool OMText::setValue(std::string value)
     }
     else
     {
-        throw OMException("Unable to create OMText object");
+        throw OMException("Unable to create OMText object", this);
     }
 }
 
@@ -329,7 +329,7 @@ bool OMText::setValue(std::string value)
     }
     else
     {
-        throw OMException("Unable to create OMText object");
+        throw OMException("Unable to create OMText object", this);
     }
 }
 
@@ -355,7 +355,7 @@ bool OMText::setValue(std::string value)
     }
     else
     {
-        throw OMException("Unable to create OMText object");
+        throw OMException("Unable to create OMText object", this);
     }
 }
 
@@ -396,7 +396,7 @@ bool OMText::setValue(std::string value)
     }
     else
     {
-        throw OMException("Unable to create OMText object");
+        throw OMException("Unable to create OMText object", this);
     }
 }
 
