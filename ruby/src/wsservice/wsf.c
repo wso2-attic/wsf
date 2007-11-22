@@ -30,7 +30,7 @@ static void
 wsf_ruby_req_info_fill(wsf_req_info_t *req_info, VALUE request);
 
 static void
-wsf_ruby_res_info_fill(VALUE response, axis2_char_t *status_line);
+wsf_ruby_res_info_fill(VALUE response, axis2_char_t *h_key, axis2_char_t *k_value);
 
 
 static VALUE rb_mWSO2;
@@ -220,10 +220,11 @@ wsservice_initialize(VALUE self, VALUE options)
 
 
 static void
-wsf_ruby_res_info_fill(VALUE response, axis2_char_t *status_line)
+wsf_ruby_res_info_fill(VALUE response, axis2_char_t *h_key, axis2_char_t *h_value)
 {
-    rb_hash_aset(response, rb_str_new2("Content-type"), rb_str_new2("text/xml"));
-    rb_hash_aset(response, rb_str_new2("Status"), rb_str_new2(status_line));
+    VALUE headers = rb_iv_get(response, "@headers");
+    rb_hash_aset(headers, rb_str_new2((char *) h_key), rb_str_new2((char *) h_value));
+/*    rb_hash_aset(headers, rb_str_new2("Status"), rb_str_new2(status_line)); */
 }
 
 
@@ -446,8 +447,7 @@ wsservice_reply(VALUE self, VALUE request, VALUE response)
     conf_ctx = wsf_worker_get_conf_ctx (ruby_worker, ws_env_svr);
     if (!conf_ctx) 
     {
-        /* report error */
-        return;
+        rb_raise(rb_eException, "[wsf-service] Could not create configuration context (conf_ctx is null)");
     }
 
     conf = axis2_conf_ctx_get_conf (conf_ctx, ws_env_svr); 
@@ -476,16 +476,23 @@ wsservice_reply(VALUE self, VALUE request, VALUE response)
     if (status == WS_HTTP_ACCEPTED)
     {
         sprintf (status_line, "%s 202 Accepted", req_info.http_protocol);
+        wsf_ruby_res_info_fill(response, (axis2_char_t *) "Content-Length", (axis2_char_t *) "0");
+        wsf_ruby_res_info_fill(response, (axis2_char_t *) "Content-Type", (axis2_char_t *) req_info.content_type);
     }
     else if (status == WS_HTTP_OK) 
     {
         sprintf (status_line, "%s 200 OK", req_info.http_protocol);
+        wsf_ruby_res_info_fill(response, (axis2_char_t *) "Content-Type", (axis2_char_t *) req_info.out_content_type);
+        
     }
     else if (status == WS_HTTP_INTERNAL_SERVER_ERROR) 
     {
         sprintf (status_line, "%s 500 Internal Server Error", req_info.http_protocol);
+        if (req_info.content_type)
+            wsf_ruby_res_info_fill(response, (axis2_char_t *) "Content-Type", (axis2_char_t *) req_info.out_content_type);
     }
-    wsf_ruby_res_info_fill(response, status_line);
+    wsf_ruby_res_info_fill(response, (axis2_char_t *) "Status", (axis2_char_t *) status_line);
+/*    wsf_ruby_res_info_fill(response, status_line); */
 
     return rb_str_new(req_info.result_payload, req_info.result_length);
 
