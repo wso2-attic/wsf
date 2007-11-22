@@ -16,9 +16,9 @@
  */
 
 $reqPayloadString = <<<XML
-	<ns1:echoString xmlns:ns1="http://php.axis2.org/samples/reliable">
+	<ns1:pingString xmlns:ns1="http://php.axis2.org/samples/reliable">
 		<text>Hello World!</text>
-	</ns1:echoString>
+	</ns1:pingString>
 XML;
 
 try {
