@@ -1,4 +1,4 @@
-prgbindir=$(prefix)/bin/samples/notify
+prgbindir=$(prefix)/bin/samples/cpp/notify
 prgbin_PROGRAMS = notify 
 notify_SOURCES = notify.cpp
 
