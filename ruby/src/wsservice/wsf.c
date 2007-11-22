@@ -224,7 +224,6 @@ wsf_ruby_res_info_fill(VALUE response, axis2_char_t *h_key, axis2_char_t *h_valu
 {
     VALUE headers = rb_iv_get(response, "@headers");
     rb_hash_aset(headers, rb_str_new2((char *) h_key), rb_str_new2((char *) h_value));
-/*    rb_hash_aset(headers, rb_str_new2("Status"), rb_str_new2(status_line)); */
 }
 
 
@@ -358,7 +357,7 @@ wsf_ruby_req_info_fill(wsf_req_info_t *req_info, VALUE request)
     } 
     else 
     {
-        /* not in reails */
+        /* not in rails */
         req_info->svr_name = strdup("localhost");
         req_info->svr_port = 9999;
         req_info->req_data = RSTRING(request)->ptr;
@@ -492,45 +491,8 @@ wsservice_reply(VALUE self, VALUE request, VALUE response)
             wsf_ruby_res_info_fill(response, (axis2_char_t *) "Content-Type", (axis2_char_t *) req_info.out_content_type);
     }
     wsf_ruby_res_info_fill(response, (axis2_char_t *) "Status", (axis2_char_t *) status_line);
-/*    wsf_ruby_res_info_fill(response, status_line); */
 
     return rb_str_new(req_info.result_payload, req_info.result_length);
-
-    /*
-    php_end_ob_buffer(0, 0 TSRMLS_CC);
-
-    if (status == WS_HTTP_ACCEPTED){
-        sprintf (status_line, "%s 202 Accepted", req_info.http_protocol);
-        sapi_add_header (status_line, strlen (status_line), 1);
-        sapi_add_header ("Content-Length: 0", sizeof ("Content-Length: 0") - 1, 1);
-        content_type = emalloc(strlen (req_info.content_type) * sizeof (char) + 20);
-        sprintf (content_type, "Content-Type: %s", req_info.content_type);
-        sapi_add_header (content_type, strlen (content_type), 1);
-
-    }else if (status == WS_HTTP_OK) {
-        sprintf (status_line, "%s 200 OK", req_info.http_protocol);
-        sapi_add_header (status_line, strlen (status_line), 1);
-        content_type = emalloc(strlen (req_info.out_content_type) * sizeof (char) + 20);
-        sprintf (content_type, "Content-Type: %s", req_info.out_content_type);
-        sapi_add_header (content_type, strlen (content_type), 1);
-        php_write (req_info.result_payload,
-            req_info.result_length TSRMLS_CC);
-
-    }else if (status == WS_HTTP_INTERNAL_SERVER_ERROR) {
-
-        sprintf (status_line, "%s 500 Internal Server Error", req_info.http_protocol);
-        sapi_add_header (status_line, strlen (status_line), 1);
-        if (req_info.content_type){
-            content_type = emalloc(strlen (req_info.content_type) * sizeof (char) + 20);
-            sprintf (content_type, "Content-Type: %s", req_info.content_type);
-            if (content_type){
-                sapi_add_header (content_type, strlen (content_type), 1);
-                php_write (req_info.result_payload, req_info.result_length TSRMLS_CC);
-            }
-        }
-    }
-    wsf_php_req_info_cleanup(&req_info, ws_env_svr);
-    */
 }
 
 void
