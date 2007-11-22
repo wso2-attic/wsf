@@ -27,6 +27,11 @@
 
 #include <ruby.h>
 
+
+#ifndef RSTRING_PTR
+    #define RSTRING_PTR(x) (RSTRING(x)->ptr)
+#endif
+
 typedef struct wsservice
 {
     wsf_svc_info_t *svc_info;
