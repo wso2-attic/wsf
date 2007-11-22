@@ -566,13 +566,12 @@ wsf_util_generate_svc_name_from_uri (
         uri = req_uri;
     }
 
-    temp_string = strdup (uri);
+    temp_string = axutil_strdup(env, uri);
 
-    index = strstr (temp_string, ".rb/");
+    index = rindex(temp_string, '/');
 
     if (index) {
         char *op_index = NULL;
-        index = index + 4;
         op_index = index + 1;
         temp_string[index - temp_string] = '\0';
         svc_info->op_name = axutil_strdup (env, op_index);
@@ -580,7 +579,7 @@ wsf_util_generate_svc_name_from_uri (
 
     svc_name = axutil_replace (env, temp_string, '/', '|');
 
-    free (temp_string);
+    AXIS2_FREE(env->allocator, temp_string);
 
     return svc_name;
 }
