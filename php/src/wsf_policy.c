@@ -178,22 +178,22 @@ wsf_policy_handle_client_security (
                     neethi_engine_get_policy (env, incoming_policy_node,
                     root_ele);
                 if (!neethi_policy) {
-                    php_printf ("policy creation failed");
+                    /* php_printf ("policy creation failed"); */
                     return AXIS2_FAILURE;
                 }
                 svc = axis2_svc_client_get_svc (svc_client, env);
                 if (!svc) {
-                    php_printf ("Service is NULL");
+                  /*  php_printf ("Service is NULL"); */
                     return AXIS2_FAILURE;
                 }
                 desc = axis2_svc_get_base (svc, env);
                 if (!desc) {
-                    php_printf ("Description is NULL");
+				 /*   php_printf ("Description is NULL"); */
                     return AXIS2_FAILURE;
                 }
                 policy_include = axis2_desc_get_policy_include (desc, env);
                 if (!policy_include) {
-                    php_printf ("Policy include is NULL");
+                  /*  php_printf ("Policy include is NULL"); */
                     return AXIS2_FAILURE;
                 }
                 axis2_policy_include_add_policy_element (policy_include, env,
@@ -364,21 +364,21 @@ wsf_policy_handle_server_security (
                     neethi_engine_get_policy (env, incoming_policy_node,
                     root_ele);
                 if (!neethi_policy) {
-                    php_printf ("policy creation failed");
+                  /*  php_printf ("policy creation failed"); */
                     return AXIS2_FAILURE;
                 }
                 if (!svc) {
-                    php_printf ("Service is NULL");
+                 /*   php_printf ("Service is NULL"); */
                     return AXIS2_FAILURE;
                 }
                 desc = axis2_svc_get_base (svc, env);
                 if (!desc) {
-                    php_printf ("Description is NULL");
+                /*    php_printf ("Description is NULL"); */
                     return AXIS2_FAILURE;
                 }
                 policy_include = axis2_desc_get_policy_include (desc, env);
                 if (!policy_include) {
-                    php_printf ("Policy include is NULL");
+                 /*   php_printf ("Policy include is NULL"); */
                     return AXIS2_FAILURE;
                 }
                 axis2_policy_include_add_policy_element (policy_include, env,
