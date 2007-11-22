@@ -85,7 +85,7 @@ function wsf_client_response_and_validate(DomDocument $envelope_dom, DomDocument
     if(isset($response_parameters[WSF_CLASSMAP]))
         $class_map = $response_parameters[WSF_CLASSMAP];
 
-    if($class_map){
+    if($class_map){var_dump($tmp_param_struct);
         $response_class = new $class_map[$response_node->localName];
         $ref_class = new ReflectionClass($response_class);
         if($response_child_list){
@@ -215,7 +215,7 @@ function wsf_set_values_to_class_obj($val, $class_map, &$child, $prev_user_obj)
                         if(!$user_level_obj)
                             $user_level_obj = new $class_map[$val['class_map_name']];
                  		if(!$child)
-                                    continue;
+                            continue;
                         if($child->firstChild != NULL && $child->firstChild->nodeType == XML_ELEMENT_NODE)
                             $child = $child->firstChild;
 
@@ -241,23 +241,51 @@ function wsf_set_values_to_class_obj($val, $class_map, &$child, $prev_user_obj)
                             }
                         }
                         else{
-                           if($refle_class && $refle_class->hasProperty($child->localName))
-                                $property = $refle_class->getProperty($child->localName);
-                            if($property){
-                                if($child->firstChild->nodeType == XML_TEXT_NODE){
-                                    $property->setValue($user_level_obj, $child->firstChild->wholeText);
+                            if(isset($val2["maxOccurs"]) && $val2["maxOccurs"] == "unbounded"){
+                                //printf("haaai");
+                                if($refle_class && $refle_class->hasProperty($child->localName))
+                                    $property = $refle_class->getProperty($child->localName);
+                                if($property){
+                                    if($child->firstChild->nodeType == XML_TEXT_NODE){
+                                        $array_val = array();
+                                        $array_child = $child;
+                                        while($array_child != NULL){
+                                            $array_val[] = $array_child->firstChild->wholeText;
+                                            $array_child = $array_child->nextSibling;
+                                        }   
+                                        $property->setValue($user_level_obj, $array_val);
+                                    }       
                                 }
+                                if($child->nextSibling != NULL)
+                                    $child = $child->nextSibling;
+                                else{
+                                    $parent = $child->parentNode;
+                                    $child = $child->parentNode->nextSibling;
+                                    if(!$child){
+                                        $child = $parent->parentNode->nextSibling;
+                                        /** need a recursive loop */
+                                    }
+                                }  
                             }
-
-                            if($child->nextSibling != NULL)
-                                $child = $child->nextSibling;
                             else{
-                                $parent = $child->parentNode;
-                                $child = $child->parentNode->nextSibling;
-                                if(!$child){
-                                    $child = $parent->parentNode->nextSibling;
-                                    /** need a recursive loop */
-                                }
+                                if($refle_class && $refle_class->hasProperty($child->localName))
+                                       $property = $refle_class->getProperty($child->localName);
+                                if($property){
+                                    if($child->firstChild->nodeType == XML_TEXT_NODE){
+                                          $property->setValue($user_level_obj, $child->firstChild->wholeText);
+                                    }   
+                                }       
+
+                                if($child->nextSibling != NULL)
+                                    $child = $child->nextSibling;
+                                else{
+                                    $parent = $child->parentNode;
+                                    $child = $child->parentNode->nextSibling;
+                                    if(!$child){
+                                        $child = $parent->parentNode->nextSibling;
+                                        /** need a recursive loop */
+                                    }
+                                }    
                             }
                         }
                     }
@@ -317,22 +345,3 @@ function wsf_set_values_to_array($response_struct, $child)
 
 
 ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
