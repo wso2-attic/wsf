@@ -562,7 +562,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
             VALUE method_exists;
             
             user_klass = rb_define_class(classname, rb_cObject);
-            user_obj = rb_class_new_instance(0, Qnil, user_klass);
+            user_obj = rb_class_new_instance(0, NULL, user_klass);
 
             if(user_obj != Qnil)
             {

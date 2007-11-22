@@ -289,7 +289,7 @@ wsf_ruby_req_info_fill(wsf_req_info_t *req_info, VALUE request)
         {
             req_info->svr_port = atoi(RSTRING_PTR(temp));
             AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
-                          "[wsf_service] request server port: %s",req_info->svr_port);
+                          "[wsf_service] request server port: %d",req_info->svr_port);
         }
 
         temp = rb_hash_aref(renv, rb_str_new2("SERVER_PROTOCOL"));
@@ -339,7 +339,7 @@ wsf_ruby_req_info_fill(wsf_req_info_t *req_info, VALUE request)
             request_envelope = RSTRING_PTR(v_rawpost);
             AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
                           "[wsf_service] request raw post data: %s",request_envelope);
-            request_envelope_len = strlen(request_envelope); 
+            request_envelope_len = axutil_strlen(request_envelope); 
         }
         else
         {
@@ -534,6 +534,8 @@ Init_wsservice()
     axis2_char_t *wsf_home;
     axis2_char_t *log_path;
 
+    axis2_char_t *s_log_level;
+
 
     rb_mWSO2 = rb_define_module("WSO2");
     rb_mWSF = rb_define_module_under(rb_mWSO2, "WSF");
@@ -572,7 +574,8 @@ Init_wsservice()
     }
     else
     {
-        log_level = atoi(RSTRING_PTR(v_log_path));
+        s_log_level = RSTRING_PTR(v_log_level);
+        log_level = atoi(s_log_level);
     }
 
     ws_env_svr = wsf_env_create_svr(log_path, 

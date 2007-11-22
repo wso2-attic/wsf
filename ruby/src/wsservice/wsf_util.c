@@ -252,42 +252,6 @@ wsf_free_wrapper (
 }
 
 
-/* {{{ axis2_environment create function */
-axutil_env_t *
-wsf_env_create (
-    axis2_char_t * path_tolog)
-{
-    axutil_allocator_t *allocator = NULL;
-    axutil_error_t *error = NULL;
-    axutil_log_t *log = NULL;
-    axis2_char_t log_path[250];
-    axutil_env_t *env = NULL;
-    axutil_thread_pool_t *thread_pool = NULL;
-    const axis2_char_t *LOG_NAME = "wsf.log";
-    allocator = malloc (sizeof (axutil_allocator_t));
-
-    allocator->free_fn = wsf_free_wrapper;
-    allocator->malloc_fn = wsf_malloc_wrapper;
-    allocator->realloc = wsf_realloc_warpper;
-
-    error = axutil_error_create (allocator);
-    if (path_tolog && (
-            (0 == strcmp (path_tolog, "")) ||
-            (0 == strcmp (path_tolog, ".")) ||
-            (0 == strcmp (path_tolog, "./")))) {
-        snprintf (log_path, 256, "%s", LOG_NAME);
-    } else {
-        snprintf (log_path, 256, "%s/%s", path_tolog, LOG_NAME);
-    }
-
-    thread_pool = axutil_thread_pool_init (allocator);
-    log = axutil_log_create (allocator, NULL, log_path);
-    env =
-        axutil_env_create_with_error_log_thread_pool (allocator, error, log,
-        thread_pool);
-    return env;
-}
-
 /* }}} */
 /* {{{ axis2_environment create function */
 axutil_env_t *
@@ -319,9 +283,9 @@ wsf_env_create_svr (
 
     thread_pool = axutil_thread_pool_init (allocator);
     log = axutil_log_create (allocator, NULL, log_path);
-    env =
-        axutil_env_create_with_error_log_thread_pool (allocator, error, log,
+    env = axutil_env_create_with_error_log_thread_pool (allocator, error, log,
         thread_pool);
+
     env->log->level = loglevel;
     return env;
 }
