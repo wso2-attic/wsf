@@ -674,7 +674,7 @@ wsf_util_create_op_and_add_to_svc (
                   }
                   if(mep_value == Qnil)
                   {
-                     mep = RSTRING_PTR(mep_value);
+                     mep = RSTRING(mep_value)->ptr;
                      if (mep) {
                         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                             "[wsf_service] op mep %s", mep);
@@ -1383,8 +1383,8 @@ wsf_util_hash_each_ops_to_funcs(VALUE key, VALUE value, VALUE arg)
 
     svc_info = wsservice->svc_info;
 
-    func_name = RSTRING_PTR(value);
-    op_name = RSTRING_PTR(key);
+    func_name = RSTRING(value)->ptr;
+    op_name = RSTRING(key)->ptr;
 
     if (op_name)
     {
@@ -1418,8 +1418,8 @@ wsf_util_hash_each_action(VALUE key, VALUE value, VALUE arg)
 
     svc_info = wsservice->svc_info;
     
-    operation_name = RSTRING_PTR(value);
-    wsa_action = RSTRING_PTR(key);
+    operation_name = RSTRING(value)->ptr;
+    wsa_action = RSTRING(key)->ptr;
 
     func_name = axutil_hash_get (svc_info->ops_to_functions,
             operation_name, AXIS2_HASH_KEY_STRING);
@@ -1547,7 +1547,7 @@ wsf_util_resolve_op_to_func(VALUE key, VALUE value, VALUE self)
     /* retrieving key */
     if(TYPE(key) == T_STRING)
     {
-        op_name = RSTRING_PTR(key);
+        op_name = RSTRING(key)->ptr;
     }
     else if(TYPE(key) == T_SYMBOL)
     {
@@ -1561,7 +1561,7 @@ wsf_util_resolve_op_to_func(VALUE key, VALUE value, VALUE self)
     /* retrieving value */
     if(TYPE(value) == T_STRING)
     {
-        func_name = RSTRING_PTR(value);
+        func_name = RSTRING(value)->ptr;
     }
     else if(TYPE(value) == T_SYMBOL)
     {
@@ -1602,7 +1602,7 @@ wsf_util_resolve_class_ops(VALUE key, VALUE value, VALUE self)
     
     if(TYPE(key) == T_STRING)
     {
-        class_name = RSTRING_PTR(key);
+        class_name = RSTRING(key)->ptr;
     }
     else if(TYPE(key) == T_SYMBOL)
     {

@@ -31,7 +31,8 @@ XML
 begin
   LOG_FILE_NAME = "ruby_amazon.log"
 
-  client = WSClient.new({"to" => "http://webservices.amazon.com/onca/xml",
+  #client = WSClient.new({"to" => "http://webservices.amazon.com/onca/xml",
+  client = WSClient.new({"to" => "http://localhost:9090/onca/xml",
                          "http_method" => "GET",
                          "use_soap" => false},
                         LOG_FILE_NAME)

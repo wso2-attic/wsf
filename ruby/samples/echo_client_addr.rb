@@ -27,7 +27,8 @@ XML
 
 begin
   LOG_FILE_NAME = "ruby_echo_client_addr.log"
-  END_POINT = "http://localhost:9090/axis2/services/echo"
+  #END_POINT = "http://localhost:9090/axis2/services/echo"
+  END_POINT = "http://localhost:7070/wsservice/echo_addr"
   ACTION = "http://ws.apache.org/axis2/c/samples/echoString"
 
   client = WSClient.new({"use_wsa" => "TRUE"},

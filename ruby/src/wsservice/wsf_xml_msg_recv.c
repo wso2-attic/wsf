@@ -28,10 +28,6 @@
 #include <ruby.h>
 #include "wsf_common.h"
 
-#ifndef RSTRING_PTR
-    #define RSTRING_PTR(x) (RSTRING(x)->ptr)
-#endif
-
 axis2_status_t AXIS2_CALL wsf_xml_msg_recv_invoke_business_logic_sync (
     axis2_msg_recv_t * msg_recv,
     const axutil_env_t * env,
@@ -242,7 +238,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
         if ((tmp = rb_hash_aref(svc_info->ht_op_params,
                 ID2SYM(rb_intern("actions")))) != Qnil && TYPE(tmp) == T_STRING)
         {
-            function_type = RSTRING_PTR(tmp);
+            function_type = RSTRING(tmp)->ptr;
             if (strcmp (function_type, "MIXED") == 0) {
                 int status = AXIS2_SUCCESS;
                 status = wsf_xml_msg_recv_invoke_mixed (env, svc_info,
@@ -584,7 +580,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
                 {
                     if(TYPE(res) == T_STRING)
                     {
-                        res_payload = axutil_strdup(env, RSTRING_PTR(res));
+                        res_payload = axutil_strdup(env, RSTRING(res)->ptr);
                     }
                     else if(rb_obj_is_kind_of(res, msg_klass))
                     {
@@ -653,14 +649,14 @@ wsf_xml_msg_recv_invoke_wsmsg (
                     }
                     else
                     {
-                        default_cnt_type = RSTRING_PTR(v_default_cnt_type);
+                        default_cnt_type = RSTRING(v_default_cnt_type)->ptr;
                     }
 
                     v_action = rb_hash_aref(properties, ID2SYM(rb_intern(WS_ACTION)));
-                    action = RSTRING_PTR(v_action);
+                    action = RSTRING(v_action)->ptr;
                     axis2_msg_ctx_set_wsa_action(out_msg_ctx, env, action);
              
-                    res_payload = RSTRING_PTR(rb_hash_aref(properties, ID2SYM(rb_intern("str"))));
+                    res_payload = RSTRING(rb_hash_aref(properties, ID2SYM(rb_intern("str"))))->ptr;
 					AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
 							            "[wsf log ]response payload %s", res_payload);
 
@@ -685,7 +681,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
                 }
                 else if(TYPE(res) == T_STRING)
                 {
-                    res_payload = RSTRING_PTR(res);
+                    res_payload = RSTRING(res)->ptr;
                 }
                 else if(rb_obj_is_kind_of(res, fault_klass))
                 {
@@ -861,7 +857,7 @@ wsf_xml_msg_recv_set_soap_fault (
     v_code = rb_funcall(soap_fault, rb_intern(WS_FAULT_CODE), 0);
     if(v_code != Qnil)
     {
-        code = RSTRING_PTR(v_code);
+        code = RSTRING(v_code)->ptr;
         full_code = (axis2_char_t*)AXIS2_MALLOC(env-> allocator, sizeof(axis2_char_t)*
                      (axutil_strlen(code) + axutil_strlen(AXIOM_SOAP_DEFAULT_NAMESPACE_PREFIX) + 2));
         sprintf(full_code, "%s:%s", AXIOM_SOAP_DEFAULT_NAMESPACE_PREFIX, code);
@@ -871,14 +867,14 @@ wsf_xml_msg_recv_set_soap_fault (
     v_reason = rb_funcall(soap_fault, rb_intern(WS_FAULT_REASON), 0);
     if(v_reason != Qnil)
     {
-        reason = RSTRING_PTR(v_reason);
+        reason = RSTRING(v_reason)->ptr;
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
             "[wsf_service] setting fault reason %s", reason);
     }
     v_role = rb_funcall(soap_fault, rb_intern(WS_FAULT_ROLE), 0);
     if(v_role != Qnil)
     {
-        role = RSTRING_PTR(v_role);
+        role = RSTRING(v_role)->ptr;
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
             "[wsf_service] setting fault role %s", role);
     }
@@ -888,7 +884,7 @@ wsf_xml_msg_recv_set_soap_fault (
     {
         axiom_node_t *text_node = NULL;
 
-        detail = RSTRING_PTR(v_detail);
+        detail = RSTRING(v_detail)->ptr;
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
             "[wsf_service] setting fault detail %s", detail);
         axiom_element_create (env, NULL, "error", NULL, &detail_node);

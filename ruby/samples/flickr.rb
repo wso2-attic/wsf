@@ -18,7 +18,7 @@ require 'wsf'
 
 include WSO2::WSF
 
-key = ""
+key = "somekey"
 
 req_payload_string = <<XML
 <x:FlickrRequest xmlns:x="urn:flickr">
@@ -31,6 +31,7 @@ XML
 begin
   LOG_FILE_NAME = "ruby_flicker.log"
   END_POINT = "http://api.flickr.com/services/soap"
+ # END_POINT = "http://localhost:9090/services/soap"
 
   client = WSClient.new({"to" => END_POINT},
                         LOG_FILE_NAME)
