@@ -129,7 +129,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     $operation = wsf_find_operation($sig_model_dom, $operation_name, $endpoint_address, $is_multiple_interfaces);
 
     if(!$operation){
-        echo "\noperation not found";
+	    /* echo "\noperation not found"; */
         return;
     }
 
