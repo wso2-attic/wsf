@@ -244,17 +244,10 @@ wsf_ruby_req_info_fill(wsf_req_info_t *req_info, VALUE request)
     {
         /* we're inside Rails, wheee! */
         renv = rb_funcall(request, rb_intern("env"), 0); /* request.env */
-        temp = rb_hash_aref(renv, rb_str_new2("REQUEST_URI"));
+        temp = rb_hash_aref(renv, rb_str_new2("REQUEST_PATH"));
         if (temp != Qnil) 
         {
-            axis2_char_t *cindex;
             req_info->request_uri = RSTRING(temp)->ptr;
-            /* just remove the last pointer */
-            cindex = rindex(req_info->request_uri, '?');
-            if(cindex)
-            {
-                *cindex = '\0';
-            }
             AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
                           "[wsf_service] request uri: %s",req_info->request_uri);
         }
@@ -311,7 +304,7 @@ wsf_ruby_req_info_fill(wsf_req_info_t *req_info, VALUE request)
                           "[wsf_service] request content type: %s",req_info->content_type);
         }
 
-        temp = rb_hash_aref(renv, rb_str_new2("SOAP_ACTION"));
+        temp = rb_hash_aref(renv, rb_str_new2("HTTP_SOAPACTION"));
         if( temp != Qnil)
         {
             req_info->soap_action = RSTRING(temp)->ptr;
