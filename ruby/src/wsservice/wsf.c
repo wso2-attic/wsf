@@ -251,7 +251,10 @@ wsf_ruby_req_info_fill(wsf_req_info_t *req_info, VALUE request)
             req_info->request_uri = RSTRING(temp)->ptr;
             /* just remove the last pointer */
             cindex = rindex(req_info->request_uri, '?');
-            *cindex = '\0';
+            if(cindex)
+            {
+                *cindex = '\0';
+            }
             AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
                           "[wsf_service] request uri: %s",req_info->request_uri);
         }
