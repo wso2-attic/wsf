@@ -113,6 +113,7 @@ function wsf_client_response_and_validate(DomDocument $envelope_dom, DomDocument
     else{
         $return_array = array();
         if($response_child_list){
+            $ret_val_elements = $response_child_list->length; 
             foreach($response_child_list as $child){
                 foreach($tmp_param_struct[$response_node->localName] as $key => $val){
                     if($key == $child->localName){
@@ -120,7 +121,10 @@ function wsf_client_response_and_validate(DomDocument $envelope_dom, DomDocument
                     }
                 }
             }
-            $return_array[$response_node->localName] = $return_ele_array;
+            if($ret_val_elements == 1)
+                 $return_array[$response_node->localName] = $return_ele_array[$key];
+            else
+                $return_array[$response_node->localName] = $return_ele_array;
             return $return_array;
         }
     }
@@ -292,13 +296,13 @@ function wsf_set_values_to_class_obj($val, $class_map, &$child, $prev_user_obj)
                 }
             }
             else if($key2 != WSF_NS && $key2 != 'class_map_name' && $key2 != 'nillable'){
-                //echo $key2."\n";
+               // echo $key2."\n";
             }
             
         }
     }
-    else{
-        
+    else{/** max occcurs ???? */
+         return $child->firstChild->wholeText;     
     }
 
     if($user_level_obj)
