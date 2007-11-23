@@ -82,13 +82,18 @@ typedef enum ws_input_types
 
 #define WS_SOAP_ACTION      "SOAPAction"
 
-#define WS_USES_XOP			"usesXOP"      /** MTOM XOP */
-#define WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE "defaultAttachmentContentType"
-#define WS_ATTACHMENTS 			"attachments"
-#define WS_CID2CONTENT_TYPE 	"cid2contentType"
-#define WS_RESPONSE_XOP 		"responseXOP"
-#define WS_REQUEST_XOP  		"requestXOP"
-#define WS_USE_MTOM     		"useMTOM"
+#define WS_USES_XOP							"usesXOP"      /** MTOM XOP */
+#define WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE "default_attachment_content_type"
+#define WS_ATTACHMENTS 						"attachments"
+#define WS_CID2CONTENT_TYPE 				"cid_2_content_type"
+#define WS_RESPONSE_XOP 					"responseXOP"
+#define WS_REQUEST_XOP  					"requestXOP"
+#define WS_USE_MTOM     					"use_mtom"
+
+#define AXIS2_ELEMENT_LN_INCLUDE				"Include"
+#define AXIS2_NAMESPACE_URI_INCLUDE 			"http://www.w3.org/2004/08/xop/include"
+#define AXIS2_ELEMENT_ATTR_NAME_CONTENT_TYPE	"xmlmime:contentType"
+#define AXIS2_ELEMENT_ATTR_NAME_HREF         	"href"
 
 /** Reliable Messaging */
 #define WS_WILL_CONTINUE_SEQUENCE 	"willContinueSequence"
@@ -273,7 +278,7 @@ typedef struct ruby_req_info
     void *result_payload;
     int result_length;
     char *transfer_encoding;
-    char *out_content_type;
+	char *out_content_type;
 } wsf_req_info_t;
 
 /** functions */
