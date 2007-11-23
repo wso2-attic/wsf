@@ -12,8 +12,6 @@ end
 
 # Add Build Rules
 dir_config('WSFC', WSFC_HOME + '/include', WSFC_HOME + '/lib')
-#dir_config('Rampart', WSFC_HOME + '/include', WSFC_HOME + '/lib')
-#dir_config('WSFC', 'C:\dev\wsfc\wso2-wsf-c-bin-1.2.0\include', 'C:\dev\wsfc\wso2-wsf-c-bin-1.2.0\lib')
 
 have_library('axutil')
 have_library('axis2_minizip')

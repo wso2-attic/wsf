@@ -14,7 +14,7 @@ INTRODUCTION
   to write client applications to consume an existing Web Service.
 
 
-INSTALLATION
+INSTALLATION 
 ------------
 1. It is required to have WSO2 WSF/C installed in your machine 
    to compile and use this extension module.
@@ -30,6 +30,15 @@ INSTALLATION
 3. make
 
 4. sudo make install
+
+
+INSTALLATION ON WINDOWS
+-----------------------
+1. Download and install WSO2 WSF/C for windows from http://wso2.org/projects/wsf/c
+
+2. Run the extconf-win32.rb in the build directory of the source tree.
+
+3. Run namke install to compile the source and complete the installation
 
 
 FEATURES
