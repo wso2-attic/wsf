@@ -17,6 +17,9 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 
+abs_top_builddir=`pwd`
+AC_SUBST(abs_top_builddir)
+
 
 dnl check for flavours of varargs macros (test from GLib)
 AC_MSG_CHECKING(for ISO C99 varargs macros in C)
@@ -94,37 +97,40 @@ dnl AC_FUNC_MALLOC
 dnl AC_FUNC_REALLOC
 #AC_CHECK_FUNCS([memmove])
 
-AC_MSG_CHECKING(Axis2)
+AC_MSG_CHECKING(path to use Axis2C . This is a compulsory to build Sandesha2C)
 AC_ARG_WITH(axis2,
-[  --with-axis2[=PATH]   axis2.
-    ],
+[  --with-axis2[=PATH]      use axis2c.],
 [ case "$withval" in
   no)
     AC_MSG_RESULT(no)
-    XMPP_DIR=""
     ;;
   *)
-    AC_MSG_RESULT(yes)
-    dnl Find iksemel XMPP include dir 
+    AC_MSG_RESULT($withval)
+    dnl Find axis2 include dir in the path
     if test -d $withval; then
-        axis2inc="-I$withval"
-        AXIS2_DIR="axis2"
-    dnl else find the iksemel include dir in /usr/include
-    elif test -d '$(AXIS2C_HOME)/include/axis2-1.1'; then
-        axis2inc="-I$(AXIS2C_HOME)/include/axis2-1.1"
-        AXIS2_DIR="axis2"
+        AXIS2INC="-I$withval"
+    dnl else find the axis2inc include dir in $(WSFC_HOME)/include
+    elif [ -d "$abs_top_builddir" ]; then
+            AXIS2INC="-I$abs_top_builddir/../axis2c/include"
     else
-        AC_MSG_ERROR(Could not find axis2. stop)
+        AC_MSG_ERROR(could not find axis2inc. stop)
     fi
-        AXIS2_DIR="axis2"
     ;;
   esac ],
+  AXIS2INC="-I$abs_top_builddir/../axis2c/include"
   AC_MSG_RESULT(no)
 )
 
 
-AXIS2INC=$axis2inc
+
+AXIOMINC="-I$abs_top_builddir/../axis2c/axiom/include"
+UTILINC="-I$abs_top_builddir/../axis2c/util/include"
+NEETHIINC="-I$abs_top_builddir/../axis2c/neethi/include"
+
 AC_SUBST(AXIS2INC)
+AC_SUBST(AXIOMINC)
+AC_SUBST(UTILINC)
+
 
 export prefix 
 
