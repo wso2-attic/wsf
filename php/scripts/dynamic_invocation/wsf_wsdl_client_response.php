@@ -85,7 +85,7 @@ function wsf_client_response_and_validate(DomDocument $envelope_dom, DomDocument
     if(isset($response_parameters[WSF_CLASSMAP]))
         $class_map = $response_parameters[WSF_CLASSMAP];
 
-    if($class_map){var_dump($tmp_param_struct);
+    if($class_map){
         $response_class = new $class_map[$response_node->localName];
         $ref_class = new ReflectionClass($response_class);
         if($response_child_list){
@@ -121,7 +121,7 @@ function wsf_client_response_and_validate(DomDocument $envelope_dom, DomDocument
                     }
                 }
             }
-            if($ret_val_elements == 1)
+            if($ret_val_elements == 1 || isset($return_ele_array[$key][$key]))
                  $return_array[$response_node->localName] = $return_ele_array[$key];
             else
                 $return_array[$response_node->localName] = $return_ele_array;
