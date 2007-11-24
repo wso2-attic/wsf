@@ -1083,6 +1083,11 @@ wsf_client_do_request (
                 (!is_addressing_engaged && is_addressing_action_present))
             && engage_rm) {
             if (!is_addressing_engaged) {
+				if(msg_ht){
+					wsf_client_set_addressing_options_to_options(env, client_options, msg_ht TSRMLS_CC);
+				}else{
+					wsf_client_set_addressing_options_to_options(env, client_options, client_ht TSRMLS_CC);
+				}
                 axis2_svc_client_engage_module (svc_client, env,
                     "addressing");
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
