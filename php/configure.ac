@@ -270,6 +270,63 @@ AC_ARG_ENABLE(diclient, [  --enable-diclient    build diclient library wrapper. 
   DICLIENT_DIR="diclient"
 )
 
+AC_MSG_CHECKING(path to use mysql storage .)
+AC_ARG_WITH(mysql,
+[  --with-mysql[=PATH]      use mysql storage.],
+[ case "$withval" in
+  no)
+    AC_MSG_RESULT(no)
+    WRAPPER_DIR=""
+    ;;
+  *)
+    AC_MSG_RESULT($withval)
+    WRAPPER_DIR="mysql"
+    dnl Find mysql include dir in the path
+    if test -d $withval; then
+        mysqlinc="-I$withval"
+    dnl else find the mysqlinc include dir in /usr/include/mysql
+    elif test -d '/usr/include/mysql'; then
+        mysqlinc="-I/usr/include/mysql"
+    else
+        AC_MSG_ERROR(could not find mysqlinc. stop)
+    fi
+    WRAPPER_DIR="mysql"
+    LDFLAGS="$LDFLAGS -lmysqlclient -lnsl -lm -lz"
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+)
+
+AC_MSG_CHECKING(path to use sqlite storage .)
+AC_ARG_WITH(sqlite,
+[  --with-sqlite[=PATH]      use sqlite storage.],
+[ case "$withval" in
+  no)
+    AC_MSG_RESULT(no)
+    WRAPPER_DIR=""
+    ;;
+  *)
+    AC_MSG_RESULT($withval)
+    WRAPPER_DIR="sqlite"
+    dnl Find sqlite include dir in the path
+    if test -d $withval; then
+        sqliteinc="-I$withval"
+    dnl else find the sqliteinc include dir in /usr/include
+    elif test -d '/usr/include'; then
+        sqliteinc="-I/usr/include"
+    else
+        AC_MSG_ERROR(could not find sqliteinc. stop)
+    fi
+    WRAPPER_DIR="sqlite"
+    LDFLAGS="$LDFLAGS -lsqlite3"
+    ;;
+  esac ],
+  AC_MSG_RESULT(yes)
+  WRAPPER_DIR="sqlite"
+  sqliteinc="-I/usr/include"
+  LDFLAGS="$LDFLAGS -lsqlite3"
+)
+
 
 
 APACHE2INC=$apache2inc
