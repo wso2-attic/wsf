@@ -17,8 +17,6 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 
-abs_top_builddir=`pwd`
-AC_SUBST(abs_top_builddir)
 
 
 dnl check for flavours of varargs macros (test from GLib)
@@ -97,6 +95,10 @@ dnl AC_FUNC_MALLOC
 dnl AC_FUNC_REALLOC
 #AC_CHECK_FUNCS([memmove])
 
+
+abs_top_builddir=`pwd`
+AC_SUBST(abs_top_builddir)
+
 AC_MSG_CHECKING(path to use Axis2C . This is a compulsory to build Sandesha2C)
 AC_ARG_WITH(axis2,
 [  --with-axis2[=PATH]      use axis2c.],
@@ -109,27 +111,28 @@ AC_ARG_WITH(axis2,
     dnl Find axis2 include dir in the path
     if test -d $withval; then
         AXIS2INC="-I$withval"
-    dnl else find the axis2inc include dir in $(WSFC_HOME)/include
+    dnl else find the axis2inc include dir in $(WSFCPP_HOME)/include
     elif [ -d "$abs_top_builddir" ]; then
-            AXIS2INC="-I$abs_top_builddir/../axis2c/include"
+            AXIS2INC="-I$abs_top_builddir/wsf_c/axis2c/include"
     else
         AC_MSG_ERROR(could not find axis2inc. stop)
     fi
-    ;;
+    ;; 
   esac ],
-  AXIS2INC="-I$abs_top_builddir/../axis2c/include"
+  AXIS2INC="-I$abs_top_builddir/wsf_caxis2c/include"
   AC_MSG_RESULT(no)
 )
 
 
 
-AXIOMINC="-I$abs_top_builddir/../axis2c/axiom/include"
-UTILINC="-I$abs_top_builddir/../axis2c/util/include"
-NEETHIINC="-I$abs_top_builddir/../axis2c/neethi/include"
+AXIOMINC="-I$abs_top_builddir/wsf_c/axis2c/axiom/include"
+UTILINC="-I$abs_top_builddir/wsf_c/axis2c/util/include"
+NEETHIINC="-I$abs_top_builddir/wsf_c/axis2c/neethi/include"
 
 AC_SUBST(AXIS2INC)
 AC_SUBST(AXIOMINC)
 AC_SUBST(UTILINC)
+AC_SUBST(NEETIHINC)
 
 
 export prefix 

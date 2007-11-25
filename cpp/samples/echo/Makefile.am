@@ -11,118 +11,118 @@ echo_non_blocking_dual_SOURCES = echo_non_blocking_dual.cpp
 echo_security_SOURCES = echo_security.cpp
 
 echo_LDADD   = $(LDFLAGS) \
-                -L$(AXIS2C_HOME)/lib \
-					-laxutil \
-                    -laxis2_axiom \
-                    -laxis2_engine \
-                    -laxis2_parser \
+                -L$(WSFCPP_HOME)/lib \
+		../../wsf_c/axis2c/util/src/libaxutil.la \
+		../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
+		../../wsf_c/axis2c/src/core/engine/libaxis2_engine.la \
+		../../wsf_c/axis2c/axiom/src/parser/libxml2/libaxis2_parser.la \
+			../../wsf_c/axis2c/src/core/transport/http/sender/libaxis2_http_sender.la \
+			../../wsf_c/axis2c/src/core/transport/http/receiver/libaxis2_http_receiver.la \
                     -lpthread \
-                    -laxis2_http_sender \
-                    -laxis2_http_receiver \
 			../../src/libwso2_wsf.la \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
 echo_rest_LDADD   = $(LDFLAGS) \
-                -L$(AXIS2C_HOME)/lib \
-					-laxutil \
-                    -laxis2_axiom \
-                    -laxis2_engine \
-                    -laxis2_parser \
+                -L$(WSFCPP_HOME)/lib \
+		../../wsf_c/axis2c/util/src/libaxutil.la \
+		../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
+		../../wsf_c/axis2c/src/core/engine/libaxis2_engine.la \
+		../../wsf_c/axis2c/axiom/src/parser/libxml2/libaxis2_parser.la \
+			../../wsf_c/axis2c/src/core/transport/http/sender/libaxis2_http_sender.la \
+			../../wsf_c/axis2c/src/core/transport/http/receiver/libaxis2_http_receiver.la \
                     -lpthread \
-                    -laxis2_http_sender \
-                    -laxis2_http_receiver \
 			../../src/libwso2_wsf.la \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
 echo_blocking_LDADD   = $(LDFLAGS) \
-                -L$(AXIS2C_HOME)/lib \
-					-laxutil \
-                    -laxis2_axiom \
-                    -laxis2_engine \
-                    -laxis2_parser \
+                -L$(WSFCPP_HOME)/lib \
+		../../wsf_c/axis2c/util/src/libaxutil.la \
+		../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
+		../../wsf_c/axis2c/src/core/engine/libaxis2_engine.la \
+		../../wsf_c/axis2c/axiom/src/parser/libxml2/libaxis2_parser.la \
+			../../wsf_c/axis2c/src/core/transport/http/sender/libaxis2_http_sender.la \
+			../../wsf_c/axis2c/src/core/transport/http/receiver/libaxis2_http_receiver.la \
                     -lpthread \
-                    -laxis2_http_sender \
-                    -laxis2_http_receiver \
 			../../src/libwso2_wsf.la \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
 echo_blocking_addr_LDADD   = $(LDFLAGS) \
-                -L$(AXIS2C_HOME)/lib \
-					-laxutil \
-                    -laxis2_axiom \
-                    -laxis2_engine \
-                    -laxis2_parser \
+                -L$(WSFCPP_HOME)/lib \
+		../../wsf_c/axis2c/util/src/libaxutil.la \
+		../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
+		../../wsf_c/axis2c/src/core/engine/libaxis2_engine.la \
+		../../wsf_c/axis2c/axiom/src/parser/libxml2/libaxis2_parser.la \
+			../../wsf_c/axis2c/src/core/transport/http/sender/libaxis2_http_sender.la \
+			../../wsf_c/axis2c/src/core/transport/http/receiver/libaxis2_http_receiver.la \
                     -lpthread \
-                    -laxis2_http_sender \
-                    -laxis2_http_receiver \
 			../../src/libwso2_wsf.la \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
 echo_blocking_soap11_LDADD   = $(LDFLAGS) \
-                -L$(AXIS2C_HOME)/lib \
-					-laxutil \
-                    -laxis2_axiom \
-                    -laxis2_engine \
-                    -laxis2_parser \
+                -L$(WSFCPP_HOME)/lib \
+		../../wsf_c/axis2c/util/src/libaxutil.la \
+		../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
+		../../wsf_c/axis2c/src/core/engine/libaxis2_engine.la \
+		../../wsf_c/axis2c/axiom/src/parser/libxml2/libaxis2_parser.la \
+			../../wsf_c/axis2c/src/core/transport/http/sender/libaxis2_http_sender.la \
+			../../wsf_c/axis2c/src/core/transport/http/receiver/libaxis2_http_receiver.la \
                     -lpthread \
-                    -laxis2_http_sender \
-                    -laxis2_http_receiver \
 			../../src/libwso2_wsf.la \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
 echo_blocking_dual_LDADD   = $(LDFLAGS) \
-                -L$(AXIS2C_HOME)/lib \
-					-laxutil \
-                    -laxis2_axiom \
-                    -laxis2_engine \
-                    -laxis2_parser \
+                -L$(WSFCPP_HOME)/lib \
+		../../wsf_c/axis2c/util/src/libaxutil.la \
+		../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
+		../../wsf_c/axis2c/src/core/engine/libaxis2_engine.la \
+		../../wsf_c/axis2c/axiom/src/parser/libxml2/libaxis2_parser.la \
+			../../wsf_c/axis2c/src/core/transport/http/sender/libaxis2_http_sender.la \
+			../../wsf_c/axis2c/src/core/transport/http/receiver/libaxis2_http_receiver.la \
                     -lpthread \
-                    -laxis2_http_sender \
-                    -laxis2_http_receiver \
 			../../src/libwso2_wsf.la \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
 echo_non_blocking_LDADD   = $(LDFLAGS) \
-                -L$(AXIS2C_HOME)/lib \
-					-laxutil \
-                    -laxis2_axiom \
-                    -laxis2_engine \
-                    -laxis2_parser \
+                -L$(WSFCPP_HOME)/lib \
+		../../wsf_c/axis2c/util/src/libaxutil.la \
+		../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
+		../../wsf_c/axis2c/src/core/engine/libaxis2_engine.la \
+		../../wsf_c/axis2c/axiom/src/parser/libxml2/libaxis2_parser.la \
+			../../wsf_c/axis2c/src/core/transport/http/sender/libaxis2_http_sender.la \
+			../../wsf_c/axis2c/src/core/transport/http/receiver/libaxis2_http_receiver.la \
                     -lpthread \
-                    -laxis2_http_sender \
-                    -laxis2_http_receiver \
 			../../src/libwso2_wsf.la \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
 echo_non_blocking_dual_LDADD   = $(LDFLAGS) \
-                -L$(AXIS2C_HOME)/lib \
-					-laxutil \
-                    -laxis2_axiom \
-                    -laxis2_engine \
-                    -laxis2_parser \
+                -L$(WSFCPP_HOME)/lib \
+		../../wsf_c/axis2c/util/src/libaxutil.la \
+		../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
+		../../wsf_c/axis2c/src/core/engine/libaxis2_engine.la \
+		../../wsf_c/axis2c/axiom/src/parser/libxml2/libaxis2_parser.la \
+			../../wsf_c/axis2c/src/core/transport/http/sender/libaxis2_http_sender.la \
+			../../wsf_c/axis2c/src/core/transport/http/receiver/libaxis2_http_receiver.la \
                     -lpthread \
-                    -laxis2_http_sender \
-                    -laxis2_http_receiver \
 			../../src/libwso2_wsf.la \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
 echo_security_LDADD   = $(LDFLAGS) \
-                -L$(AXIS2C_HOME)/lib \
-                                        -laxutil \
-                    -laxis2_axiom \
-                    -laxis2_engine \
-                    -laxis2_parser \
+                -L$(WSFCPP_HOME)/lib \
+		../../wsf_c/axis2c/util/src/libaxutil.la \
+		../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
+		../../wsf_c/axis2c/src/core/engine/libaxis2_engine.la \
+		../../wsf_c/axis2c/axiom/src/parser/libxml2/libaxis2_parser.la \
+			../../wsf_c/axis2c/src/core/transport/http/sender/libaxis2_http_sender.la \
+			../../wsf_c/axis2c/src/core/transport/http/receiver/libaxis2_http_receiver.la \
                     -lpthread \
-                    -laxis2_http_sender \
-                    -laxis2_http_receiver \
                         ../../src/libwso2_wsf.la \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
