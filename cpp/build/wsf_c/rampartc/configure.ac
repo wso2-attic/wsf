@@ -67,29 +67,8 @@ AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 #AC_CHECK_FUNCS([memmove])
 
-AC_MSG_CHECKING(path to use Axis2C . This is a compulsory to build Rampart-C)
-AC_ARG_WITH(axis2,
-[  --with-axis2[=PATH]      use axis2c.],
-[ case "$withval" in
-  no)
-    AC_MSG_RESULT(no)
-    ;;
-  *)
-    AC_MSG_RESULT($withval)
-    dnl Find axis2 include dir in the path
-    if test -d $withval; then
-        AXIS2INC="-I$withval"
-    dnl else find the axis2inc include dir in $(WSFC_HOME)/include
-    elif test -d '$abs_top_builddir'; then
-        AXIS2INC="-I$abs_top_builddir/../axis2c/include"
-    else
-        AC_MSG_ERROR(could not find axis2inc. stop)
-    fi
-    ;;
-  esac ],
-  AXIS2INC="-I$abs_top_builddir/../axis2c/include"
-  AC_MSG_RESULT(no)
-)
+abs_top_builddir=`pwd`
+AC_SUBST(abs_top_builddir)
 
 AC_MSG_CHECKING(path to use Axis2C . This is a compulsory to build Rampart-C)
 AC_ARG_WITH(axis2,
@@ -102,15 +81,16 @@ AC_ARG_WITH(axis2,
     AC_MSG_RESULT($withval)
     dnl Find axis2 include dir in the path
     if test -d $withval; then
-        axis2inc="-I$withval"
-    dnl else find the axis2inc include dir in $(AXIS2C_HOME)/include
-    elif test -d '$(AXIS2C_HOME)/include/axis2-1.1'; then
-        axis2inc="-I$(AXIS2C_HOME)/include/axis2-1.1"
+        AXIS2INC="-I$withval"
+    dnl else find the axis2inc include dir in $(WSFCPP_HOME)/include
+    elif test -d '$abs_top_builddir'; then
+        AXIS2INC="-I$abs_top_builddir/../axis2c/include"
     else
         AC_MSG_ERROR(could not find axis2inc. stop)
     fi
     ;;
   esac ],
+  AXIS2INC="-I$abs_top_builddir/../axis2c/include"
   AC_MSG_RESULT(no)
 )
 
@@ -138,20 +118,18 @@ AC_ARG_WITH(openssl,
   AC_MSG_RESULT(no)
 )
 
-AXIS2INC=$axis2inc
-AXIOMINC=$axiominc
-NEETHIINC=$neethiinc
-OPENSSLINC=$opensslinc
-OPENSSLLIB=$openssllib
-UTILINC=$axis2_utilinc
 AXIOMINC="-I$abs_top_builddir/../axis2c/axiom/include"
 UTILINC="-I$abs_top_builddir/../axis2c/util/include"
+NEETHIINC="-I$abs_top_builddir/../axis2c/neethi/include"
 AC_SUBST(AXIS2INC)
 AC_SUBST(AXIOMINC)
+AC_SUBST(UTILINC)
+
+OPENSSLINC=$opensslinc
+OPENSSLLIB=$openssllib
 AC_SUBST(OPENSSLINC)
 AC_SUBST(OPENSSLLIB)
 AC_SUBST(NEETHIINC)
-AC_SUBST(UTILINC)
 AC_SUBST(XMLSCHEMAINC)
 
 AC_CONFIG_FILES([Makefile \
