@@ -121,6 +121,12 @@ Contents:
        wsf.log_level = 3
        extension=wsf.dll
 
+       set extension_dir entry to point to you php extensions location. This is <PHP Binary Directory>/ext.
+       extension_dir="./ext"
+
+       Also enable php xsl extension.
+       extension="php_xsl.dll"
+
        [Note] Log level is by default set to INFO. Log levels range from 0 to 4. Log levels are as follows.
 	      CRITICAL->  0 , ERROR -> 1 , WARNING -> 2 , INFO -> 3, DEBUG -> 4
      
