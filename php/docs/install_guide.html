@@ -84,9 +84,22 @@ system.</p>
 
 <p>2. After installing the extension, you have to edit the php.ini file and
 add the following line to the php.ini file:<br />
-<b><i>extension=wsf.so</i></b></p>
-
-<p>Now you are ready to use WSO2 WSF/PHP.</p>
+<b><i>extension=wsf.so&nbsp;</i></b></p>
+    <p>
+        <b><i></i></b>Also enable xsl extension that comes with PHP. &nbsp;
+    </p>
+    <p>
+        <strong><em>extension=xsl.so</em></strong></p>
+    <p>
+        <strong></strong>If you are using the source distribution, go to ext/xsl directory
+        and do&nbsp; ./<strong>phpize</strong>, ./<strong>configure</strong> , ./<strong>make</strong>,
+        ./<strong>make install</strong> to install the xsl extension.</p>
+    <p>
+        Set extension_dir entry to point to your extension installation directory.
+    </p>
+    <p>
+        eg <strong>extension_dir="usr/local/lib/php/extensions/debug-zts-***"</strong>.
+        The last directory depends on your php version.</p>
 
 <p>3. Copy the scripts folder to your Web server's document root.</p>
 
@@ -191,18 +204,18 @@ options. You will find the option --with-wsf.<br />
 <p>5. Add the following entries to config.nice.bat file.</p>
 
 <p>        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
-            &nbsp;&nbsp;
+            &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
         "--with-extra-includes=&lt;Libxml2 bin dir&gt;\include;&lt;iconv
 bin directory&gt;\include;&lt;zlib bin dir&gt;\include;&lt;wsf-c
 dir&gt;\include" </p>
 
 <p>        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
-            &nbsp;&nbsp;
+            &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
     "-- with-extra-libs=&lt;Libxml2 bin dir&gt;\lib;&lt;iconv bin
 dir&gt;\lib;&lt;zlib bin dir&gt;\lib;&lt;wsf-c dir&gt;\lib"</p>
 
 <p>        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
-        &nbsp;&nbsp;
+        &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
     "--with-wsf=shared"</p>
 
 <p>6. Run the above config.nice.bat file to configure the wsf extension as a
@@ -234,7 +247,7 @@ dll.</p>
                     +-- samples </pre>
 
 <p>
-                        2. Copy wsf.dll to the PHP installation directory.</p>
+                        2. Copy wsf.dll to the &lt;PHP installation directory&gt;/ext direcotory.</p>
 
 <p>
     3. Add wso2-wsf-php-bin-1.2.0-win32\wsf_c\lib directory to the PATH environment variable.</p>
@@ -245,17 +258,30 @@ dll.</p>
 installation location.<br />
        [wsf]
     <br />
+        <strong>
     wsf.home="&lt;path_to_extract_folder&gt;\wsf_c"
     <br />
     wsf.log_path="&lt;path to extract_folder&gt;\wsf_c\logs"
     <br />
-    wsf.log_level=3
-    <br />
-       extension=wsf.dll
+    wsf.log_level=3 </strong>
     </p>
+    <p>
+        <strong></strong><strong>
+       extension=wsf.dll </strong>
+    </p>
+    <p>
+        Set entension_dir entry to your extensions directory.</p>
 
-<p>6. Configure the Apache2 Web server with PHP as follows.<br />
-</p>
+<p>
+    <strong>extension_dir ="./ext"</strong></p>
+    <p>
+        Also enable php_xsl extension
+    </p>
+    <p>
+        <strong>extension = php_xsl.dll</strong></p>
+    <p>
+        6. Configure the Apache2 Web server with PHP as follows.<br />
+    </p>
 
 <p>
     6.1. Copy php5apache2.dll to Apache2/modules directory and add the following entries in httpd.conf file.<br />
