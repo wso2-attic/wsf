@@ -18,16 +18,6 @@ samples_DATA=
 EXTRA_DIST = build.sh autogen.sh CREDITS LICENSE build axis2c_build.sh guththila tools AUTHORS NOTICE xdocs
 
 dist-hook:
-	rm -rf `find $(distdir)/ -type d -name *.svn`
-	rm -rf `find $(distdir)/ -type f -name *.la`
-	rm -rf `find $(distdir)/ -type f -name *.o`
-	rm -rf `find $(distdir)/ -type f -name *.lo`
-	rm -rf `find $(distdir)/ -type f -name *.loT`
-	rm -rf `find $(distdir)/ -type d -name .deps`
-	rm -rf `find $(distdir)/ -type d -name .libs`
-	rm -rf `find $(distdir)/ -type f -name Makefile`
-	rm -rf `find $(distdir)/ -type f -name axis2c-sample-src-${PACKAGE_VERSION}.tar.gz`
-	rm -rf `find $(distdir)/ -type d -name autom4te.cache`
 	sh dist.sh
 
 bindist: $(bin_PROGRAMS)
@@ -41,9 +31,4 @@ bindist: $(bin_PROGRAMS)
 
 install-data-hook:
 	cp -rf samples/* $(samplesdir)
-	rm -rf `find $(distdir)/ -type d -name *.svn`
-	rm -rf `find $(distdir)/ -type d -name *.deps`
-	rm -rf `find $(distdir)/ -type d -name *.libs`
-	rm -rf `find $(distdir)/ -type f -name Makefile`
-	rm -rf `find $(distdir)/ -type d -name autom4te.cache`
 
