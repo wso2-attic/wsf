@@ -172,7 +172,7 @@ border="1">
     </tr>
     <tr valign="top">
       <td colspan="1" style="height: 20px; width: 96px;">"policy"</td>
-      <td colspan="1" style="height: 20px"> WSPolicy object</td>
+      <td colspan="1" style="height: 20px"> &nbsp;WSPolicy object</td>
       <td colspan="1" style="height: 20px">WSPolicy object</td>
       <td colspan="1" style="height: 20px">None</td>
       <td colspan="1" style="height: 20px">WSPolicy Object</td>
@@ -466,6 +466,29 @@ border="1">
       </td>
     </tr>
     <tr valign="top">
+      <td><p>"classes"</p>
+      </td>
+      <td><p>array</p>
+      </td>
+      <td><p>Array mapping of classnames to class infomation array</p>
+      </td>
+      <td><p>None</p>
+      </td>
+      <td><p>Array mapping of classnames to class infomation array</p>
+
+        <p>e.g. ("classes" =&gt; array("foo"=&gt;array( "operations" =&gt;$ops, "actions"=&gt;$actions,
+        "args"=&gt;$args)))</p>
+        <p>
+            The above basically means that the service would expose the methods of class 'foo'.
+            The methods to be exposed are provided as "operations" associative array which is
+            an operations to functions mapping. "actions" is an array of operation to action
+            mapping. Which is same as above defined actions options.</p>
+        <p>
+            "args" is an array of arguments to be passed to the class constuctor. If the class
+            constuctor does not accepts arguments , this options need not be specified.</p>
+      </td>
+    </tr>
+    <tr valign="top">
       <td><p>"opMEP"</p>
       </td>
       <td><p>array</p>
@@ -600,14 +623,14 @@ None <br>
 
 <h3><b>Example</b></h3>
 <pre><span style="color: rgb(0, 0, 0); font-weight: bold;">function</span> echoFunction<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$inMessage</span><span style="color: rgb(102, 204, 102);">)</span> <span style="color: rgb(102, 204, 102);">{</span>
- 
+&nbsp;
     <span style="color: rgb(0, 0, 255);">$returnMessage</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSMessage<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$inMessage</span>-&gt;<span style="color: rgb(0, 102, 0);">str</span><span style="color: rgb(102, 204, 102);">)</span>;
- 
+&nbsp;
     <span style="color: rgb(177, 177, 0);">return</span> <span style="color: rgb(0, 0, 255);">$returnMessage</span>;
 <span style="color: rgb(102, 204, 102);">}</span>
- 
+&nbsp;
 <span style="color: rgb(0, 0, 255);">$operations</span> = <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"echoString"</span> =&gt; <span style="color: rgb(255, 0, 0);">"echoFunction"</span><span style="color: rgb(102, 204, 102);">)</span>;
- 
+&nbsp;
 <span style="color: rgb(0, 0, 255);">$svr</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSService<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"operations"</span> =&gt; <span style="color: rgb(0, 0, 255);">$operations</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
         
 <span style="color: rgb(0, 0, 255);">$svr</span>-&gt;<span style="color: rgb(0, 102, 0);">reply</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
@@ -730,7 +753,8 @@ border="1">
       <td style="width: 465px"><p>xs:anyURI</p>
 
         <p>WS-Addressing From. A URI indicating where the response or request
-        came from.  (Note: This doesn't support reference parameters.) </p>
+        came from.&nbsp;
+    (Note: This doesn't support reference parameters.) </p>
       </td>
     </tr>
     <tr valign="top">
@@ -829,7 +853,7 @@ representation of the binary content to be sent or being received.</p>
 </ul>
 
 <p>An associative array, containing the mapping of cid (content ID) to its
-corresponding  attachment. When an attachment is received, this property
+corresponding  &nbsp;attachment. When an attachment is received, this property
 will be present in the WSMessage object.</p>
 <ul>
   <li><p><b>array headers</b></p>
@@ -854,7 +878,7 @@ XML;
     <span style="color: rgb(0, 0, 255);">$resMessage</span> = <span style="color: rgb(0, 0, 255);">$client</span>-&gt;<span style="color: rgb(0, 102, 0);">request</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$reqMessage</span><span style="color: rgb(102, 204, 102);">)</span>;
     
     <a href="http://www.php.net/printf"><span style="color: rgb(0, 0, 102);">printf</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"Response = %s <span style="color: rgb(0, 0, 153); font-weight: bold;">\n</span>"</span>, <span style="color: rgb(0, 0, 255);">$resMessage</span>-&gt;<span style="color: rgb(0, 102, 0);">str</span><span style="color: rgb(102, 204, 102);">)</span>;
- 
+&nbsp;
 </pre>
 <a id="fault"></a>
 
@@ -1153,7 +1177,7 @@ border="1">
                 &lt;text&gt;Hello World!&lt;/text&gt;
         &lt;/ns1:notifyString&gt;
 XML;
- 
+&nbsp;
     ws_send<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$reqPayloadString</span>,
                <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"to"</span>=&gt;<span style="color: rgb(255, 0, 0);">"http://localhost/reply_notify_service.php"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
 <br>
