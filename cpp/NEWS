@@ -1,7 +1,7 @@
-WSO2 Web Services Framework (WSF)/C++ 1.0.0 RC1
-===============================================
+WSO2 Web Services Framework (WSF)/C++ 1.0.0 Alpha RC1
+=====================================================
 
-WSO2 WSF/C++ 1.0.0 RC1 is now available.[22-Nov-2007, Senaka]
+WSO2 WSF/C++ 1.0.0 Alpha RC1 is now available.[26-Nov-2007, Senaka]
 
 Project home page:
 http://wso2.org/projects/wsf/cpp
@@ -34,7 +34,7 @@ Key Features
       * Encryption
       * Signing
       * WS-SecurityPolicy based configuration  
-         
+   
 -------------------
 Reporting Problems
 ===================

@@ -3,7 +3,7 @@
 
 VERSION
 -------
-1.0.0
+1.0.0 Alpha
 
 
 INTRODUCTION
@@ -16,9 +16,7 @@ INTRODUCTION
 
 PREREQUISITES
 -------------
-- It is required to have WSO2 WSF/C installed on your machine in order to
-  compile and use this extension module.
-
+- None
 
 INSTALLATION
 ------------
@@ -36,7 +34,6 @@ FEATURES
   - Support for SOAP 1.2
   - Support for WS-Addressing
   - Support for SOAP MTOM
-  - Support for WS-Security (with Rampart)
   - Support for WS-Policy
   - Support for WS-SecurityPolicy
   - Support for REST style invocations

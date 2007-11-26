@@ -175,6 +175,7 @@ secpolicy -
     - deploy, update and run
       - deploy policy (run deploy.sh)
       - usage: deploy.sh scenarioX
+      - restart server
       - update and run (run update.sh)
       - usage: update_n_run.sh
     - run all

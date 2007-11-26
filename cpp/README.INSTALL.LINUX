@@ -1,12 +1,34 @@
 Building and Installing WSO2 WSF/C++ from Source on Linux.
 ==========================================================
 
-Go to the directory where you have extracted the source distribution.
-Run the following:    
-    ./autogen.sh
-    ./configure
-    make
-    make install
+   1. Extract the source tar package to a folder.
+
+   2. Set WSFCPP_HOME environment variable pointing to the location where you want to install WSO2 WSF/C++.
+
+        $ WSFCPP_HOME='/your_desired_path_to_wsf_c++_installation'
+        $ export WSFCPP_HOME
+
+   3. Then go to the folder where you extracted the source.
+
+        $ cd /your_path_to_wsf_c++_source
+
+   4. Build the source
+      * This can be done using the following command sequence in the directory where you have extracted the source
+
+        $  ./configure --prefix=${WSFCPP_HOME}
+        $ make
+        $ make install
+        $ make examples
+
+   5. Go to where you installed WSO2 WSF/C++.
+      Start simple axis server * To start the simple axis server on port 9090 run the following commands
+
+        $ cd ${WSFCPP_HOME}/bin
+        $ ./axis2_http_server
+
+      To see the possible command line options run ./axis2_http_server -h Note : If you run into shared library problems, try setting the LD_LIBRARY_PATH
+
+        $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${WSFCPP_HOME}/lib
 
 Now you are ready to use WSO2 WSF/C++.
 
