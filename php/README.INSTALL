@@ -11,7 +11,20 @@ Note: You may require super user privileges to run 'make install' on your system
 
 After installing the extension, you have to edit the php.ini file
 and add the following line to the php.ini file:
+
 extension=wsf.so
+
+set the extension_dir entry to point to your extensions directory. IF you installed PHP from PHP source,
+this would be /usr/local/lib/php/extensions/debug-zts-***/
+extension_dir =" /usr/local/lib/php/extensions/debug-zts-20060613/"
+
+Then enable php_xsl extension. 
+extension=xsl.so.
+If you installed PHP from source, go to xsl extension directory of the source folder and do 
+./phpize
+./configure
+./make
+./make install
 
 Now you are ready to use WSO2 WSF/PHP.
 Copy the scripts folder to your Web server's document root.
@@ -31,7 +44,7 @@ Test with a Web browser; as an example access http://localhost/samples/echo_clie
     in the prefix folder.
 
 [wsf]
-wsf.home="path to your wsf_c installation directory"
+wsf.home="<path to your wsf_c installation directory>" { this entry is optional}
 wsf.log_level = 3
 
   { Log level is by default set to ERROR. Log levels range from 0 to 4. Log levels are as follows.
