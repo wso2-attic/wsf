@@ -119,7 +119,7 @@ AC_ARG_WITH(axis2,
     fi
     ;; 
   esac ],
-  AXIS2INC="-I$abs_top_builddir/wsf_caxis2c/include"
+  AXIS2INC="-I$abs_top_builddir/wsf_c/axis2c/include"
   AC_MSG_RESULT(no)
 )
 
