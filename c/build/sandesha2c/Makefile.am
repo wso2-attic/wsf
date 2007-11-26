@@ -22,10 +22,5 @@ scripts_DATA=config/*.bat config/*.sh config/*.txt
 
 install-data-hook:
 	cp -rf samples/* $(samplesdir)
-	rm -rf `find $(distdir)/ -type d -name *.svn`
-	rm -rf `find $(distdir)/ -type d -name *.deps`
-	rm -rf `find $(distdir)/ -type d -name *.libs`
-	rm -rf `find $(distdir)/ -type f -name Makefile`
-	rm -rf `find $(distdir)/ -type d -name autom4te.cache`
 
 
