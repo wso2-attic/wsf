@@ -462,6 +462,9 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         QName qName = innerElement.getSchemaTypeName();
         OMElement element = factory.createOMElement(innerElement.getName(), null);
         if (qName.equals(Constants.XSD_ANYTYPE)) {
+            if (JavaScriptEngine.isNull(jsObject)) {
+                return element;
+            }
             return buildResponse(annotated, json, jsObject, innerElement);
         }
         if (qName.equals(Constants.XSD_STRING)) {
