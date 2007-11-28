@@ -16,16 +16,17 @@
 require 'wsf'
 
 include WSO2::WSF
+include WSO2::Util
 
 req_payload = <<XML
 <ns1:echo xmlns:ns1="http://php.axis2.org/samples"><text>Hello World!</text></ns1:echo>
 XML
 
 begin
-   WSFC_HOME = "/home/janapriya/deploy/wsfc/" 
-   LOG_FILE = "/tmp/security_sample.log"
+   LOG_FILE = "security_sample.log"
    ACTION = "http://php.axis2.org/samples/echoString"
-   END_POINT = "http://localhost:9090/axis2/services/sec_echo/echoString"
+   #END_POINT = "http://localhost:9090/axis2/services/sec_echo/echoString"
+   END_POINT = "http://localhost:5000/rampart/signing"
 
    message_properties = {"to" => END_POINT,
                          "action" => ACTION}
@@ -54,7 +55,7 @@ begin
               "policy" => policy,
               "security_token" => security_token}
    
-   client = WSClient.new(options, WSFC_HOME, LOG_FILE)
+   client = WSClient.new(options, LOG_FILE)
 
    res_message = client.request(payload)
 
