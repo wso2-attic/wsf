@@ -84,12 +84,16 @@ rem Build Apache Savan/C
 
 @cd ..
 @xcopy /E /Q /I /Y savanc\modules\savan .\..\..\axis2c\build\axis2c-bin-1.2.0-win32\modules\savan
+@
 @xcopy /E /Q /I /Y savanc\services\publisher .\..\..\axis2c\build\axis2c-bin-1.2.0-win32\services\publisher
 @xcopy /E /Q /I /Y savanc\services\listener .\..\..\axis2c\build\axis2c-bin-1.2.0-win32\services\listener
 @xcopy /E /Q /I /Y savanc\services\subscription .\..\..\axis2c\build\axis2c-bin-1.2.0-win32\services\subscription
 @xcopy /E /Q /I /Y savanc\samples .\..\..\axis2c\build\axis2c-bin-1.2.0-win32\samples\savan
 @copy /Y savanc\modules\savan\mod_savan.dll .\..\..\axis2c\build\axis2c-bin-1.2.0-win32\lib\
 @copy /Y savanc\modules\savan\mod_savan.lib .\..\..\axis2c\build\axis2c-bin-1.2.0-win32\lib\
+@copy /Y savanc\lib\savan\savan_client.dll .\..\..\axis2c\build\axis2c-bin-1.2.0-win32\lib\
+@copy /Y savanc\lib\savan\savan_client.lib .\..\..\axis2c\build\axis2c-bin-1.2.0-win32\lib\
+
 @mkdir .\..\..\axis2c\build\axis2c-bin-1.2.0-win32\bin\samples\savan
 @copy /Y savanc\bin\samples\savan\*.exe .\..\..\axis2c\build\axis2c-bin-1.2.0-win32\bin\samples\savan
 @goto pack_wsfc
@@ -99,15 +103,15 @@ rem Build Apache Savan/C
 
 :pack_wsfc
 @cd ..\..
-@if not exist wso2-wsf-c-bin-1.2.0 mkdir wso2-wsf-c-bin-1.2.0
-@xcopy /E /Q /I /Y axis2c\build\axis2c-bin-1.2.0-win32 wso2-wsf-c-bin-1.2.0
-@copy /Y config\axis2.xml wso2-wsf-c-bin-1.2.0\axis2.xml
-@copy /Y INSTALL wso2-wsf-c-bin-1.2.0
-@copy /Y README wso2-wsf-c-bin-1.2.0
-@copy /Y NEWS wso2-wsf-c-bin-1.2.0
-@copy /Y COPYING wso2-wsf-c-bin-1.2.0
-@copy /Y AUTHORS wso2-wsf-c-bin-1.2.0
-@copy /Y NOTICE wso2-wsf-c-bin-1.2.0
-@xcopy /E /I /Q /Y docs  wso2-wsf-c-bin-1.2.0\docs
+@if not exist wso2-wsf-c-bin-1.2.0-win32 mkdir wso2-wsf-c-bin-1.2.0-win32
+@xcopy /E /Q /I /Y axis2c\build\axis2c-bin-1.2.0-win32 wso2-wsf-c-bin-1.2.0-win32
+@copy /Y config\axis2.xml wso2-wsf-c-bin-1.2.0-win32\axis2.xml
+@copy /Y INSTALL wso2-wsf-c-bin-1.2.0-win32
+@copy /Y README wso2-wsf-c-bin-1.2.0-win32
+@copy /Y NEWS wso2-wsf-c-bin-1.2.0-win32
+@copy /Y COPYING wso2-wsf-c-bin-1.2.0-win32
+@copy /Y AUTHORS wso2-wsf-c-bin-1.2.0-win32
+@copy /Y NOTICE wso2-wsf-c-bin-1.2.0-win32
+@xcopy /E /I /Q /Y docs  wso2-wsf-c-bin-1.2.0-win32\docs
 
 :end
