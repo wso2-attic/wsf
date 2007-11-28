@@ -12,6 +12,7 @@ if(WSFC_HOME == nil)
 end
 
 dir_config("wsservice", WSFC_HOME + '/include/axis2-1.1', WSFC_HOME + '/lib')
+dir_config("Rampart", WSFC_HOME + '/include/rampart-1.0', WSFC_HOME + '/modules/rampart')
 
 have_library('axutil')
 have_library('axis2_minizip')
@@ -23,6 +24,7 @@ have_library('axis2_http_common')
 have_library('axis2_http_sender')
 have_library('axis2_http_receiver')
 have_library('axis2_engine')
+
 
 
 create_makefile("wsservice")

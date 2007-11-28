@@ -623,8 +623,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
             }
             else
             {
-		        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-							            "[wsf log ]The method %s doesnt exist", op_name);
+		        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf log ]The method %s doesnt exist", op_name);
 
                 return NULL;
             }

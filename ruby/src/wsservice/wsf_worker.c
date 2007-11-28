@@ -32,7 +32,7 @@
 
 #include "wsf_util.h"
 #include "wsf_stream.h"
-/* #include "wsf_policy.h" */
+#include "wsf_policy.h"
     
 #define READ_SIZE 32
 struct wsf_worker_t 
@@ -261,17 +261,15 @@ wsf_worker_process_request (
         if (svc_info->use_mtom == 1) {
         axis2_msg_ctx_set_doing_mtom (msg_ctx, env, AXIS2_TRUE);
     }
-   /*  if (svc_info->security_token != NULL && svc_info->policy != NULL) {
-    */   
-        /**  call security function here */ 
-        /*    axis2_conf_t * conf = NULL;
+   
+	if (svc_info->security_token != Qnil && svc_info->policy != Qnil) {
+        /**  call security function here */
+        axis2_conf_t * conf = NULL;
         conf = axis2_conf_ctx_get_conf (worker->conf_ctx, env);
         wsf_policy_handle_server_security (svc_info->security_token,
-            svc_info->policy, env, svc_info->svc, conf TSRMLS_CC);
-        */
-    /*
+            svc_info->policy, env, svc_info->svc, conf);
     }
-    */
+    
     soap_action = request->soap_action;
 	if (soap_action){
 	    soap_action_str = axutil_string_create (env, soap_action);

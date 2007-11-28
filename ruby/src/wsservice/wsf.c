@@ -73,6 +73,7 @@ wsservice_initialize(VALUE self, VALUE options)
     VALUE ht_op_params;
     VALUE request_xop;
     VALUE security_token;
+    VALUE policy;
     VALUE use_reliable;
     VALUE ht_classes;
 
@@ -90,6 +91,7 @@ wsservice_initialize(VALUE self, VALUE options)
     svc_info->ops_to_classes = axutil_hash_make (ws_env_svr);
     svc_info->ruby_worker = worker;
 
+    
     if(TYPE(options) == T_HASH)
     {
         ht_actions = rb_hash_aref(options, ID2SYM(rb_intern("actions")));
@@ -167,6 +169,7 @@ wsservice_initialize(VALUE self, VALUE options)
             AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
                           "[wsf_service] request xop %d", svc_info->request_xop);
         }
+      
 
         security_token = rb_hash_aref(options, ID2SYM(rb_intern(WS_SECURITY_TOKEN)));
         if(security_token == Qnil)
@@ -179,6 +182,22 @@ wsservice_initialize(VALUE self, VALUE options)
             AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
                           "[wsf_service] security_token object present");
         }
+		else
+			svc_info->security_token = Qnil;
+
+		policy = rb_hash_aref(options, ID2SYM(rb_intern(WS_POLICY_NAME)));
+        if(policy == Qnil)
+        {
+            policy = rb_hash_aref(options, rb_str_new2(WS_POLICY_NAME));
+        }
+        if(policy != Qnil)
+        {
+			svc_info->policy = policy;
+            AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                          "[wsf_service] security_token object present");
+        }
+		else
+			svc_info->policy = Qnil;
 
         use_reliable = rb_hash_aref(options, ID2SYM(rb_intern(WS_RELIABLE)));
         if(use_reliable == Qtrue)
