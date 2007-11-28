@@ -15,23 +15,36 @@
  * limitations under the License.
  */
 
+$item = array("abc" => 101.5, "wso2" => 250.50, "xyz" => 99.99);
 
-/** The  purchaseOrder function
- * @param int $count the number of widgets to buy
- * (maps to the xs:nonNegativeInteger XML schema type )
- * @param string $date the date those items were sold
- * (maps to the xs:gDay XML schema type)
- * @return string $t time for buying it
- *(maps to the xs:QName XML schema type )
+/** BuyItem function
+ * @param string $item_name of the item to buy
+ * (maps to the xs:string XML schema type )
+ * @param int $amount no of items to buy
+ * (maps to the xs:nonNegativeInteger XML schema type)
+ * @return float $price total price
+ *(maps to the xs:double XML schema type )
  */
-function purchaseOrder($x,$y)
+function getPriceFunction($item_name ,$amount)
 {
-    return $x+$y;
+    global $item;
+    if ($item_name && $amount){
+        if(isset($item[$item_name])){
+            return array("price" => ($item[$item_name] * $amount));
+        }
+        else
+            return NULL;
+    }
+    return array("price" => 200043);
 }
 
 
-$operations = array("purchaseOrder"=>"purchaseOrder");
-$svr = new WSService(array("operations"=>$operations, "bindingStyle"=>"doclit"));
+$operations = array("getPrice"=>"getPriceFunction");
+$opParams = array("getPriceFunction"=>"MIXED");
+
+$svr = new WSService(array("operations"=>$operations, 
+			   "bindingStyle"=>"doclit",
+		   	   "opParams"=>$opParams));
 
 
 $svr->reply();
