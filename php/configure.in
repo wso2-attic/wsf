@@ -2,7 +2,7 @@
 ### General Build Configuration Parameters
 
 # To build with debug symbols set DEBUG = 1
-DEBUG = 1 
+DEBUG = 0 
 #CRUNTIME Library (Use /MD or /MT)
 CRUNTIME=/MT
 # Visual Studio version
@@ -12,7 +12,7 @@ VC_VERSION_2005_OR_ABOVE=0
 ### WSF/C Build Configuration Parameters
 
 # Path to libxml2 installation
-LIBXML2_BIN_DIR = E:\libxml2-2.6.27.win32
+LIBXML2_BIN_DIR = E:\libxml2-2.6.30.win32
 
 # Path to iconv installation
 ICONV_BIN_DIR = E:\iconv-1.9.2.win32
@@ -33,14 +33,14 @@ SQLITE_BIN_DIR = "E:\sqlite-source-3_3_8"
 SQLITE_SRC_DIR = "E:\sqlite-source-3_3_8"
 
 # Build with MySQL support for permanent storage, to enable set WITH_MYSQL = 1
-WITH_MYSQL = 1 
+WITH_MYSQL = 1
 # Path to MySQL installation
 MYSQL_BIN_DIR = "C:\Program Files\MySQL\MySQL Server 5.0"
 
 #############################################################################
 # Configuration for building wsf/php extension using its own build
-PHP_SRC_DIR = E:\php\php-5.2.4
-PHP_BIN_DIR = E:\php\php-5.2.4-Win32
+PHP_SRC_DIR = E:\php\php-5.2.5
+PHP_BIN_DIR = E:\php\php-5.2.5-Win32
 WIN32BUILD_DIR = E:\php\win32build
 
 
