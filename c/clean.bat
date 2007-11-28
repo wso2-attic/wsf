@@ -6,7 +6,7 @@
 
 @if exist savanc\build\savanc rmdir /S /Q savanc\build\savanc
 
-@if exist wso2-wsf-c-bin-1.2.0 rmdir /S /Q wso2-wsf-c-bin-1.2.0
+@if exist wso2-wsf-c-bin-1.2.0-win32 rmdir /S /Q wso2-wsf-c-bin-1.2.0-win32
 
 @if exist axis2c\build\win32\int.msvc rmdir /S /Q axis2c\build\win32\int.msvc
 
