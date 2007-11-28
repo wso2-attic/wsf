@@ -31,10 +31,10 @@ def load_policy_from_file(filename)
 end
 
 begin
-   WSFC_HOME = "/home/janapriya/deploy/wsfc/"
-   LOG_FILE = "/tmp/security_sample.log"
+   LOG_FILE = "security_sample.log"
    ACTION = "http://php.axis2.org/samples/echoString"
-   END_POINT = "http://localhost:9090/axis2/services/sec_echo/echoString"
+   #END_POINT = "http://localhost:9090/axis2/services/sec_echo/echoString"
+   END_POINT = "http://localhost:3000/rampart/usernametoken"
 
    message_properties = {"to" => END_POINT,
                          "action" => ACTION}
@@ -52,8 +52,8 @@ begin
 
    policy = WSPolicy.new(policy_content)
 
-   security_options = {"user" => "Alice",
-                       "password" => "abcd!1234",
+   security_options = {"user" => "Raigama",
+                       "password" => "RaigamaPW",
                        "password_type" => "Digest"}
  
    security_token = WSSecurityToken.new(security_options)
@@ -62,7 +62,7 @@ begin
               "policy" => policy,
               "security_token" => security_token}
    
-   client = WSClient.new(options, WSFC_HOME, LOG_FILE)
+   client = WSClient.new(options, LOG_FILE)
 
    res_message = client.request(payload)
 
