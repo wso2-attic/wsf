@@ -1076,7 +1076,7 @@ PHP_METHOD (ws_service, __construct)
                 
                     svc_info->request_xop = Z_BVAL_PP (tmp);
             }else {
-                svc_info->request_xop = 0;
+                svc_info->request_xop = -1;
             }
             
             AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,

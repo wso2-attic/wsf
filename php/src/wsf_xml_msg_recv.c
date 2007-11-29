@@ -126,7 +126,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
     axis2_status_t status = AXIS2_SUCCESS;
     axis2_bool_t skel_invoked = AXIS2_FALSE;
     int use_mtom = AXIS2_TRUE;
-    int request_xop = AXIS2_FALSE;
+	int request_xop = AXIS2_FALSE;
 
     const axis2_char_t *style = NULL;
     axis2_char_t *local_name = NULL;
@@ -615,13 +615,6 @@ wsf_xml_msg_recv_invoke_wsmsg (
     if (!om_node)
         return NULL;
 
-    req_payload = wsf_util_serialize_om (env, om_node);
-
-    if (!req_payload) {
-        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "Request Payload is NULL");
-        return NULL;
-    }
-
     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
         " [wsf_svr] calling php service ");
 
@@ -629,8 +622,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
 
         MAKE_STD_ZVAL (msg);
         object_init_ex (msg, ws_message_class_entry);
-        add_property_string (msg, "str", req_payload, 1);
-
+        
         if (request_xop == AXIS2_TRUE) {
 
             zval *cid2str = NULL;
@@ -651,7 +643,14 @@ wsf_xml_msg_recv_invoke_wsmsg (
             add_property_zval (msg, "attachments", cid2str);
             add_property_zval (msg, "cid2contentType", cid2contentType);
 
-        }
+		}else if(request_xop == AXIS2_FALSE){
+			wsf_util_find_xop_content_and_convert_to_base64(env, om_node);
+		}
+
+		/** this should be after mtom processing */
+		req_payload = wsf_util_serialize_om (env, om_node);
+		add_property_string (msg, "str", req_payload, 1);
+
 
         ZVAL_STRING (&func, op_name, 0);
         params[0] = &param;

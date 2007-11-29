@@ -953,6 +953,76 @@ wsf_util_get_attachments (
     return attachments_found;
 }
 
+void
+wsf_util_find_xop_content_and_convert_to_base64 (
+    const axutil_env_t * env,
+    axiom_node_t * om_node)
+{
+        axiom_node_t *temp_node = NULL;
+    axiom_node_t *nodes[256];
+    int count = 0;
+
+    if (!om_node)
+    {
+        return;
+    }
+
+    nodes[count++] = om_node;
+
+
+    do {
+		if (axiom_node_get_node_type(om_node, env) == AXIOM_TEXT) {
+			axiom_text_t *text = NULL;
+			axiom_data_handler_t *data_handler = NULL;
+			
+			
+			text = (axiom_text_t*)axiom_node_get_data_element(om_node, env);
+			if(text) {
+				data_handler = axiom_text_get_data_handler (text, env);
+                if (data_handler) {
+                   axiom_text_set_optimize(text, env, AXIS2_FALSE);
+                }			
+			}
+        }
+        temp_node = axiom_node_get_first_child(om_node, env);
+        if (temp_node)
+        {
+            om_node = temp_node;
+            nodes[count++] = om_node;
+        }
+        else
+        {
+            temp_node = axiom_node_get_next_sibling(om_node, env);
+            if (temp_node)
+            {
+                om_node = temp_node;
+                nodes[count -1] = om_node;
+            }
+            else
+            {
+                while (count > 1 && !temp_node)
+                {
+                    count--;
+                    om_node = nodes[count -1];
+                    temp_node = axiom_node_get_next_sibling(om_node, env);
+                }
+               
+                if (temp_node && count > 1)
+                {
+                    om_node = temp_node;
+                    nodes[count -1] = om_node;
+                }
+                else
+                {
+                    count--;
+                }
+            }
+        }
+    } while(count > 0);
+    
+    return;
+}
+
 char *
 wsf_util_serialize_om (
     const axutil_env_t * env,

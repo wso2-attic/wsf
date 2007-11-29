@@ -212,12 +212,10 @@ wsf_client_handle_incoming_attachments (
     zval **tmp = NULL;
 	int attachments_found = 0;
     zval *cid2str = NULL;
-    zval *cid2contentType = NULL;
+    zval *cid2content_type = NULL;
             
-
-    int responseXOP = AXIS2_FALSE;
+    int response_xop = 0;
     
-   
 	if (!client_ht)
         return 0;
 
@@ -227,28 +225,30 @@ wsf_client_handle_incoming_attachments (
     if (client_ht && zend_hash_find (client_ht, WS_RESPONSE_XOP,
             sizeof (WS_RESPONSE_XOP), (void **) &tmp) == SUCCESS
         && Z_TYPE_PP (tmp) == IS_BOOL) {
-        responseXOP = Z_BVAL_PP (tmp);
+        response_xop = Z_BVAL_PP (tmp);
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_client] responseXOP %d", responseXOP);
+            "[wsf_client] responseXOP %d", response_xop);
     }
 
-    if (responseXOP == 1) {
+    if (response_xop == 1) {
 
         MAKE_STD_ZVAL(cid2str);
         INIT_PZVAL(cid2str);
-        MAKE_STD_ZVAL(cid2contentType);
-        INIT_PZVAL(cid2contentType);
+        MAKE_STD_ZVAL(cid2content_type);
+        INIT_PZVAL(cid2content_type);
 
         array_init (cid2str);
-        array_init (cid2contentType);
+        array_init (cid2content_type);
         attachments_found = wsf_util_get_attachments (env, response_payload, cid2str,
-            cid2contentType TSRMLS_CC);
+            cid2content_type TSRMLS_CC);
         add_property_zval (msg, WS_ATTACHMENTS, cid2str);
-        add_property_zval (msg, WS_CID2CONTENT_TYPE, cid2contentType);
+        add_property_zval (msg, WS_CID2CONTENT_TYPE, cid2content_type);
         zval_ptr_dtor(&cid2str);
-        zval_ptr_dtor(&cid2contentType);
+        zval_ptr_dtor(&cid2content_type);
 
-    }
+	}else if(response_xop == 0){
+		wsf_util_find_xop_content_and_convert_to_base64(env, response_payload);
+	}
 	return attachments_found;
 }
 
@@ -1305,7 +1305,8 @@ wsf_client_do_request (
             
             add_property_stringl (rmsg, WS_MSG_PAYLOAD_STR, res_text,
                 strlen (res_text), 1);
-	    add_property_long (rmsg, WS_MSG_TYPE, WS_USING_STRING);
+			
+			add_property_long (rmsg, WS_MSG_TYPE, WS_USING_STRING);
             
             ZVAL_ZVAL (return_value, rmsg, 1, 0);
             zval_ptr_dtor(&rmsg);

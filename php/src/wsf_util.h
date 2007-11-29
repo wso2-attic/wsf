@@ -158,4 +158,9 @@ void wsf_util_process_ws_service_classes(
 	wsf_svc_info_t *svc_info,
 	axutil_env_t *ws_env_svr TSRMLS_DC);
 
+void
+wsf_util_find_xop_content_and_convert_to_base64 (
+    const axutil_env_t * env,
+    axiom_node_t * om_node);
+
 #endif /* WSF_UTIL_H */
