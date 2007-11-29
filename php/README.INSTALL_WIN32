@@ -66,6 +66,9 @@ Contents:
        Next run the build.bat file located in wso2-wsf-php-src directory. It should build the binary dist pack
        to the same directory.
 
+       ( Before running the build.bat file, add your vcvars32.bat folder location to PATH environment variable. 
+	If you are using vc2005, it is located in C:\Program Files\Microsoft Visual Studio 8\VC\bin)
+
      c. Building WSO2 WSF/PHP with php win32 build system
  
        There is another way of building the WSF/PHP extension. For this you will first need to build php
