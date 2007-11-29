@@ -23,7 +23,7 @@ AC_PROG_MAKE_SET
 #CFLAGS="$CFLAGS -ansi -Wall -D_LARGEFILE64_SOURCE -Wno-implicit-function-declaration"
 CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 if test "$GCC" = "yes"; then
-    CFLAGS="$CFLAGS -ansi -Wall -Werror -Wno-implicit-function-declaration -g"
+    CFLAGS="$CFLAGS -ansi -Wall  -Wno-implicit-function-declaration -g"
 fi
 LDFLAGS="$LDFLAGS -lpthread"
 
@@ -59,7 +59,7 @@ AC_ARG_WITH(wsfc,
 )
 
 WSFCINC=$wsfcinc
-AXIS2INC="$wsfcinc/axis2-1.1"
+AXIS2INC="$wsfcinc/axis2-1.2"
 SANDESHA2INC="$wsfcinc/sandesha2-0.90"
 RAMPARTINC="$wsfcinc/rampart-0.90"
 
