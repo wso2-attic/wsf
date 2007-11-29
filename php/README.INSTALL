@@ -28,6 +28,7 @@ If you installed PHP from source, go to xsl extension directory of the source fo
 
 Now you are ready to use WSO2 WSF/PHP.
 Copy the scripts folder to your Web server's document root.
+If your are running your clients on the shell, copy the scripts folder to your current working directory.
 Also copy the samples folder to your Web server's document root.
 Test with a Web browser; as an example access http://localhost/samples/echo_client.php
 
