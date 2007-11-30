@@ -1,9 +1,15 @@
+WSO2 WSF/PHP 1.2.0
+* WSDL mode support reimplemented using xslt based wsdl parser for both
+client and server side.
+* Support for exposing class methods as operations added.
+* Numerous bug fixes done for security, MTOM and WSDLGeneration.
+* Support for adding soap headers improved.
+
+
 WSO2 WSF/PHP 1.1.0
+======================
 * Bug fixes related to MTOM, Security
 * Memory Leaks fixed
-
-
-
 
 WSO2 WSF/PHP 1.0.0
 ======================
