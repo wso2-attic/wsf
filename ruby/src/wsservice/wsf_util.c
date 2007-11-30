@@ -554,10 +554,11 @@ wsf_util_generate_svc_name_from_uri (
     wsf_svc_info_t * svc_info,
     axutil_env_t * env)
 {
-    char *svc_name = NULL;
+	char *svc_name = NULL;
     char *temp_string = NULL;
     char *index = NULL;
     char *uri = NULL;
+    int i;
 
     if (strncmp (req_uri, "/", 1) == 0) {
         /* start with a / */
@@ -568,11 +569,18 @@ wsf_util_generate_svc_name_from_uri (
 
     temp_string = axutil_strdup(env, uri);
 
-    index = rindex(temp_string, '/');
+    /* index = rindex(temp_string, '/'); */
+    for(i = axutil_strlen(temp_string) -1; i> 0; i--)
+    {
+	if(temp_string[i] == '/')
+	{
+	    break;
+	}
+    }
 
-    if (index) {
+    if (i > 0) {
         char *op_index = NULL;
-        op_index = index + 1;
+        op_index = temp_string + i + 1;
         temp_string[index - temp_string] = '\0';
         svc_info->op_name = axutil_strdup (env, op_index);
     }
@@ -582,6 +590,7 @@ wsf_util_generate_svc_name_from_uri (
     AXIS2_FREE(env->allocator, temp_string);
 
     return svc_name;
+
 }
 
 /* create service */
