@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+#ifdef WIN32
+	#include "winsock2.h"   // hack to avoid errors winsock redefinitions
+#endif
 #include "ruby.h"
 #include <axis2_addr.h>
 #include "wsf_util.h"
