@@ -55,7 +55,6 @@
 #include <libxml/xpath.h>
 #endif
 #include "ext/libxml/php_libxml.h"
-#include "ext/dom/xml_common.h"
 #include <axiom.h>
 #include <axis2_svc_client.h>
 #include <axiom_soap.h>

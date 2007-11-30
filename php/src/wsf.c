@@ -585,7 +585,9 @@ PHP_METHOD (ws_message, __construct)
 	if (Z_TYPE_P (payload) == IS_STRING) {
         add_property_stringl (object, WS_MSG_PAYLOAD_STR, Z_STRVAL_P (payload), Z_STRLEN_P (payload), 1);
         add_property_long (object, WS_MSG_TYPE, WS_USING_STRING);
-    }else if (Z_TYPE_P (payload) == IS_OBJECT){
+    }
+/*    
+    else if (Z_TYPE_P (payload) == IS_OBJECT){
 #ifdef HAVE_PHP_DOM        
         if(instanceof_function (Z_OBJCE_P (payload), dom_node_class_entry TSRMLS_CC)) {
 #endif            
@@ -594,7 +596,9 @@ PHP_METHOD (ws_message, __construct)
 #ifdef HAVE_PHP_DOM            
         }
 #endif    
-    } else {
+    } 
+*/    
+    else {
         return;
     }
     if (NULL != properties) {
@@ -718,7 +722,7 @@ PHP_METHOD (ws_message, __get)
         }
     }
     else if (strcmp (prop_name, WS_MSG_PAYLOAD_DOM) == 0) {
-#ifdef HAVE_DOM        
+/*        
         if (get_message_storage_type (object TSRMLS_CC) == WS_USING_STRING) {
             zval ** tmp_val = NULL;
             if (zend_hash_find (Z_OBJPROP_P (object), WS_MSG_PAYLOAD_STR,
@@ -741,7 +745,7 @@ PHP_METHOD (ws_message, __get)
 					}
             }
         }
-#endif
+*/
     }
 }
 /* }}} */ 

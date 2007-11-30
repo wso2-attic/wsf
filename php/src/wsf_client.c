@@ -382,8 +382,9 @@ wsf_client_get_reader_from_zval (
     axis2_char_t *str_payload = NULL;
     int str_payload_len = 0;
     axiom_xml_reader_t *reader = NULL;
+    /*
     xmlNodePtr nodep;
-
+    */
     if (Z_TYPE_PP (param) == IS_STRING) {
         str_payload = Z_STRVAL_PP (param);
         str_payload_len = Z_STRLEN_PP (param);
@@ -393,7 +394,8 @@ wsf_client_get_reader_from_zval (
             AXIS2_XML_PARSER_TYPE_BUFFER);
 
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsflog] %s", str_payload);
-    } else if (Z_TYPE_PP (param) == IS_OBJECT){
+    }/*
+        else if (Z_TYPE_PP (param) == IS_OBJECT){
 #ifdef HAVE_DOM        
         if(instanceof_function (Z_OBJCE_PP (param),dom_node_class_entry TSRMLS_CC)) {
 #endif
@@ -408,7 +410,7 @@ wsf_client_get_reader_from_zval (
         }
 #endif        
     }
-
+*/
     if (!reader) {
         zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C),
             1 TSRMLS_CC, "Xml Reader Creation Failed");
