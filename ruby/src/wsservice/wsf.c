@@ -91,7 +91,6 @@ wsservice_initialize(VALUE self, VALUE options)
     svc_info->ops_to_classes = axutil_hash_make (ws_env_svr);
     svc_info->ruby_worker = worker;
 
-    
     if(TYPE(options) == T_HASH)
     {
         ht_actions = rb_hash_aref(options, ID2SYM(rb_intern("actions")));
@@ -519,7 +518,6 @@ Init_wsservice()
     axis2_char_t *log_path;
 
     axis2_char_t *s_log_level;
-
 
     rb_mWSO2 = rb_define_module("WSO2");
     rb_mWSF = rb_define_module_under(rb_mWSO2, "WSF");
