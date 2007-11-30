@@ -21,13 +21,10 @@ include REXML
 include WSO2::WSF
 
 class FlickrClient
-   def initialize(key)
+   def initialize(key, log_file)
       @key = key
-      
-      LOG_FILE_NAME = "ruby_rails_flicker_client.log"
-
       @client = WSClient.new({"to" => "http://api.flickr.com/services/soap"},
-                             LOG_FILE_NAME)
+                             log_file)
    end
 
    def query(text)
