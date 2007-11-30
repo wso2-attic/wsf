@@ -168,19 +168,23 @@ wsf_str_to_axiom_node(const axutil_env_t *env,
                        char               *container,
                        int                 size)
 {
-  axiom_xml_reader_t *xml_reader = axiom_xml_reader_create_for_memory(env, container, size, "utf-8", AXIS2_XML_PARSER_TYPE_BUFFER);
+	axiom_xml_reader_t *xml_reader = NULL;
+	axiom_stax_builder_t *stax_builder = NULL;
+	axiom_document_t *document = NULL;
+	axiom_node_t *axiom_node = NULL;
+   xml_reader= axiom_xml_reader_create_for_memory(env, container, size, "utf-8", AXIS2_XML_PARSER_TYPE_BUFFER);
   if (xml_reader == NULL)
     return NULL;
 
-  axiom_stax_builder_t *stax_builder = axiom_stax_builder_create(env, xml_reader);
+   stax_builder= axiom_stax_builder_create(env, xml_reader);
   if (stax_builder == NULL)
     return NULL;
 
-  axiom_document_t *document = axiom_stax_builder_get_document(stax_builder, env);
+   document = axiom_stax_builder_get_document(stax_builder, env);
   if (document == NULL)
     return NULL;
 
-  axiom_node_t *axiom_node = axiom_document_get_root_element(document, env);
+  axiom_node = axiom_document_get_root_element(document, env);
   if (axiom_node == NULL)
     return NULL;
 
