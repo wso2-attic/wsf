@@ -2,7 +2,7 @@ dnl run autogen.sh to generate the configure script.
 
 AC_PREREQ(2.59)
 
-AC_INIT(wso2-wsf-cpp, 0.1)
+AC_INIT(wso2-wsf-cpp, 1.0alpha1)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE([tar-ustar])
@@ -54,7 +54,7 @@ fi
 
 CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 if test "$GCC" = "yes"; then
-    CFLAGS="$CFLAGS -ansi -Wall -Werror -Wno-implicit-function-declaration -g"
+    CFLAGS="$CFLAGS -ansi -Wall  -Wno-implicit-function-declaration -g"
 fi
 LDFLAGS="$LDFLAGS -lpthread"
 
