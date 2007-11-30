@@ -98,6 +98,7 @@ wsf_policy_handle_client_security (
         tmp_rampart_ctx.receiverCertificateFormat = NULL;
         tmp_rampart_ctx.ttl = 0;
         tmp_rampart_ctx.callback_function = NULL;
+		
     }
     if (!sec_token && !policy)
         return AXIS2_FAILURE;
@@ -111,7 +112,7 @@ wsf_policy_handle_client_security (
             if (Z_TYPE_PP (tmp_type) == IS_ARRAY) {
                 policy_type = *tmp_type;
                 incoming_policy_node =
-                    wsf_do_create_policy (sec_token, policy_type,
+                    wsf_do_create_policy (sec_token, policy_type, AXIS2_FAILURE,
                     env TSRMLS_CC);
             }
             if (Z_TYPE_PP (tmp_type) == IS_STRING) {
@@ -127,7 +128,7 @@ wsf_policy_handle_client_security (
             if (Z_TYPE_PP (tmp_type) == IS_ARRAY) {
                 policy_type = *tmp_type;
                 outgoing_policy_node =
-                    wsf_do_create_policy (sec_token, policy_type,
+                    wsf_do_create_policy (sec_token, policy_type, AXIS2_FAILURE,
                     env TSRMLS_CC);
                 is_multiple_flow = AXIS2_SUCCESS;
             }
@@ -153,9 +154,9 @@ wsf_policy_handle_client_security (
        function */
     if (Z_TYPE_P (policy) == IS_OBJECT && is_multiple_flow == AXIS2_FALSE) {
         outgoing_policy_node =
-            wsf_do_create_policy (sec_token, policy, env TSRMLS_CC);
+            wsf_do_create_policy (sec_token, policy, AXIS2_FAILURE, env TSRMLS_CC);
         incoming_policy_node =
-            wsf_do_create_policy (sec_token, policy, env TSRMLS_CC);
+            wsf_do_create_policy (sec_token, policy, AXIS2_FAILURE, env TSRMLS_CC);
     }
 
     /* get the values from the security token object and keep it in a
@@ -278,6 +279,7 @@ wsf_policy_handle_server_security (
         tmp_rampart_ctx.receiverCertificateFormat = NULL;
         tmp_rampart_ctx.ttl = 0;
         tmp_rampart_ctx.callback_function = NULL;
+		 
     }
 
     if (!sec_token && !policy && !svc && !conf)
@@ -292,7 +294,7 @@ wsf_policy_handle_server_security (
             if (Z_TYPE_PP (tmp_type) == IS_ARRAY) {
                 policy_type = *tmp_type;
                 incoming_policy_node =
-                    wsf_do_create_policy (sec_token, policy_type,
+					wsf_do_create_policy (sec_token, policy_type, AXIS2_SUCCESS,
                     env TSRMLS_CC);
                 is_multiple_flow = AXIS2_SUCCESS;
             }
@@ -310,7 +312,7 @@ wsf_policy_handle_server_security (
             if (Z_TYPE_PP (tmp_type) == IS_ARRAY) {
                 policy_type = *tmp_type;
                 outgoing_policy_node =
-                    wsf_do_create_policy (sec_token, policy_type,
+                    wsf_do_create_policy (sec_token, policy_type, AXIS2_SUCCESS,
                     env TSRMLS_CC);
                 is_multiple_flow = AXIS2_SUCCESS;
             }
@@ -337,9 +339,9 @@ wsf_policy_handle_server_security (
        function */
     if (Z_TYPE_P (policy) == IS_OBJECT && is_multiple_flow == AXIS2_FALSE) {
         outgoing_policy_node =
-            wsf_do_create_policy (sec_token, policy, env TSRMLS_CC);
+            wsf_do_create_policy (sec_token, policy, AXIS2_SUCCESS, env TSRMLS_CC);
         incoming_policy_node =
-            wsf_do_create_policy (sec_token, policy, env TSRMLS_CC);
+            wsf_do_create_policy (sec_token, policy, AXIS2_SUCCESS, env TSRMLS_CC);
     }
 
     /* get the values from the security token object and keep it in a
@@ -581,6 +583,7 @@ axiom_node_t *
 wsf_do_create_policy (
     zval * sec_token,
     zval * policy,
+	axis2_bool_t is_server_side,
     axutil_env_t * env TSRMLS_DC)
 {
     neethi_options_t *neethi_options = NULL;
@@ -647,6 +650,9 @@ wsf_do_create_policy (
                                                   token_ref))
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                                  "[wsf_sec_policy] token_ref_enabled ");
+			 if(is_server_side == AXIS2_SUCCESS)
+				  neethi_options_set_server_side(neethi_options, env, is_server_side);
+
         }
         
         if (zend_hash_find (ht_policy, WS_ENCRYPT_SIGNATURE,

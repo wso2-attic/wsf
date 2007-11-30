@@ -109,6 +109,7 @@ typedef struct tokenProperties
     char *receiverCertificateFormat;
     int ttl;
     char *callback_function;
+	
 }
 tokenProperties_t;
 
@@ -146,6 +147,7 @@ int wsf_set_options_to_rampart_ctx (rampart_context_t * in_rampart_ctx,
 axiom_node_t *wsf_do_create_policy (
     zval * sec_token,
     zval * policy,
+	axis2_bool_t is_server_side,
     axutil_env_t * env TSRMLS_DC);
 
 

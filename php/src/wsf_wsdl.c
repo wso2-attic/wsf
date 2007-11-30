@@ -643,7 +643,7 @@ void wsf_wsdl_handle_client_security(HashTable *client_ht,
               	input_policy_node = wsf_util_deserialize_buffer (env, policy_xml);
             }
             else
-                input_policy_node = wsf_do_create_policy (NULL, policy, env TSRMLS_CC);
+				input_policy_node = wsf_do_create_policy (NULL, policy, AXIS2_FALSE, env TSRMLS_CC);
         }
 	
     }
