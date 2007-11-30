@@ -16,6 +16,7 @@
 
 
 #ifndef WSF_POLICY_H
+
 #define WSF_POLICY_H
 
 #include <axutil_env.h>
