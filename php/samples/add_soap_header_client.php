@@ -26,8 +26,8 @@ try {
     $client = new WSClient(array( "to"=>"http://localhost/samples/echo_service.php"));
 
     $header1 = new WSHeader(array("ns"=>"http://test.org",
-	    			  "localname"=>"header1",
-				  "value"=>"value1",
+	    			  "name"=>"header1",
+				  "data"=>"value1",
 				  "mustUnderstand"=>true));
 
 
