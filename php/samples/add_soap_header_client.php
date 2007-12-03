@@ -25,10 +25,14 @@ try {
 
     $client = new WSClient(array( "to"=>"http://localhost/samples/echo_service.php"));
 
-    $msg = new WSMessage($reqPayloadString ,
-        array("headers" => array(new WSHeader("http://test.org","header1", 
-            array(new WSHeader("http://test1.org","header2", "value2", true, 2)), true, 1))));
+    $header1 = new WSHeader(array("ns"=>"http://test.org",
+	    			  "localname"=>"header1",
+				  "value"=>"value1",
+				  "mustUnderstand"=>true));
 
+
+    $msg = new WSMessage($reqPayloadString ,
+        array("inputHeaders" => array($header1)));
    $client->request($msg);
 
    $sentMsg = $client->getLastRequest();
