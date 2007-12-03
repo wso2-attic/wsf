@@ -2,7 +2,7 @@
 <package packagerversion="1.4.2" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
 
     <name>wso2_wsf_php</name>
-<channel>10.100.1.36</channel>
+    <channel>http://dist.wso2.org/products/wsf/php/1.2.0</channel>
 <summary>Web Services for PHP</summary>
 <description>
 WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into PHP is a PHP extension for providing and consuming Web Services in PHP. WSO2 WSF/PHP supports SOAP 1.1, SOAP 1.2, WSDL 1.1, WSDL 2.0, REST style invocation as well as some of the key WS-* stack specifications such as: SOAP MTOM, WS-Addressing, WS-Security, WS-SecurityPolicy and WS-ReliableMessaging.
@@ -75,16 +75,6 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
    <file name="wsf_worker.h" role="src" />
    <file name="wsf_xml_msg_recv.c" role="src" />
    <file name="wsf_xml_msg_recv.h" role="src" />
-   <file name="php_encoding.c" role="src" />
-   <file name="php_encoding.h" role="src" />
-   <file name="php_http.c" role="src" />
-   <file name="php_http.h" role="src" />
-   <file name="php_schema.c" role="src" />
-   <file name="php_schema.h" role="src" />
-   <file name="php_sdl.c" role="src" />
-   <file name="php_sdl.h" role="src" />
-   <file name="php_xml.c" role="src" />
-   <file name="php_xml.h" role="src" />
    <file name="wsf_wsdl.h" role="src" />
    <file name="wsf_wsdl.c" role="src" />
    <file name="wsf_version.h" role="src" />
