@@ -172,7 +172,7 @@ border="1">
     </tr>
     <tr valign="top">
       <td colspan="1" style="height: 20px; width: 96px;">"policy"</td>
-      <td colspan="1" style="height: 20px"> &nbsp;WSPolicy object</td>
+      <td colspan="1" style="height: 20px"> &nbsp; WSPolicy object</td>
       <td colspan="1" style="height: 20px">WSPolicy object</td>
       <td colspan="1" style="height: 20px">None</td>
       <td colspan="1" style="height: 20px">WSPolicy Object</td>
@@ -225,8 +225,7 @@ border="1">
 <h3><b>Methods</b></h3>
 <a id="pre_WSMessage"></a>
 <ul>
-  <li><p><b>WSMessage WSClient-&gt;request (string message | domDocument
-    message | WSMessage message)</b></p>
+  <li><p><b>WSMessage WSClient-&gt;request (string message | WSMessage message)</b></p>
   </li>
 </ul>
 
@@ -253,8 +252,6 @@ border="1">
         be any one of the following types:</p>
         <ul>
           <li><p>string</p>
-          </li>
-          <li><p>domDocument</p>
           </li>
           <li><p>WSMessage</p>
           </li>
@@ -283,7 +280,7 @@ border="1">
 </p>
 <a id="pre_void_WSClient"></a>
 <ul>
-  <li><p><b>void WSClient -&gt; send(string payload | domDocument message |
+  <li><p><b>void WSClient -&gt; send(string payload | 
     WSMessage message)</b></p>
   </li>
 </ul>
@@ -311,8 +308,6 @@ border="1">
         can be any one of the following types:</p>
         <ul>
           <li><p>string</p>
-          </li>
-          <li><p>domDocument</p>
           </li>
           <li><p>WSMessage</p>
           </li>
@@ -647,7 +642,7 @@ properties related to a message. <a id="construct3"></a>
 <h3><b>Constructor</b></h3>
 <a id="message_WSMessage"></a>
 <ul>
-  <li><b>WSMessage (string payload | domDocument payload[, array
+  <li><b>WSMessage (string payload [, array
     properties])</b></li>
 </ul>
 
@@ -673,8 +668,6 @@ border="1">
         type of the parameter can be any one of the following types:</p>
         <ul>
           <li><p>string</p>
-          </li>
-          <li><p>domDocument</p>
           </li>
         </ul>
 
@@ -830,15 +823,7 @@ border="1">
 <p>Stores the last SOAP request or response payload sent in the message
 as an XML string.</p>
 <ul>
-  <li><p><b>domDocument dom</b></p>
-  </li>
-</ul>
-
-<p>Stores the last SOAP request or response payload sent in the message
-as a domDocument</p>
-<ul>
-  <li><p><b>array attachments</b></p>
-  </li>
+  <li><b>array attachments</b></li>
 </ul>
 
 <p>An associative array, containing the information on the binary
@@ -853,7 +838,7 @@ representation of the binary content to be sent or being received.</p>
 </ul>
 
 <p>An associative array, containing the mapping of cid (content ID) to its
-corresponding  &nbsp;attachment. When an attachment is received, this property
+corresponding  &nbsp; attachment. When an attachment is received, this property
 will be present in the WSMessage object.</p>
 <ul>
   <li><p><b>array headers</b></p>
@@ -1024,8 +1009,7 @@ operating at the time the fault occurred.</p>
 
 <h2><b>Predefined Functions</b></h2>
 <ul>
-  <li><h4><a id="ws_request"></a><b>WSMessage ws_request (string payload |
-    domDocument payload | WSMessage payload <br>
+  <li><h4><a id="ws_request"></a><b>WSMessage ws_request (string payload | WSMessage payload&nbsp;
     [, array options])</b></h4>
   </li>
 </ul>
@@ -1053,8 +1037,6 @@ border="1">
         one of the following types:</p>
         <ul>
           <li><p>string</p>
-          </li>
-          <li><p>domDocument</p>
           </li>
           <li><p>WSMessage</p>
           </li>
@@ -1104,8 +1086,7 @@ XML;
 <br>
 
 <ul>
-  <li><h4><a id="ws_send"></a><b>void ws_send (string payload | domDocument
-    payload | WSMessage payload <br>
+  <li><h4><a id="ws_send"></a><b>void ws_send (string payload&nbsp; | WSMessage payload
     [, array options])</b></h4>
   </li>
 </ul>
@@ -1135,10 +1116,7 @@ border="1">
         <ul>
           <li><p>string</p>
           </li>
-          <li><p>domDocument</p>
-          </li>
-          <li><p>WSMessage</p>
-          </li>
+          <li>WSMessage</li>
         </ul>
 
         <p>The payload is expected to be in valid XML format as expected by
