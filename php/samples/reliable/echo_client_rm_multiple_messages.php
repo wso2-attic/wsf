@@ -30,14 +30,14 @@ try {
 
     $client = new WSClient(array("reliable"=>TRUE,"useWSA" => TRUE, "willContinueSequence"=>TRUE));
 
-    $client->send($msg);
+    $client->request($msg);
 
     $msg1 = new WSMessage($reqPayloadString,
 			array(
 			   "to"=>"http://localhost/samples/reliable/echo_service_rm.php",
                      "action" => "http://php.axis2.org/samples/echoString"));
 
-    $client->send($msg1);
+    $client->request($msg1);
 
 
     $msg2 = new WSMessage($reqPayloadString,
@@ -46,7 +46,7 @@ try {
                "action" => "http://php.axis2.org/samples/echoString",
                "lastMessage"=>TRUE));
     
-    $client->send($msg2);
+    $client->request($msg2);
 
     sleep(20);
     
