@@ -4,10 +4,11 @@ class FlickrController < ApplicationController
      if params[:query].nil?
       	@result = nil
      else
+        @query = params[:query]
         key = ""
 		log_file = "ruby_rails_flicker_client.log"
         client = FlickrClient.new(key, log_file)
-        @result = client.query(params[:query])
+        @result = client.query(@query)
      end  
   rescue => exception
     @result = exception

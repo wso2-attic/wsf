@@ -58,25 +58,27 @@ body {
 <div class="search_form" id="search_form">
 <form action="search" method="post">
   <h1>Flickr Sample</h1>
-  <%= text_field_tag "query" %>
+  <%= text_field_tag("query") %>
   <input type="submit" value="Go">
 </form>
 </div>
 <div class="photo_container">
-  <% if not @result.nil? %> 
-  <% @result.each do |photo|%>
-     <div class="photo_content" id="photo_content">
-        <div class="photo" id="photo">
-          <%= image_tag(photo[:url_thumbnail_size]) %>
-        </div>
-        <div class="details" id="details">
-          <%= photo[:title] %>
-          <br />
-          <%= link_to("large", photo[:url_big_size]) %>
-          <%= link_to("medium", photo[:url_medium_size]) %>
-        </div>
-    </div>
-  <% end %>
+  <% if not @result.nil? and @result.is_a?(Array) %> 
+    <% @result.each do |photo|%>
+       <div class="photo_content" id="photo_content">
+         <div class="photo" id="photo">
+           <%= image_tag(photo[:url_thumbnail_size]) %>
+         </div>
+         <div class="details" id="details">
+           <%= photo[:title] %>
+           <br />
+           <%= link_to("large", photo[:url_big_size]) %>
+           <%= link_to("medium", photo[:url_medium_size]) %>
+         </div>
+      </div>
+    <% end %>
+  <% else%>
+    No results for the query <%= @query %>
   <% end %>
 </div> 
 

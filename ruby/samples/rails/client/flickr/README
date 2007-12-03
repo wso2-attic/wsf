@@ -14,3 +14,4 @@ Please follow the steps below to execute the "Flickr Sample"
  views/flickr/search.rhtml
 
 3. Set "key" variable in flickr_controller.rb in your rails applications controller directory.
+You can generate a key from  http://www.flickr.com/services/api/

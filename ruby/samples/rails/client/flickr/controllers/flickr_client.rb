@@ -77,7 +77,7 @@ XML
   
          #puts "attributes : #{id}, #{farm}, #{title}, #{secret}"
 
-	 h = Hash.new
+	     h = Hash.new
          h[:title] = title
          h[:url_o_jpg] = "http://farm#{farm}.static.flickr.com/#{server}/#{id}_#{secret}_o.jpg";
          h[:url_o_gif] = "http://farm#{farm}.static.flickr.com/#{server}/#{id}_#{secret}_o.gif";
