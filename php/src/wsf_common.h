@@ -124,7 +124,7 @@ typedef enum ws_input_types
 #define WS_OUTPUT_HEADERS       "outputHeaders"
 #define WS_HEADER_PREFIX        "prefix"
 #define WS_HEADER_NS    		"ns"
-#define WS_HEADER_LOCALNAME 	"localname"
+#define WS_HEADER_LOCALNAME 	"name"
 #define WS_HEADER_DATA     		"data"
 #define WS_HEADER_ROLE     		"role"
 #define WS_HEADER_ACTOR         "actor"
