@@ -49,8 +49,6 @@ typedef enum ws_object_types_t
 /** using input */
 typedef enum ws_input_types
 {
-    WS_USING_DOM = 0,
-    WS_USING_SIMPLEXML,
     WS_USING_STRING,
     WS_USING_MSG,
     WS_USING_INCORRECT_INPUT
@@ -124,13 +122,14 @@ typedef enum ws_input_types
 /** header options */
 #define WS_INPUT_HEADERS        "inputHeaders"
 #define WS_OUTPUT_HEADERS       "outputHeaders"
-#define WS_HEADERS      		"headers"   
+#define WS_HEADER_PREFIX        "prefix"
 #define WS_HEADER_NS    		"ns"
 #define WS_HEADER_LOCALNAME 	"localname"
 #define WS_HEADER_DATA     		"data"
 #define WS_HEADER_ROLE     		"role"
 #define WS_HEADER_ACTOR         "actor"
 #define WS_HEADER_MUST_UNDERSTAND 	"mustUnderstand"
+#define WS_HEADER_PREFIX        "prefix"
 
 /** security policy */
 #define WS_POLICY_NAME 			"policy"
@@ -141,9 +140,6 @@ typedef enum ws_input_types
 /** end options */
 
 #define WS_MSG_PAYLOAD_STR 		"str"
-#define WS_MSG_PAYLOAD_SXML 	"simpleXML"
-#define WS_MSG_PAYLOAD_DOM 		"dom"
-#define WS_MSG_TYPE 			"payloadtype"
 
 /** soap header attributes */
 

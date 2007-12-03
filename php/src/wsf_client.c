@@ -382,9 +382,6 @@ wsf_client_get_reader_from_zval (
     axis2_char_t *str_payload = NULL;
     int str_payload_len = 0;
     axiom_xml_reader_t *reader = NULL;
-    /*
-    xmlNodePtr nodep;
-    */
     if (Z_TYPE_PP (param) == IS_STRING) {
         str_payload = Z_STRVAL_PP (param);
         str_payload_len = Z_STRLEN_PP (param);
@@ -394,23 +391,7 @@ wsf_client_get_reader_from_zval (
             AXIS2_XML_PARSER_TYPE_BUFFER);
 
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsflog] %s", str_payload);
-    }/*
-        else if (Z_TYPE_PP (param) == IS_OBJECT){
-#ifdef HAVE_DOM        
-        if(instanceof_function (Z_OBJCE_PP (param),dom_node_class_entry TSRMLS_CC)) {
-#endif
-        nodep = wsf_util_get_xml_node (*param TSRMLS_CC);
-
-        reader = axiom_xml_reader_create_for_memory (env, (void *) nodep->doc,
-            0, "utf-8", AXIS2_XML_PARSER_TYPE_DOC);
-
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_client] Input WSMessage - dom node ");
-#ifdef HAVE_DOM        
-        }
-#endif        
     }
-*/
     if (!reader) {
         zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C),
             1 TSRMLS_CC, "Xml Reader Creation Failed");
@@ -656,7 +637,7 @@ wsf_client_set_headers (
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
             "[wsf_client] setting header node ");
 
-        if (zend_hash_find (ht, WS_HEADERS, sizeof (WS_HEADERS),
+        if (zend_hash_find (ht, WS_INPUT_HEADERS, sizeof (WS_INPUT_HEADERS),
                 (void **) &tmp) == SUCCESS) {
             if (Z_TYPE_PP (tmp) == IS_ARRAY) {
                 HashPosition pos;
@@ -669,19 +650,22 @@ wsf_client_set_headers (
 
                 while (zend_hash_get_current_data_ex (ht, (void **) &val,
                         &pos) != FAILURE) {
-                    zval *header = *val;
-                    axiom_node_t *header_node = NULL;
-                    header_node =
-                        wsf_util_construct_header_node (env,
-                                NULL, header TSRMLS_CC);
-                    if (header_node) {
-                        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                            "[wsf_client] adding header block to svc_client");
-                        axis2_svc_client_add_header (svc_client, env,
-                            header_node);
-                    }
+					if(Z_TYPE_PP(val) == IS_OBJECT && instanceof_function(Z_OBJCE_PP(val), ws_header_class_entry TSRMLS_CC))
+					{
+						zval *header = *val;
+						axiom_node_t *header_node = NULL;
+						header_node =
+							wsf_util_construct_header_node (env,
+									NULL, header TSRMLS_CC);
+						if (header_node) {
+							AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+								"[wsf_client] adding header block to svc_client");
+							axis2_svc_client_add_header (svc_client, env,
+								header_node);
+						}
+					}
                     zend_hash_move_forward_ex (ht, &pos);
-                }
+				}
             }
         }
     }
@@ -961,27 +945,22 @@ wsf_client_do_request (
         instanceof_function (Z_OBJCE_P (param),
             ws_message_class_entry TSRMLS_CC)) {
         zval **tmp_val = NULL;
-        if ((zend_hash_find (Z_OBJPROP_P (param), WS_MSG_PAYLOAD_STR,
+        if (zend_hash_find (Z_OBJPROP_P (param), WS_MSG_PAYLOAD_STR,
                     sizeof (WS_MSG_PAYLOAD_STR),
-                    (void **) &tmp_val) == SUCCESS)
-            || (zend_hash_find (Z_OBJPROP_P (param), WS_MSG_PAYLOAD_DOM,
-                    sizeof (WS_MSG_PAYLOAD_DOM),
-                    (void **) &tmp_val) == SUCCESS)) {
+					(void **) &tmp_val) == SUCCESS) {
             reader = wsf_client_get_reader_from_zval (tmp_val, env TSRMLS_CC);
-        }
-
+		}else {
+			return;
+		}
 		msg_ht = Z_OBJPROP_P(param);
-
         input_type = WS_USING_MSG;
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
             "[wsf_client] do_request Input type is WSMessage ");
-
     } else {
         reader = wsf_client_get_reader_from_zval (&param, env TSRMLS_CC);
 
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
             "[wsf_client] Input  is not WSMessage ");
-
         input_type = WS_USING_STRING;
     }
 
@@ -1025,7 +1004,7 @@ wsf_client_do_request (
         wsf_client_handle_outgoing_attachments (env, msg_ht, param, client_ht,
             request_payload, client_options TSRMLS_CC);
 
-    } else if (input_type == WS_USING_DOM || input_type == WS_USING_STRING) {
+    } else if (input_type == WS_USING_STRING) {
 
         status = wsf_client_set_options (client_ht, NULL, env,
             client_options, svc_client, 0 TSRMLS_CC);
@@ -1308,8 +1287,6 @@ wsf_client_do_request (
             add_property_stringl (rmsg, WS_MSG_PAYLOAD_STR, res_text,
                 strlen (res_text), 1);
 			
-			add_property_long (rmsg, WS_MSG_TYPE, WS_USING_STRING);
-            
             ZVAL_ZVAL (return_value, rmsg, 1, 0);
             zval_ptr_dtor(&rmsg);
 

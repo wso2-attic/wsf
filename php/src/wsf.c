@@ -584,21 +584,7 @@ PHP_METHOD (ws_message, __construct)
     
 	if (Z_TYPE_P (payload) == IS_STRING) {
         add_property_stringl (object, WS_MSG_PAYLOAD_STR, Z_STRVAL_P (payload), Z_STRLEN_P (payload), 1);
-        add_property_long (object, WS_MSG_TYPE, WS_USING_STRING);
-    }
-/*    
-    else if (Z_TYPE_P (payload) == IS_OBJECT){
-#ifdef HAVE_PHP_DOM        
-        if(instanceof_function (Z_OBJCE_P (payload), dom_node_class_entry TSRMLS_CC)) {
-#endif            
-			add_property_zval (object, WS_MSG_PAYLOAD_DOM, payload);
-			add_property_long (object, WS_MSG_TYPE, WS_USING_DOM);
-#ifdef HAVE_PHP_DOM            
-        }
-#endif    
-    } 
-*/    
-    else {
+    }else {
         return;
     }
     if (NULL != properties) {
@@ -643,10 +629,10 @@ PHP_METHOD (ws_message, __construct)
 			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
 				add_property_stringl(object, WS_FROM, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
 		}
-        if (zend_hash_find (ht, WS_HEADERS, sizeof (WS_HEADERS),
+        if (zend_hash_find (ht, WS_INPUT_HEADERS, sizeof (WS_INPUT_HEADERS),
             (void **) &tmp) == SUCCESS) {
 				if (Z_TYPE_PP (tmp) == IS_ARRAY) {
-					add_property_zval (object, WS_HEADERS, *tmp);
+					add_property_zval (object, WS_INPUT_HEADERS, *tmp);
 				}
         }
     }
@@ -660,93 +646,9 @@ PHP_METHOD (ws_message, __destruct)
 {
 }
 
-static int
-get_message_storage_type (zval * this_ptr TSRMLS_DC) 
-{
-    zval ** param_val = NULL;
-    if (zend_hash_find (Z_OBJPROP_P (this_ptr), WS_MSG_TYPE,
-            sizeof (WS_MSG_TYPE), (void **) &param_val) == SUCCESS && 
-            Z_TYPE_PP (param_val) == IS_LONG){
-            
-        return Z_LVAL_PP (param_val);
-    }
-    return -1;
-}
-
-
 /* {{{ WSMessage::__get() */ 
 PHP_METHOD (ws_message, __get) 
 {
-    zval * object = NULL;
-    char *prop_name = NULL;
-    long prop_name_len = 0;
-    if (zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "s", &prop_name,
-            &prop_name_len) == FAILURE){
-            php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
-    }
-    if (prop_name_len <= 0){
-        php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid property");
-    }
-
-    WSF_GET_THIS (object);
-    
-    if (strcmp (prop_name, WS_MSG_PAYLOAD_STR) == 0) {
-        if (get_message_storage_type (object TSRMLS_CC) == WS_USING_DOM) {
-
-            xmlNodePtr nodep = NULL;
-            axiom_node_t * payload = NULL;
-            zval ** tmp_val = NULL;
-            axiom_xml_reader_t * reader = NULL;
-            if ((zend_hash_find (Z_OBJPROP_P (object), WS_MSG_PAYLOAD_DOM,
-                sizeof (WS_MSG_PAYLOAD_DOM), (void **) &tmp_val) == SUCCESS)){
-					nodep = ws_get_xml_node (*tmp_val);
-					reader = axiom_xml_reader_create_for_memory (env, 
-						(void *) nodep->doc, 0, "utf-8", AXIS2_XML_PARSER_TYPE_DOC);
-					if (!reader) {
-						zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C), 
-								1 TSRMLS_CC, "xml reader create failed");
-					}
-	                
-					payload = wsf_util_read_payload (reader, env);
-	                
-					if (payload) {
-						axis2_char_t * res_text = NULL;
-						res_text = wsf_util_serialize_om (env, payload);
-						axiom_node_free_tree (payload, env);
-						if (res_text) {
-							add_property_string (object, WS_MSG_PAYLOAD_STR, res_text, 1);
-							RETURN_STRING (res_text, 1);
-						}
-					}
-            }
-        }
-    }
-    else if (strcmp (prop_name, WS_MSG_PAYLOAD_DOM) == 0) {
-/*        
-        if (get_message_storage_type (object TSRMLS_CC) == WS_USING_STRING) {
-            zval ** tmp_val = NULL;
-            if (zend_hash_find (Z_OBJPROP_P (object), WS_MSG_PAYLOAD_STR,
-                sizeof (WS_MSG_PAYLOAD_STR), (void **) &tmp_val) == SUCCESS) {
-					long length = 0;
-					char *buffer = Z_STRVAL_PP (tmp_val);
-					length = Z_STRLEN_PP (tmp_val);
-					if (buffer) {
-						int ret;
-						zval * value = NULL;
-						xmlDocPtr doc = NULL;
-						doc =  xmlReadMemory (buffer, length, NULL, "UTF-8",  XML_PARSE_NOBLANKS | XML_PARSE_SAX1);
-						if (!doc) {
-							RETURN_NULL ();
-						}
-						value = php_dom_create_object ((xmlNodePtr) doc, &ret, NULL, 
-							return_value, NULL TSRMLS_CC);
-						add_property_zval (object, WS_MSG_PAYLOAD_DOM, value);
-						RETURN_ZVAL (value, 0, 0);
-					}
-            }
-        }
-*/
-    }
 }
 /* }}} */ 
     
@@ -1695,50 +1597,59 @@ PHP_METHOD (ws_header, __construct)
     char *name, *ns;
     int name_len, ns_len;
     zend_bool must_understand = 0;
-    if (zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "ss|zbz", &ns,
-            &ns_len, &name, &name_len, &data, &must_understand, &role) == FAILURE) {
+	zval *arg = NULL;
+	if (zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "z", &arg) == FAILURE) {
         php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
     }
-    if (ns_len == 0) {
-        php_error_docref (NULL TSRMLS_CC, E_ERROR,
-            "Invalid parameters. Invalid namespace.");
-    }
-    if (name_len == 0) {
-        php_error_docref (NULL TSRMLS_CC, E_ERROR,
-            "Invalid parameters. Invalid header name.");
-    }
-    add_property_stringl (this_ptr, WS_HEADER_NS, ns, ns_len, 1);
-    add_property_stringl (this_ptr, WS_HEADER_LOCALNAME, name, name_len, 1);
-    if (data) {
-        
+
+	if(Z_TYPE_P(arg) == IS_ARRAY){
+		zval ** tmp;
+		HashTable *ht = Z_ARRVAL_P(arg);
+		if(!ht) return;
+		
+		if(zend_hash_find(ht, WS_HEADER_NS, sizeof(WS_HEADER_NS), (void **)&tmp) == SUCCESS &&
+			Z_TYPE_PP(tmp) == IS_STRING){
+				add_property_stringl(this_ptr, WS_HEADER_NS, Z_STRVAL_PP(tmp),
+					Z_STRLEN_PP(tmp), 1);
+		}
+		if(zend_hash_find(ht, WS_HEADER_LOCALNAME, sizeof(WS_HEADER_LOCALNAME), (void**)&tmp) == SUCCESS
+			&& Z_TYPE_PP(tmp) == IS_STRING){
+				add_property_stringl(this_ptr, WS_HEADER_LOCALNAME, Z_STRVAL_PP(tmp), 
+					Z_STRLEN_PP(tmp), 1);
+		}
+		if(zend_hash_find(ht, WS_HEADER_DATA, sizeof(WS_HEADER_DATA), (void**)&tmp) == SUCCESS){
 #ifndef ZEND_ENGINE_2
-            zval_add_ref (&data);
-        
+				zval_add_ref (tmp);
 #endif  /*  */
-            add_property_zval (this_ptr, WS_HEADER_DATA, data);
-    }
-        
-            
-    if (must_understand) {
-        add_property_bool (this_ptr, WS_HEADER_MUST_UNDERSTAND,
-            must_understand);
-    }
-    if (role) {
-        if (Z_TYPE_P (role) == IS_LONG && 
-            (Z_LVAL_P (role) == WS_SOAP_ROLE_NEXT
-                || Z_LVAL_P (role) == WS_SOAP_ROLE_NONE
-                || Z_LVAL_P (role) == WS_SOAP_ROLE_ULTIMATE_RECEIVER)) {
-            add_property_long (this_ptr, WS_HEADER_ROLE, Z_LVAL_P (role));
-     }
-     else if (Z_TYPE_P (role) == IS_STRING && Z_STRLEN_P (role) > 0) {
-            add_property_stringl (this_ptr, WS_HEADER_ROLE,
-                Z_STRVAL_P (role), Z_STRLEN_P (role), 1);
-     }
-     else {
-            php_error_docref (NULL TSRMLS_CC, E_ERROR,
-                "Invalid parameters. Invalid role.");
-          }
-     }
+				add_property_zval (this_ptr, WS_HEADER_DATA, *tmp);
+		}
+		if(zend_hash_find(ht, WS_HEADER_MUST_UNDERSTAND, sizeof(WS_HEADER_MUST_UNDERSTAND),
+			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
+				add_property_bool(this_ptr, WS_HEADER_MUST_UNDERSTAND, Z_BVAL_PP(tmp));
+		}
+		if(zend_hash_find(ht, WS_HEADER_PREFIX, sizeof(WS_HEADER_PREFIX), (void **)&tmp) == SUCCESS
+			&& Z_TYPE_PP(tmp) == IS_STRING){
+				add_property_string(this_ptr, WS_HEADER_PREFIX, Z_STRVAL_PP(tmp), 1);
+		}
+		if(zend_hash_find(ht, WS_HEADER_ROLE, sizeof(WS_HEADER_ROLE), (void**)&tmp) == SUCCESS){
+			if (Z_TYPE_PP (tmp) == IS_LONG && 
+				(Z_LVAL_PP (tmp) == WS_SOAP_ROLE_NEXT
+				|| Z_LVAL_PP (tmp) == WS_SOAP_ROLE_NONE
+				|| Z_LVAL_PP (tmp) == WS_SOAP_ROLE_ULTIMATE_RECEIVER)) {
+				add_property_long (this_ptr, WS_HEADER_ROLE, Z_LVAL_PP (tmp));
+		 }
+		 else if (Z_TYPE_PP (tmp) == IS_STRING && Z_STRLEN_PP (tmp) > 0) {
+				add_property_stringl (this_ptr, WS_HEADER_ROLE,
+					Z_STRVAL_PP (tmp), Z_STRLEN_PP (tmp), 1);
+		 }
+		 else {
+				php_error_docref (NULL TSRMLS_CC, E_ERROR,
+					"Invalid parameters. Invalid role.");
+			  }
+		}
+		
+		}
+	
 }
 
 
