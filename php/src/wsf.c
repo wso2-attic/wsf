@@ -214,8 +214,7 @@ php_ws_object_new_ex ( zend_class_entry * class_type, ws_object ** obj TSRMLS_DC
 
 static void ws_objects_free_storage (void *object TSRMLS_DC);
 
-/* {{{ proto ws_get_xml_node
-*/ 
+/* 
 static xmlNodePtr
 ws_get_xml_node(zval * node) 
 {
@@ -239,7 +238,7 @@ ws_get_xml_node(zval * node)
     }
     return nodep;
 }
-/* }}} end ws_get_xml_node */
+*/
 
 /* {{{ proto wsf_log_version_string 
  */
@@ -1593,10 +1592,6 @@ PHP_METHOD (ws_fault, __toString)
 
 PHP_METHOD (ws_header, __construct) 
 {
-    zval * data = NULL, *role = NULL;
-    char *name, *ns;
-    int name_len, ns_len;
-    zend_bool must_understand = 0;
 	zval *arg = NULL;
 	if (zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "z", &arg) == FAILURE) {
         php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
