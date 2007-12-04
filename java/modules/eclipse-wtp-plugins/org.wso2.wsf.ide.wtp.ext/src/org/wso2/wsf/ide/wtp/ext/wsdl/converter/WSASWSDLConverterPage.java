@@ -93,7 +93,7 @@ public class WSASWSDLConverterPage extends AbstractWSDLConverterWizardPage{
     		toggleControls(false);
     	}else{
     		toggleControls(true);
-		}     
+    	}
 		
 		//call the handle modify method if the settings are restored
 		if (restoredFromPreviousSettings){
@@ -128,7 +128,7 @@ public class WSASWSDLConverterPage extends AbstractWSDLConverterWizardPage{
 				uploadUtil.setWSDL(true);
 			}else{
 				updateStatus("File Type Invalid !!, Valid Types {aar,zip,jar,xml'}");
-		}
+			}
 		}
 	}
 	

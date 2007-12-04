@@ -37,7 +37,7 @@ public class WSASMessageConstant {
     //EndPoints of Services
     public static String host = "http://localhost:";
     public static String port = "9762";
-    
+
     public static String generalServiceEndPoint = host+port+"/services/GeneralServices";
     public static String validateServiceEndpoint = host+port+"/services/Service";
     public static String validateModuleEndpoint = host+port+"/services/Module";

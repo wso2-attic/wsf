@@ -113,6 +113,6 @@ public class WSASWSDLConverterWizard extends Wizard implements INewWizard{
     
     private String goAheadConversion(File resourceFile){
 		return util.requestValidate(resourceFile,wsdlConverterPage.getFileType());
-	}
+    }
 
 }

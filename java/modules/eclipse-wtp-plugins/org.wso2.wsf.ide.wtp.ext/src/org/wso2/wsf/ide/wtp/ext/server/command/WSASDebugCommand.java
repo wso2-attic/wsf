@@ -30,7 +30,7 @@ public class WSASDebugCommand {
 	
     private static IStatus status;
 
-	public  static IStatus run() throws InvocationTargetException {
+	public  static IStatus run() throws InvocationTargetException{
 	 try{
 		status = Status.OK_STATUS;
 		Process wsasProcess = null;
@@ -66,10 +66,10 @@ public class WSASDebugCommand {
 				WSASConfigurationBean.setWSASAlreadyRunning(false);
 		}
 		runnerFile.delete();
-				} catch (Exception e) {
-					e.printStackTrace();
-		}
-		return status;
+	  } catch (Exception e) {
+		e.printStackTrace();
+	  }
+	  return status;
 	}
 
 }

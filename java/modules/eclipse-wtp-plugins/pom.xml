@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.wsf</groupId>
     <artifactId>org.wso2.wsf</artifactId>
-    <version>SNAPSHOT</version>
+    <version>2.1-SNAPSHOT</version>
     <name>wso2wsf eclipse wtp plugins</name>
     <packaging>pom</packaging>
     <description>The WSO2 WSF Eclipse WSF Plugin</description>
@@ -100,21 +100,47 @@
             <url>scp://dist.wso2.org/home/httpd/dist.wso2.org/maven2/</url>
         </snapshotRepository>
     </distributionManagement>
+    
+    <profiles>
+        <profile>
+            <activation>
+	    	<property>
+                	<name>sign</name>
+            	</property>
+	    </activation>
+	    <build>
+		<plugins>
+			<plugin>
+                		<groupId>org.apache.maven.plugins</groupId>
+                		<artifactId>maven-gpg-plugin</artifactId>
+                		<version>1.0-alpha-3</version>
+                		<executions>
+                    			<execution>
+                        			<id>sign-artifacts</id>
+                        			<phase>verify</phase>
+                        			<goals>
+                            				<goal>sign</goal>
+                        			</goals>
+                    			</execution>
+                		</executions>
+            		</plugin>
+		</plugins>
+	    </build>
+       </profile>
+    </profiles>
 
 	<properties>
 
 		<wso2wsf.version>${pom.version}</wso2wsf.version>
 
-	     	<axis2_version>1.3</axis2_version>
-		<axiom_version>1.2.5</axiom_version>
-	        <xmlshema_version>1.3.2</xmlshema_version>
+	     	<axis2_version>SNAPSHOT</axis2_version>
+		<axiom_version>SNAPSHOT</axiom_version>
+	        <xmlshema_version>SNAPSHOT</xmlshema_version>
 	       	<javamail_version>1.4</javamail_version>
         	<commons_codec_version>1.3</commons_codec_version>
         	<commons_httpclient_version>3.0.1</commons_httpclient_version>
         	<commons_logging_version>1.1</commons_logging_version>
         	<commons_io_version>1.2</commons_io_version>
-        	<axis2_saaj_version>1.3</axis2_saaj_version>
-        	<axis2_saaj_api_version>1.3</axis2_saaj_api_version>
         	<stax_api_version>1.0.1</stax_api_version>
         	<stax_impl_artifactid>wstx-asl</stax_impl_artifactid>
         	<stax_impl_groupid>org.codehaus.woodstox</stax_impl_groupid>
@@ -143,4 +169,4 @@
     </mailingLists>
 
 
- 	</project>
+ </project>

@@ -127,5 +127,5 @@ public class WSASModuleValidatePlugin extends AbstractUIPlugin {
 	public void setValidURL(boolean validURL) {
 		this.validURL = validURL;
 	}
-
+    
 }

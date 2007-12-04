@@ -53,26 +53,26 @@ public class WSASStartCommand {
 		Process wsasProcess = null;
 		String pathNodesStopWin[] = {WSASCoreUIMessages.DIR_BIN, WSASCoreUIMessages.WSAS_START_BAT};
 		String pathNodesStopIx[] = {WSASCoreUIMessages.DIR_BIN, WSASCoreUIMessages.WSAS_START_SH};
-				String wsasInstallationLocation = WSASConfigurationBean.getWsasInstallationPath();
-				try {
-					Runtime runtime = Runtime.getRuntime();
-					String OS = System.getProperty(WSASCoreUIMessages.PROPERTIES_OS_NAME).toLowerCase();
-					if ((OS.indexOf(WSASCoreUIMessages.OS_WIN_9) > -1)
-							|| (OS.indexOf(WSASCoreUIMessages.OS_WIN_NT) > -1)
-							|| (OS.indexOf(WSASCoreUIMessages.OS_WIN_2000) > -1)
-							|| (OS.indexOf(WSASCoreUIMessages.OS_WIN_XP) > -1)) {
-						wsasProcess = runtime.exec(FileUtils.addNodesToPath(wsasInstallationLocation, 
-																			pathNodesStopWin));
-						wsasProcess.waitFor();
-					} else {
-						wsasProcess = runtime.exec(WSASCoreUIMessages.XTERM_EXEC + 
-							FileUtils.addNodesToPath(wsasInstallationLocation, pathNodesStopIx));
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
-				WSASConfigurationBean.setWSASAlreadyRunning(false);
+		String wsasInstallationLocation = WSASConfigurationBean.getWsasInstallationPath();
+		try {
+			Runtime runtime = Runtime.getRuntime();
+			String OS = System.getProperty(WSASCoreUIMessages.PROPERTIES_OS_NAME).toLowerCase();
+			if ((OS.indexOf(WSASCoreUIMessages.OS_WIN_9) > -1)
+					|| (OS.indexOf(WSASCoreUIMessages.OS_WIN_NT) > -1)
+					|| (OS.indexOf(WSASCoreUIMessages.OS_WIN_2000) > -1)
+					|| (OS.indexOf(WSASCoreUIMessages.OS_WIN_XP) > -1)) {
+				wsasProcess = runtime.exec(FileUtils.addNodesToPath(wsasInstallationLocation, 
+																	pathNodesStopWin));
+				wsasProcess.waitFor();
+			} else {
+				wsasProcess = runtime.exec(WSASCoreUIMessages.XTERM_EXEC + 
+					FileUtils.addNodesToPath(wsasInstallationLocation, pathNodesStopIx));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		WSASConfigurationBean.setWSASAlreadyRunning(false);
 	}
 
 }

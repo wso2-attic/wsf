@@ -49,7 +49,7 @@ public class WSASJAVA2WSDLWizard extends Wizard implements INewWizard{
 	public WSASJAVA2WSDLWizard() {
 		super();
 		setNeedsProgressMonitor(true);
-		setWindowTitle("WSO2 JAVA 2 WSDL Tool");
+		setWindowTitle("WSO2 JAVA2WSDL Tool");
 	}
 		
 	

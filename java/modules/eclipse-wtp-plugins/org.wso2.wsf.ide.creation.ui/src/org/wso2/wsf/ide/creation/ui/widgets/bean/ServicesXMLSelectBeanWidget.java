@@ -73,10 +73,10 @@ public class ServicesXMLSelectBeanWidget extends SimpleWidgetDataContributor
 		griddata.horizontalSpan = 14;
 		mainComp.setLayout( layout );
 		mainComp.setLayoutData( griddata );
-		
+
 		Text label = new Text(mainComp,SWT.BACKGROUND | SWT.READ_ONLY);
 		label.setText( WSASCreationUIMessages.LABEL_WSAS_PREFERENCE_PAGE );
-		
+
 		model.setGenerateServicesXML(true);
 		model.setServicesXML(false);
 
@@ -346,9 +346,9 @@ public class ServicesXMLSelectBeanWidget extends SimpleWidgetDataContributor
 			model.setPathToServicesXML( servicesXMLPath.getText() );
 		}
 	}
-
-
-
+	
+	
+	
     private void handleJARBrowse(Shell parent){
         FileDialog fileDialog = new FileDialog(parent);
         fileDialog.setFilterExtensions(new String[]{"*.jar"});

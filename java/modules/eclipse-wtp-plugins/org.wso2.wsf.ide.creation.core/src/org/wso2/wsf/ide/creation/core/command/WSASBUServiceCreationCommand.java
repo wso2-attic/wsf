@@ -162,17 +162,17 @@ public class WSASBUServiceCreationCommand extends
 			//And identifies its main package
 			for (int i = 0; i < matchingPossibleServiceFiles.length; i++) {
 				if (matchingPossibleServiceFiles[i].getName().toString().equals(serviceName+".class")) {
-				String[] result = new String[2];
+					String[] result = new String[2];
 					if (matchingPossibleServiceFiles[i].getAbsolutePath().contains("\\")) {
 						result[0] = matchingPossibleServiceFiles[i].getAbsolutePath()
 										.substring(classesDirectory.length());
-					packageString = result[0];
-				}else{
+						packageString = result[0];
+					}else{
 						result = matchingPossibleServiceFiles[i].getAbsolutePath().split(classesDirectory);
-					packageString = result[1];
-				}
+						packageString = result[1];
+					}
 					classFileDestination = FileUtils.addAnotherNodeToPath(servicesDirectory, packageString );
-				String[] packageDestination = classFileDestination.split(serviceName+".class");
+					String[] packageDestination = classFileDestination.split(serviceName+".class");
 					mainPackage = packageDestination[0];
 					serviceIncludeClassList.put(serviceName, 
 							new String[]{mainPackage,matchingPossibleServiceFiles[i].getAbsolutePath()});
@@ -209,16 +209,16 @@ public class WSASBUServiceCreationCommand extends
 									(pairs.getKey().toString()+".class"))
 							);
 						File newClassFile = new File(classFileNewLocation.toOSString());
-				if (!newClassFile.exists()){
+						if (!newClassFile.exists()){
 							new File(PackageNewLocation).mkdirs();
-					newClassFile.createNewFile();
+							newClassFile.createNewFile();
 							FileUtils.copy(new File(value[1].toString()), newClassFile);
 						}
 					
 				}
 			}
 			
-			
+		
 			//Import all the stuff form the .matadata directory to inside the current web project
 			} catch (IOException e) {
 				status = StatusUtils.errorStatus(
@@ -236,6 +236,6 @@ public class WSASBUServiceCreationCommand extends
 	    
 	    return status;
 	}
-
-
+	
+	
 }

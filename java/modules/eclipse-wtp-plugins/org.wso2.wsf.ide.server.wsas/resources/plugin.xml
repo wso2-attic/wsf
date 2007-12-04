@@ -5,9 +5,9 @@
          point="org.eclipse.wst.server.core.runtimeTypes">
        <runtimeType
             class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime"
-            description="WSO2 Web Services Application Server 2.0"
+            description="WSO2 Web Services Application Server"
             id="org.wso2.wsf.ide.server.wsas.runtime"
-            name="WSO2 WSAS 2.0"
+            name="WSO2 WSAS"
             vendor="WSO2"
             vendorId="wso2"
             version="2.0">
@@ -22,8 +22,8 @@
             id="org.wso2.wsf.ide.server.wsas.server"
             runtime="true"
             runtimeTypeId="org.wso2.wsf.ide.server.wsas.runtime"
-            name="WSO2 WSAS 2.0"
-            description="WSO2 Web Services Application Server 2.0"
+            name="WSO2 WSAS"
+            description="WSO2 Web Services Application Server"
             class="org.eclipse.jst.server.generic.core.internal.GenericServer"
             behaviourClass="org.eclipse.jst.server.generic.core.internal.ExternalServerBehaviour"
             hasConfiguration="false"

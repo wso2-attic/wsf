@@ -58,7 +58,7 @@ public class WSASArchiveValidatePage extends AbstractArchiveValidateWizardPage{
      */
     public void createControl(Composite parent) {
         final Composite container = new Composite(parent, SWT.NULL);
-       GridLayout layout = new GridLayout();
+        GridLayout layout = new GridLayout();
         layout.numColumns = 14;
         container.setLayout(layout);
         GridData gd = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
@@ -140,7 +140,7 @@ public class WSASArchiveValidatePage extends AbstractArchiveValidateWizardPage{
         
         setPageComplete(false);
 		setControl(container);
-
+		
     	if (!WSASConfigurationBean.isWsasCorrectPathSet() || !WSASConfigurationBean.isWsasStartStatus()){
     		updateStatus(WSASMessageConstant.WARNING_WSAS_NOT_STARTED);
     		toggleControls(false);
@@ -150,7 +150,7 @@ public class WSASArchiveValidatePage extends AbstractArchiveValidateWizardPage{
 			setPathVisible(servicesXMlPathText,false);
 			setPathVisible(aarPathText,true);
     	}
-		
+    	
 		//call the handle modify method if the settings are restored
 		if (restoredFromPreviousSettings){
 		    handleModify();
@@ -229,7 +229,7 @@ public class WSASArchiveValidatePage extends AbstractArchiveValidateWizardPage{
 	public void setFileType(String fileType) {
 		this.fileType = fileType;
 	}
-
+	
 	private void toggleControls(boolean toggleValue){
 		setPathVisible(aarPathText,toggleValue);
 		setPathVisible(servicesXMlPathText, toggleValue);
@@ -238,7 +238,7 @@ public class WSASArchiveValidatePage extends AbstractArchiveValidateWizardPage{
 		validateAARRadioButton.setEnabled(toggleValue);
 		validateServicesXmlRadioButton.setEnabled(toggleValue);
 	}
-
+	
 	private void toggleValidateAAR(boolean toggleValue){
 		validateServicesXmlBrowseButton.setEnabled(!toggleValue);
 		validateAARBrowseButton.setEnabled(toggleValue);

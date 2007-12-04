@@ -97,7 +97,6 @@ public class WSASModuleValidatePage extends AbstractModuleValidateWizardPage{
 			}     
 		}); 
        
-       
         /////////////////////////////////////////////////////////////////////////////////
         
 	    Label separator = new Label( container, SWT.NONE);  // Leave some vertical space.
@@ -141,7 +140,7 @@ public class WSASModuleValidatePage extends AbstractModuleValidateWizardPage{
         
         setPageComplete(false);
     	setControl(container);
-
+    	
     	if (!WSASConfigurationBean.isWsasCorrectPathSet() || !WSASConfigurationBean.isWsasStartStatus()){
     		updateStatus(WSASMessageConstant.WARNING_WSAS_NOT_STARTED);
     		toggleControls(false);
@@ -151,7 +150,7 @@ public class WSASModuleValidatePage extends AbstractModuleValidateWizardPage{
 			setPathVisible(moduleXMlPathText,false);
 			setPathVisible(marPathText,true);;
     	}
-		
+    	
 		//call the handle modify method if the settings are restored
 		if (restoredFromPreviousSettings){
 		    handleModify();
@@ -189,7 +188,7 @@ public class WSASModuleValidatePage extends AbstractModuleValidateWizardPage{
 				uploadUtil.setXml(true);
 			}else{
 				updateStatus("File Type Invalid !!, Valid Types {mar,zip,jar,xml'}");
-		}
+			}
 		}
 	}
 	

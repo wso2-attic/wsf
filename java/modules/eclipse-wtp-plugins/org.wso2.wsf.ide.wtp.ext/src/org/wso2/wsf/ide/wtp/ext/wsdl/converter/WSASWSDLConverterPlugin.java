@@ -103,7 +103,7 @@ public class WSASWSDLConverterPlugin extends AbstractUIPlugin {
         }
         return wizardImageDescriptor;
     }
-
+    
 	public boolean isGoAheadConversion() {
 		return goAheadConversion;
 	}
