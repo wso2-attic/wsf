@@ -17,31 +17,12 @@ module WSO2
   module Util
 
     class WSUtil
-	  WSF_UTIL_DEFAULT_CONTENT_TYPE = "application/octet-stream"
-      WSF_UTIL_CONTENT_TYPE_TO_FILE_EXT = {"image/jpeg" => ".jpg"}
-
+	  
 	  WSF_UTIL_BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----"
       WSF_UTIL_END_CERTIFICATE = "-----END CERTIFICATE-----"
       WSF_UTIL_BEGIN_RSA_PVT_KEY = "-----BEGIN RSA PRIVATE KEY-----" 
       WSF_UTIL_END_RSA_PVT_KEY = "-----END RSA PRIVATE KEY-----"
   
-      def WSUtil.file_put_base64_content(file_name, base64_content, content_type = WSF_UTIL_DEFAULT_CONTENT_TYPE)
-
-        return false unless file_name.kind_of? String and
-                            base64_content.kind_of? String and
-                            content_type.kind_of? String
-
-        return false if file_name.empty? or
-                        base64_content.empty? or
-                        content_type.empty?
-
-        file_name_with_ext = file_name
-        file_name_with_ext + WSF_UTIL_CONTENT_TYPE_TO_FILE_EXT[content_type].to_s
-
-        return WSFC::ruby_file_put_base64_content(file_name_with_ext, base64_content) ? true : false
-
-      end
-
       def WSUtil.ws_get_cert_from_file(file_name)
         return nil unless file_name.kind_of? String
     
