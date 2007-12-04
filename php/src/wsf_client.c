@@ -73,9 +73,28 @@ int wsf_client_set_soap_action (
     axutil_env_t * env,
     axis2_options_t * client_options TSRMLS_DC);
 
+int wsf_client_set_timeout(
+    HashTable *client_ht,
+    axutil_env_t *env,
+    axis2_options_t *client_options TSRMLS_DC);
+    
+
 int is_addr_action_present_in_options(
 	HashTable *msg_ht, 
 	HashTable *client_ht TSRMLS_DC);
+
+int wsf_client_set_timeout(
+    HashTable *client_ht,
+    axutil_env_t *env,
+    axis2_options_t *client_options TSRMLS_DC)
+{
+    zval **tmp = NULL;
+    if(zend_hash_find(client_ht, WS_TIMEOUT, sizeof(WS_TIMEOUT), (void**)&tmp) == SUCCESS){
+        return axis2_options_set_timeout_in_milli_seconds(client_options, env, Z_LVAL_PP(tmp));
+    }else{
+        return 0;
+    }
+}
 
 int is_addr_action_present_in_options(
 	HashTable *msg_ht, 
@@ -574,6 +593,11 @@ wsf_client_add_properties (
             sizeof (WS_RM_RESPONSE_TIMEOUT), (void **) &tmp) == SUCCESS) {
         add_property_string (this_ptr, WS_RM_RESPONSE_TIMEOUT,
             Z_STRVAL_PP (tmp), 1);
+    }
+    /** timeout */
+    if(zend_hash_find(ht, WS_TIMEOUT, sizeof(WS_TIMEOUT), (void **)&tmp) == SUCCESS &&
+            Z_TYPE_PP(tmp) == IS_LONG){
+        add_property_long(this_ptr, WS_TIMEOUT, Z_LVAL_PP(tmp));
     }
 }
 

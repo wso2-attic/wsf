@@ -88,6 +88,7 @@ typedef enum ws_input_types
 #define WS_RESPONSE_XOP 		"responseXOP"
 #define WS_REQUEST_XOP  		"requestXOP"
 #define WS_USE_MTOM     		"useMTOM"
+#define WS_TIMEOUT              "timeout"
 
 /** Reliable Messaging */
 #define WS_WILL_CONTINUE_SEQUENCE 	"willContinueSequence"

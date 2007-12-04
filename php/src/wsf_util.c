@@ -758,6 +758,33 @@ wsf_util_create_op_and_add_to_svc (
     return;
 }
 
+void wsf_util_set_addr_action_to_op(
+    wsf_svc_info_t * svc_info,
+    char *action,
+    axutil_env_t * env,
+    char *op_name TSRMLS_DC)
+{
+    axis2_op_t *op = NULL;
+    axutil_qname_t *op_qname = NULL;
+    op_qname = axutil_qname_create (env, op_name, NULL, NULL);
+
+    if (NULL != svc_info->svc && NULL != op_name) {
+        op = axis2_svc_get_op_with_name (svc_info->svc, env, op_name);
+        if (!op) {
+                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                        "[wsf service] %s operation not found when trying to set the action ",
+                        op_name);
+       }
+       if (action) {
+                axis2_svc_add_mapping (svc_info->svc, env, action, op);
+       }
+    }
+    if(op_qname){
+        axutil_qname_free(op_qname, env);
+    }
+    return;
+}
+
 void
 wsf_util_set_attachments_with_cids (
     const axutil_env_t * env,
@@ -1579,11 +1606,7 @@ void wsf_util_process_ws_service_operations_and_actions(
             efree(function_name);
         }
     }
-
 }
-
-
-
 
 void wsf_util_process_ws_service_operations_and_actions_for_classes(
         HashTable *ht_ops_to_funcs,
@@ -1657,7 +1680,6 @@ void wsf_util_process_ws_service_operations_and_actions_for_classes(
                         axutil_strdup (ws_env_svr, Z_STRVAL_PP (tmp_function)),
                     AXIS2_HASH_KEY_STRING, axutil_strdup (ws_env_svr, Z_STRVAL_PP (tmp_function)));
             }
-
             
             if (wsa_action) {
                 wsf_util_create_op_and_add_to_svc (svc_info, wsa_action,
@@ -1688,7 +1710,6 @@ void wsf_util_process_ws_service_operations_and_actions_for_classes(
             val = (axis2_char_t *) v;
 			
             if (key && val) {
-		
 
                  /* function is there, add the operation to service */
                  if (strcmp (key, val) == 0) {
@@ -1709,7 +1730,6 @@ void wsf_util_process_ws_service_operations_and_actions_for_classes(
             }
         }
     }
-
 }
 
 void wsf_util_process_ws_service_classes(
