@@ -27,22 +27,18 @@ WS-Addressing, WS-Security UsernameToken, WS-ReliableMessaging as well as REST s
 <p>This extension is available as an external extension. Please see the <a
 href="install_guide.html">Installation Guide</a> for more information.</p>
 
-<h2><a name="Runtime">4. Runtime Configuration</a></h2>
+<h2><a name="Runtime">4. Runtime and compile time Configuration</a></h2>
 
-<p>The behavior of this extension is governed by the following settings in
-php.ini.</p>
+<p>
+You should have the following configuration before run the extension, in rbconfig.rb
+</p>
 
-<p>Dynamic extension setting : <br>
-
-<b><i>extension=wsf.so</i></b><br>
-This setting indicates that the extension shared library will be named wsf.so
-and placed in the extension directory.</p>
-
-<p>In addition to the above setting, the following WSO2 WSF specific settings
-are required.</p>
+<p>
+NOTE: Mostly rbconfig.rb can be found in /usr/lib/ruby/1.8/i686-linux/rbconfig.rb
+</p>
 
 <table border="1">
-  <caption>WSO2 WSF/PHP Configuration Options</caption>
+  <caption>WSO2 WSF/Ruby Configuration Options</caption>
   <tbody>
     <tr>
       <th>Name</th>
@@ -50,58 +46,58 @@ are required.</p>
       <th>Type</th>
       <th>Default</th>
       <th>Description</th>
-      <th>Changeable</th>
     </tr>
     <tr>
-      <td>wsf.home</td>
-
+      <td>WSF_HOME</td>
       <td>string</td>
-      <td>"/path_to_php_ext/wsf_c"</td>
+      <td>"(No default)"</td>
       <td>Path to where you have WSO2 WSF/C installed.</td>
-      <td>PHP_INI_ALL</td>
     </tr>
     <tr>
-      <td>wsf.log_path</td>
-
+      <td>WSF_LOG_PATH</td>
       <td>string</td>
       <td>"/tmp"</td>
-      <td>Path to the folder into which the WSO2 WSF/PHP log file is to be
-        written. <br>
-        A log file named wsf.log will be written to this given location.</td>
-      <td>PHP_INI_ALL</td>
+      <td>Path to the folder into which the WSO2 WSF/C log file is to be written. <br>
+        A log files named wsf_ruby_client.log, wsf_ruby_server.log  will be written to this given location.
+      </td>
     </tr>
-
+    <tr>
+      <td>WSF_LOG_LEVEL</td>
+      <td>string</td>
+      <td>"3"</td>
+      <td>The level of the log to be written. <br>
+        You can configure the the log level from here.
+      </td>
+    </tr>
   </tbody>
 </table>
 
-<p>Note: PHP_INI_ALL means that the entry can be set anywhere in the
-php.ini.</p>
 
 <h2><a name="Quick">5. Quick Start Guide</a></h2>
 
 <p>This section is aimed to help you get a Web service up quickly using WSO2
-WSF/PHP and consume that service using a WSO2 WSF/PHP client.</p>
+WSF/Ruby and consume that service using a WSO2 WSF/Ruby .</p>
 
-<p>First follow the installation guide and get WSO2 WSF/PHP working on your
-machine. Once you have installed the extension, you should be able to run the
-PHP scripts written using classes supported by WSO2 WSF. To do this drop them
-into the Apache2's htdocs folder, or where ever you have your web server
-root.<br>
-Make sure that you have edited your php.ini file in accordance with the
-instructions in the <a href="install_guide.html">Installation Guide</a>.</p>
+<p>First follow the installation guide and get WSO2 WSF/Ruby working on your machine 
+<a href="install_guide.html">Installation Guide</a>. Once you have installed the extension,
+you should be able to run the Ruby scripts written using classes supported by WSO2 WSF. <br>
+</p>
 
 <p>Once you have WSO2 WSF up and running successfully, you can start writing
 your own services and clients.</p>
 
-<p>Let's first see how to write a client to consume the <a
-href="http://api.google.com/search/">Google spell check service.</a> First we
-need to prepare the payload, as expected by the service:</p>
-<pre><span style="color: rgb(0, 0, 255);">$reqPayloadString</span> = &lt;&lt;&lt;XML
+<p>Let's first see how to write a client to consume the 
+<a href="http://flickr.com/services/api/">Flickr Photo Search service.</a>
+First we need to prepare the payload, as expected by the service:</p>
+
+<pre>
+<span style="color: rgb(0, 0, 255);">$reqPayloadString</span> = &lt;&lt;&lt;XML
 &lt;ns1:doSpellingSuggestion x:encodingStyle=<span style="color: rgb(255, 0, 0);">"http://schemas.xmlsoap.org/soap/encoding/"</span> xmlns:ns1=<span style="color: rgb(255, 0, 0);">"urn:GoogleSearch"</span> xmlns:x=<span style="color: rgb(255, 0, 0);">"http://schemas.xmlsoap.org/soap/envelope/"</span> xmlns:xsi=<span style="color: rgb(255, 0, 0);">"http://www.w3.org/1999/XMLSchema-instance"</span> xmlns:xsd=<span style="color: rgb(255, 0, 0);">"http://www.w3.org/1999/XMLSchema"</span>&gt;
         &lt;key xsi:type=<span style="color: rgb(255, 0, 0);">"xsd:string"</span>&gt;your_key_here&lt;/key&gt;
         &lt;phrase xsi:type=<span style="color: rgb(255, 0, 0);">"xsd:string"</span>&gt;tamperature&lt;/phrase&gt;
 &lt;/ns1:doSpellingSuggestion&gt;
-XML;</pre>
+XML;
+</pre>
 
 <p>In the above payload, you have to enter your <a
 href="http://code.google.com/apis/base/signup.html">Google key</a> in the
