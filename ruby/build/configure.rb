@@ -3,15 +3,6 @@
 require 'mkmf'
 require 'rbconfig'
 
-# Generate WSFC Wrapper
-system('swig -ruby -I../swig/ -outdir ./ -Wall WSFC.i') unless File.exists?('WSFC_wrap.c')
-
-# Create "lib" Directory
-Dir.mkdir('lib') unless (FileTest.exist?('lib') && FileTest.directory?('lib'))
-
-system('rsync -r --exclude=wsservice --exclude=.svn ../src/* lib')
-system('rsync -r --exclude=.svn ../src/wsservice .')
-
 # Check the configurations
 WSFC_HOME = Config::CONFIG['WSFC_HOME']
 if(WSFC_HOME == nil)
