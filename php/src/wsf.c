@@ -86,13 +86,13 @@ PHP_METHOD (ws_client, get_last_request);
 PHP_METHOD (ws_client, get_last_response_headers);
 PHP_METHOD (ws_client, get_proxy);
 PHP_METHOD (ws_client, terminate_outgoing_rm);
+PHP_METHOD (ws_client, wait);
+
 
 /** WSService */ 
-PHP_METHOD (ws_service, set_class);
 PHP_METHOD (ws_service, reply);
 PHP_METHOD (ws_service, __construct);
 PHP_METHOD (ws_service, __destruct);
-PHP_METHOD (ws_service, wait);
 
 /** WSHeader class functions */ 
 PHP_METHOD (ws_header, __construct);
@@ -139,6 +139,7 @@ zend_function_entry php_ws_message_class_functions[] ={
 zend_function_entry php_ws_client_class_functions[] = {
     PHP_MALIAS (ws_client, request, request, NULL, ZEND_ACC_PUBLIC) 
     PHP_MALIAS (ws_client, send, send, NULL, ZEND_ACC_PUBLIC) 
+	PHP_MALIAS (ws_client, wait, wait, NULL, ZEND_ACC_PUBLIC)
     PHP_MALIAS (ws_client, getLastResponse, get_last_response, NULL, ZEND_ACC_PUBLIC)
     PHP_MALIAS (ws_client, getLastRequest, get_last_request, NULL, ZEND_ACC_PUBLIC)
     PHP_MALIAS (ws_client, getProxy, get_proxy, NULL, ZEND_ACC_PUBLIC)
@@ -161,9 +162,7 @@ zend_function_entry php_ws_client_proxy_class_functions[] = {
 
 /** service function entry */ 
 zend_function_entry php_ws_service_class_functions[] = {
-    PHP_MALIAS (ws_service, setClass, set_class, NULL, ZEND_ACC_PUBLIC) 
     PHP_MALIAS (ws_service, reply, reply, NULL, ZEND_ACC_PUBLIC) 
-    PHP_MALIAS (ws_service, wait, wait, NULL, ZEND_ACC_PUBLIC)
     PHP_ME (ws_service, __construct, NULL, ZEND_ACC_PUBLIC) 
     PHP_ME (ws_service, __destruct, NULL, ZEND_ACC_PUBLIC)  
     { NULL, NULL, NULL} 
@@ -1055,7 +1054,7 @@ PHP_METHOD (ws_service, __construct)
     }
 }
 
-PHP_METHOD(ws_service, wait)
+PHP_METHOD(ws_client, wait)
 {
    long num;
 
@@ -1077,15 +1076,8 @@ PHP_METHOD(ws_service, wait)
 PHP_METHOD (ws_service, __destruct) 
 {
 }
-
-
 /* } }} end WSService::__destruct */ 
     
-/* {{{ proto long setClass(string classname) Set a class to the service */ 
-PHP_METHOD (ws_service, set_class) 
-{
-}
-/* }}} end setClass */ 
 
 static void generate_wsdl_for_service(zval *svc_zval, 
         wsf_svc_info_t *svc_info, 
