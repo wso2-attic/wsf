@@ -29,10 +29,10 @@
  */
 function wsf_process_wsdl($user_parameters, $function_parameters)
 {
-    require_once('wsf_wsdl_consts.php');
-    require_once('wsf_wsdl_util.php');
-    require_once('wsf_wsdl_client_request.php');
-    require_once('wsf_wsdl_client_response.php');
+    require_once('dynamic_invocation/wsf_wsdl_consts.php');
+    require_once('dynamic_invocation/wsf_wsdl_util.php');
+    require_once('dynamic_invocation/wsf_wsdl_client_request.php');
+    require_once('dynamic_invocation/wsf_wsdl_client_response.php');
 
     global $is_wsdl_11;
     global $wsdl_11_dom;
@@ -58,6 +58,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
         $class_map = NULL;
 
     $xslt_location = $user_parameters[WSF_XSLT_LOCATION];
+    $xslt_location = "./dynamic_invocation/xslt/";
 
     $operation_name = $function_parameters[WSF_INVOKE_FUNCTION];
     $arg_count = $function_parameters[WSF_ARG_COUNT];
@@ -180,8 +181,8 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
  */
 function wsf_process_response($response_payload_string, $response_sig_model_string, $response_parameters, $wsdldom_string)
 {
-    require_once('wsf_wsdl_consts.php');
-    require_once('wsf_wsdl_client_response.php');
+    require_once('dynamic_invocation/wsf_wsdl_consts.php');
+    require_once('dynamic_invocation/wsf_wsdl_client_response.php');
 
     $envelope_dom = new DomDocument(); 
     $sig_model_dom = new DomDocument();
@@ -201,9 +202,9 @@ function wsf_process_response($response_payload_string, $response_sig_model_stri
 
 function wsf_process_wsdl_for_service($parameters, $operation_array)
 {
-    require_once('wsf_wsdl_consts.php');
-    require_once('wsf_wsdl_util.php');
-    require_once('wsf_wsdl_service.php');
+    require_once('dynamic_invocation/wsf_wsdl_consts.php');
+    require_once('dynamic_invocation/wsf_wsdl_util.php');
+    require_once('dynamic_invocation/wsf_wsdl_service.php');
 
 	global $is_wsdl_11;
     global $wsdl_11_dom;
@@ -283,10 +284,10 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
 
 function wsf_wsdl_process_in_msg($parameters)
 {
-    require_once('wsf_wsdl_consts.php');
-    require_once('wsf_wsdl_util.php');
-    require_once('wsf_wsdl_client_request.php');
-    require_once('wsf_wsdl_service.php');
+    require_once('dynamic_invocation/wsf_wsdl_consts.php');
+    require_once('dynamic_invocation/wsf_wsdl_util.php');
+    require_once('dynamic_invocation/wsf_wsdl_client_request.php');
+    require_once('dynamic_invocation/wsf_wsdl_service.php');
 
     $payload_dom = new DomDocument();
     $sig_model_dom = new DomDocument();

@@ -83,7 +83,10 @@ void create_dynamic_client(zval *this_ptr, char *function, int function_len,
     char *real_path = NULL;
     int path_len = 0;
     
-	
+	php_stream *stream;
+    FILE *new_fp;        
+
+
     if(SG (request_info).request_method){
         real_path = estrdup(SG(request_info).path_translated);
         path_len = strlen(SG(request_info).path_translated)- strlen(SG(request_info).request_uri);
@@ -160,15 +163,27 @@ void create_dynamic_client(zval *this_ptr, char *function, int function_len,
         INIT_PZVAL(params[1]);
 	
         script.type = ZEND_HANDLE_FP;
-        script.filename = script_file_name.c;
+        script.filename = "wsf_wsdl.php";/*script_file_name.c;*/
         script.opened_path = NULL;
         script.free_filename = 0;
-        if (!(script.handle.fp = VCWD_FOPEN (script.filename, "rb"))){
+
+
+        /*if (!(script.handle.fp = VCWD_FOPEN (script.filename, "rb"))){
             php_error_docref (NULL TSRMLS_CC, E_ERROR, 
                               "Unable to open script file: %s", script.filename);
             return ;
         }
-        else{
+        */
+        stream  = php_stream_open_wrapper("wsf_wsdl.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL TSRMLS_CC);
+        if(!stream)
+                return;
+
+        if (php_stream_cast(stream, PHP_STREAM_AS_STDIO|PHP_STREAM_CAST_RELEASE, (void*)&new_fp, REPORT_ERRORS) == FAILURE)    {
+                php_printf ("Unable to open script file or file not found:");
+        }
+        script.handle.fp =  new_fp;
+
+        if(script.handle.fp){
             php_lint_script (&script TSRMLS_CC);
             if (call_user_function (EG (function_table), (zval **) NULL,
                                     &request_function, &retval, 2,
@@ -838,7 +853,10 @@ void wsf_wsdl_process_service(zval *this_ptr, wsf_req_info_t *request_info1, wsf
     zval request_function;
     zval *operations;
     axutil_hash_index_t *hi = NULL;
-    
+   
+    FILE *new_fp;
+    php_stream *stream;
+ 
     real_path = estrdup(SG(request_info).path_translated);
     path_len = 
         strlen(SG(request_info).path_translated)- strlen(SG(request_info).request_uri);
@@ -896,15 +914,26 @@ void wsf_wsdl_process_service(zval *this_ptr, wsf_req_info_t *request_info1, wsf
     INIT_PZVAL(params[1]);
     
     script.type = ZEND_HANDLE_FP;
-    script.filename = script_file_name.c;
+    script.filename = "wsf_wsdl.php";/*script_file_name.c;*/
     script.opened_path = NULL;
     script.free_filename = 0;
-    if (!(script.handle.fp = VCWD_FOPEN (script.filename, "rb"))){
+
+/*    if (!(script.handle.fp = VCWD_FOPEN (script.filename, "rb"))){
         php_error_docref (NULL TSRMLS_CC, E_ERROR, 
                           "Unable to open script file: %s", script.filename);
         return;
     }
-    else{
+*/
+    stream  = php_stream_open_wrapper("wsf_wsdl.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL TSRMLS_CC);
+    if(!stream)
+        return;
+
+    if (php_stream_cast(stream, PHP_STREAM_AS_STDIO|PHP_STREAM_CAST_RELEASE, (void*)&new_fp, REPORT_ERRORS) == FAILURE)    {
+        php_printf ("Unable to open script file or file not found:");
+    }
+    script.handle.fp =  new_fp;
+
+    if(script.handle.fp){
         php_lint_script (&script TSRMLS_CC);
         if (call_user_function (EG (function_table), (zval **) NULL,
                                 &request_function, &retval, 2, 
@@ -1174,7 +1203,10 @@ void wsf_wsdl_set_sig_model(char *wsdl_path, wsf_svc_info_t *svc_info, const axu
     zval request_function;
     zval *operations;
     axutil_hash_index_t *hi = NULL;
-    
+   
+    FILE *new_fp;
+    php_stream *stream;
+ 
     real_path = estrdup(SG(request_info).path_translated);
     path_len = 
         strlen(SG(request_info).path_translated)- strlen(SG(request_info).request_uri);
@@ -1226,12 +1258,23 @@ void wsf_wsdl_set_sig_model(char *wsdl_path, wsf_svc_info_t *svc_info, const axu
     script.filename = script_file_name.c;
     script.opened_path = NULL;
     script.free_filename = 0;
-    if (!(script.handle.fp = VCWD_FOPEN (script.filename, "rb"))){
+   /* if (!(script.handle.fp = VCWD_FOPEN (script.filename, "rb"))){
         php_error_docref (NULL TSRMLS_CC, E_ERROR, 
                           "Unable to open script file: %s", script.filename);
         return;
     }
-    else{
+   */
+
+    stream  = php_stream_open_wrapper("wsf_wsdl.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL TSRMLS_CC);
+    if(!stream)
+        return;
+
+    if (php_stream_cast(stream, PHP_STREAM_AS_STDIO|PHP_STREAM_CAST_RELEASE, (void*)&new_fp, REPORT_ERRORS) == FAILURE)    {
+        php_printf ("Unable to open script file or file not found:");
+    }
+    script.handle.fp =  new_fp;
+
+    if(script.handle.fp){
         php_lint_script (&script TSRMLS_CC);
         if (call_user_function (EG (function_table), (zval **) NULL,
                                 &request_function, &retval, 2, 

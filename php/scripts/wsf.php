@@ -90,7 +90,7 @@ function ws_reply($options)
 function ws_generate_wsdl($include_location, $service_name, $fn_arry,
                           $binding_style, $wsdl_version, $request_uri, $op_arry)
 {
-    require_once($include_location);
+    require_once("wsdl/WS_WSDL_Creator.php");
 
     $Binding_style = NULL;
 

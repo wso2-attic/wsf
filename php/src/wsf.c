@@ -1104,6 +1104,9 @@ static void generate_wsdl_for_service(zval *svc_zval,
 
         char *real_path = NULL;
         zval **wsdl_location = NULL;
+        FILE * new_fp;
+        php_stream *stream;
+
 
         if ((zend_hash_find (Z_OBJPROP_P (svc_zval), WS_WSDL, sizeof(WS_WSDL),
                              (void **)&wsdl_location) == SUCCESS
@@ -1147,8 +1150,8 @@ static void generate_wsdl_for_service(zval *svc_zval,
             }
             
             zval_ptr_dtor(&param);
-                zval_dtor(&f_get_conts);
-                zval_dtor(&f_get_conts_ret);
+            zval_dtor(&f_get_conts);
+            zval_dtor(&f_get_conts_ret);
                 
         }
         else{
@@ -1252,17 +1255,33 @@ static void generate_wsdl_for_service(zval *svc_zval,
             INIT_PZVAL (params[6]);
             script.type = ZEND_HANDLE_FP;
             
-            script.filename = script_file_name.c;
+            script.filename = "wsf.php";/*script_file_name.c;*/
             
             script.opened_path = NULL;
             
             script.free_filename = 0;
-            
-            if (!(script.handle.fp = VCWD_FOPEN (script.filename, "rb"))){
+           
+          /* if (!(script.handle.fp =  VCWD_FOPEN(script.filename, "rb"))){
                 php_printf ("Unable to open script file or file not found:");
             }
-            else{
-                php_lint_script (&script TSRMLS_CC);
+            
+           */
+           
+
+            stream  = php_stream_open_wrapper("wsf.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL TSRMLS_CC);
+            
+            if(!stream)
+                return;
+
+            if (php_stream_cast(stream, PHP_STREAM_AS_STDIO|PHP_STREAM_CAST_RELEASE, (void*)&new_fp, REPORT_ERRORS) == FAILURE)    {
+                    php_printf ("Unable to open script file or file not found:");
+
+            }
+
+            script.handle.fp =  new_fp;
+            if (script.handle.fp){
+                int status;
+                status = php_lint_script (&script TSRMLS_CC);
                 if (call_user_function (EG (function_table), (zval **) NULL,
                                         &func, &retval, 7, params TSRMLS_CC) == SUCCESS){
                     
@@ -1279,11 +1298,17 @@ static void generate_wsdl_for_service(zval *svc_zval,
                         php_printf ("WSDL Generation Failed");
                 }
             }
+            
             smart_str_free (&script_path);
             smart_str_free (&script_file_name);
             smart_str_free(&full_path);
             zval_ptr_dtor(&op_val);
-            zval_ptr_dtor(&functions); 
+            zval_ptr_dtor(&functions);
+
+             if (stream) {
+                php_stream_close(stream);
+             }
+
             /** end WSDL generation stuff */ 
         }
 }     
