@@ -30,6 +30,6 @@ have_library('neethi')
 have_library('neethi_util')
 have_library('mod_rampart')
 
-$CFLAGS = $CFLAGS + "-DWIN32 -DSWIG_NOINCLUDE"
+$CFLAGS = $CFLAGS + " -DWIN32 -DSWIG_NOINCLUDE"
 
 create_makefile('WSFC')
