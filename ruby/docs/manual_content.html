@@ -19,7 +19,7 @@ WSO2 Web Services Framework. This Ruby extension can be used to provide and cons
 WS-Addressing, WS-Security UsernameToken, WS-ReliableMessaging as well as REST style invocation.</p>
 
 <h2><a name="Requirements">2. Requirements</a></h2>
-
+You should have the WSO2 WSF/C installed in your computer as a prerequisties to install WSF/Ruby
 <p></p>
 
 <h2><a name="Installation">3. Installation</a></h2>
@@ -91,43 +91,76 @@ your own services and clients.</p>
 First we need to prepare the payload, as expected by the service:</p>
 
 <pre>
-<span style="color: rgb(0, 0, 255);">$reqPayloadString</span> = &lt;&lt;&lt;XML
-&lt;ns1:doSpellingSuggestion x:encodingStyle=<span style="color: rgb(255, 0, 0);">"http://schemas.xmlsoap.org/soap/encoding/"</span> xmlns:ns1=<span style="color: rgb(255, 0, 0);">"urn:GoogleSearch"</span> xmlns:x=<span style="color: rgb(255, 0, 0);">"http://schemas.xmlsoap.org/soap/envelope/"</span> xmlns:xsi=<span style="color: rgb(255, 0, 0);">"http://www.w3.org/1999/XMLSchema-instance"</span> xmlns:xsd=<span style="color: rgb(255, 0, 0);">"http://www.w3.org/1999/XMLSchema"</span>&gt;
-        &lt;key xsi:type=<span style="color: rgb(255, 0, 0);">"xsd:string"</span>&gt;your_key_here&lt;/key&gt;
-        &lt;phrase xsi:type=<span style="color: rgb(255, 0, 0);">"xsd:string"</span>&gt;tamperature&lt;/phrase&gt;
-&lt;/ns1:doSpellingSuggestion&gt;
-XML;
+<span style="color: rgb(0, 0, 255);">reqPayloadString</span> = &lt;&lt;XML
+&lt;x:FlickrRequest xmlns:x="urn:flickr"&gt;
+  &lt;method&gt;flickr.photos.search&lt;/method&gt;
+  &lt;api_key&gt;#{key}&lt;/api_key&gt;
+  &lt;text&gt;temperature&lt;/text&gt;
+&lt;/x:FlickrRequest&gt;
+XML
 </pre>
 
-<p>In the above payload, you have to enter your <a
-href="http://code.google.com/apis/base/signup.html">Google key</a> in the
-"key" element. The "phrase" element contains the word that we want to
-spell-check.</p>
+<p>In the above payload, you have to enter your flickr key in the
+"key" element. The "text" element contains the words that we want to
+search for.</p>
+
+<p>
+NOTE: You can make a flickr key <a href="http://flickr.com/services/api/"> here</a>
+</p>
+
+<p>
+Next we need to create a WSClient, with the options to be used by the
+client. For the Flickr photo service, we have to use only one option, i.e the endpoint
+of the Flickr service
+</p>
 
 <p>Next we need to create a WSClient, with the options to be used by the
-client. For the Google spell check service, we have to use two options, one
+client. For the Flickr photo service, we have to use two options, one
 is the endpoint address the request is to be sent to, the other is the SOAP
 version. The Google spell check service uses SOAP version 1.1.</p>
-<pre>        <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"to"</span> =&gt; <span style="color: rgb(255, 0, 0);">"http://api.google.com/search/beta2"</span>, 
-                <span style="color: rgb(255, 0, 0);">"useSOAP"</span> =&gt; <span style="color: rgb(204, 102, 204);">1.1</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>; </pre>
 
-<p>Once we have the payload and the client ready, we can send the request and
-receive the response.</p>
-<pre>        <span style="color: rgb(0, 0, 255);">$resMessage</span> = <span style="color: rgb(0, 0, 255);">$client</span>-&gt;<span style="color: rgb(0, 102, 0);">request</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$reqPayloadString</span><span style="color: rgb(102, 204, 102);">)</span>;
-    
-        <a href="http://www.php.net/printf"><span style="color: rgb(0, 0, 102);">printf</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"Response = %s &lt;br/&gt;<span style="color: rgb(0, 0, 153); font-weight: bold;">\n</span>"</span>, <a href="http://www.php.net/htmlspecialchars"><span style="color: rgb(0, 0, 102);">htmlspecialchars</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$resMessage</span>-&gt;<span style="color: rgb(0, 102, 0);">str</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
+<pre>
+client = WSO2::WSF::WSClient.new({&quot;to&quot; =&gt; &quot;http://api.flickr.com/services/soap&quot;});
+</pre>
 
-<p>Here is the complete source code for this Google spell check client : <a
-href="samples/google_spell.html">google_spell.php</a>. Please remember to
-replace "your_key_here" string with a valid Google key. <br>
+<p>
+Here is the complete source code for the Flickr photo search. <a href="samples/flickr.rb">
+flickr.rb</a>. Please remember to replece your_key_here" string with a valid Fclikr key.
 </p>
+
+<pre>
+require 'wsf'
+
+key = "replace your_key_key"
+
+req_payload_string = &lt;&lt;XML
+&lt;x:FlickrRequest xmlns:x="urn:flickr"&gt;
+  &lt;method&gt;flickr.photos.search&lt;/method&gt;
+  &lt;api_key&gt;#{key}&lt;/api_key&gt;
+  &lt;text&gt;sri lanka&lt;/text&gt;
+&lt;/x:FlickrRequest&gt;
+XML
+
+client = WSO2::WSF::WSClient.new({"to" =&gt; "http://api.flickr.com/services/soap"};
+
+res_message = client.request(req_payload_string)
+
+if not res_message.nil? then
+  puts "Received OM: "&lt;&lt; "\n" &lt;&lt; res_message.payload_to_s &lt;&lt; "\n\n"
+end
+</pre>
+
 
 <p>The following sections detail how to write a simple service and a client
 with WSO2 WSF/PHP.</p>
 
 <h2 class="western"><a name="5.1.">5.1. Hello Service</a></h2>
 
-<!-- <p>Let's see how to write your first Web service with WSO2 WSF/PHP.</p>
+<p>Let's see how to write your first Web service with WSO2 WSF/Ruby.</p>
+
+<p>
+First you need to install Ruby on rails in deploying the service.
+</p>
 
 <p>The first service that we are going to write is named "hello" and would
 have a single operation named "greet". This "greet" operation, when invoked
