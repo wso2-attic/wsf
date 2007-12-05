@@ -52,7 +52,6 @@ void wsf_util_create_svc_from_svc_info (
 
 void wsf_util_create_op_and_add_to_svc (
     wsf_svc_info_t * svc_info,
-    char *options,
     axutil_env_t * env,
     char *op_name,
     HashTable * meps TSRMLS_DC);
@@ -145,9 +144,13 @@ void wsf_util_engage_modules_to_svc(
     axis2_conf_ctx_t *conf_ctx,
     wsf_svc_info_t *svc_info);
 
-void wsf_util_process_ws_service_operations_and_actions(
+void wsf_util_process_ws_service_op_actions(
+     HashTable *ht_actions,
+     wsf_svc_info_t *svc_info,
+     axutil_env_t *ws_env_svr TSRMLS_DC);
+
+void wsf_util_process_ws_service_operations(
         HashTable *ht_ops_to_funcs,
-        HashTable *ht_actions,
         HashTable *ht_ops_to_mep,
         wsf_svc_info_t *svc_info,
         axutil_env_t *ws_env_svr TSRMLS_DC);
