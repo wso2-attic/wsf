@@ -1,0 +1,134 @@
+#!/usr/bin/env bash
+
+#function go_to_ruby_root
+#{
+#}
+
+function show_revision_number
+{
+	echo `svn info | grep Revision`
+}
+
+function clear_content
+{
+	for file in *
+	do
+		case "$file" in
+			"build.sh" | "configure.rb" | "extconf-win32.rb" | "mkdist" )
+			;;
+			* )
+			rm -rf $file
+			echo "removing $file ... done"
+			;;
+		esac
+	done
+
+	echo
+	echo "clearing content ... OK"
+	echo
+}
+
+function sync_content
+{
+	# Generate WSFC Wrapper
+	swig -ruby -I../swig/ -outdir ./ -Wall WSFC.i
+	echo "synchronizing WSFC_wrap.c ... done"
+
+	# Create "lib" Directory
+	if [ ! -e "lib" ]
+	then
+		mkdir lib
+	fi
+
+	rsync -r --exclude=.svn ../src/config lib
+	echo "synchronizing config ... done"
+
+	rsync -r --exclude=.svn ../src/logger lib
+	echo "synchronizing logger ... done"
+	
+	rsync -r --exclude=.svn ../src/util lib
+	echo "synchronizing util ... done"
+	
+	rsync -r --exclude=.svn ../src/wsf lib
+	rsync ../src/wsf.rb lib
+	echo "synchronizing wsf ... done"
+	
+	rsync -r --exclude=.svn --exclude=*.o --exclude=Makefile --exclude=*.log --exclude=*.so ../src/wsservice .
+	echo "synchronizing wsservice ... done"
+	
+	rsync -r --exclude=.svn ../samples .
+	echo "synchronizing samples ... done"
+	
+	rsync ../AUTHORS .
+	echo "synchronizing AUTHORS ... done"
+
+	rsync ../COPYING .
+	echo "synchronizing COPYING ... done"
+
+	rsync ../LICENSE .
+	echo "synchronizing LICENSE ... done"
+
+	rsync ../NEWS .
+	echo "synchronizing NEWS ... done"
+
+	rsync ../NOTICE .
+	echo "synchronizing NOTICE ... done"
+
+	rsync ../README .
+	echo "synchronizing README ... done"
+
+	rsync ../README.SAMPLES .
+	echo "synchronizing README.SAMPLES ... done"
+
+	echo
+	echo "synchronizing content ... OK"
+	echo
+}
+
+function validate_dist
+{
+	echo "validate_dist"
+}
+
+function show_usage
+{
+	echo "Usage :"
+	echo "--create [version-number] [win32|linux|all] create distribution package."
+	echo "--revno                                     show svn revision number."
+	echo "--clear                                     clear all content."
+	echo "--sync                                      synchronize content."
+	echo "--validate                                  validate current source using the test suite."
+	echo "--help                                      show this usage message."
+}
+
+function create_package
+{
+	echo "create_package"
+}
+
+if [ $# -eq 0 ]
+then
+	show_usage
+	exit -1
+fi
+
+if [ $1 == "--create" ]
+then
+	create_package
+elif [ $1 == "--revno" ]
+then
+	show_revision_number
+elif [ $1 == "--clear" ]
+then
+	clear_content
+elif [ $1 == "--sync" ]
+then
+	sync_content
+elif [ $1 == "--validate" ]
+then
+	validate_dist
+else
+	show_usage
+fi
+
+exit 0
