@@ -4,8 +4,7 @@ amazon.rb -
   
   A client assessing Amazon search using REST.
   Set the following variables to match your case.
-  - axis2c_home[Line 30].
-  - log_file_name[Line 31].
+  - LOG_FILE_NAME[Line 32].
 
 
 Echo
@@ -14,44 +13,42 @@ echo_client_addr.rb -
   
   Echo client with WS-Addressing.
   Set the following variables to match your case.
-  - axis2c_home[Line 27].
-  - log_file_name[Line 28].
-  - end_point[Line 29].
+  - LOG_FILE_NAME[Line 29].
+  - END_POINT[Line 30].
+  - ACTION[Line 31].
 
 echo_client.rb -
   
   Echo client, client for echo service.
   Sends a request and accepts a reply.
   Set the following variables to match your case.
-  - axis2c_home[Line 27].
-  - log_file_name[Line 28].
-  - end_point[Line 29].
+  - LOG_FILE_NAME[Line 29].
+  - END_POINT[Line 30].
 
 echo_client_rest.rb -
   
   Client using rest GET call access a service using REST.
   Set the following variables to match your case.
-  - axis2c_home[Line 27].
-  - log_file_name[Line 28].
-  - end_point[Line 29].
+  - LOG_FILE_NAME[Line 29].
+  - END_POINT[Line 30].
 
 echo_client_soap11.rb -
 
   Client for echo service using SOAP 1.1 protocol.
   Set the following variables to match your case.
-  - axis2c_home[Line 27].
-  - log_file_name[Line 28].
-  - end_point[Line 29].
+  - LOG_FILE_NAME[Line 29].
+  - END_POINT[Line 30].
 
 
-Accessing Yahoo WebService API
-------------------------------
-yahoo.rb -
-  A client assessing Yahoo search using REST.
+Flicker
+-------
+filckr.rb -
+  Client for accessing flicker SOAP service.
   Set the following variables to match your case.
-  - axis2c_home[Line 28].
-  - log_file_name[Line 29].
-                     
+  - KEY[Line 21].
+  - LOG_FILE_NAME[Line 32].
+  - END_POINT[Line 33].
+
 
 MTOM / Base64 Attachments
 --------------------------
@@ -60,31 +57,131 @@ mtom/mtom_download_client.rb -
   attachment sent by the service. You have to save the file 
   to a globally writable folder. This sample uses the current folder.
   Set the following variables to match your case.
-  - axis2c_home[Line 25].
-  - log_file_name[Line 26].
-  - end_point[Line 27].
+  - LOG_FILE_NAME[Line 28].
+  - END_POINT[Line 29].
                     
 mtom/mtom_upload_client_base64.rb -
   A client that sends an image as a base64 encoded string.
   Set the following variables to match your case.
-  - axis2c_home[Line 25].
-  - log_file_name[Line 26].
-  - end_point[Line 27].
+  - LOG_FILE_NAME[Line 27].
+  - END_POINT[Line 28].
+  - ACTION[Line 29].
 
 mtom/mtom_upload_client.rb -
   Client for MTOM upload service. Sends a file as an attachment to the service.
   The image used is located in the "resources" folder.
   Set the following variables to match your case.
-  - axis2c_home[Line 25].
-  - log_file_name[Line 26].
-  - end_point[Line 27].
+  - LOG_FILE_NAME[Line 27].
+  - END_POINT[Line 28].
+  - ACTION[Line 29].
 
-                    
-Flicker
--------
-filckr.rb -
-  Client for accessing flicker SOAP service.
+
+Security
+--------
+security/username_token/username_token_client.rb -
+  UsernameToken sample client
   Set the following variables to match your case.
-  - key[Line 19].
-  - axis2c_home[Line 28].
-  - log_file_name[Line 29].
+  - LOG_FILE[Line 25].
+  - ACTION[Line 26].
+  - END_POINT[Line 27].
+
+security/username_token/username_token_client_file.rb -
+  UsernameToken sample client.
+  Policy is loaded from "policy.xml".
+  Set the following variables to match your case.
+  - LOG_FILE[Line 34].
+  - ACTION[Line 35].
+  - END_POINT[Line 36].
+
+security/timestamp/timestamp_client.rb - 
+  Timestamp token client.
+  Set the following variables to match your case.
+  - LOG_FILE[Line 25].
+  - ACTION[Line 26].
+  - END_POINT[Line 27].
+
+security/timestamp/timestamp_client_file.rb - 
+  Timestamp token client.
+  Policy is loaded from "policy.xml".
+  Set the following variables to match your case.
+  - LOG_FILE[Line 34].
+  - ACTION[Line 35].
+  - END_POINT[Line 36].
+
+security/encryption/encrypt_client.rb - 
+  Encryption Client.
+  Set the following variables to match your case.
+  - LOG_FILE[Line 26].
+  - ACTION[Line 27].
+  - END_POINT[Line 28].
+
+security/encryption/encrypt_client_file.rb - 
+  Encryption Client.
+  Policy is loaded from "policy.xml".
+  Set the following variables to match your case.
+  - LOG_FILE[Line 34].
+  - ACTION[Line 35].
+  - END_POINT[Line 36].
+
+security/signing/signing_client.rb - 
+  Signing Client.
+  Set the following variables to match your case.
+  - LOG_FILE[Line 25].
+  - ACTION[Line 26].
+  - END_POINT[Line 27].
+
+security/signing/signing_client_file.rb - 
+  Signing Client.
+  Policy is loaded from "policy.xml".
+  Set the following variables to match your case.
+  - LOG_FILE[Line 34].
+  - ACTION[Line 35].
+  - END_POINT[Line 36].
+
+security/complete/complete_scenario.rb - 
+  A complete scenario to show UsernameToken, Timestamp, Encrypt, Sign.
+  Policy is loaded from "policy.xml".
+  Set the following variables to match your case.
+  - LOG_FILE[Line 40].
+  - ACTION[Line 41].
+  - END_POINT[Line 42].
+
+
+Reliable Messaging
+------------------
+reliable/echo_client_rm.rb - 
+  Single Channel two way RM Client
+  Set the following variables to match your case.
+  - LOG_FILE_NAME[Line 29].
+  - END_POINT[Line 30].
+  - ACTION[Line 31].
+
+reliable/mtom_upload_client_rm.rb -
+  Single Channel two way RM Client sending an MTOM attachment
+  Set the following variables to match your case.
+  - LOG_FILE_NAME[Line 27].
+  - END_POINT[Line 28].
+  - ACTION[Line 29].
+
+reliable/ping_client_rm.rb -
+  Single Channel one way RM Client
+  Set the following variables to match your case.
+  - LOG_FILE_NAME[Line 29].
+  - END_POINT[Line 30].
+  - ACTION[Line 31].
+
+reliable/ping_client_rm_multiple_messages.rb -
+  Single Channel one way RM service with multiple messages
+  Set the following variables to match your case.
+  - LOG_FILE_NAME[Line 29].
+  - END_POINT[Line 30].
+  - ACTION[Line 31].
+
+
+Accessing Yahoo WebService API
+------------------------------
+yahoo.rb -
+  A client assessing Yahoo search using REST.
+  Set the following variables to match your case.
+  - LOG_FILE_NAME[Line 30].
+  - END_POINT[Line 31].

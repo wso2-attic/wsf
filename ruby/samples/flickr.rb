@@ -31,7 +31,6 @@ XML
 begin
   LOG_FILE_NAME = "ruby_flicker.log"
   END_POINT = "http://api.flickr.com/services/soap"
- # END_POINT = "http://localhost:9090/services/soap"
 
   client = WSClient.new({"to" => END_POINT},
                         LOG_FILE_NAME)
@@ -41,7 +40,7 @@ begin
   res_message = client.request(req_payload_string)
 
   if not res_message.nil? then
-    puts "Received OM: "<< "\n" << res_message.payload_to_s << "\n\n"
+    puts "Received OM : " << "\n" << res_message.payload_to_s << "\n\n"
     puts "Client invocation SUCCESSFUL !!!"
   else
     puts "Client invocation FAILED !!!"

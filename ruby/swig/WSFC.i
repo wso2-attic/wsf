@@ -367,66 +367,6 @@ wsf_axiom_node_to_str(const axutil_env_t *env,
 }
 %}
 
-%inline %{
-axis2_char_t *
-wsf_axiom_data_handler_get_base64_content(axiom_data_handler_t *data_handler,
-                                           const axutil_env_t   *env)
-{
-  axis2_char_t *content = NULL;
-  int           content_length = 0;
-  int encoded_length  = 0;
-  axis2_char_t *encoded_str = NULL;
-  
-  axiom_data_handler_read_from (data_handler, env, &content, &content_length);
-
-  if (content == NULL)
-    return NULL;
-
-  encoded_length = axutil_base64_encode_len(content_length);
-  encoded_str = AXIS2_MALLOC(env->allocator, encoded_length + 2);
-                
-  if (encoded_str == NULL)
-    return NULL;
-
-  encoded_length = axutil_base64_encode(encoded_str, content, content_length);
-  encoded_str[encoded_length] = '\0';
-
-  return encoded_str;
-}
-%}
-
-%inline %{
-int
-wsf_file_put_base64_content(const char *file_name,
-                             const char *base64_content)
-{
-  int decoded_length = 0;
-  char *decoded_content = NULL;
-  FILE *file = NULL;
-  
-  decoded_length = axutil_base64_decode_len(base64_content);
-  
-  decoded_content = (char*)malloc(decoded_length);
-  if (decoded_content == NULL)
-    return 0;
-
-  decoded_length = axutil_base64_decode(decoded_content, base64_content);
-  if (decoded_content == NULL)
-    return 0;
-
-  file = fopen(file_name, "w");
-  if (file == NULL)
-    return 0;
-
-  fwrite(decoded_content, sizeof(char), decoded_length, file);
-  fclose(file);
-
-  free(decoded_content);
-
-  return 1;
-}
-%}
-
 axis2_char_t *
 axiom_data_handler_get_content_type(axiom_data_handler_t *data_handler,
                                     const axutil_env_t   *env);
@@ -780,6 +720,3 @@ rampart_context_set_pwcb_function(rampart_context_t *rampart_context,
                                       const axutil_env_t *env,
                                       password_callback_fn pwcb_function,
                                       void *ctx);
-
-
-

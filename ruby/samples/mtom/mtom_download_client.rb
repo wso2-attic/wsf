@@ -18,7 +18,6 @@
 require 'wsf'
 
 include WSO2::WSF
-include WSO2::Util
 
 req_payload_string = <<XML
 <download/>
@@ -26,7 +25,7 @@ XML
 
 begin
   LOG_FILE_NAME = "ruby_mtom_download_client.log"
-  END_POINT = "http://localhost:9090/samples/mtom/mtom_download_service.php"
+  END_POINT = "http://localhost:3000/wsservice/mtom"
 
   client = WSClient.new({"to" => END_POINT,
                          "use_mtom" => "TRUE",
@@ -40,7 +39,7 @@ begin
   res_message = client.request(req_message)
 
   if not res_message.nil? then
-    puts "Received OM: "<< "\n" << res_message.payload_to_s << "\n\n"
+    puts "Received OM : " << "\n" << res_message.payload_to_s << "\n\n"
     
     # Save image/jpeg files
     attachments = res_message.property "attachments"
@@ -52,11 +51,14 @@ begin
         content = attachments[cid]
         if content then
 
-          if WSUtil.file_put_base64_content(cid, content, content_type) then
-            puts "cid = " + cid + " | " + "content type = " + content_type + " : File saved SUCCESSFULLY !!!"
-          else
-            puts "cid = " + cid + " | " + "content type = " + content_type + " : Failed to save file !!!"
-          end
+		  file_name = cid
+		  file_name = file_name + ".jpg" if content_type == "image/jpeg"
+		  
+		  f = File.new(file_name, "w")
+		  f.write(content)
+		  f.close
+
+          puts "Downloaded file : " << file_name << "\n\n"
 
         end
       }
@@ -86,4 +88,3 @@ rescue => exception
   puts "Client invocation FAILED !!!\n"
   puts "Exception : " << exception
 end
-

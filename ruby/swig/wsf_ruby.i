@@ -1,4 +1,21 @@
 %inline %{
+VALUE
+wsf_axiom_data_handler_get_content(axiom_data_handler_t *data_handler,
+                                   const axutil_env_t   *env)
+{
+  axis2_char_t *content = NULL;
+  int           content_length = 0;
+
+  axiom_data_handler_read_from (data_handler, env, &content, &content_length);
+
+  if (content == NULL)
+    return Qnil;
+
+  return rb_str_new(content, content_length);
+}
+%}
+
+%inline %{
 axis2_status_t
 wsf_set_security_token_data_to_rampart_context(const axutil_env_t * env,
                                                 rampart_context_t *rampart_context,

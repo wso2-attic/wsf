@@ -20,20 +20,17 @@ require 'wsf'
 include WSO2::WSF
 
 req_payload_string = <<XML
-<ns1:mtomSample xmlns:ns1="http://ws.apache.org/axis2/c/samples/mtom"><ns1:fileName>test.jpg</ns1:fileName><ns1:image><xop:Include href="cid:myid1" xmlns:xop="http://www.w3.org/2004/08/xop/include"/></ns1:image></ns1:mtomSample>
+<ns1:upload xmlns:ns1="http://ws.apache.org/axis2/c/samples/mtom"><ns1:fileName>test.jpg</ns1:fileName><ns1:image xmlmime:contentType="image/jpeg" xmlns:xmlmime="http://www.w3.org/2004/06/xmlmime"><xop:Include href="cid:myid1" xmlns:xop="http://www.w3.org/2004/08/xop/include"/></ns1:image></ns1:upload>
 XML
 
 begin
   LOG_FILE_NAME = "ruby_mtom_upload_client.log"
-  END_POINT = "http://localhost:9090/axis2/services/mtom"
-  ACTION = "http://ws.apache.org/axis2/c/samples/mtomSample"
+  END_POINT = "http://localhost:3000/wsservice/mtom"
 
   content = IO.read("resources/axis2.jpg")
 
   client = WSClient.new({"to" => END_POINT,
-                         "action" => ACTION,
-                         "use_mtom" => "TRUE",
-                         "use_wsa" => "TRUE"},
+                         "use_mtom" => "TRUE"},
                         LOG_FILE_NAME)
 
   req_message = WSMessage.new(req_payload_string,
@@ -45,7 +42,7 @@ begin
   res_message = client.request(req_message)
   
   if not res_message.nil? then
-    puts "Received OM: "<< "\n" << res_message.payload_to_s << "\n\n"
+    puts "Received OM : " << "\n" << res_message.payload_to_s << "\n\n"
     puts "Client invocation SUCCESSFUL !!!"
   else
     puts "Client invocation FAILED !!!"

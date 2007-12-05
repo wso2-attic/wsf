@@ -27,8 +27,8 @@ XML
 
 begin
   LOG_FILE_NAME = "ruby_echo_client_rm.log"
-  END_POINT = "http://127.0.0.1:9090/axis2/services/RMSampleService"
-  ACTION = "urn:wsrm:EchoString"
+  END_POINT = "http://127.0.0.1:3000/wsservice/echo_reliable"
+  ACTION = "http://ruby.axis2.org/samples/echoString"
 
   client = WSClient.new({"use_wsa" => "TRUE",
                          "reliable" => "TRUE"},
@@ -44,7 +44,7 @@ begin
   res_message = client.request(req_message)
 
   if not res_message.nil? then
-    puts "Received OM: "<< "\n" << res_message.payload_to_s << "\n\n"
+    puts "Received OM : " << "\n" << res_message.payload_to_s << "\n\n"
     puts "Client invocation SUCCESSFUL !!!"
   else
     puts "Client invocation FAILED !!!"

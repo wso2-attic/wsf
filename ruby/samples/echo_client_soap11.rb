@@ -27,10 +27,12 @@ XML
 
 begin
   LOG_FILE_NAME = "ruby_echo_client_soap11.log"
-  END_POINT = "http://localhost:9090/axis2/services/echo"
+  END_POINT = "http://localhost:9090/wsservice/echo"
+  ACTION = "http://ruby.axis2.org/samples/echoString"
 
   client = WSClient.new({"to" => END_POINT,
-                         "use_soap" => 1.1},
+                         "use_soap" => 1.1,
+  						 "action" => ACTION},
                         LOG_FILE_NAME)
 
   puts "Sending OM : " << "\n" << req_payload_string << "\n" 
@@ -38,7 +40,7 @@ begin
   res_message = client.request(req_payload_string)
 
   if not res_message.nil? then
-    puts "Received OM: "<< "\n" << res_message.payload_to_s << "\n\n"
+    puts "Received OM : " << "\n" << res_message.payload_to_s << "\n\n"
     puts "Client invocation SUCCESSFUL !!!"
   else
     puts "Client invocation FAILED !!!"

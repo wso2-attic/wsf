@@ -73,7 +73,7 @@ wsservice_initialize(VALUE self, VALUE options)
     VALUE ht_op_params;
     VALUE request_xop;
     VALUE security_token;
-    VALUE policy;
+	VALUE policy;
     VALUE use_reliable;
     VALUE ht_classes;
 
@@ -168,7 +168,6 @@ wsservice_initialize(VALUE self, VALUE options)
             AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
                           "[wsf_service] request xop %d", svc_info->request_xop);
         }
-      
 
         security_token = rb_hash_aref(options, ID2SYM(rb_intern(WS_SECURITY_TOKEN)));
         if(security_token == Qnil)
@@ -182,21 +181,21 @@ wsservice_initialize(VALUE self, VALUE options)
                           "[wsf_service] security_token object present");
         }
 		else
-			svc_info->security_token = Qnil;
+            svc_info->security_token = Qnil;
 
-		policy = rb_hash_aref(options, ID2SYM(rb_intern(WS_POLICY_NAME)));
+        policy = rb_hash_aref(options, ID2SYM(rb_intern(WS_POLICY_NAME)));
         if(policy == Qnil)
         {
             policy = rb_hash_aref(options, rb_str_new2(WS_POLICY_NAME));
         }
         if(policy != Qnil)
         {
-			svc_info->policy = policy;
+            svc_info->policy = policy;
             AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
                           "[wsf_service] security_token object present");
         }
-		else
-			svc_info->policy = Qnil;
+        else
+            svc_info->policy = Qnil;
 
         use_reliable = rb_hash_aref(options, ID2SYM(rb_intern(WS_RELIABLE)));
         if(use_reliable == Qtrue)
@@ -351,9 +350,11 @@ wsf_ruby_req_info_fill(wsf_req_info_t *req_info, VALUE request)
         if(v_rawpost != Qnil)
         {
             request_envelope = RSTRING(v_rawpost)->ptr;
+
             AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
                           "[wsf_service] request raw post data: %s",request_envelope);
-            request_envelope_len = axutil_strlen(request_envelope); 
+            
+			request_envelope_len = RSTRING(v_rawpost)->len;
         }
         else
         {
@@ -501,9 +502,10 @@ wsservice_reply(VALUE self, VALUE request, VALUE response)
         if (req_info.content_type)
             wsf_ruby_res_info_fill(response, (axis2_char_t *) "Content-Type", (axis2_char_t *) req_info.out_content_type);
     }
+
     wsf_ruby_res_info_fill(response, (axis2_char_t *) "Status", (axis2_char_t *) status_line);
 
-    return rb_str_new(req_info.result_payload, req_info.result_length);
+	return rb_str_new(req_info.result_payload, req_info.result_length);
 }
 
 void
@@ -518,6 +520,7 @@ Init_wsservice()
     axis2_char_t *log_path;
 
     axis2_char_t *s_log_level;
+
 
     rb_mWSO2 = rb_define_module("WSO2");
     rb_mWSF = rb_define_module_under(rb_mWSO2, "WSF");

@@ -1,53 +1,77 @@
 
-            WSO2 WSF/Ruby
+        WSO2 WSF/Ruby
 	    =============
 
 VERSION
 -------
-1.0.0 - Alpha release
+1.0.0 - Beta release
 
 
 INTRODUCTION
 ------------
 - WSF/Ruby is the Ruby language extension to WSO2 WSF/C
-  [http://www.wso2.org/projects/wsf/c]. This initial version enables you 
-  to write client applications to consume an existing Web Service.
+  [http://www.wso2.org/projects/wsf/c]. This version enables you 
+  to write client/service applications to consume/provide Web Services.
 
 
-INSTALLATION 
+PREREQUISITES
+-------------
+- It is required to have WSO2 WSF/C installed in your machine 
+  in order to compile and use this extension module.
+
+
+CONFIGURATION
+-------------
+- The following configuration entries have to be added to the 'rbconfig.rb'.
+  
+  CONFIG["WSFC_HOME"] = "/your/wsfc/home/"
+  CONFIG["WSF_LOG_DIR"] = "/where/the/log/files/should/reside/"
+  CONFIG["WSF_LOG_LEVEL"] = "5"
+    
+	Valid Log Levels - 
+	      "0" - CRITICAL
+		  "1" - ERROR
+		  "2" - WARNING
+		  "3" - INFO
+		  "4" - DEBUG
+		  "5" - TRACE
+
+    NOTE : Type "ruby -e 'puts $:'" in a console to find where this file is.
+           It's /usr/local/lib/ruby/1.8/i686-linux/rbconfig.rb in my case.
+
+
+INSTALLATION
 ------------
-1. It is required to have WSO2 WSF/C installed in your machine 
-   to compile and use this extension module.
+Linux
+-----
+1. Run "sudo ruby build.rb" to setup the extension.
 
-2. Run 'configure.rb' to configure the source tree.
-   
-   You have to specify the WSF/C include and library locations as given below
-   if they are not installed into a standarad location
+Windows
+-------
+1. Run the extconf-win32.rb in the build directory of the source tree.
 
-   ./configure.rb --with-WSFC-include=/your/axis2c/include/axis2-1.1 
-                  --with-WSFC-lib=/your/axis2c/lib
-
-3. make
-
-4. sudo make install
+2. Run nmake install to compile the source and complete the installation.
 
 
-INSTALLATION ON WINDOWS
------------------------
-1. Download and install WSO2 WSF/C for windows from http://wso2.org/projects/wsf/c
+RUN SAMPLES
+-----------
+1. It is required to have Rails Framework installed in your machine to run 
+   Rails samples in "samples/rails".
 
-2. Run the extconf-win32.rb in the build directory of the source tree.
-
-3. Run namke install to compile the source and complete the installation
+2. Start "axis2_http_server" that comes with WSO2 WSF/C to run
+   other consumer samples.
 
 
 FEATURES
 --------
-- Support for WS-Addressing
-- Support for SOAP MTOM
+Consumer
+  - Support for WS-Addressing
+  - Support for SOAP MTOM
+  - Support for WS-Security (with Rampart)
+  - Support for WS-Policy
+  - Support for WS-SecurityPolicy
+  - Support for WS-ReliableMessaging (with Sandesha)
 
-
-THINGS TO FOLLOW VERY SOON
---------------------------
-- Support for WS-Security (with Rampart)
-- Support for WS-ReliableMessaging (with Sandesha)
+Provider
+  - Support for WS-Addressing
+  - Support for WS-ReliableMessaging (with Sandesha)

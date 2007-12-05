@@ -87,7 +87,7 @@ typedef enum ws_input_types
 #define WS_ATTACHMENTS 						"attachments"
 #define WS_CID2CONTENT_TYPE 				"cid_2_content_type"
 #define WS_RESPONSE_XOP 					"responseXOP"
-#define WS_REQUEST_XOP  					"requestXOP"
+#define WS_REQUEST_XOP  					"request_xop"
 #define WS_USE_MTOM     					"use_mtom"
 
 #define AXIS2_ELEMENT_LN_INCLUDE				"Include"
@@ -117,13 +117,13 @@ typedef enum ws_input_types
 #define WS_CACHE_WSDL           "cache_wsdl"
 
 /** soap fault */
-#define WS_FAULT_REASON 		"Reason"
-#define WS_FAULT_ROLE   		"Role"
+#define WS_FAULT_REASON 		"reason"
+#define WS_FAULT_ROLE   		"role"
 #define WS_FAULT_TEXT   		"text"
-#define WS_FAULT_CODE   		"Code"
+#define WS_FAULT_CODE   		"code"
 #define WS_FAULT_CODE_NS        "codens"
 #define WS_FAULT_SUBCODE 		"Subcode"
-#define WS_FAULT_DETAIL 		"Detail"
+#define WS_FAULT_DETAIL 		"detail"
 
 #define WS_HEADERS      		"headers"    /** header options */
 #define WS_HEADER_NS    		"ns"

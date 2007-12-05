@@ -93,21 +93,17 @@ void wsf_ruby_req_info_cleanup (
     wsf_req_info_t * req_info,
 	axutil_env_t *env);
 
-/*
-void wsf_util_set_attachments_with_cids (
-    const axutil_env_t * env,
+void wsf_util_pack_attachments (
+	axutil_env_t * env,
+    axiom_node_t * payload_node,
+    VALUE attach_ht,
     int enable_mtom,
-    axiom_node_t * payload_node,
-    HashTable * attach_ht,
-    char *default_cnt_type TSRMLS_DC);
+    char *default_cnt_type);
 
-
-int wsf_util_get_attachments (
-    const axutil_env_t * env,
-    axiom_node_t * payload_node,
-    zval * cid2str,
-    zval * cid2contentType TSRMLS_DC);
-*/
+void wsf_util_unpack_attachments (
+	const axutil_env_t * env,
+	axiom_node_t * payload_node,
+	VALUE* message);
 
 char *wsf_util_serialize_om (
     const axutil_env_t * env,
@@ -138,13 +134,13 @@ axiom_node_t *wsf_util_construct_header_node (
     zval * header TSRMLS_DC);
 
 char *wsf_util_read_file_to_buffer (
-    char *filename);
+    char *filename);*/
 
 axiom_node_t *wsf_util_deserialize_buffer (
     const axutil_env_t * env,
     char *buffer);
 
-void wsf_util_set_soap_fault (
+/*void wsf_util_set_soap_fault (
     zval * this_ptr,
     char *fault_code_ns,
     char *fault_code,
@@ -161,7 +157,6 @@ void wsf_util_handle_soap_fault(
 */
 
 void wsf_util_process_ws_service_operations_and_actions(VALUE self);
-
 
 void wsf_util_engage_modules_to_svc(
     axutil_env_t *env,

@@ -167,7 +167,6 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
 
     if (0 == axutil_strcmp (AXIS2_STYLE_DOC, style)) {
 
-
         om_node = axiom_soap_body_get_base_node (body, env);
         om_element = axiom_node_get_data_element (om_node, env);
         om_node = axiom_node_get_first_child (om_node, env);
@@ -178,6 +177,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
             return AXIS2_FAILURE;
         }
     } else if (0 == axutil_strcmp (AXIS2_STYLE_RPC, style)) {
+
         axiom_soap_body_t *body = NULL;
         axiom_node_t *op_node = NULL;
         axiom_element_t *op_element = NULL;
@@ -467,295 +467,150 @@ wsf_xml_msg_recv_invoke_mixed (
 
 static axiom_node_t *
 wsf_xml_msg_recv_invoke_wsmsg (
-    const axutil_env_t * env,
-    axis2_char_t * soap_ns,
-    axis2_char_t * op_name,
-    axiom_node_t * om_node,
-    axis2_msg_ctx_t * out_msg_ctx,
-    axis2_char_t* classname,
-    int use_mtom,
-    int request_xop)
+    const axutil_env_t *env,
+    axis2_char_t       *soap_ns,
+    axis2_char_t       *op_name,
+    axiom_node_t       *om_node,
+    axis2_msg_ctx_t    *out_msg_ctx,
+    axis2_char_t       *classname,
+    int                 use_mtom,
+    int                 request_xop)
 {
-
-    char *req_payload = NULL, *res_payload = NULL;
-    axiom_node_t *res_om_node = NULL;
-    void *val = NULL;
-    int _bailout = 0;
-
-    VALUE msg;
-    VALUE msg_klass;
-    VALUE fault_klass;
-    VALUE msg_params[3];
-    VALUE func;
-    VALUE retval;
-    VALUE param;
-
-    VALUE user_klass;
-    VALUE user_obj;
-    VALUE res;
-
-    VALUE v_op_name;
-
     if (!om_node)
-        return NULL;
-
-    req_payload = wsf_util_serialize_om (env, om_node);
-
-    if (!req_payload) {
+		return NULL;
+    
+	char *req_payload = NULL;
+	req_payload = wsf_util_serialize_om (env, om_node);
+    if (!req_payload)
+	{
         AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "Request Payload is NULL");
         return NULL;
     }
+	
+	char *res_payload = NULL;
+    axiom_node_t *res_om_node = NULL;
+    void *val = NULL;
 
-    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-        " [wsf_svr] calling ruby service ");
+    VALUE ws_msg_class;
+    VALUE ws_fault_class;
+    VALUE user_class;
+    VALUE v_op_name;
+    VALUE result = Qnil;
+	VALUE rb_mWSO2;
+	VALUE rb_mWSF;
+	ID ws_msg_class_id;
+	ID ws_fault_class_id;
+    
+	/* zend_try { */
 
-    /* zend_try { */
-        msg_klass = rb_define_class("WSMessage", rb_cObject);
-        /* msg_params[0] = rb_str_new2(req_payload); */
-        msg = rb_str_new2(req_payload);
+		rb_mWSO2 = rb_define_module("WSO2");
+		rb_mWSF = rb_define_module_under(rb_mWSO2, "WSF");
+		
+		ws_msg_class_id = rb_intern("WSMessage");
+		ws_msg_class = rb_const_get(rb_mWSF, ws_msg_class_id);
 
-        /* CHANGED
-        MAKE_STD_ZVAL (msg);
-        object_init_ex (msg, ws_message_class_entry);
-        add_property_string (msg, "str", req_payload, 1);
-        */
+		ws_fault_class_id = rb_intern("WSFault");
+		ws_fault_class = rb_const_get(rb_mWSF, ws_fault_class_id);
 
-        /* TODO
-        if (request_xop == AXIS2_TRUE) {
+		/* Create Request Message */
+		VALUE req_msg_payload;
+		VALUE req_message;
 
-            zval *cid2str = NULL;
-            zval *cid2contentType = NULL;
+		req_msg_payload = rb_str_new2(req_payload);
+		req_message = rb_class_new_instance (1, &req_msg_payload, ws_msg_class);
 
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                "[wsf_service] requestXOP is TRUE, setting attachements");
-
-            MAKE_STD_ZVAL (cid2str);
-            MAKE_STD_ZVAL (cid2contentType);
-
-            array_init (cid2str);
-            array_init (cid2contentType);
-
-            wsf_util_get_attachments (env, om_node, cid2str,
-                cid2contentType TSRMLS_CC);
-
-            add_property_zval (msg, "attachments", cid2str);
-            add_property_zval (msg, "cid2contentType", cid2contentType);
-
+        if (request_xop == AXIS2_TRUE)
+		{
+			wsf_util_unpack_attachments (env, om_node, &req_message);
         }
-        */
 
-        /* ZVAL_STRING (&func, op_name, 0); */
         v_op_name = rb_str_new2(op_name);
 
-        /*
-        params[0] = &param;
-        ZVAL_ZVAL (params[0], msg, NULL, NULL);
-        INIT_PZVAL (params[0]);
-        */
-
-        if (NULL != classname)
+    	VALUE user_obj;
+        VALUE method_exists;
+        
+		if (NULL != classname)
         { 
-            VALUE method_exists;
-            
-            user_klass = rb_define_class(classname, rb_cObject);
-            user_obj = rb_class_new_instance(0, NULL, user_klass);
-
-            if(user_obj != Qnil)
-            {
-            
-                method_exists = rb_funcall(user_obj, rb_intern("respond_to?"), 2, rb_str_new2(op_name), Qtrue);
-                if(method_exists == Qtrue)
-                {
-                    res = rb_funcall(user_obj, rb_intern(op_name), 1, msg);
-                }
-                else
-                {
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                            "[wsf log ]The method %s doesnt exist", op_name);
-
-                    return NULL;
-                }
-
-                if(res != Qnil)
-                {
-                    if(TYPE(res) == T_STRING)
-                    {
-                        res_payload = axutil_strdup(env, RSTRING(res)->ptr);
-                    }
-                    else if(rb_obj_is_kind_of(res, msg_klass))
-                    {
-                        res_payload = axutil_strdup(env, RSTRING_PTR(
-                                              rb_funcall(res, rb_intern("payload_to_s"), 0)));
-                    }
-                    else if(rb_obj_is_kind_of(res, fault_klass))
-                    {
-                        wsf_xml_msg_recv_set_soap_fault(env, soap_ns,
-                            out_msg_ctx, res);
-                    }
-                }
-            }
+            user_class = rb_define_class(classname, rb_cObject);
+            user_obj = rb_class_new_instance(0, NULL, user_class);
         }
-            /*
-            zend_lookup_class (classname, strlen (classname),
-                &ce TSRMLS_CC);
-            if (ce) { 
-                if (call_user_function
-                    (ft, (zval **) NULL, &func, &retval, 1,
-                        params TSRMLS_CC) == SUCCESS) {
-                    if (Z_TYPE (retval) == IS_STRING) {
-                        res_payload = axutil_strdup (env, Z_STRVAL (retval));
-                    } else if (Z_TYPE (retval) == IS_OBJECT &&
-                        instanceof_function (Z_OBJCE (retval),
-                            ws_fault_class_entry TSRMLS_CC)) {
-                        wsf_xml_msg_recv_set_soap_fault (env, soap_ns,
-                            out_msg_ctx, &retval TSRMLS_CC);
-                    }
-                }
-            }
-            */
-
         else
         {
-            VALUE method_exists = rb_funcall(rb_cObject, rb_intern("respond_to?"), 2, rb_str_new2(op_name), Qtrue);
-            if(method_exists == Qtrue)
-            {
-                res = rb_funcall(T_NIL, rb_intern(op_name), 1, msg);
-            }
-            else
-            {
-		        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf log ]The method %s doesnt exist", op_name);
-
-                return NULL;
-            }
-
-            if(res != Qnil)
-            {
-                if(rb_obj_is_kind_of(res, msg_klass))
-                {
-                    axis2_char_t *default_cnt_type = NULL;
-                    VALUE v_default_cnt_type;
-                    VALUE properties;
-                    VALUE attachments;
-                    VALUE v_action;
-                    axis2_char_t *action;
-
-                    properties = rb_funcall(res, rb_intern("properties"), 0);
-
-                    v_default_cnt_type = rb_hash_aref(properties, ID2SYM(rb_intern("defaultAttachmentContentType")));
-                    if(v_default_cnt_type == Qnil)
-                    {
-                        default_cnt_type = "application/octet-stream";
-                    }
-                    else
-                    {
-                        default_cnt_type = RSTRING(v_default_cnt_type)->ptr;
-                    }
-
-                    v_action = rb_hash_aref(properties, ID2SYM(rb_intern(WS_ACTION)));
-                    action = RSTRING(v_action)->ptr;
-                    axis2_msg_ctx_set_wsa_action(out_msg_ctx, env, action);
-             
-                    res_payload = RSTRING(rb_hash_aref(properties, ID2SYM(rb_intern("str"))))->ptr;
-					AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-							            "[wsf log ]response payload %s", res_payload);
-
-                    if(res_payload)
-                    {
-                        res_om_node = wsf_util_deserialize_buffer(env, res_payload);
-                    }
-
-                    attachments = rb_hash_aref(properties, ID2SYM(rb_intern("attachments")));
-
-                    if(TYPE(attachments) == T_ARRAY)
-                    {/*
-                        wsf_util_set_attachments_with_cids (env, use_mtom,
-                            res_om_node, attachments, default_cnt_type);
-                        if (use_mtom == 1) 
-                        {
-                            axis2_msg_ctx_set_doing_mtom (out_msg_ctx, env,
-                                AXIS2_TRUE);
-                        }
-						*/
-                    }
-                }
-                else if(TYPE(res) == T_STRING)
-                {
-                    res_payload = RSTRING(res)->ptr;
-                }
-                else if(rb_obj_is_kind_of(res, fault_klass))
-                {
-                    wsf_xml_msg_recv_set_soap_fault(env, soap_ns,
-                                    out_msg_ctx, res);
-                }
-            }
+			user_obj = rb_cObject;
         }
-        /*
-        else if (call_user_function
-            (CG (function_table), (zval **) NULL, &func, &retval, 1,
-                params TSRMLS_CC) == SUCCESS) {
-            if (Z_TYPE (retval) == IS_OBJECT
-                && instanceof_function (Z_OBJCE (retval),
-                    ws_message_class_entry TSRMLS_CC)) {
-                zval **msg_tmp = NULL;
-                axis2_char_t *default_cnt_type = NULL;
 
-                if (zend_hash_find
-                    (Z_OBJPROP (retval), "defaultAttachmentContentType",
-                        sizeof ("defaultAttachmentContentType"),
-                        (void **) & msg_tmp) == SUCCESS
-                    && Z_TYPE_PP (msg_tmp) == IS_STRING) {
-                    default_cnt_type = Z_STRVAL_PP (msg_tmp);
-                } else {
-                    default_cnt_type = "application/octet-stream";
-                }
-                
-				if (zend_hash_find (Z_OBJPROP(retval), WS_ACTION, sizeof (WS_ACTION),
-                	(void **) &msg_tmp) == SUCCESS && Z_TYPE_PP(msg_tmp) == IS_STRING) {
-                        axis2_char_t *action = NULL;
-                        action = Z_STRVAL_PP (msg_tmp);
-                        axis2_msg_ctx_set_wsa_action (out_msg_ctx, env, action);
-                }
+		if (user_obj != Qnil)
+		{
+			method_exists = rb_funcall(user_obj, rb_intern("respond_to?"), 2, rb_str_new2(op_name), Qtrue);
+			if(method_exists == Qtrue)
+			{
+				result = rb_funcall(user_obj, rb_intern(op_name), 1, req_message);
+			}
+			else
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf log ]The method %s doesnt exist", op_name);
+			}
+		}
+			
+		if(result != Qnil)
+		{
+			if(TYPE(result) == T_STRING)
+			{
+				res_payload = axutil_strdup(env, RSTRING(result)->ptr);
+    			
+				res_om_node = wsf_util_deserialize_buffer (env, res_payload);
+			}
+			else if(rb_obj_is_kind_of(result, ws_msg_class)) /* WSMessage */
+			{
+				res_payload = axutil_strdup(env, RSTRING(rb_funcall(result, rb_intern("payload_to_s"), 0))->ptr);
+				
+				res_om_node = wsf_util_deserialize_buffer(env, res_payload);
 
-                if (zend_hash_find (Z_OBJPROP (retval), "str", sizeof ("str"),
-                   (void **) & msg_tmp) == SUCCESS && Z_TYPE_PP (msg_tmp) == IS_STRING) {
+				VALUE attachments;
+				VALUE v_default_cnt_type;
+				axis2_char_t *default_cnt_type = NULL;
+				VALUE v_action;
+				axis2_char_t *action;
 
-						res_payload = Z_STRVAL_PP (msg_tmp);
-						AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-							"[wsf log ]response payload %s", res_payload);
-						if (res_payload) {
-							res_om_node = wsf_util_deserialize_buffer (env, res_payload);
-						}
-                }
-                if (zend_hash_find (Z_OBJPROP (retval), "attachments", sizeof ("attachments"),
-                   (void **) & msg_tmp) == SUCCESS && Z_TYPE_PP (msg_tmp) == IS_ARRAY) {
+				/* Set WSA action */
+				v_action = rb_funcall(result, rb_intern("property"), 1, rb_str_new2("action"));
+				if (v_action != Qnil)
+				{
+					action = RSTRING(v_action)->ptr;
+					if (action != NULL)
+						axis2_msg_ctx_set_wsa_action(out_msg_ctx, env, action);
+				}
+			 
+				/* Process attachments */
+				attachments = rb_funcall(result, rb_intern("property"), 1, rb_str_new2(WS_ATTACHMENTS));
 
-                    HashTable *ht = NULL;
-                    ht = Z_ARRVAL_PP (msg_tmp);
-                    if (ht && res_om_node) {
-                        wsf_util_set_attachments_with_cids (env, use_mtom,
-                            res_om_node, ht, default_cnt_type TSRMLS_CC);
-                        if (use_mtom == 1) {
-                            axis2_msg_ctx_set_doing_mtom (out_msg_ctx, env,
-                                AXIS2_TRUE);
-                        }
-                    }
-                }
-            } else if (Z_TYPE (retval) == IS_STRING) {
-                res_payload =  Z_STRVAL (retval);
-                if (res_payload) {
-                    res_om_node = wsf_util_deserialize_buffer (env, res_payload);
-                }
-            } else if (Z_TYPE (retval) == IS_OBJECT &&
-                instanceof_function (Z_OBJCE (retval),
-                    ws_fault_class_entry TSRMLS_CC)) {
-                wsf_xml_msg_recv_set_soap_fault (env, soap_ns, out_msg_ctx,
-                    &retval TSRMLS_CC);
-            }
-        }
-        zval_ptr_dtor(&msg);
-    }
+				if ((attachments != Qnil) && (TYPE(attachments) == T_HASH))
+				{
+					v_default_cnt_type = rb_funcall(result, rb_intern("property"), 1, rb_str_new2(WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE));
+					if(v_default_cnt_type == Qnil)
+					{
+						default_cnt_type = "application/octet-stream";
+					}
+					else
+					{
+						default_cnt_type = RSTRING(v_default_cnt_type)->ptr;
+					}
+				
+					wsf_util_pack_attachments ((axutil_env_t *)env, res_om_node, attachments, use_mtom, default_cnt_type);
 
-    zend_catch {
+					if (use_mtom == AXIS2_TRUE) 
+					{
+						axis2_msg_ctx_set_doing_mtom (out_msg_ctx, env, AXIS2_TRUE);
+					}
+				}
+			}
+			else if(rb_obj_is_kind_of(result, ws_fault_class))
+			{
+				wsf_xml_msg_recv_set_soap_fault(env, soap_ns, out_msg_ctx, result);
+			}
+		}
+        
+    /*zend_catch {
         if (EG(exception) && Z_TYPE_P(EG(exception)) == IS_OBJECT && 
                 instanceof_function(Z_OBJCE_P(EG(exception)), ws_fault_class_entry TSRMLS_CC)) {
                  wsf_xml_msg_recv_set_soap_fault (env, soap_ns, out_msg_ctx,
@@ -766,21 +621,13 @@ wsf_xml_msg_recv_invoke_wsmsg (
         
     }
     zend_end_try ();
-
-    if(_bailout){
-        zend_bailout();
-    }
     */
-	  if(req_payload){
-		    AXIS2_FREE(env->allocator, req_payload);
-	  }
+	
+	if (req_payload)
+	{
+		AXIS2_FREE(env->allocator, req_payload);
+	}
 
-    if (!res_payload) {
-        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "Response Payload is NULL");
-        return NULL;
-    }
-   
-    res_om_node = wsf_util_deserialize_buffer (env, res_payload);
     return res_om_node;
 }
 
@@ -813,12 +660,6 @@ wsf_xml_msg_recv_set_soap_fault (
     VALUE v_role;
 
     axiom_node_t *detail_node = NULL;
-
-
-    /*
-    smart_str fcode = {0};
-    zval **tmp;
-    */
 
     if (!soap_ns || !out_msg_ctx)
         return;
@@ -946,6 +787,3 @@ wsf_xml_msg_recv_set_soap_fault (
     
     AXIS2_FREE(env->allocator, full_code);
 }
-
-
-

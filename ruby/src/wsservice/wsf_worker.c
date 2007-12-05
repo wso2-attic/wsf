@@ -261,7 +261,7 @@ wsf_worker_process_request (
         if (svc_info->use_mtom == 1) {
         axis2_msg_ctx_set_doing_mtom (msg_ctx, env, AXIS2_TRUE);
     }
-   
+    
 	if (svc_info->security_token != Qnil && svc_info->policy != Qnil) {
         /**  call security function here */
         axis2_conf_t * conf = NULL;
@@ -269,8 +269,8 @@ wsf_worker_process_request (
         wsf_policy_handle_server_security (svc_info->security_token,
             svc_info->policy, env, svc_info->svc, conf);
     }
-    
-    soap_action = request->soap_action;
+
+	soap_action = request->soap_action;
 	if (soap_action){
 	    soap_action_str = axutil_string_create (env, soap_action);
 	}
