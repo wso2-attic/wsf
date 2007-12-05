@@ -1,0 +1,83 @@
+WSF/Ruby - 1.0.0-Beta
+=====================
+This is the Ruby extension to the WSO2 Web Services Framework(WSF)
+
+You can download this release from:
+http://dist.wso2.org/products/wsf/ruby/1.0.0-beta/
+
+Project home page:
+http://wso2.org/projects/wsf/ruby
+
+
+Key Features
+============
+1. Client API to consume Web services
+
+      * WSMessage class to handle message level options
+      * WSClient class with both one way and two way service invocation support
+      
+2. Service API to provide Web services
+
+      * WSMessage class to handle message level options
+      * WSService class with support for both one way and two way operations
+
+3. Attachments with MTOM
+
+      * Binary optimized
+      * Non-optimized (Base64 encoded)
+
+4. WS-Addressing
+
+      * Version 1.0
+      * Submission
+
+5. WS-Security 
+      * UsernameToken and Timestamp
+      * Encryption
+      * Signing
+      * WS-SecurityPolicy based configuration  
+         
+6. WS-Reliable Messaging
+      * Single channel two way reliable messaging
+
+7. REST Support
+      * Expose a single service script both as SOAP and REST service
+
+
+Major Changes Since Last Release
+================================
+1. Provider implementation
+
+2. Support for the following specifications on consumer side
+   - WS-Security
+   - WS-ReliableMessaging
+
+3. Support for the following specifications on provider side
+   - WS-Addressing
+   - WS-ReliableMessaging
+
+4. Win32 distribution
+
+
+Dependencies
+============
+1. The provider implementation uses Rails framework as the deployment model.
+   Therefore in order to use provider implementation, you should have Rails
+   installed on your machine. Please visit http://www.rubyonrails.org/ 
+   to find out more about RoR(Ruby on Rails).
+
+
+Reporting Problems
+==================
+Issues can be reported using the public JIRA available at:
+   https://wso2.org/jira/browse/WSFRUBY
+
+
+Contact Us
+==========
+Please subscribe to our user or developer mailing lists. For details on how
+to subscribe please visit: http://wso2.org/projects/wsf/ruby#mail
+
+Thank you for your interest in WSO2 WSF/Ruby.
+
+ - WSO2 WSF/Ruby Team
