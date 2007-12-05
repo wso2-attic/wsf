@@ -262,7 +262,30 @@ wsf_ruby_req_info_fill(wsf_req_info_t *req_info, VALUE request)
         /* we're inside Rails, wheee! */
         renv = rb_funcall(request, rb_intern("env"), 0); /* request.env */
         temp = rb_hash_aref(renv, rb_str_new2("REQUEST_PATH"));
-        if (temp != Qnil) 
+        if(temp == Qnil)
+        {
+            /** we have to extract request path from request uri*/
+            int i;
+            axis2_char_t *temp_string;
+            temp = rb_hash_aref(renv, rb_str_new2("REQUEST_URI"));
+            if(temp != Qnil)
+            {
+                temp_string = RSTRING(temp)->ptr;
+                for(i = axutil_strlen(temp_string) -1; i > 0; i--)
+                {
+                    if(temp_string[i] == '?')
+                    {
+                        temp_string[i] = '\0';
+                        break;
+                    }
+                }
+                req_info->request_uri = temp_string;
+                AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                              "[wsf_service] request uri: %s",req_info->request_uri);
+
+            } 
+        }
+        else if (temp != Qnil) 
         {
             req_info->request_uri = RSTRING(temp)->ptr;
             AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
@@ -542,7 +565,7 @@ Init_wsservice()
     }
     wsf_home = RSTRING(v_wsf_home)->ptr;
 
-    v_log_path = rb_eval_string("Config::CONFIG['WSFC_LOG_PATH']");
+    v_log_path = rb_eval_string("Config::CONFIG['WSF_LOG_DIR']");
     if(v_log_path == Qnil)
     {
         log_path = "/tmp";
@@ -552,7 +575,7 @@ Init_wsservice()
         log_path = RSTRING(v_log_path)->ptr;
     }
 
-    v_log_level = rb_eval_string("Config::CONFIG['WSFC_LOG_LEVEL']");
+    v_log_level = rb_eval_string("Config::CONFIG['WSF_LOG_LEVEL']");
     if(v_log_level == Qnil)
     {
         log_level = 3;
@@ -582,18 +605,18 @@ Init_wsservice()
     if(v_log_path == Qnil)
     {
         AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI, 
-                          "[wsf_service] WSFC_LOG_PATH is not set, using /tmp as default log path");
+                          "[wsf_service] WSF_LOG_DIR is not set, using /tmp as default log path");
     }
     AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
-                          "[wsf_service] Using WSFC_LOG_PATH: %s", log_path);
+                          "[wsf_service] Using WSF_LOG_DIR: %s", log_path);
 
     if(v_log_level == Qnil)
     {
         AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI, 
-                          "[wsf_service] WSFC_LOG_LEVEL is not set, using 3 as the default log level");
+                          "[wsf_service] WSF_LOG_LEVEL is not set, using 3 as the default log level");
     }
     AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
-                          "[wsf_service] Using WSFC_LOG_LEVEL: %d", log_level);
+                          "[wsf_service] Using WSF_LOG_LEVEL: %d", log_level);
   
     wsf_msg_recv = wsf_xml_msg_recv_create(ws_env_svr);
     worker = wsf_worker_create(ws_env_svr, wsf_home, NULL);

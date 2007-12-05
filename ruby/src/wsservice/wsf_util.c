@@ -496,7 +496,6 @@ wsf_util_generate_svc_name_from_uri (
 {
 	char *svc_name = NULL;
     char *temp_string = NULL;
-    char *index = NULL;
     char *uri = NULL;
     int i;
 
@@ -512,16 +511,16 @@ wsf_util_generate_svc_name_from_uri (
     /* index = rindex(temp_string, '/'); */
     for(i = axutil_strlen(temp_string) -1; i> 0; i--)
     {
-	if(temp_string[i] == '/')
-	{
-	    break;
-	}
+        if(temp_string[i] == '/')
+        {
+            break;
+        }
     }
 
     if (i > 0) {
         char *op_index = NULL;
         op_index = temp_string + i + 1;
-        temp_string[index - temp_string] = '\0';
+        temp_string[i] = '\0';
         svc_info->op_name = axutil_strdup (env, op_index);
     }
 
