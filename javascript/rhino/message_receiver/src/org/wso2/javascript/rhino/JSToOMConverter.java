@@ -15,6 +15,7 @@
  */
 package org.wso2.javascript.rhino;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.databinding.types.Day;
 import org.apache.axis2.databinding.types.Duration;
@@ -37,9 +38,8 @@ import org.apache.axis2.databinding.types.UnsignedLong;
 import org.apache.axis2.databinding.types.UnsignedShort;
 import org.apache.axis2.databinding.types.Year;
 import org.apache.axis2.databinding.types.YearMonth;
-import org.apache.axis2.databinding.utils.ConverterUtil;
 import org.apache.axis2.databinding.utils.BeanUtil;
-import org.apache.axiom.om.OMElement;
+import org.apache.axis2.databinding.utils.ConverterUtil;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EvaluatorException;
 import org.wso2.javascript.xmlimpl.QName;
@@ -48,6 +48,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class JSToOMConverter {
 
@@ -220,6 +221,7 @@ public class JSToOMConverter {
             Calendar calendar = Calendar.getInstance();
             calendar.clear();
             calendar.setTime(date);
+            calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
             return ConverterUtil.convertToString(calendar);
         } catch (EvaluatorException e) {
             throw new AxisFault("Unable to convert the return value to date");
