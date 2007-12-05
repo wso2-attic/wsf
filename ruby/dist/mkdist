@@ -1,37 +1,26 @@
 #!/usr/bin/env bash
 
-#function go_to_ruby_root
-#{
-#}
-
 function show_revision_number
 {
-	echo `svn info | grep Revision`
-}
+	rev_no=`svn info | grep Revision` 
+	echo $rev_no
 
-function clear_content
-{
-	for file in *
-	do
-		case "$file" in
-			"build.sh" | "configure.rb" | "extconf-win32.rb" | "mkdist" )
-			;;
-			* )
-			rm -rf $file
-			echo "removing $file ... done"
-			;;
-		esac
-	done
-
-	echo
-	echo "clearing content ... OK"
-	echo
+	return $rev_no
 }
 
 function sync_content
 {
+	rsync ../../build/build.sh .
+	echo "synchronizing build.sh ... done"
+
+	rsync ../../build/configure.rb .
+	echo "synchronizing configure.rb ... done"
+
+	rsync ../../build/extconf-win32.rb .
+	echo "synchronizing extconf-win32.rb ... done"
+
 	# Generate WSFC Wrapper
-	swig -ruby -I../swig/ -outdir ./ -Wall WSFC.i
+	swig -ruby -I../../swig/ -outdir ./ -Wall WSFC.i
 	echo "synchronizing WSFC_wrap.c ... done"
 
 	# Create "lib" Directory
@@ -40,44 +29,44 @@ function sync_content
 		mkdir lib
 	fi
 
-	rsync -r --exclude=.svn ../src/config lib
+	rsync -r --exclude=.svn ../../src/config lib
 	echo "synchronizing config ... done"
 
-	rsync -r --exclude=.svn ../src/logger lib
+	rsync -r --exclude=.svn ../../src/logger lib
 	echo "synchronizing logger ... done"
 	
-	rsync -r --exclude=.svn ../src/util lib
+	rsync -r --exclude=.svn ../../src/util lib
 	echo "synchronizing util ... done"
 	
-	rsync -r --exclude=.svn ../src/wsf lib
-	rsync ../src/wsf.rb lib
+	rsync -r --exclude=.svn ../../src/wsf lib
+	rsync ../../src/wsf.rb lib
 	echo "synchronizing wsf ... done"
 	
-	rsync -r --exclude=.svn --exclude=*.o --exclude=Makefile --exclude=*.log --exclude=*.so ../src/wsservice .
+	rsync -r --exclude=.svn --exclude=*.o --exclude=Makefile --exclude=*.log --exclude=*.so ../../src/wsservice .
 	echo "synchronizing wsservice ... done"
 	
-	rsync -r --exclude=.svn ../samples .
+	rsync -r --exclude=.svn ../../samples .
 	echo "synchronizing samples ... done"
 	
-	rsync ../AUTHORS .
+	rsync ../../AUTHORS .
 	echo "synchronizing AUTHORS ... done"
 
-	rsync ../COPYING .
+	rsync ../../COPYING .
 	echo "synchronizing COPYING ... done"
 
-	rsync ../LICENSE .
+	rsync ../../LICENSE .
 	echo "synchronizing LICENSE ... done"
 
-	rsync ../NEWS .
+	rsync ../../NEWS .
 	echo "synchronizing NEWS ... done"
 
-	rsync ../NOTICE .
+	rsync ../../NOTICE .
 	echo "synchronizing NOTICE ... done"
 
-	rsync ../README .
+	rsync ../../README .
 	echo "synchronizing README ... done"
 
-	rsync ../README.SAMPLES .
+	rsync ../../README.SAMPLES .
 	echo "synchronizing README.SAMPLES ... done"
 
 	echo
@@ -85,25 +74,43 @@ function sync_content
 	echo
 }
 
-function validate_dist
+function create_package
 {
-	echo "validate_dist"
+	# Find revision number
+	cd ..
+	revision_number=`svn info | grep Revision`
+	cd dist
+
+	# Create directory
+	rm -rf $1
+	mkdir $1
+
+	# Sync content
+	cd $1
+	sync_content
+	echo $revision_number > .revision
+	cd ..
+	
+	# Create Linux package
+	tar -cvzf $1.tar.gz $1
+	
+	echo
+	echo "Linux distribution package - $1.tar.gz... OK"
+	echo
+
+	# Create Win32 package
+	zip -r $1.zip $1
+	
+	echo
+	echo "Win32 distribution package - $1.zip ... OK"
+	echo
 }
 
 function show_usage
 {
 	echo "Usage :"
-	echo "--create [version-number] [win32|linux|all] create distribution package."
-	echo "--revno                                     show svn revision number."
-	echo "--clear                                     clear all content."
-	echo "--sync                                      synchronize content."
-	echo "--validate                                  validate current source using the test suite."
-	echo "--help                                      show this usage message."
-}
-
-function create_package
-{
-	echo "create_package"
+	echo "--create [package-name]     create Linux and Win32 distribution packages."
+	echo "--help                      show this usage message."
 }
 
 if [ $# -eq 0 ]
@@ -114,19 +121,12 @@ fi
 
 if [ $1 == "--create" ]
 then
-	create_package
-elif [ $1 == "--revno" ]
-then
-	show_revision_number
-elif [ $1 == "--clear" ]
-then
-	clear_content
-elif [ $1 == "--sync" ]
-then
-	sync_content
-elif [ $1 == "--validate" ]
-then
-	validate_dist
+	if [ ! -z $2 ]
+	then
+		create_package $2
+	else
+		show_usage
+	fi
 else
 	show_usage
 fi
