@@ -1,5 +1,0 @@
-Copy the content of the controllers directory to the controllers directory of your rail application.
-And try the services with your client using following endpoint addresses
-
-Echo Sample                 : http://your_rail_application/wsservice/echo
-Echo with Addressing Sample : http://your_rail_application/wsservice/echo_addr
