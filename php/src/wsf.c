@@ -92,6 +92,7 @@ PHP_METHOD (ws_service, set_class);
 PHP_METHOD (ws_service, reply);
 PHP_METHOD (ws_service, __construct);
 PHP_METHOD (ws_service, __destruct);
+PHP_METHOD (ws_service, wait);
 
 /** WSHeader class functions */ 
 PHP_METHOD (ws_header, __construct);
@@ -162,6 +163,7 @@ zend_function_entry php_ws_client_proxy_class_functions[] = {
 zend_function_entry php_ws_service_class_functions[] = {
     PHP_MALIAS (ws_service, setClass, set_class, NULL, ZEND_ACC_PUBLIC) 
     PHP_MALIAS (ws_service, reply, reply, NULL, ZEND_ACC_PUBLIC) 
+    PHP_MALIAS (ws_service, wait, wait, NULL, ZEND_ACC_PUBLIC)
     PHP_ME (ws_service, __construct, NULL, ZEND_ACC_PUBLIC) 
     PHP_ME (ws_service, __destruct, NULL, ZEND_ACC_PUBLIC)  
     { NULL, NULL, NULL} 
@@ -1051,6 +1053,20 @@ PHP_METHOD (ws_service, __construct)
                       sizeof(WS_WSDL), (void **)&wsdl_tmp) == SUCCESS){
         wsf_wsdl_process_service(this_ptr, NULL, svc_info, ws_env_svr TSRMLS_CC);
     }
+}
+
+PHP_METHOD(ws_service, wait)
+{
+   long num;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &num) == FAILURE) {
+        return;
+    }
+    if (num < 0) {
+        php_error_docref(NULL TSRMLS_CC, E_WARNING, "Number of seconds must be greater than or equal to 0");
+        return;
+    }
+    php_sleep(num);
 }
 
 

@@ -90,7 +90,7 @@ int wsf_client_set_timeout(
 {
     zval **tmp = NULL;
     if(zend_hash_find(client_ht, WS_TIMEOUT, sizeof(WS_TIMEOUT), (void**)&tmp) == SUCCESS){
-        return axis2_options_set_timeout_in_milli_seconds(client_options, env, Z_LVAL_PP(tmp));
+        return axis2_options_set_timeout_in_milli_seconds(client_options, env,1000* Z_LVAL_PP(tmp));
     }else{
         return 0;
     }
@@ -922,10 +922,12 @@ wsf_client_set_options (
 
     status = wsf_client_set_endpoint_and_soap_action (client_ht, msg_ht, env,
         client_options TSRMLS_CC);
-    if (client_ht)
+    if (client_ht){
         wsf_client_set_security_options (client_ht, msg_ht, env,
             client_options, svc_client TSRMLS_CC);
 
+        wsf_client_set_timeout(client_ht, env, client_options TSRMLS_CC);
+    }
     return status;
 }
 
