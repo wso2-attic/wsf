@@ -20,6 +20,9 @@ extension_dir =" /usr/local/lib/php/extensions/debug-zts-20060613/"
 
 Then enable php_xsl extension. 
 extension=xsl.so.
+Uncomment the include_path and edit it to point to the location for scripts folder as
+include_path = ".:/path/to/scripts/folder" 
+
 If you installed PHP from source, go to xsl extension directory of the source folder and do 
 ./phpize
 ./configure
@@ -27,8 +30,6 @@ If you installed PHP from source, go to xsl extension directory of the source fo
 ./make install
 
 Now you are ready to use WSO2 WSF/PHP.
-Copy the scripts folder to your Web server's document root.
-If your are running your clients on the shell, copy the scripts folder to your current working directory.
 Also copy the samples folder to your Web server's document root.
 Test with a Web browser; as an example access http://localhost/samples/echo_client.php
 

@@ -131,6 +131,10 @@ Contents:
        Also enable php xsl extension.
        extension="php_xsl.dll"
 
+       Uncomment the "include_path" and edit it to point to the location for scripts folder as
+
+       include_path = ".;/path/to/scripts/folder" 
+        
        [Note] Log level is by default set to INFO. Log levels range from 0 to 4. Log levels are as follows.
 	      CRITICAL->  0 , ERROR -> 1 , WARNING -> 2 , INFO -> 3, DEBUG -> 4
      
@@ -147,13 +151,8 @@ Contents:
        
        AddType application/x-httpd-php .php .phtml
        AddType application/x-httpd-php-source .phps
-                              
-    5. Copy the scripts folder and the samples folder to your Web server's document root.
-       If you want to run your clients on wsdl mode on command line, copy scripts folder to
-       your current working directory.
 
        Now you should be able to run the samples in samples directory. 
-       [Note] scripts folder contain the php scripts used for wsdl generation
                          		 	
 3. Binary Dependency version numbers.
 
