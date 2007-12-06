@@ -174,7 +174,7 @@ void create_dynamic_client(zval *this_ptr, char *function, int function_len,
             return ;
         }
         */
-        stream  = php_stream_open_wrapper("wsf_wsdl.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL TSRMLS_CC);
+        stream  = php_stream_open_wrapper("wsf_wsdl.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
         if(!stream)
                 return;
 
@@ -924,7 +924,7 @@ void wsf_wsdl_process_service(zval *this_ptr, wsf_req_info_t *request_info1, wsf
         return;
     }
 */
-    stream  = php_stream_open_wrapper("wsf_wsdl.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL TSRMLS_CC);
+    stream  = php_stream_open_wrapper("wsf_wsdl.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
     if(!stream)
         return;
 
@@ -1265,7 +1265,7 @@ void wsf_wsdl_set_sig_model(char *wsdl_path, wsf_svc_info_t *svc_info, const axu
     }
    */
 
-    stream  = php_stream_open_wrapper("wsf_wsdl.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL TSRMLS_CC);
+    stream  = php_stream_open_wrapper("wsf_wsdl.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
     if(!stream)
         return;
 

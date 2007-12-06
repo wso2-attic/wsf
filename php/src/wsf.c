@@ -1268,7 +1268,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
            */
            
 
-            stream  = php_stream_open_wrapper("wsf.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL TSRMLS_CC);
+            stream  = php_stream_open_wrapper("wsf.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
             
             if(!stream)
                 return;
