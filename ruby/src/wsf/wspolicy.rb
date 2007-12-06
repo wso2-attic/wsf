@@ -46,9 +46,37 @@ module WSO2
 	     return nil
        end
 
+	   # this method will return policy as a string, if policy is created using a string or
+	   # a REXML::Element. 
+	   # used by wsservice
 
-       private
+	   def get_policy()
+		 if @policy.kind_of? String
+           return @policy
+         elsif @policy.kind_of? REXML::Element
+           return @policy.to_s
+		 end
 
+         return nil
+	   end
+	   
+	   # this method will return policy options if policy is defined from a hash
+	   # used by wsservice
+	   
+	   def option(policy_option)
+		  return nil if @policy.kind_of? String
+		  return nil if @policy.kind_of? REXML::Element
+		
+          options = @policy.has_key?("security")? @policy["security"]: nil
+
+          return nil if options.nil?
+
+		  opt = options.has_key?(policy_option)? options[policy_option].to_s : nil
+		  
+		  return opt
+	   end
+	
+	
        def create_policy_from_hash(policy, env)
 	     return nil if policy.nil?
 	     return nil unless policy.kind_of? Hash
@@ -147,6 +175,7 @@ module WSO2
 	    end
       end
 
+	  public  :get_policy
     end 
 
   end   

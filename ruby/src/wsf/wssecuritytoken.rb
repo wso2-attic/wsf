@@ -25,7 +25,7 @@ module WSO2
 
        
        def option(option_name)
-	     return @policy.has_key?(option_name) ? @policy[option_name] : nil
+		  return @policy.has_key?(option_name) ? @policy[option_name] : nil
        end 
 
     end   
