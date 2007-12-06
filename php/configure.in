@@ -7,7 +7,8 @@ DEBUG = 0
 CRUNTIME=/MT
 # Visual Studio version
 VC_VERSION_2005_OR_ABOVE=0
-
+# Build with thread safety
+ZTS =1
 #############################################################################
 ### WSF/C Build Configuration Parameters
 
