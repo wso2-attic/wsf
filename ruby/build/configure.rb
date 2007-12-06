@@ -10,8 +10,6 @@ if(WSFC_HOME == nil)
   exit(-1)
 end
 
-p WSFC_HOME + "\n"
-
 # Add Build Rules
 dir_config('WSFC', WSFC_HOME + '/include/axis2-1.2', WSFC_HOME + '/lib')
 dir_config('Rampart', WSFC_HOME + '/include/rampart-1.0', WSFC_HOME + '/modules/rampart')
