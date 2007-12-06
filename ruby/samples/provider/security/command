@@ -1,1 +1,1 @@
-./script/generate controller rampart callback timestamp usernametoken signing encryption complete
+./script/generate controller security callback timestamp usernametoken signing encryption complete
