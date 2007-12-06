@@ -49,7 +49,7 @@ AC_CHECK_LIB(z, inflate)
 #CFLAGS="$CFLAGS -ansi -Wall -D_LARGEFILE64_SOURCE -Wno-implicit-function-declaration"
 CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 if test "$GCC" = "yes"; then
-    CFLAGS="$CFLAGS -ansi -Wall -Wno-implicit-function-declaration -Werror"
+    CFLAGS="$CFLAGS -ansi -Wall -Wno-implicit-function-declaration "
 fi
 LDFLAGS="$LDFLAGS -lpthread"
 
@@ -183,14 +183,48 @@ AC_ARG_ENABLE(tests, [  --enable-tests    build tests. default=yes],
   TESTDIR=""
 )
 
+AC_MSG_CHECKING(whether to use archive)
+AC_ARG_WITH(archive,
+[  --with-archive[=PATH]      Find the zlib header files in 'PATH'.
+    If you omit the '=PATH' part completely, the configure script will search
+    '/usr/include/' for zlib headers.],
+[ case "$withval" in
+  no)
+    AC_MSG_RESULT(no)
+    ZLIBBUILD=""
+    zliblibs=""
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    zliblibs="$(top_builddir)/src/minizip/libaxis2_minizip.la"
+    CFLAGS="$CFLAGS -DAXIS2_ARCHIVE_ENABLED"
+    if test -d $withval; then
+        zlibinc="-I$withval"
+    elif test -d '/usr/include'; then
+        zlibinc="-I/usr/include"
+    else
+        AC_MSG_ERROR(could not find zlib stop)
+    fi
+    ZLIBBUILD="minizip"
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+)
+
+
 
 CFLAGS="$CFLAGS $GUTHTHILA_CFLAGS"
 
 UTILINC=$axis2_utilinc
+ZLIBINC=$zlibinc
+ZLIBLIBS=$zliblibs
 VERSION_NO="1:0:1"
 
 AC_SUBST(VERSION_NO)
 AC_SUBST(UTILINC)
+AC_SUBST(ZLIBINC)
+AC_SUBST(ZLIBLIBS)
+AC_SUBST(ZLIBBUILD)
 AC_SUBST(GUTHTHILA_DIR)
 AC_SUBST(GUTHTHILA_LIBS)
 AC_SUBST(TESTDIR)
