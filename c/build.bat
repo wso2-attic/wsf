@@ -91,8 +91,8 @@ rem Build Apache Savan/C
 @xcopy /E /Q /I /Y savanc\samples .\..\..\axis2c\build\axis2c-bin-1.2.0-win32\samples\savan
 @copy /Y savanc\modules\savan\mod_savan.dll .\..\..\axis2c\build\axis2c-bin-1.2.0-win32\lib\
 @copy /Y savanc\modules\savan\mod_savan.lib .\..\..\axis2c\build\axis2c-bin-1.2.0-win32\lib\
-@copy /Y savanc\lib\savan\savan_client.dll .\..\..\axis2c\build\axis2c-bin-1.2.0-win32\lib\
-@copy /Y savanc\lib\savan\savan_client.lib .\..\..\axis2c\build\axis2c-bin-1.2.0-win32\lib\
+@copy /Y savanc\lib\savan_client.dll .\..\..\axis2c\build\axis2c-bin-1.2.0-win32\lib\
+@copy /Y savanc\lib\savan_client.lib .\..\..\axis2c\build\axis2c-bin-1.2.0-win32\lib\
 
 @mkdir .\..\..\axis2c\build\axis2c-bin-1.2.0-win32\bin\samples\savan
 @copy /Y savanc\bin\samples\savan\*.exe .\..\..\axis2c\build\axis2c-bin-1.2.0-win32\bin\samples\savan
