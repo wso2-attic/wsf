@@ -1,5 +1,8 @@
 Accessing Amazon Web Service API
 --------------------------------
+Consumers
+=========
+
 amazon.rb -
   
   A client assessing Amazon search using REST.
@@ -189,10 +192,9 @@ yahoo.rb -
 
 Rails Samples
 -------------
-Client
-------
-	Refer to rails/client/flickr/README to run the flickr client
+  Refer to rails/flickr/README to run the flickr client
 
-Service
--------
-	Refer to rails/service/README to deploy services
+
+Provider
+========
+  Refer to provider/README to deploy services
