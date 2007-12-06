@@ -1,0 +1,12 @@
+1. Please use following commands to generate a rails project.
+    i) rails sec_rampart
+    ii) cd sec_rampart
+    iii) ./script/generate controller security callback timestamp timestamp_file usernametoken usernametoken_file signing signing_file encryption encryption_file complete
+
+2. Now copy following files and directories to app/controllers/
+    i) keys
+    ii) policies
+    iii) security_controller.rb (overwrite)
+
+3. run ./script/server (from sec_rampart root directory)
+
