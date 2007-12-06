@@ -1,9 +1,9 @@
-WSF/Ruby - 1.0.0-Beta
-=====================
+WSF/Ruby - 1.0.0
+================
 This is the Ruby extension to the WSO2 Web Services Framework(WSF)
 
 You can download this release from:
-http://dist.wso2.org/products/wsf/ruby/1.0.0-beta/
+http://dist.wso2.org/products/wsf/ruby/1.0.0/
 
 Project home page:
 http://wso2.org/projects/wsf/ruby
@@ -46,17 +46,12 @@ Key Features
 
 Major Changes Since Last Release
 ================================
-1. Provider implementation
-
-2. Support for the following specifications on consumer side
-   - WS-Security
-   - WS-ReliableMessaging
-
-3. Support for the following specifications on provider side
-   - WS-Addressing
-   - WS-ReliableMessaging
-
-4. Win32 distribution
+1. Support for the following specifications on provider side
+   - REST
+   - SOAP MTOM
+   - WS-Security (with Rampart)
+   - WS-Policy
+   - WS-SecurityPolicy
 
 
 Dependencies

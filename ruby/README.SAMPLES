@@ -185,3 +185,14 @@ yahoo.rb -
   Set the following variables to match your case.
   - LOG_FILE_NAME[Line 30].
   - END_POINT[Line 31].
+
+
+Rails Samples
+-------------
+Client
+------
+	Refer to rails/client/flickr/README to run the flickr client
+
+Service
+-------
+	Refer to rails/service/README to deploy services

@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-function show_revision_number
-{
-	rev_no=`svn info | grep Revision` 
-	echo $rev_no
-
-	return $rev_no
-}
-
 function sync_content
 {
 	rsync ../../build/build.sh .
