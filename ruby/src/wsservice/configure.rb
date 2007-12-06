@@ -11,7 +11,7 @@ if(WSFC_HOME == nil)
   exit(-1)
 end
 
-dir_config("wsservice", WSFC_HOME + '/include/axis2-1.1', WSFC_HOME + '/lib')
+dir_config("wsservice", WSFC_HOME + '/include/axis2-1.2', WSFC_HOME + '/lib')
 dir_config("Rampart", WSFC_HOME + '/include/rampart-1.0', WSFC_HOME + '/modules/rampart')
 
 have_library('axutil')
