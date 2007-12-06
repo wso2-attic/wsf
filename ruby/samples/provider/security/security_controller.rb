@@ -4,7 +4,7 @@ require 'rexml/document'
 require 'rexml/element'
 
 def echoFunction(in_msg)
-     "<wrapped>" + in_msg + "</wrapped>"
+     "<wrapped>" + in_msg.payload_to_s + "</wrapped>"
 end
 
 def passwordCallBack(username)

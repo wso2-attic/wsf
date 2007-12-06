@@ -16,6 +16,7 @@
 require 'wsf'
 
 include WSO2::WSF
+include WSO2::Util
 
 req_payload = <<XML
 <ns1:echo xmlns:ns1="http://php.axis2.org/samples"><text>Hello World!</text></ns1:echo>
