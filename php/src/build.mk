@@ -1,14 +1,14 @@
 AUTOCONF = .\..\configure.in
 !include $(AUTOCONF)
 
-CFLAGS = /nologo /w /D "WIN32" /D "_WINDOWS" /D "ZTS" /D "PHP_WIN32" /D "COMPILE_DL_WSF" \
+CFLAGS = /nologo /w /D "WIN32" /D "_WINDOWS" /D "PHP_WIN32" /D "COMPILE_DL_WSF" \
 	 /D "_USE_32BIT_TIME_T=1" /D "USE_SANDESHA2" /D "ZEND_WIN32" /D "ZEND_DEBUG=0" \
 	 /D "_MBCS" 
 
 LDFLAGS = /nologo /LIBPATH:.\..\wso2-wsf-php-bin-1.2.0-win32\wsf_c\lib /LIBPATH:$(PHP_BIN_DIR)\dev \
 	  /LIBPATH:$(LIBXML2_BIN_DIR)\lib
 
-LIBS = php5ts.lib axutil.lib axis2_engine.lib axis2_parser.lib \
+LIBS = axutil.lib axis2_engine.lib axis2_parser.lib \
        axiom.lib libxml2.lib mod_rampart.lib axis2_http_sender.lib \
        neethi_util.lib neethi.lib sandesha2.lib libxml2.lib wsock32.lib
 
@@ -24,6 +24,14 @@ LDFLAGS = $(LDFLAGS) /DEBUG
 !else
 CFLAGS = $(CFLAGS) /D "NDEBUG" /O2 $(CRUNTIME)
 LDFLAGS = $(LDFLAGS)
+!endif
+
+
+!if "$(ZTS)" == "1"
+CFLAGS = $(CFLAGS) /D "ZTS"
+LIBS = $(LIBS) php5ts.lib
+!else
+LIBS = $(LIBS) php5.lib
 !endif
 
 WSFPHP_SRC= wsf.c \
