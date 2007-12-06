@@ -30,7 +30,7 @@ class MtomUploadServiceController < ApplicationController
 
   require "wsf"
   
-  def mtom_upload
+  def upload
       #operation to ruby function map
       operations = {"upload" => "uploadFunction"}
 

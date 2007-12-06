@@ -7,14 +7,14 @@ class EchoServiceAddrController < ApplicationController
 
   require "wsf"
   
-  def echo_addr
+  def echo
       #operation to ruby function map
       operations = {"echoString" => "echoFunction",
 	   				"echoInt" => "echoFunction"}
 
       #action to operation map
-      actions = {"wso2:wsf:ruby:echo_string" => "echoString",
-	  			 "wso2:wsf:ruby:echo_int" => "echoInt"}
+      actions = {"http://ruby.wsf.wso2/samples/echoString" => "echoString",
+	  			 "http://ruby.wsf.wso2/samples/echoInt" => "echoInt"}
 
       wss = WSO2::WSF::WSService.new({:operations => operations,
 									  :actions => actions});

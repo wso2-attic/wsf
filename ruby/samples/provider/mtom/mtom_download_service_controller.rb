@@ -15,7 +15,7 @@ class MtomDownloadServiceController < ApplicationController
 
   require "wsf"
   
-  def mtom_download
+  def download
       #operation to ruby function map
       operations = {"download" => "downloadFunction"}
 

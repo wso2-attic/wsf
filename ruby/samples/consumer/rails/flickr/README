@@ -20,7 +20,7 @@ Please follow the steps below to execute the "Flickr Sample"
      |
      +-- controllers
      |       |
-     |       +-- flickr_controller.rb (replaced with the sample lickr_controler.rb)
+     |       +-- flickr_controller.rb (replaced with the sample flickr_controler.rb)
      |       |
      |       +-- flickr_client.rb
      |

@@ -27,7 +27,7 @@ def load_policy_from_file(filename)
 end
  
 
-class RampartController < ApplicationController
+class SecurityController < ApplicationController
  
   	def callback
       	begin

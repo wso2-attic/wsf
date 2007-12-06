@@ -24,7 +24,7 @@ XML
 begin
    LOG_FILE = "security_sample.log"
    ACTION = "http://php.axis2.org/samples/echoString"
-   END_POINT="http://localhost:3000/rampart/callback"
+   END_POINT="http://localhost:3000/security/callback"
 
    message_properties = {"to" => END_POINT,
                          "action" => ACTION}
@@ -52,7 +52,7 @@ begin
    res_message = client.request(payload)
 
    if not res_message.nil? then
-      puts "Received OM: "<< "\n" << res_message.payload_to_s << "\n\n"
+      puts "Received OM : " << "\n" << res_message.payload_to_s << "\n\n"
       puts "Client invocation SUCCESSFUL !!!"
    else
       puts "Client invocation FAILED !!!"

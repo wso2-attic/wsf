@@ -27,8 +27,7 @@ XML
 
 begin
   LOG_FILE_NAME = "ruby_echo_client_rm.log"
-  END_POINT = "http://127.0.0.1:3000/wsservice/echo_reliable"
-  ACTION = "http://ruby.axis2.org/samples/echoString"
+  END_POINT = "http://127.0.0.1:3000/echo_service_rm/echo"
 
   client = WSClient.new({"use_wsa" => "TRUE",
                          "reliable" => "TRUE"},
@@ -36,8 +35,7 @@ begin
 
   req_message = WSMessage.new(req_payload_string,
                               nil,
-                              {"to" => END_POINT,
-                               "action" => ACTION})
+                              {"to" => END_POINT})
 
   puts "Sending OM : " << "\n" << req_payload_string << "\n" 
 

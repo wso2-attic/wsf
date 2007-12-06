@@ -7,7 +7,7 @@ class EchoServiceRmController < ApplicationController
 
   require "wsf"
 
-  def echo_reliable
+  def echo
       #operation to ruby function map
       operations = {"echoString" => "echoFunction"}
 

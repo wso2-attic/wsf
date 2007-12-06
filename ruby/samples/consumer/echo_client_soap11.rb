@@ -27,8 +27,8 @@ XML
 
 begin
   LOG_FILE_NAME = "ruby_echo_client_soap11.log"
-  END_POINT = "http://localhost:9090/wsservice/echo"
-  ACTION = "http://ruby.axis2.org/samples/echoString"
+  END_POINT = "http://localhost:9090/echo_service/echo"
+  ACTION = "http://ruby.wsf.wso2/samples/echoString"
 
   client = WSClient.new({"to" => END_POINT,
                          "use_soap" => 1.1,

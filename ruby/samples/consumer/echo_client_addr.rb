@@ -27,8 +27,8 @@ XML
 
 begin
   LOG_FILE_NAME = "ruby_echo_client_addr.log"
-  END_POINT = "http://localhost:9090/wsservice/echo_addr"
-  ACTION = "http://ruby.axis2.org/samples/echoString"
+  END_POINT = "http://localhost:9090/echo_service_addr/echo"
+  ACTION = "http://ruby.wsf.wso2/samples/echoString"
 
   client = WSClient.new({"use_wsa" => "TRUE"},
                         LOG_FILE_NAME)
@@ -43,7 +43,7 @@ begin
   res_message = client.request(req_message)
 
   if not res_message.nil? then
-    puts "Received OM: "<< "\n" << res_message.payload_to_s << "\n\n"
+    puts "Received OM : "<< "\n" << res_message.payload_to_s << "\n\n"
     puts "Client invocation SUCCESSFUL !!!"
   else
     puts "Client invocation FAILED !!!"
