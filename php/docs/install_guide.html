@@ -101,14 +101,14 @@ add the following line to the php.ini file:<br />
         eg <strong>extension_dir="usr/local/lib/php/extensions/debug-zts-***"</strong>.
         The last directory depends on your php version.</p>
 
-<p>3. Copy the scripts folder to your Web server's document root. If you want to run
-            wsdl mode samples on your shell, copy</p>
-    <p>
-        scripts folder to your current working directory.&nbsp;</p>
+<p> Uncomment the <strong>include_path</strong> and edit it to point to the location for scripts folder as </p>
+<p><strong> include_path = ".:/path/to/scripts/folder"</strong> </p>
 
-<p>4. Also, copy all the samples to your Web server's document root.</p>
 
-<p>5. Test with a Web browser. For example, access <a href="http://localhost/echo_client.php">http://localhost/echo_client.php</a></p>
+
+<p>3. Also, copy all the samples to your Web server's document root.</p>
+
+<p>4. Test with a Web browser. For example, access <a href="http://localhost/echo_client.php">http://localhost/echo_client.php</a></p>
 
 <p></p>
 
@@ -289,6 +289,12 @@ installation location.<br />
     </p>
     <p>
         <strong>extension = php_xsl.dll</strong></p>
+    <p> Uncomment the <strong>include_path</strong> and edit it to point to the
+       location for scripts folder as </p>
+    <p>
+       <strong> include_path = ".;/path/to/scripts/folder"</strong>
+   </p>
+
     <p>
         6. Configure the Apache2 Web server with PHP as follows.<br />
     </p>
@@ -308,10 +314,9 @@ installation location.<br />
     </p>
 
 <p>
-    7. Copy the scripts folder and the samples folder to your Apache Web server's
+    7. Copy the samples folder to your Apache Web server's
 document root. If you want to run samples</p>
-    <p>
-        on the command line, copy scripts folder to your current working directory.</p>
+
     <p>
         Now you should be able to run the samples in the samples directory.</p>
 </body>
