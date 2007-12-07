@@ -125,7 +125,7 @@ client = WSO2::WSF::WSClient.new({&quot;to&quot; =&gt; &quot;http://api.flickr.c
 
 <p>
 Here is the complete source code for the Flickr photo search. <a href="samples/flickr.rb">
-flickr.rb</a>. Please remember to replece your_key_here" string with a valid Fclikr key.
+flickr.rb</a>. Please remember to replece your_key_here" string with a valid Flickr key.
 </p>
 
 <pre>
@@ -159,7 +159,10 @@ with WSO2 WSF/PHP.</p>
 <p>Let's see how to write your first Web service with WSO2 WSF/Ruby.</p>
 
 <p>
-First you need to install Ruby on rails in deploying the service.
+First you need to install Ruby on rails, Instructions for setting up ruby on rails
+can be found <a href="http://www.rubyonrails.org/down">here</a>. Then you have to 
+be familiar with the Model-View-Controller(MVC) development environment provided by
+the Rails. After that you will be ready to write the Web service using WSO2 WSF/Ruby.
 </p>
 
 <p>The first service that we are going to write is named "hello" and would
@@ -180,7 +183,7 @@ exchanged between the client and service:</p>
 <br>
  
 
-<p>The steps to be followed when implementing a service with WSO2 WSF/PHP
+<p>The steps to be followed when implementing a service with WSO2 WSF/Ruby
 include:</p>
 <ol> 
   <li><b>Write the functions corresponding to the operations of the
@@ -198,68 +201,90 @@ include:</p>
   <li><b>Invoke the reply() method of the WSService class to invoke the
     operation and prepare the response.</b><br>
     This step is a simple method call to indicate to the service to start
-    processing the request. This step is the same for all services.<br>
+    processing the request. This step is the same for all services.<b>
   </li> 
-</ol> -->
+</ol> 
 
 <h3 class="western"><a name="5.1.1.">5.1.1. Operation Implementation</a></h3>
 
-<!-- <p>Following is the implementation of the greet operation:</p>  -->
-<!--code -->
-<!-- <pre class="php"><span style="color: rgb(0, 0, 0); font-weight: bold;">function</span> greet<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$message</span><span style="color: rgb(102, 204, 102);">)</span> <span style="color: rgb(102, 204, 102);">{</span>
-  
-<span style="color: rgb(0, 0, 255);">$responsePayloadString</span> = &lt;&lt;&lt;XML
-        &lt;greetResponse&gt;Hello Client!&lt;/greetResponse&gt;
+
+<p>Following is the implementation of the greet operation:</p> 
+
+<pre>
+def greet(message)
+    responsePayloadString = &lt;&lt;XML
+            &lt;greetResponse&gt;Hello Client!&lt;/greetResponse&gt;
 XML;
- 
-        <span style="color: rgb(0, 0, 255);">$returnMessage</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSMessage<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$responsePayloadString</span><span style="color: rgb(102, 204, 102);">)</span>;  
-        
-        <span style="color: rgb(177, 177, 0);">return</span> <span style="color: rgb(0, 0, 255);">$returnMessage</span>;
-<span style="color: rgb(102, 204, 102);">}</span></pre> -->
+
+    return WSMessage.new(responsePayloadString)
+end
+<pre>
 <!--code -->
-<!-- <br>
+<br>
 
 
 <p>This function implements the business logic for the greet operation.
 Basically this function receives the request payload as a WSMessage object
-instance, prepares the response and returns it as a WSMessage instance.</p> -->
+instance, prepares the response and returns it as a WSMessage instance.</p>
 
 <h3 class="western"><a name="5.1.2.">5.1.2. Service Instance Creation with
 Operations</a></h3> 
 
-<!-- <p>A service can be created, specifying the operations as shown below:</p>
-<pre><span style="color: rgb(0, 0, 255);">$service</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSService<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"operations"</span> =&gt; <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"greet"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
-<br>
+<p>A service can be created, specifying the operations as shown below:</p>
 
+<pre>
+service = WSService.new({"operations" => {"greet" => "greet"}})
+</pre>
+<br>
 
 <p>In the above code fragment, we create a service instance with the "greet"
 operation. The "greet" function implemented above will be called when the
-"greet" operation is invoked with the service.</p>
-<br>  -->
+"greet" operation is invoked with the service. So in the association key is
+the service operation name and the value is the corrosponding ruby function name.</p>
+<br> 
+
+<p>
+NOTE: You have to put the above code inside a function of your controller, in a way
+we can specify the endpoint corrosponding to that function as the service endpoint.
+</p>
 
 
 <h3><a name="5.1.3.">5.1.3. Replying to Service Invocations</a></h3>
-<!-- <pre><span style="color: rgb(0, 0, 255);">$service</span>-&gt;<span style="color: rgb(0, 102, 0);">reply</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
+
+
 
 <p>The reply() method of the service has to be called by all service
 implementations. This call would trigger the request processing on the server 
-side and prepare the response to be sent to the client.</p> -->
+side and prepare the response to be sent to the client.</p> 
+<p>
+Here you have to pass two local variables request and response as the argument to
+the reply method. Then it will return the response as a string, you can render it  back
+using the 'render' method like in following code segment,
+</p>
+
+<pre>
+    res = service.reply(request, response)
+    render :text =&gt; res
+</pre>
 
 <h3><a name="5.1.4.">5.1.4. Full Source</a></h3>
 
-<!-- <p>Here is the complete source code for the service : <a
-href="samples/hello_service.html">hello_service.php</a></p>
-<br> -->
+<p>Here is the complete source code for the service : <a
+href="samples/hello_service.html">hello_service.ruby</a></p>
+<br> 
 
 
 <h3><a name="5.1.5.">5.1.5. Deploying the Service</a></h3> 
 
-<!-- <p>In order to make the service available to be consumed by clients, we have
-to deploy the service. To deploy the service, you just have to copy the PHP
-source file implementing the service to your Web root, just like you do with
-other PHP scripts. Let's name our service PHP script, hello_service.php.</p>
+<p>In order to make the service available to be consumed by clients, we have
+to deploy the service. Before the deployment you should make sure the WSService 
+is called inside a function in your controller. So if you are deploying rails with
+WEBRick or Mongreal servers, you just need to run the server (Running ./script/server
+from the application root directory), and the services will be automatically deployed.
+</p>
 
-<p>To verify that your service has been correctly deployed, you can start the
+<p>
+To verify that your service has been correctly deployed, you can start the
 Web server and then browse for the service script using a Web browser. For
 our sample, assuming the default values for the Web server, you can test the
 service with <a  
@@ -269,7 +294,7 @@ get.</p>
 
 <p><br>
 <br>  
-</p> -->
+</p>
 
 <h2 class="western" style="margin-top: 0in; margin-bottom: 0in"><a
 name="4.2.">5.2. Hello Client</a></h2>
