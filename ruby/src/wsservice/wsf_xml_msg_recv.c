@@ -476,17 +476,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
     int                 use_mtom,
     int                 request_xop)
 {
-    if (!om_node)
-		return NULL;
-    
-	char *req_payload = NULL;
-	req_payload = wsf_util_serialize_om (env, om_node);
-    if (!req_payload)
-	{
-        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "Request Payload is NULL");
-        return NULL;
-    }
-	
+    char *req_payload = NULL;
 	char *res_payload = NULL;
     axiom_node_t *res_om_node = NULL;
     void *val = NULL;
@@ -500,6 +490,23 @@ wsf_xml_msg_recv_invoke_wsmsg (
 	VALUE rb_mWSF;
 	ID ws_msg_class_id;
 	ID ws_fault_class_id;
+
+	VALUE req_msg_payload;
+	VALUE req_message;
+
+	VALUE user_obj;
+    VALUE method_exists;
+
+	if (!om_node)
+		return NULL;
+    
+	req_payload = wsf_util_serialize_om (env, om_node);
+    if (!req_payload)
+	{
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "Request Payload is NULL");
+        return NULL;
+    }
+	
     
 	/* zend_try { */
 
@@ -513,8 +520,6 @@ wsf_xml_msg_recv_invoke_wsmsg (
 		ws_fault_class = rb_const_get(rb_mWSF, ws_fault_class_id);
 
 		/* Create Request Message */
-		VALUE req_msg_payload;
-		VALUE req_message;
 
 		req_msg_payload = rb_str_new2(req_payload);
 		req_message = rb_class_new_instance (1, &req_msg_payload, ws_msg_class);
@@ -526,9 +531,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
 
         v_op_name = rb_str_new2(op_name);
 
-    	VALUE user_obj;
-        VALUE method_exists;
-        
+       
 		if (NULL != classname)
         { 
             user_class = rb_define_class(classname, rb_cObject);
@@ -562,15 +565,15 @@ wsf_xml_msg_recv_invoke_wsmsg (
 			}
 			else if(rb_obj_is_kind_of(result, ws_msg_class)) /* WSMessage */
 			{
-				res_payload = axutil_strdup(env, RSTRING(rb_funcall(result, rb_intern("payload_to_s"), 0))->ptr);
-				
-				res_om_node = wsf_util_deserialize_buffer(env, res_payload);
-
 				VALUE attachments;
 				VALUE v_default_cnt_type;
 				axis2_char_t *default_cnt_type = NULL;
 				VALUE v_action;
 				axis2_char_t *action;
+
+				res_payload = axutil_strdup(env, RSTRING(rb_funcall(result, rb_intern("payload_to_s"), 0))->ptr);
+				
+				res_om_node = wsf_util_deserialize_buffer(env, res_payload);
 
 				/* Set WSA action */
 				v_action = rb_funcall(result, rb_intern("property"), 1, rb_str_new2("action"));

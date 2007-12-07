@@ -12,6 +12,7 @@ if(WSFC_HOME == nil)
 end
 
 dir_config("wsservice", WSFC_HOME + '/include', WSFC_HOME + '/lib')
+dir_config("rampart", WSFC_HOME + '/include',  WSFC_HOME + '/modules/rampart')
 
 have_library('axutil')
 have_library('axis2_minizip')
@@ -23,7 +24,10 @@ have_library('axis2_http_common')
 have_library('axis2_http_sender')
 have_library('axis2_http_receiver')
 have_library('axis2_engine')
+have_library('neethi')
+have_library('neethi_util')
+have_library('mod_rampart')
 
-$CFLAGS = $CFLAGS + "-DWIN32 -DSWIG_NOINCLUDE"
+$CFLAGS = $CFLAGS + " -DWIN32 -DSWIG_NOINCLUDE"
 
 create_makefile("wsservice")

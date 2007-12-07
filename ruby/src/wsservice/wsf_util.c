@@ -663,9 +663,6 @@ void wsf_util_pack_attachments (
 		int 		  enable_mtom,
 		char 		 *default_cnt_type)
 {
-	if (!node)
-		return;
-
 	axiom_element_t *node_element = NULL;
 	axiom_element_t *child_element = NULL;
 	axiom_child_element_iterator_t *child_element_ite = NULL;
@@ -674,6 +671,9 @@ void wsf_util_pack_attachments (
 	axis2_char_t *element_localname = NULL;
 	axiom_namespace_t *element_namespace = NULL;
 	axis2_char_t *namespace_uri = NULL;
+
+	if (!node)
+		return;
 
 	if (axiom_node_get_node_type(node, env) == AXIOM_ELEMENT)
 	{
@@ -712,11 +712,11 @@ void wsf_util_pack_attachments (
                         		if ((axutil_strlen(href) > 4) && (pos = axutil_strstr (href, "cid:")))
 								{
 									axis2_char_t* cid = NULL;
-									cid = href + 4;
-
 									VALUE content_tmp;
 									void* content = NULL;
 									unsigned int content_length = 0;
+
+									cid = href + 4;
 
 			            			content_tmp = rb_hash_aref(attach_ht, rb_str_new2(cid));
 									content_length = RSTRING(content_tmp)->len;
@@ -779,9 +779,6 @@ void wsf_util_unpack_attachments (
 		axiom_node_t 	   *node,
 		VALUE			   *message)
 {
-	if (!node)
-		return;
-
 	axiom_text_t * text_element = NULL;
 	axiom_data_handler_t *data_handler = NULL;
 	axis2_char_t *content = NULL;
@@ -789,6 +786,9 @@ void wsf_util_unpack_attachments (
 	axis2_char_t *content_type = NULL;
 	axis2_char_t *cid = NULL;
 	axiom_node_t *child_node = NULL;
+
+	if (!node)
+		return;
 	
 	// Process current node
 	if (axiom_node_get_node_type (node, env) == AXIOM_TEXT)
