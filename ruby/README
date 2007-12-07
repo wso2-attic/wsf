@@ -50,7 +50,8 @@ Linux
 
 Windows
 -------
-1. Run "build.bat" to setup the extension. 
+1. Run "vcvars32.bat" to set environment variables for Visual Studio.
+2. Run "build.bat" to setup the extension. 
 
 
 RUN SAMPLES
