@@ -2,11 +2,14 @@
 
 function sync_content
 {
+	rsync ../../build/build.bat .
+	echo "synchronizing build.bat ... done"
+
 	rsync ../../build/build.sh .
 	echo "synchronizing build.sh ... done"
 
-	rsync ../../build/configure.rb .
-	echo "synchronizing configure.rb ... done"
+	rsync ../../build/extconf.rb .
+	echo "synchronizing extconf.rb ... done"
 
 	rsync ../../build/extconf-win32.rb .
 	echo "synchronizing extconf-win32.rb ... done"
