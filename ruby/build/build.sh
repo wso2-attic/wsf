@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-ruby configure.rb
+ruby extconf.rb
 make
 make install
 cd wsservice
-ruby configure.rb
+ruby extconf.rb 
 make
 make install
