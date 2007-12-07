@@ -182,8 +182,7 @@ class SecurityController < ApplicationController
 
             policy = WSO2::WSF::WSPolicy.new(policy_content)
 
-            sec_token = WSO2::WSF::WSSecurityToken.new({"private_key" => pvt_key})
-            policy = WSO2::WSF::WSPolicy.new({"security" => policy_content,
+            sec_token = WSO2::WSF::WSSecurityToken.new({"private_key" => pvt_key,
                                                         "certificate" => cert})
 
             wss = WSO2::WSF::WSService.new({"operations" => operations,
