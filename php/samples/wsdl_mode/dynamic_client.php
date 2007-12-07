@@ -22,17 +22,17 @@ try {
 
     $proxy = $client->getProxy();	
 
-    $val =  $proxy->GetPrice(array("ProductType"=> "Testing",
-                                   "ItemNo" => 234));    
-    var_dump($val);
+    $return_val =  $proxy->GetPrice(array("ProductType"=> "Testing",
+                                          "ItemNo" => 234));    
+    printf("Price is : %s <br/>", $return_val["Price"]);
 
 } catch (Exception $e) {
     if ($e instanceof WSFault) {
-        printf("Soap Fault Reason: %s\n", $e->Reason);
-        printf("Soap Fault Code: %s \n", $e->Code);
+        printf("Soap Fault Reason: %s<br/>", $e->Reason);
+        printf("Soap Fault Code: %s <br/>", $e->Code);
         
     } else {
-        printf("Message = %s\n",$e->getMessage());
+        printf("Message = %s<br/>",$e->getMessage());
     }
   }
 ?>

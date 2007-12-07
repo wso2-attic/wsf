@@ -22,11 +22,30 @@ try {
 
     $proxy = $client->getProxy();	
 
-    $val =  $proxy->QueryPurchaseOrder(array("productName"=> "Testing",
+    $return_val =  $proxy->QueryPurchaseOrder(array("productName"=> "Testing",
                                              "quantity" => 234,
                                              "date" => "2003-12-34",
-                                             "orderNo" => 345));    
-    var_dump($val);
+                                             "orderNo" => 345));  
+      
+    printf("<strong>Shipping address </strong><br/>");
+    printf("Name : %s <br/>", $return_val["shipTo"]["name"]);
+    printf("Street : %s <br/>", $return_val["shipTo"]["street"]);
+    printf("City : %s <br/>", $return_val["shipTo"]["city"]);
+    printf("State : %s <br/>", $return_val["shipTo"]["state"]);
+    printf("Zip : %s <br/>", $return_val["shipTo"]["zip"]);
+    
+    printf("<br/><strong>Billing address </strong><br/>");
+    printf("Name : %s <br/>", $return_val["billTo"]["name"]);
+    printf("Street : %s <br/>", $return_val["billTo"]["street"]);
+    printf("City : %s <br/>", $return_val["billTo"]["city"]);
+    printf("State : %s <br/>", $return_val["billTo"]["state"]);
+    printf("Zip : %s <br/>", $return_val["billTo"]["zip"]);
+    
+    printf("<br/><strong>Product info </strong><br/>");
+    printf("Product ID : %s <br/>", $return_val["product"]["productId"]);
+    printf("ShippingDate : %s <br/>", $return_val["product"]["shippingDate"]);
+    printf("Status : %s <br/>", $return_val["product"]["status"]);
+   
 
 } catch (Exception $e) {
 
