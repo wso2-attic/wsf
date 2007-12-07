@@ -75,30 +75,13 @@ void create_dynamic_client(zval *this_ptr, char *function, int function_len,
     zval **class_map;
     zval request_function, retval, param1, param2;
     zend_file_handle script;
-    smart_str script_file_name = { 0 };
     zval *params[2];
     zval *user_parameters;
     zval *function_parameters;
-    smart_str xslt_location = { 0 };
-    char *real_path = NULL;
-    int path_len = 0;
-    
-	php_stream *stream;
+    php_stream *stream;
     FILE *new_fp;        
 
 
-    if(SG (request_info).request_method){
-        real_path = estrdup(SG(request_info).path_translated);
-        path_len = strlen(SG(request_info).path_translated)- strlen(SG(request_info).request_uri);
-        real_path[path_len + 1] = '\0';
-    }
-    else{
-        real_path = "./";
-    }
-    
-    smart_str_appends(&script_file_name, real_path);
-    smart_str_appends(&xslt_location, real_path);
-   
     if (instanceof_function (Z_OBJCE_P (this_ptr),
                              ws_client_proxy_class_entry TSRMLS_CC)) {
         if (zend_hash_find (Z_OBJPROP_P (this_ptr), WS_WSDL_WSCLIENT,
@@ -117,11 +100,6 @@ void create_dynamic_client(zval *this_ptr, char *function, int function_len,
     if ( zend_hash_find ( Z_OBJPROP_P (client_zval), WS_WSDL, sizeof (WS_WSDL),
                           (void **) &wsdl_location) == SUCCESS
          && Z_TYPE_PP (wsdl_location) == IS_STRING){
-        smart_str_appends(&script_file_name, WS_WSDL_FILE_PATH);
-        smart_str_0 (&script_file_name);
-        
-        smart_str_appends(&xslt_location, WS_WSDL_XSLT_PATH);
-        smart_str_0(&xslt_location);
            
         params[0] = &param1;
         params[1] = &param2;
@@ -147,7 +125,7 @@ void create_dynamic_client(zval *this_ptr, char *function, int function_len,
             g_arguments = args;
         }
         add_assoc_string(user_parameters, WS_WSDL_XSLT_LOCATION, 
-                         xslt_location.c, 1);
+                         "test", 1);
         
         MAKE_STD_ZVAL(function_parameters);
         array_init(function_parameters);
@@ -163,17 +141,11 @@ void create_dynamic_client(zval *this_ptr, char *function, int function_len,
         INIT_PZVAL(params[1]);
 	
         script.type = ZEND_HANDLE_FP;
-        script.filename = "wsf_wsdl.php";/*script_file_name.c;*/
+        script.filename = "wsf_wsdl.php";
         script.opened_path = NULL;
         script.free_filename = 0;
 
 
-        /*if (!(script.handle.fp = VCWD_FOPEN (script.filename, "rb"))){
-            php_error_docref (NULL TSRMLS_CC, E_ERROR, 
-                              "Unable to open script file: %s", script.filename);
-            return ;
-        }
-        */
         stream  = php_stream_open_wrapper("wsf_wsdl.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
         if(!stream)
                 return;
@@ -658,7 +630,7 @@ void wsf_wsdl_handle_client_security(HashTable *client_ht,
               	input_policy_node = wsf_util_deserialize_buffer (env, policy_xml);
             }
             else
-				input_policy_node = wsf_do_create_policy (NULL, policy, AXIS2_FALSE, env TSRMLS_CC);
+	      input_policy_node = wsf_do_create_policy (NULL, policy, AXIS2_FALSE, env TSRMLS_CC);
         }
 	
     }
@@ -840,10 +812,6 @@ void wsf_wsdl_handle_client_security(HashTable *client_ht,
 
 void wsf_wsdl_process_service(zval *this_ptr, wsf_req_info_t *request_info1, wsf_svc_info_t *svc_info, axutil_env_t *env TSRMLS_DC)
 {
-    char *real_path = NULL;
-    int path_len = 0;
-    smart_str script_file_name = { 0 };
-    smart_str xslt_location = { 0 };
     zval **wsdl_location = NULL;
     zval *params[2];
     zval retval, param1, param2;
@@ -857,22 +825,9 @@ void wsf_wsdl_process_service(zval *this_ptr, wsf_req_info_t *request_info1, wsf
     FILE *new_fp;
     php_stream *stream;
  
-    real_path = estrdup(SG(request_info).path_translated);
-    path_len = 
-        strlen(SG(request_info).path_translated)- strlen(SG(request_info).request_uri);
-    real_path[path_len + 1] = '\0';
-    
-    smart_str_appends(&script_file_name, real_path);
-    smart_str_appends(&xslt_location, real_path);
     
     zend_hash_find(Z_OBJPROP_P(this_ptr), WS_WSDL, sizeof(WS_WSDL),
                    (void **)&wsdl_location);
-    
-    smart_str_appends(&script_file_name, WS_WSDL_FILE_PATH);
-    smart_str_0 (&script_file_name);
-    
-    smart_str_appends(&xslt_location, WS_WSDL_XSLT_PATH);
-    smart_str_0(&xslt_location);
     
     params[0] = &param1;
     params[1] = &param2;
@@ -906,7 +861,7 @@ void wsf_wsdl_process_service(zval *this_ptr, wsf_req_info_t *request_info1, wsf
     
     
     ZVAL_STRING(&request_function, WS_WSDL_SERVICE_REQ_FUNCTION, 0);
-    add_assoc_string(param_array, WS_WSDL_XSLT_LOCATION, xslt_location.c, 1);
+    add_assoc_string(param_array, WS_WSDL_XSLT_LOCATION, "test", 1);
     
     ZVAL_ZVAL(params[0], param_array, NULL, NULL);
     INIT_PZVAL(params[0]);
@@ -914,16 +869,11 @@ void wsf_wsdl_process_service(zval *this_ptr, wsf_req_info_t *request_info1, wsf
     INIT_PZVAL(params[1]);
     
     script.type = ZEND_HANDLE_FP;
-    script.filename = "wsf_wsdl.php";/*script_file_name.c;*/
+    script.filename = "wsf_wsdl.php";
     script.opened_path = NULL;
     script.free_filename = 0;
 
-/*    if (!(script.handle.fp = VCWD_FOPEN (script.filename, "rb"))){
-        php_error_docref (NULL TSRMLS_CC, E_ERROR, 
-                          "Unable to open script file: %s", script.filename);
-        return;
-    }
-*/
+
     stream  = php_stream_open_wrapper("wsf_wsdl.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
     if(!stream)
         return;
@@ -1000,9 +950,9 @@ void wsf_wsdl_handle_server_security(wsf_svc_info_t *svc_info,
     neethi_policy_t *normalized_input_neethi_policy = NULL;
     
     neethi_policy_t *merged_input_neethi_policy = NULL;
-	int i = 0;
-	axutil_param_t *security_param = NULL;
-	axis2_conf_t *conf = NULL;
+    int i = 0;
+    axutil_param_t *security_param = NULL;
+    axis2_conf_t *conf = NULL;
     wsf_worker_t *worker = NULL;
 
     if(!op_policies)
@@ -1192,10 +1142,6 @@ void wsf_wsdl_handle_server_security(wsf_svc_info_t *svc_info,
 
 void wsf_wsdl_set_sig_model(char *wsdl_path, wsf_svc_info_t *svc_info, const axutil_env_t *env TSRMLS_DC)
 {
-    char *real_path = NULL;
-    int path_len = 0;
-    smart_str script_file_name = { 0 };
-    smart_str xslt_location = { 0 };
     zval *params[2];
     zval retval, param1, param2;
     zval *param_array;
@@ -1207,21 +1153,6 @@ void wsf_wsdl_set_sig_model(char *wsdl_path, wsf_svc_info_t *svc_info, const axu
     FILE *new_fp;
     php_stream *stream;
  
-    real_path = estrdup(SG(request_info).path_translated);
-    path_len = 
-        strlen(SG(request_info).path_translated)- strlen(SG(request_info).request_uri);
-    real_path[path_len + 1] = '\0';
-    
-    smart_str_appends(&script_file_name, real_path);
-    smart_str_appends(&xslt_location, real_path);
-    
-    
-    smart_str_appends(&script_file_name, WS_WSDL_FILE_PATH);
-    smart_str_0 (&script_file_name);
-    
-    smart_str_appends(&xslt_location, WS_WSDL_XSLT_PATH);
-    smart_str_0(&xslt_location);
-    
     params[0] = &param1;
     params[1] = &param2;
     
@@ -1247,7 +1178,7 @@ void wsf_wsdl_set_sig_model(char *wsdl_path, wsf_svc_info_t *svc_info, const axu
     
     
     ZVAL_STRING(&request_function, WS_WSDL_SERVICE_REQ_FUNCTION, 0);
-    add_assoc_string(param_array, WS_WSDL_XSLT_LOCATION, xslt_location.c, 1);
+    add_assoc_string(param_array, WS_WSDL_XSLT_LOCATION, "test", 1);
     
     ZVAL_ZVAL(params[0], param_array, NULL, NULL);
     INIT_PZVAL(params[0]);
@@ -1255,15 +1186,9 @@ void wsf_wsdl_set_sig_model(char *wsdl_path, wsf_svc_info_t *svc_info, const axu
     INIT_PZVAL(params[1]);
     
     script.type = ZEND_HANDLE_FP;
-    script.filename = script_file_name.c;
+    script.filename = "wsf_wsdl.php";
     script.opened_path = NULL;
     script.free_filename = 0;
-   /* if (!(script.handle.fp = VCWD_FOPEN (script.filename, "rb"))){
-        php_error_docref (NULL TSRMLS_CC, E_ERROR, 
-                          "Unable to open script file: %s", script.filename);
-        return;
-    }
-   */
 
     stream  = php_stream_open_wrapper("wsf_wsdl.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
     if(!stream)

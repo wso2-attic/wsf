@@ -1097,8 +1097,6 @@ static void generate_wsdl_for_service(zval *svc_zval,
         char *binding_name = NULL;
         char *wsdl_version = NULL;
         int path_len = 0;
-        smart_str script_path = { 0 };
-        smart_str script_file_name = { 0 };
         smart_str full_path = {0};
         zval * op_val;
 
@@ -1219,27 +1217,10 @@ static void generate_wsdl_for_service(zval *svc_zval,
                 } 
             }
             
-            if(!in_cmd){
-                smart_str_appends(&script_path, real_path);
-                smart_str_appends(&script_path, "scripts/wsdl/WS_WSDL_Creator.php");
-                smart_str_0 (&script_path);
-                
-                smart_str_appends(&script_file_name, real_path);
-                smart_str_appends(&script_file_name, "scripts/wsf.php");
-                smart_str_0 (&script_file_name);
-                
-                efree(real_path);
-            }else{
-                
-                smart_str_appends(&script_path, "scripts/wsdl/WS_WSDL_Creator.php");
-                smart_str_0 (&script_path);
-                
-                smart_str_appends(&script_file_name, "scripts/wsf.php");
-                smart_str_0 (&script_file_name);
-            }
-            
+	    efree(real_path);
+          
             ZVAL_STRING (&func, "ws_generate_wsdl", 0);
-            ZVAL_STRING (params[0], script_path.c, 0);
+            ZVAL_STRING (params[0], "test", 0);
             INIT_PZVAL (params[0]);
             ZVAL_STRING (params[1], service_name, 0);
             INIT_PZVAL (params[1]);
@@ -1255,19 +1236,12 @@ static void generate_wsdl_for_service(zval *svc_zval,
             INIT_PZVAL (params[6]);
             script.type = ZEND_HANDLE_FP;
             
-            script.filename = "wsf.php";/*script_file_name.c;*/
+            script.filename = "wsf.php";
             
             script.opened_path = NULL;
             
             script.free_filename = 0;
            
-          /* if (!(script.handle.fp =  VCWD_FOPEN(script.filename, "rb"))){
-                php_printf ("Unable to open script file or file not found:");
-            }
-            
-           */
-           
-
             stream  = php_stream_open_wrapper("wsf.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
             
             if(!stream)
@@ -1299,8 +1273,6 @@ static void generate_wsdl_for_service(zval *svc_zval,
                 }
             }
             
-            smart_str_free (&script_path);
-            smart_str_free (&script_file_name);
             smart_str_free(&full_path);
             zval_ptr_dtor(&op_val);
             zval_ptr_dtor(&functions);
