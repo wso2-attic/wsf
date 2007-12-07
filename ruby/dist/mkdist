@@ -8,6 +8,9 @@ function sync_content
 	rsync ../../build/build.sh .
 	echo "synchronizing build.sh ... done"
 
+	rsync ../../find_rbconfig.rb .
+	echo "synchronizing find_rbconfig.rb ... done"
+
 	rsync ../../build/extconf.rb .
 	echo "synchronizing extconf.rb ... done"
 

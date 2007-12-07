@@ -38,7 +38,7 @@ CONFIGURATION
 		  "4" - DEBUG
 		  "5" - TRACE
 
-    NOTE : Type "ruby -e 'puts $:'" in a console to find where this file is.
+    NOTE : run "ruby find_rbconfig.rb" in a console to find where this file is.
            It's /usr/local/lib/ruby/1.8/i686-linux/rbconfig.rb in my case.
 
 
