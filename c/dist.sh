@@ -30,6 +30,12 @@ make maintainer-clean
 
 cd ../../
 
+cd ..
+
+cp /tmp/dist.sh /tmp/dist_hook.sh .
+
+rm -rf wso2-wsf-c-src-1.2.0.tar.gz
+cd wso2-wsf-c-src-1.2.0
 rm -rf `find . -type d -name .svn`
 rm -rf `find . -type f -name *.la`
 rm -rf `find . -type f -name *.o`
@@ -39,12 +45,7 @@ rm -rf `find . -type d -name .deps`
 rm -rf `find . -type d -name .libs`
 rm -rf `find . -type f -name Makefile`
 rm -rf `find . -type d -name autom4te.cache`
-
 cd ..
-
-cp /tmp/dist.sh /tmp/dist_hook.sh .
-
-rm -rf wso2-wsf-c-src-1.2.0.tar.gz
 tar -pczf wso2-wsf-c-src-1.2.0.tar.gz wso2-wsf-c-src-1.2.0
 rm -rf wso2-wsf-c-src-1.2.0/examples/config.log
 zip -r wso2-wsf-c-src-1.2.0.zip wso2-wsf-c-src-1.2.0
