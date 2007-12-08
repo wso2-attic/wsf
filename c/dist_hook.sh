@@ -25,23 +25,29 @@ tar -xf wso2-wsf-c-src-1.2.0.tar.gz
 mv wso2-wsf-c-src-1.2.0   ../../wso2-wsf-c-src-1.2.0/savanc/samples
 
 cd ../../
+cd axis2c/xdocs/api
+doxygen doxygenconf
+cd ../../../
+cd rampartc/xdocs/api
+doxygen doxygenconf
+cd ../../../
+cd sandesha2c/xdocs/api
+doxygen doxygenconf
+cd ../../../
+cd savanc/xdocs/api
+doxygen doxygenconf
+cd ../../../
 
 cd wso2-wsf-c-src-1.2.0
 cp -r axis2c/xdocs docs/axis2c
+cp -r ../axis2c/xdocs/api/html docs/axis2c/api
 cp -r savanc/xdocs docs/savanc
+cp -r ../savanc/xdocs/api/html docs/savanc/api
 cp -r sandesha2c/xdocs docs/sandesha2c
+cp -r ../sandesha2c/xdocs/api/html docs/sandesha2c/api
 cp -r rampartc/xdocs docs/rampartc
+cp -r ../rampartc/xdocs/api/html docs/rampartc/api
 cp -r wsclient/docs docs/wsclient
-
-rm -rf `find . -type d -name .svn`
-rm -rf `find . -type f -name *.la`
-rm -rf `find . -type f -name *.o`
-rm -rf `find . -type f -name *.lo`
-rm -rf `find . -type f -name *.loT`
-rm -rf `find . -type d -name .deps`
-rm -rf `find . -type d -name .libs`
-rm -rf `find . -type f -name Makefile`
-rm -rf `find . -type d -name autom4te.cache`
 
 grep -rl WSFC_HOME *| xargs sed -i "s/WSFC_HOME/WSFC_HOME/g"
 cd ..
