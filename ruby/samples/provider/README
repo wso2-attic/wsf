@@ -1,23 +1,59 @@
-Copy the content of the controllers directory to the controllers directory of your rail application.
-And try the services with your client using following endpoint addresses
+REAME for Service deployment with Rails
+======================================
+
+First you need to build a rails application to deploy the samples mentioned here.
+To build an application follow the following steps.
+
+1. Go to a directory where you want to start the rails application.
+
+2. Run the following command.
+        rails your_rails_application. 
+   Here on, the term 'your_rails_application' should be renamed to the name of your application.
+
+3. cd your_rails_application.
+
+4. There you will find the following directory structure. (only app sub directory is shown here)
+
+ -- app
+     |
+     +-- controllers
+     |
+     +-- views
+
+5. Then copy the files of the relevent sample to the app/controllers directory of your rails application.
+For an example, for Echo Sample you will copy echo_service_controller.rb to the app/controllers so the
+directory strcutre after copying the Echo sample
+
+ -- app
+     |
+     +-- controllers
+     |       |
+     |       +-- echo_service_controller.rb
+     |
+     +-- views
+
+6. Then run the ./script/server from the root directory of your rails application to run the server. Then
+the services will be deployed automatically.
+
+7. Now you can try the services with your client using following endpoint addresses.
 
 Echo
 ----
 1. Copy echo_service_controller.rb into the controllers directory of your rail application
 2. Try the services with your client using following endpoint addresse:
-   http://your_rail_application/echo_service/echo
+   http://your_rails_application/echo_service/echo
 
 Echo with Addressing
 --------------------
 1. Copy echo_service_addr_controller.rb into the controllers directory of your rail application
 2. Try the services with your client using following endpoint addresse:
-   http://your_rail_application/echo_service_addr/echo
+   http://your_rails_application/echo_service_addr/echo
 
 Echo with Class Map
 -------------------
 1. Copy echo_classmap_service_controller.rb into the controllers directory of your rail application
 2. Try the services with your client using following endpoint addresse:
-   http://your_rail_application/echo_classmap_service/echo
+   http://your_rails_application/echo_classmap_service/echo
 
 MTOM/Base64 Attachments
 -----------------------
@@ -25,20 +61,20 @@ mtom/mtom_base64_upload_service_controller.rb
 
 1. Copy mtom/mtom_base64_upload_service_controller.rb into the controllers directory of your rail application
 2. Try the services with your client using following endpoint addresse:
-   http://your_rail_application/mtom_base64_upload_service/upload
+   http://your_rails_application/mtom_base64_upload_service/upload
 
 mtom/mtom_upload_service_controller.rb
 
 1. Copy mtom/mtom_upload_service_controller.rb into the controllers directory of your rail application
 2. Try the services with your client using following endpoint addresse:
-   http://your_rail_application/mtom_upload_service/upload
+   http://your_rails_application/mtom_upload_service/upload
 
 mtom/mtom_download_service_controller.rb
 
 1. Copy mtom/mtom_download_service_controller.rb into the controllers directory of your rail application
 2. Copy mtom/resources into root directory of your rail application
 3. Try the services with your client using following endpoint addresse:
-   http://your_rail_application/mtom_download_service/download
+   http://your_rails_application/mtom_download_service/download
 
 Reliable Messaging
 ------------------
@@ -46,13 +82,13 @@ reliable/echo_service_rm_controller.rb
 
 1. Copy reliable/echo_service_rm_controller.rb into the controllers directory of your rail application
 2. Try the services with your client using following endpoint addresse:
-   http://your_rail_application/echo_service_rm/echo
+   http://your_rails_application/echo_service_rm/echo
 
 reliable/mtom_upload_service_rm_controller.rb
 
 1. Copy reliable/mtom_upload_service_rm_controller.rb into the controllers directory of your rail application
 2. Try the services with your client using following endpoint addresse:
-   http://your_rail_application/mtom_upload_service_rm/upload
+   http://your_rails_application/mtom_upload_service_rm/upload
 
 Security
 --------
@@ -61,13 +97,13 @@ security/security_controller.rb
 1. Copy security/security_controller.rb into the controllers directory of your rail application
 2. Copy keys and policies directories into the controllers directory of your rail application
 2. Try the services with your client using following endpoint addresse:
-   http://your_rail_application/security/callback
-   http://your_rail_application/security/timestamp
-   http://your_rail_application/security/timestamp_file
-   http://your_rail_application/security/usernametoken
-   http://your_rail_application/security/usernametoken_file
-   http://your_rail_application/security/signing
-   http://your_rail_application/security/signing_file
-   http://your_rail_application/security/encryption
-   http://your_rail_application/security/encryption_file
-   http://your_rail_application/security/complete
+   http://your_rails_application/security/callback
+   http://your_rails_application/security/timestamp
+   http://your_rails_application/security/timestamp_file
+   http://your_rails_application/security/usernametoken
+   http://your_rails_application/security/usernametoken_file
+   http://your_rails_application/security/signing
+   http://your_rails_application/security/signing_file
+   http://your_rails_application/security/encryption
+   http://your_rails_application/security/encryption_file
+   http://your_rails_application/security/complete
