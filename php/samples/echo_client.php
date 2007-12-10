@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-$reqPayloadString = <<<XML
+$requestPayloadString = <<<XML
 <ns1:echoString xmlns:ns1="http://php.axis2.org/samples"><text>Hello World!</text></ns1:echoString>
 XML;
 
@@ -24,18 +24,18 @@ try {
     $client = new WSClient(
         array("to"=>"http://localhost/samples/echo_service.php"));
 
-				
-    $resMessage = $client->request($reqPayloadString);
+                
+    $responseMessage = $client->request($requestPayloadString);
     
-    printf("Response = %s <br>", htmlspecialchars($resMessage->str));
+    printf("Response = %s <br>", htmlspecialchars($responseMessage->str));
 
 } catch (Exception $e) {
 
-	if ($e instanceof WSFault) {
-		printf("Soap Fault: %s\n", $e->Reason);
-	} else {
-		printf("Message = %s\n",$e->getMessage());
-	}
+    if ($e instanceof WSFault) {
+        printf("Soap Fault: %s\n", $e->Reason);
+    } else {
+        printf("Message = %s\n",$e->getMessage());
+    }
 
 }
 ?>
