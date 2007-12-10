@@ -25,18 +25,19 @@ class Bar
     }
     function echoValue($inMessage){
 
-$reqPayloadString = <<<XML
+$requestPayloadString = <<<XML
 <ns1:echoString xmlns:ns1="http://wso2.org/projects/wsf/php">
      <value>$this->value</value></ns1:echoString>
 XML;
-        return new WSMessage($reqPayloadString);
+        return new WSMessage($requestPayloadString);
     }
 }
 
 
 $ops = array("echoString" => "echoValue");
 
-$svr = new WSService(array("classes"=>array("Bar"=>array("operations"=>$ops,"args"=>array("Hello")))));
+$svr = new WSService(array( "classes" => array("Bar" => array("operations" => $ops,
+                                                              "args" => array("Hello") ))));
         
 $svr->reply();
 
