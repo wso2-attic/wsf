@@ -16,7 +16,7 @@
  */
 
 /* sample test payload */
-$reqPayloadString = <<<XML
+$requestPayloadString = <<<XML
 <soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope">
    <soapenv:Header/>
    <soapenv:Body>
@@ -29,15 +29,15 @@ XML;
 
 function echoFunction($inMessage) {
 
-    $returnMessage = new WSMessage($inMessage->str);
+    $outMessage = new WSMessage($inMessage->str);
 
-    return $returnMessage;
+    return $outMessage;
 }
 
 $operations = array("echoString" => "echoFunction");
 
-$svr = new WSService(array("operations" => $operations));
+$service = new WSService(array("operations" => $operations));
         
-$svr->reply($reqPayloadString);
+$service->reply($requestPayloadString);
 
 ?>
