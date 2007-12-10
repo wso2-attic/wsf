@@ -15,26 +15,26 @@
  * limitations under the License.
  */
 
-$reqPayloadString = <<<XML
+$requestPayloadString = <<<XML
 <ns1:notifyString xmlns:ns1="http://php.axis2.org/samples"><text>Hello World!</text></ns1:notifyString>
 XML;
 
 try {
 
     $client = new WSClient(
-        array("to"=>"http://localhost/samples/notify_service.php"));
-				
-    $client->send($reqPayloadString);
+        array( "to" => "http://localhost/samples/notify_service.php"));
+                
+    $client->send($requestPayloadString);
     
-    printf("Request sent\n");
+    printf("Request sent to endpoint\n");
     
 } catch (Exception $e) {
 
-	if ($e instanceof WSFault) {
-		printf("Soap Fault: %s\n", $e->Reason);
-	} else {
-		printf("Message = %s\n",$e->getMessage());
-	}
+    if ($e instanceof WSFault) {
+        printf("Soap Fault: %s\n", $e->Reason);
+    } else {
+        printf("Message = %s\n",$e->getMessage());
+    }
 
 }
 ?>
