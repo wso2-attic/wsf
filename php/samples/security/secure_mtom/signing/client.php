@@ -28,7 +28,7 @@ try {
 	$f = file_get_contents("../../../resources/axis2.jpg");
 
 	$reqMessage = new WSMessage($reqPayloadString,
-	array("to" => "http://localhost/samples/security/secure_mtom/encryption/mtom_security_service.php",
+	array("to" => "http://localhost/samples/security/secure_mtom/signing/service.php",
               "action" => "http://wso2.org/upload",
               "attachments" => array("myid1" => $f)));
 
