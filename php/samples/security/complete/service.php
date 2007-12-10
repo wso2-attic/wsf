@@ -33,7 +33,7 @@ $policy = new WSPolicy($policy_xml);
 
 $sec_token = new WSSecurityToken(array("privateKey" => $pvt_key,
                                        "certificate" => $cert,
-                                       "receiverCertificate" =>$pub_key));
+                                       "receiverCertificate" => $pub_key));
 
 $actions = array("http://php.axis2.org/samples/echoString" => "echoString");
 

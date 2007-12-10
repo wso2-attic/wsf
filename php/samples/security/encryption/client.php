@@ -24,14 +24,14 @@ try {
     $pvt_key = ws_get_key_from_file("../keys/alice_key.pem");
     
     $reqMessage = new WSMessage($reqPayloadString,
-                                array("to"=>"http://localhost/samples/security/encryption/service.php",
+                                array("to" => "http://localhost/samples/security/encryption/service.php",
                                       "action" => "http://php.axis2.org/samples/echoString"));
     
-    $sec_array = array("encrypt"=>TRUE,
+    $sec_array = array("encrypt" => TRUE,
                        "algorithmSuite" => "Basic256Rsa15",
                        "securityTokenReference" => "IssuerSerial");
     
-    $policy = new WSPolicy(array("security"=>$sec_array));
+    $policy = new WSPolicy(array("security" => $sec_array));
     $sec_token = new WSSecurityToken(array("privateKey" => $pvt_key,
                                            "receiverCertificate" => $rec_cert));
     

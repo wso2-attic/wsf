@@ -26,7 +26,7 @@ $operations = array("echoString" => "echoFunction");
 $actions = array("http://php.axis2.org/samples/echoString" => "echoString");
 $sec_array = array("includeTimeStamp" => TRUE);
 
-$policy = new WSPolicy(array("security"=>$sec_array));
+$policy = new WSPolicy(array("security"=> $sec_array));
 $sec_token = new WSSecurityToken(array("ttl" => 100));
 
 $svr = new WSService(array("operations" => $operations,

@@ -25,8 +25,8 @@ try {
                                 array("to"=>"http://localhost/samples/security/timestamp/service.php",
                                       "action" => "http://php.axis2.org/samples/echoString"));
     
-    $sec_array = array("includeTimeStamp"=>TRUE );
-    $policy = new WSPolicy(array("security"=>$sec_array));
+    $sec_array = array("includeTimeStamp" => TRUE );
+    $policy = new WSPolicy(array("security" => $sec_array));
     $sec_token = new WSSecurityToken(array("ttl" => 60));
     
     $client = new WSClient(array("useWSA" => TRUE,

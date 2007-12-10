@@ -32,7 +32,7 @@ $actions = array("http://php.axis2.org/samples/echoString" => "echoString");
 $policy_xml = file_get_contents("policy.xml");
 $policy = new WSPolicy($policy_xml);
 $sec_token = new WSSecurityToken(array("privateKey" => $pvt_key,
-                                       "receiverCertificate" =>$pub_key));
+                                       "receiverCertificate" => $pub_key));
 
 $svr = new WSService(array("actions" => $actions,
                            "operations" => $operations,

@@ -31,10 +31,10 @@ $sec_array = array("encrypt" => TRUE,
                     "securityTokenReference" => "IssuerSerial");
 
 $actions = array("http://php.axis2.org/samples/echoString" => "echoString");
-
-$policy = new WSPolicy(array("security"=>$sec_array));
+ 
+$policy = new WSPolicy(array("security"=> $sec_array));
 $sec_token = new WSSecurityToken(array("privateKey" => $pvt_key,
-                                       "receiverCertificate" =>$pub_key));
+                                       "receiverCertificate" => $pub_key));
 
 $svr = new WSService(array("actions" => $actions,
                            "operations" => $operations,
