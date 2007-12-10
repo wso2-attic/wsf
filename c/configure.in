@@ -5,8 +5,8 @@
 DEBUG = 0
 #CRUNTIME Library ( Use /MD or /MT)
 CRUNTIME=/MD
-# Visual Studio version
-VC_VERSION_2005_OR_ABOVE=1
+# embed manifest files or not
+EMBED_MANIFEST =1
 
 #############################################################################
 ### Apache Axis2/C Build Configuration Parameters
@@ -40,6 +40,9 @@ ENABLE_GUTHTHILA = 0
 
 # Build TCP server in addition to HTTP server
 WITH_TCP = 1
+
+# build with archive based deployment support
+WITH_ARCHIVE = 0
 
 #############################################################################
 ### Apache Rampart/C Build Configuration Parameters
