@@ -32,7 +32,7 @@ CONFIGURATION
   
   CONFIG["WSFC_HOME"] = "/your/wsfc/home/"
   CONFIG["WSF_LOG_DIR"] = "/where/the/log/files/should/reside/"
-  CONFIG["WSF_LOG_LEVEL"] = "5"
+  CONFIG["WSF_LOG_LEVEL"] = "3"
     
 	Valid Log Levels - 
 	      "0" - CRITICAL

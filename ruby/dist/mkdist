@@ -64,6 +64,9 @@ function sync_content
 	rsync ../../README .
 	echo "synchronizing README ... done"
 
+	rsync ../../INSTALL .
+	echo "synchronizing INSTALL ... done"
+
 	rsync ../../README.SAMPLES .
 	echo "synchronizing README.SAMPLES ... done"
 
