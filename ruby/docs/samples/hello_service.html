@@ -4,17 +4,17 @@ def greet(message)
     responsePayloadString = &lt;&lt;XML
             &lt;greetResponse&gt;Hello Client!&lt;/greetResponse&gt;
 XML;
-    return WSMessage.new(responsePayloadString)
+    return WSO2::WSF::WSMessage.new(responsePayloadString)
 end
 
 
-class HelloServiceController < ApplicationController
+class HelloServiceController &lt; ApplicationController
 
   require "wsf"
 
   def greet
       #operation to ruby function map
-      service = WSService.new({"operations" =&gt; {"greet" =&gt; "greet"}}
+      service = WSO2::WSF::WSService.new({"operations" =&gt; {"greet" =&gt; "greet"}}
 
       res = service.reply(request, response);
 

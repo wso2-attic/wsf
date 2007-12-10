@@ -231,7 +231,7 @@ Operations</a></h3>
 <p>A service can be created, specifying the operations as shown below:</p>
 
 <pre>
-service = WSService.new({"operations" =&gt; {"greet" =&gt; "greet"}})
+service = WSO2::WSF::WSService.new({"operations" =&gt; {"greet" =&gt; "greet"}})
 </pre>
 
 </br>
@@ -297,7 +297,7 @@ get.</p>
 </p>
 
 <h2 class="western" style="margin-top: 0in; margin-bottom: 0in"><a
-name="4.2.">5.2. Hello Client</a></h2>
+name="5.2.">5.2. Hello Client</a></h2>
 
 <p>Now that you know how to write a service with WSO2 WSF/Ruby, let's see how
 you can write a client to consume that service. The request payload that the
@@ -308,14 +308,15 @@ receive and process the response.</p>
 <p>The steps to be followed when implementing a client with WSO2 WSF/Ruby
 include:</p>
 <ol>
-  <li><b>Set the desired request payload and options.</b> <br>
-    You can set the desired payload either in plain text form or as a WSMessage.
-    Here we will demonstrate a simple consumer of the web service using request
-    as a text.<br>
+  <li><b>Create a WSMessage instance with the desired request payload and
+    options.</b> <br>
+    The WSMessage constructor takes an hash of options that help to fine
+    tune the request message sent from the client. As a minimum, you have to
+    set the "to" option, indicating the endpoint reference of the service to
+    be consumed.<br>
   </li>
   <li><b>Create a WSClient instance</b><br>
-    You can use the WSClient instance to consume the service. There we set options
-    as arguments to the constructor. The option</li>
+    You can use the WSClient instance to consume the service.</li>
   <li><b>Send the request and receive the response.</b><br>
     Invoke the request() method passing the message as a parameter. This
     method returns a WSMessage instance, representing the response message.
@@ -328,11 +329,12 @@ include:</p>
 
 <h3><a name="5.2.1.">5.2.1. Preparing the Request Message</a></h3>
 
-<pre>        <span style="color: rgb(0, 0, 255);">$message</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSMessage<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$requestPayloadString</span>, 
-                <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"to"</span> =&gt; <span style="color: rgb(255, 0, 0);">"http://localhost/hello_service.php"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
+<pre>
+message = WSO2::WSF::WSMessage.new(requestPayload, {"to"=&gt; "http://localhost/hello_service/greet"});
+</pre>
 
 <p>In the above code fragment, a WSMessage instance is created with a payload
-to be sent in the request and the service endpoint. The "to" element of the
+to be sent in the request. and the service endpoint. The "to" element of the
 options array is mapped to the address of the location of the service. In
 other words, the "to" address indicates where the request should be sent
 to.</p>
@@ -341,9 +343,14 @@ to.</p>
 
 <h3><a name="5.2.2.">5.2.2. Sending a Request and Receiving a
 Response</a></h3>
-<pre>        <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(102, 204, 102);">)</span>;
-        
-        <span style="color: rgb(0, 0, 255);">$response</span> = <span style="color: rgb(0, 0, 255);">$client</span>-&gt;<span style="color: rgb(0, 102, 0);">request</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$message</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
+
+<pre>
+client = WSO2::WSF:WSClient.new();
+
+response = client.request(message);
+
+p response.payload_to_s
+</pre>
 
 <p>For sending a request with the output message created earlier, we need a
 WSClient instance. We pass the message to be sent to the service to the
@@ -384,8 +391,13 @@ instance.<br>
 Hence the API for a user implemented function mapping to a service operation
 is as follows.</p> 
 <pre>  <b>WSMessage user_defined_operation(WSMessage payload)</b></pre>
+or
+<pre>  <b>String user_defined_operation(WSMessage payload)</b></pre>
 
 <p>Following code fragment shows an example:</p>
+<pre>
+
+</pre>
 <pre><span style="color: rgb(0, 0, 0); font-weight: bold;">function</span> echoFunction<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$inMessage</span><span style="color: rgb(102, 204, 102);">)</span> <span style="color: rgb(102, 204, 102);">{</span>
  
     <span style="color: rgb(0, 0, 255);">$returnMessage</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSMessage<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$inMessage</span>-&gt;<span style="color: rgb(0, 102, 0);">str</span><span style="color: rgb(102, 204, 102);">)</span>; 
