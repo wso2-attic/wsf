@@ -28,10 +28,6 @@ $pub_key = ws_get_cert_from_file("../keys/alice_cert.cert");
 
 $operations = array("echoString" => "echoFunction");
 
-/* $sec_array = array("sign" => TRUE, */
-/*                     "algorithmSuite" => "Basic256Rsa15", */
-/*                     "securityTokenReference" => "KeyIdentifier"); */
-
 $policy_xml = file_get_contents("policy.xml");
 $policy = new WSPolicy($policy_xml);
 
