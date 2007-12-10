@@ -1,0 +1,54 @@
+<html><body>
+
+<pre>
+require 'wsf'
+
+include WSO2::WSF
+
+key = "somekey"
+
+req_payload_string = &lt;&lt;XML
+&lt;x:FlickrRequest xmlns:x="urn:flickr"&gt;
+  &lt;method&gt;flickr.photos.search&lt;/method&gt;
+  &lt;api_key&gt;#{key}&lt;/api_key&gt;
+  &lt;text&gt;sri lanka&lt;/text&gt;
+&lt;/x:FlickrRequest&gt;
+XML
+
+begin
+  LOG_FILE_NAME = "ruby_flicker.log"
+  END_POINT = "http://api.flickr.com/services/soap"
+
+  client = WSClient.new({"to" =&gt; END_POINT},
+                        LOG_FILE_NAME)
+
+  puts "Sending OM : " &lt;&lt; "\n" &lt;&lt; req_payload_string &lt;&lt; "\n"
+
+  res_message = client.request(req_payload_string)
+
+  if not res_message.nil? then
+    puts "Received OM : " &lt;&lt; "\n" &lt;&lt; res_message.payload_to_s &lt;&lt; "\n\n"
+    puts "Client invocation SUCCESSFUL !!!"
+  else
+    puts "Client invocation FAILED !!!"
+  end
+rescue WSFault =&gt; wsfault
+  puts "Client invocation FAILED !!!\n"
+  puts "WSFault : "
+  puts wsfault.xml
+  puts "----------"
+  puts wsfault.code
+  puts "----------"
+  puts wsfault.reason
+  puts "----------"
+  puts wsfault.role
+  puts "----------"
+  puts wsfault.detail
+  puts "----------"
+rescue =&gt; exception
+  puts "Client invocation FAILED !!!\n"
+  puts "Exception : " &lt;&lt; exception
+end 
+
+</pre>
+</body></html>

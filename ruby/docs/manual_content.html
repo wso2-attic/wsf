@@ -124,7 +124,7 @@ client = WSO2::WSF::WSClient.new({&quot;to&quot; =&gt; &quot;http://api.flickr.c
 </pre>
 
 <p>
-Here is the complete source code for the Flickr photo search. <a href="samples/flickr.rb">
+Here is the complete source code for the Flickr photo search. <a href="samples/flickr.html">
 flickr.rb</a>. Please remember to replece your_key_here" string with a valid Flickr key.
 </p>
 
@@ -201,7 +201,7 @@ include:</p>
   <li><b>Invoke the reply() method of the WSService class to invoke the
     operation and prepare the response.</b><br>
     This step is a simple method call to indicate to the service to start
-    processing the request. This step is the same for all services.<b>
+    processing the request. This step is the same for all services.
   </li> 
 </ol> 
 
@@ -215,13 +215,11 @@ def greet(message)
     responsePayloadString = &lt;&lt;XML
             &lt;greetResponse&gt;Hello Client!&lt;/greetResponse&gt;
 XML;
-
     return WSMessage.new(responsePayloadString)
 end
-<pre>
+</pre>
 <!--code -->
-<br>
-
+</br>
 
 <p>This function implements the business logic for the greet operation.
 Basically this function receives the request payload as a WSMessage object
@@ -233,9 +231,10 @@ Operations</a></h3>
 <p>A service can be created, specifying the operations as shown below:</p>
 
 <pre>
-service = WSService.new({"operations" => {"greet" => "greet"}})
+service = WSService.new({"operations" =&gt; {"greet" =&gt; "greet"}})
 </pre>
-<br>
+
+</br>
 
 <p>In the above code fragment, we create a service instance with the "greet"
 operation. The "greet" function implemented above will be called when the
@@ -250,7 +249,6 @@ we can specify the endpoint corrosponding to that function as the service endpoi
 
 
 <h3><a name="5.1.3.">5.1.3. Replying to Service Invocations</a></h3>
-
 
 
 <p>The reply() method of the service has to be called by all service
@@ -270,7 +268,7 @@ using the 'render' method like in following code segment,
 <h3><a name="5.1.4.">5.1.4. Full Source</a></h3>
 
 <p>Here is the complete source code for the service : <a
-href="samples/hello_service.html">hello_service.ruby</a></p>
+href="samples/hello_service.html">hello_service_controller.rb</a></p>
 <br> 
 
 
@@ -288,8 +286,10 @@ To verify that your service has been correctly deployed, you can start the
 Web server and then browse for the service script using a Web browser. For
 our sample, assuming the default values for the Web server, you can test the
 service with <a  
-href="http://localhost/hello_service.php">http://localhost/hello_service.php</a>.
-You should get an entry for the hello_service.php on the page that you
+href="http://localhost/hello_service/greet">http://localhost/hello_service/greet</a>.
+Here the hellow_services the name of the controller and the greet is a function inside
+the controller where you create the WSService object.
+You should get an entry for the hello_service/greet on the page that you
 get.</p>
 
 <p><br>
@@ -299,24 +299,23 @@ get.</p>
 <h2 class="western" style="margin-top: 0in; margin-bottom: 0in"><a
 name="4.2.">5.2. Hello Client</a></h2>
 
-<p>Now that you know how to write a service with WSO2 WSF/PHP , let's see how
+<p>Now that you know how to write a service with WSO2 WSF/Ruby, let's see how
 you can write a client to consume that service. The request payload that the
 client will be sending to the service was described in the previous section.
 The client has to prepare the payload, send a request to the service and then
 receive and process the response.</p>
 
-<p>The steps to be followed when implementing a client with WSO2 WSF/PHP
+<p>The steps to be followed when implementing a client with WSO2 WSF/Ruby
 include:</p>
 <ol>
-  <li><b>Create a WSMessage instance with the desired request payload and
-    options.</b> <br>
-    The WSMessage constructor takes an array of options that help to fine
-    tune the request message sent from the client. As a minimum, you have to
-    set the "to" option, indicating the endpoint reference of the service to
-    be consumed.<br>
+  <li><b>Set the desired request payload and options.</b> <br>
+    You can set the desired payload either in plain text form or as a WSMessage.
+    Here we will demonstrate a simple consumer of the web service using request
+    as a text.<br>
   </li>
   <li><b>Create a WSClient instance</b><br>
-    You can use the WSClient instance to consume the service.</li>
+    You can use the WSClient instance to consume the service. There we set options
+    as arguments to the constructor. The option</li>
   <li><b>Send the request and receive the response.</b><br>
     Invoke the request() method passing the message as a parameter. This
     method returns a WSMessage instance, representing the response message.
@@ -328,6 +327,7 @@ include:</p>
 </ol>
 
 <h3><a name="5.2.1.">5.2.1. Preparing the Request Message</a></h3>
+
 <pre>        <span style="color: rgb(0, 0, 255);">$message</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSMessage<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$requestPayloadString</span>, 
                 <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"to"</span> =&gt; <span style="color: rgb(255, 0, 0);">"http://localhost/hello_service.php"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
 
