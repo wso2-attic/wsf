@@ -24,7 +24,7 @@ Uncomment the include_path and edit it to point to the location for scripts fold
 include_path = ".:/path/to/scripts/folder" 
 
 If you installed PHP from source, go to xsl extension directory of the source folder and do 
-./phpize
+phpize
 ./configure
 ./make
 ./make install
