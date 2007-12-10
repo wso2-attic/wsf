@@ -12,8 +12,8 @@ INTRODUCTION
 - WSF/Ruby is the Ruby language extension to WSO2 WSF/C
   [http://www.wso2.org/projects/wsf/c]. This version enables you to 
   consume/provide Web Services both with rest and with the power of
-  WS-* stack including WS-Reliable Messaging, WS-Security and MTOM 
-  Attachment. (See below for the complete Features list) 
+  WS-* stack including WS-Reliable Messaging, WS-Security, WS-Addressing
+  and MTOM Attachments. (See below for the complete Features list) 
 
 
 PREREQUISITES
@@ -72,11 +72,11 @@ RUN SAMPLES
    change the constant END_POINT to your service endpoint.
    
 4. Then run the sample by typing ruby echo_client.rb in command line or terminal.
-   If your client and service working, You will see the 'SUCCESSFUL' message 
+   If your client and service working fine, You will see the 'SUCCESSFUL' message 
 
 5. You may deploy the echo service in WSO2 WSF/C to run
    consumer samples. Remember to change the END_POINT constants to the service
-   end point address before running clients.
+   end point addresses before running clients.
 
 
 FEATURES
