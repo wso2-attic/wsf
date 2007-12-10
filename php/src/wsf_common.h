@@ -200,37 +200,39 @@ typedef enum ws_input_types
 typedef struct wsf_svc_info
 {
 
-    axis2_svc_t *svc;
+  axis2_svc_t *svc;
+  
+  axis2_msg_recv_t *msg_recv;
+  
+  struct wsf_worker_t *php_worker;
+  
+  axutil_hash_t *ops_to_actions;
 
-    axis2_msg_recv_t *msg_recv;
+  axutil_hash_t *ops_to_functions;
+  
+  axutil_array_list_t *modules_to_engage;
+  
+  axutil_hash_t *ops_to_classes;
+  
+  zval *class_args;
+  
+  HashTable *ht_op_params;
+  
+  int request_xop;
+  
+  int use_mtom;
+  
+  zval *policy;
+  
+  zval *security_token;
+  
+  char *svc_name;
+  /** this is needed in case of request uri dispatching( for rest) */
+  char *op_name;
+  
+  char *sig_model_string;
 
-    struct wsf_worker_t *php_worker;
-
-    axutil_hash_t *ops_to_actions;
-
-    axutil_hash_t *ops_to_functions;
-
-    axutil_array_list_t *modules_to_engage;
-
-	axutil_hash_t *ops_to_classes;
-
-	zval *class_args;
-
-    HashTable *ht_op_params;
-
-    int request_xop;
-
-    int use_mtom;
-
-    zval *policy;
-
-    zval *security_token;
-
-    char *svc_name;
-    /** this is needed in case of request uri dispatching( for rest) */
-    char *op_name;
-
-    char *sig_model_string;
+  zval *class_map;
 }
 wsf_svc_info_t;
 

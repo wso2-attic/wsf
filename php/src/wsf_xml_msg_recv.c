@@ -562,7 +562,7 @@ wsf_xml_msg_recv_invoke_mixed (
     add_assoc_string(param_array, "payload_string", in_msg_body_string, 1);
     add_assoc_string(param_array, "operation_name", operation_name, 1);
     add_assoc_string(param_array, "function_name", function_name, 1);
-    
+    add_assoc_zval(param_array, WS_WSDL_CLASSMAP, svc_info->class_map);
 
     ZVAL_STRING(&request_function, "wsf_wsdl_process_in_msg", 0);
     ZVAL_ZVAL(params[0], param_array, NULL, NULL);

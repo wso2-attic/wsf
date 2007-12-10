@@ -217,6 +217,7 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
     
     $wsdl_location = $parameters[WSF_WSDL];
     $xslt_location = $parameters[WSF_XSLT_LOCATION];
+    
 		    
     $sig_model_dom->preserveWhiteSpace = false;
     $wsdl_dom->preserveWhiteSpace = false;
@@ -299,6 +300,12 @@ function wsf_wsdl_process_in_msg($parameters)
     $payload_string = $parameters["payload_string"];
     $operation_name = $parameters["operation_name"];
     $function_name = $parameters["function_name"];
+    if (isset($parameters[WSF_CLASSMAP]))
+        $class_map = $parameters[WSF_CLASSMAP];
+    else
+        $class_map = NULL;
+    
+    file_put_contents("/tmp/my.txt", print_r($class_map, TRUE));
 
     //$operation = "asdsad";
      $payload_dom->loadXML($payload_string);
@@ -312,7 +319,7 @@ function wsf_wsdl_process_in_msg($parameters)
         $operation = "\noperation not found";
     }
 
-    $return_payload_string = wsf_serivce_invoke_function($operation_node, $function_name, $payload_dom->firstChild);
+    $return_payload_string = wsf_serivce_invoke_function($operation_node, $function_name, $payload_dom->firstChild, $class_map);
     
     return $return_payload_string;
 }

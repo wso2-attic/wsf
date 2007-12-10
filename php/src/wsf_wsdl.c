@@ -840,7 +840,7 @@ void wsf_wsdl_process_service(zval *this_ptr, wsf_req_info_t *request_info1, wsf
                           sizeof (WS_WSDL_CLASSMAP),
                           (void **) &class_map) == SUCCESS
          && Z_TYPE_PP (class_map) == IS_ARRAY){
-        add_assoc_zval(param_array, WS_WSDL_CLASSMAP, *class_map);
+        svc_info->class_map =  *class_map;
         
     }
     
