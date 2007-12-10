@@ -5,9 +5,11 @@ Consumers
 
 amazon.rb -
   
-  A client assessing Amazon search using REST.
+  A client accessing Amazon search using REST.
   Set the following variables to match your case.
   - LOG_FILE_NAME[Line 32].
+  
+  ruby amazon.rb to run the service
 
 
 Echo
@@ -181,7 +183,7 @@ reliable/ping_client_rm_multiple_messages.rb -
   - ACTION[Line 31].
 
 
-Accessing Yahoo WebService API
+Accessing Yahoo Web Service API
 ------------------------------
 yahoo.rb -
   A client assessing Yahoo search using REST.
@@ -192,9 +194,9 @@ yahoo.rb -
 
 Rails Samples
 -------------
-  Refer to rails/flickr/README to run the flickr client
+  Refer to samples/rails/flickr/README to run the flickr client
 
 
 Provider
 ========
-  Refer to provider/README to deploy services
+  Refer to samples/provider/README to deploy services

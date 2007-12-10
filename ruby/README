@@ -10,16 +10,20 @@ VERSION
 INTRODUCTION
 ------------
 - WSF/Ruby is the Ruby language extension to WSO2 WSF/C
-  [http://www.wso2.org/projects/wsf/c]. This version enables you 
-  to write client/service applications to consume/provide Web Services 
-  respectively.
+  [http://www.wso2.org/projects/wsf/c]. This version enables you to 
+  consume/provide Web Services both with rest and with the power of
+  WS-* stack including WS-Reliable Messaging, WS-Security and MTOM 
+  Attachment. (See below for the complete Features list) 
 
 
 PREREQUISITES
 -------------
-- It is required to have WSO2 WSF/C installed in your machine 
-  in order to compile and use this extension module.
+- WSO2 WSF/C [http://dist.wso2.org/products/wsf/c]
+  Please see the INSTALL file of the WSO2 WSF/C to install WSO2 WSF/C.
 
+- Ruby version 1.8.5 or above.
+  [http://ftp.ruby-lang.org/pub/ruby/1.8]
+  
 
 CONFIGURATION
 -------------
@@ -45,8 +49,7 @@ CONFIGURATION
 INSTALLATION
 ------------
 Linux
------
-1. Run "sudo sh build.sh" to setup the extension.
+----- 1. Run "sudo sh build.sh" to setup the extension.
 
 Windows
 -------
@@ -67,18 +70,6 @@ RUN SAMPLES
 
 FEATURES
 --------
-Consumer
-  - Support for REST
-  - Support for SOAP 1.1
-  - Support for SOAP 1.2
-  - Support for SOAP MTOM
-  - Support for WS-Addressing
-  - Support for WS-Security (with Rampart)
-  - Support for WS-Policy
-  - Support for WS-SecurityPolicy
-  - Support for WS-ReliableMessaging (with Sandesha)
-
-Provider
   - Support for REST
   - Support for SOAP 1.1
   - Support for SOAP 1.2
