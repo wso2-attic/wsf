@@ -22,11 +22,11 @@ XML;
 try {
 
     $reqMessage = new WSMessage($reqPayloadString,
-                                array("to"=>"http://localhost/samples/security/timestamp/timestamp_service_file.php",
+                                array("to"=>"http://localhost/samples/security/timestamp/service.php",
                                       "action" => "http://php.axis2.org/samples/echoString"));
     
-    $policy_xml = file_get_contents("policy.xml");
-    $policy = new WSPolicy($policy_xml);
+    $sec_array = array("includeTimeStamp"=>TRUE );
+    $policy = new WSPolicy(array("security"=>$sec_array));
     $sec_token = new WSSecurityToken(array("ttl" => 60));
     
     $client = new WSClient(array("useWSA" => TRUE,
