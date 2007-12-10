@@ -39,7 +39,7 @@ function get_my_password_function($username)
 		return $password;
 	}
 	else
-	return NULL;
+	 return NULL;
 
 }
 
