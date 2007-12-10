@@ -20,11 +20,11 @@ $reqPayloadString = <<<XML
 XML;
 
 try {
-    $rec_cert = ws_get_cert_from_file("../keys/bob_cert.cert");
-    $pvt_key = ws_get_key_from_file("../keys/alice_key.pem");
+    $rec_cert = ws_get_cert_from_file("../../keys/bob_cert.cert");
+    $pvt_key = ws_get_key_from_file("../../keys/alice_key.pem");
     
     $reqMessage = new WSMessage($reqPayloadString,
-                                array("to"=>"http://localhost/samples/security/encryption/encrypt_service.php",
+                                array("to"=>"http://localhost/samples/security/encryption/policy_file_based/service.php",
                                       "action" => "http://php.axis2.org/samples/echoString"));
     
     $policy_xml = file_get_contents("policy.xml"); 
