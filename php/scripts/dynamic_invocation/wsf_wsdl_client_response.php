@@ -125,7 +125,7 @@ function wsf_client_response_and_validate(DomDocument $envelope_dom, DomDocument
                  $return_array[$response_node->localName] = $return_ele_array[$key];
             else
                 $return_array[$response_node->localName] = $return_ele_array;
-            return $return_array;
+            return $return_array[$response_node->localName];
         }
     }
 }
