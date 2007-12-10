@@ -22,8 +22,8 @@ function echoFunction($inMessage) {
     return $returnMessage;
 }
 
-$cert = ws_get_cert_from_file("../keys/bob_cert.cert");
-$pvt_key = ws_get_key_from_file("../keys/bob_key.pem");
+$cert = ws_get_cert_from_file("../../keys/bob_cert.cert");
+$pvt_key = ws_get_key_from_file("../../keys/bob_key.pem");
 
 $operations = array("echoString" => "echoFunction");
 
