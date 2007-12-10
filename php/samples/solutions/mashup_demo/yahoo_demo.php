@@ -15,7 +15,7 @@
     if (isset($yahoo_query) && !empty($yahoo_query)) {
 
         /* Include the required class */
-        require_once("../../../scripts/wso2/yahoo/YahooClient.php");
+        require_once("wso2/yahoo/YahooClient.php");
         $yahoo_client = new YahooClient(
                 "rQ8qSMLV34EQyEvRO.y7G91WlgvVIcbrfUliUtQi6AvVnX72hfd6bskjpU6rrw4l");
 

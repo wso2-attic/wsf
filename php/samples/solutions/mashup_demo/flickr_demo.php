@@ -54,7 +54,7 @@
     /* Call service only if the query is set, ignore otherwise */
 if(isset($flickr_query) && !empty($flickr_query) && isset($flickr_key)) {
         /* Include the required class */
-        require_once("../../../scripts/wso2/flickr/FlickrClient.php");  
+        require_once("wso2/flickr/FlickrClient.php");  
 	
 	$flickr_client = new FlickrClient($flickr_key);
         if($flickr_method === "text") {

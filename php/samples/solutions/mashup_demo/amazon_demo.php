@@ -10,7 +10,7 @@
     /* Call service only if the query is set, ignore otherwise */
     if (isset($amazon_query) && !empty($amazon_query) && isset($amazon_key)) {
 
-        require_once("../../../scripts/wso2/amazon/AmazonClient.php");
+        require_once("wso2/amazon/AmazonClient.php");
         $amazon_client = new AmazonClient($amazon_key);
 
         $res = $amazon_client->itemSearch($amazon_query, $amazon_index, $page);
