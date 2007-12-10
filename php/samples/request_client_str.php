@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-include_once('../scripts/wsf.php');
+include_once('wsf.php');
 
 $reqPayloadString = <<<XML
     <ns1:echoString xmlns:ns1="http://php.axis2.org/samples">

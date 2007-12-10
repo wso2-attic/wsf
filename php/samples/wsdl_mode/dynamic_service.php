@@ -17,8 +17,6 @@
 
 function GetPriceFunction($arg1, $arg2) {
     
-    
-    // $return_value = "first argument is ...".$arg1."\t and the second is ".($arg2+1);
     $return_value = array("Price" => 234.431);
     return $return_value;
 }
