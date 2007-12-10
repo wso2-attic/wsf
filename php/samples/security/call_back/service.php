@@ -15,19 +15,31 @@
  * limitations under the License.
  */
 
+// Username Password mapping table
+$user_pass_mapping = array(
+					"Raigama" => "RaigamaPW",
+					"Alice" => "abcd!123",
+					"Bob" => "wxyz!123");
+
 function echoFunction($inMessage) {
 
-    $returnMessage = new WSMessage($inMessage->str);
+	$returnMessage = new WSMessage($inMessage->str);
 
-    return $returnMessage;
+	return $returnMessage;
 }
 
 function get_my_password_function($username)
 {
-    //logic to get password from any source (ex: using mysql database
-    // etc)
-    $password = "RaigamaPW";
-    return $password;
+	//logic to get password from any source (ex: using mysql database
+	// etc)
+	global $user_pass_mapping;
+
+	if(isset($user_pass_mapping[$username])){
+		$password = $user_pass_mapping[$username];
+		return $password;
+	}
+	else
+	return NULL;
 
 }
 
@@ -43,7 +55,7 @@ $svr = new WSService(array("operations" => $operations,
                            "actions" => $actions,
                            "policy" => $policy,
                            "securityToken" => $sec_token));
-        
+
 $svr->reply();
 
 ?>
