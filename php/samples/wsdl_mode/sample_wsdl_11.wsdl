@@ -89,7 +89,7 @@
 	<wsdl:service name="ShippingTradeService">
 		<wsdl:port name="ShippingTradePort"
 			binding="tns:ShippingTradeSoapBinding">
-			<soap:address location="http://localhost/samples/wsdl_mode/ShippingTradeService.php"></soap:address>
+			<soap:address location="http://localhost/samples/wsdl_mode/wsdl_11_service.php"></soap:address>
 		</wsdl:port>
 	</wsdl:service>
 </wsdl:definitions>

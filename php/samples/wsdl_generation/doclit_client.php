@@ -30,7 +30,7 @@ $class_map = array("getPrice" => "getPriceRequestWrapper",
 
 try {
 
-    $client = new WSClient(array("wsdl" => "http://localhost/samples/wsdl_generation/wsdl_service_doclit.php?wsdl",
+    $client = new WSClient(array("wsdl" => "http://localhost/samples/wsdl_generation/doclit_service.php?wsdl",
                                  "classmap" => $class_map));
 
     $proxy = $client->getProxy();	

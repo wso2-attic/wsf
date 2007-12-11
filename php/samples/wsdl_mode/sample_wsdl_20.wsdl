@@ -64,6 +64,6 @@
 	</binding>
 	<service name="MyService" interface="tns:MyServicePort">
 		<endpoint name="MyServicePort" binding="tns:MyServiceBinding"
-			address="http://localhost/samples/wsdl_mode/dynamic_service.php" />
+			address="http://localhost/samples/wsdl_mode/wsdl_20_service.php" />
 	</service>
 </description>

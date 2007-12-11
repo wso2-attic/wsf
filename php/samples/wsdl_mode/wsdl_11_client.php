@@ -17,7 +17,7 @@
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"ShippingTrade.wsdl",
+    $client = new WSClient(array("wsdl"=>"sample_wsdl_11.wsdl",
                                  ));
 
     $proxy = $client->getProxy();	

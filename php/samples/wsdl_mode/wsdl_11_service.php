@@ -15,16 +15,19 @@
  * limitations under the License.
  */
 
-function GetPriceFunction($arg1, $arg2) {
+function QueryPurchaseOrderFunction($pro_name, $quantity, $date, $orderNo) {
     
-    $return_value = array("Price" => 234.431);
+    
+    $return_value = array("shipTo" => array("name" => "Jane Smith", "street" => "YorkStreet", "city" => "colombo", "state" => "Sri Lanka", "zip" => 32343),
+                          "billTo" => array("name" => "John Smith", "street" => "Maple Street", "city" => "LA", "state" => "USA", "zip" => 55432),
+                          "product" => array("productId" => 2344, "shippingDate" => date(20080101), "status" => TRUE));
     return $return_value;
 }
 
-$operations = array("GetPrice" => "GetPriceFunction");
-$opParams = array("GetPriceFunction"=>"MIXED");
+$operations = array("QueryPurchaseOrder" => "QueryPurchaseOrderFunction");
+$opParams = array("QueryPurchaseOrderFunction"=>"MIXED");
 
-$svr = new WSService(array("wsdl"=>"sample.wsdl", 
+$svr = new WSService(array("wsdl"=>"sample_wsdl_11.wsdl", 
                            "operations" => $operations,
                            "opParams"=>$opParams));
         

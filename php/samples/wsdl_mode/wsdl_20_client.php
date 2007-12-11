@@ -17,8 +17,7 @@
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"sample.wsdl",
-                                 "to" => "http://localhost/samples/wsdl_mode/dynamic_service.php"));
+    $client = new WSClient(array("wsdl"=>"sample_wsdl_20.wsdl"));
 
     $proxy = $client->getProxy();	
 

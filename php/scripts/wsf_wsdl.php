@@ -279,7 +279,7 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
 	$return_array["sig_model_string"] = $sig_model_string;
 	$return_array["policies"] = $policy_array;
 	
-	//	file_put_contents("/tmp/my.txt", print_r($policy_array, TRUE));
+	file_put_contents("/tmp/my.txt", print_r($operation_array, TRUE));
     return $return_array;
 }
 
@@ -300,14 +300,11 @@ function wsf_wsdl_process_in_msg($parameters)
     $payload_string = $parameters["payload_string"];
     $operation_name = $parameters["operation_name"];
     $function_name = $parameters["function_name"];
-    if (isset($parameters[WSF_CLASSMAP]))
-        $class_map = $parameters[WSF_CLASSMAP];
-    else
-        $class_map = NULL;
+   // if (isset($parameters[WSF_CLASSMAP]))
+   //     $class_map = $parameters[WSF_CLASSMAP];
+   // else
+   //     $class_map = NULL;
     
-    file_put_contents("/tmp/my.txt", print_r($class_map, TRUE));
-
-    //$operation = "asdsad";
      $payload_dom->loadXML($payload_string);
     $sig_model_dom->loadXML($sig_model_string);
 
