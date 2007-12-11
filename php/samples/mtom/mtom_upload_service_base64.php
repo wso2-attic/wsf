@@ -26,15 +26,19 @@ function getAttachment($inMessage) {
 	    $dom = new DomDocument();
 	    $dom->loadXML($inMessage->str);
 	    $images = $dom->documentElement->getElementsByTagName('image');
-	    $image = $images->item(0);
-	    file_put_contents("/tmp/base64image.txt",$image->nodeValue);
+        $image = $images->item(0);
+        if (stristr(php_os, 'WIN')) {
+            file_put_contents("base64image.txt",$image->nodeValue);
+        }else{
+            file_put_contents("/tmp/base64image.txt",$image->nodeValue);
+        }
     }
 
-$resPayload = <<<XML
+$responsePayload = <<<XML
 <ns1:response xmlns:ns1="http://php.axis2.org/samples/mtom">Image Saved</ns1:response>
 XML;
 
-    $returnMessage = new WSMessage($resPayload);
+    $returnMessage = new WSMessage($responsePayload);
 
     return $returnMessage;
 }

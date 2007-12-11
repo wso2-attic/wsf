@@ -17,7 +17,7 @@
 
 function sendAttachment($msg)
 {
-$resPayloadString = <<<XML
+$responsePayloadString = <<<XML
         <ns1:download xmlns:ns1="http://php.axis2.org/samples/mtom">
             <ns1:fileName>test.jpg</ns1:fileName>
                 <ns1:image xmlmime:contentType="image/jpeg" xmlns:xmlmime="http://www.w3.org/2004/06/xmlmime">
@@ -26,14 +26,15 @@ $resPayloadString = <<<XML
         </ns1:download>
 XML;
     $f = file_get_contents("../resources/axis2.jpg");                                        
-    $ret_msg = new WSMessage($resPayloadString, 
-            array("attachments"=>array("myid1" => $f)));  
-    return $ret_msg;    
+
+    $responseMessage = new WSMessage($responsePayloadString, 
+            array( "attachments" => array("myid1" => $f)));  
+    return $responseMessage;    
 }
 
-$operations = array("download"=>"sendAttachment");
+$operations = array("download" => "sendAttachment");
 
-$server = new WSService(array("operations" => $operations, "useMTOM"=>TRUE));
+$server = new WSService(array("operations" => $operations, "useMTOM" => TRUE));
 
 $server->reply();
 
