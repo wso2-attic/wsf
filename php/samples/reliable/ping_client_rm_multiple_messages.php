@@ -15,47 +15,45 @@
  * limitations under the License.
  */
 
-$reqPayloadString = <<<XML
-	<ns1:pingString xmlns:ns1="http://php.axis2.org/samples/reliable">
-		<text>Hello World!</text>
-	</ns1:pingString>
+$requestPayloadString = <<<XML
+    <ns1:pingString xmlns:ns1="http://php.axis2.org/samples/reliable">
+        <text>Hello World!</text>
+    </ns1:pingString>
 XML;
 
 try {
 
-    $msg = new WSMessage($reqPayloadString,
-			array(
-			   "to"=>"http://localhost/samples/reliable/ping_service_rm.php",
-                     "action" => "http://php.axis2.org/samples/pingString"));
+    $message = new WSMessage($requestPayloadString,
+            array( "to" => "http://localhost/samples/reliable/ping_service_rm.php",
+                   "action" => "http://php.axis2.org/samples/pingString"));
 
-    $client = new WSClient(array("reliable"=>TRUE,"useWSA" => TRUE, "willContinueSequence"=>TRUE));
+    $client = new WSClient(array( "reliable" => TRUE, "useWSA" => TRUE, "willContinueSequence" => TRUE));
 
-    $client->send($msg);
+    $client->send($message);
 
-    $msg1 = new WSMessage($reqPayloadString,
-			array(
-			   "to"=>"http://localhost/samples/reliable/ping_service_rm.php",
-                     "action" => "http://php.axis2.org/samples/pingString"));
+    $message1 = new WSMessage($requestPayloadString,
+            array( "to" => "http://localhost/samples/reliable/ping_service_rm.php",
+                   "action" => "http://php.axis2.org/samples/pingString"));
 
-    $client->send($msg1);
+    $client->send($message1);
 
 
-    $msg2 = new WSMessage($reqPayloadString,
-		array(
-		   "to"=>"http://localhost/samples/reliable/ping_service_rm.php",
+    $message2 = new WSMessage($requestPayloadString,
+        array( "to" => "http://localhost/samples/reliable/ping_service_rm.php",
                "action" => "http://php.axis2.org/samples/pingString",
-               "lastMessage"=>TRUE));
+               "lastMessage" => TRUE));
     
-    $client->send($msg2);
+    $client->send($message2);
 
-    sleep(20);
+    /** wait 10 seconds for the requests to complete */
+    $client->wait(10);
     
 } catch (Exception $e) {
 
-	if ($e instanceof WSFault) {
-		printf("Soap Fault: %s\n", $e->Reason);
-	} else {
-		printf("Message = %s\n",$e->getMessage());
-	}
+    if ($e instanceof WSFault) {
+        printf("Soap Fault: %s\n", $e->Reason);
+    } else {
+        printf("Message = %s\n",$e->getMessage());
+    }
 }
 ?>

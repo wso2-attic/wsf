@@ -16,21 +16,20 @@
  */
 
 $reqPayloadString = <<<XML
-	<ns1:echoString xmlns:ns1="http://php.axis2.org/samples">
-		<text>Hello World!</text>
-	</ns1:echoString>
+    <ns1:echoString xmlns:ns1="http://php.axis2.org/samples">
+        <text>Hello World!</text>
+    </ns1:echoString>
 XML;
 
 function echoFunction($inMessage) {
-
     return new WSMessage($inMessage->str);
 }
 
-$operations = array("echoString" => "echoFunction");
-$actions = array("http://php.axis2.org/samples/echoString" => "echoString");
+$operations = array( "echoString" => "echoFunction");
+$actions = array( "http://php.axis2.org/samples/echoString" => "echoString");
 
-$svr = new WSService(array("operations" => $operations,
-			   "reliable"=>TRUE));
-$svr->reply();
+$service = new WSService(array( "operations" => $operations,
+                            "reliable"=>TRUE));
+$service->reply();
 
 ?>

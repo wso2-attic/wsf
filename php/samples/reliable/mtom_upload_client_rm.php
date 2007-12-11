@@ -15,27 +15,31 @@
  * limitations under the License.
  */
 
-$reqPayloadString = <<<XML
+$requestPayloadString = <<<XML
 <ns1:upload xmlns:ns1="http://php.axis2.org/samples/mtom">
-<ns1:fileName>test.jpg</ns1:fileName><ns1:image xmlmime:contentType="image/jpeg" xmlns:xmlmime="http://www.w3.org/2004/06/xmlmime"><xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="cid:myid1"></xop:Include></ns1:image></ns1:upload>
+    <ns1:fileName>test.jpg</ns1:fileName>
+    <ns1:image xmlmime:contentType="image/jpeg" xmlns:xmlmime="http://www.w3.org/2004/06/xmlmime">
+        <xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="cid:myid1"></xop:Include>
+    </ns1:image></ns1:upload>
 XML;
 
 try {
     $f = file_get_contents("../resources/axis2.jpg");
 
-    $reqMessage = new WSMessage($reqPayloadString,
-                                array("to" => "http://localhost/samples/reliable/mtom_upload_service_rm.php",
+    $requestMessage = new WSMessage($requestPayloadString,
+                               array( "to" => "http://localhost/samples/reliable/mtom_upload_service_rm.php",
                                       "action" => "http://php.axis2.org/samples/mtom",
                                       "attachments" => array("myid1" => $f)));
 
-    $client = new WSClient(array("useMTOM" => TRUE,
-                                 "reliable"=> TRUE));
+    $client = new WSClient(array( "useMTOM" => TRUE,
+                                  "reliable" => TRUE));
 
-    $resMessage = $client->request($reqMessage);
+    $requestMessage = $client->request($requestMessage);
 
-    echo $resMessage->str;
+    echo $requestMessage->str;
 
-    sleep(10);
+    /** wait 10 seconds for the requests to complete */
+    $client->wait(10);
 
 } catch (Exception $e) {
     if ($e instanceof WSFault) {
