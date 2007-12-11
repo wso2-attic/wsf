@@ -302,10 +302,9 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     innerElement.getMinOccurs() == 0) {
                 return true;
             }
-            throw new AxisFault("As this operation has multiple return values it should be " +
-                    "returning an object rather then a javascript simple type. Object :" +
-                    innerElement.getName() +
-                    " was not found in the value returned");
+            throw new AxisFault("Required element " + innerElement.getName() + " of type " +
+                    innerElement.getSchemaTypeName() +
+                    " was not found in the response");
         }
         return false;
     }
