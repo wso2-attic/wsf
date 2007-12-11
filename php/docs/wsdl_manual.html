@@ -17,33 +17,68 @@
 <p>In the WSDL mode, by providing a WSDL file, you can invoke a service or
 provide a service, without having to construct the payload manually. Few
 simple steps are required to configure either the client or the service to
-use the WSDL mode.</p>
+use the WSDL mode.WSO2
+    WSF/PHP supports both WSDL 1.1 and WSDL 2.0 in WSDL mode.</p>
 
 <h2 id="1">10.1. Writing a Simple Client to Use the WSDL Mode</h2>
 
-<p>The sample.wsdl WSDL file provided in the samples\wsdl_mode folder will be
-used for the samples in this manual. Please have a look at the
-samples\wsdl_mode\sample.wsdl.</p>
+<p>
+    There are two WSDL(WSDL 1.1 and WSDL 2.0) files provided in the samples\wsdl_mode folder and sample_wsdl_11.wsdl will be
+used for the sample in this manual. Please have a look at the samples\wsdl_mode\sample_wsdl_11.wsdl.</p>
+<pre style="text-align: left"><strong>1.<span style="font-family: Verdana">create a WSClient object as follows </span>
+</strong> 
+$client = new WSClient(array("<span style="color: #ff3333">wsdl</span>"=&gt;"<span style="color: #ff0000">sample_wsdl_11<span>.wsdl</span></span>"));
+       
+ If the service endpoint has changed from the location which is defined in the WSDL then you can specify it as 
+ $client = new WSClient(array("<span style="color: #ff3333">wsdl</span>"=&gt;"<span
+     style="color: #ff0000">sample_wsdl_11<span>.wsdl</span></span>",
+			    "<span style="color: #ff0033">to</span>" =&gt; "<span style="color: #ff0000">http://tempuri.org</span>"));
 
-<p><strong id="2">First obtain a WSClientProxy object from the WSClient as
-follows:</strong></p>
-<pre>        $client = new WSClient(array("<span style="color: #ff3333">wsdl</span>"=&gt;"<span style="color: #ff3333">sample.wsdl</span>"));
-        $proxy = $client-&gt;getProxy();
-    </pre>
+<strong>2.<span style="font-family: Verdana">obtain a WSClientProxy object from the WSClient as follows:</span></strong><span style="font-family: Verdana"> </span> $proxy = $client-&gt;getProxy();</pre>
 
-<p>Now you can call any operation defined in the sample.wsdl WSDL directory
-on the WSClientProxy object. For example,invoke the GetPrice operation
-defined in sample.wsdl, as follows. invoke the GetPrice operation defined
-in sample.wsdl, as follows.</p>
-<pre>        $value = $proxy-&gt;GetPrice(array("ProductType"=> "Testing",
-                                   "ItemNo" => 234));
+<p>Now you can call any operation defined in the WSDL . For example,invoke the <strong>
+         QueryPurchaseOrder</strong> operation defined in the wsdl, as follows. invoke
+     the <strong>QueryPurchaseOrder</strong> operation defined in sample_wsdl_11.wsdl,
+     as follows.</p>
+<pre>
+ $return_value = $proxy-&gt;<strong>QueryPurchaseOrder</strong>($input);
+
+<span style="font-family: Verdana">The arguments will be for the function either an object defined in the class map or arry of arguments.Which can be constructed as the following two ways. First you should have understand the values that should
+pass to the input. It is defined in schema in WSDL. In schema input and output parameter types is defined and you should pass exactly the way it is defined there. First we will have a look at the schema for the input message. </span>
+  <span style="color: #990000"> &lt;xsd:element name="orderInfo"&gt;
+		&lt;xsd:complexType&gt;
+		    &lt;xsd:sequence&gt;
+				&lt;xsd:element name="productName" type="xsd:string"&gt;&lt;/xsd:element&gt;
+				&lt;xsd:element name="quantity" type="xsd:float"&gt;&lt;/xsd:element&gt;
+				&lt;xsd:element name="date" type="xsd:dateTime"&gt;&lt;/xsd:element&gt;
+				&lt;xsd:element name="orderNo" type="xsd:int"&gt;&lt;/xsd:element&gt;
+			&lt;/xsd:sequence&gt;
+		&lt;/xsd:complexType&gt;
+  &lt;/xsd:element&gt;
+</span>
+<span><span><strong><span style="font-size: 10pt; font-family: Verdana">Array of arguments
+</span></strong><span style="font-family: Verdana">As you can see the element of the
+    input message in the WSDL of the <strong>QueryPurchaseOrder</strong> is OrderInfo
+    which is a complex type defined in the schema. The complex type <strong>OrderInfo</strong>
+    has four elements.So the array that you have to construct will be $input_array =
+    array("<span style="color: #ff0000">productName</span>" =&gt; "<span style="color: #ff0000">Testing</span>",
+    "<span style="color: #ff0000">quantity</span>" =&gt; <span style="color: #ff0000">234</span>,
+    "<span style="color: #ff0000">date</span>" =&gt; date(<span style="color: #ff0000">20031234)</span>,
+    "<span style="color: #ff0000">orderNo</span>" =&gt; <span style="color: #ff0000">345</span>));
+    If the type of the element would be another complex type there should be another
+    array instead of the value.This will be explained in construct </span></span></span><span
+        style="font-family: Verdana"></span><strong><span style="text-decoration: underline">
+        </span><span style="font-size: 10pt; font-family: Verdana">Passing class objects 
+</span>
+        </strong>
+
 </pre>
 
 
 <p>This call will construct the SOAP envelope with the required payload and
 send it to the service endpoint specified in the WSDL.</p>
 
-<h3 id="2">10.2. Writing a Simple Service to Use the WSDL Mode</h3>
+<h3 id="H3_1">10.2. Writing a Simple Service to Use the WSDL Mode</h3>
 
 <p>We will implement a service to accept the request sent by the above
 client.</p>

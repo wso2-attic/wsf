@@ -13,7 +13,8 @@
 <h1>WSDL Mode</h1>
 
 <p>A user can provide a WSDL (Web Services Description Language) file to
-obtain a proxy  and invoke a service. This is a very convenient way of
+obtain a proxy&nbsp;
+    and invoke a service. This is a very convenient way of
 implementing a client.</p>
 
 <p>The following options can be used to configure the WSDL mode on the client
@@ -36,7 +37,7 @@ side.</p>
     <tr>
       <td style="width: 100px; height: 21px">wsdl</td>
       <td style="width: 100px; height: 21px">string</td>
-      <td style="width: 100px; height: 21px">this should be a URI or  a
+      <td style="width: 100px; height: 21px">this should be a URI or&nbsp; a
         filename</td>
       <td style="width: 100px; height: 21px">none</td>
       <td style="width: 373px; height: 21px">You can provide a WSDL file or a
@@ -79,7 +80,8 @@ array of named output parameters.</p>
 <p>The following is a sample code demonstrating the use of WSClientProxy.
 Consider we have a WSDL which defines the operation "echoString" which echoes
 a given value.</p>
-<pre>            $client = new WSClient(array("wsdl"=&gt;"echo.wsdl"));
+<pre>
+            $client = new WSClient(array("wsdl"=&gt;"sample.wsdl"));
             $proxy = $client-&gt;getProxy();
             $value = $proxy-&gt;echoString(array("Hello World"));
         </pre>
