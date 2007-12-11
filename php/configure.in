@@ -6,7 +6,7 @@ DEBUG = 0
 #CRUNTIME Library (Use /MD or /MT)
 CRUNTIME=/MT
 # Visual Studio version
-VC_VERSION_2005_OR_ABOVE=0
+EMBED_MANIFEST=0
 # Build with thread safety
 ZTS =1
 #############################################################################
@@ -17,9 +17,6 @@ LIBXML2_BIN_DIR = E:\libxml2-2.6.30.win32
 
 # Path to iconv installation
 ICONV_BIN_DIR = E:\iconv-1.9.2.win32
-
-# Path to zlib installation
-ZLIB_BIN_DIR=E:\zlib-1.2.3.win32
 
 # Enable/disable SSL client transport, to enable set ENABLE_SSL = 1
 ENABLE_SSL = 1
@@ -43,6 +40,4 @@ MYSQL_BIN_DIR = "C:\Program Files\MySQL\MySQL Server 5.0"
 PHP_SRC_DIR = E:\php\php-5.2.5
 PHP_BIN_DIR = E:\php\php-5.2.5-Win32
 WIN32BUILD_DIR = E:\php\win32build
-
-
 
