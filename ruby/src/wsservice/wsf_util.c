@@ -260,6 +260,7 @@ wsf_svc_info_create (
     svc_info->ops_to_functions = NULL;
     svc_info->ops_to_classes = NULL;
     svc_info->ops_to_actions = NULL;
+    svc_info->class_to_args = NULL;
     svc_info->modules_to_engage = NULL;
     svc_info->service = NULL;
     svc_info->op_name = NULL;
@@ -282,6 +283,12 @@ wsf_svc_info_free (
         }
         if (svc_info->ops_to_actions) {
             axutil_hash_free (svc_info->ops_to_actions, env);
+        }
+        if (svc_info->modules_to_engage) {
+            axutil_array_list_free (svc_info->modules_to_engage, env);
+        }
+        if (svc_info->class_to_args) {
+            axutil_hash_free (svc_info->class_to_args, env);
         }
         if (svc_info->modules_to_engage) {
             axutil_array_list_free (svc_info->modules_to_engage, env);
@@ -974,9 +981,9 @@ wsf_util_hash_each_ops_to_funcs(VALUE key, VALUE value, VALUE arg)
     }
 
     axutil_hash_set (svc_info->ops_to_functions,
-        axutil_strdup (wsservice->ws_env_svr, op_name_to_store),
+        op_name_to_store,
         AXIS2_HASH_KEY_STRING,
-        axutil_strdup (wsservice->ws_env_svr, func_name));
+        (void*)func_name);
 
 }
 
@@ -999,14 +1006,14 @@ wsf_util_hash_each_action(VALUE key, VALUE value, VALUE arg)
     operation_name = RSTRING(value)->ptr;
     wsa_action = RSTRING(key)->ptr;
 
-    func_name = axutil_hash_get (svc_info->ops_to_functions,
+    func_name = (axis2_char_t*)axutil_hash_get (svc_info->ops_to_functions,
             operation_name, AXIS2_HASH_KEY_STRING);
     if (!func_name)
     {
         axutil_hash_set (svc_info->ops_to_functions,
-                            axutil_strdup (wsservice->ws_env_svr, operation_name),
-                                AXIS2_HASH_KEY_STRING, axutil_strdup (wsservice->ws_env_svr,
-                                operation_name));
+                                operation_name,
+                                AXIS2_HASH_KEY_STRING,
+                                (void*)operation_name);
         func_name = operation_name;
     }
    
@@ -1021,9 +1028,9 @@ wsf_util_hash_each_action(VALUE key, VALUE value, VALUE arg)
 
         /* keep track of operations with actions */
         axutil_hash_set (svc_info->ops_to_actions,
-                    axutil_strdup (wsservice->ws_env_svr, operation_name),
-                    AXIS2_HASH_KEY_STRING, axutil_strdup (wsservice->ws_env_svr,
-                        wsa_action));
+                    operation_name,
+                    AXIS2_HASH_KEY_STRING,
+                    (void*)wsa_action);
     }
 
     else
@@ -1156,27 +1163,27 @@ wsf_util_resolve_op_to_func(VALUE key, VALUE value, VALUE self)
     class_name = wsservice->temp_ops_class;
 
     axutil_hash_set (svc_info->ops_to_classes,
-        axutil_strdup (wsservice->ws_env_svr, op_name),
+        op_name,
         AXIS2_HASH_KEY_STRING,
-        axutil_strdup (wsservice->ws_env_svr, class_name));
+        (void*)class_name);
 
     axutil_hash_set (svc_info->ops_to_functions,
-        axutil_strdup (wsservice->ws_env_svr, op_name),
+        op_name,
         AXIS2_HASH_KEY_STRING,
-        axutil_strdup (wsservice->ws_env_svr, func_name));
+        (void*)func_name);
 
 }
 
 static int
-wsf_util_resolve_class_ops(VALUE key, VALUE value, VALUE self)
+wsf_util_resolve_class_params(VALUE key, VALUE value, VALUE self)
 {
     axis2_char_t *class_name;
     wsservice_t *wsservice;
-    VALUE func_hash;
+    VALUE class_param_hash;
 
     Data_Get_Struct(self, wsservice_t, wsservice);
 
-    func_hash = value;
+    class_param_hash= value;
     
     if(TYPE(key) == T_STRING)
     {
@@ -1192,10 +1199,46 @@ wsf_util_resolve_class_ops(VALUE key, VALUE value, VALUE self)
     }
     wsservice->temp_ops_class = class_name;
 
-    if(TYPE(func_hash) == T_HASH)
-    {  
-        /* operation to function map */
-        rb_hash_foreach(func_hash, wsf_util_resolve_op_to_func, self);
+    if(TYPE(class_param_hash) == T_HASH)
+    {
+        VALUE ht_ops;
+        VALUE ht_args;
+
+        ht_ops = rb_hash_aref(class_param_hash, ID2SYM(rb_intern("operations")));
+        if(ht_ops == Qnil)
+        {
+            ht_ops = rb_hash_aref(class_param_hash, rb_str_new2("operations"));
+        }
+        if(ht_ops != Qnil)
+        {
+            AXIS2_LOG_DEBUG (wsservice->ws_env_svr->log, AXIS2_LOG_SI,
+                  "[wsf_service] setting operation for classs %s", class_name);
+            if(TYPE(ht_ops) == T_HASH)
+            {
+                /* operation to function map */
+                rb_hash_foreach(ht_ops, wsf_util_resolve_op_to_func, self);
+            }
+        }
+
+        ht_args = rb_hash_aref(class_param_hash, ID2SYM(rb_intern("args")));
+        if(ht_args == Qnil)
+        {
+            ht_args = rb_hash_aref(class_param_hash, rb_str_new2("args"));
+        }
+        if(ht_args != Qnil)
+        {
+            AXIS2_LOG_DEBUG (wsservice->ws_env_svr->log, AXIS2_LOG_SI,
+                  "[wsf_service] setting args for classs %s", class_name);
+            if(TYPE(ht_args) == T_ARRAY)
+            {
+                /* array of constructor arguments */
+                axutil_hash_set (wsservice->svc_info->class_to_args,
+                    class_name,
+                    AXIS2_HASH_KEY_STRING,
+                    (void*)ht_args);
+                
+            }
+        }
     }
     else
     {
@@ -1207,8 +1250,6 @@ void wsf_util_process_ws_service_classes(VALUE self)
 {
     VALUE ht_calsses;
     VALUE ht_ops_to_mep;
-    /*HashTable *ht_classes,
-    HashTable *ht_ops_to_mep, */
     wsf_svc_info_t *svc_info;
     axutil_env_t *ws_env_svr;
 
@@ -1227,8 +1268,15 @@ void wsf_util_process_ws_service_classes(VALUE self)
             /* class_hash has the class_name=>(ops) map */
             if(TYPE(class_hash) == T_HASH)
             {
-                rb_hash_foreach(class_hash, wsf_util_resolve_class_ops, self);
+                rb_hash_foreach(class_hash, wsf_util_resolve_class_params, self);
             }
         }
+
+    }
+    else if(TYPE(wsservice->ht_classes) == T_HASH)
+    {
+        /* if this we only allow only class per service, it wourld have been redude to
+           Just  iterate through classes hash */
+        rb_hash_foreach(wsservice->ht_classes, wsf_util_resolve_class_params, self);
     }
 }

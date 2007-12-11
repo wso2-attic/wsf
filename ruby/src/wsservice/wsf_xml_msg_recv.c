@@ -58,7 +58,8 @@ static axiom_node_t *wsf_xml_msg_recv_invoke_wsmsg (
     axis2_msg_ctx_t * out_msg_ctx,
     axis2_char_t *classname,
     int enable_mtom,
-    int request_xop );
+    int request_xop,
+    VALUE class_args);
 
 
 static int wsf_xml_msg_recv_invoke_mixed (
@@ -153,6 +154,8 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
     axiom_soap_header_t *out_header = NULL;
     axiom_soap_fault_t *soap_fault = NULL;
 
+    VALUE class_args = Qnil;
+
     AXIS2_PARAM_CHECK (env->error, in_msg_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK (env->error, out_msg_ctx, AXIS2_FAILURE);
 
@@ -231,6 +234,12 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
         return AXIS2_FAILURE;
     }
 
+    if(classname != NULL && svc_info->class_to_args)
+    {
+        class_args = (VALUE) axutil_hash_get(svc_info->class_to_args, classname,
+                AXIS2_HASH_KEY_STRING);
+    }
+
     if (svc_info->ht_op_params != Qnil) {
         /* CHANGED */
         VALUE tmp;
@@ -249,14 +258,14 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
                     wsf_xml_msg_recv_invoke_wsmsg (env, soap_ns,
                     operation_name,
                     om_node, out_msg_ctx,
-                    classname, use_mtom, request_xop);
+                    classname, use_mtom, request_xop, class_args);
             }
         }
     } else {
         result_node =
             wsf_xml_msg_recv_invoke_wsmsg (env, soap_ns, operation_name,
             om_node, out_msg_ctx,
-            classname, use_mtom, request_xop);
+            classname, use_mtom, request_xop, class_args);
     }
     if (!result_node) {
 
@@ -474,7 +483,8 @@ wsf_xml_msg_recv_invoke_wsmsg (
     axis2_msg_ctx_t    *out_msg_ctx,
     axis2_char_t       *classname,
     int                 use_mtom,
-    int                 request_xop)
+    int                 request_xop,
+    VALUE class_args)
 {
     char *req_payload = NULL;
 	char *res_payload = NULL;
@@ -533,9 +543,36 @@ wsf_xml_msg_recv_invoke_wsmsg (
 
        
 		if (NULL != classname)
-        { 
+        {   
+            VALUE *argv = NULL;
+            int length;
+            int i;
+            VALUE next_arg;
+
             user_class = rb_define_class(classname, rb_cObject);
-            user_obj = rb_class_new_instance(0, NULL, user_class);
+
+            argv = (VALUE*)AXIS2_MALLOC(env-> allocator, sizeof(VALUE));
+
+            i = 0;
+            while(Qnil != (next_arg = rb_ary_shift(class_args)))
+            {
+                if(i != 0)
+                {
+                    argv = AXIS2_REALLOC(env->allocator, argv, sizeof(VALUE) * (i +1));
+                }
+                argv[i] = next_arg;
+
+                i ++;
+            }
+
+            length = i;
+
+            user_obj = rb_class_new_instance(length , argv, user_class);
+
+            if(argv)
+            {
+                AXIS2_FREE(env->allocator, argv);
+            }
         }
         else
         {
@@ -613,23 +650,16 @@ wsf_xml_msg_recv_invoke_wsmsg (
 			}
 		}
         
-    /*zend_catch {
-        if (EG(exception) && Z_TYPE_P(EG(exception)) == IS_OBJECT && 
-                instanceof_function(Z_OBJCE_P(EG(exception)), ws_fault_class_entry TSRMLS_CC)) {
-                 wsf_xml_msg_recv_set_soap_fault (env, soap_ns, out_msg_ctx,
-                                             EG(exception) TSRMLS_CC);
-        }else{
-            _bailout = 1;
-        }
-        
-    }
-    zend_end_try ();
-    */
 	
 	if (req_payload)
 	{
 		AXIS2_FREE(env->allocator, req_payload);
 	}
+
+    if (res_payload)
+    {
+		AXIS2_FREE(env->allocator, res_payload);
+    }
 
     return res_om_node;
 }

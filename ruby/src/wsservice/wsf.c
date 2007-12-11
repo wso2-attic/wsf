@@ -49,6 +49,8 @@ wsservice_mark(wsservice_t *wsservice)
 static void
 wsservice_free(wsservice_t *w)
 {
+    wsf_svc_info_free(w->svc_info, ws_env_svr);
+
     free(w);
 }
 
@@ -89,6 +91,8 @@ wsservice_initialize(VALUE self, VALUE options)
     svc_info->ops_to_functions = axutil_hash_make (ws_env_svr);
     svc_info->ops_to_actions = axutil_hash_make (ws_env_svr);
     svc_info->ops_to_classes = axutil_hash_make (ws_env_svr);
+    svc_info->class_to_args = axutil_hash_make (ws_env_svr);
+
     svc_info->ruby_worker = worker;
 
     if(TYPE(options) == T_HASH)

@@ -236,6 +236,8 @@ typedef struct wsf_svc_info
     axutil_hash_t *ops_to_functions;
     
     axutil_hash_t *ops_to_classes;
+    
+    axutil_hash_t *class_to_args;
 
     axutil_array_list_t *modules_to_engage;
 
