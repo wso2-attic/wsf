@@ -16,8 +16,7 @@
  */
 
 $reqPayloadString = <<<XML
-	<download>
-	</download>
+<download></download>
 XML;
 
 try {

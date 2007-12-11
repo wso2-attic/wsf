@@ -21,16 +21,6 @@ function getAttachment($inMessage) {
     $cid2contentMap = $inMessage->cid2contentType;
     $imageName;
     
-    
-    foreach($cid2stringMap as $i=>$value){
-        $f = $cid2stringMap[$i];
-        $contentType = $cid2contentMap[$i];
-        if(strcmp($contentType,"image/jpeg") ==0){
-            $imageName = $i."."."jpg";
-            file_put_contents("/tmp/".$imageName, $f);
-        }
-    }
-
     $arraysize = count($cid2contentMap);
     if($arraysize == 0){
 	    $dom = new DomDocument();
