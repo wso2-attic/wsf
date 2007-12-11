@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-$reqPayloadString = <<<XML
+$requestPayloadString = <<<XML
 <webSearch><appid>ApacheRestDemo</appid><query>SriLanka</query><form/></webSearch>
 XML;
 
@@ -26,9 +26,9 @@ try {
 	      "HTTPMethod"=>GET,
 	      "useSOAP"=>FALSE));
 				
-    $resMessage = $client->request($reqPayloadString);
+    $responseMessage = $client->request($requestPayloadString);
     
-    printf("Response = %s <br>", htmlspecialchars($resMessage->str));
+    printf("Response = %s <br>", htmlspecialchars($responseMessage->str));
 
 } catch (Exception $e) {
 

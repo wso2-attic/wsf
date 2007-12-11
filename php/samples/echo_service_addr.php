@@ -25,9 +25,9 @@ function echoFunction($inMessage) {
 $operations = array("echoString" => "echoFunction");
 $actions = array("http://php.axis2.org/samples/echoString" => "echoString");
 
-$svr = new WSService(array("operations" => $operations, 
-                              "actions" => $actions));
+$service = new WSService(array( "operations" => $operations, 
+                                "actions" => $actions));
         
-$svr->reply();
+$service->reply();
 
 ?>

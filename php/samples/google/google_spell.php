@@ -17,32 +17,34 @@
 
 /** 
   * Note: This is a simole example written just as a proof of concept. 
-  * You may write a nice web interface to improve the usability.	
+  * You may write a nice web interface to improve the usability.    
   * This sample sends a Goole key and a phrase to Google spell service. 
   * If everyting goes right, it returns a spell corrected version of 
   * the prase you submit.
   * Google spell uses SOAP 1.1.
   */
 
-$reqPayloadString = <<<XML
+$requestPayloadString = <<<XML
 <ns1:doSpellingSuggestion x:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns1="urn:GoogleSearch" xmlns:x="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance" xmlns:xsd="http://www.w3.org/1999/XMLSchema">
-	<key xsi:type="xsd:string">your_key_here</key>
-	<phrase xsi:type="xsd:string">tamperature</phrase>
+    <key xsi:type="xsd:string">your_key_here</key>
+    <phrase xsi:type="xsd:string">tamperature</phrase>
 </ns1:doSpellingSuggestion>
 XML;
 
 try {
-	$client = new WSClient(array("to" => "http://api.google.com/search/beta2", 
-		"useSOAP" => 1.1)); 
-	$resMessage = $client->request($reqPayloadString);
-	printf("Response = %s <br/>\n", htmlspecialchars($resMessage->str));
+    $client = new WSClient(array( "to" => "http://api.google.com/search/beta2", 
+                                  "useSOAP" => 1.1)); 
+    $responseMessage = $client->request($requestPayloadString);
+
+    printf("Response = %s <br/>\n", htmlspecialchars($resMessage->str));
+
 } catch (Exception $e) {
-	if ($e instanceof WSFault) {
-		printf("Soap Fault: %s\n", $e->Reason);
-	} else {
-		printf("Message = %s\n",$e->getMessage());
-	}
-	
+    if ($e instanceof WSFault) {
+        printf("Soap Fault: %s\n", $e->Reason);
+    } else {
+        printf("Message = %s\n",$e->getMessage());
+    }
+    
 }
 
 

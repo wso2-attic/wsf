@@ -17,22 +17,22 @@
 
 include_once('wsf.php');
 
-$reqPayloadString = <<<XML
+$requestPayloadString = <<<XML
     <ns1:echoString xmlns:ns1="http://php.axis2.org/samples">
         <text>Hello World!</text>
     </ns1:echoString>
 XML;
 
 $document = new domDocument;
-$document->loadXML($reqPayloadString);
+$document->loadXML($requestPayloadString);
 
 
 try {
 
-    $resMessage = ws_request($document, 
-                        array("to"=>"http://localhost/samples/reply_echo_service.php"));
+    $responseMessage = ws_request($document, 
+                        array("to" => "http://localhost/samples/reply_echo_service.php"));
     
-    printf("Response = %s <br>", htmlspecialchars($resMessage->str));
+    printf("Response = %s <br>", htmlspecialchars($responseMessage->str));
 
 } catch (Exception $e) {
 

@@ -15,24 +15,24 @@
  * limitations under the License.
  */
 
-$reqPayloadString = <<<XML
-	<ns1:echoString xmlns:ns1="http://php.axis2.org/samples">
-		<text>Hello World!</text>
-	</ns1:echoString>
+$requestPayloadString = <<<XML
+    <ns1:echoString xmlns:ns1="http://php.axis2.org/samples">
+        <text>Hello World!</text>
+    </ns1:echoString>
 XML;
 
 try {
 
-    $client = new WSClient(array("to"=>"https://localhost/samples/echo_service.php",
-					   "CACert"=>"E:\\cacert.pem"));
-    $msg = $client->request($reqPayloadString);
-    echo $msg->str;
+    $client = new WSClient(array( "to" => "https://localhost/samples/echo_service.php",
+                                  "CACert" => "E:\\cacert.pem"));
+    $responseMessage = $client->request($requestPayloadString);
+    echo $responseMessage->str;
         
 } catch (Exception $e) {
-	if ($e instanceof WSFault) {
-		printf("Soap Fault: %s\n", $e->Code);
-	} else {
-		printf("Message = %s\n",$e->getMessage());
-	}
+    if ($e instanceof WSFault) {
+        printf("Soap Fault: %s\n", $e->Code);
+    } else {
+        printf("Message = %s\n",$e->getMessage());
+    }
 }
 ?>

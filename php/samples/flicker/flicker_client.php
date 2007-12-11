@@ -16,7 +16,7 @@
  */
 
 
-$reqPayloadString = <<<XML
+$requestPayloadString = <<<XML
 <x:FlickrRequest xmlns:x="urn:flickr">
 <method>flickr.test.echo</method>
 <api_key>your key</api_key>
@@ -27,20 +27,20 @@ XML;
 try {
 
     $flicker_client = new WSClient(
-        array("to"=>"http://api.flickr.com/services/soap/"));
+        array("to" => "http://api.flickr.com/services/soap/"));
 
-				
-    $resMessage = $flicker_client->request($reqPayloadString);
+                
+    $responseMessage = $flicker_client->request($requestPayloadString);
     
-    printf("Response = %s <br>", htmlspecialchars($resMessage->str));
+    printf("Response = %s <br>", htmlspecialchars($responseMessage->str));
 
 } catch (Exception $e) {
 
-	if ($e instanceof WSFault) {
-		printf("Soap Fault: %s\n", $e->Reason);
-	} else {
-		printf("Message = %s\n",$e->getMessage());
-	}
+    if ($e instanceof WSFault) {
+        printf("Soap Fault: %s\n", $e->Reason);
+    } else {
+        printf("Message = %s\n",$e->getMessage());
+    }
 
 }
 ?>
