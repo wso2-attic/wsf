@@ -36,27 +36,25 @@ function getAttachment($inMessage) {
     }
     
 if($file_saved){
-$resPayload = <<<XML
+$responsePayload = <<<XML
 <ns1:response xmlns:ns1="http://php.axis2.org/samples/mtom">Image Saved</ns1:response>
 XML;
 }
 else{
-$resPayload = <<<XML
+$responsePayload = <<<XML
 <ns1:response xmlns:ns1="http://php.axis2.org/samples/mtom">Image Saving Failed</ns1:response>
 XML;
 }
 
-    $returnMessage = new WSMessage($resPayload);
+    $returnMessage = new WSMessage($responsePayload);
 
     return $returnMessage;
 }
 
 $operations = array("upload" => "getAttachment");
 
-$server = new WSService(
-            array(
-                "operations" => $operations, 
-                "requestXOP"=>TRUE));
+$server = new WSService( array( "operations" => $operations, 
+                                "requestXOP" => TRUE));
         
 $server->reply();
 
