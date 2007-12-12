@@ -20,7 +20,6 @@ Contents:
 	You need to download following dependency libraries:
 
 	libxml2 binary distribution   
-        zlib binary distribution
         iconv binary distribution
 	OpenSSL binary distribution
 	PHP Source
@@ -30,7 +29,7 @@ Contents:
 
 	In addition you need to have visual studio installed on your system.
 	
-	obtain libxml2, zlib, and iconv win32 binaries from [1].
+	obtain libxml2 and iconv win32 binaries from [1].
 	obtain OpenSSL binary from [2] [the build system assumes that you install openssl from msi].
 	obtain MySql Server from [3].
 	obtain PHP Source and Bianry from [4].
@@ -87,9 +86,9 @@ Contents:
        You will find the option --with-wsf.
 
        Add following entries to config.nice.bat file.
-	"--with-extra-includes=<Libxml2 bin dir>\include;<Iconv bin dir>\include;<zlib bi dir>\include;<wsf-c>\include;
+	"--with-extra-includes=<Libxml2 bin dir>\include;<Iconv bin dir>\include;<wsf-c>\include;
 		<wsf-c-bin>\include;"
-	"--with-extra-libs=<Libxml2 bin dir>\lib;<Iconv bin dir>\lib;<zlib bin dir>\lib;<wsf-c>\lib;<wsf-c-bin>\lib"
+	"--with-extra-libs=<Libxml2 bin dir>\lib;<Iconv bin dir>\lib;<wsf-c>\lib;<wsf-c-bin>\lib"
 	--with-wsf=shared"
 
 	Now run config.nice.bat file to generate the makefile.
@@ -161,7 +160,6 @@ Contents:
   1. PHP     5.2.5
   2. Libxml2 2.6.30
   3. Iconv   1.9.2 
-  4. zlib    1.2.3
-  5. openssl .98e (MSI)
+  4. openssl .98e (MSI)
 
 
