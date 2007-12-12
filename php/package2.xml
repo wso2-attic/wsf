@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package packagerversion="1.4.2" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
+<package packagerversion="1.4.2" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0"     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
 
     <name>wso2_wsf_php</name>
     <channel>http://dist.wso2.org/products/wsf/php/1.2.0</channel>
@@ -8,41 +8,41 @@
 WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into PHP is a PHP extension for providing and consuming Web Services in PHP. WSO2 WSF/PHP supports SOAP 1.1, SOAP 1.2, WSDL 1.1, WSDL 2.0, REST style invocation as well as some of the key WS-* stack specifications such as: SOAP MTOM, WS-Addressing, WS-Security, WS-SecurityPolicy and WS-ReliableMessaging.
 </description>
 <lead>
-	<name>Nabeel Yoosuf</name>
-	<user>nabeel</user>
-	<email>nabeel@php.net</email>
-	<active>yes</active>
+    <name>Nabeel Yoosuf</name>
+    <user>nabeel</user>
+    <email>nabeel@php.net</email>
+    <active>yes</active>
 </lead>
 <lead>
-	<name>Nandika Jayawardana</name>
-	<user>nandika</user>
-	<email>nandika@wso2.com</email>
-	<active>yes</active>
+    <name>Nandika Jayawardana</name>
+    <user>nandika</user>
+    <email>nandika@wso2.com</email>
+    <active>yes</active>
 </lead>
 <lead>
-	<name>Buddhika Semasinghe</name>
-	<user>buddhika</user>
-	<email>buddhika@wso2.com</email>
-	<active>yes</active>
+    <name>Buddhika Semasinghe</name>
+    <user>buddhika</user>
+    <email>buddhika@wso2.com</email>
+    <active>yes</active>
 </lead>
 <lead>
-	<name>Samisa Abeysinghe</name>
-	<user>Samisa</user>
-	<email>samisa@wso2.com</email>
-	<active>yes</active>
+    <name>Samisa Abeysinghe</name>
+    <user>Samisa</user>
+    <email>samisa@wso2.com</email>
+    <active>yes</active>
 </lead>
 
-<date>2007-10-16</date>
+<date>2007-12-15</date>
 <version>
-	<release>1.1.0</release>
-	<api>1.1.0</api>
+    <release>1.2.0</release>
+    <api>1.2.0</api>
 </version>
 <stability>
-	<release>stable</release>
-	<api>stable</api>
+    <release>stable</release>
+    <api>stable</api>
 </stability>
 <license uri="http://apache.org/licenses/LICENSE-2.0">Apache2</license>
-<notes>1.1.0 release </notes>
+<notes>1.2.0 release </notes>
 
 <contents>
     <dir name="/">
@@ -65,7 +65,7 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
    <file name="wsf_out_transport_info.h" role="src" />
    <file name="wsf_policy.c" role="src" />
    <file name="wsf_policy.h" role="src" />
-   <file name="wsf_soap.c" role="src" />	
+   <file name="wsf_soap.c" role="src" />    
    <file name="wsf_soap.h" role="src" />
    <file name="wsf_stream.c" role="src" />
    <file name="wsf_stream.h" role="src" />
@@ -80,7 +80,8 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
    <file name="wsf_version.h" role="src" />
    </dir>
    <dir name="scripts" baseinstalldir="wso2_wsf_php">
-        <file name="wsf.php" role="php"/>
+       <file name="wsf.php" role="php"/>
+       <file name="wsf_wsdl.php" role="php"/>
         <dir name="wsdl">
             <file name="WS_WSDL_Binding.php" role="php"/>
             <file name="WS_WSDL_Consts.php" role="php"/>
@@ -94,12 +95,16 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
         </dir>
         <dir name="dynamic_invocation">
             <file name="wsf_wsdl_consts.php" role="php"/>
-            <file name="wsf_wsdl.php" role="php"/>
+        <file name="wsf_wsdl_client_request.php" role="php"/>
+            <file name="wsf_wsdl_client_response.php" role="php"/>
+            <file name="wsf_wsdl_service.php" role="php"/>
+            <file name="wsf_wsdl_util.php" role="php"/>
             <dir name="xslt">
                 <file name="doc.xslt" role="php"/>
                 <file name="jsstub.xslt" role="php"/>
                 <file name="tryit.xslt" role="php"/>
-                <file name="wsdl11to20.xsl10.xsl" role="php"/>
+        <file name="wsdl11to20.xsl10.xsl" role="php"/>
+        <file name="formatxml.xsl" role="php"/>
                 <file name="wsdl2sig.xslt" role="php"/>
             </dir>
         </dir>
@@ -132,7 +137,9 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
         </dir>
    </dir>
    <dir name="samples" baseinstalldir="wso2_wsf_php">
-        <file name="add_soap_header_client.php" role="php"/>
+    	<file name="add_soap_header_client.php" role="php"/>
+        <file name="add_soap_header_with_client_client.php" role="php"/>
+        <file name="class_based_service.php" role="php"/>
         <file name="echo_client_addr.php" role="php"/>
         <file name="echo_client_multiple_invocation.php" role="php"/>
         <file name="echo_client.php" role="php"/>
@@ -159,6 +166,24 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
             <file name="mtom_upload_service_base64.php" role="php"/>
             <file name="mtom_upload_service.php" role="php"/>
         </dir>
+	<dir name="solutions">
+	   	<dir name="mashup_demo">
+                	<file name="yahoo_demo.php" role="php"/>
+        	        <file name="flicker_demo.php" role="php"/>
+	                <file name="amazon_demo.php" role="php"/>
+                	<file name="flicker_more.php" role="php"/>
+			<file name="demo.html" role="php"/>
+			<dir name="style">
+				<file name="rounded.css" role="php"/>
+				<file name="style.css" role="php" />
+			</dir>
+			<dir name="js">
+				<file name="ajax.js" role="php"/>
+				<file name="tab.js" role="php" />
+			</dir>
+            </dir>
+        </dir>
+        <dir name="reliable">
         <dir name="reliable">
             <file name="echo_client_rm.php"  role="php"/>
             <file name="echo_service_rm.php"  role="php"/>
@@ -177,42 +202,59 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
         </dir>
         <dir name="security">
             <dir name="complete">
-                <file name="complete_scenario_client.php" role="php"/>
-                <file name="complete_scenario_service.php" role="php"/>
+                <file name="client.php" role="php"/>
+                <file name="service.php" role="php"/>
                 <file name="policy.xml" role="php"/>
-            </dir>
-            <dir name="call_back">
-                <file name="password_call_back_client.php" role="php"/>
-                <file name="password_call_back_service.php" role="php"/>
             </dir>
             <dir name="signing">
-                <file name="policy.xml" role="php"/>
-                <file name="signing_client_file.php" role="php"/>
-                <file name="signing_client.php" role="php"/>
-                <file name="signing_service_file.php" role="php"/>
-                <file name="signing_service.php" role="php"/>
+                <file name="client.php" role="php"/>
+		<file name="service.php" role="php"/>
+		<dir name="policy_file_based">
+		    <file name="service.php" role="php"/>
+		    <file name="service.php" role="php"/>
+                    <file name="policy.xml" role="php"/>
+		</dir>
             </dir>
             <dir name="encryption">
-                <file name="policy.xml" role="php"/>
-                <file name="encrypt_client_file.php" role="php"/>
-                <file name="encrypt_client.php" role="php"/>
-                <file name="encrypt_service_file.php" role="php"/>
-                <file name="encrypt_service.php" role="php"/>
+                <file name="client.php" role="php"/>
+		<file name="service.php" role="php"/>
+		<dir name="policy_file_based">
+		    <file name="service.php" role="php"/>
+		    <file name="service.php" role="php"/>
+                    <file name="policy.xml" role="php"/>
+		</dir>
             </dir>
-            <dir name="timestamp">
-                <file name="policy.xml" role="php"/>
-                <file name="timestamp_client_file.php" role="php"/>
-                <file name="timestamp_client.php" role="php"/>
-                <file name="timestamp_service_file.php" role="php"/>
-                <file name="timestamp_service.php" role="php"/>
+	    <dir name="timestamp">
+                <file name="client.php" role="php"/>
+		<file name="service.php" role="php"/>
+		<dir name="policy_file_based">
+		    <file name="service.php" role="php"/>
+		    <file name="service.php" role="php"/>
+                    <file name="policy.xml" role="php"/>
+		</dir>
             </dir>
             <dir name="username_token">
-                <file name="policy.xml" role="php"/>
-                <file name="username_token_client_file.php" role="php"/>
-                <file name="username_token_client.php" role="php"/>
-                <file name="username_token_service_file.php" role="php"/>
-                <file name="username_token_service.php" role="php"/>
-            </dir>
+                <file name="client.php" role="php"/>
+		<file name="service.php" role="php"/>
+		<dir name="policy_file_based">
+		    <file name="service.php" role="php"/>
+		    <file name="service.php" role="php"/>
+                    <file name="policy.xml" role="php"/>
+		</dir>
+	    </dir>
+            <dir name="secure_mtom">
+		<dir name="signing">
+		    <file name="service.php" role="php"/>
+		    <file name="service.php" role="php"/>
+                    <file name="policySignOnlyMtom.xml" role="php"/>
+	        </dir>
+		<dir name="encryption">
+		    <file name="service.php" role="php"/>
+		    <file name="service.php" role="php"/>
+		</dir>
+	    </dir>
+	    </dir>
+            <dir name="keys">
             <dir name="keys">
                 <file name="alice_cert.cert" role="php"/>
                 <file name="alice_key.pem" role="php"/>
@@ -267,7 +309,6 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
         <file name="wsdl_generation_api.html" role="doc"/>
         <file name="wsdl_manual.html" role="doc"/>
         <file name="wsdl_mode_api.html" role="doc"/>
-   
         <dir name="samples">
             <file name="google_spell.html" role="doc"/>
             <file name="hello_client.html" role="doc"/>
