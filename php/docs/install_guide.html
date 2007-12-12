@@ -61,9 +61,6 @@ system.</p>
     href="http://xmlsoft.org/downloads.html"></a> (Note: Most Linux systems
     have libxml2 by default.)</li>
 
-    <li>zlib, iconv for win32 <a href="http://www.zlatkovic.com/pub/libxml">Download</a> (Note: Most Linux systems
-    have zlib and iconv by default.). </li>
-
     <li>OpenSSL (Use the msi Installer) <a href="http://www.openssl.org/" >Download</a></li>
     <li>Sqlite or Mysql (needed for reliable messaging) <a href="http://www.sqlite.org/download.html" >Download Sqlite</a>, <a href="http://dev.mysql.com/downloads/" >Download Mysql</a></li>
 </ul>
@@ -143,9 +140,7 @@ add the following line to the php.ini file:<br />
     <p>
         libxml2 binary distribution <a href="http://www.zlatkovic.com/pub/libxml/">Download</a>
     </p>
-    <p>
-        zlib binary distribution <a href="http://www.zlatkovic.com/pub/libxml/">Download</a>
-    </p>
+   
     <p>
         iconv binary distribution <a href="http://www.zlatkovic.com/pub/libxml/">Download</a>
     </p>
@@ -212,20 +207,20 @@ options. You will find the option --with-wsf.<br />
 
 <p>        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
             &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
-    &nbsp;&nbsp;
+    &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
         "--with-extra-includes=&lt;Libxml2 bin dir&gt;\include;&lt;iconv
-bin directory&gt;\include;&lt;zlib bin dir&gt;\include;&lt;wsf-c
+bin directory&gt;\include;&lt;wsf-c
 dir&gt;\include" </p>
 
 <p>        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
             &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
-            &nbsp;&nbsp;
+            &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
     "-- with-extra-libs=&lt;Libxml2 bin dir&gt;\lib;&lt;iconv bin
-dir&gt;\lib;&lt;zlib bin dir&gt;\lib;&lt;wsf-c dir&gt;\lib"</p>
+dir&gt;\lib;&lt;wsf-c dir&gt;\lib"</p>
 
 <p>        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
         &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
-        &nbsp;&nbsp;
+        &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
     "--with-wsf=shared"</p>
 
 <p>6. Run the above config.nice.bat file to configure the wsf extension as a

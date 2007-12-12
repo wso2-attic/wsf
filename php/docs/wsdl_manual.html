@@ -58,7 +58,7 @@ pass to the input. It is defined in schema in WSDL. In schema input and output p
 		&lt;/xsd:complexType&gt;
   &lt;/xsd:element&gt;
 </span>
-<span><span><strong><span style="font-size: 10pt; font-family: Verdana">Assoacitive array of arguments
+<span><span><strong><span style="font-size: 10pt; font-family: Verdana">10.1.1.Assoacitive array of arguments
 </span></strong><span style="font-family: Verdana">As you can see the element of the input message in the WSDL of the <strong>QueryPurchaseOrder</strong> is OrderInfo which is a complex type defined in the schema. The complex type <strong>OrderInfo </strong>has four elements. So the array that you have to construct will be 
 
 $input_array =array("<span style="color: #ff0000">productName</span>" =&gt; "<span style="color: #ff0000">Testing</span>",
@@ -153,7 +153,7 @@ $<span style="color: #330066">order_info_array </span>= array("<span style="colo
 
 Same array structure apply for $billToArray as well.
 <span style="text-decoration: underline; color: #990000;"><strong></strong></span><span style="font-size: 10pt;">
- <strong>class objects 
+<strong>10.1.2. class objects 
 </strong><span style="font-size: 8pt">In this method user should provide a class map which includes the classed for the complex types defined in the WSDL to the associated operation that he is going to invoke. In this example you can see that there are four complex types associted the operation QueryPurchaseOrder.So
 the class map implemetation should be 
 
@@ -207,14 +207,16 @@ $input_obj-&gt;quantity = 232;
 $input_obj-&gt;date = date(20040921); 
 $input_obj-&gt;orderNo = 20034;
 
-Then pass the $input_obj to operation $return_obj
-    = $proxy-&gt;<strong>QueryPurchaseOrder</strong>($input_obj);</span>
+Then pass the $input_obj to operation 
+$return_obj = $proxy-&gt;<strong>QueryPurchaseOrder</strong>($input_obj);</span>
 
 If the quantity element is another complex type as earlier case then you should create anoter object from the relevant class and assign the object to quantity attribute
+
 class quantityTypeWrapper{
 	public $amount;
 	public $weight_kg;
 }
+
 Make sure to have the class mapping entry in classmap array.
 $quan_obj = new quantityTypeWrapper();
 $quan_obj-&gt;amount = 23232;
@@ -237,26 +239,99 @@ of the type addressWrapper, addressWrapper and productInfoWrapper respectively.A
 <p>We will implement a service to accept the request sent by the above
 client.</p>
 
-<p>First write a function corresponding to the GetPrice operation defined in the WSDL.</p>
-<pre>        function GetPriceFunction($arg1, $arg2){
-            return array("Price" => 234.431);
-        }
-</pre>
-
-<p>Now we can map this function to the echoString operation as follows.</p>
-<pre>   $operations = array("<span style="color: #ff3333">GetPrice</span>"=&gt;"<span style="color: #ff3333">GetPriceFunction</span>");
-        $opparams = array("<span style="color: #ff3333">GetPriceFunction</span>"=&gt;"<span style="color: #ff3333">MIXED</span>");
-    </pre>
-
-<p>Here we are indicating to the service that the echoFunction is not a
+<p>First write a function corresponding to the&nbsp; QueryPurchaseOrder operation defined in the WSDL.</p>
+    <p>
+        function QueryPurchaseOrderFunction($productName, $quantity, $date, $orderNo){<br />
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            return $return_array;<br />
+        &nbsp; &nbsp; &nbsp;}<br />
+    </p>
+    <p>
+        The return array should be created as the same way it is created in client side</p>
+   
+        $return_array = array("<span style="color: #ff0000">shipTo</span>" =&gt; $<span style="color: #000066">shipToArray</span>,
+    <br />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "<span style="color: #ff0000">billTo</span>"
+    =&gt; $<span style="color: #330066">billToArray,</span>
+    <br />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; "<span style="color: #ff0033">product</span>"
+    =&gt; $<span style="color: #000066">product_array</span>);
+    <br />
+    <br />
+    $<span style="color: #000066">shipToArray</span> = array("<span style="color: #ff0000">name</span>"
+    =&gt; "<span style="color: #ff0033">Jane Smith</span>",<br />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;"<span style="color: #ff0000">street</span>" =&gt;
+    "<span style="color: #ff0000">YorkStreet"</span>,
+    <br />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; "<span style="color: #ff0033">city</span>" =&gt;
+    "<span style="color: #ff0000">colombo</span>",
+    <br />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; "<span style="color: #ff0000">zip</span>" =&gt;
+    <span style="color: #ff0033">32343</span>);
+    <br />
+    <br />
+    $<span style="color: #330066">billToArray</span> = array("<span style="color: #ff0000">name</span>"
+    =&gt; "J<span style="color: #ff0033">ohn Smith</span>",
+    <br />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; "<span style="color: #ff0000">street</span>" =&gt; "<span style="color: #ff0000">Maple
+        Street</span>",
+    <br />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; "<span style="color: #ff0000">city</span>" =&gt; "<span style="color: #ff0000">LA</span>",
+    <br />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; "<span style="color: #ff0000">state</span>" =&gt; "<span style="color: #ff0000">USA</span>",
+    <br />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; "<span style="color: #ff0000">zip</span>" =&gt; <span style="color: #ff0033">
+        55432</span>);
+    <br />
+    <br />
+    $<span style="color: #000066">product_array</span> = array("<span style="color: #ff0033">productId</span>"
+    =&gt; <span style="color: #ff0000">2344</span>,
+    <br />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; "<span style="color: #ff0000">shippingDate</span>"
+    =&gt; <span style="color: #ff0000">date(20080101)</span>,
+    <br />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "<span style="color: #ff0000">status</span>"
+    =&gt; <span style="color: #ff0000">TRUE</span>);<br />
+    <br />
+    Now we can map this function to the QueryPurchaseOrderFunction operation as follows.
+    <br />
+    <br />
+    
+        $operations = array("<span style="color: #ff0000">QueryPurchaseOrder</span>"=&gt;"<span
+            style="color: #ff0000">QueryPurchaseOrderFunction</span>");<br />
+        &nbsp;$opparams = array("<span style="color: #ff0033">QueryPurchaseOrderFunction</span>"=&gt;"<span style="color: #ff3333">MIXED</span>");<br />
+        &nbsp; &nbsp;&nbsp;
+    <br />
+    Here we are indicating to the service that the QueryPurchaseOrderFunction is not a
 function that accepts a WSMessage instance as the sole argument, but a
-function with mixed arguments.</p>
-<pre>        $service = new WSService(array("<span style="color: #ff3333">wsdl</span>"=&gt;"<span style="color: #ff3333">sample.wsdl</span>", 
-            "<span style="color: #ff3333">operations</span>"=&gt;$operations,
-            "<span style="color: #ff3333">opParams</span>"=&gt;$opparams));
-
-        $service-&gt;reply();
-    </pre>
+function with mixed arguments.<br />
+    <br />
+    $service =
+    
+        new WSService(array("<span style="color: #ff0000">wsdl</span>"=&gt;"s<span style="color: #ff0000">ample_wsdl_11.wsdl</span>",
+    <br />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; "<span style="color: #ff0000">operations</span>" =&gt; $operations, 
+    <br />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; "<span style="color: #ff0000">opParams</span>"=&gt;$opParams));
+    <br />
+        $service-&gt;reply();<br />
+        
+    
+    
+    
 
 <h3 id="3">10.3. WSDL Generation for a Given Service</h3>
 
