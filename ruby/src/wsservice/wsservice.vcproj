@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="C:\install\ruby\lib\ruby\site_ruby\1.8\i386-msvcrt"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="E:/rubybin/lib/ruby/1.8/i386-mswin32_80;$(WSFC_HOME)\include;"
+				AdditionalIncludeDirectories="c:/install/ruby/lib/ruby/1.8/i386-mswin32_80;$(WSFC_HOME)\include;"
 				PreprocessorDefinitions="WIN32;_WIN32;_DEBUG;_WINDOWS;_USRDLL;WSSERVICE_EXPORTS;SWIG_NOINCLUDE;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -49,6 +49,7 @@
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
+				CallingConvention="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -61,9 +62,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="axiom.lib axis2_engine.lib axis2_parser.lib axutil.lib  msvcr80-ruby18.lib mod_rampart.lib neethi_util.lib axis2_http_sender.lib neethi.lib"
+				AdditionalDependencies="msvcrt-ruby18.lib axiom.lib axis2_engine.lib axis2_parser.lib axutil.lib  mod_rampart.lib neethi_util.lib axis2_http_sender.lib neethi.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="E:\rubybin\lib;&quot;$(WSFC_HOME)\lib&quot;"
+				AdditionalLibraryDirectories="C:\install\ruby\lib;&quot;$(WSFC_HOME)\lib&quot;"
+				ModuleDefinitionFile="C:\dev\ruby\src\wsservice\wsservice-i386-mswin32.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
