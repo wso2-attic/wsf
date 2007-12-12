@@ -29,7 +29,7 @@
 						<xsd:element name="billTo" type="tns:address">
 						</xsd:element>
 						<xsd:element name="product"
-							type="tns:orderInfo">
+							type="tns:productInfo">
 						</xsd:element>
 					</xsd:sequence>
 				</xsd:complexType>
@@ -44,7 +44,7 @@
             		<xsd:element name="zip" type="xsd:decimal"></xsd:element>
             	</xsd:sequence></xsd:complexType>
         
-            <xsd:complexType name="orderInfo">
+            <xsd:complexType name="productInfo">
             	<xsd:sequence>
             		<xsd:element name="productId" type="xsd:int"></xsd:element>
             		<xsd:element name="shippingDate"
