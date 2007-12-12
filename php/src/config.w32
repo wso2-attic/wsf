@@ -1,27 +1,26 @@
 // $Id: config.w32,v 1.5 2006/06/22 10:29:33 nabeel Exp $
 // vim:ft=javascript
 
-	ARG_WITH("wsf", "WSO2 WSF for PHP support", "no");
-	
-	if(PHP_WSF != "no" && PHP_LIBXML == "yes"){
-	if(CHECK_LIB("axis2_engine.lib", "wsf", PHP_WSF) &&
-		CHECK_LIB("axiom.lib", "wsf", PHP_WSF) &&
-		CHECK_LIB("axutil.lib", "wsf", PHP_WSF) &&
-		CHECK_LIB("axis2_parser.lib", "wsf", PHP_WSF) &&
-		CHECK_LIB("mod_rampart.lib", "wsf", PHP_WSF) &&
-		CHECK_LIB("neethi.lib", "wsf", PHP_WSF) &&
-		CHECK_LIB("neethi_util.lib", "wsf", PHP_WSF) &&
-		CHECK_LIB("sandesha2.lib", "wsf", PHP_WSF) &&
-		CHECK_LIB("axis2_http_sender.lib", "wsf", PHP_WSF) &&
-		CHECK_LIB("libxml2.lib", "wsf", PHP_WSF)){
-		
-		EXTENSION("wsf", "wsf.c wsf_worker.c wsf_xml_msg_recv.c wsf_stream.c wsf_util.c wsf_out_transport_info.c wsf_client.c wsf_policy.c");
+    ARG_WITH("wsf", "WSO2 WSF/PHP Web Services support", "no");
+    
+    if(PHP_WSF != "no" && PHP_LIBXML == "yes"){
+    if(CHECK_LIB("axis2_engine.lib", "wsf", PHP_WSF) &&
+       CHECK_LIB("axiom.lib", "wsf", PHP_WSF) &&
+       CHECK_LIB("axutil.lib", "wsf", PHP_WSF) &&
+       CHECK_LIB("axis2_parser.lib", "wsf", PHP_WSF) &&
+       CHECK_LIB("mod_rampart.lib", "wsf", PHP_WSF) &&
+       CHECK_LIB("neethi.lib", "wsf", PHP_WSF) &&
+       CHECK_LIB("neethi_util.lib", "wsf", PHP_WSF) &&
+       CHECK_LIB("sandesha2.lib", "wsf", PHP_WSF) &&
+       CHECK_LIB("axis2_http_sender.lib", "wsf", PHP_WSF) &&
+       CHECK_LIB("libxml2.lib", "wsf", PHP_WSF)){
+        
+       EXTENSION("wsf", "wsf.c wsf_worker.c wsf_xml_msg_recv.c wsf_stream.c wsf_util.c wsf_out_transport_info.c wsf_client.c wsf_policy.c wsf_wsdl.c");
 
-		AC_DEFINE("HAVE_WSF",1,"Have wsf library");
-		ADD_EXTENSION_DEP('dom', 'dom');
+        AC_DEFINE("HAVE_WSF",1,"Have WSO2 WSF/PHP Library");
 
-		}
-		else{
-			WARNING("wsf not enabled , Libraries and headers not found");
-		}
-	}
+        }
+        else{
+            WARNING("WSO2-WSF/PHP not enabled , Libraries and headers not found");
+        }
+    }
