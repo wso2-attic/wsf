@@ -1,9 +1,9 @@
-        Web Services Framework/C  (WSO2 WSF/C)
+        Web Services Framework for C  (WSO2 WSF/C)
 
   What is it?
   -----------
 
-  WSO2 Web Services Framework/C (WSO2 WSF/C)is a fully open source framework for 
+  WSO2 Web Services Framework for C (WSO2 WSF/C)is a fully open source framework for 
   providing and consuming web services. WSO2 WSF/C is a collection of 
   libraries and tools, supporting basic web services technologies such as XML, 
   SOAP, WSDL. REST as well as the Web Services specifications such as 
