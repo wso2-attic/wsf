@@ -2,7 +2,7 @@
 <package packagerversion="1.4.2" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0"     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
 
     <name>wso2_wsf_php</name>
-    <channel>http://dist.wso2.org/products/wsf/php/1.2.0</channel>
+    <channel>10.100.1.175</channel>
 <summary>Web Services for PHP</summary>
 <description>
 WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into PHP is a PHP extension for providing and consuming Web Services in PHP. WSO2 WSF/PHP supports SOAP 1.1, SOAP 1.2, WSDL 1.1, WSDL 2.0, REST style invocation as well as some of the key WS-* stack specifications such as: SOAP MTOM, WS-Addressing, WS-Security, WS-SecurityPolicy and WS-ReliableMessaging.
@@ -65,8 +65,6 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
    <file name="wsf_out_transport_info.h" role="src" />
    <file name="wsf_policy.c" role="src" />
    <file name="wsf_policy.h" role="src" />
-   <file name="wsf_soap.c" role="src" />    
-   <file name="wsf_soap.h" role="src" />
    <file name="wsf_stream.c" role="src" />
    <file name="wsf_stream.h" role="src" />
    <file name="wsf_util.c" role="src" />
@@ -104,7 +102,7 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
                 <file name="jsstub.xslt" role="php"/>
                 <file name="tryit.xslt" role="php"/>
         <file name="wsdl11to20.xsl10.xsl" role="php"/>
-        <file name="formatxml.xsl" role="php"/>
+        <file name="formatxml.xslt" role="php"/>
                 <file name="wsdl2sig.xslt" role="php"/>
             </dir>
         </dir>
@@ -138,7 +136,7 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
    </dir>
    <dir name="samples" baseinstalldir="wso2_wsf_php">
     	<file name="add_soap_header_client.php" role="php"/>
-        <file name="add_soap_header_with_client_client.php" role="php"/>
+        <file name="add_soap_header_with_child_client.php" role="php"/>
         <file name="class_based_service.php" role="php"/>
         <file name="echo_client_addr.php" role="php"/>
         <file name="echo_client_multiple_invocation.php" role="php"/>
@@ -166,12 +164,12 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
             <file name="mtom_upload_service_base64.php" role="php"/>
             <file name="mtom_upload_service.php" role="php"/>
         </dir>
-	<dir name="solutions">
-	   	<dir name="mashup_demo">
+    	<dir name="solutions">
+	       	<dir name="mashup_demo">
                 	<file name="yahoo_demo.php" role="php"/>
-        	        <file name="flicker_demo.php" role="php"/>
+        	        <file name="flickr_demo.php" role="php"/>
 	                <file name="amazon_demo.php" role="php"/>
-                	<file name="flicker_more.php" role="php"/>
+                	<file name="flickr_more.php" role="php"/>
 			<file name="demo.html" role="php"/>
 			<dir name="style">
 				<file name="rounded.css" role="php"/>
@@ -204,11 +202,9 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
 					<file name="left.gif" role="php"/>
 					<file name="left.gif" role="php"/>
 				</dir>
-	            </dir>
-		</dir>
-            </dir>
+	        </dir>
         </dir>
-        <dir name="reliable">
+        </dir>
         <dir name="reliable">
             <file name="echo_client_rm.php"  role="php"/>
             <file name="echo_service_rm.php"  role="php"/>
@@ -233,59 +229,57 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
             </dir>
             <dir name="signing">
                 <file name="client.php" role="php"/>
-		<file name="service.php" role="php"/>
-		<dir name="policy_file_based">
-		    <file name="service.php" role="php"/>
-		    <file name="service.php" role="php"/>
+        		<file name="service.php" role="php"/>
+		        <dir name="policy_file_based">
+        		    <file name="service.php" role="php"/>
+		            <file name="service.php" role="php"/>
                     <file name="policy.xml" role="php"/>
-		</dir>
-            </dir>
-            <dir name="encryption">
+        		</dir>
+           </dir>
+           <dir name="encryption">
                 <file name="client.php" role="php"/>
-		<file name="service.php" role="php"/>
-		<dir name="policy_file_based">
-		    <file name="service.php" role="php"/>
-		    <file name="service.php" role="php"/>
+        		<file name="service.php" role="php"/>
+        		<dir name="policy_file_based">
+        	        <file name="service.php" role="php"/>
+		            <file name="service.php" role="php"/>
                     <file name="policy.xml" role="php"/>
-		</dir>
-            </dir>
-	    <dir name="timestamp">
+    	       </dir>
+           </dir>
+    	   <dir name="timestamp">
                 <file name="client.php" role="php"/>
-		<file name="service.php" role="php"/>
-		<dir name="policy_file_based">
-		    <file name="service.php" role="php"/>
-		    <file name="service.php" role="php"/>
+    	    	<file name="service.php" role="php"/>
+        	    <dir name="policy_file_based">
+		            <file name="service.php" role="php"/>
+        		    <file name="service.php" role="php"/>
                     <file name="policy.xml" role="php"/>
-		</dir>
-            </dir>
-            <dir name="username_token">
+        		</dir>
+           </dir>
+           <dir name="username_token">
                 <file name="client.php" role="php"/>
-		<file name="service.php" role="php"/>
-		<dir name="policy_file_based">
-		    <file name="service.php" role="php"/>
-		    <file name="service.php" role="php"/>
+		        <file name="service.php" role="php"/>
+        		<dir name="policy_file_based">
+        		    <file name="service.php" role="php"/>
+		            <file name="service.php" role="php"/>
                     <file name="policy.xml" role="php"/>
-		</dir>
-	    </dir>
-            <dir name="secure_mtom">
-		<dir name="signing">
-		    <file name="service.php" role="php"/>
-		    <file name="service.php" role="php"/>
+        		</dir>
+	       </dir>
+           <dir name="secure_mtom">
+        		<dir name="signing">
+	    	        <file name="service.php" role="php"/>
+    	    	    <file name="service.php" role="php"/>
                     <file name="policySignOnlyMtom.xml" role="php"/>
-	        </dir>
-		<dir name="encryption">
-		    <file name="service.php" role="php"/>
-		    <file name="service.php" role="php"/>
-		</dir>
-	    </dir>
-	    </dir>
+	            </dir>
+    	    	<dir name="encryption">
+	    	        <file name="service.php" role="php"/>
+		            <file name="service.php" role="php"/>
+                </dir>
+            </dir>
             <dir name="keys">
-            <dir name="keys">
-                <file name="alice_cert.cert" role="php"/>
-                <file name="alice_key.pem" role="php"/>
-                <file name="bob_cert.cert" role="php"/>
-                <file name="bob_key.pem" role="php"/>
-            </dir> 
+                 <file name="alice_cert.cert" role="php"/>
+                 <file name="alice_key.pem" role="php"/>
+                 <file name="bob_cert.cert" role="php"/>
+                 <file name="bob_key.pem" role="php"/>
+             </dir>
         </dir>
         <dir name="resources">
             <file name="axis2.jpg" role="php"/>
@@ -294,13 +288,17 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
             <file name="yahoo_rest_client.php" role="php"/>
         </dir>
         <dir name="wsdl_generation">
-            <file name="wsdl_service_doclit.php" role="php"/>
-            <file name="wsdl_service_rpc.php" role="php"/>
+            <file name="doclit_service.php" role="php"/>
+            <file name="doclit_client.php" role="php"/>
+            <file name="rpc_service.php" role="php"/>
         </dir>
         <dir name="wsdl_mode">
-            <file name="dynamic_client.php" role="php"/>
-            <file name="dynamic_echo_service.php" role="php"/>
-            <file name="sample.wsdl" role="php"/>
+            <file name="wsdl_11_client.php" role="php"/>
+            <file name="wsdl_11_service.php" role="php"/>
+            <file name="wsdl_20_client.php" role="php"/>
+            <file name="wsdl_20_service.php" role="php"/>
+            <file name="sample_wsdl_11.wsdl" role="php"/>
+            <file name="sample_wsdl_20.wsdl" role="php"/>
         </dir>
         <dir name="sudoku">
             <file name="sudoku_service.php" role="php"/>
