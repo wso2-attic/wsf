@@ -12,7 +12,6 @@ if(WSFC_HOME == nil)
 end
 
 dir_config("wsservice", WSFC_HOME + '/include', WSFC_HOME + '/lib')
-dir_config("rampart", WSFC_HOME + '/include',  WSFC_HOME + '/modules/rampart')
 
 have_library('axutil')
 have_library('axis2_minizip')
