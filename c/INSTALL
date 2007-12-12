@@ -63,6 +63,9 @@ The following steps need to be taken to install and run WSF/C using source distr
 
       To see the possible command line options run ./wsclient --help or ./wsclient -h 
 
+      6. Running Sandesha/C, Rampart/C and Savan/C samples.
+         Plesae refer the INSTALL files in sandesha2c, rampartc and savanc
+
 2.2. Using the RPM package
 You can install the RPM package using the following command
 
