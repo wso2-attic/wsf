@@ -20,19 +20,17 @@ ICONV_BIN_DIR = E:\iconv-1.9.2.win32
 
 # Enable/disable SSL client transport, to enable set ENABLE_SSL = 1
 ENABLE_SSL = 1
-# Path to OpenSSL installation, required if SSL transport is enabled
+# Path to OpenSSL installation, required if SSL transport is enabled 
+#( Use OpenSSL .98e or above MSI installer )
 OPENSSL_BIN_DIR = E:\OpenSSL
 
 # Build with SQLite support for permanent storage, to disable set WITH_SQLITE = 0
+# ( sqlite is bundled with WSF/PHP )
 WITH_SQLITE = 0
-# Path to SQLite installation
-SQLITE_BIN_DIR = "E:\sqlite-source-3_3_8"
-# Path to SQLite source
-SQLITE_SRC_DIR = "E:\sqlite-source-3_3_8"
 
 # Build with MySQL support for permanent storage, to enable set WITH_MYSQL = 1
 WITH_MYSQL = 1
-# Path to MySQL installation
+# Path to MySQL installation ( Make sure to install dev version ( headers ) using MSI )
 MYSQL_BIN_DIR = "C:\Program Files\MySQL\MySQL Server 5.0"
 
 #############################################################################
