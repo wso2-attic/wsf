@@ -15,16 +15,16 @@
  * limitations under the License.
  */
 
-$reqPayloadStrings = array();
+$requestPayloadStrings = array();
 
 for ($i = 0 ; $i < 10; $i++) {
 $tmp = "Hello World "."$i";
-$reqPayloadString = <<<XML
+$requestPayloadString = <<<XML
 <ns1:echoString xmlns:ns1="http://ws.apache.org/axis2/c/samples">
    <text>$tmp</text>
 </ns1:echoString>
 XML;
-array_push($reqPayloadStrings,$reqPayloadString);
+array_push($requestPayloadStrings,$requestPayloadString);
 }
 
 try
@@ -32,12 +32,12 @@ try
     $serviceClient = new WSClient();
 
     for($i = 0 ; $i < 10; $i++) {
-        $msg = new WSMessage($reqPayloadStrings[$i],
-                                      array("to"=>"http://localhost/samples/echo_service.php"));
-        $resPayload = $serviceClient->request($msg);
+        $msg = new WSMessage($requestPayloadStrings[$i],
+                             array( "to" => "http://localhost/samples/echo_service.php"));
+        $responsePayload = $serviceClient->request($msg);
         printf("Round %s<br>",$i);
         printf("--------<br>");
-        printf("Response = %s <br><br>", htmlspecialchars($resPayload->str));
+        printf("Response = %s <br><br>", htmlspecialchars($responsePayload->str));
 
         printf("Last Request = %s<br><br>",htmlspecialchars($serviceClient->getLastRequest()));
         printf("Last Response = %s<br><br>",htmlspecialchars($serviceClient->getLastResponse()));

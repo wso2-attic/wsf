@@ -27,7 +27,7 @@ function getAttachment($inMessage) {
 	    $dom->loadXML($inMessage->str);
 	    $images = $dom->documentElement->getElementsByTagName('image');
         $image = $images->item(0);
-        if (stristr(php_os, 'WIN')) {
+        if (stristr(PHP_OS, 'WIN')) {
             file_put_contents("base64image.txt",$image->nodeValue);
         }else{
             file_put_contents("/tmp/base64image.txt",$image->nodeValue);
@@ -45,11 +45,11 @@ XML;
 
 $operations = array("upload" => "getAttachment");
 
-$server = new WSService(
+$service = new WSService(
             array(
                 "operations" => $operations, 
                 "requestXOP"=>TRUE));
         
-$server->reply();
+$service->reply();
 
 ?>

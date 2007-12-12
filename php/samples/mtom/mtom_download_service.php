@@ -34,8 +34,8 @@ XML;
 
 $operations = array("download" => "sendAttachment");
 
-$server = new WSService(array("operations" => $operations, "useMTOM" => TRUE));
+$service = new WSService(array("operations" => $operations, "useMTOM" => TRUE));
 
-$server->reply();
+$service->reply();
 
 ?>

@@ -22,8 +22,8 @@ function sendFault($inMessage) {
 
 $operations = array("getFault" => "sendFault");
 
-$svr = new WSService(array("operations" => $operations));
+$service = new WSService(array("operations" => $operations));
         
-$svr->reply();
+$service->reply();
 
 ?>

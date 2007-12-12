@@ -22,8 +22,8 @@ function notifyFunction($inMessage) {
 
 $operations = array("notifyString" => "notifyFunction");
 
-$svr = new WSService(array("operations" => $operations));
+$service = new WSService(array("operations" => $operations));
         
-$svr->reply();
+$service->reply();
 
 ?>

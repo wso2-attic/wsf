@@ -40,7 +40,7 @@ try {
             $contentType = $cid2contentMap[$i];
             if(strcmp($contentType,"image/jpeg") ==0){
                 $imageName = $i."."."jpg";
-                if(stristr(php_os, 'WIN')) {
+                if(stristr(PHP_OS, 'WIN')) {
                     file_put_contents($imageName, $f);
                 }else{
                     file_put_contents("/tmp/".$imageName, $f);

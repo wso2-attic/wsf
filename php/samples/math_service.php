@@ -46,7 +46,7 @@ XML;
 
 function subFunction($inMessage) {
 
-	$simplexml = new SimpleXMLElement($inMessage->str);
+    $simplexml = new SimpleXMLElement($inMessage->str);
     $value1 = $simplexml->param1[0];
     $value2 = $simplexml->param2[0];
     $Result = $value1 - $value2;    
@@ -81,7 +81,7 @@ XML;
 
 function divFunction($inMessage) {
 
-	$simplexml = new SimpleXMLElement($inMessage->str);
+    $simplexml = new SimpleXMLElement($inMessage->str);
     $value1 = $simplexml->param1[0];
     $value2 = $simplexml->param2[0];
     $Result = $value1 / $value2;    

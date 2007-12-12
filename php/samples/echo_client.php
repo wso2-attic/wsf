@@ -22,7 +22,6 @@ XML;
 try {
 
     $client = new WSClient(array( "to" => "http://localhost/samples/echo_service.php" ));
-
                 
     $responseMessage = $client->request( $requestPayloadString );
     

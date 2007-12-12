@@ -23,6 +23,7 @@ class Bar
     function Bar($str){
         $this->value = $str;
     }
+
     function echoValue($inMessage){
 
 $requestPayloadString = <<<XML
@@ -34,11 +35,11 @@ XML;
 }
 
 
-$ops = array("echoString" => "echoValue");
+$operations = array("echoString" => "echoValue");
 
-$svr = new WSService(array( "classes" => array("Bar" => array("operations" => $ops,
+$service = new WSService(array( "classes" => array("Bar" => array("operations" => $operations,
                                                               "args" => array("Hello") ))));
         
-$svr->reply();
+$service->reply();
 
 ?>

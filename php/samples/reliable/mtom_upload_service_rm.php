@@ -26,7 +26,11 @@ function getAttachment($inMessage) {
         $contentType = $cid2contentMap[$i];
         if(strcmp($contentType,"image/jpeg") ==0) {
             $imageName = $i."."."jpg";
-            file_put_contents("/tmp/".$imageName, $f);
+		if(stristr(PHP_OS, 'WIN')){
+		   file_put_contents($imageName, $f);
+            }else{
+                file_put_contents("/tmp/".$imageName, $f);
+            }
         }
     }
 
