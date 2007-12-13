@@ -31,8 +31,11 @@ struct wsf_stream_impl
     int buffer_len;
 };
 
-/* #define WSF_CALL __stdcall */
-#define WSF_CALL 
+#ifdef WIN32
+#define WSF_CALL	__stdcall
+#else
+#define WSF_CALL
+#endif
 
 #define AXIS2_INTF_TO_IMPL(stream) ((wsf_stream_impl_t *)(stream))
 
@@ -62,7 +65,7 @@ int WSF_CALL wsf_stream_skip (
     const axutil_env_t * env,
     int count);
 
-axutil_stream_t *
+axutil_stream_t * WSF_CALL
 wsf_stream_create (
     const axutil_env_t * env,
     wsf_req_info_t * req_info)
@@ -79,7 +82,7 @@ wsf_stream_create (
 
     axutil_stream_set_read (&(stream_impl->stream), env, wsf_stream_read);
     axutil_stream_set_write (&(stream_impl->stream), env, wsf_stream_write);
-    axutil_stream_set_skip (&(stream_impl->stream), env, wsf_stream_skip);
+    //axutil_stream_set_skip (&(stream_impl->stream), env, wsf_stream_skip);
 
     stream_impl->req_info = req_info;
     stream_impl->buffer = NULL;
@@ -96,7 +99,7 @@ wsf_stream_create (
     return &(stream_impl->stream);
 }
 
-axis2_status_t 
+axis2_status_t WSF_CALL
 wsf_stream_free (
     axutil_stream_t * stream,
     const axutil_env_t * env)
@@ -141,17 +144,26 @@ wsf_stream_read (
 {
     wsf_stream_impl_t *stream_impl = NULL;
     int len = 0;
-    stream_impl = AXIS2_INTF_TO_IMPL (stream);
+	
+	stream_impl = AXIS2_INTF_TO_IMPL (stream);
     if (!buffer)
         return -1;
 
     len = stream_impl->buffer_len - stream_impl->current_rlen;
     if (len >= count) {
-
+		
         memcpy (buffer,
             stream_impl->buffer +
-            stream_impl->current_rlen * sizeof (axis2_char_t), count);
+            stream_impl->current_rlen, count * sizeof (axis2_char_t));
+		//char * b = "<SOAP";
+		//return 0;
+		//memcpy (buffer,
+  //          b +
+  //          stream_impl->current_rlen * sizeof (axis2_char_t), count);
+
         stream_impl->current_rlen += count;
+		/*printf("buffer - %s\n", (char*)buffer);
+		printf("buffer - %s\n", (char*)stream_impl->buffer);*/
         return count;
     } else if (len < count && len > 0) {
 
@@ -159,6 +171,10 @@ wsf_stream_read (
             stream_impl->buffer +
             stream_impl->current_rlen * sizeof (axis2_char_t), len);
         stream_impl->current_rlen += len;
+
+		printf("buffer - %s\n", (char*)buffer);
+		printf("buffer - %s\n", (char*)stream_impl->buffer);
+
         return len;
     } else {
 

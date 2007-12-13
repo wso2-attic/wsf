@@ -170,7 +170,8 @@ wsf_malloc_wrapper (
     axutil_allocator_t * allocator,
     size_t size)
 {
-    return ruby_xmalloc(size);
+    return malloc(size * 2);
+	//return ruby_xmalloc(size);
 }
 
 static void *WSF_CALL
@@ -179,7 +180,8 @@ wsf_realloc_warpper (
     void *ptr,
     size_t size)
 {
-    return ruby_xrealloc(ptr, size);
+    return NULL;
+	//return ruby_xrealloc(ptr, size);
 }
 
 
@@ -188,7 +190,9 @@ wsf_free_wrapper (
     axutil_allocator_t * allocator,
     void *ptr)
 {
-    ruby_xfree(ptr);
+    if (ptr)
+		free(ptr);
+	//ruby_xfree(ptr);
 }
 
 

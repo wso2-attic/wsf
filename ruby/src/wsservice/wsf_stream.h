@@ -26,12 +26,12 @@ extern "C"
 {
 #endif
 
-axutil_stream_t *
+axutil_stream_t * WSF_CALL
 wsf_stream_create (
     const axutil_env_t * env,
     wsf_req_info_t * req);
 
-axis2_status_t 
+axis2_status_t WSF_CALL
 wsf_stream_free (
     axutil_stream_t * stream,
     const axutil_env_t * env);

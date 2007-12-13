@@ -399,7 +399,7 @@ wsf_ruby_req_info_fill(wsf_req_info_t *req_info, VALUE request)
         /* not in rails */
         req_info->svr_name = strdup("localhost");
         req_info->svr_port = 9999;
-        req_info->req_data = RSTRING(request)->ptr;
+        req_info->req_data = axutil_strdup(ws_env_svr, RSTRING(request)->ptr);
         req_info->req_data_length = RSTRING(request)->len;
         req_info->http_protocol = strdup("HTTP");
         req_info->request_method = strdup("POST");
@@ -461,6 +461,8 @@ wsservice_reply(VALUE self, VALUE request, VALUE response)
 
     /* fill the request information */
     wsf_ruby_req_info_fill(&req_info, request);
+
+	printf("aaaaa \n");
 
     /* crete the service */
     if(wsservice->request_uri == NULL)
