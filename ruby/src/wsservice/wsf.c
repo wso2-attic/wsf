@@ -462,8 +462,6 @@ wsservice_reply(VALUE self, VALUE request, VALUE response)
     /* fill the request information */
     wsf_ruby_req_info_fill(&req_info, request);
 
-	printf("aaaaa \n");
-
     /* crete the service */
     if(wsservice->request_uri == NULL)
     {

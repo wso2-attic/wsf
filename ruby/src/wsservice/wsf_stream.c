@@ -155,25 +155,15 @@ wsf_stream_read (
         memcpy (buffer,
             stream_impl->buffer +
             stream_impl->current_rlen, count * sizeof (axis2_char_t));
-		//char * b = "<SOAP";
-		//return 0;
-		//memcpy (buffer,
-  //          b +
-  //          stream_impl->current_rlen * sizeof (axis2_char_t), count);
 
         stream_impl->current_rlen += count;
-		/*printf("buffer - %s\n", (char*)buffer);
-		printf("buffer - %s\n", (char*)stream_impl->buffer);*/
-        return count;
+	    return count;
     } else if (len < count && len > 0) {
 
         memcpy (buffer,
             stream_impl->buffer +
             stream_impl->current_rlen * sizeof (axis2_char_t), len);
         stream_impl->current_rlen += len;
-
-		printf("buffer - %s\n", (char*)buffer);
-		printf("buffer - %s\n", (char*)stream_impl->buffer);
 
         return len;
     } else {
