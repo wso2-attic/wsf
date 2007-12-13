@@ -10,7 +10,7 @@ if test "$PHP_WSF" = "yes"; then
 	
     dnl # add include path
 
-	PHP_ADD_INCLUDE(/opt/wso2/wsf_c/include/axis2-1.1)
+	PHP_ADD_INCLUDE(/opt/wso2/wsf_c/include/axis2-1.2)
 	PHP_ADD_INCLUDE(/opt/wso2/wsf_c/include/sandesha2-0.91)
 	PHP_ADD_INCLUDE(/opt/wso2/wsf_c/include/rampart-1.0)
 	PHP_ADD_INCLUDE(/usr/include/libxml2)
