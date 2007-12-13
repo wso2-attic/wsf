@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-$reqPayloadString = <<<XML
+$requestPayloadString = <<<XML
 	<ns1:pingString xmlns:ns1="http://php.axis2.org/samples">
 		<text>Hello World!</text>
 	</ns1:pingString>
@@ -23,21 +23,18 @@ XML;
 
 try {
 
-    $msg = new WSMessage($reqPayloadString,
-			array(
-			   "to"=>"http://localhost/samples/reliable/ping_service_rm.php",
-              "action" => "http://php.axis2.org/samples/pingString"));
+    $requestMessage = new WSMessage($requestPayloadString,
+			array( "to" => "http://localhost/samples/reliable/ping_service_rm.php",
+                   "action" => "http://php.axis2.org/samples/pingString"));
 
-    $client = new WSClient(array("reliable"=>TRUE,"useWSA" => TRUE));
+    $client = new WSClient(array( "reliable" => TRUE , "useWSA" => TRUE));
     
-	
-    $client->send($msg);
+    $client->send($requestMessage);
 
     echo "Message Sent";
 
-    sleep(10);
+    $client->wait(10);
 
-    
 } catch (Exception $e) {
 
 	if ($e instanceof WSFault) {
