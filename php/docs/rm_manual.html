@@ -25,21 +25,6 @@ SQLite and MySQL.</p>
 
 <h3>Using WSO2 WSF/PHP with SQLite</h3>
 
-<p>You will need to have SQLite version 3 installed on your machine.</p>
-
-<p>Note: For the Windows binary, the SQLite3 binary and executable will be
-packed with the WSO2 WSF/PHP binary. So what you will need is to add the
-&lt;WSO2 WSF/PHP&gt;\wsf_c\lib directory to the path.</p>
-
-<p>You will find a script (sqlite_schema.sh | sqlite_schema.bat )  for
-creating the databases that are used by WSO2 WSF/PHP in the &lt;WSO2
-WSF/PHP&gt; directory. Make sure to run this script before starting the
-server. When you run this script, it will create two database files
-"sandesha2_client_db" and "sandesha2_svr_db" in the directory where you
-executed the script. For Linux, put these databases to your Linux
-environment's /tmp directory, and these files should have the read and write
-permissions for the user that runs your Web server.</p>
-
 <p>On Windows, add the following php.ini entry.</p>
 
 <p><strong>wsf.rm_db_dir=&lt;database location&gt;</strong></p>
