@@ -40,7 +40,7 @@ try{
     
     $proxy = $client->getProxy();
     $val = $proxy->RetArrayInt1D($input);
-    print_r($val);
+    echo $val->RetArrayInt1DResult->int[0];
 
 }catch (Exception $e) {
 
@@ -55,15 +55,4 @@ try{
 }
 ?>
 --EXPECT--
-RetArrayInt1DResponseWrapper Object
-	(
-	    [RetArrayInt1DResult] => ArrayOfIntWrapper Object
-		(
-		    [int] => Array
-		        (
-		            [0] => 100
-		        )
-
-		)
-
-	)
+100

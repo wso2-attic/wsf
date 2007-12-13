@@ -40,7 +40,7 @@ try{
     
     $proxy = $client->getProxy();
     $val = $proxy->RetArrayString1D($input);
-    print_r($val);
+    echo $val->RetArrayString1DResult->string[0];
 
 }catch (Exception $e) {
 
@@ -55,11 +55,5 @@ try{
 }
 ?>
 --EXPECT--
-RetArrayString1DResponseWrapper Object
-(
-    [RetArrayString1DResult] => ArrayOfstringWrapper Object
-        (
-            [string] => Hello world
-        )
+Hello world
 
-)

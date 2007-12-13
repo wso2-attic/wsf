@@ -40,7 +40,7 @@ try{
     
     $proxy = $client->getProxy();
     $val = $proxy->RetArrayDateTime1D($input);
-    echo $val->RetArrayDateTime1DResult->dateTime;
+    echo $val->RetArrayDateTime1DResult->dateTime[0];
 
 }catch (Exception $e) {
 

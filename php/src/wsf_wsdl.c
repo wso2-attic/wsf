@@ -343,12 +343,36 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
         axis2_svc_client_engage_module (svc_client, env, WS_MODULE_ADDRESSING);
     }
     
+    
+    if (zend_hash_find (Z_OBJPROP_P (client_zval), WS_USE_SOAP, sizeof (WS_USE_SOAP),
+                        (void **)&tmp_options) == SUCCESS) {
+      if (Z_TYPE_PP (tmp_options) == IS_STRING) {
+	char *value = NULL;
+	value = Z_STRVAL_PP (tmp_options);
+	if (value && strcmp (value, "1.2") == 0) {
+	  soap_version = 2;
+	  AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+			   "[wsf_wsdl] soap version SOAP12");
+	} else if (value && strcmp (value, "1.1") == 0) {
+	  soap_version = 1;
+	  AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+				 "[wsf_wsdl] soap version SOAP11");
+	}
+      } else if (Z_TYPE_PP (tmp_options) == IS_DOUBLE) {
+	double val = Z_DVAL_PP (tmp_options);
+	if (val == 1.2) {
+	  soap_version = 2;
+	} else if (val == 1.1) {
+	  soap_version = 1;
+	}
+      }
+    }
     if (soap_version){
-        axis2_options_set_soap_version (client_options, env,
-                                        soap_version);
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                         "[wsf_wsdl]soap version in wsdl mode is %d",
-                         soap_version);
+      axis2_options_set_soap_version (client_options, env,
+				      soap_version);
+      AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+		       "[wsf_wsdl]soap version in wsdl mode is %d",
+		       soap_version);
     }
     
     if(!php_payload){

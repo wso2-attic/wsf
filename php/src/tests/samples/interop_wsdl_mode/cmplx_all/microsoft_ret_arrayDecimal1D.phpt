@@ -40,7 +40,7 @@ try{
     
     $proxy = $client->getProxy();
     $val = $proxy->RetArrayDecimal1D($input);
-    print_r($val);
+    echo $val->RetArrayDecimal1DResult->decimal[0];
 
 }catch (Exception $e) {
 
@@ -55,15 +55,4 @@ try{
 }
 ?>
 --EXPECT--
-RetArrayDecimal1DResponseWrapper Object
-(
-    [RetArrayDecimal1DResult] => ArrayOfNullableOfdecimal1DWrapper Object
-        (
-            [decimal] => Array
-                (
-                    [0] => 0.61803398875
-                )
-
-        )
-
-)
+0.61803398874989

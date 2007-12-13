@@ -44,8 +44,6 @@ try{
     $val = $proxy->RetEnumString($input);
     echo "Result is:"."\n"; 
     var_dump($val);
-    echo "\n";
-    echo "\n";
 
 }catch (Exception $e) {
 
