@@ -27,7 +27,7 @@ XML
 
 begin
   LOG_FILE_NAME = "ruby_echo_client_addr.log"
-  END_POINT = "http://localhost:9090/echo_service_addr/echo"
+  END_POINT = "http://localhost:3000/echo_service_addr/echo"
   ACTION = "http://ruby.wsf.wso2/samples/echoString"
 
   client = WSClient.new({"use_wsa" => "TRUE"},
