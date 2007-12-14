@@ -1,6 +1,8 @@
 
 class WS_WSDL_Operations
 
+  attr_reader :created_types, :operations, :xsd_types
+
   WS_OPERATION_INPUT_TAG = 'input';
   WS_OPERATION_OUTPUT_TAG = 'output';
   WS_OPERATION_TYPE_TAG = 'type';

@@ -4,10 +4,9 @@ require 'ws_wsdl_constants'
 include REXML
 
 class WS_WSDL_Message
-  
-  private @simple_types, @fun_mapping
-  public @operations
 
+  attr_reader :simple_types, :fun_mapping, :operations
+  
   def initialize(operations, simple_types, ops_to_functions)
     @operations = operations
     @simple_types = simple_types

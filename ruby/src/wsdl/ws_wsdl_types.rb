@@ -5,8 +5,7 @@ include REXML
 
 class WS_WSDL_Type
   
-  private @ns, @created_types, @fun_mapping
-  public @simple_types, @cmplx_types, @schema_types
+  attr_reader :ns, :created_types, :fun_mapping, :simple_types, :cmplx_types, :schema_types
 
   def initialize(ns, array1, array2, mapping_array)
     @ns = ns
