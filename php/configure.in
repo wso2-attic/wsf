@@ -25,8 +25,10 @@ ENABLE_SSL = 1
 OPENSSL_BIN_DIR = E:\OpenSSL
 
 # Build with SQLite support for permanent storage, to disable set WITH_SQLITE = 0
-# ( sqlite is bundled with WSF/PHP )
 WITH_SQLITE = 1
+#sqlite Binary Directory and Source directory
+SQLITE_BIN_DIR = "E:\sqlite-3_3_81"
+SQLITE_SRC_DIR = "E:\sqlite-3_3_81"
 
 # Build with MySQL support for permanent storage, to enable set WITH_MYSQL = 1
 WITH_MYSQL = 0
