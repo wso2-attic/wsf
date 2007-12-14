@@ -10,7 +10,7 @@
 
 <body>
 <h1> Reliable Messaging API</h1>
-     <p>The WSO2 WSF/PHP extension supports WS-ReliableMessaging protocol versions 1.0 and 1.1. 
+     <p>The WSO2 WSF/Ruby extension supports WS-ReliableMessaging protocol versions 1.0 and 1.1. 
         One way messages as well as two way messages can be sent reliably.
      </p>
     <p>
@@ -21,7 +21,7 @@
         WSClient Options for RM </strong>
     </p>
     <p>
-        <table border="1">
+        <table width="100%" border="1">
             <tr>
                 <td style="width: 100px; height: 15px">
                     <strong>Option </strong>
@@ -43,7 +43,7 @@
                 <td style="width: 100px; height: 21px">
                     TRUE | 1.0 | 1.1 </td>
                 <td style="width: 100px; height: 21px">
-                    Default RM version is 1.0</td>
+                    1.0</td>
                 <td style="width: 373px; height: 21px">
                     Defines whether to enable reliable messaging (RM) or not. 
                     If specified TRUE, then RM
@@ -52,32 +52,32 @@
             </tr>
             <tr>
                 <td style="width: 100px; height: 4px">
-                    sequenceExpiryTime</td>
+                    sequence_expiry_time</td>
                 <td style="width: 100px; height: 4px">
                     int</td>
                 <td style="width: 100px; height: 4px">
                     int</td>
                 <td style="width: 100px; height: 4px">
-                    &nbsp;60 seconds</td>
+                    60 seconds</td>
                 <td style="width: 373px; height: 4px">
-                    The current sequence will expire in "sequenceExpiryTime" seconds from the current
+                    The current sequence will expire in "sequence_expiry_time" seconds from the current
                     time.</td>
             </tr>
               <tr>
                 <td style="width: 100px; height: 4px">
-                    sequenceKey</td>
+                    sequence_key</td>
                 <td style="width: 100px; height: 4px">
                     string</td>
                 <td style="width: 100px; height: 4px">
                     string</td>
                 <td style="width: 100px; height: 4px">
-                    none&nbsp;</td>
+                    None</td>
                 <td style="width: 373px; height: 4px">
                     The sequence key property </td>
             </tr>
             <tr>
                 <td style="width: 100px; height: 4px">
-                    "willContinueSequence"</td>
+                    "will_continue_sequence"</td>
                 <td style="width: 100px; height: 4px">
                     boolean</td>
                 <td style="width: 100px; height: 4px">
@@ -87,7 +87,7 @@
                 <td style="width: 373px; height: 4px">
                     Whether to continue the sequence. The sequence will be terminated by default
                     if the user does not specify
-                    "willContinueSequence" =&gt; TRUE.</td>
+                    "will_continue_sequence" =&gt; TRUE.</td>
             </tr>
         </table>
     </p>
@@ -95,7 +95,7 @@
     <strong id="ws_message_options">WSMessage Options for RM<br />
         <br />
     </strong>
-    <table border="1" >
+    <table width="100%" border="1" >
         <tr style="font-weight: bold">
             <td style="width: 100px">
                 Option</td>
@@ -110,7 +110,7 @@
         </tr>
         <tr>
             <td style="width: 100px">
-                lastMessage</td>
+                last_message</td>
             <td style="width: 100px">
                 Boolean</td>
             <td style="width: 100px">
@@ -121,20 +121,19 @@
                 If the user wants to create multiple requests using the same sequence, this option can
                 be used.
                 <br />
-                    The client will check its "willContinueSequence" option. If it is FALSE (default
+                    The client will check its "will_continue_sequence" option. If it is FALSE (default
                     value) , it will send a message
-                    and terminate the sequence. If the client's&nbsp; "willContinueSequence" property is TRUE, it will check the "lastMessage"
-                    property of WSMessage. If the "lastMessage" is TRUE (default is FALSE) it will add the last
+                    and terminate the sequence. If the client's&nbsp; "will_continue_sequence" property is TRUE, it will check the "last_message"
+                    property of WSMessage. If the "last_message" is TRUE (default is FALSE) it will add the last
                     message and terminate the sequence.</td>
         </tr>
     </table>
     <br />
     <strong id="ws_service_options">
-        <br />
     WSService Options for RM<br />
     </strong>
     <br />
-    <table border="1">
+    <table width="100%" border="1">
         <tr style="font-weight: bold">
             <td style="width: 100px">
                 Option</td>

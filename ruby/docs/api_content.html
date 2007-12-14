@@ -10,11 +10,11 @@
 </head>
 
 <body lang="en-US" dir="ltr">
-<h1>WSO2 WSF/PHP API</h1>
+<h1>WSO2 WSF/Ruby API</h1>
 
-<p>WSO2 Web Services Framework/PHP is a PHP extension that can be used to
+<p>WSO2 Web Services Framework/Ruby is a Ruby extension that can be used to
 provide and consume Web services. This document covers the API of WSO2
-WSF/PHP extension.</p>
+WSF/Ruby extension.</p>
 <a id="pre"></a>
 
 <h2><b>Predefined Classes</b></h2>
@@ -25,7 +25,7 @@ WSF/PHP extension.</p>
 <h3><b>Constructor</b></h3>
 <a id="pre_WSClient"></a>
 <ul>
-  <li><p><b>WSClient([array options])</b></p>
+  <li><p><b>WSClient(Hash options, String log_file_name)</b></p>
   </li>
 </ul>
 
@@ -33,21 +33,25 @@ WSF/PHP extension.</p>
 
 <p>Parameters:</p>
 
-<table cellspacing="3" style="page-break-inside: avoid" cellpadding="4"
+<table width="100%" cellspacing="3" style="page-break-inside: avoid" cellpadding="4"
 border="1">
-  <col><col><col><col><col><col><thead>
+  <col><col><thead>
     <tr valign="top">
-      <th style="width: 96px"><p>Parameter</p>
+      <th><p>Parameter</p>
       </th>
-      <th colspan="4"><p>Description</p>
+      <th><p>Default Value</p>
+      </th>
+      <th><p>Description</p>
       </th>
     </tr>
   </thead>
   <tbody>
     <tr valign="top">
-      <td style="width: 96px"><p>options</p>
+      <td><p>options</p>
       </td>
-      <td colspan="4"><p align="left">An associative array of options. Both
+      <td><p>None</p>
+      </td>
+      <td><p align="left">An associative array of options. Both
         message related properties, defined for WSMessage as well as WSClient
         specific options defined below, can be included in the options array
         here. Please note that the "to" option must be specified at some
@@ -60,6 +64,34 @@ border="1">
         properties that can be used as options.</p>
       </td>
     </tr>
+    <tr valign="top">
+      <td><p>log_file_name</p>
+      </td>
+      <td><p>"wsf_ruby_client.log"</p>
+      </td>
+      <td><p>The name of the log file that the client log messages would get logged into.</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table cellspacing="3" style="page-break-inside: avoid" cellpadding="4"
+border="1">
+  <!--<col><col><col><col><col><col><thead>
+    <tr valign="top">
+      <th style="width: 96px"><p>Parameter</p>
+      </th>
+      <th colspan="4"><p>Description</p>
+      </th>
+    </tr>
+  </thead>-->
+  <tbody>
+    <!--<tr valign="top">
+      <td style="width: 96px"><p>options</p>
+      </td>
+      <td colspan="4">
+      </td>
+    </tr>-->
     <tr valign="top">
       <th style="width: 96px"><p>Option</p>
       </th>
@@ -78,7 +110,7 @@ border="1">
       </td>
     </tr>
     <tr valign="top">
-      <td style="width: 96px"><p>"useSOAP"</p>
+      <td style="width: 96px"><p>"use_soap"</p>
       </td>
       <td><p>boolean | double | string</p>
       </td>
@@ -90,13 +122,13 @@ border="1">
       </td>
       <td><p>Specifies whether to use SOAP bindings, or not. If FALSE, a REST
         style invocation will take place with the given HTTP method as
-        specified by the "HTTPMethod" option. 1.1 or "1.1" would make the
+        specified by the "http_method" option. 1.1 or "1.1" would make the
         message use SOAP 1.1. 1.2 or "1.2" would make the message use SOAP
         1.2. TRUE means use SOAP 1.2.</p>
       </td>
     </tr>
     <tr valign="top">
-      <td style="width: 96px; height: 55px"><p>"HTTPMethod"</p>
+      <td style="width: 96px; height: 55px"><p>"http_method"</p>
       </td>
       <td style="height: 55px"><p>string <br>
         case insensitive</p>
@@ -113,7 +145,7 @@ border="1">
       </td>
     </tr>
     <tr valign="top">
-      <td style="height: 51px; width: 96px;"><p>"useMTOM"</p>
+      <td style="height: 51px; width: 96px;"><p>"use_mtom"</p>
       </td>
       <td style="height: 51px"><p>boolean</p>
       </td>
@@ -129,7 +161,7 @@ border="1">
       </td>
     </tr>
     <tr valign="top">
-      <td style="width: 96px"><p>"responseXOP"</p>
+      <td style="width: 96px"><p>"response_xop"</p>
       </td>
       <td><p>boolean</p>
       </td>
@@ -139,8 +171,8 @@ border="1">
       </td>
       <td><p style="margin-bottom: 0in">Controls whether XOP elements in a
         response with MTOM are resolved into the logically equivalent
-        straight XML infoset or not. If TRUE, the member variable
-        "attachments" of the message returned as a result of the calling request
+	straight XML infoset or not. If TRUE, the options "attachments" and "cid_2_content_type" 
+	of the message returned as a result of the calling request
         method would be set. If FALSE, the binary content will be present in
         the response payload in base64 format.</p>
       </td>
@@ -150,7 +182,7 @@ border="1">
       </td>
     </tr>
     <tr valign="top">
-      <td style="width: 96px"><p>"useWSA"</p>
+      <td style="width: 96px"><p>"use_wsa"</p>
       </td>
       <td><p>boolean | double | string</p>
       </td>
@@ -161,7 +193,7 @@ border="1">
       <td><p>"1.0"</p>
       </td>
       <td><p>Indicates whether to use WS-Addressing. If TRUE, 1.0 or "1.0", the
-        WS-Addressing 1.0 version will be used, if "submission" the
+        WS-Addressing 1.0 version will be used. If "submission" the
         WS-Addressing submission version will be used. When 1.0, "1.0" or
         "submission" is specified, the "action" must be present. If FALSE, no
         addressing headers will be sent.</p>
@@ -172,13 +204,13 @@ border="1">
     </tr>
     <tr valign="top">
       <td colspan="1" style="height: 20px; width: 96px;">"policy"</td>
-      <td colspan="1" style="height: 20px"> WSPolicy object</td>
+      <td colspan="1" style="height: 20px">WSPolicy object</td>
       <td colspan="1" style="height: 20px">WSPolicy object</td>
       <td colspan="1" style="height: 20px">None</td>
       <td colspan="1" style="height: 20px">WSPolicy Object</td>
     </tr>
     <tr valign="top">
-      <td colspan="1" style="height: 21px; width: 96px;">"securityToken"</td>
+      <td colspan="1" style="height: 21px; width: 96px;">"security_token"</td>
       <td colspan="1" style="height: 21px">WSSecurityToken</td>
       <td colspan="1" style="height: 21px"></td>
       <td colspan="1" style="height: 21px">None</td>
@@ -189,20 +221,20 @@ border="1">
       <td colspan="5">Proxy and SSL settings related properties</td>
     </tr>
     <tr valign="top">
-      <td colspan="1" style="height: 20px; width: 96px;">"proxyHost"</td>
+      <td colspan="1" style="height: 20px; width: 96px;">"proxy_host"</td>
       <td colspan="1" style="height: 20px">string</td>
       <td colspan="1" style="height: 20px">string</td>
       <td colspan="1" style="height: 20px">None</td>
       <td colspan="1" style="height: 20px">proxy host to be used.</td>
     </tr>
     <tr valign="top">
-      <td colspan="1" style="height: 21px; width: 96px;">"proxyPort"</td>
+      <td colspan="1" style="height: 21px; width: 96px;">"proxy_port"</td>
       <td colspan="1" style="height: 21px">string</td>
       <td colspan="1" style="height: 21px">string</td>
       <td colspan="1" style="height: 21px">None</td>
       <td colspan="1" style="height: 21px">proxy port to use.</td>
     </tr>
-    <tr valign="top">
+    <!--<tr valign="top">
       <td colspan="5">WSDL Mode</td>
     </tr>
     <tr valign="top">
@@ -213,19 +245,16 @@ border="1">
       <td colspan="1" style="height: 20px">None</td>
       <td colspan="1" style="height: 20px">WSDL file can be used to invoke a
         Web service using dynamic invocation</td>
-    </tr>
+    </tr>-->
   </tbody>
 </table>
 
-<p><br>
-<br>
-</p>
 <a id="method"></a>
 
 <h3><b>Methods</b></h3>
 <a id="pre_WSMessage"></a>
 <ul>
-  <li><p><b>WSMessage WSClient-&gt;request (string message | domDocument
+  <li><p><b>WSMessage WSClient.request(String message | REXMLDocument
     message | WSMessage message)</b></p>
   </li>
 </ul>
@@ -235,7 +264,7 @@ format.</p>
 
 <p>Parameters:</p>
 
-<table cellspacing="3" style="page-break-inside: avoid" cellpadding="4"
+<table width="100%" cellspacing="3" style="page-break-inside: avoid" cellpadding="4"
 border="1">
   <col><col><thead>
     <tr valign="top">
@@ -252,9 +281,9 @@ border="1">
       <td><p>The request message payload to be sent. The type of the parameter can
         be any one of the following types:</p>
         <ul>
-          <li><p>string</p>
+          <li><p>String</p>
           </li>
-          <li><p>domDocument</p>
+          <li><p>REXMLDocument</p>
           </li>
           <li><p>WSMessage</p>
           </li>
@@ -268,23 +297,18 @@ border="1">
   </tbody>
 </table>
 
-<p><br>
-<br>
-</p>
-
 <p>Return Values:</p>
 
 <p>The response will be returned as a WSMessage object instance.</p>
 
 <p>Throws WSFault on error.</p>
 
-<p><br>
 <br>
-</p>
+
 <a id="pre_void_WSClient"></a>
 <ul>
-  <li><p><b>void WSClient -&gt; send(string payload | domDocument message |
-    WSMessage message)</b></p>
+  <li><p><b>void WSClient.send(String message | REXMLDocument
+    message | WSMessage message)</b></p>
   </li>
 </ul>
 
@@ -293,7 +317,7 @@ hence no response will be expected.</p>
 
 <p>Parameters:</p>
 
-<table cellspacing="3" style="page-break-inside: avoid" cellpadding="4"
+<table width="100%" cellspacing="3" style="page-break-inside: avoid" cellpadding="4"
 border="1">
   <col><col><thead>
     <tr valign="top">
@@ -310,9 +334,9 @@ border="1">
       <td><p>The request message payload to be sent. The type of the parameter
         can be any one of the following types:</p>
         <ul>
-          <li><p>string</p>
+          <li><p>String</p>
           </li>
-          <li><p>domDocument</p>
+          <li><p>REXMLDocument</p>
           </li>
           <li><p>WSMessage</p>
           </li>
@@ -326,36 +350,32 @@ border="1">
   </tbody>
 </table>
 
-<p><br>
-<br>
-</p>
-
 <p>Return Values:</p>
 
 <p>void</p>
 
 <p>Throws WSFault on error.</p>
 
-<p><br>
-<br>
-</p>
-
 <h3><b>Member Variables</b></h3>
 None
 
 <h3><b>Example</b></h3>
-<pre><span style="color: rgb(0, 0, 255);">$reqPayloadString</span> = &lt;&lt;&lt;XML
-        &lt;ns1:echoString xmlns:ns1=<span style="color: rgb(255, 0, 0);">"http://php.axis2.org/samples"</span>&gt;
-                &lt;text&gt;Hello World!&lt;/text&gt;
-        &lt;/ns1:echoString&gt;
-XML;
 
-    <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span>
-        <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"to"</span>=&gt;<span style="color: rgb(255, 0, 0);">"http://localhost/echo_service.php"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
+<pre>
+    req_payload_string = &lt;&lt;<span style="color: brown;">XML</span>
+        <span style="color: rgb(0, 75, 0);">&lt;ns1:echoString xmlns:ns1="http://ruby.wsf.wso2.net/samples"&gt;
+            &lt;text&gt;Hello World!&lt;/text&gt;
+	&lt;/ns1:echoString&gt;</span>
+    <span style="color: brown;">XML</span>
+
+    client = <span style="color: orange;">WSClient</span>.<span style="color: blue;">new</span>({<span style="color: green;">"to"</span> =&gt; <span style="color: red;">"http://localhost/hello_service/greet"</span>})
                                 
-    <span style="color: rgb(0, 0, 255);">$resMessage</span> = <span style="color: rgb(0, 0, 255);">$client</span>-&gt;<span style="color: rgb(0, 102, 0);">request</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$reqPayloadString</span><span style="color: rgb(102, 204, 102);">)</span>;
-    
-    <a href="http://www.php.net/printf"><span style="color: rgb(0, 0, 102);">printf</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"Response = %s &lt;br&gt;"</span>, <a href="http://www.php.net/htmlspecialchars"><span style="color: rgb(0, 0, 102);">htmlspecialchars</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$resMessage</span>-&gt;<span style="color: rgb(0, 102, 0);">str</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
+    res_message = client.request(req_payload_string)
+
+    <span style="color: rgb(0, 0, 255);">if not</span> res_message.<span style="color: rgb(0, 0, 255);">nil?</span> <span style="color: rgb(0, 0, 255);">then</span>
+        <span style="color: rgb(0, 0, 255);">puts</span> <span style="color: red;">"Received OM : "</span> &lt;&lt; <span style="color: red;">"\n"</span> &lt;&lt; res_message.payload_to_s &lt;&lt; <span style="color: red;">"\n\n"</span>
+    <span style="color: rgb(0, 0, 255);">end</span>
+</pre>
 
 <p></p>
 <a id="service"></a>
@@ -624,29 +644,75 @@ properties related to a message. <a id="construct3"></a>
 <h3><b>Constructor</b></h3>
 <a id="message_WSMessage"></a>
 <ul>
-  <li><b>WSMessage (string payload | domDocument payload[, array
-    properties])</b></li>
+  <li><b>WSMessage (String str_payload, REXMLDocument rexml_payload, Hash properties)</b></li>
 </ul>
 
 <p>Constructs a new WSMessage object.</p>
 
 <p>Parameters:</p>
 
-<table cellspacing="3" style="page-break-inside: avoid" cellpadding="4"
+<table width="100%" cellspacing="3" style="page-break-inside: avoid" cellpadding="4"
 border="1">
-  <col><col><col><col><col><col><thead>
+  <col><col><thead>
+    <tr valign="top">
+      <th><p>Parameter</p>
+      </th>
+      <th><p>Default Value</p>
+      </th>
+      <th><p>Description</p>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr valign="top">
+      <td><p>str_payload</p>
+      </td>
+      <td><p>None</p>
+      </td>
+      <td><p>A string representing the payload being sent or being received.
+	     The payload is expected to be in valid XML format as expected by
+        the service.</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td><p>rexml_payload</p>
+      </td>
+      <td><p>nil</p>
+      </td>
+      <td><p>A REXML Document object encapsulating the payload being sent or being received.
+	     The payload is expected to be in valid XML format as expected by
+        the service.</p>
+      </td>
+    </tr>
+     <tr valign="top">
+      <td><p>properties</p>
+      </td>
+      <td><p>nil</p>
+      </td>
+      <td><p align="left">A hash of properties.</p>
+
+        <p align="left">The following table shows the possible message level
+        properties and related details.</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table width="100%" cellspacing="3" style="page-break-inside: avoid" cellpadding="4"
+border="1">
+  <!--<col><col><col><col><col><col><thead>
     <tr valign="top">
       <th><p>Parameter</p>
       </th>
       <th colspan="4"><p>Description</p>
       </th>
     </tr>
-  </thead>
+  </thead>-->
   <tbody>
-    <tr valign="top">
+    <!--<tr valign="top">
       <td><p>payload</p>
       </td>
-      <td colspan="4"><p>Request payload being sent or being received. The
+      <td colspan="4"> The
         type of the parameter can be any one of the following types:</p>
         <ul>
           <li><p>string</p>
@@ -655,8 +721,7 @@ border="1">
           </li>
         </ul>
 
-        <p>The payload is expected to be in valid XML format as expected by
-        the service.</p>
+        <p></p>
       </td>
     </tr>
     <tr valign="top">
@@ -667,17 +732,17 @@ border="1">
         <p align="left">The following table shows the possible message level
         properties and related details.</p>
       </td>
-    </tr>
+    </tr>-->
     <tr valign="top">
-      <th><p>Option</p>
+      <th style="width: 96px"><p>Option</p>
       </th>
       <th><p>Data Type</p>
       </th>
       <th><p>Value Domain</p>
       </th>
-      <th style="width: 109px"><p>Default Value</p>
+      <th><p>Default Value</p>
       </th>
-      <th style="width: 465px"><p>Description</p>
+      <th><p>Description</p>
       </th>
     </tr>
     <tr>
@@ -685,17 +750,17 @@ border="1">
       </td>
     </tr>
     <tr valign="top">
-      <td><p>"to"</p>
+      <td style="width: 96px"><p>"to"</p>
       </td>
       <td><p>string</p>
       </td>
       <td><p>A URI</p>
       </td>
-      <td style="width: 109px"><p>None</p>
+      <td><p>None</p>
       </td>
-      <td style="width: 465px"><p>A URI representing the endpoint URI of the
-        service to be consumed. This must be present on the client side. In case
-        WS-Addressing is in use, this will be used as the WSA To header</p>
+      <td><p>A URI representing the endpoint URI of the
+        service to be consumed. This must be present on the server side. In case
+        WS-Addressing is in use, this will be used as the WSA "to" header</p>
       </td>
     </tr>
     <tr>
@@ -703,46 +768,46 @@ border="1">
       </td>
     </tr>
     <tr valign="top">
-      <td><p>"action"</p>
+      <td style="width: 96px"><p>"action"</p>
       </td>
       <td><p>string</p>
       </td>
       <td><p>A URI</p>
       </td>
-      <td style="width: 109px"><p>None</p>
+      <td><p>None</p>
       </td>
-      <td style="width: 465px"><p>xs:anyURI <br clear="all">
+      <td><p>xs:anyURI <br clear="all">
         The WS-A action to use when constructing the WS-A headers. A URI
         representing the WSA action that helps uniquely identify the
         operation to be invoked. This is also used as the SOAP Action
-        regardless of whether the useWSA option is specified or not.</p>
+        regardless of whether the use_wsa option is specified or not.</p>
       </td>
     </tr>
     <tr valign="top">
-      <td><p>"from"</p>
+      <td style="width: 96px"><p>"from"</p>
       </td>
       <td><p>string</p>
       </td>
       <td><p>A URI</p>
       </td>
-      <td style="width: 109px"><p>None</p>
+      <td><p>None</p>
       </td>
-      <td style="width: 465px"><p>xs:anyURI</p>
+      <td><p>xs:anyURI</p>
 
         <p>WS-Addressing From. A URI indicating where the response or request
-        came from.  (Note: This doesn't support reference parameters.) </p>
+        came from.(Note: This doesn't support reference parameters.) </p>
       </td>
     </tr>
     <tr valign="top">
-      <td><p>"replyTo"</p>
+      <td style="width: 96px"><p>"reply_to"</p>
       </td>
       <td><p>string</p>
       </td>
       <td><p>A URI</p>
       </td>
-      <td style="width: 109px"><p>None</p>
+      <td><p>None</p>
       </td>
-      <td style="width: 465px"><p>xs:anyURI</p>
+      <td><p>xs:anyURI</p>
 
         <p>WS-Addressing ReplyTo. A URI indicating where the response should
         be sent to. The default value is the anonymous URI (depending on the version).
@@ -750,15 +815,15 @@ border="1">
       </td>
     </tr>
     <tr valign="top">
-      <td><p>"faultTo"</p>
+      <td style="width: 96px"><p>"fault_to"</p>
       </td>
       <td><p>string</p>
       </td>
       <td><p>A URI</p>
       </td>
-      <td style="width: 109px"><p>None</p>
+      <td><p>None</p>
       </td>
-      <td style="width: 465px"><p>xs:anyURI</p>
+      <td><p>xs:anyURI</p>
 
         <p>WS-Addressing FaultTo. A URI indicating where the fault should be
         sent to in case of an error. (Note: This doesn't support reference
@@ -770,15 +835,15 @@ border="1">
       </td>
     </tr>
     <tr valign="top">
-      <td><p>"defaultAttachmentContentType"</p>
+      <td style="width: 96px"><p>"default_attachment_content_type"</p>
       </td>
       <td><p>string</p>
       </td>
       <td><p>MTOM content type</p>
       </td>
-      <td style="width: 109px"><p>"application/octet-stream"</p>
+      <td><p>"application/octet-stream"</p>
       </td>
-      <td style="width: 465px"><p style="margin-bottom: 0in">Specify a
+      <td><p style="margin-bottom: 0in">Specify a
         default MTOM content type to be used with MTOM attachments. You can
         also specify xmlmime:contentType on the xop:Include element, which
         will override this setting.</p>
@@ -787,75 +852,81 @@ border="1">
   </tbody>
 </table>
 
-<p><br>
-<br>
-</p>
 <a id="method3"></a>
-
-<h3><b>Methods</b></h3>
+<a id="WSMessage_Methods"></a>
+<!--<h3><b>Methods</b></h3>
 
 <p>None</p>
-<a id="WSMessage_Member_ariables"></a>
+<a id="WSMessage_Member_ariables"></a>-->
 
-<h3><b>Member Variables</b></h3>
+<h3><b>Methods</b></h3>
 <ul>
-  <li><p><b>string str</b></p>
+  <a id="WSMessage_payload_to_s"></a>
+  <li><p><b>String WSMessage.payload_to_s</b></p>
   </li>
 </ul>
 
-<p>Stores the last SOAP request or response payload sent in the message
-as an XML string.</p>
+<p>Returns payload as a String.</p>
+
 <ul>
-  <li><p><b>domDocument dom</b></p>
+  <a id="WSMessage_property"></a>
+  <li><p><b>Object WSMessage.property(String property_name)</b></p>
   </li>
 </ul>
 
-<p>Stores the last SOAP request or response payload sent in the message
-as a domDocument</p>
-<ul>
-  <li><p><b>array attachments</b></p>
+<p>Returns the property with name "property_name" if found and nil otherwise.</p>
+
+<!--<ul>
+  <a id="WSMessage_add_attachment_content"></a>
+  <li><p><b>void WSMessage.add_attachment_content(String cid, String content)</b></p>
   </li>
 </ul>
 
-<p>An associative array, containing the information on the binary
-attachments, e.g., array("cid1" =&gt; $image)) Here "cid1" is the ID mentioned
-in the &lt;XOP:Include&gt; element, and $image contains the string
+<p>This comes in handy when sending binary attachments. Here "cid" is the ID mentioned
+in the &lt;XOP:Include&gt; element, and "conttent" contains the string
 representation of the binary content to be sent or being received.</p>
 <br>
 
 <ul>
-  <li><p><b>array cid2contentType</b></p>
+  <a id="WSMessage_add_content_type"></a>
+  <li><p><b>void WSMessage.add_content_type(String cid, String content_type)</b></p>
   </li>
 </ul>
 
-<p>An associative array, containing the mapping of cid (content ID) to its
-corresponding  attachment. When an attachment is received, this property
-will be present in the WSMessage object.</p>
-<ul>
+<p>This is useful when receiving binary attachments. Here "cid" is the ID mentioned
+in the &lt;XOP:Include&gt; element, and "conttent" contains the string
+representation of the binary content to be sent or being received.When an attachment is received, this property
+will be present in the WSMessage object.</p>-->
+
+<!--<ul>
   <li><p><b>array headers</b></p>
   </li>
 </ul>
 
-<p>An array of SOAP Header objects being sent or being received. </p>
+<p>An array of SOAP Header objects being sent or being received. </p>-->
 
 <h3><b>Example</b></h3>
-<pre><span style="color: rgb(0, 0, 255);">$reqPayloadString</span> = &lt;&lt;&lt;XML
-        &lt;ns1:<a href="http://www.php.net/echo"><span style="color: rgb(0, 0, 102);">echo</span></a> xmlns:ns1=<span style="color: rgb(255, 0, 0);">"http://php.axis2.org/samples"</span>&gt;
-                &lt;text&gt;Hello World!&lt;/text&gt;
-        &lt;/ns1:echo&gt;
-XML;
+<pre>
+    req_payload_string = &lt;&lt;<span style="color: brown;">XML</span>
+        <span style="color: rgb(0, 75, 0);">&lt;ns1:echoString xmlns:ns1="http://ruby.wsf.wso2.net/samples"&gt;
+            &lt;text&gt;Hello World!&lt;/text&gt;
+	&lt;/ns1:echoString&gt;</span>
+    <span style="color: brown;">XML</span>
 
-    <span style="color: rgb(0, 0, 255);">$reqMessage</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSMessage<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$reqPayloadString</span>,
-        <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"to"</span>=&gt;<span style="color: rgb(255, 0, 0);">"http://localhost/echo_service_addr.php"</span>,
-              <span style="color: rgb(255, 0, 0);">"action"</span> =&gt; <span style="color: rgb(255, 0, 0);">"http://php.axis2.org/samples/echoString"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
-              
-    <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"useWSA"</span> =&gt; <span style="color: rgb(0, 0, 0); font-weight: bold;">TRUE</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
+    req_message = <span style="color: orange;">WSMessage</span>.<span style="color: blue;">new</span>(req_payload_string,
+	                        <span style="color: blue;">nil</span>,
+				{<span style="color: green;">"to"</span> =&gt; <span style="color: red;">"http://localhost/hello_service/greet"</span>,
+                                 <span style="color: green;">"action"</span> =&gt; <span style="color: red;">"http://ruby.axis2.org/samples/echoString"</span>})
+
+    client = <span style="color: orange;">WSClient</span>.<span style="color: blue;">new</span>({<span style="color: green;">"use_wsa"</span> =&gt; <span style="color: blue;">true</span>})
                                 
-    <span style="color: rgb(0, 0, 255);">$resMessage</span> = <span style="color: rgb(0, 0, 255);">$client</span>-&gt;<span style="color: rgb(0, 102, 0);">request</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$reqMessage</span><span style="color: rgb(102, 204, 102);">)</span>;
-    
-    <a href="http://www.php.net/printf"><span style="color: rgb(0, 0, 102);">printf</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"Response = %s <span style="color: rgb(0, 0, 153); font-weight: bold;">\n</span>"</span>, <span style="color: rgb(0, 0, 255);">$resMessage</span>-&gt;<span style="color: rgb(0, 102, 0);">str</span><span style="color: rgb(102, 204, 102);">)</span>;
- 
+    res_message = client.request(req_message)
+
+    <span style="color: rgb(0, 0, 255);">if not</span> res_message.<span style="color: rgb(0, 0, 255);">nil?</span> <span style="color: rgb(0, 0, 255);">then</span>
+        <span style="color: rgb(0, 0, 255);">puts</span> <span style="color: red;">"Received OM : "</span> &lt;&lt; <span style="color: red;">"\n"</span> &lt;&lt; res_message.payload_to_s &lt;&lt; <span style="color: red;">"\n\n"</span>
+    <span style="color: rgb(0, 0, 255);">end</span>
 </pre>
+
 <a id="fault"></a>
 
 <h2><b>WSFault</b></h2>
@@ -864,8 +935,7 @@ XML;
 <h3><b>Constructor</b></h3>
 <a id="fault_WSFault"></a>
 <ul>
-  <li><p><b>WSFault(string code, string reason, string role, string
-    detail)</b></p>
+  <li><p><b>WSFault(String code, String reason, String role, String detail, String xml)</b></p>
   </li>
 </ul>
 
@@ -873,30 +943,30 @@ XML;
 
 <p>Parameters:</p>
 
-<table cellspacing="3" style="page-break-inside: avoid" cellpadding="4"
+<table width="100%" cellspacing="3" style="page-break-inside: avoid" cellpadding="4"
 border="1">
   <col><col><col><col><col><col><thead>
   </thead>
   <tbody>
     <tr valign="top">
-      <th><p>Option</p>
+      <th><p>Parameter</p>
       </th>
-      <th><p>Data Type</p>
+      <!--<th><p>Data Type</p>
       </th>
       <th><p>Value Domain</p>
-      </th>
+      </th>-->
       <th><p>Default Value</p>
       </th>
       <th><p>Description</p>
       </th>
     </tr>
     <tr valign="top">
-      <td><p>"code"</p>
+      <td><p>code</p>
       </td>
-      <td><p>string</p>
+      <!--<td><p>string</p>
       </td>
       <td><p>An error code string</p>
-      </td>
+      </td>-->
       <td><p>None</p>
       </td>
       <td><p>SOAP fault code. SOAP fault codes are intended to provide a
@@ -907,12 +977,12 @@ border="1">
       </td>
     </tr>
     <tr valign="top">
-      <td><p>"reason"</p>
+      <td><p>reason</p>
       </td>
-      <td><p>string</p>
+      <!--<td><p>string</p>
       </td>
       <td><p>Reason string</p>
-      </td>
+      </td>-->
       <td><p>None</p>
       </td>
       <td><p>SOAP fault reason. Provides a human readable explanation of the
@@ -920,85 +990,110 @@ border="1">
       </td>
     </tr>
     <tr valign="top">
-      <td><p>"role"</p>
+      <td><p>role</p>
       </td>
-      <td><p>string</p>
+      <!--<td><p>string</p>
       </td>
       <td><p>Role string</p>
-      </td>
-      <td><p>None</p>
+      </td>-->
+      <td><p>""</p>
       </td>
       <td><p>SOAP fault role. Identifies the role in which the SOAP processing node
         was operating at the time the fault occurred.</p>
       </td>
     </tr>
     <tr valign="top">
-      <td><p>"detail"</p>
+      <td><p>detail</p>
       </td>
-      <td><p>string</p>
+      <!--<td><p>string</p>
       </td>
       <td><p>Detail string</p>
-      </td>
-      <td><p>None</p>
+      </td>-->
+      <td><p>""</p>
       </td>
       <td><p>SOAP Fault detail. Contains application specific error
         information.</p>
       </td>
     </tr>
+    <tr valign="top">
+      <td><p>xml</p>
+      </td>
+      <!--<td><p>string</p>
+      </td>
+      <td><p>Detail string</p>
+      </td>-->
+      <td><p>""</p>
+      </td>
+      <td><p>SOAP fault as an XML string.</p>
+      </td>
+    </tr>
   </tbody>
 </table>
 
-<p><br>
-<br>
-</p>
 <a id="method2"></a>
 
-<h3><b>Methods</b></h3>
+<!--<h3><b>Methods</b></h3>
 <a id="A1"></a>
 <ul>
   <li><p><b>WSFault-&gt;__toString()</b></p>
     <p>Returns the fault information as a string</p>
   </li>
 </ul>
-<br>
+<br>-->
 <a id="member_variables"></a>
 
-<h3><b>Member Variables</b></h3>
+<h3><b>Methods</b></h3>
 <ul>
-  <li><p><b>string Code</b></p>
+  <a id="WSFault_to_s"></a>
+  <li><p><b>String to_s</b></p>
   </li>
 </ul>
 
-<p>SOAP fault code. SOAP fault codes are intended to provide a means by which
+<p>Returns the fault information as a string.</p>
+
+<ul>
+  <a id="WSFault_code"></a>
+  <li><p><b>String code</b></p>
+  </li>
+</ul>
+
+<p>Returns SOAP fault code. SOAP fault codes are intended to provide a means by which
 faults are classified.</p>
+
 <ul>
-  <li><p><b>string Reason</b></p>
+  <a id="WSFault_reason"></a>
+  <li><p><b>String reason</b></p>
   </li>
 </ul>
 
-<p>SOAP fault reason. Provides a human readable explanation of the fault.</p>
+<p>Returns SOAP fault reason. Provides a human readable explanation of the fault.</p>
+
 <ul>
-  <li><p><b>string Role</b></p>
+  <a id="WSFault_role"></a>
+  <li><p><b>String role</b></p>
   </li>
 </ul>
 
-<p>SOAP fault role. Identifies the role in which the SOAP processing node was
+<p>Returns SOAP fault role. Identifies the role in which the SOAP processing node was
 operating at the time the fault occurred.</p>
-<ul>
-  <li><b>string Detail</b></li>
-</ul>
-
-<p>SOAP fault detail. Contains application specific error information.</p>
-<br>
 
 <ul>
-  <li><b>string str</b></li>
+  <a id="WSFault_detail"></a>
+  <li><b>String detail</b></li>
 </ul>
 
-<p>Contains the received SOAP fault as an XML string.</p>
+<p>Returns SOAP fault detail. Contains application specific error information.</p>
+
+<ul>
+  <a id="WSFault_xml"></a>
+  <li><b>String xml</b></li>
+</ul>
+
+<p>Returns the SOAP fault as an XML string.</p>
+
 <a id="function"></a>
 
-<h2><b>Predefined Functions</b></h2>
+<!--<h2><b>Predefined Functions</b></h2>
 <ul>
   <li><h4><a id="ws_request"></a><b>WSMessage ws_request (string payload |
     domDocument payload | WSMessage payload <br>
@@ -1212,6 +1307,6 @@ border="1">
 ws_reply<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"operations"</span> =&gt; <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"echoString"</span> =&gt; <span style="color: rgb(255, 0, 0);">"echoFunction"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
 
 <p><br>
-</p>
+</p>-->
 </body>
 </html>

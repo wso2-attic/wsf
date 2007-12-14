@@ -10,41 +10,38 @@
 </head>
 
 <body xml:lang="en">
-<h1>WSO2 WSF/PHP Installation Guide</h1>
+<h1>WSO2 WSF/Ruby Installation Guide</h1>
 
 <p>This document guides you on how to install the WSO2 Web Services
-Framework/PHP extension, and run the server and client samples on Linux and
+Framework/Ruby extension, and run the server and client samples on Linux and
 Microsoft Windows operating systems.</p>
 
 <p>Please send your feedback to the user mailing list: <a
-href="mailto:wsf-php-user@wso2.org">wsf-php-user@wso2.org</a>. Kindly see <a
-href="https://www-lk.wso2.com/repo/wso2/php_axis2/extension/xdocs/index.html#mail">Home
+href="mailto:wsf-ruby-user@wso2.org">wsf-ruby-user@wso2.org</a>. Kindly see <a
+href="mailto:wsf-ruby-user-request@lists.wso2.net?subject=subscribe">Home
 page</a> for subscription.</p>
 
 <h2>Contents</h2>
 <ul>
   <li><a href="#Common Installation Instructions">Common Installation
     Instructions</a></li>
-  <li><a href="#1.Installing and Running on Linuxs">Installing and Running on
+  <li><a href="#Pre-Installation Configurations">Pre-Installation 
+    Configurations</a></li>
+  <li><a href="#1.Installing and Running on Linux">Installing and Running on
     Linux</a></li>
   <li><a
     href="#2.Installing and Running on Microsoft Windows (win32)">Installing
     and Running on Microsoft Windows (win32)</a>
     <ul>
-      <li><a href="#Build PHP on Windows">Build PHP on MS Windows</a></li>
+      <li><a href="#Build Ruby on Windows">Build Ruby on MS Windows</a></li>
       <li><a href="#Build WSO2 WSF for C on Windows from Source">Building
         WSO2 WSF/C on MS Windows from Source</a>
         <ul>
           <li><a href="#Requirements">Requirements</a></li>
-          <li><a href="#Building WSF/PHP From Source">Building WSF/PHP from
+          <li><a href="#Building WSF/Ruby From Source">Building WSF/Ruby from
             Source</a></li>
         </ul>
       </li>
-      <li><a
-        href="#Building WSO2 WSF for PHP on Windows from Source">Building
-        WSO2 WSF/PHP on MS Windows from Source</a></li>
-      <li><a href="#Installing WSO2 WSF As a PHP Extension">Installing WSO2
-        WSF as a PHP Extension</a></li>
     </ul>
   </li>
 </ul>
@@ -55,13 +52,11 @@ page</a> for subscription.</p>
 <p>To get the distributions working, you need the following installed in your
 system.</p>
 <ul>
-  <li>PHP 5.1.1 or later, which can be downloaded from the <a
-    href="http://www.php.net/">PHP </a> official Web site. Please refer to
-    the additional note on installing PHP as a DSO module to the Apache2 Web
-    server.
-    <p>If you are using a pre-installed version of PHP, please make sure that
+  <li>Ruby 1.8.5 or later, which can be downloaded from the <a
+    href="http://ftp.ruby-lang.org/pub/ruby/1.8">Ruby </a> download resources.
+    <p>If you are using a pre-installed version of Ruby, please make sure that
     you have the developer version installed, so that you can compile the
-    WSO2 WSF/PHP source.</p>
+    WSO2 WSF/Ruby source.</p>
   </li>
   <li>libxml2 <a href="http://xmlsoft.org/downloads.html">Download</a><a
     href="http://xmlsoft.org/downloads.html"></a> (Note: Most Linux systems
@@ -73,60 +68,54 @@ system.</p>
     <li>OpenSSL <a href="http://www.openssl.org/" >Download</a></li>
     <li>Sqlite or Mysql (needed for reliable messaging) <a href="http://www.sqlite.org/download.html" >Download Sqlite</a>, <a href="http://dev.mysql.com/downloads/" >Download Mysql</a>
 </ul>
-<a id="1.Installing and Running on Linuxs"></a>
+
+<a id="Pre-Installation Configurations"></a>
+
+<h2>Pre-Installation Configurations</h2>
+
+<p>
+Before Install WSO2 WSF/RUBY, following configuration entries have to be added
+to the 'rbconfig.rb' that shift with ruby package.
+(under windows use '/' to seperate directories. e.g. "E:/install/wsfc")
+</p>
+
+<pre>
+CONFIG["WSFC_HOME"] = "/your/wsfc/home/"
+CONFIG["WSF_LOG_DIR"] = "/where/the/log/files/should/reside/"
+CONFIG["WSF_LOG_LEVEL"] = "3"
+</pre>
+
+Valid Log Levels -
+    <ul>
+      <li>"0" - CRITICAL</li>
+      <li>"1" - ERROR</li>
+      <li>"2" - WARNING</li>
+      <li>"3" - INFO</li>
+      <li>"4" - DEBUG</li>
+      <li>"5" - TRACE</li>
+    </ul>
+<p>
+NOTE : run "ruby find_rbconfig.rb" in a console to find where this file is.
+       It's /usr/local/lib/ruby/1.8/i686-linux/rbconfig.rb in my case.
+</p>
+
+<a id="1.Installing and Running on Linux"></a>
 
 <h2>1. Installing and Running on Linux</h2>
-
-<p>1. Go to the directory where you have extracted the source distribution.
-Run the following:</p>
-<ul>
-  <li>./configure</li>
-  <li>make</li>
-  <li>make install</li>
-</ul>
-
-<p>Note: You may require super user privileges to run 'make install' on your
-system.</p>
-
-<p>2. After installing the extension, you have to edit the php.ini file and
-add the following line to the php.ini file:<br />
-<b><i>extension=wsf.so</i></b></p>
-
-<p>Now you are ready to use WSO2 WSF/PHP.</p>
-
-<p>3. Copy the scripts folder to your Web server's document root.</p>
-
-<p>4. Also, copy all the samples to your Web server's document root.</p>
-
-<p>5. Test with a Web browser. For example, access <h
-href=http://localhost/echo_client.php>http://localhost/echo_client.php</h></p>
-
-<p></p>
-
-<p><i>Notes:</i></p>
-<ul>
-  <li><i>You may run './configure --help' for more information on configure
-    options.</i></li>
-  <li><i>If you don't provide the --prefix configure option, WSO2 WSF/PHP
-    will be installed into the PHP extensions directory by default.</i></li>
-  <li><i>If you provide the --prefix configure option, you will have to edit
-    the php.ini file in your system and add the following entry.</i></li>
-  <li><i>Note that WSO2 WSF/C will be installed to a folder named "wsf_c" in
-    the prefix folder.<br />
-    <b>[wsf] wsf.home="path to your wsf_c installation directory"</b><br />
-    <b>
-    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;wsf.log_level=3</b><br />
-    </i></li>
-</ul>
+<p>
+Run "sudo sh build.sh" to setup the extension.
+</p>
 <a id="2.Installing and Running on Microsoft Windows (win32)"></a>
 
 <h2>2. Installing and Running on Microsoft Windows (win32)</h2>
-<a id="Build PHP on Windows"></a>
+<a id="Build Ruby on Windows"></a>
 
-<h3>Build PHP on MS Windows</h3>
+<h3>Build Ruby on MS Windows</h3>
 
-<p>Please refer to the README.WIN32-BUILD-SYSTEM file that comes with the PHP
-source distribution.</p>
+<p>Please refer to the README file in the win32 directory of the Ruby 
+source distribution. (If you are in windows please refer to the README
+in the win32 directory in the source)</p>
+
 <a id="Build WSO2 WSF for C on Windows from Source"></a>
 
 <h3>Build WSO2 WSF/C on MS Windows from Source</h3>
@@ -140,114 +129,26 @@ source distribution.</p>
   <li>zlib binary distribution</li>
   <li>iconv binary distribution</li>
 </ul>
-<a id="Building WSF/PHP From Source"></a>
+<a id="Building WSF/Ruby From Source"></a>
 
-<h3>Building WSF/PHP from Source</h3>
+<h3>Building WSF/RUBY from Source</h3>
 
 <p>1. If you have the Visual Studio command prompt, open it and change
-directory to wso2-wsf-php extract folder.<br />
+directory to wso2-wsf-ruby extract folder.<br/>
 </p>
 
 <p>2. If not, create a new shortcut and set target to:<br />
 <b>        %comspec% /k "C:\Program Files\Microsoft Visual Studio .NET
-2003\Vc7\bin\vcvars32.bat"</b><br />
+2003\Vc7\bin\vcvars32.bat"</b><br/>
 </p>
 
-<p>3. Now change directory to wso2-wsf-php-src, extract directory, and edit
-the configure.in file. Then set your binary installation locations of
-libxml2, zlib and iconv , OpenSSL<br />
+<p>3. Copy the .dll and .lib files of the libxml2, zlib and iconv , OpenSSL to the 
+WSFC_HOME/lib directory 
+<br/>
 </p>
 
-<p>4.Also, you need to specify the PHP source directory and its binary build
-location to build the extension along with wsf_c. Please fill the following
-entries in configure.in file. PHP_SRC_DIR, PHP_BIN_DIR and WIN32BUILD_DIR.</p>
+<p>4. Once you have done it, run build.bat file in the wsf/ruby extension from the
+source directory. This will build the binary distribution.</p>
 
-<p>5.Once you have done it, run build.bat file in the wso2-wsf-php-src
-extract directory. This will build the binary distribution.</p>
-<a id="Building WSO2 WSF for PHP on Windows from Source"></a>
-
-<h3>Building the WSO2 WSF/PHP Extension with PHP WIN32 Build System</h3>
-
-<p>1. Before trying this, please refer to the README.WIN32-BUILD-SYSTEM file
-in the PHP source distribution, and build the PHP source under MS Windows.</p>
-
-<p>2. Copy wsf_php folder to php_source/ext directory.</p>
-
-<p>3. Run buildconf.bat file to rebuild the configure.js file.</p>
-
-<p>4. "cscript /nologo configure.js --help" will give the configuration
-options. You will find the option --with-wsf.<br />
-</p>
-
-<p>5. Add the following entries to config.nice.bat file.</p>
-
-<p>        &nbsp; &nbsp; &nbsp; &nbsp; "--with-extra-includes=&lt;Libxml2 bin dir&gt;\include;&lt;iconv
-bin directory&gt;\include;&lt;zlib bin dir&gt;\include;&lt;wsf-c
-dir&gt;\include" </p>
-
-<p>        &nbsp; &nbsp; &nbsp; &nbsp; "-- with-extra-libs=&lt;Libxml2 bin dir&gt;\lib;&lt;iconv bin
-dir&gt;\lib;&lt;zlib bin dir&gt;\lib;&lt;wsf-c dir&gt;\lib"</p>
-
-<p>        &nbsp; &nbsp; &nbsp; &nbsp; "--with-wsf=shared"</p>
-
-<p>6. Run the above config.nice.bat file to configure the wsf extension as a
-dll.</p>
-
-<p>7. "nmake" will build the wsf extension.<br />
-</p>
-<a id="Installing WSO2 WSF As a PHP Extension"></a>
-
-<h3>Installing WSO2 WSF as a PHP Extension</h3>
-
-<p>1. If you have built from the source, you should now have the wsf_c binary
-and the wsf.dll.<br />
-</p>
-
-<p>2. If you have extracted the binary, you should have the following
-structure.</p>
-<pre>    wso2-wsf-php-bin-1.1.0-win32
-	           |
-                    +-- wsf_c
-                    |
-                    +-- wsf.dll</pre>
-
-<p>3. Copy wsf.dll to the PHP installation directory.</p>
-
-<p>4. Add wso2-wsf-php-bin-1.1.0-win32\wsf_c\lib directory to the PATH environment variable.</p>
-
-<p>5. Add the following entries to your php.ini file which is in your PHP
-installation location.<br />
-</p>
-<pre>       [wsf]
-       wsf.home="<path_to_extract_folder>\wsf_c"
-       wsf.log_path="<path_to_extract_folder>\wsf_c\logs"
-       wsf.log_level=3
-       extension=wsf.dll</path_to_extract_folder></path_to_extract_folder></pre>
-
-<p>6. Configure the Apache2 Web server with PHP as follows.<br />
-</p>
-
-<p>7. Copy php5apache2.dll to Apache2/modules directory. </br>
-</p>
-<p>
-	Add the following entries in httpd.conf file.<br />
-</p>
-
-<p>8. LoadModule php5_module modules/php5apache2.dll <br />
-</p>
-
-<p>9. PHPIniDir " < your php.ini file location> "<br />
-</p>
-
-<p>10. AddType application/x-httpd-php .php .phtml<br />
-</p>
-
-<p>11. AddType application/x-httpd-php-source .phps<br />
-</p>
-
-<p>12. Copy the scripts folder and all the samples to your Web server's
-document root.</p>
-
-<p>Now you should be able to run the samples in the samples directory.</p>
 </body>
 </html>

@@ -5,43 +5,54 @@
 </head>
 
 <body>
-<pre>
+<pre>require 'wsf'
+
+include WSO2::WSF
+
+req_payload_string = &lt;&lt;XML
+<ns1:greet xmlns:ns1="http://ws.apache.org/axis2/services/hello">
+    <text>Hello World!</text>
+</ns1:greet>
+XML
+
+begin
+  LOG_FILE_NAME = "ruby_hello_client.log"
+  END_POINT = "http://localhost:9090/hello_service/greet"
+  
+  client = WSClient.new({},
+                        LOG_FILE_NAME)
+
+  req_message = WSMessage.new(req_payload_string,
+                              nil,
+                              {"to" =&gt; END_POINT})
+
+  puts "Sending OM : " &lt;&lt; "\n" &lt;&lt; req_payload_string &lt;&lt; "\n" 
+
+  res_message = client.request(req_message)
+
+  if not res_message.nil? then
+    puts "Received OM : " &lt;&lt; "\n" &lt;&lt; res_message.payload_to_s &lt;&lt; "\n\n"
+    puts "Client invocation SUCCESSFUL !!!"
+  else
+    puts "Client invocation FAILED !!!"
+  end
+rescue WSFault =&gt; wsfault
+  puts "Client invocation FAILED !!!\n"
+  puts "WSFault : "
+  puts wsfault.xml
+  puts "----------"
+  puts wsfault.code
+  puts "----------"
+  puts wsfault.reason
+  puts "----------"
+  puts wsfault.role
+  puts "----------"
+  puts wsfault.detail
+  puts "----------"
+rescue =&gt; exception
+  puts "Client invocation FAILED !!!\n"
+  puts "Exception : " &lt;&lt; exception
+end
 </pre>
-<pre class="php"><span style="color: rgb(0, 0, 0); font-weight: bold;">&lt;?php</span>
- 
-<span style="color: rgb(0, 0, 255);">$reqestPayloadString</span> = &lt;&lt;&lt;XML
-&lt;greet&gt;Hello Service!&lt;/greet&gt;
-XML;
- 
-try
-<span style="color: rgb(102, 204, 102);">{</span>
-        <span style="color: rgb(0, 0, 255);">$message</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSMessage<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$reqestPayloadString</span>, 
-                <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"to"</span> =&gt; <span style="color: rgb(255, 0, 0);">"http://localhost/hello_service.php"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
-        
-        <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(102, 204, 102);">)</span>;
-        
-        <span style="color: rgb(0, 0, 255);">$response</span> = <span style="color: rgb(0, 0, 255);">$client</span>-&gt;<span style="color: rgb(0, 102, 0);">request</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$message</span><span style="color: rgb(102, 204, 102);">)</span>;
-        
-        <a href="http://www.php.net/echo"><span style="color: rgb(0, 0, 102);">echo</span></a> <span style="color: rgb(255, 0, 0);">"Hello service replied saying: '"</span>;
-        <a href="http://www.php.net/echo"><span style="color: rgb(0, 0, 102);">echo</span></a> <span style="color: rgb(0, 0, 255);">$response</span>-&gt;<span style="color: rgb(0, 102, 0);">str</span>;
-        <a href="http://www.php.net/echo"><span style="color: rgb(0, 0, 102);">echo</span></a> <span style="color: rgb(255, 0, 0);">"'<span style="color: rgb(0, 0, 153); font-weight: bold;">\n</span>"</span>;
-<span style="color: rgb(102, 204, 102);">}</span>
-catch <span style="color: rgb(102, 204, 102);">(</span>Exception <span style="color: rgb(0, 0, 255);">$e</span><span style="color: rgb(102, 204, 102);">)</span> 
-<span style="color: rgb(102, 204, 102);">{</span>
-        
-        <span style="color: rgb(177, 177, 0);">if</span> <span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$e</span> instanceof WSFault<span style="color: rgb(102, 204, 102);">)</span> 
-        <span style="color: rgb(102, 204, 102);">{</span>
-            <span style="color: rgb(0, 0, 255);">$fault</span> = <span style="color: rgb(0, 0, 255);">$e</span>;
-                <a href="http://www.php.net/printf"><span style="color: rgb(0, 0, 102);">printf</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"Soap Fault received with code '%s' and reason '%s'<span style="color: rgb(0, 0, 153); font-weight: bold;">\n</span>"</span>, 
-                        <span style="color: rgb(0, 0, 255);">$fault</span>-&gt;<span style="color: rgb(0, 102, 0);">code</span>, <span style="color: rgb(0, 0, 255);">$fault</span>-&gt;<span style="color: rgb(0, 102, 0);">reason</span><span style="color: rgb(102, 204, 102);">)</span>;
-        <span style="color: rgb(102, 204, 102);">}</span>
-        <span style="color: rgb(177, 177, 0);">else</span> 
-        <span style="color: rgb(102, 204, 102);">{</span>
-                <a href="http://www.php.net/printf"><span style="color: rgb(0, 0, 102);">printf</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"Exception caught with message '%s'<span style="color: rgb(0, 0, 153); font-weight: bold;">\n</span>"</span>, <span style="color: rgb(0, 0, 255);">$e</span>-&gt;<span style="color: rgb(0, 102, 0);">getMessage</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
-        <span style="color: rgb(102, 204, 102);">}</span>
-<span style="color: rgb(102, 204, 102);">}</span>
- 
-<span style="color: rgb(0, 0, 0); font-weight: bold;">?&gt;</span>
- </pre>
 </body>
 </html>
