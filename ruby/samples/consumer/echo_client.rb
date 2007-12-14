@@ -27,7 +27,7 @@ XML
 
 begin
   LOG_FILE_NAME = "ruby_echo_client.log"
-  END_POINT = "http://localhost:9090/echo_service/echo"
+  END_POINT = "http://localhost:3000/echo_service/echo"
 
   client = WSClient.new({"to" => END_POINT},
                         LOG_FILE_NAME)
