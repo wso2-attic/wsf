@@ -134,14 +134,13 @@ typedef enum ws_input_types
 #define WS_HEADER_MUST_UNDERSTAND 	"mustUnderstand"
 
 #define WS_POLICY_NAME 			"policy"
-#define WS_SECURITY_TOKEN 		"securityToken"
+#define WS_SECURITY_TOKEN 		"security_token"
 
 #define WS_PROXY_HOST           "proxyHost"
 #define WS_PROXY_PORT           "proxyPort"
 /** end options */
 
 #define WS_MSG_PAYLOAD_STR 		"str"
-#define WS_MSG_PAYLOAD_SXML 	"simpleXML"
 #define WS_MSG_PAYLOAD_DOM 		"dom"
 #define WS_MSG_TYPE 			"payloadtype"
 
