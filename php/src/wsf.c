@@ -1441,33 +1441,7 @@ PHP_METHOD (ws_service, reply)
 		generate_wsdl_for_service(obj ,svc_info, &req_info, SG(request_info).query_string , 0 TSRMLS_CC);
 
    }else {
-       /*
-        conf = axis2_conf_ctx_get_conf (conf_ctx, ws_env_svr);
-        if (!axis2_conf_get_svc (conf, ws_env_svr, svc_info->svc_name))
-             {
-            axis2_conf_add_svc (conf, ws_env_svr, svc_info->svc);
-            if (NULL != svc_info->modules_to_engage)
-                 {
-                int i = 0;
-                int size =
-                    axutil_array_list_size (svc_info->modules_to_engage,
-                    ws_env_svr);
-                for (i = 0; i < size; i++)
-                     {
-                    axis2_char_t * mod_name =
-                        (axis2_char_t *) axutil_array_list_get (svc_info->
-                        modules_to_engage, ws_env_svr, i);
-                    wsf_util_engage_module (conf, mod_name, ws_env_svr,
-                        svc_info->svc);
-                    }
-                }
-            }
-        */
-/*         if(zend_hash_find(Z_OBJPROP_P(this_ptr), WS_WSDL,
- *                           sizeof(WS_WSDL), (void **)&tmp) == SUCCESS){
- *             wsf_wsdl_process_service(this_ptr, &req_info, svc_info, ws_env_svr TSRMLS_CC);
- *         }
- */
+       
         status = wsf_worker_process_request (php_worker, ws_env_svr, &req_info, svc_info TSRMLS_CC);
         
         php_end_ob_buffer(0, 0 TSRMLS_CC);
@@ -1483,6 +1457,7 @@ PHP_METHOD (ws_service, reply)
 		}else if (status == WS_HTTP_OK) {
             sprintf (status_line, "%s 200 OK", req_info.http_protocol);
             sapi_add_header (status_line, strlen (status_line), 1);
+			if(req_info.out_content_type)
 			content_type = emalloc(strlen (req_info.out_content_type) * sizeof (char) + 20);
             sprintf (content_type, "Content-Type: %s", req_info.out_content_type);
 			sapi_add_header (content_type, strlen (content_type), 1);
