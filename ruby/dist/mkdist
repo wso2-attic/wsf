@@ -18,8 +18,8 @@ function sync_content
 	echo "synchronizing extconf-win32.rb ... done"
 
 	# Generate WSFC Wrapper
-	swig -ruby -I../../swig/ -outdir ./ -Wall WSFC.i
-	echo "synchronizing WSFC_wrap.c ... done"
+	swig -ruby -I../../swig/ -o WSFC_wrapper.c -outdir ./ -Wall WSFC.i
+	echo "synchronizing WSFC_wrapper.c ... done"
 
 	# Create "lib" Directory
 	if [ ! -e "lib" ]
