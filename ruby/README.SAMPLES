@@ -1,8 +1,10 @@
-Accessing Amazon Web Service API
+WSO2 WSF/Ruby SAMPLES README
 --------------------------------
+
 Consumers
 =========
-
+Accessing Amazon Web Service API
+--------------------------------
 amazon.rb -
   
   A client accessing Amazon search using REST.
@@ -199,4 +201,4 @@ Rails Samples
 
 Provider
 ========
-  Refer to samples/provider/README to deploy services
+  Refer to samples/provider/README for the guide on deploying services
