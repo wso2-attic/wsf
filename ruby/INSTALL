@@ -29,7 +29,8 @@ INSTALLATION
 
 Linux
 ----- 
-1. Run "sudo sh build.sh" to setup the extension.
+1. Run "sh build.sh" to setup the extension.  You may require super user privileges
+to run build.sh
 
 Windows
 -------
