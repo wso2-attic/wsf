@@ -24,7 +24,7 @@ XML;
 try {
 
     $client = new WSClient(array( "to" => "https://localhost/samples/echo_service.php",
-                                  "CACert" => "E:\\cacert.pem"));
+                                  "CACert" => "./resources/cacert.pem"));
     $responseMessage = $client->request($requestPayloadString);
     echo $responseMessage->str;
         
