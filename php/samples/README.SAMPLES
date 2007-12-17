@@ -94,29 +94,50 @@ Note: [ In the mtom samples, received image files are saved to /tmp folder. When
 WSDL generation samples
 -------------------------
 
-wsdl_generation/wsdl_service_doclit.php - WSDL generation sample service for doc-lit style
+wsdl_generation/doclit_service.php - WSDL generation sample service for doc-lit style
 
-wsdl_generation/wsdl_service_rpc.php - WSDL generation sample service for rpc style
+wsdl_generation/doclit_client.php -  WSDL mode client for the doclit_service.php
+
+wsdl_generation/rpc_service.php - WSDL generation sample service for rpc style
 
 
 Security Samples
 -----------------
-security/username_token/username_token_client.php  - UsernameToken sample client
-security/username_token/username_token_service.php - UsernameToken sample service
+security/username_token/client.php		      - UsernameToken sample client
+security/username_token/service.php 		      - UsernameToken sample service
+security/username_token/policy_file_based/client.php  - UsernameToken sample client based on a policy file
+security/username_token/policy_file_based/service.php - UsernameToken sample service based on a policy file
+security/username_token/call_back/client.php  	      - UsernameToken sample client for password call back method
+security/username_token/call_back/service.php 	      - UsernameToken sample service for password call back method
 
-security/timestamp/timestamp_client.php            - Timestamp token client
-security/timestamp/timestamp_service.php           - Timestamp token service
+security/timestamp/client.php            	      - Timestamp  client
+security/timestamp/service.php           	      - Timestamp  service
+security/timestamp/policy_file_based/client.php       - Timestamp  client based on a policy file
+security/timestamp/policy_file_based/service.php      - Timestamp  service based on a policy file
 
-security/encryption/encrypt_client.php             - Encryption Client
-security/encryption/encrypt_service.php            - Encryption Service
+security/encryption/client.php             	      - Encryption Client
+security/encryption/service.php               	      - Encryption Service
+security/encryption/policy_file_based/client.php      - Encryption Client based on a policy file
+security/encryption/policy_file_based/service.php     - Encryption Service based on a policy file
 
-security/signing/signing_client.php                - Signing Client 
-security/signing/signing_service.php               - Signing Service
+security/signing/client.php        		      - Signing Client 
+security/signing/service.php               	      - Signing Service
+security/signing/policy_file_based/client.php         - Signing Client based on a policy file
+security/signing/policy_file_based/service.php        - Signing Service based on a policy file
+
+security/secure_mtom/encryption/client.php 	      - MTOM upload client with encryption enabled
+security/secure_mtom/encryption/service.php 	      - MTOM upload service with encryption enabled
+security/secure_mtom/signing/client.php 	      - MTOM upload client with signing enabled
+security/secure_mtom/signing/service.php 	      - MTOM upload service with signing enabled
+
+security/secure_mtom/complete/client.php 	      - UsernameToken, Timestamp, Encryption and Siginig enabled client 
+security/secure_mtom/complete/service.php 	      - UsernameToken, Timestamp, Encryption and Siginig enabled Service
+
 
 Reliable Messaging Samples
 --------------------------
 
-reliable/echo_client_rm.php                        - Single Channel two way RM Client
+reliable/echo_client_rm.php			   - Single Channel two way RM Client
 reliable/echo_service_rm.php                       - Single Channel one way RM Service
 reliable/mtom_upload_client_rm.php                 - Single Channel two way RM Slient sending an MTOM attachment
 reliable/mtom_upload_service_rm.php                - Single Channel two way RM Service
@@ -127,8 +148,11 @@ reliable/ping_client_rm_multiple_messages.php      - Single Channel one way RM s
 WSDL mode
 ----------
 
-wsdl_mode/dynamic_client.php                       - WSDL mode Client using dynamic invocation
-wsdl_mode/dynamic_echo_service.php                 - WSDL mode Service
+wsdl_mode/wsdl_11_client.php                       - WSDL mode Client using WSDL 1.1 
+wsdl_mode/wsdl_11_service.php			   - WSDL mode Service using WSDL 1.1
+wsdl_mode/wsdl_20_client.php                       - WSDL mode Client using WSDL 2.0 
+wsdl_mode/wsdl_20_service.php			   - WSDL mode Service using WSDL 2.0
+
 
 Sudoku
 --------
@@ -140,3 +164,12 @@ flicker
 --------
 
 filcker/flicker_client.php                         - Client for accessing flicker soap service
+
+SSL
+-------
+ssl_client.php                                     - Client by enabling HTTPS- Please refer README.SSL_CLIENT
+
+Solutions
+----------
+solutions/mashup_demo/demo.html		           - Solution to illustrate yahoo, flicker and amazon clients
+solutions/calendar 				   - Calendar system - Please refer solutions/calendar/README
