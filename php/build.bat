@@ -47,6 +47,9 @@ rem @call clean.bat
 
 @if exist NEWS copy /Y NEWS wso2-wsf-php-bin-1.2.0-win32
 
+@if exist AUTHORS copy /Y AUTHORS wso2-wsf-php-bin-1.2.0-win32
+
+@if exist COPYING copy /Y COPYING wso2-wsf-php-bin-1.2.0-win32
 
 @cd src
 
