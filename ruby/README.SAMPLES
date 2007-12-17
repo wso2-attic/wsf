@@ -3,6 +3,7 @@ WSO2 WSF/Ruby SAMPLES README
 
 Consumers
 =========
+
 Accessing Amazon Web Service API
 --------------------------------
 amazon.rb -
@@ -47,10 +48,10 @@ echo_client_soap11.rb -
   - END_POINT[Line 30].
 
 
-Flicker
+Flickr
 -------
 filckr.rb -
-  Client for accessing flicker SOAP service.
+  Client for accessing flickr SOAP service.
   Set the following variables to match your case.
   - KEY[Line 21].
   - LOG_FILE_NAME[Line 32].
