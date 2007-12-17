@@ -27,20 +27,20 @@ function sync_content
 		mkdir lib
 	fi
 
-	rsync -r --exclude=.svn ../../src/config lib
+	rsync -r --exclude=.svn ../../lib/config lib
 	echo "synchronizing config ... done"
 
-	rsync -r --exclude=.svn ../../src/logger lib
+	rsync -r --exclude=.svn ../../lib/logger lib
 	echo "synchronizing logger ... done"
 	
-	rsync -r --exclude=.svn ../../src/util lib
+	rsync -r --exclude=.svn ../../lib/util lib
 	echo "synchronizing util ... done"
 	
-	rsync -r --exclude=.svn ../../src/wsf lib
-	rsync ../../src/wsf.rb lib
+	rsync -r --exclude=.svn ../../lib/wsf lib
+	rsync ../../lib/wsf.rb lib
 	echo "synchronizing wsf ... done"
 	
-	rsync -r --exclude=.svn --exclude=*.o --exclude=Makefile --exclude=*.log --exclude=*.so ../../src/wsservice .
+	rsync -r --exclude=.svn --exclude=*.o --exclude=Makefile --exclude=*.log --exclude=*.so ../../wsservice .
 	echo "synchronizing wsservice ... done"
 	
 	rsync -r --exclude=.svn ../../samples .
