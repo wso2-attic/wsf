@@ -2,19 +2,19 @@
 
 function sync_content
 {
-	rsync ../../build/build.bat .
+	rsync ../../build.bat .
 	echo "synchronizing build.bat ... done"
 
-	rsync ../../build/build.sh .
+	rsync ../../build.sh .
 	echo "synchronizing build.sh ... done"
 
 	rsync ../../find_rbconfig.rb .
 	echo "synchronizing find_rbconfig.rb ... done"
 
-	rsync ../../build/extconf.rb .
+	rsync ../../extconf.rb .
 	echo "synchronizing extconf.rb ... done"
 
-	rsync ../../build/extconf-win32.rb .
+	rsync ../../extconf-win32.rb .
 	echo "synchronizing extconf-win32.rb ... done"
 
 	# Generate WSFC Wrapper

@@ -25,7 +25,7 @@ XML
 
 begin
   LOG_FILE_NAME = "ruby_mtom_download_client.log"
-  END_POINT = "http://localhost:3030/mtom_download_service/download"
+  END_POINT = "http://localhost:3000/mtom_download_service/download"
 
   client = WSClient.new({"to" => END_POINT,
                          "response_xop" => "TRUE"},

@@ -43,7 +43,7 @@ class SecurityController < ApplicationController
 			wss = WSO2::WSF::WSService.new({"operations" => operations,
 											"actions" => actions,
 											"policy" => policy,
-											"securityToken" => sec_token})
+											"security_token" => sec_token})
 		  
 
 			res = wss.reply(request, response);
@@ -65,7 +65,7 @@ class SecurityController < ApplicationController
 			wss = WSO2::WSF::WSService.new({"operations" => operations,
 										  "actions" => actions,
                       "policy" => policy,
-										  "securityToken" => sec_token})
+										  "security_token" => sec_token})
                       
 
 			res = wss.reply(request, response);
@@ -88,7 +88,7 @@ class SecurityController < ApplicationController
             wss = WSO2::WSF::WSService.new({"operations" => operations,
                                           "actions" => actions,
                                           "policy" => policy,
-                                          "securityToken" => sec_token})
+                                          "security_token" => sec_token})
 
             res = wss.reply(request, response);
 
@@ -111,7 +111,7 @@ class SecurityController < ApplicationController
 			wss = WSO2::WSF::WSService.new({"operations" => operations,
 										  "actions" => actions,
 										  "policy" => policy,
-										  "securityToken" => sec_token})
+										  "security_token" => sec_token})
 
 			res = wss.reply(request, response);
 
@@ -135,7 +135,7 @@ class SecurityController < ApplicationController
             wss = WSO2::WSF::WSService.new({"operations" => operations,
                                           "actions" => actions,
                                           "policy" => policy,
-                                          "securityToken" => sec_token})
+                                          "security_token" => sec_token})
 
             res = wss.reply(request, response);
 
@@ -163,7 +163,7 @@ class SecurityController < ApplicationController
 			wss = WSO2::WSF::WSService.new({"operations" => operations,
 										  "actions" => actions,
 										  "policy" => policy,
-										  "securityToken" => sec_token})
+										  "security_token" => sec_token})
 
 			res = wss.reply(request, response);
 			
@@ -189,7 +189,7 @@ class SecurityController < ApplicationController
             wss = WSO2::WSF::WSService.new({"operations" => operations,
                                           "actions" => actions,
                                           "policy" => policy,
-                                          "securityToken" => sec_token})
+                                          "security_token" => sec_token})
 
             res = wss.reply(request, response);
 
@@ -217,7 +217,7 @@ class SecurityController < ApplicationController
 			wss = WSO2::WSF::WSService.new({"operations" => operations,
 										  "actions" => actions,
 										  "policy" => policy,
-										  "securityToken" => sec_token})
+										  "security_token" => sec_token})
 
 			res = wss.reply(request, response);
 
@@ -243,7 +243,7 @@ class SecurityController < ApplicationController
             wss = WSO2::WSF::WSService.new({"operations" => operations,
                                           "actions" => actions,
                                           "policy" => policy,
-                                          "securityToken" => sec_token})
+                                          "security_token" => sec_token})
 
             res = wss.reply(request, response);
 
@@ -272,7 +272,7 @@ class SecurityController < ApplicationController
 			wss = WSO2::WSF::WSService.new({"operations" => operations,
 										  "actions" => actions,
 										  "policy" => policy,
-										  "securityToken" => sec_token})
+										  "security_token" => sec_token})
 
 			res = wss.reply(request, response);
 
