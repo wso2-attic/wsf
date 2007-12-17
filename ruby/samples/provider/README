@@ -41,19 +41,23 @@ Echo
 ----
 1. Copy echo_service_controller.rb into the controllers directory of your rail application
 2. Try the services with your client using following endpoint addresses:
-   http://your_rails_application/echo_service/echo
+   http://your_rails_application_uri/echo_service/echo
+
+NOTE: your rails_application_uri is the uri where you have host your application. If you have hosted the samples in
+your local machine with the port name 3000 (Which is the default for rails in-built servers), here on, you can put
+localhost:3000 in the place of your_rails_application_uri
 
 Echo with Addressing
 --------------------
 1. Copy echo_service_addr_controller.rb into the controllers directory of your rail application
 2. Try the services with your client using following endpoint addresses:
-   http://your_rails_application/echo_service_addr/echo
+   http://your_rails_application_uri/echo_service_addr/echo
 
 Echo with Class Map
 -------------------
 1. Copy echo_classmap_service_controller.rb into the controllers directory of your rail application
 2. Try the services with your client using following endpoint addresses:
-   http://your_rails_application/echo_classmap_service/echo
+   http://your_rails_application_uri/echo_classmap_service/echo
 
 MTOM/Base64 Attachments
 -----------------------
@@ -61,20 +65,20 @@ mtom/mtom_base64_upload_service_controller.rb
 
 1. Copy mtom/mtom_base64_upload_service_controller.rb into the controllers directory of your rail application
 2. Try the services with your client using following endpoint addresses:
-   http://your_rails_application/mtom_base64_upload_service/upload
+   http://your_rails_application_uri/mtom_base64_upload_service/upload
 
 mtom/mtom_upload_service_controller.rb
 
 1. Copy mtom/mtom_upload_service_controller.rb into the controllers directory of your rail application
 2. Try the services with your client using following endpoint addresses:
-   http://your_rails_application/mtom_upload_service/upload
+   http://your_rails_application_uri/mtom_upload_service/upload
 
 mtom/mtom_download_service_controller.rb
 
 1. Copy mtom/mtom_download_service_controller.rb into the controllers directory of your rail application
 2. Copy mtom/resources into root directory of your rail application
 3. Try the services with your client using following endpoint addresses:
-   http://your_rails_application/mtom_download_service/download
+   http://your_rails_application_uri/mtom_download_service/download
 
 Reliable Messaging
 ------------------
@@ -82,13 +86,13 @@ reliable/echo_service_rm_controller.rb
 
 1. Copy reliable/echo_service_rm_controller.rb into the controllers directory of your rail application
 2. Try the services with your client using following endpoint addresses:
-   http://your_rails_application/echo_service_rm/echo
+   http://your_rails_application_uri/echo_service_rm/echo
 
 reliable/mtom_upload_service_rm_controller.rb
 
 1. Copy reliable/mtom_upload_service_rm_controller.rb into the controllers directory of your rail application
 2. Try the services with your client using following endpoint addresses:
-   http://your_rails_application/mtom_upload_service_rm/upload
+   http://your_rails_application_uri/mtom_upload_service_rm/upload
 
 Security
 --------
@@ -97,13 +101,13 @@ security/security_controller.rb
 1. Copy security/security_controller.rb into the controllers directory of your rail application
 2. Copy keys and policies directories into the controllers directory of your rail application
 2. Try the services with your client using following endpoint addresses:
-   http://your_rails_application/security/callback
-   http://your_rails_application/security/timestamp
-   http://your_rails_application/security/timestamp_file
-   http://your_rails_application/security/usernametoken
-   http://your_rails_application/security/usernametoken_file
-   http://your_rails_application/security/signing
-   http://your_rails_application/security/signing_file
-   http://your_rails_application/security/encryption
-   http://your_rails_application/security/encryption_file
-   http://your_rails_application/security/complete
+   http://your_rails_application_uri/security/callback
+   http://your_rails_application_uri/security/timestamp
+   http://your_rails_application_uri/security/timestamp_file
+   http://your_rails_application_uri/security/usernametoken
+   http://your_rails_application_uri/security/usernametoken_file
+   http://your_rails_application_uri/security/signing
+   http://your_rails_application_uri/security/signing_file
+   http://your_rails_application_uri/security/encryption
+   http://your_rails_application_uri/security/encryption_file
+   http://your_rails_application_uri/security/complete

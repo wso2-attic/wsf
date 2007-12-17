@@ -1,0 +1,33 @@
+WSO2 WSF/Ruby 1.0.0
+======================
+
+Major changes since the beta release
+
+* Web Service Provider features
+- WS-Security (with Rampart)
+- WS-SecurityPolicy
+- Class Map API for the WSService
+
+WSO2 WSF/Ruby 1.0.0-beta
+======================
+
+Major changes since last release
+* Web Service Consumer :
+- WS-Security (with Rampart)
+- WS-Policy
+- WS-SecurityPolicy
+- WS-ReliableMessaging (with Sandesha)
+
+* Web Service Provider (NEW) :
+- WS-Addressing
+- WS-ReliableMessaging (with Sandesha)  
+
+WSO2 WSF/Ruby 1.0.0-alpha
+======================
+
+This release provided web service consumsers
+* SOAP 1.1
+* SOAP 1.2
+* REST
+* SOAP MTOM
+* WS-Addressing
