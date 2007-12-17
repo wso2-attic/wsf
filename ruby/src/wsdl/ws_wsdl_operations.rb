@@ -54,7 +54,11 @@ class WS_WSDL_Operations
     "token"          => "string" }
 
   def initialize(operations)
-    operations.each_pair do |i, value|
+    @xsd_map_arry = {}
+    @operations = {}
+    @xsd_types = {}
+    @created_types = {}
+    (0...operations.length).each do |i|
       @operation_name = operations[i]
       @xsd_map_arry[@operation_name] = []
       set_operations(@operation_name)
@@ -62,14 +66,15 @@ class WS_WSDL_Operations
   end
 
   def set_operations(operation_name)
-    @operations[operation_name][WS_OPERATION_INPUT_TAG] = []
-    @operations[operation_name][WS_OPERATION_OUTPUT_TAG] = []
+    @operations[operation_name] = 
+      { WS_OPERATION_INPUT_TAG => Array.new, WS_OPERATION_OUTPUT_TAG => Array.new }
 
-    @xsd_types[operation_name]["In"] = []
+    @xsd_types[operation_name] = {}
+    @xsd_types[operation_name]["In"] = {}
 
+    match = {}
     $wsf_meta[operation_name.intern][:param_names].each do |param|
-      match = []
-      match[2] = param
+       match[2] = param
       match[1] = "anyType"
       @xsd_types[operation_name]["In"][match[2]] = "anyType"
              
@@ -79,6 +84,7 @@ class WS_WSDL_Operations
 
     end
 
+    @xsd_types[operation_name]["Out"] = {}
     @xsd_types[operation_name]["Out"]["returnVal"] = "anyType"
     
     @created_types[match[1]] = 2

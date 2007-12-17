@@ -13,7 +13,7 @@ class WS_WSDL_Message
     @fun_mapping = ops_to_functions
   end
 
-  def create_doclit_message
+  def create_doclit_message(msg_doc, msg_root)
     [WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME,
      WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME].each do |type|
       
@@ -39,9 +39,10 @@ class WS_WSDL_Message
 
         if WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME.capitalize == type.capitalize
           @fun_mapping.each_pair do |k, v|
-            part.set_attribute(WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME,
-                               "#{WS_WSDL_Const::WS_WSDL_DEFAULT_SCHEMA_ATTR_NAME}:" .
-                               "#{key}#{WS_WSDL_Const::WS_WSDL_RESPONSE_ATTR_NAME}") if v == name
+            if v == name
+              part.add_attribute(WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME,
+                                 "#{WS_WSDL_Const::WS_WSDL_DEFAULT_SCHEMA_ATTR_NAME}:#{key}#{WS_WSDL_Const::WS_WSDL_RESPONSE_ATTR_NAME}") 
+            end
           end
         end
 

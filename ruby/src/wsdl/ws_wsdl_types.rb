@@ -8,6 +8,7 @@ class WS_WSDL_Type
   attr_reader :ns, :created_types, :fun_mapping, :simple_types, :cmplx_types, :schema_types
 
   def initialize(ns, array1, array2, mapping_array)
+    @cmplx_types = {}
     @ns = ns
     @simple_types = WS_WSDL_Const::DEFAULT_TYPES
     @created_types = array1
@@ -60,7 +61,7 @@ class WS_WSDL_Type
     types.add_element el
 
     @schema_types.each_pair do |function_name, params|
-      params.each_pari do |request_type, params2|
+      params.each_pair do |request_type, params2|
         ct = Element.new WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME
         ct.add_namespace WS_WSDL_Const::WS_SOAP_XML_SCHEMA_NAMESPACE
 
@@ -145,8 +146,7 @@ class WS_WSDL_Type
                         prop[WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME])
         p.add_attribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME,
                         prop[WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME])
-        prefix = type_root.attributes.get_attribute(prop[WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME]
-                                                    [WS_WSDL_Const::WS_WSDL_NAMESPACE_ATTR_NAME]).prefix
+        prefix = type_root.attributes.get_attribute(prop[WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME][WS_WSDL_Const::WS_WSDL_NAMESPACE_ATTR_NAME]).prefix
         p.add_attribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME, 
                         "#{prefix}:#{@simple_types[prop[WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME]][WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME]}")
         all.add_element p

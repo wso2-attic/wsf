@@ -16,7 +16,7 @@ class WS_WSDL_Service
   end
 
   def create_service(svr_dom, svr_root)
-    svr_ele = Element.new WS_WSDL_const::WS_WSDL_SERVICE_ATTR_NAME
+    svr_ele = Element.new WS_WSDL_Const::WS_WSDL_SERVICE_ATTR_NAME
     svr_ele.add_namespace WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE
 
     svr_ele.add_attribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, @s_name)

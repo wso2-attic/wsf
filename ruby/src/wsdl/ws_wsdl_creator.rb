@@ -35,17 +35,17 @@ class WS_WSDL_Creator
     wsdl_dom << XMLDecl.new
     wsdl_dom.xml_decl.encoding = WS_WSDL_Const::WS_DOM_DOCUMENT_ENCODING
 
-    wsdl_root_ele = Element.new WS_WSDL_const::WS_WSDL_DEFINITION
-    wsdl_root_ele.add_namespace WS_WSDL_const::WS_SCHEMA_WSDL_NAMESPACE
+    wsdl_root_ele = Element.new WS_WSDL_Const::WS_WSDL_DEFINITION
+    wsdl_root_ele.add_namespace WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE
 
-    wsdl_root_ele.add_attributes({ WS_WSDL_const::WS_WSDL_DEF_XSD_QN => WS_WSDL_const::WS_SOAP_XML_SCHEMA_NAMESPACE,
-                                   WS_WSDL_const::WS_WSDL_DEF_TNS_QN => @namespace,
-                                   WS_WSDL_const::WS_WSDL_DEF_SOAP_ENV_QN => WS_WSDL_const::WS_SCHEMA_SOAP_NAMESPACE,
-                                   WS_WSDL_const::WS_WSDL_DEF_WSDL_QN => WS_WSDL_const::WS_SCHEMA_WSDL_NAMESPACE,
-                                   WS_WSDL_const::WS_WSDL_DEF_SOAP_ENC_QN => WS_WSDL_const::WS_SOAP_SCHEMA_ENCODING_NAMESPACE,
-                                   WS_WSDL_const::WS_WSDL_DEF_HTTP_QN => WS_WSDL_const::WS_WSDL_HTTP12_NAMESPACE,
-                                   WS_WSDL_const::WS_WSDL_DEF_SCHEMA_PREFIX => "#{@namespace}/xsd",
-                                   WS_WSDL_const::WS_WSDL_DEF_TARGET_NS => @namespace })
+    wsdl_root_ele.add_attributes({ WS_WSDL_Const::WS_WSDL_DEF_XSD_QN => WS_WSDL_Const::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                   WS_WSDL_Const::WS_WSDL_DEF_TNS_QN => @namespace,
+                                   WS_WSDL_Const::WS_WSDL_DEF_SOAP_ENV_QN => WS_WSDL_Const::WS_SCHEMA_SOAP_NAMESPACE,
+                                   WS_WSDL_Const::WS_WSDL_DEF_WSDL_QN => WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
+                                   WS_WSDL_Const::WS_WSDL_DEF_SOAP_ENC_QN => WS_WSDL_Const::WS_SOAP_SCHEMA_ENCODING_NAMESPACE,
+                                   WS_WSDL_Const::WS_WSDL_DEF_HTTP_QN => WS_WSDL_Const::WS_WSDL_HTTP12_NAMESPACE,
+                                   WS_WSDL_Const::WS_WSDL_DEF_SCHEMA_PREFIX => "#{@namespace}/xsd",
+                                   WS_WSDL_Const::WS_WSDL_DEF_TARGET_NS => @namespace })
 
     oper_obj = WS_WSDL_Operations.new(@f_name)
     created_type_arry = oper_obj.created_types
@@ -54,7 +54,7 @@ class WS_WSDL_Creator
 
     if @binding_style == "doclit"
       type_obj = WS_WSDL_Type.new(@namespace, created_type_arry, xsd_arry, @ops_to_functions)
-      type_obj.created_doclit_type(wsdl_dom, wsdl_root_ele)
+      type_obj.create_doclit_type(wsdl_dom, wsdl_root_ele)
       simple_array = type_obj.simple_types
 
       msg_obj = WS_WSDL_Message.new(operations_arry, simple_array, @ops_to_functions)
@@ -74,12 +74,12 @@ class WS_WSDL_Creator
     port_obj.create_port_type(wsdl_dom, wsdl_root_ele)
 
     if @binding_style == "doclit"
-      bind_obj = WS_WSDL_Binding(@service_name, @endpoint, operations_arry, @ops_to_functions)
+      bind_obj = WS_WSDL_Binding.new(@service_name, @endpoint, operations_arry, @ops_to_functions)
       bind_obj.create_rpc_binding(wsdl_dom, wsdl_root_ele)
     end
     
     if @binding_style == "rpc"
-      bind_obj = WS_WSDL_Binding(@service_name, @endpoint, operations_arry, @ops_to_functions)
+      bind_obj = WS_WSDL_Binding.new(@service_name, @endpoint, operations_arry, @ops_to_functions)
       bind_obj.create_rpc_binding(wsdl_dom, wsdl_root_ele)
     end
 

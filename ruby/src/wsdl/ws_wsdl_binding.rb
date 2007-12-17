@@ -109,8 +109,7 @@ class WS_WSDL_Binding
     binding_ele.add_namespace WS_WSDL_Const::WS_WSDL2_NAMESPACE
 
     binding_ele.add_attribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME,
-                              "#{@svr_name}#{WS_WSDL_Const::WS_WSDL_SOAP_ATTR_NAME.upcase}" .
-                              "#{WS_WSDL_Const::WS_WSDL_BINDING_ATTR_NAME.capitalize}")
+                              "#{@svr_name}#{WS_WSDL_Const::WS_WSDL_SOAP_ATTR_NAME.upcase}#{WS_WSDL_Const::WS_WSDL_BINDING_ATTR_NAME.capitalize}")
     binding_ele.add_attribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME,
                               WS_WSDL_Const:: WS_WSDL2_WSOAP_ATTR_VAL)
     binding_ele.add_attribute(WS_WSDL_Const::WS_WSDL_INTERFACE_ATTR_NAME,
