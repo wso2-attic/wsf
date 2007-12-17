@@ -26,11 +26,11 @@ class Bar
 
     function echoValue($inMessage){
 
-$requestPayloadString = <<<XML
+$responsePayloadString = <<<XML
 <ns1:echoString xmlns:ns1="http://wso2.org/projects/wsf/php">
      <value>$this->value</value></ns1:echoString>
 XML;
-        return new WSMessage($requestPayloadString);
+        return new WSMessage($responsePayloadString);
     }
 }
 
