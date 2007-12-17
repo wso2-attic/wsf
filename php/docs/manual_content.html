@@ -541,7 +541,7 @@ password.</p>
 Or else, you can use the password call back mechanism by using a callback
 function. <br>
 <br>
-<span style="color: #0000ff">  &nbsp;function
+<span style="color: #0000ff">  &nbsp; function
 <em>passwordFunction</em>($username)<br>
 {<br>
 /** some&nbsp; mechanism to retrieve the password */<br>
@@ -549,15 +549,17 @@ function. <br>
 }</span><br>
 <br>
 Then WSSecurityToken object would be<br>
-<span style="color: #0000ff">      &nbsp; &nbsp; &nbsp; $security_obj</span> = <span
+<span style="color: #0000ff">      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $security_obj</span> = <span
 style="color: rgb(0, 0, 0); font-weight: bold;">new</span>
 WSSecurityToken<span style="color: rgb(102, 204, 102);">(</span><span
 style="color: rgb(0, 0, 102);">array</span><span
 style="color: rgb(102, 204, 102);">(</span><br>
-    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp;
               <span style="color: rgb(255, 0, 0);"> "user"</span>
 =&gt; <span style="color: rgb(255, 0, 0);">"john"</span>,<br>
-    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp;
               <span style="color: rgb(255, 0, 0);">
 "password_callback"</span> =&gt; <span
 style="color: rgb(255, 0, 0);">"passwordFunction"</span><span
@@ -566,37 +568,40 @@ style="color: rgb(102, 204, 102);">)</span>;<br>
 <br>
 If you want the timetoLive and timestamp , those options also can be
 specified.<br>
-<span style="color: rgb(0, 0, 255);">     &nbsp; &nbsp;&nbsp; $policy_obj</span> =<span
+<span style="color: rgb(0, 0, 255);">     &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; $policy_obj</span> =<span
 style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSPolicy<span
 style="color: rgb(102, 204, 102);">(<br>
-    &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
-         </span>  &nbsp; <a href="http://www.php.net/array"><span
+    &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
+         </span>  &nbsp; &nbsp; <a href="http://www.php.net/array"><span
 style="color: rgb(0, 0, 102);">array</span></a><span
 style="color: rgb(102, 204, 102);">(</span> <span
 style="color: rgb(255, 0, 0);">"useUsernameToken"</span> =&gt;TRUE,<br>
-    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp;
               <span
 style="color: rgb(255, 0, 0);">"includeTimestamp"=&gt;</span>TRUE<span
 style="color: rgb(102, 204, 102);">)</span><span
 style="color: rgb(102, 204, 102);">)</span>;<br>
 <br>
-<span style="color: #0000ff">    &nbsp; &nbsp; $security_obj</span> = <span
+<span style="color: #0000ff">    &nbsp; &nbsp; &nbsp; &nbsp; $security_obj</span> = <span
 style="color: rgb(0, 0, 0); font-weight: bold;">new</span>
 WSSecurityToken<span style="color: rgb(102, 204, 102);">(</span><span
 style="color: rgb(0, 0, 102);">array</span><span
 style="color: rgb(102, 204, 102);">(</span><br>
-    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp;
               <span style="color: rgb(255, 0, 0);"> "user"</span>
 =&gt; <span style="color: rgb(255, 0, 0);">"john"</span>,<br>
-    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp;
               <span style="color: rgb(255, 0, 0);"> "password"</span>
 =&gt; <span style="color: rgb(255, 0, 0);">"fred",<br>
 </span><span style="color: rgb(102, 204, 102);">              &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-    &nbsp; <span
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span
 style="color: #ff0000">"ttl"</span><span style="color: #111111"> =&gt;
 300</span>)</span><span style="color: rgb(102, 204, 102);">)</span>;<br>
 <br>
-    &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp;
     
 
 <h3><a name="6.7.">6.7. One-Way Clients</a></h3>
@@ -908,7 +913,72 @@ underlying Web services engine. For example, if there is a replyTo set in the
 incoming message, the reply would be sent to the specified replyTo
 endpoint.</p>
 
-<h3><a name="7.6.">7.6. One-Way Operations</a></h3>
+<h3><a name="7.6.">7.6. Implementing Service Operations with in a class</a></h3>
+<p>WSF/PHP api allows you to implement a php class and expose methods of that class
+as operations of the Web Service. Let take an example 'Foo' class which implement the 
+'bar' method.
+
+</p>
+    <p>
+        <span style="color: #ff3366">class</span> Foo{
+    </p>
+    <p>
+        &nbsp; &nbsp; &nbsp; <span style="color: #ff6666">
+    private</span> $value = "";
+    </p>
+    <p>
+        <span style="color: #ff6666">&nbsp; &nbsp; &nbsp; function</span> Foo($value){</p>
+    <p>
+        &nbsp; &nbsp; &nbsp;
+        $this->value = $value;
+    </p>
+    <p>
+        &nbsp; &nbsp; &nbsp; }
+    </p>
+    <p>
+        &nbsp; &nbsp; &nbsp; <span style="color: #ff6666">function</span> bar($inMessage){
+    </p>
+    <p>
+        $requestPayloadString =&nbsp; &lt;&lt;&lt;XML &lt;ns1:echoStringResponse xmlns:ns1="http://wso2.org/projects/wsf/php"&gt;</p>
+    <p>
+        &lt;value&gt;<span style="color: #ff6666">$this-&gt;value</span>&lt;/value&gt;&lt;/ns1:echoStringResponse&gt;
+        XML;
+    </p>
+    <p>
+        &nbsp;new WSMessage($requestPayloadString);
+    </p>
+    <p>
+        &nbsp; &nbsp; &nbsp; }
+    </p>
+    <p>
+        }
+    </p>
+    <p>
+        Here we are implementing the bar method that would take a WSMessage object and return
+        a response WSMessage object.</p>
+    <p>
+        You need to specify to the WSService constuctor that, class Foo's bar method should
+        be exposed as an operation of the service.</p>
+    <p>
+        Following is how to do it.</p>
+    <p>
+        $ops = array("<span style="color: #ff6666">echoString</span>"=&gt;"bar");</p>
+    <p>
+        $constructor_args = array("Hello World");</p>
+    <p>
+        $service = new WSService(array("<span style="color: #ff6666">classes</span>"=&gt;array("<span
+            style="color: #ff6666">foo</span>"=&gt;array("<span style="color: #ff6666">operations</span>"=&gt;$ops,
+        "<span style="color: #ff6666">args</span>"=&gt;$constructor_args))));</p>
+    <p>
+        You can implement mutiple classes and expose methods of those classes as operations
+        of the same service. To facilitate this
+    </p>
+    <p>
+        WSService constructor options array takes an argument "classes" as an array.With
+        in this array you can specify the operations and the constructor arguments as an
+        associative array against the class names as demonstrated above.</p>
+
+<h3><a name="7.7.">7.7. One-Way Operations</a></h3>
 
 <p>You can make your service operations adhere to either the in-out message
 exchange pattern or the in-only message exchange pattern. If a function
@@ -928,7 +998,7 @@ a sample of an in-only operation. .</p>
 <p>In the above sample, the notify function accepts the payload sent by the
 client and consumes it, and does not send any response.</p>
 
-<h3><a name="7.7.">7.7. Providing Web Services Using Function API</a></h3>
+<h3><a name="7.8.">7.8. Providing Web Services Using Function API</a></h3>
 
 <p>The function based API has a function, ws_reply() that you can use on a
 service script to reply to client requests.</p>
