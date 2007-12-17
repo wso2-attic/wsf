@@ -46,8 +46,8 @@ CONFIGURATION
            It's /usr/local/lib/ruby/1.8/i686-linux/rbconfig.rb in my case.
 
 
-INSTALLATION
-------------
+INSTALLATION USING SOURCE
+-------------------------
 Linux
 ----- 
 1. Run "sh build.sh" to setup the extension. You may require super user privileges
