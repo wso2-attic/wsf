@@ -45,6 +45,8 @@ try {
     
     $client->send($message2);
 
+    echo "Messages Sent";
+
     /** wait 10 seconds for the requests to complete */
     $client->wait(10);
     
