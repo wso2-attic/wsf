@@ -279,7 +279,6 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
 	$return_array["sig_model_string"] = $sig_model_string;
 	$return_array["policies"] = $policy_array;
 	
-	file_put_contents("/tmp/my.txt", print_r($operation_array, TRUE));
     return $return_array;
 }
 
