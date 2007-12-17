@@ -1,6 +1,8 @@
 calendar system
 
-Import calender.sql in to mysql server. 
+Create a database named calender.
+
+Import calender.sql. 
 
 Start with the login_client.php.
 
