@@ -53,7 +53,7 @@ Key Features
 
 9. WSDL mode support for both client and server side
       * Write services and client based on a given WSDL
-      * WS Security with WSDL mode is supported.
+      * WS Security, WS Addressing and WS Security Policy is supported in wsdl mode.
 
 10. Backward compatibility with PHP5 SOAP extension
       * Experimental
@@ -61,11 +61,15 @@ Key Features
 --------------------------------
 Major Changes Since Last Release
 ================================
-1. Memory leaks fixed
+1. WSDL mode Code was reimplemented to support WSDL 1.1 as well as WSDL 2.0. In addtion,
+   WSF/PHP is able to support WS Security, WS Security Policy and WS Addressing in wsdl mode now.
 
-2. Many Bug fixes  
+2. WSHeader class was improved to support adding custom soap headers with child elements.
+
+3. WSF/PHP now supports exposing functions defined in php classes as web service operations.
+
+4. Many Bugs related to MTOM, WSDL generation, WS Security were fixed.
  
-
 -------------------
 Reporting Problems
 ===================
