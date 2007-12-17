@@ -1,0 +1,165 @@
+Building and Installing WSO2 WSF/Ruby on Win32.
+
+If you need any help with building or installation , send a 
+mail to wsf-ruby-user@lists.wso2.org
+===========================================================
+Contents:
+1. How to build WSF/Ruby under Windows from source
+    a. Requirements
+    b. Building the extension.
+    c. Building the extension using PHP build system.
+2. Installing WSF/Ruby extension as a PHP extension.
+3. Binary dependency version numbers.
+
+===========================================================
+
+1. How to build WSF/Ruby under Windows from source
+
+    a. Requirements
+
+	You need to download following dependency libraries:
+
+	libxml2 binary distribution   
+        iconv binary distribution
+	OpenSSL binary distribution
+	PHP Source
+	PHP Binary
+	Win32build [ win32 buildtools for PHP ]
+	Mysql Server 5 [When using Reliable Messaging With MySql Database ]
+
+	In addition you need to have visual studio installed on your system.
+	
+	obtain libxml2 and iconv win32 binaries from [1].
+	obtain OpenSSL binary from [2] [the build system assumes that you install openssl from msi].
+	obtain MySql Server from [3].
+	obtain PHP Source and Bianry from [4].
+	obtain Win32Build from [5].
+
+
+	[1] http://www.zlatkovic.com/pub/libxml/
+	[2] http://www.slproweb.com/products/Win32OpenSSL.html
+	[3] http://dev.mysql.com/downloads/
+	[4] http://www.php.net/downloads.php
+	[5] http://www.php.net/extra/win32build.zip 
+
+        
+    b. WSF/PHP extension is build on top of WSF/C Web Services Framework. The extension source code
+       is packaged with WSF/C code. When you download the wso2-wsf-php-src.zip file, it will contain
+       following dirctory structure.
+	
+       wso2-wsf-php-src
+         |
+         +--- src
+	 |
+	 +--- wsf_c
+	 |
+	 +--- docs
+	 |
+	 +--- samples
+	 |
+	 +--- scripts
+         
+       In the wso2-wsf-php-src directory you will find a file named configure.in file. Open this file
+       and set your dependency directory locations to relevent entries. You can build with debug symbol
+       by setting DEBUG=1 option.
+	
+       Next run the build.bat file located in wso2-wsf-php-src directory. It should build the binary dist pack
+       to the same directory.
+
+       ( Before running the build.bat file, add your vcvars32.bat file location to PATH environment variable. 
+	If you are using vc2005, it is located in C:\Program Files\Microsoft Visual Studio 8\VC\bin)
+
+     c. Building WSO2 WSF/PHP with php win32 build system
+ 
+       There is another way of building the WSF/PHP extension. For this you will first need to build php
+       from source under windows.please refer README.WIN32-BUILD-SYSTEM
+       file in PHP source distribution and build PHP source under Windows.
+
+       You will also need wso2-wsf-c binary in order to build using this technique.
+                
+       Copy wsf_php folder to php_source/ext directory.
+
+       Run "buildconf.bat" to rebuild the configre.js file.
+
+
+       "cscript /nologo configure.js --help" will give the configuration options.
+       You will find the option --with-wsf.
+
+       Add following entries to config.nice.bat file.
+	"--with-extra-includes=<Libxml2 bin dir>\include;<Iconv bin dir>\include;<wsf-c>\include;
+		<wsf-c-bin>\include;"
+	"--with-extra-libs=<Libxml2 bin dir>\lib;<Iconv bin dir>\lib;<wsf-c>\lib;<wsf-c-bin>\lib"
+	--with-wsf=shared"
+
+	Now run config.nice.bat file to generate the makefile.
+   
+	"nmake" will build wsf extension.
+
+2. Installing WSO2 WSF as a PHP extension.
+
+    Now you should have the wso2-wsf-php binary pack with following structure.
+    ( you can get the binary from the .zip binary pack or building from the source )
+
+    wso2-wsf-php-bin-1.1.0-win32
+                |  
+	    	+-- wsf_c
+                |
+                +-- wsf.dll
+	        |
+                +-- samples
+                |
+		+-- scripts
+                      
+
+    1. Copy wsf.dll to PHP installation directory.
+    
+    2. Add wsf_c\lib directory to PATH environment variable.
+
+    3. Add the following entries to your php.ini file which is in your PHP 
+       installation location.
+       [wsf]
+       wsf.home="<path_to_extract_folder>\wsf_c"                       
+       wsf.log_path="<path_to_extract_folder>\wsf_c\logs"
+       wsf.rm_db_dir="<path_to_extract_folder>\wsf_c>"
+       wsf.log_level = 3
+       extension=wsf.dll
+
+       set extension_dir entry to point to you php extensions location. This is <PHP Binary Directory>/ext.
+       extension_dir="./ext"
+
+       Also enable php xsl extension.
+       extension="php_xsl.dll"
+
+       Uncomment the "include_path" and edit it to point to the location for scripts folder as
+
+       include_path = ".;/path/to/scripts/folder" 
+        
+       [Note] Log level is by default set to INFO. Log levels range from 0 to 4. Log levels are as follows.
+	      CRITICAL->  0 , ERROR -> 1 , WARNING -> 2 , INFO -> 3, DEBUG -> 4
+     
+    4. Configure the Apache2 Web server with PHP as follows.
+       
+       Copy php5apache2.dll to Apache2/modules directory (If your Apache2 service is of Apache 2.2.X family, use
+	php5apache2_2.dll) .
+
+       Add following entries in httpd.conf file.
+
+       LoadModule php5_module modules/php5apache2.dll
+       
+       PHPIniDir <your php.ini file location>
+       
+       AddType application/x-httpd-php .php .phtml
+       AddType application/x-httpd-php-source .phps
+
+       Now you should be able to run the samples in samples directory. 
+                         		 	
+3. Binary Dependency version numbers.
+
+  WSO2-WSF-PHP-1.2.0 Win32 Binary Will be compiled using following version of dependency libraries.
+
+  1. PHP     5.2.5
+  2. Libxml2 2.6.30
+  3. Iconv   1.9.2 
+  4. openssl .98e (MSI)
+
+
