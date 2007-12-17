@@ -11,14 +11,21 @@ if(WSFC_HOME == nil)
   exit(-1)
 end
 
-dir_config("wsservice", WSFC_HOME + '/include/axis2-1.2', WSFC_HOME + '/lib')
-dir_config("Rampart", WSFC_HOME + '/include/rampart-1.0', WSFC_HOME + '/modules/rampart')
-
+if /mswin32|bccwin32/ =~ RUBY_PLATFORM
+    dir_config('WSFC', WSFC_HOME + '/include', WSFC_HOME + '/lib')
+    $CFLAGS = $CFLAGS + " -DWIN32 -DSWIG_NOINCLUDE"
+    have_library('libxml2')
+    have_library('axiom')
+else
+    dir_config('WSFC', WSFC_HOME + '/include/axis2-1.2', WSFC_HOME + '/lib')
+    dir_config('Rampart', WSFC_HOME + '/include/rampart-1.0', WSFC_HOME + '/modules/rampart')
+    have_library('axis2_libxml2') 
+    have_library('axis2_axiom')
+  end
+  
 have_library('axutil')
 have_library('axis2_minizip')
 have_library('axis2_parser')
-have_library('axis2_libxml2')
-have_library('axis2_axiom')
 have_library('axis2_engine')
 have_library('axis2_http_common')
 have_library('axis2_http_sender')
