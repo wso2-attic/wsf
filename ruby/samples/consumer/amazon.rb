@@ -22,7 +22,7 @@ req_payload_string = <<XML
 <ItemSearch>
   <Service>AWSECommerceService</Service> 
   <SearchIndex>Books</SearchIndex>
-  <AWSAccessKeyId>19VBVF8C8HQQ0HTH7PR2</AWSAccessKeyId>
+  <AWSAccessKeyId>XXXXXXXXXXXXXXXXXXX</AWSAccessKeyId>
   <Operation>ItemSearch</Operation>
   <Keywords>sri lanka travel books</Keywords>
 </ItemSearch>
