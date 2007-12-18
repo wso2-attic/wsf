@@ -40,7 +40,7 @@ The following steps need to be taken to install and run WSF/C using source distr
         $ make samples 
 
       Use './configure --help' to find out possible configuration options.
-      Note :If you do not provide a --prefix configure option, it will by default be installed into /usr/local/wsf_c directory.
+      Note :If you do not provide a --prefix configure option, it will by default be installed into /opt/wso2/wsf_c directory.
    5. Go to where you installed WSO2 WSF/C.
       Start simple axis server * To start the simple axis server on port 9090 run the following commands
 
@@ -71,9 +71,9 @@ You can install the RPM package using the following command
 
     $ rpm -i <wso2-wsf-c.rpm.file.name>
 
-This will install WSO2 WSF/C to /usr/local/wsf_c/ Set the WSFC_HOME environment variable to that location
+This will install WSO2 WSF/C to /opt/wso2/wsf_c/ Set the WSFC_HOME environment variable to that location
 
-    $ WSFC_HOME=/usr/local/wsf_c/
+    $ WSFC_HOME=/opt/wso2/wsf_c/
     $ export WSFC_HOME
 
 To run and test the installation, you can follow the step 5 in section 2.1. above
@@ -83,9 +83,9 @@ You can install the deb package using the following command
 
     $ dpkg -i <wso2-wsf-c.deb.file.name>
 
-This will install WSO2 WSF/C to /usr/local/wsf_c/ Set the WSFC_HOME environment variable to that location
+This will install WSO2 WSF/C to /opt/wso2/wsf_c/ Set the WSFC_HOME environment variable to that location
 
-    $ WSFC_HOME=/usr/local/wsf_c/
+    $ WSFC_HOME=/opt/wso2/wsf_c/
     $ export WSFC_HOME
 
 To run and test the installation, you can follow the step 5 in section 2.1. above
