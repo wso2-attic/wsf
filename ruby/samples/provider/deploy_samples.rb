@@ -17,7 +17,13 @@ end
 #creating the rails application
 puts "Creating rails application '" + rails_app_name + "' "
 
-system("rails " + rails_app_name)
+if RUBY_PLATFORM =~ /mswin32/
+	system("cmd /C rails " + rails_app_name)
+else
+	system("rails " + rails_app_name)
+end
+
+#system("rails " + rails_app_name)
 
 destination = rails_app_name + "/app/controllers/"
 if FileTest.directory?(destination)
