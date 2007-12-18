@@ -96,6 +96,7 @@ wsf_util_construct_header_node (
     char *ns = NULL;
     char *localname = NULL;
     char prefix[6];
+	char *nsprefix = NULL;
     axiom_namespace_t *header_ns = NULL;
     axiom_node_t *header_node = NULL;
     axiom_element_t *header_ele = NULL;
@@ -118,12 +119,19 @@ wsf_util_construct_header_node (
             sizeof (WS_HEADER_NS), (void **) &tmp) == SUCCESS
         && Z_TYPE_PP (tmp) == IS_STRING) {
         ns = Z_STRVAL_PP (tmp);
-    } else {
-        return NULL;
+    }
+	if (zend_hash_find (Z_OBJPROP_P (header), WS_HEADER_PREFIX,
+            sizeof (WS_HEADER_PREFIX), (void **) &tmp) == SUCCESS
+        && Z_TYPE_PP (tmp) == IS_STRING) {
+        nsprefix = Z_STRVAL_PP (tmp);
     }
 
-    sprintf (prefix, "ns%d", WSF_GLOBAL (curr_ns_index)++);
-    header_ns = axiom_namespace_create (env, ns, prefix);
+	if(ns && nsprefix){
+		header_ns = axiom_namespace_create (env, ns, nsprefix);
+	}else if(ns){
+		sprintf (prefix, "ns%d", WSF_GLOBAL (curr_ns_index)++);
+		header_ns = axiom_namespace_create (env, ns, prefix);
+	}
     header_ele = axiom_element_create (env, parent , localname, header_ns, &header_node);
 
     if (zend_hash_find (Z_OBJPROP_P (header), WS_HEADER_MUST_UNDERSTAND,
