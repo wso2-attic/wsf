@@ -22,53 +22,52 @@ href="https://www-lk.wso2.com/repo/wso2/php_axis2/extension/xdocs/index.html#mai
 page</a> for subscription.</p>
 
 <h2>Contents</h2>
-<ul>
-  <li><a href="#Common Installation Instructions">Common Installation
-    Instructions</a></li>
-  <li><a href="#1.Installing and Running on Linuxs">Installing and Running on
-    Linux</a></li>
-  <li><a
-    href="#2.Installing and Running on Microsoft Windows (win32)">Installing
-    and Running on Microsoft Windows (win32)</a>
-    <ul>
-      <li><a href="#Build PHP on Windows">How to build WSF/PHP under Windows from source</a></li>
-      <ul>
-          <li><a href="#Requirements">Requirements</a></li>
-    <li><a href="#Building WSO2 WSF/PHP Extension">Building WSF/PHP extension</a></li>
-    <li><a href="#Building the WSO2 WSF/PHP Extension with PHP WIN32 Build System">Building the WSO2 WSF/PHP Extension with PHP WIN32 Build System</a></li>
-        </ul>
-      <li><a href="#Installing WSO2 WSF As a PHP Extension">Installing WSO2
-        WSF as a PHP Extension</a></li>
-    </ul>
+<ol>
+  <li>
+    &nbsp;<a href="#1.Installing and Running on Linux">Installing and Running on
+    Linux</a>
+    <ol>
+    <li>&nbsp;<a href="#Prerequisites">Prerequisites</a></li>
+    <li>&nbsp;<a href="#installing">Installing</a></li>
+    </ol>
   </li>
-</ul>
-<a id="Common Installation Instructions"></a>
-
-<h2>Common Installation Instructions</h2>
-
-<p>To get the distributions working, you need the following installed in your
-system.</p>
-<ul>
-  <li>PHP 5.1.1 or later, which can be downloaded from the <a
-    href="http://www.php.net/">PHP </a> official Web site. Please refer to
-    the additional note on installing PHP as a DSO module to the Apache2 Web
-    server.
-    <p>If you are using a pre-installed version of PHP, please make sure that
-    you have the developer version installed, so that you can compile the
-    WSO2 WSF/PHP source.</p>
-  </li>
-  <li>libxml2 <a href="http://xmlsoft.org/downloads.html">Download</a><a
-    href="http://xmlsoft.org/downloads.html"></a> (Note: Most Linux systems
-    have libxml2 by default.)</li>
-
-    <li>OpenSSL (Use the msi Installer) <a href="http://www.openssl.org/" >Download</a></li>
-    <li>Sqlite or Mysql (needed for reliable messaging) <a href="http://www.sqlite.org/download.html" >Download Sqlite</a>, <a href="http://dev.mysql.com/downloads/" >Download Mysql</a></li>
-</ul>
-<a id="1.Installing and Running on Linuxs"></a>
-
-<h2>1. Installing and Running on Linux</h2>
-
-<p>1. Go to the directory where you have extracted the source distribution.
+  <li><a href="#2.Installing and Running on Microsoft Windows (win32)">Installing
+    and Running on Microsoft Windows </a></li>
+    <ol>
+      <li><a href="#Prerequisites_win32">Prerequisites</a></li>
+      <li><a href="#Building ">Building </a></li>
+       <li><a href="#Building with PHP WIN32 Build System">Building with PHP WIN32 Build System</a></li>
+      <li><a href="#Installing WSO2 WSF/PHP Binary">Installing WSO2 WSF/PHP Binary</a></li>
+  </ol>
+   <li><a href="#2.Installing using pecl tool">Installing using pecl tool</a></li>
+  </ol>
+<a id="#1.Installing and Running on Linux"></a><h2>1. Installing and Running on Linux</h2>
+<a id="#Prerequisites"></a><h3>1.1 &nbsp;Prerequisites</h3>
+    <p>
+        &nbsp; &nbsp; &nbsp;Inorder to build and run the WSF/PHP Linux source distribution, you
+        need to have the following software installed on&nbsp; your system.</p>
+    <ol>
+    <li>PHP 5.1.1 or later, which can be downloaded from the <a
+    href="http://www.php.net/">
+            PHP </a>official Web site. Please refer to the additional note on installing
+        PHP as a DSO module to the Apache2 Web server.&nbsp; If you are using a pre-installed
+        version of PHP, please make sure that you have the developer version installed,
+        so that you can compile the WSO2 WSF/PHP source.</li>
+        <li>libxml2 <a href="http://xmlsoft.org/downloads.html">Download</a><a
+    href="http://xmlsoft.org/downloads.html"></a> (Note: Most Linux systems have libxml2
+        by default.) </li>
+        
+    <li> OpenSSL&nbsp; <a href="http://www.openssl.org/" >
+        Download</a> </li>
+        <li>sqlite or MySql (needed for reliable messaging) <a href="http://www.sqlite.org/download.html" >
+        Download Sqlite</a>, <a href="http://dev.mysql.com/downloads/" >Download Mysql</a>
+    </li>
+    </ol>
+    
+    <a id="#installing"></a><h3>1.2 &nbsp;Installing</h3>
+    
+    <p>
+        1. Go to the directory where you have extracted the source distribution.
 Run the following:</p>
 <ul>
   <li>./configure</li>
@@ -93,7 +92,7 @@ add the following line to the php.ini file:<br />
                     <li>phpize</li> 
                     <li>./configure</li> 
                     <li>make</li>
-                    <li>make install<li>
+                    <li>make install</li>
                     </ul>
     <p>
         Set extension_dir entry to point to your extension installation directory.
@@ -130,19 +129,15 @@ add the following line to the php.ini file:<br />
 </ul>
 <a id="2.Installing and Running on Microsoft Windows (win32)"></a>
 
-<h2>2. Installing and Running on Microsoft Windows (win32)</h2>
-<a id="Build WSO2 WSF for C on Windows from Source"></a>
+<h2>2. Installing and Running on Microsoft Windows</h2>
+<a id="Prerequisites_win32"></a><h3>
+            2.1 Prerequisites</h3>
 
-<h3>Building  WSO2 WSF/PHP on MS Windows from Source</h3>
-<a id="Requirements"></a>
 
-<h4>
-        &nbsp; Requirements</h4>
     <p>
-        &nbsp;You need to download following dependency libraries:
-    </p>
+            To build WSO2 WSF/PHP from source you will need the following dependency libraries.</p>
     <p>
-        libxml2 binary distribution <a href="http://www.zlatkovic.com/pub/libxml/">Download</a>
+      Libxml2 binary distribution <a href="http://www.zlatkovic.com/pub/libxml/">Download</a>
     </p>
    
     <p>
@@ -158,16 +153,17 @@ add the following line to the php.ini file:<br />
         Win32build [ win32 buildtools for PHP ]<a href="http://www.php.net/extra/win32build.zip"> Download</a>
     </p>
     <p>
-        Mysql Server 5 [When using Reliable Messaging With MySql Database ]<a href="http://dev.mysql.com/downloads/"> Download</a>
+          sqlite or
+        Mysql Server 5 ( Needed When using Reliable Messaging )<a href="http://www.sqlite.org/download.html"> Download sqlite</a><a href="http://dev.mysql.com/downloads/"> Download MySql</a>
         </p>
     <p>
-        In addition you need to have visual studio installed on your system. 
+        In addition you need to have Microsoft Visual Studio installed on your system. 
     </p>
-    <a id="Building WSO2 WSF/PHP Extension"></a>
-<h4><strong>Building WSO2 WSF/PHP Extension</strong></h4>
+    <a id="#Building"></a>
+<h3><strong>2.2 Building </strong></h3>
 
 <p>
-        &nbsp;WSF/PHP extension is build on top of WSF/C Web Services Framework.&nbsp; The
+        WSF/PHP extension is build on top of WSF/C Web Services Framework.&nbsp; The
     extension source code is packaged with WSF/C code. When you download the wso2-wsf-php-src.zip
     file, it will contain following dirctory structure.
 </p>
@@ -192,9 +188,10 @@ add the following line to the php.ini file:<br />
         ( Before running the build.bat file, add your vcvars32.bat&nbsp; file location to
         PATH environment variable. IF you are using vc2005, it is located in C:\Program
         Files\Microsoft Visual Studio 8\VC\bin )</p>
-<a id="#Building the WSO2 WSF/PHP Extension with PHP WIN32 Build System"></a>
+<a id="#Building with PHP WIN32 Build System"></a>
 
-<h4>Building the WSO2 WSF/PHP Extension with PHP WIN32 Build System</h4>
+<h3>
+            2.3 Building with PHP WIN32 Build System</h3>
 
 <p>1. Before trying this, please refer to the README.WIN32-BUILD-SYSTEM file
 in the PHP source distribution, and build the PHP source under MS Windows.</p>
@@ -209,32 +206,22 @@ options. You will find the option --with-wsf.<br />
 
 <p>5. Add the following entries to config.nice.bat file.</p>
 
-<p>        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
-            &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
-    &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
-        "--with-extra-includes=&lt;Libxml2 bin dir&gt;\include;&lt;iconv
-bin directory&gt;\include;&lt;wsf-c
+<p>"--with-extra-includes=&lt;Libxml2 bin dir&gt;\include;&lt;iconv bin directory&gt;\include;&lt;wsf-c
 dir&gt;\include" </p>
 
-<p>        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
-            &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
-            &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
-    "-- with-extra-libs=&lt;Libxml2 bin dir&gt;\lib;&lt;iconv bin
-dir&gt;\lib;&lt;wsf-c dir&gt;\lib"</p>
+<p> "-- with-extra-libs=&lt;Libxml2 bin dir&gt;\lib;&lt;iconv bin dir&gt;\lib;&lt;wsf-c dir&gt;\lib"</p>
 
-<p>        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
-        &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
-        &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
-    "--with-wsf=shared"</p>
+<p> "--with-wsf=shared"</p>
 
 <p>6. Run the above config.nice.bat file to configure the wsf extension as a
 dll.</p>
 
 <p>7. "nmake" will build the wsf extension.<br />
 </p>
-<a id="Installing WSO2 WSF As a PHP Extension"></a>
+<a id="#Installing WSO2 WSF/PHP Binary"></a>
 
-<h3>Installing WSO2 WSF as a PHP Extension</h3>
+<h3>
+            2.4 Installing WSF/PHP Binary</h3>
     <p>
         1. If you built the extension from the source, you will find the wso2-wsf-php-bin-1.2.0-win32
         (binary pack) located in your source directory.</p>
@@ -287,7 +274,7 @@ installation location.<br />
         Also enable php_xsl extension
     </p>
     <p>
-        <strong>extension = php_xsl.dll</strong></p>
+       <strong>extension = php_xsl.dll</strong></p>
     <p> Uncomment the <strong>include_path</strong> and edit it to point to the
        location for scripts folder as </p>
     <p>
@@ -299,24 +286,25 @@ installation location.<br />
     </p>
 
 <p>
+                        &nbsp; &nbsp;&nbsp;
     6.1. Copy php5apache2.dll to Apache2/modules directory and add the following entries in httpd.conf file.<br />
-    &nbsp; &nbsp;
-</p>
-    <p>
-        &nbsp; &nbsp; LoadModule php5_module modules/php5apache2.dll <br />
-        &nbsp; &nbsp; PHPIniDir "&lt; your php.ini file location> "<br />
-        &nbsp;&nbsp;
     </p>
+       <p>
+           <strong>&nbsp; &nbsp;&nbsp; LoadModule</strong> php5_module modules/php5apache2.dll <br />
+           <strong>&nbsp; &nbsp;&nbsp;
+          PHPIniDir</strong> "&lt; your php.ini file location> "<br /></p>
     <p>
-        &nbsp;&nbsp; &nbsp;AddType application/x-httpd-php .php .phtml<br />
-        &nbsp;&nbsp; AddType application/x-httpd-php-source .phps<br />
-    </p>
-
+      &nbsp; &nbsp;&nbsp; AddType application/x-httpd-php .php .phtml<br />
+      &nbsp; &nbsp;&nbsp;
+       AddType application/x-httpd-php-source .phps<br /></p>
 <p>
     7. Copy the samples folder to your Apache Web server's
 document root. If you want to run samples</p>
 
     <p>
         Now you should be able to run the samples in the samples directory.</p>
+        <a id="2.Installing using pecl tool"></a>
+<h3>Installing using pecl tool</h3>
+       
 </body>
 </html>
