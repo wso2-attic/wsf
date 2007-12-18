@@ -136,6 +136,8 @@ security/secure_mtom/complete/service.php 	      - UsernameToken, Timestamp, Enc
 
 Reliable Messaging Samples
 --------------------------
+Before running the samples you need to set up the database used by the WSF/PHP.
+Please refer to the docs/rm_manual.html for how to set up the database.
 
 reliable/echo_client_rm.php			   - Single Channel two way RM Client
 reliable/echo_service_rm.php                       - Single Channel one way RM Service
