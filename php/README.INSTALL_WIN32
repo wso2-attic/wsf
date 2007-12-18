@@ -1,14 +1,14 @@
 Building and Installing WSO2 WSF/PHP on Win32.
 
 If you need any help with building or installation , send a 
-mail to wsf-PHP-user@lists.wso2.net
+mail to wsf-PHP-user@lists.wso2.org
 ===========================================================
 Contents:
 1. How to build WSF/PHP under Windows from source
-    a. Requirements
-    b. Building the extension.
-    c. Building the extension using PHP build system.
-2. Installing WSF/PHP extension as a PHP extension.
+    a. Prerequisites
+    b. Building.
+    c. Building using PHP Win32 build system.
+2. Installing WSO2 WSF/PHP Binary.
 3. Binary dependency version numbers.
 
 ===========================================================
@@ -69,7 +69,7 @@ Contents:
        ( Before running the build.bat file, add your vcvars32.bat file location to PATH environment variable. 
 	If you are using vc2005, it is located in C:\Program Files\Microsoft Visual Studio 8\VC\bin)
 
-     c. Building WSO2 WSF/PHP with php win32 build system
+     c. Building using PHP win32 build system
  
        There is another way of building the WSF/PHP extension. For this you will first need to build php
        from source under windows.please refer README.WIN32-BUILD-SYSTEM
@@ -132,8 +132,8 @@ Contents:
 
        Uncomment the "include_path" and edit it to point to the location for scripts folder as
 
-       include_path = ".;/path/to/scripts/folder" 
-        
+       include_path = ".;/path/to/scripts/folder"
+
        [Note] Log level is by default set to INFO. Log levels range from 0 to 4. Log levels are as follows.
 	      CRITICAL->  0 , ERROR -> 1 , WARNING -> 2 , INFO -> 3, DEBUG -> 4
      
