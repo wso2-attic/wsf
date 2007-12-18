@@ -14,24 +14,20 @@ Key Features
 ============
 
 1. Client API to consume Web services
-
       * WSMessage class to handle message level options
       * WSClient class with both one way and two way service invocation support
       * Option of using functions in place of object oriented API with ws_request
       
 2. Service API to provide Web services
-
       * WSMessage class to handle message level options
       * WSService class with support for both one way and two way operations
       * Option of using functions in place of object oriented API with ws_reply
 
 3. Attachments with MTOM
-
       * Binary optimized
       * Non-optimized (Base64 binary)
 
 4. WS-Addressing
-
       * Version 1.0
       * Submission
 
@@ -46,29 +42,31 @@ Key Features
 
 7. WSDL Generation for Server Side
       * WSDL generation based on annotations and function signatures, and 
-        serving on ?wsdl requests
+        serving on ?wsdl or ?wsdl2 requests
 
-8. REST Support
+8. WSDL mode support for both client and server side
+      * Write services and client based on a given WSDL
+      * WS-Addressing and WS-SecurityPolicy is supported in WSDL mode
+
+9. REST Support
       * Expose a single service script both as SOAP and REST service
 
-9. WSDL mode support for both client and server side
-      * Write services and client based on a given WSDL
-      * WS Security, WS Addressing and WS Security Policy is supported in wsdl mode.
+10. Provide easy to use classes for common services
+      * Consume some well known services such as Yahoo search and Flickr 
+        and Amazon services using predefined classes
 
-10. Backward compatibility with PHP5 SOAP extension
-      * Experimental
 
 --------------------------------
 Major Changes Since Last Release
 ================================
-1. WSDL mode Code was reimplemented to support WSDL 1.1 as well as WSDL 2.0. In addtion,
-   WSF/PHP is able to support WS Security, WS Security Policy and WS Addressing in wsdl mode now.
+1. WSDL mode code was reimplemented to support WSDL 1.1 as well as WSDL 2.0. In addtion,
+   WSDL mode is also capable of supporting WS-SecurityPolicy and WS-Addressing now.
 
 2. WSHeader class was improved to support adding custom soap headers with child elements.
 
-3. WSF/PHP now supports exposing functions defined in php classes as web service operations.
+3. Supports exposing member functions defined in PHP classes as Web service operations.
 
-4. Many Bugs related to MTOM, WSDL generation, WS Security were fixed.
+4. Many bugs related to MTOM, WSDL generation and WS-Security were fixed.
  
 -------------------
 Reporting Problems
