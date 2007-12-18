@@ -163,8 +163,11 @@ try {
                         if($message=='success'){
                               include 'detail_table_client.php';
 
-                                  }
-
+                                               }
+                        else{
+                              print_r($message);
+                             
+                            }
                      }      
 
 
@@ -188,7 +191,13 @@ try {
 	
 	} 
 	
- 
+ ?>
+<br />
+<br />
+<a href ="login_client.php">Back to the login page</a>
+
+<?php
+
 if( ! isset( $errorFree ) || !isset($_POST['posted'])){?>
 
 	<form action="#" method="post">
@@ -201,10 +210,10 @@ if( ! isset( $errorFree ) || !isset($_POST['posted'])){?>
 		
 			<div><label for="uname">Username <em>*</em></label> <input id="uname" name="uname" value="<?php echo $uname; ?>" type="text" /></div>
 			<div><label for="password">Password <em>*</em></label> <input id="password" name="password" value="<?php echo $password; ?>" size="45" type="password" /></div>
-			<div><label for="repassword">Re-enter password </label> <input id="repassword" name="repassword" value="" size="45" type="password" /></div>
+			<div><label for="repassword">Re-enter password <em>*</em></label> <input id="repassword" name="repassword" value="" size="45" type="password" /></div>
 			<div><label for="fname">First Name <em>*</em></label> <input id="fname" name="fname" value="<?php echo $firstName; ?>" size="45" type="text" /></div>
-			<div><label for="lname">Last Name </label> <input id="lname" name="lname" value="<?php echo $lastName; ?>" size="45" type="text" /></div>
-			<div><label for="email">Email Address </label> <input id="email" name="email" value="<?php echo $email; ?>" type="text" />
+			<div><label for="lname">Last Name <em>*</em></label> <input id="lname" name="lname" value="<?php echo $lastName; ?>" size="45" type="text" /></div>
+			<div><label for="email">Email Address <em>*</em></label> <input id="email" name="email" value="<?php echo $email; ?>" type="text" />
 			</div>
 	</fieldset>
 	
@@ -213,7 +222,7 @@ if( ! isset( $errorFree ) || !isset($_POST['posted'])){?>
 
 			<div><label for="address">Address<em>*</em></label> <input id="address" name="address" size="45" type="text" value="<?php echo $address; ?>"/></div>
 			<div><label for="country">Country <em>*</em></label> <input id="country" name="country" value="<?php echo $country; ?>" size="12" type="text" /></div>
-			<div><label for="code">Postel Code</label> <input id="code" name="code" size="5" type="text" value="<?php echo $code; ?>"/></div>
+			<div><label for="code">Postel Code <em>*</em></label> <input id="code" name="code" size="5" type="text" value="<?php echo $code; ?>"/></div>
 	</fieldset>
 	<div class="buttonrow">
 		<input value="Save" class="button" type="submit" />

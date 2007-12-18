@@ -62,6 +62,9 @@ function register($inMessage)
                 
      $res=mysql_query($query,$link);
 
+    $query2 = "SELECT user_id FROM `customer_details`";
+    $res2=mysql_query($query2);      
+    $id_array=mysql_fetch_array($res2, MYSQL_NUM);
         if($res) 
             { 
          $resPayload = <<<XML
@@ -69,14 +72,29 @@ function register($inMessage)
          <text>success</text>
          </ns1:result>
 XML;
+}
+        elseif(in_array($userID,$id_array)){
+            $resPayload = <<<XML
+         <ns1:result xmlns:ns1="http://php.axis2.org/samples">
+         <text>UserID is alreday added.Please enter another userID</text>
+         </ns1:result>
+XML;
+       
+ }        else{
 
+ $resPayload = <<<XML
+         <ns1:result xmlns:ns1="http://php.axis2.org/samples">
+         <text>Error with registration...Error with database settings or you may entered already added userID.</text>
+         </ns1:result> 
+XML;
+}
 
         $returnMessage = new WSMessage($resPayload);
         return $returnMessage;
 
  
             }
-}
+
 
 
 /*

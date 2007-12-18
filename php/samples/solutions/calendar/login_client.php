@@ -1,4 +1,5 @@
 <?php
+session_start();
 $userID = $_POST["userID"];
 $password = $_POST["mypassword"];
 $result = $_POST["Submit"];
@@ -76,7 +77,6 @@ XML;
                            $simplexml = new SimpleXMLElement($response->str);
                            $message =trim($simplexml->text);
                            if($message=='success'){
-                           session_start();
                            $_SESSION["member_id"] = $_POST["userID"];
                            header('Location: calendar_client.php');
                          } 

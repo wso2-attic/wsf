@@ -61,8 +61,6 @@ echo"<td>$code</td>";
 
 </table>
 
-<a href="login_client.php"><img src="./assets/images/arrow.jpg">Back to the login page</a>
-
 </body>
 </html>
 

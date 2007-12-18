@@ -160,12 +160,14 @@ catch (Exception $e)
 
  $times=array('12am','1am','2am','3am','4am','5am','6am','7am','8am','9am','10am','11am','12pm','1pm','2pm','3pm','4pm','5pm','6pm','7pm','8pm','9pm','10pm','11pm');
 
+$dlength=sizeof($days);
+$tlength=sizeof($times);
+
+if(!empty($day)){
+
  $daytime=array_combine($time,$day);
 
- $dlength=sizeof($days);
- $tlength=sizeof($times);
-
-for($i=0; $i < $tlength; $i++){
+ for($i=0; $i < $tlength; $i++){
 
        for($j=0; $j < $dlength; $j++){
 
@@ -198,6 +200,28 @@ for($i=0; $i < $tlength; $i++){
         if(($j+1)%8==0){echo"</tr>";} 
    } 
 }
+}
+else{
+echo"you have not added any event for this week yet";
+
+
+for($i=0; $i < $tlength; $i++){
+
+       for($j=0; $j < $dlength; $j++){
+
+            if($j%8==0)
+            {
+             echo"<tr><td>$times[$i]</td>";
+            }
+          else
+              {
+              echo"<td>&nbsp;</td>";
+              }
+        if(($j+1)%8==0){echo"</tr>";}
+   }
+}
+}
+
 
 ?>
 

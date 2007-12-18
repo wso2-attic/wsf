@@ -29,11 +29,13 @@ echo"<br/>";
 	<fieldset>
 		<legend>Event Information</legend>
 
-                       <div><label for="year">Year<em>*</em></label> <input id="year" name="year" size="45" type="text" value="<?php echo $year; ?>"/></div>
-                        <div><label for="week">Week<em>*</em></label> <input id="week" name="week" size="45" type="text" value="<?php echo $week; ?>"/></div>
+                       <div><label for="year">Year<em>*</em></label> <input id="year" name="year" size="45" type="text" value="<?php echo $year; ?>"/><?php echo"Ex: 2008"?></div>
+                        <div><label for="week">Week<em>*</em></label> <input id="week" name="week" size="45" type="text" value="<?php echo $week; ?>"/><?php echo"Ex: 07(Week of the year)"?></div>
 
-			<div><label for="event">Even Time<em>*</em></label> <input id="time" name="time" size="45" type="text" value="<?php echo $time; ?>"/></div>
-		       <div><label for="code">Day of the week</label> <input id="date" name="date" size="10" type="text" value="<?php echo $date; ?>"/></div>
+
+			<div><label for="event">Even Time<em>*</em></label> <input id="time" name="time" size="45" type="text" value="<?php echo $time; ?>"/><?php echo"Ex: 10am"?></div>
+
+		       <div><label for="code">Day of the week</label> <input id="date" name="date" size="10" type="text" value="<?php echo $date; ?>"/><?php echo"Ex: Sunday"?></div>
 	</fieldset>
 	<div class="buttonrow">
 		<input value="Save" class="button" type="submit" name="Submit"/>
@@ -92,13 +94,13 @@ try {
     
                 printf("Soap Fault: %s\n", $e->Reason);
     
-        } else {
+        } /*else {
 
                 printf("Message = %s\n",$e->getMessage());
 
         }
 
-
+*/
 
 }
 
