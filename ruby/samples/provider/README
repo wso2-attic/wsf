@@ -50,7 +50,7 @@ Echo
    http://your_rails_application_uri/echo_service/echo
 
 NOTE: your rails_application_uri is the uri where you have host your application. If you have hosted the samples in
-your local machine with the port name 3000 (Which is the default for rails in-built servers), here on, you can put
+your local machine with the port name 3000 (Which is the default for rails in-built servers), just put
 localhost:3000 in the place of your_rails_application_uri
 
 Echo with Addressing
