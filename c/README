@@ -17,10 +17,10 @@
   including WS-* specifications as well as raw REST like invocations.
 
   WSO2 WSF/C provides the basic framework on which other scripting language 
-  bindings could be built; WSO2 WSF/PHP and WSO2 WSF/AJAX are based on 
+  bindings could be built; WSO2 WSF/PHP, WSO2 WSF/RUBY are based on 
   WSO2 WSF/C. It could also be embeded in other software where the full 
-  Web services stack support is required. It is based on Apache Axis2/C and 
-  also includes Apache Sandesha2/C.
+  Web services stack support is required. It is based on Apache Axis2/C.
+  It also includes Apache Sandesha2/C, Apache Rampart/C and Apache Savan/C.
 
   The Latest Version
   ------------------
