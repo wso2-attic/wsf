@@ -32,7 +32,7 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
     <active>yes</active>
 </lead>
 
-<date>2007-12-15</date>
+<date>2007-12-18</date>
 <version>
     <release>1.2.0</release>
     <api>1.2.0</api>
@@ -52,7 +52,6 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
         <file name="README" role="doc"/>
         <file name="README.INSTALL" role="doc"/>
         <file name="README.INSTALL_WIN32" role="doc"/>
-        <file name="README.SSL_CLIENT" role="doc"/>
         <file name="NEWS" role="doc"/>
         <file name="LICENSE" role="doc"/>
    <dir name="src">
@@ -93,7 +92,7 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
         </dir>
         <dir name="dynamic_invocation">
             <file name="wsf_wsdl_consts.php" role="php"/>
-        <file name="wsf_wsdl_client_request.php" role="php"/>
+            <file name="wsf_wsdl_client_request.php" role="php"/>
             <file name="wsf_wsdl_client_response.php" role="php"/>
             <file name="wsf_wsdl_service.php" role="php"/>
             <file name="wsf_wsdl_util.php" role="php"/>
@@ -101,8 +100,8 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
                 <file name="doc.xslt" role="php"/>
                 <file name="jsstub.xslt" role="php"/>
                 <file name="tryit.xslt" role="php"/>
-        <file name="wsdl11to20.xsl10.xsl" role="php"/>
-        <file name="formatxml.xslt" role="php"/>
+                <file name="wsdl11to20.xsl10.xsl" role="php"/>
+                 <file name="formatxml.xslt" role="php"/>
                 <file name="wsdl2sig.xslt" role="php"/>
             </dir>
         </dir>
@@ -156,6 +155,8 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
         <file name="request_client_msg.php" role="php"/>
         <file name="request_client_str.php" role="php"/>
         <file name="ssl_client.php" role="php"/>
+        <file name="README.SSL_CLIENT" role="doc"/>
+        <file name="README.SAMPLES" role="doc"/>
         <dir name="mtom">
             <file name="mtom_download_client.php" role="php"/>
             <file name="mtom_download_service.php" role="php"/>
@@ -231,7 +232,7 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
                 <file name="client.php" role="php"/>
         		<file name="service.php" role="php"/>
 		        <dir name="policy_file_based">
-        		    <file name="service.php" role="php"/>
+        		    <file name="client.php" role="php"/>
 		            <file name="service.php" role="php"/>
                     <file name="policy.xml" role="php"/>
         		</dir>
@@ -240,7 +241,7 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
                 <file name="client.php" role="php"/>
         		<file name="service.php" role="php"/>
         		<dir name="policy_file_based">
-        	        <file name="service.php" role="php"/>
+        	        <file name="client.php" role="php"/>
 		            <file name="service.php" role="php"/>
                     <file name="policy.xml" role="php"/>
     	       </dir>
@@ -249,7 +250,7 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
                 <file name="client.php" role="php"/>
     	    	<file name="service.php" role="php"/>
         	    <dir name="policy_file_based">
-		            <file name="service.php" role="php"/>
+		            <file name="client.php" role="php"/>
         		    <file name="service.php" role="php"/>
                     <file name="policy.xml" role="php"/>
         		</dir>
@@ -258,19 +259,23 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
                 <file name="client.php" role="php"/>
 		        <file name="service.php" role="php"/>
         		<dir name="policy_file_based">
-        		    <file name="service.php" role="php"/>
+        		    <file name="client.php" role="php"/>
 		            <file name="service.php" role="php"/>
                     <file name="policy.xml" role="php"/>
-        		</dir>
+                </dir>
+                <dir name="call_back">
+                    <file name="client.php" role="php"/>
+                    <file name="service.php" role="php"/>
+                </dir>
 	       </dir>
            <dir name="secure_mtom">
         		<dir name="signing">
-	    	        <file name="service.php" role="php"/>
+	    	        <file name="client.php" role="php"/>
     	    	    <file name="service.php" role="php"/>
                     <file name="policySignOnlyMtom.xml" role="php"/>
 	            </dir>
     	    	<dir name="encryption">
-	    	        <file name="service.php" role="php"/>
+	    	        <file name="client.php" role="php"/>
 		            <file name="service.php" role="php"/>
                 </dir>
             </dir>
@@ -283,6 +288,7 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
         </dir>
         <dir name="resources">
             <file name="axis2.jpg" role="php"/>
+            <file name="cacert.pem" role="php"/>
         </dir>
         <dir name="yahoo">
             <file name="yahoo_rest_client.php" role="php"/>
