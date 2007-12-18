@@ -25,7 +25,7 @@ XML
 
 begin
   LOG_FILE_NAME = "ruby_mtom_upload_client_base64.log"
-  END_POINT = "http://localhost:9090/mtom_base64_upload_service/upload"
+  END_POINT = "http://localhost:3000/mtom_base64_upload_service/upload"
 
   content = IO.read("resources/axis2.jpg")
 
