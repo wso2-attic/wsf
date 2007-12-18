@@ -617,9 +617,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
 
     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
         " [wsf_svr] calling php service ");
-
     zend_try {
-
         MAKE_STD_ZVAL (msg);
         object_init_ex (msg, ws_message_class_entry);
         
@@ -715,7 +713,12 @@ wsf_xml_msg_recv_invoke_wsmsg (
 			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_xml_msg_recv] call_user_function failed ");
 			return NULL;
 		}
-            if (Z_TYPE (retval) == IS_OBJECT
+            if (EG(exception) && Z_TYPE_P(EG(exception)) == IS_OBJECT &&
+               instanceof_function(Z_OBJCE_P(EG(exception)), ws_fault_class_entry TSRMLS_CC)) {
+                  wsf_xml_msg_recv_set_soap_fault (env, soap_ns, out_msg_ctx,
+                  EG(exception) TSRMLS_CC);
+                  zend_clear_exception(TSRMLS_C);
+            }else if (Z_TYPE (retval) == IS_OBJECT
                 && instanceof_function (Z_OBJCE (retval),
                     ws_message_class_entry TSRMLS_CC)) {
                 zval **msg_tmp = NULL;
@@ -767,23 +770,28 @@ wsf_xml_msg_recv_invoke_wsmsg (
                 if (res_payload) {
                     res_om_node = wsf_util_deserialize_buffer (env, res_payload);
                 }
-            } else if (Z_TYPE (retval) == IS_OBJECT &&
+            } /*
+                else if (Z_TYPE (retval) == IS_OBJECT &&
                 instanceof_function (Z_OBJCE (retval),
                     ws_fault_class_entry TSRMLS_CC)) {
                 wsf_xml_msg_recv_set_soap_fault (env, soap_ns, out_msg_ctx,
                     &retval TSRMLS_CC);
+                zend_clear_exception(TSRMLS_C);
             }
-        zval_ptr_dtor(&msg);
+            */
+         zval_ptr_dtor(&msg); 
     }
+    
     zend_catch {
+        
         if (EG(exception) && Z_TYPE_P(EG(exception)) == IS_OBJECT && 
                 instanceof_function(Z_OBJCE_P(EG(exception)), ws_fault_class_entry TSRMLS_CC)) {
-                 wsf_xml_msg_recv_set_soap_fault (env, soap_ns, out_msg_ctx,
+            wsf_xml_msg_recv_set_soap_fault (env, soap_ns, out_msg_ctx,
                                              EG(exception) TSRMLS_CC);
+            zend_clear_exception(TSRMLS_C);
         }else{
             _bailout = 1;
         }
-        
     }
     zend_end_try ();
 
@@ -834,8 +842,7 @@ wsf_xml_msg_recv_set_soap_fault (
 
     if (strcmp (soap_ns, AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI) == 0) {
         soap_version = AXIOM_SOAP12;
-    } else if (strcmp (soap_ns, AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI) ==
-        0) {
+    } else if (strcmp (soap_ns, AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI) == 0) {
         soap_version = AXIOM_SOAP11;
     } else
         return;
