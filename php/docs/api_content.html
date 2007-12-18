@@ -172,7 +172,7 @@ border="1">
     </tr>
     <tr valign="top">
       <td colspan="1" style="height: 20px; width: 96px;">"policy"</td>
-      <td colspan="1" style="height: 20px"> &nbsp;&nbsp; WSPolicy object</td>
+      <td colspan="1" style="height: 20px"> &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; WSPolicy object</td>
       <td colspan="1" style="height: 20px">WSPolicy object</td>
       <td colspan="1" style="height: 20px">None</td>
       <td colspan="1" style="height: 20px">WSPolicy Object</td>
@@ -838,14 +838,15 @@ representation of the binary content to be sent or being received.</p>
 </ul>
 
 <p>An associative array, containing the mapping of cid (content ID) to its
-corresponding  &nbsp;&nbsp; attachment. When an attachment is received, this property
+corresponding  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; attachment. When an attachment is received, this property
 will be present in the WSMessage object.</p>
 <ul>
-  <li><p><b>array headers</b></p>
+  <li><p><b>array inputHeaders</b></p>
   </li>
 </ul>
 
-<p>An array of SOAP Header objects being sent or being received. </p>
+<p>An array of WSHeader objects (corresponds to Soap Headers ) being sent.
+</p>
 
 <h3><b>Example</b></h3>
 <pre><span style="color: rgb(0, 0, 255);">$reqPayloadString</span> = &lt;&lt;&lt;XML
@@ -1006,6 +1007,116 @@ operating at the time the fault occurred.</p>
 
 <p>Contains the received SOAP fault as an XML string.</p>
 <a id="function"></a>
+<a id="#header"></a>
+<h2><b>WSHeader</b></h2>
+<a id="#header_construct"></a>
+<h3><b>Constructor</b></h3>
+<ul>
+  <li><p><b>WSHeader(array options)</b></p>
+  </li>
+</ul>
+
+<p>Constructs a new WSHeader object.</p>
+
+<p>Parameters:</p>
+
+<table cellspacing="3" style="page-break-inside: avoid" cellpadding="4"
+border="1">
+  <col><col><col><col><col><col><thead>
+  </thead>
+  <tbody>
+    <tr valign="top">
+      <th><p>Option</p>
+      </th>
+      <th><p>Data Type</p>
+      </th>
+      <th><p>Value Domain</p>
+      </th>
+      <th><p>Default Value</p>
+      </th>
+      <th><p>Description</p>
+      </th>
+    </tr>
+    <tr valign="top">
+      <td><p>
+    "ns"</p>
+      </td>
+      <td><p>string</p>
+      </td>
+      <td><p>
+    Soap Header's namespace uri</p>
+      </td>
+      <td><p>None</p>
+      </td>
+      <td><p>
+    xs:anyURI</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td><p>
+    "name"</p>
+      </td>
+      <td><p>string</p>
+      </td>
+      <td><p>
+    Soap Header element's localname</p>
+      </td>
+      <td><p>None</p>
+      </td>
+      <td>
+        Header element localname</td>
+    </tr>
+    <tr valign="top">
+      <td><p>
+        "data"</p>
+      </td>
+      <td><p>
+        mixed</p>
+      </td>
+      <td><p>
+        string or an array of WSHeader objecs</p>
+      </td>
+      <td><p>None</p>
+      </td>
+      <td>
+          If an string is provided it will be taken as the text value of the xml header element. If
+          an array of WSHeader objects is provided, they will be added as the child elements
+          of the parent WSHeader object.</td>
+    </tr>
+    <tr valign="top">
+      <td><p>
+          "mustUnderstand"</p>
+      </td>
+      <td><p>
+          boolean</p>
+      </td>
+      <td><p>
+          true | false
+      </p>
+      </td>
+      <td><p>None</p>
+      </td>
+      <td>
+          specifys whether to add mustUnderstand attribute to the Soap Header or not</td>
+    </tr>
+    <tr valign="top">
+      <td><p>
+              "role"</p>
+      </td>
+      <td><p>
+              int</p>
+      </td>
+      <td><p>
+              WS_SOAP_ROLE_NEXT | WS_SOAP_ROLE_NONE |WS_SOAP_ROLE_ULTIMATE_RECEIVER</p>
+      </td>
+      <td><p>None</p>
+      </td>
+      <td>
+          Soap Header role value.</td>
+    </tr>
+  </tbody>
+</table>
+
 
 <h2><b>Predefined Functions</b></h2>
 <ul>
@@ -1069,7 +1180,7 @@ border="1">
 <p>WSMessage object instance representing a response.</p>
 
 <p>Throws WSFault on error.</p>
-<br>
+<br/>
 
 
 <p>Example</p>
