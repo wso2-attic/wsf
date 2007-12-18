@@ -61,6 +61,7 @@
 #include <axis2_http_transport.h>
 #include <axis2_addr.h>
 #include <axiom_util.h>
+#include "zend_exceptions.h"
 
 PHP_MINIT_FUNCTION (wsf);
 PHP_MSHUTDOWN_FUNCTION (wsf);
