@@ -36,7 +36,7 @@ try {
                                   "useSOAP" => 1.1)); 
     $responseMessage = $client->request($requestPayloadString);
 
-    printf("Response = %s <br/>\n", htmlspecialchars($resMessage->str));
+    printf("Response = %s <br/>\n", htmlspecialchars($responseMessage->str));
 
 } catch (Exception $e) {
     if ($e instanceof WSFault) {
