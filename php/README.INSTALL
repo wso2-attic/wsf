@@ -69,14 +69,14 @@ END of NOTES]
    It will copy the scripts and samples folders to /usr/local/lib/php/wso2_wsf_php
    directory. Copy the samples directory to Apache2 Servers document root.
 
-   Now you need to edit the php.ini file and all following entries.
+   Add following entries to your php.ini file.
 
    extension=wsf.so
    wsf.home = /opt/wso2/wsf_c
    wsf.log_level = 3
 
    Uncomment the include_path and edit it to point to the location for scripts folder as
-   include_path = ".:/path/to/scripts/folder"
+   include_path = ".:/usr/local/lib/php/wso2_wsf_php/scripts"
 
    [ Note: You need to have php_xsl extension installed on your system for wsdl mode to work.]
 
