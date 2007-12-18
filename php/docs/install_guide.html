@@ -79,10 +79,9 @@ Run the following:</p>
 system.</p>
 
 <p>2. After installing the extension, you have to edit the php.ini file and
-add the following line to the php.ini file:<br />
-<b><i>extension=wsf.so&nbsp;</i></b></p>
-    <p>
-        <b><i></i></b>Also enable xsl extension that comes with PHP. &nbsp;
+add the following line to the php.ini<br />
+<b><i>extension=wsf.so&nbsp;</i></b></p><p>
+3. <a id="xsl"></a>If you have not enabled php_xsl extension that comes with PHP, then enable it as follows. &nbsp;&nbsp;
     </p>
     <p>
         <strong><em>extension=xsl.so</em></strong></p>
@@ -106,9 +105,11 @@ add the following line to the php.ini file:<br />
 
 
 
-<p>3. Also, copy all the samples to your Web server's document root.</p>
+<p>
+                4. Also, copy all the samples to your Web server's document root.</p>
 
-<p>4. Test with a Web browser. For example, access <a href="http://localhost/echo_client.php">http://localhost/echo_client.php</a></p>
+<p>
+    5. Test with a Web browser. For example, access <a href="http://localhost/echo_client.php">http://localhost/echo_client.php</a></p>
 
 <p></p>
 
@@ -304,7 +305,40 @@ document root. If you want to run samples</p>
     <p>
         Now you should be able to run the samples in the samples directory.</p>
         <a id="2.Installing using pecl tool"></a>
-<h3>Installing using pecl tool</h3>
+<h3>
+          4 Installing using pecl tool</h3>
+    You can use the pecl tool to install WSO2 WSF/PHP.<br />
+    <br />
+    1. First you need to download and install<a href="http://dist.wso2.org/products/wsf/c/1.2.0/"> WSO2 WSF/C Web Services framework</a>
+    1.2.0 version. You
+    can use either the source distribution, rpm or deb.<br />
+    <br />
+    2. Download the WSO2 WSF/PHP pecl package. Next use pecl tool to install package.<br />
+    <strong>&nbsp; &nbsp; pecl install</strong> wso2_wsf_php_x.y.z.tgz<br />
+    &nbsp;&nbsp; Alternatively you can give the wso2_wsf_php_x.y.z.tgz package url to
+    pecl tool as well.<br />
+    <br />
+    This will compile and install WSO2-WSF/PHP to you php extensions directory. It will
+    copy the docs to /usr/local/lib/php/doc/wso2_wsf_php directory. It will copy the
+    scripts and samples folders to /usr/local/lib/php/wso2_wsf_php directory. Copy the
+    samples directory to Apache2 Servers document root.<br />
+    <br />
+    3.&nbsp; Add following entries to your php.ini file.
+    <br />
+    &nbsp; &nbsp;&nbsp; extension=wsf.so
+    <br />
+    &nbsp; &nbsp;&nbsp; wsf.home = /opt/wso2/wsf_c wsf<br />
+    &nbsp; &nbsp;&nbsp; log_level = 3
+    <br />
+    <br />
+    Uncomment the include_path entry and edit it to point to the location for scripts
+    folder as
+    <br />
+    include_path = ".:/usr/local/lib/php/wso2_wsf_php/scripts"
+    <br />
+    <br />
+    [ Note: You need to have <a href="#xsl">php_xsl</a> extension installed on your system for WSDL mode
+    to work.]
        
 </body>
 </html>
