@@ -73,6 +73,53 @@ option must be set. Hence the SecurityToken object is created as</p>
     res_message = client.request(req_message)
 </pre>
 
+<h2 id="2"><a name="">8.2. Writing a Secure Web Service</a></h2>
+
+<p>Make sure that the addressing action is set in WSService.</p>
+
+<pre>
+    <span style="color: blue;">def</span> echoFunction(in_message)
+        res_message = <span style="color: orange;">WSMessage</span>.<span style="color: blue;">new</span>(in_message.payload_to_s)
+        <span style="color: blue;">return</span> res_message
+    <span style="color: blue;">end</span>
+
+    operations = {<span style="color: green;">"echoString"</span> =&gt; <span style="color: red;">"echoFunction"</span>)
+
+    actions = {<span style="color: green;">"http://php.axis2.org/samples/echoString"</span> =&gt; <span style="color: red;">"echoString"</span>}
+</pre>
+
+If the client has specified the username and timestamp, these options should be set in the server side also.
+
+<pre>
+    policy = <span style="color: orange;">WSPolicy</span>.<span style="color: blue;">new</span>({<span style="color: green;">"security"</span> =&gt; {<span style="color: green;">"use_username_token"</span> =&gt; <span style="color: blue;">true</span>,
+                                          <span style="color: green;">"include_time_stamp"</span> =&gt; <span style="color: blue;">true</span>}})
+</pre>
+
+<p><strong>Note: If you wish to use a policy file instead of an options array, you can directly set the policy XML file.</strong></p>
+
+<pre>
+    policy_xml = <span style="color: orange;">IO</span>.read(<span style="color: red;">"policy.xml"</span>)
+    policy = <span style="color: orange;">WSPolicy</span>.<span style="color: blue;">new</span>({<span style="color: green;">"security"</span> =&gt; policy_xml}) 
+</pre>
+
+<p>Username and password must be provided for validation on the server side.</p>
+
+<pre>
+    security_token = <span style="color: orange;">WSSecurityToken</span>.<span style="color: blue;">new</span>({<span style="color: green;">"user"</span> =&gt; <span style="color: red;">"bob"</span>,
+                                          <span style="color: green;">"password"</span> =&gt; <span style="color: red;">"bob12"</span>,
+                                          <span style="color: green;">"password_type"</span> =&gt; <span style="color: red;">"Digest"</span>,
+					  <span style="color: green;">"ttl"</span> =&gt; <span style="color: blue;">300</span>})
+
+    service = <span style="color: orange;">WSService</span>.<span style="color: blue;">new</span>({<span style="color: green;">"operations"</span> =&gt; operations,
+                             <span style="color: green;">"actions"</span> =&gt; actions,
+                             <span style="color: green;">"policy"</span> =&gt; policy,
+			     <span style="color: green;">"security_token"</span> =&gt; sec_token})
+
+    res = service.reply(request, response)
+    render <span style="color: green;">:text</span> => res
+
+</pre>
+
 <h2 id="3"><a name="3">8.3. Encryption and Signing</a></h2>
 
 <p>For encryption and signing, keys and certificates must be provided using the two functions:</p>
