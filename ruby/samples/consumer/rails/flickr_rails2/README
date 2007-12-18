@@ -10,8 +10,8 @@ Please follow the steps below to execute the "Flickr Sample"
 
  controllers/flickr_client.rb
  controllers/flickr_controller.rb
- views/flickr/index.rhtml
- views/flickr/search.rhtml
+ views/flickr/index.html.erb
+ views/flickr/search.html.erb
 
  After this step, you will have following directory structure in your 
  rails application. (only app sub directory is shown here)
@@ -28,26 +28,21 @@ Please follow the steps below to execute the "Flickr Sample"
            |
            +-- flickr
                  |
-                 +-- index.rhtml (replaced with the sample index.rhtml)
+                 +-- index.html.erb (replaced with the sample index.html.erb)
                  |
-                 +-- search.rhtml (replaced with the sample search.rhtml)
+                 +-- search.html.erb (replaced with the sample search.html.erb)
 
-NOTE: If you are using rails 2.0.0 you may have to follow the following additional steps.
-
-* You may need to configure the database information in your rails
+3. You may need to configure the database information in your rails
 application. You can find a guide on how to configure the database from the following link.
 http://wiki.rubyonrails.com/rails/pages/TutorialStepOne.
 
-* Rename both index.rhtml and search.rhtml to index.html.erb and search.html.erb.
-
-
-3. Set "key" variable in flickr_controller.rb in your rails applications controller directory.
+4. Set "key" variable in flickr_controller.rb in your rails applications controller directory.
  You can generate a key from  http://www.flickr.com/services/api/
 
-4. Start the WEBrick or Mongreal server by executing the followng commond from the root
+5. Start the WEBrick or Mongreal server by executing the followng commond from the root
  directory of your rails application .
  ./script/server
 
-5. Then Test the application from the browser.
+6. Then Test the application from the browser.
  If the application runs on your local machine, go to http://localhost:3000/flickr/index
  to visit the application

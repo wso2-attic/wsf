@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title> WSF/Ruby Client Sample </title>
+<style type="text/css">
+<!--
+body {
+  margin: 0px;
+  padding: 0px;
+}
+
+#search_form {
+  background: #fff;
+  width: 100%;
+  margin: 20px;
+  border-top: 0px;
+  border-left: 0px;
+  border-right: 0px;
+  border-bottom: 1px;
+  border-color: #eee;
+  border-style: solid;
+  padding: 20px;
+}
+
+#photo_content {
+  background: #fff;
+  float: left;
+  width: 330px;
+  height: 95px;
+  margin: 20px;
+  padding: 10px;
+}
+
+#photo {
+  background: #fff;
+  float: left;
+  width: 75px;
+  height: 75px;
+  margin: 5px;
+}
+#details {
+  background: #fff;
+  float: left;
+  width: 225px;
+  height: 75px;
+  padding-left: 10px;
+  padding-right: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+-->
+</style>
+</head>
+<body>
+
+<div class="search_form" id="search_form">
+<form action="flickr/search" method="post">
+  <h1>Flickr Sample</h1>
+  <%= text_field_tag "query" %>
+  <input type="submit" value="Go">
+</form>
+</div>
+</body>
+<html>
