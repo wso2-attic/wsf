@@ -1,4 +1,4 @@
-Building and Installing WSO2 WSF/PHP from Source on Linux.
+1. Building and Installing WSO2 WSF/PHP from Source on Linux.
 
 ===========================================================
 
@@ -15,8 +15,8 @@ and add the following line to the php.ini file:
 extension=wsf.so
 
 set the extension_dir entry to point to your extensions directory. IF you installed PHP from PHP source,
-this would be /usr/local/lib/php/extensions/debug-zts-***/
-extension_dir =" /usr/local/lib/php/extensions/debug-zts-20060613/"
+this would be /usr/local/lib/php/extensions/debug-zts-xyz/
+extension_dir =" /usr/local/lib/php/extensions/debug-zts-xyz/"
 
 Then enable php_xsl extension. 
 extension=xsl.so.
@@ -53,3 +53,30 @@ wsf.log_level = 3
     CRITICAL->  0 , ERROR -> 1 , WARNING -> 2 , INFO -> 3, DEBUG -> 4 }
 
 END of NOTES]
+
+2. INSTALLING WSF/PHP Pecl Package
+
+2.1. You need to download the WSF/C 1.2.0 source release from http://dist.wso2.org/products/wsf/c.
+   Unpack and run the build.sh file and it will be installed to /opt/wso2 directory.
+
+2.2. Once you have the WSF/C installed, you can install pecl package as follows. Download the wso2_wsf_php_1.2.0.tgz
+   from http://dist.wso2.org/products/wsf/php/1.2.0.
+
+   $ pecl install wso2_wsf_php_1.2.0.tgz
+
+   This will compile and install WSO2-WSF/PHP to you php extensions directory.
+   It will copy the docs to /usr/local/lib/php/doc/wso2_wsf_php directory.
+   It will copy the scripts and samples folders to /usr/local/lib/php/wso2_wsf_php
+   directory. Copy the samples directory to Apache2 Servers document root.
+
+   Now you need to edit the php.ini file and all following entries.
+
+   extension=wsf.so
+   wsf.home = /opt/wso2/wsf_c
+   wsf.log_level = 3
+
+   Uncomment the include_path and edit it to point to the location for scripts folder as
+   include_path = ".:/path/to/scripts/folder"
+
+   [ Note: You need to have php_xsl extension installed on your system for wsdl mode to work.]
+
