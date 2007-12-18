@@ -31,7 +31,7 @@ rem @call clean.bat
 
 @if exist wso2-wsf-ruby-bin-1.0.0-win32\wsf_c\modules\logging rmdir /S /Q wso2-wsf-ruby-bin-1.0.0-win32\wsf_c\modules\logging
 
-rem @if exist scripts xcopy /Y /I /Q /E scripts wso2-wsf-ruby-bin-1.0.0-win32\scripts
+rem @if exist xcopy /Y /I /Q /E scripts wso2-wsf-ruby-bin-1.0.0-win32\scripts
 
 @if exist lib xcopy /Y /I /Q /E lib wso2-wsf-ruby-bin-1.0.0-win32\lib
 
@@ -68,4 +68,12 @@ cd wsservice
 @if exist wsservice.so copy /Y wsservice.so ..\wso2-wsf-ruby-bin-1.0.0-win32\lib
 
 cd ..
+
+@cd sqlite-3_3_81
+
+@if exist sqlite3.dll copy /Y sqlite3.dll ..\wso2-wsf-ruby-bin-1.0.0-win32\wsf_c\lib
+
+@if exist sqlite3.exe copy /Y sqlite3.exe ..\wso2-wsf-ruby-bin-1.0.0-win32\wsf_c\lib
+
+@cd ..
 
