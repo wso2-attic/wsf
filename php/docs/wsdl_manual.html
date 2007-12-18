@@ -66,8 +66,8 @@ $input_array =array("<span style="color: #ff0000">productName</span>" =&gt; "<sp
     		"<span style="color: #ff0000">date</span>" =&gt; date(<span style="color: #ff0000">20031234)</span>,
    		 "<span style="color: #ff0000">orderNo</span>" =&gt; <span style="color: #ff0000">345</span>));
 
-<span style="font-family:Verdana">Here the key of the array will be the element name of the complex type and the user should provide the appropriate value for the key.If the type of the element would be another complex type there should be another array instead of the value.As an
-example imagine if the quantity element's type is another complex type define in the schema. So the our new schema will be</span>
+<span style="font-family:Verdana">Here the key of the array will be the element name of the complex type and the user should provide the appropriate value for the key. If the type of the element would be another complex type there should be another array instead of the value. As an
+example imagine if the quantity element's type is another complex type define in the schema. So our new schema will be,</span>
     
    
     <span style="color: #990000">&lt;xsd:element name="orderInfo"&gt; 
@@ -91,7 +91,7 @@ example imagine if the quantity element's type is another complex type define in
          &lt;/xsd:element&gt; </span>
             
  
-So the array that you should have to create will be 
+So the array that you should create will be, 
 
 $input_array =array("<span style="color: #ff0000">productName</span>" =&gt; "<span style="color: #ff0000">Testing</span>",
 		 "<span style="color: #ff0000">quantity</span>" =&gt; $quantity_array, 
@@ -104,7 +104,7 @@ $quantity_array = array("<span style="color: #ff0000">amount</span>" =&gt; <span
 After creating the array you can pass it to the operation that you are going to invoke. <span style="font-family: Courier New">
     <span style="font-size: 9pt; font-family: Verdana"><span style="font-size: 10pt"></span>
    </span><span style="font-size: 9pt; font-family: Verdana"><span style="font-size: 10pt"> $proxy-&gt;</span><strong>QueryPurchaseOrder</strong>($input_array); </span>
-    <span><span style="font-family: Verdana"><span style="font-size: 10pt"></span>  Since you have passed the array type arrguments to the function the return value will be an associative array.The schema for the return message in the sample wsdl is </span></span></span>  
+    <span><span style="font-family: Verdana"><span style="font-size: 10pt"></span>  Since you have passed the array type arrguments to the function the return value will be an associative array. The schema for the return message in the sample wsdl is, </span></span></span>  
             	<span style="color: #990000">&lt;xsd:element name="orderDetails"&gt;
 		&lt;xsd:complexType&gt;
 			&lt;xsd:sequence&gt;
@@ -133,7 +133,7 @@ After creating the array you can pass it to the operation that you are going to 
             	&lt;/xsd:sequence&gt;
          &lt;/xsd:complexType&gt;</span>
          
-So the return array will be the same structure that we have created the input array.The return array has three elements shipTo, billTo and product. Since all of this elements are complex types then there should be associative array for the corespoinding elements. Now the return array becomes.
+So the return array will be the same structure that we have created the input array. The return array has three elements shipTo, billTo and product. Since all of these elements are complex types there should be an associative array for the correspoinding elements. Now the return array becomes,
    
 $return_array = $proxy-&gt;<strong>QueryPurchaseOrder</strong>($input_array); 
 
@@ -154,8 +154,8 @@ $<span style="color: #330066">order_info_array </span>= array("<span style="colo
 Same array structure apply for $billToArray as well.
 <span style="text-decoration: underline; color: #990000;"><strong></strong></span><span style="font-size: 10pt;">
 <strong>10.1.2. class objects 
-</strong><span style="font-size: 8pt">In this method user should provide a class map which includes the classed for the complex types defined in the WSDL to the associated operation that he is going to invoke. In this example you can see that there are four complex types associted the operation QueryPurchaseOrder.So
-the class map implemetation should be 
+</strong><span style="font-size: 8pt">In this method user should provide a class map which includes the classes for the complex types defined in the WSDL to the associated operation that he is going to invoke. In this example you can see that there are four complex types associted with the operation QueryPurchaseOrder. So
+the class map implemetation should be, 
 
 <strong>$class_map = array("complex_type" =&gt; "class_name_that_wrapping_the_complex_type");
     </strong>
@@ -164,7 +164,7 @@ In our example it should be as $class_map = array( "<span style="color: #ff0000"
 				         "<span style="color: #ff0000">address</span>" =&gt; "<span style="color: #ff0000">addressWrapper</span>", 
 				        "<span style="color: #ff0000">productInfo</span>"=&gt; "<span style="color: #ff0000">productInfoWrapper</span>") ;
 </span><strong></strong>
-</span><span style="font-size: 8pt">In each the element name in the complex element will be a public variable in the class. Then the four classes will be 
+</span><span style="font-size: 8pt">In each the element name in the complex element will be a public variable in the class. Then the four classes will be, 
 
 class OrderInfoWrapper{
 	public $productName;
@@ -193,7 +193,7 @@ class productInfoWrapper{
 	public $status; 
 } 
 
-After creating the class map it should be pass to WSClient constructor as <span style="font-family: Courier New">
+After creating the class map it should be passed to WSClient constructor as, <span style="font-family: Courier New">
 <span style="font-family: Verdana">
 $client = new WSClient(array("<span style="color: #ff3333">wsdl</span>"=&gt;"<span style="color: #ff0000">sample_wsdl_11<span>.wsdl</span></span>", 
 		           "<span style="color: #ff0000">classmap</span>" =&gt; <span style="color: #330066">$classmap</span>)); 
@@ -210,7 +210,7 @@ $input_obj-&gt;orderNo = 20034;
 Then pass the $input_obj to operation 
 $return_obj = $proxy-&gt;<strong>QueryPurchaseOrder</strong>($input_obj);</span>
 
-If the quantity element is another complex type as earlier case then you should create anoter object from the relevant class and assign the object to quantity attribute
+If the quantity element is another complex type as earlier case then you should create another object from the relevant class and assign the object to quantity attribute.
 
 class quantityTypeWrapper{
 	public $amount;
@@ -225,8 +225,8 @@ $quan_obj-&gt;weight_kg = 2323.24;
 Now the qunatity variable in $input_obj object will be
 $input_obj-&gt;quantity = $quan_obj;
 
-Since you have passed a object value to operation the return value will be an object with the type of OrderDetailsWrapper.It has three atrributes shipTo, billTo and product which are also objects 
-of the type addressWrapper, addressWrapper and productInfoWrapper respectively.As example you can access the values as 
+Since you have passed a object value to operation the return value will be an object with the type of OrderDetailsWrapper. It has three atrributes shipTo, billTo and product which are also objects 
+of the type addressWrapper, addressWrapper and productInfoWrapper respectively. As an example you can access the values as, 
 
 	$return_obj-&gt;billTo-&gt;Name;
 	$return_obj-&gt;shipTo-&gt;street;
@@ -247,7 +247,7 @@ client.</p>
         &nbsp; &nbsp; &nbsp;}<br />
     </p>
     <p>
-        The return array should be created as the same way it is created in client side</p>
+        The return array should be created as the same way it is created in client side.</p>
    
         $return_array = array("<span style="color: #ff0000">shipTo</span>" =&gt; $<span style="color: #000066">shipToArray</span>,
     <br />
