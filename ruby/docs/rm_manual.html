@@ -3,14 +3,13 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
   <title>WS02 WSF/Ruby Reliable Messaging Manual</title>
-  <link href="style/api_style.css" rel="stylesheet" type="text/css"
-  media="all" />
+  <link href="style/api_style.css" rel="stylesheet" type="text/css" media="all" />
 </head>
 
 <body xml:lang="en" lang="en">
-<h1><span style="font-family: Arial;">9. Reliable Messaging Manual</span></h1>
+<h2 id="9"><a name="9">9. Reliable Messaging Manual</a></h2>
 
 <p>The WSO2 WSF/Ruby extension supports reliable messaging (RM) protocol
 versions 1.0 and 1.1. <!--It also supports one way as well as two way reliable
@@ -57,7 +56,7 @@ init_mysql.sh file to create the database tables. Next you will need to build
 WSO2 WSF/PHP with MySQL enabled by specifying the option WITH_MYSQL=1 on 
 Windows or enable-mysql on Linux.</p> -->
 
-<h2><strong id="1">9.1. Writing RM Enabled Client.</strong></h2>
+<h2><a name="1">9.1. Writing RM Enabled Client.</a></h2>
 
 <p>Since WS-Addressing is required for WS-RM to work, you need to specify the
 necessary WS-Addressing options along with RM Options. Let's implement a
@@ -127,7 +126,7 @@ option "last_message" =&gt; true. Now WSClient will terminate the current
 sequence after sending msg3.</p>
 
 
-<h2><strong id="2">9.2. Writing RM Enabled Service</strong></h2>
+<h2><a name="2">9.2. Writing RM Enabled Service</a></h2>
 
 <p>The following code demonstrates how to write a RM enabled Web Service.</p>
 

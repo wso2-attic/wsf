@@ -9,13 +9,13 @@
 </head>
 
 <body xml:lang="en" lang="en">
-<h1>WS Security API</h1>
+<h2><a name="">WS Security API</a></h2>
 
-<h2>Predefined Classes for WS Security</h2>
+<!--<h2>Predefined Classes for WS Security</h2>-->
 
-<h3 id="wspolicy">WSPolicy</h3>
+<h2 id="wspolicy"><a name="">WSPolicy</a></h2>
 
-<h4 id="ws_policy_construct">Constructor</h4>
+<!--<h2 id="ws_policy_construct"><a name="">Constructor</a></h2>-->
 
 <p><strong>WSPolicy (mixed policy)</strong></p>
 
@@ -41,10 +41,6 @@ security features by using an options hash that is accepted by the WSPolicy
 constructor. The following is a description of the options that can be
 provided in the options hash. Examples will be provided on the policy files
 later in this document.</p>
-
-<p></p>
-
-<p></p>
 
 <table border="1">
   <tbody>
@@ -152,7 +148,7 @@ later in this document.</p>
   </tbody>
 </table>
 
-<h3 id="ws_security_token">WSSecurityToken</h3>
+<h2 id="ws_security_token"><a name="">WSSecurityToken</a></h2>
 
 <p>A Ruby level object that logically represents security properties. This
 object will be used to specify the security properties from the client or
@@ -246,11 +242,8 @@ following table.</p>
     </tr>
   </tbody>
 </table>
-<br />
 
-
-<h2 id="ws_client_svc_options">WSClient and WSService Options for
-Security</h2>
+<h2 id="ws_client_svc_options"><a name="">WSClient and WSService Options for Security</a></h2>
 
 <table border="1">
   <tbody>
@@ -279,15 +272,15 @@ Security</h2>
   </tbody>
 </table>
 
-<p><br />
+<p>
 Only a common subset of security options can be provided as user options. For
 more complex scenarios, you should provide the appropriate policy file.</p>
-<br />
 
+<h2 id="sec_policy_sample"><a name="">WS-SecurityPolicy File Example</a></h2>
 
-<h2 id="sec_policy_sample">WS-SecurityPolicy File Example</h2>
+[<a href="../samples/consumer/security/encryption/policy.xml">View</a>]
 
-<p><font face="Monospace">&lt;<font color="#000000">wsp</font>:<font
+<!--<p><font face="Monospace">&lt;<font color="#000000">wsp</font>:<font
 color="#000000">Policy</font><font color="#000000">xmlns</font>:<font
 color="#000000">wsp</font>='http:<font
 color="#808080"><i>//schemas.xmlsoap.org/ws/2004/09/policy'&gt;<br />
@@ -390,6 +383,6 @@ color="#000000">Wss10</font>&gt;<br />
 color="#000000">ExactlyOne</font>&gt;<br />
 &lt;/<font color="#000000">wsp</font>:<font
 color="#000000">Policy</font>&gt;<br />
-</font></p>
+</font></p>-->
 </body>
 </html>

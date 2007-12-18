@@ -10,19 +10,19 @@
 </head>
 
 <body lang="en-US" dir="ltr">
-<h1>WSO2 WSF/Ruby API</h1>
+<h1><a name="">WSO2 WSF/Ruby API</a></h1>
 
 <p>WSO2 Web Services Framework/Ruby is a Ruby extension that can be used to
 provide and consume Web services. This document covers the API of WSO2
 WSF/Ruby extension.</p>
 <a id="pre"></a>
 
-<h2><b>Predefined Classes</b></h2>
+<h2><a name="">Member Classes</a></h2>
 <a id="client"></a>
-<h2><b>WSClient</b></h2>
+<h2><a name="">WSClient</a></h2>
 <a id="construct"></a>
 
-<h3><b>Constructor</b></h3>
+<h2><a name="">Constructor</a></h2>
 <a id="pre_WSClient"></a>
 <ul>
   <li><p><b>WSClient(Hash options, String log_file_name)</b></p>
@@ -251,7 +251,7 @@ border="1">
 
 <a id="method"></a>
 
-<h3><b>Methods</b></h3>
+<h2><a name="">Methods</a></h2>
 <a id="pre_WSMessage"></a>
 <ul>
   <li><p><b>WSMessage WSClient.request(String message | REXMLDocument
@@ -356,10 +356,10 @@ border="1">
 
 <p>Throws WSFault on error.</p>
 
-<h3><b>Member Variables</b></h3>
+<h2><a name="">Member Variables</a></h2>
 None
 
-<h3><b>Example</b></h3>
+<h2><a name="">Example</a></h2>
 
 <pre>
     req_payload_string = &lt;&lt;<span style="color: brown;">XML</span>
@@ -380,10 +380,10 @@ None
 <p></p>
 <a id="service"></a>
 
-<h2><b>WSService</b></h2>
+<h2><a name="">WSService</h2>
 <a id="construct1"></a>
 
-<h3><b>Constructor</b></h3>
+<h2><a name="">Constructor</a></h2>
 <a id="service_WSService"></a>
 <ul>
   <li><p><b>WSService (Hash options)</b></p>
@@ -593,7 +593,7 @@ border="1">
 
 <a id="method1"></a>
 
-<h3><b>Methods</b></h3>
+<h2><a name="">Methods</a></h2>
 <a id="service_void_WSService"></a>
 <ul>
   <li><p><b>void WSService.reply()</b></p>
@@ -609,10 +609,10 @@ process the request, call the necessary methods and send a response back.</p>
 
 <p>Throws WSFault on error.</p>
 
-<h3><b>Member Variables</b></h3>
+<h2><a name="">Member Variables</a></h2>
 None <br>
 
-<h3><b>Example</b></h3>
+<h2><a name="">Example</a></h2>
 
 <pre>
     <span style="color: rgb(128, 128, 128); font-style: italic;"># Function that implements the business log</span>
@@ -632,13 +632,13 @@ None <br>
 
 <a id="message"></a>
 
-<h2><b>WSMessage</b></h2>
+<h2><a name="">WSMessage</a></h2>
 The WSMessage class represents a message passed between a client and a service.
 This class encapsulates the XML payload in various formats, the WS-Addressing
 action information related to the message, the MTOM attachment data, and other
 properties related to a message. <a id="construct3"></a>
 
-<h3><b>Constructor</b></h3>
+<h2><a name="">Constructor</a></h2>
 <a id="message_WSMessage"></a>
 <ul>
   <li><b>WSMessage (String str_payload, REXMLDocument rexml_payload, Hash properties)</b></li>
@@ -856,7 +856,7 @@ border="1">
 <p>None</p>
 <a id="WSMessage_Member_ariables"></a>-->
 
-<h3><b>Methods</b></h3>
+<h2><a name="">Methods</a></h2>
 <ul>
   <a id="WSMessage_payload_to_s"></a>
   <li><p><b>String WSMessage.payload_to_s</b></p>
@@ -902,7 +902,7 @@ will be present in the WSMessage object.</p>-->
 
 <p>An array of SOAP Header objects being sent or being received. </p>-->
 
-<h3><b>Example</b></h3>
+<h2><a name="">Example</a></h2>
 <pre>
     req_payload_string = &lt;&lt;<span style="color: brown;">XML</span>
         <span style="color: rgb(0, 75, 0);">&lt;ns1:echoString xmlns:ns1="http://ruby.wsf.wso2.net/samples"&gt;
@@ -926,10 +926,10 @@ will be present in the WSMessage object.</p>-->
 
 <a id="fault"></a>
 
-<h2><b>WSFault</b></h2>
+<h2><a name="">WSFault</a></h2>
 <a id="construct2"></a>
 
-<h3><b>Constructor</b></h3>
+<h2><a name="">Constructor</a></h2>
 <a id="fault_WSFault"></a>
 <ul>
   <li><p><b>WSFault(String code, String reason, String role, String detail, String xml)</b></p>
@@ -1039,7 +1039,7 @@ border="1">
 <br>-->
 <a id="member_variables"></a>
 
-<h3><b>Methods</b></h3>
+<h2><a name="">Methods</a></h2>
 <ul>
   <a id="WSFault_to_s"></a>
   <li><p><b>String to_s</b></p>

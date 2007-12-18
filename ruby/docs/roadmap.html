@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head>
+
+
+	<meta http-equiv="CONTENT-TYPE" content="text/html; charset=utf-8"><title>WSO2 WSF/Ruby Roadmap</title>
+	
+	<meta name="GENERATOR" content="OpenOffice.org 2.0  (Linux)">
+	<meta name="CREATED" content="20071102;10050300">
+	<meta name="CHANGED" content="20071102;16330600">
+	<link href="roadmap_files/wsf-docs-header.css" rel="stylesheet" type="text/css" media="all"></head><body dir="ltr" lang="en-US">
+<div id="header">
+</div>
+<div id="main-content">
+<h1>WSO2 Web Services Framework for Ruby Roadmap</h1>
+<div id="main" dir="ltr">
+	<p>WSO2 WSF/Ruby delivers a comprehensive Web services stack to
+	users, providing the luxury of most of the WS-* support in Ruby Web services .
+	This Web services framework could be used to provide and
+	consume Web services with value added Quality of Services  (QoS)
+	support. Currently we support the following specifications:</p>
+	<ul>
+		<li><p>SOAP 1.1</p>
+		</li><li><p>SOAP 1.2</p>
+		<!--</li><li><p>WSDL 1.1</p>
+		</li><li><p>WSDL 2.0</p>-->
+		</li><li><p>MTOM</p>
+		</li><li><p>WS-Addressing</p>
+		</li><li><p>WS-SecurityPolicy</p>
+		</li><li><p>WS-Security</p>
+		</li><li><p>WS-ReliableMessaging</p>
+	</li></ul>
+	<p>WSO2 WSF/Ruby distinguishes itself being <b>the first and the only</b> Web Services Framework in Ruby 
+	to support this stack of WS specifications.</p>
+
+	<p>The support of WS-Security along with MTOM and WS-Addressing
+	ensures that developers seeking to build business-critical
+	applications could leverage WSO2 WSF/Ruby for their enterprise
+	applications. Given that the WSO2 WSF/Ruby implementation
+	interoperates with Microsoft WCF and J2EE implementations such as 
+	WSO2 WSAS, further highlights its use in enterprise SOA
+	implementations.  
+	</p>
+	<p>In the coming months we will continue to collaborate with the
+	community, enhance the current set of features and improve
+	interoperability. Following are some areas that we plan to work on
+	in the next few months: 
+	</p>
+	
+	<h3>Add support for WSDL mode (contract first mode)</h3>
+	<p>This would have support for WSDL 1.1 and WSDL 2.0 and this would be powered up with 
+	the WSDL mode that is going to be implemented in WSO2 WSF/C.</p>
+
+	<h3>Add support for WSDL generation (code first mode)</h3>
+	<p>This would have support for complex types as well.</p>
+
+	<h3>Continue to enhance interoperability with Microsoft WCF and J2EE
+	implementations</h3>
+	<p>We believe that it is critical to inter-operate, getting WSO2 WSF/Ruby
+	clients as well as WSO2 WSF/Ruby based services working with heterogeneous
+	implementations. Interoperability testing is done not only at basic
+	SOAP and WSDL levels, but also at QoS specification implementations
+	such as binary attachments, WS-Security signing and encryption,
+	WS-Addressing scenarios and WS-ReliableMessaging scenarios.</p>
+	<!--<p>We have participated in the following interoperability events:</p>
+	<ul>
+		<li><p><font size="3">Microsoft WCF Web Services Interoperability
+		Plug-Fest – March 2006</font></p>
+		</li><li><p><font size="3">Microsoft WCF Web Services Interoperability
+		Plug-Fest – November 2006</font></p>
+		</li><li><p><font size="3">Microsoft WCF Web Services Interoperability
+		Plug-Fest – July 2007</font></p>
+	</li></ul>
+	<p>WS-Security, MTOM and WS-Addressing were successfully tested and
+	issues were fixed at the above inter-op plug-fest events.</p>
+	<p><br><br>
+	</p>
+	<p>We will be participating in the following upcoming
+	interoperability events.</p>
+	<ul>
+		<li value="1"><p><font size="3">Microsoft WCF Web Services
+		Interoperability Plug-Fest – November 2007</font></p>
+	</li></ul>
+	<p>The interoperability events also set the stage to test with other
+	J2EE implementations in addition to Microsoft WCF.</p>
+	<p>  
+	</p>
+	<h3>Improve WSDL mode support</h3>
+	<p>We have been continuously improving our WSDL support where we are
+	able to handle both WSDL 1.1 and WSDL 2.0. We came up with a new
+	design for WSDL mode last month and have successfully implemented
+	and tested that design for the client side. We would continue to
+	implement the new WSDL mode design for the server side as well. This
+	new design has enhanced support to handle complex XML schema types
+	and WS-Policy elements in WSDL. Once the current phase of
+	implementation, which is done using XSLT and PHP, is complete, we
+	would implement the same design in C to enhance performance. 
+	</p>
+	<h3>Improve WSDL generation</h3>
+	<p>WSDL generation does not support complex types as of now. However
+	we plan on including this by  Q1 of 2008. 
+	</p>-->
+	<!--<h3>Integrate PECL installation 
+	</h3>
+	<p>WSO2 WSF/PHP will be made available as a PECL install package, to
+	enhance the user experience with installation and setup. We expect
+	we would be able to reach much wider audience with PECL install
+	support. This feature will be available in the next release expected
+	in December 2007. 
+	</p>-->
+	<h3>Provide easy to use classes for common services</h3>
+	<p>WSO2 WSF/Ruby will implement some easy to use Ruby classes to
+	consume services such as Yahoo search and Flickr SOAP services. This
+	will yield better user experience when consuming those services with
+	WSO2 WSF/Ruby.</p>
+	<h3>Provide solutions based on WSO2 WSF/Ruby</h3>
+	<p>Going beyond the current set of simple services and clients that
+	are available as samples with WSO2 WSF/Ruby, we will implement some
+	enterprise grade samples for the benefit of users who want to
+	explore how to use the WSO2 WSF/Ruby features in an enterprise setup. 
+	This is expected to grab most user attraction in the time to come.
+	This will let the user experiance the true power of WSO2 WSF/Ruby with some practical scenarios. 
+	</p>
+	<h3>WS-* support 
+	</h3>
+	<p>We will be continuously adding to the number of WS-*
+	specifications supported, based on the implementations available
+	with WSO2 WSF/C.</p>
+	<h4>Integrate WS-Eventing support</h4>
+	<p>WS-Eventing is supported by WSO2 WSF/C. This will be integrated
+	with WSO2 WSF/Ruby.</p>
+	<h3>Provide support for different Deployment Models</h3>
+	<p>Currently WSO2 WSF/Ruby uses Rails Framework as its deployment model. In the future there 
+	will be support for other main stream deployment models as well.</P>
+</div>
+</div>
+<!--Google Analytics Tracking code-->
+<script type="text/javascript" src="roadmap_files/urchin.js">
+</script>
+<script type="text/javascript">
+  _uacct = "UA-103065-6"; 
+  _udn="wso2.org"; 
+ urchinTracker();</script>
+<!--End of Google Analytics Tracking code-->
+</body></html>
