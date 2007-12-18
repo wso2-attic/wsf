@@ -51,6 +51,8 @@ rem @call clean.bat
 
 @if exist COPYING copy /Y COPYING wso2-wsf-php-bin-1.2.0-win32
 
+@if exist ChangeLog copy /Y ChangeLog wso2-wsf-php-bin-1.2.0-win32
+
 @cd src
 
 @nmake /nologo -f build.mk dist
