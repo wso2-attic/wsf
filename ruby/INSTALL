@@ -34,5 +34,4 @@ to run build.sh
 
 Windows
 -------
-1. Run "vcvars32.bat" to set environment variables for Visual Studio.
-2. Run "build.bat" to setup the extension. 
+Please refer to the INSTALL_WIN32 file for a guide on installation in windows.

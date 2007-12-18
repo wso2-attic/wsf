@@ -50,14 +50,11 @@ INSTALLATION USING SOURCE
 -------------------------
 Linux
 ----- 
-1. Run "sh build.sh" to setup the extension. You may require super user privileges
-to run build.sh
+Please refer to the INSTALL file for a guide on installation in Linux.
 
 Windows
 -------
-1. Run "vcvars32.bat" to set environment variables for Visual Studio.
-2. Run "build.bat" to setup the extension. 
-
+Please refer to the INSTALL_WIN32 file for a guide on installation in windows.
 
 RUN SAMPLES
 -----------
