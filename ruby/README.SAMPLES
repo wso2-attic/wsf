@@ -197,7 +197,8 @@ yahoo.rb -
 
 Rails Samples
 -------------
-  Refer to samples/rails/flickr/README to run the flickr client
+  Refer to samples/rails/flickr/README to run the flickr client in rails 1.* and
+  samples/rails/flickr_rails2/README to run in rails 2.0.0 or above
 
 
 Provider
