@@ -1,4 +1,5 @@
 WSO2 WSF/PHP 1.2.0
+======================
 * WSDL mode support reimplemented using xslt based wsdl parser for both
 client and server side.
 * Support for exposing class methods as operations added.
