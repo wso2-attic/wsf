@@ -4,14 +4,14 @@ If you need any help with building or installation , send a
 mail to wsf-ruby-user@lists.wso2.org
 ===========================================================
 Contents:
-1. How to build WSF/Ruby under Windows from source
+1. How to build WSF/Ruby under Windows from binaries
     a. Requirements
 2. Installing WSF/Ruby extension as a Ruby extension.
 3. Binary dependency version numbers.
 
 ===========================================================
 
-1. How to build WSF/Ruby under Windows from source
+1. How to build WSF/Ruby under Windows from binaries
 
     a. Requirements
 
@@ -40,7 +40,6 @@ Contents:
 2. Installing WSO2 WSF as a Ruby extension.
 
     Now you should have the wso2-wsf-ruby binary pack with following structure.
-    ( you can get the binary from the .zip binary pack or building from the source )
 
     wso2-wsf-ruby-bin-1.1.0-win32
                 |  
