@@ -20,7 +20,7 @@ Contents:
 	You need to download following dependency libraries:
 
 	libxml2 binary distribution   
-        iconv binary distribution
+    iconv binary distribution
 	OpenSSL binary distribution
 	PHP Source
 	PHP Binary
@@ -47,17 +47,17 @@ Contents:
        is packaged with WSF/C code. When you download the wso2-wsf-php-src.zip file, it will contain
        following dirctory structure.
 	
-       wso2-wsf-php-src
-         |
-         +--- src
-	 |
-	 +--- wsf_c
-	 |
-	 +--- docs
-	 |
-	 +--- samples
-	 |
-	 +--- scripts
+   wso2-wsf-php-src
+        |
+        +--- src
+	    |
+	    +--- wsf_c
+	    |
+	    +--- docs
+	    |
+	    +--- samples
+	    |
+	    +--- scripts
          
        In the wso2-wsf-php-src directory you will find a file named configure.in file. Open this file
        and set your dependency directory locations to relevent entries. You can build with debug symbol
@@ -67,7 +67,7 @@ Contents:
        to the same directory.
 
        ( Before running the build.bat file, add your vcvars32.bat file location to PATH environment variable. 
-	If you are using vc2005, it is located in C:\Program Files\Microsoft Visual Studio 8\VC\bin)
+	    If you are using vc2005, it is located in C:\Program Files\Microsoft Visual Studio 8\VC\bin)
 
      c. Building using PHP win32 build system
  
@@ -97,62 +97,66 @@ Contents:
 
 2. Installing WSO2 WSF as a PHP extension.
 
-    Now you should have the wso2-wsf-php binary pack with following structure.
-    ( you can get the binary from the .zip binary pack or building from the source )
+    1.If you built the extension from the source, you will find the wso2-wsf-php-bin-1.2.0-win32 (binary pack) 
+      located in your source directory.
+      
+        You can get the binary pack by downloading and extracting the binary distribution as well. 
 
-    wso2-wsf-php-bin-xyz-win32
-                |  
-	    	+-- wsf_c
-                |
-                +-- wsf.dll
-	        |
-                +-- samples
-                |
-		+-- scripts
-                      
+        It will have the following structure
 
-    1. Copy wsf.dll to <PHP installation directory>/ext directory.
+        wso2-wsf-php-bin-1.2.0-win32
+               |
+               +-- wsf_c
+               |
+               +-- wsf.dll
+               |
+               +-- docs
+               |
+               +-- scripts
+               |
+               +-- samples 
+
+    2. Copy wsf.dll to the <PHP installation directory>/ext directory.
+
+    3. Add wso2-wsf-php-bin-1.2.0-win32\wsf_c\lib directory to the PATH environment variable.
+
+    4. Add the above listed dependency library dlls to the PATH environment variable.
+
+    5. Add the following entries to your php.ini file which is in your PHP installation location.
     
-    2. Add wsf_c\lib directory to PATH environment variable.
+    [wsf]
+    wsf.home="<path_to_extract_folder>\wsf_c"
+    wsf.log_path="<path to extract_folder>\wsf_c\logs"
+    wsf.log_level=3
 
-    3. Add the following entries to your php.ini file which is in your PHP 
-       installation location.
-       [wsf]
-       wsf.home="<path_to_extract_folder>\wsf_c"                       
-       wsf.log_path="<path_to_extract_folder>\wsf_c\logs"
-       wsf.rm_db_dir="<path_to_extract_folder>\wsf_c>"
-       wsf.log_level = 3
-       extension=wsf.dll
+    extension=wsf.dll
 
-       set extension_dir entry to point to you php extensions location.
-       extension_dir="./ext"
+    Set entension_dir entry to your extensions directory.
 
-       Also enable php xsl extension.
-       extension="php_xsl.dll"
+    extension_dir ="./ext"
 
-       Uncomment the "include_path" and edit it to point to the location for scripts folder as
+    Also enable php_xsl extension
 
-       include_path = ".;/path/to/scripts/folder"
+    extension = php_xsl.dll
 
-       [Note] Log level is by default set to INFO. Log levels range from 0 to 4. Log levels are as follows.
-	      CRITICAL->  0 , ERROR -> 1 , WARNING -> 2 , INFO -> 3, DEBUG -> 4
-     
-    4. Configure the Apache2 Web server with PHP as follows.
-       
-       Copy php5apache2.dll to Apache2/modules directory (If your Apache2 service is of Apache 2.2.X family, use
-	php5apache2_2.dll) .
+    Uncomment the include_path and edit it to point to the location for scripts folder as
 
-       Add following entries in httpd.conf file.
+    include_path = ".;/path/to/scripts/folder"
 
-       LoadModule php5_module modules/php5apache2.dll
-       
-       PHPIniDir <your php.ini file location>
-       
-       AddType application/x-httpd-php .php .phtml
-       AddType application/x-httpd-php-source .phps
+    6. Configure the Apache2 Web server with PHP as follows.
 
-       Now you should be able to run the samples in samples directory. 
-                         		 	
+        6.1. Copy php5apache2.dll to Apache2/modules directory and add the following entries in httpd.conf file.
+
+            LoadModule php5_module modules/php5apache2.dll
+            PHPIniDir "< your php.ini file location> "
+
+            AddType application/x-httpd-php .php .phtml
+            AddType application/x-httpd-php-source .phps
+
+    7. Copy the samples folder to your Apache Web server's document root. If you want to run samples
+
+    Now you should be able to run the samples in the samples directory.
+
 3. Binary Dependency version numbers.
 
   WSO2-WSF-PHP-1.2.0 Win32 Binary Will be compiled using following version of dependency libraries.
