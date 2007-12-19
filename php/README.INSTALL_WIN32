@@ -111,7 +111,7 @@ Contents:
 		+-- scripts
                       
 
-    1. Copy wsf.dll to PHP installation directory.
+    1. Copy wsf.dll to <PHP installation directory>/ext directory.
     
     2. Add wsf_c\lib directory to PATH environment variable.
 
@@ -124,7 +124,7 @@ Contents:
        wsf.log_level = 3
        extension=wsf.dll
 
-       set extension_dir entry to point to you php extensions location. This is <PHP Binary Directory>/ext.
+       set extension_dir entry to point to you php extensions location.
        extension_dir="./ext"
 
        Also enable php xsl extension.
