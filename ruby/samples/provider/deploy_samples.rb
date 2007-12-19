@@ -36,7 +36,12 @@ if FileTest.directory?(destination)
     FileUtils.copy_file("mtom/mtom_upload_service_controller.rb", destination + "/mtom_upload_service_controller.rb");
     FileUtils.cp_r("mtom/resources", rails_app_name);
 
-    FileUtils.copy_file("security/security_controller.rb", destination + "/security_controller.rb");
+    FileUtils.copy_file("security/callback_controller.rb", destination + "/callback_controller.rb");
+    FileUtils.copy_file("security/complete_controller.rb", destination + "/complete_controller.rb");
+    FileUtils.copy_file("security/encryption_controller.rb", destination + "/encryption_controller.rb");
+    FileUtils.copy_file("security/signing_controller.rb", destination + "/signing_controller.rb");
+    FileUtils.copy_file("security/timestamp_controller.rb", destination + "/timestamp_controller.rb");
+    FileUtils.copy_file("security/username_token_controller.rb", destination + "/username_token_controller.rb");
     FileUtils.cp_r("security/policies", destination);
     FileUtils.cp_r("security/keys", destination);
 
