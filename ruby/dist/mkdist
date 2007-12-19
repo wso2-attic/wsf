@@ -14,9 +14,6 @@ function sync_content
 	rsync ../../extconf.rb .
 	echo "synchronizing extconf.rb ... done"
 
-	rsync ../../extconf-win32.rb .
-	echo "synchronizing extconf-win32.rb ... done"
-
 	# Generate WSFC Wrapper
 	swig -ruby -I../../swig/ -o WSFC_wrapper.c -outdir ./ -Wall WSFC.i
 	echo "synchronizing WSFC_wrapper.c ... done"
