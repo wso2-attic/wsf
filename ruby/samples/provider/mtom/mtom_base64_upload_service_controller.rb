@@ -11,7 +11,7 @@ def uploadFunction(in_msg)
 	if !image_node.nil? then
 	  puts "Base64 content = " + image_node.text
 
-	  file_name = "/tmp/base64imagecontent.txt"
+	  file_name = "base64imagecontent.txt"
 
 	  f = File.new(file_name, "w")
 	  f.write(image_node.text)
