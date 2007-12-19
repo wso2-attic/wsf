@@ -69,11 +69,11 @@ cd wsservice
 
 cd ..
 
-@cd sqlite-3_3_81
+@if exist sqlite-3_3_81 cd sqlite-3_3_81
 
 @if exist sqlite3.dll copy /Y sqlite3.dll ..\wso2-wsf-ruby-bin-1.0.0-win32\wsf_c\lib
 
 @if exist sqlite3.exe copy /Y sqlite3.exe ..\wso2-wsf-ruby-bin-1.0.0-win32\wsf_c\lib
 
-@cd ..
+@if exist sqlite3.exe cd ..
 
