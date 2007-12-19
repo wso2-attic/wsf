@@ -1,4 +1,4 @@
 SUBDIRS= wsf_c src
-EXTRA_DIST=build.bat clean.bat configure.in wsf_c_build.bat LICENSE NOTICE README.INSTALL README.INSTALL_WIN32 README.SSL_CLIENT
+EXTRA_DIST=build.bat clean.bat configure.in wsf_c_build.bat LICENSE NOTICE README.INSTALL README.INSTALL_WIN32 
 
 
