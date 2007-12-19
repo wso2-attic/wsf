@@ -1,9 +1,9 @@
 Summary: WSO2 WSF/PHP
 Name: wso2-wsf-php
 Vendor: WSO2 Inc.
-Version:1.1.0
+Version:1.2.0
 Release: 1
-Source: wso2-wsf-php-1.1.0.tar.gz
+Source: wso2-wsf-php-1.2.0.tar.gz
 License: Apache License V2.0
 Group: Development/Tools
 %description
@@ -29,7 +29,9 @@ echo "wsf.home=\"/usr/lib/php/modules/wsf_c\"" >> /etc/php.ini
 echo "wsf.log_path=\"/tmp\"" >> /etc/php.ini
 echo "wsf.rm_db_dir=\"/tmp\"" >> /etc/php.ini
 
-echo "Copy scripts and samples folders in /usr/lib/php/modules/wsf_php to your Web Root"
+echo "Copy samples folders in /usr/lib/php/modules/wsf_php to your Web Root"
+echo "Edit php.ini file located in /etc/php.ini and set your php.ini entry include_path to point to /usr/lib/php/modules/wsf_php/scripts directory"
+echo "eg. include_path = \".:/usr/lib/php/modules/wsf_php/scripts\" "
 
 %files
 %defattr(-,root,root)
