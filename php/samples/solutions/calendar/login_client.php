@@ -1,48 +1,9 @@
 <?php
 session_start();
+ob_start();
 $userID = $_POST["userID"];
 $password = $_POST["mypassword"];
 $result = $_POST["Submit"];
-?>
-
-<html>
-<head></head>
-<body>
-<table width="300" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#CCCCCC">
-<tr>
-<form name="form1" method="post" action="#">
-<td>
-<table width="100%" border="0" cellpadding="3" cellspacing="1" bgcolor="#FFFFFF">
-<tr>
-<td colspan="3"><strong>Member Login </strong></td>
-</tr>
-<tr>
-<td width="78">UserID</td>
-<td width="6">:</td>
-<td width="294"><input name="userID" type="text" id="userID"></td>
-</tr>
-<tr>
-<td>Password</td>
-<td>:</td>
-<td><input name="mypassword" type="password" id="mypassword"></td>
-</tr>
-<tr>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td><input type="submit" name="Submit" value="Login"></td>
-</tr>
-<tr>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td><a href="register_client.php">Register now</a></td>
-</tr>     
-</table> 
-</form>  
-</body> 
-</html>
-
-
-<?php
 
 /*Get the values entered by the form and send them to the service to check whether the user name and password are correct.*/
 
@@ -104,6 +65,45 @@ XML;
 
 
 }
+ ob_end_flush();
+?>
+
+<html>
+<head></head>
+<body>
+<table width="300" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#CCCCCC">
+<tr>
+<form name="form1" method="post" action="#">
+<td>
+<table width="100%" border="0" cellpadding="3" cellspacing="1" bgcolor="#FFFFFF">
+<tr>
+<td colspan="3"><strong>Member Login </strong></td>
+</tr>
+<tr>
+<td width="78">UserID</td>
+<td width="6">:</td>
+<td width="294"><input name="userID" type="text" id="userID"></td>
+</tr>
+<tr>
+<td>Password</td>
+<td>:</td>
+<td><input name="mypassword" type="password" id="mypassword"></td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td><input type="submit" name="Submit" value="Login"></td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td><a href="register_client.php">Register now</a></td>
+</tr>
+</table>
+</form>
+</body>
+</html>
+
 
 
 
