@@ -21,17 +21,15 @@ set -e
 case "$1" in
     configure)
 
-    echo ";[wsf]" >> /etc/php5/apache2/php.ini
-    echo "extension=wsf.so" >> /etc/php5/apache2/php.ini
-    echo "wsf.home=\"/usr/lib/php5/20060613+lfs/wsf_c\"" >> /etc/php5/apache2/php.ini
-    echo "wsf.log_path=\"/tmp\"" >> /etc/php5/apache2/php.ini
-    echo "wsf.rm_db_dir=\"/tmp\"" >> /etc/php5/apache2/php.ini
+    echo ";[wsf]" >> /usr/local/Zend/Core/etc/php.ini
+    echo "extension=wsf.so" >> /usr/local/Zend/Core/etc/php.ini
+    echo "wsf.home=\"/usr/local/Zend/Core/lib/php/20060613/wsf_c\"" >> /usr/local/Zend/Core/etc/php.ini
+    echo "wsf.log_path=\"/tmp\"" >> /usr/local/Zend/Core/etc/php.ini
+    echo "wsf.rm_db_dir=\"/tmp\"" >> /usr/local/Zend/Core/etc/php.ini
     
-    echo "Copy scripts and samples folders in /usr/lib/php5/20060613+lfs/wsf_php to your Web Root"
-    echo "Copy sample directory in /usr/lib/php5/20060613+lfs/wsf_php  to your Web Root"
-    echo "Set include_path in php.ini to scripts directory in /usr/lib/php5/20060613+lfs/wsf_php"
+    echo "Copy sample directory in /usr/local/Zend/Core/lib/php/20060613/wsf_php to your Web Root"
+    echo "Set include_path in php.ini to scripts directory in /usr/local/Zend/Core/lib/php/20060613/wsf_php"
     echo "Enable xsl extension"
-
     ;;
     abort-upgrade|abort-remove|abort-deconfigure)
     ;;
