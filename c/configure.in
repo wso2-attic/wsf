@@ -33,7 +33,6 @@ ENABLE_LIBCURL = 0
 # Enable/disable SSL client transport, to enable set ENABLE_SSL = 1
 ENABLE_SSL = 0
 # Path to OpenSSL installation, required if SSL transport is enabled
-#OPENSSL_BIN_DIR = D:\OpenSSL
 
 # Enable/disable Guththila parser, to enable set ENABLE_GUTHTHILA = 1
 ENABLE_GUTHTHILA = 0
