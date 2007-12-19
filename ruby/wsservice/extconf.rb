@@ -30,7 +30,9 @@ have_library('axis2_http_common')
 have_library('axis2_http_sender')
 have_library('axis2_http_receiver')
 have_library('axis2_engine')
-
+have_library('neethi')
+have_library('neethi_util')
+have_library('mod_rampart')
 
 
 create_makefile("wsservice")
