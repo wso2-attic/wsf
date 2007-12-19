@@ -24,7 +24,7 @@ XML
 begin
    LOG_FILE = "security_sample.log"
    ACTION = "http://php.axis2.org/samples/echoString"
-   END_POINT="http://localhost:3000/security/timestamp"
+   END_POINT="http://localhost:3000/timestamp/timestamp"
 
    message_properties = {"to" => END_POINT,
                          "action" => ACTION}

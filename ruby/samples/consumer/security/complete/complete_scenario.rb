@@ -40,7 +40,7 @@ end
 begin
    LOG_FILE = "complete_security_sample.log"
    ACTION = "http://php.axis2.org/samples/echoString"
-   END_POINT = "http://localhost:3000/security/complete"
+   END_POINT = "http://localhost:3000/complete/complete"
 
    message_properties = {"to" => END_POINT,
                          "action" => ACTION}
