@@ -35,6 +35,8 @@ directory structure after copying the Echo sample
 
 You can get the above steps done for all the provider samples by running following command from this directory.
         ruby deploy_samples.rb your_rails_application
+Then you will have a rails application created in a directory called 'your_rails_application' relative to the
+currrent directory.
 
 6. Then run the ./script/server from the root directory of your rails application to run the server. Then
 the services will be deployed automatically.
