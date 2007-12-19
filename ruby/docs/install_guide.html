@@ -4,13 +4,13 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-  <title>WSO2 WSF Installation Guide</title>
+  <title>WSO2 WSF/Ruby Installation Guide</title>
   <link href="style/api_style.css" rel="stylesheet" type="text/css"
   media="all" />
 </head>
 
 <body xml:lang="en">
-<h1>WSO2 WSF/Ruby Installation Guide</h1>
+<h1><a name="">WSO2 WSF/Ruby Installation Guide</a></h1>
 
 <p>This document guides you on how to install the WSO2 Web Services
 Framework/Ruby extension, and run the server and client samples on Linux and
@@ -18,10 +18,10 @@ Microsoft Windows operating systems.</p>
 
 <p>Please send your feedback to the user mailing list: <a
 href="mailto:wsf-ruby-user@wso2.org">wsf-ruby-user@wso2.org</a>. Kindly see <a
-href="mailto:wsf-ruby-user-request@lists.wso2.net?subject=subscribe">Home
+href="http://wso2.org/projects/wsf/ruby">Home
 page</a> for subscription.</p>
 
-<h2>Contents</h2>
+<h2><a name="">Contents</a></h2>
 <ul>
   <li><a href="#Common Installation Instructions">Common Installation
     Instructions</a></li>
@@ -47,7 +47,7 @@ page</a> for subscription.</p>
 </ul>
 <a id="Common Installation Instructions"></a>
 
-<h2>Common Installation Instructions</h2>
+<h2><a name="">Common Installation Instructions</a></h2>
 
 <p>To get the distributions working, you need the following installed in your
 system.</p>
@@ -66,15 +66,15 @@ system.</p>
     have zlib and iconv by default.). </li>
 
     <li>OpenSSL <a href="http://www.openssl.org/" >Download</a></li>
-    <li>Sqlite or Mysql (needed for reliable messaging) <a href="http://www.sqlite.org/download.html" >Download Sqlite</a>, <a href="http://dev.mysql.com/downloads/" >Download Mysql</a>
+    <li>SQLite or MySQL (needed for reliable messaging) <a href="http://www.sqlite.org/download.html" >Download SQLite</a>, <a href="http://dev.mysql.com/downloads/" >Download MySQL</a>
 </ul>
 
 <a id="Pre-Installation Configurations"></a>
 
-<h2>Pre-Installation Configurations</h2>
+<h2<a name="">Pre-Installation Configurations</a></h2>
 
 <p>
-Before Install WSO2 WSF/RUBY, following configuration entries have to be added
+Before Install WSO2 WSF/Ruby, following configuration entries have to be added
 to the 'rbconfig.rb' that shift with ruby package.
 (under windows use '/' to seperate directories. e.g. "E:/install/wsfc")
 </p>
@@ -101,22 +101,30 @@ NOTE : run "ruby find_rbconfig.rb" in a console to find where this file is.
 
 <a id="1.Installing and Running on Linux"></a>
 
-<h2>1. Installing and Running on Linux</h2>
+<h2><a name="">Installing and Running on Linux</a></h2>
 <p>
-Run "sudo sh build.sh" to setup the extension.
+Run "sh build.sh" to setup the extension. You may require super user privileges to run this.
 </p>
 <a id="2.Installing and Running on Microsoft Windows (win32)"></a>
 
-<h2>2. Installing and Running on Microsoft Windows (win32)</h2>
+<h2><a name="">Installing and Running on Microsoft Windows (win32)</a></h2>
 <a id="Build Ruby on Windows"></a>
 
-<h3>Build Ruby on MS Windows</h3>
+<p>Please refer to the INSTALL file.</p>
+
+<!--<h2><a name="">2.1. Binary Distribution</a></h2>
 
 <p>Please refer to the README file in the win32 directory of the Ruby 
 source distribution. (If you are in windows please refer to the README
 in the win32 directory in the source)</p>
 
-<a id="Build WSO2 WSF for C on Windows from Source"></a>
+<h2><a name="">2.2. Source Distribution</a></h2>
+
+<p>Please refer to the README file in the win32 directory of the Ruby 
+source distribution. (If you are in windows please refer to the README
+in the win32 directory in the source)</p>-->
+
+<!--<a id="Build WSO2 WSF for C on Windows from Source"></a>
 
 <h3>Build WSO2 WSF/C on MS Windows from Source</h3>
 <a id="Requirements"></a>
@@ -148,7 +156,7 @@ WSFC_HOME/lib directory
 </p>
 
 <p>4. Once you have done it, run build.bat file in the wsf/ruby extension from the
-source directory. This will build the binary distribution.</p>
+source directory. This will build the binary distribution.</p>-->
 
 </body>
 </html>

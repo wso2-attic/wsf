@@ -283,7 +283,7 @@ href="samples/hello_service.html">hello_service_controller.rb</a></p>
 <p>In order to make the service available to be consumed by clients, we have
 to deploy the service. Before the deployment you should make sure the WSService 
 is called inside a function in your controller. So if you are deploying rails with
-WEBRick or Mongreal servers, you just need to run the server (Running ./script/server
+<a href="http://www.webrick.org/">WEBRick</a> or <a href="http://mongrel.rubyforge.org/">Mongrel</a> servers, you just need to run the server (Running ./script/server
 from the application root directory), and the services will be automatically deployed.
 </p>
 
@@ -293,7 +293,7 @@ Web server and then browse for the service script using a Web browser. For
 our sample, assuming the default values for the Web server, you can test the
 service with <a  
 href="http://localhost/hello_service/greet">http://localhost/hello_service/greet</a>.
-Here the hellow_services the name of the controller and the greet is a function inside
+Here the hello_services the name of the controller and the greet is a function inside
 the controller where you create the WSService object.
 You should get an entry for the hello_service/greet on the page that you
 get.</p>  
@@ -384,7 +384,7 @@ format for each operation of the services that you intend to provide. For
 each operation in a service, once those payload formats are defined, you have
 to implement the functions that process the incoming request and generate the 
 response message corresponding to each operation. When invoking a function
-mapped to a service operation, WSO2 WSF passes a WSMessage object instance to
+mapped to a service operation, WSO2 WSF/Ruby passes a WSMessage object instance to
 that function and expects that function to return a WSMessage object
 instance.
 <br>
