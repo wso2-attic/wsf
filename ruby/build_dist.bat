@@ -41,7 +41,7 @@ rem @if exist xcopy /Y /I /Q /E scripts wso2-wsf-ruby-bin-1.0.0-win32\scripts
 
 @if exist NOTICE copy /Y NOTICE wso2-wsf-ruby-bin-1.0.0-win32
 
-@if exist INSTALL_WIN32 copy /Y INSTALL_WIN32 wso2-wsf-ruby-bin-1.0.0-win32
+@if exist INSTALL copy /Y INSTALL wso2-wsf-ruby-bin-1.0.0-win32
 
 @if exist README.SAMPLES copy /Y README.SAMPLES wso2-wsf-ruby-bin-1.0.0-win32
 
