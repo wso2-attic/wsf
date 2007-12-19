@@ -11,9 +11,11 @@ INTRODUCTION
 ------------
 - WSF/Ruby is the Ruby language extension to WSO2 WSF/C
   [http://www.wso2.org/projects/wsf/c]. This version enables you to 
-  consume/provide Web Services both with rest and with the power of
+  consume/provide Web Services both with REST and with the power of
   WS-* stack including WS-Reliable Messaging, WS-Security, WS-Addressing
-  and MTOM Attachments. (See below for the complete Features list) 
+  and MTOM Attachments. WSF/Ruby distinguishes itself being the first and 
+  the only Web Services Framework in Ruby to support this stack of 
+  WS specifications. (See below for the complete Features list) 
 
 
 PREREQUISITES
@@ -35,7 +37,7 @@ CONFIGURATION
   CONFIG["WSF_LOG_LEVEL"] = "3"
     
 	Valid Log Levels - 
-	      "0" - CRITICAL
+      	          "0" - CRITICAL
 		  "1" - ERROR
 		  "2" - WARNING
 		  "3" - INFO
@@ -48,13 +50,7 @@ CONFIGURATION
 
 INSTALLATION USING SOURCE
 -------------------------
-Linux
------ 
-Please refer to the INSTALL file for a guide on installation in Linux.
-
-Windows
--------
-Please refer to the INSTALL_WIN32 file for a guide on installation in windows.
+Please refer to the INSTALL file for a guide on installation.
 
 RUN SAMPLES
 -----------

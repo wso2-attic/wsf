@@ -1,10 +1,10 @@
-Installing WSO2 WSF/RUBY
-=======================
+Installing WSO2 WSF/Ruby
+========================
 
 PREINSTALL CONFIGURATIONS
 -------------------------
 
-- Before Install WSO2 WSF/RUBY, following configuration entries have to be added
+- Before Install WSO2 WSF/Ruby, following configuration entries have to be added
   to the 'rbconfig.rb' that shift with ruby package.
   (under windows use '/' to seperate directories. e.g. "E:/install/wsfc")
   
@@ -27,10 +27,104 @@ INSTALLATION
 
 Linux
 ----- 
-1. Run "sh build.sh" to setup the extension.  You may require super user privileges
-to run build.sh
+1. Run "sh build.sh" to setup the extension.  You may require super user 
+   privileges to run build.sh
 
 Windows
 -------
-1. Run vcvars32.bat.
-2. Run build.bat.
+Source Distribution
+-------------------
+1. Comment the following 3 lines at the top of config.h file. 
+ 
+   #if _MSC_VER != 1200
+   #error MSC version unmatch
+   #endif
+
+   NOTE : run "ruby find_config_h.rb" in a console to find where this file is.
+
+2. If you have the Visual Studio command prompt installed on your computer, 
+   open it and go to the WSO2 WSF/Ruby source directory.
+
+3. If you don't have the Visual Studio command prompt installed 
+   on your computer, create a new shortcut and set target to:
+   %comspec% /k "C:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\bin\vcvars32.bat"
+
+4. Make sure the WSFC_HOME/lib directory is added to the PATH environment variable.
+
+5. Run build.bat file in the WSO2 WSF/Ruby source directory.
+
+
+Binary Distribution
+-------------------
+1. How to setup WSF/Ruby on Windows
+
+    a. Requirements
+
+    You need to download following dependency libraries:
+
+    libxml2 binary distribution   
+    iconv binary distribution
+    OpenSSL binary distribution
+    Ruby Binary (One click installer is prefereble)
+    Mysql Server 5 [When using Reliable Messaging With MySql Database ]
+
+    In addition you need to have visual studio installed on your system.
+    
+    obtain libxml2 and iconv win32 binaries from [1].
+    obtain OpenSSL binary from [2] [the build system assumes that you install openssl from msi].
+    obtain MySql Server from [3].
+    obtain Ruby Bianry from [4].
+
+    [1] http://www.zlatkovic.com/pub/libxml/
+    [2] http://www.slproweb.com/products/Win32OpenSSL.html
+    [3] http://dev.mysql.com/downloads/
+    [4] http://www.ruby-lang.org/en/downloads/
+        
+2. Installing Ruby extension.
+
+    You should have the wso2-wsf-ruby binary pack with following structure.
+
+    wso2-wsf-ruby-bin-1.0.0-win32
+                |  
+                +-- wsf_c
+                |
+                +-- doc
+                |
+                +-- samples
+                |
+                +-- lib
+     
+    1. Include <wso2-wsf-ruby-binary>/wsf_c/lib to windows PATH variable. 
+
+    2. Execute install.rb file. (run "ruby install.rb" without quotes)
+    
+    3. Add wsf_c\lib directory to PATH environment variable.
+
+    4. Add the following entries to your rbconfig.rb file which is in your ruby installation location.
+
+       (use '/' to seperate directories. e.g. "E:/install/wsfc")
+  
+          CONFIG["WSFC_HOME"] = "/your/wsfc/home/"
+          CONFIG["WSF_LOG_DIR"] = "/where/the/log/files/should/reside/"
+          CONFIG["WSF_LOG_LEVEL"] = "3"
+    
+        Valid Log Levels - 
+              "0" - CRITICAL
+              "1" - ERROR
+              "2" - WARNING
+              "3" - INFO
+              "4" - DEBUG
+              "5" - TRACE
+    
+            NOTE : run "ruby find_rbconfig.rb" in a console to find where this file is.
+               
+    4. Now you should be able to run the samples in samples directory. 
+                                      
+3. Binary Dependency version numbers.
+
+  WSO2-WSF-Ruby-1.0.0 Win32 Binary Will be compiled using following version of dependency libraries.
+
+  1. Ruby    1.8.6
+  2. Libxml2 2.6.30
+  3. Iconv   1.9.2 
+  4. openssl .98d (MSI)
