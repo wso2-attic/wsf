@@ -1,3 +1,21 @@
+Running the Samples
+-------------------
+Once you have installed the samples, you can run them from,
+WSFCPP_HOME/bin/samples/cpp. For example, to run the echo sample, execute
+the echo binary found in WSFCPP_HOME/bin/samples/cpp/echo.
+
+
+Modifying the Samples
+---------------------
+You always can modify the samples by editing the respective .cpp files
+found in the sub-directories of WSFCPP_INSTALL_DIR/samples. For instance,
+to modify the echo_security client edit echo_security.cpp found in
+WSFCPP_INSTALL_DIR/samples/echo.
+
+Once you have finished editing, re-build WSO2 WSF/C++ in the case of MS
+Windows or, run 'make examples' from the WSFCPP_INSTALL_DIR.
+
+
 Echo Samples
 ------------
 echo -
@@ -80,7 +98,7 @@ echo_security -
   - policy_file[Line 14]. default: ../client_repo/policy.xml
 
   * Please note that the echo_security sample will not work unless you set the
-  client_repo, and the policy_file variables.
+  client_repo, and the policy_file variables, and modify the sample.
   
 
 Accessing Yahoo WebService API
