@@ -100,7 +100,7 @@ Contents:
     Now you should have the wso2-wsf-php binary pack with following structure.
     ( you can get the binary from the .zip binary pack or building from the source )
 
-    wso2-wsf-php-bin-1.1.0-win32
+    wso2-wsf-php-bin-xyz-win32
                 |  
 	    	+-- wsf_c
                 |
