@@ -27,8 +27,10 @@ begin
   LOG_FILE_NAME = "ruby_mtom_upload_client.log"
   END_POINT = "http://localhost:3000/mtom_upload_service/upload"
 
-  content = IO.read("resources/axis2.jpg")
-
+  resource = File.new("resources/axis2.jpg", "rb")
+  
+  content = resource.read
+    
   client = WSClient.new({"to" => END_POINT,
                          "use_mtom" => "TRUE"},
                         LOG_FILE_NAME)
