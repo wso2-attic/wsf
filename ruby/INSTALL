@@ -21,8 +21,6 @@ PREINSTALL CONFIGURATIONS
           "5" - TRACE
 
     NOTE : run "ruby find_rbconfig.rb" in a console to find where this file is.
-           It's /usr/local/lib/ruby/1.8/i686-linux/rbconfig.rb in my case.
-
 
 INSTALLATION
 ------------
@@ -34,4 +32,5 @@ to run build.sh
 
 Windows
 -------
-Please refer to the INSTALL_WIN32 file for a guide on installation in windows.
+1. Run vcvars32.bat.
+2. Run build.bat.
