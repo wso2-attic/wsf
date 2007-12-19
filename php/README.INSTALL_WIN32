@@ -79,7 +79,7 @@ Contents:
                 
        Copy wsf_php folder to php_source/ext directory.
 
-       Run "buildconf.bat" to rebuild the configre.js file.
+       Run "buildconf.bat" to rebuild the configure.js file.
 
 
        "cscript /nologo configure.js --help" will give the configuration options.
