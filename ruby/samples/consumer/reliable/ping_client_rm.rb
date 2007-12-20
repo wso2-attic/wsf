@@ -20,24 +20,22 @@ require 'wsf'
 include WSO2::WSF
 
 req_payload_string = <<XML
-<ns1:ping xmlns:ns1="http://tempuri.org">
-    <text>Ping !!!</text>
-</ns1:ping>
+<ns1:echoString xmlns:ns1="http://tempuri.org/">
+    <ns1:Text>Hello World !!!</ns1:Text>
+</ns1:echoString>
 XML
 
 begin
   LOG_FILE_NAME = "ruby_ping_client_rm.log"
-  END_POINT = "http://127.0.0.1:9090/axis2/services/RMSampleService"
-  ACTION = "urn:wsrm:ping"
-
+  END_POINT = "http://127.0.0.1:3000/echo_service_rm/echo"
+  
   client = WSClient.new({"use_wsa" => "TRUE",
                          "reliable" => "TRUE"},
                         LOG_FILE_NAME)
 
   message = WSMessage.new(req_payload_string,
                           nil,
-                          {"to" => END_POINT,
-                           "action" => ACTION})
+                          {"to" => END_POINT})
 
   puts "Sending OM : " << "\n" << req_payload_string << "\n" 
 
