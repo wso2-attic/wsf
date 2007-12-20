@@ -49,6 +49,8 @@ rem @if exist xcopy /Y /I /Q /E scripts wso2-wsf-ruby-bin-1.0.0-win32\scripts
 
 @if exist LICENSE copy /Y LICENSE wso2-wsf-ruby-bin-1.0.0-win32
 
+@if exist find_config_h.rb copy /Y find_config_h.rb wso2-wsf-ruby-bin-1.0.0-win32
+
 @if exist NEWS copy /Y NEWS wso2-wsf-ruby-bin-1.0.0-win32
 
 @if exist install.rb copy /Y install.rb wso2-wsf-ruby-bin-1.0.0-win32

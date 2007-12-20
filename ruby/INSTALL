@@ -95,13 +95,11 @@ Binary Distribution
                 |
                 +-- lib
      
-    1. Include <wso2-wsf-ruby-binary>/wsf_c/lib to windows PATH variable. 
+    1. Include <wso2-wsf-ruby-binary-dir>/wsf_c/lib to windows PATH variable. 
 
     2. Execute install.rb file. (run "ruby install.rb" without quotes)
     
-    3. Add wsf_c\lib directory to PATH environment variable.
-
-    4. Add the following entries to your rbconfig.rb file which is in your ruby installation location.
+    3. Add the following entries to your rbconfig.rb file which is in your ruby installation location.
 
        (use '/' to seperate directories. e.g. "E:/install/wsfc")
   
@@ -109,7 +107,7 @@ Binary Distribution
           CONFIG["WSF_LOG_DIR"] = "/where/the/log/files/should/reside/"
           CONFIG["WSF_LOG_LEVEL"] = "3"
     
-        Valid Log Levels - 
+       Valid Log Levels - 
               "0" - CRITICAL
               "1" - ERROR
               "2" - WARNING
