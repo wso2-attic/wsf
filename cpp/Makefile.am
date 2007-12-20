@@ -1,4 +1,4 @@
-SUBDIRS=wsf_c src samples
+SUBDIRS=src samples
 
 examples:
 	sh build_samples.sh $(prefix)
@@ -22,4 +22,5 @@ examples:
 	rm -rf $(prefix)/bin/samples/mtom  
 	rm -rf $(prefix)/bin/samples/yahoosearch
 
+EXTRA_DIST=README.INSTALL.LINUX README.SAMPLES
 
