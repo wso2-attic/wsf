@@ -53,7 +53,7 @@ begin
 		  file_name = cid
 		  file_name = file_name + ".jpg" if content_type == "image/jpeg"
 		  
-		  f = File.new(file_name, "w")
+		  f = File.new(file_name, "wb")
 		  f.write(content)
 		  f.close
 
