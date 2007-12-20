@@ -20,15 +20,17 @@ require 'wsf'
 include WSO2::WSF
 
 req_payload_string = <<XML
-<ns1:mtomSample xmlns:ns1="http://ws.apache.org/axis2/c/samples/mtom"><ns1:fileName>test.jpg</ns1:fileName><ns1:image><xop:Include href="cid:myid1" xmlns:xop="http://www.w3.org/2004/08/xop/include"/></ns1:image></ns1:mtomSample>
+<ns1:upload xmlns:ns1="http://ws.apache.org/axis2/c/samples/mtom"><ns1:fileName>test.jpg</ns1:fileName><ns1:image xmlmime:contentType="image/jpeg" xmlns:xmlmime="http://www.w3.org/2004/06/xmlmime"><xop:Include href="cid:myid1" xmlns:xop="http://www.w3.org/2004/08/xop/include"/></ns1:image></ns1:upload>
 XML
 
 begin
   LOG_FILE_NAME = "ruby_mtom_upload_client_rm.log"
-  END_POINT = "http://127.0.0.1:9090/axis2/services/RMSampleService"
+  END_POINT = "http://127.0.0.1:3000/mtom_upload_service_rm/upload"
   ACTION = "http://php.axis2.org/samples/mtom"
 
-  content = IO.read("resources/axis2.jpg")
+  resource = File.new("resources/axis2.jpg", "rb")
+  
+  content = resource.read
 
   client = WSClient.new({"to" => END_POINT,
                          "action" => ACTION,

@@ -12,7 +12,7 @@ def uploadFunction(in_msg)
 				file_name = cid
 				file_name = file_name + ".jpg" if content_type == "image/jpeg"
 
-				f = File.new(file_name, "w")
+				f = File.new(file_name, "wb")
 				f.write(content)
 				f.close
 
@@ -30,7 +30,7 @@ class MtomUploadServiceRmController < ApplicationController
 
   require "wsf"
   
-  def mtom
+  def upload
       #operation to ruby function map
       operations = {"upload" => "uploadFunction"}
 
