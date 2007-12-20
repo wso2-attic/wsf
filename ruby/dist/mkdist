@@ -11,6 +11,9 @@ function sync_content
 	rsync ../../find_rbconfig.rb .
 	echo "synchronizing find_rbconfig.rb ... done"
 
+	rsync ../../find_config_h.rb .
+	echo "synchronizing find_config_h.rb ... done"
+
 	rsync ../../extconf.rb .
 	echo "synchronizing extconf.rb ... done"
 
@@ -66,6 +69,9 @@ function sync_content
 
 	rsync ../../README.SAMPLES .
 	echo "synchronizing README.SAMPLES ... done"
+
+	rsync ../../ChangeLog .
+	echo "synchronizing ChangeLog ... done"
 
 	echo
 	echo "synchronizing content ... OK"
