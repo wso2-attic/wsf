@@ -39,6 +39,7 @@ href="mailto:wsf-c-dev-request@wso2.org?subject=subscribe">subcribe</a></p>
       <li><a href="#Installing_WSO2_WSF/PHP_Binary">Installing WSO2 WSF/PHP Binary</a></li>
   </ol>
    <li><a href="#2.Installing_using_pecl_tool">Installing using pecl tool</a></li>
+    <li><a href="#Installing_Linux_Binaries">Installing Linux Binaries ( rmp and deb )</a></li>
   </ol>
 <a id="1.Installing_and_Running_on_Linux"></a><h2>1. Installing and Running on Linux</h2>
 <a id="Prerequisites"></a><h3>1.1 &nbsp;Prerequisites</h3>
@@ -308,7 +309,7 @@ document root. If you want to run samples</p>
         Now you should be able to run the samples in the samples directory.</p>
         <a id="2.Installing_using_pecl_tool"></a>
 <h3>
-          4 Installing using pecl tool</h3>
+          3 Installing using pecl tool</h3>
     You can use the pecl tool to install WSO2 WSF/PHP.<br />
     <br />
     1. First you need to download and install<a href="http://dist.wso2.org/products/wsf/c/1.2.0/"> WSO2 WSF/C Web Services framework</a>
@@ -341,6 +342,56 @@ document root. If you want to run samples</p>
     <br />
     [ Note: You need to have <a href="#xsl">php_xsl</a> extension installed on your system for WSDL mode
     to work.]
+    <br />
+    <br />
+    <a id="#Installing_Linux_Binaries" />
+    <h3>4 Installing Linux Binaries ( rmp and deb )</h3>
+    4.1 Installing from debian and ubuntu deb
+    <br />
+    <br />
+    Download the appropriate debian package for your system. You should have php5 and
+    apache2 installed using apt tool.<br />
+    Usually apache Web Root will be /var/www and php extension directory will be /usr/lib/php5/*.
+    php.ini file will be located<br />
+    in /etc/php5/apache2 directory.<br />
+    <br />
+    <strong>dpkg -i wso2-wsf-php-xyz.deb</strong><br />
+    <br />
+    samples and scripts folders will get copied to php extensions directory.
+    <br />
+    Edit php.ini and append include_path entry to include &lt;php extensions directory&gt;/wsf_php/scripts
+    directory.<br />
+    <strong>include_path = ".:&lt;php extensions directory&gt;/wsf_php/scripts"<br />
+    </strong>Copy samples directory to web root.<br />
+    <br />
+    To use wsdl mode, you will need php_xsl extension installed on your system.
+    <br />
+    <strong>apt-get install php5-xsl</strong><br />
+    <br />
+    Also enable xsl.so in php.ini.<br />
+    <strong>extension=xsl.so<br />
+    </strong>
+    <br />
+    <br />
+    4.2 Installing using rpm<br />
+    <br />
+    Download the appropriate rpm&nbsp; package for your system. You should have php5
+    and apache2 installed using rpm.<br />
+    Usually apache Web Root will be /var/www and php extensions directory will be /usr/lib/php/modules.
+    php.ini file will be located<br />
+    in /etc directory.<br />
+    <br />
+    <strong>rpm -i wso2-wsf-php-xyz.rpm</strong><br />
+    <br />
+    samples and scripts folders will get copied to /usr/lib/php/modules&nbsp; directory.
+    <br />
+    Edit php.ini and append include_path entry to include /usr/llib/php/modules/wsf_php/scripts
+    directory.<br />
+    <strong>include_path = ".:/usr/lib/php/modules/wsf_php/scripts"</strong><br />
+    <br />
+    To use wsdl mode, you will need <strong>php_xsl</strong> extension installed on
+    your system and enabled in php.ini.<br />
+    <strong>extension=xsl.so</strong><br />
        
 </body>
 </html>
