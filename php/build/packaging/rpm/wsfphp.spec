@@ -17,7 +17,7 @@ make
 %install
 make install
 strip -g /usr/lib/php/modules/wsf_c/lib/*.so
-cp -f `php-config --extension-dir`/wsf.so /usr/lib/php/modules/
+#cp -f `php-config --extension-dir`/wsf.so /usr/lib/php/modules/
 mkdir -p /usr/lib/php/modules/wsf_php
 cp -rf scripts /usr/lib/php/modules/wsf_php
 cp -rf samples /usr/lib/php/modules/wsf_php
