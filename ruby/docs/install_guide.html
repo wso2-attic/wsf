@@ -21,142 +21,515 @@ href="mailto:wsf-ruby-user@wso2.org">wsf-ruby-user@wso2.org</a>. Kindly see <a
 href="http://wso2.org/projects/wsf/ruby">Home
 page</a> for subscription.</p>
 
+            <li><a href=""></a>
 <h2><a name="">Contents</a></h2>
 <ul>
-  <li><a href="#Common Installation Instructions">Common Installation
-    Instructions</a></li>
-  <li><a href="#Pre-Installation Configurations">Pre-Installation 
-    Configurations</a></li>
-  <li><a href="#1.Installing and Running on Linux">Installing and Running on
-    Linux</a></li>
-  <li><a
-    href="#2.Installing and Running on Microsoft Windows (win32)">Installing
-    and Running on Microsoft Windows (win32)</a>
+  <li><a href="#Installing WSO2 WSF/Ruby from Source on Linux">Installing WSO2 WSF/Ruby from Source on Linux</a>
     <ul>
-      <li><a href="#Build Ruby on Windows">Build Ruby on MS Windows</a></li>
-      <li><a href="#Build WSO2 WSF for C on Windows from Source">Building
-        WSO2 WSF/C on MS Windows from Source</a>
-        <ul>
-          <li><a href="#Requirements">Requirements</a></li>
-          <li><a href="#Building WSF/Ruby From Source">Building WSF/Ruby from
-            Source</a></li>
-        </ul>
-      </li>
+        <li>
+            <a href="#Prerequisites">Prerequisites</a>
+        </li>
+        <li>
+            <a href="#Installation">Installation</a>
+        </li>
     </ul>
   </li>
-</ul>
-<a id="Common Installation Instructions"></a>
-
-<h2><a name="">Common Installation Instructions</a></h2>
-
-<p>To get the distributions working, you need the following installed in your
-system.</p>
-<ul>
-  <li>Ruby 1.8.5 or later, which can be downloaded from the <a
-    href="http://ftp.ruby-lang.org/pub/ruby/1.8">Ruby </a> download resources.
-    <p>If you are using a pre-installed version of Ruby, please make sure that
-    you have the developer version installed, so that you can compile the
-    WSO2 WSF/Ruby source.</p>
+  <li><a href="#Building and Installing WSO2 WSF/Ruby on Win32">Building and Installing WSO2 WSF/Ruby on Win32</a>
+    <ul>
+        <li>
+            <a href="#How to build WSF/Ruby under Windows from binaries">How to build WSF/Ruby under Windows from binaries</a>
+            <ul>
+                <li>
+                    <a href="#Requirements">Requirements</a>
+                </li>
+                <li>
+                    <a href="#Installing WSO2 WSF/Ruby extension as a Ruby extension">Installing WSO2 WSF/Ruby extension as a Ruby extension</a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#How to build WSO2 WSF/Ruby under Windows from source">How to build WSO2 WSF/Ruby under Windows from source</a>
+        </li>
+    </ul>
   </li>
-  <li>libxml2 <a href="http://xmlsoft.org/downloads.html">Download</a><a
-    href="http://xmlsoft.org/downloads.html"></a> (Note: Most Linux systems
-    have libxml2 by default.)</li>
+  <li><a href="#Run Samples">Run Samples</a></li>
+</ol>
 
-    <li>zlib, iconv for win32 <a href="http://www.zlatkovic.com/pub/libxml">Download</a> (Note: Most Linux systems
-    have zlib and iconv by default.). </li>
 
-    <li>OpenSSL <a href="http://www.openssl.org/" >Download</a></li>
-    <li>SQLite or MySQL (needed for reliable messaging) <a href="http://www.sqlite.org/download.html" >Download SQLite</a>, <a href="http://dev.mysql.com/downloads/" >Download MySQL</a>
+<h2>
+<a name="Installing WSO2 WSF/Ruby from Source on Linux">
+Installing WSO2 WSF/Ruby from Source on Linux
+</a>
+</h2>
+
+<h3>
+<a name="Prerequisites">
+Prerequisites
+</a>
+</h3>
+
+<ul>
+<li>
+WSO2 WSF/C [http://dist.wso2.org/products/wsf/c]
+
+   Please see the INSTALL file of the WSO2 WSF/C to install WSO2 WSF/C.
+</li>
+
+
+
+<li>
+Ruby version 1.8.5 or above.
+
+   [http://ftp.ruby-lang.org/pub/ruby/1.8]
+
+</li>
 </ul>
 
-<a id="Pre-Installation Configurations"></a>
 
-<h2<a name="">Pre-Installation Configurations</a></h2>
+<h2>
+<a name="Installation">
+Installation
+</a>
+</h2>
 
-<p>
-Before Install WSO2 WSF/Ruby, following configuration entries have to be added
-to the 'rbconfig.rb' that shift with ruby package.
-(under windows use '/' to seperate directories. e.g. "E:/install/wsfc")
-</p>
+
+<ul>
+<li>
+Before Install WSO2 WSF/RUBY, following configuration entries have to be added
+   to the 'rbconfig.rb' that ship with ruby package.
 
 <pre>
-CONFIG["WSFC_HOME"] = "/your/wsfc/home/"
-CONFIG["WSF_LOG_DIR"] = "/where/the/log/files/should/reside/"
-CONFIG["WSF_LOG_LEVEL"] = "3"
+
+     NOTE : run "ruby find_rbconfig.rb" in a console to find where this 'rbconfig.rb' file is.
+
+    #---------------------------------------------------------------------------------
+
+    CONFIG["WSFC_HOME"] = "your/wsfc/home/dir"
+    CONFIG["WSF_LOG_DIR"] = "where/you/wish/log/file/should/be"
+    CONFIG["WSF_LOG_LEVEL"] = "3"
+
+    #---------------------------------------------------------------------------------
+
+     NOTE: Above WSF_LOG_LEVEL entry can have one of the following values- 
+               "0" - CRITICAL
+               "1" - ERROR
+               "2" - WARNING
+               "3" - INFO
+               "4" - DEBUG
+               "5" - TRACE
+   
+</pre> 
+</li>
+
+<li>
+Run "sh build.sh" to setup the extension.  You may require super user 
+
+   privileges to run build.sh
+</li>
+
+
+
+
+<h2>
+<a name="Building and Installing WSO2 WSF/Ruby on Win32">
+Building and Installing WSO2 WSF/Ruby on Win32
+</a>
+</h2>
+
+<h3>
+<a name="How to build WSF/Ruby under Windows from binaries">
+How to build WSF/Ruby under Windows from binaries
+</a>
+</h3>
+
+
+<h4>
+<a name="Requirements">
+Requirements
+</a>
+</h4>
+
+<p>
+   You need to download following dependency libraries:
+</p>
+
+<ul>
+ <li>
+   libxml2 binary distribution    - (Libxml2 2.6.30)
+ </li>
+ <li>
+   iconv binary distribution      - (Iconv   1.9.2)
+ </li>
+ <li>
+   OpenSSL binary distribution    - (openssl 0.98d, MSI distribution)
+ </li>
+ <li>
+   Ruby Binary                    - (Ruby    1.8.6, One click installer is prefereble)
+ </li>
+ <li>
+   Mysql Server [When using Reliable Messaging With MySql Database ]
+                                  - (MySql    5.0 or above)
+ </li>
+</ul>
+
+<p>
+   In addition you need to have visual studio installed on your system.
+</p>
+
+
+<ul>
+ <li>
+   obtain libxml2 and iconv win32 binaries from [1].
+ </li>
+ <li>
+
+   obtain OpenSSL binary from [2] [the build system assumes that you install openssl from msi].
+ </li>
+ <li>
+
+   obtain MySql Server from [3].
+ </li>
+ <li>
+
+   obtain Ruby Bianry from [4].
+ </li>
+</ul>
+
+
+  <p>
+   [1] http://www.zlatkovic.com/pub/libxml/
+ </p>
+ <p>
+
+   [2] http://www.slproweb.com/products/Win32OpenSSL.html
+ </p>
+ <p>
+
+   [3] http://dev.mysql.com/downloads/
+ </p>
+ <p>
+
+   [4] http://www.ruby-lang.org/en/downloads/
+ </p>
+
+<p>
+   NOTE:
+    WSO2-WSF-Ruby-1.0.0 Win32 Binary Will be compiled using following version of dependency libraries.
+</p>
+    
+<ol>
+    <li>
+    Ruby    1.8.6
+    </li>
+
+    <li>
+    Libxml2 2.6.30
+    </li>
+
+    <li>
+    Iconv   1.9.2 
+    </li>
+
+    <li>
+    openssl .98d (MSI)   
+    </li>
+</ol>
+
+        
+<h2>
+<a name="Installing WSO2 WSF/Ruby extension as a Ruby extension">
+Installing WSO2 WSF/Ruby extension as a Ruby extension
+</a>
+</h2>
+
+
+<p>
+    Now you should have the wso2-wsf-ruby binary pack with following structure.
+</p>
+
+
+<p>
+<pre>
+    wso2-wsf-ruby-bin-1.0.0-win32
+                |  
+                +-- wsf_c
+                |
+                +-- doc
+                |
+                +-- samples
+                |
+                +-- lib
+
+</pre>
+</p>                  
+
+
+<ol>
+ <li>
+    Execute install.rb file. (run "ruby install.rb" without quotes)
+ </li>
+    
+
+ <li>
+    Add "<wso2-wsf-ruby-bin-1.0.0-win32 extracted directory>\wsf_c\lib" directory to PATH environment variable.
+ </li>
+
+ <li>
+    Add the following entries to your rbconfig.rb file which is in your Ruby installation location.
+
+ <pre> 
+        NOTE : run "ruby find_rbconfig.rb" in a console to find where this 'rbconfig.rb' file is.
+
+        (use '/' or '\\' to to seperate directories.                                          |
+         e.g. "E:/install/wsfc" or "E:\\install\\wsfc")
+
+       #---------------------------------------------------------------------------------
+       CONFIG["WSFC_HOME"] = "<wso2-wsf-ruby-bin-1.0.0-win32 extracted directory>\\wsf_c"
+       CONFIG["WSF_LOG_DIR"] = "where\\you\\wish\\log\\file\\should\\be"
+       CONFIG["WSF_LOG_LEVEL"] = "3"
+       #---------------------------------------------------------------------------------
+
+        NOTE: Above WSF_LOG_LEVEL entry can have one of the following values- 
+
+                  "0" - CRITICAL
+                  "1" - ERROR
+                  "2" - WARNING
+                  "3" - INFO
+                  "4" - DEBUG
+                  "5" - TRACE
+
+ </pre> 
+    
+ </li>
+
+ <li>
+    Now proceed to RUN SAMPLES section for a guide on how to run samples in WSO2 WSF/Ruby.
+ </li>
+</ol>
+
+    
+
+<h2>
+<a name="How to build WSO2 WSF/Ruby under Windows from source">
+How to build WSO2 WSF/Ruby under Windows from source
+</a>
+</h2>
+
+<ol>
+    <li>
+    Comment the following 3 lines at the top of config.h file. 
+
+     
+<pre>
+       #if _MSC_VER != 1200
+
+       #error MSC version unmatch
+
+       #endif
+
+       NOTE : run "ruby find_config_h.rb" in a console to find where this file is.
 </pre>
 
-Valid Log Levels -
-    <ul>
-      <li>"0" - CRITICAL</li>
-      <li>"1" - ERROR</li>
-      <li>"2" - WARNING</li>
-      <li>"3" - INFO</li>
-      <li>"4" - DEBUG</li>
-      <li>"5" - TRACE</li>
-    </ul>
-<p>
-NOTE : run "ruby find_rbconfig.rb" in a console to find where this file is.
-       It's /usr/local/lib/ruby/1.8/i686-linux/rbconfig.rb in my case.
-</p>
+    </li>
 
-<a id="1.Installing and Running on Linux"></a>
+    <li>
+<pre>
+    Add the following entries to your rbconfig.rb file which is in your Ruby installation location.
 
-<h2><a name="">Installing and Running on Linux</a></h2>
-<p>
-Run "sh build.sh" to setup the extension. You may require super user privileges to run this.
-</p>
-<a id="2.Installing and Running on Microsoft Windows (win32)"></a>
+        NOTE : run "ruby find_rbconfig.rb" in a console to find where this 'rbconfig.rb' file is.
 
-<h2><a name="">Installing and Running on Microsoft Windows (win32)</a></h2>
-<a id="Build Ruby on Windows"></a>
+        (use '/' or '\\' to to seperate directories.                                          |
+         e.g. "E:/install/wsfc" or "E:\\install\\wsfc")
 
-<p>Please refer to the INSTALL file.</p>
+       #---------------------------------------------------------------------------------
 
-<!--<h2><a name="">2.1. Binary Distribution</a></h2>
+       CONFIG["WSFC_HOME"] = "<wso2-wsf-ruby-bin-1.0.0-win32 extracted directory>\\wsf_c"
+       CONFIG["WSF_LOG_DIR"] = "where\\you\\wish\\log\\files\\should\\be"
+       CONFIG["WSF_LOG_LEVEL"] = "3"
 
-<p>Please refer to the README file in the win32 directory of the Ruby 
-source distribution. (If you are in windows please refer to the README
-in the win32 directory in the source)</p>
+       #---------------------------------------------------------------------------------
 
-<h2><a name="">2.2. Source Distribution</a></h2>
+       
+        NOTE: Above WSF_LOG_LEVEL entry can have one of the following values- 
 
-<p>Please refer to the README file in the win32 directory of the Ruby 
-source distribution. (If you are in windows please refer to the README
-in the win32 directory in the source)</p>-->
+                  "0" - CRITICAL
+                  "1" - ERROR
+                  "2" - WARNING
+                  "3" - INFO
+                  "4" - DEBUG
+                  "5" - TRACE
 
-<!--<a id="Build WSO2 WSF for C on Windows from Source"></a>
+</pre>
+    </li>
 
-<h3>Build WSO2 WSF/C on MS Windows from Source</h3>
-<a id="Requirements"></a>
+    <li>
+    Make sure the WSFC_HOME/lib directory is added to the PATH environment variable.
+    </li>
 
-<h4>Requirements</h4>
+    <li>
+    If you have the Visual Studio command prompt installed on your computer, 
 
-<p>You need to download the following:</p>
+       open it.
+    </li>
+
+
+    <li>
+    If you don't have the Visual Studio command prompt installed on your computer, 
+
+       open a command prompt and run vcvars32.bat.
+    </li>
+
+
+    <li>
+    Go to the WSO2 WSF/Ruby source directory
+
+    </li>
+    <li>
+    Run build.bat file in the WSO2 WSF/Ruby source directory.
+
+
+    </li>
+    <li>
+    Now proceed to RUN SAMPLES section for a guide on how to run samples in WSO2 WSF/Ruby.
+
+
+    </li>
+</ol>
+
+<h2>
+<a name="Run Samples">
+Run Samples
+</a>
+</h2>
+
+
+<ol>
+<li>
+It is required to have Rails Framework installed in your machine to run 
+
+   the Rails samples in
+
 <ul>
-  <li>libxml2 binary distribution</li>
-  <li>zlib binary distribution</li>
-  <li>iconv binary distribution</li>
+     <li>   
+     samples/consumer/rails and
+     </li>   
+
+     <li>   
+     samples/provide
+     </li>   
 </ul>
-<a id="Building WSF/Ruby From Source"></a>
 
-<h3>Building WSF/RUBY from Source</h3>
+</li>
 
-<p>1. If you have the Visual Studio command prompt, open it and change
-directory to wso2-wsf-ruby extract folder.<br/>
+
+<li>
+Go to the samples/provider directory in the WSO2 WSF/Ruby binary/source
+   distribution.
+
+<pre>
+<i>
+        cd samples/provider
+</i>
+</pre>
+
+
+</li>
+
+<li>
+Run deploy_samples.rb by executing the following command
+
+
+<pre>
+<i>
+        ruby deploy_samples.rb your_rails_application
+</i>
+</pre>
+
+</li>
+
+<li>
+   Then you will have a rails application created in a directory called
+   'your_rails_application' relative to the currrent directory.
+</li>
+
+<li>
+Go to the directory 'your_rails_application'
+<pre>
+<i>
+        cd your_rails_application
+</i>
+</pre>
+</li>
+
+
+<li>
+Then start the server executing the following command,
+<pre>
+<i>
+        run the ruby script/server
+</i>
+</pre>
+
+<p>
+NOTE: If you are using rails 2.0.0 or above you may need to configure the 
+      database information in your rails application. You can find a guide
+      on how to configure the database from the following link.
 </p>
+      <a href="http://wiki.rubyonrails.com/rails/pages/TutorialStepOne">
+        http://wiki.rubyonrails.com/rails/pages/TutorialStepOne
+      </a>
+</li>
 
-<p>2. If not, create a new shortcut and set target to:<br />
-<b>        %comspec% /k "C:\Program Files\Microsoft Visual Studio .NET
-2003\Vc7\bin\vcvars32.bat"</b><br/>
-</p>
 
-<p>3. Copy the .dll and .lib files of the libxml2, zlib and iconv , OpenSSL to the 
-WSFC_HOME/lib directory 
-<br/>
-</p>
+<li>
+Now you are done deploying the provider samples . 
+</li>
 
-<p>4. Once you have done it, run build.bat file in the wsf/ruby extension from the
-source directory. This will build the binary distribution.</p>-->
+
+<li>
+Start a new shell or command prompt and go to the samples/consumer directory
+
+   in the WSO2 WSF/Ruby binary/source distribution. Make sure WSO2 WSF/C libraries
+
+   and its dependend libraries are included in the 'PATH' enviroment variable for new
+
+   shell/command prompt as well.
+
+       
+<pre>
+<i>
+       cd wsfc_ruby_source_installation/samples/consumer
+</i>
+</pre>
+
+
+</li>
+
+
+<li>
+Then run the echo sample by typing "ruby echo_client.rb" in command line or
+
+   terminal. If your client and service are working fine, You will see the 
+
+   'SUCCESSFUL' message 
+</li>
+
+ 
+<li>
+To run other samples please read the guide on README.SAMPLES file.
+</li>
+
+
+<hr/>
+<b>
+If you need any help with building or installation , send a 
+
+mail to wsf-ruby-user@lists.wso2.org
+</b>
+
+
+
+
 
 </body>
 </html>
