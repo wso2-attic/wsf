@@ -4,11 +4,11 @@ Building and Installing WSO2 WSF/Ruby on Win32.
 
 Contents:
 
-1. How to build WSF/Ruby under Windows from binaries
+1. How to build WSO2 WSF/Ruby under Windows from binaries
     a. Requirements
-    b. Installing WSF/Ruby extension as a Ruby extension.
+    b. Installing WSO2 WSF/Ruby extension as a Ruby extension.
 
-2. How to build WSF/Ruby under Windows from source
+2. How to build WSO2 WSF/Ruby under Windows from source
 
 3. Run Samples
 
@@ -47,7 +47,7 @@ a. Requirements
     3. Iconv   1.9.2 
     4. openssl .98d (MSI)   
         
-b. Installing WSO2 WSF as a Ruby extension.
+b. Installing WSO2 WSF/Ruby as a Ruby extension.
 
     Now you should have the wso2-wsf-ruby binary pack with following structure.
 
@@ -91,7 +91,7 @@ b. Installing WSO2 WSF as a Ruby extension.
     
                
 
-2. How to build WSF/Ruby under Windows from source
+2. How to build WSO2 WSF/Ruby under Windows from source
 
     1. Comment the following 3 lines at the top of config.h file. 
      
@@ -171,7 +171,7 @@ NOTE: If you are using rails 2.0.0 or above you may need to configure the
 f. Now you are done deploying the provider samples . 
 
 e. Start a new shell or command prompt and go to the samples/consumer directory
-   in the WSO2/WSF Ruby binary/source distribution. Make sure WSO2 WSF/C libraries
+   in the WSO2 WSF/Ruby binary/source distribution. Make sure WSO2 WSF/C libraries
    and its dependend libraries are included in the 'PATH' enviroment variable for new
    shell/command prompt as well.
        
