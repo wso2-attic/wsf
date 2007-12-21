@@ -1,4 +1,4 @@
-REAME for Service deployment with Rails
+README for Service deployment with Rails
 ======================================
 
 First you need to build a rails application to deploy the samples mentioned here.
@@ -38,7 +38,7 @@ You can get the above steps done for all the provider samples by running followi
 Then you will have a rails application created in a directory called 'your_rails_application' relative to the
 currrent directory.
 
-6. Then run the ./script/server from the root directory of your rails application to run the server. Then
+6. Then run the ruby script/server from the root directory of your rails application to run the server. Then
 the services will be deployed automatically.
 
 7. Now you can try the services with your client using endpoint addresses mentioned in the following section.

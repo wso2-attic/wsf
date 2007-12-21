@@ -4,7 +4,7 @@ Please follow the steps below to execute the "Flickr Sample"
 
  rails ruby.client
  cd ruby.client
- ./script/generate controller flickr index search
+ ruby script/generate controller flickr index search
 
 2. Replace following files in your rails application directory.
 
@@ -46,7 +46,7 @@ http://wiki.rubyonrails.com/rails/pages/TutorialStepOne.
 
 4. Start the WEBrick or Mongreal server by executing the followng commond from the root
  directory of your rails application .
- ./script/server
+ ruby script/server
 
 5. Then Test the application from the browser.
  If the application runs on your local machine, go to http://localhost:3000/flickr/index
