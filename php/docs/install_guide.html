@@ -31,13 +31,14 @@ href="mailto:wsf-c-dev-request@wso2.org?subject=subscribe">subcribe</a></p>
     </ol>
   </li>
   <li><a href="#2.Installing_and_Running_on_Microsoft_windows">Installing
-    and Running on Microsoft Windows </a></li>
+    and Running on Microsoft Windows </a>
     <ol>
       <li><a href="#Prerequisites_win32">Prerequisites</a></li>
       <li><a href="#Building">Building </a></li>
        <li><a href="#Building_with_PHP_WIN32_Build_System">Building with PHP WIN32 Build System</a></li>
       <li><a href="#Installing_WSO2_WSF/PHP_Binary">Installing WSO2 WSF/PHP Binary</a></li>
   </ol>
+   </li>
    <li><a href="#2.Installing_using_pecl_tool">Installing using pecl tool</a></li>
     <li><a href="#Installing_Linux_Binaries">Installing Linux Binaries ( rmp and deb )</a></li>
   </ol>
@@ -323,7 +324,7 @@ document root. If you want to run samples</p>
     <br />
     This will compile and install WSO2-WSF/PHP to you php extensions directory. It will
     copy the docs to /usr/local/lib/php/doc/wso2_wsf_php directory and it will copy the
-    scripts and samples folders to the same directory. Copy the
+    scripts and samples folders to the /usr/local/lib/php directory. Copy the
     samples directory to Apache2 Servers document root.<br />
     <br />
     3.&nbsp; Add following entries to your php.ini file.
@@ -341,7 +342,8 @@ document root. If you want to run samples</p>
     <br />
     <br />
     [ Note: You need to have <a href="#xsl">php_xsl</a> extension installed on your system for WSDL mode
-    to work.]
+    to work. Also the above specified paths may change depending
+    on your system.]
     <br />
     <br />
     <a id="#Installing_Linux_Binaries" />
