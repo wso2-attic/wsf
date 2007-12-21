@@ -53,7 +53,7 @@ rem @if exist xcopy /Y /I /Q /E scripts wso2-wsf-ruby-bin-1.0.0-win32\scripts
 
 @if exist NEWS copy /Y NEWS wso2-wsf-ruby-bin-1.0.0-win32
 
-@if exist README.INSTALL_WIN32 copy /Y README.INSTALL_WIN32  wso2-wsf-ruby-bin-1.0.0-win3
+@if exist README.INSTALL_WIN32 copy /Y README.INSTALL_WIN32 wso2-wsf-ruby-bin-1.0.0-win32
 
 @if exist install.rb copy /Y install.rb wso2-wsf-ruby-bin-1.0.0-win32
 
