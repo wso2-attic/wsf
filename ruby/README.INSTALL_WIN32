@@ -137,7 +137,7 @@ b. Installing WSO2 WSF as a Ruby extension.
     8. Now proceed to RUN SAMPLES section for a guide on how to run samples in WSO2 WSF/Ruby.
 
 
-3. RUN SAMPLES
+3. Run Samples
 
 a. It is required to have Rails Framework installed in your machine to run 
    the Rails samples in
@@ -175,13 +175,15 @@ e. Start a new shell or command prompt and go to the samples/consumer directory
    and its dependend libraries are included in the 'PATH' enviroment variable for new
    shell/command prompt as well.
        
-       cd ../consumer
+       cd wsfc_ruby_source_installation/samples/consumer
 
 
 e. Then run the echo sample by typing "ruby echo_client.rb" in command line or
    terminal. If your client and service are working fine, You will see the 
    'SUCCESSFUL' message 
  
+f. To run other samples please read the guide on README.SAMPLES file.
+
 If you need any help with building or installation , send a 
 mail to wsf-ruby-user@lists.wso2.org
 

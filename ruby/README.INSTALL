@@ -1,19 +1,17 @@
 Installing WSO2 WSF/Ruby from Source on Linux
 ============================================
 
-If you need any help with building or installation , send a 
-mail to wsf-ruby-user@lists.wso2.org
-===========================================================
-
 Contents:
 
-1. PREREQUISITES
-2. INSTALLATION
-3. RUN SAMPLES
+1. Prerequisites
+
+2. Installation
+
+3. Run samples
 
 ===========================================================
 
-1. PREREQUISITES
+1. Prerequisites
 
 a. WSO2 WSF/C [http://dist.wso2.org/products/wsf/c]
    Please see the INSTALL file of the WSO2 WSF/C to install WSO2 WSF/C.
@@ -22,7 +20,7 @@ b. Ruby version 1.8.5 or above.
    [http://ftp.ruby-lang.org/pub/ruby/1.8]
 
 
-2. INSTALLATION
+2. Installation
 
 a. Before Install WSO2 WSF/RUBY, following configuration entries have to be added
    to the 'rbconfig.rb' that ship with ruby package.
@@ -47,7 +45,7 @@ b. Run "sh build.sh" to setup the extension.  You may require super user
    privileges to run build.sh
 
 
-3. RUN SAMPLES
+3. Run samples
 
 a. It is required to have Rails Framework installed in your machine to run 
    the Rails samples in
@@ -81,15 +79,18 @@ NOTE: If you are using rails 2.0.0 or above you may need to configure the
 f. Now you are done deploying the provider samples . 
 
 e. Start a new shell or command prompt and go to the samples/consumer directory
-   in the WSO2/WSF ruby binary/source distribution. Make sure wso2 wsf/c libraries
+   in the WSO2/WSF ruby binary/source distribution. Make sure WSO2 WSF/C libraries
    and its dependend libraries are inside the 'PATH' enviroment variable for new
    shell/command prompt as well.
        
-       cd ../consumer
+       cd wsfc_ruby_source_installation/samples/consumer
 
 
 e. Then run the echo sample by typing ruby echo_client.rb in command line or
    terminal. If your client and service working fine, You will see the 
    'SUCCESSFUL' message 
 
+f. To run other samples please read the guide on README.SAMPLES file.
 
+If you need any help with building or installation , send a 
+mail to wsf-ruby-user@lists.wso2.org
