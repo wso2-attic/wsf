@@ -1,12 +1,16 @@
 Installing WSO2 WSF/Ruby
 ========================
 
-PREINSTALL CONFIGURATIONS
+INSTALLATION
+------------
+
+Common configurations (Both Linux and windows)
 -------------------------
 
 - Before Install WSO2 WSF/Ruby, following configuration entries have to be added
   to the 'rbconfig.rb' that shift with ruby package.
-  (under windows use '/' to seperate directories. e.g. "E:/install/wsfc")
+  (under windows use '/' or '\\' to to seperate directories.
+   e.g. "E:/install/wsfc" or "E:\\install\\wsfc")
   
   CONFIG["WSFC_HOME"] = "/your/wsfc/home/"
   CONFIG["WSF_LOG_DIR"] = "/where/the/log/files/should/reside/"
@@ -22,8 +26,6 @@ PREINSTALL CONFIGURATIONS
 
     NOTE : run "ruby find_rbconfig.rb" in a console to find where this file is.
 
-INSTALLATION
-------------
 
 Linux
 ----- 
@@ -127,3 +129,25 @@ Binary Distribution
   2. Libxml2 2.6.30
   3. Iconv   1.9.2 
   4. openssl .98d (MSI)
+
+RUN SAMPLES
+-----------
+1. It is required to have Rails Framework installed in your machine to run 
+   the Rails samples in
+     - samples/consumer/rails and
+	 - samples/provider
+
+2. To deploy the echo service sample follow the README in the samples/provider
+   directory.
+
+3. Then go to the samples/consumer directory and open the echo_client.rb and 
+   change the constant END_POINT to your service endpoint.
+   
+4. Then run the sample by typing ruby echo_client.rb in command line or terminal.
+   If your client and service working fine, You will see the 'SUCCESSFUL' message 
+
+5. You may deploy the echo service in WSO2 WSF/C to run
+   consumer samples. Remember to change the END_POINT constants to the service
+   end point addresses before running clients.
+
+
