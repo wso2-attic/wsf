@@ -34,7 +34,7 @@ end
 begin
    LOG_FILE = "security_sample.log"
    ACTION = "http://php.axis2.org/samples/echoString"
-   END_POINT = "http://localhost:3000/signing/signing"
+   END_POINT = "http://localhost:3000/signing/signing_file"
 
    message_properties = {"to" => END_POINT,
                          "action" => ACTION}
