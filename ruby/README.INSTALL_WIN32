@@ -1,0 +1,187 @@
+Building and Installing WSO2 WSF/Ruby on Win32.
+
+If you need any help with building or installation , send a 
+mail to wsf-ruby-user@lists.wso2.org
+===========================================================
+
+Contents:
+
+1. How to build WSF/Ruby under Windows from binaries
+    a. Requirements
+    b. Installing WSF/Ruby extension as a Ruby extension.
+
+2. How to build WSF/Ruby under Windows from source
+
+3. RUN SAMPLES
+
+===========================================================
+
+1. How to build WSF/Ruby under Windows from binaries
+
+a. Requirements
+
+   You need to download following dependency libraries:
+
+   libxml2 binary distribution    - (Libxml2 2.6.30)
+   iconv binary distribution      - (Iconv   1.9.2)
+   OpenSSL binary distribution    - (openssl 0.98d, MSI distribution)
+   Ruby Binary                    - (Ruby    1.8.6, One click installer is prefereble)
+   Mysql Server [When using Reliable Messaging With MySql Database ]
+                                  - (MySql    5.0 or above)
+
+   In addition you need to have visual studio installed on your system.
+
+   obtain libxml2 and iconv win32 binaries from [1].
+   obtain OpenSSL binary from [2] [the build system assumes that you install openssl from msi].
+   obtain MySql Server from [3].
+   obtain Ruby Bianry from [4].
+
+   [1] http://www.zlatkovic.com/pub/libxml/
+   [2] http://www.slproweb.com/products/Win32OpenSSL.html
+   [3] http://dev.mysql.com/downloads/
+   [4] http://www.ruby-lang.org/en/downloads/
+
+   NOTE:
+    WSO2-WSF-Ruby-1.0.0 Win32 Binary Will be compiled using following version of dependency libraries.
+    
+    1. Ruby    1.8.6
+    2. Libxml2 2.6.30
+    3. Iconv   1.9.2 
+    4. openssl .98d (MSI)   
+        
+b. Installing WSO2 WSF as a Ruby extension.
+
+    Now you should have the wso2-wsf-ruby binary pack with following structure.
+
+    wso2-wsf-ruby-bin-1.0.0-win32
+                |  
+                +-- wsf_c
+                |
+                +-- doc
+                |
+                +-- samples
+                |
+                +-- lib
+                      
+
+    1. Execute install.rb file. (run "ruby install.rb" without quotes)
+    
+    2. Add wsf_c\lib directory to PATH environment variable.
+
+    3. Add the following entries to your rbconfig.rb file which is in your ruby installation location.
+       
+        NOTE : run "ruby find_rbconfig.rb" in a console to find where this 'rbconfig.rb' file is.
+
+        (use '/' or '\\' to to seperate directories.                                          |
+         e.g. "E:/install/wsfc" or "E:\\install\\wsfc")
+     
+       #---------------------------------------------------------------------------------
+       CONFIG["WSFC_HOME"] = "<wso2-wsf-ruby-bin-1.0.0-win32 extracted directory>\\wsf_c"
+       CONFIG["WSF_LOG_DIR"] = "where\\you\\wish\\log\\file\\should\\be"
+       CONFIG["WSF_LOG_LEVEL"] = "3"
+       #---------------------------------------------------------------------------------
+       
+        NOTE: Above WSF_LOG_LEVEL entry can have one of the following values- 
+                  "0" - CRITICAL
+                  "1" - ERROR
+                  "2" - WARNING
+                  "3" - INFO
+                  "4" - DEBUG
+                  "5" - TRACE
+    
+    4. Now proceed to RUN SAMPLES section for a guide on how to run samples in WSO2 WSF/Ruby.
+    
+               
+
+2. How to build WSF/Ruby under Windows from source
+
+    1. Comment the following 3 lines at the top of config.h file. 
+     
+       #if _MSC_VER != 1200
+       #error MSC version unmatch
+       #endif
+
+       NOTE : run "ruby find_config_h.rb" in a console to find where this file is.
+
+    2. Add the following entries to your rbconfig.rb file which is in your ruby installation location.
+       
+        NOTE : run "ruby find_rbconfig.rb" in a console to find where this 'rbconfig.rb' file is.
+
+        (use '/' or '\\' to to seperate directories.                                          |
+         e.g. "E:/install/wsfc" or "E:\\install\\wsfc")
+     
+       #---------------------------------------------------------------------------------
+       CONFIG["WSFC_HOME"] = "<wso2-wsf-ruby-bin-1.0.0-win32 extracted directory>\\wsf_c"
+       CONFIG["WSF_LOG_DIR"] = "where\\you\\wish\\log\\file\\should\\be"
+       CONFIG["WSF_LOG_LEVEL"] = "3"
+       #---------------------------------------------------------------------------------
+       
+        NOTE: Above WSF_LOG_LEVEL entry can have one of the following values- 
+                  "0" - CRITICAL
+                  "1" - ERROR
+                  "2" - WARNING
+                  "3" - INFO
+                  "4" - DEBUG
+                  "5" - TRACE
+
+    3. Make sure the WSFC_HOME/lib directory is added to the PATH environment variable.
+
+    4. If you have the Visual Studio command prompt installed on your computer, 
+       open it.
+
+    5. If you don't have the Visual Studio command prompt installed on your computer, 
+       open a command prompt and run vcvars32.bat.
+
+    6. Go to the WSO2 WSF/Ruby source directory
+
+    7. Run build.bat file in the WSO2 WSF/Ruby source directory.
+
+    8. Now proceed to RUN SAMPLES section for a guide on how to run samples in WSO2 WSF/Ruby.
+
+
+3. RUN SAMPLES
+
+a. It is required to have Rails Framework installed in your machine to run 
+   the Rails samples in
+     - samples/consumer/rails and
+	 - samples/provide
+
+b. Go to the samples/provider directory in the WSO2/WSF ruby binary/source
+   distribution.
+
+        cd samples/provider
+
+c. Run deploy_samples.rb by executing the following command
+
+        ruby deploy_samples.rb your_rails_application
+
+   Then you will have a rails application created in a directory called
+   'your_rails_application' relative to the currrent directory.
+
+d. Go to the directory 'your_rails_application'
+        cd your_rails_application
+
+e. Then start the server executing the following command,
+        run the ruby script/server
+
+NOTE: If you are using rails 2.0.0 or above you may need to configure the 
+      database information in your rails application. You can find a guide
+      on how to configure the database from the following link.
+
+      http://wiki.rubyonrails.com/rails/pages/TutorialStepOne
+
+f. Now you are done deploying the provider samples . 
+
+e. Start a new shell or command prompt and go to the samples/consumer directory
+   in the WSO2/WSF ruby binary/source distribution. Make sure wso2 wsf/c libraries
+   and its dependend libraries are inside the 'PATH' enviroment variable for new
+   shell/command prompt as well.
+       
+       cd ../consumer
+
+
+e. Then run the echo sample by typing ruby echo_client.rb in command line or
+   terminal. If your client and service working fine, You will see the 
+   'SUCCESSFUL' message 
+
+

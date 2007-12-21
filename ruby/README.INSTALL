@@ -1,0 +1,95 @@
+Installing WSO2 WSF/Ruby from Source on Linux
+============================================
+
+If you need any help with building or installation , send a 
+mail to wsf-ruby-user@lists.wso2.org
+===========================================================
+
+Contents:
+
+1. PREREQUISITES
+2. INSTALLATION
+3. RUN SAMPLES
+
+===========================================================
+
+1. PREREQUISITES
+
+a. WSO2 WSF/C [http://dist.wso2.org/products/wsf/c]
+   Please see the INSTALL file of the WSO2 WSF/C to install WSO2 WSF/C.
+
+b. Ruby version 1.8.5 or above.
+   [http://ftp.ruby-lang.org/pub/ruby/1.8]
+
+
+2. INSTALLATION
+
+a. Before Install WSO2 WSF/RUBY, following configuration entries have to be added
+   to the 'rbconfig.rb' that ship with ruby package.
+       
+     NOTE : run "ruby find_rbconfig.rb" in a console to find where this 'rbconfig.rb' file is.
+ 
+    #---------------------------------------------------------------------------------
+    CONFIG["WSFC_HOME"] = "your/wsfc/home/dir"
+    CONFIG["WSF_LOG_DIR"] = "where/you/wish/log/file/should/be"
+    CONFIG["WSF_LOG_LEVEL"] = "3"
+    #---------------------------------------------------------------------------------
+    
+     NOTE: Above WSF_LOG_LEVEL entry can have one of the following values- 
+               "0" - CRITICAL
+               "1" - ERROR
+               "2" - WARNING
+               "3" - INFO
+               "4" - DEBUG
+               "5" - TRACE
+    
+b. Run "sh build.sh" to setup the extension.  You may require super user 
+   privileges to run build.sh
+
+
+3. RUN SAMPLES
+
+a. It is required to have Rails Framework installed in your machine to run 
+   the Rails samples in
+     - samples/consumer/rails and
+	 - samples/provide
+
+b. Go to the samples/provider directory in the WSO2/WSF ruby binary/source
+   distribution.
+
+        cd samples/provider
+
+c. Run deploy_samples.rb by executing the following command
+
+        ruby deploy_samples.rb your_rails_application
+
+   Then you will have a rails application created in a directory called
+   'your_rails_application' relative to the currrent directory.
+
+d. Go to the directory 'your_rails_application'
+        cd your_rails_application
+
+e. Then start the server executing the following command,
+        run the ruby script/server
+
+NOTE: If you are using rails 2.0.0 or above you may need to configure the 
+      database information in your rails application. You can find a guide
+      on how to configure the database from the following link.
+
+      http://wiki.rubyonrails.com/rails/pages/TutorialStepOne
+
+f. Now you are done deploying the provider samples . 
+
+e. Start a new shell or command prompt and go to the samples/consumer directory
+   in the WSO2/WSF ruby binary/source distribution. Make sure wso2 wsf/c libraries
+   and its dependend libraries are inside the 'PATH' enviroment variable for new
+   shell/command prompt as well.
+       
+       cd ../consumer
+
+
+e. Then run the echo sample by typing ruby echo_client.rb in command line or
+   terminal. If your client and service working fine, You will see the 
+   'SUCCESSFUL' message 
+
+
