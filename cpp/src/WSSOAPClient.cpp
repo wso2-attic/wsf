@@ -34,7 +34,7 @@ bool WSSOAPClient::setOptions(Options * options)
   * @todo: document this function
   */
  WSSOAPClient::WSSOAPClient(const axis2_conf_ctx_t * conf_ctx, std::string endpoint_address)
-    :ServiceClient::ServiceClient(conf_ctx, endpoint_address)
+    :ServiceClient(conf_ctx, endpoint_address)
 {}
 
 /** @brief WSSOAPClient
@@ -42,7 +42,7 @@ bool WSSOAPClient::setOptions(Options * options)
   * @todo: document this function
   */
  WSSOAPClient::WSSOAPClient(std::string repo_home, std::string endpoint_address)
-    :ServiceClient::ServiceClient(repo_home, endpoint_address)
+    :ServiceClient(repo_home, endpoint_address)
 {}
 
 /** @brief WSSOAPClient
@@ -50,5 +50,5 @@ bool WSSOAPClient::setOptions(Options * options)
   * @todo: document this function
   */
  WSSOAPClient::WSSOAPClient(std::string endpoint_address)
-    :ServiceClient::ServiceClient(endpoint_address)
+    :ServiceClient(endpoint_address)
 {}
