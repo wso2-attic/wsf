@@ -1,0 +1,118 @@
+WSO2 Web Services Framework/C++ - Installation Guide (Microsoft Windows)
+========================================================================
+
+1. Software Dependencies
+------------------------
+
+1.1. Mandatory
+
+    * Libxml2 - http://www.xmlsoft.org/
+    * libiconv - http://www.gnu.org/software/libiconv/
+    * zlib - http://www.zlib.net/
+
+1.2. Optional
+
+    * Apache2 httpd - http://httpd.apache.org/ - Required for deploying services with httpd
+    * OpenSSL - http://www.openssl.org/ - Required for SSL client transport and WS-Security with Apache Rampart/C
+    * Either SQLite - http://www.sqlite.org/ or MySQL - http://www.mysql.org/ - Required for WS-ReliableMessaging with Apache Sandesha2/C 
+    * iksemel - http://iksemel.jabberstudio.org/ - Required for XMPP transport
+
+
+2. Requirements
+---------------
+
+The makefile shipped with this version needs Microsoft Visual Studio Compiler (cl) and nmake build tool.
+(Note: You can download Microsoft VSExpress2005 edition and Platform SDK from Microsoft Web site. 
+You will need to add the path to Platform SDK Include and Lib folders to makefile)
+You also need have a look at and install the dependencies mentioned in section 1. above.
+
+
+3. Building and Installing WSO2 WSF/C++ from Source on MS Windows.
+------------------------------------------------------------------
+
+   1. Extract the source zip package to a folder.
+
+   2. If you want to install WSO2 WSF/C++ in a location other than the default, wso2-wsf-cpp-bin-x.x.x-win32,
+      set WSFCPP_HOME environment variable pointing to the location where you want to install WSO2 WSF/C++.
+
+        > set WSFCPP_HOME='your_desired_path_to_wsf_c++_installation'
+
+   3. Then go to the folder where you extracted the source.
+
+        > cd your_path_to_wsf_c++_source
+
+   4. Edit the Configuration
+      * Edit configure.in found in the folder where you extracted the source.
+
+      The configure.in file contains the user specific configuration parameters. Please have a look at
+      this file and set the settings to match your system's settings. Settings for Apache Axis2/C are
+      mandatory. Settings for Apache Rampart/C and Apache Sandesha2/C are optional and needs to be set
+      only if you want to build those. The comments in the configure.in file explain each setting, 
+      please have a look at the comments to get an understanding on what each setting means.
+
+   5. Build the source
+      * Run build.bat batch file found in the folder where you extracted the source.
+
+        > build.bat
+
+      Note: You may need to set the PATH environment variable to vcvars32.bat if Windows complains
+      that it cannot find this batch file when running the build.bat file
+
+   6. You need to add the path to lib directory to the PATH variable (%WSFCPP_HOME%\lib)
+
+        > set PATH=%PATH%;%WSFCPP_HOME%\lib
+
+   7. Go to where you installed WSO2 WSF/C++. Start simple axis server
+      * To start the simple axis server on port 9090 run the following commands
+
+        > cd "%WSFCPP_HOME%\bin"
+        > axis2_http_server.exe
+
+      * If the server fails to start, you may need to set the WSFCPP_HOME environment variable, pointing
+      to the deploy folder (C:\wsfcpp)
+      
+        > set WSFCPP_HOME='C:\wsfcpp'
+
+      To see the possible command line options run axis2_http_server.exe -h
+
+      If the server is running successfully you should see the message
+      "Started Simple Axis2 HTTP Server..."
+
+Now you are ready to use WSO2 WSF/C++.
+
+Notes:
+ - You may require administrative privileges to run 'build.bat' on your system.
+ - You may optionally specify the path in which the installation should be 
+   deployed using "set WSFCPP_HOME='your_desired_path_to_wsf_c++_installation'".
+ - If you don't set the WSFCPP_HOME environment variable, WSO2 WSF/C++ will by 
+   default be installed into, 'your_path_to_wsf_c++_source\wso2-wsf-cpp-bin-x.x.x-win32'
+
+
+4. Installing WSO2 WSF/C++ from the Binary Release for MS Windows.
+------------------------------------------------------------------
+
+   1. Extract the binary distribution to a folder of your choice. (example: C:\wsfcpp)
+
+   2. Copy libxml2.dll, iconv.dll and zlib1.dll downloaded to C:\wsfcpp\lib
+      
+   3. You need to set a couple of environment variables before you can run the server and clients.
+      * Set the variable WSFCPP_HOME to the deploy folder (C:\wsfcpp)
+
+        > set WSFCPP_HOME='C:\wsfcpp'
+
+      * Add the path to lib directory to the PATH variable (%WSFCPP_HOME%\lib)
+
+        > set PATH=%PATH%;%WSFCPP_HOME%\lib
+
+   4. Go to where you installed WSO2 WSF/C++. Start simple axis server
+      * To start the simple axis server on port 9090 run the following commands
+
+        > cd "%WSFCPP_HOME%\bin"
+        > axis2_http_server.exe
+
+      To see the possible command line options run axis2_http_server.exe -h
+
+      If the server is running successfully you should see the message
+      "Started Simple Axis2 HTTP Server..."
+
+Now you are ready to use WSO2 WSF/C++.
