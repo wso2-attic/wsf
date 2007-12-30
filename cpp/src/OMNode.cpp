@@ -93,7 +93,7 @@ axiom_node_t * OMNode::getAxiomNode()
   *
   * @todo: document this function
   */
-OMNode::OMNode() throw(OMException)
+OMNode::OMNode()
 {
     _wsf_axiom_node = NULL;
 }
