@@ -17,6 +17,7 @@
 #ifndef EXCEPTION_H
 #define EXCEPTION_H
 
+#include <WSFDefines.h>
 #include <iostream>
 #include <string>
 
@@ -50,7 +51,7 @@ namespace wso2wsf
          * @param e exception object.
          * @return a modified output stream is returned.
          */
-        friend std::ostream & operator <<(std::ostream & str, Exception const & e);
+        friend WSF_EXTERN std::ostream & WSF_CALL operator <<(std::ostream & str, Exception const & e);
 
     private:
         /**
@@ -62,31 +63,31 @@ namespace wso2wsf
         /**
          * desctructor that can be overriden.
          */
-        virtual ~Exception();
+        virtual WSF_CALL ~Exception();
 
         /**
          * Method for doing the required processing.
          * Must be overriden, for an class that can be constructed.
          */
-        virtual void process() const = 0;
+        virtual void WSF_CALL process() const = 0;
 
         /**
          * Operation for obtaining string representation of the exception
          * object. No member fields can be modified within this function.
          * The derived class has the option to override the behaviour.
          */
-        virtual operator std::string() const;
+        virtual WSF_CALL operator std::string() const;
 
     protected:
         /**
          * Constructor accepting a reason for the exception.
          * @param reason reason to exception.
          */
-        Exception(char const * reason);
+        WSF_CALL Exception(char const * reason);
     };
     /** @} */
 
-    inline std::ostream & operator <<(std::ostream & str, Exception const & e)
+    inline std::ostream & WSF_CALL operator <<(std::ostream & str, Exception const & e)
     {
         return str << e.operator std::string();
     }

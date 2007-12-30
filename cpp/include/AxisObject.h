@@ -17,6 +17,7 @@
 #ifndef AXISOBJECT_H
 #define AXISOBJECT_H
 
+#include <WSFDefines.h>
 #include <axutil_env.h>
 #include <string>
 #include <AxisFault.h>
@@ -58,24 +59,24 @@ namespace wso2wsf
         /**
          * Increments reference count.
          */
-        void incrementRef();
+        void WSF_CALL incrementRef();
 
         /**
          * Decrements reference count.
          */
-        void decrementRef();
+        void WSF_CALL decrementRef();
 
     protected:
         /**
          * Method to get the reference to the axutil_env struct.
          * @return reference to the axutil_env struct.
          */
-        axutil_env_t * getEnv();
+        axutil_env_t * WSF_CALL getEnv();
 
         /**
          * Constructor setting up the AxisObject.
          */
-        AxisObject();
+        WSF_CALL AxisObject();
 
         /**
          * Method for initializing the Axis Object.
@@ -85,19 +86,19 @@ namespace wso2wsf
          * @exception AxisFault an exception is thrown if something goes wrong
          * while setting up the environment.
          */
-        void initialize(std::string log_file, axutil_log_levels_t log_level) throw(AxisFault);
+        void WSF_CALL initialize(std::string log_file, axutil_log_levels_t log_level) throw(AxisFault);
 
         /**
          * Enables or Disables logging,
          * @param enable true will enable and false will disable.
          */
-        void enableLogging(bool enable);
+        void WSF_CALL enableLogging(bool enable);
 
     public:
         /**
          * destructor frees resources.
          */
-        virtual ~AxisObject();
+        virtual WSF_CALL ~AxisObject();
     };
     /** @} */
 }

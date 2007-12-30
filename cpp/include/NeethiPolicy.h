@@ -17,6 +17,7 @@
 #ifndef NEETHIPOLICY_H
 #define NEETHIPOLICY_H
 
+#include <WSFDefines.h>
 #include <NeethiObject.h>
 #include <OMElement.h>
 #include <neethi_policy.h>
@@ -57,13 +58,13 @@ namespace wso2wsf
          * Method to get the reference to the neethi_policy struct.
          * @return reference to the neethi_policy struct.
          */
-        neethi_policy_t * getNeethiPolicy();
+        neethi_policy_t * WSF_CALL getNeethiPolicy();
 
         /**
          * Method to set the reference to the neethi_policy struct.
          * @param policy reference to the neethi_policy struct.
          */
-        void setNeethiPolicy(neethi_policy_t * policy);
+        void WSF_CALL setNeethiPolicy(neethi_policy_t * policy);
 
         /**
          * Creates a neethi_policy struct.
@@ -71,7 +72,7 @@ namespace wso2wsf
          * @exception NeethiException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        NeethiPolicy(std::string file_name) throw(NeethiException);
+        WSF_EXTERN WSF_CALL NeethiPolicy(std::string file_name) throw(NeethiException);
 
         /**
          * Creates a neethi_policy struct.
@@ -79,38 +80,38 @@ namespace wso2wsf
          * @exception NeethiException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        NeethiPolicy(OMElement * element) throw(NeethiException);
+        WSF_EXTERN WSF_CALL NeethiPolicy(OMElement * element) throw(NeethiException);
 
         /**
          * desctructor that frees resources.
          */
-        virtual ~NeethiPolicy();
+        virtual WSF_CALL ~NeethiPolicy();
 
         /**
          * Sets policy name.
          * @param name name to set.
          * @return true if successful, false otherwise.
          */
-        bool setName(std::string name);
+        WSF_EXTERN bool WSF_CALL setName(std::string name);
 
         /**
          * Gets policy name.
          * @return policy name as string.
          */
-        std::string getName();
+        WSF_EXTERN std::string WSF_CALL getName();
 
         /**
          * Sets policy id.
          * @param id id to set.
          * @return true if successful, false otherwise.
          */
-        bool setId(std::string id);
+        WSF_EXTERN bool WSF_CALL setId(std::string id);
 
         /**
          * Gets policy id.
          * @return policy id as string.
          */
-        std::string getId();
+        WSF_EXTERN std::string WSF_CALL getId();
 
     };
     /** @} */

@@ -17,11 +17,13 @@
 #ifndef OMTEXT_H
 #define OMTEXT_H
 
+#include <WSFDefines.h>
 #include <axiom_text.h>
 #include <OMNode.h>
 #include <OMElement.h>
 #include <OMDataHandler.h>
 #include <OMException.h>
+
 /**
  * @file OMText.h
  */
@@ -68,7 +70,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        OMText(OMNode * parent, std::string value) throw(OMException);
+        WSF_EXTERN WSF_CALL OMText(OMNode * parent, std::string value) throw(OMException);
 
         /**
          * Creates an om text struct.
@@ -76,7 +78,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        OMText(std::string value) throw(OMException);
+        WSF_EXTERN WSF_CALL OMText(std::string value) throw(OMException);
 
         /**
          * Creates an om text struct.
@@ -85,7 +87,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        OMText(OMNode * parent, OMDataHandler * data_handler) throw(OMException);
+        WSF_EXTERN WSF_CALL OMText(OMNode * parent, OMDataHandler * data_handler) throw(OMException);
 
         /**
          * Creates an om text struct.
@@ -93,14 +95,14 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        OMText(OMDataHandler * data_handler) throw(OMException);
+        WSF_EXTERN WSF_CALL OMText(OMDataHandler * data_handler) throw(OMException);
 
         /**
          * Creates an om text struct.
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        OMText() throw(OMException);
+        WSF_EXTERN WSF_CALL OMText() throw(OMException);
 
         /**
          * Creates an om text struct.
@@ -109,12 +111,12 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        OMText(OMNode * parent, axiom_node_t * node) throw(OMException);
+        WSF_CALL OMText(OMNode * parent, axiom_node_t * node) throw(OMException);
 
         /**
          * Desctructor that frees resources.
          */
-        ~OMText();
+        WSF_CALL ~OMText();
 
         /**
          * Sets the text value
@@ -122,44 +124,44 @@ namespace wso2wsf
          * @return status of the op. true on success,
          * false on error.
          */
-        bool setValue(std::string value);
+        WSF_EXTERN bool WSF_CALL setValue(std::string value);
 
         /**
          * Gets text value
          * @return text value, "" is returned if there is no text value.
          */
-        std::string getValue();
+        WSF_EXTERN std::string WSF_CALL getValue();
 
         /**
          * Gets text value from the text node even when MTOM optimized
          * @return text value base64 encoded text when MTOM optimized,
          * "" is returned if there is no text value.
          */
-        std::string getText();
+        WSF_EXTERN std::string WSF_CALL getText();
 
         /**
          * Sets optimized.
          * @param optimize optimize value or not.
          */
-        void optimize(bool optimize);
+        WSF_EXTERN void WSF_CALL optimize(bool optimize);
 
         /**
          * Sets whether to use binary or not.
          * @param is_binary binary or not.
          */
-        void isBinary(bool is_binary);
+        WSF_EXTERN void WSF_CALL isBinary(bool is_binary);
 
         /**
          * Retrieves data handler.
          * @return data handler is returned.
          */
-        OMDataHandler * getDataHandler();
+        WSF_EXTERN OMDataHandler * WSF_CALL getDataHandler();
 
         /**
          * Gets the content id.
          * @return content id is returned.
          */
-        std::string getContentId();
+        WSF_EXTERN std::string WSF_CALL getContentId();
 
         /**
          * Sets the content id.
@@ -167,34 +169,34 @@ namespace wso2wsf
          * @return status of the op. true on success,
          * false on error.
          */
-        bool setContentId(std::string content_id);
+        WSF_EXTERN bool WSF_CALL setContentId(std::string content_id);
 
         /**
          * Detaches given node from the parent and reset the links.
          * @return a pointer to detached node,returns NULL on error with error
          * code set to environment's error struct.
          */
-        virtual OMNode * detach();
+        WSF_EXTERN virtual OMNode * WSF_CALL detach();
 
         /**
          * get parent of node.
          * @return pointer to parent node of node, return NULL if no parent exists or
          * when an error occured.
          */
-        virtual OMNode * getParent();
+        WSF_EXTERN virtual OMNode * WSF_CALL getParent();
 
         /**
          * get the previous sibling.
          * @return a pointer to previous sibling , NULL if a previous sibling does not exits
          * (happens when this node is the first child of a node).
          */
-        virtual OMNode * getPreviousSibling();
+        WSF_EXTERN virtual OMNode * WSF_CALL getPreviousSibling();
 
         /**
          * get next sibling.
          * @return next sibling of this node.
          */
-        virtual OMNode * getNextSibling();
+        WSF_EXTERN virtual OMNode * WSF_CALL getNextSibling();
 
         /**
          * get the node type of this element.
@@ -202,7 +204,7 @@ namespace wso2wsf
          * AXIOM_DOCTYPE, AXIOM_PROCESSING_INSTRUCTION.
          * @return node type.
          */
-        virtual axiom_types_t nodeType();
+        WSF_EXTERN virtual axiom_types_t WSF_CALL nodeType();
     };
     /** @} */
 }

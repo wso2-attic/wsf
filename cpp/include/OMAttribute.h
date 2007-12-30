@@ -17,6 +17,7 @@
 #ifndef OMATTRIBUTE_H
 #define OMATTRIBUTE_H
 
+#include <WSFDefines.h>
 #include <OMNamespace.h>
 #include <OMObject.h>
 #include <axiom_attribute.h>
@@ -51,7 +52,7 @@ namespace wso2wsf
          * @param attribute OMAttribute object.
          * @return a modified output stream is returned.
          */
-        friend std::ostream & operator <<(std::ostream & str, OMAttribute const & attribute);
+        friend WSF_EXTERN std::ostream & WSF_CALL operator <<(std::ostream & str, OMAttribute const & attribute);
 
         /**
          * Overloaded insertion operator, is used for printing the attribute onto a console.
@@ -59,7 +60,7 @@ namespace wso2wsf
          * @param attribute OMAttribute object.
          * @return a modified output stream is returned.
          */
-        friend std::ostream & operator <<(std::ostream & str, OMAttribute const * attribute);
+        friend WSF_EXTERN std::ostream & WSF_CALL operator <<(std::ostream & str, OMAttribute const * attribute);
 
     private:
         /**
@@ -79,13 +80,13 @@ namespace wso2wsf
          * Method to get the reference to the axiom_attribute struct.
          * @return reference to the axiom_attribute struct.
          */
-        axiom_attribute_t * getAxiomAttribute();
+        axiom_attribute_t * WSF_CALL getAxiomAttribute();
 
         /**
          * Method to set the reference to the axiom_attribute struct.
          * @param attribute reference to the axiom_attribute struct.
          */
-        void setAxiomAttribute(axiom_attribute_t * attribute);
+        void WSF_CALL setAxiomAttribute(axiom_attribute_t * attribute);
 
         /**
          * Creates a attribute struct.
@@ -95,7 +96,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        OMAttribute(std::string name, std::string value, OMNamespace * ns) throw(OMException);
+        WSF_EXTERN WSF_CALL OMAttribute(std::string name, std::string value, OMNamespace * ns) throw(OMException);
 
         /**
          * Creates a attribute struct.
@@ -104,7 +105,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        OMAttribute(std::string name, std::string value) throw(OMException);
+        WSF_EXTERN WSF_CALL OMAttribute(std::string name, std::string value) throw(OMException);
 
         /**
          * Copy Constructor.
@@ -112,43 +113,43 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        OMAttribute(OMAttribute & attribute) throw(OMException);
+        WSF_EXTERN WSF_CALL OMAttribute(OMAttribute & attribute) throw(OMException);
 
         /**
          * desctructor that frees resources.
          */
-        virtual ~OMAttribute();
+        virtual WSF_CALL ~OMAttribute();
 
         /**
          * Compares two attributes.
          * @param attribute attribute to be compared.
          * @return true if the two attributes are equal, false otherwise.
          */
-        bool equals(OMAttribute * attribute);
+        WSF_EXTERN bool WSF_CALL equals(OMAttribute * attribute);
 
         /**
          * Method to obtain value.
          * @return value, NULL on error.
          */
-        std::string getValue();
+        WSF_EXTERN std::string WSF_CALL getValue();
 
         /**
          * Method to obtain name.
          * @return attribute name, NULL on error.
          */
-        std::string getName();
+        WSF_EXTERN std::string WSF_CALL getName();
 
         /**
          * Method to obtain namespace.
          * @return attribute namespace, NULL on error.
          */
-        OMNamespace * getNamespace();
+        WSF_EXTERN OMNamespace * WSF_CALL getNamespace();
 
         /**
          * Method to set value.
          * @param value attribute Value.
          */
-        void setValue(std::string value);
+        WSF_EXTERN void WSF_CALL setValue(std::string value);
 
 //        /**
 //         * Method to set name.
@@ -160,16 +161,16 @@ namespace wso2wsf
          * Converts this attribute to a string.
          * @return converted attribute as string.
          */
-        virtual std::string toString();
+        WSF_EXTERN virtual std::string WSF_CALL toString();
     };
     /** @} */
 
-    inline std::ostream & operator <<(std::ostream & str, OMAttribute const & attribute)
+    inline std::ostream & WSF_CALL operator <<(std::ostream & str, OMAttribute const & attribute)
     {
         return str << const_cast<OMAttribute &>(attribute).toString();
     }
 
-    inline std::ostream & operator <<(std::ostream & str, OMAttribute const * attribute)
+    inline std::ostream & WSF_CALL operator <<(std::ostream & str, OMAttribute const * attribute)
     {
         return str << const_cast<OMAttribute *>(attribute)->toString();
     }

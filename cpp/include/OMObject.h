@@ -1,6 +1,7 @@
 #ifndef OMOBJECT_H
 #define OMOBJECT_H
 
+#include <WSFDefines.h>
 #include <AxisObject.h>
 
 /**
@@ -28,7 +29,7 @@ namespace wso2wsf
         /**
          * Constructor setting up the OMObject.
          */
-        OMObject();
+        WSF_CALL OMObject();
     };
     /** @} */
 }

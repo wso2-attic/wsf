@@ -17,6 +17,7 @@
 #ifndef OMELEMENT_H
 #define OMELEMENT_H
 
+#include <WSFDefines.h>
 #include <OMNode.h>
 #include <OMNamespace.h>
 #include <OMAttribute.h>
@@ -94,7 +95,7 @@ namespace wso2wsf
          * @return pointer to the namespace, if found, else NULL. On error, returns
          * NULL and sets error code in environment,s error.
          */
-        OMNamespace * findNamespace(std::string uri, std::string prefix);
+        OMNamespace * WSF_CALL findNamespace(std::string uri, std::string prefix);
 
     public:
         /**
@@ -104,7 +105,7 @@ namespace wso2wsf
          * @param child child node.
          * @return status of the op. true on success else false.
          */
-        virtual bool removeChildLocal(OMNode * child);
+        virtual bool WSF_CALL removeChildLocal(OMNode * child);
 
         /**
          * Adds given node as child to parent in C++ Level. child should not have a parent
@@ -112,20 +113,20 @@ namespace wso2wsf
          * @param child child node.
          * @return status of the op. true on success else false.
          */
-        virtual void addChildLocal(OMNode * child);
+        virtual void WSF_CALL addChildLocal(OMNode * child);
 
         /**
          * Method to retrieve children of this node.
          * @return childern of this node.
          */
-        virtual std::vector<OMNode *> getChilderen();
+        WSF_EXTERN virtual std::vector<OMNode *> WSF_CALL getChilderen();
 
         /**
          * Method to set children of this node.
          * @param children child node array.
          * @return childern of this node.
          */
-        virtual void setChilderen(std::vector<OMNode *> children);
+        WSF_EXTERN virtual void WSF_CALL setChilderen(std::vector<OMNode *> children);
 
         /**
          * Creates an om element struct.
@@ -134,7 +135,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        OMElement(OMNode * parent, axiom_node_t * node) throw(OMException);
+        WSF_CALL OMElement(OMNode * parent, axiom_node_t * node) throw(OMException);
 
         /**
          * Creates an om element struct.
@@ -144,7 +145,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        OMElement(OMNode * parent, std::string localname, OMNamespace * ns) throw(OMException);
+        WSF_EXTERN WSF_CALL OMElement(OMNode * parent, std::string localname, OMNamespace * ns) throw(OMException);
 
         /**
          * Creates an om element struct.
@@ -153,7 +154,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        OMElement(OMNode * parent, std::string localname) throw(OMException);
+        WSF_EXTERN WSF_CALL OMElement(OMNode * parent, std::string localname) throw(OMException);
 
         /**
          * Creates an om element struct.
@@ -162,7 +163,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        OMElement(std::string localname, OMNamespace * ns) throw(OMException);
+        WSF_EXTERN WSF_CALL OMElement(std::string localname, OMNamespace * ns) throw(OMException);
 
         /**
          * Creates an om element struct.
@@ -170,33 +171,33 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        OMElement(std::string localname) throw(OMException);
+        WSF_EXTERN WSF_CALL OMElement(std::string localname) throw(OMException);
 
         /**
          * desctructor that frees resources. Please note that all associated attributes,
          * namespaces, and child nodes will also be removed.
          */
-        virtual ~OMElement();
+        virtual WSF_CALL ~OMElement();
 
         /**
          * Frees an om node and all of its children.
          * @param node node to be freed.
          */
-        void freeTree();
+        WSF_EXTERN void WSF_CALL freeTree();
 
         /**
          * Inserts a sibling node after the given node.
          * @param to_insert the node to be inserted. Cannot be NULL.
          * @return status of the op, true on success else false.
          */
-        bool insertSiblingAfter(OMNode * to_insert);
+        WSF_EXTERN bool WSF_CALL insertSiblingAfter(OMNode * to_insert);
 
         /**
          * Inserts a sibling node before the given current node.
          * @param to_insert the node to be inserted. Cannot be NULL.
          * @return status of the op, AXIS2_SUCCESS on success else AXIS2_FAILURE.
          */
-        bool insertSiblingBefore(OMNode * to_insert);
+        WSF_EXTERN bool WSF_CALL insertSiblingBefore(OMNode * to_insert);
 
         /**
          * Declare a namespace in current element (in the scope of this element).
@@ -208,7 +209,7 @@ namespace wso2wsf
          * @param no_find true for no-find mode.
          * @return satus of the op. true on success else false.
          */
-        bool setNamespace(OMNamespace * ns, bool no_find);
+        WSF_EXTERN bool WSF_CALL setNamespace(OMNamespace * ns, bool no_find);
 
         /**
          * get the namespace of om_element.
@@ -216,21 +217,21 @@ namespace wso2wsf
          * @return pointer to Namespace. NULL if there is no namespace.
          * associated with the element.
          */
-        OMNamespace * getNamespace(bool is_default);
+        WSF_EXTERN OMNamespace * WSF_CALL getNamespace(bool is_default);
 
         /**
          * declared a default namespace explicitly.
          * @param uri namespace uri of the default namespace.
          * @return the declared namespace.
          */
-        bool declareDefaultNamespace(std::string uri);
+        WSF_EXTERN bool WSF_CALL declareDefaultNamespace(std::string uri);
 
         /**
          * Adds an attribute to current element
          * @param attribute attribute to be added.
          * @return satus of the op. true on success else false.
          */
-        bool addAttribute(OMAttribute * attribute);
+        WSF_EXTERN bool WSF_CALL addAttribute(OMAttribute * attribute);
 
         /**
          * Gets (finds) the attribute with the given name.
@@ -239,7 +240,7 @@ namespace wso2wsf
          * @return a pointer to the attribute with given name if found, else NULL.
          * On error, returns NULL and sets the error code in environment's error struct.
          */
-        OMAttribute * getAttribute(std::string name, OMNamespace * ns);
+        WSF_EXTERN OMAttribute * WSF_CALL getAttribute(std::string name, OMNamespace * ns);
 
         /**
          * Gets (finds) the attribute with the given name and namespace.
@@ -248,7 +249,7 @@ namespace wso2wsf
          * @return a pointer to the attribute with given name if found, else NULL.
          * On error, returns NULL and sets the error code in environment's error struct.
          */
-        OMAttribute * getAttribute(std::string name);
+        WSF_EXTERN OMAttribute * WSF_CALL getAttribute(std::string name);
 
         /**
          * Gets (finds) the attribute value with the given name and namespace.
@@ -256,7 +257,7 @@ namespace wso2wsf
          * @param ns namespace of the attribute to be found. can be NULL.
          * @return the attribute value with given name if found, else NULL.
          */
-        std::string getAttributeValue(std::string name, OMNamespace * ns);
+        WSF_EXTERN std::string WSF_CALL getAttributeValue(std::string name, OMNamespace * ns);
 
         /**
          * Gets (finds) the attribute value with the given name.
@@ -264,7 +265,7 @@ namespace wso2wsf
          * @param ns namespace of the attribute to be found. can be NULL.
          * @return the attribute value with given name if found, else NULL.
          */
-        std::string getAttributeValue(std::string name);
+        WSF_EXTERN std::string WSF_CALL getAttributeValue(std::string name);
 
         /**
          * removes an attribute from the element attribute list
@@ -273,13 +274,13 @@ namespace wso2wsf
          * @param attribute attribute to be removed.
          * @return true if attribute was found and removed, else false.
          */
-        bool removeAttribute(OMAttribute * attribute);
+        WSF_EXTERN bool WSF_CALL removeAttribute(OMAttribute * attribute);
 
         /**
          * returns the localname of this element
          * @return localname of element, returns NULL on error.
          */
-        std::string getLocalname();
+        WSF_EXTERN std::string WSF_CALL getLocalname();
 
         /**
          * Sets the text of the given element.
@@ -288,14 +289,14 @@ namespace wso2wsf
          * @param text text to be set.
          * @return true if text was set, else false.
          */
-        bool setText(std::string text);
+        WSF_EXTERN bool WSF_CALL setText(std::string text);
 
         /**
          * select all the text children and concat them to a single string.
          * @return the contanated text of all text childrens text values
          * return null if no text children is avilable or on error.
          */
-        std::string getText();
+        WSF_EXTERN std::string WSF_CALL getText();
 
         /**
          * Adds given node as child to parent. child should not have a parent
@@ -303,13 +304,13 @@ namespace wso2wsf
          * @param child child node.
          * @return satus of the op. true on success else false.
          */
-        bool addChild(OMNode * child);
+        WSF_EXTERN bool WSF_CALL addChild(OMNode * child);
 
         /**
          * returns the first child om element of this om element node.
          * @return om element if one is availble otherwise return NULL.
          */
-        OMElement * getFirstElement();
+        WSF_EXTERN OMElement * WSF_CALL getFirstElement();
 
         /**
          * returns the om_element corresponding to given local name and
@@ -318,7 +319,7 @@ namespace wso2wsf
          * @param ns namespace of element.
          * retrieved element.
          */
-        OMElement * getChildElement(std::string localname, OMNamespace * ns);
+        WSF_EXTERN OMElement * WSF_CALL getChildElement(std::string localname, OMNamespace * ns);
 
         /**
          * builds this om_element_node completely, This is only possible
@@ -326,46 +327,46 @@ namespace wso2wsf
          * @return true if this element node was successfully completed,
          * otherwise returns false.
          */
-        bool build();
+        WSF_EXTERN bool WSF_CALL build();
 
         /**
          * Detaches given node from the parent and reset the links
          * @return a pointer to detached node,returns NULL on error with error
          * code set to environment's error struct
          */
-        OMNode * detach();
+        WSF_EXTERN OMNode * WSF_CALL detach();
 
         /** get parent of node
          * @return pointer to parent node of node, return NULL if no parent exists or
          * when an error occured.
          */
-        OMNode * getParent();
+        WSF_EXTERN OMNode * WSF_CALL getParent();
 
         /**
           * get the first child of node
           * @return pointer to first child node , NULL is returned on error with
           * error code set in environments error
           */
-        OMNode * getFirstChild();
+        WSF_EXTERN OMNode * WSF_CALL getFirstChild();
 
         /**
          * get the last child
          * @return pointer to last child of this node , return NULL on error.
          */
-        OMNode * getLastChild();
+        WSF_EXTERN OMNode * WSF_CALL getLastChild();
 
         /**
          * get the previous sibling
          * @return a pointer to previous sibling , NULL if a previous sibling does not exits
          * (happens when this node is the first child of a node )
          */
-        OMNode * getPreviousSibling();
+        WSF_EXTERN OMNode * WSF_CALL getPreviousSibling();
 
         /**
          * get next sibling
          * @return next sibling of this node.
          */
-        OMNode * getNextSibling();
+        WSF_EXTERN OMNode * WSF_CALL getNextSibling();
 
         /**
          * get the node type of this element
@@ -373,7 +374,7 @@ namespace wso2wsf
          * AXIOM_DOCTYPE, AXIOM_PROCESSING_INSTRUCTION
          * @return node type
          */
-        axiom_types_t nodeType();
+        WSF_EXTERN axiom_types_t WSF_CALL nodeType();
 
 //        /**
 //         * get  the attribute list of the element

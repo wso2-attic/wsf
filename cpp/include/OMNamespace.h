@@ -17,6 +17,7 @@
 #ifndef OMNAMESPACE_H
 #define OMNAMESPACE_H
 
+#include <WSFDefines.h>
 #include <stdio.h>
 #include <string>
 #include <OMObject.h>
@@ -53,7 +54,7 @@ namespace wso2wsf
          * @param ns OMNamespace object.
          * @return a modified output stream is returned.
          */
-        friend std::ostream & operator <<(std::ostream & str, OMNamespace const & ns);
+        friend WSF_EXTERN std::ostream & WSF_CALL operator <<(std::ostream & str, OMNamespace const & ns);
 
         /**
          * Overloaded insertion operator, is used for printing the namespace onto a console.
@@ -61,7 +62,7 @@ namespace wso2wsf
          * @param ns OMNamespace object.
          * @return a modified output stream is returned.
          */
-        friend std::ostream & operator <<(std::ostream & str, OMNamespace const * ns);
+        friend WSF_EXTERN std::ostream & WSF_CALL operator <<(std::ostream & str, OMNamespace const * ns);
 
     private:
         /**
@@ -75,13 +76,13 @@ namespace wso2wsf
          * Method to get the reference to the axiom_namespace struct.
          * @return reference to the axiom_namespace struct.
          */
-        axiom_namespace_t * getAxiomNamespace();
+        axiom_namespace_t * WSF_CALL getAxiomNamespace();
 
         /**
          * Method to set the reference to the axiom_namespace struct.
          * @param ns reference to the axiom_namespace struct.
          */
-        void setAxiomNamespace(axiom_namespace_t * ns);
+        void WSF_CALL setAxiomNamespace(axiom_namespace_t * ns);
 
         /**
          * Creates a namespace struct.
@@ -90,7 +91,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        OMNamespace(std::string uri, std::string prefix) throw(OMException);
+        WSF_EXTERN WSF_CALL OMNamespace(std::string uri, std::string prefix) throw(OMException);
 
         /**
          * Copy Constructor.
@@ -98,46 +99,46 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        OMNamespace(OMNamespace & om_namespace) throw(OMException);
+        WSF_EXTERN WSF_CALL OMNamespace(OMNamespace & om_namespace) throw(OMException);
 
         /**
          * desctructor that frees resources.
          */
-        virtual ~OMNamespace();
+        virtual WSF_CALL ~OMNamespace();
 
         /**
          * Compares two namepsaces.
          * @param ns namespace to be compared.
          * @return true if the two namespaces are equal, false otherwise.
          */
-        bool equals(OMNamespace * ns);
+        WSF_EXTERN bool WSF_CALL equals(OMNamespace * ns);
 
         /**
          * Method to obtain URI.
          * @return namespace uri, NULL on error.
          */
-        std::string getURI();
+        WSF_EXTERN std::string WSF_CALL getURI();
 
         /**
          * Method to obtain prefix.
          * @return prefix, NULL on error.
          */
-        std::string getPrefix();
+        WSF_EXTERN std::string WSF_CALL getPrefix();
 
         /**
          * Converts this namespace to a string.
          * @return converted namespace as string.
          */
-        virtual std::string toString();
+        WSF_EXTERN virtual std::string WSF_CALL toString();
     };
     /** @} */
 
-    inline std::ostream & operator <<(std::ostream & str, OMNamespace const & ns)
+    inline std::ostream & WSF_CALL operator <<(std::ostream & str, OMNamespace const & ns)
     {
         return str << const_cast<OMNamespace &>(ns).toString();
     }
 
-    inline std::ostream & operator <<(std::ostream & str, OMNamespace const * ns)
+    inline std::ostream & WSF_CALL operator <<(std::ostream & str, OMNamespace const * ns)
     {
         return str << const_cast<OMNamespace *>(ns)->toString();
     }

@@ -1,7 +1,7 @@
 #ifndef OMEXCEPTION_H
 #define OMEXCEPTION_H
 
-
+#include <WSFDefines.h>
 #include <Exception.h>
 #include <OMObject.h>
 
@@ -38,7 +38,7 @@ namespace wso2wsf
          * Constructor accepting a reason for the exception.
          * @param reason reason to exception.
          */
-        OMException(char const * reason);
+        WSF_CALL OMException(char const * reason);
 
         /**
          * Constructor accepting a reason for the exception, and the
@@ -46,17 +46,17 @@ namespace wso2wsf
          * @param reason reason to exception.
          * @param sender object that triggered the exception.
          */
-        OMException(char const * reason, OMObject * sender);
+        WSF_CALL OMException(char const * reason, OMObject * sender);
 
         /**
          * Method for doing the required processing, of the OM Exception.
          */
-        void process() const;
+        WSF_EXTERN void WSF_CALL process() const;
 
         /**
          * desctructor that can be overriden.
          */
-        virtual ~OMException();
+        virtual WSF_CALL ~OMException();
     };
     /** @} */
 }

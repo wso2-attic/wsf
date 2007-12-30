@@ -17,6 +17,7 @@
 #ifndef ICALLBACK_H
 #define ICALLBACK_H
 
+#include <WSFDefines.h>
 #include <OMElement.h>
 #include <string>
 
@@ -40,30 +41,30 @@ namespace wso2wsf
      * an object that is used for passing callbacks for the request
      * method in the ServiceClient Class, in a non-blocking scenario.
      */
-    class ICallback
+    class WSF_EXTERN ICallback
     {
     public:
         /**
          * Handler to be invoked in a Complete Event.
          * @param message Reference to message that is passed in.
          */
-        virtual void onComplete(OMElement* message) = 0;
+        virtual void WSF_CALL onComplete(OMElement* message) = 0;
 
         /**
          * Handler to be invoked in a Fault Event.
          * @param message Reference to message that is passed in.
          */
-        virtual void onFault(OMElement* message) = 0;
+        virtual void WSF_CALL onFault(OMElement* message) = 0;
 
         /**
          * desctructor that can be overriden.
          */
-        virtual ~ICallback();
+        virtual WSF_CALL ~ICallback();
     };
     /** @} */
 
     /* inline implementation of ICallback class. */
-    inline ICallback::~ICallback()
+    inline WSF_CALL ICallback::~ICallback()
     {}
 }
 #endif // ICALLBACK_H

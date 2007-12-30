@@ -17,6 +17,7 @@
 #ifndef WSRESTCLIENT_H
 #define WSRESTCLIENT_H
 
+#include <WSFDefines.h>
 #include <ServiceClient.h>
 
 /**
@@ -46,27 +47,27 @@ namespace wso2wsf
          * @param options pointer to options struct to be set.
          * @return true on success or false on failure.
          */
-        bool setOptions(Options * options);
+        WSF_EXTERN bool WSF_CALL setOptions(Options * options);
 
         /**
          * create a WS REST client from the default repository.
          * @param endpoint_address endpoint address to be used.
          */
-        WSRESTClient(std::string endpoint_address);
+        WSF_EXTERN WSF_CALL WSRESTClient(std::string endpoint_address);
 
         /**
          * create a WS REST client from the repository.
          * @param repo_home location of the repository.
          * @param endpoint_address endpoint address to be used.
          */
-        WSRESTClient(std::string repo_home, std::string endpoint_address);
+        WSF_EXTERN WSF_CALL WSRESTClient(std::string repo_home, std::string endpoint_address);
 
         /**
          * create a WS REST client from a configuration context.
          * @param conf_ctx pointer to configuration context.
          * @param endpoint_address endpoint address to be used.
          */
-        WSRESTClient(const axis2_conf_ctx_t * conf_ctx, std::string endpoint_address);
+        WSF_EXTERN WSF_CALL WSRESTClient(const axis2_conf_ctx_t * conf_ctx, std::string endpoint_address);
     };
     /** @} */
 }

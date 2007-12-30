@@ -17,7 +17,7 @@
 #ifndef AXISFAULT_H
 #define AXISFAULT_H
 
-
+#include <WSFDefines.h>
 #include <Exception.h>
 
 /**
@@ -47,12 +47,12 @@ namespace wso2wsf
          * Constructor accepting a reason for the exception.
          * @param reason reason to exception.
          */
-        AxisFault(char const * reason);
+        WSF_CALL AxisFault(char const * reason);
 
         /**
          * Method for doing the required processing, of the Axis Fault.
          */
-        void process() const;
+        WSF_EXTERN void WSF_CALL process() const;
     };
     /** @} */
 }

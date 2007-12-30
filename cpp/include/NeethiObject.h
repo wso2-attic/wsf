@@ -1,6 +1,7 @@
 #ifndef NEETHIOBJECT_H
 #define NEETHIOBJECT_H
 
+#include <WSFDefines.h>
 #include <AxisObject.h>
 
 /**
@@ -28,7 +29,7 @@ namespace wso2wsf
         /**
          * Constructor setting up the NeethiObject.
          */
-        NeethiObject();
+        WSF_CALL NeethiObject();
     };
     /** @} */
 }

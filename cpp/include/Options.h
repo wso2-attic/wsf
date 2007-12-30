@@ -17,6 +17,7 @@
 #ifndef OPTIONS_H
 #define OPTIONS_H
 
+#include <WSFDefines.h>
 #include <axis2_options.h>
 #include <axis2_const.h>
 #include <AxisObject.h>
@@ -92,154 +93,154 @@ namespace wso2wsf
          * Sets xml parser reset. By default, set to true.
          * @param paser_reset is a boolean value.
          */
-        void setXMLParserReset(bool paser_reset);
+        void WSF_CALL setXMLParserReset(bool paser_reset);
 
     public:
         /**
          * Creates the options struct with or without given parent.
          */
-        Options();
+        WSF_CALL Options();
 
         /**
          * destructor frees resources.
          */
-        ~Options();
+        WSF_CALL ~Options();
 
         /**
          * Gets WSA fault to address.
          * @return pointer to fault to address if set, else NULL.
          */
-        std::string getFaultTo();
+        WSF_EXTERN std::string WSF_CALL getFaultTo();
 
         /**
          * Gets WSA from address.
          * @return pointer to from address if set, else NULL.
          */
-        std::string getFrom();
+        WSF_EXTERN std::string WSF_CALL getFrom();
 
         /**
          * Gets message ID.
          * @return pointer to message ID string if set, else NULL.
          */
-        std::string getMessageId();
+        WSF_EXTERN std::string WSF_CALL getMessageId();
 
         /**
          * Gets WSA reply to address.
          * @return pointer to reply to address if set, else NULL.
          */
-        std::string getReplyTo();
+        WSF_EXTERN std::string WSF_CALL getReplyTo();
 
         /**
          * Sets the bool value indicating whether to enable REST or not.
          * @param enable bool value indicating whether to enable REST
          * or not, true to enable, false to disable.
          */
-        void setEnableREST(bool enable);
+        WSF_EXTERN void WSF_CALL setEnableREST(bool enable);
 
         /**
          * Sets the bool value indicating whether to use a separate listener or not.
          * @param use_separate_listener bool value indicating whether to use
          * a separate listener or not.
          */
-        void setUseSeparateListener(bool use_separate_listener);
+        WSF_EXTERN void WSF_CALL setUseSeparateListener(bool use_separate_listener);
 
         /**
          * Gets the wait time after which a client times out in a blocking scenario.
          * The default is AXIS2_DEFAULT_TIMEOUT_MILLISECONDS.
          * @return timeout in milliseconds.
          */
-        long getTimeout();
+        WSF_EXTERN long WSF_CALL getTimeout();
 
         /**
          * Gets WSA to address.
          * @return pointer to, to address if set, else NULL.
          */
-        std::string getTo();
+        WSF_EXTERN std::string WSF_CALL getTo();
 
         /**
          * Sets fault to address.
          * @param fault_to pointer to, fault to address. Options takes over the
          * ownership of the struct.
          */
-        void setFaultTo(std::string fault_to);
+        WSF_EXTERN void WSF_CALL setFaultTo(std::string fault_to);
 
         /**
          * Sets from address.
          * @param from pointer to, from address. Options takes over the ownership
          * of the struct.
          */
-        void setFrom(std::string from);
+        WSF_EXTERN void WSF_CALL setFrom(std::string from);
 
         /**
          * sets from address.
          * @param to pointer to , to address. Options takes over the ownership of the struct.
          */
-        void setTo(std::string to);
+        WSF_EXTERN void WSF_CALL setTo(std::string to);
 
         /**
          * Sets message ID.
          * @param message_id pointer to message_id struct.
          */
-        void setMessageId(std::string message_id);
+        WSF_EXTERN void WSF_CALL setMessageId(std::string message_id);
 
         /**
          * Sets the properties.
          * @param property pointer to properties object.
          * @return true on success, else false.
          */
-        bool setProperty(Property * property);
+        WSF_EXTERN bool WSF_CALL setProperty(Property * property);
 
         /**
          * Sets reply to address.
          * @param reply_to pointer to endpoint reference struct representing
          * reply to address. options takes over the ownership of the struct.
          */
-        void setReplyTo(std::string reply_to);
+        WSF_EXTERN void WSF_CALL setReplyTo(std::string reply_to);
 
         /**
          * Sets timeout in Milli seconds.
          * @param timeout timeout in milli seconds.
          * @return true on success, else false.
          */
-        void setTimeout(long timeout);
+        WSF_EXTERN void WSF_CALL setTimeout(long timeout);
 
         /**
          * Adds a WSA reference parameter.
          * @param reference_parameter pointer to reference parameter in the form
          * of an AXIOM tree. options takes over the ownership of the struct.
          */
-        void addReferenceParameter(OMElement * reference_parameter);
+        WSF_EXTERN void WSF_CALL addReferenceParameter(OMElement * reference_parameter);
 
         /**
          * Gets SOAP version.
          * @return AXIOM_SOAP11 if SOAP version 1.1 is in use, else AXIOM_SOAP12.
          */
-        soap_version getSoapVersion();
+        WSF_EXTERN soap_version WSF_CALL getSoapVersion();
 
         /**
          * Sets SOAP version.
          * @param version soap version, either AXIOM_SOAP11 or AXIOM_SOAP12.
          */
-        void setSoapVersion(soap_version version);
+        WSF_EXTERN void WSF_CALL setSoapVersion(soap_version version);
 
         /**
          * Enable/disable MTOM handling.
          * @param enable true if MTOM is to be enabled, if not, false.
          */
-        void setEnableMTOM(bool enable);
+        WSF_EXTERN void WSF_CALL setEnableMTOM(bool enable);
 
         /**
          * Gets Enable/disable MTOM status.
          * @return true if MTOM enabled, else false.
          */
-        bool getEnableMTOM();
+        WSF_EXTERN bool WSF_CALL getEnableMTOM();
 
         /**
          * Sets the HTTP method to be used
          * @param http_method string representing HTTP method to use,
          * can be either AXIS2_HTTP_GET or AXIS2_HTTP_POST
          */
-        void setHTTPMethod(std::string http_method);
+        WSF_EXTERN void WSF_CALL setHTTPMethod(std::string http_method);
     };
     /** @} */
 }

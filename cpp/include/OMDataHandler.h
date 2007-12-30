@@ -17,6 +17,7 @@
 #ifndef OMDATAHANDLER_H
 #define OMDATAHANDLER_H
 
+#include <WSFDefines.h>
 #include <axiom_data_handler.h>
 #include <OMObject.h>
 #include <OMException.h>
@@ -59,7 +60,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        OMDataHandler(std::string file_name, std::string mime_type) throw(OMException);
+        WSF_EXTERN WSF_CALL OMDataHandler(std::string file_name, std::string mime_type) throw(OMException);
 
         /**
          * Creates data_handler struct.
@@ -67,7 +68,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        OMDataHandler(std::string mime_type) throw(OMException);
+        WSF_EXTERN WSF_CALL OMDataHandler(std::string mime_type) throw(OMException);
 
         /**
          * Creates data_handler struct.
@@ -75,42 +76,42 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        OMDataHandler() throw(OMException);
+        WSF_EXTERN WSF_CALL OMDataHandler() throw(OMException);
 
         /**
          * Desctructor that frees resources.
          */
-        ~OMDataHandler();
+        WSF_CALL ~OMDataHandler();
 
         /**
          * Method to get the reference to the axiom_data_handler struct.
          * @return reference to the axiom_data_handler struct.
          */
-        axiom_data_handler_t * getAxiomDataHandler();
+        axiom_data_handler_t * WSF_CALL getAxiomDataHandler();
 
         /**
          * Method to set the reference to the axiom_data_handler struct.
          * @param data_handler reference to the axiom_data_handler struct.
          */
-        void setAxiomDataHandler(axiom_data_handler_t * data_handler);
+        void WSF_CALL setAxiomDataHandler(axiom_data_handler_t * data_handler);
 
         /**
          * Gets content type.
          * @return content type.
          */
-        std::string getContentType();
+        WSF_EXTERN std::string WSF_CALL getContentType();
 
         /**
          * Method to get the input stream.
          * @return reference to input stream.
          */
-        axis2_byte_t * getInputStream();
+        WSF_EXTERN axis2_byte_t * WSF_CALL getInputStream();
 
         /**
          * Method to get the input stream length.
          * @return length of input stream.
          */
-        int getInputStreamLength();
+        WSF_EXTERN int WSF_CALL getInputStreamLength();
 
         /**
          * Method to read into a stream.
@@ -118,7 +119,7 @@ namespace wso2wsf
          * @param output_stream_length size of retrieved stream.
          * @return true if operation was successful, false otherwise.
          */
-        bool read(axis2_byte_t ** output_stream, int * output_stream_length);
+        WSF_EXTERN bool WSF_CALL read(axis2_byte_t ** output_stream, int * output_stream_length);
 
         /**
          * Method to write to a stream.
@@ -126,14 +127,14 @@ namespace wso2wsf
          * @param input_stream_len size of input stream.
          * @return true if operation was successful, false otherwise.
          */
-        bool write(axis2_byte_t * input_stream, int input_stream_length);
+        WSF_EXTERN bool WSF_CALL write(axis2_byte_t * input_stream, int input_stream_length);
 
         /**
          * Method to set file name.
          * @param file_name associated file name.
          * @return true if operation was successful, false otherwise.
          */
-        bool setFileName(std::string file_name);
+        WSF_EXTERN bool WSF_CALL setFileName(std::string file_name);
     };
     /** @} */
 }

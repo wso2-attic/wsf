@@ -17,6 +17,7 @@
 #ifndef PROPERTY_H
 #define PROPERTY_H
 
+#include <WSFDefines.h>
 #include <axutil_utils.h>
 #include <string>
 /**
@@ -66,7 +67,7 @@ namespace wso2wsf
          * @param name property key string.
          * @param value pointer to property to be set.
          */
-        Property(std::string name, void * value);
+        WSF_EXTERN WSF_CALL Property(std::string name, void * value);
 
         /**
          * Creates a node struct.
@@ -74,25 +75,25 @@ namespace wso2wsf
          * @param value pointer to property to be set.
          * @param scope scope of property.
          */
-        Property(std::string name, void * value, axis2_scope_t scope);
+        WSF_EXTERN WSF_CALL Property(std::string name, void * value, axis2_scope_t scope);
 
         /**
          * Gets Property name.
          * @return property key string.
          */
-        std::string getName();
+        WSF_EXTERN std::string WSF_CALL getName();
 
         /**
          * Gets Property value.
          * @return pointer to property to be set.
          */
-        void * getValue();
+        WSF_EXTERN void * WSF_CALL getValue();
 
         /**
          * Gets Property scope.
          * @return scope of property.
          */
-        axis2_scope_t getScope();
+        WSF_EXTERN axis2_scope_t WSF_CALL getScope();
     };
     /** @} */
 }
