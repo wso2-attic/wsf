@@ -53,6 +53,14 @@ namespace wso2wsf
          */
         friend WSF_EXTERN std::ostream & WSF_CALL operator <<(std::ostream & str, Exception const & e);
 
+        /**
+         * Overloaded insertion operator, is used for printing the exception onto a console.
+         * @param str existing stream.
+         * @param e exception object.
+         * @return a modified output stream is returned.
+         */
+        friend WSF_EXTERN std::ostream & WSF_CALL operator <<(std::ostream & str, Exception const * e);
+
     private:
         /**
          * @var _reason reason to what caused the exception.
@@ -89,7 +97,12 @@ namespace wso2wsf
 
     inline std::ostream & WSF_CALL operator <<(std::ostream & str, Exception const & e)
     {
-        return str << e.operator std::string();
+        return str << const_cast<Exception &>(e).operator std::string();
     }
+
+    inline std::ostream & WSF_CALL operator <<(std::ostream & str, Exception const * e)
+    {
+        return str << const_cast<Exception *>(e)->operator std::string();
+    }    
 }
 #endif // EXCEPTION_H

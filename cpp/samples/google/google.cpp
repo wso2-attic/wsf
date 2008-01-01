@@ -43,7 +43,7 @@ int main()
                 cout << endl << "Response: " << response->toString() << endl;
             }
         }
-        catch (AxisFault e)
+        catch (AxisFault * e)
         {
             cout << endl << "Fault: " << (sc->getLastSOAPFault())->toString() << endl;
         }

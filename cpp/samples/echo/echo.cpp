@@ -27,7 +27,7 @@ int main()
                 cout << endl << "Response: " << (response->getFirstElement())->toString() << endl;
             }
         }
-        catch (AxisFault e)
+        catch (AxisFault * e)
         {
             cout << endl << "Response: " << (sc->getLastSOAPFault())->toString() << endl;
         }
@@ -49,7 +49,7 @@ int main()
                 cout << endl << "Response: " << (response->getFirstElement())->toString() << endl;
             }
         }
-        catch (AxisFault e)
+        catch (AxisFault * e)
         {
             cout << endl << "Response: " << (sc->getLastSOAPFault())->toString() << endl;
         }

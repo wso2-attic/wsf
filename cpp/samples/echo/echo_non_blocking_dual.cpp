@@ -57,7 +57,7 @@ int main()
             {
                 sc->request(payload, callback, "http://ws.apache.org/axis2/c/samples/echoString");
             }
-            catch (AxisFault e)
+            catch (AxisFault * e)
             {
                 cout << e;
             }

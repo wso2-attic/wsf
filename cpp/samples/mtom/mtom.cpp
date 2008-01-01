@@ -37,7 +37,7 @@ int main()
                 cout << endl << "Response: " << response->toString() << endl;
             }
         }
-        catch (AxisFault e)
+        catch (AxisFault * e)
         {
             cout << endl << "Fault: " << e << endl;
         }

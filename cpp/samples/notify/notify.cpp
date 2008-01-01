@@ -20,7 +20,7 @@ int main()
     {
         status = sc->send(payload, "http://example.org/action/notify");
     }
-    catch (AxisFault e)
+    catch (AxisFault * e)
     {
         cout << e;
     }

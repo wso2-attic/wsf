@@ -31,7 +31,7 @@ int main()
                 cout << endl << "Response: " << sc->getLastResponseSoapEnvelopeString() << endl;
             }
         }
-        catch (AxisFault e)
+        catch (AxisFault * e)
         {
             cout << endl << "Response: " << sc->getLastResponseSoapEnvelopeString() << endl;
             cout << endl << "Response: " << (sc->getLastSOAPFault())->toString() << endl;

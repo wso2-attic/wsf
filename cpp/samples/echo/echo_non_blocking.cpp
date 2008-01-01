@@ -52,7 +52,7 @@ int main()
             {
                 sc->request(payload, callback, "");
             }
-            catch (AxisFault e)
+            catch (AxisFault * e)
             {}
             int count = 0;
             while (count < 30)
