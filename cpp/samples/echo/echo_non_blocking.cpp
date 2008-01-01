@@ -3,17 +3,18 @@
 #include <OMElement.h>
 #include <iostream>
 #include <AxisFault.h>
+#include <WSFDefines.h>
 using namespace std;
 using namespace wso2wsf;
 
 class EchoCallback: public ICallback
 {
 public:
-    void onComplete(OMElement* message);
+    void WSF_CALL onComplete(OMElement* message);
 
-    void onFault(OMElement* message);
+    void WSF_CALL onFault(OMElement* message);
 
-    ~EchoCallback();
+    WSF_CALL ~EchoCallback();
 };
 
 bool isComplete = false;

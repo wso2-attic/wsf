@@ -4,7 +4,7 @@ AUTOCONF = .\..\configure.in
 WSFCPP_HOME_DIR="%WSFCPP_HOME%"
 SAMPLES_HOME_DIR=.\
 
-CFLAGS = /nologo /w /D "WIN32" /D "_WINDOWS" /D "_MBCS"
+CFLAGS = /nologo /w /D "WIN32" /D "_WINDOWS" /D "_MBCS" /EHsc
 
 LDFLAGS = /nologo /LIBPATH:$(WSFCPP_HOME_DIR)\lib
 
