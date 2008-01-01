@@ -13,7 +13,7 @@ to modify the echo_security client edit echo_security.cpp found in
 WSFCPP_INSTALL_DIR/samples/echo.
 
 Once you have finished editing, re-build WSO2 WSF/C++ in the case of MS
-Windows or, run 'make examples' from the WSFCPP_INSTALL_DIR.
+Windows or, run 'make examples' for Linux from the WSFCPP_INSTALL_DIR.
 
 
 Echo Samples
@@ -186,18 +186,31 @@ secpolicy -
   echo_security sample.
   There are three invocation models
     - deploy and run
-      - deploy policy (run deploy.sh)
-      - usage: deploy.sh scenarioX
+      - deploy policy (run Linux: deploy.sh Windows: deploy.bat)
+      - usage: 
+        - Linux: deploy.sh scenarioX
+        - Windows: deploy.bat scenarioX
       - restart server
       - run echo_security
     - deploy, update and run
-      - deploy policy (run deploy.sh)
-      - usage: deploy.sh scenarioX
+      - deploy policy (run Linux: deploy.sh Windows: deploy.bat)
+      - usage:
+        - Linux: deploy.sh scenarioX
+        - Windows: deploy.bat scenarioX
       - restart server
-      - update and run (run update.sh)
-      - usage: update_n_run.sh
+      - update and run (run Linux: update_n_run.sh Windows: update_n_run.bat)
+      - usage:
+        - Linux: update_n_run.sh scenarioX
+        - Windows: update_n_run.bat scenarioX
     - run all
-      - usage: run_all.sh
+      - usage:
+        - Linux: run_all.sh
+        - Windows: n/a
+  Testing a scenario
+    - run test_scenario
+      - usage:
+        - Linux: test_scen.sh scenarioX server_port
+        - Windows: test_scen.bat scenarioX server_port
   Seven scenarios are provided demonstrating various possibilities.
     - Timestamp
     - UsernameToken
