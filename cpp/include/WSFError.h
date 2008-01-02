@@ -29,7 +29,7 @@
 #define CREATION_OF_OM_NAMESPACE_OBJECT_FAILED "Unable to create OMNamespace object"
 #define CREATION_OF_OM_TEXT_OBJECT_FAILED "Unable to create OMText object"
 #define CREATION_OF_SERVICE_CLIENT_FAILED "Creation of Service Client Failed"
-#define CREATION_OF_SERVICE_OPTIONS_FAILED "Creation of Service Options Failed"
+#define CREATION_OF_SERVICE_CLIENT_OPTIONS_FAILED "Creation of Service Options Failed"
 #define CREATION_OF_CALLBACK_OBJECT_FAILED "Creation of Callback Failed"
 #define SETTING_UP_SERVICE_CLIENT_OPTIONS_FAILED "Setting up Options Failed"
 #define SETTING_SOAP_ACTION_FAILED "Failure occured while setting SOAP Action"

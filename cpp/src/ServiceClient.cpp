@@ -15,7 +15,7 @@
  */
 
 #include <stdio.h>
-#include <WSFDefines.h>
+#include <WSFError.h>
 #include <sstream>
 #include <axis2_callback.h>
 #include <ServiceClient.h>

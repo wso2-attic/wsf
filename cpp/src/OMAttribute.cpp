@@ -15,7 +15,7 @@
  */
 
 #include <stdio.h>
-#include <WSFDefines.h>
+#include <WSFError.h>
 #include <OMAttribute.h>
 using namespace std;
 using namespace wso2wsf;
