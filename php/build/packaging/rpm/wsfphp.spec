@@ -22,6 +22,8 @@ mkdir -p /usr/lib/php/modules/wsf_php
 cp -rf scripts /usr/lib/php/modules/wsf_php
 cp -rf samples /usr/lib/php/modules/wsf_php
 cp -rf docs /usr/lib/php/modules/wsf_php
+mkdir /usr/lib/php/modules/wsf_php/sandesha2
+cp -rf wsf_c/sandesha2c/config /usr/lib/php/modules/wsf_php/sandesha2
 %post
 echo "[wsf]" >> /etc/php.ini
 echo "extension=wsf.so" >> /etc/php.ini
