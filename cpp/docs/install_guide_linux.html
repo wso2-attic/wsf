@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>WSO2 Web Services Framework/C++ - Installation Guide (Linux)</title>
+  <link href="style.css" rel="stylesheet" type="text/css" media="all">
+</head>
+
+<body lang="en-US" dir="ltr">
+<h1>WSO2 Web Services Framework/C++ - Installation Guide (Linux)</h1>
+
+<h2><a id="dependencies"></a>1. Software Dependencies</h2>
+
+<h3>1.1. Mandatory</h3>
+<ul>
+  <li>Libxml2 - <a
+  href="http://www.xmlsoft.org/">http://www.xmlsoft.org/</a></li>
+  <li>libiconv - <a
+    href="http://www.gnu.org/software/libiconv/">http://www.gnu.org/software/libiconv/</a></li>
+  <li>zlib - <a href="http://www.zlib.net/">http://www.zlib.net/</a></li>
+</ul>
+
+<h3>1.2. Optional</h3>
+<ul>
+  <li>Apache2 httpd - <a
+    href="http://httpd.apache.org/">http://httpd.apache.org/</a> - Required
+    for deploying services with HTTPD</li>
+  <li>OpenSSL - <a href="http://www.openssl.org/">http://www.openssl.org/</a>
+    - Required for SSL client transport and WS-Security with Apache
+  Rampart/C</li>
+  <li>Either SQLite - <a
+    href="http://www.sqlite.org/">http://www.sqlite.org/</a> or MySQL - <a
+    href="http://www.mysql.org/">http://www.mysql.org/</a> - Required for
+    WS-ReliableMessaging  with Apache Sandesha2/C</li>
+  <li>iksemel - <a
+    href="http://iksemel.jabberstudio.org/">http://iksemel.jabberstudio.org/</a>
+    - Required for XMPP transport</li>
+</ul>
+<br />
+<h2><a id="requirements"></a>2. Requirements</h2>
+To install and run WSF/C++ using the source distribution on Linux, you are required to have pkg-config 
+on your system. By default, most Linux systems have this tool.
+<br /><br />
+<h2><a id="source"></a>3. Building and Installing WSO2 WSF/C++ from Source on Linux.</h2>
+<ol>
+    <li>Extract the source tar package to a folder.<br /><br /></li>
+
+    <li>Set WSFCPP_HOME environment variable pointing to the location where you want to install WSO2 WSF/C++.
+    <pre>	$ WSFCPP_HOME='/your_desired_path_to_wsf_c++_installation'
+	$ export WSFCPP_HOME</pre></li>
+
+    <li>Then go to the folder where you extracted the source.
+    <pre>	$ cd /your_path_to_wsf_c++_source</pre></li>
+
+    <li>Build the source<br />
+      * This can be done using the following command sequence in the directory where you have extracted the source
+    <pre>	$  ./configure --prefix=${WSFCPP_HOME}
+	$ make
+	$ make install
+	$ make examples</pre></li>
+
+    <li>Go to where you installed WSO2 WSF/C++. Start simple axis server<br />
+      * To start the simple axis server on port 9090 run the following commands
+    <pre>	$ cd ${WSFCPP_HOME}/bin
+	$ ./axis2_http_server</pre>
+      To see the possible command line options run <code>./axis2_http_server -h</code>.
+      If you run into shared library problems, try setting the LD_LIBRARY_PATH
+    <pre>	$ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${WSFCPP_HOME}/lib</pre></li>
+</ol>
+Now you are ready to use WSO2 WSF/C++.<br />
+<br />
+Notes:
+<ul>
+    <li>You may require super user privileges to run <code>make install</code> on your system.</li>
+    <li>You may optionally specify the path in which the installation should be
+   deployed using <code>./configure --prefix=PATH</code>.</li>
+    <li>If you don't provide the <code>--prefix</code> configure option, WSO2 WSF/C++ will by
+   default be installed into, <code>/opt/wso2/wsf_cpp</code></li>
+    <li>You may run <code>./configure --help</code> for more information on configure options.</li>
+</ul>
+</body>
+</html>

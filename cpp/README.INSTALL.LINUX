@@ -1,5 +1,5 @@
-WSO2 Web Services Framework/C++ - Installation Guide (Microsoft Windows)
-========================================================================
+WSO2 Web Services Framework/C++ - Installation Guide (Linux)
+============================================================
 
 1. Software Dependencies
 ------------------------
@@ -18,7 +18,13 @@ WSO2 Web Services Framework/C++ - Installation Guide (Microsoft Windows)
     * iksemel - http://iksemel.jabberstudio.org/ - Required for XMPP transport
 
 
-2. Building and Installing WSO2 WSF/C++ from Source on Linux.
+2. Requirements
+---------------
+To install and run WSF/C++ using the source distribution on Linux, you are required to have pkg-config
+on your system. By default, most Linux systems have this tool.
+
+
+3. Building and Installing WSO2 WSF/C++ from Source on Linux.
 -------------------------------------------------------------
 
    1. Extract the source tar package to a folder.
@@ -40,13 +46,13 @@ WSO2 Web Services Framework/C++ - Installation Guide (Microsoft Windows)
         $ make install
         $ make examples
 
-   5. Go to where you installed WSO2 WSF/C++.
-      Start simple axis server * To start the simple axis server on port 9090 run the following commands
+   5. Go to where you installed WSO2 WSF/C++. Start simple axis server
+      * To start the simple axis server on port 9090 run the following commands
 
         $ cd ${WSFCPP_HOME}/bin
         $ ./axis2_http_server
 
-      To see the possible command line options run ./axis2_http_server -h Note : If you run into shared library problems, try setting the LD_LIBRARY_PATH
+      To see the possible command line options run ./axis2_http_server -h. If you run into shared library problems, try setting the LD_LIBRARY_PATH.
 
         $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${WSFCPP_HOME}/lib
 
