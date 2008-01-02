@@ -1,7 +1,16 @@
-WSO2 Web Services Framework (WSF)/PHP v1.2.0 Released
+WSO2 Web Services Framework for PHP v1.2.0 Released
 =========================================================
 
 We are pleased to announce the release of WSO2 WSF/PHP 1.2.0.
+
+WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), is an open source,
+enterprise grade, PHP extension for providing and consuming Web Services in PHP.
+WSO2 WSF/PHP is a complete solution for building and deploying Web services  and is 
+the only PHP extension with the widest range of WS-* specification implementations. 
+It's Key features include, secure services and clients with WS-Security support, 
+binary attachments with MTOM, automatic WSDL generation (code first model), 
+WSDL mode for both services and clients (contract first model) 
+and interoperability with .NET and J2EE.
 
 You can download the release from:
 http://wso2.org/downloads/wsf/php
