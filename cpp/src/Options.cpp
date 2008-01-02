@@ -226,6 +226,11 @@ string Options::getFaultTo()
  Options::Options()
 {
     _wsf_options = axis2_options_create(getEnv());
+    _reply_to = NULL;
+    _to = NULL;
+    _from = NULL;
+    _fault_to = NULL;
+
 }
 
 /** @brief setEnableREST

@@ -226,6 +226,9 @@ bool OMText::setValue(std::string value)
  OMText::OMText(OMNode * parent, axiom_node_t * node) throw(OMException)
 {
     _wsf_axiom_text = NULL;
+    _data_handler = NULL;
+    _parent = NULL;
+
     if (node && (axiom_node_get_node_type(node, getEnv()) == AXIOM_TEXT))
     {
         _wsf_axiom_text = (axiom_text_t *)axiom_node_get_data_element(node, getEnv());
@@ -258,6 +261,9 @@ bool OMText::setValue(std::string value)
  OMText::OMText() throw(OMException)
 {
     axiom_node_t * node;
+    
+    _data_handler = NULL;
+    _parent = NULL;
     _wsf_axiom_text = axiom_text_create(getEnv(), NULL, NULL, &node);
     if (_wsf_axiom_text)
     {
@@ -278,6 +284,9 @@ bool OMText::setValue(std::string value)
 {
     axiom_node_t * node;
     axiom_data_handler_t * data_handler_c = NULL;
+
+    _data_handler = NULL;
+    _parent = NULL;
     if (data_handler != NULL)
     {
         data_handler_c = data_handler->getAxiomDataHandler();
@@ -303,6 +312,9 @@ bool OMText::setValue(std::string value)
     axiom_node_t * node;
     axiom_node_t * parent_c = NULL;
     axiom_data_handler_t * data_handler_c = NULL;
+
+    _data_handler = NULL;
+    _parent = NULL;
     if (parent != NULL)
     {
         parent_c = parent->getAxiomNode();
@@ -340,6 +352,9 @@ bool OMText::setValue(std::string value)
  OMText::OMText(std::string value) throw(OMException)
 {
     axiom_node_t * node;
+
+    _data_handler = NULL;
+    _parent = NULL;
     if (value == "")
     {
         _wsf_axiom_text = axiom_text_create(getEnv(), NULL, NULL, &node);
@@ -367,6 +382,9 @@ bool OMText::setValue(std::string value)
 {
     axiom_node_t * node;
     axiom_node_t * parent_c = NULL;
+
+    _data_handler = NULL;
+    _parent = NULL;
     if (parent != NULL)
     {
         parent_c = parent->getAxiomNode();

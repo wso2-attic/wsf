@@ -139,6 +139,9 @@ bool OMElement::declareDefaultNamespace(std::string uri)
 {
     _default_namespace = NULL;
     _wsf_axiom_element = NULL;
+    _namespace = NULL;
+    _parent = NULL;
+
     if (node && (axiom_node_get_node_type(node, getEnv()) == AXIOM_ELEMENT))
     {
         _wsf_axiom_element = (axiom_element_t *)axiom_node_get_data_element(node, getEnv());
@@ -210,10 +213,13 @@ bool OMElement::declareDefaultNamespace(std::string uri)
   */
  OMElement::OMElement(OMNode * parent, std::string localname, OMNamespace * ns) throw(OMException)
 {
-    _default_namespace = NULL;
     axiom_node_t * node;
     axiom_node_t * parent_c = NULL;
     axiom_namespace_t * ns_c = NULL;
+    
+    _default_namespace = NULL;
+    _namespace = NULL;
+    _parent = NULL;
     if (parent != NULL)
     {
         parent_c = parent->getAxiomNode();
@@ -491,8 +497,12 @@ bool OMElement::setNamespace(OMNamespace * ns, bool no_find)
   */
  OMElement::OMElement(std::string localname) throw(OMException)
 {
-    _default_namespace = NULL;
     axiom_node_t * node;
+
+    _default_namespace = NULL;
+    _namespace = NULL;
+    _parent = NULL;
+
     _wsf_axiom_element = axiom_element_create(getEnv(), NULL, localname.c_str(), NULL, &node);
     if (_wsf_axiom_element)
     {
@@ -512,9 +522,12 @@ bool OMElement::setNamespace(OMNamespace * ns, bool no_find)
   */
  OMElement::OMElement(std::string localname, OMNamespace * ns) throw(OMException)
 {
-    _default_namespace = NULL;
     axiom_node_t * node;
     axiom_namespace_t * ns_c = NULL;
+
+    _default_namespace = NULL;
+    _namespace = NULL;
+    _parent = NULL;
     if (ns != NULL)
     {
         ns_c = ns->getAxiomNamespace();
@@ -661,6 +674,11 @@ OMElement * OMElement::getChildElement(std::string localname, OMNamespace * ns)
 {
     axiom_node_t * node;
     axiom_node_t * parent_c = NULL;
+
+    _default_namespace = NULL;
+    _namespace = NULL;
+    _parent = NULL;
+    
     if (parent != NULL)
     {
         parent_c = parent->getAxiomNode();

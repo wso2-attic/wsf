@@ -161,6 +161,12 @@ axis2_status_t AXIS2_CALL callbackOnFault(axis2_callback_t * callback, const axu
     _conf_ctx = conf_ctx;
     _endpoint_address = endpoint_address;
     _repo_home = "";
+    _wsf_service_client = NULL;
+    _last_soap_fault = NULL;
+    _last_response_soap_envelope_element = NULL;
+    _last_response_soap_envelope = NULL;
+    _options = NULL;
+    _policy = NULL;
 }
 
 /** @brief ServiceClient
@@ -172,6 +178,12 @@ axis2_status_t AXIS2_CALL callbackOnFault(axis2_callback_t * callback, const axu
     _conf_ctx = NULL;
     _endpoint_address = endpoint_address;
     _repo_home = repo_home;
+    _wsf_service_client = NULL;
+    _last_soap_fault = NULL;
+    _last_response_soap_envelope_element = NULL;
+    _last_response_soap_envelope = NULL;
+    _options = NULL;
+    _policy = NULL;
 }
 
 /** @brief ServiceClient
@@ -183,6 +195,12 @@ axis2_status_t AXIS2_CALL callbackOnFault(axis2_callback_t * callback, const axu
     _conf_ctx = NULL;
     _endpoint_address = endpoint_address;
     _repo_home = string(AXIS2_GETENV("WSFC_HOME"));
+    _wsf_service_client = NULL;
+    _last_soap_fault = NULL;
+    _last_response_soap_envelope_element = NULL;
+    _last_response_soap_envelope = NULL;
+    _options = NULL;
+    _policy = NULL;
 }
 
 /** @brief InitializeClient
