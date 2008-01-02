@@ -93,4 +93,4 @@ e. Then run the echo sample by typing ruby echo_client.rb in command line or
 f. To run other samples please read the guide on README.SAMPLES file.
 
 If you need any help with building or installation , send a 
-mail to wsf-ruby-user@lists.wso2.org
+mail to wsf-ruby-user@wso2.org
