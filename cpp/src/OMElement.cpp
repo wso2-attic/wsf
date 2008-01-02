@@ -15,6 +15,7 @@
  */
 
 #include <stdio.h>
+#include <WSFError.h>
 #include <OMElement.h>
 #include <OMText.h>
 using namespace std;
@@ -169,7 +170,7 @@ bool OMElement::declareDefaultNamespace(std::string uri)
     }
     else
     {
-        throw &OMException("Unable to create OMElement object", this);
+        throw &OMException(CREATION_OF_OM_ELEMENT_OBJECT_FAILED, this);
     }
     axiom_node_t * node_new = NULL;
     axiom_children_iterator_t * children_iterator = NULL;
@@ -247,7 +248,7 @@ bool OMElement::declareDefaultNamespace(std::string uri)
     }
     else
     {
-        throw &OMException("Unable to create OMElement object", this);
+        throw &OMException(CREATION_OF_OM_ELEMENT_OBJECT_FAILED, this);
     }
 }
 
@@ -512,7 +513,7 @@ bool OMElement::setNamespace(OMNamespace * ns, bool no_find)
     }
     else
     {
-        throw &OMException("Unable to create OMElement object", this);
+        throw &OMException(CREATION_OF_OM_ELEMENT_OBJECT_FAILED, this);
     }
 }
 
@@ -541,7 +542,7 @@ bool OMElement::setNamespace(OMNamespace * ns, bool no_find)
     }
     else
     {
-        throw &OMException("Unable to create OMElement object", this);
+        throw &OMException(CREATION_OF_OM_ELEMENT_OBJECT_FAILED, this);
     }
 }
 
@@ -702,7 +703,7 @@ OMElement * OMElement::getChildElement(std::string localname, OMNamespace * ns)
     }
     else
     {
-        throw &OMException("Unable to create OMElement object", this);
+        throw &OMException(CREATION_OF_OM_ELEMENT_OBJECT_FAILED, this);
     }
 }
 

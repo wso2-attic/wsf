@@ -15,6 +15,7 @@
  */
 
 #include <stdio.h>
+#include <WSFError.h>
 #include <OMElement.h>
 #include <OMText.h>
 using namespace std;
@@ -250,7 +251,7 @@ bool OMText::setValue(std::string value)
     }
     else
     {
-        throw &OMException("Unable to create OMText object", this);
+        throw &OMException(CREATION_OF_OM_TEXT_OBJECT_FAILED, this);
     }
 }
 
@@ -272,7 +273,7 @@ bool OMText::setValue(std::string value)
     }
     else
     {
-        throw &OMException("Unable to create OMText object", this);
+        throw &OMException(CREATION_OF_OM_TEXT_OBJECT_FAILED, this);
     }
 }
 
@@ -299,7 +300,7 @@ bool OMText::setValue(std::string value)
     }
     else
     {
-        throw &OMException("Unable to create OMText object", this);
+        throw &OMException(CREATION_OF_OM_TEXT_OBJECT_FAILED, this);
     }
 }
 
@@ -341,7 +342,7 @@ bool OMText::setValue(std::string value)
     }
     else
     {
-        throw &OMException("Unable to create OMText object", this);
+        throw &OMException(CREATION_OF_OM_TEXT_OBJECT_FAILED, this);
     }
 }
 
@@ -370,7 +371,7 @@ bool OMText::setValue(std::string value)
     }
     else
     {
-        throw &OMException("Unable to create OMText object", this);
+        throw &OMException(CREATION_OF_OM_TEXT_OBJECT_FAILED, this);
     }
 }
 
@@ -414,7 +415,7 @@ bool OMText::setValue(std::string value)
     }
     else
     {
-        throw &OMException("Unable to create OMText object", this);
+        throw &OMException(CREATION_OF_OM_TEXT_OBJECT_FAILED, this);
     }
 }
 

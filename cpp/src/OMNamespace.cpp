@@ -15,6 +15,7 @@
  */
 
 #include <stdio.h>
+#include <WSFError.h>
 #include <OMAttribute.h>
 using namespace std;
 using namespace wso2wsf;
@@ -37,7 +38,7 @@ axiom_namespace_t * OMNamespace::getAxiomNamespace()
     _wsf_axiom_namespace = axiom_namespace_create(getEnv(), uri.c_str(), prefix.c_str());
     if (!_wsf_axiom_namespace)
     {
-        throw &OMException("Unable to create OMNamespace object", this);
+        throw &OMException(CREATION_OF_OM_NAMESPACE_OBJECT_FAILED, this);
     }
 }
 
@@ -50,7 +51,7 @@ axiom_namespace_t * OMNamespace::getAxiomNamespace()
     _wsf_axiom_namespace = axiom_namespace_create(getEnv(), (ns.getURI()).c_str(), (ns.getPrefix()).c_str());
     if (!_wsf_axiom_namespace)
     {
-        throw &OMException("Unable to create OMNamespace object", this);
+        throw &OMException(CREATION_OF_OM_NAMESPACE_OBJECT_FAILED, this);
     }
 }
 

@@ -15,6 +15,7 @@
  */
 
 #include <stdio.h>
+#include <WSFDefines.h>
 #include <OMAttribute.h>
 using namespace std;
 using namespace wso2wsf;
@@ -50,7 +51,7 @@ axiom_attribute_t * OMAttribute::getAxiomAttribute()
     }
     if (!_wsf_axiom_attribute)
     {
-        throw &OMException("Unable to create OMAttribute object", this);
+        throw &OMException(CREATION_OF_OM_ATTRIBUTE_OBJECT_FAILED, this);
     }
 }
 
@@ -65,7 +66,7 @@ axiom_attribute_t * OMAttribute::getAxiomAttribute()
     _wsf_axiom_attribute = axiom_attribute_create(getEnv(), name.c_str(), value.c_str(), NULL);
     if (!_wsf_axiom_attribute)
     {
-        throw &OMException("Unable to create OMAttribute object", this);
+        throw &OMException(CREATION_OF_OM_ATTRIBUTE_OBJECT_FAILED, this);
     }
 }
 
@@ -81,7 +82,7 @@ axiom_attribute_t * OMAttribute::getAxiomAttribute()
         (attribute.getValue()).c_str(), (attribute.getNamespace())->getAxiomNamespace());
     if (!_wsf_axiom_attribute)
     {
-        throw &OMException("Unable to create OMAttribute object", this);
+        throw &OMException(CREATION_OF_OM_ATTRIBUTE_OBJECT_FAILED, this);
     }
 }
 

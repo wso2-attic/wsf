@@ -15,6 +15,7 @@
  */
 
 #include <stdio.h>
+#include <WSFError.h>
 #include <AxisObject.h>
 using namespace std;
 using namespace wso2wsf;
@@ -65,7 +66,7 @@ void AxisObject::initialize(std::string log_file, axutil_log_levels_t log_level)
         _env = axutil_env_create_all(log_file.c_str(), log_level);
         if (!_env)
         {
-            throw &AxisFault("Creation of Execution Environment Failed");
+            throw &AxisFault(CREATION_OF_EXECUTION_ENVIRONMENT_FAILED);
         }
         else
         {
