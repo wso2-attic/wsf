@@ -114,7 +114,7 @@ string OMDataHandler::getContentType()
     _wsf_axiom_data_handler = axiom_data_handler_create(getEnv(), NULL, NULL);
     if (!_wsf_axiom_data_handler)
     {
-        throw OMException("Unable to create OMDataHandler object", this);
+        throw &OMException("Unable to create OMDataHandler object", this);
     }
 }
 
@@ -127,7 +127,7 @@ string OMDataHandler::getContentType()
     _wsf_axiom_data_handler = axiom_data_handler_create(getEnv(), NULL, mime_type.c_str());
     if (!_wsf_axiom_data_handler)
     {
-        throw OMException("Unable to create OMDataHandler object", this);
+        throw &OMException("Unable to create OMDataHandler object", this);
     }
 }
 
@@ -140,7 +140,7 @@ string OMDataHandler::getContentType()
     _wsf_axiom_data_handler = axiom_data_handler_create(getEnv(), file_name.c_str(), mime_type.c_str());
     if (!_wsf_axiom_data_handler)
     {
-        throw OMException("Unable to create OMDataHandler object", this);
+        throw &OMException("Unable to create OMDataHandler object", this);
     }
 }
 

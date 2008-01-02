@@ -32,12 +32,12 @@ axiom_namespace_t * OMNamespace::getAxiomNamespace()
   *
   * @todo: document this function
   */
- OMNamespace::OMNamespace(std::string uri, std::string prefix) throw(OMException)
+ OMNamespace::OMNamespace(std::string uri, std::string prefix) throw (OMException)
 {
     _wsf_axiom_namespace = axiom_namespace_create(getEnv(), uri.c_str(), prefix.c_str());
     if (!_wsf_axiom_namespace)
     {
-        throw OMException("Unable to create OMNamespace object", this);
+        throw &OMException("Unable to create OMNamespace object", this);
     }
 }
 
@@ -45,12 +45,12 @@ axiom_namespace_t * OMNamespace::getAxiomNamespace()
   *
   * @todo: document this function
   */
- OMNamespace::OMNamespace(OMNamespace & ns) throw(OMException)
+ OMNamespace::OMNamespace(OMNamespace & ns) throw (OMException)
 {
     _wsf_axiom_namespace = axiom_namespace_create(getEnv(), (ns.getURI()).c_str(), (ns.getPrefix()).c_str());
     if (!_wsf_axiom_namespace)
     {
-        throw OMException("Unable to create OMNamespace object", this);
+        throw &OMException("Unable to create OMNamespace object", this);
     }
 }
 

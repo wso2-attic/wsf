@@ -223,7 +223,7 @@ bool OMText::setValue(std::string value)
   *
   * @todo: document this function
   */
- OMText::OMText(OMNode * parent, axiom_node_t * node) throw(OMException)
+ OMText::OMText(OMNode * parent, axiom_node_t * node) throw (OMException)
 {
     _wsf_axiom_text = NULL;
     _data_handler = NULL;
@@ -250,7 +250,7 @@ bool OMText::setValue(std::string value)
     }
     else
     {
-        throw OMException("Unable to create OMText object", this);
+        throw &OMException("Unable to create OMText object", this);
     }
 }
 
@@ -258,7 +258,7 @@ bool OMText::setValue(std::string value)
   *
   * @todo: document this function
   */
- OMText::OMText() throw(OMException)
+ OMText::OMText() throw (OMException)
 {
     axiom_node_t * node;
     
@@ -272,7 +272,7 @@ bool OMText::setValue(std::string value)
     }
     else
     {
-        throw OMException("Unable to create OMText object", this);
+        throw &OMException("Unable to create OMText object", this);
     }
 }
 
@@ -280,7 +280,7 @@ bool OMText::setValue(std::string value)
   *
   * @todo: document this function
   */
- OMText::OMText(OMDataHandler * data_handler) throw(OMException)
+ OMText::OMText(OMDataHandler * data_handler) throw (OMException)
 {
     axiom_node_t * node;
     axiom_data_handler_t * data_handler_c = NULL;
@@ -299,7 +299,7 @@ bool OMText::setValue(std::string value)
     }
     else
     {
-        throw OMException("Unable to create OMText object", this);
+        throw &OMException("Unable to create OMText object", this);
     }
 }
 
@@ -307,7 +307,7 @@ bool OMText::setValue(std::string value)
   *
   * @todo: document this function
   */
- OMText::OMText(OMNode * parent, OMDataHandler * data_handler) throw(OMException)
+ OMText::OMText(OMNode * parent, OMDataHandler * data_handler) throw (OMException)
 {
     axiom_node_t * node;
     axiom_node_t * parent_c = NULL;
@@ -341,7 +341,7 @@ bool OMText::setValue(std::string value)
     }
     else
     {
-        throw OMException("Unable to create OMText object", this);
+        throw &OMException("Unable to create OMText object", this);
     }
 }
 
@@ -349,7 +349,7 @@ bool OMText::setValue(std::string value)
   *
   * @todo: document this function
   */
- OMText::OMText(std::string value) throw(OMException)
+ OMText::OMText(std::string value) throw (OMException)
 {
     axiom_node_t * node;
 
@@ -370,7 +370,7 @@ bool OMText::setValue(std::string value)
     }
     else
     {
-        throw OMException("Unable to create OMText object", this);
+        throw &OMException("Unable to create OMText object", this);
     }
 }
 
@@ -378,7 +378,7 @@ bool OMText::setValue(std::string value)
   *
   * @todo: document this function
   */
- OMText::OMText(OMNode * parent, std::string value) throw(OMException)
+ OMText::OMText(OMNode * parent, std::string value) throw (OMException)
 {
     axiom_node_t * node;
     axiom_node_t * parent_c = NULL;
@@ -414,7 +414,7 @@ bool OMText::setValue(std::string value)
     }
     else
     {
-        throw OMException("Unable to create OMText object", this);
+        throw &OMException("Unable to create OMText object", this);
     }
 }
 
