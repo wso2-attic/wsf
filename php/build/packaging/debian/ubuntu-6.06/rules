@@ -64,7 +64,7 @@ install: build
 binary-indep: build install
 	cp ./src/modules/wsf.so  $(CURDIR)/debian/wso2-wsf-php/usr/lib/php5/20051025/
 	mkdir $(CURDIR)/debian/wso2-wsf-php/usr/lib/php5/20051025/wsf_php
-	cp -r scripts samples  $(CURDIR)/debian/wso2-wsf-php/usr/lib/php5/20051025/wsf_php
+	cp -r scripts samples docs $(CURDIR)/debian/wso2-wsf-php/usr/lib/php5/20051025/wsf_php
 # We have nothing to do by default.
 
 # Build architecture-dependent files here.

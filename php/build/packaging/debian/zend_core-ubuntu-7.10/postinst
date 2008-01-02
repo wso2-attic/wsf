@@ -29,7 +29,7 @@ case "$1" in
     
     echo "Copy sample directory in /usr/local/Zend/Core/lib/php/20060613/wsf_php to your Web Root"
     echo "Set include_path in php.ini to scripts directory in /usr/local/Zend/Core/lib/php/20060613/wsf_php"
-    echo "Enable xsl extension"
+    echo "Enable xsl extension for PHP"
     ;;
     abort-upgrade|abort-remove|abort-deconfigure)
     ;;
