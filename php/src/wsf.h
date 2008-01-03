@@ -102,16 +102,13 @@ extern zend_class_entry *ws_policy_class_entry;
 extern wsf_worker_t *worker;
 
 ZEND_BEGIN_MODULE_GLOBALS (wsf)
-    long enable_trace;
     char *home;
-    long enable_exception;
     char *log_path;
 	int log_level;
     char *soap_uri;
     char *rm_db_dir;
     int curr_ns_index;
     int soap_version;
-
 ZEND_END_MODULE_GLOBALS (wsf)
 
 ZEND_EXTERN_MODULE_GLOBALS (wsf)

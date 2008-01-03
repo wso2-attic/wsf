@@ -307,10 +307,6 @@ STD_PHP_INI_ENTRY ("wsf.log_path", "/tmp", PHP_INI_ALL,
         OnUpdateString, log_path, zend_wsf_globals,wsf_globals)
 STD_PHP_INI_ENTRY ("wsf.log_level", "4", PHP_INI_ALL, 
         OnUpdateLong, log_level, zend_wsf_globals, wsf_globals)
-STD_PHP_INI_ENTRY ("wsf.enable_trace", "1", PHP_INI_ALL, 
-        OnUpdateBool, enable_trace, zend_wsf_globals, wsf_globals)  
-STD_PHP_INI_ENTRY ("wsf.enable_exception", "1", PHP_INI_ALL, 
-        OnUpdateBool, enable_exception, zend_wsf_globals, wsf_globals)  
 STD_PHP_INI_ENTRY ("wsf.rm_db_dir", "/tmp", PHP_INI_ALL,
     OnUpdateString, rm_db_dir, zend_wsf_globals, wsf_globals)  
 PHP_INI_END () 
@@ -323,8 +319,6 @@ static void ws_init_globals (zend_wsf_globals * wsf_globals)
     wsf_globals->home = NULL;
     wsf_globals->log_path = NULL;
 	wsf_globals->log_level = 1;
-    wsf_globals->enable_trace = 0;
-    wsf_globals->enable_exception = 0;
     wsf_globals->soap_version = AXIOM_SOAP12;
     wsf_globals->soap_uri = AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
     wsf_globals->rm_db_dir = NULL;
