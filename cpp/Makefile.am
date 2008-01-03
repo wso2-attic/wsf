@@ -22,5 +22,5 @@ examples:
 	rm -rf $(prefix)/bin/samples/mtom  
 	rm -rf $(prefix)/bin/samples/yahoosearch
 
-EXTRA_DIST=README.INSTALL.LINUX README.SAMPLES
+EXTRA_DIST=README.INSTALL.LINUX README.INSTALL.WINDOWS README.SAMPLES build.bat clean.bat configure.in docs
 
