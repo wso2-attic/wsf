@@ -324,8 +324,9 @@ document root. If you want to run samples</p>
     <br />
     2. Download the WSO2 WSF/PHP pecl package. Next use pecl tool to install package.<br />
     <strong>&nbsp; &nbsp; pecl install</strong> wso2_wsf_php_x.y.z.tgz<br />
-    &nbsp;&nbsp; Alternatively you can give the wso2_wsf_php_x.y.z.tgz package url to
-    pecl tool as well.<br />
+    &nbsp; &nbsp; Or
+    <br />
+    <strong>&nbsp; pecl install</strong> http://dist.wso2.org/products/wsf/php/wso2_wsf_php-1.2.0.tgz<br />
     <br />
     This will compile and install WSO2-WSF/PHP to you php extensions directory. It will
     copy the docs to /usr/local/lib/php/doc/wso2_wsf_php directory and it will copy the
@@ -376,31 +377,32 @@ document root. If you want to run samples</p>
     <strong>apt-get install php5-xsl</strong><br />
     <br />
     Also enable xsl.so in php.ini.<br />
-    <strong>extension=xsl.so<br />
-    </strong>
-    <br />
-    <br />
-    <a id="Installing using rpm"></a>
-        <h3>4.2 Installing using rpm</h3>
-    <br />
+                        <strong>extension=xsl.so<br />
+                        </strong>[Note]<br/>
+        Scripts for creating database for reliable messaging will be located in &lt;php
+        extensions directory&gt;/wsf_c/bin/sandesha2 directory.</p>
+    <h3>4.2 Installing using rpm</h3>
     Download the appropriate rpm&nbsp; package for your system. You should have php5
-    and apache2 installed using rpm.<br />
-    Usually apache Web Root will be /var/www and php extensions directory will be /usr/lib/php/modules.
+    and apache2 installed using rpm. Also install<br />
+    php-xml rpm which includes a number of php extensions including xsl and dom. ( <strong>
+        yum install php-xml </strong>).<br />
+    Usually apache Web Root will be /var/www/html and php extensions directory will be /usr/lib/php/modules.
     php.ini file will be located<br />
     in /etc directory.<br />
     <br />
     <strong>rpm -i wso2-wsf-php-xyz.rpm</strong><br />
     <br />
-    samples and scripts folders will get copied to /usr/lib/php/modules&nbsp; directory.
+    samples, scripts, docs and sandesha2 (scripts for creating database for RM) folders
+    will be inside a folder named wsf_php in /usr/lib/php/modules&nbsp; directory.
     <br />
-    Edit php.ini and append include_path entry to include /usr/llib/php/modules/wsf_php/scripts
+    Edit php.ini and append include_path entry to include /usr/lib/php/modules/wsf_php/scripts
     directory.<br />
     <strong>include_path = ".:/usr/lib/php/modules/wsf_php/scripts"</strong><br />
     <br />
     To use wsdl mode, you will need <strong>php_xsl</strong> extension installed on
     your system and enabled in php.ini.<br />
     <strong>extension=xsl.so</strong><br />
-    </p>
+    &nbsp;
        
 </body>
 </html>
