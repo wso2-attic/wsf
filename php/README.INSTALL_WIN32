@@ -1,7 +1,5 @@
 Building and Installing WSO2 WSF/PHP on Win32.
 
-If you need any help with building or installation , send a 
-mail to wsf-PHP-user@lists.wso2.org
 ===========================================================
 Contents:
 1. How to build WSF/PHP under Windows from source
@@ -166,4 +164,7 @@ Contents:
   3. Iconv   1.9.2 
   4. openssl .98e (MSI)
 
+===============================================================================================
+If you need any help with building or installation , send a 
+mail to wsf-PHP-user@lists.wso2.org
 
