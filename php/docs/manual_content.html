@@ -46,26 +46,42 @@ are required.</p>
   <tbody>
     <tr>
       <th>Name</th>
-      <th>Type</th>
+      <th style="width: 37px">Type</th>
       <th>Default</th>
       <th>Description</th>
-      <th>Changeable</th>
+      <th style="width: 78px">Changeable</th>
     </tr>
     <tr>
       <td>wsf.home</td>
-      <td>string</td>
+      <td style="width: 37px">string</td>
       <td>"/path_to_php_ext/wsf_c"</td>
       <td>Path to where you have WSO2 WSF/C installed.</td>
-      <td>PHP_INI_ALL</td>
+      <td style="width: 78px">PHP_INI_ALL</td>
     </tr>
     <tr>
-      <td>wsf.log_path</td>
-      <td>string</td>
-      <td>"/tmp"</td>
-      <td>Path to the folder into which the WSO2 WSF/PHP log file is to be
+      <td style="height: 55px">wsf.log_path</td>
+      <td style="width: 37px; height: 55px">string</td>
+      <td style="height: 55px">"/tmp"</td>
+      <td style="height: 55px">Path to the folder into which the WSO2 WSF/PHP log file is to be
         written. <br>
-        A log file named wsf.log will be written to this given location.</td>
-      <td>PHP_INI_ALL</td>
+        A log file named wsf_cliet.log will be written to this given location.</td>
+      <td style="width: 78px; height: 55px">PHP_INI_ALL</td>
+    </tr>
+    <tr>
+      <td>wsf.log_level</td>
+      <td style="width: 37px">
+    int</td>
+      <td>
+    1</td>
+      <td>
+    This is an integer value indicating the log_level to be used by the WSF/PHP<br />
+    It can be one of the following values.<br />
+    0 -&gt; CRITICAL&nbsp; ( Only critical errors will be logged )<br />
+    1 -&gt; ERROR &nbsp; &nbsp;&nbsp; ( Errors will be logged)<br />
+    2 -&gt; WARNING&nbsp; ( Errors and Warnings will be logged)<br />
+    3 -&gt; INFO &nbsp; &nbsp; &nbsp; ( Errors , Warnings and Infomation will be logged)<br />
+    4 -&gt; DEBUG &nbsp; ( All log messages including debug messages will be logged)</td>
+      <td style="width: 78px">PHP_INI_ALL</td>
     </tr>
   </tbody>
 </table>
@@ -541,7 +557,7 @@ password.</p>
 Or else, you can use the password call back mechanism by using a callback
 function. <br>
 <br>
-<span style="color: #0000ff">  &nbsp;&nbsp; &nbsp; function
+<span style="color: #0000ff">  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; function
 <em>passwordFunction</em>($username)<br>
 {<br>
 /** some&nbsp; mechanism to retrieve the password */<br>
@@ -550,6 +566,7 @@ function. <br>
 <br>
 Then WSSecurityToken object would be<br>
 <span style="color: #0000ff">      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                   $security_obj</span> = <span
 style="color: rgb(0, 0, 0); font-weight: bold;">new</span>
 WSSecurityToken<span style="color: rgb(102, 204, 102);">(</span><span
@@ -557,12 +574,14 @@ style="color: rgb(0, 0, 102);">array</span><span
 style="color: rgb(102, 204, 102);">(</span><br>
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-    &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
               <span style="color: rgb(255, 0, 0);"> "user"</span>
 =&gt; <span style="color: rgb(255, 0, 0);">"john"</span>,<br>
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-    &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
               <span style="color: rgb(255, 0, 0);">
 "password_callback"</span> =&gt; <span
 style="color: rgb(255, 0, 0);">"passwordFunction"</span><span
@@ -572,45 +591,53 @@ style="color: rgb(102, 204, 102);">)</span>;<br>
 If you want the timetoLive and timestamp , those options also can be
 specified.<br>
 <span style="color: rgb(0, 0, 255);">     &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp;
+    &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp;
         $policy_obj</span> =<span
 style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSPolicy<span
 style="color: rgb(102, 204, 102);">(<br>
     &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
-    &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
-         </span>  &nbsp; &nbsp; &nbsp; &nbsp; <a href="http://www.php.net/array"><span
+    &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
+            &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
+         </span>  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a href="http://www.php.net/array"><span
 style="color: rgb(0, 0, 102);">array</span></a><span
 style="color: rgb(102, 204, 102);">(</span> <span
 style="color: rgb(255, 0, 0);">"useUsernameToken"</span> =&gt;TRUE,<br>
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-    &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
               <span
 style="color: rgb(255, 0, 0);">"includeTimestamp"=&gt;</span>TRUE<span
 style="color: rgb(102, 204, 102);">)</span><span
 style="color: rgb(102, 204, 102);">)</span>;<br>
 <br>
-<span style="color: #0000ff">    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $security_obj</span> = <span
+<span style="color: #0000ff">    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    $security_obj</span> = <span
 style="color: rgb(0, 0, 0); font-weight: bold;">new</span>
 WSSecurityToken<span style="color: rgb(102, 204, 102);">(</span><span
 style="color: rgb(0, 0, 102);">array</span><span
 style="color: rgb(102, 204, 102);">(</span><br>
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-    &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
               <span style="color: rgb(255, 0, 0);"> "user"</span>
 =&gt; <span style="color: rgb(255, 0, 0);">"john"</span>,<br>
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-    &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
               <span style="color: rgb(255, 0, 0);"> "password"</span>
 =&gt; <span style="color: rgb(255, 0, 0);">"fred",<br>
 </span><span style="color: rgb(102, 204, 102);">              &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    <span
 style="color: #ff0000">"ttl"</span><span style="color: #111111"> =&gt;
 300</span>)</span><span style="color: rgb(102, 204, 102);">)</span>;<br>
 <br>
-    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
     
 
 <h3><a name="6.7.">6.7. One-Way Clients</a></h3>
