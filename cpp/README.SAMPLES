@@ -16,6 +16,14 @@ Once you have finished editing, re-build WSO2 WSF/C++ in the case of MS
 Windows or, run 'make examples' for Linux from the WSFCPP_INSTALL_DIR.
 
 
+Re-building Samples (MS Windows)
+--------------------------------
+Initialize environment for using Microsoft Visual Studio tools, by running
+vcvars32.bat (which is found in, MS_VISUAL_STUDIO_INSTALL_DIR/VC/bin). Then,
+  1. cd WSFCPP_INSTALL_DIR\samples
+  2. Run 'nmake dist -f samples.mk AUTOCONF=..\configure.in'
+
+
 Echo Samples
 ------------
 echo -

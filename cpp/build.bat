@@ -15,25 +15,26 @@ rem @if not %ERRORLEVEL% EQU 0 goto end
 rem Pack WSO2 WSF/C++
 :pack_wsfcpp
 @cd ..
-@set WSFCPP_INSTALL=%CD%
+@set WSFCPP_SOURCE=%CD%
 @if not exist "%WSFCPP_HOME%" set WSFCPP_HOME=%CD%\wso2-wsf-cpp-bin-1.0.0-win32
 @if exist "%WSFCPP_HOME%" rmdir /s /q "%WSFCPP_HOME%"
 @mkdir "%WSFCPP_HOME%"
 @cd "%WSFCPP_HOME%"
-@xcopy /E /Q /I /Y "%WSFCPP_INSTALL%\wsf_c\wso2-wsf-c-bin-1.2.0-win32" .
-@copy /Y "%WSFCPP_INSTALL%\INSTALL" .
-@copy /Y "%WSFCPP_INSTALL%\README.INSTALL.WINDOWS" .
-@copy /Y "%WSFCPP_INSTALL%\README" .
-@copy /Y "%WSFCPP_INSTALL%\NEWS" .
-@copy /Y "%WSFCPP_INSTALL%\COPYING" .
-@copy /Y "%WSFCPP_INSTALL%\AUTHORS" .
-@copy /Y "%WSFCPP_INSTALL%\NOTICE" .
-@xcopy /E /I /Q /Y "%WSFCPP_INSTALL%\docs"  docs
-@cd "%WSFCPP_INSTALL%"
+@xcopy /E /Q /I /Y "%WSFCPP_SOURCE%\wsf_c\wso2-wsf-c-bin-1.2.0-win32" .
+@copy /Y "%WSFCPP_SOURCE%\INSTALL" .
+@copy /Y "%WSFCPP_SOURCE%\README.INSTALL.WINDOWS" .
+@copy /Y "%WSFCPP_SOURCE%\README.SAMPLES" .
+@copy /Y "%WSFCPP_SOURCE%\README" .
+@copy /Y "%WSFCPP_SOURCE%\NEWS" .
+@copy /Y "%WSFCPP_SOURCE%\COPYING" .
+@copy /Y "%WSFCPP_SOURCE%\AUTHORS" .
+@copy /Y "%WSFCPP_SOURCE%\NOTICE" .
+@xcopy /E /I /Q /Y "%WSFCPP_SOURCE%\docs"  docs
+@cd "%WSFCPP_SOURCE%"
 
 rem Remove WSF/C Client Samples
 :strip_c_client_samples
-@set WSFCPP_INSTALL=%CD%
+@set WSFCPP_SOURCE=%CD%
 @cd "%WSFCPP_HOME%\bin\samples"
 @if exist rampart xcopy /E /Q /I /Y rampart ..\rampart
 @cd ..\
@@ -41,15 +42,15 @@ rem Remove WSF/C Client Samples
 @mkdir samples
 @if exist rampart xcopy /E /Q /I /Y rampart samples\rampart
 @if exist rampart rmdir /s /q rampart
-@cd "%WSFCPP_INSTALL%"
+@cd "%WSFCPP_SOURCE%"
 
 rem Clean bin Folder
 :clean_bin_dir
-@set WSFCPP_INSTALL=%CD%
+@set WSFCPP_SOURCE=%CD%
 @cd "%WSFCPP_HOME%\bin"
 @del *.exp
 @del *.lib
-@cd "%WSFCPP_INSTALL%"
+@cd "%WSFCPP_SOURCE%"
 
 rem Build Source
 :build_source
@@ -62,11 +63,11 @@ rem Build Source
 
 rem Build Client Samples
 :build_client_samples
-@set WSFCPP_INSTALL=%CD%
+@set WSFCPP_SOURCE=%CD%
 @cd "%WSFCPP_HOME%\bin\samples"
 @if exist cpp rmdir /s /q cpp
 @mkdir cpp
-@cd "%WSFCPP_INSTALL%"
+@cd "%WSFCPP_SOURCE%"
 @cd samples
 @nmake dist -f samples.mk AUTOCONF=..\configure.in
 @if not %ERRORLEVEL% EQU 0 goto end
@@ -75,6 +76,19 @@ rem Build Client Samples
 @for /F "tokens=*" %%G in ('dir /B /AD /S *.svn*') do rmdir /S /Q %%G
 @for /F "tokens=*" %%G in ('dir /B /S *.sh*') do del %%G
 @for /F "tokens=*" %%G in ('dir /B /S *.am*') do del %%G
-@cd "%WSFCPP_INSTALL%"
+@cd "%WSFCPP_SOURCE%"
+
+rem Deploy Sample Source
+:dep_sample_source
+@if exist "%WSFCPP_HOME%\samples" rmdir /s /q "%WSFCPP_HOME%\samples"
+@xcopy /E /I /Q /Y samples "%WSFCPP_HOME%\samples"
+@copy /Y configure.in "%WSFCPP_HOME%"
+@set WSFCPP_SOURCE=%CD%
+@cd "%WSFCPP_HOME%\samples"
+@for /F "tokens=*" %%G in ('dir /B /AD /S *.svn*') do rmdir /S /Q %%G
+@for /F "tokens=*" %%G in ('dir /B /AD /S int.msvc') do rmdir /S /Q %%G
+@for /F "tokens=*" %%G in ('dir /B /S *.sh*') do del %%G
+@for /F "tokens=*" %%G in ('dir /B /S *.am*') do del %%G
+@cd "%WSFCPP_SOURCE%"
 
 :end
