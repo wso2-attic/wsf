@@ -15,20 +15,26 @@ int main()
         OMElement * payload = new OMElement(NULL,"echoString", ns);
         OMElement * child = new OMElement(payload,"text", NULL);
         child->setText("Hello World!");
-        printf ((payload->toString()).c_str());
-        cout << endl;
+        cout << endl << "Request: " << payload << endl;
         OMElement * response;
         try
         {
             response = sc->request(payload, "");
             if (response)
-            {   
-                cout << endl << "Response: " << response->toString() << endl;
+            {
+                cout << endl << "Response: " << response << endl;
             }
         }
-        catch (AxisFault * e)
+        catch (AxisFault & e)
         {
-            cout << endl << "Response: " << (sc->getLastSOAPFault())->toString() << endl;
+            if (sc->getLastSOAPFault())
+            {
+                cout << endl << "Response: " << sc->getLastSOAPFault() << endl;
+            }
+            else
+            {
+                cout << endl << "Response: " << e << endl;
+            }
         }
         delete payload;
     }

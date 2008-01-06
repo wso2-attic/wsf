@@ -72,7 +72,7 @@ namespace wso2wsf
          * @exception NeethiException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        WSF_EXTERN WSF_CALL NeethiPolicy(std::string file_name) throw(NeethiException);
+        WSF_EXTERN WSF_CALL NeethiPolicy(std::string file_name) throw (NeethiException);
 
         /**
          * Creates a neethi_policy struct.
@@ -80,7 +80,7 @@ namespace wso2wsf
          * @exception NeethiException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        WSF_EXTERN WSF_CALL NeethiPolicy(OMElement * element) throw(NeethiException);
+        WSF_EXTERN WSF_CALL NeethiPolicy(OMElement * element) throw (NeethiException);
 
         /**
          * desctructor that frees resources.

@@ -32,20 +32,26 @@ int main()
         OMAttribute * at3 = new OMAttribute("type", "xsd:string", ns2);
         child2->addAttribute(at2);
         child2->setText("salvasion");
-        printf ((payload->toString()).c_str());
-        cout << endl;
+        cout << endl << "Request: " << payload << endl;
         OMElement * response;
         try
         {
             response = sc->request(payload, "");
             if (response)
             {
-                cout << endl << "Response: " << response->toString() << endl;
+                cout << endl << "Response: " << response << endl;
             }
         }
-        catch (AxisFault * e)
+        catch (AxisFault & e)
         {
-            cout << endl << "Fault: " << (sc->getLastSOAPFault())->toString() << endl;
+            if (sc->getLastSOAPFault())
+            {
+                cout << endl << "Response: " << sc->getLastSOAPFault() << endl;
+            }
+            else
+            {
+                cout << endl << "Response: " << e << endl;
+            }
         }
         delete payload;
     }

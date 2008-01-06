@@ -166,7 +166,7 @@ namespace wso2wsf
          * @exception AxisFault an exception is thrown if something goes wrong
          * while creating a config context.
          */
-        WSF_EXTERN void WSF_CALL initializeClient(std::string log_file, axutil_log_levels_t log_level) throw(AxisFault);
+        WSF_EXTERN void WSF_CALL initializeClient(std::string log_file, axutil_log_levels_t log_level) throw (AxisFault);
 
         /**
          * Method to retrieve the last SOAP fault that resulted after invoking
@@ -217,7 +217,7 @@ namespace wso2wsf
          * @exception AxisFault an exception is thrown if something goes wrong
          * while removing headers.
          */
-        WSF_EXTERN void WSF_CALL removeAllHeaders() throw(AxisFault);
+        WSF_EXTERN void WSF_CALL removeAllHeaders() throw (AxisFault);
 
         /**
          * Set the given policy object to the description hierarchy.
@@ -236,7 +236,7 @@ namespace wso2wsf
          * @exception AxisFault an exception is thrown if something goes wrong
          * while creating a config context.
          */
-        WSF_EXTERN bool WSF_CALL send(OMElement * payload, std::string action) throw(AxisFault);
+        WSF_EXTERN bool WSF_CALL send(OMElement * payload, std::string action) throw (AxisFault);
 
         /**
          * This method is used to interact with a service operation whose MEP is Robust Out-Only.
@@ -250,7 +250,7 @@ namespace wso2wsf
          * @exception AxisFault an exception is thrown if something goes wrong
          * while creating a config context.
          */
-        WSF_EXTERN bool WSF_CALL send(OMElement * payload, std::string operation, std::string action) throw(AxisFault);
+        WSF_EXTERN bool WSF_CALL send(OMElement * payload, std::string operation, std::string action) throw (AxisFault);
 
         /**
          * This method is used to interact with a service operation whose MEP is Out-Only, or Robust Out-Only.
@@ -265,7 +265,7 @@ namespace wso2wsf
          * @exception AxisFault an exception is thrown if something goes wrong
          * while creating a config context.
          */
-        WSF_EXTERN bool WSF_CALL send(OMElement * payload, bool robust, std::string operation, std::string action) throw(AxisFault);
+        WSF_EXTERN bool WSF_CALL send(OMElement * payload, bool robust, std::string operation, std::string action) throw (AxisFault);
 
         /**
          * This method is used to interact with a service operation whose MEP is Out-Only, or Robust Out-Only.
@@ -278,7 +278,7 @@ namespace wso2wsf
          * @exception AxisFault an exception is thrown if something goes wrong
          * while creating a config context.
          */
-        WSF_EXTERN bool WSF_CALL send(OMElement * payload, bool robust, std::string action) throw(AxisFault);
+        WSF_EXTERN bool WSF_CALL send(OMElement * payload, bool robust, std::string action) throw (AxisFault);
 
         /**
          * Sends XML request and receives XML response.
@@ -290,7 +290,7 @@ namespace wso2wsf
          * @exception AxisFault an exception is thrown if something goes wrong
          * while creating a config context.
          */
-        WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, std::string action) throw(AxisFault);
+        WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, std::string action) throw (AxisFault);
 
         /**
          * Sends XML request and receives XML response.
@@ -306,7 +306,7 @@ namespace wso2wsf
          * @exception AxisFault an exception is thrown if something goes wrong
          * while creating a config context.
          */
-        WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, ICallback * callback, std::string operation, std::string action) throw(AxisFault);
+        WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, ICallback * callback, std::string operation, std::string action) throw (AxisFault);
 
         /**
          * Sends XML request and receives XML response.
@@ -320,7 +320,7 @@ namespace wso2wsf
          * @exception AxisFault an exception is thrown if something goes wrong
          * while creating a config context.
          */
-        WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, ICallback * callback, std::string action) throw(AxisFault);
+        WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, ICallback * callback, std::string action) throw (AxisFault);
 
         /**
          * Sends XML request and receives XML response.
@@ -334,7 +334,7 @@ namespace wso2wsf
          * @exception AxisFault an exception is thrown if something goes wrong
          * while creating a config context.
          */
-        WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, std::string operation, std::string action) throw(AxisFault);
+        WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, std::string operation, std::string action) throw (AxisFault);
 
         /**
          * Gets the last respose SOAP envelope.

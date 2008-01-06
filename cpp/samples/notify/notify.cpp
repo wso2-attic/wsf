@@ -14,19 +14,19 @@ int main()
     OMNamespace * ns = new OMNamespace("http://example.org/notify", "m");
     OMElement * payload = new OMElement(NULL,"notify", ns);
     payload->setText("notify5");
-    cout << payload->toString();
+    cout << endl << "Request: " << payload << endl;
     bool status = false;
     try
     {
         status = sc->send(payload, "http://example.org/action/notify");
     }
-    catch (AxisFault * e)
+    catch (AxisFault & e)
     {
-        cout << e;
+        cout << endl << "Response: " << e << endl;
     }
     if (status)
     {
-        printf("\nnotify client invoke SUCCESSFUL!\n");
+        cout << endl << "notify client invoke SUCCESSFUL!" << endl;
     }
     delete sc;
 }

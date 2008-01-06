@@ -86,7 +86,7 @@ namespace wso2wsf
          * @exception AxisFault an exception is thrown if something goes wrong
          * while setting up the environment.
          */
-        void WSF_CALL initialize(std::string log_file, axutil_log_levels_t log_level) throw(AxisFault);
+        void WSF_CALL initialize(std::string log_file, axutil_log_levels_t log_level) throw (AxisFault);
 
         /**
          * Enables or Disables logging,

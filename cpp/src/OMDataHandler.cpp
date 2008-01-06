@@ -115,7 +115,7 @@ string OMDataHandler::getContentType()
     _wsf_axiom_data_handler = axiom_data_handler_create(getEnv(), NULL, NULL);
     if (!_wsf_axiom_data_handler)
     {
-        throw &OMException(CREATION_OF_OM_DATA_HANDLER_OBJECT_FAILED, this);
+        throw OMException(CREATION_OF_OM_DATA_HANDLER_OBJECT_FAILED, this);
     }
 }
 
@@ -128,7 +128,7 @@ string OMDataHandler::getContentType()
     _wsf_axiom_data_handler = axiom_data_handler_create(getEnv(), NULL, mime_type.c_str());
     if (!_wsf_axiom_data_handler)
     {
-        throw &OMException(CREATION_OF_OM_DATA_HANDLER_OBJECT_FAILED, this);
+        throw OMException(CREATION_OF_OM_DATA_HANDLER_OBJECT_FAILED, this);
     }
 }
 
@@ -141,7 +141,7 @@ string OMDataHandler::getContentType()
     _wsf_axiom_data_handler = axiom_data_handler_create(getEnv(), file_name.c_str(), mime_type.c_str());
     if (!_wsf_axiom_data_handler)
     {
-        throw &OMException(CREATION_OF_OM_DATA_HANDLER_OBJECT_FAILED, this);
+        throw OMException(CREATION_OF_OM_DATA_HANDLER_OBJECT_FAILED, this);
     }
 }
 

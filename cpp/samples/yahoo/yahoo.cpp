@@ -20,20 +20,26 @@ int main()
         child1->setText("YahooDemo");
         OMElement * child2 = new OMElement(payload,"query", NULL);
         child2->setText("finance");
-        printf ((payload->toString()).c_str());
-        cout << endl;
+        cout << endl << "Request: " << payload << endl;
         OMElement * response;
         try
         {
             response = sc->request(payload, "");
             if (response)
             {
-                cout << endl << "Response: " << response->toString() << endl;
+                cout << endl << "Response: " << response << endl;
             }
         }
-        catch (AxisFault * e)
+        catch (AxisFault & e)
         {
-            cout << endl << "Fault: " << (sc->getLastSOAPFault())->toString() << endl;
+            if (sc->getLastSOAPFault())
+            {
+                cout << endl << "Response: " << sc->getLastSOAPFault() << endl;
+            }
+            else
+            {
+                cout << endl << "Response: " << e << endl;
+            }
         }
         delete payload;
     }

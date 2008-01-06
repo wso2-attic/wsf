@@ -7,4 +7,4 @@ echo "Copying latest module to client_repo"
 cp -r $AXIS2C_HOME/modules/rampart $CLIENT_REPO/modules
 
 #RUN
-../echo/echo_security
+../echo/echo_security $AXIS2C_HOME/client_repo

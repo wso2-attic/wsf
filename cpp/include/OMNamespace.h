@@ -91,7 +91,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMNamespace(std::string uri, std::string prefix) throw(OMException);
+        WSF_EXTERN WSF_CALL OMNamespace(std::string uri, std::string prefix) throw (OMException);
 
         /**
          * Copy Constructor.
@@ -99,7 +99,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMNamespace(OMNamespace & om_namespace) throw(OMException);
+        WSF_EXTERN WSF_CALL OMNamespace(OMNamespace & om_namespace) throw (OMException);
 
         /**
          * desctructor that frees resources.

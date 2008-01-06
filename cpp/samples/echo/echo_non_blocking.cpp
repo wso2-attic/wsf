@@ -35,17 +35,40 @@ void EchoCallback::onFault(OMElement* message)
     isComplete = true;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
-    WSSOAPClient * sc = new WSSOAPClient("http://localhost:9090/axis2/services/echo");
+    string end_point;
+    int timeout;
+    WSSOAPClient * sc;
+
+    end_point = "http://localhost:9090/axis2/services/echo";
+    timeout = 30;
+
+    if (argc > 1)
+    {
+        if (string (argv[1]).compare("-h") == 0)
+        {
+            cout << "Usage : " << argv[0] << " [timeout] [end_point]" << endl;
+            cout << "use -h for help" << endl;
+            cout << "default timeout " << timeout << endl;
+            cout << "default end_point " << end_point << endl;
+            cout << "NOTE: command line arguments must appear in given order, with trailing ones being optional" << endl;
+            return 0;
+        }
+        else
+            timeout = atoi(argv[1]);
+    }
+    if (argc > 2)
+        end_point = argv[2];
+
+    sc = new WSSOAPClient(end_point);
     sc->initializeClient("echo_non_blocking.log", AXIS2_LOG_LEVEL_TRACE);
     {
         OMNamespace * ns = new OMNamespace("http://ws.apache.org/axis2/services/echo", "ns1");
         OMElement * payload = new OMElement(NULL,"echoString", ns);
         OMElement * child = new OMElement(payload,"text", NULL);
         child->setText("Hello World!");
-        printf ((payload->toString()).c_str());
-        cout << endl;
+        cout << endl << "Request: " << payload << endl;
         EchoCallback * callback = new EchoCallback();
         if (callback)
         {
@@ -53,20 +76,22 @@ int main()
             {
                 sc->request(payload, callback, "");
             }
-            catch (AxisFault * e)
-            {}
+            catch (AxisFault & e)
+            {
+                cout << "Response: " << e << endl;
+            }
             int count = 0;
-            while (count < 30)
+            while (count < timeout)
             {
                 if (isComplete)
                 {
                     break;
                 }
-               	AXIS2_USLEEP(100);
+               	WSF_USLEEP(100);
                 count++;
             }
             cout << endl << endl << "Time: " << count << endl;
-            if (count == 30)
+            if (count == timeout)
             {
                 return 0;
             }

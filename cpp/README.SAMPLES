@@ -24,15 +24,24 @@ vcvars32.bat (which is found in, MS_VISUAL_STUDIO_INSTALL_DIR/VC/bin). Then,
   2. Run 'nmake dist -f samples.mk AUTOCONF=..\configure.in'
 
 
+Using Command-Line Interface
+----------------------------
+Some samples do have a command-line interface where you can specify certain
+parameters at runtime. For help in using the command-line interface run the
+sample with a -h switch. (ex:- Windows: 'echo.exe -h', Linux: './echo -h').
+
+
 Echo Samples
 ------------
 echo -
 
-  Echo client with WS-Addressing, and dual invocation.
+  Echo client with WS-Addressing, and iterative invocation.
   Set the following variables to match your case.
-  - end_point[Line 11]. default: http://localhost:9090/axis2/services/echo
-  - log_file_name[Line 12]. default: echo.log
-  - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
+  - end_point[Line 15]. default: http://localhost:9090/axis2/services/echo
+  - iterations[Line 16]. default: 2
+  - log_file_name[Line 33]. default: echo.log
+  - log_level[Line 33]. default: AXIS2_LOG_LEVEL_TRACE
+  Command-Line Interface: Yes
 
 echo_blocking -
 
@@ -41,16 +50,18 @@ echo_blocking -
   - end_point[Line 11]. default: http://localhost:9090/axis2/services/echo
   - log_file_name[Line 12]. default: echo_blocking.log
   - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
+  Command-Line Interface: No
 
 echo_blocking_dual -
 
   Echo client using seperate listner, and different ReplyTo.
   Set the following variables to match your case.
-  - end_point[Line 11]. default: http://localhost:9090/axis2/services/echo
-  - reply_to[Line 16]. default: http://localhost:6060/axis2/services/
+  - end_point[Line 14]. default: http://localhost:9090/axis2/services/echo
+  - reply_to[Line 15]. default: http://localhost:6060/axis2/services/
     __ANONYMOUS_SERVICE__/__OPERATION_OUT_IN__
-  - log_file_name[Line 12]. default: echo_blocking_dual.log
-  - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
+  - log_file_name[Line 35]. default: echo_blocking_dual.log
+  - log_level[Line 35]. default: AXIS2_LOG_LEVEL_TRACE
+  Command-Line Interface: Yes
 
 echo_blocking_addr -
 
@@ -59,6 +70,7 @@ echo_blocking_addr -
   - end_point[Line 11]. default: http://localhost:9090/axis2/services/echo
   - log_file_name[Line 12]. default: echo_blocking_addr.log
   - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
+  Command-Line Interface: No
 
 echo_blocking_soap11 -
 
@@ -67,6 +79,7 @@ echo_blocking_soap11 -
   - end_point[Line 11]. default: http://localhost:9090/axis2/services/echo
   - log_file_name[Line 12]. default: echo_blocking_soap11.log
   - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
+  Command-Line Interface: No
 
 echo_rest -
 
@@ -75,14 +88,17 @@ echo_rest -
   - end_point[Line 11]. default: http://localhost:9090/axis2/services/echo
   - log_file_name[Line 12]. default: echo_rest.log
   - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
+  Command-Line Interface: No
 
 echo_non_blocking -
 
   Echo client with non-blocking (asynchronous) operations.
   Set the following variables to match your case.
-  - end_point[Line 39]. default: http://localhost:9090/axis2/services/echo
-  - log_file_name[Line 40]. default: echo_non_blocking.log
-  - log_level[Line 40]. default: AXIS2_LOG_LEVEL_TRACE
+  - end_point[Line 44]. default: http://localhost:9090/axis2/services/echo
+  - timeout[Line 45]. default: 30
+  - log_file_name[Line 65]. default: echo_non_blocking.log
+  - log_level[Line 65]. default: AXIS2_LOG_LEVEL_TRACE
+  Command-Line Interface: Yes
 
 echo_non_blocking_dual -
 
@@ -92,18 +108,21 @@ echo_non_blocking_dual -
   - end_point[Line 39]. default: http://localhost:9090/axis2/services/echo
   - reply_to[Line 44]. default: http://localhost:6060/axis2/services/
     __ANONYMOUS_SERVICE__/__OPERATION_OUT_IN__
+  - timeout[Line 64]. default: 30
   - log_file_name[Line 40]. default: echo_non_blocking_dual.log
   - log_level[Line 40]. default: AXIS2_LOG_LEVEL_TRACE
+  Command-Line Interface: No
 
 echo_security -
 
   Echo client with WS-SecurityPolicy.
   Set the following variables to match your case.
-  - client_repo[Line 11]. default: ../client_repo
-  - end_point[Line 11]. default: http://localhost:9090/axis2/services/sec_echo
-  - log_file_name[Line 12]. default: echo_security.log
-  - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
-  - policy_file[Line 14]. default: ../client_repo/policy.xml
+  - end_point[Line 14]. default: http://localhost:9090/axis2/services/sec_echo
+  - client_repo[Line 15]. default: ../client_repo
+  - policy_file[Line 16]. default: policy.xml
+  - log_file_name[Line 39]. default: echo_security.log
+  - log_level[Line 39]. default: AXIS2_LOG_LEVEL_TRACE
+  Command-Line Interface: Yes
 
   * Please note that the echo_security sample will not work unless you set the
   client_repo, and the policy_file variables, and modify the sample.
@@ -117,6 +136,7 @@ yahoo -
   Set the following variables to match your case.
   - log_file_name[Line 12]. default: yahoo_rest_search.log
   - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
+  Command-Line Interface: No
 
 
 Accessing Google WebService API
@@ -128,6 +148,7 @@ google -
   - log_file_name[Line 12]. default: google_client.log
   - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
   - google_api_key[Line 30]. default: 00000000000000000000000000000000
+  Command-Line Interface: No
 
   * A valid api key would return a response, and an invalid key would return a
   fault. The default key is invalid.
@@ -142,6 +163,7 @@ flickr -
   - log_file_name[Line 12]. default: flickr_client.log
   - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
   - flickr_api_key[Line 30]. default: 00000000000000000000000000000000
+  Command-Line Interface: No
 
   * A valid api key would return a response, and an invalid key would return a
   fault. The default key is invalid.
@@ -153,10 +175,11 @@ mtom -
 
   Client for uploading JPEG image files using MTOM.
   Set the following variables to match your case.
-  - end_point[Line 11]. default: http://localhost:9090/axis2/services/mtom
-  - log_file_name[Line 12]. default: mtom.log
-  - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
-  - file_name[Line 26]. default: resources/axis2.jpg
+  - end_point[Line 16]. default: http://localhost:9090/axis2/services/mtom
+  - file_name[Line 17]. default: resources/axis2.jpg
+  - log_file_name[Line 38]. default: mtom.log
+  - log_level[Line 38]. default: AXIS2_LOG_LEVEL_TRACE
+  Command-Line Interface: Yes
 
 
 Math Client
@@ -169,10 +192,13 @@ math -
     - mul: Multiplication
     - div: Division
   Set the following variables to match your case.
-  - end_point[Line 11]. default: http://localhost:9090/axis2/services/math
-  - log_file_name[Line 12]. default: math_blocking.log
-  - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
-  - operation[Line 16]. default: add
+  - end_point[Line 14]. default: http://localhost:9090/axis2/services/math
+  - operation[Line 15]. default: add
+  - param1[Line 16]. default: 40
+  - param2[Line 17]. default: 8
+  - log_file_name[Line 43]. default: math_blocking.log
+  - log_level[Line 43]. default: AXIS2_LOG_LEVEL_TRACE
+  Command-Line Interface: Yes
 
 
 Notify Client
@@ -184,6 +210,7 @@ notify -
   - end_point[Line 11]. default: http://localhost:9090/axis2/services/notify
   - log_file_name[Line 12]. default: notify.log
   - log_level[Line 12]. default: AXIS2_LOG_LEVEL_TRACE
+  Command-Line Interface: No
 
 
 Security Policy Samples

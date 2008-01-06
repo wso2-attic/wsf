@@ -96,7 +96,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMAttribute(std::string name, std::string value, OMNamespace * ns) throw(OMException);
+        WSF_EXTERN WSF_CALL OMAttribute(std::string name, std::string value, OMNamespace * ns) throw (OMException);
 
         /**
          * Creates a attribute struct.
@@ -105,7 +105,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMAttribute(std::string name, std::string value) throw(OMException);
+        WSF_EXTERN WSF_CALL OMAttribute(std::string name, std::string value) throw (OMException);
 
         /**
          * Copy Constructor.
@@ -113,7 +113,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMAttribute(OMAttribute & attribute) throw(OMException);
+        WSF_EXTERN WSF_CALL OMAttribute(OMAttribute & attribute) throw (OMException);
 
         /**
          * desctructor that frees resources.

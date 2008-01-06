@@ -60,7 +60,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMDataHandler(std::string file_name, std::string mime_type) throw(OMException);
+        WSF_EXTERN WSF_CALL OMDataHandler(std::string file_name, std::string mime_type) throw (OMException);
 
         /**
          * Creates data_handler struct.
@@ -68,7 +68,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMDataHandler(std::string mime_type) throw(OMException);
+        WSF_EXTERN WSF_CALL OMDataHandler(std::string mime_type) throw (OMException);
 
         /**
          * Creates data_handler struct.
@@ -76,7 +76,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMDataHandler() throw(OMException);
+        WSF_EXTERN WSF_CALL OMDataHandler() throw (OMException);
 
         /**
          * Desctructor that frees resources.

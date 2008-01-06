@@ -40,7 +40,7 @@ using namespace wso2wsf;
     }
     if (!_wsf_neethi_policy)
     {
-        throw &NeethiException(CREATION_OF_NEETHI_POLICY_OBJECT_FAILED, this);
+        throw NeethiException(CREATION_OF_NEETHI_POLICY_OBJECT_FAILED, this);
     }
 }
 
@@ -58,7 +58,7 @@ using namespace wso2wsf;
     }
     if (!_wsf_neethi_policy)
     {
-        throw &NeethiException(CREATION_OF_NEETHI_POLICY_OBJECT_FAILED, this);
+        throw NeethiException(CREATION_OF_NEETHI_POLICY_OBJECT_FAILED, this);
     }
 }
 

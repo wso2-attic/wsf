@@ -70,7 +70,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMText(OMNode * parent, std::string value) throw(OMException);
+        WSF_EXTERN WSF_CALL OMText(OMNode * parent, std::string value) throw (OMException);
 
         /**
          * Creates an om text struct.
@@ -78,7 +78,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMText(std::string value) throw(OMException);
+        WSF_EXTERN WSF_CALL OMText(std::string value) throw (OMException);
 
         /**
          * Creates an om text struct.
@@ -87,7 +87,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMText(OMNode * parent, OMDataHandler * data_handler) throw(OMException);
+        WSF_EXTERN WSF_CALL OMText(OMNode * parent, OMDataHandler * data_handler) throw (OMException);
 
         /**
          * Creates an om text struct.
@@ -95,14 +95,14 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMText(OMDataHandler * data_handler) throw(OMException);
+        WSF_EXTERN WSF_CALL OMText(OMDataHandler * data_handler) throw (OMException);
 
         /**
          * Creates an om text struct.
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMText() throw(OMException);
+        WSF_EXTERN WSF_CALL OMText() throw (OMException);
 
         /**
          * Creates an om text struct.
@@ -111,7 +111,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        WSF_CALL OMText(OMNode * parent, axiom_node_t * node) throw(OMException);
+        WSF_CALL OMText(OMNode * parent, axiom_node_t * node) throw (OMException);
 
         /**
          * Desctructor that frees resources.

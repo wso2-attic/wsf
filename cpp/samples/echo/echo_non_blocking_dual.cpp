@@ -49,8 +49,7 @@ int main()
         OMElement * payload = new OMElement(NULL,"echoString", ns);
         OMElement * child = new OMElement(payload,"text", NULL);
         child->setText("Hello World!");
-        printf ((payload->toString()).c_str());
-        cout << endl;
+        cout << endl << "Request: " << payload << endl;
         EchoCallback * callback = new EchoCallback();
         if (callback)
         {
@@ -58,22 +57,22 @@ int main()
             {
                 sc->request(payload, callback, "http://ws.apache.org/axis2/c/samples/echoString");
             }
-            catch (AxisFault * e)
+            catch (AxisFault & e)
             {
-                cout << e;
+                cout << "Response: " << e << endl;
             }
-            int count = 0;  
-            while (count < 30)
+            int count = 0, timeout = 30;  
+            while (count < timeout)
             {
                 if (isComplete)
                 {
                     break;
                 }
-                AXIS2_USLEEP(100);
+                WSF_USLEEP(100);
                 count++;
             }
             cout << endl << endl << "Time: " << count << endl;
-            if (count == 30)
+            if (count == timeout)
             {
                 return 0;
             }

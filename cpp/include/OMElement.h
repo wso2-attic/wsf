@@ -135,7 +135,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        WSF_CALL OMElement(OMNode * parent, axiom_node_t * node) throw(OMException);
+        WSF_CALL OMElement(OMNode * parent, axiom_node_t * node) throw (OMException);
 
         /**
          * Creates an om element struct.
@@ -145,7 +145,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMElement(OMNode * parent, std::string localname, OMNamespace * ns) throw(OMException);
+        WSF_EXTERN WSF_CALL OMElement(OMNode * parent, std::string localname, OMNamespace * ns) throw (OMException);
 
         /**
          * Creates an om element struct.
@@ -154,7 +154,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMElement(OMNode * parent, std::string localname) throw(OMException);
+        WSF_EXTERN WSF_CALL OMElement(OMNode * parent, std::string localname) throw (OMException);
 
         /**
          * Creates an om element struct.
@@ -163,7 +163,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMElement(std::string localname, OMNamespace * ns) throw(OMException);
+        WSF_EXTERN WSF_CALL OMElement(std::string localname, OMNamespace * ns) throw (OMException);
 
         /**
          * Creates an om element struct.
@@ -171,7 +171,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMElement(std::string localname) throw(OMException);
+        WSF_EXTERN WSF_CALL OMElement(std::string localname) throw (OMException);
 
         /**
          * desctructor that frees resources. Please note that all associated attributes,

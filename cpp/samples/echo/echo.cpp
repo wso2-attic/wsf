@@ -6,52 +6,58 @@
 using namespace std;
 using namespace wso2wsf;
 
-int main()
+int main(int argc, char *argv[])
 {
-    WSSOAPClient * sc = new WSSOAPClient("http://localhost:9090/axis2/services/echo");
+    string end_point;
+    int iterations;
+    WSSOAPClient * sc;
+
+    end_point = "http://localhost:9090/axis2/services/echo";
+    iterations = 2;
+
+    if (argc > 1)
+    {   
+        if (string (argv[1]).compare("-h") == 0)
+        {   
+            cout << "Usage : " << argv[0] << " [end_point]" << endl;
+            cout << "use -h for help" << endl;
+            cout << "default end_point " << end_point << endl;
+            return 0;
+        }   
+        else
+            end_point = argv[1];
+    }   
+
+    sc = new WSSOAPClient(end_point);
+    cout << endl << "Using end_point: " << end_point << endl;
     sc->initializeClient("echo.log", AXIS2_LOG_LEVEL_TRACE);
     sc->engageModule(AXIS2_MODULE_ADDRESSING);
+    for (int i = 0; i < iterations; i++)
     {
         OMNamespace * ns = new OMNamespace("http://ws.apache.org/axis2/services/echo", "ns1");
         OMElement * payload = new OMElement(NULL,"echoString", ns);
         OMElement * child = new OMElement(payload,"text", NULL);
         child->setText("Hello World!");
-        printf ((payload->toString()).c_str());
-        cout << endl;
+        cout << endl << "Request: " << payload << endl;
         OMElement * response;
         try
         {
             response = sc->request(payload, "http://ws.apache.org/axis2/c/samples/echoString");
             if (response)
             {
-                cout << endl << "Response: " << (response->getFirstElement())->toString() << endl;
+                cout << endl << "Response: " << response->getFirstElement() << endl;
             }
         }
-        catch (AxisFault * e)
+        catch (AxisFault & e)
         {
-            cout << endl << "Response: " << (sc->getLastSOAPFault())->toString() << endl;
-        }
-        delete payload;
-    }
-    {
-        OMNamespace * ns = new OMNamespace("http://ws.apache.org/axis2/services/echo", "ns1");
-        OMElement * payload = new OMElement(NULL,"echoString", ns);
-        OMElement * child = new OMElement(payload,"text", NULL);
-        child->setText("Hello World!");
-        printf ((payload->toString()).c_str());
-        cout << endl;
-        OMElement * response;
-        try
-        {
-            response = sc->request(payload, "");
-            if (response)
+            if (sc->getLastSOAPFault())
             {
-                cout << endl << "Response: " << (response->getFirstElement())->toString() << endl;
+                cout << endl << "Response: " << sc->getLastSOAPFault() << endl;
             }
-        }
-        catch (AxisFault * e)
-        {
-            cout << endl << "Response: " << (sc->getLastSOAPFault())->toString() << endl;
+            else
+            {
+                cout << endl << "Response: " << e << endl;
+            }
         }
         delete payload;
     }

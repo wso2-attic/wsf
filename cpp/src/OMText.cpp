@@ -251,7 +251,7 @@ bool OMText::setValue(std::string value)
     }
     else
     {
-        throw &OMException(CREATION_OF_OM_TEXT_OBJECT_FAILED, this);
+        throw OMException(CREATION_OF_OM_TEXT_OBJECT_FAILED, this);
     }
 }
 
@@ -273,7 +273,7 @@ bool OMText::setValue(std::string value)
     }
     else
     {
-        throw &OMException(CREATION_OF_OM_TEXT_OBJECT_FAILED, this);
+        throw OMException(CREATION_OF_OM_TEXT_OBJECT_FAILED, this);
     }
 }
 
@@ -300,7 +300,7 @@ bool OMText::setValue(std::string value)
     }
     else
     {
-        throw &OMException(CREATION_OF_OM_TEXT_OBJECT_FAILED, this);
+        throw OMException(CREATION_OF_OM_TEXT_OBJECT_FAILED, this);
     }
 }
 
@@ -342,7 +342,7 @@ bool OMText::setValue(std::string value)
     }
     else
     {
-        throw &OMException(CREATION_OF_OM_TEXT_OBJECT_FAILED, this);
+        throw OMException(CREATION_OF_OM_TEXT_OBJECT_FAILED, this);
     }
 }
 
@@ -371,7 +371,7 @@ bool OMText::setValue(std::string value)
     }
     else
     {
-        throw &OMException(CREATION_OF_OM_TEXT_OBJECT_FAILED, this);
+        throw OMException(CREATION_OF_OM_TEXT_OBJECT_FAILED, this);
     }
 }
 
@@ -415,7 +415,7 @@ bool OMText::setValue(std::string value)
     }
     else
     {
-        throw &OMException(CREATION_OF_OM_TEXT_OBJECT_FAILED, this);
+        throw OMException(CREATION_OF_OM_TEXT_OBJECT_FAILED, this);
     }
 }
 

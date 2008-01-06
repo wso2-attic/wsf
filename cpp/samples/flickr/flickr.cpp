@@ -19,22 +19,26 @@ int main()
         child2->setText("00000000000000000000000000000000");
         OMElement * child3 = new OMElement(payload,"tags", NULL);
         child3->setText("home");
-        printf ((payload->toString()).c_str());
-        cout << endl;
-        OMElement * response = NULL;
+        cout << endl << "Request: " << payload << endl;
+        OMElement * response;
         try
         {
             response = sc->request(payload, "");
             if (response)
             {
-                cout << endl << "Response: " << response->toString() << endl;
-                cout << endl << "Response: " << sc->getLastResponseSoapEnvelopeString() << endl;
+                cout << endl << "Response: " << response << endl;
             }
         }
-        catch (AxisFault * e)
+        catch (AxisFault & e)
         {
-            cout << endl << "Response: " << sc->getLastResponseSoapEnvelopeString() << endl;
-            cout << endl << "Response: " << (sc->getLastSOAPFault())->toString() << endl;
+            if (sc->getLastSOAPFault())
+            {
+                cout << endl << "Response: " << sc->getLastSOAPFault() << endl;
+            }
+            else
+            {
+                cout << endl << "Response: " << e << endl;
+            }
         }
         delete payload;
     }
