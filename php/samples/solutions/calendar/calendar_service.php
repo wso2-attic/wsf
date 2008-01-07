@@ -155,8 +155,7 @@ XML;
 
 }
 
-
-function readTimeValues($inMessage)
+function getEvent($inMessage)
 {
    $simplexml = new SimpleXMLElement($inMessage->str);
    $user_id=trim($simplexml->userId);
@@ -164,100 +163,45 @@ function readTimeValues($inMessage)
    $year=trim($simplexml->year);
 
    connect_db();
-   $time=array();
-
-   $query1="SELECT time FROM `create_events` WHERE `user_id`='".$user_id."' AND `week`='".$week."' AND `year`='".$year."'";
+   $query1="SELECT event FROM `create_events` WHERE `user_id`='".$user_id."' AND `week`='".$week."' AND `year`='".$year."'";
    $row1=mysql_query($query1);
+   
+   $query2="SELECT time FROM `create_events` WHERE `user_id`='".$user_id."' AND `week`='".$week."' AND `year`='".$year."'";
+   $row2=mysql_query($query2);
+
+   $query3="SELECT date FROM `create_events` WHERE `user_id`='".$user_id."' AND `week`='".$week."' AND `year`='".$year."'";
+   $row3=mysql_query($query3);
 
    $resPayload = <<<XML
    <ns1:result xmlns:ns1="http://php.axis2.org/samples">
 XML;
 
-
-   while($values=mysql_fetch_array($row1, MYSQL_NUM)){
-   $resPayload .= <<<XML
-    <time>$values[0]</time>         
+    while($values1=mysql_fetch_array($row1, MYSQL_NUM)){
+    $resPayload .= <<<XML
+    <event>$values1[0]
 XML;
 }
 
-   $resPayload .= <<<XML
-    </ns1:result>
+     while($values2=mysql_fetch_array($row2, MYSQL_NUM)){
+     $resPayload .= <<<XML
+     <time>$values2[0]</time>
+XML;
+}
+
+    while($values3=mysql_fetch_array($row3, MYSQL_NUM)){
+    $resPayload .= <<<XML
+    <day>$values3[0]</day>
+XML;
+}
+  
+     $resPayload .= <<<XML
+    </event></ns1:result>
 XML;
 
 $returnMessage = new WSMessage($resPayload);
 return $returnMessage;
 
 }
-
-
-function readEventValues($inMessage)
-{
-   $simplexml = new SimpleXMLElement($inMessage->str);
-   $user_id=trim($simplexml->userId);
-   $week=trim($simplexml->week);
-   $year=trim($simplexml->year);
-
-   connect_db();
-
-   $event=array();
-
-   $query="SELECT event FROM `create_events` WHERE `user_id`='".$user_id."' AND `week`='".$week."' AND `year`='".$year."'";
-   $row=mysql_query($query);
-
-   $resPayload = <<<XML
-   <ns1:result xmlns:ns1="http://php.axis2.org/samples">
-XML;
-
-
-   while($values=mysql_fetch_array($row, MYSQL_NUM)){
-   $resPayload .= <<<XML
-   <event>$values[0]</event>
-XML;
-}
-   $resPayload .= <<<XML
-   </ns1:result>
-XML;
-
-   $returnMessage = new WSMessage($resPayload);
-   return $returnMessage;
-
-}
-
-
-function readDayValues($inMessage)
-{
-
-   $simplexml = new SimpleXMLElement($inMessage->str);
-   $user_id=trim($simplexml->userId);
-   $week=trim($simplexml->week);
-   $year=trim($simplexml->year);
-
-   connect_db();
-
-   $event=array();
-
-   $query="SELECT date FROM `create_events` WHERE `user_id`='".$user_id."' AND `week`='".$week."' AND `year`='".$year."'";
-   $row=mysql_query($query);
-
-   $resPayload = <<<XML
-      <ns1:result xmlns:ns1="http://php.axis2.org/samples">
-XML;
-
-
-   while($values=mysql_fetch_array($row, MYSQL_NUM)){
-   $resPayload .= <<<XML
-   <day>$values[0]</day>
-XML;
-}
-   $resPayload .= <<<XML
-   </ns1:result>
-XML;
-
-   $returnMessage = new WSMessage($resPayload);
-   return $returnMessage;
-
-}
-
 
 
 /*
@@ -380,9 +324,7 @@ XML;
                      "add" => "addEvent",
                      "update"=>"updateEvent",
                      "delete"=>"deleteEvent",
-                     "readtime"=>"readTimeValues",
-                     "readevent"=>"readEventValues",
-                     "readday"=>"readDayValues");
+                     "getEvent"=>"getEvent");
 
    $svr = new WSService(array("operations" => $operations));
    $svr->reply();

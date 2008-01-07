@@ -9,6 +9,55 @@ session_start();
 <link rel="stylesheet" type="text/css" href="./assets/style/initial.css" media="screen, projection" />
 <link rel="stylesheet" type="text/css" href="./assets/style/wso2cal.css" media="screen, projection" />
 <script type="text/javascript" src="./assets/scripts/basic_cal.js"></script>
+<script type="text/javascript" src="jquery-1.2.1.pack.js"></script>
+<script language="javascript" type="text/javascript">
+$(function() {
+        
+    var viewport = {
+        o: function() {
+            if (self.innerHeight) {
+                        this.pageYOffset = self.pageYOffset;
+                        this.pageXOffset = self.pageXOffset;
+                        this.innerHeight = self.innerHeight;
+                        this.innerWidth = self.innerWidth;
+                } else if (document.documentElement && document.documentElement.clientHeight) {
+                        this.pageYOffset = document.documentElement.scrollTop;
+                        this.pageXOffset = document.documentElement.scrollLeft;
+                        this.innerHeight = document.documentElement.clientHeight;
+                        this.innerWidth = document.documentElement.clientWidth;
+                } else if (document.body) {
+                        this.pageYOffset = document.body.scrollTop;
+                        this.pageXOffset = document.body.scrollLeft;
+                        this.innerHeight = document.body.clientHeight;
+                        this.innerWidth = document.body.clientWidth;
+                }
+                return this;
+        },
+        init: function(el) {
+            $(el).css("left",Math.round(viewport.o().innerWidth/2) + viewport.o().pageXOffset - Math.round($(el).width()/2));
+            $(el).css("top",Math.round(viewport.o().innerHeight/2) + viewport.o().pageYOffset - Math.round($(el).height()/2));
+        }
+    };
+    $(".simple_popup_info").each(function(){
+        $(this).css("display","none").siblings(".simple_popup").click(function(){
+            $(".simple_popup_div").remove();
+            var strSimple = "<div class='simple_popup_div'><div class='simple_popup_inner'>";
+            strSimple += "<p class='simple_close'>[ x ] <a href='#'>Close</a></p>";
+            strSimple += $(this).siblings(".simple_popup_info").html();
+            strSimple += "</div></div>";
+            $("body").append(strSimple);
+            viewport.init(".simple_popup_div");
+            $(".simple_close").click(function(){
+                $(".simple_popup_div").remove();
+                return false;
+            });
+            return false;
+        });
+    });
+
+});
+</script>
+
 </head>
 <body>
 <div id="container">
@@ -16,6 +65,23 @@ session_start();
     <h1><img src="./assets/images/wso2.png" alt="wso2" /></h1><p>Keep track your fact</p>
 	<hr class="hidden clear" />
   </div>
+  <script type="text/javascript">
+  
+  var d = new Date()
+  var time = d.getHours()
+  if (time<10)
+  {
+  document.write("<b>Good morning</b>");
+  }
+  else if(time>13)  {
+  document.write("<b>Good Afternoon</b>");
+  }
+  else
+ {
+ document.write("<b>Good day</b>");
+ }
+ </script>
+
   <div id="wrapper">
     <div id="content">
 		<div id="cal_menu">
@@ -57,87 +123,51 @@ $week_no = $_GET["week"];
 $year = $_GET["year"];
 
 //create three soap messages for read values if time, event and day
-$reqPayloadString1=<<<XML
-<ns1:readtime xmlns:ns1="http://php.axis2.org/samples">
+$reqPayloadString=<<<XML
+<ns1:getEvent xmlns:ns1="http://php.axis2.org/samples">
 <userId>$user_id</userId>
 <week>$week_no</week>
 <year>$year</year>
-</ns1:readtime>
-XML;
-
-$reqPayloadString2=<<<XML
-<ns1:readevent xmlns:ns1="http://php.axis2.org/samples">
-<userId>$user_id</userId>
-<week>$week_no</week>
-<year>$year</year>
-</ns1:readevent>
-XML;
-
-
-$reqPayloadString3=<<<XML
-<ns1:readday xmlns:ns1="http://php.axis2.org/samples">
-<userId>$user_id</userId>
-<week>$week_no</week>
-<year>$year</year>
-</ns1:readday>
+</ns1:getEvent>
 XML;
 
 try
     {
             $client = new WSClient(array("to"=>"http://localhost/samples/solutions/calendar/calendar_service.php"));
-            $response1 = $client->request($reqPayloadString1);
-            $response2 = $client->request($reqPayloadString2);   
-            $response3 = $client->request($reqPayloadString3);
-
+            $response = $client->request($reqPayloadString);
+            
             $time=array();
+            $event=array();
+            $day=array();
             $i=0;
 
-//read incoming SOAP messages
-           if ($response1)
+//read incoming SOAP message
+           if ($response)
             {
-
-     
-           $simplexml = new SimpleXMLElement($response1->str);
-           $i=0;
-           while($temp=$simplexml->time[$i])
+           $simplexml = new SimpleXMLElement($response->str);
+           $i=0;$j=0;$q=0;
+           while($temp=$simplexml->event[$i])
            {
 
-             $time[] = trim($temp);
+            $event[]= trim($temp);  
              $i++;
            }
-   
-           }
 
-
-
-           if ($response2)
-            {
-
-            $simplexml = new SimpleXMLElement($response2->str);
-            $i=0;
-            while($temp=$simplexml->event[$i])
-            {
-
-             $event[] = trim($temp);
-             $i++;
-           }
-           }
-
-
-
-           if ($response3)
-            {
-            $simplexml = new SimpleXMLElement($response3->str);
-           $i=0;
-           while($temp=$simplexml->day[$i])
+           while($temp1=$simplexml->event->time[$j])
            {
 
-             $day[] = trim($temp);
-             $i++;
+            $time[]= trim($temp1);  
+             $j++;
            }
-          
+         
+           while($temp2=$simplexml->event->day[$q])
+           {
+
+            $day[]= trim($temp2);  
+             $q++;
            }
 
+}
 
    }
 
@@ -184,19 +214,19 @@ if(!empty($day)){
                    foreach($time as $key => $value)
                     {
                       if(($value==$times[$i])&&($day[$key]==$days[$j])){
-                      echo"<td>$event[$key]</td>";$val=true;
+                      echo"<td id='$j$i' onclick='function1(this);'>$event[$key]</td>";$val=true;
                     }
                     }
 
                   if($val==false)
                   {
-                    echo"<td>&nbsp;</td>";
+                    echo"<td id='$j$i'  class='simple_popup' onclick='function1(this);'></td>";
                   }
 
            }     
           else
               {
-              echo"<td>&nbsp;</td>";
+              echo"<td id='$j$i' onclick='function1(this);'>&nbsp;</td>";
               }
         if(($j+1)%8==0){echo"</tr>";} 
    } 
@@ -212,11 +242,11 @@ for($i=0; $i < $tlength; $i++){
 
             if($j%8==0)
             {
-             echo"<tr><td>$times[$i]</td>";
+             echo"<tr><td  id='$j$i'>$times[$i]</td>";
             }
           else
               {
-              echo"<td>&nbsp;</td>";
+              echo"<td  id='$j$i' class='simple_popup' onclick='Popup.show()'>&nbsp</td>";
               }
         if(($j+1)%8==0){echo"</tr>";}
    }
@@ -309,9 +339,7 @@ for($j = 0; $j < $firstDay; $j++, $counter++)
 echo "<td>&nbsp;</td>";
 } 
 if($counter % 7 == 0)
-
-echo "</tr><tr><td><input type='button' value= '$week' onClick='display($month,$year,this.value);'></td>"; 
-
+echo"</tr><tr><td><input type='button' style='background-color:white' value='$week' onClick='display($month,$year,this.value);'></td>"; 
 if(date("w", $timeStamp) == 0 || date("w", $timeStamp) == 6){
 echo "<td class='weekend' width='50'>$i</td>";
 } elseif($i == date("d") && $month == date("m") && $year == date("Y")){
