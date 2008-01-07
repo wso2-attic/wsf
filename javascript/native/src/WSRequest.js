@@ -26,7 +26,7 @@ WSRequest = function() {
     this._soapVer = null;
 };
 
-WebServiceError = function(reason, detail, code) {
+var WebServiceError = function(reason, detail, code) {
     this.reason = reason;
     this.detail = detail;
     this.code = code;
@@ -77,11 +77,11 @@ WSRequest.prototype.send = function(payload) {
 
     var req = null;
     // string to be sent
-
+    var method;
     if (this._optionSet["HTTPMethod"] != null)
-        var method = this._optionSet["HTTPMethod"];
+        method = this._optionSet["HTTPMethod"];
     else
-        var method = "POST";
+        method = "POST";
 
     this._soapVer = WSRequest.util._bindingVersion(this._optionSet);
 
@@ -164,11 +164,12 @@ WSRequest.prototype.send = function(payload) {
  * @static
  */
 WSRequest.prototype._processResult = function () {
+    var httpstatus;
     if (this._soapVer == 0) {
         this.responseText = this._xmlhttp.responseText;
         this.responseXML = this._xmlhttp.responseXML;
 
-        var httpstatus = this._xmlhttp.status;
+        httpstatus = this._xmlhttp.status;
         if (httpstatus == '200' || httpstatus == '202') {
             this.error = null;
         } else {
@@ -179,10 +180,11 @@ WSRequest.prototype._processResult = function () {
 
         if (this._xmlhttp.responseText != "") {
             var response;
+            var responseXMLdoc;
             if (browser == "ie" || browser == "ie7") {
                 if (this._xmlhttp.responseXML.documentElement == null) {
                     // unrecognized media type (probably application/soap+xml)
-                    var responseXMLdoc = new ActiveXObject("Microsoft.XMLDOM");
+                    responseXMLdoc = new ActiveXObject("Microsoft.XMLDOM");
                     responseXMLdoc.loadXML(this._xmlhttp.responseText);
                     response = responseXMLdoc.documentElement;
                 } else {
@@ -190,14 +192,15 @@ WSRequest.prototype._processResult = function () {
                 }
             } else {
                 var parser = new DOMParser();
-                var responseXMLdoc = parser.parseFromString(this._xmlhttp.responseText,"text/xml");
+                responseXMLdoc = parser.parseFromString(this._xmlhttp.responseText,"text/xml");
                 response = responseXMLdoc.documentElement;
                 response.normalize();  //fixes data getting truncated at 4096 characters
             }
+            var soapNamespace;
             if (this._soapVer == 1.1)
-                var soapNamespace = "http://schemas.xmlsoap.org/soap/envelope/";
+                soapNamespace = "http://schemas.xmlsoap.org/soap/envelope/";
             else
-                var soapNamespace = "http://www.w3.org/2003/05/soap-envelope";
+                soapNamespace = "http://www.w3.org/2003/05/soap-envelope";
 
             var soapBody = WSRequest.util._firstElement(response, soapNamespace, "Body");
             if (soapBody != null && soapBody.hasChildNodes()) {
@@ -237,7 +240,7 @@ WSRequest.prototype._processResult = function () {
             this.responseXML = null;
             this.responseText = "";
             try {
-                var httpstatus = this._xmlhttp.status;
+                httpstatus = this._xmlhttp.status;
                 if (httpstatus == '200' || httpstatus == '202') {
                     this.error = null;
                 } else {
@@ -402,7 +405,7 @@ WSRequest.util = {
                 break;
             case "SOAP 1.1":
                 soapVer = 1.1;
-                break;
+                break;                                                                                  open
             case "HTTP":
                 soapVer = 0;
                 break;
@@ -777,11 +780,12 @@ WSRequest.util = {
     _firstElement : function (node, namespace, localName) {
         if (node == null) return null;
         var browser = WSRequest.util._getBrowser();
+        var doc;
         if (browser == "ie" || browser == "ie7") {
             if (node.nodeType == 9)
-                var doc = node;
+                doc = node;
             else
-                var doc = node.ownerDocument;
+                doc = node.ownerDocument;
             doc.setProperty("SelectionNamespaces", "xmlns:soap='" + namespace + "'");
             el = node.selectSingleNode(".//soap:" + localName);
         } else {
