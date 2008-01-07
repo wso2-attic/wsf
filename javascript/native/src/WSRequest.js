@@ -405,7 +405,7 @@ WSRequest.util = {
                 break;
             case "SOAP 1.1":
                 soapVer = 1.1;
-                break;                                                                                  open
+                break;                                                                                  
             case "HTTP":
                 soapVer = 0;
                 break;
