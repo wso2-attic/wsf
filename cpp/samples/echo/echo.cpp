@@ -30,7 +30,15 @@ int main(int argc, char *argv[])
 
     sc = new WSSOAPClient(end_point);
     cout << endl << "Using end_point: " << end_point << endl;
-    sc->initializeClient("echo.log", AXIS2_LOG_LEVEL_TRACE);
+    try
+    {
+        sc->initializeClient("echo.log", AXIS2_LOG_LEVEL_TRACE);
+    }
+    catch (AxisFault & e)
+    {
+        cout << endl << "Error: " << e << endl;
+        return 0;
+    }
     sc->engageModule(AXIS2_MODULE_ADDRESSING);
     for (int i = 0; i < iterations; i++)
     {
@@ -52,11 +60,11 @@ int main(int argc, char *argv[])
         {
             if (sc->getLastSOAPFault())
             {
-                cout << endl << "Response: " << sc->getLastSOAPFault() << endl;
+                cout << endl << "Fault: " << sc->getLastSOAPFault() << endl;
             }
             else
             {
-                cout << endl << "Response: " << e << endl;
+                cout << endl << "Error: " << e << endl;
             }
         }
         delete payload;

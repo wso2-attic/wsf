@@ -40,7 +40,15 @@ int main(int argc, char *argv[])
         end_point = argv[4];
     
     sc = new WSSOAPClient(end_point);
-    sc->initializeClient("math_blocking.log", AXIS2_LOG_LEVEL_TRACE);
+    try 
+    {   
+        sc->initializeClient("math_blocking.log", AXIS2_LOG_LEVEL_TRACE);
+    }   
+    catch (AxisFault & e)
+    {   
+        cout << endl << "Error: " << e << endl;
+        return 0;
+    }
     sc->engageModule(AXIS2_MODULE_ADDRESSING);
     {
         OMNamespace * ns = new OMNamespace("http://ws.apache.org/axis2/services/math", "ns1");
@@ -63,11 +71,11 @@ int main(int argc, char *argv[])
         {
             if (sc->getLastSOAPFault())
             {
-                cout << endl << "Response: " << sc->getLastSOAPFault() << endl;
+                cout << endl << "Fault: " << sc->getLastSOAPFault() << endl;
             }
             else
             {
-                cout << endl << "Response: " << e << endl;
+                cout << endl << "Error: " << e << endl;
             }
         }
         delete payload;

@@ -9,7 +9,15 @@ using namespace wso2wsf;
 int main()
 {
     WSRESTClient * sc = new WSRESTClient("http://localhost:9090/axis2/services/echo/echoString");
-    sc->initializeClient("echo_rest.log", AXIS2_LOG_LEVEL_TRACE);
+    try 
+    {   
+        sc->initializeClient("echo_rest.log", AXIS2_LOG_LEVEL_TRACE);
+    }   
+    catch (AxisFault & e)
+    {   
+        cout << endl << "Error: " << e << endl;
+        return 0;
+    }
     Options * op = sc->getOptions();
     op->setHTTPMethod(AXIS2_HTTP_GET);
     sc->setOptions(op);
@@ -30,14 +38,7 @@ int main()
         }
         catch (AxisFault & e)
         {
-            if (sc->getLastSOAPFault())
-            {
-                cout << endl << "Response: " << sc->getLastSOAPFault() << endl;
-            }
-            else
-            {
-                cout << endl << "Response: " << e << endl;
-            }
+            cout << endl << "Error: " << e << endl;
         }
         delete payload;
     }

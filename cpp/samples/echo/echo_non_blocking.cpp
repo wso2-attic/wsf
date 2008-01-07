@@ -31,7 +31,7 @@ void EchoCallback::onComplete(OMElement* message)
 
 void EchoCallback::onFault(OMElement* message)
 {
-    cout << endl << "Response: " << message->toString() << endl;
+    cout << endl << "Fault: " << message->toString() << endl;
     isComplete = true;
 }
 
@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
     WSSOAPClient * sc;
 
     end_point = "http://localhost:9090/axis2/services/echo";
-    timeout = 30;
+    timeout = 10000;
 
     if (argc > 1)
     {
@@ -62,7 +62,15 @@ int main(int argc, char *argv[])
         end_point = argv[2];
 
     sc = new WSSOAPClient(end_point);
-    sc->initializeClient("echo_non_blocking.log", AXIS2_LOG_LEVEL_TRACE);
+    try 
+    {   
+        sc->initializeClient("echo_non_blocking.log", AXIS2_LOG_LEVEL_TRACE);
+    }   
+    catch (AxisFault & e)
+    {   
+        cout << endl << "Error: " << e << endl;
+        return 0;
+    }
     {
         OMNamespace * ns = new OMNamespace("http://ws.apache.org/axis2/services/echo", "ns1");
         OMElement * payload = new OMElement(NULL,"echoString", ns);
@@ -78,7 +86,7 @@ int main(int argc, char *argv[])
             }
             catch (AxisFault & e)
             {
-                cout << "Response: " << e << endl;
+                cout << "Error: " << e << endl;
             }
             int count = 0;
             while (count < timeout)

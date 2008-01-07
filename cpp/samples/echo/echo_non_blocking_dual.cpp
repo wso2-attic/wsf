@@ -31,14 +31,22 @@ void EchoCallback::onComplete(OMElement* message)
 
 void EchoCallback::onFault(OMElement* message)
 {
-    cout << endl << "Response: " << message->toString() << endl;
+    cout << endl << "Fault: " << message->toString() << endl;
     isComplete = true;
 }
 
 int main()
 {
     WSSOAPClient * sc = new WSSOAPClient("http://localhost:9090/axis2/services/echo");
-    sc->initializeClient("echo_non_blocking_dual.log", AXIS2_LOG_LEVEL_TRACE);
+    try 
+    {   
+        sc->initializeClient("echo_non_blocking_dual.log", AXIS2_LOG_LEVEL_TRACE);
+    }   
+    catch (AxisFault & e)
+    {   
+        cout << endl << "Error: " << e << endl;
+        return 0;
+    }
     sc->engageModule(AXIS2_MODULE_ADDRESSING);
     Options * op = sc->getOptions();
     op->setUseSeparateListener(true);
@@ -59,9 +67,9 @@ int main()
             }
             catch (AxisFault & e)
             {
-                cout << "Response: " << e << endl;
+                cout << "Error: " << e << endl;
             }
-            int count = 0, timeout = 30;  
+            int count = 0, timeout = 10000;  
             while (count < timeout)
             {
                 if (isComplete)

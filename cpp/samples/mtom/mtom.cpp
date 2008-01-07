@@ -34,7 +34,15 @@ int main(int argc, char *argv[])
         file_name = argv[2];
 
     sc = new WSSOAPClient(end_point);
-    sc->initializeClient("mtom.log", AXIS2_LOG_LEVEL_TRACE);
+    try 
+    {   
+        sc->initializeClient("mtom.log", AXIS2_LOG_LEVEL_TRACE);
+    }   
+    catch (AxisFault & e)
+    {   
+        cout << endl << "Error: " << e << endl;
+        return 0;
+    }
     sc->engageModule(AXIS2_MODULE_ADDRESSING);
     Options * op = sc->getOptions();
     op->setSoapVersion(AXIOM_SOAP11);
@@ -61,7 +69,7 @@ int main(int argc, char *argv[])
         }
         catch (AxisFault & e)
         {
-            cout << endl << "Fault: " << e << endl;
+            cout << endl << "Error: " << e << endl;
         }
         delete payload;
     }

@@ -9,7 +9,15 @@ using namespace wso2wsf;
 int main()
 {
     WSSOAPClient * sc = new WSSOAPClient("http://localhost:9090/axis2/services/notify");
-    sc->initializeClient("notify.log", AXIS2_LOG_LEVEL_TRACE);
+    try 
+    {   
+        sc->initializeClient("notify.log", AXIS2_LOG_LEVEL_TRACE);
+    }   
+    catch (AxisFault & e)
+    {   
+        cout << endl << "Error: " << e << endl;
+        return 0;
+    }
     sc->engageModule(AXIS2_MODULE_ADDRESSING);
     OMNamespace * ns = new OMNamespace("http://example.org/notify", "m");
     OMElement * payload = new OMElement(NULL,"notify", ns);
@@ -22,7 +30,7 @@ int main()
     }
     catch (AxisFault & e)
     {
-        cout << endl << "Response: " << e << endl;
+        cout << endl << "Error: " << e << endl;
     }
     if (status)
     {

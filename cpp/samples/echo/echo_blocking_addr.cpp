@@ -9,7 +9,15 @@ using namespace wso2wsf;
 int main()
 {
     WSSOAPClient * sc = new WSSOAPClient("http://localhost:9090/axis2/services/echo");
-    sc->initializeClient("echo_blocking_addr.log", AXIS2_LOG_LEVEL_TRACE);
+    try 
+    {   
+        sc->initializeClient("echo_blocking_addr.log", AXIS2_LOG_LEVEL_TRACE);
+    }   
+    catch (AxisFault & e)
+    {   
+        cout << endl << "Error: " << e << endl;
+        return 0;
+    }
     sc->engageModule(AXIS2_MODULE_ADDRESSING);
     {
         OMNamespace * ns = new OMNamespace("http://ws.apache.org/axis2/services/echo", "ns1");
@@ -30,11 +38,11 @@ int main()
         {
             if (sc->getLastSOAPFault())
             {
-                cout << endl << "Response: " << sc->getLastSOAPFault() << endl;
+                cout << endl << "Fault: " << sc->getLastSOAPFault() << endl;
             }
             else
             {
-                cout << endl << "Response: " << e << endl;
+                cout << endl << "Error: " << e << endl;
             }
         }
         delete payload;

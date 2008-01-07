@@ -9,7 +9,15 @@ using namespace wso2wsf;
 int main()
 {
     WSSOAPClient * sc = new WSSOAPClient("http://api.flickr.com/services/soap/");
-    sc->initializeClient("flicker_client.log", AXIS2_LOG_LEVEL_TRACE);
+    try 
+    {   
+        sc->initializeClient("flickr_client.log", AXIS2_LOG_LEVEL_TRACE);
+    }   
+    catch (AxisFault & e)
+    {   
+        cout << endl << "Error: " << e << endl;
+        return 0;
+    }
     {
         OMNamespace * ns = new OMNamespace("urn:flickr", "x");
         OMElement * payload = new OMElement(NULL,"FlickrRequest", ns);
@@ -33,11 +41,11 @@ int main()
         {
             if (sc->getLastSOAPFault())
             {
-                cout << endl << "Response: " << sc->getLastSOAPFault() << endl;
+                cout << endl << "Fault: " << sc->getLastSOAPFault() << endl;
             }
             else
             {
-                cout << endl << "Response: " << e << endl;
+                cout << endl << "Error: " << e << endl;
             }
         }
         delete payload;

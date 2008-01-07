@@ -9,7 +9,15 @@ using namespace wso2wsf;
 int main()
 {
     WSRESTClient * sc = new WSRESTClient("http://search.yahooapis.com/WebSearchService/V1/webSearch");
-    sc->initializeClient("yahoo_rest_search.log", AXIS2_LOG_LEVEL_TRACE);
+    try 
+    {   
+        sc->initializeClient("yahoo_rest_search.log", AXIS2_LOG_LEVEL_TRACE);
+    }   
+    catch (AxisFault & e)
+    {   
+        cout << endl << "Error: " << e << endl;
+        return 0;
+    }
     sc->engageModule(AXIS2_MODULE_ADDRESSING);
     Options * op = sc->getOptions();
     op->setHTTPMethod(AXIS2_HTTP_GET);
@@ -32,14 +40,7 @@ int main()
         }
         catch (AxisFault & e)
         {
-            if (sc->getLastSOAPFault())
-            {
-                cout << endl << "Response: " << sc->getLastSOAPFault() << endl;
-            }
-            else
-            {
-                cout << endl << "Response: " << e << endl;
-            }
+            cout << endl << "Error: " << e << endl;
         }
         delete payload;
     }

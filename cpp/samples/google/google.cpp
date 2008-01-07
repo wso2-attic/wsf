@@ -9,7 +9,15 @@ using namespace wso2wsf;
 int main()
 {
     WSSOAPClient * sc = new WSSOAPClient("http://api.google.com/search/beta2");
-    sc->initializeClient("google_client.log", AXIS2_LOG_LEVEL_TRACE);
+    try 
+    {   
+        sc->initializeClient("google_client.log", AXIS2_LOG_LEVEL_TRACE);
+    }   
+    catch (AxisFault & e)
+    {   
+        cout << endl << "Error: " << e << endl;
+        return 0;
+    }
     sc->engageModule(AXIS2_MODULE_ADDRESSING);
     Options * op = sc->getOptions();
     op->setSoapVersion(AXIOM_SOAP11);
@@ -46,11 +54,11 @@ int main()
         {
             if (sc->getLastSOAPFault())
             {
-                cout << endl << "Response: " << sc->getLastSOAPFault() << endl;
+                cout << endl << "Fault: " << sc->getLastSOAPFault() << endl;
             }
             else
             {
-                cout << endl << "Response: " << e << endl;
+                cout << endl << "Error: " << e << endl;
             }
         }
         delete payload;
