@@ -72,7 +72,7 @@ AC_SUBST(RAMPARTINC)
 export prefix 
 
 AC_CONFIG_FILES([Makefile \
-    flicker/Makefile \
+    flickr/Makefile \
     trader/Makefile \
     trader/util/Makefile \
     trader/trader/Makefile \
