@@ -24,7 +24,7 @@
 axiom_node_t *
 build_soap_body_content(const axutil_env_t *env,
         const axis2_char_t *operation,
-        const axis2_char_t *flicker_key,
+        const axis2_char_t *flickr_key,
         const axis2_char_t *search_term);
 
 void print_invalid_om(const axutil_env_t *env, axiom_node_t *ret_node);
@@ -40,23 +40,23 @@ int main(int argc, char** argv)
     axiom_node_t *payload = NULL;
     axiom_node_t *ret_node = NULL;
 
-    const axis2_char_t *flicker_key = NULL;
+    const axis2_char_t *flickr_key = NULL;
     const axis2_char_t *search_term = NULL;
     const axis2_char_t *operation = NULL;
 
     operation = "echo";
-    flicker_key = "00000000000000000000000000000000";
+    flickr_key = "00000000000000000000000000000000";
 
     /* Set up the environment */
-    env = axutil_env_create_all("flicker_client.log", AXIS2_LOG_LEVEL_TRACE);
+    env = axutil_env_create_all("flickr_client.log", AXIS2_LOG_LEVEL_TRACE);
 
-    /* Set end point reference of flicker service */
+    /* Set end point reference of flickr service */
     address = "http://api.flickr.com/services/soap/";
 
     if ((argc > 1) && (axutil_strcmp("-h", argv[1]) == 0))
     {
-        printf("\nUsage : %s flicker_key [search_term] \n", argv[0]);
-        printf("\tflicker_key Your Flicker license key. Default value won't work. You must use your key here.\n");
+        printf("\nUsage : %s flickr_key [search_term] \n", argv[0]);
+        printf("\tflickr_key Your Flicker license key. Default value won't work. You must use your key here.\n");
         printf("\tsearch_term Search term to be used with Flicker photo search service.\n");
         printf("NOTE: command line arguments must appear in given order, with trailing ones being optional\n");
         printf("\tUse -h for help\n");
@@ -64,14 +64,14 @@ int main(int argc, char** argv)
     }
 
     if (argc > 1)
-        flicker_key = argv[1];
+        flickr_key = argv[1];
     if (argc > 2)
         search_term = argv[2];
     if (argc > 3)
         address = argv[3];
 
     printf("Using endpoint : %s\n", address);
-    printf("\nInvoking operation %s with params %s and %s\n", operation, flicker_key, search_term);
+    printf("\nInvoking operation %s with params %s and %s\n", operation, flickr_key, search_term);
 
     /* Create EPR with given address */
     endpoint_ref = axis2_endpoint_ref_create(env, address);
@@ -100,7 +100,7 @@ int main(int argc, char** argv)
     axis2_svc_client_set_options(svc_client, env, options);
 
     /* Build the SOAP request message payload using OM API.*/
-    payload = build_soap_body_content(env, operation, flicker_key, search_term);
+    payload = build_soap_body_content(env, operation, flickr_key, search_term);
 
     /* Send request */
     ret_node = axis2_svc_client_send_receive(svc_client, env, payload);
@@ -160,11 +160,11 @@ int main(int argc, char** argv)
 axiom_node_t *
 build_soap_body_content(const axutil_env_t *env,
         const axis2_char_t *operation,
-        const axis2_char_t *flicker_key,
+        const axis2_char_t *flickr_key,
         const axis2_char_t *search_term)
 {
-    axiom_node_t *flicker_om_node = NULL;
-    axiom_element_t* flicker_om_ele = NULL;
+    axiom_node_t *flickr_om_node = NULL;
+    axiom_element_t* flickr_om_ele = NULL;
     axiom_node_t* text_om_node = NULL;
     axiom_element_t * text_om_ele = NULL;
     axiom_namespace_t *ns0 = NULL;
@@ -172,33 +172,33 @@ build_soap_body_content(const axutil_env_t *env,
 
     ns0 = axiom_namespace_create(env, "urn:flickr", "x");
 
-    flicker_om_ele = axiom_element_create(env, NULL, "FlickrRequest", ns0, &flicker_om_node);
+    flickr_om_ele = axiom_element_create(env, NULL, "FlickrRequest", ns0, &flickr_om_node);
 
     if (search_term)
         buffer = "flickr.photos.search";
     else
         buffer = "flickr.test.echo";
 
-    text_om_ele = axiom_element_create(env, flicker_om_node, "method", NULL, &text_om_node);
+    text_om_ele = axiom_element_create(env, flickr_om_node, "method", NULL, &text_om_node);
     axiom_element_set_text(text_om_ele, env, buffer, text_om_node);
 
-    text_om_ele = axiom_element_create(env, flicker_om_node, "api_key", NULL, &text_om_node);
-    axiom_element_set_text(text_om_ele, env, flicker_key, text_om_node);
+    text_om_ele = axiom_element_create(env, flickr_om_node, "api_key", NULL, &text_om_node);
+    axiom_element_set_text(text_om_ele, env, flickr_key, text_om_node);
    
     if (!search_term)
     {
-        text_om_ele = axiom_element_create(env, flicker_om_node, "name", NULL, &text_om_node);
+        text_om_ele = axiom_element_create(env, flickr_om_node, "name", NULL, &text_om_node);
         axiom_element_set_text(text_om_ele, env, "test", text_om_node);
     }
     else
     {
-        text_om_ele = axiom_element_create(env, flicker_om_node, "tags", NULL, &text_om_node);
+        text_om_ele = axiom_element_create(env, flickr_om_node, "tags", NULL, &text_om_node);
         axiom_element_set_text(text_om_ele, env, search_term, text_om_node);
     }
 
-    buffer = axiom_node_to_string(flicker_om_node, env);
+    buffer = axiom_node_to_string(flickr_om_node, env);
     printf("%s\n", buffer);
-    return flicker_om_node;
+    return flickr_om_node;
 }
 
 void print_invalid_om(const axutil_env_t *env, axiom_node_t *ret_node)
