@@ -1,10 +1,10 @@
 prgbindir=$(prefix)/bin/samples
-samplesdir=$(prefix)/samples/client/flicker
-prgbin_PROGRAMS = flicker
-samples_DATA=flicker_client.c Makefile.am README.txt Makefile.in
-flicker_SOURCES = flicker_client.c
+samplesdir=$(prefix)/samples/client/flickr
+prgbin_PROGRAMS = flickr
+samples_DATA=flickr_client.c Makefile.am README.txt Makefile.in
+flickr_SOURCES = flickr_client.c
 
-flicker_LDADD   =    $(LDFLAGS) \
+flickr_LDADD   =    $(LDFLAGS) \
                     -L$(WSFC_HOME)/lib \
 					-laxutil \
                     -laxis2_axiom \
@@ -17,4 +17,4 @@ flicker_LDADD   =    $(LDFLAGS) \
 
 INCLUDES = @AXIS2INC@
 
-EXTRA_DIST=README.txt flicker.mk
+EXTRA_DIST=README.txt flickr.mk
