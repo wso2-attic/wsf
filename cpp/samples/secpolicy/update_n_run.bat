@@ -7,5 +7,5 @@ rem INSTALL MODULE to make sure that both server and client have the same module
 @xcopy /E /I /Q /Y %AXIS2C_HOME%\modules\rampart %CLIENT_REPO%\modules
 
 rem RUN
-@../echo/echo_security
+@../echo/echo_security %AXIS2C_HOME%\client_repo\
 @echo on

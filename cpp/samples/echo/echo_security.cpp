@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     WSSOAPClient * sc;
 
     end_point = "http://localhost:9090/axis2/services/echo";
-    client_repo = "../client_repo";
+    client_repo = "../client_repo/";
     policy_file = "policy.xml";
 
     if (argc > 1)
@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
             cout << "default end_point " << end_point << endl;
             cout << "default policy_file " << policy_file << endl;
             cout << "NOTE: command line arguments must appear in given order, with trailing ones being optional" << endl;
+            cout << "IMPORTANT: please add a trailing slash (or back-slash) after client_repo location" << endl;
             return 0;
         }
         else

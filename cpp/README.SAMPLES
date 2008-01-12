@@ -118,7 +118,7 @@ echo_security -
   Echo client with WS-SecurityPolicy.
   Set the following variables to match your case.
   - end_point[Line 14]. default: http://localhost:9090/axis2/services/sec_echo
-  - client_repo[Line 15]. default: ../client_repo
+  - client_repo[Line 15]. default: ../client_repo/
   - policy_file[Line 16]. default: policy.xml
   - log_file_name[Line 41]. default: echo_security.log
   - log_level[Line 41]. default: AXIS2_LOG_LEVEL_TRACE
