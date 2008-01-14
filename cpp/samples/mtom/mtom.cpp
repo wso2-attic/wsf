@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     string end_point, file_name;
     WSSOAPClient * sc;
 
-    end_point = "http://localhost:9090/axis2/services/echo";
+    end_point = "http://localhost:9090/axis2/services/mtom";
     file_name = "resources/axis2.jpg";
 
     if (argc > 1)

@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     string end_point, client_repo, policy_file;
     WSSOAPClient * sc;
 
-    end_point = "http://localhost:9090/axis2/services/echo";
+    end_point = "http://localhost:9090/axis2/services/sec_echo";
     client_repo = "../client_repo/";
     policy_file = "policy.xml";
 
