@@ -109,13 +109,23 @@ def request(opt)
         @req_payload_string = Java_String.new(opt)
     end                                               
     
+
+    if opt.is_a?(REXML::Document)
+       @req_payload_string = opt.to_s
+    end
+
     # if th eparameter is a WSMessage
     if opt.is_a?(WSMessage)
         
         #assigns the contents of a WSMessage to the local variables
-        @req_payload_string = opt.str_payload
+	if(opt.rexml_payload == nil)
+          @req_payload_string = opt.str_payload
+        else
+          @req_payload_string = opt.rexml_payload.to_s
+        end
         tempOptions = opt.options
-        
+
+        if(tempOptions != nil)
         # setting the EPR if it is sent with the WSMessage
         if(tempOptions.has_key?('to'))
            @options.setTo(EndpointReference.new(tempOptions['to']))
@@ -155,7 +165,7 @@ def request(opt)
           @options.setFaultTo(tempOptions['fault_to'])
         end
         
-
+	end
     end
     
     #setting options to the ServiceClient
