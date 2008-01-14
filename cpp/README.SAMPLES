@@ -126,6 +126,10 @@ echo_security -
 
   * Please note that the echo_security sample will not work unless you set the
   client_repo, and the policy_file variables, and modify the sample.
+
+  * Make sure you have run,
+  Linux: RAMPART_SAMPLES_DIR/rampart/client/sec_echo/deploy_client_repo.sh or
+  Windows: RAMPART_SAMPLES_DIR\client\sec_echo\deploy_client_repo.bat.
   
 
 Accessing Yahoo WebService API
@@ -256,6 +260,8 @@ secpolicy -
     - A complete scenario to show: Timestamp, UsernameToken, Encrypt,
       The protection order is Encrypt->Sign Signature is Encrypted
     - Replay detection
+
+  * Read more on echo_security sample for further details.
 
 
 Monitoring Payload
