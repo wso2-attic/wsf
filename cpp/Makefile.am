@@ -1,5 +1,6 @@
 SUBDIRS=src samples
-
+datadir=$(prefix)
+data_DATA=README.INSTALL.LINUX README.SAMPLES README INSTALL COPYING NEWS NOTICE
 examples:
 	sh build_samples.sh $(prefix)
 	rm -rf $(prefix)/bin/samples/resources  
