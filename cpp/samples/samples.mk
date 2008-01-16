@@ -133,7 +133,7 @@ mtom_exe:
 	@link.exe $(LDFLAGS) int.msvc\mtom\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\cpp\mtom\mtom.exe
              -@$(_VC_MANIFEST_EMBED_EXE)
              @xcopy /E /I /Q /Y $(SAMPLES_HOME_DIR)\mtom\resources $(WSFCPP_HOME_DIR)\bin\samples\cpp\mtom\resources
-             @del $(WSFCPP_HOME_DIR)\bin\samples\cpp\mtom\resources\*.am
+             @if exist $(WSFCPP_HOME_DIR)\bin\samples\cpp\mtom\resources\*.am del $(WSFCPP_HOME_DIR)\bin\samples\cpp\mtom\resources\*.am
 
 wsfcpp_samples: int_dir echo_samples flickr_exe google_exe math_exe notify_exe yahoo_exe mtom_exe
 
