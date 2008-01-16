@@ -40,8 +40,10 @@ rm -rf `find . -type d -name .deps`
 rm -rf `find . -type d -name .libs`
 rm -rf `find . -type f -name Makefile`
 rm -rf `find . -type d -name autom4te.cache`
+rm -rf `find . -type f -name stamp-h1`
 cd ..
 tar -pczf wso2-wsf-cpp-src-1.0.0.tar.gz wso2-wsf-cpp-src-1.0.0
+rm -rf `find . -type f -name config.log`
 zip -r wso2-wsf-cpp-src-1.0.0.zip wso2-wsf-cpp-src-1.0.0
 rm -rf wso2-wsf-cpp-src-1.0.0
 mv *tar.gz ../../
