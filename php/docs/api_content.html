@@ -172,7 +172,7 @@ border="1">
     </tr>
     <tr valign="top">
       <td colspan="1" style="height: 20px; width: 96px;">"policy"</td>
-      <td colspan="1" style="height: 20px"> &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; WSPolicy object</td>
+      <td colspan="1" style="height: 20px"> &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; WSPolicy object</td>
       <td colspan="1" style="height: 20px">WSPolicy object</td>
       <td colspan="1" style="height: 20px">None</td>
       <td colspan="1" style="height: 20px">WSPolicy Object</td>
@@ -801,6 +801,24 @@ border="1">
         will override this setting.</p>
       </td>
     </tr>
+     <tr>
+      <td colspan="5" valign="top"><p>Custom SOAP Headers</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td><p>"inputHeaders"</p>
+      </td>
+      <td><p>array of WSHeader objecs</p>
+      </td>
+      <td><p>
+    array of WSHeader objecs</p>
+      </td>
+      <td style="width: 109px"><p>NONE</p>
+      </td>
+      <td style="width: 465px">
+    When an array of WSHeader objects is set to the options array, these headers will
+    be present on the outgoing SOAP Envelope.</td>
+    </tr>
   </tbody>
 </table>
 
@@ -838,7 +856,7 @@ representation of the binary content to be sent or being received.</p>
 </ul>
 
 <p>An associative array, containing the mapping of cid (content ID) to its
-corresponding  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; attachment. When an attachment is received, this property
+corresponding  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; attachment. When an attachment is received, this property
 will be present in the WSMessage object.</p>
 <ul>
   <li><p><b>array inputHeaders</b></p>
