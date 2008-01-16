@@ -6,6 +6,9 @@ grep -rl AXIS2C_HOME *| xargs sed -i "s/AXIS2C_HOME/WSFCPP_HOME/g"
 grep -rl WSFC_HOME *| xargs sed -i "s/WSFC_HOME/WSFCPP_HOME/g"
 find . -name "*configure.ac" | xargs sed -i "s/-Werror//g"
 cp dist/link.sh dist/link_samples.sh wsf_c
+cd wsf_c
+./build.sh
+cd ..
 ./build.sh
 cd wsf_c
 sh dist.sh
