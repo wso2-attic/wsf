@@ -262,22 +262,12 @@ dll.</p>
     <p>
         5. Add the following entries to your php.ini file which is in your PHP
 installation location.<br />
-       [wsf]
-    <br />
-        <strong>
-    wsf.home="&lt;path_to_extract_folder&gt;\wsf_c"
-    <br />
-    wsf.log_path="&lt;path to extract_folder&gt;\wsf_c\logs"
-    <br />
-    wsf.log_level=3 </strong>
-    </p>
-    <p>
         <strong></strong><strong>
        extension=wsf.dll </strong>
-    </p>
+        </p>
     <p>
+        <strong></strong>
         Set entension_dir entry to your extensions directory.</p>
-
 <p>
     <strong>extension_dir ="./ext"</strong></p>
     <p>
@@ -290,7 +280,16 @@ installation location.<br />
     <p>
        <strong> include_path = ".;/path/to/scripts/folder"</strong>
    </p>
-
+    <p>
+       [wsf]
+    <br />
+        <strong>
+    wsf.home="&lt;path_to_extract_folder&gt;\wsf_c"
+    <br />
+    wsf.log_path="&lt;path to extract_folder&gt;\wsf_c\logs"
+    <br />
+    wsf.log_level=3 </strong>
+    </p>
     <p>
         6. Configure the Apache2 Web server with PHP as follows.<br />
     </p>
