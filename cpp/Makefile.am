@@ -1,4 +1,4 @@
-SUBDIRS=src samples wsf_c
+SUBDIRS=wsf_c src samples 
 datadir=$(prefix)
 data_DATA=README.INSTALL.LINUX README.SAMPLES README INSTALL COPYING NEWS NOTICE
 examples:
