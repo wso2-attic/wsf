@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
         OMElement * response;
         try
         {
-            response = sc->request(payload, "http://ws.apache.org/axis2/c/samples/echoString");
+            response = sc->request(payload, "http://ws.apache.org/axis2/c/samples/mathSample");
             if (response)
             {
                 cout << endl << "Response: " << response << endl;
