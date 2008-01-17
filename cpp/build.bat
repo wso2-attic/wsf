@@ -29,7 +29,23 @@ rem Pack WSO2 WSF/C++
 @copy /Y "%WSFCPP_SOURCE%\COPYING" .
 @copy /Y "%WSFCPP_SOURCE%\AUTHORS" .
 @copy /Y "%WSFCPP_SOURCE%\NOTICE" .
-@xcopy /E /I /Q /Y "%WSFCPP_SOURCE%\docs"  docs
+@cd "%WSFCPP_SOURCE%"
+
+rem Add HTML Documentation
+:add_html_docs
+@set WSFCPP_SOURCE=%CD%
+@cd "%WSFCPP_HOME%"
+@mkdir docs_temp
+@xcopy /E /I /Q /Y docs  docs_temp
+@rmdir /S /Q docs
+@mkdir docs
+@mkdir docs\wsf_c
+@xcopy /E /I /Q /Y "%WSFCPP_SOURCE%\docs"  docs\cpp
+@xcopy /E /I /Q /Y docs_temp  docs\wsf_c\docs
+@rmdir /S /Q docs_temp
+@if exist wsclient\docs\index.html mkdir docs\wsf_c\wsclient
+@if exist docs\wsf_c\wsclient mkdir docs\wsf_c\wsclient\docs
+@if exist docs\wsf_c\wsclient\docs copy /Y wsclient\docs\index.html docs\wsf_c\wsclient\docs\index.html
 @cd "%WSFCPP_SOURCE%"
 
 rem Remove WSF/C Client Samples
