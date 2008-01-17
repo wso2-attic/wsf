@@ -1,7 +1,5 @@
 #!/bin/bash
 set -e
-grep -rl WSFCPP_HOME *| xargs sed -i "s/WSFCPP_HOME/WSFCPP_HOME/g"
-grep -rl WSFCPP_HOME *| xargs sed -i "s/WSFCPP_HOME/WSFCPP_HOME/g"
 
 cp build/wsf_c/rampartc/configure.ac wsf_c/rampartc/configure.ac
 cp build/wsf_c/Makefile.am wsf_c/
