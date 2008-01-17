@@ -9,6 +9,7 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
@@ -50,15 +51,16 @@ public class SpringAxis2Servlet extends AxisServlet {
         		SpringWebService springService = (SpringWebService) it.next();
         		
         		//Retrieve data required to build service
-        		String beanName = springService.getBeanIDofBeanToExpose();
-        		String clazz = applicationContext.getBean(beanName).getClass().getName();
-        		
-        		//Start building axis service        		
-        		axisService = new AxisService(beanName + "SpringService");
-        		
-        		SpringWebServiceBuilder builder = new SpringWebServiceBuilder(configContext, axisService);
+        		String beanName = springService.getServiceName();
+        		Object springPOJO = springService.getBeanToExpose();
+        		String clazz = springPOJO.getClass().getName();
         		
         		try {
+        			//Start building axis service        		
+            		axisService = new AxisService(beanName + "SpringService");
+            		
+            		SpringWebServiceBuilder builder = new SpringWebServiceBuilder(configContext, axisService);
+            		
         			// populate Spring bean with common parameters
         			
         			springService = populateCommonParameters(springService, clazz);
@@ -80,6 +82,7 @@ public class SpringAxis2Servlet extends AxisServlet {
 
 
     }
+    
     
     
     // populate Spring Web Service bean with parameters common to POJOs
@@ -110,8 +113,10 @@ public class SpringAxis2Servlet extends AxisServlet {
     		parameters = new HashMap();
     	}
     	
-    	parameters.put("ServiceObjectSupplier", "org.apache.axis2.extensions.spring.receivers.SpringServletContextObjectSupplier");
-    	parameters.put("SpringBeanName", springService.getBeanIDofBeanToExpose());
+//    	parameters.put("ServiceObjectSupplier", "org.apache.axis2.extensions.spring.receivers.SpringServletContextObjectSupplier");
+//    	parameters.put("SpringBeanName", springService.getServiceName());
+    	parameters.put("ServiceObjectSupplier", "org.apache.axis2.spring.SpringObjectSupplier");
+    	parameters.put("SpringPOJO", springService.getBeanToExpose());
     	parameters.put("ServiceClass", clazz);
     	
     	springService.setMessageReceivers(msgReceivers);

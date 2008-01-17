@@ -56,7 +56,7 @@ public class SpringWebServiceBuilder {
 		try {
 			// process name
 			// Processing service level parameters
-			String beanName = springService.getBeanIDofBeanToExpose();
+			String beanName = springService.getServiceName();
 					
 			if (!"".equals(beanName.trim())) {
 				service.setName(beanName);
@@ -301,11 +301,17 @@ public class SpringWebServiceBuilder {
 			// TODO set OMelement to parameter Element
 			String paramName = (String) it.next();
 			parameter.setName(paramName);
-
-			String paramValue = (String) parameterMap.get(paramName);
-			parameter.setValue(paramValue);
-			parameter.setParameterType(Parameter.TEXT_PARAMETER);
-
+			
+			Object paramValue = parameterMap.get(paramName);
+			
+			if (paramValue instanceof String) {
+				parameter.setParameterType(Parameter.TEXT_PARAMETER);
+				parameter.setValue((String)paramValue);
+			}
+			else {
+				parameter.setValue(paramValue);
+			}
+			
 			Parameter parentParam = null;
 			if (parent != null) {
 				parentParam = parent.getParameter(parameter.getName());

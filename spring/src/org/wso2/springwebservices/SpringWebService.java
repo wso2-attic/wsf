@@ -14,7 +14,8 @@ import org.wso2.springwebservices.beans.ParameterBean;
 public class SpringWebService {
 	
 	// variables to represent options available to a Axis 2 Web Service
-	private String beanIDofBeanToExpose;
+	private Object beanToExpose;
+	private String serviceName;
 	private Map parameters;
 	private ArrayList<MessageReceiverBean> messageReceivers;
 	private String serviceDescription;
@@ -59,12 +60,18 @@ public class SpringWebService {
 	public void setParameters(Map parameters) {
 		this.parameters = parameters;
 	}
-	public String getBeanIDofBeanToExpose() {
-		return beanIDofBeanToExpose;
+	public Object getBeanToExpose() {
+		return beanToExpose;
 	}
-	public void setBeanIDofBeanToExpose(String beanIDofBeanToExpose) {
-		this.beanIDofBeanToExpose = beanIDofBeanToExpose;
+	public void setBeanToExpose(Object beanToExpose) {
+		this.beanToExpose = beanToExpose;
 	}
-
+	public String getServiceName() {
+		return serviceName;
+	}
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
+	}
+	
 	
 }
