@@ -211,10 +211,10 @@ class WS_WSDL_Creator
                                      $this->namespace);
 
 
-        $wsdl_doc_ele = $wsdl_dom->createElement(WS_WSDL_Const::WS_WSDL2_DOCUMENTATION);
-        $doc_txt = new DomText("A simple ".$this->service_name." service");
-        $wsdl_doc_ele->appendChild($doc_txt);
-        $wsdl_root_ele->appendChild($wsdl_doc_ele);
+//        $wsdl_doc_ele = $wsdl_dom->createElement(WS_WSDL_Const::WS_WSDL2_DOCUMENTATION);
+//        $doc_txt = new DomText("A simple ".$this->service_name." service");
+//        $wsdl_doc_ele->appendChild($doc_txt);
+//        $wsdl_root_ele->appendChild($wsdl_doc_ele);
 
 
         $oper_obj = new WS_WSDL_Operations($this->f_name);

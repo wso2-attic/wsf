@@ -115,17 +115,53 @@ function ws_generate_wsdl($include_location, $service_name, $fn_arry,
 
     $namespace = "http://www.wso2.org/php";
 
-    $wsdl = new WS_WSDL_Creator($fn_arry ,$service_name, $request_uri,
-                               $Binding_style,$namespace, $wsdl_version, $op_arry);
-    $wsdl_out = $wsdl->WS_WSDL_Out();
-
-    return $wsdl_out;
-
-
+    /* Since WSDL 2.0 logic seems very buggy, better to use WSDL converter, should move this code to C level */
+    if(strcmp($wsdl_version ,"wsdl2.0") == 0){
+      $wsdl_version = "wsdl1.1";
+      $wsdl = new WS_WSDL_Creator($fn_arry ,$service_name, $request_uri,
+				  $Binding_style,$namespace, $wsdl_version, $op_arry);
+      $wsdl_out = $wsdl->WS_WSDL_Out();
+      $converted_wsdl = convert_to_wsdl20($wsdl_out);
+      return $converted_wsdl;
+    }
+    else
+    {
+      $wsdl = new WS_WSDL_Creator($fn_arry ,$service_name, $request_uri,
+				  $Binding_style,$namespace, $wsdl_version, $op_arry);
+      $wsdl_out = $wsdl->WS_WSDL_Out();
+      return $wsdl_out;
+    }
+    
+    
 }
 
 
+function convert_to_wsdl20($wsdl_out)
+{
+  $wsdl_dom = new DomDocument();
+  $xslt_wsdl_20_dom = new DOMDocument();
+  $xslt_11_to_20_dom = new DOMDocument();
+  $xslt_11_to_20_dom->preserveWhiteSpace = false;
+  $xslt = new XSLTProcessor();
 
+  
+  $xslt_str = file_get_contents("dynamic_invocation/xslt/wsdl11to20.xsl10.xsl", TRUE);
+  if(!($xslt_wsdl_20_dom->loadXML($xslt_str)))
+    error_log("WSDL can not be converted", 0);
+  
+  $xslt->importStyleSheet($xslt_wsdl_20_dom);
+  $wsdl_dom->loadXML($wsdl_out);
+  $xslt_11_to_20_dom->loadXML($xslt->transformToXML($wsdl_dom));
+  $doc_ele = $xslt_11_to_20_dom->documentElement;
+  foreach($doc_ele->childNodes as $child){
+      if($child->nodeType == XML_COMMENT_NODE ){
+         $old_child = $doc_ele->removeChild($child); 
+          //echo "asdasd";
+      }
+  }
+  
+  return $xslt_11_to_20_dom->saveXML();
+}
 
 
 ?>

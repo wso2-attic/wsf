@@ -129,7 +129,6 @@ function wsf_wsdl_create_response_payload($return_val, $signature_node)
 	else
 	$tmp_param_struct = $body_array;
 
-	// file_put_contents("/tmp/my.txt", print_r($return_val, TRUE));
 
 
 	$element = $res_payload_dom->createElementNS($ret_value_namespace, $ret_value_name);
