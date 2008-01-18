@@ -261,26 +261,19 @@ dll.</p>
         4. Add the above listed dependency library dlls to the PATH environment variable.</p>
     <p>
         5. Add the following entries to your php.ini file which is in your PHP
-installation location.<br />
-        <strong></strong><strong>
-       extension=wsf.dll </strong>
-        </p>
+installation location.</p>
     <p>
-        <strong></strong>
         Set entension_dir entry to your extensions directory.</p>
 <p>
     <strong>extension_dir ="./ext"</strong></p>
     <p>
-        Also enable php_xsl extension
+        <strong></strong>Enable wsf extension.<br />
+        <strong></strong><strong>
+       extension=wsf.dll </strong>
     </p>
     <p>
-       <strong>extension = php_xsl.dll</strong></p>
-    <p> Uncomment the <strong>include_path</strong> and edit it to point to the
-       location for scripts folder as </p>
-    <p>
-       <strong> include_path = ".;/path/to/scripts/folder"</strong>
-   </p>
-    <p>
+        Set WSF/PHP configuration options.</p>
+    <p><p>
        [wsf]
     <br />
         <strong>
@@ -290,6 +283,17 @@ installation location.<br />
     <br />
     wsf.log_level=3 </strong>
     </p>
+    </p>
+    <p>
+        Also enable php_xsl extension
+    </p>
+    <p>
+        <strong>extension = php_xsl.dll</strong></p>
+    <p> Uncomment the include_path and edit it to point to the
+       location for scripts folder as </p>
+    <p>
+        <strong>include_path = ".;/path/to/scripts/folder" </strong>
+   </p>
     <p>
         6. Configure the Apache2 Web server with PHP as follows.<br />
     </p>
