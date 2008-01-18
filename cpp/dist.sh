@@ -4,8 +4,17 @@ cd dist_temp
 cp dist.sh /tmp/dist_cpp.sh
 grep -rl AXIS2C_HOME *| xargs sed -i "s/AXIS2C_HOME/WSFCPP_HOME/g"
 grep -rl WSFC_HOME *| xargs sed -i "s/WSFC_HOME/WSFCPP_HOME/g"
+grep -rl 'WSO2 Web Services Framework[/]' * | xargs sed -i "s/WSO2 Web Services Framework\//WSO2 Web Services Framework for /g"
 find . -name "*configure.ac" | xargs sed -i "s/-Werror//g"
 cp dist/link.sh dist/link_samples.sh wsf_c
+
+cp build/wsf_c/rampartc/configure.ac wsf_c/rampartc/configure.ac
+cp build/wsf_c/Makefile.am wsf_c/
+cp build/wsf_c/rampartc/src/Makefile.am  wsf_c/rampartc/src/Makefile.am
+cp build/wsf_c/rampartc/src/core/Makefile.am  wsf_c/rampartc/src/core/Makefile.am
+cp build/wsf_c/axis2c/neethi/configure.ac wsf_c/axis2c/neethi/configure.ac
+cp build/wsf_c/axis2c/neethi/src/Makefile.am wsf_c/axis2c/neethi/src/Makefile.am
+
 cd wsf_c
 ./build.sh
 cd ..
