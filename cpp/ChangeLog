@@ -1,0 +1,31 @@
+WSO2 WSF/C++ 1.0.0
+==================
+
+1. Client API to consume Web services
+
+	* WSSOAPClient class with one-way and two-way service invocation support
+	  for SOAP 1.1, and SOAP 1.2.
+	* WSRESTClient class with one-way and two-way service invocation support
+	  for REST style invocations.
+	* Options class for getting and setting generic service related options,
+	  for SOAP and REST clients. REST Clients ignore SOAP related options and
+	  vice versa.
+
+2. Attachments with MTOM
+
+	* Binary optimized
+	* Non-optimized (Base64 binary)
+
+3. WS-Addressing
+
+	* Version 1.0
+	* Submission
+
+4. WS-Security
+
+	* UsernameToken and Timestamp
+	* Encryption
+	* Signing
+	* WS-SecurityPolicy based configuration
+
+-- WSO2 WSF/C++ team <wsf-c-dev@wso2.org>  Tue, 22 Jan 2008

@@ -41,7 +41,35 @@ FEATURES
   - Support for REST style invocations
 
 
-Training
+THE LATEST VERSION
+------------------
+- Details of the latest version can be found on the WSO2 WSF/C++
+  project page under http://wso2.org/projects/wsf/cpp.
+
+
+LICENSING
+---------
+- WSO2 WSF/C++ is released under Apache License Version 2.0.
+  Please see the file called LICENSE.
+
+
+CONTACTS
+--------
+- If you want freely available support for using WSO2 WSF/C++ please
+  join the WSO2 WSF/C++ user community by subscribing to users mailing
+  list, wsf-cpp-user@wso2.org by sending an email to
+  'wsf-cpp-user-request@wso2.org' with the subject 'subscribe'.
+
+- If you have a bug report for WSO2 WSF/C++ please go log a Jira issue
+  at https://wso2.org/jira/browse/WSFCPP
+
+- If you want to participate in actively developing WSO2 WSF/C++ please
+  subscribe to the 'wsf-c-dev@wso2.org' by sending and email to
+  wsf-c-dev-request@wso2.org with the subject 'subscribe'. Please append
+  prefix '[C++]' in the subject for all further communication.
+
+
+TRAINING
 --------
 - WSO2 Inc. offers a variety of professional Training Programs, including
   training on general Web services as well as WSO2 WSF/C++.
@@ -50,7 +78,7 @@ Training
   http://wso2.com/training/course-catalog/
 
 
-Support
+SUPPORT
 -------
 - WSO2 Inc. offers a variety of development and production support
   programs, ranging from Web-based support up through normal business

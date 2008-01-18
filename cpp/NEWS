@@ -1,11 +1,13 @@
-WSO2 Web Services Framework (WSF)/C++ 1.0.0
-===========================================
+WSO2 Web Services Framework for C++ (WSO2 WSF/C++) 1.0.0 Released
+=================================================================
 
-WSO2 WSF/C++ 1.0.0 Alpha RC1 is now available.[26-Nov-2007, Senaka]
+WSO2 WSF/C++ team is pleased to announce the release of WSO2 WSF/C++ 1.0.0.
 
-WSO2 WSF/C++ 1.0.0 Alpha RC2 is now available.[03-Jan-2008, Senaka]
+You can download this release from: http://dist.wso2.org/products/wsf/cpp/1.0.0
 
-WSO2 WSF/C++ 1.0.0 Alpha renamed to WSO2 WSF/C++ 1.0.0.[05-Jan-2008, Senaka]
+WSO2 Web Services Framework for C++ (WSO2 WSF/C++) is a standards compliant, enterprise
+grade, open source, C++ library for consuming Web services in C++, based on the popular,
+WSO2 WSF/C library.
 
 Project home page:
 http://wso2.org/projects/wsf/cpp
@@ -15,6 +17,7 @@ Key Features
 =============
 
 1. Client API to consume Web services
+
       * WSSOAPClient class with one-way and two-way service invocation support
         for SOAP 1.1, and SOAP 1.2.
       * WSRESTClient class with one-way and two-way service invocation support
@@ -33,7 +36,8 @@ Key Features
       * Version 1.0
       * Submission
 
-4. WS-Security 
+4. WS-Security
+
       * UsernameToken and Timestamp 
       * Encryption
       * Signing
