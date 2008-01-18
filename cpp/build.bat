@@ -46,6 +46,15 @@ rem Add HTML Documentation
 @if exist wsclient\docs\index.html mkdir docs\wsf_c\wsclient
 @if exist docs\wsf_c\wsclient mkdir docs\wsf_c\wsclient\docs
 @if exist docs\wsf_c\wsclient\docs copy /Y wsclient\docs\index.html docs\wsf_c\wsclient\docs\
+@if exist docs\wsf_c\docs\wsclient mkdir docs\wsf_c\wsclient
+@if exist docs\wsf_c\docs\wsclient xcopy /E /I /Q /Y docs\wsf_c\docs\wsclient docs\wsf_c\wsclient
+@if exist docs\wsf_c\docs\wsclient rmdir /S /Q docs\wsf_c\docs\wsclient
+@if exist docs\wsf_c\wsclient\index.html mkdir docs\wsf_c\wsclient\docs
+@if exist docs\wsf_c\wsclient\index.html copy /Y docs\wsf_c\wsclient\index.html docs\wsf_c\wsclient\docs\
+@if exist docs\wsf_c\wsclient\index.html del docs\wsf_c\wsclient\index.html
+@if exist docs\wsf_c\docs\axis2c rmdir /S /Q docs\wsf_c\docs\axis2c
+@if exist docs\wsf_c\docs\rampartc rmdir /S /Q docs\wsf_c\docs\rampartc
+@if exist docs\wsf_c\docs\sandesha2c rmdir /S /Q docs\wsf_c\docs\sandesha2c
 @cd "%WSFCPP_SOURCE%"
 
 rem Remove WSF/C Client Samples
