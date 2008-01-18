@@ -1,4 +1,4 @@
-package org.wso2.springwebservices.beans;
+package org.wso2.spring.ws.beans;
 
 import org.apache.axis2.builder.Builder;
 import org.apache.axis2.deployment.DeploymentErrorMsgs;

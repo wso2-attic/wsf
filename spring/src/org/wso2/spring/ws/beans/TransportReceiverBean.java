@@ -1,34 +1,35 @@
-package org.wso2.springwebservices.beans;
+package org.wso2.spring.ws.beans;
 
 import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.deployment.DeploymentException;
-import org.apache.axis2.description.TransportOutDescription;
+import org.apache.axis2.description.TransportInDescription;
 import org.apache.axis2.engine.AxisConfiguration;
-import org.apache.axis2.transport.TransportSender;
+import org.apache.axis2.transport.TransportListener;
 import org.apache.axis2.util.Loader;
 
-//Replaces the Transport Sender property of the configuration .xml files
+//Replaces the Transport Receiver property of the configuration .xml files
 
-public class TransportSenderBean extends AbstractTransportBean {
+public class TransportReceiverBean extends AbstractTransportBean {
+	
 	@Override
 	public void populateConfig(AxisConfiguration axisConfig) throws AxisFault {
 		// TODO Auto-generated method stub
 		
-		// initialize transport out description
+		// initialize transport in description
 		
-		TransportOutDescription tod = new TransportOutDescription(getName());
+		TransportInDescription tid = new TransportInDescription(getName());
 		
-		TransportSender transportSender = null;
+		TransportListener receiver = null;
 		
-		// Load the transport sender class
-		
+		// Load the transport receiver class
 		try {
-			Class sender = Loader.loadClass(getClazz());
-			transportSender = (TransportSender) sender.newInstance();
-			tod.setSender(transportSender);
+			Class receiverClass = Loader.loadClass(getClazz());
+
+			receiver = (TransportListener) receiverClass.newInstance();
+			tid.setReceiver(receiver);
 		} catch (ClassNotFoundException e) {
             throw new DeploymentException(e);
         } catch (IllegalAccessException e) {
@@ -37,9 +38,9 @@ public class TransportSenderBean extends AbstractTransportBean {
             throw new DeploymentException(e);
         }
         
-     // add parameters of the transport sender to the transport out description
+        // add parameters of the transport receiver to the transport in description
         
-        Set paramKeys = getParameters().keySet();
+		Set paramKeys = getParameters().keySet();
 		
 		Iterator it = paramKeys.iterator();
 		
@@ -49,13 +50,11 @@ public class TransportSenderBean extends AbstractTransportBean {
 			org.apache.axis2.description.Parameter param = new org.apache.axis2.description.Parameter();
 			param.setName(paramName);
 			param.setValue(getParameters().get(paramName));
-			tod.addParameter(param);
+			tid.addParameter(param);
 			it.remove();
-			
 		}
 		
-		// add transport out description to the Axis configuration
-		axisConfig.addTransportOut(tod);
-        
+		// add transport in description to the Axis configuration
+		axisConfig.addTransportIn(tid);
 	}
 }

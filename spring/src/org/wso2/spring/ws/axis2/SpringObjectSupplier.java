@@ -1,4 +1,4 @@
-package org.apache.axis2.spring;
+package org.wso2.spring.ws.axis2;
 
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.ServiceObjectSupplier;

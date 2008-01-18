@@ -1,11 +1,9 @@
-package org.wso2.springwebservices;
+package org.wso2.spring.ws;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
-import org.wso2.springwebservices.beans.MessageReceiverBean;
-import org.wso2.springwebservices.beans.ParameterBean;
+import org.wso2.spring.ws.beans.MessageReceiverBean;
 
 
 // Spring Web Service is a bean to hold information in place of the services.xml of an Axis 2 service
@@ -14,7 +12,7 @@ import org.wso2.springwebservices.beans.ParameterBean;
 public class SpringWebService {
 	
 	// variables to represent options available to a Axis 2 Web Service
-	private Object beanToExpose;
+	private Object serviceBean;
 	private String serviceName;
 	private Map parameters;
 	private ArrayList<MessageReceiverBean> messageReceivers;
@@ -60,17 +58,17 @@ public class SpringWebService {
 	public void setParameters(Map parameters) {
 		this.parameters = parameters;
 	}
-	public Object getBeanToExpose() {
-		return beanToExpose;
-	}
-	public void setBeanToExpose(Object beanToExpose) {
-		this.beanToExpose = beanToExpose;
-	}
 	public String getServiceName() {
 		return serviceName;
 	}
 	public void setServiceName(String serviceName) {
 		this.serviceName = serviceName;
+	}
+	public Object getServiceBean() {
+		return serviceBean;
+	}
+	public void setServiceBean(Object serviceBean) {
+		this.serviceBean = serviceBean;
 	}
 	
 	

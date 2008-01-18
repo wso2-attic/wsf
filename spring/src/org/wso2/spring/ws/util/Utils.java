@@ -1,4 +1,4 @@
-package org.wso2.springwebservices.util;
+package org.wso2.spring.ws.util;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -6,8 +6,8 @@ import java.util.Map;
 import javax.servlet.ServletException;
 
 import org.springframework.context.ApplicationContext;
-import org.wso2.springwebservices.SpringAxisConfiguration;
-import org.wso2.springwebservices.WebServices;
+import org.wso2.spring.ws.SpringAxisConfiguration;
+import org.wso2.spring.ws.WebServices;
 
 public class Utils {
 	

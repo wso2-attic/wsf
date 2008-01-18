@@ -13,7 +13,7 @@
   <servlet>
   	<servlet-name>axis2</servlet-name>
   	<servlet-class>
-  		org.wso2.springwebservices.servlet.SpringAxis2Servlet
+  		org.wso2.spring.ws.servlet.SpringAxis2Servlet
   	</servlet-class>
   	<load-on-startup>1</load-on-startup>
   </servlet>

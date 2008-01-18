@@ -1,4 +1,4 @@
-package org.wso2.springwebservices.beans;
+package org.wso2.spring.ws.beans;
 
 import java.util.ArrayList;
 import java.util.Iterator;

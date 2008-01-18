@@ -1,4 +1,4 @@
-package org.wso2.springwebservices.servlet;
+package org.wso2.spring.ws.servlet;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,20 +9,19 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.axis2.description.AxisService;
-import org.apache.axis2.spring.SpringBeanSystemConfigurator;
-import org.apache.axis2.spring.SpringWebServiceBuilder;
 import org.apache.axis2.transport.http.AxisServlet;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-import org.wso2.springwebservices.SpringWebService;
-import org.wso2.springwebservices.WebServices;
-import org.wso2.springwebservices.beans.MessageReceiverBean;
-import org.wso2.springwebservices.util.Utils;
+import org.wso2.spring.ws.SpringWebService;
+import org.wso2.spring.ws.WebServices;
+import org.wso2.spring.ws.axis2.SpringBeanSystemConfigurator;
+import org.wso2.spring.ws.axis2.SpringWebServiceBuilder;
+import org.wso2.spring.ws.beans.MessageReceiverBean;
+import org.wso2.spring.ws.util.Utils;
 
 
 
@@ -52,7 +51,7 @@ public class SpringAxis2Servlet extends AxisServlet {
         		
         		//Retrieve data required to build service
         		String beanName = springService.getServiceName();
-        		Object springPOJO = springService.getBeanToExpose();
+        		Object springPOJO = springService.getServiceBean();
         		String clazz = springPOJO.getClass().getName();
         		
         		try {
@@ -113,10 +112,8 @@ public class SpringAxis2Servlet extends AxisServlet {
     		parameters = new HashMap();
     	}
     	
-//    	parameters.put("ServiceObjectSupplier", "org.apache.axis2.extensions.spring.receivers.SpringServletContextObjectSupplier");
-//    	parameters.put("SpringBeanName", springService.getServiceName());
-    	parameters.put("ServiceObjectSupplier", "org.apache.axis2.spring.SpringObjectSupplier");
-    	parameters.put("SpringPOJO", springService.getBeanToExpose());
+    	parameters.put("ServiceObjectSupplier", "org.wso2.spring.ws.axis2.SpringObjectSupplier");
+    	parameters.put("SpringPOJO", springService.getServiceBean());
     	parameters.put("ServiceClass", clazz);
     	
     	springService.setMessageReceivers(msgReceivers);

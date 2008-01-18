@@ -1,21 +1,9 @@
-package org.wso2.springwebservices;
+package org.wso2.spring.ws;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
 
-import javax.servlet.ServletException;
-
-import org.apache.axis2.AxisFault;
-import org.apache.axis2.deployment.DeploymentException;
-import org.apache.axis2.engine.AxisConfiguration;
-import org.apache.axis2.spring.SpringBeanSystemConfigurator;
-import org.springframework.context.ApplicationContext;
-import org.wso2.springwebservices.beans.Axis2Bean;
-import org.wso2.springwebservices.beans.ParameterBean;
-import org.wso2.springwebservices.beans.PhaseOrderBean;
-
-import com.sun.tools.javac.comp.Todo;
+import org.wso2.spring.ws.beans.ParameterBean;
+import org.wso2.spring.ws.beans.PhaseOrderBean;
 
 // Spring Axis configuration replaces the axis2.xml making it possible to represent the configuration information with a Spring bean
 

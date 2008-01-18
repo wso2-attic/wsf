@@ -1,4 +1,4 @@
-package org.apache.axis2.spring;
+package org.wso2.spring.ws.axis2;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -33,8 +33,8 @@ import org.apache.axis2.util.Loader;
 import org.apache.ws.commons.schema.utils.NamespaceMap;
 import org.codehaus.jam.JAnnotation;
 import org.codehaus.jam.JMethod;
-import org.wso2.springwebservices.SpringWebService;
-import org.wso2.springwebservices.beans.MessageReceiverBean;
+import org.wso2.spring.ws.SpringWebService;
+import org.wso2.spring.ws.beans.MessageReceiverBean;
 
 
 public class SpringWebServiceBuilder {

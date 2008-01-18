@@ -1,12 +1,12 @@
-package org.apache.axis2.spring;
+package org.wso2.spring.ws.axis2;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.engine.AxisConfiguration;
-import org.wso2.springwebservices.SpringAxisConfiguration;
-import org.wso2.springwebservices.beans.Axis2Bean;
+import org.wso2.spring.ws.SpringAxisConfiguration;
+import org.wso2.spring.ws.beans.Axis2Bean;
 
 public class SpringAxisConfigBuilder {
 // populate axis configuration with bean properties

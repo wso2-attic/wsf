@@ -1,4 +1,4 @@
-package org.apache.axis2.spring;
+package org.wso2.spring.ws.axis2;
 
 import java.io.File;
 import java.util.Iterator;
@@ -23,8 +23,8 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.engine.AxisConfigurator;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.wso2.springwebservices.SpringAxisConfiguration;
-import org.wso2.springwebservices.beans.Axis2Bean;
+import org.wso2.spring.ws.SpringAxisConfiguration;
+import org.wso2.spring.ws.beans.Axis2Bean;
 
 public class SpringBeanSystemConfigurator extends DeploymentEngine implements
 		AxisConfigurator {

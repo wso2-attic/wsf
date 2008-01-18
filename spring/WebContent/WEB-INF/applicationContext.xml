@@ -7,11 +7,11 @@
 	
 	<!-- Sample Service -->
 	
-	<bean id="services" class="org.wso2.springwebservices.WebServices">
+	<bean id="services" class="org.wso2.spring.ws.WebServices">
 	<property name="services">
 		<list>
-			<bean id="productManService" class="org.wso2.springwebservices.SpringWebService">
-				<property name="beanToExpose" ref="productManager"></property>
+			<bean id="productManService" class="org.wso2.spring.ws.SpringWebService">
+				<property name="serviceBean" ref="productManager"></property>
 				<property name="serviceName" value="TestProductManager"></property>
 				<property name="serviceDescription" value="This is the test webservice for Spring/Axis2 Integration" ></property>
 				<property name="targetNameSpace" value="www.springtest.com"></property>

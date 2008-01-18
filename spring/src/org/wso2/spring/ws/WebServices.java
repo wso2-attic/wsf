@@ -1,4 +1,4 @@
-package org.wso2.springwebservices;
+package org.wso2.spring.ws;
 
 import java.util.ArrayList;
 
