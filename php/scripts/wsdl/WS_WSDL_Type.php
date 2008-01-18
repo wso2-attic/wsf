@@ -114,8 +114,8 @@ class WS_WSDL_Type
         $el = $type_doc->createElementNS(WS_WSDL_Const::WS_SOAP_XML_SCHEMA_NAMESPACE,
                                          WS_WSDL_Const::WS_WSDL_SCHEMA_ATTR_NAME);
 
-/*         $el->setAttribute(WS_WSDL_Const::WS_WSDL_ELEMENTFROMDEFAULT_ATTR_NAME, */
-/*                           WS_WSDL_Const::WS_WSDL_QUALIFIED_ATTR_NAME); */
+         $el->setAttribute(WS_WSDL_Const::WS_WSDL_ELEMENTFORMDEFAULT_ATTR_NAME, 
+                           WS_WSDL_Const::WS_WSDL_QUALIFIED_ATTR_NAME);
 
         $el->setAttribute(WS_WSDL_Const::WS_WSDL_DEF_TARGET_NS,
                           $this->ns."/xsd");

@@ -132,7 +132,7 @@ class WS_WSDL_Const
     const WS_WSDL_RESPONSE_ATTR_NAME = 'Response';
     const WS_WSDL_IN_ATTR_NAME = 'In';
     const WS_WSDL_OUT_ATTR_NAME = 'Out';
-    const WS_WSDL_ELEMENTFROMDEFAULT_ATTR_NAME = 'elementFromDefault';
+    const WS_WSDL_ELEMENTFORMDEFAULT_ATTR_NAME = 'elementFormDefault';
     const WS_WSDL_QUALIFIED_ATTR_NAME = 'qualified';
     const WS_WSDL_DEFAULT_SCHEMA_ATTR_NAME = 'ns0';
     const WS_WSDL_TNS_ATTR_NAME = 'tns';
