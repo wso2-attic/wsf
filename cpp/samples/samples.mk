@@ -33,7 +33,7 @@ int_dir:
 
 echo_dir:
              @if not exist int.msvc\echo mkdir int.msvc\echo
-             @if not exist "$(WSFCPP_HOME_DIR)\bin\samples\cpp\echo" mkdir "$(WSFCPP_HOME_DIR)\bin\samples\cpp\echo"
+             @if not exist $(WSFCPP_HOME_DIR)\bin\samples\cpp\echo mkdir $(WSFCPP_HOME_DIR)\bin\samples\cpp\echo
              
 echo_exe:
              @if not exist int.msvc\echo\echo mkdir int.msvc\echo\echo
@@ -93,42 +93,42 @@ echo_samples: echo_dir echo_exe echo_blocking_exe echo_blocking_addr_exe echo_bl
 
 flickr_exe:
              @if not exist int.msvc\flickr mkdir int.msvc\flickr
-             @if not exist "$(WSFCPP_HOME_DIR)\bin\samples\cpp\flickr" mkdir "$(WSFCPP_HOME_DIR)\bin\samples\cpp\flickr"
+             @if not exist $(WSFCPP_HOME_DIR)\bin\samples\cpp\flickr mkdir $(WSFCPP_HOME_DIR)\bin\samples\cpp\flickr
 	@cl.exe $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\flickr\flickr.cpp /Foint.msvc\flickr\ /c
 	@link.exe $(LDFLAGS) int.msvc\flickr\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\cpp\flickr\flickr.exe
              -@$(_VC_MANIFEST_EMBED_EXE)
 
 google_exe:
              @if not exist int.msvc\google mkdir int.msvc\google
-             @if not exist "$(WSFCPP_HOME_DIR)\bin\samples\cpp\google" mkdir "$(WSFCPP_HOME_DIR)\bin\samples\cpp\google"
+             @if not exist $(WSFCPP_HOME_DIR)\bin\samples\cpp\google mkdir $(WSFCPP_HOME_DIR)\bin\samples\cpp\google
 	@cl.exe $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\google\google.cpp /Foint.msvc\google\ /c
 	@link.exe $(LDFLAGS) int.msvc\google\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\cpp\google\google.exe
              -@$(_VC_MANIFEST_EMBED_EXE)
 
 math_exe:
              @if not exist int.msvc\math mkdir int.msvc\math
-             @if not exist "$(WSFCPP_HOME_DIR)\bin\samples\cpp\math" mkdir "$(WSFCPP_HOME_DIR)\bin\samples\cpp\math"
+             @if not exist $(WSFCPP_HOME_DIR)\bin\samples\cpp\math mkdir $(WSFCPP_HOME_DIR)\bin\samples\cpp\math
 	@cl.exe $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\math\math.cpp /Foint.msvc\math\ /c
 	@link.exe $(LDFLAGS) int.msvc\math\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\cpp\math\math.exe
              -@$(_VC_MANIFEST_EMBED_EXE)
 
 notify_exe:
              @if not exist int.msvc\notify mkdir int.msvc\notify
-             @if not exist "$(WSFCPP_HOME_DIR)\bin\samples\cpp\notify" mkdir "$(WSFCPP_HOME_DIR)\bin\samples\cpp\notify"
+             @if not exist $(WSFCPP_HOME_DIR)\bin\samples\cpp\notify mkdir $(WSFCPP_HOME_DIR)\bin\samples\cpp\notify
 	@cl.exe $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\notify\notify.cpp /Foint.msvc\notify\ /c
 	@link.exe $(LDFLAGS) int.msvc\notify\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\cpp\notify\notify.exe
              -@$(_VC_MANIFEST_EMBED_EXE)
 
 yahoo_exe:
              @if not exist int.msvc\yahoo mkdir int.msvc\yahoo
-             @if not exist "$(WSFCPP_HOME_DIR)\bin\samples\cpp\yahoo" mkdir "$(WSFCPP_HOME_DIR)\bin\samples\cpp\yahoo"
+             @if not exist $(WSFCPP_HOME_DIR)\bin\samples\cpp\yahoo mkdir $(WSFCPP_HOME_DIR)\bin\samples\cpp\yahoo
 	@cl.exe $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\yahoo\yahoo.cpp /Foint.msvc\yahoo\ /c
 	@link.exe $(LDFLAGS) int.msvc\yahoo\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\cpp\yahoo\yahoo.exe
              -@$(_VC_MANIFEST_EMBED_EXE)
 
 mtom_exe:
              @if not exist int.msvc\mtom mkdir int.msvc\mtom
-             @if not exist "$(WSFCPP_HOME_DIR)\bin\samples\cpp\mtom" mkdir "$(WSFCPP_HOME_DIR)\bin\samples\cpp\mtom"
+             @if not exist $(WSFCPP_HOME_DIR)\bin\samples\cpp\mtom mkdir $(WSFCPP_HOME_DIR)\bin\samples\cpp\mtom
              @cl.exe $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\mtom\mtom.cpp /Foint.msvc\mtom\ /c
 	@link.exe $(LDFLAGS) int.msvc\mtom\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\cpp\mtom\mtom.exe
              -@$(_VC_MANIFEST_EMBED_EXE)
