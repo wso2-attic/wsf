@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     WSSOAPClient * sc;
 
     end_point = "http://localhost:9090/axis2/services/sec_echo";
-    client_repo = "../client_repo/";
+    client_repo = "client_repo/";
     policy_file = "policy.xml";
 
     if (argc > 1)
