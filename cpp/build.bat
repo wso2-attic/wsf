@@ -99,11 +99,11 @@ rem Build Client Samples
 @xcopy /E /I /Q /Y secpolicy "%WSFCPP_HOME%\bin\samples\cpp\secpolicy"
 @cd "%WSFCPP_HOME%\bin\samples\cpp"
 @if not exist .svn mkdir .svn
-@for /F "tokens=*" %%G in ('dir /B /AD /S *.svn*') do rmdir /S /Q %%G
+@for /F "tokens=*" %%G in ('dir /B /AD /S *.svn*') do rmdir /S /Q "%%G"
 @if not exist *.sh echo > #.sh
-@for /F "tokens=*" %%G in ('dir /B /S *.sh*') do del %%G
+@for /F "tokens=*" %%G in ('dir /B /S *.sh*') do del "%%G"
 @if not exist *.am echo > #.am
-@for /F "tokens=*" %%G in ('dir /B /S *.am*') do del %%G
+@for /F "tokens=*" %%G in ('dir /B /S *.am*') do del "%%G"
 @cd "%WSFCPP_SOURCE%"
 
 rem Deploy Sample Source
@@ -114,13 +114,13 @@ rem Deploy Sample Source
 @set WSFCPP_SOURCE=%CD%
 @cd "%WSFCPP_HOME%\samples"
 @if not exist .svn mkdir .svn
-@for /F "tokens=*" %%G in ('dir /B /AD /S *.svn*') do rmdir /S /Q %%G
+@for /F "tokens=*" %%G in ('dir /B /AD /S *.svn*') do rmdir /S /Q "%%G"
 @if not exist int.msvc mkdir int.msvc
-@for /F "tokens=*" %%G in ('dir /B /AD /S *int.msvc*') do rmdir /S /Q %%G
+@for /F "tokens=*" %%G in ('dir /B /AD /S *int.msvc*') do rmdir /S /Q "%%G"
 @if not exist *.sh echo > #.sh
-@for /F "tokens=*" %%G in ('dir /B /S *.sh*') do del %%G
+@for /F "tokens=*" %%G in ('dir /B /S *.sh*') do del "%%G"
 @if not exist *.am echo > #.am
-@for /F "tokens=*" %%G in ('dir /B /S *.am*') do del %%G
+@for /F "tokens=*" %%G in ('dir /B /S *.am*') do del "%%G"
 @cd "%WSFCPP_SOURCE%"
 
 :end
