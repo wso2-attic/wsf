@@ -30,9 +30,9 @@ _VC_MANIFEST_EMBED_DLL= if exist $@.manifest mt.exe -nologo -manifest $@.manifes
 wso2_wsf_dll :
 	@if not exist int.msvc mkdir int.msvc
 	@cl.exe $(CFLAGS) $(INCLUDE_PATH) *.cpp /Foint.msvc\ /c
-             @rc.exe /r /fo "int.msvc\wsf.res" wsf.rc
+	@rc.exe /r /fo "int.msvc\wsf.res" wsf.rc
 	@link.exe $(LDFLAGS) int.msvc\*.obj int.msvc\wsf.res $(LIBS) /DLL  /OUT:$(WSFCPP_HOME_DIR)\lib\wso2_wsf.dll /IMPLIB:$(WSFCPP_HOME_DIR)\lib\wso2_wsf.lib
-             -@$(_VC_MANIFEST_EMBED_DLL)
+	-@$(_VC_MANIFEST_EMBED_DLL)
 
 wsfcpp: wso2_wsf_dll
 
