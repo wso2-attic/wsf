@@ -201,7 +201,7 @@ wsf_env_create_svr (
     axutil_allocator_t *allocator = NULL;
     axutil_error_t *error = NULL;
     axutil_log_t *log = NULL;
-    axis2_char_t log_path[250];
+    axis2_char_t log_path[256];
     axutil_env_t *env = NULL;
     axutil_thread_pool_t *thread_pool = NULL;
     const axis2_char_t *LOG_NAME = "wsf_ruby_server.log";
