@@ -135,36 +135,34 @@ function wsf_get_wsdl_dom($wsdl_dom, $xslt_location)
 	if($wsdl_dom){
 		$child_list = $wsdl_dom->childNodes;
 		foreach($child_list as $child){
-			if($child->localName == WSF_DEFINITION){
-				/* first element local name is definitions, so this is a
-				 version 1.1 WSDL */
-			/*	if(!($xslt_wsdl_20_dom->load($xslt_location."/wsdl11to20.xsl10.xsl")))
-				return "WSDL 1.1 to 2.0 converting stylesheet not found";
-			*/	
-				
-				$xslt_str = file_get_contents("dynamic_invocation/xslt/wsdl11to20.xsl10.xsl", TRUE);
-				if(!($xslt_wsdl_20_dom->loadXML($xslt_str)))
-				   return "WSDL 1.1 to 2.0 converting stylesheet not found";
-				
-				$xslt->importStyleSheet($xslt_wsdl_20_dom);
-				$xslt_11_to_20_dom->loadXML($xslt->transformToXML($wsdl_dom));
-				$is_wsdl_11 = TRUE;
-				$wsdl_11_dom = $wsdl_dom;
-				return $xslt_11_to_20_dom;
-			}
-			else if ($child->localName == WSF_DESCRIPTION) {
-				/* first element local name is description, so this is a
-				 version 2.0 WSDL */
-				return $wsdl_dom;
-			}
-			else{
-				/* echo "Not a valid WSDL"; */
-				return NULL;
-			}
+		  if($child->nodeType == XML_COMMENT_NODE)
+		    continue;
+		  if($child->localName == WSF_DEFINITION){
+		    /* first element local name is definitions, so this is a
+		     version 1.1 WSDL */
+		    $xslt_str = file_get_contents("dynamic_invocation/xslt/wsdl11to20.xsl10.xsl", TRUE);
+			  if(!($xslt_wsdl_20_dom->loadXML($xslt_str)))
+			    return "WSDL 1.1 to 2.0 converting stylesheet not found";
+			  
+			  $xslt->importStyleSheet($xslt_wsdl_20_dom);
+			  $xslt_11_to_20_dom->loadXML($xslt->transformToXML($wsdl_dom));
+			  $is_wsdl_11 = TRUE;
+			  $wsdl_11_dom = $wsdl_dom;
+			  return $xslt_11_to_20_dom;
+		  }
+		  else if ($child->localName == WSF_DESCRIPTION) {
+		    /* first element local name is description, so this is a
+		     version 2.0 WSDL */
+		    return $wsdl_dom;
+		  }
+		  else{
+		    /* echo "Not a valid WSDL"; */
+		    return NULL;
+		  }
 		}
 	}
 	else
-	return NULL;
+	  return NULL;
 }
 
 
@@ -272,15 +270,16 @@ function wsf_get_binding(DomDocument $wsdl_dom, $endpoint_address, $is_wsdl_11 =
 		return NULL;
 	}
 	else{
-		$root_node = $wsdl_dom->firstChild;
+		$root_node = $wsdl_dom->documentElement;
 		$root_child_list = $root_node->childNodes;
 
 
 		foreach($root_child_list as $childs){
-			if($childs->localName == WSF_SERVICE && $childs->namespaceURI == WSF_WSDL_NAMESPACE){
-				$service_node = $childs;
-				break;
-			}
+		  
+		  if($childs->localName == WSF_SERVICE && $childs->namespaceURI == WSF_WSDL_NAMESPACE){
+		    $service_node = $childs;
+		    break;
+		  }
 		}
 
 		if(!$service_node){

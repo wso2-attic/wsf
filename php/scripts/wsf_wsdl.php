@@ -158,7 +158,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
 
     if ($is_wsdl_11 == TRUE && $wsdl_11_dom)
         $wsdl_dom = $wsdl_11_dom;
-    
+
     $wsdl_dom_string = $wsdl_dom->saveXML();
     $return_value = array(WSF_ENDPOINT_URI=> $endpoint_address,
                           WSF_BINDING_DETAILS=> $binding_array,
