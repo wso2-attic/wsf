@@ -46,12 +46,18 @@ WITH_ARCHIVE = 0
 #############################################################################
 ### Apache Rampart/C Build Configuration Parameters
 
+# Whether Rampart/C is built or not
+ENABLE_RAMPARTC = 0
+
 # Path to OpenSSL installation
 OPENSSL_BIN_DIR = E:\OpenSSL
 
 
 #############################################################################
 ### Apache Sandesha2/C Build Configuration Parameters
+
+# Whether Sandesha2/C is built or not
+ENABLE_SANDESHA2C = 1
 
 # Build with SQLite support for permenent storage, to disable set WITH_SQLITE = 0
 WITH_SQLITE = 0
@@ -64,5 +70,12 @@ SQLITE_SRC_DIR = "E:\sqlite-source-3_3_8"
 WITH_MYSQL = 1
 # Path to MySQL installation
 MYSQL_BIN_DIR = "C:\Program Files\MySQL\MySQL Server 5.0"
+
+
+#############################################################################
+### Apache Savan/C Build Configuration Parameters
+
+# Whether Savan/C is built or not
+ENABLE_SAVANC = 1
 
 
