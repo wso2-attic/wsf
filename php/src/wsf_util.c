@@ -184,9 +184,23 @@ wsf_util_construct_header_node (
     }
     if (zend_hash_find (Z_OBJPROP_P (header), WS_HEADER_DATA,
             sizeof (WS_HEADER_DATA), (void **) &tmp) == SUCCESS
-        && Z_TYPE_PP (tmp) == IS_STRING) {
-        axiom_element_set_text (header_ele, env, Z_STRVAL_PP (tmp),
-            header_node);
+			&& Z_TYPE_PP (tmp) == IS_STRING && Z_STRLEN_PP(tmp) > 0) {
+				axiom_node_t *node = NULL;
+				char *str = Z_STRVAL_PP(tmp);
+				while(*str == ' ' && *str != '\0'){
+					str++; 
+				}
+				if(str[0] == '<')
+				{
+					node = wsf_util_deserialize_buffer(env , Z_STRVAL_PP(tmp));
+					if(node){
+						axiom_node_add_child(header_node, env, node);
+					}
+				}
+				if(!node){
+					axiom_element_set_text (header_ele, env, Z_STRVAL_PP (tmp),
+						header_node);
+				}
     }else if (zend_hash_find (Z_OBJPROP_P (header), WS_HEADER_DATA,
             sizeof (WS_HEADER_DATA), (void **) &tmp) == SUCCESS
         && Z_TYPE_PP (tmp) == IS_ARRAY) {
