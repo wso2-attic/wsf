@@ -172,7 +172,7 @@ border="1">
     </tr>
     <tr valign="top">
       <td colspan="1" style="height: 20px; width: 96px;">"policy"</td>
-      <td colspan="1" style="height: 20px"> &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; WSPolicy object</td>
+      <td colspan="1" style="height: 20px"> &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; WSPolicy object</td>
       <td colspan="1" style="height: 20px">WSPolicy object</td>
       <td colspan="1" style="height: 20px">None</td>
       <td colspan="1" style="height: 20px">WSPolicy Object</td>
@@ -329,12 +329,21 @@ border="1">
 
 <p>void</p>
 
-<p>Throws WSFault on error.</p>
+<p>Throws <strong>WSFault</strong> on error.</p>
+    <ul>
 
-<p><br>
-<br>
-</p>
-
+<li><strong>&nbsp;string WSClient-&gt;getLastResponse() </strong>
+</li>
+    </ul>
+    <p>
+        This function returns the last received soap message as a string</p>
+        <ul>
+    <li><strong>&nbsp; string WSClient-&gt;getLastResponse() </strong>
+        <p>
+            This function returns the last received soap message as a string<br />
+        </p>
+    </li>
+</ul>
 <h3><b>Member Variables</b></h3>
 None
 
@@ -856,7 +865,7 @@ representation of the binary content to be sent or being received.</p>
 </ul>
 
 <p>An associative array, containing the mapping of cid (content ID) to its
-corresponding  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; attachment. When an attachment is received, this property
+corresponding  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; attachment. When an attachment is received, this property
 will be present in the WSMessage object.</p>
 <ul>
   <li><p><b>array inputHeaders</b></p>
