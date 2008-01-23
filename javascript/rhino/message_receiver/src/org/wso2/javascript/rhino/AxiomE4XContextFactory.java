@@ -92,4 +92,9 @@ public class AxiomE4XContextFactory extends ContextFactory {
                 "org.wso2.javascript.xmlimpl.XMLLibImpl"
         );
     }
+
+    protected void onContextCreated(Context cx) {
+        cx.setClassShutter(new ClassShutterImpl());
+        super.onContextCreated(cx);
+    }
 }
