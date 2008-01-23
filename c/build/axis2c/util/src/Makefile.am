@@ -38,6 +38,9 @@ libaxutil_la_SOURCES = hash.c \
 			duration.c\
 			stomp/frame.c \
 			stomp/stomp.c
+			md5.c \
+			digest_calc.c
+
 
                         
 libaxutil_la_LIBADD =	$(top_builddir)/src/platforms/unix/libaxis2_unix.la \
