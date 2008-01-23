@@ -37,7 +37,7 @@ libaxutil_la_SOURCES = hash.c \
 			version.c \
 			duration.c\
 			stomp/frame.c \
-			stomp/stomp.c
+			stomp/stomp.c \
 			md5.c \
 			digest_calc.c
 
