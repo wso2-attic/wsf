@@ -42,7 +42,8 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     $binding_array = array();
 
     $is_doc_lit = FALSE;
-
+    $is_rpc_enc = FALSE; 
+    
     $wsdl_dom = new DomDocument();
     $sig_model_dom  = new DOMDocument();
 
@@ -119,6 +120,8 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
         if(!$binding_node)
             return  NULL;
         $policy_array = wsf_get_all_policies($wsdl_11_dom, $binding_node, $operation_name, $is_wsdl_11);
+        $is_rpc_enc =  wsf_is_rpc_enc_wsdl($wsdl_11_dom, $binding_node, $operation_name);
+        /* rpc literal not supported */
         
     }
     else{
@@ -149,8 +152,10 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
         }
     }
      
-    if($sig_method)
+    if($sig_method && !$is_rpc_enc)
         $payload = wsf_create_payload($sig_method, $is_doc_lit, $operation_name, $arg_count, $arguments, $class_map);
+    else
+        $payload = wsf_create_payload($sig_method, FALSE, $operation_name, $arg_count, $arguments, $class_map);
 
     if($sig_method)
         $return_node = wsf_get_response_parameters($sig_method);

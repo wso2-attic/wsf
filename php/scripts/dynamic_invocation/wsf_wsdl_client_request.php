@@ -135,7 +135,7 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
     $tmp_param_struct = array();
     $is_wrapper = FALSE;
     
-    if(($is_doc == TRUE)  && $signature_node){
+    if($signature_node){
         $params_node = $signature_node->firstChild;
         if($params_node && $params_node->localName == WSF_PARAMS){
             if($params_node->hasAttributes()){
@@ -176,29 +176,56 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
     /* no wrapper elements most probably getter functions */
     if(count($tmp_param_struct) == 0)
         return NULL;
+  
+    if($is_doc == TRUE){
+        $payload_dom = new DOMDocument('1.0', 'iso-8859-1');
+        $element = $payload_dom->createElementNS($tmp_param_struct[$ele_name][WSF_NS], "ns1:".$ele_name);
+        if(is_object($arguments[0])){
+            /* this is class map support */
+            $new_obj = $arguments[0];
+            $parameter_structure = $tmp_param_struct[$ele_name];
+            wsf_create_payload_for_class_map($payload_dom, $parameter_structure, $element, $new_obj);
+            $payload_dom->appendChild($element);
+            $payload_node = $payload_dom->firstChild;
+            $clone_node = $payload_node->cloneNode(TRUE);
+            return $payload_dom->saveXML($clone_node);
+        }
+        else {
+            /* array type implementation */
+            $parameter_structure = $tmp_param_struct[$ele_name];
+            wsf_create_payload_for_array($payload_dom, $parameter_structure, $element, $arguments[0]);
+            $payload_dom->appendChild($element);
+            $payload_node = $payload_dom->firstChild;
+            $clone_node = $payload_node->cloneNode(TRUE);
+            return $payload_dom->saveXML($clone_node);
+        }
+    }else{
+        $payload_dom = new DOMDocument('1.0', 'iso-8859-1');
+        $element = $payload_dom->createElementNS($tmp_param_struct[$ele_name][WSF_NS], "ns1:".$ele_name);
+        $element->setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+        $element->setAttribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
 
-    $payload_dom = new DOMDocument('1.0', 'iso-8859-1');
-    $element = $payload_dom->createElementNS($tmp_param_struct[$ele_name][WSF_NS], "ns1:".$ele_name);
-    if(is_object($arguments[0])){
-        /* this is class map support */
-        $new_obj = $arguments[0];
-        $parameter_structure = $tmp_param_struct[$ele_name];
-        wsf_create_payload_for_class_map($payload_dom, $parameter_structure, $element, $new_obj);
-        $payload_dom->appendChild($element);
-        $payload_node = $payload_dom->firstChild;
-        $clone_node = $payload_node->cloneNode(TRUE);
-        return $payload_dom->saveXML($clone_node);
-    }
-    else {
-        /* array type implementation */
-        $parameter_structure = $tmp_param_struct[$ele_name];
-        wsf_create_payload_for_array($payload_dom, $parameter_structure, $element, $arguments[0]);
-        $payload_dom->appendChild($element);
-        $payload_node = $payload_dom->firstChild;
-        $clone_node = $payload_node->cloneNode(TRUE);
-        return $payload_dom->saveXML($clone_node);
-    }
 
+        if(is_object($arguments[0])){
+            $new_obj = $arguments[0];
+            $parameter_structure = $tmp_param_struct[$ele_name];
+            wsf_create_rpc_payload_for_class_map($payload_dom, $parameter_structure, $element, $new_obj);
+            $payload_dom->appendChild($element);
+            $payload_node = $payload_dom->firstChild;
+            $clone_node = $payload_node->cloneNode(TRUE);
+            return $payload_dom->saveXML($clone_node);
+        }
+        else {
+            /* array type implementation */
+            $parameter_structure = $tmp_param_struct[$ele_name];
+            wsf_create_rpc_payload_for_array($payload_dom, $parameter_structure, $element, $arguments[0]);
+            $payload_dom->appendChild($element);
+            $payload_node = $payload_dom->firstChild;
+            $clone_node = $payload_node->cloneNode(TRUE);
+            return $payload_dom->saveXML($clone_node);
+
+        }
+    }
 }
 
 /**
@@ -376,6 +403,110 @@ function wsf_create_payload_for_array(DomDocument $payload_dom, $parameter_struc
                         if($key == $arg_key){
                             $element_2 = $payload_dom->createElementNS($value[WSF_NS], "ns".$i.":".$key);
                             wsf_create_payload_for_array($payload_dom, $value, $element_2, $arg_val);
+                            $root_ele->appendChild($element_2);
+                            $i++;
+                        }
+                    }
+             
+                }
+            }
+        }else if($key == WSF_TYPE && is_xsd_type($value)){
+            /* TODO multiple values */
+            if($value == 'boolean' && !$argument_array[0])
+                $element_2 = $payload_dom->createTextNode(0);
+            else
+                $element_2 = $payload_dom->createTextNode($argument_array[0]);
+            $root_ele->appendChild($element_2);
+        }
+    }
+
+}
+
+/**
+ * Recursive function to create rpc payload 
+ * @param DomDocument $payload_dom 
+ * @param array $value_array Array that include payload details
+ * @param DomNode $element 
+ * @param mixed $new_obj call_map object
+ */
+
+
+function wsf_create_rpc_payload_for_class_map(DomDocument $payload_dom, $parameter_struct, DomNode $root_ele, $classmap_obj, $prev_class_obj = NULL)
+{
+    static $i = 2;
+    $element_2 = NULL;
+    foreach($parameter_struct as $val => $value){
+        if(is_array($value)){
+            if($value[WSF_NS]){
+                if (isset($value[WSF_TYPE]) && $value[WSF_TYPE] && $classmap_obj){
+                    if($classmap_obj->$val)
+                        $obj_value = $classmap_obj->$val;
+                    else
+                        $obj_value = $prev_class_obj->$val;
+                    if($value[WSF_NS] == "NULL")
+                        $element_2 = $payload_dom->createElement($val, $obj_value);
+                    else
+                        $element_2 = $payload_dom->createElementNS($value[WSF_NS], "ns".$i.":".$val, $obj_value);
+                }
+                else {
+                    if(isset($value['nillable'])){
+                        if(isset($value['maxOccurs'])){
+                            /*logic should be changed for more elemnts*/ 
+                            $element_2 = $payload_dom->createElementNS($value['ns'], "ns".$i.":".$val);
+                            $prev_class_obj = $classmap_obj;
+                            $new_obj = $classmap_obj->$val;
+                            $i++;
+                            wsf_create_payload_for_class_map($payload_dom, $value, $element_2, $new_obj, $prev_class_obj);
+             
+                        }
+                        else{
+                            $element_2 = $payload_dom->createElementNS($value['ns'], "ns".$i.":".$val);
+                            $prev_class_obj = $classmap_obj;
+                            $new_obj = $classmap_obj->$val;
+                            $i++;
+                            wsf_create_payload_for_class_map($payload_dom, $value, $element_2, $new_obj, $prev_class_obj);
+             
+                        }
+                    }
+                    else{
+                        if(!isset($value['class_map_name'])){
+                            $element_2 = $payload_dom->createElementNS($value['ns'], "ns".$i.":".$val);
+                            $prev_class_obj = $classmap_obj;
+                            $new_obj = $classmap_obj->$val;
+                            $i++;
+                            wsf_create_rpc_payload_for_class_map($payload_dom, $value, $element_2, $new_obj, $prev_class_obj);
+                        }
+                    }
+                }
+            }
+            if($element_2)
+                $root_ele->appendChild($element_2);
+        }
+    }
+}
+
+function wsf_create_rpc_payload_for_array(DomDocument $payload_dom, $parameter_struct, DomNode $root_ele, $argument_array)
+{
+    static $i = 2;
+    foreach($parameter_struct as $key => $value){
+        if(is_array($value)){
+            if($value[WSF_NS]){
+                if (isset($value[WSF_TYPE]) && $value[WSF_TYPE]){
+                    foreach($argument_array as $arg_key => $arg_val){
+                        if($key == $arg_key){
+                            /* type conversion is needed */
+                            $element_2 = $payload_dom->createElement($key, $arg_val);
+                            $element_2->setAttribute("xsi:type", "xsd:".$value[WSF_TYPE]);
+                            $root_ele->appendChild($element_2);
+                            $i++;
+                        }
+                    }
+                }
+                else {
+                    foreach($argument_array as $arg_key => $arg_val){
+                        if($key == $arg_key){
+                            $element_2 = $payload_dom->createElement($value[WSF_NS], "ns".$i.":".$key);
+                            wsf_create_rpc_payload_for_array($payload_dom, $value, $element_2, $arg_val);
                             $root_ele->appendChild($element_2);
                             $i++;
                         }

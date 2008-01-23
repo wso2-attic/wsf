@@ -716,4 +716,41 @@ function wsf_wsdl_util_convert_value($xsd_type, $data_value)
 	return $converted_value;
 }
 
+function wsf_is_rpc_enc_wsdl($wsdl_11_dom, $binding_node, $operation_name)
+{
+    if(!$binding_node)
+        return FALSE;
+
+    $binding_child_list = $binding_node->childNodes;
+    foreach($binding_child_list as $binding_child)
+    {
+        if($binding_child->localName == "binding")
+        {
+            $binding_attr = $binding_child->attributes;
+            $style =  $binding_attr->getNamedItem("style")->value;
+            //var_dump($style)."\n\n";
+        }
+        if($binding_child->localName == WSF_OPERATION && $style == "rpc"){
+            $op_name = NULL;
+            $operation_attr = $binding_child->attributes;
+            if($operation_attr->getNamedItem(WSF_NAME))
+                $op_name = $operation_attr->getNamedItem(WSF_NAME)->value;
+            if($op_name == $operation_name && $binding_child->hasChildNodes()){
+                foreach($binding_child->childNodes as $input_output){
+                    if($input_output->firstChild && $input_output->firstChild->localName == "body"){
+                        $body_attr = $input_output->firstChild->attributes;
+                        $enc =  $body_attr->getNamedItem("use")->value;
+                        $enc_style = $body_attr->getNamedItem("encodingStyle")->value;
+                        if($enc =="encoded")
+                            return TRUE;
+                        else
+                            return FALSE;
+                    }
+                }
+            }
+        }    
+    }
+
+    return FALSE;
+}
 ?>
