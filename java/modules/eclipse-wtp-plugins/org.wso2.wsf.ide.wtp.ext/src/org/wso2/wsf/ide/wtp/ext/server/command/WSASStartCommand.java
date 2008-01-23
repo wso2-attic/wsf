@@ -60,6 +60,7 @@ public class WSASStartCommand {
 			if ((OS.indexOf(WSASCoreUIMessages.OS_WIN_9) > -1)
 					|| (OS.indexOf(WSASCoreUIMessages.OS_WIN_NT) > -1)
 					|| (OS.indexOf(WSASCoreUIMessages.OS_WIN_2000) > -1)
+					|| (OS.indexOf(WSASCoreUIMessages.OS_WIN_VISTA) > -1)
 					|| (OS.indexOf(WSASCoreUIMessages.OS_WIN_XP) > -1)) {
 				wsasProcess = runtime.exec(FileUtils.addNodesToPath(wsasInstallationLocation, 
 																	pathNodesStopWin));

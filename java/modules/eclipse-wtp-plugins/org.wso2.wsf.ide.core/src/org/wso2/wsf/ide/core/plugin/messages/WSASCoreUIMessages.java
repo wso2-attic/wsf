@@ -41,6 +41,7 @@ public final class WSASCoreUIMessages extends NLS {
 	public static final String OS_WIN_NT = "nt" ; 					//$NON-NLS-1$
 	public static final String OS_WIN_2000 = "windows 2000" ; 		//$NON-NLS-1$
 	public static final String OS_WIN_XP = "windows xp" ; 			//$NON-NLS-1$
+	public static final String OS_WIN_VISTA	 = "windows vista" ; 	//$NON-NLS-1$
 
 	public static final String WSAS_DEFAULT_DEBUG_HOST = "localhost" ; 		//$NON-NLS-1$
 	public static final String WSAS_DEFAULT_DEBUG_PORT = "8088" ; 			//$NON-NLS-1$
