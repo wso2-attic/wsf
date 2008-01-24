@@ -210,7 +210,7 @@ WSRequest.prototype._processResult = function () {
                     newDoc.appendChild(soapBody.firstChild);
                 } else {
                     newDoc = document.implementation.createDocument("", "", null);
-                    newDoc.appendChild(soapBody.firstChild);
+                    newDoc.appendChild(soapBody.firstChild.cloneNode(true));
                 }
 
                 this.responseXML = newDoc;
@@ -337,12 +337,11 @@ WSRequest.util = {
             var browser = WSRequest.util._getBrowser();
             switch (browser) {
                 case "gecko":
+                case "safari":
                     var serializer = new XMLSerializer();
                     return serializer.serializeToString(payload);
                     break;
                 case "ie":
-                    return payload.xml;
-                    break;
                 case "ie7":
                     return payload.xml;
                     break;
@@ -350,9 +349,6 @@ WSRequest.util = {
                     var xmlSerializer = document.implementation.createLSSerializer();
                     return xmlSerializer.writeToString(payload);
                     break;
-                case "safari":
-                // use the safari method
-                    throw new WebServiceError("Not implemented", "WSRequest.util._serializeToString doesn't support Safari browser.");
                 case "undefined":
                     throw new WebServiceError("Unknown browser", "WSRequest.util._serializeToString doesn't recognize the browser, to invoke browser-specific serialization code.");
             }
@@ -382,8 +378,13 @@ WSRequest.util = {
             case "safari":
             case "undefined":
                 value = "";
-                if (node.nodeType == 3) value = node.nodeValue;
-                else for (c in node.childNodes) value += WSRequest.util._stringValue(node.childNodes[c]);
+                if (node.nodeType == 3) {
+                    value = node.nodeValue;
+                } else {
+                    for (var i = 0; i < node.childNodes.length; i++) {
+                        value += WSRequest.util._stringValue(node.childNodes[i]);
+                    }
+                }
                 return value;
                 break;
         }
