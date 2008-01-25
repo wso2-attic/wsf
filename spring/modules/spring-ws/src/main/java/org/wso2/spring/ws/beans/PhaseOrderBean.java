@@ -40,7 +40,7 @@ public class PhaseOrderBean implements Axis2Bean {
 
 
 	// populate Axis Configuration with phase order information
-	@Override
+	
 	public void populateConfig(AxisConfiguration axisConfig) throws DeploymentException{
 		// TODO Auto-generated method stub
 

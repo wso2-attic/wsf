@@ -25,7 +25,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     
-    <artifactId>axis2-webapp</artifactId>
+    <artifactId>wso2-spring-ws-webapp</artifactId>
     <packaging>war</packaging>
     <name>WSO2 Spring Web Services - Web Application Module</name>
 

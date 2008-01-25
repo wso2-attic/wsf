@@ -11,7 +11,7 @@ public class SpringObjectSupplier implements ServiceObjectSupplier {
 	public static final String SPRING_POJO = "SpringPOJO";
 	
 	
-	@Override
+	
 	public Object getServiceObject(AxisService axisService) throws AxisFault {
 		// TODO Auto-generated method stub
 		

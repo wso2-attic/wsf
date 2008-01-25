@@ -14,7 +14,7 @@ import org.apache.axis2.util.Loader;
 
 public class TransportReceiverBean extends AbstractTransportBean {
 	
-	@Override
+	
 	public void populateConfig(AxisConfiguration axisConfig) throws AxisFault {
 		// TODO Auto-generated method stub
 		

@@ -15,7 +15,7 @@ public class MessageReceiverBean implements Axis2Bean {
 	private String clazz;
 	
 	// populate the axis configuration with the set properties
-	@Override
+	
 	public void populateConfig(AxisConfiguration axisConfig) throws DeploymentException {
 		// TODO Auto-generated method stub
 		

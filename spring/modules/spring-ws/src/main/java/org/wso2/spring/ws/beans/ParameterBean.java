@@ -84,7 +84,7 @@ public class ParameterBean implements Axis2Bean {
 	}
 	
 	// populate the Axis Configuration with parameters
-	@Override
+	
 	public void populateConfig(AxisConfiguration axisConfig) throws AxisFault {
 		// TODO Auto-generated method stub
 

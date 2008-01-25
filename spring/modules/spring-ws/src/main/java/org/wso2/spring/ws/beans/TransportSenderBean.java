@@ -13,7 +13,7 @@ import org.apache.axis2.util.Loader;
 //Replaces the Transport Sender property of the configuration .xml files
 
 public class TransportSenderBean extends AbstractTransportBean {
-	@Override
+	
 	public void populateConfig(AxisConfiguration axisConfig) throws AxisFault {
 		// TODO Auto-generated method stub
 		
