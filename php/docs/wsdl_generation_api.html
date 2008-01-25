@@ -377,8 +377,7 @@ messages.</p>
 is,</p>
 
 <p></p>
-<pre>
-    &lt;element name="luckyNoFunction"&gt;
+<pre>    &lt;element name="luckyNoFunction"&gt;
         &lt;complexType&gt;
             &lt;sequence&gt;
                 &lt;element name="yr" type="xsd:gYear"/&gt;
@@ -400,12 +399,28 @@ is,</p>
 <p>Example, for RPC style:</p>
 
 <p>The message elements are,</p>
-<pre>    &lt;message name="luckyNoFunction"&gt;
+<pre>
+    &lt;message name="luckyNoFunction"&gt;
         &lt;part name="yr" type="xsd:gYear"/&gt;
         &lt;part name="name" type="xsd:string"/&gt;
     &lt;/message&gt;
         &lt;message name="luckyNoFunctionResponse"&gt;
         &lt;part name="t" type="xsd:int"/&gt;
-    &lt;/message&gt;</pre>
+    &lt;/message&gt;
+
+
+</pre>
+
+<h2 id="H2_1">5. Service Name</h2>
+
+<p> You can specify a name for the service for generating WSDL. If you have not provided the service name then will generate a 
+service name based on the address location</p>
+
+<p>Example,</p>
+
+<p></p>
+<pre>$service = new WSService(array("operations"=&gt;$operations, "serviceName"=&gt;"sampleService"))</pre>
+
+<p></p>
 </body>
 </html>
