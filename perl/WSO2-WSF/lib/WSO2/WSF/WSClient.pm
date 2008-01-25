@@ -3,7 +3,7 @@ package WSO2::WSF::WSClient;
 use 5.008008;
 # use strict;
 use warnings;
-use base qw(WSO2::WSF);
+# use base qw(WSO2::WSF);
 
 use WSO2::WSF::C;
 use WSO2::WSF::WSMessage;
@@ -41,9 +41,8 @@ sub request {
 
     $is_wsmessage = 1  if( $args =~ /WSMessage/ );
 
-
     $this->{env} = WSO2::WSF::C::axutil_env_create_all(
-	"/tmp/wsf-perl.log", 
+	"/tmp/wsf-perl.log",
 	$WSO2::WSF::C::AXIS2_LOG_LEVEL_TRACE );
 
     unless( defined( $this->{env} ) ) {
@@ -57,16 +56,7 @@ sub request {
 	die( "ERROR:  Axis2/C home is not given" );
     }
 
-    $this->{svc_client} = WSO2::WSF::C::axis2_svc_client_create(
-	$this->{env}, 
-	$this->{axis2c_home} );
-
-    unless( defined( $this->{svc_client} ) ) {
-	WSO2::WSF::C::axis2_log_debug(
-	    $this->{env},
-	    "[wsf-perl] Service client creation failed" );
-	die( "ERROR:  Failed to create service client" );
-    }
+    $this->{svc_client} = wsf_svc_client_create( $this );
 
     # skipping sandesha for the moment
     # wsf_client_set_module_param_options('env'		  => $this->{env}, 
@@ -75,95 +65,19 @@ sub request {
     #				    'module_option'	  => "sandesha2_db", 
     #				    'module_option_value' => "/home/gandalf/svn/wsf-c/deploy");
 
-    my $reader = '';
+    local $reader = '';
 
-    if( $is_wsmessage ) {
-	$reader = WSO2::WSF::C::axiom_xml_reader_create_for_memory_new(
-	    $this->{env}, 
-	    $this->{payload},
-	    length( $this->{payload} ),
-	    "utf-8",
-	    $WSO2::WSF::C::AXIS2_XML_PARSER_TYPE_BUFFER );
-    } else {
-	$reader = WSO2::WSF::C::axiom_xml_reader_create_for_memory_new(
-	    $this->{env}, 
-	    $this->{payload},
-	    length( $this->{payload} ),
-	    "utf-8",
-	    $WSO2::WSF::C::AXIS2_XML_PARSER_TYPE_BUFFER );
-    }
+    wsf_reader_create($is_wsmessage, $this->{env}, $this->{payload});
 
-    unless( defined( $reader ) ) {
-	WSO2::WSF::C::axis2_log_debug(
-	    $this->{env},
-	    "[wsf-perl] Failed to create xml_reader_for_memory" );
-    }
-
-    # convert $reader to an axiom node
-    my $builder = WSO2::WSF::C::axiom_stax_builder_create( $this->{env}, $reader );
-
-    unless( defined( $builder ) ) {
-	WSO2::WSF::C::axis2_log_debug(
-	    $this->{env},
-	    "[wsf-perl] Axiom node conversion failed" );
-    }
-
-    # convert payload to an axiom node
-    my $request_payload = wsf_util_read_payload( { 'reader'	=> $reader, 
-						   'env'	=> $this->{env} } );
-
-    unless( defined( $request_payload ) ) {
-	WSO2::WSF::C::axis2_log_debug(
-	    $this->{env},
-	    "[wsf-perl] Failed to convert payload to an axiom node" );
-    }
-
-    die( "ERROR:  Request payload should not be null" ) unless( defined( $request_payload ) );
+    my $request_payload = wsf_get_payload( $this );
 
     WSO2::WSF::C::axiom_xml_reader_free( $reader, $this->{env} );
 
-    my $client_options = WSO2::WSF::C::axis2_svc_client_get_options(
-	$this->{svc_client}, 
-	$this->{env} );
-    WSO2::WSF::C::axis2_options_set_xml_parser_reset(
-	$client_options,
-	$this->{env},
-	$WSO2::WSF::C::AXIS2_TRUE );
+    local $client_options = wsf_get_client_options( $this );
 
+    wsf_set_proxy_settings( $this );
 
-    # adding proxy settings
-    if ( defined( $this->{proxy_host} ) && defined( $this->{proxy_port} ) ) {
-	WSO2::WSF::C::axis2_svc_client_set_proxy( 
-	    $this->{svc_client},
-	    $this->{env},
-	    $this->{proxy_host},
-	    $this->{proxy_port} );
-    }
-
-    # adding ssl properties
-    if ( defined( $this->{ssl_server_key_filename} ) &&
-	 defined( $this->{ssl_client_key_filename} ) &&
-	 defined( $this->{passphrase} ) ) {
-
-	my $ssl_server_key_prop = WSO2::WSF::C::axutil_property_create_with_args( 
-	    $this->{env},
-	    0,
-	    $WSO2::WSF::C::AXIS2_TRUE,
-	    0,
-	    WSO2::WSF::C::axutil_strdup($this->{env}, $this->{ssl_server_key_filename}) );
-	my $ssl_client_key_prop = WSO2::WSF::C::axutil_property_create_with_args( 
-	    $this->{env},
-	    0,
-	    $WSO2::WSF::C::AXIS2_TRUE,
-	    0,
-	    WSO2::WSF::C::axutil_strdup($this->{env}, $this->{ssl_client_key_filename}) );
-	my $passphrase_prop = WSO2::WSF::C::axutil_property_create_with_args( 
-	    $this->{env},
-	    0,
-	    $WSO2::WSF::C::AXIS2_TRUE,
-	    0,
-	    WSO2::WSF::C::axutil_strdup($this->{evn}, $this->{passphrase}) );
-    }
+    wsf_add_ssl_properties( $this );
 
     # assuming payload is a string, setting client options
 
@@ -172,11 +86,11 @@ sub request {
 
     if( defined( $this->{useSOAP} ) ) {
 	for( $this->{useSOAP} ) {
-	    if	( /^1\.2$/ )  { $soap_version = $WSO2::WSF::C::AXIOM_SOAP12; }
-	    elsif 	( /^1\.1$/ )  { $soap_version = $WSO2::WSF::C::AXIOM_SOAP11; }
-	    elsif	( /^TRUE$/ )  { $soap_version = $WSO2::WSF::C::AXIOM_SOAP12; }
-	    elsif	( /^FALSE$/ ) { $use_soap = $WSO2::WSF::C::AXIS2_FALSE; }
-	    else		      { $soap_version = $WSO2::WSF::C::AXIOM_SOAP12; }
+	    if	  ( /^1\.2$/ )  { $soap_version = $WSO2::WSF::C::AXIOM_SOAP12; }
+	    elsif ( /^1\.1$/ )  { $soap_version = $WSO2::WSF::C::AXIOM_SOAP11; }
+	    elsif ( /^TRUE$/ )  { $soap_version = $WSO2::WSF::C::AXIOM_SOAP12; }
+	    elsif ( /^FALSE$/ ) { $use_soap = $WSO2::WSF::C::AXIS2_FALSE; }
+	    else       	        { $soap_version = $WSO2::WSF::C::AXIOM_SOAP12; }
 	}
     }
 
@@ -198,6 +112,17 @@ sub request {
 	    $this->{env},
 	    $WSO2::WSF::C::AXIS2_ENABLE_REST,
 	    $rest_property );
+    }
+
+    # handling security
+    my $policy = defined( $this->{$WSO2::WSF::C::WSF_CP_POLICY} ) ?
+	$this->{$WSO2::WSF::C::WSF_CP_POLICY} : undef;
+
+    my $sec_token = defined( $this->{$WSO2::WSF::C::WSF_CP_SEC_TOKEN} ) ?
+	$this->{$WSO2::WSF::C::WSF_CP_SEC_TOKEN} : undef;
+
+    if( defined( $policy ) ) {
+	# policy is given, let's do the rest
     }
 
     # default header type is post, only setting the HTTP_METHOD if GET
@@ -357,31 +282,148 @@ sub request {
 	    }
 	}
     } elsif( $response_payload ) {
-	# handle attachments
+        # handle attachments
 
-	my $writer = WSO2::WSF::C::axiom_xml_writer_create_for_memory(
+        my $buffer = WSO2::WSF::C::wsf_axiom_node_to_str( $this->{env}, $response_payload );
+
+        my $res_msg = new WSO2::WSF::WSMessage( { 'payload' => $this->{payload},
+						  'str'     => $buffer } );
+	return $res_msg;
+    }
+}
+
+sub wsf_add_ssl_properties {
+    my $this = shift;
+
+    if ( defined( $this->{ssl_server_key_filename} ) &&
+	 defined( $this->{ssl_client_key_filename} ) &&
+	 defined( $this->{passphrase} ) ) {
+
+	my $ssl_server_key_prop = WSO2::WSF::C::axutil_property_create_with_args( 
 	    $this->{env},
-	    undef,
+	    0,
 	    $WSO2::WSF::C::AXIS2_TRUE,
 	    0,
+	    WSO2::WSF::C::axutil_strdup($this->{env}, $this->{ssl_server_key_filename}) );
+
+	my $ssl_client_key_prop = WSO2::WSF::C::axutil_property_create_with_args( 
+	    $this->{env},
+	    0,
+	    $WSO2::WSF::C::AXIS2_TRUE,
+	    0,
+	    WSO2::WSF::C::axutil_strdup($this->{env}, $this->{ssl_client_key_filename}) );
+
+	my $passphrase_prop = WSO2::WSF::C::axutil_property_create_with_args( 
+	    $this->{env},
+	    0,
+	    $WSO2::WSF::C::AXIS2_TRUE,
+	    0,
+	    WSO2::WSF::C::axutil_strdup($this->{env}, $this->{passphrase}) );
+
+	WSO2::WSF::C::axis2_options_set_property(
+	    $client_options,
+	    $this->{env},
+	    $WSO2::WSF::C::WSF_PROP_NAME_SERVER_CERT,
+	    $ssl_server_key_prop );
+
+	WSO2::WSF::C::axis2_options_set_property(
+	    $client_options,
+	    $this->{env},
+	    $WSO2::WSF::C::WSF_PROP_NAME_KEY_FILE,
+	    $ssl_client_key_prop );
+
+	WSO2::WSF::C::axis2_options_set_property(
+	    $client_options,
+	    $this->{env},
+	    $WSO2::WSF::C::WSF_PROP_NAME_SSL_PASSPHRASE,
+	    $passphrase_prop );
+    }
+
+}
+
+sub wsf_get_client_options {
+    my $this = shift;
+
+    my $ops = WSO2::WSF::C::axis2_svc_client_get_options( $this->{svc_client}, $this->{env} );
+
+    WSO2::WSF::C::axis2_options_set_xml_parser_reset( $ops,
+						      $this->{env},
+						      $WSO2::WSF::C::AXIS2_TRUE );
+    return $ops;
+}
+
+sub wsf_get_payload {
+    my $this = shift;
+
+    # request payload
+    my $req_pl = WSO2::WSF::C::wsf_str_to_axiom_node( $this->{env},
+						      $this->{payload},
+						      length( $this->{payload} ) );
+
+    unless( defined( $req_pl ) ) {
+	WSO2::WSF::C::axis2_log_debug(
+	    $this->{env},
+	    "[wsf-perl] Failed to convert payload to an axiom node" );
+    }
+
+    die( "ERROR:  Request payload should not be null" ) unless( defined( $req_pl ) );
+    return $req_pl;
+}
+
+sub wsf_reader_create {
+
+    my($isws, $env, $payload) = (@_);
+
+    if( $is_wsmessage ) {
+	$reader = WSO2::WSF::C::axiom_xml_reader_create_for_memory_new(
+	    $env,
+	    $payload,
+	    length( $payload ),
+	    "utf-8",
 	    $WSO2::WSF::C::AXIS2_XML_PARSER_TYPE_BUFFER );
+    } else {
+	$reader = WSO2::WSF::C::axiom_xml_reader_create_for_memory_new(
+	    $env,
+	    $payload,
+	    length( $payload ),
+	    "utf-8",
+	    $WSO2::WSF::C::AXIS2_XML_PARSER_TYPE_BUFFER );
+    }
 
-	my $om_output = WSO2::WSF::C::axiom_output_create(
+    unless( defined( $reader ) ) {
+	WSO2::WSF::C::axis2_log_debug(
+	    $env,
+	    "[wsf-perl] Failed to create xml_reader_for_memory" );
+    }
+
+}
+
+sub wsf_svc_client_create {
+    my $this = shift;
+    my $svc = WSO2::WSF::C::axis2_svc_client_create(
+ 	$this->{env},
+ 	$this->{axis2c_home} );
+
+     unless( defined( $svc ) ) {
+ 	WSO2::WSF::C::axis2_log_debug(
+ 	    $this->{env},
+ 	    "[wsf-perl] Service client creation failed" );
+ 	die( "ERROR:  Failed to create service client" );
+     }
+    return $svc;
+}
+
+sub wsf_set_proxy_settings {
+    my $this = shift;
+
+    print $this->{proxy_host} . "\n";
+
+    if ( defined( $this->{proxy_host} ) && defined( $this->{proxy_port} ) ) {
+	WSO2::WSF::C::axis2_svc_client_set_proxy( 
+	    $this->{svc_client},
 	    $this->{env},
-	    $writer );
-
-	WSO2::WSF::C::axiom_node_serialize(
-	    $response_payload,
-	    $this->{env},
-	    $om_output );
-
-	my $buffer = WSO2::WSF::C::axiom_xml_writer_get_xml_new(
-	    $writer,
-	    $this->{env} );
-
-	$res_msg = new WSO2::WSF::WSMessage( { 'payload' => $this->{payload},
-					       'str' 	 => $buffer } );
-	return $res_msg;
+	    $this->{proxy_host},
+	    $this->{proxy_port} );
     }
 }
 
@@ -506,16 +548,16 @@ Chintana Wilamuna, E<lt>chintana@wso2.comE<gt>
 
 Copyright (C) 2007 by WSO2
 
-Licensed under the Apache License, Version 2.0 (the "License");             
-you may not use this file except in compliance with the License.            
-You may obtain a copy of the License at                                     
-                                                                            
-      http://www.apache.org/licenses/LICENSE-2.0                             
-                                                                            
-Unless required by applicable law or agreed to in writing, software         
-distributed under the License is distributed on an "AS IS" BASIS,           
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.    
-See the License for the specific language governing permissions and         
-limitations under the License.     
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 =cut
