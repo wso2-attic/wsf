@@ -20,6 +20,6 @@ import org.mozilla.javascript.ClassShutter;
 public class ClassShutterImpl implements ClassShutter {
     public boolean visibleToScripts(String fullClassName) {
         // For the moment we dont allow to execute java code
-        return (fullClassName.equals("org.mozilla.javascript.EcmaError") || fullClassName.equals("java.lang.Object"));
+        return (fullClassName.equals("org.mozilla.javascript.EcmaError") || fullClassName.startsWith("java.lang."));
     }
 }
