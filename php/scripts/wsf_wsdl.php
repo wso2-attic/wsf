@@ -304,12 +304,11 @@ function wsf_wsdl_process_in_msg($parameters)
     $payload_string = $parameters["payload_string"];
     $operation_name = $parameters["operation_name"];
     $function_name = $parameters["function_name"];
-   // if (isset($parameters[WSF_CLASSMAP]))
-   //     $class_map = $parameters[WSF_CLASSMAP];
-   // else
-   //     $class_map = NULL;
+    $class_name = $parameters["class_name"];
+    $class_args = $parameters["class_args"];
+
     
-     $payload_dom->loadXML($payload_string);
+    $payload_dom->loadXML($payload_string);
     $sig_model_dom->loadXML($sig_model_string);
 
     $endpoint_address = wsf_get_endpoint_address($sig_model_dom);
@@ -320,7 +319,7 @@ function wsf_wsdl_process_in_msg($parameters)
         $operation = "\noperation not found";
     }
 
-    $return_payload_string = wsf_serivce_invoke_function($operation_node, $function_name, $payload_dom->firstChild, $class_map);
+    $return_payload_string = wsf_serivce_invoke_function($operation_node, $function_name, $class_name, $class_args, $payload_dom->firstChild, $class_map);
     
     return $return_payload_string;
 }

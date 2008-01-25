@@ -87,7 +87,7 @@ function ws_reply($options)
     $svr->reply();
 }
 
-function ws_generate_wsdl($include_location, $service_name, $fn_arry,
+function ws_generate_wsdl($service_name, $fn_arry, $class_arry,
                           $binding_style, $wsdl_version, $request_uri, $op_arry)
 {
     require_once("wsdl/WS_WSDL_Creator.php");
@@ -118,7 +118,7 @@ function ws_generate_wsdl($include_location, $service_name, $fn_arry,
     /* Since WSDL 2.0 logic seems very buggy, better to use WSDL converter, should move this code to C level */
     if(strcmp($wsdl_version ,"wsdl2.0") == 0){
       $wsdl_version = "wsdl1.1";
-      $wsdl = new WS_WSDL_Creator($fn_arry ,$service_name, $request_uri,
+      $wsdl = new WS_WSDL_Creator($fn_arry, $class_arry, $service_name, $request_uri,
 				  $Binding_style,$namespace, $wsdl_version, $op_arry);
       $wsdl_out = $wsdl->WS_WSDL_Out();
       $converted_wsdl = convert_to_wsdl20($wsdl_out);
@@ -126,7 +126,7 @@ function ws_generate_wsdl($include_location, $service_name, $fn_arry,
     }
     else
     {
-      $wsdl = new WS_WSDL_Creator($fn_arry ,$service_name, $request_uri,
+      $wsdl = new WS_WSDL_Creator($fn_arry, $class_arry, $service_name, $request_uri,
 				  $Binding_style,$namespace, $wsdl_version, $op_arry);
       $wsdl_out = $wsdl->WS_WSDL_Out();
       return $wsdl_out;

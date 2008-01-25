@@ -17,7 +17,7 @@
  */
 
 
-function wsf_serivce_invoke_function($operation_node, $function_name, $envelope_node, $class_map)
+function wsf_serivce_invoke_function($operation_node, $function_name, $class_name, $class_args, $envelope_node, $class_map)
 {
 	if($operation_node){
 		foreach($operation_node->childNodes as $style){
@@ -78,8 +78,21 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $envelope_
 				$index2++;
 			}
 		}
-
-		$response_value = call_user_func_array($function_name, $arg_array);
+		
+        if($class_name != NULL)
+        {
+            // First call the constructor
+            $class = new ReflectionClass($class_name);
+            $class_inst = $class->newInstanceArgs($class_args);
+            
+            // Then the user method
+            $method = $class->getMethod($function_name);
+            $response_value = $method->invokeArgs($class_inst, $arg_array);
+        }
+        else
+        {
+		    $response_value = call_user_func_array($function_name, $arg_array);
+        }
 		$response_payload_string = wsf_wsdl_create_response_payload($response_value, $signature_node);
 	}
 	else{

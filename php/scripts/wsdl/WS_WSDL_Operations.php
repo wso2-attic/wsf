@@ -88,22 +88,52 @@ class WS_WSDL_Operations
      * constructor of the class
      * @param Array $operations Array of operations defined in the service
      */
-    function __construct($operations)
+    function __construct($operations, $class_arry)
     {
-        foreach($operations as $i=>$value)
+        if($class_arry != NULL)
         {
-            $this->operationName = $operations[$i];
-            $this->xsdMapArry[$this->operationName] = array();
-            $this->setOperations($this->operationName);
+            foreach($class_arry as $name => $class_info)
+            {
+                if(is_array($class_info) && is_array($class_info["operations"]))
+                {
+                    foreach($class_info["operations"] as $i=>$value)
+                    {
+                        $this->operationName = $value;
+                        $this->xsdMapArry[$this->operationName] = array();
+                        $this->setOperations($this->operationName, $name);
+                    }
+                }
+            }
+        }
+        else if($operations != NULL)
+        {
+            foreach($operations as $i=>$value)
+            {
+                $this->operationName = $value;
+                $this->xsdMapArry[$this->operationName] = array();
+                $this->setOperations($this->operationName);
+            }
         }
     }
 
-    private function setOperations($operationName)
+    private function setOperations($operationName, $classname = NULL)
     {
         $this->operations[$operationName][self::WS_OPERATION_INPUT_TAG] = array();
         $this->operations[$operationName][self::WS_OPERATION_OUTPUT_TAG] = array();
-        $operation = new ReflectionFunction($operationName);
-        $doc_comment = $operation->getDocComment();
+
+        $doc_comment = "";
+        if($classname != NULL)
+        {
+            $class = new ReflectionClass($classname);
+            $method = $class->getMethod($operationName);
+
+            $doc_comment = $method->getDocComment();
+        }
+        else
+        {
+            $operation = new ReflectionFunction($operationName);
+            $doc_comment = $operation->getDocComment();
+        }
 
         if (!$doc_comment)
         {

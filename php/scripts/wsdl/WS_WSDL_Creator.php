@@ -36,6 +36,7 @@ class WS_WSDL_Creator
     public $namespace;
     private $endpoint;
     private $f_name;
+    private $class_arry;
     private $service_name;
     private $Binding_style;
     private $wsdl_version;
@@ -43,14 +44,15 @@ class WS_WSDL_Creator
 
     /**
      * Constructor of the class
-     * @param string $obj_name to determine whether a php class or php function
+     * @param string $f_array array of functions 
+     * @param string $class_array array of functions 
      * @param string $service name of the service
      * @param string $endpoint endpoint location of the service
      * @param string $binding_style binding style of the service
      * @param string $ns namespace
      * @param string $wsdl_ver wsdl_version(wsdl1.1 or wsdl2)
      */
-    function __construct($obj_name, $service, $endpoints,
+    function __construct($f_arry, $class_arry, $service, $endpoints,
                          $binding_style,  $ns , $wsdl_ver, $op_arry)
     {
         if(!$ns)
@@ -61,7 +63,8 @@ class WS_WSDL_Creator
             $this->namespace = $ns;
 
         $this->endpoint = $endpoints;
-        $this->f_name = $obj_name;
+        $this->f_name = $f_arry;
+        $this->class_arry = $class_arry;
         $this->service_name = $service;
         $this->Binding_style = $binding_style;
         if($wsdl_ver == "wsdl1.1")
@@ -69,6 +72,7 @@ class WS_WSDL_Creator
         if($wsdl_ver == "wsdl2.0")
             $this->wsdl_version = "wsdl2";
         $this->ops_to_functions = $op_arry;
+
     }
 
     /**
@@ -114,7 +118,7 @@ class WS_WSDL_Creator
                                      $this->namespace);
 
 
-        $oper_obj = new WS_WSDL_Operations($this->f_name);
+        $oper_obj = new WS_WSDL_Operations($this->f_name, $this->class_arry);
         $createdTypeArry = $oper_obj->createdTypes;
         $operationsArry = $oper_obj->operations;
         $xsdArry = $oper_obj->xsdTypes;
@@ -217,7 +221,7 @@ class WS_WSDL_Creator
 //        $wsdl_root_ele->appendChild($wsdl_doc_ele);
 
 
-        $oper_obj = new WS_WSDL_Operations($this->f_name);
+        $oper_obj = new WS_WSDL_Operations($this->f_name, $this->class_arry);
         $createdTypeArry = $oper_obj->createdTypes;
         $operationsArry = $oper_obj->operations;
         $xsdArry = $oper_obj->xsdTypes;
