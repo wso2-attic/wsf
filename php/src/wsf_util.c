@@ -399,6 +399,7 @@ wsf_svc_info_create (
     svc_info->class_args = NULL;
     svc_info->sig_model_string = NULL;
     svc_info->class_map = NULL;
+    svc_info->wsdl_gen_class_map = NULL;
 
     return svc_info;
 }

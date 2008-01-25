@@ -60,7 +60,8 @@ static axiom_node_t *wsf_xml_msg_recv_invoke_mixed (
     wsf_svc_info_t * svc_info,
     axis2_msg_ctx_t * in_msg_ctx,
     axis2_msg_ctx_t * out_msg_ctx,
-    axis2_char_t * op_name TSRMLS_DC);
+    axis2_char_t * op_name,
+    axis2_char_t * class_name TSRMLS_DC);
 
 static void wsf_xml_msg_recv_set_soap_fault (
     const axutil_env_t * env,
@@ -228,7 +229,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
             function_type = Z_STRVAL_PP (tmp);
             if (strcmp (function_type, "MIXED") == 0) {
                 result_node = wsf_xml_msg_recv_invoke_mixed (env, svc_info,
-                    in_msg_ctx, out_msg_ctx, operation_name TSRMLS_CC);
+                    in_msg_ctx, out_msg_ctx, operation_name, classname TSRMLS_CC);
             } else if (strcmp (function_type, "WSMESSAGE") == 0) {
                 result_node =
                     wsf_xml_msg_recv_invoke_wsmsg (env, soap_ns,
@@ -442,7 +443,8 @@ wsf_xml_msg_recv_invoke_mixed (
     wsf_svc_info_t * svc_info,
     axis2_msg_ctx_t * in_msg_ctx,
     axis2_msg_ctx_t * out_msg_ctx,
-    axis2_char_t * function_name TSRMLS_DC)
+    axis2_char_t * function_name,
+    axis2_char_t * class_name TSRMLS_DC)
 {
     axiom_soap_envelope_t *soap_envelope = NULL;
 /*     axis2_char_t *soap_version_uri = NULL; */
@@ -461,6 +463,9 @@ wsf_xml_msg_recv_invoke_mixed (
     char *res_payload_str = NULL;
     axiom_node_t *res_om_node = NULL;
     axiom_node_t *soap_env_node = NULL;   
+
+    zval *class_args;
+    zval class_args_val;
     
     if (!in_msg_ctx || !function_name)
 		return NULL;
@@ -492,6 +497,29 @@ wsf_xml_msg_recv_invoke_mixed (
                      "[wsf_wsdl]Input soap body is \t %s \n", in_msg_body_string);
     }
     
+
+    if(class_name && svc_info->class_args)
+    {
+        zval **tmp;
+        if(zend_hash_find(Z_ARRVAL_P(svc_info->class_args), class_name, 
+            strlen(class_name)+1, (void**)&tmp) == SUCCESS)
+        {
+            class_args = *tmp;        
+            /* zval_add_ref(class_arg); */
+        }
+        else
+        {
+            class_args = &class_args_val;
+            ZVAL_NULL(class_args);
+            INIT_PZVAL(class_args);
+        }
+    }
+    else
+    {
+          class_args = &class_args_val;
+          ZVAL_NULL(class_args);
+          INIT_PZVAL(class_args);
+    }
     if(svc_info->sig_model_string){
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                          "[wsf_wsdl]sig model string found is \t \n %s \n", svc_info->sig_model_string);
@@ -562,7 +590,14 @@ wsf_xml_msg_recv_invoke_mixed (
     add_assoc_string(param_array, "payload_string", in_msg_body_string, 1);
     add_assoc_string(param_array, "operation_name", operation_name, 1);
     add_assoc_string(param_array, "function_name", function_name, 1);
+    if(class_name)
+    {
+        add_assoc_string(param_array, "class_name", class_name, 1);
+    }
     add_assoc_zval(param_array, WS_WSDL_CLASSMAP, svc_info->class_map);
+
+    
+    add_assoc_zval(param_array, "class_args", class_args);
 
     ZVAL_STRING(&request_function, "wsf_wsdl_process_in_msg", 0);
     ZVAL_ZVAL(params[0], param_array, NULL, NULL);

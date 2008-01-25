@@ -235,6 +235,9 @@ typedef struct wsf_svc_info
   char *sig_model_string;
 
   zval *class_map;
+
+  zval *wsdl_gen_class_map;
+  
 }
 wsf_svc_info_t;
 

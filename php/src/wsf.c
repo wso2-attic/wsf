@@ -916,7 +916,7 @@ PHP_METHOD (ws_service, __construct)
     intern->obj_type = WS_SVC;
     
     svc_info->php_worker = worker;
-    
+
     if (options) {
         zval ** tmp = NULL;
         ht_options = Z_ARRVAL_P (options);
@@ -1015,6 +1015,8 @@ PHP_METHOD (ws_service, __construct)
 				(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY){
 					ht_classes = Z_ARRVAL_PP(tmp);
 
+                    svc_info->wsdl_gen_class_map = *tmp;
+                    zval_add_ref(&(svc_info->wsdl_gen_class_map));
             }
 
             if(zend_hash_find(ht_options, WS_SERVICE_NAME, sizeof(WS_SERVICE_NAME),
@@ -1088,8 +1090,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
         int in_cmd TSRMLS_DC)
 {
         char *service_name = NULL;
-        zval func, retval, param1, param2, param3, param4, param5, param6,
-        param7;
+        zval func, retval, param1, param2, param3, param4, param5, param6, param7;
         zval * params[7];
         axutil_hash_index_t * hi = NULL;
         zval * functions;
@@ -1161,7 +1162,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
                 path_len = strlen(SG(request_info).path_translated)- strlen(req_info->request_uri);
                 real_path[path_len + 1] = '\0';
             }else{
-                real_path = ".";
+                real_path = estrdup(".");
             }
             
             service_name = svc_info->svc_name;
@@ -1219,16 +1220,27 @@ static void generate_wsdl_for_service(zval *svc_zval,
                                       1);
                 } 
             }
-            
-	    efree(real_path);
+
+	        efree(real_path);
+
+
           
             ZVAL_STRING (&func, "ws_generate_wsdl", 0);
-            ZVAL_STRING (params[0], "test", 0);
+            ZVAL_STRING (params[0], service_name, 0);
             INIT_PZVAL (params[0]);
-            ZVAL_STRING (params[1], service_name, 0);
+            ZVAL_ZVAL (params[1], functions, NULL, NULL);
             INIT_PZVAL (params[1]);
-            ZVAL_ZVAL (params[2], functions, NULL, NULL);
+            
+            if(svc_info->wsdl_gen_class_map)
+            {
+                ZVAL_ZVAL (params[2], svc_info->wsdl_gen_class_map, NULL, NULL);
+            }
+            else
+            {
+                ZVAL_NULL (params[2]);
+            }
             INIT_PZVAL (params[2]);
+
             ZVAL_STRING (params[3], binding_name, 0);
             INIT_PZVAL (params[3]);
             ZVAL_STRING (params[4], wsdl_version, 0);

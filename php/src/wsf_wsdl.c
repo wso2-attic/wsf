@@ -1246,7 +1246,6 @@ void wsf_wsdl_set_sig_model(char *wsdl_path, wsf_svc_info_t *svc_info, const axu
                     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
                                     "[wsf_wsdl]received sig model string");
                 }
-                                
             }
         }
     }
