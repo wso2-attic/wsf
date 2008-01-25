@@ -131,7 +131,7 @@ function wsf_wsdl_create_response_payload($return_val, $signature_node)
 
 
 
-	$element = $res_payload_dom->createElementNS($ret_value_namespace, "ns0:".$ret_value_name);file_put_contents("C:/test.txt", print_r($tmp_param_struct, TRUE));
+	$element = $res_payload_dom->createElementNS($ret_value_namespace, "ns0:".$ret_value_name);
 	/* This is for array implementation */
 	wsf_service_create_response_payload_for_array($res_payload_dom, $tmp_param_struct[$ret_value_name], $element, $return_val);
 	$res_payload_dom->appendChild($element);
