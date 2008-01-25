@@ -655,7 +655,7 @@ wsf_util_generate_svc_name_from_uri (
         svc_info->op_name = axutil_strdup (env, op_index);
     }
 
-    svc_name = axutil_replace (env, temp_string, '/', '|');
+    svc_name = axutil_replace (env, temp_string, '/', '_');
 
     efree (temp_string);
 

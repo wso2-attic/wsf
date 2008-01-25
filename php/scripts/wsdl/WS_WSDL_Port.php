@@ -49,7 +49,7 @@ class WS_WSDL_Port
         $port_el = $port_doc->createElementNS( WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                                WS_WSDL_Const::WS_WSDL_PORTTYPE_ATTR_NAME);
         $port_el->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME,
-                               $this->service_name);
+                               $this->service_name."PortType");
         foreach($this->operations as $name => $params)
         {
             $operation = $port_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,

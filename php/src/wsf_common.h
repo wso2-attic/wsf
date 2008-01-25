@@ -64,6 +64,8 @@ typedef enum ws_input_types
 #define WS_CLASSMAP     "classmap"
 #define WS_CLASSES      "classes"
 #define WS_CONS_ARGS    "args"
+#define WS_SERVICE_NAME    "serviceName"
+
 
 
 /** Options array options */

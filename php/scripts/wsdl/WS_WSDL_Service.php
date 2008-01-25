@@ -56,9 +56,9 @@ class WS_WSDL_Service
         $svr_port = $svr_dom->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                               WS_WSDL_Const::WS_WSDL_PORT_ATTR_NAME);
         $svr_port->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME,
-                                $this->S_name);
+                                $this->S_name."SOAPPort_Http");
         $svr_port->setAttribute(WS_WSDL_Const::WS_WSDL_BINDING_ATTR_NAME,
-                                WS_WSDL_Const::WS_WSDL_TNS_ATTR_NAME.":".$this->S_name);
+                                WS_WSDL_Const::WS_WSDL_TNS_ATTR_NAME.":".$this->S_name."SOAPBinding");
 
         $svr_addr = $svr_dom->createElementNS(WS_WSDL_Const::WS_SCHEMA_SOAP_NAMESPACE,
                                               WS_WSDL_Const::WS_WSDL_ADDRESS_ATTR_NAME);

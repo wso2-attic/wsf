@@ -894,7 +894,8 @@ PHP_METHOD (ws_service, __construct)
 	HashTable * ht_classes = NULL;
     char *wsdl = NULL;
 	zval **wsdl_tmp = NULL;
-    
+    char *service_name = NULL;
+
     if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "|a",
             &options)) {
         php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
@@ -1015,17 +1016,26 @@ PHP_METHOD (ws_service, __construct)
 					ht_classes = Z_ARRVAL_PP(tmp);
 
             }
+
+            if(zend_hash_find(ht_options, WS_SERVICE_NAME, sizeof(WS_SERVICE_NAME),
+                (void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
+                 service_name = Z_STRVAL_PP(tmp);
+            }
         }
     }
     
     if (SG (request_info).request_uri) {
         svc_info->svc_name = wsf_util_generate_svc_name_from_uri (SG (request_info).
                                 request_uri, svc_info, ws_env_svr);
+        if(service_name)
+            svc_info->svc_name = strdup(service_name);
         svc_info->msg_recv = wsf_msg_recv;
         wsf_util_create_svc_from_svc_info (svc_info, ws_env_svr TSRMLS_CC);
     } else if(SG(request_info).path_translated) {
         svc_info->svc_name = wsf_util_generate_svc_name_from_uri (
             SG(request_info).path_translated, svc_info, ws_env_svr);
+        if(service_name)
+            svc_info->svc_name = strdup(service_name);
         svc_info->msg_recv = wsf_msg_recv;
         wsf_util_create_svc_from_svc_info (svc_info, ws_env_svr TSRMLS_CC);
     }
