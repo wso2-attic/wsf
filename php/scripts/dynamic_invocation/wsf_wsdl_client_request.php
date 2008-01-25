@@ -391,21 +391,27 @@ function wsf_create_payload_for_array(DomDocument $payload_dom, $parameter_struc
                 if (isset($value[WSF_TYPE]) && $value[WSF_TYPE]){
                     foreach($argument_array as $arg_key => $arg_val){
                         if($key == $arg_key){
-                            /* type conversion is needed */
-                            $element_2 = $payload_dom->createElementNS($value[WSF_NS], "ns".$i.":".$key, $arg_val);
-                            $root_ele->appendChild($element_2);
-                            $i++;
-                        }
+				/* type conversion is needed */
+				if($value[WSF_NS] == "NULL")
+					$element_2 = $payload_dom->createElement($key, $arg_val);
+				else	
+					$element_2 = $payload_dom->createElementNS($value[WSF_NS], "ns".$i.":".$key, $arg_val);
+				$root_ele->appendChild($element_2);
+				$i++;
+			}
                     }
                 }
                 else {
                     foreach($argument_array as $arg_key => $arg_val){
-                        if($key == $arg_key){
-                            $element_2 = $payload_dom->createElementNS($value[WSF_NS], "ns".$i.":".$key);
-                            wsf_create_payload_for_array($payload_dom, $value, $element_2, $arg_val);
-                            $root_ele->appendChild($element_2);
-                            $i++;
-                        }
+			    if($key == $arg_key){
+				    if($value[WSF_NS] == "NULL")
+					    $element_2 = $payload_dom->createElement($key);
+				    else
+					    $element_2 = $payload_dom->createElementNS($value[WSF_NS], "ns".$i.":".$key);
+				    wsf_create_payload_for_array($payload_dom, $value, $element_2, $arg_val);
+				    $root_ele->appendChild($element_2);
+				    $i++;
+			    }
                     }
              
                 }

@@ -157,7 +157,7 @@ function wsf_create_response_struct(DomNode $param_child, $wrapper_ns)
     if($wrap_type == 'yes'){
         $is_xsd = is_xsd_type($param_type);
         if($param_ns == NULL)
-            $rec_array[WSF_NS] = $wrapper_ns;
+            $rec_array[WSF_NS] = "NULL";//$wrapper_ns;
         else
             $rec_array[WSF_NS] = $param_ns;
 

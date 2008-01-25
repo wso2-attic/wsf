@@ -131,7 +131,7 @@ function wsf_wsdl_create_response_payload($return_val, $signature_node)
 
 
 
-	$element = $res_payload_dom->createElementNS($ret_value_namespace, $ret_value_name);
+	$element = $res_payload_dom->createElementNS($ret_value_namespace, "ns0:".$ret_value_name);file_put_contents("C:/test.txt", print_r($tmp_param_struct, TRUE));
 	/* This is for array implementation */
 	wsf_service_create_response_payload_for_array($res_payload_dom, $tmp_param_struct[$ret_value_name], $element, $return_val);
 	$res_payload_dom->appendChild($element);
@@ -151,7 +151,10 @@ function wsf_service_create_response_payload_for_array(DomDocument $payload_dom,
 					foreach($argument_array as $arg_key => $arg_val){
 						if($key == $arg_key){
 							/* type conversion is needed */
-							$element_2 = $payload_dom->createElementNS($value[WSF_NS], "ns".$i.":".$key, $arg_val);
+							if($value[WSF_NS] == "NULL")
+								$element_2 = $payload_dom->createElement($key, $arg_val);
+							else
+								$element_2 = $payload_dom->createElementNS($value[WSF_NS], "ns".$i.":".$key, $arg_val);
 							$root_ele->appendChild($element_2);
 							$i++;
 						}
@@ -160,7 +163,10 @@ function wsf_service_create_response_payload_for_array(DomDocument $payload_dom,
 				else {
 					foreach($argument_array as $arg_key => $arg_val){
 						if($key == $arg_key){
-							$element_2 = $payload_dom->createElementNS($value[WSF_NS], "ns".$i.":".$key);
+							if($value[WSF_NS] == "NULL")
+								$element_2 = $payload_dom->createElement($key);
+							else
+								$element_2 = $payload_dom->createElementNS($value[WSF_NS], "ns".$i.":".$key);
 							wsf_service_create_response_payload_for_array($payload_dom, $value, $element_2, $arg_val);
 							$root_ele->appendChild($element_2);
 							$i++;
