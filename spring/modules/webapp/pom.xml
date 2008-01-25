@@ -32,7 +32,7 @@
     <dependencies>
     	<dependency>
     		<groupId>org.wso2.spring.ws</groupId>
-    		<artifactId>wso2-spring-ws</artifactId>
+    		<artifactId>wso2-spring-ws-main</artifactId>
     		<version>SNAPSHOT</version>
     	</dependency>
 	
