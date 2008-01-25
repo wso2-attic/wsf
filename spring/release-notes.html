@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.2  (Linux)">
+	<META NAME="AUTHOR" CONTENT="Tharindu Mathew">
+	<META NAME="CREATED" CONTENT="20080125;14160400">
+	<META NAME="CHANGEDBY" CONTENT="Tharindu Mathew">
+	<META NAME="CHANGED" CONTENT="20080125;16225200">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { size: 8.5in 11in; margin: 0.79in }
+		P { margin-bottom: 0.08in }
+		H2 { margin-bottom: 0.08in }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US" DIR="LTR">
+<P STYLE="margin-bottom: 0in"><FONT FACE="Times, serif"><FONT SIZE=3>25th
+January 2008</FONT></FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="Times, serif"><FONT SIZE=3></FONT></FONT></P>
+<H2 STYLE="page-break-after: avoid"><FONT FACE="DejaVu Sans, serif"><FONT SIZE=5><B>WSO2
+WSF/Spring 1.0 beta</B></FONT></FONT></H2>
+<P STYLE="margin-bottom: 0in"><FONT FACE="Times, serif"><FONT SIZE=3></FONT></FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="Times, serif"><FONT SIZE=3>Welcome
+to the WSO2 Web Services Framework for Spring release 1.0 beta.</FONT></FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="Times, serif"><FONT SIZE=3></FONT></FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="Times, serif"><FONT SIZE=3>WSO2
+WSF/Spring provides an amazingly simple Code First approach to create
+Web Services for the Spring user. This framework integrates the
+Apache Axis2 web services engine into Spring. Thus providing all the
+power and versatility of the Axis2 engine to the Spring user. Now,
+with just a few entries in the application context, Spring users can
+enjoy the benefits of Service Oriented Architecture in their
+applications.</FONT></FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="Times, serif"><FONT SIZE=3></FONT></FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="Times, serif"><FONT SIZE=3></FONT></FONT></P>
+<P STYLE="margin-bottom: 0in"><BR>
+</P>
+<H2 STYLE="page-break-after: avoid"><FONT FACE="DejaVu Sans, serif"><FONT SIZE=5><B>Features</B></FONT></FONT></H2>
+<P STYLE="margin-bottom: 0in"><FONT FACE="Times, serif"><FONT SIZE=3></FONT></FONT></P>
+<UL>
+	<LI><P STYLE="margin-bottom: 0in"><FONT FACE="Times, serif"><FONT SIZE=3>Support
+	for exposing Spring services through the IOC container</FONT></FONT></P>
+	<LI><P STYLE="margin-bottom: 0in"><FONT FACE="Times, serif"><FONT SIZE=3>Support
+	for editing Axis 2 booting configuration through the IOC container</FONT></FONT></P>
+	<LI><P STYLE="margin-bottom: 0in"><FONT FACE="Times, serif"><FONT SIZE=3>Automated
+	WSDL generation of Spring services</FONT></FONT></P>
+	<LI><P STYLE="margin-bottom: 0in"><FONT FACE="Times, serif"><FONT SIZE=3>Support
+	for querying service's WSDL (with ?wsdl), schema (with ?xsd) and
+	policies (with ?policy)</FONT></FONT></P>
+	<LI><P STYLE="margin-bottom: 0in"><FONT FACE="Times, serif"><FONT SIZE=3>Deployment
+	of Axis2 Modules (WS-Addressing, WS-Security, etc.) through the
+	classpath</FONT></FONT></P>
+</UL>
+<PRE>
+
+</PRE><H2 STYLE="page-break-after: avoid">
+<FONT FACE="DejaVu Sans, serif"><FONT SIZE=5><B>Known Issues</B></FONT></FONT></H2>
+<PRE><FONT FACE="Times, serif"><FONT SIZE=3></FONT></FONT>1. D<FONT FACE="Times, serif"><FONT SIZE=3>ue to limitations in Axis2, method overloading is not supported, and</FONT></FONT></PRE><P STYLE="margin-bottom: 0in">
+<FONT FACE="Times, serif"><FONT SIZE=3>hence the WSDL for services
+where methods are overloaded cannot be generated.</FONT></FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="Times, serif"><FONT SIZE=3>Hence
+all WSDL based functionality related to services will not work for </FONT></FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="Times, serif"><FONT SIZE=3>such
+services.</FONT></FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="Times, serif"><FONT SIZE=3></FONT></FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="Times, serif"><FONT SIZE=3>2.
+WS-Policy support is still in experimental stage and limited to
+single</FONT></FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="Times, serif"><FONT SIZE=3>port
+scenarios.</FONT></FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="Times, serif"><FONT SIZE=3></FONT></FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="Times, serif"><FONT SIZE=3>3.
+You cannot have two different versions of the Apache Sandesha2
+module</FONT></FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="Times, serif"><FONT SIZE=3>in
+the system.</FONT></FONT></P>
+<P STYLE="margin-bottom: 0in"><BR>
+</P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="Times, serif"><FONT SIZE=3></FONT></FONT></P>
+<PRE>
+</PRE><H2 STYLE="page-break-after: avoid">
+<FONT FACE="Times, serif"><FONT SIZE=3></FONT></FONT><FONT FACE="DejaVu Sans, serif"><FONT SIZE=5><B>Reporting
+Problems</B></FONT></FONT></H2>
+<P>Issues can be reported using the public JIRA available at
+<A HREF="http://wso2.org/jira/browse/WSFSpring">http://wso2.org/jira/browse/WSFSpring</A></P>
+<P><BR><BR>
+</P>
+<H2>Contact us</H2>
+<P>WSO2 WSF/Spring developers can be contacted via mailing lists:
+<BR><BR><STRONG>For Users: </STRONG><STRONG><A HREF="mailto:wsas-java-user@wso2.org"><SPAN STYLE="font-weight: medium">wsf-spring-dev@wso2.org</SPAN></A></STRONG>
+<BR><BR><STRONG>For Developers:</STRONG><STRONG><A HREF="mailto:wsas-java-dev@wso2.org"><SPAN STYLE="font-weight: medium">wsf-spring-user@wso2.org</SPAN></A></STRONG><BR><BR>For
+details on subscriptions see
+<A HREF="http://www.wso2.org/projects/wsas/java#mail">wsf-spring-dev-request@wso2.org</A><BR><BR><BR>Alternatively,
+questions can also be raised in the forums:
+<A HREF="http://wso2.org/forum/194s">http://wso2.org/forum/194</A><BR><BR><BR>
+</P>
+<P>Thank you for your interest in WSO2 WSF/Spring</P>
+<P><STRONG><EM>- </EM></STRONG><STRONG><EM><SPAN STYLE="font-style: normal">The
+WSO2 WSF/Spring Development Team</SPAN></EM></STRONG></P>
+<PRE><FONT FACE="Times, serif"><FONT SIZE=3>-----------------------------------------------------------</FONT></FONT>
+ <FONT FACE="Times, serif"><FONT SIZE=3>2008 WSO2 Inc.</FONT></FONT></PRE>
+</BODY>
+</HTML>
