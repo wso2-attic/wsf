@@ -22,11 +22,9 @@ function GetPriceFunction($arg1, $arg2) {
 }
 
 $operations = array("GetPrice" => "GetPriceFunction");
-$opParams = array("GetPriceFunction"=>"MIXED");
 
 $svr = new WSService(array("wsdl"=>"sample_wsdl_20.wsdl", 
-                           "operations" => $operations,
-                           "opParams"=>$opParams));
+                           "operations" => $operations));
         
 $svr->reply();
 
