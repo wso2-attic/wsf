@@ -892,7 +892,6 @@ PHP_METHOD (ws_service, __construct)
     HashTable * ht_ops_to_mep = NULL;
     HashTable * ht_opParams = NULL;
 	HashTable * ht_classes = NULL;
-    char *wsdl = NULL;
 	zval **wsdl_tmp = NULL;
     char *service_name = NULL;
 
@@ -952,9 +951,9 @@ PHP_METHOD (ws_service, __construct)
             
             if (zend_hash_find (ht_options, WS_WSDL, sizeof (WS_WSDL),
                (void **) & tmp) == SUCCESS  &&Z_TYPE_PP (tmp) == IS_STRING) {
-				    wsdl = Z_STRVAL_PP (tmp);
-                                    add_property_stringl (this_ptr, WS_WSDL, Z_STRVAL_PP (tmp),
-                                                          Z_STRLEN_PP (tmp), 1);
+				    svc_info->wsdl = Z_STRVAL_PP (tmp);
+                    add_property_stringl (this_ptr, WS_WSDL, Z_STRVAL_PP (tmp),
+                                                      Z_STRLEN_PP (tmp), 1);
             }
             if (zend_hash_find (ht_options , WS_CLASSMAP, sizeof (WS_CLASSMAP),
                    (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {

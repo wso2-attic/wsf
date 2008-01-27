@@ -237,6 +237,8 @@ typedef struct wsf_svc_info
   zval *class_map;
 
   zval *wsdl_gen_class_map;
+
+  char *wsdl;
   
 }
 wsf_svc_info_t;

@@ -235,14 +235,24 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
                     wsf_xml_msg_recv_invoke_wsmsg (env, soap_ns,
                     operation_name,
                     om_node, out_msg_ctx,
-                    classname,svc_info, use_mtom, request_xop TSRMLS_CC);
+                    classname, svc_info, use_mtom, request_xop TSRMLS_CC);
             }
         }
     } else {
-        result_node =
-            wsf_xml_msg_recv_invoke_wsmsg (env, soap_ns, operation_name,
-            om_node, out_msg_ctx,
-			classname,svc_info, use_mtom, request_xop TSRMLS_CC);
+        /* this is where the default value for opParam is set,
+           If the wsdl option is set go for the MIXED mode by default */
+        if(svc_info->wsdl == NULL)
+        {
+            result_node =
+                wsf_xml_msg_recv_invoke_wsmsg (env, soap_ns, operation_name,
+                om_node, out_msg_ctx,
+                classname, svc_info, use_mtom, request_xop TSRMLS_CC);
+        }
+        else
+        {
+            result_node = wsf_xml_msg_recv_invoke_mixed (env, svc_info,
+                in_msg_ctx, out_msg_ctx, operation_name, classname TSRMLS_CC);
+        }
     }
     if (!result_node) {
 
