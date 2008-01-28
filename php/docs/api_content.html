@@ -172,7 +172,7 @@ border="1">
     </tr>
     <tr valign="top">
       <td colspan="1" style="height: 20px; width: 96px;">"policy"</td>
-      <td colspan="1" style="height: 20px"> &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; WSPolicy object</td>
+      <td colspan="1" style="height: 20px"> &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; WSPolicy object</td>
       <td colspan="1" style="height: 20px">WSPolicy object</td>
       <td colspan="1" style="height: 20px">None</td>
       <td colspan="1" style="height: 20px">WSPolicy Object</td>
@@ -879,7 +879,7 @@ representation of the binary content to be sent or being received.</p>
 </ul>
 
 <p>An associative array, containing the mapping of cid (content ID) to its
-corresponding  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; attachment. When an attachment is received, this property
+corresponding  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; attachment. When an attachment is received, this property
 will be present in the WSMessage object.</p>
 <ul>
   <li><p><b>array inputHeaders</b></p>
@@ -915,8 +915,7 @@ XML;
 <h3><b>Constructor</b></h3>
 <a id="fault_WSFault"></a>
 <ul>
-  <li><p><b>WSFault(string code, string reason, string role, string
-    detail)</b></p>
+  <li><p><b>WSFault(string code, string reason [, string role, string detail])</b></p>
   </li>
 </ul>
 
@@ -954,7 +953,7 @@ border="1">
         means by which faults are classified.<br>
         Please see <a
         href="http://www.w3.org/TR/soap12-part1/#faultcodes">SOAP 1.2
-        spec</a> for more information</p>
+        spec</a> for more information.This is a mandatory option.</p>
       </td>
     </tr>
     <tr valign="top">
@@ -966,8 +965,8 @@ border="1">
       </td>
       <td><p>None</p>
       </td>
-      <td><p>SOAP fault reason. Provides a human readable explanation of the
-        fault.</p>
+      <td><p>SOAP fault reason. Provides a human readable explanation of the fault.This is a
+    mandatory option.</p>
       </td>
     </tr>
     <tr valign="top">
