@@ -1017,7 +1017,6 @@ PHP_METHOD (ws_service, __construct)
                     svc_info->wsdl_gen_class_map = *tmp;
                     zval_add_ref(&(svc_info->wsdl_gen_class_map));
             }
-
             if(zend_hash_find(ht_options, WS_SERVICE_NAME, sizeof(WS_SERVICE_NAME),
                 (void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
                  service_name = Z_STRVAL_PP(tmp);
@@ -1508,8 +1507,9 @@ PHP_METHOD (ws_fault, __construct)
     if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC,
             "zs|s!z!s", &code, &sf_reason, &sf_reason_len, &sf_role,
             &sf_role_len, &details, &value, &value_len)) {
-        php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid Paramters, Fault Code and Fault Reason values are mandatory");
-        return;
+				AXIS2_LOG_ERROR(ws_env_svr->log, AXIS2_LOG_SI,
+					"[wsf fault]Invalid Paramters, Fault Code and Fault Reason values are mandatory");
+		return;
     }
     if (Z_TYPE_P (code) == IS_STRING) {
         sf_code = Z_STRVAL_P (code);
@@ -1527,27 +1527,21 @@ PHP_METHOD (ws_fault, __construct)
             sf_code = Z_STRVAL_PP (tmp_code);
             sf_code_len = Z_STRLEN_PP (tmp_code);
         } else {
-            php_error_docref (NULL TSRMLS_CC, E_ERROR,
-                "Invalid parameters. Invalid fault code.");
+			AXIS2_LOG_ERROR(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_fault] Invalid fault code.");
+			return;
         }
     } else {
-        php_error_docref (NULL TSRMLS_CC, E_ERROR,
-            "Invalid Parameters, Invalid fault code");
+        AXIS2_LOG_ERROR(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_fault] Invalid fault code.");
+			return;
     }
-    if (!sf_code || !sf_reason)
-         {
-        if (WSF_GLOBAL (soap_version) == AXIOM_SOAP11)
-             {
-            php_error_docref (NULL TSRMLS_CC, E_ERROR,
-                "faultcode and faultstring are mandatory ");
+    if (!sf_code || !sf_reason){
+        if (WSF_GLOBAL (soap_version) == AXIOM_SOAP11){
+			AXIS2_LOG_ERROR(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_fault] faultcode and faultstring are mandatory ");
             return;
-            }
-        
-        else if (WSF_GLOBAL (soap_version) == AXIOM_SOAP12) {
-            php_error_docref (NULL TSRMLS_CC, E_ERROR,
-                "Code and Reason are mandatory ");
-        }
-        }
+        }else if (WSF_GLOBAL (soap_version) == AXIOM_SOAP12) {
+            AXIS2_LOG_ERROR(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_fault] Code and Reason are mandatory ");
+		}
+   }
     wsf_util_set_soap_fault (this_ptr, sf_code_ns, sf_code, sf_reason,
         sf_role, details, value TSRMLS_CC);
 }

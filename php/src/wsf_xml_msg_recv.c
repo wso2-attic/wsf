@@ -916,8 +916,8 @@ wsf_xml_msg_recv_set_soap_fault (
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
             "[wsf_service] setting fault reason %s", reason);
     } else {
-        php_error_docref (NULL TSRMLS_CC, E_ERROR,
-            "invalid value,  soap fault (reason|string) missing");
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[wsf_service]invalid soap fault (reason|string) missing");
+		reason = "Error Reason unspecified";
     }
 
     if (zend_hash_find
@@ -931,8 +931,8 @@ wsf_xml_msg_recv_set_soap_fault (
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
             "[wsf_service] setting fault code %s", code);
     } else {
-        php_error_docref (NULL TSRMLS_CC, E_ERROR,
-            " Invalid fault,fault code missing");
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[wsf_service]invalid soap fault (reason|string) missing");
+		code = "Receiver";
     }
 
     if (zend_hash_find
@@ -972,5 +972,4 @@ wsf_xml_msg_recv_set_soap_fault (
     }
     axis2_msg_ctx_set_soap_envelope (out_msg_ctx, env, out_envelope);
     smart_str_free(&fcode);
-
 }
