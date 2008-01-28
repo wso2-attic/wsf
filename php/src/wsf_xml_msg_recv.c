@@ -730,8 +730,19 @@ wsf_xml_msg_recv_invoke_wsmsg (
 				zval *tmp_cls_obj;
 				MAKE_STD_ZVAL(tmp_cls_obj);
 				object_init_ex(tmp_cls_obj, *ce);
-				
 				if(zend_hash_exists(&Z_OBJCE_P(tmp_cls_obj)->function_table, 
+					ZEND_CONSTRUCTOR_FUNC_NAME, sizeof(ZEND_CONSTRUCTOR_FUNC_NAME))){
+						zval c_ret, constructor;
+						INIT_ZVAL(c_ret);
+						INIT_ZVAL(constructor);
+
+						ZVAL_STRING(&constructor, ZEND_CONSTRUCTOR_FUNC_NAME, 1);
+						if(call_user_function(NULL, &tmp_cls_obj, &constructor, &c_ret, argc, argv TSRMLS_CC) == FAILURE){
+							php_error_docref(NULL TSRMLS_CC, E_ERROR, "Error Calling the constructor ");	
+						}
+						zval_dtor(&constructor);
+						zval_dtor(&c_ret);
+				}else if(zend_hash_exists(&Z_OBJCE_P(tmp_cls_obj)->function_table, 
 					class_name, strlen(class_name)) == SUCCESS){
 						zval c_ret, constructor;
 						INIT_ZVAL(c_ret);

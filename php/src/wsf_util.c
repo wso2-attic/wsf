@@ -1669,17 +1669,17 @@ void wsf_util_process_ws_service_classes(
     zend_hash_internal_pointer_reset_ex (ht_classes, &pos);
 	while(zend_hash_get_current_data_ex(ht_classes, (void**)&tmp, &pos) != FAILURE){
 		HashTable *ht_ops_to_functions = NULL;
-		char *classname = NULL;
 		uint str_length = 0;
 		zval **tmpval = NULL;
-		int class_exists = 0;
+		
 		
         if(Z_TYPE_PP(tmp) == IS_ARRAY){
 			/** data value is an array 	"classes"=>array("foo"=>array($ops, $actions,..)" */
 			HashTable *values = NULL;
-           
+            char *classname = NULL;
             ulong num_index = 0;
-            
+            int class_exists = 0;
+
 			values = Z_ARRVAL_PP(tmp);
             if (zend_hash_get_current_key_ex (values, &classname,
                     &str_length, &num_index, AXIS2_TRUE, &pos) != FAILURE){
@@ -1700,17 +1700,17 @@ void wsf_util_process_ws_service_classes(
 						add_assoc_zval(svc_info->class_args, classname, *tmpval);
 				}
 			}
-		}
-
-		class_exists = zend_lookup_class(classname, str_length, &ce TSRMLS_CC);
-		if(class_exists){
-			if(!svc_info->ops_to_classes){
-				svc_info->ops_to_classes = axutil_hash_make(ws_env_svr);
+			class_exists = zend_lookup_class(classname, str_length, &ce TSRMLS_CC);
+			if(class_exists){
+				if(!svc_info->ops_to_classes){
+					svc_info->ops_to_classes = axutil_hash_make(ws_env_svr);
+				}
+				wsf_util_process_ws_service_operations_for_classes(ht_ops_to_functions,
+					ht_ops_to_mep, svc_info, classname, ws_env_svr TSRMLS_CC);
 			}
-			wsf_util_process_ws_service_operations_for_classes(ht_ops_to_functions,
-				ht_ops_to_mep, svc_info, classname, ws_env_svr TSRMLS_CC);
 		}
 
+		
 		zend_hash_move_forward_ex (ht_classes, &pos);
 	}
 }
