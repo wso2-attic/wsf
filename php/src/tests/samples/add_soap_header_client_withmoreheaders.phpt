@@ -12,20 +12,36 @@ try {
 
     $client = new WSClient(array( "to"=>"http://localhost/samples/echo_service.php"));
 
-    $msg = new WSMessage($reqPayloadString ,
-			array("headers" => array(new WSHeader("http://test.org","header1", "value1", true, 1),
-				 new WSHeader("http://test1.org","header2", "value2", true, 2),
-				 new WSHeader("http://test2.org","header3", "value3", true, 3),
-				 new WSHeader("http://test3.org","header4", "value4", true, 4),
-				 new WSHeader("http://test4.org","header5", "value5", true, 5))
-			      )
-			);
+    $headers = array(new WSHeader(array( "ns" => "http://test.org",
+                                   "name" => "header1",
+                                   "data" => "value1",
+                                   "mustUnderstand" => true)),
+				 new WSHeader(array( "ns" => "http://test.org",
+                                   "name" => "header2",
+                                   "data" => "value2",
+                                   "mustUnderstand" => true)),
+				 new WSHeader(array( "ns" => "http://test.org",
+                                   "name" => "header3",
+                                   "data" => "value3",
+                                   "mustUnderstand" => true)),
+				 new WSHeader(array( "ns" => "http://test.org",
+                                   "name" => "header4",
+                                   "data" => "value4",
+                                   "mustUnderstand" => true)),
+				 new WSHeader(array( "ns" => "http://test.org",
+                                   "name" => "header5",
+                                   "data" => "value5",
+                                   "mustUnderstand" => true)));
+
+    $msg = new WSMessage($reqPayloadString, array( "inputHeaders" => $headers));
+
+    
 
     $client->request($msg);
         
 } catch (Exception $e) {
 	if ($e instanceof WSFault) {
-		printf("Soap Fault: %s\n", $e->code);
+		printf("Soap Fault: %s\n", $e->Reason);
 	} else {
 		printf("Message = %s\n",$e->getMessage());
 	}
@@ -33,3 +49,4 @@ try {
 ?>
 
 --EXPECT--
+Soap Fault: Header not understood

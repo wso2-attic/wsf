@@ -2,32 +2,35 @@
 Test for echo_client_dom_document sample
 --FILE--
 <?php
+include_once('wsf.php');
 
-$reqPayloadDomDoc = new DOMDocument();
-$xmlFile = 'tests/samples/misc_files/echo.xml';
+$requestPayloadString = <<<XML
+    <ns1:echoString xmlns:ns1="http://php.axis2.org/samples">
+        <text>Hello World!</text>
+    </ns1:echoString>
+XML;
 
-$reqPayloadDomDoc->load($xmlFile);
+$document = new domDocument;
+$document->loadXML($requestPayloadString);
+
 
 try {
 
-    $client = new WSClient(
-        array("to"=>"http://localhost/samples/echo_service.php"));
-				
-    $resMessage = $client->request($reqPayloadDomDoc);
+    $responseMessage = ws_request($document, 
+                        array("to" => "http://localhost/samples/reply_echo_service.php"));
     
-    printf("Response = %s <br>", htmlspecialchars($resMessage->str));
+    printf("Response = %s <br>", htmlspecialchars($responseMessage->str));
 
 } catch (Exception $e) {
 
-	if ($e instanceof WSFault) {
-		printf("Soap Fault: %s\n", $e->code);
-	} else {
-		printf("Message = %s\n",$e->getMessage());
-	}
-
+    if ($e instanceof WSFault) {
+        printf("Soap Fault: %s\n", $e->Reason);
+    } else {
+        printf("Message = %s\n",$e->getMessage());
+    }
 }
 ?>
 --EXPECT--
-Response = &lt;ns1:echoString xmlns:ns1=&quot;http://ws.apache.org/axis2/c/samples&quot;&gt;
-   &lt;text&gt;Hello World!&lt;/text&gt;
-&lt;/ns1:echoString&gt; <br>
+Response = &lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;
+        &lt;text&gt;Hello World!&lt;/text&gt;
+    &lt;/ns1:echoString&gt; <br>
