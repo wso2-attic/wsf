@@ -1,0 +1,64 @@
+Deploying a Web Service using WSF/Spring
+----------------------------------------
+
+1. Copy the jars in the WEB-INF/lib directory to your classpath (WEB-INF/lib directory in a web application)
+
+2. Copy the axis2Config.xml in the WEB-INF/ directory to your WEB-INF/ directory (This location can be changed provided that the application Context)
+
+2. Insert the following entries in your web.xml
+
+  <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+  <context-param>
+  	<param-name>contextConfigLocation</param-name>
+
+  	<!--Point to the application context of the application -->
+	<param-value>/WEB-INF/applicationContext.xml</param-value>
+
+  </context-param>
+
+  <servlet>
+  	<servlet-name>axis2</servlet-name>
+  	<servlet-class>
+  		org.wso2.spring.ws.servlet.SpringAxis2Servlet
+  	</servlet-class>
+  	<load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+  	<servlet-name>axis2</servlet-name>
+  	<url-pattern>/axis2/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>axis2</servlet-name>
+  	<url-pattern>/services/*</url-pattern>
+  </servlet-mapping>
+
+
+NOTE : Insert the following xml snippet only if you want to view the axis2 services in your start page (Useful in development time)
+
+  <welcome-file-list>
+  	<!-- <welcome-file>index.jsp</welcome-file> -->
+  	<welcome-file>/axis2-web/index.jsp</welcome-file>
+  </welcome-file-list>
+
+3. Add the following line in your application context (WEB-INF/ in this case) and copy the axisConfig.xml to the relevant location
+
+<import resource="axis2Config.xml"/>
+
+4. Declare a service bean and add your Spring beans to expose them as web services.
+
+Ex :- If you have a Spring bean with id "productManager", it can be exposed as follows:
+
+	<bean id="services" class="org.wso2.spring.ws.WebServices">
+		<property name="services">
+			<list>
+				<bean id="bookService" class="org.wso2.spring.ws.SpringWebService">
+					<property name="serviceBean" ref="productManager"></property>
+					<property name="serviceName" value="TestProductManager"></property>
+				</bean>
+			</list>
+		</property>
+	</bean>
