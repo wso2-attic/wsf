@@ -10,7 +10,7 @@ XML;
 try {
 
     $reqMessage = new WSMessage($reqPayloadString,
-                                array("to"=>"http://localhost/samples/security/timestamp/timestamp_service.php",
+                                array("to"=>"http://localhost/samples/security/timestamp/service.php",
                                       "action" => "http://php.axis2.org/samples/echoString"));
     
     $sec_array = array("includeTimeStamp"=>TRUE );
@@ -28,7 +28,7 @@ try {
 } catch (Exception $e) {
 
 	if ($e instanceof WSFault) {
-		printf("Soap Fault: %s\n", $e->code);
+		printf("Soap Fault: %s\n", $e->Reason);
 	} else {
 		printf("Message = %s\n",$e->getMessage());
 	}

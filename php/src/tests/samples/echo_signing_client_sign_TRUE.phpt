@@ -12,7 +12,7 @@ try {
     $rec_cert = ws_get_cert_from_file("keys/bob_cert.cert");
     
     $reqMessage = new WSMessage($reqPayloadString,
-                                array("to"=>"http://localhost/samples/security/signing/signing_service_sign_TRUE.php",
+                                array("to"=>"http://localhost/services/signing_service_sign_TRUE.php",
                                       "action" => "http://php.axis2.org/samples/echoString"));
     
     $sec_array = array("sign"=>"TRUE",
@@ -35,7 +35,7 @@ try {
 } catch (Exception $e) {
 
 	if ($e instanceof WSFault) {
-		printf("Soap Fault: %s\n", $e->code);
+		printf("Soap Fault: %s\n", $e->Reason);
 	} else {
 		printf("Message = %s\n",$e->getMessage());
 	}

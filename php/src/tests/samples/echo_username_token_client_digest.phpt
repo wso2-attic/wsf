@@ -12,7 +12,7 @@ XML;
 try {
 
     $reqMessage = new WSMessage($reqPayloadString,
-                                array("to"=>"http://localhost/samples/security/username_token/username_token_service_digest.php",
+                                array("to"=>"http://localhost/services/username_token_service_digest.php",
                                       "action" => "http://php.axis2.org/samples/echoString"));
     
     $sec_array = array("useUsernameToken"=>TRUE );

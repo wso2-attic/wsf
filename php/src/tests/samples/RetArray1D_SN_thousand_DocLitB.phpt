@@ -6,9 +6,9 @@ Test for RetArray1D_SN_thousand_DocLitB sample
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"tests/samples/misc_files/ComplexDataTypesDocLitB.wsdl",
+    $client = new WSClient(array("wsdl"=>"misc_files/ComplexDataTypesDocLitB.wsdl",
                                  "useSOAP" => "1.1",
-                                 "to" => "http://localhost/samples/DocLitB_Service.php"));
+                                 "to" => "http://localhost/services/DocLitB_Service.php"));
     $proxy = $client->getProxy();	
     $person_array = array();
 
