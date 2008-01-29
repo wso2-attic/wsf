@@ -179,22 +179,18 @@ wsf_policy_handle_client_security (
                     neethi_engine_get_policy (env, incoming_policy_node,
                     root_ele);
                 if (!neethi_policy) {
-                    /* php_printf ("policy creation failed"); */
                     return AXIS2_FAILURE;
                 }
                 svc = axis2_svc_client_get_svc (svc_client, env);
                 if (!svc) {
-                  /*  php_printf ("Service is NULL"); */
                     return AXIS2_FAILURE;
                 }
                 desc = axis2_svc_get_base (svc, env);
                 if (!desc) {
-				 /*   php_printf ("Description is NULL"); */
                     return AXIS2_FAILURE;
                 }
                 policy_include = axis2_desc_get_policy_include (desc, env);
                 if (!policy_include) {
-                  /*  php_printf ("Policy include is NULL"); */
                     return AXIS2_FAILURE;
                 }
                 axis2_policy_include_add_policy_element (policy_include, env,
@@ -366,21 +362,17 @@ wsf_policy_handle_server_security (
                     neethi_engine_get_policy (env, incoming_policy_node,
                     root_ele);
                 if (!neethi_policy) {
-                  /*  php_printf ("policy creation failed"); */
                     return AXIS2_FAILURE;
                 }
                 if (!svc) {
-                 /*   php_printf ("Service is NULL"); */
                     return AXIS2_FAILURE;
                 }
                 desc = axis2_svc_get_base (svc, env);
                 if (!desc) {
-                /*    php_printf ("Description is NULL"); */
                     return AXIS2_FAILURE;
                 }
                 policy_include = axis2_desc_get_policy_include (desc, env);
                 if (!policy_include) {
-                 /*   php_printf ("Policy include is NULL"); */
                     return AXIS2_FAILURE;
                 }
                 axis2_policy_include_add_policy_element (policy_include, env,
@@ -396,8 +388,6 @@ wsf_policy_handle_server_security (
 
     /** engage module rampart */
     wsf_util_engage_module (conf, "rampart", env, svc);
-
-
 
     if (outgoing_policy_node && incoming_policy_node) {
         axis2_char_t *om_str_in = NULL;
@@ -431,14 +421,12 @@ wsf_set_tmp_rampart_options (
     HashTable *ht_token = NULL;
     zval **token_val = NULL;
 
-    // need to remove this
     if(policy){
         if (Z_TYPE_P (policy) == IS_OBJECT)
             ht_policy = Z_OBJPROP_P (policy);
         else
             ht_policy = Z_ARRVAL_P (policy);
     }
-
 
     ht_token = Z_OBJPROP_P (sec_token);
     
@@ -482,30 +470,11 @@ wsf_set_tmp_rampart_options (
         && Z_TYPE_PP (token_val) == IS_STRING) {
         tmp_rampart_ctx.password = Z_STRVAL_PP (token_val);
     }
-/*     if (zend_hash_find (ht_token, WS_CERTIFICATE_FORMAT, */
-/*             sizeof (WS_CERTIFICATE_FORMAT), (void **) &token_val) == SUCCESS */
-/*         && Z_TYPE_PP (token_val) == IS_STRING) { */
-/*         tmp_rampart_ctx.certificateFormat = Z_STRVAL_PP (token_val); */
-/*     } */
-/*     if (zend_hash_find (ht_token, WS_PVT_KEY_FORMAT, */
-/*             sizeof (WS_PVT_KEY_FORMAT), (void **) &token_val) == SUCCESS */
-/*         && Z_TYPE_PP (token_val) == IS_STRING) { */
-/*         tmp_rampart_ctx.pvtKeyFormat = Z_STRVAL_PP (token_val); */
-/*     } */
-/*     if (zend_hash_find (ht_token, WS_RECEIVER_CERTIFICATE_FORMAT, */
-/*             sizeof (WS_RECEIVER_CERTIFICATE_FORMAT), */
-/*             (void **) &token_val) == SUCCESS */
-/*         && Z_TYPE_PP (token_val) == IS_STRING) { */
-/*         tmp_rampart_ctx.receiverCertificateFormat = Z_STRVAL_PP (token_val); */
-/*     } */
     if (zend_hash_find (ht_token, WS_PASSWORD_CALL_BACK,
             sizeof (WS_PASSWORD_CALL_BACK), (void **) &token_val) == SUCCESS
         && Z_TYPE_PP (token_val) == IS_STRING) {
         tmp_rampart_ctx.callback_function = Z_STRVAL_PP (token_val);
     }
-
-
-
     return tmp_rampart_ctx;
 }
 
@@ -650,9 +619,8 @@ wsf_do_create_policy (
                                                   token_ref))
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                                  "[wsf_sec_policy] token_ref_enabled ");
-			 if(is_server_side == AXIS2_SUCCESS)
-				  neethi_options_set_server_side(neethi_options, env, is_server_side);
-
+		 if(is_server_side == AXIS2_SUCCESS)
+		  neethi_options_set_server_side(neethi_options, env, is_server_side);
         }
         
         if (zend_hash_find (ht_policy, WS_ENCRYPT_SIGNATURE,
@@ -682,7 +650,6 @@ wsf_do_create_policy (
             else
                 php_error_docref (NULL TSRMLS_CC, E_ERROR,
                                   "Wrong option for protection order");
-        
         }
         
     }
@@ -692,10 +659,6 @@ wsf_do_create_policy (
     }
     return return_node;
 }
-
-
-
-
 
 int
 wsf_policy_set_policy_options (
@@ -720,18 +683,14 @@ wsf_policy_set_policy_options (
             wsf_set_security_policy_options (this_ptr, tmp, env TSRMLS_CC);
             return AXIS2_SUCCESS;
         }
-
     }
-
     if (Z_TYPE_P (property) == IS_STRING) {
         add_property_zval (this_ptr, "policy_xml", property);
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
             "[wsf_policy] policy node creating from a file ");
         return AXIS2_SUCCESS;
     }
-
     return AXIS2_FAILURE;
-
 }
 
 int
@@ -929,12 +888,3 @@ char *wsf_get_rampart_token_value(char *token_ref)
     else
         return NULL;
 }
-
-
-
-
-
-
-
-
-

@@ -1709,8 +1709,6 @@ void wsf_util_process_ws_service_classes(
 					ht_ops_to_mep, svc_info, classname, ws_env_svr TSRMLS_CC);
 			}
 		}
-
-		
 		zend_hash_move_forward_ex (ht_classes, &pos);
 	}
 }

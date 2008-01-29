@@ -215,31 +215,6 @@ php_ws_object_new_ex ( zend_class_entry * class_type, ws_object ** obj TSRMLS_DC
 
 static void ws_objects_free_storage (void *object TSRMLS_DC);
 
-/* 
-static xmlNodePtr
-ws_get_xml_node(zval * node) 
-{
-    php_libxml_node_object * object;
-    xmlNodePtr nodep;
-    TSRMLS_FETCH ();
-    object =  (php_libxml_node_object *) 
-        zend_object_store_get_object (node TSRMLS_CC);
-
-    nodep = php_libxml_import_node (node TSRMLS_CC);
-    if (!nodep){
-        return NULL;
-    }
-    if (nodep->doc == NULL){
-        php_error_docref (NULL TSRMLS_CC, E_WARNING,
-            "Imported Node must have associated Document");
-        return NULL;
-    }
-    if (nodep->type == XML_DOCUMENT_NODE || nodep->type == XML_HTML_DOCUMENT_NODE){
-        nodep = xmlDocGetRootElement ((xmlDocPtr) nodep);
-    }
-    return nodep;
-}
-*/
 
 /* {{{ proto wsf_log_version_string 
  */
@@ -446,8 +421,6 @@ PHP_RSHUTDOWN_FUNCTION (wsf)
 {
     return SUCCESS;
 }
-
-
 /* }}} */ 
     
 /* {{{ PHP_MINFO_FUNCTION
@@ -470,8 +443,6 @@ php_ws_object_new (zend_class_entry * class_type TSRMLS_DC)
     ws_object * tmp;
     return php_ws_object_new_ex (class_type, &tmp TSRMLS_CC);
 }
-
-
 /* }}} */ 
     
 /* {{{ ws_object_new_ex */ 
@@ -492,9 +463,6 @@ php_ws_object_new_ex (
     
 	ALLOC_HASHTABLE(intern->std.properties);
     zend_hash_init(intern->std.properties, 0, NULL, ZVAL_PTR_DTOR, 0);
-/*    
-	zend_object_std_init (&intern->std, class_type TSRMLS_CC);
-*/    
     zend_hash_copy (intern->std.properties, &class_type->default_properties,
         (copy_ctor_func_t) zval_add_ref, (void *) &tmp, sizeof (void *));
     
@@ -518,9 +486,6 @@ ws_objects_free_storage (void *object TSRMLS_DC)
 		zend_hash_destroy(intern->std.properties);
 		FREE_HASHTABLE(intern->std.properties);
 	}
-/*    
-	zend_object_std_dtor (&intern->std TSRMLS_CC);
-*/
     if (intern->obj_type == WS_SVC_CLIENT) {
         axis2_svc_client_t * svc_client = NULL;
         svc_client = (axis2_svc_client_t *) intern->ptr;
@@ -566,7 +531,6 @@ PHP_METHOD (ws_message, __construct)
     zval * payload = NULL;
     zval * properties = NULL;
     
-        /*  zval *attachments = NULL; */ 
     if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "z|a", &payload, &properties)) {
         php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
         return;
@@ -708,8 +672,6 @@ PHP_METHOD (ws_client, __construct)
 
     }
 }
-
-
 /* }}} */ 
     
 /* {{{ WSClient::__destruct() */ 
@@ -1632,7 +1594,7 @@ PHP_METHOD (ws_header, __construct)
 			  }
 		}
 		
-		}
+	}
 	
 }
 
@@ -1675,12 +1637,6 @@ PHP_METHOD (ws_security_token, __construct)
                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
             add_property_string (object, WS_PRIVATE_KEY, Z_STRVAL_PP (tmp), 1);
         }
-/*         if (zend_hash_find (ht, WS_PVT_KEY_FORMAT, */
-/*                 sizeof (WS_PVT_KEY_FORMAT), (void **) &tmp) == SUCCESS &&  */
-/*                 Z_TYPE_PP (tmp) == IS_STRING) { */
-/*                add_property_string (object, WS_PVT_KEY_FORMAT, */
-/*                Z_STRVAL_PP (tmp), 1); */
-/*         } */
         if (zend_hash_find (ht, WS_CERTIFICATE, sizeof (WS_CERTIFICATE),
                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
             add_property_string (object, WS_CERTIFICATE, Z_STRVAL_PP (tmp), 1);
@@ -1691,12 +1647,6 @@ PHP_METHOD (ws_security_token, __construct)
             add_property_string (object, WS_RECEIVER_CERTIFICATE,
                 Z_STRVAL_PP (tmp), 1);
         }
-/*         if (zend_hash_find (ht, WS_RECEIVER_CERTIFICATE_FORMAT, */
-/*                 sizeof (WS_RECEIVER_CERTIFICATE_FORMAT), */
-/*                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) { */
-/*             add_property_string (object, WS_RECEIVER_CERTIFICATE_FORMAT, */
-/*                 Z_STRVAL_PP (tmp), 1); */
-/*         } */
         if (zend_hash_find (ht, WS_TTL, sizeof (WS_TTL),
                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_LONG) {
             add_property_long (object, WS_TTL, Z_LVAL_PP (tmp));
@@ -1846,7 +1796,6 @@ PHP_FUNCTION (ws_get_cert_from_file)
 /* {{{  proto  WSClientProxy::__construct(mixed options) */ 
 PHP_METHOD (ws_client_proxy, __construct) 
 {
-
 }
 
 

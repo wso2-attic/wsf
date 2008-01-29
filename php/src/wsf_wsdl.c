@@ -637,7 +637,7 @@ void wsf_wsdl_handle_client_security(HashTable *client_ht,
 
     char *policy_xml = NULL;
 
-	/* If there are user defined policies it well be set instead of policies in WSDL */
+	/* If there are user defined policies it will be set instead of policies in WSDL */
 	
     if (zend_hash_find (client_ht, WS_POLICY_NAME, sizeof (WS_POLICY_NAME),
                         (void **) &tmp) == SUCCESS) {
@@ -739,8 +739,7 @@ void wsf_wsdl_handle_client_security(HashTable *client_ht,
                     neethi_engine_get_policy (env, binding_policy_node,
                                               binding_policy_root_ele);
                 normalized_binding_neethi_policy = 
-                    neethi_engine_get_normalize(env, AXIS2_FALSE, 
-												binding_neethi_policy);
+                    neethi_engine_get_normalize(env, AXIS2_FALSE,binding_neethi_policy);
                 neethi_policy_free(binding_neethi_policy, env);
                 binding_neethi_policy = NULL;
             }
@@ -943,8 +942,6 @@ void wsf_wsdl_process_service(zval *this_ptr, wsf_req_info_t *request_info1, wsf
             }
         }
     }
-    
-    
 }
 
 void wsf_wsdl_handle_server_security(wsf_svc_info_t *svc_info,
@@ -1106,9 +1103,6 @@ void wsf_wsdl_handle_server_security(wsf_svc_info_t *svc_info,
                 return;
             }
             /* end line */
-				
-            
-         
             
             op_qname = axutil_qname_create (env, op_name, NULL, NULL);
             
@@ -1123,8 +1117,7 @@ void wsf_wsdl_handle_server_security(wsf_svc_info_t *svc_info,
         }
         
     }	
-    
-		/* no need to change so many things just want to public some functions in wsf_policy.c */
+   /* no need to change so many things just want to public some functions in wsf_policy.c */
   
     
     tmp_rampart_ctx.certificate = NULL;
@@ -1158,8 +1151,6 @@ void wsf_wsdl_handle_server_security(wsf_svc_info_t *svc_info,
 				
     conf = axis2_conf_ctx_get_conf (wsf_worker_get_conf_ctx(worker, env), env);
     wsf_util_engage_module (conf, "rampart", env, svc_info->svc);
-    
-    
 }
 
 

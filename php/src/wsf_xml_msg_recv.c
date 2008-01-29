@@ -457,7 +457,6 @@ wsf_xml_msg_recv_invoke_mixed (
     axis2_char_t * class_name TSRMLS_DC)
 {
     axiom_soap_envelope_t *soap_envelope = NULL;
-/*     axis2_char_t *soap_version_uri = NULL; */
     axiom_soap_body_t *soap_body = NULL;
     axiom_node_t *soap_body_node = NULL;
     char *in_msg_body_string = NULL;
@@ -606,7 +605,6 @@ wsf_xml_msg_recv_invoke_mixed (
     }
     add_assoc_zval(param_array, WS_WSDL_CLASSMAP, svc_info->class_map);
 
-    
     add_assoc_zval(param_array, "class_args", class_args);
 
     ZVAL_STRING(&request_function, "wsf_wsdl_process_in_msg", 0);
@@ -826,15 +824,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
                 if (res_payload) {
                     res_om_node = wsf_util_deserialize_buffer (env, res_payload);
                 }
-            } /*
-                else if (Z_TYPE (retval) == IS_OBJECT &&
-                instanceof_function (Z_OBJCE (retval),
-                    ws_fault_class_entry TSRMLS_CC)) {
-                wsf_xml_msg_recv_set_soap_fault (env, soap_ns, out_msg_ctx,
-                    &retval TSRMLS_CC);
-                zend_clear_exception(TSRMLS_C);
-            }
-            */
+            } 
          zval_ptr_dtor(&msg); 
     }
     

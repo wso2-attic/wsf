@@ -674,22 +674,21 @@ wsf_client_set_headers (
 
                 while (zend_hash_get_current_data_ex (ht, (void **) &val,
                         &pos) != FAILURE) {
-					if(Z_TYPE_PP(val) == IS_OBJECT && instanceof_function(Z_OBJCE_PP(val), ws_header_class_entry TSRMLS_CC))
-					{
-						zval *header = *val;
-						axiom_node_t *header_node = NULL;
-						header_node =
-							wsf_util_construct_header_node (env,
-									NULL, header TSRMLS_CC);
-						if (header_node) {
-							AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-								"[wsf_client] adding header block to svc_client");
-							axis2_svc_client_add_header (svc_client, env,
-								header_node);
+			if(Z_TYPE_PP(val) == IS_OBJECT && 
+				instanceof_function(Z_OBJCE_PP(val), ws_header_class_entry TSRMLS_CC))
+				{
+					zval *header = *val;
+					axiom_node_t *header_node = NULL;
+					header_node = wsf_util_construct_header_node (env,
+							NULL, header TSRMLS_CC);
+					if (header_node) {
+						AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+							"[wsf_client] adding header block to svc_client");
+						axis2_svc_client_add_header (svc_client, env, header_node);
 						}
 					}
                     zend_hash_move_forward_ex (ht, &pos);
-				}
+			}
             }
         }
     }
@@ -1278,31 +1277,20 @@ wsf_client_do_request (
 		soap_version = axis2_options_get_soap_version(client_options, env);
 		fault_node = axiom_soap_fault_get_base_node(soap_fault, env);
 		if(fault_node){
-                /*
-                res_text = axiom_node_sub_tree_to_string ( fault_node, env);
-               */
-					res_text = axiom_node_to_string ( fault_node, env);
-					MAKE_STD_ZVAL (rfault);
-					INIT_PZVAL(rfault);
-
-					object_init_ex (rfault, ws_fault_class_entry);
-
-					add_property_stringl (rfault, "str", res_text,
-						strlen (res_text), 1);
-
-					wsf_util_handle_soap_fault(rfault, env, fault_node, soap_version TSRMLS_CC);
-				/*
-                wsf_set_soap_fault_properties (env, soap_fault,
-                    rfault TSRMLS_CC);
-                ZVAL_ZVAL (return_value, rfault, 0, 1); */
-					zend_throw_exception_object(rfault TSRMLS_CC);
-					return ;
-				}
+			res_text = axiom_node_to_string ( fault_node, env);
+			MAKE_STD_ZVAL (rfault);
+			INIT_PZVAL(rfault);
+			object_init_ex (rfault, ws_fault_class_entry);
+			add_property_stringl (rfault, "str", res_text, strlen (res_text), 1);
+			wsf_util_handle_soap_fault(rfault, env, fault_node, soap_version TSRMLS_CC);
+			zend_throw_exception_object(rfault TSRMLS_CC);
+			return ;
+		}
             }
         }else if (response_payload) {
             int attachments_found = 0;
             zval *rmsg = NULL;
-			MAKE_STD_ZVAL (rmsg);
+       	    MAKE_STD_ZVAL (rmsg);
             
             object_init_ex (rmsg, ws_message_class_entry);
             attachments_found = wsf_client_handle_incoming_attachments (env, client_ht, rmsg,
