@@ -256,11 +256,16 @@
 			<id>ws-zones-repository</id>
 			<url>http://ws.zones.apache.org/repository2</url>
 		</repository>
+		<repository>
+			<id>apache-snapshots</id>
+			<name>Apache Development Repository</name>
+			<url>http://people.apache.org/repo/m2-snapshot-repository</url>
+		</repository>
 	</repositories>
 
 	<properties>
 		<!-- TODO trying with the latest Axis2 -->
-		<axis2.version>1.3</axis2.version>
+		<axis2.version>SNAPSHOT</axis2.version>
 		<axiom.version>1.2.6</axiom.version>
 		<addressing.version>1.3</addressing.version>
 		<rampart.version>1.3</rampart.version>
