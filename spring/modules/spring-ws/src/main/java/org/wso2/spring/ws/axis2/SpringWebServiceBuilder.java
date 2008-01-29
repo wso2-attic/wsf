@@ -56,7 +56,8 @@ import org.wso2.spring.ws.beans.MessageReceiverBean;
 public class SpringWebServiceBuilder {
 	
 	String TAG_OBJECT_SUPPLIER = "ObjectSupplier";
-
+	final static String OPERATION_NAME = "operationName";
+	
 	private AxisService service;
 	private ConfigurationContext configCtx;
 	private AxisConfiguration axisConfig;
@@ -463,8 +464,8 @@ public class SpringWebServiceBuilder {
 	public static String getSimpleName(JMethod method) {
         JAnnotation methodAnnon = method.getAnnotation(AnnotationConstants.WEB_METHOD);
         if (methodAnnon != null) {
-            if (methodAnnon.getValue(AnnotationConstants.OPERATION_NAME) !=null) {
-                return methodAnnon.getValue(AnnotationConstants.OPERATION_NAME).asString();
+            if (methodAnnon.getValue(OPERATION_NAME) !=null) {
+                return methodAnnon.getValue(OPERATION_NAME).asString();
             }
         }
         return method.getSimpleName();
