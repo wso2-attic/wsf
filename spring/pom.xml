@@ -247,19 +247,12 @@
 		<woden.version>1.0-incubating-M7b</woden.version>
 		<wss4j.version>1.5.3</wss4j.version>
 
-		<xbean.version>2.1.0</xbean.version>
-
 		<wsdl4j.version>1.6.1</wsdl4j.version>
 		<annogen.version>0.1.0</annogen.version>
 
 		<javamail.version>1.4</javamail.version>
 
 		<jaxen.version>1.1-beta-10</jaxen.version>
-
-		<xmlsec.version>1.4.0</xmlsec.version>
-
-		<bcprov.jdk13.version>132</bcprov.jdk13.version>
-		<bcprov.jdk15.version>132</bcprov.jdk15.version>
 
 		<commons.codec.version>1.3</commons.codec.version>
 		<commons.httpclient.version>3.0.1</commons.httpclient.version>
@@ -274,55 +267,15 @@
 		<commons.discovery.version>0.2</commons.discovery.version>
 		<commons.collections.version>3.1</commons.collections.version>
 
-		<ant.version>1.7.0</ant.version>
-
 		<commons.fileupload.version>1.1.1</commons.fileupload.version>
-		<derby.version>10.1.1.0</derby.version>
-		<hibernate.version>3.1.3</hibernate.version>
 
 		<xerces.version>2.8.0</xerces.version>
 
-		<tcpmon.version>1.0</tcpmon.version>
-
-		<dom4j.version>1.6</dom4j.version>
-
 		<!-- properties needed in building binary distribution -->
-		<dist.dir>target/dist</dist.dir>
-		<dist.temp.dir>
-			${dist.dir}/wsfspring-${version}
-		</dist.temp.dir>
-		<dist.dir.temp.www>target/temp_www</dist.dir.temp.www>
-		<dist.temp.assembly.bin.dir>
-			wsfspring-${version}
-		</dist.temp.assembly.bin.dir>
-		<dist.src.assembly.bin.dir>
-			wsfspring-${version}-src
-		</dist.src.assembly.bin.dir>
-
-		<!-- properties needed for war distribution -->
-		<war.dir>target/war</war.dir>
-		<war.temp.dir>${war.dir}/temp</war.temp.dir>
-		<dist.dir.temp.war.www>
-			target/temp_war_www
-		</dist.dir.temp.war.www>
-		<war.temp.assembly.dir>war_zip/temp</war.temp.assembly.dir>
 
 		<!--<clover.license.file>TODO</clover.license.file>-->
 		<tomcat.version>5.5.15</tomcat.version>
-		<tribes.version>6.0.10</tribes.version>
-		<juli.version>6.0.10</juli.version>
-
-		<slf4j.version>1.0.1</slf4j.version>
-		
-		<toolsjar>${java.home}/../lib/tools.jar</toolsjar>
-		<mx4j.version>3.0.1</mx4j.version>
-
-		<opensaml.version>1.1.406</opensaml.version>
-		<axis1.version>1.4</axis1.version>
-
 		<xalan.version>2.7.0</xalan.version>
-		<wrapper.version>3.2.3</wrapper.version>
-
 		<spring.version>2.0.7</spring.version>
 
 	</properties>
