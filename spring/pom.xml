@@ -19,7 +19,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.wso2.spring.ws</groupId>
-	<artifactId>wso2-spring-ws</artifactId>
+	<artifactId>wsf-spring-main</artifactId>
 	<packaging>pom</packaging>
 	<version>1.0beta-rc1</version>
 	<name>WSO2 Spring Web Services Framework</name>
