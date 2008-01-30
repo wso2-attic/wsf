@@ -27,7 +27,7 @@
 
 	<artifactId>wso2-spring-ws-main</artifactId>
 	<packaging>jar</packaging>
-	<version>SNAPSHOT</version>
+	<version>1.0beta-rc1</version>
 	<name>WSO2 Spring Web Services - Main Module</name>
 
 	<build>

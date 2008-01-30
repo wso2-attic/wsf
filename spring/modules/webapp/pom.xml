@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.wso2.spring.ws</groupId>
     	<artifactId>wso2-spring-ws</artifactId>
-        <version>SNAPSHOT</version>
+        <version>1.0beta-rc1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     
