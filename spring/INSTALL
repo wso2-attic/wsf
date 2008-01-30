@@ -1,6 +1,8 @@
 Deploying a Web Service using WSF/Spring
 ----------------------------------------
 
+IMPORTANT: The spring and spring weaver jars relevant to your servlet container should be in your classpath (WEB-INF/lib directory)
+
 NOTE: The following instrutions will be relative your webapp present in the servlet container's webapps directory.
 
 1. Copy the jars in the WEB-INF/lib directory to your classpath (WEB-INF/lib directory in a web application)
