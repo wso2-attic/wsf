@@ -3,8 +3,14 @@
 WSO2 Web Services Framework for Spring 1.0 beta
 -----------------------------------------------
 
-Building the source
--------------------
+Building with the binary distribution
+-------------------------------------
+
+Please follow instructions in the INSTALL file.
+
+
+Building the source distribution
+--------------------------------
 
 NOTE: JDK 1.5 and Maven 2 is required to build the source.
 
