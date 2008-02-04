@@ -1,5 +1,5 @@
 #define WSF_LICENSE_RCSTR \
-  "Copyright 2005,2006 WSO2, Inc. http://wso2.com" \
+  "Copyright 2005,2007 WSO2, Inc. http://wso2.com" \
   "Licensed under the Apache License, Version 2.0 (the ""License""); " \
   "you may not use this file except in compliance with the License. " \
   "You may obtain a copy of the License at\r\n" \
@@ -31,12 +31,12 @@ BEGIN
       VALUE "Comments", WSF_LICENSE_RCSTR "\0"
       VALUE "CompanyName", "WSO2 \r\n www.wso2.com" "\0"
       VALUE "FileDescription", "WSO2 WSF/PHP\0"
-      VALUE "FileVersion", "1.2.0\0"
+      VALUE "FileVersion", "1.2.1\0"
       VALUE "InternalName", "wsf.dll\0"
       VALUE "LegalCopyright", "Copyright 2005,2007 WSO2, Inc. http://wso2.com\0"
       VALUE "OriginalFilename", "wsf.dll\0"
       VALUE "ProductName", "WSO2 WSF/PHP\0"
-      VALUE "ProductVersion", "1.2.0\0"
+      VALUE "ProductVersion", "1.2.1\0"
     END
   END
   BLOCK "VarFileInfo"

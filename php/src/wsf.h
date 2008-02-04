@@ -69,10 +69,6 @@ PHP_RINIT_FUNCTION (wsf);
 PHP_RSHUTDOWN_FUNCTION (wsf);
 PHP_MINFO_FUNCTION (wsf);
 
-PHP_FUNCTION (is_ws_fault);
-PHP_FUNCTION (ws_test_function);
-
-
 typedef struct _ws_object
 {
     zend_object std;
@@ -100,7 +96,6 @@ extern zend_class_entry *ws_security_token_class_entry;
 extern zend_class_entry *ws_policy_class_entry;
 
 extern wsf_worker_t *worker;
-extern int script_executed;
 
 ZEND_BEGIN_MODULE_GLOBALS (wsf)
     char *home;

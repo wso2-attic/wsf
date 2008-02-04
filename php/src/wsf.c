@@ -62,13 +62,15 @@ static axutil_env_t *env;
 static axutil_env_t *ws_env_svr;
 axis2_msg_recv_t * wsf_msg_recv;
 wsf_worker_t * worker;
-int script_executed;
 
 #define WSF_RESET_GLOBALS() \
 		WSF_GLOBAL(soap_version) = AXIOM_SOAP12; \
 		WSF_GLOBAL(soap_uri) = AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI; \
 		WSF_GLOBAL(curr_ns_index) = 0; 
 
+
+PHP_FUNCTION (is_ws_fault);
+PHP_FUNCTION (ws_init_wsdlmode);
 
 /** WSMessage functions */ 
 PHP_METHOD (ws_message, __construct);
@@ -199,6 +201,7 @@ zend_function_entry php_ws_policy_class_functions[] = {
 /* {{{ wsf_functions[] */ 
 zend_function_entry wsf_functions[] = {
     PHP_FE (is_ws_fault, NULL) 
+	PHP_FE(ws_init_wsdlmode, NULL)
     PHP_FE (ws_get_key_from_file, NULL) 
     PHP_FE (ws_get_cert_from_file, NULL) 
     { NULL, NULL, NULL} 
@@ -250,30 +253,6 @@ STANDARD_MODULE_PROPERTIES };
 #ifdef COMPILE_DL_WSF
     ZEND_GET_MODULE (wsf) 
 #endif  /*  */
-ZEND_INI_MH (OnUpdateCacheEnabled) {
-    long *p;
-    
-#ifndef ZTS
-    char *base = (char *) mh_arg2;
-#else   /*  */
-    char *base;
-    base = (char *) ts_resource (*((int *) mh_arg2));
-#endif  /*  */
-    p = (long *) (base + (size_t) mh_arg1);
-    if (new_value_length == 2 && strcasecmp ("on", new_value) == 0) {
-        *p = 1;
-    }
-    else if (new_value_length == 3 && strcasecmp ("yes", new_value) == 0) {
-        *p = 1;
-    }
-    else if (new_value_length == 4 && strcasecmp ("true", new_value) == 0) {
-        *p = 1;
-    }
-    else {
-        *p = (long) (atoi (new_value) != 0);
-    } return SUCCESS;
-}
-
 
 /* {{{ PHP_INI */ 
 PHP_INI_BEGIN () 
@@ -367,7 +346,6 @@ PHP_MINIT_FUNCTION (wsf)
 	}else{
 		WSF_GLOBAL(home) = home_folder;
 	}
-    script_executed = 0;
 
     env = wsf_env_create (WSF_GLOBAL (log_path)); 
 	env->log->level = WSF_GLOBAL(log_level);
@@ -526,7 +504,33 @@ PHP_FUNCTION (is_ws_fault)
 	}
 }
 /* }}} */ 
-    
+
+/*** {{{ ws_init_wsdlmode  */ 
+PHP_FUNCTION (ws_init_wsdlmode) 
+{
+	 zend_file_handle script;
+	 php_stream *stream;
+
+	 script.type = ZEND_HANDLE_FP;
+	 script.filename = "wsf_wsdl.php";
+	 script.opened_path = NULL;
+	 script.free_filename = 0;
+
+	 stream  = php_stream_open_wrapper("wsf_wsdl.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
+	 if(!stream)
+		return;
+
+	if (php_stream_cast(stream, PHP_STREAM_AS_STDIO|PHP_STREAM_CAST_RELEASE, (void*)&script.handle.fp, REPORT_ERRORS) == FAILURE)    {
+		php_error_docref (NULL TSRMLS_CC, E_ERROR, "Unable to open script file or file not found:");
+		return;
+	}
+	if(script.handle.fp){
+		php_lint_script (&script TSRMLS_CC);
+	}
+	php_stream_close(stream);
+}
+/* }}} */ 
+
 /* {{{ proto WSMessage::__construct(mixed payload[, array properties]) */ 
 PHP_METHOD (ws_message, __construct) 
 {
@@ -1067,11 +1071,8 @@ static void generate_wsdl_for_service(zval *svc_zval,
         smart_str full_path = {0};
         zval * op_val;
 
-        char *real_path = NULL;
         zval **wsdl_location = NULL;
-        FILE * new_fp;
         php_stream *stream;
-
 
         if ((zend_hash_find (Z_OBJPROP_P (svc_zval), WS_WSDL, sizeof(WS_WSDL),
                              (void **)&wsdl_location) == SUCCESS
@@ -1109,9 +1110,9 @@ static void generate_wsdl_for_service(zval *svc_zval,
                         efree(new_val1);
                     }
                     
-                }else
-                    php_printf ("WSDL Generation failed for the given WSDL");
-                
+				}else{
+					php_error_docref(NULL TSRMLS_CC, E_ERROR, "WSDL Generation failed for the given WSDL");
+				}
             }
             
             zval_ptr_dtor(&param);
@@ -1120,14 +1121,6 @@ static void generate_wsdl_for_service(zval *svc_zval,
                 
         }
         else{
-            if(!in_cmd){
-                real_path = estrdup(SG(request_info).path_translated);
-                path_len = strlen(SG(request_info).path_translated)- strlen(req_info->request_uri);
-                real_path[path_len + 1] = '\0';
-            }else{
-                real_path = estrdup(".");
-            }
-            
             service_name = svc_info->svc_name;
                 
             if(!in_cmd){
@@ -1184,10 +1177,6 @@ static void generate_wsdl_for_service(zval *svc_zval,
                 } 
             }
 
-	        efree(real_path);
-
-
-          
             ZVAL_STRING (&func, "ws_generate_wsdl", 0);
             ZVAL_STRING (params[0], service_name, 0);
             INIT_PZVAL (params[0]);
@@ -1225,12 +1214,10 @@ static void generate_wsdl_for_service(zval *svc_zval,
             if(!stream)
                 return;
 
-            if (php_stream_cast(stream, PHP_STREAM_AS_STDIO|PHP_STREAM_CAST_RELEASE, (void*)&new_fp, REPORT_ERRORS) == FAILURE)    {
-                    php_printf ("Unable to open script file or file not found:");
-
+            if (php_stream_cast(stream, PHP_STREAM_AS_STDIO|PHP_STREAM_CAST_RELEASE, (void*)&script.handle.fp, REPORT_ERRORS) == FAILURE)    {
+					php_error_docref(NULL TSRMLS_CC, E_ERROR, "Unable to open script file or file not found:");
             }
 
-            script.handle.fp =  new_fp;
             if (script.handle.fp){
                 int status;
                 status = php_lint_script (&script TSRMLS_CC);
@@ -1246,11 +1233,11 @@ static void generate_wsdl_for_service(zval *svc_zval,
                         if(val){
                             efree(val);
                         }
-                    }else
-                        php_printf ("WSDL Generation Failed");
+					}else{
+						php_error_docref(NULL TSRMLS_CC, E_ERROR, "WSDL Generation Failed");
+					}
                 }
             }
-            
             smart_str_free(&full_path);
             zval_ptr_dtor(&op_val);
             zval_ptr_dtor(&functions);
@@ -1258,7 +1245,6 @@ static void generate_wsdl_for_service(zval *svc_zval,
              if (stream) {
                 php_stream_close(stream);
              }
-
             /** end WSDL generation stuff */ 
         }
 }     
