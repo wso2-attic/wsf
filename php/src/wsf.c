@@ -62,6 +62,7 @@ static axutil_env_t *env;
 static axutil_env_t *ws_env_svr;
 axis2_msg_recv_t * wsf_msg_recv;
 wsf_worker_t * worker;
+int script_executed;
 
 #define WSF_RESET_GLOBALS() \
 		WSF_GLOBAL(soap_version) = AXIOM_SOAP12; \
@@ -366,6 +367,8 @@ PHP_MINIT_FUNCTION (wsf)
 	}else{
 		WSF_GLOBAL(home) = home_folder;
 	}
+    script_executed = 0;
+
     env = wsf_env_create (WSF_GLOBAL (log_path)); 
 	env->log->level = WSF_GLOBAL(log_level);
 

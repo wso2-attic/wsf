@@ -80,7 +80,6 @@ void create_dynamic_client(zval *this_ptr, char *function, int function_len,
     zval *function_parameters;
     php_stream *stream;
     FILE *new_fp;
-	int script_executed = 0;
 
 
     if (instanceof_function (Z_OBJCE_P (this_ptr),

@@ -100,6 +100,7 @@ extern zend_class_entry *ws_security_token_class_entry;
 extern zend_class_entry *ws_policy_class_entry;
 
 extern wsf_worker_t *worker;
+extern int script_executed;
 
 ZEND_BEGIN_MODULE_GLOBALS (wsf)
     char *home;
