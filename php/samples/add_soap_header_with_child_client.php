@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2005,2006 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
