@@ -23,12 +23,12 @@ XML;
 
 try {
 
-    $client = new WSClient(array( "to" => "http://localhost/samples/echo_service.php" ));
+    $client = new WSClient(array( "to" => "http://localhost:8080/samples/echo_service.php" ));
 
     $header1 = new WSHeader(array( "ns" => "http://test.org",
                                    "name" => "header1",
                                    "data" => "value1",
-                                   "mustUnderstand" => true));
+                                   "mustUnderstand" => false));
 
 
     $msg = new WSMessage($requestPayloadString , array( "inputHeaders" => array($header1)));
