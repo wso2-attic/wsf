@@ -91,6 +91,8 @@ axiom_node_t *
 wsf_util_construct_header_node (
     const axutil_env_t * env,
     axiom_node_t *parent,
+	axis2_char_t *soap_uri,
+	int soap_version,
     zval * header TSRMLS_DC)
 {
     char *ns = NULL;
@@ -145,7 +147,7 @@ wsf_util_construct_header_node (
 
         must_understand = Z_BVAL_PP (tmp);
         sprintf (must_val, "%d", must_understand);
-        soap_ns = axiom_namespace_create (env, WSF_GLOBAL (soap_uri), "soapenv");
+        soap_ns = axiom_namespace_create (env, soap_uri, "soapenv");
         mu_attr = axiom_attribute_create (env, "mustUnderstand", must_val, soap_ns);
         axiom_element_add_attribute (header_ele, env, mu_attr, header_node);
     }
@@ -164,21 +166,17 @@ wsf_util_construct_header_node (
         } else if (Z_TYPE_PP (tmp) == IS_STRING) {
             role_val = Z_STRVAL_PP (tmp);
         }
-        if (!soap_ns)
-            soap_ns =
-                axiom_namespace_create (env, WSF_GLOBAL (soap_uri),
-                "soapenv");
+		if (!soap_ns){
+            soap_ns = axiom_namespace_create (env, soap_uri, "soapenv");
+		}
             /** role is only valid for soap12, for soap11 use actor, TODO */
-        if (WSF_GLOBAL (soap_version) == AXIOM_SOAP12 && role_val) {
-            role_attr = axiom_attribute_create (env, WS_HEADER_ROLE,
-                role_val, soap_ns);
-            axiom_element_add_attribute (header_ele, env, role_attr,
-                header_node);
-        } else if (WSF_GLOBAL (soap_version) == AXIOM_SOAP11 && role_val) {
-            role_attr = axiom_attribute_create (env, WS_HEADER_ACTOR,
-                role_val, soap_ns);
-            axiom_element_add_attribute (header_ele, env, role_attr,
-                header_node);
+        if (soap_version == AXIOM_SOAP12 && role_val) {
+            role_attr = axiom_attribute_create (env, WS_HEADER_ROLE, role_val, soap_ns);
+            axiom_element_add_attribute (header_ele, env, role_attr, header_node);
+
+        } else if (soap_version == AXIOM_SOAP11 && role_val) {
+            role_attr = axiom_attribute_create (env, WS_HEADER_ACTOR, role_val, soap_ns);
+            axiom_element_add_attribute (header_ele, env, role_attr, header_node);
         }
     }
     if (zend_hash_find (Z_OBJPROP_P (header), WS_HEADER_DATA,
@@ -212,7 +210,7 @@ wsf_util_construct_header_node (
              zend_hash_move_forward_ex (ht, &pos)) {
             if(Z_TYPE_PP(param) == IS_OBJECT && 
                instanceof_function(Z_OBJCE_PP(param), ws_header_class_entry TSRMLS_CC)){  
-                  wsf_util_construct_header_node(env, header_node, *param TSRMLS_CC);  
+				   wsf_util_construct_header_node(env, header_node, soap_uri, soap_version , *param TSRMLS_CC);  
             }
         }
    }

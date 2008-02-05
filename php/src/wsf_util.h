@@ -110,6 +110,8 @@ void wsf_env_free (
 axiom_node_t *wsf_util_construct_header_node (
     const axutil_env_t * env,
     axiom_node_t *parent,
+	axis2_char_t *soap_uri,
+	int soap_version,
     zval * header TSRMLS_DC);
 
 char *wsf_util_read_file_to_buffer (

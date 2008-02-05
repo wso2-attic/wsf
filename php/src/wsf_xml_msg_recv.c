@@ -45,10 +45,12 @@ wsf_xml_msg_recv_process_incomming_headers(axiom_soap_envelope_t *envelope,
 
 /*
 static axiom_node_t *
-wsf_xml_msg_recv_process_outgoing_headers(axiom_soap_envelope_t *envelope,
-										  axutil_env_t *env,
-										  zval *msg TSRMLS_DC);
+wsf_xml_msg_recv_process_outgoing_headers(
+axutil_env_t *env,
+axis2_msg_ctx_t *in_msg_ctx,
+zval *msg TSRMLS_DC);
 */
+
 static axis2_char_t *wsf_xml_msg_recv_get_method_name (
     axis2_msg_ctx_t * msg_ctx,
     const axutil_env_t * env);
@@ -798,65 +800,65 @@ wsf_xml_msg_recv_invoke_wsmsg (
 			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_xml_msg_recv] call_user_function failed ");
 			return NULL;
 		}
-            if (EG(exception) && Z_TYPE_P(EG(exception)) == IS_OBJECT &&
-               instanceof_function(Z_OBJCE_P(EG(exception)), ws_fault_class_entry TSRMLS_CC)) {
-				   wsf_xml_msg_recv_set_soap_fault (env, in_msg_ctx, out_msg_ctx,
-                  EG(exception) TSRMLS_CC);
-                  zend_clear_exception(TSRMLS_C);
-            }else if (Z_TYPE (retval) == IS_OBJECT
-                && instanceof_function (Z_OBJCE (retval),
-                    ws_message_class_entry TSRMLS_CC)) {
-                zval **msg_tmp = NULL;
-                axis2_char_t *default_cnt_type = NULL;
+        
+		if (EG(exception) && Z_TYPE_P(EG(exception)) == IS_OBJECT &&
+           instanceof_function(Z_OBJCE_P(EG(exception)), ws_fault_class_entry TSRMLS_CC)) {
+			   wsf_xml_msg_recv_set_soap_fault (env, in_msg_ctx, out_msg_ctx,
+					EG(exception) TSRMLS_CC);
+              zend_clear_exception(TSRMLS_C);
 
-                if (zend_hash_find
-                    (Z_OBJPROP (retval), "defaultAttachmentContentType",
-                        sizeof ("defaultAttachmentContentType"),
-                        (void **) & msg_tmp) == SUCCESS
-                    && Z_TYPE_PP (msg_tmp) == IS_STRING) {
-                    default_cnt_type = Z_STRVAL_PP (msg_tmp);
-                } else {
-                    default_cnt_type = "application/octet-stream";
-                }
-                
-				if (zend_hash_find (Z_OBJPROP(retval), WS_ACTION, sizeof (WS_ACTION),
-                	(void **) &msg_tmp) == SUCCESS && Z_TYPE_PP(msg_tmp) == IS_STRING) {
-                        axis2_char_t *action = NULL;
-                        action = Z_STRVAL_PP (msg_tmp);
-                        axis2_msg_ctx_set_wsa_action (out_msg_ctx, env, action);
-                }
+        }else if (Z_TYPE (retval) == IS_OBJECT && instanceof_function (Z_OBJCE (retval),
+                ws_message_class_entry TSRMLS_CC)) {
 
-                if (zend_hash_find (Z_OBJPROP (retval), "str", sizeof ("str"),
-                   (void **) & msg_tmp) == SUCCESS && Z_TYPE_PP (msg_tmp) == IS_STRING) {
+            zval **msg_tmp = NULL;
+            axis2_char_t *default_cnt_type = NULL;
 
-						res_payload = Z_STRVAL_PP (msg_tmp);
-						AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-							"[wsf log ]response payload %s", res_payload);
-						if (res_payload) {
-							res_om_node = wsf_util_deserialize_buffer (env, res_payload);
-						}
-                }
-                if (zend_hash_find (Z_OBJPROP (retval), "attachments", sizeof ("attachments"),
-                   (void **) & msg_tmp) == SUCCESS && Z_TYPE_PP (msg_tmp) == IS_ARRAY) {
+            if (zend_hash_find(Z_OBJPROP (retval), "defaultAttachmentContentType",
+                    sizeof ("defaultAttachmentContentType"), (void **) & msg_tmp) == SUCCESS
+					&& Z_TYPE_PP (msg_tmp) == IS_STRING) {
+                default_cnt_type = Z_STRVAL_PP (msg_tmp);
+            } else {
+                default_cnt_type = "application/octet-stream";
+            }
+            
+			if (zend_hash_find (Z_OBJPROP(retval), WS_ACTION, sizeof (WS_ACTION),
+            	(void **) &msg_tmp) == SUCCESS && Z_TYPE_PP(msg_tmp) == IS_STRING) {
+                    axis2_char_t *action = NULL;
+                    action = Z_STRVAL_PP (msg_tmp);
+                    axis2_msg_ctx_set_wsa_action (out_msg_ctx, env, action);
+            }
 
-                    HashTable *ht = NULL;
-                    ht = Z_ARRVAL_PP (msg_tmp);
-                    if (ht && res_om_node) {
-                        wsf_util_set_attachments_with_cids (env, use_mtom,
-                            res_om_node, ht, default_cnt_type TSRMLS_CC);
-                        if (use_mtom == 1) {
-                            axis2_msg_ctx_set_doing_mtom (out_msg_ctx, env,
-                                AXIS2_TRUE);
-                        }
+            if (zend_hash_find (Z_OBJPROP (retval), "str", sizeof ("str"),
+               (void **) & msg_tmp) == SUCCESS && Z_TYPE_PP (msg_tmp) == IS_STRING) {
+
+					res_payload = Z_STRVAL_PP (msg_tmp);
+					AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+						"[wsf log ]response payload %s", res_payload);
+					if (res_payload) {
+						res_om_node = wsf_util_deserialize_buffer (env, res_payload);
+					}
+            }
+            if (zend_hash_find (Z_OBJPROP (retval), "attachments", sizeof ("attachments"),
+               (void **) & msg_tmp) == SUCCESS && Z_TYPE_PP (msg_tmp) == IS_ARRAY) {
+
+                HashTable *ht = NULL;
+                ht = Z_ARRVAL_PP (msg_tmp);
+                if (ht && res_om_node) {
+                    wsf_util_set_attachments_with_cids (env, use_mtom,
+                        res_om_node, ht, default_cnt_type TSRMLS_CC);
+                    if (use_mtom == 1) {
+                        axis2_msg_ctx_set_doing_mtom (out_msg_ctx, env,
+                            AXIS2_TRUE);
                     }
                 }
-            } else if (Z_TYPE (retval) == IS_STRING) {
-                res_payload =  Z_STRVAL (retval);
-                if (res_payload) {
-                    res_om_node = wsf_util_deserialize_buffer (env, res_payload);
-                }
-            } 
-         zval_ptr_dtor(&msg); 
+            }
+        } else if (Z_TYPE (retval) == IS_STRING) {
+            res_payload =  Z_STRVAL (retval);
+            if (res_payload) {
+                res_om_node = wsf_util_deserialize_buffer (env, res_payload);
+            }
+        } 
+        zval_ptr_dtor(&msg); 
     }
     
     zend_catch {
@@ -911,8 +913,6 @@ wsf_xml_msg_recv_set_soap_fault (
 
 	axis2_char_t *soap_ns = AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
     int soap_version = AXIOM_SOAP12;
-
-
 
     smart_str fcode = {0};
     zval **tmp;
@@ -1074,17 +1074,6 @@ wsf_xml_msg_recv_process_incomming_headers(axiom_soap_envelope_t *envelope,
 /*
 static axiom_node_t *
 wsf_xml_msg_recv_process_outgoing_headers(axutil_env_t *env,
-										  zval *msg TSRMLS_DC)
-{
-	
-
-
-
-
-
-
-
-
-
-}
+axis2_msg_ctx_t *in_msg_ctx, zval *msg TSRMLS_DC)
+{}
 */
