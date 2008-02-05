@@ -146,8 +146,7 @@ wsf_util_construct_header_node (
         must_understand = Z_BVAL_PP (tmp);
         sprintf (must_val, "%d", must_understand);
         soap_ns = axiom_namespace_create (env, WSF_GLOBAL (soap_uri), "soapenv");
-        mu_attr =
-            axiom_attribute_create (env, "mustUnderstand", must_val, soap_ns);
+        mu_attr = axiom_attribute_create (env, "mustUnderstand", must_val, soap_ns);
         axiom_element_add_attribute (header_ele, env, mu_attr, header_node);
     }
     if (zend_hash_find (Z_OBJPROP_P (header), WS_HEADER_ROLE,
@@ -216,8 +215,6 @@ wsf_util_construct_header_node (
                   wsf_util_construct_header_node(env, header_node, *param TSRMLS_CC);  
             }
         }
-
-
    }
     return header_node;
 }
