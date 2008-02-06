@@ -41,7 +41,7 @@ axis2_status_t AXIS2_CALL wsf_xml_msg_recv_invoke_business_logic_sync (
 
 static zval* 
 wsf_xml_msg_recv_process_incomming_headers(axiom_soap_envelope_t *envelope,
-								 axutil_env_t *env TSRMLS_DC);
+								 const axutil_env_t *env TSRMLS_DC);
 
 /*
 static axiom_node_t *
@@ -1004,7 +1004,7 @@ wsf_xml_msg_recv_set_soap_fault (
 
 static zval* 
 wsf_xml_msg_recv_process_incomming_headers(axiom_soap_envelope_t *envelope,
-								 axutil_env_t *env TSRMLS_DC)
+								 const axutil_env_t *env TSRMLS_DC)
 {
 	axiom_soap_header_t *header = NULL;
 	zval *output_headers = NULL;
@@ -1081,3 +1081,4 @@ wsf_xml_msg_recv_process_outgoing_headers(axutil_env_t *env,
 axis2_msg_ctx_t *in_msg_ctx, zval *msg TSRMLS_DC)
 {}
 */
+
