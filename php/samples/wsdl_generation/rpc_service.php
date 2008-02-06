@@ -22,16 +22,17 @@
  * @param string $date the date those items were sold
  * (maps to the xs:gDay XML schema type)
  * @return string $t time for buying it
- *(maps to the xs:QName XML schema type )
+ * (maps to the xs:QName XML schema type )
  */
 function purchaseOrder($x,$y)
 {
-    return $x+$y;
+    return array("return"=>$x*$y);
 }
 
 
 $operations = array("purchaseOrder"=>"purchaseOrder");
-$svr = new WSService(array("operations"=>$operations, "bindingStyle"=>"rpc-enc"));
+$opParams = array("purchaseOrder"=>"MIXED");
+$svr = new WSService(array("operations"=>$operations, "bindingStyle"=>"rpc-enc", "opParams" => $opParams));
 
 
 $svr->reply();
