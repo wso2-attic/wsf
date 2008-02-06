@@ -59,10 +59,10 @@ END of NOTES]
 2.1. You need to download the WSF/C 1.2.0 source release from http://dist.wso2.org/products/wsf/c.
    Unpack and run the build.sh file and it will be installed to /opt/wso2 directory.
 
-2.2. Once you have the WSF/C installed, you can install pecl package as follows. Download the wso2_wsf_php_1.2.0.tgz
-   from http://dist.wso2.org/products/wsf/php/1.2.0.
+2.2. Once you have the WSF/C installed, you can install pecl package as follows. Download the wso2_wsf_php_1.2.1.tgz
+   from http://dist.wso2.org/products/wsf/php/1.2.1.
 
-   $ pecl install wso2_wsf_php_1.2.0.tgz
+   $ pecl install wso2_wsf_php_1.2.1.tgz
 
    This will compile and install WSO2-WSF/PHP to you php extensions directory.
    It will copy the docs to /usr/local/lib/php/doc/wso2_wsf_php directory.
