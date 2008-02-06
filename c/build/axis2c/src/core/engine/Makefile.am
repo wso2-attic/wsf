@@ -5,6 +5,7 @@ libaxis2_engine_la_SOURCES= ../transport/transport_receiver.c handler.c \
                         	phase.c \
                         	disp_checker.c \
                         	addr_disp.c \
+							rest_disp.c \
                         	req_uri_disp.c \
                         	disp.c \
                         	soap_action_disp.c \
