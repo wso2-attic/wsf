@@ -927,6 +927,8 @@ PHP_METHOD (ws_service, __construct)
             if (zend_hash_find (ht_options , WS_CLASSMAP, sizeof (WS_CLASSMAP),
                    (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
                     add_property_zval(this_ptr, WS_CLASSMAP, *tmp);
+                    svc_info->class_map = *tmp;
+                    zval_add_ref(&(svc_info->class_map));
             }
 
             if (zend_hash_find (ht_options, WS_USE_MTOM, sizeof (WS_USE_MTOM), 
@@ -1067,7 +1069,6 @@ static void generate_wsdl_for_service(zval *svc_zval,
         zval ** tmpval;
         char *binding_name = NULL;
         char *wsdl_version = NULL;
-        int path_len = 0;
         smart_str full_path = {0};
         zval * op_val;
 

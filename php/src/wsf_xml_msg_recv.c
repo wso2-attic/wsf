@@ -473,7 +473,7 @@ wsf_xml_msg_recv_invoke_mixed (
 
     zval *class_args;
     zval class_args_val;
-    
+
     if (!in_msg_ctx || !function_name)
 		return NULL;
 
@@ -600,7 +600,11 @@ wsf_xml_msg_recv_invoke_mixed (
     {
         add_assoc_string(param_array, "class_name", class_name, 1);
     }
-    add_assoc_zval(param_array, WS_WSDL_CLASSMAP, svc_info->class_map);
+   
+    if(svc_info->class_map)
+    {
+         add_assoc_zval(param_array, WS_WSDL_CLASSMAP, svc_info->class_map);
+    }
 
     add_assoc_zval(param_array, "class_args", class_args);
 

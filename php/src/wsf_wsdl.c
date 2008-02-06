@@ -140,7 +140,7 @@ void create_dynamic_client(zval *this_ptr, char *function, int function_len,
         INIT_PZVAL(params[0]);
         ZVAL_ZVAL(params[1], function_parameters, NULL, NULL);
         INIT_PZVAL(params[1]);
-	
+
 		if(zend_hash_find(Z_OBJPROP_P(this_ptr), "SCRIPT_EXECUTED", sizeof("SCRIPT_EXECUTED"), (void**)&tmp) == SUCCESS){
 			if(Z_TYPE_PP(tmp) == IS_BOOL && Z_BVAL_PP(tmp) == 1){
 				script_executed = 1;
