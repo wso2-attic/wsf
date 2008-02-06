@@ -19,31 +19,54 @@
 
 function wsf_serivce_invoke_function($operation_node, $function_name, $class_name, $class_args, $envelope_node, $class_map)
 {
+    require_once("wsf_wsdl_util.php");
 	if($operation_node){
 		foreach($operation_node->childNodes as $style){
 			if($style->tagName == WSF_SIGNATURE){
 				$signature_node = $style;
+                break;
 			}
 		}
 	}
 
-	if($signature_node){
-		$params_node = $signature_node->firstChild;
-		if($params_node && $params_node->localName == WSF_PARAMS){
-			$args = $params_node->childNodes->length;
-			$index = 1;
-			$param_array = array();
-			foreach($params_node->childNodes as $param_node){
-				$param_attr = $param_node->attributes;
-				$param_name = $param_attr->getNamedItem(WSF_NAME)->value;
-				$param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
-				$value_array[WSF_NAME] = $param_name;
-				$value_array[WSF_TYPE] = $param_type;
-				$param_array[$index] = $value_array;
-				$index ++;
-			}
-		}
-	}
+    $is_doc = TRUE; //currently we only support doc-lit style parsing..
+
+    if($signature_node){
+        $params_node = $signature_node->firstChild;
+        if($params_node && $params_node->localName == WSF_PARAMS){
+            if($params_node->hasAttributes()){
+                /* Wrapper element of the request operation */
+                $params_attr = $params_node->attributes;
+                $ele_name = $params_attr->getNamedItem(WSF_WRAPPER_ELEMENT)->value;
+                $ele_ns = $params_attr->getNamedItem(WSF_WRAPPER_ELEMENT_NS)->value;
+                $child_array =  array();
+                $child_array[WSF_NS] = $ele_ns;
+                $is_wrapper = TRUE;
+                            
+                $param_child_list = $params_node->childNodes;
+                foreach($param_child_list as $param_child){
+                    $param_attr = $param_child->attributes;
+                    $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
+                    $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
+                    $child_array[$param_name] = wsf_create_temp_struct($param_child, $ele_ns); 
+                }
+            }
+            else{
+                /* No wrapper element in the request */
+                $child_array =  array();
+                $param_child_list = $params_node->childNodes;
+                foreach($param_child_list as $param_child){
+                    $param_attr = $param_child->attributes;
+                    $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
+                    $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
+                    $child_array[$param_name] = wsf_create_temp_struct($param_child, $ele_ns);
+                    $ele_name = $param_name;
+                }
+            }
+        }
+    }
+
+    $tmp_param_struct = $child_array;
 
 	foreach($envelope_node->childNodes as $env_child_node){
 		if($env_child_node->localName == 'Body'){
@@ -56,56 +79,43 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
 		error_log("soap_body not found", 0);
 	}
 
-	$soap_body_child_list = $soap_body_node->childNodes;
-	$payload_child_length = $soap_body_child_list->length;
+    $op_param_values = array();
+    if($class_map != NULL)
+    {
+        $op_param_values = wsf_parse_payload_for_service_class_map($soap_body_node, $tmp_param_struct, $ele_name, $class_map);
+    }
+    else
+    {
+        $op_param_values = wsf_parse_payload_for_array($soap_body_node, $tmp_param_struct);
+    }
 
-	if($payload_child_length > $args)
-	error_log("Input message is wrong", 0);
 
+    
+    $arg_array = $op_param_values; 
+    if($class_name != NULL)
+    {
+        // First call the constructor
+        $class = new ReflectionClass($class_name);
+        $class_inst = $class->newInstanceArgs($class_args);
+        
+        // Then the user method
+        $method = $class->getMethod($function_name);
+        $response_value = $method->invokeArgs($class_inst, $arg_array);
+    }
+    else
+    {
+        $response_value = call_user_func_array($function_name, $arg_array);
+    }
+    $response_payload_string = wsf_wsdl_create_response_payload($response_value, $signature_node);
 
-	if($class_map == NULL){
-		$index2 = 1;
-		$arg_array = array();
-		foreach($soap_body_child_list as $param_soap_child){
-			if($param_array[$index2][WSF_NAME] == $param_soap_child->localName){
-				if (is_xsd_type($param_array[$index2][WSF_TYPE])){
-					$converted_value =  wsf_wsdl_util_convert_value($param_array[$index2][WSF_TYPE], $param_soap_child->firstChild->wholeText);
-					$arg_array[$index2 -1] = $converted_value;
-				}
-				else{
-					// create an object
-				}
-				$index2++;
-			}
-		}
-		
-        if($class_name != NULL)
-        {
-            // First call the constructor
-            $class = new ReflectionClass($class_name);
-            $class_inst = $class->newInstanceArgs($class_args);
-            
-            // Then the user method
-            $method = $class->getMethod($function_name);
-            $response_value = $method->invokeArgs($class_inst, $arg_array);
-        }
-        else
-        {
-		    $response_value = call_user_func_array($function_name, $arg_array);
-        }
-		$response_payload_string = wsf_wsdl_create_response_payload($response_value, $signature_node);
-	}
-	else{
-		//file_put_contents("/tmp/my.txt", print_r($soap_body_node->localName, TRUE));
-	}
-	
 	return $response_payload_string;
 }
 
 function wsf_wsdl_create_response_payload($return_val, $signature_node)
 {
-	require_once('wsf_wsdl_client_response.php');
+    require_once("wsf_wsdl_util.php");
 
+    $is_doc = TRUE;
 	$is_wrapper = FALSE;
 	$tmp_param_struct = array();
 
@@ -114,17 +124,18 @@ function wsf_wsdl_create_response_payload($return_val, $signature_node)
 	foreach ($signature_node->childNodes as $signature_child_node){
 		if($signature_child_node->localName == WSF_RETURNS){
 			$returns_node = $signature_child_node;
+            break;
 		}
 	}
 
 	if(!$returns_node)
-	error_log("Returns node not found", 0);
+	    error_log("Returns node not found", 0);
 
 	if($returns_node->hasAttributes()){
-		$ret_value_name = $returns_node->attributes->getNamedItem(WSF_WRAPPER_ELEMENT)->value;
-		$ret_value_namespace = $returns_node->attributes->getNamedItem(WSF_WRAPPER_ELEMENT_NS)->value;
+		$ele_name = $returns_node->attributes->getNamedItem(WSF_WRAPPER_ELEMENT)->value;
+		$ele_ns = $returns_node->attributes->getNamedItem(WSF_WRAPPER_ELEMENT_NS)->value;
 		$body_array = array();
-		$body_array[WSF_NS] = $ret_value_namespace;
+		$body_array[WSF_NS] = $ele_ns;
 		$is_wrapper = TRUE;
 	}
 
@@ -134,70 +145,80 @@ function wsf_wsdl_create_response_payload($return_val, $signature_node)
 		$param_attr = $param_child->attributes;
 		$param_name = $param_attr->getNamedItem(WSF_NAME)->value;
 		$param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
-		$body_array[$param_name] = wsf_create_response_struct($param_child, $ret_value_namespace);
+		$body_array[$param_name] = wsf_create_temp_struct($param_child, $ele_ns);
 	}
 
 	if($is_wrapper == TRUE)
-	$tmp_param_struct[$ret_value_name] = $body_array;
+	    $tmp_param_struct[$ele_name] = $body_array;
 	else
-	$tmp_param_struct = $body_array;
+	    $tmp_param_struct = $body_array;
 
 
+    /* no wrapper elements most probably getter functions */
+    if(count($tmp_param_struct) == 0)
+        return NULL;
 
-	$element = $res_payload_dom->createElementNS($ret_value_namespace, "ns0:".$ret_value_name);
-	/* This is for array implementation */
-	wsf_service_create_response_payload_for_array($res_payload_dom, $tmp_param_struct[$ret_value_name], $element, $return_val);
-	$res_payload_dom->appendChild($element);
-	$res_payload_node = $res_payload_dom->firstChild;
-	$clone_node = $res_payload_node->cloneNode(TRUE);
-	return $res_payload_dom->saveXML($clone_node);
-}
+    $arguments = $return_val;
+
+ 
+    if($is_doc == TRUE){
+        $payload_dom = new DOMDocument('1.0', 'iso-8859-1');
+        $element = $payload_dom->createElementNS($ele_ns, "ns1:".$ele_name);
+        if(is_object($arguments)){
+            /* this is class map support */
+            $new_obj = $arguments;
+            $parameter_structure = $tmp_param_struct[$ele_name];
+            $namespace_map = array($tmp_param_struct[$ele_name][WSF_NS] => "ns1");
+            wsf_create_payload_for_class_map($payload_dom, $parameter_structure, $element, $element, $new_obj,
+                                                                        $namespace_map);
+            $payload_dom->appendChild($element);
+            $payload_node = $payload_dom->firstChild;
+            $clone_node = $payload_node->cloneNode(TRUE);
+
+            return $payload_dom->saveXML($clone_node);
+        }
+        else {
+            /* array type implementation */
+            $parameter_structure = $tmp_param_struct[$ele_name];
+            $namespace_map = array($tmp_param_struct[$ele_name][WSF_NS] => "ns1");
+
+            wsf_create_payload_for_array($payload_dom, $parameter_structure, $element, $element, $arguments,
+                                                                       $namespace_map);
+            $payload_dom->appendChild($element);
+            $payload_node = $payload_dom->firstChild;
+            $clone_node = $payload_node->cloneNode(TRUE);
+            return $payload_dom->saveXML($clone_node);
+        }
+    }else{
+        $payload_dom = new DOMDocument('1.0', 'iso-8859-1');
+        $element = $payload_dom->createElementNS($tmp_param_struct[$ele_name][WSF_NS], "ns1:".$ele_name);
+        $element->setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+        $element->setAttribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
 
 
-function wsf_service_create_response_payload_for_array(DomDocument $payload_dom, $parameter_struct, DomNode $root_ele, $argument_array)
-{
-	static $i = 2;
-	foreach($parameter_struct as $key => $value){
-		if(is_array($value)){
-			if($value[WSF_NS]){
-				if (isset($value[WSF_TYPE]) && $value[WSF_TYPE]){
-					foreach($argument_array as $arg_key => $arg_val){
-						if($key == $arg_key){
-							/* type conversion is needed */
-							if($value[WSF_NS] == "NULL")
-								$element_2 = $payload_dom->createElement($key, $arg_val);
-							else
-								$element_2 = $payload_dom->createElementNS($value[WSF_NS], "ns".$i.":".$key, $arg_val);
-							$root_ele->appendChild($element_2);
-							$i++;
-						}
-					}
-				}
-				else {
-					foreach($argument_array as $arg_key => $arg_val){
-						if($key == $arg_key){
-							if($value[WSF_NS] == "NULL")
-								$element_2 = $payload_dom->createElement($key);
-							else
-								$element_2 = $payload_dom->createElementNS($value[WSF_NS], "ns".$i.":".$key);
-							wsf_service_create_response_payload_for_array($payload_dom, $value, $element_2, $arg_val);
-							$root_ele->appendChild($element_2);
-							$i++;
-						}
-					}
-
-				}
-			}
-		}else if($key == WSF_TYPE && is_xsd_type($value)){
-			/* TODO multiple values */
-			if($value == 'boolean' && !$argument_array[0])
-			$element_2 = $payload_dom->createTextNode(0);
-			else
-			$element_2 = $payload_dom->createTextNode($argument_array[0]);
-			$root_ele->appendChild($element_2);
-		}
-	}
-
+        if(is_object($arguments)){
+            $new_obj = $arguments;
+            $parameter_structure = $tmp_param_struct[$ele_name];
+            $namespace_map = array($tmp_param_struct[$ele_name][WSF_NS] => "ns1");
+            wsf_create_rpc_payload_for_class_map($payload_dom, $parameter_structure, $element, $element, $new_obj,
+                                                                        $namespace_map);
+            $payload_dom->appendChild($element);
+            $payload_node = $payload_dom->firstChild;
+            $clone_node = $payload_node->cloneNode(TRUE);
+            return $payload_dom->saveXML($clone_node);
+        }
+        else {
+            /* array type implementation */
+            $parameter_structure = $tmp_param_struct[$ele_name];
+            $namespace_map = array($tmp_param_struct[$ele_name][WSF_NS] => "ns1");
+            wsf_create_rpc_payload_for_array($payload_dom, $parameter_structure, $element, $element, $arguments[0],
+                                                                       $namespace_map);
+            $payload_dom->appendChild($element);
+            $payload_node = $payload_dom->firstChild;
+            $clone_node = $payload_node->cloneNode(TRUE);
+            return $payload_dom->saveXML($clone_node);
+        }
+    }
 }
 
 

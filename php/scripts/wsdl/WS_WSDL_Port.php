@@ -46,6 +46,8 @@ class WS_WSDL_Port
 
     public function createPortType(DomDocument $port_doc, DomElement $port_root)
     {
+       $attr_name_to_postfix_map = array(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME => WS_WSDL_Const::WS_WSDL_OPERTION_INPUT_TAG,
+                                         WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME => WS_WSDL_Const::WS_WSDL_OPERTION_OUTPUT_TAG);
         $port_el = $port_doc->createElementNS( WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                                WS_WSDL_Const::WS_WSDL_PORTTYPE_ATTR_NAME);
         $port_el->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME,
@@ -66,7 +68,7 @@ class WS_WSDL_Port
                 foreach($this->fun_mapping as $key => $value){
                     if ($value == $name)
                         $sel->setAttribute(WS_WSDL_Const::WS_WSDL_MESSAGE_ATTR_NAME,
-                                           WS_WSDL_Const::WS_WSDL_TNS_ATTR_NAME.":"."$key".ucfirst($type));
+                                           WS_WSDL_Const::WS_WSDL_TNS_ATTR_NAME.":"."$key".ucfirst($attr_name_to_postfix_map[$type]));
                 }
                 $operation->appendChild($sel);
             }

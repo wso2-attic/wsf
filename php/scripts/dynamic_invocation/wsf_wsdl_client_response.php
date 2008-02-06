@@ -16,336 +16,87 @@
  * limitations under the License.
  */
 
+
 /**
  * Processes and validate response message and assign values to class map.
- * @param string $response_payload_string response envelope
- * @param string $response_sig_model_string response parameter string
+ * @param DomDocument $envelope_dom response envelope
+ * @param DomDocument $signature_dom response parameter string
  * @param array $response_parameters array of response parameters
  * @return mixed an object, an array or a simple type in line with the 
  * expected format of the response
  */
-function wsf_client_response_and_validate(DomDocument $envelope_dom, DomDocument $sig_model_dom, $response_parameters)
+function wsf_client_response_and_validate(DomDocument $envelope_dom, DomDocument $signature_dom, $response_parameters)
 {
     require_once('wsf_wsdl_consts.php');
+    require_once('wsf_wsdl_util.php');
 
-    $has_return = FALSE;
-    $is_wrapper = FALSE;
     $tmp_param_struct = array();
-    $class_map = NULL;
-    
+
+    $envelope_node = $envelope_dom->documentElement;
+    $returns_node = $signature_dom->documentElement;
+
+    if($returns_node){
+        if($returns_node->localName == WSF_RETURNS){
+            if($returns_node->hasAttributes()){
+                /* Wrapper element of the request operation */
+                $params_attr = $returns_node->attributes;
+                $ele_name = $params_attr->getNamedItem(WSF_WRAPPER_ELEMENT)->value;
+                $ele_ns = $params_attr->getNamedItem(WSF_WRAPPER_ELEMENT_NS)->value;
+                $child_array =  array();
+                $child_array[WSF_NS] = $ele_ns;
+                $is_wrapper = TRUE;
+                            
+                $param_child_list = $returns_node->childNodes;
+                foreach($param_child_list as $param_child){
+                    $param_attr = $param_child->attributes;
+                    $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
+                    $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
+                    $child_array[$param_name] = wsf_create_temp_struct($param_child, $ele_ns); 
+                }
+            }
+            else{
+                /* No wrapper element in the request */
+                $child_array =  array();
+                $param_child_list = $returns_node->childNodes;
+                foreach($param_child_list as $param_child){
+                    $param_attr = $param_child->attributes;
+                    $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
+                    $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
+                    $child_array[$param_name] = wsf_create_temp_struct($param_child, $ele_ns);
+                    $ele_name = $param_name;
+                }
+            }
+        }
+    }
+
+    $tmp_param_struct = $child_array;
+
     /** get SOAP body DOM tree to compare with Sig model */
-    $env_node = $envelope_dom->firstChild; 
-    $env_child_list = $env_node->childNodes;
-    foreach($env_child_list as $env_child){
-        if (strtolower($env_child->localName) == WSF_BODY){
-            if(!$env_child->hasChildNodes())
-                return;
-            $clone_body_node = $env_child->firstChild->cloneNode(TRUE);
-            $response_node = $clone_body_node; 
-        }
-    }
-    
-    $returns_node = $sig_model_dom->firstChild; 
-    if ($returns_node && $returns_node->tagName == WSF_RETURNS){
-        if($returns_node->hasAttributes()){
-            $ret_value_name = $returns_node->attributes->getNamedItem(WSF_WRAPPER_ELEMENT)->value;
-            $ret_value_namespace = $returns_node->attributes->getNamedItem(WSF_WRAPPER_ELEMENT_NS)->value;
-            $body_array = array();
-            $body_array[WSF_NS] = $ret_value_namespace;
-            $is_wrapper = TRUE;
-        }
-    }
+	foreach($envelope_node->childNodes as $env_child_node){
+		if($env_child_node->localName == 'Body'){
+			$soap_body_node = $env_child_node->firstChild;
+			break;
+		}
+	}
 
-    
-    $param_child_list = $returns_node->childNodes;
-    foreach($param_child_list as $param_child){
-        $param_attr = $param_child->attributes;
-        $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
-        $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
-        $body_array[$param_name] = wsf_create_response_struct($param_child, $ret_value_namespace);
+	if(!$soap_body_node){
+		error_log("soap_body not found", 0);
+	}
 
-    }
-    
-    
-    if($is_wrapper == TRUE)
-        $tmp_param_struct[$ret_value_name] = $body_array;
-    else
-        $tmp_param_struct = $body_array;
-  
-    if(!isset($tmp_param_struct[$response_node->localName])){
-        echo "return operation not found";
-        return;
-    }
-   
-    if ($is_wrapper == FALSE && $response_node->firstChild->nodeType == XML_TEXT_NODE ){
-        return $response_node->firstChild->wholeText;        
-    }
-    
-    $response_child_list = $response_node->childNodes;
     if(isset($response_parameters[WSF_CLASSMAP]))
         $class_map = $response_parameters[WSF_CLASSMAP];
 
-    if($class_map){
-        $response_class = new $class_map[$response_node->localName];
-        $ref_class = new ReflectionClass($response_class);
-        if($response_child_list){
-            foreach($response_child_list as $child){
-                foreach($tmp_param_struct[$response_node->localName] as $key => $val){
-                    if($key == $child->localName){
-                        $ret_val = wsf_set_values_to_class_obj($val, $class_map, $child, NULL);
-                        if($ref_class)
-                            $ref_property = $ref_class->getProperty($key);
-                        if($ref_property)
-                            $ref_property->setValue($response_class, $ret_val);
-                    }
-                }
-                
-            }
-            
-            return $response_class;
-        }
-        else{
-            if (count($tmp_param_struct[$response_node->tagName]) == 1){
-                return; /* response has empty playload */
-            }
-        }
+    $op_param_values = array();
+    if($class_map)
+    {
+        $op_param_values = wsf_parse_payload_for_class_map($soap_body_node, $tmp_param_struct, $ele_name, $class_map);
     }
-    else{
-        $return_array = array();
-        if($response_child_list){
-            $ret_val_elements = $response_child_list->length; 
-            foreach($response_child_list as $child){
-                foreach($tmp_param_struct[$response_node->localName] as $key => $val){
-                    if($key == $child->localName){
-                        $return_ele_array[$key] = wsf_set_values_to_array($val, $child->firstChild); 
-                    }
-                }
-            }
-            if($ret_val_elements == 1 || isset($return_ele_array[$key][$key]))
-                 $return_array[$response_node->localName] = $return_ele_array[$key];
-            else
-                $return_array[$response_node->localName] = $return_ele_array;
-            return $return_array[$response_node->localName];
-        }
-    }
-}
-
-function wsf_create_response_struct(DomNode $param_child, $wrapper_ns)
-{
-    $rec_array = array();
-    $param_nil = NULL;
-    $param_min = NULL;
-    $param_max = NULL;
-    $param_ns = NULL;
-
-    $param_attr = $param_child->attributes;
-    if($param_attr->getNamedItem(WSF_WSDL_SIMPLE))
-        $wrap_type = $param_attr->getNamedItem(WSF_WSDL_SIMPLE)->value;
-    if($param_attr->getNamedItem(WSF_TARGETNAMESPACE))
-        $param_ns = $param_attr->getNamedItem(WSF_TARGETNAMESPACE)->value;
-    if($param_attr->getNamedItem(WSF_TYPE))
-        $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
-    if($param_attr->getNamedItem(WSF_TYPE_NAMESPACE))
-        $param_type_ns = $param_attr->getNamedItem(WSF_TYPE_NAMESPACE)->value;
-    if($param_attr->getNamedItem('minOccurs'))
-        $param_min = $param_attr->getNamedItem('minOccurs')->value;
-    if($param_attr->getNamedItem('maxOccurs'))
-        $param_max = $param_attr->getNamedItem('maxOccurs')->value;
-    if($param_attr->getNamedItem('nillable'))
-        $param_nil = $param_attr->getNamedItem('nillable')->value;
-
-    if($wrap_type == 'yes'){
-        $is_xsd = is_xsd_type($param_type);
-        if($param_ns == NULL)
-            $rec_array[WSF_NS] = "NULL";//$wrapper_ns;
-        else
-            $rec_array[WSF_NS] = $param_ns;
-
-        $rec_array[WSF_TYPE] = $param_type;
-        if($param_min)
-            $rec_array['minOccurs'] = $param_min;
-        if($param_max != 1)
-            $rec_array['maxOccurs'] = $param_max;
-        if($param_nil)
-            $rec_array['nillable'] = $param_nil;
-    }
-    else{
-        if($param_ns == NULL)
-            $rec_array[WSF_NS] = $wrapper_ns;
-        else
-            $rec_array[WSF_NS] = $param_ns;
-        
-        $rec_array['class_map_name'] = $param_type;
-        if($param_min)
-            $rec_array['minOccurs'] = $param_min;
-        if($param_max != 1)
-            $rec_array['maxOccurs'] = $param_max;
-        if($param_nil)
-            $rec_array['nillable'] = $param_nil;
-
-        $param_child_list_level2 = $param_child->childNodes;
-        foreach($param_child_list_level2 as $param_child_level2){
-            $param_child_level2_attr = $param_child_level2->attributes;
-            $param_level2_name = $param_child_level2_attr->getNamedItem(WSF_NAME)->value;
-            $rec_array[$param_level2_name] = wsf_create_temp_struct($param_child_level2, $wrapper_ns);
-        }
-    }
-    
-    return $rec_array;
-    
-}
-
-
-
-
-
-/**
- * Recursive function to create response temperary structure
- * @param DomNode $types_node schema node of the WSDL
- * @param string $param_type Type of the parameter
- */
-
-
-function wsf_set_values_to_class_obj($val, $class_map, &$child, $prev_user_obj)
-{
-    $user_level_obj = NULL;
-
-    
-    if(is_array($val) && !isset($val[WSF_TYPE])){
-        foreach($val as $key2 => $val2){                    
-            if(is_array($val2)){
-                if(isset($val['class_map_name'])){
-                    if($class_map[$val['class_map_name']]){
-                        if(!$user_level_obj)
-                            $user_level_obj = new $class_map[$val['class_map_name']];
-                 		if(!$child)
-                            continue;
-                        if($child->firstChild != NULL && $child->firstChild->nodeType == XML_ELEMENT_NODE)
-                            $child = $child->firstChild;
-
-                        $refle_class = new ReflectionClass($user_level_obj);
-
-                        if(!isset($val2[WSF_TYPE])){
-                            if($prev_user_obj){
-                                if($refle_class && $refle_class->hasProperty($child->localName))
-                                    $refle_property = $refle_class->getProperty($child->localName);
-                                                          
-                                $result_obj = wsf_set_values_to_class_obj($val2, $class_map, $child, $prev_user_obj);
-                                if(isset($refle_property))
-                                    $refle_property->setValue($user_level_obj, $result_obj);
-                            }
-                            else{
-                                if($refle_class && $refle_class->hasProperty($child->localName))
-                                    $refle_property = $refle_class->getProperty($child->localName);
-
-                                $prev_user_obj = $user_level_obj;
-                                $result_obj = wsf_set_values_to_class_obj($val2, $class_map, $child, $prev_user_obj);
-                                if(isset($refle_property))
-                                    $refle_property->setValue($user_level_obj, $result_obj);
-                            }
-                        }
-                        else{
-                            if(isset($val2["maxOccurs"]) && $val2["maxOccurs"] == "unbounded"){
-                                //printf("haaai");
-                                if($refle_class && $refle_class->hasProperty($child->localName))
-                                    $property = $refle_class->getProperty($child->localName);
-                                if($property){
-                                    if($child->firstChild->nodeType == XML_TEXT_NODE){
-                                        $array_val = array();
-                                        $array_child = $child;
-                                        while($array_child != NULL){
-                                            $array_val[] = $array_child->firstChild->wholeText;
-                                            $array_child = $array_child->nextSibling;
-                                        }   
-                                        $property->setValue($user_level_obj, $array_val);
-                                    }       
-                                }
-                                if($child->nextSibling != NULL)
-                                    $child = $child->nextSibling;
-                                else{
-                                    $parent = $child->parentNode;
-                                    $child = $child->parentNode->nextSibling;
-                                    if(!$child){
-                                        $child = $parent->parentNode->nextSibling;
-                                        /** need a recursive loop */
-                                    }
-                                }  
-                            }
-                            else{
-                                if($refle_class && $refle_class->hasProperty($child->localName))
-                                       $property = $refle_class->getProperty($child->localName);
-                                if($property){
-                                    if($child->firstChild->nodeType == XML_TEXT_NODE){
-                                          $property->setValue($user_level_obj, $child->firstChild->wholeText);
-                                    }   
-                                }       
-
-                                if($child->nextSibling != NULL)
-                                    $child = $child->nextSibling;
-                                else{
-                                    $parent = $child->parentNode;
-                                    $child = $child->parentNode->nextSibling;
-                                    if(!$child){
-                                        $child = $parent->parentNode->nextSibling;
-                                        /** need a recursive loop */
-                                    }
-                                }    
-                            }
-                        }
-                    }
-                }
-            }
-            else if($key2 != WSF_NS && $key2 != 'class_map_name' && $key2 != 'nillable'){
-               // echo $key2."\n";
-            }
-            
-        }
-    }
-    else{/** max occcurs ???? */
-         return $child->firstChild->wholeText;     
-    }
-
-    if($user_level_obj)
-        return $user_level_obj;
     else
-        return NULL;
-
-}
-
-function wsf_set_values_to_array($response_struct, $child)
-{
-    $data_array = array();
-    if(is_array($response_struct) && !isset($response_struct[WSF_TYPE])){
-        foreach($response_struct as $key => $value){
-            if(is_array($value) && !isset($value[WSF_TYPE])){
-                if($key == $child->localName)
-                    $data_array [$key] = wsf_set_values_to_array($value, $child->firstChild);
-                $child = $child->nextSibling;
-            }
-            else if(is_array($value) && isset($value[WSF_TYPE])){
-                if ($key == $child->localName){
-                    if($child->firstChild->nodeType == XML_TEXT_NODE){
-                        $converted_value =  wsf_wsdl_util_convert_value($value[WSF_TYPE], $child->firstChild->wholeText);
-                        $data_array [$key] = $converted_value;
-                    }
-                    else
-                        $data_array [$key] = $child->firstChild;//any type may be an xml
-                    $child = $child->nextSibling;
-                }
-            }
-        }
-    }else{
-        if($child->nodeType == XML_TEXT_NODE){
-            $converted_value =  wsf_wsdl_util_convert_value($response_struct[WSF_TYPE], $child->wholeText);
-            $data_array [$child->parentNode->localName] = $converted_value;
-        }
-
+    {
+        $op_param_values = wsf_parse_payload_for_array($soap_body_node, $tmp_param_struct);
     }
-    return $data_array;
 
+    return $op_param_values;
 }
-
-    
-
 
 ?>

@@ -116,9 +116,10 @@ class WS_WSDL_Binding
     {
         $binding_ele = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                        WS_WSDL_Const::WS_WSDL_BINDING_ATTR_NAME);
-        $binding_ele->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $this->svr_name);
+        $binding_ele->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, 
+                                   $this->svr_name."SOAPBinding");
         $binding_ele->setAttribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME,
-                                    WS_WSDL_Const::WS_WSDL_TNS_ATTR_NAME.":".$this->svr_name);
+                                    WS_WSDL_Const::WS_WSDL_TNS_ATTR_NAME.":".$this->svr_name."PortType");
 
         $s_binding = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_SOAP_NAMESPACE,
                      WS_WSDL_Const::WS_WSDL_BINDING_ATTR_NAME);
@@ -147,6 +148,11 @@ class WS_WSDL_Binding
                                       WS_WSDL_Const::WS_WSDL_ENCODED_ATTR_NAME);
                 $s_body->setAttribute(WS_WSDL_Const::WS_WSDL_ENCOD_STYLE_ATTR_NAME,
                                       WS_WSDL_Const::WS_SOAP_SCHEMA_ENCODING_NAMESPACE);
+                
+                
+                $s_body->setAttribute(WS_WSDL_Const::WS_WSDL_RPC_NAMESPACE,
+                                      WS_WSDL_Const::WS_WSDL_RPC_NAMESPACE_VALUE);
+                
                 $sbinding_ele->appendChild($s_body);
                 $op->appendChild($sbinding_ele);
             }

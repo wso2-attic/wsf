@@ -27,8 +27,10 @@
  * @param array $function_parameters details of the invoked function
  * @return array $return_value array of details to be passed to C level
  */
+
 function wsf_process_wsdl($user_parameters, $function_parameters)
 {
+
     require_once('dynamic_invocation/wsf_wsdl_consts.php');
     require_once('dynamic_invocation/wsf_wsdl_util.php');
     require_once('dynamic_invocation/wsf_wsdl_client_request.php');
@@ -78,7 +80,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
         return "WSDL could not be loaded.";
    
     $wsdl_dom->preserveWhiteSpace = false;
-/* changing code for processing mutiple port types in wsdl 1.1 */
+    /* changing code for processing mutiple port types in wsdl 1.1 */
     $is_multiple_interfaces = wsf_is_mutiple_port_types($wsdl_dom);
 
     if ($is_multiple_interfaces == FALSE){
@@ -88,7 +90,6 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
             return "error creating WSDL Dom Document";
         
         $sig_model_dom = wsf_get_sig_model_dom($wsdl_dom, $xslt_location);
-//        $schema_node = wsf_get_schema_node($wsdl_dom); 
         
     }
     else {
@@ -97,7 +98,9 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
 
         $sig_model_dom = wsf_process_multiple_interfaces($wsdl_dom, $sig_model_dom, $xslt_location);
     }
-    
+
+    //echo test_serialize_node($sig_model_dom->documentElement);
+    //echo $sig_model_dom->saveXML()."\n";
 
 /*     if ($is_wsdl_11 == FALSE && !$wsdl_11_dom ) */
 /*          $schema_node = wsf_get_schema_node($wsdl_dom);  */
@@ -305,8 +308,8 @@ function wsf_wsdl_process_in_msg($parameters)
     $operation_name = $parameters["operation_name"];
     $function_name = $parameters["function_name"];
     $class_name = $parameters["class_name"];
+    $class_map = $parameters["classmap"];
     $class_args = $parameters["class_args"];
-
     
     $payload_dom->loadXML($payload_string);
     $sig_model_dom->loadXML($sig_model_string);

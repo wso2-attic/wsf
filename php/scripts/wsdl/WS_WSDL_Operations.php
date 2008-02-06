@@ -143,7 +143,9 @@ class WS_WSDL_Operations
             {
                 $match[2] = $param->getName();
                 $match[1] = "anyType";
-                $this->xsdTypes[$operationName]["In"][$match[2]] = "anyType";
+                $this->xsdTypes[$operationName]["In"][$match[2]] = array("type"=>"anyType",
+                                                                         "array" => NULL,
+                                                                         "object" => NULL);
 
 
                 $this->createdTypes[$match[1]] = 2;
@@ -153,7 +155,9 @@ class WS_WSDL_Operations
             }
 
 
-            $this->xsdTypes[$operationName]["Out"]["returnVal"] = "anyType";
+            $this->xsdTypes[$operationName]["Out"]["returnVal"] = array("type"=> "anyType",
+                                                                            "array" => NULL,
+                                                                            "object" => NULL);
 
             $this->createdTypes[$match[1]] = 2;
             $this->operations[$operationName][self::WS_OPERATION_OUTPUT_TAG][] =
@@ -174,38 +178,62 @@ class WS_WSDL_Operations
                 }
             }
             $j = 0;
-            if(preg_match_all('|@param\s+(?:object\s+)?(\w+)\s+\$(\w+)\s+(.*)|', $doc_comment,
+            if(preg_match_all('|@param\s+(?:(array)\s+of\s+)?(?:(object)\s+)?(\w+)\s+\$(\w+)\s+(.*)|', $doc_comment,
                               $matches, PREG_SET_ORDER))
             {
                 $this->xsdTypes[$operationName]["In"] = array();
                 foreach($matches as $match)
                 {
                     $j++;
-                    $this->createdTypes[$match[1]] = 1;
-                    $this->phpMapArry[$j] = $match[1];
+                    $this->createdTypes[$match[3]] = 1;
+                    $this->phpMapArry[$j] = $match[3];
 
-                    $relavantType = $this->checkValidTypes($j);
-                    $this->xsdTypes[$operationName]["In"][$match[2]] = $relavantType;
+                    if($match[2] == "object")
+                    {
+                        $releventType = $match[3];
+                    }
+                    else
+                    {
+                        $releventType = $this->checkValidTypes($j);
+                    } 
+                    $this->xsdTypes[$operationName]["In"][$match[4]] = array("type"=>$releventType,
+                                                                             "array" => $match[1],
+                                                                             "object"=> $match[2]);
 
                     $this->operations[$operationName][self::WS_OPERATION_INPUT_TAG][] =
-                        array(self::WS_OPERATION_NAME_TAG => $match[2],
-                              self::WS_OPERATION_TYPE_TAG => $relavantType);
+                        array(self::WS_OPERATION_NAME_TAG => $match[4],
+                              self::WS_OPERATION_TYPE_TAG => $releventType,
+                              "array" => $match[1],
+                              "object"=> $match[2]);
 
                 }
 
             }
 
-            if(preg_match('|@return\s+(?:object\s+)?(\w+)\s+\$(\w+)\s+(.*)|', $doc_comment, $match_r))
+            if(preg_match('|@return\s+(?:(array)\s+of\s+)?(?:(object)\s+)?(\w+)\s+\$(\w+)\s+(.*)|', $doc_comment, $match_r))
             {
                 $j++;
-                $this->phpMapArry[$j] = $match_r[1];
-                $returnType = $this->checkValidTypes($j);
-                $this->xsdTypes[$operationName]["Out"][$match_r[2]] = $returnType;
+                $this->phpMapArry[$j] = $match_r[3];
 
-                $this->createdTypes[$match_r[1]] = 1;
+                if($match[2] == "object")
+                {
+                    $returnType = $match_r[3];
+                }
+                else
+                {
+                    $returnType = $this->checkValidTypes($j);
+                } 
+
+                $this->xsdTypes[$operationName]["Out"][$match_r[4]] = array("type"=>$returnType,
+                                                                             "array" => $match_r[1],
+                                                                             "object"=> $match_r[2]);
+
+                $this->createdTypes[$match_r[3]] = 1;
                 $this->operations[$operationName][self::WS_OPERATION_OUTPUT_TAG][] =
                     array(self::WS_OPERATION_NAME_TAG => self::WS_OPERATION_RET_TAG,
-                          self::WS_OPERATION_TYPE_TAG => $returnType);
+                          self::WS_OPERATION_TYPE_TAG => $returnType,
+                          "array" => $match_r[1],
+                          "object"=> $match_r[2]);
             }
         }
     }

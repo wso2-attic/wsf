@@ -16,7 +16,6 @@
  * limitations under the License.
  */
 
-
 /**
  * Finds the operation DomNode.
  * @param DomDocument $sig_model_dom 
@@ -135,6 +134,7 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
     $tmp_param_struct = array();
     $is_wrapper = FALSE;
     
+
     if($signature_node){
         $params_node = $signature_node->firstChild;
         if($params_node && $params_node->localName == WSF_PARAMS){
@@ -173,10 +173,11 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
         else
             $tmp_param_struct = $child_array;
     }
+    
     /* no wrapper elements most probably getter functions */
     if(count($tmp_param_struct) == 0)
         return NULL;
-  
+ 
     if($is_doc == TRUE){
         $payload_dom = new DOMDocument('1.0', 'iso-8859-1');
         $element = $payload_dom->createElementNS($tmp_param_struct[$ele_name][WSF_NS], "ns1:".$ele_name);
@@ -184,16 +185,21 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
             /* this is class map support */
             $new_obj = $arguments[0];
             $parameter_structure = $tmp_param_struct[$ele_name];
-            wsf_create_payload_for_class_map($payload_dom, $parameter_structure, $element, $new_obj);
+            $namespace_map = array($tmp_param_struct[$ele_name][WSF_NS] => "ns1");
+            wsf_create_payload_for_class_map($payload_dom, $parameter_structure, $element, $element, $new_obj,
+                                                                        $namespace_map);
             $payload_dom->appendChild($element);
             $payload_node = $payload_dom->firstChild;
             $clone_node = $payload_node->cloneNode(TRUE);
+
             return $payload_dom->saveXML($clone_node);
         }
         else {
             /* array type implementation */
             $parameter_structure = $tmp_param_struct[$ele_name];
-            wsf_create_payload_for_array($payload_dom, $parameter_structure, $element, $arguments[0]);
+            $namespace_map = array($tmp_param_struct[$ele_name][WSF_NS] => "ns1");
+            wsf_create_payload_for_array($payload_dom, $parameter_structure, $element, $element, $arguments[0],
+                                                                       $namespace_map);
             $payload_dom->appendChild($element);
             $payload_node = $payload_dom->firstChild;
             $clone_node = $payload_node->cloneNode(TRUE);
@@ -209,7 +215,9 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
         if(is_object($arguments[0])){
             $new_obj = $arguments[0];
             $parameter_structure = $tmp_param_struct[$ele_name];
-            wsf_create_rpc_payload_for_class_map($payload_dom, $parameter_structure, $element, $new_obj);
+            $namespace_map = array($tmp_param_struct[$ele_name][WSF_NS] => "ns1");
+            wsf_create_rpc_payload_for_class_map($payload_dom, $parameter_structure, $element, $element, $new_obj,
+                                                                        $namespace_map);
             $payload_dom->appendChild($element);
             $payload_node = $payload_dom->firstChild;
             $clone_node = $payload_node->cloneNode(TRUE);
@@ -218,339 +226,15 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
         else {
             /* array type implementation */
             $parameter_structure = $tmp_param_struct[$ele_name];
-            wsf_create_rpc_payload_for_array($payload_dom, $parameter_structure, $element, $arguments[0]);
+            $namespace_map = array($tmp_param_struct[$ele_name][WSF_NS] => "ns1");
+            wsf_create_rpc_payload_for_array($payload_dom, $parameter_structure, $element, $element, $arguments[0],
+                                                                       $namespace_map);
             $payload_dom->appendChild($element);
             $payload_node = $payload_dom->firstChild;
             $clone_node = $payload_node->cloneNode(TRUE);
             return $payload_dom->saveXML($clone_node);
-
         }
     }
 }
-
-/**
- * Recursive function to create temperaly structure
- * @param DomNode $types_node schema node of the WSDL
- * @param string $param_type Type of the parameter
- */
-
-
-function wsf_create_temp_struct(DomNode $param_child, $wrapper_ns)
-{
-    $rec_array = array();
-    $param_nil = NULL;
-    $param_min = NULL;
-    $param_max = NULL;
-    $param_ns = NULL;
-   
-    $param_attr = $param_child->attributes;
-    if($param_attr->getNamedItem(WSF_WSDL_SIMPLE))
-        $wrap_type = $param_attr->getNamedItem(WSF_WSDL_SIMPLE)->value;
-    if($param_attr->getNamedItem(WSF_TARGETNAMESPACE))
-        $param_ns = $param_attr->getNamedItem(WSF_TARGETNAMESPACE)->value;
-    if($param_attr->getNamedItem(WSF_TYPE))
-        $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
-    if($param_attr->getNamedItem(WSF_TYPE_NAMESPACE))
-        $param_type_ns = $param_attr->getNamedItem(WSF_TYPE_NAMESPACE)->value;
-    if($param_attr->getNamedItem('minOccurs'))
-        $param_min = $param_attr->getNamedItem('minOccurs')->value;
-    if($param_attr->getNamedItem('maxOccurs'))
-        $param_max = $param_attr->getNamedItem('maxOccurs')->value;
-    if($param_attr->getNamedItem('nillable'))
-        $param_nil = $param_attr->getNamedItem('nillable')->value;
-
-    if($wrap_type == 'yes'){
-        if($param_ns == NULL)
-            $rec_array[WSF_NS] = "NULL";//$wrapper_ns;
-        else
-            $rec_array[WSF_NS] = $param_ns;
-
-        $rec_array[WSF_TYPE] = $param_type;
-        if($param_min != 1)
-            $rec_array['minOccurs'] = $param_min; 
-        if($param_max != 1)
-            $rec_array['maxOccurs'] = $param_max; 
-        if($param_nil)
-            $rec_array['nillable'] = $param_nil; 
-    }
-    else{
-        
-        /* for some WSDL sig model gives simple type no even there are
-         * xsd types in the parameter. So this check is needed */
-        if (is_xsd_type($param_type)){
-            if($param_ns == NULL)
-                $rec_array[WSF_NS] = $wrapper_ns;
-            else
-                $rec_array[WSF_NS] = $param_ns;
-
-            $rec_array[WSF_TYPE] = $param_type;
-            if($param_min)
-                $rec_array['minOccurs'] = $param_min; 
-            if($param_max != 1)
-                $rec_array['maxOccurs'] = $param_max; 
-            if($param_nil)
-                $rec_array['nillable'] = $param_nil; 
-        }
-        else{
-            if($param_ns == NULL)
-                $rec_array[WSF_NS] = $wrapper_ns;
-            else
-                $rec_array[WSF_NS] = $param_ns;
-
-            $rec_array[WSF_NS] = $param_ns;
-            $rec_array['class_map_name'] = $param_type;
-            if($param_min)
-                $rec_array['minOccurs'] = $param_min; 
-            if($param_max != 1)
-                $rec_array['maxOccurs'] = $param_max; 
-            if($param_nil)
-                $rec_array['nillable'] = $param_nil; 
-            
-            $param_child_list_level2 = $param_child->childNodes;
-            foreach($param_child_list_level2 as $param_child_level2){
-                $param_child_level2_attr = $param_child_level2->attributes;
-            $param_level2_name = $param_child_level2_attr->getNamedItem(WSF_NAME)->value;
-            $rec_array[$param_level2_name] = wsf_create_temp_struct($param_child_level2, $wrapper_ns);
-            }
-        }
-    }
-
-    return $rec_array;
-    
-}
-
-/**
- * Recursive function to create payload 
- * @param DomDocument $payload_dom 
- * @param array $value_array Array that include payload details
- * @param DomNode $element 
- * @param mixed $new_obj call_map object
- */
-
-
-function wsf_create_payload_for_class_map(DomDocument $payload_dom, $parameter_struct, DomNode $root_ele, $classmap_obj, $prev_class_obj = NULL)
-{
-    static $i = 2;
-    $element_2 = NULL;
-    foreach($parameter_struct as $val => $value){
-        if(is_array($value)){
-            if($value[WSF_NS]){
-                if (isset($value[WSF_TYPE]) && $value[WSF_TYPE] && $classmap_obj){
-                    if($classmap_obj->$val)
-                        $obj_value = $classmap_obj->$val;
-                    else
-                        $obj_value = $prev_class_obj->$val;
-                    if($value[WSF_NS] == "NULL")
-                        $element_2 = $payload_dom->createElement($val, $obj_value);
-                    else
-                        $element_2 = $payload_dom->createElementNS($value[WSF_NS], "ns".$i.":".$val, $obj_value);
-                }
-                else {
-                    if(isset($value['nillable'])){
-                        if(isset($value['maxOccurs'])){
-                            /*logic should be changed for more elemnts*/ 
-                            $element_2 = $payload_dom->createElementNS($value['ns'], "ns".$i.":".$val);
-                            $prev_class_obj = $classmap_obj;
-                            $new_obj = $classmap_obj->$val;
-                            $i++;
-                            wsf_create_payload_for_class_map($payload_dom, $value, $element_2, $new_obj, $prev_class_obj);
-             
-                        }
-                        else{
-                            $element_2 = $payload_dom->createElementNS($value['ns'], "ns".$i.":".$val);
-                            $prev_class_obj = $classmap_obj;
-                            $new_obj = $classmap_obj->$val;
-                            $i++;
-                            wsf_create_payload_for_class_map($payload_dom, $value, $element_2, $new_obj, $prev_class_obj);
-             
-                        }
-                    }
-                    else{
-                        if(!isset($value['class_map_name'])){
-                            $element_2 = $payload_dom->createElementNS($value['ns'], "ns".$i.":".$val);
-                            $prev_class_obj = $classmap_obj;
-                            $new_obj = $classmap_obj->$val;
-                            $i++;
-                            wsf_create_payload_for_class_map($payload_dom, $value, $element_2, $new_obj, $prev_class_obj);
-                        }
-                    }
-                }
-            }
-            if($element_2)
-                $root_ele->appendChild($element_2);
-        }
-    }
-}
-
-function wsf_create_payload_for_array(DomDocument $payload_dom, $parameter_struct, DomNode $root_ele, $argument_array)
-{
-    static $i = 2;
-    foreach($parameter_struct as $key => $value){
-        if(is_array($value)){
-            if($value[WSF_NS]){
-                if (isset($value[WSF_TYPE]) && $value[WSF_TYPE]){
-                    foreach($argument_array as $arg_key => $arg_val){
-                        if($key == $arg_key){
-				/* type conversion is needed */
-				if($value[WSF_NS] == "NULL")
-					$element_2 = $payload_dom->createElement($key, $arg_val);
-				else	
-					$element_2 = $payload_dom->createElementNS($value[WSF_NS], "ns".$i.":".$key, $arg_val);
-				$root_ele->appendChild($element_2);
-				$i++;
-			}
-                    }
-                }
-                else {
-                    foreach($argument_array as $arg_key => $arg_val){
-			    if($key == $arg_key){
-				    if($value[WSF_NS] == "NULL")
-					    $element_2 = $payload_dom->createElement($key);
-				    else
-					    $element_2 = $payload_dom->createElementNS($value[WSF_NS], "ns".$i.":".$key);
-				    wsf_create_payload_for_array($payload_dom, $value, $element_2, $arg_val);
-				    $root_ele->appendChild($element_2);
-				    $i++;
-			    }
-                    }
-             
-                }
-            }
-        }else if($key == WSF_TYPE && is_xsd_type($value)){
-            /* TODO multiple values */
-            if($value == 'boolean' && !$argument_array[0])
-                $element_2 = $payload_dom->createTextNode(0);
-            else
-                $element_2 = $payload_dom->createTextNode($argument_array[0]);
-            $root_ele->appendChild($element_2);
-        }
-    }
-
-}
-
-/**
- * Recursive function to create rpc payload 
- * @param DomDocument $payload_dom 
- * @param array $value_array Array that include payload details
- * @param DomNode $element 
- * @param mixed $new_obj call_map object
- */
-
-
-function wsf_create_rpc_payload_for_class_map(DomDocument $payload_dom, $parameter_struct, DomNode $root_ele, $classmap_obj, $prev_class_obj = NULL)
-{
-    static $i = 2;
-    $element_2 = NULL;
-    foreach($parameter_struct as $val => $value){
-        if(is_array($value)){
-            if($value[WSF_NS]){
-                if (isset($value[WSF_TYPE]) && $value[WSF_TYPE] && $classmap_obj){
-                    if($classmap_obj->$val)
-                        $obj_value = $classmap_obj->$val;
-                    else
-                        $obj_value = $prev_class_obj->$val;
-                    if($value[WSF_NS] == "NULL")
-                        $element_2 = $payload_dom->createElement($val, $obj_value);
-                    else
-                        $element_2 = $payload_dom->createElementNS($value[WSF_NS], "ns".$i.":".$val, $obj_value);
-                }
-                else {
-                    if(isset($value['nillable'])){
-                        if(isset($value['maxOccurs'])){
-                            /*logic should be changed for more elemnts*/ 
-                            $element_2 = $payload_dom->createElementNS($value['ns'], "ns".$i.":".$val);
-                            $prev_class_obj = $classmap_obj;
-                            $new_obj = $classmap_obj->$val;
-                            $i++;
-                            wsf_create_payload_for_class_map($payload_dom, $value, $element_2, $new_obj, $prev_class_obj);
-             
-                        }
-                        else{
-                            $element_2 = $payload_dom->createElementNS($value['ns'], "ns".$i.":".$val);
-                            $prev_class_obj = $classmap_obj;
-                            $new_obj = $classmap_obj->$val;
-                            $i++;
-                            wsf_create_payload_for_class_map($payload_dom, $value, $element_2, $new_obj, $prev_class_obj);
-             
-                        }
-                    }
-                    else{
-                        if(!isset($value['class_map_name'])){
-                            $element_2 = $payload_dom->createElementNS($value['ns'], "ns".$i.":".$val);
-                            $prev_class_obj = $classmap_obj;
-                            $new_obj = $classmap_obj->$val;
-                            $i++;
-                            wsf_create_rpc_payload_for_class_map($payload_dom, $value, $element_2, $new_obj, $prev_class_obj);
-                        }
-                    }
-                }
-            }
-            if($element_2)
-                $root_ele->appendChild($element_2);
-        }
-    }
-}
-
-function wsf_create_rpc_payload_for_array(DomDocument $payload_dom, $parameter_struct, DomNode $root_ele, $argument_array)
-{
-    static $i = 2;
-    foreach($parameter_struct as $key => $value){
-        if(is_array($value)){
-            if($value[WSF_NS]){
-                if (isset($value[WSF_TYPE]) && $value[WSF_TYPE]){
-                    foreach($argument_array as $arg_key => $arg_val){
-                        if($key == $arg_key){
-                            /* type conversion is needed */
-                            $element_2 = $payload_dom->createElement($key, $arg_val);
-                            $element_2->setAttribute("xsi:type", "xsd:".$value[WSF_TYPE]);
-                            $root_ele->appendChild($element_2);
-                            $i++;
-                        }
-                    }
-                }
-                else {
-                    foreach($argument_array as $arg_key => $arg_val){
-                        if($key == $arg_key){
-                            $element_2 = $payload_dom->createElement($value[WSF_NS], "ns".$i.":".$key);
-                            wsf_create_rpc_payload_for_array($payload_dom, $value, $element_2, $arg_val);
-                            $root_ele->appendChild($element_2);
-                            $i++;
-                        }
-                    }
-             
-                }
-            }
-        }else if($key == WSF_TYPE && is_xsd_type($value)){
-            /* TODO multiple values */
-            if($value == 'boolean' && !$argument_array[0])
-                $element_2 = $payload_dom->createTextNode(0);
-            else
-                $element_2 = $payload_dom->createTextNode($argument_array[0]);
-            $root_ele->appendChild($element_2);
-        }
-    }
-
-}
-
-
 
 ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

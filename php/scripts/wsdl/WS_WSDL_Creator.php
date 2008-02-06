@@ -112,7 +112,7 @@ class WS_WSDL_Creator
 
         $wsdl_root_ele->setAttributeNS(WS_WSDL_const::WS_WSDL_DEF_SCHEMA_URI,
                                        WS_WSDL_const::WS_WSDL_DEF_SCHEMA_PREFIX,
-                                       $this->namespace."/xsd");
+                                       $this->namespace);
         
         $wsdl_root_ele->setAttribute(WS_WSDL_const::WS_WSDL_DEF_TARGET_NS,
                                      $this->namespace);
@@ -137,13 +137,13 @@ class WS_WSDL_Creator
 
         if ($this->Binding_style == "rpc")
         {
-            $type_obj = new WS_WSDL_Type($this->namespace, $createdTypeArry, $operationsArry, $this->ops_to_functions);
-            $type_obj->createRPCType($wsdl_dom, $wsdl_root_ele);
+            $type_obj = new WS_WSDL_Type($this->namespace, $createdTypeArry, $xsdArry, $this->ops_to_functions);
+            /* no types for the time being */
+            $class_to_prefix = $type_obj->createRPCType($wsdl_dom, $wsdl_root_ele);
             $simple_array = $type_obj->simpleTypes;
 
-
             $msg_obj = new WS_WSDL_Message($operationsArry, $simple_array, $this->ops_to_functions);
-            $msg_obj->createRPCMessage($wsdl_dom,$wsdl_root_ele);
+            $msg_obj->createRPCMessage($wsdl_dom,$wsdl_root_ele, $class_to_prefix);
 
         }
 

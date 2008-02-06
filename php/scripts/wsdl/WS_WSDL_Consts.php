@@ -35,7 +35,7 @@ class WS_WSDL_Const
     const WS_WSDL_DEF_SOAP_ENC_QN = 'xmlns:soapenc';
     const WS_WSDL_DEF_TARGET_NS = 'targetNamespace';
     const WS_WSDL_DEF_HTTP_QN = 'xmlns:http';
-    const WS_WSDL_DEF_SCHEMA_PREFIX = 'xmlns:ns0';
+    const WS_WSDL_DEF_SCHEMA_PREFIX = 'xmlns:tns';
 
 
     const WS_WSDL2_DESCRIPTION = "description";
@@ -66,8 +66,8 @@ class WS_WSDL_Const
     const WS_WSDL_DEF_SCHEMA_URI = 'http://www.w3.org/2000/xmlns/';
 
 
-    const WS_WSDL_OPERTION_INPUT_TAG = 'input';
-    const WS_WSDL_OPERTION_OUTPUT_TAG = 'output';
+    const WS_WSDL_OPERTION_INPUT_TAG = '';
+    const WS_WSDL_OPERTION_OUTPUT_TAG = 'response';
 
 
     const WS_WSDL_SERVICE_ATTR_NAME = "service";
@@ -99,6 +99,8 @@ class WS_WSDL_Const
     const WS_WSDL_ENCODED_ATTR_NAME = 'encoded';
     const WS_WSDL_LITERAL_ATTR_NAME = 'literal';
     const WS_WSDL_ENCOD_STYLE_ATTR_NAME= 'encodingStyle';
+    const WS_WSDL_RPC_NAMESPACE= 'namespace';
+    const WS_WSDL_RPC_NAMESPACE_VALUE= 'http://www.wso2.org/php';
     const WS_WSDL_SOAP_ACTION_ATTR_NAME = 'soapAction';
 
     const WS_WSDL_PROTOCAL_ATTR_NAME = "protocol";
@@ -134,9 +136,13 @@ class WS_WSDL_Const
     const WS_WSDL_OUT_ATTR_NAME = 'Out';
     const WS_WSDL_ELEMENTFORMDEFAULT_ATTR_NAME = 'elementFormDefault';
     const WS_WSDL_QUALIFIED_ATTR_NAME = 'qualified';
-    const WS_WSDL_DEFAULT_SCHEMA_ATTR_NAME = 'ns0';
+    const WS_WSDL_DEFAULT_SCHEMA_ATTR_NAME = 'tns';
     const WS_WSDL_TNS_ATTR_NAME = 'tns';
 
+    const WS_WSDL_ATTR_MAX_OCCURS = "maxOccurs";
+    const WS_WSDL_ATTR_VALUE_UNBOUNDED = "unbounded";
+
+    const WS_WSDL_SCHEMA_TYPE_DEFAULT_NS = "http://www.wso2.org/php/xsd";
 
     static public $defaultTypes = array(
                                       'string'    => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
