@@ -24,17 +24,6 @@ ENABLE_SSL = 1
 #( Use OpenSSL .98e or above MSI installer )
 OPENSSL_BIN_DIR = E:\OpenSSL
 
-# Build with SQLite support for permanent storage, to disable set WITH_SQLITE = 0
-WITH_SQLITE = 1
-#sqlite Binary Directory and Source directory
-SQLITE_BIN_DIR = "E:\sqlite-3_3_81"
-SQLITE_SRC_DIR = "E:\sqlite-3_3_81"
-
-# Build with MySQL support for permanent storage, to enable set WITH_MYSQL = 1
-WITH_MYSQL = 0
-# Path to MySQL installation ( Make sure to install dev version ( headers ) using MSI )
-MYSQL_BIN_DIR = "C:\Program Files\MySQL\MySQL Server 5.0"
-
 #############################################################################
 # Configuration for building wsf/php extension using its own build
 PHP_SRC_DIR = E:\php\php-5.2.5
