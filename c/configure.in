@@ -47,7 +47,7 @@ WITH_ARCHIVE = 0
 ### Apache Rampart/C Build Configuration Parameters
 
 # Whether Rampart/C is built or not
-ENABLE_RAMPARTC = 0
+ENABLE_RAMPARTC = 1
 
 # Path to OpenSSL installation
 OPENSSL_BIN_DIR = E:\OpenSSL
