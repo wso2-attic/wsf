@@ -67,9 +67,9 @@ wsf_worker_t * wsf_worker_create (const axutil_env_t * env,
         axis2_module_desc_t * module_desc = NULL;
         axutil_param_t * param = NULL;
         axutil_qname_t * sandesha2_qname = NULL;
-        
-        sandesha2_qname = axutil_qname_create (env, "sandesha2", NULL, NULL);
 
+		sandesha2_qname = axutil_qname_create (env, "sandesha2", NULL, NULL);
+     
         conf = axis2_conf_ctx_get_conf (worker->conf_ctx, env);
         
         module_desc = axis2_conf_get_module (conf, env, sandesha2_qname);
@@ -77,9 +77,18 @@ wsf_worker_t * wsf_worker_create (const axutil_env_t * env,
         if (module_desc) {
             param = axis2_module_desc_get_param (module_desc, env, "sandesha2_db");
             if (param) {
-                axutil_param_set_value (param, env, rm_db_dir);
+			    smart_str sandesha2_db = { 0 };
+				smart_str_appends(&sandesha2_db, rm_db_dir);
+		        smart_str_appends(&sandesha2_db, "/");
+		        smart_str_appends(&sandesha2_db, "sandesha2db");
+		        smart_str_0(&sandesha2_db);
+                
+				axutil_param_set_value (param, env, axutil_strdup(env , sandesha2_db.c));
+
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_svr] rm_db_dir %s", rm_db_dir);
+					"[wsf_svr] rm_db_dir %s", sandesha2_db.c);
+				
+				smart_str_free(&sandesha2_db);
             }
         }
         

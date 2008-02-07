@@ -962,9 +962,17 @@ wsf_client_do_request (
     int is_addressing_action_present = AXIS2_FALSE;
     int is_rm_engaged = AXIS2_FALSE;
     char *sequence_key = NULL;
+	smart_str sandesha2_db = { 0 };
+	smart_str_appends(&sandesha2_db, WSF_GLOBAL(rm_db_dir));
+    smart_str_appends(&sandesha2_db, "/");
+    smart_str_appends(&sandesha2_db, "sandesha2_db");
+    smart_str_0(&sandesha2_db);
+	
 
     wsf_client_set_module_param_option (env, svc_client, "sandesha2",
-        "sandesha2_db", WSF_GLOBAL (rm_db_dir));
+		"sandesha2_db", sandesha2_db.c);
+
+	smart_str_free(&sandesha2_db);
 
     if (Z_TYPE_P (param) == IS_OBJECT &&
         instanceof_function (Z_OBJCE_P (param),
