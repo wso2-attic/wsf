@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	
+	<import resource="axis2Config.xml"/>
+	
+	<!-- Service Bean -->
+	
+	<bean id="services" class="org.wso2.spring.ws.WebServices">
+	<property name="services">
+		<list>
+			<bean id="bookService" class="org.wso2.spring.ws.SpringWebService">
+				<property name="serviceBean" ref="productManager"></property>
+				<property name="serviceName" value="TestProductManager"></property>
+				
+				<property name="serviceDescription" value="This is a test webservice for Spring/Axis2 Integration" ></property>
+				
+			</bean>
+			<bean id="productManService" class="org.wso2.spring.ws.SpringWebService">
+				<property name="serviceBean" ref="bookManager"></property>
+				<property name="serviceName" value="BookManagerTEST"></property>
+				
+				<property name="serviceDescription" value="This is a test webservice for Spring/Axis2 Integration" ></property>
+				<property name="targetNameSpace" value="www.springtest.com"></property>
+				<property name="sessionScope" value="request"></property>
+				<property name="modules">
+					<list>
+						<value>addressing</value>
+					</list>
+				</property>
+			</bean>
+		</list>
+	</property>
+	</bean>
+	
+	<!-- Book Manager sample service -->
+	
+	<bean id="bookManager" class="com.sample.service.BookManager">
+		<property name="books">
+			<list>
+				<ref bean="book1"/>
+				<ref bean="book2"/>
+				<ref bean="book3"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="book1" class="com.sample.service.Book">
+		<property name="author" value="Robert Ludlum"></property>
+		<property name="title" value="The Matarese Circle"></property>
+		<property name="price" value="960.0"></property>
+	</bean>
+	
+	<bean id="book2" class="com.sample.service.Book">
+		<property name="author" value="Dan Brown"></property>
+		<property name="title" value="The Da Vinci Code"></property>
+		<property name="price" value="1020.0"></property>
+	</bean>
+	
+	<bean id="book3" class="com.sample.service.Book">
+		<property name="author" value="Rober Jordan"></property>
+		<property name="title" value="The Wheel of Time: Book 1"></property>
+		<property name="price" value="840.0"></property>
+	</bean>
+	
+	<!-- Product Manager sample service -->
+	
+	<bean id="productManager" class="com.hello.sample.service.SimpleProductManager">
+        <property name="products">
+            <list>
+                <ref bean="product1"/>
+                <ref bean="product2"/>
+                <ref bean="product3"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="product1" class="com.hello.sample.service.Product">
+        <property name="description" value="Lamp"/>
+        <property name="price" value="5.75"/>
+    </bean>
+
+    <bean id="product2" class="com.hello.sample.service.Product">
+        <property name="description" value="Table"/>
+        <property name="price" value="5123.25"/>
+    </bean>
+
+    <bean id="product3" class="com.hello.sample.service.Product">
+        <property name="description" value="Chair"/>
+        <property name="price" value="22.79"/>
+    </bean>
+
+</beans>

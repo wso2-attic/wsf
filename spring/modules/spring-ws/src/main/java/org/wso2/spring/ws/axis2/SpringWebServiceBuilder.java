@@ -62,6 +62,12 @@ public class SpringWebServiceBuilder {
 	private ConfigurationContext configCtx;
 	private AxisConfiguration axisConfig;
 	
+	public SpringWebServiceBuilder(AxisConfiguration axisConfig, AxisService service) {
+        this.service = service;
+        this.axisConfig = axisConfig;
+		// TODO Auto-generated constructor stub
+	}
+	
 	public SpringWebServiceBuilder(ConfigurationContext configCtx, AxisService service) {
         this.service = service;
         this.configCtx = configCtx;

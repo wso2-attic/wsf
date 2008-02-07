@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+<bean id="axisConfig" class="org.wso2.spring.ws.SpringAxisConfiguration">
+		<property name="parameters">
+			<list>
+				<bean id="hd" class="org.wso2.spring.ws.beans.ParameterBean">
+					<property name="name" value="hotdeployment"></property>
+					<property name="value" value="true"></property>
+
+				</bean>
+				<bean id="hu" class="org.wso2.spring.ws.beans.ParameterBean">
+					<property name="name" value="hotupdate"></property>
+					<property name="value" value="true"></property>
+				</bean>				
+				<bean id="eMTOM" class="org.wso2.spring.ws.beans.ParameterBean">
+					<property name="name" value="enableMTOM"></property>
+					<property name="value" value="true"></property>
+				</bean>
+				<bean id="eSwA" class="org.wso2.spring.ws.beans.ParameterBean">
+					<property name="name" value="enableSwA"></property>
+					<property name="value" value="true"></property>
+				</bean>
+				<bean id="timeOut" class="org.wso2.spring.ws.beans.ParameterBean">
+					<property name="name" value="ConfigContextTimeoutInterval"></property>
+					<property name="value" value="30000"></property>
+				</bean>
+				
+				<bean id="stacktrace" class="org.wso2.spring.ws.beans.ParameterBean">
+					<property name="name" value="sendStacktraceDetailsWithFaults"></property>
+					<property name="value" value="false"></property>
+				</bean>
+				<bean id="drillFaultReason" class="org.wso2.spring.ws.beans.ParameterBean">
+					<property name="name" value="DrillDownToRootCauseForFaultReason"></property>
+					<property name="value" value="false"></property>
+				</bean>
+				<bean id="username" class="org.wso2.spring.ws.beans.ParameterBean">
+					<property name="name" value="userName"></property>
+					<property name="value" value="admin"></property>
+				</bean>
+				<bean id="passwd" class="org.wso2.spring.ws.beans.ParameterBean">
+					<property name="name" value="password"></property>
+					<property name="value" value="axis2"></property>
+				</bean>
+				<bean id="disRest" class="org.wso2.spring.ws.beans.ParameterBean">
+					<property name="name" value="disableREST"></property>
+					<property name="value" value="true"></property>
+					<property name="locked" value="false"></property>
+				</bean>
+				
+			</list>
+			
+		</property>
+		<property name="messageReceivers">
+			<list>
+				<ref bean="axis2MsgReceiverIN"/>
+				<ref bean="axis2MsgReceiverINOUT"/>
+				<ref bean="axis2MsgReceiverIN2"/>
+				<ref bean="axis2MsgReceiverINOUT2"/>
+			</list>
+		</property>
+		<property name="messageFormatters">
+			<list>
+				<ref bean="axis2MsgFormatterURL"/>
+				<ref bean="axis2MsgFormatterForm"/>
+				<ref bean="axis2MsgFormatterXML"/>
+			</list>
+		</property>
+		<property name="messageBuilders">
+			<list>
+				<ref bean="axis2MsgBuilderURL"/>
+				<ref bean="axis2MsgBuilderForm"/>
+				<ref bean="axis2MsgBuilderXML"/>
+			</list>
+		</property>
+		<property name="transportReceivers">
+			<list>
+				<ref bean="axis2TransportReceiver"/>
+			</list>
+		</property>
+		<property name="transportSenders">
+			<list>
+				<ref bean="axis2TransportSenderTCP"/>
+				<ref bean="axis2TransportSenderlocal"/>
+				<ref bean="axis2TransportSender"/>
+				<ref bean="axis2TransportSenderHTTPS"/>
+			</list>
+		</property>
+		<property name="phaseOrders">
+			<list>
+				<ref bean="axis2InPhaseOrder"/>
+				<ref bean="axis2InFaultPhaseOrder"/>
+				<ref bean="axis2OutPhaseOrder"/>
+				<ref bean="axis2OutFaultPhaseOrder"/>
+			</list>
+		</property>
+		
+		<property name="modules">
+			<list>
+				<value>addressing</value>
+			</list>
+		
+		</property>
+		
+	</bean>
+	
+	<!-- Parameter definitions -->
+	
+	
+	
+	<!-- Message Receiver definitions -->
+	
+	<bean id="axis2MsgReceiverIN" class="org.wso2.spring.ws.beans.MessageReceiverBean">
+		<property name="mep" value="http://www.w3.org/2004/08/wsdl/in-only"></property>
+		<property name="clazz" value="org.apache.axis2.receivers.RawXMLINOnlyMessageReceiver"></property>
+	</bean>
+	<bean id="axis2MsgReceiverINOUT" class="org.wso2.spring.ws.beans.MessageReceiverBean">
+		<property name="mep" value="http://www.w3.org/2004/08/wsdl/in-out"></property>
+		<property name="clazz" value="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"></property>
+	</bean>
+	<bean id="axis2MsgReceiverIN2" class="org.wso2.spring.ws.beans.MessageReceiverBean">
+		<property name="mep" value="http://www.w3.org/2006/01/wsdl/in-only"></property>
+		<property name="clazz" value="org.apache.axis2.receivers.RawXMLINOnlyMessageReceiver"></property>
+	</bean>
+	<bean id="axis2MsgReceiverINOUT2" class="org.wso2.spring.ws.beans.MessageReceiverBean">
+		<property name="mep" value="http://www.w3.org/2006/01/wsdl/in-out"></property>
+		<property name="clazz" value="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"></property>
+	</bean>
+	
+	
+	
+	<!-- Message Formatter Definitions -->
+	
+	<bean id="axis2MsgFormatterURL" class="org.wso2.spring.ws.beans.MessageFormatterBean">
+		<property name="contentType" value="application/x-www-form-urlencoded"></property>
+		<property name="clazz" value="org.apache.axis2.transport.http.XFormURLEncodedFormatter"></property>
+	</bean>
+	<bean id="axis2MsgFormatterForm" class="org.wso2.spring.ws.beans.MessageFormatterBean">
+		<property name="contentType" value="multipart/form-data"></property>
+		<property name="clazz" value="org.apache.axis2.transport.http.MultipartFormDataFormatter"></property>
+	</bean>
+	<bean id="axis2MsgFormatterXML" class="org.wso2.spring.ws.beans.MessageFormatterBean">
+		<property name="contentType" value="application/xml"></property>
+		<property name="clazz" value="org.apache.axis2.transport.http.ApplicationXMLFormatter"></property>
+	</bean>
+	
+	
+	
+	<!-- Message Builder Definitions -->
+	
+	<bean id="axis2MsgBuilderXML" class="org.wso2.spring.ws.beans.MessageBuilderBean">
+		<property name="contentType" value="application/xml"></property>
+		<property name="clazz" value="org.apache.axis2.builder.ApplicationXMLBuilder"></property>
+	</bean>
+	<bean id="axis2MsgBuilderURL" class="org.wso2.spring.ws.beans.MessageBuilderBean">
+		<property name="contentType" value="application/x-www-form-urlencoded"></property>
+		<property name="clazz" value="org.apache.axis2.builder.XFormURLEncodedBuilder"></property>
+	</bean>
+	<bean id="axis2MsgBuilderForm" class="org.wso2.spring.ws.beans.MessageBuilderBean">
+		<property name="contentType" value="multipart/form-data"></property>
+		<property name="clazz" value="org.apache.axis2.builder.MultipartFormDataBuilder"></property>
+	</bean>
+	
+	
+	<!-- Transport Receiver Definitions -->
+	
+	<bean id="axis2TransportReceiver" class="org.wso2.spring.ws.beans.TransportReceiverBean">
+		<property name="name" value="http"></property>
+		<property name="clazz" value="org.apache.axis2.transport.http.SimpleHTTPServer"></property>
+		<property name="parameters">
+			<map>
+				<entry key="port" value="8888" />
+			</map>
+		</property>
+	</bean>
+	
+	
+	<!-- Transport Sender Definitions -->
+	
+	<bean id="axis2TransportSender" class="org.wso2.spring.ws.beans.TransportSenderBean">
+		<property name="name" value="http"></property>
+		<property name="clazz" value="org.apache.axis2.transport.http.CommonsHTTPTransportSender"></property>
+		<property name="parameters">
+			<map>
+				<entry key="PROTOCOL" value="HTTP/1.1" />
+				<entry key="Transfer-Encoding" value="chunked" />
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="axis2TransportSenderTCP" class="org.wso2.spring.ws.beans.TransportSenderBean">
+		<property name="name" value="tcp"></property>
+		<property name="clazz" value="org.apache.axis2.transport.tcp.TCPTransportSender"></property>
+	</bean>
+	
+	<bean id="axis2TransportSenderlocal" class="org.wso2.spring.ws.beans.TransportSenderBean">
+		<property name="name" value="local"></property>
+		<property name="clazz" value="org.apache.axis2.transport.local.LocalTransportSender"></property>
+	</bean>
+	
+	<bean id="axis2TransportSenderHTTPS" class="org.wso2.spring.ws.beans.TransportSenderBean">
+		<property name="name" value="https"></property>
+		<property name="clazz" value="org.apache.axis2.transport.http.CommonsHTTPTransportSender"></property>
+		<property name="parameters">
+			<map>
+				<entry key="PROTOCOL" value="HTTP/1.1" />
+				<entry key="Transfer-Encoding" value="chunked" />
+			</map>
+		</property>
+	</bean>
+	
+	<!-- Addressing phase definition -->
+	
+	<bean id="axis2AddressingPhase" class="org.wso2.spring.ws.beans.PhaseBean">
+		<property name="name" value="Addressing"></property>
+		<property name="handlers">
+			<list>
+				<ref bean="addressingHandler"/>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- Addressing handler -->
+	
+	<bean id="addressingHandler" class="org.wso2.spring.ws.beans.HandlerBean">
+		<property name="name" value="AddressingBasedDispatcher"></property>
+		<property name="clazz" value="org.apache.axis2.dispatchers.AddressingBasedDispatcher"></property>
+		<property name="orderPhase" value="Addressing"></property>
+		
+	</bean>
+	
+		
+	<!-- In Phase Order definition -->
+	
+	<bean id="axis2InPhaseOrder" class="org.wso2.spring.ws.beans.PhaseOrderBean">
+		<property name="phaseOrderType" value="InFlow"></property>
+		<property name="phases">
+			<list>
+				<ref bean="axis2TransportPhase"/>
+				<ref bean="axis2AddressingPhase"/>
+				<ref bean="preDispatchPhase"/>
+				<bean id="InDispatchPhase" class="org.wso2.spring.ws.beans.PhaseBean">
+					<property name="name" value="Dispatch"></property>
+					<property name="clazz" value="org.apache.axis2.engine.DispatchPhase"></property>
+					<property name="handlers">
+						<list>
+							<ref bean="RequestURI"/>
+							<ref bean="SOAPAction"/>
+							<ref bean="RequestURIOperation"/>
+							<ref bean="SOAPMessageBody"/>
+							<ref bean="HTTPLocationBased"/>
+						</list>
+					</property>
+				</bean>
+				
+			</list>
+		</property>
+	</bean>
+	
+	
+	<!--  Transport Phase -->
+	
+	<bean id="axis2TransportPhase" class="org.wso2.spring.ws.beans.PhaseBean">
+		<property name="name" value="Transport"></property>
+		<property name="handlers">
+		<list>
+				<bean id="URIBasedDispather" class="org.wso2.spring.ws.beans.HandlerBean">
+					<property name="name" value="RequestURIBasedDispatcher"></property>
+					<property name="clazz" value="org.apache.axis2.dispatchers.RequestURIBasedDispatcher"></property>
+					<property name="orderPhase" value="Transport"></property>
+				</bean>
+			
+			
+				<bean id="ActionBasedDispatcher" class="org.wso2.spring.ws.beans.HandlerBean">
+					<property name="name" value="SOAPActionBasedDispatcher"></property>
+					<property name="clazz" value="org.apache.axis2.dispatchers.SOAPActionBasedDispatcher"></property>
+					<property name="orderPhase" value="Transport"></property>
+				</bean>
+			
+		</list>
+		</property>
+	</bean>
+	
+	<!-- Common handlers for InDispatch Phase of In and InFault Phase Orders -->
+	
+	<bean id="RequestURI" class="org.wso2.spring.ws.beans.HandlerBean">
+		<property name="name" value="RequestURIBasedDispatcher"></property>
+		<property name="clazz"
+			value="org.apache.axis2.dispatchers.RequestURIBasedDispatcher">
+		</property>
+	</bean>
+	<bean id="SOAPAction" class="org.wso2.spring.ws.beans.HandlerBean">
+		<property name="name" value="SOAPActionBasedDispatcher"></property>
+		<property name="clazz"
+			value="org.apache.axis2.dispatchers.SOAPActionBasedDispatcher">
+		</property>
+	</bean>
+	<bean id="RequestURIOperation" class="org.wso2.spring.ws.beans.HandlerBean">
+		<property name="name" value="RequestURIOperationDispatcher"></property>
+		<property name="clazz"
+			value="org.apache.axis2.dispatchers.RequestURIOperationDispatcher">
+		</property>
+	</bean>
+	<bean id="SOAPMessageBody" class="org.wso2.spring.ws.beans.HandlerBean">
+		<property name="name" value="SOAPMessageBodyBasedDispatcher"></property>
+		<property name="clazz"
+			value="org.apache.axis2.dispatchers.SOAPMessageBodyBasedDispatcher">
+		</property>
+	</bean>
+	<bean id="HTTPLocationBased" class="org.wso2.spring.ws.beans.HandlerBean">
+		<property name="name" value="HTTPLocationBasedDispatcher"></property>
+		<property name="clazz"
+			value="org.apache.axis2.dispatchers.HTTPLocationBasedDispatcher">
+		</property>
+	</bean>
+
+
+	<!-- In Fault Phase Order definition -->
+
+	<bean id="axis2InFaultPhaseOrder" class="org.wso2.spring.ws.beans.PhaseOrderBean">
+		<property name="phaseOrderType" value="InFaultFlow"></property>
+		<property name="phases">
+			<list>
+				<ref bean="axis2AddressingPhase"/>
+				<ref bean="preDispatchPhase"/>
+				<bean id="InFaultDispatchPhase" class="org.wso2.spring.ws.beans.PhaseBean">
+					<property name="name" value="Dispatch"></property>
+					<property name="clazz" value="org.apache.axis2.engine.DispatchPhase"></property>
+					<property name="handlers">
+						<list>
+							<ref bean="RequestURI"/>
+							<ref bean="SOAPAction"/>
+							<ref bean="RequestURIOperation"/>
+							<ref bean="SOAPMessageBody"/>
+							<ref bean="HTTPLocationBased"/>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	
+	<!-- Pre Dispatch Phase -->
+	
+	<bean id="preDispatchPhase" class="org.wso2.spring.ws.beans.PhaseBean">
+		<property name="name" value="PreDispatch"></property>
+	</bean>
+	
+	
+	<!-- Out Phase Order definition -->
+	
+	<bean id="axis2OutPhaseOrder" class="org.wso2.spring.ws.beans.PhaseOrderBean">
+		<property name="phaseOrderType" value="OutFlow"></property>
+		<property name="phases">
+			<list>
+				<ref bean="messageOut" />
+			</list>
+		</property>
+	</bean>
+	
+	
+	<!-- Out Fault Phase Order definition -->
+	
+	<bean id="axis2OutFaultPhaseOrder" class="org.wso2.spring.ws.beans.PhaseOrderBean">
+		<property name="phaseOrderType" value="OutFaultFlow"></property>
+		<property name="phases">
+			<list>
+				<ref bean="messageOut" />
+			</list>
+		</property>
+	</bean>
+	
+	
+	<!--  Message out phase (Common for Out and Out Fault Phases) -->
+	
+	<bean id="messageOut" class="org.wso2.spring.ws.beans.PhaseBean">
+		<property name="name" value="MessageOut"></property>
+	</bean>
+
+</beans>
