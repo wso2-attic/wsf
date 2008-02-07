@@ -1,6 +1,6 @@
 @echo off
 
-rem @call clean.bat
+@call clean.bat
 
 @copy configure.in wsf_c\configure.in
 @copy wsf_c_build.bat wsf_c\build.bat
@@ -16,6 +16,8 @@ rem @call clean.bat
 @xcopy /E /Q /Y /I wsf_c\wso2-wsf-c-bin-1.2.0 wso2-wsf-php-bin-1.2.1-win32\wsf_c
 
 @if exist wso2-wsf-php-bin-1.2.1-win32\wsf_c\services rmdir /S /Q wso2-wsf-php-bin-1.2.1-win32\wsf_c\services
+
+@if exist wso2-wsf-php-bin-1.2.1-win32\wsf_c\docs rmdir /S /Q wso2-wsf-php-bin-1.2.1-win32\wsf_c\docs
 
 @if exist wso2-wsf-php-bin-1.2.1-win32\wsf_c\modules\savan rmdir /S /Q wso2-wsf-php-bin-1.2.1-win32\wsf_c\modules\savan
 
@@ -59,3 +61,7 @@ rem @call clean.bat
 
 @cd ..
 
+
+@if exist wso2-wsf-php-bin-1.2.1-win32\wsf_c\include rmdir /S /Q wso2-wsf-php-bin-1.2.1-win32\wsf_c\include
+@del /Q wso2-wsf-php-bin-1.2.1-win32\wsf_c\lib\*.exp
+@del /Q  wso2-wsf-php-bin-1.2.1-win32\wsf_c\lib\*.lib
