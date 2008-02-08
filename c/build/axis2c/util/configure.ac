@@ -237,6 +237,17 @@ AC_CONFIG_FILES([Makefile \
     include/Makefile \
     test/Makefile \
     test/util/Makefile \
+    test/allocator/Makefile \
+    test/date_time/Makefile \
+    test/duration/Makefile \
+    test/link_list/Makefile \
+    test/properties/Makefile \
+    test/rand/Makefile \
+    test/stack/Makefile \
+    test/string_util/Makefile \
+    test/uri/Makefile \
+    test/url/Makefile \
+    test/utils/Makefile \
     ])
     
 AC_OUTPUT
