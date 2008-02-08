@@ -1,6 +1,6 @@
 @echo off
 
-rem @call clean.bat
+@call clean.bat
 
 @copy configure.in wsf_c\configure.in
 @copy wsf_c_build.bat wsf_c\build.bat
