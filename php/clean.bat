@@ -2,7 +2,7 @@
 
 @if exist wso2-wsf-php-1.2.1-win32 rmdir /S /Q wso2-wsf-php-1.2.1-win32
 
-@if exist wsf_c\axis2c\build\axis2c-bin-1.2.0-win32 rmdir /s /q wsf_c\axis2c\build\axis2c-bin-1.2.0-win32
+@if exist wsf_c\axis2c\build\axis2c-bin-1.2.0-win32 rmdir /s /q wsf_c\axis2c\build\axis2c-bin-1.3.0-win32
 
 @if exist wsf_c\axis2c\build\deploy rmdir /s /q wsf_c\axis2c\build\deploy
 
