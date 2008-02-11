@@ -1062,18 +1062,19 @@ static void generate_wsdl_for_service(zval *svc_zval,
         zval func, retval, param1, param2, param3, param4, param5, param6, param7;
         zval * params[7];
         axutil_hash_index_t * hi = NULL;
-        zval * functions;
+		zval * functions = NULL;
         zend_file_handle script;
         char *val = NULL;
         int len = 0;
-        zval ** tmpval;
+		zval ** tmpval = NULL;
         char *binding_name = NULL;
         char *wsdl_version = NULL;
         smart_str full_path = {0};
-        zval * op_val;
+		zval * op_val = NULL;
+		FILE *new_fp = NULL;
 
         zval **wsdl_location = NULL;
-        php_stream *stream;
+		php_stream *stream = NULL;
 
         if ((zend_hash_find (Z_OBJPROP_P (svc_zval), WS_WSDL, sizeof(WS_WSDL),
                              (void **)&wsdl_location) == SUCCESS
@@ -1215,12 +1216,13 @@ static void generate_wsdl_for_service(zval *svc_zval,
             if(!stream)
                 return;
 
-            if (php_stream_cast(stream, PHP_STREAM_AS_STDIO|PHP_STREAM_CAST_RELEASE, (void*)&script.handle.fp, REPORT_ERRORS) == FAILURE)    {
+            if (php_stream_cast(stream, PHP_STREAM_AS_STDIO|PHP_STREAM_CAST_RELEASE, (void*)&new_fp, REPORT_ERRORS) == FAILURE)    {
 					php_error_docref(NULL TSRMLS_CC, E_ERROR, "Unable to open script file or file not found:");
             }
 
-            if (script.handle.fp){
+            if (new_fp){
                 int status;
+				script.handle.fp = new_fp;
                 status = php_lint_script (&script TSRMLS_CC);
                 if (call_user_function (EG (function_table), (zval **) NULL,
                                         &func, &retval, 7, params TSRMLS_CC) == SUCCESS){
@@ -1242,10 +1244,6 @@ static void generate_wsdl_for_service(zval *svc_zval,
             smart_str_free(&full_path);
             zval_ptr_dtor(&op_val);
             zval_ptr_dtor(&functions);
-
-             if (stream) {
-                php_stream_close(stream);
-             }
             /** end WSDL generation stuff */ 
         }
 }     
