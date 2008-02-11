@@ -148,12 +148,12 @@ void create_dynamic_client(zval *this_ptr, char *function, int function_len,
 		}
 		if(!script_executed){
 			script.type = ZEND_HANDLE_FP;
-			script.filename = "wsf_wsdl_include.php";
+			script.filename = "wsf_wsdl.php";
 			script.opened_path = NULL;
 			script.free_filename = 0;
 
 
-			stream  = php_stream_open_wrapper("wsf_wsdl_include.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
+			stream  = php_stream_open_wrapper("wsf_wsdl.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
 			if(!stream)
 					return;
 
@@ -162,8 +162,8 @@ void create_dynamic_client(zval *this_ptr, char *function, int function_len,
 			}
 			script.handle.fp =  new_fp;
 			if(script.handle.fp){
-				php_execute_script (&script TSRMLS_CC);
-				/* php_lint_script (&script TSRMLS_CC); */
+			    /*	php_execute_script (&script TSRMLS_CC); */
+		        php_lint_script (&script TSRMLS_CC); 
 				add_property_bool(this_ptr, "SCRIPT_EXECUTED", 1);
 				script_executed = 1;
 			}
