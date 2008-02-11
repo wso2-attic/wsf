@@ -174,7 +174,7 @@ typedef enum ws_input_types
 #define WS_RM_VERSION_1_1  2
 
 #define WS_RM_RESPONSE_TIMEOUT "responseTimeout"
-#define WS_RM_DEFAULT_RESPONSE_TIMEOUT "5"
+#define WS_RM_DEFAULT_RESPONSE_TIMEOUT "12"
 
 
 
