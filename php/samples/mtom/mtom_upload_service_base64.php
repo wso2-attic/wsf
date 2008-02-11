@@ -29,8 +29,12 @@ function getAttachment($inMessage) {
         $image = $images->item(0);
         if (stristr(PHP_OS, 'WIN')) {
             file_put_contents("base64image.txt",$image->nodeValue);
+            $str = base64_decode($image->nodeValue);
+            file_put_contents("decoded_image.jpg", $str);
         }else{
             file_put_contents("/tmp/base64image.txt",$image->nodeValue);
+		$str = base64_decode($image->nodeValue);
+            file_put_contents("decoded_image.jpg", $str);
         }
     }
 
