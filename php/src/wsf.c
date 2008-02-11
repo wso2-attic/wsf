@@ -815,6 +815,7 @@ PHP_METHOD (ws_client, get_last_response_headers)
             }
         }
     }
+    RETURN_NULL();
 }
 /* }}} */ 
     
