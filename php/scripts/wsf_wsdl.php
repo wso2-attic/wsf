@@ -27,7 +27,6 @@
  * @param array $function_parameters details of the invoked function
  * @return array $return_value array of details to be passed to C level
  */
-
 function wsf_process_wsdl($user_parameters, $function_parameters)
 {
 
@@ -61,11 +60,12 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
         $class_map = NULL;
 
     $xslt_location = $user_parameters[WSF_XSLT_LOCATION];
-    $xslt_location = "./dynamic_invocation/xslt/";
+    $xslt_location = "./xslt/";
 
     $operation_name = $function_parameters[WSF_INVOKE_FUNCTION];
     $arg_count = $function_parameters[WSF_ARG_COUNT];
     $arguments = $function_parameters[WSF_ARG_ARRAY];
+
 
     $sig_model_dom->preserveWhiteSpace = false;
     $wsdl_dom->preserveWhiteSpace = false;
@@ -79,6 +79,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     if(!$wsdl_dom->load($wsdl_location))
         return "WSDL could not be loaded.";
    
+
     $wsdl_dom->preserveWhiteSpace = false;
     /* changing code for processing mutiple port types in wsdl 1.1 */
     $is_multiple_interfaces = wsf_is_mutiple_port_types($wsdl_dom);
@@ -98,16 +99,10 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
 
         $sig_model_dom = wsf_process_multiple_interfaces($wsdl_dom, $sig_model_dom, $xslt_location);
     }
-
-    //echo test_serialize_node($sig_model_dom->documentElement);
-    //echo $sig_model_dom->saveXML()."\n";
-
-/*     if ($is_wsdl_11 == FALSE && !$wsdl_11_dom ) */
-/*          $schema_node = wsf_get_schema_node($wsdl_dom);  */
     
     if(!$sig_model_dom)
         return "error creating intermediate model";
-   
+  
     if(!$endpoint_address)
         $endpoint_address = wsf_get_endpoint_address($sig_model_dom);
     else{
@@ -133,6 +128,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
             return  NULL;
         $policy_array = wsf_get_all_policies($wsdl_dom, $binding_node, $operation_name);
     }
+
     $operation = wsf_find_operation($sig_model_dom, $operation_name, $endpoint_address, $is_multiple_interfaces);
 
     if(!$operation){
@@ -154,6 +150,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
             
         }
     }
+
      
     if($sig_method && !$is_rpc_enc)
         $payload = wsf_create_payload($sig_method, $is_doc_lit, $operation_name, $arg_count, $arguments, $class_map);
@@ -310,14 +307,14 @@ function wsf_wsdl_process_in_msg($parameters)
     $class_name = $parameters["class_name"];
     $class_map = $parameters["classmap"];
     $class_args = $parameters["class_args"];
-    
+
     $payload_dom->loadXML($payload_string);
     $sig_model_dom->loadXML($sig_model_string);
 
     $endpoint_address = wsf_get_endpoint_address($sig_model_dom);
     $is_multiple_interfaces = NULL;
     $operation_node = wsf_find_operation($sig_model_dom, $operation_name, $endpoint_address, $is_multiple_interfaces);
-    
+
     if(!$operation_node){
         $operation = "\noperation not found";
     }

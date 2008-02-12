@@ -661,7 +661,7 @@ function wsf_wsdl_util_convert_value($xsd_type, $data_value)
         "short"          =>  "integer",
         "byte"           =>  "integer",
         "long"           =>  "interger",
-        "decimal"        =>  "integer",
+        "decimal"        =>  "float",
         "interger"       =>  "integer",
         "base64Binary"   =>  "string",
         "hexBinary"      =>  "string",
@@ -698,6 +698,7 @@ function wsf_wsdl_util_convert_value($xsd_type, $data_value)
         "token"          => "string");
 
 
+    $converted_value = $data_value;
 	foreach($xsd_php_mapping_table as $key => $value){
 		if ($key == $xsd_type){
 			if($value == 'integer')
@@ -777,9 +778,17 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
 {
     static $i = 2;
 
+    if($parameter_struct[WSF_HAS_SIG_CHILDS] !== TRUE)
+    {
+        $values = array_values($namespace_map);
+        $prefix = $values[0];
+        wsf_create_payload_for_unknown_class_map($payload_dom, $parent_ele, $class_obj, $prefix);
+        return;
+    }
+
     foreach($parameter_struct as $key => $value){
         if(is_array($value)){
-            if (isset($value[WSF_TYPE]) && $value[WSF_TYPE]){
+            if (isset($value[WSF_TYPE_REP]) && $value[WSF_TYPE_REP]){
                 if($class_obj->$key)
                 {
                     $arg_val = $class_obj->$key;
@@ -810,10 +819,13 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
                             $parent_ele->appendChild($element_2);
                         }
                     }
-                    else{
+                    else if(!is_array($arg_val)){
                         /* in a case this is not an array */
                         $element_2 = $payload_dom->createElement($node_name, $arg_val);
                         $parent_ele->appendChild($element_2);
+                    }
+                    else{
+                        error_log("Array is given for ". $key ." which should be a non array. \n");
                     }
                 }
             }
@@ -847,11 +859,25 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
                             $element_2 = $payload_dom->createElement($node_name);
                             if(is_object($arg_val_item))
                             {
-                                wsf_create_payload_for_class_map($payload_dom, $value, $element_2, $root_ele, $arg_val_item, $namespace_map);
+                                if($value[WSF_HAS_SIG_CHILDS] === TRUE)
+                                {
+                                    wsf_create_payload_for_class_map($payload_dom, $value, $element_2, $root_ele, $arg_val_item, $namespace_map);
+                                }
+                                else
+                                {
+                                    wsf_create_payload_for_unknown_class_map($payload_dom, $element_2, $arg_val_item, $prefix);
+                                }
                             }
                             else
                             {
-                                wsf_create_payload_for_array($payload_dom, $value, $element_2, $root_ele, $arg_val_item, $namespace_map);
+                                if($value[WSF_HAS_SIG_CHILDS] === TRUE)
+                                {
+                                    wsf_create_payload_for_array($payload_dom, $value, $element_2, $root_ele, $arg_val_item, $namespace_map);
+                                }
+                                else
+                                {
+                                    wsf_create_payload_for_unknown_array($payload_dom, $element_2, $arg_val_item, $prefix);
+                                }
                             }
                             $parent_ele->appendChild($element_2);
                         }
@@ -861,17 +887,31 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
                         $element_2 = $payload_dom->createElement($node_name);
                         if(is_object($arg_val))
                         {
-                            wsf_create_payload_for_class_map($payload_dom, $value, $element_2, $root_ele, $arg_val, $namespace_map);
+                            if($value[WSF_HAS_SIG_CHILDS] === TRUE)
+                            {
+                                wsf_create_payload_for_class_map($payload_dom, $value, $element_2, $root_ele, $arg_val, $namespace_map);
+                            }
+                            else
+                            {
+                                wsf_create_payload_for_unknown_class_map($payload_dom, $element_2, $arg_val, $prefix);
+                            }
                         }
                         else
                         {
-                            wsf_create_payload_for_array($payload_dom, $value, $element_2, $root_ele, $arg_val, $namespace_map);
+                            if($value[WSF_HAS_SIG_CHILDS] === TRUE)
+                            {
+                                wsf_create_payload_for_array($payload_dom, $value, $element_2, $root_ele, $arg_val, $namespace_map);
+                            }
+                            else
+                            {
+                                wsf_create_payload_for_unknown_array($payload_dom, $element_2, $arg_val, $prefix);
+                            }
                         }
                         $parent_ele->appendChild($element_2);
                     }
                 }
             }
-        }else if($key == WSF_TYPE && is_xsd_type($value)){
+        }else if($key == WSF_TYPE_REP && is_xsd_type($value)){
             /* TODO multiple values */
             if(!$argument_array[0])
                 $element_2 = $payload_dom->createTextNode(0);
@@ -900,9 +940,17 @@ function wsf_create_payload_for_array(DomDocument $payload_dom,
 {
     static $i = 2;
 
+    if($parameter_struct[WSF_HAS_SIG_CHILDS] !== TRUE)
+    {
+        $values = array_values($namespace_map);
+        $prefix = $values[0];
+        wsf_create_payload_for_unknown_array($payload_dom, $parent_ele, $argument_array, $prefix);
+        return;
+    }
+
     foreach($parameter_struct as $key => $value){
         if(is_array($value)){
-                if (isset($value[WSF_TYPE]) && $value[WSF_TYPE]){
+                if (isset($value[WSF_TYPE_REP]) && $value[WSF_TYPE_REP]){
                     foreach($argument_array as $arg_key => $arg_val){
                         if($key == $arg_key){
                             /* type conversion is needed */
@@ -932,10 +980,13 @@ function wsf_create_payload_for_array(DomDocument $payload_dom,
                                     $parent_ele->appendChild($element_2);
                                 }
                             }
-                            else{
+                            else if(!is_array($arg_val)){
                                 /* in a case this is not an array */
                                 $element_2 = $payload_dom->createElement($node_name, $arg_val);
                                 $parent_ele->appendChild($element_2);
+                            }
+                            else{
+                                error_log("Array is given for ". $key ." which should be a non array. \n");
                             }
                         }
                     }
@@ -969,11 +1020,25 @@ function wsf_create_payload_for_array(DomDocument $payload_dom,
                                     $element_2 = $payload_dom->createElement($node_name);
                                     if(is_object($arg_val_item))
                                     {
-                                        wsf_create_payload_for_class_map($payload_dom, $value, $element_2, $root_ele, $arg_val_item, $namespace_map);
+                                        if($value[WSF_HAS_SIG_CHILDS] === TRUE)
+                                        {
+                                            wsf_create_payload_for_class_map($payload_dom, $value, $element_2, $root_ele, $arg_val_item, $namespace_map);
+                                        }
+                                        else
+                                        {
+                                            wsf_create_payload_for_unknown_class_map($payload_dom, $element_2, $arg_val_item, $prefix);
+                                        }
                                     }
                                     else
                                     {
-                                        wsf_create_payload_for_array($payload_dom, $value, $element_2, $root_ele, $arg_val_item, $namespace_map);
+                                        if($value[WSF_HAS_SIG_CHILDS] === TRUE)
+                                        {
+                                            wsf_create_payload_for_array($payload_dom, $value, $element_2, $root_ele, $arg_val_item, $namespace_map);
+                                        }
+                                        else
+                                        {
+                                            wsf_create_payload_for_unknown_array($payload_dom, $element_2, $arg_val_item, $prefix);
+                                        }
                                     }
                                     $parent_ele->appendChild($element_2);
                                 }
@@ -984,24 +1049,184 @@ function wsf_create_payload_for_array(DomDocument $payload_dom,
                                 $element_2 = $payload_dom->createElement($node_name);
                                 if(is_object($arg_val))
                                 {
-                                    wsf_create_payload_for_class_map($payload_dom, $value, $element_2, $root_ele, $arg_val, $namespace_map);
+                                    if($value[WSF_HAS_SIG_CHILDS] === TRUE)
+                                    {
+                                        wsf_create_payload_for_class_map($payload_dom, $value, $element_2, $root_ele, $arg_val, $namespace_map);
+                                    }
+                                    else
+                                    {
+                                        wsf_create_payload_for_unknown_class_map($payload_dom, $element_2, $arg_val, $prefix);
+                                    }
                                 }
                                 else
                                 {
-                                    wsf_create_payload_for_array($payload_dom, $value, $element_2, $root_ele, $arg_val, $namespace_map);
+                                    if($value[WSF_HAS_SIG_CHILDS] === TRUE)
+                                    {
+                                        wsf_create_payload_for_array($payload_dom, $value, $element_2, $root_ele, $arg_val, $namespace_map);
+                                    }
+                                    else
+                                    {
+                                        wsf_create_payload_for_unknown_array($payload_dom, $element_2, $arg_val, $prefix);
+                                    }
                                 }
                                 $parent_ele->appendChild($element_2);
                             }
                         }
                     }
                 }
-        }else if($key == WSF_TYPE && is_xsd_type($value)){
+        }else if($key == WSF_TYPE_REP && is_xsd_type($value)){
             /* TODO multiple values */
             if(!$argument_array[0])
                 $element_2 = $payload_dom->createTextNode(0);
             else
                 $element_2 = $payload_dom->createTextNode($argument_array[0]);
             $root_ele->appendChild($element_2);
+        }
+    }
+}
+
+/** create payload for unknown class maps 
+ * @param $payload_dom - DomDocument for the payload building
+ * @param $parent_ele - The parent node to add the content
+ * @param $argument_array - The user given argument array 
+ * @param $class_obj - object with user data..
+ * @param $ns_prefix
+ */
+function wsf_create_payload_for_unknown_class_map(DomDocument $payload_dom,
+                                     DomNode $parent_ele,
+                                     $class_obj,
+                                     $ns_prefix)
+{
+    $reflex_obj = new ReflectionObject($class_obj);
+    $reflex_properties = $reflex_obj->getProperties();
+
+
+    foreach($reflex_properties as $reflex_property)
+    {
+        $key = $reflex_property->getName();
+        $value = $reflex_property->getValue($class_obj);
+
+        if($ns_prefix != NULL && !empty($ns_prefix))
+        {
+            $node_name = $ns_prefix.":".$key;
+        }
+        else
+        {
+            $node_name = $key;
+        }
+        if(is_object($value))
+        {
+            $current_node = $payload_dom->createElement($node_name);
+            wsf_create_payload_for_unknown_class_map($payload_dom, $current_node, $value, $ns_prefix);
+            $parent_ele->appendChild($current_node);
+        }
+        else if(wsf_is_map($value))
+        {
+            $current_node = $payload_dom->createElement($node_name);
+            wsf_create_payload_for_unknown_array($payload_dom, $current_node, $value, $ns_prefix);
+            $parent_ele->appendChild($current_node);
+        }
+        else if(is_array($value))
+        {
+            foreach($value as $child_value)
+            {
+                if(is_object($child_value))
+                {
+                    $current_node = $payload_dom->createElement($node_name);
+                    wsf_create_payload_for_unknown_class_map($payload_dom, $current_node, $child_value, $ns_prefix);
+                    $parent_ele->appendChild($current_node);
+                }
+                else if(wsf_is_map($child_value))
+                {
+                    $current_node = $payload_dom->createElement($node_name);
+                    wsf_create_payload_for_unknown_array($payload_dom, $current_node, $child_value, $ns_prefix);
+                    $parent_ele->appendChild($current_node);
+                }
+                else if(is_array($child_value))
+                {
+                    error_log("Invalid array (inside an array) supplied around ".print_r($child_value, TRUE)." \n");
+                }
+                else
+                {
+                    $current_node = $payload_dom->createElement($node_name, $child_value);
+                    $parent_ele->appendChild($current_node);
+                }
+            }
+        }
+        else
+        {
+            $current_node = $payload_dom->createElement($node_name, $value);
+            $parent_ele->appendChild($current_node);
+        }
+    }
+}
+
+
+
+/** create payload for arrays
+ * @param $payload_dom - DomDocument for the payload building
+ * @param $parent_ele - The parent node to add the content
+ * @param $argument_array - The user given argument array 
+ * @param $ns_prefix
+ */
+function wsf_create_payload_for_unknown_array(DomDocument $payload_dom,
+                                     DomNode $parent_ele,
+                                     array $argument_array,
+                                     $ns_prefix)
+{
+    foreach($argument_array as $key=> $value)
+    {
+        if($ns_prefix != NULL && !empty($ns_prefix))
+        {
+            $node_name = $ns_prefix.":".$key;
+        }
+        else
+        {
+            $node_name = $key;
+        }
+        if(is_object($value))
+        {
+            $current_node = $payload_dom->createElement($node_name);
+            wsf_create_payload_for_unknown_class_map($payload_dom, $current_node, $value, $ns_prefix);
+            $parent_ele->appendChild($current_node);
+        }
+        else if(wsf_is_map($value))
+        {
+            $current_node = $payload_dom->createElement($node_name);
+            wsf_create_payload_for_unknown_array($payload_dom, $current_node, $value, $ns_prefix);
+            $parent_ele->appendChild($current_node);
+        }
+        else if(is_array($value))
+        {
+            foreach($value as $child_value)
+            {
+                if(is_object($child_value))
+                {
+                    $current_node = $payload_dom->createElement($node_name);
+                    wsf_create_payload_for_unknown_class_map($payload_dom, $current_node, $child_value, $ns_prefix);
+                    $parent_ele->appendChild($current_node);
+                }
+                else if(wsf_is_map($child_value))
+                {
+                    $current_node = $payload_dom->createElement($node_name);
+                    wsf_create_payload_for_unknown_array($payload_dom, $current_node, $child_value, $ns_prefix);
+                    $parent_ele->appendChild($current_node);
+                }
+                else if(is_array($child_value))
+                {
+                    error_log("Invalid array (inside an array) supplied around ".print_r($child_value, TRUE)." \n");
+                }
+                else
+                {
+                    $current_node = $payload_dom->createElement($node_name, $child_value);
+                    $parent_ele->appendChild($current_node);
+                }
+            }
+        }
+        else
+        {
+            $current_node = $payload_dom->createElement($node_name, $value);
+            $parent_ele->appendChild($current_node);
         }
     }
 }
@@ -1029,7 +1254,7 @@ function wsf_create_rpc_payload_for_class_map(DomDocument $payload_dom,
 
     foreach($parameter_struct as $key => $value){
         if(is_array($value)){
-                if (isset($value[WSF_TYPE]) && $value[WSF_TYPE]){
+                if (isset($value[WSF_TYPE_REP]) && $value[WSF_TYPE_REP]){
                     if($class_obj->$key)
                     {
                         $arg_val = $class_obj->$key;
@@ -1057,14 +1282,14 @@ function wsf_create_rpc_payload_for_class_map(DomDocument $payload_dom,
                         if(($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1) && is_array($arg_val)){
                             foreach($arg_val as $arg_val_item){
                                 $element_2 = $payload_dom->createElement($node_name, $arg_val_item);
-                                $element_2->setAttribute("xsi:type", "xsd:".$value[WSF_TYPE]);
+                                $element_2->setAttribute("xsi:type", "xsd:".$value[WSF_TYPE_REP]);
                                 $parent_ele->appendChild($element_2);
                             }
                         }
                         else{
                             /* in a case this is not an array */
                             $element_2 = $payload_dom->createElement($node_name, $arg_val);
-                            $element_2->setAttribute("xsi:type", "xsd:".$value[WSF_TYPE]);
+                            $element_2->setAttribute("xsi:type", "xsd:".$value[WSF_TYPE_REP]);
                             $parent_ele->appendChild($element_2);
                         }
                     }
@@ -1123,7 +1348,7 @@ function wsf_create_rpc_payload_for_class_map(DomDocument $payload_dom,
                         }
                     }
                 }
-        }else if($key == WSF_TYPE && is_xsd_type($value)){
+        }else if($key == WSF_TYPE_REP && is_xsd_type($value)){
             /* TODO multiple values */
             if(!$argument_array[0])
                 $element_2 = $payload_dom->createTextNode(0);
@@ -1154,7 +1379,7 @@ function wsf_create_rpc_payload_for_array(DomDocument $payload_dom,
 
     foreach($parameter_struct as $key => $value){
         if(is_array($value)){
-            if (isset($value[WSF_TYPE]) && $value[WSF_TYPE]){
+            if (isset($value[WSF_TYPE_REP]) && $value[WSF_TYPE_REP]){
                 foreach($argument_array as $arg_key => $arg_val){
                     if($key == $arg_key){
                         /* type conversion is needed */
@@ -1181,14 +1406,14 @@ function wsf_create_rpc_payload_for_array(DomDocument $payload_dom,
                         if(($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1) && is_array($arg_val)){
                             foreach($arg_val as $arg_val_item){
                                 $element_2 = $payload_dom->createElement($node_name, $arg_val_item);
-                                $element_2->setAttribute("xsi:type", "xsd:".$value[WSF_TYPE]);
+                                $element_2->setAttribute("xsi:type", "xsd:".$value[WSF_TYPE_REP]);
                                 $parent_ele->appendChild($element_2);
                             }
                         }
                         else{
                             /* in a case this is not an array */
                             $element_2 = $payload_dom->createElement($node_name, $arg_val);
-                            $element_2->setAttribute("xsi:type", "xsd:".$value[WSF_TYPE]);
+                            $element_2->setAttribute("xsi:type", "xsd:".$value[WSF_TYPE_REP]);
                             $parent_ele->appendChild($element_2);
                         }
                     }
@@ -1242,7 +1467,7 @@ function wsf_create_rpc_payload_for_array(DomDocument $payload_dom,
                     }
                 }
             }
-        }else if($key == WSF_TYPE && is_xsd_type($value)){
+        }else if($key == WSF_TYPE_REP && is_xsd_type($value)){
             /* TODO multiple values */
             if(!$argument_array[0])
                 $element_2 = $payload_dom->createTextNode(0);
@@ -1267,6 +1492,7 @@ function wsf_create_temp_struct(DomNode $param_child, $wrapper_ns)
     $param_min = NULL;
     $param_max = NULL;
     $param_ns = NULL;
+    $param_has_sig_childs = FALSE;
    
     $param_attr = $param_child->attributes;
     if($param_attr->getNamedItem(WSF_WSDL_SIMPLE))
@@ -1284,13 +1510,18 @@ function wsf_create_temp_struct(DomNode $param_child, $wrapper_ns)
     if($param_attr->getNamedItem('nillable'))
         $param_nil = $param_attr->getNamedItem('nillable')->value;
 
-    if($wrap_type == 'yes'){
+    if($param_child->hasChildNodes()){
+        $param_has_sig_childs = TRUE;
+    }
+    $rec_array[WSF_HAS_SIG_CHILDS] = $param_has_sig_childs;
+
+    if($wrap_type == 'yes'){ /* this is for simple types */
         if($param_ns == NULL)
             $rec_array[WSF_NS] = "NULL";//$wrapper_ns;
         else
             $rec_array[WSF_NS] = $param_ns;
 
-        $rec_array[WSF_TYPE] = $param_type;
+        $rec_array[WSF_TYPE_REP] = $param_type;
         if($param_min != 1)
             $rec_array['minOccurs'] = $param_min; 
         if($param_max != 1)
@@ -1308,7 +1539,7 @@ function wsf_create_temp_struct(DomNode $param_child, $wrapper_ns)
             else
                 $rec_array[WSF_NS] = $param_ns;
 
-            $rec_array[WSF_TYPE] = $param_type;
+            $rec_array[WSF_TYPE_REP] = $param_type;
             if($param_min)
                 $rec_array['minOccurs'] = $param_min;
             if($param_max != 1)
@@ -1334,8 +1565,8 @@ function wsf_create_temp_struct(DomNode $param_child, $wrapper_ns)
             $param_child_list_level2 = $param_child->childNodes;
             foreach($param_child_list_level2 as $param_child_level2){
                 $param_child_level2_attr = $param_child_level2->attributes;
-            $param_level2_name = $param_child_level2_attr->getNamedItem(WSF_NAME)->value;
-            $rec_array[$param_level2_name] = wsf_create_temp_struct($param_child_level2, $wrapper_ns);
+                $param_level2_name = $param_child_level2_attr->getNamedItem(WSF_NAME)->value;
+                $rec_array[$param_level2_name] = wsf_create_temp_struct($param_child_level2, $wrapper_ns);
             }
         }
     }
@@ -1361,7 +1592,7 @@ function wsf_parse_payload_for_array(DomNode $payload, array $parameter_struct)
     {   
         if(is_array($value))
         {
-            if(isset($value[WSF_TYPE]) && $value[WSF_TYPE] && is_xsd_type($value[WSF_TYPE])){
+            if(isset($value[WSF_TYPE_REP]) && $value[WSF_TYPE_REP]){
                 if($key == $current_child->localName) {
                     if(($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1)){
                         $i = 0;
@@ -1370,13 +1601,13 @@ function wsf_parse_payload_for_array(DomNode $payload, array $parameter_struct)
                         {
                             if($current_child->firstChild)
                             {
-                                $converted_value =  wsf_wsdl_util_convert_value($value[WSF_TYPE], $current_child->firstChild->wholeText);
+                                $converted_value =  wsf_wsdl_util_convert_value($value[WSF_TYPE_REP], $current_child->firstChild->wholeText);
                             }
                             else
                             {
                                 if(!isset($value["nillable"]))
                                 {
-                                    error_log("Non nillable element". $key ."is nil. ");
+                                    error_log("Non nillable element". $key ."is nil. \n");
                                 }
                                 $converted_value = "";
                             }
@@ -1388,13 +1619,13 @@ function wsf_parse_payload_for_array(DomNode $payload, array $parameter_struct)
                     {
                         if($current_child->firstChild)
                         {
-                            $converted_value =  wsf_wsdl_util_convert_value($value[WSF_TYPE], $current_child->firstChild->wholeText);
+                            $converted_value =  wsf_wsdl_util_convert_value($value[WSF_TYPE_REP], $current_child->firstChild->wholeText);
                         }
                         else
                         {
                             if(!isset($value["nillable"]))
                             {
-                                error_log("Non nillable element". $key ."is nil. ");
+                                error_log("Non nillable element". $key ."is nil. \n");
                             }
                             $converted_value = "";
                         }
@@ -1408,7 +1639,7 @@ function wsf_parse_payload_for_array(DomNode $payload, array $parameter_struct)
                         // so this if fine
                     }
                     else{
-                       error_log("minOccurs!=0 element". $key ."doesn't exist.");
+                       error_log("minOccurs!=0 element". $key ."doesn't exist.\n");
                     }
                 }
             }
@@ -1422,13 +1653,20 @@ function wsf_parse_payload_for_array(DomNode $payload, array $parameter_struct)
                         {
                             if($current_child->firstChild)
                             {
-                                $converted_value = wsf_parse_payload_for_array($current_child, $value);
+                                if($value[WSF_HAS_SIG_CHILDS] === TRUE)
+                                {
+                                    $converted_value = wsf_parse_payload_for_array($current_child, $value);
+                                }
+                                else
+                                {
+                                    $converted_value = wsf_parse_payload_for_unknown_array($current_child);
+                                }
                             }
                             else
                             {
                                 if(!isset($value["nillable"]))
                                 {
-                                    error_log("Non nillable element". $key ."is nil. ");
+                                    error_log("Non nillable element". $key ."is nil. \n");
                                 }
                                 $converted_value = "";
                             }
@@ -1440,13 +1678,20 @@ function wsf_parse_payload_for_array(DomNode $payload, array $parameter_struct)
                     {
                         if($current_child->firstChild)
                         {
-                             $converted_value = wsf_parse_payload_for_array($current_child, $value);
+                            if($value[WSF_HAS_SIG_CHILDS] === TRUE)
+                            {
+                                $converted_value = wsf_parse_payload_for_array($current_child, $value);
+                            }
+                            else
+                            {
+                                $converted_value = wsf_parse_payload_for_unknown_array($current_child);
+                            }
                         }
                         else
                         {
                             if(!isset($value["nillable"]))
                             {
-                                error_log("Non nillable element". $key ."is nil. ");
+                                error_log("Non nillable element". $key ."is nil. \n");
                             }
                             $converted_value = "";
                         }
@@ -1460,7 +1705,7 @@ function wsf_parse_payload_for_array(DomNode $payload, array $parameter_struct)
                         // so this if fine
                     }
                     else{
-                       error_log("minOccurs!=0 element". $key ."doesn't exist.");
+                       error_log("minOccurs!=0 element". $key ."doesn't exist.\n");
                     }
                 }
             }
@@ -1472,7 +1717,7 @@ function wsf_parse_payload_for_array(DomNode $payload, array $parameter_struct)
 
 
 /**
- * parse payload and return an object heirachy
+ * parse payload and return an object hierarchy
  * @param $payload 
  * @param $parameter_struct
  * @return
@@ -1493,6 +1738,10 @@ function wsf_parse_payload_for_class_map(DomNode $payload, array $parameter_stru
         $object = $ref_class->newInstance();
 
     }
+    if($ref_class == NULL && !$ref_class->isInstantiable())
+    {
+        $object = new wsf_unknown_schema_element();
+    }
 
     if($object == NULL){
         return NULL;
@@ -1505,7 +1754,7 @@ function wsf_parse_payload_for_class_map(DomNode $payload, array $parameter_stru
     {   
         if(is_array($value))
         {
-            if(isset($value[WSF_TYPE]) && $value[WSF_TYPE] && is_xsd_type($value[WSF_TYPE])){
+            if(isset($value[WSF_TYPE_REP]) && $value[WSF_TYPE_REP]){
                 if($key == $current_child->localName) {
                     if(($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1)){
                         $i = 0;
@@ -1514,13 +1763,13 @@ function wsf_parse_payload_for_class_map(DomNode $payload, array $parameter_stru
                         {
                             if($current_child->firstChild)
                             {
-                                $converted_value =  wsf_wsdl_util_convert_value($value[WSF_TYPE], $current_child->firstChild->wholeText);
+                                $converted_value =  wsf_wsdl_util_convert_value($value[WSF_TYPE_REP], $current_child->firstChild->wholeText);
                             }
                             else
                             {
                                 if(!isset($value["nillable"]))
                                 {
-                                    error_log("Non nillable element". $key ."is nil. ");
+                                    error_log("Non nillable element". $key ."is nil. \n");
                                 }
                                 $converted_value = "";
                             }
@@ -1533,13 +1782,13 @@ function wsf_parse_payload_for_class_map(DomNode $payload, array $parameter_stru
                     {
                         if($current_child->firstChild)
                         {
-                            $converted_value =  wsf_wsdl_util_convert_value($value[WSF_TYPE], $current_child->firstChild->wholeText);
+                            $converted_value =  wsf_wsdl_util_convert_value($value[WSF_TYPE_REP], $current_child->firstChild->wholeText);
                         }
                         else
                         {
                             if(!isset($value["nillable"]))
                             {
-                                error_log("Non nillable element". $key ."is nil. ");
+                                error_log("Non nillable element". $key ."is nil. \n");
                             }
                             $converted_value = "";
                         }
@@ -1553,7 +1802,7 @@ function wsf_parse_payload_for_class_map(DomNode $payload, array $parameter_stru
                         // so this if fine
                     }
                     else{
-                       error_log("minOccurs!=0 element". $key ."doesn't exist.");
+                       error_log("minOccurs!=0 element". $key ."doesn't exist.\n");
                     }
                 }
             }
@@ -1569,13 +1818,20 @@ function wsf_parse_payload_for_class_map(DomNode $payload, array $parameter_stru
                         {
                             if($current_child->firstChild)
                             {
-                                $converted_value = wsf_parse_payload_for_class_map($current_child, $value, $class_map_name, $class_map);
+                                if($value[WSF_HAS_SIG_CHILDS] === TRUE)
+                                {
+                                    $converted_value = wsf_parse_payload_for_class_map($current_child, $value, $class_map_name, $class_map);
+                                }
+                                else
+                                {
+                                    $converted_value = wsf_parse_payload_for_unknown_class_map($current_child, $class_map_name, $class_map);
+                                }
                             }
                             else
                             {
                                 if(!isset($value["nillable"]))
                                 {
-                                    error_log("Non nillable element". $key ."is nil. ");
+                                    error_log("Non nillable element". $key ."is nil. \n");
                                 }
                                 $converted_value = "";
                             }
@@ -1588,13 +1844,20 @@ function wsf_parse_payload_for_class_map(DomNode $payload, array $parameter_stru
                     {
                         if($current_child->firstChild)
                         {
-                             $converted_value = wsf_parse_payload_for_class_map($current_child, $value, $class_map_name, $class_map);
+                            if($value[WSF_HAS_SIG_CHILDS] === TRUE)
+                            {
+                                $converted_value = wsf_parse_payload_for_class_map($current_child, $value, $class_map_name, $class_map);
+                            }
+                            else
+                            {
+                                $converted_value = wsf_parse_payload_for_unknown_class_map($current_child, $class_map_name, $class_map);
+                            }
                         }
                         else
                         {
                             if(!isset($value["nillable"]))
                             {
-                                error_log("Non nillable element". $key ."is nil. ");
+                                error_log("Non nillable element". $key ."is nil. \n");
                             }
                             $converted_value = "";
                         }
@@ -1608,7 +1871,7 @@ function wsf_parse_payload_for_class_map(DomNode $payload, array $parameter_stru
                         // so this if fine
                     }
                     else{
-                       error_log("minOccurs!=0 element". $key ."doesn't exist.");
+                       error_log("minOccurs!=0 element". $key ."doesn't exist.\n");
                     }
                 }
             }
@@ -1635,7 +1898,7 @@ function wsf_parse_payload_for_service_class_map(DomNode $payload, array $parame
     {   
         if(is_array($value))
         {
-            if(isset($value[WSF_TYPE]) && $value[WSF_TYPE] && is_xsd_type($value[WSF_TYPE])){
+            if(isset($value[WSF_TYPE_REP]) && $value[WSF_TYPE_REP]){
                 if($key == $current_child->localName) {
                     if(($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1)){
                         $i = 0;
@@ -1644,13 +1907,13 @@ function wsf_parse_payload_for_service_class_map(DomNode $payload, array $parame
                         {
                             if($current_child->firstChild)
                             {
-                                $converted_value =  wsf_wsdl_util_convert_value($value[WSF_TYPE], $current_child->firstChild->wholeText);
+                                $converted_value =  wsf_wsdl_util_convert_value($value[WSF_TYPE_REP], $current_child->firstChild->wholeText);
                             }
                             else
                             {
                                 if(!isset($value["nillable"]))
                                 {
-                                    error_log("Non nillable element". $key ."is nil. ");
+                                    error_log("Non nillable element". $key ."is nil. \n");
                                 }
                                 $converted_value = "";
                             }
@@ -1662,13 +1925,13 @@ function wsf_parse_payload_for_service_class_map(DomNode $payload, array $parame
                     {
                         if($current_child->firstChild)
                         {
-                            $converted_value =  wsf_wsdl_util_convert_value($value[WSF_TYPE], $current_child->firstChild->wholeText);
+                            $converted_value =  wsf_wsdl_util_convert_value($value[WSF_TYPE_REP], $current_child->firstChild->wholeText);
                         }
                         else
                         {
                             if(!isset($value["nillable"]))
                             {
-                                error_log("Non nillable element". $key ."is nil. ");
+                                error_log("Non nillable element". $key ."is nil. \n");
                             }
                             $converted_value = "";
                         }
@@ -1682,7 +1945,7 @@ function wsf_parse_payload_for_service_class_map(DomNode $payload, array $parame
                         // so this if fine
                     }
                     else{
-                       error_log("minOccurs!=0 element". $key ."doesn't exist.");
+                       error_log("minOccurs!=0 element". $key ."doesn't exist.\n");
                     }
                 }
             }
@@ -1698,13 +1961,20 @@ function wsf_parse_payload_for_service_class_map(DomNode $payload, array $parame
                         {
                             if($current_child->firstChild)
                             {
-                                $converted_value = wsf_parse_payload_for_class_map($current_child, $value, $class_map_name, $class_map);
+                                if($value[WSF_HAS_SIG_CHILDS] === TRUE)
+                                {
+                                    $converted_value = wsf_parse_payload_for_class_map($current_child, $value, $class_map_name, $class_map);
+                                }
+                                else
+                                {
+                                    $converted_value = wsf_parse_payload_for_unknown_class_map($current_child, $class_map_name, $class_map);
+                                }
                             }
                             else
                             {
                                 if(!isset($value["nillable"]))
                                 {
-                                    error_log("Non nillable element". $key ."is nil. ");
+                                    error_log("Non nillable element". $key ."is nil. \n");
                                 }
                                 $converted_value = "";
                             }
@@ -1716,13 +1986,20 @@ function wsf_parse_payload_for_service_class_map(DomNode $payload, array $parame
                     {
                         if($current_child->firstChild)
                         {
-                             $converted_value = wsf_parse_payload_for_class_map($current_child, $value, $class_map_name, $class_map);
+                            if($value[WSF_HAS_SIG_CHILDS] === TRUE)
+                            {
+                                $converted_value = wsf_parse_payload_for_class_map($current_child, $value, $class_map_name, $class_map);
+                            }
+                            else
+                            {
+                                $converted_value = wsf_parse_payload_for_unknown_class_map($current_child, $class_map_name, $class_map);
+                            }
                         }
                         else
                         {
                             if(!isset($value["nillable"]))
                             {
-                                error_log("Non nillable element". $key ."is nil. ");
+                                error_log("Non nillable element". $key ."is nil. \n");
                             }
                             $converted_value = "";
                         }
@@ -1736,7 +2013,7 @@ function wsf_parse_payload_for_service_class_map(DomNode $payload, array $parame
                         // so this if fine
                     }
                     else{
-                       error_log("minOccurs!=0 element". $key ."doesn't exist.");
+                       error_log("minOccurs!=0 element". $key ."doesn't exist.\n");
                     }
                 }
             }
@@ -1746,7 +2023,166 @@ function wsf_parse_payload_for_service_class_map(DomNode $payload, array $parame
     return $parse_tree;
 }
 
-function test_serialize_node($xml)
+/**
+ * wsf_parse_payload_for_unknown_array
+ * @param $current_node node to parse
+ * @returns array of parsed data
+ */
+function wsf_parse_payload_for_unknown_array($current_node)
+{
+    $param_child = array();
+
+    foreach($current_node->childNodes as $child)
+    {
+        if($child->nodeType == XML_TEXT_NODE)
+        {
+            $node_value = $child->nodeValue;
+            return $node_value;
+        }
+
+
+        $name = $child->tagName;
+        $needle = strpos($name, ':');
+
+        if($needle !== FALSE)
+        {
+            $name = substr($name, $needle + 1);
+        }
+
+        if($child->nodeType ==  XML_ELEMENT_NODE)
+        {
+            $node_value = wsf_parse_payload_for_unknown_array($child);
+        }
+        else
+        {
+            $node_value = NULL;
+        }
+
+        if($node_value !== NULL)
+        {
+            if($param_child[$name] === NULL)
+            {
+                $param_child[$name] = $node_value;
+            }
+            else
+            {
+                if(is_array($param_child[$name]) && !wsf_is_map($param_child[$name]))
+                {
+                    $i = count($param_child[$name]);
+                    $param_child[$name][$i] = $node_value;
+                }
+                else
+                {
+                    $tmp = $param_child[$name];
+                    $param_child[$name] = array($tmp, $node_value);
+                }
+            }
+        }
+    }
+
+    return $param_child;
+}
+
+/**
+ * wsf_parse_payload_for_unknown_class_map
+ * @param $current_node node to parse
+ * @returns array of parsed data
+ */
+function wsf_parse_payload_for_unknown_class_map($current_node, $element_name, $class_map)
+{
+    if(is_array($class_map))
+    {
+        $class_name = $class_map[$element_name];
+    }
+    if(!isset($class_name) || $class_name == NULL)
+    {
+        $class_name = $element_name;
+    }
+   
+    try
+    {
+        $ref_class = new ReflectionClass($class_name);
+        if ($ref_class->isInstantiable()) {
+            $object = $ref_class->newInstance();
+
+        }
+    } catch(Exception $e) {
+        $object = new wsf_unknown_schema_element();
+    }
+
+    if($object == NULL){
+        return NULL;
+    }
+
+
+    foreach($current_node->childNodes as $child)
+    {
+        if($child->nodeType == XML_TEXT_NODE)
+        {
+            $node_value = $child->nodeValue;
+            return $node_value;
+        }
+
+
+        $name = $child->tagName;
+        $needle = strpos($name, ':');
+
+        if($needle !== FALSE)
+        {
+            $name = substr($name, $needle + 1);
+        }
+
+        if($child->nodeType ==  XML_ELEMENT_NODE)
+        {
+            $node_value = wsf_parse_payload_for_unknown_class_map($child, $name, $class_map);
+        }
+        else
+        {
+            $node_value = NULL;
+        }
+
+        if($node_value !== NULL)
+        {
+            if($object->$name === NULL)
+            {
+                $object->$name = $node_value;
+            }
+            else
+            {
+                if(is_array($object->$name) && !wsf_is_map($object->$name))
+                {
+                    $i = count($object->$name);
+                    $tmp = $object->$name;
+                    $tmp[$i] = $node_value;
+                    $object->$name = $tmp;
+                }
+                else
+                {
+                    $tmp = $object->$name;
+                    $object->$name = array($tmp, $node_value);
+                }
+            }
+        }
+    }
+
+    return $object;
+}
+
+
+/**
+ * @param node to start with
+ * @return the node with comments skiped
+ */
+function wsf_remove_next_whitespace_and_comments(&$xml)
+{
+    while($xml != NULL && $xml->nodeType != XML_ELEMENT_NODE)
+    {
+        $xml = $xml->nextSibling;
+    }
+    return $xml;
+}
+
+function wsf_test_serialize_node($xml)
 {
     $nodeText = "";
 
@@ -1771,7 +2207,7 @@ function test_serialize_node($xml)
 
         foreach ($xml->childNodes as $child)
         {
-            $childText = test_serialize_node($child);
+            $childText = wsf_test_serialize_node($child);
             $nodeText .= $childText;
         }
 
@@ -1779,6 +2215,59 @@ function test_serialize_node($xml)
 
     }
     return $nodeText;
+}
+
+function wsf_is_map($map)
+{
+    if(!is_array($map))
+    {
+        return FALSE;
+    }
+    $keys = array_keys($map);
+    if($keys[0] === 0)
+    {
+        return FALSE;
+    }
+    return TRUE;
+}
+
+class wsf_unknown_schema_element
+{
+    public $properties;
+    public function __construct()
+    {
+        $this->properties = array();
+    }
+
+    public function __get($name)
+    {
+        return $this->properties[$name];
+    }
+
+    public function __set($name, $value)
+    {
+        $this->properties[$name] = $value;
+    }
+
+    public function __isset($name)
+    {
+        if($this->properties[$name] == NULL)
+        {
+            return FALSE;
+        }
+        else
+        {
+            return TRUE;
+        }
+    }
+
+    public function __unset($name)
+    {
+        if($this->properties[$name] != NULL)
+        {
+            $this->properties[$name] = NULL;
+        }
+    }
 }
 
 ?>

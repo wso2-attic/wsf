@@ -15,6 +15,7 @@ class AmazonClient extends WSClient
 
     /** endpoints */
     const AMAZON_ENDPOINT = "http://webservices.amazon.com/onca/xml";
+    //const AMAZON_ENDPOINT = "http://localhost:8080/onca/xml";
 
     /** 
      * Your Amazon Application key

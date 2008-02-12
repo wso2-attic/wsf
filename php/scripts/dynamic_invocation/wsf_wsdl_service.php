@@ -80,7 +80,7 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
 	}
 
     $op_param_values = array();
-    if($class_map != NULL)
+    if($class_map != NULL && !empty($class_map))
     {
         $op_param_values = wsf_parse_payload_for_service_class_map($soap_body_node, $tmp_param_struct, $ele_name, $class_map);
     }
@@ -89,6 +89,7 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
         $op_param_values = wsf_parse_payload_for_array($soap_body_node, $tmp_param_struct);
     }
 
+    
 
     
     $arg_array = $op_param_values; 
@@ -136,6 +137,7 @@ function wsf_wsdl_create_response_payload($return_val, $signature_node)
 		$ele_ns = $returns_node->attributes->getNamedItem(WSF_WRAPPER_ELEMENT_NS)->value;
 		$body_array = array();
 		$body_array[WSF_NS] = $ele_ns;
+        $body_array[WSF_HAS_SIG_CHILDS] = TRUE;
 		$is_wrapper = TRUE;
 	}
 

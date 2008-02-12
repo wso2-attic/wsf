@@ -145,6 +145,7 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
                 $ele_ns = $params_attr->getNamedItem(WSF_WRAPPER_ELEMENT_NS)->value;
                 $child_array =  array();
                 $child_array[WSF_NS] = $ele_ns;
+                $child_array[WSF_HAS_SIG_CHILDS] = TRUE;
                 $is_wrapper = TRUE;
                             
                 $param_child_list = $params_node->childNodes;
@@ -173,7 +174,7 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
         else
             $tmp_param_struct = $child_array;
     }
-    
+
     /* no wrapper elements most probably getter functions */
     if(count($tmp_param_struct) == 0)
         return NULL;
@@ -198,6 +199,7 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
             /* array type implementation */
             $parameter_structure = $tmp_param_struct[$ele_name];
             $namespace_map = array($tmp_param_struct[$ele_name][WSF_NS] => "ns1");
+
             wsf_create_payload_for_array($payload_dom, $parameter_structure, $element, $element, $arguments[0],
                                                                        $namespace_map);
             $payload_dom->appendChild($element);
