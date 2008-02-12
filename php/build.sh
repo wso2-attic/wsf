@@ -5,6 +5,10 @@ cp build/wsf_c/Makefile.am wsf_c/
 cd wsf_c
 build/copy_build_files.sh
 cd ..
+cp build/wsf_c/axis2c/configure.ac wsf_c/axis2c
+cp build/wsf_c/axis2c/util/configure.ac wsf_c/axis2c/util
+cp build/wsf_c/axis2c/axiom/configure.ac wsf_c/axis2c/axiom
+cp build/wsf_c/rampartc/configure.ac wsf_c/rampartc
 
 for i in `find . -name configure.ac`
 do
