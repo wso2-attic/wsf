@@ -195,27 +195,6 @@ if test "rampartc" = ${RAMPART_DIR}; then
     AC_CONFIG_SUBDIRS(rampartc)
 fi    
 
-AC_MSG_CHECKING(whether to build wsclient)
-AC_ARG_ENABLE(wsclient, [  --enable-wsclient	build wsclient. default=yes],
-[ case "${enableval}" in
-  no)
-    AC_MSG_RESULT(no)
-    WSCLIENT_DIR=""
-    ;;
-  *)
-    AC_MSG_RESULT(yes)
-    WSCLIENT_DIR="wsclient"
-
-    ;;
-  esac ],
-  AC_MSG_RESULT(yes)
-  WSCLIENT_DIR="wsclient"
-)
-
-AC_SUBST(WSCLIENT_DIR)
-if test "wsclient" = ${WSCLIENT_DIR}; then
-    AC_CONFIG_SUBDIRS(wsclient)
-fi
 AC_MSG_CHECKING(whether to build sandesha)
 AC_ARG_ENABLE(sandesha, [  --enable-sandesha	build sandesha. default=yes],
 [ case "${enableval}" in
