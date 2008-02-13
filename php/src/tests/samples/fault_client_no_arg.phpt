@@ -27,5 +27,5 @@ try {
 }
 ?>
 --EXPECT--
-Soap Fault Reason: Testing WSFault
-Soap Fault Code: soapenv:Sender
+Soap Fault Reason: Error Reason unspecified
+Soap Fault Code: Receiver
