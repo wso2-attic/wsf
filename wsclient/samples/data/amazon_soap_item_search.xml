@@ -1,0 +1,9 @@
+<ItemSearch xmlns="http://webservices.amazon.com/AWSECommerceService/2005-10-05">
+       <AWSAccessKeyId>0EADDHWF3PPVRSMBB2R2</AWSAccessKeyId>
+       <Request>
+           <ResponseGroup>Medium</ResponseGroup>
+           <ItemPage>1</ItemPage>
+           <Keywords>Web Services</Keywords>
+           <SearchIndex>Books</SearchIndex>
+       </Request>
+   </ItemSearch>

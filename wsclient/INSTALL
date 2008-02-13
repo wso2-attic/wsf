@@ -1,0 +1,7 @@
+set WSFC_HOME environment variable to point to your install folder
+
+./configure
+make 
+make install
+
+
