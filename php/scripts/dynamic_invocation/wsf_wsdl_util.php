@@ -1733,14 +1733,15 @@ function wsf_parse_payload_for_class_map(DomNode $payload, array $parameter_stru
         $class_name = $element_name;
     }
     
-    $ref_class = new ReflectionClass($class_name);
-    if ($ref_class->isInstantiable()) {
-        $object = $ref_class->newInstance();
-
-    }
-    if($ref_class == NULL && !$ref_class->isInstantiable())
+    try
     {
-        $object = new wsf_unknown_schema_element();
+        $ref_class = new ReflectionClass($class_name);
+        if ($ref_class->isInstantiable()) {
+            $object = $ref_class->newInstance();
+
+        }
+    } catch(Exception $e) {
+        $object = new WSFUnknownSchemaConstruct();
     }
 
     if($object == NULL){
@@ -2107,7 +2108,7 @@ function wsf_parse_payload_for_unknown_class_map($current_node, $element_name, $
 
         }
     } catch(Exception $e) {
-        $object = new wsf_unknown_schema_element();
+        $object = new WSFUnknownSchemaConstruct();
     }
 
     if($object == NULL){
@@ -2231,7 +2232,7 @@ function wsf_is_map($map)
     return TRUE;
 }
 
-class wsf_unknown_schema_element
+class WSFUnknownSchemaConstruct
 {
     public $properties;
     public function __construct()
