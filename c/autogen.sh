@@ -18,6 +18,11 @@ cd samples
 echo "Running autogen.sh in Sandesha2/C Samples"
 ./autogen.sh
 
+cd ..
+cd ../wsclient
+echo "Running autogen.sh in wsclient"
+./autogen.sh
+
 cd ../rampartc
 echo "Running autogen.sh in Rampart/C"
 ./autogen.sh
