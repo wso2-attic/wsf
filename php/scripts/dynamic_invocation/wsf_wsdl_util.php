@@ -723,12 +723,14 @@ function wsf_is_rpc_enc_wsdl($wsdl_11_dom, $binding_node, $operation_name)
         return FALSE;
 
     $binding_child_list = $binding_node->childNodes;
+    $style = NULL;
     foreach($binding_child_list as $binding_child)
     {
-        if($binding_child->localName == "binding")
-        {
+        if($binding_child->localName == "binding"){
             $binding_attr = $binding_child->attributes;
-            $style =  $binding_attr->getNamedItem("style")->value;
+            if($binding_attr && $binding_attr->getNamedItem("style")){
+                $style =  $binding_attr->getNamedItem("style")->value;
+            }
             //var_dump($style)."\n\n";
         }
         if($binding_child->localName == WSF_OPERATION && $style == "rpc"){
@@ -793,15 +795,15 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
                 {
                     $arg_val = $class_obj->$key;
                     /* type conversion is needed */
-                    if(empty($value[WSF_NS]) || $value[WSF_NS] == "NULL"){
+                    if(!array_key_exists(WSF_NS, $value) || empty($value[WSF_NS]) || $value[WSF_NS] == "NULL"){
                         $value[WSF_NS] = NULL;
                     }
 
-                    if($value[WSF_NS] == NULL){
+                    if(!isset($value[WSF_NS]) || $value[WSF_NS] == NULL){
                         $node_name = $key;
                     }
                     else{
-                        if($namespace_map[$value[WSF_NS]] != NULL){
+                        if(array_key_exists($value[WSF_NS], $namespace_map) && $namespace_map[$value[WSF_NS]] != NULL){
                             $prefix = $namespace_map[$value[WSF_NS]];
                         }
                         else{
@@ -813,7 +815,7 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
                         $node_name = $prefix.":".$key;
                     }
 
-                    if(($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1) && is_array($arg_val)){
+                    if(array_key_exists("maxOccurs", $value) && ($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1) && is_array($arg_val)){
                         foreach($arg_val as $arg_val_item){
                             $element_2 = $payload_dom->createElement($node_name, $arg_val_item);
                             $parent_ele->appendChild($element_2);
@@ -854,7 +856,7 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
                         $node_name = $prefix.":".$key;
                     }
 
-                    if(($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1) && is_array($arg_val)){
+                    if(array_key_exists("maxOccurs", $value) && ($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1) && is_array($arg_val)){
                         foreach($arg_val as $arg_val_item){
                             $element_2 = $payload_dom->createElement($node_name);
                             if(is_object($arg_val_item))
@@ -974,7 +976,7 @@ function wsf_create_payload_for_array(DomDocument $payload_dom,
                                 $node_name = $prefix.":".$key;
                             }
 
-                            if(($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1) && is_array($arg_val)){
+                            if(array_key_exists("maxOccurs", $value) && ($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1) && is_array($arg_val)){
                                 foreach($arg_val as $arg_val_item){
                                     $element_2 = $payload_dom->createElement($node_name, $arg_val_item);
                                     $parent_ele->appendChild($element_2);
@@ -1015,7 +1017,7 @@ function wsf_create_payload_for_array(DomDocument $payload_dom,
                                 $node_name = $prefix.":".$key;
                             }
 
-                            if(($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1) && is_array($arg_val)){
+                            if(array_key_exists("maxOccurs", $value) && ($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1) && is_array($arg_val)){
                                 foreach($arg_val as $arg_val_item){
                                     $element_2 = $payload_dom->createElement($node_name);
                                     if(is_object($arg_val_item))
@@ -1279,7 +1281,7 @@ function wsf_create_rpc_payload_for_class_map(DomDocument $payload_dom,
                             $node_name = $prefix.":".$key;
                         }
 
-                        if(($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1) && is_array($arg_val)){
+                        if(array_key_exists("maxOccurs", $value) && ($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1) && is_array($arg_val)){
                             foreach($arg_val as $arg_val_item){
                                 $element_2 = $payload_dom->createElement($node_name, $arg_val_item);
                                 $element_2->setAttribute("xsi:type", "xsd:".$value[WSF_TYPE_REP]);
@@ -1319,7 +1321,7 @@ function wsf_create_rpc_payload_for_class_map(DomDocument $payload_dom,
                             $node_name = $prefix.":".$key;
                         }
 
-                        if(($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1) && is_array($arg_val)){
+                        if(array_key_exists("maxOccurs", $value) && ($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1) && is_array($arg_val)){
                             foreach($arg_val as $arg_val_item){
                                 $element_2 = $payload_dom->createElement($node_name);
                                 if(is_object($arg_val_item))
@@ -1403,7 +1405,7 @@ function wsf_create_rpc_payload_for_array(DomDocument $payload_dom,
                             $node_name = $prefix.":".$key;
                         }
 
-                        if(($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1) && is_array($arg_val)){
+                        if(array_key_exists("maxOccurs", $value) && ($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1) && is_array($arg_val)){
                             foreach($arg_val as $arg_val_item){
                                 $element_2 = $payload_dom->createElement($node_name, $arg_val_item);
                                 $element_2->setAttribute("xsi:type", "xsd:".$value[WSF_TYPE_REP]);
@@ -1443,7 +1445,7 @@ function wsf_create_rpc_payload_for_array(DomDocument $payload_dom,
                             $node_name = $prefix.":".$key;
                         }
 
-                        if(($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1) && is_array($arg_val)){
+                        if(array_key_exists("maxOccurs", $value) && ($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1) && is_array($arg_val)){
                             foreach($arg_val as $arg_val_item){
                                 $element_2 = $payload_dom->createElement($node_name);
                                 if(is_object($arg_val_item))
@@ -1594,10 +1596,10 @@ function wsf_parse_payload_for_array(DomNode $payload, array $parameter_struct)
         {
             if(isset($value[WSF_TYPE_REP]) && $value[WSF_TYPE_REP]){
                 if($key == $current_child->localName) {
-                    if(($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1)){
+                    if(array_key_exists("maxOccurs", $value) && ($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1)){
                         $i = 0;
                         $parse_tree[$key] = array();
-                        while($current_child->localName == $key)
+                        while($current_child !== NULL && $current_child->localName == $key)
                         {
                             if($current_child->firstChild)
                             {
@@ -1646,10 +1648,10 @@ function wsf_parse_payload_for_array(DomNode $payload, array $parameter_struct)
             else
             {
                 if($key == $current_child->localName) {
-                    if(($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1)){
+                    if(array_key_exists("maxOccurs", $value) && ($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1)){
                         $i = 0;
                         $parse_tree[$key] = array();
-                        while($current_child->localName == $key)
+                        while($current_child !== NULL && $current_child->localName == $key)
                         {
                             if($current_child->firstChild)
                             {
@@ -1757,10 +1759,10 @@ function wsf_parse_payload_for_class_map(DomNode $payload, array $parameter_stru
         {
             if(isset($value[WSF_TYPE_REP]) && $value[WSF_TYPE_REP]){
                 if($key == $current_child->localName) {
-                    if(($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1)){
+                    if(array_key_exists("maxOccurs", $value) && ($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1)){
                         $i = 0;
                         $tmp_array = array();
-                        while($current_child->localName == $key)
+                        while($current_child !== NULL && $current_child->localName == $key)
                         {
                             if($current_child->firstChild)
                             {
@@ -1812,10 +1814,10 @@ function wsf_parse_payload_for_class_map(DomNode $payload, array $parameter_stru
                 $class_map_name = $value["class_map_name"];
 
                 if($key == $current_child->localName) {
-                    if(($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1)){
+                    if(array_key_exists("maxOccurs", $value) && ($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1)){
                         $i = 0;
                         $tmp_array = array();
-                        while($current_child->localName == $key)
+                        while($current_child !== NULL && $current_child->localName == $key)
                         {
                             if($current_child->firstChild)
                             {
@@ -1901,7 +1903,7 @@ function wsf_parse_payload_for_service_class_map(DomNode $payload, array $parame
         {
             if(isset($value[WSF_TYPE_REP]) && $value[WSF_TYPE_REP]){
                 if($key == $current_child->localName) {
-                    if(($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1)){
+                    if(array_key_exists("maxOccurs", $value) && ($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1)){
                         $i = 0;
                         $parse_tree[$key] = array();
                         while($current_child->localName == $key)
@@ -1955,7 +1957,7 @@ function wsf_parse_payload_for_service_class_map(DomNode $payload, array $parame
                 $class_map_name = $value["class_map_name"];
 
                 if($key == $current_child->localName) {
-                    if(($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1)){
+                    if(array_key_exists("maxOccurs", $value) && ($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1)){
                         $i = 0;
                         $parse_tree[$key] = array();
                         while($current_child->localName == $key)

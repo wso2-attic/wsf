@@ -151,6 +151,7 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
                 $param_child_list = $params_node->childNodes;
                 foreach($param_child_list as $param_child){
                     $param_attr = $param_child->attributes;
+                    $ele_ns = NULL;
                     $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
                     $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
                     $child_array[$param_name] = wsf_create_temp_struct($param_child, $ele_ns); 
