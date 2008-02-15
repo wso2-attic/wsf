@@ -80,7 +80,7 @@ void create_dynamic_client(zval *this_ptr, char *function, int function_len,
     zval *function_parameters;
     php_stream *stream;
     FILE *new_fp;
-	int script_executed = 0;
+	/*int script_executed = 0; */
 
 
     if (instanceof_function (Z_OBJCE_P (this_ptr),
@@ -141,12 +141,14 @@ void create_dynamic_client(zval *this_ptr, char *function, int function_len,
         ZVAL_ZVAL(params[1], function_parameters, NULL, NULL);
         INIT_PZVAL(params[1]);
 
+		/*
 		if(zend_hash_find(Z_OBJPROP_P(this_ptr), "SCRIPT_EXECUTED", sizeof("SCRIPT_EXECUTED"), (void**)&tmp) == SUCCESS){
 			if(Z_TYPE_PP(tmp) == IS_BOOL && Z_BVAL_PP(tmp) == 1){
 				script_executed = 1;
 			}
 		}
 		if(!script_executed){
+		*/
 			script.type = ZEND_HANDLE_FP;
 			script.filename = "wsf_wsdl.php";
 			script.opened_path = NULL;
@@ -162,27 +164,40 @@ void create_dynamic_client(zval *this_ptr, char *function, int function_len,
 			}
 			script.handle.fp =  new_fp;
 			if(script.handle.fp){
-			    /*	php_execute_script (&script TSRMLS_CC); */
-		        php_lint_script (&script TSRMLS_CC); 
-				add_property_bool(this_ptr, "SCRIPT_EXECUTED", 1);
+				int lint_script = 1;
+				{
+					zval check_function, retval1;
+					ZVAL_STRING(&check_function, "wsf_wsdl_check", 0);
+					if (call_user_function (EG (function_table), (zval **) NULL, 
+						&check_function, &retval1, 0,NULL TSRMLS_CC) == SUCCESS){
+							if(Z_TYPE(retval1) == IS_LONG && Z_LVAL(retval1) == 1){
+								lint_script = 0;							
+							}
+					}
+				}
+				/*	php_execute_script (&script TSRMLS_CC); */
+				if(lint_script){
+					php_lint_script (&script TSRMLS_CC); 
+				}
+		/*		add_property_bool(this_ptr, "SCRIPT_EXECUTED", 1);
 				script_executed = 1;
 			}
+		*/
 		}
-		if(script_executed){
+		
+/*		if(script_executed){ */
             if (call_user_function (EG (function_table), (zval **) NULL,
                                     &request_function, &retval, 2,
                                     params TSRMLS_CC) == SUCCESS ){
-                if (Z_TYPE_P(&retval) == IS_ARRAY && 
-                    Z_TYPE_P (&retval) != IS_NULL)
-                    wsf_wsdl_do_request(client_zval, &retval, return_value, 
-                                        env TSRMLS_CC);
+                if (Z_TYPE_P(&retval) == IS_ARRAY && Z_TYPE_P (&retval) != IS_NULL)
+                    wsf_wsdl_do_request(client_zval, &retval, return_value, env TSRMLS_CC);
                 else if (Z_TYPE_P(&retval) == IS_STRING){
                     php_error_docref(NULL TSRMLS_CC, E_ERROR, 
                                      "Error occured in script: %s",
                                      Z_STRVAL_P(&retval));
                 }
             }
-        }
+ /*       } */
     }
 }
 
