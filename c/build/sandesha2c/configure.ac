@@ -21,7 +21,7 @@ AC_CHECK_LIB(dl, dlopen)
 
 CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 if test "$GCC" = "yes"; then
-    CFLAGS="$CFLAGS -ansi -Wall -Werror -Wno-implicit-function-declaration -g"
+    CFLAGS="$CFLAGS -ansi -Wall  -Wno-implicit-function-declaration -g"
 fi
 LDFLAGS="-lpthread"
 
@@ -148,7 +148,6 @@ AC_CONFIG_FILES([Makefile \
     src/storage/Makefile\
     src/storage/beans/Makefile\
     src/storage/common/Makefile \
-    src/storage/inmemory/Makefile\
     src/storage/sqlite/Makefile\
     src/storage/mysql/Makefile\
     src/client/Makefile \
