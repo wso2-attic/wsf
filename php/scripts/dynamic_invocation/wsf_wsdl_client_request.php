@@ -133,8 +133,7 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
 {
     $tmp_param_struct = array();
     $is_wrapper = FALSE;
-    
-
+   
     if($signature_node){
         $params_node = $signature_node->firstChild;
         if($params_node && $params_node->localName == WSF_PARAMS){
@@ -160,6 +159,7 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
             else{
                 /* No wrapper element in the request */
                 $child_array =  array();
+                $ele_ns = NULL;
                 $param_child_list = $params_node->childNodes;
                 foreach($param_child_list as $param_child){
                     $param_attr = $param_child->attributes;
@@ -176,6 +176,7 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
             $tmp_param_struct = $child_array;
     }
 
+
     /* no wrapper elements most probably getter functions */
     if(count($tmp_param_struct) == 0)
         return NULL;
@@ -188,6 +189,7 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
             $new_obj = $arguments[0];
             $parameter_structure = $tmp_param_struct[$ele_name];
             $namespace_map = array($tmp_param_struct[$ele_name][WSF_NS] => "ns1");
+
             wsf_create_payload_for_class_map($payload_dom, $parameter_structure, $element, $element, $new_obj,
                                                                         $namespace_map);
             $payload_dom->appendChild($element);
@@ -206,6 +208,7 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
             $payload_dom->appendChild($element);
             $payload_node = $payload_dom->firstChild;
             $clone_node = $payload_node->cloneNode(TRUE);
+
             return $payload_dom->saveXML($clone_node);
         }
     }else{

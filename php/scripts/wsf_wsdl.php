@@ -102,7 +102,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     
     if(!$sig_model_dom)
         return "error creating intermediate model";
-  
+
     if(!$endpoint_address)
         $endpoint_address = wsf_get_endpoint_address($sig_model_dom);
     else{

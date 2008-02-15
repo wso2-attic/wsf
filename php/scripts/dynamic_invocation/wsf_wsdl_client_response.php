@@ -35,6 +35,9 @@ function wsf_client_response_and_validate(DomDocument $envelope_dom, DomDocument
     $envelope_node = $envelope_dom->documentElement;
     $returns_node = $signature_dom->documentElement;
 
+    $ele_ns = NULL;
+    $is_wrapper = FALSE;
+
     if($returns_node){
         if($returns_node->localName == WSF_RETURNS){
             if($returns_node->hasAttributes()){
@@ -69,7 +72,12 @@ function wsf_client_response_and_validate(DomDocument $envelope_dom, DomDocument
         }
     }
 
-    $tmp_param_struct = $child_array;
+    if ($is_wrapper == TRUE)
+        $tmp_param_struct = $child_array;
+    else
+        $tmp_param_struct = $child_array[$ele_name];
+
+
 
     /** get SOAP body DOM tree to compare with Sig model */
 	foreach($envelope_node->childNodes as $env_child_node){
@@ -83,11 +91,12 @@ function wsf_client_response_and_validate(DomDocument $envelope_dom, DomDocument
 		error_log("soap_body not found", 0);
 	}
 
+    $class_map = NULL;
     if(isset($response_parameters[WSF_CLASSMAP]))
         $class_map = $response_parameters[WSF_CLASSMAP];
 
     $op_param_values = array();
-    if($class_map)
+    if($class_map !== NULL)
     {
         $op_param_values = wsf_parse_payload_for_class_map($soap_body_node, $tmp_param_struct, $ele_name, $class_map);
     }

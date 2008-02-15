@@ -649,10 +649,9 @@ function is_xsd_type($param_type)
 	return in_array($param_type, $xsd_array);
 }
 
-
-function wsf_wsdl_util_convert_value($xsd_type, $data_value)
+function wsf_wsdl_util_xsd_to_php_type_map()
 {
-	$xsd_php_mapping_table = array(
+    static $map = array(
         "string"         =>  "string",
         "boolean"        =>  "boolean",
         "double"         =>  "float",
@@ -697,22 +696,55 @@ function wsf_wsdl_util_convert_value($xsd_type, $data_value)
         "normalizedString"=> "string",
         "token"          => "string");
 
+    return $map;
+}
+
+function wsf_wsdl_util_serialize_php_value($xsd_type, $data_value)
+{
+	$xsd_php_mapping_table = wsf_wsdl_util_xsd_to_php_type_map();
+    $serialized_value = $data_value;
+    
+    if(array_key_exists($xsd_type, $xsd_php_mapping_table))
+    {
+        $type = $xsd_php_mapping_table[$xsd_type];
+
+        if($type == "boolean")
+        {
+            if($data_value == FALSE)
+            {
+                $serialized_value = "false";
+            }
+            else
+            {
+                $serialized_value = "true";
+            }
+        }
+    }
+
+    if($serialized_value === NULL) return "";
+    return $serialized_value;
+}
+
+
+function wsf_wsdl_util_convert_value($xsd_type, $data_value)
+{
+	$xsd_php_mapping_table = wsf_wsdl_util_xsd_to_php_type_map();
 
     $converted_value = $data_value;
-	foreach($xsd_php_mapping_table as $key => $value){
-		if ($key == $xsd_type){
-			if($value == 'integer')
-			$converted_value = (int)($data_value);
-			else if ($value == 'float')
-			$converted_value = (float)($data_value);
-			else if ($value == 'boolean')
-			$converted_value = (boolean)($data_value);
-			else if ($value == 'string')
-			$converted_value = $data_value;
-			else
-			$converted_value = $data_value;
-		}
-	}
+    if(array_key_exists($xsd_type, $xsd_php_mapping_table))
+    {
+        $type = $xsd_php_mapping_table[$xsd_type];
+        if($type == 'integer')
+            $converted_type = (int)($data_value);
+        else if ($type == 'float')
+            $converted_type = (float)($data_value);
+        else if ($type == 'boolean')
+            $converted_type = (boolean)($data_value);
+        else if ($type == 'string')
+            $converted_type = $data_value;
+        else
+            $converted_type = $data_value;
+    }
 
 	return $converted_value;
 }
@@ -817,13 +849,15 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
 
                     if(array_key_exists("maxOccurs", $value) && ($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1) && is_array($arg_val)){
                         foreach($arg_val as $arg_val_item){
-                            $element_2 = $payload_dom->createElement($node_name, $arg_val_item);
+                            $serialized_value = wsf_wsdl_util_serialize_php_value($value[WSF_TYPE_REP], $arg_val_item);
+                            $element_2 = $payload_dom->createElement($node_name, $serialized_value);
                             $parent_ele->appendChild($element_2);
                         }
                     }
                     else if(!is_array($arg_val)){
                         /* in a case this is not an array */
-                        $element_2 = $payload_dom->createElement($node_name, $arg_val);
+                        $serialized_value = wsf_wsdl_util_serialize_php_value($value[WSF_TYPE_REP], $arg_val);
+                        $element_2 = $payload_dom->createElement($node_name, $serialized_value);
                         $parent_ele->appendChild($element_2);
                     }
                     else{
@@ -913,13 +947,6 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
                     }
                 }
             }
-        }else if($key == WSF_TYPE_REP && is_xsd_type($value)){
-            /* TODO multiple values */
-            if(!$argument_array[0])
-                $element_2 = $payload_dom->createTextNode(0);
-            else
-                $element_2 = $payload_dom->createTextNode($argument_array[0]);
-            $root_ele->appendChild($element_2);
         }
     }
 }
@@ -929,7 +956,7 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
  * @param $parameter_struct - Map of parameters extracted from sig model
  * @param $parent_ele - The parent node to add the content
  * @param $root_ele - The always parent. Just to add all the namespace declaration here..
- * @param $argument_array - The user given argument array 
+ * @param $user_arguments - The user given arguments
  * @param $namespace_map - Just make sure the unique namespace is used. Newly added
     (passed by reference)
  */
@@ -937,152 +964,169 @@ function wsf_create_payload_for_array(DomDocument $payload_dom,
                                      array $parameter_struct,
                                      DomNode $parent_ele,
                                      DomNode $root_ele,
-                                     array $argument_array,
+                                     $user_arguments,
                                      array &$namespace_map = array())
 {
     static $i = 2;
 
-    if($parameter_struct[WSF_HAS_SIG_CHILDS] !== TRUE)
-    {
+    $unknown_schema_found = FALSE;
+
+    if($parameter_struct[WSF_HAS_SIG_CHILDS] !== TRUE){
         $values = array_values($namespace_map);
         $prefix = $values[0];
-        wsf_create_payload_for_unknown_array($payload_dom, $parent_ele, $argument_array, $prefix);
-        return;
+        if(is_array($user_arguments))
+        {
+            wsf_create_payload_for_unknown_array($payload_dom, $parent_ele, $user_arguments, $prefix);
+        }
+        $unknown_schema_found = TRUE;
     }
 
     foreach($parameter_struct as $key => $value){
         if(is_array($value)){
-                if (isset($value[WSF_TYPE_REP]) && $value[WSF_TYPE_REP]){
-                    foreach($argument_array as $arg_key => $arg_val){
-                        if($key == $arg_key){
-                            /* type conversion is needed */
-                            if($value[WSF_NS] == "NULL"){
-                                $value[WSF_NS] = NULL;
-                            }
+            if($unknown_schema_found)
+            {
+                continue;
+            }
+            if (isset($value[WSF_TYPE_REP]) && $value[WSF_TYPE_REP]){
+                foreach($user_arguments as $arg_key => $arg_val){
+                    if($key == $arg_key){
+                        /* type conversion is needed */
+                        if($value[WSF_NS] == "NULL"){
+                            $value[WSF_NS] = NULL;
+                        }
 
-                            if($value[WSF_NS] == NULL){
-                                $node_name = $key;
+                        if($value[WSF_NS] == NULL){
+                            $node_name = $key;
+                        }
+                        else{
+                            if($namespace_map[$value[WSF_NS]] != NULL){
+                                $prefix = $namespace_map[$value[WSF_NS]];
                             }
                             else{
-                                if($namespace_map[$value[WSF_NS]] != NULL){
-                                    $prefix = $namespace_map[$value[WSF_NS]];
-                                }
-                                else{
-                                    $prefix = "ns".$i;
-                                    $i ++;
-                                    $root_ele->setAttribute("xmlns:".$prefix, $value[WSF_NS]);
-                                    $namespace_map[$value[WSF_NS]] = $prefix;
-                                }
-                                $node_name = $prefix.":".$key;
+                                $prefix = "ns".$i;
+                                $i ++;
+                                $root_ele->setAttribute("xmlns:".$prefix, $value[WSF_NS]);
+                                $namespace_map[$value[WSF_NS]] = $prefix;
                             }
+                            $node_name = $prefix.":".$key;
+                        }
 
-                            if(array_key_exists("maxOccurs", $value) && ($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1) && is_array($arg_val)){
-                                foreach($arg_val as $arg_val_item){
-                                    $element_2 = $payload_dom->createElement($node_name, $arg_val_item);
-                                    $parent_ele->appendChild($element_2);
-                                }
-                            }
-                            else if(!is_array($arg_val)){
-                                /* in a case this is not an array */
-                                $element_2 = $payload_dom->createElement($node_name, $arg_val);
+                        if(array_key_exists("maxOccurs", $value) && ($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1) && is_array($arg_val)){
+                            foreach($arg_val as $arg_val_item){
+                                $serialized_value = wsf_wsdl_util_serialize_php_value($value[WSF_TYPE_REP], $arg_val_item);
+                                $element_2 = $payload_dom->createElement($node_name, $serialized_value);
                                 $parent_ele->appendChild($element_2);
                             }
-                            else{
-                                error_log("Array is given for ". $key ." which should be a non array. \n");
-                            }
+                        }
+                        else if(!is_array($arg_val)){
+                            /* in a case this is not an array */
+                            $serialized_value = wsf_wsdl_util_serialize_php_value($value[WSF_TYPE_REP], $arg_val);
+                            $element_2 = $payload_dom->createElement($node_name, $serialized_value);
+                            $parent_ele->appendChild($element_2);
+                        }
+                        else{
+                            error_log("Array is given for ". $key ." which should be a non array. \n");
                         }
                     }
                 }
-                else {
-                    foreach($argument_array as $arg_key => $arg_val){
-                        if($key == $arg_key){
-                            /* type conversion is needed */
-                            if($value[WSF_NS] == "NULL"){
-                                $value[WSF_NS] = NULL;
-                            }
+            }
+            else {
+                foreach($user_arguments as $arg_key => $arg_val){
+                    if($key == $arg_key){
+                        /* type conversion is needed */
+                        if($value[WSF_NS] == "NULL"){
+                            $value[WSF_NS] = NULL;
+                        }
 
-                            if($value[WSF_NS] == NULL){
-                                $node_name = $key;
+                        if($value[WSF_NS] == NULL){
+                            $node_name = $key;
+                        }
+                        else{
+                            if($namespace_map[$value[WSF_NS]] != NULL){
+                                $prefix = $namespace_map[$value[WSF_NS]];
                             }
                             else{
-                                if($namespace_map[$value[WSF_NS]] != NULL){
-                                    $prefix = $namespace_map[$value[WSF_NS]];
-                                }
-                                else{
-                                    $prefix = "ns".$i;
-                                    $i ++;
-                                    $root_ele->setAttribute("xmlns:".$prefix, $value[WSF_NS]);
-                                    $namespace_map[$value[WSF_NS]] = $prefix;
-                                }
-                                $node_name = $prefix.":".$key;
+                                $prefix = "ns".$i;
+                                $i ++;
+                                $root_ele->setAttribute("xmlns:".$prefix, $value[WSF_NS]);
+                                $namespace_map[$value[WSF_NS]] = $prefix;
                             }
+                            $node_name = $prefix.":".$key;
+                        }
 
-                            if(array_key_exists("maxOccurs", $value) && ($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1) && is_array($arg_val)){
-                                foreach($arg_val as $arg_val_item){
-                                    $element_2 = $payload_dom->createElement($node_name);
-                                    if(is_object($arg_val_item))
-                                    {
-                                        if($value[WSF_HAS_SIG_CHILDS] === TRUE)
-                                        {
-                                            wsf_create_payload_for_class_map($payload_dom, $value, $element_2, $root_ele, $arg_val_item, $namespace_map);
-                                        }
-                                        else
-                                        {
-                                            wsf_create_payload_for_unknown_class_map($payload_dom, $element_2, $arg_val_item, $prefix);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if($value[WSF_HAS_SIG_CHILDS] === TRUE)
-                                        {
-                                            wsf_create_payload_for_array($payload_dom, $value, $element_2, $root_ele, $arg_val_item, $namespace_map);
-                                        }
-                                        else
-                                        {
-                                            wsf_create_payload_for_unknown_array($payload_dom, $element_2, $arg_val_item, $prefix);
-                                        }
-                                    }
-                                    $parent_ele->appendChild($element_2);
-                                }
-                            }
-                            else{
-                                /* in a case this is not an array */
-                                #$element_2 = $payload_dom->createElementNS($value[WSF_NS], $node_name);
+                        if(array_key_exists("maxOccurs", $value) && ($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1) && is_array($arg_val)){
+                            foreach($arg_val as $arg_val_item){
                                 $element_2 = $payload_dom->createElement($node_name);
-                                if(is_object($arg_val))
+                                if(is_object($arg_val_item))
                                 {
                                     if($value[WSF_HAS_SIG_CHILDS] === TRUE)
                                     {
-                                        wsf_create_payload_for_class_map($payload_dom, $value, $element_2, $root_ele, $arg_val, $namespace_map);
+                                        wsf_create_payload_for_class_map($payload_dom, $value, $element_2, $root_ele, $arg_val_item, $namespace_map);
                                     }
                                     else
                                     {
-                                        wsf_create_payload_for_unknown_class_map($payload_dom, $element_2, $arg_val, $prefix);
+                                        wsf_create_payload_for_unknown_class_map($payload_dom, $element_2, $arg_val_item, $prefix);
                                     }
                                 }
                                 else
                                 {
                                     if($value[WSF_HAS_SIG_CHILDS] === TRUE)
                                     {
-                                        wsf_create_payload_for_array($payload_dom, $value, $element_2, $root_ele, $arg_val, $namespace_map);
+                                        wsf_create_payload_for_array($payload_dom, $value, $element_2, $root_ele, $arg_val_item, $namespace_map);
                                     }
                                     else
                                     {
-                                        wsf_create_payload_for_unknown_array($payload_dom, $element_2, $arg_val, $prefix);
+                                        wsf_create_payload_for_unknown_array($payload_dom, $element_2, $arg_val_item, $prefix);
                                     }
                                 }
                                 $parent_ele->appendChild($element_2);
                             }
                         }
+                        else{
+                            /* in a case this is not an array */
+                            #$element_2 = $payload_dom->createElementNS($value[WSF_NS], $node_name);
+                            $element_2 = $payload_dom->createElement($node_name);
+                            if(is_object($arg_val))
+                            {
+                                if($value[WSF_HAS_SIG_CHILDS] === TRUE)
+                                {
+                                    wsf_create_payload_for_class_map($payload_dom, $value, $element_2, $root_ele, $arg_val, $namespace_map);
+                                }
+                                else
+                                {
+                                    wsf_create_payload_for_unknown_class_map($payload_dom, $element_2, $arg_val, $prefix);
+                                }
+                            }
+                            else
+                            {
+                                if($value[WSF_HAS_SIG_CHILDS] === TRUE)
+                                {
+                                    wsf_create_payload_for_array($payload_dom, $value, $element_2, $root_ele, $arg_val, $namespace_map);
+                                }
+                                else
+                                {
+                                    wsf_create_payload_for_unknown_array($payload_dom, $element_2, $arg_val, $prefix);
+                                }
+                            }
+                            $parent_ele->appendChild($element_2);
+                        }
                     }
                 }
+            }
         }else if($key == WSF_TYPE_REP && is_xsd_type($value)){
+
             /* TODO multiple values */
-            if(!$argument_array[0])
-                $element_2 = $payload_dom->createTextNode(0);
-            else
-                $element_2 = $payload_dom->createTextNode($argument_array[0]);
-            $root_ele->appendChild($element_2);
+            if($user_arguments == NULL || !is_array($user_arguments))
+            {
+                $serialized_value = wsf_wsdl_util_serialize_php_value($value, $user_arguments);
+                $element_2 = $payload_dom->createTextNode($serialized_value);
+                $parent_ele->appendChild($element_2);
+
+            }
+            else if(is_array($user_arguments))
+            {
+                error_log("Array is specified for when non-array is expected\n");
+            }
         }
     }
 }
@@ -1090,7 +1134,7 @@ function wsf_create_payload_for_array(DomDocument $payload_dom,
 /** create payload for unknown class maps 
  * @param $payload_dom - DomDocument for the payload building
  * @param $parent_ele - The parent node to add the content
- * @param $argument_array - The user given argument array 
+ * @param $user_arguments - The user given argument array 
  * @param $class_obj - object with user data..
  * @param $ns_prefix
  */
@@ -1168,15 +1212,15 @@ function wsf_create_payload_for_unknown_class_map(DomDocument $payload_dom,
 /** create payload for arrays
  * @param $payload_dom - DomDocument for the payload building
  * @param $parent_ele - The parent node to add the content
- * @param $argument_array - The user given argument array 
+ * @param $user_arguments - The user given argument array 
  * @param $ns_prefix
  */
 function wsf_create_payload_for_unknown_array(DomDocument $payload_dom,
                                      DomNode $parent_ele,
-                                     array $argument_array,
+                                     $user_arguments,
                                      $ns_prefix)
 {
-    foreach($argument_array as $key=> $value)
+    foreach($user_arguments as $key=> $value)
     {
         if($ns_prefix != NULL && !empty($ns_prefix))
         {
@@ -1352,10 +1396,10 @@ function wsf_create_rpc_payload_for_class_map(DomDocument $payload_dom,
                 }
         }else if($key == WSF_TYPE_REP && is_xsd_type($value)){
             /* TODO multiple values */
-            if(!$argument_array[0])
+            if(!$user_arguments[0])
                 $element_2 = $payload_dom->createTextNode(0);
             else
-                $element_2 = $payload_dom->createTextNode($argument_array[0]);
+                $element_2 = $payload_dom->createTextNode($user_arguments[0]);
             $root_ele->appendChild($element_2);
         }
     }
@@ -1366,7 +1410,7 @@ function wsf_create_rpc_payload_for_class_map(DomDocument $payload_dom,
  * @param $parameter_struct - Map of parameters extracted from sig model
  * @param $parent_ele - The parent node to add the content
  * @param $root_ele - The always parent. Just to add all the namespace declaration here..
- * @param $argument_array - The user given argument array 
+ * @param $user_arguments - The user given argument array 
  * @param $namespace_map - Just make sure the unique namespace is used. Newly added
     (passed by reference)
  */
@@ -1374,7 +1418,7 @@ function wsf_create_rpc_payload_for_array(DomDocument $payload_dom,
                                      array $parameter_struct,
                                      DomNode $parent_ele,
                                      DomNode $root_ele,
-                                     array $argument_array,
+                                     array $user_arguments,
                                      array &$namespace_map = array())
 {
     static $i = 2;
@@ -1382,7 +1426,7 @@ function wsf_create_rpc_payload_for_array(DomDocument $payload_dom,
     foreach($parameter_struct as $key => $value){
         if(is_array($value)){
             if (isset($value[WSF_TYPE_REP]) && $value[WSF_TYPE_REP]){
-                foreach($argument_array as $arg_key => $arg_val){
+                foreach($user_arguments as $arg_key => $arg_val){
                     if($key == $arg_key){
                         /* type conversion is needed */
                         if($value[WSF_NS] == "NULL"){
@@ -1422,7 +1466,7 @@ function wsf_create_rpc_payload_for_array(DomDocument $payload_dom,
                 }
             }
             else {
-                foreach($argument_array as $arg_key => $arg_val){
+                foreach($user_arguments as $arg_key => $arg_val){
                     if($key == $arg_key){
                         /* type conversion is needed */
                         if($value[WSF_NS] == "NULL"){
@@ -1471,10 +1515,10 @@ function wsf_create_rpc_payload_for_array(DomDocument $payload_dom,
             }
         }else if($key == WSF_TYPE_REP && is_xsd_type($value)){
             /* TODO multiple values */
-            if(!$argument_array[0])
+            if(!$user_arguments[0])
                 $element_2 = $payload_dom->createTextNode(0);
             else
-                $element_2 = $payload_dom->createTextNode($argument_array[0]);
+                $element_2 = $payload_dom->createTextNode($user_arguments[0]);
             $root_ele->appendChild($element_2);
         }
     }
@@ -1586,14 +1630,44 @@ function wsf_create_temp_struct(DomNode $param_child, $wrapper_ns)
 function wsf_parse_payload_for_array(DomNode $payload, array $parameter_struct)
 {
     $parse_tree = array();
+
+    $is_just_text = FALSE;
     
     /* for now, we only support complex type sequences */
     //$child_nodes = $payload->childNodes;
-    $current_child = $payload->firstChild;
+
+    $original_payload = $payload;
+    while($payload != NULL && $payload->nodeType != XML_ELEMENT_NODE)
+    {
+        $payload = $payload->nextSibling;
+    }
+    if($payload == NULL) {
+        $is_just_text = TRUE;
+    }
+
+
+    if($payload != NULL)
+    {
+        /* go for the childs */
+        $current_child = $payload->firstChild;
+        while($current_child != NULL && $current_child->nodeType != XML_ELEMENT_NODE)
+        {
+            $current_child = $current_child->nextSibling;
+        }
+        if($current_child == NULL)
+        {
+            $is_just_text = TRUE;
+        }
+    }
+
     foreach($parameter_struct as $key => $value)
     {   
         if(is_array($value))
         {
+            if($is_just_text)
+            {
+                continue;
+            }
             if(isset($value[WSF_TYPE_REP]) && $value[WSF_TYPE_REP]){
                 if($key == $current_child->localName) {
                     if(array_key_exists("maxOccurs", $value) && ($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1)){
@@ -1615,6 +1689,10 @@ function wsf_parse_payload_for_array(DomNode $payload, array $parameter_struct)
                             }
                             $parse_tree[$key][$i++] = $converted_value;
                             $current_child = $current_child->nextSibling;
+                            while($current_child != NULL && $current_child->nodeType != XML_ELEMENT_NODE)
+                            {
+                                $current_child = $current_child->nextSibling;
+                            }
                         }
                     }
                     else
@@ -1711,6 +1789,14 @@ function wsf_parse_payload_for_array(DomNode $payload, array $parameter_struct)
                     }
                 }
             }
+        }else if($key == WSF_TYPE_REP && is_xsd_type($value)){
+            if ($payload != NULL && $payload->nodeType != XML_TEXT_NODE)
+            {
+                $original_value = $payload->nodeValue;
+                $converted_value = wsf_wsdl_util_convert_value($value, $original_value);
+
+                return $converted_value;
+            }
         }
     }
 
@@ -1735,6 +1821,14 @@ function wsf_parse_payload_for_class_map(DomNode $payload, array $parameter_stru
         $class_name = $element_name;
     }
     
+    while($payload != NULL && $payload->nodeType != XML_ELEMENT_NODE)
+    {
+        $payload = $payload->nextSibling;
+    }
+    if($payload == NULL) {
+        return NULL;
+    }
+
     try
     {
         $ref_class = new ReflectionClass($class_name);
@@ -1753,6 +1847,15 @@ function wsf_parse_payload_for_class_map(DomNode $payload, array $parameter_stru
     /* for now, we only support complex type sequences */
     //$child_nodes = $payload->childNodes;
     $current_child = $payload->firstChild;
+    while($current_child != NULL && $current_child->nodeType != XML_ELEMENT_NODE)
+    {
+        $current_child = $current_child->nextSibling;
+    }
+    if($current_child == NULL)
+    {
+        return $parse_tree;
+    }
+
     foreach($parameter_struct as $key => $value)
     {   
         if(is_array($value))
@@ -1797,6 +1900,10 @@ function wsf_parse_payload_for_class_map(DomNode $payload, array $parameter_stru
                         }
                         $object->$key = $converted_value;
                         $current_child = $current_child->nextSibling;
+                        while($current_child != NULL && $current_child->nodeType != XML_ELEMENT_NODE)
+                        {
+                            $current_child = $current_child->nextSibling;
+                        }
                     }
                 }
                 else

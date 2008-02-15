@@ -30,6 +30,7 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
 	}
 
     $is_doc = TRUE; //currently we only support doc-lit style parsing..
+    $is_wrapper = FALSE;
 
     if($signature_node){
         $params_node = $signature_node->firstChild;
@@ -54,6 +55,7 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
             else{
                 /* No wrapper element in the request */
                 $child_array =  array();
+                $ele_ns = NULL;
                 $param_child_list = $params_node->childNodes;
                 foreach($param_child_list as $param_child){
                     $param_attr = $param_child->attributes;
@@ -66,7 +68,11 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
         }
     }
 
-    $tmp_param_struct = $child_array;
+    if ($is_wrapper == TRUE)
+        $tmp_param_struct = $child_array;
+    else
+        $tmp_param_struct = $child_array[$ele_name];
+    
 
 	foreach($envelope_node->childNodes as $env_child_node){
 		if($env_child_node->localName == 'Body'){
@@ -140,6 +146,11 @@ function wsf_wsdl_create_response_payload($return_val, $signature_node)
         $body_array[WSF_HAS_SIG_CHILDS] = TRUE;
 		$is_wrapper = TRUE;
 	}
+    else
+    {
+        $ele_ns = NULL;
+        $ele_name = NULL;
+    }
 
 
 	$param_child_list = $returns_node->childNodes;
@@ -148,6 +159,10 @@ function wsf_wsdl_create_response_payload($return_val, $signature_node)
 		$param_name = $param_attr->getNamedItem(WSF_NAME)->value;
 		$param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
 		$body_array[$param_name] = wsf_create_temp_struct($param_child, $ele_ns);
+        if($ele_name === NULL) /* that is when the wrapper element is not exist */
+        {
+            $ele_name= $param_name;        
+        }
 	}
 
 	if($is_wrapper == TRUE)
@@ -155,15 +170,16 @@ function wsf_wsdl_create_response_payload($return_val, $signature_node)
 	else
 	    $tmp_param_struct = $body_array;
 
+    $arguments = $return_val;
+
 
     /* no wrapper elements most probably getter functions */
     if(count($tmp_param_struct) == 0)
         return NULL;
 
-    $arguments = $return_val;
-
  
     if($is_doc == TRUE){
+        $ele_ns = $tmp_param_struct[$ele_name][WSF_NS];
         $payload_dom = new DOMDocument('1.0', 'iso-8859-1');
         $element = $payload_dom->createElementNS($ele_ns, "ns1:".$ele_name);
         if(is_object($arguments)){
