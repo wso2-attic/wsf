@@ -324,5 +324,8 @@ function wsf_wsdl_process_in_msg($parameters)
     return $return_payload_string;
 }
 
+function wsf_wsdl_check(){
+	return 1;
+}
 
 ?>
