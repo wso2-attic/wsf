@@ -32,6 +32,7 @@ libaxutil_la_SOURCES = hash.c \
                         date_time.c \
                         base64_binary.c \
                         properties.c \
+						http_chunked_stream.c \
 			rand.c \
 			date_time_util.c \
 			version.c \
