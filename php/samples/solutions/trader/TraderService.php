@@ -21,16 +21,15 @@ function createaccountFunction($inMessage) {
     $userid = $simplexml->param1[0];
     $password = $simplexml->param2[0];
 
-    if($userid=="" or $password=="")
-      {
+    if($userid=="" or $password==""){
        $Result="User ID or Password is required";
        $resPayload = <<<XML
 <ns1:result xmlns:ns1="http://ws.axis2.org/axis2/php/trader">$Result</ns1:result>
 XML;
        $returnMessage = new WSMessage($resPayload);
        return $returnMessage;
-
-      }
+    }
+    
     $fp;
     if (stristr(PHP_OS, 'WIN')) {
 	    $fp = @fopen('members.xml','r+');
@@ -38,8 +37,7 @@ XML;
 	    $fp = @fopen('/tmp/members.xml','r+');
     
     }
-    if(!$fp) 
-      {   
+    if(!$fp) {   
        $clients = array();
        $clients [] = array(
        'UserID' => $userid,
@@ -51,72 +49,58 @@ XML;
        $r = $doc->createElement( "clients" );
        $doc->appendChild( $r );
 
-       foreach( $clients as $client )
-         {
+       foreach( $clients as $client ){
           $b = $doc->createElement( "client" );
   
           $UserID = $doc->createElement( "UserID" );
-          $UserID->appendChild(
-          $doc->createTextNode( $client['UserID'] )
-          );
+          $UserID->appendChild($doc->createTextNode( $client['UserID'] ));
           $b->appendChild( $UserID );
   
           $Password = $doc->createElement( "Password" );
-          $Password->appendChild(
-          $doc->createTextNode( $client['Password'] )
-          );
+          $Password->appendChild($doc->createTextNode( $client['Password']));
           $b->appendChild( $Password );
-  
           $r->appendChild( $b );
-         }
-	    if (stristr(PHP_OS, 'WIN')) {
+       }
+	   if (stristr(PHP_OS, 'WIN')) {
 		    print $doc->save("members.xml");
-	    }else{
+	   }else{
 		    print $doc->save("/tmp/members.xml");
 	    
-	    }
-      }		
-
-    else
-    {
+	  }
+   }else{
 	    $doc;
-      if (stristr(PHP_OS, 'WIN')) {
+        if(stristr(PHP_OS, 'WIN')) {
 	      $doc =DOMDocument::load("members.xml");
-      }else{
+         }else{
      	      $doc =DOMDocument::load("/tmp/members.xml");
-      
-      }
-       $doc->formatOutput = true;
-       $r = $doc->firstChild;
+         }
+        $doc->formatOutput = true;
+        $r = $doc->firstChild;
 
-       $clients = $doc->getElementsByTagName( "client" );
+        $clients = $doc->getElementsByTagName( "client" );
 
-       foreach( $clients as $client )
-         {
+        foreach( $clients as $client ){
           $UserIDs = $client->getElementsByTagName( "UserID" );
           $UserID = $UserIDs->item(0)->nodeValue;
    
-          if ($userid==$UserID)
-             {
+          if ($userid==$UserID){
               $Resultcheck="User ID alredy has been using";
               $resPayload = <<<XML
 <ns1:result xmlns:ns1="http://ws.axis2.org/axis2/php/trader">$Resultcheck</ns1:result>
 XML;
               $returnMessage = new WSMessage($resPayload);
               return $returnMessage;
-             }
-         } 
+          }
+      } 
 
-       if($Resultcheck=="")
-         {
+      if($Resultcheck==""){
           $clients = array();
           $clients [] = array(
           'UserID' => $userid,
           'Password' => $password,
           );
 
-          foreach( $clients as $client )
-            {
+       foreach( $clients as $client ){
              $b = $doc->createElement( "client" );
   
              $UserID = $doc->createElement( "UserID" );
@@ -132,15 +116,14 @@ XML;
              $b->appendChild( $Password );
   
              $r->appendChild( $b );
-            }
-  
-          fwrite($fp,$doc->savexml());
-          fclose($fp);
          }
-
+  
+         fwrite($fp,$doc->savexml());
+         fclose($fp);
       }
-    $epr = "http://localhost/samples/solutions/trader/ExchangeTrader.php";
-    $operation = "create-account";
+   }
+   $epr = "http://localhost/samples/solutions/trader/ExchangeTrader.php";
+   $operation = "create-account";
  
     $reqPayloadString = <<<XML
     <ns1:$operation xmlns:ns1="http://ws.apache.org/axis2/php/trader">
@@ -150,34 +133,24 @@ XML;
 XML;
 
     try{
-	$client = new WSClient(array(
-				      "to"=>$epr));
-	$response = $client->request($reqPayloadString);
-	 
-	if ($response)
-	   {      
+    	$client = new WSClient(array("to"=>$epr));
+    	$response = $client->request($reqPayloadString);
+		if ($response){      
             $Result = "Created";    
             $resPayload = <<<XML
 <ns1:result xmlns:ns1="http://ws.axis2.org/axis2/php/trader">$Result</ns1:result>
 XML;
-
             $returnMessage = new WSMessage($resPayload);
             return $returnMessage;
-
 	    } 
-       }
-    catch (Exception $e)
-       {
-	if ($e instanceof WSFault)
-	   {
-	    print"Soap Fault:\n".$e->Reason;
-	   }
-	else
-	   {
-	    print"Message:\n".$e->getMessage();
-	   }
-       }
-
+    }
+    catch (Exception $e){
+    	if ($e instanceof WSFault){
+	        print"Soap Fault:\n".$e->Reason;
+	    }else{
+	        print"Message:\n".$e->getMessage();
+	    }
+    }
 }
 
 
@@ -189,31 +162,25 @@ function buyFunction($inMessage) {
     $symbol = $simplexml->param3[0];
     $amount = $simplexml->param4[0];
 
-
-
 // check the validity of inputs
-    if($userid=="" or $password=="" or $symbol=="" or $amount=="")
-      {
+    if($userid=="" or $password=="" or $symbol=="" or $amount==""){
        $Result="Not all required data are provided";
-
        $resPayload = <<<XML
 <ns1:result xmlns:ns1="http://ws.axis2.org/axis2/php/trader">$Result</ns1:result>
 XML;
        $returnMessage = new WSMessage($resPayload);
        return $returnMessage;
-
-      }
+   }
 
 // check the amount validity
-    if ($amount < 0 or $amount == 0)
-       {
+    if ($amount < 0 or $amount == 0){
         $Result="Amount has not supplied as to valid";
         $resPayload = <<<XML
 <ns1:result xmlns:ns1="http://ws.axis2.org/axis2/php/trader">$Result</ns1:result>
 XML;
         $returnMessage = new WSMessage($resPayload);
         return $returnMessage;
-       } 
+    } 
 
 
     $doc = new DOMDocument();
@@ -227,16 +194,14 @@ XML;
     $operation = "buy";
 
     $clients = $doc->getElementsByTagName( "client" );
-    foreach( $clients as $client )
-      {
+    foreach( $clients as $client ){
        $UserIDs = $client->getElementsByTagName( "UserID" );
        $UserID = $UserIDs->item(0)->nodeValue;
   
        $passwords = $client->getElementsByTagName( "Password" );
        $Password = $passwords->item(0)->nodeValue;
    
-       if ($userid==$UserID and $password==$Password)
-          {
+       if ($userid==$UserID and $password==$Password){
            $Result1="Match";
 
            $reqPayloadString = <<<XML
@@ -248,13 +213,11 @@ XML;
 </ns1:$operation>
 XML;
 
-           try{
-	       $client = new WSClient(array(
-				      "to"=>$epr));
-	       $response = $client->request($reqPayloadString);
-	 
-	       if ($response)
-	          {      
+        try{
+	        $client = new WSClient(array("to"=>$epr));
+            $response = $client->request($reqPayloadString);
+
+            if ($response){      
                    $Result = $response->str;    
                    $resPayload = <<<XML
 <ns1:result xmlns:ns1="http://ws.axis2.org/axis2/php/trader">$Result</ns1:result>
@@ -263,33 +226,24 @@ XML;
                    $returnMessage = new WSMessage($resPayload);
                    return $returnMessage;
 
-	          } 
-              }
-
-           catch (Exception $e)
-              {
-	       if ($e instanceof WSFault)
-	          {
-	           print"Soap Fault:\n".$e->Reason;
-	          }
-	       else
-	          {
-	           print"Message:\n".$e->getMessage();
-	          }
-              }
-
-          }
+            } 
+         }catch (Exception $e){
+    	       if ($e instanceof WSFault){
+    	           print"Soap Fault:\n".$e->Reason;
+	           }else{
+	                print"Message:\n".$e->getMessage();
+	           }
+         }
       }
-    if($Result1 =="")
-      {
+    }
+    if($Result1 ==""){
        $Result="Wrong User ID or Password";
        $resPayload = <<<XML
 <ns1:result xmlns:ns1="http://ws.axis2.org/axis2/php/trader">$Result</ns1:result>
 XML;
        $returnMessage = new WSMessage($resPayload);
        return $returnMessage;
-      }
-
+   }
 }
    
 
@@ -300,8 +254,6 @@ function sellFunction($inMessage) {
     $password = $simplexml->param2[0];
     $symbol = $simplexml->param3[0];
     $amount = $simplexml->param4[0];
-
-
 
 // check the validity of inputs
     if($userid=="" or $password=="" or $symbol=="" or $amount=="")
