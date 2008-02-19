@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+./autogen.sh
 cp build/wsf_c/Makefile.am wsf_c/
 cd wsf_c
 build/copy_build_files.sh
