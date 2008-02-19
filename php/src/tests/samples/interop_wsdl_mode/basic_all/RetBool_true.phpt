@@ -8,8 +8,8 @@ try {
     $client = new WSClient(array("wsdl" => "http://131.107.72.15/SoapWsdl_BaseDataTypes_XmlFormatter_Service_Indigo/BaseDataTypesDocLitB.svc?wsdl"));
     
     $proxy = $client->getProxy();	
-    $val =  $proxy->RetBool(array(TRUE));    
-    var_dump($val);
+    $val =  $proxy->RetBool(TRUE);    
+    echo $val;
 
 } catch (Exception $e) {
 
@@ -22,5 +22,5 @@ try {
 }
 ?>
 --EXPECT--
-string(4) "true"
+true
 

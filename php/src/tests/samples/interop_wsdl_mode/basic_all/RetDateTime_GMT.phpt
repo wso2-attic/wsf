@@ -9,7 +9,7 @@ try {
                   array("wsdl" => "http://131.107.72.15/SoapWsdl_BaseDataTypes_XmlFormatter_Service_Indigo/BaseDataTypesDocLitB.svc?wsdl"));
     
     $proxy = $client->getProxy();
-    $val =  $proxy->RetDateTime(array("2005-06-30T08:30:00-07:00"));
+    $val =  $proxy->RetDateTime("2005-06-30T08:30:00-07:00");
     echo $val."\n";
 
 } catch (Exception $e) {
