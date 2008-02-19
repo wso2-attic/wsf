@@ -6,9 +6,7 @@ inDecimal(90)
 try {
 
     $client = new WSClient(
-                  array("wsdl" => "http://131.107.72.15/SoapWsdl_BaseDataTypes_XmlFormatter_Service_Indigo/BaseDataTypesDocLitB.svc?wsdl",
-                        "proxyHost"=>"localhost",
-                        "proxyPort"=>"9080"));
+                  array("wsdl" => "http://131.107.72.15/SoapWsdl_BaseDataTypes_XmlFormatter_Service_Indigo/BaseDataTypesDocLitB.svc?wsdl"));
     
     $proxy = $client->getProxy();
     $val =  $proxy->RetDecimal(90);
