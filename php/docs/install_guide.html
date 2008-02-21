@@ -65,11 +65,8 @@ href="mailto:wsf-c-dev-request@wso2.org?subject=subscribe">subcribe</a></p>
         
     <li> OpenSSL&nbsp; <a href="http://www.openssl.org/" >
         Download</a> </li>
-        <li>sqlite or MySql (needed for reliable messaging) <a href="http://www.sqlite.org/download.html" >
-        Download Sqlite</a>, <a href="http://dev.mysql.com/downloads/" >Download Mysql</a>
-    </li>
     </ol>
-    
+        
     <a id="installing"></a><h3>1.2 &nbsp;Installing</h3>
     
     <p>
@@ -160,12 +157,8 @@ add the following line to the php.ini<br />
         Win32build [ win32 buildtools for PHP ]<a href="http://www.php.net/extra/win32build.zip"> Download</a>
     </p>
     <p>
-          sqlite or
-        Mysql Server 5 ( Needed When using Reliable Messaging )<a href="http://www.sqlite.org/download.html"> Download sqlite</a><a href="http://dev.mysql.com/downloads/"> Download MySql</a>
-        </p>
-    <p>
         In addition you need to have Microsoft Visual Studio installed on your system. 
-    </p>
+        </p>
     <a id="Building"></a>
 <h3><strong>2.2 Building </strong></h3>
 
@@ -273,7 +266,9 @@ installation location.</p>
     </p>
     <p>
         Set WSF/PHP configuration options.</p>
-    <p><p>
+    <p>
+    </p>
+    <p>
        [wsf]
     <br />
         <strong>
@@ -283,7 +278,8 @@ installation location.</p>
     <br />
     wsf.log_level=3 </strong>
     </p>
-    </p>
+    <p>
+        <strong></strong><strong>wsf.rm_db_dir="&lt;path to extract_folder"&gt;\wsf_c"</strong></p>
     <p>
         Also enable php_xsl extension
     </p>
