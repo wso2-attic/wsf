@@ -19,46 +19,13 @@ messaging.</p>
 <h2><strong id="1">9.1. How to Configure WSO2 WSF/PHP to use Reliable
 Messaging</strong></h2>
 
-<p>To implement reliable messaging, WSO2 WSF/PHP uses a database system to
-store state information related to messaging. Two DBMS systems are supported,
-SQLite and MySQL.</p>
+<p>To implement reliable messaging, WSO2 WSF/PHP uses SQLite&nbsp; database system to
+store state information related to messaging. This is
+packed with the binary or source.</p>
 
-<h3>Using WSO2 WSF/PHP with SQLite</h3>
-
-<p>You will need to have SQLite version 3 installed on your machine.</p>
-
-<p>Note: For the Windows binary, the SQLite3 binary and executable will be
-packed with the WSO2 WSF/PHP binary. So what you will need is to add the
-&lt;WSO2 WSF/PHP&gt;\wsf_c\lib directory to the path.</p>
-
-<p>You will find a script (sqlite_schema.sh | sqlite_schema.bat )  for
-creating the databases that are used by WSO2 WSF/PHP in the &lt;WSO2
-WSF/PHP&gt; directory. Make sure to run this script before starting the
-server. When you run this script, it will create two database files
-"sandesha2_client_db" and "sandesha2_svr_db" in the directory where you
-executed the script. For Linux, put these databases to your Linux
-environment's /tmp directory, and these files should have the read and write
-permissions for the user that runs your Web server.</p>
-
-<p>On Windows, add the following php.ini entry.</p>
-
-<p><strong>wsf.rm_db_dir=&lt;database location&gt;</strong></p>
-
-<p>You can do the same on Linux if you have provided proper read and write
-permissions.</p>
-
-<h3>Using WSO2 WSF/PHP with MySQL</h3>
-
-<p>You will need to have the MySQL database installed on your machine. You
-will find the relevant scripts to create the database tables and the user
-account in &lt;WSO2 WSF/PHP&gt;\wsf_c\bin\sandesha2. First  create a user in
-MySQL using the instructions in the create_mysql_user.txt file. There the
-user account name is referred to as 'g'. Then use init_mysql.bat or
-init_mysql.sh file to create the database tables. Next you will need to build
-WSO2 WSF/PHP with MySQL enabled by specifying the option WITH_MYSQL=1 on
-Windows or --enable-mysql on Linux.</p>
-
-<p> </p>
+<p> If you using WSF/PHP on windows, please make sure to add the php.ini entry</p>
+    <p>
+        <strong>wsf.rm_db_dir="&lt;path to wsf/php extract direcotry&gt;\wsf_c\"</strong></p>
 
 <h2><strong id="2">9.2. Writing RM Enabled Web Service Client.</strong></h2>
 
@@ -68,34 +35,35 @@ simple RM client with WSO2 WSF/PHP.</p>
 
 <p>First create a suitable payload to be sent to the echo service.</p>
 
-<p>$req_payload_string =  &lt;&lt;&lt;XML &lt;ns1:echoString
+<p>$req_payload_string =&nbsp; &lt;&lt;&lt;XML &lt;ns1:echoString
 xmlns="http://www.wsf.org/echo/echoString"&gt;&lt;text&gt;Hello
 RM!&lt;/text&gt;&lt;/ns1:echoString&gt;XML;</p>
 
 <p>try {</p>
 
-<p>          $msg =   new WSMessage($reqPayloadString,  array("<span
+<p>          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $msg =   new WSMessage($reqPayloadString,  &nbsp;
+    &nbsp;array("<span
 style="color: #ff6666">action</span>" =&gt; "<span
 style="color: #ff6666">http://php.axis2.org/samples/echoString</span>") );</p>
 
-<p>          $client = new WSClient(array( "<span
+<p>          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $client = new WSClient(array( "<span
 style="color: #ff6666">to</span>"=&gt;"<span
 style="color: #ff6666">http://localhost/echo_service_rm.php</span>", "<span
 style="color: #ff6666">reliable</span>"=&gt;TRUE));</p>
 
-<p>          $result = $client-&gt;request($msg);</p>
+<p>          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $result = $client-&gt;request($msg);</p>
 
-<p>          echo $result-&gt;str;</p>
+<p>          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; echo $result-&gt;str;</p>
 
-<p>} catch (Exception $e) { </p>
+<p>} catch (Exception $e) {&nbsp;</p>
 
-<p>           if ($e instanceof WSFault) {</p>
+<p>           &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if ($e instanceof WSFault) {</p>
 
-<p>               printf("Soap Fault: %s\n", $e-&gt;code);</p>
+<p>               &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; printf("Soap Fault: %s\n", $e-&gt;code);</p>
 
-<p>          } else {</p>
+<p>          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; } else {</p>
 
-<p>         printf("Message = %s\n",$e-&gt;getMessage()); }</p>
+<p>         &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; printf("Message = %s\n",$e-&gt;getMessage()); }</p>
 
 <p>}</p>
 
@@ -109,36 +77,46 @@ application message and terminate the sequence.</p>
 receiving RM endpoint, you can configure the above Web service client as
 follows.</p>
 
-<p>          $msg0 =   new WSMessage($reqPayloadString,  array("<span
+<p>          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $msg0 =   new WSMessage($reqPayloadString,  &nbsp;
+    &nbsp;array("<span
 style="color: #ff6666">action</span>" =&gt; "<span
 style="color: #ff6666">http://php.axis2.org/samples/echoString</span>") );</p>
 
-<p>          $msg1 = new WSMessage($reqPayloadString, array("<span
+<p>          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $msg1 = new WSMessage($reqPayloadString, array("<span
 style="color: #ff6666">action</span>"=&gt;"<span
 style="color: #ff6666">http://php.axis2.org/samples/echoString</span>"));</p>
 
-<p>          $msg2 = new WSMessage($reqPayloadString, array("<span
+<p>          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $msg2 = new WSMessage($reqPayloadString, array("<span
 style="color: #ff6666">action</span>"=&gt;"<span
-style="color: #ff6666">http://php.axis2.org/samples/echoString</span>",      
+style="color: #ff6666">http://php.axis2.org/samples/echoString</span>",      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp;&nbsp;
                                                                              
                                            "<span
 style="color: #ff6666">lastMessage</span>"=&gt;TRUE));</p>
 
-<p>          $client = new WSClient(array( "<span
+<p>          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $client = new WSClient(array( "<span
 style="color: #ff6666">to</span>"=&gt;"<span
 style="color: #ff6666">http://localhost:8080/echo_service_rm.php</span>",</p>
 
-<p>                                                      "<span
+<p>                                                      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; "<span
 style="color: #ff6666">reliable</span>"=&gt;TRUE,</p>
 
-<p>                                                      "<span
+<p>                                                      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; "<span
 style="color: #ff6666">willContinueSequence</span>"=&gt;TRUE));</p>
 
-<p>          $result = $client-&gt;request($msg0);</p>
+<p>          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $result = $client-&gt;request($msg0);</p>
 
-<p>          $client-&gt;request($msg1);</p>
+<p>          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $client-&gt;request($msg1);</p>
 
-<p>          $client-&gt;request($msg2);</p>
+<p>          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $client-&gt;request($msg2);</p>
 
 <p>Since we specified "willContinueSequence"=&gt;TRUE option in WSClient , it
 will not terminate the sequence after sending the first message. It keeps the
@@ -158,14 +136,14 @@ echo_service_rm.php was used as the above client's receiving endpoint.</p>
 
 <p>function echoFunction($inMessage){</p>
 
-<p>         return new WSMessage($inMessage-&gt;str);</p>
+<p>         &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; return new WSMessage($inMessage-&gt;str);</p>
 
 <p>}</p>
 
 <p>$operations = array("<span style="color: #ff6666">echoString</span>" =&gt;
 "<span style="color: #ff6666">echoFunction</span>");</p>
 
-<p>$actions      = array("<span
+<p>$actions      &nbsp; &nbsp;&nbsp; = array("<span
 style="color: #ff6666">http://php.axis2.org/samples/echoString</span>"=&gt;"<span
 style="color: #ff6666">echoString</span>");</p>
 
@@ -173,18 +151,21 @@ style="color: #ff6666">echoString</span>");</p>
 style="color: #ff6666">operations</span>"=&gt;<span
 style="color: #ff6666">$operations,</span></p>
 
-<p>                                                 "<span
+<p>                                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
+    "<span
 style="color: #ff6666">reliable</span>"=&gt;TRUE));</p>
 
 <p>$service-&gt;reply();</p>
 
 <p>Note how we map "echoString" operation to
-"http://php.axis2.org/samples/echoString"  which is the same action URI used
+"http://php.axis2.org/samples/echoString"&nbsp;
+    which is the same action URI used
 in the above example client.</p>
 
 <p>On WSService options, "reliable"=&gt;TRUE option is used to tell the
 service to use the RM protocol.</p>
 
-<p> </p>
+<p> &nbsp;</p>
 </body>
 </html>
