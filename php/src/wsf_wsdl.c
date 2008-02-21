@@ -141,51 +141,36 @@ void create_dynamic_client(zval *this_ptr, char *function, int function_len,
         ZVAL_ZVAL(params[1], function_parameters, NULL, NULL);
         INIT_PZVAL(params[1]);
 
-		/*
-		if(zend_hash_find(Z_OBJPROP_P(this_ptr), "SCRIPT_EXECUTED", sizeof("SCRIPT_EXECUTED"), (void**)&tmp) == SUCCESS){
-			if(Z_TYPE_PP(tmp) == IS_BOOL && Z_BVAL_PP(tmp) == 1){
-				script_executed = 1;
-			}
+		script.type = ZEND_HANDLE_FP;
+		script.filename = "wsf_wsdl.php";
+		script.opened_path = NULL;
+		script.free_filename = 0;
+
+
+		stream  = php_stream_open_wrapper("wsf_wsdl.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
+		if(!stream)
+				return;
+
+		if (php_stream_cast(stream, PHP_STREAM_AS_STDIO|PHP_STREAM_CAST_RELEASE, (void*)&new_fp, REPORT_ERRORS) == FAILURE)    {
+				php_printf ("Unable to open script file or file not found:");
 		}
-		if(!script_executed){
-		*/
-			script.type = ZEND_HANDLE_FP;
-			script.filename = "wsf_wsdl.php";
-			script.opened_path = NULL;
-			script.free_filename = 0;
-
-
-			stream  = php_stream_open_wrapper("wsf_wsdl.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
-			if(!stream)
-					return;
-
-			if (php_stream_cast(stream, PHP_STREAM_AS_STDIO|PHP_STREAM_CAST_RELEASE, (void*)&new_fp, REPORT_ERRORS) == FAILURE)    {
-					php_printf ("Unable to open script file or file not found:");
-			}
-			script.handle.fp =  new_fp;
-			if(script.handle.fp){
-				int lint_script = 1;
-				{
-					zval check_function, retval1;
-					ZVAL_STRING(&check_function, "wsf_wsdl_check", 0);
-					if (call_user_function (EG (function_table), (zval **) NULL, 
-						&check_function, &retval1, 0,NULL TSRMLS_CC) == SUCCESS){
-							if(Z_TYPE(retval1) == IS_LONG && Z_LVAL(retval1) == 1){
-								lint_script = 0;							
-							}
-					}
+		script.handle.fp =  new_fp;
+		if(script.handle.fp){
+			int lint_script = 1;
+			{
+				zval check_function, retval1;
+				ZVAL_STRING(&check_function, "wsf_wsdl_check", 0);
+				if (call_user_function (EG (function_table), (zval **) NULL, 
+					&check_function, &retval1, 0,NULL TSRMLS_CC) == SUCCESS){
+						if(Z_TYPE(retval1) == IS_LONG && Z_LVAL(retval1) == 1){
+							lint_script = 0;							
+						}
 				}
-				/*	php_execute_script (&script TSRMLS_CC); */
+			}
 				if(lint_script){
 					php_lint_script (&script TSRMLS_CC); 
 				}
-		/*		add_property_bool(this_ptr, "SCRIPT_EXECUTED", 1);
-				script_executed = 1;
 			}
-		*/
-		}
-		
-/*		if(script_executed){ */
             if (call_user_function (EG (function_table), (zval **) NULL,
                                     &request_function, &retval, 2,
                                     params TSRMLS_CC) == SUCCESS ){
@@ -197,8 +182,7 @@ void create_dynamic_client(zval *this_ptr, char *function, int function_len,
                                      Z_STRVAL_P(&retval));
                 }
             }
- /*       } */
-    }
+		}
 }
 
 
