@@ -1508,7 +1508,7 @@ void wsf_util_process_ws_service_operations(
             op_name_to_store = func_name;
         }
 
-	key_len = Z_STRLEN_PP(tmp);
+   	    key_len = Z_STRLEN_PP(tmp);
         function_name = emalloc (key_len + 1);
         zend_str_tolower_copy (function_name, func_name, key_len);
 
@@ -1585,7 +1585,7 @@ void wsf_util_process_ws_service_op_actions(
                 if (zend_hash_find (EG (function_table), key, key_len + 1, (void **) &f) == FAILURE){
                     /* php_error_docref (NULL TSRMLS_CC, E_ERROR, "Named function not in function table"); */
                     AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, 
-                            "[wsf-php] %s The function does not exist in function table ", &operation_name);
+                            "[wsf-php] %s The function does not exist in function table ", operation_name);
                 }else{
                 	axutil_hash_set (svc_info->ops_to_functions, axutil_strdup (ws_env_svr, Z_STRVAL_PP (tmp)),
 	                    AXIS2_HASH_KEY_STRING, axutil_strdup (ws_env_svr, Z_STRVAL_PP (tmp)));
