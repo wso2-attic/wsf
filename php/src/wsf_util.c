@@ -1499,7 +1499,7 @@ void wsf_util_process_ws_service_operations(
         char *function_name = NULL;
         int key_len = 0;
             
-	    zend_hash_get_current_key_ex (ht_ops_to_funcs, &op_name, &op_name_len, &index, 0, &pos);
+        zend_hash_get_current_key_ex (ht_ops_to_funcs, &op_name, &op_name_len, &index, 0, &pos);
         
         func_name = Z_STRVAL_PP (tmp);
         if (op_name){
@@ -1508,7 +1508,7 @@ void wsf_util_process_ws_service_operations(
             op_name_to_store = func_name;
         }
 
-	    key_len = Z_STRLEN_PP(tmp);
+	key_len = Z_STRLEN_PP(tmp);
         function_name = emalloc (key_len + 1);
         zend_str_tolower_copy (function_name, func_name, key_len);
 
@@ -1517,7 +1517,6 @@ void wsf_util_process_ws_service_operations(
             efree(function_name);
             php_error_docref (NULL TSRMLS_CC, E_ERROR, "Named function not in function table");
             AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf-php] %s function not defined", func_name);
-            continue;
         }else{
             
     	    axutil_hash_set (svc_info->ops_to_functions, axutil_strdup (ws_env_svr, op_name_to_store),
@@ -1526,7 +1525,7 @@ void wsf_util_process_ws_service_operations(
      	    wsf_util_create_op_and_add_to_svc (svc_info, ws_env_svr,
                 op_name_to_store, ht_ops_to_mep TSRMLS_CC);
             
-	    }
+	}
         zend_hash_move_forward_ex (ht_ops_to_funcs, &pos);
         i++;
     }
@@ -1587,11 +1586,10 @@ void wsf_util_process_ws_service_op_actions(
                     /* php_error_docref (NULL TSRMLS_CC, E_ERROR, "Named function not in function table"); */
                     AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, 
                             "[wsf-php] %s The function does not exist in function table ", &operation_name);
-                    continue;
-                }
-
-                axutil_hash_set (svc_info->ops_to_functions, axutil_strdup (ws_env_svr, Z_STRVAL_PP (tmp)),
-                    AXIS2_HASH_KEY_STRING, axutil_strdup (ws_env_svr, Z_STRVAL_PP (tmp)));
+                }else{
+                	axutil_hash_set (svc_info->ops_to_functions, axutil_strdup (ws_env_svr, Z_STRVAL_PP (tmp)),
+	                    AXIS2_HASH_KEY_STRING, axutil_strdup (ws_env_svr, Z_STRVAL_PP (tmp)));
+		}
                 efree(key);
             }
 
