@@ -3,57 +3,164 @@ RetArrayString1D
 --FILE--
 <?php
 
-class RetArrayString1DWrapper
-{
-    public $inArrayString1D;
+class inArrayString1D { 
+    public $string; //string
 }
 
-
-class ArrayOfstringWrapper
-{
-    public $string;
+class RetArrayString1DResult { 
+    public $string; //string
 }
 
-class RetArrayString1DResponseWrapper
-{
-    public $RetArrayString1DResult;
+class inArrayInt1D { 
+    public $int; //int
 }
 
+class RetArrayInt1DResult { 
+    public $int; //int
+}
 
+class inArrayDecimal1D { 
+    public $decimal; //decimal
+}
 
-$classmap = array("RetArrayString1D" => "RetArrayString1DWrapper",
-                  "ArrayOfstring" => "ArrayOfstringWrapper",
-                  "RetArrayString1DResponse" => "RetArrayString1DResponseWrapper");
+class RetArrayDecimal1DResult { 
+    public $decimal; //decimal
+}
 
+class inArrayDateTime1D { 
+    public $dateTime; //dateTime
+}
 
-try{
+class RetArrayDateTime1DResult { 
+    public $dateTime; //dateTime
+}
 
-    $client = new WSClient(array("wsdl"=> "http://131.107.72.15/SoapWsdl_ComplexDataTypes_XmlFormatter_Service_Indigo/ComplexDataTypesDocLitW.svc?wsdl"/*  "./wsdls/ComplexDataTypesDocLitW.wsdl" */,
-                                 "classmap" => $classmap));
+class inArrayString2D { 
+    public $ArrayOfstring; //ArrayOfstring
+}
 
-    $input = new RetArrayString1DWrapper();
-    $obj = new ArrayOfstringWrapper();
-    $obj->string = "Hello world";
+class ArrayOfstring { 
+    public $string; //string
+}
 
-    $input->inArrayString1D = $obj;
+class RetArrayString2DResult { 
+    public $ArrayOfstring; //ArrayOfstring
+}
+
+class inArray1D_SN { 
+    public $Person; //Person
+}
+
+class Person { 
+    public $Age; //double
+    public $ID; //float
+    public $Male; //boolean
+    public $Name; //string
+}
+
+class RetArray1D_SNResult { 
+    public $Person; //Person
+}
+
+class inArrayAnyType1D { 
+    public $anyType; //anyType
+}
+
+class anyType { 
+}
+
+class RetArrayAnyType1DResult { 
+    public $anyType; //anyType
+}
+
+class inStructS1 { 
+    public $name; //string
+}
+
+class RetStructS1Result { 
+    public $name; //string
+}
+
+class inStructSN { 
+    public $Age; //double
+    public $ID; //float
+    public $Male; //boolean
+    public $Name; //string
+}
+
+class RetStructSNResult { 
+    public $Age; //double
+    public $ID; //float
+    public $Male; //boolean
+    public $Name; //string
+}
+
+class inStructSNSA { 
+    public $BaseDetails; //Person
+    public $HireDate; //dateTime
+    public $JobID; //unsignedInt
+    public $numbers; //ArrayOfshort
+}
+
+class ArrayOfshort { 
+    public $short; //short
+}
+
+class RetStructSNSAResult { 
+    public $BaseDetails; //Person
+    public $HireDate; //dateTime
+    public $JobID; //unsignedInt
+    public $numbers; //ArrayOfshort
+}
+
+class inStructSNSAS { 
+    public $members; //ArrayOfPerson
+    public $name; //string
+}
+
+class ArrayOfPerson { 
+    public $Person; //Person
+}
+
+class RetStructSNSASResult { 
+    public $members; //ArrayOfPerson
+    public $name; //string
+}
+
+// define the class map
+$class_map = array(
+ "inArrayString1D" => "inArrayString1D", "RetArrayString1DResult" => "RetArrayString1DResult", "inArrayInt1D" => "inArrayInt1D", "RetArrayInt1DResult" => "RetArrayInt1DResult", "inArrayDecimal1D" => "inArrayDecimal1D", "RetArrayDecimal1DResult" => "RetArrayDecimal1DResult", "inArrayDateTime1D" => "inArrayDateTime1D", "RetArrayDateTime1DResult" => "RetArrayDateTime1DResult", "inArrayString2D" => "inArrayString2D", "ArrayOfstring" => "ArrayOfstring", "RetArrayString2DResult" => "RetArrayString2DResult", "inArray1D_SN" => "inArray1D_SN", "Person" => "Person", "RetArray1D_SNResult" => "RetArray1D_SNResult", "inArrayAnyType1D" => "inArrayAnyType1D", "anyType" => "anyType", "RetArrayAnyType1DResult" => "RetArrayAnyType1DResult", "inStructS1" => "inStructS1", "RetStructS1Result" => "RetStructS1Result", "inStructSN" => "inStructSN", "RetStructSNResult" => "RetStructSNResult", "inStructSNSA" => "inStructSNSA", "ArrayOfshort" => "ArrayOfshort", "RetStructSNSAResult" => "RetStructSNSAResult", "inStructSNSAS" => "inStructSNSAS", "ArrayOfPerson" => "ArrayOfPerson", "RetStructSNSASResult" => "RetStructSNSASResult");
+
+try {
+
+    // create client in WSDL mode
+    $client = new WSClient(array ("wsdl" =>"http://131.107.72.15/SoapWsdl_ComplexDataTypes_XmlFormatter_Service_Indigo/ComplexDataTypesDocLitB.svc?wsdl",
+        "classmap" => $class_map));
+
+    // get proxy object reference form client 
+    $proxy = $client->getProxy();
+    
+    $input = new inArrayString1D();
+    $input->string = "Hello World";
+    $val = $proxy->RetArrayString1D($input);
+    print_r($val);
 
     
-    $proxy = $client->getProxy();
-    $val = $proxy->RetArrayString1D($input);
-    echo $val->RetArrayString1DResult->string[0];
-
-}catch (Exception $e) {
-
-    if ($e instanceof WSFault) {
-        printf("Soap Fault Reason: %s\n", $e->Reason);
-        printf("Soap Fault Code: %s \n", $e->Code);
-
-    } else {
-        printf("Message = %s\n",$e->getMessage());
-    }
-
+} catch (Exception $e) {
+	// in case of an error, process the fault
+	if ($e instanceof WSFault) {
+		printf("Soap Fault: %s\n", $e->Reason);
+	} else {
+		printf("Message = %s\n", $e->getMessage());
+	}
 }
 ?>
 --EXPECT--
-Hello world
+RetArrayString1DResult Object
+(
+    [string] => Array
+        (
+            [0] => Hello World
+        )
 
+)
