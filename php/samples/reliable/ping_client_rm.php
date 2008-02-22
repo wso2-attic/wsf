@@ -31,7 +31,7 @@ try {
     
     $client->send($requestMessage);
 
-    echo "Message Sent";
+    echo "Message Sent to the Endpoint";
 
     $client->wait(10);
 
