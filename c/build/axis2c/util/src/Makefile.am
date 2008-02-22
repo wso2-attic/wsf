@@ -1,4 +1,4 @@
-SUBDIRS = platforms/unix minizip @ZLIBBUILD@ stomp
+SUBDIRS = platforms/unix @ZLIBBUILD@ stomp
 lib_LTLIBRARIES = libaxutil.la
 libaxutil_la_SOURCES = hash.c \
                         allocator.c \
