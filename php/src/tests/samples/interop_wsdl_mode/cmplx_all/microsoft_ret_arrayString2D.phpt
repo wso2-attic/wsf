@@ -142,14 +142,19 @@ try {
     
     $input = new inArrayString2D();
     
-    $strArray0 = array("str00","str01","str02");
-    $strArray1 = array("str10","str11","str12");
-    
+    $strArray0 = new ArrayOfstring();
+    $strArray0->string = array("str00","str01","str02");
+
+    $strArray1 = new ArrayOfstring();
+    $strArray1->string = array("str10","str11","str12");
+
+
     $arrStrArr = array($strArray0,$strArray1);
     
     $input->ArrayOfstring = $arrStrArr;
     
-    $val = $proxy->RetArrayString2D($input);
+    $val = $proxy->RetArrayString2D($input); 
+    
     print_r($val);
 
     
