@@ -1,0 +1,57 @@
+             WSO2 WSFC_UNIT
+            ================
+
+VERSION
+-------
+1.0.0
+
+
+INTRODUCTION
+------------
+- WSFC_UNIT is a Unit Testing Framework in C, for C projects. Initially
+  designed to test Apache Axis2/C and sub projects, WSFC_UNIT can also
+  be used to test any other C project that confirms to the C99 Standard.
+  WSFC_UNIT is a part of WSO2 Web Services Framework for C (WSF/C). For
+  help in running WSFC_UNIT, on Linux based systems, run, ./wsfc_unit -h;
+  on MS Windows based systems, run, wsfc_unit.exe -h. Please note that
+  WSFC_UNIT is officially supported for Linux based systems and MS
+  Windows based systems.
+
+
+THE LATEST VERSION
+------------------
+- Details of the latest version can be found on the WSO2 WSF/C project
+  page under http://wso2.org/projects/wsf/c.
+
+
+LICENSING
+---------
+- WSO2 WSF/C, and WSFC_UNIT is released under Apache License Version 2.0.
+  Please see the file called LICENSE.
+
+
+CONTACTS
+--------
+- If you want freely available support for using WSO2 WSF/C and WSFC_UNIT
+  please join the WSO2 WSF/C user community by subscribing to users
+  mailing list, wsf-c-user@wso2.org by sending an email to
+  'wsf-c-user-request@wso2.org' with the subject 'subscribe'.
+
+- If you have a bug report for WSO2 WSFC_UNIT please go log a Jira issue
+  at https://wso2.org/jira/browse/WSFC
+
+- If you want to participate in actively developing WSO2 WSFC_UNIT please
+  subscribe to the 'wsf-c-dev@wso2.org' by sending and email to
+  wsf-c-dev-request@wso2.org with the subject 'subscribe'. Please append
+  prefix '[C]' in the subject for all further communication.
+
+
+SUPPORT
+-------
+- WSO2 Inc. offers a variety of development and production support
+  programs, ranging from Web-based support up through normal business
+  hours, to premium 24x7 phone support.
+
+- For additional support information please refer to
+  http://wso2.com/support/
+
