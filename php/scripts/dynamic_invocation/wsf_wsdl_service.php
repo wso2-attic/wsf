@@ -88,14 +88,14 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
     $op_param_values = array();
     if($class_map != NULL && !empty($class_map))
     {
-        $op_param_values = wsf_parse_payload_for_service_class_map($soap_body_node, $tmp_param_struct, $ele_name, $class_map);
+        //$op_param_values = wsf_parse_payload_for_service_class_map($soap_body_node, $tmp_param_struct, $ele_name, $class_map);
+        $op_param_values = wsf_parse_payload_for_class_map($soap_body_node, $tmp_param_struct, $ele_name, $class_map);
     }
     else
     {
         $op_param_values = wsf_parse_payload_for_array($soap_body_node, $tmp_param_struct);
     }
 
-    
 
     
     $arg_array = $op_param_values; 
@@ -107,12 +107,27 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
         
         // Then the user method
         $method = $class->getMethod($function_name);
-        $response_value = $method->invokeArgs($class_inst, $arg_array);
+        if($class_map != NULL && !empty($class_map))
+        {
+            $response_value = $method->invoke($class_inst, $arg_array);
+        }
+        else
+        {
+            $response_value = $method->invokeArgs($class_inst, $arg_array);
+        }
     }
     else
     {
-        $response_value = call_user_func_array($function_name, $arg_array);
+        if($class_map != NULL && !empty($class_map))
+        {
+            $response_value = call_user_func($function_name, $arg_array);
+        }
+        else
+        {
+            $response_value = call_user_func_array($function_name, $arg_array);
+        }
     }
+    
     $response_payload_string = wsf_wsdl_create_response_payload($response_value, $signature_node);
 
 	return $response_payload_string;
