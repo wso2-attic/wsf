@@ -1,7 +1,25 @@
 <?php
+/*
+ * Copyright (c) 2005-2008 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 require_once ('wsf_wsdl.php');
 require_once ('util/wsf_utils.php');
 require_once ('wsdl2php/wsf_class_writer.php');
+require_once ('wsdl2php/wsf_help.php');
 
 // array to keep track of classes that are already written 
 global $written_classes;
@@ -16,6 +34,11 @@ if (isset($_GET['input'])) {
 } else {
     //process command line arguments
     $args = wsf_arguments($argv);
+}
+
+if ($args['h']) {
+	wsf_wsdl2php_print_help();
+	return;
 }
 
 // pick the WSDL form command line arguments
