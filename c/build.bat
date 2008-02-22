@@ -2,7 +2,6 @@
 @call vcvars32.bat /nologo
 
 rem Build Apache Axis2/C
-
 @cd axis2c\build
 @if exist axis2c-bin-1.2.0-win32 rmdir /s /q axis2c-bin-1.2.0-win32
 @cd win32
@@ -34,6 +33,13 @@ rem Build wsclient
 @cd wsclient
 @nmake -f wsclient.mk AXIS2_BIN_DIR=..\axis2c\build\axis2c-bin-1.2.0-win32 AUTOCONF=..\configure.in
 @cd ..
+
+rem Build Unit Test Framework
+@cd test\framework
+@nmake -f wsfc_unit.mk AUTOCONF=..\..\configure.in
+@cd ..\..
+
+rem Build Tests
 
 :pack_wsfc
 @if not exist wso2-wsf-c-bin-1.2.0-win32 mkdir wso2-wsf-c-bin-1.2.0-win32
