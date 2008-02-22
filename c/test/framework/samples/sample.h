@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef WSF_UNIT_SAMPLE_H
-#define WSF_UNIT_SAMPLE_H
+#ifndef WSFC_UNIT_SAMPLE_H
+#define WSFC_UNIT_SAMPLE_H
 
 #include <wsf_unit.h>
 
@@ -24,12 +24,6 @@
 extern "C"
 {
 #endif
-
-    wsf_unit_test_list_t provided_names[] =
-    {
-        {test_sample1},
-        {test_sample2}
-    };
 
     wsf_unit_status_t test_sample1(wsf_unit_suite_t * suite);
     wsf_unit_status_t test_sample2(wsf_unit_suite_t * suite);

@@ -17,9 +17,9 @@
 
 #include <wsf_unit.h>
 
-wsf_unit_bool_t quiet = WSF_UNIT_FALSE;
-wsf_unit_bool_t list_tests = WSF_UNIT_FALSE;
-wsf_unit_bool_t invert = WSF_UNIT_FALSE;
+wsf_unit_bool_t quiet = WSFC_UNIT_FALSE;
+wsf_unit_bool_t list_tests = WSFC_UNIT_FALSE;
+wsf_unit_bool_t invert = WSFC_UNIT_FALSE;
 FILE *log_file = NULL;
 const wsf_unit_char_t **test_list = NULL;
 
@@ -61,7 +61,7 @@ struct wsf_unit_test_case
     wsf_unit_sub_suite_t *sub_suite;
 };
 
-WSF_UNIT_EXTERN wsf_unit_suite_t *WSF_UNIT_CALL
+WSFC_UNIT_EXTERN wsf_unit_suite_t *WSFC_UNIT_CALL
 wsf_unit_suite_create(
     const wsf_unit_char_t *suite_name)
 {
@@ -70,7 +70,7 @@ wsf_unit_suite_create(
     suite = (wsf_unit_suite_t *) malloc(sizeof(wsf_unit_suite_t));
     if (suite)
     {
-        wsf_unit_status_t status = WSF_UNIT_FAILURE;
+        wsf_unit_status_t status = WSFC_UNIT_FAILURE;
         if (!suite_name)
         {
             return suite;
@@ -90,7 +90,7 @@ wsf_unit_suite_create(
     return suite;
 }
 
-WSF_UNIT_EXTERN wsf_unit_status_t WSF_UNIT_CALL
+WSFC_UNIT_EXTERN wsf_unit_status_t WSFC_UNIT_CALL
 wsf_unit_suite_add_sub_suite(
     wsf_unit_suite_t * suite,
     const wsf_unit_char_t *suite_name)
@@ -101,7 +101,7 @@ wsf_unit_suite_add_sub_suite(
 
     if (!suite)
     {
-        return WSF_UNIT_FAILURE;
+        return WSFC_UNIT_FAILURE;
     }
     else if (suite->tail && !suite->tail->omit)
         /* Report Last sub_suite */
@@ -115,11 +115,11 @@ wsf_unit_suite_add_sub_suite(
     if (!sub_suite)
     {
         wsf_unit_print_error_message("[error] %s\n", "No memmory available");
-        return WSF_UNIT_FAILURE;
+        return WSFC_UNIT_FAILURE;
     }
     sub_suite->name = NULL;
     sub_suite->total = 0;
-    sub_suite->omit = WSF_UNIT_FALSE;
+    sub_suite->omit = WSFC_UNIT_FALSE;
     sub_suite->not_implemented = 0;
     sub_suite->failed = 0;
     sub_suite->next = NULL;
@@ -162,12 +162,12 @@ wsf_unit_suite_add_sub_suite(
 
     if (!wsf_unit_test_required(sub_suite->name))
     {
-        sub_suite->omit = WSF_UNIT_TRUE;
+        sub_suite->omit = WSFC_UNIT_TRUE;
         if (list_tests)
         {
             wsf_unit_print_message("%s\n", sub_suite->name);
         }
-        return WSF_UNIT_SUCCESS;
+        return WSFC_UNIT_SUCCESS;
     }
 
     if (!quiet)
@@ -175,10 +175,10 @@ wsf_unit_suite_add_sub_suite(
         wsf_unit_print_message("\n%-20s:  ", sub_suite->name);
     }
 
-    return WSF_UNIT_SUCCESS;
+    return WSFC_UNIT_SUCCESS;
 }
 
-WSF_UNIT_EXTERN void WSF_UNIT_CALL
+WSFC_UNIT_EXTERN void WSFC_UNIT_CALL
 wsf_unit_suite_free(
     wsf_unit_suite_t * suite)
 {
@@ -214,10 +214,10 @@ wsf_unit_suite_free(
     }
 }
 
-WSF_UNIT_EXTERN void WSF_UNIT_CALL
+WSFC_UNIT_EXTERN void WSFC_UNIT_CALL
 wsf_unit_run_test(
     wsf_unit_suite_t * suite,
-    WSF_UNIT_TEST test,
+    WSFC_UNIT_TEST test,
     void *value)
 {
     wsf_unit_test_case_t *test_case = NULL;
@@ -233,7 +233,7 @@ wsf_unit_run_test(
     {
         return;
     }
-    test_case->status = WSF_UNIT_SUCCESS;
+    test_case->status = WSFC_UNIT_SUCCESS;
     test_case->sub_suite = sub_suite;
 
     sub_suite = suite->tail;
@@ -247,7 +247,7 @@ wsf_unit_run_test(
     free(test_case);
 }
 
-WSF_UNIT_EXTERN void WSF_UNIT_CALL
+WSFC_UNIT_EXTERN void WSFC_UNIT_CALL
 wsf_unit_print_error_message(
     const char *format,
     ...)
@@ -273,7 +273,7 @@ wsf_unit_print_error_message(
     }
 }
 
-WSF_UNIT_EXTERN void WSF_UNIT_CALL
+WSFC_UNIT_EXTERN void WSFC_UNIT_CALL
 wsf_unit_print_message(
     const char *format,
     ...)
@@ -305,10 +305,10 @@ wsf_unit_test_exists(
     {
         if (!strcmp(test_list[i], name))
         {
-            return WSF_UNIT_TRUE;
+            return WSFC_UNIT_TRUE;
         }
     }
-    return WSF_UNIT_FALSE;
+    return WSFC_UNIT_FALSE;
 }
 
 static wsf_unit_bool_t
@@ -317,18 +317,18 @@ wsf_unit_test_required(
 {
     if (list_tests)
     {
-        return WSF_UNIT_FALSE;
+        return WSFC_UNIT_FALSE;
     }
     else if (!test_list)
     {
-        return WSF_UNIT_TRUE;
+        return WSFC_UNIT_TRUE;
     }
     else if ((wsf_unit_test_exists(name) && !invert)
         || (!(wsf_unit_test_exists(name) && invert)))
     {
-        return WSF_UNIT_TRUE;
+        return WSFC_UNIT_TRUE;
     }
-    return WSF_UNIT_FALSE;
+    return WSFC_UNIT_FALSE;
 }
 
 static void
@@ -391,25 +391,22 @@ wsf_unit_report_suite(
 
     temp = suite->head;
     wsf_unit_print_message("\n---------------------------------------------------\n");
-    wsf_unit_print_message("%-15s\t\tTotal\tFail\tFailed %%\n", "Failed Tests");
+    wsf_unit_print_message("%-15s\t\tTotal\tFailed\tFailure %%\n", "Test Report");
     wsf_unit_print_message("---------------------------------------------------\n");
     while (temp)
     {
-        if (temp->failed)
-        {
-            float percent = ((float)temp->failed / (float)temp->total);
-            wsf_unit_print_message("%-15s\t\t%5d\t%4d\t%6.2f%%\n", temp->name,
-                    temp->total, temp->failed, percent * 100);
-        }
+        float percent = ((float)temp->failed / (float)temp->total);
+        wsf_unit_print_message("%-15s\t\t%5d\t%6d\t%6.2f%%\n", temp->name,
+            temp->total, temp->failed, percent * 100);
         temp = temp->next;
     }
     wsf_unit_print_message("___________________________________________________\n\n");
-    wsf_unit_print_message("%-15s\t\t%5d\t%4d\t%6.2f%%\n", "",
+    wsf_unit_print_message("%-15s\t\t%5d\t%6d\t%6.2f%%\n", "",
                     total, failed, ((float)failed / (float)total) * 100);
     wsf_unit_print_message("===================================================\n");
 }
 
-WSF_UNIT_EXTERN void WSF_UNIT_CALL
+WSFC_UNIT_EXTERN void WSFC_UNIT_CALL
 wsf_unit_assert_equals_int(
     wsf_unit_test_case_t *test_case,
     const char *message,
@@ -427,7 +424,7 @@ wsf_unit_assert_equals_int(
         return;
     }
 
-    test_case->status = WSF_UNIT_FAILURE;
+    test_case->status = WSFC_UNIT_FAILURE;
     if (message)
     {
         wsf_unit_print_error_message("Line %d: %s\n%-20s:  ", line_no, message, "");
@@ -440,7 +437,7 @@ wsf_unit_assert_equals_int(
     }
 }
 
-WSF_UNIT_EXTERN void WSF_UNIT_CALL
+WSFC_UNIT_EXTERN void WSFC_UNIT_CALL
 wsf_unit_assert_equals_float(
     wsf_unit_test_case_t *test_case,
     const char *message,
@@ -458,7 +455,7 @@ wsf_unit_assert_equals_float(
         return;
     }
 
-    test_case->status = WSF_UNIT_FAILURE;
+    test_case->status = WSFC_UNIT_FAILURE;
     if (message)
     {
         wsf_unit_print_error_message("Line %d: %s\n%-20s:  ", line_no, message, "");
@@ -471,7 +468,7 @@ wsf_unit_assert_equals_float(
     }
 }
 
-WSF_UNIT_EXTERN void WSF_UNIT_CALL
+WSFC_UNIT_EXTERN void WSFC_UNIT_CALL
 wsf_unit_assert_equals_double(
     wsf_unit_test_case_t *test_case,
     const char *message,
@@ -489,7 +486,7 @@ wsf_unit_assert_equals_double(
         return;
     }
 
-    test_case->status = WSF_UNIT_FAILURE;
+    test_case->status = WSFC_UNIT_FAILURE;
     if (message)
     {
         wsf_unit_print_error_message("Line %d: %s\n%-20s:  ", line_no, message, "");
@@ -502,7 +499,7 @@ wsf_unit_assert_equals_double(
     }
 }
 
-WSF_UNIT_EXTERN void WSF_UNIT_CALL
+WSFC_UNIT_EXTERN void WSFC_UNIT_CALL
 wsf_unit_assert_equals_char(
     wsf_unit_test_case_t *test_case,
     const char *message,
@@ -520,7 +517,7 @@ wsf_unit_assert_equals_char(
         return;
     }
 
-    test_case->status = WSF_UNIT_FAILURE;
+    test_case->status = WSFC_UNIT_FAILURE;
     if (message)
     {
         wsf_unit_print_error_message("Line %d: %s\n%-20s:  ", line_no, message, "");
@@ -533,7 +530,7 @@ wsf_unit_assert_equals_char(
     }
 }
 
-WSF_UNIT_EXTERN void WSF_UNIT_CALL
+WSFC_UNIT_EXTERN void WSFC_UNIT_CALL
 wsf_unit_assert_equals_string(
     wsf_unit_test_case_t *test_case,
     const char *message,
@@ -555,7 +552,7 @@ wsf_unit_assert_equals_string(
         return;
     }
 
-    test_case->status = WSF_UNIT_FAILURE;
+    test_case->status = WSFC_UNIT_FAILURE;
     if (message)
     {
         wsf_unit_print_error_message("Line %d: %s\n%-20s:  ", line_no, message, "");
@@ -568,7 +565,7 @@ wsf_unit_assert_equals_string(
     }
 }
 
-WSF_UNIT_EXTERN void WSF_UNIT_CALL
+WSFC_UNIT_EXTERN void WSFC_UNIT_CALL
 wsf_unit_assert_equals_ptr(
     wsf_unit_test_case_t *test_case,
     const char *message,
@@ -586,7 +583,7 @@ wsf_unit_assert_equals_ptr(
         return;
     }
 
-    test_case->status = WSF_UNIT_FAILURE;
+    test_case->status = WSFC_UNIT_FAILURE;
     if (message)
     {
         wsf_unit_print_error_message("Line %d: %s\n%-20s:  ", line_no, message, "");
@@ -599,7 +596,7 @@ wsf_unit_assert_equals_ptr(
     }
 }
 
-WSF_UNIT_EXTERN void WSF_UNIT_CALL
+WSFC_UNIT_EXTERN void WSFC_UNIT_CALL
 wsf_unit_assert_equals_size(
     wsf_unit_test_case_t *test_case,
     const char *message,
@@ -617,7 +614,7 @@ wsf_unit_assert_equals_size(
         return;
     }
 
-    test_case->status = WSF_UNIT_FAILURE;
+    test_case->status = WSFC_UNIT_FAILURE;
     if (message)
     {
         wsf_unit_print_error_message("Line %d: %s\n%-20s:  ", line_no, message, "");
@@ -630,7 +627,7 @@ wsf_unit_assert_equals_size(
     }
 }
 
-WSF_UNIT_EXTERN void WSF_UNIT_CALL
+WSFC_UNIT_EXTERN void WSFC_UNIT_CALL
 wsf_unit_assert_not_equals_int(
     wsf_unit_test_case_t *test_case,
     const char *message,
@@ -648,7 +645,7 @@ wsf_unit_assert_not_equals_int(
         return;
     }
 
-    test_case->status = WSF_UNIT_FAILURE;
+    test_case->status = WSFC_UNIT_FAILURE;
     if (message)
     {
         wsf_unit_print_error_message("Line %d: %s\n%-20s:  ", line_no, message, "");
@@ -661,7 +658,7 @@ wsf_unit_assert_not_equals_int(
     }
 }
 
-WSF_UNIT_EXTERN void WSF_UNIT_CALL
+WSFC_UNIT_EXTERN void WSFC_UNIT_CALL
 wsf_unit_assert_not_equals_float(
     wsf_unit_test_case_t *test_case,
     const char *message,
@@ -679,7 +676,7 @@ wsf_unit_assert_not_equals_float(
         return;
     }
 
-    test_case->status = WSF_UNIT_FAILURE;
+    test_case->status = WSFC_UNIT_FAILURE;
     if (message)
     {
         wsf_unit_print_error_message("Line %d: %s\n%-20s:  ", line_no, message, "");
@@ -692,7 +689,7 @@ wsf_unit_assert_not_equals_float(
     }
 }
 
-WSF_UNIT_EXTERN void WSF_UNIT_CALL
+WSFC_UNIT_EXTERN void WSFC_UNIT_CALL
 wsf_unit_assert_not_equals_double(
     wsf_unit_test_case_t *test_case,
     const char *message,
@@ -710,7 +707,7 @@ wsf_unit_assert_not_equals_double(
         return;
     }
 
-    test_case->status = WSF_UNIT_FAILURE;
+    test_case->status = WSFC_UNIT_FAILURE;
     if (message)
     {
         wsf_unit_print_error_message("Line %d: %s\n%-20s:  ", line_no, message, "");
@@ -723,7 +720,7 @@ wsf_unit_assert_not_equals_double(
     }
 }
 
-WSF_UNIT_EXTERN void WSF_UNIT_CALL
+WSFC_UNIT_EXTERN void WSFC_UNIT_CALL
 wsf_unit_assert_not_equals_char(
     wsf_unit_test_case_t *test_case,
     const char *message,
@@ -741,7 +738,7 @@ wsf_unit_assert_not_equals_char(
         return;
     }
 
-    test_case->status = WSF_UNIT_FAILURE;
+    test_case->status = WSFC_UNIT_FAILURE;
     if (message)
     {
         wsf_unit_print_error_message("Line %d: %s\n%-20s:  ", line_no, message, "");
@@ -754,7 +751,7 @@ wsf_unit_assert_not_equals_char(
     }
 }
 
-WSF_UNIT_EXTERN void WSF_UNIT_CALL
+WSFC_UNIT_EXTERN void WSFC_UNIT_CALL
 wsf_unit_assert_not_equals_string(
     wsf_unit_test_case_t *test_case,
     const char *message,
@@ -783,7 +780,7 @@ wsf_unit_assert_not_equals_string(
         return;
     }
 
-    test_case->status = WSF_UNIT_FAILURE;
+    test_case->status = WSFC_UNIT_FAILURE;
     if (message)
     {
         wsf_unit_print_error_message("Line %d: %s\n%-20s:  ", line_no, message, "");
@@ -796,7 +793,7 @@ wsf_unit_assert_not_equals_string(
     }
 }
 
-WSF_UNIT_EXTERN void WSF_UNIT_CALL
+WSFC_UNIT_EXTERN void WSFC_UNIT_CALL
 wsf_unit_assert_not_equals_ptr(
     wsf_unit_test_case_t *test_case,
     const char *message,
@@ -814,7 +811,7 @@ wsf_unit_assert_not_equals_ptr(
         return;
     }
 
-    test_case->status = WSF_UNIT_FAILURE;
+    test_case->status = WSFC_UNIT_FAILURE;
     if (message)
     {
         wsf_unit_print_error_message("Line %d: %s\n%-20s:  ", line_no, message, "");
@@ -827,7 +824,7 @@ wsf_unit_assert_not_equals_ptr(
     }
 }
 
-WSF_UNIT_EXTERN void WSF_UNIT_CALL
+WSFC_UNIT_EXTERN void WSFC_UNIT_CALL
 wsf_unit_assert_not_equals_size(
     wsf_unit_test_case_t *test_case,
     const char *message,
@@ -845,7 +842,7 @@ wsf_unit_assert_not_equals_size(
         return;
     }
 
-    test_case->status = WSF_UNIT_FAILURE;
+    test_case->status = WSFC_UNIT_FAILURE;
     if (message)
     {
         wsf_unit_print_error_message("Line %d: %s\n%-20s:  ", line_no, message, "");
@@ -858,7 +855,7 @@ wsf_unit_assert_not_equals_size(
     }
 }
 
-WSF_UNIT_EXTERN void WSF_UNIT_CALL
+WSFC_UNIT_EXTERN void WSFC_UNIT_CALL
 wsf_unit_assert_null(
     wsf_unit_test_case_t *test_case,
     const char *message,
@@ -875,7 +872,7 @@ wsf_unit_assert_null(
         return;
     }
 
-    test_case->status = WSF_UNIT_FAILURE;
+    test_case->status = WSFC_UNIT_FAILURE;
     if (message)
     {
         wsf_unit_print_error_message("Line %d: %s\n%-20s:  ", line_no, message, "");
@@ -887,7 +884,7 @@ wsf_unit_assert_null(
     }
 }
 
-WSF_UNIT_EXTERN void WSF_UNIT_CALL
+WSFC_UNIT_EXTERN void WSFC_UNIT_CALL
 wsf_unit_assert_not_null(
     wsf_unit_test_case_t *test_case,
     const char *message,
@@ -904,7 +901,7 @@ wsf_unit_assert_not_null(
         return;
     }
 
-    test_case->status = WSF_UNIT_FAILURE;
+    test_case->status = WSFC_UNIT_FAILURE;
     if (message)
     {
         wsf_unit_print_error_message("Line %d: %s\n%-20s:  ", line_no, message, "");
@@ -916,7 +913,7 @@ wsf_unit_assert_not_null(
     }
 }
 
-WSF_UNIT_EXTERN void WSF_UNIT_CALL
+WSFC_UNIT_EXTERN void WSFC_UNIT_CALL
 wsf_unit_assert_true(
     wsf_unit_test_case_t *test_case,
     const char *message,
@@ -933,7 +930,7 @@ wsf_unit_assert_true(
         return;
     }
 
-    test_case->status = WSF_UNIT_FAILURE;
+    test_case->status = WSFC_UNIT_FAILURE;
     if (message)
     {
         wsf_unit_print_error_message("Line %d: %s\n%-20s:  ", line_no, message, "");
@@ -945,7 +942,7 @@ wsf_unit_assert_true(
     }
 }
 
-WSF_UNIT_EXTERN void WSF_UNIT_CALL
+WSFC_UNIT_EXTERN void WSFC_UNIT_CALL
 wsf_unit_assert_false(
     wsf_unit_test_case_t *test_case,
     const char *message,
@@ -962,7 +959,7 @@ wsf_unit_assert_false(
         return;
     }
 
-    test_case->status = WSF_UNIT_FAILURE;
+    test_case->status = WSFC_UNIT_FAILURE;
     if (message)
     {
         wsf_unit_print_error_message("Line %d: %s\n%-20s:  ",line_no, message, "");
@@ -974,7 +971,7 @@ wsf_unit_assert_false(
     }
 }
 
-WSF_UNIT_EXTERN void WSF_UNIT_CALL
+WSFC_UNIT_EXTERN void WSFC_UNIT_CALL
 wsf_unit_not_implemented(
     wsf_unit_test_case_t *test_case,
     const char *message,
@@ -987,7 +984,7 @@ wsf_unit_not_implemented(
     }
 }
 
-WSF_UNIT_EXTERN void WSF_UNIT_CALL
+WSFC_UNIT_EXTERN void WSFC_UNIT_CALL
 wsf_unit_fail(
     wsf_unit_test_case_t *test_case,
     const char *message,
@@ -998,7 +995,7 @@ wsf_unit_fail(
         return;
     }
 
-    test_case->status = WSF_UNIT_FAILURE;
+    test_case->status = WSFC_UNIT_FAILURE;
     if (message)
     {
         wsf_unit_print_error_message("Line %d: %s\n%-20s:  ", line_no, message, "");
@@ -1010,19 +1007,20 @@ wsf_unit_fail(
     }
 }
 
-WSF_UNIT_EXTERN int WSF_UNIT_CALL
+WSFC_UNIT_EXTERN int WSFC_UNIT_CALL
 wsf_unit_execute(
     const int argc,
     const char *const argv[],
     const wsf_unit_char_t *suite_name,
-    const wsf_unit_test_list_t *provided_tests)
+    const int testc,
+    const wsf_unit_test_list_t testv[])
 {
     int i = 0, j = 0;
-    wsf_unit_bool_t list_provided = WSF_UNIT_FALSE;
+    wsf_unit_bool_t list_provided = WSFC_UNIT_FALSE;
     wsf_unit_suite_t *suite = NULL;
 
-    list_tests = WSF_UNIT_FALSE;
-    invert = WSF_UNIT_FALSE;
+    list_tests = WSFC_UNIT_FALSE;
+    invert = WSFC_UNIT_FALSE;
     test_list = NULL;
     quiet = !isatty(STDOUT_FILENO);
 
@@ -1030,7 +1028,7 @@ wsf_unit_execute(
     {
         if (!strcmp(argv[i], "-h"))
         {
-            printf("Usage: %s [options] [-f log_file] [test_names]\n");
+            printf("Usage: %s [options] [-f log_file] [test_names]\n", argv[0]);
             printf(" -x to skip provided test names. If you do not\n");
             printf("    provide this option, only the names provided\n");
             printf("    wil run\n");
@@ -1041,17 +1039,17 @@ wsf_unit_execute(
         }
         if (!list_tests && !strcmp(argv[i], "-l"))
         {
-            list_tests = WSF_UNIT_TRUE;
+            list_tests = WSFC_UNIT_TRUE;
             continue;
         }
         if (!invert && !strcmp(argv[i], "-x"))
         {
-            invert = WSF_UNIT_TRUE;
+            invert = WSFC_UNIT_TRUE;
             continue;
         }
         if (!quiet && !strcmp(argv[i], "-q"))
         {
-            quiet = WSF_UNIT_TRUE;
+            quiet = WSFC_UNIT_TRUE;
             continue;
         }
         if (!log_file && !strcmp(argv[i], "-f"))
@@ -1074,14 +1072,13 @@ wsf_unit_execute(
         if (!list_provided)
         {
             j = i;
-            list_provided = WSF_UNIT_TRUE;
+            list_provided = WSFC_UNIT_TRUE;
         }
     }
 
     wsf_unit_print_message("\n---------------------------------------------------");
-    wsf_unit_print_message("\nUnit Test Suite     : %s", suite_name);
-    wsf_unit_print_message("\nAvailable Test Sets : %4d",
-           (int)(sizeof(provided_tests) / sizeof(struct wsf_unit_test_list *)));
+    wsf_unit_print_message("\nUnit Test Suite     :  %s", suite_name);
+    wsf_unit_print_message("\nAvailable Test Sets :  %d", testc);
     wsf_unit_print_message("\n===================================================\n");
 
     if (list_provided)
@@ -1097,9 +1094,9 @@ wsf_unit_execute(
 
     suite = wsf_unit_suite_create(NULL);
 
-    for (i = 0; i < (sizeof(provided_tests) / sizeof(struct wsf_unit_test_list *)); i++)
+    for (i = 0; i < testc; i++)
     {
-        provided_tests[i].execute(suite);
+        testv[i].execute(suite);
     }
 
     wsf_unit_report_suite(suite);
