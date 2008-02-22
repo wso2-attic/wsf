@@ -165,11 +165,32 @@ try {
 }
 ?>
 --EXPECT--
-RetArrayString1DResponseWrapper Object
+RetArrayString2DResult Object
 (
-    [RetArrayString1DResult] => ArrayOfstringWrapper Object
+    [ArrayOfstring] => Array
         (
-            [string] => Hello world
+            [0] => ArrayOfstring Object
+                (
+                    [string] => Array
+                        (
+                            [0] => str00
+                            [1] => str01
+                            [2] => str02
+                        )
+
+                )
+
+            [1] => ArrayOfstring Object
+                (
+                    [string] => Array
+                        (
+                            [0] => str10
+                            [1] => str11
+                            [2] => str12
+                        )
+
+                )
+
         )
 
 )
