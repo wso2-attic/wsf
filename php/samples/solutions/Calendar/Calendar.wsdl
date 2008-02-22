@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://calendar.php.wsf.wso2.org" 
+    xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" 
+    xmlns:ns0="http://calendar.php.wsf.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+    xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+    xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"
+    targetNamespace="http://calendar.php.wsf.wso2.org">
+
+    <wsp:Policy wsu:Id="transport_binding_policy">
+        <wsp:ExactlyOne>
+            <wsp:All>
+                <sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                        <wsp:policy>
+                                <sp:TransportToken>
+                                        <wsp:policy>
+                                            <sp:HttpsToken RequireClientCertificate="false" />
+                                        </wsp:policy>
+                                </sp:TransportToken>
+                                <sp:AlgorithmSuite>
+                                        <wsp:policy>
+                                                <sp:Basic256 />
+                                        </wsp:policy>
+                                </sp:AlgorithmSuite>
+                                <sp:Layout>
+                                        <wsp:policy>
+                                                <sp:Lax />
+                                        </wsp:policy>
+                                </sp:Layout>
+                        </wsp:policy>
+                </sp:TransportBinding>
+                <sp:Wss10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                    <wsp:Policy>
+                        <sp:MustSupportRefKeyIdentifier/> 
+                        <sp:MustSupportRefEmbeddedToken/> 
+                        <sp:MustSupportRefIssuerSerial/> 
+                    </wsp:Policy> 
+                </sp:Wss10>
+
+            </wsp:All>
+        </wsp:ExactlyOne>
+    </wsp:Policy>
+ 
+    <wsp:Policy wsu:Id="username_token_policy">
+        <wsp:ExactlyOne>
+            <wsp:All>
+                <sp:SignedSupportingTokens>
+                    <wsp:Policy>
+                        <sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+                            <wsp:Policy>
+                                <sp:WssUsernameToken10/>
+                            </wsp:Policy>
+                        </sp:UsernameToken>
+                    </wsp:Policy>
+                </sp:SignedSupportingTokens>
+            </wsp:All>
+        </wsp:ExactlyOne>
+    </wsp:Policy> 
+
+    <wsdl:types>
+        <xs:schema xmlns:ax21="http://calendar.php.wsf.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://calendar.php.wsf.wso2.org/xsd">
+            <xs:complexType name="Event">
+                <xs:sequence>
+                        <xs:element name="name" type="xs:string"/>
+                        <xs:element name="start_date_time" type="xs:dateTime"/>
+                        <xs:element name="end_date_time" type="xs:dateTime"/>
+                        <xs:element minOccurs="0" name="description" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ns="http://calendar.php.wsf.wso2.org" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://calendar.php.wsf.wso2.org">
+            <xs:element name="getEvents">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="user_name" type="xs:string"/>
+                        <xs:element minOccurs="0" name="start_date_time" nillable="true" type="xs:dateTime"/>
+                        <xs:element minOccurs="0" name="end_date_time" nillable="true" type="xs:dateTime"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getEventsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ns0:Event"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addEvent">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="user_name" type="xs:string"/>
+                        <xs:element minOccurs="0" name="event" nillable="true" type="ns0:Event"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addEventResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="success" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteEvents">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="user_name" type="xs:string"/>
+                        <xs:element name="start_date_time" type="xs:dateTime"/>
+                        <xs:element name="end_date_time" type="xs:dateTime"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteEventsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="success" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="register">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="username" type="xs:string"/>
+                        <xs:element name="password" type="xs:string"/>
+                        <xs:element name="first_name" type="xs:string"/>
+                        <xs:element minOccurs="0" name="last_name" nillable="true" type="xs:string"/>
+                        <xs:element name="email" type="xs:string"/>
+                        <xs:element minOccurs="0" name="address" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="country" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="postal_code" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="registerResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="success" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="registerRequest">
+        <wsdl:part name="parameters" element="ns1:register"/>
+    </wsdl:message>
+    <wsdl:message name="registerResponse">
+        <wsdl:part name="parameters" element="ns1:registerResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getEventsRequest">
+        <wsdl:part name="parameters" element="ns1:getEvents"/>
+    </wsdl:message>
+    <wsdl:message name="getEventsResponse">
+        <wsdl:part name="parameters" element="ns1:getEventsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="deleteEventsRequest">
+        <wsdl:part name="parameters" element="ns1:deleteEvents"/>
+    </wsdl:message>
+    <wsdl:message name="deleteEventsResponse">
+        <wsdl:part name="parameters" element="ns1:deleteEventsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="addEventRequest">
+        <wsdl:part name="parameters" element="ns1:addEvent"/>
+    </wsdl:message>
+    <wsdl:message name="addEventResponse">
+        <wsdl:part name="parameters" element="ns1:addEventResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="CalendarPortType">
+        <wsdl:operation name="register">
+            <wsdl:input message="ns1:registerRequest" wsaw:Action="urn:register"/>
+            <wsdl:output message="ns1:registerResponse" wsaw:Action="urn:registerResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getEvents">
+            <wsdl:input message="ns1:getEventsRequest" wsaw:Action="urn:getEvents"/>
+            <wsdl:output message="ns1:getEventsResponse" wsaw:Action="urn:getEventsResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="deleteEvents">
+            <wsdl:input message="ns1:deleteEventsRequest" wsaw:Action="urn:deleteEvents"/>
+            <wsdl:output message="ns1:deleteEventsResponse" wsaw:Action="urn:deleteEventsResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="addEvent">
+            <wsdl:input message="ns1:addEventRequest" wsaw:Action="urn:addEvent"/>
+            <wsdl:output message="ns1:addEventResponse" wsaw:Action="urn:addEventResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="CalendarSOAP12Binding" type="ns1:CalendarPortType">
+        <wsp:PolicyReference URI="#transport_binding_policy"/>
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="register">
+            <soap12:operation soapAction="urn:register" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getEvents">
+            <soap12:operation soapAction="urn:getEvents" style="document"/>
+            <wsdl:input>
+                <wsp:PolicyReference URI="#username_token_policy"/>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteEvents">
+            <soap12:operation soapAction="urn:deleteEvents" style="document"/>
+            <wsdl:input>
+                <wsp:PolicyReference URI="#username_token_policy"/>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addEvent">
+            <soap12:operation soapAction="urn:addEvent" style="document"/>
+            <wsdl:input>
+                <wsp:PolicyReference URI="#username_token_policy"/>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="Calendar">
+        <wsdl:port name="CalendarSOAP12port_http" binding="ns1:CalendarSOAP12Binding">
+            <soap12:address location="https://localhost:8080/axis2/services/Calendar"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

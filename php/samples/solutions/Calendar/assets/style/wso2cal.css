@@ -1,0 +1,131 @@
+/*
+-----------------------------------------------------------
+WSO2 Calendar - http://www.wso2.com/
+Main Stylesheet
+
+Basic styling : initial.css
+IE Hacks      : ie_hacks.css
+
+----------------------------------------------------------- */
+
+body { font-size: 80%; color: #333; font-family: Verdana, Arial, Helvetica, sans-serif; }
+
+a, a:link { color: #AF111A; }
+a:visited { color: #9E2525; }
+a:hover { color: #E10000; text-decoration: none; }
+a img { border: 0; }
+
+h1, h2, h3, h4 { font-weight: normal; }
+h2 { font-size: 150%; }
+h3 { font-size: 120%; }
+h4 { font-size: 100%; font-weight: bold; }
+h5 { font-size: 90%; }
+h6 { font-size: 80%; text-transform: uppercase; font-weight: normal; }
+code, kbd { font-size: 120%; }
+dt { font-weight: bold; }
+
+/* Helper classes */
+.hide { display: none; }
+.hidden { visibility: hidden; }
+.clear { clear: both; }
+hr.hidden { margin: 0; padding: 0; border: 0; height: 1px; }
+
+div#container { background: url(../images/container_bk.png) repeat-y left top; }
+div#header { background: url(../images/header_bk.png) #F47A20 repeat-x left bottom;  }
+div#header h1 { margin: 0; color: #FFF; float: left; }
+div#header h1 img { float: left; height: 70px; }
+div#header p { margin: 20px 20px 0 0; float: right; font-size: 200%; color: #000; font-family: Georgia, "Times New Roman", Times, serif; font-style: italic; }
+div#content p { line-height: 1.4; }
+div#navigation { }
+div#extra {  }
+div#footer { background: #000; color: #FFF; }
+div#footer p { margin: 0; padding: 5px 10px; }
+
+div#wrapper { float: right; width: 100%; margin-left: -200px; }
+div#content { margin-left: 200px; }
+div#cal_menu { float: right; }
+div#cal_menu ul { margin: 10px 20px 10px 0; }
+div#cal_menu ul li { display: inline; list-style: none; }
+div#main { float: left; width: 100%; }
+div#navigation { float: left; width: 200px; }
+div#extra { float: left; clear: left; width: 200px; }
+div#footer{ clear: both; width: 100%; }
+
+	table.cal_table { border-collapse: collapse; color: #000; width: 100%; }
+	table.cal_table td { padding: 3px 10px; border: 1px solid #F6E497; }
+	table.cal_table td.colored { background-color: #FFC; }
+	table.cal_table td.values { text-align: center; }
+	table.cal_table td.top-border { border-left: none; border-top: none; }
+	
+	table.cal_table td.cal_time { width: 40px; background-color: #FFC;  }
+	table.cal_table td.cal_day { background-color: #FFC; }
+	table.cal_table td.no_border { border-left: none; border-top: none; background: none; }
+	
+	
+
+/* Right Calendar style */
+.weekend {
+font-family: Verdana;
+font-size: 8pt;
+color: grey;
+height: 20;
+padding-left: 5pt;
+}
+
+
+.title {
+font-family: Verdana;
+font-size: 100%;
+color: black;
+font-weight: bold;
+text-align: center;
+}
+
+.normal {
+font-family: Verdana;
+font-size: 8pt;
+color: #000000;
+height: 20;
+padding-left: 5pt;
+} 
+
+.today {
+font-family: Verdana;
+font-size: 8pt;
+color: #FFFFFF;
+background-color: #900;
+height: 20;
+padding-left: 5pt;
+} 
+
+.selected {
+font-family: Verdana;
+font-size: 8pt;
+color: #FFFFFF;
+background-color: #C00000;
+height: 20;
+padding-left: 5pt;
+} 
+
+.head {
+font-family: Verdana;
+font-size: 8pt;
+color: white;
+background-color: black;
+height: 20;
+padding-left: 5pt;
+}
+
+.event {
+font-family: Verdana;
+font-size: 8pt;
+color: #000000;
+background-color: #C6D1DC;
+height: 20;
+padding-left: 5pt;
+} 
+
+.tab1{
+margin-top: 5px;
+}
+
