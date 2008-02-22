@@ -461,7 +461,6 @@ wsf_xml_msg_recv_invoke_mixed (
     char *operation_name = NULL;
     axutil_hash_index_t * hi = NULL;
 
-    int path_len = 0;
     zval *params[1];
     zval request_function, retval, param1;
     zval *param_array;
