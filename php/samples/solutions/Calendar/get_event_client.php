@@ -37,7 +37,6 @@ require_once("CalendarClient.php");
   <div id="wrapper">
       <div id="content">
            <div id="cal_menu">
-             <a href="logout.php"><b><i>logout</i></b></a>
 	     <ul><li><a href="add_event_client.php">Create Event</a></li><li><a href="delete_event_client.php">Delete Event</a></li></ul>
            </div>
       <div id="main">
