@@ -135,9 +135,7 @@ try {
 
     // create client in WSDL mode
     $client = new WSClient(array ("wsdl" =>"http://131.107.72.15/SoapWsdl_ComplexDataTypes_XmlFormatter_Service_Indigo/ComplexDataTypesDocLitB.svc?wsdl",
-        "classmap" => $class_map,
-        "proxyHost"=>"localhost",
-        "proxyPort"=>"9080"));
+        "classmap" => $class_map));
 
     // get proxy object reference form client 
     $proxy = $client->getProxy();
