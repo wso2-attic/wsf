@@ -1033,7 +1033,7 @@ wsf_unit_execute(
         {
             printf("Usage: %s [options] [-f log_file] [test_names]\n", argv[0]);
             printf(" -x to skip provided test names. If you do not\n");
-            printf("    provide this option, only the names provided\n");
+            printf("    provide this option all the tests provided\n");
             printf("    wil run\n");
             printf(" -l to list available tests instead of running\n");
             printf(" -q for a quite mode operation\n");
