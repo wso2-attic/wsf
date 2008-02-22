@@ -28,9 +28,15 @@ global $written_classes;
 global $operations;
 
 // start of main logic
+
 $args = array();
+
+// check if it is a web request or a command line request
 if (isset($_GET['input'])) {
     // it is a HTTP GET request
+    $args['input'] = array();
+    $args['input'][1] = $_GET['input'];
+    $args['s'] = isset($_GET['s']);
 } else {
     //process command line arguments
     $args = wsf_arguments($argv);
