@@ -1,24 +1,53 @@
-AUTOCONF = ..\configure.in
+AUTOCONF = .\..\..\configure.in
 !include $(AUTOCONF)
 
-AXIS2_BIN_DIR=.\..\axis2c\build\axis2c-bin-1.2.0-win32
+WSFC_HOME_DIR="%WSFC_HOME%"
 
-!if "$(ENABLE_RAMPARTC)" == "1"
-OPFLAGS = mod_rampart.lib
+CFLAGS = /nologo /w /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "AXIS2_DECLARE_EXPORT"
+
+LDFLAGS = /nologo /LIBPATH:$(WSFC_HOME_DIR)\lib
+
+INCLUDE_PATH = /I.\include
+
+!if "$(DEBUG)" == "1"
+CFLAGS = $(CFLAGS) /D "_DEBUG" /Od /Z7 $(CRUNTIME)d
+LDFLAGS = $(LDFLAGS) /DEBUG
 !else
-OPFLAGS =
+CFLAGS = $(CFLAGS) /D "NDEBUG" /O2 $(CRUNTIME)
+LDFLAGS = $(LDFLAGS)
 !endif
 
-wsclient:
-	@echo off
+!if "$(EMBED_MANIFEST)" == "0"
+_VC_MANIFEST_EMBED_DLL=
+!else
+_VC_MANIFEST_EMBED_DLL= if exist $@.manifest mt.exe -nologo -manifest $@.manifest -outputresource:$@;2
+!endif
 
+wso2_wsfc_unit_dll:
 	@if not exist int.msvc mkdir int.msvc
-	@cl.exe /nologo /D "WIN32" /w /D "_WINDOWS" /D "AXIS2_DECLARE_EXPORT" /D "_MBCS" src\*.c \
-	/I.\..\axis2c\build\axis2c-bin-1.2.0-win32\include /I.\..\axis2c\neethi\include /I.\..\axis2c\neethi\src\util /Foint.msvc\ /c
+	@cl.exe $(CFLAGS) $(INCLUDE_PATH) src\*.c /Foint.msvc\ /c
+	@link.exe $(LDFLAGS) int.msvc\*.obj /DLL  /OUT:$(WSFC_HOME_DIR)\lib\wso2_wsfc_unit.dll /IMPLIB:$(WSFC_HOME_DIR)\lib\wso2_wsfc_unit.lib
+	-@$(_VC_MANIFEST_EMBED_DLL)
 
-	@link.exe /LIBPATH:.\..\axis2c\build\axis2c-bin-1.2.0-win32\lib int.msvc\*.obj axutil.lib  axis2_engine.lib \
-	axis2_parser.lib axiom.lib neethi_util.lib axis2_http_sender.lib $(OPFLAGS) /OUT:$(AXIS2_BIN_DIR)\bin\wsclient.exe
+wso2_wsfc_unit_samples:
+	@if not exist int.msvc mkdir int.msvc
+	@cl.exe /nologo /D "WIN32" /w /D "_WINDOWS" /D "_MBCS" samples\*.c \
+        /I.\include /I.\samples /Foint.msvc\ /c
+	@if not exist $(WSFC_HOME_DIR)\bin\test mkdir $(WSFC_HOME_DIR)\bin\test
+	@if not exist $(WSFC_HOME_DIR)\bin\test\framework mkdir $(WSFC_HOME_DIR)\bin\test\framework
+	@if not exist $(WSFC_HOME_DIR)\bin\test\framework\samples mkdir $(WSFC_HOME_DIR)\bin\test\framework\samples
+	@link.exe /LIBPATH:$(WSFC_HOME_DIR)\lib int.msvc\*.obj axutil.lib  \wso2_wsfc_unit.lib \
+        $(OPFLAGS) /OUT:$(WSFC_HOME_DIR)\bin\test\framework\samples
+
+wsfc_unit: wso2_wsfc_unit_dll
+
+cleanint:
+	@if exist $(WSFC_HOME_DIR)\lib\wso2_wsfc_unit.ilk del $(WSFC_HOME_DIR)\lib\wso2_wsfc_unit.ilk
+
+clean: 
 	@if exist int.msvc rmdir /s /q int.msvc
-	@mkdir $(AXIS2_BIN_DIR)\bin\samples\wsclient
-	@xcopy /S /Y samples\* $(AXIS2_BIN_DIR)\bin\samples\wsclient
-	
+
+install: wsfc_unit wso2_wsfc_unit_samples
+
+dist: clean install cleanint
+
