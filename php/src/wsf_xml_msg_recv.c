@@ -461,9 +461,7 @@ wsf_xml_msg_recv_invoke_mixed (
     char *operation_name = NULL;
     axutil_hash_index_t * hi = NULL;
 
-    char *real_path = NULL;
     int path_len = 0;
-    smart_str script_file_name = { 0 };
     zval *params[1];
     zval request_function, retval, param1;
     zval *param_array;
@@ -555,18 +553,15 @@ wsf_xml_msg_recv_invoke_mixed (
             smart_str_appends(&req_uri, "http://");
             smart_str_appends(&req_uri, server_name);
             smart_str_appends(&req_uri, ":");
-            smart_str_appends(&req_uri, port);
+			if(port != NULL){
+				smart_str_appends(&req_uri, port);
+			}
             smart_str_appends(&req_uri, SG(request_info).request_uri);
             smart_str_appends(&req_uri, "?wsdl");
-
             smart_str_0(&req_uri);
             wsf_wsdl_set_sig_model(req_uri.c, svc_info, env TSRMLS_CC);
         }
     }
-
-    real_path = estrdup(SG(request_info).path_translated);
-    path_len = strlen(SG(request_info).path_translated)- strlen(SG(request_info).request_uri);
-    real_path[path_len + 1] = '\0';
 
     /* find the operation name */
     if (svc_info->ops_to_functions) {
@@ -581,11 +576,6 @@ wsf_xml_msg_recv_invoke_mixed (
             }
         } 
     }
-
-
-    smart_str_appends(&script_file_name, real_path);
-    smart_str_appends(&script_file_name, "scripts/dynamic_invocation/wsf_wsdl.php");
-    smart_str_0 (&script_file_name);
 
     params[0] = &param1;
 
