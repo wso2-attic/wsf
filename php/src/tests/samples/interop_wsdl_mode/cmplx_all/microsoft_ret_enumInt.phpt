@@ -21,7 +21,7 @@ class RetEnumIntResponseWrapper
 }
 
 
-$classmap = array("RetEnumInt" => "RetEnumIntWrapper",
+$classmap = array("inEnumInt" => "RetEnumIntWrapper",
                   "RetEnumIntResponse" => "RetEnumIntResponseWrapper",
                   "IntSet" => "IntSetWrapper");
                   
@@ -29,7 +29,9 @@ $classmap = array("RetEnumInt" => "RetEnumIntWrapper",
 try{
 
     $client = new WSClient(array("wsdl"=> "http://131.107.72.15/SoapWsdl_ComplexDataTypes_XmlFormatter_Service_Indigo/ComplexDataTypesDocLitW.svc?wsdl" ,
-                                 "classmap" => $classmap));
+                                 "classmap" => $classmap,
+                                 "proxyHost"=>"localhost",
+                                 "proxyPort"=>"9080"));
 
 
 

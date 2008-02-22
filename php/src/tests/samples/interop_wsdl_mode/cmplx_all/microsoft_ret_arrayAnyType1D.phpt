@@ -29,7 +29,9 @@ $classmap = array("RetArrayAnyType1D" => "RetArrayAnyType1DWrapper",
 try{
 
     $client = new WSClient(array("wsdl"=> "http://131.107.72.15/SoapWsdl_ComplexDataTypes_XmlFormatter_Service_Indigo/ComplexDataTypesDocLitW.svc?wsdl" ,
-                                 "classmap" => $classmap));
+                                 "classmap" => $classmap,
+                                 "proxyHost"=>"localhost",
+                                 "proxyPort"=>"9090"));
 
     $input = new RetArrayAnyType1DWrapper();
     $obj = new ArrayOfanyTypeWrapper();
