@@ -49,4 +49,64 @@ function wsf_arguments($argv) {
 	return $_ARG;
 }
 
+/**
+ * Function to write 'sig model' for a given wsdl   
+ * $wsdl_location location of the WSDL
+ * returns none
+ */
+function wsf_wsdl2sig($wsdl_location) {
+
+	require_once ('dynamic_invocation/wsf_wsdl_consts.php');
+	require_once ('dynamic_invocation/wsf_wsdl_util.php');
+
+	global $written_classes;
+	global $operations;
+	
+	$code = "";
+
+	$wsdl_dom = new DomDocument();
+	$sig_model_dom = new DOMDocument();
+
+	$xslt_location = "./xslt/";
+
+	$sig_model_dom->preserveWhiteSpace = false;
+	$wsdl_dom->preserveWhiteSpace = false;
+
+	if (!$wsdl_location) {
+		echo "WSDL is not found";
+		return NULL;
+	}
+	$is_multiple_interfaces = FALSE;
+
+	// load WSDL as DOM
+	if (!$wsdl_dom->load($wsdl_location)) {
+		echo "WSDL could not be loaded.";
+		return NULL;
+	}
+
+	$wsdl_dom->preserveWhiteSpace = false;
+
+	// changing code for processing mutiple port types in wsdl 1.1 
+	$is_multiple_interfaces = wsf_is_mutiple_port_types($wsdl_dom);
+
+	if ($is_multiple_interfaces == FALSE) {
+		$wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $xslt_location);
+		if (!$wsdl_dom) {
+			echo "Error creating WSDL DOM document";
+			return NULL;
+		}
+		$sig_model_dom = wsf_get_sig_model_dom($wsdl_dom, $xslt_location);
+	} else {
+		$wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $xslt_location);
+		$sig_model_dom = wsf_process_multiple_interfaces($wsdl_dom, $sig_model_dom, $xslt_location);
+	}
+
+	if (!$sig_model_dom) {
+		echo "Error creating intermediate service operations signature model";
+		return NULL;
+	}
+
+	echo $sig_model_dom->saveXML();
+}
+
 ?>

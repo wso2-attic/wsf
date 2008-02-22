@@ -26,7 +26,7 @@ $operations = array ();
 /**
  * Function to write sub classes.  
  * $nodes array of nodes corresponding to the classes to be written
- * returns code segment corresponding to sub classes as a strring
+ * returns code segment corresponding to sub classes as a string
  */
 function wsf_write_sub_classes($nodes) {
 	global $written_classes;
@@ -81,7 +81,7 @@ function wsf_write_sub_classes($nodes) {
 /**
  * Function to write classes. Does the WSDL to PHP conversion using a 'sig model'.  
  * $wsdl_location location of the WSDL
- * returns code segment corresponding to classes as a strring
+ * returns code segment corresponding to classes as a string
  */
 function wsf_wsdl2php($wsdl_location) {
 
@@ -135,7 +135,7 @@ function wsf_wsdl2php($wsdl_location) {
 		return NULL;
 	}
 
-	//echo $sig_model_dom->saveXML();
+	echo $sig_model_dom->saveXML();
 
 	// get the list of operations
 	$op_nodes = $sig_model_dom->getElementsByTagName(WSF_OPERATION);

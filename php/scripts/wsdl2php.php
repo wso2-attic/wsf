@@ -42,13 +42,18 @@ if (isset($_GET['input'])) {
     $args = wsf_arguments($argv);
 }
 
-if ($args['h']) {
+if ($args['h']) { // -h used for help; print help
 	wsf_wsdl2php_print_help();
 	return;
 }
 
 // pick the WSDL form command line arguments
 $wsdl_location = $args['input'][1];
+
+if ($args['d']) { // -d used for debug; print sig model
+	wsf_wsdl2sig($wsdl_location);
+	return;
+}
 
 // call function to convert from WSDL to PHP
 $class_code = wsf_wsdl2php($wsdl_location);
