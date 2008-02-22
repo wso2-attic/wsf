@@ -37,8 +37,15 @@ function wsf_write_sub_classes($nodes) {
 					$param_attr = $param_child->attributes;
 					$param_name = $param_attr->getNamedItem(WSF_NAME)->value;
 					$param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
+					
+					// check if the attribute is of array type
+					$max_occurs = $param_attr->getNamedItem(WSF_MAX_OCCURS)->value;
+					$array_type = "";
+					if ($max_occurs != "1")
+						$array_type = "array of ";
+					
 					// write public members of the class 
-					$code = $code . "    public $" . $param_name . "; //" . $param_type . "\n";
+					$code = $code . "    public $" . $param_name . "; // " . $array_type . $param_type . "\n";
 					// if it is not s simple type, we have to keep track of it to write a corresponding class
 					if ($param_attr->getNamedItem(WSF_WSDL_SIMPLE)->value == 'no')
 						$child_array[] = $param_child;
@@ -176,8 +183,15 @@ function wsf_wsdl2php($wsdl_location) {
 									$param_attr = $param_child->attributes;
 									$param_name = $param_attr->getNamedItem(WSF_NAME)->value;
 									$param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
+
+									// check if the attribute is of array type
+									$max_occurs = $param_attr->getNamedItem(WSF_MAX_OCCURS)->value;
+									$array_type = "";
+									if ($max_occurs != "1")
+										$array_type = "array of ";
+									
 									// write public members of the class 
-									$code = $code .  "    public $" . $param_name . "; //" . $param_type . "\n";
+									$code = $code .  "    public $" . $param_name . "; // " . $array_type . $param_type . "\n";
 									// if it is not s simple type, we have to keep track of it to write a corresponding class
 									if ($param_attr->getNamedItem(WSF_WSDL_SIMPLE)->value == 'no')
 										$child_array[] = $param_child;

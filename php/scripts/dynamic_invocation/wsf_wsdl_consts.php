@@ -20,6 +20,8 @@ define("WSF_OPERATION" , "operation");
 define("WSF_ADDRESS", "address");
 define("WSF_NAME" , "name");
 define("WSF_TYPE", "type");
+define("WSF_MAX_OCCURS", "maxOccurs");
+define("WSF_MIN_OCCURS", "minOccurs");
 define("WSF_HAS_SIG_CHILDS", "wsf_has_sig_childs");
 define("WSF_TYPE_REP", "type_rep");
 define("WSF_ID", "Id");
