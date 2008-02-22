@@ -43,6 +43,7 @@ define("WSF_HAS_SIG_CHILDS", "wsf_has_sig_childs");
 define("WSF_TYPE_REP", "type_rep");
 define("WSF_ID", "Id");
 define("WSF_SERVICE", "service");
+define("WSF_CLIENT", "client");
 define("WSF_BINDING", "binding");
 define("WSF_POLICY_REFERENCE", "PolicyReference");
 define("WSF_POLICY", "Policy");
@@ -77,9 +78,6 @@ define("WSF_TYPES", "types");
 define("WSF_WSDL_DOM", "wsdl_dom");
 define("WSF_WSDL_SIMPLE", "simple");
 define("WSF_WSDL_COMPLEX_TYPE", "complexType");
-
-define("WSF_CLIENT", "client");
-define("WSF_SERVICE", "service");
 
 define("WSF_WSDL2_NAMESPACE", "http://www.w3.org/ns/wsdl");
 define("WSF_WSDL_NAMESPACE", "http://schemas.xmlsoap.org/wsdl/");
