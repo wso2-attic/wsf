@@ -391,7 +391,7 @@ wsf_unit_report_suite(
 
     temp = suite->head;
     wsf_unit_print_message("\n---------------------------------------------------\n");
-    wsf_unit_print_message("%-15s\t\tTotal\tFailed\tFailure %%\n", "Test Report");
+    wsf_unit_print_message("%-15s\t\tTotal\tFailed\tFailure %%\n", "Failure Report");
     wsf_unit_print_message("---------------------------------------------------\n");
     while (temp)
     {
