@@ -395,9 +395,12 @@ wsf_unit_report_suite(
     wsf_unit_print_message("---------------------------------------------------\n");
     while (temp)
     {
-        float percent = ((float)temp->failed / (float)temp->total);
-        wsf_unit_print_message("%-15s\t\t%5d\t%6d\t%6.2f%%\n", temp->name,
-            temp->total, temp->failed, percent * 100);
+        if (!temp->omit)
+        {
+            float percent = ((float)temp->failed / (float)temp->total);
+            wsf_unit_print_message("%-15s\t\t%5d\t%6d\t%6.2f%%\n", temp->name,
+                temp->total, temp->failed, percent * 100);
+        }
         temp = temp->next;
     }
     wsf_unit_print_message("___________________________________________________\n\n");
