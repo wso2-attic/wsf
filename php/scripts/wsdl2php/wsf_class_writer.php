@@ -1,4 +1,6 @@
 <?php
+
+
 /*
  * Copyright (c) 2005-2008 WSO2, Inc. http://wso2.com
  *
@@ -15,7 +17,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 // array to keep track of classes that are already written 
 $written_classes = array ();
@@ -54,20 +55,20 @@ function wsf_write_sub_classes($nodes) {
 					$param_attr = $param_child->attributes;
 					$param_name = $param_attr->getNamedItem(WSF_NAME)->value;
 					$param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
-					
+
 					// check if the attribute is of array type
 					$max_occurs = $param_attr->getNamedItem(WSF_MAX_OCCURS)->value;
 					$array_type = "";
-					if ($max_occurs != "1")
+					if ($max_occurs != null && $max_occurs != "1")
 						$array_type = "array of ";
-					
+
 					// write public members of the class 
 					$code = $code . "    public $" . $param_name . "; // " . $array_type . $param_type . "\n";
 					// if it is not s simple type, we have to keep track of it to write a corresponding class
 					if ($param_attr->getNamedItem(WSF_WSDL_SIMPLE)->value == 'no')
 						$child_array[] = $param_child;
 				}
-				$code = $code . "}\n\n"; 
+				$code = $code . "}\n\n";
 				// done writing the current class, now go and write the sub classes
 				$code = $code . wsf_write_sub_classes($child_array);
 			}
@@ -90,7 +91,7 @@ function wsf_wsdl2php($wsdl_location) {
 
 	global $written_classes;
 	global $operations;
-	
+
 	$code = "";
 
 	$wsdl_dom = new DomDocument();
@@ -140,13 +141,13 @@ function wsf_wsdl2php($wsdl_location) {
 
 	// process each operation
 	foreach ($op_nodes as $op_node) {
-		
+
 		// get operation name 
 		$op_attr = $op_node->attributes;
 		$op_name = $op_attr->getNamedItem(WSF_NAME)->value;
 
 		if ($operations[$op_name] == NULL) { // it operation is already found in an earlier parse, should not re-set it
-			$operations[$op_name] = array();
+			$operations[$op_name] = array ();
 			$operations[$op_name][WSF_CLIENT] = "";
 			$operations[$op_name][WSF_SERVICE] = "";
 		}
@@ -178,15 +179,15 @@ function wsf_wsdl2php($wsdl_location) {
 									continue;
 
 								// start writing class	
-								$code = $code .  "class " . $ele_name . " { \n";
+								$code = $code . "class " . $ele_name . " { \n";
 								$written_classes[$ele_name] = true;
 
 								// prepare the demo code that the user could use for testing client. 
 								// shows how to create the input and receive the response
-								
+
 								if ($param_node->localName == WSF_PARAMS) {
 									$operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "    \$input = new $ele_name();\n    //TODO: fill in the class fields of \$input to match your business logic\n";
-									$operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "function ".$op_name . "(\$input) {\n    // TODO: fill in the business logic\n    // NOTE: \$input is of type $ele_name\n";
+									$operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "function " . $op_name . "(\$input) {\n    // TODO: fill in the business logic\n    // NOTE: \$input is of type $ele_name\n";
 								}
 								if ($param_node->localName == WSF_RETURNS) {
 									$operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "\n    // call the operation\n    \$response = \$proxy->" . $op_node->attributes->getNamedItem('name')->value . "(\$input);\n    //TODO: Implement business logic to consume \$response, which is of type $ele_name\n";
@@ -202,28 +203,76 @@ function wsf_wsdl2php($wsdl_location) {
 									// check if the attribute is of array type
 									$max_occurs = $param_attr->getNamedItem(WSF_MAX_OCCURS)->value;
 									$array_type = "";
-									if ($max_occurs != "1")
+									if ($max_occurs != null && $max_occurs != "1")
 										$array_type = "array of ";
-									
+
 									// write public members of the class 
-									$code = $code .  "    public $" . $param_name . "; // " . $array_type . $param_type . "\n";
+									$code = $code . "    public $" . $param_name . "; // " . $array_type . $param_type . "\n";
 									// if it is not s simple type, we have to keep track of it to write a corresponding class
 									if ($param_attr->getNamedItem(WSF_WSDL_SIMPLE)->value == 'no')
 										$child_array[] = $param_child;
 								}
-								$code = $code .  "}\n\n";
+								$code = $code . "}\n\n";
 								// done writing the current class, now go and write the sub classes
-								$code = $code .  wsf_write_sub_classes($child_array);
+								$code = $code . wsf_write_sub_classes($child_array);
 							} else {
 								// TODO: No wrapper element, how to handle the code generation? Following code does nothing. Need to modify it
 								$child_array = array ();
 								$param_child_list = $param_node->childNodes;
 								foreach ($param_child_list as $param_child) {
 									$param_attr = $param_child->attributes;
-									$param_name = $param_attr->getNamedItem(WSF_NAME)->value;
-									$code = $code .  $param_name;
+									$ele_name = $param_attr->getNamedItem(WSF_NAME)->value;
 									$param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
-									$ele_name = $param_name;
+
+									//....
+									// check if the class is already written
+									if ($written_classes[$ele_name] == true)
+										continue;
+
+									// start writing class	
+									$code = $code . "class " . $ele_name . " { \n";
+									$written_classes[$ele_name] = true;
+
+									// prepare the demo code that the user could use for testing client. 
+									// shows how to create the input and receive the response
+
+									if ($param_node->localName == WSF_PARAMS) {
+										$operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "    \$input = new $ele_name();\n    //TODO: fill in the class fields of \$input to match your business logic\n";
+										$operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "function " . $op_name . "(\$input) {\n    // TODO: fill in the business logic\n    // NOTE: \$input is of type $ele_name\n";
+									}
+									if ($param_node->localName == WSF_RETURNS) {
+										$operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "\n    // call the operation\n    \$response = \$proxy->" . $op_node->attributes->getNamedItem('name')->value . "(\$input);\n    //TODO: Implement business logic to consume \$response, which is of type $ele_name\n";
+										$operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // NOTE: should return an object of type $ele_name\n}\n\n";
+									}
+
+									if ($param_child->hasChildNodes()) {
+										$param_attrib_child_list = $param_child->childNodes;
+										foreach ($param_attrib_child_list as $param_attrib_child) {
+											$param_attr = $param_attrib_child->attributes;
+											$param_name = $param_attr->getNamedItem(WSF_NAME)->value;
+											$param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
+
+											// check if the attribute is of array type
+											$max_occurs = $param_attr->getNamedItem(WSF_MAX_OCCURS)->value;
+											$array_type = "";
+											if ($max_occurs != null && $max_occurs != "1")
+												$array_type = "array of ";
+
+											// write public members of the class 
+											$code = $code . "    public $" . $param_name . "; // " . $array_type . $param_type . "\n";
+											// if it is not s simple type, we have to keep track of it to write a corresponding class
+											if ($param_attr->getNamedItem(WSF_WSDL_SIMPLE)->value == 'no')
+												$child_array[] = $param_attrib_child;
+										}
+									} else { // it may be of anyType
+										$code = $code . "    public \$" . $param_type . "; // $param_type\n";
+									}
+
+									$code = $code . "}\n\n";
+									// done writing the current class, now go and write the sub classes
+									$code = $code . wsf_write_sub_classes($child_array);
+
+									//...
 								}
 							}
 						}
@@ -232,8 +281,7 @@ function wsf_wsdl2php($wsdl_location) {
 			}
 		}
 	}
-	
+
 	return $code;
 }
-
 ?>
