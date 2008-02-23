@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+#include <stdio.h>
 #include <sample.h>
 
 const struct wsf_unit_test_list provided_names[] =
@@ -23,10 +24,11 @@ const struct wsf_unit_test_list provided_names[] =
     {test_sample2}
 };
 
-int main(int argc, const char *const argv[])
+int main(int argc, char **argv)
 {
     return wsf_unit_execute(argc, argv, "WSF Unit Sample",
         (sizeof(provided_names) / sizeof(struct wsf_unit_test_list *)),
         provided_names);
+    return 0;
 }
 

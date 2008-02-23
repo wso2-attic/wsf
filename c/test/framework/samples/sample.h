@@ -25,8 +25,8 @@ extern "C"
 {
 #endif
 
-    wsf_unit_status_t test_sample1(wsf_unit_suite_t * suite);
-    wsf_unit_status_t test_sample2(wsf_unit_suite_t * suite);
+    wsf_unit_status_t WSF_UNIT_CALL test_sample1(wsf_unit_suite_t * suite);
+    wsf_unit_status_t WSF_UNIT_CALL test_sample2(wsf_unit_suite_t * suite);
 
 #ifdef __cplusplus
 }

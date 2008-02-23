@@ -370,9 +370,12 @@ wsf_unit_report_suite(
 
     for (temp = suite->head; temp; temp = temp->next)
     {
-        failed += temp->failed;
-        not_implemented += temp->not_implemented;
-        total += temp->total;
+        if (!temp->omit)
+        {
+            failed += temp->failed;
+            not_implemented += temp->not_implemented;
+            total += temp->total;
+        }
     }
 
     if (failed == 0)
@@ -1025,7 +1028,9 @@ wsf_unit_execute(
     list_tests = WSF_UNIT_FALSE;
     invert = WSF_UNIT_FALSE;
     test_list = NULL;
+#ifndef WIN32
     quiet = !isatty(STDOUT_FILENO);
+#endif
 
     for (i = 1; i < argc; i++)
     {

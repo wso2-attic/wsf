@@ -36,7 +36,7 @@ rem Build wsclient
 
 rem Build Unit Test Framework
 @cd test\framework
-@nmake -f wsfc_unit.mk AUTOCONF=..\..\configure.in
+@nmake install -f wsfc_unit.mk AUTOCONF=..\..\configure.in
 @cd ..\..
 
 rem Build Tests

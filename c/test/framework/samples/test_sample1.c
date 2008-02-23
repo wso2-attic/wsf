@@ -17,11 +17,11 @@
 
 #include <sample.h>
 
-static void test_sample1_test1(wsf_unit_test_case_t *tc, void *data);
-static void test_sample1_test2(wsf_unit_test_case_t *tc, void *data);
-static void test_sample1_test3(wsf_unit_test_case_t *tc, void *data);
+static void WSF_UNIT_CALL test_sample1_test1(wsf_unit_test_case_t *tc, void *data);
+static void WSF_UNIT_CALL test_sample1_test2(wsf_unit_test_case_t *tc, void *data);
+static void WSF_UNIT_CALL test_sample1_test3(wsf_unit_test_case_t *tc, void *data);
 
-wsf_unit_status_t test_sample1(wsf_unit_suite_t * suite)
+wsf_unit_status_t WSF_UNIT_CALL test_sample1(wsf_unit_suite_t * suite)
 {
     wsf_unit_status_t status = WSF_UNIT_FAILURE;
     status = WSF_UNIT_ADD_SUB_SUITE(suite);
@@ -32,19 +32,19 @@ wsf_unit_status_t test_sample1(wsf_unit_suite_t * suite)
     return status;
 }
 
-static void test_sample1_test1(wsf_unit_test_case_t *tc, void *data)
+static void WSF_UNIT_CALL test_sample1_test1(wsf_unit_test_case_t *tc, void *data)
 {
     WSF_UNIT_ASSERT_TRUE(tc, NULL, 1);
     WSF_UNIT_ASSERT_FALSE(tc, NULL, 0);
 }
 
-static void test_sample1_test2(wsf_unit_test_case_t *tc, void *data)
+static void WSF_UNIT_CALL test_sample1_test2(wsf_unit_test_case_t *tc, void *data)
 {
     WSF_UNIT_ASSERT_NOT_EQUALS_CHAR(tc, NULL, 'a', 'b');
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, NULL, "test", "test");
 }
 
-static void test_sample1_test3(wsf_unit_test_case_t *tc, void *data)
+static void WSF_UNIT_CALL test_sample1_test3(wsf_unit_test_case_t *tc, void *data)
 {
     WSF_UNIT_ASSERT_EQUALS_PTR(tc, NULL, tc, tc);
     WSF_UNIT_ASSERT_NOT_EQUALS_SIZE(tc, NULL, sizeof(tc), sizeof(tc));
