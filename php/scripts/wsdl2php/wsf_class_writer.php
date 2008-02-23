@@ -135,8 +135,6 @@ function wsf_wsdl2php($wsdl_location) {
 		return NULL;
 	}
 
-	echo $sig_model_dom->saveXML();
-
 	// get the list of operations
 	$op_nodes = $sig_model_dom->getElementsByTagName(WSF_OPERATION);
 
