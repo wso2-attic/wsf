@@ -26,7 +26,7 @@ const struct wsf_unit_test_list provided_names[] =
 
 int main(int argc, const char *const argv[])
 {
-    return wsf_unit_execute(argc, argv, "WSF Unit Sample",
+    return wsf_unit_execute(argc, argv, "WSFC_Unit Sample",
         (sizeof(provided_names) / sizeof(struct wsf_unit_test_list *)),
         provided_names);
     return 0;
