@@ -566,7 +566,7 @@ wsf_unit_assert_equals_string(
     else
     {
         wsf_unit_print_error_message(
-             "Line %d: expected <%d>, but saw <%d>\n%-20s:  ", line_no,
+             "Line %d: expected <%s>, but saw <%s>\n%-20s:  ", line_no,
              expected, actual, "");   
     }
 }
@@ -794,7 +794,7 @@ wsf_unit_assert_not_equals_string(
     else
     {
         wsf_unit_print_error_message(
-             "Line %d: did not expect <%d>, but saw <%d>\n%-20s:  ", line_no,
+             "Line %d: did not expect <%s>, but saw <%s>\n%-20s:  ", line_no,
              expected, actual, "");   
     }
 }
