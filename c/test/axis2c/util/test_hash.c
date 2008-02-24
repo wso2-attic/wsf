@@ -182,6 +182,10 @@ wsf_unit_status_t WSF_UNIT_CALL test_hash(wsf_unit_suite_t * suite)
         {
             status = WSF_UNIT_FAILURE;
         }
+        if (test_data->hash)
+        {
+            axutil_hash_free(test_data->hash, env);
+        }
         AXIS2_FREE(env->allocator, test_data);
     }
     else

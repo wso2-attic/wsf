@@ -24,7 +24,8 @@ const struct wsf_unit_test_list axutil_tests[] =
     {test_log},
     {test_md5},
     {test_string},
-    {test_thread}
+    {test_thread},
+    {test_uuid_gen}
 };
 
 int main(int argc, const char *const argv[])
