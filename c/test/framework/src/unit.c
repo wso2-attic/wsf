@@ -16,12 +16,20 @@
  */
 
 #include <wsf_unit.h>
+#include <signal.h>
+#include <setjmp.h>
 
 wsf_unit_bool_t quiet = WSF_UNIT_FALSE;
 wsf_unit_bool_t list_tests = WSF_UNIT_FALSE;
 wsf_unit_bool_t invert = WSF_UNIT_FALSE;
+wsf_unit_bool_t skip_segv = WSF_UNIT_FALSE;
+wsf_unit_bool_t in_run_test = WSF_UNIT_FALSE;
 FILE *log_file = NULL;
 const wsf_unit_char_t **test_list = NULL;
+jmp_buf x;
+
+void sig_handler(
+    int signal);
 
 static wsf_unit_bool_t
 wsf_unit_test_exists(
@@ -222,6 +230,7 @@ wsf_unit_run_test(
 {
     wsf_unit_test_case_t *test_case = NULL;
     wsf_unit_sub_suite_t *sub_suite = NULL;
+    wsf_unit_bool_t is_exception = WSF_UNIT_FALSE;
 
     if (!wsf_unit_test_required(suite->tail->name))
     {
@@ -239,7 +248,36 @@ wsf_unit_run_test(
     sub_suite = suite->tail;
     sub_suite->total++;
 
-    test(test_case, value);
+    if (!skip_segv)
+    {
+        signal(SIGSEGV, sig_handler);
+        is_exception = (wsf_unit_bool_t)setjmp(x);
+
+        if (!is_exception)
+        {
+            in_run_test = WSF_UNIT_TRUE;
+            test(test_case, value);
+            in_run_test = WSF_UNIT_FALSE;
+        }
+        else
+        {
+            test_case->status = WSF_UNIT_FAILURE;
+            wsf_unit_print_error_message(
+                "Line --: Segmentation Fault in Test No. %d\n%-20s:  ",
+                sub_suite->total, "");
+            /*
+             * Getting the line number of where the segfault
+             * occured requires debugging information. Thus,
+             * it requires some peek into something like GDB
+             * to figure this out. This seem lot of work for
+             * the moment. Perhaps someday in the future. :D
+             */
+        }
+    }
+    else
+    {
+        test(test_case, value);
+    }
     if (!test_case->status)
     {
         sub_suite->failed++;
@@ -1037,12 +1075,14 @@ wsf_unit_execute(
         if (!strcmp(argv[i], "-h"))
         {
             printf("Usage: %s [options] [-f log_file] [test_names]\n", argv[0]);
+            printf(" -f to provide a log_file\n");
+            printf(" -l to list available tests instead of running\n");
+            printf(" -q for a quite mode operation\n");
+            printf(" -s to stop catching Segmentation Faults. This\n");
+            printf("    is useful for debugging\n");
             printf(" -x to skip provided test names. If you do not\n");
             printf("    provide this option all the tests provided\n");
             printf("    wil run\n");
-            printf(" -l to list available tests instead of running\n");
-            printf(" -q for a quite mode operation\n");
-            printf(" -f to provide a log_file\n");
             return 0;
         }
         if (!list_tests && !strcmp(argv[i], "-l"))
@@ -1058,6 +1098,11 @@ wsf_unit_execute(
         if (!quiet && !strcmp(argv[i], "-q"))
         {
             quiet = WSF_UNIT_TRUE;
+            continue;
+        }
+        if (!skip_segv && !strcmp(argv[i], "-s"))
+        {
+            skip_segv = WSF_UNIT_TRUE;
             continue;
         }
         if (!log_file && !strcmp(argv[i], "-f"))
@@ -1120,5 +1165,24 @@ wsf_unit_execute(
         log_file = NULL;
     }
     return 0;
+}
+
+void
+sig_handler(
+    int signal)
+{
+    switch (signal)
+    {
+    case SIGSEGV:
+        if (in_run_test)
+        {
+            in_run_test = WSF_UNIT_FALSE;
+            longjmp(x, (int)WSF_UNIT_TRUE);
+        }
+        break;
+    default:
+        break;
+    }
+    return;
 }
 
