@@ -115,7 +115,6 @@ wsf_unit_status_t WSF_UNIT_CALL test_string(wsf_unit_suite_t * suite)
         status = WSF_UNIT_FAILURE;
     }
     return status;
-
 }
 
 static void WSF_UNIT_CALL test_axutil_string_strrtrim(wsf_unit_test_case_t *tc, void *data)
@@ -167,14 +166,26 @@ static void WSF_UNIT_CALL test_axutil_string_strrtrim(wsf_unit_test_case_t *tc, 
 
     out_str = axutil_strrtrim(env, temp, " \t\r\n");
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Trimmed Output is NULL", out_str);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Input made NULL", temp);
     if (out_str)
     {
         WSF_UNIT_ASSERT_EQUALS_STRING(tc, NULL, trim_data->out, out_str);
         AXIS2_FREE(env->allocator, out_str);
+        out_str = NULL;
     }
     if (temp)
     {
+        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Trim Function alterted input",
+            trim_data->in, temp);
         AXIS2_FREE(env->allocator, temp);
+    }
+
+    out_str = axutil_strrtrim(env, trim_data->in, " \t\r\n");
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Trimmed Output is NULL", out_str);
+    if (out_str)
+    {
+        WSF_UNIT_ASSERT_EQUALS_STRING(tc, NULL, trim_data->out, out_str);
+        AXIS2_FREE(env->allocator, out_str);
     }
     env = NULL;
 }
@@ -228,14 +239,26 @@ static void WSF_UNIT_CALL test_axutil_string_strltrim(wsf_unit_test_case_t *tc, 
 
     out_str = axutil_strltrim(env, temp, " \t\r\n");
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Trimmed Output is NULL", out_str);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Input made NULL", temp);
     if (out_str)
     {
         WSF_UNIT_ASSERT_EQUALS_STRING(tc, NULL, trim_data->out, out_str);
         AXIS2_FREE(env->allocator, out_str);
+        out_str = NULL;
     }
     if (temp)
     {
+        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Trim Function alterted input",
+            trim_data->in, temp);
         AXIS2_FREE(env->allocator, temp);
+    }
+
+    out_str = axutil_strltrim(env, trim_data->in, " \t\r\n");
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Trimmed Output is NULL", out_str);
+    if (out_str)
+    {
+        WSF_UNIT_ASSERT_EQUALS_STRING(tc, NULL, trim_data->out, out_str);
+        AXIS2_FREE(env->allocator, out_str);
     }
     env = NULL;
 }
@@ -289,14 +312,26 @@ static void WSF_UNIT_CALL test_axutil_string_strtrim(wsf_unit_test_case_t *tc, v
 
     out_str = axutil_strtrim(env, temp, " \t\r\n");
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Trimmed Output is NULL", out_str);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Input made NULL", temp);
     if (out_str)
     {
         WSF_UNIT_ASSERT_EQUALS_STRING(tc, NULL, trim_data->out, out_str);
         AXIS2_FREE(env->allocator, out_str);
+        out_str = NULL;
     }
     if (temp)
     {
+        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Trim Function alterted input",
+            trim_data->in, temp);
         AXIS2_FREE(env->allocator, temp);
+    }
+
+    out_str = axutil_strtrim(env, trim_data->in, " \t\r\n");
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Trimmed Output is NULL", out_str);
+    if (out_str)
+    {
+        WSF_UNIT_ASSERT_EQUALS_STRING(tc, NULL, trim_data->out, out_str);
+        AXIS2_FREE(env->allocator, out_str);
     }
     env = NULL;
 }

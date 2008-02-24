@@ -27,6 +27,7 @@ wsf_unit_bool_t skip_segv = WSF_UNIT_FALSE;
 wsf_unit_bool_t in_run_test = WSF_UNIT_FALSE;
 FILE *log_file = NULL;
 const wsf_unit_char_t **test_list = NULL;
+int errors = 0;
 jmp_buf x;
 
 void sig_handler(
@@ -376,14 +377,14 @@ wsf_unit_report_sub_suite(
 {
     if (sub_suite && !quiet)
     {
-        if (sub_suite->failed == 0)
-        {
-            wsf_unit_print_message("SUCCESS\n");
-        }
-        else
+        if (sub_suite->failed != 0)
         {
             wsf_unit_print_message("FAILED %d of %d\n",
                 sub_suite->failed, sub_suite->total);
+        }
+        else
+        {
+            wsf_unit_print_message("SUCCESS\n");
         }
     }
 }
@@ -419,7 +420,13 @@ wsf_unit_report_suite(
 
     if (failed == 0)
     {
-        if (not_implemented == 0)
+        if (errors != 0)
+        {
+            wsf_unit_print_message("\nSome Tests had Errors. Failed Test Sets: %d\n",
+                                   errors);
+            return;
+        }
+        else if (not_implemented == 0)
         {
             wsf_unit_print_message("\nAll Tests Passed\n");
             return;
@@ -1176,7 +1183,12 @@ wsf_unit_execute(
 
     for (i = 0; i < testc; i++)
     {
-        testv[i].execute(suite);
+        if(!testv[i].execute(suite))
+        {
+            wsf_unit_print_error_message(
+                "Test Set Reported Failure\n%-20s:  ", "");
+            errors++;
+        }
     }
 
     wsf_unit_report_suite(suite);
