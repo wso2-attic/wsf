@@ -20,6 +20,7 @@
 
 const struct wsf_unit_test_list axutil_tests[] =
 {
+    {test_array_list},
     {test_hash},
     {test_log},
     {test_md5},
