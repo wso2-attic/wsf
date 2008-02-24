@@ -38,6 +38,7 @@ extern "C"
     #define CREATE_TEST_ENV() axutil_env_create_all("axutil_tests.log", AXIS2_LOG_LEVEL_TRACE)
 
     wsf_unit_status_t WSF_UNIT_CALL test_array_list(wsf_unit_suite_t * suite);
+    wsf_unit_status_t WSF_UNIT_CALL test_dir_handler(wsf_unit_suite_t * suite);
     wsf_unit_status_t WSF_UNIT_CALL test_hash(wsf_unit_suite_t * suite);
     wsf_unit_status_t WSF_UNIT_CALL test_log(wsf_unit_suite_t * suite);
     wsf_unit_status_t WSF_UNIT_CALL test_md5(wsf_unit_suite_t * suite);

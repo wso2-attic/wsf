@@ -446,8 +446,22 @@ wsf_unit_report_suite(
             if (!temp->omit)
             {
                 float percent = ((float)(temp->total - temp->not_implemented) / (float)temp->total);
-                wsf_unit_print_message("%-15s\t\t%5d\t%5d\t%6.2f%%\n", temp->name,
-                    temp->total, (temp->total - temp->not_implemented), percent * 100);
+                if (strlen(temp->name) > 15 && strlen(temp->name) < 20)
+                {
+                    wsf_unit_print_message("%-20s\t%5d\t%5d\t%6.2f%%\n", temp->name,
+                        temp->total, (temp->total - temp->not_implemented), percent * 100);
+                }
+                else if (strlen(temp->name) > 20)
+                {
+                    temp->name[20] = '\0';
+                    wsf_unit_print_message("%-20s\t%5d\t%5d\t%6.2f%%\n", temp->name,
+                        temp->total, (temp->total - temp->not_implemented), percent * 100);
+                }
+                else
+                {
+                    wsf_unit_print_message("%-15s\t\t%5d\t%5d\t%6.2f%%\n", temp->name,
+                        temp->total, (temp->total - temp->not_implemented), percent * 100);
+                }
             }
             temp = temp->next;
         }
@@ -467,8 +481,22 @@ wsf_unit_report_suite(
         if (!temp->omit)
         {
             float percent = ((float)temp->failed / (float)temp->total);
-            wsf_unit_print_message("%-15s\t\t%5d\t%6d\t%6.2f%%\n", temp->name,
-                temp->total, temp->failed, percent * 100);
+            if (strlen(temp->name) > 15 && strlen(temp->name) < 20)
+            {
+                wsf_unit_print_message("%-20s\t%5d\t%6d\t%6.2f%%\n", temp->name,
+                    temp->total, temp->failed, percent * 100);
+            }
+            else if (strlen(temp->name) > 20)
+            {
+                temp->name[20] = '\0';
+                wsf_unit_print_message("%-20s\t%5d\t%6d\t%6.2f%%\n", temp->name,
+                    temp->total, temp->failed, percent * 100);
+            }
+            else
+            {
+                wsf_unit_print_message("%-15s\t\t%5d\t%6d\t%6.2f%%\n", temp->name,
+                    temp->total, temp->failed, percent * 100);
+            }
         }
         temp = temp->next;
     }
