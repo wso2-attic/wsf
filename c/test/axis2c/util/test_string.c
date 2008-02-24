@@ -159,7 +159,7 @@ static void WSF_UNIT_CALL test_axutil_string_strrtrim(wsf_unit_test_case_t *tc, 
     }
 
     temp = axutil_strdup(env, trim_data->in);
-    WSF_UNIT_ASSERT_NOT_NULL(tc, "String Duplication Failed", trim_data);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "String Duplication Failed", temp);
     if (!temp)
     {
         return;
@@ -220,7 +220,7 @@ static void WSF_UNIT_CALL test_axutil_string_strltrim(wsf_unit_test_case_t *tc, 
     }
 
     temp = axutil_strdup(env, trim_data->in);
-    WSF_UNIT_ASSERT_NOT_NULL(tc, "String Duplication Failed", trim_data);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "String Duplication Failed", temp);
     if (!temp)
     {
         return;
@@ -281,7 +281,7 @@ static void WSF_UNIT_CALL test_axutil_string_strtrim(wsf_unit_test_case_t *tc, v
     }
 
     temp = axutil_strdup(env, trim_data->in);
-    WSF_UNIT_ASSERT_NOT_NULL(tc, "String Duplication Failed", trim_data);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "String Duplication Failed", temp);
     if (!temp)
     {
         return;

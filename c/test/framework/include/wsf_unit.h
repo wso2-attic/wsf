@@ -314,10 +314,10 @@ extern "C"
         wsf_unit_assert_false(p, q, r, __LINE__)
 
     #define WSF_UNIT_NOT_IMPLEMENTED(p, q) \
-        wsf_unit_assert_not_implemented(p, q, __LINE__)
+        wsf_unit_not_implemented(p, q, __LINE__)
 
     #define WSF_UNIT_FAIL(p, q) \
-        wsf_unit_assert_fail(p, q, __LINE__)
+        wsf_unit_fail(p, q, __LINE__)
 
 #ifdef __cplusplus
 }

@@ -22,6 +22,7 @@
 wsf_unit_bool_t quiet = WSF_UNIT_FALSE;
 wsf_unit_bool_t list_tests = WSF_UNIT_FALSE;
 wsf_unit_bool_t invert = WSF_UNIT_FALSE;
+wsf_unit_bool_t detailed_report = WSF_UNIT_FALSE;
 wsf_unit_bool_t skip_segv = WSF_UNIT_FALSE;
 wsf_unit_bool_t in_run_test = WSF_UNIT_FALSE;
 FILE *log_file = NULL;
@@ -243,10 +244,10 @@ wsf_unit_run_test(
         return;
     }
     test_case->status = WSF_UNIT_SUCCESS;
-    test_case->sub_suite = sub_suite;
 
     sub_suite = suite->tail;
     sub_suite->total++;
+    test_case->sub_suite = sub_suite;
 
     if (!skip_segv)
     {
@@ -421,12 +422,32 @@ wsf_unit_report_suite(
         if (not_implemented == 0)
         {
             wsf_unit_print_message("\nAll Tests Passed\n");
+            return;
         }
-        else
+        else if (!detailed_report)
         {
             wsf_unit_print_message("\nAll Implemented Tests Passed. Not Implemented: %d\n",
-                   not_implemented);
+                                   not_implemented);
+            return;
         }
+        temp = suite->head;
+        wsf_unit_print_message("\n---------------------------------------------------\n");
+        wsf_unit_print_message("%-15s\tTotal\tImpl.\t Impl. %%\n", "Implementation Report");
+        wsf_unit_print_message("---------------------------------------------------\n");
+        while (temp)
+        {
+            if (!temp->omit)
+            {
+                float percent = ((float)(temp->total - temp->not_implemented) / (float)temp->total);
+                wsf_unit_print_message("%-15s\t\t%5d\t%5d\t%6.2f%%\n", temp->name,
+                    temp->total, (temp->total - temp->not_implemented), percent * 100);
+            }
+            temp = temp->next;
+        }
+        wsf_unit_print_message("___________________________________________________\n\n");
+        wsf_unit_print_message("%-15s\t\t%5d\t%5d\t%6.2f%%\n", "",
+                        total, (total - not_implemented), ((float)(total - not_implemented) / (float)total) * 100);
+        wsf_unit_print_message("===================================================\n");
         return;
     }
 
@@ -1078,6 +1099,7 @@ wsf_unit_execute(
             printf(" -f to provide a log_file\n");
             printf(" -l to list available tests instead of running\n");
             printf(" -q for a quite mode operation\n");
+            printf(" -r to report not implemented tests in detail.\n");
             printf(" -s to stop catching Segmentation Faults. This\n");
             printf("    is useful for debugging\n");
             printf(" -x to skip provided test names. If you do not\n");
@@ -1098,6 +1120,11 @@ wsf_unit_execute(
         if (!quiet && !strcmp(argv[i], "-q"))
         {
             quiet = WSF_UNIT_TRUE;
+            continue;
+        }
+        if (!detailed_report && !strcmp(argv[i], "-r"))
+        {
+            detailed_report = WSF_UNIT_TRUE;
             continue;
         }
         if (!skip_segv && !strcmp(argv[i], "-s"))
