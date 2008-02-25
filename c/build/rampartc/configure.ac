@@ -47,7 +47,7 @@ AC_CHECK_LIB(dl, dlopen)
 
 CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 if test "$GCC" = "yes"; then
-    CFLAGS="$CFLAGS -ansi -Wall -Werror -Wno-implicit-function-declaration"
+    CFLAGS="$CFLAGS -ansi -Wall  -Wno-implicit-function-declaration"
     #CFLAGS="$CFLAGS -ansi -Wall -Wno-implicit-function-declaration"
 fi
 
@@ -140,7 +140,9 @@ AC_CONFIG_FILES([Makefile \
     src/data/Makefile \
     src/handlers/Makefile \
     src/core/Makefile \
+    src/trust/Makefile \
     src/util/Makefile \
+    src/secconv/Makefile \
     test/Makefile \
     test/omxmlsec/Makefile \
     test/c14n/Makefile \
