@@ -16,9 +16,13 @@
  */
 
 #include <util.h>
-#include <axutil_dir_handler.h>
+#include "test_dir_handler.h"
 
 static void test_axutil_dir_handler_list_service_or_module_dirs(    
+    wsf_unit_test_case_t *tc,
+    void *data);
+
+static void test_axutil_dir_handler_list_services_or_modules_in_dir(    
     wsf_unit_test_case_t *tc,
     void *data);
 
@@ -42,6 +46,8 @@ wsf_unit_status_t WSF_UNIT_CALL test_dir_handler(wsf_unit_suite_t * suite)
 
     wsf_unit_run_test(suite,
         test_axutil_dir_handler_list_service_or_module_dirs, data);
+    wsf_unit_run_test(suite,
+        test_axutil_dir_handler_list_services_or_modules_in_dir, data);
 
     if (data)
     {
@@ -70,10 +76,79 @@ test_axutil_dir_handler_list_service_or_module_dirs(
 {
     axutil_env_t *env = NULL;
     axutil_test_data_t *test_data = (axutil_test_data_t *)data;
+    axutil_array_list_t *dir_array = NULL;
 
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Test Data Unavailable", test_data);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Test Environment Unavailable", test_data->test_env);
 
     env = test_data->test_env;
+#ifndef TEST_DIR_HANDLER_LIST_DIRS_IMPLEMENTED
     WSF_UNIT_NOT_IMPLEMENTED(tc, "Listing Service/Module Dir Test Not Implemented");
+#else
+    dir_array = axutil_dir_handler_list_service_or_module_dirs(env,
+                    TEST_DIR_HANDLER_LIST_DIRS_PATH);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Returned Array of Directories is NULL", dir_array);
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Incorrect List Size", 
+        TEST_DIR_HANDLER_LIST_DIRS_FOLDER_COUNT, axutil_array_list_size(dir_array, env));
+   if (dir_array)
+   {
+       int size = 0;
+       int j = 0;
+       axutil_file_t *del_dir = NULL;
+
+       size = axutil_array_list_size(dir_array, env);
+       for (j = 0; j < size; j++)
+       {
+           del_dir = axutil_array_list_get(dir_array, env, j);
+           WSF_UNIT_ASSERT_NOT_NULL(tc, "Reference on List is NULL", del_dir);
+           if (del_dir)
+           {
+               axutil_file_free(del_dir, env);
+           }
+       }
+       axutil_array_list_free(dir_array, env);
+   }
+#endif
+}
+
+static void WSF_UNIT_CALL
+test_axutil_dir_handler_list_services_or_modules_in_dir(
+    wsf_unit_test_case_t *tc,
+    void *data)
+{
+    axutil_env_t *env = NULL;
+    axutil_test_data_t *test_data = (axutil_test_data_t *)data;
+    axutil_array_list_t *file_array = NULL;
+
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Test Data Unavailable", test_data);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Test Environment Unavailable", test_data->test_env);
+
+    env = test_data->test_env;
+#ifndef TEST_DIR_HANDLER_LIST_DLLS_IMPLEMENTED
+    WSF_UNIT_NOT_IMPLEMENTED(tc, "Listing Services/Modules in Dir Test Not Implemented");
+#else
+    file_array = axutil_dir_handler_list_service_or_module_dirs(env,
+                    TEST_DIR_HANDLER_LIST_DLLS_PATH);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Returned Array of Files is NULL", dir_array);
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Incorrect List Size", 
+        TEST_DIR_HANDLER_LIST_DLLS_FILE_COUNT, axutil_array_list_size(dir_array, env));
+   if (file_array)
+   {
+       int size = 0;
+       int j = 0;
+       axutil_file_t *del_file = NULL;
+
+       size = axutil_array_list_size(file_array, env);
+       for (j = 0; j < size; j++)
+       {
+           del_file = axutil_array_list_get(file_array, env, j);
+           WSF_UNIT_ASSERT_NOT_NULL(tc, "Reference on List is NULL", del_file);
+           if (del_file)
+           {
+               axutil_file_free(del_file, env);
+           }
+       }
+       axutil_array_list_free(file_array, env);
+   }
+#endif
 }

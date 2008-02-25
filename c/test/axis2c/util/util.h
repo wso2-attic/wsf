@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef WSFC_UNIT_SAMPLE_H
-#define WSFC_UNIT_SAMPLE_H
+#ifndef UTIL_H
+#define UTIL_H
 
 #include <wsf_unit.h>
 #include <axutil_env.h>
