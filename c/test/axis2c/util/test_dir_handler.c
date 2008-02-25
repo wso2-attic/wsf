@@ -130,7 +130,7 @@ test_axutil_dir_handler_list_services_or_modules_in_dir(
     WSF_UNIT_NOT_IMPLEMENTED(tc, "Listing Services/Modules in Dir Test Not Implemented");
     /* Modify test_dir_handler.h, and rebuild to implement */
 #else
-    file_array = axutil_dir_handler_list_service_or_module_dirs(env,
+    file_array = axutil_dir_handler_list_services_or_modules_in_dir(env,
                     TEST_DIR_HANDLER_LIST_DLLS_PATH);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Returned Array of Files is NULL", file_array);
     WSF_UNIT_ASSERT_EQUALS_INT(tc, NULL, TEST_DIR_HANDLER_LIST_DLLS_FILE_COUNT,
