@@ -1254,7 +1254,6 @@ PHP_METHOD (ws_service, reply)
 {
     ws_object_ptr intern = NULL;
     zval * obj = NULL;
-/*  axis2_conf_t * conf = NULL; */
     axis2_conf_ctx_t * conf_ctx = NULL;
     wsf_svc_info_t * svc_info = NULL;
     wsf_req_info_t  req_info;
@@ -1262,8 +1261,6 @@ PHP_METHOD (ws_service, reply)
     wsf_worker_t * php_worker = NULL;
     zval ** raw_post;
     int status = 0;
-
- /*  Char content_length[40]; */
 
     char status_line[100];
     char *content_type = NULL;
@@ -1289,11 +1286,6 @@ PHP_METHOD (ws_service, reply)
         php_error_docref (NULL TSRMLS_CC, E_ERROR, "conf ctx missing");
         return;
     }
-
-	if (php_start_ob_buffer(NULL, 0, 0 TSRMLS_CC) != SUCCESS) {
-		php_error_docref(NULL TSRMLS_CC, E_ERROR,"ob_start failed");
-	}
-
 
     zend_is_auto_global ("_SERVER", sizeof ("_SERVER") - 1 TSRMLS_CC);
     
@@ -1409,7 +1401,6 @@ PHP_METHOD (ws_service, reply)
        
         status = wsf_worker_process_request (php_worker, ws_env_svr, &req_info, svc_info TSRMLS_CC);
         
-        php_end_ob_buffer(0, 0 TSRMLS_CC);
 
         if (status == WS_HTTP_ACCEPTED){
             sprintf (status_line, "%s 202 Accepted", req_info.http_protocol);
