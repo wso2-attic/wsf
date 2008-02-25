@@ -1,7 +1,7 @@
 datadir=$(prefix)
 docsdir=$(prefix)/docs
 samplesdir=$(prefix)/samples
-SUBDIRS=axis2c $(SANDESHA_DIR) $(RAMPART_DIR) $(SAVAN_DIR) $(WSCLIENT_DIR) test 
+SUBDIRS=axis2c $(SANDESHA_DIR) $(RAMPART_DIR) $(SAVAN_DIR) $(WSCLIENT_DIR) 
 docs_DATA=
 data_DATA=config/axis2.xml README \
         INSTALL COPYING NEWS CREDITS NOTICE 
@@ -11,7 +11,6 @@ dist-hook:
 
 samples:
 	sh build_samples.sh $(prefix)
-	sh link_samples.sh $(prefix)
 
 install-data-hook:
 	cp -rf docs/* $(docsdir)
@@ -21,7 +20,6 @@ install-data-hook:
 	rm -rf `find $(samplesdir)/ -type d -name *.deps`
 	rm -rf `find $(samplesdir)/ -type f -name Makefile`
 	rm -rf `find $(samplesdir)/ -type d -name autom4te.cache`
-	sh link.sh $(prefix)
 
-EXTRA_DIST=build_samples.sh config build.bat clean.bat docs CREDITS NOTICE examples LICENSE configure.in link_samples.sh link.sh 
+EXTRA_DIST=build_samples.sh config build.bat clean.bat docs CREDITS NOTICE examples LICENSE configure.in link_samples.sh link.sh build/build_optional.bat build/optional.mk
 
