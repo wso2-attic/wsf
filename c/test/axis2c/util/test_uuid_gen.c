@@ -28,6 +28,8 @@ wsf_unit_status_t WSF_UNIT_CALL test_uuid_gen(wsf_unit_suite_t * suite)
     axutil_env_t *env = NULL;
     axutil_test_data_t *data = NULL;
 
+    status = WSF_UNIT_ADD_SUB_SUITE(suite);
+
     env = CREATE_TEST_ENV();
     if (env)
     {
@@ -38,7 +40,6 @@ wsf_unit_status_t WSF_UNIT_CALL test_uuid_gen(wsf_unit_suite_t * suite)
         data->test_env = env;
         data->test_data = NULL;
     }
-    status = WSF_UNIT_ADD_SUB_SUITE(suite);
 
     wsf_unit_run_test(suite, test_axutil_uuid_gen_create, data);
 

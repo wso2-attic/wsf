@@ -54,6 +54,7 @@ wsf_unit_status_t WSF_UNIT_CALL test_string(wsf_unit_suite_t * suite)
     char *trim_out_str2 = "abcd efgh    ";
     char *trim_out_str3 = "abcd efgh";
 
+    status = WSF_UNIT_ADD_SUB_SUITE(suite);
 
     env = CREATE_TEST_ENV();
     if (env)
@@ -75,7 +76,6 @@ wsf_unit_status_t WSF_UNIT_CALL test_string(wsf_unit_suite_t * suite)
             data->test_data = NULL;
         }
     }
-    status = WSF_UNIT_ADD_SUB_SUITE(suite);
 
     trim_data->in = trim_in_str;
     trim_data->out = trim_out_str1;

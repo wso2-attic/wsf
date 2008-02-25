@@ -70,13 +70,14 @@ wsf_unit_status_t WSF_UNIT_CALL test_hash(wsf_unit_suite_t * suite)
     axutil_test_data_t *data = NULL;
     test_axutil_hash_t *test_data = NULL;
 
+    status = WSF_UNIT_ADD_SUB_SUITE(suite);
+
     env = CREATE_TEST_ENV();
     if (env)
     {
         data = AXIS2_MALLOC(env->allocator, sizeof(axutil_test_data_t));
     }
 
-    status = WSF_UNIT_ADD_SUB_SUITE(suite);
     if (data)
     {
         data->test_env = env;
@@ -84,6 +85,7 @@ wsf_unit_status_t WSF_UNIT_CALL test_hash(wsf_unit_suite_t * suite)
         if (test_data)
         {
             data->test_data = test_data;
+            test_data->hash = NULL;
             test_data->a1 = (a_t *) AXIS2_MALLOC(env->allocator, sizeof(a_t));
             if (test_data->a1)
             {

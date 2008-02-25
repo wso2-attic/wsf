@@ -23,12 +23,14 @@ wsf_unit_bool_t quiet = WSF_UNIT_FALSE;
 wsf_unit_bool_t list_tests = WSF_UNIT_FALSE;
 wsf_unit_bool_t invert = WSF_UNIT_FALSE;
 wsf_unit_bool_t detailed_report = WSF_UNIT_FALSE;
+wsf_unit_bool_t only_if_needed = WSF_UNIT_FALSE;
 wsf_unit_bool_t skip_segv = WSF_UNIT_FALSE;
 wsf_unit_bool_t in_run_test = WSF_UNIT_FALSE;
 FILE *log_file = NULL;
 const wsf_unit_char_t **test_list = NULL;
 int errors = 0;
 jmp_buf x;
+jmp_buf y;
 
 void sig_handler(
     int signal);
@@ -81,6 +83,9 @@ wsf_unit_suite_create(
     if (suite)
     {
         wsf_unit_status_t status = WSF_UNIT_FAILURE;
+
+        suite->head = NULL;
+        suite->tail = NULL;
         if (!suite_name)
         {
             return suite;
@@ -176,6 +181,10 @@ wsf_unit_suite_add_sub_suite(
         if (list_tests)
         {
             wsf_unit_print_message("%s\n", sub_suite->name);
+        }
+        if(only_if_needed)
+        {
+            longjmp(y, (int)WSF_UNIT_TRUE);
         }
         return WSF_UNIT_SUCCESS;
     }
@@ -364,7 +373,7 @@ wsf_unit_test_required(
         return WSF_UNIT_TRUE;
     }
     else if ((wsf_unit_test_exists(name) && !invert)
-        || (!(wsf_unit_test_exists(name) && invert)))
+        || ((!wsf_unit_test_exists(name) && invert)))
     {
         return WSF_UNIT_TRUE;
     }
@@ -1195,6 +1204,12 @@ wsf_unit_execute(
             printf("Usage: %s [options] [-f log_file] [test_names]\n", argv[0]);
             printf(" -f to provide a log_file\n");
             printf(" -l to list available tests instead of running\n");
+            printf(" -n to run tests only if neccessary and if not\n");
+            printf("    abort immediately. It is important to know\n");
+            printf("    that this might cause memory leaks in poor\n");
+            printf("    implementations of test cases. To use this\n");
+            printf("    option initialize the test suite/sub-suite\n");
+            printf("    before any local memory allocations");
             printf(" -q for a quite mode operation\n");
             printf(" -r to report not implemented tests in detail.\n");
             printf(" -s to stop catching Segmentation Faults. This\n");
@@ -1217,6 +1232,11 @@ wsf_unit_execute(
         if (!quiet && !strcmp(argv[i], "-q"))
         {
             quiet = WSF_UNIT_TRUE;
+            continue;
+        }
+        if (!only_if_needed && !strcmp(argv[i], "-n"))
+        {
+            only_if_needed = WSF_UNIT_TRUE;
             continue;
         }
         if (!detailed_report && !strcmp(argv[i], "-r"))
@@ -1273,7 +1293,9 @@ wsf_unit_execute(
 
     for (i = 0; i < testc; i++)
     {
-        if(!testv[i].execute(suite))
+        wsf_unit_bool_t is_list_only = WSF_UNIT_FALSE;
+        is_list_only = (wsf_unit_bool_t)setjmp(y);
+        if(!is_list_only && !testv[i].execute(suite) && !list_tests)
         {
             wsf_unit_print_error_message(
                 "Test Set Reported Failure\n%-20s:  ", "");

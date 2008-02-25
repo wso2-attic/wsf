@@ -95,6 +95,8 @@ wsf_unit_status_t WSF_UNIT_CALL test_thread(wsf_unit_suite_t * suite)
     axutil_test_data_t *data = NULL;
     test_axutil_thread_t *thread_data = NULL;
 
+    status = WSF_UNIT_ADD_SUB_SUITE(suite);
+
     env = CREATE_TEST_ENV();
     if (env)
     {
@@ -125,7 +127,6 @@ wsf_unit_status_t WSF_UNIT_CALL test_thread(wsf_unit_suite_t * suite)
             data->test_data = NULL;
         }
     }
-    status = WSF_UNIT_ADD_SUB_SUITE(suite);
 
     wsf_unit_run_test(suite, test_axutil_thread_init, data);
     wsf_unit_run_test(suite, test_axutil_thread_create, data);
@@ -145,42 +146,25 @@ wsf_unit_status_t WSF_UNIT_CALL test_thread(wsf_unit_suite_t * suite)
             AXIS2_FREE(env->allocator, thread_data->test_value1);
             thread_data->test_value1 = NULL;
         }
-        else
-        {
-            status = WSF_UNIT_FAILURE;
-        }
         if (thread_data->test_value2)
         {
             AXIS2_FREE(env->allocator, thread_data->test_value2);
             thread_data->test_value2 = NULL;
-        }
-        else
-        {
-            status = WSF_UNIT_FAILURE;
         }
         if (thread_data->test_value3)
         {
             AXIS2_FREE(env->allocator, thread_data->test_value3);
             thread_data->test_value3 = NULL;
         }
-        else
-        {
-            status = WSF_UNIT_FAILURE;
-        }
         if (thread_data->test_value4)
         {
             AXIS2_FREE(env->allocator, thread_data->test_value4);
             thread_data->test_value4 = NULL;
         }
-        else
+        if (thread_data->thread_lock)
         {
-            status = WSF_UNIT_FAILURE;
+            axutil_thread_mutex_destroy(thread_data->thread_lock);
         }
-        axutil_thread_mutex_destroy(thread_data->thread_lock);
-    }
-    else
-    {
-        status = WSF_UNIT_FAILURE;
     }
     wsf_unit_run_test(suite, test_axutil_thread_test_thread_free, data);
 

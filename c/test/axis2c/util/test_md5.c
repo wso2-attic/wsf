@@ -55,6 +55,7 @@ wsf_unit_status_t WSF_UNIT_CALL test_md5(wsf_unit_suite_t * suite)
     char *md_out_str6 = "d174ab98d277d9f5a5611c2c9f419d9f";
     char *md_out_str7 = "57edf4a22be3c955ac49da2e2107b67a";
 
+    status = WSF_UNIT_ADD_SUB_SUITE(suite);
 
     env = CREATE_TEST_ENV();
     if (env)
@@ -76,7 +77,6 @@ wsf_unit_status_t WSF_UNIT_CALL test_md5(wsf_unit_suite_t * suite)
             data->test_data = NULL;
         }
     }
-    status = WSF_UNIT_ADD_SUB_SUITE(suite);
 
     test_data->in = md_in_str1;
     test_data->out = md_out_str1;
