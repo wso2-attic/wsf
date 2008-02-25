@@ -17,6 +17,8 @@ cp -rf build/axis2c/util/src/stomp  axis2c/util/src/
 
 cp build/rampartc/Makefile.am rampartc
 cp build/rampartc/src/core/Makefile.am rampartc/src/core
+cp build/rampartc/src/secconv/Makefile.am rampartc/src/secconv
+cp build/rampartc/src/trust/Makefile.am rampartc/src/trust
 cp build/rampartc/src/Makefile.am rampartc/src
 cp build/sandesha2c/configure.ac sandesha2c
 cp build/sandesha2c/Makefile.am sandesha2c
