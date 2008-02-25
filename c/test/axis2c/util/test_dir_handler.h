@@ -30,8 +30,8 @@
 
 #define TEST_DIR_HANDLER_LIST_DIRS_FOLDER_COUNT 0
 
-/* uncomment to enable test_axutil_dir_handler_list_service_or_module_dirs */
-/* #define TEST_DIR_HANDLER_LIST_DLLS_IMPLEMENTED */
+/* uncomment to enable test_axutil_dir_handler_list_services_or_modules_in_dir */
+/* #define TEST_DIR_HANDLER_LIST_DLLS_IMPLEMENTED */ 
 
 #ifndef WIN32
     #define TEST_DIR_HANDLER_LIST_DLLS_PATH "/tmp/test/"

@@ -17,6 +17,7 @@
 
 #include <util.h>
 #include "test_dir_handler.h"
+#include <axutil_file.h>
 
 static void test_axutil_dir_handler_list_service_or_module_dirs(    
     wsf_unit_test_case_t *tc,
@@ -129,9 +130,9 @@ test_axutil_dir_handler_list_services_or_modules_in_dir(
 #else
     file_array = axutil_dir_handler_list_service_or_module_dirs(env,
                     TEST_DIR_HANDLER_LIST_DLLS_PATH);
-    WSF_UNIT_ASSERT_NOT_NULL(tc, "Returned Array of Files is NULL", dir_array);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Returned Array of Files is NULL", file_array);
     WSF_UNIT_ASSERT_EQUALS_INT(tc, "Incorrect List Size", 
-        TEST_DIR_HANDLER_LIST_DLLS_FILE_COUNT, axutil_array_list_size(dir_array, env));
+        TEST_DIR_HANDLER_LIST_DLLS_FILE_COUNT, axutil_array_list_size(file_array, env));
    if (file_array)
    {
        int size = 0;
