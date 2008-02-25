@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2005-2008 WSO2, Inc. http://wso2.com
  *
@@ -22,23 +23,27 @@
 /* uncomment to enable test_axutil_dir_handler_list_service_or_module_dirs */
 /* #define TEST_DIR_HANDLER_LIST_DIRS_IMPLEMENTED */
 
+/* Absolute path to AXIS2C_HOME */
 #ifndef WIN32
     #define TEST_DIR_HANDLER_LIST_DIRS_PATH "/tmp/test/"
 #else
     #define TEST_DIR_HANDLER_LIST_DIRS_PATH "C:\temp\test"
 #endif
 
+/* Number of sub folders with dlls in AXIS2C_HOME/services + AXIS2C_HOME/modules */
 #define TEST_DIR_HANDLER_LIST_DIRS_FOLDER_COUNT 0
 
 /* uncomment to enable test_axutil_dir_handler_list_services_or_modules_in_dir */
 /* #define TEST_DIR_HANDLER_LIST_DLLS_IMPLEMENTED */ 
 
+/* Absolute path to AXIS2C_HOME */
 #ifndef WIN32
     #define TEST_DIR_HANDLER_LIST_DLLS_PATH "/tmp/test/"
 #else
     #define TEST_DIR_HANDLER_LIST_DLLS_PATH "C:\temp\test"
 #endif
 
+/* Number of dlls in sub folders of AXIS2C_HOME/services + AXIS2C_HOME/modules */
 #define TEST_DIR_HANDLER_LIST_DLLS_FILE_COUNT 0
 
 #endif
