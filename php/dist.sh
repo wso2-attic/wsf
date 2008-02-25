@@ -8,7 +8,7 @@ make samples
 cd ..
 cp wsf_c_dist_hook.sh wsf_c/dist_hook.sh
 sed -i "s/src//g" Makefile.am
-./configure --with-wsf --enable-openssl --with-apache2=/usr/local/apache2/include --with-axis2=`pwd`/wsf_c/axis2c/include --enable-tcp=yes --enable-tests=yes --enable-savan=no --with-xmpp --prefix=`php-config --extension-dir`/wsf_c
+./configure --with-wsf --enable-openssl --with-apache2=/usr/local/apache2/include --with-axis2=`pwd`/wsf_c/axis2c/include --enable-tcp=yes --enable-tests=no --enable-savan=no --with-xmpp --with-archive --prefix=`php-config --extension-dir`/wsf_c 
 make dist
 tar xzf wso2-wsf-php-src-1.2.1.tar.gz
 rm wso2-wsf-php-src-1.2.1.tar.gz
