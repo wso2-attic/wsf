@@ -538,6 +538,37 @@ wsf_unit_assert_equals_int(
 }
 
 WSF_UNIT_EXTERN void WSF_UNIT_CALL
+wsf_unit_assert_equals_long(
+    wsf_unit_test_case_t *test_case,
+    const char *message,
+    const long expected,
+    const long actual,
+    const int line_no)
+{
+    if (!test_case->status)
+    {
+        return;
+    }
+
+    if (expected == actual)
+    {
+        return;
+    }
+
+    test_case->status = WSF_UNIT_FAILURE;
+    if (message)
+    {
+        wsf_unit_print_error_message("Line %d: %s\n%-20s:  ", line_no, message, "");
+    }
+    else
+    {
+        wsf_unit_print_error_message(
+             "Line %d: expected <%ld>, but saw <%ld>\n%-20s:  ", line_no,
+             expected, actual, "");
+    }
+}
+
+WSF_UNIT_EXTERN void WSF_UNIT_CALL
 wsf_unit_assert_equals_float(
     wsf_unit_test_case_t *test_case,
     const char *message,
@@ -755,6 +786,37 @@ wsf_unit_assert_not_equals_int(
         wsf_unit_print_error_message(
              "Line %d: did not expect <%d>, but saw <%d>\n%-20s:  ", line_no,
              expected, actual, "");   
+    }
+}
+
+WSF_UNIT_EXTERN void WSF_UNIT_CALL
+wsf_unit_assert_not_equals_long(
+    wsf_unit_test_case_t *test_case,
+    const char *message,
+    const long expected,
+    const long actual,
+    const int line_no)
+{
+    if (!test_case->status)
+    {
+        return;
+    }
+
+    if (expected != actual)
+    {
+        return;
+    }
+
+    test_case->status = WSF_UNIT_FAILURE;
+    if (message)
+    {
+        wsf_unit_print_error_message("Line %d: %s\n%-20s:  ", line_no, message, "");
+    }
+    else
+    {
+        wsf_unit_print_error_message(
+             "Line %d: did not expect <%ld>, but saw <%ld>\n%-20s:  ", line_no,
+             expected, actual, "");  
     }
 }
 

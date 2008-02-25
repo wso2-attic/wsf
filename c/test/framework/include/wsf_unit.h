@@ -101,6 +101,14 @@ extern "C"
         const int line_no);
 
     WSF_UNIT_EXTERN void WSF_UNIT_CALL
+    wsf_unit_assert_equals_long(
+        wsf_unit_test_case_t *test_case,
+        const char *message,
+        const long expected,
+        const long actual,
+        const int line_no);
+
+    WSF_UNIT_EXTERN void WSF_UNIT_CALL
     wsf_unit_assert_equals_float(
         wsf_unit_test_case_t *test_case,
         const char *message,
@@ -154,6 +162,14 @@ extern "C"
         const char *message,
         const int expected,
         const int actual,
+        const int line_no);
+
+    WSF_UNIT_EXTERN void WSF_UNIT_CALL
+    wsf_unit_assert_not_equals_long(
+        wsf_unit_test_case_t *test_case,
+        const char *message,
+        const long expected,
+        const long actual,
         const int line_no);
 
     WSF_UNIT_EXTERN void WSF_UNIT_CALL
@@ -262,6 +278,9 @@ extern "C"
     #define WSF_UNIT_ASSERT_EQUALS_INT(p, q, r, s) \
         wsf_unit_assert_equals_int(p, q, r, s, __LINE__)
 
+    #define WSF_UNIT_ASSERT_EQUALS_LONG(p, q, r, s) \
+        wsf_unit_assert_equals_long(p, q, r, s, __LINE__)
+
     #define WSF_UNIT_ASSERT_EQUALS_FLOAT(p, q, r, s) \
         wsf_unit_assert_equals_float(p, q, r, s, __LINE__)
 
@@ -282,6 +301,9 @@ extern "C"
 
     #define WSF_UNIT_ASSERT_NOT_EQUALS_INT(p, q, r, s) \
         wsf_unit_assert_not_equals_int(p, q, r, s, __LINE__)
+
+    #define WSF_UNIT_ASSERT_NOT_EQUALS_LONG(p, q, r, s) \
+        wsf_unit_assert_not_equals_long(p, q, r, s, __LINE__)
 
     #define WSF_UNIT_ASSERT_NOT_EQUALS_FLOAT(p, q, r, s) \
         wsf_unit_assert_not_equals_float(p, q, r, s, __LINE__)
