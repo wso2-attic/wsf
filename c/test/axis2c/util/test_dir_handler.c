@@ -84,8 +84,8 @@ test_axutil_dir_handler_list_service_or_module_dirs(
 
     env = test_data->test_env;
 #ifndef TEST_DIR_HANDLER_LIST_DIRS_IMPLEMENTED
-    WSF_UNIT_NOT_IMPLEMENTED(tc, "Listing Service/Module Dir Test Not Implemented");
-    /* Modify test_dir_handler.h, and rebuild to implement */
+    WSF_UNIT_NOT_IMPLEMENTED(tc, "Listing Service/Module Dir Test Not Enabled");
+    /* Modify test_dir_handler.h, and rebuild to enable */
 #else
     dir_array = axutil_dir_handler_list_service_or_module_dirs(env,
                     TEST_DIR_HANDLER_LIST_DIRS_PATH);
@@ -127,8 +127,8 @@ test_axutil_dir_handler_list_services_or_modules_in_dir(
 
     env = test_data->test_env;
 #ifndef TEST_DIR_HANDLER_LIST_DLLS_IMPLEMENTED
-    WSF_UNIT_NOT_IMPLEMENTED(tc, "Listing Services/Modules in Dir Test Not Implemented");
-    /* Modify test_dir_handler.h, and rebuild to implement */
+    WSF_UNIT_NOT_IMPLEMENTED(tc, "Listing Services/Modules in Dir Test Not Enabled");
+    /* Modify test_dir_handler.h, and rebuild to enable */
 #else
     file_array = axutil_dir_handler_list_services_or_modules_in_dir(env,
                     TEST_DIR_HANDLER_LIST_DLLS_PATH);
