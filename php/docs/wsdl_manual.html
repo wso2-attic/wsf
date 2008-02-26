@@ -205,6 +205,13 @@ class productInfoWrapper{
 	public $status; 
 } 
 
+
+<p>
+<b>NOTE:</b>
+You can use the
+<a href="wsdl_manual.html#4">wsdl2php.php script</a> to generate the classes for the WSDL.
+</p>
+
 After creating the class map it should be passed to WSClient constructor as, <span style="font-family: Courier New">
 <span style="font-family: Verdana">
 $client = new WSClient(array("<span style="color: #ff3333">wsdl</span>"=&gt;"<span style="color: #ff0000">sample_wsdl_11<span>.wsdl</span></span>", 
@@ -350,7 +357,92 @@ function with mixed arguments.<br />
         
     
     
-    
+
+<p>
+Simmilar to the client you can use the class map API for implementing services as well.
+For the above service you can use the classmap API in the following way. You can use the
+<a href="wsdl_manual.html#4">wsdl2php.php script</a> to generate the classes for the WSDL.
+</p>
+
+<pre class="php"><span style="color: rgb(0, 0, 0); font-weight: bold;">class</span> orderInfo <span style="color: rgb(102, 204, 102);">{</span> 
+    <span style="color: rgb(0, 0, 0); font-weight: bold;">public</span> <span style="color: rgb(0, 0, 255);">$productName</span>; <span style="color: rgb(128, 128, 128); font-style: italic;">// string</span>
+    <span style="color: rgb(0, 0, 0); font-weight: bold;">public</span> <span style="color: rgb(0, 0, 255);">$quantity</span>; <span style="color: rgb(128, 128, 128); font-style: italic;">// float</span>
+
+    <span style="color: rgb(0, 0, 0); font-weight: bold;">public</span> <span style="color: rgb(0, 0, 255);">$date</span>; <span style="color: rgb(128, 128, 128); font-style: italic;">// dateTime</span>
+    <span style="color: rgb(0, 0, 0); font-weight: bold;">public</span> <span style="color: rgb(0, 0, 255);">$orderNo</span>; <span style="color: rgb(128, 128, 128); font-style: italic;">// int</span>
+<span style="color: rgb(102, 204, 102);">}</span>
+&nbsp;
+
+<span style="color: rgb(0, 0, 0); font-weight: bold;">class</span> orderDetails <span style="color: rgb(102, 204, 102);">{</span> 
+    <span style="color: rgb(0, 0, 0); font-weight: bold;">public</span> <span style="color: rgb(0, 0, 255);">$shipTo</span>; <span style="color: rgb(128, 128, 128); font-style: italic;">// address</span>
+    <span style="color: rgb(0, 0, 0); font-weight: bold;">public</span> <span style="color: rgb(0, 0, 255);">$billTo</span>; <span style="color: rgb(128, 128, 128); font-style: italic;">// address</span>
+
+    <span style="color: rgb(0, 0, 0); font-weight: bold;">public</span> <span style="color: rgb(0, 0, 255);">$product</span>; <span style="color: rgb(128, 128, 128); font-style: italic;">// productInfo</span>
+<span style="color: rgb(102, 204, 102);">}</span>
+&nbsp;
+<span style="color: rgb(0, 0, 0); font-weight: bold;">class</span> address <span style="color: rgb(102, 204, 102);">{</span> 
+    <span style="color: rgb(0, 0, 0); font-weight: bold;">public</span> <span style="color: rgb(0, 0, 255);">$name</span>; <span style="color: rgb(128, 128, 128); font-style: italic;">// string</span>
+
+    <span style="color: rgb(0, 0, 0); font-weight: bold;">public</span> <span style="color: rgb(0, 0, 255);">$street</span>; <span style="color: rgb(128, 128, 128); font-style: italic;">// string</span>
+    <span style="color: rgb(0, 0, 0); font-weight: bold;">public</span> <span style="color: rgb(0, 0, 255);">$city</span>; <span style="color: rgb(128, 128, 128); font-style: italic;">// string</span>
+    <span style="color: rgb(0, 0, 0); font-weight: bold;">public</span> <span style="color: rgb(0, 0, 255);">$state</span>; <span style="color: rgb(128, 128, 128); font-style: italic;">// string</span>
+
+    <span style="color: rgb(0, 0, 0); font-weight: bold;">public</span> <span style="color: rgb(0, 0, 255);">$zip</span>; <span style="color: rgb(128, 128, 128); font-style: italic;">// decimal</span>
+<span style="color: rgb(102, 204, 102);">}</span>
+&nbsp;
+<span style="color: rgb(0, 0, 0); font-weight: bold;">class</span> productInfo <span style="color: rgb(102, 204, 102);">{</span> 
+    <span style="color: rgb(0, 0, 0); font-weight: bold;">public</span> <span style="color: rgb(0, 0, 255);">$productId</span>; <span style="color: rgb(128, 128, 128); font-style: italic;">// int</span>
+
+    <span style="color: rgb(0, 0, 0); font-weight: bold;">public</span> <span style="color: rgb(0, 0, 255);">$shippingDate</span>; <span style="color: rgb(128, 128, 128); font-style: italic;">// dateTime</span>
+    <span style="color: rgb(0, 0, 0); font-weight: bold;">public</span> <span style="color: rgb(0, 0, 255);">$status</span>; <span style="color: rgb(128, 128, 128); font-style: italic;">// boolean</span>
+<span style="color: rgb(102, 204, 102);">}</span>
+&nbsp;
+
+<span style="color: rgb(128, 128, 128); font-style: italic;">// define PHP functions that maps to WSDL operations </span>
+<span style="color: rgb(0, 0, 0); font-weight: bold;">function</span> QueryPurchaseOrder<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$input</span><span style="color: rgb(102, 204, 102);">)</span> <span style="color: rgb(102, 204, 102);">{</span>
+    <span style="color: rgb(128, 128, 128); font-style: italic;">// TODO: fill in the business logic</span>
+    <span style="color: rgb(128, 128, 128); font-style: italic;">// NOTE: $input is of type orderInfo</span>
+
+    <span style="color: rgb(128, 128, 128); font-style: italic;">// NOTE: should return an object of type orderDetails</span>
+&nbsp;
+    <span style="color: rgb(0, 0, 255);">$productName</span> = <span style="color: rgb(0, 0, 255);">$input</span>-&gt;<span style="color: rgb(0, 102, 0);">productName</span>;
+    <span style="color: rgb(0, 0, 255);">$quantity</span> = <span style="color: rgb(0, 0, 255);">$input</span>-&gt;<span style="color: rgb(0, 102, 0);">quantity</span>;
+    <span style="color: rgb(0, 0, 255);">$date</span> = <span style="color: rgb(0, 0, 255);">$input</span>-&gt;<span style="color: rgb(0, 102, 0);">date</span>;
+    <span style="color: rgb(0, 0, 255);">$orderNo</span> = <span style="color: rgb(0, 0, 255);">$input</span>-&gt;<span style="color: rgb(0, 102, 0);">orderNo</span>;
+
+&nbsp;
+    <span style="color: rgb(128, 128, 128); font-style: italic;">// You can process the input with above data,</span>
+&nbsp;
+    <span style="color: rgb(0, 0, 255);">$shipTo</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> address<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(102, 204, 102);">)</span>;
+    <span style="color: rgb(0, 0, 255);">$shipTo</span>-&gt;<span style="color: rgb(0, 102, 0);">name</span> = <span style="color: rgb(255, 0, 0);">"Jane Smith"</span>;
+    <span style="color: rgb(0, 0, 255);">$shipTo</span>-&gt;<span style="color: rgb(0, 102, 0);">street</span> = <span style="color: rgb(255, 0, 0);">"York Streat"</span>;
+    <span style="color: rgb(0, 0, 255);">$shipTo</span>-&gt;<span style="color: rgb(0, 102, 0);">city</span> = <span style="color: rgb(255, 0, 0);">"colombo"</span>;
+    <span style="color: rgb(0, 0, 255);">$shipTo</span>-&gt;<span style="color: rgb(0, 102, 0);">zip</span> = <span style="color: rgb(255, 0, 0);">"32234"</span>;
+    <span style="color: rgb(0, 0, 255);">$shipTo</span>-&gt;<span style="color: rgb(0, 102, 0);">state</span> = <span style="color: rgb(255, 0, 0);">"-"</span>;
+
+&nbsp;
+    <span style="color: rgb(0, 0, 255);">$billTo</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> address<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(102, 204, 102);">)</span>;
+    <span style="color: rgb(0, 0, 255);">$billTo</span>-&gt;<span style="color: rgb(0, 102, 0);">name</span> = <span style="color: rgb(255, 0, 0);">"John Smith"</span>;
+    <span style="color: rgb(0, 0, 255);">$billTo</span>-&gt;<span style="color: rgb(0, 102, 0);">street</span> = <span style="color: rgb(255, 0, 0);">"Maple Street"</span>;
+    <span style="color: rgb(0, 0, 255);">$billTo</span>-&gt;<span style="color: rgb(0, 102, 0);">city</span> = <span style="color: rgb(255, 0, 0);">"LA"</span>; 
+    <span style="color: rgb(0, 0, 255);">$billTo</span>-&gt;<span style="color: rgb(0, 102, 0);">state</span> = <span style="color: rgb(255, 0, 0);">"USA"</span>;
+    <span style="color: rgb(0, 0, 255);">$billTo</span>-&gt;<span style="color: rgb(0, 102, 0);">zip</span> = <span style="color: rgb(204, 102, 204);">55432</span>;
+
+&nbsp;
+    <span style="color: rgb(0, 0, 255);">$product</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> ProductInfo<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(102, 204, 102);">)</span>;
+    <span style="color: rgb(0, 0, 255);">$product</span>-&gt;<span style="color: rgb(0, 102, 0);">productId</span> = <span style="color: rgb(204, 102, 204);">2344</span>;
+    <span style="color: rgb(0, 0, 255);">$product</span>-&gt;<span style="color: rgb(0, 102, 0);">shippingDate</span> = <a href="http://www.php.net/date"><span style="color: rgb(0, 0, 102);">date</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(204, 102, 204);">20080101</span><span style="color: rgb(102, 204, 102);">)</span>;
+    <span style="color: rgb(0, 0, 255);">$product</span>-&gt;<span style="color: rgb(0, 102, 0);">status</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">TRUE</span>;
+
+&nbsp;
+&nbsp;
+    <span style="color: rgb(0, 0, 255);">$return_value</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> orderDetails<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(102, 204, 102);">)</span>;
+    <span style="color: rgb(0, 0, 255);">$return_value</span>-&gt;<span style="color: rgb(0, 102, 0);">shipTo</span> = <span style="color: rgb(0, 0, 255);">$shipTo</span>;
+    <span style="color: rgb(0, 0, 255);">$return_value</span>-&gt;<span style="color: rgb(0, 102, 0);">billTo</span> = <span style="color: rgb(0, 0, 255);">$billTo</span>;
+    <span style="color: rgb(0, 0, 255);">$return_value</span>-&gt;<span style="color: rgb(0, 102, 0);">product</span> = <span style="color: rgb(0, 0, 255);">$product</span>;
+    <span style="color: rgb(177, 177, 0);">return</span> <span style="color: rgb(0, 0, 255);">$return_value</span>;
+
+<span style="color: rgb(102, 204, 102);">}</span></pre>
 
 <h3 id="3">10.3. WSDL Generation for a Given Service</h3>
 
@@ -369,5 +461,37 @@ echoService.php, a request should be sent as,</p>
 
 <p>For more information on the annotation syntax, please have a look at the
 <a href="wsdl_generation_api.html">WSDL generation API document</a>.</p>
+
+<p>http://localhost/echoService.php?wsdl</p>
+
+<p>or</p>
+
+<p>http://localhost/echoService.php?wsdl2</p>
+
+<p>For more information on the annotation syntax, please have a look at the
+<a href="wsdl_generation_api.html">WSDL generation API document</a>.</p>
+
+
+<h3 id="4">10.4. WSDL to PHP Code Generation</h3>
+
+<p>
+You can Generate the PHP code for a given WSDL using wsdl2php.php script bundle
+with the WSO2 WSF/PHP distribution. You can find the wsdl2php.php script inside the
+'scripts' directory.
+</p>
+
+<p>
+Here is how you can use this script.
+</p>
+
+<pre>
+
+Usage: <i>php wsdl2php.php [-s] &lt;wsdl&gt; </i>
+    wsdl - URL or path to WSDL file
+
+    Options:
+        -s        Generate code for service.
+                  By default this is false, meaning code for client will be generated.
+</pre>
 </body>
 </html>
