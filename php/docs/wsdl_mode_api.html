@@ -80,13 +80,48 @@ array of named output parameters.</p>
 <p>The following is a sample code demonstrating the use of WSClientProxy.
 Consider we have a WSDL which defines the operation "echoString" which echoes
 a given value.</p>
-<pre>
-            $client = new WSClient(array("wsdl"=&gt;"sample.wsdl"));
+<pre>            $client = new WSClient(array("wsdl"=&gt;"sample.wsdl"));
             $proxy = $client-&gt;getProxy();
             $value = $proxy-&gt;echoString(array("Hello World"));
         </pre>
 
 <h2 id="wsservice_wsdl_mode">Writing a Service to use WSDL mode</h2>
+
+<p><h2 id="H2_1">
+            WSService Options for WSDL Mode</h2>
+
+<table border="1">
+  <tbody>
+    <tr>
+      <td style="width: 100px; height: 15px"><strong>Option</strong></td>
+      <td style="width: 100px; height: 15px"><strong>Data Type</strong></td>
+      <td style="width: 100px; height: 15px"><strong>Value
+      Domain</strong></td>
+      <td style="width: 100px; height: 15px"><strong>Default
+      Value</strong></td>
+      <td style="width: 373px; height: 15px"><strong>Description</strong></td>
+    </tr>
+    <tr>
+      <td style="width: 100px; height: 21px">wsdl</td>
+      <td style="width: 100px; height: 21px">string</td>
+      <td style="width: 100px; height: 21px">this should be a URI or&nbsp; a
+        filename</td>
+      <td style="width: 100px; height: 21px">none</td>
+      <td style="width: 373px; height: 21px">You can provide a WSDL file or a
+        URL of the WSDL file for this option</td>
+    </tr>
+    <tr>
+      <td style="width: 100px; height: 21px">classmap</td>
+      <td style="width: 100px; height: 21px">array</td>
+      <td style="width: 100px; height: 21px">array of class names </td>
+      <td style="width: 100px; height: 21px">none</td>
+      <td style="width: 373px; height: 21px">maps some WSDL complex types to PHP classes. 
+      This option must be an array with WSDL types as keys and names of PHP classes as values.</td>
+    </tr>
+  </tbody>
+</table>
+
+
 
 <p>By default, WSO2 WSF/PHP uses functions that accept a WSMessage instance
 as the argument for service functions. However, when using the WSDL mode on
@@ -94,9 +129,15 @@ the server side this is not necessary. You can write the functions that will
 accept multiple arguments for functions. To specify the type of arguments
 that a particular function takes, there are two constant values defined as
 "WSMESSAGE" and "MIXED". When a function is specified as MIXED it means that
-it is a function that accepts arguments other than a WSMessage instance. For
-the WSDL mode on the server side, please use the MIXED type functions.</p>
+it is a function that accepts arguments other than a WSMessage instance. </p>
+            <p>
+                By default, when you specify the wsdl file to the service with the option "wsdl"=&gt;"&lt;wsdl
+                file location&gt;", the service object assumes that the operations defined for this
+                perticular service will accept multiple arguements.
+            </p>
+            <p>
 Example:
+            </p>
 <pre>    function echoFunction($a) {
         return $a;
     }
@@ -110,5 +151,6 @@ Example:
 
     $svr-&gt;reply();
  </pre>
+</p>
 </body>
 </html>
