@@ -26,11 +26,13 @@ wsf_unit_bool_t detailed_report = WSF_UNIT_FALSE;
 wsf_unit_bool_t only_if_needed = WSF_UNIT_FALSE;
 wsf_unit_bool_t skip_segv = WSF_UNIT_FALSE;
 wsf_unit_bool_t in_run_test = WSF_UNIT_FALSE;
+wsf_unit_bool_t in_execute = WSF_UNIT_FALSE;
 FILE *log_file = NULL;
 const wsf_unit_char_t **test_list = NULL;
 int errors = 0;
 jmp_buf x;
 jmp_buf y;
+jmp_buf z;
 
 void sig_handler(
     int signal);
@@ -1294,13 +1296,23 @@ wsf_unit_execute(
     for (i = 0; i < testc; i++)
     {
         wsf_unit_bool_t is_list_only = WSF_UNIT_FALSE;
+        wsf_unit_bool_t is_exception = WSF_UNIT_FALSE;
         is_list_only = (wsf_unit_bool_t)setjmp(y);
-        if(!is_list_only && !testv[i].execute(suite) && !list_tests)
+        is_exception = (wsf_unit_bool_t)setjmp(z);
+        in_execute = WSF_UNIT_TRUE;
+        if(!is_list_only && !is_exception && !testv[i].execute(suite) && !list_tests)
         {
             wsf_unit_print_error_message(
                 "Test Set Reported Failure\n%-20s:  ", "");
             errors++;
         }
+        else if(is_exception)
+        {
+            wsf_unit_print_error_message(
+                "Segmentation Fault in Test Initialization\n%-20s:  ", "");
+            errors++;
+        }
+        in_execute = WSF_UNIT_FALSE;
     }
 
     wsf_unit_report_suite(suite);
@@ -1329,6 +1341,11 @@ sig_handler(
         {
             in_run_test = WSF_UNIT_FALSE;
             longjmp(x, (int)WSF_UNIT_TRUE);
+        }
+        else if (in_execute)
+        {
+            in_execute = WSF_UNIT_FALSE;
+            longjmp(z, (int)WSF_UNIT_TRUE);
         }
         break;
     default:
