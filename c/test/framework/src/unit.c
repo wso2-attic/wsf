@@ -1297,23 +1297,36 @@ wsf_unit_execute(
     {
         wsf_unit_bool_t is_list_only = WSF_UNIT_FALSE;
         wsf_unit_bool_t is_exception = WSF_UNIT_FALSE;
-        is_list_only = (wsf_unit_bool_t)setjmp(y);
-        is_exception = (wsf_unit_bool_t)setjmp(z);
-        signal(SIGSEGV, sig_handler);
-        in_execute = WSF_UNIT_TRUE;
-        if(!is_list_only && !is_exception && !testv[i].execute(suite) && !list_tests)
+
+        if (!skip_segv)
         {
-            wsf_unit_print_error_message(
-                "Test Set Reported Failure\n%-20s:  ", "");
-            errors++;
+            signal(SIGSEGV, sig_handler);
+            is_list_only = (wsf_unit_bool_t)setjmp(y);
+            is_exception = (wsf_unit_bool_t)setjmp(z);
+            in_execute = WSF_UNIT_TRUE;
+            if(!is_list_only && !is_exception && !testv[i].execute(suite) && !list_tests)
+            {
+                wsf_unit_print_error_message(
+                    "Test Set Reported Failure\n%-20s:  ", "");
+                errors++;
+            }
+            else if(is_exception && !list_tests)
+            {
+                wsf_unit_print_error_message(
+                    "Segmentation Fault in Test Initialization\n%-20s:  ", "");
+                errors++;
+            }
+            in_execute = WSF_UNIT_FALSE;
         }
-        else if(is_exception && !list_tests)
+        else
         {
-            wsf_unit_print_error_message(
-                "Segmentation Fault in Test Initialization\n%-20s:  ", "");
-            errors++;
+            if(!is_list_only && !testv[i].execute(suite) && !list_tests)
+            {
+                wsf_unit_print_error_message(
+                    "Test Set Reported Failure\n%-20s:  ", "");
+                errors++;
+            }
         }
-        in_execute = WSF_UNIT_FALSE;
     }
 
     wsf_unit_report_suite(suite);
