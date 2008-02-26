@@ -1,0 +1,4877 @@
+<html>
+
+<head>
+  <title>WSF/PHP Samples</title>
+  <style type="text/css">
+* { 
+  font-family: Verdana, sans-serif;
+  font-size: 98%;
+}
+
+.t-head { font-weight: bold; background: #007f99; padding: 5px; color: #fff; }
+
+.odd { background: #ffffcc; }
+.odd td { padding: 5px; vertical-align: top; }
+
+.even { background: #e5ffcc; }
+.even td { padding: 5px; vertical-align: top; }
+
+.topic { background: #88daeb; }
+.topic td { padding: 5px; }
+
+a:link, a:visited { color: blue; }
+
+a:link img { border: none; }
+
+td.t-head a:link { color: #88daeb; }
+
+pre { background: #fff; }
+  </style>
+  <script language="javascript" src="js/moo.js"></script>
+  <script language="javascript">
+window.addEvent('domready', function() {
+    var echoservice = new Fx.Slide('code-echo-service');
+    echoservice.hide()
+    $('toggle-echo-service').addEvent('click', function(e) {
+        e = new Event(e);
+        echoservice.toggle();
+        e.stop();
+    });
+    var echoclient = new Fx.Slide('code-echo-client');
+    echoclient.hide()
+    $('toggle-echo-client').addEvent('click', function(e) {
+        e = new Event(e);
+        echoclient.toggle();
+        e.stop();
+    });
+    var echoclientsoap11 = new Fx.Slide('code-echo-client-soap11');
+    echoclientsoap11.hide()
+    $('toggle-echo-client-soap11').addEvent('click', function(e) {
+        e = new Event(e);
+        echoclientsoap11.toggle();
+        e.stop();
+    });
+    var echoserviceaddr = new Fx.Slide('code-echo-service-addr');
+    echoserviceaddr.hide()
+    $('toggle-echo-service-addr').addEvent('click', function(e) {
+        e = new Event(e);
+        echoserviceaddr.toggle();
+        e.stop();
+    });
+    var echoclientaddr = new Fx.Slide('code-echo-client-addr');
+    echoclientaddr.hide()
+    $('toggle-echo-client-addr').addEvent('click', function(e) {
+        e = new Event(e);
+        echoclientaddr.toggle();
+        e.stop();
+    });
+    var echoclientmultipleinvocation = new Fx.Slide('code-echo-client-multiple-invocation');
+    echoclientmultipleinvocation.hide()
+    $('toggle-echo-client-multiple-invocation').addEvent('click', function(e) {
+        e = new Event(e);
+        echoclientmultipleinvocation.toggle();
+        e.stop();
+    });
+    var notifyservice = new Fx.Slide('code-notify-service');
+    notifyservice.hide()
+    $('toggle-notify-service').addEvent('click', function(e) {
+        e = new Event(e);
+        notifyservice.toggle();
+        e.stop();
+    });
+    var notifyclient = new Fx.Slide('code-notify-client');
+    notifyclient.hide()
+    $('toggle-notify-client').addEvent('click', function(e) {
+        e = new Event(e);
+        notifyclient.toggle();
+        e.stop();
+    });
+    var faultclient = new Fx.Slide('code-fault-client');
+    faultclient.hide()
+    $('toggle-fault-client').addEvent('click', function(e) {
+        e = new Event(e);
+        faultclient.toggle();
+        e.stop();
+    });
+    var faultservice = new Fx.Slide('code-fault-service');
+    faultservice.hide()
+    $('toggle-fault-service').addEvent('click', function(e) {
+        e = new Event(e);
+        faultservice.toggle();
+        e.stop();
+    });
+    var mathservice = new Fx.Slide('code-math-service');
+    mathservice.hide()
+    $('toggle-math-service').addEvent('click', function(e) {
+        e = new Event(e);
+        mathservice.toggle();
+        e.stop();
+    });
+    var mathclient = new Fx.Slide('code-math-client');
+    mathclient.hide()
+    $('toggle-math-client').addEvent('click', function(e) {
+        e = new Event(e);
+        mathclient.toggle();
+        e.stop();
+    });
+    var echoclientrest = new Fx.Slide('code-echo-client-rest');
+    echoclientrest.hide()
+    $('toggle-echo-client-rest').addEvent('click', function(e) {
+        e = new Event(e);
+        echoclientrest.toggle();
+        e.stop();
+    });
+    var addsoapheaderclient = new Fx.Slide('code-add-soap-header-client');
+    addsoapheaderclient.hide()
+    $('toggle-add-soap-header-client').addEvent('click', function(e) {
+        e = new Event(e);
+        addsoapheaderclient.toggle();
+        e.stop();
+    });
+    var replyechoservice = new Fx.Slide('code-reply-echo-service');
+    replyechoservice.hide()
+    $('toggle-reply-echo-service').addEvent('click', function(e) {
+        e = new Event(e);
+        replyechoservice.toggle();
+        e.stop();
+    });
+    var requestclientdom = new Fx.Slide('code-request-client-dom');
+    requestclientdom.hide()
+    $('toggle-request-client-dom').addEvent('click', function(e) {
+        e = new Event(e);
+        requestclientdom.toggle();
+        e.stop();
+    });
+    var requestclientmsg = new Fx.Slide('code-request-client-msg');
+    requestclientmsg.hide()
+    $('toggle-request-client-msg').addEvent('click', function(e) {
+        e = new Event(e);
+        requestclientmsg.toggle();
+        e.stop();
+    });
+    var requestclientstr = new Fx.Slide('code-request-client-str');
+    requestclientstr.hide()
+    $('toggle-request-client-str').addEvent('click', function(e) {
+        e = new Event(e);
+        requestclientstr.toggle();
+        e.stop();
+    });
+    var googlegooglesearch = new Fx.Slide('code-google-google-search');
+    googlegooglesearch.hide()
+    $('toggle-google-google-search').addEvent('click', function(e) {
+        e = new Event(e);
+        googlegooglesearch.toggle();
+        e.stop();
+    });
+    var googlegooglespell = new Fx.Slide('code-google-google-spell');
+    googlegooglespell.hide()
+    $('toggle-google-google-spell').addEvent('click', function(e) {
+        e = new Event(e);
+        googlegooglespell.toggle();
+        e.stop();
+    });
+    var yahooyahoorestclient = new Fx.Slide('code-yahoo-yahoo-rest-client');
+    yahooyahoorestclient.hide()
+    $('toggle-yahoo-yahoo-rest-client').addEvent('click', function(e) {
+        e = new Event(e);
+        yahooyahoorestclient.toggle();
+        e.stop();
+    });
+    var mtommtomdownloadservice = new Fx.Slide('code-mtom-mtom-download-service');
+    mtommtomdownloadservice.hide()
+    $('toggle-mtom-mtom-download-service').addEvent('click', function(e) {
+        e = new Event(e);
+        mtommtomdownloadservice.toggle();
+        e.stop();
+    });
+    var mtommtomdownloadclient = new Fx.Slide('code-mtom-mtom-download-client');
+    mtommtomdownloadclient.hide()
+    $('toggle-mtom-mtom-download-client').addEvent('click', function(e) {
+        e = new Event(e);
+        mtommtomdownloadclient.toggle();
+        e.stop();
+    });
+    var mtommtomuploadservice = new Fx.Slide('code-mtom-mtom-upload-service');
+    mtommtomuploadservice.hide()
+    $('toggle-mtom-mtom-upload-service').addEvent('click', function(e) {
+        e = new Event(e);
+        mtommtomuploadservice.toggle();
+        e.stop();
+    });
+    var mtommtomuploadclient = new Fx.Slide('code-mtom-mtom-upload-client');
+    mtommtomuploadclient.hide()
+    $('toggle-mtom-mtom-upload-client').addEvent('click', function(e) {
+        e = new Event(e);
+        mtommtomuploadclient.toggle();
+        e.stop();
+    });
+    var mtommtomuploadservicebase64 = new Fx.Slide('code-mtom-mtom-upload-service-base64');
+    mtommtomuploadservicebase64.hide()
+    $('toggle-mtom-mtom-upload-service-base64').addEvent('click', function(e) {
+        e = new Event(e);
+        mtommtomuploadservicebase64.toggle();
+        e.stop();
+    });
+    var mtommtomuploadclientbase64 = new Fx.Slide('code-mtom-mtom-upload-client-base64');
+    mtommtomuploadclientbase64.hide()
+    $('toggle-mtom-mtom-upload-client-base64').addEvent('click', function(e) {
+        e = new Event(e);
+        mtommtomuploadclientbase64.toggle();
+        e.stop();
+    });
+    var wsdlgenerationdoclitservice = new Fx.Slide('code-wsdl-generation-doclit-service');
+    wsdlgenerationdoclitservice.hide()
+    $('toggle-wsdl-generation-doclit-service').addEvent('click', function(e) {
+        e = new Event(e);
+        wsdlgenerationdoclitservice.toggle();
+        e.stop();
+    });
+    var wsdlgenerationdoclitclient = new Fx.Slide('code-wsdl-generation-doclit-client');
+    wsdlgenerationdoclitclient.hide()
+    $('toggle-wsdl-generation-doclit-client').addEvent('click', function(e) {
+        e = new Event(e);
+        wsdlgenerationdoclitclient.toggle();
+        e.stop();
+    });
+    var wsdlgenerationrpcservice = new Fx.Slide('code-wsdl-generation-rpc-service');
+    wsdlgenerationrpcservice.hide()
+    $('toggle-wsdl-generation-rpc-service').addEvent('click', function(e) {
+        e = new Event(e);
+        wsdlgenerationrpcservice.toggle();
+        e.stop();
+    });
+    var securityusernametokenclient = new Fx.Slide('code-security-username-token-client');
+    securityusernametokenclient.hide()
+    $('toggle-security-username-token-client').addEvent('click', function(e) {
+        e = new Event(e);
+        securityusernametokenclient.toggle();
+        e.stop();
+    });
+    var securityusernametokenservice = new Fx.Slide('code-security-username-token-service');
+    securityusernametokenservice.hide()
+    $('toggle-security-username-token-service').addEvent('click', function(e) {
+        e = new Event(e);
+        securityusernametokenservice.toggle();
+        e.stop();
+    });
+    var securityusernametokenpolicyfilebasedclient = new Fx.Slide('code-security-username-token-policy-file-based-client');
+    securityusernametokenpolicyfilebasedclient.hide()
+    $('toggle-security-username-token-policy-file-based-client').addEvent('click', function(e) {
+        e = new Event(e);
+        securityusernametokenpolicyfilebasedclient.toggle();
+        e.stop();
+    });
+    var securityusernametokenpolicyfilebasedservice = new Fx.Slide('code-security-username-token-policy-file-based-service');
+    securityusernametokenpolicyfilebasedservice.hide()
+    $('toggle-security-username-token-policy-file-based-service').addEvent('click', function(e) {
+        e = new Event(e);
+        securityusernametokenpolicyfilebasedservice.toggle();
+        e.stop();
+    });
+    var securityusernametokencallbackclient = new Fx.Slide('code-security-username-token-call-back-client');
+    securityusernametokencallbackclient.hide()
+    $('toggle-security-username-token-call-back-client').addEvent('click', function(e) {
+        e = new Event(e);
+        securityusernametokencallbackclient.toggle();
+        e.stop();
+    });
+    var securityusernametokencallbackservice = new Fx.Slide('code-security-username-token-call-back-service');
+    securityusernametokencallbackservice.hide()
+    $('toggle-security-username-token-call-back-service').addEvent('click', function(e) {
+        e = new Event(e);
+        securityusernametokencallbackservice.toggle();
+        e.stop();
+    });
+    var securitytimestampclient = new Fx.Slide('code-security-timestamp-client');
+    securitytimestampclient.hide()
+    $('toggle-security-timestamp-client').addEvent('click', function(e) {
+        e = new Event(e);
+        securitytimestampclient.toggle();
+        e.stop();
+    });
+    var securitytimestampservice = new Fx.Slide('code-security-timestamp-service');
+    securitytimestampservice.hide()
+    $('toggle-security-timestamp-service').addEvent('click', function(e) {
+        e = new Event(e);
+        securitytimestampservice.toggle();
+        e.stop();
+    });
+    var securitytimestamppolicyfilebasedclient = new Fx.Slide('code-security-timestamp-policy-file-based-client');
+    securitytimestamppolicyfilebasedclient.hide()
+    $('toggle-security-timestamp-policy-file-based-client').addEvent('click', function(e) {
+        e = new Event(e);
+        securitytimestamppolicyfilebasedclient.toggle();
+        e.stop();
+    });
+    var securitytimestamppolicyfilebasedservice = new Fx.Slide('code-security-timestamp-policy-file-based-service');
+    securitytimestamppolicyfilebasedservice.hide()
+    $('toggle-security-timestamp-policy-file-based-service').addEvent('click', function(e) {
+        e = new Event(e);
+        securitytimestamppolicyfilebasedservice.toggle();
+        e.stop();
+    });
+    var securityencryptionclient = new Fx.Slide('code-security-encryption-client');
+    securityencryptionclient.hide()
+    $('toggle-security-encryption-client').addEvent('click', function(e) {
+        e = new Event(e);
+        securityencryptionclient.toggle();
+        e.stop();
+    });
+    var securityencryptionservice = new Fx.Slide('code-security-encryption-service');
+    securityencryptionservice.hide()
+    $('toggle-security-encryption-service').addEvent('click', function(e) {
+        e = new Event(e);
+        securityencryptionservice.toggle();
+        e.stop();
+    });
+    var securityencryptionpolicyfilebasedclient = new Fx.Slide('code-security-encryption-policy-file-based-client');
+    securityencryptionpolicyfilebasedclient.hide()
+    $('toggle-security-encryption-policy-file-based-client').addEvent('click', function(e) {
+        e = new Event(e);
+        securityencryptionpolicyfilebasedclient.toggle();
+        e.stop();
+    });
+    var securityencryptionpolicyfilebasedservice = new Fx.Slide('code-security-encryption-policy-file-based-service');
+    securityencryptionpolicyfilebasedservice.hide()
+    $('toggle-security-encryption-policy-file-based-service').addEvent('click', function(e) {
+        e = new Event(e);
+        securityencryptionpolicyfilebasedservice.toggle();
+        e.stop();
+    });
+    var securitysigningclient = new Fx.Slide('code-security-signing-client');
+    securitysigningclient.hide()
+    $('toggle-security-signing-client').addEvent('click', function(e) {
+        e = new Event(e);
+        securitysigningclient.toggle();
+        e.stop();
+    });
+    var securitysigningservice = new Fx.Slide('code-security-signing-service');
+    securitysigningservice.hide()
+    $('toggle-security-signing-service').addEvent('click', function(e) {
+        e = new Event(e);
+        securitysigningservice.toggle();
+        e.stop();
+    });
+    var securitysigningpolicyfilebasedclient = new Fx.Slide('code-security-signing-policy-file-based-client');
+    securitysigningpolicyfilebasedclient.hide()
+    $('toggle-security-signing-policy-file-based-client').addEvent('click', function(e) {
+        e = new Event(e);
+        securitysigningpolicyfilebasedclient.toggle();
+        e.stop();
+    });
+    var securitysigningpolicyfilebasedservice = new Fx.Slide('code-security-signing-policy-file-based-service');
+    securitysigningpolicyfilebasedservice.hide()
+    $('toggle-security-signing-policy-file-based-service').addEvent('click', function(e) {
+        e = new Event(e);
+        securitysigningpolicyfilebasedservice.toggle();
+        e.stop();
+    });
+    var securitysecuremtomencryptionclient = new Fx.Slide('code-security-secure-mtom-encryption-client');
+    securitysecuremtomencryptionclient.hide()
+    $('toggle-security-secure-mtom-encryption-client').addEvent('click', function(e) {
+        e = new Event(e);
+        securitysecuremtomencryptionclient.toggle();
+        e.stop();
+    });
+    var securitysecuremtomencryptionservice = new Fx.Slide('code-security-secure-mtom-encryption-service');
+    securitysecuremtomencryptionservice.hide()
+    $('toggle-security-secure-mtom-encryption-service').addEvent('click', function(e) {
+        e = new Event(e);
+        securitysecuremtomencryptionservice.toggle();
+        e.stop();
+    });
+    var securitysecuremtomsigningclient = new Fx.Slide('code-security-secure-mtom-signing-client');
+    securitysecuremtomsigningclient.hide()
+    $('toggle-security-secure-mtom-signing-client').addEvent('click', function(e) {
+        e = new Event(e);
+        securitysecuremtomsigningclient.toggle();
+        e.stop();
+    });
+    var securitysecuremtomsigningservice = new Fx.Slide('code-security-secure-mtom-signing-service');
+    securitysecuremtomsigningservice.hide()
+    $('toggle-security-secure-mtom-signing-service').addEvent('click', function(e) {
+        e = new Event(e);
+        securitysecuremtomsigningservice.toggle();
+        e.stop();
+    });
+    var reliableechoclientrm = new Fx.Slide('code-reliable-echo-client-rm');
+    reliableechoclientrm.hide()
+    $('toggle-reliable-echo-client-rm').addEvent('click', function(e) {
+        e = new Event(e);
+        reliableechoclientrm.toggle();
+        e.stop();
+    });
+    var reliableechoservicerm = new Fx.Slide('code-reliable-echo-service-rm');
+    reliableechoservicerm.hide()
+    $('toggle-reliable-echo-service-rm').addEvent('click', function(e) {
+        e = new Event(e);
+        reliableechoservicerm.toggle();
+        e.stop();
+    });
+    var reliablemtomuploadclientrm = new Fx.Slide('code-reliable-mtom-upload-client-rm');
+    reliablemtomuploadclientrm.hide()
+    $('toggle-reliable-mtom-upload-client-rm').addEvent('click', function(e) {
+        e = new Event(e);
+        reliablemtomuploadclientrm.toggle();
+        e.stop();
+    });
+    var reliablemtomuploadservicerm = new Fx.Slide('code-reliable-mtom-upload-service-rm');
+    reliablemtomuploadservicerm.hide()
+    $('toggle-reliable-mtom-upload-service-rm').addEvent('click', function(e) {
+        e = new Event(e);
+        reliablemtomuploadservicerm.toggle();
+        e.stop();
+    });
+    var reliablepingclientrm = new Fx.Slide('code-reliable-ping-client-rm');
+    reliablepingclientrm.hide()
+    $('toggle-reliable-ping-client-rm').addEvent('click', function(e) {
+        e = new Event(e);
+        reliablepingclientrm.toggle();
+        e.stop();
+    });
+    var reliablepingservicerm = new Fx.Slide('code-reliable-ping-service-rm');
+    reliablepingservicerm.hide()
+    $('toggle-reliable-ping-service-rm').addEvent('click', function(e) {
+        e = new Event(e);
+        reliablepingservicerm.toggle();
+        e.stop();
+    });
+    var reliablepingclientrmmultiplemessages = new Fx.Slide('code-reliable-ping-client-rm-multiple-messages');
+    reliablepingclientrmmultiplemessages.hide()
+    $('toggle-reliable-ping-client-rm-multiple-messages').addEvent('click', function(e) {
+        e = new Event(e);
+        reliablepingclientrmmultiplemessages.toggle();
+        e.stop();
+    });
+    var wsdlmodewsdl11client = new Fx.Slide('code-wsdl-mode-wsdl-11-client');
+    wsdlmodewsdl11client.hide()
+    $('toggle-wsdl-mode-wsdl-11-client').addEvent('click', function(e) {
+        e = new Event(e);
+        wsdlmodewsdl11client.toggle();
+        e.stop();
+    });
+    var wsdlmodewsdl11service = new Fx.Slide('code-wsdl-mode-wsdl-11-service');
+    wsdlmodewsdl11service.hide()
+    $('toggle-wsdl-mode-wsdl-11-service').addEvent('click', function(e) {
+        e = new Event(e);
+        wsdlmodewsdl11service.toggle();
+        e.stop();
+    });
+    var wsdlmodewsdl20client = new Fx.Slide('code-wsdl-mode-wsdl-20-client');
+    wsdlmodewsdl20client.hide()
+    $('toggle-wsdl-mode-wsdl-20-client').addEvent('click', function(e) {
+        e = new Event(e);
+        wsdlmodewsdl20client.toggle();
+        e.stop();
+    });
+    var wsdlmodewsdl20service = new Fx.Slide('code-wsdl-mode-wsdl-20-service');
+    wsdlmodewsdl20service.hide()
+    $('toggle-wsdl-mode-wsdl-20-service').addEvent('click', function(e) {
+        e = new Event(e);
+        wsdlmodewsdl20service.toggle();
+        e.stop();
+    });
+    var sudokusudokuclient = new Fx.Slide('code-sudoku-sudoku-client');
+    sudokusudokuclient.hide()
+    $('toggle-sudoku-sudoku-client').addEvent('click', function(e) {
+        e = new Event(e);
+        sudokusudokuclient.toggle();
+        e.stop();
+    });
+    var sudokusudokuservice = new Fx.Slide('code-sudoku-sudoku-service');
+    sudokusudokuservice.hide()
+    $('toggle-sudoku-sudoku-service').addEvent('click', function(e) {
+        e = new Event(e);
+        sudokusudokuservice.toggle();
+        e.stop();
+    });
+    var sslclient = new Fx.Slide('code-ssl-client');
+    sslclient.hide()
+    $('toggle-ssl-client').addEvent('click', function(e) {
+        e = new Event(e);
+        sslclient.toggle();
+        e.stop();
+    });
+    var flickrclient = new Fx.Slide('code-flickr-client');
+    flickrclient.hide()
+    $('toggle-flickr-client').addEvent('click', function(e) {
+        e = new Event(e);
+        flickrclient.toggle();
+        e.stop();
+    });
+    
+});
+  </script>
+  <link href="css/prettify.css" type="text/css" rel="stylesheet" />
+  <script language="javascript" src="js/prettify.js"></script>
+</head>
+
+<body onload="prettyPrint();">
+<a href="http://wso2.org/wsf/php"><img src="images/wsf-php-logo-s.gif" alt="" /></a>
+
+<br /><br />
+<table cellspacing="0">
+  <tr>
+    <td class="t-head"><a href="http://wso2.org/wsf/php">WSF/PHP</a> Samples</td>
+  </tr>
+
+  <tr class="topic">
+    <td colspan="2">Basic functionalities</td>
+  </tr>
+
+<tr class="odd">
+  <td colspan="2" class="desc">Echo service, accepts a payload and returns the same. Two way (in-out) sample.
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+<a href="echo_client.php">Run client</a> | <a href="echo_service.php">WSDL</a> |
+<a href="#" id="toggle-echo-client">show client code</a> |  <a href="#" id="toggle-echo-service">show server code</a>
+<div id="code-echo-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$requestPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echoString&gt;
+XML;
+
+try {
+
+    $client = new WSClient(array( &quot;to&quot; =&gt; &quot;http://localhost/samples/echo_service.php&quot; ));
+                
+    $responseMessage = $client-&gt;request( $requestPayloadString );
+    
+    printf(&quot;Response = %s &lt;br&gt;&quot;, htmlspecialchars($responseMessage-&gt;str));
+
+} catch (Exception $e) {
+
+    if ($e instanceof WSFault) {
+        printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+    } else {
+        printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+    }
+
+}
+?&gt;
+
+</pre><br />
+</div>
+
+<div id="code-echo-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/* sample test payload */
+$requestPayloadString = &lt;&lt;&lt;XML
+&lt;soapenv:Envelope xmlns:soapenv=&quot;http://www.w3.org/2003/05/soap-envelope&quot;&gt;
+   &lt;soapenv:Header/&gt;
+   &lt;soapenv:Body&gt;
+     &lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;
+         &lt;text&gt;Hello World!&lt;/text&gt;
+     &lt;/ns1:echoString&gt;
+    &lt;/soapenv:Body&gt;
+&lt;/soapenv:Envelope&gt;
+XML;
+
+function echoFunction($inMessage) {
+
+    $outMessage = new WSMessage($inMessage-&gt;str);
+
+    return $outMessage;
+}
+
+$operations = array(&quot;echoString&quot; =&gt; &quot;echoFunction&quot;);
+
+$service = new WSService(array(&quot;operations&quot; =&gt; $operations));
+        
+$service-&gt;reply($requestPayloadString);
+
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="even">
+  <td colspan="2" class="desc">Echo service with WS-Addressing.
+</td>
+</tr>
+<tr class="even">
+  <td colspan="2">
+<a href="echo_client_addr.php">Run client</a> | <a href="echo_service_addr.php">WSDL</a> |
+<a href="#" id="toggle-echo-client-addr">show client code</a> |  <a href="#" id="toggle-echo-service-addr">show server code</a>
+<div id="code-echo-client-addr"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$requestPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:echo xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
+XML;
+
+try {
+
+    $reqMessage = new WSMessage($requestPayloadString,
+        array( &quot;to&quot; =&gt; &quot;http://localhost/samples/echo_service_addr.php&quot;,
+               &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/echoString&quot;));
+              
+    $client = new WSClient(array(&quot;useWSA&quot; =&gt; TRUE));
+                
+    $responseMessage = $client-&gt;request($reqMessage);
+    
+    printf(&quot;Response = %s \n&quot;, htmlspecialchars($responseMessage-&gt;str));
+
+} catch (Exception $e) {
+
+    if ($e instanceof WSFault) {
+        printf(&quot;Soap Fault : %s\n&quot;, $e-&gt;Reason);
+    } else {
+        printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+    }
+
+}
+?&gt;
+
+</pre><br />
+</div>
+
+<div id="code-echo-service-addr"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+function echoFunction($inMessage) {
+
+    $returnMessage = new WSMessage($inMessage-&gt;str);
+
+    return $returnMessage;
+}
+
+$operations = array(&quot;echoString&quot; =&gt; &quot;echoFunction&quot;);
+$actions = array(&quot;http://php.axis2.org/samples/echoString&quot; =&gt; &quot;echoString&quot;);
+
+$service = new WSService(array( &quot;operations&quot; =&gt; $operations, 
+                                &quot;actions&quot; =&gt; $actions));
+        
+$service-&gt;reply();
+
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="odd">
+  <td colspan="2" class="desc">Client for echo service using SOAP 1.1 protocol
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+<a href="echo_client_soap11.php">Run client</a> (<a href="#" id="toggle-echo-client-soap11">show code</a>)<br />
+<div id="code-echo-client-soap11"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$requestPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echoString&gt;
+XML;
+
+try {
+
+    $client = new WSClient(array(&quot;to&quot;=&gt;&quot;http://localhost/samples/echo_service.php&quot;,
+                                 &quot;useSOAP&quot;=&gt;1.1, 
+                                 &quot;action&quot;=&gt;&quot;http://localhost/samples/echo_service.php/echoString&quot;));
+
+    $responseMessage = $client-&gt;request($requestPayloadString);
+    
+    printf(&quot;Response = %s &lt;br&gt;&quot;, htmlspecialchars($responseMessage-&gt;str));
+
+} catch (Exception $e) {
+
+    if ($e instanceof WSFault) {
+        printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+    } else {
+        printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+    }
+
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+
+<tr class="odd">
+  <td colspan="2">
+
+  </td>
+</tr>
+<tr class="even">
+  <td colspan="2" class="desc">Echo sample showing how to use the same client object instance to do repeated calls
+</td>
+</tr>
+<tr class="even">
+  <td colspan="2">
+<a href="echo_client_multiple_invocation.php">Run client</a> (<a href="#" id="toggle-echo-client-multiple-invocation">show code</a>)<br />
+<div id="code-echo-client-multiple-invocation"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$requestPayloadStrings = array();
+
+for ($i = 0 ; $i &lt; 10; $i++) {
+$tmp = &quot;Hello World &quot;.&quot;$i&quot;;
+$requestPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:echoString xmlns:ns1=&quot;http://ws.apache.org/axis2/c/samples&quot;&gt;
+   &lt;text&gt;$tmp&lt;/text&gt;
+&lt;/ns1:echoString&gt;
+XML;
+array_push($requestPayloadStrings,$requestPayloadString);
+}
+
+try
+{
+    $serviceClient = new WSClient();
+
+    for($i = 0 ; $i &lt; 10; $i++) {
+        $msg = new WSMessage($requestPayloadStrings[$i],
+                             array( &quot;to&quot; =&gt; &quot;http://localhost/samples/echo_service.php&quot;));
+        $responsePayload = $serviceClient-&gt;request($msg);
+        printf(&quot;Round %s&lt;br&gt;&quot;,$i);
+        printf(&quot;--------&lt;br&gt;&quot;);
+        printf(&quot;Response = %s &lt;br&gt;&lt;br&gt;&quot;, htmlspecialchars($responsePayload-&gt;str));
+
+        printf(&quot;Last Request = %s&lt;br&gt;&lt;br&gt;&quot;,htmlspecialchars($serviceClient-&gt;getLastRequest()));
+        printf(&quot;Last Response = %s&lt;br&gt;&lt;br&gt;&quot;,htmlspecialchars($serviceClient-&gt;getLastResponse()));
+    }
+
+} catch (Exception $e) {
+   if ($e instanceof WSFault) {
+       printf(&quot;Soap Fault : %s&lt;br&gt;&quot;, $e-&gt;Reason());
+   } else {
+       printf(&quot;Fault Message = %s&lt;br&gt;&quot;,$e-&gt;getMessage());
+   }
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+<tr class="odd">
+  <td colspan="2" class="desc">Notify service, accepts a payload, but does not return a reply. One way (in-only) sample.
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+
+<a href="notify_client.php">Run client</a> | <a href="notify_service.php">WSDL</a> |
+<a href="#" id="toggle-notify-client">show client code</a> |  <a href="#" id="toggle-notify-service">show server code</a>
+<div id="code-notify-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$requestPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:notifyString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:notifyString&gt;
+XML;
+
+try {
+
+    $client = new WSClient(
+        array( &quot;to&quot; =&gt; &quot;http://localhost/samples/notify_service.php&quot;));
+                
+    $client-&gt;send($requestPayloadString);
+    
+    printf(&quot;Request sent to endpoint\n&quot;);
+    
+} catch (Exception $e) {
+
+    if ($e instanceof WSFault) {
+        printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+    } else {
+        printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+    }
+
+}
+?&gt;
+
+</pre><br />
+</div>
+
+
+<div id="code-notify-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+function notifyFunction($inMessage) {
+
+    return;
+}
+
+$operations = array(&quot;notifyString&quot; =&gt; &quot;notifyFunction&quot;);
+
+$service = new WSService(array(&quot;operations&quot; =&gt; $operations));
+        
+$service-&gt;reply();
+
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="even">
+  <td colspan="2" class="desc">Client that receives a soap fault
+</td>
+</tr>
+<tr class="even">
+  <td colspan="2">
+<a href="fault_client.php">Run client</a> | <a href="fault_service.php">WSDL</a> |
+<a href="#" id="toggle-fault-client">show client code</a> |  <a href="#" id="toggle-fault-service">show server code</a>
+
+<div id="code-fault-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+function sendFault($inMessage) {
+    throw new WSFault(&quot;Sender&quot;, &quot;Testing WSFault&quot;);
+}
+
+$operations = array(&quot;getFault&quot; =&gt; &quot;sendFault&quot;);
+
+$service = new WSService(array(&quot;operations&quot; =&gt; $operations));
+        
+$service-&gt;reply();
+
+?&gt;
+
+</pre><br />
+</div>
+
+<div id="code-fault-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$requestPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:getFault xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:getFault&gt;
+XML;
+
+try {
+
+    $client = new WSClient( array( &quot;to&quot; =&gt; &quot;http://localhost/samples/fault_service.php&quot; ));
+
+                
+    $responseMessage = $client-&gt;request($requestPayloadString);
+    
+} catch (Exception $e) {
+
+    if ($e instanceof WSFault) {
+        printf(&quot;Soap Fault Reason: %s\n&quot;, $e-&gt;Reason);
+        printf(&quot;Soap Fault Code: %s \n&quot;, $e-&gt;Code);
+
+    } else {
+        printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+    }
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="odd">
+  <td colspan="2" class="desc">Math service for add, sub, mul and div operations.Returns the reply for the operations.(In math directory)
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+<a href="math_service.php">WSDL</a> (<a href="#" id="toggle-math-service">show code</a>)<br />
+<div id="code-math-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/* sample test payload */
+$reqPayloadString = &lt;&lt;&lt;XML
+&lt;soapenv:Envelope xmlns:soapenv=&quot;http://www.w3.org/2003/05/soap-envelope&quot;&gt;
+   &lt;soapenv:Header/&gt;
+   &lt;soapenv:Body&gt;
+      &lt;ns1:add xmlns:ns1=&quot;http://ws.apache.org/axis2/services/math&quot;&gt;
+         &lt;param1&gt;40&lt;/param1&gt;
+         &lt;param2&gt;8&lt;/param2&gt;
+      &lt;/ns1:add&gt;
+   &lt;/soapenv:Body&gt;
+&lt;/soapenv:Envelope&gt;
+XML;
+
+function addFunction($inMessage) {
+
+    
+    $simplexml = new SimpleXMLElement($inMessage-&gt;str);
+    $value1 = $simplexml-&gt;param1[0];
+    $value2 = $simplexml-&gt;param2[0];
+    $Result = $value1 + $value2;    
+     $resPayload = &lt;&lt;&lt;XML
+&lt;ns1:result xmlns:ns1=&quot;http://ws.axis2.org/axis2/php/math&quot;&gt;$Result&lt;/ns1:result&gt;
+XML;
+    $returnMessage = new WSMessage($resPayload);
+
+    return $returnMessage;
+}
+
+
+function subFunction($inMessage) {
+
+    $simplexml = new SimpleXMLElement($inMessage-&gt;str);
+    $value1 = $simplexml-&gt;param1[0];
+    $value2 = $simplexml-&gt;param2[0];
+    $Result = $value1 - $value2;    
+    $resPayload = &lt;&lt;&lt;XML
+&lt;ns1:result xmlns:ns1=&quot;http://ws.axis2.org/axis2/php/math&quot;&gt;$Result&lt;/ns1:result&gt;
+XML;
+
+    $returnMessage = new WSMessage($resPayload);
+
+    return $returnMessage;
+
+
+}
+
+
+function mulFunction($inMessage) {
+    
+    $simplexml = new SimpleXMLElement($inMessage-&gt;str);
+    $value1 = $simplexml-&gt;param1[0];
+    $value2 = $simplexml-&gt;param2[0];
+    $Result = $value1 * $value2;    
+    $resPayload = &lt;&lt;&lt;XML
+&lt;ns1:result xmlns:ns1=&quot;http://ws.axis2.org/axis2/php/math&quot;&gt;$Result&lt;/ns1:result&gt;
+XML;
+
+    $returnMessage = new WSMessage($resPayload);
+
+    return $returnMessage;
+}
+
+
+
+function divFunction($inMessage) {
+
+    $simplexml = new SimpleXMLElement($inMessage-&gt;str);
+    $value1 = $simplexml-&gt;param1[0];
+    $value2 = $simplexml-&gt;param2[0];
+    $Result = $value1 / $value2;    
+    $resPayload = &lt;&lt;&lt;XML
+&lt;ns1:result xmlns:ns1=&quot;http://ws.axis2.org/axis2/php/math&quot;&gt;$Result&lt;/ns1:result&gt;
+XML;
+
+    $returnMessage = new WSMessage($resPayload);
+
+    return $returnMessage;
+}
+
+
+$operations = array(&quot;add&quot; =&gt; &quot;addFunction&quot;,
+                    &quot;sub&quot; =&gt; &quot;subFunction&quot;,
+                    &quot;mul&quot; =&gt; &quot;mulFunction&quot;,
+                    &quot;div&quot; =&gt; &quot;divFunction&quot;);
+
+$svr = new WSService(array(&quot;operations&quot; =&gt; $operations));
+        
+$svr-&gt;reply($reqPayloadString);
+
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+<tr class="even">
+  <td colspan="2" class="desc">Client with GUI for math service.Send the request and accept the reply from math service.(In math directory)
+</td>
+</tr>
+<tr class="even">
+  <td colspan="2">
+<a href="math_client.php">Run client</a> (<a href="#" id="toggle-math-client">show code</a>)<br />
+<div id="code-math-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+$getResult = $_POST[&quot;getResult&quot;];
+$operation = $_POST[&quot;operation&quot;];
+$epr = $_POST[&quot;epr&quot;];
+$param1 = $_POST[&quot;param1&quot;];
+$param2 = $_POST[&quot;param2&quot;];
+		    
+?&gt;
+
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt; Math Sample &lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;form method=&quot;post&quot; action=&quot;&lt;?php echo $PHP_SELF;?&gt;&quot;&gt;
+&lt;table cols=&quot;2&quot; border=&quot;1&quot; cellpadding=&quot;10&quot; cellspacing=&quot;0&quot; align=&quot;center&quot; width=&quot;100%&quot;&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;h4&gt;Operations&lt;/h4&gt;
+
+Add : &lt;input type=&quot;radio&quot; value=&quot;add&quot; name=&quot;operation&quot; checked&gt;
+
+Subtract: &lt;input type=&quot;radio&quot; value=&quot;sub&quot; name=&quot;operation&quot;&gt;
+
+Multiply: &lt;input type=&quot;radio&quot; value=&quot;mul&quot; name=&quot;operation&quot;&gt;
+
+Divide: &lt;input type=&quot;radio&quot; value=&quot;div&quot; name=&quot;operation&quot;&gt;
+&lt;br/&gt;&lt;br/&gt;
+&lt;h4&gt;Target Endpoint&lt;/h4&gt;
+Endpoint:&lt;input type=&quot;text&quot; size=&quot;60&quot; maxlength=&quot;60&quot; name=&quot;epr&quot; 
+          value=&quot;http://localhost/samples/math_service.php&quot;&gt;&lt;br /&gt;
+
+&lt;h4&gt;Parameters&lt;/h4&gt;
+Parameter 1:&lt;input type=&quot;text&quot; size=&quot;6&quot; maxlength=&quot;10&quot; name=&quot;param1&quot; value=&quot;10&quot;&gt;
+Parameter 2:&lt;input type=&quot;text&quot; size=&quot;6&quot; maxlength=&quot;10&quot; name=&quot;param2&quot; value=&quot;20&quot;&gt;&lt;br/&gt;
+&lt;br/&gt;
+
+&lt;input type=&quot;submit&quot; value=&quot;submit&quot; name=&quot;getResult&quot;&gt;
+&lt;input type=&quot;submit&quot; value=&quot;Reset&quot; name=&quot;reset&quot;&gt;
+
+
+
+
+
+
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+
+&lt;/form&gt;
+&lt;?php
+if (isset($_POST['getResult']))
+{
+      if (isset($_GET['param1']) &amp;&amp; isset($_GET['param2']))
+      {
+	$epr = $_GET['epr'];
+	$param1 = $_GET['param1'];
+	$param2 = $_GET['param2'];
+	$operation  = $_GET['operation'];
+      }
+    
+     
+if (isset($param1) &amp;&amp;  isset($param2))
+    {
+      /*
+      echo $operation;
+      echo $param1;
+      echo $param2;
+      */
+
+$reqPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:$operation xmlns:ns1=&quot;http://ws.apache.org/axis2/php/math&quot;&gt;
+     &lt;param1&gt;$param1&lt;/param1&gt;
+      &lt;param2&gt;$param2&lt;/param2&gt;
+&lt;/ns1:$operation&gt;
+XML;
+
+     try
+       {
+	    $client = new WSClient(array(
+				      &quot;to&quot;=&gt;$epr));
+	    $response = $client-&gt;request($reqPayloadString);
+	 
+	    if ($response)
+	    {
+	         echo &quot;Result : &quot;.$response-&gt;str.&quot;&quot;;
+	    }
+       } 
+  
+     catch (Exception $e)
+       {
+	    if ($e instanceof WSFault)
+	    {
+	     printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+	    }
+	 else
+	   {
+	     printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+	   }
+      }
+    }
+}
+
+?&gt;
+
+
+
+
+&lt;/body&gt;
+&lt;/html&gt;
+
+
+</pre><br />
+</div>
+  </td>
+</tr>
+<tr class="odd">
+  <td colspan="2" class="desc">Client using rest GET call access a service using rest
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+<a href="echo_client_rest.php">Run client</a> (<a href="#" id="toggle-echo-client-rest">show code</a>)<br />
+<div id="code-echo-client-rest"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$requestPayloadString = &lt;&lt;&lt;XML
+    &lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;
+        &lt;text&gt;Hello World!&lt;/text&gt;
+    &lt;/ns1:echoString&gt;
+XML;
+
+try {
+
+    $client = new WSClient( array(&quot;to&quot; =&gt; &quot;http://localhost/samples/echo_service.php/echoString&quot;,
+                                  &quot;useSOAP&quot; =&gt; FALSE,
+                                  &quot;HTTPMethod&quot; =&gt; &quot;GET&quot;));
+
+                
+    $responseMessage = $client-&gt;request($requestPayloadString);
+    
+    printf(&quot;Response = %s &lt;br&gt;&quot;, htmlspecialchars($responseMessage-&gt;str));
+
+} catch (Exception $e) {
+
+    if ($e instanceof WSFault) {
+        printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+    } else {
+        printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+    }
+
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+<tr class="even">
+  <td colspan="2" class="desc">Client that addes costom soap headers
+</td>
+</tr>
+<tr class="even">
+  <td colspan="2">
+<a href="add_soap_header_client.php">Run client</a> (<a href="#" id="toggle-add-soap-header-client">show code</a>)<br />
+<div id="code-add-soap-header-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$requestPayloadString = &lt;&lt;&lt;XML
+    &lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;
+        &lt;text&gt;Hello World!&lt;/text&gt;
+    &lt;/ns1:echoString&gt;
+XML;
+
+try {
+
+    $client = new WSClient(array( &quot;to&quot; =&gt; &quot;http://localhost/samples/echo_service.php&quot; ));
+
+    $header1 = new WSHeader(array( &quot;ns&quot; =&gt; &quot;http://test.org&quot;,
+                                   &quot;name&quot; =&gt; &quot;header1&quot;,
+                                   &quot;data&quot; =&gt; &quot;value1&quot;,
+                                   &quot;mustUnderstand&quot; =&gt; false));
+
+
+    $msg = new WSMessage($requestPayloadString , array( &quot;inputHeaders&quot; =&gt; array($header1)));
+    $client-&gt;request($msg);
+
+    $sentMsg = $client-&gt;getLastRequest();
+    $recvMsg = $client-&gt;getLastResponse();        
+
+    echo &quot;\nSent message \n&quot;;
+    echo htmlspecialchars($sentMsg);
+   
+    echo &quot;\n\n Received message \n&quot;;
+    echo htmlspecialchars($recvMsg);
+
+} catch (Exception $e) {
+    if ($e instanceof WSFault) {
+        printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+    } else {
+        printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+    }
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="topic">
+  <td colspan="2">Function API samples</td>
+</tr>
+
+<tr class="odd">
+  <td colspan="2" class="desc">Echo service implemented with ws_reply() function.
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+<a href="reply_echo_service.php">WSDL</a> (<a href="#" id="toggle-reply-echo-service">show code</a>)<br />
+<div id="code-reply-echo-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+include_once('wsf.php');
+
+function echoFunction($inMessage) {
+
+    $returnMessage = new WSMessage($inMessage-&gt;str);
+
+    return $returnMessage;
+}
+
+$operations = array(&quot;echoString&quot; =&gt; &quot;echoFunction&quot;);
+
+ws_reply(array(&quot;operations&quot; =&gt; $operations));
+        
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+<tr class="even">
+  <td colspan="2" class="desc">Client for reply echo service, using ws_request() function with payload in domDocument format.
+</td>
+</tr>
+<tr class="even">
+  <td colspan="2">
+<a href="request_client_dom.php">Run client</a> (<a href="#" id="toggle-request-client-dom">show code</a>)<br />
+<div id="code-request-client-dom"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+include_once('wsf.php');
+
+$requestPayloadString = &lt;&lt;&lt;XML
+    &lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;
+        &lt;text&gt;Hello World!&lt;/text&gt;
+    &lt;/ns1:echoString&gt;
+XML;
+
+$document = new domDocument;
+$document-&gt;loadXML($requestPayloadString);
+
+
+try {
+
+    $responseMessage = ws_request($document, 
+                        array(&quot;to&quot; =&gt; &quot;http://localhost/samples/reply_echo_service.php&quot;));
+    
+    printf(&quot;Response = %s &lt;br&gt;&quot;, htmlspecialchars($responseMessage-&gt;str));
+
+} catch (Exception $e) {
+
+    if ($e instanceof WSFault) {
+        printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+    } else {
+        printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+    }
+}
+
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+<tr class="odd">
+  <td colspan="2" class="desc">Client for reply echo service, using ws_request() function with payload in Axis2Message format.
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+<a href="request_client_msg.php">Run client</a> (<a href="#" id="toggle-request-client-msg">show code</a>)<br />
+<div id="code-request-client-msg"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+include_once('wsf.php');
+
+$requestPayloadString = &lt;&lt;&lt;XML
+    &lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;
+        &lt;text&gt;Hello World!&lt;/text&gt;
+    &lt;/ns1:echoString&gt;
+XML;
+
+try {
+
+    $requestMessage = new WSMessage($requestPayloadString, 
+                        array(&quot;to&quot; =&gt; &quot;http://localhost/samples/reply_echo_service.php&quot;));
+    
+    $responseMessage = ws_request($requestMessage);
+    
+    printf(&quot;Response = %s &lt;br&gt;&quot;, htmlspecialchars($responseMessage-&gt;str));
+
+} catch (Exception $e) {
+
+    if ($e instanceof WSFault) {
+        printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+    } else {
+        printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+    }
+}
+
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+<tr class="even">
+  <td colspan="2" class="desc">Client for reply echo service, using ws_request() function with payload in string format.
+</td>
+</tr>
+<tr class="even">
+  <td colspan="2">
+<a href="request_client_str.php">Run client</a> (<a href="#" id="toggle-request-client-str">show code</a>)<br />
+<div id="code-request-client-str"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+include_once('wsf.php');
+
+$requestPayloadString = &lt;&lt;&lt;XML
+    &lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;
+        &lt;text&gt;Hello World!&lt;/text&gt;
+    &lt;/ns1:echoString&gt;
+XML;
+
+try {
+
+    $responseMessage = ws_request($requestPayloadString, 
+                        array( &quot;to&quot; =&gt; &quot;http://localhost/samples/reply_echo_service.php&quot;));
+    
+    printf(&quot;Response = %s &lt;br&gt;&quot;, htmlspecialchars($responseMessage-&gt;str));
+
+} catch (Exception $e) {
+
+    if ($e instanceof WSFault) {
+        printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+    } else {
+        printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+    }
+}
+
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="topic">
+  <td colspan="2">Accessing search providers</td>
+</tr>
+
+<tr class="odd">
+  <td colspan="2" class="desc">Google search sample. Needs a valid google key. Insert your key in the key element of the payload string given in this sample.
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+<a href="google/google_search.php">WSDL</a> (<a href="#" id="toggle-google-google-search">show code</a>)<br />
+<div id="code-google-google-search"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2006 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/** 
+  * Note: This is a simole example written just as a proof of concept. 
+  * You may write a nice web interface to improve the usability.    
+  * This sample sends a Goole key and other relevant data to Google 
+  * search service. 
+  * If everyting goes right, it returns a set of search results.
+  * You can control the number of results through maxResults parameter
+  * in the request payload.
+  * Google search uses SOAP 1.1.
+  */
+
+$requestPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:doGoogleSearch x:encodingStyle=&quot;http://schemas.xmlsoap.org/soap/encoding/&quot; xmlns:ns1=&quot;urn:GoogleSearch&quot; xmlns:x=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot; xmlns:xsi=&quot;http://www.w3.org/1999/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/1999/XMLSchema&quot;&gt;
+    &lt;key xsi:type=&quot;xsd:string&quot;&gt;your_key_here&lt;/key&gt;
+    &lt;q xsi:type=&quot;xsd:string&quot;&gt;temperature&lt;/q&gt;
+    &lt;start xsi:type=&quot;xsd:int&quot;&gt;0&lt;/start&gt;
+    &lt;maxResults xsi:type=&quot;xsd:int&quot;&gt;10&lt;/maxResults&gt;
+    &lt;filter xsi:type=&quot;xsd:boolean&quot;&gt;true&lt;/filter&gt;
+    &lt;restrict xsi:type=&quot;xsd:string&quot;&gt;&lt;/restrict&gt;
+    &lt;safeSearch xsi:type=&quot;xsd:boolean&quot;&gt;false&lt;/safeSearch&gt;
+    &lt;lr xsi:type=&quot;xsd:string&quot;&gt;&lt;/lr&gt;
+    &lt;ie xsi:type=&quot;xsd:string&quot;&gt;latin1&lt;/ie&gt;
+    &lt;oe xsi:type=&quot;xsd:string&quot;&gt;latin1&lt;/oe&gt;
+&lt;/ns1:doGoogleSearch&gt;
+XML;
+
+try {
+    $client = new WSClient(array(&quot;to&quot; =&gt; &quot;http://api.google.com/search/beta2&quot;,
+        &quot;useSOAP&quot;=&gt;&quot;1.1&quot;)); 
+
+    $responsePayload = $client-&gt;request($requestPayloadString);
+    printf(&quot;Response = %s &lt;br/&gt;\n&quot;, htmlspecialchars($responsePayload-&gt;str));
+} catch (Exception $e) {
+    if ($e instanceof WSFault) {
+        printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+    } else {
+        printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+    }
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+<tr class="even">
+  <td colspan="2" class="desc">Google spell sample. Needs a valid google key. Insert your key in the key element of the payload string given in this sample.
+</td>
+</tr>
+<tr class="even">
+  <td colspan="2">
+<a href="google/google_spell.php">WSDL</a> (<a href="#" id="toggle-google-google-spell">show code</a>)<br />
+<div id="code-google-google-spell"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2006 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/** 
+  * Note: This is a simole example written just as a proof of concept. 
+  * You may write a nice web interface to improve the usability.    
+  * This sample sends a Goole key and a phrase to Google spell service. 
+  * If everyting goes right, it returns a spell corrected version of 
+  * the prase you submit.
+  * Google spell uses SOAP 1.1.
+  */
+
+$requestPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:doSpellingSuggestion x:encodingStyle=&quot;http://schemas.xmlsoap.org/soap/encoding/&quot; xmlns:ns1=&quot;urn:GoogleSearch&quot; xmlns:x=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot; xmlns:xsi=&quot;http://www.w3.org/1999/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/1999/XMLSchema&quot;&gt;
+    &lt;key xsi:type=&quot;xsd:string&quot;&gt;your_key_here&lt;/key&gt;
+    &lt;phrase xsi:type=&quot;xsd:string&quot;&gt;tamperature&lt;/phrase&gt;
+&lt;/ns1:doSpellingSuggestion&gt;
+XML;
+
+try {
+    $client = new WSClient(array( &quot;to&quot; =&gt; &quot;http://api.google.com/search/beta2&quot;, 
+                                  &quot;useSOAP&quot; =&gt; 1.1)); 
+    $responseMessage = $client-&gt;request($requestPayloadString);
+
+    printf(&quot;Response = %s &lt;br/&gt;\n&quot;, htmlspecialchars($responseMessage-&gt;str));
+
+} catch (Exception $e) {
+    if ($e instanceof WSFault) {
+        printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+    } else {
+        printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+    }
+    
+}
+
+
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+<tr class="odd">
+  <td colspan="2" class="desc">A client assessing yahoo search using rest
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+<a href="yahoo/yahoo_rest_client.php">Run client</a> (<a href="#" id="toggle-yahoo-yahoo-rest-client">show code</a>)<br />
+<div id="code-yahoo-yahoo-rest-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$requestPayloadString = &lt;&lt;&lt;XML
+&lt;webSearch&gt;&lt;appid&gt;ApacheRestDemo&lt;/appid&gt;&lt;query&gt;SriLanka&lt;/query&gt;&lt;form/&gt;&lt;/webSearch&gt;
+XML;
+
+try {
+
+    $client = new WSClient(
+        array(&quot;to&quot;=&gt;&quot;http://search.yahooapis.com/WebSearchService/V1/webSearch&quot;,
+	      &quot;HTTPMethod&quot;=&gt;GET,
+	      &quot;useSOAP&quot;=&gt;FALSE));
+				
+    $responseMessage = $client-&gt;request($requestPayloadString);
+    
+    printf(&quot;Response = %s &lt;br&gt;&quot;, htmlspecialchars($responseMessage-&gt;str));
+
+} catch (Exception $e) {
+
+	if ($e instanceof WSFault) {
+		printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+	} else {
+		printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+	}
+}
+
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="topic">
+  <td colspan="2">MTOM / Base64 Attachments</td>
+</tr>
+
+<tr class="even">
+  <td colspan="2" class="desc">MTOM sample where the service sends an attachment to the client. The image used is located in the resources folder.
+</td>
+</tr>
+<tr class="even">
+  <td colspan="2">
+<a href="mtom/mtom_download_client.php">Run client</a> | <a href="mtom/mtom_download_service.php">WSDL</a> |
+<a href="#" id="toggle-mtom-mtom-download-client">show client code</a> | <a href="#" id="toggle-mtom-mtom-download-service">show server code</a>
+
+<div id="code-mtom-mtom-download-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2006 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$requestPayloadString = &lt;&lt;&lt;XML
+&lt;download&gt;&lt;/download&gt;
+XML;
+
+try {
+
+    $client = new WSClient(
+        array( &quot;to&quot; =&gt; &quot;http://localhost/samples/mtom/mtom_download_service.php&quot;,
+               &quot;useMTOM&quot; =&gt; TRUE,
+               &quot;responseXOP&quot; =&gt; TRUE));
+
+    $requestMessage = new WSMessage($requestPayloadString);                    
+    $responseMessage = $client-&gt;request($requestMessage);
+    
+    printf(&quot;Response = %s \n&quot;, $responseMessage-&gt;str);
+
+    $cid2stringMap = $responseMessage-&gt;attachments;
+    $cid2contentMap = $responseMessage-&gt;cid2contentType;
+    $imageName;
+    if($cid2stringMap &amp;&amp; $cid2contentMap){
+        foreach($cid2stringMap as $i=&gt;$value){
+            $f = $cid2stringMap[$i];
+            $contentType = $cid2contentMap[$i];
+            if(strcmp($contentType,&quot;image/jpeg&quot;) ==0){
+                $imageName = $i.&quot;.&quot;.&quot;jpg&quot;;
+                if(stristr(PHP_OS, 'WIN')) {
+                    file_put_contents($imageName, $f);
+                }else{
+                    file_put_contents(&quot;/tmp/&quot;.$imageName, $f);
+                }
+            }
+        }
+    }else{
+        printf(&quot;attachments not received &quot;);
+    }
+    
+} catch (Exception $e) {
+
+    if ($e instanceof WSFault) {
+        printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+    } else {
+        printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+    }
+}
+?&gt;
+
+</pre><br />
+</div>
+
+<div id="code-mtom-mtom-download-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2006 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+function sendAttachment($msg)
+{
+$responsePayloadString = &lt;&lt;&lt;XML
+        &lt;ns1:download xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;
+            &lt;ns1:fileName&gt;test.jpg&lt;/ns1:fileName&gt;
+                &lt;ns1:image xmlmime:contentType=&quot;image/jpeg&quot; xmlns:xmlmime=&quot;http://www.w3.org/2004/06/xmlmime&quot;&gt;
+                    &lt;xop:Include xmlns:xop=&quot;http://www.w3.org/2004/08/xop/include&quot; href=&quot;cid:myid1&quot;&gt;&lt;/xop:Include&gt;
+                &lt;/ns1:image&gt;
+        &lt;/ns1:download&gt;
+XML;
+    $f = file_get_contents(&quot;../resources/axis2.jpg&quot;);                                        
+
+    $responseMessage = new WSMessage($responsePayloadString, 
+            array( &quot;attachments&quot; =&gt; array(&quot;myid1&quot; =&gt; $f)));  
+    return $responseMessage;    
+}
+
+$operations = array(&quot;download&quot; =&gt; &quot;sendAttachment&quot;);
+
+$service = new WSService(array(&quot;operations&quot; =&gt; $operations, &quot;useMTOM&quot; =&gt; TRUE));
+
+$service-&gt;reply();
+
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="odd">
+  <td colspan="2" class="desc">MTOM sample where the service saves an attachment sent by the client. You have to save the file to a globally writable folder. This sample uses '/tmp'. 
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+<a href="mtom/mtom_upload_client.php">Run client</a> | <a href="mtom/mtom_upload_service.php">WSDL</a> |
+<a href="#" id="toggle-mtom-mtom-upload-service">show server code</a> | <a href="#" id="toggle-mtom-mtom-upload-client">show client code</a>
+
+<div id="code-mtom-mtom-upload-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2006 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$requestPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:upload xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;
+               &lt;ns1:fileName&gt;test.jpg&lt;/ns1:fileName&gt;
+               &lt;ns1:image xmlmime:contentType=&quot;image/jpeg&quot; xmlns:xmlmime=&quot;http://www.w3.org/2004/06/xmlmime&quot;&gt;
+                  &lt;xop:Include xmlns:xop=&quot;http://www.w3.org/2004/08/xop/include&quot; href=&quot;cid:myid1&quot;&gt;&lt;/xop:Include&gt;
+               &lt;/ns1:image&gt;
+&lt;/ns1:upload&gt;
+XML;
+
+try {
+    $f = file_get_contents(&quot;../resources/axis2.jpg&quot;);
+    
+    $requestMessage = new WSMessage($requestPayloadString, 
+        array(&quot;to&quot; =&gt; &quot;http://localhost/samples/mtom/mtom_upload_service.php&quot;,
+        &quot;attachments&quot; =&gt; array(&quot;myid1&quot; =&gt; $f)));
+    
+    $client = new WSClient(array(&quot;useMTOM&quot; =&gt; TRUE));
+
+    $responseMessage = $client-&gt;request($requestMessage);
+    
+    echo $responseMessage-&gt;str;
+
+} catch (Exception $e) {
+    if ($e instanceof WSFault) {
+        printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+    } else {
+        printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+    }
+}
+?&gt;
+
+</pre><br />
+</div>
+
+<div id="code-mtom-mtom-upload-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2006 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+function getAttachment($inMessage) {
+    
+    $cid2stringMap = $inMessage-&gt;attachments;
+    $cid2contentMap = $inMessage-&gt;cid2contentType;
+    $imageName;
+    $file_saved = 0;
+
+    foreach($cid2stringMap as $i=&gt;$value){
+        $f = $cid2stringMap[$i];
+        $contentType = $cid2contentMap[$i];
+        if(strcmp($contentType,&quot;image/jpeg&quot;) ==0){
+            $imageName = $i.&quot;.&quot;.&quot;jpg&quot;;
+            if (stristr(PHP_OS, 'WIN')) {
+                $file_saved = file_put_contents($imageName, $f);
+            }else{                
+                $file_saved = file_put_contents(&quot;/tmp/&quot;.$imageName, $f);
+            }
+        }
+    }
+    
+if($file_saved){
+$responsePayload = &lt;&lt;&lt;XML
+&lt;ns1:response xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;Image Saved&lt;/ns1:response&gt;
+XML;
+}
+else{
+$responsePayload = &lt;&lt;&lt;XML
+&lt;ns1:response xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;Image Saving Failed&lt;/ns1:response&gt;
+XML;
+}
+
+    $returnMessage = new WSMessage($responsePayload);
+
+    return $returnMessage;
+}
+
+$operations = array(&quot;upload&quot; =&gt; &quot;getAttachment&quot;);
+
+$service = new WSService( array( &quot;operations&quot; =&gt; $operations, 
+                                &quot;requestXOP&quot; =&gt; TRUE));
+        
+$service-&gt;reply();
+
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="even">
+  <td colspan="2" class="desc">A service that receives a base64 string attachement and saves it to a file.
+</td>
+</tr>
+<tr class="even">
+  <td colspan="2">
+<a href="mtom/mtom_upload_client_base64.php">Run client</a> | <a href="mtom/mtom_upload_service_base64.php">WSDL</a> |
+<a href="#" id="toggle-mtom-mtom-upload-client-base64">show client code</a> | <a href="#" id="toggle-mtom-mtom-upload-service-base64">show server code</a>
+
+<div id="code-mtom-mtom-upload-client-base64"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2006 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$requestPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:upload xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;
+               &lt;ns1:fileName&gt;test.jpg&lt;/ns1:fileName&gt;
+               &lt;ns1:image xmlmime:contentType=&quot;image/jpeg&quot; xmlns:xmlmime=&quot;http://www.w3.org/2004/06/xmlmime&quot;&gt;
+                  &lt;xop:Include xmlns:xop=&quot;http://www.w3.org/2004/08/xop/include&quot; href=&quot;cid:myid1&quot;&gt;&lt;/xop:Include&gt;
+               &lt;/ns1:image&gt;
+&lt;/ns1:upload&gt;
+XML;
+
+try {
+    $f = file_get_contents(&quot;../resources/axis2.jpg&quot;);
+    
+    $requestMessage = new WSMessage($requestPayloadString, 
+        array(&quot;to&quot; =&gt; &quot;http://localhost/samples/mtom/mtom_upload_service_base64.php&quot;,
+        &quot;attachments&quot; =&gt; array(&quot;myid1&quot; =&gt; $f)));
+    
+    $client = new WSClient(array(&quot;useMTOM&quot; =&gt;FALSE));
+
+    $responseMessage = $client-&gt;request($requestMessage);
+    
+    echo $responseMessage-&gt;str;
+
+} catch (Exception $e) {
+    if ($e instanceof WSFault) {
+        printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+    } else {
+        printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+    }
+}
+?&gt;
+
+</pre><br />
+</div>
+
+<div id="code-mtom-mtom-upload-service-base64"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2006 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+function getAttachment($inMessage) {
+    
+    $cid2stringMap = $inMessage-&gt;attachments;
+    $cid2contentMap = $inMessage-&gt;cid2contentType;
+    $imageName;
+    
+    $arraysize = count($cid2contentMap);
+    if($arraysize == 0){
+	    $dom = new DomDocument();
+	    $dom-&gt;loadXML($inMessage-&gt;str);
+	    $images = $dom-&gt;documentElement-&gt;getElementsByTagName('image');
+        $image = $images-&gt;item(0);
+        if (stristr(PHP_OS, 'WIN')) {
+            file_put_contents(&quot;base64image.txt&quot;,$image-&gt;nodeValue);
+            $str = base64_decode($image-&gt;nodeValue);
+            file_put_contents(&quot;decoded_image.jpg&quot;, $str);
+        }else{
+            file_put_contents(&quot;/tmp/base64image.txt&quot;,$image-&gt;nodeValue);
+		$str = base64_decode($image-&gt;nodeValue);
+            file_put_contents(&quot;decoded_image.jpg&quot;, $str);
+        }
+    }
+
+$responsePayload = &lt;&lt;&lt;XML
+&lt;ns1:response xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;Image Saved&lt;/ns1:response&gt;
+XML;
+
+    $returnMessage = new WSMessage($responsePayload);
+
+    return $returnMessage;
+}
+
+$operations = array(&quot;upload&quot; =&gt; &quot;getAttachment&quot;);
+
+$service = new WSService(
+            array(
+                &quot;operations&quot; =&gt; $operations, 
+                &quot;requestXOP&quot;=&gt;TRUE));
+        
+$service-&gt;reply();
+
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="topic">
+  <td colspan="2">WSDL generation</td>
+</tr>
+
+<tr class="odd">
+  <td colspan="2" class="desc">WSDL generation sample service for doc-lit style
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+
+<a href="wsdl_generation/doclit_client.php">Run client</a> | <a href="wsdl_generation/doclit_service.php">WSDL</a> |
+<a href="#" id="toggle-wsdl-generation-doclit-client">show client code</a> |
+<a href="#" id="toggle-wsdl-generation-doclit-service">show server code</a>
+
+<div id="code-wsdl-generation-doclit-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+class getPriceRequestWrapper
+{
+    public $item_name;
+    public $amount;
+}
+
+class getPriceResponseWrapper
+{
+    public $price;
+}
+
+$class_map = array(&quot;getPrice&quot; =&gt; &quot;getPriceRequestWrapper&quot;,
+                   &quot;getPriceResponse&quot; =&gt; &quot;getPriceResponseWrapper&quot;);
+
+try {
+
+    $client = new WSClient(array(&quot;wsdl&quot; =&gt; &quot;http://localhost/samples/wsdl_generation/doclit_service.php?wsdl&quot;,
+                                 &quot;classmap&quot; =&gt; $class_map));
+
+    $proxy = $client-&gt;getProxy();	
+
+    $input = new getPriceRequestWrapper();
+    $input-&gt;item_name = &quot;wso2&quot;;
+    $input-&gt;amount = 10;
+
+    $val = $proxy-&gt;getPrice($input);
+
+    printf(&quot;The Total Price is: %s \n&quot;, $val-&gt;price);
+
+} catch (Exception $e) {
+    if ($e instanceof WSFault) {
+        printf(&quot;Soap Fault Reason: %s\n&quot;, $e-&gt;Reason);
+        printf(&quot;Soap Fault Code: %s \n&quot;, $e-&gt;Code);
+        
+    } else {
+        printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+    }
+  }
+?&gt;
+
+</pre><br />
+</div>
+
+
+<div id="code-wsdl-generation-doclit-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$item = array(&quot;abc&quot; =&gt; 101.5, &quot;wso2&quot; =&gt; 250.50, &quot;xyz&quot; =&gt; 99.99);
+
+/** BuyItem function
+ * @param string $item_name of the item to buy
+ * (maps to the xs:string XML schema type )
+ * @param int $amount no of items to buy
+ * (maps to the xs:nonNegativeInteger XML schema type)
+ * @return float $price total price
+ *(maps to the xs:double XML schema type )
+ */
+function getPriceFunction($item_name ,$amount)
+{
+    global $item;
+    if ($item_name &amp;&amp; $amount){
+        if(isset($item[$item_name])){
+            return array(&quot;price&quot; =&gt; ($item[$item_name] * $amount));
+        }
+        else
+            return NULL;
+    }
+    return array(&quot;price&quot; =&gt; 200043);
+}
+
+
+$operations = array(&quot;getPrice&quot;=&gt;&quot;getPriceFunction&quot;);
+$opParams = array(&quot;getPriceFunction&quot;=&gt;&quot;MIXED&quot;);
+
+$svr = new WSService(array(&quot;operations&quot;=&gt;$operations, 
+			   &quot;bindingStyle&quot;=&gt;&quot;doclit&quot;,
+		   	   &quot;opParams&quot;=&gt;$opParams));
+
+
+$svr-&gt;reply();
+
+
+?&gt;
+
+    
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="even">
+  <td colspan="2" class="desc">WSDL generation sample service for rpc style
+</td>
+</tr>
+<tr class="even">
+  <td colspan="2">
+<a href="wsdl_generation/rpc_service.php">WSDL</a> (<a href="#" id="toggle-wsdl-generation-rpc-service">show code</a>)<br />
+<div id="code-wsdl-generation-rpc-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+/** The  purchaseOrder function
+ * @param int $count the number of widgets to buy
+ * (maps to the xs:nonNegativeInteger XML schema type )
+ * @param string $date the date those items were sold
+ * (maps to the xs:gDay XML schema type)
+ * @return string $t time for buying it
+ * (maps to the xs:QName XML schema type )
+ */
+function purchaseOrder($x,$y)
+{
+    return array(&quot;return&quot;=&gt;$x*$y);
+}
+
+
+$operations = array(&quot;purchaseOrder&quot;=&gt;&quot;purchaseOrder&quot;);
+$opParams = array(&quot;purchaseOrder&quot;=&gt;&quot;MIXED&quot;);
+$svr = new WSService(array(&quot;operations&quot;=&gt;$operations, &quot;bindingStyle&quot;=&gt;&quot;rpc-enc&quot;, &quot;opParams&quot; =&gt; $opParams));
+
+
+$svr-&gt;reply();
+
+
+?&gt;
+
+    
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="topic">
+  <td colspan="2">Security samples</td>
+</tr>
+
+<tr class="odd">
+  <td colspan="2" class="desc">UsernameToken sample
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+<a href="security/username_token/client.php">Run client</a> | <a href="security/username_token/service.php">WSDL</a> |
+<a href="#" id="toggle-security-username-token-client">show client code</a> |
+<a href="#" id="toggle-security-username-token-service">show code</a>
+
+<div id="code-security-username-token-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// User defined function implementing service operation 
+function echoFunction($inMessage) {
+    $returnMessage = new WSMessage($inMessage-&gt;str);
+    return $returnMessage;
+}
+
+// Operations and associated options
+$operations = array(&quot;echoString&quot; =&gt; &quot;echoFunction&quot;);
+$actions = array(&quot;http://php.axis2.org/samples/echoString&quot; =&gt; &quot;echoString&quot;);
+
+// Security options
+$security_options = array(&quot;useUsernameToken&quot; =&gt; TRUE);
+$policy = new WSPolicy(array(&quot;security&quot;=&gt;$security_options));
+$security_token = new WSSecurityToken(array(&quot;user&quot; =&gt; &quot;Raigama&quot;,
+                                            &quot;password&quot; =&gt; &quot;RaigamaPW&quot;,
+                                            &quot;passwordType&quot; =&gt; &quot;Digest&quot;));
+
+// Create service with options
+$service = new WSService(array(&quot;operations&quot; =&gt; $operations,
+                               &quot;actions&quot; =&gt; $actions,
+                               &quot;policy&quot; =&gt; $policy,
+                               &quot;securityToken&quot; =&gt; $security_token));
+
+// Reply to requests
+$service-&gt;reply();
+
+?&gt;
+
+</pre><br />
+</div>
+
+<div id="code-security-username-token-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Request payload string 
+$reqPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:echo xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
+XML;
+
+try {
+    // Create message with request payload and options
+    $reqMessage = new WSMessage($reqPayloadString,
+                         array(&quot;to&quot; =&gt; &quot;http://localhost/samples/security/username_token/service.php&quot;,
+                               &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/echoString&quot;));
+   
+    // Set up security options
+    $security_options = array(&quot;useUsernameToken&quot; =&gt; TRUE );
+    $policy = new WSPolicy(array(&quot;security&quot; =&gt; $security_options));
+    $security_token = new WSSecurityToken(array(&quot;user&quot; =&gt; &quot;Raigama&quot;,
+                                                &quot;password&quot; =&gt; &quot;RaigamaPW&quot;,
+                                                &quot;passwordType&quot; =&gt; &quot;Digest&quot;));
+    
+    // Create client with options
+    $client = new WSClient(array(&quot;useWSA&quot; =&gt; TRUE,
+                                 &quot;policy&quot; =&gt; $policy,
+                                 &quot;securityToken&quot; =&gt; $security_token));
+	
+    // Send request and capture response
+    $resMessage = $client-&gt;request($reqMessage);
+    
+    printf(&quot;Response = %s \n&quot;, $resMessage-&gt;str);
+
+} catch (Exception $e) {
+
+	if ($e instanceof WSFault) {
+		printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+	} else {
+		printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+	}
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="even">
+  <td colspan="2" class="desc">UsernameToken sample client based on a policy file
+</td>
+</tr>
+<tr class="even">
+  <td colspan="2">
+<a href="security/username_token/policy_file_based/client.php">Run client</a> | <a href="security/username_token/policy_file_based/service.php">WSDL</a> |
+<a href="#" id="toggle-security-username-token-policy-file-based-client">show client code</a> |
+<a href="#" id="toggle-security-username-token-policy-file-based-service">show server code</a>
+
+<div id="code-security-username-token-policy-file-based-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// User defined function implementing service operation 
+function echoFunction($inMessage) {
+    $returnMessage = new WSMessage($inMessage-&gt;str);
+    return $returnMessage;
+}
+
+// Operations and associated options
+$operations = array(&quot;echoString&quot; =&gt; &quot;echoFunction&quot;);
+$actions = array(&quot;http://php.axis2.org/samples/echoString&quot; =&gt; &quot;echoString&quot;);
+
+// Security options
+$policy_xml = file_get_contents(&quot;policy.xml&quot;);
+$policy = new WSPolicy($policy_xml);
+$security_token = new WSSecurityToken(array(&quot;user&quot; =&gt; &quot;Alice&quot;,
+                                            &quot;password&quot; =&gt; &quot;abcd!123&quot;,
+                                            &quot;passwordType&quot; =&gt; &quot;Digest&quot;));
+
+// Create service with options
+$service = new WSService(array(&quot;operations&quot; =&gt; $operations,
+                               &quot;actions&quot; =&gt; $actions,
+                               &quot;policy&quot; =&gt; $policy,
+                               &quot;securityToken&quot; =&gt; $security_token));
+
+// Reply to requests
+$service-&gt;reply();
+
+?&gt;
+
+</pre><br />
+</div>
+
+<div id="code-security-username-token-policy-file-based-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Request payload string 
+$reqPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:echo xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
+XML;
+
+try {
+    // Create message with request payload and options
+    $reqMessage = new WSMessage($reqPayloadString,
+                         array(&quot;to&quot; =&gt; &quot;http://localhost/samples/security/username_token/policy_file_based/service.php&quot;,
+                               &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/echoString&quot;));
+   
+    // Set up security options
+    $policy_xml = file_get_contents(&quot;policy.xml&quot;);
+    $policy = new WSPolicy($policy_xml);
+    $security_token = new WSSecurityToken(array(&quot;user&quot; =&gt; &quot;Alice&quot;,
+                                                &quot;password&quot; =&gt; &quot;abcd!123&quot;,
+                                                &quot;passwordType&quot; =&gt; &quot;Digest&quot;));
+    
+    // Create client with options
+    $client = new WSClient(array(&quot;useWSA&quot; =&gt; TRUE,
+                                 &quot;policy&quot; =&gt; $policy,
+                                 &quot;securityToken&quot; =&gt; $security_token));
+	
+    // Send request and capture response
+    $resMessage = $client-&gt;request($reqMessage);
+    
+    printf(&quot;Response = %s \n&quot;, $resMessage-&gt;str);
+
+} catch (Exception $e) {
+
+	if ($e instanceof WSFault) {
+		printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+	} else {
+		printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+	}
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="odd">
+  <td colspan="2" class="desc">UsernameToken sample client for password call back method
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+<a href="security/username_token/call_back/client.php">Run client</a> | <a href="security/username_token/call_back/service.php">WSDL</a> |
+<a href="#" id="toggle-security-username-token-call-back-client">show client code</a> |
+<a href="#" id="toggle-security-username-token-call-back-service">show server code</a>
+
+<div id="code-security-username-token-call-back-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Username Password mapping table
+$user_pass_mapping = array(
+					&quot;Raigama&quot; =&gt; &quot;RaigamaPW&quot;,
+					&quot;Alice&quot; =&gt; &quot;abcd!123&quot;,
+					&quot;Bob&quot; =&gt; &quot;wxyz!123&quot;);
+
+function echoFunction($inMessage) {
+
+	$returnMessage = new WSMessage($inMessage-&gt;str);
+
+	return $returnMessage;
+}
+
+function get_my_password_function($username)
+{
+	//logic to get password from any source (ex: using mysql database
+	// etc)
+	global $user_pass_mapping;
+
+	if(isset($user_pass_mapping[$username])){
+		$password = $user_pass_mapping[$username];
+		return $password;
+	}
+	else
+	 return NULL;
+
+}
+
+$operations = array(&quot;echoString&quot; =&gt; &quot;echoFunction&quot;);
+$actions = array(&quot;http://php.axis2.org/samples/echoString&quot; =&gt; &quot;echoString&quot;);
+$sec_array = array(&quot;useUsernameToken&quot; =&gt; TRUE);
+
+$policy = new WSPolicy(array(&quot;security&quot;=&gt;$sec_array));
+$sec_token = new WSSecurityToken(array(&quot;passwordCallback&quot; =&gt; &quot;get_my_password_function&quot;,
+                                       &quot;passwordType&quot; =&gt; &quot;Digest&quot;));
+
+$svr = new WSService(array(&quot;operations&quot; =&gt; $operations,
+                           &quot;actions&quot; =&gt; $actions,
+                           &quot;policy&quot; =&gt; $policy,
+                           &quot;securityToken&quot; =&gt; $sec_token));
+
+$svr-&gt;reply();
+
+?&gt;
+
+</pre><br />
+</div>
+
+<div id="code-security-username-token-call-back-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$reqPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:echo xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
+XML;
+
+try {
+
+    $reqMessage = new WSMessage($reqPayloadString,
+                                array(&quot;to&quot; =&gt; &quot;http://localhost/samples/security/username_token/call_back/service.php&quot;,
+                                      &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/echoString&quot;));
+    
+    $sec_array = array(&quot;useUsernameToken&quot; =&gt; TRUE );
+    $policy = new WSPolicy(array(&quot;security&quot; =&gt; $sec_array));
+    $sec_token = new WSSecurityToken(array(&quot;user&quot; =&gt; &quot;Raigama&quot;,
+                                           &quot;password&quot; =&gt; &quot;RaigamaPW&quot;,
+                                           &quot;passwordType&quot; =&gt; &quot;Digest&quot;));
+    
+    $client = new WSClient(array(&quot;useWSA&quot; =&gt; TRUE,
+                                 &quot;policy&quot; =&gt; $policy,
+                                 &quot;securityToken&quot; =&gt; $sec_token));
+				
+    $resMessage = $client-&gt;request($reqMessage);
+    
+    printf(&quot;Response = %s \n&quot;, $resMessage-&gt;str);
+
+} catch (Exception $e) {
+
+	if ($e instanceof WSFault) {
+		printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+	} else {
+		printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+	}
+
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="even">
+  <td colspan="2" class="desc">Timestamp  client
+</td>
+</tr>
+<tr class="even">
+  <td colspan="2">
+<a href="security/timestamp/client.php">Run client</a> | <a href="security/timestamp/service.php">WSDL</a> |
+<a href="#" id="toggle-security-timestamp-client">show client code</a> |  <a href="#" id="toggle-security-timestamp-service">show server code</a>
+
+<div id="code-security-timestamp-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+function echoFunction($inMessage) {
+
+    $returnMessage = new WSMessage($inMessage-&gt;str);
+
+    return $returnMessage;
+}
+
+$operations = array(&quot;echoString&quot; =&gt; &quot;echoFunction&quot;);
+$actions = array(&quot;http://php.axis2.org/samples/echoString&quot; =&gt; &quot;echoString&quot;);
+$sec_array = array(&quot;includeTimeStamp&quot; =&gt; TRUE);
+
+$policy = new WSPolicy(array(&quot;security&quot;=&gt; $sec_array));
+$sec_token = new WSSecurityToken(array(&quot;ttl&quot; =&gt; 100));
+
+$svr = new WSService(array(&quot;operations&quot; =&gt; $operations,
+                           &quot;actions&quot; =&gt; $actions,
+                           &quot;policy&quot; =&gt; $policy,
+                           &quot;securityToken&quot; =&gt; $sec_token));
+        
+$svr-&gt;reply();
+
+?&gt;
+
+
+
+</pre><br />
+</div>
+
+<div id="code-security-timestamp-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$reqPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:echo xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
+XML;
+
+try {
+
+    $reqMessage = new WSMessage($reqPayloadString,
+                                array(&quot;to&quot;=&gt;&quot;http://localhost/samples/security/timestamp/service.php&quot;,
+                                      &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/echoString&quot;));
+    
+    $sec_array = array(&quot;includeTimeStamp&quot; =&gt; TRUE );
+    $policy = new WSPolicy(array(&quot;security&quot; =&gt; $sec_array));
+    $sec_token = new WSSecurityToken(array(&quot;ttl&quot; =&gt; 60));
+    
+    $client = new WSClient(array(&quot;useWSA&quot; =&gt; TRUE,
+                                 &quot;policy&quot; =&gt; $policy,
+                                 &quot;securityToken&quot; =&gt; $sec_token));
+				
+    $resMessage = $client-&gt;request($reqMessage);
+    
+    printf(&quot;Response = %s \n&quot;, $resMessage-&gt;str);
+
+} catch (Exception $e) {
+
+	if ($e instanceof WSFault) {
+		printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+	} else {
+		printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+	}
+
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="odd">
+  <td colspan="2" class="desc">Timestamp  client based on a policy file
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+<a href="security/timestamp/policy_file_based/client.php">Run client</a> | <a href="security/timestamp/policy_file_based/service.php">WSDL</a> |
+<a href="#" id="toggle-security-timestamp-policy-file-based-client">show client code</a> |
+<a href="#" id="toggle-security-timestamp-policy-file-based-service">show server code</a>
+
+<div id="code-security-timestamp-policy-file-based-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+function echoFunction($inMessage) {
+
+    $returnMessage = new WSMessage($inMessage-&gt;str);
+
+    return $returnMessage;
+}
+
+$operations = array(&quot;echoString&quot; =&gt; &quot;echoFunction&quot;);
+$actions = array(&quot;http://php.axis2.org/samples/echoString&quot; =&gt; &quot;echoString&quot;);
+
+$policy_xml = file_get_contents(&quot;policy.xml&quot;);
+$policy = new WSPolicy($policy_xml);
+$sec_token = new WSSecurityToken(array(&quot;ttl&quot; =&gt; 100));
+
+$svr = new WSService(array(&quot;operations&quot; =&gt; $operations,
+                           &quot;actions&quot; =&gt; $actions,
+                           &quot;policy&quot; =&gt; $policy,
+                           &quot;securityToken&quot; =&gt; $sec_token));
+        
+$svr-&gt;reply();
+
+?&gt;
+
+
+
+</pre><br />
+</div>
+
+<div id="code-security-timestamp-policy-file-based-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$reqPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:echo xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
+XML;
+
+try {
+
+    $reqMessage = new WSMessage($reqPayloadString,
+                                array(&quot;to&quot;=&gt;&quot;http://localhost/samples/security/timestamp/policy_file_based/service.php&quot;,
+                                      &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/echoString&quot;));
+    
+    $policy_xml = file_get_contents(&quot;policy.xml&quot;);
+    $policy = new WSPolicy($policy_xml);
+    $sec_token = new WSSecurityToken(array(&quot;ttl&quot; =&gt; 60));
+    
+    $client = new WSClient(array(&quot;useWSA&quot; =&gt; TRUE,
+                                 &quot;policy&quot; =&gt; $policy,
+                                 &quot;securityToken&quot; =&gt; $sec_token));
+				
+    $resMessage = $client-&gt;request($reqMessage);
+    
+    printf(&quot;Response = %s \n&quot;, $resMessage-&gt;str);
+
+} catch (Exception $e) {
+
+	if ($e instanceof WSFault) {
+		printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+	} else {
+		printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+	}
+
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="even">
+  <td colspan="2" class="desc">Encryption Client
+</td>
+</tr>
+<tr class="even">
+  <td colspan="2">
+<a href="security/encryption/client.php">Run client</a> | <a href="security/encryption/service.php">WSDL</a> |
+<a href="#" id="toggle-security-encryption-client">show client code</a> | <a href="#" id="toggle-security-encryption-service">show server code</a>
+
+<div id="code-security-encryption-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+function echoFunction($inMessage) {
+
+    $returnMessage = new WSMessage($inMessage-&gt;str);
+
+    return $returnMessage;
+}
+
+$pub_key = ws_get_cert_from_file(&quot;../keys/alice_cert.cert&quot;);
+$pvt_key = ws_get_key_from_file(&quot;../keys/bob_key.pem&quot;);
+
+$operations = array(&quot;echoString&quot; =&gt; &quot;echoFunction&quot;);
+$sec_array = array(&quot;encrypt&quot; =&gt; TRUE,
+                    &quot;algorithmSuite&quot; =&gt; &quot;Basic256Rsa15&quot;,
+                    &quot;securityTokenReference&quot; =&gt; &quot;IssuerSerial&quot;);
+
+$actions = array(&quot;http://php.axis2.org/samples/echoString&quot; =&gt; &quot;echoString&quot;);
+ 
+$policy = new WSPolicy(array(&quot;security&quot;=&gt; $sec_array));
+$sec_token = new WSSecurityToken(array(&quot;privateKey&quot; =&gt; $pvt_key,
+                                       &quot;receiverCertificate&quot; =&gt; $pub_key));
+
+$svr = new WSService(array(&quot;actions&quot; =&gt; $actions,
+                           &quot;operations&quot; =&gt; $operations,
+                           &quot;policy&quot; =&gt; $policy,
+                           &quot;securityToken&quot; =&gt; $sec_token));
+        
+$svr-&gt;reply();
+
+?&gt;
+
+</pre><br />
+</div>
+
+<div id="code-security-encryption-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$reqPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:echo xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
+XML;
+
+try {
+    $rec_cert = ws_get_cert_from_file(&quot;../keys/bob_cert.cert&quot;);
+    $pvt_key = ws_get_key_from_file(&quot;../keys/alice_key.pem&quot;);
+    
+    $reqMessage = new WSMessage($reqPayloadString,
+                                array(&quot;to&quot; =&gt; &quot;http://localhost/samples/security/encryption/service.php&quot;,
+                                      &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/echoString&quot;));
+    
+    $sec_array = array(&quot;encrypt&quot; =&gt; TRUE,
+                       &quot;algorithmSuite&quot; =&gt; &quot;Basic256Rsa15&quot;,
+                       &quot;securityTokenReference&quot; =&gt; &quot;IssuerSerial&quot;);
+    
+    $policy = new WSPolicy(array(&quot;security&quot; =&gt; $sec_array));
+    $sec_token = new WSSecurityToken(array(&quot;privateKey&quot; =&gt; $pvt_key,
+                                           &quot;receiverCertificate&quot; =&gt; $rec_cert));
+    
+    $client = new WSClient(array(&quot;useWSA&quot; =&gt; TRUE,
+                                 &quot;policy&quot; =&gt; $policy,
+                                 &quot;securityToken&quot; =&gt; $sec_token));
+				
+    $resMessage = $client-&gt;request($reqMessage);
+    
+    printf(&quot;Response = %s \n&quot;, $resMessage-&gt;str);
+
+} catch (Exception $e) {
+
+	if ($e instanceof WSFault) {
+		printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+	} else {
+		printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+	}
+
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="odd">
+  <td colspan="2" class="desc">Encryption Client based on a policy file
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+<a href="security/encryption/policy_file_based/client.php">Run client</a> | <a href="security/encryption/policy_file_based/service.php">WSDL</a> |
+<a href="#" id="toggle-security-encryption-policy-file-based-client">show client code</a> |
+<a href="#" id="toggle-security-encryption-policy-file-based-service">show server code</a>
+
+<div id="code-security-encryption-policy-file-based-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+function echoFunction($inMessage) {
+
+    $returnMessage = new WSMessage($inMessage-&gt;str);
+
+    return $returnMessage;
+}
+
+$pub_key = ws_get_cert_from_file(&quot;../../keys/alice_cert.cert&quot;);
+$pvt_key = ws_get_key_from_file(&quot;../../keys/bob_key.pem&quot;);
+
+$operations = array(&quot;echoString&quot; =&gt; &quot;echoFunction&quot;);
+
+$actions = array(&quot;http://php.axis2.org/samples/echoString&quot; =&gt; &quot;echoString&quot;);
+
+$policy_xml = file_get_contents(&quot;policy.xml&quot;);
+$policy = new WSPolicy($policy_xml);
+$sec_token = new WSSecurityToken(array(&quot;privateKey&quot; =&gt; $pvt_key,
+                                       &quot;receiverCertificate&quot; =&gt; $pub_key));
+
+$svr = new WSService(array(&quot;actions&quot; =&gt; $actions,
+                           &quot;operations&quot; =&gt; $operations,
+                           &quot;policy&quot; =&gt; $policy,
+                           &quot;securityToken&quot; =&gt; $sec_token));
+        
+$svr-&gt;reply();
+
+?&gt;
+
+</pre><br />
+</div>
+
+<div id="code-security-encryption-policy-file-based-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$reqPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:echo xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
+XML;
+
+try {
+    $rec_cert = ws_get_cert_from_file(&quot;../../keys/bob_cert.cert&quot;);
+    $pvt_key = ws_get_key_from_file(&quot;../../keys/alice_key.pem&quot;);
+    
+    $reqMessage = new WSMessage($reqPayloadString,
+                                array(&quot;to&quot; =&gt; &quot;http://localhost/samples/security/encryption/policy_file_based/service.php&quot;,
+                                      &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/echoString&quot;));
+    
+    $policy_xml = file_get_contents(&quot;policy.xml&quot;); 
+    $policy = new WSPolicy($policy_xml);
+    $sec_token = new WSSecurityToken(array(&quot;privateKey&quot; =&gt; $pvt_key,
+                                           &quot;receiverCertificate&quot; =&gt; $rec_cert));
+    
+    $client = new WSClient(array(&quot;useWSA&quot; =&gt; TRUE,
+                                 &quot;policy&quot; =&gt; $policy,
+                                 &quot;securityToken&quot; =&gt; $sec_token));
+				
+    $resMessage = $client-&gt;request($reqMessage);
+    
+    printf(&quot;Response = %s \n&quot;, $resMessage-&gt;str);
+
+} catch (Exception $e) {
+
+	if ($e instanceof WSFault) {
+		printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+	} else {
+		printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+	}
+
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="even">
+  <td colspan="2" class="desc">Signing Client 
+</td>
+</tr>
+<tr class="even">
+  <td colspan="2">
+<a href="security/signing/client.php">Run client</a> | <a href="security/signing/service.php">WSDL</a> |
+<a href="#" id="toggle-security-signing-client">show client code</a> |
+<a href="#" id="toggle-security-signing-service">show server code</a>
+
+<div id="code-security-signing-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+function echoFunction($inMessage) {
+
+    $returnMessage = new WSMessage($inMessage-&gt;str);
+
+    return $returnMessage;
+}
+
+$cert = ws_get_cert_from_file(&quot;../keys/bob_cert.cert&quot;);
+$pvt_key = ws_get_key_from_file(&quot;../keys/bob_key.pem&quot;);
+
+$operations = array(&quot;echoString&quot; =&gt; &quot;echoFunction&quot;);
+
+$sec_array = array(&quot;sign&quot; =&gt; TRUE,
+                    &quot;algorithmSuite&quot; =&gt; &quot;Basic256Rsa15&quot;,
+                    &quot;securityTokenReference&quot; =&gt; &quot;KeyIdentifier&quot;);
+
+$policy = new WSPolicy(array(&quot;security&quot;=&gt;$sec_array));
+
+$sec_token = new WSSecurityToken(array(&quot;privateKey&quot; =&gt; $pvt_key,
+                                       &quot;certificate&quot; =&gt; $cert));
+
+$actions = array(&quot;http://php.axis2.org/samples/echoString&quot; =&gt; &quot;echoString&quot;);
+
+$svr = new WSService(array(&quot;operations&quot; =&gt; $operations,
+                           &quot;actions&quot; =&gt; $actions,
+                           &quot;policy&quot; =&gt; $policy,
+                           &quot;securityToken&quot; =&gt; $sec_token));
+        
+$svr-&gt;reply();
+
+?&gt;
+
+</pre><br />
+</div>
+
+<div id="code-security-signing-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$reqPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:echo xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
+XML;
+
+try {
+    $my_cert = ws_get_cert_from_file(&quot;../keys/alice_cert.cert&quot;);
+    $my_key = ws_get_key_from_file(&quot;../keys/alice_key.pem&quot;);
+    $rec_cert = ws_get_cert_from_file(&quot;../keys/bob_cert.cert&quot;);
+    
+    $reqMessage = new WSMessage($reqPayloadString,
+                                array(&quot;to&quot; =&gt; &quot;http://localhost/samples/security/signing/service.php&quot;,
+                                      &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/echoString&quot;));
+    
+    $sec_array = array(&quot;sign&quot;=&gt;TRUE,
+                       &quot;algorithmSuite&quot; =&gt; &quot;Basic256Rsa15&quot;,
+                       &quot;securityTokenReference&quot; =&gt; &quot;IssuerSerial&quot;);
+    
+    $policy = new WSPolicy(array(&quot;security&quot;=&gt;$sec_array));
+    $sec_token = new WSSecurityToken(array(&quot;privateKey&quot; =&gt; $my_key,
+                                           &quot;certificate&quot; =&gt; $my_cert,
+                                           &quot;receiverCertificate&quot; =&gt; $rec_cert));
+    
+    $client = new WSClient(array(&quot;useWSA&quot; =&gt; TRUE,
+                                 &quot;policy&quot; =&gt; $policy,
+                                 &quot;securityToken&quot; =&gt; $sec_token));
+				
+    $resMessage = $client-&gt;request($reqMessage);
+    
+    printf(&quot;Response = %s \n&quot;, $resMessage-&gt;str);
+
+} catch (Exception $e) {
+
+	if ($e instanceof WSFault) {
+		printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+	} else {
+		printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+	}
+
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="odd">
+  <td colspan="2" class="desc">Signing Client based on a policy file
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+<a href="security/signing/policy_file_based/client.php">Run client</a> | <a href="security/signing/policy_file_based/service.php">WSDL</a> |
+<a href="#" id="toggle-security-signing-policy-file-based-client">show client code</a> |
+<a href="#" id="toggle-security-signing-policy-file-based-service">show server code</a>
+
+<div id="code-security-signing-policy-file-based-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+function echoFunction($inMessage) {
+
+    $returnMessage = new WSMessage($inMessage-&gt;str);
+
+    return $returnMessage;
+}
+
+$cert = ws_get_cert_from_file(&quot;../../keys/bob_cert.cert&quot;);
+$pvt_key = ws_get_key_from_file(&quot;../../keys/bob_key.pem&quot;);
+
+$operations = array(&quot;echoString&quot; =&gt; &quot;echoFunction&quot;);
+
+$policy_xml = file_get_contents(&quot;policy.xml&quot;);
+$policy = new WSPolicy($policy_xml);
+
+$sec_token = new WSSecurityToken(array(&quot;privateKey&quot; =&gt; $pvt_key,
+                                       &quot;certificate&quot; =&gt; $cert));
+
+$actions = array(&quot;http://php.axis2.org/samples/echoString&quot; =&gt; &quot;echoString&quot;);
+
+$svr = new WSService(array(&quot;operations&quot; =&gt; $operations,
+                           &quot;actions&quot; =&gt; $actions,
+                           &quot;policy&quot; =&gt; $policy,
+                           &quot;securityToken&quot; =&gt; $sec_token));
+        
+$svr-&gt;reply();
+
+?&gt;
+
+</pre><br />
+</div>
+
+<div id="code-security-signing-policy-file-based-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$reqPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:echo xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
+XML;
+
+try {
+    $my_cert = ws_get_cert_from_file(&quot;../../keys/alice_cert.cert&quot;);
+    $my_key = ws_get_key_from_file(&quot;../../keys/alice_key.pem&quot;);
+    $rec_cert = ws_get_cert_from_file(&quot;../../keys/bob_cert.cert&quot;);
+    
+    $reqMessage = new WSMessage($reqPayloadString,
+                                array(&quot;to&quot; =&gt; &quot;http://localhost/samples/security/signing/policy_file_based/service.php&quot;,
+                                      &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/echoString&quot;));
+    
+    $policy_xml = file_get_contents(&quot;policy.xml&quot;); 
+    $policy = new WSPolicy($policy_xml);
+    $sec_token = new WSSecurityToken(array(&quot;privateKey&quot; =&gt; $my_key,
+                                           &quot;certificate&quot; =&gt; $my_cert,
+                                           &quot;receiverCertificate&quot; =&gt; $rec_cert));
+    
+    $client = new WSClient(array(&quot;useWSA&quot; =&gt; TRUE,
+                                 &quot;policy&quot; =&gt; $policy,
+                                 &quot;securityToken&quot; =&gt; $sec_token));
+				
+    $resMessage = $client-&gt;request($reqMessage);
+    
+    printf(&quot;Response = %s \n&quot;, $resMessage-&gt;str);
+
+} catch (Exception $e) {
+
+	if ($e instanceof WSFault) {
+		printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+	} else {
+		printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+	}
+
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="even">
+  <td colspan="2" class="desc">MTOM upload client with encryption enabled
+</td>
+</tr>
+<tr class="even">
+  <td colspan="2">
+<a href="security/secure_mtom/encryption/client.php">Run client</a> | <a href="security/secure_mtom/encryption/service.php">WSDL</a> |
+<a href="#" id="toggle-security-secure-mtom-encryption-client">show client code</a> |
+<a href="#" id="toggle-security-secure-mtom-encryption-service">show server code</a>
+
+<div id="code-security-secure-mtom-encryption-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+function getAttachment($inMessage) {
+
+  $cid2stringMap = $inMessage-&gt;attachments;
+    $cid2contentMap = $inMessage-&gt;cid2contentType;
+    $imageName;
+
+
+    foreach($cid2stringMap as $i=&gt;$value){
+        $f = $cid2stringMap[$i];
+        $contentType = $cid2contentMap[$i];
+        if(strcmp($contentType,&quot;image/jpeg&quot;) ==0){
+            $imageName = $i.&quot;.&quot;.&quot;jpg&quot;;
+            file_put_contents(&quot;/tmp/&quot;.$imageName, $f);
+        }
+    }
+
+    $arraysize = count($cid2contentMap);
+    if($arraysize == 0){
+        $dom = new DomDocument();
+        $dom-&gt;loadXML($inMessage-&gt;str);
+        $images = $dom-&gt;documentElement-&gt;getElementsByTagName('image');
+        $image = $images-&gt;item(0);
+        file_put_contents(&quot;/tmp/base64image.txt&quot;,$image-&gt;nodeValue);
+    }
+
+$resPayload = &lt;&lt;&lt;XML
+&lt;ns1:response xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;Image Saved&lt;/ns1:response&gt;
+XML;
+
+    $returnMessage = new WSMessage($resPayload);
+
+    return $returnMessage;
+
+}
+
+$pub_key = ws_get_cert_from_file(&quot;../../keys/alice_cert.cert&quot;);
+$pvt_key = ws_get_key_from_file(&quot;../../keys/bob_key.pem&quot;);
+
+$operations = array(&quot;upload&quot; =&gt; &quot;getAttachment&quot;);
+$sec_array = array(&quot;encrypt&quot; =&gt; TRUE,
+                    &quot;algorithmSuite&quot; =&gt; &quot;Basic256Rsa15&quot;,
+                    &quot;securityTokenReference&quot; =&gt; &quot;IssuerSerial&quot;);
+
+$actions = array(&quot;http://wso2.org/upload&quot; =&gt; &quot;upload&quot;);
+ 
+$policy = new WSPolicy(array(&quot;security&quot;=&gt; $sec_array));
+$sec_token = new WSSecurityToken(array(&quot;privateKey&quot; =&gt; $pvt_key,
+                                       &quot;receiverCertificate&quot; =&gt; $pub_key));
+
+$svr = new WSService(array(&quot;actions&quot; =&gt; $actions,
+                           &quot;operations&quot; =&gt; $operations,
+                           &quot;policy&quot; =&gt; $policy,
+                           &quot;requestXOP&quot;=&gt;TRUE,
+                           &quot;securityToken&quot; =&gt; $sec_token));
+        
+$svr-&gt;reply();
+
+?&gt;
+
+</pre><br />
+</div>
+
+<div id="code-security-secure-mtom-encryption-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$reqPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:upload xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;
+               &lt;ns1:fileName&gt;test.jpg&lt;/ns1:fileName&gt;
+               &lt;ns1:image xmlmime:contentType=&quot;image/jpeg&quot; xmlns:xmlmime=&quot;http://www.w3.org/2004/06/xmlmime&quot;&gt;
+                  &lt;xop:Include xmlns:xop=&quot;http://www.w3.org/2004/08/xop/include&quot; href=&quot;cid:myid1&quot;&gt;&lt;/xop:Include&gt;
+               &lt;/ns1:image&gt;
+&lt;/ns1:upload&gt;
+XML;
+
+try {
+    $f = file_get_contents(&quot;../../../resources/axis2.jpg&quot;);
+
+    $rec_cert = ws_get_cert_from_file(&quot;../../keys/bob_cert.cert&quot;);
+    $pvt_key = ws_get_key_from_file(&quot;../../keys/alice_key.pem&quot;);
+    
+    $reqMessage = new WSMessage($reqPayloadString,
+                                array(&quot;to&quot; =&gt; &quot;http://localhost/samples/security/secure_mtom/encryption/service.php&quot;,
+                                      &quot;action&quot; =&gt; &quot;http://wso2.org/upload&quot;,
+                                      &quot;attachments&quot; =&gt; array(&quot;myid1&quot; =&gt; $f)));
+    
+    $sec_array = array(&quot;encrypt&quot; =&gt; TRUE,
+                       &quot;algorithmSuite&quot; =&gt; &quot;Basic256Rsa15&quot;,
+                       &quot;securityTokenReference&quot; =&gt; &quot;IssuerSerial&quot;);
+    
+    $policy = new WSPolicy(array(&quot;security&quot; =&gt; $sec_array));
+    $sec_token = new WSSecurityToken(array(&quot;privateKey&quot; =&gt; $pvt_key,
+                                           &quot;receiverCertificate&quot; =&gt; $rec_cert));
+    
+    $client = new WSClient(array(&quot;useWSA&quot; =&gt; TRUE,
+                                 &quot;useMTOM&quot; =&gt; TRUE,
+                                 &quot;policy&quot; =&gt; $policy,
+                                 &quot;securityToken&quot; =&gt; $sec_token));
+				
+    $resMessage = $client-&gt;request($reqMessage);
+    
+    printf(&quot;Response = %s \n&quot;, $resMessage-&gt;str);
+
+} catch (Exception $e) {
+
+	if ($e instanceof WSFault) {
+		printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+	} else {
+		printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+	}
+
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="odd">
+  <td colspan="2" class="desc">MTOM upload client with signing enabled
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+<a href="security/secure_mtom/signing/client.php">Run client</a> | <a href="security/secure_mtom/signing/service.php">WSDL</a> |
+<a href="#" id="toggle-security-secure-mtom-signing-client">show client code</a> |
+<a href="#" id="toggle-security-secure-mtom-signing-service">show server code</a>
+
+<div id="code-security-secure-mtom-signing-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+function getAttachment($inMessage) {
+
+	$cid2stringMap = $inMessage-&gt;attachments;
+	$cid2contentMap = $inMessage-&gt;cid2contentType;
+	$imageName;
+	$file_saved = 0;
+
+	foreach($cid2stringMap as $i=&gt;$value){
+		$f = $cid2stringMap[$i];
+		$contentType = $cid2contentMap[$i];
+		if(strcmp($contentType,&quot;image/jpeg&quot;) ==0){
+			$imageName = $i.&quot;.&quot;.&quot;jpg&quot;;
+			$file_saved = file_put_contents(&quot;/tmp/&quot;.$imageName, $f);
+		}
+	}
+
+	if($file_saved){
+		$resPayload = &lt;&lt;&lt;XML
+&lt;ns1:response xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;Image Saved&lt;/ns1:response&gt;
+XML;
+	}
+	else{
+		$resPayload = &lt;&lt;&lt;XML
+&lt;ns1:response xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;Image Saving Failed&lt;/ns1:response&gt;
+XML;
+	}
+
+	$returnMessage = new WSMessage($resPayload);
+
+	return $returnMessage;
+}
+$pub_key = ws_get_cert_from_file(&quot;../../keys/alice_cert.cert&quot;);
+
+$pub_key = ws_get_cert_from_file(&quot;../../keys/alice_cert.cert&quot;);
+$pvt_key = ws_get_key_from_file(&quot;../../keys/bob_key.pem&quot;);
+
+$policy_xml = file_get_contents(&quot;policySignOnlyMtom.xml&quot;);
+$policy = new WSPolicy($policy_xml);
+
+$sec_token = new WSSecurityToken(array(&quot;privateKey&quot; =&gt; $pvt_key,
+                                       &quot;receiverCertificate&quot; =&gt;$pub_key));
+
+$actions = array(&quot;http://wso2.org/upload&quot; =&gt; &quot;upload&quot;);
+$operations = array(&quot;upload&quot; =&gt; &quot;getAttachment&quot;);
+
+$server = new WSService(array(
+                &quot;operations&quot; =&gt; $operations,
+				&quot;actions&quot; =&gt; $actions, 
+                &quot;requestXOP&quot;=&gt;TRUE,
+				&quot;policy&quot; =&gt; $policy,
+				&quot;securityToken&quot; =&gt; $sec_token));
+
+$server-&gt;reply();
+
+?&gt;
+
+</pre><br />
+</div>
+
+<div id="code-security-secure-mtom-signing-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$reqPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:upload xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;
+               &lt;ns1:fileName&gt;test.jpg&lt;/ns1:fileName&gt;
+               &lt;ns1:image xmlmime:contentType=&quot;image/jpeg&quot; xmlns:xmlmime=&quot;http://www.w3.org/2004/06/xmlmime&quot;&gt;
+                  &lt;xop:Include xmlns:xop=&quot;http://www.w3.org/2004/08/xop/include&quot; href=&quot;cid:myid1&quot;&gt;&lt;/xop:Include&gt;
+               &lt;/ns1:image&gt;
+&lt;/ns1:upload&gt;
+XML;
+
+try {
+	$f = file_get_contents(&quot;../../../resources/axis2.jpg&quot;);
+
+	$reqMessage = new WSMessage($reqPayloadString,
+	array(&quot;to&quot; =&gt; &quot;http://localhost/samples/security/secure_mtom/signing/service.php&quot;,
+              &quot;action&quot; =&gt; &quot;http://wso2.org/upload&quot;,
+              &quot;attachments&quot; =&gt; array(&quot;myid1&quot; =&gt; $f)));
+
+	$my_cert = ws_get_cert_from_file(&quot;../../keys/alice_cert.cert&quot;);
+	$my_key = ws_get_key_from_file(&quot;../../keys/alice_key.pem&quot;);
+	$rec_cert = ws_get_cert_from_file(&quot;../../keys/bob_cert.cert&quot;);
+
+	$policy_xml = file_get_contents(&quot;policySignOnlyMtom.xml&quot;);
+
+	$policy = new WSPolicy($policy_xml);
+	$sec_token = new WSSecurityToken(array(&quot;privateKey&quot; =&gt; $my_key,
+                                           &quot;certificate&quot; =&gt; $my_cert,
+                                           &quot;receiverCertificate&quot; =&gt; $rec_cert));
+
+	$client = new WSClient(array(&quot;useMTOM&quot; =&gt; TRUE,
+                                     &quot;useSOAP&quot; =&gt; &quot;1.1&quot;,
+                                     &quot;useWSA&quot; =&gt; TRUE,
+                                     &quot;policy&quot; =&gt; $policy,
+                                     &quot;securityToken&quot; =&gt; $sec_token));
+
+	$resMessage = $client-&gt;request($reqMessage);
+	echo $resMessage-&gt;str.&quot;\n&quot;;
+
+} catch (Exception $e) {
+	if ($e instanceof WSFault) {
+		printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Code);
+		printf(&quot;Soap FaultReason: %s\n&quot;, $e-&gt;Reason);
+	} else {
+		printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+	}
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="topic">
+  <td colspan="2">Reliable Messaging Samples</td>
+</tr>
+
+<tr class="odd">
+  <td colspan="2" class="desc">Single Channel two way RM Client
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+<a href="reliable/echo_client_rm.php">Run client</a> | <a href="reliable/mtom_upload_service_rm.php">WSDL</a> |
+<a href="#" id="toggle-reliable-echo-client-rm">show client code</a> | <a href="#" id="toggle-reliable-mtom-upload-service-rm">show server code</a>
+
+<div id="code-reliable-mtom-upload-service-rm"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+function getAttachment($inMessage) {
+
+    $cid2stringMap = $inMessage-&gt;attachments;
+    $cid2contentMap = $inMessage-&gt;cid2contentType;
+    $imageName;
+
+    foreach($cid2stringMap as $i=&gt;$value) {
+        $f = $cid2stringMap[$i];
+        $contentType = $cid2contentMap[$i];
+        if(strcmp($contentType,&quot;image/jpeg&quot;) ==0) {
+            $imageName = $i.&quot;.&quot;.&quot;jpg&quot;;
+		if(stristr(PHP_OS, 'WIN')){
+		   file_put_contents($imageName, $f);
+            }else{
+                file_put_contents(&quot;/tmp/&quot;.$imageName, $f);
+            }
+        }
+    }
+
+$responsePayload = &lt;&lt;&lt;XML
+&lt;ns1:response xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;Image Saved&lt;/ns1:response&gt;
+XML;
+
+    $responseMessage = new WSMessage($responsePayload);
+
+    return $responseMessage;
+}
+
+$operations = array(&quot;upload&quot; =&gt; &quot;getAttachment&quot;);
+$actions = array(&quot;http://php.axis2.org/samples/mtom&quot; =&gt; &quot;upload&quot;);
+
+$server = new WSService(array( &quot;operations&quot; =&gt; $operations,
+                               &quot;actions&quot; =&gt; $actions,
+                               &quot;requestXOP&quot; =&gt; TRUE,
+                               &quot;reliable&quot; =&gt; TRUE));
+$server-&gt;reply();
+
+?&gt;
+
+</pre><br />
+</div>
+
+<div id="code-reliable-echo-client-rm"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$requestPayloadString = &lt;&lt;&lt;XML
+    &lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;
+        &lt;text&gt;Hello World!&lt;/text&gt;
+    &lt;/ns1:echoString&gt;
+XML;
+
+try {
+
+    $requestMessage = new WSMessage($requestPayloadString,
+            array( &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/echoString&quot;));
+
+    $client = new WSClient(array( &quot;to&quot; =&gt; &quot;http://localhost/samples/reliable/echo_service_rm.php&quot;,
+                                  &quot;reliable&quot; =&gt; TRUE));
+
+    $responseMessage = $client-&gt;request($requestMessage);
+    if($responseMessage){
+        echo $responseMessage-&gt;str;
+    }
+    
+    $client-&gt;wait(10);  
+    
+} catch (Exception $e) {
+
+    if ($e instanceof WSFault) {
+        printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+    } else {
+        printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+    }
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+<tr class="even">
+  <td colspan="2" class="desc">Single Channel one way RM Service
+</td>
+</tr>
+<tr class="even">
+  <td colspan="2">
+<a href="reliable/echo_service_rm.php">WSDL</a> (<a href="#" id="toggle-reliable-echo-service-rm">show code</a>)<br />
+<div id="code-reliable-echo-service-rm"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$reqPayloadString = &lt;&lt;&lt;XML
+    &lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;
+        &lt;text&gt;Hello World!&lt;/text&gt;
+    &lt;/ns1:echoString&gt;
+XML;
+
+function echoFunction($inMessage) {
+    return new WSMessage($inMessage-&gt;str);
+}
+
+$operations = array( &quot;echoString&quot; =&gt; &quot;echoFunction&quot;);
+$actions = array( &quot;http://php.axis2.org/samples/echoString&quot; =&gt; &quot;echoString&quot;);
+
+$service = new WSService(array( &quot;operations&quot; =&gt; $operations,
+                            &quot;reliable&quot;=&gt;TRUE));
+$service-&gt;reply();
+
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+<tr class="odd">
+  <td colspan="2" class="desc">Single Channel two way RM Slient sending an MTOM attachment
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+<a href="reliable/mtom_upload_client_rm.php">Run client</a> (<a href="#" id="toggle-reliable-mtom-upload-client-rm">show code</a>)<br />
+<div id="code-reliable-mtom-upload-client-rm"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$requestPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:upload xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;
+    &lt;ns1:fileName&gt;test.jpg&lt;/ns1:fileName&gt;
+    &lt;ns1:image xmlmime:contentType=&quot;image/jpeg&quot; xmlns:xmlmime=&quot;http://www.w3.org/2004/06/xmlmime&quot;&gt;
+        &lt;xop:Include xmlns:xop=&quot;http://www.w3.org/2004/08/xop/include&quot; href=&quot;cid:myid1&quot;&gt;&lt;/xop:Include&gt;
+    &lt;/ns1:image&gt;&lt;/ns1:upload&gt;
+XML;
+
+try {
+    $f = file_get_contents(&quot;../resources/axis2.jpg&quot;);
+
+    $requestMessage = new WSMessage($requestPayloadString,
+                               array( &quot;to&quot; =&gt; &quot;http://localhost/samples/reliable/mtom_upload_service_rm.php&quot;,
+                                      &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/mtom&quot;,
+                                      &quot;attachments&quot; =&gt; array(&quot;myid1&quot; =&gt; $f)));
+
+    $client = new WSClient(array( &quot;useMTOM&quot; =&gt; TRUE,
+                                  &quot;reliable&quot; =&gt; TRUE));
+
+    $requestMessage = $client-&gt;request($requestMessage);
+
+    echo $requestMessage-&gt;str;
+
+    /** wait 10 seconds for the requests to complete */
+    $client-&gt;wait(10);
+
+} catch (Exception $e) {
+    if ($e instanceof WSFault) {
+        printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;code);
+    } else {
+        printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+    }
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="even">
+  <td colspan="2" class="desc">Single Channel one way RM Client
+</td>
+</tr>
+<tr class="even">
+  <td colspan="2">
+<a href="reliable/ping_client_rm.php">Run client</a> | <a href="reliable/ping_service_rm.php">WSDL</a> |
+<a href="#" id="toggle-reliable-ping-client-rm">show client code</a> |  <a href="#" id="toggle-reliable-ping-service-rm">show server code</a>
+
+
+<div id="code-reliable-ping-service-rm"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+function pingFunction($inMessage) {
+    return ;
+}
+
+$operations = array( &quot;pingString&quot; =&gt; &quot;pingFunction&quot; );
+$actions = array( &quot;http://php.axis2.org/samples/pingString&quot; =&gt; &quot;pingString&quot;);
+$meps = array( &quot;pingString&quot; =&gt; &quot;IN_ONLY&quot; );
+
+$svr = new WSService(array( &quot;operations&quot; =&gt; $operations,
+                            &quot;opMEP&quot; =&gt; $meps,
+                            &quot;reliable&quot;=&gt;TRUE));
+$svr-&gt;reply();
+
+?&gt;
+
+</pre><br />
+</div>
+
+<div id="code-reliable-ping-client-rm"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$requestPayloadString = &lt;&lt;&lt;XML
+	&lt;ns1:pingString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;
+		&lt;text&gt;Hello World!&lt;/text&gt;
+	&lt;/ns1:pingString&gt;
+XML;
+
+try {
+
+    $requestMessage = new WSMessage($requestPayloadString,
+			array( &quot;to&quot; =&gt; &quot;http://localhost/samples/reliable/ping_service_rm.php&quot;,
+                   &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/pingString&quot;));
+
+    $client = new WSClient(array( &quot;reliable&quot; =&gt; TRUE , &quot;useWSA&quot; =&gt; TRUE));
+    
+    $client-&gt;send($requestMessage);
+
+    echo &quot;Message Sent to the Endpoint&quot;;
+
+    $client-&gt;wait(10);
+
+} catch (Exception $e) {
+
+	if ($e instanceof WSFault) {
+		printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+	} else {
+		printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+	}
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="odd">
+  <td colspan="2" class="desc">Single Channel one way RM service with multiple messages
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+<a href="reliable/ping_client_rm_multiple_messages.php">Run client</a> (<a href="#" id="toggle-reliable-ping-client-rm-multiple-messages">show code</a>)<br />
+<div id="code-reliable-ping-client-rm-multiple-messages"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$requestPayloadString = &lt;&lt;&lt;XML
+    &lt;ns1:pingString xmlns:ns1=&quot;http://php.axis2.org/samples/reliable&quot;&gt;
+        &lt;text&gt;Hello World!&lt;/text&gt;
+    &lt;/ns1:pingString&gt;
+XML;
+
+try {
+
+    $message = new WSMessage($requestPayloadString,
+            array( &quot;to&quot; =&gt; &quot;http://localhost/samples/reliable/ping_service_rm.php&quot;,
+                   &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/pingString&quot;));
+
+    $client = new WSClient(array( &quot;reliable&quot; =&gt; TRUE, &quot;useWSA&quot; =&gt; TRUE, &quot;willContinueSequence&quot; =&gt; TRUE));
+
+    $client-&gt;send($message);
+
+    $message1 = new WSMessage($requestPayloadString,
+            array( &quot;to&quot; =&gt; &quot;http://localhost/samples/reliable/ping_service_rm.php&quot;,
+                   &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/pingString&quot;));
+
+    $client-&gt;send($message1);
+
+
+    $message2 = new WSMessage($requestPayloadString,
+        array( &quot;to&quot; =&gt; &quot;http://localhost/samples/reliable/ping_service_rm.php&quot;,
+               &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/pingString&quot;,
+               &quot;lastMessage&quot; =&gt; TRUE));
+    
+    $client-&gt;send($message2);
+
+    echo &quot;Messages Sent&quot;;
+
+    /** wait 10 seconds for the requests to complete */
+    $client-&gt;wait(10);
+    
+} catch (Exception $e) {
+
+    if ($e instanceof WSFault) {
+        printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+    } else {
+        printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+    }
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="topic">
+  <td colspan="2">WSDL mode</td>
+</tr>
+
+<tr class="even">
+  <td colspan="2" class="desc">WSDL mode Client using WSDL 1.1 
+</td>
+</tr>
+<tr class="even">
+  <td colspan="2">
+<a href="wsdl_mode/wsdl_11_client.php">Run client</a> | <a href="wsdl_mode/wsdl_11_service.php">WSDL</a> |
+<a href="#" id="toggle-wsdl-mode-wsdl-11-client">show client code</a> |
+<a href="#" id="toggle-wsdl-mode-wsdl-11-service">show server code</a>
+
+<div id="code-wsdl-mode-wsdl-11-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+function QueryPurchaseOrderFunction($pro_name, $quantity, $date, $orderNo) {
+
+
+	$return_value = array(&quot;shipTo&quot; =&gt; array(&quot;name&quot; =&gt; &quot;Jane Smith&quot;,
+											&quot;street&quot; =&gt; &quot;YorkStreet&quot;,
+											&quot;city&quot; =&gt; &quot;colombo&quot;, 
+											&quot;state&quot; =&gt; &quot;Sri Lanka&quot;, 
+											&quot;zip&quot; =&gt; 32343),
+	
+                          &quot;billTo&quot; =&gt; array(&quot;name&quot; =&gt; &quot;John Smith&quot;, 
+                          					&quot;street&quot; =&gt; &quot;Maple Street&quot;, 
+                          					&quot;city&quot; =&gt; &quot;LA&quot;, &quot;state&quot; =&gt; &quot;USA&quot;, 
+                          					&quot;zip&quot; =&gt; 55432),
+	
+                          &quot;product&quot; =&gt; array(&quot;productId&quot; =&gt; 2344, 
+                          					&quot;shippingDate&quot; =&gt; date(20080101), 
+                          					&quot;status&quot; =&gt; TRUE));
+	return $return_value;
+}
+
+$operations = array(&quot;QueryPurchaseOrder&quot; =&gt; &quot;QueryPurchaseOrderFunction&quot;);
+
+$svr = new WSService(array(&quot;wsdl&quot;=&gt;&quot;sample_wsdl_11.wsdl&quot;,
+                           &quot;operations&quot; =&gt; $operations));
+
+$svr-&gt;reply();
+
+?&gt;
+
+</pre><br />
+</div>
+
+<div id="code-wsdl-mode-wsdl-11-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+try {
+
+    $client = new WSClient(array(&quot;wsdl&quot;=&gt;&quot;sample_wsdl_11.wsdl&quot;,
+                                 ));
+
+    $proxy = $client-&gt;getProxy();	
+
+    $return_val =  $proxy-&gt;QueryPurchaseOrder(array(&quot;productName&quot;=&gt; &quot;Testing&quot;,
+                                             &quot;quantity&quot; =&gt; 234,
+                                             &quot;date&quot; =&gt; &quot;2003-12-34&quot;,
+                                             &quot;orderNo&quot; =&gt; 345));  
+      
+    printf(&quot;&lt;strong&gt;Shipping address &lt;/strong&gt;&lt;br/&gt;&quot;);
+    printf(&quot;Name : %s &lt;br/&gt;&quot;, $return_val[&quot;shipTo&quot;][&quot;name&quot;]);
+    printf(&quot;Street : %s &lt;br/&gt;&quot;, $return_val[&quot;shipTo&quot;][&quot;street&quot;]);
+    printf(&quot;City : %s &lt;br/&gt;&quot;, $return_val[&quot;shipTo&quot;][&quot;city&quot;]);
+    printf(&quot;State : %s &lt;br/&gt;&quot;, $return_val[&quot;shipTo&quot;][&quot;state&quot;]);
+    printf(&quot;Zip : %s &lt;br/&gt;&quot;, $return_val[&quot;shipTo&quot;][&quot;zip&quot;]);
+    
+    printf(&quot;&lt;br/&gt;&lt;strong&gt;Billing address &lt;/strong&gt;&lt;br/&gt;&quot;);
+    printf(&quot;Name : %s &lt;br/&gt;&quot;, $return_val[&quot;billTo&quot;][&quot;name&quot;]);
+    printf(&quot;Street : %s &lt;br/&gt;&quot;, $return_val[&quot;billTo&quot;][&quot;street&quot;]);
+    printf(&quot;City : %s &lt;br/&gt;&quot;, $return_val[&quot;billTo&quot;][&quot;city&quot;]);
+    printf(&quot;State : %s &lt;br/&gt;&quot;, $return_val[&quot;billTo&quot;][&quot;state&quot;]);
+    printf(&quot;Zip : %s &lt;br/&gt;&quot;, $return_val[&quot;billTo&quot;][&quot;zip&quot;]);
+    
+    printf(&quot;&lt;br/&gt;&lt;strong&gt;Product info &lt;/strong&gt;&lt;br/&gt;&quot;);
+    printf(&quot;Product ID : %s &lt;br/&gt;&quot;, $return_val[&quot;product&quot;][&quot;productId&quot;]);
+    printf(&quot;ShippingDate : %s &lt;br/&gt;&quot;, $return_val[&quot;product&quot;][&quot;shippingDate&quot;]);
+    printf(&quot;Status : %s &lt;br/&gt;&quot;, $return_val[&quot;product&quot;][&quot;status&quot;]);
+   
+
+} catch (Exception $e) {
+
+		printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+<tr class="odd">
+  <td colspan="2" class="desc">WSDL mode Service using WSDL 1.1
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+
+  </td>
+</tr>
+<tr class="even">
+  <td colspan="2" class="desc">WSDL mode Client using WSDL 2.0 
+</td>
+</tr>
+<tr class="even">
+  <td colspan="2">
+<a href="wsdl_mode/wsdl_20_client.php">Run client</a> | <a href="wsdl_mode/wsdl_20_service.php">WSDL</a> |
+<a href="#" id="toggle-wsdl-mode-wsdl-20-client">show client code</a> |
+<a href="#" id="toggle-wsdl-mode-wsdl-20-service">show server code</a>
+
+<div id="code-wsdl-mode-wsdl-20-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+function GetPriceFunction($arg1, $arg2) {
+    
+    $return_value = array(&quot;Price&quot; =&gt; 234.431);
+    return $return_value;
+}
+
+$operations = array(&quot;GetPrice&quot; =&gt; &quot;GetPriceFunction&quot;);
+
+$svr = new WSService(array(&quot;wsdl&quot;=&gt;&quot;sample_wsdl_20.wsdl&quot;, 
+                           &quot;operations&quot; =&gt; $operations));
+        
+$svr-&gt;reply();
+
+?&gt;
+
+</pre><br />
+</div>
+
+<div id="code-wsdl-mode-wsdl-20-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+try {
+
+    $client = new WSClient(array(&quot;wsdl&quot;=&gt;&quot;sample_wsdl_20.wsdl&quot;));
+
+    $proxy = $client-&gt;getProxy();	
+
+    $return_val =  $proxy-&gt;GetPrice(array(&quot;ProductType&quot;=&gt; &quot;Testing&quot;,
+                                          &quot;ItemNo&quot; =&gt; 234));    
+    printf(&quot;Price is : %s &lt;br/&gt;&quot;, $return_val[&quot;Price&quot;]);
+
+} catch (Exception $e) {
+    if ($e instanceof WSFault) {
+        printf(&quot;Soap Fault Reason: %s&lt;br/&gt;&quot;, $e-&gt;Reason);
+        printf(&quot;Soap Fault Code: %s &lt;br/&gt;&quot;, $e-&gt;Code);
+        
+    } else {
+        printf(&quot;Message = %s&lt;br/&gt;&quot;,$e-&gt;getMessage());
+    }
+  }
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+<tr class="odd">
+  <td colspan="2" class="desc">WSDL mode Service using WSDL 2.0
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+
+  </td>
+</tr>
+<tr class="even">
+  <td colspan="2" class="desc">Client demonstrating  Addressing, MTOM 
+</td>
+</tr>
+<tr class="even">
+  <td colspan="2">
+<a href="sudoku/sudoku_client.php">Run client</a> | <a href="sudoku/sudoku_service.php">WSDL</a> |
+<a href="#" id="toggle-sudoku-sudoku-client">show client code</a> |
+<a href="#" id="toggle-sudoku-sudoku-service">show server code</a>
+
+<div id="code-sudoku-sudoku-service"><br />
+<pre class="prettyprint">
+&lt;?php
+$imageID = &quot;1.jpg&quot;;
+function submit($recvMsg) {
+    global $imageID;
+    $simplexml = new SimpleXMLElement($recvMsg-&gt;str);
+    foreach ($simplexml-&gt;children(&quot;http://www.wso2.net/wsf/prototype&quot;) as $tag =&gt; $childNode) {
+        foreach ($childNode-&gt;children(&quot;http://www.wso2.net/wsf/prototype&quot;) as $tag2 =&gt; $childNode2) {
+            foreach ($childNode2-&gt;children(&quot;http://www.wso2.net/wsf/prototype&quot;) as $tag3 =&gt; $childNode3) {
+                if (strcmp($tag3, &quot;strElement&quot;) == 0){
+                    $imageID = $childNode3;
+                }
+            }
+        }
+    }
+
+    $resPayloadString = &lt;&lt;&lt;XML
+    &lt;ns1:submitResponse xmlns:ns1=&quot;http://www.wso2.net/wsf&quot;&gt;
+    &lt;pro:testDocOut xmlns:pro=&quot;http://www.wso2.net/wsf/prototype&quot;&gt;
+            &lt;pro:intStrElement&gt;
+                    &lt;pro:intElement&gt;12&lt;/pro:intElement&gt;
+                    &lt;pro:strElement&gt;$imageID&lt;/pro:strElement&gt;
+            &lt;/pro:intStrElement&gt;
+            &lt;pro:binaryElement&gt;
+            &lt;xop:Include xmlns:xop=&quot;http://www.w3.org/2004/08/xop/include&quot; href=&quot;cid:a&quot;&gt;&lt;/xop:Include&gt;
+	    &lt;/pro:binaryElement&gt;	
+            &lt;pro:anyElement&gt;
+                    &lt;test123&gt;1 2 3 4 5 6&lt;/test123&gt;
+            &lt;/pro:anyElement&gt;
+    &lt;/pro:testDocOut&gt;
+    &lt;/ns1:submitResponse&gt;
+XML;
+      
+  $f = file_get_contents(&quot;./service_resources/&quot;.$imageID); 	
+  return new WSMessage($resPayloadString , 
+		array(
+			&quot;attachments&quot;=&gt;array(&quot;a&quot;=&gt;$f),
+                  &quot;defaultAttachmentContentType&quot;=&gt;&quot;image/jpeg&quot;
+		     ));
+} 
+$actions = array(&quot;http://www.wso2.net/products/wsf_php/demo/submit&quot;=&gt;&quot;submit&quot;);
+$ops = array(&quot;submit&quot;=&gt;&quot;submit&quot;);
+$service = new WSService(array(&quot;operations&quot;=&gt;$ops,
+                               &quot;actions&quot;=&gt;$actions,
+                               &quot;useMTOM&quot;=&gt;TRUE));
+$service-&gt;reply();
+
+?&gt;
+</pre><br />
+</div>
+
+<div id="code-sudoku-sudoku-client"><br />
+<pre class="prettyprint">
+&lt;?php
+
+$scenario = $_POST[&quot;scenario&quot;];
+$epr = $_POST[&quot;epr&quot;];
+$imageID = 1;
+$qosAddr = $_POST[&quot;qosAddr&quot;];
+$qosMTOM;
+$qosRM;
+
+session_start();
+$message = &quot;&quot;;
+if (!isset($_SESSION['message'])) {
+		    $_SESSION['message'] = &quot;&quot;;
+} else {
+    if (isset($_POST['submit']) || !isset($_GET['imageID'])) {
+       	$_SESSION['message'] = &quot;&quot;;
+    }
+    $message = $_SESSION['message'];
+}
+?&gt;
+
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;WSF/PHP MTOM ADDRESSING&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+	&lt;form method=&quot;post&quot; action=&quot;&lt;?php echo $PHP_SELF;?&gt;&quot;&gt;
+	&lt;table cols=&quot;2&quot; border=&quot;1&quot; cellpadding=&quot;10&quot; cellspacing=&quot;0&quot; align=&quot;center&quot; width=&quot;100%&quot;&gt;
+	&lt;tr&gt;
+	    &lt;td&gt;
+	&lt;h4&gt;Request Reply Senario&lt;/h4&gt;
+
+&lt;h4&gt;Target Endpoint&lt;/h4&gt;
+Endpoint:&lt;input type=&quot;text&quot; size=&quot;60&quot; maxlength=&quot;60&quot; name=&quot;epr&quot; value=&quot;http://localhost/samples/sudoku/sudoku_service.php&quot;&gt;&lt;br /&gt;
+&lt;h4&gt;WS-*&lt;/h4&gt;
+Addressing : &lt;input type=&quot;checkbox&quot; value=&quot;Addressing&quot; name=&quot;qosAddr&quot;&gt;&lt;br/&gt;
+XOP/MTOM : &lt;input type=&quot;checkbox&quot; checked=&quot;true&quot; disabled value=&quot;MTOM&quot; name=&quot;qosMTOM&quot;&gt;&lt;br/&gt;
+&lt;!--Reliable Messaging : &lt;input type=&quot;checkbox&quot; value=&quot;RM&quot; name=&quot;qosRM&quot;&gt;&lt;br /--&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;input type=&quot;submit&quot; value=&quot;submit&quot; name=&quot;submit&quot;&gt;
+&lt;/form&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;?php
+echo &quot;&lt;form method=\&quot;post\&quot; action=\&quot;http://&quot;.$_SERVER['SERVER_NAME'].&quot;:&quot;.$_SERVER[&quot;SERVER_PORT&quot;].&quot;/samples/sudoku/sudoku_client.php?act=delete\&quot;&gt;&quot;;
+echo &quot;&lt;input type=\&quot;submit\&quot; value=\&quot;Reset \&quot; name=\&quot;reset\&quot;&gt;&quot;;
+echo &quot;&lt;/form&gt;&quot;;
+echo &quot;&lt;/td&gt;&quot;;
+?&gt;
+
+&lt;?php
+
+if (isset($_POST['submit']) || isset($_GET['imageID'])) {
+if (isset($_GET['imageID'])){
+    $imageID = $_GET['imageID'];
+    $epr = $_GET['epr'];
+    $qosAddr = $_GET['qosAddr'];
+}
+
+
+echo &quot;&lt;td&gt;&quot;;
+
+echo &quot;&lt;h2&gt; Here are the Results&lt;/h2&gt; &lt;br/&gt;&lt;br/&gt;&quot;;
+
+$reqPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:submit xmlns:ns1=&quot;http://www.wso2.net/wsf&quot;&gt;
+&lt;pro:testDocIn xmlns:pro=&quot;http://www.wso2.net/wsf/prototype&quot;&gt;
+        &lt;pro:intStrElement&gt;
+                &lt;pro:intElement&gt;12&lt;/pro:intElement&gt;
+                &lt;pro:strElement&gt;$imageID.jpg&lt;/pro:strElement&gt;
+        &lt;/pro:intStrElement&gt;
+        &lt;pro:binaryElement/&gt;
+        &lt;pro:anyElement&gt;
+                &lt;test123&gt;1 2 3 4 5 6&lt;/test123&gt;
+        &lt;/pro:anyElement&gt;
+&lt;/pro:testDocIn&gt;
+&lt;/ns1:submit&gt;
+XML;
+
+
+try {
+    $msg = new WSMessage($reqPayloadString,
+			array(&quot;to&quot;=&gt;$epr,
+			&quot;action&quot;=&gt;&quot;http://www.wso2.net/products/wsf_php/demo/submit&quot;));
+    
+    $client_options = array();
+    $client_options[&quot;useMTOM&quot;] = TRUE;
+    $client_options[&quot;responseXOP&quot;] = TRUE;
+    if($qosAddr){
+    	$client_options[&quot;useWSA&quot;] = TRUE;
+    }
+
+    $client = new WSClient($client_options);
+
+    $message = $message.&quot;&gt;&gt;&gt; Sending SOAP request to &quot;.$epr.&quot; requesting for image &quot;.$imageID.&quot;.jpg&lt;br/&gt;&quot;;
+    $resMsg = $client-&gt;request($msg);
+   
+    $cid2str = $resMsg-&gt;attachments;
+    $cid2cnt = $resMsg-&gt;cid2contentType;	    
+    if($cid2str){
+    foreach($cid2str as $i=&gt;$value){
+	$f = $cid2str[$i];
+	file_put_contents(&quot;./client_resources/&quot;.$imageID.&quot;.jpg&quot;, $f);
+    }
+    }   
+    
+    $message = $message.&quot;&lt;&lt;&lt; Saved image &quot;.$imageID.&quot;.jpg received&lt;br/&gt;&quot;;
+    $sentMsg = $client-&gt;getLastRequest();
+    $recvMsg = $client-&gt;getLastResponse();
+    echo &quot;&lt;strong&gt;Showing solution blocks &quot;.$imageID.&quot; out of 9&lt;/strong&gt;&quot;;
+    echo &quot;&lt;table&gt;&lt;tr&gt;&quot;;
+    for ($counter = 1; $counter &lt;= $imageID; $counter++) {
+        echo &quot;&lt;td&gt;&lt;img src='./client_resources/&quot;.$counter.&quot;.jpg'/&gt;&lt;/td&gt;&quot;;
+        if (($counter % 3) == 0 ) {
+            echo &quot;&lt;/tr&gt;&lt;tr&gt;&quot;;
+        }
+    }
+    echo &quot;&lt;/tr&gt;&lt;/table&gt;&quot;;
+
+    if ($imageID &lt; 9) {
+        $imageID += 1;
+        echo &quot;&lt;script type='text/javascript'&gt;&quot;;
+        echo &quot;function reload() {&quot;;
+        echo &quot;window.location=&quot;;
+        echo &quot;'http://&quot;.$_SERVER['SERVER_NAME'].&quot;:&quot;.$_SERVER[&quot;SERVER_PORT&quot;].&quot;/samples/sudoku/sudoku_client.php&quot;;
+        echo &quot;?imageID=&quot;.$imageID.&quot;&amp;epr=&quot;.$epr.&quot;&amp;qosAddr=&quot;.$qosAddr.&quot;';}&quot;;
+        echo &quot;setTimeout('reload()',1000)&quot;;
+        echo &quot;&lt;/script&gt;&quot;;
+    }
+  
+} catch (Exception $e) {
+    if ($e instanceof WSFault) {
+        printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+    } else {
+        printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+    }
+
+}
+    
+echo &quot;&lt;/td&gt;&quot;;
+}
+else {
+echo &quot;&lt;td&gt;.&quot;;
+echo &quot;&lt;/td&gt;&quot;;
+}
+?&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;?php
+echo $message.&quot;&lt;br/&gt;&quot;;
+echo &quot;&lt;strong&gt;Showing Sent/Received Message &lt;/strong&gt;&quot;;
+echo &quot;&lt;table&gt;&lt;tr&gt;&quot;;
+echo &quot;&lt;td&gt;&lt;textarea type=\&quot;text\&quot; rows=\&quot;15\&quot; cols=\&quot;60\&quot;&gt;&quot;;
+echo $sentMsg.&quot;&quot;;
+echo &quot;&lt;/textarea&gt;&lt;/td&gt;&quot;;
+if($recvMsg)
+{
+echo &quot;&lt;td&gt;&lt;textarea type=\&quot;text\&quot; rows=\&quot;15\&quot; cols=\&quot;60\&quot;&gt;&quot;;
+echo $recvMsg.&quot;&quot;;
+echo &quot;&lt;/textarea&gt;&lt;/td&gt;&quot;;	 
+}
+echo &quot;&lt;/tr&gt;&lt;/table&gt;&quot;;
+$_SESSION['message'] = $message;
+?&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="odd">
+  <td colspan="2" class="desc">Client by enabling HTTPS- Please refer README.SSL_CLIENT
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+<a href="ssl_client.php">Run client</a> (<a href="#" id="toggle-ssl-client">show code</a>)<br />
+<div id="code-ssl-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$requestPayloadString = &lt;&lt;&lt;XML
+    &lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;
+        &lt;text&gt;Hello World!&lt;/text&gt;
+    &lt;/ns1:echoString&gt;
+XML;
+
+try {
+
+    $client = new WSClient(array( &quot;to&quot; =&gt; &quot;https://localhost/samples/echo_service.php&quot;,
+                                  &quot;CACert&quot; =&gt; &quot;./resources/cacert.pem&quot;));
+    $responseMessage = $client-&gt;request($requestPayloadString);
+    echo $responseMessage-&gt;str;
+        
+} catch (Exception $e) {
+    if ($e instanceof WSFault) {
+        printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Code);
+    } else {
+        printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+    }
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+<tr class="topic">
+  <td colspan="2">Flickr</td>
+</tr>
+
+<tr class="even">
+  <td colspan="2" class="desc">Flickr client
+</td>
+</tr>
+<tr class="even">
+  <td colspan="2">
+<a href="flickr/flickr.php">Run client</a> (<a href="#" id="toggle-flickr-client">show code</a>)<br />
+<div id="code-flickr-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+$requestPayloadString = &lt;&lt;&lt;XML
+&lt;x:FlickrRequest xmlns:x=&quot;urn:flickr&quot;&gt;
+&lt;method&gt;flickr.test.echo&lt;/method&gt;
+&lt;api_key&gt;your key&lt;/api_key&gt;
+&lt;name&gt;cars&lt;/name&gt;
+&lt;/x:FlickrRequest&gt;
+XML;
+
+try {
+
+    $flicker_client = new WSClient(
+        array(&quot;to&quot; =&gt; &quot;http://api.flickr.com/services/soap/&quot;));
+
+                
+    $responseMessage = $flicker_client-&gt;request($requestPayloadString);
+    
+    printf(&quot;Response = %s &lt;br&gt;&quot;, htmlspecialchars($responseMessage-&gt;str));
+
+} catch (Exception $e) {
+
+    if ($e instanceof WSFault) {
+        printf(&quot;Soap Fault: %s\n&quot;, $e-&gt;Reason);
+    } else {
+        printf(&quot;Message = %s\n&quot;,$e-&gt;getMessage());
+    }
+
+}
+?&gt;
+</pre><br />
+</div>
+  </td>
+</tr>
+
+
+</table>
+
+
+</body>
+
+</html>
