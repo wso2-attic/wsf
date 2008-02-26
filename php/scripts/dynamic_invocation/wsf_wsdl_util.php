@@ -822,6 +822,15 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
 
     foreach($parameter_struct as $key => $value){
         if(is_array($value)){
+            if($value["class_map_name"] == "anyType")
+            {
+                  $values = array_values($namespace_map);
+                  $prefix = $values[0];
+                  {
+                        wsf_create_payload_for_unknown_class_map($payload_dom, $parent_ele, $class_obj, $prefix);
+                  }
+                  continue;
+            }
             if (isset($value[WSF_TYPE_REP]) && $value[WSF_TYPE_REP]){
                 if($class_obj->$key)
                 {
@@ -981,11 +990,22 @@ function wsf_create_payload_for_array(DomDocument $payload_dom,
         $unknown_schema_found = TRUE;
     }
 
+
     foreach($parameter_struct as $key => $value){
         if(is_array($value)){
             if($unknown_schema_found)
             {
                 continue;
+            }
+            if($value["class_map_name"] == "anyType")
+            {
+                  $values = array_values($namespace_map);
+                  $prefix = $values[0];
+                  if(is_array($user_arguments))
+                  {
+                      wsf_create_payload_for_unknown_array($payload_dom, $parent_ele, $user_arguments, $prefix);
+                  }
+                  continue;
             }
             if (isset($value[WSF_TYPE_REP]) && $value[WSF_TYPE_REP]){
                 foreach($user_arguments as $arg_key => $arg_val){
@@ -1300,6 +1320,15 @@ function wsf_create_rpc_payload_for_class_map(DomDocument $payload_dom,
 
     foreach($parameter_struct as $key => $value){
         if(is_array($value)){
+            if($value["class_map_name"] == "anyType")
+            {
+                  $values = array_values($namespace_map);
+                  $prefix = $values[0];
+                  {
+                        wsf_create_payload_for_unknown_class_map($payload_dom, $parent_ele, $class_obj, $prefix);
+                  }
+                  continue;
+            }
                 if (isset($value[WSF_TYPE_REP]) && $value[WSF_TYPE_REP]){
                     if($class_obj->$key)
                     {
@@ -1425,6 +1454,16 @@ function wsf_create_rpc_payload_for_array(DomDocument $payload_dom,
 
     foreach($parameter_struct as $key => $value){
         if(is_array($value)){
+            if($value["class_map_name"] == "anyType")
+            {
+                  $values = array_values($namespace_map);
+                  $prefix = $values[0];
+                  if(is_array($user_arguments))
+                  {
+                      wsf_create_payload_for_unknown_array($payload_dom, $parent_ele, $user_arguments, $prefix);
+                  }
+                  continue;
+            }
             if (isset($value[WSF_TYPE_REP]) && $value[WSF_TYPE_REP]){
                 foreach($user_arguments as $arg_key => $arg_val){
                     if($key == $arg_key){
@@ -1668,6 +1707,16 @@ function wsf_parse_payload_for_array(DomNode $payload, array $parameter_struct)
             {
                 continue;
             }
+            if($value["class_map_name"] == "anyType")
+            {
+                $tag_name = $current_child->localname;
+                if($key == $tag_name)
+                {
+                  $converted_value = wsf_parse_payload_for_unknown_array($current_child);
+                  $parse_tree[$key] = $converted_value;
+                  continue;
+                }
+            }
             if(isset($value[WSF_TYPE_REP]) && $value[WSF_TYPE_REP]){
                 if($key == $current_child->localName) {
                     if(array_key_exists("maxOccurs", $value) && ($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1)){
@@ -1860,6 +1909,16 @@ function wsf_parse_payload_for_class_map(DomNode $payload, array $parameter_stru
     {   
         if(is_array($value))
         {
+            if($value["class_map_name"] == "anyType")
+            {
+                $tag_name = $current_child->localname;
+                if($key == $tag_name)
+                {
+                  $converted_value = wsf_parse_payload_for_unknown_class_map($current_child, "anyType_for".$key, $class_map);
+                  $parse_tree[$key] = $converted_value;
+                  continue;
+                }
+            }
             if(isset($value[WSF_TYPE_REP]) && $value[WSF_TYPE_REP]){
                 if($key == $current_child->localName) {
                     if(array_key_exists("maxOccurs", $value) && ($value["maxOccurs"] == "unbounded" || $value["maxOccurs"] > 1)){
