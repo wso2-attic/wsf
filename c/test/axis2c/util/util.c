@@ -27,6 +27,7 @@ const struct wsf_unit_test_list axutil_tests[] =
     {test_hash},
     {test_log},
     {test_md5},
+    {test_rand},
     {test_string},
     {test_thread},
     {test_uuid_gen}

@@ -44,6 +44,7 @@ extern "C"
     wsf_unit_status_t WSF_UNIT_CALL test_hash(wsf_unit_suite_t * suite);
     wsf_unit_status_t WSF_UNIT_CALL test_log(wsf_unit_suite_t * suite);
     wsf_unit_status_t WSF_UNIT_CALL test_md5(wsf_unit_suite_t * suite);
+    wsf_unit_status_t WSF_UNIT_CALL test_rand(wsf_unit_suite_t * suite);
     wsf_unit_status_t WSF_UNIT_CALL test_string(wsf_unit_suite_t * suite);
     wsf_unit_status_t WSF_UNIT_CALL test_thread(wsf_unit_suite_t * suite);
     wsf_unit_status_t WSF_UNIT_CALL test_uuid_gen(wsf_unit_suite_t * suite);
