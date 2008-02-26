@@ -62,7 +62,7 @@ fi
 #CFLAGS="$CFLAGS -ansi -Wall -D_LARGEFILE64_SOURCE -Wno-implicit-function-declaration"
 CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 if test "$GCC" = "yes"; then
-    CFLAGS="$CFLAGS -ansi -Wall -Werror -Wno-implicit-function-declaration -g"
+    CFLAGS="$CFLAGS -ansi -Wall  -Wno-implicit-function-declaration -g"
 #    CFLAGS="$CFLAGS -ansi -Wall -Wno-implicit-function-declaration"
 fi
 LDFLAGS="$LDFLAGS -lpthread"
@@ -103,6 +103,35 @@ dnl Checks for library functions.
 dnl AC_FUNC_MALLOC
 dnl AC_FUNC_REALLOC
 #AC_CHECK_FUNCS([memmove])
+
+AC_MSG_CHECKING(whether to use archive)
+AC_ARG_WITH(archive,
+[  --with-archive[=PATH]      Find the zlib header files in 'PATH'.
+    If you omit the '=PATH' part completely, the configure script will search
+    '/usr/include/' for zlib headers.],
+[ case "$withval" in
+  no)
+    AC_MSG_RESULT(no)
+    ZLIBBUILD=""
+    zliblibs=""
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    zliblibs="minizip/libaxis2_minizip.la"
+    CFLAGS="$CFLAGS -DAXIS2_ARCHIVE_ENABLED"
+    if test -d $withval; then
+        zlibinc="-I$withval"
+    elif test -d '/usr/include'; then
+        zlibinc="-I/usr/include"
+    else
+        AC_MSG_ERROR(could not find zlib stop)
+    fi
+    ZLIBBUILD="minizip"
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+)
+
 
 AC_MSG_CHECKING(whether to build libxml2 xml parser library)
 AC_ARG_ENABLE(libxml2, [  --enable-libxml2    
@@ -406,6 +435,7 @@ AC_SUBST(XMPP_DIR)
 AC_SUBST(TCP_DIR)
 AC_SUBST(GUTHTHILA_DIR)
 AC_SUBST(GUTHTHILA_LIBS)
+AC_SUBST(ZLIBBUILD)
 AM_CONDITIONAL(AXIS2_SSL_ENABLED, test x$ssl_enabled = xtrue)
 AM_CONDITIONAL(AXIS2_LIBCURL_ENABLED, test x$libcurl_enabled = xtrue)
 AM_CONDITIONAL(AXIS2_XMPP_GSSAPI, test x$gssapi_enabled = xtrue)
