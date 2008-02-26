@@ -1768,7 +1768,7 @@ function wsf_parse_payload_for_array(DomNode $payload, array $parameter_struct)
                         // so this if fine
                     }
                     else{
-                       error_log("minOccurs!=0 element". $key ."doesn't exist.\n");
+                       error_log("minOccurs!=0 element ". $key ." doesn't exist.\n");
                     }
                 }
             }
@@ -1834,7 +1834,7 @@ function wsf_parse_payload_for_array(DomNode $payload, array $parameter_struct)
                         // so this if fine
                     }
                     else{
-                       error_log("minOccurs!=0 element". $key ."doesn't exist.\n");
+                       error_log("minOccurs!=0 element ". $key ." doesn't exist.\n");
                     }
                 }
             }
@@ -1971,7 +1971,7 @@ function wsf_parse_payload_for_class_map(DomNode $payload, array $parameter_stru
                         // so this if fine
                     }
                     else{
-                       error_log("minOccurs!=0 element". $key ."doesn't exist.\n");
+                       error_log(" minOccurs!=0 element". $key ." doesn't exist.\n");
                     }
                 }
             }
@@ -2040,7 +2040,7 @@ function wsf_parse_payload_for_class_map(DomNode $payload, array $parameter_stru
                         // so this if fine
                     }
                     else{
-                       error_log("minOccurs!=0 element". $key ."doesn't exist.\n");
+                       error_log(" minOccurs!=0 element". $key ." doesn't exist.\n");
                     }
                 }
             }
@@ -2114,7 +2114,7 @@ function wsf_parse_payload_for_service_class_map(DomNode $payload, array $parame
                         // so this if fine
                     }
                     else{
-                       error_log("minOccurs!=0 element". $key ."doesn't exist.\n");
+                       error_log(" minOccurs!=0 element". $key ." doesn't exist.\n");
                     }
                 }
             }
@@ -2182,7 +2182,7 @@ function wsf_parse_payload_for_service_class_map(DomNode $payload, array $parame
                         // so this if fine
                     }
                     else{
-                       error_log("minOccurs!=0 element". $key ."doesn't exist.\n");
+                       error_log(" minOccurs!=0 element". $key ." doesn't exist.\n");
                     }
                 }
             }
