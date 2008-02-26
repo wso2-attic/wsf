@@ -105,7 +105,7 @@ class FlickrClient extends WSClient
         }
         catch(Exception $e)
         {
-            return handleException($e);
+            return $this->handleException($e);
         }
         
         $ret = $this->extractPhotoResponse($res->str);
