@@ -80,7 +80,7 @@ wsf_worker_t * wsf_worker_create (const axutil_env_t * env,
 			    smart_str sandesha2_db = { 0 };
 				smart_str_appends(&sandesha2_db, rm_db_dir);
 		        smart_str_appends(&sandesha2_db, "/");
-		        smart_str_appends(&sandesha2_db, "sandesha2db");
+		        smart_str_appends(&sandesha2_db, "sandesha2_db");
 		        smart_str_0(&sandesha2_db);
                 
 				axutil_param_set_value (param, env, axutil_strdup(env , sandesha2_db.c));
