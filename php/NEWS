@@ -67,21 +67,20 @@ Key Features
 Experimental Features
 ---------------------
 
-11. wsdl2php script. This script can generate php classes for services and clients from a given WSDL to be used
+11. wsdl2php.php script. This script can generate PHP classes for services and clients for a given WSDL to be used
     with WSDL Mode .
 
 --------------------------------
 Major Changes Since Last Release
 ================================
-1. Large Attachments problem fixed. MTOM implementation is able to send large attachments now.
-2. wsdl2php script added. This script can generate php classes for web services and clients from a given WSDL
-   to be used with WSDL mode.
+1. MTOM implementation improved to send large attachments.
+2. wsdl2php.php script added to help generate PHP classes to be used with WSDL mode.
 3. WSDL mode classmap support added for services.
-4. Documentation improved.
-5. SOAP Header handling improved.
-6. WSDL mode support for arrays.
-7. WSDL generation for services implemented using classes.
-8. Many Bug fixes
+4. WSDL mode support for arrays added.
+5. Improved API to let the user access SOAP Headers from service scripts.
+6. WSDL generation for services improved with support for PHP classes.
+7. Improvements to documentation.
+8. Many bug fixes.
 
 
 -------------------
