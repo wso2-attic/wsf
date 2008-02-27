@@ -64,24 +64,26 @@ Key Features
       * Consume some well known services such as Yahoo search and Flickr 
         and Amazon services using predefined classes
 
-Experimental Feature
+Experimental Features
 ---------------------
 
-11. wsdl2php script. This script can generate services and clients from a given wsdl.
+11. wsdl2php script. This script can generate php classes for services and clients from a given WSDL to be used
+    with WSDL Mode .
 
 --------------------------------
 Major Changes Since Last Release
 ================================
 1. Large Attachments problem fixed. MTOM implementation is able to send large attachments now.
-2. wsdl2php script added. This script is able to generate php classes for web services and clients from a given wsdl.
+2. wsdl2php script added. This script can generate php classes for web services and clients from a given WSDL
+   to be used with WSDL mode.
 3. WSDL mode classmap support added for services.
 4. Documentation improved.
 5. SOAP Header handling improved.
-6. WSDL Mode was not supporting multiple function to the proxy object on the same .php file and implementing
-   multiple WSClient functions on the same .php file. This problem is fixed.
-7. WSDL mode support for arrays with schema maxOccurs attribute.
-8. WSDL generation for service implemented using classes.
- 
+6. WSDL mode support for arrays.
+7. WSDL generation for services implemented using classes.
+8. Many Bug fixes
+
+
 -------------------
 Reporting Problems
 ===================
