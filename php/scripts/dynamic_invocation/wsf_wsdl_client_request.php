@@ -222,7 +222,10 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
             $new_obj = $arguments[0];
             $parameter_structure = $tmp_param_struct[$ele_name];
             $namespace_map = array($tmp_param_struct[$ele_name][WSF_NS] => "ns1");
-            wsf_create_rpc_payload_for_class_map($payload_dom, $parameter_structure, $element, $element, $new_obj,
+            //wsf_create_rpc_payload_for_class_map($payload_dom, $parameter_structure, $element, $element, $new_obj,
+            //                                                          $namespace_map);a
+            // currently we handle both rpc and doc lit sameway
+            wsf_create_payload_for_class_map($payload_dom, $parameter_structure, $element, $element, $new_obj,
                                                                         $namespace_map);
             $payload_dom->appendChild($element);
             $payload_node = $payload_dom->firstChild;
@@ -233,8 +236,12 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
             /* array type implementation */
             $parameter_structure = $tmp_param_struct[$ele_name];
             $namespace_map = array($tmp_param_struct[$ele_name][WSF_NS] => "ns1");
-            wsf_create_rpc_payload_for_array($payload_dom, $parameter_structure, $element, $element, $arguments[0],
+
+            //wsf_create_rpc_payload_for_array($payload_dom, $parameter_structure, $element, $element, $arguments[0],
+            //                                                           $namespace_map);
+            wsf_create_payload_for_array($payload_dom, $parameter_structure, $element, $element, $arguments[0],
                                                                        $namespace_map);
+
             $payload_dom->appendChild($element);
             $payload_node = $payload_dom->firstChild;
             $clone_node = $payload_node->cloneNode(TRUE);
