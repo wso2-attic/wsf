@@ -24,6 +24,11 @@ static void test_axutil_rand_create(
     wsf_unit_test_case_t *tc,
     void *data);
 
+static void test_axutil_rand_create_with_range(    
+    wsf_unit_test_case_t *tc,
+    void *data);
+
+
 wsf_unit_status_t WSF_UNIT_CALL test_rand(wsf_unit_suite_t * suite)
 {
     wsf_unit_status_t status = WSF_UNIT_FAILURE;
@@ -44,6 +49,7 @@ wsf_unit_status_t WSF_UNIT_CALL test_rand(wsf_unit_suite_t * suite)
     }
 
     wsf_unit_run_test(suite, test_axutil_rand_create, data);
+    wsf_unit_run_test(suite, test_axutil_rand_create_with_range, data);
 
     if (data)
     {
@@ -71,8 +77,8 @@ static void WSF_UNIT_CALL test_axutil_rand_create(wsf_unit_test_case_t *tc, void
     axutil_test_data_t *test_data = (axutil_test_data_t *)data;
     unsigned int seed1;
     unsigned int seed2;
-    int rand_val1;
-    int rand_val2;
+    int rand_val1 = -1;
+    int rand_val2 = -1;
 
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Test Data Unavailable", test_data);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Test Environment Unavailable", test_data->test_env);
@@ -94,6 +100,19 @@ static void WSF_UNIT_CALL test_axutil_rand_create(wsf_unit_test_case_t *tc, void
 #endif
     seed2 = axutil_rand_get_seed_value_based_on_time(env);
     WSF_UNIT_ASSERT_NOT_EQUALS_INT(tc, "Invalid Seed Values", seed1, seed2);
+
+}
+
+static void WSF_UNIT_CALL test_axutil_rand_create_with_range(wsf_unit_test_case_t *tc, void *data)
+{
+    axutil_env_t *env = NULL;
+    axutil_test_data_t *test_data = (axutil_test_data_t *)data;
+    unsigned int seed1;
+
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Test Data Unavailable", test_data);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Test Environment Unavailable", test_data->test_env);
+
+    env = test_data->test_env;
 
     /* Test Failure Returns */
     seed1 = axutil_rand_get_seed_value_based_on_time(env);

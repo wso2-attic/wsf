@@ -17,6 +17,7 @@
 
 #include <util.h>
 #include <axutil_date_time.h>
+#include <time.h>
 
 static void test_axutil_date_time_create(    
     wsf_unit_test_case_t *tc,
@@ -35,6 +36,10 @@ static void test_axutil_date_time_serialize(
     void *data);
 
 static void test_axutil_date_time_error_input_failures(    
+    wsf_unit_test_case_t *tc,
+    void *data);
+
+static void test_axutil_date_time_create_with_offset_gmtime(
     wsf_unit_test_case_t *tc,
     void *data);
 
@@ -62,6 +67,7 @@ wsf_unit_status_t WSF_UNIT_CALL test_date_time(wsf_unit_suite_t * suite)
     wsf_unit_run_test(suite, test_axutil_date_time_deserialize, data);
     wsf_unit_run_test(suite, test_axutil_date_time_serialize, data);
     wsf_unit_run_test(suite, test_axutil_date_time_error_input_failures, data);
+    wsf_unit_run_test(suite, test_axutil_date_time_create_with_offset_gmtime, data);
 
     if (data)
     {
@@ -119,6 +125,8 @@ static void WSF_UNIT_CALL test_axutil_date_time_create_with_offset(wsf_unit_test
     axutil_date_time_t *date_time1 = NULL;
     axutil_date_time_t *date_time2 = NULL;
     axutil_date_time_t *date_time3 = NULL;
+    char *str1 = NULL;
+    char *str2 = NULL;
 
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Test Data Unavailable", test_data);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Test Environment Unavailable", test_data->test_env);
@@ -146,6 +154,76 @@ static void WSF_UNIT_CALL test_axutil_date_time_create_with_offset(wsf_unit_test
     WSF_UNIT_ASSERT_TRUE(tc, "Invalid Date Time",
         axutil_date_time_compare(date_time2, env, date_time3) == 
         AXIS2_DATE_TIME_COMP_RES_EXPIRED);
+
+    str1 = axutil_date_time_serialize_date_time(date_time2, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Date Time Serialize Failed", str1);
+    WSF_UNIT_ASSERT_TRUE(tc, "Date Time Deserialize Failed",
+        axutil_date_time_deserialize_date_time(date_time2, env, str1));
+    str2 = axutil_date_time_serialize_date_time(date_time2, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Date Time Serialize Failed", str1);
+
+    if (str1 && str2)
+    {
+        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Serialize/Deserialize Failed", str1, str2);
+    }
+
+    if (str1)
+    {
+        AXIS2_FREE(env->allocator, str1);
+        str1 = NULL;
+    }
+    if (str2)
+    {
+        AXIS2_FREE(env->allocator, str2);
+        str1 = NULL;
+    }
+
+    str1 = axutil_date_time_serialize_date(date_time2, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Date Time Serialize Failed", str1);
+    WSF_UNIT_ASSERT_TRUE(tc, "Date Time Deserialize Failed",
+        axutil_date_time_deserialize_date(date_time2, env, str1));
+    str2 = axutil_date_time_serialize_date(date_time2, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Date Time Serialize Failed", str1);
+
+    if (str1 && str2)
+    {
+        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Serialize/Deserialize Failed", str1, str2);
+    }
+
+    if (str1)
+    {
+        AXIS2_FREE(env->allocator, str1);
+        str1 = NULL;
+    }
+    if (str2)
+    {
+        AXIS2_FREE(env->allocator, str2);
+        str1 = NULL;
+    }
+
+    str1 = axutil_date_time_serialize_time(date_time2, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Date Time Serialize Failed", str1);
+    WSF_UNIT_ASSERT_TRUE(tc, "Date Time Deserialize Failed",
+        axutil_date_time_deserialize_time(date_time2, env, str1));
+    str2 = axutil_date_time_serialize_time(date_time2, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Date Time Serialize Failed", str1);
+
+    if (str1 && str2)
+    {
+        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Serialize/Deserialize Failed", str1, str2);
+    }
+
+    if (str1)
+    {
+        AXIS2_FREE(env->allocator, str1);
+        str1 = NULL;
+    }
+    if (str2)
+    {
+        AXIS2_FREE(env->allocator, str2);
+        str1 = NULL;
+    }
+
     if (date_time1)
     {
         axutil_date_time_free(date_time1, env);
@@ -282,7 +360,7 @@ static void WSF_UNIT_CALL test_axutil_date_time_serialize(wsf_unit_test_case_t *
 
     if (str)
     {
-        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Serialized String is invlaid",
+        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Serialized String is invalid",
             "2000-11-11T12:30:24.799Z", str);
         AXIS2_FREE(env->allocator, str);
         str = NULL;
@@ -293,7 +371,7 @@ static void WSF_UNIT_CALL test_axutil_date_time_serialize(wsf_unit_test_case_t *
 
     if (str)
     {
-        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Serialized String is invlaid",
+        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Serialized String is invalid",
             "2000-11-11", str);
         AXIS2_FREE(env->allocator, str);
         str = NULL;
@@ -304,7 +382,7 @@ static void WSF_UNIT_CALL test_axutil_date_time_serialize(wsf_unit_test_case_t *
 
     if (str)
     {
-        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Serialized String is invlaid",
+        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Serialized String is invalid",
             "12:30:24.799Z", str);
         AXIS2_FREE(env->allocator, str);
         str = NULL;
@@ -326,7 +404,7 @@ static void WSF_UNIT_CALL test_axutil_date_time_serialize(wsf_unit_test_case_t *
 
     if (str)
     {
-        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Serialized String is invlaid",
+        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Serialized String is invalid",
             "2000-11-11T12:30:24.799Z", str);
         AXIS2_FREE(env->allocator, str);
         str = NULL;
@@ -428,4 +506,65 @@ static void WSF_UNIT_CALL test_axutil_date_time_error_input_failures(wsf_unit_te
     WSF_UNIT_ASSERT_TRUE(tc, "Set Date Time Invalid",
         axutil_date_time_set_date_time(date_time, env, 2004, 2, 29, 12, 30, 24, 799));
    /* End of Error set */
+}
+
+static void WSF_UNIT_CALL test_axutil_date_time_create_with_offset_gmtime(wsf_unit_test_case_t *tc, void *data)
+{
+    axutil_env_t *env = NULL;
+    axutil_test_data_t *test_data = (axutil_test_data_t *)data;
+    axutil_date_time_t *date_time = NULL;
+    char *str1 = NULL;
+    char *str2 = NULL;
+    time_t t;
+    struct tm *utc_time = NULL;
+    int y, m, d;
+
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Test Data Unavailable", test_data);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Test Environment Unavailable", test_data->test_env);
+
+    if (!test_data)
+    {
+        return;
+    }
+    env = test_data->test_env;
+    date_time = axutil_date_time_create_with_offset(env, 0);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Date Time Creation Failed", date_time);
+    if (!date_time)
+    {
+        return;
+    }
+    t = time(NULL);
+
+    utc_time = gmtime(&t);
+    y = utc_time->tm_year + 1900;
+    m = utc_time->tm_mon + 1;
+    d = utc_time->tm_mday;
+
+    str1 = (char *) AXIS2_MALLOC(env->allocator, sizeof(char) * 32);
+
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Memory Allocation Failure", str1);
+
+    sprintf(str1, "%d-%d-%d", y, m, d);
+
+    str2 = axutil_date_time_serialize_date(date_time, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Date Time Serialize Failed", str2);
+
+    if (str1 && str2)
+    {
+        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Serialized String is Invalid",
+            str1, str2);
+    }
+
+    if (str1)
+    {
+        AXIS2_FREE(env->allocator, str1);
+    }
+    if (str2)
+    {
+        AXIS2_FREE(env->allocator, str2);
+    }
+    if (date_time)
+    {
+        axutil_date_time_free(date_time, env);
+    }
 }
