@@ -33,8 +33,8 @@ function getAttachment($inMessage) {
             file_put_contents("decoded_image.jpg", $str);
         }else{
             file_put_contents("/tmp/base64image.txt",$image->nodeValue);
-		$str = base64_decode($image->nodeValue);
-            file_put_contents("decoded_image.jpg", $str);
+        	$str = base64_decode($image->nodeValue);
+            file_put_contents("/tmp/decoded_image.jpg", $str);
         }
     }
 
