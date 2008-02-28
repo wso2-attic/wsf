@@ -30,6 +30,18 @@ static void test_axutil_uri_parse_string(
     wsf_unit_test_case_t *tc,
     void *data);
 
+static void test_axutil_uri_parse_relative(    
+    wsf_unit_test_case_t *tc,
+    void *data);
+
+static void test_axutil_uri_port_of_scheme(    
+    wsf_unit_test_case_t *tc,
+    void *data);
+
+static void test_axutil_uri_to_string(    
+    wsf_unit_test_case_t *tc,
+    void *data);
+
 wsf_unit_status_t WSF_UNIT_CALL test_uri(wsf_unit_suite_t * suite)
 {
     wsf_unit_status_t status = WSF_UNIT_FAILURE;
@@ -52,6 +64,9 @@ wsf_unit_status_t WSF_UNIT_CALL test_uri(wsf_unit_suite_t * suite)
     wsf_unit_run_test(suite, test_axutil_uri_create, data);
     wsf_unit_run_test(suite, test_axutil_uri_parse_hostinfo, data);
     wsf_unit_run_test(suite, test_axutil_uri_parse_string, data);
+    wsf_unit_run_test(suite, test_axutil_uri_parse_relative, data);
+    wsf_unit_run_test(suite, test_axutil_uri_port_of_scheme, data);
+    wsf_unit_run_test(suite, test_axutil_uri_to_string, data);
 
     if (data)
     {
@@ -134,7 +149,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_hostinfo(wsf_unit_test_case_t *t
 
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -159,7 +174,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_hostinfo(wsf_unit_test_case_t *t
 
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -184,7 +199,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_hostinfo(wsf_unit_test_case_t *t
 
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -194,7 +209,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_hostinfo(wsf_unit_test_case_t *t
     WSF_UNIT_ASSERT_NULL(tc, "CONNECT Parsing Must Fail But, Didn't", uri);
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
     }
 
     uri = axutil_uri_parse_hostinfo(env, "home.netscape.com:443/extra");
@@ -202,7 +217,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_hostinfo(wsf_unit_test_case_t *t
     WSF_UNIT_ASSERT_NULL(tc, "CONNECT Parsing Must Fail But, Didn't", uri);
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -211,7 +226,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_hostinfo(wsf_unit_test_case_t *t
     WSF_UNIT_ASSERT_NULL(tc, "CONNECT Parsing Must Fail But, Didn't", uri);
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -220,7 +235,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_hostinfo(wsf_unit_test_case_t *t
     WSF_UNIT_ASSERT_NULL(tc, "CONNECT Parsing Must Fail But, Didn't", uri);
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -229,7 +244,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_hostinfo(wsf_unit_test_case_t *t
     WSF_UNIT_ASSERT_NULL(tc, "CONNECT Parsing Must Fail But, Didn't", uri);
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -238,7 +253,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_hostinfo(wsf_unit_test_case_t *t
     WSF_UNIT_ASSERT_NULL(tc, "CONNECT Parsing Must Fail But, Didn't", uri);
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -247,7 +262,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_hostinfo(wsf_unit_test_case_t *t
     WSF_UNIT_ASSERT_NULL(tc, "CONNECT Parsing Must Fail But, Didn't", uri);
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -256,11 +271,12 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_hostinfo(wsf_unit_test_case_t *t
     WSF_UNIT_ASSERT_NULL(tc, "CONNECT Parsing Must Fail But, Didn't", uri);
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
     /* End of Error Tests */
     WSF_UNIT_FAIL(tc, "No Method to get Hostname");
+    WSF_UNIT_FAIL(tc, "Fix memory leaks in uri.c and remove this line");
     WSF_UNIT_FAIL(tc, "axutil_uri_get_server Returns Reference but NO Documentation");
 }
 
@@ -312,7 +328,40 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
+        uri = NULL;
+    }
+
+    uri = axutil_uri_parse_string(env, "http://");
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "String Parsing Failed", uri);
+    str = axutil_uri_get_server(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Server Should Fail. But, Didn't", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_protocol(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Protocol",
+        "http", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_to_string(uri, env, 0);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
+        "http://", str);
+    if (str)
+    {
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    if (uri)
+    {
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -349,7 +398,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -386,7 +435,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -421,7 +470,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -458,7 +507,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -493,7 +542,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -528,7 +577,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -563,7 +612,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -600,7 +649,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -637,7 +686,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -674,7 +723,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -711,7 +760,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -746,7 +795,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -781,7 +830,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -816,7 +865,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -851,7 +900,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -895,7 +944,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -941,7 +990,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -987,7 +1036,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -1031,7 +1080,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -1077,7 +1126,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -1121,7 +1170,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -1165,7 +1214,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -1209,7 +1258,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -1255,7 +1304,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -1301,7 +1350,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -1347,7 +1396,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -1393,7 +1442,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -1437,7 +1486,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -1481,7 +1530,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -1525,7 +1574,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -1578,7 +1627,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -1615,7 +1664,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
 
@@ -1652,7 +1701,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
     /* End of Abbreviated URI Block */
@@ -1662,42 +1711,42 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     WSF_UNIT_ASSERT_NULL(tc, "String Parsing Should Fail. But, Didn't", uri);
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
     uri = axutil_uri_parse_string(env, "//home.netscape.com:9090/path?foo=bar#rel");
     WSF_UNIT_ASSERT_NULL(tc, "String Parsing Should Fail. But, Didn't", uri);
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
     uri = axutil_uri_parse_string(env, "htpp://home.netscape.com:9090/path?foo=bar#rel");
     WSF_UNIT_ASSERT_NULL(tc, "String Parsing Should Fail. But, Didn't", uri);
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
     uri = axutil_uri_parse_string(env, "http://home.netscape.com:9090//path?foo=bar#rel");
     WSF_UNIT_ASSERT_NULL(tc, "String Parsing Should Fail. But, Didn't", uri);
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
     uri = axutil_uri_parse_string(env, "http://home.netscape.com/path:9090?foo=bar#rel");
     WSF_UNIT_ASSERT_NULL(tc, "String Parsing Should Fail. But, Didn't", uri);
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
     uri = axutil_uri_parse_string(env, "http:9090//home.netscape.com/path?foo=bar#rel");
     WSF_UNIT_ASSERT_NULL(tc, "String Parsing Should Fail. But, Didn't", uri);
     if (uri)
     {
-        axutil_uri_free((axutil_uri_t *)uri, env);
+        axutil_uri_free(uri, env);
         uri = NULL;
     }
     /* End of Error Cases */
@@ -1708,4 +1757,416 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     WSF_UNIT_FAIL(tc, "axutil_uri_get_path Returns Reference but NO Documentation");
     WSF_UNIT_FAIL(tc, "axutil_uri_get_server Returns Reference but NO Documentation");
     WSF_UNIT_FAIL(tc, "axutil_uri_get_protocol Returns Reference but NO Documentation");
+}
+
+static void WSF_UNIT_CALL test_axutil_uri_parse_relative(wsf_unit_test_case_t *tc, void *data)
+{
+    axutil_env_t *env = NULL;
+    axutil_test_data_t *test_data = (axutil_test_data_t *)data;
+    axutil_uri_t *uri = NULL;
+    axutil_uri_t *temp = NULL;
+    axutil_uri_t *base = NULL;
+    char *str = NULL;
+
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Test Data Unavailable", test_data);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Test Environment Unavailable", test_data->test_env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Test Data Unavailable", test_data->test_data);
+
+    if (!test_data || !test_data->test_data)
+    {
+        return;
+    }
+
+    env = test_data->test_env;
+
+    base = axutil_uri_parse_string(env, "http://");
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "String Parsing Failed", base);
+    str = axutil_uri_to_string(base, env, 0);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
+        "http://", str);
+    if (str)
+    {
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    uri = axutil_uri_parse_relative(env, base, "/my_path?foo=bar#rel");
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Relative Parsing Failed", uri);
+    str = axutil_uri_to_string(uri, env, 0);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
+        "http:///my_path?foo=bar#rel", str);
+    if (str)
+    {
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    if (base)
+    {
+        axutil_uri_free(base, env);
+        uri = NULL;
+    }
+    if (uri)
+    {
+        axutil_uri_free(uri, env);
+        uri = NULL;
+    }
+
+    base = axutil_uri_parse_string(env, "http://?bar=foo#xrel");
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "String Parsing Failed", base);
+    str = axutil_uri_to_string(base, env, 0);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
+        "http://?bar=foo#xrel", str);
+    if (str)
+    {
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    uri = axutil_uri_parse_relative(env, base, "/my_path?foo=bar#rel");
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Relative Parsing Failed", uri);
+    str = axutil_uri_to_string(uri, env, 0);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
+        "http:///my_path?foo=bar#rel", str);
+    if (str)
+    {
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    if (base)
+    {
+        axutil_uri_free(base, env);
+        uri = NULL;
+    }
+    if (uri)
+    {
+        axutil_uri_free(uri, env);
+        uri = NULL;
+    }
+
+    base = axutil_uri_parse_string(env, "http://home.netscape.com:80");
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "String Parsing Failed", base);
+    str = axutil_uri_to_string(base, env, 0);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
+        "http://home.netscape.com", str);
+    if (str)
+    {
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    uri = axutil_uri_parse_relative(env, base, "/my_path?foo=bar#rel");
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Relative Parsing Failed", uri);
+    str = axutil_uri_to_string(uri, env, 0);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
+        "http://home.netscape.com/my_path?foo=bar#rel", str);
+    if (str)
+    {
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    if (base)
+    {
+        axutil_uri_free(base, env);
+        uri = NULL;
+    }
+    if (uri)
+    {
+        axutil_uri_free(uri, env);
+        uri = NULL;
+    }
+
+    base = axutil_uri_parse_string(env, "https://home.netscape.com:443");
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "String Parsing Failed", base);
+    str = axutil_uri_to_string(base, env, 0);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
+        "https://home.netscape.com", str);
+    if (str)
+    {
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    uri = axutil_uri_parse_string(env, "/my_path?foo=bar#rel");
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "String Parsing Failed", uri);
+    temp = axutil_uri_resolve_relative(env, base, uri);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Relative Resolution Failed", uri);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Relative Resolution Failed", temp);
+    WSF_UNIT_ASSERT_EQUALS_PTR(tc, "Invalid Reference Returned",
+        uri, temp);
+    temp = NULL;
+    str = axutil_uri_to_string(uri, env, 0);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
+        "https://home.netscape.com/my_path?foo=bar#rel", str);
+    if (str)
+    {
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    if (base)
+    {
+        axutil_uri_free(base, env);
+        uri = NULL;
+    }
+    if (uri)
+    {
+        axutil_uri_free(uri, env);
+        uri = NULL;
+    }
+}
+
+static void WSF_UNIT_CALL test_axutil_uri_port_of_scheme(wsf_unit_test_case_t *tc, void *data)
+{
+    axutil_env_t *env = NULL;
+    axutil_test_data_t *test_data = (axutil_test_data_t *)data;
+
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Test Data Unavailable", test_data);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Test Environment Unavailable", test_data->test_env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Test Data Unavailable", test_data->test_data);
+
+    if (!test_data || !test_data->test_data)
+    {
+        return;
+    }
+
+    env = test_data->test_env;
+
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 80,
+        axutil_uri_port_of_scheme("http"));
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 80,
+        AXIS2_URI_HTTP_DEFAULT_PORT);
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 21,
+        axutil_uri_port_of_scheme("ftp"));
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 21,
+        AXIS2_URI_FTP_DEFAULT_PORT);
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 443,
+        axutil_uri_port_of_scheme("https"));
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 443,
+        AXIS2_URI_HTTPS_DEFAULT_PORT);
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 70,
+        axutil_uri_port_of_scheme("gopher"));
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 70,
+        AXIS2_URI_GOPHER_DEFAULT_PORT);
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 389,
+        axutil_uri_port_of_scheme("ldap"));
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 389,
+        AXIS2_URI_LDAP_DEFAULT_PORT);
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 119,
+        axutil_uri_port_of_scheme("nntp"));
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 119,
+        AXIS2_URI_NNTP_DEFAULT_PORT);
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 143,
+        axutil_uri_port_of_scheme("imap"));
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 143,
+        AXIS2_URI_IMAP_DEFAULT_PORT);
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 110,
+        axutil_uri_port_of_scheme("pop"));
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 110,
+       AXIS2_URI_POP_DEFAULT_PORT);
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 5060,
+        axutil_uri_port_of_scheme("sip"));
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 5060,
+        AXIS2_URI_SIP_DEFAULT_PORT);
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 23,
+        axutil_uri_port_of_scheme("telnet"));
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 23,
+        AXIS2_URI_TELNET_DEFAULT_PORT);
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 22,
+        axutil_uri_port_of_scheme("ssh"));
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 22,
+        AXIS2_URI_SSH_DEFAULT_PORT);
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 191,
+        axutil_uri_port_of_scheme("prospero"));
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 191,
+        AXIS2_URI_PROSPERO_DEFAULT_PORT);
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 2049,
+        axutil_uri_port_of_scheme("nfs"));
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 2049,
+        AXIS2_URI_NFS_DEFAULT_PORT);
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 3372,
+        axutil_uri_port_of_scheme("tip"));
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 3372,
+        AXIS2_URI_TIP_DEFAULT_PORT);
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 674,
+        axutil_uri_port_of_scheme("acap"));
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 674,
+        AXIS2_URI_ACAP_DEFAULT_PORT);
+
+    /* Ports Below are listed on IANA List as of 2008-02-28, at,
+     * http://www.iana.org/assignments/port-numbers, as z39.50
+     * in general.
+     */
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 210,
+        axutil_uri_port_of_scheme("z39.50r"));
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 210,
+        axutil_uri_port_of_scheme("z39.50s"));
+
+    /* Ports Below are not on IANA List as of 2008-02-28, at,
+     * http://www.iana.org/assignments/port-numbers
+     */
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 554,
+        axutil_uri_port_of_scheme("rtsp"));
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 554,
+        AXIS2_URI_RTSP_DEFAULT_PORT);
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 210,
+        axutil_uri_port_of_scheme("wais"));
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 210,
+        AXIS2_URI_WAIS_DEFAULT_PORT);
+
+    /* Couldn't locate enough resources to determine the existence
+     * of a scheme named "snews"
+     */
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 563,
+        axutil_uri_port_of_scheme("snews"));
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Port", 563,
+        AXIS2_URI_SNEWS_DEFAULT_PORT);
+}
+
+static void WSF_UNIT_CALL test_axutil_uri_to_string(wsf_unit_test_case_t *tc, void *data)
+{
+    axutil_env_t *env = NULL;
+    axutil_test_data_t *test_data = (axutil_test_data_t *)data;
+    axutil_uri_t *uri = NULL;
+    axutil_uri_t *temp = NULL;
+    char *str = NULL;
+
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Test Data Unavailable", test_data);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Test Environment Unavailable", test_data->test_env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Test Data Unavailable", test_data->test_data);
+
+    if (!test_data || !test_data->test_data)
+    {
+        return;
+    }
+
+    env = test_data->test_env;
+
+    uri = axutil_uri_parse_string(env, "http://user:pass@home.netscape.com:9090/path?foo=bar#rel");
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "String Parsing Failed", uri);
+
+    temp = axutil_uri_clone(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI Clone Failed", temp);
+
+    str = axutil_uri_to_string(temp, env, AXIS2_URI_UNP_REVEALPASSWORD);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
+        "http://user:pass@home.netscape.com:9090/path?foo=bar#rel", str);
+    if (str)
+    {
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    if (temp)
+    {
+        axutil_uri_free(temp, env);
+        temp = NULL;
+    }
+    str = axutil_uri_to_string(uri, env, AXIS2_URI_UNP_OMITSITEPART | AXIS2_URI_UNP_OMITPATHINFO);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
+        "", str);
+    if (str && *str)
+    {
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    str = axutil_uri_to_string(uri, env, AXIS2_URI_UNP_OMITSITEPART | AXIS2_URI_UNP_OMITQUERY
+                               | AXIS2_URI_UNP_OMITPATHINFO);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
+        "", str);
+    if (str && *str)
+    {
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    str = axutil_uri_to_string(uri, env, AXIS2_URI_UNP_OMITUSER | AXIS2_URI_UNP_REVEALPASSWORD);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
+        "http://:pass@home.netscape.com:9090/path?foo=bar#rel", str);
+    if (str)
+    {
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    str = axutil_uri_to_string(uri, env, AXIS2_URI_UNP_OMITPASSWORD | AXIS2_URI_UNP_REVEALPASSWORD);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
+        "http://user@home.netscape.com:9090/path?foo=bar#rel", str);
+    if (str)
+    {
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    str = axutil_uri_to_string(uri, env, AXIS2_URI_UNP_OMITPASSWORD);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
+        "http://user@home.netscape.com:9090/path?foo=bar#rel", str);
+    if (str)
+    {
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    str = axutil_uri_to_string(uri, env, AXIS2_URI_UNP_OMITUSERINFO);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
+        "http://home.netscape.com:9090/path?foo=bar#rel", str);
+    if (str)
+    {
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    str = axutil_uri_to_string(uri, env, AXIS2_URI_UNP_OMITPASSWORD | AXIS2_URI_UNP_OMITUSER);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
+        "http://home.netscape.com:9090/path?foo=bar#rel", str);
+    if (str)
+    {
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    str = axutil_uri_to_string(uri, env, 0);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
+        "http://user:XXXXXXXX@home.netscape.com:9090/path?foo=bar#rel", str);
+    if (str)
+    {
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    str = axutil_uri_to_string(uri, env, AXIS2_URI_UNP_OMITUSER);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
+        "http://:XXXXXXXX@home.netscape.com:9090/path?foo=bar#rel", str);
+    if (str)
+    {
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    str = axutil_uri_to_string(uri, env, AXIS2_URI_UNP_OMITUSERINFO | AXIS2_URI_UNP_OMITPATHINFO);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
+        "http://home.netscape.com:9090", str);
+    if (str)
+    {
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    str = axutil_uri_to_string(uri, env, AXIS2_URI_UNP_OMITSITEPART | AXIS2_URI_UNP_OMITQUERY);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
+        "/path#rel", str);
+    if (str)
+    {
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    if (uri)
+    {
+        axutil_uri_free(uri, env);
+        uri = NULL;
+    }
 }
