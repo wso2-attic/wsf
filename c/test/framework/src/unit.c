@@ -1213,12 +1213,12 @@ wsf_unit_execute(
             printf("    option initialize the test suite/sub-suite\n");
             printf("    before any local memory allocations\n");
             printf(" -q for a quite mode operation\n");
-            printf(" -r to report not implemented tests in detail.\n");
+            printf(" -r to report not-implemented tests in detail.\n");
             printf(" -s to stop catching Segmentation Faults. This\n");
             printf("    is useful for debugging\n");
             printf(" -x to skip provided test names. If you do not\n");
             printf("    provide this option all the tests provided\n");
-            printf("    wil run\n");
+            printf("    will run\n");
             return 0;
         }
         if (!list_tests && !strcmp(argv[i], "-l"))
