@@ -925,7 +925,7 @@ wsf_xml_msg_recv_set_soap_fault (
     } else
         return;
 
-    env_ns = axiom_namespace_create (env, soap_ns, "env");
+    env_ns = axiom_namespace_create (env, soap_ns, AXIOM_SOAP_DEFAULT_NAMESPACE_PREFIX);
     if (!env_ns) {
         return;
     }
