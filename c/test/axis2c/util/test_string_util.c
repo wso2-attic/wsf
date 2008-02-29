@@ -358,9 +358,9 @@ static void WSF_UNIT_CALL test_axutil_string_util_last_token(wsf_unit_test_case_
         WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Token Count", 2,
             axutil_array_list_size(tokens, env));
         WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Token on Array List", "one",
-            (char *)axutil_array_list_get(tokens, env, 0));
-        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Token on Array List", "sample test string",
             (char *)axutil_array_list_get(tokens, env, 1));
+        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Token on Array List", "sample test string",
+            (char *)axutil_array_list_get(tokens, env, 0));
         /*while (axutil_array_list_size(tokens, env))
         {
             AXIS2_FREE(env->allocator, axutil_array_list_remove(tokens, env, 0));
@@ -380,9 +380,9 @@ static void WSF_UNIT_CALL test_axutil_string_util_last_token(wsf_unit_test_case_
         WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Token Count", 2,
             axutil_array_list_size(tokens, env));
         WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Token on Array List", "one",
-            (char *)axutil_array_list_get(tokens, env, 0));
-        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Token on Array List", "sample,test,string",
             (char *)axutil_array_list_get(tokens, env, 1));
+        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Token on Array List", "sample,test,string",
+            (char *)axutil_array_list_get(tokens, env, 0));
         /*while (axutil_array_list_size(tokens, env))
         {
             AXIS2_FREE(env->allocator, axutil_array_list_remove(tokens, env, 0));
@@ -402,9 +402,9 @@ static void WSF_UNIT_CALL test_axutil_string_util_last_token(wsf_unit_test_case_
         WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Token Count", 2,
             axutil_array_list_size(tokens, env));
         WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Token on Array List", "one",
-            (char *)axutil_array_list_get(tokens, env, 0));
-        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Token on Array List", "sample test,string",
             (char *)axutil_array_list_get(tokens, env, 1));
+        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Token on Array List", "sample test,string",
+            (char *)axutil_array_list_get(tokens, env, 0));
         /*while (axutil_array_list_size(tokens, env))
         {
             AXIS2_FREE(env->allocator, axutil_array_list_remove(tokens, env, 0));
@@ -424,9 +424,9 @@ static void WSF_UNIT_CALL test_axutil_string_util_last_token(wsf_unit_test_case_
         WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Token Count", 2,
             axutil_array_list_size(tokens, env));
         WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Token on Array List", "string one",
-            (char *)axutil_array_list_get(tokens, env, 0));
-        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Token on Array List", "sample test",
             (char *)axutil_array_list_get(tokens, env, 1));
+        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Token on Array List", "sample test",
+            (char *)axutil_array_list_get(tokens, env, 0));
         /*while (axutil_array_list_size(tokens, env))
         {
             AXIS2_FREE(env->allocator, axutil_array_list_remove(tokens, env, 0));
@@ -446,9 +446,9 @@ static void WSF_UNIT_CALL test_axutil_string_util_last_token(wsf_unit_test_case_
         WSF_UNIT_ASSERT_EQUALS_INT(tc, "Invalid Token Count", 2,
             axutil_array_list_size(tokens, env));
         WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Token on Array List", "sample,test,string,one",
-            (char *)axutil_array_list_get(tokens, env, 0));
-        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Token on Array List", "",
             (char *)axutil_array_list_get(tokens, env, 1));
+        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Token on Array List", "",
+            (char *)axutil_array_list_get(tokens, env, 0));
         /*while (axutil_array_list_size(tokens, env))
         {
             AXIS2_FREE(env->allocator, axutil_array_list_remove(tokens, env, 0));
