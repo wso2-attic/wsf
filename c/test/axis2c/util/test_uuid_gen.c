@@ -75,9 +75,9 @@ static void WSF_UNIT_CALL test_axutil_uuid_gen_create(wsf_unit_test_case_t *tc, 
 
     env = test_data->test_env;
     uuid1 = axutil_uuid_gen(env);
-    WSF_UNIT_ASSERT_NOT_NULL(tc, "UUID Created Failed", uuid1);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "UUID Create Failed", uuid1);
     uuid2 = axutil_uuid_gen(env);
-    WSF_UNIT_ASSERT_NOT_NULL(tc, "UUID Created Failed", uuid2);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "UUID Create Failed", uuid2);
     if (uuid1 && uuid2)
     {
         WSF_UNIT_ASSERT_NOT_EQUALS_STRING(tc, "UUID Not Unique", uuid1, uuid2);

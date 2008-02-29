@@ -212,6 +212,22 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_hostinfo(wsf_unit_test_case_t *t
         axutil_uri_free(uri, env);
     }
 
+    uri = axutil_uri_parse_hostinfo(env, ":443");
+
+    WSF_UNIT_ASSERT_NULL(tc, "CONNECT Parsing Must Fail But, Didn't", uri);
+    if (uri)
+    {
+        axutil_uri_free(uri, env);
+    }
+
+    uri = axutil_uri_parse_hostinfo(env, "[]:443");
+
+    WSF_UNIT_ASSERT_NULL(tc, "CONNECT Parsing Must Fail But, Didn't", uri);
+    if (uri)
+    {
+        axutil_uri_free(uri, env);
+    }
+
     uri = axutil_uri_parse_hostinfo(env, "home.netscape.com:443/extra");
 
     WSF_UNIT_ASSERT_NULL(tc, "CONNECT Parsing Must Fail But, Didn't", uri);
@@ -391,6 +407,43 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
         "http://home.netscape.com:9090", str);
+    if (str)
+    {
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    if (uri)
+    {
+        axutil_uri_free(uri, env);
+        uri = NULL;
+    }
+
+    uri = axutil_uri_parse_string(env, "http://[home.netscape.com]:9090");
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "String Parsing Failed", uri);
+    str = axutil_uri_get_server(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Server Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "String Parsing Identified Invalid Server",
+        "[home.netscape.com]:9090", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "String Parsing Identified Invalid Port",
+        9090, (int)axutil_uri_get_port(uri, env));
+    str = axutil_uri_get_protocol(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Protocol",
+        "http", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_to_string(uri, env, 0);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
+        "http://[home.netscape.com]:9090", str);
     if (str)
     {
         AXIS2_FREE(env->allocator, str);
@@ -1707,6 +1760,27 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     /* End of Abbreviated URI Block */
 
     /* Error Cases */
+    uri = axutil_uri_parse_string(env, "http://:9090");
+    WSF_UNIT_ASSERT_NULL(tc, "String Parsing Should Fail. But, Didn't", uri);
+    if (uri)
+    {
+        axutil_uri_free(uri, env);
+        uri = NULL;
+    }
+    uri = axutil_uri_parse_string(env, "http://user:pass");
+    WSF_UNIT_ASSERT_NULL(tc, "String Parsing Should Fail. But, Didn't", uri);
+    if (uri)
+    {
+        axutil_uri_free(uri, env);
+        uri = NULL;
+    }
+    uri = axutil_uri_parse_string(env, "http://user:pass@:9090");
+    WSF_UNIT_ASSERT_NULL(tc, "String Parsing Should Fail. But, Didn't", uri);
+    if (uri)
+    {
+        axutil_uri_free(uri, env);
+        uri = NULL;
+    }
     uri = axutil_uri_parse_string(env, ".home.netscape.com:9090/path?foo=bar#rel");
     WSF_UNIT_ASSERT_NULL(tc, "String Parsing Should Fail. But, Didn't", uri);
     if (uri)
