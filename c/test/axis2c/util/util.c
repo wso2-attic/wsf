@@ -30,6 +30,7 @@ const struct wsf_unit_test_list axutil_tests[] =
     {test_rand},
     {test_stack},
     {test_string},
+    {test_string_util},
     {test_thread},
     {test_uri},
     {test_url},
