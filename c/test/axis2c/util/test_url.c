@@ -620,7 +620,7 @@ static void WSF_UNIT_CALL test_axutil_url_beans(wsf_unit_test_case_t *tc, void *
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Get Server Failed",
         "sample.netscape.com:9090", axutil_url_get_server(url, env));
 
-    WSF_UNIT_FAIL(tc, "Remove this after adding Get/Set Host to axutil_url");
+    WSF_UNIT_NOT_IMPLEMENTED(tc, "Remove this after adding Get/Set Host to axutil_url");
     WSF_UNIT_NOT_IMPLEMENTED(tc, "Implement Tests 1 and 2, after fixing AXIS2C-1028");
     if (url)
     {

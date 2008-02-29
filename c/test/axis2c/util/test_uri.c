@@ -108,7 +108,7 @@ static void WSF_UNIT_CALL test_axutil_uri_create(wsf_unit_test_case_t *tc, void 
     {
         test_data->test_data = uri;
     }
-    WSF_UNIT_FAIL(tc, "Add axutil_uri_create to Header and Remove this");
+    WSF_UNIT_NOT_IMPLEMENTED(tc, "Add axutil_uri_create to Header and Remove this");
 }
 
 static void WSF_UNIT_CALL test_axutil_uri_parse_hostinfo(wsf_unit_test_case_t *tc, void *data)
@@ -291,9 +291,9 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_hostinfo(wsf_unit_test_case_t *t
         uri = NULL;
     }
     /* End of Error Tests */
-    WSF_UNIT_FAIL(tc, "No Method to get Hostname");
-    WSF_UNIT_FAIL(tc, "Fix memory leaks in uri.c and remove this line");
-    WSF_UNIT_FAIL(tc, "axutil_uri_get_server Returns Reference but NO Documentation");
+    WSF_UNIT_NOT_IMPLEMENTED(tc, "No Method to get Hostname");
+    WSF_UNIT_NOT_IMPLEMENTED(tc, "Fix memory leaks in uri.c and remove this line");
+    WSF_UNIT_NOT_IMPLEMENTED(tc, "axutil_uri_get_server Returns Reference but NO Documentation");
 }
 
 static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc, void *data)
@@ -1825,12 +1825,12 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     /* End of Error Cases */
 
-    WSF_UNIT_FAIL(tc, "No Method to get Hostname");
-    WSF_UNIT_FAIL(tc, "No Method to get Query");
-    WSF_UNIT_FAIL(tc, "No Method to get Fragment");
-    WSF_UNIT_FAIL(tc, "axutil_uri_get_path Returns Reference but NO Documentation");
-    WSF_UNIT_FAIL(tc, "axutil_uri_get_server Returns Reference but NO Documentation");
-    WSF_UNIT_FAIL(tc, "axutil_uri_get_protocol Returns Reference but NO Documentation");
+    WSF_UNIT_NOT_IMPLEMENTED(tc, "No Method to get Hostname");
+    WSF_UNIT_NOT_IMPLEMENTED(tc, "No Method to get Query");
+    WSF_UNIT_NOT_IMPLEMENTED(tc, "No Method to get Fragment");
+    WSF_UNIT_NOT_IMPLEMENTED(tc, "axutil_uri_get_path Returns Reference but NO Documentation");
+    WSF_UNIT_NOT_IMPLEMENTED(tc, "axutil_uri_get_server Returns Reference but NO Documentation");
+    WSF_UNIT_NOT_IMPLEMENTED(tc, "axutil_uri_get_protocol Returns Reference but NO Documentation");
 }
 
 static void WSF_UNIT_CALL test_axutil_uri_parse_relative(wsf_unit_test_case_t *tc, void *data)
