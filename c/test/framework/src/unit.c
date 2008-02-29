@@ -1211,7 +1211,7 @@ wsf_unit_execute(
             printf("    that this might cause memory leaks in poor\n");
             printf("    implementations of test cases. To use this\n");
             printf("    option initialize the test suite/sub-suite\n");
-            printf("    before any local memory allocations");
+            printf("    before any local memory allocations\n");
             printf(" -q for a quite mode operation\n");
             printf(" -r to report not implemented tests in detail.\n");
             printf(" -s to stop catching Segmentation Faults. This\n");
