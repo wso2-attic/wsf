@@ -1080,7 +1080,14 @@ wsf_util_serialize_om (
         AXIS2_XML_PARSER_TYPE_BUFFER);
     om_output = axiom_output_create (env, writer);
 
-    axiom_node_serialize (ret_node, env, om_output);
+    /* We should serialize the sub tree to preserve namespaces that reside 
+       outside ret_node but referenced form within the ret_node tree. 
+       Hence use axiom_node_serialize_sub_tree and not axiom_node_serialize.
+       axiom_node_serialize assumes the OM tree to be complete, hence, does 
+       not double ckeck if all referenced namespaces are serialized, but 
+       axiom_node_serialize_sub_tree does. */
+    axiom_node_serialize_sub_tree(ret_node, env, om_output); 
+
     buffer = (axis2_char_t *) axiom_xml_writer_get_xml (writer, env);
     buffer_len = axutil_strlen (buffer);
 
