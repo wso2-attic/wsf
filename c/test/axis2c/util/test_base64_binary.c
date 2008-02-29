@@ -18,15 +18,18 @@
 #include <util.h>
 #include <axutil_base64_binary.h>
 
-static void test_axutil_base64_binary_create(    
+static void WSF_UNIT_CALL
+test_axutil_base64_binary_create(    
     wsf_unit_test_case_t *tc,
     void *data);
 
-static void test_axutil_base64_binary_encode(    
+static void WSF_UNIT_CALL
+test_axutil_base64_binary_encode(    
     wsf_unit_test_case_t *tc,
     void *data);
 
-static void test_axutil_base64_binary_raw_binary(    
+static void WSF_UNIT_CALL
+test_axutil_base64_binary_raw_binary(    
     wsf_unit_test_case_t *tc,
     void *data);
 

@@ -18,27 +18,33 @@
 #include <util.h>
 #include <axutil_uri.h>
 
-static void test_axutil_uri_create(    
+static void WSF_UNIT_CALL
+test_axutil_uri_create(    
     wsf_unit_test_case_t *tc,
     void *data);
 
-static void test_axutil_uri_parse_hostinfo(    
+static void WSF_UNIT_CALL
+test_axutil_uri_parse_hostinfo(    
     wsf_unit_test_case_t *tc,
     void *data);
 
-static void test_axutil_uri_parse_string(    
+static void WSF_UNIT_CALL
+test_axutil_uri_parse_string(    
     wsf_unit_test_case_t *tc,
     void *data);
 
-static void test_axutil_uri_parse_relative(    
+static void WSF_UNIT_CALL
+test_axutil_uri_parse_relative(    
     wsf_unit_test_case_t *tc,
     void *data);
 
-static void test_axutil_uri_port_of_scheme(    
+static void WSF_UNIT_CALL
+test_axutil_uri_port_of_scheme(    
     wsf_unit_test_case_t *tc,
     void *data);
 
-static void test_axutil_uri_to_string(    
+static void WSF_UNIT_CALL
+test_axutil_uri_to_string(    
     wsf_unit_test_case_t *tc,
     void *data);
 

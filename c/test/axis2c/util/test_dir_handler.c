@@ -19,11 +19,13 @@
 #include "test_dir_handler.h"
 #include <axutil_file.h>
 
-static void test_axutil_dir_handler_list_service_or_module_dirs(    
+static void WSF_UNIT_CALL
+test_axutil_dir_handler_list_service_or_module_dirs(    
     wsf_unit_test_case_t *tc,
     void *data);
 
-static void test_axutil_dir_handler_list_services_or_modules_in_dir(    
+static void WSF_UNIT_CALL
+test_axutil_dir_handler_list_services_or_modules_in_dir(    
     wsf_unit_test_case_t *tc,
     void *data);
 

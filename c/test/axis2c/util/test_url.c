@@ -18,15 +18,18 @@
 #include <util.h>
 #include <axutil_url.h>
 
-static void test_axutil_url_create(    
+static void WSF_UNIT_CALL
+test_axutil_url_create(    
     wsf_unit_test_case_t *tc,
     void *data);
 
-static void test_axutil_url_parse(    
+static void WSF_UNIT_CALL
+test_axutil_url_parse(    
     wsf_unit_test_case_t *tc,
     void *data);
 
-static void test_axutil_url_beans(    
+static void WSF_UNIT_CALL
+test_axutil_url_beans(    
     wsf_unit_test_case_t *tc,
     void *data);
 

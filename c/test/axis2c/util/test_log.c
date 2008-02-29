@@ -17,31 +17,48 @@
 
 #include <util.h>
 
-static void test_axutil_log_create(    
+static void WSF_UNIT_CALL
+test_axutil_log_create(    
     wsf_unit_test_case_t *tc,
     void *data);
-static void test_axutil_log_debug(    
+
+static void WSF_UNIT_CALL
+test_axutil_log_debug(    
     wsf_unit_test_case_t *tc,
     void *data);
-static void test_axutil_log_debug_off(    
+
+static void WSF_UNIT_CALL
+test_axutil_log_debug_off(    
     wsf_unit_test_case_t *tc,
     void *data);
-static void test_axutil_log_info(    
+
+static void WSF_UNIT_CALL
+test_axutil_log_info(    
     wsf_unit_test_case_t *tc,
     void *data);
-static void test_axutil_log_info_off(    
+
+static void WSF_UNIT_CALL
+test_axutil_log_info_off(    
     wsf_unit_test_case_t *tc,
     void *data);
-static void test_axutil_log_warning(    
+
+static void WSF_UNIT_CALL
+test_axutil_log_warning(    
     wsf_unit_test_case_t *tc,
     void *data);
-static void test_axutil_log_warning_off(
+
+static void WSF_UNIT_CALL
+test_axutil_log_warning_off(
     wsf_unit_test_case_t *tc,
     void *data);
-static void test_axutil_log_error(
+
+static void WSF_UNIT_CALL
+test_axutil_log_error(
     wsf_unit_test_case_t *tc,
     void *data);
-static void test_axutil_log_critical(
+
+static void WSF_UNIT_CALL
+test_axutil_log_critical(
     wsf_unit_test_case_t *tc,
     void *data);
 

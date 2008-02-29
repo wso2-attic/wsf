@@ -19,27 +19,33 @@
 #include <axutil_date_time.h>
 #include <time.h>
 
-static void test_axutil_date_time_create(    
+static void WSF_UNIT_CALL
+test_axutil_date_time_create(    
     wsf_unit_test_case_t *tc,
     void *data);
 
-static void test_axutil_date_time_create_with_offset(    
+static void WSF_UNIT_CALL
+test_axutil_date_time_create_with_offset(    
     wsf_unit_test_case_t *tc,
     void *data);
 
-static void test_axutil_date_time_deserialize(    
+static void WSF_UNIT_CALL
+test_axutil_date_time_deserialize(    
     wsf_unit_test_case_t *tc,
     void *data);
 
-static void test_axutil_date_time_serialize(    
+static void WSF_UNIT_CALL
+test_axutil_date_time_serialize(    
     wsf_unit_test_case_t *tc,
     void *data);
 
-static void test_axutil_date_time_error_input_failures(    
+static void WSF_UNIT_CALL
+test_axutil_date_time_error_input_failures(    
     wsf_unit_test_case_t *tc,
     void *data);
 
-static void test_axutil_date_time_create_with_offset_gmtime(
+static void WSF_UNIT_CALL
+test_axutil_date_time_create_with_offset_gmtime(
     wsf_unit_test_case_t *tc,
     void *data);
 

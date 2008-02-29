@@ -25,15 +25,18 @@
 #define ARRAY_LIST_TEST_VAL_5 "value5"
 #define ARRAY_LIST_TEST_VAL_6 "value6"
 
-static void test_axutil_array_list_create(    
+static void WSF_UNIT_CALL
+test_axutil_array_list_create(    
     wsf_unit_test_case_t *tc,
     void *data);
 
-static void test_axutil_array_list_add(    
+static void WSF_UNIT_CALL
+test_axutil_array_list_add(    
     wsf_unit_test_case_t *tc,
     void *data);
 
-static void test_axutil_array_list_set_remove(    
+static void WSF_UNIT_CALL
+test_axutil_array_list_set_remove(    
     wsf_unit_test_case_t *tc,
     void *data);
 

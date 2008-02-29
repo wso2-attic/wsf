@@ -18,7 +18,8 @@
 #include <util.h>
 #include <axutil_uuid_gen.h>
 
-static void test_axutil_uuid_gen_create(    
+static void WSF_UNIT_CALL
+test_axutil_uuid_gen_create(    
     wsf_unit_test_case_t *tc,
     void *data);
 

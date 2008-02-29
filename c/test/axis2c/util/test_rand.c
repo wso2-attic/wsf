@@ -20,11 +20,13 @@
 
 #define AXIS2_RAND_MAX 32768
 
-static void test_axutil_rand_create(    
+static void WSF_UNIT_CALL
+test_axutil_rand_create(    
     wsf_unit_test_case_t *tc,
     void *data);
 
-static void test_axutil_rand_create_with_range(    
+static void WSF_UNIT_CALL
+test_axutil_rand_create_with_range(    
     wsf_unit_test_case_t *tc,
     void *data);
 

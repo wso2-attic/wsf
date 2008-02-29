@@ -18,15 +18,18 @@
 #include <util.h>
 #include <axutil_string_util.h>
 
-static void test_axutil_string_util_tokenize(    
+static void WSF_UNIT_CALL
+test_axutil_string_util_tokenize(    
     wsf_unit_test_case_t *tc,
     void *data);
 
-static void test_axutil_string_util_first_token(    
+static void WSF_UNIT_CALL
+test_axutil_string_util_first_token(    
     wsf_unit_test_case_t *tc,
     void *data);
 
-static void test_axutil_string_util_last_token(    
+static void WSF_UNIT_CALL
+test_axutil_string_util_last_token(    
     wsf_unit_test_case_t *tc,
     void *data);
 
