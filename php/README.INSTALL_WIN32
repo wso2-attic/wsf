@@ -95,14 +95,14 @@ Contents:
 
 2. Installing WSO2 WSF as a PHP extension.
 
-    1.If you built the extension from the source, you will find the wso2-wsf-php-bin-1.2.0-win32 (binary pack) 
+    1.If you built the extension from the source, you will find the wso2-wsf-php-bin-x.y.z-win32 (binary pack) 
       located in your source directory.
       
         You can get the binary pack by downloading and extracting the binary distribution as well. 
 
         It will have the following structure
 
-        wso2-wsf-php-bin-1.2.0-win32
+        wso2-wsf-php-bin-x.y.z-win32
                |
                +-- wsf_c
                |
@@ -116,7 +116,7 @@ Contents:
 
     2. Copy wsf.dll to the <PHP installation directory>/ext directory.
 
-    3. Add wso2-wsf-php-bin-1.2.0-win32\wsf_c\lib directory to the PATH environment variable.
+    3. Add wso2-wsf-php-bin-x.y.z-win32\wsf_c\lib directory to the PATH environment variable.
 
     4. Add the above listed dependency library dlls to the PATH environment variable.
 
@@ -157,7 +157,7 @@ Contents:
 
 3. Binary Dependency version numbers.
 
-  WSO2-WSF-PHP-1.2.0 Win32 Binary Will be compiled using following version of dependency libraries.
+  WSO2-WSF-PHP-1.2.1 Win32 Binary Will be compiled using following version of dependency libraries.
 
   1. PHP     5.2.5
   2. Libxml2 2.6.30
