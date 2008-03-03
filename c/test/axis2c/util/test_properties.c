@@ -157,7 +157,7 @@ static void WSF_UNIT_CALL test_axutil_properties_create(wsf_unit_test_case_t *tc
         axutil_properties_get_property(prop, env, PROPERTIES_TEST_KEY_3));
 
     WSF_UNIT_ASSERT_TRUE(tc, "Set Property Failed", 
-        axutil_properties_set_property(prop, env, (char *)axutil_strdup(env, PROPERTIES_TEST_KEY_2), (char *)axutil_strdup(env, "this.was.changed")));
+        axutil_properties_set_property(prop, env, PROPERTIES_TEST_KEY_2, "this.was.changed"));
 
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Hash Get Mismatch",
         (char *)axutil_hash_get(prop_hash, PROPERTIES_TEST_KEY_2,
@@ -168,7 +168,7 @@ static void WSF_UNIT_CALL test_axutil_properties_create(wsf_unit_test_case_t *tc
         axutil_properties_get_property(prop, env, PROPERTIES_TEST_KEY_2));
 
     WSF_UNIT_ASSERT_TRUE(tc, "Set Property Failed", 
-        axutil_properties_set_property(prop, env, (char *)axutil_strdup(env, PROPERTIES_TEST_KEY_4), (char *)axutil_strdup(env, "this.is.all,new")));
+        axutil_properties_set_property(prop, env, PROPERTIES_TEST_KEY_4, "this.is.all,new"));
 
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Hash Get Mismatch",
         (char *)axutil_hash_get(prop_hash, PROPERTIES_TEST_KEY_4,
@@ -197,6 +197,4 @@ static void WSF_UNIT_CALL test_axutil_properties_create(wsf_unit_test_case_t *tc
     {
         axutil_properties_free(prop, env);
     }
-
-    WSF_UNIT_NOT_IMPLEMENTED(tc, "Remove strdups for values after fixing AXIS2C-1037");
 }

@@ -114,7 +114,6 @@ static void WSF_UNIT_CALL test_axutil_uri_create(wsf_unit_test_case_t *tc, void 
     {
         test_data->test_data = uri;
     }
-    WSF_UNIT_NOT_IMPLEMENTED(tc, "Add axutil_uri_create to Header and Remove this");
 }
 
 static void WSF_UNIT_CALL test_axutil_uri_parse_hostinfo(wsf_unit_test_case_t *tc, void *data)
@@ -288,7 +287,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_hostinfo(wsf_unit_test_case_t *t
         uri = NULL;
     }
 
-    uri = axutil_uri_parse_hostinfo(env, "[home.netscape.com]:443");
+    uri = axutil_uri_parse_hostinfo(env, "[home.netscape.com]");
 
     WSF_UNIT_ASSERT_NULL(tc, "CONNECT Parsing Must Fail But, Didn't", uri);
     if (uri)
@@ -299,7 +298,6 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_hostinfo(wsf_unit_test_case_t *t
     /* End of Error Tests */
     WSF_UNIT_NOT_IMPLEMENTED(tc, "No Method to get Hostname");
     WSF_UNIT_NOT_IMPLEMENTED(tc, "Fix memory leaks in uri.c and remove this line");
-    WSF_UNIT_NOT_IMPLEMENTED(tc, "axutil_uri_get_server Returns Reference but NO Documentation");
 }
 
 static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc, void *data)
@@ -984,7 +982,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         str = NULL;
     }
     str = axutil_uri_get_path(uri, env);
-    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Path Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
         "/path", str);
     if (str)
@@ -1030,7 +1028,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         str = NULL;
     }
     str = axutil_uri_get_path(uri, env);
-    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Path Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
         "/path", str);
     if (str)
@@ -1076,7 +1074,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         str = NULL;
     }
     str = axutil_uri_get_path(uri, env);
-    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Path Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
         "/path", str);
     if (str)
@@ -1120,7 +1118,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         str = NULL;
     }
     str = axutil_uri_get_path(uri, env);
-    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Path Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
         "/path", str);
     if (str)
@@ -1166,7 +1164,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         str = NULL;
     }
     str = axutil_uri_get_path(uri, env);
-    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Path Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
         "/path", str);
     if (str)
@@ -1210,7 +1208,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         str = NULL;
     }
     str = axutil_uri_get_path(uri, env);
-    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Path Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
         "/path", str);
     if (str)
@@ -1254,7 +1252,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         str = NULL;
     }
     str = axutil_uri_get_path(uri, env);
-    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Path Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
         "/path", str);
     if (str)
@@ -1298,7 +1296,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         str = NULL;
     }
     str = axutil_uri_get_path(uri, env);
-    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Path Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
         "/path", str);
     if (str)
@@ -1344,7 +1342,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         str = NULL;
     }
     str = axutil_uri_get_path(uri, env);
-    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Path Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
         "/path", str);
     if (str)
@@ -1390,7 +1388,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         str = NULL;
     }
     str = axutil_uri_get_path(uri, env);
-    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Path Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
         "/path", str);
     if (str)
@@ -1436,7 +1434,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         str = NULL;
     }
     str = axutil_uri_get_path(uri, env);
-    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Path Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
         "/path", str);
     if (str)
@@ -1482,7 +1480,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         str = NULL;
     }
     str = axutil_uri_get_path(uri, env);
-    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Path Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
         "/path", str);
     if (str)
@@ -1526,7 +1524,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         str = NULL;
     }
     str = axutil_uri_get_path(uri, env);
-    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Path Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
         "/path", str);
     if (str)
@@ -1570,7 +1568,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         str = NULL;
     }
     str = axutil_uri_get_path(uri, env);
-    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Path Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
         "/path", str);
     if (str)
@@ -1614,7 +1612,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         str = NULL;
     }
     str = axutil_uri_get_path(uri, env);
-    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Path Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
         "/path", str);
     if (str)
@@ -1658,16 +1656,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         str = NULL;
     }
     str = axutil_uri_get_path(uri, env);
-    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
-    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
-        "/path", str);
-    if (str)
-    {
-        /*AXIS2_FREE(env->allocator, str);*/
-        str = NULL;
-    }
-    str = axutil_uri_get_path(uri, env);
-    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Path Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
         "/path", str);
     if (str)
@@ -1714,6 +1703,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     str = axutil_uri_to_string(uri, env, 0);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+printf(str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
         "home.netscape.com", str);
     if (str)
@@ -1741,7 +1731,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     WSF_UNIT_ASSERT_EQUALS_INT(tc, "String Parsing Identified Invalid Port",
         9090, (int)axutil_uri_get_port(uri, env));
     str = axutil_uri_get_path(uri, env);
-    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Path Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
         "/path", str);
     if (str)
@@ -1752,7 +1742,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     str = axutil_uri_to_string(uri, env, 0);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
-        "http://home.netscape.com:9090/path?foo=bar#rel", str);
+        "home.netscape.com:9090/path?foo=bar#rel", str);
     if (str)
     {
         AXIS2_FREE(env->allocator, str);
@@ -1834,9 +1824,6 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     WSF_UNIT_NOT_IMPLEMENTED(tc, "No Method to get Hostname");
     WSF_UNIT_NOT_IMPLEMENTED(tc, "No Method to get Query");
     WSF_UNIT_NOT_IMPLEMENTED(tc, "No Method to get Fragment");
-    WSF_UNIT_NOT_IMPLEMENTED(tc, "axutil_uri_get_path Returns Reference but NO Documentation");
-    WSF_UNIT_NOT_IMPLEMENTED(tc, "axutil_uri_get_server Returns Reference but NO Documentation");
-    WSF_UNIT_NOT_IMPLEMENTED(tc, "axutil_uri_get_protocol Returns Reference but NO Documentation");
 }
 
 static void WSF_UNIT_CALL test_axutil_uri_parse_relative(wsf_unit_test_case_t *tc, void *data)
@@ -2238,7 +2225,25 @@ static void WSF_UNIT_CALL test_axutil_uri_to_string(wsf_unit_test_case_t *tc, vo
     str = axutil_uri_to_string(uri, env, AXIS2_URI_UNP_OMITSITEPART | AXIS2_URI_UNP_OMITQUERY);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
+        "/path", str);
+    if (str)
+    {
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    str = axutil_uri_to_string(uri, env, AXIS2_URI_UNP_OMITSITEPART | AXIS2_URI_UNP_OMITQUERY_ONLY);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
         "/path#rel", str);
+    if (str)
+    {
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    str = axutil_uri_to_string(uri, env, AXIS2_URI_UNP_OMITSITEPART | AXIS2_URI_UNP_OMITFRAGMENT_ONLY);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
+        "/path?foo=bar", str);
     if (str)
     {
         AXIS2_FREE(env->allocator, str);

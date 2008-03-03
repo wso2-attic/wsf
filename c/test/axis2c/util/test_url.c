@@ -52,8 +52,8 @@ wsf_unit_status_t WSF_UNIT_CALL test_url(wsf_unit_suite_t * suite)
         data->test_data = NULL;
     }
 
-    /*wsf_unit_run_test(suite, test_axutil_url_create, data);*/
-    /*wsf_unit_run_test(suite, test_axutil_url_parse, data);*/
+    wsf_unit_run_test(suite, test_axutil_url_create, data);
+    wsf_unit_run_test(suite, test_axutil_url_parse, data);
     wsf_unit_run_test(suite, test_axutil_url_beans, data);
 
     if (data)
@@ -624,7 +624,6 @@ static void WSF_UNIT_CALL test_axutil_url_beans(wsf_unit_test_case_t *tc, void *
         "sample.netscape.com:9090", axutil_url_get_server(url, env));
 
     WSF_UNIT_NOT_IMPLEMENTED(tc, "Remove this after adding Get/Set Host to axutil_url");
-    WSF_UNIT_NOT_IMPLEMENTED(tc, "Implement Tests 1 and 2, after fixing AXIS2C-1028");
     if (url)
     {
         axutil_url_free(url, env);
