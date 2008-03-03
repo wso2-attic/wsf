@@ -1703,7 +1703,6 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     }
     str = axutil_uri_to_string(uri, env, 0);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
-printf(str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
         "home.netscape.com", str);
     if (str)
