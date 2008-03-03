@@ -38,7 +38,7 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
     <active>yes</active>
 </lead>
 
-<date>2008-02-26</date>
+<date>2008-03-03</date>
 <version>
     <release>1.2.1</release>
     <api>1.2.1</api>
@@ -198,8 +198,8 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
             <file name="google_search.php" role="php"/>
             <file name="google_spell.php" role="php"/>
         </dir>
-        <dir name="flicker">
-            <file name="flicker_client.php" role="php"/>
+        <dir name="flickr">
+            <file name="flickr_client.php" role="php"/>
         </dir>
         <dir name="security">
             <dir name="complete">
