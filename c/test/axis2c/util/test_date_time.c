@@ -443,70 +443,71 @@ static void WSF_UNIT_CALL test_axutil_date_time_error_input_failures(wsf_unit_te
     /* Out-of-Range Errors */
     WSF_UNIT_ASSERT_FALSE(tc, "Date Time Deserialize Invalid",
         axutil_date_time_deserialize_date_time(date_time, env, "2000-13-11T12:30:24.799Z"));
-    WSF_UNIT_ASSERT_TRUE(tc, "Set Date Time Invalid",
+    WSF_UNIT_ASSERT_FALSE(tc, "Set Date Time Invalid",
         axutil_date_time_set_date_time(date_time, env, 2000, 13, 11, 12, 30, 24, 799));
     WSF_UNIT_ASSERT_FALSE(tc, "Date Time Deserialize Invalid",
         axutil_date_time_deserialize_date_time(date_time, env, "2000-0-11T12:30:24.799Z"));
-    WSF_UNIT_ASSERT_TRUE(tc, "Set Date Time Invalid",
+    WSF_UNIT_ASSERT_FALSE(tc, "Set Date Time Invalid",
         axutil_date_time_set_date_time(date_time, env, 2000, 0, 11, 12, 30, 24, 799));
     WSF_UNIT_ASSERT_FALSE(tc, "Date Time Deserialize Invalid",
         axutil_date_time_deserialize_date_time(date_time, env, "2000-11-32T12:30:24.799Z"));
-    WSF_UNIT_ASSERT_TRUE(tc, "Set Date Time Invalid",
+    WSF_UNIT_ASSERT_FALSE(tc, "Set Date Time Invalid",
         axutil_date_time_set_date_time(date_time, env, 2000, 11, 32, 12, 30, 24, 799));
     WSF_UNIT_ASSERT_FALSE(tc, "Date Time Deserialize Invalid",
         axutil_date_time_deserialize_date_time(date_time, env, "2000-11-0T12:30:24.799Z"));
-    WSF_UNIT_ASSERT_TRUE(tc, "Set Date Time Invalid",
+    WSF_UNIT_ASSERT_FALSE(tc, "Set Date Time Invalid",
         axutil_date_time_set_date_time(date_time, env, 2000, 11, 0, 12, 30, 24, 799));
     WSF_UNIT_ASSERT_FALSE(tc, "Date Time Deserialize Invalid",
         axutil_date_time_deserialize_date_time(date_time, env, "2000-11-11T24:30:24.799Z"));
-    WSF_UNIT_ASSERT_TRUE(tc, "Set Date Time Invalid",
+    WSF_UNIT_ASSERT_FALSE(tc, "Set Date Time Invalid",
         axutil_date_time_set_date_time(date_time, env, 2000, 11, 11, 24, 30, 24, 799));
     WSF_UNIT_ASSERT_FALSE(tc, "Date Time Deserialize Invalid",
         axutil_date_time_deserialize_date_time(date_time, env, "2000-11-11T12:60:24.799Z"));
-    WSF_UNIT_ASSERT_TRUE(tc, "Set Date Time Invalid",
+    WSF_UNIT_ASSERT_FALSE(tc, "Set Date Time Invalid",
         axutil_date_time_set_date_time(date_time, env, 2000, 11, 11, 12, 60, 24, 799));
     WSF_UNIT_ASSERT_FALSE(tc, "Date Time Deserialize Invalid",
         axutil_date_time_deserialize_date_time(date_time, env, "2000-11-11T12:30:60.799Z"));
-    WSF_UNIT_ASSERT_TRUE(tc, "Set Date Time Invalid",
+    WSF_UNIT_ASSERT_FALSE(tc, "Set Date Time Invalid",
         axutil_date_time_set_date_time(date_time, env, 2000, 11, 11, 12, 30, 60, 799));
     WSF_UNIT_ASSERT_FALSE(tc, "Date Time Deserialize Invalid",
         axutil_date_time_deserialize_date_time(date_time, env, "2000-11-11T12:30:24.1000Z"));
-    WSF_UNIT_ASSERT_TRUE(tc, "Set Date Time Invalid",
+    WSF_UNIT_ASSERT_FALSE(tc, "Set Date Time Invalid",
         axutil_date_time_set_date_time(date_time, env, 2000, 11, 11, 12, 30, 24, 1000));
     /* End of Error set */
 
     /* Month Errors */
     WSF_UNIT_ASSERT_FALSE(tc, "Date Time Deserialize Invalid",
         axutil_date_time_deserialize_date_time(date_time, env, "2000-2-30T12:30:24.799Z"));
-    WSF_UNIT_ASSERT_TRUE(tc, "Set Date Time Invalid",
+    WSF_UNIT_ASSERT_FALSE(tc, "Set Date Time Invalid",
         axutil_date_time_set_date_time(date_time, env, 2000, 2, 30, 12, 30, 24, 799));
     WSF_UNIT_ASSERT_FALSE(tc, "Date Time Deserialize Invalid",
         axutil_date_time_deserialize_date_time(date_time, env, "2000-4-31T12:30:24.799Z"));
-    WSF_UNIT_ASSERT_TRUE(tc, "Set Date Time Invalid",
+    WSF_UNIT_ASSERT_FALSE(tc, "Set Date Time Invalid",
         axutil_date_time_set_date_time(date_time, env, 2000, 4, 31, 12, 30, 24, 799)); 
     WSF_UNIT_ASSERT_FALSE(tc, "Date Time Deserialize Invalid",
         axutil_date_time_deserialize_date_time(date_time, env, "2000-6-31T12:30:24.799Z"));
-    WSF_UNIT_ASSERT_TRUE(tc, "Set Date Time Invalid",
+    WSF_UNIT_ASSERT_FALSE(tc, "Set Date Time Invalid",
         axutil_date_time_set_date_time(date_time, env, 2000, 6, 31, 12, 30, 24, 799)); 
     WSF_UNIT_ASSERT_FALSE(tc, "Date Time Deserialize Invalid",
         axutil_date_time_deserialize_date_time(date_time, env, "2000-9-31T12:30:24.799Z"));
-    WSF_UNIT_ASSERT_TRUE(tc, "Set Date Time Invalid",
-        axutil_date_time_set_date_time(date_time, env, 2000, 8, 31, 12, 30, 24, 799)); 
+    WSF_UNIT_ASSERT_FALSE(tc, "Set Date Time Invalid",
+        axutil_date_time_set_date_time(date_time, env, 2000, 9, 31, 12, 30, 24, 799)); 
     WSF_UNIT_ASSERT_FALSE(tc, "Date Time Deserialize Invalid",
         axutil_date_time_deserialize_date_time(date_time, env, "2000-11-31T12:30:24.799Z"));
-    WSF_UNIT_ASSERT_TRUE(tc, "Set Date Time Invalid",
+    WSF_UNIT_ASSERT_FALSE(tc, "Set Date Time Invalid",
         axutil_date_time_set_date_time(date_time, env, 2000, 11, 31, 12, 30, 24, 799));
     /* End of Error set */
 
     /* Leap Year Errors */
     WSF_UNIT_ASSERT_FALSE(tc, "Date Time Deserialize Invalid",
         axutil_date_time_deserialize_date_time(date_time, env, "2000-2-29T12:30:24.799Z"));
-    WSF_UNIT_ASSERT_TRUE(tc, "Set Date Time Invalid",
+    WSF_UNIT_ASSERT_FALSE(tc, "Set Date Time Invalid",
         axutil_date_time_set_date_time(date_time, env, 2000, 2, 29, 12, 30, 24, 799));
     WSF_UNIT_ASSERT_FALSE(tc, "Date Time Deserialize Invalid",
         axutil_date_time_deserialize_date_time(date_time, env, "2001-2-29T12:30:24.799Z"));
-    WSF_UNIT_ASSERT_TRUE(tc, "Set Date Time Invalid",
+    WSF_UNIT_ASSERT_FALSE(tc, "Set Date Time Invalid",
         axutil_date_time_set_date_time(date_time, env, 2001, 2, 29, 12, 30, 24, 799));
+   /* End of Error set */
     WSF_UNIT_ASSERT_TRUE(tc, "Date Time Deserialize Invalid",
         axutil_date_time_deserialize_date_time(date_time, env, "2004-2-29T12:30:24.799Z"));
     WSF_UNIT_ASSERT_TRUE(tc, "Set Date Time Invalid",

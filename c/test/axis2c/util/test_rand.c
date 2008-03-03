@@ -132,7 +132,7 @@ static void WSF_UNIT_CALL test_axutil_rand_create_with_range(wsf_unit_test_case_
         (axutil_rand_with_range(&seed1, 0, AXIS2_RAND_MAX) < AXIS2_RAND_MAX &&
          axutil_rand_with_range(&seed1, 0, AXIS2_RAND_MAX) > 0));
     WSF_UNIT_ASSERT_TRUE(tc, "Number Out-of-Range",
-        (axutil_rand_with_range(&seed1, 2, 3) < 3 &&
-         axutil_rand_with_range(&seed1, 2, 3) > 2));
+        (axutil_rand_with_range(&seed1, 2, 3) <= 3 &&
+         axutil_rand_with_range(&seed1, 2, 3) >= 2));
     /* End Test */
 }
