@@ -51,6 +51,8 @@
 
 @if exist AUTHORS copy /Y AUTHORS wso2-wsf-php-bin-1.2.1-win32
 
+@if exist README copy /Y README wso2-wsf-php-bin-1.2.1-win32
+
 @if exist COPYING copy /Y COPYING wso2-wsf-php-bin-1.2.1-win32
 
 @if exist ChangeLog copy /Y ChangeLog wso2-wsf-php-bin-1.2.1-win32
