@@ -152,6 +152,18 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_hostinfo(wsf_unit_test_case_t *t
         str = NULL;
     }
 
+    str = axutil_uri_get_host(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Host Failed", str);
+
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "CONNECT Parsing Identified Invalid Host",
+        "home.netscape.com", str);
+
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+
     if (uri)
     {
         axutil_uri_free(uri, env);
@@ -177,6 +189,18 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_hostinfo(wsf_unit_test_case_t *t
         str = NULL;
     }
 
+    str = axutil_uri_get_host(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Host Failed", str);
+
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "CONNECT Parsing Identified Invalid Host",
+        "sample.ipvsix.com", str);
+
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+
     if (uri)
     {
         axutil_uri_free(uri, env);
@@ -195,6 +219,18 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_hostinfo(wsf_unit_test_case_t *t
 
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "CONNECT Parsing Identified Invalid Server",
         "192.168.0.1:443", str);
+
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+
+    str = axutil_uri_get_host(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Host Failed", str);
+
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "CONNECT Parsing Identified Invalid Host",
+        "192.168.0.1", str);
 
     if (str)
     {
@@ -296,8 +332,6 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_hostinfo(wsf_unit_test_case_t *t
         uri = NULL;
     }
     /* End of Error Tests */
-    WSF_UNIT_NOT_IMPLEMENTED(tc, "No Method to get Hostname");
-    WSF_UNIT_NOT_IMPLEMENTED(tc, "Fix memory leaks in uri.c and remove this line");
 }
 
 static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc, void *data)
@@ -1870,7 +1904,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_relative(wsf_unit_test_case_t *t
     if (base)
     {
         axutil_uri_free(base, env);
-        uri = NULL;
+        base = NULL;
     }
     if (uri)
     {
@@ -1903,7 +1937,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_relative(wsf_unit_test_case_t *t
     if (base)
     {
         axutil_uri_free(base, env);
-        uri = NULL;
+        base = NULL;
     }
     if (uri)
     {
@@ -1936,7 +1970,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_relative(wsf_unit_test_case_t *t
     if (base)
     {
         axutil_uri_free(base, env);
-        uri = NULL;
+        base = NULL;
     }
     if (uri)
     {
@@ -1975,7 +2009,7 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_relative(wsf_unit_test_case_t *t
     if (base)
     {
         axutil_uri_free(base, env);
-        uri = NULL;
+        base = NULL;
     }
     if (uri)
     {
