@@ -1,0 +1,33 @@
+Installing WSO2 WSF/PHP on ZEND CORE 2.5.0.
+===========================================================
+Install instructions.
+---------------------
+
+1. Install Zend Core
+2. Unzip wso2-wsf-php-bin-x.y.z-win32-zc.zip file and add wso2-wsf-php-bin-x.y.z-win32-zc\wsf_c\lib directory 
+   to PATH system environment variable.
+
+3. Copy wsf.dll found in wso2-wsf-php-bin-x.y.z-win32-zc directory to C:\Program Files\Zend\Core\lib\phpext directory
+
+4. Add following php.ini entries to php.ini file located in C:\Program Files\Zend\Core\etc directory.
+   
+   extension=wsf.dll
+   
+   wsf.home="<wsf-php extract directory>\wso2-wsf-php-bin-1.2.1-win32\wsf_c"
+   wsf.log_path="<wsf-php extract directory>\wso2-wsf-php-bin-1.2.1-win32\wsf_c\logs"
+   wsf.rm_db_dir="<wsf-php extract directory>\wso2-wsf-php-bin-1.2.1-win32\wsf_c"
+   wsf.log_level=4
+
+   Append <wsf-php extract directory>\wso2-wsf-php-bin-1.2.1-win32\scripts to include_path php.ini entry.
+   Eg.
+
+   include_path = ".;<wsf-php extract directory>/wso2-wsf-php-bin-1.2.1-win32/scripts"
+
+5. If you have php_xsl disabled, enable it by uncommenting extension=php_xsl.dll entry in php.ini.
+
+6. Re start ZendCoreApache Service.
+
+______________________________________________________________
+If you need any help with installation or developing code, 
+please send a mail to wsf-php-user@wso2.org
+
