@@ -2303,42 +2303,45 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         axutil_uri_free(uri, env);
         uri = NULL;
     }
+    /* End of Error Cases */
+
+    /* Unstoppable Errors */
     uri = axutil_uri_parse_string(env, "//home.netscape.com:9090/path?foo=bar#rel");
-    WSF_UNIT_ASSERT_NULL(tc, "String Parsing Should Fail. But, Didn't", uri);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "String Parsing Shouldn't Fail.", uri);
     if (uri)
     {
         axutil_uri_free(uri, env);
         uri = NULL;
     }
     uri = axutil_uri_parse_string(env, "htpp://home.netscape.com:9090/path?foo=bar#rel");
-    WSF_UNIT_ASSERT_NULL(tc, "String Parsing Should Fail. But, Didn't", uri);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "String Parsing Shouldn't Fail.", uri);
     if (uri)
     {
         axutil_uri_free(uri, env);
         uri = NULL;
     }
     uri = axutil_uri_parse_string(env, "http://home.netscape.com:9090//path?foo=bar#rel");
-    WSF_UNIT_ASSERT_NULL(tc, "String Parsing Should Fail. But, Didn't", uri);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "String Parsing Shouldn't Fail.", uri);
     if (uri)
     {
         axutil_uri_free(uri, env);
         uri = NULL;
     }
     uri = axutil_uri_parse_string(env, "http://home.netscape.com/path:9090?foo=bar#rel");
-    WSF_UNIT_ASSERT_NULL(tc, "String Parsing Should Fail. But, Didn't", uri);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "String Parsing Shouldn't Fail.", uri);
     if (uri)
     {
         axutil_uri_free(uri, env);
         uri = NULL;
     }
     uri = axutil_uri_parse_string(env, "http:9090//home.netscape.com/path?foo=bar#rel");
-    WSF_UNIT_ASSERT_NULL(tc, "String Parsing Should Fail. But, Didn't", uri);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "String Parsing Shouldn't Fail.", uri);
     if (uri)
     {
         axutil_uri_free(uri, env);
         uri = NULL;
     }
-    /* End of Error Cases */
+    /* End of Unstoppable Errors */
 }
 
 static void WSF_UNIT_CALL test_axutil_uri_parse_relative(wsf_unit_test_case_t *tc, void *data)
