@@ -371,6 +371,24 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         /*AXIS2_FREE(env->allocator, str);*/
         str = NULL;
     }
+    str = axutil_uri_get_host(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Host Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Host",
+        "home.netscape.com", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_host(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Host Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Host",
+        "home.netscape.com", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
     str = axutil_uri_to_string(uri, env, 0);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
@@ -441,6 +459,15 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         /*AXIS2_FREE(env->allocator, str);*/
         str = NULL;
     }
+    str = axutil_uri_get_host(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Host Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Host",
+        "home.netscape.com", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
     str = axutil_uri_to_string(uri, env, 0);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
@@ -473,6 +500,15 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Protocol",
         "http", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_host(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Host Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Host",
+        "home.netscape.com", str);
     if (str)
     {
         /*AXIS2_FREE(env->allocator, str);*/
@@ -515,6 +551,24 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         /*AXIS2_FREE(env->allocator, str);*/
         str = NULL;
     }
+    str = axutil_uri_get_query(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Query Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Query String",
+        "foo=bar", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_host(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Host Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Host",
+        "home.netscape.com", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
     str = axutil_uri_to_string(uri, env, 0);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
@@ -545,6 +599,24 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Protocol",
         "http", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_query(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Query Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Query String",
+        "foo=bar", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_host(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Host Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Host",
+        "home.netscape.com", str);
     if (str)
     {
         /*AXIS2_FREE(env->allocator, str);*/
@@ -587,6 +659,33 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         /*AXIS2_FREE(env->allocator, str);*/
         str = NULL;
     }
+    str = axutil_uri_get_query(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Query Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Query String",
+        "foo=bar", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_fragment(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Fragment Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Fragment",
+        "rel", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_host(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Host Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Host",
+        "home.netscape.com", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
     str = axutil_uri_to_string(uri, env, 0);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
@@ -617,6 +716,33 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Protocol",
         "http", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_query(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Query Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Query String",
+        "foo=bar", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_fragment(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Fragment Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Fragment",
+        "rel", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_host(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Host Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Host",
+        "home.netscape.com", str);
     if (str)
     {
         /*AXIS2_FREE(env->allocator, str);*/
@@ -657,6 +783,24 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         /*AXIS2_FREE(env->allocator, str);*/
         str = NULL;
     }
+    str = axutil_uri_get_fragment(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Fragment Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Fragment",
+        "rel", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_host(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Host Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Host",
+        "home.netscape.com", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
     str = axutil_uri_to_string(uri, env, 0);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
@@ -687,6 +831,24 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Protocol",
         "http", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_fragment(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Fragment Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Fragment",
+        "rel", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_host(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Host Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Host",
+        "home.netscape.com", str);
     if (str)
     {
         /*AXIS2_FREE(env->allocator, str);*/
@@ -729,6 +891,24 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         /*AXIS2_FREE(env->allocator, str);*/
         str = NULL;
     }
+    str = axutil_uri_get_query(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Query Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Query String",
+        "foo=bar", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_fragment(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Fragment Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Fragment",
+        "rel", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
     str = axutil_uri_to_string(uri, env, AXIS2_URI_UNP_REVEALPASSWORD);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
@@ -766,6 +946,15 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         /*AXIS2_FREE(env->allocator, str);*/
         str = NULL;
     }
+    str = axutil_uri_get_fragment(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Fragment Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Fragment",
+        "rel", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
     str = axutil_uri_to_string(uri, env, AXIS2_URI_UNP_REVEALPASSWORD);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
@@ -798,6 +987,15 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Protocol",
         "http", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_query(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Query Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Query String",
+        "foo=bar", str);
     if (str)
     {
         /*AXIS2_FREE(env->allocator, str);*/
@@ -875,6 +1073,24 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         /*AXIS2_FREE(env->allocator, str);*/
         str = NULL;
     }
+    str = axutil_uri_get_query(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Query Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Query String",
+        "foo=bar", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_fragment(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Fragment Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Fragment",
+        "rel", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
     str = axutil_uri_to_string(uri, env, AXIS2_URI_UNP_REVEALPASSWORD);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
@@ -910,6 +1126,15 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         /*AXIS2_FREE(env->allocator, str);*/
         str = NULL;
     }
+    str = axutil_uri_get_query(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Query Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Query String",
+        "foo=bar", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
     str = axutil_uri_to_string(uri, env, AXIS2_URI_UNP_REVEALPASSWORD);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
@@ -940,6 +1165,15 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Protocol Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Protocol",
         "http", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_fragment(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Fragment Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Fragment",
+        "rel", str);
     if (str)
     {
         /*AXIS2_FREE(env->allocator, str);*/
@@ -1024,6 +1258,15 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         /*AXIS2_FREE(env->allocator, str);*/
         str = NULL;
     }
+    str = axutil_uri_get_host(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Host Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Host",
+        "home.netscape.com", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
     str = axutil_uri_to_string(uri, env, 0);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
@@ -1065,6 +1308,15 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Path Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
         "/path", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_host(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Host Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Host",
+        "home.netscape.com", str);
     if (str)
     {
         /*AXIS2_FREE(env->allocator, str);*/
@@ -1116,6 +1368,24 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         /*AXIS2_FREE(env->allocator, str);*/
         str = NULL;
     }
+    str = axutil_uri_get_query(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Query Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Query String",
+        "foo=bar", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_host(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Host Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Host",
+        "home.netscape.com", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
     str = axutil_uri_to_string(uri, env, 0);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
@@ -1155,6 +1425,24 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Path Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
         "/path", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_query(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Query Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Query String",
+        "foo=bar", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_host(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Host Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Host",
+        "home.netscape.com", str);
     if (str)
     {
         /*AXIS2_FREE(env->allocator, str);*/
@@ -1206,6 +1494,33 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         /*AXIS2_FREE(env->allocator, str);*/
         str = NULL;
     }
+    str = axutil_uri_get_query(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Query Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Query String",
+        "foo=bar", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_fragment(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Fragment Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Fragment",
+        "rel", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_host(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Host Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Host",
+        "home.netscape.com", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
     str = axutil_uri_to_string(uri, env, 0);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
@@ -1245,6 +1560,33 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Path Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
         "/path", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_query(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Query Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Query String",
+        "foo=bar", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_fragment(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Fragment Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Fragment",
+        "rel", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_host(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Host Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Host",
+        "home.netscape.com", str);
     if (str)
     {
         /*AXIS2_FREE(env->allocator, str);*/
@@ -1294,6 +1636,24 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         /*AXIS2_FREE(env->allocator, str);*/
         str = NULL;
     }
+    str = axutil_uri_get_fragment(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Fragment Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Fragment",
+        "rel", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_host(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Host Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Host",
+        "home.netscape.com", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
     str = axutil_uri_to_string(uri, env, 0);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
@@ -1333,6 +1693,24 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Path Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
         "/path", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_fragment(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Fragment Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Fragment",
+        "rel", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_host(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Host Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Host",
+        "home.netscape.com", str);
     if (str)
     {
         /*AXIS2_FREE(env->allocator, str);*/
@@ -1384,6 +1762,24 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         /*AXIS2_FREE(env->allocator, str);*/
         str = NULL;
     }
+    str = axutil_uri_get_query(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Query Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Query String",
+        "foo=bar", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_fragment(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Fragment Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Fragment",
+        "rel", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
     str = axutil_uri_to_string(uri, env, AXIS2_URI_UNP_REVEALPASSWORD);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
@@ -1430,6 +1826,15 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         /*AXIS2_FREE(env->allocator, str);*/
         str = NULL;
     }
+    str = axutil_uri_get_fragment(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Fragment Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Fragment",
+        "rel", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
     str = axutil_uri_to_string(uri, env, AXIS2_URI_UNP_REVEALPASSWORD);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
@@ -1471,6 +1876,15 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Path Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
         "/path", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_query(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Query Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Query String",
+        "foo=bar", str);
     if (str)
     {
         /*AXIS2_FREE(env->allocator, str);*/
@@ -1566,6 +1980,24 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         /*AXIS2_FREE(env->allocator, str);*/
         str = NULL;
     }
+    str = axutil_uri_get_query(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Query Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Query String",
+        "foo=bar", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_fragment(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Fragment Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Fragment",
+        "rel", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
     str = axutil_uri_to_string(uri, env, AXIS2_URI_UNP_REVEALPASSWORD);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
@@ -1610,6 +2042,15 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         /*AXIS2_FREE(env->allocator, str);*/
         str = NULL;
     }
+    str = axutil_uri_get_query(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Query Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Query String",
+        "foo=bar", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
     str = axutil_uri_to_string(uri, env, AXIS2_URI_UNP_REVEALPASSWORD);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
@@ -1649,6 +2090,15 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Path Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
         "/path", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_fragment(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Fragment Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Fragment",
+        "rel", str);
     if (str)
     {
         /*AXIS2_FREE(env->allocator, str);*/
@@ -1735,6 +2185,15 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         /*AXIS2_FREE(env->allocator, str);*/
         str = NULL;
     }
+    str = axutil_uri_get_host(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Host Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Host",
+        "home.netscape.com", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
     str = axutil_uri_to_string(uri, env, 0);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "URI as String Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid URI",
@@ -1767,6 +2226,33 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Path Failed", str);
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Path",
         "/path", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_query(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Query Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Query String",
+        "foo=bar", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_fragment(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Fragment Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Fragment",
+        "rel", str);
+    if (str)
+    {
+        /*AXIS2_FREE(env->allocator, str);*/
+        str = NULL;
+    }
+    str = axutil_uri_get_host(uri, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "Get Host Failed", str);
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Invalid Host",
+        "home.netscape.com", str);
     if (str)
     {
         /*AXIS2_FREE(env->allocator, str);*/
@@ -1853,10 +2339,6 @@ static void WSF_UNIT_CALL test_axutil_uri_parse_string(wsf_unit_test_case_t *tc,
         uri = NULL;
     }
     /* End of Error Cases */
-
-    WSF_UNIT_NOT_IMPLEMENTED(tc, "No Method to get Hostname");
-    WSF_UNIT_NOT_IMPLEMENTED(tc, "No Method to get Query");
-    WSF_UNIT_NOT_IMPLEMENTED(tc, "No Method to get Fragment");
 }
 
 static void WSF_UNIT_CALL test_axutil_uri_parse_relative(wsf_unit_test_case_t *tc, void *data)
