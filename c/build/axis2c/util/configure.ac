@@ -196,7 +196,7 @@ AC_ARG_WITH(archive,
     ;;
   *)
     AC_MSG_RESULT(yes)
-    zliblibs="$(top_builddir)/src/minizip/libaxis2_minizip.la"
+    zliblibs="minizip/libaxis2_minizip.la"
     CFLAGS="$CFLAGS -DAXIS2_ARCHIVE_ENABLED"
     if test -d $withval; then
         zlibinc="-I$withval"
