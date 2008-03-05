@@ -43,7 +43,7 @@ void wsf_wsdl_do_request(zval *client_zval,
                          zval* return_value,
                          axutil_env_t *env TSRMLS_DC);
 
-xmlDocPtr wsf_wsdl_create_request_envelope(char *php_payload,
+char* wsf_wsdl_create_request_envelope(char *php_payload,
                                            int soap_version,
                                            axutil_env_t *env TSRMLS_DC);
 
@@ -192,7 +192,7 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
     axis2_svc_client_t *svc_client = NULL;
     axis2_options_t *client_options = NULL;
     ws_object_ptr intern = NULL;
-    xmlDocPtr request_doc = NULL;
+    char* request_doc = NULL;
     axiom_soap_envelope_t *response_envelope = NULL;
     char *php_payload = NULL;
     char *endpoint_address = NULL;
@@ -486,58 +486,67 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
     
 }
 
-xmlDocPtr wsf_wsdl_create_request_envelope(char *php_payload,
-                                           int soap_version,
-                                           axutil_env_t *env TSRMLS_DC)
+char* 
+wsf_wsdl_create_request_envelope(char *payload,
+                                 int soap_version,
+                                 axutil_env_t *env TSRMLS_DC)
 {
-    xmlDoc *doc, *payload_doc;
-    xmlNodePtr envelope = NULL, body = NULL, head = NULL, payload = NULL; 
-    xmlNsPtr ns = NULL;
+    axiom_soap_envelope_t* envelope = NULL;
+	axiom_soap_header_t* header = NULL;
+	axiom_soap_body_t* body = NULL;
+	axiom_node_t* envelope_node = NULL;
 
-    doc = xmlNewDoc (BAD_CAST (WS_WSDL_ENV_1_0));
-    doc->encoding = xmlCharStrdup (WS_WSDL_ENV_UTF);
-    doc->charset = XML_CHAR_ENCODING_UTF8;
-    if (soap_version == 1) {
-        envelope = xmlNewDocNode (doc, NULL, 
-                                  BAD_CAST (AXIOM_SOAP_ENVELOPE_LOCAL_NAME), NULL);
-        ns = xmlNewNs (envelope, BAD_CAST (AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI),
-                       BAD_CAST (AXIOM_SOAP_DEFAULT_NAMESPACE_PREFIX));
-        xmlSetNs (envelope, ns);
-    } else if (soap_version == 2) {
-        envelope = xmlNewDocNode (doc, NULL, 
-                                  BAD_CAST (AXIOM_SOAP_ENVELOPE_LOCAL_NAME), NULL);
-        ns = xmlNewNs (envelope, BAD_CAST (AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI),
-                       BAD_CAST (AXIOM_SOAP_DEFAULT_NAMESPACE_PREFIX));
-        xmlSetNs (envelope, ns);
-    } else {
-        php_printf ("Unknown SOAP version");
+	if ((soap_version == AXIOM_SOAP11) || (soap_version == AXIOM_SOAP12))
+	{
+		envelope = axiom_soap_envelope_create_with_soap_version_prefix(env, soap_version, AXIOM_SOAP_DEFAULT_NAMESPACE_PREFIX);
+    } 
+	else 
+	{
+        php_printf("\nUnknown SOAP version\n");
     }
-    xmlDocSetRootElement (doc, envelope);
-    
-        head = xmlNewChild (envelope, ns, 
-                            BAD_CAST (AXIOM_SOAP_HEADER_LOCAL_NAME), NULL);
-		body = xmlNewChild (envelope, ns, BAD_CAST (AXIOM_SOAP_BODY_LOCAL_NAME),
-                            NULL);
-	
-		if(php_payload){
-        	payload_doc = xmlParseMemory(php_payload, strlen(php_payload) + 1);
-        	if(!payload_doc)
-            	return NULL;
-        
-        	payload = xmlDocGetRootElement(payload_doc);
 
-        	if(!payload)
-            	return NULL;
-      
-          	xmlAddChild(body, payload);
-		}
-        return doc;
+    header = axiom_soap_header_create_with_parent(env, envelope);
+    if (!header)
+    {
+        return NULL;
+    }
+
+    body = axiom_soap_body_create_with_parent(env, envelope);
+    if (!body)
+    {
+        return NULL;
+    }
+    
+	if (payload)
+	{
+		axiom_xml_reader_t* reader = NULL;
+		axiom_node_t* payload_axiom = NULL;
+	    axiom_document_t* document = NULL;			
+		axiom_stax_builder_t* builder = NULL;	
+
+		reader = axiom_xml_reader_create_for_memory (env, payload, axutil_strlen(payload), "utf-8",
+													 AXIS2_XML_PARSER_TYPE_BUFFER);
+		       
+		builder = axiom_stax_builder_create(env, reader);
+		
+		document = axiom_stax_builder_get_document(builder, env);
+
+		payload_axiom = axiom_document_build_all(document, env);
+		
+		axiom_soap_body_add_child(body, env, payload_axiom);
+
+		axiom_stax_builder_free_self(builder, env);
+	}
+
+	envelope_node = axiom_soap_envelope_get_base_node(envelope, env);
+    
+	return axiom_node_to_string(envelope_node, env);	 
 }
 
 
 axiom_soap_envelope_t *
-wsf_wsdl_create_soap_envelope_from_doc (
-    xmlDocPtr doc,
+wsf_wsdl_create_soap_envelope_from_buffer (
+    axis2_char_t* buffer,
     const axutil_env_t * env,
     axis2_char_t * soap_version_uri)
 {
@@ -548,8 +557,8 @@ wsf_wsdl_create_soap_envelope_from_doc (
     
 
     reader =
-        axiom_xml_reader_create_for_memory (env, doc, 0, "utf-8",
-                                            AXIS2_XML_PARSER_TYPE_DOC);
+        axiom_xml_reader_create_for_memory (env, buffer, axutil_strlen(buffer), "utf-8",
+                                            AXIS2_XML_PARSER_TYPE_BUFFER);
 
     builder = axiom_stax_builder_create (env, reader);
 
@@ -566,7 +575,7 @@ wsf_wsdl_send_receive_soap_envelope_with_op_client (
     axutil_env_t * env,
     axis2_svc_client_t * svc_client,
     axis2_options_t * options,
-    xmlDocPtr doc)
+    axis2_char_t* buffer)
 {
     axiom_soap_envelope_t *res_envelope = NULL, *req_envelope = NULL;
     axis2_svc_ctx_t *svc_ctx = NULL;
@@ -589,7 +598,7 @@ wsf_wsdl_send_receive_soap_envelope_with_op_client (
     soap_version_uri =
         (axis2_char_t *) axis2_options_get_soap_version_uri (options, env);
 
-    req_envelope = wsf_wsdl_create_soap_envelope_from_doc (doc, env, 
+    req_envelope = wsf_wsdl_create_soap_envelope_from_buffer (buffer, env, 
                                                            soap_version_uri);
     
     axis2_msg_ctx_set_soap_envelope (req_msg_ctx, env, req_envelope);
