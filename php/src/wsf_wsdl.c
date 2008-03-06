@@ -61,7 +61,7 @@ wsf_wsdl_send_receive_soap_envelope_with_op_client (
     axutil_env_t * env,
     axis2_svc_client_t * svc_client,
     axis2_options_t * options,
-    xmlDocPtr doc);
+    char *buffer);
 
 
 void create_dynamic_client(zval *this_ptr, char *function, int function_len,
