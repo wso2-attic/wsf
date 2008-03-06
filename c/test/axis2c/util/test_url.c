@@ -566,6 +566,8 @@ static void WSF_UNIT_CALL test_axutil_url_beans(wsf_unit_test_case_t *tc, void *
         "http", axutil_url_get_protocol(url, env));
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Get Server Failed",
         "home.netscape.com:443", axutil_url_get_server(url, env));
+    WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Get Host Failed",
+        "home.netscape.com", axutil_url_get_host(url, env));
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Get Path Failed",
         "/my_data", axutil_url_get_path(url, env));
     WSF_UNIT_ASSERT_EQUALS_INT(tc, "Get Port Failed",
@@ -578,7 +580,7 @@ static void WSF_UNIT_CALL test_axutil_url_beans(wsf_unit_test_case_t *tc, void *
     if (str)
     {
         WSF_UNIT_ASSERT_EQUALS_STRING(tc, "External Form Invalid",
-            "https://home.netscape.com:443/my_data", str);
+            "https://home.netscape.com/my_data", str);
         AXIS2_FREE(env->allocator, str);
         str = NULL;
     }
@@ -597,6 +599,18 @@ static void WSF_UNIT_CALL test_axutil_url_beans(wsf_unit_test_case_t *tc, void *
     WSF_UNIT_ASSERT_EQUALS_INT(tc, "Get Port Failed",
         445, axutil_url_get_port(url, env));
 
+    WSF_UNIT_ASSERT_TRUE(tc, "Set Host Failed",
+        axutil_url_set_host(url, env, "changed.netscape.com"));
+    str = axutil_url_to_external_form(url, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URL To External Form Failed", url);
+    if (str)
+    {
+        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "External Form Invalid",
+            "https://changed.netscape.com:445/my_data", str);
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+
     WSF_UNIT_ASSERT_TRUE(tc, "Set Path Failed",
         axutil_url_set_path(url, env, "/new"));
     str = axutil_url_to_external_form(url, env);
@@ -604,7 +618,7 @@ static void WSF_UNIT_CALL test_axutil_url_beans(wsf_unit_test_case_t *tc, void *
     if (str)
     {
         WSF_UNIT_ASSERT_EQUALS_STRING(tc, "External Form Invalid",
-            "https://sample.netscape.com:445/new", str);
+            "https://changed.netscape.com:445/new", str);
         AXIS2_FREE(env->allocator, str);
         str = NULL;
     }
@@ -616,14 +630,13 @@ static void WSF_UNIT_CALL test_axutil_url_beans(wsf_unit_test_case_t *tc, void *
     if (str)
     {
         WSF_UNIT_ASSERT_EQUALS_STRING(tc, "External Form Invalid",
-            "https://sample.netscape.com:9090/new", str);
+            "https://changed.netscape.com:9090/new", str);
         AXIS2_FREE(env->allocator, str);
         str = NULL;
     }
     WSF_UNIT_ASSERT_EQUALS_STRING(tc, "Get Server Failed",
-        "sample.netscape.com:9090", axutil_url_get_server(url, env));
+        "changed.netscape.com:9090", axutil_url_get_server(url, env));
 
-    WSF_UNIT_NOT_IMPLEMENTED(tc, "Remove this after adding Get/Set Host to axutil_url");
     if (url)
     {
         axutil_url_free(url, env);
