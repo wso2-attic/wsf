@@ -19,6 +19,7 @@ wsclient_LDADD   = $(LDFLAGS) \
 					$(GUTHTHILA_LIBS) \
 					$(RAMPART_LIBS) \
 					$(OMXMLSEC_LIBS) \
+					$(SECCONV_LIBS) \
                     $(LIBXML2_LIBS)
 
 INCLUDES =	-I ../../axis2c/util/include \

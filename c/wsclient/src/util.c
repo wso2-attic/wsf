@@ -136,7 +136,6 @@ wsclient_soap_out (const axutil_env_t *env,
 	axiom_output_t *om_output = NULL;
 	axis2_char_t *buffer;
 	axis2_status_t status = 0;
-
 	op_client = axis2_svc_client_get_op_client(svc_client, env);
 	if (op_client)
 	{

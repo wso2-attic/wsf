@@ -78,6 +78,28 @@ AC_ARG_ENABLE(trace, [  --enable-trace    enable trace. default=no],
   CFLAGS="$CFLAGS"
 )
 
+AC_MSG_CHECKING(whether to build rampart)
+AC_ARG_ENABLE(rampart, [  --enable-rampart	build rampart. default=yes],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    RAMPART_DIR=""
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    CFLAGS="$CFLAGS -DWSF_RAMPART_ENABLED"
+    RAMPART_LIBS="../../rampartc/src/core/libmod_rampart.la"
+    OMXMLSEC_LIBS="../../rampartc/src/omxmlsec/libomxmlsec.la"
+    SECCONV_LIBS="../../rampartc/src/secconv/libsecconv.la"
+    ;;
+  esac ],
+  AC_MSG_RESULT(yes)
+  CFLAGS="$CFLAGS -DWSF_RAMPART_ENABLED"
+  RAMPART_LIBS="../../rampartc/src/core/libmod_rampart.la"
+  OMXMLSEC_LIBS="../../rampartc/src/omxmlsec/libomxmlsec.la"
+  SECCONV_LIBS="../../rampartc/src/secconv/libsecconv.la"
+)
+
 AC_MSG_CHECKING(whether to use openssl)
 AC_ARG_ENABLE(openssl, [  --enable-openssl  enable ssl. default=no],
 [ case "${enableval}" in
@@ -131,6 +153,9 @@ AC_SUBST(AXIOMINC)
 AC_SUBST(UTILINC)
 AC_SUBST(NEETHIINC)
 
+AC_SUBST(OMXMLSEC_LIBS)
+AC_SUBST(RAMPART_LIBS)
+AC_SUBST(SECCONV_LIBS)
 
 AC_SUBST(TESTDIR)
 AC_SUBST(SAMPLES)
