@@ -1,3 +1,13 @@
+WSO2 WSF/C 1.2.1
+================
+	On top of the 1.2.0 features, the following were added:
+	1. Some bug fixes (Please see https://wso2.org/jira/browse/WSFC 
+	for detailed information on the bug fixes)
+
+
+-- WSO2 WSF/C team <wsf-c-dev@wso2.org>  Monday, 10th March 2008
+
+
 WSO2 WSF/C 1.2.0
 ================
 	On top of the 1.1.0 features, the following were added:
