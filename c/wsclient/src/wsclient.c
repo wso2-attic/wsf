@@ -259,6 +259,26 @@ Rampart:\n"),
        --password-file FILE         uses password from FILE.\n"),
 			("\
        --digest                     uses a password digest for the usename token.\n"),
+			("\
+       --sign-body                  Signs the soap body.\n"),
+			("\
+       --certificate FILE           X509 Certificate for the sender which can be used for signing.\n"),
+			("\
+       --key FILE                   private key file FILE, which must be the private key in PEM format.\n"),
+			("\
+       --recipient-certificate FILE public key associated with FILE, which should be an X509 certificate in PEM format.\n"),
+			("\
+       --encrypt-payload            Encrypts the contents of the SOAP body.\n"),
+			("\
+       --algorithmsuite SUITE       algorithmsuite for signature and encryption\n"),
+			("\
+       --encrypt-signature          Encrypts the signature (when signing before encryption).\n"),
+			("\
+       --encrypt-before-signing     Encrypts before signing(by default wsclient will sign before encrypting.\n"),
+			("\
+       --sign-body                  Signs the soap body.\n"),
+			("\
+       --timestamp                  Generates a timestamp element in the security header.\n"),
 			"\n",
 			("\
 General HTTP Options:\n"),
