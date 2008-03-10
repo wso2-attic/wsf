@@ -28,6 +28,10 @@
         <parameter name="port" locked="false">6060</parameter>
     </transportReceiver>
 
+    <transportReceiver name="https" class="axis2_http_receiver">
+        <parameter name="port" locked="false">6060</parameter>
+    </transportReceiver>
+
     <!-- Uncomment this one with the appropriate papameters to enable the SMTP transport Receiver
     <transportReceiver name="mail" class="org.apache.axis2.transport.mail.SimpleMailListener">
           <parameter name="transport.mail.pop3.host" locked="false">127.0.0.1</parameter>
