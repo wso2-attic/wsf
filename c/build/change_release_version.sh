@@ -8,3 +8,4 @@ fi
 sed -i "s/$1/$2/g" configure.ac
 sed -i "s/$1/$2/g" dist.sh
 sed -i "s/$1/$2/g" dist_hook.sh
+sed -i "s/$1/$2/g" build.bat
