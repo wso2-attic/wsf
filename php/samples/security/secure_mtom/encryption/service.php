@@ -27,8 +27,12 @@ function getAttachment($inMessage) {
         $f = $cid2stringMap[$i];
         $contentType = $cid2contentMap[$i];
         if(strcmp($contentType,"image/jpeg") ==0){
-            $imageName = $i."."."jpg";
-            file_put_contents("/tmp/".$imageName, $f);
+		$imageName = $i."."."jpg";
+		if (stristr(PHP_OS, 'WIN')) {
+			file_put_contents($imageName, $f);
+		}else{    
+			file_put_contents("/tmp/".$imageName, $f);
+		}
         }
     }
 
@@ -37,8 +41,12 @@ function getAttachment($inMessage) {
         $dom = new DomDocument();
         $dom->loadXML($inMessage->str);
         $images = $dom->documentElement->getElementsByTagName('image');
-        $image = $images->item(0);
-        file_put_contents("/tmp/base64image.txt",$image->nodeValue);
+	$image = $images->item(0);
+	if (stristr(PHP_OS, 'WIN')) {
+		file_put_contents("base64image.txt",$image->nodeValue);
+	}else{
+		file_put_contents("/tmp/base64image.txt",$image->nodeValue);
+	}
     }
 
 $resPayload = <<<XML

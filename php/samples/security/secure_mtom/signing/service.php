@@ -25,9 +25,15 @@ function getAttachment($inMessage) {
 	foreach($cid2stringMap as $i=>$value){
 		$f = $cid2stringMap[$i];
 		$contentType = $cid2contentMap[$i];
-		if(strcmp($contentType,"image/jpeg") ==0){
-			$imageName = $i."."."jpg";
-			$file_saved = file_put_contents("/tmp/".$imageName, $f);
+        if(strcmp($contentType,"image/jpeg") ==0){
+            if (stristr(PHP_OS, 'WIN')) {
+    			$imageName = $i."."."jpg";
+                $file_saved = file_put_contents($imageName, $f);
+            }else{
+            	$imageName = $i."."."jpg";
+                $file_saved = file_put_contents("/tmp/".$imageName, $f);
+            
+            }
 		}
 	}
 
