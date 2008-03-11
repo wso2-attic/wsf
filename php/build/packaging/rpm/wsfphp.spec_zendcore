@@ -33,7 +33,7 @@ echo "wsf.rm_db_dir=\"/tmp\"" >> /etc/php.ini
 
 echo "Copy samples folders in  /usr/local/Zend/Core/modules/wsf_php to your Web Root"
 echo "Edit php.ini file located in /etc/php.ini and set your php.ini entry include_path to point to  /usr/local/Zend/Core/modules/wsf_php/scripts directory"
-echo "eg. include_path = \".: /usr/local/Zend/Core/modules/wsf_php/scripts\" "
+echo "eg. include_path = \".:/usr/local/Zend/Core/modules/wsf_php/scripts\" "
 
 %files
 %defattr(-,root,root)
