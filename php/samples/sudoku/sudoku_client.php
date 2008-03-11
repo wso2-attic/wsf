@@ -101,11 +101,7 @@ try {
     if($cid2str){
     foreach($cid2str as $i=>$value){
 	    $f = $cid2str[$i];
-	    if (stristr(PHP_OS, 'WIN')) {
 		file_put_contents("./client_resources/".$imageID.".jpg", $f);
-	    }else{
-	    	file_put_contents("/tmp/".$imageID.".jpg", $f);
-	    }
     }
     }   
     
@@ -115,11 +111,7 @@ try {
     echo "<strong>Showing solution blocks ".$imageID." out of 9</strong>";
     echo "<table><tr>";
     for ($counter = 1; $counter <= $imageID; $counter++) {
-	  if (stristr(PHP_OS, 'WIN')) {
         	echo "<td><img src='./client_resources/".$counter.".jpg'/></td>";
-	  }else{
-		echo "<td><img src='/tmp/".$counter.".jpg'/></td>";
-	  }
         if (($counter % 3) == 0 ) {
             echo "</tr><tr>";
         }
