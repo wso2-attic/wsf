@@ -1375,7 +1375,7 @@ wsf_client_enable_ssl (
         passphrase_prop);
 
     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-        "[wsf-client] setting ssh options %s -- %s -- %s ",
+        "[wsf-client] setting ssl options %s -- %s -- %s ",
         ssl_server_key_filename, ssl_client_key_filename, passphrase);
 }
 
