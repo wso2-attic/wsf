@@ -26,7 +26,7 @@ Key Features
       * WSMessage class to handle message level options
       * WSClient class with both one way and two way service invocation support
       * Option of using functions in place of object oriented API with ws_request
-      
+
 2. Service API to provide Web services
       * WSMessage class to handle message level options
       * WSService class with support for both one way and two way operations
@@ -44,8 +44,8 @@ Key Features
       * UsernameToken and Timestamp 
       * Encryption
       * Signing
-      * WS-SecurityPolicy based configuration  
-         
+      * WS-SecurityPolicy based configuration
+
 6. WS-Reliable Messaging
       * Single channel two way reliable messaging
 
@@ -67,8 +67,8 @@ Key Features
 Experimental Features
 ---------------------
 
-11. wsdl2php.php script. This script can generate PHP classes for services and clients for a given WSDL to be used
-    with WSDL Mode .
+11. wsdl2php.php script. This script can generate PHP classes for services 
+    and clients for a given WSDL to be used with WSDL Mode .
 
 --------------------------------
 Major Changes Since Last Release
@@ -94,7 +94,7 @@ Contact Us
 ============
 
 Please subscribe to our user or developer mailing lists. For details on how
-to subscribe please visit: http://wso2.org/projects/wsf/php#mail
+to subscribe please visit: http://wso2.org/mail#wsfphp
 
 We welcome your early feedback on this implementation.
 Thank you for your interest in WSO2 WSF/PHP.
