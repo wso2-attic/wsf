@@ -70,7 +70,6 @@ wsf_worker_t * worker;
 
 
 PHP_FUNCTION (is_ws_fault);
-PHP_FUNCTION (ws_init_wsdlmode);
 
 /** WSMessage functions */ 
 PHP_METHOD (ws_message, __construct);
@@ -201,7 +200,6 @@ zend_function_entry php_ws_policy_class_functions[] = {
 /* {{{ wsf_functions[] */ 
 zend_function_entry wsf_functions[] = {
     PHP_FE (is_ws_fault, NULL) 
-	PHP_FE(ws_init_wsdlmode, NULL)
     PHP_FE (ws_get_key_from_file, NULL) 
     PHP_FE (ws_get_cert_from_file, NULL) 
     { NULL, NULL, NULL} 
@@ -502,32 +500,6 @@ PHP_FUNCTION (is_ws_fault)
 	}else{
         RETURN_FALSE;
 	}
-}
-/* }}} */ 
-
-/*** {{{ ws_init_wsdlmode  */ 
-PHP_FUNCTION (ws_init_wsdlmode) 
-{
-	 zend_file_handle script;
-	 php_stream *stream;
-
-	 script.type = ZEND_HANDLE_FP;
-	 script.filename = "wsf_wsdl.php";
-	 script.opened_path = NULL;
-	 script.free_filename = 0;
-
-	 stream  = php_stream_open_wrapper("wsf_wsdl.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
-	 if(!stream)
-		return;
-
-	if (php_stream_cast(stream, PHP_STREAM_AS_STDIO|PHP_STREAM_CAST_RELEASE, (void*)&script.handle.fp, REPORT_ERRORS) == FAILURE)    {
-		php_error_docref (NULL TSRMLS_CC, E_ERROR, "Unable to open script file or file not found:");
-		return;
-	}
-	if(script.handle.fp){
-		php_lint_script (&script TSRMLS_CC);
-	}
-	php_stream_close(stream);
 }
 /* }}} */ 
 
