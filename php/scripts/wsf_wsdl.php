@@ -304,8 +304,8 @@ function wsf_wsdl_process_in_msg($parameters)
     $payload_string = $parameters["payload_string"];
     $operation_name = $parameters["operation_name"];
     $function_name = $parameters["function_name"];
-    $class_name = $parameters["class_name"];
-    $class_map = $parameters["classmap"];
+    $class_name = isset($parameters["class_name"]) ? $parameters['class_name'] : '';
+    $class_map = isset($parameters["classmap"]) ? $parameters['classmap'] : '';
     $class_args = $parameters["class_args"];
 
     $payload_dom->loadXML($payload_string);
