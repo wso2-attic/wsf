@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-$getResult = $_POST["getResult"];
-$operation = $_POST["operation"];
-$epr = $_POST["epr"];
-$param1 = $_POST["param1"];
-$param2 = $_POST["param2"];
+$getResult = isset($_POST["getResult"]) ? $_POST['getResult'] : '';
+$operation = isset($_POST["operation"]) ? $_POST['operation'] : '';
+$epr = isset($_POST["epr"]) ? $_POST['epr'] : '';
+$param1 = isset($_POST["param1"]) ? $_POST['param1'] : '';
+$param2 = isset($_POST["param2"]) ? $_POST['param2'] : '';
 		    
 ?>
 
@@ -27,7 +27,7 @@ $param2 = $_POST["param2"];
 <title> Math Sample </title>
 </head>
 <body>
-<form method="post" action="<?php echo $PHP_SELF;?>">
+<form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
 <table cols="2" border="1" cellpadding="10" cellspacing="0" align="center" width="100%">
 <tr>
 <td>
