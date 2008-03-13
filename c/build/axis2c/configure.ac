@@ -165,17 +165,15 @@ AC_ARG_ENABLE(guththila, [  --enable-guththila
   *)
     AC_MSG_RESULT(yes)
     WRAPPER_DIR="guththila"
-    if test -d $srcdir/guththila; then
-        AC_CONFIG_SUBDIRS(guththila)
-    fi
-
-    GUTHTHILA_LIBS="/guththila/src/"
-    GUTHTHILA_DIR="guththila"
 
     ;;
   esac ],
   AC_MSG_RESULT(yes)
   WRAPPER_DIR="guththila"
+  AC_CONFIG_SUBDIRS(guththila)
+  GUTHTHILA_LIBS="/guththila/src/"
+  GUTHTHILA_DIR="guththila"
+
 )
 
 AC_MSG_CHECKING(whether to build tcp transport)
