@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import org.wso2.spring.ws.beans.MessageReceiverBean;
-
+import org.wso2.spring.ws.beans.OperationBean;
 
 // Spring Web Service is a bean to hold information in place of the services.xml of an Axis 2 service
 
@@ -36,9 +36,10 @@ public class SpringWebService {
 	private String targetNameSpace;
 	private String sessionScope;
 	private ArrayList<String> modules;
-	
-	
-	public ArrayList<MessageReceiverBean> getMessageReceivers() {
+    private ArrayList<OperationBean> excludeOperations;
+
+
+    public ArrayList<MessageReceiverBean> getMessageReceivers() {
 		return messageReceivers;
 	}
 	public void setMessageReceivers(ArrayList<MessageReceiverBean> messageReceivers) {
@@ -86,6 +87,12 @@ public class SpringWebService {
 	public void setServiceBean(Object serviceBean) {
 		this.serviceBean = serviceBean;
 	}
-	
+	public ArrayList<OperationBean> getExcludeOperations() {
+		return excludeOperations;
+	}
+	public void setExcludeOperations(ArrayList<OperationBean> excludeOperations) {
+		this.excludeOperations = excludeOperations;
+	}
+
 	
 }

@@ -15,6 +15,13 @@
 				<property name="serviceName" value="TestProductManager"></property>
 				<property name="serviceDescription" value="This is the test webservice for Spring/Axis2 Integration" ></property>
 				<property name="targetNameSpace" value="www.springtest.com"></property>
+				<property name="excludeOperations">
+					<list>
+						<bean id="test" class="org.wso2.spring.ws.beans.OperationBean">
+							<property name="name" value="increasePrice"></property>
+						</bean>
+					</list>
+				</property>
 				<property name="sessionScope" value="request"></property>
 				<property name="modules">
 					<list>

@@ -51,6 +51,7 @@ import org.codehaus.jam.JAnnotation;
 import org.codehaus.jam.JMethod;
 import org.wso2.spring.ws.SpringWebService;
 import org.wso2.spring.ws.beans.MessageReceiverBean;
+import org.wso2.spring.ws.beans.OperationBean;
 
 
 public class SpringWebServiceBuilder {
@@ -150,11 +151,17 @@ public class SpringWebServiceBuilder {
 			    loadObjectSupplierClass(objectSupplierValue);
 			}
 			
-			//TODO Removing exclude operations
-			
+			//Removing exclude operations
 			ArrayList excludeops = new ArrayList();
-			
-			// generate schema
+            ArrayList<OperationBean> excludeOpBeans = springService.getExcludeOperations();
+            if (excludeOpBeans != null && excludeOpBeans.size() > 0) {
+                for (int i = 0; i < excludeOpBeans.size(); i++) {
+                    OperationBean operationBean =  excludeOpBeans.get(i);
+                    excludeops.add(operationBean.getName());
+                }
+            }
+
+            // generate schema
 			
 			if (!service.isUseUserWSDL()) {
 			    // Generating schema for the service if the impl class is Java
