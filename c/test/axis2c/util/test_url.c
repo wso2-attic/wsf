@@ -213,7 +213,7 @@ static void WSF_UNIT_CALL test_axutil_url_create(wsf_unit_test_case_t *tc, void 
     if (str)
     {
         WSF_UNIT_ASSERT_EQUALS_STRING(tc, "External Form Invalid",
-            "http://home.netscape.com:443/my_data", str);
+            "http://home.netscape.com:443/my_data?foo=bar", str);
         AXIS2_FREE(env->allocator, str);
         str = NULL;
     }
@@ -230,7 +230,7 @@ static void WSF_UNIT_CALL test_axutil_url_create(wsf_unit_test_case_t *tc, void 
     if (str)
     {
         WSF_UNIT_ASSERT_EQUALS_STRING(tc, "External Form Invalid",
-            "http://home.netscape.com:443/my_data", str);
+            "http://home.netscape.com:443/my_data?foo=bar#rel", str);
         AXIS2_FREE(env->allocator, str);
         str = NULL;
     }
@@ -247,7 +247,7 @@ static void WSF_UNIT_CALL test_axutil_url_create(wsf_unit_test_case_t *tc, void 
     if (str)
     {
         WSF_UNIT_ASSERT_EQUALS_STRING(tc, "External Form Invalid",
-            "http://home.netscape.com:443/my_data", str);
+            "http://home.netscape.com:443/my_data#rel", str);
         AXIS2_FREE(env->allocator, str);
         str = NULL;
     }
@@ -394,7 +394,7 @@ static void WSF_UNIT_CALL test_axutil_url_parse(wsf_unit_test_case_t *tc, void *
     if (str)
     {
         WSF_UNIT_ASSERT_EQUALS_STRING(tc, "External Form Invalid",
-            "http://home.netscape.com/path", str);
+            "http://home.netscape.com/path?foo=bar", str);
         AXIS2_FREE(env->allocator, str);
         str = NULL;
     }
@@ -411,7 +411,7 @@ static void WSF_UNIT_CALL test_axutil_url_parse(wsf_unit_test_case_t *tc, void *
     if (str)
     {
         WSF_UNIT_ASSERT_EQUALS_STRING(tc, "External Form Invalid",
-            "http://home.netscape.com:443/path", str);
+            "http://home.netscape.com:443/path?foo=bar", str);
         AXIS2_FREE(env->allocator, str);
         str = NULL;
     }
@@ -428,7 +428,7 @@ static void WSF_UNIT_CALL test_axutil_url_parse(wsf_unit_test_case_t *tc, void *
     if (str)
     {
         WSF_UNIT_ASSERT_EQUALS_STRING(tc, "External Form Invalid",
-            "http://home.netscape.com:443/path", str);
+            "http://home.netscape.com:443/path?foo=bar#rel", str);
         AXIS2_FREE(env->allocator, str);
         str = NULL;
     }
@@ -445,7 +445,7 @@ static void WSF_UNIT_CALL test_axutil_url_parse(wsf_unit_test_case_t *tc, void *
     if (str)
     {
         WSF_UNIT_ASSERT_EQUALS_STRING(tc, "External Form Invalid",
-            "http://home.netscape.com:443/path", str);
+            "http://home.netscape.com:443/path#rel", str);
         AXIS2_FREE(env->allocator, str);
         str = NULL;
     }

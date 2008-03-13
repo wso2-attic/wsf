@@ -469,9 +469,9 @@ static void WSF_UNIT_CALL test_axutil_date_time_error_input_failures(wsf_unit_te
         axutil_date_time_deserialize_date_time(date_time, env, "2000-11-11T12:30:60.799Z"));
     WSF_UNIT_ASSERT_FALSE(tc, "Set Date Time Invalid",
         axutil_date_time_set_date_time(date_time, env, 2000, 11, 11, 12, 30, 60, 799));
-    WSF_UNIT_ASSERT_FALSE(tc, "Date Time Deserialize Invalid",
+    WSF_UNIT_ASSERT_TRUE(tc, "Date Time Deserialize Invalid",
         axutil_date_time_deserialize_date_time(date_time, env, "2000-11-11T12:30:24.1000Z"));
-    WSF_UNIT_ASSERT_FALSE(tc, "Set Date Time Invalid",
+    WSF_UNIT_ASSERT_TRUE(tc, "Set Date Time Invalid",
         axutil_date_time_set_date_time(date_time, env, 2000, 11, 11, 12, 30, 24, 1000));
     /* End of Error set */
 
@@ -551,7 +551,7 @@ static void WSF_UNIT_CALL test_axutil_date_time_create_with_offset_gmtime(wsf_un
 
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Memory Allocation Failure", str1);
 
-    sprintf(str1, "%d-%d-%d", y, m, d);
+    sprintf(str1, "%d-%02d-%02d", y, m, d);
 
     str2 = axutil_date_time_serialize_date(date_time, env);
     WSF_UNIT_ASSERT_NOT_NULL(tc, "Date Time Serialize Failed", str2);
