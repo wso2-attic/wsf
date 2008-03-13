@@ -6,6 +6,7 @@ rm -rf axis2c/samples/server/listener
 cp -r build/xmpp/samples/listener axis2c/samples/server
 cp build/rampartc/configure.ac rampartc
 cp build/axis2c/configure.ac axis2c
+cp build/axis2c/axiom/configure.ac axis2c/axiom
 cp build/axis2c/Makefile.am axis2c
 
 #copy files for stomp client
