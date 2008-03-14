@@ -11,7 +11,7 @@ try {
     $proxy = $client->getProxy();
     $stringLF = "Hello 
 			World";
-    $val =  $proxy->RetString(array($stringLF));
+    $val =  $proxy->RetString($stringLF);
     
     echo $val."\n";
     
@@ -27,5 +27,5 @@ try {
 }
 ?>
 --EXPECT--
-               Hello
-                   World
+ Hello 
+			World

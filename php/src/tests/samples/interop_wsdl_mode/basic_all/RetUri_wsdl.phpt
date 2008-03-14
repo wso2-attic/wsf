@@ -9,7 +9,7 @@ try {
                   array("wsdl" => "http://131.107.72.15/SoapWsdl_BaseDataTypes_XmlFormatter_Service_Indigo/BaseDataTypesDocLitB.svc?wsdl"));
     
     $proxy = $client->getProxy();
-    $val =  $proxy->RetUri(array("http://xwsinterop.redmond.corp.microsoft.com/MTOM_Service_Indigo/MtomServiceSimplestBinding.svc?wsdl"));
+    $val =  $proxy->RetUri("http://xwsinterop.redmond.corp.microsoft.com/MTOM_Service_Indigo/MtomServiceSimplestBinding.svc?wsdl");
     echo $val."\n";
 
 } catch (Exception $e) {
