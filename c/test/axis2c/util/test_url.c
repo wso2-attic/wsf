@@ -516,6 +516,27 @@ static void WSF_UNIT_CALL test_axutil_url_parse(wsf_unit_test_case_t *tc, void *
         AXIS2_FREE(env->allocator, str);
         str = NULL;
     }
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Get Port Failed",
+        443, axutil_url_get_port(url, env));
+    if (url)
+    {
+        axutil_url_free(url, env);
+        url = NULL;
+    }
+
+    url = axutil_url_parse_string(env, "http://home.netscape.com");
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URL Parse Failed", url);
+    str = axutil_url_to_external_form(url, env);
+    WSF_UNIT_ASSERT_NOT_NULL(tc, "URL To External Form Failed", url);
+    if (str)
+    {
+        WSF_UNIT_ASSERT_EQUALS_STRING(tc, "External Form Invalid",
+            "http://home.netscape.com/", str);
+        AXIS2_FREE(env->allocator, str);
+        str = NULL;
+    }
+    WSF_UNIT_ASSERT_EQUALS_INT(tc, "Get Port Failed",
+        80, axutil_url_get_port(url, env));
     if (url)
     {
         axutil_url_free(url, env);
