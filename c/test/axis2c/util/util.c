@@ -24,6 +24,7 @@ const struct wsf_unit_test_list axutil_tests[] =
     {test_base64_binary},
     {test_date_time},
     {test_dir_handler},
+    {test_duration},
     {test_hash},
     {test_log},
     {test_md5},
