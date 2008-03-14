@@ -41,7 +41,7 @@ AC_CHECK_LIB(z, inflate)
 dnl AC_CHECK_LIB(cutest, CuTestInit)
 
 AC_MSG_CHECKING(whether to build libxml2 xml parser library)
-AC_ARG_ENABLE(libxml2, [  --enable-libxml2    build libxml2 xml parser library wrapper. default=yes],
+AC_ARG_ENABLE(libxml2, [  --enable-libxml2    build libxml2 xml parser library wrapper. default=no],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
@@ -53,8 +53,7 @@ AC_ARG_ENABLE(libxml2, [  --enable-libxml2    build libxml2 xml parser library w
 
     ;;
   esac ],
-  AC_MSG_RESULT(yes)
-  WRAPPER_DIR="libxml2"
+  AC_MSG_RESULT(no)
 )
 
 AC_MSG_CHECKING(whether to build guththila xml parser library)
@@ -66,14 +65,11 @@ AC_ARG_ENABLE(guththila, [  --enable-guththila    build guththila xml parser lib
   *)
     AC_MSG_RESULT(yes)
     WRAPPER_DIR="guththila"
-    if test -d $srcdir/guththila; then
-        AC_CONFIG_SUBDIRS(guththila)
-    fi
-
    GUTHTHILA_DIR="guththila"
     ;;
   esac ],
-  AC_MSG_RESULT(no)
+  AC_MSG_RESULT(yes)
+  WRAPPER_DIR="guththila"
 )
 
 
