@@ -822,7 +822,7 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
 
     foreach($parameter_struct as $key => $value){
         if(is_array($value)){
-            if($value["class_map_name"] == "anyType")
+            if(array_key_exists("class_map_name", $value) && $value["class_map_name"] == "anyType")
             {
                   $values = array_values($namespace_map);
                   $prefix = $values[0];
@@ -1909,7 +1909,7 @@ function wsf_parse_payload_for_class_map(DomNode $payload, array $parameter_stru
     {   
         if(is_array($value))
         {
-            if($value["class_map_name"] == "anyType")
+            if(array_key_exists("class_map_name", $value) && $value["class_map_name"] == "anyType")
             {
                 $tag_name = $current_child->localname;
                 if($key == $tag_name)
