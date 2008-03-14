@@ -29,9 +29,7 @@ $classmap = array("RetArrayAnyType1D" => "RetArrayAnyType1DWrapper",
 try{
 
     $client = new WSClient(array("wsdl"=> "http://131.107.72.15/SoapWsdl_ComplexDataTypes_XmlFormatter_Service_Indigo/ComplexDataTypesDocLitW.svc?wsdl" ,
-                                 "classmap" => $classmap,
-                                 "proxyHost"=>"localhost",
-                                 "proxyPort"=>"9090"));
+                                 "classmap" => $classmap));
 
     $input = new RetArrayAnyType1DWrapper();
     $obj = new ArrayOfanyTypeWrapper();
@@ -42,7 +40,7 @@ try{
     $proxy = $client->getProxy();
     $val = $proxy->RetArrayAnyType1D($input);
     echo "Result is:"."\n"; 
-    var_dump($val);
+    
     print_r($val);
 
 }catch (Exception $e) {
@@ -59,11 +57,8 @@ try{
 ?>
 --EXPECT--
 Result is:
-string(2) "34"
-
-string(12) "3.432543E+07"
-
-string(4) "true"
-
-string(6) "Tester"
+RetArrayAnyType1DResponseWrapper Object
+(
+    [RetArrayAnyType1DResult] => "Hello"
+)
 

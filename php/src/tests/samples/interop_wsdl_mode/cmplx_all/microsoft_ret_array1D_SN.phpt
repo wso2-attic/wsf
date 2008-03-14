@@ -163,7 +163,6 @@ try {
 }
 ?>
 --EXPECT--
-Notice: Undefined index:  http://schemas.datacontract.org/2004/07/XwsInterop.SoapWsdl.ComplexDataTypes.XmlFormatter.Service.Indigo in C:\wsfphp\wso2-wsf-php-bin-1.2.1-win32\scripts\dynamic_invocation\wsf_wsdl_util.php on line 881
 RetArray1D_SNResult Object
 (
     [Person] => Array
