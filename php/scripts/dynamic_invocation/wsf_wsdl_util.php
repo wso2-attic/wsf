@@ -879,7 +879,7 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
                 {
                     $arg_val = $class_obj->$key;
                     /* type conversion is needed */
-                    if($value[WSF_NS] == "NULL"){
+                    if(!array_key_exists(WSF_NS, $value) || empty($value[WSF_NS]) || $value[WSF_NS] == "NULL"){
                         $value[WSF_NS] = NULL;
                     }
 
@@ -887,7 +887,7 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
                         $node_name = $key;
                     }
                     else{
-                        if($namespace_map[$value[WSF_NS]] != NULL){
+                        if(array_key_exists(WSF_NS, $value) && $namespace_map[$value[WSF_NS]] != NULL){
                             $prefix = $namespace_map[$value[WSF_NS]];
                         }
                         else{
