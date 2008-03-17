@@ -39,8 +39,9 @@ Key Features
 --------------
 Major Changes Since Last Release
 ================================
-   1. Memory leak fixes
-   2. Many bug fixes
+   1. Made the Guththila as default parser.
+   2. Memory leak fixes
+   3. Many bug fixes
 
 -------------------
 Reporting Problems
