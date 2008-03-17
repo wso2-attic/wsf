@@ -30,6 +30,16 @@ example code.
  $msg = $client->request($reqPayloadString);
  echo $msg->str;
 
+
+4. You can give the your ssl server cert as the CACert. Following is how you can obtain
+the server cert.
+
+openssl s_client -connect  <servername>:<port>
+
+Eg:-
+
+openssl s_client -connect wso2.org:443
+
 _________________________________________________________________
 
 Here is a an example of a private key.
