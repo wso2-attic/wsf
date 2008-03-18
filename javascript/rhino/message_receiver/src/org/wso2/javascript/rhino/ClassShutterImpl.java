@@ -21,6 +21,7 @@ public class ClassShutterImpl implements ClassShutter {
     public boolean visibleToScripts(String fullClassName) {
         // For the moment we dont allow to execute java code
         return (fullClassName.startsWith("org.mozilla.javascript.") || fullClassName.startsWith("java.lang.") ||
-                fullClassName.startsWith("org.apache.axis2.AxisFault"));
+                fullClassName.startsWith("org.apache.axis2.AxisFault") ||
+                fullClassName.startsWith("org.apache.axiom.om.OMException"));
     }
 }
