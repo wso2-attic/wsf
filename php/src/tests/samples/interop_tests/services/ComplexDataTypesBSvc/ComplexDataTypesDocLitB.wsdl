@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="ComplexDataTypesDocLitBService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:tns="http://tempuri.org/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="http://localhost/services/ComplexDataTypesBSvc/ComplexDataTypesDocLitB.svc2" namespace="http://tempuri.org/"/>
+      <xsd:import schemaLocation="http://localhost/services/ComplexDataTypesBSvc/ComplexDataTypesDocLitB.svc0" namespace="http://schemas.microsoft.com/2003/10/Serialization/"/>
+      <xsd:import schemaLocation="http://localhost/services/ComplexDataTypesBSvc/ComplexDataTypesDocLitB.svc1" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+      <xsd:import schemaLocation="http://localhost/services/ComplexDataTypesBSvc/ComplexDataTypesDocLitB.svc3" namespace="http://schemas.datacontract.org/2004/07/System"/>
+      <xsd:import schemaLocation="http://localhost/services/ComplexDataTypesBSvc/ComplexDataTypesDocLitB.svc4" namespace="http://schemas.datacontract.org/2004/07/XwsInterop.SoapWsdl.ComplexDataTypes.XmlFormatter.Service.Indigo"/>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="RetArrayString1D_RequestMessage_Body">
+    <wsdl:part name="inArrayString1D" element="tns:inArrayString1D"/>
+  </wsdl:message>
+  <wsdl:message name="RetArrayString1D_ResponseMessage_Body">
+    <wsdl:part name="RetArrayString1DResult" element="tns:RetArrayString1DResult"/>
+  </wsdl:message>
+  <wsdl:message name="RetArrayInt1D_RequestMessage_Body">
+    <wsdl:part name="inArrayInt1D" element="tns:inArrayInt1D"/>
+  </wsdl:message>
+  <wsdl:message name="RetArrayInt1D_ResponseMessage_Body">
+    <wsdl:part name="RetArrayInt1DResult" element="tns:RetArrayInt1DResult"/>
+  </wsdl:message>
+  <wsdl:message name="RetArrayDecimal1D_RequestMessage_Body">
+    <wsdl:part name="inArrayDecimal1D" element="tns:inArrayDecimal1D"/>
+  </wsdl:message>
+  <wsdl:message name="RetArrayDecimal1D_ResponseMessage_Body">
+    <wsdl:part name="RetArrayDecimal1DResult" element="tns:RetArrayDecimal1DResult"/>
+  </wsdl:message>
+  <wsdl:message name="RetArrayDateTime1D_RequestMessage_Body">
+    <wsdl:part name="inArrayDateTime1D" element="tns:inArrayDateTime1D"/>
+  </wsdl:message>
+  <wsdl:message name="RetArrayDateTime1D_ResponseMessage_Body">
+    <wsdl:part name="RetArrayDateTime1DResult" element="tns:RetArrayDateTime1DResult"/>
+  </wsdl:message>
+  <wsdl:message name="RetArrayString2D_RequestMessage_Body">
+    <wsdl:part name="inArrayString2D" element="tns:inArrayString2D"/>
+  </wsdl:message>
+  <wsdl:message name="RetArrayString2D_ResponseMessage_Body">
+    <wsdl:part name="RetArrayString2DResult" element="tns:RetArrayString2DResult"/>
+  </wsdl:message>
+  <wsdl:message name="RetArray1D_SN_RequestMessage_Body">
+    <wsdl:part name="inArray1D_SN" element="tns:inArray1D_SN"/>
+  </wsdl:message>
+  <wsdl:message name="RetArray1D_SN_ResponseMessage_Body">
+    <wsdl:part name="RetArray1D_SNResult" element="tns:RetArray1D_SNResult"/>
+  </wsdl:message>
+  <wsdl:message name="RetArrayAnyType1D_RequestMessage_Body">
+    <wsdl:part name="inArrayAnyType1D" element="tns:inArrayAnyType1D"/>
+  </wsdl:message>
+  <wsdl:message name="RetArrayAnyType1D_ResponseMessage_Body">
+    <wsdl:part name="RetArrayAnyType1DResult" element="tns:RetArrayAnyType1DResult"/>
+  </wsdl:message>
+  <wsdl:message name="RetStructS1_RequestMessage_Body">
+    <wsdl:part name="inStructS1" element="tns:inStructS1"/>
+  </wsdl:message>
+  <wsdl:message name="RetStructS1_ResponseMessage_Body">
+    <wsdl:part name="RetStructS1Result" element="tns:RetStructS1Result"/>
+  </wsdl:message>
+  <wsdl:message name="RetStructSN_RequestMessage_Body">
+    <wsdl:part name="inStructSN" element="tns:inStructSN"/>
+  </wsdl:message>
+  <wsdl:message name="RetStructSN_ResponseMessage_Body">
+    <wsdl:part name="RetStructSNResult" element="tns:RetStructSNResult"/>
+  </wsdl:message>
+  <wsdl:message name="RetStructSNSA_RequestMessage_Body">
+    <wsdl:part name="inStructSNSA" element="tns:inStructSNSA"/>
+  </wsdl:message>
+  <wsdl:message name="RetStructSNSA_ResponseMessage_Body">
+    <wsdl:part name="RetStructSNSAResult" element="tns:RetStructSNSAResult"/>
+  </wsdl:message>
+  <wsdl:message name="RetStructSNSAS_RequestMessage_Body">
+    <wsdl:part name="inStructSNSAS" element="tns:inStructSNSAS"/>
+  </wsdl:message>
+  <wsdl:message name="RetStructSNSAS_ResponseMessage_Body">
+    <wsdl:part name="RetStructSNSASResult" element="tns:RetStructSNSASResult"/>
+  </wsdl:message>
+  <wsdl:message name="RetEnumString_RequestMessage_Body">
+    <wsdl:part name="inEnumString" element="tns:inEnumString"/>
+  </wsdl:message>
+  <wsdl:message name="RetEnumString_ResponseMessage_Body">
+    <wsdl:part name="RetEnumStringResult" element="tns:RetEnumStringResult"/>
+  </wsdl:message>
+  <wsdl:message name="RetEnumInt_RequestMessage_Body">
+    <wsdl:part name="inEnumInt" element="tns:inEnumInt"/>
+  </wsdl:message>
+  <wsdl:message name="RetEnumInt_ResponseMessage_Body">
+    <wsdl:part name="RetEnumIntResult" element="tns:RetEnumIntResult"/>
+  </wsdl:message>
+  <wsdl:message name="RetDerivedClass_RequestMessage_Body">
+    <wsdl:part name="inDerivedClass" element="tns:inDerivedClass"/>
+  </wsdl:message>
+  <wsdl:message name="RetDerivedClass_ResponseMessage_Body">
+    <wsdl:part name="RetDerivedClassResult" element="tns:RetDerivedClassResult"/>
+  </wsdl:message>
+  <wsdl:portType name="IComplexDataTypesDocLitB">
+    <wsdl:operation name="RetArrayString1D">
+      <wsdl:input wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetArrayString1D" name="RetArrayString1D_RequestMessage_Body" message="tns:RetArrayString1D_RequestMessage_Body"/>
+      <wsdl:output wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetArrayString1DResponse" name="RetArrayString1D_ResponseMessage_Body" message="tns:RetArrayString1D_ResponseMessage_Body"/>
+    </wsdl:operation>
+    <wsdl:operation name="RetArrayInt1D">
+      <wsdl:input wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetArrayInt1D" name="RetArrayInt1D_RequestMessage_Body" message="tns:RetArrayInt1D_RequestMessage_Body"/>
+      <wsdl:output wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetArrayInt1DResponse" name="RetArrayInt1D_ResponseMessage_Body" message="tns:RetArrayInt1D_ResponseMessage_Body"/>
+    </wsdl:operation>
+    <wsdl:operation name="RetArrayDecimal1D">
+      <wsdl:input wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetArrayDecimal1D" name="RetArrayDecimal1D_RequestMessage_Body" message="tns:RetArrayDecimal1D_RequestMessage_Body"/>
+      <wsdl:output wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetArrayDecimal1DResponse" name="RetArrayDecimal1D_ResponseMessage_Body" message="tns:RetArrayDecimal1D_ResponseMessage_Body"/>
+    </wsdl:operation>
+    <wsdl:operation name="RetArrayDateTime1D">
+      <wsdl:input wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetArrayDateTime1D" name="RetArrayDateTime1D_RequestMessage_Body" message="tns:RetArrayDateTime1D_RequestMessage_Body"/>
+      <wsdl:output wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetArrayDateTime1DResponse" name="RetArrayDateTime1D_ResponseMessage_Body" message="tns:RetArrayDateTime1D_ResponseMessage_Body"/>
+    </wsdl:operation>
+    <wsdl:operation name="RetArrayString2D">
+      <wsdl:input wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetArrayString2D" name="RetArrayString2D_RequestMessage_Body" message="tns:RetArrayString2D_RequestMessage_Body"/>
+      <wsdl:output wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetArrayString2DResponse" name="RetArrayString2D_ResponseMessage_Body" message="tns:RetArrayString2D_ResponseMessage_Body"/>
+    </wsdl:operation>
+    <wsdl:operation name="RetArray1D_SN">
+      <wsdl:input wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetArray1D_SN" name="RetArray1D_SN_RequestMessage_Body" message="tns:RetArray1D_SN_RequestMessage_Body"/>
+      <wsdl:output wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetArray1D_SNResponse" name="RetArray1D_SN_ResponseMessage_Body" message="tns:RetArray1D_SN_ResponseMessage_Body"/>
+    </wsdl:operation>
+    <wsdl:operation name="RetArrayAnyType1D">
+      <wsdl:input wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetArrayAnyType1D" name="RetArrayAnyType1D_RequestMessage_Body" message="tns:RetArrayAnyType1D_RequestMessage_Body"/>
+      <wsdl:output wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetArrayAnyType1DResponse" name="RetArrayAnyType1D_ResponseMessage_Body" message="tns:RetArrayAnyType1D_ResponseMessage_Body"/>
+    </wsdl:operation>
+    <wsdl:operation name="RetStructS1">
+      <wsdl:input wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetStructS1" name="RetStructS1_RequestMessage_Body" message="tns:RetStructS1_RequestMessage_Body"/>
+      <wsdl:output wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetStructS1Response" name="RetStructS1_ResponseMessage_Body" message="tns:RetStructS1_ResponseMessage_Body"/>
+    </wsdl:operation>
+    <wsdl:operation name="RetStructSN">
+      <wsdl:input wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetStructSN" name="RetStructSN_RequestMessage_Body" message="tns:RetStructSN_RequestMessage_Body"/>
+      <wsdl:output wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetStructSNResponse" name="RetStructSN_ResponseMessage_Body" message="tns:RetStructSN_ResponseMessage_Body"/>
+    </wsdl:operation>
+    <wsdl:operation name="RetStructSNSA">
+      <wsdl:input wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetStructSNSA" name="RetStructSNSA_RequestMessage_Body" message="tns:RetStructSNSA_RequestMessage_Body"/>
+      <wsdl:output wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetStructSNSAResponse" name="RetStructSNSA_ResponseMessage_Body" message="tns:RetStructSNSA_ResponseMessage_Body"/>
+    </wsdl:operation>
+    <wsdl:operation name="RetStructSNSAS">
+      <wsdl:input wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetStructSNSAS" name="RetStructSNSAS_RequestMessage_Body" message="tns:RetStructSNSAS_RequestMessage_Body"/>
+      <wsdl:output wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetStructSNSASResponse" name="RetStructSNSAS_ResponseMessage_Body" message="tns:RetStructSNSAS_ResponseMessage_Body"/>
+    </wsdl:operation>
+    <wsdl:operation name="RetEnumString">
+      <wsdl:input wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetEnumString" name="RetEnumString_RequestMessage_Body" message="tns:RetEnumString_RequestMessage_Body"/>
+      <wsdl:output wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetEnumStringResponse" name="RetEnumString_ResponseMessage_Body" message="tns:RetEnumString_ResponseMessage_Body"/>
+    </wsdl:operation>
+    <wsdl:operation name="RetEnumInt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetEnumInt" name="RetEnumInt_RequestMessage_Body" message="tns:RetEnumInt_RequestMessage_Body"/>
+      <wsdl:output wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetEnumIntResponse" name="RetEnumInt_ResponseMessage_Body" message="tns:RetEnumInt_ResponseMessage_Body"/>
+    </wsdl:operation>
+    <wsdl:operation name="RetDerivedClass">
+      <wsdl:input wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetDerivedClass" name="RetDerivedClass_RequestMessage_Body" message="tns:RetDerivedClass_RequestMessage_Body"/>
+      <wsdl:output wsaw:Action="http://tempuri.org/IComplexDataTypesDocLitB/RetDerivedClassResponse" name="RetDerivedClass_ResponseMessage_Body" message="tns:RetDerivedClass_ResponseMessage_Body"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_IComplexDataTypesDocLitB" type="tns:IComplexDataTypesDocLitB">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="RetArrayString1D">
+      <soap:operation soapAction="http://tempuri.org/IComplexDataTypesDocLitB/RetArrayString1D" style="document"/>
+      <wsdl:input name="RetArrayString1D_RequestMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="RetArrayString1D_ResponseMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RetArrayInt1D">
+      <soap:operation soapAction="http://tempuri.org/IComplexDataTypesDocLitB/RetArrayInt1D" style="document"/>
+      <wsdl:input name="RetArrayInt1D_RequestMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="RetArrayInt1D_ResponseMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RetArrayDecimal1D">
+      <soap:operation soapAction="http://tempuri.org/IComplexDataTypesDocLitB/RetArrayDecimal1D" style="document"/>
+      <wsdl:input name="RetArrayDecimal1D_RequestMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="RetArrayDecimal1D_ResponseMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RetArrayDateTime1D">
+      <soap:operation soapAction="http://tempuri.org/IComplexDataTypesDocLitB/RetArrayDateTime1D" style="document"/>
+      <wsdl:input name="RetArrayDateTime1D_RequestMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="RetArrayDateTime1D_ResponseMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RetArrayString2D">
+      <soap:operation soapAction="http://tempuri.org/IComplexDataTypesDocLitB/RetArrayString2D" style="document"/>
+      <wsdl:input name="RetArrayString2D_RequestMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="RetArrayString2D_ResponseMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RetArray1D_SN">
+      <soap:operation soapAction="http://tempuri.org/IComplexDataTypesDocLitB/RetArray1D_SN" style="document"/>
+      <wsdl:input name="RetArray1D_SN_RequestMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="RetArray1D_SN_ResponseMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RetArrayAnyType1D">
+      <soap:operation soapAction="http://tempuri.org/IComplexDataTypesDocLitB/RetArrayAnyType1D" style="document"/>
+      <wsdl:input name="RetArrayAnyType1D_RequestMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="RetArrayAnyType1D_ResponseMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RetStructS1">
+      <soap:operation soapAction="http://tempuri.org/IComplexDataTypesDocLitB/RetStructS1" style="document"/>
+      <wsdl:input name="RetStructS1_RequestMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="RetStructS1_ResponseMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RetStructSN">
+      <soap:operation soapAction="http://tempuri.org/IComplexDataTypesDocLitB/RetStructSN" style="document"/>
+      <wsdl:input name="RetStructSN_RequestMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="RetStructSN_ResponseMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RetStructSNSA">
+      <soap:operation soapAction="http://tempuri.org/IComplexDataTypesDocLitB/RetStructSNSA" style="document"/>
+      <wsdl:input name="RetStructSNSA_RequestMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="RetStructSNSA_ResponseMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RetStructSNSAS">
+      <soap:operation soapAction="http://tempuri.org/IComplexDataTypesDocLitB/RetStructSNSAS" style="document"/>
+      <wsdl:input name="RetStructSNSAS_RequestMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="RetStructSNSAS_ResponseMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RetEnumString">
+      <soap:operation soapAction="http://tempuri.org/IComplexDataTypesDocLitB/RetEnumString" style="document"/>
+      <wsdl:input name="RetEnumString_RequestMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="RetEnumString_ResponseMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RetEnumInt">
+      <soap:operation soapAction="http://tempuri.org/IComplexDataTypesDocLitB/RetEnumInt" style="document"/>
+      <wsdl:input name="RetEnumInt_RequestMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="RetEnumInt_ResponseMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RetDerivedClass">
+      <soap:operation soapAction="http://tempuri.org/IComplexDataTypesDocLitB/RetDerivedClass" style="document"/>
+      <wsdl:input name="RetDerivedClass_RequestMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="RetDerivedClass_ResponseMessage_Body">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ComplexDataTypesDocLitBService">
+    <wsdl:port name="BasicHttpBinding_IComplexDataTypesDocLitB" binding="tns:BasicHttpBinding_IComplexDataTypesDocLitB">
+      <soap:address location="http://localhost/services/ComplexDataTypesBSvc/ComplexDataTypesDocLitB_Service.php"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
