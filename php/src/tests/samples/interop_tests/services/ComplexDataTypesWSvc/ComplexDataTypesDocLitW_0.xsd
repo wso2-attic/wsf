@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://tempuri.org/">
-  <xs:import schemaLocation="ComplexDataTypesDocLitW_2.xsd" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
-  <xs:import schemaLocation="ComplexDataTypesDocLitW_3.xsd" namespace="http://schemas.datacontract.org/2004/07/System"/>
-  <xs:import schemaLocation="ComplexDataTypesDocLitW_4.xsd" namespace="http://schemas.datacontract.org/2004/07/XwsInterop.SoapWsdl.ComplexDataTypes.XmlFormatter.Service.Indigo"/>
+  <xs:import schemaLocation="http://localhost/services/ComplexDataTypesWSvc/ComplexDataTypesDocLitW_2.xsd" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+  <xs:import schemaLocation="http://localhost/services/ComplexDataTypesWSvc/ComplexDataTypesDocLitW_3.xsd" namespace="http://schemas.datacontract.org/2004/07/System"/>
+  <xs:import schemaLocation="http://localhost/services/ComplexDataTypesWSvc/ComplexDataTypesDocLitW_4.xsd" namespace="http://schemas.datacontract.org/2004/07/XwsInterop.SoapWsdl.ComplexDataTypes.XmlFormatter.Service.Indigo"/>
   <xs:element name="RetArrayString1D">
     <xs:complexType>
       <xs:sequence>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/XwsInterop.SoapWsdl.ComplexDataTypes.XmlFormatter.Service.Indigo" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://schemas.datacontract.org/2004/07/XwsInterop.SoapWsdl.ComplexDataTypes.XmlFormatter.Service.Indigo">
-  <xs:import schemaLocation="ComplexDataTypesDocLitW_2.xsd" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
-  <xs:import schemaLocation="ComplexDataTypesDocLitW_1.xsd" namespace="http://schemas.microsoft.com/2003/10/Serialization/"/>
+  <xs:import schemaLocation="http://localhost/services/ComplexDataTypesWSvc/ComplexDataTypesDocLitW_2.xsd" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+  <xs:import schemaLocation="http://localhost/services/ComplexDataTypesWSvc/ComplexDataTypesDocLitW_1.xsd" namespace="http://schemas.microsoft.com/2003/10/Serialization/"/>
   <xs:complexType name="ArrayOfPerson">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="Person" nillable="true" type="tns:Person"/>
