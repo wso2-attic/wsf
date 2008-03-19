@@ -25,8 +25,9 @@ XML;
 
 try {
    
+    $end_point = file_get_contents('epSoap12.txt');
 	$reqMessage = new WSMessage($reqPayloadString, 
-        array("to" => "http://131.107.72.15/WSAddressingCR_Service_WCF/WSAddressing10.svc/Soap12",
+        array("to" => $end_point,
               "action" => "http://example.org/action/echoIn",
               "replyTo" => "http://www.w3.org/2005/08/addressing/anonymous"));
 	

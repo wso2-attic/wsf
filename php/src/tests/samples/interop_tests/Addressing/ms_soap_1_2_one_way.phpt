@@ -23,9 +23,11 @@ $reqPayloadString = <<<XML
 <notify xmlns="http://example.org/echo">test</notify>
 XML;
 try {
+
+    $end_point = file_get_contents('epSoap12.txt');
    
 	$reqMessage = new WSMessage($reqPayloadString, 
-        array("to" => "http://131.107.72.15/WSAddressingCR_Service_WCF/WSAddressing10.svc/Soap12",
+        array("to" => $end_point,
               "action" => "http://example.org/action/notify"));
 	
 	$client = new WSClient(array("useSOAP" => "1.2",

@@ -5,8 +5,9 @@ RetDateTime(2005-12-12T12:00:00)
 
 try {
 
-    $client = new WSClient(
-                  array("wsdl" => "http://131.107.72.15/SoapWsdl_BaseDataTypes_XmlFormatter_Service_Indigo/BaseDataTypesDocLitB.svc?wsdl"));
+    $wsdl = file_get_contents('wsdlDoclitB.txt');
+
+    $client = new WSClient(array("wsdl" => $wsdl));
     
     $proxy = $client->getProxy();
     $val =  $proxy->RetDateTime("2005-12-12T12:00:00");

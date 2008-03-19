@@ -5,8 +5,9 @@ RetDateTime_max(9999-12-31T23:59:59.9999999)
 
 try {
 
-    $client = new WSClient(
-                  array("wsdl" => "http://131.107.72.15/SoapWsdl_BaseDataTypes_XmlFormatter_Service_Indigo/BaseDataTypesDocLitB.svc?wsdl"));
+    $wsdl = file_get_contents('wsdlDoclitB.txt');
+
+    $client = new WSClient(array("wsdl" => $wsdl));
     
     $proxy = $client->getProxy();
     $val =  $proxy->RetDateTime("9999-12-31T23:59:59.9999999");

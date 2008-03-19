@@ -5,8 +5,9 @@ inDecimal_minus_valid(-9223372036854775808)
 
 try {
 
-    $client = new WSClient(
-                  array("wsdl" => "http://131.107.72.15/SoapWsdl_BaseDataTypes_XmlFormatter_Service_Indigo/BaseDataTypesDocLitB.svc?wsdl"));
+    $wsdl = file_get_contents('wsdlDoclitB.txt');
+
+    $client = new WSClient(array("wsdl" => $wsdl));
     
     $proxy = $client->getProxy();
     $val =  $proxy->RetDecimal(-9223372036854775808);
