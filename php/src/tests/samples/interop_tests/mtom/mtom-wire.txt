@@ -1,448 +1,0 @@
-
-#### Scenario #3.1. echoBinaryAsString, Soap11MtomUTF8 binding
-
-##Request
-
-POST http://131.107.72.15/Mtom/svc/service.svc/Soap11MtomUTF8 HTTP/1.1
-SOAPAction: "http://xmlsoap.org/echoBinaryAsString"
-Content-Type: multipart/related; type="application/xop+xml";start="<http://tempuri.org/0>";boundary="uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=1";start-info="text/xml"
-Host: 131.107.72.15
-Content-Length: 1501
-Expect: 100-continue
-Proxy-Connection: Keep-Alive
-
---uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=1
-Content-ID: <http://tempuri.org/0>
-Content-Transfer-Encoding: 8bit
-Content-Type: application/xop+xml;charset=utf-8;type="text/xml"
-
-<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><EchoBinaryAsString xmlns="http://xmlsoap.org/Ping"><array><xop:Include href="cid:http%3A%2F%2Ftempuri.org%2F1%2F632618206521093670" xmlns:xop="http://www.w3.org/2004/08/xop/include"/></array></EchoBinaryAsString></s:Body></s:Envelope>
---uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=1
-Content-ID: <http://tempuri.org/1/632618206521093670>
-Content-Transfer-Encoding: binary
-Content-Type: application/octet-stream
-
-H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! 
-
-
-##Response
-
-HTTP/1.1 200 OK
-Proxy-Connection: Keep-Alive
-Connection: Keep-Alive
-Content-Length: 864
-Via: 1.1 RED-PRXY-03
-Date: Fri, 09 Sep 2005 06:57:22 GMT
-Content-Type: multipart/related; type="application/xop+xml";start="<http://tempuri.org/0>";boundary="uuid:b71dc628-ec8f-4422-8a4a-992f041cb94c+id=40";start-info="text/xml"
-Server: Microsoft-IIS/6.0
-X-Powered-By: ASP.NET
-X-AspNet-Version: 2.0.50215
-Cache-Control: private
-
-
---uuid:b71dc628-ec8f-4422-8a4a-992f041cb94c+id=40
-Content-ID: <http://tempuri.org/0>
-Content-Transfer-Encoding: 8bit
-Content-Type: application/xop+xml;charset=utf-8;type="text/xml"
-
-<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><EchoBinaryAsStringResponse xmlns="http://xmlsoap.org/Ping"><EchoBinaryAsStringResult>Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!</EchoBinaryAsStringResult></EchoBinaryAsStringResponse></s:Body></s:Envelope>
---uuid:b71dc628-ec8f-4422-8a4a-992f041cb94c+id=40--
-
-
-#### Scenario #3.2. EchoStringAsBinary, Soap11MtomUTF8 binding. 
-
-##Request
-
-
-POST http://131.107.72.15/Mtom/svc/service.svc/Soap11MtomUTF8 HTTP/1.1
-SOAPAction: "http://xmlsoap.org/EchoStringAsBinary"
-Content-Type: multipart/related; type="application/xop+xml";start="<http://tempuri.org/0>";boundary="uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=4";start-info="text/xml"
-Host: 131.107.72.15
-Content-Length: 800
-Expect: 100-continue
-
---uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=4
-Content-ID: <http://tempuri.org/0>
-Content-Transfer-Encoding: 8bit
-Content-Type: application/xop+xml;charset=utf-8;type="text/xml"
-
-<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><EchoStringAsBinary xmlns="http://xmlsoap.org/Ping"><s>Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!</s></EchoStringAsBinary></s:Body></s:Envelope>
---uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=4--
-
-
-##Response
-
-HTTP/1.1 200 OK
-Proxy-Connection: Keep-Alive
-Connection: Keep-Alive
-Content-Length: 1558
-Via: 1.1 RED-PRXY-03
-Date: Fri, 09 Sep 2005 06:57:22 GMT
-Content-Type: multipart/related; type="application/xop+xml";start="<http://tempuri.org/0>";boundary="uuid:b71dc628-ec8f-4422-8a4a-992f041cb94c+id=43";start-info="text/xml"
-Server: Microsoft-IIS/6.0
-X-Powered-By: ASP.NET
-X-AspNet-Version: 2.0.50215
-Cache-Control: private
-
-
---uuid:b71dc628-ec8f-4422-8a4a-992f041cb94c+id=43
-Content-ID: <http://tempuri.org/0>
-Content-Transfer-Encoding: 8bit
-Content-Type: application/xop+xml;charset=utf-8;type="text/xml"
-
-<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><EchoStringAsBinaryResponse xmlns="http://xmlsoap.org/Ping"><EchoStringAsBinaryResult><xop:Include href="cid:http%3A%2F%2Ftempuri.org%2F1%2F632618206428437500" xmlns:xop="http://www.w3.org/2004/08/xop/include"/></EchoStringAsBinaryResult></EchoStringAsBinaryResponse></s:Body></s:Envelope>
---uuid:b71dc628-ec8f-4422-8a4a-992f041cb94c+id=43
-Content-ID: <http://tempuri.org/1/632618206428437500>
-Content-Transfer-Encoding: binary
-Content-Type: application/octet-stream
-
-H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o  W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! 
---uuid:b71dc628-ec8f-4422-8a4a-992f041cb94c+id=43--
-
-
-
-#### Scenario #3.3. EchoBinaryArrayAsStringArray, Soap11MtomUTF8 binding. 
-
-##Request
-
-POST http://131.107.72.15/Mtom/svc/service.svc/Soap11MtomUTF8 HTTP/1.1
-SOAPAction: "http://xmlsoap.org/EchoBinaryArrayAsStringArray"
-Content-Type: multipart/related; type="application/xop+xml";start="<http://tempuri.org/0>";boundary="uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=6";start-info="text/xml"
-Host: 131.107.72.15
-Content-Length: 4093
-Expect: 100-continue
-
---uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=6
-Content-ID: <http://tempuri.org/0>
-Content-Transfer-Encoding: 8bit
-Content-Type: application/xop+xml;charset=utf-8;type="text/xml"
-
-<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><EchoBinaryArrayAsStringArray xmlns="http://xmlsoap.org/Ping"><arrayOfArray xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:x="http://www.w3.org/2001/XMLSchema"><base64Binary xmlns="http://schemas.microsoft.com/2003/10/Serialization/Arrays"><xop:Include href="cid:http%3A%2F%2Ftempuri.org%2F1%2F632618206526687734" xmlns:xop="http://www.w3.org/2004/08/xop/include"/></base64Binary><base64Binary xmlns="http://schemas.microsoft.com/2003/10/Serialization/Arrays"><xop:Include href="cid:http%3A%2F%2Ftempuri.org%2F2%2F632618206526687734" xmlns:xop="http://www.w3.org/2004/08/xop/include"/></base64Binary><base64Binary xmlns="http://schemas.microsoft.com/2003/10/Serialization/Arrays"><xop:Include href="cid:http%3A%2F%2Ftempuri.org%2F3%2F632618206526687734" xmlns:xop="http://www.w3.org/2004/08/xop/include"/></base64Binary></arrayOfArray></EchoBinaryArrayAsStringArray></s:Body></s:Envelope>
---uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=6
-Content-ID: <http://tempuri.org/1/632618206526687734>
-Content-Transfer-Encoding: binary
-Content-Type: application/octet-stream
-
-H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d  ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d !   -   1 
---uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=6
-Content-ID: <http://tempuri.org/2/632618206526687734>
-Content-Transfer-Encoding: binary
-Content-Type: application/octet-stream
-
-H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d !   -   2 
---uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=6
-Content-ID: <http://tempuri.org/3/632618206526687734>
-Content-Transfer-Encoding: binary
-Content-Type: application/octet-stream
-
-H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d !   -   3 
---uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=6--
-
-
-##Response
-
-HTTP/1.1 200 OK
-Proxy-Connection: Keep-Alive
-Connection: Keep-Alive
-Content-Length: 2028
-Via: 1.1 RED-PRXY-03
-Date: Fri, 09 Sep 2005 06:57:22 GMT
-Content-Type: multipart/related; type="application/xop+xml";start="<http://tempuri.org/0>";boundary="uuid:b71dc628-ec8f-4422-8a4a-992f041cb94c+id=45";start-info="text/xml"
-Server: Microsoft-IIS/6.0
-X-Powered-By: ASP.NET
-X-AspNet-Version: 2.0.50215
-Cache-Control: private
-
-
---uuid:b71dc628-ec8f-4422-8a4a-992f041cb94c+id=45
-Content-ID: <http://tempuri.org/0>
-Content-Transfer-Encoding: 8bit
-Content-Type: application/xop+xml;charset=utf-8;type="text/xml"
-
-<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><EchoBinaryArrayAsStringArrayResponse xmlns="http://xmlsoap.org/Ping"><EchoBinaryArrayAsStringArrayResult xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:x="http://www.w3.org/2001/XMLSchema"><string xmlns="http://schemas.microsoft.com/2003/10/Serialization/Arrays">Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World! - 1</string><string xmlns="http://schemas.microsoft.com/2003/10/Serialization/Arrays">Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World! - 2</string><string xmlns="http://schemas.microsoft.com/2003/10/Serialization/Arrays">Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World! - 3</string></EchoBinaryArrayAsStringArrayResult></EchoBinaryArrayAsStringArrayResponse></s:Body></s:Envelope>
---uuid:b71dc628-ec8f-4422-8a4a-992f041cb94c+id=45--
-
-
-
-
-#### Scenario #3.4. EchoBinaryFieldAsString, Soap11MtomUTF8 binding. 
-
-##Request
-
-
-POST http://131.107.72.15/Mtom/svc/service.svc/Soap11MtomUTF8 HTTP/1.1
-SOAPAction: "http://xmlsoap.org/Ping"
-Content-Type: multipart/related; type="application/xop+xml";start="<http://tempuri.org/0>";boundary="uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=5";start-info="text/xml"
-Host: 131.107.72.15
-Content-Length: 590
-Expect: 100-continue
-
-HTTP/1.1 100 Continue
-Via: 1.1 RED-PRXY-03
---uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=5
-Content-ID: <http://tempuri.org/0>
-Content-Transfer-Encoding: 8bit
-Content-Type: application/xop+xml;charset=utf-8;type="text/xml"
-
-<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><EchoBinaryFieldAsString xmlns="http://xmlsoap.org/Ping"><s xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:x="http://www.w3.org/2001/XMLSchema"><Array>SABlAGwAbABvACAAVwBvAHIAbABkACEA</Array><Name>My Struct</Name></s></EchoBinaryFieldAsString></s:Body></s:Envelope>
---uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=5--
-
-
-##Response
-
-HTTP/1.1 200 OK
-Proxy-Connection: Keep-Alive
-Connection: Keep-Alive
-Content-Length: 512
-Via: 1.1 RED-PRXY-03
-Date: Fri, 09 Sep 2005 06:57:22 GMT
-Content-Type: multipart/related; type="application/xop+xml";start="<http://tempuri.org/0>";boundary="uuid:b71dc628-ec8f-4422-8a4a-992f041cb94c+id=44";start-info="text/xml"
-Server: Microsoft-IIS/6.0
-X-Powered-By: ASP.NET
-X-AspNet-Version: 2.0.50215
-Cache-Control: private
-
-
---uuid:b71dc628-ec8f-4422-8a4a-992f041cb94c+id=44
-Content-ID: <http://tempuri.org/0>
-Content-Transfer-Encoding: 8bit
-Content-Type: application/xop+xml;charset=utf-8;type="text/xml"
-
-<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><EchoBinaryFieldAsStringResponse xmlns="http://xmlsoap.org/Ping"><EchoBinaryFieldAsStringResult>Hello World!</EchoBinaryFieldAsStringResult></EchoBinaryFieldAsStringResponse></s:Body></s:Envelope>
---uuid:b71dc628-ec8f-4422-8a4a-992f041cb94c+id=44--
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#### Scenario #3.6. echoBinaryAsString, Soap11MtomUTF16 binding
-
-##Request
-
-POST http://131.107.72.15/Mtom/svc/service.svc/Soap11MtomUTF16 HTTP/1.1
-SOAPAction: "http://xmlsoap.org/echoBinaryAsString"
-Content-Type: multipart/related; type="application/xop+xml";start="<http://tempuri.org/0>";boundary="uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=2";start-info="text/xml"
-Host: 131.107.72.15
-Content-Length: 1893
-Expect: 100-continue
-
-HTTP/1.1 100 Continue
-Via: 1.1 RED-PRXY-03
-
---uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=2
-Content-ID: <http://tempuri.org/0>
-Content-Transfer-Encoding: binary
-Content-Type: application/xop+xml;charset=utf-16;type="text/xml"
-
-ÿş< ? x m l   v e r s i o n = " 1 . 0 "   e n c o d i n g = " u t f - 1 6 " ? > < s : E n v e l o p e   x m l n s : s = " h t t p : / / s c h e m a s . x m l s o a p . o r g / s o a p / e n v e l o p e / " > < s : B o d y > < E c h o B i n a r y A s S t r i n g   x m l n s = " h t t p : / / x m l s o a p . o r g / P i n g " > < a r r a y > < x o p : I n c l u d e   h r e f = " c i d : h t t p % 3 A % 2 F % 2 F t e m p u r i . o r g % 2 F 1 % 2 F 6 3 2 6 1 8 2 0 6 5 2 1 5 9 3 1 4 0 "   x m l n s : x o p = " h t t p : / / w w w . w 3 . o r g / 2 0 0 4 / 0 8 / x o p / i n c l u d e "   / > < / a r r a y > < / E c h o B i n a r y A s S t r i n g > < / s : B o d y > < / s : E n v e l o p e > 
---uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=2
-Content-ID: <http://tempuri.org/1/632618206521593140>
-Content-Transfer-Encoding: binary
-Content-Type: application/octet-stream
-
-H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l 4Üo     ç  ç   *8  5ås¨ E Ù@ €WÊ¬n61Œ	¶ P8,µµ˜¤ğP?O#   l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! 
---uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=2--
-
-
-##Response
-
-HTTP/1.1 200 OK
-Proxy-Connection: Keep-Alive
-Connection: Keep-Alive
-Content-Length: 1567
-Via: 1.1 RED-PRXY-03
-Date: Fri, 09 Sep 2005 06:57:22 GMT
-Content-Type: multipart/related; type="application/xop+xml";start="<http://tempuri.org/0>";boundary="uuid:b71dc628-ec8f-4422-8a4a-992f041cb94c+id=41";start-info="text/xml"
-Server: Microsoft-IIS/6.0
-X-Powered-By: ASP.NET
-X-AspNet-Version: 2.0.50215
-Cache-Control: private
-
-
---uuid:b71dc628-ec8f-4422-8a4a-992f041cb94c+id=41
-Content-ID: <http://tempuri.org/0>
-Content-Transfer-Encoding: binary
-Content-Type: application/xop+xml;charset=utf-16;type="text/xml"
-
-ÿş< ? x m l   v e r s i o n = " 1 . 0 "   e n c o d i n g = " u t f - 1 6 " ? > < s : E n v e l o p e   x m l n s : s = " h t t p : / / s c h e m a s . x m l s o a p . o r g / s o a p / e n v e l o p e / " > < s : B o d y > < E c h o B i n a r y A s S t r i n g R e s p o n s e   x m l n s = " h t t p : / / x m l s o a p . o r g / P i n g " > < E c h o B i n a r y A s S t r i n g R e s u l t > H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o  W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! < / E c h o B i n a r y A s S t r i n g R e s u l t > < / E c h o B i n a r y A s S t r i n g R e s p o n s e > < / s : B o d y > < / s : E n v e l o p e > 
---uuid:b71dc628-ec8f-4422-8a4a-992f041cb94c+id=41--
-
-
-
-
-
-#### Scenario #3.8. echoBinaryAsString, Soap11MtomSecureSignEncrypt binding. AES256 RSA1_5
-
-##Request
-
-POST http://131.107.72.15/Mtom/svc/service.svc/Soap11MtomSecureSignEncrypt HTTP/1.1
-SOAPAction: "http://xmlsoap.org/echoBinaryAsString"
-Content-Type: multipart/related; type="application/xop+xml";start="<http://tempuri.org/0>";boundary="uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=3";start-info="text/xml"
-Host: 131.107.72.15
-Content-Length: 7212
-Expect: 100-continue
-
---uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=3
-Content-ID: <http://tempuri.org/0>
-Content-Transfer-Encoding: 8bit
-Content-Type: application/xop+xml;charset=utf-8;type="text/xml"
-
-<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"><s:Header><o:Security s:mustUnderstand="1" xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"><u:Timestamp u:Id="uuid-4d4ee765-5717-4d53-9ac9-99bddc07df6c-5"><u:Created>2005-09-09T06:57:32.488Z</u:Created><u:Expires>2005-09-09T07:02:32.488Z</u:Expires></u:Timestamp><o:BinarySecurityToken u:Id="uuid-4d4ee765-5717-4d53-9ac9-99bddc07df6c-2" ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3" EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary"><xop:Include href="cid:http%3A%2F%2Ftempuri.org%2F1%2F632618206525089430" xmlns:xop="http://www.w3.org/2004/08/xop/include"/></o:BinarySecurityToken><e:EncryptedKey Id="_1" xmlns:e="http://www.w3.org/2001/04/xmlenc#"><e:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p"/><KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#"><o:SecurityTokenReference><o:KeyIdentifier ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509SubjectKeyIdentifier">Xeg55vRyK3ZhAEhEf+YT0z986L0=</o:KeyIdentifier></o:SecurityTokenReference></KeyInfo><e:CipherData><e:CipherValue>oQfpxwT8/SAGyZQzKE2b4yO6dXuQj7pwJ+5CGL3Rf7C06bQ5ttMoQ9GLJcQYkXTzin+WwHEgs5bj5ml9HKTW9QAU5JJ6lksdymmQvWP5ZtGPBVchO4sofEGoCKmBiZL/DYS/cnbzgnc/3a6NYnc10y2fWGaGLiqa00zijAw7o0Y=</e:CipherValue></e:CipherData></e:EncryptedKey><c:DerivedKeyToken u:Id="_2" xmlns:c="http://schemas.xmlsoap.org/ws/2005/02/sc"><o:SecurityTokenReference><o:Reference URI="#_1"/></o:SecurityTokenReference><c:Nonce>OrEPRX7fISIS4sXYWPMv3g==</c:Nonce></c:DerivedKeyToken><e:ReferenceList xmlns:e="http://www.w3.org/2001/04/xmlenc#"><e:DataReference URI="#_3"/><e:DataReference URI="#_4"/></e:ReferenceList><e:EncryptedData Id="_4" Type="http://www.w3.org/2001/04/xmlenc#Element" xmlns:e="http://www.w3.org/2001/04/xmlenc#"><e:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes256-cbc"/><KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#"><o:SecurityTokenReference><o:Reference URI="#_2"/></o:SecurityTokenReference></KeyInfo><e:CipherData><e:CipherValue><xop:Include href="cid:http%3A%2F%2Ftempuri.org%2F2%2F632618206525089430" xmlns:xop="http://www.w3.org/2004/08/xop/include"/></e:CipherValue></e:CipherData></e:EncryptedData></o:Security></s:Header><s:Body u:Id="_0"><e:EncryptedData Id="_3" Type="http://www.w3.org/2001/04/xmlenc#Content" xmlns:e="http://www.w3.org/2001/04/xmlenc#"><e:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes256-cbc"/><KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#"><o:SecurityTokenReference xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"><o:Reference URI="#_2"/></o:SecurityTokenReference></KeyInfo><e:CipherData><e:CipherValue><xop:Include href="cid:http%3A%2F%2Ftempuri.org%2F3%2F632618206525089430" xmlns:xop="http://www.w3.org/2004/08/xop/include"/></e:CipherValue></e:CipherData></e:EncryptedData></s:Body></s:Envelope>
-
---uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=3
-Content-ID: <http://tempuri.org/1/632618206525089430>
-Content-Transfer-Encoding: binary
-Content-Type: application/octet-stream
-
-0‚0‚ô 3¦±Ucíg!P¨™0	*†H†÷ 0010U
-OASIS10UOASIS Interop Test CA0050319000000Z180319235959Z0B10U
-OASIS1 0UOASIS Interop Test Cert10UAlice0Ÿ0	*†H†÷  0‰ ¢¨½ôµUŠ4hzä(#Sà9€òÿJ¡mâÛ»r¶\nÚ­ğı¶¢ £­~§İ%¯9]rˆÛÊú¾™IÌ¤×
-œµË:9˜Àª†Û‘èI•sçibó½ï¦[JItümzÛƒÒıÀP"ûijÃO±’“ğ3y+,ş› £“00	U0 03U,0*0(¢&†$http://interop.bbtest.net/crl/ca.crl0Uÿ°0U
-â]PvuA]ÕÙe,Ğæøú1ˆ0U#0€À(üÁë5¡Öªª MÂI0	*†H†÷ ‚ :©:›Öû¬«-|””ı±%±$¢Ç#“–À¥¥xæı†Y!Z{TjWÜâ@L‡ßDÓ¤y]Ï~¼­‹?8hPR˜MHÉèv&1Në€Pº@Š˜et´OÄh_‘7qB_æ°ŠÿwÅ[Ôß¸Ãf”:”à ñn¨wXVi,Ú|h#PLÓ#$/-jıB¾¾‘@›×?ºIÆEÃÓ—G*›D/Û.Ø¥±¤aˆõKÎ’÷ø­„Ãß–¦)°¸±Şğ,]e¢â¼Tæ3@­óbõQÔ‡Ó©½¸µœ’ ±‹4ƒdOeàÆËÛ=„Õp¯#‰O
-
---uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=3
-Content-ID: <http://tempuri.org/2/632618206525089430>
-Content-Transfer-Encoding: binary
-Content-Type: application/octet-stream
-
-ĞÛ¨§ÿ:é`˜›eÅöéœ‡%†Á{‰¿ôYu ¹ÜM8¨ó+ŠÉ²ö‚†}‘ÅÚyîma»ÜğÁí™„”ÄÑŒ=9›¢Ü!MŠ‚êÊØ‡Ğ<ÜÿXmV/FÆ'÷;şë…q L”º<ŠŒ‹Y°¡­1*\ZúÅñ¦(Ìr!gÇƒ`R7oÛø¾z+rò/µ XÀ²ÙóÏB¤ı®ÉeÒàÃmî™[°_æpF)6Ô}õˆâvçtdD˜ßW³¶vªğñÇç•;4w{ ­c`‚”î7[FœC]
-F˜’öûˆ§+†|—Ô›Q&·ÇÅ+ÿx¥® Ç·d#Oú¿ÒÛ½Š‘uCHhæ½t¼ñ=Ê[+ƒ*hGÕl!Öà[íõñ0Â+ì‡Û·‚l´¯¿röÁSŞÚÜáĞ”èÀ•tJ¼X{±X>Sà'‚ÆÃæoÍÖîš™Ş'°Y	ÂÒWÈ½Z¤ü–-;-1ëe×Bi=ú4feÉ=fš­5Nx¨ÙNQ¤éLò”g²Ñ(¶^r˜/&È5`¿´(=9@ÀFŠi‘Iih;+l^¾¤êE¡ËïK¯ ¢İHfa|şÄ
-”}øß”üÔ¹Ämæh›‚Í¥E§à‡Õ%Ø¯–Pu&Fq_Ğs!Ï¿!¥œá\SDÊ°* *›üqéŞ¦1ig…1d”¿&‘üRŸ,6ï–ú)½jCÍœ¯VøE=yW©= GÈˆ/m?è/õ¯°ó³ëÚİËëR} ıúÄ·¹8éÿ­ÁØGƒXP`fÒİIµ€š–XTsc^®nC6 ´{„×°<\›“Ç@ÀĞóÍ¡¬µÄôÃ‡Ûº×Ç°şå
-ölÔ$ŸéÜ}ñª×#ü¿Bµ£-:2wë‰›Á™3¶ók
-~d¢Q”õû%).k€&„¸ ï[ÜÎ×HRtèä@HÜ’S*»5Ÿ… å¸È®³±K'Ü:ÅDxó|¶¦ôÉ»Î™%XòÔÚã*1‚ƒdH_§¶V|W²ÂÙ&ˆµÿß¡Æ)j6;Zí¨iIkFŞñİ›§KCÃZAÎA‘yÉÑ‰¢ äQS fr¬Í±y_$×è¯µGÓ¥“¶
-sn&Í›Æ$5pš«TNZLµğœ…ÃşÂ}±J^-¹|üòókÀá“TÆıÚ*ç¯š´ÇD_öæéÏJCÆ¿ö—
-×¼kOi¶´”c… ]øÍ ÄÔ©^=fŸÅİ`ÃÜáË1añ´…pĞEÈÜ/óuÔ¹Â•–ëº„‡£9Š=wí1áGÍ{¾|\$3æ»0«ÅĞmm¨¡Ğ''ÆjŠR¡ïL/kMNÜÁCã4qÊ)ãw\ ¸ôh¥¡Ï~üç„ë+jB˜%Ş)ÔòŠ¦BsGÒÄ7¦íöDÁÑÊÍÑFş†­yıD­µT«ü¼QRŒmÿmƒH»/f¬ÜT)‰D¤öøÿ«íJ©^•4¶¥–öïbpÿ¶öÜ¼Vãßá—8”÷óuÍ]¨1zÀ	=¼0Ó>VøÄl¼*‚‹M=É«†òT6q%G¨X??Sä*´»¡ĞÑ£Hşä-¡¾ã¦³]ô‚}{ğ¸šyuë záóÏß¬Ù×ÔÖ: ÇEdN‹ûéë"š½PÄJ‚’1uvšzò±0v<{óğWÚ¶I´ƒÙ¤6kÅS·Á¼İz‘H
- z\u     ’  ’   *8  5ås¨ E „9@ €Sî¬n61Œ	¶ P8,Ï¯˜¤'ìPDAZ]  
-
---uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=3
-Content-ID: <http://tempuri.org/3/632618206525089430>
-Content-Transfer-Encoding: binary
-Content-Type: application/octet-stream
-
- ¾œf‰ tjfúÏè›rş,Ä¸»——ê‹‡*`’$*¨lÕôyîÕ¨5`¤^ËOo³è]{ªczµÃik¥¹u¥ı8S×L§3‹àl‚¯œfâŞåšËŒœûlHüßQ ¸ÉÔPÎCÆ+ÜÃ²!äÓT¹*¡LÔğcÍS÷q‚).°{×WVª,u(V«5³\Å,¬ô“ä÷_g¢gµm-ÀDÏ>Q0JÔ'‡W³¥ÚE¹£öÎX%c1–¾DZĞ°–³^ã7ÛFA ~føi{W!„áéuøÊ;-”tù¾su(óIqºíòİW¥“VÑ‡©ÂÂóX·ğâmr*ÖÄÔ–—GÃ˜ã‘9˜’?Üà ?ÍbµÂÇQŠì6ëWLš4àºÛê¯¸ ·{Iø1gĞU„åÆkO£€MYIá‰²­-Â&MÚ†¨yjÜ«’8cßÇY±q´	ÇUT«Øä*È½ÅtÊ8]†‘›ÉŸ÷`…b“ç`²ª—¯Nxıµ"õz"*~œïtCÓzËë
-Ì¦|Î©OŠ"±%.UÚ}ñ$œÁÍ^ÏF±¾b?'ËÉ¦Ÿ^mƒ˜vã¯kjgF»SKg5Õ¡qå¦ 3Î2	îp±?å½±õ:ÃDfÌ6¯NQ«"§QO Ú°NºÇı½<ˆ~eæ°#ìíúUtş¨·>¤2^ÕÈ
-%l‹¹Œ„“¹#e¼$´>æ'JÌïêÍ½‘&ËN7 Ù÷roinŞ¶ÎP?‰ã=^õÖƒ óµhs3V&àÔVAmtX2ùàšŒæèÛc¶àEõşŠ?{íıixV7b¤›,ø)#¸K?[`‹Ò£Mf²Ô•¼DşõÙ8ÄIÂS‘ÚærC¢Ã‚)ó«u2oK‘L&ÿ@$ÀWOá*–sñåešÍ?8£i¿X‚,7ºÅF«Àê‡
-€@èJ+O%DEÄÙA.VˆOºç«ëI
-<6¸PÙCtì$]	q=¶Š_<Ù 
-t‡AÒĞÇiÒ¸Q©D‡¢6­Š4ä24Yâtf*…¢i®ÿ
->_™Qô~ˆ1öš7P¥	Ê÷¡íjlÒo‡ÇApmûz¼Œ`I21z>Jp9Ì”ñ®|mJ%ïÏ|âiE0½›[ò7Cæe×	´‹îÛ6ª³läZt}èêÉ\}û<2ñ´½Pr‘R¿1kâş´ÉëÌãNmF>(bg{ø~À	ê°ª~‹A—ò6ã-`vS™Ó·8 ¨u']ço£û"+ª˜–y`=Ju1TGıqñ¸ˆ\å³Aó¦òâÛš¸eÀÆŒÁy§'ä2P|±› ×€‚ˆ£4Ú&ÆP¦®¢¯«I™ø•áê¹¼·‚¤Lş®l-yrÏ]…äÏşV„Xµ\)Í1~{<k+ieQlXÃƒ÷·;[SÂ71âP’¤™fCŠ¼f
-
---uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=3--
-
-
-
-##Response
-
-HTTP/1.1 200 OK
-Proxy-Connection: Keep-Alive
-Connection: Keep-Alive
-Content-Length: 5242
-Via: 1.1 RED-PRXY-03
-Date: Fri, 09 Sep 2005 06:57:22 GMT
-Content-Type: multipart/related; type="application/xop+xml";start="<http://tempuri.org/0>";boundary="uuid:b71dc628-ec8f-4422-8a4a-992f041cb94c+id=42";start-info="text/xml"
-Server: Microsoft-IIS/6.0
-X-Powered-By: ASP.NET
-X-AspNet-Version: 2.0.50215
-Cache-Control: private
-
-
---uuid:b71dc628-ec8f-4422-8a4a-992f041cb94c+id=42
-Content-ID: <http://tempuri.org/0>
-Content-Transfer-Encoding: 8bit
-Content-Type: application/xop+xml;charset=utf-8;type="text/xml"
-
-<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"><s:Header><o:Security s:mustUnderstand="1" xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"><u:Timestamp u:Id="uuid-cb6edca3-1bc3-4759-a81f-b876530077bd-83"><u:Created>2005-09-09T06:57:22.781Z</u:Created><u:Expires>2005-09-09T07:02:22.781Z</u:Expires></u:Timestamp><e:EncryptedKey Id="_1" xmlns:e="http://www.w3.org/2001/04/xmlenc#"><e:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p"/><KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#"><o:SecurityTokenReference><o:KeyIdentifier ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509SubjectKeyIdentifier">CuJdE1B2dUFd1dkL 0Gv     ê  ê   5ås¨ *8  E Ü}@ ;«R61Œ¬n P	¶˜¤- 8,ÕPú£fˆ  ZSzQ5vj6MYg=</o:KeyIdentifier></o:SecurityTokenReference></KeyInfo><e:CipherData><e:CipherValue>HZt6ekBkQTcetV+JL1+Ue/SXp8LPWqSH/sBkl+lVQBLD8SQyisAkeINwgnUR1N1bTnKSmknrrTVoiTieFmTL4R+mCTEnZTRVq9eh784MhS+IKVQDkhFXBtXNHhbUXYnPpisG74Ulk7Tmc54AFYgNwt9nUmOCgUrR5SdaNNtna2k=</e:CipherValue></e:CipherData></e:EncryptedKey><c:DerivedKeyToken u:Id="_2" xmlns:c="http://schemas.xmlsoap.org/ws/2005/02/sc"><o:SecurityTokenReference><o:Reference URI="#_1"/></o:SecurityTokenReference><c:Nonce>NGNPpY/b0FnQ8SrtYKM9CQ==</c:Nonce></c:DerivedKeyToken><e:ReferenceList xmlns:e="http://www.w3.org/2001/04/xmlenc#"><e:DataReference URI="#_3"/><e:DataReference URI="#_4"/></e:ReferenceList><e:EncryptedData Id="_4" Type="http://www.w3.org/2001/04/xmlenc#Element" xmlns:e="http://www.w3.org/2001/04/xmlenc#"><e:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes256-cbc"/><KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#"><o:SecurityTokenReference><o:Reference URI="#_2"/></o:SecurityTokenReference></KeyInfo><e:CipherData><e:CipherValue><xop:Include href="cid:http%3A%2F%2Ftempuri.org%2F1%2F632618206427968750" xmlns:xop="http://www.w3.org/2004/08/xop/include"/></e:CipherValue></e:CipherData></e:EncryptedData></o:Security></s:Header><s:Body u:Id="_0"><e:EncryptedData Id="_3" Type="http://www.w3.org/2001/04/xmlenc#Content" xmlns:e="http://www.w3.org/2001/04/xmlenc#"><e:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes256-cbc"/><KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#"><o:SecurityTokenReference xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"><o:Reference URI="#_2"/></o:SecurityTokenReference></KeyInfo><e:CipherData><e:CipherValue><xop:Include href="cid:http%3A%2F%2Ftempuri.org%2F2%2F632618206427968750" xmlns:xop="http://www.w3.org/2004/08/xop/include"/></e:CipherValue></e:CipherData></e:EncryptedData></s:Body></s:Envelope>
-
---uuid:b71dc628-ec8f-4422-8a4a-992f041cb94c+id=42
-Content-ID: <http://tempuri.org/1/632618206427968750>
-Content-Transfer-Encoding: binary
-Content-Type: application/octet-stream
-
-¼¡ÿg‘x[Õ‘^{œ?Ã»¿J)U{«êEÀ+ÍZáˆW uúù7îÍ2Äq©µ‘éìgÿQCa¼|…\‰J+Lx#wŸPy/0âUÿt8‡Ç*-;NO“ó;Ç¿5‹ÆéÔ@¯L¢¯ƒìƒ@0¦_şö+ß_Ü¨Jµ;V9\I=ÃÒè:qÑ²€6äSøØÉ.Ëã"`¸DÏ\Ç'kWÄ­é\şk¾†Näº¥¯ÇˆÁq Iê¨y&ÍlßE].·ŸA±@ÆA”†9dÏO›Ÿ29(@BÃåçù¯š¼šˆù^‡K9ÎÓ„>å¢ºy,q½¹IËÉóõÅ‘µ:òú”° ‰i ŠÁÌõñ.
-?EŠ”ªáévÈñ-ö¯)ÅaîögJBt=ÀÖİ²«ëXİó²ÑV²À‹óÅ4i.!*~ò}—Fº¿l¦u:>½-şßüvïñÿ[”¥Ì¢DĞ·K Cd™1’Ê,@,Ù6.²ri)æ46š¹½%‹|¿qæìÜÒ,N¹÷kğe8?o`C‹à¶~yèI«ê)ßö6ÓıÉí ÜÑéV¿o2¦©YA¬‰è¼Z¤|GÑ_ì·=Ùá-À¦N·pãøD¢‰°”¹ñ&ô³İ¼ï\7{W¬ragİ*æŸÛêÓÒi—~“<³šh·» ¾õø"
-¦Ê)u¦ÑÜáŒ™Œ­®J§§×YÛ"_mmwÛæE¯!„pë€ºÛ¼İK~”Ã’š‹#4ïû¡¾£tÿŠd#®ÌÚelÅ?ÿh×Ü÷;+|î8İèÂT-o{4‹e”§¤£¥ßàí_¼ úø“Ç{-°ådØ,—>Mé¡	ÆÖy—ı^a°svI#l)ÁAOöë+²»ÛÇ2U£–‰üãcÏ\Öâ˜['½	ä·{ÄšÁ:D±lÅHô¿
-	{8ÈQ7š!DºäÃ8òv#6JŠ\\ 7İZwIî²=Ø?î8ö»¸‚^ÑuŒ‰/T	Ó_ôô^õ—ú>Âôüø<™‚ñ.dÃŠíÒ’ÆF}Z¦ù¨Ö¶ÓvEîšèûpŒ 0Gv     6   6    *8  5ås¨ E  (;@ €YH¬n61Œ	¶ P8,Õ˜¤9PDpû,   0Gv     B  B   5ås¨ *8  E 4@ ;«ø61Œ¬n P	¶˜¤98,ÕPú£Ú²  Tfº’AÅ©5¬Ÿ=€£ù¨TÁÿzÜIô<Ê+:‚> |ìG<~ËéÇàè³)øcb/^ÜÉ9–¦$—'à….ô—dª¯M•?dC=ı»ü(¹ yå¿4Å/ù®7¾,Ğ¦«`ÎÆl/‹~ôMO§æØÁ´è¯€éKÅOg€ÆÄ›dL?¸ãŸlòˆx#a*¢GğØC=ÅTçÁŸ*ÛHñ4k•+¿¬OâW¶¶â5hùvşâ÷B6©0æ&PQÓ3Ò¬z‡ÚèàBœWÔv1É÷iY’£,é2±û¼õ‡wÔ
-ß zä³g …A~vø3Én;h¯léóÓ &œÜsø¸)øúàîÖP˜·‡‘hR½îÇÖj{OE+D†®–'Ğ'Xì¼K%Ñ1AV°è¡3AR@÷ÇkæŠÇ÷Ÿ$l¾|GÓÃDËÙ©zù·‘FO5˜:­ám®E*£=`•kcûúG^ód4¹:m¹R•"3&Î¾ºï”LÖ¨ĞJ/zUnÕA%HaX @ªğÕA§MV†Ş©=2³(Ğvİ+h?ŸbÑ@!Î>°„<ÈµO[Œ’ÿ	TI5™dÛøì·†ÑBPÅIôiĞ“6åé2!Ìyk §¾ôlôÂºù—šad&À×óâû–X³
-
---uuid:b71dc628-ec8f-4422-8a4a-992f041cb94c+id=42
-Content-ID: <http://tempuri.org/2/632618206427968750>
-Content-Transfer-Encoding: binary
-Content-Type: application/octet-stream
-
-0õÚİ&M¤c"²í_dÿhbt
-‹ôRš¤˜ò‹Œã)£LNäİä8ı°yí¡µÜÁmFBş¹AAV„şırú¨úÛ;P=«æl;›·Î3å†kŸô±Èöwé¤¤lNöû¼K0uS‹ïwï¿rÁ™ W˜`m­Ö­&våßh’8ûB˜üe_P­ÍNs¦’\.R¼ç(Ç¿Ë;y2ZÉ{Ğv‡Š_ñÆîUé„ŸËu)g&.áØˆÕ—gŠ¦õšBgxÙL;NmNt°ƒ³W™ëÄl×÷æîÌE)rÆ­¹8M«cM¡Ãô½^ú)±Õù0¸›·kÉmlˆœ„ŞhÓ›eYZÙHEßì‹¿®™«Ío|ögÑq7ÀAyC[˜\M>Ú‹ª(à.¬äW	¨6İ»H}S"bù$DîÖÂ,’¼9ı¸Õ»˜/]8¨xÄÚR÷ïÛñfuæwÌ1õĞ¡ë±C«&2bFÙÍoœc–œºèŒÇù§”½EğˆÜsoF×m¸µù ºŞ¢…•~EŸ¯gA2_Ú‰ë,R8&Š¨qk–EHà°ªË—Ä{f2°§aÑc«”l<mÿŒ«Ğc²-ŒuŞ[;Å¾ÖäÀ“¾HO¨çºT5‰ÂÔ»ÄyZt˜”ÿêwë2
-ØŞm—hÂ CœhÁÑôª  
-¦ìs—o{‘úl
---uuid:b71dc628-ec8f-4422-8a4a-992f041cb94c+id=42--
-
-
-
-
-
-
-
-
-
-
-#### Scenario #3.9. echoBinaryAsString, Soap12MtomUTF8 binding. 
-
-##Request
-
-
-POST http://131.107.72.15/Mtom/svc/service.svc/Soap12MtomUTF8 HTTP/1.1
-Content-Type: multipart/related; type="application/xop+xml";start="<http://tempuri.org/0>";boundary="uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=7";start-info="application/soap+xml"; action="http://xmlsoap.org/echoBinaryAsString"
-Host: 131.107.72.15
-Content-Length: 1941
-Expect: 100-continue
-HTTP/1.1 100 Continue
-Via: 1.1 RED-PRXY-03
-
---uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=7
-Content-ID: <http://tempuri.org/0>
-Content-Transfer-Encoding: 8bit
-Content-Type: application/xop+xml;charset=utf-8;type="application/soap+xml"
-
-<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing"><s:Header><a:Action s:mustUnderstand="1">http://xmlsoap.org/echoBinaryAsString</a:Action><a:MessageID>urn:uuid:1bf061d6-d532-4b0c-930b-8b8202c38b8a</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><a:To s:mustUnderstand="1">http://131.107.72.15/Mtom/svc/service.svc/Soap12MtomUTF8</a:To></s:Header><s:Body><EchoBinaryAsString xmlns="http://xmlsoap.org/Ping"><array><xop:Include href="cid:http%3A%2F%2Ftempuri.org%2F1%2F632618206527087310" xmlns:xop="http://www.w3.org/2004/08/xop/include"/></array></EchoBinaryAsString></s:Body></s:Envelope>
-
---uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=7
-Content-ID: <http://tempuri.org/1/632618206527087310>
-Content-Transfer-Encoding: binary
-Content-Type: application/octet-stream
-
-H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! H e l l o   W o r l d ! 
-
---uuid:0ca0e16e-feb1-426c-97d8-c4508ada5e82+id=7--
-
-
-##Response
-
-HTTP/1.1 200 OK
-Proxy-Connection: Keep-Alive
-Connection: Keep-Alive
-Content-Length: 1166
-Via: 1.1 RED-PRXY-03
-Date: Fri, 09 Sep 2005 06:57:22 GMT
-Content-Type: multipart/related; type="application/xop+xml";start="<http://tempuri.org/0>";boundary="uuid:b71dc628-ec8f-4422-8a4a-992f041cb94c+id=46";start-info="application/soap+xml"
-Server: Microsoft-IIS/6.0
-X-Powered-By: ASP.NET
-X-AspNet-Version: 2.0.50215
-Cache-Control: private
-
-
---uuid:b71dc628-ec8f-4422-8a4a-992f041cb94c+id=46
-Content-ID: <http://tempuri.org/0>
-Content-Transfer-Encoding: 8bit
-Content-Type: application/xop+xml;charset=utf-8;type="application/soap+xml"
-
-<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing"><s:Header><a:Action s:mustUnderstand="1">*</a:Action><a:RelatesTo>urn:uuid:1bf061d6-d532-4b0c-930b-8b8202c38b8a</a:RelatesTo><a:To s:mustUnderstand="1">http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:To></s:Header><s:Body><EchoBinaryAsStringResponse xmlns="http://xmlsoap.org/Ping"><EchoBinaryAsStringResult>Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!</EchoBinaryAsStringResult></EchoBinaryAsStringResponse></s:Body></s:Envelope>
---uuid:b71dc628-ec8f-4422-8a4a-992f041cb94c+id=46--
-                                            
