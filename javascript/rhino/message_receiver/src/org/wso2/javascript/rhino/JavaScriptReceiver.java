@@ -290,7 +290,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                             continue;
                         }
                     }
-                    handleSimpleTypeinResponse(innerElement, object, fac, annotated, json,
+                    handleSimpleTypeinResponse(innerElement, object, fac, json,
                                                outElement);
                 }
             }
@@ -431,36 +431,35 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
     }
 
     private void handleSimpleTypeinResponse(XmlSchemaElement innerElement, Object jsObject,
-                                            OMFactory factory, boolean annotated, boolean json,
+                                            OMFactory factory, boolean json,
                                             OMElement outElement) throws AxisFault {
         long maxOccurs = innerElement.getMaxOccurs();
         if (maxOccurs > 1 && !innerElement.getSchemaTypeName().equals(Constants.XSD_ANYTYPE)) {
-            annotated  = false;
             if (jsObject instanceof Object[]) {
                 Object[] objects = (Object[]) jsObject;
                 for (int i = 0; i < objects.length; i++) {
                     outElement.addChild(handleSchemaTypeinResponse(innerElement, objects[i],
-                                                                   factory, annotated, json));
+                                                                   factory, json));
                 }
             } else if (jsObject instanceof NativeArray) {
                 NativeArray nativeArray = (NativeArray) jsObject;
                 Object[] objects = nativeArray.getAllIds();
                 for (int i = 0; i < objects.length; i++) {
                     outElement.addChild(handleSchemaTypeinResponse(innerElement, objects[i],
-                                                                   factory, annotated, json));
+                                                                   factory, json));
                 }
             } else {
                 outElement.addChild(handleSchemaTypeinResponse(innerElement, jsObject, factory,
-                                                               annotated, json));
+                                                               json));
             }
             return;
         }
         outElement.addChild(
-                handleSchemaTypeinResponse(innerElement, jsObject, factory, annotated, json));
+                handleSchemaTypeinResponse(innerElement, jsObject, factory, json));
     }
 
     private OMElement handleSchemaTypeinResponse(XmlSchemaElement innerElement, Object jsObject,
-                                                 OMFactory factory, boolean annotated, boolean json)
+                                                 OMFactory factory, boolean json)
             throws AxisFault {
         QName qName = innerElement.getSchemaTypeName();
         OMElement element = factory.createOMElement(innerElement.getName(), null);
