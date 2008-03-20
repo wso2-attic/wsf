@@ -408,7 +408,7 @@ public class JSToOMConverter {
             Object uri = qName.get("uri", qName);
             Object localName = qName.get("localName", qName);
             String prefixString, localNameString;
-            if (!JavaScriptEngine.isNull(uri)) {
+            if (!JavaScriptEngine.isNull(uri) && !"".equals(uri)) {
                 prefixString = BeanUtil.getUniquePrefix();
                 omElement.declareNamespace(((String)uri), prefixString);
                 localNameString = prefixString + ":" + localName;
