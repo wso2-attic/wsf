@@ -214,7 +214,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 XmlSchemaType schemaType = xmlSchemaElement.getSchemaType();
                 if (schemaType instanceof XmlSchemaComplexType) {
                     XmlSchemaComplexType complexType = ((XmlSchemaComplexType) schemaType);
-                    handleComplexTypeInResponse(complexType, outElement, response, fac, annotated,
+                    handleComplexTypeInResponse(complexType, outElement, response, fac,
                                                 engine.isJson(), false);
                     body.addChild(outElement);
                 } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANYTYPE) {
@@ -252,7 +252,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
 
     private void handleComplexTypeInResponse(XmlSchemaComplexType complexType, OMElement outElement,
                                              Object response,
-                                             OMFactory fac, boolean annotated, boolean json,
+                                             OMFactory fac, boolean json,
                                              boolean isInnerParam) throws AxisFault {
         XmlSchemaParticle particle = complexType.getParticle();
         if (particle instanceof XmlSchemaSequence) {
@@ -276,7 +276,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                             fac.createOMElement(name, outElement.getNamespace());
                     outElement.addChild(complexTypeElement);
                     handleComplexTypeInResponse(innerComplexType, complexTypeElement, object, fac,
-                                                annotated, json, true);
+                                                json, true);
                 } else {
                     Object object;
                     if (isInnerParam || count > 1) {
