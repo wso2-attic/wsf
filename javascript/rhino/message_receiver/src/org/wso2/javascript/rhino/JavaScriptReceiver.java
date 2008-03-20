@@ -16,71 +16,31 @@
 
 package org.wso2.javascript.rhino;
 
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMFactory;
-import org.apache.axiom.om.OMNamespace;
-import org.apache.axiom.om.OMNode;
-import org.apache.axiom.om.OMText;
-import org.apache.axiom.soap.SOAP11Constants;
-import org.apache.axiom.soap.SOAP12Constants;
-import org.apache.axiom.soap.SOAPBody;
-import org.apache.axiom.soap.SOAPEnvelope;
-import org.apache.axiom.soap.SOAPFactory;
+import org.apache.axiom.om.*;
+import org.apache.axiom.soap.*;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
-import org.apache.axis2.databinding.types.Day;
-import org.apache.axis2.databinding.types.Duration;
-import org.apache.axis2.databinding.types.Month;
-import org.apache.axis2.databinding.types.MonthDay;
-import org.apache.axis2.databinding.types.Time;
-import org.apache.axis2.databinding.types.Year;
-import org.apache.axis2.databinding.types.YearMonth;
+import org.apache.axis2.databinding.types.*;
 import org.apache.axis2.databinding.utils.ConverterUtil;
 import org.apache.axis2.description.AxisMessage;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
+import org.apache.axis2.description.java2wsdl.TypeTable;
 import org.apache.axis2.engine.MessageReceiver;
 import org.apache.axis2.json.JSONOMBuilder;
 import org.apache.axis2.receivers.AbstractInOutMessageReceiver;
 import org.apache.axis2.wsdl.WSDLConstants;
-import org.apache.ws.commons.schema.XmlSchemaComplexType;
-import org.apache.ws.commons.schema.XmlSchemaElement;
-import org.apache.ws.commons.schema.XmlSchemaEnumerationFacet;
-import org.apache.ws.commons.schema.XmlSchemaObjectCollection;
-import org.apache.ws.commons.schema.XmlSchemaParticle;
-import org.apache.ws.commons.schema.XmlSchemaSequence;
-import org.apache.ws.commons.schema.XmlSchemaSimpleType;
-import org.apache.ws.commons.schema.XmlSchemaSimpleTypeContent;
-import org.apache.ws.commons.schema.XmlSchemaSimpleTypeRestriction;
-import org.apache.ws.commons.schema.XmlSchemaType;
+import org.apache.ws.commons.schema.*;
 import org.apache.ws.commons.schema.constants.Constants;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.NativeArray;
-import org.mozilla.javascript.NativeObject;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.Undefined;
-import org.mozilla.javascript.UniqueTag;
+import org.mozilla.javascript.*;
 import org.wso2.javascript.xmlimpl.XML;
 import org.wso2.javascript.xmlimpl.XMLList;
 
 import javax.xml.namespace.QName;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * Class JavaScriptReceiver implements the AbstractInOutSyncMessageReceiver,
@@ -217,7 +177,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     body.addChild(outElement);
                 } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANYTYPE) {
                     if (!JavaScriptEngine.isNull(response)) {
-                        OMElement element = buildResponse(annotated, engine.isJson(), response,
+                        // If its anyType that means we have to add xsi:type
+                        OMElement element = buildResponse(false, engine.isJson(), response,
                                                           xmlSchemaElement);
                         if (element != null) {
                             body.addChild(element);
@@ -432,6 +393,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                                             OMElement outElement) throws AxisFault {
         long maxOccurs = innerElement.getMaxOccurs();
         if (maxOccurs > 1 && !innerElement.getSchemaTypeName().equals(Constants.XSD_ANYTYPE)) {
+            annotated  = false;
             if (jsObject instanceof Object[]) {
                 Object[] objects = (Object[]) jsObject;
                 for (int i = 0; i < objects.length; i++) {
@@ -464,7 +426,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             if (JavaScriptEngine.isNull(jsObject)) {
                 return element;
             }
-            return buildResponse(annotated, json, jsObject, innerElement);
+            // need to set annotated as false cause we need to set xsi:type
+            return buildResponse(false, json, jsObject, innerElement);
         }
         if (qName.equals(Constants.XSD_STRING)) {
             String str = JSToOMConverter.convertToString(jsObject);
@@ -708,6 +671,16 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 Object[] objects = { element };
                 return context.newObject(engine, "XML", objects);
             } else if (omElement.getText() != null) {
+                OMAttribute omAttribute = omElement.getAttribute(new QName("http://www.w3.org/2001/XMLSchema-instance", "type"));
+                if (omAttribute != null) {
+                    String value = omAttribute.getAttributeValue();
+                    if (value != null && !value.trim().equals("")) {
+                        String[] strings = value.split(":");
+                        TypeTable table = new TypeTable();
+                        QName qName = table.getQNamefortheType(strings[1]);
+                        return createParam(omElement, qName, engine);
+                    }
+                }
                 return omElement.getText();
             } else {
                 return Undefined.instance;
@@ -1117,6 +1090,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         String className = jsObject.getClass().getName();
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace namespace = fac.createOMNamespace("http://www.wso2.org/ns/jstype", "js");
+        OMNamespace xsiNamespace = fac.createOMNamespace("http://www.w3.org/2001/XMLSchema-instance", "xsi");
+        OMNamespace xsNamespace = fac.createOMNamespace("http://www.w3.org/2001/XMLSchema", "xs");
         OMElement element = fac.createOMElement(elementName, null);
         // Get the OMNode inside the jsObjecting object
         if (jsObject instanceof XML) {
@@ -1147,12 +1122,16 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 element.setText((String) jsObject);
                 if (addTypeInfo) {
                     element.addAttribute("type", "string", namespace);
+                    element.declareNamespace(xsNamespace);
+                    element.addAttribute("type", "xs:string", xsiNamespace);
                 }
             } else if (jsObject instanceof Boolean) {
                 Boolean booljsObject = (Boolean) jsObject;
                 element.setText(booljsObject.toString());
                 if (addTypeInfo) {
                     element.addAttribute("type", "boolean", namespace);
+                    element.declareNamespace(xsNamespace);
+                    element.addAttribute("type", "xs:boolean", xsiNamespace);
                 }
             } else if (jsObject instanceof Number) {
                 Number numjsObject = (Number) jsObject;
@@ -1163,6 +1142,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 element.setText(str);
                 if (addTypeInfo) {
                     element.addAttribute("type", "number", namespace);
+                    element.addAttribute("type", "xs:double", xsiNamespace);
+                    element.declareNamespace(xsNamespace);
                 }
             } else
             if (jsObject instanceof Date || "org.mozilla.javascript.NativeDate".equals(className)) {
@@ -1174,6 +1155,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 element.setText(dateTime);
                 if (addTypeInfo) {
                     element.addAttribute("type", "date", namespace);
+                    element.addAttribute("type", "xs:dateTime", xsiNamespace);
+                    element.declareNamespace(xsNamespace);
                 }
             } else if (jsObject instanceof NativeArray) {
                 element.addAttribute("type", "array", namespace);
