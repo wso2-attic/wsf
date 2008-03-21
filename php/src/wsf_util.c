@@ -436,7 +436,8 @@ wsf_php_req_info_init (wsf_req_info_t *req_info)
     req_info = emalloc (sizeof (wsf_req_info_t));
     */
     req_info->svr_name = NULL;
-    req_info->svr_port = -1;
+	/** default port is 80 */
+    req_info->svr_port = 80;
     req_info->http_protocol = NULL;
     req_info->content_encoding = NULL;
     req_info->soap_action = NULL;

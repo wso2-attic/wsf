@@ -1097,10 +1097,16 @@ static void generate_wsdl_for_service(zval *svc_zval,
         }
         else{
             service_name = svc_info->svc_name;
-                
+			
             if(!in_cmd){
-                smart_str_appends(&full_path, req_info->svr_name);
-                smart_str_appends(&full_path, req_info->request_uri);
+				
+				smart_str_appends(&full_path, req_info->svr_name);
+				if(req_info->svr_port != 80){
+					char svr_port[10];				
+					sprintf(svr_port, ":%d", req_info->svr_port);
+					smart_str_appends(&full_path, svr_port);
+				}
+				smart_str_appends(&full_path, req_info->request_uri);
                 smart_str_0 (&full_path);
             }else{
                 smart_str_appends(&full_path, SG(request_info).path_translated); 

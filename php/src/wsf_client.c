@@ -636,7 +636,7 @@ wsf_client_set_module_param_option (
             module_option_value));
 
     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-        "[wsf_client setting %s module param %s to %s ", module_name,
+        "[wsf_client] setting %s module param %s to %s ", module_name,
         module_option, module_option_value);
     axutil_qname_free (module_qname, env);
     return AXIS2_SUCCESS;
@@ -686,9 +686,13 @@ wsf_client_set_headers (
 							"[wsf_client] adding header block to svc_client");
 						axis2_svc_client_add_header (svc_client, env, header_node);
 						}
-					}
+				}else{
+					php_error_docref (NULL TSRMLS_CC, E_ERROR,
+            "Only WSHeader type objects are accepted");
+
+				}
                     zend_hash_move_forward_ex (ht, &pos);
-			}
+				}
             }
         }
     }
@@ -1005,7 +1009,7 @@ wsf_client_do_request (
         zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C),
             1 TSRMLS_CC, "request payload should not be null");
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "request payload node is null");
+            "[wsf client] request payload node is null");
     }
 
     client_options =
@@ -1375,7 +1379,7 @@ wsf_client_enable_ssl (
         passphrase_prop);
 
     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-        "[wsf-client] setting ssl options %s -- %s -- %s ",
+        "[wsf-client] setting SSL options %s -- %s -- %s ",
         ssl_server_key_filename, ssl_client_key_filename, passphrase);
 }
 
