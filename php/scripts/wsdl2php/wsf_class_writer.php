@@ -24,6 +24,8 @@ $written_classes = array ();
 // array to hold information on operations to help generate demo code 
 $operations = array ();
 
+$actions = NULL;
+
 /**
  * Function to write sub classes.  
  * $nodes array of nodes corresponding to the classes to be written
@@ -91,6 +93,7 @@ function wsf_wsdl2php($wsdl_location) {
 
 	global $written_classes;
 	global $operations;
+	global $actions;
 
 	$code = "";
 
@@ -136,6 +139,7 @@ function wsf_wsdl2php($wsdl_location) {
 		return NULL;
 	}
 
+
 	// get the list of operations
 	$op_nodes = $sig_model_dom->getElementsByTagName(WSF_OPERATION);
 
@@ -154,7 +158,7 @@ function wsf_wsdl2php($wsdl_location) {
 
 		// get the nodes describing operation characteristics 
 		$op_child_list = $op_node->childNodes;
-
+    
 		foreach ($op_child_list as $op_child) {
 			// process the signature node
 			if ($op_child->localName == WSF_SIGNATURE) {
@@ -279,9 +283,27 @@ function wsf_wsdl2php($wsdl_location) {
 					}
 				}
 			}
+            else if($op_child->localName == WSF_BINDING_DETAILS) {
+                /* action is default to wsa waction */
+                $action = $op_child->getAttribute('wsawaction'); 
+                if($action == NULL)
+                {
+                    $action = $op_child->getAttribute('soapaction');
+                }
+
+                if($action != NULL)
+                {
+                    /* we feeding the actions to the global variable */
+                    if($actions == NULL)
+                    {
+                        $actions = array();
+                    }
+                
+                    $actions[$action] = $op_name;
+                }
+            }
 		}
 	}
-
 	return $code;
 }
 ?>

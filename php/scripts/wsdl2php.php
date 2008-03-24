@@ -27,6 +27,9 @@ global $written_classes;
 // array to hold information on operations to help generate demo code 
 global $operations;
 
+// array to hold information on actions..
+global $actions;
+
 // start of main logic
 
 $args = array();
@@ -57,7 +60,7 @@ if ($args['d']) { // -d used for debug; print sig model
 
 // call function to convert from WSDL to PHP
 $class_code = wsf_wsdl2php($wsdl_location);
- 
+
 if ($class_code == NULL )
 	return; 
 
@@ -102,15 +105,34 @@ if ($args['s']) {
 	foreach ($operations as $op_name => $value) {
 		$op_params_map = $op_params_map . " \"" . $op_name . "\" => \"" . "MIXED" . "\",";
 	}
-	
 	$op_params_map = substr_replace($op_params_map, "", -1);
 	echo $op_params_map;
 	echo ");\n\n";
+
+    if($actions != NULL)
+    {
+     
+        echo "// define the actions => operations map\n";
+        echo "\$actions = array(\n";
+        $actions_map_str = "";
+        foreach ($actions as $action => $op_name) {
+            $actions_map_str = $actions_map_str . " \"" . $action . "\" => \"" . $op_name."\",";
+        }
+        $actions_map_str = substr_replace($actions_map_str, "", -1);
+        echo $actions_map_str;
+        echo ");\n\n";   
+    }
+	
 	
 	echo "// create service in WSDL mode\n";
 	echo "\$service = new WSService(array (\"wsdl\" =>\"$wsdl_location\",\n";
 	echo "        \"operations\" => \$operations,\n";
 	echo "        \"opParams\" => \$opParams,\n";
+    if($actions != NULL)
+    {
+        echo 
+        "        \"actions\" => \$actions,\n";
+    }
 	echo "        \"classmap\" => \$class_map));\n\n";
      
     echo "// process client requests and reply \n";
