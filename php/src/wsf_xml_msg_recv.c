@@ -609,6 +609,14 @@ wsf_xml_msg_recv_invoke_mixed (
                              "[wsf_wsdl]return payload string is\t %s", res_payload_str);
             
         }
+
+        if (EG(exception) && Z_TYPE_P(EG(exception)) == IS_OBJECT &&
+           instanceof_function(Z_OBJCE_P(EG(exception)), ws_fault_class_entry TSRMLS_CC)) {
+               wsf_xml_msg_recv_set_soap_fault (env, in_msg_ctx, out_msg_ctx,
+                    EG(exception) TSRMLS_CC);
+              zend_clear_exception(TSRMLS_C);
+
+        }
     }
     
     if(!res_payload_str)
