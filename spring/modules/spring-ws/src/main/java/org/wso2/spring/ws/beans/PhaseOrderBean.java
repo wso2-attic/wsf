@@ -23,17 +23,16 @@ import org.apache.axis2.deployment.DeploymentException;
 import org.apache.axis2.deployment.util.PhasesInfo;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.engine.Phase;
+import org.wso2.spring.ws.axis2.SpringAxisConstants;
 
-// Replaces the Phase Order property of the configuration .xml files
+/**
+ * The Phase Order Bean replaces the Phase Order
+ * property of the configuration .xml files 
+ */
 
 public class PhaseOrderBean implements Axis2Bean {
 	
 	// types of phase orders
-	private final String TAG_FLOW_IN = "InFlow";
-	private final String TAG_FLOW_IN_FAULT = "InFaultFlow";
-	private final String TAG_FLOW_OUT = "OutFlow";
-	private final String TAG_FLOW_OUT_FAULT = "OutFaultFlow";
-	
 	
 	private ArrayList<PhaseBean> phases;
 	private String phaseOrderType;
@@ -69,13 +68,13 @@ public class PhaseOrderBean implements Axis2Bean {
 		Iterator it = getPhases().iterator();
 		
 
-		if (TAG_FLOW_IN.equals(flowType)) {
+		if (SpringAxisConstants.TAG_FLOW_IN.equals(flowType)) {
 			info.setINPhases(processPhases(it, axisConfig));
-		} else if (TAG_FLOW_IN_FAULT.equals(flowType)) {
+		} else if (SpringAxisConstants.TAG_FLOW_IN_FAULT.equals(flowType)) {
 			info.setIN_FaultPhases(processPhases(it, axisConfig));
-		} else if (TAG_FLOW_OUT.equals(flowType)) {
+		} else if (SpringAxisConstants.TAG_FLOW_OUT.equals(flowType)) {
 			info.setOUTPhases(processPhases(it, axisConfig));
-		} else if (TAG_FLOW_OUT_FAULT.equals(flowType)) {
+		} else if (SpringAxisConstants.TAG_FLOW_OUT_FAULT.equals(flowType)) {
 			info.setOUT_FaultPhases(processPhases(it, axisConfig));
 		}
 

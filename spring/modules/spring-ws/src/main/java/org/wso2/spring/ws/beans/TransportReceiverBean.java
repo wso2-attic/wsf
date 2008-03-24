@@ -26,7 +26,10 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.transport.TransportListener;
 import org.apache.axis2.util.Loader;
 
-//Replaces the Transport Receiver property of the configuration .xml files
+/**
+ * The Transport Receiver Bean replaces the Transport 
+ * Receiver property of the configuration .xml files 
+ */
 
 public class TransportReceiverBean extends AbstractTransportBean {
 	

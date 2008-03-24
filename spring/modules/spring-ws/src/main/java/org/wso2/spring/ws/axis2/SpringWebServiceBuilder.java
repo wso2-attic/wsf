@@ -54,10 +54,12 @@ import org.wso2.spring.ws.beans.MessageReceiverBean;
 import org.wso2.spring.ws.beans.OperationBean;
 
 
+/**
+ * Spring Web Service Builder populates the Axis Service with data
+ * from the Spring Web Service, generates WSDL, etc.
+ */
+
 public class SpringWebServiceBuilder {
-	
-	String TAG_OBJECT_SUPPLIER = "ObjectSupplier";
-	final static String OPERATION_NAME = "operationName";
 	
 	private AxisService service;
 	private ConfigurationContext configCtx;
@@ -66,16 +68,21 @@ public class SpringWebServiceBuilder {
 	public SpringWebServiceBuilder(AxisConfiguration axisConfig, AxisService service) {
         this.service = service;
         this.axisConfig = axisConfig;
-		// TODO Auto-generated constructor stub
 	}
 	
 	public SpringWebServiceBuilder(ConfigurationContext configCtx, AxisService service) {
         this.service = service;
         this.configCtx = configCtx;
         this.axisConfig = this.configCtx.getAxisConfiguration();
-		// TODO Auto-generated constructor stub
 	}
 	
+	/**
+	 * Populates the Axis Service with data from the Spring Web Service
+	 * 
+	 * @param springService
+	 * @return AxisService
+	 * @throws DeploymentException
+	 */
 	public AxisService populateService(SpringWebService springService) throws DeploymentException {
 		try {
 			// process name
@@ -146,7 +153,7 @@ public class SpringWebServiceBuilder {
             }
             
 			// Load object supplier
-			String objectSupplierValue = (String) service.getParameterValue(TAG_OBJECT_SUPPLIER);
+			String objectSupplierValue = (String) service.getParameterValue(SpringAxisConstants.TAG_OBJECT_SUPPLIER);
 			if (objectSupplierValue != null) {
 			    loadObjectSupplierClass(objectSupplierValue);
 			}
@@ -284,7 +291,7 @@ public class SpringWebServiceBuilder {
     }
 	
 		
-	public void processMessageReceivers(ClassLoader loader,
+	private void processMessageReceivers(ClassLoader loader,
 			MessageReceiverBean receiverBean) throws DeploymentException {
 		
 			MessageReceiver receiver = loadMessageReceiver(loader, receiverBean);
@@ -292,7 +299,7 @@ public class SpringWebServiceBuilder {
 		
 	}
 	
-	public MessageReceiver loadMessageReceiver(ClassLoader loader,
+	private MessageReceiver loadMessageReceiver(ClassLoader loader,
 			MessageReceiverBean receiverBean) throws DeploymentException {
 		
 		String className = receiverBean.getClazz();
@@ -322,7 +329,7 @@ public class SpringWebServiceBuilder {
 		return receiver;
 	}
 	
-	public void processParameters(Map parameterMap, ParameterInclude service,
+	private void processParameters(Map parameterMap, ParameterInclude service,
             ParameterInclude parent) throws DeploymentException {
 		Iterator it = parameterMap.keySet().iterator();
 
@@ -367,7 +374,7 @@ public class SpringWebServiceBuilder {
 	}
 	
 	
-	public static void fillAxisService(AxisService axisService,
+	private static void fillAxisService(AxisService axisService,
             AxisConfiguration axisConfig,
             ArrayList excludeOperations,
             ArrayList nonRpcMethods) throws Exception {
@@ -474,11 +481,11 @@ public class SpringWebServiceBuilder {
         }
 	}
 	
-	public static String getSimpleName(JMethod method) {
+	private static String getSimpleName(JMethod method) {
         JAnnotation methodAnnon = method.getAnnotation(AnnotationConstants.WEB_METHOD);
         if (methodAnnon != null) {
-            if (methodAnnon.getValue(OPERATION_NAME) !=null) {
-                return methodAnnon.getValue(OPERATION_NAME).asString();
+            if (methodAnnon.getValue(SpringAxisConstants.OPERATION_NAME) !=null) {
+                return methodAnnon.getValue(SpringAxisConstants.OPERATION_NAME).asString();
             }
         }
         return method.getSimpleName();

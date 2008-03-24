@@ -21,7 +21,10 @@ import java.util.Map;
 
 import org.apache.axis2.AxisFault;
 
-// implements common parameters both to the transport receiver and the transport sender
+/**
+ * The AbstractTransportBean implements parameters common to both
+ * the transport receiver and the transport sender
+ */
 
 public abstract class AbstractTransportBean implements Axis2Bean {
 	

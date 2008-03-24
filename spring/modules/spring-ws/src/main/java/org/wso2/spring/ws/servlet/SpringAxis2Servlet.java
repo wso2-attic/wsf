@@ -39,6 +39,10 @@ import org.wso2.spring.ws.axis2.SpringWebServiceBuilder;
 import org.wso2.spring.ws.beans.MessageReceiverBean;
 import org.wso2.spring.ws.util.Utils;
 
+/**
+ * The Spring Axis2 Servlet integrates Axis2 capabilities into 
+ * the Spring framework
+ */
 public class SpringAxis2Servlet extends AxisServlet {
 
     private AxisService axisService;
@@ -99,7 +103,7 @@ public class SpringAxis2Servlet extends AxisServlet {
     
     // populate Spring Web Service bean with parameters common to POJOs
     
-    public SpringWebService populateCommonParameters(SpringWebService springService, String clazz) {
+    private SpringWebService populateCommonParameters(SpringWebService springService, String clazz) {
     	ArrayList<MessageReceiverBean> msgReceivers = springService.getMessageReceivers();
     	
     	// populate common message receivers 

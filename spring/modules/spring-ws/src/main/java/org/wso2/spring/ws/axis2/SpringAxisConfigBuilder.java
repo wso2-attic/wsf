@@ -24,21 +24,27 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.wso2.spring.ws.SpringAxisConfiguration;
 import org.wso2.spring.ws.beans.Axis2Bean;
 
+/**
+ * Ths SpringAxisConfigBuilder populates 
+ * the axis configuration with bean properties
+ */
+
 public class SpringAxisConfigBuilder {
-// populate axis configuration with bean properties
 	
 	private SpringAxisConfiguration springConfig = null;
 	
+	
 	public SpringAxisConfigBuilder(SpringAxisConfiguration springConfig) {
-		// TODO Auto-generated constructor stub
 		this.springConfig = springConfig;
 	}
 	
 	
+	/**
+	 * Populates configuration with parameters, receivers, formatters, etc
+	 * @param axisConfig
+	 * @throws AxisFault
+	 */
 	public void populateConfig(AxisConfiguration axisConfig) throws AxisFault {
-		// TODO Auto-generated method stub
-		
-		// populate configuration with parameters, receivers, formatters, etc
 		
 		populateConfigWithLists(springConfig.getParameters(), axisConfig);
 		populateConfigWithLists(springConfig.getMessageReceivers(), axisConfig);
@@ -59,8 +65,12 @@ public class SpringAxisConfigBuilder {
 	}
 	
 	
-	// populate axis configuration with values from various property lists
-	
+	/**
+	 * Populates axis configuration with values from various property lists
+	 * @param list
+	 * @param axisConfig
+	 * @throws AxisFault
+	 */
 	private void populateConfigWithLists(ArrayList list, AxisConfiguration axisConfig) throws AxisFault{
 		Iterator it = list.iterator();
 		

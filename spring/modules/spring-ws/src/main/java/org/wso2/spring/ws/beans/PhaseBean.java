@@ -25,7 +25,10 @@ import org.apache.axis2.engine.Phase;
 import org.apache.axis2.i18n.Messages;
 import org.apache.axis2.util.Loader;
 
-// Replaces the Phase property of the configuration .xml files
+/**
+ * The Phase Bean replaces the Phase property 
+ * of the configuration .xml files 
+ */
 
 public class PhaseBean {
 

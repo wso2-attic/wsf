@@ -19,6 +19,11 @@ package org.wso2.spring.ws;
 import java.util.ArrayList;
 
 
+/**
+ * The Web Services bean holds the Spring Web Services
+ * in an ArrayList
+ *
+ */
 public class WebServices {
 	
 	private ArrayList<SpringWebService> services;

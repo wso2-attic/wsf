@@ -22,19 +22,12 @@ import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.engine.AxisConfiguration;
 
-// Replaces the Parameter property of the configuration .xml files
-
+/**
+ * The Parameter bean replaces the Parameter 
+ * property of the configuration .xml files
+ */
 public class ParameterBean implements Axis2Bean {
 
-//	private Map parameters = new HashMap();
-//	
-//	public Map getParameters() {
-//		return parameters;
-//	}
-//
-//	public void setParameters(Map parameters) throws AxisFault {
-//		this.parameters = parameters;
-//	}
 	private boolean locked;
 	private String name;
 	private String value;

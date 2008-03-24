@@ -26,7 +26,10 @@ import org.apache.axis2.engine.Phase;
 import org.apache.axis2.i18n.Messages;
 import org.apache.axis2.phaseresolver.PhaseException;
 
-// Replaces the Handler property of the configuration .xml files
+/**
+ * The Handler Bean replaces the Handler property
+ *  of the configuration .xml files
+ */
 
 public class HandlerBean {
 	

@@ -23,9 +23,10 @@ import org.apache.axis2.i18n.Messages;
 import org.apache.axis2.transport.MessageFormatter;
 import org.apache.axis2.util.Loader;
 
-// Replaces the message formatter property of the configuration .xml files
-
-
+/**
+ * The Message Formatter Bean replaces the message 
+ * formatter property of the configuration .xml files
+ */
 public class MessageFormatterBean implements Axis2Bean{
 	
 	private String contentType;

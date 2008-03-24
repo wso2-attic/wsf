@@ -23,8 +23,12 @@ import org.apache.axis2.engine.MessageReceiver;
 import org.apache.axis2.i18n.Messages;
 import org.apache.axis2.util.Loader;
 
-// Replaces the message receiver property of the configuration .xml files
+// 
 
+/**
+ * The Message Receiver Bean replaces the message 
+ * receiver property of the configuration .xml files
+ */
 public class MessageReceiverBean implements Axis2Bean {
 	
 	private String mep;

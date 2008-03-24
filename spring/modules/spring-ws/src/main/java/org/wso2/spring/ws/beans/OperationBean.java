@@ -16,6 +16,10 @@
 
 package org.wso2.spring.ws.beans;
 
+/**
+ * The operation bean replaces the operations property
+ * in the .xml configuration files. 
+ */
 public class OperationBean {
     private String name;
     //TODO: Implement other attributes

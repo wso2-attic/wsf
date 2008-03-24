@@ -21,9 +21,14 @@ import java.util.ArrayList;
 import org.wso2.spring.ws.beans.ParameterBean;
 import org.wso2.spring.ws.beans.PhaseOrderBean;
 
-// Spring Axis configuration replaces the axis2.xml making it possible to represent the configuration information with a Spring bean
 
 
+/**
+ * Spring Axis configuration replaces the axis2.xml making it 
+ * possible to represent the configuration information 
+ * with a Spring bean 
+ *
+ */
 public class SpringAxisConfiguration{
 	
 	// Axis2 options available to be configured

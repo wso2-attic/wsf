@@ -23,7 +23,10 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.i18n.Messages;
 import org.apache.axis2.util.Loader;
 
-// Replaces the message builder property of the configuration .xml files
+/**
+ * The Message Builder Bean replaces the message 
+ * builder property of the configuration .xml files
+ */
 
 public class MessageBuilderBean implements Axis2Bean {
 
@@ -39,8 +42,7 @@ public class MessageBuilderBean implements Axis2Bean {
         String className = getClazz();
         
         try {
-        	builderClass = Loader.loadClass(getClazz());//findAndValidateSelectorClass(className,
-			                   //                             DeploymentErrorMsgs.ERROR_LOADING_MESSAGE_BUILDER);
+        	builderClass = Loader.loadClass(getClazz());
 			builderObject = (Builder) builderClass.newInstance();
         } catch (ClassNotFoundException e) {
             throw new DeploymentException(Messages.getMessage(

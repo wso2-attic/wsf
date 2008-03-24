@@ -22,9 +22,12 @@ import java.util.Map;
 import org.wso2.spring.ws.beans.MessageReceiverBean;
 import org.wso2.spring.ws.beans.OperationBean;
 
-// Spring Web Service is a bean to hold information in place of the services.xml of an Axis 2 service
 
-
+/**
+ * Spring Web Service is a bean to hold information
+ *  in place of the services.xml of an Axis 2 service
+ *
+ */
 public class SpringWebService {
 	
 	// variables to represent options available to a Axis 2 Web Service

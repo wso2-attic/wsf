@@ -16,10 +16,6 @@
 
 package org.wso2.spring.ws.axis2;
 
-import java.io.File;
-import java.util.Iterator;
-import java.util.Map;
-
 import javax.servlet.ServletConfig;
 
 import org.apache.axis2.AxisFault;
@@ -30,7 +26,6 @@ import org.apache.axis2.builder.MTOMBuilder;
 import org.apache.axis2.builder.SOAPBuilder;
 import org.apache.axis2.builder.XFormURLEncodedBuilder;
 import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.deployment.DeploymentConstants;
 import org.apache.axis2.deployment.DeploymentEngine;
 import org.apache.axis2.deployment.DeploymentException;
 import org.apache.axis2.deployment.ModuleDeployer;
@@ -38,19 +33,23 @@ import org.apache.axis2.description.Parameter;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.engine.AxisConfigurator;
 import org.apache.axis2.transport.http.HTTPConstants;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.spring.ws.SpringAxisConfiguration;
-import org.wso2.spring.ws.beans.Axis2Bean;
 
+/**
+ * Axis Configurator for WSF/Spring
+ */
 public class SpringBeanSystemConfigurator extends DeploymentEngine implements
 		AxisConfigurator {
+	
+	private static final Log log = LogFactory.getLog(SpringBeanSystemConfigurator.class);
 	
 	private SpringAxisConfiguration springConfig = null;
 	private String repoLocation = null;
 	private ServletConfig config;
 	
 	public SpringBeanSystemConfigurator(SpringAxisConfiguration springConfig, ServletConfig config) throws DeploymentException{
-		// TODO Auto-generated constructor stub
 		
 		this.springConfig = springConfig;
 		this.axisConfig = new AxisConfiguration();
@@ -68,14 +67,19 @@ public class SpringBeanSystemConfigurator extends DeploymentEngine implements
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see org.apache.axis2.engine.AxisConfigurator#engageGlobalModules()
+	 */
 	public void engageGlobalModules() throws AxisFault {
 		// TODO Auto-generated method stub
 		engageModules();
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see org.apache.axis2.engine.AxisConfigurator#getAxisConfiguration()
+	 */
 	public AxisConfiguration getAxisConfiguration() throws AxisFault {
-		// TODO Auto-generated method stub
 		
 		SpringAxisConfigBuilder builder = new SpringAxisConfigBuilder(springConfig);
 		// populate Axis Configuration with default values
@@ -93,6 +97,9 @@ public class SpringBeanSystemConfigurator extends DeploymentEngine implements
 		
 	}
 	
+	/**
+	 * @param axisConfig
+	 */
 	public void populateDefaultValues(AxisConfiguration axisConfig) {
 		axisConfig.addMessageBuilder("multipart/related", new MIMEBuilder());
         axisConfig.addMessageBuilder("application/soap+xml", new SOAPBuilder());
@@ -103,6 +110,9 @@ public class SpringBeanSystemConfigurator extends DeploymentEngine implements
                                      new XFormURLEncodedBuilder());
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.apache.axis2.deployment.DeploymentEngine#loadServices()
+	 */
 	@Override
 	public void loadServices() {
         if (!(repoLocation == null || "".equals(repoLocation))) {
@@ -110,12 +120,12 @@ public class SpringBeanSystemConfigurator extends DeploymentEngine implements
         }
     }
 	
+	/* (non-Javadoc)
+	 * @see org.apache.axis2.deployment.DeploymentEngine#setConfigContext(org.apache.axis2.context.ConfigurationContext)
+	 */
 	public void setConfigContext(ConfigurationContext configContext) {
         super.setConfigContext(configContext);
 
-        // setting ServletContext into configctx
-        configContext.setProperty(HTTPConstants.MC_HTTP_SERVLETCONTEXT,
-                                  config.getServletContext());
         // setting ServletContext into configctx
         configContext.setProperty(HTTPConstants.MC_HTTP_SERVLETCONTEXT,
                                   config.getServletContext());
@@ -125,8 +135,7 @@ public class SpringBeanSystemConfigurator extends DeploymentEngine implements
         try {
             configContext.getAxisConfiguration().addParameter(servletConfigParam);
         } catch (AxisFault axisFault) {
-            System.out.println(axisFault.getMessage());
-        	//log.error(axisFault.getMessage(), axisFault);
+        	log.error(axisFault.getMessage(), axisFault);
         }
     }
 

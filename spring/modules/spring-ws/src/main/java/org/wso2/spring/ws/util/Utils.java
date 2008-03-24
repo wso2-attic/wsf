@@ -25,23 +25,39 @@ import org.springframework.context.ApplicationContext;
 import org.wso2.spring.ws.SpringAxisConfiguration;
 import org.wso2.spring.ws.WebServices;
 
+/**
+ * The Utils class holds utility methods used in WSF/Spring
+ */
+
 public class Utils {
 	
-	// returns Spring axis configuration bean from an application context
-	
+	/**
+	 * Returns the Spring Axis Configuration bean from an application context
+	 * @param appCtx
+	 * @return Spring Axis Configuration
+	 * @throws ServletException
+	 */
 	public static SpringAxisConfiguration getAxisConfigfromAppContext(ApplicationContext appCtx) throws ServletException{
 		return (SpringAxisConfiguration) getBeanfromAppContext(appCtx, SpringAxisConfiguration.class);
 	}
 	
-	// returns Spring services bean from an application context
-	
+	/**
+	 * Returns Spring services bean from an application context
+	 * @param appCtx
+	 * @return Web Services
+	 * @throws ServletException
+	 */
 	public static WebServices getServicesfromAppContext(ApplicationContext appCtx) throws ServletException{
 		return (WebServices) getBeanfromAppContext(appCtx, WebServices.class);
 	}
 
-	
-	// returns required bean from an application context
-	
+	/**
+	 * Returns required bean from an application context
+	 * @param appCtx
+	 * @param clazz
+	 * @return Bean Class
+	 * @throws ServletException
+	 */
 	protected static Object getBeanfromAppContext(ApplicationContext appCtx, Class clazz) throws ServletException{
 		
 		Map configMap = appCtx.getBeansOfType(clazz);

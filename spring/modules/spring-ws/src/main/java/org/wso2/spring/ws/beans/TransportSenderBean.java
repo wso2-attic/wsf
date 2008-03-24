@@ -26,7 +26,10 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.transport.TransportSender;
 import org.apache.axis2.util.Loader;
 
-//Replaces the Transport Sender property of the configuration .xml files
+/**
+ * The Transport Sender Bean replaces the Transport 
+ * Sender property of the configuration .xml files 
+ */
 
 public class TransportSenderBean extends AbstractTransportBean {
 	
