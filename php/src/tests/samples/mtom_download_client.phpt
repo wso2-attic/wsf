@@ -17,8 +17,6 @@ try {
     $reqMessage = new WSMessage($reqPayloadString);					
     $resMessage = $client->request($reqMessage);
     
-    printf("Response = %s \n", $resMessage->str);
-
     $cid2stringMap = $resMessage->attachments;
     $cid2contentMap = $resMessage->cid2contentType;
     $imageName;
@@ -29,6 +27,7 @@ try {
 	        if(strcmp($contentType,"image/jpeg") ==0){
       	      $imageName = $i."."."jpg";
 	            file_put_contents("C:/Apache2.2/htdocs/".$imageName, $f);
+				print("Image Saved");
       	  }
 	    }
 	}else{
@@ -45,6 +44,4 @@ try {
 }
 ?>
 --EXPECT--
-$strlen(Response = <ns1:download xmlns:ns1="http://php.axis2.org/samples/mtom">
-            <ns1:fileName>test.jpg</ns1:fileName>
-                <ns1:image xmlmime:contentType="image/jpeg" xmlns:xmlmime="http://www.w3.org/2004/06/xmlmime">)
+Image Saved
