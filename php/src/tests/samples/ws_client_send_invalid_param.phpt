@@ -31,6 +31,6 @@ try {
 }
 ?>
 --EXPECT--
-Response = <ns1:echo xmlns:ns1="http://php.axis2.org/samples">
-		<text>Hello World!</text>
-	</ns1:echo>
+Warning: WSClient::send() expects exactly 1 parameter, 0 given in C:\wsfphp\src\tests\samples\ws_client_send_invalid_param.php on line 16
+
+Fatal error: WSClient::send(): Invalid parameters in C:\wsfphp\src\tests\samples\ws_client_send_invalid_param.php on line 16
