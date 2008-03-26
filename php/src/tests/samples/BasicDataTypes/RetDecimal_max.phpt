@@ -5,7 +5,7 @@ inDecimal_max(79228162514264337593543950335)
 
 try {
 
-    $wsdl = file_get_contents('wsdlDoclitB.txt');
+   $wsdl = file_get_contents('config/SimpleDataTypesWsdlDoclitB.txt');
 
     $client = new WSClient(array("wsdl" => $wsdl));
     

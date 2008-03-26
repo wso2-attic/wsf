@@ -5,7 +5,7 @@ RetString_LF("LF:Hello_LF_World")
 
 try {
 
-    $wsdl = file_get_contents('wsdlDoclitB.txt');
+   $wsdl = file_get_contents('config/SimpleDataTypesWsdlDoclitB.txt');
     $client = new WSClient(array("wsdl" => $wsdl));
     
     $proxy = $client->getProxy();

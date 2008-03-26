@@ -5,7 +5,7 @@ RetUri_mail("mailto:mailto:mduerst@ifi.unizh.ch");
 
 try {
 
-    $wsdl = file_get_contents('wsdlDoclitB.txt');
+   $wsdl = file_get_contents('config/SimpleDataTypesWsdlDoclitB.txt');
     $client = new WSClient(array("wsdl" => $wsdl));
     
     $proxy = $client->getProxy();

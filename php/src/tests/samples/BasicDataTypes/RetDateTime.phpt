@@ -5,7 +5,7 @@ RetDateTime(2005-12-12T12:00:00)
 
 try {
 
-    $wsdl = file_get_contents('wsdlDoclitB.txt');
+   $wsdl = file_get_contents('config/SimpleDataTypesWsdlDoclitB.txt');
 
     $client = new WSClient(array("wsdl" => $wsdl));
     

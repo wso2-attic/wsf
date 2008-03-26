@@ -5,7 +5,7 @@ inDecimal_minus_valid(-9223372036854775808)
 
 try {
 
-    $wsdl = file_get_contents('wsdlDoclitB.txt');
+   $wsdl = file_get_contents('config/SimpleDataTypesWsdlDoclitB.txt');
 
     $client = new WSClient(array("wsdl" => $wsdl));
     

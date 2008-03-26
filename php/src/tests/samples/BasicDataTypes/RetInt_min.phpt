@@ -5,7 +5,7 @@ RetInt_min(-2147483648)
 
 try {
 
-    $wsdl = file_get_contents('wsdlDoclitB.txt');
+   $wsdl = file_get_contents('config/SimpleDataTypesWsdlDoclitB.txt');
     $client = new WSClient(array("wsdl" => $wsdl));
     
     $proxy = $client->getProxy();
