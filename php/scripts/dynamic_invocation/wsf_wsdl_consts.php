@@ -26,7 +26,8 @@ define("WSF_METHOD", "method");
 define("WSF_INFERENCE", "inference");
 define("WSF_RPC", "rpc");
 define("WSF_ENDPOINT_URI", "endpoint_uri");
-define("WSF_BINDING_DETAILS", "binding-details");
+define("WSF_BINDING_DETAILS", "binding_details");
+define("WSF_W2P_BINDING_DETAILS", "binding-details");
 define("WSF_REQUEST_PAYLOAD", "request_payload");
 define("WSF_POLICY_NODE", "policy_node");
 

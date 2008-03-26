@@ -283,7 +283,7 @@ function wsf_wsdl2php($wsdl_location) {
 					}
 				}
 			}
-            else if($op_child->localName == WSF_BINDING_DETAILS) {
+            else if($op_child->localName == WSF_W2P_BINDING_DETAILS) {
                 /* action is default to wsa waction */
                 $action = $op_child->getAttribute('wsawaction'); 
                 if($action == NULL)
