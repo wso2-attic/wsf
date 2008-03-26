@@ -41,7 +41,7 @@ cd ../../../
 cd wso2-wsf-c-src-1.2.1
 cp -r axis2c/xdocs docs/axis2c
 cp -r ../axis2c/xdocs/api/html docs/axis2c/api
-cp -r savanc/xdocs docs/savanc
+cp -r savanc/docs docs/savanc
 cp -r ../savanc/xdocs/api/html docs/savanc/api
 cp -r sandesha2c/xdocs docs/sandesha2c
 cp -r ../sandesha2c/xdocs/api/html docs/sandesha2c/api
