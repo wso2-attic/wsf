@@ -1,0 +1,1 @@
+http://localhost/services/BasicTypesDoclitBSvc/BasicTypesDocLitB_Service.php?wsdl
