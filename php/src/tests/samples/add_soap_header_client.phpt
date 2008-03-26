@@ -23,12 +23,14 @@ try {
 
     $sentMsg = $client->getLastRequest();
     $recvMsg = $client->getLastResponse();        
-
+    
     echo "\nSent message \n";
     echo htmlspecialchars($sentMsg);
    
     echo "\n\n Received message \n";
     echo htmlspecialchars($recvMsg);
+    
+
 
 } catch (Exception $e) {
     if ($e instanceof WSFault) {

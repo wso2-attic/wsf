@@ -18,6 +18,6 @@ try {
 }
 ?>
 --EXPECT--
-Response = &lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;
-        &lt;text&gt;Hello World!&lt;/text&gt;
-    &lt;/ns1:echoString&gt; <br>
+Warning: WSClient::getProxy() expects parameter 1 to be string, array given in C:\wsfphp\src\tests\samples\ws_client_getProxy_invalid_param.php on line 7
+
+Fatal error: WSClient::getProxy(): Invalid Parameters,specify the service and port in C:\wsfphp\src\tests\samples\ws_client_getProxy_invalid_param.php on line 7

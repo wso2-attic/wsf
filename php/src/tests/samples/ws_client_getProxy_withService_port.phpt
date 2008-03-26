@@ -5,7 +5,7 @@ Test for ws_client_getProxy_withService_port sample
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"sample.wsdl"));
+    $client = new WSClient(array("wsdl"=>"misc_files/sample.wsdl"));
 
     $proxy = $client->getProxy("SampleEchoService","SampleEchoServicePort");	
 

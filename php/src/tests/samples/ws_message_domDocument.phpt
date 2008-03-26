@@ -3,28 +3,32 @@ Test for ws_message_domDocument sample
 --FILE--
 <?php
 
+
+include_once('wsf.php');
+
 $reqPayloadDomDoc = new DOMDocument();
-$xmlFile = 'tests/samples/misc_files/echo.xml';
+$xmlFile = 'misc_files/echo.xml';
 
 $reqPayloadDomDoc->load($xmlFile);
 
 try {
-
-    $client = new WSClient(
-        array("to"=>"http://localhost/samples/echo_service.php"));
-				
-    $resMessage = $client->request($reqPayloadDomDoc);
     
-    printf("Response = %s <br>", htmlspecialchars($resMessage->str));
+    $responseMessage = ws_request($reqPayloadDomDoc, 
+                        array("to" => "http://localhost/samples/reply_echo_service.php",
+						"action"=>"http://php.axis2.org/samples/echoString",
+              "faultTo"=>"http://php.axis2.org/samples/echoString",
+              "replyTo"=>"http://localhost/samples/echo_service.php",
+              "from"=>"http://localhost/samples/echo_service_addr.php"));
+    
+    printf("Response = %s <br>", htmlspecialchars($responseMessage->str));
 
 } catch (Exception $e) {
 
-	if ($e instanceof WSFault) {
-		printf("Soap Fault: %s\n", $e->code);
-	} else {
-		printf("Message = %s\n",$e->getMessage());
-	}
-
+    if ($e instanceof WSFault) {
+        printf("Soap Fault: %s\n", $e->Reason);
+    } else {
+        printf("Message = %s\n",$e->getMessage());
+    }
 }
 ?>
 --EXPECT--

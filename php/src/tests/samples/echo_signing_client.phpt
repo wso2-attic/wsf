@@ -13,7 +13,7 @@ try {
     $rec_cert = ws_get_cert_from_file("keys/bob_cert.cert");
     
     $reqMessage = new WSMessage($reqPayloadString,
-                                array("to"=>"http://localhost/samples/security/signing/service.php",
+                                array("to"=>"http://localhost:9090/axis2/services/sec_echo",
                                       "action" => "http://php.axis2.org/samples/echoString"));
     
     $sec_array = array("sign"=>TRUE,

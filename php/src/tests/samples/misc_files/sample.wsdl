@@ -129,7 +129,7 @@
         <port binding="tns:SampleEchoServicePortBinding" 
             name="SampleEchoServicePort">
             <soap:address 
-                location="http://localhost/samples/wsdl_mode/dynamic_echo_service.php"/>
+                location="http://localhost/samples/wsdl_mode/wsdl_11_service.php"/>
 		</port>
 	</service>
 </definitions>

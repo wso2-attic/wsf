@@ -10,7 +10,7 @@ XML;
 try {
 
     $client = new WSClient(
-        array("to"=>"http://localhost/samples/fault_service_role&detail.php"));
+        array("to"=>"http://localhost/services/fault_service_role&detail.php"));
 
 				
     $resMessage = $client->request($reqPayloadString);
