@@ -10,7 +10,7 @@ try {
 
     $client = new WSClient(
         array("to"=>"http://search.yahooapis.com/WebSearchService/V1/webSearch",
-	      "HTTPMethod"=>GET,
+	      "HTTPMethod"=>"GET",
 	      "useSOAP"=>FALSE));
 				
     $resMessage = $client->request($reqPayloadString);
