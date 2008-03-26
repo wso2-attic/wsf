@@ -13,15 +13,13 @@ $reqPayloadString = <<<XML
 XML;
 
 function sendFault($inMessage) {
-    
-    return new WSFault("Sender", "Testing WSFault", "Fault Role", "Fault Detail");
-    /*return new WSFault(array("operations" => $operations));*/
+    throw new WSFault("Sender", "Testing WSFault","Test1","Test2");
 }
 
 $operations = array("getFault" => "sendFault");
 
-$svr = new WSService(array("operations" => $operations));
+$service = new WSService(array("operations" => $operations));
         
-$svr->reply($reqPayloadString);
+$service->reply();
 
 ?>

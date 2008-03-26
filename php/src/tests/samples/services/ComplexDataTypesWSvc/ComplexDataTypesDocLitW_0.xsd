@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://tempuri.org/">
+  <xs:import schemaLocation="http://localhost/services/ComplexDataTypesWSvc/ComplexDataTypesDocLitW_2.xsd" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+  <xs:import schemaLocation="http://localhost/services/ComplexDataTypesWSvc/ComplexDataTypesDocLitW_3.xsd" namespace="http://schemas.datacontract.org/2004/07/System"/>
+  <xs:import schemaLocation="http://localhost/services/ComplexDataTypesWSvc/ComplexDataTypesDocLitW_4.xsd" namespace="http://schemas.datacontract.org/2004/07/XwsInterop.SoapWsdl.ComplexDataTypes.XmlFormatter.Service.Indigo"/>
+  <xs:element name="RetArrayString1D">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="inArrayString1D" nillable="true" type="q1:ArrayOfstring" xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetArrayString1DResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="RetArrayString1DResult" nillable="true" type="q2:ArrayOfstring" xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetArrayInt1D">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="inArrayInt1D" nillable="true" type="q3:ArrayOfint" xmlns:q3="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetArrayInt1DResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="RetArrayInt1DResult" nillable="true" type="q4:ArrayOfint" xmlns:q4="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetArrayDecimal1D">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="inArrayDecimal1D" nillable="true" type="q5:ArrayOfNullableOfdecimal" xmlns:q5="http://schemas.datacontract.org/2004/07/System"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetArrayDecimal1DResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="RetArrayDecimal1DResult" nillable="true" type="q6:ArrayOfNullableOfdecimal" xmlns:q6="http://schemas.datacontract.org/2004/07/System"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetArrayDateTime1D">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="inArrayDateTime1D" nillable="true" type="q7:ArrayOfNullableOfdateTime" xmlns:q7="http://schemas.datacontract.org/2004/07/System"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetArrayDateTime1DResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="RetArrayDateTime1DResult" nillable="true" type="q8:ArrayOfNullableOfdateTime" xmlns:q8="http://schemas.datacontract.org/2004/07/System"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetArrayString2D">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="inArrayString2D" nillable="true" type="q9:ArrayOfArrayOfstring" xmlns:q9="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetArrayString2DResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="RetArrayString2DResult" nillable="true" type="q10:ArrayOfArrayOfstring" xmlns:q10="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetArray1D_SN">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="inArray1D_SN" nillable="true" type="q11:ArrayOfPerson" xmlns:q11="http://schemas.datacontract.org/2004/07/XwsInterop.SoapWsdl.ComplexDataTypes.XmlFormatter.Service.Indigo"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetArray1D_SNResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="RetArray1D_SNResult" nillable="true" type="q12:ArrayOfPerson" xmlns:q12="http://schemas.datacontract.org/2004/07/XwsInterop.SoapWsdl.ComplexDataTypes.XmlFormatter.Service.Indigo"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetArrayAnyType1D">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="inArrayAnyType1D" nillable="true" type="q13:ArrayOfanyType" xmlns:q13="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetArrayAnyType1DResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="RetArrayAnyType1DResult" nillable="true" type="q14:ArrayOfanyType" xmlns:q14="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetStructS1">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="inStructS1" nillable="true" type="q15:Name" xmlns:q15="http://schemas.datacontract.org/2004/07/XwsInterop.SoapWsdl.ComplexDataTypes.XmlFormatter.Service.Indigo"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetStructS1Response">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="RetStructS1Result" nillable="true" type="q16:Name" xmlns:q16="http://schemas.datacontract.org/2004/07/XwsInterop.SoapWsdl.ComplexDataTypes.XmlFormatter.Service.Indigo"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetStructSN">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="inStructSN" nillable="true" type="q17:Person" xmlns:q17="http://schemas.datacontract.org/2004/07/XwsInterop.SoapWsdl.ComplexDataTypes.XmlFormatter.Service.Indigo"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetStructSNResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="RetStructSNResult" nillable="true" type="q18:Person" xmlns:q18="http://schemas.datacontract.org/2004/07/XwsInterop.SoapWsdl.ComplexDataTypes.XmlFormatter.Service.Indigo"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetStructSNSA">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="inStructSNSA" nillable="true" type="q19:Employee" xmlns:q19="http://schemas.datacontract.org/2004/07/XwsInterop.SoapWsdl.ComplexDataTypes.XmlFormatter.Service.Indigo"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetStructSNSAResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="RetStructSNSAResult" nillable="true" type="q20:Employee" xmlns:q20="http://schemas.datacontract.org/2004/07/XwsInterop.SoapWsdl.ComplexDataTypes.XmlFormatter.Service.Indigo"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetStructSNSAS">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="inStructSNSAS" nillable="true" type="q21:Group" xmlns:q21="http://schemas.datacontract.org/2004/07/XwsInterop.SoapWsdl.ComplexDataTypes.XmlFormatter.Service.Indigo"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetStructSNSASResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="RetStructSNSASResult" nillable="true" type="q22:Group" xmlns:q22="http://schemas.datacontract.org/2004/07/XwsInterop.SoapWsdl.ComplexDataTypes.XmlFormatter.Service.Indigo"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetEnumString">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="inEnumString" type="q23:BitMask" xmlns:q23="http://schemas.datacontract.org/2004/07/XwsInterop.SoapWsdl.ComplexDataTypes.XmlFormatter.Service.Indigo"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetEnumStringResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="RetEnumStringResult" type="q24:BitMask" xmlns:q24="http://schemas.datacontract.org/2004/07/XwsInterop.SoapWsdl.ComplexDataTypes.XmlFormatter.Service.Indigo"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetEnumInt">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="inEnumInt" type="q25:IntSet" xmlns:q25="http://schemas.datacontract.org/2004/07/XwsInterop.SoapWsdl.ComplexDataTypes.XmlFormatter.Service.Indigo"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetEnumIntResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="RetEnumIntResult" type="q26:IntSet" xmlns:q26="http://schemas.datacontract.org/2004/07/XwsInterop.SoapWsdl.ComplexDataTypes.XmlFormatter.Service.Indigo"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetDerivedClass">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="inDerivedClass" nillable="true" type="q27:Table" xmlns:q27="http://schemas.datacontract.org/2004/07/XwsInterop.SoapWsdl.ComplexDataTypes.XmlFormatter.Service.Indigo"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetDerivedClassResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="RetDerivedClassResult" nillable="true" type="q28:Table" xmlns:q28="http://schemas.datacontract.org/2004/07/XwsInterop.SoapWsdl.ComplexDataTypes.XmlFormatter.Service.Indigo"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
