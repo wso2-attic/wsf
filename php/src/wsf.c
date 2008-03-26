@@ -1103,7 +1103,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
 				smart_str_appends(&full_path, req_info->svr_name);
 				if(req_info->svr_port != 80){
 					char svr_port[10];				
-					sprintf(svr_port, ":%d", req_info->svr_port);
+					sprintf(svr_port, ":%ld", req_info->svr_port);
 					smart_str_appends(&full_path, svr_port);
 				}
 				smart_str_appends(&full_path, req_info->request_uri);
