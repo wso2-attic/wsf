@@ -19,5 +19,5 @@ try {
 ?>
 --EXPECT--
 Response = &lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;
-        &lt;text&gt;Hello World!&lt;/text&gt;
+        &lt;text&gt;Hello!&lt;/text&gt;
     &lt;/ns1:echoString&gt; <br>
