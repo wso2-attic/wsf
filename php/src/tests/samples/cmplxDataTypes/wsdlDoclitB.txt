@@ -1,1 +1,0 @@
-http://localhost/services/ComplexDataTypesBSvc/ComplexDataTypesDocLitB_Service.php?wsdl
