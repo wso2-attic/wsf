@@ -133,7 +133,7 @@ $class_map = array(
 
 try {
 
-    $wsdl = file_get_contents('wsdlDoclitB.txt');
+  $wsdl = file_get_contents('config/cmplxDataTypeWsdlDoclitB.txt');
     // create client in WSDL mode
     $client = new WSClient(array ("wsdl" =>$wsdl , "classmap" => $class_map));
 
