@@ -9,14 +9,13 @@ XML;
 try {
 
     $client = new WSClient(
-        array("to"=>"http://localhost/samples/echo_service.php",
-               "useSOAP"=>FALSE , "action"=>"http://localhost/samples/cho_service.php/echoString"));
+        array("to"=>"http://localhost/samples/echo_service.php/echoString",
+               "useSOAP"=>FALSE));
 
-				
     $resMessage = $client->request($reqPayloadString);
     
-    printf("Response = %s <br>", htmlspecialchars($resMessage->str));
-
+    echo $resMessage->str;
+    
 } catch (Exception $e) {
 
 	if ($e instanceof WSFault) {
@@ -28,4 +27,4 @@ try {
 }
 ?>
 --EXPECT--
-Response = &lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echoString&gt; <br>
+<ns1:echoString xmlns:ns1="http://php.axis2.org/samples"><text>Hello World!</text></ns1:echoString>
