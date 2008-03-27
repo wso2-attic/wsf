@@ -10,7 +10,7 @@ try {
 
     $client = new WSClient(
         array("to"=>"http://localhost/samples/echo_service.php",
-               "useSOAP"=>TRUE , "action"=>"http://localhost/samples/cho_service.php/echoString"));
+               "useSOAP"=>TRUE));
 
 				
     $resMessage = $client->request($reqPayloadString);
