@@ -5,7 +5,7 @@ inDecimal(90)
 
 try {
 
-   $wsdl = file_get_contents('config/SimpleDataTypesWsdlDoclitB.txt');
+   $wsdl = file_get_contents('samples/config/SimpleDataTypesWsdlDoclitB.txt');
 
     $client = new WSClient(array("wsdl" => $wsdl,
 	                             "to" => "http://localhost:9090/services/BasicTypesDoclitBSvc/BasicTypesDocLitB_Service.php"));

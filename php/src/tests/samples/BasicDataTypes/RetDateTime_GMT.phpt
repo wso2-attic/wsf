@@ -5,7 +5,7 @@ RetDateTime_GMT(2005-06-30T08:30:00-07:00)
 
 try {
 
-   $wsdl = file_get_contents('config/SimpleDataTypesWsdlDoclitB.txt');
+   $wsdl = file_get_contents('samples/config/SimpleDataTypesWsdlDoclitB.txt');
 
     $client = new WSClient(array("wsdl" => $wsdl));
     

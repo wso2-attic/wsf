@@ -5,7 +5,7 @@ RetSingle_valid(0.61803398874989484820458683)
 
 try {
 
-   $wsdl = file_get_contents('config/SimpleDataTypesWsdlDoclitB.txt');
+   $wsdl = file_get_contents('samples/config/SimpleDataTypesWsdlDoclitB.txt');
     $client = new WSClient(array("wsdl" => $wsdl));
     
     $proxy = $client->getProxy();
