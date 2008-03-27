@@ -135,7 +135,7 @@ try {
 
 
   
-    $wsdl = file_get_contents('config/cmplxDataTypeWsdlDoclitB.txt');
+    $wsdl = file_get_contents('samples/config/cmplxDataTypeWsdlDoclitB.txt');
     // create client in WSDL mode
     $client = new WSClient(array ("wsdl" =>$wsdl, "classmap" => $class_map));
 
