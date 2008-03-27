@@ -7,7 +7,7 @@ Test for ws_message_domDocument sample
 include_once('wsf.php');
 
 $reqPayloadDomDoc = new DOMDocument();
-$xmlFile = 'misc_files/echo.xml';
+$xmlFile = 'samples/misc_files/echo.xml';
 
 $reqPayloadDomDoc->load($xmlFile);
 
