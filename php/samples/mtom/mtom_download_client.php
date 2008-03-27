@@ -16,7 +16,7 @@
  */
 
 $requestPayloadString = <<<XML
-<download></download>
+<download xmlns="http://test.org"></download>
 XML;
 
 try {
