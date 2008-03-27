@@ -1,0 +1,1 @@
+swig -ruby -I./swig/ -o WSFC_wrapper.c -outdir ./ -Wall WSFC.i
