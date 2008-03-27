@@ -1,0 +1,13 @@
+Running tests
+
+1. Set TEST_PHP_EXECUTABLE variable to point to the php executable.
+2. Following command will execute the tests in the samples directory.
+
+php run-tests.php samples
+
+Using pear tool
+----------------
+To run the tests use command
+pear run-tests -r   {-r flag is for running the tests in directories as well.}
+
+
