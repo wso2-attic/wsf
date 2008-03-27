@@ -8,9 +8,9 @@ $reqPayloadString = <<<XML
 XML;
 
 try {
-    $my_cert = ws_get_cert_from_file("tests/samples/keys/alice_cert.cert");
-    $my_key = ws_get_key_from_file("tests/samples/keys/alice_key.pem");
-    $rec_cert = ws_get_cert_from_file("tests/samples/keys/bob_cert.cert");
+    $my_cert = ws_get_cert_from_file("keys/alice_cert.cert");
+    $my_key = ws_get_key_from_file("keys/alice_key.pem");
+    $rec_cert = ws_get_cert_from_file("keys/bob_cert.cert");
     
     $reqMessage = new WSMessage($reqPayloadString,
                                 array("to"=>"http://localhost/samples/security/signing/signing_service_Basic128.php",
@@ -45,6 +45,7 @@ try {
 ?>
 
 --EXPECT--
-Response = <ns1:echo xmlns:ns1="http://php.axis2.org/samples"><text>Hello World!</text></ns1:echo>
+Warning: WSPolicy::__construct() expects at least 1 parameter, 0 given in E:\wsfphp\src\tests\samples\ws_policy_construct_invalid_param.php on line 20
 
+Fatal error: WSPolicy::__construct(): Invalid parameters in E:\wsfphp\src\tests\samples\ws_policy_construct_invalid_param.php on line 20
 
