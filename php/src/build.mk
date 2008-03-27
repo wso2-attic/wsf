@@ -64,7 +64,7 @@ cleanint:
 clean: 
 	@if exist intdir rmdir /s /q intdir
 		
-dist: clean copy_sqlite wsfphp cleanint
+dist: clean wsfphp cleanint
 
 
 
