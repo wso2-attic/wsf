@@ -1426,7 +1426,6 @@ PHP_METHOD (ws_fault, __construct)
     if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC,
             "zs|s!z!s", &code, &sf_reason, &sf_reason_len, &sf_role,
             &sf_role_len, &details, &value, &value_len)) {
-
 				php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
 				AXIS2_LOG_ERROR(ws_env_svr->log, AXIS2_LOG_SI,
 					"[wsf fault]Invalid Paramters, Fault Code and Fault Reason values are mandatory");
@@ -1448,13 +1447,29 @@ PHP_METHOD (ws_fault, __construct)
             sf_code = Z_STRVAL_PP (tmp_code);
             sf_code_len = Z_STRLEN_PP (tmp_code);
         } else {
-			AXIS2_LOG_ERROR(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_fault] Invalid fault code.");
-			return;
+			php_error_docref (NULL TSRMLS_CC, E_ERROR, "Fault Code and Fault Code namespace must be strings");
+		
+			AXIS2_LOG_ERROR(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_fault] Fautl Code and ns must be strings.");
+		return;
         }
     } else {
+		php_error_docref (NULL TSRMLS_CC, E_ERROR, "Incorrect Fault Code");
+			
         AXIS2_LOG_ERROR(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_fault] Invalid fault code.");
 			return;
     }
+    if(!(strcmp(sf_code, "VersionMismatch") == 0 || 
+       strcmp(sf_code, "MustUnderstand") == 0 ||
+       strcmp(sf_code, "DataEncodingUnknown") == 0 ||
+       strcmp(sf_code, "Sender") == 0 ||
+	   strcmp(sf_code, "Client") == 0 ||
+	   strcmp(sf_code, "Server") == 0 ||
+       strcmp(sf_code, "Receiver") == 0)){
+	php_error_docref (NULL TSRMLS_CC, E_ERROR, 
+			"Incorrect Fault Code, Code must be one of Client, Server, VersionMismatch,MustUnderstand,DataEncodingUnknown,Sender, Receiver");
+    }
+
+
     if (!sf_code || !sf_reason){
         if (WSF_GLOBAL (soap_version) == AXIOM_SOAP11){
 			AXIS2_LOG_ERROR(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_fault] faultcode and faultstring are mandatory ");
