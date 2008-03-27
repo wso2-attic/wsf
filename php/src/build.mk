@@ -1,11 +1,13 @@
 AUTOCONF = .\..\configure.in
 !include $(AUTOCONF)
 
+WSFPHP_BIN_DIR=wso2-wsf-php-bin-$(WSFPHP_VERSION)-win32
+
 CFLAGS = /nologo /w /D "WIN32" /D "_WINDOWS" /D "PHP_WIN32" /D "COMPILE_DL_WSF" \
 	 /D "_USE_32BIT_TIME_T=1" /D "ZEND_WIN32" /D "ZEND_DEBUG=0" \
 	 /D "_MBCS" 
 
-LDFLAGS = /nologo /LIBPATH:.\..\wso2-wsf-php-bin-1.2.1-win32\wsf_c\lib /LIBPATH:$(PHP_BIN_DIR)\dev \
+LDFLAGS = /nologo /LIBPATH:.\..\$(WSFPHP_BIN_DIR)\wsf_c\lib /LIBPATH:$(PHP_BIN_DIR)\dev \
 	  /LIBPATH:$(LIBXML2_BIN_DIR)\lib
 
 LIBS = axutil.lib axis2_engine.lib axis2_parser.lib \
@@ -14,7 +16,7 @@ LIBS = axutil.lib axis2_engine.lib axis2_parser.lib \
 
 INCLUDE_PATH = /I$(PHP_SRC_DIR) /I$(PHP_SRC_DIR)\main /I$(PHP_SRC_DIR)\regex \
 	       /I$(PHP_SRC_DIR)\ext /I$(PHP_SRC_DIR)\sapi /I$(PHP_SRC_DIR)\Zend \
-	       /I$(PHP_SRC_DIR)\TSRM /I.\..\wso2-wsf-php-bin-1.2.1-win32\wsf_c\include \
+	       /I$(PHP_SRC_DIR)\TSRM /I.\..\$(WSFPHP_BIN_DIR)\wsf_c\include \
 	       /I$(LIBXML2_BIN_DIR)\include /I$(WIN32BUILD_DIR)\include \
 	       /I$(ICONV_BIN_DIR)\include 
 
@@ -49,23 +51,19 @@ wsf.dll :
 	@if not exist intdir mkdir intdir
 	@cl.exe $(CFLAGS) $(INCLUDE_PATH) $(WSFPHP_SRC) /Fointdir\ /c
 	@rc.exe /r /fo "intdir/wsf.res" wsf.rc
-	@link.exe $(LDFLAGS) intdir\*.obj intdir\wsf.res $(LIBS) /DLL  /OUT:.\..\wso2-wsf-php-bin-1.2.1-win32\wsf.dll
+	@link.exe $(LDFLAGS) intdir\*.obj intdir\wsf.res $(LIBS) /DLL  /OUT:.\..\$(WSFPHP_BIN_DIR)\wsf.dll
 
 wsfphp: wsf.dll
 
 cleanint:
-	@if exist .\..\wso2-wsf-php-bin-1.2.1-win32\wsf.lib del .\..\wso2-wsf-php-bin-1.2.1-win32\wsf.lib
-	@if exist .\..\wso2-wsf-php-bin-1.2.1-win32\wsf.ilk del .\..\wso2-wsf-php-bin-1.2.1-win32\wsf.ilk
-	@if exist .\..\wso2-wsf-php-bin-1.2.1-win32\wsf.exp del .\..\wso2-wsf-php-bin-1.2.1-win32\wsf.exp
+	@if exist .\..\$(WSFPHP_BIN_DIR)\wsf.lib del .\..\$(WSFPHP_BIN_DIR)\wsf.lib
+	@if exist .\..\$(WSFPHP_BIN_DIR)\wsf.ilk del .\..\$(WSFPHP_BIN_DIR)\wsf.ilk
+	@if exist .\..\$(WSFPHP_BIN_DIR)\wsf.exp del .\..\$(WSFPHP_BIN_DIR)\wsf.exp
 
 
 clean: 
 	@if exist intdir rmdir /s /q intdir
 		
-copy_sqlite:
-	@if exist $(SQLITE_BIN_DIR)\sqlite3.dll copy /Y  $(SQLITE_BIN_DIR)\sqlite3.dll .\..\wso2-wsf-php-bin-1.2.1-win32\wsf_c\lib
-	@if exist $(SQLITE_BIN_DIR)\sqlite3.exe copy /Y  $(SQLITE_BIN_DIR)\sqlite3.exe .\..\wso2-wsf-php-bin-1.2.1-win32\wsf_c\lib
-
 dist: clean copy_sqlite wsfphp cleanint
 
 
