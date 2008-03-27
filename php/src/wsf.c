@@ -1534,6 +1534,9 @@ PHP_METHOD (ws_header, __construct)
 		}
 		if(zend_hash_find(ht, WS_HEADER_LOCALNAME, sizeof(WS_HEADER_LOCALNAME), (void**)&tmp) == SUCCESS
 			&& Z_TYPE_PP(tmp) == IS_STRING){
+				if(Z_STRLEN_PP(tmp) == 0){
+					php_error_docref (NULL TSRMLS_CC, E_ERROR, "A Soap Header should have a non empty localname");
+				}
 				add_property_stringl(this_ptr, WS_HEADER_LOCALNAME, Z_STRVAL_PP(tmp), 
 					Z_STRLEN_PP(tmp), 1);
 		}
