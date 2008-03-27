@@ -6,7 +6,7 @@ Test for wsdl_mode sample
 
 try {
 
-    $client = new WSClient(array("wsdl"=>"misc_files/sample.wsdl"));
+    $client = new WSClient(array("wsdl"=>"samples/misc_files/sample.wsdl"));
 
     $proxy = $client->getProxy();	
 
