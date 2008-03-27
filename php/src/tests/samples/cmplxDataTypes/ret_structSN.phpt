@@ -30,7 +30,6 @@ $classmap = array("RetStructSN" => "RetStructSNWrapper",
 
 
 try{
-    $wsdl = file_get_contents('wsdlDoclitW.txt');
     $wsdl = file_get_contents('samples/config/cmplxDataTypesWsdlDoclitW.txt');
     $client = new WSClient(array("wsdl"=>$wsdl , "classmap" => $classmap));
 
