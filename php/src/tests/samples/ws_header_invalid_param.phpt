@@ -2,32 +2,10 @@
 Test for ws_header_invalid_param sample
 --FILE--
 <?php
-$reqPayloadString = <<<XML
-	<ns1:echoString xmlns:ns1="http://php.axis2.org/samples">
-		<text>Hello World!</text>
-	</ns1:echoString>
-XML;
-
-try {
-
-    $client = new WSClient(array( "to"=>"http://localhost/samples/echo_service.php"));
-
-    $msg = new WSMessage($reqPayloadString ,
-			array("headers" => array(new WSHeader(10),
-							 new WSHeader("http://test1.org","header2", "value2", true, 2)
-							 )
-				)
-			);
-
-    $client->request($msg);
-        
-} catch (Exception $e) {
-	if ($e instanceof WSFault) {
-		printf("Soap Fault: %s\n", $e->code);
-	} else {
-		printf("Message = %s\n",$e->getMessage());
-	}
-}
+ new WSHeader("http://test1.org","header2", "value2", true, 2)
 ?>
 
---EXPECT--
+--EXPECTF--
+Warning: WSHeader::__construct() expects exactly 1 parameter, 5 given in %sws_header_invalid_param.php on line %d
+
+Fatal error: WSHeader::__construct(): Invalid parameters in %sws_header_invalid_param.php on line %d
