@@ -1,5 +1,9 @@
 Running tests
 
+First Copy the <WSFPHP>\samples directory and <WSFPHP>\src\test\samples\services directory to your web servers document root.
+
+Then
+
 1. Set TEST_PHP_EXECUTABLE variable to point to the php executable.
 2. Following command will execute the tests in the samples directory.
 
@@ -8,6 +12,6 @@ php run-tests.php samples
 Using pear tool
 ----------------
 To run the tests use command
-pear run-tests -r   {-r flag is for running the tests in directories as well.}
+pear run-tests -r samples  {-r flag is for running the tests in directories as well.}
 
 
