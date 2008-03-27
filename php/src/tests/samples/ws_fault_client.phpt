@@ -31,5 +31,5 @@ try {
 --EXPECT--
 Soap Fault Reason: Testing WSFault
 Soap Fault Code: soapenv:Sender 
-Soap Fault Role: Fault Role 
-Soap Fault Detail: <error>Fault Detail</error>
+Soap Fault Role: Role 
+Soap Fault Detail: <error>This is a test</error>
