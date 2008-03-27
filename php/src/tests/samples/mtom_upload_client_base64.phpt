@@ -1,5 +1,5 @@
 --TEST--
-Test for mtom_download_client_base64 client sample
+Test for mtom_upload_client_base64 client sample
 --FILE--
 <?php
 
@@ -13,7 +13,7 @@ $reqPayloadString = <<<XML
 XML;
 
 try {
-	$f = file_get_contents("C:/Apache2.2/htdocs/samples/resources/axis2.jpg");
+	$f = file_get_contents("samples/resources/axis2.jpg");
     
 	$reqMessage = new WSMessage($reqPayloadString, 
         array("to" => "http://localhost/samples/mtom/mtom_upload_service_base64.php",
