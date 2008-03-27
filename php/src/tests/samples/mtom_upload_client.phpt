@@ -13,7 +13,7 @@ $reqPayloadString = <<<XML
 XML;
 
 try {
-	$f = file_get_contents("C:/Apache2.2/htdocs/samples/resources/axis2.jpg");
+	$f = file_get_contents("samples/resources/axis2.jpg");
     
 	$reqMessage = new WSMessage($reqPayloadString, 
         array("to" => "http://localhost/samples/mtom/mtom_upload_service.php",
