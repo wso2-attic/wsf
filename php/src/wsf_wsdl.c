@@ -80,7 +80,9 @@ void create_dynamic_client(zval *this_ptr, char *function, int function_len,
     zval *function_parameters;
     php_stream *stream;
     FILE *new_fp;
-	/*int script_executed = 0; */
+
+    zval **service_name;
+    zval **port_name;
 
 
     if (instanceof_function (Z_OBJCE_P (this_ptr),
@@ -125,8 +127,20 @@ void create_dynamic_client(zval *this_ptr, char *function, int function_len,
             g_classmap = *class_map;
             g_arguments = args;
         }
-        add_assoc_string(user_parameters, WS_WSDL_XSLT_LOCATION, 
-                         "test", 1);
+
+        if ( zend_hash_find ( Z_OBJPROP_P (this_ptr), WS_SERVICE_NAME, sizeof (WS_SERVICE_NAME),
+                              (void **) &service_name) == SUCCESS
+             && Z_TYPE_PP (service_name) == IS_STRING){
+            add_assoc_string(user_parameters, WS_SERVICE_NAME,
+                             Z_STRVAL_PP(service_name), 1);
+        }
+
+        if ( zend_hash_find ( Z_OBJPROP_P (this_ptr), WS_PORT_NAME, sizeof (WS_PORT_NAME),
+                              (void **) &port_name) == SUCCESS
+             && Z_TYPE_PP (port_name) == IS_STRING){
+            add_assoc_string(user_parameters, WS_PORT_NAME,
+                             Z_STRVAL_PP(port_name), 1);
+        }
         
         MAKE_STD_ZVAL(function_parameters);
         array_init(function_parameters);
@@ -904,7 +918,13 @@ void wsf_wsdl_process_service(zval *this_ptr, wsf_req_info_t *request_info1, wsf
     
     
     ZVAL_STRING(&request_function, WS_WSDL_SERVICE_REQ_FUNCTION, 0);
-    add_assoc_string(param_array, WS_WSDL_XSLT_LOCATION, "test", 1);
+    
+    if(!svc_info->generated_svc_name){
+        add_assoc_string(param_array, WS_SERVICE_NAME, svc_info->svc_name, 1);
+    }
+    if(svc_info->port_name){
+        add_assoc_string(param_array, WS_PORT_NAME, svc_info->port_name, 1);
+    }
     
     ZVAL_ZVAL(params[0], param_array, NULL, NULL);
     INIT_PZVAL(params[0]);
@@ -1213,7 +1233,13 @@ void wsf_wsdl_set_sig_model(char *wsdl_path, wsf_svc_info_t *svc_info, const axu
     
     
     ZVAL_STRING(&request_function, WS_WSDL_SERVICE_REQ_FUNCTION, 0);
-    add_assoc_string(param_array, WS_WSDL_XSLT_LOCATION, "test", 1);
+    
+    if(!svc_info->generated_svc_name){
+        add_assoc_string(param_array, WS_SERVICE_NAME, svc_info->svc_name, 1);
+    }
+    if(svc_info->port_name){
+        add_assoc_string(param_array, WS_PORT_NAME, svc_info->port_name, 1);
+    }
     
     ZVAL_ZVAL(params[0], param_array, NULL, NULL);
     INIT_PZVAL(params[0]);

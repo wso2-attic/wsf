@@ -595,6 +595,14 @@ wsf_xml_msg_recv_invoke_mixed (
          add_assoc_zval(param_array, WS_WSDL_CLASSMAP, svc_info->class_map);
     }
 
+    if(!svc_info->generated_svc_name){
+        add_assoc_string(param_array, WS_SERVICE_NAME, svc_info->svc_name, 1);
+    }
+    if(svc_info->port_name){
+        add_assoc_string(param_array, WS_PORT_NAME, svc_info->port_name, 1);
+    }
+
+
     add_assoc_zval(param_array, "class_args", class_args);
 
     ZVAL_STRING(&request_function, "wsf_wsdl_process_in_msg", 0);

@@ -30,6 +30,8 @@ define("WSF_BINDING_DETAILS", "binding_details");
 define("WSF_W2P_BINDING_DETAILS", "binding-details");
 define("WSF_REQUEST_PAYLOAD", "request_payload");
 define("WSF_POLICY_NODE", "policy_node");
+define("WSF_SERVICE_NAME", "serviceName");
+define("WSF_PORT_NAME", "portName");
 
 define("WSF_DEFINITION", "definitions");
 define("WSF_DESCRIPTION", "description");
@@ -58,6 +60,8 @@ define("WSF_TARGETNAMESPACE", "targetNamespace");
 define("WSF_BINDINDG_DETAILS", "binding-details");
 define("WSF_WSAWAACTION", "wsawaction");
 define("WSF_SOAPACTION", "soapaction");
+define("WSF_HTTPMETHOD", "httpmethod");
+define("WSF_USE_SOAP", "usesoap");
 define("WSF_WSA", "wsa");
 define("WSF_SOAP", "soap");
 define("WSF_SOAP11", "SOAP11");
@@ -79,6 +83,10 @@ define("WSF_TYPES", "types");
 define("WSF_WSDL_DOM", "wsdl_dom");
 define("WSF_WSDL_SIMPLE", "simple");
 define("WSF_WSDL_COMPLEX_TYPE", "complexType");
+define("WSF_WSDL_PORT_TYPE", "portType");
+
+define("WSF_WSDL1TO2_XSL_LOCATION", "dynamic_invocation/xslt/wsdl11to20.xsl10.xsl");
+define("WSF_SIG_XSL_LOCATION", "dynamic_invocation/xslt/wsdl2sig.xslt");
 
 define("WSF_WSDL2_NAMESPACE", "http://www.w3.org/ns/wsdl");
 define("WSF_WSDL_NAMESPACE", "http://schemas.xmlsoap.org/wsdl/");

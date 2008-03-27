@@ -64,8 +64,8 @@ typedef enum ws_input_types
 #define WS_CLASSMAP     "classmap"
 #define WS_CLASSES      "classes"
 #define WS_CONS_ARGS    "args"
-#define WS_SERVICE_NAME    "serviceName"
-
+#define WS_SERVICE_NAME "serviceName"
+#define WS_PORT_NAME    "portName"
 
 
 /** Options array options */
@@ -230,6 +230,11 @@ typedef struct wsf_svc_info
   zval *security_token;
   
   char *svc_name;
+
+  char *port_name;
+
+  int generated_svc_name;
+
   /** this is needed in case of request uri dispatching( for rest) */
   char *op_name;
   

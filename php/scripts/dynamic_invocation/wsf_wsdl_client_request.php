@@ -23,7 +23,7 @@
  * @param string $endpoint_address service endpoint address
  * @return DomNode operation DomNode of the Sig model
  */
-function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $endpoint_address, $is_multiple)
+function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $service_name, $port_name, $is_multiple)
 {
     require_once('wsf_wsdl_consts.php');
     require_once('wsf_wsdl_util.php');
@@ -32,16 +32,54 @@ function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $endpoi
         $operation = NULL;
         $services_node = $sig_model_dom->firstChild;
         $services_childs_list = $services_node->childNodes;
-        
+
         foreach($services_childs_list as $child){
-            if($child->tagName == WSF_SERVICE && $child->attributes->getNamedItem(WSF_ADDRESS)->value == $endpoint_address){
-                $service_node = $child;
-                break;
+            if($child->tagName == WSF_SERVICE) {
+                if($service_name == NULL){
+                    /* pick by port if the service name is not given*/
+                    if($port_name == NULL){
+                        /* now just get the first service and port*/
+                        $service_node = $child;
+                        break;
+                    }
+                    /* now pick by the port name */
+                    if($child->attributes->getNamedItem("endpoint")){
+                        $derived_port_name = $child->attributes->getNamedItem("endpoint")->value;
+                    }
+                    if($derived_port_name == $port_name){
+                        $service_node = $child;
+                        break;
+                    }
+                }
+                $child_service_name = NULL;
+                if($child->attributes->getNamedItem(WSF_NAME))
+                {
+                    $child_service_name = $child->attributes->getNamedItem(WSF_NAME)->value;
+                }
+                if($service_name == $child_service_name)
+                {
+                    /* pick by port if the service name is found*/
+                    if($port_name == NULL){
+                        /* now just get the first service and port*/
+                        $service_node = $child;
+                        break;
+                    }
+                    /* now pick by the port name */
+                    if($child->attributes->getNamedItem("endpoint")){
+                        $derived_port_name = $child->attributes->getNamedItem("endpoint")->value;
+                    }
+                    if($derived_port_name == $port_name){
+                        $service_node = $child;
+                        break;
+                    }
+                }
             }
         }
-        
-        if(!$service_node)
+        if(!$service_node){
+            error_log("service node not found");
             return NULL;
+        }
+
         
         $service_child_list = $service_node->childNodes;
         /* search the operations element of the sig */
@@ -59,13 +97,11 @@ function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $endpoi
                     $operation_node = $operations_child->attributes;
                     if($operation_node->getNamedItem(WSF_NAME)->value == $operation_name){
                         $operation = $operations_child;
-                        break;
+                        return $operation;
                     }
                 }
             }
         }
-        
-        return $operation;
     }
     else{
         $operation = NULL;
@@ -97,6 +133,7 @@ function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $endpoi
                 }
             }
         }
+        return $operation;
     }
 }
 

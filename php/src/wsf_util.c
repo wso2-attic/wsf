@@ -377,6 +377,8 @@ wsf_svc_info_create (
 
     svc_info->svc = NULL;
     svc_info->svc_name = NULL;
+    svc_info->generated_svc_name = 0;
+    svc_info->port_name = NULL;
     svc_info->msg_recv = NULL;
     svc_info->php_worker = NULL;
     svc_info->use_mtom = 0;     /* default is false otherwise service side will send MIME
@@ -409,6 +411,10 @@ wsf_svc_info_free (
     if (NULL != svc_info) {
         if (svc_info->svc_name) {
             AXIS2_FREE (env->allocator, svc_info->svc_name);
+            svc_info->svc_name = NULL;
+        }
+        if (svc_info->port_name) {
+            AXIS2_FREE (env->allocator, svc_info->port_name);
             svc_info->svc_name = NULL;
         }
         if (svc_info->ops_to_functions) {
