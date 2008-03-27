@@ -1,6 +1,7 @@
 #############################################################################
 ### General Build Configuration Parameters
 
+WSFPHP_VERSION=1.2.1
 # To build with debug symbols set DEBUG = 1
 DEBUG = 0 
 #CRUNTIME Library (Use /MD or /MT)
