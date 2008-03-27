@@ -15,14 +15,15 @@
  * limitations under the License.
  */
 
-function sendFault($inMessage) {
-    throw new WSFault("Sender");
+function echoFunction($a) {
+    return $a;
 }
 
-$operations = array("getFault" => "sendFault");
+$operations = array("echoString" => "echoFunction");
+$opParams = array("echoFunction"=>"MIXED");
 
-$service = new WSService(array("operations" => $operations));
+$svr = new WSService(array("wsdl"=>"sample.wsdl", "operations" => $operations,"opParams"=>$opParams));
         
-$service->reply();
+$svr->reply();
 
 ?>
