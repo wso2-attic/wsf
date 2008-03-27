@@ -1426,6 +1426,8 @@ PHP_METHOD (ws_fault, __construct)
     if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC,
             "zs|s!z!s", &code, &sf_reason, &sf_reason_len, &sf_role,
             &sf_role_len, &details, &value, &value_len)) {
+
+				php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
 				AXIS2_LOG_ERROR(ws_env_svr->log, AXIS2_LOG_SI,
 					"[wsf fault]Invalid Paramters, Fault Code and Fault Reason values are mandatory");
 		return;
