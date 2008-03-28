@@ -301,7 +301,7 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
                 
     }
     else{
-        $binding_node = wsf_get_binding($wsdl_dom, $endpoint_address);
+        $binding_node = wsf_get_binding($wsdl_dom, $service, $port);
         if(!$binding_node)
             return  NULL;
         foreach($operation_array as $value){
