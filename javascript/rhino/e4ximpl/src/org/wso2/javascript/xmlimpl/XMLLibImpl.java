@@ -338,7 +338,7 @@ public final class XMLLibImpl extends XMLLib implements Serializable {
 
     public Namespace constructNamespace(Context cx, Object prefixValue, Object uriValue) {
         String prefix;
-        String uri;
+        String uri = null;
 
         if (uriValue instanceof QName) {
             QName qname = (QName) uriValue;
@@ -346,11 +346,11 @@ public final class XMLLibImpl extends XMLLib implements Serializable {
             if (uri == null) {
                 uri = qname.toString();
             }
-        } else {
+        } else if (uriValue != null){
             uri = ScriptRuntime.toString(uriValue);
         }
 
-        if (uri.length() == 0) {
+        if (uri == null || uri.length() == 0) {
             if (prefixValue == Undefined.instance) {
                 prefix = "";
             } else {
