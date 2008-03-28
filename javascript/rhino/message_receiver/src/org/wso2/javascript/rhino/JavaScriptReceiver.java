@@ -973,10 +973,13 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 if (namespace != null) {
                     namespaceURI = namespace.getNamespaceURI();
                 }
-                Object[] namespaceObjects = { prefix,
-                        namespaceURI};
-                Scriptable e4xNamespace =
-                        engine.getCx().newObject(engine, "Namespace", namespaceObjects);
+                Scriptable e4xNamespace = null;
+                if (namespaceURI != null) {
+                    Object[] namespaceObjects = { prefix,
+                            namespaceURI };
+                    e4xNamespace =
+                            engine.getCx().newObject(engine, "Namespace", namespaceObjects);
+                }
                 Object[] qnameObjects = { e4xNamespace,
                         value };
                 return engine.getCx().newObject(engine, "QName", qnameObjects);
