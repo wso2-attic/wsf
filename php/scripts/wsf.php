@@ -16,7 +16,7 @@
  */
 
 /** The version of this WSO2 WSF for PHP file */
-define('WSF_VERSION', '1.0.0');
+define('WSF_VERSION', '1.2.1');
 
 function ws_request($payload, $options = array(NULL))
 {
