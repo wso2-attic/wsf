@@ -1,7 +1,7 @@
 <?php
 
 // PHP classes corresponding to the data types in defined in WSDL
-
+// These classes are not used in the barelit types - so the codegen should be corrected
 class inBool { 
     public $boolean; // boolean
 }
@@ -173,8 +173,9 @@ function RetBool($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type inBool
     // NOTE: should return an object of type RetBoolResult
-    $ret = new RetBoolResult();
-    $ret->boolean = $input->boolean;
+
+    // Here the $input is the actual simple value, you just set it to the ret value
+    $ret = $input;
     return $ret;
 }
 
@@ -183,8 +184,9 @@ function RetByte($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type inByte
     // NOTE: should return an object of type RetByteResult
-    $ret =  new RetByteResult();
-    $ret->unsignedByte = $input->unsignedByte;
+
+    // Here the $input is the actual simple value, you just set it to the ret value
+    $ret =  $input;
     return $ret;
 }
 
@@ -193,8 +195,9 @@ function RetSByte($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type inSByte
     // NOTE: should return an object of type RetSByteResult
-    $ret = new RetSByteResult();
-    $ret->byte = $input->byte;
+
+    // Here the $input is the actual simple value, you just set it to the ret value
+    $ret = $input;
     return $ret;
 }
 
@@ -203,8 +206,9 @@ function RetByteArray($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type inByteArray
     // NOTE: should return an object of type RetByteArrayResult
-    $ret = new RetByteArrayResult();
-    $ret->base64Binary = $input->base64Binary;
+
+    // Here the $input is the actual simple value, you just set it to the ret value
+    $ret = $input;
     return $ret;
 }
 
@@ -214,8 +218,9 @@ function RetDecimal($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type inDecimal
     // NOTE: should return an object of type RetDecimalResult
-    $ret = new RetDecimalResult();
-    $ret->decimal = $input->decimal;
+
+    // Here the $input is the actual simple value, you just set it to the ret value
+    $ret = $input;
     return $ret;
 }
 
@@ -224,8 +229,9 @@ function RetFloat($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type inFloat
     // NOTE: should return an object of type RetFloatResult
-    $ret = new RetFloatResult();
-    $ret->float = $input->float;
+
+    // Here the $input is the actual simple value, you just set it to the ret value
+    $ret = $input;
     return $ret;
 }
 
@@ -234,8 +240,9 @@ function RetDouble($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type inDouble
     // NOTE: should return an object of type RetDoubleResult
-    $ret = new RetDoubleResult();
-    $ret->double = $input->double;
+
+    // Here the $input is the actual simple value, you just set it to the ret value
+    $ret = $input;
     return $ret;
 }
 
@@ -244,8 +251,9 @@ function RetSingle($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type inSingle
     // NOTE: should return an object of type RetSingleResult
-    $ret = new RetSingleResult();
-    $ret->float = $input->float;
+
+    // Here the $input is the actual simple value, you just set it to the ret value
+    $ret = $input;
     return $ret;
 }
 
@@ -254,8 +262,9 @@ function RetInt($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type inInt
     // NOTE: should return an object of type RetIntResult
-    $ret = new RetIntResult();
-    $ret->int = $input->int;
+
+    // Here the $input is the actual simple value, you just set it to the ret value
+    $ret = $input;
     return $ret;
     
 }
@@ -265,8 +274,9 @@ function RetShort($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type inShort
     // NOTE: should return an object of type RetShortResult
-    $ret = new RetShortResult();
-    $ret->short = $input->short;
+
+    // Here the $input is the actual simple value, you just set it to the ret value
+    $ret = $input;
     return $ret;
 }
 
@@ -275,8 +285,9 @@ function RetLong($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type inLong
     // NOTE: should return an object of type RetLongResult
-    $ret = new RetLongResult();
-    $ret->long = $input->long;
+
+    // Here the $input is the actual simple value, you just set it to the ret value
+    $ret = $input;
     return $ret;
 }
 
@@ -285,8 +296,9 @@ function RetObject($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type inObject
     // NOTE: should return an object of type RetObjectResult
-    $ret = new RetObjectResult();
-    $ret->anyType = $input->anyType;
+
+    // Here the $input is the actual simple value, you just set it to the ret value
+    $ret = $input;
     return $ret;
 }
 
@@ -295,8 +307,9 @@ function RetUInt($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type inUInt
     // NOTE: should return an object of type RetUIntResult
-    $ret = new RetUIntResult();
-    $ret->unsignedInt = $input->unsignedInt;
+
+    // Here the $input is the actual simple value, you just set it to the ret value
+    $ret = $input;
     return $ret;
 }
 
@@ -305,8 +318,9 @@ function RetUShort($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type inUShort
     // NOTE: should return an object of type RetUShortResult
-    $ret = new RetUShortResult();
-    $ret->unsignedShort = $input->unsignedShort;
+
+    // Here the $input is the actual simple value, you just set it to the ret value
+    $ret = $input;
     return $ret;
 }
 
@@ -315,8 +329,9 @@ function RetULong($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type inULong
     // NOTE: should return an object of type RetULongResult
-    $ret = new RetULongResult();
-    $ret->unsignedLong = $input->unsignedLong;
+
+    // Here the $input is the actual simple value, you just set it to the ret value
+    $ret = $input;
     return $ret;
 }
 
@@ -325,8 +340,9 @@ function RetString($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type inString
     // NOTE: should return an object of type RetStringResult
-    $ret = new RetStringResult();
-    $ret->string = $input->string;
+
+    // Here the $input is the actual simple value, you just set it to the ret value
+    $ret = $input;
     return $ret;
 }
 
@@ -336,9 +352,10 @@ function RetUri($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type inUri
     // NOTE: should return an object of type RetUriResult
-    $ret = new RetUriResult();
-    $ret->anyURI = $input->anyURI;
-    return anyURI;
+
+    // Here the $input is the actual simple value, you just set it to the ret value
+    $ret = $input;
+    return $ret;
 }
 
 
@@ -346,8 +363,9 @@ function RetDateTime($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type inDateTime
     // NOTE: should return an object of type RetDateTimeResult
-    $ret = new RetDateTimeResult();
-    $ret->dateTime = $input->dateTime;
+
+    // Here the $input is the actual simple value, you just set it to the ret value
+    $ret = $input;
     return $ret;
 }
 
@@ -356,9 +374,9 @@ function RetDateTimeOffset($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type inDateTimeOffset
     // NOTE: should return an object of type RetDateTimeOffsetResult
-    $ret = new RetDateTimeOffsetResult();
-    $ret->DateTime = $input->DateTime;
-    $ret->OffsetMinutes = $input->OffsetMinutes;
+
+    // Here the $input is the actual simple value, you just set it to the ret value
+    $ret = $input;
     return $ret;
 }
 
@@ -368,8 +386,9 @@ function RetQName($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type inQName
     // NOTE: should return an object of type RetQNameResult
-    $ret = new RetQNameResult();
-    $ret->QName = $input->QName;
+
+    // Here the $input is the actual simple value, you just set it to the ret value
+    $ret = $input;
     return $ret;
 }
 
