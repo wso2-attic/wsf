@@ -49,8 +49,8 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     $sig_model_dom  = new DOMDocument();
 
     /* retrieving the user parameters */
-    $service_name = NULL;
-    $port_name = NULL;
+    $service = NULL;
+    $port = NULL;
     if(array_key_exists(WSF_SERVICE_NAME, $user_parameters)){
         $service = $user_parameters[WSF_SERVICE_NAME];
     }

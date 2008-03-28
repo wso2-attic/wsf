@@ -95,7 +95,7 @@ function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $servic
             foreach($operations_node->childNodes as $operations_child){
                 if($operations_child->nodeType == XML_ELEMENT_NODE && $operations_child->tagName == WSF_OPERATION){
                     $operation_node = $operations_child->attributes;
-                    if($operation_node->getNamedItem(WSF_NAME)->value == $operation_name){
+                    if($operation_node->getNamedItem(WSF_NAME) && $operation_node->getNamedItem(WSF_NAME)->value == $operation_name){
                         $operation = $operations_child;
                         return $operation;
                     }
@@ -109,7 +109,8 @@ function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $servic
         $services_childs_list = $services_node->childNodes;
 
         foreach($services_childs_list as $child){
-            if($child->tagName == WSF_SERVICE && $child->attributes->getNamedItem(WSF_ADDRESS)->value == $endpoint_address){
+            if($child->tagName == WSF_SERVICE && $child->attributes->getNamedItem(WSF_ADDRESS) &&
+                    $child->attributes->getNamedItem(WSF_ADDRESS)->value == $endpoint_address){
                 $service_node = $child;
                 if(!$service_node)
                     return NULL;
@@ -122,7 +123,8 @@ function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $servic
                             foreach($operations_node->childNodes as $operations_child){
                                 if($operations_child->tagName == WSF_OPERATION){
                                     $operation_node = $operations_child->attributes;
-                                    if($operation_node->getNamedItem(WSF_NAME)->value == $operation_name){
+                                    if($operation_node->getNamedItem(WSF_NAME) && 
+                                            $operation_node->getNamedItem(WSF_NAME)->value == $operation_name){
                                         $operation = $operations_child;
                                         return $operation;
                                     }
@@ -177,8 +179,14 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
             if($params_node->hasAttributes()){
                 /* Wrapper element of the request operation */
                 $params_attr = $params_node->attributes;
-                $ele_name = $params_attr->getNamedItem(WSF_WRAPPER_ELEMENT)->value;
-                $ele_ns = $params_attr->getNamedItem(WSF_WRAPPER_ELEMENT_NS)->value;
+                $ele_name = NULL;
+                if($params_attr->getNamedItem(WSF_WRAPPER_ELEMENT)){
+                    $ele_name = $params_attr->getNamedItem(WSF_WRAPPER_ELEMENT)->value;
+                }
+                $ele_ns = NULL;
+                if($params_attr->getNamedItem(WSF_WRAPPER_ELEMENT_NS)){
+                    $ele_ns = $params_attr->getNamedItem(WSF_WRAPPER_ELEMENT_NS)->value;
+                }
                 $child_array =  array();
                 $child_array[WSF_NS] = $ele_ns;
                 $child_array[WSF_HAS_SIG_CHILDS] = TRUE;

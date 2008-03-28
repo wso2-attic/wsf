@@ -539,6 +539,7 @@ function wsf_get_binding_details(DomNode $operation_node)
     $soap_version = 2;
     $wsa_action = NULL;
     $soap_action = NULL;
+    $http_method = NULL;
 
     $operation_child_list = $operation_node->childNodes;
     foreach($operation_child_list as $operation_child){
@@ -1003,7 +1004,8 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
                         $node_name = $key;
                     }
                     else{
-                        if(array_key_exists(WSF_NS, $value) && $namespace_map[$value[WSF_NS]] != NULL){
+                        if(array_key_exists(WSF_NS, $value) && array_key_exists($value[WSF_NS], $namespace_map) && 
+                                $namespace_map[$value[WSF_NS]] != NULL){
                             $prefix = $namespace_map[$value[WSF_NS]];
                         }
                         else{
@@ -1446,7 +1448,7 @@ function wsf_create_rpc_payload_for_class_map(DomDocument $payload_dom,
                   continue;
             }
                 if (isset($value[WSF_TYPE_REP]) && $value[WSF_TYPE_REP]){
-                    if($class_obj->$key)
+                    if($class_obj->$key !== NULL)
                     {
                         $arg_val = $class_obj->$key;
                         /* type conversion is needed */
@@ -1825,7 +1827,7 @@ function wsf_parse_payload_for_array(DomNode $payload, array $parameter_struct)
             }
             if(isset($value["class_map_name"]) && ($value["class_map_name"] == "anyType"))
             {
-                $tag_name = $current_child->localname;
+                $tag_name = $current_child->localName;
                 if($key == $tag_name)
                 {
                   $converted_value = wsf_parse_payload_for_unknown_array($current_child);
@@ -2027,7 +2029,7 @@ function wsf_parse_payload_for_class_map(DomNode $payload, array $parameter_stru
         {
             if(array_key_exists("class_map_name", $value) && $value["class_map_name"] == "anyType")
             {
-                $tag_name = $current_child->localname;
+                $tag_name = $current_child->localName;
                 if($key == $tag_name)
                 {
                   $converted_value = wsf_parse_payload_for_unknown_class_map($current_child, "anyType_for".$key, $class_map);
@@ -2375,7 +2377,8 @@ function wsf_parse_payload_for_unknown_array($current_node)
  */
 function wsf_parse_payload_for_unknown_class_map($current_node, $element_name, $class_map)
 {
-    if(is_array($class_map))
+    $class_name = NULL;
+    if(is_array($class_map) && array_key_exists($element_name, $class_map))
     {
         $class_name = $class_map[$element_name];
     }
