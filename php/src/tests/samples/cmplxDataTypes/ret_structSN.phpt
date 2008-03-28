@@ -71,9 +71,10 @@ try{
 Result is:
 string(2) "34"
 
-string(12) "3.432543E+07"
+string(8) "34325434"
 
 string(4) "true"
 
 string(6) "Tester"
+
 
