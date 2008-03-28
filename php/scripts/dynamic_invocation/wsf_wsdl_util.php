@@ -1975,11 +1975,12 @@ function wsf_parse_payload_for_array(DomNode $payload, array $parameter_struct)
  * parse payload and return an object hierarchy
  * @param $payload 
  * @param $parameter_struct
- * @return
+ * @return the parsed result objects
  */
 function wsf_parse_payload_for_class_map(DomNode $payload, array $parameter_struct, $element_name, $class_map)
 {
-    if(is_array($class_map))
+    $parse_tree = NULL;
+    if(is_array($class_map) && array_key_exists($element_name, $class_map))
     {
         $class_name = $class_map[$element_name];
     }
@@ -2020,11 +2021,18 @@ function wsf_parse_payload_for_class_map(DomNode $payload, array $parameter_stru
     }
     if($current_child == NULL)
     {
-        return $parse_tree;
+        /* it still can be a text node */
+        $current_child = $payload->firstChild;
+        if($current_child != NULL && $current_child->nodeType == XML_TEXT_NODE)
+        {
+            return $current_child->nodeValue;
+        }
+        /* otherwise it is a NULL */
+        return NULL;
     }
 
     foreach($parameter_struct as $key => $value)
-    {   
+    {
         if(is_array($value))
         {
             if(array_key_exists("class_map_name", $value) && $value["class_map_name"] == "anyType")

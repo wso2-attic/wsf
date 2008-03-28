@@ -96,7 +96,6 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
         $op_param_values = wsf_parse_payload_for_array($soap_body_node, $tmp_param_struct);
     }
 
-
     
     $arg_array = $op_param_values; 
     if($class_name != NULL)
