@@ -1204,7 +1204,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 }
             } else if (jsObject instanceof NativeArray) {
                 element.addAttribute("type", "array", namespace);
-                element.declareNamespace(namespace);
+                element.declareNamespace(xsiNamespace);
+                element.declareNamespace(xsNamespace);
                 NativeArray nativeArray = (NativeArray) jsObject;
                 Object[] objects = nativeArray.getAllIds();
                 for (int i = 0; i < objects.length; i++) {
@@ -1228,7 +1229,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 }
             } else if (jsObject instanceof Object[]) {
                 element.addAttribute("type", "array", namespace);
-                element.declareNamespace(namespace);
+                element.declareNamespace(xsiNamespace);
+                element.declareNamespace(xsNamespace);
                 Object[] objects = (Object[]) jsObject;
                 for (int i = 0; i < objects.length; i++) {
                     Object object = objects[i];
@@ -1237,7 +1239,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 }
             } else if (jsObject instanceof NativeObject) {
                 element.addAttribute("type", "object", namespace);
-                element.declareNamespace(namespace);
+                element.declareNamespace(xsiNamespace);
+                element.declareNamespace(xsNamespace);
                 NativeObject nativeObject = (NativeObject) jsObject;
                 Object[] objects = NativeObject.getPropertyIds(nativeObject);
                 for (int i = 0; i < objects.length; i++) {
