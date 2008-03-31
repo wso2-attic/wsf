@@ -1233,8 +1233,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 }
             } else if (jsObject instanceof Object[]) {
                 element.addAttribute("type", "array", namespace);
+                element.declareNamespace(xsiNamespace);
                 element.declareNamespace(xsNamespace);
-                element.addAttribute("type", "xs:anyType", xsiNamespace);
                 Object[] objects = (Object[]) jsObject;
                 for (int i = 0; i < objects.length; i++) {
                     Object object = objects[i];
@@ -1243,8 +1243,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 }
             } else if (jsObject instanceof NativeObject) {
                 element.addAttribute("type", "object", namespace);
+                element.declareNamespace(xsiNamespace);
                 element.declareNamespace(xsNamespace);
-                element.addAttribute("type", "xs:anyType", xsiNamespace);
                 NativeObject nativeObject = (NativeObject) jsObject;
                 Object[] objects = NativeObject.getPropertyIds(nativeObject);
                 for (int i = 0; i < objects.length; i++) {
