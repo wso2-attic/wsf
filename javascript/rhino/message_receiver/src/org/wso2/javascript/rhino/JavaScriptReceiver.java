@@ -1097,14 +1097,14 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
 
         // Check whether the innerElement is null.
         if (innerElement != null) {
-            return createResponseElement(result, innerElement.getName(), !annotated);
+            return createResponseElement(result, innerElement.getName(), !annotated, true);
         } else {
 
             // wrap the response in a wrapper element called return. If the wrapper contains an OMElemet return the
             // OMElement (There is no use in the wrapper). 
             // There are occations when the function returns a js type which is not XML.
             // Therefore we need the wrapper element tp wrap it. What if the service returned null? just return null.
-            OMElement element = createResponseElement(result, "return", !annotated);
+            OMElement element = createResponseElement(result, "return", !annotated, true);
             OMElement omElement = element.getFirstElement();
             if (omElement == null) {
                 String elementText = element.getText();
@@ -1130,7 +1130,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
      * @throws AxisFault - Thrown in case an exception occurs during the conversion
      */
     private OMElement createResponseElement(Object jsObject, String elementName,
-                                            boolean addTypeInfo) throws AxisFault {
+                                            boolean addTypeInfo, boolean defineXSI) throws AxisFault {
         String className = jsObject.getClass().getName();
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace namespace = fac.createOMNamespace("http://www.wso2.org/ns/jstype", "js");
@@ -1222,7 +1222,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                         o = nativeArray.get(property.intValue(), nativeArray);
                         propertyElementName = "item";
                     }
-                    OMElement paramElement = createResponseElement(o, propertyElementName, true);
+                    OMElement paramElement = createResponseElement(o, propertyElementName, true, false);
                     element.addChild(paramElement);
                 }
             } else if (jsObject instanceof Object[]) {
@@ -1230,7 +1230,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 Object[] objects = (Object[]) jsObject;
                 for (int i = 0; i < objects.length; i++) {
                     Object object = objects[i];
-                    OMElement paramElement = createResponseElement(object, "item", true);
+                    OMElement paramElement = createResponseElement(object, "item", true, false);
                     element.addChild(paramElement);
                 }
             } else if (jsObject instanceof NativeObject) {
@@ -1243,7 +1243,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     if (object instanceof String) {
                         String property = (String) object;
                         o = nativeObject.get(property, nativeObject);
-                        OMElement paramElement = createResponseElement(o, property, true);
+                        OMElement paramElement = createResponseElement(o, property, true, false);
                         element.addChild(paramElement);
                     }
                 }
