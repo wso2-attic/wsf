@@ -1142,6 +1142,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             element.addChild((((XML) jsObject).getAxiomFromXML()));
             if (addTypeInfo) {
                 element.addAttribute("type", "xml", namespace);
+                element.declareNamespace(xsNamespace);
+                element.addAttribute("type", "xs:anyType", xsiNamespace);
             }
         } else if (jsObject instanceof XMLList) {
             XMLList list = (XMLList) jsObject;
@@ -1158,6 +1160,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 element.addChild(wrapperElement);
                 if (addTypeInfo) {
                     wrapperElement.addAttribute("type", "xmlList", namespace);
+                    wrapperElement.declareNamespace(xsNamespace);
+                    wrapperElement.addAttribute("type", "xs:anyType", xsiNamespace);
                 }
             }
         } else {
@@ -1229,8 +1233,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 }
             } else if (jsObject instanceof Object[]) {
                 element.addAttribute("type", "array", namespace);
-                element.declareNamespace(xsiNamespace);
                 element.declareNamespace(xsNamespace);
+                element.addAttribute("type", "xs:anyType", xsiNamespace);
                 Object[] objects = (Object[]) jsObject;
                 for (int i = 0; i < objects.length; i++) {
                     Object object = objects[i];
@@ -1239,8 +1243,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 }
             } else if (jsObject instanceof NativeObject) {
                 element.addAttribute("type", "object", namespace);
-                element.declareNamespace(xsiNamespace);
                 element.declareNamespace(xsNamespace);
+                element.addAttribute("type", "xs:anyType", xsiNamespace);
                 NativeObject nativeObject = (NativeObject) jsObject;
                 Object[] objects = NativeObject.getPropertyIds(nativeObject);
                 for (int i = 0; i < objects.length; i++) {
