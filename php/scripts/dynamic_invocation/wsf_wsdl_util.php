@@ -1882,7 +1882,7 @@ function wsf_parse_payload_for_array(DomNode $payload, array $parameter_struct)
                 }
                 else
                 {
-                    if($value["minOccurs"] && $value["miOccurs"] == 0){
+                    if($value["minOccurs"] && $value["minOccurs"] == 0){
                         // so this if fine
                     }
                     else{
@@ -1948,7 +1948,7 @@ function wsf_parse_payload_for_array(DomNode $payload, array $parameter_struct)
                 }
                 else
                 {
-                    if($value["minOccurs"] && $value["miOccurs"] == 0){
+                    if($value["minOccurs"] && $value["minOccurs"] == 0){
                         // so this if fine
                     }
                     else{
@@ -2093,7 +2093,7 @@ function wsf_parse_payload_for_class_map(DomNode $payload, array $parameter_stru
                 }
                 else
                 {
-                    if($value["minOccurs"] && $value["miOccurs"] == 0){
+                    if($value["minOccurs"] && $value["minOccurs"] == 0){
                         // so this if fine
                     }
                     else{
@@ -2162,7 +2162,7 @@ function wsf_parse_payload_for_class_map(DomNode $payload, array $parameter_stru
                 }
                 else
                 {
-                    if($value["minOccurs"] && $value["miOccurs"] == 0){
+                    if($value["minOccurs"] && $value["minOccurs"] == 0){
                         // so this if fine
                     }
                     else{
@@ -2236,7 +2236,7 @@ function wsf_parse_payload_for_service_class_map(DomNode $payload, array $parame
                 }
                 else
                 {
-                    if($value["minOccurs"] && $value["miOccurs"] == 0){
+                    if($value["minOccurs"] && $value["minOccurs"] == 0){
                         // so this if fine
                     }
                     else{
@@ -2304,7 +2304,7 @@ function wsf_parse_payload_for_service_class_map(DomNode $payload, array $parame
                 }
                 else
                 {
-                    if($value["minOccurs"] && $value["miOccurs"] == 0){
+                    if($value["minOccurs"] && $value["minOccurs"] == 0){
                         // so this if fine
                     }
                     else{
