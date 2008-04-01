@@ -20,4 +20,4 @@ OPFLAGS = $(OPFLAGS) "no"
 !endif
 
 dist :
-	@build_optional.bat $(OPFLAGS)
+	build_optional.bat $(OPFLAGS)

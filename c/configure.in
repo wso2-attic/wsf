@@ -6,7 +6,7 @@ DEBUG = 0
 #CRUNTIME Library ( Use /MD or /MT)
 CRUNTIME=/MD
 # embed manifest files or not
-EMBED_MANIFEST =1
+EMBED_MANIFEST = 1
 
 #############################################################################
 ### Apache Axis2/C Build Configuration Parameters
@@ -18,7 +18,10 @@ LIBXML2_BIN_DIR = E:\libxml2-2.6.27.win32
 ICONV_BIN_DIR = E:\iconv-1.9.2.win32
 
 # Path to zlib installation
-ZLIB_BIN_DIR=E:\zlib-1.2.3.win32
+ZLIB_BIN_DIR = E:\zlib-1.2.3.win32
+
+# Path to OpenSSL installation
+OPENSSL_BIN_DIR = E:\Openssl 
 
 # Path to Apache2 installation
 APACHE_BIN_DIR = "C:\Program Files\Apache Software Foundation\Apache2.2"
@@ -49,15 +52,11 @@ WITH_ARCHIVE = 0
 # Whether Rampart/C is built or not
 ENABLE_RAMPARTC = 1
 
-# Path to OpenSSL installation
-OPENSSL_BIN_DIR = E:\OpenSSL
-
-
 #############################################################################
 ### Apache Sandesha2/C Build Configuration Parameters
 
 # Whether Sandesha2/C is built or not
-ENABLE_SANDESHA2C = 1
+#ENABLE_SANDESHA2C = 1
 
 #############################################################################
 ### Apache Savan/C Build Configuration Parameters
