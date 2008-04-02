@@ -122,26 +122,30 @@ sub wsf_client_set_headers {
 
     my ($this) = (@_);
 
-    if ( defined $this->{inputHeaders} ) {
-	if ( $this->{inputHeaders} !~ /WSHeader/) {
-	    # you can't put an elephant into the washing machine, sorry
-	    die "Invalid header data, please give custom header info via a WSHeader object";
-	}
-
-	if ( not defined $this->{inputHeaders}->{name} ) {
-	    # dude, can't make a header without a name
-	    die "Name of the header not given";
-	}
-    }
-
     # $this->{cp_ih} - stands for copied inputHeaders. Save the header
     # stuff that comes since we're recursing and passing $this
 
-    $this->{cp_ih} = $this->{inputHeaders};
-    $this->{wsf_header_parent} = undef;
-    my $header = wsf_util_construct_header_node( $this );
-    if ( defined $header ) {
-	WSO2::WSF::C::axis2_svc_client_add_header($this->{svc_client}, $this->{env}, WSO2::WSF::C::axiom_node_t_pp_value($header));
+    if ( defined $this->{inputHeaders} ) {
+
+	foreach my $cpih (@{$this->{inputHeaders}}) {
+	    $this->{cp_ih} = $cpih;
+	    $this->{wsf_header_parent} = undef;
+
+	    if ( $cpih !~ /WSHeader/) {
+		# you can't put an elephant into the washing machine, sorry
+		die "Invalid header data, please give custom header info via a WSHeader object";
+	    }
+
+	    if ( not defined $cpih->{name} ) {
+		# dude, can't make a header without a name
+		die "Name of the header not given";
+	    }
+
+	    my $header = wsf_util_construct_header_node( $this );
+	    if ( defined $header ) {
+		WSO2::WSF::C::axis2_svc_client_add_header($this->{svc_client}, $this->{env}, WSO2::WSF::C::axiom_node_t_pp_value($header));
+	    }
+	}
     }
 }
 
