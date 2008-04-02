@@ -13,7 +13,7 @@
 
 @mkdir wso2-wsf-php-bin-1.2.1-win32
 
-@xcopy /E /Q /Y /I wsf_c\wso2-wsf-c-bin-1.2.0 wso2-wsf-php-bin-1.2.1-win32\wsf_c
+@xcopy /E /Q /Y /I wsf_c\wso2-wsf-c-bin-%WSFC_VERSION% wso2-wsf-php-bin-1.2.1-win32\wsf_c
 
 @if exist wso2-wsf-php-bin-1.2.1-win32\wsf_c\services rmdir /S /Q wso2-wsf-php-bin-1.2.1-win32\wsf_c\services
 
