@@ -48,20 +48,28 @@ sub request {
 	$WSO2::WSF::C::AXIS2_LOG_LEVEL_TRACE );
 
     unless( defined( $this->{env} ) ) {
-	die( "ERROR:  Failed to create WSF/C environment" );
+	die "ERROR:  Failed to create WSF/C environment";
     }
 
-    unless( defined( $this->{axis2c_home} ) ) {
+    # no longer use axis2c_home, this extension use WSF/C now
+    if ( defined( $this->{axis2c_home} ) ) {
+	die "axis2c_home is now deprecated, please use wsfc_home instead.";
+    }
+
+    unless( defined( $this->{wsfc_home} ) ) {
+	# can't continue without knowing where WSF/C is installed.
 	WSO2::WSF::C::axis2_log_debug(
 	    $this->{env},
 	    "[wsf-perl] Location where WSF/C installed is not specified" );
-	die( "ERROR:  Axis2/C home is not given" );
+	die "ERROR:  WSF/C home is not given";
     }
 
     $this->{svc_client} = wsf_svc_client_create( $this );
 
-    local $addr_action_present; # record whether addressing is engaged or not
+    # record whether addressing is engaged or not
+    local $addr_action_present;
 
+    # wsf_reader_create will fill this later
     local $reader = '';
 
     wsf_reader_create($is_wsmessage, $this->{env}, $this->{payload});
@@ -76,29 +84,155 @@ sub request {
 
     wsf_add_ssl_properties( $this );
 
+    # handle custom headers, accepts a WSHeader object via inputHeaders
+    wsf_client_set_headers( $this );
+
+    local $wsf_soap_version = $WSO2::WSF::C::AXIOM_SOAP12;
+    local $wsf_soap_uri = $WSO2::WSF::C::AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
+
     # assuming payload is a string, setting client options
     wsf_set_client_options( $this );
 
+    # WS-Security related stuff
     wsf_handle_security( $this );
 
     wsf_set_default_header_type( $this );
 
+    # end point reference
     wsf_set_epr( $this );
 
     wsf_set_soap_action( $this );
 
+    # WS-Addressing related stuff
     wsf_set_addressing_options( $this );
-
-    # setting headers
 
     # outgoing attachments
     wsf_handle_outgoing_attachments( $this, $client_options, $request_payload );
 
-    # reliable messaging
+    # WS-RM
     wsf_handle_reliable_messaging( $this, $client_options, $one_way );
 
     return wsf_process_response( $this );
 
+}
+
+sub wsf_client_set_headers {
+    # adding user defined headers to the SOAP message.
+    # users can create a WSHeader object and pass it to inputHeaders
+
+    my ($this) = (@_);
+
+    if ( defined $this->{inputHeaders} ) {
+	if ( $this->{inputHeaders} !~ /WSHeader/) {
+	    # you can't put an elephant into the washing machine, sorry
+	    die "Invalid header data, please give custom header info via a WSHeader object";
+	}
+
+	if ( not defined $this->{inputHeaders}->{name} ) {
+	    # dude, can't make a header without a name
+	    die "Name of the header not given";
+	}
+    }
+
+    # $this->{cp_ih} - stands for copied inputHeaders. Save the header
+    # stuff that comes since we're recursing and passing $this
+
+    $this->{cp_ih} = $this->{inputHeaders};
+    $this->{wsf_header_parent} = undef;
+    my $header = wsf_util_construct_header_node( $this );
+    if ( defined $header ) {
+	WSO2::WSF::C::axis2_svc_client_add_header($this->{svc_client}, $this->{env}, WSO2::WSF::C::axiom_node_t_pp_value($header));
+    }
+}
+
+sub wsf_util_construct_header_node {
+    my ($this) = (@_);
+    my $header_ns;
+    my $header_ele;
+    my $header_node = WSO2::WSF::C::new_axiom_node_t_pp();
+    local $curr_ns_index = 0;
+    my $soap_ns;
+    # header parent
+    my $hp = (defined $this->{wsf_header_parent}) ? WSO2::WSF::C::axiom_node_t_pp_value($this->{wsf_header_parent}) : undef;
+
+    if ( defined($this->{cp_ih}->{ns}) and defined($this->{cp_ih}->{nsprefix}) ) {
+	$header_ns = WSO2::WSF::C::axiom_namespace_create($this->{env},
+							  $this->{cp_ih}->{ns},
+							  $this->{cp_ih}->{nsprefix});
+    } elsif ( defined($this->{cp_ih}->{ns}) ) {
+	 my $prefix = "ns$curr_ns_index";
+	 $curr_ns_index++;
+	 $header_ns = WSO2::WSF::C::axiom_namespace_create($this->{env},
+							   $this->{cp_ih}->{ns},
+							   $prefix);
+    }
+
+    $header_ele = WSO2::WSF::C::axiom_element_create($this->{env},
+						     $hp,
+						     $this->{cp_ih}->{name},
+						     $header_ns,
+						     $header_node
+						     );
+
+    if ( defined($this->{cp_ih}->{mustUnderstand}) ) {
+	$soap_ns = WSO2::WSF::C::axiom_namespace_create($this->{env}, $wsf_soap_uri,"soapenv" );
+	my $mu_attr = WSO2::WSF::C::axiom_attribute_create($this->{env},
+							   "mustUnderstand",
+							   $this->{cp_ih}->{mustUnderstand},
+							   $soap_ns);
+	WSO2::WSF::C::axiom_element_add_attribute($header_ele, $this->{env}, $mu_attr, WSO2::WSF::C::axiom_node_t_pp_value($header_node));
+    }
+
+    if ( defined($this->{cp_ih}->{role}) ) {
+	my $role_attr = undef;
+	my $role_val = undef;
+
+	if ( $this->{cp_ih}->{role} eq $WSO2::WSF::C::WS_SOAP_ROLE_NEXT ) {
+	    $role_val = $WSO2::WSF::C::WS_SOAP_ROLE_NEXT_URI;
+	} elsif ( $this->{cp_ih}->{role} eq $WSO2::WSF::C::WS_SOAP_ROLE_NONE ) {
+	    $role_val = $WSO2::WSF::C::WS_SOAP_ROLE_NONE_URI;
+	} elsif ( $this->{cp_ih}->{role} eq $WSO2::WSF::C::WS_SOAP_ROLE_ULTIMATE_RECEIVER ) {
+	    $role_val = $WSO2::WSF::C::WS_SOAP_ROLE_ULTIMATE_RECEIVER_URI;
+	} else {
+	     $role_val = $this->{cp_ih}->{role};
+	}
+
+	if ( not $soap_ns ) {
+	    $soap_ns = WSO2::WSF::C::axiom_namespace_create($this->{env}, $wsf_soap_uri, "soapenv");
+	}
+
+	if ( ($wsf_soap_version eq $WSO2::WSF::C::AXIOM_SOAP12) and (defined $role_val)  ) {
+	    $role_attr = WSO2::WSF::C::axiom_attribute_create($this->{env},
+							      $WSO2::WSF::C::WS_HEADER_ROLE,
+							      $role_val,
+							      $soap_ns);
+	} elsif ( ($wsf_soap_version eq $WSO2::WSF::C::AXIOM_SOAP11) and (defined $role_val) ) {
+	    $role_attr = WSO2::WSF::C::axiom_attribute_create($this->{env},
+							      $WSO2::WSF::C::WS_HEADER_ACTOR,
+							      $role_val,
+							      $soap_ns);
+
+	}
+	WSO2::WSF::C::axiom_element_add_attribute($header_ele, $this->{env}, $role_attr, WSO2::WSF::C::axiom_node_t_pp_value($header_node));
+    }
+
+    # NOTE: do we need access to the previous inputHeaders?
+
+    if ( $this->{cp_ih}->{data} =~ /WSHeader/ ) {
+	$this->{cp_ih} = $this->{cp_ih}->{data};
+	$this->{wsf_header_parent} = $header_node;
+	wsf_util_construct_header_node( $this );
+    } else {
+	my $node = undef;
+	if ( $this->{cp_ih} =~ /</ ) {
+	    # wheeee, XML
+	    $node = WSO2::WSF::C::wsf_util_deserialize_buffer($this->{env}, $this->{cp_ih});
+	    WSO2::WSF::C::axiom_node_add_child($header_node, $this->{env}, $node) if defined $node;
+	} elsif ( not $node ) {
+	    WSO2::WSF::C::axiom_element_set_text($header_ele, $this->{env}, $this->{cp_ih}->{data}, WSO2::WSF::C::axiom_node_t_pp_value($header_node));
+	}
+    }
+    return $header_node;
 }
 
 sub wsf_handle_reliable_messaging {
@@ -465,7 +599,8 @@ sub wsf_set_client_options {
     if( defined( $this->{useSOAP} ) ) {
 	for( $this->{useSOAP} ) {
 	    if	  ( /^1\.2$/ )   { $soap_version = $WSO2::WSF::C::AXIOM_SOAP12; }
-	    elsif ( /^1\.1$/ )   { $soap_version = $WSO2::WSF::C::AXIOM_SOAP11; }
+	    elsif ( /^1\.1$/ )   { $soap_version = $WSO2::WSF::C::AXIOM_SOAP11;
+				   $wsf_soap_version = $WSO2::WSF::C::AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI; }
 	    elsif ( /^true$/i )  { $soap_version = $WSO2::WSF::C::AXIOM_SOAP12; }
 	    elsif ( /^false$/i ) { $use_soap = $WSO2::WSF::C::AXIS2_FALSE; }
 	    else       	         { $soap_version = $WSO2::WSF::C::AXIOM_SOAP12; }
@@ -611,13 +746,13 @@ sub wsf_svc_client_create {
     my $this = shift;
     my $svc = WSO2::WSF::C::axis2_svc_client_create(
  	$this->{env},
- 	$this->{axis2c_home} );
+ 	$this->{wsfc_home} );
 
     unless( defined( $svc ) ) {
  	WSO2::WSF::C::axis2_log_debug(
  	    $this->{env},
  	    "[wsf-perl] Service client creation failed" );
- 	die( "ERROR:  Failed to create service client" );
+ 	die "ERROR:  Failed to create service client";
      }
     return $svc;
 }
@@ -687,7 +822,7 @@ after creating the client.
 
 =over 4
 
-=item axis2c_home
+=item wsfc_home
 
 This is a mandatory argument that should contain the absolute URL of the
 folder you installed Axis2/C or WSF/C.
