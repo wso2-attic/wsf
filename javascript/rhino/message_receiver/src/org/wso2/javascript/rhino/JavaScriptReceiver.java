@@ -762,7 +762,13 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         }
         if (Constants.XSD_INTEGER.equals(type)) {
             try {
-                return ConverterUtil.convertToInteger(value);
+                if ((value == null) || value.equals("")) {
+                    return new Integer(Integer.MIN_VALUE);
+                }
+                if (value.startsWith("+")) {
+                    value = value.substring(1);
+                }
+                return new Integer(value);
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "integer"));
             }

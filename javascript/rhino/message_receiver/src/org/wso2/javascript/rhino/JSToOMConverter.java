@@ -67,8 +67,7 @@ public class JSToOMConverter {
 
     public static String convertToDouble(Object jsObject) throws AxisFault {
         try {
-            Double doubleObject = (Double) jsObject;
-            String str = ConverterUtil.convertToString(doubleObject);
+            String str = jsObject.toString();
             if (str.indexOf("Infinity") >= 0) {
                 str = str.replace("Infinity", "INF");
             }
@@ -80,8 +79,8 @@ public class JSToOMConverter {
 
     public static String convertToInteger(Object jsObject) throws AxisFault {
         try {
-            BigInteger bigInteger = (BigInteger) jsObject;
-            return ConverterUtil.convertToString(bigInteger);
+            Integer integer = (Integer) jsObject;
+            return ConverterUtil.convertToString(integer);
         } catch (Exception e) {
             throw new AxisFault("Unable to convert the return value to integer");
         }
