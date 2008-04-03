@@ -128,9 +128,6 @@ sub wsf_client_set_headers {
     if ( defined $this->{inputHeaders} ) {
 
 	foreach my $cpih (@{$this->{inputHeaders}}) {
-	    $this->{cp_ih} = $cpih;
-	    $this->{wsf_header_parent} = undef;
-
 	    if ( $cpih !~ /WSHeader/) {
 		# you can't put an elephant into the washing machine, sorry
 		die "Invalid header data, please give custom header info via a WSHeader object";
@@ -141,7 +138,8 @@ sub wsf_client_set_headers {
 		die "Name of the header not given";
 	    }
 
-	    my $header = wsf_util_construct_header_node( $this );
+	    # wsf_util_construct_header_node(env, parent, $cpih)
+	    my $header = wsf_util_construct_header_node( $this->{env}, undef, $cpih );
 	    if ( defined $header ) {
 		WSO2::WSF::C::axis2_svc_client_add_header($this->{svc_client}, $this->{env}, WSO2::WSF::C::axiom_node_t_pp_value($header));
 	    }
@@ -150,90 +148,89 @@ sub wsf_client_set_headers {
 }
 
 sub wsf_util_construct_header_node {
-    my ($this) = (@_);
+    my $env = shift @_;
+    my $parent = shift @_;
+    my ($ihs) = (@_); # input headers
     my $header_ns;
     my $header_ele;
     my $header_node = WSO2::WSF::C::new_axiom_node_t_pp();
     local $curr_ns_index = 0;
     my $soap_ns;
-    # header parent
-    my $hp = (defined $this->{wsf_header_parent}) ? WSO2::WSF::C::axiom_node_t_pp_value($this->{wsf_header_parent}) : undef;
 
-    if ( defined($this->{cp_ih}->{ns}) and defined($this->{cp_ih}->{nsprefix}) ) {
-	$header_ns = WSO2::WSF::C::axiom_namespace_create($this->{env},
-							  $this->{cp_ih}->{ns},
-							  $this->{cp_ih}->{nsprefix});
-    } elsif ( defined($this->{cp_ih}->{ns}) ) {
+    if ( defined($ihs->{ns}) and defined($ihs->{nsprefix}) ) {
+	$header_ns = WSO2::WSF::C::axiom_namespace_create($env,
+							  $ihs->{ns},
+							  $ihs->{nsprefix});
+    } elsif ( defined($ihs->{ns}) ) {
 	 my $prefix = "ns$curr_ns_index";
 	 $curr_ns_index++;
-	 $header_ns = WSO2::WSF::C::axiom_namespace_create($this->{env},
-							   $this->{cp_ih}->{ns},
+	 $header_ns = WSO2::WSF::C::axiom_namespace_create($env,
+							   $ihs->{ns},
 							   $prefix);
     }
 
-    $header_ele = WSO2::WSF::C::axiom_element_create($this->{env},
-						     $hp,
-						     $this->{cp_ih}->{name},
+    $header_ele = WSO2::WSF::C::axiom_element_create($env,
+						     $parent,
+						     $ihs->{name},
 						     $header_ns,
-						     $header_node
-						     );
+						     $header_node);
 
-    if ( defined($this->{cp_ih}->{mustUnderstand}) ) {
-	$soap_ns = WSO2::WSF::C::axiom_namespace_create($this->{env}, $wsf_soap_uri,"soapenv" );
-	my $mu_attr = WSO2::WSF::C::axiom_attribute_create($this->{env},
+    if ( defined($ihs->{mustUnderstand}) ) {
+	$soap_ns = WSO2::WSF::C::axiom_namespace_create($env, $wsf_soap_uri, "soapenv" );
+	my $mu_attr = WSO2::WSF::C::axiom_attribute_create($env,
 							   "mustUnderstand",
-							   $this->{cp_ih}->{mustUnderstand},
+							   $ihs->{mustUnderstand},
 							   $soap_ns);
-	WSO2::WSF::C::axiom_element_add_attribute($header_ele, $this->{env}, $mu_attr, WSO2::WSF::C::axiom_node_t_pp_value($header_node));
+	WSO2::WSF::C::axiom_element_add_attribute($header_ele, $env, $mu_attr, WSO2::WSF::C::axiom_node_t_pp_value($header_node));
     }
 
-    if ( defined($this->{cp_ih}->{role}) ) {
+    if ( defined($ihs->{role}) ) {
 	my $role_attr = undef;
 	my $role_val = undef;
 
-	if ( $this->{cp_ih}->{role} eq $WSO2::WSF::C::WS_SOAP_ROLE_NEXT ) {
+	if ( $ihs->{role} eq $WSO2::WSF::C::WS_SOAP_ROLE_NEXT ) {
 	    $role_val = $WSO2::WSF::C::WS_SOAP_ROLE_NEXT_URI;
-	} elsif ( $this->{cp_ih}->{role} eq $WSO2::WSF::C::WS_SOAP_ROLE_NONE ) {
+	} elsif ( $ihs->{role} eq $WSO2::WSF::C::WS_SOAP_ROLE_NONE ) {
 	    $role_val = $WSO2::WSF::C::WS_SOAP_ROLE_NONE_URI;
-	} elsif ( $this->{cp_ih}->{role} eq $WSO2::WSF::C::WS_SOAP_ROLE_ULTIMATE_RECEIVER ) {
+	} elsif ( $ihs->{role} eq $WSO2::WSF::C::WS_SOAP_ROLE_ULTIMATE_RECEIVER ) {
 	    $role_val = $WSO2::WSF::C::WS_SOAP_ROLE_ULTIMATE_RECEIVER_URI;
 	} else {
-	     $role_val = $this->{cp_ih}->{role};
+	     $role_val = $ihs->{role};
 	}
 
 	if ( not $soap_ns ) {
-	    $soap_ns = WSO2::WSF::C::axiom_namespace_create($this->{env}, $wsf_soap_uri, "soapenv");
+	    $soap_ns = WSO2::WSF::C::axiom_namespace_create($env, $wsf_soap_uri, "soapenv");
 	}
 
 	if ( ($wsf_soap_version eq $WSO2::WSF::C::AXIOM_SOAP12) and (defined $role_val)  ) {
-	    $role_attr = WSO2::WSF::C::axiom_attribute_create($this->{env},
+	    $role_attr = WSO2::WSF::C::axiom_attribute_create($env,
 							      $WSO2::WSF::C::WS_HEADER_ROLE,
 							      $role_val,
 							      $soap_ns);
 	} elsif ( ($wsf_soap_version eq $WSO2::WSF::C::AXIOM_SOAP11) and (defined $role_val) ) {
-	    $role_attr = WSO2::WSF::C::axiom_attribute_create($this->{env},
+	    $role_attr = WSO2::WSF::C::axiom_attribute_create($env,
 							      $WSO2::WSF::C::WS_HEADER_ACTOR,
 							      $role_val,
 							      $soap_ns);
 
 	}
-	WSO2::WSF::C::axiom_element_add_attribute($header_ele, $this->{env}, $role_attr, WSO2::WSF::C::axiom_node_t_pp_value($header_node));
+	WSO2::WSF::C::axiom_element_add_attribute($header_ele, $env, $role_attr, WSO2::WSF::C::axiom_node_t_pp_value($header_node));
     }
 
-    # NOTE: do we need access to the previous inputHeaders?
-
-    if ( $this->{cp_ih}->{data} =~ /WSHeader/ ) {
-	$this->{cp_ih} = $this->{cp_ih}->{data};
-	$this->{wsf_header_parent} = $header_node;
-	wsf_util_construct_header_node( $this );
+    if ( (defined $ihs->{data}) and ($ihs->{data} =~ /WSHeader/) ) {
+	wsf_util_construct_header_node( $env, $header_node, $ihs->{data} );
+    } elsif ( (defined $ihs->{data}) and ($ihs->{data} =~ /ARRAY/) ) {
+	foreach my $h (@{$ihs->{data}}) {
+	    wsf_util_construct_header_node( $env, WSO2::WSF::C::axiom_node_t_pp_value($header_node), $h );
+	}
     } else {
 	my $node = undef;
-	if ( $this->{cp_ih} =~ /</ ) {
+	if ( $ihs =~ /</ ) {
 	    # wheeee, XML
-	    $node = WSO2::WSF::C::wsf_util_deserialize_buffer($this->{env}, $this->{cp_ih});
-	    WSO2::WSF::C::axiom_node_add_child($header_node, $this->{env}, $node) if defined $node;
+	    $node = WSO2::WSF::C::wsf_util_deserialize_buffer($env, $ihs);
+	    WSO2::WSF::C::axiom_node_add_child($header_node, $env, $node) if defined $node;
 	} elsif ( not $node ) {
-	    WSO2::WSF::C::axiom_element_set_text($header_ele, $this->{env}, $this->{cp_ih}->{data}, WSO2::WSF::C::axiom_node_t_pp_value($header_node));
+	    WSO2::WSF::C::axiom_element_set_text($header_ele, $env, $ihs->{data}, WSO2::WSF::C::axiom_node_t_pp_value($header_node));
 	}
     }
     return $header_node;
