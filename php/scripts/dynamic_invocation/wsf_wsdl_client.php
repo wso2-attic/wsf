@@ -46,6 +46,10 @@ function wsf_get_response_parameters(DomNode $signature_node)
 
 function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $arg_count, $arguments, array $class_map = NULL)
 {
+    require_once('wsf_wsdl_consts.php');
+    require_once('wsf_wsdl_util.php');
+    require_once('wsf_wsdl_serialization.php');
+
     $tmp_param_struct = array();
     $is_wrapper = FALSE;
    
@@ -184,6 +188,7 @@ function wsf_client_response_and_validate(DomDocument $envelope_dom, DomDocument
 {
     require_once('wsf_wsdl_consts.php');
     require_once('wsf_wsdl_util.php');
+    require_once('wsf_wsdl_deserialization.php');
 
     $tmp_param_struct = array();
 

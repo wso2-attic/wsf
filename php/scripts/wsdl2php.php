@@ -17,7 +17,7 @@
  */
 
 require_once ('wsf_wsdl.php');
-require_once ('util/wsf_utils.php');
+require_once ('wsdl2php/wsf_utils.php');
 require_once ('wsdl2php/wsf_class_writer.php');
 require_once ('wsdl2php/wsf_help.php');
 

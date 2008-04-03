@@ -196,7 +196,6 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
 }
 
 
-
 /**
  * Processes and validate response message and assign values to class map.
  * @param string $response_payload_string response envelope
@@ -208,6 +207,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
 function wsf_process_response($response_payload_string, $response_sig_model_string, $response_parameters, $wsdldom_string)
 {
     require_once('dynamic_invocation/wsf_wsdl_consts.php');
+    require_once('dynamic_invocation/wsf_wsdl_util.php');
     require_once('dynamic_invocation/wsf_wsdl_client.php');
 
     $envelope_dom = new DomDocument(); 

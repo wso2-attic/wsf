@@ -19,7 +19,10 @@
 
 function wsf_serivce_invoke_function($operation_node, $function_name, $class_name, $class_args, $envelope_node, $class_map)
 {
-    require_once("wsf_wsdl_util.php");
+    require_once('wsf_wsdl_consts.php');
+    require_once('wsf_wsdl_util.php');
+    require_once('wsf_wsdl_deserialization.php');
+
 	if($operation_node){
 		foreach($operation_node->childNodes as $style){
 			if($style->tagName == WSF_SIGNATURE){
@@ -134,7 +137,9 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
 
 function wsf_wsdl_create_response_payload($return_val, $signature_node)
 {
-    require_once("wsf_wsdl_util.php");
+    require_once('wsf_wsdl_consts.php');
+    require_once('wsf_wsdl_util.php');
+    require_once('wsf_wsdl_serialization.php');
 
     $is_doc = TRUE;
 	$is_wrapper = FALSE;
