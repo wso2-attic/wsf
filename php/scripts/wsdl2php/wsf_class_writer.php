@@ -58,6 +58,10 @@ function wsf_write_sub_classes($nodes) {
                     $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
                     $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
 
+                    if($param_child->getAttribute("simple") == "yes"){
+                        $code .= wsf_comment_on_simple_type($param_child, $ele_name, $param_type);
+                    }
+
                     // check if the attribute is of array type
                     $max_occurs = $param_attr->getNamedItem(WSF_MAX_OCCURS)->value;
                     $array_type = "";
@@ -236,7 +240,16 @@ function wsf_wsdl2php($wsdl_location) {
 
                                     if ($param_node->localName == WSF_PARAMS) {
                                         $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "    //TODO: fill \$input with (data type: {$param_type}) data to match your business logic\n";
+                                        if($param_child->getAttribute("simple") == "yes"){
+                                            $simple_type_comment = wsf_comment_on_simple_type($param_child, "\$input", $param_type);
+                                            $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . $simple_type_comment."\n";
+                                        }
                                         $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "function " . $op_name . "(\$input) {\n    // TODO: fill in the business logic\n    // NOTE: \$input is of type {$param_type}\n";
+                                        if($param_child->getAttribute("simple") == "yes"){
+                                            $simple_type_comment = wsf_comment_on_simple_type($param_child, "\$input", $param_type);
+                                            $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . $simple_type_comment."\n";
+                                        }
+
                                     }
                                     if ($param_node->localName == WSF_RETURNS) {
                                         $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "\n    // call the operation\n    \$response = \$proxy->" . $op_node->attributes->getNamedItem('name')->value . "(\$input);\n    //TODO: Implement business logic to consume \$response, which is of type {$param_type}\n";
@@ -271,5 +284,157 @@ function wsf_wsdl2php($wsdl_location) {
         }
     }
     return $code;
+}
+
+function wsf_comment_on_simple_type($param_node, $param_name, $param_type)
+{
+    $comment = "";
+    if($param_node->hasChildNodes()){
+        $comment = "    //NOTE: ${param_name} should follow the following restrictions\n";
+    }
+    else{
+        return "";
+    }
+
+    $i = 0;
+    $restrictions = $param_node->childNodes;
+    // first iterate through the enumerations
+    foreach($restrictions as $restriction){
+        if($restriction->nodeName == "enumeration"){
+            if($i == 0){
+                $comment .= "    /* You can have one of the following value\n";
+                $i ++;
+            }
+            $value = $restriction->getAttribute("value");
+            $comment .= "     * {$value}\n";
+        }
+    }
+
+    if($i != 0){
+        $comment .= "     */\n";
+    }
+
+    $min_value = -1;
+    $min_inclusive = FALSE;
+    $max_value = -1;
+    $max_inclusive = FALSE;
+
+
+    // first iterate through the max/minInclusives/Exclusives
+    foreach($restrictions as $restriction){
+        if($restriction->nodeName == "minInclusive"){
+            $value =  $restriction->getAttribute("value");
+            if($min_value == -1){
+                $min_value = $value;
+                $min_inclusive = TRUE;
+            }
+            else{
+                $min_value = ($min_value -1> $value)?$value:$min_value;
+                $min_inclusive = TRUE;
+            }
+        }
+        else if($restriction->nodeName == "maxInclusive"){
+            $value = $restriction->getAttribute("value");
+            if($max_value == -1){
+                $max_value = $value;
+                $max_inclusive = TRUE;
+            }
+            else{
+                $max_value = ($max_value +1< $value)?$value:$max_value;
+                $max_inclusive = TRUE;
+            }
+        }
+        if($restriction->nodeName == "minExclusive"){
+            $value =  $restriction->getAttribute("value");
+            if($min_value == -1){
+                $min_value = $value;
+                $min_inclusive = FALSE;
+            }
+            else{
+                $min_value = ($min_value > $value)?$value:$min_value;
+                $min_inclusive = FALSE;
+            }
+        }
+        else if($restriction->nodeName == "maxExclusive"){
+            $value = $restriction->getAttribute("value");
+            if($max_value == -1){
+                $max_value = $value;
+                $max_inclusive = FALSE;
+            }
+            else{
+                $max_value = ($max_value < $value)?$value:$max_value;
+                $max_inclusive = FALSE;
+            }
+        }
+    }
+
+    if($min_value == -1 && $max_value == -1){
+        // just skip it
+    }
+    else
+    {
+        //print out the max/min information
+        $comment .= "    /* Your value should be \n";
+        if($min_value != -1){
+            $comment .= "       Greater than ";
+            if($min_inclusive){
+                $comment .= "or equal to ";
+            }
+            $comment .= $min_value."\n";
+        }
+        if($max_value != -1){
+            $comment .= "       Less than ";
+            if($max_inclusive){
+                $comment .= "or equal to ";
+            }
+            $comment .= $max_value."\n";
+        }
+        $comment .= "     */\n";
+    }
+  
+    $min_len = -1;
+    $max_len = -1;
+
+    // first iterate through the max/minInclusives/Exclusives
+    foreach($restrictions as $restriction){
+        if($restriction->nodeName == "minLength"){
+            $len =  $restriction->getAttribute("value");
+            if($min_len == -1){
+                $min_len = $len;
+            }
+            else{
+                $min_len = ($min_len > $len)?$len:$min_len;
+            }
+        }
+        else if($restriction->nodeName == "maxLength"){
+            $len = $restriction->getAttribute("value");
+            if($max_len == -1){
+                $max_len = $len;
+            }
+            else{
+                $max_len = ($max_len < $len)?$len:$max_len;
+            }
+        }
+    }
+
+    if($min_len == -1 && $max_len == -1){
+        // just skip it
+    }
+    else
+    {
+        //print out the max/min information
+        $comment .= "    /* Your length of the value should be \n";
+        if($min_len != -1){
+            $comment .= "       Greater than ";
+            $comment .= $min_len."\n";
+        }
+        if($max_len != -1){
+            $comment .= "       Less than ";
+            $comment .= $max_len."\n";
+        }
+        $comment .= "     */";
+    }
+  
+    return $comment;
 }
 ?>
