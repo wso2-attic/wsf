@@ -32,8 +32,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
 
     require_once('dynamic_invocation/wsf_wsdl_consts.php');
     require_once('dynamic_invocation/wsf_wsdl_util.php');
-    require_once('dynamic_invocation/wsf_wsdl_client_request.php');
-    require_once('dynamic_invocation/wsf_wsdl_client_response.php');
+    require_once('dynamic_invocation/wsf_wsdl_client.php');
 
     global $is_wsdl_11;
     global $wsdl_11_dom;
@@ -209,7 +208,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
 function wsf_process_response($response_payload_string, $response_sig_model_string, $response_parameters, $wsdldom_string)
 {
     require_once('dynamic_invocation/wsf_wsdl_consts.php');
-    require_once('dynamic_invocation/wsf_wsdl_client_response.php');
+    require_once('dynamic_invocation/wsf_wsdl_client.php');
 
     $envelope_dom = new DomDocument(); 
     $sig_model_dom = new DomDocument();
