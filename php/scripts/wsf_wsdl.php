@@ -320,7 +320,6 @@ function wsf_wsdl_process_in_msg($parameters)
 {
     require_once('dynamic_invocation/wsf_wsdl_consts.php');
     require_once('dynamic_invocation/wsf_wsdl_util.php');
-    require_once('dynamic_invocation/wsf_wsdl_client_request.php');
     require_once('dynamic_invocation/wsf_wsdl_service.php');
 
     $payload_dom = new DomDocument();
