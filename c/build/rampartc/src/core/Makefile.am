@@ -21,3 +21,8 @@ INCLUDES = -I$(top_builddir)/include \
 			@UTILINC@ \
 			@NEETHIINC@ \
 			@AXIOMINC@
+
+install-data-hook:
+	cp $(prefix)/modules/rampart/libmod_rampart* $(prefix)/lib
+
+
