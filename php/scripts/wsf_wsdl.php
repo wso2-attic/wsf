@@ -50,10 +50,10 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     /* retrieving the user parameters */
     $service = NULL;
     $port = NULL;
-    if(array_key_exists(WSF_SERVICE_NAME, $user_parameters)){
+    if(array_key_exists(WSF_SERVICE_NAME, $user_parameters)) {
         $service = $user_parameters[WSF_SERVICE_NAME];
     }
-    if(array_key_exists(WSF_PORT_NAME, $user_parameters)){
+    if(array_key_exists(WSF_PORT_NAME, $user_parameters)) {
         $port = $user_parameters[WSF_PORT_NAME];
     }
 
@@ -80,7 +80,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     $sig_model_dom->preserveWhiteSpace = false;
     $wsdl_dom->preserveWhiteSpace = false;
        
-    if(!$wsdl_location){
+    if(!$wsdl_location) {
         error_log("WSDL location uri is not found");
         return "WSDL locaiton uri is not found";
     }
@@ -133,9 +133,9 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     }
     
     /* for retrieve binding we have to go to the old WSDL */
-    if ($is_wsdl_11 &&  $wsdl_11_dom != NULL){
+    if ($is_wsdl_11 &&  $wsdl_11_dom != NULL) {
         $binding_node = wsf_get_binding($wsdl_11_dom, $service, $port, TRUE);
-        if(!$binding_node){
+        if(!$binding_node) {
             error_log("binding node not found");
             return  NULL;
         }
@@ -145,7 +145,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     }
     else{
         $binding_node = wsf_get_binding($wsdl_dom, $service, $port);
-        if(!$binding_node){
+        if(!$binding_node) {
             error_log("binding node not found");
             return  NULL;
         }
@@ -154,16 +154,16 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
 
     $operation = wsf_find_operation($sig_model_dom, $operation_name, $service, $port, $is_multiple_interfaces);
 
-    if(!$operation){
+    if(!$operation) {
         error_log("operation node not found");
         return;
     }
 
     $binding_array = wsf_get_binding_details($operation);
 
-    if($operation){
-        foreach($operation->childNodes as $style){
-            if($style->tagName == WSF_SIGNATURE){
+    if($operation) {
+        foreach($operation->childNodes as $style) {
+            if($style->tagName == WSF_SIGNATURE) {
                 $sig_method = $style;
                 if($style->attributes->getNamedItem(WSF_METHOD)->value == WSF_INFERENCE)
                     $is_doc_lit = TRUE;
@@ -241,34 +241,34 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
     $wsdl_dom->preserveWhiteSpace = false;
     
     $wsdl_location = $parameters[WSF_WSDL];
-    if(array_key_exists(WSF_SERVICE_NAME, $parameters)){
+    if(array_key_exists(WSF_SERVICE_NAME, $parameters)) {
         $service_name = $parameters[WSF_SERVICE_NAME];
     }
-    if(array_key_exists(WSF_PORT_NAME, $parameters)){
+    if(array_key_exists(WSF_PORT_NAME, $parameters)) {
         $port_name = $parameters[WSF_PORT_NAME];
     }
     
     $sig_model_dom->preserveWhiteSpace = false;
     $wsdl_dom->preserveWhiteSpace = false;
 
-    if(!$wsdl_location){
+    if(!$wsdl_location) {
         return "WSDL is not found";
     }
     $is_multiple_interfaces = FALSE;
 
     // Load WSDL as DOM
     $wsdl_dom = new DOMDocument();
-    if(!$wsdl_dom->load($wsdl_location)){
+    if(!$wsdl_dom->load($wsdl_location)) {
         return "WSDL {$wsdl_location} could not be loaded.";
     }
 
     /* changing code for processing mutiple port types in wsdl 1.1 */
     $is_multiple_interfaces = wsf_is_mutiple_port_types($wsdl_dom);
     
-    if ($is_multiple_interfaces == FALSE){
+    if ($is_multiple_interfaces == FALSE) {
         $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom);
         
-        if(!$wsdl_dom){
+        if(!$wsdl_dom) {
             return "error creating WSDL Dom Document";
         }
         
@@ -279,7 +279,7 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
         $sig_model_dom = wsf_process_multiple_interfaces($wsdl_dom);
     }
 
-    if(!$sig_model_dom){
+    if(!$sig_model_dom) {
         return "error creating intermediate model";
     }
     
@@ -290,11 +290,11 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
     /* this will no longer need for the service */
     $endpoint_address = wsf_get_endpoint_address($sig_model_dom);
     
-    if ($is_wsdl_11 == TRUE && $wsdl_11_dom != NULL){
+    if ($is_wsdl_11 == TRUE && $wsdl_11_dom != NULL) {
         $binding_node = wsf_get_binding($wsdl_11_dom, $service, $port, TRUE);
         if(!$binding_node)
             return  NULL;
-        foreach($operation_array as $value){
+        foreach($operation_array as $value) {
             $policy_array[$value] = wsf_get_all_policies($wsdl_11_dom, $binding_node, $value, TRUE);
          } 
                 
@@ -303,7 +303,7 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
         $binding_node = wsf_get_binding($wsdl_dom, $service, $port);
         if(!$binding_node)
             return  NULL;
-        foreach($operation_array as $value){
+        foreach($operation_array as $value) {
             $policy_array[$value] = wsf_get_all_policies($wsdl_dom, $binding_node, $value);
         }
     }
@@ -332,10 +332,10 @@ function wsf_wsdl_process_in_msg($parameters)
     $port_name = NULL;
     $is_multiple_interfaces = FALSE;
 
-    if(array_key_exists(WSF_SERVICE_NAME, $parameters)){
+    if(array_key_exists(WSF_SERVICE_NAME, $parameters)) {
         $service_name = $parameters[WSF_SERVICE_NAME];
     }
-    if(array_key_exists(WSF_PORT_NAME, $parameters)){
+    if(array_key_exists(WSF_PORT_NAME, $parameters)) {
         $port_name = $parameters[WSF_PORT_NAME];
     }
    
@@ -356,7 +356,7 @@ function wsf_wsdl_process_in_msg($parameters)
 
     $operation_node = wsf_find_operation($sig_model_dom, $operation_name, $service_name, $port_name, $is_multiple_interfaces);
 
-    if(!$operation_node){
+    if(!$operation_node) {
         return "operation not found";
     }
     
@@ -366,7 +366,7 @@ function wsf_wsdl_process_in_msg($parameters)
     return $return_payload_string;
 }
 
-function wsf_wsdl_check(){
+function wsf_wsdl_check() {
     return 1;
 }
 

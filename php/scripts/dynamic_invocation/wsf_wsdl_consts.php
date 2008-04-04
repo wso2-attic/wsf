@@ -42,7 +42,6 @@ define("WSF_NAME" , "name");
 define("WSF_TYPE", "type");
 define("WSF_MAX_OCCURS", "maxOccurs");
 define("WSF_MIN_OCCURS", "minOccurs");
-define("WSF_HAS_SIG_CHILDS", "wsf_has_sig_childs");
 define("WSF_TYPE_REP", "type_rep");
 define("WSF_ID", "Id");
 define("WSF_SERVICE", "service");
@@ -94,5 +93,14 @@ define("WSF_POLICY_REFERENCE_NAMESPACE_URI", "http://schemas.xmlsoap.org/ws/2004
 define("WSF_POLICY_NAMESPACE_URI", "http://www.w3.org/ns/ws-policy");
 define("WSF_POLICY_ID_NAMESPACE_URI", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd");
 
+// constants involves in sig model data 
+
+define("WSF_SIG_META_DATA", "__sig_meta_data"); // doesn't support elements with this name in schemas
+
+define("WSF_SIG_CHILDS", "childs"); // doesn't support elements with this name in schemas
+define("WSF_HAS_SIG_CHILDS", "has_childs");
+
+define("WSF_CLASS_MAP_NAME", "class_map_name");
+define("WSF_XSD_NILLABLE", "nillable");
 
 ?>

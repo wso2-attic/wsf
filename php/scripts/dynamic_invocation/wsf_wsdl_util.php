@@ -30,25 +30,25 @@
 
 function wsf_is_mutiple_port_types($wsdl_dom)
 {
-    if($wsdl_dom){
+    if($wsdl_dom) {
         $child_list = $wsdl_dom->childNodes;
-        foreach($child_list as $child){
-            if ($child->nodeType != XML_ELEMENT_NODE){
+        foreach($child_list as $child) {
+            if ($child->nodeType != XML_ELEMENT_NODE) {
                 continue;
             }
-            if ($child->localName == WSF_DESCRIPTION){
+            if ($child->localName == WSF_DESCRIPTION) {
                 return FALSE;
             }
-            else if ($child->localName == WSF_DEFINITION){
+            else if ($child->localName == WSF_DEFINITION) {
                 $wsdl_11_child_list = $child->childNodes;
                 $i = 0;
-                foreach($wsdl_11_child_list as $wsdl_11_child){
-                    if ($child->nodeType != XML_ELEMENT_NODE){
+                foreach($wsdl_11_child_list as $wsdl_11_child) {
+                    if ($child->nodeType != XML_ELEMENT_NODE) {
                         continue;
                     }
-                    if ($wsdl_11_child->localName == WSF_WSDL_PORT_TYPE){
+                    if ($wsdl_11_child->localName == WSF_WSDL_PORT_TYPE) {
                         $i++;
-                        if($i > 1){
+                        if($i > 1) {
                             return TRUE;
                         }
                     }
@@ -67,11 +67,11 @@ function wsf_process_multiple_interfaces($wsdl_dom)
     $interface_array = array();
     $i = 1 ;
 
-    foreach($wsdl_2_0_child_list as $interface_child){
-        if($interface_child->nodeType != XML_ELEMENT_NODE){
+    foreach($wsdl_2_0_child_list as $interface_child) {
+        if($interface_child->nodeType != XML_ELEMENT_NODE) {
             continue;
         }
-        if($interface_child->localName == 'interface'){
+        if($interface_child->localName == 'interface') {
             $interface_array[$i] = $interface_child->attributes->getNamedItem('name')->value;
             $i++;
         }
@@ -87,13 +87,13 @@ function wsf_process_multiple_interfaces($wsdl_dom)
 
     $wsdl_2_0_child_list2 = $wsdl_dom2->firstChild->childNodes;
 
-    for($j = 1 ; $j <= $no_of_interfaces; $j++){
+    for($j = 1 ; $j <= $no_of_interfaces; $j++) {
         $wsdl_2_0_child_list1 = $wsdl_dom2->firstChild->childNodes;
-        foreach($wsdl_2_0_child_list1 as $service_child){
-            if($service_child->nodeType != XML_ELEMENT_NODE){
+        foreach($wsdl_2_0_child_list1 as $service_child) {
+            if($service_child->nodeType != XML_ELEMENT_NODE) {
                 continue;
             }
-            if($service_child->localName == 'service'){
+            if($service_child->localName == 'service') {
                 $old_attr = $service_child->getAttribute('interface');
                 $service_child->removeAttribute($old_attr);
                 $service_child->setAttribute('interface', "tns:".$interface_array[$j]);
@@ -104,21 +104,21 @@ function wsf_process_multiple_interfaces($wsdl_dom)
 
         $services_node = $tmp_sig_model->firstChild;
         $service_child_list = $services_node->childNodes;
-        foreach($service_child_list as $service_child){
-            if($service_child->nodeType != XML_ELEMENT_NODE){
+        foreach($service_child_list as $service_child) {
+            if($service_child->nodeType != XML_ELEMENT_NODE) {
                 continue;
             }
-            if($service_child->localName == 'service' && $service_child->hasAttributes()){
+            if($service_child->localName == 'service' && $service_child->hasAttributes()) {
                 $service_endpoint = $service_child->attributes->getNamedItem('endpoint')->value;
                 $operations_child_list = $service_child->childNodes;
 
-                foreach($operations_child_list as $operations_child){
-                    if($operations_child->nodeType != XML_ELEMENT_NODE){
+                foreach($operations_child_list as $operations_child) {
+                    if($operations_child->nodeType != XML_ELEMENT_NODE) {
                         continue;
                     }
-                    if($operations_child->localName == 'operations'){
+                    if($operations_child->localName == 'operations') {
                         $operations_name = $operations_child->attributes->getNamedItem('name')->value;
-                        if(strstr($service_endpoint, $operations_name)){
+                        if(strstr($service_endpoint, $operations_name)) {
                             $sig_service_array[strstr($service_endpoint, $operations_name)] = $service_child;
                         }
                     }
@@ -129,7 +129,7 @@ function wsf_process_multiple_interfaces($wsdl_dom)
     $created_sig_dom = new DOMDocument('1.0', 'iso-8859-1');
     $element = $created_sig_dom->createElement('services');
     $created_sig_dom->appendChild($element);
-    foreach($sig_service_array as $value){
+    foreach($sig_service_array as $value) {
         wsf_schema_appendNode($element, $value, $created_sig_dom);
     }
 
@@ -153,13 +153,13 @@ function wsf_get_wsdl_dom($wsdl_dom)
     $xslt = new XSLTProcessor();
     global $wsdl_11_dom, $is_wsdl_11;
      
-    if($wsdl_dom){
+    if($wsdl_dom) {
         $child_list = $wsdl_dom->childNodes;
-        foreach($child_list as $child){
-            if($child->nodeType != XML_ELEMENT_NODE){
+        foreach($child_list as $child) {
+            if($child->nodeType != XML_ELEMENT_NODE) {
                 continue;
             }
-            if($child->localName == WSF_DEFINITION){
+            if($child->localName == WSF_DEFINITION) {
                 /* first element local name is definitions, so this is a
                  version 1.1 WSDL */
                 $xslt_str = file_get_contents(WSF_WSDL1TO2_XSL_LOCATION, TRUE);
@@ -205,7 +205,7 @@ function wsf_get_sig_model_dom(DomDocument $wsdl_dom)
     
     $xslt_str = file_get_contents(WSF_SIG_XSL_LOCATION, TRUE);
     
-    if($xslt_str && $xslt_dom->loadXML($xslt_str)){
+    if($xslt_str && $xslt_dom->loadXML($xslt_str)) {
         $xsl->importStyleSheet($xslt_dom);
         return $xsl->transformToDoc($wsdl_dom);
     }
@@ -252,25 +252,25 @@ function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $servic
     require_once('wsf_wsdl_consts.php');
     require_once('wsf_wsdl_util.php');
 
-    if ($is_multiple == FALSE){
+    if ($is_multiple == FALSE) {
         $operation = NULL;
         $services_node = $sig_model_dom->firstChild;
         $services_childs_list = $services_node->childNodes;
 
-        foreach($services_childs_list as $child){
+        foreach($services_childs_list as $child) {
             if($child->tagName == WSF_SERVICE) {
-                if($service_name == NULL){
+                if($service_name == NULL) {
                     /* pick by port if the service name is not given*/
-                    if($port_name == NULL){
+                    if($port_name == NULL) {
                         /* now just get the first service and port*/
                         $service_node = $child;
                         break;
                     }
                     /* now pick by the port name */
-                    if($child->attributes->getNamedItem("endpoint")){
+                    if($child->attributes->getNamedItem("endpoint")) {
                         $derived_port_name = $child->attributes->getNamedItem("endpoint")->value;
                     }
-                    if($derived_port_name == $port_name){
+                    if($derived_port_name == $port_name) {
                         $service_node = $child;
                         break;
                     }
@@ -283,23 +283,23 @@ function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $servic
                 if($service_name == $child_service_name)
                 {
                     /* pick by port if the service name is found*/
-                    if($port_name == NULL){
+                    if($port_name == NULL) {
                         /* now just get the first service and port*/
                         $service_node = $child;
                         break;
                     }
                     /* now pick by the port name */
-                    if($child->attributes->getNamedItem("endpoint")){
+                    if($child->attributes->getNamedItem("endpoint")) {
                         $derived_port_name = $child->attributes->getNamedItem("endpoint")->value;
                     }
-                    if($derived_port_name == $port_name){
+                    if($derived_port_name == $port_name) {
                         $service_node = $child;
                         break;
                     }
                 }
             }
         }
-        if(!$service_node){
+        if(!$service_node) {
             error_log("service node not found");
             return NULL;
         }
@@ -307,19 +307,19 @@ function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $servic
         
         $service_child_list = $service_node->childNodes;
         /* search the operations element of the sig */
-        foreach($service_child_list as $service_child){
-            if($service_child->tagName == WSF_OPERATIONS){
+        foreach($service_child_list as $service_child) {
+            if($service_child->tagName == WSF_OPERATIONS) {
                 $operations_node = $service_child;
                 break;
             }
         }
         
         /* search the operation element of sig */
-        if($operations_node){
-            foreach($operations_node->childNodes as $operations_child){
-                if($operations_child->nodeType == XML_ELEMENT_NODE && $operations_child->tagName == WSF_OPERATION){
+        if($operations_node) {
+            foreach($operations_node->childNodes as $operations_child) {
+                if($operations_child->nodeType == XML_ELEMENT_NODE && $operations_child->tagName == WSF_OPERATION) {
                     $operation_node = $operations_child->attributes;
-                    if($operation_node->getNamedItem(WSF_NAME) && $operation_node->getNamedItem(WSF_NAME)->value == $operation_name){
+                    if($operation_node->getNamedItem(WSF_NAME) && $operation_node->getNamedItem(WSF_NAME)->value == $operation_name) {
                         $operation = $operations_child;
                         return $operation;
                     }
@@ -332,23 +332,23 @@ function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $servic
         $services_node = $sig_model_dom->firstChild;
         $services_childs_list = $services_node->childNodes;
 
-        foreach($services_childs_list as $child){
+        foreach($services_childs_list as $child) {
             if($child->tagName == WSF_SERVICE && $child->attributes->getNamedItem(WSF_ADDRESS) &&
-                    $child->attributes->getNamedItem(WSF_ADDRESS)->value == $endpoint_address){
+                    $child->attributes->getNamedItem(WSF_ADDRESS)->value == $endpoint_address) {
                 $service_node = $child;
                 if(!$service_node)
                     return NULL;
                 $service_child_list = $service_node->childNodes;
                 /* search the operations element of the sig */
-                foreach($service_child_list as $service_child){
-                    if($service_child->tagName == WSF_OPERATIONS){
+                foreach($service_child_list as $service_child) {
+                    if($service_child->tagName == WSF_OPERATIONS) {
                         $operations_node = $service_child;
-                        if($operations_node){
-                            foreach($operations_node->childNodes as $operations_child){
-                                if($operations_child->tagName == WSF_OPERATION){
+                        if($operations_node) {
+                            foreach($operations_node->childNodes as $operations_child) {
+                                if($operations_child->tagName == WSF_OPERATION) {
                                     $operation_node = $operations_child->attributes;
                                     if($operation_node->getNamedItem(WSF_NAME) && 
-                                            $operation_node->getNamedItem(WSF_NAME)->value == $operation_name){
+                                            $operation_node->getNamedItem(WSF_NAME)->value == $operation_name) {
                                         $operation = $operations_child;
                                         return $operation;
                                     }
@@ -379,15 +379,15 @@ function wsf_get_binding(DomDocument $wsdl_dom, $service_name, $port_name, $is_w
 {
     require_once('wsf_wsdl_consts.php');
 
-    if($is_wsdl_11 == FALSE){
+    if($is_wsdl_11 == FALSE) {
         $root_node = $wsdl_dom->firstChild;
         $root_child_list = $root_node->childNodes;
          
-        foreach($root_child_list as $childs){
-            if($childs->nodeType != XML_ELEMENT_NODE){
+        foreach($root_child_list as $childs) {
+            if($childs->nodeType != XML_ELEMENT_NODE) {
                 continue;
             }
-            if($childs->localName == WSF_SERVICE && $childs->namespaceURI == WSF_WSDL2_NAMESPACE){
+            if($childs->localName == WSF_SERVICE && $childs->namespaceURI == WSF_WSDL2_NAMESPACE) {
                 if($service_name == NULL)
                 {
                     /* pick the first node as service if the service name is not given*/
@@ -407,19 +407,19 @@ function wsf_get_binding(DomDocument $wsdl_dom, $service_name, $port_name, $is_w
             }
         }
          
-        if(!$service_node){
+        if(!$service_node) {
             error_log("Service node not found, please check service name, endpoint name");
             /* echo "serivice node not found"; */
             return;
         }
          
         $service_child_list = $service_node->childNodes;
-        foreach($service_child_list as $service_childs){
-            if($service_childs->nodeType != XML_ELEMENT_NODE){
+        foreach($service_child_list as $service_childs) {
+            if($service_childs->nodeType != XML_ELEMENT_NODE) {
                 continue;
             }
-            if($service_childs->localName == WSF_ENDPOINT && $service_childs->namespaceURI == WSF_WSDL2_NAMESPACE){
-                if($port_name == NULL){
+            if($service_childs->localName == WSF_ENDPOINT && $service_childs->namespaceURI == WSF_WSDL2_NAMESPACE) {
+                if($port_name == NULL) {
                     $endpoint_node = $service_childs;
                     break;
                 }
@@ -435,16 +435,16 @@ function wsf_get_binding(DomDocument $wsdl_dom, $service_name, $port_name, $is_w
                 }
             }
         }
-        if($endpoint_node != NULL){
+        if($endpoint_node != NULL) {
             $binding_name = $endpoint_node->attributes->getNamedItem(WSF_BINDING)->value;
         }
-        if(!$binding_name){
+        if(!$binding_name) {
             error_log("Binding node not found, please check service name, endpoint name");
             return NULL;
         }
          
-        foreach($root_child_list as $childs){
-            if($childs->localName == WSF_BINDING && $childs->namespaceURI == WSF_WSDL2_NAMESPACE){
+        foreach($root_child_list as $childs) {
+            if($childs->localName == WSF_BINDING && $childs->namespaceURI == WSF_WSDL2_NAMESPACE) {
                 $binding_name_mod = strstr($binding_name, ":");
                 if($childs->attributes->getNamedItem(WSF_NAME)->value == substr($binding_name_mod, 1))
                 return $childs;
@@ -458,12 +458,12 @@ function wsf_get_binding(DomDocument $wsdl_dom, $service_name, $port_name, $is_w
         $root_child_list = $root_node->childNodes;
 
 
-        foreach($root_child_list as $childs){
+        foreach($root_child_list as $childs) {
             /* ignoreing comments and all the unrelated child nodes */
-            if($childs->nodeType != XML_ELEMENT_NODE){
+            if($childs->nodeType != XML_ELEMENT_NODE) {
                 continue;
             }
-            if($childs->localName == WSF_SERVICE && $childs->namespaceURI == WSF_WSDL_NAMESPACE){
+            if($childs->localName == WSF_SERVICE && $childs->namespaceURI == WSF_WSDL_NAMESPACE) {
                 if($service_name == NULL)
                 {
                     /* pick the first node as service if the service name is not given*/
@@ -483,7 +483,7 @@ function wsf_get_binding(DomDocument $wsdl_dom, $service_name, $port_name, $is_w
             }
         }
 
-        if(!$service_node){
+        if(!$service_node) {
             error_log("Service node not found, please check service name, endpoint name");
             /* echo "service node not found"; */
             return;
@@ -492,12 +492,12 @@ function wsf_get_binding(DomDocument $wsdl_dom, $service_name, $port_name, $is_w
         $service_child_list = $service_node->childNodes;
         $port_node = NULL;
 
-        foreach($service_child_list as $service_childs){
+        foreach($service_child_list as $service_childs) {
             /* ignoreing comments and all the unrelated child nodes */
-            if($service_childs->nodeType != XML_ELEMENT_NODE){
+            if($service_childs->nodeType != XML_ELEMENT_NODE) {
                 continue;
             }
-            if($service_childs->localName == WSF_PORT && $service_childs->namespaceURI == WSF_WSDL_NAMESPACE){
+            if($service_childs->localName == WSF_PORT && $service_childs->namespaceURI == WSF_WSDL_NAMESPACE) {
                 if($port_name == NULL)
                 {
                     /* pick the first node as port if the port name is not given*/
@@ -521,17 +521,17 @@ function wsf_get_binding(DomDocument $wsdl_dom, $service_name, $port_name, $is_w
             $binding_name = $port_node->attributes->getNamedItem(WSF_BINDING)->value;
         }
 
-        if(!$binding_name){
+        if(!$binding_name) {
             /* echo "binding_name not found"; */
             error_log("Binding node not found, please check service name, port name");
             return NULL;
         }
 
-        foreach($root_child_list as $childs){
-            if($childs->nodeType != XML_ELEMENT_NODE){
+        foreach($root_child_list as $childs) {
+            if($childs->nodeType != XML_ELEMENT_NODE) {
                 continue;
             }
-            if($childs->localName == WSF_BINDING && $childs->namespaceURI == WSF_WSDL_NAMESPACE){
+            if($childs->localName == WSF_BINDING && $childs->namespaceURI == WSF_WSDL_NAMESPACE) {
                 $binding_name_mod = strstr($binding_name, ":");
                 if($childs->attributes->getNamedItem(WSF_NAME)->value == substr($binding_name_mod, 1))
                     return $childs;
@@ -558,15 +558,15 @@ function wsf_get_all_policies(DomDocument $wsdl_dom, DomNode $binding_node, $ope
     return NULL;
 
     $binding_child_list = $binding_node->childNodes;
-    foreach($binding_child_list as $binding_child){
-        if($binding_child->localName == WSF_POLICY_REFERENCE){
+    foreach($binding_child_list as $binding_child) {
+        if($binding_child->localName == WSF_POLICY_REFERENCE) {
             $binding_attr = $binding_child->attributes;
             $policy_uri =  $binding_attr->getNamedItem(WSF_URI)->value;
             $binding_policy = get_policy_node($wsdl_dom, $policy_uri);
             $policy_array["operation_policy"] = $binding_policy;
         }
 
-        if($binding_child->localName == WSF_POLICY){
+        if($binding_child->localName == WSF_POLICY) {
             $binding_policy_child = $binding_child->firstChild;
             $binding_attr = $binding_policy_child->attributes;
             $policy_uri =  $binding_attr->getNamedItem(WSF_URI)->value;
@@ -574,12 +574,12 @@ function wsf_get_all_policies(DomDocument $wsdl_dom, DomNode $binding_node, $ope
             $policy_array["operation_policy"] = $binding_policy;
         }
 
-        if($binding_child->localName == WSF_OPERATION && $is_wsdl_11 = FALSE){
+        if($binding_child->localName == WSF_OPERATION && $is_wsdl_11 = FALSE) {
             $operation_attr = $binding_child->attributes;
             $operation_ref = $operation_attr->getNamedItem(WSF_REF)->value;
-            if(substr(strstr($operation_ref, ":"), 1) == $operation_name && $binding_child->hasChildNodes()){
-                foreach($binding_child->childNodes as $input_output){
-                    if($input_output->firstChild->localName == WSF_POLICY_REFERENCE){  /* there may be several chidren */
+            if(substr(strstr($operation_ref, ":"), 1) == $operation_name && $binding_child->hasChildNodes()) {
+                foreach($binding_child->childNodes as $input_output) {
+                    if($input_output->firstChild->localName == WSF_POLICY_REFERENCE) {  /* there may be several chidren */
                         $input_output_attr = $input_output->firstChild->attributes;
                         $msg_policy_uri =  $input_output_attr->getNamedItem(WSF_URI)->value;
                         $msg_policy = get_policy_node($wsdl_dom, $msg_policy_uri);
@@ -590,14 +590,14 @@ function wsf_get_all_policies(DomDocument $wsdl_dom, DomNode $binding_node, $ope
             }
         }
 
-        if($binding_child->localName == WSF_OPERATION && $is_wsdl_11 = TRUE){
+        if($binding_child->localName == WSF_OPERATION && $is_wsdl_11 = TRUE) {
             $op_name = NULL;
             $operation_attr = $binding_child->attributes;
             if($operation_attr->getNamedItem(WSF_NAME))
             $op_name = $operation_attr->getNamedItem(WSF_NAME)->value;
-            if($op_name == $operation_name && $binding_child->hasChildNodes()){
-                foreach($binding_child->childNodes as $input_output){
-                    if($input_output->firstChild && $input_output->firstChild->localName == WSF_POLICY_REFERENCE){  /* there may be several children */
+            if($op_name == $operation_name && $binding_child->hasChildNodes()) {
+                foreach($binding_child->childNodes as $input_output) {
+                    if($input_output->firstChild && $input_output->firstChild->localName == WSF_POLICY_REFERENCE) {  /* there may be several children */
                         $input_output_attr = $input_output->firstChild->attributes;
                         $msg_policy_uri =  $input_output_attr->getNamedItem(WSF_URI)->value;
                         $msg_policy = get_policy_node($wsdl_dom, $msg_policy_uri);
@@ -624,12 +624,12 @@ function get_policy_node(DomDocument $wsdl_dom, $policy_uri)
 
     $root_node = $wsdl_dom->firstChild;
     $root_child_list = $root_node->childNodes;
-    foreach($root_child_list as $child){
-        if($child->localName == WSF_POLICY){
+    foreach($root_child_list as $child) {
+        if($child->localName == WSF_POLICY) {
             $policy_attr = $child->attributes;
             $policy_in_same_wsdl  = strpos($policy_uri, '#');
-            if($policy_in_same_wsdl === 0){
-                if($policy_attr->getNamedItemNS(WSF_POLICY_ID_NAMESPACE_URI, WSF_ID)->value == substr($policy_uri, 1)){
+            if($policy_in_same_wsdl === 0) {
+                if($policy_attr->getNamedItemNS(WSF_POLICY_ID_NAMESPACE_URI, WSF_ID)->value == substr($policy_uri, 1)) {
                     $policy_node = $child;
                     break;
                 }
@@ -641,7 +641,7 @@ function get_policy_node(DomDocument $wsdl_dom, $policy_uri)
     }
 
 
-    if($policy_node){
+    if($policy_node) {
         $clone_policy_node = $policy_node->cloneNode(TRUE);
         return $wsdl_dom->saveXML($clone_policy_node);
     } else
@@ -666,42 +666,42 @@ function wsf_get_binding_details(DomNode $operation_node)
     $http_method = NULL;
 
     $operation_child_list = $operation_node->childNodes;
-    foreach($operation_child_list as $operation_child){
-        if($operation_child->localName == WSF_BINDINDG_DETAILS && $operation_child->hasAttributes()){
+    foreach($operation_child_list as $operation_child) {
+        if($operation_child->localName == WSF_BINDINDG_DETAILS && $operation_child->hasAttributes()) {
             $binding_array[WSF_USE_SOAP] = TRUE;
             if($operation_child->attributes->getNamedItem(WSF_WSAWAACTION))
                 $wsa_action = $operation_child->attributes->getNamedItem(WSF_WSAWAACTION)->value;
             if($operation_child->attributes->getNamedItem(WSF_SOAPACTION))
                 $soap_action = $operation_child->attributes->getNamedItem(WSF_SOAPACTION)->value;
 
-            if($operation_child->attributes->getNamedItem(WSF_HTTPMETHOD)){
+            if($operation_child->attributes->getNamedItem(WSF_HTTPMETHOD)) {
                 $http_method = $operation_child->attributes->getNamedItem(WSF_HTTPMETHOD)->value;
             }
-            if($wsa_action){
+            if($wsa_action) {
                 $binding_array[WSF_WSA] = $wsa_action;
             }
-            if($soap_action){
+            if($soap_action) {
                 $binding_array[WSF_SOAP] = $soap_action;
             }
-            if($http_method){
+            if($http_method) {
                 $binding_array[WSF_USE_SOAP] = FALSE;
                 $binding_array[WSF_HTTPMETHOD] = $http_method;
             }
         }
     }
 
-    if($binding_array[WSF_USE_SOAP]){
+    if($binding_array[WSF_USE_SOAP]) {
         /* goto operations parent get soap version information*/
         $operations_node = $operation_node->parentNode;
-        if ($operations_node){
+        if ($operations_node) {
             $service_node = $operations_node->parentNode;
         }
-        if ($service_node){
+        if ($service_node) {
             $soap_type = $service_node->attributes->getNamedItem(WSF_TYPE)->value;
-            if($soap_type == WSF_SOAP11){
+            if($soap_type == WSF_SOAP11) {
                 $soap_version = 1;
             }
-            else if($soap_type == WSF_SOAP12){
+            else if($soap_type == WSF_SOAP12) {
                 $soap_version = 2;
             }
             else{
@@ -732,35 +732,35 @@ function wsf_get_schema_node(&$wsdl_dom, &$wsdl_dom2 = NULL)
      
     $root_node = $wsdl_dom->firstChild;
     $root_child_list = $root_node->childNodes;
-    foreach($root_child_list as $childs){
+    foreach($root_child_list as $childs) {
         /* this is for inline schema */
         $tmp_node = $childs;
         $schema_node = $tmp_node->cloneNode(TRUE);
         /* end inline schema */
 
-        if($childs->localName == WSF_TYPES){
+        if($childs->localName == WSF_TYPES) {
             $schema_list = $childs->childNodes;
             // to find import schemas
-            foreach($schema_list as $schema_child){
+            foreach($schema_list as $schema_child) {
                 $schema = array();
                 $i = 0;
                 $import_child_list = $schema_child->childNodes;
-                foreach($import_child_list as $import_child){
-                    if($import_child->localName == "import" && $import_child->attributes->getNamedItem('schemaLocation')){
+                foreach($import_child_list as $import_child) {
+                    if($import_child->localName == "import" && $import_child->attributes->getNamedItem('schemaLocation')) {
                         $schema["schema".$i]= $import_child->attributes->getNamedItem('schemaLocation')->value;
                         $i++;
                     }
                 }
             }
 
-            if($schema){
+            if($schema) {
                 $schema_dom = new DomDocument();
                 $schema_dom->preserveWhiteSpace = false;
-                foreach($schema as $key => $val){
+                foreach($schema as $key => $val) {
                     $schema_dom->load($val);
                     $import_schema_child_list = $schema_dom->childNodes;
-                    foreach($import_schema_child_list as $import_schema_child){
-                        if($import_schema_child->localName == 'schema'){
+                    foreach($import_schema_child_list as $import_schema_child) {
+                        if($import_schema_child->localName == 'schema') {
                             $tmp_import_schema_node = $import_schema_child;
                             $cloned_import_schema_node = $tmp_import_schema_node->cloneNode(TRUE);
                             wsf_schema_appendNode($schema_node, $tmp_import_schema_node, $wsdl_dom);
@@ -769,15 +769,15 @@ function wsf_get_schema_node(&$wsdl_dom, &$wsdl_dom2 = NULL)
                 }
             }
             $wsdl_2_0_child_list2 = $wsdl_dom->firstChild->childNodes;
-            foreach($wsdl_2_0_child_list2 as $types_child){
-                if($types_child->localName == 'types'){
+            foreach($wsdl_2_0_child_list2 as $types_child) {
+                if($types_child->localName == 'types') {
                     $types_child_list = $types_child->childNodes;
-                    foreach($types_child_list as $schema_child){
-                        if($schema_child->localName == 'schema'){
+                    foreach($types_child_list as $schema_child) {
+                        if($schema_child->localName == 'schema') {
                             $schema_child_list = $schema_child->childNodes;
                             for ($i = $schema_child_list->length; $i >= 0; $i--) {
                                 $import_child = $schema_child_list->item($i);
-                                if($import_child && $import_child->localName == 'import' && $import_child->attributes->getNamedItem('schemaLocation')){
+                                if($import_child && $import_child->localName == 'import' && $import_child->attributes->getNamedItem('schemaLocation')) {
                                     $schema_child->removeChild($import_child);
                                 }
                             }
@@ -786,13 +786,13 @@ function wsf_get_schema_node(&$wsdl_dom, &$wsdl_dom2 = NULL)
                 }
             }
 
-            if($wsdl_dom2){
+            if($wsdl_dom2) {
                 $wsdl_2_0_child_list = $wsdl_dom2->firstChild->childNodes;
-                foreach($wsdl_2_0_child_list as $types_child){
-                    if($types_child->localName == 'types'){
+                foreach($wsdl_2_0_child_list as $types_child) {
+                    if($types_child->localName == 'types') {
                         $types_child_list = $types_child->childNodes;
-                        foreach($types_child_list as $schema_child){
-                            if($schema_child->localName == 'schema'){
+                        foreach($types_child_list as $schema_child) {
+                            if($schema_child->localName == 'schema') {
                                 $types_child->removeChild($schema_child);
                                 foreach($schema_node->childNodes as $schema3_child)
                                 wsf_schema_appendNode($types_child, $schema3_child, $wsdl_dom2);
@@ -804,18 +804,18 @@ function wsf_get_schema_node(&$wsdl_dom, &$wsdl_dom2 = NULL)
                 }
             }
 
-            if($wsdl_dom2){
+            if($wsdl_dom2) {
                 $wsdl_2_0_child_list = $wsdl_dom2->firstChild->childNodes;
-                foreach($wsdl_2_0_child_list as $types_child){
-                    if($types_child->localName == 'types'){
+                foreach($wsdl_2_0_child_list as $types_child) {
+                    if($types_child->localName == 'types') {
                         $types_child_list = $types_child->childNodes;
-                        foreach($types_child_list as $schema_child){
-                            if($schema_child->localName == 'schema'){
+                        foreach($types_child_list as $schema_child) {
+                            if($schema_child->localName == 'schema') {
                                 $schema_child_list = $schema_child->childNodes;
                                 for ($i = $schema_child_list->length; $i >= 0; $i--) {
-                                    //foreach($schema_child_list as $import_child){
+                                    //foreach($schema_child_list as $import_child) {
                                     $import_child = $schema_child_list->item($i);
-                                    if($import_child->localName == 'import' && $import_child->attributes->getNamedItem('schemaLocation')){
+                                    if($import_child->localName == 'import' && $import_child->attributes->getNamedItem('schemaLocation')) {
                                         $schema_child->removeChild($import_child);
 
                                     }
@@ -999,21 +999,21 @@ function wsf_is_rpc_enc_wsdl($wsdl_11_dom, $binding_node, $operation_name)
     $style = NULL;
     foreach($binding_child_list as $binding_child)
     {
-        if($binding_child->localName == "binding"){
+        if($binding_child->localName == "binding") {
             $binding_attr = $binding_child->attributes;
-            if($binding_attr && $binding_attr->getNamedItem("style")){
+            if($binding_attr && $binding_attr->getNamedItem("style")) {
                 $style =  $binding_attr->getNamedItem("style")->value;
             }
             //var_dump($style)."\n\n";
         }
-        if($binding_child->localName == WSF_OPERATION && $style == "rpc"){
+        if($binding_child->localName == WSF_OPERATION && $style == "rpc") {
             $op_name = NULL;
             $operation_attr = $binding_child->attributes;
             if($operation_attr->getNamedItem(WSF_NAME))
                 $op_name = $operation_attr->getNamedItem(WSF_NAME)->value;
-            if($op_name == $operation_name && $binding_child->hasChildNodes()){
-                foreach($binding_child->childNodes as $input_output){
-                    if($input_output->firstChild && $input_output->firstChild->localName == "body"){
+            if($op_name == $operation_name && $binding_child->hasChildNodes()) {
+                foreach($binding_child->childNodes as $input_output) {
+                    if($input_output->firstChild && $input_output->firstChild->localName == "body") {
                         $body_attr = $input_output->firstChild->attributes;
                         $enc =  $body_attr->getNamedItem("use")->value;
                         $enc_style = $body_attr->getNamedItem("encodingStyle")->value;
@@ -1039,7 +1039,7 @@ function wsf_is_rpc_enc_wsdl($wsdl_11_dom, $binding_node, $operation_name)
  */
 
 
-function wsf_create_temp_struct(DomNode $param_child, $wrapper_ns)
+function wsf_create_sig_data_struct(DomNode $param_child, $wrapper_ns)
 {
     $rec_array = array();
     $param_nil = NULL;
@@ -1057,19 +1057,19 @@ function wsf_create_temp_struct(DomNode $param_child, $wrapper_ns)
         $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
     if($param_attr->getNamedItem(WSF_TYPE_NAMESPACE))
         $param_type_ns = $param_attr->getNamedItem(WSF_TYPE_NAMESPACE)->value;
-    if($param_attr->getNamedItem('minOccurs'))
-        $param_min = $param_attr->getNamedItem('minOccurs')->value;
-    if($param_attr->getNamedItem('maxOccurs'))
-        $param_max = $param_attr->getNamedItem('maxOccurs')->value;
-    if($param_attr->getNamedItem('nillable'))
-        $param_nil = $param_attr->getNamedItem('nillable')->value;
+    if($param_attr->getNamedItem(WSF_MIN_OCCURS))
+        $param_min = $param_attr->getNamedItem(WSF_MIN_OCCURS)->value;
+    if($param_attr->getNamedItem(WSF_MAX_OCCURS))
+        $param_max = $param_attr->getNamedItem(WSF_MAX_OCCURS)->value;
+    if($param_attr->getNamedItem(WSF_XSD_NILLABLE))
+        $param_nil = $param_attr->getNamedItem(WSF_XSD_NILLABLE)->value;
 
-    if($param_child->hasChildNodes()){
+    if($param_child->hasChildNodes()) {
         $param_has_sig_childs = TRUE;
     }
     $rec_array[WSF_HAS_SIG_CHILDS] = $param_has_sig_childs;
 
-    if($wrap_type == 'yes'){ /* this is for simple types */
+    if($wrap_type == 'yes') { /* this is for simple types */
         if($param_ns == NULL)
             $rec_array[WSF_NS] = "NULL";//$wrapper_ns;
         else
@@ -1077,17 +1077,17 @@ function wsf_create_temp_struct(DomNode $param_child, $wrapper_ns)
 
         $rec_array[WSF_TYPE_REP] = $param_type;
         if($param_min != 1)
-            $rec_array['minOccurs'] = $param_min; 
+            $rec_array[WSF_MIN_OCCURS] = $param_min; 
         if($param_max != 1)
-            $rec_array['maxOccurs'] = $param_max; 
+            $rec_array[WSF_MAX_OCCURS] = $param_max; 
         if($param_nil)
-            $rec_array['nillable'] = $param_nil; 
+            $rec_array[WSF_XSD_NILLABLE] = $param_nil; 
     }
     else{
         
         /* for some WSDL sig model gives simple type no even there are
          * xsd types in the parameter. So this check is needed */
-        if (is_xsd_type($param_type)){
+        if (is_xsd_type($param_type)) {
             if($param_ns == NULL)
                 $rec_array[WSF_NS] = $wrapper_ns;
             else
@@ -1095,11 +1095,11 @@ function wsf_create_temp_struct(DomNode $param_child, $wrapper_ns)
 
             $rec_array[WSF_TYPE_REP] = $param_type;
             if($param_min)
-                $rec_array['minOccurs'] = $param_min;
+                $rec_array[WSF_MIN_OCCURS] = $param_min;
             if($param_max != 1)
-                $rec_array['maxOccurs'] = $param_max;
+                $rec_array[WSF_MAX_OCCURS] = $param_max;
             if($param_nil)
-                $rec_array['nillable'] = $param_nil;
+                $rec_array[WSF_XSD_NILLABLE] = $param_nil;
         }
         else{
             if($param_ns == NULL)
@@ -1108,19 +1108,21 @@ function wsf_create_temp_struct(DomNode $param_child, $wrapper_ns)
                 $rec_array[WSF_NS] = $param_ns;
 
             $rec_array[WSF_NS] = $param_ns;
-            $rec_array['class_map_name'] = $param_type;
+            $rec_array[WSF_CLASS_MAP_NAME] = $param_type;
             if($param_min)
-                $rec_array['minOccurs'] = $param_min;
+                $rec_array[WSF_MIN_OCCURS] = $param_min;
             if($param_max != 1)
-                $rec_array['maxOccurs'] = $param_max;
+                $rec_array[WSF_MAX_OCCURS] = $param_max;
             if($param_nil)
-                $rec_array['nillable'] = $param_nil;
+                $rec_array[WSF_XSD_NILLABLE] = $param_nil;
 
             $param_child_list_level2 = $param_child->childNodes;
-            foreach($param_child_list_level2 as $param_child_level2){
+
+            $rec_array[WSF_SIG_CHILDS] = array();
+            foreach($param_child_list_level2 as $param_child_level2) {
                 $param_child_level2_attr = $param_child_level2->attributes;
                 $param_level2_name = $param_child_level2_attr->getNamedItem(WSF_NAME)->value;
-                $rec_array[$param_level2_name] = wsf_create_temp_struct($param_child_level2, $wrapper_ns);
+                $rec_array[WSF_SIG_CHILDS][$param_level2_name] = wsf_create_sig_data_struct($param_child_level2, $wrapper_ns);
             }
         }
     }

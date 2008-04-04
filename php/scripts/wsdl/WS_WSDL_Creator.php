@@ -53,10 +53,8 @@ class WS_WSDL_Creator
      * @param string $wsdl_ver wsdl_version(wsdl1.1 or wsdl2)
      */
     function __construct($f_arry, $class_arry, $service, $endpoints,
-                         $binding_style,  $ns , $wsdl_ver, $op_arry)
-    {
-        if(!$ns)
-        {
+                         $binding_style,  $ns , $wsdl_ver, $op_arry) {
+        if(!$ns) {
             $this->namespace = $endpoints;
         }
         else
@@ -78,8 +76,7 @@ class WS_WSDL_Creator
     /**
      * Creates the wsdl document for WSDL1.1
      */
-    private function buildWsdlDom()
-    {
+    private function buildWsdlDom() {
         $wsdl_dom = new DomDocument(WS_WSDL_Const::WS_DOM_DOCUMENT_VERSION_NO,
                                     WS_WSDL_Const::WS_DOM_DOCUMENT_ENCODING);
 
@@ -124,8 +121,7 @@ class WS_WSDL_Creator
         $xsdArry = $oper_obj->xsdTypes;
 
 
-        if($this->Binding_style == "doclit")
-        {
+        if($this->Binding_style == "doclit") {
             $type_obj = new WS_WSDL_Type($this->namespace, $createdTypeArry,
                                         $xsdArry, $this->ops_to_functions);
             $type_obj->createDocLitType($wsdl_dom, $wsdl_root_ele);
@@ -135,8 +131,7 @@ class WS_WSDL_Creator
             $msg_obj->createDocLitMessage($wsdl_dom,$wsdl_root_ele);
         }
 
-        if ($this->Binding_style == "rpc")
-        {
+        if ($this->Binding_style == "rpc") {
             $type_obj = new WS_WSDL_Type($this->namespace, $createdTypeArry, $xsdArry, $this->ops_to_functions);
             /* no types for the time being */
             $class_to_prefix = $type_obj->createRPCType($wsdl_dom, $wsdl_root_ele);
@@ -152,15 +147,13 @@ class WS_WSDL_Creator
         $port_obj = new WS_WSDL_Port($this->service_name, $operationsArry, $this->ops_to_functions);
         $port_obj->createPortType($wsdl_dom, $wsdl_root_ele);
 
-        if ($this->Binding_style == "doclit")
-        {
+        if ($this->Binding_style == "doclit") {
             $bind_obj = new WS_WSDL_Binding($this->service_name,
                                            $this->endpoint, $operationsArry, $this->ops_to_functions);
             $bind_obj->createDocLitBinding($wsdl_dom, $wsdl_root_ele);
         }
 
-        if ($this->Binding_style == "rpc")
-        {
+        if ($this->Binding_style == "rpc") {
             $bind_obj = new WS_WSDL_Binding($this->service_name, $this->endpoint,
                                            $operationsArry, $this->ops_to_functions);
             $bind_obj->createRPCBinding($wsdl_dom, $wsdl_root_ele);
@@ -181,8 +174,7 @@ class WS_WSDL_Creator
      * Creates wsdl for WSDL 2.0
      *
      */
-    private function buildWsdl2Dom()
-    {
+    private function buildWsdl2Dom() {
         $wsdl_dom = new DomDocument(WS_WSDL_Const::WS_DOM_DOCUMENT_VERSION_NO,
                                     WS_WSDL_Const::WS_DOM_DOCUMENT_ENCODING);
 
@@ -254,8 +246,7 @@ class WS_WSDL_Creator
      *
      */
 
-    public function WS_WSDL_Out()
-    {
+    public function WS_WSDL_Out() {
         if ($this->wsdl_version == "wsdl1")
             $tmp = $this->buildWsdlDom();
         else

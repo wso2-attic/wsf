@@ -64,7 +64,7 @@ $class_code = wsf_wsdl2php($wsdl_location);
 echo "<?php\n\n";
 
 $class_map = NULL;
-if($class_code){
+if($class_code) {
 
     echo "// PHP classes corresponding to the data types in defined in WSDL\n\n";
     echo $class_code;
@@ -131,11 +131,11 @@ if ($args['s']) {
 	echo "\$service = new WSService(array (\"wsdl\" =>\"$wsdl_location\",\n";
 	echo "        \"operations\" => \$operations,\n";
 	echo "        \"opParams\" => \$opParams,\n";
-    if($actions != NULL){
+    if($actions != NULL) {
         echo 
          "        \"actions\" => \$actions,\n";
     }
-    if($class_map != NULL){
+    if($class_map != NULL) {
 	    echo 
          "        \"classmap\" => \$class_map,\n";
     }
@@ -150,7 +150,7 @@ if ($args['s']) {
 	echo "try {\n\n";
 	echo "    // create client in WSDL mode\n";
 	echo "    \$client = new WSClient(array (\"wsdl\" =>\"$wsdl_location\",\n";
-    if($class_map != NULL){
+    if($class_map != NULL) {
 	    echo 
          "        \"classmap\" => \$class_map,\n";
     }

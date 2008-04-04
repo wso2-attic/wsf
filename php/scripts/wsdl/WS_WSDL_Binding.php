@@ -38,8 +38,7 @@ class WS_WSDL_Binding
      * @param Array $operations Array of operations defined in the service
      */
 
-    function __construct($service_name, $wsdl_ep, $operations = false, $ops_to_functions)
-    {
+    function __construct($service_name, $wsdl_ep, $operations = false, $ops_to_functions) {
         $this->svr_name = $service_name;
         $this->operations = $operations;
         $this->wsdl_location = $wsdl_ep;
@@ -52,8 +51,7 @@ class WS_WSDL_Binding
      * @param DomElement $binding_root root element of the document
      */
     public function createDocLitBinding(DomDocument $binding_doc,
-                                        DomElement $binding_root)
-    {
+                                        DomElement $binding_root) {
         $binding_ele = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                        WS_WSDL_Const::WS_WSDL_BINDING_ATTR_NAME);
         $binding_ele->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME,
@@ -69,12 +67,11 @@ class WS_WSDL_Binding
                                  WS_WSDL_Const::WS_WSDL_DOCUMENT_ATTR_NAME);
         $binding_ele->appendChild($s_binding);
 
-        foreach($this->operations as $name => $params)
-        {
+        foreach($this->operations as $name => $params) {
 
             $op = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                                 WS_WSDL_Const::WS_WSDL_OPERATION_ATTR_NAME);
-            foreach($this->fun_mapping as $key => $value){
+            foreach($this->fun_mapping as $key => $value) {
                 if ($value == $name)
                 $op->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $key);
             }
@@ -89,8 +86,7 @@ class WS_WSDL_Binding
 
 
             foreach(array(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME,
-                          WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME) as $type)
-            {
+                          WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME) as $type) {
                 $sbinding_ele = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                 $type);
                 $s_body = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_SOAP_NAMESPACE,
@@ -112,8 +108,7 @@ class WS_WSDL_Binding
      * @param DomElement $binding_root root element of the document
      */
     public function createRPCBinding(DomDocument $binding_doc,
-                                     DomElement $binding_root)
-    {
+                                     DomElement $binding_root) {
         $binding_ele = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                        WS_WSDL_Const::WS_WSDL_BINDING_ATTR_NAME);
         $binding_ele->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, 
@@ -129,17 +124,15 @@ class WS_WSDL_Binding
                                  WS_WSDL_Const::WS_SCHEMA_SOAP_HTTP_NAMESPACE);
         $binding_ele->appendChild($s_binding);
 
-        foreach($this->operations as $name => $params)
-        {
+        foreach($this->operations as $name => $params) {
             $op = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                                 WS_WSDL_Const::WS_WSDL_OPERATION_ATTR_NAME);
-            foreach($this->fun_mapping as $key => $value){
+            foreach($this->fun_mapping as $key => $value) {
                 if ($value == $name)
                 $op->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $key);
             }
             foreach(array(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME,
-                          WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME) as $type)
-            {
+                          WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME) as $type) {
                 $sbinding_ele = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                 $type);
                 $s_body = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_SOAP_NAMESPACE,
@@ -166,8 +159,7 @@ class WS_WSDL_Binding
      * @param DomDocument $binding_doc DomDocument element of the wsdl document 
      * @param DomElement $binding_root root element of the document
      */
-    public function createWsdl2Binding(DomDocument $binding_doc, DomElement $binding_root)
-    {
+    public function createWsdl2Binding(DomDocument $binding_doc, DomElement $binding_root) {
         $binding_ele = $binding_doc->createElementNS(WS_WSDL_Const::WS_WSDL2_NAMESPACE,
                        WS_WSDL_Const::WS_WSDL_BINDING_ATTR_NAME);
         $binding_ele->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME,

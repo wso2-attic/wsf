@@ -116,7 +116,7 @@ function ws_generate_wsdl($service_name, $fn_arry, $class_arry,
     $namespace = "http://www.wso2.org/php";
 
     /* Since WSDL 2.0 logic seems very buggy, better to use WSDL converter, should move this code to C level */
-    if(strcmp($wsdl_version ,"wsdl2.0") == 0){
+    if(strcmp($wsdl_version ,"wsdl2.0") == 0) {
       $wsdl_version = "wsdl1.1";
       $wsdl = new WS_WSDL_Creator($fn_arry, $class_arry, $service_name, $request_uri,
 				  $Binding_style,$namespace, $wsdl_version, $op_arry);
@@ -153,8 +153,8 @@ function convert_to_wsdl20($wsdl_out)
   $wsdl_dom->loadXML($wsdl_out);
   $xslt_11_to_20_dom->loadXML($xslt->transformToXML($wsdl_dom));
   $doc_ele = $xslt_11_to_20_dom->documentElement;
-  foreach($doc_ele->childNodes as $child){
-      if($child->nodeType == XML_COMMENT_NODE ){
+  foreach($doc_ele->childNodes as $child) {
+      if($child->nodeType == XML_COMMENT_NODE ) {
          $old_child = $doc_ele->removeChild($child); 
           //echo "asdasd";
       }
