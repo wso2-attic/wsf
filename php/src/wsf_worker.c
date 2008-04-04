@@ -247,7 +247,7 @@ wsf_worker_process_request (
         axutil_string_free (ctx_uuid_str, env);
     }
     php_out_transport_info = wsf_out_transport_info_create (env, request);
-	axis2_msg_ctx_set_out_transport_info (msg_ctx, env, (axis2_out_transport_info_t*)php_out_transport_info);
+	axis2_msg_ctx_set_out_transport_info (msg_ctx, env, &(php_out_transport_info->out_transport));
     if (request->transfer_encoding) {
         axis2_msg_ctx_set_transfer_encoding (msg_ctx, env,
             axutil_strdup (env, request->transfer_encoding));

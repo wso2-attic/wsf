@@ -49,7 +49,52 @@ axis2_status_t WSF_CALL wsf_http_out_transport_info_free (
     axis2_http_out_transport_info_t * out_transport_info,
     const axutil_env_t * env);
 
+axis2_status_t WSF_CALL
+wsf_out_transport_info_impl_set_content_type(
+            axis2_out_transport_info_t * out_transport_info,
+                const axutil_env_t * env,
+                    const axis2_char_t * content_type)
+{
+    /*
+    axis2_http_out_transport_info_t *http_transport_info = NULL;
+    http_transport_info = AXIS2_INTF_TO_IMPL(out_transport_info);
+    return axis2_http_out_transport_info_set_content_type(http_transport_info, env, content_type);
+    */
+    return 0;
+}
 
+axis2_status_t AXIS2_CALL
+wsf_out_transport_info_impl_set_char_encoding(
+            axis2_out_transport_info_t * out_transport_info,
+                const axutil_env_t * env,
+                    const axis2_char_t * encoding)
+{   /*
+    axis2_http_out_transport_info_t *http_transport_info = NULL;
+    http_transport_info = AXIS2_INTF_TO_IMPL(out_transport_info);
+    return axis2_http_out_transport_info_set_char_encoding(http_transport_info, env, encoding);
+    */
+    return 0;
+}
+
+void AXIS2_CALL
+wsf_out_transport_info_impl_free(
+    axis2_out_transport_info_t * out_transport_info,
+    const axutil_env_t * env)
+{
+    /*
+    axis2_http_out_transport_info_t *http_transport_info = NULL;
+    http_transport_info = AXIS2_INTF_TO_IMPL(out_transport_info);
+    axis2_http_out_transport_info_free(http_transport_info, env);
+    return;
+    */
+}
+/******************************************************************************/
+
+static const axis2_out_transport_info_ops_t ops_var = {
+    wsf_out_transport_info_impl_set_content_type,
+    wsf_out_transport_info_impl_set_char_encoding,
+    wsf_out_transport_info_impl_free
+};
 
 /***************************** End of function headers ************************/
 
@@ -73,6 +118,7 @@ wsf_out_transport_info_create (
     info_impl->encoding = NULL;
 
     out_transport_info = &(info_impl->out_transport_info);
+    out_transport_info->out_transport.ops = &ops_var;
 
     axis2_http_out_transport_info_set_char_encoding_func (out_transport_info,
         env, wsf_http_out_transport_info_set_char_encoding);
