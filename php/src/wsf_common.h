@@ -56,6 +56,8 @@ typedef enum ws_input_types
 
 /** options for services array */
 
+#define WS_PHP_LOG_PREFIX      "[WSF/PHP] "
+
 #define WS_ACTIONS      "actions"
 #define WS_OPERATIONS  "operations"
 #define WS_OP_MEP      "opMEP"

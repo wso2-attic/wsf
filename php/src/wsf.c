@@ -60,6 +60,7 @@ zend_class_entry * ws_param_class_entry;
  *  message receiver does not have state*/ 
 static axutil_env_t *env;
 static axutil_env_t *ws_env_svr;
+static int ws_is_svr;
 axis2_msg_recv_t * wsf_msg_recv;
 wsf_worker_t * worker;
 
@@ -119,6 +120,9 @@ PHP_METHOD (ws_client_proxy, __destruct);
 PHP_METHOD (ws_client_proxy, get_functions);
 PHP_METHOD (ws_client_proxy, get_types);
 PHP_METHOD (ws_client_proxy, get_location);
+
+/** Logging errors */
+PHP_FUNCTION (ws_log_write);
 
 static 
 ZEND_BEGIN_ARG_INFO ( ws_client_proxy_call_args, 0) 
@@ -202,6 +206,7 @@ zend_function_entry wsf_functions[] = {
     PHP_FE (is_ws_fault, NULL) 
     PHP_FE (ws_get_key_from_file, NULL) 
     PHP_FE (ws_get_cert_from_file, NULL) 
+    PHP_FE (ws_log_write, NULL) 
     { NULL, NULL, NULL} 
 };
 /* }}} */ 
@@ -597,6 +602,7 @@ PHP_METHOD (ws_client, __construct)
     axis2_svc_client_t * svc_client = NULL;
     zval * options = NULL;
     long cache_wsdl;
+    ws_is_svr = 0;
     if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "|a", &options)) {
         php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
         return;
@@ -837,6 +843,7 @@ PHP_METHOD (ws_service, __construct)
 	zval **wsdl_tmp = NULL;
     char *service_name = NULL;
     char *port_name = NULL;
+    ws_is_svr = 1;
 
     if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "|a",
             &options)) {
@@ -1867,3 +1874,75 @@ PHP_METHOD (ws_client_proxy, get_location)
 
 
 /* }}} end getLocation */ 
+    
+/* {{{ proto string ws_log_write(string file, string line, string level, string text) */ 
+PHP_FUNCTION (ws_log_write) 
+{
+    char *text;
+    int text_len;
+
+    char *level_str;
+    int level;
+    int level_len;
+
+    char *file;
+    int file_len;
+
+    char* line_str;
+    int line;
+    int line_len;
+
+    axis2_char_t *buffer;
+
+    axutil_log_t * log;
+    axutil_env_t * current_env;
+
+    if(ws_is_svr) {
+        current_env = ws_env_svr;
+    }
+    else {
+        current_env = env;
+    }
+    log = current_env->log;
+
+    
+        /* Parse arguments */ 
+    if (zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "ssss",
+            &file, &file_len, &line_str, &line_len, &level_str,
+            &level_len, &text, &text_len) == FAILURE) {
+        return;
+    }
+
+    buffer = axutil_stracat(env, WS_PHP_LOG_PREFIX, text);
+
+    line = axutil_atoi(line_str);
+    level = axutil_atoi(level_str);
+
+    switch(level){
+        case 0:
+            axutil_log_impl_log_critical(log, file, line, buffer);
+            break;
+        case 1:
+            axutil_log_impl_log_error(log, file, line, buffer);
+            break;
+        case 2:
+            axutil_log_impl_log_warning(log, file, line, buffer);
+            break;
+        case 3:
+            axutil_log_impl_log_info(log, file, line, buffer);
+            break;
+        case 4:
+            axutil_log_impl_log_debug(log, file, line, buffer);
+            break;
+        case 5:
+            axutil_log_impl_log_user(log, file, line, buffer);
+            break;
+        default:
+            axutil_log_impl_log_trace(log, file, line, buffer);
+            break;
+    }
+
+    AXIS2_FREE(env->allocator, buffer);
+        
+}
+/* }}} */ 

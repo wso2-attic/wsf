@@ -40,34 +40,39 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
         if($params_node && $params_node->localName == WSF_PARAMS) {
             if($params_node->hasAttributes()) {
                 /* Wrapper element of the request operation */
-                $params_attr = $params_node->attributes;
-                $ele_name = $params_attr->getNamedItem(WSF_WRAPPER_ELEMENT)->value;
-                $ele_ns = $params_attr->getNamedItem(WSF_WRAPPER_ELEMENT_NS)->value;
-                $sig_data_array =  array();
-                $sig_data_array[WSF_NS] = $ele_ns;
-                $sig_data_array[WSF_HAS_SIG_CHILDS] = TRUE;
+                $sig_attrs = $params_node->attributes;
+                $ele_name = $sig_attrs->getNamedItem(WSF_WRAPPER_ELEMENT)->value;
+                $ele_ns = $sig_attrs->getNamedItem(WSF_WRAPPER_ELEMENT_NS)->value;
+                $sig_data_struct =  array();
+                $sig_data_struct[WSF_NS] = $ele_ns;
+                $sig_data_struct[WSF_HAS_SIG_CHILDS] = TRUE;
+
+                if($sig_attrs->getNamedItem(WSF_CONTENT_MODEL)) {
+                    $content_model = $sig_attrs->getNamedItem(WSF_CONTENT_MODEL)->value;
+                    $sig_data_struct[WSF_CONTENT_MODEL] = $content_model;
+                }
                 $is_wrapper = TRUE;
                             
                 $param_child_list = $params_node->childNodes;
-                $sig_data_array[WSF_SIG_CHILDS] = array();
+                $sig_data_struct[WSF_SIG_CHILDS] = array();
 
                 foreach($param_child_list as $param_child) {
                     $param_attr = $param_child->attributes;
                     $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
                     $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
-                    $sig_data_array[WSF_SIG_CHILDS][$param_name] = wsf_create_sig_data_struct($param_child, $ele_ns); 
+                    $sig_data_struct[WSF_SIG_CHILDS][$param_name] = wsf_create_sig_data_struct($param_child); 
                 }
             }
             else{
                 /* No wrapper element in the request */
-                $sig_data_array =  array();
+                $sig_data_struct =  array();
                 $ele_ns = NULL;
                 $param_child_list = $params_node->childNodes;
                 foreach($param_child_list as $param_child) {
                     $param_attr = $param_child->attributes;
                     $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
                     $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
-                    $sig_data_array[$param_name] = wsf_create_sig_data_struct($param_child, $ele_ns);
+                    $sig_data_struct[$param_name] = wsf_create_sig_data_struct($param_child);
                     $ele_name = $param_name;
                 }
             }
@@ -75,9 +80,9 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
     }
 
     if ($is_wrapper == TRUE)
-        $sig_param_struct = $sig_data_array;
+        $sig_param_struct = $sig_data_struct;
     else
-        $sig_param_struct = $sig_data_array[$ele_name];
+        $sig_param_struct = $sig_data_struct[$ele_name];
     
 
 	foreach($envelope_node->childNodes as $env_child_node) {
@@ -163,25 +168,30 @@ function wsf_wsdl_create_response_payload($return_val, $signature_node)
 	if($returns_node->hasAttributes()) {
 		$ele_name = $returns_node->attributes->getNamedItem(WSF_WRAPPER_ELEMENT)->value;
 		$ele_ns = $returns_node->attributes->getNamedItem(WSF_WRAPPER_ELEMENT_NS)->value;
-		$sig_data_array = array();
-		$sig_data_array[WSF_NS] = $ele_ns;
-        $sig_data_array[WSF_HAS_SIG_CHILDS] = TRUE;
+		$sig_data_struct = array();
+		$sig_data_struct[WSF_NS] = $ele_ns;
+        $sig_data_struct[WSF_HAS_SIG_CHILDS] = TRUE;
+
+        if($returns_node->attributes->getNamedItem(WSF_CONTENT_MODEL)) {
+            $content_model = $returns_node->attributes->getNamedItem(WSF_CONTENT_MODEL)->value;
+            $sig_data_struct[WSF_CONTENT_MODEL] = $content_model;
+        }
 		$is_wrapper = TRUE;
 
         $param_child_list = $returns_node->childNodes;
-        $sig_data_array[WSF_SIG_CHILDS] = array();
+        $sig_data_struct[WSF_SIG_CHILDS] = array();
 
         foreach($param_child_list as $param_child) {
             $param_attr = $param_child->attributes;
             $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
             $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
-            $sig_data_array[WSF_SIG_CHILDS][$param_name] = wsf_create_sig_data_struct($param_child, $ele_ns);
+            $sig_data_struct[WSF_SIG_CHILDS][$param_name] = wsf_create_sig_data_struct($param_child);
         }
 	}
     else
     {
         /* No wrapper element in the request */
-        $sig_data_array =  array();
+        $sig_data_struct =  array();
         $ele_ns = NULL;
         $ele_name = NULL;
         $param_child_list = $returns_node->childNodes;
@@ -189,7 +199,7 @@ function wsf_wsdl_create_response_payload($return_val, $signature_node)
             $param_attr = $param_child->attributes;
             $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
             $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
-            $sig_data_array[$param_name] = wsf_create_sig_data_struct($param_child, $ele_ns);
+            $sig_data_struct[$param_name] = wsf_create_sig_data_struct($param_child);
             $ele_name = $param_name;
         }
     }
@@ -197,10 +207,10 @@ function wsf_wsdl_create_response_payload($return_val, $signature_node)
 
 
 	if($is_wrapper == TRUE) {
-	    $sig_param_struct[$ele_name] = $sig_data_array;
+	    $sig_param_struct[$ele_name] = $sig_data_struct;
 	}
     else{
-	    $sig_param_struct = $sig_data_array;
+	    $sig_param_struct = $sig_data_struct;
 	}
 
     $arguments = $return_val;

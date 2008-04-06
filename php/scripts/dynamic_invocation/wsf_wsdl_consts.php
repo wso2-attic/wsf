@@ -100,7 +100,25 @@ define("WSF_SIG_META_DATA", "__sig_meta_data"); // doesn't support elements with
 define("WSF_SIG_CHILDS", "childs"); // doesn't support elements with this name in schemas
 define("WSF_HAS_SIG_CHILDS", "has_childs");
 
-define("WSF_CLASS_MAP_NAME", "class_map_name");
+define("WSF_CLASSMAP_NAME", "classmap_name");
 define("WSF_XSD_NILLABLE", "nillable");
+define("WSF_CONTENT_MODEL", "contentModel");
+
+// log level definition
+
+define(WSF_LOG_CRITICAL, 0);
+
+define(WSF_LOG_ERROR, 1);
+
+define(WSF_LOG_WARNING, 2);
+
+define(WSF_LOG_INFO, 3);
+
+define(WSF_LOG_DEBUG, 4);
+
+define(WSF_LOG_USER, 5);
+
+define(WSF_LOG_TRACE, 6);
+
 
 ?>

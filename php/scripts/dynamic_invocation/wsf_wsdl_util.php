@@ -28,8 +28,7 @@
  * @return array $return_value array of details to be passed to C level
  */
 
-function wsf_is_mutiple_port_types($wsdl_dom)
-{
+function wsf_is_mutiple_port_types($wsdl_dom) {
     if($wsdl_dom) {
         $child_list = $wsdl_dom->childNodes;
         foreach($child_list as $child) {
@@ -59,8 +58,7 @@ function wsf_is_mutiple_port_types($wsdl_dom)
     return FALSE;
 }
 
-function wsf_process_multiple_interfaces($wsdl_dom)
-{
+function wsf_process_multiple_interfaces($wsdl_dom) {
     $wsdl_2_0_child_list = $wsdl_dom->firstChild->childNodes;
 
     /* to store the list of interfaces */
@@ -142,8 +140,7 @@ function wsf_process_multiple_interfaces($wsdl_dom)
  * @param string $wsdl_location
  * @return DomDocument $wsdl_dom DomDocument of WSDL2.0
  */
-function wsf_get_wsdl_dom($wsdl_dom)
-{
+function wsf_get_wsdl_dom($wsdl_dom) {
     require_once('wsf_wsdl_consts.php');
 
     $xslt_wsdl_20_dom = new DOMDocument();
@@ -196,8 +193,7 @@ function wsf_get_wsdl_dom($wsdl_dom)
  * @return DomDocument Sig model DomDocument
  */
 
-function wsf_get_sig_model_dom(DomDocument $wsdl_dom)
-{
+function wsf_get_sig_model_dom(DomDocument $wsdl_dom) {
     require_once('wsf_wsdl_consts.php');
 
     $xslt_dom  = new DOMDocument();
@@ -220,8 +216,7 @@ function wsf_get_sig_model_dom(DomDocument $wsdl_dom)
  * @return string endpoint address value
  */
 
-function wsf_get_endpoint_address(DomDocument $sig_model_dom)
-{
+function wsf_get_endpoint_address(DomDocument $sig_model_dom) {
     require_once('wsf_wsdl_consts.php');
 
     $services_node = $sig_model_dom->firstChild;
@@ -230,8 +225,7 @@ function wsf_get_endpoint_address(DomDocument $sig_model_dom)
     return $service_attr->getNamedItem(WSF_ADDRESS)->value;
 }
 
-function wsf_is_multiple_endpoints(DomDocument $sig_model_dom)
-{
+function wsf_is_multiple_endpoints(DomDocument $sig_model_dom) {
     $services_node = $sig_model_dom->firstChild;
     $no_of_ep = $services_node->childNodes->length;
     if($no_of_ep == 1)
@@ -247,8 +241,7 @@ function wsf_is_multiple_endpoints(DomDocument $sig_model_dom)
  * @param string $endpoint_address service endpoint address
  * @return DomNode operation DomNode of the Sig model
  */
-function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $service_name, $port_name, $is_multiple)
-{
+function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $service_name, $port_name, $is_multiple) {
     require_once('wsf_wsdl_consts.php');
     require_once('wsf_wsdl_util.php');
 
@@ -276,12 +269,10 @@ function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $servic
                     }
                 }
                 $child_service_name = NULL;
-                if($child->attributes->getNamedItem(WSF_NAME))
-                {
+                if($child->attributes->getNamedItem(WSF_NAME)) {
                     $child_service_name = $child->attributes->getNamedItem(WSF_NAME)->value;
                 }
-                if($service_name == $child_service_name)
-                {
+                if($service_name == $child_service_name) {
                     /* pick by port if the service name is found*/
                     if($port_name == NULL) {
                         /* now just get the first service and port*/
@@ -375,8 +366,7 @@ function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $servic
  * @param Bool $$is_wsdl_11 true is WSDL version 1.1, else false
  * @return DomNode binding DomNode
  */
-function wsf_get_binding(DomDocument $wsdl_dom, $service_name, $port_name, $is_wsdl_11 = FALSE)
-{
+function wsf_get_binding(DomDocument $wsdl_dom, $service_name, $port_name, $is_wsdl_11 = FALSE) {
     require_once('wsf_wsdl_consts.php');
 
     if($is_wsdl_11 == FALSE) {
@@ -388,19 +378,16 @@ function wsf_get_binding(DomDocument $wsdl_dom, $service_name, $port_name, $is_w
                 continue;
             }
             if($childs->localName == WSF_SERVICE && $childs->namespaceURI == WSF_WSDL2_NAMESPACE) {
-                if($service_name == NULL)
-                {
+                if($service_name == NULL) {
                     /* pick the first node as service if the service name is not given*/
                     $service_node = $childs;
                     break;
                 }
                 $child_service_name = NULL;
-                if($childs->attributes->getNamedItem(WSF_NAME))
-                {
+                if($childs->attributes->getNamedItem(WSF_NAME)) {
                     $child_service_name = $childs->attributes->getNamedItem(WSF_NAME)->value;
                 }
-                if($service_name == $child_service_name)
-                {
+                if($service_name == $child_service_name) {
                     $service_node = $childs;
                     break;
                 }
@@ -424,12 +411,10 @@ function wsf_get_binding(DomDocument $wsdl_dom, $service_name, $port_name, $is_w
                     break;
                 }
                 $child_endpoint_name = NULL;
-                if($service_childs->attributes->getNamedItem(WSF_NAME))
-                {
+                if($service_childs->attributes->getNamedItem(WSF_NAME)) {
                     $child_endpoint_name = $service_childs->attributes->getNamedItem(WSF_NAME)->value;
                 }
-                if($port_name == $child_endpoint_name)
-                {
+                if($port_name == $child_endpoint_name) {
                     $endpoint_node = $service_childs;
                     break;
                 }
@@ -464,19 +449,16 @@ function wsf_get_binding(DomDocument $wsdl_dom, $service_name, $port_name, $is_w
                 continue;
             }
             if($childs->localName == WSF_SERVICE && $childs->namespaceURI == WSF_WSDL_NAMESPACE) {
-                if($service_name == NULL)
-                {
+                if($service_name == NULL) {
                     /* pick the first node as service if the service name is not given*/
                     $service_node = $childs;
                     break;
                 }
                 $child_service_name = NULL;
-                if($childs->attributes->getNamedItem(WSF_NAME))
-                {
+                if($childs->attributes->getNamedItem(WSF_NAME)) {
                     $child_service_name = $childs->attributes->getNamedItem(WSF_NAME)->value;
                 }
-                if($service_name == $child_service_name)
-                {
+                if($service_name == $child_service_name) {
                     $service_node = $childs;
                     break;
                 }
@@ -498,26 +480,22 @@ function wsf_get_binding(DomDocument $wsdl_dom, $service_name, $port_name, $is_w
                 continue;
             }
             if($service_childs->localName == WSF_PORT && $service_childs->namespaceURI == WSF_WSDL_NAMESPACE) {
-                if($port_name == NULL)
-                {
+                if($port_name == NULL) {
                     /* pick the first node as port if the port name is not given*/
                     $port_node = $service_childs;
                     break;
                 }
                 $child_port_name = NULL;
-                if($service_childs->attributes->getNamedItem(WSF_NAME))
-                {
+                if($service_childs->attributes->getNamedItem(WSF_NAME)) {
                     $child_port_name = $service_childs->attributes->getNamedItem(WSF_NAME)->value;
                 }
-                if($port_name == $child_port_name)
-                {
+                if($port_name == $child_port_name) {
                     $port_node = $service_childs;
                     break;
                 }
             }
         }
-        if($port_node != NULL)
-        {
+        if($port_node != NULL) {
             $binding_name = $port_node->attributes->getNamedItem(WSF_BINDING)->value;
         }
 
@@ -549,8 +527,7 @@ function wsf_get_binding(DomDocument $wsdl_dom, $service_name, $port_name, $is_w
  * @param Bool $$is_wsdl_11 true is WSDL version 1.1, else false
  * @return array of policies
  */
-function wsf_get_all_policies(DomDocument $wsdl_dom, DomNode $binding_node, $operation_name, $is_wsdl_11 = FALSE)
-{
+function wsf_get_all_policies(DomDocument $wsdl_dom, DomNode $binding_node, $operation_name, $is_wsdl_11 = FALSE) {
     require_once('wsf_wsdl_consts.php');
 
     $policy_array = array();
@@ -618,8 +595,7 @@ function wsf_get_all_policies(DomDocument $wsdl_dom, DomNode $binding_node, $ope
  * @return string policy xml string
  */
 
-function get_policy_node(DomDocument $wsdl_dom, $policy_uri)
-{
+function get_policy_node(DomDocument $wsdl_dom, $policy_uri) {
     require_once('wsf_wsdl_consts.php');
 
     $root_node = $wsdl_dom->firstChild;
@@ -655,8 +631,7 @@ function get_policy_node(DomDocument $wsdl_dom, $policy_uri)
  * @param DomNode $operation_node
  * @return array binding-details array
  */
-function wsf_get_binding_details(DomNode $operation_node)
-{
+function wsf_get_binding_details(DomNode $operation_node) {
     require_once('wsf_wsdl_consts.php');
 
     $binding_array = array();
@@ -720,8 +695,7 @@ function wsf_get_binding_details(DomNode $operation_node)
  * @param DomDocument $wsdl_dom WSDL2.0 DomDocument
  * @return DomNode $schema_node Cloned schema node
  */
-function wsf_get_schema_node(&$wsdl_dom, &$wsdl_dom2 = NULL)
-{
+function wsf_get_schema_node(&$wsdl_dom, &$wsdl_dom2 = NULL) {
     require_once('wsf_wsdl_consts.php');
 
 
@@ -839,44 +813,36 @@ function wsf_get_schema_node(&$wsdl_dom, &$wsdl_dom2 = NULL)
  * @param DomDocument $doc DomDocument of parent DomNode
  */
 
-function wsf_schema_appendNode( $parent, $child, $doc )
-{
-    if( $child == NULL)
-    {
+function wsf_schema_appendNode( $parent, $child, $doc ) {
+    if( $child == NULL) {
         return;
     }
     $newChild = NULL;
-    if( $child-> nodeType == XML_TEXT_NODE )
-    {
+    if( $child-> nodeType == XML_TEXT_NODE ) {
         $newChild = $doc-> createTextNode($child->nodeValue);
         //echo $newChild->nodeValue."\n";
     }
-    else if( $child-> nodeType == XML_ELEMENT_NODE)
-    {
+    else if( $child-> nodeType == XML_ELEMENT_NODE) {
         $childTag = $child->tagName;
 
         $newChild = $doc-> createElementNS($child->namespaceURI, $childTag);
 
-        foreach( $child->attributes as $attribute)
-        {
+        foreach( $child->attributes as $attribute) {
             $newChild->setAttribute($attribute->name, $attribute->value);
         }
 
-        foreach ( $child->childNodes as $childsChild)
-        {
+        foreach ( $child->childNodes as $childsChild) {
             wsf_schema_appendNode( $newChild, $childsChild, $doc);
         }
     }
-    if( $newChild != NULL)
-    {
+    if( $newChild != NULL) {
         $parent-> appendChild( $newChild);
     }
 }
 
 
 
-function is_xsd_type($param_type)
-{
+function is_xsd_type($param_type) {
 
     $xsd_array = array("string", "boolean", "double", "boolean", "double",
                           "float", "int", "integer", "byte", "decimal", 
@@ -890,8 +856,7 @@ function is_xsd_type($param_type)
     return in_array($param_type, $xsd_array);
 }
 
-function wsf_wsdl_util_xsd_to_php_type_map()
-{
+function wsf_wsdl_util_xsd_to_php_type_map() {
     static $map = array(
         "string"         =>  "string",
         "boolean"        =>  "boolean",
@@ -940,19 +905,15 @@ function wsf_wsdl_util_xsd_to_php_type_map()
     return $map;
 }
 
-function wsf_wsdl_util_serialize_php_value($xsd_type, $data_value)
-{
+function wsf_wsdl_util_serialize_php_value($xsd_type, $data_value) {
     $xsd_php_mapping_table = wsf_wsdl_util_xsd_to_php_type_map();
     $serialized_value = $data_value;
     
-    if(array_key_exists($xsd_type, $xsd_php_mapping_table))
-    {
+    if(array_key_exists($xsd_type, $xsd_php_mapping_table)) {
         $type = $xsd_php_mapping_table[$xsd_type];
 
-        if($type == "boolean")
-        {
-            if($data_value == FALSE)
-            {
+        if($type == "boolean") {
+            if($data_value == FALSE) {
                 $serialized_value = "false";
             }
             else
@@ -967,13 +928,11 @@ function wsf_wsdl_util_serialize_php_value($xsd_type, $data_value)
 }
 
 
-function wsf_wsdl_util_convert_value($xsd_type, $data_value)
-{
+function wsf_wsdl_util_convert_value($xsd_type, $data_value) {
     $xsd_php_mapping_table = wsf_wsdl_util_xsd_to_php_type_map();
 
     $converted_value = $data_value;
-    if(array_key_exists($xsd_type, $xsd_php_mapping_table))
-    {
+    if(array_key_exists($xsd_type, $xsd_php_mapping_table)) {
         $type = $xsd_php_mapping_table[$xsd_type];
         if($type == 'integer')
             $converted_type = (int)($data_value);
@@ -990,15 +949,13 @@ function wsf_wsdl_util_convert_value($xsd_type, $data_value)
     return $converted_value;
 }
 
-function wsf_is_rpc_enc_wsdl($wsdl_11_dom, $binding_node, $operation_name)
-{
+function wsf_is_rpc_enc_wsdl($wsdl_11_dom, $binding_node, $operation_name) {
     if(!$binding_node)
         return FALSE;
 
     $binding_child_list = $binding_node->childNodes;
     $style = NULL;
-    foreach($binding_child_list as $binding_child)
-    {
+    foreach($binding_child_list as $binding_child) {
         if($binding_child->localName == "binding") {
             $binding_attr = $binding_child->attributes;
             if($binding_attr && $binding_attr->getNamedItem("style")) {
@@ -1039,95 +996,69 @@ function wsf_is_rpc_enc_wsdl($wsdl_11_dom, $binding_node, $operation_name)
  */
 
 
-function wsf_create_sig_data_struct(DomNode $param_child, $wrapper_ns)
-{
-    $rec_array = array();
-    $param_nil = NULL;
-    $param_min = NULL;
-    $param_max = NULL;
-    $param_ns = NULL;
-    $param_has_sig_childs = FALSE;
+function wsf_create_sig_data_struct(DomNode $sig_node) {
+    $sig_data_struct = array();
+    $type = NULL;
+    $type_ns = NULL;
+    $is_simple = NULL;
    
-    $param_attr = $param_child->attributes;
-    if($param_attr->getNamedItem(WSF_WSDL_SIMPLE))
-        $wrap_type = $param_attr->getNamedItem(WSF_WSDL_SIMPLE)->value;
-    if($param_attr->getNamedItem(WSF_TARGETNAMESPACE))
-        $param_ns = $param_attr->getNamedItem(WSF_TARGETNAMESPACE)->value;
-    if($param_attr->getNamedItem(WSF_TYPE))
-        $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
-    if($param_attr->getNamedItem(WSF_TYPE_NAMESPACE))
-        $param_type_ns = $param_attr->getNamedItem(WSF_TYPE_NAMESPACE)->value;
-    if($param_attr->getNamedItem(WSF_MIN_OCCURS))
-        $param_min = $param_attr->getNamedItem(WSF_MIN_OCCURS)->value;
-    if($param_attr->getNamedItem(WSF_MAX_OCCURS))
-        $param_max = $param_attr->getNamedItem(WSF_MAX_OCCURS)->value;
-    if($param_attr->getNamedItem(WSF_XSD_NILLABLE))
-        $param_nil = $param_attr->getNamedItem(WSF_XSD_NILLABLE)->value;
-
-    if($param_child->hasChildNodes()) {
-        $param_has_sig_childs = TRUE;
+    $sig_attrs = $sig_node->attributes;
+    if($sig_attrs->getNamedItem(WSF_WSDL_SIMPLE)) {
+        $is_simple = $sig_attrs->getNamedItem(WSF_WSDL_SIMPLE)->value;
     }
-    $rec_array[WSF_HAS_SIG_CHILDS] = $param_has_sig_childs;
+    if($sig_attrs->getNamedItem(WSF_TARGETNAMESPACE)) {
+        $ns = $sig_attrs->getNamedItem(WSF_TARGETNAMESPACE)->value;
+        $sig_data_struct[WSF_NS] = $ns;
+    }
+    else {
+        $sig_data_struct[WSF_NS] = NULL;
+    }
+    if($sig_attrs->getNamedItem(WSF_TYPE)) {
+        $type = $sig_attrs->getNamedItem(WSF_TYPE)->value;
+    }
+    if($sig_attrs->getNamedItem(WSF_TYPE_NAMESPACE)) {
+        $type_ns = $sig_attrs->getNamedItem(WSF_TYPE_NAMESPACE)->value;
+    }
+    if($sig_attrs->getNamedItem(WSF_MIN_OCCURS)) {
+        $min = $sig_attrs->getNamedItem(WSF_MIN_OCCURS)->value;
+        $sig_data_struct[WSF_MIN_OCCURS] = $min;
+    }
+    if($sig_attrs->getNamedItem(WSF_MAX_OCCURS)) {
+        $max = $sig_attrs->getNamedItem(WSF_MAX_OCCURS)->value;
+        $sig_data_struct[WSF_MAX_OCCURS] = $max;
+    }
+    if($sig_attrs->getNamedItem(WSF_XSD_NILLABLE)) {
+        $nillable = $sig_attrs->getNamedItem(WSF_XSD_NILLABLE)->value;
+        $sig_data_struct[WSF_XSD_NILLABLE] = $nillable;
+    }
 
-    if($wrap_type == 'yes') { /* this is for simple types */
-        if($param_ns == NULL)
-            $rec_array[WSF_NS] = "NULL";//$wrapper_ns;
-        else
-            $rec_array[WSF_NS] = $param_ns;
-
-        $rec_array[WSF_TYPE_REP] = $param_type;
-        if($param_min != 1)
-            $rec_array[WSF_MIN_OCCURS] = $param_min; 
-        if($param_max != 1)
-            $rec_array[WSF_MAX_OCCURS] = $param_max; 
-        if($param_nil)
-            $rec_array[WSF_XSD_NILLABLE] = $param_nil; 
+    if($is_simple == "yes") { /* this is for simple types */
+        $sig_data_struct[WSF_HAS_SIG_CHILDS] = FALSE;
+        //we have type only for simple types
+        $sig_data_struct[WSF_TYPE_REP] = $type;
     }
     else{
-        
-        /* for some WSDL sig model gives simple type no even there are
-         * xsd types in the parameter. So this check is needed */
-        if (is_xsd_type($param_type)) {
-            if($param_ns == NULL)
-                $rec_array[WSF_NS] = $wrapper_ns;
-            else
-                $rec_array[WSF_NS] = $param_ns;
+        $sig_data_struct[WSF_HAS_SIG_CHILDS] = TRUE;
+        //we have classmap only for complex types
+        $sig_data_struct[WSF_CLASSMAP_NAME] = $type;
 
-            $rec_array[WSF_TYPE_REP] = $param_type;
-            if($param_min)
-                $rec_array[WSF_MIN_OCCURS] = $param_min;
-            if($param_max != 1)
-                $rec_array[WSF_MAX_OCCURS] = $param_max;
-            if($param_nil)
-                $rec_array[WSF_XSD_NILLABLE] = $param_nil;
+        //go for some complexType only declarations
+
+        $sig_childs = $sig_node->childNodes;
+
+        if($sig_attrs->getNamedItem(WSF_CONTENT_MODEL)) {
+            $content_model = $sig_attrs->getNamedItem(WSF_CONTENT_MODEL)->value;
+            $sig_data_struct[WSF_CONTENT_MODEL] = $content_model;
         }
-        else{
-            if($param_ns == NULL)
-                $rec_array[WSF_NS] = $wrapper_ns;
-            else
-                $rec_array[WSF_NS] = $param_ns;
-
-            $rec_array[WSF_NS] = $param_ns;
-            $rec_array[WSF_CLASS_MAP_NAME] = $param_type;
-            if($param_min)
-                $rec_array[WSF_MIN_OCCURS] = $param_min;
-            if($param_max != 1)
-                $rec_array[WSF_MAX_OCCURS] = $param_max;
-            if($param_nil)
-                $rec_array[WSF_XSD_NILLABLE] = $param_nil;
-
-            $param_child_list_level2 = $param_child->childNodes;
-
-            $rec_array[WSF_SIG_CHILDS] = array();
-            foreach($param_child_list_level2 as $param_child_level2) {
-                $param_child_level2_attr = $param_child_level2->attributes;
-                $param_level2_name = $param_child_level2_attr->getNamedItem(WSF_NAME)->value;
-                $rec_array[WSF_SIG_CHILDS][$param_level2_name] = wsf_create_sig_data_struct($param_child_level2, $wrapper_ns);
-            }
+        $sig_data_struct[WSF_SIG_CHILDS] = array();
+        foreach($sig_childs as $sig_child) {
+            $sig_child_attrs = $sig_child->attributes;
+            $child_name = $sig_child_attrs->getNamedItem(WSF_NAME)->value;
+            $sig_data_struct[WSF_SIG_CHILDS][$child_name] = wsf_create_sig_data_struct($sig_child);
         }
     }
 
-    return $rec_array;
+    return $sig_data_struct;
 
 }
 
@@ -1135,10 +1066,8 @@ function wsf_create_sig_data_struct(DomNode $param_child, $wrapper_ns)
  * @param node to start with
  * @return the node with comments skiped
  */
-function wsf_remove_next_whitespace_and_comments(&$xml)
-{
-    while($xml != NULL && $xml->nodeType != XML_ELEMENT_NODE)
-    {
+function wsf_remove_next_whitespace_and_comments(&$xml) {
+    while($xml != NULL && $xml->nodeType != XML_ELEMENT_NODE) {
         $xml = $xml->nextSibling;
     }
     return $xml;
@@ -1149,8 +1078,7 @@ function wsf_remove_next_whitespace_and_comments(&$xml)
  * @param xml DOMDocuemnt the xml to serialize
  * @return string of serialized xml
  */
-function wsf_test_serialize_node($xml)
-{
+function wsf_test_serialize_node($xml) {
     $nodeText = "";
 
     if ($xml->nodeType == XML_TEXT_NODE) { //for text node
@@ -1163,8 +1091,7 @@ function wsf_test_serialize_node($xml)
         $nodeText = "<" . $nodeName;
 
         // add attributes
-        foreach( $xml->attributes as $attri)
-        {
+        foreach( $xml->attributes as $attri) {
             $nodeText .= " " . $attri->name . "=" . "\"" . $attri->value . "\" ";
         }
 
@@ -1172,8 +1099,7 @@ function wsf_test_serialize_node($xml)
 
         // add childs
 
-        foreach ($xml->childNodes as $child)
-        {
+        foreach ($xml->childNodes as $child) {
             $childText = wsf_test_serialize_node($child);
             $nodeText .= $childText;
         }
@@ -1189,16 +1115,13 @@ function wsf_test_serialize_node($xml)
  * Note that is_array returns TRUE for both general arrays and map
  * This distinguises the arrays and map
  */
-function wsf_is_map($map)
-{
-    if(!is_array($map))
-    {
+function wsf_is_map($map) {
+    if(!is_array($map)) {
         return FALSE;
     }
     /* array keys shouldn't be number for pure match */
     $keys = array_keys($map);
-    if($keys[0] === 0)
-    {
+    if($keys[0] === 0) {
         return FALSE;
     }
     return TRUE;
@@ -1211,25 +1134,20 @@ function wsf_is_map($map)
 class WSFUnknownSchemaConstruct
 {
     public $properties;
-    public function __construct()
-    {
+    public function __construct() {
         $this->properties = array();
     }
 
-    public function __get($name)
-    {
+    public function __get($name) {
         return $this->properties[$name];
     }
 
-    public function __set($name, $value)
-    {
+    public function __set($name, $value) {
         $this->properties[$name] = $value;
     }
 
-    public function __isset($name)
-    {
-        if($this->properties[$name] == NULL)
-        {
+    public function __isset($name) {
+        if($this->properties[$name] == NULL) {
             return FALSE;
         }
         else
@@ -1238,10 +1156,8 @@ class WSFUnknownSchemaConstruct
         }
     }
 
-    public function __unset($name)
-    {
-        if($this->properties[$name] != NULL)
-        {
+    public function __unset($name) {
+        if($this->properties[$name] != NULL) {
             $this->properties[$name] = NULL;
         }
     }

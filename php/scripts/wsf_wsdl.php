@@ -33,6 +33,8 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     require_once('dynamic_invocation/wsf_wsdl_consts.php');
     require_once('dynamic_invocation/wsf_wsdl_util.php');
     require_once('dynamic_invocation/wsf_wsdl_client.php');
+    
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_INFO, "wsf_process_wsdl called");
 
     global $is_wsdl_11;
     global $wsdl_11_dom;
@@ -66,10 +68,12 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
         $endpoint_address = NULL;
   
     /* class map is an optional parameter */
-    if (isset($user_parameters[WSF_CLASSMAP]))
+    if (isset($user_parameters[WSF_CLASSMAP])) {
         $class_map = $user_parameters[WSF_CLASSMAP];
-    else
+    }
+    else {
         $class_map = NULL;
+    }
 
 
     /* extracting the information on function parameters */
@@ -231,6 +235,8 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
     require_once('dynamic_invocation/wsf_wsdl_consts.php');
     require_once('dynamic_invocation/wsf_wsdl_util.php');
     require_once('dynamic_invocation/wsf_wsdl_service.php');
+    
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "this is server test log");
 
     global $is_wsdl_11;
     global $wsdl_11_dom;
