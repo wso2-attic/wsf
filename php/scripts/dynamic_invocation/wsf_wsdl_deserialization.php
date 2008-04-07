@@ -19,60 +19,71 @@
 /**
  * parse payload and return an array of paramerters
  * @param $payload 
- * @param $sig_data_struct
- *      example of parameter_struct..
+ * @param $sig_node
+ *      example of sig..
  *
- *      Array
- *      (
- *          [has_childs] => 
- *          [ns] => http://wso2.org/dyn/codegen/demo
- *          [type_rep] => int //either one of type_rep or childs exists
- *          [minOccurs] => 
- *          [maxOccurs] => 
- *          [childs] => Array ()
- *      )
+ *      <params wrapper-element="myDemo"
+ *             wrapper-element-ns="http://wso2.org/dyn/codegen/demo"
+ *             simple="no" contentModel="all">
+ *          <param token="#in"
+ *               targetNamespace="http://wso2.org/dyn/codegen/demo"
+ *               minOccurs="1" maxOccurs="1" name="demo1" type="int"
+ *               type-namespace="http://www.w3.org/2001/XMLSchema" 
+ *               type-prefix="xs" simple="yes"/>
+ *          <param token="#in" 
+ *               targetNamespace="http://wso2.org/dyn/codegen/demo"
+ *               minOccurs="1" maxOccurs="1" name="demo2" type="string"
+ *               type-namespace="http://www.w3.org/2001/XMLSchema" 
+ *               type-prx="xs" simple="yes"/>
+ *      </params>
  *
- *     Array
- *     (
- *         [ns] => http://wso2.org/dyn/codegen/demo
- *         [has_childs] => 1
- *         [childs] => Array
- *             (
- *                 [demo1] => Array
- *                     (
- *                         [has_childs] => 
- *                         [ns] => http://wso2.org/dyn/codegen/demo
- *                         [type_rep] => int
- *                     )
- * 
- *                 [demo2] => Array
- *                     (
- *                         [has_childs] => 
- *                         [ns] => http://wso2.org/dyn/codegen/demo
- *                         [type_rep] => string
- *                     )
- * 
- *             )
- * 
- *      )
  *
  * @return the parse tree
  */
-function wsf_parse_payload_for_array(DomNode $payload, array $sig_data_struct) {
+function wsf_parse_payload_for_array(DomNode $payload, DomNode $sig_node) {
 
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "Loading in to parsing array");
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, print_r($sig_data_struct, TRUE));
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, wsf_test_serialize_node($sig_node));
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, wsf_test_serialize_node($payload));
 
     while($payload != NULL && $payload->nodeType != XML_ELEMENT_NODE) {
         $payload = $payload->nextSibling;
     }
 
+    $parse_tree = array();
 
-    // this situation meets only for non-wrapped mode as doclit-bare wsdls
-    if(array_key_exists(WSF_TYPE_REP, $sig_data_struct)) {
-        $param_value = $sig_data_struct[WSF_TYPE_REP];
-        if(is_xsd_type($param_value)) {
+    if($sig_node->hasAttributes()) {
+        //wrapped situations..    
+
+        if($payload != NULL) {
+            /* go for the childs */
+            $current_child = $payload->firstChild;
+            while($current_child != NULL && $current_child->nodeType != XML_ELEMENT_NODE) {
+                $current_child = $current_child->nextSibling;
+            }
+            if($current_child == NULL) {
+                return $parse_tree; //just the empty array
+            }
+        }
+
+        $parse_tree = wsf_infer_content_model($current_child, $sig_node, NULL);
+
+        return $parse_tree;
+    }
+    else {
+        // this situation meets only for non-wrapped mode as doclit-bare wsdls
+        $the_only_node = $sig_node->firstChild;
+
+        $is_simple = FALSE;
+        if($the_only_node->attributes->getNamedItem(WSF_WSDL_SIMPLE) &&
+                $the_only_node->attributes->getNamedItem(WSF_WSDL_SIMPLE)->value == "yes") {
+            $is_simple = TRUE;
+        }
+        $param_type = NULL;
+        if($the_only_node->attributes->getNamedItem(WSF_TYPE)) {
+            $param_type = $the_only_node->attributes->getNamedItem(WSF_TYPE)->value;
+        }
+        if($is_simple) {
             if ($payload != NULL) {
                 if($payload->firstChild) {
                     $original_value = $payload->firstChild->nodeValue;
@@ -80,66 +91,123 @@ function wsf_parse_payload_for_array(DomNode $payload, array $sig_data_struct) {
                 else {
                     $original_value = "";
                 }
-                $converted_value = wsf_wsdl_util_convert_value($param_value, $original_value);
+                $converted_value = wsf_wsdl_util_convert_value($param_type, $original_value);
 
                 return $converted_value;
             }
         }
     }
 
-    //all the other situations..    
-    $parse_tree = array();
-
-    if($payload != NULL) {
-        /* go for the childs */
-        $current_child = $payload->firstChild;
-        while($current_child != NULL && $current_child->nodeType != XML_ELEMENT_NODE) {
-            $current_child = $current_child->nextSibling;
-        }
-        if($current_child == NULL) {
-            return $parse_tree; //just the empty array
-        }
-    }
-
-    $parse_tree = wsf_infer_content_model($current_child, $sig_data_struct, FALSE);
-
     return $parse_tree;
+
 }
 
 
 /**
  * parse payload and return an object hierarchy
  * @param $payload 
- * @param $sig_data_struct
- *      example of parameter_struct..
+ * @param $sig_node
+ *      example of sig..
  *
- *      Array
- *      (
- *          [has_childs] => 
- *          [ns] => http://wso2.org/dyn/codegen/demo
- *          [type_rep] => int //either one of type_rep or childs exists
- *          [minOccurs] => 
- *          [maxOccurs] => 
- *          [childs] => Array ()
- *      )
+ *      <params wrapper-element="myDemo"
+ *             wrapper-element-ns="http://wso2.org/dyn/codegen/demo"
+ *             simple="no" contentModel="all">
+ *          <param token="#in"
+ *               targetNamespace="http://wso2.org/dyn/codegen/demo"
+ *               minOccurs="1" maxOccurs="1" name="demo1" type="int"
+ *               type-namespace="http://www.w3.org/2001/XMLSchema" 
+ *               type-prefix="xs" simple="yes"/>
+ *          <param token="#in" 
+ *               targetNamespace="http://wso2.org/dyn/codegen/demo"
+ *               minOccurs="1" maxOccurs="1" name="demo2" type="string"
+ *               type-namespace="http://www.w3.org/2001/XMLSchema" 
+ *               type-prx="xs" simple="yes"/>
+ *      </params>
+ *
  *
  * @param $element_name element name under which the parsing happen
  * @return the parsed result objects
  */
-function wsf_parse_payload_for_class_map(DomNode $payload, array $sig_data_struct, $element_name, $class_map) {
+function wsf_parse_payload_for_class_map(DomNode $payload, DomNode $sig_node, $element_name, $classmap) {
 
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "Loading in to parsing classmap");
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, print_r($sig_data_struct, TRUE));
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, wsf_test_serialize_node($sig_node));
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, wsf_test_serialize_node($payload));
 
     while($payload != NULL && $payload->nodeType != XML_ELEMENT_NODE) {
         $payload = $payload->nextSibling;
     }
 
-    // this situation meets only for non-wrapped mode as doclit-bare wsdls
-    if(array_key_exists(WSF_TYPE_REP, $sig_data_struct)) {
-        $param_value = $sig_data_struct[WSF_TYPE_REP];
-        if(is_xsd_type($param_value)) {
+    if($sig_node->hasAttributes()) {
+        //wrapped situations..    
+
+        // this situation gotta create the object..
+        if(is_array($classmap) && array_key_exists($element_name, $classmap)) {
+            $class_name = $classmap[$element_name];
+        }
+        if(!isset($class_name) || $class_name == NULL) {
+            $class_name = $element_name;
+        }
+
+        try {
+            $ref_class = new ReflectionClass($class_name);
+            if ($ref_class->isInstantiable()) {
+                $object = $ref_class->newInstance();
+
+            }
+        } catch(Exception $e) {
+            $object = new WSFUnknownSchemaConstruct();
+        }
+
+        if($object == NULL) {
+            return NULL;
+        }
+
+        // for a NULL payload return the empty object
+        if($payload == NULL) {
+            return $object;
+        }
+
+        $current_child = $payload->firstChild;
+        while($current_child != NULL && $current_child->nodeType != XML_ELEMENT_NODE) {
+            $current_child = $current_child->nextSibling;
+        }
+        if($current_child == NULL) {
+            /* it still can be a text node */
+            $current_child = $payload->firstChild;
+            if($current_child != NULL && $current_child->nodeType == XML_TEXT_NODE) {
+                return $current_child->nodeValue;
+            }
+            /* otherwise it is a NULL */
+            return NULL;
+        }
+
+        // all the above part of the story we were handling non-wrap types like in doclit-bare
+
+        $parse_tree = wsf_infer_content_model($current_child, $sig_node, $classmap);
+
+        foreach($parse_tree as $parsed_key => $parsed_value) {
+            $object->$parsed_key = $parsed_value;
+        }
+
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, print_r($object, TRUE));
+        return $object;
+
+    }
+    else {
+        // this situation meets only for non-wrapped mode as doclit-bare wsdls
+        $the_only_node = $sig_node->firstChild;
+
+        $is_simple = FALSE;
+        if($the_only_node->attributes->getNamedItem(WSF_WSDL_SIMPLE) &&
+                $the_only_node->attributes->getNamedItem(WSF_WSDL_SIMPLE)->value == "yes") {
+            $is_simple = TRUE;
+        }
+        $param_type = NULL;
+        if($the_only_node->attributes->getNamedItem(WSF_TYPE)) {
+            $param_type = $the_only_node->attributes->getNamedItem(WSF_TYPE)->value;
+        }
+        if($is_simple) {
             if ($payload != NULL) {
                 if($payload->firstChild) {
                     $original_value = $payload->firstChild->nodeValue;
@@ -147,64 +215,14 @@ function wsf_parse_payload_for_class_map(DomNode $payload, array $sig_data_struc
                 else {
                     $original_value = "";
                 }
-                $converted_value = wsf_wsdl_util_convert_value($param_value, $original_value);
+                $converted_value = wsf_wsdl_util_convert_value($param_type, $original_value);
 
                 return $converted_value;
             }
         }
     }
 
-    // for all the other situation gotta create the object..
-    if(is_array($class_map) && array_key_exists($element_name, $class_map)) {
-        $class_name = $class_map[$element_name];
-    }
-    if(!isset($class_name) || $class_name == NULL) {
-        $class_name = $element_name;
-    }
-    
-
-    try
-    {
-        $ref_class = new ReflectionClass($class_name);
-        if ($ref_class->isInstantiable()) {
-            $object = $ref_class->newInstance();
-
-        }
-    } catch(Exception $e) {
-        $object = new WSFUnknownSchemaConstruct();
-    }
-
-    if($object == NULL) {
-        return NULL;
-    }
-
-    // for a NULL payload return the empty object
-    if($payload == NULL) {
-        return $object;
-    }
-
-    $current_child = $payload->firstChild;
-    while($current_child != NULL && $current_child->nodeType != XML_ELEMENT_NODE) {
-        $current_child = $current_child->nextSibling;
-    }
-    if($current_child == NULL) {
-        /* it still can be a text node */
-        $current_child = $payload->firstChild;
-        if($current_child != NULL && $current_child->nodeType == XML_TEXT_NODE) {
-            return $current_child->nodeValue;
-        }
-        /* otherwise it is a NULL */
-        return NULL;
-    }
-
-    // all the above part of the story we were handling non-wrap types like in doclit-bare
-
-    $parse_tree = wsf_infer_content_model($current_child, $sig_data_struct, TRUE);
-
-    foreach($parse_tree as $parsed_key => $parsed_value) {
-        $object->$parsed_key = $parsed_value;
-    }
-    return $object;
+    return NULL;
 }
 
 
@@ -269,10 +287,10 @@ function wsf_parse_payload_for_unknown_array(DomNode $current_node) {
  * @param $current_node node to parse
  * @returns array of parsed data
  */
-function wsf_parse_payload_for_unknown_class_map(DomNode $current_node, $element_name, $class_map) {
+function wsf_parse_payload_for_unknown_class_map(DomNode $current_node, $element_name, $classmap) {
     $class_name = NULL;
-    if(is_array($class_map) && array_key_exists($element_name, $class_map)) {
-        $class_name = $class_map[$element_name];
+    if(is_array($classmap) && array_key_exists($element_name, $classmap)) {
+        $class_name = $classmap[$element_name];
     }
     if(!isset($class_name) || $class_name == NULL) {
         $class_name = $element_name;
@@ -312,7 +330,7 @@ function wsf_parse_payload_for_unknown_class_map(DomNode $current_node, $element
         }
 
         if($child->nodeType ==  XML_ELEMENT_NODE) {
-            $node_value = wsf_parse_payload_for_unknown_class_map($child, $name, $class_map);
+            $node_value = wsf_parse_payload_for_unknown_class_map($child, $name, $classmap);
         }
         else
         {
@@ -345,30 +363,58 @@ function wsf_parse_payload_for_unknown_class_map(DomNode $current_node, $element
 
 /** 
  * Do deserialization over simple schema types and move to the next element
- * @param param_key string, the element name
- * @param param_value array, the schema information corrosponding to the key element
- *                     consists of following information for an example
- *                         [has_childs] => 
- *                         [ns] => http://wso2.org/dyn/codegen/demo
- *                         [type_rep] => int
- * @param $current_child is the relevent xml node to parse
+ * @param $current_child is the relevent xml node to parse, and 
+ *                   move the current_child to the next child
+ * @param $sig_param_node the sig model for the param
  * @return the result simple type value.
  */
 
-function deserialize_simple_types($param_key, $param_value, &$current_child) {
+function deserialize_simple_types(&$current_child, DomNode $sig_param_node) {
 
     $ret_val = NULL;
+    $target_namespace = NULL;
+    $min_occurs = 1;
+    $max_occurs = 1;
+    $sig_param_attris = $sig_param_node->attributes;
+    $param_type = NULL;
+    $param_name = NULL;
 
-    if(array_key_exists("maxOccurs", $param_value) && ($param_value["maxOccurs"] == "unbounded" || $param_value["maxOccurs"] > 1)) {
+    if($sig_param_attris->getNamedItem(WSF_NAME)) {
+        $param_name =
+            $sig_param_attris->getNamedItem(WSF_NAME)->value;
+    }
+
+    if($sig_param_attris->getNamedItem(WSF_TARGETNAMESPACE)) {
+         $target_namespace =
+            $sig_param_attris->getNamedItem(WSF_TARGETNAMESPACE)->value;
+    }
+
+    if($sig_param_attris->getNamedItem(WSF_MIN_OCCURS)) {
+         $min_occurs =
+            $sig_param_attris->getNamedItem(WSF_MIN_OCCURS)->value;
+    }
+
+    if($sig_param_attris->getNamedItem(WSF_MAX_OCCURS)) {
+         $max_occurs =
+            $sig_param_attris->getNamedItem(WSF_MAX_OCCURS)->value;
+    }
+
+    if($sig_param_attris->getNamedItem(WSF_TYPE)) {
+         $param_type =
+            $sig_param_attris->getNamedItem(WSF_TYPE)->value;
+    }
+
+    if($max_occurs > 1 || $max_occurs == "unbounded") {
         $i = 0;
         $tmp_array = array();
-        while($current_child !== NULL && $current_child->localName == $param_key) {
+        while($current_child !== NULL && $current_child->localName == $param_name) {
             if($current_child->firstChild) {
-                $converted_value =  wsf_wsdl_util_convert_value($param_value[WSF_TYPE_REP], $current_child->firstChild->wholeText);
+                $converted_value =  wsf_wsdl_util_convert_value($param_type, $current_child->firstChild->wholeText);
             }
             else{
                 if(!isset($param_value["nillable"])) {
-                    error_log("Non nillable element". $param_key ."is nil. \n");
+                    error_log("Non nillable element". $param_name ."is nil. \n");
+                    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "Non nillable element". $param_name ."is nil. ");
                 }
                 $converted_value = "";
             }
@@ -379,21 +425,22 @@ function deserialize_simple_types($param_key, $param_value, &$current_child) {
             }
         }
         $ret_val = $tmp_array;
-        $object->$param_key = $tmp_array;
+        $object->$param_name = $tmp_array;
+        
     }
-    else
-    {
+    else {
         if($current_child->firstChild) {
-            $converted_value =  wsf_wsdl_util_convert_value($param_value[WSF_TYPE_REP], $current_child->firstChild->wholeText);
+            $converted_value =  wsf_wsdl_util_convert_value($param_type, $current_child->firstChild->wholeText);
         }
         else
         {
             if(!isset($param_value["nillable"])) {
-                error_log("Non nillable element". $param_key ."is nil. \n");
+                error_log("Non nillable element". $param_name ."is nil. \n");
+                ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "Non nillable element". $param_name ."is nil. ");
             }
             $converted_value = "";
         }
-        $object->$param_key = $converted_value;
+        $object->$param_name = $converted_value;
         $ret_val = $converted_value;
         $current_child = $current_child->nextSibling;
         while($current_child != NULL && $current_child->nodeType != XML_ELEMENT_NODE) {
@@ -405,57 +452,66 @@ function deserialize_simple_types($param_key, $param_value, &$current_child) {
 
 /** 
  * Do deserialization over complex schema types and move to the next element
- * @param param_key string, the element name
- * @param param_value array, the schema information corrosponding to the key element
- *                     consists of following information for an example
- *                        [ns] => http://wso2.org/dyn/codegen/demo
- *                        [has_childs] => 1
- *                        [childs] => Array
- *                            (
- *                                [demo1] => Array
- *                                    (
- *                                        [has_childs] => 
- *                                        [ns] => http://wso2.org/dyn/codegen/demo
- *                                        [type_rep] => int
- *                                    )
- *                   
- *                                [demo2] => Array
- *                                    (
- *                                        [has_childs] => 
- *                                        [ns] => http://wso2.org/dyn/codegen/demo
- *                                        [type_rep] => string
- *                                    )
- *                   
- *                            )
+ * @param $current_child is the relevent xml node to parse, and 
+ *                   move the current_child to the next child
+ * @param $sig_param_node the sig model for the param
  *
- * @param $current_child is the relevent xml node to parse
+ * @param $classmap the classmap passed by the user
  * @return the result complex type value.
  */
+function deserialize_complex_types(&$current_child, DomNode $sig_param_node, $classmap) {
 
-
-function deserialize_complex_types($param_key, $param_value, &$current_child, $is_classmap = TRUE) {
-
-   $class_map_name = $param_value[WSF_CLASSMAP_NAME];
-   ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, print_r($param_value, TRUE));
     $ret_val = NULL;
-    if(array_key_exists("maxOccurs", $param_value) && ($param_value["maxOccurs"] == "unbounded" || $param_value["maxOccurs"] > 1)) {
+    $target_namespace = NULL;
+    $min_occurs = 1;
+    $max_occurs = 1;
+    $sig_param_attris = $sig_param_node->attributes;
+    $param_type = NULL;
+    $param_name = NULL;
+
+    if($sig_param_attris->getNamedItem(WSF_NAME)) {
+        $param_name =
+            $sig_param_attris->getNamedItem(WSF_NAME)->value;
+    }
+
+    if($sig_param_attris->getNamedItem(WSF_TARGETNAMESPACE)) {
+         $target_namespace =
+            $sig_param_attris->getNamedItem(WSF_TARGETNAMESPACE)->value;
+    }
+
+    if($sig_param_attris->getNamedItem(WSF_MIN_OCCURS)) {
+         $min_occurs =
+            $sig_param_attris->getNamedItem(WSF_MIN_OCCURS)->value;
+    }
+
+    if($sig_param_attris->getNamedItem(WSF_MAX_OCCURS)) {
+         $max_occurs =
+            $sig_param_attris->getNamedItem(WSF_MAX_OCCURS)->value;
+    }
+
+    if($sig_param_attris->getNamedItem(WSF_TYPE)) {
+         $param_type =
+            $sig_param_attris->getNamedItem(WSF_TYPE)->value;
+    }
+
+    if($max_occurs > 1 || $max_occurs == "unbounded") {
         $i = 0;
         $tmp_array = array();
-        while($current_child !== NULL && $current_child->localName == $param_key) {
+        while($current_child !== NULL && $current_child->localName == $param_name) {
             if($current_child->firstChild) {
-                if($param_value[WSF_HAS_SIG_CHILDS] === TRUE && array_key_exists(WSF_SIG_CHILDS, $param_value)) {
-                    if($is_classmap) {
-                        $converted_value = wsf_parse_payload_for_class_map($current_child, $param_value, $class_map_name, $class_map);
+                if($sig_param_node->hasChildNodes()) {
+                    if($classmap) {
+                        $converted_value = wsf_parse_payload_for_class_map($current_child, $sig_param_node, $param_type, $classmap);
                     }
                     else { 
-                        $converted_value = wsf_parse_payload_for_array($current_child, $param_value);
+                        $converted_value = wsf_parse_payload_for_array($current_child, $sig_param_node);
                     }
 
                 }
                 else
                 {
-                    if($is_classmap) {
-                        $converted_value = wsf_parse_payload_for_unknown_class_map($current_child, $class_map_name, $class_map);
+                    if($classmap) {
+                        $converted_value = wsf_parse_payload_for_unknown_class_map($current_child, $param_type, $classmap);
                     }
                     else {
                         $converted_value = wsf_parse_payload_for_unknown_array($current_child);
@@ -465,7 +521,8 @@ function deserialize_complex_types($param_key, $param_value, &$current_child, $i
             else
             {
                 if(!isset($param_value["nillable"])) {
-                    error_log("Non nillable element". $param_key ."is nil. \n");
+                    error_log("Non nillable element". $param_name ."is nil. \n");
+                    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "Non nillable element". $param_name ."is nil. ");
                 }
                 $converted_value = "";
             }
@@ -477,21 +534,20 @@ function deserialize_complex_types($param_key, $param_value, &$current_child, $i
         }
         $ret_val = $tmp_array;
     }
-    else
-    {
+    else {
         if($current_child->firstChild) {
-            if($param_value[WSF_HAS_SIG_CHILDS] === TRUE && array_key_exists(WSF_SIG_CHILDS, $param_value)) {
-                if($is_classmap) {
-                    $converted_value = wsf_parse_payload_for_class_map($current_child, $param_value, $class_map_name, $class_map);
+            if($sig_param_node->hasChildNodes()) {
+                if($classmap) {
+                    $converted_value = wsf_parse_payload_for_class_map($current_child, $sig_param_node, $param_type, $classmap);
                 }
                 else { 
-                    $converted_value = wsf_parse_payload_for_array($current_child, $param_value);
+                    $converted_value = wsf_parse_payload_for_array($current_child, $sig_param_node);
                 }
             }
             else
             {
-                if($is_classmap) {
-                    $converted_value = wsf_parse_payload_for_unknown_class_map($current_child, $class_map_name, $class_map);
+                if($classmap) {
+                    $converted_value = wsf_parse_payload_for_unknown_class_map($current_child, $param_type, $classmap);
                 }
                 else{
                     $converted_value = wsf_parse_payload_for_unknown_array($current_child);
@@ -501,7 +557,8 @@ function deserialize_complex_types($param_key, $param_value, &$current_child, $i
         else
         {
             if(!isset($param_value["nillable"])) {
-                error_log("Non nillable element". $param_key ."is nil. \n");
+                error_log("Non nillable element". $param_name ."is nil. \n");
+                ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "Non nillable element". $param_name ."is nil. ");
             }
             $converted_value = "";
         }
@@ -517,94 +574,125 @@ function deserialize_complex_types($param_key, $param_value, &$current_child, $i
 /**
  * handle content model in parsing
  * @param $current_child, starting child element to handle...
- * @param $sig_data_struct, the same old parameter struct..
- * @param $is_classmap whether it is for classmap or not..
+ * @param $sig_node the sig model for the content model 
+ *
+ * @param $classmap the user passed classmap
  */
-function wsf_infer_content_model(DomNode $current_child, array $sig_data_struct, $is_classmap) {
+function wsf_infer_content_model(DomNode $current_child, DomNode $sig_node, $classmap) {
+
     $parse_tree = array();
-    $content_model = $sig_data_struct[WSF_CONTENT_MODEL];
+
+    $content_model = WSF_WSDL_SEQUENCE;
+    
+    if($sig_node->attributes->getNamedItem(WSF_CONTENT_MODEL)) {
+        $content_model = $sig_node->attributes->getNamedItem(WSF_CONTENT_MODEL)->value;
+    }
+
     $first_child = $current_child;
-    if(array_key_exists(WSF_SIG_CHILDS, $sig_data_struct) && is_array($sig_data_struct[WSF_SIG_CHILDS])) {
-        foreach($sig_data_struct[WSF_SIG_CHILDS] as $param_key => $param_value) {
-            // the childs should be set as an array
-            if(is_array($param_value)) {
-                if(isset($param_value[WSF_CLASSMAP_NAME]) && ($param_value[WSF_CLASSMAP_NAME] == "anyType")) {
-                    $tag_name = $current_child->localName;
-                    if($param_key == $tag_name) {
-                        $converted_value = wsf_parse_payload_for_unknown_array($current_child);
-                        $parse_tree[$param_key] = $converted_value;
+
+    if($sig_node->hasChildNodes()) {
+        foreach($sig_node->childNodes as $sig_param_node) {
+            $is_simple = FALSE;
+            $param_name = NULL;
+            $param_type = NULL;
+            $min_occurs = 1;
+
+            if($sig_param_node->attributes->getNamedItem(WSF_NAME)) {
+                $param_name = $sig_param_node->attributes->getNamedItem(WSF_NAME)->value;
+            }
+            if($sig_param_node->attributes->getNamedItem(WSF_TYPE)) {
+                $param_type = $sig_param_node->attributes->getNamedItem(WSF_TYPE)->value;
+            }
+            if($sig_param_node->attributes->getNamedItem(WSF_MIN_OCCURS)) {
+                $min_occurs = $sig_param_node->attributes->getNamedItem(WSF_MIN_OCCURS)->value;
+            }
+            if($sig_param_node->attributes->getNamedItem(WSF_WSDL_SIMPLE) &&
+                    $sig_param_node->attributes->getNamedItem(WSF_WSDL_SIMPLE)->value == "yes") {
+                $is_simple = TRUE;
+            }
+
+            // for any types no content model can be specified..
+            if($param_type == "anyType") {
+                $tag_name = $current_child->localName;
+                if($param_name == $tag_name) {
+                    $converted_value = wsf_parse_payload_for_unknown_array($current_child);
+                    $parse_tree[$param_name] = $converted_value;
+                    continue;
+                }
+            }
+
+            if($content_model == WSF_WSDL_SEQUENCE) {
+                    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, 
+                            "\$param_name:{$param_name} and child name: {$current_child->localName}");
+                if($param_name == $current_child->localName) {
+
+                    if($is_simple) {
+                        // this moves the current_child pointer to the next child..
+                        $parse_tree[$param_name] = deserialize_simple_types($current_child, $sig_param_node);
+                    }
+                    else {
+                        $parse_tree[$param_name] = deserialize_complex_types($current_child, $sig_param_node, $classmap);
+                    }
+                }
+                else
+                {
+                    if($min_occurs == 0) {
+                        error_log("minOccurs != 0 element ". $param_name ." doesn't exist in the sequence.\n");
+                        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "minOccurs != 0 element ". $param_name ." doesn't exist in the sequence.");
+                        if($current_child->localName != NULL){
+                            error_log($current_child->localName. " is found in place of ". $param_name ."\n");
+                            ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, $current_child->localName. " is found in place of ". $param_name);
+                        }
+                    }
+                }
+            }
+            else if($content_model == WSF_WSDL_ALL) {
+                $found = FALSE;
+                $current_child = $first_child;
+
+                while($current_child !== NULL) {
+                    if($current_child->nodeType == XML_TEXT_NODE) {
                         continue;
                     }
-                }
-               
-                if($content_model == "sequence") {
-                    if($param_key == $current_child->localName) {
-                        if(isset($param_value[WSF_TYPE_REP]) && $param_value[WSF_TYPE_REP]) {
+                    if($param_name == $current_child->localName) {
+                        if($is_simple) {
                             // this moves the current_child pointer to the next child..
-                            $parse_tree[$param_key] = deserialize_simple_types($param_key, $param_value, $current_child);
+                            $parse_tree[$param_name] = deserialize_simple_types($current_child, $sig_param_node);
                         }
                         else {
-                            $parse_tree[$param_key] = deserialize_complex_types($param_key, $param_value, $current_child, $is_classmap);
+                            $parse_tree[$param_name] = deserialize_complex_types($current_child, $sig_param_node, $classmap);
                         }
+                        $found = TRUE;
+                        break; //found and no need to investigate more..
                     }
-                    else
-                    {
-                        if(!array_key_exists("minOccurs", $param_value) || $param_value["minOccurs"] == 0) {
-                            // if array_key doesn't exist that mean minOccurs = 1;
-                            error_log("minOccurs != 0 element ". $param_key ." doesn't exist in the sequence.\n");
-                            if($current_child->localName != NULL){
-                                error_log($current_child->localName. " is found in place of ". $param_key ."\n");
-                            }
-                        }
-                    }
+
+                    $current_child = $current_child->nextSibling;
                 }
-                else if($content_model == "all") {
-                    $found = FALSE;
-                    $current_child = $first_child;
-                    while($current_child !== NULL) {
-                        if($current_child->nodeType == XML_TEXT_NODE) {
-                            continue;
-                        }
-
-                        if($param_key == $current_child->localName) {
-                            if(isset($param_value[WSF_TYPE_REP]) && $param_value[WSF_TYPE_REP]) {
-                                // this moves the current_child pointer to the next child..
-                                $parse_tree[$param_key] = deserialize_simple_types($param_key, $param_value, $current_child);
-                            }
-                            else {
-                                $parse_tree[$param_key] = deserialize_complex_types($param_key, $param_value, $current_child, $is_classmap);
-                            }
-                            $found = TRUE;
-                            break; //found and no need to investigate more..
-                        }
-
-                        $current_child = $current_child->nextSibling;
-                    }
-                    if(!$found) {
-                        
-                        if(!array_key_exists("minOccurs", $param_value) || $param_value["minOccurs"] != 0) {
-                            // if array_key doesn't exist that mean minOccurs = 1;
-                            error_log("minOccurs != 0 element ". $param_key ." doesn't exist.\n");
-                        }  
-                    }
+                if(!$found) {
+                    if($min_occurs == 0) {
+                        // if array_key doesn't exist that mean minOccurs = 1;
+                        error_log("minOccurs != 0 element ". $param_name ." doesn't exist.\n");
+                        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "minOccurs != 0 element ". $param_name ." doesn't exist.");
+                    }  
                 }
-                else if($content_model == "choice") {
-                    if($param_key == $current_child->localName) {
-                        if(isset($param_value[WSF_TYPE_REP]) && $param_value[WSF_TYPE_REP]) {
-                            // this moves the current_child pointer to the next child..
-                            $parse_tree[$param_key] = deserialize_simple_types($param_key, $param_value, $current_child);
-                        }
-                        else {
-                            $parse_tree[$param_key] = deserialize_complex_types($param_key, $param_value, $current_child, $is_classmap);
-                        }
-
-                        //finally found what they were asking for, no need to continue any further..
-                        break;
+            }
+            else if($content_model == "choice") {
+                if($param_name == $current_child->localName) {
+                    if($is_simple) {
+                        // this moves the current_child pointer to the next child..
+                        $parse_tree[$param_name] = deserialize_simple_types($current_child, $sig_param_node);
                     }
+                    else {
+                        $parse_tree[$param_name] = deserialize_complex_types($current_child, $sig_param_node, $classmap);
+                    }
+
+                    //finally found what they were asking for, no need to continue any further..
+                    break;
                 }
             }
         }
     }
+ 
     return $parse_tree;
 }
 

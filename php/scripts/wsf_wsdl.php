@@ -29,7 +29,6 @@
  */
 function wsf_process_wsdl($user_parameters, $function_parameters)
 {
-
     require_once('dynamic_invocation/wsf_wsdl_consts.php');
     require_once('dynamic_invocation/wsf_wsdl_util.php');
     require_once('dynamic_invocation/wsf_wsdl_client.php');
@@ -62,10 +61,12 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     $wsdl_location = $user_parameters[WSF_WSDL];
 
     /* wsf endpoint is an optional parameter */
-    if(isset($user_parameters[WSF_ENDPOINT]))
+    if(isset($user_parameters[WSF_ENDPOINT])) {
         $endpoint_address = $user_parameters[WSF_ENDPOINT];
-    else
+    }
+    else {
         $endpoint_address = NULL;
+    }
   
     /* class map is an optional parameter */
     if (isset($user_parameters[WSF_CLASSMAP])) {

@@ -18,12 +18,12 @@
 
 /**
  * Return response parameters as a DOM node.
- * @param DomNode $signature_node Node points to the signature element in sigmodel  
+ * @param DomNode $sig_node Node points to the signature element in sigmodel  
  * @return DomNode Cloned DomNode
  */
-function wsf_get_response_parameters(DomNode $signature_node)
+function wsf_get_response_parameters(DomNode $sig_node)
 {
-    $signature_child_list = $signature_node->childNodes;
+    $signature_child_list = $sig_node->childNodes;
     foreach($signature_child_list as $signature_child) {
         if($signature_child->tagName == WSF_RETURNS) {
             $clone_return_node = $signature_child->cloneNode(TRUE);
@@ -35,30 +35,31 @@ function wsf_get_response_parameters(DomNode $signature_node)
 
 /**
  * Creates the payload to be passed to C level.
- * @param DomNode $signature_node the sig node of the operation
+ * @param DomNode $sig_node the sig node of the operation
  * @param Bool $is_doc true if doc-lit or false if rpc style
  * @param string $operation_name Name of the operation to be invoked
  * @param int $arg_count No of arguments in the function
  * @param array $argument array of arguments of the function to be invoked
- * @param array $class_map array of class mappings for complex types 
+ * @param array $classmap array of class mappings for complex types 
  * @param DomNode $schema_node schema for the given WSDL
  */
 
-function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $arg_count, $arguments, array $class_map = NULL)
+function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name, $arg_count, $arguments, array $classmap = NULL)
 {
     require_once('wsf_wsdl_consts.php');
     require_once('wsf_wsdl_util.php');
     require_once('wsf_wsdl_serialization.php');
 
-    $sig_data_struct = array();
-
     // if the sig is an immediate simple type then
     // it is expected to have is_wrapper = TRUE
     $is_wrapper = FALSE;
-    $sig_data_struct = NULL;
+    $params_node = NULL;
+
+    // starting prefix index to build the xml
+    $prefix_i = 2;
    
-    if($signature_node) {
-        $params_node = $signature_node->firstChild;
+    if($sig_node) {
+        $params_node = $sig_node->firstChild;
         if($params_node && $params_node->localName == WSF_PARAMS) {
             if($params_node->hasAttributes()) {
                 /* Wrapper element of the request operation */
@@ -71,70 +72,43 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
                 if($sig_attrs->getNamedItem(WSF_WRAPPER_ELEMENT_NS)) {
                     $ele_ns = $sig_attrs->getNamedItem(WSF_WRAPPER_ELEMENT_NS)->value;
                 }
-
-                $sig_data_struct = array();
-                $sig_data_struct[WSF_NS] = $ele_ns;
-                $sig_data_struct[WSF_HAS_SIG_CHILDS] = TRUE;
-
-                if($sig_attrs->getNamedItem(WSF_CONTENT_MODEL)) {
-                    $content_model = $sig_attrs->getNamedItem(WSF_CONTENT_MODEL)->value;
-                    $sig_data_struct[WSF_CONTENT_MODEL] = $content_model;
-                }
-                
                 $is_wrapper = TRUE;
                             
-                $param_child_list = $params_node->childNodes;
-                $sig_data_struct[WSF_SIG_CHILDS] = array();
-
-                foreach($param_child_list as $param_child) {
-                    $param_attr = $param_child->attributes;
-                    $ele_ns = NULL;
-                    $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
-                    $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
-                    $sig_data_struct[WSF_SIG_CHILDS][$param_name] = wsf_create_sig_data_struct($param_child); 
-                }
             }
-            else{
+            else {
                 /* No wrapper element in the request */
-                $sig_data_struct =  array();
                 $ele_ns = NULL;
-                $param_child_list = $params_node->childNodes;
+                $ele_name = NULL;
 
-                // This loop is expected to have only one child
-                foreach($param_child_list as $param_child) {
-                    $param_attr = $param_child->attributes;
-                    $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
-                    $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
-                    $sig_data_struct[$param_name] = wsf_create_sig_data_struct($param_child);
-                    $ele_name = $param_name;
+                /* check for the only param target-namespace */
+                $only_param = $params_node->firstChild;
+                $sig_attrs = $only_param->attributes;
+                
+                if($sig_attrs->getNamedItem(WSF_TARGETNAMESPACE)) {
+                    $ele_ns = $sig_attrs->getNamedItem(WSF_TARGETNAMESPACE)->value;
+                }
+
+                if($sig_attrs->getNamedItem(WSF_NAME)) {
+                    $ele_name = $sig_attrs->getNamedItem(WSF_NAME)->value;
                 }
             }
-        }
-        if ($is_wrapper == TRUE) {
-            $sig_data_struct[$ele_name] = $sig_data_struct;
-        }
-        else{
-            $sig_data_struct = $sig_data_struct;
         }
     }
 
-    file_put_contents("/tmp/param_struct", wsf_test_serialize_node($signature_node));
-
-    /* no wrapper elements most probably getter functions */
-    if(count($sig_data_struct) == 0) {
+    if($params_node == NULL) {
         return NULL;
     }
  
     if($is_doc == TRUE) {
         $payload_dom = new DOMDocument('1.0', 'iso-8859-1');
-        $element = $payload_dom->createElementNS($sig_data_struct[$ele_name][WSF_NS], "ns1:".$ele_name);
+        $element = $payload_dom->createElementNS($ele_ns, WSF_STARTING_NS_PREFIX.":".$ele_name);
         if(is_object($arguments[0])) {
+
             /* this is class map support */
             $new_obj = $arguments[0];
-            $parameter_structure = $sig_data_struct[$ele_name];
-            $namespace_map = array($sig_data_struct[$ele_name][WSF_NS] => "ns1");
-            wsf_create_payload_for_class_map($payload_dom, $parameter_structure, $element, $element, $new_obj,
-                                                                        $namespace_map);
+            $namespace_map = array($ele_ns => WSF_STARTING_NS_PREFIX);
+            wsf_create_payload_for_class_map($payload_dom, $params_node, $element, $element, $new_obj,
+                                                           $prefix_i, $namespace_map);
             $payload_dom->appendChild($element);
             $payload_node = $payload_dom->firstChild;
             $clone_node = $payload_node->cloneNode(TRUE);
@@ -143,33 +117,31 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
         }
         else {
             /* array type implementation */
-            $parameter_structure = $sig_data_struct[$ele_name];
-            $namespace_map = array($sig_data_struct[$ele_name][WSF_NS] => "ns1");
+            $namespace_map = array($ele_ns => WSF_STARTING_NS_PREFIX);
 
-            wsf_create_payload_for_array($payload_dom, $parameter_structure, $element, $element, $arguments[0],
-                                                                       $namespace_map);
+            wsf_create_payload_for_array($payload_dom, $params_node, $element, $element, $arguments[0],
+                                                           $prefix_i, $namespace_map);
             $payload_dom->appendChild($element);
             $payload_node = $payload_dom->firstChild;
             $clone_node = $payload_node->cloneNode(TRUE);
 
             return $payload_dom->saveXML($clone_node);
         }
-    }else{
+    }
+    else {
         $payload_dom = new DOMDocument('1.0', 'iso-8859-1');
-        $element = $payload_dom->createElementNS($sig_data_struct[$ele_name][WSF_NS], "ns1:".$ele_name);
+        $element = $payload_dom->createElementNS($ele_ns, WSF_STARTING_NS_PREFIX.":".$ele_name);
         $element->setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
         $element->setAttribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
 
 
         if(is_object($arguments[0])) {
             $new_obj = $arguments[0];
-            $parameter_structure = $sig_data_struct[$ele_name];
-            $namespace_map = array($sig_data_struct[$ele_name][WSF_NS] => "ns1");
-            //wsf_create_rpc_payload_for_class_map($payload_dom, $parameter_structure, $element, $element, $new_obj,
-            //                                                          $namespace_map);a
+            
+            $namespace_map = array($ele_ns => WSF_STARTING_NS_PREFIX);
             // currently we handle both rpc and doc lit sameway
-            wsf_create_payload_for_class_map($payload_dom, $parameter_structure, $element, $element, $new_obj,
-                                                                        $namespace_map);
+            wsf_create_payload_for_class_map($payload_dom, $params_node, $element, $element, $new_obj,
+                                                           $prefix_i, $namespace_map);
             $payload_dom->appendChild($element);
             $payload_node = $payload_dom->firstChild;
             $clone_node = $payload_node->cloneNode(TRUE);
@@ -177,13 +149,11 @@ function wsf_create_payload(DomNode $signature_node, $is_doc, $operation_name, $
         }
         else {
             /* array type implementation */
-            $parameter_structure = $sig_data_struct[$ele_name];
-            $namespace_map = array($sig_data_struct[$ele_name][WSF_NS] => "ns1");
+            
+            $namespace_map = array($ele_ns => WSF_STARTING_NS_PREFIX);
 
-            //wsf_create_rpc_payload_for_array($payload_dom, $parameter_structure, $element, $element, $arguments[0],
-            //                                                           $namespace_map);
-            wsf_create_payload_for_array($payload_dom, $parameter_structure, $element, $element, $arguments[0],
-                                                                       $namespace_map);
+            wsf_create_payload_for_array($payload_dom, $params_node, $element, $element, $arguments[0],
+                                                           $prefix_i, $namespace_map);
 
             $payload_dom->appendChild($element);
             $payload_node = $payload_dom->firstChild;
@@ -208,8 +178,6 @@ function wsf_client_response_and_validate(DomDocument $envelope_dom, DomDocument
     require_once('wsf_wsdl_util.php');
     require_once('wsf_wsdl_deserialization.php');
 
-    $sig_data_struct = array();
-
     $envelope_node = $envelope_dom->documentElement;
     $returns_node = $signature_dom->documentElement;
 
@@ -221,73 +189,58 @@ function wsf_client_response_and_validate(DomDocument $envelope_dom, DomDocument
             if($returns_node->hasAttributes()) {
                 /* Wrapper element of the request operation */
                 $sig_attrs = $returns_node->attributes;
-                $ele_name = $sig_attrs->getNamedItem(WSF_WRAPPER_ELEMENT)->value;
-                $ele_ns = $sig_attrs->getNamedItem(WSF_WRAPPER_ELEMENT_NS)->value;
-                $sig_data_struct =  array();
-                $sig_data_struct[WSF_NS] = $ele_ns;
-                $sig_data_struct[WSF_HAS_SIG_CHILDS] = TRUE;
-
-                if($sig_attrs->getNamedItem(WSF_CONTENT_MODEL)) {
-                    $content_model = $sig_attrs->getNamedItem(WSF_CONTENT_MODEL)->value;
-                    $sig_data_struct[WSF_CONTENT_MODEL] = $content_model;
+                $ele_name = NULL;
+                $ele_ns = NULL;
+                if($sig_attrs->getNamedItem(WSF_WRAPPER_ELEMENT)) {
+                    $ele_name = $sig_attrs->getNamedItem(WSF_WRAPPER_ELEMENT)->value;
+                }
+                if($sig_attrs->getNamedItem(WSF_WRAPPER_ELEMENT_NS)) {
+                    $ele_ns = $sig_attrs->getNamedItem(WSF_WRAPPER_ELEMENT_NS)->value;
                 }
                 $is_wrapper = TRUE;
-                            
-                $param_child_list = $returns_node->childNodes;
-                $sig_data_struct[WSF_SIG_CHILDS] = array();
-                foreach($param_child_list as $param_child) {
-                    $param_attr = $param_child->attributes;
-                    $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
-                    $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
-                    $sig_data_struct[WSF_SIG_CHILDS][$param_name] = wsf_create_sig_data_struct($param_child); 
-                }
             }
-            else{
+            else {
                 /* No wrapper element in the request */
-                $sig_data_struct =  array();
-                $param_child_list = $returns_node->childNodes;
-                foreach($param_child_list as $param_child) {
-                    $param_attr = $param_child->attributes;
-                    $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
-                    $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
-                    $sig_data_struct[$param_name] = wsf_create_sig_data_struct($param_child);
-                    $ele_name = $param_name;
+                $ele_ns = NULL;
+                $ele_name = NULL;
+
+                /* check for the only param target-namespace */
+                $only_param = $returns_node->firstChild;
+                $sig_attrs = $only_param->attributes;
+                
+                if($sig_attrs->getNamedItem(WSF_TARGETNAMESPACE)) {
+                    $ele_ns = $sig_attrs->getNamedItem(WSF_TARGETNAMESPACE)->value;
+                }
+                if($sig_attrs->getNamedItem(WSF_NAME)) {
+                    $ele_name = $sig_attrs->getNamedItem(WSF_NAME)->value;
                 }
             }
         }
     }
 
-    if ($is_wrapper == TRUE)
-        $sig_data_struct = $sig_data_struct;
-    else
-        $sig_data_struct = $sig_data_struct[$ele_name];
-
-
-
     /** get SOAP body DOM tree to compare with Sig model */
-	foreach($envelope_node->childNodes as $env_child_node) {
-		if($env_child_node->localName == 'Body') {
-			$soap_body_node = $env_child_node->firstChild;
-			break;
-		}
-	}
+    foreach($envelope_node->childNodes as $env_child_node) {
+        if($env_child_node->localName == 'Body') {
+            $soap_body_node = $env_child_node->firstChild;
+            break;
+        }
+    }
 
-	if(!$soap_body_node) {
-		error_log("soap_body not found", 0);
-	}
+    if(!$soap_body_node) {
+        error_log("soap_body not found", 0);
+    }
 
-    $class_map = NULL;
-    if(isset($response_parameters[WSF_CLASSMAP]))
-        $class_map = $response_parameters[WSF_CLASSMAP];
+    $classmap = NULL;
+    if(isset($response_parameters[WSF_CLASSMAP])) {
+        $classmap = $response_parameters[WSF_CLASSMAP];
+    }
 
     $op_param_values = array();
-    if($class_map !== NULL)
-    {
-        $op_param_values = wsf_parse_payload_for_class_map($soap_body_node, $sig_data_struct, $ele_name, $class_map);
+    if($classmap !== NULL) {
+        $op_param_values = wsf_parse_payload_for_class_map($soap_body_node, $returns_node, $ele_name, $classmap);
     }
-    else
-    {
-        $op_param_values = wsf_parse_payload_for_array($soap_body_node, $sig_data_struct);
+    else {
+        $op_param_values = wsf_parse_payload_for_array($soap_body_node, $returns_node);
     }
 
     return $op_param_values;

@@ -52,35 +52,61 @@ function wsf_write_sub_classes($nodes) {
                 $code = $code . "class " . $type_name . " { \n";
                 $written_classes[$type_name] = true;
 
-                $param_child_list = $node->childNodes;
-                foreach ($param_child_list as $param_child) {
-                    $param_attr = $param_child->attributes;
-                    $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
-                    $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
+                $child_array = array();
+                $code .= wsf_write_content_model($node, $child_array);
 
-                    if($param_child->getAttribute("simple") == "yes"){
-                        $code .= wsf_comment_on_simple_type($param_child, $ele_name, $param_type);
-                    }
-
-                    // check if the attribute is of array type
-                    $max_occurs = $param_attr->getNamedItem(WSF_MAX_OCCURS)->value;
-                    $array_type = "";
-                    if ($max_occurs != null && $max_occurs != "1")
-                        $array_type = "array of ";
-
-                    // write public members of the class 
-                    $code = $code . "    public $" . $param_name . "; // " . $array_type . $param_type . "\n";
-                    // if it is not s simple type, we have to keep track of it to write a corresponding class
-                    if ($param_attr->getNamedItem(WSF_WSDL_SIMPLE)->value == 'no')
-                        $child_array[] = $param_child;
-                }
                 $code = $code . "}\n\n";
                 // done writing the current class, now go and write the sub classes
                 $code = $code . wsf_write_sub_classes($child_array);
             }
-            // TODO: How to generate code if we do not have a wrapper element?
             // TODO: What about arrays?
         }
+    }
+    return $code;
+}
+
+function wsf_write_content_model($parent_node, &$child_array) {
+    $code = "";
+    $param_child_list = $parent_node->childNodes;
+    if($parent_node->attributes) {
+        $content_model = $parent_node->attributes->getNamedItem(WSF_CONTENT_MODEL)->value;
+    }
+    if($content_model == "choice") {
+        //just start a comment
+        $code .= "\n";
+        $code .= "    // You may set only one from the following set\n";
+        $code .= "    // ---------------Start Choice----------------\n";
+    }
+    foreach ($param_child_list as $param_child) {
+        if($param_child->localName == WSF_PARAM) {
+            $param_attr = $param_child->attributes;
+            $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
+            $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
+
+            if($param_child->getAttribute("simple") == "yes"){
+                $code .= wsf_comment_on_simple_type($param_child, $ele_name, $param_type);
+            }
+
+            // check if the attribute is of array type
+            $max_occurs = $param_attr->getNamedItem(WSF_MAX_OCCURS)->value;
+            $array_type = "";
+            if ($max_occurs != null && $max_occurs != "1")
+                $array_type = "array of ";
+
+            // write public members of the class 
+            $code = $code . "    public $" . $param_name . "; // " . $array_type . $param_type . "\n";
+            // if it is not s simple type, we have to keep track of it to write a corresponding class
+            if ($param_attr->getNamedItem(WSF_WSDL_SIMPLE)->value == 'no')
+                $child_array[] = $param_child;
+        }
+        else if($param_child->localName == WSF_INNER_CONTENT) {
+            // in place of inner content recursively call the wsf_write_content_model
+            $code .= wsf_write_content_model($param_child, $child_array);
+        }
+    }
+    if($content_model == "choice") {
+        //just start a comment
+        $code .= "    // ----------------End Choice---------------\n\n";
     }
     return $code;
 }
@@ -202,30 +228,15 @@ function wsf_wsdl2php($wsdl_location) {
                                     $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // NOTE: should return an object of type $ele_name\n}\n\n";
                                 }
 
-                                $param_child_list = $param_node->childNodes;
-                                foreach ($param_child_list as $param_child) {
-                                    $param_attr = $param_child->attributes;
-                                    $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
-                                    $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
-
-                                    // check if the attribute is of array type
-                                    $max_occurs = $param_attr->getNamedItem(WSF_MAX_OCCURS)->value;
-                                    $array_type = "";
-                                    if ($max_occurs != null && $max_occurs != "1")
-                                        $array_type = "array of ";
-
-                                    // write public members of the class 
-                                    $code = $code . "    public $" . $param_name . "; // " . $array_type . $param_type . "\n";
-                                    // if it is not s simple type, we have to keep track of it to write a corresponding class
-                                    if ($param_attr->getNamedItem(WSF_WSDL_SIMPLE)->value == 'no')
-                                        $child_array[] = $param_child;
-                                }
+                                $child_array = array();
+                                $code .= wsf_write_content_model($param_node, $child_array);
+                                
                                 $code = $code . "}\n\n";
                                 // done writing the current class, now go and write the sub classes
                                 $code = $code . wsf_write_sub_classes($child_array);
                             } else {
                                 // TODO: No wrapper element, there won't be any class generated for this 
-                                
+
                                 $child_array = array ();
                                 $param_child_list = $param_node->childNodes;
 

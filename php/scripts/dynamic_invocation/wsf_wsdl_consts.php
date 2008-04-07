@@ -103,22 +103,23 @@ define("WSF_HAS_SIG_CHILDS", "has_childs");
 define("WSF_CLASSMAP_NAME", "classmap_name");
 define("WSF_XSD_NILLABLE", "nillable");
 define("WSF_CONTENT_MODEL", "contentModel");
+define("WSF_INNER_CONTENT", "inner-content");
+
+define("WSF_STARTING_NS_PREFIX", "ns1");
+define("WSF_SOAP_BODY", "Body");
+
+define("WSF_WSDL_SEQUENCE", "sequence");
+define("WSF_WSDL_CHOICE", "choice");
+define("WSF_WSDL_ALL", "all");
 
 // log level definition
 
-define(WSF_LOG_CRITICAL, 0);
-
-define(WSF_LOG_ERROR, 1);
-
-define(WSF_LOG_WARNING, 2);
-
-define(WSF_LOG_INFO, 3);
-
-define(WSF_LOG_DEBUG, 4);
-
-define(WSF_LOG_USER, 5);
-
-define(WSF_LOG_TRACE, 6);
-
+define("WSF_LOG_CRITICAL", 0);
+define("WSF_LOG_ERROR", 1);
+define("WSF_LOG_WARNING", 2);
+define("WSF_LOG_INFO", 3);
+define("WSF_LOG_DEBUG", 4);
+define("WSF_LOG_USER", 5);
+define("WSF_LOG_TRACE", 6);
 
 ?>
