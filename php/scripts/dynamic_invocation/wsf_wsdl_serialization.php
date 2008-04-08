@@ -42,7 +42,7 @@
  *
  * @param DomNode $parent_node - The parent node to add the content 
  * @param DomNode $root_node - The top most of parent
- * @param mixed $class_obj - class object to pass
+ * @param mixed $user_obj - class object to pass
  * @param $prefix_i - next available prefix index 
  * @param $namespace_map - Just make sure the unique namespace is used.
     Newly added (passed by reference)
@@ -53,7 +53,7 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
                                             DomNode $sig_node, 
                                             DomNode $parent_node, 
                                             DomNode $root_node, 
-                                            $class_obj, 
+                                            $user_obj, 
                                             &$prefix_i, 
                                             array &$namespace_map) {
 
@@ -70,24 +70,12 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
         // the unknown structure..
         $values = array_values($namespace_map);
         $prefix = $values[0];
-        wsf_create_payload_for_unknown_class_map($payload_dom, $parent_node, $class_obj, $prefix);
+        wsf_create_payload_for_unknown_class_map($payload_dom, $parent_node, $user_obj, $prefix);
         return;
     }
 
-    $user_arguments = array();
     // filling user class information to the array..
-   
-    $sig_param_nodes = $sig_node->childNodes;
-
-    foreach($sig_param_nodes as $sig_param_node) {
-        $param_attrs = $sig_param_node->attributes;
-        if($param_attrs->getNamedItem(WSF_NAME)) {
-            $param_name = $param_attrs->getNamedItem(WSF_NAME)->value;
-        }
-        if($class_obj->$param_name !== NULL) {
-            $user_arguments[$param_name] = $class_obj->$param_name;
-        }
-    }
+    $user_arguments = wsf_convert_classobj_to_array($sig_node, $user_obj);
     
     wsf_build_content_model($sig_node, $user_arguments, $parent_node, $payload_dom, $root_node, $prefix_i, $namespace_map);
 }
@@ -120,7 +108,7 @@ function wsf_create_payload_for_array(DomDocument $payload_dom,
         // the unknown structure..
         $values = array_values($namespace_map);
         $prefix = $values[0];
-        wsf_create_payload_for_unknown_class_map($payload_dom, $parent_node, $class_obj, $prefix);
+        wsf_create_payload_for_unknown_class_map($payload_dom, $parent_node, $user_obj, $prefix);
         return;
     }
 
@@ -159,21 +147,21 @@ function wsf_create_payload_for_array(DomDocument $payload_dom,
  * @param $payload_dom - DomDocument for the payload building
  * @param $parent_node - The parent node to add the content
  * @param $user_arguments - The user given argument array 
- * @param $class_obj - object with user data..
+ * @param $user_obj - object with user data..
  * @param $ns_prefix
  */
 function wsf_create_payload_for_unknown_class_map(DomDocument $payload_dom,
                                      DomNode $parent_node,
-                                     $class_obj,
+                                     $user_obj,
                                      $ns_prefix) {
 
-    $reflex_obj = new ReflectionObject($class_obj);
+    $reflex_obj = new ReflectionObject($user_obj);
     $reflex_properties = $reflex_obj->getProperties();
 
 
     foreach($reflex_properties as $reflex_property) {
         $key = $reflex_property->getName();
-        $value = $reflex_property->getValue($class_obj);
+        $value = $reflex_property->getValue($user_obj);
 
         if($ns_prefix != NULL && !empty($ns_prefix)) {
             $node_name = $ns_prefix.":".$key;
@@ -566,36 +554,71 @@ function wsf_build_content_model(DomNode $sig_node, array $user_arguments,
     
     $sig_param_nodes = $sig_node->childNodes;
     foreach($sig_param_nodes as $sig_param_node) {
-        $param_name = $sig_param_node->attributes->getNamedItem(WSF_NAME)->value;
+        if($sig_param_node->nodeName == WSF_PARAM) {
+            $param_name = $sig_param_node->attributes->getNamedItem(WSF_NAME)->value;
 
-        // users are not expected to provide it in exact sequence..
-        // for both all and sequences we build the xml same order as in the schema
-        // for choice we pick the first non-null value in the group, when it is in the order defined in the schema
-        foreach($user_arguments as $user_key => $user_val) {
-            if($param_name == $user_key) {
-                if ($sig_param_node->attributes->getNamedItem(WSF_WSDL_SIMPLE)->value == "yes") {
-                    wsf_serialize_simple_types($sig_param_node,
-                                    $user_val, $parent_node, $payload_dom, 
-                                    $root_node, $prefix_i, $namespace_map);
+            // users are not expected to provide it in exact sequence..
+            // for both all and sequences we build the xml same order as in the schema
+            // for choice we pick the first non-null value in the group, when it is in the order defined in the schema
+            foreach($user_arguments as $user_key => $user_val) {
+                if($param_name == $user_key) {
+                    if ($sig_param_node->attributes->getNamedItem(WSF_WSDL_SIMPLE)->value == "yes") {
+                        wsf_serialize_simple_types($sig_param_node,
+                                        $user_val, $parent_node, $payload_dom, 
+                                        $root_node, $prefix_i, $namespace_map);
+                    }
+                    else {
+                        wsf_serialize_complex_types($sig_param_node, 
+                                        $user_val, $parent_node, $payload_dom,
+                                        $root_node, $prefix_i, $namespace_map);
+                    }
+                    if($user_val !== NULL) {
+                        $just_found_once = TRUE;
+                    }
+                    break;
                 }
-                else {
-                    wsf_serialize_complex_types($sig_param_node, 
-                                    $user_val, $parent_node, $payload_dom,
-                                    $root_node, $prefix_i, $namespace_map);
-                }
-                if($user_val !== NULL) {
-                    $just_found_once = TRUE;
-                }
+            }
+            if($just_found_once && $content_model == "choice"){
                 break;
             }
         }
-        if($just_found_once && $content_model == "choice"){
-            break;
+        else if($sig_param_node->nodeName == WSF_INNER_CONTENT) {
+            wsf_build_content_model($sig_param_node, $user_arguments, $parent_node,
+                    $payload_dom, $root_node, $prefix_i, $namespace_map);
         }
     }
 }
 
+/**
+ * convert user object to user arguments array, right now just for one level
+ * @param $sig_node DomNode sig model
+ * @param $user_obj
+ * @return resulting argument array
+ */
+function wsf_convert_classobj_to_array($sig_node, $user_obj) {
 
+    $user_arguments = array();
+
+    $sig_param_nodes = $sig_node->childNodes;
+
+    foreach($sig_param_nodes as $sig_param_node) {
+        if($sig_param_node->nodeName == WSF_PARAM) {
+            $param_attrs = $sig_param_node->attributes;
+            if($param_attrs->getNamedItem(WSF_NAME)) {
+                $param_name = $param_attrs->getNamedItem(WSF_NAME)->value;
+            }
+            if($user_obj->$param_name !== NULL) {
+                $user_arguments[$param_name] = $user_obj->$param_name;
+            }
+        }
+        else if($sig_param_node->nodeName == WSF_INNER_CONTENT) {
+            $tmp_array = wsf_convert_classobj_to_array($sig_param_node, $user_obj);
+            $user_arguments = array_merge($user_arguments, $tmp_array);
+        }
+    }
+
+    return $user_arguments;
+}
 
 //-------------------------------------------------------------------------------------------
 //currently we don't have diffent serialization for rpc-style in contrast with doc-lit

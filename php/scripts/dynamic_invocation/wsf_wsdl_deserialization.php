@@ -592,68 +592,93 @@ function wsf_infer_content_model(DomNode $current_child, DomNode $sig_node, $cla
 
     if($sig_node->hasChildNodes()) {
         foreach($sig_node->childNodes as $sig_param_node) {
-            $is_simple = FALSE;
-            $param_name = NULL;
-            $param_type = NULL;
-            $min_occurs = 1;
 
-            if($sig_param_node->attributes->getNamedItem(WSF_NAME)) {
-                $param_name = $sig_param_node->attributes->getNamedItem(WSF_NAME)->value;
-            }
-            if($sig_param_node->attributes->getNamedItem(WSF_TYPE)) {
-                $param_type = $sig_param_node->attributes->getNamedItem(WSF_TYPE)->value;
-            }
-            if($sig_param_node->attributes->getNamedItem(WSF_MIN_OCCURS)) {
-                $min_occurs = $sig_param_node->attributes->getNamedItem(WSF_MIN_OCCURS)->value;
-            }
-            if($sig_param_node->attributes->getNamedItem(WSF_WSDL_SIMPLE) &&
-                    $sig_param_node->attributes->getNamedItem(WSF_WSDL_SIMPLE)->value == "yes") {
-                $is_simple = TRUE;
-            }
+            if($sig_param_node->nodeName == WSF_PARAM) {
+                $is_simple = FALSE;
+                $param_name = NULL;
+                $param_type = NULL;
+                $min_occurs = 1;
 
-            // for any types no content model can be specified..
-            if($param_type == "anyType") {
-                $tag_name = $current_child->localName;
-                if($param_name == $tag_name) {
-                    $converted_value = wsf_parse_payload_for_unknown_array($current_child);
-                    $parse_tree[$param_name] = $converted_value;
-                    continue;
+                if($sig_param_node->attributes->getNamedItem(WSF_NAME)) {
+                    $param_name = $sig_param_node->attributes->getNamedItem(WSF_NAME)->value;
                 }
-            }
+                if($sig_param_node->attributes->getNamedItem(WSF_TYPE)) {
+                    $param_type = $sig_param_node->attributes->getNamedItem(WSF_TYPE)->value;
+                }
+                if($sig_param_node->attributes->getNamedItem(WSF_MIN_OCCURS)) {
+                    $min_occurs = $sig_param_node->attributes->getNamedItem(WSF_MIN_OCCURS)->value;
+                }
+                if($sig_param_node->attributes->getNamedItem(WSF_WSDL_SIMPLE) &&
+                        $sig_param_node->attributes->getNamedItem(WSF_WSDL_SIMPLE)->value == "yes") {
+                    $is_simple = TRUE;
+                }
 
-            if($content_model == WSF_WSDL_SEQUENCE) {
-                    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, 
-                            "\$param_name:{$param_name} and child name: {$current_child->localName}");
-                if($param_name == $current_child->localName) {
-
-                    if($is_simple) {
-                        // this moves the current_child pointer to the next child..
-                        $parse_tree[$param_name] = deserialize_simple_types($current_child, $sig_param_node);
-                    }
-                    else {
-                        $parse_tree[$param_name] = deserialize_complex_types($current_child, $sig_param_node, $classmap);
+                // for any types no content model can be specified..
+                if($param_type == "anyType") {
+                    $tag_name = $current_child->localName;
+                    if($param_name == $tag_name) {
+                        $converted_value = wsf_parse_payload_for_unknown_array($current_child);
+                        $parse_tree[$param_name] = $converted_value;
+                        continue;
                     }
                 }
-                else
-                {
-                    if($min_occurs == 0) {
-                        error_log("minOccurs != 0 element ". $param_name ." doesn't exist in the sequence.\n");
-                        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "minOccurs != 0 element ". $param_name ." doesn't exist in the sequence.");
-                        if($current_child->localName != NULL){
-                            error_log($current_child->localName. " is found in place of ". $param_name ."\n");
-                            ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, $current_child->localName. " is found in place of ". $param_name);
+
+                if($content_model == WSF_WSDL_SEQUENCE) {
+                        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, 
+                                "\$param_name:{$param_name} and child name: {$current_child->localName}");
+                    if($param_name == $current_child->localName) {
+
+                        if($is_simple) {
+                            // this moves the current_child pointer to the next child..
+                            $parse_tree[$param_name] = deserialize_simple_types($current_child, $sig_param_node);
+                        }
+                        else {
+                            $parse_tree[$param_name] = deserialize_complex_types($current_child, $sig_param_node, $classmap);
+                        }
+                    }
+                    else
+                    {
+                        if($min_occurs == 0) {
+                            error_log("minOccurs != 0 element ". $param_name ." doesn't exist in the sequence.\n");
+                            ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "minOccurs != 0 element ". $param_name ." doesn't exist in the sequence.");
+                            if($current_child->localName != NULL){
+                                error_log($current_child->localName. " is found in place of ". $param_name ."\n");
+                                ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, $current_child->localName. " is found in place of ". $param_name);
+                            }
                         }
                     }
                 }
-            }
-            else if($content_model == WSF_WSDL_ALL) {
-                $found = FALSE;
-                $current_child = $first_child;
+                else if($content_model == WSF_WSDL_ALL) {
+                    $found = FALSE;
+                    $current_child = $first_child;
 
-                while($current_child !== NULL) {
-                    if($current_child->nodeType == XML_TEXT_NODE) {
-                        continue;
+                    while($current_child !== NULL) {
+                        if($current_child->nodeType == XML_TEXT_NODE) {
+                            continue;
+                        }
+                        if($param_name == $current_child->localName) {
+                            if($is_simple) {
+                                // this moves the current_child pointer to the next child..
+                                $parse_tree[$param_name] = deserialize_simple_types($current_child, $sig_param_node);
+                            }
+                            else {
+                                $parse_tree[$param_name] = deserialize_complex_types($current_child, $sig_param_node, $classmap);
+                            }
+                            $found = TRUE;
+                            break; //found and no need to investigate more..
+                        }
+
+                        $current_child = $current_child->nextSibling;
                     }
+                    if(!$found) {
+                        if($min_occurs == 0) {
+                            // if array_key doesn't exist that mean minOccurs = 1;
+                            error_log("minOccurs != 0 element ". $param_name ." doesn't exist.\n");
+                            ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "minOccurs != 0 element ". $param_name ." doesn't exist.");
+                        }  
+                    }
+                }
+                else if($content_model == "choice") {
                     if($param_name == $current_child->localName) {
                         if($is_simple) {
                             // this moves the current_child pointer to the next child..
@@ -662,33 +687,15 @@ function wsf_infer_content_model(DomNode $current_child, DomNode $sig_node, $cla
                         else {
                             $parse_tree[$param_name] = deserialize_complex_types($current_child, $sig_param_node, $classmap);
                         }
-                        $found = TRUE;
-                        break; //found and no need to investigate more..
-                    }
 
-                    $current_child = $current_child->nextSibling;
-                }
-                if(!$found) {
-                    if($min_occurs == 0) {
-                        // if array_key doesn't exist that mean minOccurs = 1;
-                        error_log("minOccurs != 0 element ". $param_name ." doesn't exist.\n");
-                        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "minOccurs != 0 element ". $param_name ." doesn't exist.");
-                    }  
+                        //finally found what they were asking for, no need to continue any further..
+                        break;
+                    }
                 }
             }
-            else if($content_model == "choice") {
-                if($param_name == $current_child->localName) {
-                    if($is_simple) {
-                        // this moves the current_child pointer to the next child..
-                        $parse_tree[$param_name] = deserialize_simple_types($current_child, $sig_param_node);
-                    }
-                    else {
-                        $parse_tree[$param_name] = deserialize_complex_types($current_child, $sig_param_node, $classmap);
-                    }
-
-                    //finally found what they were asking for, no need to continue any further..
-                    break;
-                }
+            else if($sig_param_node->nodeName == WSF_INNER_CONTENT) {
+                $tmp_tree = wsf_infer_content_model($current_child, $sig_param_node, $classmap);
+                $parse_tree = array_merge($parse_tree, $tmp_tree);
             }
         }
     }
