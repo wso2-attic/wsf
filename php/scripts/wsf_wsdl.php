@@ -228,6 +228,7 @@ function wsf_process_response($response_payload_string, $response_sig_model_stri
     $wsdl_dom->loadXML($wsdldom_string);
     
     $response_class = wsf_client_response_and_validate($envelope_dom, $sig_model_dom, $response_parameters);
+    
     return $response_class;
 }
 

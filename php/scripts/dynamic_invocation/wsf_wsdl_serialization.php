@@ -130,8 +130,8 @@ function wsf_create_payload_for_array(DomDocument $payload_dom,
             $param_type = $the_only_node->attributes->getNamedItem(WSF_TYPE)->value;
         }
         if($is_simple) {
-            if($user_arguments == NULL || !is_array($user_arguments)) {
-                $serialized_value = wsf_wsdl_util_serialize_php_value($param_type, $user_arguments);
+            if($user_arguments === NULL || !is_array($user_arguments)) {
+                $serialized_value = wsf_wsdl_serialize_php_value($param_type, $user_arguments);
                 $text_node = $payload_dom->createTextNode($serialized_value);
                 $parent_node->appendChild($text_node);
 
@@ -341,7 +341,7 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
         if(is_array($user_val)) {
             foreach($user_val as $user_val_item) {
                 /* type conversion is needed */
-                $serialized_value = wsf_wsdl_util_serialize_php_value(
+                $serialized_value = wsf_wsdl_serialize_php_value(
                              $param_type, $user_val_item);
                 $ele = $payload_dom->createElement($node_name, $serialized_value);
                 $parent_node->appendChild($ele);
@@ -349,7 +349,7 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
         }
         else {
             /* in a case this is not an array */
-            $serialized_value = wsf_wsdl_util_serialize_php_value(
+            $serialized_value = wsf_wsdl_serialize_php_value(
                              $param_type, $user_val);
             $ele = $payload_dom->createElement($node_name, $serialized_value);
             $parent_node->appendChild($ele);
@@ -358,7 +358,7 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
     else {
         if(!is_array($user_val)) {
             /* in a case this is not an array */
-            $serialized_value = wsf_wsdl_util_serialize_php_value(
+            $serialized_value = wsf_wsdl_serialize_php_value(
                              $param_type, $user_val);
             $ele = $payload_dom->createElement($node_name, $serialized_value);
             $parent_node->appendChild($ele);
@@ -586,6 +586,10 @@ function wsf_build_content_model(DomNode $sig_node, array $user_arguments,
             wsf_build_content_model($sig_param_node, $user_arguments, $parent_node,
                     $payload_dom, $root_node, $prefix_i, $namespace_map);
         }
+        else if($sig_param_node->nodeName == WSF_INHERITED_CONTENT) {
+            wsf_build_content_model($sig_param_node, $user_arguments, $parent_node,
+                    $payload_dom, $root_node, $prefix_i, $namespace_map);
+        }
     }
 }
 
@@ -619,6 +623,37 @@ function wsf_convert_classobj_to_array($sig_node, $user_obj) {
 
     return $user_arguments;
 }
+
+/**
+ * serialize the php value to the string value to put in the xml
+ * @param $xsd_type, xsd type the value hold
+ * @param $data_value, the data_value with php type
+ * @return string serialized to string
+ */
+function wsf_wsdl_serialize_php_value($xsd_type, $data_value) {
+    $xsd_php_mapping_table = wsf_wsdl_util_xsd_to_php_type_map();
+    $serialized_value = $data_value;
+
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "serializing ".$data_value);
+
+    if(array_key_exists($xsd_type, $xsd_php_mapping_table)) {
+        $type = $xsd_php_mapping_table[$xsd_type];
+
+        if($type == "boolean") {
+            if($data_value == FALSE) {
+                $serialized_value = "false";
+            }
+            else
+            {
+                $serialized_value = "true";
+            }
+        }
+    }
+
+    if($serialized_value === NULL) return "";
+    return $serialized_value."";
+}
+
 
 //-------------------------------------------------------------------------------------------
 //currently we don't have diffent serialization for rpc-style in contrast with doc-lit

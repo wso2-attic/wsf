@@ -84,14 +84,14 @@ function wsf_parse_payload_for_array(DomNode $payload, DomNode $sig_node) {
             $param_type = $the_only_node->attributes->getNamedItem(WSF_TYPE)->value;
         }
         if($is_simple) {
-            if ($payload != NULL) {
+            if ($payload !== NULL) {
                 if($payload->firstChild) {
                     $original_value = $payload->firstChild->nodeValue;
                 }
                 else {
                     $original_value = "";
                 }
-                $converted_value = wsf_wsdl_util_convert_value($param_type, $original_value);
+                $converted_value = wsf_wsdl_deserialize_string_value($param_type, $original_value);
 
                 return $converted_value;
             }
@@ -208,14 +208,14 @@ function wsf_parse_payload_for_class_map(DomNode $payload, DomNode $sig_node, $e
             $param_type = $the_only_node->attributes->getNamedItem(WSF_TYPE)->value;
         }
         if($is_simple) {
-            if ($payload != NULL) {
+            if ($payload !== NULL) {
                 if($payload->firstChild) {
                     $original_value = $payload->firstChild->nodeValue;
                 }
                 else {
                     $original_value = "";
                 }
-                $converted_value = wsf_wsdl_util_convert_value($param_type, $original_value);
+                $converted_value = wsf_wsdl_deserialize_string_value($param_type, $original_value);
 
                 return $converted_value;
             }
@@ -409,7 +409,7 @@ function deserialize_simple_types(&$current_child, DomNode $sig_param_node) {
         $tmp_array = array();
         while($current_child !== NULL && $current_child->localName == $param_name) {
             if($current_child->firstChild) {
-                $converted_value =  wsf_wsdl_util_convert_value($param_type, $current_child->firstChild->wholeText);
+                $converted_value =  wsf_wsdl_deserialize_string_value($param_type, $current_child->firstChild->wholeText);
             }
             else{
                 if(!isset($param_value["nillable"])) {
@@ -430,7 +430,7 @@ function deserialize_simple_types(&$current_child, DomNode $sig_param_node) {
     }
     else {
         if($current_child->firstChild) {
-            $converted_value =  wsf_wsdl_util_convert_value($param_type, $current_child->firstChild->wholeText);
+            $converted_value =  wsf_wsdl_deserialize_string_value($param_type, $current_child->firstChild->wholeText);
         }
         else
         {
@@ -697,11 +697,53 @@ function wsf_infer_content_model(DomNode $current_child, DomNode $sig_node, $cla
                 $tmp_tree = wsf_infer_content_model($current_child, $sig_param_node, $classmap);
                 $parse_tree = array_merge($parse_tree, $tmp_tree);
             }
+            else if($sig_param_node->nodeName == WSF_INHERITED_CONTENT) {
+                $tmp_tree = wsf_infer_content_model($current_child, $sig_param_node, $classmap);
+                $parse_tree = array_merge($parse_tree, $tmp_tree);
+            }
         }
     }
  
     return $parse_tree;
 }
+
+
+/**
+ * deserialize the php value from the string value to the given xsd type value
+ * @param $xsd_type, xsd type the value hold
+ * @param $data_value, the data_value with the string type
+ * @return deserialized to given php type value
+ */
+function wsf_wsdl_deserialize_string_value($xsd_type, $data_value) {
+    $xsd_php_mapping_table = wsf_wsdl_util_xsd_to_php_type_map();
+
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "deserializing ".$data_value);
+
+    $converted_value = $data_value;
+    if(array_key_exists($xsd_type, $xsd_php_mapping_table)) {
+        $type = $xsd_php_mapping_table[$xsd_type];
+        if($type == 'integer') {
+            $converted_value = (int)($data_value);
+        }
+        else if ($type == 'float') {
+            $converted_value = (float)($data_value);
+        }
+        else if ($type == 'boolean') {
+            $converted_value = ($data_value === "true");
+        }
+        else if ($type == 'string') {
+            $converted_value = $data_value;
+        }
+        else {
+            $converted_value = $data_value;
+        }
+    }
+    
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "deserialized to ".$converted_value);
+
+    return $converted_value;
+}
+
 
 //-----------------------------------------------------------------------------
 

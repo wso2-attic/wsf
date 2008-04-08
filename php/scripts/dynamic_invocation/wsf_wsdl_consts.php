@@ -104,6 +104,8 @@ define("WSF_CLASSMAP_NAME", "classmap_name");
 define("WSF_XSD_NILLABLE", "nillable");
 define("WSF_CONTENT_MODEL", "contentModel");
 define("WSF_INNER_CONTENT", "inner-content");
+define("WSF_INHERITED_CONTENT", "inherited-content");
+define("WSF_EXTENSION", "extension");
 
 define("WSF_STARTING_NS_PREFIX", "ns1");
 define("WSF_SOAP_BODY", "Body");

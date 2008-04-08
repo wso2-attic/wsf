@@ -908,6 +908,8 @@ function wsf_wsdl_util_xsd_to_php_type_map() {
 function wsf_wsdl_util_serialize_php_value($xsd_type, $data_value) {
     $xsd_php_mapping_table = wsf_wsdl_util_xsd_to_php_type_map();
     $serialized_value = $data_value;
+
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "serializing ".$data_value);
     
     if(array_key_exists($xsd_type, $xsd_php_mapping_table)) {
         $type = $xsd_php_mapping_table[$xsd_type];
@@ -931,20 +933,29 @@ function wsf_wsdl_util_serialize_php_value($xsd_type, $data_value) {
 function wsf_wsdl_util_convert_value($xsd_type, $data_value) {
     $xsd_php_mapping_table = wsf_wsdl_util_xsd_to_php_type_map();
 
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "deserializing ".$data_value);
+
     $converted_value = $data_value;
     if(array_key_exists($xsd_type, $xsd_php_mapping_table)) {
         $type = $xsd_php_mapping_table[$xsd_type];
-        if($type == 'integer')
-            $converted_type = (int)($data_value);
-        else if ($type == 'float')
-            $converted_type = (float)($data_value);
-        else if ($type == 'boolean')
-            $converted_type = (boolean)($data_value);
-        else if ($type == 'string')
-            $converted_type = $data_value;
-        else
-            $converted_type = $data_value;
+        if($type == 'integer') {
+            $converted_value = (int)($data_value);
+        }
+        else if ($type == 'float') {
+            $converted_value = (float)($data_value);
+        }
+        else if ($type == 'boolean') {
+            $converted_value = ($data_value === "true");
+        }
+        else if ($type == 'string') {
+            $converted_value = $data_value;
+        }
+        else {
+            $converted_value = $data_value;
+        }
     }
+    
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "deserialized to ".$converted_value);
 
     return $converted_value;
 }
@@ -987,80 +998,6 @@ function wsf_is_rpc_enc_wsdl($wsdl_11_dom, $binding_node, $operation_name) {
     return FALSE;
 }
 
-
-
-/**
- * Recursive function to create temperaly structure
- * @param DomNode $types_node schema node of the WSDL
- * @param string $param_type Type of the parameter
- */
-
-
-function wsf_create_sig_data_struct(DomNode $sig_node) {
-    $sig_data_struct = array();
-    $type = NULL;
-    $type_ns = NULL;
-    $is_simple = NULL;
-   
-    $sig_attrs = $sig_node->attributes;
-    if($sig_attrs->getNamedItem(WSF_WSDL_SIMPLE)) {
-        $is_simple = $sig_attrs->getNamedItem(WSF_WSDL_SIMPLE)->value;
-    }
-    if($sig_attrs->getNamedItem(WSF_TARGETNAMESPACE)) {
-        $ns = $sig_attrs->getNamedItem(WSF_TARGETNAMESPACE)->value;
-        $sig_data_struct[WSF_NS] = $ns;
-    }
-    else {
-        $sig_data_struct[WSF_NS] = NULL;
-    }
-    if($sig_attrs->getNamedItem(WSF_TYPE)) {
-        $type = $sig_attrs->getNamedItem(WSF_TYPE)->value;
-    }
-    if($sig_attrs->getNamedItem(WSF_TYPE_NAMESPACE)) {
-        $type_ns = $sig_attrs->getNamedItem(WSF_TYPE_NAMESPACE)->value;
-    }
-    if($sig_attrs->getNamedItem(WSF_MIN_OCCURS)) {
-        $min = $sig_attrs->getNamedItem(WSF_MIN_OCCURS)->value;
-        $sig_data_struct[WSF_MIN_OCCURS] = $min;
-    }
-    if($sig_attrs->getNamedItem(WSF_MAX_OCCURS)) {
-        $max = $sig_attrs->getNamedItem(WSF_MAX_OCCURS)->value;
-        $sig_data_struct[WSF_MAX_OCCURS] = $max;
-    }
-    if($sig_attrs->getNamedItem(WSF_XSD_NILLABLE)) {
-        $nillable = $sig_attrs->getNamedItem(WSF_XSD_NILLABLE)->value;
-        $sig_data_struct[WSF_XSD_NILLABLE] = $nillable;
-    }
-
-    if($is_simple == "yes") { /* this is for simple types */
-        $sig_data_struct[WSF_HAS_SIG_CHILDS] = FALSE;
-        //we have type only for simple types
-        $sig_data_struct[WSF_TYPE_REP] = $type;
-    }
-    else{
-        $sig_data_struct[WSF_HAS_SIG_CHILDS] = TRUE;
-        //we have classmap only for complex types
-        $sig_data_struct[WSF_CLASSMAP_NAME] = $type;
-
-        //go for some complexType only declarations
-
-        $sig_childs = $sig_node->childNodes;
-
-        if($sig_attrs->getNamedItem(WSF_CONTENT_MODEL)) {
-            $content_model = $sig_attrs->getNamedItem(WSF_CONTENT_MODEL)->value;
-            $sig_data_struct[WSF_CONTENT_MODEL] = $content_model;
-        }
-        $sig_data_struct[WSF_SIG_CHILDS] = array();
-        foreach($sig_childs as $sig_child) {
-            $sig_child_attrs = $sig_child->attributes;
-            $child_name = $sig_child_attrs->getNamedItem(WSF_NAME)->value;
-            $sig_data_struct[WSF_SIG_CHILDS][$child_name] = wsf_create_sig_data_struct($sig_child);
-        }
-    }
-
-    return $sig_data_struct;
-
-}
 
 /**
  * @param node to start with
