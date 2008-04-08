@@ -619,6 +619,10 @@ function wsf_convert_classobj_to_array($sig_node, $user_obj) {
             $tmp_array = wsf_convert_classobj_to_array($sig_param_node, $user_obj);
             $user_arguments = array_merge($user_arguments, $tmp_array);
         }
+        else if($sig_param_node->nodeName == WSF_INHERITED_CONTENT) {
+            $tmp_array = wsf_convert_classobj_to_array($sig_param_node, $user_obj);
+            $user_arguments = array_merge($user_arguments, $tmp_array);
+        }
     }
 
     return $user_arguments;

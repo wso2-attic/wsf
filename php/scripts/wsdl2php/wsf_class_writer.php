@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Copyright (c) 2005-2008 WSO2, Inc. http://wso2.com
  *
@@ -26,46 +25,79 @@ $operations = array ();
 
 $actions = NULL;
 
+$sub_codess = NULL;
+
 /**
  * Function to write sub classes.  
  * $nodes array of nodes corresponding to the classes to be written
  * returns code segment corresponding to sub classes as a string
  */
-function wsf_write_sub_classes($nodes) {
+function wsf_write_sub_classes($node) {
     global $written_classes;
     $code = "";
-    foreach ($nodes as $node) {
-        if ($node) {
-
-            if ($node->hasAttributes()) {
-                // Wrapper element found
-                $attrs = $node->attributes;
+    if ($node) {
+        if ($node->hasAttributes()) {
+            // Wrapper element found
+            $attrs = $node->attributes;
+            if($attrs->getNamedItem(WSF_TYPE)) {
                 $type_name = $attrs->getNamedItem(WSF_TYPE)->value;
-
-                // array to hold child elements corresponding to sub classes
-                $child_array = array ();
-
-                // check if the class was already written 
-                if ($written_classes[$type_name] == true)
-                    continue;
-
-                $code = $code . "class " . $type_name . " { \n";
-                $written_classes[$type_name] = true;
-
-                $child_array = array();
-                $code .= wsf_write_content_model($node, $child_array);
-
-                $code = $code . "}\n\n";
-                // done writing the current class, now go and write the sub classes
-                $code = $code . wsf_write_sub_classes($child_array);
             }
-            // TODO: What about arrays?
+            else if($attrs->getNamedItem(WSF_EXTENSION)) {
+                $type_name = $attrs->getNamedItem(WSF_EXTENSION)->value;
+            }
+
+            // array to hold child elements corresponding to sub classes
+            $child_array = array ();
+
+            // check if the class was already written 
+            if($written_classes[$type_name] == TRUE) {
+                continue;
+            }
+
+            // write the extension code..
+            $extension_code = wsf_write_extension($node, $code);
+
+            $code = $code . "class " . $type_name . $extension_code. " {\n";
+            $written_classes[$type_name] = TRUE;
+
+            $child_array = array();
+            $code .= wsf_write_content_model($node, $child_array);
+
+            $code = $code . "}\n\n";
+            // done writing the current class, now go and write the sub classes
+            foreach($child_array as $child) {
+                $code = $code . wsf_write_sub_classes($child);
+            }
         }
+        // TODO: What about arrays?
     }
     return $code;
 }
 
+
+function wsf_write_extension(DomNode $sig_node, &$code) {
+    $first_sig_child = $sig_node->firstChild;
+   
+    $extension_code = "";
+    if($first_sig_child != NULL && $first_sig_child->nodeName == WSF_INHERITED_CONTENT) {
+
+        $attrs = $first_sig_child->attributes;
+        if($attrs->getNamedItem(WSF_EXTENSION)) {
+            $type_name = $attrs->getNamedItem(WSF_EXTENSION)->value;
+        }
+        $extension_code .= " extends ".$type_name;
+
+        $code = $code . wsf_write_sub_classes($first_sig_child);
+    }
+    else {
+        $extension_code .= "";
+    }
+    return $extension_code;
+}
+
+
 function wsf_write_content_model($parent_node, &$child_array) {
+    global $sub_codes;
     $code = "";
     $param_child_list = $parent_node->childNodes;
     if($parent_node->attributes) {
@@ -78,7 +110,7 @@ function wsf_write_content_model($parent_node, &$child_array) {
         $code .= "    // ---------------Start Choice----------------\n";
     }
     foreach ($param_child_list as $param_child) {
-        if($param_child->localName == WSF_PARAM) {
+        if($param_child->nodeName == WSF_PARAM) {
             $param_attr = $param_child->attributes;
             $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
             $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
@@ -99,7 +131,7 @@ function wsf_write_content_model($parent_node, &$child_array) {
             if ($param_attr->getNamedItem(WSF_WSDL_SIMPLE)->value == 'no')
                 $child_array[] = $param_child;
         }
-        else if($param_child->localName == WSF_INNER_CONTENT) {
+        else if($param_child->nodeName == WSF_INNER_CONTENT) {
             // in place of inner content recursively call the wsf_write_content_model
             $code .= wsf_write_content_model($param_child, $child_array);
         }
@@ -124,8 +156,10 @@ function wsf_wsdl2php($wsdl_location) {
     global $written_classes;
     global $operations;
     global $actions;
+    global $sub_codes;
 
     $code = "";
+    $sub_codes .= array();
 
     $wsdl_dom = new DomDocument();
     $sig_model_dom = new DOMDocument();
@@ -191,13 +225,13 @@ function wsf_wsdl2php($wsdl_location) {
     
         foreach ($op_child_list as $op_child) {
             // process the signature node
-            if ($op_child->localName == WSF_SIGNATURE) {
+            if ($op_child->nodeName == WSF_SIGNATURE) {
                 // get the nodes representing operation parameters and return types within signature
                 $param_list = $op_child->childNodes;
                 foreach ($param_list as $param_node) {
                     if ($param_node) {
                         // look for params and returns nodes 
-                        if ($param_node->localName == WSF_PARAMS || $param_node->localName == WSF_RETURNS) {
+                        if ($param_node->nodeName == WSF_PARAMS || $param_node->nodeName == WSF_RETURNS) {
                             if ($param_node->hasAttributes()) {
                                 // Wrapper element 
                                 $params_attr = $param_node->attributes;
@@ -209,21 +243,25 @@ function wsf_wsdl2php($wsdl_location) {
                                 $child_array = array ();
 
                                 // check if the class is already written
-                                if ($written_classes[$ele_name] == TRUE)
+                                if ($written_classes[$ele_name] == TRUE) {
                                     continue;
+                                }
+
+                                // write the extension code..
+                                $extension_code = wsf_write_extension($param_node, $code);
 
                                 // start writing class    
-                                $code = $code . "class " . $ele_name . " { \n";
+                                $code = $code . "class " . $ele_name . $extension_code. " {\n";
                                 $written_classes[$ele_name] = TRUE;
 
                                 // prepare the demo code that the user could use for testing client. 
                                 // shows how to create the input and receive the response
 
-                                if ($param_node->localName == WSF_PARAMS) {
+                                if ($param_node->nodeName == WSF_PARAMS) {
                                     $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "    \$input = new $ele_name();\n    //TODO: fill in the class fields of \$input to match your business logic\n";
                                     $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "function " . $op_name . "(\$input) {\n    // TODO: fill in the business logic\n    // NOTE: \$input is of type $ele_name\n";
                                 }
-                                if ($param_node->localName == WSF_RETURNS) {
+                                if ($param_node->nodeName == WSF_RETURNS) {
                                     $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "\n    // call the operation\n    \$response = \$proxy->" . $op_node->attributes->getNamedItem('name')->value . "(\$input);\n    //TODO: Implement business logic to consume \$response, which is of type $ele_name\n";
                                     $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // NOTE: should return an object of type $ele_name\n}\n\n";
                                 }
@@ -233,7 +271,9 @@ function wsf_wsdl2php($wsdl_location) {
                                 
                                 $code = $code . "}\n\n";
                                 // done writing the current class, now go and write the sub classes
-                                $code = $code . wsf_write_sub_classes($child_array);
+                                foreach($child_array as $child) {
+                                    $code = $code . wsf_write_sub_classes($child);
+                                }
                             } else {
                                 // TODO: No wrapper element, there won't be any class generated for this 
 
@@ -249,7 +289,7 @@ function wsf_wsdl2php($wsdl_location) {
                                     // prepare the demo code that the user could use for testing client. 
                                     // shows how to create the input and receive the response
 
-                                    if ($param_node->localName == WSF_PARAMS) {
+                                    if ($param_node->nodeName == WSF_PARAMS) {
                                         $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "    //TODO: fill \$input with (data type: {$param_type}) data to match your business logic\n";
                                         if($param_child->getAttribute("simple") == "yes"){
                                             $simple_type_comment = wsf_comment_on_simple_type($param_child, "\$input", $param_type);
@@ -262,18 +302,17 @@ function wsf_wsdl2php($wsdl_location) {
                                         }
 
                                     }
-                                    if ($param_node->localName == WSF_RETURNS) {
+                                    if ($param_node->nodeName == WSF_RETURNS) {
                                         $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "\n    // call the operation\n    \$response = \$proxy->" . $op_node->attributes->getNamedItem('name')->value . "(\$input);\n    //TODO: Implement business logic to consume \$response, which is of type {$param_type}\n";
                                         $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // NOTE: should return an object of (type: {$param_type})\n}\n\n";
                                     }
-
                                 }
                             }
                         }
                     }
                 }
             }
-            else if($op_child->localName == WSF_W2P_BINDING_DETAILS) {
+            else if($op_child->nodeName == WSF_W2P_BINDING_DETAILS) {
                 /* action is default to wsa waction */
                 $action = $op_child->getAttribute('wsawaction'); 
                 if($action == NULL)
