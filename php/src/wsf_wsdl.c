@@ -486,12 +486,7 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
             if (call_user_function (EG (function_table), (zval **) NULL,
                                     &response_function, res_retval, 4, 
                                     res_params TSRMLS_CC) == SUCCESS ){
-                if (Z_TYPE_P(res_retval) == IS_STRING)
-                    ZVAL_ZVAL(return_value, res_retval, 0, 0);
-                if (Z_TYPE_P(res_retval) == IS_OBJECT)
-                    ZVAL_ZVAL(return_value, res_retval, 0, 0); 
-                if (Z_TYPE_P(res_retval) == IS_ARRAY)
-                    ZVAL_ZVAL(return_value, res_retval, 0, 0);
+                ZVAL_ZVAL(return_value, res_retval, 0, 0);
             }
         }
     }

@@ -7,11 +7,10 @@ try {
 
    $wsdl = file_get_contents('samples/config/SimpleDataTypesWsdlDoclitB.txt');
 
-    $client = new WSClient(array("wsdl" => $wsdl,
-	                             "to" => "http://localhost:9090/services/BasicTypesDoclitBSvc/BasicTypesDocLitB_Service.php"));
+    $client = new WSClient(array("wsdl" => $wsdl));
     
     $proxy = $client->getProxy();
-    $val =  $proxy->RetDecimal(90);
+    $val =  $proxy->RetDecimal(0.0009);
     echo $val."\n";
 
 } catch (Exception $e) {
@@ -25,4 +24,4 @@ try {
 }
 ?>
 --EXPECT--
-90
+0.0009

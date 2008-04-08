@@ -10,8 +10,13 @@ try {
     $client = new WSClient(array("wsdl" => $wsdl));
     
     $proxy = $client->getProxy();	
-    $val =  $proxy->RetBool(FALSE);    
-    echo $val;
+    $val =  $proxy->RetBool(FALSE);
+    if($val) {
+        echo "true";
+    }
+    else {
+        echo "false";
+    }
 
 } catch (Exception $e) {
 

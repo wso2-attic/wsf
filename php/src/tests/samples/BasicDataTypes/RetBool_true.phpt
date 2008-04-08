@@ -11,7 +11,13 @@ try {
     
     $proxy = $client->getProxy();	
     $val =  $proxy->RetBool(TRUE);    
-    echo $val;
+
+    if($val) {
+        echo "true";
+    }
+    else {
+        echo "false";
+    }
 
 } catch (Exception $e) {
 
