@@ -276,7 +276,7 @@ function wsf_create_payload_for_unknown_array(DomDocument $payload_dom,
 }
 
 /** 
- * Do serialization over simple schema types
+ * Do serialization over simple schema types, attributes are too handled here
  * @param $sig_param_node sig model for the param
  * @param $user_val the user value given to the type
  * @param $parant_ele just root element of the element
@@ -294,6 +294,7 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
     $sig_param_attris = $sig_param_node->attributes;
     $param_type = NULL;
     $param_name = NULL;
+    $is_attribute = FALSE;
 
     if($sig_param_attris->getNamedItem(WSF_NAME)) {
         $param_name = 
@@ -319,9 +320,14 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
          $param_type = 
             $sig_param_attris->getNamedItem(WSF_TYPE)->value;
     }
+
+    if($sig_param_attris->getNamedItem(WSF_ATTRIBUTE) &&
+        $sig_param_attris->getNamedItem(WSF_ATTRIBUTE)->value == "yes") {
+         $is_attribute = TRUE;
+    }
     
     if($target_namespace == NULL) {
-        $node_name = $param_name;
+        $qualified_name = $param_name;
     }
     else{
         if(array_key_exists($target_namespace, $namespace_map)
@@ -334,39 +340,55 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
             $root_node->setAttribute("xmlns:".$prefix, $target_namespace);
             $namespace_map[$target_namespace] = $prefix;
         }
-        $node_name = $prefix.":".$param_name;
+        $qualified_name = $prefix.":".$param_name;
     }
-    
-    if($max_occurs > 1 || $max_occurs == "unbounded") {
-        if(is_array($user_val)) {
-            foreach($user_val as $user_val_item) {
-                /* type conversion is needed */
+
+    if($is_attribute) {
+        $attri_name = $qualified_name;
+       
+        if(!is_array($user_val) && !is_object($user_val)) {
+            $serialized_value = wsf_wsdl_serialize_php_value(
+                                 $param_type, $user_val);
+            $parent_node->setAttribute($attri_name, $serialized_value);
+            ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR,
+                    "You have provided an array or an object for ".
+                    $param_name ." which should be a simple type.");
+        }
+    }
+    else {
+        $node_name = $qualified_name;
+
+        if($max_occurs > 1 || $max_occurs == "unbounded") {
+            if(is_array($user_val)) {
+                foreach($user_val as $user_val_item) {
+                    /* type conversion is needed */
+                    $serialized_value = wsf_wsdl_serialize_php_value(
+                                 $param_type, $user_val_item);
+                    $ele = $payload_dom->createElement($node_name, $serialized_value);
+                    $parent_node->appendChild($ele);
+                }
+            }
+            else {
+                /* in a case this is not an array */
                 $serialized_value = wsf_wsdl_serialize_php_value(
-                             $param_type, $user_val_item);
+                                 $param_type, $user_val);
                 $ele = $payload_dom->createElement($node_name, $serialized_value);
                 $parent_node->appendChild($ele);
             }
         }
         else {
-            /* in a case this is not an array */
-            $serialized_value = wsf_wsdl_serialize_php_value(
-                             $param_type, $user_val);
-            $ele = $payload_dom->createElement($node_name, $serialized_value);
-            $parent_node->appendChild($ele);
-        }
-    }
-    else {
-        if(!is_array($user_val)) {
-            /* in a case this is not an array */
-            $serialized_value = wsf_wsdl_serialize_php_value(
-                             $param_type, $user_val);
-            $ele = $payload_dom->createElement($node_name, $serialized_value);
-            $parent_node->appendChild($ele);
-        }
-        else {
-            error_log("Array is given for ". $param_name ." which should be a non array. \n");
-            ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR,
-                "Array is given for ". $param_name ." which should be a non array.");
+            if(!is_array($user_val)) {
+                /* in a case this is not an array */
+                $serialized_value = wsf_wsdl_serialize_php_value(
+                                 $param_type, $user_val);
+                $ele = $payload_dom->createElement($node_name, $serialized_value);
+                $parent_node->appendChild($ele);
+            }
+            else {
+                error_log("Array is given for ". $param_name ." which should be a non array. \n");
+                ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR,
+                    "Array is given for ". $param_name ." which should be a non array.");
+            }
         }
     }
 }
@@ -551,7 +573,7 @@ function wsf_build_content_model(DomNode $sig_node, array $user_arguments,
     }
 
     $just_found_once = FALSE;
-    
+
     $sig_param_nodes = $sig_node->childNodes;
     foreach($sig_param_nodes as $sig_param_node) {
         if($sig_param_node->nodeName == WSF_PARAM) {

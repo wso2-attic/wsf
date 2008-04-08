@@ -558,7 +558,7 @@ function deserialize_complex_types(&$current_child, DomNode $sig_param_node, $cl
         {
             if(!isset($param_value["nillable"])) {
                 error_log("Non nillable element". $param_name ."is nil. \n");
-                ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "Non nillable element". $param_name ."is nil. ");
+                ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Non nillable element". $param_name ."is nil. ");
             }
             $converted_value = "";
         }
@@ -572,7 +572,7 @@ function deserialize_complex_types(&$current_child, DomNode $sig_param_node, $cl
 }
 
 /**
- * handle content model in parsing
+ * handle content model in parsing, attributes are too hanldled in this level
  * @param $current_child, starting child element to handle...
  * @param $sig_node the sig model for the content model 
  *
@@ -589,12 +589,14 @@ function wsf_infer_content_model(DomNode $current_child, DomNode $sig_node, $cla
     }
 
     $first_child = $current_child;
+    $parent_node = $current_child->parentNode;
 
     if($sig_node->hasChildNodes()) {
         foreach($sig_node->childNodes as $sig_param_node) {
 
             if($sig_param_node->nodeName == WSF_PARAM) {
                 $is_simple = FALSE;
+                $is_attribute = FALSE;
                 $param_name = NULL;
                 $param_type = NULL;
                 $min_occurs = 1;
@@ -613,6 +615,10 @@ function wsf_infer_content_model(DomNode $current_child, DomNode $sig_node, $cla
                     $is_simple = TRUE;
                 }
 
+                if($sig_param_node->attributes->getNamedItem(WSF_ATTRIBUTE) &&
+                    $sig_param_node->attributes->getNamedItem(WSF_ATTRIBUTE)->value == "yes") {
+                     $is_attribute = TRUE;
+                }
                 // for any types no content model can be specified..
                 if($param_type == "anyType") {
                     $tag_name = $current_child->localName;
@@ -623,7 +629,15 @@ function wsf_infer_content_model(DomNode $current_child, DomNode $sig_node, $cla
                     }
                 }
 
-                if($content_model == WSF_WSDL_SEQUENCE) {
+                if($is_attribute) {
+                    ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, wsf_test_serialize_node($parent_node));
+                    if($parent_node && $parent_node->attributes->getNamedItem($param_name)) {
+                        $original_value = $parent_node->attributes->getNamedItem($param_name)->value;
+                        $converted_value =  wsf_wsdl_deserialize_string_value($param_type, $original_value);
+                        $parse_tree[$param_name] = $converted_value;
+                    }
+                }
+                else if($content_model == WSF_WSDL_SEQUENCE) {
                         ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, 
                                 "\$param_name:{$param_name} and child name: {$current_child->localName}");
                     if($param_name == $current_child->localName) {
