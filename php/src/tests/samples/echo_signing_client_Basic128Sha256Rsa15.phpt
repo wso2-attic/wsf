@@ -13,7 +13,7 @@ try {
     $rec_cert = ws_get_cert_from_file("keys/bob_cert.cert");
     
     $reqMessage = new WSMessage($reqPayloadString,
-                                array("to"=>"http://localhost/services/signing_service_Basic128.php",
+                                array("to"=>"http://localhost/services/signing_service_Basic128Sha256Rsa15.php",
                                       "action" => "http://php.axis2.org/samples/echoString"));
     
     $sec_array = array("sign"=>TRUE,
@@ -45,5 +45,6 @@ try {
 ?>
 
 --EXPECT--
-Soap Fault: Digest created with Invalid algorithm
+Response = <ns1:echo xmlns:ns1="http://php.axis2.org/samples"><text>Hello World!</text></ns1:echo>
+
 
