@@ -327,8 +327,22 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 XmlSchemaType schemaType = innerElement.getSchemaType();
                 if (schemaType instanceof XmlSchemaComplexType) {
                     String innerElementName = innerElement.getName();
-                    OMElement complexTypePayload = payload.getFirstChildWithName(new QName(
-                            innerElementName));
+                    QName payloadQname = payload.getQName();
+                    OMElement complexTypePayload = null;
+                    QName qName;
+                    // When retrieving elements we have to look for the namespace too. There may be
+                    // Ocations even when the children are namespace qualified. In such situations
+                    // we should retrieve them using that namespace.
+                    // If that fails we try using the localname only.
+                    if (payloadQname != null) {
+                        qName = new QName(payloadQname.getNamespaceURI(),
+                                          innerElementName);
+                        complexTypePayload = payload.getFirstChildWithName(qName);
+                    }
+                    if (complexTypePayload == null) {
+                        qName = new QName(innerElementName);
+                        complexTypePayload = payload.getFirstChildWithName(qName);
+                    }
                     if (complexTypePayload == null) {
                         throw new AxisFault(
                                 "Required element " + complexType.getName()
@@ -411,8 +425,22 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
     private Object handleSimpleElement(OMElement payload, JavaScriptEngine engine,
                                        String innerElementName, long minOccurs, QName schemaType)
             throws AxisFault {
-        OMElement omElement = payload.getFirstChildWithName(new QName(
-                innerElementName));
+        QName payloadQname = payload.getQName();
+        OMElement omElement = null;
+        QName qName;
+        // When retrieving elements we have to look for the namespace too. There may be
+        // Ocations even when the children are namespace qualified. In such situations
+        // we should retrieve them using that namespace.
+        // If that fails we try using the localname only.
+        if (payloadQname != null) {
+            qName = new QName(payloadQname.getNamespaceURI(),
+                                    innerElementName);
+            omElement = payload.getFirstChildWithName(qName);
+        }
+        if (omElement == null ){
+            qName = new QName(innerElementName);
+            omElement = payload.getFirstChildWithName(qName);
+        }
         if (omElement == null) {
             // There was no such element in the payload. Therefore we check for minoccurs
             // and if its 0 add null as a parameter (If not we might mess up the parameters
