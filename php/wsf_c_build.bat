@@ -62,7 +62,7 @@ rem Build Neethi util
 rem @cd ..\..
 @if not exist wso2-wsf-c-bin-%WSFC_VERSION% mkdir wso2-wsf-c-bin-%WSFC_VERSION%
 @xcopy /E /Q /I /Y axis2c\build\axis2c-bin-1.3.0-win32 wso2-wsf-c-bin-%WSFC_VERSION%
-@copy /Y config\axis2.xml wso2-wsf-c-bin-1.2.0\axis2.xml
+@copy /Y config\axis2.xml wso2-wsf-c-bin-%WSFC_VERSION%\axis2.xml
 @copy /Y INSTALL wso2-wsf-c-bin-%WSFC_VERSION%
 @copy /Y README wso2-wsf-c-bin-%WSFC_VERSION%
 @copy /Y NEWS wso2-wsf-c-bin-%WSFC_VERSION%
