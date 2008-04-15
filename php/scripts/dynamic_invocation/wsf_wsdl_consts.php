@@ -115,6 +115,9 @@ define("WSF_WSDL_SEQUENCE", "sequence");
 define("WSF_WSDL_CHOICE", "choice");
 define("WSF_WSDL_ALL", "all");
 
+define("WSF_SIMPLE_CONTENT_VALUE", "value");
+define("WSF_SIMPLE_CONTENT", "simpleContent");
+
 // log level definition
 
 define("WSF_LOG_CRITICAL", 0);

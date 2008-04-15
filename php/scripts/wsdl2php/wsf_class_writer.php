@@ -51,7 +51,7 @@ function wsf_write_sub_classes($node) {
 
             // check if the class was already written 
             if($written_classes[$type_name] == TRUE) {
-                continue;
+                return;
             }
 
             // write the extension code..
@@ -140,6 +140,16 @@ function wsf_write_content_model($parent_node, &$child_array) {
         //just start a comment
         $code .= "    // ----------------End Choice---------------\n\n";
     }
+    
+    if($content_model == WSF_SIMPLE_CONTENT) {
+        $extension_type = $parent_node->attributes->getNamedItem(WSF_EXTENSION)->value;
+        $param_name = $parent_node->attributes->getNamedItem(WSF_NAME)->value;
+        $code .= "    // The \"value\" represents the element '$param_name' value..\n";
+        $ele_name = WSF_SIMPLE_CONTENT_VALUE;
+        $code .= wsf_comment_on_simple_type($parent_node, $ele_name, $extension_type);
+        $code = $code . "    public $" . $ele_name . "; // " . $extension_type . "\n";
+    }
+
     return $code;
 }
 
@@ -282,29 +292,56 @@ function wsf_wsdl2php($wsdl_location) {
 
                                 foreach ($param_child_list as $param_child) {
                                     $param_attr = $param_child->attributes;
+
                                     $ele_name = $param_attr->getNamedItem(WSF_NAME)->value;
                                     $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
 
+                                    $content_model = "";
+                                    if($param_attr->getNamedItem(WSF_CONTENT_MODEL)) {
+                                        $content_model = $param_attr->getNamedItem(WSF_CONTENT_MODEL)->value;
+                                    }
 
-                                    // prepare the demo code that the user could use for testing client. 
-                                    // shows how to create the input and receive the response
+                                    if($content_model == WSF_SIMPLE_CONTENT) {
+                                        // start writing class    
+                                        if(!array_key_exists($ele_name, $written_classes) && !$written_classes[$ele_name]) {
+                                            $written_classes[$ele_name] = TRUE;
+                                            $code = $code . "class " . $ele_name.  " {\n";
 
-                                    if ($param_node->nodeName == WSF_PARAMS) {
-                                        $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "    //TODO: fill \$input with (data type: {$param_type}) data to match your business logic\n";
-                                        if($param_child->getAttribute("simple") == "yes"){
-                                            $simple_type_comment = wsf_comment_on_simple_type($param_child, "\$input", $param_type);
-                                            $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . $simple_type_comment."\n";
+                                            $code .= wsf_write_content_model($param_child, $child_array);
+                                            $code = $code . "}\n\n";
                                         }
-                                        $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "function " . $op_name . "(\$input) {\n    // TODO: fill in the business logic\n    // NOTE: \$input is of type {$param_type}\n";
-                                        if($param_child->getAttribute("simple") == "yes"){
-                                            $simple_type_comment = wsf_comment_on_simple_type($param_child, "\$input", $param_type);
-                                            $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . $simple_type_comment."\n";
+
+                                        if ($param_node->nodeName == WSF_PARAMS) {
+                                            $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "    \$input = new $ele_name();\n    //TODO: fill in the class fields of \$input to match your business logic\n";
+                                            $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "function " . $op_name . "(\$input) {\n    // TODO: fill in the business logic\n    // NOTE: \$input is of type $ele_name\n";
+                                        }
+                                        if ($param_node->nodeName == WSF_RETURNS) {
+                                            $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "\n    // call the operation\n    \$response = \$proxy->" . $op_node->attributes->getNamedItem('name')->value . "(\$input);\n    //TODO: Implement business logic to consume \$response, which is of type $ele_name\n";
+                                            $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // NOTE: should return an object of type $ele_name\n}\n\n";
                                         }
 
                                     }
-                                    if ($param_node->nodeName == WSF_RETURNS) {
-                                        $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "\n    // call the operation\n    \$response = \$proxy->" . $op_node->attributes->getNamedItem('name')->value . "(\$input);\n    //TODO: Implement business logic to consume \$response, which is of type {$param_type}\n";
-                                        $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // NOTE: should return an object of (type: {$param_type})\n}\n\n";
+                                    else {
+                                        // prepare the demo code that the user could use for testing client. 
+                                        // shows how to create the input and receive the response
+
+                                        if ($param_node->nodeName == WSF_PARAMS) {
+                                            $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "    //TODO: fill \$input with (data type: {$param_type}) data to match your business logic\n";
+                                            if($param_child->getAttribute("simple") == "yes"){
+                                                $simple_type_comment = wsf_comment_on_simple_type($param_child, "\$input", $param_type);
+                                                $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . $simple_type_comment."\n";
+                                            }
+                                            $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "function " . $op_name . "(\$input) {\n    // TODO: fill in the business logic\n    // NOTE: \$input is of type {$param_type}\n";
+                                            if($param_child->getAttribute("simple") == "yes"){
+                                                $simple_type_comment = wsf_comment_on_simple_type($param_child, "\$input", $param_type);
+                                                $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . $simple_type_comment."\n";
+                                            }
+
+                                        }
+                                        if ($param_node->nodeName == WSF_RETURNS) {
+                                            $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "\n    // call the operation\n    \$response = \$proxy->" . $op_node->attributes->getNamedItem('name')->value . "(\$input);\n    //TODO: Implement business logic to consume \$response, which is of type {$param_type}\n";
+                                            $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // NOTE: should return an object of (type: {$param_type})\n}\n\n";
+                                        }
                                     }
                                 }
                             }
@@ -340,7 +377,6 @@ function wsf_comment_on_simple_type($param_node, $param_name, $param_type)
 {
     $comment = "";
     if($param_node->hasChildNodes()){
-        $comment = "    //NOTE: ${param_name} should follow the following restrictions\n";
     }
     else{
         return "";
@@ -348,6 +384,16 @@ function wsf_comment_on_simple_type($param_node, $param_name, $param_type)
 
     $i = 0;
     $restrictions = $param_node->childNodes;
+    foreach($restrictions as $restriction){
+        if($restriction->nodeName == "param") {
+        }
+        else{
+            $comment = "    //NOTE: ${param_name} should follow the following restrictions\n";
+            break;
+        }
+    }
+
+
     // first iterate through the enumerations
     foreach($restrictions as $restriction){
         if($restriction->nodeName == "enumeration"){

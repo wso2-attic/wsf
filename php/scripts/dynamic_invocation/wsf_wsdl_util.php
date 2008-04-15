@@ -610,8 +610,8 @@ function get_policy_node(DomDocument $wsdl_dom, $policy_uri) {
                     break;
                 }
             } else {/* TODO- get policy from another WSDL */
-            /* printf("Policy is not found in the given WSDL"); */
-            return;
+                /* printf("Policy is not found in the given WSDL"); */
+                return;
             }
         }
     }

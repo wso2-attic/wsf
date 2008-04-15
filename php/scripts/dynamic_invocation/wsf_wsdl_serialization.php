@@ -77,7 +77,20 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
     // filling user class information to the array..
     $user_arguments = wsf_convert_classobj_to_array($sig_node, $user_obj);
     
-    wsf_build_content_model($sig_node, $user_arguments, $parent_node, $payload_dom, $root_node, $prefix_i, $namespace_map);
+    if($sig_node->hasAttributes()) {
+        wsf_build_content_model($sig_node, $user_arguments, $parent_node, $payload_dom, $root_node, $prefix_i, $namespace_map);
+    }
+    else {
+    }
+        // this situation meets only for non-wrapped mode as doclit-bare wsdls
+        // and for the simpleContent extension in the classmap
+        $the_only_node = $sig_node->firstChild;
+
+        //  handle simple content extension seperatly
+        if($the_only_node->attributes->getNamedItem(WSF_CONTENT_MODEL) &&
+                $the_only_node->attributes->getNamedItem(WSF_CONTENT_MODEL)->value == WSF_SIMPLE_CONTENT) {
+            wsf_build_content_model($the_only_node, $user_arguments, $parent_node, $payload_dom, $root_node, $prefix_i, $namespace_map);
+        }
 }
 
 /** create payload for arrays
@@ -120,24 +133,31 @@ function wsf_create_payload_for_array(DomDocument $payload_dom,
         // this situation meets only for non-wrapped mode as doclit-bare wsdls
         $the_only_node = $sig_node->firstChild;
 
-        $is_simple = FALSE;
-        if($the_only_node->attributes->getNamedItem(WSF_WSDL_SIMPLE) &&
-                $the_only_node->attributes->getNamedItem(WSF_WSDL_SIMPLE)->value == "yes") {
-            $is_simple = TRUE;
+        //  handle simple content extension seperatly
+        if($the_only_node->attributes->getNamedItem(WSF_CONTENT_MODEL) &&
+                $the_only_node->attributes->getNamedItem(WSF_CONTENT_MODEL)->value == WSF_SIMPLE_CONTENT) {
+            wsf_build_content_model($the_only_node, $user_arguments, $parent_node, $payload_dom, $root_node, $prefix_i, $namespace_map);
         }
-        $param_type = NULL;
-        if($the_only_node->attributes->getNamedItem(WSF_TYPE)) {
-            $param_type = $the_only_node->attributes->getNamedItem(WSF_TYPE)->value;
-        }
-        if($is_simple) {
-            if($user_arguments === NULL || !is_array($user_arguments)) {
-                $serialized_value = wsf_wsdl_serialize_php_value($param_type, $user_arguments);
-                $text_node = $payload_dom->createTextNode($serialized_value);
-                $parent_node->appendChild($text_node);
-
+        else {
+            $is_simple = FALSE;
+            if($the_only_node->attributes->getNamedItem(WSF_WSDL_SIMPLE) &&
+                    $the_only_node->attributes->getNamedItem(WSF_WSDL_SIMPLE)->value == "yes") {
+                $is_simple = TRUE;
             }
-            else if(is_array($user_arguments)) {
-                ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Array is specified when non-array is expected for the root node\n");
+            $param_type = NULL;
+            if($the_only_node->attributes->getNamedItem(WSF_TYPE)) {
+                $param_type = $the_only_node->attributes->getNamedItem(WSF_TYPE)->value;
+            }
+            if($is_simple) {
+                if($user_arguments === NULL || !is_array($user_arguments)) {
+                    $serialized_value = wsf_wsdl_serialize_php_value($param_type, $user_arguments);
+                    $text_node = $payload_dom->createTextNode($serialized_value);
+                    $parent_node->appendChild($text_node);
+
+                }
+                else if(is_array($user_arguments)) {
+                    ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Array is specified when non-array is expected for the root node\n");
+                }
             }
         }
     }
@@ -320,12 +340,16 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
          $param_type = 
             $sig_param_attris->getNamedItem(WSF_TYPE)->value;
     }
+    else if($sig_param_attris->getNamedItem(WSF_EXTENSION)) {
+         $param_type = 
+            $sig_param_attris->getNamedItem(WSF_EXTENSION)->value;
+    }
 
     if($sig_param_attris->getNamedItem(WSF_ATTRIBUTE) &&
         $sig_param_attris->getNamedItem(WSF_ATTRIBUTE)->value == "yes") {
          $is_attribute = TRUE;
     }
-    
+
     if($target_namespace == NULL) {
         $qualified_name = $param_name;
     }
@@ -572,6 +596,20 @@ function wsf_build_content_model(DomNode $sig_node, array $user_arguments,
         $content_model = $sig_node->attributes->getNamedItem(WSF_CONTENT_MODEL)->value;
     }
 
+    // simple content extension should be treated differently
+    if($content_model == WSF_SIMPLE_CONTENT) {
+        if(array_key_exists(WSF_SIMPLE_CONTENT_VALUE, $user_arguments)) {
+            $user_val = $user_arguments[WSF_SIMPLE_CONTENT_VALUE];
+
+            $param_type = $sig_node->attributes->getNamedItem(WSF_EXTENSION)->value;
+            /* type conversion is needed */
+            $serialized_value = wsf_wsdl_serialize_php_value(
+                         $param_type, $user_val);
+            $ele = $payload_dom->createTextNode($serialized_value);
+            $parent_node->appendChild($ele);
+        }
+    }
+
     $just_found_once = FALSE;
 
     $sig_param_nodes = $sig_node->childNodes;
@@ -585,9 +623,11 @@ function wsf_build_content_model(DomNode $sig_node, array $user_arguments,
             foreach($user_arguments as $user_key => $user_val) {
                 if($param_name == $user_key) {
                     if ($sig_param_node->attributes->getNamedItem(WSF_WSDL_SIMPLE)->value == "yes") {
+
+                        // default simple type
                         wsf_serialize_simple_types($sig_param_node,
-                                        $user_val, $parent_node, $payload_dom, 
-                                        $root_node, $prefix_i, $namespace_map);
+                                    $user_val, $parent_node, $payload_dom, 
+                                    $root_node, $prefix_i, $namespace_map);
                     }
                     else {
                         wsf_serialize_complex_types($sig_param_node, 
@@ -599,6 +639,7 @@ function wsf_build_content_model(DomNode $sig_node, array $user_arguments,
                     }
                     break;
                 }
+
             }
             if($just_found_once && $content_model == "choice"){
                 break;
@@ -624,7 +665,6 @@ function wsf_build_content_model(DomNode $sig_node, array $user_arguments,
 function wsf_convert_classobj_to_array($sig_node, $user_obj) {
 
     $user_arguments = array();
-
     $sig_param_nodes = $sig_node->childNodes;
 
     foreach($sig_param_nodes as $sig_param_node) {
@@ -635,6 +675,20 @@ function wsf_convert_classobj_to_array($sig_node, $user_obj) {
             }
             if($user_obj->$param_name !== NULL) {
                 $user_arguments[$param_name] = $user_obj->$param_name;
+            }
+            if($param_attrs->getNamedItem(WSF_CONTENT_MODEL) &&
+                $param_attrs->getNamedItem(WSF_CONTENT_MODEL)->value = WSF_SIMPLE_CONTENT) {
+                $simple_content_value_const = WSF_SIMPLE_CONTENT_VALUE;
+                $user_arguments[$simple_content_value_const] = $user_obj->$simple_content_value_const;
+                $sig_attribute_nodes = $sig_param_node->childNodes;
+                foreach($sig_attribute_nodes as $sig_attribute_node) {
+                    if($sig_attribute_node->attributes->getNamedItem(WSF_ATTRIBUTE) &&
+                        $sig_attribute_node->attributes->getNamedItem(WSF_ATTRIBUTE)->value == "yes") {
+                        $attri_name = $sig_attribute_node->attributes->getNamedItem(WSF_NAME)->value;
+
+                        $user_arguments[$attri_name] = $user_obj->$attri_name;
+                    }
+                }
             }
         }
         else if($sig_param_node->nodeName == WSF_INNER_CONTENT) {
