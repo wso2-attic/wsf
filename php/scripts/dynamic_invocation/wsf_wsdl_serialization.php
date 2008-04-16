@@ -677,7 +677,7 @@ function wsf_convert_classobj_to_array($sig_node, $user_obj) {
                 $user_arguments[$param_name] = $user_obj->$param_name;
             }
             if($param_attrs->getNamedItem(WSF_CONTENT_MODEL) &&
-                $param_attrs->getNamedItem(WSF_CONTENT_MODEL)->value = WSF_SIMPLE_CONTENT) {
+                $param_attrs->getNamedItem(WSF_CONTENT_MODEL)->value == WSF_SIMPLE_CONTENT) {
                 $simple_content_value_const = WSF_SIMPLE_CONTENT_VALUE;
                 $user_arguments[$simple_content_value_const] = $user_obj->$simple_content_value_const;
                 $sig_attribute_nodes = $sig_param_node->childNodes;
