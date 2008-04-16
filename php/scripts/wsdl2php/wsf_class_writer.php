@@ -25,8 +25,6 @@ $operations = array ();
 
 $actions = NULL;
 
-$sub_codess = NULL;
-
 /**
  * Function to write sub classes.  
  * $nodes array of nodes corresponding to the classes to be written
@@ -97,7 +95,6 @@ function wsf_write_extension(DomNode $sig_node, &$code) {
 
 
 function wsf_write_content_model($parent_node, &$child_array) {
-    global $sub_codes;
     $code = "";
     $param_child_list = $parent_node->childNodes;
     if($parent_node->attributes) {
@@ -166,10 +163,10 @@ function wsf_wsdl2php($wsdl_location) {
     global $written_classes;
     global $operations;
     global $actions;
-    global $sub_codes;
+
+    $written_classes[WSF_XSD_ANYTYPE] = TRUE;
 
     $code = "";
-    $sub_codes .= array();
 
     $wsdl_dom = new DomDocument();
     $sig_model_dom = new DOMDocument();
@@ -229,6 +226,12 @@ function wsf_wsdl2php($wsdl_location) {
             $operations[$op_name][WSF_CLIENT] = "";
             $operations[$op_name][WSF_SERVICE] = "";
         }
+        else {
+            continue; //no need to record same operation multiple times
+        }
+
+        //declare the start of service function
+        $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "function " . $op_name . "(\$input) {\n";
 
         // get the nodes describing operation characteristics 
         $op_child_list = $op_node->childNodes;
@@ -269,11 +272,11 @@ function wsf_wsdl2php($wsdl_location) {
 
                                 if ($param_node->nodeName == WSF_PARAMS) {
                                     $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "    \$input = new $ele_name();\n    //TODO: fill in the class fields of \$input to match your business logic\n";
-                                    $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "function " . $op_name . "(\$input) {\n    // TODO: fill in the business logic\n    // NOTE: \$input is of type $ele_name\n";
+                                    $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // TODO: fill in the business logic\n    // NOTE: \$input is of type $ele_name\n";
                                 }
                                 if ($param_node->nodeName == WSF_RETURNS) {
                                     $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "\n    // call the operation\n    \$response = \$proxy->" . $op_node->attributes->getNamedItem('name')->value . "(\$input);\n    //TODO: Implement business logic to consume \$response, which is of type $ele_name\n";
-                                    $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // NOTE: should return an object of type $ele_name\n}\n\n";
+                                    $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // NOTE: should return an object of type $ele_name\n";
                                 }
 
                                 $child_array = array();
@@ -313,11 +316,11 @@ function wsf_wsdl2php($wsdl_location) {
 
                                         if ($param_node->nodeName == WSF_PARAMS) {
                                             $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "    \$input = new $ele_name();\n    //TODO: fill in the class fields of \$input to match your business logic\n";
-                                            $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "function " . $op_name . "(\$input) {\n    // TODO: fill in the business logic\n    // NOTE: \$input is of type $ele_name\n";
+                                            $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // TODO: fill in the business logic\n    // NOTE: \$input is of type $ele_name\n";
                                         }
                                         if ($param_node->nodeName == WSF_RETURNS) {
                                             $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "\n    // call the operation\n    \$response = \$proxy->" . $op_node->attributes->getNamedItem('name')->value . "(\$input);\n    //TODO: Implement business logic to consume \$response, which is of type $ele_name\n";
-                                            $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // NOTE: should return an object of type $ele_name\n}\n\n";
+                                            $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // NOTE: should return an object of type $ele_name\n";
                                         }
 
                                     }
@@ -331,7 +334,7 @@ function wsf_wsdl2php($wsdl_location) {
                                                 $simple_type_comment = wsf_comment_on_simple_type($param_child, "\$input", $param_type);
                                                 $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . $simple_type_comment."\n";
                                             }
-                                            $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "function " . $op_name . "(\$input) {\n    // TODO: fill in the business logic\n    // NOTE: \$input is of type {$param_type}\n";
+                                            $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // TODO: fill in the business logic\n    // NOTE: \$input is of type {$param_type}\n";
                                             if($param_child->getAttribute("simple") == "yes"){
                                                 $simple_type_comment = wsf_comment_on_simple_type($param_child, "\$input", $param_type);
                                                 $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . $simple_type_comment."\n";
@@ -340,7 +343,7 @@ function wsf_wsdl2php($wsdl_location) {
                                         }
                                         if ($param_node->nodeName == WSF_RETURNS) {
                                             $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "\n    // call the operation\n    \$response = \$proxy->" . $op_node->attributes->getNamedItem('name')->value . "(\$input);\n    //TODO: Implement business logic to consume \$response, which is of type {$param_type}\n";
-                                            $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // NOTE: should return an object of (type: {$param_type})\n}\n\n";
+                                            $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // NOTE: should return an object of (type: {$param_type})\n";
                                         }
                                     }
                                 }
@@ -369,6 +372,7 @@ function wsf_wsdl2php($wsdl_location) {
                 }
             }
         }
+        $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "}\n\n";
     }
     return $code;
 }
