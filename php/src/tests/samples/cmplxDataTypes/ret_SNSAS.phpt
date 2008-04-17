@@ -183,7 +183,7 @@ RetStructSNSASResult Object
                         (
                             [Age] => 28
                             [ID] => 11
-                            [Male] => true
+                            [Male] => 1
                             [Name] => tester1
                         )
 
@@ -191,7 +191,7 @@ RetStructSNSASResult Object
                         (
                             [Age] => 28
                             [ID] => 11
-                            [Male] => true
+                            [Male] => 1
                             [Name] => tester2
                         )
 

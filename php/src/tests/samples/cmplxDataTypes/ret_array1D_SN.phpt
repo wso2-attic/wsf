@@ -171,7 +171,7 @@ RetArray1D_SNResult Object
                 (
                     [Age] => 28
                     [ID] => 11
-                    [Male] => true
+                    [Male] => 1
                     [Name] => Tester 1
                 )
 

@@ -5,18 +5,18 @@ RetArrayAnyType1D
 
 class RetArrayAnyType1DWrapper
 {
-    public $inArrayAnyType1D;
+    public $inArrayAnyType1D; // ArrayOfanyType
 }
 
 
 class ArrayOfanyTypeWrapper
 {
-    public $anyType;
+    public $anyType; // array of anyType
 }
 
 class RetArrayAnyType1DResponseWrapper
 {
-    public $RetArrayAnyType1DResult;
+    public $RetArrayAnyType1DResult; // ArrayOfanyType
 }
 
 
@@ -28,11 +28,11 @@ $classmap = array("RetArrayAnyType1D" => "RetArrayAnyType1DWrapper",
 
 try{
      $wsdl = file_get_contents('samples/config/cmplxDataTypesWsdlDoclitW.txt');
-    $client = new WSClient(array("wsdl"=>$wsdl, "classmap" => $classmap));
+    $client = new WSClient(array("wsdl"=>$wsdl, "classmap" => $classmap, "to" => "http://localhost:8080/services/ComplexDataTypesWSvc/ComplexDataTypesDocLitW_Service.php"));
 
     $input = new RetArrayAnyType1DWrapper();
     $obj = new ArrayOfanyTypeWrapper();
-    $obj->anyType = "Hello";
+    $obj->anyType = array("Hello1", "Hello2");
     $input->inArrayAnyType1D = $obj;
 
     
@@ -58,6 +58,16 @@ try{
 Result is:
 RetArrayAnyType1DResponseWrapper Object
 (
-    [RetArrayAnyType1DResult] => "Hello"
+    [RetArrayAnyType1DResult] => ArrayOfanyTypeWrapper Object
+        (
+            [anyType] => Array
+                (
+                    [0] => Hello1
+                    [1] => Hello2
+                )
+
+        )
+
 )
+
 
