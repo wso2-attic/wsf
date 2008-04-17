@@ -44,9 +44,10 @@ int main (int argc, char **argv)
  	char *dest_uri = NULL;
 	axutil_array_list_t *array_list;
 	axis2_status_t status;
-	env = axutil_env_create_all ("wsclient.log", AXIS2_LOG_LEVEL_DEBUG);
-	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-					"[wsclient]wsclient initiated ");
+    int ii = 0;
+    axis2_char_t *name = NULL;
+    axis2_char_t *log_path = "wsclient.log";
+    axutil_log_levels_t log_level = AXIS2_LOG_LEVEL_INFO;
 
 	if (argc > 1)
 	{
@@ -54,6 +55,48 @@ int main (int argc, char **argv)
 			print_help ();
 		else if (!strcmp (argv[1], "-v") || !strcmp (argv[1], "--version"))
 			print_version ();
+
+	    for (ii = 0; ii < argc; ii++)
+	    {
+            name = NULL;
+            if (argv[ii][0] == '-' && argv[ii][1] == '-')
+            {
+                name = argv[ii]+2;
+            }
+            if (!axutil_strcmp(name, "log-level"))
+            {
+                axis2_char_t *level = (char *)argv[++ii];
+                if(!axutil_strcmp(level, "user"))
+                {
+                    log_level = AXIS2_LOG_LEVEL_USER;
+                }
+                if(!axutil_strcmp(level, "debug"))
+                {
+                    log_level = AXIS2_LOG_LEVEL_DEBUG;
+                }
+                if(!axutil_strcmp(level, "info"))
+                {
+                    log_level = AXIS2_LOG_LEVEL_INFO;
+                }
+                if(!axutil_strcmp(level, "warning"))
+                {
+                    log_level = AXIS2_LOG_LEVEL_WARNING;
+                }
+                if(!axutil_strcmp(level, "error"))
+                {
+                    log_level = AXIS2_LOG_LEVEL_ERROR;
+                }
+                if(!axutil_strcmp(level, "critical"))
+                {
+                    log_level = AXIS2_LOG_LEVEL_CRITICAL;
+                }
+            }
+            else if(!axutil_strcmp(name, "log-path"))
+            {
+                log_path = (char *)argv[++ii];
+            }
+        }
+	    env = axutil_env_create_all (log_path, log_level);
 
 		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 						"[wsclient]waiting for input  ");
@@ -293,6 +336,12 @@ General HTTP Options:\n"),
 SSL options:\n"),
 			("\
        --server-cert PATH           path to certificate file to use with https transport.\n"),
+			"\n",
+			("\
+       --log-path PATH              Path to log file. Default is $WSFC_HOME/logs/wsclient.log\n"),
+			"\n",
+			("\
+       --log-level LEVEL            LEVEL is one of critical, error, warning, info, debug, user. Default is info\n"),
 			"\n",
 	    };
 	int i = 0;
