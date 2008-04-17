@@ -221,6 +221,8 @@ SOAP:\n"),
 			("\
        --soap-out                   output entire SOAP reply.\n"),
 			("\
+       --soap-header LINE           add LINE as a SOAP header.\n"),
+			("\
        --send-only                  send SOAP request only.\n"),
 			("\
        --soap-dump                  output SOAP request.\n"),
