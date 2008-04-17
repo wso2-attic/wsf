@@ -118,6 +118,8 @@ define("WSF_WSDL_ALL", "all");
 define("WSF_SIMPLE_CONTENT_VALUE", "value");
 define("WSF_SIMPLE_CONTENT", "simpleContent");
 
+define("WSF_XSD_ANYTYPE", "anyType");
+
 // log level definition
 
 define("WSF_LOG_CRITICAL", 0);

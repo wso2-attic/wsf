@@ -76,7 +76,7 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
 
     // filling user class information to the array..
     $user_arguments = wsf_convert_classobj_to_array($sig_node, $user_obj);
-    
+
     if($sig_node->hasAttributes()) {
         wsf_build_content_model($sig_node, $user_arguments, $parent_node, $payload_dom, $root_node, $prefix_i, $namespace_map);
     }
@@ -291,7 +291,9 @@ function wsf_create_payload_for_unknown_array(DomDocument $payload_dom,
         }
     }
     else {
-        return $user_arguments; // just return the current value;
+        // just return the current value;
+        $ele = $payload_dom->createTextNode($user_arguments);
+        $parent_node->appendChild($ele);
     }
 }
 
@@ -481,6 +483,7 @@ function wsf_serialize_complex_types(DomNode $sig_param_node, $user_val,
         $node_name = $prefix.":".$param_name;
     }
 
+
     if($max_occurs > 1 || $max_occurs == "unbounded") {
         if(is_array($user_val)) {
             foreach($user_val as $user_val_item) {
@@ -590,6 +593,9 @@ function wsf_serialize_complex_types(DomNode $sig_param_node, $user_val,
  */
 function wsf_build_content_model(DomNode $sig_node, array $user_arguments,
             DomNode $parent_node, DomNode $payload_dom, $root_node, &$prefix_i, &$namespace_map) {
+
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "building the content model");
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, wsf_test_serialize_node($sig_node));
 
     $content_model = WSF_WSDL_SEQUENCE;
     if($sig_node->attributes->getNamedItem(WSF_CONTENT_MODEL)) {
