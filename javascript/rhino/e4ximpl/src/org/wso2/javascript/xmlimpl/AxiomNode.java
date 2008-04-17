@@ -383,7 +383,11 @@ public class AxiomNode {
             }
         }
         //TODO Check with  the defaultSettings.
-        this.getOMElement().addChild(nodeToInsert.cloneOMNode());
+        OMElement omElement = this.getOMElement();
+        // Without this appendChild does not work correctly. Strange?
+        omElement.build();
+        OMNode node = nodeToInsert.cloneOMNode();
+        omElement.addChild(node);
     }
 
     public void insertChild(AxiomNode refNode, AxiomNode nodeToInsert, int mode) {
