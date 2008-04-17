@@ -37,6 +37,7 @@ wsclient_cmd_options_t cmd_options_data [] =
       {"action", 'a', required_argument},
       {"soap-dump", 0, no_argument},
       {"soap-out", 0, no_argument},
+      {"soap-header", 0, required_argument},
       {"no-wsa", 0, no_argument},
       {"to", 0, required_argument},
       {"from", 0, required_argument},

@@ -74,6 +74,48 @@ wsclient_payload (
     return node;
 }
 
+axiom_node_t *
+wsclient_soap_header (
+    const axutil_env_t *env, 
+    char *input_buffer)
+{
+    axiom_xml_reader_t *reader;
+    axiom_stax_builder_t *builder;
+    axiom_document_t *doc;
+    axiom_node_t *node;
+    char *input;
+    input = input_buffer;
+
+    if (input)
+		reader = axiom_xml_reader_create_for_memory (env, input, strlen (input), NULL, AXIS2_XML_PARSER_TYPE_BUFFER);
+    else
+		return WSCLIENT_FAILURE;
+
+    if (reader)
+    {
+		axiom_xml_reader_init ();
+		builder = axiom_stax_builder_create (env, reader);
+    }
+    else 
+		return WSCLIENT_FAILURE;
+
+    if (builder)
+    {
+		doc  = axiom_stax_builder_get_document (builder, env);
+		if (doc)
+			axiom_document_build_all (doc, env);
+		else
+			return WSCLIENT_FAILURE;
+		node = axiom_document_get_root_element (doc, env);
+    }
+    else
+    {
+		axiom_xml_reader_free (reader, env);
+		return WSCLIENT_FAILURE;
+    }
+    return node;
+}
+
 axis2_char_t *
 wsclient_get_password (const axutil_env_t *env,
 					   const axis2_char_t *username,

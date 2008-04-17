@@ -219,6 +219,28 @@ wsclient_svc_option (axis2_svc_client_t *svc_client,
 										"[wsclient] soap out block");
 					}
 					break;
+					case SOAP_HEADER:
+					{
+	                    axiom_node_t *soap_header = NULL;
+						char *header = (char *) wsclient_options->value;
+	                    soap_header = wsclient_soap_header (env, header);
+                        if(soap_header)
+                        {
+                            if(AXIS2_SUCCESS != axis2_svc_client_add_header(
+                                svc_client, env, soap_header))
+                            {
+                                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                                    "[wsclient]Adding soap header failed");
+                            }
+                        }
+                        else
+                        {
+                            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                                "[wsclient]Creating soap header axiom element"\
+                                " for string %s failed", header);
+                        }
+					}
+					break;
 					case ACTION:
 					{
 						is_soap_enabled = 1;

@@ -29,6 +29,11 @@ wsclient_payload (
     const axutil_env_t *env, 
     char *input_buffer);
 
+axiom_node_t *
+wsclient_soap_header (
+    const axutil_env_t *env, 
+    char *input_buffer);
+
 axis2_char_t *
 wsclient_get_password (const axutil_env_t *env, 
 					   const axis2_char_t *username,

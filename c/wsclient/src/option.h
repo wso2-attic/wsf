@@ -52,6 +52,7 @@ enum cmd_options_em
       ACTION,
       SOAP_DUMP,
       SOAP_OUT,
+      SOAP_HEADER, /* {"soap-header", 0, required_argument}, */
       NO_WSA,
       TO,
       FROM,
