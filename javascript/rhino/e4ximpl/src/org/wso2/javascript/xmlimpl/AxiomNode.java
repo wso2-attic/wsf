@@ -55,9 +55,7 @@ public class AxiomNode {
 
     private AxiomNode parentNode;
     XML xmlObject;
-    private OMFactory omFactory = null;
     private AxiomNodeMatcher nodeMatcher = null;
-    private static AxiomNodeComparator axiomNodeComparator = new AxiomNodeComparator();
 
     public static final int APPEND_CHILD = 1;
     public static final int PREPEND_CHILD = 2;
@@ -287,12 +285,11 @@ public class AxiomNode {
                 omElement = null;
             }
         }
-        nsMap = null;
         return nsDeclarations.toArray();
     }
 
     public OMAttribute getOMAttribute() {
-        return (isAttribute()) ? (OMAttribute) omAttribute : null;
+        return (isAttribute()) ? omAttribute : null;
     }
 
     public OMComment getOMComment() {
@@ -304,6 +301,7 @@ public class AxiomNode {
     }
 
     public OMFactory getOMFactory() {
+        OMFactory omFactory;
         if (isOMAttribute) {
             omFactory = omAttribute.getOMFactory();
 
@@ -574,9 +572,11 @@ public class AxiomNode {
             }
 
             AxiomNode tmpAxiomNode;
-            while (iterator.hasNext()) {
-                tmpAxiomNode = AxiomNode.buildAxiomNode(iterator.next(), thisAxiomNode);
-                thisAxiomNode.addToList(tmpAxiomNode, xmlList);
+            if (iterator != null) {
+                while (iterator.hasNext()) {
+                    tmpAxiomNode = AxiomNode.buildAxiomNode(iterator.next(), thisAxiomNode);
+                    thisAxiomNode.addToList(tmpAxiomNode, xmlList);
+                }
             }
 
             return xmlList;
@@ -595,14 +595,16 @@ public class AxiomNode {
             }
 
             AxiomNode tmpAxiomNode;
-            while (iterator.hasNext()) {
-                tmpAxiomNode = AxiomNode.buildAxiomNode(iterator.next(), thisAxiomNode);
-                javax.xml.namespace.QName qname = tmpAxiomNode.getQName();
+            if (iterator != null) {
+                while (iterator.hasNext()) {
+                    tmpAxiomNode = AxiomNode.buildAxiomNode(iterator.next(), thisAxiomNode);
+                    javax.xml.namespace.QName qname = tmpAxiomNode.getQName();
 
-                if ((namespaceURI.equals("")) || (qname != null &&
-                        qname.getNamespaceURI().equals(namespaceURI)) || (tmpAxiomNode.isText())) {
-                    thisAxiomNode.addToList(tmpAxiomNode, xmlList);
+                    if ((namespaceURI.equals("")) || (qname != null &&
+                            qname.getNamespaceURI().equals(namespaceURI)) || (tmpAxiomNode.isText())) {
+                        thisAxiomNode.addToList(tmpAxiomNode, xmlList);
 
+                    }
                 }
             }
             return xmlList;
@@ -622,14 +624,16 @@ public class AxiomNode {
             }
 
             AxiomNode tmpAxiomNode;
-            while (iterator.hasNext()) {
-                tmpAxiomNode = AxiomNode.buildAxiomNode(iterator.next(), thisAxiomNode);
-                javax.xml.namespace.QName qname = tmpAxiomNode.getQName();
+            if (iterator != null) {
+                while (iterator.hasNext()) {
+                    tmpAxiomNode = AxiomNode.buildAxiomNode(iterator.next(), thisAxiomNode);
+                    javax.xml.namespace.QName qname = tmpAxiomNode.getQName();
 
-                if (qname != null && qname.getLocalPart().equals(localName)) {
+                    if (qname != null && qname.getLocalPart().equals(localName)) {
 
-                    if ((namespaceURI == null) || (qname.getNamespaceURI().equals(namespaceURI))) {
-                        thisAxiomNode.addToList(tmpAxiomNode, xmlList);
+                        if ((namespaceURI == null) || (qname.getNamespaceURI().equals(namespaceURI))) {
+                            thisAxiomNode.addToList(tmpAxiomNode, xmlList);
+                        }
                     }
                 }
             }
@@ -947,7 +951,7 @@ public class AxiomNode {
             Iterator targetChildIterator = targetElement.getChildren();
 
             OMNode refChildNode;
-            OMNode targetChildNode = null;
+            OMNode targetChildNode;
 
 //            while (refChildIterator.hasNext()) {
 ////                refChildNode = (OMNode) refChildIterator.next();
