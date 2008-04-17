@@ -399,7 +399,11 @@ public class AxiomNode {
 
                     if (prevSibling == null) {
                         refNode.getOMElement().insertSiblingBefore(nodeToInsert.cloneOMNode());
-                        nodeToInsert.getOMNode().insertSiblingAfter(refNode.getOMNode());
+                        // Prepend child was not working as expected. Commenting this line out fixed
+                        // the issue. Not deleting this line as we have to check other problems that
+                        // may pop up because of this change. Refer MASHUP-324 for details.
+                        
+//                        nodeToInsert.getOMNode().insertSiblingAfter(refNode.getOMNode());
 
                     } else {
                         prevSibling.insertSiblingAfter(nodeToInsert.cloneOMNode());
