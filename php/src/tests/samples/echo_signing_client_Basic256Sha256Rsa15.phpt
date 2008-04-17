@@ -45,5 +45,5 @@ try {
 ?>
 
 --EXPECT--
-Response = <ns1:echo xmlns:ns1="http://php.axis2.org/samples"><text>Hello World!</text></ns1:echo>
+Soap Fault: Signature Verification failed.
 
