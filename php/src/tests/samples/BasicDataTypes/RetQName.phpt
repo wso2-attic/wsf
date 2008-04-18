@@ -23,5 +23,5 @@ try {
 }
 ?>
 --EXPECT--
-localname
+d26:localname
 

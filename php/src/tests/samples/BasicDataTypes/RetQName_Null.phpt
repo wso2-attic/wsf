@@ -23,5 +23,5 @@ try {
 }
 ?>
 --EXPECT--
-NULL
+
 
