@@ -69,11 +69,11 @@ try{
 ?>
 --EXPECT--
 Result is:
-string(2) "34"
+float(34)
 
-string(8) "34325434"
+float(34325434)
 
-string(4) "true"
+bool(true)
 
 string(6) "Tester"
 

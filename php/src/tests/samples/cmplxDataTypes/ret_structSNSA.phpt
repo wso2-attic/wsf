@@ -175,7 +175,7 @@ RetStructSNSAResult Object
         (
             [Age] => 28
             [ID] => 11
-            [Male] => true
+            [Male] => 1
             [Name] => Employee_1
         )
 
@@ -196,7 +196,6 @@ RetStructSNSAResult Object
         )
 
 )
-
 
 
 

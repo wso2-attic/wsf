@@ -27,7 +27,7 @@ $classmap = array("inEnumInt" => "RetEnumIntWrapper",
                   
 
 try{
-    $wsdl = file_get_contents('samples/config/wsdlDoclitW.txt');
+    $wsdl = file_get_contents('samples/config/cmplxDataTypesWsdlDoclitW.txt');
     $client = new WSClient(array("wsdl"=>$wsdl ,
                                  "classmap" => $classmap));
                                //  "proxyHost"=>"localhost",
