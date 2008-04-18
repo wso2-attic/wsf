@@ -1000,6 +1000,49 @@ function wsf_is_rpc_enc_wsdl($wsdl_11_dom, $binding_node, $operation_name) {
 
 
 /**
+ * Returns a WSDL removing all the wsdl:imports
+ */
+
+function wsf_clear_wsdl_imports($wsdl_dom){
+   
+    $imports = wsf_get_wsdl_imports($wsdl_dom);
+    $root = $wsdl_dom->documentElement;
+
+    if(count($imports) == 0) {
+        // no wsdl_imports
+        return $wsdl_dom;
+    }
+    $wsdl_doms = array_merge(array($wsdl_dom), $imports);
+    $new_wsdl = $wsdl_dom;
+}
+
+/**
+ * Returns WSDL importing elements array associated with
+ * given wsdl
+ */
+function wsf_get_wsdl_imports($wsdl_dom){
+    $root = $wsdl_dom->documentElement;
+    $root_childs = $root->childNodes;
+
+    $imports = array();
+    foreach($root_childs as $root_child) {
+        if($root_child->nodeType != XML_ELEMENT_NODE && 
+                $root_child->nodeName == "import") {
+            if($root_child->attributes->getNamedItem("location")) {
+                $imported_location = $root_child->attributes->getNamedItem("location");
+                $imported_dom = new DOMDocument();
+                if($imported_dom->load($imported_location)) {
+                    $imports[] = $imported_dom;
+                    $recursive_imports = wsf_get_wsdl_imports($imported_dom);
+                    $imports = array_merge($imports, $recursive_imports);
+                }
+            }
+        }
+    }
+    return $imports;
+}
+
+/**
  * @param node to start with
  * @return the node with comments skiped
  */

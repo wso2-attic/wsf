@@ -86,7 +86,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     $wsdl_dom->preserveWhiteSpace = false;
        
     if(!$wsdl_location) {
-        error_log("WSDL location uri is not found");
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_INFO, "WSDL location uri is not found");
         return "WSDL locaiton uri is not found";
     }
     $is_multiple_interfaces = FALSE;
@@ -94,7 +94,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     // Load WSDL as DOM
     $wsdl_dom = new DOMDocument();
     if(!$wsdl_dom->load($wsdl_location)) {
-        error_log("WSDL {$wsdl_location}could not be loaded");
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_INFO, "WSDL {$wsdl_location}could not be loaded");
         return "WSDL {$wsdl_location} could not be loaded.";
     }
    
@@ -107,7 +107,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
         $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom);
         
         if(!$wsdl_dom) {
-            error_log("Error creating WSDL Dom Document,".
+            ws_log_write(__FILE__, __LINE__, WSF_LOG_INFO, "Error creating WSDL Dom Document,".
                     "Please check whether the wsdl is an valid XML");
             return "Error creating WSDL Dom Document".
                     "Please check whether the wsdl is an valid XML";
@@ -121,11 +121,11 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     }
     
     if(!$sig_model_dom) {
-        error_log("Error creating intermediate model");
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_INFO, "Error creating intermediate model");
         return "Error creating intermediate model";
     }
 
-    /* endpoint_address is used for just to parse back to c code: */
+    /* endpoint_address is used for just to parse back to the c code: */
     if(!$endpoint_address) {
         $endpoint_address = wsf_get_endpoint_address($sig_model_dom);
     }
@@ -178,17 +178,21 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
         }
     }
 
-    if($sig_method && !$is_rpc_enc)
+    if($sig_method && !$is_rpc_enc) {
         $payload = wsf_create_payload($sig_method, $is_doc_lit, $operation_name, $arg_count, $arguments, $class_map);
-    else
+    }
+    else {
         $payload = wsf_create_payload($sig_method, FALSE, $operation_name, $arg_count, $arguments, $class_map);
+    }
 
-    if($sig_method)
+    if($sig_method) {
         $return_node = wsf_get_response_parameters($sig_method);
+    }
     $return_sig_model_string = $sig_model_dom->saveXML($return_node);
 
-    if ($is_wsdl_11 == TRUE && $wsdl_11_dom)
+    if($is_wsdl_11 == TRUE && $wsdl_11_dom) {
         $wsdl_dom = $wsdl_11_dom;
+    }
 
     $wsdl_dom_string = $wsdl_dom->saveXML();
     $return_value = array(WSF_ENDPOINT_URI=> $endpoint_address,
