@@ -9,7 +9,7 @@ try {
     $client = new WSClient(array("wsdl" => $wsdl));
     
     $proxy = $client->getProxy();
-    $val =  $proxy->RetFloat(NaN);
+    $val =  $proxy->RetFloat('NaN');
     echo $val."\n";
 
 } catch (Exception $e) {
@@ -23,4 +23,4 @@ try {
 }
 ?>
 --EXPECT--
-NaN
+0
