@@ -17,6 +17,7 @@ require 'wsf/wsmessage'
 require 'wsf/wsfault'
 require 'config/wsconfig'
 require 'logger/wslogger'
+require 'wsdl/ws_wsdl_proxy'
 require 'rexml/document'
 
 module WSO2
@@ -655,6 +656,22 @@ module WSO2
         
       end
 
+      
+   
+      def get_proxy
+        wsdl = client_property(WSFC::WSF_CP_WSDL)
+        
+        unless wsdl.nil?
+          proxy = WSO2::WSDL::WSProxy.new(@env, @svc_client, @options, wsdl.to_s)
+          return proxy
+        else
+          WSFC::axis2_log_error(@env, "[wsf-ruby] wsdl is not set")
+        end
+
+        return nil
+      end
+      
+      
       private :set_client_options
       private :set_transaction_options
       private :message_to_axiom_node
