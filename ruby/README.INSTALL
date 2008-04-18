@@ -17,8 +17,9 @@ a. WSO2 WSF/C [http://dist.wso2.org/products/wsf/c]
    Please see the INSTALL file of the WSO2 WSF/C to install WSO2 WSF/C.
 
 b. Ruby version 1.8.5 or above.
-   [http://ftp.ruby-lang.org/pub/ruby/1.8]
-
+   To install you can do one of the following,
+   i) Please download the source from [http://ftp.ruby-lang.org/pub/ruby/1.8] and build it.  
+   ii) Install ruby runtime and development package [e.g. ruby1.8-dev]
 
 2. Installation
 
@@ -50,7 +51,7 @@ b. Run "sh build.sh" to setup the extension.  You may require super user
 a. It is required to have Rails Framework installed in your machine to run 
    the Rails samples in
      - samples/consumer/rails and
-	 - samples/provide
+     - samples/provider
 
 b. Go to the samples/provider directory in the WSO2/WSF ruby binary/source
    distribution.

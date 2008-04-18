@@ -18,3 +18,23 @@
 
 @if exist src\intdir rmdir /s /q src\intdir
 
+@del *.def
+
+@del *.obj
+
+@del *.pdb
+
+@del *.lib
+
+@del mkmf.log
+
+@del *.manifest
+
+@del makefile
+
+@del *.dll
+
+@del *.so
+
+@del *.exp
+

@@ -2,7 +2,7 @@
 ### General Build Configuration Parameters
 
 # To build with debug symbols set DEBUG = 1
-DEBUG = 1
+DEBUG = 0
 #CRUNTIME Library ( Use /MD or /MT)
 CRUNTIME=/MD
 # Visual Studio version
@@ -52,14 +52,14 @@ OPENSSL_BIN_DIR = C:\install\OpenSSL
 ### Apache Sandesha2/C Build Configuration Parameters
 
 # Build with SQLite support for permenent storage, to disable set WITH_SQLITE = 0
-WITH_SQLITE = 0
+WITH_SQLITE = 1
 # Path to SQLite installation
-SQLITE_BIN_DIR = "E:\SQLite"
+SQLITE_BIN_DIR = "C:\install\sqlite-3_3_81"
 # Path to SQLite source
-SQLITE_SRC_DIR = "E:\sqlite-source-3_3_8"
+SQLITE_SRC_DIR = "C:\install\sqlite-3_3_81"
 
 # Build with MySQL support for permenent storage, to enable set WITH_MYSQL = 1
-WITH_MYSQL = 1
+WITH_MYSQL = 0
 # Path to MySQL installation
 MYSQL_BIN_DIR=c:\install\mysql
 

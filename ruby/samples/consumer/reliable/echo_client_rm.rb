@@ -27,7 +27,7 @@ XML
 
 begin
   LOG_FILE_NAME = "ruby_echo_client_rm.log"
-  END_POINT = "http://127.0.0.1:3000/echo_service_rm/echo"
+  END_POINT = "http://localhost:3000/echo_service_rm/echo"
 
   client = WSClient.new({"use_wsa" => "TRUE",
                          "reliable" => "TRUE"},

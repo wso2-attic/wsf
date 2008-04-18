@@ -13,12 +13,15 @@ end
 # Add Build Rules
 if /mswin32|bccwin32/ =~ RUBY_PLATFORM
     dir_config('WSFC', WSFC_HOME + '/include', WSFC_HOME + '/lib')
+    dir_config('wsdlc', './wsdlc/include', './wsdlc/lib')
     $CFLAGS = $CFLAGS + " -DWIN32 -DSWIG_NOINCLUDE"
     have_library('libxml2')
     have_library('axiom')
+    have_library('wsdlc')
 else
     dir_config('WSFC', WSFC_HOME + '/include/axis2-1.2', WSFC_HOME + '/lib')
     dir_config('Rampart', WSFC_HOME + '/include/rampart-1.0', WSFC_HOME + '/modules/rampart')
+    
     have_library('axis2_axiom')
 end
 
