@@ -532,7 +532,27 @@ function wsf_comment_on_simple_type($param_node, $param_name, $param_type)
             $comment .= "       Less than ";
             $comment .= $max_len."\n";
         }
-        $comment .= "     */";
+        $comment .= "     */\n";
+    }
+
+    //Iterate throught the total digits and length facets
+    foreach($restrictions as $facet) {
+        if($facet->nodeName == "pattern") {
+            $pattern =  $facet->getAttribute("value");
+            $comment .= "    /* The pattern should be \n       {$pattern} \n    */\n";
+        }
+        else if($facet->nodeName == "length") {
+            $length =  $facet->getAttribute("value");
+            $comment .= "    /* The value length should be \n       {$length} \n    */\n";
+        }
+        else if($facet->nodeName == "totalDigits") {
+            $digits =  $facet->getAttribute("value");
+            $comment .= "    /* The number of digits should be \n       {$digits} \n    */\n";
+        }
+        else if($facet->nodeName == "fractionDigits") {
+            $digits =  $facet->getAttribute("value");
+            $comment .= "    /* The number of fraction digits should be \n       {$digits} \n    */\n";
+        }
     }
   
     return $comment;
