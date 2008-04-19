@@ -123,6 +123,7 @@ WSRequest.prototype.send = function(payload) {
             this._xmlhttp.setRequestHeader("Content-Type", "application/soap+xml;charset=UTF-8" + (soapAction == undefined ? "" : ";action=" + soapAction));
             break;
         case 0:
+            var contentType;
             if (this._optionSet["HTTPInputSerialization"] != null) {
                 contentType = this._optionSet["HTTPInputSerialization"]
             } else {
@@ -377,7 +378,7 @@ WSRequest.util = {
             case "opera":
             case "safari":
             case "undefined":
-                value = "";
+                var value = "";
                 if (node.nodeType == 3) {
                     value = node.nodeValue;
                 } else {
@@ -400,6 +401,7 @@ WSRequest.util = {
  * @return string
  */
     _bindingVersion : function(options) {
+        var soapVer;
         switch (options["useBindng"]) {
             case "SOAP 1.2":
                 soapVer = 1.2;
@@ -411,7 +413,7 @@ WSRequest.util = {
                 soapVer = 0;
                 break;
             case undefined:
-                useSOAP = options["useSOAP"];
+                var useSOAP = options["useSOAP"];
                 switch (useSOAP) {
                     case 1.2:
                         soapVer = 1.2;
@@ -666,6 +668,7 @@ WSRequest.util = {
  * @return string
  */
     _buildSOAPEnvelope : function(soapVer, options, url, content) {
+        var ns;
         if (soapVer == 1.1)
             ns = "http://schemas.xmlsoap.org/soap/envelope/";
         else
@@ -678,6 +681,7 @@ WSRequest.util = {
         var wsaNs = "";
         var wsaNsDecl = "";
         if (useWSA != undefined && useWSA != false) {
+            var standardversion;
             if (useWSA == "1.0" || useWSA == true) {
                 wsaNs = "http://www.w3.org/2005/08/addressing";
                 standardversion = true;
@@ -689,7 +693,7 @@ WSRequest.util = {
             headers = this._buildWSAHeaders(standardversion, options, url);
         }
 
-        request = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+        var request = '<?xml version="1.0" encoding="UTF-8"?>\n' +
                   '<s:Envelope xmlns:s="' + ns + '"' +
                   wsaNsDecl + '>\n' +
                   '<s:Header>' + headers + '</s:Header>\n' +
@@ -739,12 +743,13 @@ WSRequest.util = {
 
         // wsa:MessageID (required if a response is expected, e.g. wsa:ReplyTo is specified, which is always for us.)
         // If user doesn't supply an identifier, we'll make one up.
+        var id;
         if (options['messageid'] != null) {
             id = options['messageid'];
         } else {
             // coin a unique identifier based on the time (in milliseconds) and a 10-digit random number.
-            now = (new Date()).valueOf();
-            randomToken = Math.floor(Math.random() * 10000000000);
+            var now = (new Date()).valueOf();
+            var randomToken = Math.floor(Math.random() * 10000000000);
             id = "http://identifiers.wso2.com/messageid/" + now + "/" + randomToken;
         }
         headers += "<wsa:MessageID>" + id + "</wsa:MessageID>\n";
@@ -781,7 +786,7 @@ WSRequest.util = {
     _firstElement : function (node, namespace, localName) {
         if (node == null) return null;
         var browser = WSRequest.util._getBrowser();
-        var doc;
+        var doc, el;
         if (browser == "ie" || browser == "ie7") {
             if (node.nodeType == 9)
                 doc = node;
