@@ -1326,8 +1326,8 @@ PHP_METHOD (ws_service, reply)
 					Z_TYPE_PP (data) ==  IS_STRING) {
 				req_info.http_protocol = Z_STRVAL_PP (data);
 			}
-			if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "SOAP_ACTION",
-                    sizeof ("SOAP_ACTION"), (void **)&data) == SUCCESS)  &&
+			if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "HTTP_SOAPACTION",
+                    sizeof ("HTTP_SOAPACTION"), (void **)&data) == SUCCESS)  &&
 					Z_TYPE_PP (data) == IS_STRING) {
 				req_info.soap_action = Z_STRVAL_PP (data);
 			}
@@ -1348,23 +1348,7 @@ PHP_METHOD (ws_service, reply)
 			if(req_info.request_method && strcmp(req_info.request_method,"POST") == 0){
 				php_error_docref(NULL TSRMLS_CC, E_ERROR, "raw post data not found");
 			}
-		}	
-		{
-			zval ret_val, func;
-			zval **tmp_action = NULL;
-			ZVAL_STRING (&func, "apache_request_headers", 0);
-			if (call_user_function (CG (function_table), (zval **) NULL, &func,
-				&ret_val, 0, NULL TSRMLS_CC) == SUCCESS) {
-				if(Z_TYPE(ret_val) == IS_ARRAY){
-					if(zend_hash_find(Z_ARRVAL(ret_val), "SOAPAction", sizeof("SOAPAction"), 
-							(void**)&tmp_action) == SUCCESS && Z_TYPE_PP(tmp_action) == IS_STRING){
-									req_info.soap_action = Z_STRVAL_PP(tmp_action);
-							}
-					}
-			}
-           
 		}
-    
     } else if(ZEND_NUM_ARGS() > 0 && arg_data_len > 0){
         /* If we come here, it is not an HTTP post, 
            rather a command line script execution. 
