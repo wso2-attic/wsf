@@ -539,7 +539,7 @@ function wsf_deserialize_complex_types(&$current_child, DomNode $sig_param_node,
             $sig_param_attris->getNamedItem(WSF_TYPE)->value;
     }
     if($sig_param_attris->getNamedItem(WSF_XSD_NILLABLE) &&
-            $sig_param_attris->getNamedItem(WSF_XSD_NILLABLE)->value = "yes") {
+            $sig_param_attris->getNamedItem(WSF_XSD_NILLABLE)->value = "true") {
         $nillable = TRUE;
     }
 

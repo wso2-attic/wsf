@@ -95,8 +95,10 @@ function wsf_wsdl2sig($wsdl_location) {
             echo "Error creating WSDL DOM document";
             return NULL;
         }
+        $wsdl_dom = wsf_clear_wsdl_imports($wsdl_dom);
         $sig_model_dom = wsf_get_sig_model_dom($wsdl_dom, $xslt_location);
     } else {
+        $wsdl_dom = wsf_clear_wsdl_imports($wsdl_dom);
         $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $xslt_location);
         $sig_model_dom = wsf_process_multiple_interfaces($wsdl_dom, $sig_model_dom, $xslt_location);
     }

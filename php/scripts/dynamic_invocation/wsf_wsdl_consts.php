@@ -79,10 +79,16 @@ define("WSF_PORT", "port");
 define("WSF_LOCATION", "location");
 define("WSF_XSLT_LOCATION", "xslt_location");
 define("WSF_TYPES", "types");
+define("WSF_SCHEMA", "schema");
+define("WSF_ELEMENT", "element");
 define("WSF_WSDL_DOM", "wsdl_dom");
 define("WSF_WSDL_SIMPLE", "simple");
 define("WSF_WSDL_COMPLEX_TYPE", "complexType");
 define("WSF_WSDL_PORT_TYPE", "portType");
+define("WSF_WSDL_MESSAGE", "message");
+define("WSF_WSDL_INPUT", "input");
+define("WSF_WSDL_OUTPUT", "output");
+define("WSF_WSDL_PART", "part");
 
 define("WSF_WSDL1TO2_XSL_LOCATION", "dynamic_invocation/xslt/wsdl11to20.xsl10.xsl");
 define("WSF_SIG_XSL_LOCATION", "dynamic_invocation/xslt/wsdl2sig.xslt");

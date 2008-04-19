@@ -187,6 +187,8 @@ function wsf_wsdl2php($wsdl_location) {
         echo "WSDL could not be loaded.";
         return NULL;
     }
+    file_put_contents("/tmp/anotherthing", $wsdl_dom->saveXML());
+
 
     $wsdl_dom->preserveWhiteSpace = false;
 
@@ -194,15 +196,17 @@ function wsf_wsdl2php($wsdl_location) {
     $is_multiple_interfaces = wsf_is_mutiple_port_types($wsdl_dom);
 
     if ($is_multiple_interfaces == FALSE) {
-        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $xslt_location);
+        //wsdl1.1 to wsdl2 conversion
+        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom);
         if (!$wsdl_dom) {
             echo "Error creating WSDL DOM document";
             return NULL;
         }
-        $sig_model_dom = wsf_get_sig_model_dom($wsdl_dom, $xslt_location);
+        $sig_model_dom = wsf_get_sig_model_dom($wsdl_dom);
     } else {
-        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $xslt_location);
-        $sig_model_dom = wsf_process_multiple_interfaces($wsdl_dom, $sig_model_dom, $xslt_location);
+        //wsdl1.1 to wsdl2 conversion
+        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom);
+        $sig_model_dom = wsf_process_multiple_interfaces($wsdl_dom, $sig_model_dom);
     }
 
     if (!$sig_model_dom) {
