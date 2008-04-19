@@ -28,7 +28,7 @@ $classmap = array("RetArrayAnyType1D" => "RetArrayAnyType1DWrapper",
 
 try{
      $wsdl = file_get_contents('samples/config/cmplxDataTypesWsdlDoclitW.txt');
-    $client = new WSClient(array("wsdl"=>$wsdl, "classmap" => $classmap, "to" => "http://localhost:8080/services/ComplexDataTypesWSvc/ComplexDataTypesDocLitW_Service.php"));
+    $client = new WSClient(array("wsdl"=>$wsdl, "classmap" => $classmap));
 
     $input = new RetArrayAnyType1DWrapper();
     $obj = new ArrayOfanyTypeWrapper();
