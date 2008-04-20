@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ns0="http://wso2.org/dyn/codegen/demo" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ns1="http://wso2.org/dyn/codegen/demo/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://wso2.org/dyn/codegen/demo">
+    <wsdl:types>
+        <xs:schema xmlns:tns="http://wso2.org/dyn/codegen/demo" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://wso2.org/dyn/codegen/demo">
+            <!-- demonstrating element-->
+            <xs:element name="myDemo" type="xs:int"/>
+
+            <!-- kept just for the completeness -->
+            <xs:element name="myDemoResponse" type="xs:int"/>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="myDemoRequest">
+        <wsdl:part name="parameters" element="ns0:myDemo"/>
+    </wsdl:message>
+    <wsdl:message name="myDemoResponse">
+        <wsdl:part name="parameters" element="ns0:myDemoResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="MyServicePortType">
+        <wsdl:operation name="myDemo">
+            <wsdl:input message="ns0:myDemoRequest"/>
+            <wsdl:output message="ns0:myDemoResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="MyServiceSOAP12Binding" type="ns0:MyServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="myDemo">
+            <soap12:operation soapAction="urn:myDemo" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="MyService">
+        <wsdl:port name="MyServiceSOAP12port_http" binding="ns0:MyServiceSOAP12Binding">
+            <soap:address location="http://localhost/services/wsdl_mode/SimpleTypeService.php"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
