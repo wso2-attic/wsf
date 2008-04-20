@@ -1056,8 +1056,8 @@ static void generate_wsdl_for_service(zval *svc_zval,
         int in_cmd TSRMLS_DC)
 {
         char *service_name = NULL;
-        zval func, retval, param1, param2, param3, param4, param5, param6, param7;
-        zval * params[7];
+        zval func, retval, param1, param2, param3, param4, param5, param6, param7, param8;
+        zval * params[8];
         axutil_hash_index_t * hi = NULL;
 		zval * functions = NULL;
         zend_file_handle script;
@@ -1069,9 +1069,17 @@ static void generate_wsdl_for_service(zval *svc_zval,
         smart_str full_path = {0};
 		zval * op_val = NULL;
 		FILE *new_fp = NULL;
+        zval **class_map = NULL;
 
         zval **wsdl_location = NULL;
 		php_stream *stream = NULL;
+        int args_count = 0;
+
+
+        zend_hash_find ( Z_OBJPROP_P (svc_zval), WS_WSDL_CLASSMAP, 
+                              sizeof (WS_WSDL_CLASSMAP),
+                              (void **) &class_map);
+            
 
         if ((zend_hash_find (Z_OBJPROP_P (svc_zval), WS_WSDL, sizeof(WS_WSDL),
                              (void **)&wsdl_location) == SUCCESS
@@ -1143,6 +1151,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
             params[4] = &param5;
             params[5] = &param6;
             params[6] = &param7;
+            params[7] = &param8;
             
             /** for Wsdl version. default is wsdl 1.1*/ 
             if ((stricmp (wsdl_ver_str , "wsdl")) == 0)
@@ -1206,6 +1215,13 @@ static void generate_wsdl_for_service(zval *svc_zval,
             INIT_PZVAL (params[5]);
             ZVAL_ZVAL (params[6], op_val, NULL, NULL);
             INIT_PZVAL (params[6]);
+            args_count = 7;
+            if(class_map) {
+                ZVAL_ZVAL (params[7], *class_map, NULL, NULL);
+                INIT_PZVAL (params[7]);
+                args_count ++;
+            }
+
             script.type = ZEND_HANDLE_FP;
             
             script.filename = "wsf.php";
@@ -1228,7 +1244,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
 				script.handle.fp = new_fp;
                 status = php_lint_script (&script TSRMLS_CC);
                 if (call_user_function (EG (function_table), (zval **) NULL,
-                                        &func, &retval, 7, params TSRMLS_CC) == SUCCESS){
+                                        &func, &retval, args_count, params TSRMLS_CC) == SUCCESS){
                     
                     if (Z_TYPE_P (&retval) == IS_STRING && Z_TYPE_P (&retval) != IS_NULL){
                         val = estrdup (Z_STRVAL (retval));
