@@ -90,6 +90,13 @@ sub request {
     local $wsf_soap_version = $WSO2::WSF::C::AXIOM_SOAP12;
     local $wsf_soap_uri = $WSO2::WSF::C::AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
 
+    local $response_xop = 0;
+    if ( $this->{responseXOP} ) {
+	if ( ($this->{responseXOP} =~ /true/i) or ($this->{responseXOP} =~ 1) ) {
+	    $response_xop = 1;
+	}
+    }
+
     # assuming payload is a string, setting client options
     wsf_set_client_options( $this );
 
@@ -356,11 +363,11 @@ sub wsf_handle_outgoing_attachments {
     my ($this, $cliopt, $reqpayload) = (@_);
 
     if ( defined( $this->{attachments} ) ) {
-	my $attachments = defined( $this->{$WSO2::WSF::C::WSF_MP_ATTACHMENTS} ) ?
-	  $WSO2::WSF::C::WSF_MP_ATTACHMENTS : "";
+	# my $attachments = defined( $this->{$WSO2::WSF::C::WSF_MP_ATTACHMENTS} ) ?
+	#  $WSO2::WSF::C::WSF_MP_ATTACHMENTS : "";
 
-	my $enable_mtom = defined( $this->{$WSO2::WSF::C::WSF_CP_USE_MTOM} ) ?
-	  $WSO2::WSF::C::WSF_CP_USE_MTOM : "";
+	my $enable_mtom = defined( $this->{useMTOM} ) ?
+	  $WSO2::WSF::C::AXIS2_TRUE : $WSO2::WSF::C::AXIS2_FALSE;
 
 	my $default_content_type_ref = defined( $this->{$WSO2::WSF::C::WSF_MP_DEF_ATT_CON_TYPE} ) ?
 	  $WSO2::WSF::C::WSF_MP_DEF_ATT_CON_TYPE : undef;
@@ -368,13 +375,14 @@ sub wsf_handle_outgoing_attachments {
 	my $default_content_type = defined( $default_content_type_ref ) ?
 	  $default_content_type_ref : $WSO2::WSF::C::WSF_DEFAULT_CONTENT_TYPE;
 
-	WSO2::WSF::C::axis2_options_set_enable_mtom( $cliopt, $this->{env}, $default_content_type);
-	pack_attachments( $this, $reqpayload, $attachments, $enable_mtom, $default_content_type );
+	WSO2::WSF::C::axis2_options_set_enable_mtom( $cliopt, $this->{env}, $enable_mtom);
+	pack_attachments( $this, $reqpayload, $this->{attachments}, $enable_mtom, $default_content_type );
     }
 }
 
 sub pack_attachments {
-    my ($this, $node, $atts, $mtom, $ct) = (@_);
+    my $this = shift;
+    my ($node, $atts, $mtom, $ct) = (@_);
 
     return if not defined $node;
 
@@ -386,9 +394,9 @@ sub pack_attachments {
 
 	    if ( defined( $child_element_ite ) ) {
 		my $child_node = WSO2::WSF::C::axiom_child_element_iterator_next( $child_element_ite, $this->{env} );
-		my $attachment_done = undef;
+		my $attachment_done = 0;
 
-		while ( ( defined $child_node ) and ( not defined $attachment_done ) ) {
+		while ( ( defined $child_node ) and ( $attachment_done == 0 ) ) {
 		    my $child_element = WSO2::WSF::C::wsf_axiom_node_get_data_element( $child_node, $this->{env} );
 		    my $element_localname = WSO2::WSF::C::axiom_element_get_localname( $child_element, $this->{env} );
 
@@ -396,6 +404,7 @@ sub pack_attachments {
 			 ( WSO2::WSF::C::wsf_axutil_strcmp( $element_localname, $WSO2::WSF::C::AXIS2_ELEMENT_LN_INCLUDE ) == $WSO2::WSF::C::AXIS2_TRUE ) ) {
 
 			my $element_namespace = WSO2::WSF::C::axiom_element_get_namespace($child_element, $this->{env}, $child_node);
+
 			if ( defined $element_namespace ) {
 			    my $namespace_uri = WSO2::WSF::C::axiom_namespace_get_uri( $element_namespace, $this->{env} );
 
@@ -412,16 +421,16 @@ sub pack_attachments {
 
 				if ( length( $href ) > 4 ) {
 				    my $cid = substr( $href, 4, length( $href ) );
-				    my $content = $atts[$cid];
+				    my $content = $atts->{$cid};
 
 				    if ( defined $content ) {
-					WSO2::WSF::C::axiom_attach_content( $this->{env},
-									    $child_node,
-									    $node,
-									    $mtom,
-									    $ct,
-									    $content,
-									    length( $content ) );
+					WSO2::WSF::C::wsf_axiom_attach_content( $this->{env},
+										$child_node,
+										$node,
+										$mtom,
+										$ct,
+										$content,
+										length( $content ) );
 					$attachment_done = 1;
 				    }
 				}
@@ -433,6 +442,15 @@ sub pack_attachments {
 	    }
 	}
     }
+
+    # process child nodes
+    my $child_node = WSO2::WSF::C::axiom_node_get_first_child($node, $this->{env});
+    while ( defined($child_node) ) {
+	pack_attachments( $this, $child_node, $atts, $mtom, $ct );
+
+	$child_node = WSO2::WSF::C::axiom_node_get_next_sibling($child_node, $this->{env});
+    }
+
 }
 
 sub wsf_process_response {
@@ -454,7 +472,51 @@ sub wsf_process_response {
 
         my $res_msg = new WSO2::WSF::WSMessage( { 'payload' => $this->{payload},
 						  'str'     => $buffer } );
+
+	wsf_handle_incoming_attachments($res_msg, $response_payload, $this);
+
 	return $res_msg;
+    }
+}
+
+sub wsf_handle_incoming_attachments {
+    my $msg = shift;
+    my $r_payload = shift;
+    my $this = shift;
+
+    if ( $response_xop == 1 ) {
+	unpack_attachments($msg, $r_payload, $this);
+    }
+}
+
+sub unpack_attachments {
+    my $msg = shift;
+    my $r_payload = shift;
+    my $this = shift;
+
+    unless ( $r_payload ) {
+	if ( WSO2::WSF::C::axiom_node_get_node_type($r_payload) == $WSO2::WSF::C::AXIOM_TEXT ) {
+	    my $text_element = WSO2::WSF::C::wsf_axiom_node_get_text_element($r_payload, $this->{env});
+	    unless ( $text_element ) {
+		my $data_handler = WSO2::WSF::C::axiom_text_get_data_handler($text_element, $this->{env});
+
+		unless ( $data_handler ) {
+		    my $content = WSO2::WSF::C::wsf_axiom_data_handler_get_content($data_handler, $this->{env});
+		    my $content_type = WSO2::WSF::C::axiom_data_handler_get_content_type($data_handler, $this->{env});
+		    my $cid = WSO2::WSF::C::axiom_text_get_content_id($text_element, $this->{env});
+
+		    $msg->{attachments} = { "$cid" => "$content" };
+		    $msg->{content_types} = { "$cid" => "$content_type" };
+		}
+	    }
+	}
+    }
+
+    # processing child nodes
+    my $child_node = WSO2::WSF::C::axiom_node_get_first_child($r_payload, $this->{env});
+    while ( $child_node ) {
+	unpack_attachments($msg, $child_node, $this);
+	$child_node = WSO2::WSF::C::axiom_node_get_next_sibling($child_node, $this->{env});
     }
 }
 
@@ -705,6 +767,7 @@ sub wsf_get_payload {
     my $req_pl = WSO2::WSF::C::wsf_str_to_axiom_node( $this->{env},
 						      $this->{payload},
 						      length( $this->{payload} ) );
+
     unless( defined( $req_pl ) ) {
 	WSO2::WSF::C::axis2_log_debug(
 	    $this->{env},
