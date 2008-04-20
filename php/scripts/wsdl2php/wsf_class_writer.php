@@ -118,9 +118,35 @@ function wsf_write_content_model($parent_node, &$child_array) {
 
             // check if the attribute is of array type
             $max_occurs = $param_attr->getNamedItem(WSF_MAX_OCCURS)->value;
+            $min_occurs = $param_attr->getNamedItem(WSF_MIN_OCCURS)->value;
+
+            //resolving lists
+            $is_list = FALSE;
+            if($param_attr->getNamedItem(WSF_LIST)) {
+                $is_list = $param_attr->getNamedItem(WSF_LIST)->value;
+            }
+
+            //resolving unions
+            $is_union = FALSE;
+            if($param_attr->getNamedItem(WSF_UNION)) {
+                $is_union = $param_attr->getNamedItem(WSF_UNION)->value;
+            }
+            if($is_union) {
+                $union_type_array = array();
+                $union_childs = $param_child->childNodes;
+
+                foreach($union_childs as $union_child) {
+                     if($union_child->nodeName == "union") {
+                         $union_type = $union_child->attributes->getNamedItem(WSF_TYPE)->value;
+                         $union_type_array[] = $union_type;
+                     }
+                }
+                $param_type = implode("/", $union_type_array);
+            }
+
             $array_type = "";
-            if ($max_occurs != null && $max_occurs != "1")
-                $array_type = "array of ";
+            if (($max_occurs != null && $max_occurs != "1") || $is_list)
+                $array_type = "array[$min_occurs, $max_occurs] of ";
 
             // write public members of the class 
             $code = $code . "    public $" . $param_name . "; // " . $array_type . $param_type . "\n";
@@ -307,6 +333,33 @@ function wsf_wsdl2php($wsdl_location) {
                                     if($param_attr->getNamedItem(WSF_CONTENT_MODEL)) {
                                         $content_model = $param_attr->getNamedItem(WSF_CONTENT_MODEL)->value;
                                     }
+                                    //resolving lists
+                                    $is_list = FALSE;
+                                    if($param_attr->getNamedItem(WSF_LIST)) {
+                                        $is_list = $param_attr->getNamedItem(WSF_LIST)->value;
+                                    }
+                                    $type_prefix = "";
+                                    if($is_list) {
+                                        $type_prefix = "array of ";
+                                    }
+
+                                    //resolving unions
+                                    $is_union = FALSE;
+                                    if($param_attr->getNamedItem(WSF_UNION)) {
+                                        $is_union = $param_attr->getNamedItem(WSF_UNION)->value;
+                                    }
+                                    if($is_union) {
+                                        $union_type_array = array();
+                                        $union_childs = $param_child->childNodes;
+
+                                        foreach($union_childs as $union_child) {
+                                             if($union_child->nodeName == "union") {
+                                                 $union_type = $union_child->attributes->getNamedItem(WSF_TYPE)->value;
+                                                 $union_type_array[] = $union_type;
+                                             }
+                                        }
+                                        $param_type = implode("/", $union_type_array);
+                                    }
 
                                     if($content_model == WSF_SIMPLE_CONTENT) {
                                         // start writing class    
@@ -333,21 +386,22 @@ function wsf_wsdl2php($wsdl_location) {
                                         // shows how to create the input and receive the response
 
                                         if ($param_node->nodeName == WSF_PARAMS) {
-                                            $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "    //TODO: fill \$input with (data type: {$param_type}) data to match your business logic\n";
+                                            $simple_type_comment = wsf_comment_on_simple_type($param_child, "\$input", $param_type);
+                                            $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "    //TODO: fill \$input with (data type: {$type_prefix}{$param_type}) data to match your business logic\n";
                                             if($param_child->getAttribute("simple") == "yes"){
-                                                $simple_type_comment = wsf_comment_on_simple_type($param_child, "\$input", $param_type);
                                                 $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . $simple_type_comment."\n";
                                             }
-                                            $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // TODO: fill in the business logic\n    // NOTE: \$input is of type {$param_type}\n";
+                                            $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // TODO: fill in the business logic\n    // NOTE: \$input is of type {$type_prefix}{$param_type}\n";
                                             if($param_child->getAttribute("simple") == "yes"){
-                                                $simple_type_comment = wsf_comment_on_simple_type($param_child, "\$input", $param_type);
                                                 $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . $simple_type_comment."\n";
                                             }
 
                                         }
                                         if ($param_node->nodeName == WSF_RETURNS) {
-                                            $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "\n    // call the operation\n    \$response = \$proxy->" . $op_node->attributes->getNamedItem('name')->value . "(\$input);\n    //TODO: Implement business logic to consume \$response, which is of type {$param_type}\n";
-                                            $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // NOTE: should return an object of (type: {$param_type})\n";
+                                            $simple_type_comment = wsf_comment_on_simple_type($param_child, "output ", $param_type);
+                                            $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "\n    // call the operation\n    \$response = \$proxy->" . $op_node->attributes->getNamedItem('name')->value . "(\$input);\n    //TODO: Implement business logic to consume \$response, which is of type {$type_prefix}{$param_type}\n";
+                                            $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // NOTE: should return an object of (type: {$type_prefix}{$param_type})\n";
+                                            $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . $simple_type_comment."\n";
                                         }
                                     }
                                 }
@@ -381,7 +435,7 @@ function wsf_wsdl2php($wsdl_location) {
     return $code;
 }
 
-function wsf_comment_on_simple_type($param_node, $param_name, $param_type)
+function wsf_comment_on_simple_type($param_node, $param_name, $param_type, $from_union = FALSE)
 {
     $comment = "";
     if($param_node->hasChildNodes()){
@@ -392,12 +446,26 @@ function wsf_comment_on_simple_type($param_node, $param_name, $param_type)
 
     $i = 0;
     $restrictions = $param_node->childNodes;
-    foreach($restrictions as $restriction){
-        if($restriction->nodeName == "param") {
+
+    if(!$from_union) {
+        foreach($restrictions as $restriction){
+            if($restriction->nodeName == "param") {
+            }
+            else{
+                $comment = "    //NOTE: ${param_name} should follow the following restrictions\n";
+                break;
+            }
         }
-        else{
-            $comment = "    //NOTE: ${param_name} should follow the following restrictions\n";
-            break;
+    }
+
+    // handle union
+    foreach($restrictions as $restriction) {
+        if($restriction->nodeName == "union") {
+            $restriction_type = $restriction->attributes->getNamedItem(WSF_TYPE)->value;
+            if($restriction->hasChildNodes()) {
+                $comment .= "    // type {$restriction_type} hold the following restrictions\n";
+                $comment .= wsf_comment_on_simple_type($restriction, $param_name, $param_type, TRUE);
+            }
         }
     }
 

@@ -108,7 +108,13 @@ function wsf_parse_payload_for_array(DomNode $payload, DomNode $sig_node) {
                     else {
                         $original_value = "";
                     }
-                    $converted_value = wsf_wsdl_deserialize_string_value($param_type, $original_value);
+
+                    $is_list = FALSE;
+                    if($the_only_node->attributes->getNamedItem(WSF_LIST) &&
+                        $the_only_node->attributes->getNamedItem(WSF_LIST)->value == "yes") {
+                         $is_list = TRUE;
+                    }
+                    $converted_value = wsf_wsdl_deserialize_string_value($param_type, $original_value, $the_only_node);
 
                     return $converted_value;
                 }
@@ -256,7 +262,12 @@ function wsf_parse_payload_for_class_map(DomNode $payload, DomNode $sig_node, $e
                     else {
                         $original_value = "";
                     }
-                    $converted_value = wsf_wsdl_deserialize_string_value($param_type, $original_value);
+                    $is_list = FALSE;
+                    if($the_only_node->attributes->getNamedItem(WSF_LIST) &&
+                        $the_only_node->attributes->getNamedItem(WSF_LIST)->value == "yes") {
+                         $is_list = TRUE;
+                    }
+                    $converted_value = wsf_wsdl_deserialize_string_value($param_type, $original_value, $the_only_node);
 
                     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "return value : {$converted_value}");
                     return $converted_value;
@@ -421,6 +432,7 @@ function wsf_deserialize_simple_types(&$current_child, DomNode $sig_param_node) 
     $sig_param_attris = $sig_param_node->attributes;
     $param_type = NULL;
     $param_name = NULL;
+    $is_list = FALSE;
 
     if($sig_param_attris->getNamedItem(WSF_NAME)) {
         $param_name =
@@ -447,12 +459,18 @@ function wsf_deserialize_simple_types(&$current_child, DomNode $sig_param_node) 
             $sig_param_attris->getNamedItem(WSF_TYPE)->value;
     }
 
+    if($sig_param_attris->getNamedItem(WSF_LIST) &&
+        $sig_param_attris->getNamedItem(WSF_LIST)->value == "yes") {
+         $is_list = TRUE;
+    }
+
     if($max_occurs > 1 || $max_occurs == "unbounded") {
         $i = 0;
         $tmp_array = array();
         while($current_child !== NULL && $current_child->localName == $param_name) {
             if($current_child->firstChild) {
-                $converted_value =  wsf_wsdl_deserialize_string_value($param_type, $current_child->firstChild->wholeText);
+                $converted_value =  wsf_wsdl_deserialize_string_value($param_type,
+                        $current_child->firstChild->wholeText, $sig_param_node);
             }
             else{
                 if(!isset($param_value["nillable"])) {
@@ -473,7 +491,8 @@ function wsf_deserialize_simple_types(&$current_child, DomNode $sig_param_node) 
     }
     else {
         if($current_child->firstChild) {
-            $converted_value =  wsf_wsdl_deserialize_string_value($param_type, $current_child->firstChild->wholeText);
+            $converted_value =  wsf_wsdl_deserialize_string_value($param_type,
+                    $current_child->firstChild->wholeText, $sig_param_node);
         }
         else
         {
@@ -652,7 +671,14 @@ function wsf_infer_content_model(DomNode &$current_child, DomNode $sig_node, $cl
         if($text_node && $text_node->nodeType == XML_TEXT_NODE) {
             $text_value = $text_node->nodeValue;
             /* type conversion is needed */
-            $converted_value =  wsf_wsdl_deserialize_string_value($param_type, $text_value);
+
+            $is_list = FALSE;
+            if($sig_node->attributes->getNamedItem(WSF_LIST) &&
+                $sig_node->attributes->getNamedItem(WSF_LIST)->value == "yes") {
+                 $is_list = TRUE;
+            }
+
+            $converted_value =  wsf_wsdl_deserialize_string_value($param_type, $text_value, $sig_node);
             $parse_tree[WSF_SIMPLE_CONTENT_VALUE] = $converted_value;
         }
         //special for the simple content extension, to be more tested..
@@ -845,7 +871,13 @@ function wsf_infer_attributes(DomNode $parent_node, DomNode $sig_node) {
                     ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, $param_name.":".wsf_test_serialize_node($parent_node));
                     if($parent_node && $parent_node->attributes->getNamedItem($param_name)) {
                         $original_value = $parent_node->attributes->getNamedItem($param_name)->value;
-                        $converted_value =  wsf_wsdl_deserialize_string_value($param_type, $original_value);
+
+                        $is_list = FALSE;
+                        if($sig_param_node->attributes->getNamedItem(WSF_LIST) &&
+                            $sig_param_node->attributes->getNamedItem(WSF_LIST)->value == "yes") {
+                             $is_list = TRUE;
+                        }
+                        $converted_value =  wsf_wsdl_deserialize_string_value($param_type, $original_value, $sig_param_node);
                         $parse_tree[$param_name] = $converted_value;
                     }
                 }
@@ -859,12 +891,53 @@ function wsf_infer_attributes(DomNode $parent_node, DomNode $sig_node) {
  * deserialize the php value from the string value to the given xsd type value
  * @param $xsd_type, xsd type the value hold
  * @param $data_value, the data_value with the string type
+ * @param $sig_param_node, whether the type is a list or not..
  * @return deserialized to given php type value
  */
-function wsf_wsdl_deserialize_string_value($xsd_type, $data_value) {
-    $xsd_php_mapping_table = wsf_wsdl_util_xsd_to_php_type_map();
+function wsf_wsdl_deserialize_string_value($xsd_type, $data_value, $sig_param_node) {
 
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "deserializing ".$data_value);
+
+    $is_list = FALSE;
+    if($sig_param_node->attributes->getNamedItem(WSF_LIST) &&
+        $sig_param_node->attributes->getNamedItem(WSF_LIST)->value == "yes") {
+         $is_list = TRUE;
+    }
+
+    //currently union handling is not done correctly
+    $is_union = FALSE;
+    if($sig_param_node->attributes->getNamedItem(WSF_UNION) &&
+        $sig_param_node->attributes->getNamedItem(WSF_UNION)->value == "yes") {
+         $is_union = TRUE;
+    }
+
+    if($is_list) {
+        $tmp_value = explode(" ", $data_value);
+        $data_values = $tmp_value;
+
+        $converted_value = array();
+        foreach($data_values as $this_data_value) {
+            $converted_value[] = wsf_convert_string_to_php_type($xsd_type, $this_data_value);
+        }
+    }
+    else {
+        $converted_value = wsf_convert_string_to_php_type($xsd_type, $data_value);
+    }
+
+    
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "deserialized to ".$converted_value);
+
+    return $converted_value;
+}
+
+/**
+ * deserialize the php value from the string value to the given xsd type value
+ * @param $xsd_type, xsd type the value hold
+ * @param $data_value, the data_value with the string type
+ * @return cast type
+ */
+function wsf_convert_string_to_php_type($xsd_type, $data_value) {
+    $xsd_php_mapping_table = wsf_wsdl_util_xsd_to_php_type_map();
 
     $converted_value = $data_value;
     if(array_key_exists($xsd_type, $xsd_php_mapping_table)) {
@@ -885,9 +958,6 @@ function wsf_wsdl_deserialize_string_value($xsd_type, $data_value) {
             $converted_value = $data_value;
         }
     }
-    
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "deserialized to ".$converted_value);
-
     return $converted_value;
 }
 

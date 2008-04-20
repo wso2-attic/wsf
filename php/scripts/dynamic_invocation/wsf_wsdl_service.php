@@ -34,6 +34,7 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
     $is_doc = TRUE; //currently we only support doc-lit style parsing..
     $is_wrapper = FALSE;
     $params_node = NULL;
+    $is_direct_list = FALSE;
 
     if($sig_node) {
         $params_node = $sig_node->firstChild;
@@ -65,6 +66,9 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
                 }
                 if($sig_attrs->getNamedItem(WSF_NAME)) {
                     $ele_name = $sig_attrs->getNamedItem(WSF_NAME)->value;
+                }
+                if($sig_attrs->getNamedItem(WSF_LIST)) {
+                    $is_direct_list = $sig_attrs->getNamedItem(WSF_LIST)->value;
                 }
             }
         }
@@ -101,21 +105,21 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
         
         // Then the user method
         $method = $class->getMethod($function_name);
-        if($classmap != NULL && !empty($classmap)) {
+        if(($classmap != NULL && !empty($classmap)) || $is_direct_list) {
+            // for direct lists we follow same api as classmap
             $response_value = $method->invoke($class_inst, $arg_array);
         }
-        else
-        {
+        else {
             $response_value = $method->invokeArgs($class_inst, $arg_array);
         }
     }
     else
     {
-        if($classmap != NULL && !empty($classmap)) {
+        if(($classmap != NULL && !empty($classmap)) || $is_direct_list) {
+            // for direct lists we follow same api as classmap
             $response_value = call_user_func($function_name, $arg_array);
         }
-        else
-        {
+        else {
             $response_value = call_user_func_array($function_name, $arg_array);
         }
     }

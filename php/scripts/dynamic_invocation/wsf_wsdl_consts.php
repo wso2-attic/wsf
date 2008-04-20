@@ -81,6 +81,8 @@ define("WSF_XSLT_LOCATION", "xslt_location");
 define("WSF_TYPES", "types");
 define("WSF_SCHEMA", "schema");
 define("WSF_ELEMENT", "element");
+define("WSF_LIST", "list");
+define("WSF_UNION", "union");
 define("WSF_WSDL_DOM", "wsdl_dom");
 define("WSF_WSDL_SIMPLE", "simple");
 define("WSF_WSDL_COMPLEX_TYPE", "complexType");
@@ -125,6 +127,7 @@ define("WSF_SIMPLE_CONTENT_VALUE", "value");
 define("WSF_SIMPLE_CONTENT", "simpleContent");
 
 define("WSF_XSD_ANYTYPE", "anyType");
+define("WSF_VALUE", "value");
 
 // log level definition
 

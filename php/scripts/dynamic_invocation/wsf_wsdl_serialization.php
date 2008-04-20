@@ -149,8 +149,16 @@ function wsf_create_payload_for_array(DomDocument $payload_dom,
                 $param_type = $the_only_node->attributes->getNamedItem(WSF_TYPE)->value;
             }
             if($is_simple) {
-                if($user_arguments === NULL || !is_array($user_arguments)) {
-                    $serialized_value = wsf_wsdl_serialize_php_value($param_type, $user_arguments);
+
+                $is_list = FALSE;
+                if($the_only_node->attributes->getNamedItem(WSF_LIST) &&
+                    $the_only_node->attributes->getNamedItem(WSF_LIST)->value == "yes") {
+                     $is_list = TRUE;
+                }
+
+                if($user_arguments === NULL || !is_array($user_arguments) || $is_list) {
+
+                    $serialized_value = wsf_wsdl_serialize_php_value($param_type, $user_arguments, $the_only_node);
                     $text_node = $payload_dom->createTextNode($serialized_value);
                     $parent_node->appendChild($text_node);
 
@@ -317,6 +325,7 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
     $param_type = NULL;
     $param_name = NULL;
     $is_attribute = FALSE;
+    $is_list = FALSE;
 
     if($sig_param_attris->getNamedItem(WSF_NAME)) {
         $param_name = 
@@ -352,6 +361,11 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
          $is_attribute = TRUE;
     }
 
+    if($sig_param_attris->getNamedItem(WSF_LIST) &&
+        $sig_param_attris->getNamedItem(WSF_LIST)->value == "yes") {
+         $is_list = TRUE;
+    }
+
     if($target_namespace == NULL) {
         $qualified_name = $param_name;
     }
@@ -374,7 +388,7 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
        
         if(!is_array($user_val) && !is_object($user_val)) {
             $serialized_value = wsf_wsdl_serialize_php_value(
-                                 $param_type, $user_val);
+                                 $param_type, $user_val, $sig_param_node);
             $parent_node->setAttribute($attri_name, $serialized_value);
             ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR,
                     "You have provided an array or an object for ".
@@ -389,7 +403,7 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
                 foreach($user_val as $user_val_item) {
                     /* type conversion is needed */
                     $serialized_value = wsf_wsdl_serialize_php_value(
-                                 $param_type, $user_val_item);
+                                 $param_type, $user_val_item, $sig_param_node);
                     $ele = $payload_dom->createElement($node_name, $serialized_value);
                     $parent_node->appendChild($ele);
                 }
@@ -397,7 +411,7 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
             else {
                 /* in a case this is not an array */
                 $serialized_value = wsf_wsdl_serialize_php_value(
-                                 $param_type, $user_val);
+                                 $param_type, $user_val, $sig_param_node);
                 $ele = $payload_dom->createElement($node_name, $serialized_value);
                 $parent_node->appendChild($ele);
             }
@@ -406,7 +420,7 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
             if(!is_array($user_val)) {
                 /* in a case this is not an array */
                 $serialized_value = wsf_wsdl_serialize_php_value(
-                                 $param_type, $user_val);
+                                 $param_type, $user_val, $sig_param_node);
                 $ele = $payload_dom->createElement($node_name, $serialized_value);
                 $parent_node->appendChild($ele);
             }
@@ -608,9 +622,15 @@ function wsf_build_content_model(DomNode $sig_node, array $user_arguments,
             $user_val = $user_arguments[WSF_SIMPLE_CONTENT_VALUE];
 
             $param_type = $sig_node->attributes->getNamedItem(WSF_EXTENSION)->value;
+
+            $is_list = FALSE;
+            if($sig_node->attributes->getNamedItem(WSF_LIST) &&
+                $sig_node->attributes->getNamedItem(WSF_LIST)->value == "yes") {
+                 $is_list = TRUE;
+            }
             /* type conversion is needed */
             $serialized_value = wsf_wsdl_serialize_php_value(
-                         $param_type, $user_val);
+                         $param_type, $user_val, $sig_node);
             $ele = $payload_dom->createTextNode($serialized_value);
             $parent_node->appendChild($ele);
         }
@@ -679,7 +699,8 @@ function wsf_convert_classobj_to_array($sig_node, $user_obj) {
             if($param_attrs->getNamedItem(WSF_NAME)) {
                 $param_name = $param_attrs->getNamedItem(WSF_NAME)->value;
             }
-            if($user_obj->$param_name !== NULL) {
+            $reflex_object = new ReflectionObject($user_obj);
+            if($reflex_object->hasProperty($param_name) && $user_obj->$param_name !== NULL) {
                 $user_arguments[$param_name] = $user_obj->$param_name;
             }
             if($param_attrs->getNamedItem(WSF_CONTENT_MODEL) &&
@@ -714,15 +735,58 @@ function wsf_convert_classobj_to_array($sig_node, $user_obj) {
  * serialize the php value to the string value to put in the xml
  * @param $xsd_type, xsd type the value hold
  * @param $data_value, the data_value with php type
+ * @param $is_list, whether the given map is a list
  * @return string serialized to string
  */
-function wsf_wsdl_serialize_php_value($xsd_type, $data_value) {
-    $xsd_php_mapping_table = wsf_wsdl_util_xsd_to_php_type_map();
-    $serialized_value = $data_value;
+function wsf_wsdl_serialize_php_value($xsd_type, $data_value, $sig_param_node) {
+
+    $is_list = FALSE;
+    $is_union = FALSE;
+    $sig_param_attris = $sig_param_node->attributes;
+    if($sig_param_attris->getNamedItem(WSF_LIST) &&
+        $sig_param_attris->getNamedItem(WSF_LIST)->value == "yes") {
+         $is_list = TRUE;
+    }
+   
+    //currently union are not handled correctly
+    if($sig_param_attris->getNamedItem(WSF_UNION) &&
+        $sig_param_attris->getNamedItem(WSF_UNION)->value == "yes") {
+         $is_union = TRUE;
+    }
 
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "serializing ".$data_value);
+    // handle the list
+    if($is_list && is_array($data_value)) {
+        $tmp_data_values = $data_value;
 
+        $new_data_value = array();
+        foreach($tmp_data_values as $tmp_data_value) {
+            $new_data_value[] = wsf_convert_php_type_to_string($xsd_type, $tmp_data_value);
+        }
+
+        $serialized_value = implode(" ", $new_data_value);
+    }
+    else {
+        $serialized_value = wsf_convert_php_type_to_string($xsd_type, $data_value);
+    }
+
+
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "serialized ".$serialized_value);
+    return $serialized_value;
+}
+
+/**
+ * serialize the php value to the string value to put in the xml
+ * @param $xsd_type, xsd type the value hold
+ * @param $data_value, the data_value with php type
+ * @return string serialized to string
+ */
+function wsf_convert_php_type_to_string($xsd_type, $data_value) {
+    $xsd_php_mapping_table = wsf_wsdl_util_xsd_to_php_type_map();
+
+    $serialized_value = $data_value;
     if(array_key_exists($xsd_type, $xsd_php_mapping_table)) {
+        //retrieve the php type
         $type = $xsd_php_mapping_table[$xsd_type];
 
         if($type == "boolean") {
@@ -735,7 +799,6 @@ function wsf_wsdl_serialize_php_value($xsd_type, $data_value) {
             }
         }
     }
-
     if($serialized_value === NULL) return "";
     return $serialized_value."";
 }
