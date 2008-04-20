@@ -27,6 +27,9 @@ class WS_WSDL_Const
     const WS_DOM_DOCUMENT_VERSION_NO = '1.0';
     const WS_DOM_DOCUMENT_ENCODING = 'UTF-8';
 
+    const WS_WSDL_DEFAULT_SCHEMA_ATTR_NAME = 'tnx';
+    const WS_WSDL_TNS_ATTR_NAME = 'tns';
+
     const WS_WSDL_DEFINITION = 'definitions';
     const WS_WSDL_DEF_XSD_QN = 'xmlns:xsd';
     const WS_WSDL_DEF_TNS_QN = 'xmlns:tns';
@@ -35,7 +38,9 @@ class WS_WSDL_Const
     const WS_WSDL_DEF_SOAP_ENC_QN = 'xmlns:soapenc';
     const WS_WSDL_DEF_TARGET_NS = 'targetNamespace';
     const WS_WSDL_DEF_HTTP_QN = 'xmlns:http';
-    const WS_WSDL_DEF_SCHEMA_PREFIX = 'xmlns:tns';
+    const WS_WSDL_DEF_ELEMENT_PREFIX = 'xmlns:tnx';
+    
+    const WS_WSDL_DEF_ELEMENT_NS_POSTFIX = '/xsd';
 
 
     const WS_WSDL2_DESCRIPTION = "description";
@@ -136,8 +141,6 @@ class WS_WSDL_Const
     const WS_WSDL_OUT_ATTR_NAME = 'Out';
     const WS_WSDL_ELEMENTFORMDEFAULT_ATTR_NAME = 'elementFormDefault';
     const WS_WSDL_QUALIFIED_ATTR_NAME = 'qualified';
-    const WS_WSDL_DEFAULT_SCHEMA_ATTR_NAME = 'tns';
-    const WS_WSDL_TNS_ATTR_NAME = 'tns';
 
     const WS_WSDL_ATTR_MAX_OCCURS = "maxOccurs";
     const WS_WSDL_ATTR_VALUE_UNBOUNDED = "unbounded";

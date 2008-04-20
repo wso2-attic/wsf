@@ -42,6 +42,8 @@ class WS_WSDL_Creator
     private $wsdl_version;
     public $ops_to_functions;
 
+    private $classmap;
+
     /**
      * Constructor of the class
      * @param string $f_array array of functions 
@@ -53,7 +55,8 @@ class WS_WSDL_Creator
      * @param string $wsdl_ver wsdl_version(wsdl1.1 or wsdl2)
      */
     function __construct($f_arry, $class_arry, $service, $endpoints,
-                         $binding_style,  $ns , $wsdl_ver, $op_arry) {
+                         $binding_style,  $ns , $wsdl_ver, $op_arry, $classmap)
+    {
         if(!$ns) {
             $this->namespace = $endpoints;
         }
@@ -70,6 +73,7 @@ class WS_WSDL_Creator
         if($wsdl_ver == "wsdl2.0")
             $this->wsdl_version = "wsdl2";
         $this->ops_to_functions = $op_arry;
+        $this->classmap = $classmap;
 
     }
 
@@ -92,6 +96,10 @@ class WS_WSDL_Creator
                                        $this->namespace);
 
         $wsdl_root_ele->setAttributeNS(WS_WSDL_const::WS_WSDL_DEF_SCHEMA_URI,
+                                       WS_WSDL_const::WS_WSDL_DEF_ELEMENT_PREFIX,
+                                       $this->namespace. WS_WSDL_Const::WS_WSDL_DEF_ELEMENT_NS_POSTFIX);
+
+        $wsdl_root_ele->setAttributeNS(WS_WSDL_const::WS_WSDL_DEF_SCHEMA_URI,
                                        WS_WSDL_const::WS_WSDL_DEF_SOAP_ENV_QN,
                                        WS_WSDL_const::WS_SCHEMA_SOAP_NAMESPACE);
 
@@ -107,9 +115,6 @@ class WS_WSDL_Creator
                                        WS_WSDL_const::WS_WSDL_DEF_HTTP_QN,
                                        WS_WSDL_const::WS_WSDL_HTTP12_NAMESPACE);
 
-        $wsdl_root_ele->setAttributeNS(WS_WSDL_const::WS_WSDL_DEF_SCHEMA_URI,
-                                       WS_WSDL_const::WS_WSDL_DEF_SCHEMA_PREFIX,
-                                       $this->namespace);
         
         $wsdl_root_ele->setAttribute(WS_WSDL_const::WS_WSDL_DEF_TARGET_NS,
                                      $this->namespace);
@@ -123,21 +128,22 @@ class WS_WSDL_Creator
 
         if($this->Binding_style == "doclit") {
             $type_obj = new WS_WSDL_Type($this->namespace, $createdTypeArry,
-                                        $xsdArry, $this->ops_to_functions);
-            $type_obj->createDocLitType($wsdl_dom, $wsdl_root_ele);
+                                        $xsdArry, $this->ops_to_functions, $this->classmap);
+            $ele_names_info = $type_obj->createDocLitType($wsdl_dom, $wsdl_root_ele);
             $simple_array = $type_obj->simpleTypes;
 
-            $msg_obj = new WS_WSDL_Message($operationsArry, $simple_array, $this->ops_to_functions);
-            $msg_obj->createDocLitMessage($wsdl_dom,$wsdl_root_ele);
+            $msg_obj = new WS_WSDL_Message($operationsArry, $simple_array, $this->ops_to_functions, $this->classmap);
+            $msg_obj->createDocLitMessage($wsdl_dom,$wsdl_root_ele, $ele_names_info);
         }
 
         if ($this->Binding_style == "rpc") {
-            $type_obj = new WS_WSDL_Type($this->namespace, $createdTypeArry, $xsdArry, $this->ops_to_functions);
+            $type_obj = new WS_WSDL_Type($this->namespace, $createdTypeArry, 
+                                        $xsdArry, $this->ops_to_functions, $this->classmap);
             /* no types for the time being */
             $class_to_prefix = $type_obj->createRPCType($wsdl_dom, $wsdl_root_ele);
             $simple_array = $type_obj->simpleTypes;
 
-            $msg_obj = new WS_WSDL_Message($operationsArry, $simple_array, $this->ops_to_functions);
+            $msg_obj = new WS_WSDL_Message($operationsArry, $simple_array, $this->ops_to_functions, $this->classmap);
             $msg_obj->createRPCMessage($wsdl_dom,$wsdl_root_ele, $class_to_prefix);
 
         }
@@ -220,7 +226,7 @@ class WS_WSDL_Creator
 
 
         $type_obj = new WS_WSDL_Type($this->namespace, $createdTypeArry,
-                                    $xsdArry, $this->ops_to_functions);
+                                    $xsdArry, $this->ops_to_functions, $this->classmap);
         $type_obj->createWsdl2Type($wsdl_dom, $wsdl_root_ele);
 
         $interface_obj = new WS_WSDL_Interface($this->service_name,

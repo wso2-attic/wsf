@@ -25,17 +25,19 @@ class WS_WSDL_Message
     public $operations;
     private $simpleTypes;
     private $fun_mapping;
+    private $classmap;
     /*
      * The constructor of the WS_Message class
      * @param Array $operationsArray Array of operation in the service
      * @param Array $simpleTypeArray type mapping table 
      */
 
-    function __construct($operationsArray, $simpleTypeArray, $ops_to_functions)
+    function __construct($operationsArray, $simpleTypeArray, $ops_to_functions, $classmap)
     {
         $this->operations = $operationsArray;
         $this->simpleTypes = $simpleTypeArray;
         $this->fun_mapping = $ops_to_functions;
+        $this->classmap = $classmap;
     }
 
     /**
@@ -45,7 +47,7 @@ class WS_WSDL_Message
      */
 
 
-    public function createDocLitMessage(DomDocument $msg_doc, DomElement $msg_root)
+    public function createDocLitMessage(DomDocument $msg_doc, DomElement $msg_root, $ele_names_info)
     {
        $attr_name_to_postfix_map = array(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME => WS_WSDL_Const::WS_WSDL_OPERTION_INPUT_TAG,
                                          WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME => WS_WSDL_Const::WS_WSDL_OPERTION_OUTPUT_TAG);
@@ -70,17 +72,31 @@ class WS_WSDL_Message
                 if (ucfirst(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME) == ucfirst($type))
                 {
                     foreach($this->fun_mapping as $key => $value){
-                        if($value == $name)
-                            $part->setAttribute(WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME,
-                                               WS_WSDL_COnst::WS_WSDL_DEFAULT_SCHEMA_ATTR_NAME.":". $key);
+                        if($value == $name) {
+                            if($this->classmap) {
+                                $part->setAttribute(WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME,
+                                               WS_WSDL_Const::WS_WSDL_DEFAULT_SCHEMA_ATTR_NAME.":". $ele_names_info["in"]);
+                            }
+                            else {
+                                $part->setAttribute(WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME,
+                                               WS_WSDL_Const::WS_WSDL_DEFAULT_SCHEMA_ATTR_NAME.":". $key);
+                            }
+                        }
                     }
                 }
                 if (ucfirst(WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME) == ucfirst($type))
                 {
                     foreach($this->fun_mapping as $key => $value){
-                        if($value == $name)
-                            $part->setAttribute(WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME,
-                                                WS_WSDL_COnst::WS_WSDL_DEFAULT_SCHEMA_ATTR_NAME.":".$key.WS_WSDL_Const::WS_WSDL_RESPONSE_ATTR_NAME);
+                        if($value == $name) {
+                            if($this->classmap) {
+                                $part->setAttribute(WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME,
+                                               WS_WSDL_Const::WS_WSDL_DEFAULT_SCHEMA_ATTR_NAME.":". $ele_names_info["out"]);
+                            }
+                            else {
+                                $part->setAttribute(WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME,
+                                                WS_WSDL_Const::WS_WSDL_DEFAULT_SCHEMA_ATTR_NAME.":".$key.WS_WSDL_Const::WS_WSDL_RESPONSE_ATTR_NAME);
+                            }
+                        }
                     }
                 }
 

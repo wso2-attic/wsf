@@ -200,6 +200,7 @@ class WS_WSDL_Operations
                                                                              "array" => $match[1],
                                                                              "object"=> $match[2]);
 
+                    
                     $this->operations[$operationName][self::WS_OPERATION_INPUT_TAG][] =
                         array(self::WS_OPERATION_NAME_TAG => $match[4],
                               self::WS_OPERATION_TYPE_TAG => $releventType,
@@ -229,13 +230,19 @@ class WS_WSDL_Operations
                                                                              "object"=> $match_r[2]);
 
                 $this->createdTypes[$match_r[3]] = 1;
+
+
                 $this->operations[$operationName][self::WS_OPERATION_OUTPUT_TAG][] =
                     array(self::WS_OPERATION_NAME_TAG => self::WS_OPERATION_RET_TAG,
                           self::WS_OPERATION_TYPE_TAG => $returnType,
                           "array" => $match_r[1],
                           "object"=> $match_r[2]);
+
             }
         }
+        require_once('dynamic_invocation/wsf_wsdl_consts.php');
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "ouput :".print_r($this->operations[$operationName][self::WS_OPERATION_OUTPUT_TAG], TRUE));
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "input :".print_r($this->operations[$operationName][self::WS_OPERATION_INPUT_TAG], TRUE));
     }
     /**
      * check if the xsd type and php types are mathched if not a log

@@ -87,10 +87,13 @@ function ws_reply($options)
     $svr->reply();
 }
 
-function ws_generate_wsdl($service_name, $fn_arry, $class_arry,
-                          $binding_style, $wsdl_version, $request_uri, $op_arry)
+function ws_generate_wsdl($service_name, $fn_arry, $class_arry, $binding_style, 
+                          $wsdl_version, $request_uri, $op_arry, $classmap = NULL)
 {
     require_once("wsdl/WS_WSDL_Creator.php");
+
+    require_once('dynamic_invocation/wsf_wsdl_consts.php');
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "class map:".print_r($classmap, TRUE));
 
     $Binding_style = NULL;
 
@@ -119,7 +122,7 @@ function ws_generate_wsdl($service_name, $fn_arry, $class_arry,
     if(strcmp($wsdl_version ,"wsdl2.0") == 0) {
       $wsdl_version = "wsdl1.1";
       $wsdl = new WS_WSDL_Creator($fn_arry, $class_arry, $service_name, $request_uri,
-				  $Binding_style,$namespace, $wsdl_version, $op_arry);
+				  $Binding_style,$namespace, $wsdl_version, $op_arry, $classmap);
       $wsdl_out = $wsdl->WS_WSDL_Out();
       $converted_wsdl = convert_to_wsdl20($wsdl_out);
       return $converted_wsdl;
@@ -127,7 +130,7 @@ function ws_generate_wsdl($service_name, $fn_arry, $class_arry,
     else
     {
       $wsdl = new WS_WSDL_Creator($fn_arry, $class_arry, $service_name, $request_uri,
-				  $Binding_style,$namespace, $wsdl_version, $op_arry);
+				  $Binding_style,$namespace, $wsdl_version, $op_arry, $classmap);
       $wsdl_out = $wsdl->WS_WSDL_Out();
       return $wsdl_out;
     }
