@@ -419,7 +419,7 @@ class WS_WSDL_Type
            return;
         }
 
-        $class_namespace = WS_WSDL_SCHEMA_TYPE_DEFAULT_NS;
+        $namespace = WS_WSDL_Const::WS_WSDL_SCHEMA_TYPE_DEFAULT_NS;
         $class_comment = $class->getDocComment();
 
         if(preg_match_all('|@namespace\s+([^\s]+).*|', $class_comment, $matches, PREG_SET_ORDER))
