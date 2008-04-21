@@ -39,7 +39,7 @@ parse_input(const axutil_env_t *env,
 
 int main (int argc, char **argv)
 {
-	axutil_env_t *env;
+	axutil_env_t *env = NULL;
 	char *input[2];
  	char *dest_uri = NULL;
 	axutil_array_list_t *array_list;
