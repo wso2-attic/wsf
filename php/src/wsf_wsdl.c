@@ -166,7 +166,8 @@ void create_dynamic_client(zval *this_ptr, char *function, int function_len,
 				return;
 
 		if (php_stream_cast(stream, PHP_STREAM_AS_STDIO|PHP_STREAM_CAST_RELEASE, (void*)&new_fp, REPORT_ERRORS) == FAILURE)    {
-				php_printf ("Unable to open script file or file not found:");
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                         "[wsf_wsdl] Unable to open script file or file not found");
 		}
 		script.handle.fp =  new_fp;
 		if(script.handle.fp){
@@ -490,8 +491,10 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
             }
         }
     }
-    else
-        php_printf("\n response envelope not found \n");
+    else {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                         "[wsf_wsdl] Response envelope not found");
+    }
     
 }
 
@@ -511,7 +514,8 @@ wsf_wsdl_create_request_envelope(char *payload,
     } 
 	else 
 	{
-        php_printf("\nUnknown SOAP version\n");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                         "[wsf_wsdl] Unknown SOAP version");
     }
 
     header = axiom_soap_header_create_with_parent(env, envelope);
@@ -937,7 +941,8 @@ void wsf_wsdl_process_service(zval *this_ptr, wsf_req_info_t *request_info1, wsf
         return;
 
     if (php_stream_cast(stream, PHP_STREAM_AS_STDIO|PHP_STREAM_CAST_RELEASE, (void*)&new_fp, REPORT_ERRORS) == FAILURE)    {
-        php_printf ("Unable to open script file or file not found:");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                         "[wsf_wsdl] Unable to open script file or file not found");
     }
     script.handle.fp =  new_fp;
 
@@ -1251,7 +1256,9 @@ void wsf_wsdl_set_sig_model(char *wsdl_path, wsf_svc_info_t *svc_info, const axu
         return;
 
     if (php_stream_cast(stream, PHP_STREAM_AS_STDIO|PHP_STREAM_CAST_RELEASE, (void*)&new_fp, REPORT_ERRORS) == FAILURE)    {
-        php_printf ("Unable to open script file or file not found:");
+
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                         "[wsf_wsdl] Unable to open script file or file not found");
     }
     script.handle.fp =  new_fp;
 
