@@ -178,6 +178,7 @@ class WS_WSDL_Operations
                 }
             }
             $j = 0;
+            $k = 0;
             if(preg_match_all('|@param\s+(?:(array)\s+of\s+)?(?:(object)\s+)?(\w+)\s+\$(\w+)\s+(.*)|', $doc_comment,
                               $matches, PREG_SET_ORDER))
             {
@@ -194,7 +195,8 @@ class WS_WSDL_Operations
                     }
                     else
                     {
-                        $releventType = $this->checkValidTypes($j);
+                        $k++;
+                        $releventType = $this->checkValidTypes($j, $k);
                     } 
                     $this->xsdTypes[$operationName]["In"][$match[4]] = array("type"=>$releventType,
                                                                              "array" => $match[1],
@@ -222,7 +224,8 @@ class WS_WSDL_Operations
                 }
                 else
                 {
-                    $returnType = $this->checkValidTypes($j);
+                    $k++;
+                    $returnType = $this->checkValidTypes($j, $k);
                 } 
 
                 $this->xsdTypes[$operationName]["Out"][$match_r[4]] = array("type"=>$returnType,
@@ -249,10 +252,14 @@ class WS_WSDL_Operations
      *is written
      *@param string $keyIndex 
      */
-    function checkValidTypes($keyIndex)
+    function checkValidTypes($keyIndex, $keyXsdIndex)
     {
-        $keyPHPArray = $this->xsdMapArry[$keyIndex];
+        $keyPHPArray = $this->xsdMapArry[$keyXsdIndex];
         $PHPType = $this->phpMapArry[$keyIndex];
+        
+        require_once('dynamic_invocation/wsf_wsdl_consts.php');
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "mapping :".$keyPHPArray." to ".$PHPType);
+
         if ($PHPType == self::$mappingTable[$keyPHPArray])
         {
             return $keyPHPArray;
