@@ -23,4 +23,4 @@ try {
 }
 ?>
 --EXPECT--
-NaN
+0
