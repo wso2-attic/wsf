@@ -72,14 +72,14 @@ using the following syntax.</p>
 
 <p>You can add your own comments only after the $returnValueName</p>
 
-<h3>1.3. Example</h3>
+<h3>1.3. Example 1</h3>
 <pre>/** 
  * The purchaseOrder function
  * @param int $itemNo ID of the item to be purchased
  * (maps to the xs:int XML schema type )
  * @param string $date Date that the purchase order was done
  * (maps to the xs:gDate XML schema type)
- * @return int $price tolal price
+ * @return int $price total price
  * (maps to the xs:nonNegativeInteger schema type )
  */
  function purchaseOrder ($itemNo, $date)
@@ -88,9 +88,168 @@ using the following syntax.</p>
     return $Price;
  }</pre>
 
-<h2 id="schema_mapping">2. PHP to Schema Type Mapping</h2>
+
+<h3>1.4. Array types </h3>
+<p>Syntax:</p>
+<pre>
+ @param array of PHP_parameter_type $paramterName
+ ( xs:XSDType )
+</pre>
+
+<p>You can add your own comments only after the $parameterName similar to the early cases</p>
+
+<p>Example:</p>
+<pre>
+/**
+ * @param array of string $items item list
+ * (maps to the xs:string)
+ */
+</pre>
+
+<h3>1.5. Types, maps to PHP Classes</h3>
+<p>Syntax:</p>
+<pre>
+ @param object PHP_class_name $paramterName
+</pre>
+
+<p>Example:</p>
+<pre>
+/**
+ * @param object Purchase $purchase the purchase object
+ */
+</pre>
+
+In order to work this, you need to put doc comments in the class and the class variables it self.
+Following two section describes how you can do that.
+
+<h3>1.6. PHP Class to use as an Schema Type</h3>
+
+<p>Syntax:</p>
+<pre>
+ @namespace Schema_type_custom_namespace 
+</pre>
+
+<p>If the @namespace is not given, the schema type will have the default namespace http://www.wso2.org/php/xsd</p>
+<p>Example:</p>
+<pre>
+/**
+ * @namespace http://custom.host/custom/location
+ */
+</pre>
+
+<h3>1.7. PHP Class Variables</h3>
+
+<p>Syntax:</p>
+<pre>
+   @var PHP_parameter_type $parameterName
+ ( xs:XSDType )
+</pre>
+
+<p>Here PHP_parameter_type may contain "object" or "array of" phrases similar to @param and @return
+
+<p>Example:</p>
+<pre>
+/**
+ * @var String $name
+ */
+</pre>
+
+<h3>1.8. Example 2: Demonstrates how complex types and arrays are get generated</h3>
+<pre>
+/**
+ * The function to register students for a course
+ * @param string $course the course to register
+ * (maps to xs:string)
+ * @param array of object Student $students students list
+ * @return boolean $success
+ * (maps to xs:boolean)
+ */
+function registerStudents($course, $students) {
+    
+}
+
+/**
+ * @namespace http://my.university/my/faculty
+ */
+class Student {
+    /**
+     * @var string $name student name
+     */
+    public $name;
+
+    /**
+     * @var int $age student age
+     */
+    public $age;
+
+}
+</pre>
+
+<h3>1.9. Example 3: Using Classmap API</h3>
+<p>
+If you use the same scenario in the Example 2 to use with the classmap API, you need to declare both the request and response types as PHP Classes like shown in the following code segment
+</p>
+<p>
+NOTE: You are using classmap API, if you provide the "classmap" option in the WSService constructor.
+</p>
+
+<pre>
+/**
+ * The function to register students for a course
+ * @param object RegisterStudents $RegisterStudents
+ * @return object RegisterStudentsResponse $RegisterStudentsResponse
+ */
+function registerStudents($RegisterStudents) {
+    
+}
+
+/**
+ * @namespace http://my.university/my/faculty
+ */
+class RegisterStudents {
+    /**
+     * @var string $course the course to register
+     * (maps to xs:string)
+     */
+     public $course;
+
+    /**
+     * @var array of object Student $students students list
+     */
+     public $students;
+}
+
+/**
+ * @namespace http://my.university/my/faculty
+ */
+class RegisterStudentsResponse {
+  /**
+   * @var boolean $success whether the operation successful or not
+   * (maps to xs:boolean)
+   */
+    public $success;
+}
+
+/**
+ * @namespace http://my.university/my/faculty
+ */
+class Student {
+    /**
+     * @var string $name student name
+     */
+    public $name;
+
+    /**
+     * @var int $age student age
+     */
+    public $age;
+
+}
+</pre>
 
 <p></p>
+
+<h2 id="schema_mapping">2. PHP to Schema Type Mapping</h2>
 
 <p>Since PHP is a weakly-typed language in nature, the following type mapping
 is required to map the PHP types to the XML Schema types.</p>
