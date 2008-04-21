@@ -31,11 +31,8 @@ try{
     $client = new WSClient(array("wsdl"=>$wsdl, "classmap" => $classmap));
 
     $input = new RetEnumStringWrapper();
-    $obj = new BitMaskWrapper();
-
-    $obj->enumeration = "BitTwo";
     
-    $input->inEnumString = $obj;
+    $input->inEnumString = "BitTwo";
     
     $proxy = $client->getProxy();
     $val = $proxy->RetEnumString($input);
@@ -56,7 +53,7 @@ try{
 ?>
 --EXPECT--
 Result is:
-object(RetEnumStringResponseWrapper)#16 (1) {
+object(RetEnumStringResponseWrapper)#24 (1) {
   ["RetEnumStringResult"]=>
   string(6) "BitTwo"
 }

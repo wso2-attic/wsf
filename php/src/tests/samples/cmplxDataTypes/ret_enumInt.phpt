@@ -36,11 +36,8 @@ try{
 
 
     $input = new RetEnumIntWrapper();
-    $obj = new IntSetWrapper();
-
-    $obj->enumInt = "1";
     
-    $input->inEnumInt = $obj;
+    $input->inEnumInt = "1";
     
     $proxy = $client->getProxy();
     $val = $proxy->RetEnumInt($input);
@@ -62,3 +59,8 @@ try{
 ?>
 --EXPECT--
 Result is:
+object(RetEnumIntResponseWrapper)#24 (1) {
+  ["RetEnumIntResult"]=>
+  string(1) "1"
+}
+
