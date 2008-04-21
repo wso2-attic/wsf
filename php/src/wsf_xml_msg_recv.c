@@ -627,11 +627,13 @@ wsf_xml_msg_recv_invoke_mixed (
         }
     }
     
-    if(!res_payload_str)
-        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI,
+    if(!res_payload_str) {
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                          "[wsf_wsdl] response payload string not found");
-    
-    res_om_node = wsf_util_deserialize_buffer(env, res_payload_str);
+    }
+    else {
+        res_om_node = wsf_util_deserialize_buffer(env, res_payload_str);
+    }
         
     if(res_om_node)
         return res_om_node; 
