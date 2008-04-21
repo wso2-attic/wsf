@@ -151,6 +151,7 @@ function wsf_wsdl_create_response_payload($return_val, $sig_node) {
 
 	if(!$returns_node) {
 	    error_log("Returns node not found", 0);
+        return NULL;
     }
 
 	if($returns_node->hasAttributes()) {
