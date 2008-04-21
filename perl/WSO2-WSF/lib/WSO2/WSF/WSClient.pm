@@ -428,7 +428,7 @@ sub pack_attachments {
 										$child_node,
 										$node,
 										$mtom,
-										$ct,
+										$content_type,
 										$content,
 										length( $content ) );
 					$attachment_done = 1;
