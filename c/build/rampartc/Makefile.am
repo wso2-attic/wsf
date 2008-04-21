@@ -1,7 +1,7 @@
 SUBDIRS = src 
 docsdir=$(prefix)/docs/rampartc
 samplesdir=$(prefix)/samples/rampartc
-includedir=$(prefix)/include/rampart-1.0
+includedir=$(prefix)/include/rampart-1.2.0
 
 include_HEADERS=$(top_builddir)/include/*.h
 
