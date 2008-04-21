@@ -35,7 +35,6 @@ try {
     $response = $proxy->myDemo($input);
     //TODO: Implement business logic to consume $response, which is of type string
 
-    echo $client->getLastRequest()."\n";
     echo $response."\n";
 
 } catch (Exception $e) {
@@ -48,7 +47,6 @@ try {
 }
 ?>
 --EXPECT--
-<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope"><soapenv:Header></soapenv:Header><soapenv:Body><ns1:myDemo xmlns:ns1="http://wso2.org/dyn/codegen/demo" ns1:demo1="test">3</ns1:myDemo></soapenv:Body></soapenv:Envelope>
 myDemo Object
 (
     [demo1] => test

@@ -48,7 +48,6 @@ try {
     //TODO: Implement business logic to consume $response, which is of type string
 
 
-    echo $client->getLastRequest()."\n";
     echo $response."\n";
 
 } catch (Exception $e) {
@@ -61,7 +60,6 @@ try {
 }
 ?>
 --EXPECT--
-<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope"><soapenv:Header></soapenv:Header><soapenv:Body><ns1:myDemo xmlns:ns1="http://wso2.org/dyn/codegen/demo"><ns1:demo2>test</ns1:demo2><ns1:demo3>4</ns1:demo3><ns1:demo4>test 4 string</ns1:demo4><ns1:demo5>test 5 string</ns1:demo5></ns1:myDemo></soapenv:Body></soapenv:Envelope>
 myDemo Object
 (
     [demo1] => 

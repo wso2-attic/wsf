@@ -37,7 +37,6 @@ try {
     // call the operation
     $response = $proxy->myDemo($input);
 
-    echo $client->getLastRequest()."\n";
     echo $response."\n";
     //TODO: Implement business logic to consume $response, which is of type string
 
@@ -51,7 +50,6 @@ try {
 }
 ?>
 --EXPECT--
-<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope"><soapenv:Header></soapenv:Header><soapenv:Body><ns1:myDemo xmlns:ns1="http://wso2.org/dyn/codegen/demo"><ns1:demo1>3</ns1:demo1></ns1:myDemo></soapenv:Body></soapenv:Envelope>
 myDemo Object
 (
     [demo1] => 3
