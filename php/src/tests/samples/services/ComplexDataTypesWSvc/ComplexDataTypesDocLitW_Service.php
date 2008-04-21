@@ -245,6 +245,7 @@ function RetArrayAnyType1D($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type RetArrayAnyType1D
     // NOTE: should return an object of type RetArrayAnyType1DResponse
+    file_put_contents("/tmp/something", print_r($input, TRUE));
     $ret = new RetArrayAnyType1DResponse();
     $ret->RetArrayAnyType1DResult = $input->inArrayAnyType1D;
     return $ret;
@@ -295,6 +296,10 @@ function RetEnumString($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type RetEnumString
     // NOTE: should return an object of type RetEnumStringResponse
+
+    $res = new RetEnumStringResponse();
+    $res->RetEnumStringResult = $input->inEnumString;
+    return $res;
 }
 
 
@@ -302,6 +307,10 @@ function RetEnumInt($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type RetEnumInt
     // NOTE: should return an object of type RetEnumIntResponse
+
+    $res = new RetEnumIntResponse();
+    $res->RetEnumIntResult = $input->inEnumInt;
+    return $res;
 }
 
 
