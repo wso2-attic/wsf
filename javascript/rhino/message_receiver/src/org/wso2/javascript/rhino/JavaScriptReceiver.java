@@ -1182,20 +1182,16 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         } else if (jsObject instanceof XMLList) {
             XMLList list = (XMLList) jsObject;
             OMNode[] omNodes = list.getAxiomFromXML();
-            if (omNodes.length == 1) {
-                element.addChild(omNodes[0]);
-            } else if (omNodes.length == 0) {
+            if (omNodes.length == 0) {
                 return element;
             } else {
-                OMElement wrapperElement = fac.createOMElement("return", null);
                 for (int i = 0; i < omNodes.length; i++) {
-                    wrapperElement.addChild(omNodes[i]);
+                    element.addChild(omNodes[i]);
                 }
-                element.addChild(wrapperElement);
                 if (addTypeInfo) {
-                    wrapperElement.addAttribute("type", "xmlList", namespace);
-                    wrapperElement.declareNamespace(xsNamespace);
-                    wrapperElement.addAttribute("type", "xs:anyType", xsiNamespace);
+                    element.addAttribute("type", "xmlList", namespace);
+                    element.declareNamespace(xsNamespace);
+                    element.addAttribute("type", "xs:anyType", xsiNamespace);
                 }
             }
         } else {
