@@ -511,7 +511,7 @@ class WS_WSDL_Type
                 $php_type = "string"; //default to string
                 $xsd_type = "string";
 
-                if(preg_match_all('|@property\s+(?:(array)\s+of\s+)?(?:(object)\s+)?(\w+)\s+(.*)|', $property_comment,
+                if(preg_match_all('|@var\s+(?:(array)\s+of\s+)?(?:(object)\s+)?(\w+)\s+(.*)|', $property_comment,
                                               $matches, PREG_SET_ORDER))
                 {
                     $array = $matches[0][1];
