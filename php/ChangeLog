@@ -1,8 +1,10 @@
 WSO2 WSF/PHP 1.2.2 
 ======================
-* Improvments of Schema constructs support for WSDL mode including
+* Improvements of Schema constructs support for WSDL mode including
 SimpleType restricitons, ComplexType restrictions/extensions and attributes.
 * WSDL Import support.
+* Support for WSDLs with multiple bindings, API is provided to pick
+the preferred bindings.
 * wsdl2php code generation improvements to support the improvements done in
 WSDL mode.
 

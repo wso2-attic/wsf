@@ -70,10 +70,12 @@ Key Features
 --------------------------------
 Major Changes Since Last Release
 ================================
-1. Schema constructs support improvments for WSDL mode including
+1. Schema constructs support improvements for WSDL mode including
 SimpleType restricitons, ComplexType restrictions/extensions and attributes.
 2. WSDL Import support.
-3. wsdl2php code generation improvements to support the improvements done in
+3. Support for WSDLs with multiple bindings, API is provided to pick
+the preferred bindings.
+4. wsdl2php code generation improvements to support the improvements done in
 WSDL mode..
 
 
