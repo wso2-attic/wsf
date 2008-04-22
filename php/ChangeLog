@@ -1,3 +1,11 @@
+WSO2 WSF/PHP 1.2.2 
+======================
+* Improvments of Schema constructs support for WSDL mode including
+SimpleType restricitons, ComplexType restrictions/extensions and attributes.
+* WSDL Import support.
+* wsdl2php code generation improvements to support the improvements done in
+WSDL mode.
+
 WSO2 WSF/PHP 1.2.1 
 ======================
 * MTOM implementation improved to send large attachments.

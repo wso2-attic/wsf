@@ -1,7 +1,7 @@
-WSO2 Web Services Framework for PHP v1.2.1 Released
+WSO2 Web Services Framework for PHP v1.2.2 Released
 =====================================================
 
-We are pleased to announce the release of WSO2 WSF/PHP 1.2.1.
+We are pleased to announce the release of WSO2 WSF/PHP 1.2.2.
 
 WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), is an open source,
 enterprise grade, PHP extension for providing and consuming Web Services in PHP.
@@ -64,23 +64,17 @@ Key Features
       * Consume some well known services such as Yahoo search and Flickr 
         and Amazon services using predefined classes
 
-Experimental Features
----------------------
-
 11. wsdl2php.php script. This script can generate PHP classes for services 
     and clients for a given WSDL to be used with WSDL Mode .
 
 --------------------------------
 Major Changes Since Last Release
 ================================
-1. MTOM implementation improved to send large attachments.
-2. wsdl2php.php script added to help generate PHP classes to be used with WSDL mode.
-3. WSDL mode classmap support added for services.
-4. WSDL mode support for arrays added.
-5. Improved API to let the user access SOAP Headers from service scripts.
-6. WSDL generation for services improved with support for PHP classes.
-7. Improvements to documentation.
-8. Many bug fixes.
+1. Schema constructs support improvments for WSDL mode including
+SimpleType restricitons, ComplexType restrictions/extensions and attributes.
+2. WSDL Import support.
+3. wsdl2php code generation improvements to support the improvements done in
+WSDL mode..
 
 
 -------------------
