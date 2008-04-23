@@ -32,6 +32,11 @@ our $VERSION = '0.01';
 
 use WSO2::WSF::C;
 use WSO2::WSF::WSClient;
+use WSO2::WSF::WSMessage;
+use WSO2::WSF::WSSecurityToken;
+use WSO2::WSF::WSFault;
+use WSO2::WSF::WSHeader;
+use WSO2::WSF::WSPolicy;
 
 1;
 __END__
