@@ -213,7 +213,6 @@ function wsf_wsdl2php($wsdl_location) {
         echo "WSDL could not be loaded.";
         return NULL;
     }
-    file_put_contents("/tmp/anotherthing", $wsdl_dom->saveXML());
 
 
     $wsdl_dom->preserveWhiteSpace = false;
