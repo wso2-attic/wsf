@@ -38,17 +38,17 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
     <active>yes</active>
 </lead>
 
-<date>2008-03-03</date>
+<date>2008-04-26</date>
 <version>
-    <release>1.2.1</release>
-    <api>1.2.1</api>
+    <release>1.2.2</release>
+    <api>1.2.2</api>
 </version>
 <stability>
     <release>stable</release>
     <api>stable</api>
 </stability>
 <license uri="http://apache.org/licenses/LICENSE-2.0">Apache2</license>
-<notes>1.2.1 release </notes>
+<notes>1.2.2 release </notes>
 
 <contents>
     <dir name="/">
@@ -395,8 +395,6 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
 9. WSDL mode support for both client and server side
       * Write services and client based on a given WSDL
 
-10. Backward compatibility with PHP5 SOAP extension
-      * Experimental
 </notes>
 </release>
 </changelog>
