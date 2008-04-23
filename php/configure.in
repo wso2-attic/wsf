@@ -1,9 +1,9 @@
 #############################################################################
 ### General Build Configuration Parameters
 
-WSFPHP_VERSION=1.2.1
+WSFPHP_VERSION=1.2.2
 # To build with debug symbols set DEBUG = 1
-DEBUG = 0 
+DEBUG =0 
 #CRUNTIME Library (Use /MD or /MT)
 CRUNTIME=/MT
 # Visual Studio version
