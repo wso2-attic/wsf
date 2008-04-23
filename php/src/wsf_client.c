@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-#include <axis2_addr.h>
+#include "wsf.h"
 #include "wsf_util.h"
+#include <axis2_addr.h>
 #include <axutil_error_default.h>
 #include <axis2_http_transport.h>
 #include <axutil_log_default.h>
@@ -24,8 +25,6 @@
 #include "wsf_client.h"
 #include "wsf_policy.h"
 #include "zend_exceptions.h"
-#include "wsf.h"
-
 #include "zend_variables.h"
 #ifdef USE_SANDESHA2
 #include <sandesha2_client.h>
