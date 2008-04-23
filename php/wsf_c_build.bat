@@ -18,9 +18,9 @@ rem Build Apache Rampart/C
 
 @cd ..
 @xcopy /E /Q /I /Y rampartc-%RAMPARTC_VERSION%\modules\rampart .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\modules\rampart
-@copy /Y rampartc-1.1.0\include\*.h .\..\..\axis2c\build\axis2c-bin-1.3.0-win32\include\
-@copy /Y rampartc-1.1.0\modules\rampart\mod_rampart.lib .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\lib\
-@copy /Y rampartc-1.1.0\modules\rampart\mod_rampart.dll .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\lib\
+@copy /Y rampartc-%RAMPARTC_VERSION%\include\*.h .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\include\
+@copy /Y rampartc-%RAMPARTC_VERSION%\modules\rampart\mod_rampart.lib .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\lib\
+@copy /Y rampartc-%RAMPARTC_VERSION%\modules\rampart\mod_rampart.dll .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\lib\
 @goto build_sandesha2
 
 :rampart_error
@@ -41,10 +41,6 @@ rem Build Apache Sandesha2/C
 @xcopy /E /Q /I /Y sandesha2\modules\sandesha2\sandesha2.dll  .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\lib\
 @copy /Y sandesha2\include\*.h  .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\include\
 @copy /Y sandesha2\include\*.h  .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\include\
-@mkdir .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\bin\sandesha2
-@copy /Y ..\config\*.txt .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\bin\sandesha2
-@copy /Y ..\config\*.bat .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\bin\sandesha2
-@copy /Y ..\config\*.sh .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\bin\sandesha2
 @goto build_neethi_util
 
 :sandesha2_error
@@ -61,7 +57,7 @@ rem Build Neethi util
 :pack_wsfc
 rem @cd ..\..
 @if not exist wso2-wsf-c-bin-%WSFC_VERSION% mkdir wso2-wsf-c-bin-%WSFC_VERSION%
-@xcopy /E /Q /I /Y axis2c\build\axis2c-bin-1.3.0-win32 wso2-wsf-c-bin-%WSFC_VERSION%
+@xcopy /E /Q /I /Y axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32 wso2-wsf-c-bin-%WSFC_VERSION%
 @copy /Y config\axis2.xml wso2-wsf-c-bin-%WSFC_VERSION%\axis2.xml
 @copy /Y INSTALL wso2-wsf-c-bin-%WSFC_VERSION%
 @copy /Y README wso2-wsf-c-bin-%WSFC_VERSION%
