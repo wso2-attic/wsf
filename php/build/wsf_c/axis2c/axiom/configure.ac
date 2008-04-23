@@ -112,6 +112,7 @@ AC_ARG_ENABLE(guththila, [  --enable-guththila    build guththila xml parser lib
   AC_MSG_RESULT(no)
 )
 
+
 AC_MSG_CHECKING(whether to build tests)
 AC_ARG_ENABLE(tests, [  --enable-tests    build tests. default=no],
 [ case "${enableval}" in
@@ -129,7 +130,7 @@ AC_ARG_ENABLE(tests, [  --enable-tests    build tests. default=no],
   TESTDIR=""
 )
 
-PKG_PROG_PKG_CONFIG(0.20)
+PKG_PROG_PKG_CONFIG(0.15)
 PKG_CHECK_MODULES(LIBXML2, libxml-2.0)
 CFLAGS="$CFLAGS $LIBXML2_CFLAGS $GUTHTHILA_CFLAGS"
 VERSION_NO="1:0:1"
@@ -150,6 +151,10 @@ AC_CONFIG_FILES([Makefile \
     src/om/Makefile \
     src/util/Makefile \
     src/attachments/Makefile \
+    test/Makefile \
+    test/om/Makefile \
+    test/soap/Makefile \
+    test/util/Makefile \
     include/Makefile
     ])
     
