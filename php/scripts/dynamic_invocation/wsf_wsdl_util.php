@@ -643,6 +643,7 @@ function wsf_get_binding_details(DomNode $operation_node) {
     $wsa_action = NULL;
     $soap_action = NULL;
     $http_method = NULL;
+    $binding_array[WSF_USE_SOAP] = TRUE;
 
     $operation_child_list = $operation_node->childNodes;
     foreach($operation_child_list as $operation_child) {
