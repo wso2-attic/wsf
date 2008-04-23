@@ -366,7 +366,7 @@ sub wsf_handle_outgoing_attachments {
 	# my $attachments = defined( $this->{$WSO2::WSF::C::WSF_MP_ATTACHMENTS} ) ?
 	#  $WSO2::WSF::C::WSF_MP_ATTACHMENTS : "";
 
-	my $enable_mtom = defined( $this->{useMTOM} ) ?
+	my $enable_mtom = ( defined( $this->{useMTOM} ) && $this->{useMTOM} =~ /true/i ) ?
 	  $WSO2::WSF::C::AXIS2_TRUE : $WSO2::WSF::C::AXIS2_FALSE;
 
 	my $default_content_type_ref = defined( $this->{$WSO2::WSF::C::WSF_MP_DEF_ATT_CON_TYPE} ) ?
@@ -486,6 +486,8 @@ sub wsf_handle_incoming_attachments {
 
     if ( $response_xop == 1 ) {
 	unpack_attachments($msg, $r_payload, $this);
+    } else {
+	WSO2::WSF::C::wsf_util_find_xop_content_and_convert_to_base64($this->{env}, $r_payload);
     }
 }
 
@@ -494,18 +496,19 @@ sub unpack_attachments {
     my $r_payload = shift;
     my $this = shift;
 
-    unless ( $r_payload ) {
-	if ( WSO2::WSF::C::axiom_node_get_node_type($r_payload) == $WSO2::WSF::C::AXIOM_TEXT ) {
+    if ( defined $r_payload ) {
+	if ( WSO2::WSF::C::axiom_node_get_node_type($r_payload, $this->{env}) == $WSO2::WSF::C::AXIOM_TEXT ) {
 	    my $text_element = WSO2::WSF::C::wsf_axiom_node_get_text_element($r_payload, $this->{env});
-	    unless ( $text_element ) {
+
+	    if ( defined $text_element ) {
 		my $data_handler = WSO2::WSF::C::axiom_text_get_data_handler($text_element, $this->{env});
 
-		unless ( $data_handler ) {
+		if ( defined $data_handler ) {
 		    my $content = WSO2::WSF::C::wsf_axiom_data_handler_get_content($data_handler, $this->{env});
 		    my $content_type = WSO2::WSF::C::axiom_data_handler_get_content_type($data_handler, $this->{env});
 		    my $cid = WSO2::WSF::C::axiom_text_get_content_id($text_element, $this->{env});
 
-		    $msg->{attachments} = { "$cid" => "$content" };
+		    $msg->{attachments} = { "$cid" => $content };
 		    $msg->{content_types} = { "$cid" => "$content_type" };
 		}
 	    }
