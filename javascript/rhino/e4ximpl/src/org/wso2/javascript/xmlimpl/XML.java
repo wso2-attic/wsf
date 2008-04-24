@@ -844,9 +844,9 @@ public class XML extends XMLObjectImpl {
     Object getXmlObject() {
         if (axiomNode.isOMNode()) {
             return axiomNode.getOMNode();
-        } /*else if (axiomNode.isAttribute()) {
+        } else if (axiomNode.isAttribute()) {
             return axiomNode.getOMAttribute();
-        }*/
+        }
         return null;
     }
 
@@ -946,7 +946,14 @@ public class XML extends XMLObjectImpl {
     }
 
     public OMNode getAxiomFromXML() {
-        return (OMNode) getXmlObject();
+        Object object = getXmlObject();
+        // If its an OMAttribute we take its value and create an OMText from it as we have to be
+        // returning an OMNode.
+        if (object instanceof OMAttribute) {
+            OMAttribute omAttribute = (OMAttribute) object;
+            return axiomNode.getOMFactory().createOMText(omAttribute.getAttributeValue());
+        }
+        return (OMNode) object;
     }
 
     AxiomNode getAxiomNode() {

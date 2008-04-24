@@ -19,6 +19,7 @@ package org.wso2.javascript.xmlimpl;
 
 import org.apache.axiom.om.OMNode;
 import org.apache.axiom.om.OMText;
+import org.apache.axiom.om.OMAttribute;
 import org.mozilla.javascript.Callable;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
@@ -713,7 +714,17 @@ public class XMLList extends XMLObjectImpl implements Function {
         int length = length();
         OMNode[] omNodes = new OMNode[length];
         for (int i = 0; i < length; i++) {
-            omNodes[i] = (OMNode) getFromAxiomNodeList(i).getXmlObject();
+            XML xml = getFromAxiomNodeList(i);
+            Object object = xml.getXmlObject();
+            // If its an OMAttribute we take its value and create an OMText from it as we have to be
+            // returning an OMNode.
+            if (object instanceof OMAttribute) {
+                OMAttribute omAttribute = (OMAttribute) object;
+                omNodes[i] = xml.getAxiomNode().getOMFactory()
+                        .createOMText(omAttribute.getAttributeValue());
+            } else {
+                omNodes[i] = (OMNode) object;
+            }
         }
         return omNodes;
     }
