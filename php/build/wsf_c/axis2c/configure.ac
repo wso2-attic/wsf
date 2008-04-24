@@ -1,8 +1,7 @@
 dnl run autogen.sh to generate the configure script.
-
 AC_PREREQ(2.59)
 
-AC_INIT(axis2c-src, 1.0.0)
+AC_INIT(axis2c-src, 1.3.1)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE([tar-ustar])
@@ -62,7 +61,7 @@ fi
 #CFLAGS="$CFLAGS -ansi -Wall -D_LARGEFILE64_SOURCE -Wno-implicit-function-declaration"
 CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 if test "$GCC" = "yes"; then
-    CFLAGS="$CFLAGS -ansi -Wall  -Wno-implicit-function-declaration -g"
+    CFLAGS="$CFLAGS -ansi -Wall -Werror -Wno-implicit-function-declaration -g"
 #    CFLAGS="$CFLAGS -ansi -Wall -Wno-implicit-function-declaration"
 fi
 LDFLAGS="$LDFLAGS -lpthread"
@@ -177,6 +176,7 @@ AC_ARG_ENABLE(guththila, [  --enable-guththila
 )
 
 
+
 AC_MSG_CHECKING(whether to build tcp transport)
 AC_ARG_ENABLE(tcp, [  --enable-tcp
                           build tcp transport (default=no)],
@@ -253,7 +253,7 @@ AC_ARG_WITH(apr,
 
 AC_MSG_CHECKING(whether to build tests)
 AC_ARG_ENABLE(tests, [  --enable-tests    
-                          build tests (default=yes)],
+                          build tests (default=no)],
 [ case "${enableval}" in
   yes)
     AC_MSG_RESULT(yes)
@@ -272,7 +272,7 @@ AC_ARG_ENABLE(tests, [  --enable-tests
 
 AC_MSG_CHECKING(whether to enable trace)
 AC_ARG_ENABLE(trace, [  --enable-trace    
-                          enable logging trace messages, useful when debugging (default=no)],
+                          enable logging trace messages useful when debugging (default=no)],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
@@ -319,9 +319,8 @@ AC_ARG_ENABLE(openssl, [  --enable-openssl
     ssl_enabled=true
     ;;
   esac ],
-    AC_MSG_RESULT(yes)
-    CFLAGS="$CFLAGS -DAXIS2_SSL_ENABLED"
-    ssl_enabled=true
+  AC_MSG_RESULT(no)
+  CFLAGS="$CFLAGS"
 )
 
 AC_MSG_CHECKING(whether to use libcurl)
@@ -343,86 +342,15 @@ AC_ARG_ENABLE(libcurl, [  --enable-libcurl
   CFLAGS="$CFLAGS"
 )
 
-AC_MSG_CHECKING(whether to use XMPP as a transport)
-AC_ARG_WITH(xmpp,
-[  --with-xmpp[=PATH]   Whether to build XMPP transport support.
-    ],
-[ case "$withval" in
-  no)
-    AC_MSG_RESULT(no)
-    XMPP_DIR=""
-    ;;
-  *)
-    AC_MSG_RESULT(yes)
-    dnl Find iksemel include dir
-    if test -d $withval; then
-        iksemelinc="-I$withval/include"
-        iksemellib="-L$withval/lib -liksemel"
-    	XMPP_DIR="xmpp"
-    dnl else find the iksemel include dir in /usr/include
-    elif test -d '/usr'; then
-        iksemelinc="-I/usr/include"
-        iksemellib="-L/usr/lib -liksemel"
-    	XMPP_DIR="xmpp"
-    else
-        AC_MSG_ERROR(could not find iksemel. stop)
-    fi
-	XMPP_DIR="xmpp"
-    ;;
-  esac ],
-  AC_MSG_RESULT(no)
-)
-
-AC_MSG_CHECKING(whether to use gssapi)
-AC_ARG_ENABLE(gssapi, [  --enable-gssapi      enable gssapi (default=no)],
-[ case "${enableval}" in
-  no)
-    AC_MSG_RESULT(no)
-    CFLAGS="$CFLAGS"
-    gssapi_enabled=false
-    ;;
-  *)
-    AC_MSG_RESULT(yes)
-    CFLAGS="$CFLAGS -DAXIS2_XMPP_GSSAPI"
-    gssapi_enabled=true
-    ;;
-  esac ],
-  AC_MSG_RESULT(no)
-  CFLAGS="$CFLAGS"
-)
-
-#AC_MSG_CHECKING(whether to build xmpp)
-#AC_ARG_ENABLE(xmpp, [  --enable-xmpp
-#                          enable xmpp build (default=no)],
-#[ case "${enableval}" in
-#  no)
-#    AC_MSG_RESULT(no)
-#    CFLAGS="$CFLAGS"
-#    xmpp_enabled=false
-#    ;;
-#  *)
-#    AC_MSG_RESULT(yes)
-#    XMPP_DIR="xmpp"
-#    CFLAGS="$CFLAGS -DAXIS2_XMPP_ENABLED"
-#    xmpp_enabled=false
-#    ;;
-#  esac ],
-#  AC_MSG_RESULT(no)
-#  CFLAGS="$CFLAGS"
-#)
-
 
 APACHE2INC=$apache2inc
 IKSEMELINC=$iksemelinc
-IKSEMELLIB=$iksemellib
 APRINC=$aprinc
-VERSION_NO="1:0:1"
+VERSION_NO="3:1:3"
 
 AC_SUBST(VERSION_NO)
 AC_SUBST(PARSER_LIBS)
 AC_SUBST(APACHE2INC)
-AC_SUBST(IKSEMELINC)
-AC_SUBST(IKSEMELLIB)
 AC_SUBST(APRINC)
 AC_SUBST(DICLIENT_DIR)
 AC_SUBST(TESTDIR)
@@ -430,15 +358,12 @@ AC_SUBST(SAMPLES)
 AC_SUBST(APACHE2BUILD)
 AC_SUBST(PARSER_DIR)
 AC_SUBST(WRAPPER_DIR)
-AC_SUBST(XMPP_DIR)
 AC_SUBST(TCP_DIR)
 AC_SUBST(GUTHTHILA_DIR)
 AC_SUBST(GUTHTHILA_LIBS)
 AC_SUBST(ZLIBBUILD)
 AM_CONDITIONAL(AXIS2_SSL_ENABLED, test x$ssl_enabled = xtrue)
 AM_CONDITIONAL(AXIS2_LIBCURL_ENABLED, test x$libcurl_enabled = xtrue)
-AM_CONDITIONAL(AXIS2_XMPP_GSSAPI, test x$gssapi_enabled = xtrue)
-AM_CONDITIONAL(AXIS2_XMPP_ENABLED, test x$xmpp_enabled = xtrue)
 
 #export PARSER_DIR
 export WRAPPER_DIR
@@ -468,11 +393,6 @@ AC_CONFIG_FILES([Makefile \
     src/core/transport/tcp/receiver/Makefile \
     src/core/transport/tcp/server/Makefile \
     src/core/transport/tcp/server/simple_tcp_server/Makefile \
-    src/core/transport/xmpp/Makefile \
-    src/core/transport/xmpp/sender/Makefile \
-    src/core/transport/xmpp/receiver/Makefile \
-    src/core/transport/xmpp/server/Makefile \
-    src/core/transport/xmpp/server/simple_xmpp_server/Makefile \
     src/core/deployment/Makefile \
     src/core/clientapi/Makefile \
     src/core/receivers/Makefile \
@@ -490,6 +410,10 @@ AC_CONFIG_FILES([Makefile \
     test/core/addr/Makefile \
     test/core/transport/Makefile\
     test/core/transport/http/Makefile \
+    tools/tcpmon/Makefile \
+    tools/tcpmon/src/Makefile \
+    tools/md5/Makefile \
+    tools/md5/src/Makefile \
     ides/Makefile \
     include/Makefile \
     axis2c.pc
