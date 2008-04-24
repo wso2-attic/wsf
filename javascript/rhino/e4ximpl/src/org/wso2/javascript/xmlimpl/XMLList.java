@@ -459,9 +459,11 @@ public class XMLList extends XMLObjectImpl implements Function {
             if (length() == 0) {
                 return getFromAxiomNodeList(0).hasComplexContent();
             } else {
-                for (int i = 0; i < length(); i++)
-                    if (((AxiomNode) _axiomNodeList.get(i)).isElement())
-                        return true;
+                for (int i = 0; i < length(); i++) {
+                    if (!((AxiomNode) _axiomNodeList.get(i)).isElement())
+                        return false;
+                }
+                return true;
             }
         }
         return false;
