@@ -55,7 +55,7 @@ public class JavaScriptEngineUtils {
         while (iterator.hasNext()) {
             OMElement element = (OMElement) iterator.next();
             final String className = element.getText();
-            if ((className != null) & (!className.equals(""))) {
+            if ((className != null) & (!"".equals(className))) {
                 try {
                     ScriptableObject.defineClass(cx, loadClass(className));
                 } catch (PrivilegedActionException e) {
@@ -119,8 +119,8 @@ public class JavaScriptEngineUtils {
             OMElement element = (OMElement) iterator.next();
             String objectName = element.getText();
             String hostObject = element.getAttributeValue(new QName("hostObject"));
-            if ((objectName != null) & (!objectName.equals("")) & (hostObject != null)
-                    & (!hostObject.equals(""))) {
+            if ((objectName != null) & (!"".equals(objectName)) & (hostObject != null)
+                    & (!"".equals(hostObject))) {
                 Scriptable entryHostObject = engine.getCx().newObject(engine, hostObject,
                                                                       new Object[0]);
                 engine.defineProperty(objectName, entryHostObject, ScriptableObject.READONLY);
