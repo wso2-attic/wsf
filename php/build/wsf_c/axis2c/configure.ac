@@ -61,7 +61,7 @@ fi
 #CFLAGS="$CFLAGS -ansi -Wall -D_LARGEFILE64_SOURCE -Wno-implicit-function-declaration"
 CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 if test "$GCC" = "yes"; then
-    CFLAGS="$CFLAGS -ansi -Wall -Werror -Wno-implicit-function-declaration -g"
+    CFLAGS="$CFLAGS -ansi -Wall  -Wno-implicit-function-declaration -g"
 #    CFLAGS="$CFLAGS -ansi -Wall -Wno-implicit-function-declaration"
 fi
 LDFLAGS="$LDFLAGS -lpthread"
@@ -342,12 +342,62 @@ AC_ARG_ENABLE(libcurl, [  --enable-libcurl
   CFLAGS="$CFLAGS"
 )
 
+AC_MSG_CHECKING(whether to use XMPP as a transport)
+AC_ARG_WITH(xmpp,
+[  --with-xmpp[=PATH]   Whether to build XMPP transport support.
+    ],
+[ case "$withval" in
+  no)
+    AC_MSG_RESULT(no)
+    XMPP_DIR=""
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    dnl Find iksemel include dir
+    if test -d $withval; then
+        iksemelinc="-I$withval/include"
+        iksemellib="-L$withval/lib -liksemel"
+        XMPP_DIR="xmpp"
+    dnl else find the iksemel include dir in /usr/include
+    elif test -d '/usr'; then
+        iksemelinc="-I/usr/include"
+        iksemellib="-L/usr/lib -liksemel"
+        XMPP_DIR="xmpp"
+    else
+        AC_MSG_ERROR(could not find iksemel. stop)
+    fi
+    XMPP_DIR="xmpp"
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+)
+
+AC_MSG_CHECKING(whether to use gssapi)
+AC_ARG_ENABLE(gssapi, [  --enable-gssapi      enable gssapi (default=no)],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    CFLAGS="$CFLAGS"
+    gssapi_enabled=false
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    CFLAGS="$CFLAGS -DAXIS2_XMPP_GSSAPI"
+    gssapi_enabled=true
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+  CFLAGS="$CFLAGS"
+)
+
+
 
 APACHE2INC=$apache2inc
 IKSEMELINC=$iksemelinc
 APRINC=$aprinc
 VERSION_NO="3:1:3"
 
+AC_SUBST(XMPP_DIR)
 AC_SUBST(VERSION_NO)
 AC_SUBST(PARSER_LIBS)
 AC_SUBST(APACHE2INC)
@@ -364,6 +414,9 @@ AC_SUBST(GUTHTHILA_LIBS)
 AC_SUBST(ZLIBBUILD)
 AM_CONDITIONAL(AXIS2_SSL_ENABLED, test x$ssl_enabled = xtrue)
 AM_CONDITIONAL(AXIS2_LIBCURL_ENABLED, test x$libcurl_enabled = xtrue)
+AM_CONDITIONAL(AXIS2_XMPP_GSSAPI, test x$gssapi_enabled = xtrue)
+AM_CONDITIONAL(AXIS2_XMPP_ENABLED, test x$xmpp_enabled = xtrue)
+
 
 #export PARSER_DIR
 export WRAPPER_DIR
