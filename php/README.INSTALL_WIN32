@@ -157,7 +157,7 @@ Contents:
 
 3. Binary Dependency version numbers.
 
-  WSO2-WSF-PHP-1.2.1 Win32 Binary Will be compiled using following version of dependency libraries.
+  WSO2-WSF-PHP-1.2.2 Win32 Binary Will be compiled using following version of dependency libraries.
 
   1. PHP     5.2.5
   2. Libxml2 2.6.30

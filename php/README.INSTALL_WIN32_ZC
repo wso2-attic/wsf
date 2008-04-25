@@ -13,15 +13,15 @@ Install instructions.
    
    extension=wsf.dll
    
-   wsf.home="<wsf-php extract directory>\wso2-wsf-php-bin-1.2.1-win32\wsf_c"
-   wsf.log_path="<wsf-php extract directory>\wso2-wsf-php-bin-1.2.1-win32\wsf_c\logs"
-   wsf.rm_db_dir="<wsf-php extract directory>\wso2-wsf-php-bin-1.2.1-win32\wsf_c"
+   wsf.home="<wsf-php extract directory>\wso2-wsf-php-bin-1.2.2-win32\wsf_c"
+   wsf.log_path="<wsf-php extract directory>\wso2-wsf-php-bin-1.2.2-win32\wsf_c\logs"
+   wsf.rm_db_dir="<wsf-php extract directory>\wso2-wsf-php-bin-1.2.2-win32\wsf_c"
    wsf.log_level=4
 
-   Append <wsf-php extract directory>\wso2-wsf-php-bin-1.2.1-win32\scripts to include_path php.ini entry.
+   Append <wsf-php extract directory>\wso2-wsf-php-bin-1.2.2-win32\scripts to include_path php.ini entry.
    Eg.
 
-   include_path = ".;<wsf-php extract directory>/wso2-wsf-php-bin-1.2.1-win32/scripts"
+   include_path = ".;<wsf-php extract directory>/wso2-wsf-php-bin-1.2.2-win32/scripts"
 
 5. If you have php_xsl disabled, enable it by uncommenting extension=php_xsl.dll entry in php.ini.
 
