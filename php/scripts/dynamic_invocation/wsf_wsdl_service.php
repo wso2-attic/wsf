@@ -101,16 +101,27 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
     if($class_name != NULL) {
         // First call the constructor
         $class = new ReflectionClass($class_name);
-        $class_inst = $class->newInstanceArgs($class_args);
-        
-        // Then the user method
-        $method = $class->getMethod($function_name);
-        if(($classmap != NULL && !empty($classmap)) || $is_direct_list) {
-            // for direct lists we follow same api as classmap
-            $response_value = $method->invoke($class_inst, $arg_array);
+
+        if($class) {
+            if($class_args && is_array($class_args)) {
+                $class_inst = $class->newInstanceArgs($class_args);
+            }
+            else {
+                $class_inst = $class->newInstanceArgs(array());
+            }
+            
+            // Then the user method
+            $method = $class->getMethod($function_name);
+            if(($classmap != NULL && !empty($classmap)) || $is_direct_list) {
+                // for direct lists we follow same api as classmap
+                $response_value = $method->invoke($class_inst, $arg_array);
+            }
+            else {
+                $response_value = $method->invokeArgs($class_inst, $arg_array);
+            }
         }
         else {
-            $response_value = $method->invokeArgs($class_inst, $arg_array);
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "class : $class_name doesn't exists");
         }
     }
     else
