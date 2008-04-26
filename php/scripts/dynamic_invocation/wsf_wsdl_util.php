@@ -1122,7 +1122,7 @@ function wsf_clear_wsdl_imports($wsdl_dom) {
                                     $local_name = $message_name;
                                 }
                                 $new_message_name = "tns:".$local_name;
-                                $operation_child->setAttribute(WSF_BINDING, $new_message_name);
+                                $operation_child->setAttribute(WSF_WSDL_MESSAGE, $new_message_name);
                             }
                         }
                     }
