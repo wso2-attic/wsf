@@ -8,6 +8,7 @@ use warnings;
 use WSO2::WSF::C;
 use WSO2::WSF::WSMessage;
 use WSO2::WSF::WSFault;
+use WSO2::WSF::WSPolicy;
 use Error qw(:try);
 
 # WSClient constructor
@@ -552,16 +553,6 @@ sub wsf_set_addressing_options {
 	    $this->{env},
 	    "[wsf-perl] useWSA is specified, value = $this->{useWSA}" );
 
-	if( defined( $this->{to} ) ) {
-	    WSO2::WSF::C::axis2_options_set_action(
-		$client_options,
-		$this->{env},
-		$this->{to} );
-
-	    # need to engage addressing
-	    $addr_action_present = 1;
-	}
-
 	if( defined( $this->{replyTo} ) ) {
 	    my $replyto_epr = WSO2::WSF::C::axis2_endpoint_ref_create(
 		$this->{env},
@@ -626,13 +617,13 @@ sub wsf_set_soap_action {
 
     # setting the SOAP action
     if( defined( $this->{action} ) ) {
-	my $action_string = WSO2::WSF::C::axutil_string_create( 
-	    $this->{env}, 
-	    $this->{action} );
-	WSO2::WSF::C::axis2_options_set_soap_action(
+# 	my $action_string = WSO2::WSF::C::axutil_string_create( 
+# 	    $this->{env}, 
+# 	    $this->{action} );
+	WSO2::WSF::C::axis2_options_set_action(
 	    $client_options, 
 	    $this->{env}, 
-	    $action_string );
+	    $this->{action} );
     }
 }
 
@@ -739,15 +730,29 @@ sub wsf_add_ssl_properties {
 sub wsf_handle_security {
     my $this = shift;
 
-    my $policy = defined( $this->{$WSO2::WSF::C::WSF_CP_POLICY} ) ?
-      $this->{$WSO2::WSF::C::WSF_CP_POLICY} : undef;
+    my $policy = defined( $this->{policy} ) ?
+      $this->{policy} : undef;
 
-    my $sec_token = defined( $this->{$WSO2::WSF::C::WSF_CP_SEC_TOKEN} ) ?
-      $this->{$WSO2::WSF::C::WSF_CP_SEC_TOKEN} : undef;
+    my $sec_token = defined( $this->{securityToken} ) ?
+      $this->{securityToken} : undef;
 
-    if ( defined( $policy ) ) {
+    $policy = $this->{policy};
+
+#     print $policy->get_policy_as_axiom_node($this->{env}), "\n";
+
+    if ( defined($policy) && defined($sec_token) ) {
 	# policy is given, let's do the rest
-	
+	WSO2::WSF::C::handle_client_security($this->{env},
+					     $this->{svc_client},
+					     $policy->get_policy_as_axiom_node($this->{env}),
+					     ($sec_token->{privateKey} ? $sec_token->{privateKey} : ""),
+					     ($sec_token->{certificate} ? $sec_token->{certificate} : ""),
+					     ($sec_token->{receiverCertificate} ? $sec_token->{receiverCertificate} : ""),
+					     ($sec_token->{user} ? $sec_token->{user} : ""),
+					     ($sec_token->{password} ? $sec_token->{password} : ""),
+					     ($sec_token->{passwordType} ? $sec_token->{passwordType} : ""),
+					     ($sec_token->{ttl} ? $sec_token->{ttl} : "")
+					    );
     }
 
 }
@@ -785,7 +790,7 @@ sub wsf_reader_create {
 
     my($isws, $env, $payload) = (@_);
 
-    if( $is_wsmessage ) {
+    if( $isws ) {
 	$reader = WSO2::WSF::C::axiom_xml_reader_create_for_memory_new(
 	    $env,
 	    $payload,
