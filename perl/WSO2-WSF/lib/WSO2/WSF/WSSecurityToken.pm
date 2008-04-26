@@ -12,7 +12,7 @@ sub new {
 
     # $self = {} unless( defined( $self ) );
 
-    if( ( scalar( $self->{policy} ) =~ /HASH/ ) ) {
+    if( (defined $self->{policy}) and ( scalar( $self->{policy} ) =~ /HASH/ ) ) {
 	die "ERROR:  Policy should be a hash";
     }
 
