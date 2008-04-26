@@ -25,13 +25,13 @@ sub new {
     return $self;
 }
 
-sub get_policy_axiom_node {
+sub get_policy_as_axiom_node {
     my $this = shift;
     my $env = shift;
 
-    if ( defined $this->{policy} ) {
+    if ( defined $this->{security} ) {
 
-	if ( $this->{policy} =~ /HASH/ ) {
+	if ( $this->{security} =~ /HASH/ ) {
 	    return create_policy_from_hash( $this, $env );
 	} else {
 	    return create_policy_from_string( $this, $env );
@@ -47,25 +47,25 @@ sub create_policy_from_hash {
     my $this = shift;
     my $env = shift;
 
-    if ( (not defined $this->{policy}) or ($this->{policy} =~ /HASH/) ) {
+    if ( (not defined $this->{security}) or ($this->{security} !~ /HASH/) ) {
 	return undef;
     }
 
-    my $options = $this->{policy};
+    my $options = $this->{security};
 
     return undef if not defined $options;
 
     my $neethi_options = WSO2::WSF::C::neethi_options_create($env);
     if ( defined $neethi_options ) {
-	my $op = (defined $options->{include_time_stamp}) ?
-	  $options->{include_time_stamp} : undef;
+	my $op = (defined $options->{includeTimeStamp}) ?
+	  $options->{includeTimeStamp} : undef;
 
 	if ( (defined $op) and ($op eq 'TRUE') ) {
 	    WSO2::WSF::C::neethi_options_set_include_timestamp($neethi_options, $env, $WSO2::WSF::C::AXIS2_TRUE);
 	}
 
-	$op = (defined $options->{use_username_token}) ?
-	  $options->{use_username_token} : undef;
+	$op = (defined $options->{useUsernameToken}) ?
+	  $options->{useUsernameToken} : undef;
 
 	if ( (defined $op) and ($op eq 'TRUE') ) {
 	    WSO2::WSF::C::neethi_options_set_is_username_token($neethi_options, $env, $WSO2::WSF::C::AXIS2_TRUE);
@@ -82,8 +82,8 @@ sub create_policy_from_hash {
 	    }
 	}
 
-	$op = (defined $options->{algorithm_suite}) ?
-	  $options->{algorithm_suite} : undef;
+	$op = (defined $options->{algorithmSuite}) ?
+	  $options->{algorithmSuite} : undef;
 
 	if ( defined $op ) {
 	    WSO2::WSF::C::neethi_options_set_algorithmsuite($neethi_options, $env, $op);
@@ -100,23 +100,23 @@ sub create_policy_from_hash {
 	    }
 	}
 
-	$op = (defined $options->{security_token_reference}) ?
-	  $options->{security_token_reference} : undef;
+	$op = (defined $options->{securityTokenReference}) ?
+	  $options->{securityTokenReference} : undef;
 
 	if ( defined $op ) {
 	    my $token_ref = get_rampart_token_value($op);
 	    WSO2::WSF::C::neethi_options_set_keyidentifier($neethi_options, $env, $token_ref) if defined $token_ref;
 	}
 
-	$op = (defined $options->{encrypt_signature}) ?
-	  $options->{encrypt_signature} : undef;
+	$op = (defined $options->{encryptSignature}) ?
+	  $options->{encryptSignature} : undef;
 
 	if ( (defined $op) and ($op eq 'TRUE') ) {
 	    WSO2::WSF::C::neethi_options_set_signature_protection($neethi_options, $env, $WSO2::WSF::C::AXIS2_TRUE);
 	}
 
-	$op = (defined $options->{protection_order}) ?
-	  $options->{protection_order} : undef;
+	$op = (defined $options->{protectionOrder}) ?
+	  $options->{protectionOrder} : undef;
 
 	if ( defined $op ) {
 	    if ( $op eq "EncryptBeforeSigning" ) {
