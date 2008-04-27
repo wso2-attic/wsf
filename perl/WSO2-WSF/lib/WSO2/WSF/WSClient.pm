@@ -63,7 +63,7 @@ sub request {
 	    $this->{wsfc_home} = $ENV{WSFC_HOME};
 	} else {
 	    # can't continue without knowing where WSF/C is installed.
-	    WSO2::WSF::C::axis2_log_debug($this->{env},
+	    WSO2::WSF::C::axis2_log_error($this->{env},
 					  "[wsf-perl] Location where WSF/C installed is not specified" );
 	    die "ERROR:  WSF/C home is not given.  Either specify wsfc_home option or set WSFC_HOME environment variable to where you installed WSF/C";
 	}
