@@ -446,6 +446,11 @@ AC_CONFIG_FILES([Makefile \
     src/core/transport/tcp/receiver/Makefile \
     src/core/transport/tcp/server/Makefile \
     src/core/transport/tcp/server/simple_tcp_server/Makefile \
+    src/core/transport/xmpp/Makefile \
+    src/core/transport/xmpp/sender/Makefile \
+    src/core/transport/xmpp/receiver/Makefile \
+    src/core/transport/xmpp/server/Makefile \
+    src/core/transport/xmpp/server/simple_xmpp_server/Makefile \
     src/core/deployment/Makefile \
     src/core/clientapi/Makefile \
     src/core/receivers/Makefile \
