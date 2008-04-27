@@ -32,24 +32,24 @@ typedef struct wsf_worker_t wsf_worker_t;
 
 wsf_worker_t* 
 wsf_worker_create (const axutil_env_t* env,
-                   axis2_char_t*       repo_path);
+                   axis2_char_t* repo_path);
 
 axis2_char_t* 
 wsf_worker_get_bytes (const axutil_env_t* env,
-                      axutil_stream_t*    stream);
+                      axutil_stream_t* stream);
 
 int 
-wsf_worker_process_request (wsf_worker_t*   worker,
-                            axutil_env_t*   env,
+wsf_worker_process_request (wsf_worker_t* worker,
+                            axutil_env_t* env,
                             wsf_req_info_t* reqinfo,
                             wsf_svc_info_t* svc_info);
 
 axis2_conf_ctx_t* 
-wsf_worker_get_conf_ctx (wsf_worker_t*       worker,
+wsf_worker_get_conf_ctx (wsf_worker_t* worker,
                          const axutil_env_t* env);
 
 void 
-wsf_worker_free (wsf_worker_t*       worker,
+wsf_worker_free (wsf_worker_t* worker,
                  const axutil_env_t* env);
 
 #ifdef __cplusplus

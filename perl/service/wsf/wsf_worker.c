@@ -52,7 +52,7 @@ wsf_worker_dummy_free_function (void*               obj,
 
 wsf_worker_t* 
 wsf_worker_create (const axutil_env_t* env,
-                   axis2_char_t*       repo_path) 
+                   axis2_char_t* repo_path) 
 {
     wsf_worker_t * worker = NULL;
     AXIS2_ENV_CHECK (env, NULL);

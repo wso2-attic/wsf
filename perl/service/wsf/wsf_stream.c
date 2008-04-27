@@ -36,14 +36,15 @@ struct wsf_stream_impl
 
 axutil_stream_t *WSF_CALL
 wsf_stream_create (const axutil_env_t* env,
-                   wsf_req_info_t*     req_info)
+                   wsf_req_info_t* req_info)
 {
     wsf_stream_impl_t *stream_impl = NULL;
 
     stream_impl = (wsf_stream_impl_t *) AXIS2_MALLOC (env->allocator,
-        sizeof (wsf_stream_impl_t));
+                                                      sizeof (wsf_stream_impl_t));
 
-    if (!stream_impl) {
+    if (!stream_impl) 
+    {
         AXIS2_ERROR_SET (env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
     }
@@ -56,20 +57,22 @@ wsf_stream_create (const axutil_env_t* env,
     stream_impl->buffer = NULL;
     stream_impl->buffer_len = 0;
     stream_impl->current_rlen = 0;
-    stream_impl->buffer = AXIS2_MALLOC (env->allocator,
-        sizeof (axis2_char_t) * req_info->req_data_length);
+    stream_impl->buffer = 
+        AXIS2_MALLOC (env->allocator,
+                      sizeof (axis2_char_t)*req_info->req_data_length);
 
     memcpy (stream_impl->buffer, req_info->req_data,
-        req_info->req_data_length);
-
+            req_info->req_data_length);
+    
     stream_impl->buffer_len = req_info->req_data_length;
 
     return &(stream_impl->stream);
+}
 
 
 
 axis2_status_t WSF_CALL
-wsf_stream_free (axutil_stream_t*    stream,
+wsf_stream_free (axutil_stream_t* stream,
                  const axutil_env_t* env)
 {
     wsf_stream_impl_t *stream_impl = NULL;
@@ -80,13 +83,13 @@ wsf_stream_free (axutil_stream_t*    stream,
         stream_impl->buffer = NULL;
     }
 
-	AXIS2_FREE (env->allocator, stream_impl);
+    AXIS2_FREE (env->allocator, stream_impl);
     return AXIS2_SUCCESS;
 }
 
 
 axutil_stream_type_t WSF_CALL
-wsf_stream_get_type (axutil_stream_t*    stream,
+wsf_stream_get_type (axutil_stream_t* stream,
                      const axutil_env_t* env)
 {
 
@@ -95,20 +98,20 @@ wsf_stream_get_type (axutil_stream_t*    stream,
 
 
 int WSF_CALL
-wsf_stream_write (axutil_stream_t*    stream,
+wsf_stream_write (axutil_stream_t* stream,
                   const axutil_env_t* env,
-                  const void*         buf,
-                  size_t              count)
+                  const void* buf,
+                  size_t count)
 {
     return -1;
 }
 
 
 int WSF_CALL
-wsf_stream_read (axutil_stream_t*    stream,
+wsf_stream_read (axutil_stream_t* stream,
                  const axutil_env_t* env,
-                 void*               buffer,
-                 size_t              count)
+                 void* buffer,
+                 size_t count)
 {
     wsf_stream_impl_t *stream_impl = NULL;
     int len = 0;
@@ -120,15 +123,15 @@ wsf_stream_read (axutil_stream_t*    stream,
     if (len >= count) {
 
         memcpy (buffer,
-            stream_impl->buffer +
-            stream_impl->current_rlen * sizeof (axis2_char_t), count);
+                stream_impl->buffer +
+                stream_impl->current_rlen * sizeof (axis2_char_t), count);
         stream_impl->current_rlen += count;
         return count;
     } else if (len < count && len > 0) {
 
         memcpy (buffer,
-            stream_impl->buffer +
-            stream_impl->current_rlen * sizeof (axis2_char_t), len);
+                stream_impl->buffer +
+                stream_impl->current_rlen * sizeof (axis2_char_t), len);
         stream_impl->current_rlen += len;
         return len;
     } else {
@@ -140,13 +143,9 @@ wsf_stream_read (axutil_stream_t*    stream,
 
 
 int WSF_CALL
-wsf_stream_skip (axutil_stream_t*    stream,
+wsf_stream_skip (axutil_stream_t* stream,
                  const axutil_env_t* env,
-                 int                 count)
+                 int count)
 {
-
-    wsf_stream_impl_t *stream_impl = NULL;
-    stream_impl = AXIS2_INTF_TO_IMPL (stream);
     return -1;
 }
-

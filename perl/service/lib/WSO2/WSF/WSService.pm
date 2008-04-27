@@ -19,47 +19,47 @@ use WSO2::WSF::WSFC;
 
 sub new 
 {
-	my $this = shift;
-	my $properties = {};
-	
-	# Create environment
-	my $env = WSO2::WSF::WSFC::wsf_env_create ($WSO2::WSF::WSConfig::LOG_PATH,
-											   $WSO2::WSF::WSConfig::LOG_LEVEL);
-	$properties->{"env"} = $env;
+    my $this = shift;
+    my $properties = {};
 
-	# Create message receiver
-	my $msg_recv = WSO2::WSF::WSFC::wsf_xml_msg_recv_create ($env);
-	$properties->{"msg_recv"} = $msg_recv;
+    # Create environment
+    my $env = WSO2::WSF::WSFC::wsf_env_create ($WSO2::WSF::WSConfig::LOG_PATH,
+                                               $WSO2::WSF::WSConfig::LOG_LEVEL);
+    $properties->{"env"} = $env;
 
-	# Initialize XML reader
-	WSO2::WSF::WSFC::axiom_xml_reader_init ();
+    # Create message receiver
+    my $msg_recv = WSO2::WSF::WSFC::wsf_xml_msg_recv_create ($env);
+    $properties->{"msg_recv"} = $msg_recv;
 
-	# Create worker
-	my $worker = WSO2::WSF::WSFC::wsf_worker_create ($env,
-													 $WSO2::WSF::WSConfig::WSFC_HOME);
+    # Initialize XML reader
+    WSO2::WSF::WSFC::axiom_xml_reader_init ();
 
-	# Initialize object with the given set of properties
-	my %options = @_;
-	while (($key, $value) = each (%options))
-	{
-		$properties->{$key} = $value;
-	}
+    # Create worker
+    my $worker = WSO2::WSF::WSFC::wsf_worker_create ($env,
+                                                     $WSO2::WSF::WSConfig::WSFC_HOME);
 
-	bless $properties, $this;
+    # Initialize object with the given set of properties
+    my %options = @_;
+    while (($key, $value) = each (%options))
+    {
+        $properties->{$key} = $value;
+    }
 
-	return $properties;
+    bless $properties, $this;
+
+    return $properties;
 }
 
 
 sub test
 {
-	my $this = shift;
-	
-	while (($key, $value) = each (%$this))
-	{
-		print $key . " -> " . $value . "\n";
-	}
-	
+    my $this = shift;
+
+    while (($key, $value) = each (%$this))
+    {
+        print $key . " -> " . $value . "\n";
+    }
+
 }
 
 1;
