@@ -515,13 +515,13 @@ border="1">
       </td>
       <td><p>"WSMESSAGE" | "MIXED"</p>
       </td>
-      <td><p>"WSMESSAGE"</p>
+      <td><p>"MIXED" if "wsdl" option provided. "WSMESSAGE" otherwise</p>
       </td>
-      <td><p>This option specifies what a PHP function corresponding
-        to the service operation would accept as arguments. This option is
-        only required when writing a service to use in the WSDL mode. By default, the
-        WSMESSAGE is assumed, which means that each function would have a single
-        parameter of the type WSMessage.</p>
+      <td><p>This option specifies what a PHP function corresponding to the service
+         operation would accept as arguments.  If the 'wsdl' option is set this option
+         is default to MIXED, otherwise it is default to WSMESSAGE. If you are using
+         the service for WSDL Generations with the use of doc comments, you have to
+         set this parameter to MIXED explicitly. .</p>
       </td>
     </tr>
     <tr valign="top">
