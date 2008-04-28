@@ -214,7 +214,7 @@ wsf_client_set_security_options (
             "[wsf_client] policy object found ");
     }
 
-    if (sec_token && policy) {
+    if (sec_token) {
         wsf_policy_handle_client_security (sec_token, policy, env,
             svc_client TSRMLS_CC);
     }

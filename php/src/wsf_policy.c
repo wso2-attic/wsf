@@ -100,12 +100,13 @@ wsf_policy_handle_client_security (
         tmp_rampart_ctx.callback_function = NULL;
 		
     }
-    if (!sec_token && !policy)
+    if (!sec_token) {
         return AXIS2_FAILURE;
+    }
 
     /* if incoming policy and outgoing policy are diffrenet from each
        other */
-    if (Z_TYPE_P (policy) == IS_OBJECT) {
+    if (policy && Z_TYPE_P (policy) == IS_OBJECT) {
         ht = Z_OBJPROP_P (policy);
         if (zend_hash_find (ht, WS_IN_POLICY, sizeof (WS_IN_POLICY),
                 (void **) &tmp_type) == SUCCESS) {
@@ -152,7 +153,7 @@ wsf_policy_handle_client_security (
     }
     /* since creating policy xml is the same procedure use one
        function */
-    if (Z_TYPE_P (policy) == IS_OBJECT && is_multiple_flow == AXIS2_FALSE) {
+    if (policy && Z_TYPE_P (policy) == IS_OBJECT && is_multiple_flow == AXIS2_FALSE) {
         outgoing_policy_node =
             wsf_do_create_policy (sec_token, policy, AXIS2_FAILURE, env TSRMLS_CC);
         incoming_policy_node =
@@ -164,6 +165,18 @@ wsf_policy_handle_client_security (
     tmp_rampart_ctx =
         wsf_set_tmp_rampart_options (tmp_rampart_ctx, sec_token, policy,
         env TSRMLS_CC);
+
+    if(tmp_rampart_ctx.custom_tokens == NULL && policy == NULL) {
+        return AXIS2_FAILURE;
+    }
+
+    if(policy == NULL && tmp_rampart_ctx.custom_tokens != NULL) {
+
+        neethi_options_t *neethi_options = NULL;
+
+        neethi_options = neethi_options_create (env); 
+        incoming_policy_node = neethi_options_get_root_node (neethi_options, env);
+    }
 
     rampart_ctx = rampart_context_create (env);
 
