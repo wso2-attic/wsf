@@ -258,6 +258,7 @@ typedef struct wsf_svc_info
 
     void *service;
 
+	void *wsdl_info;
 }
 wsf_svc_info_t;
 

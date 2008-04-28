@@ -15,6 +15,7 @@
 #include <axis2_addr.h>
 #include <axiom_util.h>
 #include "wsf_xml_msg_recv.h"
+#include "wsf_wsdl_mode.h"
 
 static axutil_env_t *ws_env_svr;
 static axis2_msg_recv_t * wsf_msg_recv;
@@ -78,6 +79,7 @@ wsservice_initialize(VALUE self, VALUE options)
 	VALUE policy;
     VALUE use_reliable;
     VALUE ht_classes;
+	VALUE wsdl;
 
     VALUE v_use_mtom;
     VALUE key = Qnil;
@@ -94,6 +96,7 @@ wsservice_initialize(VALUE self, VALUE options)
     svc_info->class_to_args = axutil_hash_make (ws_env_svr);
 
     svc_info->ruby_worker = worker;
+	svc_info->wsdl_info = NULL;
 
     if(TYPE(options) == T_HASH)
     {
@@ -224,6 +227,49 @@ wsservice_initialize(VALUE self, VALUE options)
         {
             AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
                           "[wsf_service] ht_classes object present");
+        }
+
+		wsdl = rb_hash_aref(options, ID2SYM(rb_intern("wsdl")));
+        if(wsdl == Qnil)
+        {
+            wsdl = rb_hash_aref(options, rb_str_new2("wsdl"));
+        }
+        if(wsdl != Qnil)
+        {
+            VALUE xslt_location = Qnil;
+			VALUE type_map = Qnil;
+			axis2_char_t* xslt_location_string = NULL;
+			axis2_char_t* type_map_string = NULL;
+			axis2_char_t* wsdl_location_string = NULL;
+			wsf_wsdl_info_t* wsdl_info = NULL;
+			
+			AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                                "[wsf_service] wsdl is present");
+
+			rb_require("rbconfig");
+    
+			xslt_location = rb_eval_string("Config::CONFIG['WSF_XSLT_LOCATION'] ");
+			if(xslt_location == Qnil)
+			{
+				rb_raise(rb_eException, "Please set WSF_XSLT_LOCATION in rbconfig.rb, I cannot continue without it");
+			}
+
+			xslt_location_string = RSTRING(xslt_location)->ptr;
+
+			type_map = rb_eval_string("Config::CONFIG['WSF_TYPE_MAP'] ");
+			if(type_map == Qnil)
+			{
+				rb_raise(rb_eException, "Please set WSF_TYPE_MAP in rbconfig.rb, I cannot continue without it");
+			}
+
+			type_map_string = RSTRING(type_map)->ptr;
+
+			wsdl_location_string = RSTRING(wsdl)->ptr;
+
+			if (wsf_wsdl_mode_initialize_for_service(ws_env_svr, wsdl_location_string, type_map_string, xslt_location_string, &wsdl_info))
+			{
+				svc_info->wsdl_info = wsdl_info;
+			}
         }
     }
 

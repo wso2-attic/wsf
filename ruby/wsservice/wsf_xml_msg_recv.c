@@ -27,6 +27,7 @@
 #include <string.h>
 #include <ruby.h>
 #include "wsf_common.h"
+#include "wsf_wsdl_mode.h"
 
 axis2_status_t AXIS2_CALL wsf_xml_msg_recv_invoke_business_logic_sync (
     axis2_msg_recv_t * msg_recv,
@@ -61,6 +62,19 @@ static axiom_node_t *wsf_xml_msg_recv_invoke_wsmsg (
     int request_xop,
     VALUE class_args);
 
+static axiom_node_t *wsf_xml_msg_recv_invoke_other (
+    const axutil_env_t * env,
+	wsf_svc_info_t * svc_info,
+    axis2_char_t * soap_ns,
+	axis2_char_t *wsdl_op_name,
+    axis2_char_t * op_name,
+    axiom_node_t * om_node,
+    axis2_msg_ctx_t * out_msg_ctx,
+    axis2_char_t *classname,
+    int enable_mtom,
+    int request_xop,
+    VALUE class_args);
+
 
 static int wsf_xml_msg_recv_invoke_mixed (
     const axutil_env_t * env,
@@ -74,6 +88,9 @@ static void wsf_xml_msg_recv_set_soap_fault (
     axis2_char_t * soap_ns,
     axis2_msg_ctx_t * out_msg_ctx,
     VALUE zval_soap_fault);
+
+VALUE
+wsf_wsdl_convert_wsdl_data_to_hash(axutil_env_t* env, wsf_wsdl_data_t* request);
 
 /************************** End of function prototypes ************************/
 
@@ -125,6 +142,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
     axiom_node_t *body_content_node = NULL;
     axiom_element_t *body_content_element = NULL;
     axiom_node_t *out_node = NULL;
+	axiom_node_t* wsdl_validation_om_node = NULL;
 
 
     axiom_namespace_t *env_ns = NULL;
@@ -171,6 +189,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
     if (0 == axutil_strcmp (AXIS2_STYLE_DOC, style)) {
 
         om_node = axiom_soap_body_get_base_node (body, env);
+		wsdl_validation_om_node = om_node;
         om_element = axiom_node_get_data_element (om_node, env);
         om_node = axiom_node_get_first_child (om_node, env);
         local_name = wsf_xml_msg_recv_get_method_name (in_msg_ctx, env);
@@ -200,6 +219,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
         }
         om_node = axiom_node_get_first_child (op_node, env);
         om_element = axiom_node_get_data_element (om_node, env);
+		wsdl_validation_om_node = om_node;
     }
 
     /** set soap version and soap namespace to local variables */
@@ -249,10 +269,15 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
         {
             function_type = RSTRING(tmp)->ptr;
             if (strcmp (function_type, "MIXED") == 0) {
-                int status = AXIS2_SUCCESS;
+                /*int status = AXIS2_SUCCESS;
                 status = wsf_xml_msg_recv_invoke_mixed (env, svc_info,
                     in_msg_ctx, out_msg_ctx, operation_name);
-                return status;
+                return status;*/
+				result_node =
+                    wsf_xml_msg_recv_invoke_other (env, svc_info, soap_ns, local_name,
+                    operation_name,
+                    wsdl_validation_om_node, out_msg_ctx,
+                    classname, use_mtom, request_xop, class_args);
             } else if (strcmp (function_type, "WSMESSAGE") == 0) {
                 result_node =
                     wsf_xml_msg_recv_invoke_wsmsg (env, soap_ns,
@@ -262,10 +287,19 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
             }
         }
     } else {
-        result_node =
-            wsf_xml_msg_recv_invoke_wsmsg (env, soap_ns, operation_name,
-            om_node, out_msg_ctx,
-            classname, use_mtom, request_xop, class_args);
+		if (svc_info->wsdl_info)
+		{
+			result_node = wsf_xml_msg_recv_invoke_other (env, svc_info, soap_ns, local_name, operation_name,
+				wsdl_validation_om_node, out_msg_ctx,
+				classname, use_mtom, request_xop, class_args);
+		}
+		else
+		{
+			result_node =
+				wsf_xml_msg_recv_invoke_wsmsg (env, soap_ns, operation_name,
+				om_node, out_msg_ctx,
+				classname, use_mtom, request_xop, class_args);
+		}
     }
     if (!result_node) {
 
@@ -471,7 +505,429 @@ wsf_xml_msg_recv_invoke_mixed (
     return wsf_soap_do_function_call (env,
         svc_info, in_msg_ctx, out_msg_ctx, op_name);
 */
-	  return 0;
+		
+	
+	return 0;
+}
+
+
+axis2_bool_t
+wsf_wsdl_convert_wsdl_data_to_value_array(axutil_env_t* env, wsf_wsdl_data_t* request, VALUE** value_array, int* value_count)
+{
+	VALUE element = Qnil;
+	wsf_wsdl_data_iterator_t* iterator = NULL;
+	
+	if (request->children_type == CHILDREN_TYPE_NONE)
+	{
+		axis2_char_t* data = NULL;
+
+		*value_array = (VALUE*)AXIS2_MALLOC(env->allocator, sizeof(VALUE));
+
+		data = (axis2_char_t*)(request->data);
+		
+		if (strcmp(data, "String") == 0)
+		{
+			element = rb_str_new2(data);
+		}
+		else if (strcmp(data, "Fixnum") == 0)
+		{
+			int fixnum = atoi(data);
+			element = rb_fix_new(fixnum);
+		}
+		else if (strcmp(data, "Float") == 0)
+		{
+			int floatnum = atof(data);
+			element = rb_float_new(floatnum);
+		}
+		else
+		{
+			element = rb_str_new2(data);
+		}
+		
+		(*value_array)[0] = element;
+		*value_count = 1;
+	}
+
+	iterator = wsdl_data_iterator_create(env, request);
+
+	if (!wsdl_data_iterator_first(env, &iterator))
+		return Qnil;
+
+	if (iterator->type == CHILDREN_TYPE_ARRAY_ELEMENTS)
+	{
+		*value_array = (VALUE*)AXIS2_MALLOC(env->allocator, sizeof(VALUE));
+
+		element = rb_ary_new();
+		do
+		{
+			VALUE sub_element;
+			wsf_wsdl_data_t* data = iterator->this;
+			
+			sub_element = wsf_wsdl_convert_wsdl_data_to_hash(env, data);
+
+			rb_ary_push(element, sub_element);
+
+		} while (wsdl_data_iterator_next(env, &iterator));
+
+		(*value_array)[0] = element;
+		*value_count = 1;
+	}
+	else if (iterator->type == CHILDREN_TYPE_ATTRIBUTES)
+	{
+		int count = 0;
+		*value_array = (VALUE*)AXIS2_MALLOC(env->allocator, sizeof(VALUE));
+
+		do
+		{
+			VALUE sub_element;
+			VALUE key;
+			wsf_wsdl_data_t* data = iterator->this;
+
+			if (count != 0)
+            {
+                *value_array = AXIS2_REALLOC(env->allocator, *value_array, sizeof(VALUE) * (count + 1));
+            }
+
+			sub_element = wsf_wsdl_convert_wsdl_data_to_hash(env, data);
+			key = rb_tainted_str_new2(iterator->name);
+
+			(*value_array)[count] = sub_element;
+
+			count++;
+				
+		} while (wsdl_data_iterator_next(env, &iterator));
+
+		*value_count = count;
+	}
+
+	wsdl_data_iterator_free(env, iterator);
+
+}
+
+VALUE
+wsf_wsdl_convert_wsdl_data_to_hash(axutil_env_t* env, wsf_wsdl_data_t* request)
+{
+	VALUE element = Qnil;
+	wsf_wsdl_data_iterator_t* iterator = NULL;
+	
+	if (request->children_type == CHILDREN_TYPE_NONE)
+	{
+		axis2_char_t* data = (axis2_char_t*)(request->data);
+		
+		if (strcmp(data, "String") == 0)
+		{
+			element = rb_str_new2(data);
+		}
+		else if (strcmp(data, "Fixnum") == 0)
+		{
+			int fixnum = atoi(data);
+			element = rb_fix_new(fixnum);
+		}
+		else if (strcmp(data, "Float") == 0)
+		{
+			int floatnum = atof(data);
+			element = rb_float_new(floatnum);
+		}
+		else
+		{
+			element = rb_str_new2(data);
+		}
+		
+		return element;
+	}
+
+	iterator = wsdl_data_iterator_create(env, request);
+
+	if (!wsdl_data_iterator_first(env, &iterator))
+		return Qnil;
+
+	if (iterator->type == CHILDREN_TYPE_ARRAY_ELEMENTS)
+	{
+		element = rb_ary_new();
+		do
+		{
+			VALUE sub_element;
+			wsf_wsdl_data_t* data = iterator->this;
+			
+			sub_element = wsf_wsdl_convert_wsdl_data_to_hash(env, data);
+
+			rb_ary_push(element, sub_element);
+
+		} while (wsdl_data_iterator_next(env, &iterator));
+	}
+	else if (iterator->type == CHILDREN_TYPE_ATTRIBUTES)
+	{
+		element = rb_hash_new();
+		do
+		{
+			VALUE sub_element;
+			VALUE key;
+			wsf_wsdl_data_t* data = iterator->this;
+
+			sub_element = wsf_wsdl_convert_wsdl_data_to_hash(env, data);
+			key = rb_tainted_str_new2(iterator->name);
+
+			rb_hash_aset(element, key, sub_element);
+
+		} while (wsdl_data_iterator_next(env, &iterator));
+	}
+
+	wsdl_data_iterator_free(env, iterator);
+
+	return element;
+}
+
+
+wsf_wsdl_data_t*
+wsf_wsdl_convert_params_to_wsdl_data(axutil_env_t* env, VALUE params);
+
+static VALUE
+hash_callback (VALUE key_val_array, void** callback_data)
+{
+	axutil_env_t* env = NULL;
+	wsf_wsdl_data_t* data = NULL;
+	VALUE key;
+	VALUE value;
+
+	env = (axutil_env_t*)(callback_data[0]);
+	data = (wsf_wsdl_data_t*)(callback_data[1]);
+
+	key = rb_ary_entry(key_val_array, 0);               
+	value = rb_ary_entry(key_val_array, 1);             
+
+	/*if (TYPE(key) == T_SYMBOL)
+	{
+		key = rb_sym2str(key);							
+	}*/
+	
+	if (!NIL_P(key) && !NIL_P(value))
+	{
+		axis2_char_t* key_str = NULL;
+		axis2_char_t* value_str = NULL;
+		axis2_char_t* value_type_str = NULL;			/*TODO: support type */
+
+		key_str = axutil_strdup(env, StringValuePtr(key));
+
+		if (TYPE(value) == T_HASH)
+		{
+			wsf_wsdl_data_t* sub_data = NULL;
+			sub_data = wsf_wsdl_convert_params_to_wsdl_data(env, value);
+			wsdl_data_add_object(env, data, key_str, "whatever", sub_data, "http://www.example.org/sample/", NULL);
+		}
+		else
+		{
+			axis2_char_t* type_str = NULL;
+			VALUE type_val;
+			VALUE type_val_str;
+			VALUE val;
+			val = rb_funcall(value, rb_intern("to_s"), 0, 0);
+			type_val = rb_funcall(value, rb_intern("class"), 0, 0);
+			type_val_str = rb_funcall(type_val, rb_intern("to_s"), 0, 0);
+
+			if (!NIL_P(val) && (TYPE(val) == T_STRING))
+			{
+				value_str = axutil_strdup(env, StringValuePtr(val));
+				type_str = axutil_strdup(env, StringValuePtr(type_val_str));
+				wsdl_data_add_simple_element(env, data, key_str, type_str, value_str, "http://www.w3.org/2001/XMLSchema", "http://www.example.org/sample/");
+				/*AXIS2_FREE(env->allocator, value_str);*/
+			}
+		}
+		
+		/*AXIS2_FREE(env->allocator, key_str);*/
+	}
+	else
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] key and value should not be NULL");
+	}
+
+	return Qnil;
+}
+
+wsf_wsdl_data_t*
+wsf_wsdl_convert_params_to_wsdl_data(axutil_env_t* env, VALUE params)
+{
+	wsf_wsdl_data_t* data = NULL;
+	void** callback_data = AXIS2_MALLOC(env->allocator, sizeof(void*) * 2);
+	callback_data[0] = env;
+
+	data = wsdl_data_create_object(env);
+	callback_data[1] = data;
+	
+	if (!NIL_P(params))
+	{
+		if (TYPE(params) == T_HASH)
+		{
+			rb_iterate (rb_each, params, hash_callback, (VALUE)callback_data);
+		}
+		else /*if (TYPE(params) == T_OBJECT)*/
+		{
+			/* TODO: implement this */
+		}
+	}
+
+	AXIS2_FREE(env->allocator, callback_data);
+
+	return data;
+}
+
+static axiom_node_t *
+wsf_xml_msg_recv_invoke_other (
+    const axutil_env_t *env,
+	wsf_svc_info_t * svc_info,
+    axis2_char_t       *soap_ns,
+	axis2_char_t	   *wsdl_op_name,
+    axis2_char_t       *op_name,
+    axiom_node_t       *om_node,
+    axis2_msg_ctx_t    *out_msg_ctx,
+    axis2_char_t       *classname,
+    int                 use_mtom,
+    int                 request_xop,
+    VALUE class_args)
+{
+    char *req_payload = NULL;
+	char *res_payload = NULL;
+    void *val = NULL;
+
+    VALUE ws_msg_class;
+    VALUE ws_fault_class;
+    VALUE user_class;
+    VALUE v_op_name;
+    VALUE result = Qnil;
+	VALUE rb_mWSO2;
+	VALUE rb_mWSF;
+	ID ws_msg_class_id;
+	ID ws_fault_class_id;
+
+	VALUE req_msg_payload;
+	VALUE req_message;
+
+	VALUE user_obj;
+    VALUE method_exists;
+
+    axiom_node_t *res_om_node = NULL;
+	wsf_wsdl_info_t* wsdl_info = NULL;
+	axutil_hash_t* operations = NULL;
+	wsf_wsdl_operation_info_t* operation = NULL;
+	wsf_wsdl_data_t* input_data = NULL;
+
+	if (!om_node)
+		return NULL;
+
+
+	rb_mWSO2 = rb_define_module("WSO2");
+	rb_mWSF = rb_define_module_under(rb_mWSO2, "WSF");
+	
+	//ws_msg_class_id = rb_intern("WSMessage");
+	//ws_msg_class = rb_const_get(rb_mWSF, ws_msg_class_id);
+
+	ws_fault_class_id = rb_intern("WSFault");
+	ws_fault_class = rb_const_get(rb_mWSF, ws_fault_class_id);
+
+	wsdl_info = (wsf_wsdl_info_t*)(svc_info->wsdl_info);
+
+	operations = wsdl_info->operations;
+
+	operation = (wsf_wsdl_operation_info_t*)axutil_hash_get(operations, wsdl_op_name, AXIS2_HASH_KEY_STRING);
+
+	if (!operation)
+		return NULL;
+
+	if (!wsf_wsdl_mode_validate_axiom(env, wsdl_info->type_map, operation->request_template, om_node, VALIDATION_CRITERIA_RESPONSE_MODE, &input_data))
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_service] input parameters are not in the proper format according to the wsdl validation", op_name);
+		return NULL;
+	}
+	else
+	{
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_service] input parameters are valid according to the wsdl validation");
+	}
+     
+	if (NULL != classname)
+    {   
+        VALUE *argv = NULL;
+        int length;
+        int i;
+        VALUE next_arg;
+
+        user_class = rb_define_class(classname, rb_cObject);
+
+        argv = (VALUE*)AXIS2_MALLOC(env-> allocator, sizeof(VALUE));
+
+        i = 0;
+        while(Qnil != (next_arg = rb_ary_shift(class_args)))
+        {
+            if(i != 0)
+            {
+                argv = AXIS2_REALLOC(env->allocator, argv, sizeof(VALUE) * (i +1));
+            }
+            argv[i] = next_arg;
+
+            i++;
+        }
+
+        length = i;
+
+        user_obj = rb_class_new_instance(length , argv, user_class);
+
+        if(argv)
+        {
+            AXIS2_FREE(env->allocator, argv);
+        }
+    }
+    else
+    {
+		user_obj = rb_cObject;
+    }
+
+	if (user_obj != Qnil)
+	{
+		method_exists = rb_funcall(user_obj, rb_intern("respond_to?"), 2, rb_str_new2(op_name), Qtrue);
+		if(method_exists == Qtrue)
+		{
+			VALUE* args = NULL;
+			int count = 0;
+			wsf_wsdl_convert_wsdl_data_to_value_array(env, input_data, &args, &count);
+			
+			result = rb_funcall2(user_obj, rb_intern(op_name), count, args);
+		}
+		else
+		{
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf log ]The method %s doesnt exist", op_name);
+			return NULL;
+		}
+	}
+			
+	if(result != Qnil)
+	{
+		if(TYPE(result) == T_STRING)
+		{
+			res_payload = axutil_strdup(env, RSTRING(result)->ptr);		
+			res_om_node = wsf_util_deserialize_buffer (env, res_payload);
+		}
+		else if(rb_obj_is_kind_of(result, ws_fault_class))
+		{
+			wsf_xml_msg_recv_set_soap_fault(env, soap_ns, out_msg_ctx, result);
+		}
+		else /*TODO: if(rb_obj_is_kind_of(result, rb_intern("Hash")))*/
+		{
+			wsf_wsdl_data_t* resp = NULL;
+
+			resp = wsf_wsdl_convert_params_to_wsdl_data(env, result);
+
+			if (!wsf_wsdl_mode_validate_data(env, wsdl_info->type_map, operation->response_template, resp, VALIDATION_CRITERIA_RESPONSE_MODE))
+			{
+				WSDL_ERROR(env->log, AXIS2_LOG_SI, "[wsf_service] response validation failed according to the wsdl provided");
+				return NULL;
+			}
+			else
+			{
+				wsf_wsdl_mode_create_response_node(env, resp, &res_om_node);
+			}
+		}
+		/*else if /* for class map support */
+	}
+
+    return res_om_node;
 }
 
 static axiom_node_t *
@@ -602,7 +1058,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
 			}
 			else if(rb_obj_is_kind_of(result, ws_msg_class)) /* WSMessage */
 			{
-				VALUE attachments;
+				VALUE attachments;		
 				VALUE v_default_cnt_type;
 				axis2_char_t *default_cnt_type = NULL;
 				VALUE v_action;
