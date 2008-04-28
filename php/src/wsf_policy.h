@@ -43,6 +43,7 @@
 #define WS_UT "useUsernameToken"
 #define WS_TOKEN_REFERENCE "securityTokenReference"
 #define WS_ENCRYPT_SIGNATURE "encryptSignature"
+#define WS_CUSTOM_TOKENS "customTokens"
 
 #define WS_DEFAULT_TOKEN_VAL "X509"
 #define WS_X509_TOKEN_VAL "X509Token"
@@ -109,7 +110,7 @@ typedef struct tokenProperties
     char *receiverCertificateFormat;
     int ttl;
     char *callback_function;
-	
+    axutil_array_list_t *custom_tokens;	
 }
 tokenProperties_t;
 

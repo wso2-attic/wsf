@@ -1618,6 +1618,10 @@ PHP_METHOD (ws_security_token, __construct)
     WSF_GET_THIS (object);
     if (options) {
         HashTable * ht = Z_ARRVAL_P (options);
+        if (zend_hash_find (ht, WS_CUSTOM_TOKENS, sizeof (WS_CUSTOM_TOKENS),
+                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
+		    add_property_zval (object, WS_CUSTOM_TOKENS, *tmp);
+        }
         if (zend_hash_find (ht, WS_USER, sizeof (WS_USER),
                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
             add_property_stringl (object, WS_USER, Z_STRVAL_PP (tmp),

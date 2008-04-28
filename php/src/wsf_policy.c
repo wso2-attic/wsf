@@ -475,6 +475,42 @@ wsf_set_tmp_rampart_options (
         && Z_TYPE_PP (token_val) == IS_STRING) {
         tmp_rampart_ctx.callback_function = Z_STRVAL_PP (token_val);
     }
+    if (zend_hash_find (ht_token, WS_CUSTOM_TOKENS,
+            sizeof (WS_CUSTOM_TOKENS), (void **) &token_val) == SUCCESS
+        && Z_TYPE_PP (token_val) == IS_ARRAY) {
+       
+        zval **tmp;
+        HashPosition pos;
+        axutil_array_list_t *custom_tokens = NULL;
+        HashTable *ht_custom_tokens = NULL;
+
+        /* custom token hash */
+        ht_custom_tokens = Z_ARRVAL_PP(token_val);
+        /* initialize the tokens array */
+        custom_tokens = axutil_array_list_create(env, 10);
+        /* reset the hash pointer to start */
+        zend_hash_internal_pointer_reset_ex (ht_custom_tokens, &pos);
+        /* loop through each element */
+        while(zend_hash_get_current_data_ex(ht_custom_tokens, (void**)&tmp, &pos) != FAILURE){
+            if(Z_TYPE_PP (tmp) == IS_STRING) {
+                axis2_char_t *custom_token = NULL;
+                axiom_node_t *custom_token_node = NULL;
+
+                custom_token = Z_STRVAL_PP(tmp);
+
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                    "[wsf_sec_policy] custom token: %s ", custom_token);
+                
+                custom_token_node = wsf_util_deserialize_buffer(env, custom_token);
+                if(custom_token_node) {
+                    axutil_array_list_add(custom_tokens, env, (void*)custom_token_node);
+                }
+            }
+            zend_hash_move_forward_ex (ht_custom_tokens, &pos);
+        }
+        
+        tmp_rampart_ctx.custom_tokens = custom_tokens;
+    }
     return tmp_rampart_ctx;
 }
 
@@ -541,6 +577,11 @@ wsf_set_options_to_rampart_ctx (
             (void *) token_ctx.callback_function) == AXIS2_SUCCESS)
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
             "[wsf_sec_policy]setting callback function");
+
+    if (rampart_context_set_custom_tokens(x_rampart_ctx, env,
+            token_ctx.custom_tokens) == AXIS2_SUCCESS)
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+            "[wsf_sec_policy]setting custom tokens");
 
     return AXIS2_SUCCESS;
 
