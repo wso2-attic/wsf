@@ -240,8 +240,8 @@ wsf_worker_process_request (
         axutil_string_free (ctx_uuid_str, env);
     }
     ruby_out_transport_info = wsf_out_transport_info_create (env, request);
-    axis2_msg_ctx_set_http_out_transport_info (msg_ctx, env,
-        ruby_out_transport_info);
+    axis2_msg_ctx_set_out_transport_info (msg_ctx, env,
+        &(ruby_out_transport_info->out_transport));
     if (request->transfer_encoding) {
         axis2_msg_ctx_set_transfer_encoding (msg_ctx, env,
             axutil_strdup (env, request->transfer_encoding));
