@@ -659,6 +659,10 @@ module WSO2
       
    
       def get_proxy
+        if @options.nil? 
+          WSFC::axis2_log_error(@env, "[wsf-ruby] options is null, this is unexpected..")
+          return nil
+        end
         wsdl = client_property(WSFC::WSF_CP_WSDL)
         
         unless wsdl.nil?
