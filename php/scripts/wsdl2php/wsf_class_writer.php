@@ -151,8 +151,11 @@ function wsf_write_content_model($parent_node, &$child_array) {
             // write public members of the class 
             $code = $code . "    public $" . $param_name . "; // " . $array_type . $param_type . "\n";
             // if it is not s simple type, we have to keep track of it to write a corresponding class
-            if ($param_attr->getNamedItem(WSF_WSDL_SIMPLE)->value == 'no')
+            if ($param_attr->getNamedItem(WSF_WSDL_SIMPLE)->value == 'no' ||
+                    ($param_attr->getNamedItem(WSF_CONTENT_MODEL) && 
+                     $param_attr->getNamedItem(WSF_CONTENT_MODEL)->value == WSF_SIMPLE_CONTENT)) {
                 $child_array[] = $param_child;
+            }
         }
         else if($param_child->nodeName == WSF_INNER_CONTENT) {
             // in place of inner content recursively call the wsf_write_content_model
