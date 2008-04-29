@@ -680,6 +680,7 @@ WSRequest.util = {
         var useWSA = options["useWSA"];
         var wsaNs = "";
         var wsaNsDecl = "";
+        var usingWSA = false;
         if (useWSA != undefined && useWSA != false) {
             var standardversion;
             if (useWSA == "1.0" || useWSA == true) {
@@ -691,11 +692,32 @@ WSRequest.util = {
             } else throw ("Unknown WS-Addressing version '" + useWSA + "': must be '1.0' | 'submission' | true | false.");
             wsaNsDecl = ' xmlns:wsa="' + wsaNs + '"';
             headers = this._buildWSAHeaders(standardversion, options, url);
+            usingWSA = true;
+        }
+        var useWSS = options["useWSS"];
+        if (useWSS != undefined && useWSS) {
+            if (!usingWSA) {
+                throw ('In order to use WS Security, WS Addressing should be enabled. Please set "options["useWSA"] = true"');
+            }
+            var username = options["username"];
+            var password = options["password"];
+            var created = new Date();
+            headers += '<o:Security s:mustUnderstand="1" xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" ' +
+                       'xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">' +
+                       '<u:Timestamp u:Id="uuid-c3cdb38b-e4aa-4467-9d0e-dd30f081e08d-5">' +
+                       '<u:Created>' + WSRequest.util.toXSdateTime(created, 0) + '</u:Created>' +
+                       '<u:Expires>' + WSRequest.util.toXSdateTime(created, 5) + '</u:Expires>' +
+                       '</u:Timestamp>' +
+                       '<o:UsernameToken u:Id="Me" >' +
+                       '<o:Username>' + username + '</o:Username>' +
+                       '<o:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">' + password + '</o:Password>' +
+                       '</o:UsernameToken>' +
+                       '</o:Security>';
         }
 
         var request = '<?xml version="1.0" encoding="UTF-8"?>\n' +
                   '<s:Envelope xmlns:s="' + ns + '"' +
-                  wsaNsDecl + '>\n' +
+                   wsaNsDecl + '>\n' +
                   '<s:Header>' + headers + '</s:Header>\n' +
                   '<s:Body>' + (content != null ? content : '') + '</s:Body>\n' +
                   '</s:Envelope>';
@@ -920,6 +942,24 @@ WSRequest.util = {
             }
         }
         return encodedString;
+    },
+
+    toXSdateTime : function (thisDate, delta) {
+        var year = thisDate.getUTCFullYear();
+        var month = thisDate.getUTCMonth() + 1;
+        var day = thisDate.getUTCDate();
+        var hours = thisDate.getUTCHours();
+        var minutes = thisDate.getUTCMinutes();
+        var seconds = thisDate.getUTCSeconds() + delta;
+        var milliseconds = thisDate.getUTCMilliseconds();
+
+        return year + "-" +
+            (month < 10 ? "0" : "") + month + "-" +
+            (day < 10 ? "0" : "") + day + "T" +
+            (hours < 10 ? "0" : "") + hours + ":" +
+            (minutes < 10 ? "0" : "") + minutes + ":" +
+            (seconds < 10 ? "0" : "") + seconds +
+            (milliseconds == 0 ? "" : (milliseconds/1000).toString().substring(1)) + "Z";
     }
 }
         ;
