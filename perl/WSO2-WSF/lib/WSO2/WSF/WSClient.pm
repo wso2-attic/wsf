@@ -44,9 +44,29 @@ sub request {
 
     $is_wsmessage = 1  if( $args =~ /WSMessage/ );
 
+    if ( not defined $this->{log_file} ) {
+	$this->{log_file} = "/tmp/wsf_perl_client.log";
+    }
+
+    my $loglevel = $WSO2::WSF::C::AXIS2_LOG_LEVEL_INFO;
+
+    if ( defined $this->{log_level} ) {
+	if ( $this->{log_level} == 0 ) {
+	    $loglevel = $WSO2::WSF::C::AXIS2_LOG_LEVEL_CRITICAL;
+	} elsif ( $this->{log_level} == 1 ) {
+	    $loglevel = $WSO2::WSF::C::AXIS2_LOG_LEVEL_ERROR;
+	} elsif ( $this->{log_level} == 2 ) {
+	    $loglevel = $WSO2::WSF::C::AXIS2_LOG_LEVEL_WARNING;
+	} elsif ( $this->{log_level} == 4 ) {
+	    $loglevel = $WSO2::WSF::C::AXIS2_LOG_LEVEL_DEBUG;
+	} elsif ( $this->{log_level} == 5 ) {
+	    $loglevel = $WSO2::WSF::C::AXIS2_LOG_LEVEL_TRACE;
+	}
+    }
+
     $this->{env} = WSO2::WSF::C::axutil_env_create_all(
-	"/tmp/wsf-perl.log",
-	$WSO2::WSF::C::AXIS2_LOG_LEVEL_TRACE );
+	$this->{log_file},
+	$loglevel );
 
     unless( defined( $this->{env} ) ) {
 	die "ERROR:  Failed to create WSF/C environment";
