@@ -13,12 +13,21 @@ sub new {
     my $this = ref( $class ) || $class;
     my $self = shift;		# options
 
-    # $self = {} unless( defined( $self ) );
+    $self = {} unless defined $self;
 
     if( defined( $self ) ) {
-	foreach my $k (keys (%{$self})) {
-	    $this->{$k} = $self->{$k};
+	if ( scalar($self) =~ /HASH/ ) {
+	    foreach my $k (keys (%{$self})) {
+		$this->{$k} = $self->{$k};
+	    }
+	} else {
+	    # should be a string
+	    $this->{security} = $self;
+	    # making it a reference since Perl only blesses hard references (rascist bastard)
+	    $self = {};
+	    $self->{security} = $this->{security};
 	}
+
     }
 
     bless $self, $this;
@@ -34,6 +43,7 @@ sub get_policy_as_axiom_node {
 	if ( $this->{security} =~ /HASH/ ) {
 	    return create_policy_from_hash( $this, $env );
 	} else {
+	    # it's a string
 	    return create_policy_from_string( $this, $env );
 	}
 
@@ -151,9 +161,9 @@ sub create_policy_from_string {
     my $this = shift;
     my $env = shift;
 
-    return undef if not defined $this->{policy};
+    return undef if not defined $this->{security};
 
-    return WSO2::WSF::C::wsf_str_to_axiom_node($env, $this->{policy}, length($this->{policy}));
+    return WSO2::WSF::C::wsf_str_to_axiom_node($env, $this->{security}, length($this->{security}));
 }
 
 
