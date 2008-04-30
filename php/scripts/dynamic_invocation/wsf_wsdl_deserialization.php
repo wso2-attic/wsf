@@ -43,8 +43,6 @@
 function wsf_parse_payload_for_array(DomNode $payload, DomNode $sig_node) {
 
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "Loading in to parsing array");
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, wsf_test_serialize_node($sig_node));
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, wsf_test_serialize_node($payload));
 
     while($payload != NULL && $payload->nodeType != XML_ELEMENT_NODE) {
         $payload = $payload->nextSibling;
@@ -59,24 +57,31 @@ function wsf_parse_payload_for_array(DomNode $payload, DomNode $sig_node) {
     if($sig_node->hasAttributes()) {
         //wrapped situations..    
 
-        /* check the attributes */
-        $parse_tree = wsf_infer_attributes($payload, $sig_node);
-
-        /* go for the childs */
-        $current_child = $payload->firstChild;
-        while($current_child != NULL && $current_child->nodeType != XML_ELEMENT_NODE) {
-            $current_child = $current_child->nextSibling;
+        //again simple content should parsed differently
+        if($sig_node && $sig_node->attributes->getNamedItem(WSF_CONTENT_MODEL) &&
+                $sig_node->attributes->getNamedItem(WSF_CONTENT_MODEL)->value == WSF_SIMPLE_CONTENT) {
+            $parse_tree = wsf_infer_content_model($payload, $sig_node, NULL);
+            $attr_parse_tree = wsf_infer_attributes($payload, $sig_node);
+            $parse_tree = array_merge($parse_tree, $attr_parse_tree);
         }
-        if($current_child == NULL) {
-            return $parse_tree; //just the empty array
-        }
+        else {
+            /* check the attributes */
+            $parse_tree = wsf_infer_attributes($payload, $sig_node);
 
-        /* check the other content model */
-        $content_parse_tree = wsf_infer_content_model($current_child, $sig_node, NULL);
+            /* go for the childs */
+            $current_child = $payload->firstChild;
+            while($current_child != NULL && $current_child->nodeType != XML_ELEMENT_NODE) {
+                $current_child = $current_child->nextSibling;
+            }
+            if($current_child == NULL) {
+                return $parse_tree; //just the empty array
+            }
 
-        $parse_tree = array_merge($content_parse_tree, $parse_tree);
+            /* check the other content model */
+            $content_parse_tree = wsf_infer_content_model($current_child, $sig_node, NULL);
 
-        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "parse_tree: ". print_r($parse_tree, TRUE));
+            $parse_tree = array_merge($content_parse_tree, $parse_tree);
+        } 
         return $parse_tree;
     }
     else {
@@ -122,7 +127,6 @@ function wsf_parse_payload_for_array(DomNode $payload, DomNode $sig_node) {
         }
     }
     
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "parse_tree: ". print_r($parse_tree, TRUE));
 
     return $parse_tree;
 
@@ -157,10 +161,6 @@ function wsf_parse_payload_for_array(DomNode $payload, DomNode $sig_node) {
 function wsf_parse_payload_for_class_map(DomNode $payload, DomNode $sig_node, $element_type, $classmap) {
 
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "Loading in to parsing classmap");
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, wsf_test_serialize_node($sig_node));
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, wsf_test_serialize_node($payload));
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "[element name]". $element_type);
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "[class map]". print_r($classmap, TRUE));
 
     while($payload != NULL && $payload->nodeType != XML_ELEMENT_NODE) {
         $payload = $payload->nextSibling;
@@ -205,16 +205,26 @@ function wsf_parse_payload_for_class_map(DomNode $payload, DomNode $sig_node, $e
 
         // this situation gotta use the object..
 
-        // first parse the attributes
-        $parse_tree = wsf_infer_attributes($payload, $sig_node);
 
-        $current_child = $payload->firstChild;
-        while($current_child != NULL && $current_child->nodeType != XML_ELEMENT_NODE) {
-            $current_child = $current_child->nextSibling;
+        //again simple content should parsed differently
+        if($sig_node && $sig_node->attributes->getNamedItem(WSF_CONTENT_MODEL) &&
+                $sig_node->attributes->getNamedItem(WSF_CONTENT_MODEL)->value == WSF_SIMPLE_CONTENT) {
+            $parse_tree = wsf_infer_content_model($payload, $sig_node, $classmap);
+            $attr_parse_tree = wsf_infer_attributes($payload, $sig_node);
+            $parse_tree = array_merge($parse_tree, $attr_parse_tree);
         }
-        if($current_child != NULL) {
-            $content_parse_tree = wsf_infer_content_model($current_child, $sig_node, $classmap);
-            $parse_tree = array_merge($content_parse_tree, $parse_tree);
+        else {
+            // first parse the attributes
+            $parse_tree = wsf_infer_attributes($payload, $sig_node);
+
+            $current_child = $payload->firstChild;
+            while($current_child != NULL && $current_child->nodeType != XML_ELEMENT_NODE) {
+                $current_child = $current_child->nextSibling;
+            }
+            if($current_child != NULL) {
+                $content_parse_tree = wsf_infer_content_model($current_child, $sig_node, $classmap);
+                $parse_tree = array_merge($content_parse_tree, $parse_tree);
+            }
         }
 
         // all the above part of the story we were handling non-wrap types like in doclit-bare
@@ -223,7 +233,6 @@ function wsf_parse_payload_for_class_map(DomNode $payload, DomNode $sig_node, $e
             $object->$parsed_key = $parsed_value;
         }
 
-        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, print_r($object, TRUE));
         return $object;
 
     }
@@ -269,7 +278,6 @@ function wsf_parse_payload_for_class_map(DomNode $payload, DomNode $sig_node, $e
                     }
                     $converted_value = wsf_wsdl_deserialize_string_value($param_type, $original_value, $the_only_node);
 
-                    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "return value : {$converted_value}");
                     return $converted_value;
                 }
             }
@@ -423,7 +431,7 @@ function wsf_parse_payload_for_unknown_class_map(DomNode $current_node, $element
  * @return the result simple type value.
  */
 
-function wsf_deserialize_simple_types(&$current_child, DomNode $sig_param_node) {
+function wsf_deserialize_simple_types(&$current_child, DomNode $sig_param_node, $classmap) {
 
     $ret_val = NULL;
     $target_namespace = NULL;
@@ -433,6 +441,7 @@ function wsf_deserialize_simple_types(&$current_child, DomNode $sig_param_node) 
     $param_type = NULL;
     $param_name = NULL;
     $is_list = FALSE;
+    $content_model = NULL;
 
     if($sig_param_attris->getNamedItem(WSF_NAME)) {
         $param_name =
@@ -464,18 +473,29 @@ function wsf_deserialize_simple_types(&$current_child, DomNode $sig_param_node) 
          $is_list = TRUE;
     }
 
+    if($sig_param_attris->getNamedItem(WSF_CONTENT_MODEL)) {
+        $content_model = $sig_param_attris->getNamedItem(WSF_CONTENT_MODEL)->value;
+    }
+
     if($max_occurs > 1 || $max_occurs == "unbounded") {
         $i = 0;
         $tmp_array = array();
         while($current_child !== NULL && $current_child->localName == $param_name) {
-            if($current_child->firstChild) {
+            if($content_model == WSF_SIMPLE_CONTENT) {
+                if($classmap) {
+                    $converted_value = wsf_parse_payload_for_class_map($current_child, $sig_param_node, $param_type, $classmap);
+                }
+                else { 
+                    $converted_value = wsf_parse_payload_for_array($current_child, $sig_param_node);
+                }
+            }
+            else if($current_child->firstChild) {
                 $converted_value =  wsf_wsdl_deserialize_string_value($param_type,
                         $current_child->firstChild->wholeText, $sig_param_node);
             }
             else{
                 if(!isset($param_value["nillable"])) {
-                    error_log("Non nillable element". $param_name ."is nil. \n");
-                    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "Non nillable element". $param_name ."is nil. ");
+                    ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Non nillable element". $param_name ."is nil. ");
                 }
                 $converted_value = "";
             }
@@ -490,15 +510,22 @@ function wsf_deserialize_simple_types(&$current_child, DomNode $sig_param_node) 
         
     }
     else {
-        if($current_child->firstChild) {
+        if($content_model == WSF_SIMPLE_CONTENT) {
+            if($classmap) {
+                $converted_value = wsf_parse_payload_for_class_map($current_child, $sig_param_node, $param_type, $classmap);
+            }
+            else { 
+                $converted_value = wsf_parse_payload_for_array($current_child, $sig_param_node);
+            }
+        }
+        else if($current_child->firstChild) {
             $converted_value =  wsf_wsdl_deserialize_string_value($param_type,
                     $current_child->firstChild->wholeText, $sig_param_node);
         }
         else
         {
             if(!isset($param_value["nillable"])) {
-                error_log("Non nillable element". $param_name ."is nil. \n");
-                ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "Non nillable element". $param_name ."is nil. ");
+                ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Non nillable element". $param_name ."is nil. ");
             }
             $converted_value = "";
         }
@@ -573,7 +600,6 @@ function wsf_deserialize_complex_types(&$current_child, DomNode $sig_param_node,
         while($current_child !== NULL && $current_child->localName == $param_name) {
             if($sig_param_node->hasChildNodes()) {
                 if($classmap) {
-                    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "[param]". $param_name ."");
                     $converted_value = wsf_parse_payload_for_class_map($current_child, $sig_param_node, $param_type, $classmap);
                 }
                 else { 
@@ -591,7 +617,6 @@ function wsf_deserialize_complex_types(&$current_child, DomNode $sig_param_node,
             }
             if(!$current_child->firstChild && !$current_child->hasAttributes()) {
                 if(!$nillable) {
-                    error_log("Non nillable element". $param_name ."is nil. \n");
                     ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Non nillable element ". $param_name ." is nil. ");
                 }
                 $converted_value = "";
@@ -623,7 +648,6 @@ function wsf_deserialize_complex_types(&$current_child, DomNode $sig_param_node,
         }
         if(!$current_child->firstChild && !$current_child->hasAttributes()) {
             if(!$nillable) {
-                error_log("Non nillable element". $param_name ."is nil. \n");
                 ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Non nillable element ". $param_name ." is nil. ");
             }
             $converted_value = "";
@@ -648,8 +672,6 @@ function wsf_deserialize_complex_types(&$current_child, DomNode $sig_param_node,
 function wsf_infer_content_model(DomNode &$current_child, DomNode $sig_node, $classmap) {
 
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "parsing content model");
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, wsf_test_serialize_node($sig_node));
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, wsf_test_serialize_node($current_child));
 
     $parse_tree = array();
     if($sig_node == NULL) {
@@ -725,7 +747,6 @@ function wsf_infer_content_model(DomNode &$current_child, DomNode $sig_node, $cl
                         $tmp_array = array();
                         $i = 0;
                         while($current_child !== NULL && $current_child->localName == $param_name) {
-                            ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, wsf_test_serialize_node($sig_param_node));
                             $converted_value = wsf_parse_payload_for_unknown_array($current_child);
                             $tmp_array[$i++] = $converted_value;
                             $current_child = $current_child->nextSibling;
@@ -740,7 +761,6 @@ function wsf_infer_content_model(DomNode &$current_child, DomNode $sig_node, $cl
                     {
                         $tag_name = $current_child->localName;
                         if($param_name == $tag_name) {
-                            ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, wsf_test_serialize_node($sig_param_node));
                             $converted_value = wsf_parse_payload_for_unknown_array($current_child);
                             $parse_tree[$param_name] = $converted_value;
                             continue;
@@ -749,13 +769,11 @@ function wsf_infer_content_model(DomNode &$current_child, DomNode $sig_node, $cl
                 }
 
                 if($content_model == WSF_WSDL_SEQUENCE) {
-                        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, 
-                                "\$param_name:{$param_name} and child name: {$current_child->localName}");
                     if($param_name == $current_child->localName) {
 
                         if($is_simple) {
                             // this moves the current_child pointer to the next child..
-                            $parse_tree[$param_name] = wsf_deserialize_simple_types($current_child, $sig_param_node);
+                            $parse_tree[$param_name] = wsf_deserialize_simple_types($current_child, $sig_param_node, $classmap);
                         }
                         else {
                             $parse_tree[$param_name] = wsf_deserialize_complex_types($current_child, $sig_param_node, $classmap);
@@ -764,10 +782,8 @@ function wsf_infer_content_model(DomNode &$current_child, DomNode $sig_node, $cl
                     else
                     {
                         if($min_occurs == 0) {
-                            error_log("minOccurs != 0 element ". $param_name ." doesn't exist in the sequence.\n");
                             ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "minOccurs != 0 element ". $param_name ." doesn't exist in the sequence.");
                             if($current_child->localName != NULL){
-                                error_log($current_child->localName. " is found in place of ". $param_name ."\n");
                                 ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, $current_child->localName. " is found in place of ". $param_name);
                             }
                         }
@@ -784,7 +800,7 @@ function wsf_infer_content_model(DomNode &$current_child, DomNode $sig_node, $cl
                         if($param_name == $current_child->localName) {
                             if($is_simple) {
                                 // this moves the current_child pointer to the next child..
-                                $parse_tree[$param_name] = wsf_deserialize_simple_types($current_child, $sig_param_node);
+                                $parse_tree[$param_name] = wsf_deserialize_simple_types($current_child, $sig_param_node, $classmap);
                             }
                             else {
                                 $parse_tree[$param_name] = wsf_deserialize_complex_types($current_child, $sig_param_node, $classmap);
@@ -798,7 +814,6 @@ function wsf_infer_content_model(DomNode &$current_child, DomNode $sig_node, $cl
                     if(!$found) {
                         if($min_occurs == 0) {
                             // if array_key doesn't exist that mean minOccurs = 1;
-                            error_log("minOccurs != 0 element ". $param_name ." doesn't exist.\n");
                             ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "minOccurs != 0 element ". $param_name ." doesn't exist.");
                         }  
                     }
@@ -807,7 +822,7 @@ function wsf_infer_content_model(DomNode &$current_child, DomNode $sig_node, $cl
                     if($param_name == $current_child->localName) {
                         if($is_simple) {
                             // this moves the current_child pointer to the next child..
-                            $parse_tree[$param_name] = wsf_deserialize_simple_types($current_child, $sig_param_node);
+                            $parse_tree[$param_name] = wsf_deserialize_simple_types($current_child, $sig_param_node, $classmap);
                         }
                         else {
                             $parse_tree[$param_name] = wsf_deserialize_complex_types($current_child, $sig_param_node, $classmap);

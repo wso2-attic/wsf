@@ -58,7 +58,6 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
                                             array &$namespace_map) {
 
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "Loading in to creating payload from classmap");
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, wsf_test_serialize_node($sig_node));
 
     // This is not expected in the class map mode to have params with no childs
     // So mark it as an unknown schema
@@ -74,10 +73,11 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
         return;
     }
 
-    // filling user class information to the array..
-    $user_arguments = wsf_convert_classobj_to_array($sig_node, $user_obj);
 
     if($sig_node->hasAttributes()) {
+        // filling user class information to the array..
+        $user_arguments = wsf_convert_classobj_to_array($sig_node, $user_obj);
+
         wsf_build_content_model($sig_node, $user_arguments, $parent_node, $payload_dom, $root_node, $prefix_i, $namespace_map);
     }
     else {
@@ -86,9 +86,14 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
         // and for the simpleContent extension in the classmap
         $the_only_node = $sig_node->firstChild;
 
+
         //  handle simple content extension seperatly
         if($the_only_node->attributes->getNamedItem(WSF_CONTENT_MODEL) &&
                 $the_only_node->attributes->getNamedItem(WSF_CONTENT_MODEL)->value == WSF_SIMPLE_CONTENT) {
+
+            // filling user class information to the array..
+            $user_arguments = wsf_convert_classobj_to_array($the_only_node, $user_obj);
+
             wsf_build_content_model($the_only_node, $user_arguments, $parent_node, $payload_dom, $root_node, $prefix_i, $namespace_map);
         }
 }
@@ -112,7 +117,6 @@ function wsf_create_payload_for_array(DomDocument $payload_dom,
                                      array &$namespace_map) {
 
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "Loading in to creating payload from arrays");
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, wsf_test_serialize_node($sig_node));
 
     // here we always expect structures with childs
     if(!$sig_node->hasChildNodes()) {
@@ -326,6 +330,7 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
     $param_name = NULL;
     $is_attribute = FALSE;
     $is_list = FALSE;
+    $content_model = NULL;
 
     if($sig_param_attris->getNamedItem(WSF_NAME)) {
         $param_name = 
@@ -360,11 +365,18 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
         $sig_param_attris->getNamedItem(WSF_ATTRIBUTE)->value == "yes") {
          $is_attribute = TRUE;
     }
+ 
+    if($sig_param_attris->getNamedItem(WSF_CONTENT_MODEL)) {
+        $content_model = $sig_param_attris->getNamedItem(WSF_CONTENT_MODEL)->value;
+    }
+
 
     if($sig_param_attris->getNamedItem(WSF_LIST) &&
         $sig_param_attris->getNamedItem(WSF_LIST)->value == "yes") {
          $is_list = TRUE;
     }
+    
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, $param_name);
 
     if($target_namespace == NULL) {
         $qualified_name = $param_name;
@@ -387,12 +399,15 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
         $attri_name = $qualified_name;
        
         if(!is_array($user_val) && !is_object($user_val)) {
+    
             $serialized_value = wsf_wsdl_serialize_php_value(
-                                 $param_type, $user_val, $sig_param_node);
+                                $param_type, $user_val, $sig_param_node);
             $parent_node->setAttribute($attri_name, $serialized_value);
+        }
+        else {
             ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR,
-                    "You have provided an array or an object for ".
-                    $param_name ." which should be a simple type.");
+                        "attribute found -  ".
+                        $param_name ." which have given an array.");
         }
     }
     else {
@@ -401,28 +416,70 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
         if($max_occurs > 1 || $max_occurs == "unbounded") {
             if(is_array($user_val)) {
                 foreach($user_val as $user_val_item) {
-                    /* type conversion is needed */
+                    if($content_model == WSF_SIMPLE_CONTENT) {
+                        $ele = $payload_dom->createElement($node_name);
+                        $parent_node->appendChild($ele);
+                        if(is_object($user_val_item)) {
+                            wsf_create_payload_for_class_map($payload_dom, $sig_param_node,
+                                $ele, $root_node, $user_val_item, $prefix_i, $namespace_map);
+                        }
+                        else {
+                            wsf_create_payload_for_array($payload_dom, $sig_param_node,
+                                $ele, $root_node, $user_val_item, $prefix_i, $namespace_map);
+                        }
+                    }
+                    else {
+                        /* type conversion is needed */
+                        $serialized_value = wsf_wsdl_serialize_php_value(
+                                     $param_type, $user_val_item, $sig_param_node);
+                        $ele = $payload_dom->createElement($node_name, $serialized_value);
+                        $parent_node->appendChild($ele);
+                    }
+                }
+            }
+            else {
+                if($content_model == WSF_SIMPLE_CONTENT) {
+                    $ele = $payload_dom->createElement($node_name);
+                    $parent_node->appendChild($ele);
+                    if(is_object($user_val)) {
+                        wsf_create_payload_for_class_map($payload_dom, $sig_param_node,
+                            $ele, $root_node, $user_val, $prefix_i, $namespace_map);
+                    }
+                    else {
+                        wsf_create_payload_for_array($payload_dom, $sig_param_node,
+                            $ele, $root_node, $user_val, $prefix_i, $namespace_map);
+                    }
+                }
+                else {
+                    /* in a case this is not an array */
                     $serialized_value = wsf_wsdl_serialize_php_value(
-                                 $param_type, $user_val_item, $sig_param_node);
+                                     $param_type, $user_val, $sig_param_node);
                     $ele = $payload_dom->createElement($node_name, $serialized_value);
                     $parent_node->appendChild($ele);
                 }
             }
-            else {
-                /* in a case this is not an array */
-                $serialized_value = wsf_wsdl_serialize_php_value(
-                                 $param_type, $user_val, $sig_param_node);
-                $ele = $payload_dom->createElement($node_name, $serialized_value);
-                $parent_node->appendChild($ele);
-            }
         }
         else {
-            if(!is_array($user_val)) {
+            if(!is_array($user_val) || $content_model == WSF_SIMPLE_CONTENT) {
                 /* in a case this is not an array */
-                $serialized_value = wsf_wsdl_serialize_php_value(
-                                 $param_type, $user_val, $sig_param_node);
-                $ele = $payload_dom->createElement($node_name, $serialized_value);
-                $parent_node->appendChild($ele);
+                if($content_model == WSF_SIMPLE_CONTENT) {
+                    $ele = $payload_dom->createElement($node_name);
+                    $parent_node->appendChild($ele);
+                    if(is_object($user_val)) {
+                        wsf_create_payload_for_class_map($payload_dom, $sig_param_node,
+                            $ele, $root_node, $user_val, $prefix_i, $namespace_map);
+                    }
+                    else {
+                        wsf_create_payload_for_array($payload_dom, $sig_param_node,
+                            $ele, $root_node, $user_val, $prefix_i, $namespace_map);
+                    }
+                }
+                else {
+                    $serialized_value = wsf_wsdl_serialize_php_value(
+                                     $param_type, $user_val, $sig_param_node);
+                    $ele = $payload_dom->createElement($node_name, $serialized_value);
+                    $parent_node->appendChild($ele);
+                }
             }
             else {
                 error_log("Array is given for ". $param_name ." which should be a non array. \n");
@@ -609,13 +666,13 @@ function wsf_build_content_model(DomNode $sig_node, array $user_arguments,
             DomNode $parent_node, DomNode $payload_dom, $root_node, &$prefix_i, &$namespace_map) {
 
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "building the content model");
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, wsf_test_serialize_node($sig_node));
 
     $content_model = WSF_WSDL_SEQUENCE;
     if($sig_node->attributes->getNamedItem(WSF_CONTENT_MODEL)) {
         $content_model = $sig_node->attributes->getNamedItem(WSF_CONTENT_MODEL)->value;
     }
 
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, $content_model);
     // simple content extension should be treated differently
     if($content_model == WSF_SIMPLE_CONTENT) {
         if(array_key_exists(WSF_SIMPLE_CONTENT_VALUE, $user_arguments)) {
@@ -631,6 +688,8 @@ function wsf_build_content_model(DomNode $sig_node, array $user_arguments,
             /* type conversion is needed */
             $serialized_value = wsf_wsdl_serialize_php_value(
                          $param_type, $user_val, $sig_node);
+
+            ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, $serialized_value);
             $ele = $payload_dom->createTextNode($serialized_value);
             $parent_node->appendChild($ele);
         }
@@ -692,9 +751,24 @@ function wsf_convert_classobj_to_array($sig_node, $user_obj) {
 
     $user_arguments = array();
     $sig_param_nodes = $sig_node->childNodes;
+    $sig_param_attrs = $sig_node->attributes;
+    if(!is_object($user_obj) && !is_array($user_obj)) {
+        return $user_obj;
+    }
+
+    /* for the simple content type we expect the "VALUE" attribute */
+    if($sig_param_attrs->getNamedItem(WSF_CONTENT_MODEL) &&
+            $sig_param_attrs->getNamedItem(WSF_CONTENT_MODEL)->value == WSF_SIMPLE_CONTENT) {
+        $simple_content_value_const = WSF_SIMPLE_CONTENT_VALUE;
+        $reflex_object = new ReflectionObject($user_obj);
+        if($reflex_object->hasProperty($simple_content_value_const) && $user_obj->$simple_content_value_const !== NULL) {
+            $user_arguments[$simple_content_value_const] = $user_obj->$simple_content_value_const;
+        }
+    }
+        
 
     foreach($sig_param_nodes as $sig_param_node) {
-        if($sig_param_node->nodeName == WSF_PARAM) {
+        if($sig_param_node->nodeName == WSF_PARAM && is_object($user_obj)) {
             $param_attrs = $sig_param_node->attributes;
             if($param_attrs->getNamedItem(WSF_NAME)) {
                 $param_name = $param_attrs->getNamedItem(WSF_NAME)->value;
@@ -703,20 +777,23 @@ function wsf_convert_classobj_to_array($sig_node, $user_obj) {
             if($reflex_object->hasProperty($param_name) && $user_obj->$param_name !== NULL) {
                 $user_arguments[$param_name] = $user_obj->$param_name;
             }
+
+            /*
             if($param_attrs->getNamedItem(WSF_CONTENT_MODEL) &&
                 $param_attrs->getNamedItem(WSF_CONTENT_MODEL)->value == WSF_SIMPLE_CONTENT) {
                 $simple_content_value_const = WSF_SIMPLE_CONTENT_VALUE;
-                $user_arguments[$simple_content_value_const] = $user_obj->$simple_content_value_const;
+                $tmp_array = wsf_convert_classobj_to_array($sig_param_node, $user_obj->$simple_content_value_const);
+                $user_arguments[$param_name][$simple_content_value_const] = $tmp_array;
                 $sig_attribute_nodes = $sig_param_node->childNodes;
                 foreach($sig_attribute_nodes as $sig_attribute_node) {
                     if($sig_attribute_node->attributes->getNamedItem(WSF_ATTRIBUTE) &&
                         $sig_attribute_node->attributes->getNamedItem(WSF_ATTRIBUTE)->value == "yes") {
                         $attri_name = $sig_attribute_node->attributes->getNamedItem(WSF_NAME)->value;
 
-                        $user_arguments[$attri_name] = $user_obj->$attri_name;
+                        $user_arguments[$param_name][$attri_name] = $user_obj->$attri_name;
                     }
                 }
-            }
+            } */
         }
         else if($sig_param_node->nodeName == WSF_INNER_CONTENT) {
             $tmp_array = wsf_convert_classobj_to_array($sig_param_node, $user_obj);
