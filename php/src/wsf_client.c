@@ -285,6 +285,7 @@ wsf_client_handle_outgoing_attachments (
     HashTable *ht = NULL;
     /** default value for mtom is true */
     int enable_mtom = AXIS2_TRUE;
+    int enable_swa = AXIS2_FALSE;
 
     if (!msg_ht)
         return;
@@ -301,6 +302,16 @@ wsf_client_handle_outgoing_attachments (
             (void **) &tmp) == SUCCESS) {
         if (Z_TYPE_PP (tmp) == IS_BOOL && Z_BVAL_PP (tmp) == 0) {
             enable_mtom = AXIS2_FALSE;
+        } else if (Z_TYPE_PP (tmp) == IS_STRING) {
+            char *value = NULL;
+            value = Z_STRVAL_PP (tmp);
+            /* Check if SOAP with Attachmnts (SwA) has been enabled */
+            if (value && (strcmp (value, "swa") == 0 || strcmp (value, "SWA") || strcmp (value, "SwA")) {
+
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                    "[wsf_client] SwA enabled");
+                enable_swa = AXIS2_TRUE;
+            } 
         }
     }
 
@@ -319,7 +330,7 @@ wsf_client_handle_outgoing_attachments (
 
 
     if (ht) {
-        wsf_util_set_attachments_with_cids (env, enable_mtom, request_payload,
+        wsf_util_set_attachments_with_cids (env, enable_mtom, enable_swa, request_payload,
             ht, default_cnt_type TSRMLS_CC);
     }
 }
@@ -535,8 +546,14 @@ wsf_client_add_properties (
         add_property_bool (this_ptr, WS_RESPONSE_XOP, Z_BVAL_PP (tmp));
     }
     if (zend_hash_find (ht, WS_USE_MTOM, sizeof (WS_USE_MTOM),
-            (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_BOOL) {
-        add_property_bool (this_ptr, WS_USE_MTOM, Z_BVAL_PP (tmp));
+        (void **) &tmp) == SUCCESS) {
+        if (Z_TYPE_PP (tmp) == IS_BOOL) {
+          add_property_bool (this_ptr, WS_USE_MTOM, Z_BVAL_PP (tmp));
+        }
+        else if (Z_TYPE_PP (tmp) == IS_STRING) {
+            add_property_stringl (this_ptr, WS_USE_MTOM, Z_STRVAL_PP (tmp),
+                Z_STRLEN_PP (tmp), 1);
+        } 
     }
     if (zend_hash_find (ht, WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE,
             sizeof (WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE),

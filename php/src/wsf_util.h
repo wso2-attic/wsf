@@ -77,6 +77,7 @@ void wsf_php_req_info_cleanup (
 void wsf_util_set_attachments_with_cids (
     const axutil_env_t * env,
     int enable_mtom,
+    int enable_swa,
     axiom_node_t * payload_node,
     HashTable * attach_ht,
     char *default_cnt_type TSRMLS_DC);

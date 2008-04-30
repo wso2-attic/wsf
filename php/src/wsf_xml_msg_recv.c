@@ -855,7 +855,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
                 HashTable *ht = NULL;
                 ht = Z_ARRVAL_PP (msg_tmp);
                 if (ht && res_om_node) {
-                    wsf_util_set_attachments_with_cids (env, use_mtom,
+                    wsf_util_set_attachments_with_cids (env, use_mtom, AXIS2_FALSE,
                         res_om_node, ht, default_cnt_type TSRMLS_CC);
                     if (use_mtom == 1) {
                         axis2_msg_ctx_set_doing_mtom (out_msg_ctx, env,

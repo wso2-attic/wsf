@@ -813,6 +813,7 @@ void
 wsf_util_set_attachments_with_cids (
     const axutil_env_t * env,
     int enable_mtom,
+    int enable_swa,
     axiom_node_t * payload_node,
     HashTable * attach_ht,
     char *default_cnt_type TSRMLS_DC)
@@ -896,6 +897,10 @@ wsf_util_set_attachments_with_cids (
                                         (env, payload_node, data_handler,
                                         &text_node);
 
+                                    if (enable_swa) {
+                                        axiom_text_set_is_swa(text, env, AXIS2_TRUE);
+                                    }
+
                                     if (enable_mtom == AXIS2_FALSE) {
                                         axiom_text_set_optimize (text, env,
                                             AXIS2_FALSE);
@@ -911,7 +916,7 @@ wsf_util_set_attachments_with_cids (
     }
     tmp_node = axiom_node_get_first_child (payload_node, env);
     while (tmp_node) {
-        wsf_util_set_attachments_with_cids (env, enable_mtom, tmp_node,
+        wsf_util_set_attachments_with_cids (env, enable_mtom, AXIS2_FALSE, tmp_node,
             attach_ht, default_cnt_type TSRMLS_CC);
         tmp_node = axiom_node_get_next_sibling (tmp_node, env);
     }
