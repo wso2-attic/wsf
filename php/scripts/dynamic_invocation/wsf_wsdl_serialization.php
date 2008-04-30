@@ -778,22 +778,6 @@ function wsf_convert_classobj_to_array($sig_node, $user_obj) {
                 $user_arguments[$param_name] = $user_obj->$param_name;
             }
 
-            /*
-            if($param_attrs->getNamedItem(WSF_CONTENT_MODEL) &&
-                $param_attrs->getNamedItem(WSF_CONTENT_MODEL)->value == WSF_SIMPLE_CONTENT) {
-                $simple_content_value_const = WSF_SIMPLE_CONTENT_VALUE;
-                $tmp_array = wsf_convert_classobj_to_array($sig_param_node, $user_obj->$simple_content_value_const);
-                $user_arguments[$param_name][$simple_content_value_const] = $tmp_array;
-                $sig_attribute_nodes = $sig_param_node->childNodes;
-                foreach($sig_attribute_nodes as $sig_attribute_node) {
-                    if($sig_attribute_node->attributes->getNamedItem(WSF_ATTRIBUTE) &&
-                        $sig_attribute_node->attributes->getNamedItem(WSF_ATTRIBUTE)->value == "yes") {
-                        $attri_name = $sig_attribute_node->attributes->getNamedItem(WSF_NAME)->value;
-
-                        $user_arguments[$param_name][$attri_name] = $user_obj->$attri_name;
-                    }
-                }
-            } */
         }
         else if($sig_param_node->nodeName == WSF_INNER_CONTENT) {
             $tmp_array = wsf_convert_classobj_to_array($sig_param_node, $user_obj);

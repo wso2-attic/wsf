@@ -252,6 +252,9 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
     $sig_model_dom->preserveWhiteSpace = false;
     $wsdl_dom->preserveWhiteSpace = false;
     
+    $service_name = NULL;
+    $port_name = NULL;
+
     $wsdl_location = $parameters[WSF_WSDL];
     if(array_key_exists(WSF_SERVICE_NAME, $parameters)) {
         $service_name = $parameters[WSF_SERVICE_NAME];
@@ -303,7 +306,7 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
     $endpoint_address = wsf_get_endpoint_address($sig_model_dom);
     
     if ($is_wsdl_11 == TRUE && $wsdl_11_dom != NULL) {
-        $binding_node = wsf_get_binding($wsdl_11_dom, $service, $port, TRUE);
+        $binding_node = wsf_get_binding($wsdl_11_dom, $service_name, $port_name, TRUE);
         if(!$binding_node)
             return  NULL;
         foreach($operation_array as $value) {
@@ -312,7 +315,7 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
                 
     }
     else{
-        $binding_node = wsf_get_binding($wsdl_dom, $service, $port);
+        $binding_node = wsf_get_binding($wsdl_dom, $service_name, $port_name);
         if(!$binding_node)
             return  NULL;
         foreach($operation_array as $value) {
@@ -343,6 +346,14 @@ function wsf_wsdl_process_in_msg($parameters)
     $service_name = NULL;
     $port_name = NULL;
     $is_multiple_interfaces = FALSE;
+    
+    $sig_model_string = NULL;
+    $payload_string = NULL;
+    $operation_name = NULL;
+    $function_name = NULL;
+    $class_name = NULL;
+    $class_map = NULL;
+    $class_args = NULL;
 
     if(array_key_exists(WSF_SERVICE_NAME, $parameters)) {
         $service_name = $parameters[WSF_SERVICE_NAME];
@@ -350,14 +361,28 @@ function wsf_wsdl_process_in_msg($parameters)
     if(array_key_exists(WSF_PORT_NAME, $parameters)) {
         $port_name = $parameters[WSF_PORT_NAME];
     }
-   
-    $sig_model_string = $parameters["sig_model_string"];
-    $payload_string = $parameters["payload_string"];
-    $operation_name = $parameters["operation_name"];
-    $function_name = $parameters["function_name"];
-    $class_name = $parameters["class_name"];
-    $class_map = $parameters["classmap"];
-    $class_args = $parameters["class_args"];
+  
+    if(array_key_exists("sig_model_string", $parameters)) {
+        $sig_model_string = $parameters["sig_model_string"];
+    }
+    if(array_key_exists("payload_string", $parameters)) {
+        $payload_string = $parameters["payload_string"];
+    }
+    if(array_key_exists("operation_name", $parameters)) {
+        $operation_name = $parameters["operation_name"];
+    }
+    if(array_key_exists("function_name", $parameters)) {
+        $function_name = $parameters["function_name"];
+    }
+    if(array_key_exists("class_name", $parameters)) {
+        $class_name = $parameters["class_name"];
+    }
+    if(array_key_exists("classmap", $parameters)) {
+        $class_map = $parameters["classmap"];
+    }
+    if(array_key_exists("class_args", $parameters)) {
+        $class_args = $parameters["class_args"];
+    }
 
     
     
