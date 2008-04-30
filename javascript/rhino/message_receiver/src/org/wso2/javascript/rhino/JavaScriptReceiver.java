@@ -104,7 +104,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         SOAPEnvelope soapEnvelope = inMessage.getEnvelope();
         try {
             // Create JS Engine, Inject HostObjects
-            JavaScriptEngine engine = new JavaScriptEngine(inMessage.getAxisService().getName());
+            String serviceName = inMessage.getAxisService().getName();
+            JavaScriptEngine engine = new JavaScriptEngine(serviceName);
 
             // Rhino E4X XMLLibImpl object can be instantiated only from within a script
             // So we instantiate it in here, so that we can use it outside of the script later
@@ -131,9 +132,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             context.putThreadLocal(AXIS2_SERVICE, inMessage.getAxisService());
             context.putThreadLocal(AXIS2_CONFIGURATION_CONTEXT, inMessage
                     .getConfigurationContext());
-
             JavaScriptEngineUtils.loadGlobalPropertyObjects(engine, inMessage
-                    .getConfigurationContext().getAxisConfiguration());
+                    .getConfigurationContext().getAxisConfiguration(), serviceName);
             // JS Engine seems to need the Axis2 repository location to load the
             // imported scripts. TODO: Do we really need this (thilina)
             URL repoURL = inMessage.getConfigurationContext().getAxisConfiguration()

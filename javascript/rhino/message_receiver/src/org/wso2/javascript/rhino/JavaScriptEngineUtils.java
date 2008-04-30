@@ -18,19 +18,25 @@ package org.wso2.javascript.rhino;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.addressing.EndpointReference;
+import org.apache.axis2.transport.http.server.HttpUtils;
+import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.description.Parameter;
+import org.apache.axis2.description.TransportInDescription;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.util.Loader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.Context;
 
 import javax.xml.namespace.QName;
 import java.lang.reflect.InvocationTargetException;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.Iterator;
+import java.net.SocketException;
 
 public class JavaScriptEngineUtils {
 
@@ -103,17 +109,18 @@ public class JavaScriptEngineUtils {
     }
 
     public static void loadGlobalPropertyObjects(JavaScriptEngine engine,
-                                                 AxisConfiguration axisConfig) {
+                                                 AxisConfiguration axisConfig, String serviceName) {
         Parameter propertyObjectParameter = axisConfig
                 .getParameter("javascript.global.propertyobjects");
         if ((propertyObjectParameter != null) &&
                 (propertyObjectParameter.getParameterType() == 2)) {
             OMElement paraElement = propertyObjectParameter.getParameterElement();
-            loadGlobalProperties(paraElement, engine);
+            loadGlobalProperties(paraElement, engine, serviceName);
         }
     }
 
-    private static void loadGlobalProperties(OMElement hostObjectElement, JavaScriptEngine engine) {
+    private static void loadGlobalProperties(OMElement hostObjectElement, JavaScriptEngine engine,
+                                             String serviceName) {
         Iterator iterator = hostObjectElement.getChildrenWithName(new QName("global.property"));
         while (iterator.hasNext()) {
             OMElement element = (OMElement) iterator.next();
@@ -124,6 +131,57 @@ public class JavaScriptEngineUtils {
                 Scriptable entryHostObject = engine.getCx().newObject(engine, hostObject,
                                                                       new Object[0]);
                 engine.defineProperty(objectName, entryHostObject, ScriptableObject.READONLY);
+
+                // If this is the system host object we need to inject a property called wwwURL
+                // which would return the http url to a certain service. As the system object is a
+                // global object and does not have a pointer to the service calling it there is no
+                // other way to do it
+                if ("system".equals(objectName) && !"".equals(serviceName)) {
+                    Object object = Context.getCurrentContext()
+                            .getThreadLocal(JavaScriptEngineConstants.AXIS2_CONFIGURATION_CONTEXT);
+                    if (object instanceof ConfigurationContext) {
+                        ConfigurationContext configurationContext = (ConfigurationContext) object;
+                        AxisConfiguration configuration = configurationContext.getAxisConfiguration();
+
+                        // The Mashup server may be running behind a proxy so the best way to get
+                        // the http address would be to get it from the http transport listener
+                        // cause its configured correctly if its behind a proxy
+                        TransportInDescription inDescription =
+                                configuration
+                                        .getTransportIn("http");
+
+                        // As this is a mashup service it would have the name in the form of
+                        // authorName-serviceName and this service is not added to the axisConfig as
+                        // yet. So the Listner would not fix the serviceName for us we need to fix
+                        // it ourselves
+                        int index = serviceName.indexOf("-");
+                        if (index > -1) {
+                            serviceName = serviceName.substring(0, index) + "/" +
+                                    serviceName.substring(index + 1);
+                        }
+                        if (inDescription != null) {
+                            try {
+                                String requestIP = HttpUtils.getIpAddress(configuration);
+                                EndpointReference endpointReference = inDescription.getReceiver()
+                                        .getEPRForService(serviceName, requestIP);
+
+                                // Once we get the EPR for this service we need to inject it into
+                                // the script
+                                engine.getCx()
+                                        .evaluateString(engine, "system.wwwURL=\"" +
+                                                endpointReference.getAddress() + "\"", "", 0, null);
+                            } catch (SocketException e) {
+                                log.error("Cannot get local IP address", e);
+                            } catch (AxisFault axisFault) {
+                                log.error(
+                                        "Error obtaining endpoint reference for service " +
+                                                serviceName, axisFault);
+                            }
+
+                        }
+                    }
+                }
+
             }
         }
     }
