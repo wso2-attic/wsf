@@ -130,7 +130,7 @@ if ($args['s']) {
 	echo "// create service in WSDL mode\n";
 	echo "\$service = new WSService(array (\"wsdl\" =>\"$wsdl_location\",\n";
 	echo "        \"operations\" => \$operations,\n";
-	echo "        \"opParams\" => \$opParams,\n";
+	//echo "        \"opParams\" => \$opParams,\n";
     if($actions != NULL) {
         echo 
          "        \"actions\" => \$actions,\n";
