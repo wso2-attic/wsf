@@ -306,7 +306,7 @@ wsf_client_handle_outgoing_attachments (
             char *value = NULL;
             value = Z_STRVAL_PP (tmp);
             /* Check if SOAP with Attachmnts (SwA) has been enabled */
-            if (value && (strcmp (value, "swa") == 0 || strcmp (value, "SWA") || strcmp (value, "SwA")) {
+            if (value && (strcmp (value, "swa") == 0 || strcmp (value, "SWA") || strcmp (value, "SwA"))) {
 
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                     "[wsf_client] SwA enabled");

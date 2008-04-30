@@ -24,6 +24,7 @@ try {
 
     // create client in WSDL mode
     $client = new WSClient(array ("wsdl" =>"http://localhost/services/wsdl_mode/AttributeService.php?wsdl",
+        "to" => "http://localhost/services/wsdl_mode/AttributeService.php",
         "classmap" => $class_map,
                             ));
 

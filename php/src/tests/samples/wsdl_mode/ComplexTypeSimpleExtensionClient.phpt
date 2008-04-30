@@ -19,6 +19,7 @@ try {
 
     // create client in WSDL mode
     $client = new WSClient(array ("wsdl" =>"http://localhost/services/wsdl_mode/ComplexTypeSimpleExtensionService.php?wsdl",
+        "to" => "http://localhost/services/wsdl_mode/ComplexTypeSimpleExtensionService.php",
         "classmap" => $class_map,
                             ));
 
