@@ -934,6 +934,69 @@ wsf_util_set_attachments_with_cids (
     return;
 }
 
+int wsf_util_get_attachments_form_soap_envelope (
+     const axutil_env_t * env,
+    axiom_soap_envelope_t *soap_envelope,
+    zval * cid2str,
+    zval * cid2contentType TSRMLS_DC) {
+
+    /*
+    get soap builder from soap envelope
+    get the data handers map form soap builder
+
+    ieterate the data handler hash map
+    for each data handler
+    do
+                    cnt_type = axiom_data_handler_get_content_type(data_handler, env);
+                    cid = axiom_text_get_content_id(text, env);
+                    add_assoc_stringl (cid2str, cid, data, data_len, 1);
+                    attachments_found = 1;
+                    if (cnt_type) {
+                        add_assoc_stringl (cid2contentType, cid,
+                            cnt_type, strlen (cnt_type), 1);
+                    }
+    done
+    */
+
+    int attachments_found = 0;
+    axiom_soap_builder_t *soap_builder = NULL;
+    axutil_hash_t *mime_body_parts = NULL;
+
+    soap_builder = axiom_soap_envelope_get_soap_builder(soap_envelope, env);
+
+    if(soap_builder) {
+        mime_body_parts = axiom_soap_builder_get_mime_body_parts(soap_builder, env);
+
+        if(mime_body_parts) {
+            axutil_hash_index_t *hi = NULL;
+            axis2_char_t *cid = NULL;
+            axiom_data_handler_t *data_handler = NULL;
+            for (hi = axutil_hash_first(mime_body_parts, env);
+                 hi; hi = axutil_hash_next(env, hi))    
+            {                                                           
+                axutil_hash_this(hi, (const void **)&cid, NULL, (void**)&data_handler); 
+                if(cid && data_handler) 
+                {
+                    char *cnt_type = NULL;
+                    char *data = NULL;
+                    int data_len = 0;
+
+                    axiom_data_handler_read_from (data_handler, env, &data, &data_len);
+                    cnt_type = axiom_data_handler_get_content_type(data_handler, env);
+                    add_assoc_stringl (cid2str, cid, data, data_len, 1);
+                    attachments_found = 1;
+                    if (cnt_type) {
+                        add_assoc_stringl (cid2contentType, cid,
+                            cnt_type, strlen (cnt_type), 1);
+                    }
+                    
+                }
+            }   
+        }
+    }
+    return attachments_found;
+}
+
 int
 wsf_util_get_attachments (
     const axutil_env_t * env,

@@ -169,4 +169,10 @@ wsf_util_find_xop_content_and_convert_to_base64 (
     const axutil_env_t * env,
     axiom_node_t * om_node);
 
+int wsf_util_get_attachments_form_soap_envelope (
+     const axutil_env_t * env,
+    axiom_soap_envelope_t *soap_envelope,
+    zval * cid2str,
+    zval * cid2contentType TSRMLS_DC);
+
 #endif /* WSF_UTIL_H */

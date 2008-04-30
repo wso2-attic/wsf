@@ -59,7 +59,7 @@ try{
 ?>
 --EXPECT--
 Result is:
-object(RetEnumIntResponseWrapper)#24 (1) {
+object(RetEnumIntResponseWrapper)#4 (1) {
   ["RetEnumIntResult"]=>
   string(1) "1"
 }

@@ -722,8 +722,12 @@ wsf_xml_msg_recv_invoke_wsmsg (
             array_init (cid2str);
             array_init (cid2contentType);
 
-            wsf_util_get_attachments (env, om_node, cid2str,
-                cid2contentType TSRMLS_CC);
+            /*
+             * call wsf_util_get_attachments_form_soap_envelope(env, soap_envelope, cid2str, cid2contentType TSRMLS_CC);
+             */
+            wsf_util_get_attachments_form_soap_envelope(env, soap_envelope, cid2str, cid2contentType TSRMLS_CC);
+            /*wsf_util_get_attachments (env, om_node, cid2str,
+                cid2contentType TSRMLS_CC); */
 
             add_property_zval (msg, "attachments", cid2str);
             add_property_zval (msg, "cid2contentType", cid2contentType);
