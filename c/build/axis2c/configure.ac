@@ -2,7 +2,7 @@ dnl run autogen.sh to generate the configure script.
 
 AC_PREREQ(2.59)
 
-AC_INIT(axis2c-src, 1.0.0)
+AC_INIT(axis2c-src, 1.4.0)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE([tar-ustar])
@@ -415,7 +415,7 @@ APACHE2INC=$apache2inc
 IKSEMELINC=$iksemelinc
 IKSEMELLIB=$iksemellib
 APRINC=$aprinc
-VERSION_NO="1:0:1"
+VERSION_NO="4:0:4"
 
 AC_SUBST(VERSION_NO)
 AC_SUBST(PARSER_LIBS)

@@ -2,7 +2,7 @@ dnl run autogen.sh to generate the configure script.
 
 AC_PREREQ(2.59)
 
-AC_INIT(axis2_axiom-src, 1.3.0)
+AC_INIT(axis2_axiom-src, 1.4.0)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE
@@ -49,7 +49,7 @@ AC_CHECK_LIB(z, inflate)
 #CFLAGS="$CFLAGS -ansi -Wall -D_LARGEFILE64_SOURCE -Wno-implicit-function-declaration"
 CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 if test "$GCC" = "yes"; then
-    CFLAGS="$CFLAGS -ansi -Werror -Wall -Wno-implicit-function-declaration "
+    CFLAGS="$CFLAGS -ansi  -Wall -Wno-implicit-function-declaration "
 fi
 
 LDFLAGS="$LDFLAGS -lpthread"
@@ -132,7 +132,7 @@ AC_ARG_ENABLE(tests, [  --enable-tests    build tests. default=no],
 PKG_PROG_PKG_CONFIG(0.15)
 PKG_CHECK_MODULES(LIBXML2, libxml-2.0)
 CFLAGS="$CFLAGS $LIBXML2_CFLAGS $GUTHTHILA_CFLAGS"
-VERSION_NO="1:0:1"
+VERSION_NO="4:0:4"
 
 AC_SUBST(VERSION_NO)
 AC_SUBST(LIBXML2_CFLAGS)
