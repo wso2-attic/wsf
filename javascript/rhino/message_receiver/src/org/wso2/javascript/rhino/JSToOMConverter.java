@@ -216,6 +216,13 @@ public class JSToOMConverter {
 
     public static String convertToDateTime(Object jsObject) throws AxisFault {
         try {
+
+            // If the user returned a valid date a s a String we use the converterUtil to validate
+            // it and return it back.
+            if (jsObject instanceof String) {
+                Calendar calendar = ConverterUtil.convertToDateTime((String)jsObject);
+                return ConverterUtil.convertToString(calendar);
+            }
             Date date = (Date) Context.jsToJava(jsObject, Date.class);
             Calendar calendar = Calendar.getInstance();
             calendar.clear();
