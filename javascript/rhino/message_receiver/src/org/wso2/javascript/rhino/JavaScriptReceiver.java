@@ -1054,7 +1054,12 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             OMElement omElement = (OMElement) iterator.next();
             objectList.add(createParam(omElement, type, engine));
         }
-        return objectList.toArray();
+        int length = objectList.size();
+        NativeArray nativeArray = new NativeArray(0);
+        for (int i = 0; i < length; i++) {
+            nativeArray.put(i, nativeArray, objectList.get(i));
+        }
+        return nativeArray;
     }
 
     /**
