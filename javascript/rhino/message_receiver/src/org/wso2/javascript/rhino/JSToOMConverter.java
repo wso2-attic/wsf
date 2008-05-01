@@ -45,7 +45,6 @@ import org.mozilla.javascript.EvaluatorException;
 import org.wso2.javascript.xmlimpl.QName;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -236,6 +235,12 @@ public class JSToOMConverter {
 
     public static String convertToDate(Object jsObject) throws AxisFault {
         try {
+            // If the user returned a date date a s a String we use the converterUtil to validate
+            // it and return it back.
+            if (jsObject instanceof String) {
+                Date date = ConverterUtil.convertToDate((String)jsObject);
+                return ConverterUtil.convertToString(date);
+            }
             Date date = (Date) Context.jsToJava(jsObject, Date.class);
             return ConverterUtil.convertToString(date);
         } catch (EvaluatorException e) {
@@ -245,6 +250,12 @@ public class JSToOMConverter {
 
     public static String convertToTime(Object jsObject) throws AxisFault {
         try {
+            // If the user returned a valid time a s a String we use the converterUtil to validate
+            // it and return it back.
+            if (jsObject instanceof String) {
+                Time time = ConverterUtil.convertToTime((String)jsObject);
+                return ConverterUtil.convertToString(time);
+            }
             Date date = (Date) Context.jsToJava(jsObject, Date.class);
             Calendar calendar = Calendar.getInstance();
             calendar.clear();
@@ -258,6 +269,12 @@ public class JSToOMConverter {
 
     public static String convertToGYearMonth(Object jsObject) throws AxisFault {
         try {
+            // If the user returned a valid GYearMonth a s a String we use the converterUtil to
+            // validate it and return it back.
+            if (jsObject instanceof String) {
+                YearMonth yearMonth = ConverterUtil.convertToGYearMonth((String)jsObject);
+                return ConverterUtil.convertToString(yearMonth);
+            }
             Date date = (Date) Context.jsToJava(jsObject, Date.class);
             Calendar calendar = Calendar.getInstance();
             calendar.clear();
@@ -274,6 +291,12 @@ public class JSToOMConverter {
 
     public static String convertToGMonthDay(Object jsObject) throws AxisFault {
         try {
+            // If the user returned a valid GMonthDay a s a String we use the converterUtil to
+            // validate it and return it back.
+            if (jsObject instanceof String) {
+                MonthDay monthDay = ConverterUtil.convertToGMonthDay((String)jsObject);
+                return ConverterUtil.convertToString(monthDay);
+            }
             Date date = (Date) Context.jsToJava(jsObject, Date.class);
             Calendar calendar = Calendar.getInstance();
             calendar.clear();
@@ -290,6 +313,12 @@ public class JSToOMConverter {
 
     public static String convertToGYear(Object jsObject) throws AxisFault {
         try {
+            // If the user returned a valid GYear a s a String we use the converterUtil to
+            // validate it and return it back.
+            if (jsObject instanceof String) {
+                Year year = ConverterUtil.convertToGYear((String)jsObject);
+                return ConverterUtil.convertToString(year);
+            }
             Date date = (Date) Context.jsToJava(jsObject, Date.class);
             Calendar calendar = Calendar.getInstance();
             calendar.clear();
@@ -305,6 +334,12 @@ public class JSToOMConverter {
 
     public static String convertToGDay(Object jsObject) throws AxisFault {
         try {
+            // If the user returned a valid GDay a s a String we use the converterUtil to
+            // validate it and return it back.
+            if (jsObject instanceof String) {
+                Day day = ConverterUtil.convertToGDay((String)jsObject);
+                return ConverterUtil.convertToString(day);
+            }
             Date date = (Date) Context.jsToJava(jsObject, Date.class);
             Calendar calendar = Calendar.getInstance();
             calendar.clear();
@@ -330,6 +365,12 @@ public class JSToOMConverter {
 
     public static String convertToGMonth(Object jsObject) throws AxisFault {
         try {
+            // If the user returned a valid GMonth a s a String we use the converterUtil to
+            // validate it and return it back.
+            if (jsObject instanceof String) {
+                Month month = ConverterUtil.convertToGMonth((String)jsObject);
+                return ConverterUtil.convertToString(month);
+            }
             Date date = (Date) Context.jsToJava(jsObject, Date.class);
             Calendar calendar = Calendar.getInstance();
             calendar.clear();
