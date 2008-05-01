@@ -14,16 +14,23 @@
  * limitations under the License.
  */
 
-var WSRequest;
+// This file introduces two classes: WSRequest for invoking a Web Serivce, and WSError to encapsulate failure information.
 
-WSRequest = function() {
+var WSRequest = WSRequest = function() {
+    // properties and usage mirror XMLHTTPRequest
     this.readyState = 0;
     this.responseText = null;
     this.responseXML = null;
     this.error = null;
     this.onreadystatechange = null;
+    // Some internal properties
     this._xmlhttp = WSRequest.util._createXMLHttpRequestObject();
     this._soapVer = null;
+    this._async = true;
+    this._optionSet = null;
+    this._uri = null;
+    this._username = null;
+    this._password = null;
 };
 
 var WebServiceError = function(reason, detail, code) {
@@ -33,13 +40,18 @@ var WebServiceError = function(reason, detail, code) {
     this.toString = function() { return this.reason; };
 };
 
-WSRequest.prototype._async = true;
-WSRequest.prototype._optionSet = null;
-WSRequest.prototype._uri = null;
-WSRequest.prototype._username = null;
-WSRequest.prototype._password = null;
-
-WSRequest.prototype.open = function(options, URL, asnycFlag, userName, passWord) {
+/**
+ * @description Prepare a Web Service Request .
+ * @method open
+ * @public
+ * @static
+ * @param {object} options
+ * @param {string} URL
+ * @param {boolean} asyncFlag
+ * @param {string} username
+ * @param {string} password
+ */
+WSRequest.prototype.open = function(options, URL, asnycFlag, username, password) {
     if (arguments.length < 2 || arguments.length > 6)
     {
         throw new WebServiceError("Invalid input argument", "WSRequest.open method requires 2 to 6 arguments, but " + arguments.length + (arguments.length == 1 ? " was" : " were") + " specified.");
@@ -54,12 +66,12 @@ WSRequest.prototype.open = function(options, URL, asnycFlag, userName, passWord)
 
     this._uri = URL;
     this._async = asnycFlag;
-    if (userName != null && passWord == null)
-        throw new WebServiceError("User name should have a password", "WSRequest.open invocation specified userName: '" + userName + "' without a corresponding password.");
+    if (username != null && password == null)
+        throw new WebServiceError("User name should have a password", "WSRequest.open invocation specified username: '" + username + "' without a corresponding password.");
     else
     {
-        this._username = userName;
-        this._password = passWord;
+        this._username = username;
+        this._password = password;
     }
 
     this.readyState = 1;
@@ -70,13 +82,21 @@ WSRequest.prototype.open = function(options, URL, asnycFlag, userName, passWord)
     this.error = null;
 };
 
+/**
+ * @description Send the payload to the Web Service.
+ * @method send
+ * @public
+ * @static
+ * @param {dom} response xml payload
+ */
 WSRequest.prototype.send = function(payload) {
     if (arguments.length > 1) {
         throw new WebServiceError("Invalid input argument.", "WSRequest.send() only accepts a single argument, " + arguments.length + " were specified.");
     }
 
+    // request body formatted as a string
     var req = null;
-    // string to be sent
+
     var method;
     if (this._optionSet["HTTPMethod"] != null)
         method = this._optionSet["HTTPMethod"];
@@ -94,6 +114,7 @@ WSRequest.prototype.send = function(payload) {
         }
 
     }
+
     // formulate the message envelope
     if (this._soapVer == 0) {
         var processed = WSRequest.util._buildHTTPpayload(this._optionSet, this._uri, content);
@@ -111,51 +132,108 @@ WSRequest.prototype.send = function(payload) {
         netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead");
     } catch(e) {
     }
-    this._xmlhttp.open(method, this._uri, this._async);
 
-    switch (this._soapVer) {
-        case 1.1:
-            soapAction = (soapAction == undefined ? '""' : '"' + soapAction + '"');
-            this._xmlhttp.setRequestHeader("SOAPAction", soapAction);
-            this._xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=UTF-8");
-            break;
-        case 1.2:
-            this._xmlhttp.setRequestHeader("Content-Type", "application/soap+xml;charset=UTF-8" + (soapAction == undefined ? "" : ";action=" + soapAction));
-            break;
-        case 0:
-            var contentType;
-            if (this._optionSet["HTTPInputSerialization"] != null) {
-                contentType = this._optionSet["HTTPInputSerialization"]
-            } else {
-                if (method == "GET" | method == "DELETE") {
-                    contentType = "application/x-www-form-urlencoded";
+    var accessibleDomain = true;  // assume so for now
+    try {
+        this._xmlhttp.open(method, this._uri, this._async);
+
+        // Process protocol-specific details
+        switch (this._soapVer) {
+            case 1.1:
+                soapAction = (soapAction == undefined ? '""' : '"' + soapAction + '"');
+                this._xmlhttp.setRequestHeader("SOAPAction", soapAction);
+                this._xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=UTF-8");
+                break;
+            case 1.2:
+                this._xmlhttp.setRequestHeader("Content-Type", "application/soap+xml;charset=UTF-8" + (soapAction == undefined ? "" : ";action=" + soapAction));
+                break;
+            case 0:
+                var contentType;
+                if (this._optionSet["HTTPInputSerialization"] != null) {
+                    contentType = this._optionSet["HTTPInputSerialization"]
                 } else {
-                    contentType = "application/xml";
+                    if (method == "GET" | method == "DELETE") {
+                        contentType = "application/x-www-form-urlencoded";
+                    } else {
+                        contentType = "application/xml";
+                    }
                 }
+                this._xmlhttp.setRequestHeader("Content-Type", contentType);
+                break;
+        }
+    } catch (e) {
+        // If we received an error, see if it's an XSS error, if so don't fail - there still might be hope!
+        if (e.description == "Access is denied.\r\n" || e.toString() == "Permission denied to call method XMLHttpRequest.open") {
+            try {
+                // Are we in the context of a Google Gadget?
+                accessibleDomain = _IG_FetchXmlContent == undefined;
+            } catch (d) {
+                throw e;
             }
-            this._xmlhttp.setRequestHeader("Content-Type", contentType);
-            break;
+        } else throw e;
     }
 
-    if (this._async) {
-        this._xmlhttp.onreadystatechange = WSRequest.util._bind(this._handleReadyState, this);
-        this._xmlhttp.send(req);
+    if (accessibleDomain) {
+        if (this._async) {
+            // async call
+            this._xmlhttp.onreadystatechange = WSRequest.util._bind(this._handleReadyState, this);
+            this._xmlhttp.send(req);
+        } else {
+            // sync call
+            this.readyState = 2;
+            if (this.onreadystatechange != null)
+                this.onreadystatechange();
+
+            this._xmlhttp.send(req);
+
+            this._processResult();
+            if (this.error != null)
+                throw (this.error);
+
+            this.readyState = 4;
+            if (this.onreadystatechange != null)
+                this.onreadystatechange();
+        }
     } else {
-        // sync call
+        // Fallback to a Google Gadget, if we're able too.
+        if (!this._async)
+            throw ("Can only access Web service from within a Google Gadget when a callback is defined.");
+        if (this._soapVer != 0 || method.toUpperCase() != "GET")
+            throw ("Can only access Web service from within a Google Gadget through the HTTP binding, using the GET method.");
+
         this.readyState = 2;
         if (this.onreadystatechange != null)
             this.onreadystatechange();
 
-        this._xmlhttp.send(req);
-
-        this._processResult();
-        if (this.error != null)
-            throw (this.error);
-
-        this.readyState = 4;
-        if (this.onreadystatechange != null)
-            this.onreadystatechange();
+        _IG_FetchXmlContent(this._uri,  WSRequest.util._bind(this._FetchXMLContentCallback, this));
     }
+}
+
+/**
+ * @description Google Gadget request callback - simulate an XMLHttp callback and return to normal processing.
+ * @method _FetchXMLContentCallback
+ * @private
+ * @static
+ * @param {dom} response xml payload
+ */
+WSRequest.prototype._FetchXMLContentCallback = function (response) {
+    if (response != null && typeof(response) == "object") {
+        this._xmlhttp = {
+            "responseXML" : response,
+            "responseText" : WSRequest.util._serializeToString(response),
+            "status" : "200",
+            "readyState" : 4
+         };
+    } else {
+         this._xmlhttp = {
+            "responseXML" : null,
+            "responseText" : response,
+            "status" : "",
+            "statusText" : "_IG_FetchXMLContent failed to return valid XML.",
+            "readyState" : 4
+         };
+    }
+    this._handleReadyState();
 }
 
 /**
@@ -237,7 +315,7 @@ WSRequest.prototype._processResult = function () {
                 this.error = null;
             }
         } else {
-            // If this block being executed; it's due to server connection has falied. 
+            // If this block being executed; it's due to server connection has falied.
             this.responseXML = null;
             this.responseText = "";
             try {
@@ -260,7 +338,12 @@ WSRequest.prototype._processResult = function () {
     }
 }
 
-
+/**
+ * @description XMLHttp callback handler.
+ * @method _handleReadyState
+ * @private
+ * @static
+ */
 WSRequest.prototype._handleReadyState = function() {
     if (this._xmlhttp.readyState == 2) {
         this.readyState = 2;
@@ -275,15 +358,16 @@ WSRequest.prototype._handleReadyState = function() {
     }
 
     if (this._xmlhttp.readyState == 4) {
-        this.readyState = 4;
-
         this._processResult();
 
+        this.readyState = 4;
         if (this.onreadystatechange != null)
             this.onreadystatechange();
     }
 };
 
+
+// Utility functions
 
 WSRequest.util = {
 
@@ -293,13 +377,13 @@ WSRequest.util = {
             'Microsoft.XMLHTTP'
             ],
 
-/**
- * @description Instantiates a XMLHttpRequest object and returns it.
- * @method _createXMLHttpRequestObject
- * @private
- * @static
- * @return object
- */
+    /**
+     * @description Instantiates a XMLHttpRequest object and returns it.
+     * @method _createXMLHttpRequestObject
+     * @private
+     * @static
+     * @return object
+     */
     _createXMLHttpRequestObject : function() {
         var xhrObject;
 
@@ -322,14 +406,14 @@ WSRequest.util = {
         }
     },
 
-/**
- * @description Serialize payload to string.
- * @method _serializeToString
- * @private
- * @static
- * @param {dom} payload   xml payload
- * @return string
- */
+    /**
+     * @description Serialize payload to string.
+     * @method _serializeToString
+     * @private
+     * @static
+     * @param {dom} payload   xml payload
+     * @return string
+     */
     _serializeToString : function(payload) {
         if (payload == null) return null;
         if (typeof(payload) == "string") {
@@ -359,14 +443,14 @@ WSRequest.util = {
     },
 
 
-/**
- * @description get the character element children in a browser-independent way.
- * @method _stringValue
- * @private
- * @static
- * @param {dom element} node
- * @return string
- */
+    /**
+     * @description get the character element children in a browser-independent way.
+     * @method _stringValue
+     * @private
+     * @static
+     * @param {dom element} node
+     * @return string
+     */
     _stringValue : function(node) {
         var browser = WSRequest.util._getBrowser();
         switch (browser) {
@@ -392,14 +476,14 @@ WSRequest.util = {
     },
 
 
-/**
- * @description Determines which binding to use (SOAP 1.1, SOAP 1.2, or HTTP) from the various options.
- * @method _bindingVersion
- * @private
- * @static
- * @param {Array} options   Options given by user
- * @return string
- */
+    /**
+     * @description Determines which binding to use (SOAP 1.1, SOAP 1.2, or HTTP) from the various options.
+     * @method _bindingVersion
+     * @private
+     * @static
+     * @param {Array} options   Options given by user
+     * @return string
+     */
     _bindingVersion : function(options) {
         var soapVer;
         switch (options["useBindng"]) {
@@ -408,7 +492,7 @@ WSRequest.util = {
                 break;
             case "SOAP 1.1":
                 soapVer = 1.1;
-                break;                                                                                  
+                break;
             case "HTTP":
                 soapVer = 0;
                 break;
@@ -446,13 +530,14 @@ WSRequest.util = {
         return soapVer;
     },
 
-/**
- * @description Determine which browser we're running.
- * @method _getBrowser
- * @private
- * @static
- * @return string
- */
+
+    /**
+     * @description Determine which browser we're running.
+     * @method _getBrowser
+     * @private
+     * @static
+     * @return string
+     */
     _getBrowser : function() {
         var ua = navigator.userAgent.toLowerCase();
         if (ua.indexOf('opera') != -1) { // Opera (check first in case of spoof)
@@ -471,16 +556,16 @@ WSRequest.util = {
     },
 
 
-/**
- * @description Build HTTP payload using given parameters.
- * @method _buildHTTPpayload
- * @private
- * @static
- * @param {Array} options Options given by user
- * @param {string} url Address the request will be sent to.
- * @param {string} content SOAP payload in string format.
- * @return {array} Containing the processed URL and request body.
- */
+    /**
+     * @description Build HTTP payload using given parameters.
+     * @method _buildHTTPpayload
+     * @private
+     * @static
+     * @param {Array} options Options given by user
+     * @param {string} url Address the request will be sent to.
+     * @param {string} content SOAP payload in string format.
+     * @return {array} Containing the processed URL and request body.
+     */
     _buildHTTPpayload : function(options, url, content) {
         // Create array to hold request uri and body.
         var resultValues = new Array();
@@ -560,18 +645,18 @@ WSRequest.util = {
         return resultValues;
     },
 
-/**
- * @description Traverse the DOM tree below a given node, retreiving the content of each node and appending it to the
- *  URL or the body of the request based on the options specified.
- * @method _processNode
- * @private
- * @static
- * @param {Array} options Options given by user.
- * @param {Array} resultValues HTTP Location content and request body.
- * @param {XML} node SOAP payload as an XML object.
- * @param {string} paramSeparator Separator character for URI parameters.
- * @return {array} Containing the processed HTTP Location content and request body.
- */
+    /**
+     * @description Traverse the DOM tree below a given node, retreiving the content of each node and appending it to the
+     *  URL or the body of the request based on the options specified.
+     * @method _processNode
+     * @private
+     * @static
+     * @param {Array} options Options given by user.
+     * @param {Array} resultValues HTTP Location content and request body.
+     * @param {XML} node SOAP payload as an XML object.
+     * @param {string} paramSeparator Separator character for URI parameters.
+     * @return {array} Containing the processed HTTP Location content and request body.
+     */
     _processNode : function(options, resultValues, node, paramSeparator, inputSerialization) {
         var queryStringSep = '?';
         var HTTPLocationIgnoreUncited = "HTTPLocationIgnoreUncited";
@@ -639,7 +724,7 @@ WSRequest.util = {
                         // Add to request body if the serialization option and request type allows it.
                         if (inputSerialization == "application/x-www-form-urlencoded" && (options[HTTPMethod] == "POST"
                                 || options[HTTPMethod] == "PUT")) {
-                            
+
                             // Assign or append additional parameters.
                             if (resultValues["body"] == "") {
                                 resultValues["body"] = parameter;
@@ -653,20 +738,19 @@ WSRequest.util = {
         } while (node = node.nextSibling)
 
         return resultValues;
-    }
-    ,
+    },
 
-/**
- * @description Build soap message using given parameters.
- * @method _buildSoapEnvelope
- * @private
- * @static
- * @param {string} soapVer SOAP version (1.1 or 1.2)
- * @param {Array} options   Options given by user
- * @param {string} url Address the request will be sent to.
- * @param {string} content SOAP payload
- * @return string
- */
+    /**
+     * @description Build soap message using given parameters.
+     * @method _buildSoapEnvelope
+     * @private
+     * @static
+     * @param {string} soapVer SOAP version (1.1 or 1.2)
+     * @param {Array} options   Options given by user
+     * @param {string} url Address the request will be sent to.
+     * @param {string} content SOAP payload
+     * @return string
+     */
     _buildSOAPEnvelope : function(soapVer, options, url, content) {
         var ns;
         if (soapVer == 1.1)
@@ -705,8 +789,8 @@ WSRequest.util = {
             headers += '<o:Security s:mustUnderstand="1" xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" ' +
                        'xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">' +
                        '<u:Timestamp u:Id="uuid-c3cdb38b-e4aa-4467-9d0e-dd30f081e08d-5">' +
-                       '<u:Created>' + WSRequest.util.toXSdateTime(created, 0) + '</u:Created>' +
-                       '<u:Expires>' + WSRequest.util.toXSdateTime(created, 5) + '</u:Expires>' +
+                       '<u:Created>' + WSRequest.util._toXSdateTime(created) + '</u:Created>' +
+                       '<u:Expires>' + WSRequest.util._toXSdateTime(created, 5) + '</u:Expires>' +
                        '</u:Timestamp>' +
                        '<o:UsernameToken u:Id="Me" >' +
                        '<o:Username>' + username + '</o:Username>' +
@@ -722,19 +806,18 @@ WSRequest.util = {
                   '<s:Body>' + (content != null ? content : '') + '</s:Body>\n' +
                   '</s:Envelope>';
         return request;
-    }
-    ,
+    },
 
-/**
- * @description Build WS-Addressing headers using given parameters.
- * @method _buildWSAHeaders
- * @private
- * @static
- * @param {boolean} standardversion true for 1.0, false for submission
- * @param {Array} options   Options given by user
- * @param {string} address Address the request will be sent to.
- * @return string
- */
+    /**
+     * @description Build WS-Addressing headers using given parameters.
+     * @method _buildWSAHeaders
+     * @private
+     * @static
+     * @param {boolean} standardversion true for 1.0, false for submission
+     * @param {Array} options   Options given by user
+     * @param {string} address Address the request will be sent to.
+     * @return string
+     */
     _buildWSAHeaders : function(standardversion, options, address) {
         if (options['action'] == null)
             throw("'Action' option must be specified when WS-Addressing is engaged.");
@@ -788,23 +871,48 @@ WSRequest.util = {
     }
     ,
 
+    /**
+     * @description Set scope for callbacks.
+     * @method _getRealScope
+     * @private
+     * @static
+     * @param {Function} fn
+     * @return Function
+     */
     _getRealScope : function(fn) {
         var scope = window;
         if (fn._cscope) scope = fn._cscope;
         return function() {
             return fn.apply(scope, arguments);
         }
-    }
-    ,
+    },
 
+    /**
+     * @description Bind a function to the correct scope for callbacks
+     * @method _bind
+     * @private
+     * @static
+     * @param {Function} fn
+     * @param {Object} obj
+     * @return Function
+     */
     _bind : function(fn, obj) {
         fn._cscope = obj;
         return this._getRealScope(fn);
 
-    }
-    ,
+    },
 
-// workaround for the browser-specific differences in getElementsByTagName
+
+    /**
+     * @description Normalize browser-specific differences in getElementsByTagName
+     * @method _firstElement
+     * @private
+     * @static
+     * @param {dom} node
+     * @param {string} namespace
+     * @param {string} localName
+     * @return element
+     */
     _firstElement : function (node, namespace, localName) {
         if (node == null) return null;
         var browser = WSRequest.util._getBrowser();
@@ -824,10 +932,17 @@ WSRequest.util = {
                 el = node.getElementsByTagName(localName)[0];
         }
         return el;
-    }
-    ,
+    },
 
-// Returns the name of a given DOM text node, managing browser issues.
+
+    /**
+     * @description Returns the name of a given DOM text node, managing browser issues
+     * @method _nameForValue
+     * @private
+     * @static
+     * @param {dom} node
+     * @return string
+     */
     _nameForValue : function(node) {
         var browser = WSRequest.util._getBrowser();
         var nodeNameVal;
@@ -840,20 +955,35 @@ WSRequest.util = {
             nodeNameVal = WSRequest.util._isEmpty(node.localName) ? node.parentNode.localName : node.localName;
         }
         return nodeNameVal;
-    }
-    ,
+    },
 
-// Returns true if string value is null or empty.
+
+    /**
+     * @description Determins if a node string value is null or empty, managing browser issues
+     * @method _isEmpty
+     * @private
+     * @static
+     * @param {*} value
+     * @return boolean
+     */
     _isEmpty : function(value) {
         // Regex for determining if a given string is empty.
         var emptyRegEx = /^[\s]*$/;
 
         // Short circuit if null, otherwise check for empty.
         return (value == null || value == "#text" || emptyRegEx.test(value));
-    }
-    ,
+    },
 
-// Returns true if the attributes of the node contain a given value.
+
+    /**
+     * @description Returns true if the attributes of the node contain a given value.
+     * @method _attributeContain
+     * @private
+     * @static
+     * @param {dom node} node
+     * @param {string} value
+      * @return boolean
+     */
     _attributesContain : function(node, value) {
         var hasValue = false;
 
@@ -868,19 +998,20 @@ WSRequest.util = {
             }
         }
         return hasValue;
-    }
-    ,
-/**
- * @description Appends the template string to the URI, ensuring that the two are separated by a ? or a /. Performs a
- * merge if the start of the template is the same as the end of the URI, which will resolve at joining until a 
- * full resolution function can be developed.
- * @method _joinUrlToLocation
- * @private
- * @static
- * @param {string} endpointUri Base URI.
- * @param {string} templateString Processed contents of the HTTPLocation option.
- * @return string URI with the template string appended.
- */
+    },
+
+
+    /**
+     * @description Appends the template string to the URI, ensuring that the two are separated by a ? or a /. Performs a
+     * merge if the start of the template is the same as the end of the URI, which will resolve at joining until a
+     * full resolution function can be developed.
+     * @method _joinUrlToLocation
+     * @private
+     * @static
+     * @param {string} endpointUri Base URI.
+     * @param {string} templateString Processed contents of the HTTPLocation option.
+     * @return string URI with the template string appended.
+     */
     _joinUrlToLocation : function(endpointUri, templateString) {
         var endWithFwdSlash = new RegExp("/$");
         var startsWithFwdSlash = new RegExp("^/");
@@ -911,18 +1042,18 @@ WSRequest.util = {
             }
         }
         return endpointUri;
-    }
-    ,
+    },
 
-/**
- * @description Encodes a given string in either path or query parameter format.
- * @method _encodeString
- * @private
- * @static
- * @param {string} srcString String to be encoded.
- * @param {boolean} queryParm Indicates that the string is a query parameter and not a part of the path.
- * @return string URL encoded string.
- */
+
+    /**
+     * @description Encodes a given string in either path or query parameter format.
+     * @method _encodeString
+     * @private
+     * @static
+     * @param {string} srcString String to be encoded.
+     * @param {boolean} queryParm Indicates that the string is a query parameter and not a part of the path.
+     * @return string URL encoded string.
+     */
     _encodeString : function (srcString, queryParm) {
         var legalInPath = "-._~!$'()*+,;=:@";
         var legalInQuery = "-._~!$'()*+,;=:@/?";
@@ -944,7 +1075,19 @@ WSRequest.util = {
         return encodedString;
     },
 
-    toXSdateTime : function (thisDate, delta) {
+
+    /**
+     * @description Convert a Date to an xs:dateTime string
+     * @method _toXSdateTime
+     * @private
+     * @static
+     * @param {Date} thisDate   Date to be serialized.
+     * @param {number} delta    Optional offset to serialize a time delta seconds in the future.
+     * @return string
+     */
+    _toXSdateTime : function (thisDate, delta) {
+        if (delta == null) delta = 0;
+
         var year = thisDate.getUTCFullYear();
         var month = thisDate.getUTCMonth() + 1;
         var day = thisDate.getUTCDate();
@@ -961,8 +1104,7 @@ WSRequest.util = {
             (seconds < 10 ? "0" : "") + seconds +
             (milliseconds == 0 ? "" : (milliseconds/1000).toString().substring(1)) + "Z";
     }
-}
-        ;
+};
 
 
 
