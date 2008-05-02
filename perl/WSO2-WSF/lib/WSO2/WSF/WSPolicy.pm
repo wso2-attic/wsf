@@ -77,15 +77,15 @@ sub create_policy_from_hash {
 	$op = (defined $options->{useUsernameToken}) ?
 	  $options->{useUsernameToken} : undef;
 
-	if ( (defined $op) and ($op eq 'TRUE') ) {
+	if ( (defined $op) and ($op =~ /true/i) ) {
 	    WSO2::WSF::C::neethi_options_set_is_username_token($neethi_options, $env, $WSO2::WSF::C::AXIS2_TRUE);
 	}
 
 	$op = (defined $options->{encrypt}) ?
 	  $options->{encrypt} : undef;
 
-	if ( (defined $op) ) {
-	    if ( $op == $WSO2::WSF::C::AXIS2_TRUE ) {
+	if ( defined $op ) {
+	    if ( $op =~ /true/i ) {
 		WSO2::WSF::C::neethi_options_set_encrypt_body($neethi_options, $env, $WSO2::WSF::C::AXIS2_TRUE);
 	    } else {
 		WSO2::WSF::C::neethi_options_set_encrypt_body($neethi_options, $env, $op);
