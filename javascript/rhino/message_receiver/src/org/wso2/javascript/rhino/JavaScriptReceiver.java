@@ -473,7 +473,19 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 NativeArray nativeArray = (NativeArray) jsObject;
                 Object[] objects = nativeArray.getAllIds();
                 for (int i = 0; i < objects.length; i++) {
-                    outElement.addChild(handleSchemaTypeinResponse(innerElement, objects[i],
+                    Object object = objects[i];
+                    Object o;
+                    if (object instanceof String) {
+                        String property = (String) object;
+                        if ("length".equals(property)) {
+                            continue;
+                        }
+                        o = nativeArray.get(property, nativeArray);
+                    } else {
+                        Integer property = (Integer) object;
+                        o = nativeArray.get(property.intValue(), nativeArray);
+                    }
+                    outElement.addChild(handleSchemaTypeinResponse(innerElement, o,
                                                                    factory, json));
                 }
             } else {
