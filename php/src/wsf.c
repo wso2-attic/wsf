@@ -601,7 +601,6 @@ PHP_METHOD (ws_client, __construct)
     char *home_folder = NULL;
     axis2_svc_client_t * svc_client = NULL;
     zval * options = NULL;
-    long cache_wsdl;
     ws_is_svr = 0;
     if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "|a", &options)) {
         php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
@@ -633,27 +632,11 @@ PHP_METHOD (ws_client, __construct)
     intern->obj_type = WS_SVC_CLIENT;
     
     if (NULL != options) {
-        zval ** tmp;
         HashTable * ht = Z_ARRVAL_P (options);
         if (!ht) return;
 	/** add properties defined in api doc */
         wsf_client_add_properties (obj, ht TSRMLS_CC);
 
-        if (zend_hash_find (ht, WS_CACHE_WSDL, sizeof (WS_CACHE_WSDL),
-			(void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_LONG) {
-				cache_wsdl = Z_LVAL_PP (tmp);
-        }
-
-        if (zend_hash_find (ht, WS_WSDL, sizeof (WS_WSDL), 
-			(void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-            add_property_stringl (this_ptr, WS_WSDL, Z_STRVAL_PP (tmp),
-                                  Z_STRLEN_PP (tmp), 1);
-        }
-        
-        if (zend_hash_find (ht, "classmap", sizeof ("classmap"),
-           (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
-            add_property_zval(this_ptr, "classmap", *tmp);
-        }
 
     }
 }

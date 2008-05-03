@@ -434,6 +434,7 @@ wsf_client_add_properties (
     HashTable * ht TSRMLS_DC)
 {
     zval **tmp = NULL;
+    int cache_wsdl = 0;
     /** use soap */
     if (zend_hash_find (ht, WS_USE_SOAP, sizeof (WS_USE_SOAP),
             (void **) &tmp) == SUCCESS) {
@@ -614,6 +615,48 @@ wsf_client_add_properties (
     if(zend_hash_find(ht, WS_TIMEOUT, sizeof(WS_TIMEOUT), (void **)&tmp) == SUCCESS &&
             Z_TYPE_PP(tmp) == IS_LONG){
         add_property_long(this_ptr, WS_TIMEOUT, Z_LVAL_PP(tmp));
+    }
+
+    if (zend_hash_find (ht, WS_CACHE_WSDL, sizeof (WS_CACHE_WSDL),
+        (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_LONG) {
+            cache_wsdl = Z_LVAL_PP (tmp);
+    }
+
+    if (zend_hash_find (ht, WS_WSDL, sizeof (WS_WSDL), 
+        (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
+        add_property_stringl (this_ptr, WS_WSDL, Z_STRVAL_PP (tmp),
+                              Z_STRLEN_PP (tmp), 1);
+    }
+    
+    if (zend_hash_find (ht, WS_CLASSMAP, sizeof (WS_CLASSMAP),
+       (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
+        add_property_zval(this_ptr, WS_CLASSMAP, *tmp);
+    }
+
+    if (zend_hash_find (ht, WS_HTTP_AUTH_USERNAME, sizeof (WS_HTTP_AUTH_USERNAME),
+       (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
+        add_property_zval(this_ptr, WS_HTTP_AUTH_USERNAME, *tmp);
+    }
+    if (zend_hash_find (ht, WS_HTTP_AUTH_PASSWORD, sizeof (WS_HTTP_AUTH_PASSWORD),
+       (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
+        add_property_zval(this_ptr, WS_HTTP_AUTH_PASSWORD, *tmp);
+    }
+    if (zend_hash_find (ht, WS_HTTP_AUTH_TYPE, sizeof (WS_HTTP_AUTH_TYPE),
+       (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
+        add_property_zval(this_ptr, WS_HTTP_AUTH_TYPE, *tmp);
+    }
+
+    if (zend_hash_find (ht, WS_PROXY_AUTH_USERNAME, sizeof (WS_PROXY_AUTH_USERNAME),
+       (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
+        add_property_zval(this_ptr, WS_PROXY_AUTH_USERNAME, *tmp);
+    }
+    if (zend_hash_find (ht, WS_PROXY_AUTH_PASSWORD, sizeof (WS_PROXY_AUTH_PASSWORD),
+       (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
+        add_property_zval(this_ptr, WS_PROXY_AUTH_PASSWORD, *tmp);
+    }
+    if (zend_hash_find (ht, WS_PROXY_AUTH_TYPE, sizeof (WS_PROXY_AUTH_TYPE),
+       (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
+        add_property_zval(this_ptr, WS_PROXY_AUTH_TYPE, *tmp);
     }
 }
 
@@ -950,6 +993,80 @@ wsf_client_set_options (
     return status;
 }
 
+
+void
+wsf_client_set_http_auth_info(
+        HashTable * client_ht,
+        axutil_env_t * env,
+        axis2_options_t *options TSRMLS_DC)
+{
+    axis2_char_t *username = NULL;
+    axis2_char_t *password = NULL;
+    axis2_char_t *auth_type = NULL;
+    
+    zval **tmp = NULL;
+
+    if (zend_hash_find (client_ht, WS_HTTP_AUTH_USERNAME, sizeof (WS_HTTP_AUTH_USERNAME),
+                (void **) &tmp) == SUCCESS) {
+        username = Z_STRVAL_PP (tmp);
+    }
+    if (zend_hash_find (client_ht, WS_HTTP_AUTH_PASSWORD, sizeof (WS_HTTP_AUTH_PASSWORD),
+                (void **) &tmp) == SUCCESS) {
+        password = Z_STRVAL_PP (tmp);
+    }
+    if (zend_hash_find (client_ht, WS_HTTP_AUTH_TYPE, sizeof (WS_HTTP_AUTH_TYPE),
+                (void **) &tmp) == SUCCESS) {
+        auth_type = Z_STRVAL_PP (tmp);
+    }
+
+    if(axis2_options_set_http_auth_info(options, env,
+                 username, password, auth_type) == AXIS2_SUCCESS){
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+            "[wsf_client] success in setting http authentication information");
+    }
+    else {
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI,
+            "[wsf_client] failed in setting http authentication information");
+    }
+}
+
+
+void
+wsf_client_set_proxy_auth_info(
+        HashTable * client_ht,
+        axutil_env_t * env,
+        axis2_options_t *options TSRMLS_DC)
+{
+    axis2_char_t *username = NULL;
+    axis2_char_t *password = NULL;
+    axis2_char_t *auth_type = NULL;
+    
+    zval **tmp = NULL;
+
+    if (zend_hash_find (client_ht, WS_PROXY_AUTH_USERNAME, sizeof (WS_PROXY_AUTH_USERNAME),
+                (void **) &tmp) == SUCCESS) {
+        username = Z_STRVAL_PP (tmp);
+    }
+    if (zend_hash_find (client_ht, WS_PROXY_AUTH_PASSWORD, sizeof (WS_PROXY_AUTH_PASSWORD),
+                (void **) &tmp) == SUCCESS) {
+        password = Z_STRVAL_PP (tmp);
+    }
+    if (zend_hash_find (client_ht, WS_PROXY_AUTH_TYPE, sizeof (WS_PROXY_AUTH_TYPE),
+                (void **) &tmp) == SUCCESS) {
+        auth_type = Z_STRVAL_PP (tmp);
+    }
+
+    if(axis2_options_set_proxy_auth_info(options, env,
+                 username, password, auth_type) == AXIS2_SUCCESS){
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+            "[wsf_client] success in setting proxy authentication information");
+    }
+    else {
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI,
+            "[wsf_client] failed in setting proxy authentication information");
+    }
+}
+
 void
 wsf_client_do_request (
     zval * this_ptr,
@@ -1041,6 +1158,12 @@ wsf_client_do_request (
     /** add ssl properties */
     wsf_client_enable_ssl (client_ht, env, client_options,
         svc_client TSRMLS_CC);
+
+    /** set http authentication parameters */
+    wsf_client_set_http_auth_info(client_ht, env, client_options);
+
+    /** set proxy authentication parameters */
+    wsf_client_set_proxy_auth_info(client_ht, env, client_options);
 
     if (input_type == WS_USING_MSG) {
         /** setting soap , rest and security options */

@@ -114,6 +114,17 @@ typedef enum ws_input_types
 #define WS_BINDING_STYLE 		"bindingStyle"
 #define WS_WSDL          		"wsdl"
 #define WS_CACHE_WSDL           "cache_wsdl"
+#define WS_CLASSMAP             "classmap"
+
+/** http authentication */
+#define WS_HTTP_AUTH_USERNAME      "httpAuthUsername"
+#define WS_HTTP_AUTH_PASSWORD      "httpAuthPassword"
+#define WS_HTTP_AUTH_TYPE          "httpAuthType"
+
+/** proxy authentication */
+#define WS_PROXY_AUTH_USERNAME      "proxyAuthUsername"
+#define WS_PROXY_AUTH_PASSWORD      "proxyAuthPassword"
+#define WS_PROXY_AUTH_TYPE          "proxyAuthType"
 
 /** soap fault */
 #define WS_FAULT_REASON 		"Reason"
