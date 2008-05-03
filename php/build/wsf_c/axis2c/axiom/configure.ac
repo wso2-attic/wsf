@@ -49,7 +49,7 @@ AC_CHECK_LIB(z, inflate)
 #CFLAGS="$CFLAGS -ansi -Wall -D_LARGEFILE64_SOURCE -Wno-implicit-function-declaration"
 CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 if test "$GCC" = "yes"; then
-    CFLAGS="$CFLAGS -ansi -Werror -Wall -Wno-implicit-function-declaration "
+    CFLAGS="$CFLAGS -ansi  -Wall -Wno-implicit-function-declaration "
 fi
 
 LDFLAGS="$LDFLAGS -lpthread"
@@ -88,12 +88,14 @@ AC_ARG_ENABLE(libxml2, [  --enable-libxml2    build libxml2 xml parser library w
     ;;
   *)
     AC_MSG_RESULT(yes)
+    CFLAGS="$CFLAGS -DAXIS2_LIBXML2_ENABLED"
     WRAPPER_DIR="libxml2"
 
     ;;
   esac ],
   AC_MSG_RESULT(yes)
   WRAPPER_DIR="libxml2"
+  CFLAGS="$CFLAGS -DAXIS2_LIBXML2_ENABLED"
 )
 
 AC_MSG_CHECKING(whether to build guththila xml parser library)

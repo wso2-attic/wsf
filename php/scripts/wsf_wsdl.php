@@ -255,7 +255,9 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
     $service_name = NULL;
     $port_name = NULL;
 
-    $wsdl_location = $parameters[WSF_WSDL];
+    if(array_key_exists(WSF_WSDL, $parameters)) { 
+        $wsdl_location = $parameters[WSF_WSDL];
+    }
     if(array_key_exists(WSF_SERVICE_NAME, $parameters)) {
         $service_name = $parameters[WSF_SERVICE_NAME];
     }
@@ -384,8 +386,8 @@ function wsf_wsdl_process_in_msg($parameters)
         $class_args = $parameters["class_args"];
     }
 
-    
-    
+   
+
     $payload_dom->loadXML($payload_string);
     $sig_model_dom->loadXML($sig_model_string);
 
