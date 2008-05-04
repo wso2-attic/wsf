@@ -1160,10 +1160,10 @@ wsf_client_do_request (
         svc_client TSRMLS_CC);
 
     /** set http authentication parameters */
-    wsf_client_set_http_auth_info(client_ht, env, client_options);
+    wsf_client_set_http_auth_info(client_ht, env, client_options TSRMLS_CC);
 
     /** set proxy authentication parameters */
-    wsf_client_set_proxy_auth_info(client_ht, env, client_options);
+    wsf_client_set_proxy_auth_info(client_ht, env, client_options TSRMLS_CC);
 
     if (input_type == WS_USING_MSG) {
         /** setting soap , rest and security options */
