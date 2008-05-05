@@ -139,7 +139,7 @@ Contents:
 
     Uncomment the include_path and edit it to point to the location for scripts folder as
 
-    include_path = ".;/path/to/scripts/folder"
+    include_path = ".;/<path to the scripts folder>"
 
     6. Configure the Apache2 Web server with PHP as follows.
 
