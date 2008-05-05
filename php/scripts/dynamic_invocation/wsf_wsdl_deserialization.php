@@ -741,7 +741,7 @@ function wsf_infer_content_model(DomNode &$current_child, DomNode $sig_node, $cl
                      $is_attribute = TRUE;
                 }
                 // for any types no content model can be specified..
-                if($param_type == "anyType") {
+                if($param_type == "anyType" && $current_child !== NULL) {
                     if($max_occurs > 1 || $max_occurs == "unbounded") {
                         $tag_name = $current_child->localName;
                         $tmp_array = array();
@@ -768,7 +768,7 @@ function wsf_infer_content_model(DomNode &$current_child, DomNode $sig_node, $cl
                     }
                 }
 
-                if($content_model == WSF_WSDL_SEQUENCE) {
+                if($content_model == WSF_WSDL_SEQUENCE && $current_child !== NULL) {
                     if($param_name == $current_child->localName) {
 
                         if($is_simple) {
@@ -818,7 +818,7 @@ function wsf_infer_content_model(DomNode &$current_child, DomNode $sig_node, $cl
                         }  
                     }
                 }
-                else if($content_model == "choice") {
+                else if($content_model == "choice" && $current_child != NULL) {
                     if($param_name == $current_child->localName) {
                         if($is_simple) {
                             // this moves the current_child pointer to the next child..

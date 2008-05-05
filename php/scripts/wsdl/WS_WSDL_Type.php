@@ -30,6 +30,7 @@ class WS_WSDL_Type
     private $createdTypes;
     private $fun_mapping;
     private $classmap;
+    private $namespace_array;
 
     /**
      * Constructor of the class
@@ -45,6 +46,7 @@ class WS_WSDL_Type
         $this->schemaTypes = $array2;
         $this->fun_mapping = $mapping_array;
         $this->classmap = $classmap;
+        $this->namespace_array = array();
     }
 
 
@@ -485,15 +487,15 @@ class WS_WSDL_Type
         $comtype->appendChild($seq);
 
 
-
-        if($namespace_array[$namespace] != NULL)
+        if(array_key_exists($namespace, $this->namespace_array) &&
+                $this->namespace_array[$namespace] != NULL)
         {
-            $prefix = $namespace_array[$namespace];
+            $prefix = $this->namespace_array[$namespace];
         }
         else
         {
             $prefix = "ns".$i;
-            $namespace_array[$namespace] = $prefix;
+            $this->namespace_array[$namespace] = $prefix;
             $i ++;
         }
 

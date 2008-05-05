@@ -254,13 +254,21 @@ class WS_WSDL_Operations
      */
     function checkValidTypes($keyIndex, $keyXsdIndex)
     {
-        $keyPHPArray = $this->xsdMapArry[$keyXsdIndex];
-        $PHPType = $this->phpMapArry[$keyIndex];
+        $keyPHPArray = NULL;
+        if(array_key_exists($keyXsdIndex, $this->xsdMapArry)) {
+            $keyPHPArray = $this->xsdMapArry[$keyXsdIndex];
+        }
+
+        $PHPType = NULL;
+        if(array_key_exists($keyIndex, $this->phpMapArry)) {
+            $PHPType = $this->phpMapArry[$keyIndex];
+        }
         
         require_once('dynamic_invocation/wsf_wsdl_consts.php');
         ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "mapping :".$keyPHPArray." to ".$PHPType);
 
-        if ($PHPType == self::$mappingTable[$keyPHPArray])
+        if( $keyPHPArray && array_key_exists($keyPHPArray, self::$mappingTable) && 
+                $PHPType == self::$mappingTable[$keyPHPArray])
         {
             return $keyPHPArray;
         }
