@@ -659,6 +659,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
 	axiom_node_t *soap_body_node = NULL;
 
 	int use_mtom = AXIS2_TRUE;
+	int enable_swa = AXIS2_FALSE;
 	int request_xop = AXIS2_FALSE;
     int _bailout = 0;
 	
@@ -694,6 +695,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
         return NULL;
 
 	use_mtom = svc_info->use_mtom;
+    enable_swa = svc_info->enable_swa;
     request_xop = svc_info->request_xop;
 
     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, " [wsf_svr] calling php service ");
@@ -858,8 +860,9 @@ wsf_xml_msg_recv_invoke_wsmsg (
 
                 HashTable *ht = NULL;
                 ht = Z_ARRVAL_PP (msg_tmp);
+
                 if (ht && res_om_node) {
-                    wsf_util_set_attachments_with_cids (env, use_mtom, AXIS2_FALSE,
+                    wsf_util_set_attachments_with_cids (env, use_mtom, enable_swa,
                         res_om_node, ht, default_cnt_type TSRMLS_CC);
                     if (use_mtom == 1) {
                         axis2_msg_ctx_set_doing_mtom (out_msg_ctx, env,

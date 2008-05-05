@@ -54,7 +54,8 @@ int wsf_client_handle_incoming_attachments (
     axutil_env_t * env,
     HashTable * client_ht,
     zval * msg,
-    axiom_node_t * response_payload TSRMLS_DC);
+    axiom_soap_envelope_t * soap_envelope,
+    axiom_node_t *response_payload TSRMLS_DC);
 
 void wsf_client_set_security_options (
     HashTable * client_ht,
@@ -225,7 +226,8 @@ wsf_client_handle_incoming_attachments (
     axutil_env_t * env,
     HashTable * client_ht,
     zval * msg,
-    axiom_node_t * response_payload TSRMLS_DC)
+    axiom_soap_envelope_t * soap_envelope,
+    axiom_node_t *response_payload TSRMLS_DC)
 {
     zval **tmp = NULL;
 	int attachments_found = 0;
@@ -257,8 +259,14 @@ wsf_client_handle_incoming_attachments (
 
         array_init (cid2str);
         array_init (cid2content_type);
+
+        attachments_found = wsf_util_get_attachments_form_soap_envelope(env,
+                        soap_envelope, cid2str, cid2content_type TSRMLS_CC);
+
+        /*
         attachments_found = wsf_util_get_attachments (env, response_payload, cid2str,
             cid2content_type TSRMLS_CC);
+        */
         add_property_zval (msg, WS_ATTACHMENTS, cid2str);
         add_property_zval (msg, WS_CID2CONTENT_TYPE, cid2content_type);
         zval_ptr_dtor(&cid2str);
@@ -306,7 +314,8 @@ wsf_client_handle_outgoing_attachments (
             char *value = NULL;
             value = Z_STRVAL_PP (tmp);
             /* Check if SOAP with Attachmnts (SwA) has been enabled */
-            if (value && (strcmp (value, "swa") == 0 || strcmp (value, "SWA") || strcmp (value, "SwA"))) {
+            if (value && (strcmp (value, "swa") == 0 || strcmp (value, "SWA") == 0 
+                        || strcmp (value, "SwA") == 0)) {
 
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                     "[wsf_client] SwA enabled");
@@ -1441,11 +1450,17 @@ wsf_client_do_request (
         }else if (response_payload) {
             int attachments_found = 0;
             zval *rmsg = NULL;
+            axiom_soap_envelope_t *soap_envelope = NULL;
+
        	    MAKE_STD_ZVAL (rmsg);
             
             object_init_ex (rmsg, ws_message_class_entry);
+
+            soap_envelope =
+                axis2_svc_client_get_last_response_soap_envelope (svc_client,
+                env);
             attachments_found = wsf_client_handle_incoming_attachments (env, client_ht, rmsg,
-                response_payload TSRMLS_CC);
+                soap_envelope, response_payload TSRMLS_CC);
             
             res_text = wsf_util_serialize_om (env, response_payload);
             

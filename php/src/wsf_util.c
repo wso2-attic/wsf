@@ -384,6 +384,7 @@ wsf_svc_info_create (
     svc_info->use_mtom = 0;     /* default is false otherwise service side will send MIME
                                    headers which some servers can;t handle */
     svc_info->request_xop = 0;  /* default false */
+    svc_info->enable_swa = 0;
     svc_info->policy = NULL;
     svc_info->security_token = NULL;
 

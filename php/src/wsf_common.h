@@ -235,8 +235,10 @@ typedef struct wsf_svc_info
   HashTable *ht_op_params;
   
   int request_xop;
-  
+ 
   int use_mtom;
+
+  int enable_swa;
   
   zval *policy;
   

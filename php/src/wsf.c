@@ -896,12 +896,26 @@ PHP_METHOD (ws_service, __construct)
             }
 
             if (zend_hash_find (ht_options, WS_USE_MTOM, sizeof (WS_USE_MTOM), 
-				(void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_BOOL) {
+				(void **) &tmp) == SUCCESS) {
+                    if(Z_TYPE_PP (tmp) == IS_BOOL) {
+                        svc_info->use_mtom = Z_BVAL_PP (tmp);
+                    }
+                    if(Z_TYPE_PP (tmp) == IS_STRING) {
+                        char *value = NULL;
+                        value = Z_STRVAL_PP (tmp);
+                        if (value && (strcmp (value, "swa") == 0 || strcmp (value, "SWA") == 0
+                                || strcmp (value, "SwA") == 0)) {
 
-					svc_info->use_mtom = Z_BVAL_PP (tmp);
-					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
-						"[wsf_service] setting mtom property %d",
-							svc_info->use_mtom);
+                            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                                "[wsf_client] SwA enabled");
+                            svc_info->use_mtom = 1; /* mtom */
+                            svc_info->enable_swa = 1;  /* mtom swa*/
+                        }
+
+                    }
+                    AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
+                        "[wsf_service] setting mtom property %d",
+                            svc_info->use_mtom);
             }else {
                 svc_info->use_mtom = 0;
             }
