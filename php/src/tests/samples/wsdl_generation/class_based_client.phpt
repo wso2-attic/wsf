@@ -134,6 +134,7 @@ $hello->param2 = $param2;
 $classmap = array("HelloWorldResponse" => "HelloWorldResponse");
 
 $wsclient = new WSClient( array(
+                "to" => "http://localhost/services/wsdl_generation/class_based_service.php",
                 "wsdl" => "http://localhost/services/wsdl_generation/class_based_service.php?wsdl"));
 
 $proxy = $wsclient->getProxy();
