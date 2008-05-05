@@ -1,5 +1,5 @@
 @call wsf_c\build\init.bat
-set WSFPHP_VERSION=1.2.2
+set WSFPHP_VERSION=1.3
 
 @if exist wsf_c\wso2-wsf-c-bin-%WSFC_VERSION% rmdir /S /Q wsf_c\wso2-wsf-c-bin-%WSFC_VERSION%
 
