@@ -26,7 +26,6 @@ $actions = array(
 // create service in WSDL mode
 $service = new WSService(array ("wsdl" =>"SimpleTypeList.wsdl",
         "operations" => $operations,
-        "opParams" => $opParams,
         "actions" => $actions,
                             ));
 

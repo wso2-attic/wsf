@@ -32,7 +32,6 @@ $actions = array(
 // create service in WSDL mode
 $service = new WSService(array ("wsdl" =>"ComplexTypeAll.wsdl",
         "operations" => $operations,
-        "opParams" => $opParams,
         "actions" => $actions,
         "classmap" => $class_map,
                             ));
