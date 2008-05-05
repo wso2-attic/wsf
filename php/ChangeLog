@@ -1,4 +1,4 @@
-WSO2 WSF/PHP 1.2.2 
+WSO2 WSF/PHP 1.3.0 
 ======================
 * Improvements of Schema constructs support for WSDL mode including
 SimpleType restricitons, ComplexType restrictions/extensions and attributes.
@@ -7,6 +7,9 @@ SimpleType restricitons, ComplexType restrictions/extensions and attributes.
 the preferred bindings.
 * wsdl2php code generation improvements to support the improvements done in
 WSDL mode.
+* HTTP Basic Authentication support added.
+* SOAP Messages with Attachments (SWA) suport added.
+* Custom security token support added.
 
 WSO2 WSF/PHP 1.2.1 
 ======================
