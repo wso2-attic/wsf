@@ -5,7 +5,7 @@
 @copy configure.in wsf_c\configure.in
 @copy wsf_c_build.bat wsf_c\build.bat
 
-set WSFPHP_VERSION=1.3
+set WSFPHP_VERSION=1.3.0
 
 
 @cd wsf_c
