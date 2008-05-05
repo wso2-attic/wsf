@@ -10,9 +10,9 @@ if test "$PHP_WSF" = "yes"; then
 	
     dnl # add include path
 
-	PHP_ADD_INCLUDE(/opt/wso2/wsf_c/include/axis2-1.2)
+	PHP_ADD_INCLUDE(/opt/wso2/wsf_c/include/axis2-1.4.0)
 	PHP_ADD_INCLUDE(/opt/wso2/wsf_c/include/sandesha2-0.91)
-	PHP_ADD_INCLUDE(/opt/wso2/wsf_c/include/rampart-1.0)
+	PHP_ADD_INCLUDE(/opt/wso2/wsf_c/include/rampart-1.2.0)
 	PHP_ADD_INCLUDE(/usr/include/libxml2)
   	dnl # check for lib and symbol presence
 
@@ -40,7 +40,7 @@ src/wsf_wsdl.c"
 
 
 	PHP_NEW_EXTENSION(wsf, $wsf_srcs , $ext_shared)
-    PHP_ADD_BUILD_DIR($ext_builddir/src)
-    PHP_ADD_EXTENSION_DEP(wsf, libxml)
+	PHP_ADD_BUILD_DIR($ext_builddir/src)
+	PHP_ADD_EXTENSION_DEP(wsf, libxml)
 	PHP_ADD_EXTENSION_DEP(wsf, dom)
 fi
