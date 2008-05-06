@@ -9,8 +9,8 @@ make
 make install
 make samples
 make dist
-tar xf wso2-wsf-c-src-1.2.1.tar.gz
-cd wso2-wsf-c-src-1.2.1
+tar xf wso2-wsf-c-src-1.3.0.tar.gz
+cd wso2-wsf-c-src-1.3.0
 
 ./configure
 make maintainer-clean
@@ -34,8 +34,8 @@ cd ..
 
 cp /tmp/dist.sh /tmp/dist_hook.sh .
 
-rm -rf wso2-wsf-c-src-1.2.1.tar.gz
-cd wso2-wsf-c-src-1.2.1
+rm -rf wso2-wsf-c-src-1.3.0.tar.gz
+cd wso2-wsf-c-src-1.3.0
 rm -rf `find . -type d -name .svn`
 rm -rf `find . -type f -name *.la`
 rm -rf `find . -type f -name *.o`
@@ -46,7 +46,7 @@ rm -rf `find . -type d -name .libs`
 rm -rf `find . -type f -name Makefile`
 rm -rf `find . -type d -name autom4te.cache`
 cd ..
-tar -pczf wso2-wsf-c-src-1.2.1.tar.gz wso2-wsf-c-src-1.2.1
-rm -rf wso2-wsf-c-src-1.2.1/examples/config.log
-zip -r wso2-wsf-c-src-1.2.1.zip wso2-wsf-c-src-1.2.1
-rm -rf wso2-wsf-c-src-1.2.1
+tar -pczf wso2-wsf-c-src-1.3.0.tar.gz wso2-wsf-c-src-1.3.0
+rm -rf wso2-wsf-c-src-1.3.0/examples/config.log
+zip -r wso2-wsf-c-src-1.3.0.zip wso2-wsf-c-src-1.3.0
+rm -rf wso2-wsf-c-src-1.3.0
