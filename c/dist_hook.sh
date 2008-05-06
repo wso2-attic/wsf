@@ -6,23 +6,23 @@ cd ../../
 
 cd axis2c/samples
 make dist
-tar -xf wso2-wsf-c-src-1.2.1.tar.gz
-mv wso2-wsf-c-src-1.2.1   ../../wso2-wsf-c-src-1.2.1/axis2c/samples
+tar -xf wso2-wsf-c-src-1.3.0.tar.gz
+mv wso2-wsf-c-src-1.3.0   ../../wso2-wsf-c-src-1.3.0/axis2c/samples
 
 cd ../../sandesha2c/samples
 make dist
-tar -xf wso2-wsf-c-src-1.2.1.tar.gz
-mv wso2-wsf-c-src-1.2.1   ../../wso2-wsf-c-src-1.2.1/sandesha2c/samples
+tar -xf wso2-wsf-c-src-1.3.0.tar.gz
+mv wso2-wsf-c-src-1.3.0   ../../wso2-wsf-c-src-1.3.0/sandesha2c/samples
 
 cd ../../rampartc/samples
 make dist
-tar -xf wso2-wsf-c-src-1.2.1.tar.gz
-mv wso2-wsf-c-src-1.2.1   ../../wso2-wsf-c-src-1.2.1/rampartc/samples
+tar -xf wso2-wsf-c-src-1.3.0.tar.gz
+mv wso2-wsf-c-src-1.3.0   ../../wso2-wsf-c-src-1.3.0/rampartc/samples
 
 cd ../../savanc/samples
 make dist
-tar -xf wso2-wsf-c-src-1.2.1.tar.gz
-mv wso2-wsf-c-src-1.2.1   ../../wso2-wsf-c-src-1.2.1/savanc/samples
+tar -xf wso2-wsf-c-src-1.3.0.tar.gz
+mv wso2-wsf-c-src-1.3.0   ../../wso2-wsf-c-src-1.3.0/savanc/samples
 
 cd ../../
 cd axis2c/xdocs/api
@@ -38,7 +38,7 @@ cd savanc/xdocs/api
 doxygen doxygenconf
 cd ../../../
 
-cd wso2-wsf-c-src-1.2.1
+cd wso2-wsf-c-src-1.3.0
 cp -r axis2c/xdocs docs/axis2c
 cp -r ../axis2c/xdocs/api/html docs/axis2c/api
 cp -r savanc/docs docs/savanc
