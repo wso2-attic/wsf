@@ -115,9 +115,9 @@ border="1">
     <tr valign="top">
       <td style="height: 51px; width: 96px;"><p>"useMTOM"</p>
       </td>
-      <td style="height: 51px"><p>boolean</p>
+      <td style="height: 51px"><p>boolean | string</p>
       </td>
-      <td style="height: 51px"><p>TRUE | FALSE</p>
+      <td style="height: 51px"><p>TRUE | FALSE | "swa"</p>
       </td>
       <td style="height: 51px"><p>TRUE</p>
       </td>
@@ -125,7 +125,8 @@ border="1">
         sent MTOM optimized or not. If TRUE, the attachments will be sent out of the
         SOAP message, optimized, with MIME headers in place. If
         FALSE, attachments will be sent within the SOAP payload, as base64
-        binary.</p>
+        binary.  If "swa" is provided then 
+        the attachments will be send following the SOAP With Attachment standards.</p>
       </td>
     </tr>
     <tr valign="top">
@@ -213,6 +214,34 @@ border="1">
       <td colspan="1" style="height: 20px">None</td>
       <td colspan="1" style="height: 20px">WSDL file can be used to invoke a
         Web service using dynamic invocation</td>
+    </tr>
+
+    <tr valign="top">
+      <td colspan="5">Http Authentication</td>
+    </tr>
+    <tr valign="top">
+      <td colspan="1" style="height: 20px; width: 96px;">"httpAuthUsername"</td>
+      <td colspan="1" style="height: 20px">string</td>
+      <td colspan="1" style="height: 20px">string</td>
+      <td colspan="1" style="height: 20px">None</td>
+      <td colspan="1" style="height: 20px">Http Authentication Information: UserName</td>
+    </tr>
+    <tr valign="top">
+      <td colspan="1" style="height: 20px; width: 96px;">"httpAuthPassword"</td>
+      <td colspan="1" style="height: 20px">string</td>
+      <td colspan="1" style="height: 20px">string</td>
+      <td colspan="1" style="height: 20px">None</td>
+      <td colspan="1" style="height: 20px">Http Authentication Information: Password</td>
+    </tr>
+    <tr valign="top">
+      <td colspan="1" style="height: 20px; width: 96px;">"httpAuthType"</td>
+      <td colspan="1" style="height: 20px">string</td>
+      <td colspan="1" style="height: 20px">"Basic" | "Digest"</td>
+      <td colspan="1" style="height: 20px">None</td>
+      <td colspan="1" style="height: 20px">Http Authentication Information: Authentication type,
+            use "Basic" to force basic authentication
+            and "Digest" to force digest authentication or NULL for not
+            forcing authentication</td>
     </tr>
   </tbody>
 </table>
@@ -556,16 +585,17 @@ border="1">
     <tr valign="top">
       <td><p>"useMTOM"</p>
       </td>
-      <td><p>boolean</p>
+      <td><p>boolean | string </p>
       </td>
-      <td><p>TRUE | FALSE</p>
+      <td><p>TRUE | FALSE | "swa"</p>
       </td>
       <td><p>TRUE</p>
       </td>
       <td><p>Indicates whether the attachments should be sent MTOM optimized
         or not. If TRUE, attachments will be sent out of the SOAP message,
         optimized, and with MIME headers in place. If FALSE, attachments will be
-        sent within the SOAP payload, as base64 binary.</p>
+        sent within the SOAP payload, as base64 binary. If "swa" is provided then 
+        the attachments will be send following the SOAP With Attachment standards.</p>
       </td>
     </tr>
     <tr valign="top">
