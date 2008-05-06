@@ -98,6 +98,8 @@ wsf_policy_handle_client_security (
         tmp_rampart_ctx.receiverCertificateFormat = NULL;
         tmp_rampart_ctx.ttl = 0;
         tmp_rampart_ctx.callback_function = NULL;
+        tmp_rampart_ctx.callback_function = NULL;
+        tmp_rampart_ctx.custom_tokens  = NULL;
 		
     }
     if (!sec_token) {
