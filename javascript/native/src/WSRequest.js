@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-// This file introduces two classes: WSRequest for invoking a Web Serivce, and WSError to encapsulate failure information.
+// This file introduces two classes: WSRequest for invoking a Web Service, and WebServiceError to encapsulate failure information.
 
-var WSRequest = WSRequest = function() {
+var WSRequest = function() {
     // properties and usage mirror XMLHTTPRequest
     this.readyState = 0;
     this.responseText = null;
@@ -70,8 +70,8 @@ WSRequest.prototype.open = function(options, URL, asnycFlag, username, password)
         throw new WebServiceError("User name should have a password", "WSRequest.open invocation specified username: '" + username + "' without a corresponding password.");
     else
     {
-        this._username = username;
-        this._password = password;
+        this._optionSet["username"] = username;
+        this._optionSet["password"] = password;
     }
 
     this.readyState = 1;
