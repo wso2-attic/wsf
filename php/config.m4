@@ -18,7 +18,6 @@ if test "$PHP_WSF" = "yes"; then
 
   	PHP_ADD_LIBRARY_WITH_PATH(axis2_parser, /opt/wso2/wsf_c/lib/, WSF_SHARED_LIBADD)
   	PHP_ADD_LIBRARY_WITH_PATH(axis2_axiom, /opt/wso2/wsf_c/lib/, WSF_SHARED_LIBADD)
-  	PHP_ADD_LIBRARY_WITH_PATH(axis2_minizip, /opt/wso2/wsf_c/lib/, WSF_SHARED_LIBADD)
 	PHP_ADD_LIBRARY_WITH_PATH(axis2_engine, /opt/wso2/wsf_c/lib/, WSF_SHARED_LIBADD)	
 	PHP_ADD_LIBRARY_WITH_PATH(axutil, /opt/wso2/wsf_c/lib/, WSF_SHARED_LIBADD)	
 	PHP_ADD_LIBRARY_WITH_PATH(axis2_http_sender, /opt/wso2/wsf_c/lib/, WSF_SHARED_LIBADD)	
