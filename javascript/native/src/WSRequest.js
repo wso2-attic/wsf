@@ -135,7 +135,7 @@ WSRequest.prototype.send = function(payload) {
 
     var accessibleDomain = true;  // assume so for now
     try {
-        this._xmlhttp.open(method, this._uri, this._async);
+        this._xmlhttp.open(method, this._uri, this._async, this._optionSet.username, this._optionSet.password);
 
         // Process protocol-specific details
         switch (this._soapVer) {
