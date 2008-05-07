@@ -98,8 +98,9 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
         </dir>
         <dir name="dynamic_invocation">
             <file name="wsf_wsdl_consts.php" role="php"/>
-            <file name="wsf_wsdl_client_request.php" role="php"/>
-            <file name="wsf_wsdl_client_response.php" role="php"/>
+            <file name="wsf_wsdl_client.php" role="php"/>
+            <file name="wsf_wsdl_serialization.php" role="php"/>
+            <file name="wsf_wsdl_deserialization.php" role="php"/>
             <file name="wsf_wsdl_service.php" role="php"/>
             <file name="wsf_wsdl_util.php" role="php"/>
             <dir name="xslt">
@@ -143,6 +144,7 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
             <file name="mtom_upload_client.php" role="php"/>
             <file name="mtom_upload_service_base64.php" role="php"/>
             <file name="mtom_upload_service.php" role="php"/>
+            <file name="mtom_upload_client_swa.php" role="php"/>
         </dir>
     	<dir name="solutions">
 	       	<dir name="mashup_demo">
@@ -353,7 +355,7 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
     <api>1.1</api>
    </stability>
    <license uri="http://apache.org/licenses/LICENSE-2.0">Apache2</license>
-   <notes>1.1 release of wso2-wsf/php. 
+   <notes>1.3 release of wso2-wsf/php. 
 1. Client API to consume Web services
 
       * WSMessage class to handle message level options
