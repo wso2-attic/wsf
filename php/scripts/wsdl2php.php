@@ -45,7 +45,7 @@ if (isset($_GET['input'])) {
     $args = wsf_arguments($argv);
 }
 
-if ($args['h']) { // -h used for help; print help
+if (array_key_exists('h', $args) && $args['h']) { // -h used for help; print help
 	wsf_wsdl2php_print_help();
 	return;
 }
@@ -53,7 +53,7 @@ if ($args['h']) { // -h used for help; print help
 // pick the WSDL form command line arguments
 $wsdl_location = $args['input'][1];
 
-if ($args['d']) { // -d used for debug; print sig model
+if (array_key_exists('d', $args) && $args['d']) { // -d used for debug; print sig model
 	wsf_wsdl2sig($wsdl_location);
 	return;
 }
@@ -70,10 +70,12 @@ if($class_code) {
     echo $class_code;
 
     echo "// define the class map\n";
-    echo "\$class_map = array(\n";
+    echo "\$class_map = array(";
     $class_map = "";
     foreach ($written_classes as $class_name => $value) {
-        $class_map = $class_map . " \"" . $class_name . "\" => \"" . $class_name . "\",";
+        if($class_name != WSF_XSD_ANYTYPE) {
+            $class_map = $class_map . "\n    \"" . $class_name . "\" => \"" . $class_name . "\",";
+        }
     }
 
     // print_cass_map only the classmap is present
@@ -82,7 +84,7 @@ if($class_code) {
     echo ");\n\n";
 }
 
-if ($args['s']) { 
+    if (array_key_exists('s', $args) && $args['s']) { 
 	// generate server side code
 	echo "// define PHP functions that maps to WSDL operations \n";
 	foreach ($operations as $op_name => $value) {
@@ -91,10 +93,10 @@ if ($args['s']) {
 	}
 
 	echo "// define the operations map\n";
-	echo "\$operations = array(\n";
+	echo "\$operations = array(";
 	$operations_map = "";
 	foreach ($operations as $op_name => $value) {
-		$operations_map = $operations_map . " \"" . $op_name . "\" => \"" . $op_name . "\",";
+		$operations_map = $operations_map . "\n    \"" . $op_name . "\" => \"" . $op_name . "\",";
 	}
 	
 	$operations_map = substr_replace($operations_map, "", -1);
@@ -116,10 +118,10 @@ if ($args['s']) {
     {
      
         echo "// define the actions => operations map\n";
-        echo "\$actions = array(\n";
+        echo "\$actions = array(";
         $actions_map_str = "";
         foreach ($actions as $action => $op_name) {
-            $actions_map_str = $actions_map_str . " \"" . $action . "\" => \"" . $op_name."\",";
+            $actions_map_str = $actions_map_str . "\n    \"" . $action . "\" => \"" . $op_name."\",";
         }
         $actions_map_str = substr_replace($actions_map_str, "", -1);
         echo $actions_map_str;
@@ -129,7 +131,6 @@ if ($args['s']) {
 	
 	echo "// create service in WSDL mode\n";
 	echo "\$service = new WSService(array (\"wsdl\" =>\"$wsdl_location\",\n";
-	echo "        \"operations\" => \$operations,\n";
 	//echo "        \"opParams\" => \$opParams,\n";
     if($actions != NULL) {
         echo 
@@ -139,7 +140,7 @@ if ($args['s']) {
 	    echo 
          "        \"classmap\" => \$class_map,\n";
     }
-    echo "                            ));\n\n";
+	echo "        \"operations\" => \$operations));\n\n";
      
     echo "// process client requests and reply \n";
 	echo "\$service->reply();\n\n";
@@ -152,9 +153,11 @@ if ($args['s']) {
 	echo "    \$client = new WSClient(array (\"wsdl\" =>\"$wsdl_location\",\n";
     if($class_map != NULL) {
 	    echo 
-         "        \"classmap\" => \$class_map,\n";
+         "        \"classmap\" => \$class_map));\n\n";
     }
-    echo "                            ));\n\n";
+    else {
+        echo "                            ));\n\n";
+    }
 	
 	echo "    // get proxy object reference form client \n";
 	echo "    \$proxy = \$client->getProxy();\n\n";

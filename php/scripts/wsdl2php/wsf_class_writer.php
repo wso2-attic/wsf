@@ -48,7 +48,7 @@ function wsf_write_sub_classes($node) {
             $child_array = array ();
 
             // check if the class was already written 
-            if($written_classes[$type_name] == TRUE) {
+            if(array_key_exists($type_name, $written_classes) && $written_classes[$type_name] == TRUE) {
                 return;
             }
 
@@ -97,7 +97,8 @@ function wsf_write_extension(DomNode $sig_node, &$code) {
 function wsf_write_content_model($parent_node, &$child_array) {
     $code = "";
     $param_child_list = $parent_node->childNodes;
-    if($parent_node->attributes) {
+    $content_model = "";
+    if($parent_node->attributes && $parent_node->attributes->getNamedItem(WSF_CONTENT_MODEL)) {
         $content_model = $parent_node->attributes->getNamedItem(WSF_CONTENT_MODEL)->value;
     }
     if($content_model == "choice") {
@@ -113,12 +114,18 @@ function wsf_write_content_model($parent_node, &$child_array) {
             $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
 
             if($param_child->getAttribute("simple") == "yes"){
-                $code .= wsf_comment_on_simple_type($param_child, $ele_name, $param_type);
+                $code .= wsf_comment_on_simple_type($param_child, $param_name, $param_type);
             }
 
+            $min_occurs = $max_occurs = 1;
+
             // check if the attribute is of array type
-            $max_occurs = $param_attr->getNamedItem(WSF_MAX_OCCURS)->value;
-            $min_occurs = $param_attr->getNamedItem(WSF_MIN_OCCURS)->value;
+            if($param_attr->getNamedItem(WSF_MAX_OCCURS)) {
+                $max_occurs = $param_attr->getNamedItem(WSF_MAX_OCCURS)->value;
+            }
+            if($param_attr->getNamedItem(WSF_MIN_OCCURS)) {
+                $min_occurs = $param_attr->getNamedItem(WSF_MIN_OCCURS)->value;
+            }
 
             //resolving lists
             $is_list = FALSE;
@@ -151,7 +158,8 @@ function wsf_write_content_model($parent_node, &$child_array) {
             // write public members of the class 
             $code = $code . "    public $" . $param_name . "; // " . $array_type . $param_type . "\n";
             // if it is not s simple type, we have to keep track of it to write a corresponding class
-            if ($param_attr->getNamedItem(WSF_WSDL_SIMPLE)->value == 'no' ||
+            if (($param_attr && $param_attr->getNamedItem(WSF_WSDL_SIMPLE) && 
+                  $param_attr->getNamedItem(WSF_WSDL_SIMPLE)->value == 'no') ||
                     ($param_attr->getNamedItem(WSF_CONTENT_MODEL) && 
                      $param_attr->getNamedItem(WSF_CONTENT_MODEL)->value == WSF_SIMPLE_CONTENT)) {
                 $child_array[] = $param_child;
@@ -251,9 +259,13 @@ function wsf_wsdl2php($wsdl_location) {
 
         // get operation name 
         $op_attr = $op_node->attributes;
+
+        if($op_attr == NULL || $op_attr->getNamedItem(WSF_NAME) == NULL) {
+            continue;
+        }
         $op_name = $op_attr->getNamedItem(WSF_NAME)->value;
 
-        if ($operations[$op_name] == NULL) { // it operation is already found in an earlier parse, should not re-set it
+        if (array_key_exists($op_name, $operations) == FALSE || $operations[$op_name] == NULL) { // it operation is already found in an earlier parse, should not re-set it
             $operations[$op_name] = array ();
             $operations[$op_name][WSF_CLIENT] = "";
             $operations[$op_name][WSF_SERVICE] = "";
@@ -288,7 +300,7 @@ function wsf_wsdl2php($wsdl_location) {
                                 $child_array = array ();
 
                                 // check if the class is already written
-                                if ($written_classes[$ele_name] == TRUE) {
+                                if (array_key_exists($ele_name, $written_classes) && $written_classes[$ele_name] == TRUE) {
                                     continue;
                                 }
 
@@ -365,7 +377,7 @@ function wsf_wsdl2php($wsdl_location) {
 
                                     if($content_model == WSF_SIMPLE_CONTENT) {
                                         // start writing class    
-                                        if(!array_key_exists($ele_name, $written_classes) && !$written_classes[$ele_name]) {
+                                        if(!array_key_exists($ele_name, $written_classes) || !$written_classes[$ele_name]) {
                                             $written_classes[$ele_name] = TRUE;
                                             $code = $code . "class " . $ele_name.  " {\n";
 
