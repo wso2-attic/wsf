@@ -67,11 +67,11 @@ WSRequest.prototype.open = function(options, URL, asnycFlag, username, password)
     this._uri = URL;
     this._async = asnycFlag;
     if (username != null && password == null)
-        throw new WebServiceError("User name should have a password", "WSRequest.open invocation specified username: '" + username + "' without a corresponding password.");
+        throw new WebServiceError("User name should be accompanied by a password", "WSRequest.open invocation specified username: '" + username + "' without a corresponding password.");
     else
     {
-        this._optionSet["username"] = username;
-        this._optionSet["password"] = password;
+        this._username = username;
+        this._password = password;
     }
 
     this.readyState = 1;
@@ -121,7 +121,7 @@ WSRequest.prototype.send = function(payload) {
         req = processed["body"];
         this._uri = processed["url"];
     } else {
-        req = WSRequest.util._buildSOAPEnvelope(this._soapVer, this._optionSet, this._uri, content);
+        req = WSRequest.util._buildSOAPEnvelope(this._soapVer, this._optionSet, this._uri, content, this._username, this._password);
     }
 
     // Note that we infer soapAction from the "action" parameter - also used for wsa:Action.
@@ -135,7 +135,7 @@ WSRequest.prototype.send = function(payload) {
 
     var accessibleDomain = true;  // assume so for now
     try {
-        this._xmlhttp.open(method, this._uri, this._async, this._optionSet.username, this._optionSet.password);
+        this._xmlhttp.open(method, this._uri, this._async, this._username, this._password);
 
         // Process protocol-specific details
         switch (this._soapVer) {
@@ -710,17 +710,9 @@ WSRequest.util = {
                         parameter = tokenName + "=" + WSRequest.util._encodeString(node.nodeValue, true);
                     }
 
-                    // If ignore uncited option has been set, append parameter to URL else to the body.
-                    if (options[HTTPLocationIgnoreUncited] == null && options[HTTPLocationIgnoreUncited]) {
+                    // If ignore uncited option has been set, append parameters to body else to the url.
+                    if (options[HTTPLocationIgnoreUncited] != null && options[HTTPLocationIgnoreUncited]) {
 
-                        // If he URL does not contain ? add it and then the parameter.
-                        if (resultValues["url"].indexOf(queryStringSep) == -1) {
-                            resultValues["url"] = resultValues["url"] + queryStringSep + parameter;
-                        } else {
-                            // ...otherwise just append the uncited value.
-                            resultValues["url"] = resultValues["url"] + paramSeparator + parameter;
-                        }
-                    } else {
                         // Add to request body if the serialization option and request type allows it.
                         if (inputSerialization == "application/x-www-form-urlencoded" && (options[HTTPMethod] == "POST"
                                 || options[HTTPMethod] == "PUT")) {
@@ -731,6 +723,15 @@ WSRequest.util = {
                             } else {
                                 resultValues["body"] = resultValues["body"] + paramSeparator + parameter;
                             }
+                        }
+
+                    } else {
+                        // If he URL does not contain ? add it and then the parameter.
+                        if (resultValues["url"].indexOf(queryStringSep) == -1) {
+                            resultValues["url"] = resultValues["url"] + queryStringSep + parameter;
+                        } else {
+                            // ...otherwise just append the uncited value.
+                            resultValues["url"] = resultValues["url"] + paramSeparator + parameter;
                         }
                     }
                 }
@@ -749,9 +750,11 @@ WSRequest.util = {
      * @param {Array} options   Options given by user
      * @param {string} url Address the request will be sent to.
      * @param {string} content SOAP payload
+     * @param {string} username Optional username
+     * @param {string} password Optional password
      * @return string
      */
-    _buildSOAPEnvelope : function(soapVer, options, url, content) {
+    _buildSOAPEnvelope : function(soapVer, options, url, content, username, password) {
         var ns;
         if (soapVer == 1.1)
             ns = "http://schemas.xmlsoap.org/soap/envelope/";
@@ -783,8 +786,6 @@ WSRequest.util = {
             if (!usingWSA) {
                 throw ('In order to use WS Security, WS Addressing should be enabled. Please set "options["useWSA"] = true"');
             }
-            var username = options["username"];
-            var password = options["password"];
             var created = new Date();
             headers += '<o:Security s:mustUnderstand="1" xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" ' +
                        'xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">' +
@@ -1013,35 +1014,120 @@ WSRequest.util = {
      * @return string URI with the template string appended.
      */
     _joinUrlToLocation : function(endpointUri, templateString) {
-        var endWithFwdSlash = new RegExp("/$");
-        var startsWithFwdSlash = new RegExp("^/");
 
-        if (templateString.indexOf('?') == 0) {
-            endpointUri += templateString;
-        } else if (endpointUri.search(endWithFwdSlash) != -1) {
-            if (templateString.search(startsWithFwdSlash) != -1) {
-                endpointUri += templateString.substring(1, templateString.length);
-            } else {
-                endpointUri += templateString;
+        // JS implementation of pseudo-code found at http://www.ietf.org/rfc/rfc3986.txt sec 5.2.2
+        function parse(url) {
+            var result = {"scheme" : null, "authority" : null, "path" : null, "query": null, "fragment" : null};
+
+            result.fragment = url.indexOf("#") < 0 ? null : url.substring(url.indexOf("#") + 1);
+            url = result.fragment == null ? url : url.substring(0, url.indexOf("#"));
+            result.query = url.indexOf("?") < 0 ? null : url.substring(url.indexOf("?") + 1);
+            url = result.query == null ? url : url.substring(0, url.indexOf("?"));
+            if (url.indexOf(':') > 0) {
+                result.scheme = url.substring(0, url.indexOf(":"));
+                url = url.substring(url.indexOf(":") + 1);
             }
-        } else {
-            if (templateString.search(startsWithFwdSlash) != -1) {
-                endpointUri += templateString;
-            } else {
-                // Extract beginning of HTTPLocation path segment.
-                var firstSegment = templateString.substring(0, templateString.indexOf('/'));
-                var endsWith = new RegExp("/" + firstSegment + "$");
+            if (url.indexOf("//") == 0){
+                url = url.substring(2);
+                result.authority = url.substring(0, url.indexOf("/"));
+                result.path = url.substring(url.indexOf("/"));
+            } else result.path = url;
+            return result;
+        }
 
-                // If the end of the URL matches the start of the HTTPLocation's path, merge strings, else append.
-                if (firstSegment != "" && firstSegment.indexOf('?') == -1 && endpointUri.search(endsWith) != -1) {
-                    endpointUri = endpointUri + templateString.substring(templateString.indexOf('/'),
-                            templateString.length);
+        function merge(base, relative) {
+            if (base.authority != null && base.path == "") {
+                return "/" + relative.path;
+            } else {
+                if (base.path.indexOf("/") < 0) {
+                    return relative.path;
                 } else {
-                    endpointUri = endpointUri + "/" + templateString;
+                    var path = base.path.substring(0, base.path.lastIndexOf("/") + 1);
+                    return path + relative.path;
                 }
             }
         }
-        return endpointUri;
+
+        function removeDotSegments (path) {
+            var input = path;
+            var output = "";
+
+            while (input.length > 0) {
+                if (input.indexOf("../") == 0 || input.indexOf("./") == 0) {
+                    input = input.substring(input.indexOf("./"));
+                } else {
+                    if (input.indexOf("/./") == 0 || (input.indexOf("/.") == 0 && input.length == 2)) {
+                        input = input.substring(2);
+                        if (input.length == 0) input = "/";
+                    } else {
+                        if (input.indexOf("/../") == 0 || (input.indexOf("/..") == 0 && input.length == 3)) {
+                            input = input.substring(3);
+                            if (input.length == 0) input = "/";
+                            output = output.substring(0, output.lastIndexOf("/"));
+                        } else {
+                            if (input == "." || input == "..") {
+                                input="";
+                            } else {
+                                if (input.indexOf("/") == 0) {
+                                    output += "/";
+                                    input = input.substring(1);
+                                }
+                                var i = input.indexOf("/");
+                                if (i < 0) i = 10000;
+                                output += input.substring(0, i);
+                                input = input.substring(i);
+                            }
+                        }
+                    }
+                }
+            }
+            return output;
+        }
+
+        var base = parse(endpointUri);
+        var relative = parse(templateString);
+        var result = {"scheme" : null, "authority" : null, "path" : null, "query": null, "fragment" : null};
+
+        if (relative.scheme != null) {
+            result.scheme = relative.scheme;
+            result.authority = relative.authority;
+            result.path = removeDotSegments(relative.path);
+            result.query = relative.query;
+        } else {
+            if (relative.authority != null) {
+                result.authority = relative.authority;
+                result.path = removeDotSegments(relative.path);
+                result.query = relative.query;
+            } else {
+                if (relative.path == "") {
+                   result.path = base.path;
+                   if (relative.query != null) {
+                      result.query = relative.query;
+                   } else {
+                      result.query = base.query;
+                   }
+                } else {
+                   if (relative.path.indexOf("/") == 0) {
+                      result.path = removeDotSegments(relative.path);
+                   } else {
+                      result.path = merge(base, relative);
+                      result.path = removeDotSegments(result.path);
+                   }
+                   result.query = relative.query;
+                }
+                result.authority = base.authority;
+            }
+            result.scheme = base.scheme;
+        }
+        result.fragment = relative.fragment;
+
+        var resultURI = "";
+        if (result.scheme != null) resultURI += result.scheme + ":";
+        if (result.authority != null) resultURI += "//" + result.authority;
+        resultURI += result.path;
+        if (result.query != null) resultURI += "?" + result.query;
+        if (result.fragment != null) resultURI += "#" + result.fragment;
+        return resultURI;
     },
 
 
@@ -1105,6 +1191,4 @@ WSRequest.util = {
             (milliseconds == 0 ? "" : (milliseconds/1000).toString().substring(1)) + "Z";
     }
 };
-
-
 
