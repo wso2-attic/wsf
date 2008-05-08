@@ -104,7 +104,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     $is_multiple_interfaces = wsf_is_mutiple_port_types($wsdl_dom);
 
     if ($is_multiple_interfaces == FALSE) {
-        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom);
+        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location);
         
         if(!$wsdl_dom) {
             ws_log_write(__FILE__, __LINE__, WSF_LOG_INFO, "Error creating WSDL Dom Document,".
@@ -116,7 +116,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
         $sig_model_dom = wsf_get_sig_model_dom($wsdl_dom);
     }
     else {
-        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom);
+        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location);
         $sig_model_dom = wsf_process_multiple_interfaces($wsdl_dom);
     }
     
@@ -241,8 +241,6 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
     require_once('dynamic_invocation/wsf_wsdl_consts.php');
     require_once('dynamic_invocation/wsf_wsdl_util.php');
     require_once('dynamic_invocation/wsf_wsdl_service.php');
-    
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "this is server test log");
 
     global $is_wsdl_11;
     global $wsdl_11_dom;
@@ -283,7 +281,7 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
     $is_multiple_interfaces = wsf_is_mutiple_port_types($wsdl_dom);
     
     if ($is_multiple_interfaces == FALSE) {
-        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom);
+        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location);
         
         if(!$wsdl_dom) {
             return "error creating WSDL Dom Document";
@@ -292,7 +290,7 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
         $sig_model_dom = wsf_get_sig_model_dom($wsdl_dom);
     }
     else {
-        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom);
+        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location);
         $sig_model_dom = wsf_process_multiple_interfaces($wsdl_dom);
     }
 

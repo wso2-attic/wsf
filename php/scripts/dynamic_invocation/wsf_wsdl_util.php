@@ -140,7 +140,7 @@ function wsf_process_multiple_interfaces($wsdl_dom) {
  * @param string $wsdl_location
  * @return DomDocument $wsdl_dom DomDocument of WSDL2.0
  */
-function wsf_get_wsdl_dom($wsdl_dom) {
+function wsf_get_wsdl_dom($wsdl_dom, $wsdl_location) {
     require_once('wsf_wsdl_consts.php');
 
     $xslt_wsdl_20_dom = new DOMDocument();
@@ -166,7 +166,10 @@ function wsf_get_wsdl_dom($wsdl_dom) {
                 $xslt->importStyleSheet($xslt_wsdl_20_dom);
 
                 //clear out the wsdl imports
-                $wsdl_dom = wsf_clear_wsdl_imports($wsdl_dom);
+                $wsdl_dom = wsf_clear_wsdl_imports($wsdl_dom, $wsdl_location);
+                $wsdl_dom = wsf_clear_xsd_imports($wsdl_dom, $wsdl_location);
+    
+                //file_put_contents("/tmp/x.wsdl", $wsdl_dom->saveXML());
                 
                 $xslt_11_to_20_dom->loadXML($xslt->transformToXML($wsdl_dom));
                 $is_wsdl_11 = TRUE;
@@ -703,11 +706,11 @@ function wsf_get_binding_details(DomNode $operation_node) {
 function wsf_get_schema_node(&$wsdl_dom, &$wsdl_dom2 = NULL) {
     require_once('wsf_wsdl_consts.php');
 
-
     static $schema_node = NULL;
 
-    if ($schema_node != NULL)
-    return $schema_node; // Asume it is a single WSDL
+    if ($schema_node != NULL) {
+        return $schema_node; // Asume it is a single WSDL
+    }
      
     $root_node = $wsdl_dom->firstChild;
     $root_child_list = $root_node->childNodes;
@@ -823,25 +826,9 @@ function wsf_wsdl_append_node( $parent, $child, $doc ) {
     if( $child == NULL) {
         return;
     }
-    $newChild = NULL;
-    if( $child-> nodeType == XML_TEXT_NODE ) {
-        $newChild = $doc-> createTextNode($child->nodeValue);
-    }
-    else if( $child-> nodeType == XML_ELEMENT_NODE) {
-        $childTag = $child->tagName;
-
-        $newChild = $doc-> createElementNS($child->namespaceURI, $childTag);
-
-        foreach( $child->attributes as $attribute) {
-            $newChild->setAttribute($attribute->name, $attribute->value);
-        }
-
-        foreach ( $child->childNodes as $childsChild) {
-            wsf_wsdl_append_node( $newChild, $childsChild, $doc);
-        }
-    }
-    if( $newChild != NULL) {
-        $parent-> appendChild( $newChild);
+    $imported_node = $doc->importNode($child, TRUE);
+    if($imported_node) {
+        $parent->appendChild($imported_node);
     }
 }
 
@@ -1004,14 +991,46 @@ function wsf_is_rpc_enc_wsdl($wsdl_11_dom, $binding_node, $operation_name) {
     return FALSE;
 }
 
+/**
+ * Returns a WSDL removing all the xsd:imports
+ */
+function wsf_clear_xsd_imports($wsdl_dom, $relative_url) {
+
+    $wsdl_root = $wsdl_dom->documentElement;
+
+    $wsdl_childs = $wsdl_root->childNodes;
+    $already_added_xsds = array();
+    foreach($wsdl_childs as $wsdl_child) {
+        if($wsdl_child->nodeType != XML_ELEMENT_NODE) {
+            continue;
+        }
+        if($wsdl_child->localName == WSF_TYPES) {
+            $wsdl_types_node = $wsdl_child;
+            $wsdl_types_node_childs = $wsdl_types_node->childNodes;
+
+            foreach($wsdl_types_node_childs as $schema_node) {
+                if($schema_node->nodeType != XML_ELEMENT_NODE) {
+                    continue;
+                }
+                if($schema_node->localName == "schema") {
+                    wsf_attach_xsd_imports($wsdl_types_node, $wsdl_dom, $schema_node, $relative_url, $already_added_xsds);
+                }
+            }
+            break;
+        }
+    }
+    return $wsdl_dom;
+}
+
 
 /**
  * Returns a WSDL removing all the wsdl:imports
  */
 
-function wsf_clear_wsdl_imports($wsdl_dom) {
-  
-    $imports = wsf_get_wsdl_imports($wsdl_dom);
+function wsf_clear_wsdl_imports($wsdl_dom, $relative_url = "") {
+    
+    $already_imported_wsdls = array();
+    $imports = wsf_get_wsdl_imports($wsdl_dom, $relative_url, $already_imported_wsdls);
 
     if(count($imports) == 0) {
         // no wsdl_imports
@@ -1036,6 +1055,9 @@ function wsf_clear_wsdl_imports($wsdl_dom) {
     
     $new_wsdl_childs = $new_wsdl_root->childNodes;
     foreach($new_wsdl_childs as $new_wsdl_child) {
+        if($new_wsdl_child->nodeType != XML_ELEMENT_NODE) {
+            continue;
+        }
         if($new_wsdl_child->localName == WSF_TYPES) {
             $new_wsdl_types_node = $new_wsdl_child;
             break;
@@ -1213,26 +1235,162 @@ function wsf_clear_wsdl_imports($wsdl_dom) {
  * Returns WSDL importing elements array associated with
  * given wsdl
  */
-function wsf_get_wsdl_imports($wsdl_dom){
+function wsf_get_wsdl_imports($wsdl_dom, $relative_url, &$already_imported_wsdls){
     $root = $wsdl_dom->documentElement;
     $root_childs = $root->childNodes;
+
+    /* extracting out relative url details */
+    $path_parts = pathinfo($relative_url);
+    $relative_dir = "";
+    if(array_key_exists("dirname", $path_parts)) {
+        $relative_dir = $path_parts["dirname"]."/";
+    }
 
     $imports = array();
     foreach($root_childs as $root_child) {
         if($root_child->nodeType == XML_ELEMENT_NODE && 
-                $root_child->localName == "import") {
-            if($root_child->attributes->getNamedItem("location")) {
+                ($root_child->localName == "import" ||
+                 $root_child->localName == "include")) {
+            if($root_child->attributes && $root_child->attributes->getNamedItem("location")) {
                 $imported_location = $root_child->attributes->getNamedItem("location")->value;
-                $imported_dom = new DOMDocument();
-                if($imported_dom->load($imported_location)) {
-                    $imports[] = $imported_dom;
-                    $recursive_imports = wsf_get_wsdl_imports($imported_dom);
-                    $imports = array_merge($imports, $recursive_imports);
+
+                if(strncmp($imported_location, "http://", 7) == 0 ||
+                    strncmp($imported_location, "https://", 8) == 0) {
+                    // then this is a absolute URL and doesn't need to derive again..
+                }
+                else {
+                    // derive the absolute url from relative url 
+                    $tmp_relative_url = $relative_dir.$imported_location;
+                    $imported_location = wsf_normalize_url($tmp_relative_url);
+                }
+                if(!array_key_exists($imported_location, $already_imported_wsdls) ||
+                       $already_imported_wsdls[$imported_location] == NULL) {
+                    $already_imported_wsdls[$imported_location] = TRUE;
+                    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "importing wsdl: $imported_location from: $relative_url");
+                    $imported_dom = new DOMDocument();
+                    $imported_content = file_get_contents($imported_location);
+                    if($imported_dom->loadXML($imported_content)) {
+                        $imports[] = $imported_dom;
+                        $recursive_imports = wsf_get_wsdl_imports($imported_dom, $imported_location, $already_imported_wsdls);
+                        $imports = array_merge($imports, $recursive_imports);
+                    }
                 }
             }
         }
     }
     return $imports;
+}
+/* normalize_url */
+function wsf_normalize_url($url) {
+    $tokens = split("/", $url);
+
+    $state = 0;
+    /**
+     * here 0 is for before finding the end of ../../ series
+     * 1 is for after finding some ../../
+     * 2 after finding one some/..
+     */
+    for($i = 0; $i < count($tokens); $i ++) {
+        $token = $tokens[$i];
+        if($state == 0) {
+            if($token != ".." && $token != "." && $token != "") {
+                // found initial something note ../ or ./,
+                // so go for the next state
+                $state = 1;
+            }
+        }
+        else if($state == 1) {
+            if($token == "..") {
+                for($j = $i -1; $j >= 0; $j --) {
+                    $early_token = $tokens[$j];
+                    if($early_token != ".." && $early_token != "." && $early_token != ""
+                                && $early_token != NULL ) {
+                        //then the early token should be the one doing too much, so set both to empty
+                        $tokens[$j] = NULL; //set the early token to NULL
+                        $tokens[$i] = NULL; // set the ../ to NULL, then continue
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    // collect the token to form the new url
+    $new_url = "";
+    foreach($tokens as $token) {
+        if($token !== NULL) {
+            $new_url .= $token."/";
+        }
+    }
+    if($new_url != "") {
+        $new_url = substr_replace($new_url, "", -1);
+    }
+    return $new_url;
+
+}
+
+/* attache xsd imports to the original wsdl */
+function wsf_attach_xsd_imports($wsdl_types_node, $wsdl_dom, $schema_node, $relative_url, &$already_added_xsds) {
+    $schema_childs = $schema_node->childNodes;
+
+    /* extracting out relative url details */
+    $path_parts = pathinfo($relative_url);
+    $relative_dir = $path_parts["dirname"]."/";
+
+    $import_node_array = array();
+
+    foreach($schema_childs as $schema_child) {
+        if($schema_child->nodeType != XML_ELEMENT_NODE) {
+            continue;
+        }
+        if($schema_child->localName == "import" ||
+           $schema_child->localName == "include") {
+
+            $import_node = $schema_child;
+
+            if($import_node->attributes && $import_node->attributes->getNamedItem("schemaLocation")) {
+                $imported_location = $import_node->attributes->getNamedItem("schemaLocation")->value;
+
+                if(strncmp($imported_location, "http://", 7) == 0 ||
+                    strncmp($imported_location, "https://", 8) == 0) {
+                    // then this is a absolute URL and doesn't need to derive again..
+                }
+                else {
+                    // derive the absolute url from relative url 
+                    $tmp_relative_url = $relative_dir.$imported_location;
+                    $imported_location = wsf_normalize_url($tmp_relative_url);
+                }
+                if(!array_key_exists($imported_location, $already_added_xsds) ||
+                       $already_added_xsds[$imported_location] == NULL) {
+                    $already_added_xsds[$imported_location] = TRUE;
+                    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "importing xsd: $imported_location from: $relative_url");
+                    $imported_dom = new DOMDocument();
+                    $imported_content = file_get_contents($imported_location);
+                    if($imported_dom->loadXML($imported_content)) {
+                        $imported_root = $imported_dom->documentElement;
+                        if($imported_root && $imported_root->nodeType == XML_ELEMENT_NODE &&
+                                $imported_root->localName == "schema") {
+                            // do the same thing for the imported_schema
+                            wsf_attach_xsd_imports($wsdl_types_node, $wsdl_dom, $imported_root, $imported_location, $already_added_xsds);
+
+                            // append the schema to the first wsdl
+                            wsf_wsdl_append_node($wsdl_types_node, $imported_root, $wsdl_dom);
+                            // and remove the old node..
+                            $import_node_array[] = $import_node;
+                            
+                        }
+                    }
+                }
+                else {
+                    // still we remove the already imported node
+                    $import_node_array[] = $import_node;
+                    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "xsd: $imported_location redeclared to import from: $relative_url");
+                }
+            }
+        }
+    }
+    foreach($import_node_array as $import_node) {
+        $schema_node->removeChild($import_node);
+    }
 }
 
 /**

@@ -37,6 +37,7 @@ function wsf_write_sub_classes($node) {
         if ($node->hasAttributes()) {
             // Wrapper element found
             $attrs = $node->attributes;
+            $type_name = "";
             if($attrs->getNamedItem(WSF_TYPE)) {
                 $type_name = $attrs->getNamedItem(WSF_TYPE)->value;
             }
@@ -110,8 +111,13 @@ function wsf_write_content_model($parent_node, &$child_array) {
     foreach ($param_child_list as $param_child) {
         if($param_child->nodeName == WSF_PARAM) {
             $param_attr = $param_child->attributes;
-            $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
-            $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
+            $param_type = $param_name = "";
+            if($param_attr->getNamedItem(WSF_NAME)) {
+                $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
+            }
+            if($param_attr->getNamedItem(WSF_TYPE)) {
+                $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
+            }
 
             if($param_child->getAttribute("simple") == "yes"){
                 $code .= wsf_comment_on_simple_type($param_child, $param_name, $param_type);
@@ -233,7 +239,7 @@ function wsf_wsdl2php($wsdl_location) {
 
     if ($is_multiple_interfaces == FALSE) {
         //wsdl1.1 to wsdl2 conversion
-        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom);
+        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location);
         if (!$wsdl_dom) {
             echo "Error creating WSDL DOM document";
             return NULL;
@@ -241,7 +247,7 @@ function wsf_wsdl2php($wsdl_location) {
         $sig_model_dom = wsf_get_sig_model_dom($wsdl_dom);
     } else {
         //wsdl1.1 to wsdl2 conversion
-        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom);
+        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location);
         $sig_model_dom = wsf_process_multiple_interfaces($wsdl_dom, $sig_model_dom);
     }
 
