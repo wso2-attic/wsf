@@ -245,6 +245,8 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
     global $is_wsdl_11;
     global $wsdl_11_dom;
     
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_INFO, "wsf_process_wsdl_for_service called");
+    
     $wsdl_dom = new DomDocument();
     $sig_model_dom  = new DOMDocument();
     $sig_model_dom->preserveWhiteSpace = false;

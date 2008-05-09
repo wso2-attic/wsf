@@ -102,7 +102,14 @@ function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name, $arg_co
     if($is_doc == TRUE) {
         $payload_dom = new DOMDocument('1.0', 'iso-8859-1');
         $element = $payload_dom->createElementNS($ele_ns, WSF_STARTING_NS_PREFIX.":".$ele_name);
-        if(is_object($arguments[0])) {
+        if(!array_key_exists(0, $arguments)) {
+            $payload_dom->appendChild($element);
+            $payload_node = $payload_dom->firstChild;
+            $clone_node = $payload_node->cloneNode(TRUE);
+
+            return $payload_dom->saveXML($clone_node);
+        }
+        else if(is_object($arguments[0])) {
 
             /* this is class map support */
             $new_obj = $arguments[0];
