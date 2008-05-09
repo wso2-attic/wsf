@@ -30,13 +30,13 @@
 #include "axis2_options.h"
 #include "axutil_qname.h"
 #include "axutil_log.h"
-/*#include "axis2_key_type.h"*/
+
 #include "axis2_conf.h"
 #include "axutil_param.h"
 #include "axis2_svc_ctx.h"
 #include "axis2_desc.h"
 #include "axis2_policy_include.h"
-/*#include "rampart_context.h"*/
+
 #include "axiom_document.h"
 #include "axutil_utils_defines.h"
 #include "axutil_param.h"
@@ -50,6 +50,10 @@
 /* To create WSFC environment */
 axutil_env_t*
 wsf_env_create (axis2_char_t* path_to_log,
-				int		      log_level);
+                int log_level);
+
+void
+wsf_init (axis2_char_t* path_to_log,
+              int log_level);
 
 #endif

@@ -21,12 +21,9 @@
 #include <axiom_soap.h>
 #include <axutil_error.h>
 #include <axutil_env.h>
-/*#include <php.h>*/
+
 #include <axutil_string.h>
-/*#include "wsf_util.h"*/
-/*#include "wsf.h"
-#include <php_main.h>
-#include "wsf_wsdl.h"*/
+
 
 axis2_msg_recv_t* 
 wsf_xml_msg_recv_create (const axutil_env_t* env)
@@ -49,7 +46,8 @@ wsf_xml_msg_recv_create (const axutil_env_t* env)
         return NULL;
     }
 
-    axis2_msg_recv_set_invoke_business_logic (msg_recv, env, wsf_xml_msg_recv_invoke_business_logic_sync);
+    axis2_msg_recv_set_invoke_business_logic (msg_recv, env, 
+                                              wsf_xml_msg_recv_invoke_business_logic_sync);
 
     return msg_recv;
 }
@@ -165,44 +163,11 @@ wsf_xml_msg_recv_invoke_business_logic_sync (axis2_msg_recv_t*   msg_recv,
             return AXIS2_FAILURE;
         }
 	    if(svc_info->ops_to_classes){
-            classname = axutil_hash_get(svc_info->ops_to_classes, local_name, AXIS2_HASH_KEY_STRING);
+            classname = axutil_hash_get(svc_info->ops_to_classes, 
+                                        local_name, AXIS2_HASH_KEY_STRING);
         }
     }
 
-    /*if (svc_info->ht_op_params) {
-        zval **tmp;
-        char *function_type = NULL;
-        if (zend_hash_find (svc_info->ht_op_params,
-                operation_name, strlen (operation_name) + 1,
-                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-            function_type = Z_STRVAL_PP (tmp);
-            if (strcmp (function_type, "MIXED") == 0) {
-                result_node = wsf_xml_msg_recv_invoke_mixed (env, svc_info,
-                    in_msg_ctx, out_msg_ctx, operation_name, classname TSRMLS_CC);
-            } else if (strcmp (function_type, "WSMESSAGE") == 0) {
-                result_node =
-                    wsf_xml_msg_recv_invoke_wsmsg (env, soap_ns,
-                    operation_name,
-                    om_node, out_msg_ctx,
-                    classname, svc_info, use_mtom, request_xop TSRMLS_CC);
-            }
-        }
-    } else {*/
-        /* this is where the default value for opParam is set,
-           If the wsdl option is set go for the MIXED mode by default */
-        /*if(svc_info->wsdl == NULL)
-        {
-            result_node =
-                wsf_xml_msg_recv_invoke_wsmsg (env, soap_ns, operation_name,
-                om_node, out_msg_ctx,
-                classname, svc_info, use_mtom, request_xop TSRMLS_CC);
-        }
-        else
-        {
-            result_node = wsf_xml_msg_recv_invoke_mixed (env, svc_info,
-                in_msg_ctx, out_msg_ctx, operation_name, classname TSRMLS_CC);
-        }
-    }*/
     if (!result_node) {
 
         status = AXIS2_ERROR_GET_STATUS_CODE (env->error);

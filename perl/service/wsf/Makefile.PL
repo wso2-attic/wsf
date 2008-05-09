@@ -5,7 +5,7 @@ print "Generating SWIG interface files ...\n";
 system ("swig -perl -I./swig -outdir ../ wsf.i");
 
 WriteMakefile ("NAME" => "WSO2::WSF::WSFC",
-               "INC" => "-I/home/dinesh/wsf_c/deploy/include/axis2-1.3.1",
+               "INC" => "-I/home/dinesh/wsf_c/deploy/include/axis2-1.4.0",
                "LIBS" => ["-L/home/dinesh/wsf_c/deploy/lib
 			   -laxutil
 			   -laxis2_parser

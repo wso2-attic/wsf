@@ -68,30 +68,6 @@ wsf_worker_create (const axutil_env_t* env,
         wsf_worker_free (worker, env);
         return NULL;
     }
-    /*if (rm_db_dir) {
-        axis2_conf_t * conf = NULL;
-        axis2_module_desc_t * module_desc = NULL;
-        axutil_param_t * param = NULL;
-        axutil_qname_t * sandesha2_qname = NULL;
-
-		sandesha2_qname = axutil_qname_create (env, "sandesha2", NULL, NULL);
-     
-        conf = axis2_conf_ctx_get_conf (worker->conf_ctx, env);
-        
-        module_desc = axis2_conf_get_module (conf, env, sandesha2_qname);
-        
-        if (module_desc) {
-            param = axis2_module_desc_get_param (module_desc, env, "sandesha2_db");
-            if (param) {
-				axutil_param_set_value (param, env, axutil_strdup(env , rm_db_dir));
-
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-					"[wsf_svr] rm_db_dir %s", rm_db_dir);
-            }
-        }
-        
-        axutil_qname_free(sandesha2_qname, env);
-    }*/
 
     return worker;
 }

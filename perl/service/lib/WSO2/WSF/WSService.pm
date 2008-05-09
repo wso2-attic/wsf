@@ -15,51 +15,35 @@
 package WSO2::WSF::WSService;
 
 use WSO2::WSF::WSConfig;
-use WSO2::WSF::WSFC;
+use WSO2::WSFC;
+use Data::Dumper;
 
-sub new 
-{
-    my $this = shift;
-    my $properties = {};
+sub new {
+    my $class = shift;
+    my $self = {
+        _rh => shift,
+    };
+    bless $self, $class;
+    return $self;
+}
 
-    # Create environment
-    my $env = WSO2::WSF::WSFC::wsf_env_create ($WSO2::WSF::WSConfig::LOG_PATH,
-                                               $WSO2::WSF::WSConfig::LOG_LEVEL);
-    $properties->{"env"} = $env;
-
-    # Create message receiver
-    my $msg_recv = WSO2::WSF::WSFC::wsf_xml_msg_recv_create ($env);
-    $properties->{"msg_recv"} = $msg_recv;
-
-    # Initialize XML reader
-    WSO2::WSF::WSFC::axiom_xml_reader_init ();
-
-    # Create worker
-    my $worker = WSO2::WSF::WSFC::wsf_worker_create ($env,
-                                                     $WSO2::WSF::WSConfig::WSFC_HOME);
-
-    # Initialize object with the given set of properties
-    my %options = @_;
-    while (($key, $value) = each (%options))
-    {
-        $properties->{$key} = $value;
+# test method is for debugging purposes
+sub test {
+    my ($self) = @_;
+    my ($value, $key);
+    my $operation = $self->{_rh};
+    my $rh_op = $operation->{'operations'};
+    while (($key, $value) = each (%$rh_op)){
+        print "key value is $key and value is $value \n";
     }
+    print "action ".$operation->{'action'}."\n";
+}
 
-    bless $properties, $this;
-
-    return $properties;
+sub reply {
+    my ($self) = @_;
+    print "invoking reply method"."\n";
 }
 
 
-sub test
-{
-    my $this = shift;
-
-    while (($key, $value) = each (%$this))
-    {
-        print $key . " -> " . $value . "\n";
-    }
-
-}
 
 1;

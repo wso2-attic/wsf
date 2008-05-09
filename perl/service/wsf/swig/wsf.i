@@ -30,6 +30,9 @@ wsf_worker_t*
 wsf_worker_create (const axutil_env_t* env,
                    axis2_char_t* repo_path);
 
+void 
+wsf_init (axis2_char_t* path_to_log,
+          int log_level);
 
 %inline %{
     char*
@@ -39,5 +42,4 @@ wsf_worker_create (const axutil_env_t* env,
         return (char*)axutil_strdup (env, (void*)ptr);
     }
 %}
-
 

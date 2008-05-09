@@ -35,27 +35,21 @@ wsf_xml_msg_recv_get_method_name (axis2_msg_ctx_t*    msg_ctx,
 
 static axiom_node_t* 
 wsf_xml_msg_recv_invoke_wsmsg (const axutil_env_t* env,
-							   axis2_char_t*       soap_ns,
-							   axis2_char_t* 	   op_name,
-							   axiom_node_t* 	   om_node,
-							   axis2_msg_ctx_t*    out_msg_ctx,
-							   char* 			   classname,
-							   wsf_svc_info_t*	   svc_info,
-							   int 				   use_mtom,
-							   int 				   request_xop);
+							   axis2_char_t* soap_ns,
+							   axis2_char_t* op_name,
+							   axiom_node_t* om_node,
+							   axis2_msg_ctx_t* out_msg_ctx,
+							   char* classname,
+							   wsf_svc_info_t* svc_info,
+							   int use_mtom,
+							   int request_xop);
 
 static axiom_node_t* 
 wsf_xml_msg_recv_invoke_mixed (const axutil_env_t* env,
-							   wsf_svc_info_t* 	   svc_info,
-							   axis2_msg_ctx_t*    in_msg_ctx,
-							   axis2_msg_ctx_t*    out_msg_ctx,
-							   axis2_char_t* 	   function_name,
-							   axis2_char_t* 	   class_name);
+							   wsf_svc_info_t* svc_info,
+							   axis2_msg_ctx_t* in_msg_ctx,
+							   axis2_msg_ctx_t* out_msg_ctx,
+							   axis2_char_t* function_name,
+							   axis2_char_t* class_name);
 
-/*static void 
-wsf_xml_msg_recv_set_soap_fault (const axutil_env_t* env,
-								 axis2_char_t* 		 soap_ns,
-								 axis2_msg_ctx_t* 	 out_msg_ctx,
-								 zval *zval_soap_fault TSRMLS_DC);
-*/
 #endif /* WS_XML_MSG_RECV_H */
