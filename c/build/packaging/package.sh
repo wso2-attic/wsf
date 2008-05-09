@@ -1,5 +1,5 @@
 #!/bin/bash
-# Testing subversion issues
+
 set -e 
 
 export AXIS2C_HOME=`pwd`/deploy
