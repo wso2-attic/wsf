@@ -53,7 +53,7 @@ try{
 ?>
 --EXPECT--
 Result is:
-object(RetEnumStringResponseWrapper)#15 (1) {
+object(RetEnumStringResponseWrapper)#13 (1) {
   ["RetEnumStringResult"]=>
   string(6) "BitTwo"
 }
