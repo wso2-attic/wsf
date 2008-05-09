@@ -24,7 +24,7 @@ configure-stamp:
 
 
 build: build-stamp
-	./configure --prefix=/usr/local/wsf_c --enable-openssl=yes --enable-xmpp=yes --with-axis2=`pwd`/axis2c/include --enable-tests=yes \
+	./configure --prefix=/opt/wso2/wsf_c --enable-openssl=yes --enable-xmpp=yes --with-axis2=`pwd`/axis2c/include --enable-tests=yes \
  --with-apache2=/usr/local/apache2/include --enable-sandesha=yes --enable-rampart=yes --enable-wsclient=yes --enable-savan=yes
 	make
 	make install
@@ -63,11 +63,11 @@ install: build
 
 # Build architecture-independent files here.
 binary-indep: build install
-	cp -r /usr/local/wsf_c/bin/samples $(CURDIR)/debian/wso2-wsf-c/usr/local/wsf_c/bin/
-	cp -r /usr/local/wsf_c/samples $(CURDIR)/debian/wso2-wsf-c/usr/local/wsf_c/
-	cp -r /usr/local/wsf_c/services $(CURDIR)/debian/wso2-wsf-c/usr/local/wsf_c/
-	cp -r /usr/local/wsf_c/client_repo $(CURDIR)/debian/wso2-wsf-c/usr/local/wsf_c/
-	cp -r /usr/local/wsf_c/docs $(CURDIR)/debian/wso2-wsf-c/usr/local/wsf_c/
+	cp -r /opt/wso2/wsf_c/bin/samples $(CURDIR)/debian/wso2-wsf-c/opt/wso2/wsf_c/bin/
+	cp -r /opt/wso2/wsf_c/samples $(CURDIR)/debian/wso2-wsf-c/opt/wso2/wsf_c/
+	cp -r /opt/wso2/wsf_c/services $(CURDIR)/debian/wso2-wsf-c/opt/wso2/wsf_c/
+	cp -r /opt/wso2/wsf_c/client_repo $(CURDIR)/debian/wso2-wsf-c/opt/wso2/wsf_c/
+	cp -r /opt/wso2/wsf_c/docs $(CURDIR)/debian/wso2-wsf-c/opt/wso2/wsf_c/
 # We have nothing to do by default.
 
 # Build architecture-dependent files here.
