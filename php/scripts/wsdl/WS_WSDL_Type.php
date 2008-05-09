@@ -116,10 +116,9 @@ class WS_WSDL_Type
 
         foreach ($this->schemaTypes as $function_name => $params)
         {
-            foreach ($params as $requestType => $params2)
-            {
-                if ($requestType == WS_WSDL_Const::WS_WSDL_IN_ATTR_NAME)
-                {
+                if(array_key_exists(WS_WSDL_Const::WS_WSDL_IN_ATTR_NAME, $params)) {
+
+                    $params2 = $params[WS_WSDL_Const::WS_WSDL_IN_ATTR_NAME];
                     if($this->classmap) {
                         foreach ($params2 as $paramName => $paramValue)
                         {
@@ -193,8 +192,24 @@ class WS_WSDL_Type
                         }
                     }
                 }
-                if ($requestType == WS_WSDL_Const::WS_WSDL_OUT_ATTR_NAME)
-                {
+                else {
+                    //just create an empty schema type
+                    $ct = $type_doc->createElementNS(WS_WSDL_Const::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                      WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME);
+                    $ct->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $function_name);
+                    $el->appendChild($ct);
+
+                    $comtype = $type_doc->createElementNS(WS_WSDL_Const::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                          WS_WSDL_Const::WS_WSDL_COMPLXTYPE_ATTR_NAME);
+                    $ct->appendChild($comtype);
+                    $seq = $type_doc->createElementNS(WS_WSDL_Const::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                      WS_WSDL_Const::WS_WSDL_SEQUENCE_ATTR_NAME);
+                    $comtype->appendChild($seq);
+                }
+
+                if(array_key_exists(WS_WSDL_Const::WS_WSDL_OUT_ATTR_NAME, $params)) {
+
+                    $params2 = $params[WS_WSDL_Const::WS_WSDL_OUT_ATTR_NAME];
                     if($this->classmap) {
                         foreach ($params2 as $paramName => $paramValue)
                         {
@@ -270,7 +285,20 @@ class WS_WSDL_Type
                         }
                     }
                 }
-            }
+                else {
+                    //just create an empty schema type
+                    $ct = $type_doc->createElementNS(WS_WSDL_Const::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                      WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME);
+                    $ct->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $function_name."Response");
+                    $el->appendChild($ct);
+
+                    $comtype = $type_doc->createElementNS(WS_WSDL_Const::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                          WS_WSDL_Const::WS_WSDL_COMPLXTYPE_ATTR_NAME);
+                    $ct->appendChild($comtype);
+                    $seq = $type_doc->createElementNS(WS_WSDL_Const::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                      WS_WSDL_Const::WS_WSDL_SEQUENCE_ATTR_NAME);
+                    $comtype->appendChild($seq);
+                }
         }
         return $return_array;
     }

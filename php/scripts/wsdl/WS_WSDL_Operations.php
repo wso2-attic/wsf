@@ -218,7 +218,7 @@ class WS_WSDL_Operations
                 $j++;
                 $this->phpMapArry[$j] = $match_r[3];
 
-                if($match[2] == "object")
+                if($match_r[2] == "object")
                 {
                     $returnType = $match_r[3];
                 }
