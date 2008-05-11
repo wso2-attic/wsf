@@ -4,8 +4,8 @@ use ExtUtils::MakeMaker;
 print "Generating SWIG interface files ...\n";
 system ("swig -perl -I./swig -outdir ../ wsf.i");
 
-WriteMakefile ("NAME" => "WSO2::WSF::WSFC",
-               "INC" => "-I/home/dinesh/wsf_c/deploy/include/axis2-1.4.0",
+WriteMakefile ("NAME" => "WSO2::WSF::Server",
+               "INC" => "-I. -I/home/dinesh/wsf_c/deploy/include/axis2-1.4.0",
                "LIBS" => ["-L/home/dinesh/wsf_c/deploy/lib
 			   -laxutil
 			   -laxis2_parser
@@ -16,5 +16,6 @@ WriteMakefile ("NAME" => "WSO2::WSF::WSFC",
 			    wsf_wrap.o
 			    wsf_xml_msg_recv.o
 			    wsf_worker.o
+			    wsf_util.o
 			    wsf_out_transport_info.o
 			    wsf_stream.o");

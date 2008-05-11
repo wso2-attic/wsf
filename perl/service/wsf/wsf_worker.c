@@ -376,7 +376,7 @@ wsf_worker_process_request (wsf_worker_t*   worker,
 
 
 axis2_conf_ctx_t* 
-wsf_worker_get_conf_ctx (wsf_worker_t*       worker,
+wsf_worker_get_conf_ctx (wsf_worker_t* worker,
                          const axutil_env_t* env) 
 {
     return worker->conf_ctx;
