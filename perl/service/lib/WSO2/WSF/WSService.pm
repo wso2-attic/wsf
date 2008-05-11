@@ -16,7 +16,7 @@ package WSO2::WSF::WSService;
 
 use WSO2::WSF::WSConfig;
 use WSO2::WSF::WSRequest;
-use WSO2::WSF::WSFC;
+use WSO2::WSF::Server;
 use Data::Dumper;
 use CGI;
 
@@ -26,6 +26,9 @@ sub new {
         -rh => shift,
         -request => new WSO2::WSF::WSRequest ()
     };
+    my $request = $self->{-request};
+    $request->populate;
+
     bless $self, $class;
     return $self;
 }
@@ -45,11 +48,20 @@ sub test {
 sub reply {
     my ($self) = @_;
     my $request = $self->{-request};
-    my $worker = WSO2::WSF::WSFC::wsf_get_worker();
-    my $svc_info = WSO2::WSF::WSFC::wsf_svc_info_t->new ();
-    my $req_info = WSO2::WSF::WSFC::wsf_req_info_t->new ();
-    $request->populate;
-    WSO2::WSF::WSFC::wsf_svc_info_t_content_encoding_set();
+    my $worker = WSO2::WSF::Server::wsf_get_worker();
+    my $svc_info = WSO2::WSF::Server::wsf_svc_info_t->new ();
+    my $req_info = WSO2::WSF::Server::wsf_req_info_t->new ();
+
+    #populating wsf_request_info structure
+    WSO2::WSF::Serverc::wsf_req_info_t_content_encoding_set($req_info, $request->{-content_type});
+    WSO2::WSF::Serverc::wsf_req_info_t_svr_name_set($req_info, $request->{-server_name});
+    WSO2::WSF::Serverc::wsf_req_info_t_svr_port_set($req_info, $request->{-server_port});
+    WSO2::WSF::Serverc::wsf_req_info_t_http_protocol_set($req_info, $request->{-server_protocol});
+    WSO2::WSF::Serverc::wsf_req_info_t_soap_action_set($req_info, $request->{-soap_action});
+    WSO2::WSF::Serverc::wsf_req_info_t_req_data_set($req_info, $request->{-postdata});
+    WSO2::WSF::Serverc::wsf_req_info_t_request_method_set($req_info, $request->{-request_method});
+
+    #populating svc_info struct
 }
 
 

@@ -53,14 +53,17 @@ sub populate {
     my ($self) = @_;
     my $cgi = $self->{-cgi};
     $self->{-content_type} = $cgi->content_type;
+    $self->{-content_length} = $ENV{'CONTENT_LENGTH'};
     $self->{-request_method} = $cgi->request_method;
-    $self->{-sever_name} = $cgi->server_name;
+    $self->{-server_name} = $cgi->server_name;
     $self->{-server_port} = $cgi->server_port;
     $self->{-postdata} = $cgi->param('POSTDATA');
     $self->{-soap_action} = $cgi->http('SOAPACTION');
     $self->{-user_agent} = $cgi->user_agent;
     $self->{-server_protocol} = $cgi->server_protocol;
     $self->{-param} = $cgi->param;
+    $self->{-url_rel} = $cgi->url(-relative => 1);
+    $self->{-query_string} = $ENV{'QUERY_STRING'};
     return 1;
 }
 
