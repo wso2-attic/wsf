@@ -15,6 +15,7 @@ sub new {
 
     $self = {} unless defined $self;
 
+    # add options as "instance variables"
     if( defined( $self ) ) {
 	if ( scalar($self) =~ /HASH/ ) {
 	    foreach my $k (keys (%{$self})) {
@@ -67,54 +68,54 @@ sub create_policy_from_hash {
 
     my $neethi_options = WSO2::WSF::C::neethi_options_create($env);
     if ( defined $neethi_options ) {
-	my $op = (defined $options->{includeTimeStamp}) ?
+	my $its = (defined $options->{includeTimeStamp}) ?
 	  $options->{includeTimeStamp} : undef;
 
-	if ( (defined $op) and ($op eq 'TRUE') ) {
+	if ( (defined $its) and ($its eq 'TRUE') ) {
 	    WSO2::WSF::C::neethi_options_set_include_timestamp($neethi_options, $env, $WSO2::WSF::C::AXIS2_TRUE);
 	}
 
-	$op = (defined $options->{useUsernameToken}) ?
+	my $unt = (defined $options->{useUsernameToken}) ?
 	  $options->{useUsernameToken} : undef;
 
-	if ( (defined $op) and ($op =~ /true/i) ) {
+	if ( (defined $unt) and ($unt =~ /true/i) ) {
 	    WSO2::WSF::C::neethi_options_set_is_username_token($neethi_options, $env, $WSO2::WSF::C::AXIS2_TRUE);
 	}
 
-	$op = (defined $options->{encrypt}) ?
+	my $enc = (defined $options->{encrypt}) ?
 	  $options->{encrypt} : undef;
 
-	if ( defined $op ) {
-	    if ( $op =~ /true/i ) {
+	if ( defined $enc ) {
+	    if ( $enc =~ /true/i ) {
 		WSO2::WSF::C::neethi_options_set_encrypt_body($neethi_options, $env, $WSO2::WSF::C::AXIS2_TRUE);
 	    } else {
-		WSO2::WSF::C::neethi_options_set_encrypt_body($neethi_options, $env, $op);
+		WSO2::WSF::C::neethi_options_set_encrypt_body($neethi_options, $env, $enc);
 	    }
 	}
 
-	$op = (defined $options->{algorithmSuite}) ?
+	my $algos = (defined $options->{algorithmSuite}) ?
 	  $options->{algorithmSuite} : undef;
 
-	if ( defined $op ) {
-	    WSO2::WSF::C::neethi_options_set_algorithmsuite($neethi_options, $env, $op);
+	if ( defined $algos ) {
+	    WSO2::WSF::C::neethi_options_set_algorithmsuite($neethi_options, $env, $algos);
 	}
 
-	$op = (defined $options->{sign}) ?
+	my $sign = (defined $options->{sign}) ?
 	  $options->{sign} : undef;
 
-	if ( defined $op ) {
-	    if ( $op == $WSO2::WSF::C::AXIS2_TRUE ) {
+	if ( defined $sign ) {
+	    if ( $sign =~ /true/i ) {
 		WSO2::WSF::C::neethi_options_set_sign_body($neethi_options, $env, $WSO2::WSF::C::AXIS2_TRUE);
 	    } else {
-		WSO2::WSF::C::neethi_options_set_sign_body($neethi_options, $env, $op);
+		WSO2::WSF::C::neethi_options_set_sign_body($neethi_options, $env, $sign);
 	    }
 	}
 
-	$op = (defined $options->{securityTokenReference}) ?
+	my $str = (defined $options->{securityTokenReference}) ?
 	  $options->{securityTokenReference} : undef;
 
-	if ( defined $op ) {
-	    my $token_ref = get_rampart_token_value($op);
+	if ( defined $str ) {
+	    my $token_ref = get_rampart_token_value($str);
 	    WSO2::WSF::C::neethi_options_set_keyidentifier($neethi_options, $env, $token_ref) if defined $token_ref;
 	}
 
@@ -125,13 +126,13 @@ sub create_policy_from_hash {
 	    WSO2::WSF::C::neethi_options_set_signature_protection($neethi_options, $env, $WSO2::WSF::C::AXIS2_TRUE);
 	}
 
-	$op = (defined $options->{protectionOrder}) ?
+	my $po = (defined $options->{protectionOrder}) ?
 	  $options->{protectionOrder} : undef;
 
-	if ( defined $op ) {
-	    if ( $op eq "EncryptBeforeSigning" ) {
+	if ( defined $po ) {
+	    if ( $po eq "EncryptBeforeSigning" ) {
 		WSO2::WSF::C::neethi_options_set_encrypt_before_sign($neethi_options, $env, $WSO2::WSF::C::AXIS2_TRUE);
-	    } elsif ( $op eq  "SignBeforeEncrypt" ) {
+	    } elsif ( $po eq  "SignBeforeEncrypt" ) {
 		WSO2::WSF::C::neethi_options_set_encrypt_before_sign($neethi_options, $env, $WSO2::WSF::C::AXIS2_FALSE);
 	    }
 	}
