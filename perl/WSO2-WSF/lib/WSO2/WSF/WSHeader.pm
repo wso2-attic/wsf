@@ -10,6 +10,7 @@ sub new {
     my $this = ref( $class ) || $class;
     my $self = shift;		# options
 
+    # add options as "instance variables"
     if( defined( $self ) ) {
 	foreach my $k (keys (%{$self})) {
 	    $this->{$k} = $self->{$k};
