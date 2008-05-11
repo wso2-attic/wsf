@@ -15,39 +15,47 @@ use Error qw(:try);
 sub new {
     my $class = shift;
     my $this = ref( $class ) || $class;
-    my $args = shift;
+    my $self = shift;
 
-    $args = {} unless( defined( $args ) );
+    $self = {} unless defined $self;
 
-    if( defined( $args ) ) {
-	foreach my $k ( keys( %{$args} ) ) {
-	    $this->{$k} = $args->{$k};
+    # adding passed options as "instance variables"
+    if ( defined $self ) {
+	foreach my $k ( keys( %{$self} ) ) {
+	    $this->{$k} = $self->{$k};
 	}
     }
 
-    bless( $args, $this );
-    return $args;
+    bless $self, $this;
+    return $self;
 }
 
-sub request {
+# construct the SOAP message according to options (without RM)
+# RM options will be set later
+sub build_request_message {
     my $class = shift;
-    my $this = ref( $class ) || $class;
-    my $args = shift;
+    my $this = shift;
+    my $self = shift;
+    my $oneway = shift;
 
-    $args = {} unless( defined( $args ) );
+    $self = {} unless defined $self;
 
     my $is_wsmessage = 0;
 
-    foreach my $k ( keys %{$args} ) {
-	$this->{$k} = $args->{$k};
+    # adding passed options as "instance variables"
+    foreach my $k ( keys %{$self} ) {
+	$this->{$k} = $self->{$k};
     }
 
-    $is_wsmessage = 1  if( $args =~ /WSMessage/ );
+    # a WSMessage object was passed
+    $is_wsmessage = 1  if $self =~ /WSMessage/;
 
+    # default log file
     if ( not defined $this->{log_file} ) {
 	$this->{log_file} = "/tmp/wsf_perl_client.log";
     }
 
+    # default log level if user dosen't specify one
     my $loglevel = $WSO2::WSF::C::AXIS2_LOG_LEVEL_INFO;
 
     if ( defined $this->{log_level} ) {
@@ -60,24 +68,27 @@ sub request {
 	} elsif ( $this->{log_level} == 4 ) {
 	    $loglevel = $WSO2::WSF::C::AXIS2_LOG_LEVEL_DEBUG;
 	} elsif ( $this->{log_level} == 5 ) {
+            $loglevel = $WSO2::WSF::C::AXIS2_LOG_LEVEL_USER;
+        } elsif ( $this->{log_level} == 6 ) {
 	    $loglevel = $WSO2::WSF::C::AXIS2_LOG_LEVEL_TRACE;
 	}
     }
 
+    # making the env, accessible as an "instance variable"
     $this->{env} = WSO2::WSF::C::axutil_env_create_all(
 	$this->{log_file},
 	$loglevel );
 
-    unless( defined( $this->{env} ) ) {
+    unless( defined $this->{env} ) {
 	die "ERROR:  Failed to create WSF/C environment";
     }
 
     # no longer use axis2c_home, this extension use WSF/C now
-    if ( defined( $this->{axis2c_home} ) ) {
+    if ( defined $this->{axis2c_home} ) {
 	die "axis2c_home is now deprecated, please use wsfc_home instead.";
     }
 
-    unless( defined( $this->{wsfc_home} ) ) {
+    unless ( defined $this->{wsfc_home} ) {
 	if ( defined $ENV{WSFC_HOME} ) {
 	    # get it from the environment variable
 	    $this->{wsfc_home} = $ENV{WSFC_HOME};
@@ -89,17 +100,24 @@ sub request {
 	}
     }
 
+    # create the service client
     $this->{svc_client} = wsf_svc_client_create( $this );
 
     # record whether addressing is engaged or not
     local $addr_action_present;
 
-    # wsf_reader_create will fill this later
+    # wsf_reader_create will fill this
     local $reader = '';
+
+    WSO2::WSF::C::wsf_client_set_module_param_option($this->{env},
+                                                     $this->{svc_client},
+                                                     "sandesha2",
+                                                     "sandesha2_db",
+                                                     "/tmp/sandesha2_db");
 
     wsf_reader_create($is_wsmessage, $this->{env}, $this->{payload});
 
-    local $request_payload = wsf_get_payload( $this );
+    $request_payload = wsf_get_payload_as_axiom( $this );
 
     WSO2::WSF::C::axiom_xml_reader_free( $reader, $this->{env} );
 
@@ -115,14 +133,15 @@ sub request {
     local $wsf_soap_version = $WSO2::WSF::C::AXIOM_SOAP12;
     local $wsf_soap_uri = $WSO2::WSF::C::AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
 
-    local $response_xop = 0;
+    local $is_addressing_engaged = $WSO2::WSF::C::AXIS2_FALSE;
+
+
     if ( $this->{responseXOP} ) {
-	if ( ($this->{responseXOP} =~ /true/i) or ($this->{responseXOP} =~ 1) ) {
+	if ( ($this->{responseXOP} =~ /true/i) or ($this->{responseXOP} == 1) ) {
 	    $response_xop = 1;
 	}
     }
 
-    # assuming payload is a string, setting client options
     wsf_set_client_options( $this );
 
     # WS-Security related stuff
@@ -141,11 +160,45 @@ sub request {
     # outgoing attachments
     wsf_handle_outgoing_attachments( $this, $client_options, $request_payload );
 
-    # WS-RM
-    wsf_handle_reliable_messaging( $this, $client_options, $one_way );
+    wsf_handle_reliable_messaging( $this, $oneway );
+}
 
-    return wsf_process_response( $this );
 
+sub request {
+    my $class = shift;
+    my $this = ref( $class ) || $class;
+    my $self = shift;
+
+    local $request_payload;
+    local $response_xop = 0;
+    local $is_rm_engaged = $WSO2::WSF::C::AXIS2_FALSE;
+    local $will_continue_sequence = 0;
+    local $rm_spec_version;
+
+    # last parameter is for oneway
+    build_request_message( $class, $this, $self, 0 );
+
+    # last parameter is for oneway
+    return wsf_process_response( $this, 0 );
+
+}
+
+sub send_message {
+    my $class = shift;
+    my $this = ref( $class ) || $class;
+    my $self = shift;
+
+    local $request_payload;
+    local $response_xop = 0;
+    local $is_rm_engaged = $WSO2::WSF::C::AXIS2_FALSE;
+    local $will_continue_sequence = 0;
+    local $rm_spec_version;
+
+    # last parameter is for oneway
+    build_request_message( $class, $this, $self, 1 );
+
+    # last parameter is for oneway
+    return wsf_process_response( $this, 1 );
 }
 
 sub wsf_client_set_headers {
@@ -193,7 +246,7 @@ sub wsf_util_construct_header_node {
 	$header_ns = WSO2::WSF::C::axiom_namespace_create($env,
 							  $ihs->{ns},
 							  $ihs->{nsprefix});
-    } elsif ( defined($ihs->{ns}) ) {
+    } elsif ( defined $ihs->{ns} ) {
 	 my $prefix = "ns$curr_ns_index";
 	 $curr_ns_index++;
 	 $header_ns = WSO2::WSF::C::axiom_namespace_create($env,
@@ -207,7 +260,7 @@ sub wsf_util_construct_header_node {
 						     $header_ns,
 						     $header_node);
 
-    if ( defined($ihs->{mustUnderstand}) ) {
+    if ( defined $ihs->{mustUnderstand} ) {
 	$soap_ns = WSO2::WSF::C::axiom_namespace_create($env, $wsf_soap_uri, "soapenv" );
 	my $mu_attr = WSO2::WSF::C::axiom_attribute_create($env,
 							   "mustUnderstand",
@@ -216,9 +269,9 @@ sub wsf_util_construct_header_node {
 	WSO2::WSF::C::axiom_element_add_attribute($header_ele, $env, $mu_attr, WSO2::WSF::C::axiom_node_t_pp_value($header_node));
     }
 
-    if ( defined($ihs->{role}) ) {
-	my $role_attr = undef;
-	my $role_val = undef;
+    if ( defined $ihs->{role} ) {
+	my $role_attr;
+	my $role_val;
 
 	if ( $ihs->{role} eq $WSO2::WSF::C::WS_SOAP_ROLE_NEXT ) {
 	    $role_val = $WSO2::WSF::C::WS_SOAP_ROLE_NEXT_URI;
@@ -230,7 +283,7 @@ sub wsf_util_construct_header_node {
 	     $role_val = $ihs->{role};
 	}
 
-	if ( not $soap_ns ) {
+	if ( not defined $soap_ns ) {
 	    $soap_ns = WSO2::WSF::C::axiom_namespace_create($env, $wsf_soap_uri, "soapenv");
 	}
 
@@ -246,7 +299,10 @@ sub wsf_util_construct_header_node {
 							      $soap_ns);
 
 	}
-	WSO2::WSF::C::axiom_element_add_attribute($header_ele, $env, $role_attr, WSO2::WSF::C::axiom_node_t_pp_value($header_node));
+	WSO2::WSF::C::axiom_element_add_attribute($header_ele, 
+						  $env, 
+						  $role_attr, 
+						  WSO2::WSF::C::axiom_node_t_pp_value($header_node));
     }
 
     if ( (defined $ihs->{data}) and ($ihs->{data} =~ /WSHeader/) ) {
@@ -256,7 +312,7 @@ sub wsf_util_construct_header_node {
 	    wsf_util_construct_header_node( $env, WSO2::WSF::C::axiom_node_t_pp_value($header_node), $h );
 	}
     } else {
-	my $node = undef;
+	my $node;
 	if ( $ihs =~ /</ ) {
 	    # wheeee, XML
 	    $node = WSO2::WSF::C::wsf_util_deserialize_buffer($env, $ihs);
@@ -268,117 +324,214 @@ sub wsf_util_construct_header_node {
     return $header_node;
 }
 
-sub wsf_handle_reliable_messaging {
-    my ($this, $co, $oneway) = (@_);
+sub wsf_client_set_addressing_options_to_options {
+    my $this = shift;
+    my $cops = shift; # client options
 
-    my $reliable = $this->{$WSO2::WSF::C::WSF_CP_RELIABLE};
+    if ( defined $this->{action} ) {
+	WSO2::WSF::C::axis2_options_set_action( $cops, $this->{env}, $this->{action} );
+	WSO2::WSF::C::axis2_log_debug( $this->{env}, "[wsf-perl] addressing action present - $this->{action}" );
+    }
+
+    if ( defined $this->{replyTo} ) {
+	my $rep_epr = WSO2::WSF::C::axis2_endpoint_ref_create( $this->{env}, $this->{replyTo} );
+	WSO2::WSF::C::axis2_options_set_reply_to( $cops, $this->{env}, $rep_epr );
+	WSO2::WSF::C::axis2_log_debug( $this->{env}, "[wsf-perl] replyTo present - $this->{replyTo}" );
+    }
+
+    if ( defined $this->{faultTo} ) {
+	my $f_epr = WSO2::WSF::C::axis2_endpoint_ref_create( $this->{env}, $this->{faultTo} );
+	WSO2::WSF::C::axis2_options_set_fault_to( $cops, $this->{env}, $f_epr );
+	WSO2::WSF::C::axis2_log_debug( $this->{env}, "[wsf-perl] faultTo present - $this->{faultTo}" );
+    }
+
+    if ( defined $this->{from} ) {
+	my $from_erp = WSO2::WSF::C::axis2_endpoint_ref_create( $this->{env}, $this->{from} );
+	WSO2::WSF::C::axis2_options_set_from( $cops, $this->{env}, $from_epr );
+	WSO2::WSF::C::axis2_log_debug( $this->{env}, "[wsf-perl] from present - $this->{from}" );
+    }
+}
+
+sub wsf_handle_reliable_messaging {
+    my $this = shift;
+    my $oneway = shift;
+
+    my $reliable = $this->{reliable};
     if ( (defined $reliable) and 
 	 ( ($reliable =~ /true/i) or ($reliable == "1.0") or ($reliable == "1.1") ) ) {
 
 	# set version
-	my $rm_version = ( $reliable == "1.1" ) ?
-	  WSO2::WSF::C::WSF_RM_VERSION_1_1 :
-	      WSO2::WSF::C::WSF_RM_VERSION_1_0;
+# 	my $rm_version_str = ( $reliable eq "1.1" ) ?
+# 	  $WSO2::WSF::C::WSF_RM_VERSION_1_1_STR :
+# 	  $WSO2::WSF::C::WSF_RM_VERSION_1_0_STR;
 
-	my $rm_version_str = ( $reliable == "1.1" ) ?
-	  WSO2::WSF::C::WSF_RM_VERSION_1_1_STR :
-	      WSO2::WSF::C::WSF_RM_VERSION_1_0_STR;
+        my $rm_version = ( $reliable eq "1.1" ) ?
+          $WSO2::WSF::C::WSF_RM_VERSION_1_1 :
+          $WSO2::WSF::C::WSF_RM_VERSION_1_0;
 
-	my $rm_property = WSO2::WSF::C::wsf_axutil_property_create_with_args( $this->{env},
-									      $WSO2::WSF::C::AXIS2_SCOPE_REQUEST,
-									      $WSO2::WSF::C::AXIS2_FALSE,
-									      WSO2::WSF::C::wsf_axutil_strdup( $this->{env},
-													       $rm_version_str ) );
-	WSO2::WSF::C::wsf_axis2_options_set_property( $co,
-						      $this->{env},
-						      $WSO2::WSF::C::WSF_SANDESHA2_CLIENT_RM_SPEC_VERSION,
-						      $rm_property );
+        my $rm_version_str;
 
-	my $action = $this->{$WSO2::WSF::C::WSF_MP_ACTION};
-	my $need_to_engage_addressing = ( (not $addr_action_present) and $action );
+        my $rm_spec_version_str;
+        my $engage_rm = $WSO2::WSF::C::AXIS2_FALSE;
 
-	WSO2::WSF::C::axis2_svc_client_engage_module( $this->{svc_client},
-						      $this->{env},
-						      $WSO2::WSF::C::AXIS2_MODULE_ADDRESSING ) if $need_to_engage_addressing;
+        if ( $rm_version > 0 ) {
+            if ( $rm_version eq $WSO2::WSF::C::WSF_RM_VERSION_1_0 ) {
+                $rm_spec_version = $WSO2::WSF::C::WSF_RM_VERSION_1_0;
+                $rm_spec_version_str = $WSO2::WSF::C::WSF_RM_VERSION_1_0_STR;
+                WSO2::WSF::C::axis2_log_debug( $this->{env},
+                                               "[wsf-perl] rm spec version 1.0" );
+            } elsif ( $rm_version eq $WSO2::WSF::C::WSF_RM_VERSION_1_1 ) {
+                $rm_spec_version = $WSO2::WSF::C::WSF_RM_VERSION_1_1;
+                $rm_spec_version_str = $WSO2::WSF::C::WSF_RM_VERSION_1_1_STR;
+                WSO2::WSF::C::axis2_log_debug( $this->{env},
+                                               "[wsf-perl] rm spec version 1.1" );
+            }
 
-	# engage sandesha2
-	WSO2::WSF::C::axis2_svc_client_engage_module( $this->{svc_client},
-						      $this->{env},
-						      $WSO2::WSF::C::AXIS2_MODULE_SANDESHA2 );
 
-	# set sequence expiry time
-	my $sequence_expiry_time = $this->{$WSO2::WSF::C::WSF_CP_SEQ_EXP_TIME};
-	WSO2::WSF::C::wsf_set_module_param_value( $this->{env},
-						  $this->{svc_client},
-						  $WSO2::WSF::C::AXIS2_MODULE_SANDESHA2,
-						  $WSO2::WSF::C::WSF_SANDESHA2_CLIENT_INACT_TIMEOUT,
-						  $sequence_expiry_time ) unless $sequence_expiry_time;
+            my $rm_prop = WSO2::WSF::C::wsf_axutil_property_create_with_args(
+                $this->{env},
+                $WSO2::WSF::C::AXIS2_SCOPE_REQUEST,
+                $WSO2::WSF::C::AXIS2_FALSE,
+                WSO2::WSF::C::wsf_axutil_strdup( $this->{env}, $rm_spec_version_str ) );
 
-	# set sequence key
-	my $sequence_key = $this->{WSO2::WSF::C::WSF_CP_SEQ_KEY};
-	$sequence_key_property = WSO2::WSF::C::wsf_axutil_property_create_with_args( $this->{env},
-										     WSO2::WSF::C::AXIS2_SCOPE_REQUEST,
-										     WSO2::WSF::C::AXIS2_TRUE,
-										     WSO2::WSF::C::wsf_axutil_strdup( $this->{env},
-														      sequence_key ) );
+            WSO2::WSF::C::wsf_axis2_options_set_property( $client_options,
+                                                          $this->{env},
+                                                          $WSO2::WSF::C::WSF_SANDESHA2_CLIENT_RM_SPEC_VERSION,
+                                                          $rm_prop );
+            $engage_rm = $WSO2::WSF::C::AXIS2_TRUE;
+        }
 
-	WSO2::WSF::C::wsf_axis2_options_set_property( $co,
-						      $this->{env},
-						      WSO2::WSF::C::WSF_SANDESHA2_CLIENT_SEQ_KEY,
-						      $sequence_key_property );
+# 	my $rm_property = WSO2::WSF::C::wsf_axutil_property_create_with_args(
+# 	     $this->{env},
+# 	     $WSO2::WSF::C::AXIS2_SCOPE_REQUEST,
+# 	     $WSO2::WSF::C::AXIS2_FALSE,
+# 	     WSO2::WSF::C::wsf_axutil_strdup( $this->{env}, $rm_version_str ) );
 
-	# mark last message
-	my $last_msg = 1;
-	my $will_continue_sequence = $this->{WSO2::WSF::C::WSF_CP_WILL_CON_SEQ};
+# 	WSO2::WSF::C::wsf_axis2_options_set_property( $client_options,
+# 						      $this->{env},
+# 						      $WSO2::WSF::C::WSF_SANDESHA2_CLIENT_RM_SPEC_VERSION,
+# 						      $rm_property );
 
-	if ( $will_continue_sequence =~ /true/i ) {
-            my $last_message = $this->{$WSO2::WSF::C::WSF_MP_LAST_MSG};
-            $last_msg = 0 unless last_message =~ /true/i;
-	}
+	my $need_to_engage_addressing = ( (not defined $addr_action_present) and 
+					  (defined $this->{action}) ) ? 1 : undef;
 
-	if ( $last_msg and ($rm_version == 1) ) {
-            my $last_msg_property =  WSO2::WSF::C::wsf_axutil_property_create_with_args( $this->{env},
-											 $WSO2::WSF::C::AXIS2_SCOPE_REQUEST,
-											 $WSO2::WSF::C::AXIS2_FALSE,
-											 WSO2::WSF::C::wsf_axutil_strdup( $this->{env},
-															  $WSO2::WSF::C::AXIS2_VALUE_TRUE ) );
+        if ( ($is_addressing_engaged || ((not $is_addressing_engaged) and defined $this->{action}))
+             and ($engage_rm) ) {
+            if ( not $is_addressing_engaged ) {
+		wsf_client_set_addressing_options_to_options( $this, $client_options );
+		WSO2::WSF::C::axis2_svc_client_engage_module( $this->{svc_client}, $this->{env}, "addressing" );
+		WSO2::WSF::C::axis2_log_debug( $this->{env}, "[wsf-perl] useWSA not specified, addressing engaged since rm is engaed" );
+	    }
 
-            WSO2::WSF::C::wsf_axis2_options_set_property( $co,
+	    # engage sandesha2
+	    WSO2::WSF::C::axis2_svc_client_engage_module( $this->{svc_client},
 							  $this->{env},
-							  $WSO2::WSF::C::WSF_SANDESHA2_CLIENT_LAST_MESSAGE,
-							  $last_msg_property );
-	}
+							  $WSO2::WSF::C::AXIS2_MODULE_SANDESHA2 );
+	    $is_rm_engaged = $WSO2::WSF::C::AXIS2_TRUE;
 
-	if (not $one_way) {
+	    # set sequence expiry time
+	    if ( defined $this->{sequenceExpiryTime} ) {
+		WSO2::WSF::C::wsf_set_module_param_value( $this->{env},
+							  $this->{svc_client},
+							  $WSO2::WSF::C::AXIS2_MODULE_SANDESHA2,
+							  $WSO2::WSF::C::WSF_SANDESHA2_CLIENT_INACT_TIMEOUT,
+							  $this->{sequenceExpiryTime} ) if defined $this->{sequenceExpiryTime};
+	    }
 
-            # set offered sequence id
-            my $offered_sequence_id = WSO2::WSF::C::axutil_uuid_gen( $this->{env} );
+	    # set sequence key
+	    if ( defined $this->{sequenceKey} ) {
+		my $sequence_key_property = WSO2::WSF::C::wsf_axutil_property_create_with_args(
+                    $this->{env},
+                    $WSO2::WSF::C::AXIS2_SCOPE_REQUEST,
+                    $WSO2::WSF::C::AXIS2_TRUE,
+                    WSO2::WSF::C::wsf_axutil_strdup( $this->{env}, $sequence_key ) );
 
-            my $sequence_property = WSO2::WSF::C::axutil_property_create( $this->{env} );
+		WSO2::WSF::C::wsf_axis2_options_set_property( $client_options,
+							      $this->{env},
+							      $WSO2::WSF::C::WSF_SANDESHA2_CLIENT_SEQ_KEY,
+							      $sequence_key_property );
+	    }
 
-            WSO2::WSF::C::wsf_axutil_property_set_value( $sequence_property,
-							 $this->{env},
-							 WSO2::WSF::C::wsf_axutil_strdup( $this->{env},
-											  $offered_sequence_id ) );
-            WSO2::WSF::C::wsf_axis2_options_set_property( $co,
-							  $this->{env},
-							  $WSO2::WSF::C::WSF_SANDESHA2_CLIENT_OFFERED_SEQ_ID,
-							  $sequence_property );
-            # set time out
-            my $response_time_out = $this->{WSO2::WSF::C::WSF_CP_RES_TIME_OUT};
-            my $time_out = ( defined $response_time_out ) ? 
-	      WSO2::WSF::C::WSF_SANDESHA2_CLIENT_DEFAULT_TIME_OUT :
-		  $response_time_out;
+	    if ( defined $this->{willContinueSequence} ) {
+		$will_continue_sequence = 1;
+		WSO2::WSF::C::axis2_log_debug( $this->{env}, "[wsf-perl] willContinueSequence is true" );
+	    }
+        }
 
-            my $time_out_property = WSO2::WSF::C::wsf_axutil_property_create_with_args( $this->{env},
-											$WSO2::WSF::C::AXIS2_SCOPE_REQUEST,
-											$WSO2::WSF::C::AXIS2_FALSE,
-											WSO2::WSF::C::wsf_axutil_strdup( $this->{env},
-															 $time_out ) );
-            WSO2::WSF::C::wsf_axis2_options_set_property( $co,
-							  $this->{env},
-							  $WSO2::WSF::C::WSF_SANDESHA2_CLIENT_TIME_OUT,
-							  $time_out_property );
+	if ( $is_rm_engaged == $WSO2::WSF::C::AXIS2_TRUE ) {
+
+	    if ( $will_continue_sequence ) {
+		if ( (defined $this->{lastMessage}) and ($this->{lastMessage} == 1) ) {
+		    $will_continue_sequence = 0;
+		    if ( $rm_spec_version == $WSO2::WSF::C::WSF_RM_VERSION_1_0 ) {
+			my $last_msg_prop = WSO2::WSF::C::wsf_axutil_property_create_with_args(
+			    $this->{env},
+                            $WSO2::WSF::C::AXIS2_SCOPE_APPLICATION,
+			    $WSO2::WSF::C::AXIS2_FALSE,
+			    $WSO2::WSF::C::AXIS2_VALUE_TRUE);
+			WSO2::WSF::C::axis2_options_set_property( $client_options,
+								  $this->{env},
+								  "Sandesha2LastMessage",
+								  $last_msg_prop );
+		    }
+		} elsif ( not $will_continue_sequence ) {
+		    WSO2::WSF::C::axis2_log_debug( $this->{env},
+						   "[wsf-perl] setting TreminateSequence property" );
+		    if ( $rm_spec_version == $WSO2::WSF::C::WSF_RM_VERSION_1_0 ) {
+			                    # axutil_property_t *last_msg_prop =
+#                         axutil_property_create_with_args (env,
+#                         0, 0, 0, AXIS2_VALUE_TRUE);
+#                     axis2_options_set_property (client_options, env,
+#                         "Sandesha2LastMessage", last_msg_prop);
+#                     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+#                         "[wsf_client] setting Sandesha2LastMessage");
+			my $last_msg_prop = WSO2::WSF::C::wsf_axutil_property_create_with_args(
+			    $this->{env},
+			     $WSO2::WSF::C::AXIS2_SCOPE_REQUEST,
+			    $WSO2::WSF::C::AXIS2_FALSE,
+			    $WSO2::WSF::C::AXIS2_VALUE_TRUE);
+			WSO2::WSF::C::axis2_options_set_property( $client_options,
+								  $this->{env},
+								  "Sandesha2LastMessage",
+								  $last_msg_prop );
+			WSO2::WSF::C::axis2_log_debug( $this->{env}, "[wsf-perl] setting Sandesha2LastMessage" );
+		    }
+		}
+
+		# two way single channel
+		if ( not $oneway ) {
+		    my $timeout = undef;
+		    my $timeout_property = undef;
+		    my $offered_seq_id = undef;
+		    my $sequence_property = undef;
+
+		    $offered_seq_id = WSO2::WSF::C::axutil_uuid_gen( $this->{env} );
+
+		    $sequence_property = WSO2::WSF::C::axutil_property_create( $this->{env} );
+
+		    WSO2::WSF::C::axutil_property_set_value( $sequence_property,
+							     $this->{env},
+							     WSO2::WSF::C::axutil_strdup( $this->{env}, $offered_seq_id ));
+
+		    WSO2::WSF::C::axis2_options_set_property( $client_options,
+							      $this->{env},
+							      "Sandesha2OfferedSequenceId", 
+							      $sequence_property);
+
+		    WSO2::WSF::C::axis2_log_debug( $this->{env},
+						   "[wsf-log] Sandesha2OfferedSequenceId is set as property");
+
+		    $timeout = (defined $this->{responseTimeout}) ? 
+		        $this->{responseTimeout} : $WSO2::WSF::C::WSF_RM_DEFAULT_RESPONSE_TIMEOUT;
+
+		    $timeout_property = WSO2::WSF::C::axutil_property_create_with_args(
+		        $client_options,
+			$this->{env},
+			$WSO2::WSF::C::AXIS2_TIMEOUT_IN_SECONDS,
+			$timeout_property );
+		}
+
+	    }
 	}
     }
 
@@ -387,9 +540,7 @@ sub wsf_handle_reliable_messaging {
 sub wsf_handle_outgoing_attachments {
     my ($this, $cliopt, $reqpayload) = (@_);
 
-    if ( defined( $this->{attachments} ) ) {
-	# my $attachments = defined( $this->{$WSO2::WSF::C::WSF_MP_ATTACHMENTS} ) ?
-	#  $WSO2::WSF::C::WSF_MP_ATTACHMENTS : "";
+    if ( defined $this->{attachments} ) {
 
 	my $enable_mtom = ( defined( $this->{useMTOM} ) && $this->{useMTOM} =~ /true/i ) ?
 	  $WSO2::WSF::C::AXIS2_TRUE : $WSO2::WSF::C::AXIS2_FALSE;
@@ -414,7 +565,7 @@ sub pack_attachments {
     if ( WSO2::WSF::C::axiom_node_get_node_type( $node, $this->{env} ) == $WSO2::WSF::C::AXIOM_ELEMENT ) {
 	my $node_element = WSO2::WSF::C::wsf_axiom_node_get_data_element( $node, $this->{env} );
 
-	if ( defined( $node_element ) ) {
+	if ( defined $node_element ) {
 	    my $child_element_ite = WSO2::WSF::C::axiom_element_get_child_elements( $node_element, $this->{env}, $node );
 
 	    if ( defined( $child_element_ite ) ) {
@@ -470,7 +621,7 @@ sub pack_attachments {
 
     # process child nodes
     my $child_node = WSO2::WSF::C::axiom_node_get_first_child($node, $this->{env});
-    while ( defined($child_node) ) {
+    while ( defined $child_node ) {
 	pack_attachments( $this, $child_node, $atts, $mtom, $ct );
 
 	$child_node = WSO2::WSF::C::axiom_node_get_next_sibling($child_node, $this->{env});
@@ -478,29 +629,56 @@ sub pack_attachments {
 
 }
 
-sub wsf_process_response {
+sub wsf_client_send_terminate_sequence {
     my $this = shift;
 
-    my $response_payload = WSO2::WSF::C::axis2_svc_client_send_receive(
-	$this->{svc_client},
-	$this->{env},
-	$request_payload );
+    if ( $is_rm_engaged and (not $will_continue_sequence) and 
+         $rm_spec_version == $WSO2::WSF::C::WSF_RM_VERSION_1_1 ) {
+	WSO2::WSF::C::sandesha2_client_terminate_seq_with_svc_client_and_seq_key(
+	   $this->{env},
+	   $this->{svc_client},
+           $sequence_key );
+    }
+}
+
+sub wsf_process_response {
+    my $this = shift;
+    my $oneway = shift;
+
+    if ( $oneway ) {
+	my $retval = 0;
+	$retval = WSO2::WSF::C::axis2_svc_client_send_robust( $this->{svc_client},
+							      $this->{env},
+							      $request_payload );
+	wsf_client_send_terminate_sequence( $this );
+	return $retval;
+    } else {
+
+	my $response_payload = WSO2::WSF::C::axis2_svc_client_send_receive(
+									   $this->{svc_client},
+									   $this->{env},
+									   $request_payload );
+
+	wsf_client_send_terminate_sequence( $this );
 
 
-    if ( WSO2::WSF::C::axis2_svc_client_get_last_response_has_fault( $this->{svc_client}, $this->{env} ) == $WSO2::WSF::C::AXIS2_TRUE ) {
-	# soap fault occured
-	my $last_soap_fault = last_soap_fault_exception( $this );
-    } elsif( $response_payload ) {
-        # handle attachments
+	if ( WSO2::WSF::C::axis2_svc_client_get_last_response_has_fault( $this->{svc_client}, $this->{env} ) == $WSO2::WSF::C::AXIS2_TRUE ) {
+	    # soap fault occured
+	    my $last_soap_fault = last_soap_fault_exception( $this );
+	} elsif ( defined $response_payload ) {
+	    # handle attachments
 
-        my $buffer = WSO2::WSF::C::wsf_axiom_node_to_str( $this->{env}, $response_payload );
+	    my $buffer = WSO2::WSF::C::wsf_axiom_node_to_str( $this->{env}, $response_payload );
 
-        my $res_msg = new WSO2::WSF::WSMessage( { 'payload' => $this->{payload},
-						  'str'     => $buffer } );
+	    my $res_msg = new WSO2::WSF::WSMessage( { 'payload' => $this->{payload},
+						      'str'     => $buffer } );
 
-	wsf_handle_incoming_attachments($res_msg, $response_payload, $this);
+	    wsf_handle_incoming_attachments($res_msg, $response_payload, $this);
 
-	return $res_msg;
+	    return $res_msg;
+	} else {
+	    WSO2::WSF::C::axis2_log_debug( $this->{env}, "[wsf-perl] Error, no response received" );
+	}
     }
 }
 
@@ -566,7 +744,7 @@ sub wsf_set_addressing_options {
     my $this = shift;
 
     # addressing
-    $addr_action_present = 0;
+    $addr_action_present = undef;
 
     # setting addressing options
     if( defined( $this->{useWSA} ) && ( ( $this->{useWSA} eq "1.0" ) ||
@@ -577,7 +755,7 @@ sub wsf_set_addressing_options {
 	    $this->{env},
 	    "[wsf-perl] useWSA is specified, value = $this->{useWSA}" );
 
-	if( defined( $this->{replyTo} ) ) {
+	if( defined $this->{replyTo} ) {
 	    my $replyto_epr = WSO2::WSF::C::axis2_endpoint_ref_create(
 		$this->{env},
 		$this->{replyTo} );
@@ -587,7 +765,7 @@ sub wsf_set_addressing_options {
 		$replyto_epr );
 	}
 
-	if( defined( $this->{faultTo} ) ) {
+	if( defined $this->{faultTo} ) {
 	    my $faultto_epr = WSO2::WSF::C::axis2_endpoint_ref_create(
 		$this->{env},
 		$this->{faultTo} );
@@ -597,7 +775,7 @@ sub wsf_set_addressing_options {
 		$faultto_epr );
 	}
 
-	if( defined( $this->{from} ) ) {
+	if( defined $this->{from} ) {
 	    my $from_epr = WSO2::WSF::C::axis2_endpoint_ref_create(
 		$this->{env},
 		$this->{from} );
@@ -612,6 +790,7 @@ sub wsf_set_addressing_options {
 		$this->{svc_client},
 		$this->{env},
 		"addressing" );
+            $is_addressing_engaged = $WSO2::WSF::C::AXIS2_TRUE;
 	}
 
 	if( $this->{useWSA} eq "submission" ) {
@@ -640,10 +819,7 @@ sub wsf_set_soap_action {
     my $this = shift;
 
     # setting the SOAP action
-    if( defined( $this->{action} ) ) {
-# 	my $action_string = WSO2::WSF::C::axutil_string_create( 
-# 	    $this->{env}, 
-# 	    $this->{action} );
+    if( defined $this->{action} ) {
 	WSO2::WSF::C::axis2_options_set_action(
 	    $client_options, 
 	    $this->{env}, 
@@ -654,7 +830,7 @@ sub wsf_set_soap_action {
 sub wsf_set_epr {
     my $this = shift;
 
-    # setting end point
+    # setting end point reference
     my $to_epr = WSO2::WSF::C::axis2_endpoint_ref_create( $this->{env}, $this->{to} );
     WSO2::WSF::C::axis2_options_set_to( $client_options, $this->{env}, $to_epr );
 }
@@ -677,7 +853,7 @@ sub wsf_set_client_options {
     my $soap_version = $WSO2::WSF::C::AXIOM_SOAP12;
     my $use_soap = $WSO2::WSF::C::AXIS2_TRUE;
 
-    if( defined( $this->{useSOAP} ) ) {
+    if( defined $this->{useSOAP} ) {
 	for( $this->{useSOAP} ) {
 	    if	  ( /^1\.2$/ )   { $soap_version = $WSO2::WSF::C::AXIOM_SOAP12; }
 	    elsif ( /^1\.1$/ )   { $soap_version = $WSO2::WSF::C::AXIOM_SOAP11;
@@ -760,12 +936,9 @@ sub wsf_handle_security {
     my $sec_token = defined( $this->{securityToken} ) ?
       $this->{securityToken} : undef;
 
-    $policy = $this->{policy};
-
-#     print $policy->get_policy_as_axiom_node($this->{env}), "\n";
-
     if ( defined($policy) && defined($sec_token) ) {
 	# policy is given, let's do the rest
+
 	WSO2::WSF::C::handle_client_security($this->{env},
 					     $this->{svc_client},
 					     $policy->get_policy_as_axiom_node($this->{env}),
@@ -792,7 +965,7 @@ sub wsf_get_client_options {
     return $ops;
 }
 
-sub wsf_get_payload {
+sub wsf_get_payload_as_axiom {
     my $this = shift;
 
     # request payload
@@ -800,35 +973,41 @@ sub wsf_get_payload {
 						      $this->{payload},
 						      length( $this->{payload} ) );
 
-    unless( defined( $req_pl ) ) {
+    unless( defined $req_pl ) {
 	WSO2::WSF::C::axis2_log_debug(
 	    $this->{env},
 	    "[wsf-perl] Failed to convert payload to an axiom node" );
     }
 
-    die( "ERROR:  Request payload should not be null" ) unless( defined( $req_pl ) );
+    die "ERROR:  Request payload should not be null" unless defined $req_pl;
     return $req_pl;
 }
 
 sub wsf_reader_create {
-
     my($isws, $env, $payload) = (@_);
 
-    if( $isws ) {
-	$reader = WSO2::WSF::C::axiom_xml_reader_create_for_memory_new(
+    # same thing is done 
+#     if( $isws ) {
+# 	$reader = WSO2::WSF::C::axiom_xml_reader_create_for_memory_new(
+# 	    $env,
+# 	    $payload,
+# 	    length( $payload ),
+# 	    "utf-8",
+# 	    $WSO2::WSF::C::AXIS2_XML_PARSER_TYPE_BUFFER );
+#     } else {
+# 	$reader = WSO2::WSF::C::axiom_xml_reader_create_for_memory_new(
+# 	    $env,
+# 	    $payload,
+# 	    length( $payload ),
+# 	    "utf-8",
+# 	    $WSO2::WSF::C::AXIS2_XML_PARSER_TYPE_BUFFER );
+#     }
+    $reader = WSO2::WSF::C::axiom_xml_reader_create_for_memory_new(
 	    $env,
 	    $payload,
 	    length( $payload ),
 	    "utf-8",
 	    $WSO2::WSF::C::AXIS2_XML_PARSER_TYPE_BUFFER );
-    } else {
-	$reader = WSO2::WSF::C::axiom_xml_reader_create_for_memory_new(
-	    $env,
-	    $payload,
-	    length( $payload ),
-	    "utf-8",
-	    $WSO2::WSF::C::AXIS2_XML_PARSER_TYPE_BUFFER );
-    }
 
     unless( defined( $reader ) ) {
 	WSO2::WSF::C::axis2_log_debug(
@@ -844,7 +1023,7 @@ sub wsf_svc_client_create {
  	$this->{env},
  	$this->{wsfc_home} );
 
-    unless( defined( $svc ) ) {
+    unless( defined $svc ) {
  	WSO2::WSF::C::axis2_log_debug(
  	    $this->{env},
  	    "[wsf-perl] Service client creation failed" );
@@ -920,8 +1099,10 @@ after creating the client.
 
 =item wsfc_home
 
-This is a mandatory argument that should contain the absolute URL of the
-folder you installed Axis2/C or WSF/C.
+This should hold the absolute path name where you have installed WSF/C.
+If you don't provide this, WSF/Perl look for an environment variable called
+WSFC_HOME.  If it cannot find the location where WSF/C is installed it'll exit
+giving an error message.
 
 =item useSOAP
 
