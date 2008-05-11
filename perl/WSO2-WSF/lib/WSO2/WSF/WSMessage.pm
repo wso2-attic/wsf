@@ -10,9 +10,9 @@ sub new {
     my $this = ref( $class ) || $class;
     my $self = shift;		# options
 
-    # $self = {} unless( defined( $self ) );
+    $self = {} unless defined $self;
 
-    unless( defined( $self->{payload} ) ) {
+    unless( defined $self->{payload} ) {
 	die "ERROR:  Payload cannot be null";
     }
 
@@ -21,7 +21,7 @@ sub new {
 	die "ERROR:  Payload should be a string";
     }
 
-    if( defined( $self ) ) {
+    if( defined $self ) {
 	foreach my $k (keys (%{$self})) {
 	    $this->{$k} = $self->{$k};
 	}
