@@ -1,6 +1,5 @@
 use ExtUtils::MakeMaker;
-
 WriteMakefile (
-	'NAME' => 'WSO2::WSF',
+	'NAME' => 'WSO2::WSF::C',
 	'OPTIMIZE' => '-g',
 	);

@@ -15,13 +15,16 @@
 package WSO2::WSF::WSService;
 
 use WSO2::WSF::WSConfig;
-use WSO2::WSFC;
+use WSO2::WSF::WSRequest;
+use WSO2::WSF::WSFC;
 use Data::Dumper;
+use CGI;
 
 sub new {
     my $class = shift;
     my $self = {
-        _rh => shift,
+        -rh => shift,
+        -request => new WSO2::WSF::WSRequest ()
     };
     bless $self, $class;
     return $self;
@@ -31,7 +34,7 @@ sub new {
 sub test {
     my ($self) = @_;
     my ($value, $key);
-    my $operation = $self->{_rh};
+    my $operation = $self->{-rh};
     my $rh_op = $operation->{'operations'};
     while (($key, $value) = each (%$rh_op)){
         print "key value is $key and value is $value \n";
@@ -41,9 +44,13 @@ sub test {
 
 sub reply {
     my ($self) = @_;
-    print "invoking reply method"."\n";
+    my $request = $self->{-request};
+    my $worker = WSO2::WSF::WSFC::wsf_get_worker();
+    my $svc_info = WSO2::WSF::WSFC::wsf_svc_info_t->new ();
+    my $req_info = WSO2::WSF::WSFC::wsf_req_info_t->new ();
+    $request->populate;
+    WSO2::WSF::WSFC::wsf_svc_info_t_content_encoding_set();
 }
-
 
 
 1;
