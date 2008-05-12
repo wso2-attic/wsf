@@ -109,8 +109,8 @@ wsf_worker_get_bytes (const axutil_env_t* env,
 
 
 int
-wsf_worker_process_request (wsf_worker_t*   worker,
-                            axutil_env_t*   env,
+wsf_worker_process_request (wsf_worker_t* worker,
+                            axutil_env_t* env,
                             wsf_req_info_t* request,
                             wsf_svc_info_t* svc_info) 
 {
@@ -140,8 +140,9 @@ wsf_worker_process_request (wsf_worker_t*   worker,
 		return -1;
 
 	conf_ctx = worker->conf_ctx;
-	
     if (request->query_string) {
+
+	    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "query string %s", request->query_string);
         request_uri_with_query_string = AXIS2_MALLOC (env->allocator,
 			(strlen (request->request_uri) + 5 + strlen (request->query_string)));
         
@@ -159,6 +160,7 @@ wsf_worker_process_request (wsf_worker_t*   worker,
 	}
     
     req_url = axutil_url_to_external_form (url, env);
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "url %s",req_url);
 
 	if(url){
 		axutil_url_free(url, env);
@@ -172,6 +174,7 @@ wsf_worker_process_request (wsf_worker_t*   worker,
     }
 
     content_length = request->content_length;
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "content length %d",content_length);
     http_version = request->http_protocol;
 
     content_type = (axis2_char_t *) request->content_type;
@@ -184,6 +187,7 @@ wsf_worker_process_request (wsf_worker_t*   worker,
     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "Client HTTP version %s",
         http_version);
     encoding_header_value = request->content_encoding;
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "content type %s", encoding_header_value);
     out_desc = axis2_conf_get_transport_out (axis2_conf_ctx_get_conf 
         (worker->conf_ctx, env), env, AXIS2_TRANSPORT_ENUM_HTTP);
     in_desc = axis2_conf_get_transport_in (axis2_conf_ctx_get_conf 

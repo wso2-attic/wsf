@@ -4125,6 +4125,24 @@ XS(_wrap_wsf_worker_process_request) {
 }
 
 
+XS(_wrap_wsf_get_env) {
+  {
+    axutil_env_t *result = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 0) || (items > 0)) {
+      SWIG_croak("Usage: wsf_get_env();");
+    }
+    result = (axutil_env_t *)wsf_get_env();
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_axutil_env_t, 0 | 0); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
@@ -4280,6 +4298,7 @@ static swig_command_info swig_commands[] = {
 {"WSO2::WSF::Serverc::wsf_get_worker", _wrap_wsf_get_worker},
 {"WSO2::WSF::Serverc::wsf_worker_get_conf_ctx", _wrap_wsf_worker_get_conf_ctx},
 {"WSO2::WSF::Serverc::wsf_worker_process_request", _wrap_wsf_worker_process_request},
+{"WSO2::WSF::Serverc::wsf_get_env", _wrap_wsf_get_env},
 {0,0}
 };
 /* -----------------------------------------------------------------------------

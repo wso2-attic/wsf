@@ -56,3 +56,6 @@ wsf_worker_process_request (wsf_worker_t* worker,
                             axutil_env_t* env,
                             wsf_req_info_t* request,
                             wsf_svc_info_t* svc_info);
+
+axutil_env_t *
+wsf_get_env ();

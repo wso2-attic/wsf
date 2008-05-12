@@ -69,4 +69,11 @@ wsf_get_worker ()
     return worker;
 }
 
+axutil_env_t *
+wsf_get_env ()
+{
+    if (!env)
+        return NULL;
+    return env;
+}
 

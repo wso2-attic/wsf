@@ -48,6 +48,7 @@ sub test {
 sub reply {
     my ($self) = @_;
     my $request = $self->{-request};
+    my $env = WSO2::WSF::Server::wsf_get_env();
     my $worker = WSO2::WSF::Server::wsf_get_worker();
     my $svc_info = WSO2::WSF::Server::wsf_svc_info_t->new ();
     my $req_info = WSO2::WSF::Server::wsf_req_info_t->new ();
@@ -62,6 +63,9 @@ sub reply {
     WSO2::WSF::Serverc::wsf_req_info_t_request_method_set($req_info, $request->{-request_method});
 
     #populating svc_info struct
+    print "worker ".$worker." env ".$env."\n";
+    #invoking worker
+    WSO2::WSF::Serverc::wsf_worker_process_request($worker, $env, $req_info, $svc_info);
 }
 
 
