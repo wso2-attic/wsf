@@ -53,7 +53,7 @@ The following steps need to be taken to install and run WSF/C using source distr
       Run the wsclient in a new shell
 
         $ cd /your_path_to_wso2_wsfc/bin
-        $ ./wsclient --soap http://localhost:9090/axis2/services/echo < samples/wsclient/data/echo.xml
+        $ ./wsclient --soap http://localhost:9090/axis2/services/echo < ./samples/wsclient/data/echo.xml
 
       You can also run the sample shell scripts given for wsclient
 
