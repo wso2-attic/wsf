@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-<?php
 
 $scenario = $_POST["scenario"];
 $epr = $_POST["epr"];
