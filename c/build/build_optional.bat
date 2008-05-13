@@ -35,6 +35,8 @@ cd ..
 xcopy /E /Q /I /Y sandesha2\modules\sandesha2 .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\modules\sandesha2
 xcopy /E /Q /I /Y sandesha2\modules\sandesha2\sandesha2.lib  .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\lib\
 xcopy /E /Q /I /Y sandesha2\modules\sandesha2\sandesha2.dll  .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\lib\
+xcopy /E /Q /I /Y sandesha2\lib\sandesha2_client.lib  .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\lib\
+xcopy /E /Q /I /Y sandesha2\lib\sandesha2_client.dll  .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\lib\
 mkdir .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\bin\samples\sandesha2
 copy /Y sandesha2\bin\samples\sandesha2\*.exe .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\bin\samples\sandesha2
 xcopy /E /Q /I /Y sandesha2\services\RMSampleService .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\services\RMSampleService
