@@ -4,7 +4,7 @@ rem Build Apache Rampart/C
 if %1 == "no" goto build_sandesha2
 echo %1
 cd rampartc\build\win32
-nmake dist AUTOCONF=..\..\..\configure.in AXIS2_BIN_DIR=.\..\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32
+nmake install AUTOCONF=..\..\..\configure.in AXIS2_BIN_DIR=.\..\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32
 
 if not %ERRORLEVEL% EQU 0 goto rampart_error
 
