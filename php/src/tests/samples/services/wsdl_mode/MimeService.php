@@ -71,8 +71,6 @@ function setPerson($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type setPerson
     // NOTE: should return an object of type setPersonResponse
-
-    file_put_contents("/tmp/something", print_r($input, TRUE));
     $x =new setPersonResponse();
     $x->return = 5;
     return $x;

@@ -5,7 +5,6 @@ function myDemo($input) {
     // TODO: fill in the business logic
     // NOTE: $input is of type array of int
 
-    file_put_contents("/tmp/something", print_r($input, TRUE));
     $sum = 0;
     foreach($input as $in) {
         $sum += $in;
