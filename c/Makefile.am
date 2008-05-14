@@ -21,5 +21,5 @@ install-data-hook:
 	rm -rf `find $(samplesdir)/ -type f -name Makefile`
 	rm -rf `find $(samplesdir)/ -type d -name autom4te.cache`
 
-EXTRA_DIST=build_samples.sh config build.bat clean.bat docs CREDITS NOTICE examples LICENSE configure.in link_samples.sh link.sh build/build_optional.bat build/optional.mk build/init.bat build/versions.in
+EXTRA_DIST=build_samples.sh config build.bat clean.bat docs CREDITS NOTICE examples LICENSE configure.in link_samples.sh link.sh build/build_optional.bat build/optional.mk build/init.bat build/versions.in test
 
