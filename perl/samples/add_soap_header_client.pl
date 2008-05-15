@@ -2,7 +2,8 @@
 
 use WSO2::WSF;
 
-# This sample shows how to add custom SOAP headers
+# This sample shows how to add custom SOAP headers.
+# Assumes WSF/C is installed and axis2_http_server is listening on port 8585
 
 $payload =<<E;
 <ns1:echoString xmlns:ns1="http://ws.apache.org/axis2/c/samples">
@@ -19,16 +20,17 @@ my $version = new WSO2::WSF::WSHeader( {'name' => 'version',
 my $timereq = new WSO2::WSF::WSHeader( {'name' => 'timeRequestMade',
 					'data' => '13:20:00' } );
 
-my $capp = new WSO2::WSF::WSHeader( {'name' => 'CallingApplication',
-				     'ns' => 'http://SOAPHeaderDemonstration',
+my $capp = new WSO2::WSF::WSHeader( {'name'     => 'CallingApplication',
+				     'ns'       => 'http://SOAPHeaderDemonstration',
 				     'nsprefix' => 'MyPrefix',
-				     'data' => [$name, $version, $timereq] } );
+				     'data'     => [$name, $version, $timereq] } );
 
-my $client = new WSO2::WSF::WSClient( { 'wsfc_home'  => '/opt/wso2/wsf_c',
-	   	             		'to'           => 'http://localhost/axis2/services/echo',
-					'payload'     => $payload,
-					'inputHeaders' => [$capp]
-				      } );
+my $client = new WSO2::WSF::WSClient(
+    { 'wsfc_home'    => '/opt/wso2/wsf_c',
+      'to'           => 'http://localhost:8585/axis2/services/echo',
+      'payload'      => $payload,
+      'inputHeaders' => [$capp]
+    } );
 
 my $response = $client->request( { 'payload' => $payload } );
 

@@ -3,18 +3,19 @@
 use WSO2::WSF;
 
 # This sample tries to download an image from a service hosted with WSF/PHP
-# and assumes that you've installed and configured WSF/PHP in the specified
-# locations.  Please change them to suite your setup before running this
-# sample.
+# and assumes that you've installed and configured WSF/PHP and all the samples
+# can be accessed from http://localhost/samples.
 
 my $payload =<<E;
 <download />
 E
 
-my $client = new WSO2::WSF::WSClient( { 'to' => 'http://localhost/samples/mtom/mtom_download_service.php',
-					'wsfc_home' => '/opt/wso2/wsf_c',
-				        'useMTOM' => 'TRUE',
-				        'responseXOP' => 'TRUE' } );
+my $client = new WSO2::WSF::WSClient(
+    { 'to'        => 'http://localhost/samples/mtom/mtom_download_service.php',
+      'wsfc_home' => '/opt/wso2/wsf_c',
+      'useMTOM' => 'TRUE',
+      'responseXOP' => 'TRUE'
+    } );
 
 my $msg = new WSO2::WSF::WSMessage( { 'payload' => $payload } );
 

@@ -3,8 +3,8 @@
 use WSO2::WSF;
 
 # This sample upload an image to a service hosted with WSF/PHP assuming
-# you have installed WSF/PHP on your machine with the given URLs.
-# You need to change them before running this sample.
+# you have installed WSF/PHP on your machine and all the samples can be accessed from
+# http://localhost/samples
 
 my $payload =<<X;
 <ns1:upload xmlns:ns1="http://php.axis2.org/samples/mtom">
@@ -15,9 +15,10 @@ my $payload =<<X;
 </ns1:upload>
 X
 
-my $client = new WSO2::WSF::WSClient( { 'wsfc_home' => '/opt/wso2/wsf_c',
-				        'to' => 'http://localhost/samples/mtom/mtom_upload_service_base64.php',
-				        'useMTOM' => 'FALSE' } );
+my $client = new WSO2::WSF::WSClient(
+    { 'wsfc_home' => '/opt/wso2/wsf_c',
+      'to'        => 'http://localhost/samples/mtom/mtom_upload_service_base64.php',
+      'useMTOM'   => 'FALSE' } );
 
 open FILE, "< axis2.jpg";
 undef $/;

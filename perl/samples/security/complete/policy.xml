@@ -1,0 +1,64 @@
+<wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
+	<wsp:ExactlyOne>
+		<wsp:All>
+			
+			<sp:AsymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+				<wsp:Policy>
+					
+					<sp:InitiatorToken>
+						<wsp:Policy>
+							<sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+								<wsp:Policy>
+									<sp:WssX509V3Token10 />
+								</wsp:Policy>
+							</sp:X509Token>
+						</wsp:Policy>
+					</sp:InitiatorToken>
+					
+					<sp:RecipientToken>
+						<wsp:Policy>
+							<sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never">
+								<wsp:Policy>
+									<sp:WssX509V3Token10 />
+								</wsp:Policy>
+							</sp:X509Token>
+						</wsp:Policy>
+					</sp:RecipientToken>
+					
+					<sp:AlgorithmSuite>
+						<wsp:Policy>
+							<sp:Basic256Rsa15 />
+						</wsp:Policy>
+					</sp:AlgorithmSuite>
+					
+					<sp:Layout>
+						<wsp:Policy>
+							<sp:Lax />
+						</wsp:Policy>
+					</sp:Layout>
+					
+					<sp:IncludeTimestamp />
+					<sp:EncryptSignature />
+					<sp:OnlySignEntireHeadersAndBody />
+					
+				</wsp:Policy>
+			</sp:AsymmetricBinding>
+						
+			<sp:Wss10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+				<wsp:Policy>
+					<sp:MustSupportRefKeyIdentifier />					
+					<sp:MustSupportRefIssuerSerial />
+				</wsp:Policy>
+			</sp:Wss10>
+
+			<sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+				<sp:Body />
+			</sp:SignedParts>
+
+			<sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+				<sp:Body />
+			</sp:EncryptedParts>
+			
+		</wsp:All>
+	</wsp:ExactlyOne>
+</wsp:Policy>
