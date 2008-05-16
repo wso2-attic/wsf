@@ -1,5 +1,19 @@
 package WSO2::WSF::WSClient;
 
+# Copyright 2005,2006 WSO2, Inc. http://wso2.com
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 use 5.008008;
 # use strict;
 use warnings;
@@ -1093,15 +1107,38 @@ If this is set SOAP bindings will be used.  Otherwise REST style invocation
 will be used along with the method given by HTTPMethod option.  By default
 SOAP 1.2 message style will be used.
 
+=item useMTOM
+
+Valid options, 'TRUE', 'FALSE'. Indicates whether the attachments should be
+sent MTOM optimized or not. If 'TRUE', the attachments will be sent out of the
+SOAP message, optimized, with MIME headers in place. If 'FALSE', attachments
+will be sent within the SOAP payload, as base64 binary.
+
 =item HTTPMethod
 
 Specifies which HTTP method to use. Valid values are 'GET', 'get', 'POST' and
 'post'.  Defaults to 'POST'.
 
+=item responseXOP
+
+Controls whether XOP elements in a response with MTOM are resolved into the
+logically equivalent straight XML infoset or not. If 'TRUE', the member variable
+"attachments" of the message returned as a result of the calling request method
+would be set. If 'FALSE', the binary content will be present in the response
+payload in base64 format.
+
 =item useWSA
 
 Tell whether to use WS-Addressing.  Valid values are 'TRUE', 'FALSE', '1.0'
 and 'submission'.  If 'submission' is specified 'action' must be present.
+
+=item policy
+
+Should be a WSPolicy object.
+
+=item securityToken
+
+WSSecurityToken object which contain the security related options.
 
 =head1 METHODS
 
@@ -1124,7 +1161,7 @@ http://wso2.org/projects/wsf/perl
 
 =head1 AUTHOR
 
-Chintana Wilamuna, E<lt>chintana@wso2.comE<gt>
+WSO2 WSF/Perl Team
 
 =head1 COPYRIGHT AND LICENSE
 
