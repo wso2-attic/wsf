@@ -2,26 +2,71 @@
             Web Services Framework (Perl extension) - WSF/Perl
 	    --------------------------------------------------
 
+
 What it is?
 -----------
 
-WSF/Perl is Perl language bindings to WSO2 WSF/C.
+WSF/Perl is Perl language bindings for WSO2 WSF/C which can be accessed by
+visiting http://wso2.org/projects/wsf/c.  WSO2 WSF/C is a Web services
+framework supporting consuming and providing SOAP as well as REST style
+services.
+
+WSF/Perl supports SOAP 1.1, SOAP 1.2, SOAP MTOM, WS-Addressing, WS-Security,
+WS-SecurityPolicy, WS-ReliableMessaging and REST service invocation.
+
+
+The Latest Version
+------------------
+
+Details of the latest version can be found on the WSO2 WSF/Perl project page
+under http://wso2.org/projects/wsf/perl
+
 
 Installation
 ------------
 
-This extension is still in very early stage of development and is incomplete.
-Here's how you could play around with it if your're still interested.
+Before installing WSF/Perl you should install WSF/C which is available from
+http://wso2.org/projects/wsf/c.  If you install WSF/C to the standard location
+(which is /opt/wso2/wsf_c) you can proceed with the following commands to get
+WSF/Perl installed.  If you have installd WSF/C to a non standard folder
+setting WSFC_HOME environment variable will allow the WSF/Perl installer to
+find the correct headers and libraries and install itself.
 
-1.  Edit install.sh with your favourite text editor.
+$ perl Makefile.PL
+$ make
+$ sudo make install
 
-2.  Change LIB and give the folder that you want the Perl libraries to be
-    installed.  Since the extension is in its very early stages in the
-    development it's advisable not to install it to your standard folder
-    that Perl extensions are installed.
 
-3.  Change LIBS to point to the folder you installed WSF/C libraries.
+Licensing
+---------
 
-4.  Change INC to point to the folder you installed WSF/C headers.
+WSO2 WSF/Perl is released under Apache License Version 2.0.  Please see the file
+called LICENSE.
 
-5.  Execute install.sh script.
+
+Contacts
+--------
+
+   o If you want freely available support for using WSO2 WSF/Perl please
+     join the WSO2 WSF/Perl user community by subscribing to users mailing
+     list, wsf-perl-user@wso2.org by sending an email to 
+     'wsf-perl-user-request@wso2.org' with the subject 'subscribe'.
+
+   o If you have a bug report for WSO2 WSF/Perl please go log a Jira issue
+     at https://wso2.org/jira/browse/WSFPERL
+
+   o If you want to participate in actively developing WSO2 WSF/Perl please
+     subscribe to the 'wsf-c-dev@wso2.org' by sending and email to 
+     wsf-c-dev-request@wso2.org with the subject 'subscribe'.
+
+
+Support
+-----------
+
+WSO2 Inc. offers a variety of development and production support
+programs, ranging from Web-based support up through normal business
+hours, to premium 24x7 phone support.
+
+For additional support information please refer to http://wso2.com/support/ 
+
+
