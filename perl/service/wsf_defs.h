@@ -37,7 +37,7 @@ typedef struct wsf_svc_info
 {
     axis2_svc_t* svc;
     axis2_msg_recv_t* msg_recv;
-    struct wsf_worker_t* php_worker;
+    struct wsf_worker_t* perl_worker;
     axutil_hash_t* ops_to_actions;
     axutil_hash_t* ops_to_functions;
     axutil_array_list_t* modules_to_engage;
@@ -84,9 +84,9 @@ typedef struct wsf_req_info
     long content_length;
     char *content_type;
     char *request_method;
-    void *req_data;
+    char *req_data;
     int req_data_length;
-    void *result_payload;
+    char *result_payload;
     int result_length;
     char *transfer_encoding;
 	char *out_content_type;

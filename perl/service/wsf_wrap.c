@@ -1434,14 +1434,13 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_char swig_types[6]
 #define SWIGTYPE_p_int swig_types[7]
 #define SWIGTYPE_p_unsigned_int swig_types[8]
-#define SWIGTYPE_p_void swig_types[9]
-#define SWIGTYPE_p_ws_input_types swig_types[10]
-#define SWIGTYPE_p_ws_object_types swig_types[11]
-#define SWIGTYPE_p_wsf_req_info swig_types[12]
-#define SWIGTYPE_p_wsf_svc_info swig_types[13]
-#define SWIGTYPE_p_wsf_worker_t swig_types[14]
-static swig_type_info *swig_types[16];
-static swig_module_info swig_module = {swig_types, 15, 0, 0, 0, 0};
+#define SWIGTYPE_p_ws_input_types swig_types[9]
+#define SWIGTYPE_p_ws_object_types swig_types[10]
+#define SWIGTYPE_p_wsf_req_info swig_types[11]
+#define SWIGTYPE_p_wsf_svc_info swig_types[12]
+#define SWIGTYPE_p_wsf_worker_t swig_types[13]
+static swig_type_info *swig_types[15];
+static swig_module_info swig_module = {swig_types, 14, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1477,6 +1476,7 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
 #include "wsf.h"
 #include "wsf_xml_msg_recv.h"
 #include "wsf_worker.h"
+#include "wsf_defs.h"
 
 
 #include <limits.h>
@@ -1862,7 +1862,7 @@ XS(_wrap_wsf_svc_info_t_msg_recv_get) {
 }
 
 
-XS(_wrap_wsf_svc_info_t_php_worker_set) {
+XS(_wrap_wsf_svc_info_t_perl_worker_set) {
   {
     wsf_svc_info_t *arg1 = (wsf_svc_info_t *) 0 ;
     struct wsf_worker_t *arg2 = (struct wsf_worker_t *) 0 ;
@@ -1874,19 +1874,19 @@ XS(_wrap_wsf_svc_info_t_php_worker_set) {
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: wsf_svc_info_t_php_worker_set(self,php_worker);");
+      SWIG_croak("Usage: wsf_svc_info_t_perl_worker_set(self,perl_worker);");
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_wsf_svc_info, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "wsf_svc_info_t_php_worker_set" "', argument " "1"" of type '" "wsf_svc_info_t *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "wsf_svc_info_t_perl_worker_set" "', argument " "1"" of type '" "wsf_svc_info_t *""'"); 
     }
     arg1 = (wsf_svc_info_t *)(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_wsf_worker_t, SWIG_POINTER_DISOWN |  0 );
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "wsf_svc_info_t_php_worker_set" "', argument " "2"" of type '" "struct wsf_worker_t *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "wsf_svc_info_t_perl_worker_set" "', argument " "2"" of type '" "struct wsf_worker_t *""'"); 
     }
     arg2 = (struct wsf_worker_t *)(argp2);
-    if (arg1) (arg1)->php_worker = arg2;
+    if (arg1) (arg1)->perl_worker = arg2;
     
     
     
@@ -1900,7 +1900,7 @@ XS(_wrap_wsf_svc_info_t_php_worker_set) {
 }
 
 
-XS(_wrap_wsf_svc_info_t_php_worker_get) {
+XS(_wrap_wsf_svc_info_t_perl_worker_get) {
   {
     wsf_svc_info_t *arg1 = (wsf_svc_info_t *) 0 ;
     struct wsf_worker_t *result = 0 ;
@@ -1910,14 +1910,14 @@ XS(_wrap_wsf_svc_info_t_php_worker_get) {
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: wsf_svc_info_t_php_worker_get(self);");
+      SWIG_croak("Usage: wsf_svc_info_t_perl_worker_get(self);");
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_wsf_svc_info, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "wsf_svc_info_t_php_worker_get" "', argument " "1"" of type '" "wsf_svc_info_t *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "wsf_svc_info_t_perl_worker_get" "', argument " "1"" of type '" "wsf_svc_info_t *""'"); 
     }
     arg1 = (wsf_svc_info_t *)(argp1);
-    result = (struct wsf_worker_t *) ((arg1)->php_worker);
+    result = (struct wsf_worker_t *) ((arg1)->perl_worker);
     ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_wsf_worker_t, 0 | 0); argvi++ ;
     
     XSRETURN(argvi);
@@ -3363,10 +3363,12 @@ XS(_wrap_wsf_req_info_t_request_method_get) {
 XS(_wrap_wsf_req_info_t_req_data_set) {
   {
     wsf_req_info_t *arg1 = (wsf_req_info_t *) 0 ;
-    void *arg2 = (void *) 0 ;
+    char *arg2 = (char *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
     int argvi = 0;
     dXSARGS;
     
@@ -3378,19 +3380,25 @@ XS(_wrap_wsf_req_info_t_req_data_set) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "wsf_req_info_t_req_data_set" "', argument " "1"" of type '" "wsf_req_info_t *""'"); 
     }
     arg1 = (wsf_req_info_t *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2), 0, SWIG_POINTER_DISOWN);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "wsf_req_info_t_req_data_set" "', argument " "2"" of type '" "void *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "wsf_req_info_t_req_data_set" "', argument " "2"" of type '" "char *""'");
     }
-    if (arg1) (arg1)->req_data = arg2;
+    arg2 = (char *)(buf2);
+    if (arg1->req_data) free((char*)arg1->req_data);
+    if (arg2) {
+      size_t size = strlen((const char *)(arg2)) + 1;
+      arg1->req_data = (char *)(char *)memcpy((char *)malloc((size)*sizeof(char)), (const char *)(arg2), sizeof(char)*(size));
+    } else {
+      arg1->req_data = 0;
+    }
     
     
-    
-    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
     XSRETURN(argvi);
   fail:
     
-    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
     SWIG_croak_null();
   }
 }
@@ -3399,7 +3407,7 @@ XS(_wrap_wsf_req_info_t_req_data_set) {
 XS(_wrap_wsf_req_info_t_req_data_get) {
   {
     wsf_req_info_t *arg1 = (wsf_req_info_t *) 0 ;
-    void *result = 0 ;
+    char *result = 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
@@ -3413,8 +3421,8 @@ XS(_wrap_wsf_req_info_t_req_data_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "wsf_req_info_t_req_data_get" "', argument " "1"" of type '" "wsf_req_info_t *""'"); 
     }
     arg1 = (wsf_req_info_t *)(argp1);
-    result = (void *) ((arg1)->req_data);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_void, 0 | 0); argvi++ ;
+    result = (char *) ((arg1)->req_data);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -3493,10 +3501,12 @@ XS(_wrap_wsf_req_info_t_req_data_length_get) {
 XS(_wrap_wsf_req_info_t_result_payload_set) {
   {
     wsf_req_info_t *arg1 = (wsf_req_info_t *) 0 ;
-    void *arg2 = (void *) 0 ;
+    char *arg2 = (char *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
     int argvi = 0;
     dXSARGS;
     
@@ -3508,19 +3518,25 @@ XS(_wrap_wsf_req_info_t_result_payload_set) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "wsf_req_info_t_result_payload_set" "', argument " "1"" of type '" "wsf_req_info_t *""'"); 
     }
     arg1 = (wsf_req_info_t *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2), 0, SWIG_POINTER_DISOWN);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "wsf_req_info_t_result_payload_set" "', argument " "2"" of type '" "void *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "wsf_req_info_t_result_payload_set" "', argument " "2"" of type '" "char *""'");
     }
-    if (arg1) (arg1)->result_payload = arg2;
+    arg2 = (char *)(buf2);
+    if (arg1->result_payload) free((char*)arg1->result_payload);
+    if (arg2) {
+      size_t size = strlen((const char *)(arg2)) + 1;
+      arg1->result_payload = (char *)(char *)memcpy((char *)malloc((size)*sizeof(char)), (const char *)(arg2), sizeof(char)*(size));
+    } else {
+      arg1->result_payload = 0;
+    }
     
     
-    
-    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
     XSRETURN(argvi);
   fail:
     
-    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
     SWIG_croak_null();
   }
 }
@@ -3529,7 +3545,7 @@ XS(_wrap_wsf_req_info_t_result_payload_set) {
 XS(_wrap_wsf_req_info_t_result_payload_get) {
   {
     wsf_req_info_t *arg1 = (wsf_req_info_t *) 0 ;
-    void *result = 0 ;
+    char *result = 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
@@ -3543,8 +3559,8 @@ XS(_wrap_wsf_req_info_t_result_payload_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "wsf_req_info_t_result_payload_get" "', argument " "1"" of type '" "wsf_req_info_t *""'"); 
     }
     arg1 = (wsf_req_info_t *)(argp1);
-    result = (void *) ((arg1)->result_payload);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_void, 0 | 0); argvi++ ;
+    result = (char *) ((arg1)->result_payload);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -4155,7 +4171,6 @@ static swig_type_info _swigt__p_axutil_hash_t = {"_p_axutil_hash_t", "axutil_has
 static swig_type_info _swigt__p_char = {"_p_char", "char *|axis2_byte_t *|axis2_char_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_int = {"_p_int", "axis2_bool_t *|int *|axis2_scope_t *|axis2_status_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_int = {"_p_unsigned_int", "axis2_ssize_t *|unsigned int *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_void = {"_p_void", "void *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_ws_input_types = {"_p_ws_input_types", "ws_input_types_t *|enum ws_input_types *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_ws_object_types = {"_p_ws_object_types", "ws_object_types_t *|enum ws_object_types *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_wsf_req_info = {"_p_wsf_req_info", "struct wsf_req_info *|wsf_req_info_t *", 0, 0, (void*)"WSO2::WSF::Server::wsf_req_info_t", 0};
@@ -4172,7 +4187,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_char,
   &_swigt__p_int,
   &_swigt__p_unsigned_int,
-  &_swigt__p_void,
   &_swigt__p_ws_input_types,
   &_swigt__p_ws_object_types,
   &_swigt__p_wsf_req_info,
@@ -4189,7 +4203,6 @@ static swig_cast_info _swigc__p_axutil_hash_t[] = {  {&_swigt__p_axutil_hash_t, 
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_int[] = {  {&_swigt__p_unsigned_int, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_void[] = {  {&_swigt__p_void, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_ws_input_types[] = {  {&_swigt__p_ws_input_types, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_ws_object_types[] = {  {&_swigt__p_ws_object_types, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_wsf_req_info[] = {  {&_swigt__p_wsf_req_info, 0, 0, 0},{0, 0, 0, 0}};
@@ -4206,7 +4219,6 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_char,
   _swigc__p_int,
   _swigc__p_unsigned_int,
-  _swigc__p_void,
   _swigc__p_ws_input_types,
   _swigc__p_ws_object_types,
   _swigc__p_wsf_req_info,
@@ -4231,8 +4243,8 @@ static swig_command_info swig_commands[] = {
 {"WSO2::WSF::Serverc::wsf_svc_info_t_svc_get", _wrap_wsf_svc_info_t_svc_get},
 {"WSO2::WSF::Serverc::wsf_svc_info_t_msg_recv_set", _wrap_wsf_svc_info_t_msg_recv_set},
 {"WSO2::WSF::Serverc::wsf_svc_info_t_msg_recv_get", _wrap_wsf_svc_info_t_msg_recv_get},
-{"WSO2::WSF::Serverc::wsf_svc_info_t_php_worker_set", _wrap_wsf_svc_info_t_php_worker_set},
-{"WSO2::WSF::Serverc::wsf_svc_info_t_php_worker_get", _wrap_wsf_svc_info_t_php_worker_get},
+{"WSO2::WSF::Serverc::wsf_svc_info_t_perl_worker_set", _wrap_wsf_svc_info_t_perl_worker_set},
+{"WSO2::WSF::Serverc::wsf_svc_info_t_perl_worker_get", _wrap_wsf_svc_info_t_perl_worker_get},
 {"WSO2::WSF::Serverc::wsf_svc_info_t_ops_to_actions_set", _wrap_wsf_svc_info_t_ops_to_actions_set},
 {"WSO2::WSF::Serverc::wsf_svc_info_t_ops_to_actions_get", _wrap_wsf_svc_info_t_ops_to_actions_get},
 {"WSO2::WSF::Serverc::wsf_svc_info_t_ops_to_functions_set", _wrap_wsf_svc_info_t_ops_to_functions_set},

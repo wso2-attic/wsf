@@ -140,6 +140,24 @@ wsf_worker_process_request (wsf_worker_t* worker,
 		return -1;
 
 	conf_ctx = worker->conf_ctx;
+
+    if (svc_info->ops_to_functions)
+    {
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "have ops to function hash");
+        axutil_hash_t *hashop = svc_info->ops_to_functions;
+        axutil_hash_index_t *hash_index = NULL;
+        const void *key = NULL;
+        void *value = NULL;
+        for (hash_index = axutil_hash_first(hashop, env);
+             hash_index; hash_index = axutil_hash_next(env, hash_index))
+        {
+            axutil_hash_this(hash_index, &key, NULL, &value);
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "hash key %s and value %s", key, value);
+            value = NULL;
+            key = NULL;
+        }
+    }
+
     if (request->query_string) {
 
 	    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "query string %s", request->query_string);

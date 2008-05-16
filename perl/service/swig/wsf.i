@@ -4,6 +4,7 @@
 #include "wsf.h"
 #include "wsf_xml_msg_recv.h"
 #include "wsf_worker.h"
+#include "wsf_defs.h"
 %}
 
 %include "cpointer.i"

@@ -63,6 +63,7 @@ sub populate {
     $self->{-server_protocol} = $cgi->server_protocol;
     $self->{-param} = $cgi->param;
     $self->{-url_rel} = $cgi->url(-relative => 1);
+    $self->{-url_abs} = $cgi->url(-absolute => 1);
     $self->{-query_string} = $ENV{'QUERY_STRING'};
     return 1;
 }

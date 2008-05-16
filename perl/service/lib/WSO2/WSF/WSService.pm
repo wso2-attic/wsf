@@ -15,6 +15,7 @@
 package WSO2::WSF::WSService;
 
 use WSO2::WSF::WSConfig;
+use WSO2::WSF::C;
 use WSO2::WSF::WSRequest;
 use WSO2::WSF::Server;
 use Data::Dumper;
@@ -24,11 +25,34 @@ sub new {
     my $class = shift;
     my $self = {
         -rh => shift,
-        -request => new WSO2::WSF::WSRequest ()
+        -request => new WSO2::WSF::WSRequest (),
+        -svc_info => WSO2::WSF::Server::wsf_svc_info_t->new (),
+        -env => WSO2::WSF::Server::wsf_get_env(),
+        -worker => WSO2::WSF::Server::wsf_get_worker()
     };
+    my $env = $self->{-env};
     my $request = $self->{-request};
+    my $operation = $self->{-rh};
+
+    #$request populate method is used to populate $request object with
+    #information in CGI.
     $request->populate;
 
+    my $h_ops_to_function = WSO2::WSF::C::axutil_hash_make($env);
+    my $h_ops_to_action = WSO2::WSF::C::axutil_hash_make($env);
+
+
+    my $rh_op = $operation->{'operations'};
+    foreach (keys %$rh_op){
+        WSO2::WSF::C::axutil_hash_set($h_ops_to_function, $_, -1, $rh_op->{$_});
+    }
+    #populating svc_info
+    WSO2::WSF::Serverc::wsf_svc_info_t_ops_to_functions_set($svc_info, $h_ops_to_function);
+    WSO2::WSF::Serverc::wsf_svc_info_t_ops_to_actions_set($svc_info, $h_ops_to_function);
+
+    print $request->{-url_abs}."\n";
+    my $xx = $request->{-url_abs};
+    print $xx."\n";
     bless $self, $class;
     return $self;
 }
@@ -47,14 +71,20 @@ sub test {
 
 sub reply {
     my ($self) = @_;
+
+    #get global env and worker
+    my $env = $self->{-env};
+    my $worker = $self->{-worker};
     my $request = $self->{-request};
-    my $env = WSO2::WSF::Server::wsf_get_env();
-    my $worker = WSO2::WSF::Server::wsf_get_worker();
-    my $svc_info = WSO2::WSF::Server::wsf_svc_info_t->new ();
+    my $svc_info = $self->{-svc_info};
+
+
+    #request infor structure
     my $req_info = WSO2::WSF::Server::wsf_req_info_t->new ();
 
     #populating wsf_request_info structure
     WSO2::WSF::Serverc::wsf_req_info_t_content_encoding_set($req_info, $request->{-content_type});
+    WSO2::WSF::Serverc::wsf_req_info_t_content_length_set($req_info, $request->{-content_length});
     WSO2::WSF::Serverc::wsf_req_info_t_svr_name_set($req_info, $request->{-server_name});
     WSO2::WSF::Serverc::wsf_req_info_t_svr_port_set($req_info, $request->{-server_port});
     WSO2::WSF::Serverc::wsf_req_info_t_http_protocol_set($req_info, $request->{-server_protocol});
@@ -64,6 +94,7 @@ sub reply {
 
     #populating svc_info struct
     print "worker ".$worker." env ".$env."\n";
+
     #invoking worker
     WSO2::WSF::Serverc::wsf_worker_process_request($worker, $env, $req_info, $svc_info);
 }
