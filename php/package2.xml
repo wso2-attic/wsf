@@ -38,7 +38,7 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
     <active>yes</active>
 </lead>
 
-<date>2008-05-12</date>
+<date>2008-05-16</date>
 <version>
     <release>1.3.0</release>
     <api>1.3.0</api>
@@ -85,6 +85,7 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
    <dir name="scripts" baseinstalldir="wso2_wsf_php">
        <file name="wsf.php" role="php"/>
        <file name="wsf_wsdl.php" role="php"/>
+       <file name="wsdl2php.php" role="php"/>
         <dir name="wsdl">
             <file name="WS_WSDL_Binding.php" role="php"/>
             <file name="WS_WSDL_Consts.php" role="php"/>
@@ -110,6 +111,22 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
                 <file name="wsdl11to20.xsl10.xsl" role="php"/>
                  <file name="formatxml.xslt" role="php"/>
                 <file name="wsdl2sig.xslt" role="php"/>
+            </dir>
+        </dir>
+        <dir name="wsdl2php">
+            <file name="wsf_class_writer.php" role="php"/>
+            <file name="wsf_help.php" role="php"/>
+            <file name="wsf_utils.php" role="php"/>
+        </dir>
+        <dir name="wso2">
+            <dir name="amazon">
+                <file name="AmazonClient.php" role="php"/>
+            </dir>
+            <dir name="flickr">
+                <file name="FlickrClient.php" role="php"/>
+            </dir>
+            <dir name="yahoo">
+                <file name="YahooClient.php" role="php"/>
             </dir>
         </dir>
    </dir>
