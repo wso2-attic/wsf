@@ -107,6 +107,21 @@ be generated give an array of WSHeader objects.
                                       'data' => [ $name, $age ]
                                     } );
 
+=item mustUnderstand
+
+Can contain either 'TRUE' or 'FALSE' values.  Specifys whether to add
+mustUnderstand attribute to the Soap Header or not.
+
+=item role
+
+Can either be 1, 2 or 3.
+  1 - This will set the role to none, meaning if there are intermediary
+      SOAP nodes they will not process the header.
+  2 - This will set the role to next, meaning the next SOAP node to
+      receive the header must process it.
+  3 - This will set the role to ultimate receiver, meaning the last
+      SOAP node to receive the SOAP header will process it.
+
 =head1 SEE ALSO
 
 Look at WSO2::WSF::WSClient to see how to pass a WSHeader and create a custom
