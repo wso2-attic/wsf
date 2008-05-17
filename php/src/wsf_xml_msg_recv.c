@@ -457,6 +457,7 @@ wsf_xml_msg_recv_invoke_mixed (
     axiom_soap_envelope_t *soap_envelope = NULL;
     axiom_soap_body_t *soap_body = NULL;
     axiom_node_t *soap_body_node = NULL;
+    axiom_node_t *payload_node = NULL;
     char *in_msg_body_string = NULL;
     char *operation_name = NULL;
     axutil_hash_index_t * hi = NULL;
@@ -470,10 +471,18 @@ wsf_xml_msg_recv_invoke_mixed (
 
     zval *class_args;
     zval class_args_val;
+    
+    zval *cid2str = NULL;
+    zval *cid2contentType = NULL;
 
+	int use_mtom = AXIS2_TRUE;
+	int enable_swa = AXIS2_FALSE;
+    
     if (!in_msg_ctx || !function_name)
 		return NULL;
 
+    use_mtom = svc_info->use_mtom;
+    enable_swa = svc_info->enable_swa;
 
     soap_envelope = axis2_msg_ctx_get_soap_envelope (in_msg_ctx, env);
     if(!soap_envelope){
@@ -494,8 +503,24 @@ wsf_xml_msg_recv_invoke_mixed (
                          "[wsf_wsdl] soap body base node not found");
 		return NULL;
     }
+    payload_node = axiom_node_get_first_child(soap_body_node, env);
+    if(!payload_node) {
+        return NULL;
+    }
     soap_env_node = axiom_soap_envelope_get_base_node(soap_envelope, env);
-    in_msg_body_string = wsf_util_serialize_om(env, soap_env_node);
+
+    MAKE_STD_ZVAL (cid2str);
+    MAKE_STD_ZVAL (cid2contentType);
+
+    array_init (cid2str);
+    array_init (cid2contentType);
+
+    /*
+     * call wsf_util_get_attachments_form_soap_envelope(env, soap_envelope, cid2str, cid2contentType TSRMLS_CC);
+     */
+    wsf_util_get_attachments_form_soap_envelope(env, soap_envelope, cid2str, cid2contentType TSRMLS_CC);
+    
+    in_msg_body_string = wsf_util_serialize_om(env, payload_node);
     if(in_msg_body_string){
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                      "[wsf_wsdl]Input soap body is \t %s \n", in_msg_body_string);
@@ -585,6 +610,8 @@ wsf_xml_msg_recv_invoke_mixed (
     add_assoc_string(param_array, "payload_string", in_msg_body_string, 1);
     add_assoc_string(param_array, "operation_name", operation_name, 1);
     add_assoc_string(param_array, "function_name", function_name, 1);
+    add_assoc_bool(param_array, "useMTOM", use_mtom);
+
     if(class_name)
     {
         add_assoc_string(param_array, "class_name", class_name, 1);
@@ -602,6 +629,8 @@ wsf_xml_msg_recv_invoke_mixed (
         add_assoc_string(param_array, WS_PORT_NAME, svc_info->port_name, 1);
     }
 
+    add_assoc_zval(param_array, "attachments", cid2str);
+    add_assoc_zval(param_array, "cid2contentType", cid2contentType);
 
     add_assoc_zval(param_array, "class_args", class_args);
 
@@ -611,11 +640,41 @@ wsf_xml_msg_recv_invoke_mixed (
         
     if (call_user_function (EG (function_table), (zval **) NULL,
                             &request_function, &retval, 1, params TSRMLS_CC) == SUCCESS ){
-        if(Z_TYPE_P(&retval) == IS_STRING){
-            res_payload_str = Z_STRVAL_P(&retval);
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                             "[wsf_wsdl]return payload string is\t %s", res_payload_str);
+        if(Z_TYPE_P(&retval) == IS_ARRAY){
+    
+            HashTable *ht_return = NULL;
+            zval **tmp = NULL;
             
+            ht_return = Z_ARRVAL_P(&retval);
+
+            if(zend_hash_find(ht_return, WS_WSDL_RES_PAYLOAD, 
+                              sizeof(WS_WSDL_RES_PAYLOAD),
+                              (void **)&tmp) == SUCCESS && 
+                Z_TYPE_PP(tmp) == IS_STRING ){
+                res_payload_str = Z_STRVAL_PP(tmp);
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                             "[wsf_wsdl]return payload string is\t %s", res_payload_str);
+    
+                if(!res_payload_str) {
+                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                                     "[wsf_wsdl] response payload string not found");
+                }
+                else {
+                    res_om_node = wsf_util_deserialize_buffer(env, res_payload_str);
+
+                    if(zend_hash_find(ht_return, WS_WSDL_ATTACHMENT_MAP,
+                                    sizeof(WS_WSDL_ATTACHMENT_MAP),
+                                    (void**)&tmp) == SUCCESS &&
+                       Z_TYPE_PP(tmp) == IS_ARRAY) {
+                        int enable_mtom = AXIS2_TRUE;
+                        int enable_swa = AXIS2_FALSE;
+                        HashTable *ht_attachments = Z_ARRVAL_PP(tmp);
+    
+                        wsf_util_set_attachments_with_cids(env, enable_mtom, enable_swa,
+                                res_om_node, ht_attachments, "application/octet-stream");
+                    }
+                }
+            }
         }
 
         if (EG(exception) && Z_TYPE_P(EG(exception)) == IS_OBJECT &&
@@ -626,19 +685,8 @@ wsf_xml_msg_recv_invoke_mixed (
 
         }
     }
-    
-    if(!res_payload_str) {
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                         "[wsf_wsdl] response payload string not found");
-    }
-    else {
-        res_om_node = wsf_util_deserialize_buffer(env, res_payload_str);
-    }
         
-    if(res_om_node)
-        return res_om_node; 
-    else
-        return NULL;
+    return res_om_node; 
 }
 
 static axiom_node_t *

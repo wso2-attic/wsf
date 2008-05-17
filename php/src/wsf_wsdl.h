@@ -72,6 +72,8 @@ void wsf_wsdl_set_sig_model(char* wsdl_path,
 #define WS_WSDL_POLICY_NODE     "policy_node"
 #define WS_WSDL_RES_SIG_NODEL   "response_sig_model"
 #define WS_WSDL_ARGS            "args"
+#define WS_WSDL_ATTACHMENT_MAP  "attachment_map"
+#define WS_WSDL_RES_PAYLOAD     "response_payload"
 
 #define WS_WSDL_OP_POLICY       "operation_policy"
 #define WS_WSDL_IN_POLICY       "input_policy"

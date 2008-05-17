@@ -840,6 +840,7 @@ wsf_util_set_attachments_with_cids (
                 axiom_namespace_t *ns = NULL;
                 axis2_char_t *ns_uri = NULL;
                 axis2_char_t *ele_localname = NULL;
+
                 ele_localname = axiom_element_get_localname (ele, env);
                 if (ele_localname
                     && axutil_strcmp (ele_localname, "Include") == 0) {
@@ -847,18 +848,50 @@ wsf_util_set_attachments_with_cids (
                     if (ns && (ns_uri = axiom_namespace_get_uri (ns, env)) &&
                         axutil_strcmp (ns_uri,
                             "http://www.w3.org/2004/08/xop/include") == 0) {
+
                         axis2_char_t *cnt_type = NULL;
                         /* found a matching xop include element */
                         axis2_char_t *cid = NULL;
                         axis2_char_t *pos = NULL;
                         axis2_char_t *id = NULL;
                         zval **tmp = NULL;
+                        axutil_hash_t *attribute_hash = NULL;
+                        axiom_attribute_t *content_type_attri = NULL;
+
                         /** look for content type in parent */
-                        cnt_type =
-                            axiom_element_get_attribute_value_by_name
-                            (payload_element, env, "xmlmime:contentType");
-                        if (!cnt_type)
+                        attribute_hash = axiom_element_get_all_attributes(payload_element, env);
+
+                        if(attribute_hash)
+                        {
+                             axutil_hash_index_t *hi;
+                             void *val;
+                             const void *key;
+                        
+                             for (hi = axutil_hash_first(attribute_hash, env); hi; hi = axutil_hash_next(env, hi))
+                             {
+                                 axutil_hash_this(hi, &key, NULL, &val);
+                        
+                                 if(strstr((axis2_char_t*)key, "contentType|http://www.w3.org/2004/06/xmlmime")
+                                    ||strstr((axis2_char_t*)key, "contentType|http://www.w3.org/2005/05/xmlmime"))
+                    
+                                 {
+                                     content_type_attri = (axiom_attribute_t*)val;
+                                     break;
+                                 }
+                             }
+                        }
+
+                        if(content_type_attri) {
+                            cnt_type = axiom_attribute_get_value(content_type_attri, env);
+                        }
+                        else {
+                            cnt_type = axiom_element_get_attribute_value_by_name
+                                    (payload_element, env, "contentType");
+                            
+                        }
+                        if (!cnt_type) {
                             cnt_type = default_cnt_type;
+                        }
 
                         id = axiom_element_get_attribute_value_by_name (ele,
                             env, "href");
