@@ -30,9 +30,6 @@
 #include <sandesha2_client.h>
 #endif
 
-xmlNodePtr wsf_get_xml_node (
-    zval * node TSRMLS_DC);
-
 axiom_xml_reader_t *wsf_client_get_reader_from_zval (
     zval ** param,
     axutil_env_t * env TSRMLS_DC);

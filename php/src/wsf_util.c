@@ -31,33 +31,6 @@
 #include <axiom_util.h>
 #include <axis2_http_client.h>
 
-xmlNodePtr
-wsf_util_get_xml_node (
-    zval * node TSRMLS_DC)
-{
-    php_libxml_node_object *object;
-    xmlNodePtr nodep;
-
-    object =
-        (php_libxml_node_object *) zend_object_store_get_object (node
-        TSRMLS_CC);
-    nodep = php_libxml_import_node (node TSRMLS_CC);
-    if (!nodep) {
-        return NULL;
-    }
-    if (nodep->doc == NULL) {
-        php_error_docref (NULL TSRMLS_CC, E_WARNING,
-            "Imported Node must have \
-							associated Document");
-        return NULL;
-    }
-    if (nodep->type == XML_DOCUMENT_NODE
-        || nodep->type == XML_HTML_DOCUMENT_NODE) {
-        nodep = xmlDocGetRootElement ((xmlDocPtr) nodep);
-    }
-    return nodep;
-}
-
 char *
 wsf_util_read_file_to_buffer (
     char *filename TSRMLS_DC)
@@ -1222,22 +1195,6 @@ wsf_util_serialize_om (
     return new_buffer;
 }
 
-xmlDocPtr
-wsf_util_serialize_om_to_doc (
-    const axutil_env_t * env,
-    axiom_node_t * ret_node)
-{
-    axiom_xml_writer_t *writer = NULL;
-    axiom_output_t *om_output = NULL;
-    xmlDocPtr doc = NULL;
-
-    writer = axiom_xml_writer_create_for_memory (env,
-        NULL, AXIS2_TRUE, 0, AXIS2_XML_PARSER_TYPE_DOC);
-    om_output = axiom_output_create (env, writer);
-    axiom_node_serialize (ret_node, env, om_output);
-    doc = (xmlDocPtr) axiom_xml_writer_get_xml (writer, env);
-    return doc;
-}
 
 axiom_node_t *
 wsf_util_deserialize_buffer (

@@ -24,7 +24,6 @@
 #include <axis2_options.h>
 #include "wsf_common.h"
 #include <axiom_soap_body.h>
-#include "ext/libxml/php_libxml.h"
 
 axiom_node_t *wsf_util_read_payload (
     axiom_xml_reader_t * reader,
@@ -91,13 +90,6 @@ int wsf_util_get_attachments (
 char *wsf_util_serialize_om (
     const axutil_env_t * env,
     axiom_node_t * ret_node);
-
-xmlDocPtr wsf_util_serialize_om_to_doc (
-    const axutil_env_t * env,
-    axiom_node_t * ret_node);
-
-xmlNodePtr wsf_util_get_xml_node (
-    zval * node TSRMLS_DC);
 
 axutil_env_t *wsf_env_create (
     axis2_char_t * logpath);
