@@ -32,6 +32,7 @@ define("WSF_REQUEST_PAYLOAD", "request_payload");
 define("WSF_POLICY_NODE", "policy_node");
 define("WSF_SERVICE_NAME", "serviceName");
 define("WSF_PORT_NAME", "portName");
+define("WSF_USE_MTOM", "useMTOM");
 
 define("WSF_DEFINITION", "definitions");
 define("WSF_DESCRIPTION", "description");
@@ -128,6 +129,21 @@ define("WSF_SIMPLE_CONTENT", "simpleContent");
 
 define("WSF_XSD_ANYTYPE", "anyType");
 define("WSF_VALUE", "value");
+
+define("WSF_XSD_BASE64", "base64Binary");
+define("WSF_POSTFIX_BASE64", "_encoded");
+define("WSF_CONTENT_TYPE", "contentType");
+
+define("WSF_DEFAULT_CONTENT_TYPE", "application/octet-stream");
+define("WSF_MIME_NAMESPACE_PREFIX", "xmlmime");
+define("WSF_MIME_NAMESPACE_URI", "http://www.w3.org/2004/06/xmlmime");
+define("WSF_XOP_NAMESPACE_PREFIX", "xop");
+define("WSF_XOP_NAMESPACE_URI", "http://www.w3.org/2004/08/xop/include");
+define("WSF_MTOM_INCLUDE_TAG", "Include");
+define("WSF_HREF_PREFIX", "cid:");
+define("WSF_HREF", "href");
+define("WSF_ATTACHMENT_MAP", "attachment_map");
+define("WSF_RESPONSE_PAYLOAD", "response_payload");
 
 // log level definition
 

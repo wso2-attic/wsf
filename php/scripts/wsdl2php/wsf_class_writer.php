@@ -157,12 +157,37 @@ function wsf_write_content_model($parent_node, &$child_array) {
                 $param_type = implode("/", $union_type_array);
             }
 
+            // is array type exist..
             $array_type = "";
-            if (($max_occurs != null && $max_occurs != "1") || $is_list)
+            if (($max_occurs != null && $max_occurs != "1") || $is_list) {
                 $array_type = "array[$min_occurs, $max_occurs] of ";
-
+            }
+            
+            // is object of exist..
+            $object_of = "";
+            if (($param_attr && $param_attr->getNamedItem(WSF_WSDL_SIMPLE) && 
+                  $param_attr->getNamedItem(WSF_WSDL_SIMPLE)->value == 'no') ||
+                    ($param_attr->getNamedItem(WSF_CONTENT_MODEL) && 
+                     $param_attr->getNamedItem(WSF_CONTENT_MODEL)->value == WSF_SIMPLE_CONTENT)) {
+                $object_of = "(object)";
+            }
             // write public members of the class 
-            $code = $code . "    public $" . $param_name . "; // " . $array_type . $param_type . "\n";
+           
+            // we generate the code for base 64 type differently
+            if($object_of == "" && $param_type == WSF_XSD_BASE64) {
+                
+                $code .= "\n";
+                $code .= "    // You need to set only one from the following two vars\n";
+
+                $code = $code . "    public $" . $param_name . "; // " . $array_type . "Plain Binary" . "\n";
+                $code = $code . "    public $" . $param_name .WSF_POSTFIX_BASE64. "; // " . $array_type . $param_type . "\n";
+
+                $code .= "\n";
+            }
+            else {
+                $code = $code . "    public $" . $param_name . "; // " . $array_type . $object_of .$param_type . "\n";
+            }
+
             // if it is not s simple type, we have to keep track of it to write a corresponding class
             if (($param_attr && $param_attr->getNamedItem(WSF_WSDL_SIMPLE) && 
                   $param_attr->getNamedItem(WSF_WSDL_SIMPLE)->value == 'no') ||
@@ -184,10 +209,22 @@ function wsf_write_content_model($parent_node, &$child_array) {
     if($content_model == WSF_SIMPLE_CONTENT) {
         $extension_type = $parent_node->attributes->getNamedItem(WSF_EXTENSION)->value;
         $param_name = $parent_node->attributes->getNamedItem(WSF_NAME)->value;
+        $code .= "\n";
         $code .= "    // The \"value\" represents the element '$param_name' value..\n";
         $ele_name = WSF_SIMPLE_CONTENT_VALUE;
         $code .= wsf_comment_on_simple_type($parent_node, $ele_name, $extension_type);
-        $code = $code . "    public $" . $ele_name . "; // " . $extension_type . "\n";
+        
+        // we generate the code for base 64 type differently
+        if($extension_type == WSF_XSD_BASE64) { // this should be anyway a simple type..
+            $code .= "\n";
+            $code .= "    // You need to set only one from the following two vars\n";
+            $code = $code . "    public $" . $ele_name . "; // " . "Plain Binary" . "\n";
+            $code = $code . "    public $" . $ele_name . WSF_POSTFIX_BASE64 . "; // " . $extension_type . "\n";
+            $code .= "\n";
+        }
+        else {
+            $code = $code . "    public $" . $ele_name . "; // " . $extension_type . "\n";
+        }
     }
 
     return $code;

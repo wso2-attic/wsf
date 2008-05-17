@@ -40,7 +40,8 @@
  *
  * @return the parse tree
  */
-function wsf_parse_payload_for_array(DomNode $payload, DomNode $sig_node) {
+function wsf_parse_payload_for_array(DomNode $payload, DomNode $sig_node,
+                    $cid2cont_type, $cid2attachments) {
 
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "Loading in to parsing array");
 
@@ -60,7 +61,8 @@ function wsf_parse_payload_for_array(DomNode $payload, DomNode $sig_node) {
         //again simple content should parsed differently
         if($sig_node && $sig_node->attributes->getNamedItem(WSF_CONTENT_MODEL) &&
                 $sig_node->attributes->getNamedItem(WSF_CONTENT_MODEL)->value == WSF_SIMPLE_CONTENT) {
-            $parse_tree = wsf_infer_content_model($payload, $sig_node, NULL);
+            $parse_tree = wsf_infer_content_model($payload, $sig_node, NULL,
+                    $cid2cont_type, $cid2attachments);
             $attr_parse_tree = wsf_infer_attributes($payload, $sig_node);
             $parse_tree = array_merge($parse_tree, $attr_parse_tree);
         }
@@ -78,7 +80,8 @@ function wsf_parse_payload_for_array(DomNode $payload, DomNode $sig_node) {
             }
 
             /* check the other content model */
-            $content_parse_tree = wsf_infer_content_model($current_child, $sig_node, NULL);
+            $content_parse_tree = wsf_infer_content_model($current_child, $sig_node, NULL,
+                        $cid2cont_type, $cid2attachments);
 
             $parse_tree = array_merge($content_parse_tree, $parse_tree);
         } 
@@ -91,7 +94,8 @@ function wsf_parse_payload_for_array(DomNode $payload, DomNode $sig_node) {
         //  handle simple content extension seperatly
         if($the_only_node->attributes->getNamedItem(WSF_CONTENT_MODEL) &&
                 $the_only_node->attributes->getNamedItem(WSF_CONTENT_MODEL)->value == WSF_SIMPLE_CONTENT) {
-            $parse_tree = wsf_infer_content_model($payload, $the_only_child, NULL);
+            $parse_tree = wsf_infer_content_model($payload, $the_only_child, NULL,
+                            $cid2cont_type, $cid2attachments);
             $attr_parse_tree = wsf_infer_attributes($payload, $the_only_child);
             $parse_tree = array_merge($parse_tree, $attr_parse_tree);
         }
@@ -158,7 +162,8 @@ function wsf_parse_payload_for_array(DomNode $payload, DomNode $sig_node) {
  * @param $element_type element name under which the parsing happen
  * @return the parsed result objects
  */
-function wsf_parse_payload_for_class_map(DomNode $payload, DomNode $sig_node, $element_type, $classmap) {
+function wsf_parse_payload_for_class_map(DomNode $payload, DomNode $sig_node, $element_type, $classmap,
+                    $cid2cont_type, $cid2attachments) {
 
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "Loading in to parsing classmap");
 
@@ -209,7 +214,8 @@ function wsf_parse_payload_for_class_map(DomNode $payload, DomNode $sig_node, $e
         //again simple content should parsed differently
         if($sig_node && $sig_node->attributes->getNamedItem(WSF_CONTENT_MODEL) &&
                 $sig_node->attributes->getNamedItem(WSF_CONTENT_MODEL)->value == WSF_SIMPLE_CONTENT) {
-            $parse_tree = wsf_infer_content_model($payload, $sig_node, $classmap);
+            $parse_tree = wsf_infer_content_model($payload, $sig_node, $classmap,
+                            $cid2cont_type, $cid2attachments);
             $attr_parse_tree = wsf_infer_attributes($payload, $sig_node);
             $parse_tree = array_merge($parse_tree, $attr_parse_tree);
         }
@@ -222,7 +228,8 @@ function wsf_parse_payload_for_class_map(DomNode $payload, DomNode $sig_node, $e
                 $current_child = $current_child->nextSibling;
             }
             if($current_child != NULL) {
-                $content_parse_tree = wsf_infer_content_model($current_child, $sig_node, $classmap);
+                $content_parse_tree = wsf_infer_content_model($current_child, $sig_node, $classmap,
+                                $cid2cont_type, $cid2attachments);
                 $parse_tree = array_merge($content_parse_tree, $parse_tree);
             }
         }
@@ -243,7 +250,8 @@ function wsf_parse_payload_for_class_map(DomNode $payload, DomNode $sig_node, $e
         //  handle simple content extension seperatly
         if($the_only_node && $the_only_node->attributes->getNamedItem(WSF_CONTENT_MODEL) &&
                 $the_only_node->attributes->getNamedItem(WSF_CONTENT_MODEL)->value == WSF_SIMPLE_CONTENT) {
-            $parse_tree = wsf_infer_content_model($payload, $the_only_node, $classmap);
+            $parse_tree = wsf_infer_content_model($payload, $the_only_node, $classmap,
+                            $cid2cont_type, $cid2attachments);
             $attr_parse_tree = wsf_infer_attributes($payload, $the_only_node);
             $parse_tree = array_merge($parse_tree, $attr_parse_tree);
 
@@ -431,7 +439,8 @@ function wsf_parse_payload_for_unknown_class_map(DomNode $current_node, $element
  * @return the result simple type value.
  */
 
-function wsf_deserialize_simple_types(&$current_child, DomNode $sig_param_node, $classmap) {
+function wsf_deserialize_simple_types(&$current_child, DomNode $sig_param_node, $classmap,
+                    $cid2cont_type, $cid2attachments) {
 
     $ret_val = NULL;
     $target_namespace = NULL;
@@ -473,6 +482,7 @@ function wsf_deserialize_simple_types(&$current_child, DomNode $sig_param_node, 
          $is_list = TRUE;
     }
 
+
     if($sig_param_attris->getNamedItem(WSF_CONTENT_MODEL)) {
         $content_model = $sig_param_attris->getNamedItem(WSF_CONTENT_MODEL)->value;
     }
@@ -481,12 +491,31 @@ function wsf_deserialize_simple_types(&$current_child, DomNode $sig_param_node, 
         $i = 0;
         $tmp_array = array();
         while($current_child !== NULL && $current_child->localName == $param_name) {
+
+            //modify the mtom node to keep only the cid
+            if($param_type == WSF_XSD_BASE64) {
+                $include_node = $current_child->firstChild;
+                while($include_node && $include_node->nodeType != XML_ELEMENT_NODE) {
+                    $include_node = $include_node->nextSibling;
+                }
+                if($include_node) {
+                    if($include_node->localName == "Include") {
+                        $href = $include_node->getAttribute("href");
+                        $cid = substr($href, 4);
+                        $current_child->removeChild($include_node);
+
+                        $current_child->nodeValue = $cid;
+                    }
+                }
+            }
             if($content_model == WSF_SIMPLE_CONTENT) {
                 if($classmap) {
-                    $converted_value = wsf_parse_payload_for_class_map($current_child, $sig_param_node, $param_type, $classmap);
+                    $converted_value = wsf_parse_payload_for_class_map($current_child, $sig_param_node,
+                                    $param_type, $classmap, $cid2cont_type, $cid2attachments);
                 }
                 else { 
-                    $converted_value = wsf_parse_payload_for_array($current_child, $sig_param_node);
+                    $converted_value = wsf_parse_payload_for_array($current_child, $sig_param_node, 
+                                    $cid2cont_type, $cid2attachments);
                 }
             }
             else if($current_child->firstChild) {
@@ -506,16 +535,35 @@ function wsf_deserialize_simple_types(&$current_child, DomNode $sig_param_node, 
             }
         }
         $ret_val = $tmp_array;
-        $object->$param_name = $tmp_array;
         
     }
     else {
+
+        //modify the mtom node to keep only the cid
+        if($param_type == WSF_XSD_BASE64) {
+            $include_node = $current_child->firstChild;
+            while($include_node && $include_node->nodeType != XML_ELEMENT_NODE) {
+                $include_node = $include_node->nextSibling;
+            }
+            if($include_node) {
+                if($include_node->localName == "Include") {
+                    $href = $include_node->getAttribute("href");
+                    $cid = substr($href, 4);
+                    $current_child->removeChild($include_node);
+
+                    $current_child->nodeValue = $cid;
+                }
+            }
+        }
+
         if($content_model == WSF_SIMPLE_CONTENT) {
             if($classmap) {
-                $converted_value = wsf_parse_payload_for_class_map($current_child, $sig_param_node, $param_type, $classmap);
+                $converted_value = wsf_parse_payload_for_class_map($current_child, $sig_param_node,
+                                $param_type, $classmap, $cid2cont_type, $cid2attachments);
             }
             else { 
-                $converted_value = wsf_parse_payload_for_array($current_child, $sig_param_node);
+                $converted_value = wsf_parse_payload_for_array($current_child, $sig_param_node,
+                                    $cid2cont_type, $cid2attachments);
             }
         }
         else if($current_child->firstChild) {
@@ -529,7 +577,6 @@ function wsf_deserialize_simple_types(&$current_child, DomNode $sig_param_node, 
             }
             $converted_value = "";
         }
-        $object->$param_name = $converted_value;
         $ret_val = $converted_value;
         $current_child = $current_child->nextSibling;
         while($current_child != NULL && $current_child->nodeType != XML_ELEMENT_NODE) {
@@ -548,7 +595,8 @@ function wsf_deserialize_simple_types(&$current_child, DomNode $sig_param_node, 
  * @param $classmap the classmap passed by the user
  * @return the result complex type value.
  */
-function wsf_deserialize_complex_types(&$current_child, DomNode $sig_param_node, $classmap) {
+function wsf_deserialize_complex_types(&$current_child, DomNode $sig_param_node, $classmap,
+                    $cid2cont_type, $cid2attachments) {
 
     $ret_val = NULL;
     $target_namespace = NULL;
@@ -600,10 +648,12 @@ function wsf_deserialize_complex_types(&$current_child, DomNode $sig_param_node,
         while($current_child !== NULL && $current_child->localName == $param_name) {
             if($sig_param_node->hasChildNodes()) {
                 if($classmap) {
-                    $converted_value = wsf_parse_payload_for_class_map($current_child, $sig_param_node, $param_type, $classmap);
+                    $converted_value = wsf_parse_payload_for_class_map($current_child, $sig_param_node,
+                                        $param_type, $classmap, $cid2cont_type, $cid2attachments);
                 }
                 else { 
-                    $converted_value = wsf_parse_payload_for_array($current_child, $sig_param_node);
+                    $converted_value = wsf_parse_payload_for_array($current_child, $sig_param_node,
+                                        $cid2cont_type, $cid2attachments);
                 }
 
             }
@@ -632,10 +682,12 @@ function wsf_deserialize_complex_types(&$current_child, DomNode $sig_param_node,
     else {
         if($sig_param_node->hasChildNodes()) {
             if($classmap) {
-                $converted_value = wsf_parse_payload_for_class_map($current_child, $sig_param_node, $param_type, $classmap);
+                $converted_value = wsf_parse_payload_for_class_map($current_child, $sig_param_node,
+                                    $param_type, $classmap, $cid2cont_type, $cid2attachments);
             }
             else { 
-                $converted_value = wsf_parse_payload_for_array($current_child, $sig_param_node);
+                $converted_value = wsf_parse_payload_for_array($current_child, $sig_param_node,
+                                $cid2cont_type, $cid2attachments);
             }
         }
         else {
@@ -669,7 +721,8 @@ function wsf_deserialize_complex_types(&$current_child, DomNode $sig_param_node,
  *
  * @param $classmap the user passed classmap
  */
-function wsf_infer_content_model(DomNode &$current_child, DomNode $sig_node, $classmap) {
+function wsf_infer_content_model(DomNode &$current_child, DomNode $sig_node, $classmap,
+                    $cid2cont_type, $cid2attachments) {
 
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "parsing content model");
 
@@ -701,7 +754,11 @@ function wsf_infer_content_model(DomNode &$current_child, DomNode $sig_node, $cl
             }
 
             $converted_value =  wsf_wsdl_deserialize_string_value($param_type, $text_value, $sig_node);
-            $parse_tree[WSF_SIMPLE_CONTENT_VALUE] = $converted_value;
+            
+            // we let the deserialize_type_info to extract out the mtom information
+            wsf_deserialize_type_info($param_type, $parse_tree, WSF_SIMPLE_CONTENT_VALUE, $converted_value,
+                            $cid2cont_type, $cid2attachments);
+            //$parse_tree[WSF_SIMPLE_CONTENT_VALUE] = $converted_value;
         }
         //special for the simple content extension, to be more tested..
     }
@@ -773,10 +830,15 @@ function wsf_infer_content_model(DomNode &$current_child, DomNode $sig_node, $cl
 
                         if($is_simple) {
                             // this moves the current_child pointer to the next child..
-                            $parse_tree[$param_name] = wsf_deserialize_simple_types($current_child, $sig_param_node, $classmap);
+                            $param_value = wsf_deserialize_simple_types($current_child, $sig_param_node, $classmap, 
+                                                        $cid2cont_type, $cid2attachments);
+                            // we let the deserialize_type_info to extract out the mtom information
+                            wsf_deserialize_type_info($param_type, $parse_tree, $param_name, $param_value,
+                                            $cid2cont_type, $cid2attachments);
                         }
                         else {
-                            $parse_tree[$param_name] = wsf_deserialize_complex_types($current_child, $sig_param_node, $classmap);
+                            $parse_tree[$param_name] = wsf_deserialize_complex_types($current_child, $sig_param_node, $classmap,
+                                                        $cid2cont_type, $cid2attachments);
                         }
                     }
                     else
@@ -800,10 +862,15 @@ function wsf_infer_content_model(DomNode &$current_child, DomNode $sig_node, $cl
                         if($param_name == $current_child->localName) {
                             if($is_simple) {
                                 // this moves the current_child pointer to the next child..
-                                $parse_tree[$param_name] = wsf_deserialize_simple_types($current_child, $sig_param_node, $classmap);
+                                $param_value = wsf_deserialize_simple_types($current_child, $sig_param_node, $classmap,
+                                                            $cid2cont_type, $cid2attachments);
+
+                                wsf_deserialize_type_info($param_type, $parse_tree, $param_name, $param_value,
+                                            $cid2cont_type, $cid2attachments);
                             }
                             else {
-                                $parse_tree[$param_name] = wsf_deserialize_complex_types($current_child, $sig_param_node, $classmap);
+                                $parse_tree[$param_name] = wsf_deserialize_complex_types($current_child, $sig_param_node, $classmap,
+                                                            $cid2cont_type, $cid2attachments);
                             }
                             $found = TRUE;
                             break; //found and no need to investigate more..
@@ -822,10 +889,14 @@ function wsf_infer_content_model(DomNode &$current_child, DomNode $sig_node, $cl
                     if($param_name == $current_child->localName) {
                         if($is_simple) {
                             // this moves the current_child pointer to the next child..
-                            $parse_tree[$param_name] = wsf_deserialize_simple_types($current_child, $sig_param_node, $classmap);
+                            $param_value = wsf_deserialize_simple_types($current_child, $sig_param_node, $classmap,
+                                                                $cid2cont_type, $cid2attachments);
+                            wsf_deserialize_type_info($param_type, $parse_tree, $param_name, $param_value,
+                                            $cid2cont_type, $cid2attachments);
                         }
                         else {
-                            $parse_tree[$param_name] = wsf_deserialize_complex_types($current_child, $sig_param_node, $classmap);
+                            $parse_tree[$param_name] = wsf_deserialize_complex_types($current_child, $sig_param_node, $classmap,
+                                                                $cid2cont_type, $cid2attachments);
                         }
 
                         while($current_child != NULL && $current_child->nodeType != XML_ELEMENT_NODE) {
@@ -837,11 +908,13 @@ function wsf_infer_content_model(DomNode &$current_child, DomNode $sig_node, $cl
                 }
             }
             else if($sig_param_node->nodeName == WSF_INNER_CONTENT && $current_child) {
-                $tmp_tree = wsf_infer_content_model($current_child, $sig_param_node, $classmap);
+                $tmp_tree = wsf_infer_content_model($current_child, $sig_param_node, $classmap,
+                                $cid2cont_type, $cid2attachments);
                 $parse_tree = array_merge($parse_tree, $tmp_tree);
             }
             else if($sig_param_node->nodeName == WSF_INHERITED_CONTENT && $current_child) {
-                $tmp_tree = wsf_infer_content_model($current_child, $sig_param_node, $classmap);
+                $tmp_tree = wsf_infer_content_model($current_child, $sig_param_node, $classmap,
+                                $cid2cont_type, $cid2attachments);
                 $parse_tree = array_merge($parse_tree, $tmp_tree);
             }
         }
@@ -976,6 +1049,43 @@ function wsf_convert_string_to_php_type($xsd_type, $data_value) {
     return $converted_value;
 }
 
+/**
+ * this handles the mtom attachement + other type info deserialization
+ */
+function wsf_deserialize_type_info($param_type, &$parse_tree, $param_name, $param_value,
+                $cid2cont_type, $cid2attachments)
+{
+    if($param_type == WSF_XSD_BASE64 && !is_array($param_value)) {
+        if(!is_array($cid2attachments) || count($cid2attachments) == 0) {
+            // this mean no attachments, values are sent as MTOM attachments..
+            $parse_tree[$param_name. WSF_POSTFIX_BASE64] = $param_value;
+            $parse_tree[$param_name] = base64_decode($param_value);
+        }
+        else {
+            // if attachment array exists, $param_value contains the cid
+          
+            $attachemnt_value = NULL;
+            $content_type = NULL;
+            if(array_key_exists($param_value, $cid2attachments)) {
+                $attachment_value = $cid2attachments[$param_value];
+            }
+            if(array_key_exists($param_value, $cid2cont_type)) {
+                $content_type = $cid2cont_type[$param_value];
+            }
+
+            if($attachment_value !== NULL && $content_type !== NULL) {
+                $parse_tree[$param_name] = $attachment_value;
+                $parse_tree[$param_name.WSF_POSTFIX_BASE64] = base64_encode($attachment_value);
+
+                //filling the content type
+                $parse_tree[WSF_CONTENT_TYPE] = $content_type;
+            }
+        }
+    }
+    else {
+        $parse_tree[$param_name] = $param_value;
+    }
+}
 
 //-----------------------------------------------------------------------------
 

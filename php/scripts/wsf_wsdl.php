@@ -43,7 +43,8 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     $binding_array = array();
 
     $is_doc_lit = FALSE;
-    $is_rpc_enc = FALSE; 
+    $is_rpc_enc = FALSE;
+    $use_mtom = TRUE; //default to on
 
     $wsdl_dom = new DomDocument();
     $sig_model_dom  = new DOMDocument();
@@ -56,6 +57,9 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     }
     if(array_key_exists(WSF_PORT_NAME, $user_parameters)) {
         $port = $user_parameters[WSF_PORT_NAME];
+    }
+    if(array_key_exists(WSF_USE_MTOM, $user_parameters)) {
+        $use_mtom = $user_parameters[WSF_USE_MTOM];
     }
 
     $wsdl_location = $user_parameters[WSF_WSDL];
@@ -178,11 +182,14 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
         }
     }
 
+    $attachment_map = array();
     if($sig_method && !$is_rpc_enc) {
-        $payload = wsf_create_payload($sig_method, $is_doc_lit, $operation_name, $arg_count, $arguments, $class_map);
+        $payload = wsf_create_payload($sig_method, $is_doc_lit, $operation_name,
+                    $arg_count, $arguments, $class_map, $use_mtom, $attachment_map);
     }
     else {
-        $payload = wsf_create_payload($sig_method, FALSE, $operation_name, $arg_count, $arguments, $class_map);
+        $payload = wsf_create_payload($sig_method, FALSE, $operation_name,
+                $arg_count, $arguments, $class_map, $use_mtom, $attachment_map);
     }
 
     if($sig_method) {
@@ -200,7 +207,8 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
                           WSF_REQUEST_PAYLOAD=> $payload,
                           WSF_POLICY_NODE=> $policy_array,
                           WSF_RESPONSE_SIG_MODEL => $return_sig_model_string,
-                          WSF_WSDL_DOM => $wsdl_dom_string);
+                          WSF_WSDL_DOM => $wsdl_dom_string,
+                          WSF_ATTACHMENT_MAP => $attachment_map);
     return $return_value;
 }
 
@@ -357,6 +365,12 @@ function wsf_wsdl_process_in_msg($parameters)
     $class_map = NULL;
     $class_args = NULL;
 
+    // this is about the respnse message
+    $mtom_on = TRUE;
+
+    $cid2cont_type = array();
+    $cid2attachments = array();
+
     if(array_key_exists(WSF_SERVICE_NAME, $parameters)) {
         $service_name = $parameters[WSF_SERVICE_NAME];
     }
@@ -386,23 +400,33 @@ function wsf_wsdl_process_in_msg($parameters)
         $class_args = $parameters["class_args"];
     }
 
-   
+    if(array_key_exists("attachments", $parameters)) {
+        $cid2attachments = $parameters["attachments"];
+    }
+    if(array_key_exists("cid2contentType", $parameters)) {
+        $cid2cont_type = $parameters["cid2contentType"];
+    }
+    if(array_key_exists("useMTOM", $parameters)) {
+        $mtom_on = $parameters["useMTOM"];
+    }
 
     $payload_dom->loadXML($payload_string);
     $sig_model_dom->loadXML($sig_model_string);
 
     $endpoint_address = wsf_get_endpoint_address($sig_model_dom);
 
-    $operation_node = wsf_find_operation($sig_model_dom, $operation_name, $service_name, $port_name, $is_multiple_interfaces);
+    $operation_node = wsf_find_operation($sig_model_dom, $operation_name,
+            $service_name, $port_name, $is_multiple_interfaces);
 
     if(!$operation_node) {
         return "operation not found";
     }
-    
 
-    $return_payload_string = wsf_serivce_invoke_function($operation_node, $function_name, $class_name, $class_args, $payload_dom->firstChild, $class_map);
+    $return_payload_info = wsf_serivce_invoke_function($operation_node, $function_name,
+                $class_name, $class_args, $payload_dom->documentElement, $class_map, $mtom_on,
+                $cid2cont_type, $cid2attachments);
 
-    return $return_payload_string;
+    return $return_payload_info;
 }
 
 function wsf_wsdl_check() {

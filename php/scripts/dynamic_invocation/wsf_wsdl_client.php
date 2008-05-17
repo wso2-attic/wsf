@@ -44,7 +44,8 @@ function wsf_get_response_parameters(DomNode $sig_node)
  * @param DomNode $schema_node schema for the given WSDL
  */
 
-function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name, $arg_count, $arguments, array $classmap = NULL)
+function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name,
+            $arg_count, $arguments, array $classmap = NULL, $mtom_on, &$attachment_map)
 {
     require_once('wsf_wsdl_consts.php');
     require_once('wsf_wsdl_util.php');
@@ -115,7 +116,7 @@ function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name, $arg_co
             $new_obj = $arguments[0];
             $namespace_map = array($ele_ns => WSF_STARTING_NS_PREFIX);
             wsf_create_payload_for_class_map($payload_dom, $params_node, $element, $element, $new_obj,
-                                                           $prefix_i, $namespace_map);
+                                                  $prefix_i, $namespace_map, $mtom_on, $attachment_map);
             $payload_dom->appendChild($element);
             $payload_node = $payload_dom->firstChild;
             $clone_node = $payload_node->cloneNode(TRUE);
@@ -127,7 +128,7 @@ function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name, $arg_co
             $namespace_map = array($ele_ns => WSF_STARTING_NS_PREFIX);
 
             wsf_create_payload_for_array($payload_dom, $params_node, $element, $element, $arguments[0],
-                                                           $prefix_i, $namespace_map);
+                                                   $prefix_i, $namespace_map, $mtom_on, $attachment_map);
             $payload_dom->appendChild($element);
             $payload_node = $payload_dom->firstChild;
             $clone_node = $payload_node->cloneNode(TRUE);
@@ -148,7 +149,7 @@ function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name, $arg_co
             $namespace_map = array($ele_ns => WSF_STARTING_NS_PREFIX);
             // currently we handle both rpc and doc lit sameway
             wsf_create_payload_for_class_map($payload_dom, $params_node, $element, $element, $new_obj,
-                                                           $prefix_i, $namespace_map);
+                                                           $prefix_i, $namespace_map, $mtom_on, $attachment_map);
             $payload_dom->appendChild($element);
             $payload_node = $payload_dom->firstChild;
             $clone_node = $payload_node->cloneNode(TRUE);
@@ -160,7 +161,7 @@ function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name, $arg_co
             $namespace_map = array($ele_ns => WSF_STARTING_NS_PREFIX);
 
             wsf_create_payload_for_array($payload_dom, $params_node, $element, $element, $arguments[0],
-                                                           $prefix_i, $namespace_map);
+                                                           $prefix_i, $namespace_map, $mtom_on, $attachment_map);
 
             $payload_dom->appendChild($element);
             $payload_node = $payload_dom->firstChild;
@@ -179,7 +180,8 @@ function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name, $arg_co
  * @return mixed an object, an array or a simple type in line with the 
  * expected format of the response
  */
-function wsf_client_response_and_validate(DomDocument $envelope_dom, DomDocument $signature_dom, $response_parameters)
+function wsf_client_response_and_validate(DomDocument $envelope_dom, 
+        DomDocument $signature_dom, $response_parameters, $mtom_on = FALSE)
 {
     require_once('wsf_wsdl_consts.php');
     require_once('wsf_wsdl_util.php');
@@ -238,16 +240,27 @@ function wsf_client_response_and_validate(DomDocument $envelope_dom, DomDocument
     }
 
     $classmap = NULL;
-    if(isset($response_parameters[WSF_CLASSMAP])) {
+    $cid2cont_type = array();
+    $cid2attachments = array();
+
+    if(array_key_exists(WSF_CLASSMAP, $response_parameters)) {
         $classmap = $response_parameters[WSF_CLASSMAP];
+    }
+    if(array_key_exists("attachments", $response_parameters)) {
+        $cid2attachments = $response_parameters["attachments"];
+    }
+    if(array_key_exists("cid2contentType", $response_parameters)) {
+        $cid2cont_type = $response_parameters["cid2contentType"];
     }
 
     $op_param_values = array();
     if($classmap !== NULL) {
-        $op_param_values = wsf_parse_payload_for_class_map($soap_body_node, $returns_node, $ele_name, $classmap);
+        $op_param_values = wsf_parse_payload_for_class_map($soap_body_node, $returns_node,
+                                $ele_name, $classmap, $cid2cont_type, $cid2attachments);
     }
     else {
-        $op_param_values = wsf_parse_payload_for_array($soap_body_node, $returns_node);
+        $op_param_values = wsf_parse_payload_for_array($soap_body_node, $returns_node,
+                                $cid2cont_type, $cid2attachments);
     }
 
     return $op_param_values;
