@@ -90,6 +90,7 @@ $actions = array(
 $service = new WSService(array ("wsdl" =>"Mime.wsdl",
         "operations" => $operations,
         "actions" => $actions,
+        "useMTOM" => TRUE,
         "classmap" => $class_map,
                             ));
 

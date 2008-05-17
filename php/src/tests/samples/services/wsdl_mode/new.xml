@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<services xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <service name="MyService" endpoint="MyServiceSOAP12port_http" address="http://localhost/services/wsdl_mode/AttributeService.php" type="SOAP12">
+<services xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wsp12="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+    <service name="MyService" endpoint="MyServiceSOAP12port_http" address="http://localhost/services/wsdl_mode/AttributeGroupService.php" type="SOAP12">
         <documentation/>
         <operations name="MyServicePortType">
             <operation name="myDemo" pattern="http://www.w3.org/ns/wsdl/in-out" safe="false">
@@ -9,10 +9,8 @@
                     <params wrapper-element="myDemo" wrapper-element-ns="http://wso2.org/dyn/codegen/demo" simple="no" contentModel="sequence">
                         <param token="#in" targetNamespace="http://wso2.org/dyn/codegen/demo" minOccurs="1" maxOccurs="1" name="demo1" type="string" type-namespace="http://www.w3.org/2001/XMLSchema" type-prefix="xs" simple="yes"/>
                         <param token="#in" targetNamespace="http://wso2.org/dyn/codegen/demo" minOccurs="1" maxOccurs="1" name="demo2" type="string" type-namespace="http://www.w3.org/2001/XMLSchema" type-prefix="xs" simple="yes"/>
-                        <param attribute="yes" token="#in" targetNamespace="http://wso2.org/dyn/codegen/demo" name="demo3" type="int" type-namespace="http://wso2.org/dyn/codegen/demo" simple="yes">
-                            <maxInclusive value="5"/>
-                            <minInclusive value="2"/>
-                        </param>
+                        <param attribute="yes" token="#in" targetNamespace="http://wso2.org/dyn/codegen/demo" name="demo3" type="string" type-namespace="http://www.w3.org/2001/XMLSchema" simple="yes"/>
+                        <param attribute="yes" token="#in" targetNamespace="http://wso2.org/dyn/codegen/demo" name="demo4" type="string" type-namespace="http://www.w3.org/2001/XMLSchema" simple="yes"/>
                     </params>
                     <returns>
                         <param name="myDemoResponse" token="#in" type="string" type-namespace="http://www.w3.org/2001/XMLSchema" simple="yes" targetNamespace="http://wso2.org/dyn/codegen/demo"/>
