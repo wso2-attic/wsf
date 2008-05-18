@@ -167,4 +167,7 @@ int wsf_util_get_attachments_form_soap_envelope (
     zval * cid2str,
     zval * cid2contentType TSRMLS_DC);
 
+void wsf_util_process_rest_params(axutil_env_t *env, wsf_svc_info_t *svc_info,HashTable *ht_rest_map TSRMLS_DC);
+
+
 #endif /* WSF_UTIL_H */

@@ -60,6 +60,7 @@ typedef enum ws_input_types
 
 #define WS_ACTIONS      "actions"
 #define WS_OPERATIONS  "operations"
+#define WS_OP_TO_URL_MAP "restmaping"
 #define WS_OP_MEP      "opMEP"
 #define WS_OP_PARAMS    "opParams"
 #define WS_WSDL         "wsdl"
@@ -104,6 +105,7 @@ typedef enum ws_input_types
 /** protocol */
 #define WS_USE_SOAP			    "useSOAP"
 #define WS_HTTP_METHOD 			"HTTPMethod"
+#define WS_REST_LOCATION        "restLocation"
 
 /** SSL certificate */
 #define WS_SERVER_CERT 			"CACert"
@@ -205,6 +207,8 @@ typedef enum ws_input_types
 
 #define WS_SVC_INFO "WSFPHPSvcInfo"
 
+#define WS_REQ_INFO "WSFPHPRequestInfo"
+
 /*************************************************/
 
 #define WS_SOAP_DOCUMENT 1
@@ -250,9 +254,6 @@ typedef struct wsf_svc_info
 
   int generated_svc_name;
 
-  /** this is needed in case of request uri dispatching( for rest) */
-  char *op_name;
-  
   char *sig_model_string;
 
   zval *class_map;
@@ -260,7 +261,11 @@ typedef struct wsf_svc_info
   zval *wsdl_gen_class_map;
 
   char *wsdl;
-  
+
+  /**http://<domain>/<..*.php>/<loc_str>/ */
+  char *loc_str;	
+
+
 }
 wsf_svc_info_t;
 
@@ -270,7 +275,6 @@ typedef struct php_req_info
     long svr_port;
     char *svr_name;
     char *http_protocol;
-    char *content_encoding;
     char *soap_action;
     char *request_uri;
     char *query_string;
@@ -283,6 +287,11 @@ typedef struct php_req_info
     int result_length;
     char *transfer_encoding;
 	char *out_content_type;
+
+	/** REST parameter count */
+	int param_count;
+	/** parameters array */
+	char ***params;
 } wsf_req_info_t;
 
 /** functions */

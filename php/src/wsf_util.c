@@ -366,7 +366,6 @@ wsf_svc_info_create (
 	svc_info->ops_to_classes = NULL;
     svc_info->modules_to_engage = NULL;
     svc_info->ht_op_params = NULL;
-    svc_info->op_name = NULL;
     svc_info->class_args = NULL;
     svc_info->sig_model_string = NULL;
     svc_info->class_map = NULL;
@@ -400,9 +399,7 @@ wsf_svc_info_free (
         if (svc_info->modules_to_engage) {
             axutil_array_list_free (svc_info->modules_to_engage, env);
         }
-        if (svc_info->op_name != NULL) {
-            AXIS2_FREE (env->allocator, svc_info->op_name);
-        }
+      
         AXIS2_FREE (env->allocator, svc_info);
     }
 }
@@ -419,7 +416,6 @@ wsf_php_req_info_init (wsf_req_info_t *req_info)
 	/** default port is 80 */
     req_info->svr_port = 80;
     req_info->http_protocol = NULL;
-    req_info->content_encoding = NULL;
     req_info->soap_action = NULL;
     req_info->request_uri = NULL;
     req_info->content_length = -1;
@@ -604,7 +600,7 @@ wsf_util_engage_module (
 
 /* genarate service name from uri */
 char *
-wsf_util_generate_svc_name_from_uri (
+wsf_util_generate_svc_name_from_uri_and_set_loc_str (
     char *req_uri,
     wsf_svc_info_t * svc_info,
     axutil_env_t * env)
@@ -626,11 +622,11 @@ wsf_util_generate_svc_name_from_uri (
     index = strstr (temp_string, ".php/");
 
     if (index) {
-        char *op_index = NULL;
+        char *loc_str = NULL;
         index = index + 4;
-        op_index = index + 1;
+        loc_str = index + 1;
         temp_string[index - temp_string] = '\0';
-        svc_info->op_name = axutil_strdup (env, op_index);
+        svc_info->loc_str = axutil_strdup (env, loc_str);
     }
 
     svc_name = axutil_replace (env, temp_string, '/', '_');
@@ -1788,4 +1784,58 @@ void wsf_util_process_ws_service_classes(
 		}
 		zend_hash_move_forward_ex (ht_classes, &pos);
 	}
+}
+
+void wsf_util_process_rest_params(axutil_env_t *env, 
+	wsf_svc_info_t *svc_info,
+	HashTable *ht_rest_map TSRMLS_DC)
+{
+	zval **tmp;
+	HashPosition pos;
+	if(!ht_rest_map)
+		return;
+
+    zend_hash_internal_pointer_reset_ex (ht_rest_map, &pos);
+	while(zend_hash_get_current_data_ex(ht_rest_map, (void**)&tmp, &pos) != FAILURE){
+		zval **tmpval;		
+        if(Z_TYPE_PP(tmp) == IS_ARRAY){
+			/** data value is an array 	"<Operation>"=>array("HTTPMethod"=>"<OP>","restLocation"=>"<loc>" */
+			HashTable *values = NULL;
+            char *operation_name = NULL;
+			int str_length = 0;
+            ulong num_index = 0;
+			char *http_method = NULL;
+			char *rest_location = NULL;
+
+			values = Z_ARRVAL_PP(tmp);
+			if (zend_hash_get_current_key_ex (values, &operation_name,
+                    &str_length, &num_index, AXIS2_TRUE, &pos) != FAILURE){
+						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsfphp] Processing Rest Params opname-> %s", operation_name);
+            }
+			if(values){
+				if(zend_hash_find(values, WS_HTTP_METHOD, sizeof(WS_HTTP_METHOD), (void**)&tmpval) == SUCCESS
+					&& Z_TYPE_PP(tmpval) == IS_STRING){
+						http_method = Z_STRVAL_PP(tmpval);
+				}
+				if(zend_hash_find(values, WS_REST_LOCATION, sizeof(WS_REST_LOCATION), (void**)&tmpval) == SUCCESS
+					&& Z_TYPE_PP(tmpval) == IS_STRING){
+						rest_location = Z_STRVAL_PP(tmpval);
+				}
+			}
+			if(operation_name && http_method && rest_location){
+				axis2_op_t *op = NULL;
+				op = axis2_svc_get_op_with_name(svc_info->svc, env, operation_name);
+				if(op){
+					axis2_op_set_rest_http_method(op, env, http_method);
+					axis2_op_set_rest_http_location(op, env, rest_location);
+					axis2_svc_add_rest_mapping(svc_info->svc, env, http_method, rest_location, op);
+				}
+			}
+		}
+		zend_hash_move_forward_ex (ht_rest_map, &pos);
+	}
+
+
+
+
 }

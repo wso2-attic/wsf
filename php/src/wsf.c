@@ -823,6 +823,7 @@ PHP_METHOD (ws_service, __construct)
     HashTable * ht_ops_to_mep = NULL;
     HashTable * ht_opParams = NULL;
 	HashTable * ht_classes = NULL;
+	HashTable * ht_rest_map = NULL;
 	zval **wsdl_tmp = NULL;
     char *service_name = NULL;
     char *port_name = NULL;
@@ -880,6 +881,10 @@ PHP_METHOD (ws_service, __construct)
 					svc_info->ht_op_params = ht_opParams;
 					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
 						"[wsf_service] setting message operation parameters");
+			}
+			if(zend_hash_find(ht_options, WS_OP_TO_URL_MAP, sizeof(WS_OP_TO_URL_MAP),
+				(void **)&tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY){
+					ht_rest_map = Z_ARRVAL_PP(tmp);
 			}
             
             if (zend_hash_find (ht_options, WS_WSDL, sizeof (WS_WSDL),
@@ -978,8 +983,8 @@ PHP_METHOD (ws_service, __construct)
     }
     
     if (SG (request_info).request_uri) {
-        svc_info->svc_name = wsf_util_generate_svc_name_from_uri (SG (request_info).
-                                request_uri, svc_info, ws_env_svr);
+        svc_info->svc_name = 
+			wsf_util_generate_svc_name_from_uri_and_set_loc_str (SG (request_info).request_uri, svc_info, ws_env_svr);
         if(service_name){
             svc_info->svc_name = strdup(service_name);
         }
@@ -989,7 +994,7 @@ PHP_METHOD (ws_service, __construct)
         svc_info->msg_recv = wsf_msg_recv;
         wsf_util_create_svc_from_svc_info (svc_info, ws_env_svr TSRMLS_CC);
     } else if(SG(request_info).path_translated) {
-        svc_info->svc_name = wsf_util_generate_svc_name_from_uri (
+        svc_info->svc_name = wsf_util_generate_svc_name_from_uri_and_set_loc_str (
             SG(request_info).path_translated, svc_info, ws_env_svr);
         if(service_name){
             svc_info->svc_name = strdup(service_name);
@@ -1020,6 +1025,8 @@ PHP_METHOD (ws_service, __construct)
                       sizeof(WS_WSDL), (void **)&wsdl_tmp) == SUCCESS){
         wsf_wsdl_process_service(this_ptr, NULL, svc_info, ws_env_svr TSRMLS_CC);
     }
+
+	wsf_util_process_rest_params(ws_env_svr, svc_info, ht_rest_map TSRMLS_CC);
 }
 
 PHP_METHOD(ws_client, wait)
@@ -1263,6 +1270,15 @@ static void generate_wsdl_for_service(zval *svc_zval,
             /** end WSDL generation stuff */ 
         }
 }     
+
+static void write_response(int http_response_code, 
+						   char *protocol, 
+						   void *cnt_length, 
+						   void *cnt TSRMLS_DC)
+{
+
+}
+
        
 /* {{{ proto long reply([long style]) reply the SOAP request */ 
 PHP_METHOD (ws_service, reply) 
@@ -1311,12 +1327,6 @@ PHP_METHOD (ws_service, reply)
         if (zend_hash_find (&EG (symbol_table), "_SERVER", sizeof ("_SERVER"),
             (void **) & server_vars) == SUCCESS && (Z_TYPE_PP (server_vars) == IS_ARRAY)) {
 			
-			if ((zend_hash_find (Z_ARRVAL_PP (server_vars),
-                    "HTTP_CONTENT_ENCODING", sizeof ("HTTP_CONTENT_ENCODING"),
-                    (void **) & data) == SUCCESS)  && Z_TYPE_PP (data) == IS_STRING) {
-				req_info.content_encoding = Z_STRVAL_PP (data);
-			}
-
 			if ((zend_hash_find (Z_ARRVAL_PP (server_vars),
                     "HTTP_TRANSFER_ENCODING", sizeof ("HTTP_TRANSFER_ENCODING"),
                     (void **) & data) == SUCCESS)  && Z_TYPE_PP (data) == IS_STRING) {
@@ -1405,10 +1415,11 @@ PHP_METHOD (ws_service, reply)
             sprintf (status_line, "%s 202 Accepted", req_info.http_protocol);
             sapi_add_header (status_line, strlen (status_line), 1);
             sapi_add_header ("Content-Length: 0", sizeof ("Content-Length: 0") - 1, 1);
-            content_type = emalloc(strlen (req_info.content_type) * sizeof (char) + 20);
-            sprintf (content_type, "Content-Type: %s", req_info.content_type);
-            sapi_add_header (content_type, strlen (content_type), 1);
-        
+			if(req_info.content_type){
+				content_type = emalloc(strlen (req_info.content_type) * sizeof (char) + 20);
+				sprintf (content_type, "Content-Type: %s", req_info.content_type);
+				sapi_add_header (content_type, strlen (content_type), 1);
+			}
 		}else if (status == WS_HTTP_OK) {
             sprintf (status_line, "%s 200 OK", req_info.http_protocol);
             sapi_add_header (status_line, strlen (status_line), 1);
