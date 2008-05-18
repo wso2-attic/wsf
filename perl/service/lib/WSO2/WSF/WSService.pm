@@ -28,12 +28,15 @@ sub new {
         -request => new WSO2::WSF::WSRequest (),
         -svc_info => WSO2::WSF::Server::wsf_svc_info_t->new (),
         -env => WSO2::WSF::Server::wsf_get_env(),
-        -worker => WSO2::WSF::Server::wsf_get_worker()
+        -worker => WSO2::WSF::Server::wsf_get_worker(),
+        -msg_recv => WSO2::WSF::Server::wsf_get_msg_recv()
     };
     my $env = $self->{-env};
     my $request = $self->{-request};
     my $operation = $self->{-rh};
-
+    my $svc_info = $self->{-svc_info};
+    my $msg_recv = $self->{-msg_recv};
+    my $worker = $self->{-worker};
     #$request populate method is used to populate $request object with
     #information in CGI.
     $request->populate;
@@ -50,9 +53,21 @@ sub new {
     WSO2::WSF::Serverc::wsf_svc_info_t_ops_to_functions_set($svc_info, $h_ops_to_function);
     WSO2::WSF::Serverc::wsf_svc_info_t_ops_to_actions_set($svc_info, $h_ops_to_function);
 
-    print $request->{-url_abs}."\n";
-    my $xx = $request->{-url_abs};
-    print $xx."\n";
+    #generating svc_name replacing / with |
+    #for example /axis2/services/echo_services.pl becomes
+    #|axis2|services|echo_services.pl
+    my $svc_name = $request->{-url_abs};
+    $svc_name =~ s#/#|#g;
+    WSO2::WSF::Serverc::wsf_svc_info_t_svc_name_set($svc_info, $svc_name);
+    WSO2::WSF::Serverc::wsf_svc_info_t_msg_recv_set($svc_info, $msg_recv);
+
+    #setting perl worker for svc_info structure because that is essential
+    #for creating svc from svc_info.
+    WSO2::WSF::Serverc::wsf_svc_info_t_perl_worker_set($svc_info, $worker);
+
+    WSO2::WSF::Serverc::wsf_util_create_svc_from_svc_info($svc_info, $env);
+    WSO2::WSF::Serverc::wsf_util_process_ws_service_operations_and_actions ($svc_info, $env);
+
     bless $self, $class;
     return $self;
 }
@@ -89,8 +104,14 @@ sub reply {
     WSO2::WSF::Serverc::wsf_req_info_t_svr_port_set($req_info, $request->{-server_port});
     WSO2::WSF::Serverc::wsf_req_info_t_http_protocol_set($req_info, $request->{-server_protocol});
     WSO2::WSF::Serverc::wsf_req_info_t_soap_action_set($req_info, $request->{-soap_action});
-    WSO2::WSF::Serverc::wsf_req_info_t_req_data_set($req_info, $request->{-postdata});
     WSO2::WSF::Serverc::wsf_req_info_t_request_method_set($req_info, $request->{-request_method});
+    WSO2::WSF::Serverc::wsf_req_info_t_request_uri_set($req_info, $request->{-url_full});
+    WSO2::WSF::Serverc::wsf_req_info_t_query_string_set($req_info, $request->{-query_string});
+    WSO2::WSF::Serverc::wsf_req_info_t_req_data_set($req_info, $request->{-postdata});
+    WSO2::WSF::Serverc::wsf_req_info_t_req_data_length_set($req_info,
+                                                           $request->{-content_length});
+
+    print $request->{-url_full}."\n";
 
     #populating svc_info struct
     print "worker ".$worker." env ".$env."\n";

@@ -4159,6 +4159,98 @@ XS(_wrap_wsf_get_env) {
 }
 
 
+XS(_wrap_wsf_get_msg_recv) {
+  {
+    axis2_msg_recv_t *result = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 0) || (items > 0)) {
+      SWIG_croak("Usage: wsf_get_msg_recv();");
+    }
+    result = (axis2_msg_recv_t *)wsf_get_msg_recv();
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_axis2_msg_recv_t, 0 | 0); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_wsf_util_create_svc_from_svc_info) {
+  {
+    wsf_svc_info_t *arg1 = (wsf_svc_info_t *) 0 ;
+    axutil_env_t *arg2 = (axutil_env_t *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: wsf_util_create_svc_from_svc_info(svc_info,env);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_wsf_svc_info, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "wsf_util_create_svc_from_svc_info" "', argument " "1"" of type '" "wsf_svc_info_t *""'"); 
+    }
+    arg1 = (wsf_svc_info_t *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_axutil_env_t, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "wsf_util_create_svc_from_svc_info" "', argument " "2"" of type '" "axutil_env_t *""'"); 
+    }
+    arg2 = (axutil_env_t *)(argp2);
+    wsf_util_create_svc_from_svc_info(arg1,arg2);
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_wsf_util_process_ws_service_operations_and_actions) {
+  {
+    wsf_svc_info_t *arg1 = (wsf_svc_info_t *) 0 ;
+    axutil_env_t *arg2 = (axutil_env_t *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: wsf_util_process_ws_service_operations_and_actions(svc_info,env);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_wsf_svc_info, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "wsf_util_process_ws_service_operations_and_actions" "', argument " "1"" of type '" "wsf_svc_info_t *""'"); 
+    }
+    arg1 = (wsf_svc_info_t *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_axutil_env_t, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "wsf_util_process_ws_service_operations_and_actions" "', argument " "2"" of type '" "axutil_env_t *""'"); 
+    }
+    arg2 = (axutil_env_t *)(argp2);
+    wsf_util_process_ws_service_operations_and_actions(arg1,arg2);
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
@@ -4311,6 +4403,9 @@ static swig_command_info swig_commands[] = {
 {"WSO2::WSF::Serverc::wsf_worker_get_conf_ctx", _wrap_wsf_worker_get_conf_ctx},
 {"WSO2::WSF::Serverc::wsf_worker_process_request", _wrap_wsf_worker_process_request},
 {"WSO2::WSF::Serverc::wsf_get_env", _wrap_wsf_get_env},
+{"WSO2::WSF::Serverc::wsf_get_msg_recv", _wrap_wsf_get_msg_recv},
+{"WSO2::WSF::Serverc::wsf_util_create_svc_from_svc_info", _wrap_wsf_util_create_svc_from_svc_info},
+{"WSO2::WSF::Serverc::wsf_util_process_ws_service_operations_and_actions", _wrap_wsf_util_process_ws_service_operations_and_actions},
 {0,0}
 };
 /* -----------------------------------------------------------------------------

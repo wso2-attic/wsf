@@ -26,8 +26,8 @@ typedef struct wsf_out_transport_info_impl wsf_out_transport_info_impl_t;
 struct wsf_out_transport_info_impl
 {
     axis2_http_out_transport_info_t out_transport_info;
-    wsf_req_info_t*                 request;
-    axis2_char_t*                   encoding;
+    wsf_req_info_t* request;
+    axis2_char_t* encoding;
 };
 
 #define AXIS2_INTF_TO_IMPL(out_transport_info) \
@@ -35,8 +35,8 @@ struct wsf_out_transport_info_impl
 
 axis2_status_t WSF_CALL
 wsf_out_transport_info_impl_set_content_type(axis2_out_transport_info_t* out_transport_info,
-                                             const axutil_env_t*         env,
-                                             const axis2_char_t*         content_type)
+                                             const axutil_env_t* env,
+                                             const axis2_char_t* content_type)
 {
     /*
     axis2_http_out_transport_info_t *http_transport_info = NULL;
@@ -49,8 +49,8 @@ wsf_out_transport_info_impl_set_content_type(axis2_out_transport_info_t* out_tra
 
 axis2_status_t AXIS2_CALL
 wsf_out_transport_info_impl_set_char_encoding(axis2_out_transport_info_t* out_transport_info,
-                                              const axutil_env_t*         env,
-                                              const axis2_char_t*         encoding)
+                                              const axutil_env_t* env,
+                                              const axis2_char_t* encoding)
 {   /*
     axis2_http_out_transport_info_t *http_transport_info = NULL;
     http_transport_info = AXIS2_INTF_TO_IMPL(out_transport_info);
@@ -62,7 +62,7 @@ wsf_out_transport_info_impl_set_char_encoding(axis2_out_transport_info_t* out_tr
 
 void AXIS2_CALL
 wsf_out_transport_info_impl_free(axis2_out_transport_info_t* out_transport_info,
-                                 const axutil_env_t*         env)
+                                 const axutil_env_t* env)
 {
     /*
     axis2_http_out_transport_info_t *http_transport_info = NULL;
@@ -84,7 +84,7 @@ static const axis2_out_transport_info_ops_t ops_var = {
 
 axis2_http_out_transport_info_t*
 wsf_out_transport_info_create (const axutil_env_t* env,
-                               wsf_req_info_t*     request)
+                               wsf_req_info_t* request)
 {
     wsf_out_transport_info_impl_t *info_impl = NULL;
     axis2_http_out_transport_info_t *out_transport_info = NULL;
@@ -115,7 +115,7 @@ wsf_out_transport_info_create (const axutil_env_t* env,
 
 axis2_status_t WSF_CALL
 wsf_http_out_transport_info_free (axis2_http_out_transport_info_t* info,
-                                  const axutil_env_t*              env)
+                                  const axutil_env_t* env)
 {
     wsf_out_transport_info_impl_t *info_impl = NULL;
     AXIS2_ENV_CHECK (env, AXIS2_FAILURE);
@@ -132,7 +132,7 @@ wsf_http_out_transport_info_free (axis2_http_out_transport_info_t* info,
 
 
 axis2_status_t WSF_CALL
-wsf_out_transport_info_free_void_arg (void*               transport_info,
+wsf_out_transport_info_free_void_arg (void* transport_info,
                                       const axutil_env_t* env)
 {
     axis2_http_out_transport_info_t *transport_info_l = NULL;
@@ -145,8 +145,8 @@ wsf_out_transport_info_free_void_arg (void*               transport_info,
 
 axis2_status_t WSF_CALL 
 wsf_http_out_transport_info_set_content_type (axis2_http_out_transport_info_t* info,
-                                              const axutil_env_t*              env,
-                                              const axis2_char_t*              content_type)
+                                              const axutil_env_t* env,
+                                              const axis2_char_t* content_type)
 {
     axis2_char_t *tmp1 = NULL;
     axis2_char_t *tmp2 = NULL;
@@ -173,12 +173,14 @@ wsf_http_out_transport_info_set_content_type (axis2_http_out_transport_info_t* i
 
 axis2_status_t WSF_CALL 
 wsf_http_out_transport_info_set_char_encoding (axis2_http_out_transport_info_t* info,
-                                               const axutil_env_t*              env,
-                                               const axis2_char_t*              encoding)
+                                               const axutil_env_t* env,
+                                               const axis2_char_t* encoding)
 {
     wsf_out_transport_info_impl_t *info_impl = NULL;
     if (!encoding)
+    {
         return AXIS2_FAILURE;
+    }
 
     info_impl = AXIS2_INTF_TO_IMPL (info);
 

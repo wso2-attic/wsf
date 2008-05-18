@@ -37,4 +37,19 @@ wsf_env_create (const axis2_char_t *log_path);
 axutil_env_t*
 wsf_env_create_svr (const axis2_char_t *log_path);
 
+void
+wsf_util_create_svc_from_svc_info (wsf_svc_info_t * svc_info,
+                                   axutil_env_t * env);
+
+void 
+wsf_util_process_ws_service_operations_and_actions(wsf_svc_info_t * svc_info,
+                                                   axutil_env_t * env);
+
+void
+wsf_util_create_op_and_add_to_svc ( wsf_svc_info_t * svc_info,
+                                    char *action,
+                                    axutil_env_t * env,
+                                    char *op_name,
+                                    char *ht_mep);
+
 #endif  /* WSF_UTIL_H */

@@ -77,3 +77,10 @@ wsf_get_env ()
     return env;
 }
 
+axis2_msg_recv_t *
+wsf_get_msg_recv ()
+{
+    if (!wsf_msg_recv)
+        return NULL;
+    return wsf_msg_recv;
+}

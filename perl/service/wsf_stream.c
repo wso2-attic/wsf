@@ -60,10 +60,15 @@ wsf_stream_create (const axutil_env_t* env,
     stream_impl->buffer = 
         AXIS2_MALLOC (env->allocator,
                       sizeof (axis2_char_t)*req_info->req_data_length);
+    if (stream_impl->buffer)
+    {
+        memset ((void *)stream_impl->buffer, 0, req_info->req_data_length);
+    }
 
     memcpy (stream_impl->buffer, req_info->req_data,
             req_info->req_data_length);
-    
+    stream_impl->buffer[req_info->req_data_length] = 0;
+
     stream_impl->buffer_len = req_info->req_data_length;
 
     return &(stream_impl->stream);
@@ -117,24 +122,31 @@ wsf_stream_read (axutil_stream_t* stream,
     int len = 0;
     stream_impl = AXIS2_INTF_TO_IMPL (stream);
     if (!buffer)
+    {
         return -1;
+    }
 
     len = stream_impl->buffer_len - stream_impl->current_rlen;
-    if (len >= count) {
+    if (len >= count) 
+    {
 
         memcpy (buffer,
                 stream_impl->buffer +
                 stream_impl->current_rlen * sizeof (axis2_char_t), count);
         stream_impl->current_rlen += count;
         return count;
-    } else if (len < count && len > 0) {
+    } 
+    else if (len < count && len > 0) 
+    {
 
         memcpy (buffer,
                 stream_impl->buffer +
                 stream_impl->current_rlen * sizeof (axis2_char_t), len);
         stream_impl->current_rlen += len;
         return len;
-    } else {
+    } 
+    else 
+    {
 
         buffer = '\0';
         return 0;

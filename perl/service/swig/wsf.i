@@ -60,3 +60,15 @@ wsf_worker_process_request (wsf_worker_t* worker,
 
 axutil_env_t *
 wsf_get_env ();
+
+axis2_msg_recv_t *
+wsf_get_msg_recv ();
+
+void
+wsf_util_create_svc_from_svc_info (wsf_svc_info_t * svc_info,
+                                   axutil_env_t * env);
+void 
+wsf_util_process_ws_service_operations_and_actions(wsf_svc_info_t * svc_info,
+                                                   axutil_env_t * env);
+
+

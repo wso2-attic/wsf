@@ -64,6 +64,7 @@ sub populate {
     $self->{-param} = $cgi->param;
     $self->{-url_rel} = $cgi->url(-relative => 1);
     $self->{-url_abs} = $cgi->url(-absolute => 1);
+    $self->{-url_full} = $cgi->url();
     $self->{-query_string} = $ENV{'QUERY_STRING'};
     return 1;
 }
