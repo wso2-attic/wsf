@@ -122,16 +122,8 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
     axis2_op_ctx_t *op_ctx = NULL;
     axis2_op_t *op_desc = NULL;
 
-    axiom_node_t *om_node = NULL;
-    axiom_element_t *om_element = NULL;
-    axiom_node_t *result_node = NULL;
-    axiom_node_t *body_content_node = NULL;
-    axiom_element_t *body_content_element = NULL;
-    axiom_node_t *out_node = NULL;
-
-
     axiom_namespace_t *env_ns = NULL;
-    axutil_property_t *prop = NULL;
+    
     int soap_version = AXIOM_SOAP12;
     axis2_status_t status = AXIS2_SUCCESS;
     axis2_bool_t skel_invoked = AXIS2_FALSE;
@@ -142,19 +134,27 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
     axis2_char_t *operation_name = NULL;
     char *classname = NULL;
 
-    wsf_svc_info_t *svc_info = NULL;
+    axutil_property_t *svc_info_prop = NULL;
+	axutil_property_t *req_info_prop = NULL;
+	wsf_svc_info_t *svc_info = NULL;
+	wsf_req_info_t *req_info = NULL;
 
     /** store in_msg_ctx envelope */
     axiom_soap_envelope_t *envelope = NULL;
 	axiom_soap_body_t *body = NULL;
-
+	axiom_node_t *in_body_node = NULL;
 
     /* store out_msg_ctx envelope */
     axiom_soap_envelope_t *default_envelope = NULL;
-
     axiom_soap_body_t *out_body = NULL;
     axiom_soap_header_t *out_header = NULL;
-    axiom_soap_fault_t *soap_fault = NULL;
+    axiom_soap_fault_t *out_soap_fault = NULL;
+
+    axiom_node_t *result_node = NULL;
+
+	axiom_node_t *out_body_content_node = NULL;
+    axiom_element_t *out_body_content_element = NULL;
+	axiom_node_t *out_node = NULL;
 
     TSRMLS_FETCH ();
 
@@ -163,62 +163,95 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
 
     op_ctx = axis2_msg_ctx_get_op_ctx (in_msg_ctx, env);
     op_desc = axis2_op_ctx_get_op (op_ctx, env);
-
     style = axis2_op_get_style (op_desc, env);
 
     envelope = axis2_msg_ctx_get_soap_envelope (in_msg_ctx, env);
-    body = axiom_soap_envelope_get_body (envelope, env);
+    
+	body = axiom_soap_envelope_get_body (envelope, env);
+	
+	in_body_node = axiom_soap_body_get_base_node(body, env);
 
 
     if (0 == axutil_strcmp (AXIS2_STYLE_DOC, style)) {
-        om_node = axiom_soap_body_get_base_node (body, env);
-        om_element = axiom_node_get_data_element (om_node, env);
-        om_node = axiom_node_get_first_child (om_node, env);
         local_name = wsf_xml_msg_recv_get_method_name (in_msg_ctx, env);
-
         if (!local_name) {
-
             return AXIS2_FAILURE;
         }
     } else if (0 == axutil_strcmp (AXIS2_STYLE_RPC, style)) {
      
         axiom_node_t *op_node = NULL;
         axiom_element_t *op_element = NULL;
-        op_node = axiom_soap_body_get_base_node (body, env);
-        op_element = axiom_node_get_data_element (op_node, env);
+		op_node = axiom_node_get_first_child (in_body_node, env);
+		if(!op_node){
+			return AXIS2_FAILURE;
+		}
+		op_element = axiom_node_get_data_element(op_node, env);
 
         if (!op_element) {
 
             return AXIS2_FAILURE;
         }
         local_name = axiom_element_get_localname (op_element, env);
-
         if (!local_name) {
-
-            return AXIS2_FAILURE;
+			return AXIS2_FAILURE;
         }
-        om_node = axiom_node_get_first_child (op_node, env);
-        om_element = axiom_node_get_data_element (om_node, env);
     }
 
     /** set soap version and soap namespace to local variables */
     if (in_msg_ctx && axis2_msg_ctx_get_is_soap_11 (in_msg_ctx, env)) {
-
         soap_ns = AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI; /* default is 1.2 */
         soap_version = AXIOM_SOAP11;
     }
 
-    prop = axis2_msg_ctx_get_property (in_msg_ctx, env, WS_SVC_INFO);
-    if (prop) {
-	svc_info = (wsf_svc_info_t *) axutil_property_get_value (prop, env);
+	svc_info_prop = axis2_msg_ctx_get_property (in_msg_ctx, env, WS_SVC_INFO);
+	if (svc_info_prop) {
+		svc_info = (wsf_svc_info_t *) axutil_property_get_value (svc_info_prop, env);
 	if (svc_info) {
-        	operation_name = axutil_hash_get (svc_info->ops_to_functions, local_name,
+       	operation_name = axutil_hash_get (svc_info->ops_to_functions, local_name,
 			                AXIS2_HASH_KEY_STRING);
-                 if (!operation_name)
-     	  	        return AXIS2_FAILURE;
+        if (!operation_name)
+ 	        return AXIS2_FAILURE;
 	} else {
         	return AXIS2_FAILURE;
 	}
+
+	req_info_prop = axis2_msg_ctx_get_property(in_msg_ctx, env, WS_REQ_INFO);
+	if(req_info_prop){
+		req_info = (wsf_req_info_t *)axutil_property_get_value(req_info_prop, env);
+		if(axis2_msg_ctx_get_doing_rest(in_msg_ctx, env)){
+			axis2_op_t *op = NULL;
+			axiom_node_t *body_child_node = NULL;
+			axiom_element_t *body_child = NULL;
+			int i = 0;
+
+			body_child_node = axiom_node_get_first_child(in_body_node, env);
+
+			if (!body_child_node)
+			{
+				op = axis2_msg_ctx_get_op(in_msg_ctx, env);
+				if(op){
+					body_child = axiom_element_create_with_qname(env, NULL,
+									axis2_op_get_qname(op, env), &body_child_node);
+					axiom_soap_body_add_child(body, env, body_child_node);
+				}
+			}
+			for (i = 0; i < req_info->param_count; i++)
+			{
+				axiom_node_t *node = NULL;
+				axiom_element_t *element = NULL;
+
+				element = axiom_element_create(env, NULL, req_info->params[i][0],
+											   NULL, &node);
+				axiom_element_set_text(element, env, req_info->params[i][1], node);
+				axiom_node_add_child(body_child_node, env, node);
+				AXIS2_FREE (env->allocator, req_info->params[i][0]);
+				AXIS2_FREE (env->allocator, req_info->params[i][1]);
+				AXIS2_FREE (env->allocator, req_info->params[i]);
+			}
+		}
+	}
+
+
 	if(svc_info->ops_to_classes){
             classname = axutil_hash_get(svc_info->ops_to_classes, local_name, AXIS2_HASH_KEY_STRING);
         }
@@ -263,7 +296,6 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
             "[wsf log]response node is not null");
     }
 
-    prop = axis2_msg_ctx_get_property (in_msg_ctx, env, WS_SVC_INFO);
     if (result_node) {
         if (0 == axutil_strcmp (style, AXIS2_STYLE_RPC)) {
 
@@ -277,11 +309,11 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
                 return AXIS2_FAILURE;
             }
 
-            body_content_element = axiom_element_create (env, NULL, res_name,
-                ns, &body_content_node);
-            axiom_node_add_child (body_content_node, env, result_node);
+            out_body_content_element = axiom_element_create (env, NULL, res_name,
+                ns, &out_body_content_node);
+            axiom_node_add_child (out_body_content_node, env, result_node);
         } else {
-            body_content_node = result_node;
+            out_body_content_node = result_node;
         }
     }
 
@@ -345,16 +377,16 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
             fault_reason_str = "Error occured while processing SOAP message";
         }
 
-        soap_fault = axiom_soap_fault_create_default_fault (env, out_body,
+        out_soap_fault = axiom_soap_fault_create_default_fault (env, out_body,
             fault_value_str, fault_reason_str, soap_version);
     }
 
-    if (body_content_node) {
+    if (out_body_content_node) {
 
-        axiom_node_add_child (out_node, env, body_content_node);
+        axiom_node_add_child (out_node, env, out_body_content_node);
         status = axis2_msg_ctx_set_soap_envelope (out_msg_ctx, env,
             default_envelope);
-    } else if (soap_fault) {
+    } else if (out_soap_fault) {
 
         axis2_msg_ctx_set_soap_envelope (out_msg_ctx, env, default_envelope);
         status = AXIS2_FAILURE; /* if there is a failure we have to return a failure code */
@@ -368,7 +400,6 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
 
     return AXIS2_SUCCESS;
 }
-
 
 /**
  * Following block distinguish the exposed part of the dll.
@@ -748,7 +779,6 @@ wsf_xml_msg_recv_invoke_wsmsg (
 
     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, " [wsf_svr] calling php service ");
 
-	
 	output_headers = wsf_xml_msg_recv_process_incomming_headers(soap_envelope, env TSRMLS_CC);
     zend_try {
         MAKE_STD_ZVAL (msg);
