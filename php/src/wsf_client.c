@@ -969,21 +969,62 @@ wsf_client_set_options (
         /** default header type is POST, so only setting the HTTP_METHOD if GET */
         if (zend_hash_find (client_ht, WS_HTTP_METHOD,
                 sizeof (WS_HTTP_METHOD), (void **) &tmp) == SUCCESS) {
-
             char *value = Z_STRVAL_PP (tmp);
+			axutil_property_t *http_method_property = NULL;
             if (value && (strcmp (value, "GET") == 0
                     || strcmp (value, "get") == 0)) {
-                axutil_property_t *get_property =
-                    axutil_property_create (env);
+				
+				http_method_property =	axutil_property_create (env);
 
-                axutil_property_set_value (get_property, env,
+				axutil_property_set_value (http_method_property, env,
                     axutil_strdup (env, AXIS2_HTTP_GET));
 
                 axis2_options_set_property (client_options, env,
-                    AXIS2_HTTP_METHOD, get_property);
+                    AXIS2_HTTP_METHOD, http_method_property);
 
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_client] setting http method get property");
+                    "[wsf_client] Setting HTTPMethod GET property");
+
+            }else if (value && (strcmp (value, "PUT") == 0
+                    || strcmp (value, "put") == 0)) {
+				
+				http_method_property =	axutil_property_create (env);
+
+				axutil_property_set_value (http_method_property, env,
+                    axutil_strdup (env, AXIS2_HTTP_PUT));
+
+                axis2_options_set_property (client_options, env,
+                    AXIS2_HTTP_METHOD, http_method_property);
+
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                    "[wsf_client] Setting HTTPMethod PUT property");
+
+            }else if (value && (strcmp (value, "HEAD") == 0
+                    || strcmp (value, "head") == 0)) {
+				
+				http_method_property =	axutil_property_create (env);
+
+				axutil_property_set_value (http_method_property, env,
+                    axutil_strdup (env, AXIS2_HTTP_HEAD));
+
+                axis2_options_set_property (client_options, env,
+                    AXIS2_HTTP_METHOD, http_method_property);
+
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                    "[wsf_client] Setting HTTPMethod HEAD property");
+            }else if (value && (strcmp (value, "DELETE") == 0
+                    || strcmp (value, "delete") == 0)) {
+				
+				http_method_property =	axutil_property_create (env);
+
+				axutil_property_set_value (http_method_property, env,
+                    axutil_strdup (env, AXIS2_HTTP_DELETE));
+
+                axis2_options_set_property (client_options, env,
+                    AXIS2_HTTP_METHOD, http_method_property);
+
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                    "[wsf_client] Setting HTTPMethod DELETE property");
             }
         }
     }
@@ -1171,30 +1212,21 @@ wsf_client_do_request (
     /** set proxy authentication parameters */
     wsf_client_set_proxy_auth_info(client_ht, env, client_options TSRMLS_CC);
 
-    if (input_type == WS_USING_MSG) {
-        /** setting soap , rest and security options */
-        status = wsf_client_set_options (client_ht, msg_ht, env,
+    /** setting soap , rest and security options */
+    status = wsf_client_set_options (client_ht, msg_ht, env,
             client_options, svc_client, 0 TSRMLS_CC);
-
-        is_addressing_engaged =
-            wsf_client_set_addr_options (client_ht, msg_ht, env,
+	
+	/** set addressing options */
+    is_addressing_engaged = wsf_client_set_addr_options (client_ht, msg_ht, env,
             client_options, svc_client TSRMLS_CC);
+	
+	if (input_type == WS_USING_MSG) { 
         /** add set headers function here */
-
         wsf_client_set_headers (env, svc_client, param TSRMLS_CC);
-
+		/** handle outgoing attachments */
         wsf_client_handle_outgoing_attachments (env, msg_ht, param, client_ht,
             request_payload, client_options TSRMLS_CC);
-
-    } else if (input_type == WS_USING_STRING) {
-
-        status = wsf_client_set_options (client_ht, NULL, env,
-            client_options, svc_client, 0 TSRMLS_CC);
-
-        is_addressing_engaged =
-            wsf_client_set_addr_options (client_ht, NULL, env, client_options,
-            svc_client TSRMLS_CC);
-    }
+    } 
 
     if (status == AXIS2_FAILURE) {
         php_error_docref (NULL TSRMLS_CC, E_ERROR,
