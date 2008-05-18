@@ -471,7 +471,7 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
         }*/
         axis2_options_set_enable_mtom (client_options, env, enable_mtom);
         wsf_util_set_attachments_with_cids(env, enable_mtom, enable_swa,
-                request_node, ht_attachments, "application/octet-stream");
+                request_node, ht_attachments, "application/octet-stream" TSRMLS_CC);
     }
     
     wsf_wsdl_send_receive_soap_envelope_with_op_client (env,
@@ -527,7 +527,8 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
             array_init (cid2str);
             array_init (cid2contentType);
 
-            wsf_util_get_attachments_form_soap_envelope(env, response_envelope, cid2str, cid2contentType TSRMLS_CC);
+            wsf_util_get_attachments_form_soap_envelope(env, response_envelope,
+                        cid2str, cid2contentType TSRMLS_CC);
 
             axiom_soap_base_node = 
                 axiom_soap_envelope_get_base_node(response_envelope, env);

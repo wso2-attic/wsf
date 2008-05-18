@@ -671,7 +671,7 @@ wsf_xml_msg_recv_invoke_mixed (
                         HashTable *ht_attachments = Z_ARRVAL_PP(tmp);
     
                         wsf_util_set_attachments_with_cids(env, enable_mtom, enable_swa,
-                                res_om_node, ht_attachments, "application/octet-stream");
+                                res_om_node, ht_attachments, "application/octet-stream" TSRMLS_CC);
                     }
                 }
             }
