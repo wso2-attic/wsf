@@ -432,7 +432,7 @@ void wsf_response_info_init(wsf_response_info_t *res_info)
 	res_info->response_length = 0;
 	res_info->http_protocol = NULL;
 	res_info->http_status_code = 0;
-	res_info->http_status_code_val = NULL;
+	res_info->http_status_code_name = NULL;
 	res_info->content_type = NULL;
 	return;
 }

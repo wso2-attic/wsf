@@ -374,8 +374,8 @@ PHP_MINIT_FUNCTION (wsf)
     
 /* {{{ PHP_MSHUTDOWN_FUNCTION
  */ 
-PHP_MSHUTDOWN_FUNCTION (wsf) {
-
+PHP_MSHUTDOWN_FUNCTION (wsf) 
+{
     wsf_worker_free(worker, ws_env_svr);
     axis2_msg_recv_free (wsf_msg_recv, ws_env_svr);
     axutil_env_free (env);
@@ -1269,7 +1269,31 @@ static void generate_wsdl_for_service(zval *svc_zval,
             zval_ptr_dtor(&functions);
             /** end WSDL generation stuff */ 
         }
-}     
+}  
+
+static void 
+wsf_service_write_response(wsf_response_info_t *response TSRMLS_DC)
+{
+	if(response && response->http_status_code_name){
+		char status_line[100];
+		char *content_type = NULL; 
+		sprintf(status_line, "%s %d %s" , response->http_protocol,response->http_status_code, 
+			response->http_status_code_name );
+		sapi_add_header(status_line, strlen(status_line), 1);
+		if(response->http_status_code == 202){
+			sapi_add_header ("Content-Length: 0", sizeof ("Content-Length: 0") - 1, 1);
+		}
+		if(response->content_type){
+			content_type = emalloc(strlen (response->content_type) * sizeof (char) + 20);
+			sprintf (content_type, "Content-Type: %s", response->content_type);
+			sapi_add_header (content_type, strlen (content_type), 1);
+			if(response->response_data){
+				php_write (response->response_data, response->response_length TSRMLS_CC);
+			}
+		}
+	}
+}
+
 
 /* {{{ proto long reply([long style]) reply the SOAP request */ 
 PHP_METHOD (ws_service, reply) 
@@ -1283,11 +1307,8 @@ PHP_METHOD (ws_service, reply)
     zval ** server_vars, **data;
     wsf_worker_t * php_worker = NULL;
     zval ** raw_post;
-    int status = 0;
 
-    char status_line[100];
-    char *content_type = NULL;
-    int raw_post_null = AXIS2_FALSE;
+	int raw_post_null = AXIS2_FALSE;
     
     char *arg_data = NULL;
     int arg_data_len = 0;
@@ -1399,41 +1420,10 @@ PHP_METHOD (ws_service, reply)
 		/** begin WSDL Generation */ 
 		generate_wsdl_for_service(obj ,svc_info, &req_info, SG(request_info).query_string , 0 TSRMLS_CC);
 
-   }else {
-       
-        status = wsf_worker_process_request (php_worker, ws_env_svr, &req_info, &res_info, svc_info TSRMLS_CC);
-
-        if (status == WS_HTTP_ACCEPTED){
-            sprintf (status_line, "%s 202 Accepted", req_info.http_protocol);
-            sapi_add_header (status_line, strlen (status_line), 1);
-            sapi_add_header ("Content-Length: 0", sizeof ("Content-Length: 0") - 1, 1);
-			if(req_info.content_type){
-				content_type = emalloc(strlen (req_info.content_type) * sizeof (char) + 20);
-				sprintf (content_type, "Content-Type: %s", req_info.content_type);
-				sapi_add_header (content_type, strlen (content_type), 1);
-			}
-		}else if (status == WS_HTTP_OK) {
-            sprintf (status_line, "%s 200 OK", req_info.http_protocol);
-            sapi_add_header (status_line, strlen (status_line), 1);
-			if(res_info.content_type){
-				content_type = emalloc(strlen (res_info.content_type) * sizeof (char) + 20);
-				sprintf (content_type, "Content-Type: %s", res_info.content_type);
-				sapi_add_header (content_type, strlen (content_type), 1);
-				php_write (res_info.response_data, res_info.response_length TSRMLS_CC);
-			}
-		}else if (status == WS_HTTP_INTERNAL_SERVER_ERROR) {
-
-            sprintf (status_line, "%s 500 Internal Server Error", req_info.http_protocol);
-            sapi_add_header (status_line, strlen (status_line), 1);
-			if (res_info.content_type){
-                content_type = emalloc(strlen (res_info.content_type) * sizeof (char) + 20);
-                sprintf (content_type, "Content-Type: %s", res_info.content_type);
-                if (content_type){
-                    sapi_add_header (content_type, strlen (content_type), 1);
-                    php_write (res_info.response_data, res_info.response_length TSRMLS_CC);
-                }
-            }
-        }
+   }else 
+   {
+		wsf_worker_process_request (php_worker, ws_env_svr, &req_info, &res_info, svc_info TSRMLS_CC);
+		wsf_service_write_response(&res_info TSRMLS_CC);
 		wsf_response_info_cleanup(&res_info, ws_env_svr);
     }
 }

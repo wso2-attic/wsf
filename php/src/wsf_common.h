@@ -298,7 +298,7 @@ typedef struct wsf_response_info
 	int  response_length;
 	char *http_protocol;
 	int  http_status_code;
-	char *http_status_code_val;
+	char *http_status_code_name;
 	char *content_type;
 }wsf_response_info_t;
 
