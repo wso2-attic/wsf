@@ -38,7 +38,7 @@ void create_dynamic_client(zval *this_ptr,
                            axutil_env_t * env TSRMLS_DC);
 
 void wsf_wsdl_process_service(zval *this_ptr, 
-                              wsf_req_info_t * reqinfo, 
+                              wsf_request_info_t * reqinfo, 
                               wsf_svc_info_t *svc_info, 
                               axutil_env_t *env TSRMLS_DC);
 

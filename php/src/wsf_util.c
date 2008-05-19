@@ -371,6 +371,7 @@ wsf_svc_info_create (
     svc_info->class_map = NULL;
     svc_info->wsdl_gen_class_map = NULL;
     svc_info->wsdl = NULL;
+	svc_info->loc_str = NULL;
 
     return svc_info;
 }
@@ -406,12 +407,8 @@ wsf_svc_info_free (
 
 /** create php request info struct */
 void 
-wsf_php_req_info_init (wsf_req_info_t *req_info)
+wsf_request_info_init (wsf_request_info_t *req_info)
 {
-    /*
-    wsf_req_info_t *req_info = NULL;
-    req_info = emalloc (sizeof (wsf_req_info_t));
-    */
     req_info->svr_name = NULL;
 	/** default port is 80 */
     req_info->svr_port = 80;
@@ -421,31 +418,39 @@ wsf_php_req_info_init (wsf_req_info_t *req_info)
     req_info->content_length = -1;
     req_info->content_type = NULL;
     req_info->request_method = NULL;
-    req_info->req_data = NULL;
-    req_info->req_data_length = 0;
-    req_info->result_length = 0;
-    req_info->result_payload = NULL;
-    req_info->transfer_encoding = NULL;
+    req_info->request_data = NULL;
+    req_info->request_data_length = 0;
+	req_info->transfer_encoding = NULL;
     req_info->query_string = NULL;
-	req_info->out_content_type = NULL;
 
     return;
 }
 
+void wsf_response_info_init(wsf_response_info_t *res_info)
+{
+	res_info->response_data = NULL;
+	res_info->response_length = 0;
+	res_info->http_protocol = NULL;
+	res_info->http_status_code = 0;
+	res_info->http_status_code_val = NULL;
+	res_info->content_type = NULL;
+	return;
+}
+
 void
-wsf_php_req_info_cleanup (
-    wsf_req_info_t * req_info,
+wsf_response_info_cleanup (
+    wsf_response_info_t * response_info,
 	axutil_env_t *env)
 {
 	/**note request info is not malloced, so should not be freed */
-    if (req_info) {
-		if(req_info->result_payload){
+	if (response_info) {
+		if(response_info->response_data){
 			/** This is always allocated by axis2 */
-			AXIS2_FREE(env->allocator, req_info->result_payload);
+			AXIS2_FREE(env->allocator, response_info->response_data);
 		}
-		if(req_info->out_content_type){
-			AXIS2_FREE(env->allocator, req_info->out_content_type);
-			req_info->out_content_type = NULL;
+		if(response_info->content_type){
+			AXIS2_FREE(env->allocator, response_info->content_type);
+			response_info->content_type = NULL;
 		}
     }
 }

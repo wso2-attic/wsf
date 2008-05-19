@@ -1056,7 +1056,7 @@ PHP_METHOD (ws_service, __destruct)
 
 static void generate_wsdl_for_service(zval *svc_zval, 
         wsf_svc_info_t *svc_info, 
-        wsf_req_info_t *req_info, char *wsdl_ver_str,
+        wsf_request_info_t *req_info, char *wsdl_ver_str,
         int in_cmd TSRMLS_DC)
 {
         char *service_name = NULL;
@@ -1271,23 +1271,15 @@ static void generate_wsdl_for_service(zval *svc_zval,
         }
 }     
 
-static void write_response(int http_response_code, 
-						   char *protocol, 
-						   void *cnt_length, 
-						   void *cnt TSRMLS_DC)
-{
-
-}
-
-       
 /* {{{ proto long reply([long style]) reply the SOAP request */ 
 PHP_METHOD (ws_service, reply) 
 {
     ws_object_ptr intern = NULL;
     zval * obj = NULL;
     axis2_conf_ctx_t * conf_ctx = NULL;
-    wsf_svc_info_t * svc_info = NULL;
-    wsf_req_info_t  req_info;
+    wsf_svc_info_t *svc_info = NULL;
+    wsf_request_info_t  req_info;
+	wsf_response_info_t  res_info;
     zval ** server_vars, **data;
     wsf_worker_t * php_worker = NULL;
     zval ** raw_post;
@@ -1320,8 +1312,9 @@ PHP_METHOD (ws_service, reply)
 
     zend_is_auto_global ("_SERVER", sizeof ("_SERVER") - 1 TSRMLS_CC);
     
-    wsf_php_req_info_init (&req_info);
-    
+    wsf_request_info_init (&req_info);
+    wsf_response_info_init(&res_info);
+
     if(SG(request_info).request_uri){        
     
         if (zend_hash_find (&EG (symbol_table), "_SERVER", sizeof ("_SERVER"),
@@ -1364,8 +1357,8 @@ PHP_METHOD (ws_service, reply)
     	
 		if (zend_hash_find (&EG(symbol_table), "HTTP_RAW_POST_DATA", sizeof ("HTTP_RAW_POST_DATA"), 
                     (void **)&raw_post) != FAILURE  && ((*raw_post)->type ==  IS_STRING)){
-			req_info.req_data = Z_STRVAL_PP (raw_post);
-			req_info.req_data_length = Z_STRLEN_PP (raw_post);
+			req_info.request_data = Z_STRVAL_PP (raw_post);
+			req_info.request_data_length = Z_STRLEN_PP (raw_post);
 		}else {
 			AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "raw post data not found");
 			if(req_info.request_method && strcmp(req_info.request_method,"POST") == 0){
@@ -1385,8 +1378,8 @@ PHP_METHOD (ws_service, reply)
         }
         req_info.svr_name = strdup("localhost");
         req_info.svr_port = 9999;
-        req_info.req_data = arg_data;
-        req_info.req_data_length = arg_data_len;
+        req_info.request_data = arg_data;
+        req_info.request_data_length = arg_data_len;
         req_info.http_protocol = strdup("HTTP");
         req_info.request_uri = svc_info->svc_name;
         req_info.request_method = strdup("POST");
@@ -1408,8 +1401,7 @@ PHP_METHOD (ws_service, reply)
 
    }else {
        
-        status = wsf_worker_process_request (php_worker, ws_env_svr, &req_info, svc_info TSRMLS_CC);
-        
+        status = wsf_worker_process_request (php_worker, ws_env_svr, &req_info, &res_info, svc_info TSRMLS_CC);
 
         if (status == WS_HTTP_ACCEPTED){
             sprintf (status_line, "%s 202 Accepted", req_info.http_protocol);
@@ -1423,26 +1415,26 @@ PHP_METHOD (ws_service, reply)
 		}else if (status == WS_HTTP_OK) {
             sprintf (status_line, "%s 200 OK", req_info.http_protocol);
             sapi_add_header (status_line, strlen (status_line), 1);
-			if(req_info.out_content_type){
-				content_type = emalloc(strlen (req_info.out_content_type) * sizeof (char) + 20);
-				sprintf (content_type, "Content-Type: %s", req_info.out_content_type);
+			if(res_info.content_type){
+				content_type = emalloc(strlen (res_info.content_type) * sizeof (char) + 20);
+				sprintf (content_type, "Content-Type: %s", res_info.content_type);
 				sapi_add_header (content_type, strlen (content_type), 1);
-				php_write (req_info.result_payload, req_info.result_length TSRMLS_CC);
+				php_write (res_info.response_data, res_info.response_length TSRMLS_CC);
 			}
 		}else if (status == WS_HTTP_INTERNAL_SERVER_ERROR) {
 
             sprintf (status_line, "%s 500 Internal Server Error", req_info.http_protocol);
             sapi_add_header (status_line, strlen (status_line), 1);
-			if (req_info.content_type){
-                content_type = emalloc(strlen (req_info.content_type) * sizeof (char) + 20);
-                sprintf (content_type, "Content-Type: %s", req_info.content_type);
+			if (res_info.content_type){
+                content_type = emalloc(strlen (res_info.content_type) * sizeof (char) + 20);
+                sprintf (content_type, "Content-Type: %s", res_info.content_type);
                 if (content_type){
                     sapi_add_header (content_type, strlen (content_type), 1);
-                    php_write (req_info.result_payload, req_info.result_length TSRMLS_CC);
+                    php_write (res_info.response_data, res_info.response_length TSRMLS_CC);
                 }
             }
         }
-		wsf_php_req_info_cleanup(&req_info, ws_env_svr);
+		wsf_response_info_cleanup(&res_info, ws_env_svr);
     }
 }
 /* }}} end reply */ 

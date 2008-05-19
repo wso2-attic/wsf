@@ -27,7 +27,7 @@ struct wsf_stream_impl
 {
     axutil_stream_t stream;
     axutil_stream_type_t stream_type;
-    wsf_req_info_t *req_info;
+    wsf_request_info_t *req_info;
     axis2_char_t *buffer;
     int current_rlen;
     int buffer_len;
@@ -64,7 +64,7 @@ int WSF_CALL wsf_stream_skip (
 WSF_PHP_API axutil_stream_t *WSF_CALL
 wsf_stream_create (
     const axutil_env_t * env,
-    wsf_req_info_t * req_info TSRMLS_DC)
+    wsf_request_info_t * req_info TSRMLS_DC)
 {
     wsf_stream_impl_t *stream_impl = NULL;
 
@@ -85,12 +85,12 @@ wsf_stream_create (
     stream_impl->buffer_len = 0;
     stream_impl->current_rlen = 0;
     stream_impl->buffer = AXIS2_MALLOC (env->allocator,
-        sizeof (axis2_char_t) * req_info->req_data_length);
+        sizeof (axis2_char_t) * req_info->request_data_length);
 
-    memcpy (stream_impl->buffer, req_info->req_data,
-        req_info->req_data_length);
+    memcpy (stream_impl->buffer, req_info->request_data,
+        req_info->request_data_length);
 
-    stream_impl->buffer_len = req_info->req_data_length;
+    stream_impl->buffer_len = req_info->request_data_length;
 
     return &(stream_impl->stream);
 }

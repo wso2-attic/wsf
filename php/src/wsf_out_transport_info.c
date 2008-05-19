@@ -27,7 +27,7 @@ typedef struct wsf_out_transport_info_impl wsf_out_transport_info_impl_t;
 struct wsf_out_transport_info_impl
 {
     axis2_http_out_transport_info_t out_transport_info;
-    wsf_req_info_t *request;
+    wsf_response_info_t *response;
     axis2_char_t *encoding;
 };
 
@@ -101,7 +101,7 @@ static const axis2_out_transport_info_ops_t ops_var = {
 axis2_http_out_transport_info_t *
 wsf_out_transport_info_create (
     const axutil_env_t * env,
-    wsf_req_info_t * request)
+    wsf_response_info_t * request)
 {
     wsf_out_transport_info_impl_t *info_impl = NULL;
     axis2_http_out_transport_info_t *out_transport_info = NULL;
@@ -114,7 +114,7 @@ wsf_out_transport_info_create (
         AXIS2_ERROR_SET (env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
     }
-    info_impl->request = request;
+    info_impl->response = request;
     info_impl->encoding = NULL;
 
     out_transport_info = &(info_impl->out_transport_info);
@@ -139,7 +139,7 @@ wsf_http_out_transport_info_free (
     AXIS2_ENV_CHECK (env, AXIS2_FAILURE);
     info_impl = AXIS2_INTF_TO_IMPL (info);
 
-    info_impl->request = NULL;  /* request doesn't belong to info */
+    info_impl->response = NULL;  /* request doesn't belong to info */
     if (NULL != info_impl->encoding) {
         AXIS2_FREE (env->allocator, info_impl->encoding);
         info_impl->encoding = NULL;
@@ -178,11 +178,11 @@ axis2_status_t WSF_CALL wsf_http_out_transport_info_set_content_type (
 
         tmp1 = axutil_stracat (env, content_type, ";charset=");
         tmp2 = axutil_stracat (env, tmp1, info_impl->encoding);
-        info_impl->request->out_content_type = axutil_strdup (env, tmp2);
+        info_impl->response->content_type = axutil_strdup (env, tmp2);
         AXIS2_FREE (env->allocator, tmp1);
         AXIS2_FREE (env->allocator, tmp2);
     } else {
-        info_impl->request->out_content_type = axutil_strdup (env, content_type);
+        info_impl->response->content_type = axutil_strdup (env, content_type);
     }
     return AXIS2_SUCCESS;
 }

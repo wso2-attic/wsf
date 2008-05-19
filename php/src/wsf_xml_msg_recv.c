@@ -137,7 +137,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
     axutil_property_t *svc_info_prop = NULL;
 	axutil_property_t *req_info_prop = NULL;
 	wsf_svc_info_t *svc_info = NULL;
-	wsf_req_info_t *req_info = NULL;
+	wsf_request_info_t *req_info = NULL;
 
     /** store in_msg_ctx envelope */
     axiom_soap_envelope_t *envelope = NULL;
@@ -217,7 +217,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
 
 	req_info_prop = axis2_msg_ctx_get_property(in_msg_ctx, env, WS_REQ_INFO);
 	if(req_info_prop){
-		req_info = (wsf_req_info_t *)axutil_property_get_value(req_info_prop, env);
+		req_info = (wsf_request_info_t *)axutil_property_get_value(req_info_prop, env);
 		if(axis2_msg_ctx_get_doing_rest(in_msg_ctx, env)){
 			axis2_op_t *op = NULL;
 			axiom_node_t *body_child_node = NULL;

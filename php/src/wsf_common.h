@@ -270,7 +270,7 @@ typedef struct wsf_svc_info
 wsf_svc_info_t;
 
 
-typedef struct php_req_info
+typedef struct wsf_request_info
 {
     long svr_port;
     char *svr_name;
@@ -281,18 +281,26 @@ typedef struct php_req_info
     long content_length;
     char *content_type;
     char *request_method;
-    void *req_data;
-    int req_data_length;
-    void *result_payload;
-    int result_length;
-    char *transfer_encoding;
-	char *out_content_type;
-
+    void *request_data;
+    int request_data_length;
+    
+	char *transfer_encoding;
+	
 	/** REST parameter count */
 	int param_count;
 	/** parameters array */
 	char ***params;
-} wsf_req_info_t;
+} wsf_request_info_t;
+
+typedef struct wsf_response_info
+{
+	void *response_data;
+	int  response_length;
+	char *http_protocol;
+	int  http_status_code;
+	char *http_status_code_val;
+	char *content_type;
+}wsf_response_info_t;
 
 /** functions */
 

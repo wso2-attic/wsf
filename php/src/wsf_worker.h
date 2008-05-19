@@ -39,8 +39,9 @@ wsf_worker_t *wsf_worker_create (
 int wsf_worker_process_request (
     wsf_worker_t * worker,
     axutil_env_t * env,
-    wsf_req_info_t * reqinfo,
-    wsf_svc_info_t * svc_info TSRMLS_DC);
+    wsf_request_info_t *req_info,
+	wsf_response_info_t *res_info,
+    wsf_svc_info_t *svc_info TSRMLS_DC);
 
 void wsf_worker_free (
     wsf_worker_t * worker,

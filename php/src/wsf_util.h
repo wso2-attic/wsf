@@ -39,7 +39,7 @@ axis2_char_t *wsf_util_get_http_headers_from_op_client (
     axutil_env_t * env,
     axis2_wsdl_msg_labels_t message_label);
 
-char *wsf_util_generate_svc_name_from_uri (
+char *wsf_util_generate_svc_name_from_uri_and_set_loc_str (
     char *req_uri,
     wsf_svc_info_t * svc_info,
     axutil_env_t * env);
@@ -67,10 +67,11 @@ void wsf_svc_info_free (
     wsf_svc_info_t * svc_info,
     axutil_env_t * env);
 
-void wsf_php_req_info_init (wsf_req_info_t * req_info);
+void wsf_request_info_init (wsf_request_info_t * req_info);
+void wsf_response_info_init(wsf_response_info_t *response_info);
 
-void wsf_php_req_info_cleanup (
-    wsf_req_info_t * req_info,
+void wsf_response_info_cleanup (
+    wsf_response_info_t * response_info,
 	axutil_env_t *env);
 
 void wsf_util_set_attachments_with_cids (
@@ -167,7 +168,10 @@ int wsf_util_get_attachments_form_soap_envelope (
     zval * cid2str,
     zval * cid2contentType TSRMLS_DC);
 
-void wsf_util_process_rest_params(axutil_env_t *env, wsf_svc_info_t *svc_info,HashTable *ht_rest_map TSRMLS_DC);
+void wsf_util_process_rest_params(
+	axutil_env_t *env, 
+	wsf_svc_info_t *svc_info,
+	HashTable *ht_rest_map TSRMLS_DC);
 
 
 #endif /* WSF_UTIL_H */

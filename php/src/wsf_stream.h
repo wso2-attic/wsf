@@ -28,7 +28,7 @@ extern "C"
 
     WSF_PHP_API axutil_stream_t *WSF_CALL wsf_stream_create (
         const axutil_env_t * env,
-        wsf_req_info_t * req TSRMLS_DC);
+        wsf_request_info_t * req TSRMLS_DC);
 
 	axis2_status_t WSF_CALL
 	wsf_stream_free (

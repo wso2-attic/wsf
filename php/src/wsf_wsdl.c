@@ -910,7 +910,7 @@ void wsf_wsdl_handle_client_security(HashTable *client_ht,
     
 }
 
-void wsf_wsdl_process_service(zval *this_ptr, wsf_req_info_t *request_info1, wsf_svc_info_t *svc_info, axutil_env_t *env TSRMLS_DC)
+void wsf_wsdl_process_service(zval *this_ptr, wsf_request_info_t *request_info1, wsf_svc_info_t *svc_info, axutil_env_t *env TSRMLS_DC)
 {
     zval **wsdl_location = NULL;
     zval *params[2];
