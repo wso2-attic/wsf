@@ -25,6 +25,11 @@
 #include "wsf_common.h"
 #include <axiom_soap_body.h>
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 axiom_node_t *wsf_util_read_payload (
     axiom_xml_reader_t * reader,
     const axutil_env_t * env);
@@ -173,5 +178,8 @@ void wsf_util_process_rest_params(
 	wsf_svc_info_t *svc_info,
 	HashTable *ht_rest_map TSRMLS_DC);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* WSF_UTIL_H */
