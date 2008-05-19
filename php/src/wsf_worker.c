@@ -223,13 +223,15 @@ wsf_worker_find_op_and_params_with_location_and_method(
 	return op;
 }
 
-wsf_worker_t * wsf_worker_create (const axutil_env_t * env,
-    axis2_char_t * repo_path, axis2_char_t * rm_db_dir) 
+wsf_worker_t* 
+wsf_worker_create (
+	const axutil_env_t *env,
+    axis2_char_t *repo_path, 
+	axis2_char_t *rm_db_dir) 
 {
     wsf_worker_t * worker = NULL;
 
-	worker = (wsf_worker_t *) AXIS2_MALLOC (env->allocator,
-                sizeof (wsf_worker_t));
+	worker = (wsf_worker_t *) AXIS2_MALLOC (env->allocator,sizeof (wsf_worker_t));
     if (!worker){
         AXIS2_ERROR_SET (env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
@@ -266,7 +268,8 @@ wsf_worker_t * wsf_worker_create (const axutil_env_t * env,
     return worker;
 }
 
-axis2_char_t * wsf_worker_get_bytes (const axutil_env_t * env,
+axis2_char_t* 
+wsf_worker_get_bytes (const axutil_env_t * env,
     axutil_stream_t * stream) 
 {
     axutil_stream_t * tmp_stream = NULL;
@@ -291,8 +294,7 @@ axis2_char_t * wsf_worker_get_bytes (const axutil_env_t * env,
     return_size = axutil_stream_get_len (tmp_stream, env);
     if (return_size > 0) {
         buffer = (char *) AXIS2_MALLOC (env->allocator, sizeof (char) * (return_size + 2));
-        return_size =
-            axutil_stream_read (tmp_stream, env, buffer, return_size + 1);
+        return_size = axutil_stream_read (tmp_stream, env, buffer, return_size + 1);
         buffer[return_size + 1] = '\0';
     }
     axutil_stream_free (tmp_stream, env);
@@ -311,6 +313,8 @@ wsf_worker_free (
     }
     AXIS2_FREE (env->allocator, worker);
 }
+
+
 int
 wsf_worker_process_request (
     wsf_worker_t * worker,
@@ -658,7 +662,9 @@ wsf_worker_process_request (
     return 1;
 }
 
-axis2_conf_ctx_t * wsf_worker_get_conf_ctx (wsf_worker_t * worker,
+axis2_conf_ctx_t* 
+wsf_worker_get_conf_ctx (
+	wsf_worker_t * worker,
     const axutil_env_t * env) 
 {
     return worker->conf_ctx;

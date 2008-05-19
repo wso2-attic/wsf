@@ -35,7 +35,8 @@ struct wsf_stream_impl
 
 #define AXIS2_INTF_TO_IMPL(stream) ((wsf_stream_impl_t *)(stream))
 
-axis2_status_t WSF_CALL wsf_stream_free (
+axis2_status_t WSF_CALL 
+wsf_stream_free (
     axutil_stream_t * stream,
     const axutil_env_t * env);
 
@@ -44,19 +45,22 @@ wsf_stream_get_type (
     axutil_stream_t * stream,
     const axutil_env_t * env);
 
-int WSF_CALL wsf_stream_write (
+int WSF_CALL 
+wsf_stream_write (
     axutil_stream_t * stream,
     const axutil_env_t * env,
     const void *buffer,
     size_t count);
 
-int WSF_CALL wsf_stream_read (
+int WSF_CALL 
+wsf_stream_read (
     axutil_stream_t * stream,
     const axutil_env_t * env,
     void *buffer,
     size_t count);
 
-int WSF_CALL wsf_stream_skip (
+int WSF_CALL 
+wsf_stream_skip (
     axutil_stream_t * stream,
     const axutil_env_t * env,
     int count);
@@ -84,8 +88,8 @@ wsf_stream_create (
     stream_impl->buffer = NULL;
     stream_impl->buffer_len = 0;
     stream_impl->current_rlen = 0;
-    stream_impl->buffer = AXIS2_MALLOC (env->allocator,
-        sizeof (axis2_char_t) * req_info->request_data_length);
+    stream_impl->buffer = AXIS2_MALLOC(env->allocator,
+		sizeof (axis2_char_t) * req_info->request_data_length);
 
     memcpy (stream_impl->buffer, req_info->request_data,
         req_info->request_data_length);
@@ -140,27 +144,31 @@ wsf_stream_read (
 {
     wsf_stream_impl_t *stream_impl = NULL;
     int len = 0;
-    stream_impl = AXIS2_INTF_TO_IMPL (stream);
+    
+	stream_impl = AXIS2_INTF_TO_IMPL (stream);
     if (!buffer)
         return -1;
 
     len = stream_impl->buffer_len - stream_impl->current_rlen;
-    if (len >= count) {
+    if (len >= count) 
+	{
+        memcpy (buffer, stream_impl->buffer 
+			+  stream_impl->current_rlen * sizeof (axis2_char_t), count);
 
-        memcpy (buffer,
-            stream_impl->buffer +
-            stream_impl->current_rlen * sizeof (axis2_char_t), count);
         stream_impl->current_rlen += count;
+
         return count;
-    } else if (len < count && len > 0) {
+    } else if (len < count && len > 0) 
+	{
+        memcpy (buffer, stream_impl->buffer 
+			+ stream_impl->current_rlen * sizeof (axis2_char_t), len);
 
-        memcpy (buffer,
-            stream_impl->buffer +
-            stream_impl->current_rlen * sizeof (axis2_char_t), len);
         stream_impl->current_rlen += len;
-        return len;
-    } else {
+        
+		return len;
 
+    } else 
+	{
         buffer = '\0';
         return 0;
     }
@@ -172,7 +180,6 @@ wsf_stream_skip (
     const axutil_env_t * env,
     int count)
 {
-
     wsf_stream_impl_t *stream_impl = NULL;
     stream_impl = AXIS2_INTF_TO_IMPL (stream);
     return -1;
