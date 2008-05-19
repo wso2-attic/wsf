@@ -820,9 +820,8 @@ wsf_xml_msg_recv_invoke_wsmsg (
              * call wsf_util_get_attachments_form_soap_envelope(env, soap_envelope, cid2str, cid2contentType TSRMLS_CC);
              */
             wsf_util_get_attachments_form_soap_envelope(env, soap_envelope, cid2str, cid2contentType TSRMLS_CC);
-            
-            add_property_zval (msg, "attachments", cid2str);
-            add_property_zval (msg, "cid2contentType", cid2contentType);
+            add_property_zval (msg, WS_ATTACHMENTS, cid2str);
+            add_property_zval (msg, WS_CID2CONTENT_TYPE , cid2contentType);
 
 		}else if(request_xop == AXIS2_FALSE)
 		{
@@ -937,8 +936,8 @@ wsf_xml_msg_recv_invoke_wsmsg (
             zval **msg_tmp = NULL;
             axis2_char_t *default_cnt_type = NULL;
 
-            if (zend_hash_find(Z_OBJPROP (retval), "defaultAttachmentContentType",
-                    sizeof ("defaultAttachmentContentType"), (void **) & msg_tmp) == SUCCESS
+			if (zend_hash_find(Z_OBJPROP (retval), WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE,
+                    sizeof (WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE), (void **) & msg_tmp) == SUCCESS
 						&& Z_TYPE_PP (msg_tmp) == IS_STRING) 
 			{
                 default_cnt_type = Z_STRVAL_PP (msg_tmp);
@@ -965,7 +964,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
 						res_om_node = wsf_util_deserialize_buffer (env, res_payload);
 					}
             }
-            if (zend_hash_find (Z_OBJPROP (retval), "attachments", sizeof ("attachments"),
+			if (zend_hash_find (Z_OBJPROP (retval), WS_ATTACHMENTS, sizeof (WS_ATTACHMENTS),
                (void **) & msg_tmp) == SUCCESS && Z_TYPE_PP (msg_tmp) == IS_ARRAY) 
 			{
                 HashTable *ht = NULL;
