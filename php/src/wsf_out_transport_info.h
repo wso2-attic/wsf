@@ -25,13 +25,15 @@ extern "C"
 {
 #endif
 
-    axis2_http_out_transport_info_t *wsf_out_transport_info_create (
-        const axutil_env_t * env,
-        wsf_response_info_t * req);
+axis2_http_out_transport_info_t *
+wsf_out_transport_info_create (
+    const axutil_env_t * env,
+    wsf_response_info_t * req);
 
-    WSF_PHP_API axis2_status_t WSF_CALL wsf_out_transport_info_free_void_arg (
-        void *transport_info,
-        const axutil_env_t * env);
+WSF_PHP_API axis2_status_t WSF_CALL 
+wsf_out_transport_info_free_void_arg (
+    void *transport_info,
+    const axutil_env_t * env);
 
 
 
