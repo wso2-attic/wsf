@@ -30,56 +30,72 @@ extern "C"
 {
 #endif
 
-axiom_node_t *wsf_util_read_payload (
+axiom_node_t *
+wsf_util_read_payload (
     axiom_xml_reader_t * reader,
     const axutil_env_t * env);
 
-axis2_char_t *wsf_util_get_soap_msg_from_op_client (
+axis2_char_t *
+wsf_util_get_soap_msg_from_op_client (
     axis2_op_client_t * op_client,
     axutil_env_t * env,
     axis2_wsdl_msg_labels_t message_label);
 
-axis2_char_t *wsf_util_get_http_headers_from_op_client (
+axis2_char_t *
+wsf_util_get_http_headers_from_op_client (
     axis2_op_client_t * op_client,
     axutil_env_t * env,
     axis2_wsdl_msg_labels_t message_label);
 
-char *wsf_util_generate_svc_name_from_uri_and_set_loc_str (
+char *
+wsf_util_generate_svc_name_from_uri_and_set_loc_str (
     char *req_uri,
     wsf_svc_info_t * svc_info,
     axutil_env_t * env);
 
-void wsf_util_create_svc_from_svc_info (
+void 
+wsf_util_create_svc_from_svc_info (
     wsf_svc_info_t * svc_info,
     axutil_env_t * env TSRMLS_DC);
 
 
-void wsf_util_create_op_and_add_to_svc (
+void 
+wsf_util_create_op_and_add_to_svc (
     wsf_svc_info_t * svc_info,
     axutil_env_t * env,
     char *op_name,
     HashTable * meps TSRMLS_DC);
 
-int wsf_util_engage_module (
+int 
+wsf_util_engage_module (
     axis2_conf_t * conf,
     axis2_char_t * module_name,
     axutil_env_t * env,
     axis2_svc_t * svc);
 
-wsf_svc_info_t *wsf_svc_info_create ();
+wsf_svc_info_t *
+wsf_svc_info_create ();
 
-void wsf_svc_info_free (
+void 
+wsf_svc_info_free (
     wsf_svc_info_t * svc_info,
     axutil_env_t * env);
 
-void wsf_request_info_init (wsf_request_info_t * req_info);
-void wsf_response_info_init(wsf_response_info_t *response_info);
+void 
+wsf_request_info_init (
+	wsf_request_info_t * req_info);
 
-void wsf_response_info_cleanup (
+void 
+wsf_response_info_init(
+	wsf_response_info_t *response_info);
+
+void 
+wsf_response_info_cleanup (
     wsf_response_info_t * response_info,
 	axutil_env_t *env);
 
-void wsf_util_set_attachments_with_cids (
+void 
+wsf_util_set_attachments_with_cids (
     const axutil_env_t * env,
     int enable_mtom,
     int enable_swa,
@@ -87,40 +103,49 @@ void wsf_util_set_attachments_with_cids (
     HashTable * attach_ht,
     char *default_cnt_type TSRMLS_DC);
 
-int wsf_util_get_attachments (
+int 
+wsf_util_get_attachments (
     const axutil_env_t * env,
     axiom_node_t * payload_node,
     zval * cid2str,
     zval * cid2contentType TSRMLS_DC);
 
-char *wsf_util_serialize_om (
+char *
+wsf_util_serialize_om (
     const axutil_env_t * env,
     axiom_node_t * ret_node);
 
-axutil_env_t *wsf_env_create (
+axutil_env_t *
+wsf_env_create (
     axis2_char_t * logpath);
 
-axutil_env_t *wsf_env_create_svr (
+axutil_env_t *
+wsf_env_create_svr (
     axis2_char_t * logpath);
 
-void wsf_env_free (
+void 
+wsf_env_free (
     axutil_env_t * env);
 
-axiom_node_t *wsf_util_construct_header_node (
+axiom_node_t *
+wsf_util_construct_header_node (
     const axutil_env_t * env,
     axiom_node_t *parent,
 	axis2_char_t *soap_uri,
 	int soap_version,
     zval * header TSRMLS_DC);
 
-char *wsf_util_read_file_to_buffer (
+char *
+wsf_util_read_file_to_buffer (
     char *filename TSRMLS_DC);
 
-axiom_node_t *wsf_util_deserialize_buffer (
+axiom_node_t *
+wsf_util_deserialize_buffer (
     const axutil_env_t * env,
     char *buffer);
 
-void wsf_util_set_soap_fault (
+void 
+wsf_util_set_soap_fault (
     zval * this_ptr,
     char *fault_code_ns,
     char *fault_code,
@@ -129,34 +154,40 @@ void wsf_util_set_soap_fault (
     zval * fault_detail,
     char *name TSRMLS_DC);
 
-void wsf_util_handle_soap_fault(
+void 
+wsf_util_handle_soap_fault(
 	zval *fault_zval,
 	axutil_env_t *env,
 	axiom_node_t *fault_node,
 	int soap_version TSRMLS_DC);
 
-int wsf_util_is_module_engaged_to_svc_client(
+int 
+wsf_util_is_module_engaged_to_svc_client(
 	const axis2_svc_client_t *svc_client,
 	axutil_env_t *env,
 	char *module_name);
 
-void wsf_util_engage_modules_to_svc(
+void 
+wsf_util_engage_modules_to_svc(
     axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
     wsf_svc_info_t *svc_info);
 
-void wsf_util_process_ws_service_op_actions(
+void 
+wsf_util_process_ws_service_op_actions(
      HashTable *ht_actions,
      wsf_svc_info_t *svc_info,
      axutil_env_t *ws_env_svr TSRMLS_DC);
 
-void wsf_util_process_ws_service_operations(
+void 
+wsf_util_process_ws_service_operations(
         HashTable *ht_ops_to_funcs,
         HashTable *ht_ops_to_mep,
         wsf_svc_info_t *svc_info,
         axutil_env_t *ws_env_svr TSRMLS_DC);
 
-void wsf_util_process_ws_service_classes(
+void 
+wsf_util_process_ws_service_classes(
 	HashTable *ht_classes,
 	HashTable *ht_ops_to_mep,
 	wsf_svc_info_t *svc_info,
@@ -167,13 +198,15 @@ wsf_util_find_xop_content_and_convert_to_base64 (
     const axutil_env_t * env,
     axiom_node_t * om_node);
 
-int wsf_util_get_attachments_form_soap_envelope (
-     const axutil_env_t * env,
+int 
+wsf_util_get_attachments_form_soap_envelope (
+    const axutil_env_t * env,
     axiom_soap_envelope_t *soap_envelope,
     zval * cid2str,
     zval * cid2contentType TSRMLS_DC);
 
-void wsf_util_process_rest_params(
+void 
+wsf_util_process_rest_params(
 	axutil_env_t *env, 
 	wsf_svc_info_t *svc_info,
 	HashTable *ht_rest_map TSRMLS_DC);
