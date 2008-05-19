@@ -60,7 +60,7 @@ typedef enum ws_input_types
 
 #define WS_ACTIONS      "actions"
 #define WS_OPERATIONS  "operations"
-#define WS_OP_TO_URL_MAP "restmaping"
+#define WS_OP_TO_URL_MAP "RESTMaping"
 #define WS_OP_MEP      "opMEP"
 #define WS_OP_PARAMS    "opParams"
 #define WS_WSDL         "wsdl"
@@ -199,24 +199,18 @@ typedef enum ws_input_types
 #define WS_MODULE_RM         "sandesha2"
 
 /** http status codes */
-#define WS_HTTP_OK 200
-
-#define WS_HTTP_INTERNAL_SERVER_ERROR 500
-
-#define WS_HTTP_ACCEPTED 202
-
 #define WS_SVC_INFO "WSFPHPSvcInfo"
 
 #define WS_REQ_INFO "WSFPHPRequestInfo"
 
 /*************************************************/
-
+/*
 #define WS_SOAP_DOCUMENT 1
 #define WS_SOAP_RPC 2
 
 #define WS_SOAP_ENCODED 1
 #define WS_SOAP_LITERAL 2
-
+*/
 typedef struct wsf_svc_info
 {
 
