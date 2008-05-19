@@ -1,6 +1,7 @@
 #include "wsf_util.h"
 #include <stdlib.h>
 
+
 static void* WSF_CALL 
 wsf_malloc_wrapper (axutil_allocator_t* allocator,
 					size_t size);
@@ -136,7 +137,6 @@ wsf_util_create_svc_from_svc_info (wsf_svc_info_t * svc_info,
     }
 
     svc = axis2_conf_get_svc (conf, env, svc_info->svc_name);
-
     if (svc) 
     {
         svc_info->svc = svc;
@@ -267,5 +267,31 @@ wsf_util_create_op_and_add_to_svc (
 		axutil_qname_free(op_qname, env);
 	}
 
+    return;
+}
+
+
+void
+wsf_util_conf_add_svc (wsf_svc_info_t * svc_info,
+                       axutil_env_t * env)
+{
+    axis2_svc_t *svc = NULL;
+    axis2_conf_t *conf = NULL;
+    axis2_conf_ctx_t *conf_ctx = NULL;
+    axis2_phases_info_t *info = NULL;
+    conf_ctx = wsf_worker_get_conf_ctx (svc_info->perl_worker, env);
+    conf = axis2_conf_ctx_get_conf (conf_ctx, env);
+    svc = axis2_conf_get_svc (conf, env, svc_info->svc_name);
+    if (!svc)
+    {
+        svc = svc_info->svc;
+        if (!svc)
+        {
+            AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, 
+                             "svc not available for svc name %s", svc_info->svc_name);
+            return;
+        }
+        axis2_conf_add_svc (conf, env, svc);
+    }
     return;
 }

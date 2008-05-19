@@ -97,7 +97,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (axis2_msg_recv_t*   msg_recv,
     axiom_soap_header_t *out_header = NULL;
     axiom_soap_fault_t *soap_fault = NULL;
 
-    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "invoking business logic\n");
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "invoking business logic");
     AXIS2_PARAM_CHECK (env->error, in_msg_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK (env->error, out_msg_ctx, AXIS2_FAILURE);
 
@@ -108,7 +108,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (axis2_msg_recv_t*   msg_recv,
 
     envelope = axis2_msg_ctx_get_soap_envelope (in_msg_ctx, env);
     body = axiom_soap_envelope_get_body (envelope, env);
-
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "get soap body");
     if (0 == axutil_strcmp (AXIS2_STYLE_DOC, style)) {
         om_node = axiom_soap_body_get_base_node (body, env);
         om_element = axiom_node_get_data_element (om_node, env);
@@ -119,6 +119,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (axis2_msg_recv_t*   msg_recv,
 
             return AXIS2_FAILURE;
         }
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "localname %s", local_name);
     } else if (0 == axutil_strcmp (AXIS2_STYLE_RPC, style)) {
      
         axiom_node_t *op_node = NULL;
@@ -136,6 +137,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (axis2_msg_recv_t*   msg_recv,
 
             return AXIS2_FAILURE;
         }
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "localname %s", local_name);
         om_node = axiom_node_get_first_child (op_node, env);
         om_element = axiom_node_get_data_element (om_node, env);
     }
@@ -280,7 +282,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (axis2_msg_recv_t*   msg_recv,
         default_envelope = NULL;
     }
 
-
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "SUCCESS", local_name);
     return AXIS2_SUCCESS;
 }
 

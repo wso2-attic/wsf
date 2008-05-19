@@ -71,4 +71,6 @@ void
 wsf_util_process_ws_service_operations_and_actions(wsf_svc_info_t * svc_info,
                                                    axutil_env_t * env);
 
-
+void
+wsf_util_conf_add_svc (wsf_svc_info_t * svc_info,
+                       axutil_env_t * env);

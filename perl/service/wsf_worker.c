@@ -184,6 +184,7 @@ wsf_worker_process_request (wsf_worker_t* worker,
     http_version = request->http_protocol;
 
     content_type = (axis2_char_t *) request->content_type;
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "content type xxx%s",content_type);
     if (NULL == http_version) 
     {
         AXIS2_ERROR_SET (env->error, AXIS2_ERROR_NULL_HTTP_VERSION,
@@ -300,7 +301,7 @@ wsf_worker_process_request (wsf_worker_t* worker,
         status = axis2_http_transport_utils_process_http_post_request 
             (env, msg_ctx, request_body, out_stream, content_type,
             content_length, soap_action_str, (axis2_char_t *) req_url);
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "processed post request \n");
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "processed post request %d\n", status);
         if (status == AXIS2_FAILURE) 
         {
             axis2_char_t *fault_code = NULL;

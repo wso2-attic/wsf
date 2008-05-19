@@ -67,6 +67,7 @@ sub new {
 
     WSO2::WSF::Serverc::wsf_util_create_svc_from_svc_info($svc_info, $env);
     WSO2::WSF::Serverc::wsf_util_process_ws_service_operations_and_actions ($svc_info, $env);
+    WSO2::WSF::Serverc::wsf_util_conf_add_svc($svc_info, $env);
 
     bless $self, $class;
     return $self;
@@ -99,13 +100,14 @@ sub reply {
 
     #populating wsf_request_info structure
     WSO2::WSF::Serverc::wsf_req_info_t_content_encoding_set($req_info, $request->{-content_type});
+    WSO2::WSF::Serverc::wsf_req_info_t_content_type_set($req_info, $request->{-content_type});
     WSO2::WSF::Serverc::wsf_req_info_t_content_length_set($req_info, $request->{-content_length});
     WSO2::WSF::Serverc::wsf_req_info_t_svr_name_set($req_info, $request->{-server_name});
     WSO2::WSF::Serverc::wsf_req_info_t_svr_port_set($req_info, $request->{-server_port});
     WSO2::WSF::Serverc::wsf_req_info_t_http_protocol_set($req_info, $request->{-server_protocol});
     WSO2::WSF::Serverc::wsf_req_info_t_soap_action_set($req_info, $request->{-soap_action});
     WSO2::WSF::Serverc::wsf_req_info_t_request_method_set($req_info, $request->{-request_method});
-    WSO2::WSF::Serverc::wsf_req_info_t_request_uri_set($req_info, $request->{-url_full});
+    WSO2::WSF::Serverc::wsf_req_info_t_request_uri_set($req_info, $request->{-url_abs});
     WSO2::WSF::Serverc::wsf_req_info_t_query_string_set($req_info, $request->{-query_string});
     WSO2::WSF::Serverc::wsf_req_info_t_req_data_set($req_info, $request->{-postdata});
     WSO2::WSF::Serverc::wsf_req_info_t_req_data_length_set($req_info,
