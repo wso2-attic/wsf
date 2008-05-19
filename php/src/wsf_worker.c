@@ -329,7 +329,7 @@ wsf_worker_process_request (
     axis2_http_out_transport_info_t * php_out_transport_info = NULL;
     axis2_transport_out_desc_t * out_desc = NULL;
     axis2_transport_in_desc_t * in_desc = NULL;
-    axutil_stream_t * request_body = NULL;
+    axutil_stream_t * in_stream = NULL;
     axutil_stream_t * out_stream = NULL;
     axutil_url_t * url = NULL;
 	axis2_char_t * request_uri_with_query_string = NULL;
@@ -341,7 +341,8 @@ wsf_worker_process_request (
     axis2_char_t * ctx_uuid = NULL;
     axutil_string_t * ctx_uuid_str = NULL;
 	axis2_op_t *op = NULL;
-	
+	axis2_status_t status = AXIS2_FAILURE;
+
     if (!request)
 		return -1;
 
@@ -460,8 +461,8 @@ wsf_worker_process_request (
 	if (request->soap_action){
 	    soap_action_str = axutil_string_create (env, request->soap_action);
 	}
-	request_body = wsf_stream_create (env, request TSRMLS_CC);
-    if (!request_body) 
+	in_stream = wsf_stream_create (env, request TSRMLS_CC);
+    if (!in_stream) 
 	{
         AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "Error occured in" 
             " creating input stream.");
@@ -476,19 +477,19 @@ wsf_worker_process_request (
 		if(strcmp("GET", request->request_method) == 0)
 		{
 			processed = axis2_http_transport_utils_process_http_get_request (env,
-				msg_ctx, request_body, out_stream, content_type,
+				msg_ctx, in_stream, out_stream, content_type,
 				soap_action_str, req_url, conf_ctx, 
 				axis2_http_transport_utils_get_request_params (env,
 					(axis2_char_t *) req_url) );
 		}else if(strcmp("HEAD", request->request_method) == 0){
 			processed = axis2_http_transport_utils_process_http_head_request(env,
-				msg_ctx, request_body, out_stream, content_type,
+				msg_ctx, in_stream, out_stream, content_type,
 				soap_action_str, req_url,conf_ctx, 
 				axis2_http_transport_utils_get_request_params (env,
 					(axis2_char_t *) req_url));
 		}else if(strcmp("DELETE", request->request_method) == 0){
 			processed = axis2_http_transport_utils_process_http_delete_request(env,
-				msg_ctx, request_body, out_stream, content_type,
+				msg_ctx, in_stream, out_stream, content_type,
 				soap_action_str, req_url,conf_ctx, 
 				axis2_http_transport_utils_get_request_params (env,
 					(axis2_char_t *) req_url));
@@ -539,12 +540,12 @@ wsf_worker_process_request (
 		if(strcmp ("POST", request->request_method) == 0)
 		{
 			status = axis2_http_transport_utils_process_http_post_request 
-				(env, msg_ctx, request_body, out_stream, content_type,
+				(env, msg_ctx, in_stream, out_stream, content_type,
 				content_length, soap_action_str, (axis2_char_t *) req_url);
 		}else if(strcmp("PUT", request->request_method) == 0)
 		{
 			status = axis2_http_transport_utils_process_http_post_request 
-				(env, msg_ctx, request_body, out_stream, content_type,
+				(env, msg_ctx, in_stream, out_stream, content_type,
 				content_length, soap_action_str, (axis2_char_t *) req_url);
 		}
 
@@ -653,8 +654,8 @@ wsf_worker_process_request (
         axutil_string_free (soap_action_str, env);
     }
 
-    if(request_body){
-		wsf_stream_free(request_body, env);
+    if(in_stream){
+		wsf_stream_free(in_stream, env);
     }
     if(req_url){
        AXIS2_FREE(env->allocator, req_url);
