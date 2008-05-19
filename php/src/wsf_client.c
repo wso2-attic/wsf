@@ -247,7 +247,8 @@ wsf_client_handle_incoming_attachments (
             "[wsf_client] responseXOP %d", response_xop);
     }
 
-    if (response_xop == 1) {
+    if (response_xop == 1) 
+	{
 
         MAKE_STD_ZVAL(cid2str);
         INIT_PZVAL(cid2str);
@@ -260,16 +261,13 @@ wsf_client_handle_incoming_attachments (
         attachments_found = wsf_util_get_attachments_form_soap_envelope(env,
                         soap_envelope, cid2str, cid2content_type TSRMLS_CC);
 
-        /*
-        attachments_found = wsf_util_get_attachments (env, response_payload, cid2str,
-            cid2content_type TSRMLS_CC);
-        */
         add_property_zval (msg, WS_ATTACHMENTS, cid2str);
         add_property_zval (msg, WS_CID2CONTENT_TYPE, cid2content_type);
         zval_ptr_dtor(&cid2str);
         zval_ptr_dtor(&cid2content_type);
 
-	}else if(response_xop == 0){
+	}else if(response_xop == 0)
+	{
 		wsf_util_find_xop_content_and_convert_to_base64(env, response_payload);
 	}
 	return attachments_found;
@@ -297,45 +295,49 @@ wsf_client_handle_outgoing_attachments (
 
     if (zend_hash_find (msg_ht, WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE,
             sizeof (WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE),
-            (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
+            (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING)
+	{
         default_cnt_type = Z_STRVAL_PP (tmp);
-    } else {
+    } else 
+	{
         default_cnt_type = "application/octet-stream";
     }
-    if (client_ht
-        && zend_hash_find (client_ht, WS_USE_MTOM, sizeof (WS_USE_MTOM),
-            (void **) &tmp) == SUCCESS) {
-        if (Z_TYPE_PP (tmp) == IS_BOOL && Z_BVAL_PP (tmp) == 0) {
+    if (client_ht && zend_hash_find (client_ht, WS_USE_MTOM, sizeof (WS_USE_MTOM),
+            (void **) &tmp) == SUCCESS) 
+	{
+        if (Z_TYPE_PP (tmp) == IS_BOOL && Z_BVAL_PP (tmp) == 0) 
+		{
             enable_mtom = AXIS2_FALSE;
-        } else if (Z_TYPE_PP (tmp) == IS_STRING) {
+        } else if (Z_TYPE_PP (tmp) == IS_STRING) 
+		{
             char *value = NULL;
             value = Z_STRVAL_PP (tmp);
             /* Check if SOAP with Attachmnts (SwA) has been enabled */
             if (value && (strcmp (value, "swa") == 0 || strcmp (value, "SWA") == 0 
-                        || strcmp (value, "SwA") == 0)) {
-
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_client] SwA enabled");
+                        || strcmp (value, "SwA") == 0)) 
+			{
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_client] SwA enabled");
                 enable_swa = AXIS2_TRUE;
             } 
         }
     }
 
     if (zend_hash_find (msg_ht, WS_ATTACHMENTS, sizeof (WS_ATTACHMENTS),
-            (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
+            (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY)
+	{
         ht = Z_ARRVAL_PP (tmp);
     } else if (zend_hash_find (Z_OBJPROP_P (msg), WS_ATTACHMENTS,
-            sizeof (WS_ATTACHMENTS), (void **) &tmp) == SUCCESS) {
+            sizeof (WS_ATTACHMENTS), (void **) &tmp) == SUCCESS) 
+	{
         ht = Z_ARRVAL_PP (tmp);
-    } else
-        return;
+    } else return;
 
     axis2_options_set_enable_mtom (options, env, enable_mtom);
-    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_client] enable mtom %d",
-        enable_mtom);
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_client] enable mtom %d", enable_mtom);
 
 
-    if (ht) {
+    if (ht) 
+	{
         wsf_util_set_attachments_with_cids (env, enable_mtom, enable_swa, request_payload,
             ht, default_cnt_type TSRMLS_CC);
     }
