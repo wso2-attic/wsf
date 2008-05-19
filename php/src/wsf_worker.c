@@ -1,5 +1,5 @@
 /*
- * Copyright 2005,2007 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2008 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -341,7 +341,7 @@ wsf_worker_process_request (
     axis2_char_t * ctx_uuid = NULL;
     axutil_string_t * ctx_uuid_str = NULL;
 	axis2_op_t *op = NULL;
-	axis2_status_t status = AXIS2_FAILURE;
+	axis2_bool_t request_handled = AXIS2_FALSE;
 
     if (!request)
 		return -1;
@@ -505,7 +505,7 @@ wsf_worker_process_request (
 				response->content_type = axutil_strdup(env,"text/html");
 				response->http_status_code = AXIS2_HTTP_RESPONSE_OK_CODE_VAL;
 				response->http_status_code_name = AXIS2_HTTP_RESPONSE_OK_CODE_NAME;
-
+				
 			}else if(env->error->error_number == AXIS2_ERROR_SVC_OR_OP_NOT_FOUND){
 				axutil_array_list_t *method_list = NULL;
                 int size = 0;
@@ -519,7 +519,6 @@ wsf_worker_process_request (
 					body_string = axis2_http_transport_utils_get_method_not_allowed(env, conf_ctx);
 					response->http_status_code = AXIS2_HTTP_RESPONSE_METHOD_NOT_ALLOWED_CODE_VAL;
 					response->http_status_code_name = AXIS2_HTTP_RESPONSE_METHOD_NOT_ALLOWED_CODE_NAME;
-				    
 				}else {
 					/** 404  */
 					body_string = axis2_http_transport_utils_get_not_found(env, conf_ctx);
@@ -527,11 +526,13 @@ wsf_worker_process_request (
 					response->http_status_code_name = AXIS2_HTTP_RESPONSE_NOT_FOUND_CODE_NAME;
 				}
 			}
+			if (body_string) {
+				request_handled = AXIS2_TRUE;
+				response->response_data = axutil_strdup(env, body_string);
+				response->response_length = strlen (body_string);
+			}
         }
-        if (body_string) {
-			response->response_data = axutil_strdup(env, body_string);
-            response->response_length = strlen (body_string);
-        }
+        
     }else if (strcmp ("POST", request->request_method) == 0 ||
 		strcmp("PUT", request->request_method) == 0 ) 
 	{
@@ -579,37 +580,38 @@ wsf_worker_process_request (
 					response->response_length = strlen (body_string);
 					response->http_status_code = AXIS2_HTTP_RESPONSE_INTERNAL_SERVER_ERROR_CODE_VAL;
 					response->http_status_code_name = AXIS2_HTTP_RESPONSE_INTERNAL_SERVER_ERROR_CODE_NAME;
+					request_handled = AXIS2_TRUE;
 				}
 			}
 		}
-		op_ctx =  axis2_msg_ctx_get_op_ctx(msg_ctx, env);
-		if (status != AXIS2_FAILURE) 
-		{
-			if (axis2_op_ctx_get_response_written (op_ctx, env)) 
-			{
-				int data_length = 0;
-				int read_length = 0;
-				void *data = NULL;
-				data_length = axutil_stream_get_len (out_stream, env);
-				data = AXIS2_MALLOC (env->allocator, sizeof (char) * (data_length + 1));
-				read_length = axutil_stream_read (out_stream, env, data, data_length + 1);
-				if (data) {
-					response->response_data = data;
-					response->response_length = data_length;
-					response->http_status_code = AXIS2_HTTP_RESPONSE_OK_CODE_VAL;
-					response->http_status_code_name = AXIS2_HTTP_RESPONSE_OK_CODE_NAME;
-				}
-			}else 
-			{
-				response->response_length = 0;
-				response->http_status_code = AXIS2_HTTP_RESPONSE_ACK_CODE_VAL;
-				response->http_status_code_name = AXIS2_HTTP_RESPONSE_ACK_CODE_NAME;
-			}
-		}
+		
 	}
-	if(!op_ctx)
-		op_ctx =  axis2_msg_ctx_get_op_ctx(msg_ctx, env);
-
+	op_ctx =  axis2_msg_ctx_get_op_ctx(msg_ctx, env);
+	if (!request_handled) 
+	{
+		if (axis2_op_ctx_get_response_written (op_ctx, env)) 
+		{
+			int data_length = 0;
+			int read_length = 0;
+			void *data = NULL;
+			data_length = axutil_stream_get_len (out_stream, env);
+			data = AXIS2_MALLOC (env->allocator, sizeof (char) * (data_length + 1));
+			read_length = axutil_stream_read (out_stream, env, data, data_length + 1);
+			if (data) {
+				response->response_data = data;
+				response->response_length = data_length;
+				response->http_status_code = AXIS2_HTTP_RESPONSE_OK_CODE_VAL;
+				response->http_status_code_name = AXIS2_HTTP_RESPONSE_OK_CODE_NAME;
+			}
+		}else 
+		{
+			response->response_length = 0;
+			response->http_status_code = AXIS2_HTTP_RESPONSE_ACK_CODE_VAL;
+			response->http_status_code_name = AXIS2_HTTP_RESPONSE_ACK_CODE_NAME;
+		}
+		request_handled = AXIS2_TRUE;
+	}
+	
     if (op_ctx) 
     {
         axis2_msg_ctx_t *out_msg_ctx = NULL, *in_msg_ctx = NULL;
