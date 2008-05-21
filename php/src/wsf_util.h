@@ -211,6 +211,12 @@ wsf_util_process_rest_params(
 	wsf_svc_info_t *svc_info,
 	HashTable *ht_rest_map TSRMLS_DC);
 
+int
+wsf_util_add_svc_to_conf(
+	axutil_env_t *env,
+	wsf_svc_info_t *svc_info,
+	axis2_conf_ctx_t *conf_ctx);
+
 #ifdef __cplusplus
 }
 #endif

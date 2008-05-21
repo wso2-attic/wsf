@@ -712,14 +712,15 @@ wsf_util_create_op_and_add_to_svc (
             conf = axis2_conf_ctx_get_conf (conf_ctx, env);
 
             info = axis2_conf_get_phases_info (conf, env);
-            axis2_phases_info_set_op_phases (info, env, op);
-            axis2_svc_add_op (svc_info->svc, env, op);
+            
+			axis2_phases_info_set_op_phases (info, env, op);
+            
+			axis2_svc_add_op (svc_info->svc, env, op);
 
             if (ht_mep) {
                 char operation[300];
 
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_service] ht mep not null, %s", op_name);
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_service] ht mep not null, %s", op_name);
                 sprintf (operation, "%s", op_name);
                 if (zend_hash_find (ht_mep, operation, strlen (operation) + 1,
                         (void **) &tmp) == SUCCESS
@@ -1532,6 +1533,22 @@ int wsf_util_is_module_engaged_to_svc_client(
 		axutil_qname_free(mod_qname, env);
 	}
 	return status;	
+}
+
+int
+wsf_util_add_svc_to_conf(
+	axutil_env_t *env,
+	wsf_svc_info_t *svc_info,
+	axis2_conf_ctx_t *conf_ctx)
+{
+	axis2_conf_t *conf = NULL;
+	conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+	if(conf && !axis2_conf_get_svc(conf, env, svc_info->svc_name))
+	{
+		axis2_conf_add_svc (conf, env, svc_info->svc);
+		return AXIS2_SUCCESS;
+	}
+	return AXIS2_FAILURE;
 }
 
 void wsf_util_engage_modules_to_svc(
