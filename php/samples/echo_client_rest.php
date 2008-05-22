@@ -23,7 +23,7 @@ XML;
 
 try {
 
-    $client = new WSClient( array("to" => "http://localhost/samples/echo_service.php/echoString",
+    $client = new WSClient( array("to" => "http://localhost/samples/echo_service.php/a/b",
                                   "useSOAP" => FALSE,
                                   "HTTPMethod" => "GET"));
 
