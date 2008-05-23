@@ -565,6 +565,12 @@ PHP_METHOD (ws_message, __construct)
 			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
 				add_property_stringl(object, WS_FROM, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
 		}
+		if(zend_hash_find(ht, WS_RESPONSE_CONTENT_TYPE, sizeof(WS_RESPONSE_CONTENT_TYPE),
+			(void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
+				add_property_stringl(object, 
+					WS_RESPONSE_CONTENT_TYPE, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp),1);
+		
+		}
         if (zend_hash_find (ht, WS_INPUT_HEADERS, sizeof (WS_INPUT_HEADERS),
             (void **) &tmp) == SUCCESS) {
 				if (Z_TYPE_PP (tmp) == IS_ARRAY) {

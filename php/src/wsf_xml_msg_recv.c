@@ -964,6 +964,14 @@ wsf_xml_msg_recv_invoke_wsmsg (
 						res_om_node = wsf_util_deserialize_buffer (env, res_payload);
 					}
             }
+			if(zend_hash_find(Z_OBJPROP(retval), WS_RESPONSE_CONTENT_TYPE, 
+				sizeof(WS_RESPONSE_CONTENT_TYPE), (void **)&msg_tmp)== SUCCESS && Z_TYPE_PP(msg_tmp) == IS_STRING){
+					axutil_property_t *cnt_property = NULL;
+					cnt_property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, AXIS2_TRUE,
+						NULL, axutil_strdup(env, Z_STRVAL_PP(msg_tmp)));
+					axis2_msg_ctx_set_property(out_msg_ctx, env, AXIS2_USER_DEFINED_HTTP_HEADER_CONTENT_TYPE, cnt_property);
+			}
+
 			if (zend_hash_find (Z_OBJPROP (retval), WS_ATTACHMENTS, sizeof (WS_ATTACHMENTS),
                (void **) & msg_tmp) == SUCCESS && Z_TYPE_PP (msg_tmp) == IS_ARRAY) 
 			{
