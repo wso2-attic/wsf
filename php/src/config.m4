@@ -33,8 +33,4 @@ if test "$PHP_WSF" = "yes"; then
 
 	PHP_NEW_EXTENSION(wsf, wsf.c wsf_xml_msg_recv.c wsf_util.c wsf_stream.c wsf_worker.c wsf_out_transport_info.c wsf_client.c  wsf_policy.c wsf_wsdl.c, $ext_shared)
 	
-	PHP_ADD_EXTENSION_DEP(wsf, libxml)
-
-	PHP_ADD_EXTENSION_DEP(wsf, dom)
-
 fi
