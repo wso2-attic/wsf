@@ -69,7 +69,6 @@ wsf_policy_handle_client_security (
     int is_multiple_flow = AXIS2_FALSE;
 
     rampart_context_t *rampart_ctx = NULL;
-    tokenProperties_t tmp_rampart_ctx;
 
     axis2_svc_ctx_t *svc_ctx = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
@@ -86,22 +85,6 @@ wsf_policy_handle_client_security (
 
     char *policy_xml = NULL;
 
-    {                           /* initialize tmp_rampart_ctx structure */
-        tmp_rampart_ctx.certificate = NULL;
-        tmp_rampart_ctx.certificateFormat = NULL;
-        tmp_rampart_ctx.password = NULL;
-        tmp_rampart_ctx.passwordType = NULL;
-        tmp_rampart_ctx.pvtKey = NULL;
-        tmp_rampart_ctx.receiverCertificate = NULL;
-        tmp_rampart_ctx.pvtKeyFormat = NULL;
-        tmp_rampart_ctx.user = NULL;
-        tmp_rampart_ctx.receiverCertificateFormat = NULL;
-        tmp_rampart_ctx.ttl = 0;
-        tmp_rampart_ctx.callback_function = NULL;
-        tmp_rampart_ctx.callback_function = NULL;
-        tmp_rampart_ctx.custom_tokens  = NULL;
-		
-    }
     if (!sec_token) {
         return AXIS2_FAILURE;
     }
@@ -114,14 +97,12 @@ wsf_policy_handle_client_security (
                 (void **) &tmp_type) == SUCCESS) {
             if (Z_TYPE_PP (tmp_type) == IS_ARRAY) {
                 policy_type = *tmp_type;
-                incoming_policy_node =
-                    wsf_do_create_policy (sec_token, policy_type, AXIS2_FAILURE,
+                incoming_policy_node = wsf_do_create_policy (sec_token, policy_type, AXIS2_FAILURE,
                     env TSRMLS_CC);
             }
             if (Z_TYPE_PP (tmp_type) == IS_STRING) {
                 policy_xml = Z_STRVAL_PP (tmp_type);
-                incoming_policy_node =
-                    wsf_util_deserialize_buffer (env, policy_xml);
+                incoming_policy_node = wsf_util_deserialize_buffer (env, policy_xml);
             }
             policy_type = NULL;
             tmp_type = NULL;
@@ -156,23 +137,19 @@ wsf_policy_handle_client_security (
     /* since creating policy xml is the same procedure use one
        function */
     if (policy && Z_TYPE_P (policy) == IS_OBJECT && is_multiple_flow == AXIS2_FALSE) {
-        outgoing_policy_node =
-            wsf_do_create_policy (sec_token, policy, AXIS2_FAILURE, env TSRMLS_CC);
-        incoming_policy_node =
-            wsf_do_create_policy (sec_token, policy, AXIS2_FAILURE, env TSRMLS_CC);
+        outgoing_policy_node = wsf_do_create_policy (sec_token, policy, AXIS2_FAILURE, env TSRMLS_CC);
+        incoming_policy_node = wsf_do_create_policy (sec_token, policy, AXIS2_FAILURE, env TSRMLS_CC);
     }
 
-    /* get the values from the security token object and keep it in a
-       temperary structure */
-    tmp_rampart_ctx =
-        wsf_set_tmp_rampart_options (tmp_rampart_ctx, sec_token, policy,
-        env TSRMLS_CC);
+    rampart_ctx = rampart_context_create (env);
 
-    if(tmp_rampart_ctx.custom_tokens == NULL && policy == NULL) {
+    wsf_set_rampart_options (rampart_ctx, sec_token, policy, env TSRMLS_CC);
+
+	if(rampart_context_get_custom_tokens(rampart_ctx, env) && policy == NULL) {
         return AXIS2_FAILURE;
     }
 
-    if(policy == NULL && tmp_rampart_ctx.custom_tokens != NULL) {
+	if(policy == NULL && rampart_context_get_custom_tokens(rampart_ctx, env) != NULL) {
 
         neethi_options_t *neethi_options = NULL;
 
@@ -180,7 +157,6 @@ wsf_policy_handle_client_security (
         incoming_policy_node = neethi_options_get_root_node (neethi_options, env);
     }
 
-    rampart_ctx = rampart_context_create (env);
 
     if (incoming_policy_node) {
         if (axiom_node_get_node_type (incoming_policy_node,
@@ -215,12 +191,7 @@ wsf_policy_handle_client_security (
                 conf_ctx = axis2_svc_ctx_get_conf_ctx (svc_ctx, env);
                 conf = axis2_conf_ctx_get_conf (conf_ctx, env);
 
-                wsf_set_options_to_rampart_ctx (rampart_ctx, env,
-                    incoming_policy_node, tmp_rampart_ctx);
-
-                security_param =
-                    axutil_param_create (env, WS_RAMPART_CONFIGURATION,
-                    (void *) rampart_ctx);
+                security_param = axutil_param_create (env, WS_RAMPART_CONFIGURATION, (void *) rampart_ctx);
                 axis2_conf_add_param (conf, env, security_param);
             }
         }
@@ -268,8 +239,6 @@ wsf_policy_handle_server_security (
 
     rampart_context_t *rampart_ctx = NULL;
 
-    tokenProperties_t tmp_rampart_ctx;
-
     axutil_param_t *security_param = NULL;
 
     char *policy_xml = NULL;
@@ -277,22 +246,6 @@ wsf_policy_handle_server_security (
     axiom_element_t *root_ele = NULL;
     axis2_desc_t *desc = NULL;
     axis2_policy_include_t *policy_include = NULL;
-
-    {                           /* initialize tmp_rampart_ctx structure */
-        tmp_rampart_ctx.certificate = NULL;
-        tmp_rampart_ctx.certificateFormat = NULL;
-        tmp_rampart_ctx.password = NULL;
-        tmp_rampart_ctx.passwordType = NULL;
-        tmp_rampart_ctx.pvtKey = NULL;
-        tmp_rampart_ctx.receiverCertificate = NULL;
-        tmp_rampart_ctx.pvtKeyFormat = NULL;
-        tmp_rampart_ctx.user = NULL;
-        tmp_rampart_ctx.receiverCertificateFormat = NULL;
-        tmp_rampart_ctx.ttl = 0;
-        tmp_rampart_ctx.callback_function = NULL;
-		tmp_rampart_ctx.custom_tokens = NULL;
-		 
-    }
 
     if (!sec_token && !policy && !svc && !conf)
         return AXIS2_FAILURE;
@@ -360,11 +313,8 @@ wsf_policy_handle_server_security (
        temperary structure */
 
     rampart_ctx = rampart_context_create (env);
-    tmp_rampart_ctx =
-        wsf_set_tmp_rampart_options (tmp_rampart_ctx, sec_token, policy,
+    wsf_set_rampart_options (rampart_ctx, sec_token, policy,
         env TSRMLS_CC);
-    wsf_set_options_to_rampart_ctx (rampart_ctx, env, incoming_policy_node,
-        tmp_rampart_ctx);
 
     if (incoming_policy_node) {
         if (axiom_node_get_node_type (incoming_policy_node,
@@ -426,9 +376,9 @@ wsf_policy_handle_server_security (
 }
 
 
-tokenProperties_t
-wsf_set_tmp_rampart_options (
-    tokenProperties_t tmp_rampart_ctx,
+int
+wsf_set_rampart_options (
+    rampart_context_t *rampart_context,
     zval * sec_token,
     zval * policy,
     axutil_env_t * env TSRMLS_DC)
@@ -443,62 +393,76 @@ wsf_set_tmp_rampart_options (
         else
             ht_policy = Z_ARRVAL_P (policy);
     }
+	if(!rampart_context){
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_policy] rampart context null");
+		return NULL;
+	}
 
     ht_token = Z_OBJPROP_P (sec_token);
     
-    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                     "[wsf_policy] creating tmp rampart ctx ");
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_policy] Setting values to rampart context ");
     
     
     if (zend_hash_find (ht_token, WS_TTL, sizeof (WS_TTL),
             (void **) &token_val) == SUCCESS
         && Z_TYPE_PP (token_val) == IS_LONG) {
-        tmp_rampart_ctx.ttl = Z_LVAL_PP (token_val);
+		rampart_context_set_ttl(rampart_context, env, Z_LVAL_PP(token_val));
     }
 
     if (zend_hash_find (ht_token, WS_USER, sizeof (WS_USER),
             (void **) &token_val) == SUCCESS
         && Z_TYPE_PP (token_val) == IS_STRING) {
-        tmp_rampart_ctx.user = Z_STRVAL_PP (token_val);
+        rampart_context_set_user(rampart_context, env, Z_STRVAL_PP(token_val));
     }
     if (zend_hash_find (ht_token, WS_CERTIFICATE, sizeof (WS_CERTIFICATE),
             (void **) &token_val) == SUCCESS
         && Z_TYPE_PP (token_val) == IS_STRING) {
-        tmp_rampart_ctx.certificate = Z_STRVAL_PP (token_val);
+			rampart_context_set_certificate(rampart_context, env, Z_STRVAL_PP (token_val)); 
     }
+	if (rampart_context_set_certificate_type (rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS){
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting certificate type");
+	}
+
     if (zend_hash_find (ht_token, WS_RECEIVER_CERTIFICATE,
             sizeof (WS_RECEIVER_CERTIFICATE), (void **) &token_val) == SUCCESS
         && Z_TYPE_PP (token_val) == IS_STRING) {
-        tmp_rampart_ctx.receiverCertificate = Z_STRVAL_PP (token_val);
+			rampart_context_set_receiver_certificate(rampart_context, env, Z_STRVAL_PP(token_val));
     }
+	if (rampart_context_set_receiver_certificate_type (rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS){
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting receiver certificate type");
+	}
     if (zend_hash_find (ht_token, WS_PRIVATE_KEY, sizeof (WS_PRIVATE_KEY),
             (void **) &token_val) == SUCCESS
         && Z_TYPE_PP (token_val) == IS_STRING) {
-        tmp_rampart_ctx.pvtKey = Z_STRVAL_PP (token_val);
+			rampart_context_set_prv_key(rampart_context, env, Z_STRVAL_PP(token_val));
+		AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pvt key ");	
     }
+	if (rampart_context_set_prv_key_type (rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS){
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pvt key format ");
+	}
     if (zend_hash_find (ht_token, WS_PASSWORD_TYPE, sizeof (WS_PASSWORD_TYPE),
             (void **) &token_val) == SUCCESS
         && Z_TYPE_PP (token_val) == IS_STRING) {
-        tmp_rampart_ctx.passwordType = Z_STRVAL_PP (token_val);
+			rampart_context_set_password_type(rampart_context, env, Z_STRVAL_PP(token_val));
     }
     if (zend_hash_find (ht_token, WS_PASSWORD, sizeof (WS_PASSWORD),
             (void **) &token_val) == SUCCESS
         && Z_TYPE_PP (token_val) == IS_STRING) {
-        tmp_rampart_ctx.password = Z_STRVAL_PP (token_val);
+			rampart_context_set_password(rampart_context, env, Z_STRVAL_PP(token_val));
     }
     if (zend_hash_find (ht_token, WS_PASSWORD_CALL_BACK,
             sizeof (WS_PASSWORD_CALL_BACK), (void **) &token_val) == SUCCESS
         && Z_TYPE_PP (token_val) == IS_STRING) {
-        tmp_rampart_ctx.callback_function = Z_STRVAL_PP (token_val);
+			rampart_context_set_pwcb_function(rampart_context, env, wsf_password_provider_function, Z_STRVAL_PP(token_val));
     }
     if (zend_hash_find (ht_token, WS_CUSTOM_TOKENS,
             sizeof (WS_CUSTOM_TOKENS), (void **) &token_val) == SUCCESS
         && Z_TYPE_PP (token_val) == IS_ARRAY) {
        
-        zval **tmp;
-        HashPosition pos;
-        axutil_array_list_t *custom_tokens = NULL;
-        HashTable *ht_custom_tokens = NULL;
+			zval **tmp = NULL;
+			HashPosition pos;
+			axutil_array_list_t *custom_tokens = NULL;
+			HashTable *ht_custom_tokens = NULL;
 
         /* custom token hash */
         ht_custom_tokens = Z_ARRVAL_PP(token_val);
@@ -525,85 +489,10 @@ wsf_set_tmp_rampart_options (
             zend_hash_move_forward_ex (ht_custom_tokens, &pos);
         }
         
-        tmp_rampart_ctx.custom_tokens = custom_tokens;
+		rampart_context_set_custom_tokens(rampart_context, env, custom_tokens);
     }
-    return tmp_rampart_ctx;
+    return 0;
 }
-
-int
-wsf_set_options_to_rampart_ctx (
-    rampart_context_t * x_rampart_ctx,
-    axutil_env_t * env,
-    axiom_node_t * x_policy_node,
-    tokenProperties_t token_ctx)
-{
-
-    if (rampart_context_set_prv_key (x_rampart_ctx, env,
-            (void *) token_ctx.pvtKey) == AXIS2_SUCCESS)
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_sec_policy] setting pvt key  ");
-
-    if (rampart_context_set_prv_key_type (x_rampart_ctx, env,
-            AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS)
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_sec_policy] setting pvt key format ");
-
-    if (rampart_context_set_certificate (x_rampart_ctx, env,
-            (void *) token_ctx.certificate) == AXIS2_SUCCESS)
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_sec_policy] setting pub key ");
-
-    if (rampart_context_set_certificate_type (x_rampart_ctx, env,
-            AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS)
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_sec_policy] setting pub key format ");
-
-    if (rampart_context_set_receiver_certificate (x_rampart_ctx, env,
-            (void *) token_ctx.receiverCertificate) == AXIS2_SUCCESS)
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_sec_policy] setting pub key ");
-
-    if (rampart_context_set_receiver_certificate_type (x_rampart_ctx, env,
-            AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS)
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_sec_policy] setting pub key format ");
-
-    if (rampart_context_set_user (x_rampart_ctx, env,
-            (axis2_char_t *) token_ctx.user) == AXIS2_SUCCESS)
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_sec_policy] setting username ");
-
-    if (rampart_context_set_password (x_rampart_ctx, env,
-            (axis2_char_t *) token_ctx.password) == AXIS2_SUCCESS)
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_sec_policy] setting password ");
-
-    if (rampart_context_set_password_type (x_rampart_ctx, env,
-            (axis2_char_t *) token_ctx.passwordType) == AXIS2_SUCCESS)
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_sec_policy] setting passwordType ");
-
-    if (rampart_context_set_ttl (x_rampart_ctx, env,
-            token_ctx.ttl) == AXIS2_SUCCESS)
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_sec_policy]setting ttl value ");
-
-    if (rampart_context_set_pwcb_function (x_rampart_ctx, env,
-            wsf_password_provider_function,
-            (void *) token_ctx.callback_function) == AXIS2_SUCCESS)
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_sec_policy]setting callback function");
-
-    if (rampart_context_set_custom_tokens(x_rampart_ctx, env,
-            token_ctx.custom_tokens) == AXIS2_SUCCESS)
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_sec_policy]setting custom tokens");
-
-    return AXIS2_SUCCESS;
-
-}
-
-
 
 axiom_node_t *
 wsf_do_create_policy (

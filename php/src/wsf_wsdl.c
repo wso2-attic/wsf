@@ -691,7 +691,6 @@ void wsf_wsdl_handle_client_security(HashTable *client_ht,
     axiom_node_t *output_policy_node = NULL;
 
     zval **policy_options = NULL;
-    tokenProperties_t tmp_rampart_ctx;
     rampart_context_t *rampart_ctx = NULL;
 
     neethi_policy_t *binding_neethi_policy = NULL;
@@ -770,20 +769,6 @@ void wsf_wsdl_handle_client_security(HashTable *client_ht,
             	             Z_STRVAL_PP(policy_options));
     	}
     }
-    /* no need to change so many things just want to public some functions in wsf_policy.c */
-    
-    {                          
-        tmp_rampart_ctx.certificate = NULL;
-        tmp_rampart_ctx.password = NULL;
-        tmp_rampart_ctx.passwordType = NULL;
-        tmp_rampart_ctx.pvtKey = NULL;
-        tmp_rampart_ctx.receiverCertificate = NULL;
-        tmp_rampart_ctx.user = NULL;
-        tmp_rampart_ctx.ttl = 0;
-        tmp_rampart_ctx.callback_function = NULL;
-		tmp_rampart_ctx.custom_tokens = NULL;
-    }
-    
     
     if (zend_hash_find (client_ht, WS_SECURITY_TOKEN,
                         sizeof (WS_SECURITY_TOKEN), (void **) &tmp) == SUCCESS
@@ -798,12 +783,8 @@ void wsf_wsdl_handle_client_security(HashTable *client_ht,
                          "[wsf_wsdl]security object not found \n");
         return;
     }
-    tmp_rampart_ctx =
-        wsf_set_tmp_rampart_options (tmp_rampart_ctx, sec_token, NULL,
-                                     env TSRMLS_CC);
-    
-    
-    rampart_ctx = rampart_context_create (env);
+	rampart_ctx = rampart_context_create (env);
+    wsf_set_rampart_options (rampart_ctx, sec_token, NULL, env TSRMLS_CC);
     
     if (binding_policy_node) {
         if (axiom_node_get_node_type (binding_policy_node,
@@ -898,11 +879,7 @@ void wsf_wsdl_handle_client_security(HashTable *client_ht,
     conf_ctx = axis2_svc_ctx_get_conf_ctx (svc_ctx, env);
     conf = axis2_conf_ctx_get_conf (conf_ctx, env);
     
-    wsf_set_options_to_rampart_ctx (rampart_ctx, env,
-                                    NULL, tmp_rampart_ctx);
-    
-    security_param =
-        axutil_param_create (env, WS_RAMPART_CONFIGURATION,
+    security_param = axutil_param_create (env, WS_RAMPART_CONFIGURATION,
                              (void *) rampart_ctx);
     axis2_conf_add_param (conf, env, security_param);
     
@@ -1044,7 +1021,6 @@ void wsf_wsdl_handle_server_security(wsf_svc_info_t *svc_info,
     axiom_node_t *input_policy_node = NULL;
     axiom_node_t *output_policy_node = NULL;
     
-    tokenProperties_t tmp_rampart_ctx;
     rampart_context_t *rampart_ctx = NULL;
     
     neethi_policy_t *binding_neethi_policy = NULL;
@@ -1119,8 +1095,6 @@ void wsf_wsdl_handle_server_security(wsf_svc_info_t *svc_info,
                 
             }
             
-            
-				
             if (binding_policy_node) {
                 if (axiom_node_get_node_type (binding_policy_node,
                                               env) == AXIOM_ELEMENT) {
@@ -1202,32 +1176,17 @@ void wsf_wsdl_handle_server_security(wsf_svc_info_t *svc_info,
         }
         
     }	
-   /* no need to change so many things just want to public some functions in wsf_policy.c */
-  
-    
-    tmp_rampart_ctx.certificate = NULL;
-    tmp_rampart_ctx.password = NULL;
-    tmp_rampart_ctx.passwordType = NULL;
-    tmp_rampart_ctx.pvtKey = NULL;
-    tmp_rampart_ctx.receiverCertificate = NULL;
-    tmp_rampart_ctx.user = NULL;
-    tmp_rampart_ctx.ttl = 0;
-    tmp_rampart_ctx.callback_function = NULL;
-	tmp_rampart_ctx.custom_tokens = NULL;    
-    
+
     if(!svc_info->security_token){
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                          "[wsf_wsdl]security object not found \n");
         return;
     }
-    tmp_rampart_ctx = wsf_set_tmp_rampart_options (tmp_rampart_ctx, 
-                                                   svc_info->security_token, NULL, env TSRMLS_CC);
     rampart_ctx = rampart_context_create (env);
-    wsf_set_options_to_rampart_ctx (rampart_ctx, env,
-                                    NULL, tmp_rampart_ctx);
-    security_param =
-        axutil_param_create (env, WS_RAMPART_CONFIGURATION,
-                             (void *) rampart_ctx);
+    
+	wsf_set_rampart_options (rampart_ctx,  svc_info->security_token, NULL, env TSRMLS_CC);
+    
+	security_param = axutil_param_create (env, WS_RAMPART_CONFIGURATION, (void *) rampart_ctx);
     axis2_svc_add_param (svc_info->svc, env, security_param);
     
     /** engage module rampart */

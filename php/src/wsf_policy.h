@@ -97,24 +97,6 @@
 #define SIGN_BEFORE "SignBeforeEncrypt"
 #define ENCRYPT_BEFORE "EncryptBeforeSigning"
 
-typedef struct tokenProperties
-{
-    char *user;
-    char *certificate;
-    char *passwordType;
-    char *password;
-    char *pvtKey;
-    char *certificateFormat;
-    char *pvtKeyFormat;
-    char *receiverCertificate;
-    char *receiverCertificateFormat;
-    int ttl;
-    char *callback_function;
-    axutil_array_list_t *custom_tokens;	
-}
-tokenProperties_t;
-
-
 int wsf_policy_set_policy_options (
     zval * this_ptr,
     zval * property,
@@ -133,17 +115,13 @@ int wsf_policy_handle_server_security (
     axis2_svc_t * svc,
     axis2_conf_t * conf TSRMLS_DC);
 
-tokenProperties_t wsf_set_tmp_rampart_options (
-    tokenProperties_t tmp_rampart_ctx,
+int
+wsf_set_rampart_options (
+    rampart_context_t* rampart_ctx,
     zval * sec_token,
     zval * policy,
     axutil_env_t * env TSRMLS_DC);
 
-
-int wsf_set_options_to_rampart_ctx (rampart_context_t * in_rampart_ctx,
-                                    axutil_env_t * env,
-                                    axiom_node_t * incoming_policy_node,
-                                    tokenProperties_t tmp_rampart_ctx);
 
 axiom_node_t *wsf_do_create_policy (
     zval * sec_token,
