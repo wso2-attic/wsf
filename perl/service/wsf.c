@@ -17,17 +17,21 @@
 #include "wsf.h"
 #include "wsf_worker.h"
 #include "wsf_util.h"
+#include <EXTERN.h>
+#include <perl.h>
 
 static axutil_env_t *env;
 static int ws_is_svr;
 axis2_msg_recv_t *wsf_msg_recv;
 wsf_worker_t *worker;
+static PerlInterpreter *my_perl;
 
 void
 wsf_init (const axis2_char_t *path_to_log,
           int log_level)
 {
     axis2_char_t *repo_path = "/home/dinesh/wsf_c/deploy";
+    
     env = wsf_env_create (path_to_log);
     if (!env)
     {

@@ -273,7 +273,7 @@ wsf_worker_process_request (wsf_worker_t* worker,
         return AXIS2_CRITICAL_FAILURE;
     }
 
-    if (0 == strcmp ("GET", request->request_method)) 
+    if (!strcmp ("GET", request->request_method)) 
     {
         axis2_bool_t processed = AXIS2_FALSE;
         processed =
@@ -294,7 +294,7 @@ wsf_worker_process_request (wsf_worker_t* worker,
             request->result_length = strlen (body_string);
         }
     } 
-    else if (0 == strcmp ("POST", request->request_method)) 
+    else if (!strcmp ("POST", request->request_method)) 
     {
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "processing post request \n");
         axis2_status_t status = AXIS2_FAILURE;
