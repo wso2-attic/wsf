@@ -781,6 +781,7 @@ void wsf_wsdl_handle_client_security(HashTable *client_ht,
         tmp_rampart_ctx.user = NULL;
         tmp_rampart_ctx.ttl = 0;
         tmp_rampart_ctx.callback_function = NULL;
+		tmp_rampart_ctx.custom_tokens = NULL;
     }
     
     
@@ -1212,7 +1213,7 @@ void wsf_wsdl_handle_server_security(wsf_svc_info_t *svc_info,
     tmp_rampart_ctx.user = NULL;
     tmp_rampart_ctx.ttl = 0;
     tmp_rampart_ctx.callback_function = NULL;
-    
+	tmp_rampart_ctx.custom_tokens = NULL;    
     
     if(!svc_info->security_token){
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,

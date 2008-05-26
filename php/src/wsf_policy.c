@@ -290,6 +290,7 @@ wsf_policy_handle_server_security (
         tmp_rampart_ctx.receiverCertificateFormat = NULL;
         tmp_rampart_ctx.ttl = 0;
         tmp_rampart_ctx.callback_function = NULL;
+		tmp_rampart_ctx.custom_tokens = NULL;
 		 
     }
 
