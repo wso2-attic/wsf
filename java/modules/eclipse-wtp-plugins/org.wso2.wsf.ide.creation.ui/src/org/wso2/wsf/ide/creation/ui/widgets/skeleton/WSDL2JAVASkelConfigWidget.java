@@ -64,7 +64,6 @@ public class WSDL2JAVASkelConfigWidget extends SimpleWidgetDataContributor
 	//check box for server side interface
 	private Button generateServerSideInterfaceCheckBoxButton;
 	private Button generateAllCheckBoxButton;
-	private Button testCaseCheckBoxButton;
 	private Combo databindingTypeCombo;
 	// Text box to have the portname
 	private Combo portNameCombo;

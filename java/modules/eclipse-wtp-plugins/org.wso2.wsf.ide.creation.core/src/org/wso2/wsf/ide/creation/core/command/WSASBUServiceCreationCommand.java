@@ -182,6 +182,11 @@ public class WSASBUServiceCreationCommand extends
 			
 			//Matching other class files within the same package
 			IPath servicePacakeDirLocation = new Path(classesDirectory);
+			// Fix for the https://wso2.org/jira/browse/WSAS-752
+			// Need the package always to be present
+			if (packageString == null) {
+				packageString="";
+			}
 			servicePacakeDirLocation = servicePacakeDirLocation.append(packageString);
 			String servicePacakeDir[] = servicePacakeDirLocation.toOSString().split(serviceName+".class");
 			File[] matchingPossibleRelatedFiles = ServiceImplFilterUtil.getMatchingFiles(servicePacakeDir[0],
