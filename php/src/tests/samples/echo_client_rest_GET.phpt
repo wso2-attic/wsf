@@ -12,7 +12,7 @@ XML;
 try {
 
     $client = new WSClient(
-        array("to"=>"http://localhost/samples/echo_service.php/echoString",
+        array("to"=>"http://localhost/samples/echo_service_with_rest.php/a/b",
 	      "useSOAP"=>FALSE,
               "HTTPMethod"=>"GET"));
 
@@ -24,7 +24,7 @@ try {
 } catch (Exception $e) {
 
 	if ($e instanceof WSFault) {
-		printf("Soap Fault: %s\n", $e->Reason);
+		printf("Error Code: %s\n", $e->httpStatusCode);
 	} else {
 		printf("Message = %s\n",$e->getMessage());
 	}
