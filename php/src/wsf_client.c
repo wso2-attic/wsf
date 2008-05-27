@@ -1205,12 +1205,10 @@ wsf_client_do_request (
     client_ht = Z_OBJPROP_P (this_ptr);
 
     /** add proxy settings */
-    wsf_client_enable_proxy (client_ht, env, client_options,
-        svc_client TSRMLS_CC);
+    wsf_client_enable_proxy (client_ht, env, svc_client TSRMLS_CC);
 
     /** add ssl properties */
-    wsf_client_enable_ssl (client_ht, env, client_options,
-        svc_client TSRMLS_CC);
+    wsf_client_enable_ssl (client_ht, env, client_options TSRMLS_CC);
 
     /** set http authentication parameters */
     wsf_client_set_http_auth_info(client_ht, env, client_options TSRMLS_CC);
@@ -1543,8 +1541,7 @@ void
 wsf_client_enable_ssl (
     HashTable * ht,
     axutil_env_t * env,
-    axis2_options_t * options,
-    axis2_svc_client_t * svc_client TSRMLS_DC)
+    axis2_options_t * options TSRMLS_DC)
 {
     axutil_property_t *ssl_server_key_prop = NULL;
     axutil_property_t *ssl_client_key_prop = NULL;
@@ -1597,7 +1594,6 @@ void
 wsf_client_enable_proxy (
     HashTable * ht,
     axutil_env_t * env,
-    axis2_options_t * options,
     axis2_svc_client_t * svc_client TSRMLS_DC)
 {
     axis2_char_t *proxy_host = NULL;

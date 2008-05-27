@@ -34,7 +34,7 @@ extern "C"
 #endif
 
 /**
-*
+* Set SOAP Security and HTTP Options 
 * @param client_ht, WSClient options array
 * @param msg_ht,  WSMessage options array
 * @param env,	  axis2 environment
@@ -51,7 +51,8 @@ int wsf_client_set_options (
     int *rest_enabled TSRMLS_DC);
 
 /**
-* 
+* Process WSMessage inputHeaders array and set to svc_client
+* as axiom nodes
 * @param env, 
 * @param svc_client, 
 * @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
@@ -63,14 +64,15 @@ int wsf_client_set_headers (
 
 
 /**
-* 
-* @param this_ptr, 
-* @param param, 
-* @param return_value, 
+* Process WSMessage and WSClient options and uses axis2_svc_client
+* instance to handle the request. Both WSClient->request() and 
+* WSClient->send() methods call this function
+* @param this_ptr, WSClient instance
+* @param param,    Argument of request(), send() methods, can be either
+*                  WSMessage or a string
+* @param return_value,
 * @param env, 
 * @param svc_client, 
-* @param TSRMLS_DC, 
-* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
 */
 void wsf_client_do_request (
     zval * this_ptr,
@@ -81,38 +83,30 @@ void wsf_client_do_request (
     int is_oneway TSRMLS_DC);
 
 /**
-* 
-* @param ht, 
+* Sets SSL options to axis2 options and enable SSL
+* @param ht, WSClient options array 
 * @param env, 
-* @param options, 
-* @param TSRMLS_DC, 
-* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
+* @param options, axis2 options
 */
 void wsf_client_enable_ssl (
     HashTable * ht,
     axutil_env_t * env,
-    axis2_options_t * options,
-    axis2_svc_client_t * svc_client TSRMLS_DC);
+    axis2_options_t *options TSRMLS_DC);
+
 
 /**
-* 
-* @param ht, 
+* Sets proxy params to svc_client
+* @param ht, WSClient options array Hashtable
 * @param env, 
-* @param options, 
-* @param TSRMLS_DC, 
-* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
 */
 void wsf_client_enable_proxy (
     HashTable * ht,
-    axutil_env_t * env,
-    axis2_options_t * options,
+    axutil_env_t * env, 
     axis2_svc_client_t * svc_client TSRMLS_DC);
 
 /**
-* 
-* @param this_ptr, 
-* @param TSRMLS_DC, 
-* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
+* Add WSClient options array values as properties to WSClient instance
+* @param this_ptr, WSClient instance
 */
 void wsf_client_add_properties (
     zval * this_ptr,
