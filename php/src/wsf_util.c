@@ -952,26 +952,8 @@ int wsf_util_get_attachments_form_soap_envelope (
      const axutil_env_t * env,
     axiom_soap_envelope_t *soap_envelope,
     zval * cid2str,
-    zval * cid2contentType TSRMLS_DC) {
-
-    /*
-    get soap builder from soap envelope
-    get the data handers map form soap builder
-
-    ieterate the data handler hash map
-    for each data handler
-    do
-                    cnt_type = axiom_data_handler_get_content_type(data_handler, env);
-                    cid = axiom_text_get_content_id(text, env);
-                    add_assoc_stringl (cid2str, cid, data, data_len, 1);
-                    attachments_found = 1;
-                    if (cnt_type) {
-                        add_assoc_stringl (cid2contentType, cid,
-                            cnt_type, strlen (cnt_type), 1);
-                    }
-    done
-    */
-
+    zval * cid2contentType TSRMLS_DC)
+{
     int attachments_found = 0;
     axiom_soap_builder_t *soap_builder = NULL;
     axutil_hash_t *mime_body_parts = NULL;
