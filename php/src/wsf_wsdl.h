@@ -29,13 +29,14 @@
 #include "ext/libxml/php_libxml.h"
 
 
-void create_dynamic_client(zval *this_ptr, 
-                           char *fn_name, 
-                           int fn_name_len, 
-                           int arg_count,
-                           zval *args, 
-                           zval *return_value, 
-                           axutil_env_t * env TSRMLS_DC);
+void wsf_wsdl_create_dynamic_client(
+   zval *this_ptr, 
+   char *fn_name, 
+   int fn_name_len, 
+   int arg_count,
+   zval *args, 
+   zval *return_value, 
+   axutil_env_t * env TSRMLS_DC);
 
 void wsf_wsdl_process_service(zval *this_ptr, 
                               wsf_request_info_t * reqinfo, 

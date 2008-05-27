@@ -64,9 +64,14 @@ wsf_wsdl_send_receive_soap_envelope_with_op_client (
     axiom_node_t *request_node);
 
 
-void create_dynamic_client(zval *this_ptr, char *function, int function_len,
-                           int arg_count, zval *args, zval *return_value,
-                           axutil_env_t * env TSRMLS_DC)
+void wsf_wsdl_create_dynamic_client(
+	zval *this_ptr, 
+	char *function, 
+	int function_len,
+    int arg_count, 
+	zval *args, 
+	zval *return_value,
+    axutil_env_t * env TSRMLS_DC)
 {
     zval *client_zval = NULL;
     zval **tmp;

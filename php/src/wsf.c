@@ -1833,7 +1833,7 @@ PHP_METHOD (ws_client_proxy, __call)
             real_args[i++] = *param;
     } }
     
-    create_dynamic_client(this_ptr, fn_name, fn_name_len, arg_count,
+    wsf_wsdl_create_dynamic_client(this_ptr, fn_name, fn_name_len, arg_count,
                           args, return_value, env TSRMLS_CC);
 
     if (arg_count) {
