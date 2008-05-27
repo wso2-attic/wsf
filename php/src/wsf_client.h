@@ -113,7 +113,7 @@ void wsf_client_add_properties (
     HashTable * ht TSRMLS_DC);
 
 /**
-* 
+* Set "to" and soap action to client options
 * @param client_ht, Hash table of WSClient options array
 * @param msg_ht, HashTable of WSMessage options array
 * @param env,    axis2 environment struct 
@@ -124,17 +124,16 @@ int wsf_client_set_endpoint_and_soap_action (
     HashTable * client_ht,
     HashTable * msg_ht,
     axutil_env_t * env,
-    axis2_options_t * client_options TSRMLS_DC);
+    axis2_options_t * options TSRMLS_DC);
 
 /**
-* 
-* @param env, 
+* Set Terminate sequence message property
+* @param env,  environment
 * @param is_rm_engaged, 
 * @param will_continue_sequence, 
 * @param rm_spec_version, 
 * @param sequence_key, 
 * @param svc_client, 
-* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
 */
 void wsf_client_send_terminate_sequence (
     axutil_env_t * env,
