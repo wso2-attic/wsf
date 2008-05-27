@@ -201,6 +201,10 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
         $wsdl_dom = $wsdl_11_dom;
     }
 
+    if(is_array($attachment_map) && count($attachment_map) == 0) {
+        $attachment_map = NULL;
+    }
+
     $wsdl_dom_string = $wsdl_dom->saveXML();
     $return_value = array(WSF_ENDPOINT_URI=> $endpoint_address,
                           WSF_BINDING_DETAILS=> $binding_array,

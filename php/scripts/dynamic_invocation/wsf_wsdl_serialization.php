@@ -84,7 +84,6 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
                 $root_node, $prefix_i, $namespace_map, $mtom_on, $attachment_map);
     }
     else {
-    }
         // this situation meets only for non-wrapped mode as doclit-bare wsdls
         // and for the simpleContent extension in the classmap
         $the_only_node = $sig_node->firstChild;
@@ -100,6 +99,7 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
             wsf_build_content_model($the_only_node, $user_arguments, $parent_node,
                 $payload_dom, $root_node, $prefix_i, $namespace_map, $mtom_on, $attachement_map);
         }
+    }
 }
 
 /** create payload for arrays
