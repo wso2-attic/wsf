@@ -395,7 +395,7 @@ wsf_set_rampart_options (
     }
 	if(!rampart_context){
 		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_policy] rampart context null");
-		return NULL;
+		return -1;
 	}
 
     ht_token = Z_OBJPROP_P (sec_token);

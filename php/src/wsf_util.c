@@ -1829,7 +1829,7 @@ void wsf_util_process_rest_params(axutil_env_t *env,
 			/** data value is an array 	"<Operation>"=>array("HTTPMethod"=>"<OP>","restLocation"=>"<loc>" */
 			HashTable *values = NULL;
             char *operation_name = NULL;
-			int str_length = 0;
+			uint str_length = 0;
             ulong num_index = 0;
 			char *http_method = NULL;
 			char *rest_location = NULL;

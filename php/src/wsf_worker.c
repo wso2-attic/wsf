@@ -633,7 +633,7 @@ wsf_worker_process_request (
 						msg_ctx, in_stream, out_stream, content_type,
 							content_length, soap_action_str, (axis2_char_t *) request_url);
 		}
-		if(status == AXIS2_FAILURE && is_put_method || axis2_msg_ctx_get_doing_rest(msg_ctx, env))
+		if(status == AXIS2_FAILURE && (is_put_method || axis2_msg_ctx_get_doing_rest(msg_ctx, env)))
 		{
 			/** error occured while processing rest */
 			int msg_ctx_status_code = axis2_msg_ctx_get_status_code(msg_ctx, env);
