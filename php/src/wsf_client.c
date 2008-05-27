@@ -895,7 +895,7 @@ wsf_client_set_options (
     axutil_env_t * env,
     axis2_options_t * client_options,
     axis2_svc_client_t * svc_client,
-    int is_send TSRMLS_DC)
+    int *rest_enabled TSRMLS_DC)
 {
     zval **tmp = NULL;
     int status = AXIS2_SUCCESS;
@@ -966,6 +966,8 @@ wsf_client_set_options (
 
             axis2_options_set_property (client_options, env,
                 AXIS2_ENABLE_REST, rest_property);
+
+			*rest_enabled = AXIS2_TRUE;
         }
 
         /** default header type is POST, so only setting the HTTP_METHOD if GET */
@@ -1148,6 +1150,8 @@ wsf_client_do_request (
     int is_addressing_action_present = AXIS2_FALSE;
     int is_rm_engaged = AXIS2_FALSE;
     char *sequence_key = NULL;
+	int rest_enabled = AXIS2_FALSE;
+
 	smart_str sandesha2_db = { 0 };
 	smart_str_appends(&sandesha2_db, WSF_GLOBAL(rm_db_dir));
     smart_str_appends(&sandesha2_db, "/");
@@ -1216,7 +1220,7 @@ wsf_client_do_request (
 
     /** setting soap , rest and security options */
     status = wsf_client_set_options (client_ht, msg_ht, env,
-            client_options, svc_client, 0 TSRMLS_CC);
+            client_options, svc_client, &rest_enabled TSRMLS_CC);
 	
 	/** set addressing options */
     is_addressing_engaged = wsf_client_set_addr_options (client_ht, msg_ht, env,
@@ -1232,7 +1236,7 @@ wsf_client_do_request (
 
     if (status == AXIS2_FAILURE) {
         php_error_docref (NULL TSRMLS_CC, E_ERROR,
-            "service enpoint uri is needed for service invocation");
+            "service endpoint uri is needed for service invocation");
     }
 
 	/** find whether addressing action is present if addressing is not engaged */
@@ -1271,8 +1275,8 @@ wsf_client_do_request (
 
     /**
 		reliable = TRUE
-		1. addressing is engaged by user specifing useWSA and Action
-		2. addressing is not specified by useWSA but action presnt
+		1. addressing is engaged by user specifying useWSA and Action
+		2. addressing is not specified by useWSA but action present
 			then engage addressing
 		If Addressing is engaged engage RM
 	*/
@@ -1421,64 +1425,84 @@ wsf_client_do_request (
          /** END RM OPTIONS */
     if (is_oneway) {
         int ret_val = 0;
-        ret_val =
-            axis2_svc_client_send_robust (svc_client, env, request_payload);
+        ret_val = axis2_svc_client_send_robust (svc_client, env, request_payload);
         /** if rm is engaged and spec version is 1.1 send terminate sequence */
-        wsf_client_send_terminate_sequence (env, is_rm_engaged,
+		if(!rest_enabled){
+			wsf_client_send_terminate_sequence (env, is_rm_engaged,
             ws_client_will_continue_sequence, rm_spec_version, sequence_key,
             svc_client);
-
+		}
         if (ret_val == 1) {
             ZVAL_TRUE (return_value);
         } else {
             ZVAL_FALSE (return_value);
         }
 
-    } else {
+    } else 
+		{
 
         int has_fault = AXIS2_FALSE;
         axis2_char_t *res_text = NULL;
-
-        response_payload =
-            axis2_svc_client_send_receive (svc_client, env, request_payload);
-
+		int status_code = 0;
+        response_payload = axis2_svc_client_send_receive (svc_client, env, request_payload);
+		if(!rest_enabled)
+		{
         /** if rm is engaged and spec version is 1.1 send terminate sequence */
-        wsf_client_send_terminate_sequence (env, is_rm_engaged,
-            ws_client_will_continue_sequence, rm_spec_version, sequence_key,
-            svc_client);
-
-        if (axis2_svc_client_get_last_response_has_fault (svc_client, env)) {
-            axiom_soap_envelope_t *soap_envelope = NULL;
-            axiom_soap_body_t *soap_body = NULL;
-            axiom_soap_fault_t *soap_fault = NULL;
-            has_fault = AXIS2_TRUE;
-
-            soap_envelope =
-                axis2_svc_client_get_last_response_soap_envelope (svc_client,
-                env);
-            if (soap_envelope)
-                soap_body = axiom_soap_envelope_get_body (soap_envelope, env);
-            if (soap_body)
-                soap_fault = axiom_soap_body_get_fault (soap_body, env);
-            if (soap_fault) {
-
-		int soap_version = 0;
-		zval *rfault;
-		axiom_node_t *fault_node = NULL;
-		soap_version = axis2_options_get_soap_version(client_options, env);
-		fault_node = axiom_soap_fault_get_base_node(soap_fault, env);
-		if(fault_node){
-			res_text = axiom_node_to_string ( fault_node, env);
-			MAKE_STD_ZVAL (rfault);
-			INIT_PZVAL(rfault);
-			object_init_ex (rfault, ws_fault_class_entry);
-			add_property_stringl (rfault, "str", res_text, strlen (res_text), 1);
-			wsf_util_handle_soap_fault(rfault, env, fault_node, soap_version TSRMLS_CC);
-			zend_throw_exception_object(rfault TSRMLS_CC);
-			return ;
+			wsf_client_send_terminate_sequence (env, is_rm_engaged, ws_client_will_continue_sequence, 
+				rm_spec_version, sequence_key, svc_client);
 		}
-            }
-        }else if (response_payload) {
+		status_code = axis2_svc_client_get_http_status_code(svc_client, env);
+	
+		if((status_code != 200) && (status_code != 202) && rest_enabled)
+		{
+			zval *rfault = NULL;
+			MAKE_STD_ZVAL(rfault);
+			INIT_PZVAL(rfault);
+			object_init_ex(rfault, ws_fault_class_entry);
+			add_property_long(rfault, "httpStatusCode", status_code);
+			if(response_payload)
+				{
+					res_text = axiom_node_to_string(response_payload, env);
+					add_property_stringl(rfault, "str", res_text, strlen(res_text), 1);
+				}
+			zend_throw_exception_object(rfault TSRMLS_CC);
+			return;
+		}
+		if (axis2_svc_client_get_last_response_has_fault (svc_client, env)) 
+		{
+			axiom_soap_envelope_t *soap_envelope = NULL;
+			axiom_soap_body_t *soap_body = NULL;
+			axiom_soap_fault_t *soap_fault = NULL;
+			has_fault = AXIS2_TRUE;
+
+			soap_envelope = axis2_svc_client_get_last_response_soap_envelope (svc_client, env);
+			if (soap_envelope)
+				soap_body = axiom_soap_envelope_get_body (soap_envelope, env);
+			if (soap_body)
+				soap_fault = axiom_soap_body_get_fault (soap_body, env);
+			if (soap_fault) 
+			{
+
+				int soap_version = 0;
+				zval *rfault = NULL;
+				axiom_node_t *fault_node = NULL;
+				soap_version = axis2_options_get_soap_version(client_options, env);
+				fault_node = axiom_soap_fault_get_base_node(soap_fault, env);
+				if(fault_node)
+				{
+					res_text = axiom_node_to_string ( fault_node, env);
+					MAKE_STD_ZVAL (rfault);
+					INIT_PZVAL(rfault);
+					object_init_ex (rfault, ws_fault_class_entry);
+					add_property_stringl (rfault, "str", res_text, strlen (res_text), 1);
+					add_property_long(rfault, "httpStatusCode", status_code);
+					wsf_util_handle_soap_fault(rfault, env, fault_node, soap_version TSRMLS_CC);
+					zend_throw_exception_object(rfault TSRMLS_CC);
+					return ;
+				}
+			}
+		}else if (response_payload) 
+		{
             int attachments_found = 0;
             zval *rmsg = NULL;
             axiom_soap_envelope_t *soap_envelope = NULL;
@@ -1501,7 +1525,8 @@ wsf_client_do_request (
             ZVAL_ZVAL (return_value, rmsg, 1, 0);
             zval_ptr_dtor(&rmsg);
 
-        }else if (response_payload == NULL && has_fault == AXIS2_FALSE) {
+        }else if (response_payload == NULL && has_fault == AXIS2_FALSE)
+		{
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
                     "Response Payload NULL( Error number and code) => :" " %d :: %s",
                      env->error->error_number,

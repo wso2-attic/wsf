@@ -228,6 +228,7 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
     zval **policy_options = NULL;
     char *response_sig_model_string = NULL;
     char *wsdl_dom_string = NULL;
+	int rest_enabled = AXIS2_FALSE;
 
     axiom_node_t *env_node = NULL;
     int has_fault = AXIS2_FALSE;
@@ -331,7 +332,7 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
     
     axis2_options_set_xml_parser_reset (client_options, env, AXIS2_FALSE);
     wsf_client_set_options(Z_OBJPROP_P (client_zval), NULL,
-                           env, client_options, svc_client, 0 TSRMLS_CC);
+                           env, client_options, svc_client, &rest_enabled TSRMLS_CC);
     
     wsf_client_enable_ssl (Z_OBJPROP_P (client_zval), env, client_options,
                            svc_client TSRMLS_CC);
