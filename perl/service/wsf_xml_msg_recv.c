@@ -325,38 +325,6 @@ wsf_xml_msg_recv_invoke_business_logic_sync (axis2_msg_recv_t* msg_recv,
 }
 
 
-/**
- * Following block distinguish the exposed part of the dll.
- */
-/*AXIS2_EXPORT int
-axis2_get_instance (
-    struct axis2_msg_recv **inst,
-    const axutil_env_t * env)
-{
-
-    *inst = wsf_xml_msg_recv_create (env);
-    if (!(*inst)) {
-
-        return AXIS2_FAILURE;
-    }
-
-    return AXIS2_SUCCESS;
-}
-
-AXIS2_EXPORT int
-axis2_remove_instance (
-    struct axis2_msg_recv *inst,
-    const axutil_env_t * env)
-{
-
-    if (inst) {
-
-        axis2_msg_recv_free (inst, env);
-    }
-    return AXIS2_SUCCESS;
-}*/
-
-
 static axis2_char_t*
 wsf_xml_msg_recv_get_method_name (axis2_msg_ctx_t*    msg_ctx,
                                   const axutil_env_t* env)
@@ -418,7 +386,8 @@ wsf_xml_msg_recv_invoke_other (axis2_msg_recv_t* msg_recv,
         perl_construct( my_perl );
         eval_pv("use WSO2::WSF::C", FALSE);
         eval_pv("use WSO2::WSF::Server", FALSE);
-        if (perl_parse(my_perl, xs_init, 2, embedding, NULL))
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "calling perl_parse method");
+        if (perl_parse(my_perl, NULL, 2, embedding, NULL))
         {
             AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "perl_parse method failed");
             return NULL;
@@ -444,7 +413,7 @@ invoke_perl_function ()
 {
  dSP ;
  PUSHMARK(SP) ;
- perl_call_pv("print_this", G_DISCARD|G_NOARGS) ;
+ perl_call_pv("echoFunction", G_DISCARD|G_NOARGS) ;
 }
 
 static void
