@@ -203,6 +203,8 @@ typedef enum ws_input_types
 
 #define WS_REQ_INFO "WSFPHPRequestInfo"
 
+#define WS_MAGIC_FUNC_CALL "__call"
+
 
 typedef struct wsf_svc_info
 {
