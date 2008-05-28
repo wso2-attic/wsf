@@ -635,7 +635,7 @@ wsf_worker_process_request (
 		}
 		if(status == AXIS2_FAILURE && (is_put_method || axis2_msg_ctx_get_doing_rest(msg_ctx, env)))
 		{
-			/** error occured while processing rest */
+			/** error occurred while processing rest */
 			int msg_ctx_status_code = axis2_msg_ctx_get_status_code(msg_ctx, env);
 			if(!svc_info->loc_str)
 			{
