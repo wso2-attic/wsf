@@ -1,3 +1,7 @@
+<!--
+  To copy the contents inside resources folder to project root
+	$ mvn org.apache.maven.plugins:maven-antrun-plugin:run 
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -295,6 +299,24 @@
 					</archive>
 				</configuration>
 			</plugin>
+			 <plugin>
+        			<groupId>org.apache.maven.plugins</groupId>
+        			<artifactId>maven-antrun-plugin</artifactId>
+        			<executions>
+          				<execution>
+            					<goals>
+             		 				<goal>run</goal>
+           					</goals>
+          				</execution>
+        			</executions>
+				<configuration>
+		           		<tasks>
+			     			<copy todir="." overwrite="true">
+							<fileset dir="resources"/>
+			     			</copy>
+		           		</tasks>
+		         	</configuration>
+		       </plugin>
 		</plugins>
 	</build>
 
