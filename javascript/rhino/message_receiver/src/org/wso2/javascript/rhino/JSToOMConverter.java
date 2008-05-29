@@ -42,6 +42,7 @@ import org.apache.axis2.databinding.utils.BeanUtil;
 import org.apache.axis2.databinding.utils.ConverterUtil;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EvaluatorException;
+import org.mozilla.javascript.NativeArray;
 import org.wso2.javascript.xmlimpl.QName;
 
 import java.math.BigDecimal;
@@ -52,6 +53,35 @@ import java.util.TimeZone;
 public class JSToOMConverter {
 
     public static String convertToString(Object jsObject) {
+        if (jsObject instanceof NativeArray) {
+            NativeArray nativeArray = (NativeArray) jsObject;
+            Object[] objects = nativeArray.getAllIds();
+            String returnString = "";
+            // Using a flag here to know weather the iterator is in the first position cause we
+            // want to separate the values in the array using a ,
+            boolean first = true;
+            for (int i = 0; i < objects.length; i++) {
+                Object object = objects[i];
+                Object value;
+                if (object instanceof String) {
+                    String property = (String) object;
+                    if ("length".equals(property)) {
+                        continue;
+                    }
+                    value = nativeArray.get(property, nativeArray);
+                } else {
+                    Integer property = (Integer) object;
+                    value = nativeArray.get(property.intValue(), nativeArray);
+                }
+                if (first) {
+                    returnString += value;
+                    first = false;
+                } else {
+                    returnString += ", " + value;
+                }
+            }
+            return returnString;
+        }
         return jsObject.toString();
     }
 
