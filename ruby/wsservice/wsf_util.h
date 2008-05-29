@@ -166,4 +166,22 @@ void wsf_util_engage_modules_to_svc(
 
 void wsf_util_process_ws_service_classes(VALUE self);
 
+void
+wsf_evaluate_security_token_and_insert_to_hash(
+    axutil_env_t* env,
+    VALUE security_token,
+    axutil_hash_t* hash);
+
+void
+wsf_evaluate_policy_options_and_insert_to_hash(
+    axutil_env_t* env,
+    VALUE policy,
+    axutil_hash_t* hash);
+
+void
+wsf_evaluate_policy_and_insert_to_hash(
+    axutil_env_t* env,
+    VALUE policy,
+    axutil_hash_t* hash);
+
 #endif /* WSF_UTIL_H */

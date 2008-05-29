@@ -17,6 +17,8 @@
 #include <axutil_dll_desc.h>
 #include <axis2_msg_recv.h>
 #include <axutil_class_loader.h>
+#include "wsf_common.h"
+#include "wsf_policy.h"
 #include "wsf_worker.h"
 #include "wsf_xml_msg_recv.h"
 #include <axis2_http_transport.h>
@@ -29,6 +31,8 @@
 #include <axis2_http_client.h>
 
 #include <ruby.h>
+
+#include "wsf_wsdl_mode.h"
 
 /*
 axiom_node_t *
@@ -1280,3 +1284,327 @@ void wsf_util_process_ws_service_classes(VALUE self)
         rb_hash_foreach(wsservice->ht_classes, wsf_util_resolve_class_params, self);
     }
 }
+
+void
+wsf_evaluate_security_token_and_insert_to_hash(axutil_env_t* env,
+                                               VALUE security_token,
+                                               axutil_hash_t* hash)
+{
+    char* prv_key = NULL;
+    VALUE private_key = Qnil;
+    char* certificate = NULL;
+    VALUE cert = Qnil;
+    char* receiver_certificate = NULL;
+    VALUE rec_cert = Qnil;
+    char* username = NULL;
+    VALUE usr = Qnil;
+    char* password = NULL;
+    VALUE pwd = Qnil;
+    char* password_type = NULL;
+    VALUE pwd_type = Qnil;
+    int ttl = -1;
+    VALUE time_to_live = Qnil;
+    char* callback_function_name = NULL;
+    VALUE callback_fn = Qnil;
+
+    if (!hash)
+        return;
+
+    private_key = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("private_key"));
+    if (!NIL_P(private_key) && (TYPE(private_key) == T_STRING))
+    {
+        prv_key = RSTRING(private_key)->ptr;
+
+        if (prv_key)
+        {
+            axutil_hash_set(hash, 
+                WSF_WSDL_HK_PRIVATE_KEY, 
+                AXIS2_HASH_KEY_STRING, 
+                axutil_strdup(env, prv_key));
+        }
+    }
+
+    cert = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("certificate"));
+    if (!NIL_P(cert) && (TYPE(cert) == T_STRING))
+    {
+        certificate = RSTRING(cert)->ptr;
+
+        if (certificate)
+        {
+            axutil_hash_set(hash, 
+                WSF_WSDL_HK_CERTIFICATE, 
+                AXIS2_HASH_KEY_STRING, 
+                axutil_strdup(env, certificate));
+        }
+    }
+
+    rec_cert = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("receiver_certificate"));
+    if (!NIL_P(rec_cert) && (TYPE(rec_cert) == T_STRING))
+    {
+        receiver_certificate = RSTRING(rec_cert)->ptr;
+
+        if (receiver_certificate)
+        {
+            axutil_hash_set(hash, 
+                WSF_WSDL_HK_RECEIVER_CERTIFICATE, 
+                AXIS2_HASH_KEY_STRING, 
+                axutil_strdup(env, receiver_certificate));
+        }
+    }
+
+    usr = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("user"));
+    if (!NIL_P(usr) && (TYPE(usr) == T_STRING))
+    {
+        username = RSTRING(usr)->ptr;
+
+        if (username)
+        {
+            axutil_hash_set(hash, 
+                WSF_WSDL_HK_USER, 
+                AXIS2_HASH_KEY_STRING, 
+                axutil_strdup(env, username));
+        }
+    }
+
+    pwd = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("password"));
+    if (!NIL_P(pwd) && (TYPE(pwd) == T_STRING))
+    {
+        password = RSTRING(pwd)->ptr;
+
+        if (password)
+        {
+            axutil_hash_set(hash, 
+                WSF_WSDL_HK_PASSWORD, 
+                AXIS2_HASH_KEY_STRING, 
+                axutil_strdup(env, password));
+        }
+    }
+
+    pwd_type = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("password_type"));
+    if (!NIL_P(pwd_type) && (TYPE(pwd_type) == T_STRING))
+    {
+        password_type = RSTRING(pwd_type)->ptr;
+
+        if (password_type)
+        {
+            axutil_hash_set(hash, 
+                WSF_WSDL_HK_PASSWORD_TYPE, 
+                AXIS2_HASH_KEY_STRING, 
+                axutil_strdup(env, password_type));
+        }
+    }
+
+    callback_fn = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("password_callback"));
+    if (!NIL_P(callback_fn) && (TYPE(callback_fn) == T_STRING))
+    {
+        callback_function_name = RSTRING(callback_fn)->ptr;
+
+        if (callback_function_name)
+        {
+            axutil_hash_set(hash, 
+                WSF_WSDL_HK_PASSWORD_CALL_BACK, 
+                AXIS2_HASH_KEY_STRING, 
+                axutil_strdup(env, callback_function_name));
+        }
+    }
+
+    time_to_live = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("ttl"));
+    if (!NIL_P(time_to_live) && (TYPE(time_to_live) == T_FIXNUM))
+    {
+        ttl = FIX2INT(time_to_live);
+
+        if (ttl >= 0)
+        {
+            axutil_hash_set(hash, 
+                WSF_WSDL_HK_TTL, 
+                AXIS2_HASH_KEY_STRING, 
+                ttl);
+        }
+    }
+}
+
+void
+wsf_evaluate_policy_options_and_insert_to_hash(axutil_env_t* env,
+                                               VALUE policy,
+                                               axutil_hash_t* hash)
+{
+    VALUE time_stamp;
+    VALUE username_token;
+    VALUE encryption;
+    VALUE algorithm;
+    VALUE sign;
+    VALUE token_reference;
+    VALUE encrypt_signature;
+    VALUE protection_order;
+
+    char* ts = NULL;
+    char* ut = NULL;
+    char* encrypt = NULL;
+    char* algo_suite = NULL;
+    char* sg = NULL;
+    char* tkn = NULL;
+    char* token_ref = NULL;
+    char* encrypt_sign = NULL;
+    char* order = NULL;
+
+    if (policy != Qnil) 
+    {
+        time_stamp = rb_funcall(policy, rb_intern("option"), 1, rb_str_new2(WS_TIMESTAMP));
+
+        if (!NIL_P(time_stamp) && (TYPE(time_stamp) == T_STRING))
+        {
+            ts = RSTRING(time_stamp)->ptr;
+
+            if (ts) 
+            {
+                axutil_hash_set(hash, 
+                    WSF_WSDL_HK_TIMESTAMP, 
+                    AXIS2_HASH_KEY_STRING, 
+                    axutil_strdup(env, ts)); 
+            }
+        }
+
+        username_token = rb_funcall(policy, rb_intern("option"), 1, rb_str_new2(WS_UT));
+
+        if (!NIL_P(username_token) && (TYPE(username_token) == T_STRING))
+        {   
+            ut = RSTRING(username_token)->ptr;
+            if (ut)
+            {
+                axutil_hash_set(hash, 
+                    WSF_WSDL_HK_USERNAME_TOKEN, 
+                    AXIS2_HASH_KEY_STRING, 
+                    axutil_strdup(env, ut)); 
+            }
+        }
+
+        encryption = rb_funcall(policy, rb_intern("option"), 1, rb_str_new2(WS_ENCRYPT));
+
+        if (!NIL_P(encryption) && (TYPE(encryption) == T_STRING))
+        { 
+            encrypt = RSTRING(encryption)->ptr;
+
+            if (encrypt)
+            {
+                axutil_hash_set(hash, 
+                    WSF_WSDL_HK_ENCRYPTION, 
+                    AXIS2_HASH_KEY_STRING, 
+                    axutil_strdup(env, encrypt)); 
+            }
+        }
+
+        algorithm = rb_funcall(policy, rb_intern("option"), 1, rb_str_new2(WS_ALGORITHM));
+
+        if (!NIL_P(algorithm) && (TYPE(algorithm) == T_STRING))
+        {
+            algo_suite = RSTRING(algorithm)->ptr;
+
+            if (algo_suite)
+            {
+                axutil_hash_set(hash, 
+                    WSF_WSDL_HK_ALGORITHM, 
+                    AXIS2_HASH_KEY_STRING, 
+                    axutil_strdup(env, algo_suite)); 
+            }
+        }
+
+        sign = rb_funcall(policy, rb_intern("option"), 1, rb_str_new2(WS_SIGN));
+
+        if (!NIL_P(sign) && (TYPE(sign) == T_STRING))
+        {
+            sg = RSTRING(sign)->ptr;
+
+            if (sg)
+            {
+                axutil_hash_set(hash, 
+                    WSF_WSDL_HK_SIGNING, 
+                    AXIS2_HASH_KEY_STRING, 
+                    axutil_strdup(env, sg)); 
+            }
+        }
+
+        token_reference = rb_funcall(policy, rb_intern("option"), 1, rb_str_new2(WS_TOKEN_REFERENCE));
+
+        if (!NIL_P(token_reference) && (TYPE(token_reference) == T_STRING))
+        {
+            tkn = RSTRING(token_reference)->ptr;
+
+            if (tkn)
+            {
+                axutil_hash_set(hash, 
+                    WSF_WSDL_HK_TOKEN_REFERENCE, 
+                    AXIS2_HASH_KEY_STRING, 
+                    axutil_strdup(env, tkn)); 
+            }
+        }
+
+        encrypt_signature = rb_funcall(policy, rb_intern("option"), 1, rb_str_new2(WS_ENCRYPT_SIGNATURE)); 
+
+        if (!NIL_P(encrypt_signature) && (TYPE(encrypt_signature) == T_STRING))
+        {
+            encrypt_sign = RSTRING(encrypt_signature)->ptr;
+
+            if (encrypt_sign)
+            {
+                axutil_hash_set(hash, 
+                    WSF_WSDL_HK_ENCRYPT_SIGNATURE, 
+                    AXIS2_HASH_KEY_STRING, 
+                    axutil_strdup(env, encrypt_sign)); 
+            }
+        }
+
+        protection_order = rb_funcall(policy, rb_intern("option"), 1, rb_str_new2(WS_PROTECTION_ORDER));	
+
+        if (!NIL_P(protection_order) && (TYPE(protection_order) == T_STRING))
+        {
+            order = RSTRING(protection_order)->ptr;
+
+            if (order)
+            {
+                axutil_hash_set(hash, 
+                    WSF_WSDL_HK_PROTECTION_ORDER, 
+                    AXIS2_HASH_KEY_STRING, 
+                    axutil_strdup(env, order)); 
+            }
+        }
+    }   	
+}
+
+
+
+void
+wsf_evaluate_policy_and_insert_to_hash(axutil_env_t* env,
+                                       VALUE policy,
+                                       axutil_hash_t* hash)
+{
+    VALUE policy_string;
+
+    policy_string = rb_funcall(policy, rb_intern("get_policy"), 0);
+
+    if (!NIL_P(policy_string))
+    {
+        axis2_char_t* policy_buffer = NULL;
+        axis2_char_t* policy_str = NULL;
+        policy_str = RSTRING(policy_string)->ptr;
+
+        policy_buffer = axutil_strdup(env, policy_str);
+
+        axutil_hash_set(hash, 
+            WSF_WSDL_HK_POLICY_STRING, 
+            AXIS2_HASH_KEY_STRING, 
+            policy_buffer); 
+    }
+    else
+    {	
+        axutil_hash_t* policy_hash = NULL;
+        policy_hash = axutil_hash_make(env);
+
+        wsf_evaluate_policy_options_and_insert_to_hash(env, policy, policy_hash);
+
+        axutil_hash_set(hash, 
+            WSF_WSDL_HK_POLICY_HASH, 
+            AXIS2_HASH_KEY_STRING, 
+            policy_hash); 
+    }
+}
+

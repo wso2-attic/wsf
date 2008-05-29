@@ -103,7 +103,6 @@ typedef enum ws_input_types
 #define WS_SEQUENCE_KEY      		"sequenceKey"
 
 /** protocol */
-#define WS_USE_SOAP			    "useSOAP"
 #define WS_HTTP_METHOD 			"HTTPMethod"
 
 /** SSL certificate */
@@ -220,6 +219,9 @@ typedef enum ws_input_types
 
 #define WS_SOAP_ENCODED SOAP_ENCODED
 #define WS_SOAP_LITERAL SOAP_LITERAL
+
+#define WS_SERVICE_NAME "service_name"
+#define WS_PORT_NAME    "port_name"
 
 typedef struct wsf_svc_info
 {

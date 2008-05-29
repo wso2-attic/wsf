@@ -40,7 +40,7 @@ axiom_node_t *wsf_create_policy_node (
     axiom_node_t * node);
 
 
-axis2_char_t *AXIS2_CALL wsf_password_provider_function (
+axis2_char_t *WSF_CALL wsf_password_provider_function (
     const axutil_env_t * env,
     const axis2_char_t * username,
     void *ctx);
@@ -455,7 +455,7 @@ wsf_hash_to_axiom_node (axutil_env_t * env,
     return return_node;
 }
 
-axis2_char_t *AXIS2_CALL
+axis2_char_t *WSF_CALL
 wsf_password_provider_function (
     const axutil_env_t * env,
     const axis2_char_t * username,

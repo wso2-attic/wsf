@@ -175,7 +175,7 @@ wsservice_initialize(VALUE self, VALUE options)
             AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
                           "[wsf_service] request xop %d", svc_info->request_xop);
         }
-
+		
         security_token = rb_hash_aref(options, ID2SYM(rb_intern(WS_SECURITY_TOKEN)));
         if(security_token == Qnil)
         {
@@ -238,10 +238,16 @@ wsservice_initialize(VALUE self, VALUE options)
         {
             VALUE xslt_location = Qnil;
 			VALUE type_map = Qnil;
+            VALUE service_name_value = Qnil;
+            VALUE port_name_value = Qnil;
+            axis2_char_t* service_name = NULL;
+            axis2_char_t* port_name = NULL;
+
 			axis2_char_t* xslt_location_string = NULL;
 			axis2_char_t* type_map_string = NULL;
 			axis2_char_t* wsdl_location_string = NULL;
 			wsf_wsdl_info_t* wsdl_info = NULL;
+            axutil_hash_t* script_service_user_options = NULL;
 			
 			AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
                                 "[wsf_service] wsdl is present");
@@ -251,25 +257,118 @@ wsservice_initialize(VALUE self, VALUE options)
 			xslt_location = rb_eval_string("Config::CONFIG['WSF_XSLT_LOCATION'] ");
 			if(xslt_location == Qnil)
 			{
-				rb_raise(rb_eException, "Please set WSF_XSLT_LOCATION in rbconfig.rb, I cannot continue without it");
+				rb_raise(rb_eException, 
+                       "Please set WSF_XSLT_LOCATION in rbconfig.rb, I cannot continue without it");
 			}
-
-			xslt_location_string = RSTRING(xslt_location)->ptr;
 
 			type_map = rb_eval_string("Config::CONFIG['WSF_TYPE_MAP'] ");
 			if(type_map == Qnil)
 			{
-				rb_raise(rb_eException, "Please set WSF_TYPE_MAP in rbconfig.rb, I cannot continue without it");
+				rb_raise(rb_eException, 
+                         "Please set WSF_TYPE_MAP in rbconfig.rb, I cannot continue without it");
 			}
 
-			type_map_string = RSTRING(type_map)->ptr;
+            service_name_value = rb_hash_aref(options, ID2SYM(rb_intern(WS_SERVICE_NAME)));
+            if(service_name_value == Qnil)
+            {
+                service_name_value = rb_hash_aref(options, rb_str_new2(WS_SERVICE_NAME));
+            }
 
-			wsdl_location_string = RSTRING(wsdl)->ptr;
+            port_name_value = rb_hash_aref(options, ID2SYM(rb_intern(WS_PORT_NAME)));
+            if(port_name_value == Qnil)
+            {
+                port_name_value = rb_hash_aref(options, rb_str_new2(WS_PORT_NAME));
+            }
 
-			if (wsf_wsdl_mode_initialize_for_service(ws_env_svr, wsdl_location_string, type_map_string, xslt_location_string, &wsdl_info))
+            xslt_location_string = 
+                (axis2_char_t*)axutil_strdup(ws_env_svr, RSTRING(xslt_location)->ptr);
+
+			type_map_string = (axis2_char_t*)axutil_strdup(ws_env_svr, RSTRING(type_map)->ptr);
+
+			wsdl_location_string = (axis2_char_t*)axutil_strdup(ws_env_svr, RSTRING(wsdl)->ptr);
+
+            if (service_name_value != Qnil)
+            {
+                service_name = (axis2_char_t*)axutil_strdup(ws_env_svr, 
+                                                            RSTRING(service_name_value)->ptr);
+            }
+            
+            if (port_name_value != Qnil)
+            {
+                port_name = (axis2_char_t*)axutil_strdup(ws_env_svr, RSTRING(port_name_value)->ptr);
+            }
+            
+
+            /*policy = rb_hash_aref(options, ID2SYM(rb_intern(WS_POLICY_NAME)));
+            if(policy == Qnil)
+            {
+                policy = rb_hash_aref(options, rb_str_new2(WS_POLICY_NAME));
+            }
+
+                if (script_client_options_hash)
+            {
+            policy_xml_str = (axis2_char_t*)axutil_hash_get(script_client_options_hash, 
+            WSF_WSDL_HK_POLICY_STRING, 
+            AXIS2_HASH_KEY_STRING);
+            policy_hash = (axutil_hash_t*)axutil_hash_get(script_client_options_hash, 
+            WSF_WSDL_HK_POLICY_HASH, 
+            AXIS2_HASH_KEY_STRING);
+            security_token_hash = (axutil_hash_t*)axutil_hash_get(script_client_options_hash, 
+            WSF_WSDL_HK_SECURITY_TOKEN, 
+            AXIS2_HASH_KEY_STRING);
+            }*/
+
+            script_service_user_options = axutil_hash_make(ws_env_svr); /* TODO, clean this */
+
+            if (security_token != Qnil)
+            {
+                axutil_hash_t* sec_token_hash = NULL;
+                sec_token_hash = axutil_hash_make(ws_env_svr); /* TODO, clean this */
+                wsf_evaluate_security_token_and_insert_to_hash(ws_env_svr, 
+                                                               security_token, 
+                                                               sec_token_hash);
+                axutil_hash_set(script_service_user_options, 
+                                WSF_WSDL_HK_SECURITY_TOKEN, 
+                                AXIS2_HASH_KEY_STRING, 
+                                sec_token_hash);
+
+            }
+
+            if (policy != Qnil)
+            {
+                wsf_evaluate_policy_and_insert_to_hash(ws_env_svr,
+                                                       policy,
+                                                       script_service_user_options);
+            }
+
+			if (wsf_wsdl_mode_initialize_for_service(ws_env_svr, 
+                                                     wsdl_location_string, 
+                                                     type_map_string, 
+                                                     xslt_location_string, 
+                                                     svc_info->service,
+                                                     wsf_worker_get_conf_ctx(worker, ws_env_svr),
+                                                     script_service_user_options,
+                                                     service_name,
+                                                     port_name,
+                                                     &wsdl_info))
 			{
 				svc_info->wsdl_info = wsdl_info;
 			}
+
+            if (xslt_location_string)
+            {
+                AXIS2_FREE(ws_env_svr->allocator, xslt_location_string);
+            }
+            
+            if (type_map_string)
+            {
+                AXIS2_FREE(ws_env_svr->allocator, type_map_string);
+            }
+            
+            if (wsdl_location_string)
+            {
+                AXIS2_FREE(ws_env_svr->allocator, wsdl_location_string);
+            }
         }
     }
 

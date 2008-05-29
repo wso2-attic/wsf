@@ -63,7 +63,7 @@ wsf_out_transport_info_impl_set_content_type(
     return 0;
 }
 
-axis2_status_t AXIS2_CALL
+axis2_status_t WSF_CALL
 wsf_out_transport_info_impl_set_char_encoding(
             axis2_out_transport_info_t * out_transport_info,
                 const axutil_env_t * env,
@@ -76,7 +76,7 @@ wsf_out_transport_info_impl_set_char_encoding(
     return 0;
 }
 
-void AXIS2_CALL
+void WSF_CALL
 wsf_out_transport_info_impl_free(
     axis2_out_transport_info_t * out_transport_info,
     const axutil_env_t * env)

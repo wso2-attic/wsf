@@ -29,7 +29,7 @@
 #include "wsf_common.h"
 #include "wsf_wsdl_mode.h"
 
-axis2_status_t AXIS2_CALL wsf_xml_msg_recv_invoke_business_logic_sync (
+axis2_status_t WSF_CALL wsf_xml_msg_recv_invoke_business_logic_sync (
     axis2_msg_recv_t * msg_recv,
     const axutil_env_t * env,
     axis2_msg_ctx_t * in_msg_ctx,
@@ -125,7 +125,7 @@ wsf_xml_msg_recv_create (
 
 /***************************Function implementation****************************/
 
-axis2_status_t AXIS2_CALL
+axis2_status_t WSF_CALL
 wsf_xml_msg_recv_invoke_business_logic_sync (
     axis2_msg_recv_t * msg_recv,
     const axutil_env_t * env,
@@ -813,7 +813,6 @@ wsf_xml_msg_recv_invoke_other (
 	if (!om_node)
 		return NULL;
 
-
 	rb_mWSO2 = rb_define_module("WSO2");
 	rb_mWSF = rb_define_module_under(rb_mWSO2, "WSF");
 	
@@ -916,7 +915,7 @@ wsf_xml_msg_recv_invoke_other (
 
 			if (!wsf_wsdl_mode_validate_data(env, wsdl_info->type_map, operation->response_template, resp, VALIDATION_CRITERIA_RESPONSE_MODE))
 			{
-				WSDL_ERROR(env->log, AXIS2_LOG_SI, "[wsf_service] response validation failed according to the wsdl provided");
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_service] response validation failed according to the wsdl provided");
 				return NULL;
 			}
 			else
