@@ -2,7 +2,7 @@
 ### General Build Configuration Parameters
 
 # To build with debug symbols set DEBUG = 1
-DEBUG = 0
+DEBUG = 1
 #CRUNTIME Library ( Use /MD or /MT)
 CRUNTIME=/MD
 # Visual Studio version
@@ -19,6 +19,9 @@ ICONV_BIN_DIR=C:\install\iconv-1.9.2.win32
 
 # Path to zlib installation
 ZLIB_BIN_DIR=C:\install\zlib-1.2.3.win32
+
+# Path to libxslt installation
+LIBXSLT_BIN_DIR=C:\install\libxslt-1.1.22.win32
 
 # Path to Apache2 installation
 APACHE_BIN_DIR = C:\install\Apache2.2
