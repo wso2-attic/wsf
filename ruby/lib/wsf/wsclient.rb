@@ -335,7 +335,11 @@ module WSO2
         
         incoming_policy_node = policy.get_policy_as_axiom_node(@env)
         
-        if WSFC::handle_client_security(@env, @svc_client, incoming_policy_node, sec_token) == WSFC::AXIS2_TRUE then
+        if WSFC::wsf_handle_client_security_for_ruby(@env, 
+                                                     @svc_client, 
+                                                     incoming_policy_node, 
+                                                     sec_token) == WSFC::AXIS2_TRUE then
+
           WSFC::axis2_svc_client_engage_module(@svc_client, @env, WSFC::AXIS2_MODULE_RAMPART)
         end
       end
@@ -656,9 +660,7 @@ module WSO2
         
       end
 
-      
-   
-      def get_proxy
+      def get_proxy(service_name = nil, port_name = nil)
         if @options.nil? 
           WSFC::axis2_log_error(@env, "[wsf-ruby] options is null, this is unexpected..")
           return nil
@@ -666,7 +668,7 @@ module WSO2
         wsdl = client_property(WSFC::WSF_CP_WSDL)
         
         unless wsdl.nil?
-          proxy = WSO2::WSDL::WSProxy.new(@env, @svc_client, @options, wsdl.to_s)
+          proxy = WSO2::WSDL::WSProxy.new(@env, @svc_client, @options, wsdl.to_s, service_name, port_name)
           return proxy
         else
           WSFC::axis2_log_error(@env, "[wsf-ruby] wsdl is not set")

@@ -8,24 +8,28 @@ module WSO2
   
     class WSProxy  
 
-      def initialize(environment, service_client, client_options, wsdl)
+      def initialize(environment, service_client, client_options, wsdl, service_name, port_name)
         @env = environment
         @svc_client = service_client
         @options = client_options
         @wsdl = wsdl
         @type_map = "C:/type_map.xml"
         @xslt_location = "C:/"
+        @service_name = service_name
+        @port_name = port_name
       end
       
       def method_missing(name, *args)
         if args.length == 1 then 
           arg = args[0]
           if arg.kind_of? Hash then
-            esult = WSFC::wsf_wsdl_request_function(@env, 
+            result = WSFC::wsf_wsdl_request_function(@env, 
                                                                       @svc_client, 
                                                                       @options, 
                                                                       @wsdl, 
                                                                       name.to_s, arg,
+                                                                      @service_name,
+                                                                      @port_name,
                                                                       @type_map,
                                                                       @xslt_location)
             return result
