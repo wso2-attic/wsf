@@ -47,5 +47,7 @@ if FileTest.directory?(destination)
 
     FileUtils.copy_file("reliable/echo_service_rm_controller.rb", destination + "/echo_service_rm_controller.rb");
     FileUtils.copy_file("reliable/mtom_upload_service_rm_controller.rb", destination + "/mtom_upload_service_rm_controller.rb");
-
+    
+    FileUtils.copy_file("wsdl_mode/wsdl11_service_controller.rb", destination + "/wsdl11_service_controller.rb");
+    FileUtils.copy_file("wsdl_mode/wsdl20_service_controller.rb", destination + "/wsdl20_service_controller.rb");
 end
