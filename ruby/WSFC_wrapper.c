@@ -1752,45 +1752,47 @@ int SWIG_Ruby_arity( VALUE proc, int minimal )
 
 #define SWIGTYPE_p_AXIS2_TRANSPORT_ENUMS swig_types[0]
 #define SWIGTYPE_p__axis2_xml_parser_type swig_types[1]
-#define SWIGTYPE_p_axiom_child_element_iterator_t swig_types[2]
-#define SWIGTYPE_p_axiom_data_handler_t swig_types[3]
-#define SWIGTYPE_p_axiom_element_t swig_types[4]
-#define SWIGTYPE_p_axiom_namespace_t swig_types[5]
-#define SWIGTYPE_p_axiom_node_t swig_types[6]
-#define SWIGTYPE_p_axiom_text_t swig_types[7]
-#define SWIGTYPE_p_axiom_types_t swig_types[8]
-#define SWIGTYPE_p_axiom_xml_reader_t swig_types[9]
-#define SWIGTYPE_p_axis2_conf_ctx_t swig_types[10]
-#define SWIGTYPE_p_axis2_conf_t swig_types[11]
-#define SWIGTYPE_p_axis2_desc_t swig_types[12]
-#define SWIGTYPE_p_axis2_endpoint_ref_t swig_types[13]
-#define SWIGTYPE_p_axis2_key_type_t swig_types[14]
-#define SWIGTYPE_p_axis2_options_t swig_types[15]
-#define SWIGTYPE_p_axis2_policy_include_t swig_types[16]
-#define SWIGTYPE_p_axis2_policy_types swig_types[17]
-#define SWIGTYPE_p_axis2_svc_client_t swig_types[18]
-#define SWIGTYPE_p_axis2_svc_ctx_t swig_types[19]
-#define SWIGTYPE_p_axis2_svc_t swig_types[20]
-#define SWIGTYPE_p_axis2_wsdl_msg_labels swig_types[21]
-#define SWIGTYPE_p_axutil_env_t swig_types[22]
-#define SWIGTYPE_p_axutil_hash_t swig_types[23]
-#define SWIGTYPE_p_axutil_log_levels swig_types[24]
-#define SWIGTYPE_p_axutil_param_t swig_types[25]
-#define SWIGTYPE_p_axutil_property_t swig_types[26]
-#define SWIGTYPE_p_axutil_string_t swig_types[27]
-#define SWIGTYPE_p_char swig_types[28]
-#define SWIGTYPE_p_fault_data swig_types[29]
-#define SWIGTYPE_p_int swig_types[30]
-#define SWIGTYPE_p_neethi_options_t swig_types[31]
-#define SWIGTYPE_p_neethi_policy_t swig_types[32]
-#define SWIGTYPE_p_p_void swig_types[33]
-#define SWIGTYPE_p_password_callback_fn swig_types[34]
-#define SWIGTYPE_p_rampart_context_t swig_types[35]
-#define SWIGTYPE_p_soap_version swig_types[36]
-#define SWIGTYPE_p_unsigned_int swig_types[37]
-#define SWIGTYPE_p_wsf_wsdl_data_t swig_types[38]
-static swig_type_info *swig_types[40];
-static swig_module_info swig_module = {swig_types, 39, 0, 0, 0, 0};
+#define SWIGTYPE_p_axiom_attribute_t swig_types[2]
+#define SWIGTYPE_p_axiom_child_element_iterator_t swig_types[3]
+#define SWIGTYPE_p_axiom_data_handler_t swig_types[4]
+#define SWIGTYPE_p_axiom_element_t swig_types[5]
+#define SWIGTYPE_p_axiom_namespace_t swig_types[6]
+#define SWIGTYPE_p_axiom_node_t swig_types[7]
+#define SWIGTYPE_p_axiom_text_t swig_types[8]
+#define SWIGTYPE_p_axiom_types_t swig_types[9]
+#define SWIGTYPE_p_axiom_xml_reader_t swig_types[10]
+#define SWIGTYPE_p_axis2_conf_ctx_t swig_types[11]
+#define SWIGTYPE_p_axis2_conf_t swig_types[12]
+#define SWIGTYPE_p_axis2_desc_t swig_types[13]
+#define SWIGTYPE_p_axis2_endpoint_ref_t swig_types[14]
+#define SWIGTYPE_p_axis2_key_type_t swig_types[15]
+#define SWIGTYPE_p_axis2_options_t swig_types[16]
+#define SWIGTYPE_p_axis2_policy_include_t swig_types[17]
+#define SWIGTYPE_p_axis2_policy_types swig_types[18]
+#define SWIGTYPE_p_axis2_svc_client_t swig_types[19]
+#define SWIGTYPE_p_axis2_svc_ctx_t swig_types[20]
+#define SWIGTYPE_p_axis2_svc_t swig_types[21]
+#define SWIGTYPE_p_axis2_wsdl_msg_labels swig_types[22]
+#define SWIGTYPE_p_axutil_env_t swig_types[23]
+#define SWIGTYPE_p_axutil_hash_t swig_types[24]
+#define SWIGTYPE_p_axutil_log_levels swig_types[25]
+#define SWIGTYPE_p_axutil_param_t swig_types[26]
+#define SWIGTYPE_p_axutil_property_t swig_types[27]
+#define SWIGTYPE_p_axutil_string_t swig_types[28]
+#define SWIGTYPE_p_char swig_types[29]
+#define SWIGTYPE_p_fault_data swig_types[30]
+#define SWIGTYPE_p_int swig_types[31]
+#define SWIGTYPE_p_neethi_options_t swig_types[32]
+#define SWIGTYPE_p_neethi_policy_t swig_types[33]
+#define SWIGTYPE_p_p_axiom_node_t swig_types[34]
+#define SWIGTYPE_p_p_void swig_types[35]
+#define SWIGTYPE_p_password_callback_fn swig_types[36]
+#define SWIGTYPE_p_rampart_context_t swig_types[37]
+#define SWIGTYPE_p_soap_version swig_types[38]
+#define SWIGTYPE_p_unsigned_int swig_types[39]
+#define SWIGTYPE_p_wsf_wsdl_data_t swig_types[40]
+static swig_type_info *swig_types[42];
+static swig_module_info swig_module = {swig_types, 41, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1837,9 +1839,7 @@ static VALUE mWSFC;
 #include "axiom_document.h"
 #include "axutil_utils_defines.h"
 #include "axutil_param.h"
-#ifdef WIN32
-   #include "neethi_engine.h"
-#endif
+#include "neethi_engine.h"
 #include "neethi_options.h"
 #include "rp_defines.h"
 
@@ -1897,571 +1897,6 @@ SWIG_FromCharPtr(const char *cptr)
 }
 
 
-
-#include "wsf_wsdl_mode.h"
-
-
-
-axis2_status_t
-wsf_set_security_token_data_to_rampart_context(const axutil_env_t * env,
-                                                rampart_context_t *rampart_context,
-                                                VALUE security_token)
-{
-   char* prv_key = NULL;
-   VALUE private_key = Qnil;
-   char* certificate = NULL;
-   VALUE cert = Qnil;
-   char* receiver_certificate = NULL;
-   VALUE rec_cert = Qnil;
-   char* username = NULL;
-   VALUE usr = Qnil;
-   char* password = NULL;
-   VALUE pwd = Qnil;
-   char* password_type = NULL;
-   VALUE pwd_type = Qnil;
-   int ttl = -1;
-   VALUE time_to_live = Qnil;
-   char* callback_function_name = NULL;
-   VALUE callback_fn = Qnil;
-   
-   private_key = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("private_key"));
-   if (!NIL_P(private_key) && (TYPE(private_key) == T_STRING))
-   {
-        prv_key = RSTRING(private_key)->ptr;
- 
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf-ruby] checkcheck ");
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, prv_key);
-
-        if ((prv_key != NULL) && (rampart_context_set_prv_key(rampart_context, env, (void *)prv_key) == AXIS2_SUCCESS))
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pvt key  ");
-   
-        if ((prv_key != NULL) && (rampart_context_set_prv_key_type(rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS))
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pvt key format ");
-   }
-
-   cert = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("certificate"));
-   if (!NIL_P(cert) && (TYPE(cert) == T_STRING))
-   {
-        certificate = RSTRING(cert)->ptr;
-
-        if ((certificate != NULL) && (rampart_context_set_certificate(rampart_context, env, (void *)certificate) == AXIS2_SUCCESS))
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pub key  ");
-
-        if ((certificate != NULL) && (rampart_context_set_certificate_type(rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS))
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pub key type ");
-   }
-
-   rec_cert = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("receiver_certificate"));
-   if (!NIL_P(rec_cert) && (TYPE(rec_cert) == T_STRING))
-   {
-        receiver_certificate = RSTRING(rec_cert)->ptr;
-
-        if ((receiver_certificate != NULL) && (rampart_context_set_receiver_certificate(rampart_context, env, receiver_certificate) == AXIS2_SUCCESS))
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting receiver pub key");
-
-        if ((receiver_certificate != NULL) && (rampart_context_set_receiver_certificate_type(rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS)) 
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting receiver pub key format");
-   }
-
-   usr = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("user"));
-   if (!NIL_P(usr) && (TYPE(usr) == T_STRING))
-   {
-        username = RSTRING(usr)->ptr;
-
-        if ((username != NULL) && (rampart_context_set_user(rampart_context, env, username) == AXIS2_SUCCESS)) 
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting username ");
-   }
-
-   pwd = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("password"));
-   if (!NIL_P(pwd) && (TYPE(pwd) == T_STRING))
-   {
-        password = RSTRING(pwd)->ptr;
-
-        if ((password != NULL) && (rampart_context_set_password(rampart_context, env, password) == AXIS2_SUCCESS)) 
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting password ");
-   }
-
-   pwd_type = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("password_type"));
-   if (!NIL_P(pwd_type) && (TYPE(pwd_type) == T_STRING))
-   {
-        password_type = RSTRING(pwd_type)->ptr;
-
-        if ((password_type != NULL) && (rampart_context_set_password_type(rampart_context, env, password_type) == AXIS2_SUCCESS))
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting password type ");
-   }
-
-   time_to_live = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("ttl"));
-   if (!NIL_P(time_to_live) && (TYPE(time_to_live) == T_FIXNUM))
-   {
-        ttl = FIX2INT(time_to_live);
-
-        if (rampart_context_set_ttl(rampart_context, env, ttl) == AXIS2_SUCCESS) 
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy) setting ttl");
-   }
-   
-   /*callback_fn =  rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("password_callback"));
-   if (!NIL_P(callback_fn) && (TYPE(callback_fn) == T_STRING))
-   {
-        callback_function_name = RSTRING(callback_fn)->ptr;
-          
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_ruby] password_callback function name received; ");
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, callback_function_name);
-       
-        //if ((password_type != NULL) && (rampart_context_set_password_type(rampart_context, env, password_type) == AXIS2_SUCCESS))
-        //        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting password type ");
-   }*/
-
-   /*#option = sec_token.option("password_callback")
-    #if not option.nil?
-    #   if (WSFC::ruby_rampart_context_set_pwcb_function(rampart_context, @env, nil, option) == WSFC::AXIS2_SUCCESS) then
-    #      WSFC::axis2_log_debug(@env, "[wsf_sec_policy] setting callback function")
-    #   end
-    #endn */
-
-   return AXIS2_SUCCESS;
-
-}
-
-
-    axis2_status_t handle_client_security(axutil_env_t *env,
-                                          axis2_svc_client_t *svc_client,
-                                          axiom_node_t *incoming_policy_node,
-                                          VALUE sec_token)
-    {
-
-        axiom_element_t *root_ele = NULL;
-        neethi_policy_t *neethi_policy = NULL;
-        axis2_svc_t *svc = NULL;
-        axis2_desc_t *desc = NULL;
-        axis2_policy_include_t *policy_include = NULL;
-        axis2_svc_ctx_t *svc_ctx = NULL;
-        axis2_conf_ctx_t *conf_ctx = NULL;
-        axis2_conf_t *conf = NULL;
-        rampart_context_t *rampart_ctx = NULL;
-        axutil_param_t *security_param = NULL;
-        
-        if (incoming_policy_node) {
-            if (axiom_node_get_node_type (incoming_policy_node, env) == AXIOM_ELEMENT) {
-                root_ele = (axiom_element_t *) axiom_node_get_data_element (incoming_policy_node, env);
-
-                if (root_ele) {
-                    neethi_policy = (neethi_policy_t *) neethi_engine_get_policy (env, incoming_policy_node, root_ele);
-                    
-                    if (!neethi_policy) {
-                        return AXIS2_FAILURE;
-                    }
-                    svc = axis2_svc_client_get_svc (svc_client, env);
-                    if (!svc) {
-                        return AXIS2_FAILURE;
-                    }
-                    desc = axis2_svc_get_base (svc, env);
-                    if (!desc) {
-                        return AXIS2_FAILURE;
-                    }
-                    policy_include = axis2_desc_get_policy_include (desc, env);
-                    if (!policy_include) {
-                        return AXIS2_FAILURE;
-                    }
-                    axis2_policy_include_add_policy_element (policy_include, env,
-                                                             AXIS2_SERVICE_POLICY, neethi_policy);
-
-                    svc_ctx = axis2_svc_client_get_svc_ctx (svc_client, env);
-                    conf_ctx = axis2_svc_ctx_get_conf_ctx (svc_ctx, env);
-                    conf = axis2_conf_ctx_get_conf (conf_ctx, env);
-
-                    if (!conf) {
-                        return AXIS2_FAILURE;
-                    }
-                    rampart_ctx = rampart_context_create(env);
-                    wsf_set_security_token_data_to_rampart_context(env, rampart_ctx, sec_token);
-                    security_param = axutil_param_create(env, (axis2_char_t *) WSF_RAMPART_CONFIGURATION, rampart_ctx);
-
-                    if (!security_param) {
-                        return AXIS2_FAILURE;
-                    }
-
-                    axis2_conf_add_param(conf, env, security_param);
-                    return AXIS2_SUCCESS;
-                    
-                }
-            }
-        }
-        return AXIS2_FAILURE;
-        
-    }
-    
-	VALUE
-	wsf_wsdl_request_function_mem_free_return(axutil_env_t* env,
-											  wsf_wsdl_data_t* response,
-											  wsf_wsdl_data_t* user_parameters,
-											  axis2_char_t* wsdl_file_name,
-											  axis2_char_t* operation_name,
-											  axis2_char_t* xslt_location,
-											  axis2_char_t* type_map_file,
-											  axutil_hash_t* svc_client_options)
-	{
-		if (user_parameters)
-			wsdl_data_free(env, user_parameters);
-		if (response)
-			wsdl_data_free(env, response);
-		/*if (operation_name)
-			AXIS2_FREE(env->allocator, operation_name);
-		if (wsdl_file_name)
-			AXIS2_FREE(env->allocator, wsdl_file_name);
-		if (type_map_file)
-			AXIS2_FREE(env->allocator, type_map_file);
-		if (xslt_location)
-			AXIS2_FREE(env->allocator, xslt_location);
-		if (svc_client_options)
-			axutil_hash_free(svc_client_options, env);*/
-
-		return Qnil;
-	}
-	
-	wsf_wsdl_data_t*
-	wsf_wsdl_convert_params_to_wsdl_data(axutil_env_t* env, VALUE params);
-
-	static VALUE
-	hash_callback (VALUE key_val_array, void** callback_data)
-	{
-		axutil_env_t* env = NULL;
-		wsf_wsdl_data_t* data = NULL;
-		VALUE key;
-		VALUE value;
-
-		env = (axutil_env_t*)(callback_data[0]);
-		data = (wsf_wsdl_data_t*)(callback_data[1]);
-
-		key = rb_ary_entry(key_val_array, 0);               
-		value = rb_ary_entry(key_val_array, 1);             
-
-		/*if (TYPE(key) == T_SYMBOL)
-		{
-			key = rb_sym2str(key);							
-		}*/
-		
-		if (!NIL_P(key) && !NIL_P(value))
-		{
-			axis2_char_t* key_str = NULL;
-			axis2_char_t* value_str = NULL;
-			axis2_char_t* value_type_str = NULL;			/*TODO: support type */
-
-			key_str = axutil_strdup(env, StringValuePtr(key));
-
-			if (TYPE(value) == T_HASH)
-			{
-				wsf_wsdl_data_t* sub_data = NULL;
-				sub_data = wsf_wsdl_convert_params_to_wsdl_data(env, value);
-				wsdl_data_add_object(env, data, key_str, "whatever", sub_data, "http://www.example.org/sample/", NULL);
-			}
-			else if (TYPE(value) == T_STRING)/* if (TYPE(value) == T_OBJECT) ----> TODO: support classmap */
-			{
-				value_str = axutil_strdup(env, StringValuePtr(value));
-				wsdl_data_add_simple_element(env, data, key_str, "string", value_str, "http://www.w3.org/2001/XMLSchema", "http://www.example.org/sample/");
-				/*AXIS2_FREE(env->allocator, value_str);*/
-			}
-			else
-			{
-				VALUE val;
-				val = rb_funcall(value, rb_intern("to_s"), 0, 0);
-				if (!NIL_P(val) && (TYPE(val) == T_STRING))
-				{
-					value_str = axutil_strdup(env, StringValuePtr(val));
-					wsdl_data_add_simple_element(env, data, key_str, "string", value_str, "http://www.w3.org/2001/XMLSchema", "http://www.example.org/sample/");
-					/*AXIS2_FREE(env->allocator, value_str);*/
-				}
-			}
-			
-			/*AXIS2_FREE(env->allocator, key_str);*/
-		}
-		else
-		{
-			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] key and value should not be NULL");
-		}
-
-		return Qnil;
-	}
-
-	wsf_wsdl_data_t*
-	wsf_wsdl_convert_params_to_wsdl_data(axutil_env_t* env, VALUE params)
-	{
-		wsf_wsdl_data_t* data = NULL;
-		void** callback_data = AXIS2_MALLOC(env->allocator, sizeof(void*) * 2);
-		callback_data[0] = env;
-
-		data = wsdl_data_create_object(env);
-		callback_data[1] = data;
-		
-		if (!NIL_P(params))
-		{
-			if (TYPE(params) == T_HASH)
-			{
-				rb_iterate (rb_each, params, hash_callback, (VALUE)callback_data);
-			}
-			else /*if (TYPE(params) == T_OBJECT)*/
-			{
-				/* TODO: implement this */
-			}
-		}
-
-		AXIS2_FREE(env->allocator, callback_data);
-
-		return data;
-	}
-
-	VALUE
-	wsf_wsdl_convert_wsdl_data_to_hash(axutil_env_t* env, wsf_wsdl_data_t* response);
-
-	VALUE
-	wsf_wsdl_convert_response_to_ruby(axutil_env_t* env, wsf_wsdl_data_t* response)
-	{
-		VALUE hash = wsf_wsdl_convert_wsdl_data_to_hash(env, response);
-		return hash;
-	}
-
-	VALUE
-	wsf_wsdl_convert_wsdl_data_to_hash(axutil_env_t* env, wsf_wsdl_data_t* response)
-	{
-		VALUE element = Qnil;
-		wsf_wsdl_data_iterator_t* iterator = NULL;
-		
-		if (response->children_type == CHILDREN_TYPE_NONE)
-		{
-			axis2_char_t* data = (axis2_char_t*)(response->data);
-			element = rb_str_new2(data);
-			
-			return element;
-		}
-
-		iterator = wsdl_data_iterator_create(env, response);
-
-		if (!wsdl_data_iterator_first(env, &iterator))
-			return Qnil;
-
-		if (iterator->type == CHILDREN_TYPE_ARRAY_ELEMENTS)
-		{
-			element = rb_ary_new();
-			do
-			{
-				VALUE sub_element;
-				wsf_wsdl_data_t* data = iterator->this;
-				
-				sub_element = wsf_wsdl_convert_wsdl_data_to_hash(env, data);
-
-				rb_ary_push(element, sub_element);
-
-			} while (wsdl_data_iterator_next(env, &iterator));
-		}
-		else if (iterator->type == CHILDREN_TYPE_ATTRIBUTES)
-		{
-			element = rb_hash_new();
-			do
-			{
-				VALUE sub_element;
-				VALUE key;
-				wsf_wsdl_data_t* data = iterator->this;
-
-				sub_element = wsf_wsdl_convert_wsdl_data_to_hash(env, data);
-				key = rb_tainted_str_new2(iterator->name);
-
-				rb_hash_aset(element, key, sub_element);
-
-			} while (wsdl_data_iterator_next(env, &iterator));
-		}
-
-		wsdl_data_iterator_free(env, iterator);
-
-		return element;
-	}
-
-    VALUE
-    wsf_wsdl_request_function(axutil_env_t* env, axis2_svc_client_t* svc_client, 
-							  VALUE options,				/* RUBY client options hash*/
-							  VALUE wsdl,					/* wsdl file */
-							  VALUE operation, VALUE arg,	/* operation name and arg */
-							  VALUE type_map,				/* type map file */
-							  VALUE xslt_path)				/* xslt location */
-    {
-		wsf_wsdl_data_t* response = NULL;			/* cleaned */
-		wsf_wsdl_data_t* user_parameters = NULL;	/* TODO: NOT cleaned */
-		axis2_bool_t wsdl_request_success;		
-		axis2_char_t* wsdl_file_name = NULL;			/* cleaned */				
-		axis2_char_t* operation_name = NULL;			/* cleaned */			
-		axis2_char_t* type_map_file = NULL;				/* cleaned */ 
-		axis2_char_t* xslt_location = NULL;				/* cleaned */ 
-		axutil_hash_t* svc_client_options = NULL;		/* TODO: NOT cleaned */
-
-		AXIS2_LOG_INFO(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] calling wsf_wsdl_request_function....");
-		
-		/* wsdl_file_name */
-		if (!NIL_P(wsdl) && (TYPE(wsdl) == T_STRING))
-		{
-			axis2_char_t* wsdl_file_name_ruby;
-
-			wsdl_file_name_ruby = RSTRING(wsdl)->ptr;
-
-			if (!wsdl_file_name_ruby)
-			{
-				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] wsdl could not be null");
-				return wsf_wsdl_request_function_mem_free_return(env, response, user_parameters, wsdl_file_name, operation_name, xslt_location, type_map_file, svc_client_options);
-			}
-
-			wsdl_file_name = AXIS2_MALLOC(env->allocator, sizeof(axis2_char_t) * strlen(wsdl_file_name_ruby));
-			wsdl_file_name = strcpy(wsdl_file_name, wsdl_file_name_ruby);
-		}
-		else
-		{
-			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] wsdl should be a STRING and could not be null");
-			return wsf_wsdl_request_function_mem_free_return(env, response, user_parameters, wsdl_file_name, operation_name, xslt_location, type_map_file, svc_client_options);
-		}
-
-		/* operation_name */
-		if (!NIL_P(operation) && (TYPE(operation) == T_STRING))
-		{
-			axis2_char_t* operation_name_ruby;
-			
-			operation_name_ruby = RSTRING(operation)->ptr;
-
-			if (!operation_name_ruby)
-			{
-				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] operation name could not be null");
-				return wsf_wsdl_request_function_mem_free_return(env, response, user_parameters, wsdl_file_name, operation_name, xslt_location, type_map_file, svc_client_options);
-			}
-
-			operation_name = AXIS2_MALLOC(env->allocator, sizeof(axis2_char_t) * strlen(operation_name_ruby));
-			operation_name = strcpy(operation_name, operation_name_ruby);
-		}
-		else
-		{
-			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] operation name should be a STRING and could not be null");
-			return wsf_wsdl_request_function_mem_free_return(env, response, user_parameters, wsdl_file_name, operation_name, xslt_location, type_map_file, svc_client_options);
-		}
-
-		/* user_parameters */
-		if (!NIL_P(arg))
-		{
-			user_parameters = wsf_wsdl_convert_params_to_wsdl_data(env, arg);
-		}
-		else
-		{
-			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] params should not be NULL");
-			return wsf_wsdl_request_function_mem_free_return(env, response, user_parameters, wsdl_file_name, operation_name, xslt_location, type_map_file, svc_client_options);
-		}
-
-		/* type_map_file */
-		if (!NIL_P(type_map) && (TYPE(type_map) == T_STRING))
-		{
-			axis2_char_t* type_map_file_ruby;		
-			
-			type_map_file_ruby = RSTRING(type_map)->ptr;
-
-			if (!type_map_file_ruby)
-			{
-				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] type_map could not be null");
-				return wsf_wsdl_request_function_mem_free_return(env, response, user_parameters, wsdl_file_name, operation_name, xslt_location, type_map_file, svc_client_options);
-			}
-
-			type_map_file = AXIS2_MALLOC(env->allocator, sizeof(axis2_char_t) * strlen(type_map_file_ruby));
-			type_map_file = strcpy(type_map_file, type_map_file_ruby);
-		}
-		else
-		{
-			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] type_map should be a STRING and could not be null");
-			return wsf_wsdl_request_function_mem_free_return(env, response, user_parameters, wsdl_file_name, operation_name, xslt_location, type_map_file, svc_client_options);
-		}
-
-		/* xslt_location */
-		if (!NIL_P(xslt_path) && (TYPE(xslt_path) == T_STRING))
-		{
-			axis2_char_t* xslt_location_ruby;		
-			
-			xslt_location_ruby = RSTRING(xslt_path)->ptr;
-
-			if (!xslt_location_ruby)
-			{
-				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] xslt_path could not be null");
-				return wsf_wsdl_request_function_mem_free_return(env, response, user_parameters, wsdl_file_name, operation_name, xslt_location, type_map_file, svc_client_options);
-			}
-
-			xslt_location = AXIS2_MALLOC(env->allocator, sizeof(axis2_char_t) * strlen(xslt_location_ruby));
-			xslt_location = strcpy(xslt_location, xslt_location_ruby);
-		}
-		else
-		{
-			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] xslt_path should be a STRING and could not be null");
-			return wsf_wsdl_request_function_mem_free_return(env, response, user_parameters, wsdl_file_name, operation_name, xslt_location, type_map_file, svc_client_options);
-		}
-
-		/* svc_client_options */
-		svc_client_options = NULL;					/* TODO: create this. */
-
-		wsdl_request_success = wsf_wsdl_request(env, 
-												wsdl_file_name, 
-												operation_name, 
-												user_parameters,
-												type_map_file,
-												xslt_location,
-												svc_client,
-												svc_client_options,
-												&response);
-
-		if (!wsdl_request_success)
-		{
-			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] wsf_wsdl_request returned fault");
-			return wsf_wsdl_request_function_mem_free_return(env, response, user_parameters, wsdl_file_name, operation_name, xslt_location, type_map_file, svc_client_options);
-		}
-
-		/* response */
-		if (response)
-		{
-			VALUE response_ruby;
-			response_ruby = wsf_wsdl_convert_response_to_ruby(env, response);
-			return response_ruby;
-		}
-		else
-		{
-			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] wsf_wsdl_request response is NULL");
-			return wsf_wsdl_request_function_mem_free_return(env, response, user_parameters, wsdl_file_name, operation_name, xslt_location, type_map_file, svc_client_options);
-		}
-
-
-    	/*if (svc_client)
-		{
-			wsf_wsdl_data_t* params = NULL, *sub_params = NULL, *response = NULL;
-			axis2_char_t* wsdl = NULL; *//* this is the absolute path for wsdl, TODO: Is this okay? *//*
-			axis2_char_t* operation = NULL;
-			axis2_char_t* type_map = "C:/type_map.xml"; /* this should come as a client option *//*
-			axis2_char_t* xslt_location = "C:/"; /* this is hard coded to ./xslt/ in wsf_wsdl.php, TODO: Would it be okay to get it from php.ini? *//*
-
-			/* start : creating input parameters *//*
-			params = wsdl_data_create_object(env);
-			sub_params = wsdl_data_create_object(env);
-
-			wsdl_data_add_simple_element(env, sub_params, "ProductType", "string", "Oil", "http://www.w3.org/2001/XMLSchema", "http://www.example.org/sample/");
-			wsdl_data_add_simple_element(env, sub_params, "ItemNo", "int", "123", "http://www.w3.org/2001/XMLSchema", "http://www.example.org/sample/");
-
-			wsdl_data_add_object(env, params, "GetPriceRequest", "whatever", sub_params, "http://www.example.org/sample/", NULL);
-
-			wsdl_data_free(params);
-			params = transform_parameters(arg_count, args, env);
-
-			/* end : creating input parameters *//*
-			
-			operation = (axis2_char_t*)axutil_strdup(env, function);
-			wsdl = Z_STRVAL_PP(wsdl_location);
-
-			if (wsf_wsdl_request(env, wsdl, operation, params, type_map, xslt_location, svc_client, NULL, &response) == AXIS2_TRUE)
-				WSDL_DEBUG("[wsf_wsdl_test] Test 1 succeeded!");
-			else
-				WSDL_ERROR("[wsf_wsdl_test] Test 1 failed!");
-			
-			AXIS2_FREE(env->allocator, operation);
-		}*/
-		
-		return Qnil;
-	}
-
-
 #include <limits.h>
 #if !defined(SWIG_NO_LLONG_MAX)
 # if !defined(LLONG_MAX) && defined(__GNUC__) && defined (__LONG_LONG_MAX__)
@@ -2482,47 +1917,23 @@ SWIG_From_int  (int value)
 }
 
 
-SWIGINTERN int
-SWIG_AsCharPtrAndSize(VALUE obj, char** cptr, size_t* psize, int *alloc)
-{
-  if (TYPE(obj) == T_STRING) {
-    #if defined(StringValuePtr)
-    char *cstr = StringValuePtr(obj); 
-    #else
-    char *cstr = STR2CSTR(obj);
-    #endif
-    size_t size = RSTRING_LEN(obj) + 1;
-    if (cptr)  {
-      if (alloc) {
-	if (*alloc == SWIG_NEWOBJ) {
-	  *cptr = (char *)memcpy((char *)malloc((size)*sizeof(char)), cstr, sizeof(char)*(size));
-	} else {
-	  *cptr = cstr;
-	  *alloc = SWIG_OLDOBJ;
+	VALUE wsf_axiom_data_handler_get_content(axiom_data_handler_t *data_handler,
+						 const axutil_env_t   *env)
+	{
+		axis2_char_t *content = NULL;
+		int content_length = 0;
+
+		axiom_data_handler_read_from (data_handler, env, &content, &content_length);
+
+		if (content == NULL)
+			return Qnil;
+
+		return rb_str_new(content, content_length);
 	}
-      }
-    }
-    if (psize) *psize = size;
-    return SWIG_OK;
-  } else {
-    swig_type_info* pchar_descriptor = SWIG_pchar_descriptor();
-    if (pchar_descriptor) {
-      void* vptr = 0;
-      if (SWIG_ConvertPtr(obj, &vptr, pchar_descriptor, 0) == SWIG_OK) {
-	if (cptr) *cptr = (char *)vptr;
-	if (psize) *psize = vptr ? (strlen((char*)vptr) + 1) : 0;
-	if (alloc) *alloc = SWIG_OLDOBJ;
-	return SWIG_OK;
-      }
-    }
-  }  
-  return SWIG_TypeError;
-}
+	
 
 
-
-
-
+#define AXIS2_MODULE_RAMPART    "rampart"
 
     axiom_xml_reader_t *
     axiom_xml_reader_create_for_memory_new(const axutil_env_t * env,
@@ -2661,7 +2072,8 @@ SWIG_AsCharPtrAndSize(VALUE obj, char** cptr, size_t* psize, int *alloc)
         fault_element = axiom_node_get_data_element(soap_fault_base_node, env);
         child_element_ite = axiom_element_get_child_elements(fault_element, env, soap_fault_base_node);
 
-        while (axiom_child_element_iterator_has_next(child_element_ite, env)) {
+        while (child_element_ite &&
+	       axiom_child_element_iterator_has_next(child_element_ite, env)) {
         
             child_node = axiom_child_element_iterator_next(child_element_ite, env);
             if (child_node) {
@@ -2720,22 +2132,6 @@ SWIG_AsCharPtrAndSize(VALUE obj, char** cptr, size_t* psize, int *alloc)
         
         return t;
     }
-
-    axis2_char_t *wsf_axiom_data_handler_get_content(axiom_data_handler_t *data_handler,
-                                                     const axutil_env_t *env)
-    {
-        axis2_char_t *content = NULL;
-        int content_length = 0;
-        axis2_char_t *str = NULL;
-
-        axiom_data_handler_read_from(data_handler, env, &content, &content_length);
-
-        if (content == NULL)
-            return NULL;
-
-        str = (axis2_char_t *) malloc(sizeof(axis2_char_t) * content_length);
-        return str;
-    } 
 
     int wsf_set_module_param_value(axutil_env_t       *env,
                                    axis2_svc_client_t *svc_client,
@@ -2964,6 +2360,223 @@ SWIG_AsCharPtrAndSize(VALUE obj, char** cptr, size_t* psize, int *alloc)
     }
 
 
+    void wsf_util_find_xop_content_and_convert_to_base64 (const axutil_env_t * env,
+							  axiom_node_t * om_node)
+    {
+	    axiom_node_t *temp_node = NULL;
+	    axiom_node_t *nodes[256];
+	    int count = 0;
+
+	    if (!om_node)
+	    {
+		    return;
+	    }
+
+	    nodes[count++] = om_node;
+
+	    do {
+		    if (axiom_node_get_node_type(om_node, env) == AXIOM_TEXT) {
+			    axiom_text_t *text = NULL;
+			    axiom_data_handler_t *data_handler = NULL;
+			
+			
+			    text = (axiom_text_t*)axiom_node_get_data_element(om_node, env);
+			    if(text) {
+				    data_handler = axiom_text_get_data_handler (text, env);
+				    if (data_handler) {
+					    axiom_text_set_optimize(text, env, AXIS2_FALSE);
+				    }			
+			    }
+		    }
+		    temp_node = axiom_node_get_first_child(om_node, env);
+		    if (temp_node)
+		    {
+			    om_node = temp_node;
+			    nodes[count++] = om_node;
+		    }
+		    else
+		    {
+			    temp_node = axiom_node_get_next_sibling(om_node, env);
+			    if (temp_node)
+			    {
+				    om_node = temp_node;
+				    nodes[count -1] = om_node;
+			    }
+			    else
+			    {
+				    while (count > 1 && !temp_node)
+				    {
+					    count--;
+					    om_node = nodes[count -1];
+					    temp_node = axiom_node_get_next_sibling(om_node, env);
+				    }
+               
+				    if (temp_node && count > 1)
+				    {
+					    om_node = temp_node;
+					    nodes[count -1] = om_node;
+				    }
+				    else
+				    {
+					    count--;
+				    }
+			    }
+		    }
+	    } while(count > 0);
+    
+	    return;
+    }
+
+
+        void wsf_set_security_data_to_rampart_context(axutil_env_t *env,
+						  rampart_context_t *rampart_context,
+						  axis2_char_t *private_key,
+						  axis2_char_t *certificate,
+						  axis2_char_t *receiver_certificate,
+						  axis2_char_t *user,
+						  axis2_char_t *password,
+						  axis2_char_t *password_type,
+						  int ttl)
+    {
+	    if (NULL != private_key) {
+		    if (rampart_context_set_prv_key(rampart_context, env, (void *) private_key) == AXIS2_SUCCESS)
+			     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pvt key ");
+		    if (rampart_context_set_prv_key_type(rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS)
+			    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pvt key format ");
+	    }
+
+	    if (NULL != certificate) {
+		    if (rampart_context_set_certificate(rampart_context, env, (void *)certificate) == AXIS2_SUCCESS)
+			    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pub key");
+		    if (rampart_context_set_certificate_type(rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS)
+			    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pub key type");
+	    }
+
+	    if (NULL != receiver_certificate) {
+		    if (rampart_context_set_receiver_certificate(rampart_context, env, receiver_certificate) == AXIS2_SUCCESS)
+			    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting receiver pub key");
+		    if (rampart_context_set_receiver_certificate_type(rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS)
+			    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting receiver pub key format");
+	    }
+
+	    if ((NULL != user) && (rampart_context_set_user(rampart_context, env, user) == AXIS2_SUCCESS))
+		    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting username ");
+
+	    if ((NULL != password) && (rampart_context_set_password(rampart_context, env, password) == AXIS2_SUCCESS))
+		    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting password ");
+
+	    if ((NULL != password_type) && (rampart_context_set_password_type(rampart_context, env, password_type) == AXIS2_SUCCESS))
+		    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting password type ");
+
+	    if ((NULL != ttl) && (rampart_context_set_ttl(rampart_context, env, ttl) == AXIS2_SUCCESS))
+		    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy) setting ttl");
+
+	    return AXIS2_SUCCESS;
+    }
+	    
+
+    void handle_client_security(axutil_env_t *env, 
+				axis2_svc_client_t *svc_client,
+				axiom_node_t *incoming_policy_node,
+				axis2_char_t *private_key,
+				axis2_char_t *certificate,
+				axis2_char_t *receiver_certificate,
+				axis2_char_t *user,
+				axis2_char_t *password,
+				axis2_char_t *password_type,
+				int ttl)
+    {
+	    axiom_element_t *root = NULL;
+	    neethi_policy_t *neethi_policy = NULL;
+	    axis2_svc_t *svc = NULL;
+	    axis2_desc_t *desc = NULL;
+	    axis2_policy_include_t *policy_include = NULL;
+	    axis2_svc_ctx_t *svc_ctx = NULL;
+	    axis2_conf_ctx_t *conf_ctx = NULL;
+	    axis2_conf_t *conf = NULL;
+	    axutil_param_t *security_param = NULL;
+	    rampart_context_t *rampart_ctx = NULL;
+
+	    if (NULL != incoming_policy_node) {
+		    if (axiom_node_get_node_type(incoming_policy_node, env) == AXIOM_ELEMENT) {
+			    root = (axiom_element_t *) axiom_node_get_data_element(incoming_policy_node, env);
+			    if (NULL != root) {
+				    neethi_policy = neethi_engine_get_policy(env, incoming_policy_node, root);
+				    if (NULL != neethi_policy) {
+					    svc = axis2_svc_client_get_svc(svc_client, env);
+					    if (NULL != svc) {
+						    desc = axis2_svc_get_base(svc, env);
+						    policy_include = axis2_desc_get_policy_include(desc, env);
+						    axis2_policy_include_add_policy_element(policy_include, env, AXIS2_SERVICE_POLICY, neethi_policy);
+						    svc_ctx = axis2_svc_client_get_svc_ctx(svc_client, env);
+						    if (NULL != svc_ctx) {
+							    conf_ctx = axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
+							    if (NULL != conf_ctx) {
+								    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+								    if (NULL != conf) {
+									    rampart_ctx = rampart_context_create(env);
+									    wsf_set_security_data_to_rampart_context(env, rampart_ctx, private_key, certificate, receiver_certificate, user, password, password_type, ttl);
+									    security_param = axutil_param_create(env, (axis2_char_t *) WSF_RAMPART_CONFIGURATION, rampart_ctx);
+									    if (NULL != security_param) 
+										    axis2_conf_add_param(conf, env, security_param);
+								    }
+							    }
+						    }
+					    }
+				    }
+			    }
+		    }
+	    }
+	    axis2_svc_client_engage_module(svc_client, env, AXIS2_MODULE_RAMPART);
+
+    }
+
+
+				
+
+
+
+SWIGINTERN int
+SWIG_AsCharPtrAndSize(VALUE obj, char** cptr, size_t* psize, int *alloc)
+{
+  if (TYPE(obj) == T_STRING) {
+    #if defined(StringValuePtr)
+    char *cstr = StringValuePtr(obj); 
+    #else
+    char *cstr = STR2CSTR(obj);
+    #endif
+    size_t size = RSTRING_LEN(obj) + 1;
+    if (cptr)  {
+      if (alloc) {
+	if (*alloc == SWIG_NEWOBJ) {
+	  *cptr = (char *)memcpy((char *)malloc((size)*sizeof(char)), cstr, sizeof(char)*(size));
+	} else {
+	  *cptr = cstr;
+	  *alloc = SWIG_OLDOBJ;
+	}
+      }
+    }
+    if (psize) *psize = size;
+    return SWIG_OK;
+  } else {
+    swig_type_info* pchar_descriptor = SWIG_pchar_descriptor();
+    if (pchar_descriptor) {
+      void* vptr = 0;
+      if (SWIG_ConvertPtr(obj, &vptr, pchar_descriptor, 0) == SWIG_OK) {
+	if (cptr) *cptr = (char *)vptr;
+	if (psize) *psize = vptr ? (strlen((char*)vptr) + 1) : 0;
+	if (alloc) *alloc = SWIG_OLDOBJ;
+	return SWIG_OK;
+      }
+    }
+  }  
+  return SWIG_TypeError;
+}
+
+
+
+
+
 SWIGINTERN VALUE
 SWIG_ruby_failed(void)
 {
@@ -3016,6 +2629,1163 @@ SWIG_AsVal_int (VALUE obj, int *val)
 }
 
 
+#include "wsf_wsdl_mode.h"
+
+#define WS_USE_SOAP         "use_soap"
+#define WS_RESPONSE_XOP     "response_xop"
+#define WS_HTTP_METHOD      "http_method"
+#define WS_USE_MTOM         "use_mtom"
+#define WS_USE_WSA          "use_wsa"
+#define WS_POLICY           "policy"
+#define WS_SECURITY_TOKEN   "security_token"
+#define WS_PROXY_HOST       "proxy_host"
+#define WS_PROXY_PORT       "proxy_port"
+#define WS_WSDL             "wsdl"
+
+#define WS_SOAP_11          "1.1"
+#define WS_SOAP_12          "1.2"
+#define WS_TRUE             "true"
+#define WS_FALSE            "false"
+
+#define WS_TIMESTAMP		"time_stamp"
+#define WS_USERNAME_TOKEN   "username_token"
+#define WS_ENCRYPTION		"encryption"
+#define WS_ALGORITHM		"algorithm"
+#define WS_SIGNING			"signing"
+#define WS_TOKEN_REFERENCE	"token_reference"
+#define WS_ENCRYPT_SIGNATURE "encrypt_signature"
+#define WS_PROTECTION_ORDER  "protection_order"
+
+
+
+
+
+/* 
+axis2_status_t
+wsf_handle_client_security_for_ruby(const axutil_env_t* env,
+                                    axis2_svc_client_t *svc_client,
+                                    axiom_node_t *incoming_policy_node,
+                                    VALUE security_token)
+{
+   char* prv_key = NULL;
+   VALUE private_key = Qnil;
+   char* certificate = NULL;
+   VALUE cert = Qnil;
+   char* receiver_certificate = NULL;
+   VALUE rec_cert = Qnil;
+   char* username = NULL;
+   VALUE usr = Qnil;
+   char* password = NULL;
+   VALUE pwd = Qnil;
+   char* password_type = NULL;
+   VALUE pwd_type = Qnil;
+   int ttl = -1;
+   VALUE time_to_live = Qnil;
+   char* callback_function_name = NULL;
+   VALUE callback_fn = Qnil;
+   
+   private_key = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("private_key"));
+   if (!NIL_P(private_key) && (TYPE(private_key) == T_STRING))
+   {
+        prv_key = RSTRING(private_key)->ptr;
+   }
+
+   cert = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("certificate"));
+   if (!NIL_P(cert) && (TYPE(cert) == T_STRING))
+   {
+        certificate = RSTRING(cert)->ptr;
+   }
+
+   rec_cert = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("receiver_certificate"));
+   if (!NIL_P(rec_cert) && (TYPE(rec_cert) == T_STRING))
+   {
+        receiver_certificate = RSTRING(rec_cert)->ptr;
+   }
+
+   usr = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("user"));
+   if (!NIL_P(usr) && (TYPE(usr) == T_STRING))
+   {
+        username = RSTRING(usr)->ptr;
+   }
+
+   pwd = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("password"));
+   if (!NIL_P(pwd) && (TYPE(pwd) == T_STRING))
+   {
+        password = RSTRING(pwd)->ptr;
+   }
+
+   pwd_type = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("password_type"));
+   if (!NIL_P(pwd_type) && (TYPE(pwd_type) == T_STRING))
+   {
+        password_type = RSTRING(pwd_type)->ptr;
+   }
+
+   time_to_live = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("ttl"));
+   if (!NIL_P(time_to_live) && (TYPE(time_to_live) == T_FIXNUM))
+   {
+        ttl = FIX2INT(time_to_live);
+   }
+
+          handle_client_security(env, 
+                                 svc_client,
+                                 incoming_policy_node,
+                                 prv_key,
+                                 certificate,
+                                 receiver_certificate,
+                                 username,
+                                 password,
+                                 password_type,
+                                 ttl);
+   return AXIS2_SUCCESS;
+}*/
+
+/* Commenting out, this has moved to C layer, delete this after changing WSF/Ruby to reflect the new function */
+
+axis2_status_t
+wsf_set_security_token_data_to_rampart_context(const axutil_env_t * env,
+                                                rampart_context_t *rampart_context,
+                                                VALUE security_token)
+{
+   char* prv_key = NULL;
+   VALUE private_key = Qnil;
+   char* certificate = NULL;
+   VALUE cert = Qnil;
+   char* receiver_certificate = NULL;
+   VALUE rec_cert = Qnil;
+   char* username = NULL;
+   VALUE usr = Qnil;
+   char* password = NULL;
+   VALUE pwd = Qnil;
+   char* password_type = NULL;
+   VALUE pwd_type = Qnil;
+   int ttl = -1;
+   VALUE time_to_live = Qnil;
+   char* callback_function_name = NULL;
+   VALUE callback_fn = Qnil;
+   
+   private_key = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("private_key"));
+   if (!NIL_P(private_key) && (TYPE(private_key) == T_STRING))
+   {
+        prv_key = RSTRING(private_key)->ptr;
+ 
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf-ruby] checkcheck ");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, prv_key);
+
+        if ((prv_key != NULL) && (rampart_context_set_prv_key(rampart_context, env, (void *)prv_key) == AXIS2_SUCCESS))
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pvt key  ");
+   
+        if ((prv_key != NULL) && (rampart_context_set_prv_key_type(rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS))
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pvt key format ");
+   }
+
+   cert = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("certificate"));
+   if (!NIL_P(cert) && (TYPE(cert) == T_STRING))
+   {
+        certificate = RSTRING(cert)->ptr;
+
+        if ((certificate != NULL) && (rampart_context_set_certificate(rampart_context, env, (void *)certificate) == AXIS2_SUCCESS))
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pub key  ");
+
+        if ((certificate != NULL) && (rampart_context_set_certificate_type(rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS))
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pub key type ");
+   }
+
+   rec_cert = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("receiver_certificate"));
+   if (!NIL_P(rec_cert) && (TYPE(rec_cert) == T_STRING))
+   {
+        receiver_certificate = RSTRING(rec_cert)->ptr;
+
+        if ((receiver_certificate != NULL) && (rampart_context_set_receiver_certificate(rampart_context, env, receiver_certificate) == AXIS2_SUCCESS))
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting receiver pub key");
+
+        if ((receiver_certificate != NULL) && (rampart_context_set_receiver_certificate_type(rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS)) 
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting receiver pub key format");
+   }
+
+   usr = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("user"));
+   if (!NIL_P(usr) && (TYPE(usr) == T_STRING))
+   {
+        username = RSTRING(usr)->ptr;
+
+        if ((username != NULL) && (rampart_context_set_user(rampart_context, env, username) == AXIS2_SUCCESS)) 
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting username ");
+   }
+
+   pwd = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("password"));
+   if (!NIL_P(pwd) && (TYPE(pwd) == T_STRING))
+   {
+        password = RSTRING(pwd)->ptr;
+
+        if ((password != NULL) && (rampart_context_set_password(rampart_context, env, password) == AXIS2_SUCCESS)) 
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting password ");
+   }
+
+   pwd_type = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("password_type"));
+   if (!NIL_P(pwd_type) && (TYPE(pwd_type) == T_STRING))
+   {
+        password_type = RSTRING(pwd_type)->ptr;
+
+        if ((password_type != NULL) && (rampart_context_set_password_type(rampart_context, env, password_type) == AXIS2_SUCCESS))
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting password type ");
+   }
+
+   time_to_live = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("ttl"));
+   if (!NIL_P(time_to_live) && (TYPE(time_to_live) == T_FIXNUM))
+   {
+        ttl = FIX2INT(time_to_live);
+
+        if (rampart_context_set_ttl(rampart_context, env, ttl) == AXIS2_SUCCESS) 
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy) setting ttl");
+   }
+   
+   /*callback_fn =  rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("password_callback"));
+   if (!NIL_P(callback_fn) && (TYPE(callback_fn) == T_STRING))
+   {
+        callback_function_name = RSTRING(callback_fn)->ptr;
+          
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_ruby] password_callback function name received; ");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, callback_function_name);
+       
+        //if ((password_type != NULL) && (rampart_context_set_password_type(rampart_context, env, password_type) == AXIS2_SUCCESS))
+        //        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting password type ");
+   }*/
+
+   /*#option = sec_token.option("password_callback")
+    #if not option.nil?
+    #   if (WSFC::ruby_rampart_context_set_pwcb_function(rampart_context, @env, nil, option) == WSFC::AXIS2_SUCCESS) then
+    #      WSFC::axis2_log_debug(@env, "[wsf_sec_policy] setting callback function")
+    #   end
+    #endn */
+
+   return AXIS2_SUCCESS;
+
+}
+
+
+    axis2_status_t 
+    wsf_handle_client_security_for_ruby  (axutil_env_t *env,
+                                          axis2_svc_client_t *svc_client,
+                                          axiom_node_t *incoming_policy_node,
+                                          VALUE sec_token)
+    {
+
+        axiom_element_t *root_ele = NULL;
+        neethi_policy_t *neethi_policy = NULL;
+        axis2_svc_t *svc = NULL;
+        axis2_desc_t *desc = NULL;
+        axis2_policy_include_t *policy_include = NULL;
+        axis2_svc_ctx_t *svc_ctx = NULL;
+        axis2_conf_ctx_t *conf_ctx = NULL;
+        axis2_conf_t *conf = NULL;
+        rampart_context_t *rampart_ctx = NULL;
+        axutil_param_t *security_param = NULL;
+        
+        if (incoming_policy_node) {
+            if (axiom_node_get_node_type (incoming_policy_node, env) == AXIOM_ELEMENT) {
+                root_ele = (axiom_element_t *) axiom_node_get_data_element (incoming_policy_node, env);
+
+                if (root_ele) {
+                    neethi_policy = (neethi_policy_t *) neethi_engine_get_policy (env, incoming_policy_node, root_ele);
+                    
+                    if (!neethi_policy) {
+                        return AXIS2_FAILURE;
+                    }
+                    svc = axis2_svc_client_get_svc (svc_client, env);
+                    if (!svc) {
+                        return AXIS2_FAILURE;
+                    }
+                    desc = axis2_svc_get_base (svc, env);
+                    if (!desc) {
+                        return AXIS2_FAILURE;
+                    }
+                    policy_include = axis2_desc_get_policy_include (desc, env);
+                    if (!policy_include) {
+                        return AXIS2_FAILURE;
+                    }
+                    axis2_policy_include_add_policy_element (policy_include, env,
+                                                             AXIS2_SERVICE_POLICY, neethi_policy);
+
+                    svc_ctx = axis2_svc_client_get_svc_ctx (svc_client, env);
+                    conf_ctx = axis2_svc_ctx_get_conf_ctx (svc_ctx, env);
+                    conf = axis2_conf_ctx_get_conf (conf_ctx, env);
+
+                    if (!conf) {
+                        return AXIS2_FAILURE;
+                    }
+                    rampart_ctx = rampart_context_create(env);
+                    wsf_set_security_token_data_to_rampart_context(env, rampart_ctx, sec_token);
+                    security_param = axutil_param_create(env, (axis2_char_t *) WSF_RAMPART_CONFIGURATION, rampart_ctx);
+
+                    if (!security_param) {
+                        return AXIS2_FAILURE;
+                    }
+
+                    axis2_conf_add_param(conf, env, security_param);
+                    return AXIS2_SUCCESS;
+                    
+                }
+            }
+        }
+        return AXIS2_FAILURE;
+        
+    }
+
+    
+	VALUE
+	wsf_wsdl_request_function_mem_free_return(axutil_env_t* env,
+											  wsf_wsdl_data_t* response,
+											  wsf_wsdl_data_t* user_parameters,
+											  axis2_char_t* wsdl_file_name,
+											  axis2_char_t* operation_name,
+											  axis2_char_t* xslt_location,
+											  axis2_char_t* type_map_file,
+											  axutil_hash_t* svc_client_options)
+	{
+		if (user_parameters)
+			wsdl_data_free(env, user_parameters);
+		if (response)
+			wsdl_data_free(env, response);
+		/*if (operation_name)
+			AXIS2_FREE(env->allocator, operation_name);
+		if (wsdl_file_name)
+			AXIS2_FREE(env->allocator, wsdl_file_name);
+		if (type_map_file)
+			AXIS2_FREE(env->allocator, type_map_file);
+		if (xslt_location)
+			AXIS2_FREE(env->allocator, xslt_location);
+		if (svc_client_options)
+			axutil_hash_free(svc_client_options, env);*/
+
+		return Qnil;
+	}
+	
+	wsf_wsdl_data_t*
+	wsf_wsdl_convert_params_to_wsdl_data(axutil_env_t* env, VALUE params);
+
+    
+    static void
+    wsf_evaluate_security_token_and_insert_to_hash(axutil_env_t* env,
+                                                   VALUE security_token,
+                                                   axutil_hash_t* hash)
+    {
+        char* prv_key = NULL;
+        VALUE private_key = Qnil;
+        char* certificate = NULL;
+        VALUE cert = Qnil;
+        char* receiver_certificate = NULL;
+        VALUE rec_cert = Qnil;
+        char* username = NULL;
+        VALUE usr = Qnil;
+        char* password = NULL;
+        VALUE pwd = Qnil;
+        char* password_type = NULL;
+        VALUE pwd_type = Qnil;
+        int ttl = -1;
+        VALUE time_to_live = Qnil;
+        char* callback_function_name = NULL;
+        VALUE callback_fn = Qnil;
+
+        if (!hash)
+            return;
+
+        private_key = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("private_key"));
+        if (!NIL_P(private_key) && (TYPE(private_key) == T_STRING))
+        {
+            prv_key = RSTRING(private_key)->ptr;
+
+            if (prv_key)
+            {
+                axutil_hash_set(hash, 
+                                WSF_WSDL_HK_PRIVATE_KEY, 
+                                AXIS2_HASH_KEY_STRING, 
+                                axutil_strdup(env, prv_key));
+            }
+        }
+
+        cert = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("certificate"));
+        if (!NIL_P(cert) && (TYPE(cert) == T_STRING))
+        {
+            certificate = RSTRING(cert)->ptr;
+
+            if (certificate)
+            {
+                axutil_hash_set(hash, 
+                                WSF_WSDL_HK_CERTIFICATE, 
+                                AXIS2_HASH_KEY_STRING, 
+                                axutil_strdup(env, certificate));
+            }
+        }
+
+        rec_cert = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("receiver_certificate"));
+        if (!NIL_P(rec_cert) && (TYPE(rec_cert) == T_STRING))
+        {
+            receiver_certificate = RSTRING(rec_cert)->ptr;
+
+            if (receiver_certificate)
+            {
+                axutil_hash_set(hash, 
+                                WSF_WSDL_HK_RECEIVER_CERTIFICATE, 
+                                AXIS2_HASH_KEY_STRING, 
+                                axutil_strdup(env, receiver_certificate));
+            }
+        }
+
+        usr = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("user"));
+        if (!NIL_P(usr) && (TYPE(usr) == T_STRING))
+        {
+            username = RSTRING(usr)->ptr;
+
+            if (username)
+            {
+                axutil_hash_set(hash, 
+                                WSF_WSDL_HK_USER, 
+                                AXIS2_HASH_KEY_STRING, 
+                                axutil_strdup(env, username));
+            }
+        }
+
+        pwd = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("password"));
+        if (!NIL_P(pwd) && (TYPE(pwd) == T_STRING))
+        {
+            password = RSTRING(pwd)->ptr;
+
+            if (password)
+            {
+                axutil_hash_set(hash, 
+                                WSF_WSDL_HK_PASSWORD, 
+                                AXIS2_HASH_KEY_STRING, 
+                                axutil_strdup(env, password));
+            }
+        }
+
+        pwd_type = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("password_type"));
+        if (!NIL_P(pwd_type) && (TYPE(pwd_type) == T_STRING))
+        {
+            password_type = RSTRING(pwd_type)->ptr;
+
+            if (password_type)
+            {
+                axutil_hash_set(hash, 
+                                WSF_WSDL_HK_PASSWORD_TYPE, 
+                                AXIS2_HASH_KEY_STRING, 
+                                axutil_strdup(env, password_type));
+            }
+        }
+
+        callback_fn = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("password_callback"));
+        if (!NIL_P(callback_fn) && (TYPE(callback_fn) == T_STRING))
+        {
+            callback_function_name = RSTRING(callback_fn)->ptr;
+                              
+            if (callback_function_name)
+            {
+                axutil_hash_set(hash, 
+                                WSF_WSDL_HK_PASSWORD_CALL_BACK, 
+                                AXIS2_HASH_KEY_STRING, 
+                                axutil_strdup(env, callback_function_name));
+            }
+        }
+
+        time_to_live = rb_funcall(security_token, rb_intern("option"), 1, rb_str_new2("ttl"));
+        if (!NIL_P(time_to_live) && (TYPE(time_to_live) == T_FIXNUM))
+        {
+            ttl = FIX2INT(time_to_live);
+
+            if (ttl >= 0)
+            {
+                axutil_hash_set(hash, 
+                                WSF_WSDL_HK_TTL, 
+                                AXIS2_HASH_KEY_STRING, 
+                                ttl);
+            }
+        }
+    }
+
+    static void
+    wsf_evaluate_policy_options_and_insert_to_hash(axutil_env_t* env,
+                                                   VALUE policy,
+                                                   axutil_hash_t* hash)
+    {
+	    VALUE time_stamp;
+	    VALUE username_token;
+	    VALUE encryption;
+	    VALUE algorithm;
+	    VALUE sign;
+	    VALUE token_reference;
+	    VALUE encrypt_signature;
+	    VALUE protection_order;
+    	
+	    char* ts = NULL;
+ 	    char* ut = NULL;
+	    char* encrypt = NULL;
+	    char* algo_suite = NULL;
+	    char* sg = NULL;
+	    char* tkn = NULL;
+	    char* token_ref = NULL;
+	    char* encrypt_sign = NULL;
+	    char* order = NULL;
+
+        if (policy != Qnil) 
+	    {
+      	    time_stamp = rb_funcall(policy, rb_intern("option"), 1, rb_str_new2(WS_TIMESTAMP));
+    	
+		    if (!NIL_P(time_stamp) && (TYPE(time_stamp) == T_STRING))
+		    {
+			    ts = RSTRING(time_stamp)->ptr;
+    			
+			    if (ts) 
+                {
+                    axutil_hash_set(hash, 
+                            WSF_WSDL_HK_TIMESTAMP, 
+                            AXIS2_HASH_KEY_STRING, 
+                            axutil_strdup(env, ts)); 
+                }
+		    }
+    		
+		    username_token = rb_funcall(policy, rb_intern("option"), 1, rb_str_new2(WS_USERNAME_TOKEN));
+    		
+		    if (!NIL_P(username_token) && (TYPE(username_token) == T_STRING))
+            {   
+                ut = RSTRING(username_token)->ptr;
+                if (ut)
+                {
+                    axutil_hash_set(hash, 
+                                    WSF_WSDL_HK_USERNAME_TOKEN, 
+                                    AXIS2_HASH_KEY_STRING, 
+                                    axutil_strdup(env, ut)); 
+                }
+            }
+
+		    encryption = rb_funcall(policy, rb_intern("option"), 1, rb_str_new2(WS_ENCRYPTION));
+            
+		    if (!NIL_P(encryption) && (TYPE(encryption) == T_STRING))
+            { 
+                encrypt = RSTRING(encryption)->ptr;
+
+                if (encrypt)
+                {
+                    axutil_hash_set(hash, 
+                                    WSF_WSDL_HK_ENCRYPTION, 
+                                    AXIS2_HASH_KEY_STRING, 
+                                    axutil_strdup(env, encrypt)); 
+                }
+            }
+
+		    algorithm = rb_funcall(policy, rb_intern("option"), 1, rb_str_new2(WS_ALGORITHM));
+
+            if (!NIL_P(algorithm) && (TYPE(algorithm) == T_STRING))
+            {
+                algo_suite = RSTRING(algorithm)->ptr;
+    			
+			    if (algo_suite)
+                {
+                    axutil_hash_set(hash, 
+                                    WSF_WSDL_HK_ALGORITHM, 
+                                    AXIS2_HASH_KEY_STRING, 
+                                    axutil_strdup(env, algo_suite)); 
+                }
+		    }
+    				 
+            sign = rb_funcall(policy, rb_intern("option"), 1, rb_str_new2(WS_SIGNING));
+       		
+		    if (!NIL_P(sign) && (TYPE(sign) == T_STRING))
+            {
+		 	    sg = RSTRING(sign)->ptr;
+
+			    if (sg)
+                {
+                    axutil_hash_set(hash, 
+                                    WSF_WSDL_HK_SIGNING, 
+                                    AXIS2_HASH_KEY_STRING, 
+                                    axutil_strdup(env, sg)); 
+                }
+            }
+
+		    token_reference = rb_funcall(policy, rb_intern("option"), 1, rb_str_new2(WS_TOKEN_REFERENCE));
+
+		    if (!NIL_P(token_reference) && (TYPE(token_reference) == T_STRING))
+            {
+                tkn = RSTRING(token_reference)->ptr;
+                
+                if (tkn)
+                {
+                    axutil_hash_set(hash, 
+                                    WSF_WSDL_HK_TOKEN_REFERENCE, 
+                                    AXIS2_HASH_KEY_STRING, 
+                                    axutil_strdup(env, tkn)); 
+                }
+            }
+           
+		    encrypt_signature = rb_funcall(policy, rb_intern("option"), 1, rb_str_new2(WS_ENCRYPT_SIGNATURE)); 
+    		
+		    if (!NIL_P(encrypt_signature) && (TYPE(encrypt_signature) == T_STRING))
+		    {
+			    encrypt_sign = RSTRING(encrypt_signature)->ptr;
+                
+                if (encrypt_sign)
+                {
+                    axutil_hash_set(hash, 
+                                    WSF_WSDL_HK_ENCRYPT_SIGNATURE, 
+                                    AXIS2_HASH_KEY_STRING, 
+                                    axutil_strdup(env, encrypt_sign)); 
+                }
+            }
+
+		    protection_order = rb_funcall(policy, rb_intern("option"), 1, rb_str_new2(WS_PROTECTION_ORDER));	
+
+		    if (!NIL_P(protection_order) && (TYPE(protection_order) == T_STRING))
+            {
+                order = RSTRING(protection_order)->ptr;
+
+                if (order)
+                {
+                    axutil_hash_set(hash, 
+                                    WSF_WSDL_HK_PROTECTION_ORDER, 
+                                    AXIS2_HASH_KEY_STRING, 
+                                    axutil_strdup(env, order)); 
+                }
+		    }
+        }   	
+    }
+
+    
+   
+    static void
+    wsf_evaluate_policy_and_insert_to_hash(axutil_env_t* env,
+                                           VALUE policy,
+                                           axutil_hash_t* hash)
+    {
+        VALUE policy_string;
+
+        policy_string = rb_funcall(policy, rb_intern("get_policy"), 0);
+   
+	    if (!NIL_P(policy_string))
+   	    {
+            axis2_char_t* policy_buffer = NULL;
+            axis2_char_t* policy_str = NULL;
+		    policy_str = RSTRING(policy_string)->ptr;
+
+            policy_buffer = axutil_strdup(env, policy_str);
+            
+            axutil_hash_set(hash, 
+                            WSF_WSDL_HK_POLICY_STRING, 
+                            AXIS2_HASH_KEY_STRING, 
+                            policy_buffer); 
+   	    }
+	    else
+	    {	
+            axutil_hash_t* policy_hash = NULL;
+            policy_hash = axutil_hash_make(env);
+
+            wsf_evaluate_policy_options_and_insert_to_hash(env, policy, policy_hash);
+
+		    axutil_hash_set(hash, 
+                            WSF_WSDL_HK_POLICY_HASH, 
+                            AXIS2_HASH_KEY_STRING, 
+                            policy_hash); 
+	    }
+    }
+
+        static void
+    wsf_evaluate_client_options_and_insert_to_hash(axutil_env_t* env, 
+                                                   axis2_char_t* key,
+                                                   VALUE value,
+                                                   axutil_hash_t* hash)
+    {
+        if (!strcmp(key, WS_USE_SOAP))
+        {
+            VALUE val;
+            axis2_char_t* value_str = NULL;
+
+            val = rb_funcall(value, rb_intern("to_s"), 0, 0);
+            if (!NIL_P(val) && (TYPE(val) == T_STRING))
+			{
+			    value_str = axutil_strdup(env, StringValuePtr(val));
+
+                if ((!strcmp(value_str, WS_TRUE))
+                    || (!strcmp(value_str, WS_SOAP_12)))
+                {
+                    axutil_hash_set(hash, 
+                                    WSF_WSDL_USE_SOAP, 
+                                    AXIS2_HASH_KEY_STRING, 
+                                    WSF_WSDL_SOAP_1_2);
+                }
+                else if (!strcmp(value_str, WS_SOAP_11))
+                {
+                    axutil_hash_set(hash, 
+                                    WSF_WSDL_USE_SOAP, 
+                                    AXIS2_HASH_KEY_STRING, 
+                                    WSF_WSDL_SOAP_1_1);    
+                }
+                else if (!strcmp(value_str, WS_FALSE))
+                {
+                    axutil_hash_set(hash, 
+                                    WSF_WSDL_USE_SOAP, 
+                                    AXIS2_HASH_KEY_STRING, 
+                                    WSF_WSDL_REST); 
+                }
+            }
+        }
+        else if (!strcmp(key, WS_HTTP_METHOD))
+        {
+        }
+        else if (!strcmp(key, WS_RESPONSE_XOP))
+        {
+        }
+        else if (!strcmp(key, WS_USE_WSA))
+        {
+        }
+        else if (!strcmp(key, WS_POLICY))
+        {
+            wsf_evaluate_policy_and_insert_to_hash(env, value, hash);
+        }
+        else if (!strcmp(key, WS_SECURITY_TOKEN))
+        {
+            axutil_hash_t* security_token_hash = NULL;
+            security_token_hash = axutil_hash_make(env);
+            wsf_evaluate_security_token_and_insert_to_hash(env, value, security_token_hash);
+            
+            axutil_hash_set(hash, 
+                            WSF_WSDL_HK_SECURITY_TOKEN, 
+                            AXIS2_HASH_KEY_STRING, 
+                            security_token_hash); 
+        }
+        else if (!strcmp(key, WS_PROXY_HOST))
+        {
+        }
+        else if (!strcmp(key, WS_PROXY_PORT))
+        {
+        }
+        else if (!strcmp(key, WS_WSDL))
+        {
+        }
+    }
+
+	static VALUE
+	hash_options_callback (VALUE key_val_array, void** callback_data)
+	{
+        axutil_env_t* env = NULL;
+		axutil_hash_t* hash = NULL;
+		VALUE key;
+		VALUE value;
+
+		env = (axutil_env_t*)(callback_data[0]);
+		hash = (axutil_hash_t*)(callback_data[1]);
+
+		key = rb_ary_entry(key_val_array, 0);               
+		value = rb_ary_entry(key_val_array, 1);             
+
+		/*if (TYPE(key) == T_SYMBOL)
+		{
+			key = rb_sym2str(key);							
+		}*/
+		
+		if (!NIL_P(key) && !NIL_P(value))
+		{
+			axis2_char_t* key_str = NULL;
+
+            key_str = axutil_strdup(env, StringValuePtr(key));
+
+            wsf_evaluate_client_options_and_insert_to_hash(env, key_str, value, hash);
+        }
+
+        return Qnil;
+    }
+
+    static VALUE
+	hash_callback (VALUE key_val_array, void** callback_data)
+	{
+		axutil_env_t* env = NULL;
+		wsf_wsdl_data_t* data = NULL;
+		VALUE key;
+		VALUE value;
+
+		env = (axutil_env_t*)(callback_data[0]);
+		data = (wsf_wsdl_data_t*)(callback_data[1]);
+
+		key = rb_ary_entry(key_val_array, 0);               
+		value = rb_ary_entry(key_val_array, 1);             
+
+		/*if (TYPE(key) == T_SYMBOL)
+		{
+			key = rb_sym2str(key);							
+		}*/
+		
+		if (!NIL_P(key) && !NIL_P(value))
+		{
+			axis2_char_t* key_str = NULL;
+			axis2_char_t* value_str = NULL;
+
+			key_str = axutil_strdup(env, StringValuePtr(key));
+
+			if (TYPE(value) == T_HASH)
+			{
+				wsf_wsdl_data_t* sub_data = NULL;
+				sub_data = wsf_wsdl_convert_params_to_wsdl_data(env, value);
+				wsdl_data_add_object(env, data, key_str, "whatever", sub_data, "http://www.example.org/sample/", NULL);
+			}
+			else
+			{
+				axis2_char_t* type_str = NULL;
+				VALUE type_val;
+				VALUE type_val_str;
+				VALUE val;
+				val = rb_funcall(value, rb_intern("to_s"), 0, 0);
+				type_val = rb_funcall(value, rb_intern("class"), 0, 0);
+				type_val_str = rb_funcall(type_val, rb_intern("to_s"), 0, 0);
+
+				if (!NIL_P(val) && (TYPE(val) == T_STRING))
+				{
+					value_str = axutil_strdup(env, StringValuePtr(val));
+					type_str = axutil_strdup(env, StringValuePtr(type_val_str));
+					wsdl_data_add_simple_element(env, data, key_str, type_str, value_str, "http://www.w3.org/2001/XMLSchema", "http://www.example.org/sample/");
+					/*AXIS2_FREE(env->allocator, value_str);*/
+				}
+			}
+			
+			/*AXIS2_FREE(env->allocator, key_str);*/
+		}
+		else
+		{
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] key and value should not be NULL");
+		}
+
+		return Qnil;
+	}
+
+	wsf_wsdl_data_t*
+	wsf_wsdl_convert_params_to_wsdl_data(axutil_env_t* env, VALUE params)
+	{
+		wsf_wsdl_data_t* data = NULL;
+		void** callback_data = AXIS2_MALLOC(env->allocator, sizeof(void*) * 2);
+		callback_data[0] = env;
+
+		data = wsdl_data_create_object(env);
+		callback_data[1] = data;
+		
+		if (!NIL_P(params))
+		{
+			if (TYPE(params) == T_HASH)
+			{
+				rb_iterate (rb_each, params, hash_callback, (VALUE)callback_data);
+			}
+			else /*if (TYPE(params) == T_OBJECT)*/
+			{
+				/* TODO: implement this */
+			}
+		}
+
+		AXIS2_FREE(env->allocator, callback_data);
+
+		return data;
+	}
+
+	VALUE
+	wsf_wsdl_convert_wsdl_data_to_hash(axutil_env_t* env, wsf_wsdl_data_t* response);
+
+	VALUE
+	wsf_wsdl_convert_response_to_ruby(axutil_env_t* env, wsf_wsdl_data_t* response)
+	{
+		VALUE hash = wsf_wsdl_convert_wsdl_data_to_hash(env, response);
+		return hash;
+	}
+
+	VALUE
+	wsf_wsdl_convert_wsdl_data_to_hash(axutil_env_t* env, wsf_wsdl_data_t* response)
+	{
+		VALUE element = Qnil;
+		wsf_wsdl_data_iterator_t* iterator = NULL;
+		
+		if (response->children_type == CHILDREN_TYPE_NONE)
+		{
+			axis2_char_t* data = (axis2_char_t*)(response->data);
+			
+			if (strcmp(data, "String") == 0)
+			{
+				element = rb_str_new2(data);
+			}
+			else if (strcmp(data, "Fixnum") == 0)
+			{
+				int fixnum = atoi(data);
+				element = rb_fix_new(fixnum);
+			}
+			else if (strcmp(data, "Float") == 0)
+			{
+				int floatnum = atof(data);
+				element = rb_float_new(floatnum);
+			}
+			else
+			{
+				element = rb_str_new2(data);
+			}
+			
+			return element;
+		}
+
+		iterator = wsdl_data_iterator_create(env, response);
+
+		if (!wsdl_data_iterator_first(env, &iterator))
+			return Qnil;
+
+		if (iterator->type == CHILDREN_TYPE_ARRAY_ELEMENTS)
+		{
+			element = rb_ary_new();
+			do
+			{
+				VALUE sub_element;
+				wsf_wsdl_data_t* data = iterator->this;
+				
+				sub_element = wsf_wsdl_convert_wsdl_data_to_hash(env, data);
+
+				rb_ary_push(element, sub_element);
+
+			} while (wsdl_data_iterator_next(env, &iterator));
+		}
+		else if (iterator->type == CHILDREN_TYPE_ATTRIBUTES)
+		{
+			element = rb_hash_new();
+			do
+			{
+				VALUE sub_element;
+				VALUE key;
+				wsf_wsdl_data_t* data = iterator->this;
+
+				sub_element = wsf_wsdl_convert_wsdl_data_to_hash(env, data);
+				key = rb_tainted_str_new2(iterator->name);
+
+				rb_hash_aset(element, key, sub_element);
+
+			} while (wsdl_data_iterator_next(env, &iterator));
+		}
+
+		wsdl_data_iterator_free(env, iterator);
+
+		return element;
+	}
+
+    VALUE
+    wsf_wsdl_request_function(axutil_env_t* env, axis2_svc_client_t* svc_client, 
+							  VALUE options,				/* RUBY client options hash*/
+							  VALUE wsdl,					/* wsdl file */
+							  VALUE operation, VALUE arg,	/* operation name and arg */
+                              VALUE service, 
+                              VALUE port,
+							  VALUE type_map,				/* type map file */
+							  VALUE xslt_path)				/* xslt location */
+    {
+		wsf_wsdl_data_t* response = NULL;			/* cleaned */
+		wsf_wsdl_data_t* user_parameters = NULL;	/* TODO: NOT cleaned */
+		axis2_bool_t wsdl_request_success;		
+		axis2_char_t* wsdl_file_name = NULL;			/* cleaned */				
+		axis2_char_t* operation_name = NULL;			/* cleaned */			
+		axis2_char_t* type_map_file = NULL;				/* cleaned */ 
+		axis2_char_t* xslt_location = NULL;				/* cleaned */ 
+		axutil_hash_t* svc_client_options = NULL;		/* TODO: NOT cleaned */
+        axis2_char_t* service_name = NULL;
+        axis2_char_t* port_name = NULL;
+
+		AXIS2_LOG_INFO(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] calling wsf_wsdl_request_function....");
+		
+		/* wsdl_file_name */
+		if (!NIL_P(wsdl) && (TYPE(wsdl) == T_STRING))
+		{
+			axis2_char_t* wsdl_file_name_ruby;
+
+			wsdl_file_name_ruby = RSTRING(wsdl)->ptr;
+
+			if (!wsdl_file_name_ruby)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] wsdl could not be null");
+				return wsf_wsdl_request_function_mem_free_return(env, response, user_parameters, wsdl_file_name, operation_name, xslt_location, type_map_file, svc_client_options);
+			}
+
+			wsdl_file_name = AXIS2_MALLOC(env->allocator, sizeof(axis2_char_t) * strlen(wsdl_file_name_ruby));
+			wsdl_file_name = strcpy(wsdl_file_name, wsdl_file_name_ruby);
+		}
+		else
+		{
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] wsdl should be a STRING and could not be null");
+			return wsf_wsdl_request_function_mem_free_return(env, response, user_parameters, wsdl_file_name, operation_name, xslt_location, type_map_file, svc_client_options);
+		}
+
+		/* operation_name */
+		if (!NIL_P(operation) && (TYPE(operation) == T_STRING))
+		{
+			axis2_char_t* operation_name_ruby;
+			
+			operation_name_ruby = RSTRING(operation)->ptr;
+
+			if (!operation_name_ruby)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] operation name could not be null");
+				return wsf_wsdl_request_function_mem_free_return(env, response, user_parameters, wsdl_file_name, operation_name, xslt_location, type_map_file, svc_client_options);
+			}
+
+			operation_name = AXIS2_MALLOC(env->allocator, sizeof(axis2_char_t) * strlen(operation_name_ruby));
+			operation_name = strcpy(operation_name, operation_name_ruby);
+		}
+		else
+		{
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] operation name should be a STRING and could not be null");
+			return wsf_wsdl_request_function_mem_free_return(env, response, user_parameters, wsdl_file_name, operation_name, xslt_location, type_map_file, svc_client_options);
+		}
+
+		/* user_parameters */
+		if (!NIL_P(arg))
+		{
+			user_parameters = wsf_wsdl_convert_params_to_wsdl_data(env, arg);
+		}
+		else
+		{
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] params should not be NULL");
+			return wsf_wsdl_request_function_mem_free_return(env, response, user_parameters, wsdl_file_name, operation_name, xslt_location, type_map_file, svc_client_options);
+		}
+
+		/* type_map_file */
+		if (!NIL_P(type_map) && (TYPE(type_map) == T_STRING))
+		{
+			axis2_char_t* type_map_file_ruby;		
+			
+			type_map_file_ruby = RSTRING(type_map)->ptr;
+
+			if (!type_map_file_ruby)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] type_map could not be null");
+				return wsf_wsdl_request_function_mem_free_return(env, response, user_parameters, wsdl_file_name, operation_name, xslt_location, type_map_file, svc_client_options);
+			}
+
+			type_map_file = AXIS2_MALLOC(env->allocator, sizeof(axis2_char_t) * strlen(type_map_file_ruby));
+			type_map_file = strcpy(type_map_file, type_map_file_ruby);
+		}
+		else
+		{
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] type_map should be a STRING and could not be null");
+			return wsf_wsdl_request_function_mem_free_return(env, response, user_parameters, wsdl_file_name, operation_name, xslt_location, type_map_file, svc_client_options);
+		}
+
+		/* xslt_location */
+		if (!NIL_P(xslt_path) && (TYPE(xslt_path) == T_STRING))
+		{
+			axis2_char_t* xslt_location_ruby;		
+			
+			xslt_location_ruby = RSTRING(xslt_path)->ptr;
+
+			if (!xslt_location_ruby)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] xslt_path could not be null");
+				return wsf_wsdl_request_function_mem_free_return(env, response, user_parameters, wsdl_file_name, operation_name, xslt_location, type_map_file, svc_client_options);
+			}
+
+			xslt_location = AXIS2_MALLOC(env->allocator, sizeof(axis2_char_t) * strlen(xslt_location_ruby));
+			xslt_location = strcpy(xslt_location, xslt_location_ruby);
+		}
+		else
+		{
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] xslt_path should be a STRING and could not be null");
+			return wsf_wsdl_request_function_mem_free_return(env, response, user_parameters, wsdl_file_name, operation_name, xslt_location, type_map_file, svc_client_options);
+		}
+
+        /* service name */
+		if (!NIL_P(service) && (TYPE(service) == T_STRING))
+		{
+			axis2_char_t* service_name_ruby;
+			
+			service_name_ruby = RSTRING(service)->ptr;
+
+			if (!service_name_ruby)
+			{
+				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] service name is null");
+                service_name = NULL;
+			}
+            else
+            {
+    			service_name = AXIS2_MALLOC(env->allocator, sizeof(axis2_char_t) * strlen(service_name_ruby));
+	    		service_name = strcpy(service_name, service_name_ruby);
+            }
+		}
+		else
+		{
+			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] service name is null");
+            service_name = NULL;
+		}
+
+        /* port name */
+		if (!NIL_P(port) && (TYPE(port) == T_STRING))
+		{
+			axis2_char_t* port_name_ruby;
+			
+			port_name_ruby = RSTRING(port)->ptr;
+
+			if (!port_name_ruby)
+			{
+				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] port name is null");
+                port_name = NULL;
+			}
+            else
+            {
+        		port_name = AXIS2_MALLOC(env->allocator, sizeof(axis2_char_t) * strlen(port_name_ruby));
+			    port_name = strcpy(port_name, port_name_ruby);
+            }
+		}
+		else
+		{
+			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] port name is null");
+            port_name = NULL;
+		}
+
+        svc_client_options = NULL;
+
+        if (!NIL_P(options) && (TYPE(options) == T_HASH))
+		{
+            void** callback_data = AXIS2_MALLOC(env->allocator, sizeof(void*) * 2);
+		    callback_data[0] = env;
+
+		    svc_client_options = axutil_hash_make(env);
+		    callback_data[1] = svc_client_options;
+            
+            rb_iterate (rb_each, options, hash_options_callback, (VALUE)callback_data);
+
+            AXIS2_FREE(env->allocator, callback_data);
+        }
+
+		/* svc_client_options */
+							
+
+		wsdl_request_success = wsf_wsdl_request(env, 
+												wsdl_file_name, 
+												operation_name, 
+												user_parameters,
+												type_map_file,
+												xslt_location,
+												svc_client,
+												svc_client_options,
+                                                service_name,
+                                                port_name,
+												&response);
+
+		if (!wsdl_request_success)
+		{
+			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] wsf_wsdl_request returned fault");
+			return wsf_wsdl_request_function_mem_free_return(env, response, user_parameters, wsdl_file_name, operation_name, xslt_location, type_map_file, svc_client_options);
+		}
+
+		/* response */
+		if (response)
+		{
+			VALUE response_ruby;
+			response_ruby = wsf_wsdl_convert_response_to_ruby(env, response);
+			return response_ruby;
+		}
+		else
+		{
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_ruby] [wsdl_mode] wsf_wsdl_request response is NULL");
+			return wsf_wsdl_request_function_mem_free_return(env, response, user_parameters, wsdl_file_name, operation_name, xslt_location, type_map_file, svc_client_options);
+		}
+		
+		return Qnil;
+	}
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -3036,230 +3806,31 @@ struct timeval rb_time_timeval(VALUE);
 }
 #endif
 
-SWIGINTERN VALUE
-_wrap_wsf_set_security_token_data_to_rampart_context(int argc, VALUE *argv, VALUE self) {
-  axutil_env_t *arg1 = (axutil_env_t *) 0 ;
-  rampart_context_t *arg2 = (rampart_context_t *) 0 ;
-  VALUE arg3 = (VALUE) 0 ;
-  axis2_status_t result;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
-  VALUE vresult = Qnil;
+
+  static axiom_node_t * *new_axiom_node_t_pp() { 
+    return (axiom_node_t * *)malloc(sizeof(axiom_node_t *));
+  }
   
-  if ((argc < 3) || (argc > 3)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  static axiom_node_t * *copy_axiom_node_t_pp(axiom_node_t * value) { 
+    return (axiom_node_t * *)memcpy((axiom_node_t * *)malloc(sizeof(axiom_node_t *)),&value,sizeof(axiom_node_t *));
   }
-  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axutil_env_t, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axutil_env_t const *","wsf_set_security_token_data_to_rampart_context", 1, argv[0] )); 
-  }
-  arg1 = (axutil_env_t *)(argp1);
-  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_rampart_context_t, 0 |  0 );
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "rampart_context_t *","wsf_set_security_token_data_to_rampart_context", 2, argv[1] )); 
-  }
-  arg2 = (rampart_context_t *)(argp2);
-  arg3 = argv[2];
-  result = (axis2_status_t)wsf_set_security_token_data_to_rampart_context((axutil_env_t const *)arg1,arg2,arg3);
-  vresult = SWIG_From_int((int)(result));
-  return vresult;
-fail:
-  return Qnil;
-}
 
+  static void delete_axiom_node_t_pp(axiom_node_t * *self) { 
+    if (self) free((char*)self);
+  }
+
+  static void axiom_node_t_pp_assign(axiom_node_t * *self, axiom_node_t * value) {
+    *self = value;
+  }
+
+  static axiom_node_t * axiom_node_t_pp_value(axiom_node_t * *self) {
+    return *self;
+  }
 
 SWIGINTERN VALUE
-_wrap_handle_client_security(int argc, VALUE *argv, VALUE self) {
-  axutil_env_t *arg1 = (axutil_env_t *) 0 ;
-  axis2_svc_client_t *arg2 = (axis2_svc_client_t *) 0 ;
-  axiom_node_t *arg3 = (axiom_node_t *) 0 ;
-  VALUE arg4 = (VALUE) 0 ;
-  axis2_status_t result;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
-  void *argp3 = 0 ;
-  int res3 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 4) || (argc > 4)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 4)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axutil_env_t, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axutil_env_t *","handle_client_security", 1, argv[0] )); 
-  }
-  arg1 = (axutil_env_t *)(argp1);
-  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_axis2_svc_client_t, 0 |  0 );
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "axis2_svc_client_t *","handle_client_security", 2, argv[1] )); 
-  }
-  arg2 = (axis2_svc_client_t *)(argp2);
-  res3 = SWIG_ConvertPtr(argv[2], &argp3,SWIGTYPE_p_axiom_node_t, 0 |  0 );
-  if (!SWIG_IsOK(res3)) {
-    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "axiom_node_t *","handle_client_security", 3, argv[2] )); 
-  }
-  arg3 = (axiom_node_t *)(argp3);
-  arg4 = argv[3];
-  result = (axis2_status_t)handle_client_security(arg1,arg2,arg3,arg4);
-  vresult = SWIG_From_int((int)(result));
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_wsf_wsdl_request_function_mem_free_return(int argc, VALUE *argv, VALUE self) {
-  axutil_env_t *arg1 = (axutil_env_t *) 0 ;
-  wsf_wsdl_data_t *arg2 = (wsf_wsdl_data_t *) 0 ;
-  wsf_wsdl_data_t *arg3 = (wsf_wsdl_data_t *) 0 ;
-  axis2_char_t *arg4 = (axis2_char_t *) 0 ;
-  axis2_char_t *arg5 = (axis2_char_t *) 0 ;
-  axis2_char_t *arg6 = (axis2_char_t *) 0 ;
-  axis2_char_t *arg7 = (axis2_char_t *) 0 ;
-  axutil_hash_t *arg8 = (axutil_hash_t *) 0 ;
-  VALUE result;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
-  void *argp3 = 0 ;
-  int res3 = 0 ;
-  int res4 ;
-  char *buf4 = 0 ;
-  int alloc4 = 0 ;
-  int res5 ;
-  char *buf5 = 0 ;
-  int alloc5 = 0 ;
-  int res6 ;
-  char *buf6 = 0 ;
-  int alloc6 = 0 ;
-  int res7 ;
-  char *buf7 = 0 ;
-  int alloc7 = 0 ;
-  void *argp8 = 0 ;
-  int res8 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 8) || (argc > 8)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 8)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axutil_env_t, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axutil_env_t *","wsf_wsdl_request_function_mem_free_return", 1, argv[0] )); 
-  }
-  arg1 = (axutil_env_t *)(argp1);
-  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_wsf_wsdl_data_t, 0 |  0 );
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "wsf_wsdl_data_t *","wsf_wsdl_request_function_mem_free_return", 2, argv[1] )); 
-  }
-  arg2 = (wsf_wsdl_data_t *)(argp2);
-  res3 = SWIG_ConvertPtr(argv[2], &argp3,SWIGTYPE_p_wsf_wsdl_data_t, 0 |  0 );
-  if (!SWIG_IsOK(res3)) {
-    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "wsf_wsdl_data_t *","wsf_wsdl_request_function_mem_free_return", 3, argv[2] )); 
-  }
-  arg3 = (wsf_wsdl_data_t *)(argp3);
-  res4 = SWIG_AsCharPtrAndSize(argv[3], &buf4, NULL, &alloc4);
-  if (!SWIG_IsOK(res4)) {
-    SWIG_exception_fail(SWIG_ArgError(res4), Ruby_Format_TypeError( "", "axis2_char_t *","wsf_wsdl_request_function_mem_free_return", 4, argv[3] ));
-  }
-  arg4 = (axis2_char_t *)(buf4);
-  res5 = SWIG_AsCharPtrAndSize(argv[4], &buf5, NULL, &alloc5);
-  if (!SWIG_IsOK(res5)) {
-    SWIG_exception_fail(SWIG_ArgError(res5), Ruby_Format_TypeError( "", "axis2_char_t *","wsf_wsdl_request_function_mem_free_return", 5, argv[4] ));
-  }
-  arg5 = (axis2_char_t *)(buf5);
-  res6 = SWIG_AsCharPtrAndSize(argv[5], &buf6, NULL, &alloc6);
-  if (!SWIG_IsOK(res6)) {
-    SWIG_exception_fail(SWIG_ArgError(res6), Ruby_Format_TypeError( "", "axis2_char_t *","wsf_wsdl_request_function_mem_free_return", 6, argv[5] ));
-  }
-  arg6 = (axis2_char_t *)(buf6);
-  res7 = SWIG_AsCharPtrAndSize(argv[6], &buf7, NULL, &alloc7);
-  if (!SWIG_IsOK(res7)) {
-    SWIG_exception_fail(SWIG_ArgError(res7), Ruby_Format_TypeError( "", "axis2_char_t *","wsf_wsdl_request_function_mem_free_return", 7, argv[6] ));
-  }
-  arg7 = (axis2_char_t *)(buf7);
-  res8 = SWIG_ConvertPtr(argv[7], &argp8,SWIGTYPE_p_axutil_hash_t, 0 |  0 );
-  if (!SWIG_IsOK(res8)) {
-    SWIG_exception_fail(SWIG_ArgError(res8), Ruby_Format_TypeError( "", "axutil_hash_t *","wsf_wsdl_request_function_mem_free_return", 8, argv[7] )); 
-  }
-  arg8 = (axutil_hash_t *)(argp8);
-  result = (VALUE)wsf_wsdl_request_function_mem_free_return(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8);
-  vresult = result;
-  if (alloc4 == SWIG_NEWOBJ) free((char*)buf4);
-  if (alloc5 == SWIG_NEWOBJ) free((char*)buf5);
-  if (alloc6 == SWIG_NEWOBJ) free((char*)buf6);
-  if (alloc7 == SWIG_NEWOBJ) free((char*)buf7);
-  return vresult;
-fail:
-  if (alloc4 == SWIG_NEWOBJ) free((char*)buf4);
-  if (alloc5 == SWIG_NEWOBJ) free((char*)buf5);
-  if (alloc6 == SWIG_NEWOBJ) free((char*)buf6);
-  if (alloc7 == SWIG_NEWOBJ) free((char*)buf7);
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_wsf_wsdl_convert_params_to_wsdl_data(int argc, VALUE *argv, VALUE self) {
-  axutil_env_t *arg1 = (axutil_env_t *) 0 ;
-  VALUE arg2 = (VALUE) 0 ;
-  wsf_wsdl_data_t *result = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 2) || (argc > 2)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axutil_env_t, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axutil_env_t *","wsf_wsdl_convert_params_to_wsdl_data", 1, argv[0] )); 
-  }
-  arg1 = (axutil_env_t *)(argp1);
-  arg2 = argv[1];
-  result = (wsf_wsdl_data_t *)wsf_wsdl_convert_params_to_wsdl_data(arg1,arg2);
-  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_wsf_wsdl_data_t, 0 |  0 );
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_hash_callback(int argc, VALUE *argv, VALUE self) {
-  VALUE arg1 = (VALUE) 0 ;
-  void **arg2 = (void **) 0 ;
-  VALUE result;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 2) || (argc > 2)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
-  }
-  arg1 = argv[0];
-  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_p_void, 0 |  0 );
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "void **","hash_callback", 2, argv[1] )); 
-  }
-  arg2 = (void **)(argp2);
-  result = (VALUE)hash_callback(arg1,arg2);
-  vresult = result;
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_wsf_wsdl_convert_wsdl_data_to_hash(int argc, VALUE *argv, VALUE self) {
-  axutil_env_t *arg1 = (axutil_env_t *) 0 ;
-  wsf_wsdl_data_t *arg2 = (wsf_wsdl_data_t *) 0 ;
+_wrap_wsf_axiom_data_handler_get_content(int argc, VALUE *argv, VALUE self) {
+  axiom_data_handler_t *arg1 = (axiom_data_handler_t *) 0 ;
+  axutil_env_t *arg2 = (axutil_env_t *) 0 ;
   VALUE result;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -3270,93 +3841,17 @@ _wrap_wsf_wsdl_convert_wsdl_data_to_hash(int argc, VALUE *argv, VALUE self) {
   if ((argc < 2) || (argc > 2)) {
     rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
   }
-  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axutil_env_t, 0 |  0 );
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axiom_data_handler_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axutil_env_t *","wsf_wsdl_convert_wsdl_data_to_hash", 1, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axiom_data_handler_t *","wsf_axiom_data_handler_get_content", 1, argv[0] )); 
   }
-  arg1 = (axutil_env_t *)(argp1);
-  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_wsf_wsdl_data_t, 0 |  0 );
+  arg1 = (axiom_data_handler_t *)(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_axutil_env_t, 0 |  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "wsf_wsdl_data_t *","wsf_wsdl_convert_wsdl_data_to_hash", 2, argv[1] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "axutil_env_t const *","wsf_axiom_data_handler_get_content", 2, argv[1] )); 
   }
-  arg2 = (wsf_wsdl_data_t *)(argp2);
-  result = (VALUE)wsf_wsdl_convert_wsdl_data_to_hash(arg1,arg2);
-  vresult = result;
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_wsf_wsdl_convert_response_to_ruby(int argc, VALUE *argv, VALUE self) {
-  axutil_env_t *arg1 = (axutil_env_t *) 0 ;
-  wsf_wsdl_data_t *arg2 = (wsf_wsdl_data_t *) 0 ;
-  VALUE result;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 2) || (argc > 2)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axutil_env_t, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axutil_env_t *","wsf_wsdl_convert_response_to_ruby", 1, argv[0] )); 
-  }
-  arg1 = (axutil_env_t *)(argp1);
-  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_wsf_wsdl_data_t, 0 |  0 );
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "wsf_wsdl_data_t *","wsf_wsdl_convert_response_to_ruby", 2, argv[1] )); 
-  }
-  arg2 = (wsf_wsdl_data_t *)(argp2);
-  result = (VALUE)wsf_wsdl_convert_response_to_ruby(arg1,arg2);
-  vresult = result;
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_wsf_wsdl_request_function(int argc, VALUE *argv, VALUE self) {
-  axutil_env_t *arg1 = (axutil_env_t *) 0 ;
-  axis2_svc_client_t *arg2 = (axis2_svc_client_t *) 0 ;
-  VALUE arg3 = (VALUE) 0 ;
-  VALUE arg4 = (VALUE) 0 ;
-  VALUE arg5 = (VALUE) 0 ;
-  VALUE arg6 = (VALUE) 0 ;
-  VALUE arg7 = (VALUE) 0 ;
-  VALUE arg8 = (VALUE) 0 ;
-  VALUE result;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 8) || (argc > 8)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 8)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axutil_env_t, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axutil_env_t *","wsf_wsdl_request_function", 1, argv[0] )); 
-  }
-  arg1 = (axutil_env_t *)(argp1);
-  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_axis2_svc_client_t, 0 |  0 );
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "axis2_svc_client_t *","wsf_wsdl_request_function", 2, argv[1] )); 
-  }
-  arg2 = (axis2_svc_client_t *)(argp2);
-  arg3 = argv[2];
-  arg4 = argv[3];
-  arg5 = argv[4];
-  arg6 = argv[5];
-  arg7 = argv[6];
-  arg8 = argv[7];
-  result = (VALUE)wsf_wsdl_request_function(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8);
+  arg2 = (axutil_env_t *)(argp2);
+  result = (VALUE)wsf_axiom_data_handler_get_content(arg1,(axutil_env_t const *)arg2);
   vresult = result;
   return vresult;
 fail:
@@ -3935,39 +4430,6 @@ _wrap_wsf_last_soap_fault_exception(int argc, VALUE *argv, VALUE self) {
   arg2 = (axutil_env_t *)(argp2);
   result = (fault_data_t *)wsf_last_soap_fault_exception(arg1,arg2);
   vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_fault_data, SWIG_POINTER_OWN |  0 );
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_wsf_axiom_data_handler_get_content(int argc, VALUE *argv, VALUE self) {
-  axiom_data_handler_t *arg1 = (axiom_data_handler_t *) 0 ;
-  axutil_env_t *arg2 = (axutil_env_t *) 0 ;
-  axis2_char_t *result = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 2) || (argc > 2)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axiom_data_handler_t, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axiom_data_handler_t *","wsf_axiom_data_handler_get_content", 1, argv[0] )); 
-  }
-  arg1 = (axiom_data_handler_t *)(argp1);
-  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_axutil_env_t, 0 |  0 );
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "axutil_env_t const *","wsf_axiom_data_handler_get_content", 2, argv[1] )); 
-  }
-  arg2 = (axutil_env_t *)(argp2);
-  result = (axis2_char_t *)wsf_axiom_data_handler_get_content(arg1,(axutil_env_t const *)arg2);
-  vresult = SWIG_FromCharPtr((const char *)result);
-  free((char*)result);
   return vresult;
 fail:
   return Qnil;
@@ -4692,6 +5154,856 @@ _wrap_wsf_rampart_context_set_certificate(int argc, VALUE *argv, VALUE self) {
   return vresult;
 fail:
   if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_wsf_util_find_xop_content_and_convert_to_base64(int argc, VALUE *argv, VALUE self) {
+  axutil_env_t *arg1 = (axutil_env_t *) 0 ;
+  axiom_node_t *arg2 = (axiom_node_t *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axutil_env_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axutil_env_t const *","wsf_util_find_xop_content_and_convert_to_base64", 1, argv[0] )); 
+  }
+  arg1 = (axutil_env_t *)(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_axiom_node_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "axiom_node_t *","wsf_util_find_xop_content_and_convert_to_base64", 2, argv[1] )); 
+  }
+  arg2 = (axiom_node_t *)(argp2);
+  wsf_util_find_xop_content_and_convert_to_base64((axutil_env_t const *)arg1,arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_wsf_set_security_data_to_rampart_context(int argc, VALUE *argv, VALUE self) {
+  axutil_env_t *arg1 = (axutil_env_t *) 0 ;
+  rampart_context_t *arg2 = (rampart_context_t *) 0 ;
+  axis2_char_t *arg3 = (axis2_char_t *) 0 ;
+  axis2_char_t *arg4 = (axis2_char_t *) 0 ;
+  axis2_char_t *arg5 = (axis2_char_t *) 0 ;
+  axis2_char_t *arg6 = (axis2_char_t *) 0 ;
+  axis2_char_t *arg7 = (axis2_char_t *) 0 ;
+  axis2_char_t *arg8 = (axis2_char_t *) 0 ;
+  int arg9 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  int res3 ;
+  char *buf3 = 0 ;
+  int alloc3 = 0 ;
+  int res4 ;
+  char *buf4 = 0 ;
+  int alloc4 = 0 ;
+  int res5 ;
+  char *buf5 = 0 ;
+  int alloc5 = 0 ;
+  int res6 ;
+  char *buf6 = 0 ;
+  int alloc6 = 0 ;
+  int res7 ;
+  char *buf7 = 0 ;
+  int alloc7 = 0 ;
+  int res8 ;
+  char *buf8 = 0 ;
+  int alloc8 = 0 ;
+  int val9 ;
+  int ecode9 = 0 ;
+  
+  if ((argc < 9) || (argc > 9)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 9)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axutil_env_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axutil_env_t *","wsf_set_security_data_to_rampart_context", 1, argv[0] )); 
+  }
+  arg1 = (axutil_env_t *)(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_rampart_context_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "rampart_context_t *","wsf_set_security_data_to_rampart_context", 2, argv[1] )); 
+  }
+  arg2 = (rampart_context_t *)(argp2);
+  res3 = SWIG_AsCharPtrAndSize(argv[2], &buf3, NULL, &alloc3);
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "axis2_char_t *","wsf_set_security_data_to_rampart_context", 3, argv[2] ));
+  }
+  arg3 = (axis2_char_t *)(buf3);
+  res4 = SWIG_AsCharPtrAndSize(argv[3], &buf4, NULL, &alloc4);
+  if (!SWIG_IsOK(res4)) {
+    SWIG_exception_fail(SWIG_ArgError(res4), Ruby_Format_TypeError( "", "axis2_char_t *","wsf_set_security_data_to_rampart_context", 4, argv[3] ));
+  }
+  arg4 = (axis2_char_t *)(buf4);
+  res5 = SWIG_AsCharPtrAndSize(argv[4], &buf5, NULL, &alloc5);
+  if (!SWIG_IsOK(res5)) {
+    SWIG_exception_fail(SWIG_ArgError(res5), Ruby_Format_TypeError( "", "axis2_char_t *","wsf_set_security_data_to_rampart_context", 5, argv[4] ));
+  }
+  arg5 = (axis2_char_t *)(buf5);
+  res6 = SWIG_AsCharPtrAndSize(argv[5], &buf6, NULL, &alloc6);
+  if (!SWIG_IsOK(res6)) {
+    SWIG_exception_fail(SWIG_ArgError(res6), Ruby_Format_TypeError( "", "axis2_char_t *","wsf_set_security_data_to_rampart_context", 6, argv[5] ));
+  }
+  arg6 = (axis2_char_t *)(buf6);
+  res7 = SWIG_AsCharPtrAndSize(argv[6], &buf7, NULL, &alloc7);
+  if (!SWIG_IsOK(res7)) {
+    SWIG_exception_fail(SWIG_ArgError(res7), Ruby_Format_TypeError( "", "axis2_char_t *","wsf_set_security_data_to_rampart_context", 7, argv[6] ));
+  }
+  arg7 = (axis2_char_t *)(buf7);
+  res8 = SWIG_AsCharPtrAndSize(argv[7], &buf8, NULL, &alloc8);
+  if (!SWIG_IsOK(res8)) {
+    SWIG_exception_fail(SWIG_ArgError(res8), Ruby_Format_TypeError( "", "axis2_char_t *","wsf_set_security_data_to_rampart_context", 8, argv[7] ));
+  }
+  arg8 = (axis2_char_t *)(buf8);
+  ecode9 = SWIG_AsVal_int(argv[8], &val9);
+  if (!SWIG_IsOK(ecode9)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode9), Ruby_Format_TypeError( "", "int","wsf_set_security_data_to_rampart_context", 9, argv[8] ));
+  } 
+  arg9 = (int)(val9);
+  wsf_set_security_data_to_rampart_context(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9);
+  if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+  if (alloc4 == SWIG_NEWOBJ) free((char*)buf4);
+  if (alloc5 == SWIG_NEWOBJ) free((char*)buf5);
+  if (alloc6 == SWIG_NEWOBJ) free((char*)buf6);
+  if (alloc7 == SWIG_NEWOBJ) free((char*)buf7);
+  if (alloc8 == SWIG_NEWOBJ) free((char*)buf8);
+  return Qnil;
+fail:
+  if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+  if (alloc4 == SWIG_NEWOBJ) free((char*)buf4);
+  if (alloc5 == SWIG_NEWOBJ) free((char*)buf5);
+  if (alloc6 == SWIG_NEWOBJ) free((char*)buf6);
+  if (alloc7 == SWIG_NEWOBJ) free((char*)buf7);
+  if (alloc8 == SWIG_NEWOBJ) free((char*)buf8);
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_handle_client_security(int argc, VALUE *argv, VALUE self) {
+  axutil_env_t *arg1 = (axutil_env_t *) 0 ;
+  axis2_svc_client_t *arg2 = (axis2_svc_client_t *) 0 ;
+  axiom_node_t *arg3 = (axiom_node_t *) 0 ;
+  axis2_char_t *arg4 = (axis2_char_t *) 0 ;
+  axis2_char_t *arg5 = (axis2_char_t *) 0 ;
+  axis2_char_t *arg6 = (axis2_char_t *) 0 ;
+  axis2_char_t *arg7 = (axis2_char_t *) 0 ;
+  axis2_char_t *arg8 = (axis2_char_t *) 0 ;
+  axis2_char_t *arg9 = (axis2_char_t *) 0 ;
+  int arg10 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  int res4 ;
+  char *buf4 = 0 ;
+  int alloc4 = 0 ;
+  int res5 ;
+  char *buf5 = 0 ;
+  int alloc5 = 0 ;
+  int res6 ;
+  char *buf6 = 0 ;
+  int alloc6 = 0 ;
+  int res7 ;
+  char *buf7 = 0 ;
+  int alloc7 = 0 ;
+  int res8 ;
+  char *buf8 = 0 ;
+  int alloc8 = 0 ;
+  int res9 ;
+  char *buf9 = 0 ;
+  int alloc9 = 0 ;
+  int val10 ;
+  int ecode10 = 0 ;
+  
+  if ((argc < 10) || (argc > 10)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 10)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axutil_env_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axutil_env_t *","handle_client_security", 1, argv[0] )); 
+  }
+  arg1 = (axutil_env_t *)(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_axis2_svc_client_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "axis2_svc_client_t *","handle_client_security", 2, argv[1] )); 
+  }
+  arg2 = (axis2_svc_client_t *)(argp2);
+  res3 = SWIG_ConvertPtr(argv[2], &argp3,SWIGTYPE_p_axiom_node_t, 0 |  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "axiom_node_t *","handle_client_security", 3, argv[2] )); 
+  }
+  arg3 = (axiom_node_t *)(argp3);
+  res4 = SWIG_AsCharPtrAndSize(argv[3], &buf4, NULL, &alloc4);
+  if (!SWIG_IsOK(res4)) {
+    SWIG_exception_fail(SWIG_ArgError(res4), Ruby_Format_TypeError( "", "axis2_char_t *","handle_client_security", 4, argv[3] ));
+  }
+  arg4 = (axis2_char_t *)(buf4);
+  res5 = SWIG_AsCharPtrAndSize(argv[4], &buf5, NULL, &alloc5);
+  if (!SWIG_IsOK(res5)) {
+    SWIG_exception_fail(SWIG_ArgError(res5), Ruby_Format_TypeError( "", "axis2_char_t *","handle_client_security", 5, argv[4] ));
+  }
+  arg5 = (axis2_char_t *)(buf5);
+  res6 = SWIG_AsCharPtrAndSize(argv[5], &buf6, NULL, &alloc6);
+  if (!SWIG_IsOK(res6)) {
+    SWIG_exception_fail(SWIG_ArgError(res6), Ruby_Format_TypeError( "", "axis2_char_t *","handle_client_security", 6, argv[5] ));
+  }
+  arg6 = (axis2_char_t *)(buf6);
+  res7 = SWIG_AsCharPtrAndSize(argv[6], &buf7, NULL, &alloc7);
+  if (!SWIG_IsOK(res7)) {
+    SWIG_exception_fail(SWIG_ArgError(res7), Ruby_Format_TypeError( "", "axis2_char_t *","handle_client_security", 7, argv[6] ));
+  }
+  arg7 = (axis2_char_t *)(buf7);
+  res8 = SWIG_AsCharPtrAndSize(argv[7], &buf8, NULL, &alloc8);
+  if (!SWIG_IsOK(res8)) {
+    SWIG_exception_fail(SWIG_ArgError(res8), Ruby_Format_TypeError( "", "axis2_char_t *","handle_client_security", 8, argv[7] ));
+  }
+  arg8 = (axis2_char_t *)(buf8);
+  res9 = SWIG_AsCharPtrAndSize(argv[8], &buf9, NULL, &alloc9);
+  if (!SWIG_IsOK(res9)) {
+    SWIG_exception_fail(SWIG_ArgError(res9), Ruby_Format_TypeError( "", "axis2_char_t *","handle_client_security", 9, argv[8] ));
+  }
+  arg9 = (axis2_char_t *)(buf9);
+  ecode10 = SWIG_AsVal_int(argv[9], &val10);
+  if (!SWIG_IsOK(ecode10)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode10), Ruby_Format_TypeError( "", "int","handle_client_security", 10, argv[9] ));
+  } 
+  arg10 = (int)(val10);
+  handle_client_security(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10);
+  if (alloc4 == SWIG_NEWOBJ) free((char*)buf4);
+  if (alloc5 == SWIG_NEWOBJ) free((char*)buf5);
+  if (alloc6 == SWIG_NEWOBJ) free((char*)buf6);
+  if (alloc7 == SWIG_NEWOBJ) free((char*)buf7);
+  if (alloc8 == SWIG_NEWOBJ) free((char*)buf8);
+  if (alloc9 == SWIG_NEWOBJ) free((char*)buf9);
+  return Qnil;
+fail:
+  if (alloc4 == SWIG_NEWOBJ) free((char*)buf4);
+  if (alloc5 == SWIG_NEWOBJ) free((char*)buf5);
+  if (alloc6 == SWIG_NEWOBJ) free((char*)buf6);
+  if (alloc7 == SWIG_NEWOBJ) free((char*)buf7);
+  if (alloc8 == SWIG_NEWOBJ) free((char*)buf8);
+  if (alloc9 == SWIG_NEWOBJ) free((char*)buf9);
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_wsf_set_security_token_data_to_rampart_context(int argc, VALUE *argv, VALUE self) {
+  axutil_env_t *arg1 = (axutil_env_t *) 0 ;
+  rampart_context_t *arg2 = (rampart_context_t *) 0 ;
+  VALUE arg3 = (VALUE) 0 ;
+  axis2_status_t result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axutil_env_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axutil_env_t const *","wsf_set_security_token_data_to_rampart_context", 1, argv[0] )); 
+  }
+  arg1 = (axutil_env_t *)(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_rampart_context_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "rampart_context_t *","wsf_set_security_token_data_to_rampart_context", 2, argv[1] )); 
+  }
+  arg2 = (rampart_context_t *)(argp2);
+  arg3 = argv[2];
+  result = (axis2_status_t)wsf_set_security_token_data_to_rampart_context((axutil_env_t const *)arg1,arg2,arg3);
+  vresult = SWIG_From_int((int)(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_wsf_handle_client_security_for_ruby(int argc, VALUE *argv, VALUE self) {
+  axutil_env_t *arg1 = (axutil_env_t *) 0 ;
+  axis2_svc_client_t *arg2 = (axis2_svc_client_t *) 0 ;
+  axiom_node_t *arg3 = (axiom_node_t *) 0 ;
+  VALUE arg4 = (VALUE) 0 ;
+  axis2_status_t result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 4) || (argc > 4)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 4)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axutil_env_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axutil_env_t *","wsf_handle_client_security_for_ruby", 1, argv[0] )); 
+  }
+  arg1 = (axutil_env_t *)(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_axis2_svc_client_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "axis2_svc_client_t *","wsf_handle_client_security_for_ruby", 2, argv[1] )); 
+  }
+  arg2 = (axis2_svc_client_t *)(argp2);
+  res3 = SWIG_ConvertPtr(argv[2], &argp3,SWIGTYPE_p_axiom_node_t, 0 |  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "axiom_node_t *","wsf_handle_client_security_for_ruby", 3, argv[2] )); 
+  }
+  arg3 = (axiom_node_t *)(argp3);
+  arg4 = argv[3];
+  result = (axis2_status_t)wsf_handle_client_security_for_ruby(arg1,arg2,arg3,arg4);
+  vresult = SWIG_From_int((int)(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_wsf_wsdl_request_function_mem_free_return(int argc, VALUE *argv, VALUE self) {
+  axutil_env_t *arg1 = (axutil_env_t *) 0 ;
+  wsf_wsdl_data_t *arg2 = (wsf_wsdl_data_t *) 0 ;
+  wsf_wsdl_data_t *arg3 = (wsf_wsdl_data_t *) 0 ;
+  axis2_char_t *arg4 = (axis2_char_t *) 0 ;
+  axis2_char_t *arg5 = (axis2_char_t *) 0 ;
+  axis2_char_t *arg6 = (axis2_char_t *) 0 ;
+  axis2_char_t *arg7 = (axis2_char_t *) 0 ;
+  axutil_hash_t *arg8 = (axutil_hash_t *) 0 ;
+  VALUE result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  int res4 ;
+  char *buf4 = 0 ;
+  int alloc4 = 0 ;
+  int res5 ;
+  char *buf5 = 0 ;
+  int alloc5 = 0 ;
+  int res6 ;
+  char *buf6 = 0 ;
+  int alloc6 = 0 ;
+  int res7 ;
+  char *buf7 = 0 ;
+  int alloc7 = 0 ;
+  void *argp8 = 0 ;
+  int res8 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 8) || (argc > 8)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 8)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axutil_env_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axutil_env_t *","wsf_wsdl_request_function_mem_free_return", 1, argv[0] )); 
+  }
+  arg1 = (axutil_env_t *)(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_wsf_wsdl_data_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "wsf_wsdl_data_t *","wsf_wsdl_request_function_mem_free_return", 2, argv[1] )); 
+  }
+  arg2 = (wsf_wsdl_data_t *)(argp2);
+  res3 = SWIG_ConvertPtr(argv[2], &argp3,SWIGTYPE_p_wsf_wsdl_data_t, 0 |  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "wsf_wsdl_data_t *","wsf_wsdl_request_function_mem_free_return", 3, argv[2] )); 
+  }
+  arg3 = (wsf_wsdl_data_t *)(argp3);
+  res4 = SWIG_AsCharPtrAndSize(argv[3], &buf4, NULL, &alloc4);
+  if (!SWIG_IsOK(res4)) {
+    SWIG_exception_fail(SWIG_ArgError(res4), Ruby_Format_TypeError( "", "axis2_char_t *","wsf_wsdl_request_function_mem_free_return", 4, argv[3] ));
+  }
+  arg4 = (axis2_char_t *)(buf4);
+  res5 = SWIG_AsCharPtrAndSize(argv[4], &buf5, NULL, &alloc5);
+  if (!SWIG_IsOK(res5)) {
+    SWIG_exception_fail(SWIG_ArgError(res5), Ruby_Format_TypeError( "", "axis2_char_t *","wsf_wsdl_request_function_mem_free_return", 5, argv[4] ));
+  }
+  arg5 = (axis2_char_t *)(buf5);
+  res6 = SWIG_AsCharPtrAndSize(argv[5], &buf6, NULL, &alloc6);
+  if (!SWIG_IsOK(res6)) {
+    SWIG_exception_fail(SWIG_ArgError(res6), Ruby_Format_TypeError( "", "axis2_char_t *","wsf_wsdl_request_function_mem_free_return", 6, argv[5] ));
+  }
+  arg6 = (axis2_char_t *)(buf6);
+  res7 = SWIG_AsCharPtrAndSize(argv[6], &buf7, NULL, &alloc7);
+  if (!SWIG_IsOK(res7)) {
+    SWIG_exception_fail(SWIG_ArgError(res7), Ruby_Format_TypeError( "", "axis2_char_t *","wsf_wsdl_request_function_mem_free_return", 7, argv[6] ));
+  }
+  arg7 = (axis2_char_t *)(buf7);
+  res8 = SWIG_ConvertPtr(argv[7], &argp8,SWIGTYPE_p_axutil_hash_t, 0 |  0 );
+  if (!SWIG_IsOK(res8)) {
+    SWIG_exception_fail(SWIG_ArgError(res8), Ruby_Format_TypeError( "", "axutil_hash_t *","wsf_wsdl_request_function_mem_free_return", 8, argv[7] )); 
+  }
+  arg8 = (axutil_hash_t *)(argp8);
+  result = (VALUE)wsf_wsdl_request_function_mem_free_return(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8);
+  vresult = result;
+  if (alloc4 == SWIG_NEWOBJ) free((char*)buf4);
+  if (alloc5 == SWIG_NEWOBJ) free((char*)buf5);
+  if (alloc6 == SWIG_NEWOBJ) free((char*)buf6);
+  if (alloc7 == SWIG_NEWOBJ) free((char*)buf7);
+  return vresult;
+fail:
+  if (alloc4 == SWIG_NEWOBJ) free((char*)buf4);
+  if (alloc5 == SWIG_NEWOBJ) free((char*)buf5);
+  if (alloc6 == SWIG_NEWOBJ) free((char*)buf6);
+  if (alloc7 == SWIG_NEWOBJ) free((char*)buf7);
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_wsf_wsdl_convert_params_to_wsdl_data(int argc, VALUE *argv, VALUE self) {
+  axutil_env_t *arg1 = (axutil_env_t *) 0 ;
+  VALUE arg2 = (VALUE) 0 ;
+  wsf_wsdl_data_t *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axutil_env_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axutil_env_t *","wsf_wsdl_convert_params_to_wsdl_data", 1, argv[0] )); 
+  }
+  arg1 = (axutil_env_t *)(argp1);
+  arg2 = argv[1];
+  result = (wsf_wsdl_data_t *)wsf_wsdl_convert_params_to_wsdl_data(arg1,arg2);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_wsf_wsdl_data_t, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_wsf_evaluate_security_token_and_insert_to_hash(int argc, VALUE *argv, VALUE self) {
+  axutil_env_t *arg1 = (axutil_env_t *) 0 ;
+  VALUE arg2 = (VALUE) 0 ;
+  axutil_hash_t *arg3 = (axutil_hash_t *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axutil_env_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axutil_env_t *","wsf_evaluate_security_token_and_insert_to_hash", 1, argv[0] )); 
+  }
+  arg1 = (axutil_env_t *)(argp1);
+  arg2 = argv[1];
+  res3 = SWIG_ConvertPtr(argv[2], &argp3,SWIGTYPE_p_axutil_hash_t, 0 |  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "axutil_hash_t *","wsf_evaluate_security_token_and_insert_to_hash", 3, argv[2] )); 
+  }
+  arg3 = (axutil_hash_t *)(argp3);
+  wsf_evaluate_security_token_and_insert_to_hash(arg1,arg2,arg3);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_wsf_evaluate_policy_options_and_insert_to_hash(int argc, VALUE *argv, VALUE self) {
+  axutil_env_t *arg1 = (axutil_env_t *) 0 ;
+  VALUE arg2 = (VALUE) 0 ;
+  axutil_hash_t *arg3 = (axutil_hash_t *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axutil_env_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axutil_env_t *","wsf_evaluate_policy_options_and_insert_to_hash", 1, argv[0] )); 
+  }
+  arg1 = (axutil_env_t *)(argp1);
+  arg2 = argv[1];
+  res3 = SWIG_ConvertPtr(argv[2], &argp3,SWIGTYPE_p_axutil_hash_t, 0 |  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "axutil_hash_t *","wsf_evaluate_policy_options_and_insert_to_hash", 3, argv[2] )); 
+  }
+  arg3 = (axutil_hash_t *)(argp3);
+  wsf_evaluate_policy_options_and_insert_to_hash(arg1,arg2,arg3);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_wsf_evaluate_policy_and_insert_to_hash(int argc, VALUE *argv, VALUE self) {
+  axutil_env_t *arg1 = (axutil_env_t *) 0 ;
+  VALUE arg2 = (VALUE) 0 ;
+  axutil_hash_t *arg3 = (axutil_hash_t *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axutil_env_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axutil_env_t *","wsf_evaluate_policy_and_insert_to_hash", 1, argv[0] )); 
+  }
+  arg1 = (axutil_env_t *)(argp1);
+  arg2 = argv[1];
+  res3 = SWIG_ConvertPtr(argv[2], &argp3,SWIGTYPE_p_axutil_hash_t, 0 |  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "axutil_hash_t *","wsf_evaluate_policy_and_insert_to_hash", 3, argv[2] )); 
+  }
+  arg3 = (axutil_hash_t *)(argp3);
+  wsf_evaluate_policy_and_insert_to_hash(arg1,arg2,arg3);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_wsf_evaluate_client_options_and_insert_to_hash(int argc, VALUE *argv, VALUE self) {
+  axutil_env_t *arg1 = (axutil_env_t *) 0 ;
+  axis2_char_t *arg2 = (axis2_char_t *) 0 ;
+  VALUE arg3 = (VALUE) 0 ;
+  axutil_hash_t *arg4 = (axutil_hash_t *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int res2 ;
+  char *buf2 = 0 ;
+  int alloc2 = 0 ;
+  void *argp4 = 0 ;
+  int res4 = 0 ;
+  
+  if ((argc < 4) || (argc > 4)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 4)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axutil_env_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axutil_env_t *","wsf_evaluate_client_options_and_insert_to_hash", 1, argv[0] )); 
+  }
+  arg1 = (axutil_env_t *)(argp1);
+  res2 = SWIG_AsCharPtrAndSize(argv[1], &buf2, NULL, &alloc2);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "axis2_char_t *","wsf_evaluate_client_options_and_insert_to_hash", 2, argv[1] ));
+  }
+  arg2 = (axis2_char_t *)(buf2);
+  arg3 = argv[2];
+  res4 = SWIG_ConvertPtr(argv[3], &argp4,SWIGTYPE_p_axutil_hash_t, 0 |  0 );
+  if (!SWIG_IsOK(res4)) {
+    SWIG_exception_fail(SWIG_ArgError(res4), Ruby_Format_TypeError( "", "axutil_hash_t *","wsf_evaluate_client_options_and_insert_to_hash", 4, argv[3] )); 
+  }
+  arg4 = (axutil_hash_t *)(argp4);
+  wsf_evaluate_client_options_and_insert_to_hash(arg1,arg2,arg3,arg4);
+  if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+  return Qnil;
+fail:
+  if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_hash_options_callback(int argc, VALUE *argv, VALUE self) {
+  VALUE arg1 = (VALUE) 0 ;
+  void **arg2 = (void **) 0 ;
+  VALUE result;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  arg1 = argv[0];
+  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_p_void, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "void **","hash_options_callback", 2, argv[1] )); 
+  }
+  arg2 = (void **)(argp2);
+  result = (VALUE)hash_options_callback(arg1,arg2);
+  vresult = result;
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_hash_callback(int argc, VALUE *argv, VALUE self) {
+  VALUE arg1 = (VALUE) 0 ;
+  void **arg2 = (void **) 0 ;
+  VALUE result;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  arg1 = argv[0];
+  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_p_void, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "void **","hash_callback", 2, argv[1] )); 
+  }
+  arg2 = (void **)(argp2);
+  result = (VALUE)hash_callback(arg1,arg2);
+  vresult = result;
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_wsf_wsdl_convert_wsdl_data_to_hash(int argc, VALUE *argv, VALUE self) {
+  axutil_env_t *arg1 = (axutil_env_t *) 0 ;
+  wsf_wsdl_data_t *arg2 = (wsf_wsdl_data_t *) 0 ;
+  VALUE result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axutil_env_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axutil_env_t *","wsf_wsdl_convert_wsdl_data_to_hash", 1, argv[0] )); 
+  }
+  arg1 = (axutil_env_t *)(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_wsf_wsdl_data_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "wsf_wsdl_data_t *","wsf_wsdl_convert_wsdl_data_to_hash", 2, argv[1] )); 
+  }
+  arg2 = (wsf_wsdl_data_t *)(argp2);
+  result = (VALUE)wsf_wsdl_convert_wsdl_data_to_hash(arg1,arg2);
+  vresult = result;
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_wsf_wsdl_convert_response_to_ruby(int argc, VALUE *argv, VALUE self) {
+  axutil_env_t *arg1 = (axutil_env_t *) 0 ;
+  wsf_wsdl_data_t *arg2 = (wsf_wsdl_data_t *) 0 ;
+  VALUE result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axutil_env_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axutil_env_t *","wsf_wsdl_convert_response_to_ruby", 1, argv[0] )); 
+  }
+  arg1 = (axutil_env_t *)(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_wsf_wsdl_data_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "wsf_wsdl_data_t *","wsf_wsdl_convert_response_to_ruby", 2, argv[1] )); 
+  }
+  arg2 = (wsf_wsdl_data_t *)(argp2);
+  result = (VALUE)wsf_wsdl_convert_response_to_ruby(arg1,arg2);
+  vresult = result;
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_wsf_wsdl_request_function(int argc, VALUE *argv, VALUE self) {
+  axutil_env_t *arg1 = (axutil_env_t *) 0 ;
+  axis2_svc_client_t *arg2 = (axis2_svc_client_t *) 0 ;
+  VALUE arg3 = (VALUE) 0 ;
+  VALUE arg4 = (VALUE) 0 ;
+  VALUE arg5 = (VALUE) 0 ;
+  VALUE arg6 = (VALUE) 0 ;
+  VALUE arg7 = (VALUE) 0 ;
+  VALUE arg8 = (VALUE) 0 ;
+  VALUE arg9 = (VALUE) 0 ;
+  VALUE arg10 = (VALUE) 0 ;
+  VALUE result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 10) || (argc > 10)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 10)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axutil_env_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axutil_env_t *","wsf_wsdl_request_function", 1, argv[0] )); 
+  }
+  arg1 = (axutil_env_t *)(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_axis2_svc_client_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "axis2_svc_client_t *","wsf_wsdl_request_function", 2, argv[1] )); 
+  }
+  arg2 = (axis2_svc_client_t *)(argp2);
+  arg3 = argv[2];
+  arg4 = argv[3];
+  arg5 = argv[4];
+  arg6 = argv[5];
+  arg7 = argv[6];
+  arg8 = argv[7];
+  arg9 = argv[8];
+  arg10 = argv[9];
+  result = (VALUE)wsf_wsdl_request_function(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10);
+  vresult = result;
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_axiom_node_t_pp(int argc, VALUE *argv, VALUE self) {
+  axiom_node_t **result = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (axiom_node_t **)new_axiom_node_t_pp();
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_p_axiom_node_t, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_copy_axiom_node_t_pp(int argc, VALUE *argv, VALUE self) {
+  axiom_node_t *arg1 = (axiom_node_t *) 0 ;
+  axiom_node_t **result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axiom_node_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axiom_node_t *","copy_axiom_node_t_pp", 1, argv[0] )); 
+  }
+  arg1 = (axiom_node_t *)(argp1);
+  result = (axiom_node_t **)copy_axiom_node_t_pp(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_p_axiom_node_t, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_delete_axiom_node_t_pp(int argc, VALUE *argv, VALUE self) {
+  axiom_node_t **arg1 = (axiom_node_t **) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_p_axiom_node_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axiom_node_t **","delete_axiom_node_t_pp", 1, argv[0] )); 
+  }
+  arg1 = (axiom_node_t **)(argp1);
+  delete_axiom_node_t_pp(arg1);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_axiom_node_t_pp_assign(int argc, VALUE *argv, VALUE self) {
+  axiom_node_t **arg1 = (axiom_node_t **) 0 ;
+  axiom_node_t *arg2 = (axiom_node_t *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_p_axiom_node_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axiom_node_t **","axiom_node_t_pp_assign", 1, argv[0] )); 
+  }
+  arg1 = (axiom_node_t **)(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_axiom_node_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "axiom_node_t *","axiom_node_t_pp_assign", 2, argv[1] )); 
+  }
+  arg2 = (axiom_node_t *)(argp2);
+  axiom_node_t_pp_assign(arg1,arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_axiom_node_t_pp_value(int argc, VALUE *argv, VALUE self) {
+  axiom_node_t **arg1 = (axiom_node_t **) 0 ;
+  axiom_node_t *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_p_axiom_node_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axiom_node_t **","axiom_node_t_pp_value", 1, argv[0] )); 
+  }
+  arg1 = (axiom_node_t **)(argp1);
+  result = (axiom_node_t *)axiom_node_t_pp_value(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_axiom_node_t, 0 |  0 );
+  return vresult;
+fail:
   return Qnil;
 }
 
@@ -7476,11 +8788,310 @@ fail:
 }
 
 
+SWIGINTERN VALUE
+_wrap_axiom_namespace_create(int argc, VALUE *argv, VALUE self) {
+  axutil_env_t *arg1 = (axutil_env_t *) 0 ;
+  axis2_char_t *arg2 = (axis2_char_t *) 0 ;
+  axis2_char_t *arg3 = (axis2_char_t *) 0 ;
+  axiom_namespace_t *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int res2 ;
+  char *buf2 = 0 ;
+  int alloc2 = 0 ;
+  int res3 ;
+  char *buf3 = 0 ;
+  int alloc3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axutil_env_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axutil_env_t const *","axiom_namespace_create", 1, argv[0] )); 
+  }
+  arg1 = (axutil_env_t *)(argp1);
+  res2 = SWIG_AsCharPtrAndSize(argv[1], &buf2, NULL, &alloc2);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "axis2_char_t const *","axiom_namespace_create", 2, argv[1] ));
+  }
+  arg2 = (axis2_char_t *)(buf2);
+  res3 = SWIG_AsCharPtrAndSize(argv[2], &buf3, NULL, &alloc3);
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "axis2_char_t const *","axiom_namespace_create", 3, argv[2] ));
+  }
+  arg3 = (axis2_char_t *)(buf3);
+  result = (axiom_namespace_t *)axiom_namespace_create((axutil_env_t const *)arg1,(char const *)arg2,(char const *)arg3);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_axiom_namespace_t, 0 |  0 );
+  if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+  if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+  return vresult;
+fail:
+  if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+  if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_axiom_element_create(int argc, VALUE *argv, VALUE self) {
+  axutil_env_t *arg1 = (axutil_env_t *) 0 ;
+  axiom_node_t *arg2 = (axiom_node_t *) 0 ;
+  axis2_char_t *arg3 = (axis2_char_t *) 0 ;
+  axiom_namespace_t *arg4 = (axiom_namespace_t *) 0 ;
+  axiom_node_t **arg5 = (axiom_node_t **) 0 ;
+  axiom_element_t *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  int res3 ;
+  char *buf3 = 0 ;
+  int alloc3 = 0 ;
+  void *argp4 = 0 ;
+  int res4 = 0 ;
+  void *argp5 = 0 ;
+  int res5 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 5) || (argc > 5)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 5)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axutil_env_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axutil_env_t const *","axiom_element_create", 1, argv[0] )); 
+  }
+  arg1 = (axutil_env_t *)(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_axiom_node_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "axiom_node_t *","axiom_element_create", 2, argv[1] )); 
+  }
+  arg2 = (axiom_node_t *)(argp2);
+  res3 = SWIG_AsCharPtrAndSize(argv[2], &buf3, NULL, &alloc3);
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "axis2_char_t const *","axiom_element_create", 3, argv[2] ));
+  }
+  arg3 = (axis2_char_t *)(buf3);
+  res4 = SWIG_ConvertPtr(argv[3], &argp4,SWIGTYPE_p_axiom_namespace_t, 0 |  0 );
+  if (!SWIG_IsOK(res4)) {
+    SWIG_exception_fail(SWIG_ArgError(res4), Ruby_Format_TypeError( "", "axiom_namespace_t *","axiom_element_create", 4, argv[3] )); 
+  }
+  arg4 = (axiom_namespace_t *)(argp4);
+  res5 = SWIG_ConvertPtr(argv[4], &argp5,SWIGTYPE_p_p_axiom_node_t, 0 |  0 );
+  if (!SWIG_IsOK(res5)) {
+    SWIG_exception_fail(SWIG_ArgError(res5), Ruby_Format_TypeError( "", "axiom_node_t **","axiom_element_create", 5, argv[4] )); 
+  }
+  arg5 = (axiom_node_t **)(argp5);
+  result = (axiom_element_t *)axiom_element_create((axutil_env_t const *)arg1,arg2,(char const *)arg3,arg4,arg5);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_axiom_element_t, 0 |  0 );
+  if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+  return vresult;
+fail:
+  if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_axiom_attribute_create(int argc, VALUE *argv, VALUE self) {
+  axutil_env_t *arg1 = (axutil_env_t *) 0 ;
+  axis2_char_t *arg2 = (axis2_char_t *) 0 ;
+  axis2_char_t *arg3 = (axis2_char_t *) 0 ;
+  axiom_namespace_t *arg4 = (axiom_namespace_t *) 0 ;
+  axiom_attribute_t *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int res2 ;
+  char *buf2 = 0 ;
+  int alloc2 = 0 ;
+  int res3 ;
+  char *buf3 = 0 ;
+  int alloc3 = 0 ;
+  void *argp4 = 0 ;
+  int res4 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 4) || (argc > 4)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 4)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axutil_env_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axutil_env_t const *","axiom_attribute_create", 1, argv[0] )); 
+  }
+  arg1 = (axutil_env_t *)(argp1);
+  res2 = SWIG_AsCharPtrAndSize(argv[1], &buf2, NULL, &alloc2);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "axis2_char_t const *","axiom_attribute_create", 2, argv[1] ));
+  }
+  arg2 = (axis2_char_t *)(buf2);
+  res3 = SWIG_AsCharPtrAndSize(argv[2], &buf3, NULL, &alloc3);
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "axis2_char_t const *","axiom_attribute_create", 3, argv[2] ));
+  }
+  arg3 = (axis2_char_t *)(buf3);
+  res4 = SWIG_ConvertPtr(argv[3], &argp4,SWIGTYPE_p_axiom_namespace_t, 0 |  0 );
+  if (!SWIG_IsOK(res4)) {
+    SWIG_exception_fail(SWIG_ArgError(res4), Ruby_Format_TypeError( "", "axiom_namespace_t *","axiom_attribute_create", 4, argv[3] )); 
+  }
+  arg4 = (axiom_namespace_t *)(argp4);
+  result = (axiom_attribute_t *)axiom_attribute_create((axutil_env_t const *)arg1,(char const *)arg2,(char const *)arg3,arg4);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_axiom_attribute_t, 0 |  0 );
+  if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+  if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+  return vresult;
+fail:
+  if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+  if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_axiom_element_add_attribute(int argc, VALUE *argv, VALUE self) {
+  axiom_element_t *arg1 = (axiom_element_t *) 0 ;
+  axutil_env_t *arg2 = (axutil_env_t *) 0 ;
+  axiom_attribute_t *arg3 = (axiom_attribute_t *) 0 ;
+  axiom_node_t *arg4 = (axiom_node_t *) 0 ;
+  axis2_status_t result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  void *argp4 = 0 ;
+  int res4 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 4) || (argc > 4)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 4)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axiom_element_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axiom_element_t *","axiom_element_add_attribute", 1, argv[0] )); 
+  }
+  arg1 = (axiom_element_t *)(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_axutil_env_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "axutil_env_t const *","axiom_element_add_attribute", 2, argv[1] )); 
+  }
+  arg2 = (axutil_env_t *)(argp2);
+  res3 = SWIG_ConvertPtr(argv[2], &argp3,SWIGTYPE_p_axiom_attribute_t, 0 |  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "axiom_attribute_t *","axiom_element_add_attribute", 3, argv[2] )); 
+  }
+  arg3 = (axiom_attribute_t *)(argp3);
+  res4 = SWIG_ConvertPtr(argv[3], &argp4,SWIGTYPE_p_axiom_node_t, 0 |  0 );
+  if (!SWIG_IsOK(res4)) {
+    SWIG_exception_fail(SWIG_ArgError(res4), Ruby_Format_TypeError( "", "axiom_node_t *","axiom_element_add_attribute", 4, argv[3] )); 
+  }
+  arg4 = (axiom_node_t *)(argp4);
+  result = (axis2_status_t)axiom_element_add_attribute(arg1,(axutil_env_t const *)arg2,arg3,arg4);
+  vresult = SWIG_From_int((int)(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_axiom_element_set_text(int argc, VALUE *argv, VALUE self) {
+  axiom_element_t *arg1 = (axiom_element_t *) 0 ;
+  axutil_env_t *arg2 = (axutil_env_t *) 0 ;
+  axis2_char_t *arg3 = (axis2_char_t *) 0 ;
+  axiom_node_t *arg4 = (axiom_node_t *) 0 ;
+  axis2_status_t result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  int res3 ;
+  char *buf3 = 0 ;
+  int alloc3 = 0 ;
+  void *argp4 = 0 ;
+  int res4 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 4) || (argc > 4)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 4)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axiom_element_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axiom_element_t *","axiom_element_set_text", 1, argv[0] )); 
+  }
+  arg1 = (axiom_element_t *)(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_axutil_env_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "axutil_env_t const *","axiom_element_set_text", 2, argv[1] )); 
+  }
+  arg2 = (axutil_env_t *)(argp2);
+  res3 = SWIG_AsCharPtrAndSize(argv[2], &buf3, NULL, &alloc3);
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "axis2_char_t const *","axiom_element_set_text", 3, argv[2] ));
+  }
+  arg3 = (axis2_char_t *)(buf3);
+  res4 = SWIG_ConvertPtr(argv[3], &argp4,SWIGTYPE_p_axiom_node_t, 0 |  0 );
+  if (!SWIG_IsOK(res4)) {
+    SWIG_exception_fail(SWIG_ArgError(res4), Ruby_Format_TypeError( "", "axiom_node_t *","axiom_element_set_text", 4, argv[3] )); 
+  }
+  arg4 = (axiom_node_t *)(argp4);
+  result = (axis2_status_t)axiom_element_set_text(arg1,(axutil_env_t const *)arg2,(char const *)arg3,arg4);
+  vresult = SWIG_From_int((int)(result));
+  if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+  return vresult;
+fail:
+  if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_axis2_svc_client_add_header(int argc, VALUE *argv, VALUE self) {
+  axis2_svc_client_t *arg1 = (axis2_svc_client_t *) 0 ;
+  axutil_env_t *arg2 = (axutil_env_t *) 0 ;
+  axiom_node_t *arg3 = (axiom_node_t *) 0 ;
+  axis2_status_t result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_axis2_svc_client_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "axis2_svc_client_t *","axis2_svc_client_add_header", 1, argv[0] )); 
+  }
+  arg1 = (axis2_svc_client_t *)(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2,SWIGTYPE_p_axutil_env_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "axutil_env_t const *","axis2_svc_client_add_header", 2, argv[1] )); 
+  }
+  arg2 = (axutil_env_t *)(argp2);
+  res3 = SWIG_ConvertPtr(argv[2], &argp3,SWIGTYPE_p_axiom_node_t, 0 |  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "axiom_node_t *","axis2_svc_client_add_header", 3, argv[2] )); 
+  }
+  arg3 = (axiom_node_t *)(argp3);
+  result = (axis2_status_t)axis2_svc_client_add_header(arg1,(axutil_env_t const *)arg2,arg3);
+  vresult = SWIG_From_int((int)(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
 static swig_type_info _swigt__p_AXIS2_TRANSPORT_ENUMS = {"_p_AXIS2_TRANSPORT_ENUMS", "enum AXIS2_TRANSPORT_ENUMS *|AXIS2_TRANSPORT_ENUMS *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p__axis2_xml_parser_type = {"_p__axis2_xml_parser_type", "enum _axis2_xml_parser_type *|axis2_xml_parser_type *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_axiom_attribute_t = {"_p_axiom_attribute_t", "axiom_attribute_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_axiom_child_element_iterator_t = {"_p_axiom_child_element_iterator_t", "axiom_child_element_iterator_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_axiom_data_handler_t = {"_p_axiom_data_handler_t", "axiom_data_handler_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_axiom_element_t = {"_p_axiom_element_t", "axiom_element_t *", 0, 0, (void*)0, 0};
@@ -7512,6 +9123,7 @@ static swig_type_info _swigt__p_fault_data = {"_p_fault_data", "struct fault_dat
 static swig_type_info _swigt__p_int = {"_p_int", "axis2_bool_t *|int *|axis2_scope_t *|axis2_status_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_neethi_options_t = {"_p_neethi_options_t", "neethi_options_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_neethi_policy_t = {"_p_neethi_policy_t", "neethi_policy_t *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_p_axiom_node_t = {"_p_p_axiom_node_t", "axiom_node_t **", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_p_void = {"_p_p_void", "void **", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_password_callback_fn = {"_p_password_callback_fn", "password_callback_fn *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_rampart_context_t = {"_p_rampart_context_t", "rampart_context_t *", 0, 0, (void*)0, 0};
@@ -7522,6 +9134,7 @@ static swig_type_info _swigt__p_wsf_wsdl_data_t = {"_p_wsf_wsdl_data_t", "wsf_ws
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_AXIS2_TRANSPORT_ENUMS,
   &_swigt__p__axis2_xml_parser_type,
+  &_swigt__p_axiom_attribute_t,
   &_swigt__p_axiom_child_element_iterator_t,
   &_swigt__p_axiom_data_handler_t,
   &_swigt__p_axiom_element_t,
@@ -7553,6 +9166,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_int,
   &_swigt__p_neethi_options_t,
   &_swigt__p_neethi_policy_t,
+  &_swigt__p_p_axiom_node_t,
   &_swigt__p_p_void,
   &_swigt__p_password_callback_fn,
   &_swigt__p_rampart_context_t,
@@ -7563,6 +9177,7 @@ static swig_type_info *swig_type_initial[] = {
 
 static swig_cast_info _swigc__p_AXIS2_TRANSPORT_ENUMS[] = {  {&_swigt__p_AXIS2_TRANSPORT_ENUMS, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p__axis2_xml_parser_type[] = {  {&_swigt__p__axis2_xml_parser_type, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_axiom_attribute_t[] = {  {&_swigt__p_axiom_attribute_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_axiom_child_element_iterator_t[] = {  {&_swigt__p_axiom_child_element_iterator_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_axiom_data_handler_t[] = {  {&_swigt__p_axiom_data_handler_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_axiom_element_t[] = {  {&_swigt__p_axiom_element_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -7594,6 +9209,7 @@ static swig_cast_info _swigc__p_fault_data[] = {  {&_swigt__p_fault_data, 0, 0, 
 static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_neethi_options_t[] = {  {&_swigt__p_neethi_options_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_neethi_policy_t[] = {  {&_swigt__p_neethi_policy_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_p_axiom_node_t[] = {  {&_swigt__p_p_axiom_node_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_p_void[] = {  {&_swigt__p_p_void, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_password_callback_fn[] = {  {&_swigt__p_password_callback_fn, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_rampart_context_t[] = {  {&_swigt__p_rampart_context_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -7604,6 +9220,7 @@ static swig_cast_info _swigc__p_wsf_wsdl_data_t[] = {  {&_swigt__p_wsf_wsdl_data
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_AXIS2_TRANSPORT_ENUMS,
   _swigc__p__axis2_xml_parser_type,
+  _swigc__p_axiom_attribute_t,
   _swigc__p_axiom_child_element_iterator_t,
   _swigc__p_axiom_data_handler_t,
   _swigc__p_axiom_element_t,
@@ -7635,6 +9252,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_int,
   _swigc__p_neethi_options_t,
   _swigc__p_neethi_policy_t,
+  _swigc__p_p_axiom_node_t,
   _swigc__p_p_void,
   _swigc__p_password_callback_fn,
   _swigc__p_rampart_context_t,
@@ -7902,14 +9520,6 @@ SWIGEXPORT void Init_WSFC(void) {
   
   SWIG_RubyInitializeTrackings();
   rb_define_const(mWSFC, "WSF_CP_SEC_TOKEN", SWIG_FromCharPtr("security_token"));
-  rb_define_module_function(mWSFC, "wsf_set_security_token_data_to_rampart_context", _wrap_wsf_set_security_token_data_to_rampart_context, -1);
-  rb_define_module_function(mWSFC, "handle_client_security", _wrap_handle_client_security, -1);
-  rb_define_module_function(mWSFC, "wsf_wsdl_request_function_mem_free_return", _wrap_wsf_wsdl_request_function_mem_free_return, -1);
-  rb_define_module_function(mWSFC, "wsf_wsdl_convert_params_to_wsdl_data", _wrap_wsf_wsdl_convert_params_to_wsdl_data, -1);
-  rb_define_module_function(mWSFC, "hash_callback", _wrap_hash_callback, -1);
-  rb_define_module_function(mWSFC, "wsf_wsdl_convert_wsdl_data_to_hash", _wrap_wsf_wsdl_convert_wsdl_data_to_hash, -1);
-  rb_define_module_function(mWSFC, "wsf_wsdl_convert_response_to_ruby", _wrap_wsf_wsdl_convert_response_to_ruby, -1);
-  rb_define_module_function(mWSFC, "wsf_wsdl_request_function", _wrap_wsf_wsdl_request_function, -1);
   rb_define_const(mWSFC, "AXIS2_LOG_LEVEL_CRITICAL", SWIG_From_int((int)(AXIS2_LOG_LEVEL_CRITICAL)));
   rb_define_const(mWSFC, "AXIS2_LOG_LEVEL_ERROR", SWIG_From_int((int)(AXIS2_LOG_LEVEL_ERROR)));
   rb_define_const(mWSFC, "AXIS2_LOG_LEVEL_WARNING", SWIG_From_int((int)(AXIS2_LOG_LEVEL_WARNING)));
@@ -8189,6 +9799,7 @@ SWIGEXPORT void Init_WSFC(void) {
   rb_define_const(mWSFC, "WSF_ELEMENT_LN_SOAP11_FAULT_REASON", SWIG_FromCharPtr("faultstring"));
   rb_define_const(mWSFC, "WSF_ELEMENT_LN_SOAP11_FAULT_DETAIL", SWIG_FromCharPtr("detail"));
   rb_define_const(mWSFC, "WSF_ELEMENT_LN_SOAP11_FAULT_ROLE", SWIG_FromCharPtr("faultactor"));
+  rb_define_module_function(mWSFC, "wsf_axiom_data_handler_get_content", _wrap_wsf_axiom_data_handler_get_content, -1);
   rb_define_module_function(mWSFC, "axiom_xml_reader_create_for_memory_new", _wrap_axiom_xml_reader_create_for_memory_new, -1);
   rb_define_module_function(mWSFC, "wsf_axiom_element_get_first_node", _wrap_wsf_axiom_element_get_first_node, -1);
   rb_define_module_function(mWSFC, "wsf_get_last_soap_fault_base_node", _wrap_wsf_get_last_soap_fault_base_node, -1);
@@ -8212,7 +9823,6 @@ SWIGEXPORT void Init_WSFC(void) {
   cFault_data_t.destroy = (void (*)(void *)) free_fault_data_t;
   cFault_data_t.trackObjects = 0;
   rb_define_module_function(mWSFC, "wsf_last_soap_fault_exception", _wrap_wsf_last_soap_fault_exception, -1);
-  rb_define_module_function(mWSFC, "wsf_axiom_data_handler_get_content", _wrap_wsf_axiom_data_handler_get_content, -1);
   rb_define_module_function(mWSFC, "wsf_set_module_param_value", _wrap_wsf_set_module_param_value, -1);
   rb_define_module_function(mWSFC, "wsf_axiom_node_get_data_element", _wrap_wsf_axiom_node_get_data_element, -1);
   rb_define_module_function(mWSFC, "wsf_axiom_node_get_text_element", _wrap_wsf_axiom_node_get_text_element, -1);
@@ -8230,6 +9840,27 @@ SWIGEXPORT void Init_WSFC(void) {
   rb_define_module_function(mWSFC, "wsf_rampart_context_set_receiver_certificate", _wrap_wsf_rampart_context_set_receiver_certificate, -1);
   rb_define_module_function(mWSFC, "wsf_rampart_context_set_prv_key", _wrap_wsf_rampart_context_set_prv_key, -1);
   rb_define_module_function(mWSFC, "wsf_rampart_context_set_certificate", _wrap_wsf_rampart_context_set_certificate, -1);
+  rb_define_module_function(mWSFC, "wsf_util_find_xop_content_and_convert_to_base64", _wrap_wsf_util_find_xop_content_and_convert_to_base64, -1);
+  rb_define_module_function(mWSFC, "wsf_set_security_data_to_rampart_context", _wrap_wsf_set_security_data_to_rampart_context, -1);
+  rb_define_module_function(mWSFC, "handle_client_security", _wrap_handle_client_security, -1);
+  rb_define_module_function(mWSFC, "wsf_set_security_token_data_to_rampart_context", _wrap_wsf_set_security_token_data_to_rampart_context, -1);
+  rb_define_module_function(mWSFC, "wsf_handle_client_security_for_ruby", _wrap_wsf_handle_client_security_for_ruby, -1);
+  rb_define_module_function(mWSFC, "wsf_wsdl_request_function_mem_free_return", _wrap_wsf_wsdl_request_function_mem_free_return, -1);
+  rb_define_module_function(mWSFC, "wsf_wsdl_convert_params_to_wsdl_data", _wrap_wsf_wsdl_convert_params_to_wsdl_data, -1);
+  rb_define_module_function(mWSFC, "wsf_evaluate_security_token_and_insert_to_hash", _wrap_wsf_evaluate_security_token_and_insert_to_hash, -1);
+  rb_define_module_function(mWSFC, "wsf_evaluate_policy_options_and_insert_to_hash", _wrap_wsf_evaluate_policy_options_and_insert_to_hash, -1);
+  rb_define_module_function(mWSFC, "wsf_evaluate_policy_and_insert_to_hash", _wrap_wsf_evaluate_policy_and_insert_to_hash, -1);
+  rb_define_module_function(mWSFC, "wsf_evaluate_client_options_and_insert_to_hash", _wrap_wsf_evaluate_client_options_and_insert_to_hash, -1);
+  rb_define_module_function(mWSFC, "hash_options_callback", _wrap_hash_options_callback, -1);
+  rb_define_module_function(mWSFC, "hash_callback", _wrap_hash_callback, -1);
+  rb_define_module_function(mWSFC, "wsf_wsdl_convert_wsdl_data_to_hash", _wrap_wsf_wsdl_convert_wsdl_data_to_hash, -1);
+  rb_define_module_function(mWSFC, "wsf_wsdl_convert_response_to_ruby", _wrap_wsf_wsdl_convert_response_to_ruby, -1);
+  rb_define_module_function(mWSFC, "wsf_wsdl_request_function", _wrap_wsf_wsdl_request_function, -1);
+  rb_define_module_function(mWSFC, "new_axiom_node_t_pp", _wrap_new_axiom_node_t_pp, -1);
+  rb_define_module_function(mWSFC, "copy_axiom_node_t_pp", _wrap_copy_axiom_node_t_pp, -1);
+  rb_define_module_function(mWSFC, "delete_axiom_node_t_pp", _wrap_delete_axiom_node_t_pp, -1);
+  rb_define_module_function(mWSFC, "axiom_node_t_pp_assign", _wrap_axiom_node_t_pp_assign, -1);
+  rb_define_module_function(mWSFC, "axiom_node_t_pp_value", _wrap_axiom_node_t_pp_value, -1);
   rb_define_module_function(mWSFC, "axutil_env_create_all", _wrap_axutil_env_create_all, -1);
   rb_define_module_function(mWSFC, "axis2_endpoint_ref_create", _wrap_axis2_endpoint_ref_create, -1);
   rb_define_module_function(mWSFC, "axis2_options_set_to", _wrap_axis2_options_set_to, -1);
@@ -8305,5 +9936,11 @@ SWIGEXPORT void Init_WSFC(void) {
   rb_define_module_function(mWSFC, "rampart_context_set_password_type", _wrap_rampart_context_set_password_type, -1);
   rb_define_module_function(mWSFC, "rampart_context_set_ttl", _wrap_rampart_context_set_ttl, -1);
   rb_define_module_function(mWSFC, "rampart_context_set_pwcb_function", _wrap_rampart_context_set_pwcb_function, -1);
+  rb_define_module_function(mWSFC, "axiom_namespace_create", _wrap_axiom_namespace_create, -1);
+  rb_define_module_function(mWSFC, "axiom_element_create", _wrap_axiom_element_create, -1);
+  rb_define_module_function(mWSFC, "axiom_attribute_create", _wrap_axiom_attribute_create, -1);
+  rb_define_module_function(mWSFC, "axiom_element_add_attribute", _wrap_axiom_element_add_attribute, -1);
+  rb_define_module_function(mWSFC, "axiom_element_set_text", _wrap_axiom_element_set_text, -1);
+  rb_define_module_function(mWSFC, "axis2_svc_client_add_header", _wrap_axis2_svc_client_add_header, -1);
 }
 

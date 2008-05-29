@@ -21,6 +21,7 @@ a. Requirements
    You need to download following dependency libraries:
 
    libxml2 binary distribution    - (Libxml2 2.6.30)
+   libxslt binary distribution    - (Libxslt 1.1.22)
    iconv binary distribution      - (Iconv   1.9.2)
    OpenSSL binary distribution    - (openssl 0.98d, MSI distribution)
    Ruby Binary                    - (Ruby    1.8.6, One click installer is prefereble)
@@ -29,7 +30,7 @@ a. Requirements
 
    In addition you need to have visual studio installed on your system.
 
-   obtain libxml2 and iconv win32 binaries from [1].
+   obtain libxml2, libxslt and iconv win32 binaries from [1].
    obtain OpenSSL binary from [2] [the build system assumes that you install openssl from msi].
    obtain MySql Server from [3].
    obtain Ruby Bianry from [4].
@@ -40,18 +41,19 @@ a. Requirements
    [4] http://www.ruby-lang.org/en/downloads/
 
    NOTE:
-    WSO2-WSF-Ruby-1.0.0 Win32 Binary Will be compiled using following version of dependency libraries.
+    WSO2-WSF-Ruby-1.1.0 Win32 Binary Will be compiled using following version of dependency libraries.
     
     1. Ruby    1.8.6
     2. Libxml2 2.6.30
     3. Iconv   1.9.2 
     4. openssl .98d (MSI)   
+    5. Libxslt 1.1.22
         
 b. Installing WSO2 WSF/Ruby as a Ruby extension.
 
     Now you should have the wso2-wsf-ruby binary pack with following structure.
 
-    wso2-wsf-ruby-bin-1.0.0-win32
+    wso2-wsf-ruby-bin-1.1.0-win32
                 |  
                 +-- wsf_c
                 |

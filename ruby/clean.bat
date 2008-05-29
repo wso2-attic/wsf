@@ -1,14 +1,25 @@
-@if exist wsf_c\wso2-wsf-c-bin-1.2.0 rmdir /S /Q wsf_c\wso2-wsf-c-bin-1.2.0
+@echo off
 
-@if exist wso2-wsf-ruby-bin-1.0.0-win32 rmdir /S /Q wso2-wsf-ruby-bin-1.0.0-win32
+@call init.bat
+@call .\wsf_c\build\init.bat
 
-@if exist wsf_c\axis2c\build\axis2c-bin-1.2.0-win32 rmdir /s /q wsf_c\axis2c\build\axis2c-bin-1.2.0-win32
+@cd wsf_c
+
+@call clean.bat
+
+@cd ..
+
+@if exist wsf_c\wso2-wsf-c-bin-%WSFC_VERSION% rmdir /S /Q wsf_c\wso2-wsf-c-bin-%WSFC_VERSION%
+
+@if exist wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32 rmdir /S /Q wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32
+
+@if exist wsf_c\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32 rmdir /s /q wsf_c\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32
 
 @if exist wsf_c\axis2c\build\deploy rmdir /s /q wsf_c\axis2c\build\deploy
 
 @if exist wsf_c\axis2c\build\win32\int.msvc rmdir /s /q wsf_c\axis2c\build\win32\int.msvc
 
-@if exist wsf_c\rampartc\build\rampartc-1.0.0 rmdir /s /q wsf_c\rampartc\build\rampartc-1.0.0
+@if exist wsf_c\rampartc\build\rampartc-%RAMPARTC_VERSION% rmdir /s /q wsf_c\rampartc\build\rampartc-%RAMPARTC_VERSION%
 
 @if exist wsf_c\rampartc\build\win32\int.msvc rmdir /s /q wsf_c\rampartc\build\win32\int.msvc
 
@@ -18,23 +29,21 @@
 
 @if exist src\intdir rmdir /s /q src\intdir
 
-@del *.def
+@del /Q *.obj
 
-@del *.obj
+@del /Q /F *.pdb
+ 
+@del /Q /F *.lib
 
-@del *.pdb
+@del /Q /F mkmf.log
 
-@del *.lib
+@del /Q /F *.manifest
 
-@del mkmf.log
+@del /Q /F makefile
 
-@del *.manifest
+@del /Q /F *.dll
 
-@del makefile
+@del /Q /F *.so
 
-@del *.dll
-
-@del *.so
-
-@del *.exp
+@del /Q /F *.exp
 

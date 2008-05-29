@@ -1,21 +1,22 @@
 
-        WSO2 WSF/Ruby
-        =============
+WSO2 Web Services Framework for Ruby (WSO2 WSF/Ruby)
+====================================================
 
-VERSION
--------
-1.0.0
+LATEST VERSION
+--------------
+Details of the latest version can be found on the WSO2 WSF/Ruby project
+page under http://wso2.org/projects/wsf/ruby
 
 
 INTRODUCTION
 ------------
-- WSF/Ruby is the Ruby language extension to WSO2 WSF/C
-  [http://www.wso2.org/projects/wsf/c]. This version enables you to 
-  consume/provide Web Services both with REST and with the power of
-  WS-* stack including WS-Reliable Messaging, WS-Security, WS-Addressing
-  and MTOM Attachments. WSF/Ruby distinguishes itself being the first and 
-  the only Web Services Framework in Ruby to support this stack of 
-  WS specifications. (See below for the complete Features list) 
+WSF/Ruby is the Ruby language extension to WSO2 WSF/C
+[http://www.wso2.org/projects/wsf/c]. This version enables you to 
+consume/provide Web Services both with REST and with the power of
+WS-* stack including WS-Reliable Messaging, WS-Security, WS-Addressing
+and MTOM Attachments. WSF/Ruby distinguishes itself being the first and 
+the only Web Services Framework in Ruby to support this stack of 
+WS specifications. (See below for the complete Features list) 
 
 
 FEATURES
@@ -23,12 +24,41 @@ FEATURES
   - Support for REST
   - Support for SOAP 1.1
   - Support for SOAP 1.2
+  - Support for WSDL 1.1
+  - Support for WSDL 2.0
   - Support for SOAP MTOM
   - Support for WS-Addressing
   - Support for WS-Security (with Rampart)
   - Support for WS-Policy
   - Support for WS-SecurityPolicy
   - Support for WS-ReliableMessaging (with Sandesha)
+
+
+INSTALLATION
+------------
+
+Please refer README.INSTALL(or README.INSTALL_WIN32, for Windows platform)
+
+LICENCING
+---------
+
+WSO2 WSF/Ruby is released under Apache Licence Version 2.0
+Please see the file called LICENCE.
+
+CONTACTS
+--------
+
+  o If you want freely available support for using WSO2 WSF/Ruby please
+    join the WSO2 WSF/Ruby user community by subscribing to users mailing
+    list, wsf-ruby-user@wso2.org by sending an email to 
+    'wsf-ruby-user-request@wso2.org' with the subject 'subscribe'.
+
+  o If you have a bug report for WSO2 WSF/Ruby please go log a Jira issue
+    at https://wso2.org/jira/browse/WSFRUBY
+
+  o If you want to participate in actively developing WSO2 WSF/Ruby please
+    subscribe to the 'wsf-c-dev@wso2.org' by sending and email to 
+    wsf-c-dev-request@wso2.org with the subject 'subscribe'.
 
 
 TRAINING

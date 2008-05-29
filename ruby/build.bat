@@ -1,5 +1,7 @@
 @echo off
 
+@call vcvars32.bat /nologo
+
 @echo.
 
 @echo Building WSF Client...
