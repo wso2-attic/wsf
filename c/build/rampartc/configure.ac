@@ -142,12 +142,7 @@ AC_CONFIG_FILES([Makefile \
     src/core/Makefile \
     src/trust/Makefile \
     src/util/Makefile \
-    src/secconv/Makefile \
-    test/Makefile \
-    test/omxmlsec/Makefile \
-    test/c14n/Makefile \
-    test/openssl/Makefile 
-    test/openssl/sign/Makefile 
+    src/secconv/Makefile 
     ])
     
 AC_OUTPUT
