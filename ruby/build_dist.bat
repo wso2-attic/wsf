@@ -71,7 +71,7 @@ rem @if exist wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsdlc\conf rmdir /S /Q w
 
 @mkdir wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsdlc\conf
 
-@if exist wsdlc\conf\wsdlc_type_map.xml copy /Y wsdlc\conf\wsdlc_type_map.xml wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsdlc\conf\type_map.xml
+@if exist conf\wsdlc_type_map.xml copy /Y conf\wsdlc_type_map.xml wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsdlc\conf\type_map.xml
 
 @if exist wsdlc\xslt xcopy /Y /I /Q /E wsdlc\xslt wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsdlc\xslt
 
