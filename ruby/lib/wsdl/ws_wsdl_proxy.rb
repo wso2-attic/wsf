@@ -1,4 +1,5 @@
 require 'rexml/document'
+require 'rbconfig'
 
 include REXML
 
@@ -13,8 +14,7 @@ module WSO2
         @svc_client = service_client
         @options = client_options
         @wsdl = wsdl
-        @type_map = "C:/type_map.xml"
-        @xslt_location = "C:/"
+        @ruby_home = ::Config::CONFIG["WSF_RUBY_HOME"].to_s
         @service_name = service_name
         @port_name = port_name
       end
@@ -30,8 +30,7 @@ module WSO2
                                                                       name.to_s, arg,
                                                                       @service_name,
                                                                       @port_name,
-                                                                      @type_map,
-                                                                      @xslt_location)
+                                                                      @ruby_home)
             return result
           else
             puts "only Hash is supported"
