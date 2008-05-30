@@ -869,11 +869,11 @@ wsf_xml_msg_recv_invoke_wsmsg (
 			}
             if (*ce) 
 			{
-				/* call constuctor function */
+				/* call constructor function */
 				zval *tmp_cls_obj;
 				MAKE_STD_ZVAL(tmp_cls_obj);
 				object_init_ex(tmp_cls_obj, *ce);
-                char *magic_func_name = WS_MAGIC_FUNC_CALL;
+                
 
 				if(zend_hash_exists(&Z_OBJCE_P(tmp_cls_obj)->function_table, 
 					ZEND_CONSTRUCTOR_FUNC_NAME, sizeof(ZEND_CONSTRUCTOR_FUNC_NAME)))
@@ -910,7 +910,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
 				
                 ft = &(*ce)->function_table;
 				if(zend_hash_exists(ft, op_name, strlen(op_name)) == SUCCESS ||
-                       zend_hash_exists(ft, magic_func_name, strlen(magic_func_name)) == SUCCESS)
+                       zend_hash_exists(ft, WS_MAGIC_FUNC_CALL, strlen(WS_MAGIC_FUNC_CALL)) == SUCCESS)
 				{
 					if (call_user_function(NULL, &tmp_cls_obj, &func, &retval, 1, params TSRMLS_CC) != SUCCESS) 
 					{
