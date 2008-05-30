@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="wso2" targetNamespace="http://www.wso2.org/php"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://www.wso2.org/php">
+  
+  <wsdl:types>
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"	targetNamespace="http://www.wso2.org/php">
+      <xsd:element name="orderInfo">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="productName"	type="xsd:string"></xsd:element>
+            <xsd:element name="quantity" type="xsd:float"></xsd:element>
+            <xsd:element name="date" type="xsd:dateTime"></xsd:element>
+            <xsd:element name="orderNo" type="xsd:int">
+            </xsd:element>
+            <xsd:sequence></xsd:sequence>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="orderDetails">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="shipTo" type="tns:address">
+            </xsd:element>
+            <xsd:element name="billTo" type="tns:address">
+            </xsd:element>
+            <xsd:element name="product"
+							type="tns:productInfo">
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="address">
+        <xsd:sequence>
+          <xsd:element name="name" type="xsd:string"></xsd:element>
+          <xsd:element name="street" type="xsd:string"></xsd:element>
+          <xsd:element name="city" type="xsd:string"></xsd:element>
+          <xsd:element name="state" type="xsd:string"></xsd:element>
+          <xsd:element name="zip" type="xsd:decimal"></xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="productInfo">
+        <xsd:sequence>
+          <xsd:element name="productId" type="xsd:int"></xsd:element>
+          <xsd:element name="shippingDate" type="xsd:dateTime"></xsd:element>
+          <xsd:element name="status" type="xsd:boolean"></xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+
+  <wsdl:message name="QueryPurchaseOrderRequest">
+    <wsdl:part name="QueryPurchaseOrderRequest"	element="tns:orderInfo">
+    </wsdl:part>
+  </wsdl:message>
+  
+  <wsdl:message name="QueryPurchaseOrderResponse">
+    <wsdl:part name="QueryPurchaseOrderResponse" element="tns:orderDetails">
+    </wsdl:part>
+  </wsdl:message>
+
+  <wsdl:portType name="ShippingTradePortType">
+    <wsdl:operation name="QueryPurchaseOrder">
+      <wsdl:input message="tns:QueryPurchaseOrderRequest"></wsdl:input>
+      <wsdl:output message="tns:QueryPurchaseOrderResponse"></wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+
+  <wsdl:binding name="ShippingTradeSoapBinding"	type="tns:ShippingTradePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="QueryPurchaseOrder">
+      <soap:operation	soapAction="http://www.wso2.org/php/QueryPurchaseOrder" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+
+  <wsdl:service name="ShippingTradeService">
+    <wsdl:port name="ShippingTradePort"	binding="tns:ShippingTradeSoapBinding">
+      <soap:address location="http://localhost:3000/wsdl11_service/"></soap:address>
+    </wsdl:port>
+  </wsdl:service>
+
+</wsdl:definitions>

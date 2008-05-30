@@ -28,7 +28,7 @@ class Wsdl20ServiceController < ApplicationController
       operations = {"GetPrice" => "GetPriceFunction"}
     
       wss = WSO2::WSF::WSService.new({"operations" => operations,
-										                                     "wsdl" => "C:/sample_wsdl_20.wsdl"})
+										                                     "wsdl" => "sample_wsdl_20.wsdl"})
 
       res = wss.reply(request, response);
 

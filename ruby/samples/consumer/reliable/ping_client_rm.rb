@@ -41,7 +41,7 @@ begin
 
   client.send(message)
 
-  sleep(10)
+  sleep(60)
 rescue WSFault => wsfault
   puts "Client invocation FAILED !!!\n"
   puts "WSFault : "

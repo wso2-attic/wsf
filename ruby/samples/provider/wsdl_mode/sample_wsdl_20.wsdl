@@ -1,0 +1,69 @@
+<description xmlns="http://www.w3.org/ns/wsdl"
+	xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+	xmlns:tns="http://www.example.org/sample/"
+	targetNamespace="http://www.example.org/sample/">
+
+	<types>
+		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.example.org/sample/">
+			<xsd:element name="GetPriceRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="ProductType"
+							type="xsd:string" />
+						<xsd:element name="ItemNo" type="xsd:int" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="GetPriceResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="Price" type="xsd:float" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="QueryItemRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="ProductName"
+							type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="QueryResult">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="ProductID" type="xsd:int" />
+						<xsd:element name="manufacuterDate"
+							type="xsd:dateTime" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+	</types>
+	<interface name="MyServicePort">
+		<operation name="GetPrice"
+			pattern="http://www.w3.org/ns/wsdl/in-out">
+			<input element="tns:GetPriceRequest" />
+			<output element="tns:GetPriceResponse" />
+		</operation>
+		<operation name="QueryItem"
+			pattern="http://www.w3.org/ns/wsdl/in-out">
+			<input element="tns:QueryItemRequest" />
+			<output element="tns:QueryResult" />
+		</operation>
+	</interface>
+	<binding xmlns:ns_1="http://www.w3.org/ns/wsdl/soap"
+		name="MyServiceBinding" interface="tns:MyServicePort"
+		type="http://www.w3.org/ns/wsdl/soap" ns_1:version="1.1"
+		ns_1:protocol="http://www.w3.org/2006/01/soap11/bindings/HTTP/">
+		<operation ref="tns:GetPrice"
+			ns_1:action="http://www.example.org/sample/GetPrice" />
+		<operation ref="tns:QueryItem"
+			ns_1:action="http://www.example.org/sample/QueryItem" />
+	</binding>
+	<service name="MyService" interface="tns:MyServicePort">
+		<endpoint name="MyServicePort" binding="tns:MyServiceBinding"
+			address="http://localhost:3000/wsdl20_service/" />
+	</service>
+</description>

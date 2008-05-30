@@ -41,7 +41,7 @@ class Wsdl11ServiceController < ApplicationController
       operations = {"QueryPurchaseOrder" => "QueryPurchaseOrderFunction"}
     
       wss = WSO2::WSF::WSService.new({"operations" => operations,
-										                                     "wsdl" => "C:/sample_wsdl_11_ruby.wsdl"})
+										                                     "wsdl" => "sample_wsdl_11_ruby.wsdl"})
 
       res = wss.reply(request, response);
 

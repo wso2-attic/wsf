@@ -56,7 +56,7 @@ begin
   puts "Sending OM 3 : " << "\n" << req_payload_string << "\n" 
   client.send(message3)
 
-  sleep(20)
+  sleep(40)
 rescue WSFault => wsfault
   puts "Client invocation FAILED !!!\n"
   puts "WSFault : "

@@ -32,7 +32,7 @@ def print_hash(hash)
 
 begin
   LOG_FILE_NAME = "ruby_echo_client.log" 
-  END_POINT = "C:/sample_wsdl_20.wsdl"
+  END_POINT = "sample_wsdl_20.wsdl"
 
   client = WSClient.new({"wsdl" => END_POINT}, LOG_FILE_NAME)
   

@@ -50,4 +50,6 @@ if FileTest.directory?(destination)
     
     FileUtils.copy_file("wsdl_mode/wsdl11_service_controller.rb", destination + "/wsdl11_service_controller.rb");
     FileUtils.copy_file("wsdl_mode/wsdl20_service_controller.rb", destination + "/wsdl20_service_controller.rb");
+    FileUtils.copy_file("wsdl_mode/sample_wsdl_11.wsdl", destination + "/sample_wsdl_11.wsdl");
+    FileUtils.copy_file("wsdl_mode/sample_wsdl_20.wsdl", destination + "/sample_wsdl_20.wsdl");
 end

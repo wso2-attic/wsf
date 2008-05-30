@@ -54,7 +54,7 @@ begin
     puts "Client invocation FAILED !!!"
   end
 
-  sleep(10)
+  sleep(30)
 rescue WSFault => wsfault
   puts "Client invocation FAILED !!!\n"
   puts "WSFault : "
