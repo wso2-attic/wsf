@@ -65,7 +65,11 @@ rem @if exist xcopy /Y /I /Q /E scripts wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win3
 
 @cd wsdlc
 
-@cd call build.bat
+@call build.bat
+
+@copy lib\wsdlc.lib ..\wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsf_c\lib\wsdlc.lib
+
+@copy lib\wsdlc.dll ..\wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsf_c\lib\wsdlc.dll
 
 @cd ..
 
