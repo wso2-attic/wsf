@@ -35,7 +35,11 @@ rem @call clean.bat
 
 @if exist wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsf_c\modules\logging rmdir /S /Q wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsf_c\modules\logging
 
-rem @if exist xcopy /Y /I /Q /E scripts wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\scripts
+rem @if exist wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsdlc\xslt rmdir /S /Q wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsdlc\xslt
+
+rem @if exist wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsdlc\conf rmdir /S /Q wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsdlc\conf
+
+@if exist wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsdlc rmdir /S /Q wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsdlc
 
 @if exist lib xcopy /Y /I /Q /E lib wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\lib
 
@@ -62,6 +66,14 @@ rem @if exist xcopy /Y /I /Q /E scripts wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win3
 @if exist install.rb copy /Y install.rb wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32
 
 @if exist find_rbconfig.rb copy /Y find_rbconfig.rb wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32
+
+@mkdir wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsdlc
+
+@mkdir wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsdlc\conf
+
+@if exist wsdlc\conf\wsdlc_type_map.xml copy /Y wsdlc\conf\wsdlc_type_map.xml wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsdlc\conf\type_map.xml
+
+@if exist wsdlc\xslt xcopy /Y /I /Q /E wsdlc\xslt wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsdlc\xslt
 
 @cd wsdlc
 

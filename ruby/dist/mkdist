@@ -49,6 +49,9 @@ function sync_content
 	rsync -r --exclude=.svn --exclude=*.o --exclude=Makefile --exclude=*.log --exclude=*.so ../../wsdlc .
 	echo "synchronizing wsservice ... done"
 	
+	rsync ../../conf/wsdlc_type_map.xml ./wsdlc/conf/type_map.xml
+	echo "synchronizing type map ... done"
+	
 	rsync -r --exclude=.svn ../../samples .
 	echo "synchronizing samples ... done"
 	
