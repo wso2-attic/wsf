@@ -14,6 +14,9 @@ function sync_content
 	rsync ../../find_config_h.rb .
 	echo "synchronizing find_config_h.rb ... done"
 
+	rsync ../../get_wsfc_home.rb .
+	echo "synchronizing get_wsfc_home.rb ... done"
+
 	rsync ../../extconf.rb .
 	echo "synchronizing extconf.rb ... done"
 
