@@ -236,15 +236,13 @@ wsservice_initialize(VALUE self, VALUE options)
         }
         if(wsdl != Qnil)
         {
-            VALUE xslt_location = Qnil;
-			VALUE type_map = Qnil;
-            VALUE service_name_value = Qnil;
+            VALUE wsf_ruby_home = Qnil;
+			VALUE service_name_value = Qnil;
             VALUE port_name_value = Qnil;
             axis2_char_t* service_name = NULL;
             axis2_char_t* port_name = NULL;
 
-			axis2_char_t* xslt_location_string = NULL;
-			axis2_char_t* type_map_string = NULL;
+			axis2_char_t* wsf_ruby_home_string = NULL;
 			axis2_char_t* wsdl_location_string = NULL;
 			wsf_wsdl_info_t* wsdl_info = NULL;
             axutil_hash_t* script_service_user_options = NULL;
@@ -254,21 +252,14 @@ wsservice_initialize(VALUE self, VALUE options)
 
 			rb_require("rbconfig");
     
-			xslt_location = rb_eval_string("Config::CONFIG['WSF_XSLT_LOCATION'] ");
-			if(xslt_location == Qnil)
+			wsf_ruby_home = rb_eval_string("Config::CONFIG['WSF_RUBY_HOME'] ");
+			if(wsf_ruby_home == Qnil)
 			{
 				rb_raise(rb_eException, 
-                       "Please set WSF_XSLT_LOCATION in rbconfig.rb, I cannot continue without it");
+                       "Please set WSF_RUBY_HOME in rbconfig.rb, I cannot continue without it");
 			}
 
-			type_map = rb_eval_string("Config::CONFIG['WSF_TYPE_MAP'] ");
-			if(type_map == Qnil)
-			{
-				rb_raise(rb_eException, 
-                         "Please set WSF_TYPE_MAP in rbconfig.rb, I cannot continue without it");
-			}
-
-            service_name_value = rb_hash_aref(options, ID2SYM(rb_intern(WS_SERVICE_NAME)));
+			service_name_value = rb_hash_aref(options, ID2SYM(rb_intern(WS_SERVICE_NAME)));
             if(service_name_value == Qnil)
             {
                 service_name_value = rb_hash_aref(options, rb_str_new2(WS_SERVICE_NAME));
@@ -280,10 +271,8 @@ wsservice_initialize(VALUE self, VALUE options)
                 port_name_value = rb_hash_aref(options, rb_str_new2(WS_PORT_NAME));
             }
 
-            xslt_location_string = 
-                (axis2_char_t*)axutil_strdup(ws_env_svr, RSTRING(xslt_location)->ptr);
-
-			type_map_string = (axis2_char_t*)axutil_strdup(ws_env_svr, RSTRING(type_map)->ptr);
+            wsf_ruby_home_string = 
+                (axis2_char_t*)axutil_strdup(ws_env_svr, RSTRING(wsf_ruby_home)->ptr);
 
 			wsdl_location_string = (axis2_char_t*)axutil_strdup(ws_env_svr, RSTRING(wsdl)->ptr);
 
@@ -343,8 +332,7 @@ wsservice_initialize(VALUE self, VALUE options)
 
 			if (wsf_wsdl_mode_initialize_for_service(ws_env_svr, 
                                                      wsdl_location_string, 
-                                                     type_map_string, 
-                                                     xslt_location_string, 
+                                                     wsf_ruby_home_string, 
                                                      svc_info->service,
                                                      wsf_worker_get_conf_ctx(worker, ws_env_svr),
                                                      script_service_user_options,
@@ -355,14 +343,9 @@ wsservice_initialize(VALUE self, VALUE options)
 				svc_info->wsdl_info = wsdl_info;
 			}
 
-            if (xslt_location_string)
+            if (wsf_ruby_home_string)
             {
-                AXIS2_FREE(ws_env_svr->allocator, xslt_location_string);
-            }
-            
-            if (type_map_string)
-            {
-                AXIS2_FREE(ws_env_svr->allocator, type_map_string);
+                AXIS2_FREE(ws_env_svr->allocator, wsf_ruby_home_string);
             }
             
             if (wsdl_location_string)
