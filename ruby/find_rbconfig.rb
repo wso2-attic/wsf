@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-#env_dirs = $:
+env_dirs = $:
 
 env_dirs.each do |path|
    begin 

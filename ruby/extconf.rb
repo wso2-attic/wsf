@@ -19,8 +19,8 @@ if /mswin32|bccwin32/ =~ RUBY_PLATFORM
     have_library('libxml2')
     have_library('axiom')
 else
-    dir_config('WSFC', WSFC_HOME + '/include/axis2-1.2', WSFC_HOME + '/lib')
-    dir_config('Rampart', WSFC_HOME + '/include/rampart-1.0', WSFC_HOME + '/modules/rampart')
+    dir_config('WSFC', WSFC_HOME + '/include/axis2-1.4.0', WSFC_HOME + '/lib')
+    dir_config('Rampart', WSFC_HOME + '/include/rampart-1.2.0', WSFC_HOME + '/modules/rampart')
     have_library('axis2_axiom')
 end
 
