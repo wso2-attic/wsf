@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %PLUGIN_NAME
-Bundle-SymbolicName: org.wso2.wsf.ide.consumption.core
+Bundle-SymbolicName: org.wso2.wsf.ide.consumption.core;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: org.wso2.wsf.ide.consumption.core.plugin.WebServiceWSASConsumptionCorePlugin
 Bundle-Localization: plugin

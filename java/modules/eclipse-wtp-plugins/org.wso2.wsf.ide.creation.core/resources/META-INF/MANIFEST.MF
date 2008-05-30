@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %PLUGIN_NAME
-Bundle-SymbolicName: org.wso2.wsf.ide.creation.core
+Bundle-SymbolicName: org.wso2.wsf.ide.creation.core;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Localization: plugin
 Bundle-Activator: org.wso2.wsf.ide.creation.core.plugin.WebServiceWSASCreationCorePlugin

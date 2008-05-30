@@ -132,7 +132,6 @@ public class WSASRuntimePreferencePage extends PreferencePage implements
 					status = Status.OK_STATUS;
 					statusUpdate(true);
 					System.setProperty("wso2wsas.home", wsasPath.getText());
-					System.out.println(System.getProperty("wso2wsas.home"));
 				}else{
 					status = Status.CANCEL_STATUS;
 					statusUpdate(false);
