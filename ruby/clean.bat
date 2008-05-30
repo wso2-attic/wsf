@@ -29,21 +29,30 @@
 
 @if exist src\intdir rmdir /s /q src\intdir
 
-@del /Q *.obj
+@if exist WSFC_wrapper.obj del /Q WSFC_wrapper.obj
+@if exist vc80.pdb del /Q /F vc80.pdb
+@if exist WSFC-i386-mswin32.pdb del /Q /F WSFC-i386-mswin32.pdb
+@if exist WSFC-i386-mswin32.lib del /Q /F WSFC-i386-mswin32.lib
+@if exist mkmf.log del /Q /F mkmf.log
+@if exist WSFC.so.manifest del /Q /F WSFC.so.manifest
+@if exist makefile del /Q /F makefile
+@if exist wsfc.dll del /Q /F wsfc.dll
+@if exist wsfc.so del /Q /F wsfc.so
+@if exist WSFC-i386-mswin32.exp del /Q /F WSFC-i386-mswin32.exp
 
-@del /Q /F *.pdb
- 
-@del /Q /F *.lib
-
-@del /Q /F mkmf.log
-
-@del /Q /F *.manifest
-
-@del /Q /F makefile
-
-@del /Q /F *.dll
-
-@del /Q /F *.so
-
-@del /Q /F *.exp
+@if exist wsservice\wsf.obj del /Q /F wsservice\wsf.obj
+@if exist wsservice\wsf_out_transport_info.obj del /Q /F wsservice\wsf_out_transport_info.obj
+@if exist wsservice\wsf_policy.obj del /Q /F wsservice\wsf_policy.obj
+@if exist wsservice\wsf_stream.obj del /Q /F wsservice\wsf_stream.obj
+@if exist wsservice\wsf_util.obj del /Q /F wsservice\wsf_util.obj
+@if exist wsservice\wsf_worker.obj del /Q /F wsservice\wsf_worker.obj
+@if exist wsservice\wsf_xml_msg_recv.obj del /Q /F wsservice\wsf_xml_msg_recv.obj
+@if exist wsservice\Makefile del /Q /F wsservice\Makefile
+@if exist wsservice\wsservice.so.manifest del /Q /F wsservice\wsservice.so.manifest
+@if exist wsservice\wsservice-i386-mswin32.lib del /Q /F wsservice\wsservice-i386-mswin32.lib
+@if exist wsservice\vc80.pdb del /Q /F wsservice\vc80.pdb
+@if exist wsservice\wsservice-i386-mswin32.pdb del /Q /F wsservice\wsservice-i386-mswin32.pdb
+@if exist wsservice\wsservice.so del /Q /F wsservice\wsservice.so
+@if exist wsservice\mkmf.log del /Q /F wsservice\mkmf.log
+@if exist wsservice\wsservice-i386-mswin32.exp del /Q /F wsservice\wsservice-i386-mswin32.exp
 
