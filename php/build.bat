@@ -5,8 +5,7 @@
 @copy configure.in wsf_c\configure.in
 @copy wsf_c_build.bat wsf_c\build.bat
 
-set WSFPHP_VERSION=1.3.0
-
+set WSFPHP_VERSION=1.3.1
 
 @cd wsf_c
 
@@ -70,3 +69,8 @@ set WSFPHP_VERSION=1.3.0
 @if exist wso2-wsf-php-bin-%WSFPHP_VERSION%-win32\wsf_c\include rmdir /S /Q wso2-wsf-php-bin-%WSFPHP_VERSION%-win32\wsf_c\include
 @del /Q wso2-wsf-php-bin-%WSFPHP_VERSION%-win32\wsf_c\lib\*.exp
 @del /Q  wso2-wsf-php-bin-%WSFPHP_VERSION%-win32\wsf_c\lib\*.lib
+
+@if "%WSFPHP_SNAPSHOT%"=="1" goto :snapshot
+
+:snapshot
+move wso2-wsf-php-bin-%WSFPHP_VERSION%-win32 wso2-wsf-php-bin-snapshot-win32
