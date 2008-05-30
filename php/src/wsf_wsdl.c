@@ -335,6 +335,12 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
                            env, client_options, svc_client, &rest_enabled TSRMLS_CC);
     
     wsf_client_enable_ssl (Z_OBJPROP_P (client_zval), env, client_options TSRMLS_CC);
+
+    /** set http authentication parameters */
+    wsf_client_set_http_auth_info(Z_OBJPROP_P (client_zval), env, client_options TSRMLS_CC);
+
+    /** set proxy authentication parameters */
+    wsf_client_set_proxy_auth_info(Z_OBJPROP_P (client_zval), env, client_options TSRMLS_CC);
     
     if(policy_options)
         wsf_wsdl_handle_client_security(Z_OBJPROP_P (client_zval), 

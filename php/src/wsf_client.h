@@ -93,6 +93,29 @@ void wsf_client_enable_ssl (
     axutil_env_t * env,
     axis2_options_t *options TSRMLS_DC);
 
+/**
+ * Set the http authenticaiton headers
+ * @param ht, WSClient options array
+ * @param env, 
+ * @param options, axis2 options
+ */
+void
+wsf_client_set_http_auth_info(
+        HashTable * client_ht,
+        axutil_env_t * env,
+        axis2_options_t *options TSRMLS_DC);
+
+/**
+ * Set the proxy authenticaiton headers
+ * @param ht, WSClient options array
+ * @param env, 
+ * @param options, axis2 options
+ */
+void
+wsf_client_set_proxy_auth_info(
+        HashTable * client_ht,
+        axutil_env_t * env,
+        axis2_options_t *options TSRMLS_DC);
 
 /**
 * Sets proxy params to svc_client
