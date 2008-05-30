@@ -67,6 +67,8 @@ rem @if exist wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsdlc\conf rmdir /S /Q w
 
 @if exist find_rbconfig.rb copy /Y find_rbconfig.rb wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32
 
+@if exist get_wsfc_home.rb copy /Y get_wsfc_home.rb wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32
+
 @mkdir wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsdlc
 
 @mkdir wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsdlc\conf
