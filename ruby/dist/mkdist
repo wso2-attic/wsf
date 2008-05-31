@@ -46,8 +46,22 @@ function sync_content
 	rsync -r --exclude=.svn --exclude=*.o --exclude=Makefile --exclude=*.log --exclude=*.so ../../wsservice .
 	echo "synchronizing wsservice ... done"
 	
-	rsync -r --exclude=.svn --exclude=*.o --exclude=Makefile --exclude=*.log --exclude=*.so ../../wsdlc .
-	echo "synchronizing wsservice ... done"
+	rsync -r --exclude=.svn --exclude=*.o --exclude=Makefile --exclude=*.log --exclude=xslt --exclude=*.so ../../wsdlc .
+	echo "synchronizing wsdlc  ... done"
+
+	cd wsdlc
+	# Create "xslt" Directory
+	if [ ! -e "xslt" ]
+	then
+		mkdir xslt
+	fi
+	cd ..
+
+	rsync ../../wsdlc/xslt/wsdl2sig.xslt ./wsdlc/xslt/wsdl2sig.xslt
+	echo "synchronizing xslt 1 ... done"	
+	
+	rsync ../../wsdlc/xslt/wsdl11to20.xsl10.xsl ./wsdlc/xslt/wsdl11to20.xsl10.xsl
+	echo "synchronizing xslt 2 ... done"	
 
 	rsync ../../wsdlc/build/win32/Makefile ./wsdlc/build/win32/Makefile
 	echo "synchronizing wsdlc/win32/Makefile ... done"	
