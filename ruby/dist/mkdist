@@ -72,7 +72,7 @@ function sync_content
 	rsync ../../wsdlc/build/win32/Makefile ./wsdlc/build/win32/Makefile
 	echo "synchronizing wsdlc/win32/Makefile ... done"	
 
-	rsync ../../configure.in.wsdlc ./configure.in
+	rsync ../../configure.in.src ./configure.in
 	echo "synchronizing configure.in ... done"
 
 	rsync ../../conf/wsdlc_type_map.xml ./wsdlc/conf/type_map.xml
