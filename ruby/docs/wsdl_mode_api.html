@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <title>WS02 WSF WSDL API</title>
+  <link href="style/api_style.css" rel="stylesheet" type="text/css"
+  media="all" />
+</head>
+
+<body xml:lang="en" lang="en">
+<h1>WSDL Mode</h1>
+
+<p>A user can provide a WSDL (Web Services Description Language) file to
+obtain a proxy&nbsp;
+    and invoke a service. This is a very convenient way of
+implementing a client.</p>
+
+<p>The following options can be used to configure the WSDL mode on the client
+side.</p>
+
+<p><h2 id="ws_client_options">WSClient Options for WSDL Mode</h2>
+</p>
+
+<table border="1">
+  <tbody>
+    <tr>
+      <td style="width: 100px; height: 15px"><strong>Option</strong></td>
+      <td style="width: 100px; height: 15px"><strong>Data Type</strong></td>
+      <td style="width: 100px; height: 15px"><strong>Value
+      Domain</strong></td>
+      <td style="width: 100px; height: 15px"><strong>Default
+      Value</strong></td>
+      <td style="width: 373px; height: 15px"><strong>Description</strong></td>
+    </tr>
+    <tr>
+      <td style="width: 100px; height: 21px">wsdl</td>
+      <td style="width: 100px; height: 21px">string</td>
+      <td style="width: 100px; height: 21px">this should be a URI or&nbsp; a
+        filename</td>
+      <td style="width: 100px; height: 21px">none</td>
+      <td style="width: 373px; height: 21px">You can provide a WSDL file or a
+        URL of the WSDL file for this option</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="ws_client_methods">WSClient Methods Related to WSDL Mode</h4>
+
+<h3>WSClient.get_proxy(service_name, port_name)</h3>
+Returns a WSProxy object which can be used to access a service endpoint
+conveniently using dynamic invocation. If service_name and port_name is not 
+specified, first service and fist port will be assumed respectively.<br />
+
+
+<h2 id="wsclientproxy">WSProxy Class</h2>
+
+<p>WSProxy is a class that can be used as the proxy for invoking
+services.</p>
+
+<h4>Methods</h4>
+
+<h5>WSProxy.WSDL_OPERATION(Hash arguments)</h5>
+
+<p>In the WSDL mode, you can simply call the operations defined in WSDL as
+functions of WSProxy. You can simply pass the arguments as Hash. This returns 
+one value return one value or multiple values. If
+only one value is returned, it will be a simple value (e.g., a String or a 
+Fixnum). If multiple values are returned WSDL_OPERATION will return a Hash of named output parameters.</p>
+
+<p>The following is a sample code demonstrating the use of WSProxy.
+Consider we have a WSDL which defines the operation "echoString" which echoes
+a given value.</p>
+<pre>            client = WSClient.new({"wsdl"=&gt;"sample.wsdl"});
+            proxy = client.get_proxy
+            value = proxy.echoString({&quot;message&quot;=&gt;"Hello World"});
+        </pre>
+
+<h2 id="wsservice_wsdl_mode">Writing a Service to use WSDL mode</h2>
+
+<p><h2 id="H2_1">
+            WSService Options for WSDL Mode</h2>
+
+<table border="1">
+  <tbody>
+    <tr>
+      <td style="width: 100px; height: 15px"><strong>Option</strong></td>
+      <td style="width: 100px; height: 15px"><strong>Data Type</strong></td>
+      <td style="width: 100px; height: 15px"><strong>Value
+      Domain</strong></td>
+      <td style="width: 100px; height: 15px"><strong>Default
+      Value</strong></td>
+      <td style="width: 373px; height: 15px"><strong>Description</strong></td>
+    </tr>
+    <tr>
+      <td style="width: 100px; height: 21px">wsdl</td>
+      <td style="width: 100px; height: 21px">string</td>
+      <td style="width: 100px; height: 21px">this should be a URI or&nbsp; a
+        filename</td>
+      <td style="width: 100px; height: 21px">none</td>
+      <td style="width: 373px; height: 21px">You can provide a WSDL file or a
+        URL of the WSDL file for this option</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+<p>By default, WSO2 WSF/Ruby uses functions that accept a WSMessage instance
+as the argument for service functions. However, when using the WSDL mode on
+the server side this is not necessary. You can write the functions that will
+accept a Hash of arguments. To specify the type of arguments
+that a particular function takes, there are two constant values defined as
+"WSMESSAGE" and "MIXED". When a function is specified as MIXED it means that
+it is a function that accept a Hash as the argument. </p>
+            <p>
+                By default, when you specify the wsdl file to the service with the option "wsdl"=&gt;"&lt;wsdl
+                file location&gt;", the service object assumes that the operations defined for this
+                particular service will accept a Hash of arguments.
+            </p>
+            <p>
+Example:
+            </p>
+<pre>    def echo_function(a)
+        return a
+    end
+
+    class EchoServiceController &lt; ApplicationController
+      def index</pre>
+<pre>	operations = {"echo_string" =&gt; "echo_function&quot;}
+         op_params = {"echo_function"=&gt;"MIXED&quot;}
+
+         svr = WSService.new({"wsdl"=&gt;"sample.wsdl", 
+                               "operations" =&gt; operations,
+                               "opParams"=&gt;op_params})
+
+         svr.reply(request, response) </pre>
+<pre>      end
+    end </pre>
+</p>
+</body>
+</html>

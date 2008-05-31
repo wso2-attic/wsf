@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <title>WS02 WSF WSDL MODE MANUAL</title>
+  <link href="style/api_style.css" rel="stylesheet" type="text/css"
+  media="all" />
+  <link href="style/api_style.css" media="all" rel="stylesheet"
+  type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+<h1>10. Using WSDL</h1>
+
+<p>In the WSDL mode, by providing a WSDL file, you can invoke a service or
+provide a service, without having to construct the payload manually. Few
+simple steps are required to configure either the client or the service to
+use the WSDL mode.WSO2
+    WSF/Ruby supports both WSDL 1.1 and WSDL 2.0 in WSDL mode.</p>
+
+<h2 id="1">10.1. Writing a Simple Client to Use the WSDL Mode</h2>
+
+<p>
+    There are two WSDL(WSDL 1.1 and WSDL 2.0) files provided in the samples\wsdl_mode folder and sample_wsdl_11.wsdl will be
+used for the example in this manual. Please have a look at the samples\wsdl_mode\sample_wsdl_11.wsdl.</p>
+<pre style="text-align: left">
+<strong>1.<span style="font-family: Verdana">create a WSClient object as follows </span>
+</strong>  
+ client = WSClient.new({"<span style="color: #ff3333">wsdl</span>"=&gt;"<span style="color: #ff0000">sample_wsdl_11<span>.wsdl</span></span>"})
+       
+ If the service endpoint is different from the location which is defined in the WSDL then you can specify it as 
+ client = WSClient.new({"<span style="color: #ff3333">wsdl</span>"=&gt;"<span
+     style="color: #ff0000">sample_wsdl_11<span>.wsdl</span></span>",
+			    "<span style="color: #ff0033">to</span>" =&gt; "<a href="http://tempuri.org"><span style="color: #ff0000">http://tempuri.org</span></a>"})
+
+<strong>2.<span style="font-family: Verdana">obtain a WSProxy object from the WSClient as follows:</span></strong><span style="font-family: Verdana"> </span> 
+
+proxy = client.get_proxy</pre>
+
+<p>Now you can call any operation defined in the WSDL. For example,you can invoke the <strong>
+         QueryPurchaseOrder</strong> operation defined in the wsdl, as follows. </p>
+<pre style="text-align: justify">
+ return_value = proxy.<strong>QueryPurchaseOrder</strong>(input);
+
+<span style="font-family: Verdana">The arguments  for the function will be either an
+    object defined in a hash of arguments which can be constructed in the following two ways. First you should have understood the values
+    that should be pass to the input as defined in the schema in WSDL. You should pass input and output parameters to the function in exactly the same order it is defined
+    in schema. 
+First we will have a look at the schema for the input message. </span>
+  <span style="color: #990000"> &lt;xsd:element name="orderInfo"&gt;
+		&lt;xsd:complexType&gt;
+		    &lt;xsd:sequence&gt;
+				&lt;xsd:element name="productName" type="xsd:string"&gt;&lt;/xsd:element&gt;
+				&lt;xsd:element name="quantity" type="xsd:float"&gt;&lt;/xsd:element&gt;
+				&lt;xsd:element name="date" type="xsd:dateTime"&gt;&lt;/xsd:element&gt;
+				&lt;xsd:element name="orderNo" type="xsd:int"&gt;&lt;/xsd:element&gt;
+			&lt;/xsd:sequence&gt;
+		&lt;/xsd:complexType&gt;
+  &lt;/xsd:element&gt;
+</span><pre style="text-align: justify">
+<strong><font size="2"><span style="font-family: Verdana">Hash</span></font></strong><span><strong><span style="font-size: 10pt; font-family: Verdana"> of arguments
+</span></strong><span style="font-family: Verdana">As you can see, the input message element of the operation <strong>QueryPurchaseOrder </strong>
+    in WSDL <strong>, </strong>is <strong>OrderInfo</strong> which is a complex type defined in the schema. The complex type <strong>OrderInfo </strong>has four elements. So the array that you have to construct will be as follows.
+
+input_hash ={"<span style="color: #ff0000">productName</span>" =&gt; "<span style="color: #ff0000">Testing</span>",
+    		"<span style="color: #ff0000">quantity</span>" =&gt; <span style="color: #ff0000">234</span>,
+    		"<span style="color: #ff0000">date</span>" =&gt; &quot;<span style="color: #ff0000">2009.12.31&quot;</span>,
+   		 "<span style="color: #ff0000">orderNo</span>" =&gt; <span style="color: #ff0000">345</span>}
+
+<span style="font-family:Verdana">Here the key of the hash will be the element name of the complex type and the user should provide the appropriate value for the hash. If the type of the element is another complex type, there should be another array instead of the value. 
+As an example, imagine if the <strong>quantity</strong> element's type is another complex type defined in the schema as follows.</span>
+    
+   
+    <span style="color: #990000">&lt;xsd:element name="orderInfo"&gt; 
+        &lt;xsd:complexType&gt;
+           &lt;xsd:sequence&gt; 
+               &lt;xsd:element name="productName" type="xsd:string"&gt;&lt;/xsd:element&gt;
+               &lt;xsd:element name="quantity" type="tns:quantityType"&gt;&lt;/xsd:element&gt;
+               &lt;xsd:element name="date" type="xsd:dateTime"&gt;&lt;/xsd:element&gt; 
+               &lt;xsd:element name="orderNo" type="xsd:int"&gt;&lt;/xsd:element&gt; 
+              &lt;/xsd:sequence&gt; 
+          &lt;/xsd:complexType&gt;
+        &lt;/xsd:element&gt; 
+</span>
+        <span style="color: #990000">&lt;xsd:element name="quantityType"&gt;
+            &lt;xsd:complexType&gt; 
+	&lt;xsd:sequence&gt; 
+            	 &lt;xsd:element name="amount" type="xsd:int"&gt;&lt;/xsd:element&gt;
+            	 &lt;xsd:element name="weight_kg" type="xsd:float"&gt;&lt;/xsd:element&gt; 
+	&lt;/xsd:sequence&gt;
+            &lt;/xsd:complexType&gt; 
+         &lt;/xsd:element&gt; </span>
+            
+ 
+Now the array that you should create will be, 
+
+quantity_hash = {"<span style="color: #ff0000">amount</span>" =&gt; <span style="color: #ff0000">2300</span>, 
+ 	           "<span style="color: #ff0000">weight_kg</span>" =&gt; <span style="color: #ff0000">203443</span>}
+input_hash ={"<span style="color: #ff0000">productName</span>" =&gt; "<span style="color: #ff0000">Testing</span>",
+		 "<span style="color: #ff0000">quantity</span>" =&gt; quantity_hash, 
+		"<span style="color: #ff0000">date</span>" =&gt; &quot;<span style="color: #ff0000">2009.12.31&quot;</span>, 
+		"<span style="color: #ff0000">orderNo</span>" =&gt; <span style="color: #ff0000">345</span>} 
+
+
+After creating the array, pass it to the operation that you are going to invoke. <span style="font-family: Courier New">
+    <span style="font-size: 9pt; font-family: Verdana"><span style="font-size: 10pt"></span>
+   </span><span style="font-size: 9pt; font-family: Verdana"><span style="font-size: 10pt"> proxy.</span><strong>QueryPurchaseOrder</strong>(input_hash); 
+</span>
+<span><span style="font-family: Verdana">Since you have passed the array type arrguments to the function, the return value will also be an associative array. The schema
+    for the return message in the sample wsdl is as follows.</span></span></span>
+            	<span style="color: #990000">&lt;xsd:element name="orderDetails"&gt;
+		&lt;xsd:complexType&gt;
+			&lt;xsd:sequence&gt;
+				&lt;xsd:element name="shipTo" type="tns:address"&gt; &lt;/xsd:element&gt;
+				&lt;xsd:element name="billTo" type="tns:address"&gt;&lt;/xsd:element&gt;
+				&lt;xsd:element name="product" type="tns:orderInfo"&gt;&lt;/xsd:element&gt;
+			&lt;/xsd:sequence&gt;
+		    &lt;/xsd:complexType&gt;
+		&lt;/xsd:element&gt;
+			
+        &lt;xsd:complexType name="address"&gt;
+            	&lt;xsd:sequence&gt;
+            		&lt;xsd:element name="name" type="xsd:string"&gt;&lt;/xsd:element&gt;
+            		&lt;xsd:element name="street" type="xsd:string"&gt;&lt;/xsd:element&gt;
+            		&lt;xsd:element name="city" type="xsd:string"&gt;&lt;/xsd:element&gt;
+            		&lt;xsd:element name="state" type="xsd:string"&gt;&lt;/xsd:element&gt;
+            		&lt;xsd:element name="zip" type="xsd:decimal"&gt;&lt;/xsd:element&gt;
+            	&lt;/xsd:sequence&gt;
+        &lt;/xsd:complexType&gt;
+        
+         &lt;xsd:complexType name="orderInfo"&gt;
+            	&lt;xsd:sequence&gt;
+            		&lt;xsd:element name="productId" type="xsd:int"&gt;&lt;/xsd:element&gt;
+            		&lt;xsd:element name="shippingDate" type="xsd:dateTime"&gt;&lt;/xsd:element&gt;
+            		&lt;xsd:element name="status" type="xsd:boolean"&gt;&lt;/xsd:element&gt;
+            	&lt;/xsd:sequence&gt;
+         &lt;/xsd:complexType&gt;</span>
+         
+So the returned array will be of the same structure
+    that we created for the input array. The returned hash has three elements <strong>shipTo</strong>,
+    <strong>billTo</strong> and <strong>product</strong>. Since all of these elements are complex types, there should be a hash for the corresponding elements. Now the return array becomes,
+   
+return_hash = proxy.<strong>QueryPurchaseOrder</strong>(input_hash); 
+
+return_hash =  {&quot;orderDetails = {"<span style="color: #ff0000">shipTo</span>" =&gt; <span style="color: #000066">ship_to_hash</span>,
+    		                 "<span style="color: #ff0000">billTo</span>" =&gt; bill_to_hash,
+    		                 "<span style="color: #ff0000">product</span>" =&gt; order_info_hash}};
+  
+ship_to_hash = {"<span style="color: #ff0000">name</span>" =&gt; "<span style="color: #ff0000">Jane Smith</span>", 
+		"<span style="color: #ff0000">street</span>" =&gt; "<span style="color: #ff0000">YorkStreet</span>", 
+		"<span style="color: #ff0000">city" </span>=&gt; "<span style="color: #ff0000">colombo</span>", 
+		"<span style="color: #ff0000">state</span>" =&gt; "<span style="color: #ff0000">Sri Lanka</span>" , 
+		"<span style="color: #ff0000">zip</span>" =&gt; <span style="color: #ff0033">32343</span>}
+
+<span style="color: #330066">order_info_hash </span>= {"<span style="color: #ff0033">productId</span>" =&gt; <span style="color: #ff0033">2345</span>, 
+		"<span style="color: #ff0000">shippingDate</span>" =&gt; <span style="color: #ff0000">&quot;2008.01.01&quot;</span> , 
+		"<span style="color: #ff0000">status</span>" =&gt; <span style="color: #FF0000">true</span>}; 
+
+This same array structure applies for bill_to_hash as well.
+<span style="text-decoration: underline; color: #990000;"><strong></strong></span><h3 id="H3_1">10.2. Writing a Simple Service to Use the WSDL Mode</h3>
+
+<p>We will implement a service to accept the request sent by the above
+client.</p>
+
+<p>First write a function corresponding to the&nbsp; QueryPurchaseOrder operation defined in the WSDL.</p>
+    <p>
+        def&nbsp; QueryPurchaseOrderFunction(input_hash)<br />
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            return return_hash;<br />
+        &nbsp;end<br />
+    </p>
+    <p>
+        The return hash should be created as the same way it is created in client side.</p>
+   
+        ship_to_hash = {"<span style="color: #ff0000">name</span>" =&gt; "<span style="color: #ff0000">Jane Smith</span>",
+<br>
+		"<span style="color: #ff0000">street</span>" =&gt; "<span style="color: #ff0000">YorkStreet</span>",
+<br>
+		"<span style="color: #ff0000">city" </span>=&gt; "<span style="color: #ff0000">colombo</span>",
+<br>
+		"<span style="color: #ff0000">state</span>" =&gt; "<span style="color: #ff0000">Sri Lanka</span>" ,
+<br>
+		"<span style="color: #ff0000">zip</span>" =&gt; <span style="color: #ff0033">32343</span>}<p>
+bill_to_hash = {"<span style="color: #ff0000">name</span>" =&gt; "<span style="color: #FF0000">John</span><span style="color: #ff0000"> Smith</span>",
+<br>
+		"<span style="color: #ff0000">street</span>" =&gt; "<span style="color: #FF0000">Orange 
+Drive</span>", <br>
+		"<span style="color: #ff0000">city" </span>=&gt; "<span style="color: #FF0000">Orlando</span>",
+<br>
+		"<span style="color: #ff0000">state</span>" =&gt; "<span style="color: #FF0000">Florida</span>" ,
+<br>
+		"<span style="color: #ff0000">zip</span>" =&gt;
+<span style="color: #FF0033">32837</span>}<br>
+<br>
+<span style="color: #330066">order_info_hash </span>= {"<span style="color: #ff0033">productId</span>" =&gt; <span style="color: #ff0033">2345</span>,
+<br>
+		"<span style="color: #ff0000">shippingDate</span>" =&gt;
+<span style="color: #ff0000">&quot;2008.01.01&quot;</span> , <br>
+		"<span style="color: #ff0000">status</span>" =&gt;
+<span style="color: #FF0000">true</span>}; </p>
+<p><br />
+    return_hash =&nbsp; {&quot;orderDetails = {"<span style="color: #ff0000">shipTo</span>" =&gt;
+<span style="color: #000066">ship_to_hash</span>,<br>
+&nbsp;&nbsp;&nbsp; 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "<span style="color: #ff0000">billTo</span>" =&gt; 
+bill_to_hash,<br>
+&nbsp;&nbsp;&nbsp; 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "<span style="color: #ff0000">product</span>" =&gt; 
+order_info_hash}};<br>
+&nbsp;
+    <br />
+    Now we can map this function to the <strong>QueryPurchaseOrderFunction</strong>
+    operation as follows.
+    <br />
+    <br />
+    
+        &nbsp;operations = {"<span style="color: #ff0000">QueryPurchaseOrder</span>"=&gt;"<span
+            style="color: #ff0000">QueryPurchaseOrderFunction</span>&quot;}<br />
+        &nbsp;op_params = {&quot;<span style="color: #ff0033">QueryPurchaseOrderFunction</span>"=&gt;"<span style="color: #ff3333">MIXED</span>&quot;}<br />
+        &nbsp; &nbsp;&nbsp;
+    <br />
+    Here we are indicating to the service that the <strong>QueryPurchaseOrderFunction</strong>
+    is not a
+function that accepts a WSMessage instance as the sole argument, but a
+function with mixed arguments.<br />
+    <br />
+    service =
+    
+        WSService.new({&quot;<span style="color: #ff0000">wsdl</span>"=&gt;"s<span style="color: #ff0000">ample_wsdl_11.wsdl</span>",
+    <br />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; "<span style="color: #ff0000">operations</span>" =&gt; operations, 
+    <br />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; "<span style="color: #ff0000">opParams</span>&quot;=&gt;op_params})
+    <br />
+        service-&gt;reply(request, response);<br />
+        
+    
+    
+
+</p>
+
+<!--<h3 id="3">10.3. WSDL Generation for a Given Service</h3>
+
+<p>WSDL Generation in WSO2 WSF/Ruby is done using Ruby reflection and an
+annotation parser. In order to generate a WSDL from a given WSO2 WSF/Ruby
+service, a '?wsdl' request or a '?wsdl2' request should be sent to the
+server. '?wsdl' serves WSDL version 1.1, and '?wsdl2' serves WSDL version
+2.0. For example, if you want to generate the WSDL for the service
+echoService.php, a request should be sent as,</p>
+
+<p>http://localhost/echoService.php?wsdl</p>
+
+<p>or</p>
+
+<p>http://localhost/echoService.php?wsdl2</p>
+
+<p>For more information on the annotation syntax, please have a look at the
+<a href="wsdl_generation_api.html">WSDL generation API document</a>.</p>
+
+<p>http://localhost/echoService.php?wsdl</p>
+
+<p>or</p>
+
+<p>http://localhost/echoService.php?wsdl2</p>
+
+<p>For more information on the annotation syntax, please have a look at the
+<a href="wsdl_generation_api.html">WSDL generation API document</a>.</p>
+
+
+<h3 id="4">10.4. WSDL to Ruby Code Generation</h3>
+
+<p>
+You can Generate the Ruby code for a given WSDL using wsdl2php.php script bundle
+with the WSO2 WSF/Ruby distribution. You can find the wsdl2php.php script inside the
+'scripts' directory.
+</p>
+
+<p>
+Here is how you can use this script.
+</p>
+
+<pre>
+
+Usage: <i>php wsdl2php.php [-s] &lt;wsdl&gt; </i>
+    wsdl - URL or path to WSDL file
+
+    Options:
+        -s        Generate code for service.
+                  By default this is false, meaning code for client will be generated.
+</pre>-->
+</body>
+</html>

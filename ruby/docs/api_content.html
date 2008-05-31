@@ -25,7 +25,7 @@ WSF/Ruby extension.</p>
 <h2><a name="">Constructor</a></h2>
 <a id="pre_WSClient"></a>
 <ul>
-  <li><p><b>WSClient(Hash options, String log_file_name)</b></p>
+  <li><p><b>WSClient.new(Hash options, String log_file_name)</b></p>
   </li>
 </ul>
 
@@ -246,6 +246,18 @@ border="1">
       <td colspan="1" style="height: 20px">WSDL file can be used to invoke a
         Web service using dynamic invocation</td>
     </tr>-->
+  	<tr>
+      <td colspan="5">WSDL Mode</td>
+    </tr>
+	<tr>
+      <td colspan="1" style="height: 20px; width: 96px;">"wsdl"</td>
+      <td colspan="1" style="height: 20px">file path or URL of a WSDL
+      file</td>
+      <td colspan="1" style="height: 20px">string</td>
+      <td colspan="1" style="height: 20px">None</td>
+      <td colspan="1" style="height: 20px">WSDL file can be used to invoke a
+        Web service using dynamic invocation</td>
+    </tr>
   </tbody>
 </table>
 
@@ -386,7 +398,7 @@ None
 <h2><a name="">Constructor</a></h2>
 <a id="service_WSService"></a>
 <ul>
-  <li><p><b>WSService (Hash options)</b></p>
+  <li><p><b>WSService.new (Hash options)</b></p>
   </li>
 </ul>
 
@@ -588,6 +600,17 @@ border="1">
       <td>WSSecurityToken object which contains the security related
       options</td>
     </tr>
+  	<tr>
+      <td colspan="5">WSDL Mode</td>
+    </tr>
+	<tr>
+      <td colspan="1" style="height: 20px; width: 96px;">"wsdl"</td>
+      <td colspan="1" style="height: 20px">file path or URL of a WSDL
+      file</td>
+      <td colspan="1" style="height: 20px">string</td>
+      <td colspan="1" style="height: 20px">None</td>
+      <td colspan="1" style="height: 20px">This option is used to specify the WSDL file of the service.</td>
+    </tr>
   </tbody>
 </table>
 
@@ -641,7 +664,7 @@ properties related to a message. <a id="construct3"></a>
 <h2><a name="">Constructor</a></h2>
 <a id="message_WSMessage"></a>
 <ul>
-  <li><b>WSMessage (String str_payload, REXMLDocument rexml_payload, Hash properties)</b></li>
+  <li><b>WSMessage.new (String str_payload, REXMLDocument rexml_payload, Hash properties)</b></li>
 </ul>
 
 <p>Constructs a new WSMessage object.</p>
@@ -932,7 +955,7 @@ will be present in the WSMessage object.</p>-->
 <h2><a name="">Constructor</a></h2>
 <a id="fault_WSFault"></a>
 <ul>
-  <li><p><b>WSFault(String code, String reason, String role, String detail, String xml)</b></p>
+  <li><p><b>WSFault.new(String code, String reason, String role, String detail, String xml)</b></p>
   </li>
 </ul>
 

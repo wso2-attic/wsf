@@ -1,0 +1,585 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+  <title>WS02 WSF WSDL generation API</title>
+  <link href="style/api_style.css" rel="stylesheet" type="text/css"
+  media="all">
+</head>
+
+<body>
+<h1>Ruby WSDL Generation</h1>
+
+<p></p>
+
+<p>WSDL generation in WSO2 WSF/Ruby is done using Ruby reflection and an
+annotation parser. To generate a WSDL from a given WSO2 WSF/Ruby service, a
+?wsdl request should be sent to the server. For example, if you want to
+generate the WSDL for the service echoService.php, a request should be sent
+as,</p>
+
+<p></p>
+
+<p>http://localhost/services/echoService.php?wsdl</p>
+
+<p></p>
+
+<p>Upon receiving the request, the relevant WSDL is generated. If the Ruby
+script that implements the service contains annotations provided by the
+programmer, they will be used for WSDL generation. If the annotations are
+missing or if there is a syntax error, the WSDL will be generated using
+reflection and XSD:Any as the type for the parameters.</p>
+
+<h2 id="annotation">1. Annotation Syntax</h2>
+
+<p></p>
+
+<p>Parameter types and return types should be annotated for a Ruby function
+using the following syntax.</p>
+
+<p></p>
+
+<h3>1.1. Parameters</h3>
+
+<p>Syntax:</p>
+<pre> @param PHP_parameter_type $parameterName
+ ( xs:XSDType )</pre>
+
+<p>Example:</p>
+<pre>/**
+ * @param string $name your first name
+ * (maps to the xs:string XML schema type)
+ */</pre>
+
+<p>You can add your own comments only after the $parameterName</p>
+
+<p></p>
+
+<h3>1.2. Return Type</h3>
+
+<p></p>
+
+<p>Syntax:</p>
+<pre> @return PHP_return_type $returnValueName
+ ( xs:XSDType )</pre>
+
+<p>Example:</p>
+<pre>/**
+ * @return int $t your lucky number
+ * (maps to the xs:int XML schema type )
+ */</pre>
+
+<p>You can add your own comments only after the $returnValueName</p>
+
+<h3>1.3. Example 1</h3>
+<pre>/** 
+ * The purchaseOrder function
+ * @param int $itemNo ID of the item to be purchased
+ * (maps to the xs:int XML schema type )
+ * @param string $date Date that the purchase order was done
+ * (maps to the xs:gDate XML schema type)
+ * @return int $price total price
+ * (maps to the xs:nonNegativeInteger schema type )
+ */
+ function purchaseOrder ($itemNo, $date)
+ {
+    // some logic
+    return $Price;
+ }</pre>
+
+
+<h3>1.4. Array types </h3>
+<p>Syntax:</p>
+<pre>
+ @param array of PHP_parameter_type $paramterName
+ ( xs:XSDType )
+</pre>
+
+<p>You can add your own comments only after the $parameterName similar to the early cases</p>
+
+<p>Example:</p>
+<pre>
+/**
+ * @param array of string $items item list
+ * (maps to the xs:string)
+ */
+</pre>
+
+<h3>1.5. Types, maps to Ruby Classes</h3>
+<p>Syntax:</p>
+<pre>
+ @param object PHP_class_name $paramterName
+</pre>
+
+<p>Example:</p>
+<pre>
+/**
+ * @param object Purchase $purchase the purchase object
+ */
+</pre>
+
+In order to work this, you need to put doc comments in the class and the class variables it self.
+Following two section describes how you can do that.
+
+<h3>1.6. Ruby Class to use as an Schema Type</h3>
+
+<p>Syntax:</p>
+<pre>
+ @namespace Schema_type_custom_namespace 
+</pre>
+
+<p>If the @namespace is not given, the schema type will have the default namespace http://www.wso2.org/php/xsd</p>
+<p>Example:</p>
+<pre>
+/**
+ * @namespace http://custom.host/custom/location
+ */
+</pre>
+
+<h3>1.7. Ruby Class Variables</h3>
+
+<p>Syntax:</p>
+<pre>
+   @var PHP_parameter_type $parameterName
+ ( xs:XSDType )
+</pre>
+
+<p>Here PHP_parameter_type may contain "object" or "array of" phrases similar to @param and @return
+
+<p>Example:</p>
+<pre>
+/**
+ * @var String $name
+ */
+</pre>
+
+<h3>1.8. Example 2: Demonstrates how complex types and arrays are get generated</h3>
+<pre>
+/**
+ * The function to register students for a course
+ * @param string $course the course to register
+ * (maps to xs:string)
+ * @param array of object Student $students students list
+ * @return boolean $success
+ * (maps to xs:boolean)
+ */
+function registerStudents($course, $students) {
+    
+}
+
+/**
+ * @namespace http://my.university/my/faculty
+ */
+class Student {
+    /**
+     * @var string $name student name
+     */
+    public $name;
+
+    /**
+     * @var int $age student age
+     */
+    public $age;
+
+}
+</pre>
+
+<h3>1.9. Example 3: Using Classmap API</h3>
+<p>
+If you use the same scenario in the Example 2 to use with the classmap API, you need to declare both the request and response types as Ruby Classes like shown in the following code segment
+</p>
+<p>
+NOTE: You are using classmap API, if you provide the "classmap" option in the WSService constructor.
+</p>
+
+<pre>
+/**
+ * The function to register students for a course
+ * @param object RegisterStudents $RegisterStudents
+ * @return object RegisterStudentsResponse $RegisterStudentsResponse
+ */
+function registerStudents($RegisterStudents) {
+    
+}
+
+/**
+ * @namespace http://my.university/my/faculty
+ */
+class RegisterStudents {
+    /**
+     * @var string $course the course to register
+     * (maps to xs:string)
+     */
+     public $course;
+
+    /**
+     * @var array of object Student $students students list
+     */
+     public $students;
+}
+
+/**
+ * @namespace http://my.university/my/faculty
+ */
+class RegisterStudentsResponse {
+  /**
+   * @var boolean $success whether the operation successful or not
+   * (maps to xs:boolean)
+   */
+    public $success;
+}
+
+/**
+ * @namespace http://my.university/my/faculty
+ */
+class Student {
+    /**
+     * @var string $name student name
+     */
+    public $name;
+
+    /**
+     * @var int $age student age
+     */
+    public $age;
+
+}
+</pre>
+
+<p></p>
+
+<h2 id="schema_mapping">2. Ruby to Schema Type Mapping</h2>
+
+<p>Since Ruby is a weakly-typed language in nature, the following type mapping
+is required to map the Ruby types to the XML Schema types.</p>
+
+<table border="2">
+  <caption></caption>
+  <tbody>
+    <tr>
+      <td>Schema Type</td>
+      <td>Ruby Type</td>
+    </tr>
+    <tr>
+      <td>string</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>boolean</td>
+      <td>boolean</td>
+    </tr>
+    <tr>
+      <td>double</td>
+      <td>float</td>
+    </tr>
+    <tr>
+      <td>float</td>
+      <td>float</td>
+    </tr>
+    <tr>
+      <td>int</td>
+      <td>int</td>
+    </tr>
+    <tr>
+      <td>integer</td>
+      <td>int</td>
+    </tr>
+    <tr>
+      <td>byte</td>
+      <td>int</td>
+    </tr>
+    <tr>
+      <td>decimal</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>base64Binary</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>hexBinary</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>anyType</td>
+      <td>soap var object</td>
+    </tr>
+    <tr>
+      <td>any</td>
+      <td>soap var object</td>
+    </tr>
+    <tr>
+      <td>QName</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>dateTime</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>date</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>time</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>unsignedLong</td>
+      <td>int</td>
+    </tr>
+    <tr>
+      <td>unsignedInt</td>
+      <td>int</td>
+    </tr>
+    <tr>
+      <td>unsignedShort</td>
+      <td>int</td>
+    </tr>
+    <tr>
+      <td>unsignedByte</td>
+      <td>int</td>
+    </tr>
+    <tr>
+      <td>positiveInteger</td>
+      <td>int</td>
+    </tr>
+    <tr>
+      <td>negativeInteger</td>
+      <td>int</td>
+    </tr>
+    <tr>
+      <td>nonNegativeInteger</td>
+      <td>int</td>
+    </tr>
+    <tr>
+      <td>nonPositiveInteger</td>
+      <td>int</td>
+    </tr>
+    <tr>
+      <td>gYearMonth</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>gMonthDay</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>gYear</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>gMonth</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>gDay</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>duration</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>Name</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>NCName</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>NMTOKEN</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>NOTATION</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>NMTOKENS</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>ENTITY</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>ENTITIES</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>IDREF</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>IDREFS</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>anyURI</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>language</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>ID</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>normalizedString</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>token</td>
+      <td>string</td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<h2 id="wsdl_versions">3. WSDL Versions</h2>
+
+<p>Both WSDL 1.1 as well as WSDL 2.0 are supported.</p>
+
+<p>To get WSDL 1.1 use '?wsdl'. To get WSDL 2.0 use '?wsdl2'</p>
+
+<p></p>
+
+<p>Example,</p>
+
+<p></p>
+
+<p>For WSDL 1.1 - http://localhost/services/echoService.php?wsdl</p>
+
+<p>For WSDL 2.0 - http://localhost/services/echoService.php?wsdl2</p>
+
+<h2 id="binding_style">4. Binding Style</h2>
+
+<p></p>
+
+<p>The SOAP binding style should be set in a Ruby service option array. If the
+SOAP style is not set, then the document style is assumed as the default.</p>
+
+<p></p>
+
+<p>Example,</p>
+
+<p></p>
+<pre>$service = new WSService(array("operations"=&gt;$operations, "bindingstyle"=&gt;"rpc"))</pre>
+
+<table border="1">
+  <tbody>
+    <tr>
+      <th>Binding Style</th>
+      <th>Parameter</th>
+    </tr>
+    <tr>
+      <td>Document literal</td>
+      <td>doclit</td>
+    </tr>
+    <tr>
+      <td>RPC encoded</td>
+      <td>rpc</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<p></p>
+
+<p>Example: Generating Message elements and a schema for the document literal
+style .</p>
+<pre>/** The LuckyNo function
+ * @param string $yr year of your birthday
+ * (maps to the xs:gYear XML schema type )
+ * @param string $name your first name
+ * (maps to the xs:string XML schema type)
+ * @return int $t your lucky number
+ * (maps to the xs:int XML schema type )
+ */
+ function luckyNoFunction($yr,$name)
+ {
+    // some logic
+    return $t;
+ }</pre>
+
+<p>In the generated WSDL, the operation named "luckyfunction" has two
+messages.</p>
+<pre>    &lt;operation name="luckyNoFunction"&gt;
+        &lt;input message="s0:luckyNoFunctionInput"/&gt;
+        &lt;output message="s0:luckyNoFunctionOutput"/&gt;
+    &lt;/operation&gt;</pre>
+
+<p></p>
+
+<p>In message elements,</p>
+<pre>    &lt;message name="luckyNoFunctionInput"&gt;
+        &lt;part name="parameters" element="luckyNoFunction"/&gt;
+    &lt;/message&gt;
+    &lt;message name="luckyNoFunctionOutput"&gt;
+        &lt;part name="parameters" element="luckyNoFunctionResponse"/&gt;
+    &lt;/message&gt;</pre>
+
+<p></p>
+
+<p>Therefore, the generated schema that can be accessible on the server side
+is,</p>
+
+<p></p>
+<pre>    &lt;element name="luckyNoFunction"&gt;
+        &lt;complexType&gt;
+            &lt;sequence&gt;
+                &lt;element name="yr" type="xsd:gYear"/&gt;
+                &lt;element name="name" type="xsd:string"/&gt;
+            &lt;/sequence&gt;
+        &lt;/complexType&gt;
+    &lt;/element&gt;
+    &lt;element name="luckyNoFunctionResponse"&gt;
+        &lt;complexType&gt;
+            &lt;sequence&gt;
+                &lt;element name="t" type="xsd:int"/&gt;
+            &lt;/sequence&gt;
+        &lt;/complexType&gt;
+    &lt;/element&gt;
+</pre>
+
+<p></p>
+
+<p>Example, for RPC style:</p>
+
+<p>The message elements are,</p>
+<pre>
+    &lt;message name="luckyNoFunction"&gt;
+        &lt;part name="yr" type="xsd:gYear"/&gt;
+        &lt;part name="name" type="xsd:string"/&gt;
+    &lt;/message&gt;
+        &lt;message name="luckyNoFunctionResponse"&gt;
+        &lt;part name="t" type="xsd:int"/&gt;
+    &lt;/message&gt;
+
+
+</pre>
+
+<h2 id="H2_1">5. Service Name</h2>
+
+<p> You can specify a name for the service for generating WSDL. If you have not provided the service name then will generate a 
+service name based on the address location</p>
+
+<p>Example,</p>
+
+<p></p>
+<pre>$service = new WSService(array("operations"=&gt;$operations, "serviceName"=&gt;"sampleService"))</pre>
+
+<p></p>
+</body>
+</html>
