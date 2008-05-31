@@ -6,7 +6,7 @@ rem @call clean.bat
 @call .\wsf_c\build\init.bat
 
 @copy configure.in wsf_c\configure.in
-@copy configure.in wsdlc\build\win32\configure.in
+@copy configure.in.dist wsdlc\build\win32\configure.in
 @copy wsf_c_build.bat wsf_c\build.bat
 
 @cd wsf_c
@@ -95,7 +95,37 @@ rem @if exist wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsdlc\conf rmdir /S /Q w
 
 @cd ..
 
-@call build.bat
+@echo.
+
+@echo Building WSF Client...
+
+@echo.
+
+@ruby extconf.rb
+
+@nmake 
+
+@mt.exe -manifest WSFC.so.manifest -outputresource:WSFC.so;2
+
+@nmake install
+
+@echo. 
+
+@echo Building WSF Service...
+
+@echo.
+
+@cd wsservice
+
+@ruby extconf.rb
+
+@nmake
+
+@mt.exe -manifest wsservice.so.manifest -outputresource:wsservice.so;2
+
+@nmake install
+
+@cd .. 
 
 @if exist WSFC.so copy /Y WSFC.so wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\lib
 
