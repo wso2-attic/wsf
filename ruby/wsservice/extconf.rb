@@ -37,6 +37,6 @@ have_library('axis2_engine')
 have_library('neethi')
 have_library('neethi_util')
 have_library('mod_rampart')
-
+have_library('sandesha2')
 
 create_makefile("wsservice")

@@ -38,5 +38,6 @@ have_library('omopenssl')
 have_library('neethi')
 have_library('neethi_util')
 have_library('mod_rampart')
+have_library('sandesha2_client')
 
 create_makefile('WSFC')

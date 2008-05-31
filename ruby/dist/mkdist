@@ -20,6 +20,9 @@ function sync_content
 	rsync ../../extconf.rb .
 	echo "synchronizing extconf.rb ... done"
 
+	rsync ../../install.rb .
+	echo "synchronizing install.rb ... done"
+
 	# Generate WSFC Wrapper
 	swig -ruby -I../../swig/ -o WSFC_wrapper.c -outdir ./ -Wall WSFC.i
 	echo "synchronizing WSFC_wrapper.c ... done"
@@ -40,7 +43,10 @@ function sync_content
 	echo "synchronizing util ... done"
 	
 	rsync -r --exclude=.svn ../../lib/wsf lib
-	rsync ../../lib/wsf.rb lib
+	
+	rsync -r --exclude=.svn ../../lib/wsdl lib
+	
+        rsync ../../lib/wsf.rb lib
 	echo "synchronizing wsf ... done"
 	
 	rsync -r --exclude=.svn --exclude=*.o --exclude=Makefile --exclude=*.log --exclude=*.so ../../wsservice .
@@ -71,6 +77,9 @@ function sync_content
 
 	rsync ../../conf/wsdlc_type_map.xml ./wsdlc/conf/type_map.xml
 	echo "synchronizing type map ... done"
+	
+	rsync -r --exclude=.svn ../../docs .
+	echo "synchronizing docs ... done"
 	
 	rsync -r --exclude=.svn ../../samples .
 	echo "synchronizing samples ... done"

@@ -3,7 +3,7 @@
 wsfc_home=$(./get_wsfc_home.rb)
 
 cd wsdlc
-./autogen.sh
+sh autogen.sh
 ./configure --prefix="$wsfc_home"
 make
 make install
@@ -12,9 +12,9 @@ cd ..
 
 ruby extconf.rb
 make
-make install
+sudo make install
 
 cd wsservice
 ruby extconf.rb 
 make
-make install
+sudo make install

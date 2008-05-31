@@ -18,19 +18,19 @@ require 'wsf'
 def QueryPurchaseOrderFunction(orderInfo)
 
   return_value = {"shipTo" => {"name" => "Jane Smith",
-											                          "street" => "YorkStreet",
-											                          "city" => "colombo", 
-                                                "state" => "Sri Lanka", 
-                                                "zip" => 32343 },
+			       "street" => "YorkStreet",
+			       "city" => "colombo",
+                               "state" => "Sri Lanka",
+                               "zip" => 32343 },
 	
-                          "billTo" => {"name" => "John Smith", 
-                          					           "street" => "Maple Street", 
-                          					           "city" => "LA", "state" => "USA", 
-                          					           "zip" => 55432},
+                  "billTo" => {"name" => "John Smith", 
+                               "street" => "Maple Street", 
+                               "city" => "LA", "state" => "USA", 
+                               "zip" => 55432},
 	
-                          "product" => {"productId" => 2344, 
-                                                 "shippingDate" => "20080101", 
-                                                 "status" => "true"}};
+                   "product" => {"productId" => 2344, 
+                                 "shippingDate" => "20080101", 
+                                 "status" => "true"}};
                                                  
 	return {"orderDetails" => return_value};
 end
@@ -41,7 +41,7 @@ class Wsdl11ServiceController < ApplicationController
       operations = {"QueryPurchaseOrder" => "QueryPurchaseOrderFunction"}
     
       wss = WSO2::WSF::WSService.new({"operations" => operations,
-										                                     "wsdl" => "sample_wsdl_11_ruby.wsdl"})
+                                      "wsdl" => "sample_wsdl_11.wsdl"})
 
       res = wss.reply(request, response);
 
