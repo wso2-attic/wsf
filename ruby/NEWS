@@ -1,9 +1,9 @@
-WSF/Ruby - 1.0.0
+WSF/Ruby - 1.1.0
 ================
 This is the Ruby extension to the WSO2 Web Services Framework(WSF)
 
 You can download this release from:
-http://dist.wso2.org/products/wsf/ruby/1.0.0/
+http://dist.wso2.org/products/wsf/ruby/1.1.0/
 
 Project home page:
 http://wso2.org/projects/wsf/ruby
@@ -40,18 +40,17 @@ Key Features
 6. WS-Reliable Messaging
       * Single channel two way reliable messaging
 
-7. REST Support
+7. WSDL mode support for both client and server side
+      * WS-Addressing and WS-SecurityPolicy is supported in WSDL mode
+
+8. REST Support
       * Expose a single service script both as SOAP and REST service
 
 
 Major Changes Since Last Release
 ================================
-1. Support for the following specifications on provider side
-   - REST
-   - SOAP MTOM
-   - WS-Security (with Rampart)
-   - WS-Policy
-   - WS-SecurityPolicy
+o WSDL mode support for both client and server side
+      * WS-Addressing and WS-SecurityPolicy is supported in WSDL mode
 
 
 Dependencies

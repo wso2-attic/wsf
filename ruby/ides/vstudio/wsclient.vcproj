@@ -188,10 +188,6 @@
 			>
 		</Filter>
 		<File
-			RelativePath=".\ReadMe.txt"
-			>
-		</File>
-		<File
 			RelativePath="..\..\swig\wsf_constants.i"
 			>
 		</File>

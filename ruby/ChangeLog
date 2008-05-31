@@ -1,5 +1,20 @@
+WSO2 WSF/Ruby 1.1.0
+===================
+
+Major changes since the last release
+
+* Web Service Provider features
+- WSDL 1.1 Support (WSDL Mode) 
+- WSDL 2.0 Support (WSDL Mode)
+
+* Web Service Consumer features
+- WSDL 1.1 Support (WSDL Mode)
+- WSDL 2.0 Support (WSDL Mode)
+
+* Bug fixes and minor improvements
+
 WSO2 WSF/Ruby 1.0.0
-======================
+===================
 
 Major changes since the beta release
 
@@ -9,7 +24,7 @@ Major changes since the beta release
 - Class Map API for the WSService
 
 WSO2 WSF/Ruby 1.0.0-beta
-======================
+========================
 
 Major changes since last release
 * Web Service Consumer :

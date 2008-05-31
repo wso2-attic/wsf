@@ -32,6 +32,7 @@ a. Before Install WSO2 WSF/RUBY, following configuration entries have to be adde
     CONFIG["WSFC_HOME"] = "your/wsfc/home/dir"
     CONFIG["WSF_LOG_DIR"] = "where/you/wish/log/file/should/be"
     CONFIG["WSF_LOG_LEVEL"] = "3"
+    CONFIG["WSF_RUBY_HOME"] = "your/wsf/ruby/home/dir"
     #---------------------------------------------------------------------------------
     
      NOTE: Above WSF_LOG_LEVEL entry can have one of the following values- 

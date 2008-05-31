@@ -14,7 +14,7 @@ Contents:
 
 ===========================================================
 
-1. How to build WSF/Ruby under Windows from binaries
+1. How to install WSF/Ruby under Windows from binaries
 
 a. Requirements
 
@@ -41,7 +41,7 @@ a. Requirements
    [4] http://www.ruby-lang.org/en/downloads/
 
    NOTE:
-    WSO2-WSF-Ruby-1.1.0 Win32 Binary Will be compiled using following version of dependency libraries.
+    WSO2-WSF-Ruby-1.1.0 Win32 Binary was compiled using following version of dependency libraries.
     
     1. Ruby    1.8.6
     2. Libxml2 2.6.30
@@ -62,11 +62,13 @@ b. Installing WSO2 WSF/Ruby as a Ruby extension.
                 +-- samples
                 |
                 +-- lib
+                |
+                +-- wsdlc
                       
 
     1. Execute install.rb file. (run "ruby install.rb" without quotes)
     
-    2. Add "<wso2-wsf-ruby-bin-1.0.0-win32 extracted directory>\wsf_c\lib" directory to PATH environment variable.
+    2. Add "<wso2-wsf-ruby-bin-1.1.0-win32 extracted directory>\wsf_c\lib" directory to PATH environment variable.
 
     3. Add the following entries to your rbconfig.rb file which is in your Ruby installation location.
        
@@ -79,6 +81,7 @@ b. Installing WSO2 WSF/Ruby as a Ruby extension.
        CONFIG["WSFC_HOME"] = "<wso2-wsf-ruby-bin-1.0.0-win32 extracted directory>\\wsf_c"
        CONFIG["WSF_LOG_DIR"] = "where\\you\\wish\\log\\file\\should\\be"
        CONFIG["WSF_LOG_LEVEL"] = "3"
+       CONFIG["WSF_RUBY_HOME"] = "your\\wsf\\ruby\\home\\dir"
        #---------------------------------------------------------------------------------
        
         NOTE: Above WSF_LOG_LEVEL entry can have one of the following values- 
@@ -90,7 +93,6 @@ b. Installing WSO2 WSF/Ruby as a Ruby extension.
                   "5" - TRACE
     
     4. Now proceed to RUN SAMPLES section for a guide on how to run samples in WSO2 WSF/Ruby.
-    
                
 
 2. How to build WSO2 WSF/Ruby under Windows from source
@@ -114,6 +116,7 @@ b. Installing WSO2 WSF/Ruby as a Ruby extension.
        CONFIG["WSFC_HOME"] = "<wso2-wsf-ruby-bin-1.0.0-win32 extracted directory>\\wsf_c"
        CONFIG["WSF_LOG_DIR"] = "where\\you\\wish\\log\\files\\should\\be"
        CONFIG["WSF_LOG_LEVEL"] = "3"
+       CONFIG["WSF_RUBY_HOME"] = "your\\wsf\\ruby\\home\\dir"
        #---------------------------------------------------------------------------------
        
         NOTE: Above WSF_LOG_LEVEL entry can have one of the following values- 
@@ -123,6 +126,8 @@ b. Installing WSO2 WSF/Ruby as a Ruby extension.
                   "3" - INFO
                   "4" - DEBUG
                   "5" - TRACE
+    
+    3. Do necessary changes to "configure.in" file found under WSF/Ruby source directory.
 
     3. Make sure the WSFC_HOME/lib directory is added to the PATH environment variable.
 

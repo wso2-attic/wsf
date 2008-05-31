@@ -57,8 +57,6 @@ rem @if exist wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsdlc\conf rmdir /S /Q w
 
 @if exist LICENSE copy /Y LICENSE wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32
 
-@if exist find_config_h.rb copy /Y find_config_h.rb wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32
-
 @if exist NEWS copy /Y NEWS wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32
 
 @if exist README.INSTALL_WIN32 copy /Y README.INSTALL_WIN32 wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32
@@ -96,6 +94,11 @@ rem @if exist wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsdlc\conf rmdir /S /Q w
 @if exist wsservice.so copy /Y wsservice.so ..\wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\lib
 
 @cd ..
+
+@del /f /q /s wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsf_c\*.pdb
+@del /f /q /s wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsf_c\*.ilk
+@del /f /q /s wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsf_c\*.exp
+@del /f /q /s wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsf_c\*.manifest
 
 @if exist sqlite-3_3_81 cd sqlite-3_3_81
 
