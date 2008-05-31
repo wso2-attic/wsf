@@ -47,6 +47,12 @@ rem @if exist wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsdlc\conf rmdir /S /Q w
 
 @if exist docs xcopy /Y /I /Q /E docs wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\docs
 
+@if exist AUTHORS copy /Y AUTHORS wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32
+
+@if exist ChangeLog copy /Y ChangeLog wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32
+
+@if exist COPYING copy /Y COPYING wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32
+
 @if exist NOTICE copy /Y NOTICE wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32
 
 @if exist INSTALL copy /Y INSTALL wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32
