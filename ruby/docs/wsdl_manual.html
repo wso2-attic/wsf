@@ -160,86 +160,44 @@ ship_to_hash = {"<span style="color: #ff0000">name</span>" =&gt; "<span style="c
 
 This same array structure applies for bill_to_hash as well.
 <span style="text-decoration: underline; color: #990000;"><strong></strong></span><h3 id="H3_1">10.2. Writing a Simple Service to Use the WSDL Mode</h3>
+<pre>We will implement a service to accept the request sent by the above client. First write a function corresponding to the QueryPurchaseOrder operation defined in the WSDL.
 
-<p>We will implement a service to accept the request sent by the above
-client.</p>
+def QueryPurchaseOrderFunction(input_hash)
+    return return_hash;
+end
 
-<p>First write a function corresponding to the&nbsp; QueryPurchaseOrder operation defined in the WSDL.</p>
-    <p>
-        def&nbsp; QueryPurchaseOrderFunction(input_hash)<br />
-        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-            return return_hash;<br />
-        &nbsp;end<br />
-    </p>
-    <p>
-        The return hash should be created as the same way it is created in client side.</p>
-   
-        ship_to_hash = {"<span style="color: #ff0000">name</span>" =&gt; "<span style="color: #ff0000">Jane Smith</span>",
-<br>
-		"<span style="color: #ff0000">street</span>" =&gt; "<span style="color: #ff0000">YorkStreet</span>",
-<br>
-		"<span style="color: #ff0000">city" </span>=&gt; "<span style="color: #ff0000">colombo</span>",
-<br>
-		"<span style="color: #ff0000">state</span>" =&gt; "<span style="color: #ff0000">Sri Lanka</span>" ,
-<br>
-		"<span style="color: #ff0000">zip</span>" =&gt; <span style="color: #ff0033">32343</span>}<p>
-bill_to_hash = {"<span style="color: #ff0000">name</span>" =&gt; "<span style="color: #FF0000">John</span><span style="color: #ff0000"> Smith</span>",
-<br>
-		"<span style="color: #ff0000">street</span>" =&gt; "<span style="color: #FF0000">Orange 
-Drive</span>", <br>
-		"<span style="color: #ff0000">city" </span>=&gt; "<span style="color: #FF0000">Orlando</span>",
-<br>
-		"<span style="color: #ff0000">state</span>" =&gt; "<span style="color: #FF0000">Florida</span>" ,
-<br>
-		"<span style="color: #ff0000">zip</span>" =&gt;
-<span style="color: #FF0033">32837</span>}<br>
-<br>
-<span style="color: #330066">order_info_hash </span>= {"<span style="color: #ff0033">productId</span>" =&gt; <span style="color: #ff0033">2345</span>,
-<br>
-		"<span style="color: #ff0000">shippingDate</span>" =&gt;
-<span style="color: #ff0000">&quot;2008.01.01&quot;</span> , <br>
-		"<span style="color: #ff0000">status</span>" =&gt;
-<span style="color: #FF0000">true</span>}; </p>
-<p><br />
-    return_hash =&nbsp; {&quot;orderDetails = {"<span style="color: #ff0000">shipTo</span>" =&gt;
-<span style="color: #000066">ship_to_hash</span>,<br>
-&nbsp;&nbsp;&nbsp; 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "<span style="color: #ff0000">billTo</span>" =&gt; 
-bill_to_hash,<br>
-&nbsp;&nbsp;&nbsp; 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "<span style="color: #ff0000">product</span>" =&gt; 
-order_info_hash}};<br>
-&nbsp;
-    <br />
-    Now we can map this function to the <strong>QueryPurchaseOrderFunction</strong>
-    operation as follows.
-    <br />
-    <br />
-    
-        &nbsp;operations = {"<span style="color: #ff0000">QueryPurchaseOrder</span>"=&gt;"<span
-            style="color: #ff0000">QueryPurchaseOrderFunction</span>&quot;}<br />
-        &nbsp;op_params = {&quot;<span style="color: #ff0033">QueryPurchaseOrderFunction</span>"=&gt;"<span style="color: #ff3333">MIXED</span>&quot;}<br />
-        &nbsp; &nbsp;&nbsp;
-    <br />
-    Here we are indicating to the service that the <strong>QueryPurchaseOrderFunction</strong>
-    is not a
-function that accepts a WSMessage instance as the sole argument, but a
-function with mixed arguments.<br />
-    <br />
-    service =
-    
-        WSService.new({&quot;<span style="color: #ff0000">wsdl</span>"=&gt;"s<span style="color: #ff0000">ample_wsdl_11.wsdl</span>",
-    <br />
-    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-    &nbsp; &nbsp; &nbsp; &nbsp; "<span style="color: #ff0000">operations</span>" =&gt; operations, 
-    <br />
-    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-    &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; "<span style="color: #ff0000">opParams</span>&quot;=&gt;op_params})
-    <br />
-        service-&gt;reply(request, response);<br />
-        
-    
-    
+The return hash should be created as the same way it is created in client side.
+ship_to_hash = {"name" => "Jane Smith", 
+                         "street" => "YorkStreet", 
+                         "city" => "colombo", 
+                         "state" => "Sri Lanka" , 
+                         "zip" => 32343}
+bill_to_hash = {"name" => "John Smith", 
+                       "street" => "Orange Drive", 
+                       "city" => "Orlando", 
+                       "state" => "Florida" , 
+                       "zip" => 32837}
 
-</p>
+order_info_hash = {"productId" => 2345, 
+                             "shippingDate" => "2008.01.01" , 
+                             "status" => true}; 
+
+return_hash = {"orderDetails = {"shipTo" => ship_to_hash,
+                                               "billTo" => bill_to_hash,
+                                               "product" => order_info_hash}};
+
+Now we can map this function to the QueryPurchaseOrderFunction operation as follows. 
+
+ operations = {"QueryPurchaseOrder"=>"QueryPurchaseOrderFunction"}
+ op_params = {"QueryPurchaseOrderFunction"=>"MIXED"}
+
+Here we are indicating to the service that the QueryPurchaseOrderFunction is not a function that accepts a WSMessage instance as the sole argument, but a function with mixed arguments.
+
+service = WSService.new({"wsdl"=>"sample_wsdl_11.wsdl", 
+                                        "operations" => operations, 
+                                        "op_params"=>op_params}) 
+service->reply(request, response);
+</pre>
 
 <!--<h3 id="3">10.3. WSDL Generation for a Given Service</h3>
 
