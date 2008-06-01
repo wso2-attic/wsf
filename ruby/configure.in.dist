@@ -21,5 +21,5 @@ ICONV_BIN_DIR=C:\install\iconv-1.9.2.win32
 LIBXSLT_BIN_DIR=C:\install\libxslt-1.1.22.win32
 
 # Path to wsfc home (Modify only the version number, DO NOT modify the rest)
-WSFC_HOME=..\..\..\wso2-wsf-ruby-bin-1.1.0-win32\wsf_c
+WSFC_HOME_DIR=..\..\..\wso2-wsf-ruby-bin-1.1.0-win32\wsf_c
 

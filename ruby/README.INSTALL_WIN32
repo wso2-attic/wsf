@@ -149,7 +149,7 @@ b. Installing WSO2 WSF/Ruby as a Ruby extension.
 a. It is required to have Rails Framework installed in your machine to run 
    the Rails samples in
      - samples/consumer/rails and
-	 - samples/provide
+     - samples/provider
 
 b. Go to the samples/provider directory in the WSO2 WSF/Ruby binary/source
    distribution.
