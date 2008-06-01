@@ -564,7 +564,7 @@ wsf_xml_msg_recv_invoke_mixed (
     /*
      * call wsf_util_get_attachments_form_soap_envelope(env, soap_envelope, cid2str, cid2contentType TSRMLS_CC);
      */
-    wsf_util_get_attachments_form_soap_envelope(env, soap_envelope, cid2str, cid2contentType TSRMLS_CC);
+    wsf_util_get_attachments_from_soap_envelope(env, soap_envelope, cid2str, cid2contentType TSRMLS_CC);
     
     in_msg_body_string = wsf_util_serialize_om(env, payload_node);
     if(in_msg_body_string)
@@ -819,7 +819,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
             /*
              * call wsf_util_get_attachments_form_soap_envelope(env, soap_envelope, cid2str, cid2contentType TSRMLS_CC);
              */
-            wsf_util_get_attachments_form_soap_envelope(env, soap_envelope, cid2str, cid2contentType TSRMLS_CC);
+            wsf_util_get_attachments_from_soap_envelope(env, soap_envelope, cid2str, cid2contentType TSRMLS_CC);
             add_property_zval (msg, WS_ATTACHMENTS, cid2str);
             add_property_zval (msg, WS_CID2CONTENT_TYPE , cid2contentType);
 

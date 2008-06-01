@@ -48,7 +48,8 @@ void wsf_worker_free (
     const axutil_env_t * env);
 
 
-axis2_conf_ctx_t *wsf_worker_get_conf_ctx (
+axis2_conf_ctx_t *
+wsf_worker_get_conf_ctx (
     wsf_worker_t * worker,
     const axutil_env_t * env);
 

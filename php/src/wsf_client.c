@@ -258,7 +258,7 @@ wsf_client_handle_incoming_attachments (
         array_init (cid2str);
         array_init (cid2content_type);
 
-        attachments_found = wsf_util_get_attachments_form_soap_envelope(env,
+        attachments_found = wsf_util_get_attachments_from_soap_envelope(env,
                         soap_envelope, cid2str, cid2content_type TSRMLS_CC);
 
         add_property_zval (msg, WS_ATTACHMENTS, cid2str);

@@ -950,7 +950,7 @@ wsf_util_set_attachments_with_cids (
     return;
 }
 
-int wsf_util_get_attachments_form_soap_envelope (
+int wsf_util_get_attachments_from_soap_envelope (
      const axutil_env_t * env,
     axiom_soap_envelope_t *soap_envelope,
     zval * cid2str,

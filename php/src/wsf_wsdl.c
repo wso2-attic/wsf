@@ -538,7 +538,7 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
             array_init (cid2str);
             array_init (cid2contentType);
 
-            wsf_util_get_attachments_form_soap_envelope(env, response_envelope,
+            wsf_util_get_attachments_from_soap_envelope(env, response_envelope,
                         cid2str, cid2contentType TSRMLS_CC);
 
             axiom_soap_base_node = 
