@@ -2,7 +2,7 @@
 
 @call vcvars32.bat /nologo
 
-@if exist copy /Y configure.in wsdlc\build\win32\configure.in
+@if exist configure.in copy /Y configure.in wsdlc\build\win32\configure.in
 
 @cd wsdlc
 
