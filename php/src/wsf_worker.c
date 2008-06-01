@@ -223,6 +223,7 @@ wsf_worker_find_op_and_params_with_location_and_method(
 	return op;
 }
 
+
 wsf_worker_t* 
 wsf_worker_create (
 	const axutil_env_t *env,
@@ -323,6 +324,56 @@ wsf_worker_free (
     AXIS2_FREE (env->allocator, worker);
 }
 
+int wsf_worker_check_status_code(int status_code)
+{
+	int status = AXIS2_HTTP_RESPONSE_OK_CODE_VAL;
+	switch (status_code)
+	{
+	case AXIS2_HTTP_RESPONSE_CONTINUE_CODE_VAL:
+		status = AXIS2_HTTP_RESPONSE_CONTINUE_CODE_VAL;
+		break;
+	case AXIS2_HTTP_RESPONSE_ACK_CODE_VAL:
+		status = AXIS2_HTTP_RESPONSE_ACK_CODE_VAL;
+		break;
+	case AXIS2_HTTP_RESPONSE_MULTIPLE_CHOICES_CODE_VAL:
+		status = AXIS2_HTTP_RESPONSE_MULTIPLE_CHOICES_CODE_VAL;
+		break;
+	case AXIS2_HTTP_RESPONSE_MOVED_PERMANENTLY_CODE_VAL:
+		status = AXIS2_HTTP_RESPONSE_MULTIPLE_CHOICES_CODE_VAL;
+		break;
+	case AXIS2_HTTP_RESPONSE_SEE_OTHER_CODE_VAL:
+		status = AXIS2_HTTP_RESPONSE_SEE_OTHER_CODE_VAL;
+		break;
+	case AXIS2_HTTP_RESPONSE_NOT_MODIFIED_CODE_VAL:
+		status = AXIS2_HTTP_RESPONSE_NOT_MODIFIED_CODE_VAL;
+		break;
+	case AXIS2_HTTP_RESPONSE_TEMPORARY_REDIRECT_CODE_VAL:
+		status = AXIS2_HTTP_RESPONSE_TEMPORARY_REDIRECT_CODE_VAL;
+		break;
+	case AXIS2_HTTP_RESPONSE_BAD_REQUEST_CODE_VAL:
+		status = AXIS2_HTTP_RESPONSE_BAD_REQUEST_CODE_VAL;
+		break;
+	case AXIS2_HTTP_RESPONSE_REQUEST_TIMEOUT_CODE_VAL:
+		status = AXIS2_HTTP_RESPONSE_REQUEST_TIMEOUT_CODE_VAL;
+		break;
+	case AXIS2_HTTP_RESPONSE_CONFLICT_CODE_VAL:
+		status = AXIS2_HTTP_RESPONSE_CONFLICT_CODE_VAL;
+		break;
+	case AXIS2_HTTP_RESPONSE_GONE_CODE_VAL:
+		status = AXIS2_HTTP_RESPONSE_GONE_CODE_VAL;
+		break;
+	case AXIS2_HTTP_RESPONSE_PRECONDITION_FAILED_CODE_VAL:
+		status = AXIS2_HTTP_RESPONSE_PRECONDITION_FAILED_CODE_VAL;
+		break;
+	case AXIS2_HTTP_RESPONSE_REQUEST_ENTITY_TOO_LARGE_CODE_VAL:
+		status = AXIS2_HTTP_RESPONSE_REQUEST_ENTITY_TOO_LARGE_CODE_VAL;
+		break;
+	case AXIS2_HTTP_RESPONSE_SERVICE_UNAVAILABLE_CODE_VAL:
+		status = AXIS2_HTTP_RESPONSE_SERVICE_UNAVAILABLE_CODE_VAL;
+		break;
+	}
+	return status;
+}
 
 int
 wsf_worker_process_request (
@@ -379,7 +430,8 @@ wsf_worker_process_request (
     
     request_url = axutil_url_to_external_form (url, env);
 
-	if(url){
+	if(url)
+	{
 		axutil_url_free(url, env);
 	}
 
@@ -432,7 +484,8 @@ wsf_worker_process_request (
     
     /** generate uuid for context */ 
     ctx_uuid = axutil_uuid_gen (env);
-    if (ctx_uuid) {
+    if (ctx_uuid) 
+	{
         ctx_uuid_str = axutil_string_create (env, ctx_uuid);
         axis2_msg_ctx_set_svc_grp_ctx_id (msg_ctx, env, ctx_uuid_str);
         AXIS2_FREE (env->allocator, ctx_uuid);
@@ -464,11 +517,12 @@ wsf_worker_process_request (
 	
     
     /** use MTOM property */ 
-    if (svc_info->use_mtom == 1) {
+    if (svc_info->use_mtom == 1) 
+	{
         axis2_msg_ctx_set_doing_mtom (msg_ctx, env, AXIS2_TRUE);
     }
-    if (svc_info->security_token != NULL && svc_info->policy != NULL) {
-        
+    if (svc_info->security_token != NULL && svc_info->policy != NULL) 
+	{
         /**  call security function here */ 
         axis2_conf_t * conf = NULL;
         conf = axis2_conf_ctx_get_conf (worker->conf_ctx, env);
@@ -483,7 +537,7 @@ wsf_worker_process_request (
 	in_stream = wsf_stream_create (env, request TSRMLS_CC);
     if (!in_stream) 
 	{
-        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "Error occured in creating input stream.");
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "Error occurred in creating input stream.");
         return AXIS2_CRITICAL_FAILURE;
     }
 	if (strcmp (AXIS2_HTTP_GET, request->request_method) == 0 || 
@@ -774,13 +828,16 @@ wsf_worker_process_request (
 		response->response_data = axutil_strdup(env, body_string);
 	}
 	op_ctx =  axis2_msg_ctx_get_op_ctx(msg_ctx, env);
-	if (!request_handled) 
+	if (op_ctx && (!request_handled))
 	{
+		axis2_bool_t doing_rest = AXIS2_FALSE;
+		doing_rest = axis2_msg_ctx_get_doing_rest(msg_ctx, env);
 		if (axis2_op_ctx_get_response_written (op_ctx, env)) 
 		{
 			int data_length = 0;
 			int read_length = 0;
 			void *data = NULL;
+
 			data_length = axutil_stream_get_len (out_stream, env);
 			data = AXIS2_MALLOC (env->allocator, sizeof (char) * (data_length + 1));
 			read_length = axutil_stream_read (out_stream, env, data, data_length + 1);
@@ -791,19 +848,48 @@ wsf_worker_process_request (
 				response->http_status_code = AXIS2_HTTP_RESPONSE_OK_CODE_VAL;
 				response->http_status_code_name = AXIS2_HTTP_RESPONSE_OK_CODE_NAME;
 			}
+
+			if(doing_rest)
+			{
+			/** TODO Handle HTTP Accept headers */
+
+				axis2_msg_ctx_t *out_msg_ctx = NULL;
+				axis2_msg_ctx_t **msg_ctx_map = NULL;
+				axis2_char_t *response_content_type = NULL;
+				int status_code = AXIS2_HTTP_RESPONSE_OK_CODE_VAL;
+
+				msg_ctx_map = axis2_op_ctx_get_msg_ctx_map(op_ctx, env);
+				out_msg_ctx = msg_ctx_map[AXIS2_WSDL_MESSAGE_LABEL_OUT];
+				if(out_msg_ctx)
+				{
+					/** Set user defined response content type */
+					response_content_type = axis2_msg_ctx_get_property_value(out_msg_ctx, env, 
+						WS_RESPONSE_CONTENT_TYPE);
+					if(response_content_type)
+					{
+						if(response->content_type)
+						{
+							AXIS2_FREE(env->allocator, response->content_type);
+						}
+						response->content_type = axutil_strdup(env, response_content_type);
+					}
+				}
+				status_code = axis2_msg_ctx_get_status_code(out_msg_ctx, env);
+				response->http_status_code = wsf_worker_check_status_code(status_code);
+			}
+
 		}else 
 		{
 			response->response_length = 0;
 			response->http_status_code = AXIS2_HTTP_RESPONSE_ACK_CODE_VAL;
 			response->http_status_code_name = AXIS2_HTTP_RESPONSE_ACK_CODE_NAME;
-			/** php always writes a content type header, therefor set the received
-			    content type instead of "text/html" set by php*/
+			/** PHP always writes a content type header, therefor set the received
+			    content type instead of "text/html" set by PHP*/
 			response->content_type = axutil_strdup(env, request->content_type);
 		}
 		request_handled = AXIS2_TRUE;
 	}
 	
-
     if (op_ctx) 
     {
         axis2_msg_ctx_t *out_msg_ctx = NULL, *in_msg_ctx = NULL;

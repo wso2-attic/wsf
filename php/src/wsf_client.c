@@ -1127,7 +1127,6 @@ wsf_client_do_request (
     axis2_svc_client_t * svc_client,
     int is_oneway TSRMLS_DC)
 {
-    /** for dom  */
     int status = AXIS2_SUCCESS;
     int input_type = WS_USING_INCORRECT_INPUT;
 

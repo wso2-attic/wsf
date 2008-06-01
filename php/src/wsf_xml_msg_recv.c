@@ -309,7 +309,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
 	{
         status = AXIS2_ERROR_GET_STATUS_CODE (env->error);
     } else {
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf log]response node is not null");
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[WSFLOG] response node is not null");
     }
 
     if (result_node) 
@@ -808,7 +808,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
             zval *cid2contentType = NULL;
 
             AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                "[wsf_service] requestXOP is TRUE, setting attachements");
+                "[wsf_service] requestXOP is TRUE, setting attachments");
 
             MAKE_STD_ZVAL (cid2str);
             MAKE_STD_ZVAL (cid2contentType);
@@ -967,11 +967,13 @@ wsf_xml_msg_recv_invoke_wsmsg (
 					}
             }
 			if(zend_hash_find(Z_OBJPROP(retval), WS_RESPONSE_CONTENT_TYPE, 
-				sizeof(WS_RESPONSE_CONTENT_TYPE), (void **)&msg_tmp)== SUCCESS && Z_TYPE_PP(msg_tmp) == IS_STRING){
+				sizeof(WS_RESPONSE_CONTENT_TYPE), (void **)&msg_tmp)== SUCCESS && 
+					Z_TYPE_PP(msg_tmp) == IS_STRING)
+			{
 					axutil_property_t *cnt_property = NULL;
-					cnt_property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, AXIS2_TRUE,
-						NULL, axutil_strdup(env, Z_STRVAL_PP(msg_tmp)));
-					axis2_msg_ctx_set_property(out_msg_ctx, env, AXIS2_USER_DEFINED_HTTP_HEADER_CONTENT_TYPE, cnt_property);
+					cnt_property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
+						AXIS2_TRUE, NULL, axutil_strdup(env, Z_STRVAL_PP(msg_tmp)));
+					axis2_msg_ctx_set_property(out_msg_ctx, env, WS_RESPONSE_CONTENT_TYPE, cnt_property);
 			}
 
 			if (zend_hash_find (Z_OBJPROP (retval), WS_ATTACHMENTS, sizeof (WS_ATTACHMENTS),
