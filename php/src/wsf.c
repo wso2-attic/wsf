@@ -1159,7 +1159,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
             params[6] = &param7;
             params[7] = &param8;
             
-            /** for Wsdl version. default is wsdl 1.1*/ 
+            /** for WSDL version. default is wsdl 1.1*/ 
             if ((stricmp (wsdl_ver_str , "wsdl")) == 0)
                 wsdl_version = strdup ("wsdl1.1");
             
@@ -1370,6 +1370,12 @@ PHP_METHOD (ws_service, reply)
 					Z_TYPE_PP (data) == IS_STRING) {
 				req_info.soap_action = Z_STRVAL_PP (data);
 			}
+			if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "REMOTE_ADDR",
+				sizeof ("REMOTE_ADDR"), (void **)&data) == SUCCESS)  &&
+				Z_TYPE_PP (data) == IS_STRING) {
+					req_info.remote_address = Z_STRVAL_PP (data);
+			}
+		
 		}
 		
 		req_info.request_uri = SG (request_info).request_uri;

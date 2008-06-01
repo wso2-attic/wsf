@@ -264,6 +264,7 @@ typedef struct wsf_request_info
     long svr_port;
     char *svr_name;
     char *http_protocol;
+	char *remote_address;
     char *soap_action;
     char *request_uri;
     char *query_string;

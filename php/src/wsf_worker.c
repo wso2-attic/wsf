@@ -500,6 +500,14 @@ wsf_worker_process_request (
         axis2_msg_ctx_set_transfer_encoding (msg_ctx, env,
             axutil_strdup (env, request->transfer_encoding));
     }
+
+	/** Peer IP address */
+	if (request->remote_address)
+	{
+		axutil_property_t *peer_property = axutil_property_create(env);
+		axutil_property_set_value(peer_property, env, axutil_strdup(env, request->remote_address));
+		axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_SVR_PEER_IP_ADDR, peer_property);
+	}
     
     /** store svc_info, req_info struct as a property */ 
     {
