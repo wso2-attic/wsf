@@ -416,7 +416,10 @@ wsf_request_info_init (wsf_request_info_t *req_info)
 {
     req_info->svr_name = NULL;
 	req_info->remote_address = NULL;
-
+	req_info->accept = NULL;
+	req_info->accept_language = NULL;
+	req_info->accept_encoding = NULL;
+	req_info->accept_charset = NULL;
 	/** default port is 80 */
     req_info->svr_port = 80;
     req_info->http_protocol = NULL;

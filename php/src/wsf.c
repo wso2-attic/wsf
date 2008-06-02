@@ -1375,7 +1375,29 @@ PHP_METHOD (ws_service, reply)
 				Z_TYPE_PP (data) == IS_STRING) {
 					req_info.remote_address = Z_STRVAL_PP (data);
 			}
-		
+			if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "HTTP_ACCEPT",
+				sizeof ("HTTP_ACCEPT"), (void **)&data) == SUCCESS) && Z_TYPE_PP(data) == IS_STRING)
+			{
+					req_info.accept = Z_STRVAL_PP(data);
+			}
+			if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "HTTP_ACCEPT_LANGUAGE",
+				sizeof ("HTTP_ACCEPT_LANGUAGE"), (void **)&data) == SUCCESS) && 
+				Z_TYPE_PP(data) == IS_STRING)
+			{
+				req_info.accept_language = Z_STRVAL_PP(data);
+			}
+			if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "HTTP_ACCEPT_ENCODING",
+				sizeof ("HTTP_ACCEPT_ENCODING"), (void **)&data) == SUCCESS) && 
+					Z_TYPE_PP(data) == IS_STRING)
+			{
+				req_info.accept_encoding = Z_STRVAL_PP(data);
+			}
+			if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "HTTP_ACCEPT_CHARSET",
+				sizeof ("HTTP_ACCEPT_CHARSET"), (void **)&data) == SUCCESS) && 
+				Z_TYPE_PP(data) == IS_STRING)
+			{
+				req_info.accept_charset = Z_STRVAL_PP(data);
+			}
 		}
 		
 		req_info.request_uri = SG (request_info).request_uri;
@@ -1437,7 +1459,6 @@ PHP_METHOD (ws_service, reply)
 }
 /* }}} end reply */ 
     
-/************************* fault *********************************/ 
 /* {{{ proto void WSFault::__construct(string faultcode, string faultreason [,string faultrole [, mixed detail[, string faultname]]]) */ 
 PHP_METHOD (ws_fault, __construct) 
 {
