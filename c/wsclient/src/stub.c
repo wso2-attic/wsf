@@ -855,7 +855,7 @@ else
                 }
                 if(recipient_certificate_file)
                 {
-                    rampart_context_set_reciever_certificate_file(
+                    rampart_context_set_receiver_certificate_file(
                                 rampart_context, env, recipient_certificate_file);
                 }
                 else
@@ -879,7 +879,7 @@ else
                 }    
                 if(recipient_certificate_file)
                 {
-                    rampart_context_set_reciever_certificate_file(
+                    rampart_context_set_receiver_certificate_file(
                                 rampart_context, env, recipient_certificate_file);
                 }
                 else
