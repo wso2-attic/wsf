@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ns0="http://ws.apache.org/axis2" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ns1="http://ws.apache.org/axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://ws.apache.org/axis2">
+    <wsdl:types>
+        <xs:schema xmlns:ns="http://ws.apache.org/axis2" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://ws.apache.org/axis2">
+            <xs:element name="matrixAdd">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="param0" nillable="true" type="ns1:Matrix"/>
+                        <xs:element minOccurs="0" name="param1" nillable="true" type="ns1:Matrix"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="matrixAddResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ns1:Matrix"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema xmlns:ax21="http://ws.apache.org/axis2/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://ws.apache.org/axis2/xsd">
+            <xs:complexType name="Matrix">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="rows" nillable="true" type="ax21:MatrixRow"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="MatrixRow">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="columns" nillable="true" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="matrixAddRequest">
+        <wsdl:part name="parameters" element="ns0:matrixAdd"/>
+    </wsdl:message>
+    <wsdl:message name="matrixAddResponse">
+        <wsdl:part name="parameters" element="ns0:matrixAddResponse"/>
+    </wsdl:message>
+    <wsdl:message name="simpleAddRequest">
+        <wsdl:part name="parameters" element="ns0:simpleAdd"/>
+    </wsdl:message>
+    <wsdl:message name="simpleAddResponse">
+        <wsdl:part name="parameters" element="ns0:simpleAddResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="MatrixAdderPortType">
+        <wsdl:operation name="matrixAdd">
+            <wsdl:input message="ns0:matrixAddRequest" wsaw:Action="urn:matrixAdd"/>
+            <wsdl:output message="ns0:matrixAddResponse" wsaw:Action="urn:matrixAddResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="MatrixAdderSOAP11Binding" type="ns0:MatrixAdderPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="matrixAdd">
+            <soap:operation soapAction="urn:matrixAdd" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="MatrixAdderSOAP12Binding" type="ns0:MatrixAdderPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="matrixAdd">
+            <soap12:operation soapAction="urn:matrixAdd" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="MatrixAdderHttpBinding" type="ns0:MatrixAdderPortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="matrixAdd">
+            <http:operation location="MatrixAdder/matrixAdd"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="matrixAdd"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="matrixAdd"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="MatrixAdder">
+        <wsdl:port name="MatrixAdderSOAP11port_http" binding="ns0:MatrixAdderSOAP11Binding">
+            <soap:address location="http://localhost/services/wsdl_mode/matrix_service.php"/>
+        </wsdl:port>
+        <wsdl:port name="MatrixAdderSOAP12port_http" binding="ns0:MatrixAdderSOAP12Binding">
+            <soap12:address location="http://localhost/services/wsdl_mode/matrix_service.php"/>
+        </wsdl:port>
+        <wsdl:port name="MatrixAdderHttpport" binding="ns0:MatrixAdderHttpBinding">
+            <http:address location="http://localhost/services/wsdl_mode/matrix_service.php"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
