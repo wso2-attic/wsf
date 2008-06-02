@@ -35,26 +35,29 @@
 #include <neethi_engine.h>
 
 
-zval *g_arguments;
-zval *g_classmap;
 
 void wsf_wsdl_do_request(zval *client_zval,
                          zval* function_return_value,
                          zval* return_value,
+						 zval *arguments,
+						 zval *classmap,
                          axutil_env_t *env TSRMLS_DC);
 
-axiom_soap_envelope_t* wsf_wsdl_create_request_envelope(char *php_payload,
-                                           int soap_version,
-                                           axutil_env_t *env TSRMLS_DC);
+axiom_soap_envelope_t* 
+wsf_wsdl_create_request_envelope(char *php_payload,
+                                 int soap_version,
+                                 axutil_env_t *env TSRMLS_DC);
 
-void wsf_wsdl_handle_client_security(HashTable *client_ht,
-                                     zval **policy_array,
-                                     axutil_env_t *env,
-                                     axis2_svc_client_t * svc_client TSRMLS_DC);
+void 
+wsf_wsdl_handle_client_security(HashTable *client_ht,
+                             zval **policy_array,
+                             axutil_env_t *env,
+                             axis2_svc_client_t * svc_client TSRMLS_DC);
 
-void wsf_wsdl_handle_server_security(wsf_svc_info_t *svc,
-                                     zval **policy_options,
-                                     axutil_env_t *env TSRMLS_DC);
+void 
+wsf_wsdl_handle_server_security(wsf_svc_info_t *svc,
+                                 zval **policy_options,
+                                 axutil_env_t *env TSRMLS_DC);
 
 axiom_node_t *
 wsf_wsdl_send_receive_soap_envelope_with_op_client (
@@ -74,21 +77,24 @@ void wsf_wsdl_create_dynamic_client(
     axutil_env_t * env TSRMLS_DC)
 {
     zval *client_zval = NULL;
-    zval **tmp;
-    zval **wsdl_location;
-    zval **end_point;
-    zval **class_map;
+    zval **tmp = NULL;
+    zval **wsdl_location = NULL;
+    zval **end_point = NULL;
+    zval **class_map = NULL;
     zval request_function, retval, param1, param2;
     zend_file_handle script;
     zval *params[2];
-    zval *user_parameters;
-    zval *function_parameters;
-    php_stream *stream;
-    FILE *new_fp;
+    zval *user_parameters = NULL;
+    zval *function_parameters = NULL;
+    php_stream *stream = NULL;
+    FILE *new_fp = NULL;
 
-    zval **service_name;
-    zval **port_name;
-    zval **use_mtom;
+    zval **service_name = NULL;
+    zval **port_name = NULL;
+    zval **use_mtom = NULL;
+
+	zval *arguments = NULL;
+	zval *classmap = NULL; 
 
 
     if (instanceof_function (Z_OBJCE_P (this_ptr),
@@ -130,8 +136,8 @@ void wsf_wsdl_create_dynamic_client(
                             (void **) &class_map) == SUCCESS
              && Z_TYPE_PP (class_map) == IS_ARRAY){
             add_assoc_zval(user_parameters, WS_WSDL_CLASSMAP, *class_map);
-            g_classmap = *class_map;
-            g_arguments = args;
+            classmap = *class_map;
+            arguments = args;
         }
 
         if ( zend_hash_find ( Z_OBJPROP_P (this_ptr), WS_SERVICE_NAME, sizeof (WS_SERVICE_NAME),
@@ -200,11 +206,12 @@ void wsf_wsdl_create_dynamic_client(
             if (call_user_function (EG (function_table), (zval **) NULL,
                                     &request_function, &retval, 2,
                                     params TSRMLS_CC) == SUCCESS ){
-                if (Z_TYPE_P(&retval) == IS_ARRAY && Z_TYPE_P (&retval) != IS_NULL)
-                    wsf_wsdl_do_request(client_zval, &retval, return_value, env TSRMLS_CC);
+                if (Z_TYPE(retval) == IS_ARRAY && Z_ARRVAL (retval) != IS_NULL)
+                    wsf_wsdl_do_request(client_zval, &retval, return_value,arguments,classmap,
+					env TSRMLS_CC);
                 else if (Z_TYPE_P(&retval) == IS_STRING){
                     php_error_docref(NULL TSRMLS_CC, E_ERROR, 
-                                     "Error occured in script: %s",
+                                     "Error occurred in script: %s",
                                      Z_STRVAL_P(&retval));
                 }
             }
@@ -212,8 +219,13 @@ void wsf_wsdl_create_dynamic_client(
 }
 
 
-void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
-                         zval *return_value, axutil_env_t *env TSRMLS_DC)
+void 
+wsf_wsdl_do_request(zval *client_zval, 
+					zval *function_return_value,
+                    zval *return_value,
+					zval *arguments, 
+					zval *classmap, 
+					axutil_env_t *env TSRMLS_DC)
 {
     axis2_svc_client_t *svc_client = NULL;
     axis2_options_t *client_options = NULL;
@@ -462,7 +474,7 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
             } else if (Z_TYPE_PP (tmp_options) == IS_STRING) {
                 char *value = NULL;
                 value = Z_STRVAL_PP (tmp_options);
-                /* Check if SOAP with Attachmnts (SwA) has been enabled */
+                /* Check if SOAP with Attachments (SwA) has been enabled */
                 if (value && (strcmp (value, "swa") == 0 || strcmp (value, "SWA") == 0 
                             || strcmp (value, "SwA") == 0)) {
 
@@ -493,40 +505,42 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
 
     response_envelope = 
             axis2_svc_client_get_last_response_soap_envelope(svc_client, env);
-    if (response_envelope) {
-        env_node =
-            axiom_soap_envelope_get_base_node (response_envelope, env);
+    if (response_envelope) 
+	{
+        env_node = axiom_soap_envelope_get_base_node (response_envelope, env);
         has_fault = AXIS2_TRUE;
         
-        if (response_envelope)
+		if (response_envelope)
             soap_body = axiom_soap_envelope_get_body (response_envelope, env);
         if (soap_body)
             soap_fault = axiom_soap_body_get_fault (soap_body, env);
-        if (soap_fault) {
+        if (soap_fault) 
+		{
             soap_version = axis2_options_get_soap_version(client_options, env);
             fault_node = axiom_soap_fault_get_base_node(soap_fault, env);
-            if(fault_node){
+            if(fault_node)
+			{
                 res_text = axiom_node_to_string ( fault_node, env);
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                                 "[wsf_wsdl]Fault payload is %s", res_text);
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_wsdl]Fault payload is %s", res_text);
                 MAKE_STD_ZVAL (rfault);
                 INIT_PZVAL(rfault);
 
                 object_init_ex (rfault, ws_fault_class_entry);
                 
-                add_property_stringl (rfault, WS_MSG_PAYLOAD_STR, res_text,
-                                      strlen (res_text), 1);
+                add_property_stringl (rfault, WS_MSG_PAYLOAD_STR, res_text, strlen (res_text), 1);
                 
-                wsf_util_handle_soap_fault(rfault, env, fault_node, 
-                                           soap_version TSRMLS_CC);
+                wsf_util_handle_soap_fault(rfault, env, fault_node, soap_version TSRMLS_CC);
                 zend_throw_exception_object(rfault TSRMLS_CC);
                 return ;
             }
             
         }
-        if (soap_body)
+        if (soap_body) 
+		{
             body_base_node = axiom_soap_body_get_base_node(soap_body, env);
-        if (body_base_node && !soap_fault){
+		}
+        if (body_base_node && !soap_fault)
+		{
             axis2_char_t *response_buffer = NULL;
 
             zval *cid2str = NULL;
@@ -538,11 +552,10 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
             array_init (cid2str);
             array_init (cid2contentType);
 
-            wsf_util_get_attachments_from_soap_envelope(env, response_envelope,
-                        cid2str, cid2contentType TSRMLS_CC);
+            wsf_util_get_attachments_from_soap_envelope(env, response_envelope, cid2str, 
+				cid2contentType TSRMLS_CC);
 
-            axiom_soap_base_node = 
-                axiom_soap_envelope_get_base_node(response_envelope, env);
+            axiom_soap_base_node =  axiom_soap_envelope_get_base_node(response_envelope, env);
             res_params[0] = &res_param1;
             res_params[1] = &res_param2;
             res_params[2] = &res_param3;
@@ -554,22 +567,22 @@ void wsf_wsdl_do_request(zval *client_zval, zval *function_return_value,
             
             MAKE_STD_ZVAL(response_parameters);
             array_init(response_parameters);
-            if(g_classmap)
-                add_assoc_zval(response_parameters, WS_WSDL_CLASSMAP, g_classmap);
-            if(g_arguments)
-                add_assoc_zval(response_parameters, WS_WSDL_ARGS, g_arguments);
+            if(classmap)
+                add_assoc_zval(response_parameters, WS_WSDL_CLASSMAP, classmap);
+            if(arguments)
+                add_assoc_zval(response_parameters, WS_WSDL_ARGS, arguments);
 
             add_assoc_zval (response_parameters, "attachments", cid2str);
             add_assoc_zval (response_parameters, "cid2contentType", cid2contentType);
 
-            ZVAL_STRING(&response_function, WS_WSDL_RES_FUNCTION, 0);
-            ZVAL_STRING(res_params[0], response_buffer, 0);
+            ZVAL_STRING(&response_function, WS_WSDL_RES_FUNCTION, 1);
+            ZVAL_STRING(res_params[0], response_buffer, 1);
             INIT_PZVAL(res_params[0]);
-            ZVAL_STRING(res_params[1], response_sig_model_string, 0);
+            ZVAL_STRING(res_params[1], response_sig_model_string, 1);
             INIT_PZVAL(res_params[1]);
             ZVAL_ZVAL(res_params[2], response_parameters, NULL, NULL);
             INIT_PZVAL(res_params[2]);
-            ZVAL_STRING(res_params[3], wsdl_dom_string, 0);
+            ZVAL_STRING(res_params[3], wsdl_dom_string, 1);
             INIT_PZVAL(res_params[3]);
 
             MAKE_STD_ZVAL(res_retval);
