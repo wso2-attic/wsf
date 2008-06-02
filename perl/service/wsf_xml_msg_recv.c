@@ -29,6 +29,7 @@ static void xs_init (pTHX);
 
 EXTERN_C void boot_DynaLoader (pTHX_ CV* cv);
 
+static PerlInterpreter *my_perl;
 
 static axiom_node_t *
 wsf_xml_msg_recv_invoke_other (axis2_msg_recv_t* msg_recv,
@@ -40,7 +41,9 @@ wsf_xml_msg_recv_invoke_other (axis2_msg_recv_t* msg_recv,
                                axis2_char_t* class_name);
 
 static void
-invoke_perl_function(const axutil_env_t *env, axis2_char_t *s, axis2_char_t *n);
+invoke_perl_function(const axutil_env_t *env, 
+                     axis2_char_t *operation,
+                     axis2_char_t *class_name);
 
 
 
@@ -53,14 +56,16 @@ wsf_xml_msg_recv_create (const axutil_env_t* env)
     AXIS2_ENV_CHECK (env, NULL);
     msg_recv = axis2_msg_recv_create (env);
 
-    if (NULL == msg_recv) {
+    if (!msg_recv) 
+    {
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "xml msg recv null");
         return NULL;
     }
 
     status = axis2_msg_recv_set_scope (msg_recv, env, AXIS2_APPLICATION_SCOPE);
 
-    if (AXIS2_TRUE != status) {
+    if (AXIS2_TRUE != status) 
+    {
         axis2_msg_recv_free (msg_recv, env);
         return NULL;
     }
@@ -101,7 +106,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (axis2_msg_recv_t* msg_recv,
     axis2_char_t *local_name = NULL;
     axis2_char_t *soap_ns = AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
     axis2_char_t *operation_name = NULL;
-	char *classname = NULL;
+	axis2_char_t *classname = NULL;
 
     wsf_svc_info_t *svc_info = NULL;
 
@@ -117,7 +122,6 @@ wsf_xml_msg_recv_invoke_business_logic_sync (axis2_msg_recv_t* msg_recv,
     axiom_soap_fault_t *soap_fault = NULL;
 
     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "invoking business logic");
-
     AXIS2_PARAM_CHECK (env->error, in_msg_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK (env->error, out_msg_ctx, AXIS2_FAILURE);
 
@@ -128,7 +132,6 @@ wsf_xml_msg_recv_invoke_business_logic_sync (axis2_msg_recv_t* msg_recv,
 
     envelope = axis2_msg_ctx_get_soap_envelope (in_msg_ctx, env);
     body = axiom_soap_envelope_get_body (envelope, env);
-    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "get soap body");
     if (0 == axutil_strcmp (AXIS2_STYLE_DOC, style)) 
     {
         om_node = axiom_soap_body_get_base_node (body, env);
@@ -200,7 +203,6 @@ wsf_xml_msg_recv_invoke_business_logic_sync (axis2_msg_recv_t* msg_recv,
                                         local_name, AXIS2_HASH_KEY_STRING);
         }
     }
-    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "opearation name %s", operation_name);
     result_node = wsf_xml_msg_recv_invoke_other (msg_recv, env, svc_info, in_msg_ctx,
                                                  out_msg_ctx, operation_name, classname);
 
@@ -212,7 +214,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (axis2_msg_recv_t* msg_recv,
     else 
     {
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                         "[wsf log]response node is not null");
+                         "response node is not null");
     }
 
     prop = axis2_msg_ctx_get_property (in_msg_ctx, env, WS_SVC_INFO);
@@ -239,12 +241,11 @@ wsf_xml_msg_recv_invoke_business_logic_sync (axis2_msg_recv_t* msg_recv,
 
 
 
-    if (axis2_msg_ctx_get_soap_envelope (out_msg_ctx, env)) {
+    if (axis2_msg_ctx_get_soap_envelope (out_msg_ctx, env)) 
+    {
         /* service implementation has set the envelope,
            useful when setting a SOAP fault.
            No need to further process */
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                         " *********** soap fault set *********");
         return AXIS2_SUCCESS;
     }
 
@@ -257,30 +258,35 @@ wsf_xml_msg_recv_invoke_business_logic_sync (axis2_msg_recv_t* msg_recv,
 
     default_envelope = axiom_soap_envelope_create (env, env_ns);
 
-    if (!default_envelope) {
+    if (!default_envelope) 
+    {
 
         return AXIS2_FAILURE;
     }
 
     out_header = axiom_soap_header_create_with_parent (env, default_envelope);
-    if (!out_header) {
+    if (!out_header) 
+    {
 
         return AXIS2_FAILURE;
     }
 
     out_body = axiom_soap_body_create_with_parent (env, default_envelope);
-    if (!out_body) {
+    if (!out_body) 
+    {
 
         return AXIS2_FAILURE;
     }
 
     out_node = axiom_soap_body_get_base_node (out_body, env);
-    if (!out_node) {
+    if (!out_node) 
+    {
 
         return AXIS2_FAILURE;
     }
 
-    if (status != AXIS2_SUCCESS) {
+    if (status != AXIS2_SUCCESS) 
+    {
 
         /* something went wrong, set a SOAP Fault */
         axis2_char_t *fault_value_str = "env:Sender";
@@ -288,39 +294,50 @@ wsf_xml_msg_recv_invoke_business_logic_sync (axis2_msg_recv_t* msg_recv,
         axis2_char_t *err_msg = NULL;
 
         if (!skel_invoked)
+        {
             fault_value_str = "env:Receiver";
+        }
 
         err_msg = (char *) AXIS2_ERROR_GET_MESSAGE (env->error);
 
-        if (err_msg) {
+        if (err_msg) 
+        {
 
             fault_reason_str = err_msg;
-        } else {
+        } 
+        else 
+        {
 
             fault_reason_str = "Error occured while processing SOAP message";
         }
 
         soap_fault = axiom_soap_fault_create_default_fault (env, out_body,
-                                                            fault_value_str, fault_reason_str, soap_version);
+                                                            fault_value_str, 
+                                                            fault_reason_str, 
+                                                            soap_version);
     }
 
-    if (body_content_node) {
+    if (body_content_node) 
+    {
 
         axiom_node_add_child (out_node, env, body_content_node);
         status = axis2_msg_ctx_set_soap_envelope (out_msg_ctx, env,
                                                   default_envelope);
-    } else if (soap_fault) {
+    } 
+    else if (soap_fault) 
+    {
 
         axis2_msg_ctx_set_soap_envelope (out_msg_ctx, env, default_envelope);
         status = AXIS2_FAILURE; /* if there is a failure we have to return a failure code */
-    } else {
+    } 
+    else 
+    {
 
         /* we should free the memory as the envelope is not used, one way case */
         axiom_soap_envelope_free (default_envelope, env);
         default_envelope = NULL;
     }
 
-    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "SUCCESS", local_name);
     return AXIS2_SUCCESS;
 }
 
@@ -365,7 +382,7 @@ wsf_xml_msg_recv_get_method_name (axis2_msg_ctx_t*    msg_ctx,
     return name;
 }
 
-static PerlInterpreter *my_perl;
+
 static axiom_node_t *
 wsf_xml_msg_recv_invoke_other (axis2_msg_recv_t* msg_recv,
                                const axutil_env_t* env,
@@ -375,54 +392,70 @@ wsf_xml_msg_recv_invoke_other (axis2_msg_recv_t* msg_recv,
                                axis2_char_t* function_name,
                                axis2_char_t* class_name)
 {
+    AXIS2_PARAM_CHECK (env->error, msg_recv, NULL);
+    AXIS2_PARAM_CHECK (env->error, svc_info, NULL);
+    AXIS2_PARAM_CHECK (env->error, in_msg_ctx, NULL);
+    AXIS2_PARAM_CHECK (env->error, out_msg_ctx, NULL);
+
     axiom_node_t *node = NULL;
-    char *args[] = {NULL};
-    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "invoking wsf_xml_msg_recv_invoke");
-    char *embedding[] = { "", NULL};
-    embedding[1] = "/home/dinesh/perl/echo_service.pl";
+    axis2_char_t *embedding[] = {"", NULL};
+
+    if (!svc_info->script_filename)
+    {
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, 
+                         "perl function invocation failed, script_file name not found for \
+service %s", svc_info->svc_name);
+        return NULL;
+    }
+
+    embedding[1] = svc_info->script_filename;
     my_perl = perl_alloc();
     perl_construct( my_perl );
-/*     eval_pv("use WSO2::WSF::C", FALSE); */
-/*     eval_pv("use WSO2::WSF::Server", FALSE); */
-    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "calling perl_parse method");
+
+    /* loading WSO2::WSF::C and WSO2::WSF::Server using dynamic loader */
+    eval_pv("use WSO2::WSF::C", FALSE);
+    eval_pv("use WSO2::WSF::Server", FALSE);
+
     if (perl_parse(my_perl, xs_init, 2, embedding, NULL))
     {
         AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "perl_parse method failed");
         return NULL;
     }
-    
     perl_run(my_perl);
-    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "executed perl run");
-    invoke_perl_function(env, "test", "value");
- 
+    invoke_perl_function(env, function_name, NULL);
     if (SvTRUE(ERRSV))
     {
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "invoke perl function failed");
     }
+
     perl_destruct(my_perl);
     perl_free(my_perl);
-
     return node;
 }
 
 static void
-invoke_perl_function(const axutil_env_t *env, axis2_char_t *s, axis2_char_t *n)
+invoke_perl_function(const axutil_env_t *env, axis2_char_t *operation, axis2_char_t *class_name)
 {
+    if (!operation)
+    {
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, 
+                         "invoking perl function failed, operation not available");
+        return;
+    }
+
     dSP ;
 
     ENTER ;
     SAVETMPS ;
 
     PUSHMARK(SP) ;
-    XPUSHs(sv_2mortal(newSVpv(s,0)));
-    XPUSHs(sv_2mortal(newSVpv(n,0)));
+    XPUSHs(sv_2mortal(newSVpv("dinesh",0)));
+    XPUSHs(sv_2mortal(newSVpv("3",0)));
     PUTBACK;
 
-    perl_call_pv("echoFunction", G_DISCARD);
- 
+    perl_call_pv(operation, G_DISCARD);
     FREETMPS ;
     LEAVE ;
-
 }
 
 static void

@@ -31,8 +31,6 @@
 #include "wsf_out_transport_info.h"
 #include "wsf_stream.h"
 #include "wsf_constants.h"
-/*#include "wsf_util.h"*/
-/*#include "wsf_policy.h"*/
     
 #define READ_SIZE 32
 
@@ -296,12 +294,10 @@ wsf_worker_process_request (wsf_worker_t* worker,
     } 
     else if (!strcmp ("POST", request->request_method)) 
     {
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "processing post request \n");
         axis2_status_t status = AXIS2_FAILURE;
         status = axis2_http_transport_utils_process_http_post_request 
             (env, msg_ctx, request_body, out_stream, content_type,
             content_length, soap_action_str, (axis2_char_t *) req_url);
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "processed post request %d\n", status);
         if (status == AXIS2_FAILURE) 
         {
             axis2_char_t *fault_code = NULL;
@@ -340,8 +336,10 @@ wsf_worker_process_request (wsf_worker_t* worker,
     }
 
 	op_ctx =  axis2_msg_ctx_get_op_ctx(msg_ctx, env);
-    if (-1 == send_status) {
-        if (axis2_op_ctx_get_response_written (op_ctx, env)) {
+    if (-1 == send_status) 
+    {
+        if (axis2_op_ctx_get_response_written (op_ctx, env)) 
+        {
 			           
 			int rlen = 0;
             int readlen = 0;
@@ -355,10 +353,13 @@ wsf_worker_process_request (wsf_worker_t* worker,
 				request->result_length = rlen;
 				send_status = WS_HTTP_OK;
             }
-        } else {
+        } 
+        else 
+        {
             send_status = WS_HTTP_ACCEPTED;
         }
     }
+
     if (op_ctx) 
     {
         axis2_msg_ctx_t *out_msg_ctx = NULL, *in_msg_ctx = NULL;
@@ -399,13 +400,16 @@ wsf_worker_process_request (wsf_worker_t* worker,
         }
         
     } /* Done freeing message contexts */
-    if (soap_action_str) {
+    if (soap_action_str) 
+    {
         axutil_string_free (soap_action_str, env);
     }
-	if(request_body){
+	if(request_body)
+    {
 		wsf_stream_free(request_body, env);
 	}
-	if(req_url){
+	if(req_url)
+    {
 		AXIS2_FREE(env->allocator, req_url);
 	}
 
@@ -427,9 +431,20 @@ wsf_worker_free (wsf_worker_t*       worker,
 {
     if (!worker)
         return;
-    if (worker->conf_ctx != NULL) {
+    if (worker->conf_ctx != NULL) 
+    {
         axis2_conf_ctx_free (worker->conf_ctx, env);
         worker->conf_ctx = NULL;
     }
     AXIS2_FREE (env->allocator, worker);
 }
+
+
+
+
+
+
+
+
+
+

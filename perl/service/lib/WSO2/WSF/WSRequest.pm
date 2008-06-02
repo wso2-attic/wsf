@@ -66,6 +66,7 @@ sub populate {
     $self->{-url_abs} = $cgi->url(-absolute => 1);
     $self->{-url_full} = $cgi->url();
     $self->{-query_string} = $ENV{'QUERY_STRING'};
+    $self->{-script_filename} = $ENV{'SCRIPT_FILENAME'};
     return 1;
 }
 

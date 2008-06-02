@@ -2606,6 +2606,78 @@ XS(_wrap_wsf_svc_info_t_op_name_get) {
 }
 
 
+XS(_wrap_wsf_svc_info_t_script_filename_set) {
+  {
+    wsf_svc_info_t *arg1 = (wsf_svc_info_t *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: wsf_svc_info_t_script_filename_set(self,script_filename);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_wsf_svc_info, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "wsf_svc_info_t_script_filename_set" "', argument " "1"" of type '" "wsf_svc_info_t *""'"); 
+    }
+    arg1 = (wsf_svc_info_t *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "wsf_svc_info_t_script_filename_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    if (arg1->script_filename) free((char*)arg1->script_filename);
+    if (arg2) {
+      size_t size = strlen((const char *)(arg2)) + 1;
+      arg1->script_filename = (char *)(char *)memcpy((char *)malloc((size)*sizeof(char)), (const char *)(arg2), sizeof(char)*(size));
+    } else {
+      arg1->script_filename = 0;
+    }
+    
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_wsf_svc_info_t_script_filename_get) {
+  {
+    wsf_svc_info_t *arg1 = (wsf_svc_info_t *) 0 ;
+    char *result = 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: wsf_svc_info_t_script_filename_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_wsf_svc_info, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "wsf_svc_info_t_script_filename_get" "', argument " "1"" of type '" "wsf_svc_info_t *""'"); 
+    }
+    arg1 = (wsf_svc_info_t *)(argp1);
+    result = (char *) ((arg1)->script_filename);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_new_wsf_svc_info_t) {
   {
     wsf_svc_info_t *result = 0 ;
@@ -4394,6 +4466,8 @@ static swig_command_info swig_commands[] = {
 {"WSO2::WSF::Serverc::wsf_svc_info_t_generated_svc_name_get", _wrap_wsf_svc_info_t_generated_svc_name_get},
 {"WSO2::WSF::Serverc::wsf_svc_info_t_op_name_set", _wrap_wsf_svc_info_t_op_name_set},
 {"WSO2::WSF::Serverc::wsf_svc_info_t_op_name_get", _wrap_wsf_svc_info_t_op_name_get},
+{"WSO2::WSF::Serverc::wsf_svc_info_t_script_filename_set", _wrap_wsf_svc_info_t_script_filename_set},
+{"WSO2::WSF::Serverc::wsf_svc_info_t_script_filename_get", _wrap_wsf_svc_info_t_script_filename_get},
 {"WSO2::WSF::Serverc::new_wsf_svc_info_t", _wrap_new_wsf_svc_info_t},
 {"WSO2::WSF::Serverc::delete_wsf_svc_info_t", _wrap_delete_wsf_svc_info_t},
 {"WSO2::WSF::Serverc::wsf_req_info_t_svr_port_set", _wrap_wsf_req_info_t_svr_port_set},

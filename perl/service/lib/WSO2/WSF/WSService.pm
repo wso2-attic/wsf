@@ -61,6 +61,9 @@ sub new {
     WSO2::WSF::Serverc::wsf_svc_info_t_svc_name_set($svc_info, $svc_name);
     WSO2::WSF::Serverc::wsf_svc_info_t_msg_recv_set($svc_info, $msg_recv);
 
+    my $script_filename = $request->{-script_filename};
+    WSO2::WSF::Serverc::wsf_svc_info_t_script_filename_set($svc_info, $script_filename);
+
     #setting perl worker for svc_info structure because that is essential
     #for creating svc from svc_info.
     WSO2::WSF::Serverc::wsf_svc_info_t_perl_worker_set($svc_info, $worker);
@@ -112,9 +115,6 @@ sub reply {
     WSO2::WSF::Serverc::wsf_req_info_t_req_data_set($req_info, $request->{-postdata});
     WSO2::WSF::Serverc::wsf_req_info_t_req_data_length_set($req_info,
                                                            $request->{-content_length});
-
-    print $request->{-url_full}."\n";
-
     #populating svc_info struct
     print "worker ".$worker." env ".$env."\n";
 

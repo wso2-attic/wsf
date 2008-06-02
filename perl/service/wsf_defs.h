@@ -48,6 +48,7 @@ typedef struct wsf_svc_info
     char* port_name;
     int generated_svc_name;
     char* op_name;
+    char *script_filename;
 }
 wsf_svc_info_t;
 
