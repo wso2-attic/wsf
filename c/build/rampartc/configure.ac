@@ -136,7 +136,6 @@ AC_CONFIG_FILES([Makefile \
     src/omxmlsec/tokens/Makefile \
     src/omxmlsec/openssl/Makefile \
     src/omxmlsec/c14n/Makefile \
-    src/omxmlsec/saml/Makefile \
     src/data/Makefile \
     src/handlers/Makefile \
     src/core/Makefile \
