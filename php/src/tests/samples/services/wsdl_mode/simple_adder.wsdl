@@ -69,13 +69,13 @@
     </wsdl:binding>
     <wsdl:service name="SimpleAdder">
         <wsdl:port name="SimpleAdderSOAP11port_http" binding="ns0:SimpleAdderSOAP11Binding">
-            <soap:address location="http://localhost:8080/services/wsdl_mode/simple_service.php"/>
+            <soap:address location="http://localhost/services/wsdl_mode/simple_service.php"/>
         </wsdl:port>
         <wsdl:port name="SimpleAdderSOAP12port_http" binding="ns0:SimpleAdderSOAP12Binding">
-            <soap12:address location="http://localhost:8080/services/wsdl_mode/simple_service.php"/>
+            <soap12:address location="http://localhost/services/wsdl_mode/simple_service.php"/>
         </wsdl:port>
         <wsdl:port name="SimpleAdderHttpport" binding="ns0:SimpleAdderHttpBinding">
-            <http:address location="http://localhost:8080/services/wsdl_mode/simple_service.php"/>
+            <http:address location="http://localhost/services/wsdl_mode/simple_service.php"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>
