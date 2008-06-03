@@ -22,6 +22,7 @@ public class ClassShutterImpl implements ClassShutter {
         // For the moment we dont allow to execute java code
         return (fullClassName.startsWith("org.mozilla.javascript.") || fullClassName.startsWith("java.lang.") ||
                 fullClassName.startsWith("org.apache.axis2.AxisFault") ||
+                fullClassName.startsWith("org.wso2.mashup.MashupFault") ||
                 fullClassName.startsWith("org.apache.axiom.om.OMException"));
     }
 }
