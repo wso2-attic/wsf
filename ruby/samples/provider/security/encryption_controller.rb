@@ -24,6 +24,7 @@ end
 class EncryptionController < ApplicationController
 
 	def encryption
+    skip_before_filter :verify_authenticity_token
 		begin
             operations = {"echoString" => "echoFunction"}
             actions = {"http://php.axis2.org/samples/echoString" => "echoString"}

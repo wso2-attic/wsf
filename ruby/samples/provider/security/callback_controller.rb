@@ -15,8 +15,10 @@ end
  
 
 class CallbackController < ApplicationController
- 
-  	def callback
+   
+   skip_before_filter :verify_authenticity_token
+   
+   def callback
       	begin
 			operations = {"echoString" => "echoFunction"}
     		actions = {"http://php.axis2.org/samples/echoString" => "echoString"}

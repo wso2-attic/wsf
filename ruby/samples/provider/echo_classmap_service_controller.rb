@@ -17,6 +17,7 @@ end
 class EchoClassmapServiceController < ApplicationController
 
   require "wsf"
+  skip_before_filter :verify_authenticity_token
   
   def echo
 	  #operation to ruby function map

@@ -23,6 +23,7 @@ end
  
 
 class TimestampController < ApplicationController
+  skip_before_filter :verify_authenticity_token
  
      def timestamp
        begin

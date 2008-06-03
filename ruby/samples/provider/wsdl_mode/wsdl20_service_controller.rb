@@ -23,6 +23,9 @@ def GetPriceFunction(requestInfo)
 end
 
 class Wsdl20ServiceController < ApplicationController
+
+  skip_before_filter :verify_authenticity_token
+
   def index
     begin
       operations = {"GetPrice" => "GetPriceFunction"}

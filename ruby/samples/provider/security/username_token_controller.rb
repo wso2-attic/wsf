@@ -28,7 +28,7 @@ end
  
 
 class UsernameTokenController < ApplicationController
-
+  skip_before_filter :verify_authenticity_token
 	def usernametoken
         begin
             operations = {"echoString" => "echoFunction"}

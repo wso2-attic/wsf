@@ -36,6 +36,9 @@ def QueryPurchaseOrderFunction(orderInfo)
 end
 
 class Wsdl11ServiceController < ApplicationController
+  
+  skip_before_filter :verify_authenticity_token
+  
   def index
     begin
       operations = {"QueryPurchaseOrder" => "QueryPurchaseOrderFunction"}

@@ -17,6 +17,7 @@ end
 class MtomDownloadServiceController < ApplicationController
 
   require "wsf"
+  skip_before_filter :verify_authenticity_token
   
   def download
       #operation to ruby function map

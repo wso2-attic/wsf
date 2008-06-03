@@ -18,9 +18,9 @@ end
 puts "Creating rails application '" + rails_app_name + "' "
 
 if RUBY_PLATFORM =~ /mswin32/
-	system("cmd /C rails " + rails_app_name)
+	system("cmd /C rails -d mysql " + rails_app_name)
 else
-	system("rails " + rails_app_name)
+	system("rails -d mysql " + rails_app_name)
 end
 
 #system("rails " + rails_app_name)

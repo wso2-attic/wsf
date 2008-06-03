@@ -29,6 +29,7 @@ end
 class MtomUploadServiceController < ApplicationController
 
   require "wsf"
+  skip_before_filter :verify_authenticity_token
   
   def upload
       #operation to ruby function map
