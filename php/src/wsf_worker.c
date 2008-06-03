@@ -21,6 +21,7 @@
 #include <axis2_msg_ctx.h>
 #include <axis2_http_out_transport_info.h>
 #include <axis2_http_transport_utils.h>
+#include <axis2_http_accept_record.h>
 #include <axis2_op_ctx.h>
 #include <axis2_engine.h>
 #include <axutil_uuid_gen.h>
@@ -177,7 +178,8 @@ wsf_worker_find_op_and_params_with_location_and_method(
 
    if (op)
    {
-		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsfphp] Operation found using target endpoint uri fragment");
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+			"[wsfphp] Operation found using target endpoint uri fragment");
    }else
    {
 		int i = 0;
@@ -190,7 +192,7 @@ wsf_worker_find_op_and_params_with_location_and_method(
 		http_method = axis2_msg_ctx_get_rest_http_method(msg_ctx, env);
 		if (!http_method)
 		{
-			AXIS2_LOG_WARNING (env->log, AXIS2_LOG_SI, "unable to find http method \
+			AXIS2_LOG_WARNING (env->log, AXIS2_LOG_SI, "Unable to find http method \
 				for location: %s", svc_info->loc_str);
 			return NULL;
 		}
@@ -221,6 +223,41 @@ wsf_worker_find_op_and_params_with_location_and_method(
 		axis2_msg_ctx_set_supported_rest_http_methods(msg_ctx, env, supported_rest_methods);
 	}	
 	return op;
+}
+
+axutil_array_list_t*
+wsf_worker_process_accept_headers(axis2_char_t *accept_value, axutil_env_t *env)
+{
+	axutil_array_list_t *accept_field_list = NULL;
+	axutil_array_list_t *accept_record_list = NULL;
+	accept_field_list = axutil_tokenize(env, accept_value, ',');
+	if (accept_field_list && axutil_array_list_size(accept_field_list, env) > 0)
+	{
+		axis2_char_t *token = NULL;
+		accept_record_list = axutil_array_list_create(env, 
+			axutil_array_list_size(accept_field_list, env));
+		do
+		{
+			if (token)
+			{
+				axis2_http_accept_record_t *rec = NULL;
+				rec = axis2_http_accept_record_create(env, token);
+				if (rec)
+				{
+					axutil_array_list_add(accept_field_list, env, rec);
+				}
+				AXIS2_FREE(env->allocator, token);
+			}
+			token = (axis2_char_t *)axutil_array_list_remove(accept_field_list, env, 0);
+		}
+		while(token);
+	}
+	if (accept_record_list && 
+		axutil_array_list_size(accept_record_list, env) > 0)
+	{
+		return accept_record_list;
+	}
+	return NULL;
 }
 
 
@@ -381,7 +418,7 @@ wsf_worker_process_request (
     axutil_env_t * env,
     wsf_request_info_t * request,
 	wsf_response_info_t *response,
-    wsf_svc_info_t * svc_info TSRMLS_DC) 
+    wsf_svc_info_t *svc_info TSRMLS_DC) 
 {
     axis2_conf_ctx_t * conf_ctx = NULL;
     axis2_msg_ctx_t * msg_ctx = NULL;
@@ -402,6 +439,7 @@ wsf_worker_process_request (
     axutil_string_t * ctx_uuid_str = NULL;
 	axis2_op_t *op = NULL;
 	axis2_bool_t request_handled = AXIS2_FALSE;
+
 
     if (!request)
 		return -1;
@@ -548,6 +586,39 @@ wsf_worker_process_request (
         AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "Error occurred in creating input stream.");
         return AXIS2_CRITICAL_FAILURE;
     }
+
+	/** Handle accept headers */
+	{
+		axutil_array_list_t *accept_header_list = NULL;
+		axutil_array_list_t *accept_charset_list = NULL;
+		axutil_array_list_t *accept_language_list = NULL;
+		if(request->accept)
+		{
+			accept_header_list = wsf_worker_process_accept_headers(request->accept,env);
+			if(accept_header_list)
+			{
+				axis2_msg_ctx_set_http_accept_record_list(msg_ctx, env, accept_header_list);
+			}
+		}
+		if(request->accept_charset)
+		{
+			accept_charset_list = wsf_worker_process_accept_headers(request->accept_charset, env);
+			if(accept_charset_list)
+			{
+				axis2_msg_ctx_set_http_accept_charset_record_list(msg_ctx, env, accept_charset_list);
+			}
+		}
+		if(request->accept_language)
+		{
+			accept_language_list = wsf_worker_process_accept_headers(request->accept_language, env);
+			if(accept_language_list)
+			{
+				axis2_msg_ctx_set_http_accept_language_record_list(msg_ctx, env, accept_language_list);
+			}
+		}
+	}
+	
+
 	if (strcmp (AXIS2_HTTP_GET, request->request_method) == 0 || 
 		strcmp (AXIS2_HTTP_HEAD, request->request_method) == 0 || 
 		strcmp (AXIS2_HTTP_DELETE, request->request_method) == 0) 
@@ -836,6 +907,142 @@ wsf_worker_process_request (
 		response->response_data = axutil_strdup(env, body_string);
 	}
 	op_ctx =  axis2_msg_ctx_get_op_ctx(msg_ctx, env);
+	
+	if(!request_handled)
+	{
+		axis2_bool_t *doing_rest = AXIS2_FALSE;
+		axis2_bool_t do_rest = AXIS2_FALSE;
+		axis2_msg_ctx_t **msg_ctx_map = NULL;
+		axis2_msg_ctx_t *out_msg_ctx = NULL;
+		msg_ctx_map = axis2_op_ctx_get_msg_ctx_map(op_ctx, env);
+		out_msg_ctx = msg_ctx_map[AXIS2_WSDL_MESSAGE_LABEL_OUT];
+
+		if ((strcmp(AXIS2_HTTP_POST, request->request_method)!= 0)&& 
+			axis2_msg_ctx_get_doing_rest(msg_ctx, env))
+		{
+			do_rest = AXIS2_TRUE;
+		}
+		if ((request->accept || request->accept_charset ||
+			request->accept_language) && do_rest)
+		{
+			axis2_char_t *content_type_header_value = NULL;
+			axis2_char_t *temp = NULL;
+			axis2_char_t *language_header_value = NULL;
+
+			content_type_header_value = (axis2_char_t *) request->content_type;
+			language_header_value = axis2_msg_ctx_get_content_language(out_msg_ctx,env);
+			if (content_type_header_value)
+			{
+				temp = axutil_strdup(env, content_type_header_value);
+			}
+			if (temp)
+			{
+				axis2_char_t *content_type = NULL;
+				axis2_char_t *char_set = NULL;
+				axis2_char_t *temp2 = NULL;
+
+				temp2 = strchr(temp, ';');
+				if (temp2)
+				{
+					*temp2 = '\0';
+					temp2++;
+					char_set = axutil_strcasestr(temp2, AXIS2_HTTP_CHAR_SET_ENCODING);
+				}
+				if (char_set)
+				{
+					char_set = axutil_strltrim(env, char_set, " \t=");
+				}
+				if (char_set)
+				{
+					temp2 = strchr(char_set, ';');
+				}
+				if (temp2)
+				{
+					*temp2 = '\0';
+				}
+				content_type = axutil_strtrim(env, temp, NULL);
+
+				if (temp)
+				{
+					AXIS2_FREE(env->allocator, temp);
+					temp = NULL;
+				}
+				if (content_type && request->accept &&
+				!axutil_strcasestr(request->accept, content_type))
+				{
+					temp2 = strchr(content_type, '/');
+					if (temp2)
+					{
+						*temp2 = '\0';
+						temp = AXIS2_MALLOC(env->allocator,
+							sizeof(axis2_char_t) * ((int)strlen(content_type) + 3));
+						if (!temp)
+						{
+							AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
+							return AXIS2_FALSE;
+						}
+						sprintf(temp, "%s/*", content_type);
+						if (!axutil_strcasestr(request->accept, temp) &&
+							!strstr(request->accept, AXIS2_HTTP_HEADER_ACCEPT_ALL))
+						{
+							response->response_data = 
+								axis2_http_transport_utils_get_not_acceptable(env, conf_ctx);
+							response->content_type = AXIS2_HTTP_HEADER_ACCEPT_TEXT_HTML;
+							if (response->response_data)
+							{
+								response->response_length = axutil_strlen(response->response_data);
+							}
+							response->http_status_code = AXIS2_HTTP_RESPONSE_NOT_ACCEPTABLE_CODE_VAL;
+							response->http_status_code_name = AXIS2_HTTP_RESPONSE_NOT_IMPLEMENTED_CODE_NAME;
+							request_handled = AXIS2_TRUE;
+						}
+						AXIS2_FREE(env->allocator, temp);
+					}
+				}
+				if (content_type)
+				{
+					AXIS2_FREE(env->allocator, content_type);
+				}
+				if (char_set && request->accept_charset && 
+				!axutil_strcasestr(request->accept_charset , char_set))
+				{
+					response->response_data = 
+						axis2_http_transport_utils_get_not_acceptable(env, conf_ctx);
+					response->content_type = AXIS2_HTTP_HEADER_ACCEPT_TEXT_HTML;
+
+					if (response->response_data)
+					{
+						response->response_length = axutil_strlen(response->response_data);
+					}
+					request_handled = AXIS2_TRUE;
+					response->http_status_code = AXIS2_HTTP_RESPONSE_NOT_ACCEPTABLE_CODE_VAL;
+					response->http_status_code_name = AXIS2_HTTP_RESPONSE_NOT_ACCEPTABLE_CODE_NAME;
+				}
+				if (char_set)
+				{
+					AXIS2_FREE(env->allocator, char_set);
+				}
+			}
+			if (language_header_value)
+			{
+				if (request->accept_language &&
+				!axutil_strcasestr(request->accept_language	, language_header_value))
+				{
+					response->response_data = 
+						axis2_http_transport_utils_get_not_acceptable(env, conf_ctx);
+					response->content_type = AXIS2_HTTP_HEADER_ACCEPT_TEXT_HTML;
+					if (response->response_data)
+					{
+						response->response_length = axutil_strlen(response->response_data);
+					}
+					response->http_status_code = AXIS2_HTTP_RESPONSE_NOT_ACCEPTABLE_CODE_VAL;
+					response->http_status_code_name = AXIS2_HTTP_RESPONSE_NOT_ACCEPTABLE_CODE_NAME;
+				}
+			}
+		}
+	}
+
+
 	if (op_ctx && (!request_handled))
 	{
 		axis2_bool_t doing_rest = AXIS2_FALSE;
@@ -859,7 +1066,6 @@ wsf_worker_process_request (
 
 			if(doing_rest)
 			{
-			/** TODO Handle HTTP Accept headers */
 
 				axis2_msg_ctx_t *out_msg_ctx = NULL;
 				axis2_msg_ctx_t **msg_ctx_map = NULL;
@@ -894,6 +1100,18 @@ wsf_worker_process_request (
 			/** PHP always writes a content type header, therefor set the received
 			    content type instead of "text/html" set by PHP*/
 			response->content_type = axutil_strdup(env, request->content_type);
+			/*
+			if(doing_rest)
+			{
+				axis2_msg_ctx_t *out_msg_ctx = NULL;
+				axis2_msg_ctx_t **msg_ctx_map = NULL;
+				int status_code = AXIS2_HTTP_RESPONSE_ACK_CODE_VAL;
+
+				msg_ctx_map = axis2_op_ctx_get_msg_ctx_map(op_ctx, env);
+				out_msg_ctx = msg_ctx_map[AXIS2_WSDL_MESSAGE_LABEL_OUT];
+				status_code = axis2_msg_ctx_get_status_code(out_msg_ctx, env);
+				response->http_status_code = wsf_worker_check_status_code(status_code);
+			}*/
 		}
 		request_handled = AXIS2_TRUE;
 	}
