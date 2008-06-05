@@ -44,4 +44,7 @@ public interface JavaScriptEngineConstants {
 
     // Used to keep track of the presence of annotation of the types 
     public static final String ANNOTATED = "annotated";
+
+    // Refers to username of the mashup Author
+    public static final String ALLOW_HTTP_TRAFFIC_TO_MASHUPS ="allowHTTPAccess";
 }

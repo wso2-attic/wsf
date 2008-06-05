@@ -109,19 +109,18 @@ public class JavaScriptEngineUtils {
     }
 
     public static void loadGlobalPropertyObjects(JavaScriptEngine engine,
-                                                 AxisConfiguration axisConfig, String serviceName,
-                                                 boolean allowHttpAccess) {
+                                                 AxisConfiguration axisConfig, String serviceName) {
         Parameter propertyObjectParameter = axisConfig
                 .getParameter("javascript.global.propertyobjects");
         if ((propertyObjectParameter != null) &&
                 (propertyObjectParameter.getParameterType() == 2)) {
             OMElement paraElement = propertyObjectParameter.getParameterElement();
-            loadGlobalProperties(paraElement, engine, serviceName, allowHttpAccess);
+            loadGlobalProperties(paraElement, engine, serviceName);
         }
     }
 
     private static void loadGlobalProperties(OMElement hostObjectElement, JavaScriptEngine engine,
-                                             String serviceName, boolean allowHttpAccess) {
+                                             String serviceName) {
         Iterator iterator = hostObjectElement.getChildrenWithName(new QName("global.property"));
         while (iterator.hasNext()) {
             OMElement element = (OMElement) iterator.next();
@@ -143,6 +142,8 @@ public class JavaScriptEngineUtils {
                     if (object instanceof ConfigurationContext) {
                         ConfigurationContext configurationContext = (ConfigurationContext) object;
                         AxisConfiguration configuration = configurationContext.getAxisConfiguration();
+                        Boolean allowHttpAccess = (Boolean) configuration.getParameterValue(
+                                JavaScriptEngineConstants.ALLOW_HTTP_TRAFFIC_TO_MASHUPS);
 
                         // The Mashup server may be running behind a proxy so the best way to get
                         // the http address would be to get it from the http transport listener
@@ -151,7 +152,7 @@ public class JavaScriptEngineUtils {
                         // If httpAccess is allowed we take the http transport else we switch to the
                         // https transport
                         TransportInDescription inDescription;
-                        if (allowHttpAccess) {
+                        if (allowHttpAccess.booleanValue()) {
                             inDescription = configuration
                                         .getTransportIn("http");
                         } else {
