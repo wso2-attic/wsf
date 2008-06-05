@@ -22,6 +22,9 @@
 #include <axis2_http_simple_response.h>
 #include <axis2_transport_out_desc.h>
 #include <axutil_param_container.h>
+#if defined(WIN32)
+#include <windows.h>
+#endif
 
 static char *content_type_array [] = 
 { 
@@ -363,7 +366,9 @@ wsclient_get_attachment (const axutil_env_t *env,
 					axis2_char_t *cid_value;
 
                     #if defined(WIN32)
-                        pwd = AXIS2_GETENV ("%~sdp0");
+						char path[256];
+						GetCurrentDirectory(256, path);
+						pwd = path;
                     #else
                         pwd = AXIS2_GETENV ("PWD");
                     #endif

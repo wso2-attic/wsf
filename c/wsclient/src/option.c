@@ -17,6 +17,9 @@
 
 #include "option.h"
 #include "constants.h"
+#if defined(WIN32)
+#include <windows.h>
+#endif
 
 /* this is a global variable used in wsclient_stub.c */
 int array_size;
@@ -146,7 +149,9 @@ wsclient_process_options (int argc,
 								char *pwd;
 
                                 #if defined(WIN32)
-								    pwd = AXIS2_GETENV ("%~sdp0");
+									char path[256];
+								    GetCurrentDirectory(256, path);
+									pwd = path;
                                 #else
 								    pwd = AXIS2_GETENV ("PWD");
                                 #endif
