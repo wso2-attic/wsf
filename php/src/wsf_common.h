@@ -70,8 +70,8 @@ typedef enum ws_input_types
 #define WS_PORT_NAME    "portName"
 
 /** REST */
-#define WS_OP_TO_URL_MAP "RESTMaping"
-#define WS_REST_LOCATION "restLocation"
+#define WS_OP_TO_URL_MAP "RESTMapping"
+#define WS_REST_LOCATION "RESTLocation"
 #define WS_RESPONSE_CONTENT_TYPE "contentType"
 
 /** Options array options */
