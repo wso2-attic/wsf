@@ -362,7 +362,12 @@ wsclient_get_attachment (const axutil_env_t *env,
 					axiom_attribute_t *href = NULL;
 					axis2_char_t *cid_value;
 
-					pwd = AXIS2_GETENV ("PWD");
+                    #if defined(WIN32)
+                        pwd = AXIS2_GETENV ("%~sdp0");
+                    #else
+                        pwd = AXIS2_GETENV ("PWD");
+                    #endif
+
 					relative = wsclient_get_relative_path (env, pwd, base_dir);
 
 					attribute_qname = axutil_qname_create (env, "href", NULL, NULL);

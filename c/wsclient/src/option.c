@@ -144,7 +144,13 @@ wsclient_process_options (int argc,
 							if (!strcmp (long_name, "xop-in") || (!strcmp (long_name, "xop-out")))
 							{
 								char *pwd;
-								pwd = AXIS2_GETENV ("PWD");
+
+                                #if defined(WIN32)
+								    pwd = AXIS2_GETENV ("%~sdp0");
+                                #else
+								    pwd = AXIS2_GETENV ("PWD");
+                                #endif
+
 								strcat (pwd, "/");
 								if (strstr (optional_value, "http://"))
 								{
