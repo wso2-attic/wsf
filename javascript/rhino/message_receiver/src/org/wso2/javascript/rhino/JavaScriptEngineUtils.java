@@ -109,18 +109,19 @@ public class JavaScriptEngineUtils {
     }
 
     public static void loadGlobalPropertyObjects(JavaScriptEngine engine,
-                                                 AxisConfiguration axisConfig, String serviceName) {
+                                                 AxisConfiguration axisConfig, String serviceName,
+                                                 boolean allowHttpAccess) {
         Parameter propertyObjectParameter = axisConfig
                 .getParameter("javascript.global.propertyobjects");
         if ((propertyObjectParameter != null) &&
                 (propertyObjectParameter.getParameterType() == 2)) {
             OMElement paraElement = propertyObjectParameter.getParameterElement();
-            loadGlobalProperties(paraElement, engine, serviceName);
+            loadGlobalProperties(paraElement, engine, serviceName, allowHttpAccess);
         }
     }
 
     private static void loadGlobalProperties(OMElement hostObjectElement, JavaScriptEngine engine,
-                                             String serviceName) {
+                                             String serviceName, boolean allowHttpAccess) {
         Iterator iterator = hostObjectElement.getChildrenWithName(new QName("global.property"));
         while (iterator.hasNext()) {
             OMElement element = (OMElement) iterator.next();
@@ -146,9 +147,17 @@ public class JavaScriptEngineUtils {
                         // The Mashup server may be running behind a proxy so the best way to get
                         // the http address would be to get it from the http transport listener
                         // cause its configured correctly if its behind a proxy
-                        TransportInDescription inDescription =
-                                configuration
+
+                        // If httpAccess is allowed we take the http transport else we switch to the
+                        // https transport
+                        TransportInDescription inDescription;
+                        if (allowHttpAccess) {
+                            inDescription = configuration
                                         .getTransportIn("http");
+                        } else {
+                            inDescription = configuration
+                                        .getTransportIn("https");
+                        }
 
                         // As this is a mashup service it would have the name in the form of
                         // authorName-serviceName and this service is not added to the axisConfig as
