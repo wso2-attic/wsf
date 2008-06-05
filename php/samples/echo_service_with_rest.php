@@ -17,13 +17,13 @@
 
 function echoFunction($inMessage) {
 
-    $outMessage = new WSMessage($inMessage->str);
+	$outMessage = new WSMessage($inMessage->str);
 
     return $outMessage;
 }
 
 $operations = array("echoString" => "echoFunction","echoString1"=>"echoFunction");
-$restmap = array ("echoString"=>array("HTTPMethod"=>"GET","restLocation"=> "a/b"),
+$restmap = array ("echoString"=>array("HTTPMethod"=>"GET","restLocation"=> "a/{b}"),
 		  "echoString1"=>array("HTTPMethod"=>"POST","restLocation"=> "c"));
 $service = new WSService(array("operations" => $operations, "RESTMaping"=>$restmap));
 $service->reply($requestPayloadString);
