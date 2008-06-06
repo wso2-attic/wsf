@@ -49,7 +49,7 @@ function matrixAdd($input) {
             $matrix2->rows[] = $row2;
             $row2->columns = array();
 
-            if(count($matrix0->columns) == count($matrix1->columns)) {
+            if(count($row0->columns) == count($row1->columns)) {
                 for($j = 0; $j< count($row0->columns); $j ++ ) {
                     $col0 = $row0->columns[$j];
                     $col1 = $row1->columns[$j];
