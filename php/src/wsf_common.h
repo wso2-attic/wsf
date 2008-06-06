@@ -69,6 +69,8 @@ typedef enum ws_input_types
 #define WS_SERVICE_NAME "serviceName"
 #define WS_PORT_NAME    "portName"
 
+#define WS_ANNOTATIONS "annotations"
+
 /** REST */
 #define WS_OP_TO_URL_MAP "RESTMapping"
 #define WS_REST_LOCATION "RESTLocation"
@@ -248,6 +250,8 @@ typedef struct wsf_svc_info
   zval *class_map;
 
   zval *wsdl_gen_class_map;
+
+  zval *wsdl_gen_annotations;
 
   char *wsdl;
 

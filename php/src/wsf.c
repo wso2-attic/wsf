@@ -824,6 +824,7 @@ PHP_METHOD (ws_service, __construct)
     HashTable * ht_ops_to_mep = NULL;
     HashTable * ht_opParams = NULL;
 	HashTable * ht_classes = NULL;
+	HashTable * ht_annotations = NULL;
 	HashTable * ht_rest_map = NULL;
 	zval **wsdl_tmp = NULL;
     char *service_name = NULL;
@@ -980,6 +981,13 @@ PHP_METHOD (ws_service, __construct)
                 (void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
                  port_name = Z_STRVAL_PP(tmp);
             }
+            if(zend_hash_find(ht_options, WS_ANNOTATIONS, sizeof(WS_ANNOTATIONS),
+                (void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY){
+                 ht_annotations = Z_ARRVAL_PP(tmp);
+
+                 svc_info->wsdl_gen_annotations = *tmp;
+                 zval_add_ref(&(svc_info->wsdl_gen_annotations));
+            }
         }
     }
     
@@ -1062,8 +1070,8 @@ static void generate_wsdl_for_service(zval *svc_zval,
         int in_cmd TSRMLS_DC)
 {
         char *service_name = NULL;
-        zval func, retval, param1, param2, param3, param4, param5, param6, param7, param8;
-        zval * params[8];
+        zval func, retval, param1, param2, param3, param4, param5, param6, param7, param8, param9;
+        zval * params[9];
         axutil_hash_index_t * hi = NULL;
 		zval * functions = NULL;
         zend_file_handle script;
@@ -1158,6 +1166,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
             params[5] = &param6;
             params[6] = &param7;
             params[7] = &param8;
+            params[8] = &param9;
             
             /** for WSDL version. default is wsdl 1.1*/ 
             if ((stricmp (wsdl_ver_str , "wsdl")) == 0)
@@ -1225,6 +1234,11 @@ static void generate_wsdl_for_service(zval *svc_zval,
             if(class_map) {
                 ZVAL_ZVAL (params[7], *class_map, NULL, NULL);
                 INIT_PZVAL (params[7]);
+                args_count ++;
+            }
+            if(svc_info->wsdl_gen_annotations) {
+                ZVAL_ZVAL (params[8], svc_info->wsdl_gen_annotations, NULL, NULL);
+                INIT_PZVAL (params[8]);
                 args_count ++;
             }
 
