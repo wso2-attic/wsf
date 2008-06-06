@@ -131,6 +131,17 @@ class WS_WSDL_Binding
                 if ($value == $name)
                 $op->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $key);
             }
+            $action_ele = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_SOAP_NAMESPACE,
+                          WS_WSDL_Const::WS_WSDL_OPERATION_ATTR_NAME);
+            $action_ele->setAttribute(WS_WSDL_Const::WS_WSDL_SOAP_ACTION_ATTR_NAME,
+                                      WS_WSDL_Const::WS_WSDL_HTTP_ATTR_NAME.
+                                      $this->wsdl_location."/".$name);
+            $action_ele->setAttribute(WS_WSDL_Const::WS_WSDL_STYLE_ATTR_NAME,
+                                      WS_WSDL_Const::WS_WSDL_RPC_ATTR_NAME);
+            $op->appendChild($action_ele);
+
+
+
             foreach(array(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME,
                           WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME) as $type) {
                 $sbinding_ele = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
