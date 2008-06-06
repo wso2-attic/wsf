@@ -23,7 +23,6 @@
 class WS_WSDL_Message
 {
     public $operations;
-    private $simpleTypes;
     private $fun_mapping;
     private $classmap;
     /*
@@ -32,10 +31,9 @@ class WS_WSDL_Message
      * @param Array $simpleTypeArray type mapping table 
      */
 
-    function __construct($operationsArray, $simpleTypeArray, $ops_to_functions, $classmap)
+    function __construct($operationsArray, $ops_to_functions, $classmap)
     {
         $this->operations = $operationsArray;
-        $this->simpleTypes = $simpleTypeArray;
         $this->fun_mapping = $ops_to_functions;
         $this->classmap = $classmap;
     }
@@ -59,10 +57,11 @@ class WS_WSDL_Message
             {
                 $el = $msg_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                                 WS_WSDL_Const::WS_WSDL_MESSAGE_ATTR_NAME);
-                foreach($this->fun_mapping as $key => $value){
-                    if($value == $name)
+                foreach($this->fun_mapping as $key => $value) {
+                    if($value == $name) {
                         $el->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME,
                                           "$key".ucfirst($attr_name_to_postfix_map[$type]));
+                    }
                 }
                 $part = $msg_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                                   WS_WSDL_Const::WS_WSDL_PART_ATTR_NAME);
@@ -71,11 +70,11 @@ class WS_WSDL_Message
 
                 if (ucfirst(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME) == ucfirst($type))
                 {
-                    foreach($this->fun_mapping as $key => $value){
+                    foreach($this->fun_mapping as $key => $value) {
                         if($value == $name) {
                             if($this->classmap) {
                                 $part->setAttribute(WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME,
-                                               WS_WSDL_Const::WS_WSDL_DEFAULT_SCHEMA_ATTR_NAME.":". $ele_names_info["in"]);
+                                                $ele_names_info[$name]["in"]);
                             }
                             else {
                                 $part->setAttribute(WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME,
@@ -90,7 +89,7 @@ class WS_WSDL_Message
                         if($value == $name) {
                             if($this->classmap) {
                                 $part->setAttribute(WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME,
-                                               WS_WSDL_Const::WS_WSDL_DEFAULT_SCHEMA_ATTR_NAME.":". $ele_names_info["out"]);
+                                               $ele_names_info[$name]["out"]);
                             }
                             else {
                                 $part->setAttribute(WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME,
@@ -101,7 +100,6 @@ class WS_WSDL_Message
                 }
 
                 $el->appendChild($part);
-
 
                 $msg_root->appendChild($el);
             }

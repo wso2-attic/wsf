@@ -35,14 +35,14 @@ class WS_WSDL_Creator
 {
     public $namespace;
     private $endpoint;
-    private $f_name;
+    private $f_arry;
     private $class_arry;
     private $service_name;
     private $Binding_style;
     private $wsdl_version;
     public $ops_to_functions;
-
     private $classmap;
+    private $annotations;
 
     /**
      * Constructor of the class
@@ -55,26 +55,31 @@ class WS_WSDL_Creator
      * @param string $wsdl_ver wsdl_version(wsdl1.1 or wsdl2)
      */
     function __construct($f_arry, $class_arry, $service, $endpoints,
-                         $binding_style,  $ns , $wsdl_ver, $op_arry, $classmap)
+                         $binding_style,  $ns , $wsdl_ver,
+                         $op_arry, $classmap, $annotations)
     {
         if(!$ns) {
             $this->namespace = $endpoints;
         }
-        else
+        else {
             $this->namespace = $ns;
+        }
 
         $this->endpoint = $endpoints;
-        $this->f_name = $f_arry;
+        $this->f_arry = $f_arry;
         $this->class_arry = $class_arry;
         $this->service_name = $service;
         $this->Binding_style = $binding_style;
-        if($wsdl_ver == "wsdl1.1")
+        if($wsdl_ver == "wsdl1.1") {
             $this->wsdl_version = "wsdl1";
-        if($wsdl_ver == "wsdl2.0")
+        }
+        if($wsdl_ver == "wsdl2.0") {
             $this->wsdl_version = "wsdl2";
+        }
         $this->ops_to_functions = $op_arry;
         $this->classmap = $classmap;
-
+        
+        $this->annotations = $annotations;
     }
 
     /**
@@ -86,6 +91,7 @@ class WS_WSDL_Creator
 
         $wsdl_root_ele = $wsdl_dom->createElementNS(WS_WSDL_const::WS_SCHEMA_WSDL_NAMESPACE,
                                                     WS_WSDL_const::WS_WSDL_DEFINITION);
+        $wsdl_dom->appendChild($wsdl_root_ele);
 
         $wsdl_root_ele->setAttributeNS(WS_WSDL_const::WS_WSDL_DEF_SCHEMA_URI,
                                        WS_WSDL_const::WS_WSDL_DEF_XSD_QN,
@@ -120,19 +126,26 @@ class WS_WSDL_Creator
                                      $this->namespace);
 
 
-        $oper_obj = new WS_WSDL_Operations($this->f_name, $this->class_arry);
+        $oper_obj = new WS_WSDL_Operations($this->f_arry, $this->class_arry);
+
         $createdTypeArry = $oper_obj->createdTypes;
         $operationsArry = $oper_obj->operations;
         $xsdArry = $oper_obj->xsdTypes;
 
 
         if($this->Binding_style == "doclit") {
-            $type_obj = new WS_WSDL_Type($this->namespace, $createdTypeArry,
-                                        $xsdArry, $this->ops_to_functions, $this->classmap);
-            $ele_names_info = $type_obj->createDocLitType($wsdl_dom, $wsdl_root_ele);
-            $simple_array = $type_obj->simpleTypes;
 
-            $msg_obj = new WS_WSDL_Message($operationsArry, $simple_array, $this->ops_to_functions, $this->classmap);
+            $type_obj = new WS_WSDL_Type($this->namespace, $createdTypeArry,
+                                     $xsdArry, $this->ops_to_functions, $this->classmap);
+            if($this->annotations) {
+                $ele_names_info = $type_obj->createDocLitTypeWithAnnotations($wsdl_dom, 
+                                    $wsdl_root_ele, $this->annotations);
+            }
+            else {
+                $ele_names_info = $type_obj->createDocLitType($wsdl_dom, $wsdl_root_ele);
+            }
+
+            $msg_obj = new WS_WSDL_Message($operationsArry, $this->ops_to_functions, $this->classmap);
             $msg_obj->createDocLitMessage($wsdl_dom,$wsdl_root_ele, $ele_names_info);
         }
 
@@ -141,9 +154,8 @@ class WS_WSDL_Creator
                                         $xsdArry, $this->ops_to_functions, $this->classmap);
             /* no types for the time being */
             $class_to_prefix = $type_obj->createRPCType($wsdl_dom, $wsdl_root_ele);
-            $simple_array = $type_obj->simpleTypes;
 
-            $msg_obj = new WS_WSDL_Message($operationsArry, $simple_array, $this->ops_to_functions, $this->classmap);
+            $msg_obj = new WS_WSDL_Message($operationsArry, $this->ops_to_functions, $this->classmap);
             $msg_obj->createRPCMessage($wsdl_dom,$wsdl_root_ele, $class_to_prefix);
 
         }
@@ -171,7 +183,6 @@ class WS_WSDL_Creator
 
 
 
-        $wsdl_dom->appendChild($wsdl_root_ele);
         return $wsdl_dom->saveXML();
 
     }
@@ -219,7 +230,7 @@ class WS_WSDL_Creator
 //        $wsdl_root_ele->appendChild($wsdl_doc_ele);
 
 
-        $oper_obj = new WS_WSDL_Operations($this->f_name, $this->class_arry);
+        $oper_obj = new WS_WSDL_Operations($this->f_arry, $this->class_arry);
         $createdTypeArry = $oper_obj->createdTypes;
         $operationsArry = $oper_obj->operations;
         $xsdArry = $oper_obj->xsdTypes;
