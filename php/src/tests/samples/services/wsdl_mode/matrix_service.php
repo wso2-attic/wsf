@@ -61,7 +61,7 @@ function matrixAdd($input) {
                     $res = $proxy->simpleAdd($simpleadd);
 
                     $col2 = $res->return;
-
+                    
                     $row2->columns[] = $col2;
                 }
             }
