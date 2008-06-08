@@ -1,41 +1,32 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html>
-<head>
+<html><head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>WSO2 Web Services Framework/C - Install Guide</title>
-  <meta name="CREATED" content="20070518;12321300">
+  
+  <title>WSO2 Web Services Framework/C - Install Guide</title><meta name="CREATED" content="20070518;12321300">
   <meta name="CHANGED" content="20070611;14181900">
-  <link href="style.css" rel="stylesheet" type="text/css" media="all">
-</head>
+  <link href="style.css" rel="stylesheet" type="text/css" media="all"></head>
 
-<body lang="en-US" dir="ltr">
+<body dir="ltr" lang="en-US">
 <h1>WSO2 Web Services Framework/C - Installation Guide</h1>
 
 <h2><a id="dependencies">1. Software Dependencies</a></h2>
 
 <h3>1.1. Mandatory</h3>
 <ul>
-  <li>Libxml2 - <a
-  href="http://www.xmlsoft.org/">http://www.xmlsoft.org/</a></li>
-  <li>libiconv - <a
-    href="http://www.gnu.org/software/libiconv/">http://www.gnu.org/software/libiconv/</a></li>
+  <li>Libxml2 - <a href="http://www.xmlsoft.org/">http://www.xmlsoft.org/</a></li>
+  <li>libiconv - <a href="http://www.gnu.org/software/libiconv/">http://www.gnu.org/software/libiconv/</a></li>
   <li>zlib - <a href="http://www.zlib.net/">http://www.zlib.net/</a></li>
 </ul>
 
 <h3>1.2. Optional</h3>
 <ul>
-  <li>Apache2 httpd - <a
-    href="http://httpd.apache.org/">http://httpd.apache.org/</a> - Required
+  <li>Apache2 httpd - <a href="http://httpd.apache.org/">http://httpd.apache.org/</a> - Required
     for deploying services with HTTPD</li>
   <li>OpenSSL - <a href="http://www.openssl.org/">http://www.openssl.org/</a>
     - Required for SSL client transport and WS-Security with Apache
   Rampart/C</li>
-  <li>Either SQLite - <a
-    href="http://www.sqlite.org/">http://www.sqlite.org/</a> or MySQL - <a
-    href="http://www.mysql.org/">http://www.mysql.org/</a> - Required for
-    WS-ReliableMessaging  with Apache Sandesha2/C</li>
-  <li>iksemel - <a
-    href="http://iksemel.jabberstudio.org/">http://iksemel.jabberstudio.org/</a>
+  
+  <li>iksemel - <a href="http://iksemel.jabberstudio.org/">http://iksemel.jabberstudio.org/</a>
     - Required for XMPP transport</li>
 </ul>
 <a id="on_linux"></a>
@@ -50,8 +41,7 @@ Linux systems have this tool.
   <li>Extract the source tar package to a folder.</li>
   <li>Set the WSFC_HOME environment variable pointing to the location where
     you want to install WSO2 WSF/C.
-    <pre>        $ WSFC_HOME='/your_desired_path_to_wsfc_installation'
-        $ export WSFC_HOME</pre>
+    <pre>        $ WSFC_HOME='/your_desired_path_to_wsfc_installation'<br>        $ export WSFC_HOME</pre>
   </li>
   <li>Then go to the folder where you extracted the source.
     <pre>        $ cd /your_path_to_wsfc_source</pre>
@@ -59,10 +49,7 @@ Linux systems have this tool.
   <li>Build the source <br>
     * This can be done using the following command sequence in the directory
     where you have extracted the source.
-    <pre>        $  ./configure --prefix=${WSFC_HOME}
-        $ make
-        $ make install
-        $ make samples </pre>
+    <pre>        $  ./configure --prefix=${WSFC_HOME}<br>        $ make<br>        $ make install<br>        $ make samples </pre>
     Use './configure --help' to find out the possible configuration options.
     <br>
     <strong>Note:</strong> If you do not provide a --prefix configure option,
@@ -72,18 +59,15 @@ Linux systems have this tool.
   <li><a id="linux_src_step_5">Go to where you installed WSO2 WSF/C.
     </a>Start the simple axis server * To start the simple axis server on
     port 9090, run the following commands.
-    <pre>        $ cd ${WSFC_HOME}/bin
-        $ ./axis2_http_server</pre>
+    <pre>        $ cd ${WSFC_HOME}/bin<br>        $ ./axis2_http_server</pre>
     To see the possible command line options, run ./axis2_http_server -h
     <strong>Note</strong>: If you run into shared library problems, try
     setting the LD_LIBRARY_PATH
     <pre>        $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${WSFC_HOME}/lib</pre>
     Run the wsclient in a new shell.
-    <pre>        $ cd /your_path_to_wso2_wsfc/bin
-        $ ./wsclient --soap http://localhost:9090/axis2/services/echo &lt; samples/wsclient/data/echo.xml</pre>
+    <pre>        $ cd /your_path_to_wso2_wsfc/bin<br>        $ ./wsclient --soap http://localhost:9090/axis2/services/echo &lt; samples/wsclient/data/echo.xml</pre>
     You can also run the sample shell scripts given for the wsclient.
-    <pre>        $ cd /your_path_to_wso2_wsfc/bin/samples/wsclient
-        $ sh echo.sh</pre>
+    <pre>        $ cd /your_path_to_wso2_wsfc/bin/samples/wsclient<br>        $ sh echo.sh</pre>
     To see the possible command line options, run ./wsclient --help or
     ./wsclient -h</li>
 </ul>
@@ -93,25 +77,19 @@ You can install the RPM package using the following command.
 <pre>        $ rpm -i &lt;wso2-wsf-c.rpm.file.name&gt;</pre>
 This will install WSO2 WSF/C to /opt/wso2/wsf_c/ Set the WSFC_HOME
 environment variable to that location.
-<pre>        $ WSFC_HOME=/opt/wso2/wsf_c/
-        $ export WSFC_HOME</pre>
-To run and test the installation, you can follow <a
-href="#linux_src_step_5">step 5 in section 2.1.</a> above. <a
-id="linux_deb"></a>
+<pre>        $ WSFC_HOME=/opt/wso2/wsf_c/<br>        $ export WSFC_HOME</pre>
+To run and test the installation, you can follow <a href="#linux_src_step_5">step 5 in section 2.1.</a> above. <a id="linux_deb"></a>
 
 <h3>2.3. Using the deb Package</h3>
 You can install the deb package using the following command.
 <pre>        $ dpkg -i &lt;wso2-wsf-c.deb.file.name&gt;</pre>
 This will install WSO2 WSF/C to /opt/wso2/wsf_c/ Set the WSFC_HOME
 environment variable to that location.
-<pre>        $ WSFC_HOME=/opt/wso2/wsf_c/
-        $ export WSFC_HOME</pre>
-To run and test the installation, you can follow <a
-href="#linux_src_step_5">step 5 in section 2.1.</a> above. <a id="on_win"></a>
+<pre>        $ WSFC_HOME=/opt/wso2/wsf_c/<br>        $ export WSFC_HOME</pre>
+To run and test the installation, you can follow <a href="#linux_src_step_5">step 5 in section 2.1.</a> above. <a id="on_win"></a>
 
 <h2>3. Installing and Running on Microsoft Windows (Win32)</h2>
-This can be done using either the binary or source distribution. <a
-id="win_binary"></a>
+This can be done using either the binary or source distribution. <a id="win_binary"></a>
 
 <h3>3. 1. Using the Binary Release</h3>
 
@@ -120,8 +98,7 @@ The binaries shipped with this version are compiled with Microsoft Visual
 Studio Compiler (cl) <br>
 (<strong>Note:</strong> You can download Microsoft VSExpress2005 edition from
 the Microsoft Web site and install it to run these binaries.) <br>
-You also need to have a look at and install the dependencies mentioned in <a
-href="#dependencies">section 1.</a> above.<br>
+You also need to have a look at and install the dependencies mentioned in <a href="#dependencies">section 1.</a> above.<br>
 
 
 <h4>3.1.2. Installing and Running the Binaries</h4>
@@ -147,13 +124,11 @@ href="#dependencies">section 1.</a> above.<br>
     the default behavior. Use the command "axis2_http_server.exe -h" to learn
     about the usage.) <br>
     Run the wsclient in a new DOS shell.
-    <pre>    &gt; cd c:\wsfc\bin
-    &gt; wsclient --soap http://localhost:9090/axis2/services/echo &lt; samples/wsclient/data/echo.xml</pre>
+    <pre>    &gt; cd c:\wsfc\bin<br>    &gt; wsclient --soap http://localhost:9090/axis2/services/echo &lt; samples/wsclient/data/echo.xml</pre>
     To see the possible command line options, run wsclient --help or wsclient
     -h <br>
     You can also run the sample batch scripts given for wsclient.
-    <pre>    &gt; cd c:\wsfc\bin\samples\wsclient
-    &gt; echo.bat</pre>
+    <pre>    &gt; cd c:\wsfc\bin\samples\wsclient<br>    &gt; echo.bat</pre>
   </li>
 </ul>
 
@@ -165,8 +140,7 @@ The makefile shipped with this version needs Microsoft Visual Studio Compiler
 (<strong>Note:</strong> You can download the Microsoft VSExpress2005 edition
 and the Platform SDK from the Microsoft Web site. You will need to add the
 path to the Platform SDK Include and Lib folders, to the makefile.) <br>
-You also need to have a look at and install the dependencies mentioned in <a
-href="#dependencies">section 1.</a> above. <br>
+You also need to have a look at and install the dependencies mentioned in <a href="#dependencies">section 1.</a> above. <br>
 
 
 <h4>3.2.2. Editing the configure.in File</h4>
@@ -194,5 +168,4 @@ this batch file when running the build.bat file.)
 
 <h4>3.2.4. Running the Binaries</h4>
 Please refer to <a href="#win_binary_step2">step 2 of section 3.1.2.</a>
-above.</body>
-</html>
+above.</body></html>
