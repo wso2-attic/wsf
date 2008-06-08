@@ -70,6 +70,7 @@ typedef enum ws_input_types
 #define WS_PORT_NAME    "portName"
 
 #define WS_ANNOTATIONS "annotations"
+#define WSF_WSDL_PROCESS_IN_MSG "wsf_wsdl_process_in_msg"
 
 /** REST */
 #define WS_OP_TO_URL_MAP "RESTMapping"

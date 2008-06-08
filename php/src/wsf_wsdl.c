@@ -207,7 +207,7 @@ void wsf_wsdl_create_dynamic_client(
                                     &request_function, &retval, 2,
                                     params TSRMLS_CC) == SUCCESS ){
                 if (Z_TYPE(retval) == IS_ARRAY && Z_ARRVAL (retval) != IS_NULL)
-                    wsf_wsdl_do_request(client_zval, &retval, return_value,arguments,classmap,
+                    wsf_wsdl_do_request(client_zval, &retval, return_value, arguments,classmap,
 					env TSRMLS_CC);
                 else if (Z_TYPE_P(&retval) == IS_STRING){
                     php_error_docref(NULL TSRMLS_CC, E_ERROR, 
@@ -238,24 +238,28 @@ wsf_wsdl_do_request(zval *client_zval,
     char *wsa_action = NULL;
     int soap_version = 2; 
     zval **policy_options = NULL;
+    zval **input_headers = NULL;
     char *response_sig_model_string = NULL;
     char *wsdl_dom_string = NULL;
 	int rest_enabled = AXIS2_FALSE;
 
-    axiom_node_t *env_node = NULL;
+    axiom_node_t *res_payload = NULL;
+
     int has_fault = AXIS2_FALSE;
     axis2_char_t *res_text = NULL;
     axiom_soap_body_t *soap_body = NULL;
-    axiom_soap_fault_t *soap_fault = NULL;
     axiom_node_t *body_base_node = NULL;
+    axiom_soap_header_t *soap_header = NULL;
+    axiom_node_t *header_base_node = NULL;
+    axiom_soap_fault_t *soap_fault = NULL;
     axiom_node_t *fault_node = NULL;
     zval *rfault;
     axiom_node_t *request_node = NULL;
+
     
     zval response_function, *res_retval, res_param1, res_param2, res_param3, 
-		res_param4;
-    zval *res_params[4];
-    axiom_node_t *axiom_soap_base_node = NULL;
+		res_param4, res_param5;
+    zval *res_params[6];
     zval *response_parameters;
 
     HashTable *ht_return = Z_ARRVAL_P(function_return_value);
@@ -337,10 +341,43 @@ wsf_wsdl_do_request(zval *client_zval,
         wsdl_dom_string = Z_STRVAL_PP(tmp_options);
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_wsdl] WSDL DOM string found");
     }
+
+    /* retrieve the header information and set them on service client */
+    
+    if(zend_hash_find(ht_return, WS_WSDL_INPUT_HEADERS, 
+                      sizeof(WS_WSDL_INPUT_HEADERS),
+                      (void **)&tmp_options) == SUCCESS && 
+       Z_TYPE_PP(tmp_options) == IS_ARRAY ){
+        input_headers = tmp_options;
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_wsdl] input headers found");
+    }
     
     WSF_GET_OBJ (svc_client, client_zval, axis2_svc_client_t, intern);
     client_options =
         (axis2_options_t *) axis2_svc_client_get_options (svc_client, env);
+
+
+    if(input_headers) {
+
+        HashPosition pos;
+        zval **param;
+        char *header_str;
+        axiom_node_t *header_node;
+        
+        for (zend_hash_internal_pointer_reset_ex (Z_ARRVAL_PP(input_headers), &pos);
+                zend_hash_get_current_data_ex (Z_ARRVAL_PP(input_headers),
+                                        (void **) &param, &pos) == SUCCESS;
+                zend_hash_move_forward_ex (Z_ARRVAL_PP(input_headers), &pos)) {
+            
+            if(Z_TYPE_PP(param) == IS_STRING) {
+                header_str = Z_STRVAL_PP(param);
+                header_node = wsf_util_deserialize_buffer(env, header_str);
+                
+                axis2_svc_client_add_header(svc_client, env, header_node);
+            }
+        } 
+    }
+
     
     axis2_options_set_xml_parser_reset (client_options, env, AXIS2_FALSE);
     wsf_client_set_options(Z_OBJPROP_P (client_zval), NULL,
@@ -366,7 +403,7 @@ wsf_wsdl_do_request(zval *client_zval,
     to_epr = axis2_endpoint_ref_create (env, endpoint_address);
     axis2_options_set_to (client_options, env, to_epr);
     
-/** add proxy options **/
+    /** add proxy options **/
 
     if (zend_hash_find (Z_OBJPROP_P (client_zval), WS_PROXY_HOST, sizeof (WS_PROXY_HOST),
                         (void **)&tmp_options) == SUCCESS) {
@@ -497,7 +534,7 @@ wsf_wsdl_do_request(zval *client_zval,
                 request_node, ht_attachments, "application/octet-stream" TSRMLS_CC);
     }
     
-    wsf_wsdl_send_receive_soap_envelope_with_op_client (env,
+    res_payload = wsf_wsdl_send_receive_soap_envelope_with_op_client (env,
                                                             svc_client, 
                                                             client_options, 
                                                             request_node);
@@ -507,7 +544,6 @@ wsf_wsdl_do_request(zval *client_zval,
             axis2_svc_client_get_last_response_soap_envelope(svc_client, env);
     if (response_envelope) 
 	{
-        env_node = axiom_soap_envelope_get_base_node (response_envelope, env);
         has_fault = AXIS2_TRUE;
         
 		if (response_envelope)
@@ -542,6 +578,8 @@ wsf_wsdl_do_request(zval *client_zval,
         if (body_base_node && !soap_fault)
 		{
             axis2_char_t *response_buffer = NULL;
+            axis2_char_t *response_header_buffer = NULL;
+
 
             zval *cid2str = NULL;
             zval *cid2contentType = NULL;
@@ -555,13 +593,37 @@ wsf_wsdl_do_request(zval *client_zval,
             wsf_util_get_attachments_from_soap_envelope(env, response_envelope, cid2str, 
 				cid2contentType TSRMLS_CC);
 
-            axiom_soap_base_node =  axiom_soap_envelope_get_base_node(response_envelope, env);
+            soap_header = axiom_soap_envelope_get_header(response_envelope, env);
+            if(soap_header) {
+                header_base_node = axiom_soap_header_get_base_node(soap_header, env);
+
+                if(axiom_node_get_first_child(header_base_node, env) != NULL) {
+                    response_header_buffer = axiom_node_sub_tree_to_string(header_base_node, env);
+                }
+            }
+
+            if(!response_header_buffer) {
+                response_header_buffer = axutil_strdup(env, "");
+            }
+
             res_params[0] = &res_param1;
             res_params[1] = &res_param2;
             res_params[2] = &res_param3;
             res_params[3] = &res_param4;
-            
-            response_buffer = axiom_node_to_string (axiom_soap_base_node, env);
+            res_params[4] = &res_param5;
+          
+            if(axiom_node_get_node_type(body_base_node, env) == AXIOM_ELEMENT ) {
+                axiom_element_t *payload_element;
+                axutil_qname_t *qname;
+                payload_element = axiom_node_get_data_element(body_base_node, env);
+                
+                qname = axiom_element_get_qname(payload_element, env, body_base_node);
+                if(axutil_qname_get_localpart(qname, env) == "Body") {
+                    res_payload = axiom_node_get_frist_child(body_base_node, env);
+                }
+            }
+            response_buffer = axiom_node_sub_tree_to_string(res_payload , env);
+
             AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                              "[wsf_wsdl]Response buffer is %s", response_buffer);
             
@@ -578,19 +640,67 @@ wsf_wsdl_do_request(zval *client_zval,
             ZVAL_STRING(&response_function, WS_WSDL_RES_FUNCTION, 1);
             ZVAL_STRING(res_params[0], response_buffer, 1);
             INIT_PZVAL(res_params[0]);
-            ZVAL_STRING(res_params[1], response_sig_model_string, 1);
+            ZVAL_STRING(res_params[1], response_header_buffer, 1);
             INIT_PZVAL(res_params[1]);
-            ZVAL_ZVAL(res_params[2], response_parameters, NULL, NULL);
+            ZVAL_STRING(res_params[2], response_sig_model_string, 1);
             INIT_PZVAL(res_params[2]);
-            ZVAL_STRING(res_params[3], wsdl_dom_string, 1);
+            ZVAL_ZVAL(res_params[3], response_parameters, NULL, NULL);
             INIT_PZVAL(res_params[3]);
+            ZVAL_STRING(res_params[4], wsdl_dom_string, 1);
+            INIT_PZVAL(res_params[4]);
 
             MAKE_STD_ZVAL(res_retval);
             INIT_PZVAL(res_retval);
             if (call_user_function (EG (function_table), (zval **) NULL,
-                                    &response_function, res_retval, 4, 
+                                    &response_function, res_retval, 5, 
                                     res_params TSRMLS_CC) == SUCCESS ){
-                ZVAL_ZVAL(return_value, res_retval, 0, 0);
+                /* now the time to handle the res_retval */
+                if(Z_TYPE_P(res_retval) == IS_ARRAY){
+            
+                    HashTable *ht_return = NULL;
+                    zval **tmp = NULL;
+                    
+                    ht_return = Z_ARRVAL_P(res_retval);
+
+                    if(zend_hash_find(ht_return, WSF_WSDL_RESPONSE_PAYLOAD_PARAM,
+                                      sizeof(WSF_WSDL_RESPONSE_PAYLOAD_PARAM),
+                                      (void **)&tmp) == SUCCESS) {
+                        ZVAL_ZVAL(return_value, *tmp, 0, 0);
+                    }
+                    if(zend_hash_find(ht_return, WSF_WSDL_RESPONSE_HEADER_PARAM,
+                                      sizeof(WSF_WSDL_RESPONSE_HEADER_PARAM),
+                                      (void **)&tmp) == SUCCESS) {
+                        if(arguments && Z_TYPE_P(arguments) == IS_ARRAY) {
+                            /* keep iteration of proxy method argument */
+                            HashPosition pos_arg;
+                            zval **param_arg;
+
+                            /* keep iteration of return value in procesing response */
+                            HashPosition pos_ret;
+                            zval **param_ret;
+
+                            zval *header_params = *tmp;
+
+                            zend_hash_internal_pointer_reset_ex(Z_ARRVAL_P(header_params), &pos_ret);
+
+                            /* iterate through all the arguments in the proxy method */
+                            for (zend_hash_internal_pointer_reset_ex (Z_ARRVAL_P(arguments), &pos_arg);
+                                    zend_hash_get_current_data_ex (Z_ARRVAL_P(arguments),
+                                                            (void **) &param_arg, &pos_arg) == SUCCESS;
+                                zend_hash_move_forward_ex (Z_ARRVAL_P(arguments), &pos_arg)) {
+                                if((*param_arg)->is_ref) {
+                                    /* we assign return header pointers to all the references
+                                       called with the proxy method */
+                                    if(zend_hash_get_current_data_ex (Z_ARRVAL_P(header_params),
+                                                        (void **) &param_ret, &pos_ret) == SUCCESS) {
+                                        ZVAL_ZVAL(*param_arg, *param_ret, 0, 0);
+                                        zend_hash_move_forward_ex (Z_ARRVAL_P(header_params), &pos_ret);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

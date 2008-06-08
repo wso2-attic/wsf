@@ -1854,7 +1854,6 @@ PHP_METHOD (ws_client_proxy, __call)
     char *fn_name = NULL;
     long fn_name_len = 0;
     zval * args = NULL;
-    zval ** real_args = NULL;
     zval ** param = NULL;
     int arg_count = 0;
     HashPosition pos;
@@ -1865,21 +1864,10 @@ PHP_METHOD (ws_client_proxy, __call)
         return;
     }
     arg_count = zend_hash_num_elements (Z_ARRVAL_P (args));
-    if (arg_count > 0) {
-        real_args = safe_emalloc (sizeof (zval *), arg_count, 0);
-        for (zend_hash_internal_pointer_reset_ex (Z_ARRVAL_P (args), &pos);
-            zend_hash_get_current_data_ex (Z_ARRVAL_P (args),
-                (void **) &param, &pos) == SUCCESS;
-            zend_hash_move_forward_ex (Z_ARRVAL_P (args), &pos)) {
-            real_args[i++] = *param;
-    } }
-    
+   
     wsf_wsdl_create_dynamic_client(this_ptr, fn_name, fn_name_len, arg_count,
                           args, return_value, env TSRMLS_CC);
 
-    if (arg_count) {
-        efree (real_args);
-    }
 }
 
 

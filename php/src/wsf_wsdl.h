@@ -70,6 +70,8 @@ void wsf_wsdl_set_sig_model(char* wsdl_path,
 #define WS_WSDL_SOAP            "soap"
 #define WS_WSDL_SOAP_VERSION    "soap_version"
 #define WS_WSDL_REQ_PAYLOAD     "request_payload"
+#define WS_WSDL_INPUT_HEADERS   "input_headers"
+#define WS_WSDL_OUTPUT_HEADERS  "output_headers"
 #define WS_WSDL_POLICY_NODE     "policy_node"
 #define WS_WSDL_RES_SIG_NODEL   "response_sig_model"
 #define WS_WSDL_ARGS            "args"
@@ -84,6 +86,9 @@ void wsf_wsdl_set_sig_model(char* wsdl_path,
 #define WS_WSDL_ENV_1_0         "1.0"
 
 #define WS_WSDL_DOM          "wsdl_dom"
+
+#define WSF_WSDL_RESPONSE_PAYLOAD_PARAM "response_payload_param"
+#define WSF_WSDL_RESPONSE_HEADER_PARAM "response_header_param"
 
 #endif /* WSF_WSDL_H */
 

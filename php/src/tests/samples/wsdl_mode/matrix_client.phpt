@@ -33,6 +33,7 @@ try {
 
     // create client in WSDL mode
     $client = new WSClient(array ("wsdl" =>"http://localhost/services/wsdl_mode/matrix_service.php?wsdl",
+        "to" =>"http://localhost:80/services/wsdl_mode/matrix_service.php",
         "classmap" => $class_map));
 
     // get proxy object reference form client 
