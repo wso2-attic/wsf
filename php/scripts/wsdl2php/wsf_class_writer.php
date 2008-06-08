@@ -317,11 +317,211 @@ function wsf_wsdl2php($wsdl_location) {
             continue; //no need to record same operation multiple times
         }
 
-        //declare the start of service function
-        $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "function " . $op_name . "(\$input) {\n";
-
         // get the nodes describing operation characteristics 
         $op_child_list = $op_node->childNodes;
+
+        //first we have to have a good idea about headers, so processing headers first
+        $in_headers = 0;
+        $out_headers = 0;
+
+        $in_header_objects = array();
+        $in_header_objects[WSF_CLIENT] = "";
+        $in_header_objects[WSF_SERVICE] = "";
+
+        $out_header_objects = array();
+        $out_header_objects[WSF_CLIENT] = "";
+        $out_header_objects[WSF_SERVICE] = "";
+
+        $service_function_doc_comment = "";
+        $service_function_doc_comment .= "/**\n";
+        $service_function_doc_comment .= " * Service function $op_name\n";
+
+        // doc comments for input types
+        foreach ($op_child_list as $op_child) {
+            // process the signature node
+            if ($op_child->nodeName == WSF_SIGNATURE) {
+                // get the nodes representing operation parameters and return types within signature
+                $param_list = $op_child->childNodes;
+                foreach ($param_list as $param_node) {
+                    if ($param_node) {
+                        // look for params and returns nodes 
+                        if ($param_node->nodeName == WSF_PARAMS) {
+                            if ($param_node->hasAttributes()) {
+                                // Wrapper element 
+                                $params_attr = $param_node->attributes;
+
+                                // get wrapper element name, this is going to be the class name
+                                $ele_name = $params_attr->getNamedItem(WSF_WRAPPER_ELEMENT)->value;
+            
+                                $service_function_doc_comment .= " * @param object of $ele_name \$input \n";
+                            }
+                        }
+                        else {
+                            // No wrapper element, there won't be any class generated for this 
+
+                            $child_array = array ();
+                            $param_child_list = $param_node->childNodes;
+
+                            foreach ($param_child_list as $param_child) {
+                                $param_attr = $param_child->attributes;
+
+                                $ele_name = $param_attr->getNamedItem(WSF_NAME)->value;
+
+                                $content_model = "";
+                                if($param_attr->getNamedItem(WSF_CONTENT_MODEL)) {
+                                    $content_model = $param_attr->getNamedItem(WSF_CONTENT_MODEL)->value;
+                                }
+                                $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
+                                
+                                if($content_model == WSF_SIMPLE_CONTENT) {
+                                    $service_function_doc_comment .= " * @param object of $ele_name \$input \n";
+                                }
+                                else {
+                                    $service_function_doc_comment .= " * @param $param_type \$input \n";
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        foreach ($op_child_list as $op_child) {
+            if($op_child->nodeName == WSF_W2P_BINDING_DETAILS) {
+                $op_binding_childs = $op_child->childNodes;
+
+                foreach($op_binding_childs as $op_binding_child) {
+                    if($op_binding_child->nodeName == WSF_SOAPHEADER) {
+                        if($op_binding_child->attributes->getNamedItem(WSF_HEADER_FOR_ATTRIBUTE)) {
+                            if($op_binding_child->attributes->getNamedItem(WSF_HEADER_FOR_ATTRIBUTE)->value == WSF_WSDL_OUTPUT) {
+                                $direction = WSF_WSDL_OUTPUT;
+                            } else {
+                                $direction = WSF_WSDL_INPUT;
+                            }
+                        } else {
+                           $direction = WSF_WSDL_INPUT;
+                        }
+                    }
+                    
+                    if($op_binding_child->attributes->getNamedItem(WSF_TYPE)) {
+                        $class_name = $op_binding_child->attributes->getNamedItem(WSF_TYPE)->value;
+                        if($direction == WSF_WSDL_INPUT) {
+                            $in_header_objects[WSF_CLIENT] .= "    \$header_in{$in_headers} = new $class_name();\n    // TODO: fill in the class fields of \$header_in{$in_headers} header to match your business logic\n\n";
+                            $in_header_objects[WSF_SERVICE] .= "    // NOTE: \$header_in{$in_headers} header is of type $class_name\n";
+
+                            $service_function_doc_comment .= " * @param object of $class_name \$header_in{$in_headers} input header\n";
+
+                            $in_headers ++;
+                        }
+                        else {
+                            $out_header_objects[WSF_CLIENT] .= "\n    // TODO: Implement business logic to consume \$header_out{$out_headers}, which is of type $class_name\n";
+                            $out_header_objects[WSF_SERVICE] .= "    // NOTE: you should assign an object of type $class_name to \$header_out{$out_headers}\n";
+                            
+                            $service_function_doc_comment .= " * @param reference object of $class_name \$header_out{$out_headers} output header\n";
+
+                            $out_headers ++;
+                        }
+                    }
+                    $param_node = $op_binding_child->firstChild;
+                    $code .= wsf_write_sub_classes($param_node);
+                }
+            }
+        }
+
+        // doc comments for the return type
+        foreach ($op_child_list as $op_child) {
+            // process the signature node
+            if ($op_child->nodeName == WSF_SIGNATURE) {
+                // get the nodes representing operation parameters and return types within signature
+                $param_list = $op_child->childNodes;
+                foreach ($param_list as $param_node) {
+                    if ($param_node) {
+                        // look for params and returns nodes 
+                        if ($param_node->nodeName == WSF_RETURNS) {
+                            if ($param_node->hasAttributes()) {
+                                // Wrapper element 
+                                $params_attr = $param_node->attributes;
+
+                                // get wrapper element name, this is going to be the class name
+                                $ele_name = $params_attr->getNamedItem(WSF_WRAPPER_ELEMENT)->value;
+            
+                                $service_function_doc_comment .= " * @return object of $ele_name \n";
+                            }
+                        }
+                        else {
+                            // No wrapper element, there won't be any class generated for this 
+
+                            $child_array = array ();
+                            $param_child_list = $param_node->childNodes;
+
+                            foreach ($param_child_list as $param_child) {
+                                $param_attr = $param_child->attributes;
+
+                                $ele_name = $param_attr->getNamedItem(WSF_NAME)->value;
+                                $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
+
+                                $content_model = "";
+                                if($param_attr->getNamedItem(WSF_CONTENT_MODEL)) {
+                                    $content_model = $param_attr->getNamedItem(WSF_CONTENT_MODEL)->value;
+                                }
+                                
+                                if($content_model == WSF_SIMPLE_CONTENT) {
+                                    $service_function_doc_comment .= " * @return object of $ele_name \n";
+                                }
+                                else {
+                                    $service_function_doc_comment .= " * @return $param_type \n";
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $service_function_doc_comment .= " */\n";
+      
+        /*
+        if($out_headers > 0) {
+            $in_header_objects[WSF_CLIENT] .= "    // Declration of variables for the output headers\n"; 
+            $in_header_objects[WSF_CLIENT] .= "    // NOTE: don't set any value to these objects, rather the call to proxy will assign values for them\n"; 
+            for($i = 0; $i < $out_headers; $i ++) {
+                $in_header_objects[WSF_CLIENT] .= "    \$header_out{$i} = NULL;\n";
+            }
+            $in_header_objects[WSF_CLIENT] .= "\n"; 
+            $out_header_objects[WSF_SERVICE] .= "\n";
+        }
+        */
+        
+        if($in_header_objects[WSF_CLIENT] != "") {
+            $in_header_objects[WSF_CLIENT] = substr_replace($in_header_objects[WSF_CLIENT], "", -1);
+        }
+        if($in_header_objects[WSF_SERVICE] != "") {
+            $in_header_objects[WSF_SERVICE] .= "\n";
+        }
+        
+        /* function declration variables for headers */
+        $header_function_decl = "";
+        for($i = 0; $i < $in_headers; $i ++) {
+            $header_function_decl .= ", \$header_in".$i;
+        }
+        for($i = 0; $i < $out_headers; $i ++) {
+            $header_function_decl .= ", &\$header_out".$i;
+        }
+
+        /* function call variables for headers */
+        $header_function_call = "";
+        for($i = 0; $i < $in_headers; $i ++) {
+            $header_function_call .= ", \$header_in".$i;
+        }
+        for($i = 0; $i < $out_headers; $i ++) {
+            $header_function_call .= ", &\$header_out".$i;
+        }
+
+        //put the doc comment
+        //declare the start of service function
+        $operations[$op_name][WSF_SERVICE] = $service_function_doc_comment;
+        $operations[$op_name][WSF_SERVICE] .= "function " . $op_name . "(\$input{$header_function_decl}) {\n";
+
     
         foreach ($op_child_list as $op_child) {
             // process the signature node
@@ -359,10 +559,14 @@ function wsf_wsdl2php($wsdl_location) {
 
                                 if ($param_node->nodeName == WSF_PARAMS) {
                                     $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "    \$input = new $ele_name();\n    //TODO: fill in the class fields of \$input to match your business logic\n";
+                                    $operations[$op_name][WSF_CLIENT] .= $in_header_objects[WSF_CLIENT];
                                     $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // TODO: fill in the business logic\n    // NOTE: \$input is of type $ele_name\n";
+                                    $operations[$op_name][WSF_SERVICE] .= $in_header_objects[WSF_SERVICE];
                                 }
                                 if ($param_node->nodeName == WSF_RETURNS) {
-                                    $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "\n    // call the operation\n    \$response = \$proxy->" . $op_node->attributes->getNamedItem('name')->value . "(\$input);\n    //TODO: Implement business logic to consume \$response, which is of type $ele_name\n";
+                                    $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "\n    // call the operation\n    \$response = \$proxy->" . $op_node->attributes->getNamedItem('name')->value . "(\$input{$header_function_call});\n    //TODO: Implement business logic to consume \$response, which is of type $ele_name\n";
+                                    $operations[$op_name][WSF_CLIENT] .= $out_header_objects[WSF_CLIENT];
+                                    $operations[$op_name][WSF_SERVICE] .= $out_header_objects[WSF_SERVICE];
                                     $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // NOTE: should return an object of type $ele_name\n";
                                 }
 
@@ -430,10 +634,14 @@ function wsf_wsdl2php($wsdl_location) {
 
                                         if ($param_node->nodeName == WSF_PARAMS) {
                                             $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "    \$input = new $ele_name();\n    //TODO: fill in the class fields of \$input to match your business logic\n";
+                                            $operations[$op_name][WSF_CLIENT] .= $in_header_objects[WSF_CLIENT];
                                             $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // TODO: fill in the business logic\n    // NOTE: \$input is of type $ele_name\n";
+                                            $operations[$op_name][WSF_SERVICE] .= $in_header_objects[WSF_SERVICE];
                                         }
                                         if ($param_node->nodeName == WSF_RETURNS) {
-                                            $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "\n    // call the operation\n    \$response = \$proxy->" . $op_node->attributes->getNamedItem('name')->value . "(\$input);\n    //TODO: Implement business logic to consume \$response, which is of type $ele_name\n";
+                                            $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "\n    // call the operation\n    \$response = \$proxy->" . $op_node->attributes->getNamedItem('name')->value . "(\$input{$header_function_call});\n    //TODO: Implement business logic to consume \$response, which is of type $ele_name\n";
+                                            $operations[$op_name][WSF_CLIENT] .= $out_header_objects[WSF_CLIENT];
+                                            $operations[$op_name][WSF_SERVICE] .= $out_header_objects[WSF_SERVICE];
                                             $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // NOTE: should return an object of type $ele_name\n";
                                         }
 
@@ -448,15 +656,20 @@ function wsf_wsdl2php($wsdl_location) {
                                             if($param_child->getAttribute("simple") == "yes"){
                                                 $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . $simple_type_comment."\n";
                                             }
+                                            $operations[$op_name][WSF_CLIENT] .= $in_header_objects[WSF_CLIENT];
+
                                             $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // TODO: fill in the business logic\n    // NOTE: \$input is of type {$type_prefix}{$param_type}\n";
                                             if($param_child->getAttribute("simple") == "yes"){
                                                 $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . $simple_type_comment."\n";
                                             }
+                                            $operations[$op_name][WSF_SERVICE] .= $in_header_objects[WSF_SERVICE];
 
                                         }
                                         if ($param_node->nodeName == WSF_RETURNS) {
                                             $simple_type_comment = wsf_comment_on_simple_type($param_child, "output ", $param_type);
-                                            $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "\n    // call the operation\n    \$response = \$proxy->" . $op_node->attributes->getNamedItem('name')->value . "(\$input);\n    //TODO: Implement business logic to consume \$response, which is of type {$type_prefix}{$param_type}\n";
+                                            $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "\n    // call the operation\n    \$response = \$proxy->" . $op_node->attributes->getNamedItem('name')->value . "(\$input{$header_function_call});\n    //TODO: Implement business logic to consume \$response, which is of type {$type_prefix}{$param_type}\n";
+                                            $operations[$op_name][WSF_CLIENT] .= $out_header_objects[WSF_CLIENT];
+                                            $operations[$op_name][WSF_SERVICE] .= $out_header_objects[WSF_SERVICE];
                                             $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // NOTE: should return an object of (type: {$type_prefix}{$param_type})\n";
                                             $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . $simple_type_comment."\n";
                                         }

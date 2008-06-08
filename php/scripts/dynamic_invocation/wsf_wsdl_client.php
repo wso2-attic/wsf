@@ -99,6 +99,9 @@ function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name,
     if($params_node == NULL) {
         return NULL;
     }
+
+    // the returning payload..
+    $payload_str = NULL;
  
     if($is_doc == TRUE) {
         $payload_dom = new DOMDocument('1.0', 'iso-8859-1');
@@ -108,7 +111,7 @@ function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name,
             $payload_node = $payload_dom->firstChild;
             $clone_node = $payload_node->cloneNode(TRUE);
 
-            return $payload_dom->saveXML($clone_node);
+            $payload_str = $payload_dom->saveXML($clone_node);
         }
         else if(is_object($arguments[0])) {
 
@@ -121,7 +124,7 @@ function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name,
             $payload_node = $payload_dom->firstChild;
             $clone_node = $payload_node->cloneNode(TRUE);
 
-            return $payload_dom->saveXML($clone_node);
+            $payload_str = $payload_dom->saveXML($clone_node);
         }
         else {
             /* array type implementation */
@@ -133,7 +136,7 @@ function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name,
             $payload_node = $payload_dom->firstChild;
             $clone_node = $payload_node->cloneNode(TRUE);
 
-            return $payload_dom->saveXML($clone_node);
+            $payload_str = $payload_dom->saveXML($clone_node);
         }
     }
     else {
@@ -153,7 +156,7 @@ function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name,
             $payload_dom->appendChild($element);
             $payload_node = $payload_dom->firstChild;
             $clone_node = $payload_node->cloneNode(TRUE);
-            return $payload_dom->saveXML($clone_node);
+            $payload_str = $payload_dom->saveXML($clone_node);
         }
         else {
             /* array type implementation */
@@ -166,35 +169,129 @@ function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name,
             $payload_dom->appendChild($element);
             $payload_node = $payload_dom->firstChild;
             $clone_node = $payload_node->cloneNode(TRUE);
-            return $payload_dom->saveXML($clone_node);
+            $payload_str = $payload_dom->saveXML($clone_node);
         }
     }
+
+    $binding_details_node = NULL;
+    $binding_details_node = $sig_node->nextSibling;
+
+    while(($binding_details_node && $binding_details_node->nodeType == XML_ELEMENT_NODE) &&
+            $binding_details_node->nodeName != WSF_BINDINDG_DETAILS) {
+        $binding_details_node = $binding_details_node->nextSibling;
+    }
+
+    $input_headers = array();
+
+    $argument_index = 1;
+    if($binding_details_node) {
+        $binding_details_childs = $binding_details_node->childNodes;
+
+        foreach($binding_details_childs as $binding_details_child) {
+            if($binding_details_child->nodeType == XML_ELEMENT_NODE && 
+                $binding_details_child->nodeName == WSF_SOAPHEADER &&
+                $binding_details_child->attributes->getNamedItem(WSF_HEADER_FOR_ATTRIBUTE) &&
+                $binding_details_child->attributes->getNamedItem(WSF_HEADER_FOR_ATTRIBUTE)->value == WSF_WSDL_INPUT) {
+                
+                //so this is the next input element..
+
+                $header_name = "";
+                $header_ns = "";
+                if($binding_details_child->attributes->getNamedItem(WSF_TYPE)) {
+                    $header_name = $binding_details_child->attributes->getNamedItem(WSF_TYPE)->value;
+                }
+                if($binding_details_child->attributes->getNamedItem(WSF_TYPE_NAMESPACE)) {
+                    $header_ns = $binding_details_child->attributes->getNamedItem(WSF_TYPE_NAMESPACE)->value;
+                }
+
+                $header_dom = new DOMDocument('1.0', 'iso-8859-1');
+                $element = $header_dom->createElementNS($header_ns, WSF_STARTING_NS_PREFIX.":".$header_name);
+
+                if(array_key_exists($argument_index, $arguments)) {
+
+                    $namespace_map = array($header_ns => WSF_STARTING_NS_PREFIX);
+                    $argument = $arguments[$argument_index];
+
+                    $header_sig = $binding_details_child->firstChild;
+
+                    if($argument && is_array($argument)){
+
+                        wsf_create_payload_for_array($header_dom, $header_sig, $element, $element, $arguments,
+                                                   $prefix_i, $namespace_map, $mtom_on, $attachment_map);
+                    }
+                    else if($argument && is_object($argument)) {
+
+                        wsf_create_payload_for_class_map($header_dom, $header_sig, $element, $element, $argument,
+                                                  $prefix_i, $namespace_map, $mtom_on, $attachment_map);
+                    }
+
+                    $header_dom->appendChild($element);
+                    $header_node = $header_dom->firstChild;
+                    $clone_node = $header_node->cloneNode(TRUE);
+                    $header_str = $header_dom->saveXML($clone_node);
+
+                    $input_headers[] = $header_str;
+
+                }
+                else {
+                    break;
+                }
+
+                $argument_index ++;
+            }
+        }
+    }
+
+    return array(WSF_REQUEST_PAYLOAD => $payload_str,
+                WSF_INPUT_HEADERS => $input_headers);
 }
 
 
 /**
  * Processes and validate response message and assign values to class map.
- * @param DomDocument $envelope_dom response envelope
- * @param DomDocument $signature_dom response parameter string
+ * @param DomDocument $payload_dom response payload
+ * @param DomDocument $header_dom response header, can be NULL
+ * @param DomDocument $operation_sig_dom operation sig model
  * @param array $response_parameters array of response parameters
  * @return mixed an object, an array or a simple type in line with the 
  * expected format of the response
  */
-function wsf_client_response_and_validate(DomDocument $envelope_dom, 
-        DomDocument $signature_dom, $response_parameters, $mtom_on = FALSE)
+function wsf_client_response_and_validate(DomDocument $payload_dom, 
+        $header_dom,
+        DomDocument $operation_sig_dom,
+        $response_parameters,
+        $mtom_on = FALSE)
 {
     require_once('wsf_wsdl_consts.php');
     require_once('wsf_wsdl_util.php');
     require_once('wsf_wsdl_deserialization.php');
 
-    $envelope_node = $envelope_dom->documentElement;
-    $returns_node = $signature_dom->documentElement;
+    $payload_node = $payload_dom->documentElement;
+    $operation_sig_node = $operation_sig_dom->documentElement;
+    $binding_details_node = NULL;
+
+    $sig_method = NULL;
+    //extracting out the sig_method from the operation sig node
+    if($operation_sig_node) {
+        foreach($operation_sig_node->childNodes as $operation_sig_child) {
+            if($operation_sig_child->tagName == WSF_SIGNATURE) {
+                $sig_method = $operation_sig_child;
+            }
+            if($operation_sig_child->tagName == WSF_BINDINDG_DETAILS) {
+                $binding_details_node = $operation_sig_child;
+            }
+        }
+    }
 
     $ele_ns = NULL;
     $is_wrapper = FALSE;
 
-    if($returns_node) {
-        if($returns_node->localName == WSF_RETURNS) {
+    if($sig_method) {
+        $returns_node = $sig_method->firstChild;
+        while($returns_node && $returns_node->localName != WSF_RETURNS) {
+            $returns_node = $returns_node->nextSibling;
+        }
+        if($returns_node) {
             if($returns_node->hasAttributes()) {
                 /* Wrapper element of the request operation */
                 $sig_attrs = $returns_node->attributes;
@@ -228,14 +325,8 @@ function wsf_client_response_and_validate(DomDocument $envelope_dom,
     }
 
     /** get SOAP body DOM tree to compare with Sig model */
-    foreach($envelope_node->childNodes as $env_child_node) {
-        if($env_child_node->localName == 'Body') {
-            $soap_body_node = $env_child_node->firstChild;
-            break;
-        }
-    }
 
-    if(!$soap_body_node) {
+    if(!$payload_node) {
         error_log("soap_body not found", 0);
     }
 
@@ -255,15 +346,73 @@ function wsf_client_response_and_validate(DomDocument $envelope_dom,
 
     $op_param_values = array();
     if($classmap !== NULL) {
-        $op_param_values = wsf_parse_payload_for_class_map($soap_body_node, $returns_node,
+        $op_param_values = wsf_parse_payload_for_class_map($payload_node, $returns_node,
                                 $ele_name, $classmap, $cid2cont_type, $cid2attachments);
     }
     else {
-        $op_param_values = wsf_parse_payload_for_array($soap_body_node, $returns_node,
+        $op_param_values = wsf_parse_payload_for_array($payload_node, $returns_node,
                                 $cid2cont_type, $cid2attachments);
     }
 
-    return $op_param_values;
+    $header_node = NULL;
+    if($header_dom) {
+        $header_node = $header_dom->documentElement;
+    }
+
+    $header_params = array();
+    if($header_node) {
+        $header_child = $header_node->firstChild;
+        $output_index = 0;
+
+        if($binding_details_node) {
+            $binding_details_childs = $binding_details_node->childNodes;
+
+            foreach($binding_details_childs as $binding_details_child) {
+                if($binding_details_child->nodeType == XML_ELEMENT_NODE &&
+                    $binding_details_child->nodeName == WSF_SOAPHEADER &&
+                    $binding_details_child->attributes->getNamedItem(WSF_HEADER_FOR_ATTRIBUTE)) {
+
+                    if($binding_details_child->attributes->getNamedItem(WSF_HEADER_FOR_ATTRIBUTE)->value == WSF_WSDL_OUTPUT) {
+
+                        //so this is the next input element..
+                        $sig_attrs = $binding_details_child->attributes;
+
+                        if($sig_attrs->getNamedItem(WSF_TYPE)) {
+                            $ele_name = $sig_attrs->getNamedItem(WSF_TYPE)->value;
+                        }
+                        if($sig_attrs->getNamedItem(WSF_TYPE_NAMESPACE)) {
+                            $ele_ns = $sig_attrs->getNamedItem(WSF_TYPE_NAMESPACE)->value;
+                        }
+
+                        if($header_child) {
+                            $header_sig = $binding_details_child->firstChild;
+                            if($classmap != NULL && !empty($classmap)) {
+                                ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "starting to parse header $ele_name as a classmap");
+                                $new_param = wsf_parse_payload_for_class_map($header_child, $header_sig, $ele_name, $classmap,
+                                                                               $cid2cont_type, $cid2attachments);
+                            }
+                            else
+                            {
+                                ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "starting to parse header $ele_name as an array");
+                                $new_param = wsf_parse_payload_for_array($header_child, $header_sig,
+                                                                               $cid2cont_type, $cid2attachments);
+                            }
+                            $header_params[] = $new_param;
+                        }
+                        //go to the next header
+                        if($header_child) {
+                            do {
+                                $header_child = $header_child->nextSibling;
+                            } while($header_child && $header_child->nextSibling);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return array(WSF_RESPONSE_PAYLOAD_PARAM => $op_param_values,
+                WSF_RESPONSE_HEADER_PARAM => $header_params);
 }
 
 ?>

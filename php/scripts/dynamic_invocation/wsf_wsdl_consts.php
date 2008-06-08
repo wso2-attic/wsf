@@ -145,6 +145,14 @@ define("WSF_HREF", "href");
 define("WSF_ATTACHMENT_MAP", "attachment_map");
 define("WSF_RESPONSE_PAYLOAD", "response_payload");
 
+define("WSF_SOAPHEADER", "soapheader");
+define("WSF_HEADER_FOR_ATTRIBUTE", "for");
+define("WSF_INPUT_HEADERS", "input_headers");
+define("WSF_OUTPUT_HEADERS", "output_headers");
+define("WSF_REQUIRED", "required");
+define("WSF_RESPONSE_PAYLOAD_PARAM", "response_payload_param");
+define("WSF_RESPONSE_HEADER_PARAM", "response_header_param");
+
 // log level definition
 
 define("WSF_LOG_CRITICAL", 0);

@@ -102,6 +102,7 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
     }
 }
 
+
 /** create payload for arrays
  * @param $payload_dom - DomDocument for the payload building
  * @param $sig_node - sig model

@@ -86,8 +86,8 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     $arg_count = $function_parameters[WSF_ARG_COUNT];
     $arguments = $function_parameters[WSF_ARG_ARRAY];
 
-    $sig_model_dom->preserveWhiteSpace = false;
-    $wsdl_dom->preserveWhiteSpace = false;
+    $sig_model_dom->preserveWhiteSpace = FALSE;
+    $wsdl_dom->preserveWhiteSpace = FALSE;
        
     if(!$wsdl_location) {
         ws_log_write(__FILE__, __LINE__, WSF_LOG_INFO, "WSDL location uri is not found");
@@ -103,7 +103,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     }
    
 
-    $wsdl_dom->preserveWhiteSpace = false;
+    $wsdl_dom->preserveWhiteSpace = FALSE;
     /* changing code for processing mutiple port types in wsdl 1.1 */
     $is_multiple_interfaces = wsf_is_mutiple_port_types($wsdl_dom);
 
@@ -125,7 +125,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     }
     
     if(!$sig_model_dom) {
-        ws_log_write(__FILE__, __LINE__, WSF_LOG_INFO, "Error creating intermediate model");
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_INFO, "Error creating intermediate sig model");
         return "Error creating intermediate model";
     }
 
@@ -170,6 +170,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
 
     $binding_array = wsf_get_binding_details($operation);
 
+    //extracting out the sig_method from the operation sig node
     if($operation) {
         foreach($operation->childNodes as $style) {
             if($style->tagName == WSF_SIGNATURE) {
@@ -183,19 +184,20 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     }
 
     $attachment_map = array();
+    $return_info = NULL;
     if($sig_method && !$is_rpc_enc) {
-        $payload = wsf_create_payload($sig_method, $is_doc_lit, $operation_name,
+        $return_info = wsf_create_payload($sig_method, $is_doc_lit, $operation_name,
                     $arg_count, $arguments, $class_map, $use_mtom, $attachment_map);
     }
     else {
-        $payload = wsf_create_payload($sig_method, FALSE, $operation_name,
+        $return_info = wsf_create_payload($sig_method, FALSE, $operation_name,
                 $arg_count, $arguments, $class_map, $use_mtom, $attachment_map);
     }
 
-    if($sig_method) {
-        $return_node = wsf_get_response_parameters($sig_method);
-    }
-    $return_sig_model_string = $sig_model_dom->saveXML($return_node);
+    $payload = $return_info[WSF_REQUEST_PAYLOAD];
+    $headers = $return_info[WSF_INPUT_HEADERS];
+
+    $sig_model_string = $sig_model_dom->saveXML($operation);
 
     if($is_wsdl_11 == TRUE && $wsdl_11_dom) {
         $wsdl_dom = $wsdl_11_dom;
@@ -209,8 +211,9 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     $return_value = array(WSF_ENDPOINT_URI=> $endpoint_address,
                           WSF_BINDING_DETAILS=> $binding_array,
                           WSF_REQUEST_PAYLOAD=> $payload,
+                          WSF_INPUT_HEADERS=> $headers,
                           WSF_POLICY_NODE=> $policy_array,
-                          WSF_RESPONSE_SIG_MODEL => $return_sig_model_string,
+                          WSF_RESPONSE_SIG_MODEL => $sig_model_string,
                           WSF_WSDL_DOM => $wsdl_dom_string,
                           WSF_ATTACHMENT_MAP => $attachment_map);
     return $return_value;
@@ -225,25 +228,40 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
  * @return mixed an object, an array or a simple type in line with the 
  * expected format of the response
  */
-function wsf_process_response($response_payload_string, $response_sig_model_string, $response_parameters, $wsdldom_string)
+function wsf_process_response($response_payload_string, 
+                    $response_header_string,
+                    $response_sig_model_string,
+                    $response_parameters,
+                    $wsdldom_string)
 {
     require_once('dynamic_invocation/wsf_wsdl_consts.php');
     require_once('dynamic_invocation/wsf_wsdl_util.php');
     require_once('dynamic_invocation/wsf_wsdl_client.php');
+    
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_INFO, "wsf_process_resonse is called");
 
-    $envelope_dom = new DomDocument(); 
+    $payload_dom = new DomDocument(); 
     $sig_model_dom = new DomDocument();
     $wsdl_dom = new DomDocument();
-    
-    $envelope_dom->preserveWhiteSpace = false;
-    $sig_model_dom->preserveWhiteSpace = false;
-    $wsdl_dom->preserveWhiteSpace = false;
 
-    $envelope_dom->loadXML($response_payload_string);
+    $header_dom = NULL;
+    
+    $payload_dom->preserveWhiteSpace = FALSE;
+    $sig_model_dom->preserveWhiteSpace = FALSE;
+    $wsdl_dom->preserveWhiteSpace = FALSE;
+
+    $payload_dom->loadXML($response_payload_string);
     $sig_model_dom->loadXML($response_sig_model_string);
     $wsdl_dom->loadXML($wsdldom_string);
+
+    if($response_header_string && !empty($response_header_string)) {
+        $header_dom = new DomDocument();
+        $header_dom->preserveWhiteSpace = FALSE;
+        $header_dom->loadXML($response_header_string);
+    }
     
-    $response_class = wsf_client_response_and_validate($envelope_dom, $sig_model_dom, $response_parameters);
+    $response_class = wsf_client_response_and_validate($payload_dom, $header_dom,
+                                    $sig_model_dom, $response_parameters);
     
     return $response_class;
 }
@@ -261,8 +279,8 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
     
     $wsdl_dom = new DomDocument();
     $sig_model_dom  = new DOMDocument();
-    $sig_model_dom->preserveWhiteSpace = false;
-    $wsdl_dom->preserveWhiteSpace = false;
+    $sig_model_dom->preserveWhiteSpace = FALSE;
+    $wsdl_dom->preserveWhiteSpace = FALSE;
     
     $service_name = NULL;
     $port_name = NULL;
@@ -277,8 +295,8 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
         $port_name = $parameters[WSF_PORT_NAME];
     }
     
-    $sig_model_dom->preserveWhiteSpace = false;
-    $wsdl_dom->preserveWhiteSpace = false;
+    $sig_model_dom->preserveWhiteSpace = FALSE;
+    $wsdl_dom->preserveWhiteSpace = FALSE;
 
     if(!$wsdl_location) {
         return "WSDL is not found";
@@ -353,9 +371,8 @@ function wsf_wsdl_process_in_msg($parameters)
     $payload_dom = new DomDocument();
     $sig_model_dom = new DomDocument();
 
-
-    $payload_dom->preserveWhiteSpace = false;
-    $sig_model_dom->preserveWhiteSpace = false;
+    $payload_dom->preserveWhiteSpace = FALSE;
+    $sig_model_dom->preserveWhiteSpace = FALSE;
 
     $service_name = NULL;
     $port_name = NULL;
@@ -368,6 +385,7 @@ function wsf_wsdl_process_in_msg($parameters)
     $class_name = NULL;
     $class_map = NULL;
     $class_args = NULL;
+    $header_string = NULL;
 
     // this is about the respnse message
     $mtom_on = TRUE;
@@ -414,6 +432,21 @@ function wsf_wsdl_process_in_msg($parameters)
         $mtom_on = $parameters["useMTOM"];
     }
 
+    $header_element = NULL;
+    if(array_key_exists("header_string", $parameters)) {
+        $header_string = $parameters["header_string"];
+    
+        if($header_string && !empty($header_string)) {
+            $header_dom = new DomDocument(); 
+            $header_dom->preserveWhiteSpace = FALSE;
+
+            ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "header string :".$header_string);
+            $header_dom->loadXML($header_string);
+
+            $header_element = $header_dom->documentElement;
+        }
+    }
+
     $payload_dom->loadXML($payload_string);
     $sig_model_dom->loadXML($sig_model_string);
 
@@ -426,9 +459,11 @@ function wsf_wsdl_process_in_msg($parameters)
         return "operation not found";
     }
 
+    $payload_element = $payload_dom->documentElement;
+
     $return_payload_info = wsf_serivce_invoke_function($operation_node, $function_name,
-                $class_name, $class_args, $payload_dom->documentElement, $class_map, $mtom_on,
-                $cid2cont_type, $cid2attachments);
+                $class_name, $class_args, $payload_element, $header_element, $class_map,
+                $mtom_on, $cid2cont_type, $cid2attachments);
 
     return $return_payload_info;
 }

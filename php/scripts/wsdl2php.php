@@ -30,6 +30,8 @@ global $operations;
 // array to hold information on actions..
 global $actions;
 
+global $headers;
+
 // start of main logic
 
 $args = array();

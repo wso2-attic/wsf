@@ -18,19 +18,23 @@
 
 
 function wsf_serivce_invoke_function($operation_node, $function_name, $class_name,
-    $class_args, $soap_body_node, $classmap, $mtom_on,
+    $class_args, $soap_body_node, $header_node, $classmap, $mtom_on,
                 $cid2cont_type, $cid2attachments) {
 
     require_once('wsf_wsdl_consts.php');
     require_once('wsf_wsdl_util.php');
     require_once('wsf_wsdl_deserialization.php');
 
+    $sig_node = NULL;
+    $binding_details_node = NULL;
 	if($operation_node) {
-		foreach($operation_node->childNodes as $style) {
-			if($style->tagName == WSF_SIGNATURE) {
-				$sig_node = $style;
-                break;
+		foreach($operation_node->childNodes as $operation_child) {
+			if($operation_child->tagName == WSF_SIGNATURE) {
+				$sig_node = $operation_child;
 			}
+            if($operation_child->tagName == WSF_BINDINDG_DETAILS) {
+                $binding_details_node = $operation_child;
+            }
 		}
 	}
 
@@ -78,24 +82,100 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
     }
 
 	if(!$soap_body_node) {
-		error_log("soap_body not found", 0);
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "soap_body not found");
 	}
+
+    $header_params = array();
+    $output_headers = array();
+    if($header_node) {
+        $header_child = $header_node->firstChild;
+        $output_index = 0;
+
+        if($binding_details_node) {
+            $binding_details_childs = $binding_details_node->childNodes;
+
+            foreach($binding_details_childs as $binding_details_child) {
+                if($binding_details_child->nodeType == XML_ELEMENT_NODE &&
+                    $binding_details_child->nodeName == WSF_SOAPHEADER &&
+                    $binding_details_child->attributes->getNamedItem(WSF_HEADER_FOR_ATTRIBUTE)) {
+
+                    if($binding_details_child->attributes->getNamedItem(WSF_HEADER_FOR_ATTRIBUTE)->value == WSF_WSDL_INPUT) {
+
+                        //so this is the next input element..
+                        $sig_attrs = $binding_details_child->attributes;
+
+                        if($sig_attrs->getNamedItem(WSF_TYPE)) {
+                            $ele_name = $sig_attrs->getNamedItem(WSF_TYPE)->value;
+                        }
+                        if($sig_attrs->getNamedItem(WSF_TYPE_NAMESPACE)) {
+                            $ele_ns = $sig_attrs->getNamedItem(WSF_TYPE_NAMESPACE)->value;
+                        }
+
+                        if($header_child) {
+                            $header_sig = $binding_details_child->firstChild;
+                            if($classmap != NULL && !empty($classmap)) {
+                                ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "starting to parse header $ele_name as a classmap");
+                                $new_param = wsf_parse_payload_for_class_map($header_child, $header_sig, $ele_name, $classmap,
+                                                                               $cid2cont_type, $cid2attachments);
+                            }
+                            else
+                            {
+                                ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "starting to parse header $ele_name as an array");
+                                $new_param = wsf_parse_payload_for_array($header_child, $header_sig,
+                                                                               $cid2cont_type, $cid2attachments);
+                            }
+                            $header_params[] = $new_param;
+                        }
+                        else {
+                            //if header child doesn't exist better check whether it is an requeired header
+                            if($sig_attrs->geNamedItem(WSF_REQUIRED) && $sig_attrs->geNamedItem(WSF_REQUIRED)->value == "true") {
+                                //throwing faults saying it is required
+                                return new WSFault("Sender", "Requried header {$ele_name}|{$ele_ns} missing");
+                            }
+                        }
+
+                        //go to the next header
+                        if($header_child) {
+                            do {
+                                $header_child = $header_child->nextSibling;
+                            } while($header_child && $header_child->nextSibling);
+                        }
+                    }
+                    else if($binding_details_child->attributes->getNamedItem(WSF_HEADER_FOR_ATTRIBUTE)->value == WSF_WSDL_OUTPUT){
+                        $output_headers[$output_index] = array(); //to retrive later
+                        $header_params[] = &$output_headers[$output_index]; //to feed to the user operation
+                        
+                        $output_index ++;
+                    }
+                }
+            }
+        }
+    }
+
 
     $op_param_values = array();
     if($classmap != NULL && !empty($classmap)) {
         ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "starting to parse payload as a classmap");
         $op_param_values = wsf_parse_payload_for_class_map($soap_body_node, $params_node, $ele_name, $classmap,
                                                        $cid2cont_type, $cid2attachments);
+
+        $arg_array = array_merge(array($op_param_values), $header_params); 
     }
     else
     {
         ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "starting to parse payload as an array");
         $op_param_values = wsf_parse_payload_for_array($soap_body_node, $params_node,
                                                        $cid2cont_type, $cid2attachments);
+        if(!is_array($op_param_values) || $is_direct_list) {
+            // this can happens when returning simple types
+            $op_param_values = array($op_param_values);
+        }
+        $arg_array = array_merge($op_param_values, $header_params); 
     }
 
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, print_r($arg_array, TRUE));
     
-    $arg_array = $op_param_values; 
+
     if($class_name != NULL) {
         // First call the constructor
         $class = new ReflectionClass($class_name);
@@ -112,7 +192,7 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
             $method = $class->getMethod($function_name);
             if(($classmap != NULL && !empty($classmap)) || $is_direct_list) {
                 // for direct lists we follow same api as classmap
-                $response_value = $method->invoke($class_inst, $arg_array);
+                $response_value = $method->invokeArgs($class_inst, $arg_array);
             }
             else {
                 $response_value = $method->invokeArgs($class_inst, $arg_array);
@@ -126,18 +206,87 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
     {
         if(($classmap != NULL && !empty($classmap)) || $is_direct_list) {
             // for direct lists we follow same api as classmap
-            $response_value = call_user_func($function_name, $arg_array);
+            $response_value = call_user_func_array($function_name, $arg_array);
         }
         else {
             $response_value = call_user_func_array($function_name, $arg_array);
         }
     }
 
+
     $attachment_map = array();
+
     $response_payload_string = wsf_wsdl_create_response_payload($response_value, $sig_node, $mtom_on,
                                     $attachment_map);
+    $output_header_string =
+            wsf_wsdl_create_response_headers($binding_details_node, $output_headers, $mtom_on, $attachment_map);
 
-	return array(WSF_RESPONSE_PAYLOAD => $response_payload_string, WSF_ATTACHMENT_MAP => $attachment_map);
+
+	return array(WSF_RESPONSE_PAYLOAD => $response_payload_string, 
+                WSF_OUTPUT_HEADERS => $output_header_string,
+                WSF_ATTACHMENT_MAP => $attachment_map);
+}
+
+function wsf_wsdl_create_response_headers($binding_details_node, $arguments, $mtom_on, $attachment_map) {
+
+    $output_headers = array();
+    $argument_index = 0;
+    if($binding_details_node) {
+        $binding_details_childs = $binding_details_node->childNodes;
+
+        foreach($binding_details_childs as $binding_details_child) {
+            if($binding_details_child->nodeType == XML_ELEMENT_NODE &&
+                $binding_details_child->nodeName == WSF_SOAPHEADER &&
+                $binding_details_child->attributes->getNamedItem(WSF_HEADER_FOR_ATTRIBUTE) &&
+                $binding_details_child->attributes->getNamedItem(WSF_HEADER_FOR_ATTRIBUTE)->value == WSF_WSDL_OUTPUT) {
+                //so this is the next input element..
+
+                $header_name = "";
+                $header_ns = "";
+                if($binding_details_child->attributes->getNamedItem(WSF_TYPE)) {
+                    $header_name = $binding_details_child->attributes->getNamedItem(WSF_TYPE)->value;
+                }
+                if($binding_details_child->attributes->getNamedItem(WSF_TYPE_NAMESPACE)) {
+                    $header_ns = $binding_details_child->attributes->getNamedItem(WSF_TYPE_NAMESPACE)->value;
+                }
+
+                $header_dom = new DOMDocument('1.0', 'iso-8859-1');
+                $element = $header_dom->createElementNS($header_ns, WSF_STARTING_NS_PREFIX.":".$header_name);
+
+                if(array_key_exists($argument_index, $arguments)) {
+
+                    $namespace_map = array($header_ns => WSF_STARTING_NS_PREFIX);
+                    $argument = $arguments[$argument_index];
+
+                    $header_sig = $binding_details_child->firstChild;
+
+                    if($argument && is_array($argument)){
+                        wsf_create_payload_for_array($header_dom, $header_sig, $element, $element, $arguments,
+                                                  $prefix_i, $namespace_map, $mtom_on, $attachment_map);
+                    }
+                    else if($argument && is_object($argument)) {
+
+                        wsf_create_payload_for_class_map($header_dom, $header_sig, $element, $element, $argument,
+                                                  $prefix_i, $namespace_map, $mtom_on, $attachment_map);
+                    }
+
+                    $header_dom->appendChild($element);
+                    $header_node = $header_dom->firstChild;
+                    $clone_node = $header_node->cloneNode(TRUE);
+                    $header_str = $header_dom->saveXML($clone_node);
+
+                    $output_headers[] = $header_str;
+
+                }
+                else {
+                    break;
+                }
+
+                $argument_index ++;
+            }
+        }
+    }
+    return $output_headers;
 }
 
 function wsf_wsdl_create_response_payload($return_val, $sig_node, $mtom_on, &$attachment_map) {
