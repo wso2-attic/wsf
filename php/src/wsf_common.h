@@ -201,7 +201,6 @@ typedef enum ws_input_types
 #define WSF_MODULE_SECURITY   "rampart"
 #define WSF_MODULE_RM         "sandesha2"
 
-/** http status codes */
 #define WSF_SVC_INFO "WSFPHPSvcInfo"
 
 #define WSF_REQ_INFO "WSFPHPRequestInfo"
