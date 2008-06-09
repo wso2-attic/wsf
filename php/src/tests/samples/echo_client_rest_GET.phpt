@@ -33,4 +33,4 @@ try {
 ?>
 
 --EXPECT--
-Response = &lt;echoString&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/echoString&gt; <br>
+Response = &lt;echoString&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;b&gt;b&lt;/b&gt;&lt;/echoString&gt; <br>
