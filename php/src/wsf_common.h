@@ -58,6 +58,11 @@ typedef enum ws_input_types
 
 #define WSF_PHP_LOG_PREFIX      "[WSF/PHP] "
 
+#define WSF_MIXED "MIXED"
+#define WSF_WSMESSAGE "WSMESSAGE"
+
+#define WSF_MESSAGE_STR "str"
+
 #define WSF_ACTIONS      "actions"
 #define WSF_OPERATIONS  "operations"
 #define WSF_OP_MEP      "opMEP"
@@ -142,6 +147,9 @@ typedef enum ws_input_types
 #define WSF_FAULT_CODE_NS        "codens"
 #define WSF_FAULT_SUBCODE 		"Subcode"
 #define WSF_FAULT_DETAIL 		"Detail"
+#define WSF_FAULT_HTTP_STATUS_CODE "httpStatusCode"
+#define WSF_FAULT_STR "str"
+#define WSF_FAULT_NAME "_name"
 
 /** header options */
 #define WSF_INPUT_HEADERS        "inputHeaders"
@@ -180,6 +188,7 @@ typedef enum ws_input_types
 #define WSF_SOAP_1_2_NAMESPACE_URI "http://www.w3.org/2003/05/soap-envelope"
 
 /** sandesha2 */
+
 #define WSF_SANDESHA2_CLIENT_ACKS_TO "Sandesha2AcksTo"
 #define WSF_SANDESHA2_CLIENT_LAST_MESSAGE "Sandesha2LastMessage"
 #define WSF_SANDESHA2_CLIENT_OFFERED_SEQ_ID "Sandesha2OfferedSequenceId"
@@ -188,6 +197,9 @@ typedef enum ws_input_types
 #define WSF_SANDESHA2_CLIENT_MESSAGE_NUMBER "Sandesha2MessageNumber"
 #define WSF_SANDESHA2_CLIENT_RM_SPEC_VERSION "Sandesha2RMSpecVersion"
 #define WSF_SANDESHA2_CLIENT_DUMMY_MESSAGE "Sandesha2DummyMessage"
+#define WSF_SANDESHA2_INACTIVITY_TIMEOUT "InactivityTimeout"
+#define WSF_SANDHSHA2_LAST_MESSAGE "Sandesha2LastMessage"
+#define WSF_SANDHSHA2_SANDESHA2_OFFERED_SEQUENCE_ID "Sandesha2OfferedSequenceId"
 
 #define WSF_RM_VERSION_1_0_STR "Spec_2005_02"
 #define WSF_RM_VERSION_1_0  1
@@ -197,6 +209,19 @@ typedef enum ws_input_types
 #define WSF_RM_RESPONSE_TIMEOUT "responseTimeout"
 #define WSF_RM_DEFAULT_RESPONSE_TIMEOUT "12"
 
+#define WSF_SANDESHA2_DB "sandesha2_db"
+
+/** Addressing options */
+
+#define WSF_ADDRESSING_VERSION_1_0 "1.0"
+#define WSF_ADDRESSING_SUBMISSION "submission"
+
+/** SOAP Constants */
+
+#define WSF_SOAP_VERSION_1_1 "1.1"
+#define WSF_SOAP_VERSION_1_2 "1.2"
+
+/** module names */
 #define WSF_MODULE_ADDRESSING "addressing"
 #define WSF_MODULE_SECURITY   "rampart"
 #define WSF_MODULE_RM         "sandesha2"

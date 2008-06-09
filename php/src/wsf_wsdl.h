@@ -116,5 +116,8 @@ void wsf_wsdl_set_sig_model(char* wsdl_path,
 #define WSF_WSDL_RESPONSE_PAYLOAD_PARAM "response_payload_param"
 #define WSF_WSDL_RESPONSE_HEADER_PARAM "response_header_param"
 
+
+#define WSF_WSDL_CHECK_FUNCTION "wsf_wsdl_check"
+
 #endif /* WSF_WSDL_H */
 

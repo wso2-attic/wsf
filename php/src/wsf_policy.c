@@ -1,5 +1,5 @@
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+* Copyright 2005,2008 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,8 +88,7 @@ wsf_policy_handle_client_security (
         return AXIS2_FAILURE;
     }
 
-    /* if incoming policy and outgoing policy are diffrenet from each
-       other */
+    /* if incoming policy and outgoing policy are different from each  other */
     if (policy && Z_TYPE_P (policy) == IS_OBJECT) {
         ht = Z_OBJPROP_P (policy);
         if (zend_hash_find (ht, WSF_IN_POLICY, sizeof (WSF_IN_POLICY),
@@ -122,7 +121,7 @@ wsf_policy_handle_client_security (
                 is_multiple_flow = AXIS2_SUCCESS;
             }
         }
-        if (zend_hash_find (ht, "policy_xml", sizeof ("policy_xml"),
+        if (zend_hash_find (ht, WSF_POLICY_XML, sizeof (WSF_POLICY_XML),
                 (void **) & tmp_type) == SUCCESS
             && (Z_TYPE_PP (tmp_type) == IS_STRING)) {
             policy_xml = Z_STRVAL_PP (tmp_type);
@@ -133,8 +132,7 @@ wsf_policy_handle_client_security (
             is_multiple_flow = AXIS2_SUCCESS;
         }
     }
-    /* since creating policy xml is the same procedure use one
-       function */
+    /* since creating policy xml is the same procedure use one function */
     if (policy && Z_TYPE_P (policy) == IS_OBJECT && is_multiple_flow == AXIS2_FALSE) {
         outgoing_policy_node = wsf_do_create_policy (sec_token, policy, AXIS2_FAILURE, env TSRMLS_CC);
         incoming_policy_node = wsf_do_create_policy (sec_token, policy, AXIS2_FAILURE, env TSRMLS_CC);
@@ -196,28 +194,34 @@ wsf_policy_handle_client_security (
         }
     }
 
-    axis2_svc_client_engage_module (svc_client, env, "rampart");
+    axis2_svc_client_engage_module (svc_client, env, WSF_MODULE_SECURITY);
 
-    /* for testing only ,should be remove later */
-    if (outgoing_policy_node) {
-        axis2_char_t *om_str_in = NULL;
-        axis2_char_t *om_str_out = NULL;
+    /** Used for debuging */
+	if(env->log->level == AXIS2_LOG_LEVEL_DEBUG)
+	{
+		if (outgoing_policy_node) 
+		{
+			axis2_char_t *om_str_in = NULL;
+			axis2_char_t *om_str_out = NULL;
+			
+			om_str_out = axiom_node_to_string (outgoing_policy_node, env);
+			om_str_in = axiom_node_to_string (incoming_policy_node, env);
 
-        om_str_out = axiom_node_to_string (outgoing_policy_node, env);
-        om_str_in = axiom_node_to_string (incoming_policy_node, env);
+			AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, 
+			WSF_PHP_LOG_PREFIX "creating rampart client outgoing policy node \n\t %s \n", om_str_out);
 
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_sec_policy]creating rampart client outgoing policy node \n\t %s \n",
-            om_str_out);
-        om_str_out = NULL;
+			AXIS2_FREE(env->allocator, om_str_out);
+			om_str_out = NULL;
 
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_sec_policy]creating rampart client incoming policy node \n\t %s \n",
-            om_str_in);
-        om_str_in = NULL;
+			AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, 
+			WSF_PHP_LOG_PREFIX "creating rampart client incoming policy node \n\t %s \n",
+				om_str_in);
 
+			AXIS2_FREE(env->allocator, om_str_in);
 
-    }
+			om_str_in = NULL;
+		}
+	}
     return AXIS2_SUCCESS;
 }
 
@@ -249,8 +253,7 @@ wsf_policy_handle_server_security (
     if (!sec_token && !policy && !svc && !conf)
         return AXIS2_FAILURE;
 
-    /* if incoming policy and outgoing policy are different from each
-       other */
+    /* if incoming policy and outgoing policy are different from each other */
     if (Z_TYPE_P (policy) == IS_OBJECT) {
         ht = Z_OBJPROP_P (policy);
         if (zend_hash_find (ht, WSF_IN_POLICY, sizeof (WSF_IN_POLICY),
@@ -287,7 +290,7 @@ wsf_policy_handle_server_security (
                 is_multiple_flow = AXIS2_SUCCESS;
             }
         }
-        if (zend_hash_find (ht, "policy_xml", sizeof ("policy_xml"),
+        if (zend_hash_find (ht, WSF_POLICY_XML, sizeof (WSF_POLICY_XML),
                 (void **) & tmp_type) == SUCCESS
             && (Z_TYPE_PP (tmp_type) == IS_STRING)) {
             policy_xml = Z_STRVAL_PP (tmp_type);
@@ -299,8 +302,7 @@ wsf_policy_handle_server_security (
         }
 
     }
-    /* since creating policy xml is the same procedure use one
-       function */
+    /* since creating policy XML is the same procedure use one function */
     if (Z_TYPE_P (policy) == IS_OBJECT && is_multiple_flow == AXIS2_FALSE) {
         outgoing_policy_node =
             wsf_do_create_policy (sec_token, policy, AXIS2_SUCCESS, env TSRMLS_CC);
@@ -349,25 +351,29 @@ wsf_policy_handle_server_security (
     }
 
     /** engage module rampart */
-    wsf_util_engage_module (conf, "rampart", env, svc);
+    wsf_util_engage_module (conf, WSF_MODULE_SECURITY, env, svc);
 
-    if (outgoing_policy_node && incoming_policy_node) {
-        axis2_char_t *om_str_in = NULL;
-        axis2_char_t *om_str_out = NULL;
+	if(env->log->level == AXIS2_LOG_LEVEL_DEBUG)
+	{
+		if (outgoing_policy_node && incoming_policy_node) 
+		{
+			axis2_char_t *om_str_in = NULL;
+			axis2_char_t *om_str_out = NULL;
 
-        om_str_out = axiom_node_to_string (outgoing_policy_node, env);
-        om_str_in = axiom_node_to_string (incoming_policy_node, env);
+			om_str_out = axiom_node_to_string (outgoing_policy_node, env);
+			om_str_in = axiom_node_to_string (incoming_policy_node, env);
 
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_sec_policy]creating rampart service outgoing policy node \n\t %s \n",
-            om_str_out);
-        om_str_out = NULL;
+			AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+				"creating rampart service outgoing policy node \n\t %s \n", om_str_out);
+			AXIS2_FREE(env->allocator, om_str_out);
+			om_str_out = NULL;
 
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_sec_policy]creating rampart service incoming policy node \n\t %s \n",
-            om_str_in);
-        om_str_in = NULL;
-    }
+			AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+				"creating rampart service incoming policy node \n\t %s \n", om_str_in);
+			AXIS2_FREE(env->allocator, om_str_in);
+			om_str_in = NULL;
+		}
+	}
     return AXIS2_SUCCESS;
 }
 
@@ -383,72 +389,88 @@ wsf_set_rampart_options (
     HashTable *ht_token = NULL;
     zval **token_val = NULL;
 
-    if(policy){
+    if(policy)
+	{
         if (Z_TYPE_P (policy) == IS_OBJECT)
+		{
             ht_policy = Z_OBJPROP_P (policy);
-        else
+		}else 
+		{
             ht_policy = Z_ARRVAL_P (policy);
+		}
     }
-	if(!rampart_context){
-		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_policy] rampart context null");
+	if(!rampart_context)
+	{
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX " rampart context null");
 		return -1;
 	}
 
     ht_token = Z_OBJPROP_P (sec_token);
     
-    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_policy] Setting values to rampart context ");
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,WSF_PHP_LOG_PREFIX "Setting values to rampart context ");
     
     
     if (zend_hash_find (ht_token, WSF_TTL, sizeof (WSF_TTL),
             (void **) &token_val) == SUCCESS
-        && Z_TYPE_PP (token_val) == IS_LONG) {
+        && Z_TYPE_PP (token_val) == IS_LONG) 
+	{
 		rampart_context_set_ttl(rampart_context, env, Z_LVAL_PP(token_val));
     }
 
     if (zend_hash_find (ht_token, WSF_USER, sizeof (WSF_USER),
             (void **) &token_val) == SUCCESS
-        && Z_TYPE_PP (token_val) == IS_STRING) {
+        && Z_TYPE_PP (token_val) == IS_STRING) 
+	{
         rampart_context_set_user(rampart_context, env, Z_STRVAL_PP(token_val));
     }
     if (zend_hash_find (ht_token, WSF_CERTIFICATE, sizeof (WSF_CERTIFICATE),
             (void **) &token_val) == SUCCESS
-        && Z_TYPE_PP (token_val) == IS_STRING) {
+        && Z_TYPE_PP (token_val) == IS_STRING)
+	{
 			rampart_context_set_certificate(rampart_context, env, Z_STRVAL_PP (token_val)); 
     }
-	if (rampart_context_set_certificate_type (rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS){
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting certificate type");
+	if (rampart_context_set_certificate_type (rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS)
+	{
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Setting certificate type");
 	}
 
     if (zend_hash_find (ht_token, WSF_RECEIVER_CERTIFICATE,
             sizeof (WSF_RECEIVER_CERTIFICATE), (void **) &token_val) == SUCCESS
-        && Z_TYPE_PP (token_val) == IS_STRING) {
+        && Z_TYPE_PP (token_val) == IS_STRING) 
+	{
 			rampart_context_set_receiver_certificate(rampart_context, env, Z_STRVAL_PP(token_val));
     }
-	if (rampart_context_set_receiver_certificate_type (rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS){
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting receiver certificate type");
+	if (rampart_context_set_receiver_certificate_type (rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS)
+	{
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Setting receiver certificate type");
 	}
     if (zend_hash_find (ht_token, WSF_PRIVATE_KEY, sizeof (WSF_PRIVATE_KEY),
             (void **) &token_val) == SUCCESS
-        && Z_TYPE_PP (token_val) == IS_STRING) {
-			rampart_context_set_prv_key(rampart_context, env, Z_STRVAL_PP(token_val));
-		AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pvt key ");	
+        && Z_TYPE_PP (token_val) == IS_STRING)
+	{
+		rampart_context_set_prv_key(rampart_context, env, Z_STRVAL_PP(token_val));
+		AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,WSF_PHP_LOG_PREFIX "Setting pvt key ");	
     }
-	if (rampart_context_set_prv_key_type (rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS){
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting pvt key format ");
+	if (rampart_context_set_prv_key_type (rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS)
+	{
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Setting pvt key format ");
 	}
     if (zend_hash_find (ht_token, WSF_PASSWORD_TYPE, sizeof (WSF_PASSWORD_TYPE),
             (void **) &token_val) == SUCCESS
-        && Z_TYPE_PP (token_val) == IS_STRING) {
+        && Z_TYPE_PP (token_val) == IS_STRING) 
+	{
 			rampart_context_set_password_type(rampart_context, env, Z_STRVAL_PP(token_val));
     }
     if (zend_hash_find (ht_token, WSF_PASSWORD, sizeof (WSF_PASSWORD),
             (void **) &token_val) == SUCCESS
-        && Z_TYPE_PP (token_val) == IS_STRING) {
+        && Z_TYPE_PP (token_val) == IS_STRING) 
+	{
 			rampart_context_set_password(rampart_context, env, Z_STRVAL_PP(token_val));
     }
     if (zend_hash_find (ht_token, WSF_PASSWORD_CALL_BACK,
             sizeof (WSF_PASSWORD_CALL_BACK), (void **) &token_val) == SUCCESS
-        && Z_TYPE_PP (token_val) == IS_STRING) {
+        && Z_TYPE_PP (token_val) == IS_STRING) 
+	{
 			rampart_context_set_pwcb_function(rampart_context, env, wsf_password_provider_function, Z_STRVAL_PP(token_val));
     }
     if (zend_hash_find (ht_token, WSF_CUSTOM_TOKENS,
@@ -467,18 +489,21 @@ wsf_set_rampart_options (
         /* reset the hash pointer to start */
         zend_hash_internal_pointer_reset_ex (ht_custom_tokens, &pos);
         /* loop through each element */
-        while(zend_hash_get_current_data_ex(ht_custom_tokens, (void**)&tmp, &pos) != FAILURE){
-            if(Z_TYPE_PP (tmp) == IS_STRING) {
+        while(zend_hash_get_current_data_ex(ht_custom_tokens, (void**)&tmp, &pos) != FAILURE)
+		{
+            if(Z_TYPE_PP (tmp) == IS_STRING) 
+			{
                 axis2_char_t *custom_token = NULL;
                 axiom_node_t *custom_token_node = NULL;
 
                 custom_token = Z_STRVAL_PP(tmp);
 
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_sec_policy] custom token: %s ", custom_token);
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                    "Custom token: %s ", custom_token);
                 
                 custom_token_node = wsf_util_deserialize_buffer(env, custom_token);
-                if(custom_token_node) {
+                if(custom_token_node) 
+				{
                     axutil_array_list_add(custom_tokens, env, (void*)custom_token_node);
                 }
             }
@@ -512,91 +537,92 @@ wsf_do_create_policy (
     else
         ht_policy = Z_ARRVAL_P (policy);
 
-    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-        "[wsf_policy] Creating the policy node");
-    neethi_options = neethi_options_create (env);
-    if (neethi_options) {
-        if (zend_hash_find (ht_policy, WSF_TIMESTAMP, sizeof (WSF_TIMESTAMP),
-                (void **) &tmp) == SUCCESS) {
-            if (neethi_options_set_include_timestamp (neethi_options, env,
-                    AXIS2_TRUE))
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_sec_policy] timestamp_enabled ");
-        }
-        if (zend_hash_find (ht_policy, WSF_UT, sizeof (WSF_UT),
-                (void **) &tmp) == SUCCESS) {
-            if (neethi_options_set_is_username_token (neethi_options, env,
-                    AXIS2_TRUE))
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_sec_policy] token reference_enabled ");
-        }
-        if (zend_hash_find (ht_policy, WSF_ENCRYPT, sizeof (WSF_ENCRYPT),
-                (void **) &tmp) == SUCCESS) {
-            if (neethi_options_set_encrypt_body (neethi_options, env,
-                    AXIS2_TRUE))
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_sec_policy] encrypt_enabled ");
-        }
-        if (zend_hash_find (ht_policy, WSF_ALGORITHM, sizeof (WSF_ALGORITHM),
-                (void **) &tmp) == SUCCESS && tmp != NULL
-            && Z_TYPE_PP (tmp) == IS_STRING) {
-            algo_suite = Z_STRVAL_PP (tmp);
-            if (neethi_options_set_algorithmsuite (neethi_options, env,
-                    algo_suite))
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_sec_policy] algorithmSuite_enabled ");
-        }
-        if (zend_hash_find (ht_policy, WSF_SIGN, sizeof (WSF_SIGN),
-                (void **) &tmp) == SUCCESS) {
-            if (neethi_options_set_sign_body (neethi_options, env,
-                    AXIS2_TRUE))
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_sec_policy] sign_enabled ");
-        }
-        if (zend_hash_find (ht_policy, WSF_TOKEN_REFERENCE, sizeof (WSF_TOKEN_REFERENCE),
-                            (void **) &tmp) == SUCCESS && tmp != NULL
-            && Z_TYPE_PP (tmp) == IS_STRING) {
-            token_ref = wsf_get_rampart_token_value(Z_STRVAL_PP (tmp));
-            if (neethi_options_set_keyidentifier (neethi_options, env,
-                                                  token_ref))
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                                 "[wsf_sec_policy] token_ref_enabled ");
-		 if(is_server_side == AXIS2_SUCCESS)
-		  neethi_options_set_server_side(neethi_options, env, is_server_side);
-        }
-        
-        if (zend_hash_find (ht_policy, WSF_ENCRYPT_SIGNATURE,
-                            sizeof (WSF_ENCRYPT_SIGNATURE), (void **) &tmp) == SUCCESS) {
-            if (neethi_options_set_signature_protection(neethi_options, env,
-                                              AXIS2_TRUE))
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                                 "[wsf_sec_policy] encrypt_sign_enabled ");
-        }
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Creating the policy node");
 
-        if (zend_hash_find (ht_policy, WSF_PROTECTION_ORDER, 
-                            sizeof (WSF_PROTECTION_ORDER), (void **) &tmp) == SUCCESS && tmp != NULL
-            && Z_TYPE_PP (tmp) == IS_STRING) {
-            protection_order = Z_STRVAL_PP (tmp);
-            if(strcmp(protection_order, WSF_ENCRYPT_BEFORE) == 0){
-                 if (neethi_options_set_encrypt_before_sign (neethi_options, env,
-                                                       AXIS2_TRUE))
-                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                                     "[wsf_sec_policy]  encrypt_before_sign_enabled");
-            }
-            else if(strcmp(protection_order, WSF_SIGN_BEFORE) == 0){
-                if (neethi_options_set_encrypt_before_sign (neethi_options, env,
-                                                            AXIS2_FALSE))
-                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                                     "[wsf_sec_policy]  sign_before_encrption_enabled");
-            }
-            else
-                php_error_docref (NULL TSRMLS_CC, E_ERROR,
-                                  "Wrong option for protection order");
-        }
-        
+    neethi_options = neethi_options_create (env);
+    if (neethi_options)
+	{
+        if (zend_hash_find (ht_policy, WSF_TIMESTAMP, sizeof (WSF_TIMESTAMP),
+                (void **) &tmp) == SUCCESS)
+		{
+            if (neethi_options_set_include_timestamp (neethi_options, env, AXIS2_TRUE))
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Timestamp_enabled ");
+    }
+    if (zend_hash_find (ht_policy, WSF_UT, sizeof (WSF_UT),
+            (void **) &tmp) == SUCCESS) 
+	{
+        if (neethi_options_set_is_username_token (neethi_options, env, AXIS2_TRUE))
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Token reference_enabled ");
+    }
+    if (zend_hash_find (ht_policy, WSF_ENCRYPT, sizeof (WSF_ENCRYPT),
+            (void **) &tmp) == SUCCESS) 
+	{
+        if (neethi_options_set_encrypt_body (neethi_options, env, AXIS2_TRUE))
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Encrypt body option enabled ");
+    }
+    if (zend_hash_find (ht_policy, WSF_ALGORITHM, sizeof (WSF_ALGORITHM),
+            (void **) &tmp) == SUCCESS && tmp != NULL && Z_TYPE_PP (tmp) == IS_STRING)
+	{
+        algo_suite = Z_STRVAL_PP (tmp);
+        if (neethi_options_set_algorithmsuite (neethi_options, env, algo_suite))
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "AlgorithmSuite enabled ");
+    }
+    if (zend_hash_find (ht_policy, WSF_SIGN, sizeof (WSF_SIGN),
+            (void **) &tmp) == SUCCESS)
+	{
+        if (neethi_options_set_sign_body (neethi_options, env, AXIS2_TRUE))
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Sign_enabled ");
+    }
+    if (zend_hash_find (ht_policy, WSF_TOKEN_REFERENCE, sizeof (WSF_TOKEN_REFERENCE),
+                        (void **) &tmp) == SUCCESS && tmp != NULL
+        && Z_TYPE_PP (tmp) == IS_STRING)
+	{
+        token_ref = wsf_get_rampart_token_value(Z_STRVAL_PP (tmp));
+		if (neethi_options_set_keyidentifier (neethi_options, env, token_ref))
+		{
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Token_ref_enabled ");
+		}
+		if(is_server_side == AXIS2_SUCCESS)
+		{
+			neethi_options_set_server_side(neethi_options, env, is_server_side);
+		}
+    }
+    
+    if (zend_hash_find (ht_policy, WSF_ENCRYPT_SIGNATURE,
+                        sizeof (WSF_ENCRYPT_SIGNATURE), (void **) &tmp) == SUCCESS) 
+	{
+        if (neethi_options_set_signature_protection(neethi_options, env, AXIS2_TRUE))
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Encrypt_sign_enabled ");
     }
 
-    if (neethi_options) {
+    if (zend_hash_find (ht_policy, WSF_PROTECTION_ORDER, 
+        sizeof (WSF_PROTECTION_ORDER), (void **) &tmp) == SUCCESS && tmp != NULL 
+		&& Z_TYPE_PP (tmp) == IS_STRING)
+	{
+        protection_order = Z_STRVAL_PP (tmp);
+        if(strcmp(protection_order, WSF_ENCRYPT_BEFORE) == 0)
+		{
+             if (neethi_options_set_encrypt_before_sign (neethi_options, env, AXIS2_TRUE))
+			 {
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Encrypt_before_sign_enabled");
+		     }
+        }
+        else if(strcmp(protection_order, WSF_SIGN_BEFORE) == 0)
+		{
+            if (neethi_options_set_encrypt_before_sign (neethi_options, env, AXIS2_FALSE))
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,WSF_PHP_LOG_PREFIX "Sign_before_encrption_enabled");
+        }
+        else 
+		{
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Wrong Protection Order ");
+            php_error_docref (NULL TSRMLS_CC, E_ERROR, "Wrong option given for protection order");
+		}
+	}
+    
+   }
+
+    if (neethi_options)
+	{
         return_node = neethi_options_get_root_node (neethi_options, env);
     }
     return return_node;
@@ -614,22 +640,24 @@ wsf_policy_set_policy_options (
     if (!property)
         return AXIS2_FAILURE;
 
-    if (Z_TYPE_P (property) == IS_ARRAY) {
+    if (Z_TYPE_P (property) == IS_ARRAY) 
+	{
         HashTable *ht = Z_ARRVAL_P (property);
 
         if (!ht)
             return AXIS2_FAILURE;
         /* for security policy related things  */
-        if (zend_hash_find (ht, "security", sizeof ("security"),
-                (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
+        if (zend_hash_find (ht, WSF_POLICY_SECURITY, sizeof (WSF_POLICY_SECURITY),
+                (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) 
+		{
             wsf_set_security_policy_options (this_ptr, tmp, env TSRMLS_CC);
             return AXIS2_SUCCESS;
         }
     }
-    if (Z_TYPE_P (property) == IS_STRING) {
-        add_property_zval (this_ptr, "policy_xml", property);
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_policy] policy node creating from a file ");
+    if (Z_TYPE_P (property) == IS_STRING) 
+	{
+        add_property_zval (this_ptr, WSF_POLICY_XML, property);
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Policy node creating from a file ");
         return AXIS2_SUCCESS;
     }
     return AXIS2_FAILURE;
@@ -647,7 +675,8 @@ wsf_set_security_policy_options (
     if (sec_options == NULL)
         return AXIS2_FAILURE;
 
-    if (Z_TYPE_PP (sec_options) == IS_ARRAY) {
+    if (Z_TYPE_PP (sec_options) == IS_ARRAY)
+	{
 
         ht_sec = Z_ARRVAL_PP (sec_options);
         if (!ht_sec)
@@ -655,135 +684,139 @@ wsf_set_security_policy_options (
 
 
         if (zend_hash_find (ht_sec, WSF_SIGN, sizeof (WSF_SIGN),
-                (void **) &sec_prop) == SUCCESS
-            && (Z_TYPE_PP (sec_prop) == IS_STRING
-                || Z_TYPE_PP (sec_prop) == IS_BOOL)) {
+                (void **) &sec_prop) == SUCCESS && (Z_TYPE_PP (sec_prop) == IS_STRING
+                || Z_TYPE_PP (sec_prop) == IS_BOOL)) 
+		{
             add_property_zval (policy_obj, WSF_SIGN, *sec_prop);
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                "[wsf_policy] signing is enable ");
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX " Signing is enabled ");
         }
 
         if (zend_hash_find (ht_sec, WSF_ENCRYPT, sizeof (WSF_ENCRYPT),
-                (void **) &sec_prop) == SUCCESS
-            && (Z_TYPE_PP (sec_prop) == IS_STRING
-                || Z_TYPE_PP (sec_prop) == IS_BOOL)) {
+                (void **) &sec_prop) == SUCCESS && (Z_TYPE_PP (sec_prop) == IS_STRING
+                || Z_TYPE_PP (sec_prop) == IS_BOOL)) 
+		{
             add_property_zval (policy_obj, WSF_ENCRYPT, *sec_prop);
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                "[wsf_policy]  encryption is enable ");
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX " Encryption is enabled ");
 
         }
 
         if (zend_hash_find (ht_sec, WSF_ALGORITHM, sizeof (WSF_ALGORITHM),
-                (void **) &sec_prop) == SUCCESS
-            && (Z_TYPE_PP (sec_prop) == IS_STRING)) {
-            add_property_stringl (policy_obj, WSF_ALGORITHM,
-                Z_STRVAL_PP (sec_prop), Z_STRLEN_PP (sec_prop), 1);
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                "[wsf_policy] algorithmSuite is enable ");
+                (void **) &sec_prop) == SUCCESS && (Z_TYPE_PP (sec_prop) == IS_STRING)) {
+            
+			add_property_stringl (policy_obj, WSF_ALGORITHM, 
+				Z_STRVAL_PP (sec_prop), Z_STRLEN_PP (sec_prop), 1);
+
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "AlgorithmSuite is enabled ");
 
         }
 
         if (zend_hash_find (ht_sec, WSF_LAYOUT, sizeof (WSF_LAYOUT),
                 (void **) &sec_prop) == SUCCESS
-            && (Z_TYPE_PP (sec_prop) == IS_STRING)) {
-            add_property_stringl (policy_obj, WSF_LAYOUT,
-                Z_STRVAL_PP (sec_prop), Z_STRLEN_PP (sec_prop), 1);
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                "[wsf_policy] layout is enable ");
+            && (Z_TYPE_PP (sec_prop) == IS_STRING)) 
+		{
+            add_property_stringl (policy_obj, WSF_LAYOUT, Z_STRVAL_PP (sec_prop), Z_STRLEN_PP (sec_prop), 1);
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Layout is enabled ");
 
         }
 
         if (zend_hash_find (ht_sec, WSF_TIMESTAMP, sizeof (WSF_TIMESTAMP),
                 (void **) &sec_prop) == SUCCESS
-            && (Z_TYPE_PP (sec_prop) == IS_BOOL)) {
+            && (Z_TYPE_PP (sec_prop) == IS_BOOL)) 
+		{
             add_property_bool (policy_obj, WSF_TIMESTAMP,
                 Z_BVAL_PP (sec_prop));
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                "[wsf_policy] timestamp is enable ");
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Timestamp is enabled ");
 
         }
 
         if (zend_hash_find (ht_sec, WSF_PROTECTION_ORDER,
                 sizeof (WSF_PROTECTION_ORDER), (void **) &sec_prop) == SUCCESS
-            && (Z_TYPE_PP (sec_prop) == IS_STRING)) {
+            && (Z_TYPE_PP (sec_prop) == IS_STRING)) 
+		{
             add_property_stringl (policy_obj, WSF_PROTECTION_ORDER,
                 Z_STRVAL_PP (sec_prop), Z_STRLEN_PP (sec_prop), 1);
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                "[wsf_policy] protection order is enable ");
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+				"Protection order is enabled ");
 
         }
 
         if (zend_hash_find (ht_sec, WSF_UT, sizeof (WSF_UT),
                 (void **) &sec_prop) == SUCCESS
-            && (Z_TYPE_PP (sec_prop) == IS_BOOL)) {
+            && (Z_TYPE_PP (sec_prop) == IS_BOOL)) 
+		{
             add_property_bool (policy_obj, WSF_UT, Z_BVAL_PP (sec_prop));
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                "[wsf_policy] UsernameToken is enable ");
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX " UsernameToken is enabled ");
 
         }
 
         if (zend_hash_find (ht_sec, WSF_TOKEN_REFERENCE,
                 sizeof (WSF_TOKEN_REFERENCE), (void **) &sec_prop) == SUCCESS
-            && (Z_TYPE_PP (sec_prop) == IS_STRING)) {
+            && (Z_TYPE_PP (sec_prop) == IS_STRING)) 
+		{
             add_property_stringl (policy_obj, WSF_TOKEN_REFERENCE,
                 Z_STRVAL_PP (sec_prop), Z_STRLEN_PP (sec_prop), 1);
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                "[wsf_policy] token reference  is enable ");
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Token reference  is enabled ");
 
         }
 
         if (zend_hash_find (ht_sec, WSF_PASSWORD_CALL_BACK,
                 sizeof (WSF_PASSWORD_CALL_BACK),
                 (void **) &sec_prop) == SUCCESS
-            && Z_TYPE_PP (sec_prop) == IS_STRING) {
+            && Z_TYPE_PP (sec_prop) == IS_STRING) 
+		{
             add_property_stringl (policy_obj, WSF_PASSWORD_CALL_BACK,
                 Z_STRVAL_PP (sec_prop), Z_STRLEN_PP (sec_prop), 1);
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                "[wsf_policy] callback is enable");
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Callback is enabled");
         }
 
         if (zend_hash_find (ht_sec, WSF_ENCRYPT_SIGNATURE, 
                             sizeof (WSF_ENCRYPT_SIGNATURE),(void **) &sec_prop) == SUCCESS
             && (Z_TYPE_PP (sec_prop) == IS_STRING
-                || Z_TYPE_PP (sec_prop) == IS_BOOL)) {
+                || Z_TYPE_PP (sec_prop) == IS_BOOL)) 
+		{
             add_property_zval (policy_obj, WSF_ENCRYPT_SIGNATURE, *sec_prop);
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                             "[wsf_policy] signature encryption is enable ");
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,WSF_PHP_LOG_PREFIX \
+				"Signature encryption is enabled ");
         }
 
         /* if inflow security and outflow security exits in the array */
         if (zend_hash_find (ht_sec, WSF_IN_POLICY, sizeof (WSF_IN_POLICY),
-                (void **) &sec_prop) == SUCCESS) {
-            if (Z_TYPE_PP (sec_prop) == IS_ARRAY) {
+                (void **) &sec_prop) == SUCCESS) 
+		{
+            if (Z_TYPE_PP (sec_prop) == IS_ARRAY) 
+			{
                 add_property_zval (policy_obj, WSF_IN_POLICY, *sec_prop);
                 wsf_set_security_policy_options (policy_obj, sec_prop,
                     env TSRMLS_CC);
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_policy] in policy array is enable ");
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+					" In policy array is enabled");
             }
-            if (Z_TYPE_PP (sec_prop) == IS_STRING) {
+            if (Z_TYPE_PP (sec_prop) == IS_STRING) 
+			{
                 add_property_stringl (policy_obj, WSF_IN_POLICY,
                     Z_STRVAL_PP (sec_prop), Z_STRLEN_PP (sec_prop), 1);
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_policy] in policy xml file is enable ");
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+					"In policy xml file is enabled");
             }
 
         }
 
         if (zend_hash_find (ht_sec, WSF_OUT_POLICY, sizeof (WSF_OUT_POLICY),
-                (void **) &sec_prop) == SUCCESS) {
-            if (Z_TYPE_PP (sec_prop) == IS_ARRAY) {
+                (void **) &sec_prop) == SUCCESS) 
+		{
+            if (Z_TYPE_PP (sec_prop) == IS_ARRAY) 
+			{
                 add_property_zval (policy_obj, WSF_OUT_POLICY, *sec_prop);
-                wsf_set_security_policy_options (policy_obj, sec_prop,
-                    env TSRMLS_CC);
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_policy] out policy array is enable ");
-            }
-            if (Z_TYPE_PP (sec_prop) == IS_STRING) {
+                wsf_set_security_policy_options (policy_obj, sec_prop, env TSRMLS_CC);
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+					"Out policy array is enabled");
+			}
+            if (Z_TYPE_PP (sec_prop) == IS_STRING) 
+			{
                 add_property_stringl (policy_obj, WSF_OUT_POLICY,
                     Z_STRVAL_PP (sec_prop), Z_STRLEN_PP (sec_prop), 1);
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_policy] out policy xml file is enable ");
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+					"Out policy xml file is enabled");
             }
         }
     }
@@ -807,11 +840,12 @@ wsf_password_provider_function (
     ZVAL_STRING (params[0], (char *) username, 1);
 
     if (call_user_function (EG (function_table), (zval **) NULL,
-            &func, &retval, 1, params TSRMLS_CC) == SUCCESS) {
-        if (Z_TYPE_P (&retval) == IS_STRING && Z_TYPE_P (&retval) != IS_NULL) {
+            &func, &retval, 1, params TSRMLS_CC) == SUCCESS) 
+	{
+        if (Z_TYPE_P (&retval) == IS_STRING && Z_TYPE_P (&retval) != IS_NULL) 
+		{
             val = estrdup (Z_STRVAL (retval));
             return val;
-
         }
     }
     return NULL;

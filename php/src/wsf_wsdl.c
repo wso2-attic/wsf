@@ -36,28 +36,32 @@
 
 
 
-void wsf_wsdl_do_request(zval *client_zval,
-                         zval* function_return_value,
-                         zval* return_value,
-						 zval *arguments,
-						 zval *classmap,
-                         axutil_env_t *env TSRMLS_DC);
+void wsf_wsdl_do_request(
+	zval *client_zval,
+	zval* function_return_value,
+	zval* return_value,
+	zval *arguments,
+	zval *classmap,
+	axutil_env_t *env TSRMLS_DC);
 
 axiom_soap_envelope_t* 
-wsf_wsdl_create_request_envelope(char *php_payload,
-                                 int soap_version,
-                                 axutil_env_t *env TSRMLS_DC);
+wsf_wsdl_create_request_envelope(
+	char *php_payload,
+	int soap_version,
+	axutil_env_t *env TSRMLS_DC);
 
 void 
-wsf_wsdl_handle_client_security(HashTable *client_ht,
-                             zval **policy_array,
-                             axutil_env_t *env,
-                             axis2_svc_client_t * svc_client TSRMLS_DC);
+wsf_wsdl_handle_client_security(
+	HashTable *client_ht,
+	zval **policy_array,
+	axutil_env_t *env,
+	axis2_svc_client_t * svc_client TSRMLS_DC);
 
 void 
-wsf_wsdl_handle_server_security(wsf_svc_info_t *svc,
-                                 zval **policy_options,
-                                 axutil_env_t *env TSRMLS_DC);
+wsf_wsdl_handle_server_security(
+	wsf_svc_info_t *svc,
+	zval **policy_options,
+	axutil_env_t *env TSRMLS_DC);
 
 axiom_node_t *
 wsf_wsdl_send_receive_soap_envelope_with_op_client (
@@ -71,10 +75,10 @@ void wsf_wsdl_create_dynamic_client(
 	zval *this_ptr, 
 	char *function, 
 	int function_len,
-    int arg_count, 
+	int arg_count, 
 	zval *args, 
 	zval *return_value,
-    axutil_env_t * env TSRMLS_DC)
+	axutil_env_t * env TSRMLS_DC)
 {
     zval *client_zval = NULL;
     zval **tmp = NULL;
@@ -191,7 +195,7 @@ void wsf_wsdl_create_dynamic_client(
 			int lint_script = 1;
 			{
 				zval check_function, retval1;
-				ZVAL_STRING(&check_function, "wsf_wsdl_check", 0);
+				ZVAL_STRING(&check_function, WSF_WSDL_CHECK_FUNCTION, 0);
 				if (call_user_function (EG (function_table), (zval **) NULL, 
 					&check_function, &retval1, 0,NULL TSRMLS_CC) == SUCCESS){
 						if(Z_TYPE(retval1) == IS_LONG && Z_LVAL(retval1) == 1){
@@ -267,120 +271,113 @@ wsf_wsdl_do_request(zval *client_zval,
     axis2_char_t *proxy_host = NULL;
     axis2_char_t *proxy_port = NULL;
     
-    if(zend_hash_find(ht_return, WSF_WSDL_ENDPOINT_URI, 
-					  sizeof(WSF_WSDL_ENDPOINT_URI),
-					  (void **)&tmp_options) == SUCCESS && 
-	   				  Z_TYPE_PP(tmp_options) == IS_STRING ){
+    if(zend_hash_find(ht_return, WSF_WSDL_ENDPOINT_URI, sizeof(WSF_WSDL_ENDPOINT_URI),
+		(void **)&tmp_options) == SUCCESS && Z_TYPE_PP(tmp_options) == IS_STRING )
+	{
         endpoint_address = Z_STRVAL_PP(tmp_options);
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, 
-                         "[wsf_wsdl] endpoint address is :- %s",
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Endpoint address is :- %s",
                          endpoint_address);
     }
-    if(zend_hash_find(ht_return, WSF_WSDL_BINDING_DETAILS, 
-                      sizeof(WSF_WSDL_BINDING_DETAILS),
-                      (void **)&tmp_options) == SUCCESS && 
-       Z_TYPE_PP(tmp_options) == IS_ARRAY){
+    if(zend_hash_find(ht_return, WSF_WSDL_BINDING_DETAILS, sizeof(WSF_WSDL_BINDING_DETAILS),
+		(void **)&tmp_options) == SUCCESS && Z_TYPE_PP(tmp_options) == IS_ARRAY)
+	{
         HashTable *ht_binding = Z_ARRVAL_PP(tmp_options);
         zval **binding_options = NULL;
         
         if(zend_hash_find(ht_binding, WSF_WSDL_WSA, sizeof(WSF_WSDL_WSA), 
-						  (void **)&binding_options) == SUCCESS
-         				  && Z_TYPE_PP(binding_options) == IS_STRING){
+			(void **)&binding_options) == SUCCESS && Z_TYPE_PP(binding_options) == IS_STRING)
+		{
             wsa_action = Z_STRVAL_PP(binding_options);
             AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, 
-                             "[wsf_wsdl] wsa action is :- %s", wsa_action);
+				WSF_PHP_LOG_PREFIX "WSA action is :- %s", wsa_action);
         }
         if(zend_hash_find(ht_binding, WSF_WSDL_SOAP, sizeof(WSF_WSDL_SOAP), 
-						  (void **)&binding_options) == SUCCESS
-           && Z_TYPE_PP(binding_options) == IS_STRING){
+			(void **)&binding_options) == SUCCESS && Z_TYPE_PP(binding_options) == IS_STRING)
+		{
             soap_action = Z_STRVAL_PP(binding_options);
             AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, 
-                             "[wsf_wsdl] soap action is :- %s", soap_action);
+				WSF_PHP_LOG_PREFIX "soap action is :- %s", soap_action);
         }
-        if(zend_hash_find(ht_binding, WSF_WSDL_SOAP_VERSION, 
-                          sizeof(WSF_WSDL_SOAP_VERSION), 
-                          (void **)&binding_options) == SUCCESS
-           && Z_TYPE_PP(binding_options) == IS_LONG){
+        if(zend_hash_find(ht_binding, WSF_WSDL_SOAP_VERSION, sizeof(WSF_WSDL_SOAP_VERSION), 
+			(void **)&binding_options) == SUCCESS && Z_TYPE_PP(binding_options) == IS_LONG)
+		{
             soap_version = Z_LVAL_PP(binding_options);
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, 
-                             "[wsf_wsdl] soap version is :- %d",
-                             soap_version);
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+				"soap version is :- %d",soap_version);
         }
     }
 
     
-    if(zend_hash_find(ht_return, WSF_WSDL_REQ_PAYLOAD, 
-                      sizeof(WSF_WSDL_REQ_PAYLOAD),
-                      (void **)&tmp_options) == SUCCESS && 
-       Z_TYPE_PP(tmp_options) == IS_STRING ){
+    if(zend_hash_find(ht_return, WSF_WSDL_REQ_PAYLOAD, sizeof(WSF_WSDL_REQ_PAYLOAD),
+		(void **)&tmp_options) == SUCCESS && Z_TYPE_PP(tmp_options) == IS_STRING )
+	{
          php_payload = Z_STRVAL_PP(tmp_options);
-         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, 
-                          "[wsf_wsdl] request payload :- %s", php_payload);
+         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                          "request payload :- %s", php_payload);
     }
     
     if(zend_hash_find(ht_return, WSF_WSDL_POLICY_NODE, sizeof(WSF_WSDL_POLICY_NODE),
-                      (void **)&tmp_options) == SUCCESS && 
-       Z_TYPE_PP(tmp_options) == IS_ARRAY){
+		(void **)&tmp_options) == SUCCESS && Z_TYPE_PP(tmp_options) == IS_ARRAY)
+	{
         policy_options = tmp_options;
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_wsdl] policy array found");
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "policy array found");
     }
     
-    if(zend_hash_find(ht_return, WSF_WSDL_RES_SIG_NODEL, 
-                      sizeof(WSF_WSDL_RES_SIG_NODEL),
-                      (void **)&tmp_options) == SUCCESS && 
-       Z_TYPE_PP(tmp_options) == IS_STRING ){
+    if(zend_hash_find(ht_return, WSF_WSDL_RES_SIG_NODEL, sizeof(WSF_WSDL_RES_SIG_NODEL),
+		(void **)&tmp_options) == SUCCESS && Z_TYPE_PP(tmp_options) == IS_STRING )
+	{
         response_sig_model_string = Z_STRVAL_PP(tmp_options);
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, 
-						 "[wsf_wsdl] response sig model :- %s",
-                         response_sig_model_string);
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+			"response sig model :- %s", response_sig_model_string);
     }
     
     if(zend_hash_find(ht_return, WSF_WSDL_DOM, sizeof(WSF_WSDL_DOM),
-                      (void **)&tmp_options) == SUCCESS && 
-       Z_TYPE_PP(tmp_options) == IS_STRING ){
+		(void **)&tmp_options) == SUCCESS && Z_TYPE_PP(tmp_options) == IS_STRING )
+	{
         wsdl_dom_string = Z_STRVAL_PP(tmp_options);
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_wsdl] WSDL DOM string found");
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "WSDL DOM string found");
     }
 
     /* retrieve the header information and set them on service client */
     
-    if(zend_hash_find(ht_return, WSF_WSDL_INPUT_HEADERS, 
-                      sizeof(WSF_WSDL_INPUT_HEADERS),
-                      (void **)&tmp_options) == SUCCESS && 
-       Z_TYPE_PP(tmp_options) == IS_ARRAY ){
+    if(zend_hash_find(ht_return, WSF_WSDL_INPUT_HEADERS, sizeof(WSF_WSDL_INPUT_HEADERS),
+		(void **)&tmp_options) == SUCCESS && Z_TYPE_PP(tmp_options) == IS_ARRAY )
+	{
         input_headers = tmp_options;
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_wsdl] input headers found");
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "input headers found");
     }
     
     WSF_GET_OBJ (svc_client, client_zval, axis2_svc_client_t, intern);
-    client_options =
-        (axis2_options_t *) axis2_svc_client_get_options (svc_client, env);
+    client_options = (axis2_options_t *) axis2_svc_client_get_options (svc_client, env);
 
 
-    if(input_headers) {
+    if(input_headers)
+	{
 
         HashPosition pos;
-        zval **param;
-        char *header_str;
-        axiom_node_t *header_node;
+        zval **param = NULL;
+        char *header_str = NULL;
+        axiom_node_t *header_node = NULL;
         
         for (zend_hash_internal_pointer_reset_ex (Z_ARRVAL_PP(input_headers), &pos);
-                zend_hash_get_current_data_ex (Z_ARRVAL_PP(input_headers),
-                                        (void **) &param, &pos) == SUCCESS;
-                zend_hash_move_forward_ex (Z_ARRVAL_PP(input_headers), &pos)) {
+                zend_hash_get_current_data_ex (Z_ARRVAL_PP(input_headers), 
+				(void **) &param, &pos) == SUCCESS;
+                zend_hash_move_forward_ex (Z_ARRVAL_PP(input_headers), &pos)) 
+		{
             
-            if(Z_TYPE_PP(param) == IS_STRING) {
+            if(Z_TYPE_PP(param) == IS_STRING) 
+			{
                 header_str = Z_STRVAL_PP(param);
                 header_node = wsf_util_deserialize_buffer(env, header_str);
-                
                 axis2_svc_client_add_header(svc_client, env, header_node);
             }
         } 
     }
 
-    
+	/** reset xml parser to stop libxml2 crash */    
     axis2_options_set_xml_parser_reset (client_options, env, AXIS2_FALSE);
-    wsf_client_set_options(Z_OBJPROP_P (client_zval), NULL,
+    
+	wsf_client_set_options(Z_OBJPROP_P (client_zval), NULL,
                            env, client_options, svc_client, &rest_enabled TSRMLS_CC);
     
     wsf_client_enable_ssl (Z_OBJPROP_P (client_zval), env, client_options TSRMLS_CC);
@@ -392,45 +389,50 @@ wsf_wsdl_do_request(zval *client_zval,
     wsf_client_set_proxy_auth_info(Z_OBJPROP_P (client_zval), env, client_options TSRMLS_CC);
     
     if(policy_options)
+	{
         wsf_wsdl_handle_client_security(Z_OBJPROP_P (client_zval), 
                                         policy_options, env, svc_client TSRMLS_CC);
+	}
 
     if(zend_hash_find ( Z_OBJPROP_P (client_zval), WSF_TO, sizeof (WSF_TO),
-                        (void **) &tmp_options) == SUCCESS
-       && Z_TYPE_PP (tmp_options) == IS_STRING)
+		(void **) &tmp_options) == SUCCESS && Z_TYPE_PP (tmp_options) == IS_STRING)
+	{
         endpoint_address = Z_STRVAL_PP (tmp_options);
-    
-    to_epr = axis2_endpoint_ref_create (env, endpoint_address);
+	}
+	
+	to_epr = axis2_endpoint_ref_create (env, endpoint_address);
     axis2_options_set_to (client_options, env, to_epr);
-    
+	
     /** add proxy options **/
 
     if (zend_hash_find (Z_OBJPROP_P (client_zval), WSF_PROXY_HOST, sizeof (WSF_PROXY_HOST),
-                        (void **)&tmp_options) == SUCCESS) {
+                        (void **)&tmp_options) == SUCCESS) 
+	{
         proxy_host = Z_STRVAL_PP (tmp_options);
     }
     if (zend_hash_find (Z_OBJPROP_P (client_zval), WSF_PROXY_PORT, sizeof (WSF_PROXY_PORT),
-                        (void **)&tmp_options) == SUCCESS) {
+                        (void **)&tmp_options) == SUCCESS) 
+	{
         proxy_port = Z_STRVAL_PP (tmp_options);
     }
     if (proxy_host && proxy_port) {
         axis2_svc_client_set_proxy (svc_client, env, proxy_host, proxy_port);
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                         "[wsf_wsdl_client] setting proxy options %s -- %s -- ", proxy_host,
-                         proxy_port);
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,WSF_PHP_LOG_PREFIX \
+         "setting proxy options %s -- %s -- ", proxy_host, proxy_port);
     }
 
-    if(soap_action){
+    if(soap_action)
+	{
         axutil_string_t *action_string = axutil_string_create (env, soap_action);
         axis2_options_set_soap_action (client_options, env, action_string);
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                         "[wsf_wsdl] soap action present :- %s",
-                         soap_action);
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+        "soap action present :- %s", soap_action);
     }
     
-    if(wsa_action){
+    if(wsa_action)
+	{
         axis2_options_set_action(client_options, env, wsa_action);
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
                          "[wsf_wsdl] addressing action present :- %s",
                          wsa_action);
         axis2_svc_client_engage_module (svc_client, env, WSF_MODULE_ADDRESSING);
@@ -438,64 +440,58 @@ wsf_wsdl_do_request(zval *client_zval,
     
     
     if (zend_hash_find (Z_OBJPROP_P (client_zval), WSF_USE_SOAP, sizeof (WSF_USE_SOAP),
-                        (void **)&tmp_options) == SUCCESS) {
-      if (Z_TYPE_PP (tmp_options) == IS_STRING) {
-        char *value = NULL;
-        value = Z_STRVAL_PP (tmp_options);
-        if (value && strcmp (value, "1.2") == 0) {
-            soap_version = 2;
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                   "[wsf_wsdl] soap version SOAP12");
-            } else if (value && strcmp (value, "1.1") == 0) {
+                        (void **)&tmp_options) == SUCCESS) 
+	{
+		if (Z_TYPE_PP (tmp_options) == IS_STRING) 
+		{
+			char *value = NULL;
+			value = Z_STRVAL_PP (tmp_options);
+			if (value && strcmp (value, WSF_SOAP_VERSION_1_2) == 0) 
+			{
+				soap_version = 2;
+				AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "soap version SOAP12");
+            } else if (value && strcmp (value, WSF_SOAP_VERSION_1_1) == 0) 
+			{
               soap_version = 1;
-              AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                         "[wsf_wsdl] soap version SOAP11");
+              AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,WSF_PHP_LOG_PREFIX "soap version SOAP11");
             }
-        } else if (Z_TYPE_PP (tmp_options) == IS_DOUBLE) {
+        } else if (Z_TYPE_PP (tmp_options) == IS_DOUBLE) 
+		{
             double val = Z_DVAL_PP (tmp_options);
-            if (val == 1.2) {
+            if (val == 1.2) 
+			{
               soap_version = 2;
-            } else if (val == 1.1) {
+            } else if (val == 1.1) 
+			{
               soap_version = 1;
             }
         }
     }
-    if (soap_version){
-      axis2_options_set_soap_version (client_options, env,
-				      soap_version);
-      AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-		       "[wsf_wsdl]soap version in wsdl mode is %d",
+    if (soap_version)
+	{
+      axis2_options_set_soap_version (client_options, env, soap_version);
+      AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX " soap version in wsdl mode is %d",
 		       soap_version);
     }
     
-    if(!php_payload){
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                         "[wsf_wsdl]request payload is not found");
+    if(!php_payload)
+	{
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX " request payload is not found");
        /* return; */
     }
    
     request_node = wsf_util_deserialize_buffer(env, php_payload);
     
-    /*request_envelope = wsf_wsdl_create_request_envelope(php_payload, soap_version, 
-                                                   env TSRMLS_CC);
-    
-    if (!request_envelope){
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                         "[wsf_wsdl]Error in creating request payload dom");
-        return;
-    }
-    */
-
-    if(!request_node) {
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                         "[wsf_wsdl]Error in creating request payload dom");
+    if(!request_node) 
+	{
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                         " Error in creating request payload dom");
         return;
     }
     
-    if(zend_hash_find(ht_return, WSF_WSDL_ATTACHMENT_MAP,
-                    sizeof(WSF_WSDL_ATTACHMENT_MAP),
-                    (void**)&tmp_options) == SUCCESS &&
-       Z_TYPE_PP(tmp_options) == IS_ARRAY) {
+    if(zend_hash_find(ht_return, WSF_WSDL_ATTACHMENT_MAP, sizeof(WSF_WSDL_ATTACHMENT_MAP),
+		(void**)&tmp_options) == SUCCESS && Z_TYPE_PP(tmp_options) == IS_ARRAY) 
+	{
         int enable_mtom = AXIS2_TRUE;
         int enable_swa = AXIS2_FALSE;
         HashTable *client_ht = NULL;
@@ -503,45 +499,39 @@ wsf_wsdl_do_request(zval *client_zval,
 
         client_ht = Z_OBJPROP_P (client_zval);
 
-        if (client_ht
-            && zend_hash_find (client_ht, WSF_USE_MTOM, sizeof (WSF_USE_MTOM),
-                (void **) &tmp_options) == SUCCESS) {
-            if (Z_TYPE_PP (tmp_options) == IS_BOOL && Z_BVAL_PP (tmp_options) == 0) {
+        if (client_ht && zend_hash_find (client_ht, WSF_USE_MTOM, sizeof (WSF_USE_MTOM),
+                (void **) &tmp_options) == SUCCESS) 
+		{
+            if (Z_TYPE_PP (tmp_options) == IS_BOOL && Z_BVAL_PP (tmp_options) == 0) 
+			{
                 enable_mtom = AXIS2_FALSE;
-            } else if (Z_TYPE_PP (tmp_options) == IS_STRING) {
+            } 
+			else if (Z_TYPE_PP (tmp_options) == IS_STRING) 
+			{
                 char *value = NULL;
                 value = Z_STRVAL_PP (tmp_options);
                 /* Check if SOAP with Attachments (SwA) has been enabled */
                 if (value && (strcmp (value, "swa") == 0 || strcmp (value, "SWA") == 0 
-                            || strcmp (value, "SwA") == 0)) {
+                            || strcmp (value, "SwA") == 0)) 
+				{
 
-                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                        "[wsf_client] SwA enabled");
+                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "SwA enabled");
                     enable_swa = AXIS2_TRUE;
                 } 
             }
         }
 
 
-        /*
-        soap_body = axiom_soap_envelope_get_body (request_envelope, env);
-        if (soap_body) 
-        {
-            request_node = axiom_soap_body_get_base_node(soap_body, env);
-        }*/
         axis2_options_set_enable_mtom (client_options, env, enable_mtom);
         wsf_util_set_attachments_with_cids(env, enable_mtom, enable_swa,
-                request_node, ht_attachments, "application/octet-stream" TSRMLS_CC);
+                request_node, ht_attachments, AXIOM_MIME_TYPE_OCTET_STREAM TSRMLS_CC);
     }
     
-    res_payload = wsf_wsdl_send_receive_soap_envelope_with_op_client (env,
-                                                            svc_client, 
-                                                            client_options, 
-                                                            request_node);
+    res_payload = wsf_wsdl_send_receive_soap_envelope_with_op_client (env, svc_client, 
+                        client_options, request_node);
 
 
-    response_envelope = 
-            axis2_svc_client_get_last_response_soap_envelope(svc_client, env);
+    response_envelope = axis2_svc_client_get_last_response_soap_envelope(svc_client, env);
     if (response_envelope) 
 	{
         has_fault = AXIS2_TRUE;
@@ -618,7 +608,7 @@ wsf_wsdl_do_request(zval *client_zval,
                 payload_element = axiom_node_get_data_element(body_base_node, env);
                 
                 qname = axiom_element_get_qname(payload_element, env, body_base_node);
-                if(axutil_qname_get_localpart(qname, env) == "Body") {
+                if(axutil_qname_get_localpart(qname, env) == AXIOM_SOAP_BODY_LOCAL_NAME) {
                     res_payload = axiom_node_get_first_child(body_base_node, env);
                 }
             }
@@ -634,8 +624,8 @@ wsf_wsdl_do_request(zval *client_zval,
             if(arguments)
                 add_assoc_zval(response_parameters, WSF_WSDL_ARGS, arguments);
 
-            add_assoc_zval (response_parameters, "attachments", cid2str);
-            add_assoc_zval (response_parameters, "cid2contentType", cid2contentType);
+            add_assoc_zval (response_parameters, WSF_ATTACHMENTS , cid2str);
+            add_assoc_zval (response_parameters, WSF_CID2CONTENT_TYPE , cid2contentType);
 
             ZVAL_STRING(&response_function, WSF_WSDL_RES_FUNCTION, 1);
             ZVAL_STRING(res_params[0], response_buffer, 1);
@@ -675,7 +665,7 @@ wsf_wsdl_do_request(zval *client_zval,
                             HashPosition pos_arg;
                             zval **param_arg;
 
-                            /* keep iteration of return value in procesing response */
+                            /* keep iteration of return value in processing response */
                             HashPosition pos_ret;
                             zval **param_ret;
 
@@ -783,7 +773,7 @@ wsf_wsdl_create_soap_envelope_from_buffer (
     
 
     reader =
-        axiom_xml_reader_create_for_memory (env, buffer, axutil_strlen(buffer), "utf-8",
+        axiom_xml_reader_create_for_memory (env, buffer, axutil_strlen(buffer), AXIS2_UTF_8,
                                             AXIS2_XML_PARSER_TYPE_BUFFER);
 
     builder = axiom_stax_builder_create (env, reader);
@@ -857,7 +847,7 @@ void wsf_wsdl_handle_client_security(HashTable *client_ht,
 		
         if (Z_TYPE_P (policy) == IS_OBJECT) {
             policy_ht = Z_OBJPROP_P (policy);
-            if (zend_hash_find (policy_ht, "policy_xml", sizeof ("policy_xml"),
+            if (zend_hash_find (policy_ht, WSF_POLICY_XML, sizeof (WSF_POLICY_XML),
                 	(void **) &tmp) == SUCCESS
             	&& (Z_TYPE_PP (tmp) == IS_STRING)) {
             	policy_xml = Z_STRVAL_PP (tmp);

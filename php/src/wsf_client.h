@@ -152,7 +152,6 @@ int wsf_client_set_endpoint_and_soap_action (
 /**
 * Set Terminate sequence message property
 * @param env,  environment
-* @param is_rm_engaged, Sandesha module engaged or not value
 * @param will_continue_sequence, will_continute_sequence property value
 * @param rm_spec_version, RM Specification value
 * @param sequence_key, sequence key value
@@ -160,7 +159,6 @@ int wsf_client_set_endpoint_and_soap_action (
 */
 void wsf_client_send_terminate_sequence (
     axutil_env_t * env,
-    int is_rm_engaged,
     int will_continue_sequence,
     int rm_spec_version,
     char *sequence_key,

@@ -31,35 +31,6 @@
 #include <axiom_util.h>
 #include <axis2_http_client.h>
 
-char *
-wsf_util_read_file_to_buffer (
-    char *filename TSRMLS_DC)
-{
-    char *contents;
-    php_stream *stream;
-    int len;
-    long maxlen = PHP_STREAM_COPY_ALL;
-    zval *zcontext = NULL;
-    php_stream_context *context = NULL;
-
-    context = php_stream_context_from_zval (zcontext, 0);
-
-    stream = php_stream_open_wrapper_ex (filename, "rb",
-        (USE_PATH) | ENFORCE_SAFE_MODE | REPORT_ERRORS, NULL, context);
-    if (!stream) {
-        return NULL;
-    }
-
-    len = php_stream_copy_to_mem (stream, &contents, maxlen, 0);
-
-    php_stream_close (stream);
-
-    if (len <= 0) {
-        return NULL;
-    }
-    return contents;
-}
-
 axiom_node_t *
 wsf_util_construct_header_node (
     const axutil_env_t * env,
@@ -121,7 +92,7 @@ wsf_util_construct_header_node (
         must_understand = Z_BVAL_PP (tmp);
         sprintf (must_val, "%d", must_understand);
         soap_ns = axiom_namespace_create (env, soap_uri, "soapenv");
-        mu_attr = axiom_attribute_create (env, "mustUnderstand", must_val, soap_ns);
+        mu_attr = axiom_attribute_create (env, AXIOM_SOAP_ATTR_MUST_UNDERSTAND, must_val, soap_ns);
         axiom_element_add_attribute (header_ele, env, mu_attr, header_node);
     }
     if (zend_hash_find (Z_OBJPROP_P (header), WSF_HEADER_ROLE,
@@ -140,7 +111,7 @@ wsf_util_construct_header_node (
             role_val = Z_STRVAL_PP (tmp);
         }
 		if (!soap_ns){
-            soap_ns = axiom_namespace_create (env, soap_uri, "soapenv");
+            soap_ns = axiom_namespace_create (env, soap_uri, AXIOM_SOAP_DEFAULT_NAMESPACE_PREFIX);
 		}
             /** role is only valid for soap12, for soap11 use actor, TODO */
         if (soap_version == AXIOM_SOAP12 && role_val) {
@@ -741,13 +712,13 @@ wsf_util_create_op_and_add_to_svc (
                     if (mep) {
                         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                             "[wsf_service] op mep %s", mep);
-                        if (strcmp (mep, "IN_ONLY") == 0) {
+                        if (strcmp (mep, WSF_IN_ONLY) == 0) {
                             axis2_op_set_msg_exchange_pattern (op, env,
                                 AXIS2_MEP_URI_IN_ONLY);
                             AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                                 "[wsf_service] AXIS2_MEP_URI_IN_ONLY");
 
-                        } else if (strcmp (mep, "IN_OUT") == 0) {
+                        } else if (strcmp (mep, WSF_IN_OUT) == 0) {
                             axis2_op_set_msg_exchange_pattern (op, env,
                                 AXIS2_MEP_URI_IN_OUT);
                             AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
@@ -812,28 +783,28 @@ wsf_util_set_attachments_with_cids (
     if (!payload_node || !attach_ht)
         return;
 
-    if (axiom_node_get_node_type (payload_node, env) == AXIOM_ELEMENT) {
-        payload_element =
-            (axiom_element_t *) axiom_node_get_data_element (payload_node,
-            env);
-        axiom_element_get_first_element (payload_element, env, payload_node,
-            &node);
+    if (axiom_node_get_node_type (payload_node, env) == AXIOM_ELEMENT) 
+	{
+        payload_element = (axiom_element_t *) axiom_node_get_data_element (payload_node, env);
+        axiom_element_get_first_element (payload_element, env, payload_node, &node);
 
-        if (node && axiom_node_get_node_type (node, env) == AXIOM_ELEMENT) {
+        if (node && axiom_node_get_node_type (node, env) == AXIOM_ELEMENT) 
+		{
 
             ele = (axiom_element_t *) axiom_node_get_data_element (node, env);
-            if (ele) {
+            if (ele) 
+			{
                 axiom_namespace_t *ns = NULL;
                 axis2_char_t *ns_uri = NULL;
                 axis2_char_t *ele_localname = NULL;
 
                 ele_localname = axiom_element_get_localname (ele, env);
-                if (ele_localname
-                    && axutil_strcmp (ele_localname, "Include") == 0) {
+                if (ele_localname && axutil_strcmp (ele_localname, AXIS2_XOP_INCLUDE) == 0) 
+				{
                     ns = axiom_element_get_namespace (ele, env, node);
                     if (ns && (ns_uri = axiom_namespace_get_uri (ns, env)) &&
-                        axutil_strcmp (ns_uri,
-                            "http://www.w3.org/2004/08/xop/include") == 0) {
+                        axutil_strcmp (ns_uri, AXIS2_XOP_NAMESPACE_URI) == 0) 
+					{
 
                         axis2_char_t *cnt_type = NULL;
                         /* found a matching xop include element */
@@ -867,7 +838,8 @@ wsf_util_set_attachments_with_cids (
                              }
                         }
 
-                        if(content_type_attri) {
+                        if(content_type_attri) 
+						{
                             cnt_type = axiom_attribute_get_value(content_type_attri, env);
                         }
                         else {
@@ -879,28 +851,27 @@ wsf_util_set_attachments_with_cids (
                             cnt_type = default_cnt_type;
                         }
 
-                        id = axiom_element_get_attribute_value_by_name (ele,
-                            env, "href");
+                        id = axiom_element_get_attribute_value_by_name (ele, env, "href");
                         if (!id)
                             return;
                         pos = axutil_strstr (id, "cid:");
-                        if (pos) {
+                        if (pos) 
+						{
                             cid = id + 4;
-                            if (zend_hash_find (attach_ht, cid,
-                                    strlen (cid) + 1,
-                                    (void **) &tmp) == SUCCESS
-                                && Z_TYPE_PP (tmp) == IS_STRING) {
+                            if (zend_hash_find (attach_ht, cid, strlen (cid) + 1, 
+								(void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) 
+							{
 
                                 void *binary_data = NULL;
                                 int binary_data_len = 0;
 
                                 binary_data_len = Z_STRLEN_PP (tmp);
-                                binary_data =
-                                    AXIS2_MALLOC (env->allocator,
-                                    sizeof (char) * binary_data_len);
-                                memcpy (binary_data, Z_STRVAL_PP (tmp),
-                                    binary_data_len);
-                                if (binary_data) {
+                                binary_data = AXIS2_MALLOC (env->allocator, 
+									sizeof (char) * binary_data_len);
+
+                                memcpy (binary_data, Z_STRVAL_PP (tmp), binary_data_len);
+                                if (binary_data) 
+								{
                                     /** detach this node */
                                     axiom_node_t *text_node = NULL;
                                     axiom_text_t *text = NULL;
@@ -908,7 +879,8 @@ wsf_util_set_attachments_with_cids (
                                     axiom_node_detach (node, env);
 
                                     tmp_node = axiom_node_get_first_child (payload_node, env);
-                                    while (tmp_node) {
+                                    while (tmp_node) 
+									{
                                         axiom_node_t *next_tmp_node = NULL;
                                         next_tmp_node = axiom_node_get_next_sibling (tmp_node, env);
 
@@ -917,22 +889,19 @@ wsf_util_set_attachments_with_cids (
                                         tmp_node = next_tmp_node;
                                     }
 
-                                    data_handler =
-                                        axiom_data_handler_create (env, NULL,
-                                        cnt_type);
-                                    axiom_data_handler_set_binary_data
-                                        (data_handler, env, binary_data,
+                                    data_handler = axiom_data_handler_create (env, NULL, cnt_type);
+                                    axiom_data_handler_set_binary_data (data_handler, env, binary_data,
                                         binary_data_len);
-                                    text =
-                                        axiom_text_create_with_data_handler
-                                        (env, payload_node, data_handler,
-                                        &text_node);
+                                    text = axiom_text_create_with_data_handler
+                                        (env, payload_node, data_handler, &text_node);
 
-                                    if (enable_swa) {
+                                    if (enable_swa) 
+									{
                                         axiom_text_set_is_swa(text, env, AXIS2_TRUE);
                                     }
 
-                                    if (enable_mtom == AXIS2_FALSE) {
+                                    if (enable_mtom == AXIS2_FALSE) 
+									{
                                         axiom_text_set_optimize (text, env,
                                             AXIS2_FALSE);
                                     }
@@ -1102,15 +1071,18 @@ wsf_util_find_xop_content_and_convert_to_base64 (
     nodes[count++] = om_node;
 
     do {
-		if (axiom_node_get_node_type(om_node, env) == AXIOM_TEXT) {
+		if (axiom_node_get_node_type(om_node, env) == AXIOM_TEXT) 
+		{
 			axiom_text_t *text = NULL;
 			axiom_data_handler_t *data_handler = NULL;
 			
 			
 			text = (axiom_text_t*)axiom_node_get_data_element(om_node, env);
-			if(text) {
+			if(text) 
+			{
 				data_handler = axiom_text_get_data_handler (text, env);
-                if (data_handler) {
+                if (data_handler) 
+				{
                    axiom_text_set_optimize(text, env, AXIS2_FALSE);
                 }			
 			}
@@ -1201,30 +1173,33 @@ wsf_util_deserialize_buffer (
     axiom_document_t *document = NULL;
     axiom_node_t *payload = NULL;
 
-    reader =
-        axiom_xml_reader_create_for_memory (env, buffer,
-        axutil_strlen (buffer), "utf-8", AXIS2_XML_PARSER_TYPE_BUFFER);
-    if (!reader) {
+    reader = axiom_xml_reader_create_for_memory (env, buffer, axutil_strlen (buffer), 
+		AXIS2_UTF_8, AXIS2_XML_PARSER_TYPE_BUFFER);
+
+    if (!reader) 
+	{
         return NULL;
     }
 
     builder = axiom_stax_builder_create (env, reader);
 
-    if (!builder) {
+    if (!builder) 
+	{
         return NULL;
     }
     document = axiom_stax_builder_get_document (builder, env);
-    if (!document) {
-        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "Document is not found");
+    if (!document) 
+	{
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Document is not found");
         return NULL;
     }
 
     payload = axiom_document_get_root_element (document, env);
 
-    if (!payload) {
-        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI,
-            "Root element of the document \
-				is not found");
+    if (!payload) 
+	{
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+            "Root element of the document is not found");
         return NULL;
     }
     axiom_document_build_all (document, env);
@@ -1247,7 +1222,8 @@ wsf_util_set_soap_fault (
     if (!this_ptr)
         return;
 
-    if (fault_reason != NULL) {
+    if (fault_reason != NULL) 
+	{
         add_property_string (this_ptr, WSF_FAULT_REASON, fault_reason, 1);
 #ifdef ZEND_ENGINE_2
         zend_update_property_string (zend_exception_get_default (TSRMLS_C),
@@ -1255,56 +1231,66 @@ wsf_util_set_soap_fault (
             fault_reason TSRMLS_CC);
 #endif
     }
-    if (fault_code != NULL) {
+    if (fault_code != NULL) 
+	{
         int soap_version = WSF_GLOBAL (soap_version);
 
-        if (fault_code_ns) {
+        if (fault_code_ns) 
+		{
             add_property_string (this_ptr, WSF_FAULT_CODE, fault_code, 1);
             add_property_string (this_ptr, WSF_FAULT_CODE_NS, fault_code_ns,
                 1);
-        } else {
-            if (soap_version == AXIOM_SOAP11) {
+        } else 
+		{
+            if (soap_version == AXIOM_SOAP11) 
+			{
                 add_property_string (this_ptr, WSF_FAULT_CODE, fault_code, 1);
-                if (strcmp (fault_code, "Client") == 0 ||
-                    strcmp (fault_code, "Server") == 0 ||
-                    strcmp (fault_code, "VersionMismatch") == 0 ||
-                    strcmp (fault_code, "MustUnderstand") == 0) {
+                if (strcmp (fault_code, AXIOM_SOAP11_FAULT_CODE_SENDER) == 0 ||
+                    strcmp (fault_code, AXIOM_SOAP12_SOAP_FAULT_VALUE_RECEIVER) == 0 ||
+                    strcmp (fault_code, AXIOM_SOAP12_SOAP_FAULT_VALUE_VERSION_MISMATCH) == 0 ||
+                    strcmp (fault_code, AXIOM_SOAP_ATTR_MUST_UNDERSTAND) == 0) 
+				{
                     add_property_string (this_ptr, WSF_FAULT_CODE_NS,
                         WSF_SOAP_1_1_NAMESPACE_URI, 1);
                 }
-            } else if (soap_version == AXIOM_SOAP12) {
-                if (strcmp (fault_code, "Client") == 0) {
-                    add_property_string (this_ptr, WSF_FAULT_CODE, "Sender",
-                        1);
-                    add_property_string (this_ptr, WSF_FAULT_CODE_NS,
-                        WSF_SOAP_1_2_NAMESPACE_URI, 1);
-                } else if (strcmp (fault_code, "Server") == 0) {
-                    add_property_string (this_ptr, WSF_FAULT_CODE, "Receiver",
-                        1);
-                    add_property_string (this_ptr, WSF_FAULT_CODE_NS,
-                        WSF_SOAP_1_1_NAMESPACE_URI, 1);
-                } else if (strcmp (fault_code, "VersionMismatch") == 0
-                    || strcmp (fault_code, "MustUnderstand") == 0
-                    || strcmp (fault_code, "DataEncodingUnknown") == 0) {
-                    add_property_string (this_ptr, WSF_FAULT_CODE, fault_code,
-                        1);
-                    add_property_string (this_ptr, WSF_FAULT_CODE_NS,
-                        WSF_SOAP_1_2_NAMESPACE_URI, 1);
-                } else {
-                    add_property_string (this_ptr, WSF_FAULT_CODE, fault_code,
-                        1);
+            } 
+			else if (soap_version == AXIOM_SOAP12) 
+			{
+                if (strcmp (fault_code, AXIOM_SOAP12_SOAP_FAULT_VALUE_SENDER) == 0) 
+				{
+                    add_property_string (this_ptr, WSF_FAULT_CODE,  
+						AXIOM_SOAP12_SOAP_FAULT_VALUE_SENDER, 1);
+                    add_property_string (this_ptr, WSF_FAULT_CODE_NS, WSF_SOAP_1_2_NAMESPACE_URI, 1);
+                } else if (strcmp (fault_code, AXIOM_SOAP11_FAULT_CODE_RECEIVER) == 0) 
+				{
+                    add_property_string (this_ptr, WSF_FAULT_CODE, 
+						AXIOM_SOAP12_SOAP_FAULT_VALUE_RECEIVER, 1);
+                    add_property_string (this_ptr, WSF_FAULT_CODE_NS, WSF_SOAP_1_1_NAMESPACE_URI, 1);
+
+                } else if (strcmp (fault_code, AXIOM_SOAP12_SOAP_FAULT_VALUE_VERSION_MISMATCH) == 0
+                    || strcmp (fault_code, AXIOM_SOAP_ATTR_MUST_UNDERSTAND) == 0
+                    || strcmp (fault_code, AXIOM_SOAP12_SOAP_FAULT_VALUE_DATA_ENCODING_UKNOWN) == 0) 
+				{
+                    add_property_string (this_ptr, WSF_FAULT_CODE, fault_code, 1);
+                    add_property_string (this_ptr, WSF_FAULT_CODE_NS, WSF_SOAP_1_2_NAMESPACE_URI, 1);
+                } else 
+				{
+                    add_property_string (this_ptr, WSF_FAULT_CODE, fault_code, 1);
                 }
             }
         }
     }
-    if (fault_role != NULL) {
+    if (fault_role != NULL)
+	{
         add_property_string (this_ptr, WSF_FAULT_ROLE, fault_role, 1);
     }
-    if (fault_detail != NULL) {
+    if (fault_detail != NULL) 
+	{
         add_property_zval (this_ptr, WSF_FAULT_DETAIL, fault_detail);
     }
-    if (name != NULL) {
-        add_property_string (this_ptr, "_name", name, 1);
+    if (name != NULL) 
+	{
+        add_property_string (this_ptr, WSF_FAULT_NAME, name, 1);
     }
 }
 
@@ -1319,16 +1305,19 @@ wsf_util_handle_fault_code(
     axiom_node_t *code_value_node = NULL;
     axiom_element_t *code_value_ele = NULL;
     char *code = NULL;
-	if(soap_version == AXIOM_SOAP12){
-        code_value_ele = axiom_element_get_first_element(code_element, env, 
-                code_node, &code_value_node);
+	if(soap_version == AXIOM_SOAP12)
+	{
+        code_value_ele = axiom_element_get_first_element(code_element, env, code_node, &code_value_node);
 		code = axiom_element_get_text(code_value_ele, env, code_value_node);
-        if(code){
+        if(code)
+		{
             add_property_string(fault_obj, WSF_FAULT_CODE, code, 1);
         }                  
-	}else if(soap_version == AXIOM_SOAP11){
+	}else if(soap_version == AXIOM_SOAP11)
+	{
 		code = axiom_element_get_text(code_element, env, code_node);
-		if(code){
+		if(code)
+		{
 			add_property_string(fault_obj, WSF_FAULT_CODE, code, 1);
 		}
 	}
@@ -1344,20 +1333,25 @@ wsf_util_handle_fault_reason(
 {
 	axis2_char_t *text_value = NULL;
 
-    if(soap_version == AXIOM_SOAP12){
+    if(soap_version == AXIOM_SOAP12)
+	{
         axiom_node_t *text_node = NULL;
         axiom_element_t *text_element = NULL;
         text_element = axiom_element_get_first_element(reason_element, env, reason_node,
                 &text_node);
-        if(text_element){
+        if(text_element)
+		{
             text_value = axiom_element_get_text(text_element, env, text_node);
-            if(text_value){
+            if(text_value)
+			{
 				add_property_string(fault_obj, WSF_FAULT_REASON , text_value, 1);
             }
         }
-	}else if(soap_version == AXIOM_SOAP11){
+	}else if(soap_version == AXIOM_SOAP11)
+	{
 		text_value = axiom_element_get_text(reason_element, env, reason_node);
-		if(text_value){
+		if(text_value)
+		{
 			add_property_string(fault_obj, WSF_FAULT_REASON, text_value, 1);
 		}
 	}
@@ -1373,12 +1367,15 @@ wsf_util_handle_fault_detail(
 {
 	axis2_char_t *detail_string = NULL;
 	axiom_node_t *detail_entry_node = NULL;
-	if(detail_node){
+	if(detail_node)
+	{
 		detail_entry_node = axiom_node_get_first_element(detail_node, env);
-		if(detail_entry_node){
+		if(detail_entry_node)
+		{
 			detail_string = axiom_node_to_string(detail_entry_node, env);
 			add_property_string(fault_obj, WSF_FAULT_DETAIL, detail_string, 1);
-			if(detail_string){
+			if(detail_string)
+			{
 				AXIS2_FREE(env->allocator, detail_string);
 			}
 		}
@@ -1393,9 +1390,11 @@ wsf_util_handle_fault_role(
 	axutil_env_t *env TSRMLS_DC)
 {
 	axis2_char_t *role_uri = NULL;
-	if(role_node && role_element){
+	if(role_node && role_element)
+	{
 		role_uri = axiom_element_get_text(role_element, env, role_node);
-		if(role_uri){
+		if(role_uri)
+		{
              add_property_string(fault_obj, WSF_FAULT_ROLE, role_uri, 1);
 		}
 	}
@@ -1421,25 +1420,37 @@ wsf_util_handle_soap_fault(
 
     if(!ele_iterator)
         return;
-    while(AXIOM_CHILD_ELEMENT_ITERATOR_HAS_NEXT(ele_iterator, env)){
+    while(AXIOM_CHILD_ELEMENT_ITERATOR_HAS_NEXT(ele_iterator, env))
+	{
         node = AXIOM_CHILD_ELEMENT_ITERATOR_NEXT(ele_iterator, env);
-        if(node){
+        if(node)
+		{
             element = axiom_node_get_data_element(node, env);
-            if(element){
+            if(element)
+			{
                 char *localname = NULL;
                 localname = axiom_element_get_localname(element, env);
-                if(localname){
-					if(strcmp(localname,"Code") == 0){
+                if(localname)
+				{
+					if(strcmp(localname,AXIOM_SOAP12_SOAP_FAULT_CODE_LOCAL_NAME) == 0)
+					{
 						wsf_util_handle_fault_code(fault_obj, node, element, env, AXIOM_SOAP12 TSRMLS_CC);
-					}else if(strcmp(localname, "faultcode") == 0){
+					}else if(strcmp(localname, AXIOM_SOAP11_SOAP_FAULT_CODE_LOCAL_NAME) == 0)
+					{
 						wsf_util_handle_fault_code(fault_obj, node, element, env, AXIOM_SOAP11 TSRMLS_CC);
-					}else if(strcmp(localname, "Reason") == 0){
+					}else if(strcmp(localname, AXIOM_SOAP12_SOAP_FAULT_REASON_LOCAL_NAME) == 0)
+					{
                         wsf_util_handle_fault_reason(fault_obj, node, element, env, AXIOM_SOAP12 TSRMLS_CC);
-					}else if(strcmp(localname,"faultstring") ==0){
+					}else if(strcmp(localname,AXIOM_SOAP11_SOAP_FAULT_STRING_LOCAL_NAME) ==0)
+					{
 						wsf_util_handle_fault_reason(fault_obj, node, element, env, AXIOM_SOAP11 TSRMLS_CC);
-					}else if((strcmp(localname, "Detail")  == 0) || (strcmp(localname, "detail") == 0)){
+					}else if((strcmp(localname, AXIOM_SOAP12_SOAP_FAULT_DETAIL_LOCAL_NAME)  == 0) ||
+						(strcmp(localname, AXIOM_SOAP11_SOAP_FAULT_DETAIL_LOCAL_NAME)  == 0))
+					{
                         wsf_util_handle_fault_detail(fault_obj, node, element, env TSRMLS_CC); 
-                    }else if((strcmp(localname, "Role") == 0) ||(strcmp(localname, "faultactor") == 0)){
+                    }else if((strcmp(localname, AXIOM_SOAP12_SOAP_FAULT_ROLE_LOCAL_NAME) == 0) ||
+						(strcmp(localname, AXIOM_SOAP11_SOAP_FAULT_ACTOR_LOCAL_NAME) == 0))
+					{
 						wsf_util_handle_fault_role(fault_obj, node, element, env TSRMLS_CC);                        
                     }
                 }
@@ -1461,7 +1472,8 @@ int wsf_util_is_module_engaged_to_svc_client(
 		return 0;
 	mod_qname = axutil_qname_create(env, module_name, NULL, NULL);
 	svc = axis2_svc_client_get_svc(svc_client, env);
-	if(svc && mod_qname){
+	if(svc && mod_qname)
+	{
 		status = axis2_svc_is_module_engaged(svc, env, mod_qname);
 		axutil_qname_free(mod_qname, env);
 	}
@@ -1491,13 +1503,15 @@ void wsf_util_engage_modules_to_svc(
 {
     axis2_conf_t *conf = NULL;
     conf = axis2_conf_ctx_get_conf (conf_ctx, env);
-    if (conf && !axis2_conf_get_svc (conf, env, svc_info->svc_name)){
+    if (conf && !axis2_conf_get_svc (conf, env, svc_info->svc_name))
+	{
         axis2_conf_add_svc (conf, env, svc_info->svc);
-        if (NULL != svc_info->modules_to_engage){
+        if (NULL != svc_info->modules_to_engage)
+		{
             int i = 0;
-            int size = axutil_array_list_size (svc_info->modules_to_engage,
-                env);
-            for (i = 0; i < size; i++){
+            int size = axutil_array_list_size (svc_info->modules_to_engage, env);
+            for (i = 0; i < size; i++)
+			{
                 axis2_char_t * mod_name = (axis2_char_t *) axutil_array_list_get (
                     svc_info->modules_to_engage, env, i);
                     wsf_util_engage_module (conf, mod_name, env,

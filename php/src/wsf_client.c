@@ -26,11 +26,9 @@
 #include "wsf_policy.h"
 #include "zend_exceptions.h"
 #include "zend_variables.h"
-#ifdef USE_SANDESHA2
 #include <sandesha2_client.h>
-#endif
 
-axiom_xml_reader_t *wsf_client_get_reader_from_zval (
+axiom_xml_reader_t*wsf_client_get_reader_from_zval (
     zval ** param,
     axutil_env_t * env TSRMLS_DC);
 
@@ -141,20 +139,17 @@ wsf_client_set_soap_action (
 void
 wsf_client_send_terminate_sequence (
     axutil_env_t * env,
-    int is_rm_engaged,
     int will_continue_sequence,
     int rm_spec_version,
     char *sequence_key,
     axis2_svc_client_t * svc_client)
 {
-    if (is_rm_engaged && !will_continue_sequence
-        && rm_spec_version == WSF_RM_VERSION_1_1) {
-#ifdef USE_SANDESHA2
+    if (!will_continue_sequence && rm_spec_version == WSF_RM_VERSION_1_1) 
+	{
         {
-            sandesha2_client_terminate_seq_with_svc_client_and_seq_key (env,
-                svc_client, sequence_key);
+            sandesha2_client_terminate_seq_with_svc_client_and_seq_key (env, 
+				svc_client, sequence_key);
         }
-#endif
     }
 }
 
@@ -780,78 +775,88 @@ wsf_client_set_addr_options (
     int addr_action_present = AXIS2_FALSE;
     char *value = NULL;
 
-    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-        "[wsf_client] setting addressing options ");
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Setting addressing options");
 
-    if (client_ht) {
+    if (client_ht) 
+	{
 
-        if (zend_hash_find (client_ht, "useWSA", sizeof ("useWSA"),
-                (void **) & tmp) == SUCCESS) {
-            if (Z_TYPE_PP (tmp) == IS_BOOL) {
-                if (Z_BVAL_PP (tmp) == 1) {
-                    value = "1.0";
-                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                        "[wsf_client] useWSA true, version 1.0");
-                } else {
+        if (zend_hash_find (client_ht, WSF_USE_WSA, sizeof (WSF_USE_WSA), 
+			(void **) & tmp) == SUCCESS) 
+		{
+            if (Z_TYPE_PP (tmp) == IS_BOOL) 
+			{
+                if (Z_BVAL_PP (tmp) == 1) 
+				{
+                    value = WSF_ADDRESSING_VERSION_1_0;
+
+                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+						"useWSA true, version 1.0");
+                } else 
+				{
                     return AXIS2_FALSE;
                 }
 
-			} else if (Z_TYPE_PP (tmp) == IS_STRING ) {
-                if(strcmp("submission", Z_STRVAL_PP(tmp)) == 0){ 
+			} else if (Z_TYPE_PP (tmp) == IS_STRING ) 
+			{
+                if(strcmp(WSF_ADDRESSING_SUBMISSION , Z_STRVAL_PP(tmp)) == 0)
+				{ 
                     value = Z_STRVAL_PP (tmp);
-                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_client] useWSA is string, value is %s", value);
-                }else if(strcmp("1.0", Z_STRVAL_PP(tmp)) == 0){
+                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                    " useWSA is string, value is %s", value);
+
+                }else if(strcmp(WSF_ADDRESSING_VERSION_1_0 , Z_STRVAL_PP(tmp)) == 0)
+				{
                     value = Z_STRVAL_PP (tmp);
-                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_client] useWSA is string, value is %s", value);
+                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                    "useWSA is string, value is %s", value);
                 }
-            } else if (Z_TYPE_PP (tmp) == IS_DOUBLE && Z_DVAL_PP (tmp) == 1.0) {
+            } else if (Z_TYPE_PP (tmp) == IS_DOUBLE && Z_DVAL_PP (tmp) == 1.0) 
+			{
 
-                value = "1.0";
+                value = WSF_ADDRESSING_VERSION_1_0;
 
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_client] useWSA is double, value is %s", value);
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                    "useWSA is double, value is %s", value);
             }
         }
     }
 
-	if(value){
-		if (msg_ht) {
+	if(value)
+	{
+		if (msg_ht) 
+		{
 
-			AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-				"[wsf_client] ws_message is present setting options using ws_message options");
+			AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+				"WSMessage is present, Setting options using WSMessage properties ");
 
-			addr_action_present =
-				wsf_client_set_addressing_options_to_options (env, client_options,
-				msg_ht TSRMLS_CC);
-		} else if (client_ht) {
+			addr_action_present = 
+				wsf_client_set_addressing_options_to_options (env, client_options, msg_ht TSRMLS_CC);
+		} else if (client_ht) 
+		{
 
 			addr_action_present =
 				wsf_client_set_addressing_options_to_options (env, client_options,
 				client_ht TSRMLS_CC);
 		}
 	}
-    if (addr_action_present == AXIS2_TRUE && value) {
+    if (addr_action_present == AXIS2_TRUE && value) 
+	{
         is_addressing_engaged = AXIS2_TRUE;
 
-        axis2_svc_client_engage_module (svc_client, env, "addressing");
+        axis2_svc_client_engage_module (svc_client, env, WSF_MODULE_ADDRESSING);
 
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_client] engage addressing");
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Engaged Addressing module");
 
-        if (strcmp (value, "submission") == 0) {
+        if (strcmp (value, WSF_ADDRESSING_SUBMISSION) == 0) 
+		{
 
-            axutil_property_t *prop =
-                axutil_property_create_with_args (env, 0,
-                AXIS2_TRUE, 0, axutil_strdup (env,
-                    AXIS2_WSA_NAMESPACE_SUBMISSION));
+            axutil_property_t *prop = axutil_property_create_with_args (env, 0, AXIS2_TRUE, 
+				0, axutil_strdup (env, AXIS2_WSA_NAMESPACE_SUBMISSION));
 
-            axis2_options_set_property (client_options, env,
-                AXIS2_WSA_VERSION, prop);
+            axis2_options_set_property (client_options, env, AXIS2_WSA_VERSION, prop);
 
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                "[wsf_client] addressing versio is submission");
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                "Addressing version is submission");
         }
     }
     return is_addressing_engaged;
@@ -867,23 +872,28 @@ wsf_client_set_endpoint_and_soap_action (
     zval **msg_tmp = NULL;
 
     if (msg_ht && zend_hash_find (msg_ht, WSF_TO, sizeof (WSF_TO),
-            (void **) &msg_tmp) == SUCCESS) {
+            (void **) &msg_tmp) == SUCCESS) 
+	{
         axis2_endpoint_ref_t *to_epr = NULL;
         char *to = Z_STRVAL_PP (msg_tmp);
         to_epr = axis2_endpoint_ref_create (env, to);
         axis2_options_set_to (client_options, env, to_epr);
-    } else if (client_ht && zend_hash_find (client_ht, WSF_TO, sizeof (WSF_TO),
-            (void **) &msg_tmp) == SUCCESS) {
+
+    } else if (client_ht && zend_hash_find (client_ht, WSF_TO, sizeof (WSF_TO), 
+		(void **) &msg_tmp) == SUCCESS) 
+	{
         axis2_endpoint_ref_t *to_epr = NULL;
         char *to = Z_STRVAL_PP (msg_tmp);
         to_epr = axis2_endpoint_ref_create (env, to);
         axis2_options_set_to (client_options, env, to_epr);
-    } else {
+
+    } else 
+	{
         return AXIS2_FAILURE;
     }
 
-    wsf_client_set_soap_action (client_ht, msg_ht, env,
-        client_options TSRMLS_CC);
+	/** set soap action */
+    wsf_client_set_soap_action (client_ht, msg_ht, env, client_options TSRMLS_CC);
     return AXIS2_SUCCESS;
 }
 
@@ -902,92 +912,102 @@ wsf_client_set_options (
     int use_soap = AXIS2_TRUE;
     int soap_version = AXIOM_SOAP12;
 
-    if (client_ht) {
-        if (zend_hash_find (client_ht, WSF_USE_SOAP, sizeof (WSF_USE_SOAP),
-                (void **) &tmp) == SUCCESS) {
-
-            if (Z_TYPE_PP (tmp) == IS_STRING) {
+    if (client_ht) 
+	{
+        if (zend_hash_find (client_ht, WSF_USE_SOAP, sizeof (WSF_USE_SOAP), 
+			(void **) &tmp) == SUCCESS) 
+		{
+            if (Z_TYPE_PP (tmp) == IS_STRING)  
+			{
                 char *value = NULL;
                 value = Z_STRVAL_PP (tmp);
-                if (value && strcmp (value, "1.2") == 0) {
+                if (value && strcmp (value, WSF_SOAP_VERSION_1_2) == 0) 
+				{
+                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                        "Soap version SOAP12");
 
-                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                        "[wsf_client] soap version SOAP12");
-                } else if (value && strcmp (value, "1.1") == 0) {
+                } else if (value && strcmp (value, WSF_SOAP_VERSION_1_1) == 0) 
+				{
 
                     soap_version = AXIOM_SOAP11;
-                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                        "[wsf_client] soap version SOAP11");
+                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "SOAP Version SOAP11");
                 }
-            } else if (Z_TYPE_PP (tmp) == IS_DOUBLE) {
+            } else if (Z_TYPE_PP (tmp) == IS_DOUBLE) 
+			{
                 double val = Z_DVAL_PP (tmp);
-                if (val == 1.2) {
+                if (val == 1.2) 
+				{
 
-                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                        "[wsf_client] use soap value is false ");
+                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+						"useSOAP value is 1.2 ");
 
-                } else if (val == 1.1) {
+                } else if (val == 1.1) 
+				{
 
                     soap_version = AXIOM_SOAP11;
-                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                        "[wsf_client] soap version soap11");
+                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                        "SOAP Version soap11");
 
                 }
-            } else if (Z_TYPE_PP (tmp) == IS_BOOL && Z_BVAL_PP (tmp) == 0) {
+            } else if (Z_TYPE_PP (tmp) == IS_BOOL && Z_BVAL_PP (tmp) == 0) 
+			{
                 use_soap = AXIS2_FALSE;
             }
         }
 
         if (use_soap) {
-            if (soap_version == AXIOM_SOAP11) {
+            if (soap_version == AXIOM_SOAP11) 
+			{
                 WSF_GLOBAL (soap_version) = AXIOM_SOAP11;
                 WSF_GLOBAL (soap_uri) = WSF_SOAP_1_1_NAMESPACE_URI;
-            } else if (soap_version == AXIOM_SOAP12) {
+            } else if (soap_version == AXIOM_SOAP12) 
+			{
                 WSF_GLOBAL (soap_version) = AXIOM_SOAP12;
 				WSF_GLOBAL (soap_uri) = WSF_SOAP_1_2_NAMESPACE_URI;
             }
 
-            axis2_options_set_soap_version (client_options, env,
-                soap_version);
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                "[wsf_client] useSOAP TRUE setting soap version %d",
-                soap_version);
-        } else {
+            axis2_options_set_soap_version (client_options, env, soap_version);
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                "useSOAP TRUE setting soap version %d", soap_version);
+        } else 
+		{
 
             axutil_property_t *rest_property = NULL;
 
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                "[wsf_client] useSOAP FALSE enabling rest ");
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                "useSOAP FALSE enabling rest ");
 
             rest_property = axutil_property_create (env);
 
-            axutil_property_set_value (rest_property, env, axutil_strdup (env,
-                    AXIS2_VALUE_TRUE));
+            axutil_property_set_value (rest_property, env, axutil_strdup (env, AXIS2_VALUE_TRUE));
 
-            axis2_options_set_property (client_options, env,
-                AXIS2_ENABLE_REST, rest_property);
+            axis2_options_set_property (client_options, env, AXIS2_ENABLE_REST, rest_property);
 
 			*rest_enabled = AXIS2_TRUE;
         }
 
         /** default header type is POST, so only setting the HTTP_METHOD if GET */
         if (zend_hash_find (client_ht, WSF_HTTP_METHOD,
-                sizeof (WSF_HTTP_METHOD), (void **) &tmp) == SUCCESS) {
+                sizeof (WSF_HTTP_METHOD), (void **) &tmp) == SUCCESS) 
+		{
             char *value = Z_STRVAL_PP (tmp);
 			axutil_property_t *http_method_property = NULL;
-            if (value && (strcasecmp (value, AXIS2_HTTP_GET) == 0)) {
+            if (value && (strcasecmp (value, AXIS2_HTTP_GET) == 0)) 
+			{
 				
 				http_method_property =	axutil_property_create (env);
 
-				axutil_property_set_value (http_method_property, env,
-                    axutil_strdup (env, AXIS2_HTTP_GET));
+				axutil_property_set_value (http_method_property, env, 
+					axutil_strdup (env, AXIS2_HTTP_GET));
 
                 axis2_options_set_property (client_options, env,
                     AXIS2_HTTP_METHOD, http_method_property);
 
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,  "[wsf_client] Setting HTTPMethod GET property");
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+					"Setting HTTPMethod GET property");
 
-            }else if (value && (strcasecmp(value, AXIS2_HTTP_PUT) == 0)) {
+            }else if (value && (strcasecmp(value, AXIS2_HTTP_PUT) == 0)) 
+			{
 				
 				http_method_property =	axutil_property_create (env);
 
@@ -997,10 +1017,11 @@ wsf_client_set_options (
                 axis2_options_set_property (client_options, env,
                     AXIS2_HTTP_METHOD, http_method_property);
 
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_client] Setting HTTPMethod PUT property");
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                    "Setting HTTPMethod PUT property");
 
-            }else if (value && (strcasecmp(value, AXIS2_HTTP_HEAD) == 0)) {
+            }else if (value && (strcasecmp(value, AXIS2_HTTP_HEAD) == 0)) 
+			{
 				
 				http_method_property =	axutil_property_create (env);
 
@@ -1010,8 +1031,8 @@ wsf_client_set_options (
                 axis2_options_set_property (client_options, env,
                     AXIS2_HTTP_METHOD, http_method_property);
 
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_client] Setting HTTPMethod HEAD property");
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                    "Setting HTTPMethod HEAD property");
             }else if (value && (strcasecmp(value, AXIS2_HTTP_DELETE) == 0)) {
 				
 				http_method_property =	axutil_property_create (env);
@@ -1022,15 +1043,16 @@ wsf_client_set_options (
                 axis2_options_set_property (client_options, env,
                     AXIS2_HTTP_METHOD, http_method_property);
 
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_client] Setting HTTPMethod DELETE property");
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                    "Setting HTTPMethod DELETE property");
             }
         }
     }
 
-    status = wsf_client_set_endpoint_and_soap_action (client_ht, msg_ht, env,
-        client_options TSRMLS_CC);
-    if (client_ht){
+    status = wsf_client_set_endpoint_and_soap_action (client_ht, msg_ht, env, 
+		client_options TSRMLS_CC);
+    if (client_ht)
+	{
         wsf_client_set_security_options (client_ht, msg_ht, env,
             client_options, svc_client TSRMLS_CC);
 
@@ -1053,26 +1075,31 @@ wsf_client_set_http_auth_info(
     zval **tmp = NULL;
 
     if (zend_hash_find (client_ht, WSF_HTTP_AUTH_USERNAME, sizeof (WSF_HTTP_AUTH_USERNAME),
-                (void **) &tmp) == SUCCESS) {
+                (void **) &tmp) == SUCCESS) 
+	{
         username = Z_STRVAL_PP (tmp);
     }
     if (zend_hash_find (client_ht, WSF_HTTP_AUTH_PASSWORD, sizeof (WSF_HTTP_AUTH_PASSWORD),
-                (void **) &tmp) == SUCCESS) {
+                (void **) &tmp) == SUCCESS) 
+	{
         password = Z_STRVAL_PP (tmp);
     }
     if (zend_hash_find (client_ht, WSF_HTTP_AUTH_TYPE, sizeof (WSF_HTTP_AUTH_TYPE),
-                (void **) &tmp) == SUCCESS) {
+                (void **) &tmp) == SUCCESS)
+	{
         auth_type = Z_STRVAL_PP (tmp);
     }
 
     if(axis2_options_set_http_auth_info(options, env,
-                 username, password, auth_type) == AXIS2_SUCCESS){
+                 username, password, auth_type) == AXIS2_SUCCESS)
+	{
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, 
-			WSF_PHP_LOG_PREFIX "success in setting http authentication information");
+			WSF_PHP_LOG_PREFIX "Success in setting HTTP authentication information");
     }
-    else {
+    else 
+	{
         AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI,
-            WSF_PHP_LOG_PREFIX "failed in setting http authentication information");
+            WSF_PHP_LOG_PREFIX "Failed in Setting HTTP authentication information");
     }
 }
 
@@ -1090,26 +1117,30 @@ wsf_client_set_proxy_auth_info(
     zval **tmp = NULL;
 
     if (zend_hash_find (client_ht, WSF_PROXY_AUTH_USERNAME, sizeof (WSF_PROXY_AUTH_USERNAME),
-                (void **) &tmp) == SUCCESS) {
+                (void **) &tmp) == SUCCESS) 
+	{
         username = Z_STRVAL_PP (tmp);
     }
     if (zend_hash_find (client_ht, WSF_PROXY_AUTH_PASSWORD, sizeof (WSF_PROXY_AUTH_PASSWORD),
-                (void **) &tmp) == SUCCESS) {
+                (void **) &tmp) == SUCCESS) 
+	{
         password = Z_STRVAL_PP (tmp);
     }
     if (zend_hash_find (client_ht, WSF_PROXY_AUTH_TYPE, sizeof (WSF_PROXY_AUTH_TYPE),
-                (void **) &tmp) == SUCCESS) {
+                (void **) &tmp) == SUCCESS)
+	{
         auth_type = Z_STRVAL_PP (tmp);
     }
 
-    if(axis2_options_set_proxy_auth_info(options, env,
-                 username, password, auth_type) == AXIS2_SUCCESS){
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_client] success in setting proxy authentication information");
+    if(axis2_options_set_proxy_auth_info(options, env, username, password, auth_type) == AXIS2_SUCCESS)
+	{
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+            "Success in setting proxy authentication information");
     }
-    else {
-        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI,
-            "[wsf_client] failed in setting proxy authentication information");
+    else 
+	{
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+            "Failed in setting proxy authentication information");
     }
 }
 
@@ -1149,35 +1180,38 @@ wsf_client_do_request (
 	smart_str sandesha2_db = { 0 };
 	smart_str_appends(&sandesha2_db, WSF_GLOBAL(rm_db_dir));
     smart_str_appends(&sandesha2_db, "/");
-    smart_str_appends(&sandesha2_db, "sandesha2_db");
+    smart_str_appends(&sandesha2_db, WSF_SANDESHA2_DB);
     smart_str_0(&sandesha2_db);
 	
 
-    wsf_client_set_module_param_option (env, svc_client, "sandesha2",
-		"sandesha2_db", sandesha2_db.c);
+    wsf_client_set_module_param_option (env, svc_client, WSF_MODULE_RM, 
+		WSF_SANDESHA2_DB, sandesha2_db.c);
 
 	smart_str_free(&sandesha2_db);
 
-    if (Z_TYPE_P (param) == IS_OBJECT &&
-        instanceof_function (Z_OBJCE_P (param),
-            ws_message_class_entry TSRMLS_CC)) {
+    if (Z_TYPE_P (param) == IS_OBJECT && instanceof_function (Z_OBJCE_P (param),
+            ws_message_class_entry TSRMLS_CC)) 
+	{
         zval **tmp_val = NULL;
         if (zend_hash_find (Z_OBJPROP_P (param), WSF_MSG_PAYLOAD_STR,
-                    sizeof (WSF_MSG_PAYLOAD_STR),
-					(void **) &tmp_val) == SUCCESS) {
+                    sizeof (WSF_MSG_PAYLOAD_STR), (void **) &tmp_val) == SUCCESS) 
+		{
             reader = wsf_client_get_reader_from_zval (tmp_val, env TSRMLS_CC);
-		}else {
+		}else 
+		{
 			return;
 		}
 		msg_ht = Z_OBJPROP_P(param);
         input_type = WSF_USING_MSG;
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_client] do_request Input type is WSMessage ");
-    } else {
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+            "wsf_client do_request Input type is WSMessage ");
+    }
+	else 
+	{
         reader = wsf_client_get_reader_from_zval (&param, env TSRMLS_CC);
 
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_client] Input  is not WSMessage ");
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+            "wsf_client_do_request Input  is not WSMessage ");
         input_type = WSF_USING_STRING;
     }
 
@@ -1185,15 +1219,19 @@ wsf_client_do_request (
     request_payload = wsf_util_read_payload (reader, env);
 
 
-    if (!request_payload) {
+    if (!request_payload) 
+	{
+		AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+			"wsf_client_request_do_request payload node is null");
+
         zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C),
             1 TSRMLS_CC, "request payload should not be null");
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf client] request payload node is null");
+        
     }
 
-    client_options =
-        (axis2_options_t *) axis2_svc_client_get_options (svc_client, env);
+    client_options = (axis2_options_t *) axis2_svc_client_get_options (svc_client, env);
+
+	/** Reset XML Parser free option. This is necessary to avoid the crash problem with libxml2 */
     axis2_options_set_xml_parser_reset (client_options, env, AXIS2_FALSE);
 
     client_ht = Z_OBJPROP_P (this_ptr);
@@ -1211,14 +1249,16 @@ wsf_client_do_request (
     wsf_client_set_proxy_auth_info(client_ht, env, client_options TSRMLS_CC);
 
     /** setting soap , rest and security options */
-    status = wsf_client_set_options (client_ht, msg_ht, env,
-            client_options, svc_client, &rest_enabled TSRMLS_CC);
+    status = wsf_client_set_options (client_ht, msg_ht, env, 
+		client_options, svc_client, &rest_enabled TSRMLS_CC);
 	
 	/** set addressing options */
     is_addressing_engaged = wsf_client_set_addr_options (client_ht, msg_ht, env,
             client_options, svc_client TSRMLS_CC);
 	
-	if (input_type == WSF_USING_MSG) { 
+	if (input_type == WSF_USING_MSG) 
+	{
+
         /** add set headers function here */
         wsf_client_set_headers (env, svc_client, param TSRMLS_CC);
 		/** handle outgoing attachments */
@@ -1226,9 +1266,10 @@ wsf_client_do_request (
             request_payload, client_options TSRMLS_CC);
     } 
 
-    if (status == AXIS2_FAILURE) {
-        php_error_docref (NULL TSRMLS_CC, E_ERROR,
-            "service endpoint uri is needed for service invocation");
+    if (status == AXIS2_FAILURE) 
+	{
+		zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C),
+			1 TSRMLS_CC, "service endpoint uri is needed for service invocation");
     }
 
 	/** find whether addressing action is present if addressing is not engaged */
@@ -1236,29 +1277,33 @@ wsf_client_do_request (
 		is_addressing_action_present = is_addr_action_present_in_options(msg_ht, client_ht TSRMLS_CC);
 	}
 
-    if (client_ht) {
+    if (client_ht) 
+	{
                   /** RM OPTIONS */
         axutil_property_t *rm_prop = NULL;
         int rm_version = -1;
         rm_version = wsf_client_get_rm_version (client_ht TSRMLS_CC);
 
-        if (rm_version > 0) {
-            if (rm_version == WSF_RM_VERSION_1_0) {
+        if (rm_version > 0) 
+		{
+            if (rm_version == WSF_RM_VERSION_1_0) 
+			{
                 rm_spec_version = WSF_RM_VERSION_1_0;
                 rm_spec_version_str = WSF_RM_VERSION_1_0_STR;
 
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    WSF_PHP_LOG_PREFIX "rm spec version 1.0");
-            } else if (rm_version == WSF_RM_VERSION_1_1) {
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "rm spec version 1.0");
+
+            } else if (rm_version == WSF_RM_VERSION_1_1) 
+			{
                 rm_spec_version = WSF_RM_VERSION_1_1;
                 rm_spec_version_str = WSF_RM_VERSION_1_1_STR;
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    WSF_PHP_LOG_PREFIX "rm spec version 1.1");
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "rm spec version 1.1");
             }
 
-            if (rm_version > 0) {
+            if (rm_version > 0) 
+			{
                 rm_prop = axutil_property_create_with_args (env, 0, 0, 0, rm_spec_version_str);
-                axis2_options_set_property (client_options, env, 
+                axis2_options_set_property (client_options, env,  
 					WSF_SANDESHA2_CLIENT_RM_SPEC_VERSION, rm_prop);
                 engage_rm = AXIS2_TRUE;
             }
@@ -1271,8 +1316,8 @@ wsf_client_do_request (
 			then engage addressing
 		If Addressing is engaged engage RM
 	*/
-        if ((is_addressing_engaged || (!is_addressing_engaged && is_addressing_action_present))
-            && engage_rm) 
+        if ((is_addressing_engaged || 
+			(!is_addressing_engaged && is_addressing_action_present)) && engage_rm) 
 		{
             if (!is_addressing_engaged) 
 			{
@@ -1285,90 +1330,99 @@ wsf_client_do_request (
 				}
 
                 axis2_svc_client_engage_module (svc_client, env, WSF_MODULE_ADDRESSING);
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    WSF_PHP_LOG_PREFIX "useWSA not specified, addressing engaged since rm is engaged");
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+					"useWSA not specified, addressing engaged since rm is engaged");
             }
+
             axis2_svc_client_engage_module (svc_client, env, WSF_MODULE_RM);
             is_rm_engaged = AXIS2_TRUE;
 
             /** rm is engaged , process other rm params */
             if (zend_hash_find (client_ht, WSF_SEQUENCE_EXPIRY_TIME,
-                    sizeof (WSF_SEQUENCE_EXPIRY_TIME),
-                    (void **) &client_tmp) == SUCCESS) {
+                    sizeof (WSF_SEQUENCE_EXPIRY_TIME), (void **) &client_tmp) == SUCCESS) 
+			{
                 char timeout_value[100];
                 sprintf (timeout_value, "%ld", Z_LVAL_PP (client_tmp));
-                wsf_client_set_module_param_option (env, svc_client, "sandesha2", 
-					"InactivityTimeout", timeout_value);
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, 
-                    "[wsf_client] sequenceExpiryTime is %d",
-                    Z_LVAL_PP (client_tmp));
-            }
-            if (zend_hash_find (client_ht, WSF_SEQUENCE_KEY,
-                    sizeof (WSF_SEQUENCE_KEY),
-                    (void **) &client_tmp) == SUCCESS) {
+                wsf_client_set_module_param_option (env, svc_client, WSF_MODULE_RM, 
+					WSF_SANDESHA2_INACTIVITY_TIMEOUT, timeout_value);
 
-                if (Z_TYPE_PP (client_tmp) == IS_STRING) {
-				axutil_property_t *seq_property = NULL;
-                sequence_key =axutil_strdup (env, Z_STRVAL_PP (client_tmp));
-				seq_property =  axutil_property_create_with_args (env,
-                        AXIS2_SCOPE_REQUEST, 1, NULL, sequence_key);
-				axis2_options_set_property(client_options, env, 
-				WSF_SANDESHA2_CLIENT_SEQ_KEY, seq_property);
-					    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-						    "[wsf_client] sequence key is %d",
-							Z_STRVAL_PP (client_tmp));
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,  WSF_PHP_LOG_PREFIX \
+					"wsf_client sequenceExpiryTime is %d", Z_LVAL_PP (client_tmp));
+            }
+            if (zend_hash_find (client_ht, WSF_SEQUENCE_KEY, sizeof (WSF_SEQUENCE_KEY),
+                    (void **) &client_tmp) == SUCCESS) 
+			{
+
+                if (Z_TYPE_PP (client_tmp) == IS_STRING) 
+				{
+					axutil_property_t *seq_property = NULL;
+					sequence_key =axutil_strdup (env, Z_STRVAL_PP (client_tmp));
+					seq_property =  axutil_property_create_with_args (env, 
+						AXIS2_SCOPE_REQUEST, 1, NULL, sequence_key);
+					
+					axis2_options_set_property(client_options, env, 
+						WSF_SANDESHA2_CLIENT_SEQ_KEY, seq_property);
+					
+					AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+						    " sequence key is %d", Z_STRVAL_PP (client_tmp));
                 }
             }
-            if (zend_hash_find (client_ht, WSF_WILL_CONTINUE_SEQUENCE,
-                    sizeof (WSF_WILL_CONTINUE_SEQUENCE),
-                    (void **) &client_tmp) == SUCCESS) {
-                if (Z_TYPE_PP (client_tmp) && Z_BVAL_PP (client_tmp) == 1) {
+            if (zend_hash_find (client_ht, WSF_WILL_CONTINUE_SEQUENCE, 
+				sizeof (WSF_WILL_CONTINUE_SEQUENCE), (void **) &client_tmp) == SUCCESS)
+			{
+                if (Z_TYPE_PP (client_tmp) && Z_BVAL_PP (client_tmp) == 1) 
+				{
                     ws_client_will_continue_sequence = 1;
-                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                        "[wsf_client] willContinueSequence true");
+                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                        "willContinueSequence true");
                 }
             }
         }
-        if (is_rm_engaged) {
-            if (ws_client_will_continue_sequence
-                && input_type == WSF_USING_MSG) {
+        if (is_rm_engaged) 
+		{
+            if (ws_client_will_continue_sequence && input_type == WSF_USING_MSG) 
+			{
                 /** if input_type is ws_message and continueSequence is true on client, we should look for 
 					false value in ws_message to end the sequence */
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                        "[wsf_client] willContinueSeq TRUE, Input type Message");
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                        "willContinueSeq TRUE, Input type Message");
 
-                if (zend_hash_find (msg_ht, WSF_LAST_MESSAGE,
-                        sizeof (WSF_LAST_MESSAGE),
-                        (void **) &msg_tmp) == SUCCESS && Z_BVAL_PP (msg_tmp) == 1){
+                if (zend_hash_find (msg_ht, WSF_LAST_MESSAGE, sizeof (WSF_LAST_MESSAGE),
+                        (void **) &msg_tmp) == SUCCESS && Z_BVAL_PP (msg_tmp) == 1)
+				{
                     ws_client_will_continue_sequence = 0;
-                    if (rm_spec_version == WSF_RM_VERSION_1_0) {
-                        axutil_property_t *last_msg_prop =
-                            axutil_property_create_with_args (env,
-                            AXIS2_SCOPE_APPLICATION, 0, NULL,
-                            AXIS2_VALUE_TRUE);
-                        axis2_options_set_property (client_options, env,
-                            "Sandesha2LastMessage", last_msg_prop);
-                        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                            "[wsf_client] seting Sandesha2LastMessage");
-                    }
-                }
-                         /** END LastMessage */
-            } else if (!ws_client_will_continue_sequence) {
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_client] setting TreminateSequence property");
+                    if (rm_spec_version == WSF_RM_VERSION_1_0) 
+					{
+                        axutil_property_t *last_msg_prop = axutil_property_create_with_args (env,
+                            AXIS2_SCOPE_APPLICATION, 0, NULL, AXIS2_VALUE_TRUE);
 
-                if (rm_spec_version == WSF_RM_VERSION_1_0) {
+                        axis2_options_set_property (client_options, env, 
+							WSF_SANDHSHA2_LAST_MESSAGE , last_msg_prop);
+
+                        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+							"Setting Sandesha2LastMessage");
+                    }
+                } /** END LastMessage */
+            } else if (!ws_client_will_continue_sequence) 
+			{
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+					"Setting TreminateSequence property");
+
+                if (rm_spec_version == WSF_RM_VERSION_1_0) 
+				{
                     axutil_property_t *last_msg_prop =
-                        axutil_property_create_with_args (env,
-                        0, 0, 0, AXIS2_VALUE_TRUE);
-                    axis2_options_set_property (client_options, env,
-                        "Sandesha2LastMessage", last_msg_prop);
-                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                        "[wsf_client] setting Sandesha2LastMessage");
+						axutil_property_create_with_args (env, 0, 0, 0, AXIS2_VALUE_TRUE);
+
+                    axis2_options_set_property (client_options, env, 
+                        WSF_SANDHSHA2_LAST_MESSAGE, last_msg_prop);
+
+                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                        "Setting Sandesha2LastMessage");
                 }
             }
-            /** two way single channal */
-            if (!is_oneway) {
+            /** two way single channel*/
+            if (!is_oneway) 
+			{
 
                 char *timeout = NULL;
                 axutil_property_t *timeout_property = NULL;
@@ -1382,67 +1436,73 @@ wsf_client_do_request (
 
                     sequence_property = axutil_property_create (env);
 
-                    axutil_property_set_value (sequence_property, env,
-                        axutil_strdup (env, offered_seq_id));
+                    axutil_property_set_value (sequence_property, env, 
+						axutil_strdup (env, offered_seq_id));
 
-                    axis2_options_set_property (client_options, env,
-                        "Sandesha2OfferedSequenceId", sequence_property);
-                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                        " [wsf-log] Sandesha2OfferedSequenceId is set as property");
+                    axis2_options_set_property (client_options, env, 
+						WSF_SANDHSHA2_SANDESHA2_OFFERED_SEQUENCE_ID , sequence_property);
+                    
+					AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                        " Sandesha2OfferedSequenceId is set as property");
                 }
                 if (zend_hash_find (client_ht, WSF_RM_RESPONSE_TIMEOUT,
-                        sizeof (WSF_RM_RESPONSE_TIMEOUT),
-                        (void **) &client_tmp) == SUCCESS) {
-                    if (Z_TYPE_PP (client_tmp) == IS_STRING) {
+                        sizeof (WSF_RM_RESPONSE_TIMEOUT), (void **) &client_tmp) == SUCCESS) 
+				{
+                    if (Z_TYPE_PP (client_tmp) == IS_STRING) 
+					{
                         timeout = Z_STRVAL_PP (client_tmp);
-                    } else {
+                    }
+					else 
+					{
                         char timeout_value[21];
-                        snprintf (timeout_value, 20, "%ld",
-                            Z_LVAL_PP (client_tmp));
+                        snprintf (timeout_value, 20, "%ld", Z_LVAL_PP (client_tmp));
                         timeout = timeout_value;
                     }
-                } else {
+                }
+				else 
+				{
                     /** default timeout value is 5 */
                     timeout = WSF_RM_DEFAULT_RESPONSE_TIMEOUT;
                 }
 
-                timeout_property =
-                    axutil_property_create_with_args (env, 0, 0, 0, timeout);
+                timeout_property = axutil_property_create_with_args (env, 0, 0, 0, timeout);
 
-                if (timeout_property) {
-                    axis2_options_set_property (client_options, env,
-                        AXIS2_TIMEOUT_IN_SECONDS, timeout_property);
+                if (timeout_property) 
+				{
+                    axis2_options_set_property (client_options, env, 
+						AXIS2_TIMEOUT_IN_SECONDS, timeout_property);
                 }
             }
         }
-    }
-         /** END RM OPTIONS */
-    if (is_oneway) {
+    }/** END RM OPTIONS */
+    if (is_oneway) 
+	{
         int ret_val = 0;
         ret_val = axis2_svc_client_send_robust (svc_client, env, request_payload);
         /** if rm is engaged and spec version is 1.1 send terminate sequence */
-		if(!rest_enabled){
-			wsf_client_send_terminate_sequence (env, is_rm_engaged,
-            ws_client_will_continue_sequence, rm_spec_version, sequence_key,
-            svc_client);
+		if(!rest_enabled && is_rm_engaged)
+		{
+			wsf_client_send_terminate_sequence (env, ws_client_will_continue_sequence, 
+				rm_spec_version, sequence_key, svc_client);
 		}
-        if (ret_val == 1) {
+        if (ret_val == 1) 
+		{
             ZVAL_TRUE (return_value);
-        } else {
+        } else 
+		{
             ZVAL_FALSE (return_value);
         }
-
-    } else 
-		{
-
+    } 
+	else 
+	{
         int has_fault = AXIS2_FALSE;
         axis2_char_t *res_text = NULL;
 		int status_code = 0;
         response_payload = axis2_svc_client_send_receive (svc_client, env, request_payload);
-		if(!rest_enabled)
+		if(!rest_enabled && is_rm_engaged)
 		{
         /** if rm is engaged and spec version is 1.1 send terminate sequence */
-			wsf_client_send_terminate_sequence (env, is_rm_engaged, ws_client_will_continue_sequence, 
+			wsf_client_send_terminate_sequence (env, ws_client_will_continue_sequence, 
 				rm_spec_version, sequence_key, svc_client);
 		}
 		status_code = axis2_svc_client_get_http_status_code(svc_client, env);
@@ -1453,12 +1513,12 @@ wsf_client_do_request (
 			MAKE_STD_ZVAL(rfault);
 			INIT_PZVAL(rfault);
 			object_init_ex(rfault, ws_fault_class_entry);
-			add_property_long(rfault, "httpStatusCode", status_code);
+			add_property_long(rfault,WSF_FAULT_HTTP_STATUS_CODE  , status_code);
 			if(response_payload)
-				{
-					res_text = axiom_node_to_string(response_payload, env);
-					add_property_stringl(rfault, "str", res_text, strlen(res_text), 1);
-				}
+			{
+				res_text = axiom_node_to_string(response_payload, env);
+				add_property_stringl(rfault, WSF_FAULT_STR , res_text, strlen(res_text), 1);
+			}
 			zend_throw_exception_object(rfault TSRMLS_CC);
 			return;
 		}
@@ -1488,8 +1548,8 @@ wsf_client_do_request (
 					MAKE_STD_ZVAL (rfault);
 					INIT_PZVAL(rfault);
 					object_init_ex (rfault, ws_fault_class_entry);
-					add_property_stringl (rfault, "str", res_text, strlen (res_text), 1);
-					add_property_long(rfault, "httpStatusCode", status_code);
+					add_property_stringl (rfault, WSF_FAULT_STR , res_text, strlen (res_text), 1);
+					add_property_long(rfault,WSF_FAULT_HTTP_STATUS_CODE  , status_code);
 					wsf_util_handle_soap_fault(rfault, env, fault_node, soap_version TSRMLS_CC);
 					zend_throw_exception_object(rfault TSRMLS_CC);
 					return ;
@@ -1505,26 +1565,23 @@ wsf_client_do_request (
             
             object_init_ex (rmsg, ws_message_class_entry);
 
-            soap_envelope =
-                axis2_svc_client_get_last_response_soap_envelope (svc_client,
-                env);
+            soap_envelope = axis2_svc_client_get_last_response_soap_envelope (svc_client, env);
+
             attachments_found = wsf_client_handle_incoming_attachments (env, client_ht, rmsg,
                 soap_envelope, response_payload TSRMLS_CC);
             
             res_text = wsf_util_serialize_om (env, response_payload);
             
-            add_property_stringl (rmsg, WSF_MSG_PAYLOAD_STR, res_text,
-                strlen (res_text), 1);
+            add_property_stringl (rmsg, WSF_MSG_PAYLOAD_STR, res_text, strlen (res_text), 1);
 			
             ZVAL_ZVAL (return_value, rmsg, 1, 0);
             zval_ptr_dtor(&rmsg);
 
         }else if (response_payload == NULL && has_fault == AXIS2_FALSE)
 		{
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
                     "Response Payload NULL( Error number and code) => :" " %d :: %s",
-                     env->error->error_number,
-                     AXIS2_ERROR_GET_MESSAGE(env->error));
+                     env->error->error_number, AXIS2_ERROR_GET_MESSAGE(env->error));
 
             zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C),
                 1 TSRMLS_CC, "Error , NO Response Received");
@@ -1551,39 +1608,37 @@ wsf_client_enable_ssl (
         return;
 
     if (zend_hash_find (ht, WSF_SERVER_CERT, sizeof (WSF_SERVER_CERT),
-            (void **) &tmp) == SUCCESS) {
+            (void **) &tmp) == SUCCESS) 
+	{
         ssl_server_key_filename = Z_STRVAL_PP (tmp);
     }
     if (zend_hash_find (ht, WSF_CLIENT_CERT, sizeof (WSF_CLIENT_CERT),
-            (void **) &tmp) == SUCCESS) {
+            (void **) &tmp) == SUCCESS) 
+	{
         ssl_client_key_filename = Z_STRVAL_PP (tmp);
     }
     if (zend_hash_find (ht, WSF_PASSPHRASE, sizeof (WSF_PASSPHRASE),
-            (void **) &tmp) == SUCCESS) {
+            (void **) &tmp) == SUCCESS) 
+	{
         passphrase = Z_STRVAL_PP (tmp);
     }
 
-    ssl_server_key_prop =
-        axutil_property_create_with_args (env, 0, AXIS2_TRUE, 0,
-        axutil_strdup (env, ssl_server_key_filename));
-    axis2_options_set_property (options, env, "SERVER_CERT",
-        ssl_server_key_prop);
+    ssl_server_key_prop = axutil_property_create_with_args (env, 0, AXIS2_TRUE, 0, 
+		axutil_strdup (env, ssl_server_key_filename));
 
-    ssl_client_key_prop =
-        axutil_property_create_with_args (env, 0, AXIS2_TRUE, 0,
+    axis2_options_set_property (options, env, AXIS2_SSL_SERVER_CERT, ssl_server_key_prop);
+
+    ssl_client_key_prop = axutil_property_create_with_args (env, 0, AXIS2_TRUE, 0,
         axutil_strdup (env, ssl_client_key_filename));
-    axis2_options_set_property (options, env, "KEY_FILE",
-        ssl_client_key_prop);
+    axis2_options_set_property (options, env, AXIS2_SSL_KEY_FILE, ssl_client_key_prop);
 
-    passphrase_prop =
-        axutil_property_create_with_args (env, 0, AXIS2_TRUE, 0,
+    passphrase_prop = axutil_property_create_with_args (env, 0, AXIS2_TRUE, 0,
         axutil_strdup (env, passphrase));
-    axis2_options_set_property (options, env, "SSL_PASSPHRASE",
-        passphrase_prop);
+    axis2_options_set_property (options, env, AXIS2_SSL_PASSPHRASE, passphrase_prop);
 
-    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-        "[wsf-client] setting SSL options %s -- %s -- %s ",
-        ssl_server_key_filename, ssl_client_key_filename, passphrase);
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+		"setting SSL options %s -- %s -- %s ", 
+			ssl_server_key_filename, ssl_client_key_filename, passphrase);
 }
 
 void
@@ -1600,17 +1655,19 @@ wsf_client_enable_proxy (
         return;
 
     if (zend_hash_find (ht, WSF_PROXY_HOST, sizeof (WSF_PROXY_HOST),
-            (void **) &tmp) == SUCCESS) {
+            (void **) &tmp) == SUCCESS)
+	{
         proxy_host = Z_STRVAL_PP (tmp);
     }
     if (zend_hash_find (ht, WSF_PROXY_PORT, sizeof (WSF_PROXY_PORT),
-            (void **) &tmp) == SUCCESS) {
+            (void **) &tmp) == SUCCESS) 
+	{
         proxy_port = Z_STRVAL_PP (tmp);
     }
-    if (proxy_host && proxy_port) {
+    if (proxy_host && proxy_port) 
+	{
         axis2_svc_client_set_proxy (svc_client, env, proxy_host, proxy_port);
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf-client] setting proxy options %s -- %s -- ", proxy_host,
-            proxy_port);
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+            "Setting proxy options %s -- %s -- ", proxy_host, proxy_port);
     }
 }

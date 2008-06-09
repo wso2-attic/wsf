@@ -282,13 +282,13 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
 		{
 			function_type = Z_STRVAL_PP (tmp);
         
-			if (strcmp (function_type, "MIXED") == 0) 
+			if (strcmp (function_type, WSF_MIXED) == 0) 
 			{
                 result_node = wsf_xml_msg_recv_invoke_mixed (env, svc_info,
 								in_msg_ctx, out_msg_ctx, operation_name,
                                 classname, &output_headers_zval TSRMLS_CC);
      
-     	    } else if (strcmp (function_type, "WSMESSAGE") == 0) 
+     	    } else if (strcmp (function_type, WSF_WSMESSAGE) == 0) 
 			{
                 result_node = wsf_xml_msg_recv_invoke_wsmsg (env, operation_name,
 								in_msg_ctx, out_msg_ctx, svc_info, classname TSRMLS_CC);
@@ -350,7 +350,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
     }
 
     /* create the soap envelope here */
-    env_ns = axiom_namespace_create (env, soap_ns, "soapenv");
+    env_ns = axiom_namespace_create (env, soap_ns, AXIOM_SOAP_DEFAULT_NAMESPACE_PREFIX);
     if (!env_ns) 
 	{
         return AXIS2_FAILURE;
@@ -418,12 +418,14 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
     if (status != AXIS2_SUCCESS) 
 	{
         /* something went wrong, set a SOAP Fault */
-        axis2_char_t *fault_value_str = "env:Sender";
+		axis2_char_t *fault_value_str = 
+			AXIOM_SOAP_DEFAULT_NAMESPACE_PREFIX ":" AXIOM_SOAP12_SOAP_FAULT_VALUE_SENDER;
+
         axis2_char_t *fault_reason_str = NULL;
         axis2_char_t *err_msg = NULL;
 
         if (!skel_invoked)
-            fault_value_str = "env:Receiver";
+            fault_value_str = AXIOM_SOAP_DEFAULT_NAMESPACE_PREFIX ":" AXIOM_SOAP12_SOAP_FAULT_VALUE_RECEIVER;;
 
         err_msg = (char *) AXIS2_ERROR_GET_MESSAGE (env->error);
 
@@ -432,7 +434,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
             fault_reason_str = err_msg;
         } else 
 		{
-            fault_reason_str = "Error occured while processing SOAP message";
+            fault_reason_str = "Error occurred while processing SOAP message";
         }
 
         out_soap_fault = axiom_soap_fault_create_default_fault (env, out_body,
@@ -702,8 +704,8 @@ wsf_xml_msg_recv_invoke_mixed (
         add_assoc_string(param_array, WSF_PORT_NAME, svc_info->port_name, 1);
     }
 
-    add_assoc_zval(param_array, "attachments", cid2str);
-    add_assoc_zval(param_array, "cid2contentType", cid2contentType);
+    add_assoc_zval(param_array, WSF_ATTACHMENTS, cid2str);
+    add_assoc_zval(param_array, WSF_CID2CONTENT_TYPE, cid2contentType);
 
     add_assoc_zval(param_array, "class_args", class_args);
 
@@ -744,7 +746,8 @@ wsf_xml_msg_recv_invoke_mixed (
                         HashTable *ht_attachments = Z_ARRVAL_PP(tmp);
     
                         wsf_util_set_attachments_with_cids(env, enable_mtom, enable_swa,
-                                res_om_node, ht_attachments, "application/octet-stream" TSRMLS_CC);
+                                res_om_node, ht_attachments, 
+								AXIOM_MIME_TYPE_OCTET_STREAM TSRMLS_CC);
                     }
                 }
             }
@@ -805,19 +808,22 @@ wsf_xml_msg_recv_invoke_wsmsg (
 		return NULL;
 
     soap_envelope = axis2_msg_ctx_get_soap_envelope (in_msg_ctx, env);
-    if(!soap_envelope){
-        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "[wsf_wsdl] soap envelope not found");
+    if(!soap_envelope)
+	{
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "soap envelope not found");
 		return NULL;
     }
     
     soap_body = axiom_soap_envelope_get_body(soap_envelope, env);
-    if(!soap_body){
-        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "[wsf_wsdl] soap body not found");
+    if(!soap_body)
+	{
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI,WSF_PHP_LOG_PREFIX "soap body not found");
 		return NULL;
     }
     soap_body_node = axiom_soap_body_get_base_node(soap_body, env);
-    if(!soap_body_node){
-        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "[wsf_wsdl] soap body base node not found");
+    if(!soap_body_node)
+	{
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "soap body base node not found");
 		return NULL;
     }
 
@@ -829,14 +835,16 @@ wsf_xml_msg_recv_invoke_wsmsg (
     enable_swa = svc_info->enable_swa;
     request_xop = svc_info->request_xop;
 
-    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, " [wsf_svr] calling php service ");
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX " Calling php service");
 
 	output_headers = wsf_xml_msg_recv_process_incomming_headers(soap_envelope, env TSRMLS_CC);
-    zend_try {
+    zend_try 
+	{
         MAKE_STD_ZVAL (msg);
         object_init_ex (msg, ws_message_class_entry);
 
-		if(output_headers){
+		if(output_headers)
+		{
 			add_property_zval(msg, WSF_OUTPUT_HEADERS, output_headers);
 		}
         
@@ -845,8 +853,8 @@ wsf_xml_msg_recv_invoke_wsmsg (
             zval *cid2str = NULL;
             zval *cid2contentType = NULL;
 
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                "[wsf_service] requestXOP is TRUE, setting attachments");
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                "requestXOP is TRUE, setting attachments");
 
             MAKE_STD_ZVAL (cid2str);
             MAKE_STD_ZVAL (cid2contentType);
@@ -868,7 +876,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
 
 		/** this should be after mtom processing */
 		req_payload = wsf_util_serialize_om (env, om_node);
-		add_property_string (msg, "str", req_payload, 1);
+		add_property_string (msg, WSF_MESSAGE_STR , req_payload, 1);
 
         ZVAL_STRING (&func, op_name, 0);
         params[0] = &param;
@@ -952,7 +960,8 @@ wsf_xml_msg_recv_invoke_wsmsg (
 				{
 					if (call_user_function(NULL, &tmp_cls_obj, &func, &retval, 1, params TSRMLS_CC) != SUCCESS) 
 					{
-					    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_xml_msg_recv] call_user_function failed ");
+					    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+							"call_user_function failed ");
     					return NULL;
                     }
 				}
@@ -960,7 +969,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
 		}else if (call_user_function(CG (function_table), (zval **) NULL, &func, 
 						&retval, 1, params TSRMLS_CC) != SUCCESS) 
 		{
-			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_xml_msg_recv] call_user_function failed ");
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "call_user_function failed ");
 			return NULL;
 		}
         
@@ -983,7 +992,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
                 default_cnt_type = Z_STRVAL_PP (msg_tmp);
             } else 
 			{
-                default_cnt_type = "application/octet-stream";
+                default_cnt_type = AXIOM_MIME_TYPE_OCTET_STREAM;
             }
             
 			if (zend_hash_find (Z_OBJPROP(retval), WSF_ACTION, sizeof (WSF_ACTION),
@@ -994,11 +1003,12 @@ wsf_xml_msg_recv_invoke_wsmsg (
                     axis2_msg_ctx_set_wsa_action (out_msg_ctx, env, action);
             }
 
-            if (zend_hash_find (Z_OBJPROP (retval), "str", sizeof ("str"),
+            if (zend_hash_find (Z_OBJPROP (retval),  WSF_MESSAGE_STR, sizeof (WSF_MESSAGE_STR),
 				   (void **) & msg_tmp) == SUCCESS && Z_TYPE_PP (msg_tmp) == IS_STRING) 
 			{
 					res_payload = Z_STRVAL_PP (msg_tmp);
-					AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf log ]response payload %s", res_payload);
+					AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+						"response payload %s", res_payload);
 					if (res_payload) 
 					{
 						res_om_node = wsf_util_deserialize_buffer (env, res_payload);
@@ -1066,7 +1076,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
 
     if (!res_payload) 
 	{
-        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "Response Payload is NULL");
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Response Payload is NULL");
         return NULL;
     }
     return res_om_node;
@@ -1144,18 +1154,19 @@ wsf_xml_msg_recv_set_soap_fault (
         smart_str_appends(&fcode,Z_STRVAL_PP (tmp));
         smart_str_0(&fcode);
         code = fcode.c;
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_service] setting fault code %s", code);
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Setting fault code %s", code);
     } else 
 	{
-		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[wsf_service]invalid soap fault (reason|string) missing");
-		code = "Receiver";
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+			"Invalid soap fault (reason|string) missing");
+		code = AXIOM_SOAP12_FAULT_CODE_RECEIVER;
     }
 
     if (zend_hash_find(Z_OBJPROP_P (zval_soap_fault), WSF_FAULT_ROLE, sizeof (WSF_FAULT_ROLE),
             (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING)
 	{
         role = Z_STRVAL_PP (tmp);
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_service] setting fault role %s", role);
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "setting fault role %s", role);
     }
     if (zend_hash_find(Z_OBJPROP_P (zval_soap_fault), WSF_FAULT_DETAIL,
             sizeof (WSF_FAULT_DETAIL), (void **) &tmp) == SUCCESS 
@@ -1163,7 +1174,7 @@ wsf_xml_msg_recv_set_soap_fault (
 	{
         axiom_node_t *text_node = NULL;
         detail = Z_STRVAL_PP (tmp);
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,"[wsf_service] setting fault detail %s", detail);
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Setting fault detail %s", detail);
         axiom_element_create (env, NULL, "error", NULL, &detail_node);
         axiom_text_create (env, detail_node, detail, &text_node);
     }
@@ -1187,8 +1198,9 @@ wsf_xml_msg_recv_set_soap_fault (
 }
 
 static zval* 
-wsf_xml_msg_recv_process_incomming_headers(axiom_soap_envelope_t *envelope,
-								 const axutil_env_t *env TSRMLS_DC)
+wsf_xml_msg_recv_process_incomming_headers(
+	axiom_soap_envelope_t *envelope,
+	const axutil_env_t *env TSRMLS_DC)
 {
 	axiom_soap_header_t *header = NULL;
 	zval *output_headers = NULL;
@@ -1261,11 +1273,3 @@ wsf_xml_msg_recv_process_incomming_headers(axiom_soap_envelope_t *envelope,
 	}
 	return output_headers;
 }
-
-/*
-static axiom_node_t *
-wsf_xml_msg_recv_process_outgoing_headers(axutil_env_t *env,
-axis2_msg_ctx_t *in_msg_ctx, zval *msg TSRMLS_DC)
-{}
-*/
-

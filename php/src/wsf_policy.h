@@ -34,6 +34,11 @@
 #define WSF_IN_POLICY "inpolicy"
 #define WSF_OUT_POLICY "outpolicy"
 
+#define WSF_POLICY_XML "policyXML"
+#define WSF_POLICY_SECURITY "security"
+
+
+
 #define WSF_SIGN "sign"
 #define WSF_ENCRYPT "encrypt"
 #define WSF_ALGORITHM "algorithmSuite"
@@ -105,7 +110,8 @@
 * @param TSRMLS_DC, 
 * @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
 */
-int wsf_policy_set_policy_options (
+int 
+wsf_policy_set_policy_options (
     zval * this_ptr,
     zval * property,
     const axutil_env_t * env TSRMLS_DC);
@@ -118,7 +124,8 @@ int wsf_policy_set_policy_options (
 * @param TSRMLS_DC, 
 * @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
 */
-int wsf_policy_handle_client_security (
+int 
+wsf_policy_handle_client_security (
     zval * sec_token,
     zval * policy,
     axutil_env_t * env,
@@ -133,7 +140,8 @@ int wsf_policy_handle_client_security (
 * @param TSRMLS_DC, 
 * @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
 */
-int wsf_policy_handle_server_security (
+int 
+wsf_policy_handle_server_security (
     zval * sec_token,
     zval * policy,
     axutil_env_t * env,
@@ -164,7 +172,8 @@ wsf_set_rampart_options (
 * @param TSRMLS_DC, 
 * @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
 */
-axiom_node_t *wsf_do_create_policy (
+axiom_node_t *
+wsf_do_create_policy (
     zval * sec_token,
     zval * policy,
 	axis2_bool_t is_server_side,

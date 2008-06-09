@@ -287,18 +287,18 @@ wsf_worker_create (
         axis2_module_desc_t * module_desc = NULL;
         axutil_param_t * param = NULL;
         axutil_qname_t * sandesha2_qname = NULL;
-		sandesha2_qname = axutil_qname_create (env, "sandesha2", NULL, NULL);
+		sandesha2_qname = axutil_qname_create (env, WSF_MODULE_RM , NULL, NULL);
         conf = axis2_conf_ctx_get_conf (worker->conf_ctx, env);
         module_desc = axis2_conf_get_module (conf, env, sandesha2_qname);
         if (module_desc) 
 		{
-            param = axis2_module_desc_get_param (module_desc, env, "sandesha2_db");
+            param = axis2_module_desc_get_param (module_desc, env, WSF_SANDESHA2_DB);
             if (param) 
 			{
 			    smart_str sandesha2_db = { 0 };
 				smart_str_appends(&sandesha2_db, rm_db_dir);
 		        smart_str_appends(&sandesha2_db, "/");
-		        smart_str_appends(&sandesha2_db, "sandesha2_db");
+		        smart_str_appends(&sandesha2_db, WSF_SANDESHA2_DB);
 		        smart_str_0(&sandesha2_db);
 				axutil_param_set_value (param, env, axutil_strdup(env , sandesha2_db.c));
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_svr] rm_db_dir %s", sandesha2_db.c);
@@ -454,7 +454,7 @@ wsf_worker_process_request (
 		sprintf (request_uri_with_query_string, "%s?%s",
             request->request_uri, request->query_string);
 
-		url = axutil_url_create (env, "http" , request->svr_name, request->svr_port,
+		url = axutil_url_create (env, AXIS2_HTTP_PROTOCOL , request->svr_name, request->svr_port,
 				request_uri_with_query_string);
 		
 		if(request_uri_with_query_string)
@@ -462,7 +462,7 @@ wsf_worker_process_request (
 			AXIS2_FREE(env->allocator, request_uri_with_query_string);
 		}
     } else {
-		url = axutil_url_create (env, "http" , request->svr_name, request->svr_port, 
+		url = axutil_url_create (env, AXIS2_HTTP_PROTOCOL, request->svr_name, request->svr_port, 
 			request->request_uri);
 	}
     
