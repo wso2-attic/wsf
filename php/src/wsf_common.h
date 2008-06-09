@@ -37,176 +37,176 @@
 /* {{{ axis2 object types */
 typedef enum ws_object_types_t
 {
-    WS_NONE,
-    WS_SVC_CLIENT,
-    WS_SVC,
-    WS_FAULT,
-    WS_PARAM,
-    WS_OBJECT_LAST
+    WSF_NONE,
+    WSF_SVC_CLIENT,
+    WSF_SVC,
+    WSF_FAULT,
+    WSF_PARAM,
+    WSF_OBJECT_LAST
 } ws_object_types_t;
 /* }}} */
 
 /** using input */
 typedef enum ws_input_types
 {
-    WS_USING_STRING,
-    WS_USING_MSG,
-    WS_USING_INCORRECT_INPUT
+    WSF_USING_STRING,
+    WSF_USING_MSG,
+    WSF_USING_INCORRECT_INPUT
 } ws_input_types_t;
 
 /** options for services array */
 
-#define WS_PHP_LOG_PREFIX      "[WSF/PHP] "
+#define WSF_PHP_LOG_PREFIX      "[WSF/PHP] "
 
-#define WS_ACTIONS      "actions"
-#define WS_OPERATIONS  "operations"
-#define WS_OP_MEP      "opMEP"
-#define WS_OP_PARAMS    "opParams"
-#define WS_WSDL         "wsdl"
-#define WS_CLASSMAP     "classmap"
-#define WS_CLASSES      "classes"
-#define WS_CONS_ARGS    "args"
-#define WS_SERVICE_NAME "serviceName"
-#define WS_PORT_NAME    "portName"
+#define WSF_ACTIONS      "actions"
+#define WSF_OPERATIONS  "operations"
+#define WSF_OP_MEP      "opMEP"
+#define WSF_OP_PARAMS    "opParams"
+#define WSF_WSDL         "wsdl"
+#define WSF_CLASSMAP     "classmap"
+#define WSF_CLASSES      "classes"
+#define WSF_CONS_ARGS    "args"
+#define WSF_SERVICE_NAME "serviceName"
+#define WSF_PORT_NAME    "portName"
 
-#define WS_ANNOTATIONS "annotations"
+#define WSF_ANNOTATIONS "annotations"
 #define WSF_WSDL_PROCESS_IN_MSG "wsf_wsdl_process_in_msg"
 
 /** REST */
-#define WS_OP_TO_URL_MAP "RESTMapping"
-#define WS_REST_LOCATION "RESTLocation"
-#define WS_RESPONSE_CONTENT_TYPE "contentType"
+#define WSF_OP_TO_URL_MAP "RESTMapping"
+#define WSF_REST_LOCATION "RESTLocation"
+#define WSF_RESPONSE_CONTENT_TYPE "contentType"
 
 /** Options array options */
 
-#define WS_IN_ONLY "IN_ONLY"
-#define WS_IN_OUT "IN_OUT"
+#define WSF_IN_ONLY "IN_ONLY"
+#define WSF_IN_OUT "IN_OUT"
 
-#define WS_TO				"to"    /** endpoint uri */
+#define WSF_TO				"to"    /** endpoint uri */
 
-#define WS_USE_WSA     		"useWSA"
-#define WS_ACTION			"action"        /** addressing options */
-#define WS_FROM				"from"
-#define WS_REPLY_TO			"replyTo"
-#define WS_FAULT_TO			"faultTo"
+#define WSF_USE_WSA     		"useWSA"
+#define WSF_ACTION			"action"        /** addressing options */
+#define WSF_FROM				"from"
+#define WSF_REPLY_TO			"replyTo"
+#define WSF_FAULT_TO			"faultTo"
 
-#define WS_SOAP_ACTION      "SOAPAction"
+#define WSF_SOAP_ACTION      "SOAPAction"
 
-#define WS_USES_XOP			"usesXOP"      /** MTOM XOP */
-#define WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE "defaultAttachmentContentType"
-#define WS_ATTACHMENTS 			"attachments"
-#define WS_CID2CONTENT_TYPE 	"cid2contentType"
-#define WS_RESPONSE_XOP 		"responseXOP"
-#define WS_REQUEST_XOP  		"requestXOP"
-#define WS_USE_MTOM     		"useMTOM"
-#define WS_TIMEOUT              "timeout"
+#define WSF_USES_XOP			"usesXOP"      /** MTOM XOP */
+#define WSF_DEFAULT_ATTACHEMENT_CONTENT_TYPE "defaultAttachmentContentType"
+#define WSF_ATTACHMENTS 			"attachments"
+#define WSF_CID2CONTENT_TYPE 	"cid2contentType"
+#define WSF_RESPONSE_XOP 		"responseXOP"
+#define WSF_REQUEST_XOP  		"requestXOP"
+#define WSF_USE_MTOM     		"useMTOM"
+#define WSF_TIMEOUT              "timeout"
 
 /** Reliable Messaging */
-#define WS_WILL_CONTINUE_SEQUENCE 	"willContinueSequence"
-#define WS_LAST_MESSAGE 		    "lastMessage"
-#define WS_RELIABLE			        "reliable"
-#define WS_SEQUENCE_EXPIRY_TIME 	"sequenceExpiryTime"
-#define WS_SEQUENCE_KEY      		"sequenceKey"
+#define WSF_WILL_CONTINUE_SEQUENCE 	"willContinueSequence"
+#define WSF_LAST_MESSAGE 		    "lastMessage"
+#define WSF_RELIABLE			        "reliable"
+#define WSF_SEQUENCE_EXPIRY_TIME 	"sequenceExpiryTime"
+#define WSF_SEQUENCE_KEY      		"sequenceKey"
 
 /** protocol */
-#define WS_USE_SOAP			    "useSOAP"
-#define WS_HTTP_METHOD 			"HTTPMethod"
+#define WSF_USE_SOAP			    "useSOAP"
+#define WSF_HTTP_METHOD 			"HTTPMethod"
 
 
 /** SSL certificate */
-#define WS_SERVER_CERT 			"CACert"
-#define WS_CLIENT_CERT 			"clientCert"
-#define WS_PASSPHRASE  			"passphrase"
+#define WSF_SERVER_CERT 			"CACert"
+#define WSF_CLIENT_CERT 			"clientCert"
+#define WSF_PASSPHRASE  			"passphrase"
 
 /** wsdl mode */
-#define WS_BINDING_STYLE 		"bindingStyle"
-#define WS_WSDL          		"wsdl"
-#define WS_CACHE_WSDL           "cache_wsdl"
-#define WS_CLASSMAP             "classmap"
+#define WSF_BINDING_STYLE 		"bindingStyle"
+#define WSF_WSDL          		"wsdl"
+#define WSF_CACHE_WSDL           "cache_wsdl"
+#define WSF_CLASSMAP             "classmap"
 
 /** http authentication */
-#define WS_HTTP_AUTH_USERNAME      "httpAuthUsername"
-#define WS_HTTP_AUTH_PASSWORD      "httpAuthPassword"
-#define WS_HTTP_AUTH_TYPE          "httpAuthType"
+#define WSF_HTTP_AUTH_USERNAME      "httpAuthUsername"
+#define WSF_HTTP_AUTH_PASSWORD      "httpAuthPassword"
+#define WSF_HTTP_AUTH_TYPE          "httpAuthType"
 
 /** proxy authentication */
-#define WS_PROXY_AUTH_USERNAME      "proxyAuthUsername"
-#define WS_PROXY_AUTH_PASSWORD      "proxyAuthPassword"
-#define WS_PROXY_AUTH_TYPE          "proxyAuthType"
+#define WSF_PROXY_AUTH_USERNAME      "proxyAuthUsername"
+#define WSF_PROXY_AUTH_PASSWORD      "proxyAuthPassword"
+#define WSF_PROXY_AUTH_TYPE          "proxyAuthType"
 
 /** soap fault */
-#define WS_FAULT_REASON 		"Reason"
-#define WS_FAULT_ROLE   		"Role"
-#define WS_FAULT_TEXT   		"text"
-#define WS_FAULT_CODE   		"Code"
-#define WS_FAULT_CODE_NS        "codens"
-#define WS_FAULT_SUBCODE 		"Subcode"
-#define WS_FAULT_DETAIL 		"Detail"
+#define WSF_FAULT_REASON 		"Reason"
+#define WSF_FAULT_ROLE   		"Role"
+#define WSF_FAULT_TEXT   		"text"
+#define WSF_FAULT_CODE   		"Code"
+#define WSF_FAULT_CODE_NS        "codens"
+#define WSF_FAULT_SUBCODE 		"Subcode"
+#define WSF_FAULT_DETAIL 		"Detail"
 
 /** header options */
-#define WS_INPUT_HEADERS        "inputHeaders"
-#define WS_OUTPUT_HEADERS       "outputHeaders"
-#define WS_HEADER_PREFIX        "prefix"
-#define WS_HEADER_NS    		"ns"
-#define WS_HEADER_LOCALNAME 	"name"
-#define WS_HEADER_DATA     		"data"
-#define WS_HEADER_STR           "str"
-#define WS_HEADER_ROLE     		"role"
-#define WS_HEADER_ACTOR         "actor"
-#define WS_HEADER_MUST_UNDERSTAND 	"mustUnderstand"
-#define WS_HEADER_PREFIX        "prefix"
+#define WSF_INPUT_HEADERS        "inputHeaders"
+#define WSF_OUTPUT_HEADERS       "outputHeaders"
+#define WSF_HEADER_PREFIX        "prefix"
+#define WSF_HEADER_NS    		"ns"
+#define WSF_HEADER_LOCALNAME 	"name"
+#define WSF_HEADER_DATA     		"data"
+#define WSF_HEADER_STR           "str"
+#define WSF_HEADER_ROLE     		"role"
+#define WSF_HEADER_ACTOR         "actor"
+#define WSF_HEADER_MUST_UNDERSTAND 	"mustUnderstand"
+#define WSF_HEADER_PREFIX        "prefix"
 
 /** security policy */
-#define WS_POLICY_NAME 			"policy"
-#define WS_SECURITY_TOKEN 		"securityToken"
+#define WSF_POLICY_NAME 			"policy"
+#define WSF_SECURITY_TOKEN 		"securityToken"
 
-#define WS_PROXY_HOST           "proxyHost"
-#define WS_PROXY_PORT           "proxyPort"
+#define WSF_PROXY_HOST           "proxyHost"
+#define WSF_PROXY_PORT           "proxyPort"
 /** end options */
 
-#define WS_MSG_PAYLOAD_STR 		"str"
+#define WSF_MSG_PAYLOAD_STR 		"str"
 
 /** soap header attributes */
 
-#define WS_SOAP_ROLE_NONE			        1
-#define WS_SOAP_ROLE_NEXT			        2
-#define WS_SOAP_ROLE_ULTIMATE_RECEIVER		3
+#define WSF_SOAP_ROLE_NONE			        1
+#define WSF_SOAP_ROLE_NEXT			        2
+#define WSF_SOAP_ROLE_ULTIMATE_RECEIVER		3
 
-#define WS_SOAP_ROLE_NONE_URI "http://www.w3.org/2003/05/soap-envelope/role/none"
-#define WS_SOAP_ROLE_NEXT_URI "http://www.w3.org/2003/05/soap-envelope/role/next"
-#define WS_SOAP_ROLE_ULTIMATE_RECEIVER_URI "http://www.w3.org/2003/05/soap-envelope/role/next"
+#define WSF_SOAP_ROLE_NONE_URI "http://www.w3.org/2003/05/soap-envelope/role/none"
+#define WSF_SOAP_ROLE_NEXT_URI "http://www.w3.org/2003/05/soap-envelope/role/next"
+#define WSF_SOAP_ROLE_ULTIMATE_RECEIVER_URI "http://www.w3.org/2003/05/soap-envelope/role/next"
 
-#define WS_SOAP_1_1_NAMESPACE_URI "http://schemas.xmlsoap.org/soap/envelope/"
-#define WS_SOAP_1_2_NAMESPACE_URI "http://www.w3.org/2003/05/soap-envelope"
+#define WSF_SOAP_1_1_NAMESPACE_URI "http://schemas.xmlsoap.org/soap/envelope/"
+#define WSF_SOAP_1_2_NAMESPACE_URI "http://www.w3.org/2003/05/soap-envelope"
 
 /** sandesha2 */
-#define WS_SANDESHA2_CLIENT_ACKS_TO "Sandesha2AcksTo"
-#define WS_SANDESHA2_CLIENT_LAST_MESSAGE "Sandesha2LastMessage"
-#define WS_SANDESHA2_CLIENT_OFFERED_SEQ_ID "Sandesha2OfferedSequenceId"
-#define WS_SANDESHA2_CLIENT_DEBUG_MODE "Sandesha2DebugMode"
-#define WS_SANDESHA2_CLIENT_SEQ_KEY "Sandesha2SequenceKey"
-#define WS_SANDESHA2_CLIENT_MESSAGE_NUMBER "Sandesha2MessageNumber"
-#define WS_SANDESHA2_CLIENT_RM_SPEC_VERSION "Sandesha2RMSpecVersion"
-#define WS_SANDESHA2_CLIENT_DUMMY_MESSAGE "Sandesha2DummyMessage"
+#define WSF_SANDESHA2_CLIENT_ACKS_TO "Sandesha2AcksTo"
+#define WSF_SANDESHA2_CLIENT_LAST_MESSAGE "Sandesha2LastMessage"
+#define WSF_SANDESHA2_CLIENT_OFFERED_SEQ_ID "Sandesha2OfferedSequenceId"
+#define WSF_SANDESHA2_CLIENT_DEBUG_MODE "Sandesha2DebugMode"
+#define WSF_SANDESHA2_CLIENT_SEQ_KEY "Sandesha2SequenceKey"
+#define WSF_SANDESHA2_CLIENT_MESSAGE_NUMBER "Sandesha2MessageNumber"
+#define WSF_SANDESHA2_CLIENT_RM_SPEC_VERSION "Sandesha2RMSpecVersion"
+#define WSF_SANDESHA2_CLIENT_DUMMY_MESSAGE "Sandesha2DummyMessage"
 
-#define WS_RM_VERSION_1_0_STR "Spec_2005_02"
-#define WS_RM_VERSION_1_0  1
-#define WS_RM_VERSION_1_1_STR "Spec_2006_08"
-#define WS_RM_VERSION_1_1  2
+#define WSF_RM_VERSION_1_0_STR "Spec_2005_02"
+#define WSF_RM_VERSION_1_0  1
+#define WSF_RM_VERSION_1_1_STR "Spec_2006_08"
+#define WSF_RM_VERSION_1_1  2
 
-#define WS_RM_RESPONSE_TIMEOUT "responseTimeout"
-#define WS_RM_DEFAULT_RESPONSE_TIMEOUT "12"
+#define WSF_RM_RESPONSE_TIMEOUT "responseTimeout"
+#define WSF_RM_DEFAULT_RESPONSE_TIMEOUT "12"
 
-#define WS_MODULE_ADDRESSING "addressing"
-#define WS_MODULE_SECURITY   "rampart"
-#define WS_MODULE_RM         "sandesha2"
+#define WSF_MODULE_ADDRESSING "addressing"
+#define WSF_MODULE_SECURITY   "rampart"
+#define WSF_MODULE_RM         "sandesha2"
 
 /** http status codes */
-#define WS_SVC_INFO "WSFPHPSvcInfo"
+#define WSF_SVC_INFO "WSFPHPSvcInfo"
 
-#define WS_REQ_INFO "WSFPHPRequestInfo"
+#define WSF_REQ_INFO "WSFPHPRequestInfo"
 
-#define WS_MAGIC_FUNC_CALL "__call"
+#define WSF_MAGIC_FUNC_CALL "__call"
 
 
 typedef struct wsf_svc_info

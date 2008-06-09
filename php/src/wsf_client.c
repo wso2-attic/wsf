@@ -86,7 +86,7 @@ int wsf_client_set_timeout(
     axis2_options_t *client_options TSRMLS_DC)
 {
     zval **tmp = NULL;
-    if(zend_hash_find(client_ht, WS_TIMEOUT, sizeof(WS_TIMEOUT), (void**)&tmp) == SUCCESS){
+    if(zend_hash_find(client_ht, WSF_TIMEOUT, sizeof(WSF_TIMEOUT), (void**)&tmp) == SUCCESS){
         return axis2_options_set_timeout_in_milli_seconds(client_options, env,1000* Z_LVAL_PP(tmp));
     }else{
         return 0;
@@ -99,11 +99,11 @@ int is_addr_action_present_in_options(
 {
 	zval **tmp;
 	if (msg_ht
-        && zend_hash_find (msg_ht, WS_ACTION, sizeof (WS_ACTION),
+        && zend_hash_find (msg_ht, WSF_ACTION, sizeof (WSF_ACTION),
 		(void **) &tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING) {
 			return AXIS2_TRUE;
 	} else if (client_ht
-        && zend_hash_find (client_ht, WS_ACTION, sizeof (WS_ACTION),
+        && zend_hash_find (client_ht, WSF_ACTION, sizeof (WSF_ACTION),
 		(void **) &tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING) {
 			return AXIS2_TRUE;
 	}
@@ -123,11 +123,11 @@ wsf_client_set_soap_action (
         return 0;
 
     if (msg_ht
-        && zend_hash_find (msg_ht, WS_ACTION, sizeof (WS_ACTION),
+        && zend_hash_find (msg_ht, WSF_ACTION, sizeof (WSF_ACTION),
             (void **) &tmp) == SUCCESS) {
         action = Z_STRVAL_PP (tmp);
     } else if (client_ht
-        && zend_hash_find (client_ht, WS_ACTION, sizeof (WS_ACTION),
+        && zend_hash_find (client_ht, WSF_ACTION, sizeof (WSF_ACTION),
             (void **) &tmp) == SUCCESS) {
         action = Z_STRVAL_PP (tmp);
     }
@@ -148,7 +148,7 @@ wsf_client_send_terminate_sequence (
     axis2_svc_client_t * svc_client)
 {
     if (is_rm_engaged && !will_continue_sequence
-        && rm_spec_version == WS_RM_VERSION_1_1) {
+        && rm_spec_version == WSF_RM_VERSION_1_1) {
 #ifdef USE_SANDESHA2
         {
             sandesha2_client_terminate_seq_with_svc_client_and_seq_key (env,
@@ -163,20 +163,20 @@ wsf_client_get_rm_version (
     HashTable * ht TSRMLS_DC)
 {
     zval **tmp;
-    if (zend_hash_find (ht, WS_RELIABLE, sizeof (WS_RELIABLE),
+    if (zend_hash_find (ht, WSF_RELIABLE, sizeof (WSF_RELIABLE),
             (void **) &tmp) == SUCCESS) {
         if (Z_TYPE_PP (tmp) == IS_BOOL && Z_BVAL_PP (tmp) == 1) {
-            return WS_RM_VERSION_1_0;
+            return WSF_RM_VERSION_1_0;
         } else if (Z_TYPE_PP (tmp) == IS_STRING
             && strcmp (Z_STRVAL_PP (tmp), "1.1") == 0) {
-            return WS_RM_VERSION_1_1;
+            return WSF_RM_VERSION_1_1;
         } else if (Z_TYPE_PP (tmp) == IS_STRING
             && strcmp (Z_STRVAL_PP (tmp), "1.0") == 0) {
-            return WS_RM_VERSION_1_0;
+            return WSF_RM_VERSION_1_0;
         } else if (Z_TYPE_PP (tmp) == IS_DOUBLE && Z_DVAL_PP (tmp) == 1.1) {
-            return WS_RM_VERSION_1_1;
+            return WSF_RM_VERSION_1_1;
         } else if (Z_TYPE_PP (tmp) == IS_DOUBLE && Z_DVAL_PP (tmp) == 1.0) {
-            return WS_RM_VERSION_1_0;
+            return WSF_RM_VERSION_1_0;
         }
     }
     return -1;
@@ -198,14 +198,14 @@ wsf_client_set_security_options (
 
     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
         "[wsf_client] wsf_util_set_security_options");
-    if (zend_hash_find (client_ht, WS_SECURITY_TOKEN,
-            sizeof (WS_SECURITY_TOKEN), (void **) &tmp) == SUCCESS
+    if (zend_hash_find (client_ht, WSF_SECURITY_TOKEN,
+            sizeof (WSF_SECURITY_TOKEN), (void **) &tmp) == SUCCESS
         && Z_TYPE_PP (tmp) == IS_OBJECT) {
         sec_token = *tmp;
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
             "[wsf_client] security token object found ");
     }
-    if (zend_hash_find (client_ht, WS_POLICY_NAME, sizeof (WS_POLICY_NAME),
+    if (zend_hash_find (client_ht, WSF_POLICY_NAME, sizeof (WSF_POLICY_NAME),
             (void **) &tmp) == SUCCESS) {
         policy = *tmp;
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
@@ -239,8 +239,8 @@ wsf_client_handle_incoming_attachments (
     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
         "[wsf_client] handle incomming attachments");
 
-    if (client_ht && zend_hash_find (client_ht, WS_RESPONSE_XOP,
-            sizeof (WS_RESPONSE_XOP), (void **) &tmp) == SUCCESS
+    if (client_ht && zend_hash_find (client_ht, WSF_RESPONSE_XOP,
+            sizeof (WSF_RESPONSE_XOP), (void **) &tmp) == SUCCESS
         && Z_TYPE_PP (tmp) == IS_BOOL) {
         response_xop = Z_BVAL_PP (tmp);
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
@@ -261,8 +261,8 @@ wsf_client_handle_incoming_attachments (
         attachments_found = wsf_util_get_attachments_from_soap_envelope(env,
                         soap_envelope, cid2str, cid2content_type TSRMLS_CC);
 
-        add_property_zval (msg, WS_ATTACHMENTS, cid2str);
-        add_property_zval (msg, WS_CID2CONTENT_TYPE, cid2content_type);
+        add_property_zval (msg, WSF_ATTACHMENTS, cid2str);
+        add_property_zval (msg, WSF_CID2CONTENT_TYPE, cid2content_type);
         zval_ptr_dtor(&cid2str);
         zval_ptr_dtor(&cid2content_type);
 
@@ -293,8 +293,8 @@ wsf_client_handle_outgoing_attachments (
     if (!msg_ht)
         return;
 
-    if (zend_hash_find (msg_ht, WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE,
-            sizeof (WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE),
+    if (zend_hash_find (msg_ht, WSF_DEFAULT_ATTACHEMENT_CONTENT_TYPE,
+            sizeof (WSF_DEFAULT_ATTACHEMENT_CONTENT_TYPE),
             (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING)
 	{
         default_cnt_type = Z_STRVAL_PP (tmp);
@@ -302,7 +302,7 @@ wsf_client_handle_outgoing_attachments (
 	{
         default_cnt_type = "application/octet-stream";
     }
-    if (client_ht && zend_hash_find (client_ht, WS_USE_MTOM, sizeof (WS_USE_MTOM),
+    if (client_ht && zend_hash_find (client_ht, WSF_USE_MTOM, sizeof (WSF_USE_MTOM),
             (void **) &tmp) == SUCCESS) 
 	{
         if (Z_TYPE_PP (tmp) == IS_BOOL && Z_BVAL_PP (tmp) == 0) 
@@ -322,12 +322,12 @@ wsf_client_handle_outgoing_attachments (
         }
     }
 
-    if (zend_hash_find (msg_ht, WS_ATTACHMENTS, sizeof (WS_ATTACHMENTS),
+    if (zend_hash_find (msg_ht, WSF_ATTACHMENTS, sizeof (WSF_ATTACHMENTS),
             (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY)
 	{
         ht = Z_ARRVAL_PP (tmp);
-    } else if (zend_hash_find (Z_OBJPROP_P (msg), WS_ATTACHMENTS,
-            sizeof (WS_ATTACHMENTS), (void **) &tmp) == SUCCESS) 
+    } else if (zend_hash_find (Z_OBJPROP_P (msg), WSF_ATTACHMENTS,
+            sizeof (WSF_ATTACHMENTS), (void **) &tmp) == SUCCESS) 
 	{
         ht = Z_ARRVAL_PP (tmp);
     } else return;
@@ -355,7 +355,7 @@ wsf_client_set_addressing_options_to_options (
     if (!ht)
         return 0;
 
-    if (zend_hash_find (ht, WS_ACTION, sizeof (WS_ACTION),
+    if (zend_hash_find (ht, WSF_ACTION, sizeof (WSF_ACTION),
             (void **) &tmp) == SUCCESS) {
 
         axis2_options_set_action (client_options, env, Z_STRVAL_PP (tmp));
@@ -366,7 +366,7 @@ wsf_client_set_addressing_options_to_options (
             Z_STRVAL_PP (tmp));
 
     }
-    if (zend_hash_find (ht, WS_REPLY_TO, sizeof (WS_REPLY_TO),
+    if (zend_hash_find (ht, WSF_REPLY_TO, sizeof (WSF_REPLY_TO),
             (void **) &tmp) == SUCCESS) {
 
         axis2_endpoint_ref_t *replyto_epr = NULL;
@@ -380,7 +380,7 @@ wsf_client_set_addressing_options_to_options (
             "[wsf_client] replyTo present :- %s", replyto);
     }
 
-    if (zend_hash_find (ht, WS_FAULT_TO, sizeof (WS_FAULT_TO),
+    if (zend_hash_find (ht, WSF_FAULT_TO, sizeof (WSF_FAULT_TO),
             (void **) &tmp) == SUCCESS) {
 
         axis2_endpoint_ref_t *faultto_epr = NULL;
@@ -395,7 +395,7 @@ wsf_client_set_addressing_options_to_options (
             "[wsf_client] faultTo present %s", faultto);
 
     }
-    if (zend_hash_find (ht, WS_FROM, sizeof (WS_FROM),
+    if (zend_hash_find (ht, WSF_FROM, sizeof (WSF_FROM),
             (void **) &tmp) == SUCCESS) {
         axis2_endpoint_ref_t *from_epr = NULL;
 
@@ -444,227 +444,227 @@ wsf_client_add_properties (
     zval **tmp = NULL;
     int cache_wsdl = 0;
     /** use soap */
-    if (zend_hash_find (ht, WS_USE_SOAP, sizeof (WS_USE_SOAP),
+    if (zend_hash_find (ht, WSF_USE_SOAP, sizeof (WSF_USE_SOAP),
             (void **) &tmp) == SUCCESS) {
         if (Z_TYPE_PP (tmp) == IS_STRING) {
-            add_property_stringl (this_ptr, WS_USE_SOAP, Z_STRVAL_PP (tmp),
+            add_property_stringl (this_ptr, WSF_USE_SOAP, Z_STRVAL_PP (tmp),
                 Z_STRLEN_PP (tmp), 1);
         } else if (Z_TYPE_PP (tmp) == IS_DOUBLE) {
-            add_property_double (this_ptr, WS_USE_SOAP, Z_DVAL_PP (tmp));
+            add_property_double (this_ptr, WSF_USE_SOAP, Z_DVAL_PP (tmp));
         } else if (Z_TYPE_PP (tmp) == IS_BOOL) {
-            add_property_bool (this_ptr, WS_USE_SOAP, Z_BVAL_PP (tmp));
+            add_property_bool (this_ptr, WSF_USE_SOAP, Z_BVAL_PP (tmp));
         }
     }
     /** HTTP Method */
-    if (zend_hash_find (ht, WS_HTTP_METHOD, sizeof (WS_HTTP_METHOD),
+    if (zend_hash_find (ht, WSF_HTTP_METHOD, sizeof (WSF_HTTP_METHOD),
             (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-        add_property_stringl (this_ptr, WS_HTTP_METHOD, Z_STRVAL_PP (tmp),
+        add_property_stringl (this_ptr, WSF_HTTP_METHOD, Z_STRVAL_PP (tmp),
             Z_STRLEN_PP (tmp), 1);
     }
     /** endpoint address */
-    if (zend_hash_find (ht, WS_TO, sizeof (WS_TO), (void **) &tmp) == SUCCESS
+    if (zend_hash_find (ht, WSF_TO, sizeof (WSF_TO), (void **) &tmp) == SUCCESS
         && Z_TYPE_PP (tmp) == IS_STRING) {
-        add_property_stringl (this_ptr, WS_TO, Z_STRVAL_PP (tmp),
+        add_property_stringl (this_ptr, WSF_TO, Z_STRVAL_PP (tmp),
             Z_STRLEN_PP (tmp), 1);
     }
 
     /** WS-A action , ALSO SOAP Action */
-    if (zend_hash_find (ht, WS_ACTION, sizeof (WS_ACTION),
+    if (zend_hash_find (ht, WSF_ACTION, sizeof (WSF_ACTION),
             (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-        add_property_stringl (this_ptr, WS_ACTION, Z_STRVAL_PP (tmp),
+        add_property_stringl (this_ptr, WSF_ACTION, Z_STRVAL_PP (tmp),
             Z_STRLEN_PP (tmp), 1);
     }
 
     /** addressing properties */
-    if (zend_hash_find (ht, WS_ACTION, sizeof (WS_ACTION),
+    if (zend_hash_find (ht, WSF_ACTION, sizeof (WSF_ACTION),
             (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-        add_property_stringl (this_ptr, WS_ACTION, Z_STRVAL_PP (tmp),
+        add_property_stringl (this_ptr, WSF_ACTION, Z_STRVAL_PP (tmp),
             Z_STRLEN_PP (tmp), 1);
     }
-    if (zend_hash_find (ht, WS_FROM, sizeof (WS_FROM),
+    if (zend_hash_find (ht, WSF_FROM, sizeof (WSF_FROM),
             (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-        add_property_stringl (this_ptr, WS_FROM, Z_STRVAL_PP (tmp),
+        add_property_stringl (this_ptr, WSF_FROM, Z_STRVAL_PP (tmp),
             Z_STRLEN_PP (tmp), 1);
     }
-    if (zend_hash_find (ht, WS_REPLY_TO, sizeof (WS_REPLY_TO),
+    if (zend_hash_find (ht, WSF_REPLY_TO, sizeof (WSF_REPLY_TO),
             (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-        add_property_stringl (this_ptr, WS_REPLY_TO, Z_STRVAL_PP (tmp),
+        add_property_stringl (this_ptr, WSF_REPLY_TO, Z_STRVAL_PP (tmp),
             Z_STRLEN_PP (tmp), 1);
     }
-    if (zend_hash_find (ht, WS_FAULT_TO, sizeof (WS_FAULT_TO),
+    if (zend_hash_find (ht, WSF_FAULT_TO, sizeof (WSF_FAULT_TO),
             (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-        add_property_stringl (this_ptr, WS_FAULT_TO, Z_STRVAL_PP (tmp),
+        add_property_stringl (this_ptr, WSF_FAULT_TO, Z_STRVAL_PP (tmp),
             Z_STRLEN_PP (tmp), 1);
     }
 
 
     /** SSL And proxy properties */
-    if (zend_hash_find (ht, WS_SERVER_CERT, sizeof (WS_SERVER_CERT),
+    if (zend_hash_find (ht, WSF_SERVER_CERT, sizeof (WSF_SERVER_CERT),
             (void **) &tmp) == SUCCESS) {
         if (Z_TYPE_PP (tmp) == IS_STRING) {
-            add_property_string (this_ptr, WS_SERVER_CERT, Z_STRVAL_PP (tmp),
+            add_property_string (this_ptr, WSF_SERVER_CERT, Z_STRVAL_PP (tmp),
                 1);
         }
     }
 
-    if (zend_hash_find (ht, WS_CLIENT_CERT, sizeof (WS_CLIENT_CERT),
+    if (zend_hash_find (ht, WSF_CLIENT_CERT, sizeof (WSF_CLIENT_CERT),
             (void **) &tmp) == SUCCESS) {
         if (Z_TYPE_PP (tmp) == IS_STRING) {
-            add_property_string (this_ptr, WS_CLIENT_CERT, Z_STRVAL_PP (tmp),
+            add_property_string (this_ptr, WSF_CLIENT_CERT, Z_STRVAL_PP (tmp),
                 1);
         }
     }
-    if (zend_hash_find (ht, WS_PASSPHRASE, sizeof (WS_PASSPHRASE),
+    if (zend_hash_find (ht, WSF_PASSPHRASE, sizeof (WSF_PASSPHRASE),
             (void **) &tmp) == SUCCESS) {
         if (Z_TYPE_PP (tmp) == IS_STRING) {
-            add_property_string (this_ptr, WS_PASSPHRASE, Z_STRVAL_PP (tmp),
+            add_property_string (this_ptr, WSF_PASSPHRASE, Z_STRVAL_PP (tmp),
                 1);
         }
     }
-    if (zend_hash_find (ht, WS_PROXY_HOST, sizeof (WS_PROXY_HOST),
+    if (zend_hash_find (ht, WSF_PROXY_HOST, sizeof (WSF_PROXY_HOST),
             (void **) &tmp) == SUCCESS) {
         if (Z_TYPE_PP (tmp) == IS_STRING) {
-            add_property_string (this_ptr, WS_PROXY_HOST, Z_STRVAL_PP (tmp),
+            add_property_string (this_ptr, WSF_PROXY_HOST, Z_STRVAL_PP (tmp),
                 1);
         }
     }
-    if (zend_hash_find (ht, WS_PROXY_PORT, sizeof (WS_PROXY_PORT),
+    if (zend_hash_find (ht, WSF_PROXY_PORT, sizeof (WSF_PROXY_PORT),
             (void **) &tmp) == SUCCESS) {
         if (Z_TYPE_PP (tmp) == IS_STRING) {
-            add_property_string (this_ptr, WS_PROXY_PORT, Z_STRVAL_PP (tmp),
+            add_property_string (this_ptr, WSF_PROXY_PORT, Z_STRVAL_PP (tmp),
                 1);
         }
     }
 
     /** use WSA */
-    if (zend_hash_find (ht, WS_USE_WSA, sizeof (WS_USE_WSA),
+    if (zend_hash_find (ht, WSF_USE_WSA, sizeof (WSF_USE_WSA),
             (void **) &tmp) == SUCCESS) {
         if (Z_TYPE_PP (tmp) == IS_STRING) {
-            add_property_stringl (this_ptr, WS_USE_WSA, Z_STRVAL_PP (tmp),
+            add_property_stringl (this_ptr, WSF_USE_WSA, Z_STRVAL_PP (tmp),
                 Z_STRLEN_PP (tmp), 1);
         } else if (Z_TYPE_PP (tmp) == IS_BOOL) {
-            add_property_bool (this_ptr, WS_USE_WSA, Z_BVAL_PP (tmp));
+            add_property_bool (this_ptr, WSF_USE_WSA, Z_BVAL_PP (tmp));
         } else if (Z_TYPE_PP (tmp) == IS_DOUBLE) {
-            add_property_double (this_ptr, WS_USE_WSA, Z_DVAL_PP (tmp));
+            add_property_double (this_ptr, WSF_USE_WSA, Z_DVAL_PP (tmp));
         }
     }
 
     /** attachments properties */
-    if (zend_hash_find (ht, WS_RESPONSE_XOP, sizeof (WS_RESPONSE_XOP),
+    if (zend_hash_find (ht, WSF_RESPONSE_XOP, sizeof (WSF_RESPONSE_XOP),
             (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_BOOL) {
-        add_property_bool (this_ptr, WS_RESPONSE_XOP, Z_BVAL_PP (tmp));
+        add_property_bool (this_ptr, WSF_RESPONSE_XOP, Z_BVAL_PP (tmp));
     }
-    if (zend_hash_find (ht, WS_USE_MTOM, sizeof (WS_USE_MTOM),
+    if (zend_hash_find (ht, WSF_USE_MTOM, sizeof (WSF_USE_MTOM),
         (void **) &tmp) == SUCCESS) {
         if (Z_TYPE_PP (tmp) == IS_BOOL) {
-          add_property_bool (this_ptr, WS_USE_MTOM, Z_BVAL_PP (tmp));
+          add_property_bool (this_ptr, WSF_USE_MTOM, Z_BVAL_PP (tmp));
         }
         else if (Z_TYPE_PP (tmp) == IS_STRING) {
-            add_property_stringl (this_ptr, WS_USE_MTOM, Z_STRVAL_PP (tmp),
+            add_property_stringl (this_ptr, WSF_USE_MTOM, Z_STRVAL_PP (tmp),
                 Z_STRLEN_PP (tmp), 1);
         } 
     }
-    if (zend_hash_find (ht, WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE,
-            sizeof (WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE),
+    if (zend_hash_find (ht, WSF_DEFAULT_ATTACHEMENT_CONTENT_TYPE,
+            sizeof (WSF_DEFAULT_ATTACHEMENT_CONTENT_TYPE),
             (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-        add_property_stringl (this_ptr, WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE,
+        add_property_stringl (this_ptr, WSF_DEFAULT_ATTACHEMENT_CONTENT_TYPE,
             Z_STRVAL_PP (tmp), Z_STRLEN_PP (tmp), 1);
     }
 
     /** security */
 
-    if (zend_hash_find (ht, WS_SECURITY_TOKEN, sizeof (WS_SECURITY_TOKEN),
+    if (zend_hash_find (ht, WSF_SECURITY_TOKEN, sizeof (WSF_SECURITY_TOKEN),
             (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_OBJECT) {
-        add_property_zval (this_ptr, WS_SECURITY_TOKEN, *tmp);
+        add_property_zval (this_ptr, WSF_SECURITY_TOKEN, *tmp);
     }
-    if (zend_hash_find (ht, WS_POLICY_NAME, sizeof (WS_POLICY_NAME),
+    if (zend_hash_find (ht, WSF_POLICY_NAME, sizeof (WSF_POLICY_NAME),
             (void **) &tmp) == SUCCESS && (Z_TYPE_PP (tmp) == IS_OBJECT
             || Z_TYPE_PP (tmp) == IS_ARRAY)) {
-        add_property_zval (this_ptr, WS_POLICY_NAME, *tmp);
+        add_property_zval (this_ptr, WSF_POLICY_NAME, *tmp);
     }
 
     /** RM */
 
-    if (zend_hash_find (ht, WS_RELIABLE, sizeof (WS_RELIABLE),
+    if (zend_hash_find (ht, WSF_RELIABLE, sizeof (WSF_RELIABLE),
             (void **) &tmp) == SUCCESS) {
         if (Z_TYPE_PP (tmp) == IS_BOOL) {
-            add_property_bool (this_ptr, WS_RELIABLE, Z_BVAL_PP (tmp));
+            add_property_bool (this_ptr, WSF_RELIABLE, Z_BVAL_PP (tmp));
         } else if (Z_TYPE_PP (tmp) == IS_STRING) {
-            add_property_string (this_ptr, WS_RELIABLE, Z_STRVAL_PP (tmp), 1);
+            add_property_string (this_ptr, WSF_RELIABLE, Z_STRVAL_PP (tmp), 1);
         } else if (Z_TYPE_PP (tmp) == IS_DOUBLE) {
-            add_property_double (this_ptr, WS_RELIABLE, Z_DVAL_PP (tmp));
+            add_property_double (this_ptr, WSF_RELIABLE, Z_DVAL_PP (tmp));
         }
     }
-    if (zend_hash_find (ht, WS_SEQUENCE_EXPIRY_TIME,
-        sizeof (WS_SEQUENCE_EXPIRY_TIME), (void **) &tmp) == SUCCESS) {
+    if (zend_hash_find (ht, WSF_SEQUENCE_EXPIRY_TIME,
+        sizeof (WSF_SEQUENCE_EXPIRY_TIME), (void **) &tmp) == SUCCESS) {
 		if (Z_TYPE_PP (tmp) == IS_LONG) {
-			add_property_long (this_ptr, WS_SEQUENCE_EXPIRY_TIME,
+			add_property_long (this_ptr, WSF_SEQUENCE_EXPIRY_TIME,
 				Z_LVAL_PP (tmp));
 		}
     }
-    if (zend_hash_find (ht, WS_WILL_CONTINUE_SEQUENCE,
-        sizeof (WS_WILL_CONTINUE_SEQUENCE), (void **) &tmp) == SUCCESS) {
+    if (zend_hash_find (ht, WSF_WILL_CONTINUE_SEQUENCE,
+        sizeof (WSF_WILL_CONTINUE_SEQUENCE), (void **) &tmp) == SUCCESS) {
 		if (Z_TYPE_PP (tmp) == IS_BOOL) {
-			add_property_bool (this_ptr, WS_WILL_CONTINUE_SEQUENCE,
+			add_property_bool (this_ptr, WSF_WILL_CONTINUE_SEQUENCE,
 				Z_BVAL_PP (tmp));
 		}
     }
-    if (zend_hash_find (ht, WS_SEQUENCE_KEY, sizeof (WS_SEQUENCE_KEY),
+    if (zend_hash_find (ht, WSF_SEQUENCE_KEY, sizeof (WSF_SEQUENCE_KEY),
             (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-        add_property_string (this_ptr, WS_SEQUENCE_KEY, Z_STRVAL_PP (tmp), 1);
+        add_property_string (this_ptr, WSF_SEQUENCE_KEY, Z_STRVAL_PP (tmp), 1);
     }
 
-    if (zend_hash_find (ht, WS_RM_RESPONSE_TIMEOUT,
-            sizeof (WS_RM_RESPONSE_TIMEOUT), (void **) &tmp) == SUCCESS) {
-        add_property_string (this_ptr, WS_RM_RESPONSE_TIMEOUT,
+    if (zend_hash_find (ht, WSF_RM_RESPONSE_TIMEOUT,
+            sizeof (WSF_RM_RESPONSE_TIMEOUT), (void **) &tmp) == SUCCESS) {
+        add_property_string (this_ptr, WSF_RM_RESPONSE_TIMEOUT,
             Z_STRVAL_PP (tmp), 1);
     }
     /** timeout */
-    if(zend_hash_find(ht, WS_TIMEOUT, sizeof(WS_TIMEOUT), (void **)&tmp) == SUCCESS &&
+    if(zend_hash_find(ht, WSF_TIMEOUT, sizeof(WSF_TIMEOUT), (void **)&tmp) == SUCCESS &&
             Z_TYPE_PP(tmp) == IS_LONG){
-        add_property_long(this_ptr, WS_TIMEOUT, Z_LVAL_PP(tmp));
+        add_property_long(this_ptr, WSF_TIMEOUT, Z_LVAL_PP(tmp));
     }
 
-    if (zend_hash_find (ht, WS_CACHE_WSDL, sizeof (WS_CACHE_WSDL),
+    if (zend_hash_find (ht, WSF_CACHE_WSDL, sizeof (WSF_CACHE_WSDL),
         (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_LONG) {
             cache_wsdl = Z_LVAL_PP (tmp);
     }
 
-    if (zend_hash_find (ht, WS_WSDL, sizeof (WS_WSDL), 
+    if (zend_hash_find (ht, WSF_WSDL, sizeof (WSF_WSDL), 
         (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-        add_property_stringl (this_ptr, WS_WSDL, Z_STRVAL_PP (tmp),
+        add_property_stringl (this_ptr, WSF_WSDL, Z_STRVAL_PP (tmp),
                               Z_STRLEN_PP (tmp), 1);
     }
     
-    if (zend_hash_find (ht, WS_CLASSMAP, sizeof (WS_CLASSMAP),
+    if (zend_hash_find (ht, WSF_CLASSMAP, sizeof (WSF_CLASSMAP),
        (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
-        add_property_zval(this_ptr, WS_CLASSMAP, *tmp);
+        add_property_zval(this_ptr, WSF_CLASSMAP, *tmp);
     }
 
-    if (zend_hash_find (ht, WS_HTTP_AUTH_USERNAME, sizeof (WS_HTTP_AUTH_USERNAME),
+    if (zend_hash_find (ht, WSF_HTTP_AUTH_USERNAME, sizeof (WSF_HTTP_AUTH_USERNAME),
        (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-        add_property_zval(this_ptr, WS_HTTP_AUTH_USERNAME, *tmp);
+        add_property_zval(this_ptr, WSF_HTTP_AUTH_USERNAME, *tmp);
     }
-    if (zend_hash_find (ht, WS_HTTP_AUTH_PASSWORD, sizeof (WS_HTTP_AUTH_PASSWORD),
+    if (zend_hash_find (ht, WSF_HTTP_AUTH_PASSWORD, sizeof (WSF_HTTP_AUTH_PASSWORD),
        (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-        add_property_zval(this_ptr, WS_HTTP_AUTH_PASSWORD, *tmp);
+        add_property_zval(this_ptr, WSF_HTTP_AUTH_PASSWORD, *tmp);
     }
-    if (zend_hash_find (ht, WS_HTTP_AUTH_TYPE, sizeof (WS_HTTP_AUTH_TYPE),
+    if (zend_hash_find (ht, WSF_HTTP_AUTH_TYPE, sizeof (WSF_HTTP_AUTH_TYPE),
        (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-        add_property_zval(this_ptr, WS_HTTP_AUTH_TYPE, *tmp);
+        add_property_zval(this_ptr, WSF_HTTP_AUTH_TYPE, *tmp);
     }
 
-    if (zend_hash_find (ht, WS_PROXY_AUTH_USERNAME, sizeof (WS_PROXY_AUTH_USERNAME),
+    if (zend_hash_find (ht, WSF_PROXY_AUTH_USERNAME, sizeof (WSF_PROXY_AUTH_USERNAME),
        (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-        add_property_zval(this_ptr, WS_PROXY_AUTH_USERNAME, *tmp);
+        add_property_zval(this_ptr, WSF_PROXY_AUTH_USERNAME, *tmp);
     }
-    if (zend_hash_find (ht, WS_PROXY_AUTH_PASSWORD, sizeof (WS_PROXY_AUTH_PASSWORD),
+    if (zend_hash_find (ht, WSF_PROXY_AUTH_PASSWORD, sizeof (WSF_PROXY_AUTH_PASSWORD),
        (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-        add_property_zval(this_ptr, WS_PROXY_AUTH_PASSWORD, *tmp);
+        add_property_zval(this_ptr, WSF_PROXY_AUTH_PASSWORD, *tmp);
     }
-    if (zend_hash_find (ht, WS_PROXY_AUTH_TYPE, sizeof (WS_PROXY_AUTH_TYPE),
+    if (zend_hash_find (ht, WSF_PROXY_AUTH_TYPE, sizeof (WSF_PROXY_AUTH_TYPE),
        (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-        add_property_zval(this_ptr, WS_PROXY_AUTH_TYPE, *tmp);
+        add_property_zval(this_ptr, WSF_PROXY_AUTH_TYPE, *tmp);
     }
 }
 
@@ -728,7 +728,7 @@ wsf_client_set_headers (
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
             "[wsf_client] setting header node ");
 
-        if (zend_hash_find (ht, WS_INPUT_HEADERS, sizeof (WS_INPUT_HEADERS),
+        if (zend_hash_find (ht, WSF_INPUT_HEADERS, sizeof (WSF_INPUT_HEADERS),
                 (void **) &tmp) == SUCCESS) {
             if (Z_TYPE_PP (tmp) == IS_ARRAY) {
                 HashPosition pos;
@@ -866,13 +866,13 @@ wsf_client_set_endpoint_and_soap_action (
 {
     zval **msg_tmp = NULL;
 
-    if (msg_ht && zend_hash_find (msg_ht, WS_TO, sizeof (WS_TO),
+    if (msg_ht && zend_hash_find (msg_ht, WSF_TO, sizeof (WSF_TO),
             (void **) &msg_tmp) == SUCCESS) {
         axis2_endpoint_ref_t *to_epr = NULL;
         char *to = Z_STRVAL_PP (msg_tmp);
         to_epr = axis2_endpoint_ref_create (env, to);
         axis2_options_set_to (client_options, env, to_epr);
-    } else if (client_ht && zend_hash_find (client_ht, WS_TO, sizeof (WS_TO),
+    } else if (client_ht && zend_hash_find (client_ht, WSF_TO, sizeof (WSF_TO),
             (void **) &msg_tmp) == SUCCESS) {
         axis2_endpoint_ref_t *to_epr = NULL;
         char *to = Z_STRVAL_PP (msg_tmp);
@@ -903,7 +903,7 @@ wsf_client_set_options (
     int soap_version = AXIOM_SOAP12;
 
     if (client_ht) {
-        if (zend_hash_find (client_ht, WS_USE_SOAP, sizeof (WS_USE_SOAP),
+        if (zend_hash_find (client_ht, WSF_USE_SOAP, sizeof (WSF_USE_SOAP),
                 (void **) &tmp) == SUCCESS) {
 
             if (Z_TYPE_PP (tmp) == IS_STRING) {
@@ -941,10 +941,10 @@ wsf_client_set_options (
         if (use_soap) {
             if (soap_version == AXIOM_SOAP11) {
                 WSF_GLOBAL (soap_version) = AXIOM_SOAP11;
-                WSF_GLOBAL (soap_uri) = WS_SOAP_1_1_NAMESPACE_URI;
+                WSF_GLOBAL (soap_uri) = WSF_SOAP_1_1_NAMESPACE_URI;
             } else if (soap_version == AXIOM_SOAP12) {
                 WSF_GLOBAL (soap_version) = AXIOM_SOAP12;
-				WSF_GLOBAL (soap_uri) = WS_SOAP_1_2_NAMESPACE_URI;
+				WSF_GLOBAL (soap_uri) = WSF_SOAP_1_2_NAMESPACE_URI;
             }
 
             axis2_options_set_soap_version (client_options, env,
@@ -971,12 +971,11 @@ wsf_client_set_options (
         }
 
         /** default header type is POST, so only setting the HTTP_METHOD if GET */
-        if (zend_hash_find (client_ht, WS_HTTP_METHOD,
-                sizeof (WS_HTTP_METHOD), (void **) &tmp) == SUCCESS) {
+        if (zend_hash_find (client_ht, WSF_HTTP_METHOD,
+                sizeof (WSF_HTTP_METHOD), (void **) &tmp) == SUCCESS) {
             char *value = Z_STRVAL_PP (tmp);
 			axutil_property_t *http_method_property = NULL;
-            if (value && (strcmp (value, "GET") == 0
-                    || strcmp (value, "get") == 0)) {
+            if (value && (strcasecmp (value, AXIS2_HTTP_GET) == 0)) {
 				
 				http_method_property =	axutil_property_create (env);
 
@@ -986,11 +985,9 @@ wsf_client_set_options (
                 axis2_options_set_property (client_options, env,
                     AXIS2_HTTP_METHOD, http_method_property);
 
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_client] Setting HTTPMethod GET property");
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,  "[wsf_client] Setting HTTPMethod GET property");
 
-            }else if (value && (strcmp (value, "PUT") == 0
-                    || strcmp (value, "put") == 0)) {
+            }else if (value && (strcasecmp(value, AXIS2_HTTP_PUT) == 0)) {
 				
 				http_method_property =	axutil_property_create (env);
 
@@ -1003,8 +1000,7 @@ wsf_client_set_options (
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                     "[wsf_client] Setting HTTPMethod PUT property");
 
-            }else if (value && (strcmp (value, "HEAD") == 0
-                    || strcmp (value, "head") == 0)) {
+            }else if (value && (strcasecmp(value, AXIS2_HTTP_HEAD) == 0)) {
 				
 				http_method_property =	axutil_property_create (env);
 
@@ -1016,8 +1012,7 @@ wsf_client_set_options (
 
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                     "[wsf_client] Setting HTTPMethod HEAD property");
-            }else if (value && (strcmp (value, "DELETE") == 0
-                    || strcmp (value, "delete") == 0)) {
+            }else if (value && (strcasecmp(value, AXIS2_HTTP_DELETE) == 0)) {
 				
 				http_method_property =	axutil_property_create (env);
 
@@ -1057,27 +1052,27 @@ wsf_client_set_http_auth_info(
     
     zval **tmp = NULL;
 
-    if (zend_hash_find (client_ht, WS_HTTP_AUTH_USERNAME, sizeof (WS_HTTP_AUTH_USERNAME),
+    if (zend_hash_find (client_ht, WSF_HTTP_AUTH_USERNAME, sizeof (WSF_HTTP_AUTH_USERNAME),
                 (void **) &tmp) == SUCCESS) {
         username = Z_STRVAL_PP (tmp);
     }
-    if (zend_hash_find (client_ht, WS_HTTP_AUTH_PASSWORD, sizeof (WS_HTTP_AUTH_PASSWORD),
+    if (zend_hash_find (client_ht, WSF_HTTP_AUTH_PASSWORD, sizeof (WSF_HTTP_AUTH_PASSWORD),
                 (void **) &tmp) == SUCCESS) {
         password = Z_STRVAL_PP (tmp);
     }
-    if (zend_hash_find (client_ht, WS_HTTP_AUTH_TYPE, sizeof (WS_HTTP_AUTH_TYPE),
+    if (zend_hash_find (client_ht, WSF_HTTP_AUTH_TYPE, sizeof (WSF_HTTP_AUTH_TYPE),
                 (void **) &tmp) == SUCCESS) {
         auth_type = Z_STRVAL_PP (tmp);
     }
 
     if(axis2_options_set_http_auth_info(options, env,
                  username, password, auth_type) == AXIS2_SUCCESS){
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_client] success in setting http authentication information");
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, 
+			WSF_PHP_LOG_PREFIX "success in setting http authentication information");
     }
     else {
         AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI,
-            "[wsf_client] failed in setting http authentication information");
+            WSF_PHP_LOG_PREFIX "failed in setting http authentication information");
     }
 }
 
@@ -1094,15 +1089,15 @@ wsf_client_set_proxy_auth_info(
     
     zval **tmp = NULL;
 
-    if (zend_hash_find (client_ht, WS_PROXY_AUTH_USERNAME, sizeof (WS_PROXY_AUTH_USERNAME),
+    if (zend_hash_find (client_ht, WSF_PROXY_AUTH_USERNAME, sizeof (WSF_PROXY_AUTH_USERNAME),
                 (void **) &tmp) == SUCCESS) {
         username = Z_STRVAL_PP (tmp);
     }
-    if (zend_hash_find (client_ht, WS_PROXY_AUTH_PASSWORD, sizeof (WS_PROXY_AUTH_PASSWORD),
+    if (zend_hash_find (client_ht, WSF_PROXY_AUTH_PASSWORD, sizeof (WSF_PROXY_AUTH_PASSWORD),
                 (void **) &tmp) == SUCCESS) {
         password = Z_STRVAL_PP (tmp);
     }
-    if (zend_hash_find (client_ht, WS_PROXY_AUTH_TYPE, sizeof (WS_PROXY_AUTH_TYPE),
+    if (zend_hash_find (client_ht, WSF_PROXY_AUTH_TYPE, sizeof (WSF_PROXY_AUTH_TYPE),
                 (void **) &tmp) == SUCCESS) {
         auth_type = Z_STRVAL_PP (tmp);
     }
@@ -1128,7 +1123,7 @@ wsf_client_do_request (
     int is_oneway TSRMLS_DC)
 {
     int status = AXIS2_SUCCESS;
-    int input_type = WS_USING_INCORRECT_INPUT;
+    int input_type = WSF_USING_INCORRECT_INPUT;
 
     axiom_node_t *request_payload = NULL;
     axiom_node_t *response_payload = NULL;
@@ -1143,8 +1138,8 @@ wsf_client_do_request (
     /** RM OPTION VARIABLES */
     int ws_client_will_continue_sequence = AXIS2_FALSE;
     int engage_rm = AXIS2_FALSE;
-    int rm_spec_version = WS_RM_VERSION_1_0;
-    char *rm_spec_version_str = WS_RM_VERSION_1_0_STR;
+    int rm_spec_version = WSF_RM_VERSION_1_0;
+    char *rm_spec_version_str = WSF_RM_VERSION_1_0_STR;
     int is_addressing_engaged = AXIS2_FALSE;
     int is_addressing_action_present = AXIS2_FALSE;
     int is_rm_engaged = AXIS2_FALSE;
@@ -1167,15 +1162,15 @@ wsf_client_do_request (
         instanceof_function (Z_OBJCE_P (param),
             ws_message_class_entry TSRMLS_CC)) {
         zval **tmp_val = NULL;
-        if (zend_hash_find (Z_OBJPROP_P (param), WS_MSG_PAYLOAD_STR,
-                    sizeof (WS_MSG_PAYLOAD_STR),
+        if (zend_hash_find (Z_OBJPROP_P (param), WSF_MSG_PAYLOAD_STR,
+                    sizeof (WSF_MSG_PAYLOAD_STR),
 					(void **) &tmp_val) == SUCCESS) {
             reader = wsf_client_get_reader_from_zval (tmp_val, env TSRMLS_CC);
 		}else {
 			return;
 		}
 		msg_ht = Z_OBJPROP_P(param);
-        input_type = WS_USING_MSG;
+        input_type = WSF_USING_MSG;
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
             "[wsf_client] do_request Input type is WSMessage ");
     } else {
@@ -1183,7 +1178,7 @@ wsf_client_do_request (
 
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
             "[wsf_client] Input  is not WSMessage ");
-        input_type = WS_USING_STRING;
+        input_type = WSF_USING_STRING;
     }
 
     /** convert payload to an axiom node */
@@ -1223,7 +1218,7 @@ wsf_client_do_request (
     is_addressing_engaged = wsf_client_set_addr_options (client_ht, msg_ht, env,
             client_options, svc_client TSRMLS_CC);
 	
-	if (input_type == WS_USING_MSG) { 
+	if (input_type == WSF_USING_MSG) { 
         /** add set headers function here */
         wsf_client_set_headers (env, svc_client, param TSRMLS_CC);
 		/** handle outgoing attachments */
@@ -1248,24 +1243,23 @@ wsf_client_do_request (
         rm_version = wsf_client_get_rm_version (client_ht TSRMLS_CC);
 
         if (rm_version > 0) {
-            if (rm_version == WS_RM_VERSION_1_0) {
-                rm_spec_version = WS_RM_VERSION_1_0;
-                rm_spec_version_str = WS_RM_VERSION_1_0_STR;
+            if (rm_version == WSF_RM_VERSION_1_0) {
+                rm_spec_version = WSF_RM_VERSION_1_0;
+                rm_spec_version_str = WSF_RM_VERSION_1_0_STR;
+
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_client] rm spec version 1.0");
-            } else if (rm_version == WS_RM_VERSION_1_1) {
-                rm_spec_version = WS_RM_VERSION_1_1;
-                rm_spec_version_str = WS_RM_VERSION_1_1_STR;
+                    WSF_PHP_LOG_PREFIX "rm spec version 1.0");
+            } else if (rm_version == WSF_RM_VERSION_1_1) {
+                rm_spec_version = WSF_RM_VERSION_1_1;
+                rm_spec_version_str = WSF_RM_VERSION_1_1_STR;
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_client] rm spec version 1.1");
+                    WSF_PHP_LOG_PREFIX "rm spec version 1.1");
             }
 
             if (rm_version > 0) {
-                rm_prop =
-                    axutil_property_create_with_args (env, 0, 0, 0,
-                    rm_spec_version_str);
-                axis2_options_set_property (client_options, env,
-                    WS_SANDESHA2_CLIENT_RM_SPEC_VERSION, rm_prop);
+                rm_prop = axutil_property_create_with_args (env, 0, 0, 0, rm_spec_version_str);
+                axis2_options_set_property (client_options, env, 
+					WSF_SANDESHA2_CLIENT_RM_SPEC_VERSION, rm_prop);
                 engage_rm = AXIS2_TRUE;
             }
 		}
@@ -1277,37 +1271,40 @@ wsf_client_do_request (
 			then engage addressing
 		If Addressing is engaged engage RM
 	*/
-        if ((is_addressing_engaged ||
-                (!is_addressing_engaged && is_addressing_action_present))
-            && engage_rm) {
-            if (!is_addressing_engaged) {
-				if(msg_ht){
+        if ((is_addressing_engaged || (!is_addressing_engaged && is_addressing_action_present))
+            && engage_rm) 
+		{
+            if (!is_addressing_engaged) 
+			{
+				if(msg_ht)
+				{
 					wsf_client_set_addressing_options_to_options(env, client_options, msg_ht TSRMLS_CC);
-				}else{
+				}else
+				{
 					wsf_client_set_addressing_options_to_options(env, client_options, client_ht TSRMLS_CC);
 				}
-                axis2_svc_client_engage_module (svc_client, env,
-                    "addressing");
+
+                axis2_svc_client_engage_module (svc_client, env, WSF_MODULE_ADDRESSING);
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_client] useWSA not specified, addressing engaged since rm is engaed");
+                    WSF_PHP_LOG_PREFIX "useWSA not specified, addressing engaged since rm is engaged");
             }
-            axis2_svc_client_engage_module (svc_client, env, "sandesha2");
+            axis2_svc_client_engage_module (svc_client, env, WSF_MODULE_RM);
             is_rm_engaged = AXIS2_TRUE;
 
             /** rm is engaged , process other rm params */
-            if (zend_hash_find (client_ht, WS_SEQUENCE_EXPIRY_TIME,
-                    sizeof (WS_SEQUENCE_EXPIRY_TIME),
+            if (zend_hash_find (client_ht, WSF_SEQUENCE_EXPIRY_TIME,
+                    sizeof (WSF_SEQUENCE_EXPIRY_TIME),
                     (void **) &client_tmp) == SUCCESS) {
                 char timeout_value[100];
                 sprintf (timeout_value, "%ld", Z_LVAL_PP (client_tmp));
-                wsf_client_set_module_param_option (env, svc_client,
-                    "sandesha2", "InactivityTimeout", timeout_value);
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                wsf_client_set_module_param_option (env, svc_client, "sandesha2", 
+					"InactivityTimeout", timeout_value);
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, 
                     "[wsf_client] sequenceExpiryTime is %d",
                     Z_LVAL_PP (client_tmp));
             }
-            if (zend_hash_find (client_ht, WS_SEQUENCE_KEY,
-                    sizeof (WS_SEQUENCE_KEY),
+            if (zend_hash_find (client_ht, WSF_SEQUENCE_KEY,
+                    sizeof (WSF_SEQUENCE_KEY),
                     (void **) &client_tmp) == SUCCESS) {
 
                 if (Z_TYPE_PP (client_tmp) == IS_STRING) {
@@ -1316,14 +1313,14 @@ wsf_client_do_request (
 				seq_property =  axutil_property_create_with_args (env,
                         AXIS2_SCOPE_REQUEST, 1, NULL, sequence_key);
 				axis2_options_set_property(client_options, env, 
-				WS_SANDESHA2_CLIENT_SEQ_KEY, seq_property);
+				WSF_SANDESHA2_CLIENT_SEQ_KEY, seq_property);
 					    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
 						    "[wsf_client] sequence key is %d",
 							Z_STRVAL_PP (client_tmp));
                 }
             }
-            if (zend_hash_find (client_ht, WS_WILL_CONTINUE_SEQUENCE,
-                    sizeof (WS_WILL_CONTINUE_SEQUENCE),
+            if (zend_hash_find (client_ht, WSF_WILL_CONTINUE_SEQUENCE,
+                    sizeof (WSF_WILL_CONTINUE_SEQUENCE),
                     (void **) &client_tmp) == SUCCESS) {
                 if (Z_TYPE_PP (client_tmp) && Z_BVAL_PP (client_tmp) == 1) {
                     ws_client_will_continue_sequence = 1;
@@ -1334,17 +1331,17 @@ wsf_client_do_request (
         }
         if (is_rm_engaged) {
             if (ws_client_will_continue_sequence
-                && input_type == WS_USING_MSG) {
+                && input_type == WSF_USING_MSG) {
                 /** if input_type is ws_message and continueSequence is true on client, we should look for 
 					false value in ws_message to end the sequence */
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                         "[wsf_client] willContinueSeq TRUE, Input type Message");
 
-                if (zend_hash_find (msg_ht, WS_LAST_MESSAGE,
-                        sizeof (WS_LAST_MESSAGE),
+                if (zend_hash_find (msg_ht, WSF_LAST_MESSAGE,
+                        sizeof (WSF_LAST_MESSAGE),
                         (void **) &msg_tmp) == SUCCESS && Z_BVAL_PP (msg_tmp) == 1){
                     ws_client_will_continue_sequence = 0;
-                    if (rm_spec_version == WS_RM_VERSION_1_0) {
+                    if (rm_spec_version == WSF_RM_VERSION_1_0) {
                         axutil_property_t *last_msg_prop =
                             axutil_property_create_with_args (env,
                             AXIS2_SCOPE_APPLICATION, 0, NULL,
@@ -1360,7 +1357,7 @@ wsf_client_do_request (
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                     "[wsf_client] setting TreminateSequence property");
 
-                if (rm_spec_version == WS_RM_VERSION_1_0) {
+                if (rm_spec_version == WSF_RM_VERSION_1_0) {
                     axutil_property_t *last_msg_prop =
                         axutil_property_create_with_args (env,
                         0, 0, 0, AXIS2_VALUE_TRUE);
@@ -1393,8 +1390,8 @@ wsf_client_do_request (
                     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                         " [wsf-log] Sandesha2OfferedSequenceId is set as property");
                 }
-                if (zend_hash_find (client_ht, WS_RM_RESPONSE_TIMEOUT,
-                        sizeof (WS_RM_RESPONSE_TIMEOUT),
+                if (zend_hash_find (client_ht, WSF_RM_RESPONSE_TIMEOUT,
+                        sizeof (WSF_RM_RESPONSE_TIMEOUT),
                         (void **) &client_tmp) == SUCCESS) {
                     if (Z_TYPE_PP (client_tmp) == IS_STRING) {
                         timeout = Z_STRVAL_PP (client_tmp);
@@ -1406,7 +1403,7 @@ wsf_client_do_request (
                     }
                 } else {
                     /** default timeout value is 5 */
-                    timeout = WS_RM_DEFAULT_RESPONSE_TIMEOUT;
+                    timeout = WSF_RM_DEFAULT_RESPONSE_TIMEOUT;
                 }
 
                 timeout_property =
@@ -1516,7 +1513,7 @@ wsf_client_do_request (
             
             res_text = wsf_util_serialize_om (env, response_payload);
             
-            add_property_stringl (rmsg, WS_MSG_PAYLOAD_STR, res_text,
+            add_property_stringl (rmsg, WSF_MSG_PAYLOAD_STR, res_text,
                 strlen (res_text), 1);
 			
             ZVAL_ZVAL (return_value, rmsg, 1, 0);
@@ -1553,15 +1550,15 @@ wsf_client_enable_ssl (
     if (!ht)
         return;
 
-    if (zend_hash_find (ht, WS_SERVER_CERT, sizeof (WS_SERVER_CERT),
+    if (zend_hash_find (ht, WSF_SERVER_CERT, sizeof (WSF_SERVER_CERT),
             (void **) &tmp) == SUCCESS) {
         ssl_server_key_filename = Z_STRVAL_PP (tmp);
     }
-    if (zend_hash_find (ht, WS_CLIENT_CERT, sizeof (WS_CLIENT_CERT),
+    if (zend_hash_find (ht, WSF_CLIENT_CERT, sizeof (WSF_CLIENT_CERT),
             (void **) &tmp) == SUCCESS) {
         ssl_client_key_filename = Z_STRVAL_PP (tmp);
     }
-    if (zend_hash_find (ht, WS_PASSPHRASE, sizeof (WS_PASSPHRASE),
+    if (zend_hash_find (ht, WSF_PASSPHRASE, sizeof (WSF_PASSPHRASE),
             (void **) &tmp) == SUCCESS) {
         passphrase = Z_STRVAL_PP (tmp);
     }
@@ -1602,11 +1599,11 @@ wsf_client_enable_proxy (
     if (!ht)
         return;
 
-    if (zend_hash_find (ht, WS_PROXY_HOST, sizeof (WS_PROXY_HOST),
+    if (zend_hash_find (ht, WSF_PROXY_HOST, sizeof (WSF_PROXY_HOST),
             (void **) &tmp) == SUCCESS) {
         proxy_host = Z_STRVAL_PP (tmp);
     }
-    if (zend_hash_find (ht, WS_PROXY_PORT, sizeof (WS_PROXY_PORT),
+    if (zend_hash_find (ht, WSF_PROXY_PORT, sizeof (WSF_PROXY_PORT),
             (void **) &tmp) == SUCCESS) {
         proxy_port = Z_STRVAL_PP (tmp);
     }

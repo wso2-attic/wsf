@@ -335,9 +335,9 @@ PHP_MINIT_FUNCTION (wsf)
     INIT_CLASS_ENTRY (ce, "WSPolicy", php_ws_policy_class_functions);
     ws_policy_class_entry = zend_register_internal_class (&ce TSRMLS_CC);
     
-    REGISTER_LONG_CONSTANT ("WS_SOAP_ROLE_NEXT", WS_SOAP_ROLE_NEXT, CONST_CS | CONST_PERSISTENT);
-    REGISTER_LONG_CONSTANT ("WS_SOAP_ROLE_NONE", WS_SOAP_ROLE_NONE, CONST_CS | CONST_PERSISTENT);
-    REGISTER_LONG_CONSTANT ("WS_SOAP_ROLE_ULTIMATE_RECEIVER", WS_SOAP_ROLE_ULTIMATE_RECEIVER, CONST_CS | CONST_PERSISTENT);
+    REGISTER_LONG_CONSTANT ("WS_SOAP_ROLE_NEXT", WSF_SOAP_ROLE_NEXT, CONST_CS | CONST_PERSISTENT);
+    REGISTER_LONG_CONSTANT ("WS_SOAP_ROLE_NONE", WSF_SOAP_ROLE_NONE, CONST_CS | CONST_PERSISTENT);
+    REGISTER_LONG_CONSTANT ("WS_SOAP_ROLE_ULTIMATE_RECEIVER", WSF_SOAP_ROLE_ULTIMATE_RECEIVER, CONST_CS | CONST_PERSISTENT);
 
     if (WSF_GLOBAL (home)) {
         home_folder = WSF_GLOBAL (home);
@@ -437,7 +437,7 @@ php_ws_object_new_ex (
     intern = emalloc (sizeof (ws_object));
     memset (intern, 0, sizeof (ws_object));
     intern->std.ce = class_type;
-    intern->obj_type = WS_NONE;
+    intern->obj_type = WSF_NONE;
     *obj = intern;
     
 	ALLOC_HASHTABLE(intern->std.properties);
@@ -465,7 +465,7 @@ ws_objects_free_storage (void *object TSRMLS_DC)
 		zend_hash_destroy(intern->std.properties);
 		FREE_HASHTABLE(intern->std.properties);
 	}
-    if (intern->obj_type == WS_SVC_CLIENT) {
+    if (intern->obj_type == WSF_SVC_CLIENT) {
         axis2_svc_client_t * svc_client = NULL;
         svc_client = (axis2_svc_client_t *) intern->ptr;
 		
@@ -474,7 +474,7 @@ ws_objects_free_storage (void *object TSRMLS_DC)
 				axis2_svc_client_free (svc_client, env);
 			}
         }
-    }else if (intern->obj_type == WS_SVC) {
+    }else if (intern->obj_type == WSF_SVC) {
         wsf_svc_info_t * svc_info = NULL;
         svc_info = (wsf_svc_info_t *) intern->ptr;
         if (svc_info) {
@@ -519,7 +519,7 @@ PHP_METHOD (ws_message, __construct)
     WSF_OBJ_CHECK (env);
     
 	if (Z_TYPE_P (payload) == IS_STRING) {
-        add_property_stringl (object, WS_MSG_PAYLOAD_STR, Z_STRVAL_P (payload), Z_STRLEN_P (payload), 1);
+        add_property_stringl (object, WSF_MSG_PAYLOAD_STR, Z_STRVAL_P (payload), Z_STRLEN_P (payload), 1);
     }else {
         return;
     }
@@ -530,51 +530,51 @@ PHP_METHOD (ws_message, __construct)
             return;
         }
 	
-		if (zend_hash_find (ht, WS_ATTACHMENTS, sizeof (WS_ATTACHMENTS),
+		if (zend_hash_find (ht, WSF_ATTACHMENTS, sizeof (WSF_ATTACHMENTS),
                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
-					add_property_zval (object, WS_ATTACHMENTS, *tmp);
+					add_property_zval (object, WSF_ATTACHMENTS, *tmp);
         }
-		if(zend_hash_find(ht, WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE, sizeof(WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE),
+		if(zend_hash_find(ht, WSF_DEFAULT_ATTACHEMENT_CONTENT_TYPE, sizeof(WSF_DEFAULT_ATTACHEMENT_CONTENT_TYPE),
 			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
-				add_property_stringl(object, WS_DEFAULT_ATTACHEMENT_CONTENT_TYPE, 
+				add_property_stringl(object, WSF_DEFAULT_ATTACHEMENT_CONTENT_TYPE, 
 					Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp) ,1);
 		}
 
-		if(zend_hash_find(ht, WS_LAST_MESSAGE, sizeof(WS_LAST_MESSAGE),
+		if(zend_hash_find(ht, WSF_LAST_MESSAGE, sizeof(WSF_LAST_MESSAGE),
 			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
-				add_property_bool(object, WS_LAST_MESSAGE, Z_BVAL_PP(tmp));
+				add_property_bool(object, WSF_LAST_MESSAGE, Z_BVAL_PP(tmp));
 		}
 
-		if(zend_hash_find(ht, WS_TO, sizeof(WS_TO), 
+		if(zend_hash_find(ht, WSF_TO, sizeof(WSF_TO), 
 			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
-				add_property_stringl(object, WS_TO, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+				add_property_stringl(object, WSF_TO, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
 		}
-		if(zend_hash_find(ht, WS_ACTION, sizeof(WS_ACTION), 
+		if(zend_hash_find(ht, WSF_ACTION, sizeof(WSF_ACTION), 
 			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
-				add_property_stringl(object, WS_ACTION, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);	
+				add_property_stringl(object, WSF_ACTION, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);	
 		}
-		if(zend_hash_find(ht, WS_REPLY_TO, sizeof(WS_REPLY_TO), 
+		if(zend_hash_find(ht, WSF_REPLY_TO, sizeof(WSF_REPLY_TO), 
 			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
-				add_property_stringl(object, WS_REPLY_TO, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+				add_property_stringl(object, WSF_REPLY_TO, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
 		}
-		if(zend_hash_find(ht, WS_FAULT_TO, sizeof(WS_FAULT_TO), 
+		if(zend_hash_find(ht, WSF_FAULT_TO, sizeof(WSF_FAULT_TO), 
 			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
-				add_property_stringl(object, WS_FAULT_TO, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+				add_property_stringl(object, WSF_FAULT_TO, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
 		}
-		if(zend_hash_find(ht, WS_FROM, sizeof(WS_FROM), 
+		if(zend_hash_find(ht, WSF_FROM, sizeof(WSF_FROM), 
 			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
-				add_property_stringl(object, WS_FROM, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+				add_property_stringl(object, WSF_FROM, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
 		}
-		if(zend_hash_find(ht, WS_RESPONSE_CONTENT_TYPE, sizeof(WS_RESPONSE_CONTENT_TYPE),
+		if(zend_hash_find(ht, WSF_RESPONSE_CONTENT_TYPE, sizeof(WSF_RESPONSE_CONTENT_TYPE),
 			(void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
 				add_property_stringl(object, 
-					WS_RESPONSE_CONTENT_TYPE, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp),1);
+					WSF_RESPONSE_CONTENT_TYPE, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp),1);
 		
 		}
-        if (zend_hash_find (ht, WS_INPUT_HEADERS, sizeof (WS_INPUT_HEADERS),
+        if (zend_hash_find (ht, WSF_INPUT_HEADERS, sizeof (WSF_INPUT_HEADERS),
             (void **) &tmp) == SUCCESS) {
 				if (Z_TYPE_PP (tmp) == IS_ARRAY) {
-					add_property_zval (object, WS_INPUT_HEADERS, *tmp);
+					add_property_zval (object, WSF_INPUT_HEADERS, *tmp);
 				}
         }
     }
@@ -630,7 +630,7 @@ PHP_METHOD (ws_client, __construct)
     }
     
     intern->ptr = svc_client;
-    intern->obj_type = WS_SVC_CLIENT;
+    intern->obj_type = WSF_SVC_CLIENT;
     
     if (NULL != options) {
         HashTable * ht = Z_ARRVAL_P (options);
@@ -799,10 +799,10 @@ PHP_METHOD (ws_client, get_proxy)
     MAKE_STD_ZVAL (client_proxy_zval);
     object_init_ex (client_proxy_zval, ws_client_proxy_class_entry);
     if (service) {
-        add_property_string (client_proxy_zval, WS_SERVICE_NAME, service, 1);
+        add_property_string (client_proxy_zval, WSF_SERVICE_NAME, service, 1);
     }
     if (port) {
-        add_property_string (client_proxy_zval, WS_PORT_NAME, port, 1);
+        add_property_string (client_proxy_zval, WSF_PORT_NAME, port, 1);
     }
     
     add_property_zval (client_proxy_zval, "wsclient", this_ptr);
@@ -848,7 +848,7 @@ PHP_METHOD (ws_service, __construct)
     
     intern->ptr = svc_info;
     
-    intern->obj_type = WS_SVC;
+    intern->obj_type = WSF_SVC;
     
     svc_info->php_worker = worker;
 
@@ -856,27 +856,27 @@ PHP_METHOD (ws_service, __construct)
         zval ** tmp = NULL;
         ht_options = Z_ARRVAL_P (options);
         if (ht_options) {
-            if (zend_hash_find (ht_options, WS_ACTIONS , sizeof (WS_ACTIONS), 
+            if (zend_hash_find (ht_options, WSF_ACTIONS , sizeof (WSF_ACTIONS), 
                 (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
 					ht_actions = Z_ARRVAL_PP (tmp);
 					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
 						"[wsf_service] setting actions ");
             }
-            if (zend_hash_find (ht_options, WS_OPERATIONS, sizeof (WS_OPERATIONS), 
+            if (zend_hash_find (ht_options, WSF_OPERATIONS, sizeof (WSF_OPERATIONS), 
 				(void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
 
 					ht_ops_to_funcs = Z_ARRVAL_PP (tmp);
 					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
 						"[wsf_service] setting operations");
 			}
-            if (zend_hash_find (ht_options, WS_OP_MEP, sizeof (WS_OP_MEP), 
+            if (zend_hash_find (ht_options, WSF_OP_MEP, sizeof (WSF_OP_MEP), 
                (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
 
 					ht_ops_to_mep = Z_ARRVAL_PP (tmp);
 					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
 						"[wsf_service] setting message exchange pattern");
             }
-            if (zend_hash_find (ht_options, WS_OP_PARAMS, sizeof (WS_OP_PARAMS),
+            if (zend_hash_find (ht_options, WSF_OP_PARAMS, sizeof (WSF_OP_PARAMS),
                (void **) & tmp) == SUCCESS  && Z_TYPE_PP (tmp) == IS_ARRAY) {
 
 	                ht_opParams = Z_ARRVAL_PP (tmp);
@@ -884,25 +884,25 @@ PHP_METHOD (ws_service, __construct)
 					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
 						"[wsf_service] setting message operation parameters");
 			}
-			if(zend_hash_find(ht_options, WS_OP_TO_URL_MAP, sizeof(WS_OP_TO_URL_MAP),
+			if(zend_hash_find(ht_options, WSF_OP_TO_URL_MAP, sizeof(WSF_OP_TO_URL_MAP),
 				(void **)&tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY){
 					ht_rest_map = Z_ARRVAL_PP(tmp);
 			}
             
-            if (zend_hash_find (ht_options, WS_WSDL, sizeof (WS_WSDL),
+            if (zend_hash_find (ht_options, WSF_WSDL, sizeof (WSF_WSDL),
                (void **) & tmp) == SUCCESS  &&Z_TYPE_PP (tmp) == IS_STRING) {
 				    svc_info->wsdl = Z_STRVAL_PP (tmp);
-                    add_property_stringl (this_ptr, WS_WSDL, Z_STRVAL_PP (tmp),
+                    add_property_stringl (this_ptr, WSF_WSDL, Z_STRVAL_PP (tmp),
                                                       Z_STRLEN_PP (tmp), 1);
             }
-            if (zend_hash_find (ht_options , WS_CLASSMAP, sizeof (WS_CLASSMAP),
+            if (zend_hash_find (ht_options , WSF_CLASSMAP, sizeof (WSF_CLASSMAP),
                    (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
-                    add_property_zval(this_ptr, WS_CLASSMAP, *tmp);
+                    add_property_zval(this_ptr, WSF_CLASSMAP, *tmp);
                     svc_info->class_map = *tmp;
                     zval_add_ref(&(svc_info->class_map));
             }
 
-            if (zend_hash_find (ht_options, WS_USE_MTOM, sizeof (WS_USE_MTOM), 
+            if (zend_hash_find (ht_options, WSF_USE_MTOM, sizeof (WSF_USE_MTOM), 
 				(void **) &tmp) == SUCCESS) {
                     if(Z_TYPE_PP (tmp) == IS_BOOL) {
                         svc_info->use_mtom = Z_BVAL_PP (tmp);
@@ -926,7 +926,7 @@ PHP_METHOD (ws_service, __construct)
             }else {
                 svc_info->use_mtom = 0;
             }
-            if (zend_hash_find (ht_options, WS_REQUEST_XOP, sizeof (WS_REQUEST_XOP), 
+            if (zend_hash_find (ht_options, WSF_REQUEST_XOP, sizeof (WSF_REQUEST_XOP), 
 				(void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_BOOL) {
                 
                     svc_info->request_xop = Z_BVAL_PP (tmp);
@@ -937,21 +937,21 @@ PHP_METHOD (ws_service, __construct)
             AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
                 "[wsf_service] request xop %d", svc_info->request_xop);
             
-            if (zend_hash_find (ht_options, WS_POLICY_NAME, sizeof (WS_POLICY_NAME), 
+            if (zend_hash_find (ht_options, WSF_POLICY_NAME, sizeof (WSF_POLICY_NAME), 
 				(void **) &tmp) == SUCCESS) {
 
 					svc_info->policy = *tmp;
 					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
 						"[wsf_service] policy object present");
             }
-            if (zend_hash_find (ht_options, WS_SECURITY_TOKEN, sizeof (WS_SECURITY_TOKEN), 
+            if (zend_hash_find (ht_options, WSF_SECURITY_TOKEN, sizeof (WSF_SECURITY_TOKEN), 
 				(void **) &tmp) == SUCCESS) {
             
 					svc_info->security_token = *tmp;
 					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
 						"[wsf_service] security token object present ");
             }
-            if (zend_hash_find (ht_options, WS_RELIABLE, sizeof (WS_RELIABLE), 
+            if (zend_hash_find (ht_options, WSF_RELIABLE, sizeof (WSF_RELIABLE), 
 				(void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_BOOL) {
                 
 					if (!svc_info->modules_to_engage){
@@ -960,28 +960,28 @@ PHP_METHOD (ws_service, __construct)
 					axutil_array_list_add (svc_info->modules_to_engage, 
 						ws_env_svr, axutil_strdup (ws_env_svr, "sandesha2"));
             }
-            if (zend_hash_find (ht_options, WS_BINDING_STYLE, sizeof (WS_BINDING_STYLE), 
+            if (zend_hash_find (ht_options, WSF_BINDING_STYLE, sizeof (WSF_BINDING_STYLE), 
 				(void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-					add_property_stringl (obj, WS_BINDING_STYLE,
+					add_property_stringl (obj, WSF_BINDING_STYLE,
 					Z_STRVAL_PP (tmp), Z_STRLEN_PP (tmp), 1);
             }
 
-            if(zend_hash_find(ht_options, WS_CLASSES, sizeof(WS_CLASSES),
+            if(zend_hash_find(ht_options, WSF_CLASSES, sizeof(WSF_CLASSES),
 				(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY){
 					ht_classes = Z_ARRVAL_PP(tmp);
 
                     svc_info->wsdl_gen_class_map = *tmp;
                     zval_add_ref(&(svc_info->wsdl_gen_class_map));
             }
-            if(zend_hash_find(ht_options, WS_SERVICE_NAME, sizeof(WS_SERVICE_NAME),
+            if(zend_hash_find(ht_options, WSF_SERVICE_NAME, sizeof(WSF_SERVICE_NAME),
                 (void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
                  service_name = Z_STRVAL_PP(tmp);
             }
-            if(zend_hash_find(ht_options, WS_PORT_NAME, sizeof(WS_PORT_NAME),
+            if(zend_hash_find(ht_options, WSF_PORT_NAME, sizeof(WSF_PORT_NAME),
                 (void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
                  port_name = Z_STRVAL_PP(tmp);
             }
-            if(zend_hash_find(ht_options, WS_ANNOTATIONS, sizeof(WS_ANNOTATIONS),
+            if(zend_hash_find(ht_options, WSF_ANNOTATIONS, sizeof(WSF_ANNOTATIONS),
                 (void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY){
                  ht_annotations = Z_ARRVAL_PP(tmp);
 
@@ -1033,8 +1033,8 @@ PHP_METHOD (ws_service, __construct)
     
 	wsf_util_process_rest_params(ws_env_svr, svc_info, ht_rest_map TSRMLS_CC);
 
-    if(zend_hash_find(Z_OBJPROP_P(this_ptr), WS_WSDL,
-                      sizeof(WS_WSDL), (void **)&wsdl_tmp) == SUCCESS){
+    if(zend_hash_find(Z_OBJPROP_P(this_ptr), WSF_WSDL,
+                      sizeof(WSF_WSDL), (void **)&wsdl_tmp) == SUCCESS){
         wsf_wsdl_process_service(this_ptr, NULL, svc_info, ws_env_svr TSRMLS_CC);
     }
 }
@@ -1090,12 +1090,12 @@ static void generate_wsdl_for_service(zval *svc_zval,
         int args_count = 0;
 
 
-        zend_hash_find ( Z_OBJPROP_P (svc_zval), WS_WSDL_CLASSMAP, 
-                              sizeof (WS_WSDL_CLASSMAP),
+        zend_hash_find ( Z_OBJPROP_P (svc_zval), WSF_WSDL_CLASSMAP, 
+                              sizeof (WSF_WSDL_CLASSMAP),
                               (void **) &class_map);
             
 
-        if ((zend_hash_find (Z_OBJPROP_P (svc_zval), WS_WSDL, sizeof(WS_WSDL),
+        if ((zend_hash_find (Z_OBJPROP_P (svc_zval), WSF_WSDL, sizeof(WSF_WSDL),
                              (void **)&wsdl_location) == SUCCESS
              && Z_TYPE_PP (wsdl_location) == IS_STRING)) {
             zval f_get_conts, f_get_conts_ret, *param;
@@ -1176,8 +1176,8 @@ static void generate_wsdl_for_service(zval *svc_zval,
                 wsdl_version = strdup ("wsdl2.0");
             
             /** getting the correct binding style */ 
-            if ((zend_hash_find (Z_OBJPROP_P (svc_zval), WS_BINDING_STYLE,
-                                 sizeof (WS_BINDING_STYLE), (void **) &tmpval)) == SUCCESS
+            if ((zend_hash_find (Z_OBJPROP_P (svc_zval), WSF_BINDING_STYLE,
+                                 sizeof (WSF_BINDING_STYLE), (void **) &tmpval)) == SUCCESS
                 && Z_TYPE_PP (tmpval) == IS_STRING) {
                 binding_name = Z_STRVAL_PP (tmpval);
             } else {
@@ -1556,11 +1556,11 @@ PHP_METHOD (ws_fault, __toString)
 	}
 	
 	code = zend_read_property(ws_fault_class_entry, this_ptr, 
-				WS_FAULT_CODE, sizeof(WS_FAULT_CODE) -1, 1 TSRMLS_CC);
+				WSF_FAULT_CODE, sizeof(WSF_FAULT_CODE) -1, 1 TSRMLS_CC);
 	reason = zend_read_property(ws_fault_class_entry, this_ptr, 
-				WS_FAULT_REASON, sizeof(WS_FAULT_REASON) -1, 1 TSRMLS_CC);
+				WSF_FAULT_REASON, sizeof(WSF_FAULT_REASON) -1, 1 TSRMLS_CC);
 	detail = zend_read_property(ws_fault_class_entry, this_ptr,
-				WS_FAULT_DETAIL, sizeof(WS_FAULT_DETAIL) -1, 1 TSRMLS_CC);
+				WSF_FAULT_DETAIL, sizeof(WSF_FAULT_DETAIL) -1, 1 TSRMLS_CC);
 
 	if(Z_STRVAL_P(detail)){
 	length = spprintf(&fault_string, 0, "WS FAULT exception: [%s] %s %s",
@@ -1584,45 +1584,45 @@ PHP_METHOD (ws_header, __construct)
 		HashTable *ht = Z_ARRVAL_P(arg);
 		if(!ht) return;
 		
-		if(zend_hash_find(ht, WS_HEADER_NS, sizeof(WS_HEADER_NS), (void **)&tmp) == SUCCESS &&
+		if(zend_hash_find(ht, WSF_HEADER_NS, sizeof(WSF_HEADER_NS), (void **)&tmp) == SUCCESS &&
 			Z_TYPE_PP(tmp) == IS_STRING){
 				if(Z_STRLEN_PP(tmp) == 0){
 					php_error_docref (NULL TSRMLS_CC, E_ERROR, "Namespace should not be empty");
 				}
-				add_property_stringl(this_ptr, WS_HEADER_NS, Z_STRVAL_PP(tmp),
+				add_property_stringl(this_ptr, WSF_HEADER_NS, Z_STRVAL_PP(tmp),
 					Z_STRLEN_PP(tmp), 1);
 		}
-		if(zend_hash_find(ht, WS_HEADER_LOCALNAME, sizeof(WS_HEADER_LOCALNAME), (void**)&tmp) == SUCCESS
+		if(zend_hash_find(ht, WSF_HEADER_LOCALNAME, sizeof(WSF_HEADER_LOCALNAME), (void**)&tmp) == SUCCESS
 			&& Z_TYPE_PP(tmp) == IS_STRING){
 				if(Z_STRLEN_PP(tmp) == 0){
 					php_error_docref (NULL TSRMLS_CC, E_ERROR, "A Soap Header should have a non empty localname");
 				}
-				add_property_stringl(this_ptr, WS_HEADER_LOCALNAME, Z_STRVAL_PP(tmp), 
+				add_property_stringl(this_ptr, WSF_HEADER_LOCALNAME, Z_STRVAL_PP(tmp), 
 					Z_STRLEN_PP(tmp), 1);
 		}
-		if(zend_hash_find(ht, WS_HEADER_DATA, sizeof(WS_HEADER_DATA), (void**)&tmp) == SUCCESS){
+		if(zend_hash_find(ht, WSF_HEADER_DATA, sizeof(WSF_HEADER_DATA), (void**)&tmp) == SUCCESS){
 #ifndef ZEND_ENGINE_2
 				zval_add_ref (tmp);
 #endif  /*  */
-				add_property_zval (this_ptr, WS_HEADER_DATA, *tmp);
+				add_property_zval (this_ptr, WSF_HEADER_DATA, *tmp);
 		}
-		if(zend_hash_find(ht, WS_HEADER_MUST_UNDERSTAND, sizeof(WS_HEADER_MUST_UNDERSTAND),
+		if(zend_hash_find(ht, WSF_HEADER_MUST_UNDERSTAND, sizeof(WSF_HEADER_MUST_UNDERSTAND),
 			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL){
-				add_property_bool(this_ptr, WS_HEADER_MUST_UNDERSTAND, Z_BVAL_PP(tmp));
+				add_property_bool(this_ptr, WSF_HEADER_MUST_UNDERSTAND, Z_BVAL_PP(tmp));
 		}
-		if(zend_hash_find(ht, WS_HEADER_PREFIX, sizeof(WS_HEADER_PREFIX), (void **)&tmp) == SUCCESS
+		if(zend_hash_find(ht, WSF_HEADER_PREFIX, sizeof(WSF_HEADER_PREFIX), (void **)&tmp) == SUCCESS
 			&& Z_TYPE_PP(tmp) == IS_STRING){
-				add_property_string(this_ptr, WS_HEADER_PREFIX, Z_STRVAL_PP(tmp), 1);
+				add_property_string(this_ptr, WSF_HEADER_PREFIX, Z_STRVAL_PP(tmp), 1);
 		}
-		if(zend_hash_find(ht, WS_HEADER_ROLE, sizeof(WS_HEADER_ROLE), (void**)&tmp) == SUCCESS){
+		if(zend_hash_find(ht, WSF_HEADER_ROLE, sizeof(WSF_HEADER_ROLE), (void**)&tmp) == SUCCESS){
 			if (Z_TYPE_PP (tmp) == IS_LONG && 
-				(Z_LVAL_PP (tmp) == WS_SOAP_ROLE_NEXT
-				|| Z_LVAL_PP (tmp) == WS_SOAP_ROLE_NONE
-				|| Z_LVAL_PP (tmp) == WS_SOAP_ROLE_ULTIMATE_RECEIVER)) {
-				add_property_long (this_ptr, WS_HEADER_ROLE, Z_LVAL_PP (tmp));
+				(Z_LVAL_PP (tmp) == WSF_SOAP_ROLE_NEXT
+				|| Z_LVAL_PP (tmp) == WSF_SOAP_ROLE_NONE
+				|| Z_LVAL_PP (tmp) == WSF_SOAP_ROLE_ULTIMATE_RECEIVER)) {
+				add_property_long (this_ptr, WSF_HEADER_ROLE, Z_LVAL_PP (tmp));
 		 }
 		 else if (Z_TYPE_PP (tmp) == IS_STRING && Z_STRLEN_PP (tmp) > 0) {
-				add_property_stringl (this_ptr, WS_HEADER_ROLE,
+				add_property_stringl (this_ptr, WSF_HEADER_ROLE,
 					Z_STRVAL_PP (tmp), Z_STRLEN_PP (tmp), 1);
 		 }
 		 else {
@@ -1651,51 +1651,51 @@ PHP_METHOD (ws_security_token, __construct)
     WSF_GET_THIS (object);
     if (options) {
         HashTable * ht = Z_ARRVAL_P (options);
-        if (zend_hash_find (ht, WS_CUSTOM_TOKENS, sizeof (WS_CUSTOM_TOKENS),
+        if (zend_hash_find (ht, WSF_CUSTOM_TOKENS, sizeof (WSF_CUSTOM_TOKENS),
                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
-		    add_property_zval (object, WS_CUSTOM_TOKENS, *tmp);
+		    add_property_zval (object, WSF_CUSTOM_TOKENS, *tmp);
         }
-        if (zend_hash_find (ht, WS_USER, sizeof (WS_USER),
+        if (zend_hash_find (ht, WSF_USER, sizeof (WSF_USER),
                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-            add_property_stringl (object, WS_USER, Z_STRVAL_PP (tmp),
+            add_property_stringl (object, WSF_USER, Z_STRVAL_PP (tmp),
                 Z_STRLEN_PP (tmp), 1);
         }
-        if (zend_hash_find (ht, WS_CERTIFICATE, sizeof (WS_CERTIFICATE),
+        if (zend_hash_find (ht, WSF_CERTIFICATE, sizeof (WSF_CERTIFICATE),
                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-            add_property_stringl (object, WS_CERTIFICATE, Z_STRVAL_PP (tmp),
+            add_property_stringl (object, WSF_CERTIFICATE, Z_STRVAL_PP (tmp),
                 Z_STRLEN_PP (tmp), 1);
         }
-        if (zend_hash_find (ht, WS_PASSWORD_TYPE, sizeof (WS_PASSWORD_TYPE),
+        if (zend_hash_find (ht, WSF_PASSWORD_TYPE, sizeof (WSF_PASSWORD_TYPE),
                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-            add_property_stringl (object, WS_PASSWORD_TYPE,
+            add_property_stringl (object, WSF_PASSWORD_TYPE,
                 Z_STRVAL_PP (tmp), Z_STRLEN_PP (tmp), 1);
         }
-        if (zend_hash_find (ht, WS_PASSWORD, sizeof (WS_PASSWORD),
+        if (zend_hash_find (ht, WSF_PASSWORD, sizeof (WSF_PASSWORD),
                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-            add_property_string (object, WS_PASSWORD, Z_STRVAL_PP (tmp), 1);
+            add_property_string (object, WSF_PASSWORD, Z_STRVAL_PP (tmp), 1);
         }
-        if (zend_hash_find (ht, WS_PRIVATE_KEY, sizeof (WS_PRIVATE_KEY),
+        if (zend_hash_find (ht, WSF_PRIVATE_KEY, sizeof (WSF_PRIVATE_KEY),
                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-            add_property_string (object, WS_PRIVATE_KEY, Z_STRVAL_PP (tmp), 1);
+            add_property_string (object, WSF_PRIVATE_KEY, Z_STRVAL_PP (tmp), 1);
         }
-        if (zend_hash_find (ht, WS_CERTIFICATE, sizeof (WS_CERTIFICATE),
+        if (zend_hash_find (ht, WSF_CERTIFICATE, sizeof (WSF_CERTIFICATE),
                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-            add_property_string (object, WS_CERTIFICATE, Z_STRVAL_PP (tmp), 1);
+            add_property_string (object, WSF_CERTIFICATE, Z_STRVAL_PP (tmp), 1);
         }
-        if (zend_hash_find (ht, WS_RECEIVER_CERTIFICATE,
-                sizeof (WS_RECEIVER_CERTIFICATE), (void **) &tmp) == SUCCESS
+        if (zend_hash_find (ht, WSF_RECEIVER_CERTIFICATE,
+                sizeof (WSF_RECEIVER_CERTIFICATE), (void **) &tmp) == SUCCESS
             && Z_TYPE_PP (tmp) == IS_STRING)  {
-            add_property_string (object, WS_RECEIVER_CERTIFICATE,
+            add_property_string (object, WSF_RECEIVER_CERTIFICATE,
                 Z_STRVAL_PP (tmp), 1);
         }
-        if (zend_hash_find (ht, WS_TTL, sizeof (WS_TTL),
+        if (zend_hash_find (ht, WSF_TTL, sizeof (WSF_TTL),
                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_LONG) {
-            add_property_long (object, WS_TTL, Z_LVAL_PP (tmp));
+            add_property_long (object, WSF_TTL, Z_LVAL_PP (tmp));
         }
-        if (zend_hash_find (ht, WS_PASSWORD_CALL_BACK,
-                sizeof (WS_PASSWORD_CALL_BACK), (void **) &tmp) == SUCCESS
+        if (zend_hash_find (ht, WSF_PASSWORD_CALL_BACK,
+                sizeof (WSF_PASSWORD_CALL_BACK), (void **) &tmp) == SUCCESS
             && Z_TYPE_PP (tmp) == IS_STRING) {
-            add_property_string (object, WS_PASSWORD_CALL_BACK, Z_STRVAL_PP (tmp), 1);
+            add_property_string (object, WSF_PASSWORD_CALL_BACK, Z_STRVAL_PP (tmp), 1);
         }
     }
 } 
@@ -1938,7 +1938,7 @@ PHP_FUNCTION (ws_log_write)
         return;
     }
 
-    buffer = axutil_stracat(env, WS_PHP_LOG_PREFIX, text);
+    buffer = axutil_stracat(env, WSF_PHP_LOG_PREFIX, text);
 
     line = axutil_atoi(line_str);
     level = axutil_atoi(level_str);

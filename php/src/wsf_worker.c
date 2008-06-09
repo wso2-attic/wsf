@@ -554,11 +554,11 @@ wsf_worker_process_request (
 
 		svc_info_prop = axutil_property_create_with_args (env, AXIS2_SCOPE_REQUEST,
             AXIS2_TRUE, wsf_worker_dummy_free_function, svc_info);
-        axis2_msg_ctx_set_property (msg_ctx, env, WS_SVC_INFO, svc_info_prop);
+        axis2_msg_ctx_set_property (msg_ctx, env, WSF_SVC_INFO, svc_info_prop);
 
 		req_info_prop = axutil_property_create_with_args (env, AXIS2_SCOPE_REQUEST,
 			AXIS2_TRUE, wsf_worker_dummy_free_function, request);
-        axis2_msg_ctx_set_property (msg_ctx, env, WS_REQ_INFO, req_info_prop);
+        axis2_msg_ctx_set_property (msg_ctx, env, WSF_REQ_INFO, req_info_prop);
     }
 	
     
@@ -1078,7 +1078,7 @@ wsf_worker_process_request (
 				{
 					/** Set user defined response content type */
 					response_content_type = axis2_msg_ctx_get_property_value(out_msg_ctx, env, 
-						WS_RESPONSE_CONTENT_TYPE);
+						WSF_RESPONSE_CONTENT_TYPE);
 					if(response_content_type)
 					{
 						if(response->content_type)

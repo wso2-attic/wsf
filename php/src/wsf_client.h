@@ -94,7 +94,7 @@ void wsf_client_enable_ssl (
     axis2_options_t *options TSRMLS_DC);
 
 /**
- * Set the http authenticaiton headers
+ * Set the HTTP authentication headers
  * @param ht, WSClient options array
  * @param env, 
  * @param options, axis2 options
@@ -106,7 +106,7 @@ wsf_client_set_http_auth_info(
         axis2_options_t *options TSRMLS_DC);
 
 /**
- * Set the proxy authenticaiton headers
+ * Set the proxy authentication headers
  * @param ht, WSClient options array
  * @param env, 
  * @param options, axis2 options

@@ -84,19 +84,19 @@ wsf_util_construct_header_node (
     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
         " [wsf_log] construct header node ");
 
-    if (zend_hash_find (Z_OBJPROP_P (header), WS_HEADER_LOCALNAME,
-            sizeof (WS_HEADER_LOCALNAME), (void **) &tmp) == SUCCESS) {
+    if (zend_hash_find (Z_OBJPROP_P (header), WSF_HEADER_LOCALNAME,
+            sizeof (WSF_HEADER_LOCALNAME), (void **) &tmp) == SUCCESS) {
         localname = Z_STRVAL_PP (tmp);
     } else {
         return NULL;
     }
-    if (zend_hash_find (Z_OBJPROP_P (header), WS_HEADER_NS,
-            sizeof (WS_HEADER_NS), (void **) &tmp) == SUCCESS
+    if (zend_hash_find (Z_OBJPROP_P (header), WSF_HEADER_NS,
+            sizeof (WSF_HEADER_NS), (void **) &tmp) == SUCCESS
         && Z_TYPE_PP (tmp) == IS_STRING) {
         ns = Z_STRVAL_PP (tmp);
     }
-	if (zend_hash_find (Z_OBJPROP_P (header), WS_HEADER_PREFIX,
-            sizeof (WS_HEADER_PREFIX), (void **) &tmp) == SUCCESS
+	if (zend_hash_find (Z_OBJPROP_P (header), WSF_HEADER_PREFIX,
+            sizeof (WSF_HEADER_PREFIX), (void **) &tmp) == SUCCESS
         && Z_TYPE_PP (tmp) == IS_STRING) {
         nsprefix = Z_STRVAL_PP (tmp);
     }
@@ -109,8 +109,8 @@ wsf_util_construct_header_node (
 	}
     header_ele = axiom_element_create (env, parent , localname, header_ns, &header_node);
 
-    if (zend_hash_find (Z_OBJPROP_P (header), WS_HEADER_MUST_UNDERSTAND,
-            sizeof (WS_HEADER_MUST_UNDERSTAND), (void **) &tmp) == SUCCESS
+    if (zend_hash_find (Z_OBJPROP_P (header), WSF_HEADER_MUST_UNDERSTAND,
+            sizeof (WSF_HEADER_MUST_UNDERSTAND), (void **) &tmp) == SUCCESS
         && Z_TYPE_PP (tmp) == IS_BOOL) {
         axiom_attribute_t *mu_attr = NULL;
         char must_val[2];
@@ -124,17 +124,17 @@ wsf_util_construct_header_node (
         mu_attr = axiom_attribute_create (env, "mustUnderstand", must_val, soap_ns);
         axiom_element_add_attribute (header_ele, env, mu_attr, header_node);
     }
-    if (zend_hash_find (Z_OBJPROP_P (header), WS_HEADER_ROLE,
-            sizeof (WS_HEADER_ROLE), (void **) &tmp) == SUCCESS) {
+    if (zend_hash_find (Z_OBJPROP_P (header), WSF_HEADER_ROLE,
+            sizeof (WSF_HEADER_ROLE), (void **) &tmp) == SUCCESS) {
         axiom_attribute_t *role_attr = NULL;
         char *role_val = NULL;
         if (Z_TYPE_PP (tmp) == IS_LONG) {
-            if (Z_LVAL_PP (tmp) == WS_SOAP_ROLE_NEXT) {
-                role_val = WS_SOAP_ROLE_NEXT_URI;
-            } else if (Z_LVAL_PP (tmp) == WS_SOAP_ROLE_NONE) {
-                role_val = WS_SOAP_ROLE_NONE_URI;
-            } else if (Z_LVAL_PP (tmp) == WS_SOAP_ROLE_ULTIMATE_RECEIVER) {
-                role_val = WS_SOAP_ROLE_ULTIMATE_RECEIVER_URI;
+            if (Z_LVAL_PP (tmp) == WSF_SOAP_ROLE_NEXT) {
+                role_val = WSF_SOAP_ROLE_NEXT_URI;
+            } else if (Z_LVAL_PP (tmp) == WSF_SOAP_ROLE_NONE) {
+                role_val = WSF_SOAP_ROLE_NONE_URI;
+            } else if (Z_LVAL_PP (tmp) == WSF_SOAP_ROLE_ULTIMATE_RECEIVER) {
+                role_val = WSF_SOAP_ROLE_ULTIMATE_RECEIVER_URI;
             }
         } else if (Z_TYPE_PP (tmp) == IS_STRING) {
             role_val = Z_STRVAL_PP (tmp);
@@ -144,16 +144,16 @@ wsf_util_construct_header_node (
 		}
             /** role is only valid for soap12, for soap11 use actor, TODO */
         if (soap_version == AXIOM_SOAP12 && role_val) {
-            role_attr = axiom_attribute_create (env, WS_HEADER_ROLE, role_val, soap_ns);
+            role_attr = axiom_attribute_create (env, WSF_HEADER_ROLE, role_val, soap_ns);
             axiom_element_add_attribute (header_ele, env, role_attr, header_node);
 
         } else if (soap_version == AXIOM_SOAP11 && role_val) {
-            role_attr = axiom_attribute_create (env, WS_HEADER_ACTOR, role_val, soap_ns);
+            role_attr = axiom_attribute_create (env, WSF_HEADER_ACTOR, role_val, soap_ns);
             axiom_element_add_attribute (header_ele, env, role_attr, header_node);
         }
     }
-    if (zend_hash_find (Z_OBJPROP_P (header), WS_HEADER_DATA,
-            sizeof (WS_HEADER_DATA), (void **) &tmp) == SUCCESS
+    if (zend_hash_find (Z_OBJPROP_P (header), WSF_HEADER_DATA,
+            sizeof (WSF_HEADER_DATA), (void **) &tmp) == SUCCESS
 			&& Z_TYPE_PP (tmp) == IS_STRING && Z_STRLEN_PP(tmp) > 0) {
 				axiom_node_t *node = NULL;
 				char *str = Z_STRVAL_PP(tmp);
@@ -171,8 +171,8 @@ wsf_util_construct_header_node (
 					axiom_element_set_text (header_ele, env, Z_STRVAL_PP (tmp),
 						header_node);
 				}
-    }else if (zend_hash_find (Z_OBJPROP_P (header), WS_HEADER_DATA,
-            sizeof (WS_HEADER_DATA), (void **) &tmp) == SUCCESS
+    }else if (zend_hash_find (Z_OBJPROP_P (header), WSF_HEADER_DATA,
+            sizeof (WSF_HEADER_DATA), (void **) &tmp) == SUCCESS
         && Z_TYPE_PP (tmp) == IS_ARRAY) {
         HashPosition pos;
         zval **param;
@@ -1248,7 +1248,7 @@ wsf_util_set_soap_fault (
         return;
 
     if (fault_reason != NULL) {
-        add_property_string (this_ptr, WS_FAULT_REASON, fault_reason, 1);
+        add_property_string (this_ptr, WSF_FAULT_REASON, fault_reason, 1);
 #ifdef ZEND_ENGINE_2
         zend_update_property_string (zend_exception_get_default (TSRMLS_C),
             this_ptr, "message", sizeof ("message") - 1,
@@ -1259,49 +1259,49 @@ wsf_util_set_soap_fault (
         int soap_version = WSF_GLOBAL (soap_version);
 
         if (fault_code_ns) {
-            add_property_string (this_ptr, WS_FAULT_CODE, fault_code, 1);
-            add_property_string (this_ptr, WS_FAULT_CODE_NS, fault_code_ns,
+            add_property_string (this_ptr, WSF_FAULT_CODE, fault_code, 1);
+            add_property_string (this_ptr, WSF_FAULT_CODE_NS, fault_code_ns,
                 1);
         } else {
             if (soap_version == AXIOM_SOAP11) {
-                add_property_string (this_ptr, WS_FAULT_CODE, fault_code, 1);
+                add_property_string (this_ptr, WSF_FAULT_CODE, fault_code, 1);
                 if (strcmp (fault_code, "Client") == 0 ||
                     strcmp (fault_code, "Server") == 0 ||
                     strcmp (fault_code, "VersionMismatch") == 0 ||
                     strcmp (fault_code, "MustUnderstand") == 0) {
-                    add_property_string (this_ptr, WS_FAULT_CODE_NS,
-                        WS_SOAP_1_1_NAMESPACE_URI, 1);
+                    add_property_string (this_ptr, WSF_FAULT_CODE_NS,
+                        WSF_SOAP_1_1_NAMESPACE_URI, 1);
                 }
             } else if (soap_version == AXIOM_SOAP12) {
                 if (strcmp (fault_code, "Client") == 0) {
-                    add_property_string (this_ptr, WS_FAULT_CODE, "Sender",
+                    add_property_string (this_ptr, WSF_FAULT_CODE, "Sender",
                         1);
-                    add_property_string (this_ptr, WS_FAULT_CODE_NS,
-                        WS_SOAP_1_2_NAMESPACE_URI, 1);
+                    add_property_string (this_ptr, WSF_FAULT_CODE_NS,
+                        WSF_SOAP_1_2_NAMESPACE_URI, 1);
                 } else if (strcmp (fault_code, "Server") == 0) {
-                    add_property_string (this_ptr, WS_FAULT_CODE, "Receiver",
+                    add_property_string (this_ptr, WSF_FAULT_CODE, "Receiver",
                         1);
-                    add_property_string (this_ptr, WS_FAULT_CODE_NS,
-                        WS_SOAP_1_1_NAMESPACE_URI, 1);
+                    add_property_string (this_ptr, WSF_FAULT_CODE_NS,
+                        WSF_SOAP_1_1_NAMESPACE_URI, 1);
                 } else if (strcmp (fault_code, "VersionMismatch") == 0
                     || strcmp (fault_code, "MustUnderstand") == 0
                     || strcmp (fault_code, "DataEncodingUnknown") == 0) {
-                    add_property_string (this_ptr, WS_FAULT_CODE, fault_code,
+                    add_property_string (this_ptr, WSF_FAULT_CODE, fault_code,
                         1);
-                    add_property_string (this_ptr, WS_FAULT_CODE_NS,
-                        WS_SOAP_1_2_NAMESPACE_URI, 1);
+                    add_property_string (this_ptr, WSF_FAULT_CODE_NS,
+                        WSF_SOAP_1_2_NAMESPACE_URI, 1);
                 } else {
-                    add_property_string (this_ptr, WS_FAULT_CODE, fault_code,
+                    add_property_string (this_ptr, WSF_FAULT_CODE, fault_code,
                         1);
                 }
             }
         }
     }
     if (fault_role != NULL) {
-        add_property_string (this_ptr, WS_FAULT_ROLE, fault_role, 1);
+        add_property_string (this_ptr, WSF_FAULT_ROLE, fault_role, 1);
     }
     if (fault_detail != NULL) {
-        add_property_zval (this_ptr, WS_FAULT_DETAIL, fault_detail);
+        add_property_zval (this_ptr, WSF_FAULT_DETAIL, fault_detail);
     }
     if (name != NULL) {
         add_property_string (this_ptr, "_name", name, 1);
@@ -1324,12 +1324,12 @@ wsf_util_handle_fault_code(
                 code_node, &code_value_node);
 		code = axiom_element_get_text(code_value_ele, env, code_value_node);
         if(code){
-            add_property_string(fault_obj, WS_FAULT_CODE, code, 1);
+            add_property_string(fault_obj, WSF_FAULT_CODE, code, 1);
         }                  
 	}else if(soap_version == AXIOM_SOAP11){
 		code = axiom_element_get_text(code_element, env, code_node);
 		if(code){
-			add_property_string(fault_obj, WS_FAULT_CODE, code, 1);
+			add_property_string(fault_obj, WSF_FAULT_CODE, code, 1);
 		}
 	}
 }
@@ -1352,13 +1352,13 @@ wsf_util_handle_fault_reason(
         if(text_element){
             text_value = axiom_element_get_text(text_element, env, text_node);
             if(text_value){
-				add_property_string(fault_obj, WS_FAULT_REASON , text_value, 1);
+				add_property_string(fault_obj, WSF_FAULT_REASON , text_value, 1);
             }
         }
 	}else if(soap_version == AXIOM_SOAP11){
 		text_value = axiom_element_get_text(reason_element, env, reason_node);
 		if(text_value){
-			add_property_string(fault_obj, WS_FAULT_REASON, text_value, 1);
+			add_property_string(fault_obj, WSF_FAULT_REASON, text_value, 1);
 		}
 	}
 }
@@ -1377,7 +1377,7 @@ wsf_util_handle_fault_detail(
 		detail_entry_node = axiom_node_get_first_element(detail_node, env);
 		if(detail_entry_node){
 			detail_string = axiom_node_to_string(detail_entry_node, env);
-			add_property_string(fault_obj, WS_FAULT_DETAIL, detail_string, 1);
+			add_property_string(fault_obj, WSF_FAULT_DETAIL, detail_string, 1);
 			if(detail_string){
 				AXIS2_FREE(env->allocator, detail_string);
 			}
@@ -1396,7 +1396,7 @@ wsf_util_handle_fault_role(
 	if(role_node && role_element){
 		role_uri = axiom_element_get_text(role_element, env, role_node);
 		if(role_uri){
-             add_property_string(fault_obj, WS_FAULT_ROLE, role_uri, 1);
+             add_property_string(fault_obj, WSF_FAULT_ROLE, role_uri, 1);
 		}
 	}
 }
@@ -1714,11 +1714,11 @@ void wsf_util_process_ws_service_classes(
 				AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "classname -> %s", classname);
             }
 			if(values){
-				if(zend_hash_find(values, WS_OPERATIONS, sizeof(WS_OPERATIONS), (void**)&tmpval) == SUCCESS
+				if(zend_hash_find(values, WSF_OPERATIONS, sizeof(WSF_OPERATIONS), (void**)&tmpval) == SUCCESS
 					&& Z_TYPE_PP(tmpval) == IS_ARRAY){
 						ht_ops_to_functions = Z_ARRVAL_PP(tmpval);
 				}
-				if(zend_hash_find(values, WS_CONS_ARGS, sizeof(WS_CONS_ARGS), (void**)&tmpval) == SUCCESS
+				if(zend_hash_find(values, WSF_CONS_ARGS, sizeof(WSF_CONS_ARGS), (void**)&tmpval) == SUCCESS
 					&& Z_TYPE_PP(tmpval) == IS_ARRAY){
 						if(!svc_info->class_args){
 							MAKE_STD_ZVAL(svc_info->class_args);
@@ -1768,11 +1768,11 @@ void wsf_util_process_rest_params(axutil_env_t *env,
 						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsfphp] Processing Rest Params opname-> %s", operation_name);
             }
 			if(values){
-				if(zend_hash_find(values, WS_HTTP_METHOD, sizeof(WS_HTTP_METHOD), (void**)&tmpval) == SUCCESS
+				if(zend_hash_find(values, WSF_HTTP_METHOD, sizeof(WSF_HTTP_METHOD), (void**)&tmpval) == SUCCESS
 					&& Z_TYPE_PP(tmpval) == IS_STRING){
 						http_method = Z_STRVAL_PP(tmpval);
 				}
-				if(zend_hash_find(values, WS_REST_LOCATION, sizeof(WS_REST_LOCATION), (void**)&tmpval) == SUCCESS
+				if(zend_hash_find(values, WSF_REST_LOCATION, sizeof(WSF_REST_LOCATION), (void**)&tmpval) == SUCCESS
 					&& Z_TYPE_PP(tmpval) == IS_STRING){
 						rest_location = Z_STRVAL_PP(tmpval);
 				}
