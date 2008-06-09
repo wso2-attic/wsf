@@ -23,7 +23,7 @@ XML;
 
 try {
 
-    $client = new WSClient( array("to" => "http://localhost:8080/samples/echo_service_with_rest.php/a/hex",
+    $client = new WSClient( array("to" => "http://localhost/samples/echo_service_with_rest.php/a/b",
                                   "useSOAP" => FALSE,
                                   "HTTPMethod" => "GET"));
 
