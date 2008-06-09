@@ -31,28 +31,27 @@
 #include <axis2_policy_include.h>
 #include <neethi_engine.h>
 
-#define ArrySize 8
-
-
-int wsf_set_security_policy_options (
+int 
+wsf_set_security_policy_options (
     zval * policy_obj,
     zval ** tmp,
     const axutil_env_t * env TSRMLS_DC);
 
-axiom_node_t *wsf_create_policy_node (
+axiom_node_t*
+wsf_create_policy_node (
     const axutil_env_t * env,
     axiom_node_t * node);
 
 
-axis2_char_t *AXIS2_CALL wsf_password_provider_function (
+axis2_char_t* AXIS2_CALL
+wsf_password_provider_function (
     const axutil_env_t * env,
     const axis2_char_t * username,
     void *ctx);
 
-char *wsf_get_rampart_token_value(char *token_ref);
-
-
-
+char*
+wsf_get_rampart_token_value(
+	char *token_ref);
 
 int
 wsf_policy_handle_client_security (
@@ -578,13 +577,13 @@ wsf_do_create_policy (
                             sizeof (WSF_PROTECTION_ORDER), (void **) &tmp) == SUCCESS && tmp != NULL
             && Z_TYPE_PP (tmp) == IS_STRING) {
             protection_order = Z_STRVAL_PP (tmp);
-            if(strcmp(protection_order, ENCRYPT_BEFORE) == 0){
+            if(strcmp(protection_order, WSF_ENCRYPT_BEFORE) == 0){
                  if (neethi_options_set_encrypt_before_sign (neethi_options, env,
                                                        AXIS2_TRUE))
                     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                                      "[wsf_sec_policy]  encrypt_before_sign_enabled");
             }
-            else if(strcmp(protection_order, SIGN_BEFORE) == 0){
+            else if(strcmp(protection_order, WSF_SIGN_BEFORE) == 0){
                 if (neethi_options_set_encrypt_before_sign (neethi_options, env,
                                                             AXIS2_FALSE))
                     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
@@ -820,13 +819,13 @@ wsf_password_provider_function (
 
 char *wsf_get_rampart_token_value(char *token_ref)
 {
-    if(strcmp(token_ref, ISSUER_SERIAL) == 0)
+    if(strcmp(token_ref, WSF_ISSUER_SERIAL) == 0)
         return RP_REQUIRE_ISSUER_SERIAL_REFERENCE;
-    if(strcmp(token_ref, KEYIDENTIFIER) == 0)
+    if(strcmp(token_ref, WSF_KEYIDENTIFIER) == 0)
         return RP_REQUIRE_KEY_IDENTIFIRE_REFERENCE;
-    if(strcmp(token_ref, EMBEDDEDTOKEN) == 0)
+    if(strcmp(token_ref, WSF_EMBEDDEDTOKEN) == 0)
         return RP_REQUIRE_EMBEDDED_TOKEN_REFERENCE;
-    if(strcmp(token_ref, THUMBPRINT) == 0)
+    if(strcmp(token_ref, WSF_THUMBPRINT) == 0)
         return RP_REQUIRE_THUMBPRINT_REFERENCE;
     else
         return NULL;
