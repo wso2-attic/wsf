@@ -18,8 +18,6 @@ use WSO2::WSF::WSConfig;
 use WSO2::WSF::C;
 use WSO2::WSF::WSRequest;
 use WSO2::WSF::Server;
-use Data::Dumper;
-use CGI;
 
 sub new {
     my $class = shift;
@@ -119,8 +117,13 @@ sub reply {
     print "worker ".$worker." env ".$env."\n";
 
     #invoking worker
-    WSO2::WSF::Serverc::wsf_worker_process_request($worker, $env, $req_info, $svc_info);
+    my $status = WSO2::WSF::Serverc::wsf_worker_process_request($worker, $env, $req_info, $svc_info);
+    $request->status($status);
+    return  WSO2::WSF::Serverc::wsf_req_info_t_result_payload_get($req_info);
 }
 
+sub DESTROY {
+
+}
 
 1;

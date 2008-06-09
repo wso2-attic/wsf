@@ -59,7 +59,7 @@ wsf_stream_create (const axutil_env_t* env,
     stream_impl->current_rlen = 0;
     stream_impl->buffer = 
         AXIS2_MALLOC (env->allocator,
-                      sizeof (axis2_char_t)*req_info->req_data_length);
+                      sizeof (axis2_char_t)*(req_info->req_data_length+1));
     if (stream_impl->buffer)
     {
         memset ((void *)stream_impl->buffer, 0, req_info->req_data_length);

@@ -3,7 +3,6 @@ use CGI;
 
 sub new {
     my $class = shift;
-    my $cgi;
     my $self = {
         -cgi => new CGI
     };
@@ -43,11 +42,21 @@ sub http_header {
 
 
 sub request_method {
-   my ($self, $header) = @_;
-   my $cgi = $self->{-cgi};
-   return $cgi->request_method;
+    my ($self, $header) = @_;
+    my $cgi = $self->{-cgi};
+    return $cgi->request_method;
 }
 
+sub status {
+    my ($self, $status) = @_;
+    my $cgi = $self->{-cgi};
+    print $cgi->header(-status=>$status);
+}
+
+sub cgi {
+    my ($self) = @_;
+    $self->{-cgi};
+}
 
 sub populate {
     my ($self) = @_;
@@ -68,6 +77,10 @@ sub populate {
     $self->{-query_string} = $ENV{'QUERY_STRING'};
     $self->{-script_filename} = $ENV{'SCRIPT_FILENAME'};
     return 1;
+}
+
+sub DESTROY {
+    print "called wsrequest destroy";
 }
 
 1;

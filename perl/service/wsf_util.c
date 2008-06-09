@@ -295,3 +295,45 @@ wsf_util_conf_add_svc (wsf_svc_info_t * svc_info,
     }
     return;
 }
+
+axiom_node_t *
+wsf_util_deserialize_buffer (const axutil_env_t * env,
+                             char *buffer)
+{
+    axiom_xml_reader_t *reader = NULL;
+    axiom_stax_builder_t *builder = NULL;
+    axiom_document_t *document = NULL;
+    axiom_node_t *payload = NULL;
+
+    reader =
+        axiom_xml_reader_create_for_memory (env, buffer,
+        axutil_strlen (buffer), "utf-8", AXIS2_XML_PARSER_TYPE_BUFFER);
+    if (!reader) {
+        return NULL;
+    }
+
+    builder = axiom_stax_builder_create (env, reader);
+
+    if (!builder) {
+        return NULL;
+    }
+    document = axiom_stax_builder_get_document (builder, env);
+    if (!document) {
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "Document is not found");
+        return NULL;
+    }
+
+    payload = axiom_document_get_root_element (document, env);
+
+    if (!payload) {
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI,
+            "Root element of the document \
+				is not found");
+        return NULL;
+    }
+    axiom_document_build_all (document, env);
+  
+	  axiom_stax_builder_free_self (builder, env);
+
+    return payload;
+}

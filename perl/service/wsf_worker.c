@@ -41,7 +41,7 @@ struct wsf_worker_t
 
 
 void WSF_CALL
-wsf_worker_dummy_free_function (void*               obj,
+wsf_worker_dummy_free_function (void* obj,
                                 const axutil_env_t* env)
 {
     return;
@@ -56,13 +56,15 @@ wsf_worker_create (const axutil_env_t* env,
     AXIS2_ENV_CHECK (env, NULL);
     worker = (wsf_worker_t *) AXIS2_MALLOC (env->allocator,
                 sizeof (wsf_worker_t));
-    if (!worker){
+    if (!worker)
+    {
         AXIS2_ERROR_SET (env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
     }
     worker->conf_ctx = NULL;
     worker->conf_ctx = axis2_build_conf_ctx (env, repo_path);
-    if (NULL == worker->conf_ctx) {
+    if (NULL == worker->conf_ctx) 
+    {
         wsf_worker_free (worker, env);
         return NULL;
     }
@@ -81,16 +83,19 @@ wsf_worker_get_bytes (const axutil_env_t* env,
     AXIS2_ENV_CHECK (env, NULL);
     AXIS2_PARAM_CHECK (env->error, stream, NULL);
     tmp_stream = axutil_stream_create_basic (env);
-    while (1) {
+    while (1) 
+    {
         int read = 0;
         int write = 0;
         char buf[READ_SIZE];
         read = axutil_stream_read (stream, env, buf, READ_SIZE);
-        if (read < 0) {
+        if (read < 0) 
+        {
             break;
         }
         write = axutil_stream_write (tmp_stream, env, buf, read);
-        if (read < (READ_SIZE - 1)) {
+        if (read < (READ_SIZE - 1)) 
+        {
             break;
         }
     }
@@ -247,9 +252,10 @@ wsf_worker_process_request (wsf_worker_t* worker,
     }
     
     /** use MTOM property */ 
-        if (svc_info->use_mtom == 1) {
-        axis2_msg_ctx_set_doing_mtom (msg_ctx, env, AXIS2_TRUE);
-    }
+        if (svc_info->use_mtom == 1) 
+        {
+            axis2_msg_ctx_set_doing_mtom (msg_ctx, env, AXIS2_TRUE);
+        }
     /*if (svc_info->security_token != NULL && svc_info->policy != NULL) {
         
             axis2_conf_t * conf = NULL;
@@ -307,6 +313,7 @@ wsf_worker_process_request (wsf_worker_t* worker,
             {
                 send_status = WS_HTTP_INTERNAL_SERVER_ERROR;
             }
+
             if ( axis2_msg_ctx_get_is_soap_11 (msg_ctx, env))
             {
                 fault_code = AXIOM_SOAP_DEFAULT_NAMESPACE_PREFIX ":"
@@ -327,6 +334,7 @@ wsf_worker_process_request (wsf_worker_t* worker,
                 body_string = wsf_worker_get_bytes (env, out_stream);
             }
             send_status = WS_HTTP_INTERNAL_SERVER_ERROR;
+
             if (body_string) 
             {
                 request->result_payload = body_string;
@@ -348,11 +356,13 @@ wsf_worker_process_request (wsf_worker_t* worker,
             rlen = axutil_stream_get_len (out_stream, env);
             val = AXIS2_MALLOC (env->allocator, sizeof (char) * (rlen + 1));
             readlen = axutil_stream_read (out_stream, env, val, rlen + 1);
-            if (val) {
+            if (val) 
+            {
 				request->result_payload = val;
 				request->result_length = rlen;
 				send_status = WS_HTTP_OK;
             }
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "HTTP Status %d", send_status);
         } 
         else 
         {
@@ -404,11 +414,13 @@ wsf_worker_process_request (wsf_worker_t* worker,
     {
         axutil_string_free (soap_action_str, env);
     }
+
 	if(request_body)
     {
 		wsf_stream_free(request_body, env);
 	}
-	if(req_url)
+	
+    if(req_url)
     {
 		AXIS2_FREE(env->allocator, req_url);
 	}
@@ -438,11 +450,6 @@ wsf_worker_free (wsf_worker_t*       worker,
     }
     AXIS2_FREE (env->allocator, worker);
 }
-
-
-
-
-
 
 
 

@@ -58,5 +58,8 @@ wsf_util_conf_add_svc (wsf_svc_info_t * svc_info,
                        axutil_env_t * env);
 
 
+axiom_node_t *
+wsf_util_deserialize_buffer (const axutil_env_t * env,
+                             char *buffer);
 
 #endif  /* WSF_UTIL_H */
