@@ -619,7 +619,7 @@ wsf_wsdl_do_request(zval *client_zval,
                 
                 qname = axiom_element_get_qname(payload_element, env, body_base_node);
                 if(axutil_qname_get_localpart(qname, env) == "Body") {
-                    res_payload = axiom_node_get_frist_child(body_base_node, env);
+                    res_payload = axiom_node_get_first_child(body_base_node, env);
                 }
             }
             response_buffer = axiom_node_sub_tree_to_string(res_payload , env);

@@ -1172,7 +1172,7 @@ wsf_util_serialize_om (
        outside ret_node but referenced form within the ret_node tree. 
        Hence use axiom_node_serialize_sub_tree and not axiom_node_serialize.
        axiom_node_serialize assumes the OM tree to be complete, hence, does 
-       not double ckeck if all referenced namespaces are serialized, but 
+       not double check if all referenced namespaces are serialized, but 
        axiom_node_serialize_sub_tree does. */
     axiom_node_serialize_sub_tree(ret_node, env, om_output); 
 
@@ -1232,66 +1232,6 @@ wsf_util_deserialize_buffer (
 	axiom_stax_builder_free_self (builder, env);
 
     return payload;
-}
-
-void
-wsf_util_get_contents_from_file (
-    zval * return_value,
-    char *filename,
-    int filename_len TSRMLS_DC)
-{
-    char *contents;
-    php_stream *stream;
-    int len;
-    long maxlen = PHP_STREAM_COPY_ALL;
-    zval *zcontext = NULL;
-    php_stream_context *context = NULL;
-    char *DELIMITER = "-----";
-
-    context = php_stream_context_from_zval (zcontext, 0);
-
-    stream = php_stream_open_wrapper_ex (filename, "rb",
-        (USE_PATH) | ENFORCE_SAFE_MODE | REPORT_ERRORS, NULL, context);
-    if (!stream) {
-        ZVAL_BOOL (return_value, 0);
-    }
-
-    if ((len = php_stream_copy_to_mem (stream, &contents, maxlen, 0)) > 0) {
-        char *key = NULL;
-        char *start_index = NULL;
-        char *tmp_index = NULL;
-
-        tmp_index = strstr (contents, DELIMITER);
-        if (!tmp_index)
-            return;
-        if (len > (tmp_index - contents)) {
-            tmp_index += 5;
-            tmp_index = strstr (tmp_index, DELIMITER);
-            if (!tmp_index)
-                return;
-            start_index = tmp_index + 6;
-            tmp_index[contents - tmp_index] = '\0';
-        }
-
-        tmp_index = strstr (start_index, DELIMITER);
-        if (!tmp_index)
-            return;
-        tmp_index = tmp_index + 1;
-
-        start_index[tmp_index - start_index] = '\0';
-
-        key = estrdup (start_index);
-
-        efree (contents);
-
-        ZVAL_STRINGL (return_value, key, strlen (key), 0);
-    } else if (len == 0) {
-        ZVAL_EMPTY_STRING (return_value);
-    } else {
-        ZVAL_BOOL (return_value, 0);
-    }
-    php_stream_close (stream);
-
 }
 
 void

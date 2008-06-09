@@ -97,17 +97,41 @@
 #define SIGN_BEFORE "SignBeforeEncrypt"
 #define ENCRYPT_BEFORE "EncryptBeforeSigning"
 
+/**
+* 
+* @param this_ptr, 
+* @param property, 
+* @param TSRMLS_DC, 
+* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
+*/
 int wsf_policy_set_policy_options (
     zval * this_ptr,
     zval * property,
     const axutil_env_t * env TSRMLS_DC);
 
+/**
+* 
+* @param sec_token, 
+* @param policy, 
+* @param env, 
+* @param TSRMLS_DC, 
+* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
+*/
 int wsf_policy_handle_client_security (
     zval * sec_token,
     zval * policy,
     axutil_env_t * env,
     axis2_svc_client_t * svc_client TSRMLS_DC);
 
+/**
+* 
+* @param sec_token, 
+* @param policy, 
+* @param env, 
+* @param svc, 
+* @param TSRMLS_DC, 
+* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
+*/
 int wsf_policy_handle_server_security (
     zval * sec_token,
     zval * policy,
@@ -115,6 +139,14 @@ int wsf_policy_handle_server_security (
     axis2_svc_t * svc,
     axis2_conf_t * conf TSRMLS_DC);
 
+/**
+* 
+* @param rampart_ctx, 
+* @param sec_token, 
+* @param policy, 
+* @param TSRMLS_DC, 
+* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
+*/
 int
 wsf_set_rampart_options (
     rampart_context_t* rampart_ctx,
@@ -123,6 +155,14 @@ wsf_set_rampart_options (
     axutil_env_t * env TSRMLS_DC);
 
 
+/**
+* 
+* @param sec_token, 
+* @param policy, 
+* @param is_server_side, 
+* @param TSRMLS_DC, 
+* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
+*/
 axiom_node_t *wsf_do_create_policy (
     zval * sec_token,
     zval * policy,

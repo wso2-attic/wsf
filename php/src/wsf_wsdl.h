@@ -29,6 +29,17 @@
 #include "ext/libxml/php_libxml.h"
 
 
+/**
+* 
+* @param this_ptr, 
+* @param fn_name, 
+* @param fn_name_len, 
+* @param arg_count, 
+* @param args, 
+* @param return_value, 
+* @param TSRMLS_DC, 
+* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
+*/
 void wsf_wsdl_create_dynamic_client(
    zval *this_ptr, 
    char *fn_name, 
@@ -38,11 +49,26 @@ void wsf_wsdl_create_dynamic_client(
    zval *return_value, 
    axutil_env_t * env TSRMLS_DC);
 
+/**
+* 
+* @param this_ptr, 
+* @param reqinfo, 
+* @param svc_info, 
+* @param TSRMLS_DC, 
+* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
+*/
 void wsf_wsdl_process_service(zval *this_ptr, 
                               wsf_request_info_t * reqinfo, 
                               wsf_svc_info_t *svc_info, 
                               axutil_env_t *env TSRMLS_DC);
 
+/**
+* 
+* @param wsdl_path, 
+* @param svc_info, 
+* @param TSRMLS_DC, 
+* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
+*/
 void wsf_wsdl_set_sig_model(char* wsdl_path,
                             wsf_svc_info_t *svc_info,
                             const axutil_env_t *env TSRMLS_DC);

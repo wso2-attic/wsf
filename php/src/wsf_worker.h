@@ -31,11 +31,27 @@ extern "C"
 
 typedef struct wsf_worker_t wsf_worker_t;
 
+/**
+* 
+* @param env, 
+* @param repo_path, 
+* @param rm_db_dir, 
+* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
+*/
 wsf_worker_t *wsf_worker_create (
     const axutil_env_t * env,
     axis2_char_t * repo_path,
     axis2_char_t * rm_db_dir);
 
+/**
+* 
+* @param worker, 
+* @param env, 
+* @param req_info, 
+* @param res_info, 
+* @param TSRMLS_DC, 
+* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
+*/
 int wsf_worker_process_request (
     wsf_worker_t * worker,
     axutil_env_t * env,
@@ -43,11 +59,23 @@ int wsf_worker_process_request (
 	wsf_response_info_t *res_info,
     wsf_svc_info_t *svc_info TSRMLS_DC);
 
+/**
+* 
+* @param worker, 
+* @param env, 
+* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
+*/
 void wsf_worker_free (
     wsf_worker_t * worker,
     const axutil_env_t * env);
 
 
+/**
+* 
+* @param worker, 
+* @param env, 
+* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
+*/
 axis2_conf_ctx_t *
 wsf_worker_get_conf_ctx (
     wsf_worker_t * worker,

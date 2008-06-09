@@ -250,7 +250,7 @@ wsf_policy_handle_server_security (
     if (!sec_token && !policy && !svc && !conf)
         return AXIS2_FAILURE;
 
-    /* if incoming policy and outgoing policy are diffrenet from each
+    /* if incoming policy and outgoing policy are different from each
        other */
     if (Z_TYPE_P (policy) == IS_OBJECT) {
         ht = Z_OBJPROP_P (policy);
@@ -308,9 +308,6 @@ wsf_policy_handle_server_security (
         incoming_policy_node =
             wsf_do_create_policy (sec_token, policy, AXIS2_SUCCESS, env TSRMLS_CC);
     }
-
-    /* get the values from the security token object and keep it in a
-       temperary structure */
 
     rampart_ctx = rampart_context_create (env);
     wsf_set_rampart_options (rampart_ctx, sec_token, policy,
