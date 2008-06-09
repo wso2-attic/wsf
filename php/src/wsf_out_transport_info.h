@@ -25,6 +25,11 @@ extern "C"
 {
 #endif
 
+/**
+*  Create an http_out_transport_info struct
+* @param env, pointer to environment
+* @param req, pointer to wsf_response_info_t 
+*/
 axis2_http_out_transport_info_t *
 wsf_out_transport_info_create (
     const axutil_env_t * env,
