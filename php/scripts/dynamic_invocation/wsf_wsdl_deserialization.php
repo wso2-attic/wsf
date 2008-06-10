@@ -1055,7 +1055,7 @@ function wsf_convert_string_to_php_type($xsd_type, $data_value) {
 function wsf_deserialize_type_info($param_type, &$parse_tree, $param_name, $param_value,
                 $cid2cont_type, $cid2attachments)
 {
-    if($param_type == WSF_XSD_BASE64 && !is_array($param_value)) {
+    if($param_type == WSF_XSD_BASE64 && !is_array($param_value) && !is_object($param_value)) {
         if(!is_array($cid2attachments) || count($cid2attachments) == 0) {
             // this mean no attachments, values are sent as MTOM attachments..
             $parse_tree[$param_name. WSF_POSTFIX_BASE64] = $param_value;
