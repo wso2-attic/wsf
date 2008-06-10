@@ -470,7 +470,7 @@ ws_objects_free_storage (void *object TSRMLS_DC)
         svc_client = (axis2_svc_client_t *) intern->ptr;
 		
         if (svc_client) {
-			if(!wsf_util_is_module_engaged_to_svc_client(svc_client, env, "sandesha2")){
+			if(!wsf_util_is_module_engaged_to_svc_client(svc_client, env, WSF_MODULE_RM)){
 				axis2_svc_client_free (svc_client, env);
 			}
         }
@@ -1854,10 +1854,7 @@ PHP_METHOD (ws_client_proxy, __call)
     char *fn_name = NULL;
     long fn_name_len = 0;
     zval * args = NULL;
-    zval ** param = NULL;
     int arg_count = 0;
-    HashPosition pos;
-    int i = 0;
     if (zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "sz", &fn_name,
             &fn_name_len, &args) == FAILURE) {
         php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
@@ -1866,7 +1863,7 @@ PHP_METHOD (ws_client_proxy, __call)
     arg_count = zend_hash_num_elements (Z_ARRVAL_P (args));
    
     wsf_wsdl_create_dynamic_client(this_ptr, fn_name, fn_name_len, arg_count,
-                          args, return_value, env TSRMLS_CC);
+        args, return_value, env TSRMLS_CC);
 
 }
 
