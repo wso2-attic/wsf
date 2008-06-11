@@ -1069,237 +1069,250 @@ static void generate_wsdl_for_service(zval *svc_zval,
         wsf_request_info_t *req_info, char *wsdl_ver_str,
         int in_cmd TSRMLS_DC)
 {
-        char *service_name = NULL;
-        zval func, retval, param1, param2, param3, param4, param5, param6, param7, param8, param9;
-        zval * params[9];
-        axutil_hash_index_t * hi = NULL;
-		zval * functions = NULL;
-        zend_file_handle script;
-        char *val = NULL;
-        int len = 0;
-		zval ** tmpval = NULL;
-        char *binding_name = NULL;
-        char *wsdl_version = NULL;
-        smart_str full_path = {0};
-		zval * op_val = NULL;
-		FILE *new_fp = NULL;
-        zval **class_map = NULL;
+    char *service_name = NULL;
+    zval func, retval, param1, param2, param3, param4, param5, param6, param7, param8, param9;
+    zval * params[9];
+    axutil_hash_index_t * hi = NULL;
+	zval * functions = NULL;
+    zend_file_handle script;
+    char *val = NULL;
+    int len = 0;
+	zval ** tmpval = NULL;
+    char *binding_name = NULL;
+    char *wsdl_version = NULL;
+    smart_str full_path = {0};
+	zval * op_val = NULL;
+	FILE *new_fp = NULL;
+    zval **class_map = NULL;
 
-        zval **wsdl_location = NULL;
-		php_stream *stream = NULL;
-        int args_count = 0;
+    zval **wsdl_location = NULL;
+	php_stream *stream = NULL;
+    int args_count = 0;
 
 
-        zend_hash_find ( Z_OBJPROP_P (svc_zval), WSF_WSDL_CLASSMAP, 
-                              sizeof (WSF_WSDL_CLASSMAP),
-                              (void **) &class_map);
+    if(zend_hash_find ( Z_OBJPROP_P (svc_zval), WSF_WSDL_CLASSMAP, sizeof (WSF_WSDL_CLASSMAP),
+		(void **) &class_map)!= SUCCESS)
+	{
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "classmap not present");
+	}
             
 
-        if ((zend_hash_find (Z_OBJPROP_P (svc_zval), WSF_WSDL, sizeof(WSF_WSDL),
-                             (void **)&wsdl_location) == SUCCESS
-             && Z_TYPE_PP (wsdl_location) == IS_STRING)) {
-            zval f_get_conts, f_get_conts_ret, *param;
-            int new_len = 0;
-            char *new_val = NULL;
-            char *new_val1 = NULL;
+	if ((zend_hash_find (Z_OBJPROP_P (svc_zval), WSF_WSDL, sizeof(WSF_WSDL), 
+		(void **)&wsdl_location) == SUCCESS && Z_TYPE_PP (wsdl_location) == IS_STRING)) 
+	{
+        zval f_get_conts, f_get_conts_ret, *param;
+        int new_len = 0;
+        char *new_val = NULL;
+        char *new_val1 = NULL;
+        
+        INIT_ZVAL(f_get_conts);
+        INIT_ZVAL(f_get_conts_ret);
+        MAKE_STD_ZVAL(param);
+        
+        sapi_add_header ("Content-Type:application/xml", sizeof ("Content-Type:application/xml"), 1);
+        ZVAL_STRING(param, Z_STRVAL_PP(wsdl_location), 1);
+        ZVAL_STRING(&f_get_conts, "file_get_contents", 1);
+        if (call_user_function(EG(function_table), NULL, &f_get_conts, 
+			&f_get_conts_ret, 1, &param  TSRMLS_CC) == SUCCESS) 
+		{
+			if (Z_TYPE_P (&f_get_conts_ret) == IS_STRING)
+			{
+                val = estrdup (Z_STRVAL(f_get_conts_ret));
+                len = Z_STRLEN (f_get_conts_ret);
+                if(strstr(val, "<?xml version=\"1.0\""))
+				{
+                    new_len = strlen("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+                    new_val = (val + new_len);
+                    new_val1 = estrdup(strstr(new_val, "<"));
+                    len = strlen(new_val1);
+                    php_write(new_val1, len TSRMLS_CC);
+                }
+				else
+				{
+                    php_write (val, len TSRMLS_CC);
+				}
+                if(val)
+				{
+                    efree(val);
+                }
+                if(new_val1){
+                    efree(new_val1);
+                }
+                
+			}
+			else
+			{
+				php_error_docref(NULL TSRMLS_CC, E_ERROR, "WSDL Generation failed for the given WSDL");
+			}
+		}
             
-            INIT_ZVAL(f_get_conts);
-            INIT_ZVAL(f_get_conts_ret);
-            MAKE_STD_ZVAL(param);
-            
-            sapi_add_header ("Content-Type:application/xml",
-                             sizeof ("Content-Type:application/xml"), 1);
-            ZVAL_STRING(param, Z_STRVAL_PP(wsdl_location), 1);
-            ZVAL_STRING(&f_get_conts, "file_get_contents", 1);
-            if (call_user_function(EG(function_table), NULL, &f_get_conts, &f_get_conts_ret, 1, &param  TSRMLS_CC) == SUCCESS) {
-                if (Z_TYPE_P (&f_get_conts_ret) == IS_STRING){
-                    val = estrdup (Z_STRVAL(f_get_conts_ret));
-                    len = Z_STRLEN (f_get_conts_ret);
-                    if(strstr(val, "<?xml version=\"1.0\"")){
-                        new_len = strlen("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-                        new_val = (val + new_len);
-                        new_val1 = estrdup(strstr(new_val, "<"));
-                        len = strlen(new_val1);
-                        php_write(new_val1, len TSRMLS_CC);
-                    }
-                    else
-                        php_write (val, len TSRMLS_CC);
-                    if(val){
+        zval_ptr_dtor(&param);
+        zval_dtor(&f_get_conts);
+        zval_dtor(&f_get_conts_ret);
+                
+    }
+    else
+	{
+		service_name = svc_info->svc_name;
+			
+        if(!in_cmd)
+		{
+			smart_str_appends(&full_path, req_info->svr_name);
+			if(req_info->svr_port != WSF_PHP_DEFAULT_PORT){
+				char svr_port[10];				
+				sprintf(svr_port, ":%ld", req_info->svr_port);
+				smart_str_appends(&full_path, svr_port);
+			}
+			smart_str_appends(&full_path, req_info->request_uri);
+            smart_str_0 (&full_path);
+        }
+		else
+		{
+            smart_str_appends(&full_path, SG(request_info).path_translated); 
+            smart_str_0 (&full_path);
+        }
+        params[0] = &param1;
+        params[1] = &param2;
+        params[2] = &param3;
+        params[3] = &param4;
+        params[4] = &param5;
+        params[5] = &param6;
+        params[6] = &param7;
+        params[7] = &param8;
+        params[8] = &param9;
+        
+        /** for WSDL version. default is wsdl 1.1*/ 
+		if ((stricmp (wsdl_ver_str , WSF_WSDL)) == 0)
+		{
+            wsdl_version = strdup (WSF_WSDL_1_1);
+		}
+        else
+		{
+            wsdl_version = strdup (WSF_WSDL_2_0);
+		}
+        /** getting the correct binding style */ 
+        if ((zend_hash_find (Z_OBJPROP_P (svc_zval), WSF_BINDING_STYLE, sizeof (WSF_BINDING_STYLE), 
+			(void **) &tmpval)) == SUCCESS && Z_TYPE_PP (tmpval) == IS_STRING) 
+		{
+            binding_name = Z_STRVAL_PP (tmpval);
+        } else {
+            binding_name =WSF_STYLE_DOCLIT;
+        }
+        
+            /** find the functions in the service.php file */ 
+        MAKE_STD_ZVAL (functions);
+        array_init (functions);
+        MAKE_STD_ZVAL (op_val);
+        array_init (op_val);
+        if (svc_info->ops_to_functions) 
+		{
+            for (hi = axutil_hash_first (svc_info->ops_to_functions, ws_env_svr); hi; 
+				hi = axutil_hash_next (ws_env_svr, hi)) 
+			{
+                void *v = NULL;
+                const void *k = NULL;
+                axis2_char_t * f_key = NULL;
+                axis2_char_t * f_name = NULL;
+                axutil_hash_this (hi, &k, NULL, &v);
+                f_key = (axis2_char_t *) k;
+                f_name = (axis2_char_t *) v;
+                add_next_index_string (functions, (char *) f_name, 1);
+                add_assoc_string (op_val, (char *) f_key, (char *) f_name, 1);
+            } 
+        }
+
+        ZVAL_STRING (&func, WSF_WSDL_GENERATION_FUNCTION , 0);
+        ZVAL_STRING (params[0], service_name, 0);
+        INIT_PZVAL (params[0]);
+        ZVAL_ZVAL (params[1], functions, NULL, NULL);
+        INIT_PZVAL (params[1]);
+        
+        if(svc_info->wsdl_gen_class_map)
+        {
+            ZVAL_ZVAL (params[2], svc_info->wsdl_gen_class_map, NULL, NULL);
+        }
+        else
+        {
+            ZVAL_NULL (params[2]);
+        }
+        INIT_PZVAL (params[2]);
+
+        ZVAL_STRING (params[3], binding_name, 0);
+        INIT_PZVAL (params[3]);
+        ZVAL_STRING (params[4], wsdl_version, 0);
+        INIT_PZVAL (params[4]);
+        ZVAL_STRING (params[5], full_path.c , 0);
+        INIT_PZVAL (params[5]);
+        ZVAL_ZVAL (params[6], op_val, NULL, NULL);
+        INIT_PZVAL (params[6]);
+        args_count = 7;
+        if(class_map)
+		{
+            ZVAL_ZVAL (params[7], *class_map, NULL, NULL);
+            INIT_PZVAL (params[7]);
+            args_count ++;
+        }
+        if(svc_info->wsdl_gen_annotations) 
+		{
+            ZVAL_ZVAL (params[8], svc_info->wsdl_gen_annotations, NULL, NULL);
+            INIT_PZVAL (params[8]);
+            args_count ++;
+        }
+
+        script.type = ZEND_HANDLE_FP;
+        
+        script.filename = WSF_SCRIPT_FILENAME;
+        
+        script.opened_path = NULL;
+        
+        script.free_filename = 0;
+       
+        stream  = php_stream_open_wrapper(WSF_SCRIPT_FILENAME, "rb", 
+			USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
+        
+        if(!stream)
+		{
+            return;
+		}
+        
+		if (php_stream_cast(stream, PHP_STREAM_AS_STDIO|PHP_STREAM_CAST_RELEASE, 
+			(void*)&new_fp, REPORT_ERRORS) == FAILURE)    
+		{
+			php_error_docref(NULL TSRMLS_CC, E_ERROR, "Unable to open script file or file not found:");
+        }
+
+        if (new_fp)
+		{
+            int status;
+			script.handle.fp = new_fp;
+            status = php_lint_script (&script TSRMLS_CC);
+            if (call_user_function (EG (function_table), (zval **) NULL,
+                                    &func, &retval, args_count, params TSRMLS_CC) == SUCCESS)
+			{
+                
+                if (Z_TYPE_P (&retval) == IS_STRING && Z_TYPE_P (&retval) != IS_NULL)
+				{
+                    val = estrdup (Z_STRVAL (retval));
+                    len = Z_STRLEN (retval);
+                    sapi_add_header ("Content-Type:application/xml",
+                                     sizeof ("Content-Type:application/xml"), 1);
+                    php_write (val, len TSRMLS_CC);
+                    if(val)
+					{
                         efree(val);
                     }
-                    if(new_val1){
-                        efree(new_val1);
-                    }
-                    
-				}else{
-					php_error_docref(NULL TSRMLS_CC, E_ERROR, "WSDL Generation failed for the given WSDL");
+				}
+				else
+				{
+					php_error_docref(NULL TSRMLS_CC, E_ERROR, "WSDL Generation Failed");
 				}
             }
-            
-            zval_ptr_dtor(&param);
-            zval_dtor(&f_get_conts);
-            zval_dtor(&f_get_conts_ret);
-                
         }
-        else{
-            service_name = svc_info->svc_name;
-			
-            if(!in_cmd){
-				
-				smart_str_appends(&full_path, req_info->svr_name);
-				if(req_info->svr_port != 80){
-					char svr_port[10];				
-					sprintf(svr_port, ":%ld", req_info->svr_port);
-					smart_str_appends(&full_path, svr_port);
-				}
-				smart_str_appends(&full_path, req_info->request_uri);
-                smart_str_0 (&full_path);
-            }else{
-                smart_str_appends(&full_path, SG(request_info).path_translated); 
-                smart_str_0 (&full_path);
-            }
-            params[0] = &param1;
-            params[1] = &param2;
-            params[2] = &param3;
-            params[3] = &param4;
-            params[4] = &param5;
-            params[5] = &param6;
-            params[6] = &param7;
-            params[7] = &param8;
-            params[8] = &param9;
-            
-            /** for WSDL version. default is wsdl 1.1*/ 
-			if ((stricmp (wsdl_ver_str , WSF_WSDL)) == 0)
-			{
-                wsdl_version = strdup (WSF_WSDL_1_1);
-			}
-            else
-			{
-                wsdl_version = strdup (WSF_WSDL_2_0);
-			}
-            /** getting the correct binding style */ 
-            if ((zend_hash_find (Z_OBJPROP_P (svc_zval), WSF_BINDING_STYLE, sizeof (WSF_BINDING_STYLE), 
-				(void **) &tmpval)) == SUCCESS && Z_TYPE_PP (tmpval) == IS_STRING) 
-			{
-                binding_name = Z_STRVAL_PP (tmpval);
-            } else {
-                binding_name =WSF_STYLE_DOCLIT;
-            }
-            
-            /** find the functions in the service.php file */ 
-            MAKE_STD_ZVAL (functions);
-            array_init (functions);
-            MAKE_STD_ZVAL (op_val);
-            array_init (op_val);
-            if (svc_info->ops_to_functions) 
-			{
-                for (hi = axutil_hash_first (svc_info->ops_to_functions, ws_env_svr); hi; 
-					hi = axutil_hash_next (ws_env_svr, hi)) 
-				{
-                    void *v = NULL;
-                    const void *k = NULL;
-                    axis2_char_t * f_key = NULL;
-                    axis2_char_t * f_name = NULL;
-                    axutil_hash_this (hi, &k, NULL, &v);
-                    f_key = (axis2_char_t *) k;
-                    f_name = (axis2_char_t *) v;
-                    add_next_index_string (functions, (char *) f_name, 1);
-                    add_assoc_string (op_val, (char *) f_key, (char *) f_name, 1);
-                } 
-            }
-
-            ZVAL_STRING (&func, WSF_WSDL_GENERATION_FUNCTION , 0);
-            ZVAL_STRING (params[0], service_name, 0);
-            INIT_PZVAL (params[0]);
-            ZVAL_ZVAL (params[1], functions, NULL, NULL);
-            INIT_PZVAL (params[1]);
-            
-            if(svc_info->wsdl_gen_class_map)
-            {
-                ZVAL_ZVAL (params[2], svc_info->wsdl_gen_class_map, NULL, NULL);
-            }
-            else
-            {
-                ZVAL_NULL (params[2]);
-            }
-            INIT_PZVAL (params[2]);
-
-            ZVAL_STRING (params[3], binding_name, 0);
-            INIT_PZVAL (params[3]);
-            ZVAL_STRING (params[4], wsdl_version, 0);
-            INIT_PZVAL (params[4]);
-            ZVAL_STRING (params[5], full_path.c , 0);
-            INIT_PZVAL (params[5]);
-            ZVAL_ZVAL (params[6], op_val, NULL, NULL);
-            INIT_PZVAL (params[6]);
-            args_count = 7;
-            if(class_map)
-			{
-                ZVAL_ZVAL (params[7], *class_map, NULL, NULL);
-                INIT_PZVAL (params[7]);
-                args_count ++;
-            }
-            if(svc_info->wsdl_gen_annotations) 
-			{
-                ZVAL_ZVAL (params[8], svc_info->wsdl_gen_annotations, NULL, NULL);
-                INIT_PZVAL (params[8]);
-                args_count ++;
-            }
-
-            script.type = ZEND_HANDLE_FP;
-            
-            script.filename = WSF_SCRIPT_FILENAME;
-            
-            script.opened_path = NULL;
-            
-            script.free_filename = 0;
-           
-            stream  = php_stream_open_wrapper(WSF_SCRIPT_FILENAME, "rb", 
-				USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
-            
-            if(!stream)
-			{
-                return;
-			}
-            
-			if (php_stream_cast(stream, PHP_STREAM_AS_STDIO|PHP_STREAM_CAST_RELEASE, 
-				(void*)&new_fp, REPORT_ERRORS) == FAILURE)    
-			{
-				php_error_docref(NULL TSRMLS_CC, E_ERROR, "Unable to open script file or file not found:");
-            }
-
-            if (new_fp)
-			{
-                int status;
-				script.handle.fp = new_fp;
-                status = php_lint_script (&script TSRMLS_CC);
-                if (call_user_function (EG (function_table), (zval **) NULL,
-                                        &func, &retval, args_count, params TSRMLS_CC) == SUCCESS)
-				{
-                    
-                    if (Z_TYPE_P (&retval) == IS_STRING && Z_TYPE_P (&retval) != IS_NULL)
-					{
-                        val = estrdup (Z_STRVAL (retval));
-                        len = Z_STRLEN (retval);
-                        sapi_add_header ("Content-Type:application/xml",
-                                         sizeof ("Content-Type:application/xml"), 1);
-                        php_write (val, len TSRMLS_CC);
-                        if(val)
-						{
-                            efree(val);
-                        }
-					}
-					else
-					{
-						php_error_docref(NULL TSRMLS_CC, E_ERROR, "WSDL Generation Failed");
-					}
-                }
-            }
-            smart_str_free(&full_path);
-            zval_ptr_dtor(&op_val);
-            zval_ptr_dtor(&functions);
-            /** end WSDL generation stuff */ 
-        }
+        smart_str_free(&full_path);
+        zval_ptr_dtor(&op_val);
+        zval_ptr_dtor(&functions);
+        /** end WSDL generation stuff */ 
+    }
 }  
 
 static void 
@@ -1321,7 +1334,8 @@ wsf_service_write_response(wsf_response_info_t *response TSRMLS_DC)
 			content_type = emalloc(strlen (response->content_type) * sizeof (char) + 20);
 			sprintf (content_type, "Content-Type: %s", response->content_type);
 			sapi_add_header (content_type, strlen (content_type), 1);
-			if(response->response_data){
+			if(response->response_data)
+			{
 				php_write (response->response_data, response->response_length TSRMLS_CC);
 			}
 		}
@@ -1449,18 +1463,21 @@ PHP_METHOD (ws_service, reply)
 				php_error_docref(NULL TSRMLS_CC, E_ERROR, "raw post data not found");
 			}
 		}
-    } else if(ZEND_NUM_ARGS() > 0 && arg_data_len > 0){
+    } 
+	else if(ZEND_NUM_ARGS() > 0 && arg_data_len > 0)
+	{
         /* If we come here, it is not an HTTP post, 
            rather a command line script execution. 
            So set some defaults to facilitate standalone execution. */
         if((arg_data_len == 4 || arg_data_len == 5) && (stricmp (arg_data , WSF_WSDL) || 
-				stricmp(arg_data, WSF_WSDL2))){
+				stricmp(arg_data, WSF_WSDL2)))
+		{
             req_info.request_uri = svc_info->svc_name;
             req_info.svr_name = estrdup(WSF_LOCALHOST);
             generate_wsdl_for_service(obj ,svc_info, &req_info, arg_data , 1 TSRMLS_CC);
             efree(req_info.svr_name);
             return;
-        }
+		}
         req_info.svr_name = strdup(WSF_LOCALHOST);
         req_info.svr_port = 9999;
         req_info.request_data = arg_data;
@@ -1471,7 +1488,8 @@ PHP_METHOD (ws_service, reply)
         req_info.content_type = strdup("application/soap+xml;charset=UTF-8");
         req_info.content_length = arg_data_len;
           
-    }else{
+    }else
+	{
         php_printf("please provide reply function's argument SOAP Envelope XML string\n");
         return;
     }
@@ -1495,15 +1513,14 @@ PHP_METHOD (ws_service, reply)
 /* {{{ proto void WSFault::__construct(string faultcode, string faultreason [,string faultrole [, mixed detail[, string faultname]]]) */ 
 PHP_METHOD (ws_fault, __construct) 
 {
-    char *sf_code = NULL, *sf_code_ns = NULL, *sf_reason = NULL, *sf_role =
-        NULL, *value = NULL;
+    char *sf_code = NULL, *sf_code_ns = NULL, *sf_reason = NULL, *sf_role =NULL, *value = NULL;
     int sf_code_len = 0, sf_reason_len = 0, sf_role_len = 0, value_len = 0;
     zval * code = NULL, *details = NULL;
-    if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC,
-            "zs|s!z!s", &code, &sf_reason, &sf_reason_len, &sf_role,
-            &sf_role_len, &details, &value, &value_len)) {
-				php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
-				AXIS2_LOG_ERROR(ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+    if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "zs|s!z!s", 
+		&code, &sf_reason, &sf_reason_len, &sf_role, &sf_role_len, &details, &value, &value_len)) 
+	{
+		php_error_docref (NULL TSRMLS_CC, E_ERROR, "Invalid parameters");
+		AXIS2_LOG_ERROR(ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
 					"Invalid Parameters, Fault Code and Fault Reason values are mandatory");
 		return;
     }
@@ -1527,16 +1544,17 @@ PHP_METHOD (ws_fault, __construct)
         } 
 		else 
 		{
-			php_error_docref (NULL TSRMLS_CC, E_ERROR, "Fault Code and Fault Code namespace must be strings");
+			php_error_docref (NULL TSRMLS_CC, E_ERROR, 
+				"Fault Code and Fault Code namespace must be strings");
 		
 			AXIS2_LOG_ERROR(ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
 				"Fault Code and ns must be strings.");
-		return;
+			return;
         }
     } else {
 		php_error_docref (NULL TSRMLS_CC, E_ERROR, "Incorrect Fault Code");
 			
-        AXIS2_LOG_ERROR(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_fault] Invalid fault code.");
+        AXIS2_LOG_ERROR(ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Invalid fault code.");
 			return;
     }
     if(!(strcmp(sf_code, "VersionMismatch") == 0 || 
@@ -1545,18 +1563,25 @@ PHP_METHOD (ws_fault, __construct)
        strcmp(sf_code, "Sender") == 0 ||
 	   strcmp(sf_code, "Client") == 0 ||
 	   strcmp(sf_code, "Server") == 0 ||
-       strcmp(sf_code, "Receiver") == 0)){
-	php_error_docref (NULL TSRMLS_CC, E_ERROR, 
+       strcmp(sf_code, "Receiver") == 0))
+	{
+		php_error_docref (NULL TSRMLS_CC, E_ERROR, 
 			"Incorrect Fault Code, Code must be one of Client, Server, VersionMismatch,MustUnderstand,DataEncodingUnknown,Sender, Receiver");
     }
 
 
-    if (!sf_code || !sf_reason){
-        if (WSF_GLOBAL (soap_version) == AXIOM_SOAP11){
-			AXIS2_LOG_ERROR(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_fault] faultcode and faultstring are mandatory ");
+    if (!sf_code || !sf_reason)
+	{
+        if (WSF_GLOBAL (soap_version) == AXIOM_SOAP11)
+		{
+			AXIS2_LOG_ERROR(ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+				"faultcode and faultstring are mandatory ");
             return;
-        }else if (WSF_GLOBAL (soap_version) == AXIOM_SOAP12) {
-            AXIS2_LOG_ERROR(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_fault] Code and Reason are mandatory ");
+        }
+		else if (WSF_GLOBAL (soap_version) == AXIOM_SOAP12) 
+		{
+            AXIS2_LOG_ERROR(ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+				"Code and Reason are mandatory ");
 		}
    }
     wsf_util_set_soap_fault (this_ptr, sf_code_ns, sf_code, sf_reason,

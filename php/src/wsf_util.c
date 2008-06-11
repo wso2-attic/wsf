@@ -1532,13 +1532,14 @@ void wsf_util_process_ws_service_operations(
     zval ** tmp = NULL;
     int i = 0;
    
-    if (!ht_ops_to_funcs) {
+    if (!ht_ops_to_funcs) 
+	{
         return;
     }
     
     zend_hash_internal_pointer_reset_ex (ht_ops_to_funcs, &pos);
-    while (zend_hash_get_current_data_ex (ht_ops_to_funcs,
-        (void **) &tmp, &pos) != FAILURE) {
+    while (zend_hash_get_current_data_ex (ht_ops_to_funcs, (void **) &tmp, &pos) != FAILURE) 
+	{
 
         char *op_name_to_store = NULL;
         char *op_name = NULL;
@@ -1552,9 +1553,12 @@ void wsf_util_process_ws_service_operations(
         zend_hash_get_current_key_ex (ht_ops_to_funcs, &op_name, &op_name_len, &index, 0, &pos);
         
         func_name = Z_STRVAL_PP (tmp);
-        if (op_name){
+        if (op_name)
+		{
             op_name_to_store = op_name;
-        } else {
+        } 
+		else 
+		{
             op_name_to_store = func_name;
         }
 
@@ -1562,20 +1566,21 @@ void wsf_util_process_ws_service_operations(
         function_name = emalloc (key_len + 1);
         zend_str_tolower_copy (function_name, func_name, key_len);
 
-        if (zend_hash_find (EG (function_table), function_name,
-                key_len + 1, (void **) &f) == FAILURE) {
+        if (zend_hash_find (EG (function_table), function_name, key_len + 1, (void **) &f) == FAILURE) 
+		{
             efree(function_name);
             php_error_docref (NULL TSRMLS_CC, E_ERROR, "Named function not in function table");
-            AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "[wsf-php] %s function not defined", func_name);
-        }else{
-            
+            AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+				" %s function not defined", func_name);
+        }
+		else
+		{
     	    axutil_hash_set (svc_info->ops_to_functions, axutil_strdup (ws_env_svr, op_name_to_store),
                 AXIS2_HASH_KEY_STRING, axutil_strdup (ws_env_svr, func_name));
 
      	    wsf_util_create_op_and_add_to_svc (svc_info, ws_env_svr,
                 op_name_to_store, ht_ops_to_mep TSRMLS_CC);
-            
-	}
+		}
         zend_hash_move_forward_ex (ht_ops_to_funcs, &pos);
         i++;
     }
@@ -1589,71 +1594,74 @@ void wsf_util_process_ws_service_op_actions(
     HashPosition pos;
     zval ** tmp = NULL;
  
-    if (!ht_actions){
+    if (!ht_actions)
+	{
         return;
     }
     
     zend_hash_internal_pointer_reset_ex (ht_actions, &pos);
 
-    while (zend_hash_get_current_data_ex (ht_actions,
-              (void **) &tmp, &pos) != FAILURE){
+    while (zend_hash_get_current_data_ex (ht_actions, (void **) &tmp, &pos) != FAILURE)
+	{
 
-            char *func_name = NULL;
-           char *wsa_action = NULL;
-            uint str_length = 0;
-            ulong num_index = 0;
-            char *operation_name = NULL;
-            operation_name = Z_STRVAL_PP (tmp);
+        char *func_name = NULL;
+	    char *wsa_action = NULL;
+        uint str_length = 0;
+        ulong num_index = 0;
+        char *operation_name = NULL;
+        operation_name = Z_STRVAL_PP (tmp);
 
-            if (zend_hash_get_current_key_ex (ht_actions, &wsa_action,
-                    &str_length, &num_index, AXIS2_TRUE, &pos) == FAILURE){
+        if (zend_hash_get_current_key_ex (ht_actions, &wsa_action, &str_length, 
+			&num_index, AXIS2_TRUE, &pos) == FAILURE)
+		{
+			php_error_docref(NULL TSRMLS_CC, E_ERROR, "Key Restting function failed");
+        }
+        if (Z_TYPE_PP (tmp) != IS_STRING)
+		{
+            php_error_docref (NULL TSRMLS_CC, E_ERROR, "Tried to add a function that isn't a string");
+        }
 
+        func_name = axutil_hash_get (svc_info->ops_to_functions, 
+			Z_STRVAL_PP (tmp), AXIS2_HASH_KEY_STRING);
+
+        if (!func_name)
+		{
+            /** function corresponding to operation does not exist in the 
+             *  ops to function table, this operation is assumed to be a function and 
+             *  not to be a class method and check whether it exists. 
+             *  If so it will be added as an operation
+             * */
+            char *key = NULL;
+            int key_len = 0;
+            zend_function *f;
+
+            key_len = Z_STRLEN_PP(tmp);
+            key = emalloc (key_len + 1);
+
+            zend_str_tolower_copy (key, operation_name , key_len);
+
+            if (zend_hash_find (EG (function_table), key, key_len + 1, (void **) &f) == FAILURE)
+			{
+                /* php_error_docref (NULL TSRMLS_CC, E_ERROR, "Named function not in function table"); */
+                AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+					"%s The function does not exist in function table ", operation_name);
             }
-            if (Z_TYPE_PP (tmp) != IS_STRING){
-                php_error_docref (NULL TSRMLS_CC, E_ERROR,
-                    "Tried to add a function that isn't a string");
-            }
-
-            func_name = axutil_hash_get (svc_info->ops_to_functions,
-                Z_STRVAL_PP (tmp), AXIS2_HASH_KEY_STRING);
-
-            if (!func_name){
-                /** function corresponding to operation does not exist in the 
-                 *  ops to function table, this operation is assumed to be a function and 
-                 *  not to be a class method and check whether it exists. 
-                 *  If so it will be added as an operation
-                 * */
-                char *key = NULL;
-                int key_len = 0;
-                zend_function *f;
-
-                key_len = Z_STRLEN_PP(tmp);
-                key = emalloc (key_len + 1);
-
-                zend_str_tolower_copy (key, operation_name , key_len);
-
-                if (zend_hash_find (EG (function_table), key, key_len + 1, (void **) &f) == FAILURE){
-                    /* php_error_docref (NULL TSRMLS_CC, E_ERROR, "Named function not in function table"); */
-                    AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, 
-                            "[wsf-php] %s The function does not exist in function table ", operation_name);
-                }else{
-                	axutil_hash_set (svc_info->ops_to_functions, axutil_strdup (ws_env_svr, Z_STRVAL_PP (tmp)),
-	                    AXIS2_HASH_KEY_STRING, axutil_strdup (ws_env_svr, Z_STRVAL_PP (tmp)));
+			else
+			{
+            	axutil_hash_set (svc_info->ops_to_functions, axutil_strdup (ws_env_svr, Z_STRVAL_PP (tmp)),
+                    AXIS2_HASH_KEY_STRING, axutil_strdup (ws_env_svr, Z_STRVAL_PP (tmp)));
+			}
+            efree(key);
 		}
-                efree(key);
-            }
-
-          
-            if (wsa_action) {
-               
-                    wsf_util_set_addr_action_to_op(svc_info, wsa_action, ws_env_svr, operation_name TSRMLS_CC);
-                
-                    /* keep track of operations with actions */
-                    axutil_hash_set (svc_info->ops_to_actions, axutil_strdup (ws_env_svr, operation_name),
-                    AXIS2_HASH_KEY_STRING, axutil_strdup (ws_env_svr, wsa_action));
-            }
-            zend_hash_move_forward_ex (ht_actions, &pos);
-    }
+        if (wsa_action) 
+		{
+            wsf_util_set_addr_action_to_op(svc_info, wsa_action, ws_env_svr, operation_name TSRMLS_CC);
+            /* keep track of operations with actions */
+            axutil_hash_set (svc_info->ops_to_actions, axutil_strdup (ws_env_svr, operation_name),
+            AXIS2_HASH_KEY_STRING, axutil_strdup (ws_env_svr, wsa_action));
+        }
+        zend_hash_move_forward_ex (ht_actions, &pos);
+	}
 }
 
 
@@ -1668,34 +1676,38 @@ void wsf_util_process_ws_service_operations_for_classes(
     zval ** tmp = NULL;
     int i = 0;
       
-    if (!ht_ops_to_funcs || !classname) {
+    if (!ht_ops_to_funcs || !classname) 
+	{
         return;
     }        
     zend_hash_internal_pointer_reset_ex (ht_ops_to_funcs, &pos);
-        while (zend_hash_get_current_data_ex (ht_ops_to_funcs,
-               (void **) &tmp, &pos) != FAILURE) {
+    while (zend_hash_get_current_data_ex (ht_ops_to_funcs, (void **) &tmp, &pos) != FAILURE) 
+	{
 
-            char *op_name_to_store = NULL;
-            char *op_name = NULL;
-            unsigned int op_name_len = 0;
-            unsigned long index = i;
-            char *func_name = NULL;
-            zend_hash_get_current_key_ex (ht_ops_to_funcs, &op_name, &op_name_len, &index, 0, &pos);
-            zend_hash_move_forward_ex (ht_ops_to_funcs, &pos);
-            i++;
-            func_name = Z_STRVAL_PP (tmp);
-            if (op_name){
-                op_name_to_store = axutil_strdup (ws_env_svr, op_name);
-            } else {
-                op_name_to_store = axutil_strdup (ws_env_svr,func_name);
-            }
+        char *op_name_to_store = NULL;
+        char *op_name = NULL;
+        unsigned int op_name_len = 0;
+        unsigned long index = i;
+        char *func_name = NULL;
+        zend_hash_get_current_key_ex (ht_ops_to_funcs, &op_name, &op_name_len, &index, 0, &pos);
+        zend_hash_move_forward_ex (ht_ops_to_funcs, &pos);
+        i++;
+        func_name = Z_STRVAL_PP (tmp);
+        if (op_name)
+		{
+            op_name_to_store = axutil_strdup (ws_env_svr, op_name);
+        } 
+		else 
+		{
+            op_name_to_store = axutil_strdup (ws_env_svr,func_name);
+        }
 
-            axutil_hash_set (svc_info->ops_to_functions,
-                 op_name_to_store, AXIS2_HASH_KEY_STRING, axutil_strdup (ws_env_svr, func_name));
+        axutil_hash_set (svc_info->ops_to_functions,
+             op_name_to_store, AXIS2_HASH_KEY_STRING, axutil_strdup (ws_env_svr, func_name));
 
-			axutil_hash_set(svc_info->ops_to_classes , op_name_to_store , AXIS2_HASH_KEY_STRING, classname);
- 
-            wsf_util_create_op_and_add_to_svc (svc_info, ws_env_svr, op_name_to_store, ht_ops_to_mep TSRMLS_CC);
+		axutil_hash_set(svc_info->ops_to_classes , op_name_to_store , AXIS2_HASH_KEY_STRING, classname);
+
+        wsf_util_create_op_and_add_to_svc (svc_info, ws_env_svr, op_name_to_store, ht_ops_to_mep TSRMLS_CC);
     }
 }        
 
@@ -1710,13 +1722,15 @@ void wsf_util_process_ws_service_classes(
 	zend_class_entry **ce;
 
     zend_hash_internal_pointer_reset_ex (ht_classes, &pos);
-	while(zend_hash_get_current_data_ex(ht_classes, (void**)&tmp, &pos) != FAILURE){
+	while(zend_hash_get_current_data_ex(ht_classes, (void**)&tmp, &pos) != FAILURE)
+	{
 		HashTable *ht_ops_to_functions = NULL;
 		uint str_length = 0;
 		zval **tmpval = NULL;
 		
 		
-        if(Z_TYPE_PP(tmp) == IS_ARRAY){
+        if(Z_TYPE_PP(tmp) == IS_ARRAY)
+		{
 			/** data value is an array 	"classes"=>array("foo"=>array($ops, $actions,..)" */
 			HashTable *values = NULL;
             char *classname = NULL;
@@ -1724,11 +1738,14 @@ void wsf_util_process_ws_service_classes(
             int class_exists = 0;
 
 			values = Z_ARRVAL_PP(tmp);
-            if (zend_hash_get_current_key_ex (values, &classname,
-                    &str_length, &num_index, AXIS2_TRUE, &pos) != FAILURE){
-				AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, "classname -> %s", classname);
+            if (zend_hash_get_current_key_ex (values, &classname, &str_length, 
+				&num_index, AXIS2_TRUE, &pos) != FAILURE)
+			{
+				AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+					"classname -> %s", classname);
             }
-			if(values){
+			if(values)
+			{
 				if(zend_hash_find(values, WSF_OPERATIONS, sizeof(WSF_OPERATIONS), (void**)&tmpval) == SUCCESS
 					&& Z_TYPE_PP(tmpval) == IS_ARRAY){
 						ht_ops_to_functions = Z_ARRVAL_PP(tmpval);
@@ -1744,8 +1761,10 @@ void wsf_util_process_ws_service_classes(
 				}
 			}
 			class_exists = zend_lookup_class(classname, str_length, &ce TSRMLS_CC);
-			if(class_exists){
-				if(!svc_info->ops_to_classes){
+			if(class_exists)
+			{
+				if(!svc_info->ops_to_classes)
+				{
 					svc_info->ops_to_classes = axutil_hash_make(ws_env_svr);
 				}
 				wsf_util_process_ws_service_operations_for_classes(ht_ops_to_functions,
@@ -1768,7 +1787,8 @@ void wsf_util_process_rest_params(axutil_env_t *env,
     zend_hash_internal_pointer_reset_ex (ht_rest_map, &pos);
 	while(zend_hash_get_current_data_ex(ht_rest_map, (void**)&tmp, &pos) != FAILURE){
 		zval **tmpval;		
-        if(Z_TYPE_PP(tmp) == IS_ARRAY){
+        if(Z_TYPE_PP(tmp) == IS_ARRAY)
+		{
 			/** data value is an array 	"<Operation>"=>array("HTTPMethod"=>"<OP>","restLocation"=>"<loc>" */
 			HashTable *values = NULL;
             char *operation_name = NULL;
@@ -1778,24 +1798,31 @@ void wsf_util_process_rest_params(axutil_env_t *env,
 			char *rest_location = NULL;
 
 			values = Z_ARRVAL_PP(tmp);
-			if (zend_hash_get_current_key_ex (values, &operation_name,
-                    &str_length, &num_index, AXIS2_TRUE, &pos) != FAILURE){
-						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsfphp] Processing Rest Params opname-> %s", operation_name);
+			if (zend_hash_get_current_key_ex (values, &operation_name, &str_length, 
+				&num_index, AXIS2_TRUE, &pos) != FAILURE)
+			{
+				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+					"Processing Rest Params opname-> %s", operation_name);
             }
-			if(values){
+			if(values)
+			{
 				if(zend_hash_find(values, WSF_HTTP_METHOD, sizeof(WSF_HTTP_METHOD), (void**)&tmpval) == SUCCESS
-					&& Z_TYPE_PP(tmpval) == IS_STRING){
+					&& Z_TYPE_PP(tmpval) == IS_STRING)
+				{
 						http_method = Z_STRVAL_PP(tmpval);
 				}
 				if(zend_hash_find(values, WSF_REST_LOCATION, sizeof(WSF_REST_LOCATION), (void**)&tmpval) == SUCCESS
-					&& Z_TYPE_PP(tmpval) == IS_STRING){
+					&& Z_TYPE_PP(tmpval) == IS_STRING)
+				{
 						rest_location = Z_STRVAL_PP(tmpval);
 				}
 			}
-			if(operation_name && http_method && rest_location){
+			if(operation_name && http_method && rest_location)
+			{
 				axis2_op_t *op = NULL;
 				op = axis2_svc_get_op_with_name(svc_info->svc, env, operation_name);
-				if(op){
+				if(op)
+				{
 					axis2_op_set_rest_http_method(op, env, http_method);
 					axis2_op_set_rest_http_location(op, env, rest_location);
 					axis2_svc_add_rest_mapping(svc_info->svc, env, http_method, rest_location, op);

@@ -69,8 +69,8 @@ wsf_worker_find_op_and_params_with_location_and_method(
 
    if (op)
    {
-		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-			"[wsfphp] Operation found using target endpoint uri fragment");
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+			"Operation found using target endpoint uri fragment");
    }else
    {
 		int i = 0;
@@ -83,8 +83,8 @@ wsf_worker_find_op_and_params_with_location_and_method(
 		http_method = axis2_msg_ctx_get_rest_http_method(msg_ctx, env);
 		if (!http_method)
 		{
-			AXIS2_LOG_WARNING (env->log, AXIS2_LOG_SI, "Unable to find http method \
-				for location: %s", svc_info->loc_str);
+			AXIS2_LOG_WARNING (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+				"Unable to find HTTPMethod for location: %s", svc_info->loc_str);
 			return NULL;
 		}
 
@@ -191,7 +191,8 @@ wsf_worker_create (
 		        smart_str_appends(&sandesha2_db, WSF_SANDESHA2_DB);
 		        smart_str_0(&sandesha2_db);
 				axutil_param_set_value (param, env, axutil_strdup(env , sandesha2_db.c));
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_svr] rm_db_dir %s", sandesha2_db.c);
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+					"rm_db_dir %s", sandesha2_db.c);
 				smart_str_free(&sandesha2_db);
             }
         }
@@ -365,7 +366,8 @@ wsf_worker_process_request (
 
 	if (NULL == conf_ctx) 
 	{
-		AXIS2_LOG_CRITICAL(env->log, AXIS2_LOG_SI, "[wsf worker ] configuration ctx null");
+		AXIS2_LOG_CRITICAL(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+			"Configuration context null in wsf_worker_process_request");
         AXIS2_ERROR_SET (env->error, AXIS2_ERROR_NULL_CONFIGURATION_CONTEXT, AXIS2_FAILURE);
         return AXIS2_CRITICAL_FAILURE;
     }
@@ -382,7 +384,8 @@ wsf_worker_process_request (
     
 	response->http_protocol = request->http_protocol;
     
-	AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "Client HTTP version %s", request->http_protocol);
+	AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+		"Client HTTP version %s", request->http_protocol);
 
     out_stream = axutil_stream_create_basic (env);
     
@@ -473,7 +476,8 @@ wsf_worker_process_request (
 	in_stream = wsf_stream_create (env, request TSRMLS_CC);
     if (!in_stream) 
 	{
-        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "Error occurred in creating input stream.");
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+			"Error occurred in creating input stream.");
         return AXIS2_CRITICAL_FAILURE;
     }
 
