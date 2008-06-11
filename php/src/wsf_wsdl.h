@@ -99,7 +99,9 @@ void wsf_wsdl_set_sig_model(char* wsdl_path,
 #define WSF_WSDL_INPUT_HEADERS   "input_headers"
 #define WSF_WSDL_OUTPUT_HEADERS  "output_headers"
 #define WSF_WSDL_POLICY_NODE     "policy_node"
-#define WSF_WSDL_RES_SIG_NODEL   "response_sig_model"
+#define WSF_WSDL_POLICIES        "policies"
+#define WSF_WSDL_SIG_MODEL       "sig_model_string"
+#define WSF_WSDL_RES_SIG_MODEL   "response_sig_model"
 #define WSF_WSDL_ARGS            "args"
 #define WSF_WSDL_ATTACHMENT_MAP  "attachment_map"
 #define WSF_WSDL_RES_PAYLOAD     "response_payload"
@@ -116,8 +118,9 @@ void wsf_wsdl_set_sig_model(char* wsdl_path,
 #define WSF_WSDL_RESPONSE_PAYLOAD_PARAM "response_payload_param"
 #define WSF_WSDL_RESPONSE_HEADER_PARAM "response_header_param"
 
-
 #define WSF_WSDL_CHECK_FUNCTION "wsf_wsdl_check"
+
+#define WSF_WSDL_DYNAMIC_INVOC_SCRIPT "wsf_wsdl.php"
 
 #endif /* WSF_WSDL_H */
 

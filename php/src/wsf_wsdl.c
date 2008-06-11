@@ -177,12 +177,12 @@ void wsf_wsdl_create_dynamic_client(
         INIT_PZVAL(params[1]);
 
 		script.type = ZEND_HANDLE_FP;
-		script.filename = "wsf_wsdl.php";
+		script.filename = WSF_WSDL_DYNAMIC_INVOC_SCRIPT;
 		script.opened_path = NULL;
 		script.free_filename = 0;
 
 
-		stream  = php_stream_open_wrapper("wsf_wsdl.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
+		stream  = php_stream_open_wrapper(WSF_WSDL_DYNAMIC_INVOC_SCRIPT, "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
 		if(!stream)
 				return;
 
@@ -323,7 +323,7 @@ wsf_wsdl_do_request(zval *client_zval,
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "policy array found");
     }
     
-    if(zend_hash_find(ht_return, WSF_WSDL_RES_SIG_NODEL, sizeof(WSF_WSDL_RES_SIG_NODEL),
+    if(zend_hash_find(ht_return, WSF_WSDL_RES_SIG_MODEL, sizeof(WSF_WSDL_RES_SIG_MODEL),
 		(void **)&tmp_options) == SUCCESS && Z_TYPE_PP(tmp_options) == IS_STRING )
 	{
         response_sig_model_string = Z_STRVAL_PP(tmp_options);
@@ -511,8 +511,7 @@ wsf_wsdl_do_request(zval *client_zval,
                 char *value = NULL;
                 value = Z_STRVAL_PP (tmp_options);
                 /* Check if SOAP with Attachments (SwA) has been enabled */
-                if (value && (strcmp (value, "swa") == 0 || strcmp (value, "SWA") == 0 
-                            || strcmp (value, "SwA") == 0)) 
+                if (value && (stricmp (value, WSF_SWA) == 0) )
 				{
 
                     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "SwA enabled");
@@ -1077,12 +1076,12 @@ void wsf_wsdl_process_service(zval *this_ptr, wsf_request_info_t *request_info1,
     INIT_PZVAL(params[1]);
     
     script.type = ZEND_HANDLE_FP;
-    script.filename = "wsf_wsdl.php";
+    script.filename = WSF_WSDL_DYNAMIC_INVOC_SCRIPT;
     script.opened_path = NULL;
     script.free_filename = 0;
 
 
-    stream  = php_stream_open_wrapper("wsf_wsdl.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
+    stream  = php_stream_open_wrapper(WSF_WSDL_DYNAMIC_INVOC_SCRIPT, "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
     if(!stream)
         return;
 
@@ -1109,14 +1108,14 @@ void wsf_wsdl_process_service(zval *this_ptr, wsf_request_info_t *request_info1,
                 
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
                                 "[wsf_wsdl]received array from scripts");
-                if(zend_hash_find(ht_return, "sig_model_string", 
-                                  sizeof("sig_model_string"), (void **)&tmp) == SUCCESS &&
+                if(zend_hash_find(ht_return, WSF_WSDL_SIG_MODEL, 
+                                  sizeof(WSF_WSDL_SIG_MODEL), (void **)&tmp) == SUCCESS &&
                    Z_TYPE_PP(tmp) == IS_STRING){
                     svc_info->sig_model_string = Z_STRVAL_PP(tmp);
                     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
                                     "[wsf_wsdl]received sig model string");
                 }
-                if(zend_hash_find(ht_return, "policies", sizeof("policies"), 
+                if(zend_hash_find(ht_return, WSF_WSDL_POLICIES, sizeof(WSF_WSDL_POLICIES), 
                                   (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY){
                     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
                                     "[wsf_wsdl]policies found");
@@ -1375,11 +1374,11 @@ void wsf_wsdl_set_sig_model(char *wsdl_path, wsf_svc_info_t *svc_info, const axu
     INIT_PZVAL(params[1]);
     
     script.type = ZEND_HANDLE_FP;
-    script.filename = "wsf_wsdl.php";
+    script.filename = WSF_WSDL_DYNAMIC_INVOC_SCRIPT;
     script.opened_path = NULL;
     script.free_filename = 0;
 
-    stream  = php_stream_open_wrapper("wsf_wsdl.php", "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
+    stream  = php_stream_open_wrapper(WSF_WSDL_DYNAMIC_INVOC_SCRIPT, "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
     if(!stream)
         return;
 
@@ -1406,8 +1405,8 @@ void wsf_wsdl_set_sig_model(char *wsdl_path, wsf_svc_info_t *svc_info, const axu
                 
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
                                 "[wsf_wsdl]received array from scripts");
-                if(zend_hash_find(ht_return, "sig_model_string", 
-                                  sizeof("sig_model_string"), (void **)&tmp) == SUCCESS &&
+                if(zend_hash_find(ht_return, WSF_WSDL_SIG_MODEL, 
+                                  sizeof(WSF_WSDL_SIG_MODEL), (void **)&tmp) == SUCCESS &&
                    Z_TYPE_PP(tmp) == IS_STRING){
                     svc_info->sig_model_string = Z_STRVAL_PP(tmp);
                     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
