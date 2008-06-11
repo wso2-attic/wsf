@@ -1724,8 +1724,6 @@ PHP_METHOD (ws_security_token, __construct)
 		if(zend_hash_find(ht, WSF_PKCS12_KEYSTORE,sizeof(WSF_PKCS12_KEYSTORE), 
 			(void **)&tmp)== SUCCESS && Z_TYPE_PP (tmp) == IS_STRING)
 		{
-			void *value = Z_STRVAL_PP(tmp);
-			int len = Z_STRLEN_PP(tmp);
 			add_property_stringl(object, WSF_PKCS12_KEYSTORE, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp),1);
 		}
     }

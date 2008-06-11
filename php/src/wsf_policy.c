@@ -473,18 +473,15 @@ wsf_set_rampart_options (
 	{
 			rampart_context_set_pwcb_function(rampart_context, env, wsf_password_provider_function, Z_STRVAL_PP(token_val));
     }
-	if (zend_hash_find (ht_token, WSF_PKCS12_KEYSTORE,
-		sizeof (WSF_PKCS12_KEYSTORE), (void **) &token_val) == SUCCESS 
-		&& Z_TYPE_PP (token_val) == IS_STRING) 
+	if (zend_hash_find (ht_token, WSF_PKCS12_KEYSTORE, sizeof (WSF_PKCS12_KEYSTORE), 
+                (void **) &token_val) == SUCCESS && Z_TYPE_PP (token_val) == IS_STRING) 
 	{
-		void *val = Z_STRVAL_PP(token_val);
-		int len = Z_STRLEN_PP(token_val);
-		rampart_context_set_key_store_buff(rampart_context, env, val);
+		rampart_context_set_key_store_buff(rampart_context, env, Z_STRVAL_PP(token_val), Z_STRLEN_PP(token_val));
 	}
 
-    if (zend_hash_find (ht_token, WSF_CUSTOM_TOKENS,
-            sizeof (WSF_CUSTOM_TOKENS), (void **) &token_val) == SUCCESS
-        && Z_TYPE_PP (token_val) == IS_ARRAY) {
+    if (zend_hash_find (ht_token, WSF_CUSTOM_TOKENS, sizeof (WSF_CUSTOM_TOKENS), 
+                (void **) &token_val) == SUCCESS  && Z_TYPE_PP (token_val) == IS_ARRAY) 
+    {
        
 			zval **tmp = NULL;
 			HashPosition pos;
