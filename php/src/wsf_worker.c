@@ -29,6 +29,7 @@
 #include <axutil_url.h>
 #include <axiom_soap_const.h>
 #include <axiom_soap.h>
+#include <axis2_core_utils.h>
 #include "wsf_out_transport_info.h"
 #include "wsf_stream.h"
 #include "wsf_util.h"
@@ -47,116 +48,6 @@ wsf_worker_dummy_free_function (
     return;
 }
 
-axis2_op_t *AXIS2_CALL
-wsf_worker_get_op_with_method_and_location(
-    const axis2_svc_t * svc,
-    const axutil_env_t * env,
-    const axis2_char_t * method,
-    const axis2_char_t * location,
-    int * param_count,
-    axis2_char_t **** params)
-{
-    axutil_array_list_t *op_list = NULL;
-    axis2_char_t *loc_str = NULL;
-    axis2_char_t *loc_str_tmp = NULL;
-    axis2_char_t *rindex = NULL;
-    axis2_bool_t pass_one = AXIS2_TRUE;
-    axis2_bool_t loop_state = AXIS2_TRUE;
-    AXIS2_PARAM_CHECK(env->error, location, NULL);
-    AXIS2_PARAM_CHECK(env->error, method, NULL);
-    
-    loc_str = axutil_strtrim(env, location, NULL);
-    if (!loc_str)
-    {
-        return NULL;
-    }
-    loc_str_tmp = loc_str;
-    if (loc_str_tmp[0] == '/')
-    {
-        loc_str_tmp++;
-    }
-    if (strchr(loc_str_tmp, '?'))
-    {
-        axis2_char_t *temp = NULL;
-
-        temp = strchr(loc_str_tmp, '?');
-        temp[0] = '\0';
-    }
-    while(loop_state)
-    {
-        rindex = axutil_rindex(loc_str_tmp, '/');
-
-        if (rindex && *rindex)
-        {
-            loc_str_tmp = axutil_string_substring_ending_at(loc_str_tmp, (int)(rindex - loc_str_tmp));
-            /* We are sure that the difference lies within the int range */
-        }
-        else if (pass_one)
-        {
-            pass_one = AXIS2_FALSE;
-        }
-        else
-        {
-            int i = 0;
-            i = (int)strlen(loc_str_tmp);
-            /* We are sure that the difference lies within the int range */
-            if (i == 0)
-            {
-                break;
-            }
-            loc_str_tmp[i - 1] = '\0';
-        }
-
-        if (!loc_str_tmp || !*loc_str_tmp)
-        {
-            break;
-        }
-        op_list = axis2_svc_get_rest_op_list_with_method_and_location(svc, env,
-                                                                      method, loc_str_tmp);
-        if (op_list && axutil_array_list_size(op_list, env) != 0)
-        {
-            int i = 0;
-            int size = 0;
-
-            size = axutil_array_list_size(op_list, env);
-            for (i = 0; i < size; i++)
-            {
-                axis2_op_t *op_temp = NULL;
-                axis2_char_t *op_location = NULL;
-                int match_count = 0;
-                axis2_char_t ***matches = NULL;
-                axis2_status_t status = AXIS2_FAILURE;
-
-                op_temp = axutil_array_list_get(op_list, env, i);
-                op_location = axis2_op_get_rest_http_location(op_temp, env);
-                if (!op_location)
-                {
-                    continue;
-                }
-                status = axutil_parse_rest_url_for_params(env, op_location, location,
-                                                          &match_count, &matches);
-                if (status == AXIS2_SUCCESS)
-                {
-                    *params = matches;
-                    *param_count = match_count;
-                    AXIS2_FREE (env->allocator, loc_str);
-                    return op_temp;
-                }
-                else if (matches)
-                {
-                    for (i = 0; i < match_count; i++)
-                    {
-                        AXIS2_FREE (env->allocator, matches[i]);
-                    }
-                    AXIS2_FREE (env->allocator, matches);
-                }
-            }
-        }
-    }
-    AXIS2_FREE (env->allocator, loc_str);
-    return NULL;
-}
-
 axis2_op_t *
 wsf_worker_find_op_and_params_with_location_and_method(
 	axutil_env_t *env, 
@@ -170,7 +61,7 @@ wsf_worker_find_op_and_params_with_location_and_method(
 	char ***params = NULL;
 	if(svc_info->loc_str)
 	{
-		op = wsf_worker_get_op_with_method_and_location(svc_info->svc, 
+		op = axis2_core_utils_get_rest_op_with_method_and_location(svc_info->svc,
 			env, method, svc_info->loc_str, &param_count, &params);
 	}
 	req_info->param_count = param_count;
@@ -202,7 +93,7 @@ wsf_worker_find_op_and_params_with_location_and_method(
 			if (axutil_strcasecmp(rest_methods[i], 
 								  http_method))
 			{
-				if (wsf_worker_get_op_with_method_and_location(svc_info->svc, env,
+				if (axis2_core_utils_get_rest_op_with_method_and_location(svc_info->svc, env,
 					rest_methods[i], svc_info->loc_str, &param_count, &params))
 				{
 					for (j = 0; j < param_count; j++)

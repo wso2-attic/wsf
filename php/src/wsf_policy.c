@@ -132,7 +132,7 @@ wsf_policy_handle_client_security (
             is_multiple_flow = AXIS2_SUCCESS;
         }
     }
-    /* since creating policy xml is the same procedure use one function */
+    /* since creating policy XML is the same procedure use one function */
     if (policy && Z_TYPE_P (policy) == IS_OBJECT && is_multiple_flow == AXIS2_FALSE) {
         outgoing_policy_node = wsf_do_create_policy (sec_token, policy, AXIS2_FAILURE, env TSRMLS_CC);
         incoming_policy_node = wsf_do_create_policy (sec_token, policy, AXIS2_FAILURE, env TSRMLS_CC);
@@ -196,7 +196,7 @@ wsf_policy_handle_client_security (
 
     axis2_svc_client_engage_module (svc_client, env, WSF_MODULE_SECURITY);
 
-    /** Used for debuging */
+    /** Used for Debugging */
 	if(env->log->level == AXIS2_LOG_LEVEL_DEBUG)
 	{
 		if (outgoing_policy_node) 
@@ -473,6 +473,15 @@ wsf_set_rampart_options (
 	{
 			rampart_context_set_pwcb_function(rampart_context, env, wsf_password_provider_function, Z_STRVAL_PP(token_val));
     }
+	if (zend_hash_find (ht_token, WSF_PKCS12_KEYSTORE,
+		sizeof (WSF_PKCS12_KEYSTORE), (void **) &token_val) == SUCCESS 
+		&& Z_TYPE_PP (token_val) == IS_STRING) 
+	{
+		void *val = Z_STRVAL_PP(token_val);
+		int len = Z_STRLEN_PP(token_val);
+		rampart_context_set_key_store_buff(rampart_context, env, val);
+	}
+
     if (zend_hash_find (ht_token, WSF_CUSTOM_TOKENS,
             sizeof (WSF_CUSTOM_TOKENS), (void **) &token_val) == SUCCESS
         && Z_TYPE_PP (token_val) == IS_ARRAY) {

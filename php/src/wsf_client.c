@@ -660,6 +660,7 @@ wsf_client_add_properties (
     if (zend_hash_find (ht, WSF_PROXY_AUTH_TYPE, sizeof (WSF_PROXY_AUTH_TYPE),
        (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
         add_property_zval(this_ptr, WSF_PROXY_AUTH_TYPE, *tmp);
+		
     }
 }
 
@@ -992,7 +993,7 @@ wsf_client_set_options (
 		{
             char *value = Z_STRVAL_PP (tmp);
 			axutil_property_t *http_method_property = NULL;
-            if (value && (strcasecmp (value, AXIS2_HTTP_GET) == 0)) 
+            if (value && (stricmp (value, AXIS2_HTTP_GET) == 0)) 
 			{
 				
 				http_method_property =	axutil_property_create (env);
@@ -1006,7 +1007,7 @@ wsf_client_set_options (
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
 					"Setting HTTPMethod GET property");
 
-            }else if (value && (strcasecmp(value, AXIS2_HTTP_PUT) == 0)) 
+            }else if (value && (stricmp(value, AXIS2_HTTP_PUT) == 0)) 
 			{
 				
 				http_method_property =	axutil_property_create (env);
@@ -1020,7 +1021,7 @@ wsf_client_set_options (
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
                     "Setting HTTPMethod PUT property");
 
-            }else if (value && (strcasecmp(value, AXIS2_HTTP_HEAD) == 0)) 
+            }else if (value && (stricmp(value, AXIS2_HTTP_HEAD) == 0)) 
 			{
 				
 				http_method_property =	axutil_property_create (env);
@@ -1033,7 +1034,7 @@ wsf_client_set_options (
 
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
                     "Setting HTTPMethod HEAD property");
-            }else if (value && (strcasecmp(value, AXIS2_HTTP_DELETE) == 0)) {
+            }else if (value && (stricmp(value, AXIS2_HTTP_DELETE) == 0)) {
 				
 				http_method_property =	axutil_property_create (env);
 

@@ -1506,7 +1506,7 @@ PHP_METHOD (ws_fault, __construct)
         } else {
 			php_error_docref (NULL TSRMLS_CC, E_ERROR, "Fault Code and Fault Code namespace must be strings");
 		
-			AXIS2_LOG_ERROR(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_fault] Fautl Code and ns must be strings.");
+			AXIS2_LOG_ERROR(ws_env_svr->log, AXIS2_LOG_SI, "[wsf_fault] Fault Code and ns must be strings.");
 		return;
         }
     } else {
@@ -1697,6 +1697,13 @@ PHP_METHOD (ws_security_token, __construct)
             && Z_TYPE_PP (tmp) == IS_STRING) {
             add_property_string (object, WSF_PASSWORD_CALL_BACK, Z_STRVAL_PP (tmp), 1);
         }
+		if(zend_hash_find(ht, WSF_PKCS12_KEYSTORE,sizeof(WSF_PKCS12_KEYSTORE), 
+			(void **)&tmp)== SUCCESS && Z_TYPE_PP (tmp) == IS_STRING)
+		{
+			void *value = Z_STRVAL_PP(tmp);
+			int len = Z_STRLEN_PP(tmp);
+			add_property_stringl(object, WSF_PKCS12_KEYSTORE, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp),1);
+		}
     }
 } 
 

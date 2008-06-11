@@ -102,6 +102,7 @@
 #define WSF_SIGN_BEFORE "SignBeforeEncrypt"
 #define WSF_ENCRYPT_BEFORE "EncryptBeforeSigning"
 
+#define WSF_PKCS12_KEYSTORE "PKCS12KeyStore"
 
 /**
 * 

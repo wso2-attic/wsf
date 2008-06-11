@@ -1011,6 +1011,7 @@ wsf_util_get_attachments (
 					if (cnt_type) {
                         add_assoc_stringl (cid2contentType, cid, 
                             cnt_type, strlen (cnt_type), 1);
+
                     }
                 }			
 			}
