@@ -232,6 +232,21 @@ typedef enum ws_input_types
 
 #define WSF_MAGIC_FUNC_CALL "__call"
 
+/** HTTP Methods */
+#define WSF_HTTP_POST "POST"
+#define WSF_HTTP_GET  "GET"
+#define WSF_WSDL "wsdl"
+#define WSF_WSDL2 "wsdl2"
+#define WSF_LOCALHOST "localhost"
+#define WSF_PROTOCOL_HTTP "HTTP"
+
+#define WSF_WSDL_1_1 "wsdl1.1"
+#define WSF_WSDL_2_0 "wsdl2.0"
+
+#define WSF_STYLE_DOCLIT "doclit"
+#define WSF_WSDL_GENERATION_FUNCTION "ws_generate_wsdl"
+#define WSF_SCRIPT_FILENAME "wsf.php"
+
 
 typedef struct wsf_svc_info
 {

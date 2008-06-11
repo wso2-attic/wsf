@@ -90,8 +90,7 @@ wsf_worker_find_op_and_params_with_location_and_method(
 
 		for (i = 0; i < 5; i++)
 		{
-			if (axutil_strcasecmp(rest_methods[i], 
-								  http_method))
+			if (axutil_strcasecmp(rest_methods[i], http_method))
 			{
 				if (axis2_core_utils_get_rest_op_with_method_and_location(svc_info->svc, env,
 					rest_methods[i], svc_info->loc_str, &param_count, &params))
