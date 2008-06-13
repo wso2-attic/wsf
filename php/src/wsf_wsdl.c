@@ -63,14 +63,6 @@ wsf_wsdl_handle_server_security(
 	zval **policy_options,
 	axutil_env_t *env TSRMLS_DC);
 
-axiom_node_t *
-wsf_wsdl_send_receive_soap_envelope_with_op_client (
-    axutil_env_t * env,
-    axis2_svc_client_t * svc_client,
-    axis2_options_t * options,
-    axiom_node_t *request_node);
-
-
 void wsf_wsdl_create_dynamic_client(
 	zval *this_ptr, 
 	char *function, 
@@ -526,9 +518,7 @@ wsf_wsdl_do_request(zval *client_zval,
                 request_node, ht_attachments, AXIOM_MIME_TYPE_OCTET_STREAM TSRMLS_CC);
     }
     
-    res_payload = wsf_wsdl_send_receive_soap_envelope_with_op_client (env, svc_client, 
-                        client_options, request_node);
-
+    res_payload =  axis2_svc_client_send_receive(svc_client, env, request_node);
 
     response_envelope = axis2_svc_client_get_last_response_soap_envelope(svc_client, env);
     if (response_envelope) 
@@ -733,29 +723,13 @@ wsf_wsdl_create_request_envelope(char *payload,
     
 	if (payload)
 	{
-		axiom_xml_reader_t* reader = NULL;
 		axiom_node_t* payload_axiom = NULL;
-	    axiom_document_t* document = NULL;			
-		axiom_stax_builder_t* builder = NULL;	
 
-		reader = axiom_xml_reader_create_for_memory (env, payload, axutil_strlen(payload), "utf-8",
-													 AXIS2_XML_PARSER_TYPE_BUFFER);
-		       
-		builder = axiom_stax_builder_create(env, reader);
-		
-		document = axiom_stax_builder_get_document(builder, env);
+		payload_axiom = wsf_util_deserialize_buffer(env, payload);
 
-		payload_axiom = axiom_document_build_all(document, env);
-		
 		axiom_soap_body_add_child(body, env, payload_axiom);
-
-		axiom_stax_builder_free_self(builder, env);
 	}
-
-	/* envelope_node = axiom_soap_envelope_get_base_node(envelope, env); */
-
     return envelope;
-	/* return axiom_node_to_string(envelope_node, env);	 */
 }
 
 
@@ -771,9 +745,8 @@ wsf_wsdl_create_soap_envelope_from_buffer (
     axiom_stax_builder_t *builder = NULL;
     
 
-    reader =
-        axiom_xml_reader_create_for_memory (env, buffer, axutil_strlen(buffer), AXIS2_UTF_8,
-                                            AXIS2_XML_PARSER_TYPE_BUFFER);
+    reader = axiom_xml_reader_create_for_memory (env, buffer, axutil_strlen(buffer), 
+		AXIS2_UTF_8, AXIS2_XML_PARSER_TYPE_BUFFER);
 
     builder = axiom_stax_builder_create (env, reader);
 
@@ -785,24 +758,11 @@ wsf_wsdl_create_soap_envelope_from_buffer (
 }
 
 
-axiom_node_t *
-wsf_wsdl_send_receive_soap_envelope_with_op_client (
-    axutil_env_t * env,
-    axis2_svc_client_t * svc_client,
-    axis2_options_t * options,
-    axiom_node_t* req_payload)
-{
-    axiom_node_t *res_payload = NULL;
-
-    res_payload = axis2_svc_client_send_receive (svc_client, env, req_payload);
-
-    return res_payload;
-}
-
-void wsf_wsdl_handle_client_security(HashTable *client_ht,
-                                     zval **policy_array,
-                                     axutil_env_t *env,
-                                     axis2_svc_client_t * svc_client TSRMLS_DC)
+void wsf_wsdl_handle_client_security(
+	 HashTable *client_ht,
+     zval **policy_array,
+     axutil_env_t *env,
+     axis2_svc_client_t * svc_client TSRMLS_DC)
 {
     zval *sec_token = NULL;
     zval *policy = NULL;

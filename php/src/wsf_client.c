@@ -191,20 +191,18 @@ wsf_client_set_security_options (
     zval *policy = NULL;
 
 
-    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-        "[wsf_client] wsf_util_set_security_options");
     if (zend_hash_find (client_ht, WSF_SECURITY_TOKEN,
             sizeof (WSF_SECURITY_TOKEN), (void **) &tmp) == SUCCESS
         && Z_TYPE_PP (tmp) == IS_OBJECT) {
         sec_token = *tmp;
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_client] security token object found ");
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+			"wsf_client_set_security_options :- Security token object found ");
     }
     if (zend_hash_find (client_ht, WSF_POLICY_NAME, sizeof (WSF_POLICY_NAME),
             (void **) &tmp) == SUCCESS) {
         policy = *tmp;
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_client] policy object found ");
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+            " Policy object found ");
     }
 
     if (sec_token) {
@@ -231,15 +229,15 @@ wsf_client_handle_incoming_attachments (
 	if (!client_ht)
         return 0;
 
-    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-        "[wsf_client] handle incomming attachments");
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+        "handle incoming attachments");
 
-    if (client_ht && zend_hash_find (client_ht, WSF_RESPONSE_XOP,
-            sizeof (WSF_RESPONSE_XOP), (void **) &tmp) == SUCCESS
-        && Z_TYPE_PP (tmp) == IS_BOOL) {
+    if (client_ht && zend_hash_find (client_ht, WSF_RESPONSE_XOP, sizeof (WSF_RESPONSE_XOP),
+		(void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_BOOL)
+	{
         response_xop = Z_BVAL_PP (tmp);
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_client] responseXOP %d", response_xop);
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+            "responseXOP %d", response_xop);
     }
 
     if (response_xop == 1) 
@@ -295,7 +293,7 @@ wsf_client_handle_outgoing_attachments (
         default_cnt_type = Z_STRVAL_PP (tmp);
     } else 
 	{
-        default_cnt_type = "application/octet-stream";
+        default_cnt_type = AXIOM_MIME_TYPE_OCTET_STREAM;
     }
     if (client_ht && zend_hash_find (client_ht, WSF_USE_MTOM, sizeof (WSF_USE_MTOM),
             (void **) &tmp) == SUCCESS) 
@@ -307,11 +305,10 @@ wsf_client_handle_outgoing_attachments (
 		{
             char *value = NULL;
             value = Z_STRVAL_PP (tmp);
-            /* Check if SOAP with Attachmnts (SwA) has been enabled */
-            if (value && (strcmp (value, "swa") == 0 || strcmp (value, "SWA") == 0 
-                        || strcmp (value, "SwA") == 0)) 
+            /* Check if SOAP with Attachments (SwA) has been enabled */
+            if (value && (strcasecmp(value, WSF_SWA) == 0)) 
 			{
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_client] SwA enabled");
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "SwA enabled");
                 enable_swa = AXIS2_TRUE;
             } 
         }
@@ -328,7 +325,8 @@ wsf_client_handle_outgoing_attachments (
     } else return;
 
     axis2_options_set_enable_mtom (options, env, enable_mtom);
-    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsf_client] enable mtom %d", enable_mtom);
+
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Enable MTOM is %d", enable_mtom);
 
 
     if (ht) 
@@ -356,9 +354,8 @@ wsf_client_set_addressing_options_to_options (
         axis2_options_set_action (client_options, env, Z_STRVAL_PP (tmp));
         addr_action_present = AXIS2_TRUE;
 
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_client] addressing action present :- %s",
-            Z_STRVAL_PP (tmp));
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+            "Addressing action is :- %s", Z_STRVAL_PP (tmp));
 
     }
     if (zend_hash_find (ht, WSF_REPLY_TO, sizeof (WSF_REPLY_TO),
@@ -371,8 +368,8 @@ wsf_client_set_addressing_options_to_options (
 
         axis2_options_set_reply_to (client_options, env, replyto_epr);
 
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_client] replyTo present :- %s", replyto);
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+            "Addressing replyTo is :- %s", replyto);
     }
 
     if (zend_hash_find (ht, WSF_FAULT_TO, sizeof (WSF_FAULT_TO),
@@ -386,8 +383,8 @@ wsf_client_set_addressing_options_to_options (
 
         axis2_options_set_fault_to (client_options, env, faultto_epr);
 
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_client] faultTo present %s", faultto);
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+            "faultTo is %s", faultto);
 
     }
     if (zend_hash_find (ht, WSF_FROM, sizeof (WSF_FROM),
@@ -400,8 +397,8 @@ wsf_client_set_addressing_options_to_options (
 
         axis2_options_set_from (client_options, env, from_epr);
 
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_client] from present %s", from);
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,WSF_PHP_LOG_PREFIX \
+            "from is  %s", from);
     }
     return addr_action_present;
 }
@@ -414,15 +411,13 @@ wsf_client_get_reader_from_zval (
     axis2_char_t *str_payload = NULL;
     int str_payload_len = 0;
     axiom_xml_reader_t *reader = NULL;
-    if (Z_TYPE_PP (param) == IS_STRING) {
+    if (Z_TYPE_PP (param) == IS_STRING) 
+	{
         str_payload = Z_STRVAL_PP (param);
         str_payload_len = Z_STRLEN_PP (param);
+        reader = axiom_xml_reader_create_for_memory (env,  str_payload, 
+			str_payload_len, AXIS2_UTF_8, AXIS2_XML_PARSER_TYPE_BUFFER);
 
-        reader = axiom_xml_reader_create_for_memory (env,
-            str_payload, str_payload_len, "utf-8",
-            AXIS2_XML_PARSER_TYPE_BUFFER);
-
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsflog] %s", str_payload);
     }
     if (!reader) {
         zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C),
@@ -698,8 +693,8 @@ wsf_client_set_module_param_option (
     axutil_param_set_value (param, env, axutil_strdup (env,
             module_option_value));
 
-    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-        "[wsf_client] setting %s module param %s to %s ", module_name,
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+        "Setting %s module param %s to %s ", module_name,
         module_option, module_option_value);
     axutil_qname_free (module_qname, env);
     return AXIS2_SUCCESS;
@@ -715,44 +710,48 @@ wsf_client_set_headers (
     zval * msg TSRMLS_DC)
 {
     HashTable *ht = NULL;
-    if (!svc_client || !msg) {
+    if (!svc_client || !msg) 
+	{
         return 0;
-    } else {
+    } 
+	else 
+	{
 
         zval **tmp = NULL;
         ht = Z_OBJPROP_P (msg);
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-            "[wsf_client] setting header node ");
 
         if (zend_hash_find (ht, WSF_INPUT_HEADERS, sizeof (WSF_INPUT_HEADERS),
-                (void **) &tmp) == SUCCESS) {
-            if (Z_TYPE_PP (tmp) == IS_ARRAY) {
+                (void **) &tmp) == SUCCESS) 
+		{
+            if (Z_TYPE_PP (tmp) == IS_ARRAY) 
+			{
                 HashPosition pos;
                 HashTable *ht = Z_ARRVAL_PP (tmp);
                 zval **val = NULL;
                 zend_hash_internal_pointer_reset_ex (ht, &pos);
 
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    "[wsf_client] headers found");
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                    "sending headers found");
 
-                while (zend_hash_get_current_data_ex (ht, (void **) &val,
-                        &pos) != FAILURE) {
-			if(Z_TYPE_PP(val) == IS_OBJECT && 
-				instanceof_function(Z_OBJCE_PP(val), ws_header_class_entry TSRMLS_CC))
+                while (zend_hash_get_current_data_ex (ht, (void **) &val, &pos) != FAILURE) 
+				{
+					if(Z_TYPE_PP(val) == IS_OBJECT && instanceof_function(Z_OBJCE_PP(val), 
+						ws_header_class_entry TSRMLS_CC))
 				{
 					zval *header = *val;
 					axiom_node_t *header_node = NULL;
 					header_node = wsf_util_construct_header_node (env, 
 						NULL, WSF_GLOBAL(soap_uri) , WSF_GLOBAL(soap_version) ,header TSRMLS_CC);
-					if (header_node) {
-						AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-							"[wsf_client] adding header block to svc_client");
+					if (header_node) 
+					{
+						AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+							"Adding header block to svc_client");
 						axis2_svc_client_add_header (svc_client, env, header_node);
-						}
-				}else{
-					php_error_docref (NULL TSRMLS_CC, E_ERROR,
-            "Only WSHeader type objects are accepted");
-
+					}
+				}
+				else
+				{
+				php_error_docref(NULL TSRMLS_CC, E_ERROR,"Only WSHeader type objects are accepted");
 				}
                     zend_hash_move_forward_ex (ht, &pos);
 				}

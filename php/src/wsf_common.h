@@ -247,8 +247,8 @@ typedef enum ws_input_types
 #define WSF_STYLE_DOCLIT "doclit"
 #define WSF_WSDL_GENERATION_FUNCTION "ws_generate_wsdl"
 #define WSF_SCRIPT_FILENAME "wsf.php"
-#define WSF_PHP_DEFAULT_PORT 80
-
+#define WSF_DEFAULT_PORT 80
+#define WSF_SWA "swa"
 
 typedef struct wsf_svc_info
 {

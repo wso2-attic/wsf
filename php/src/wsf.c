@@ -1158,7 +1158,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
         if(!in_cmd)
 		{
 			smart_str_appends(&full_path, req_info->svr_name);
-			if(req_info->svr_port != WSF_PHP_DEFAULT_PORT){
+			if(req_info->svr_port != WSF_DEFAULT_PORT){
 				char svr_port[10];				
 				sprintf(svr_port, ":%ld", req_info->svr_port);
 				smart_str_appends(&full_path, svr_port);
