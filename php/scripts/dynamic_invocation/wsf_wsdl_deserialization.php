@@ -956,7 +956,7 @@ function wsf_infer_attributes(DomNode $parent_node, DomNode $sig_node) {
                      $is_attribute = TRUE;
                 }
                 if($is_attribute) {
-                    ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, $param_name.":".wsf_test_serialize_node($parent_node));
+                    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, $param_name.":".wsf_test_serialize_node($parent_node));
                     if($parent_node && $parent_node->attributes->getNamedItem($param_name)) {
                         $original_value = $parent_node->attributes->getNamedItem($param_name)->value;
 

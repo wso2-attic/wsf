@@ -130,7 +130,7 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
                             //if header child doesn't exist better check whether it is an requeired header
                             if($sig_attrs->geNamedItem(WSF_REQUIRED) && $sig_attrs->geNamedItem(WSF_REQUIRED)->value == "true") {
                                 //throwing faults saying it is required
-                                return new WSFault("Sender", "Requried header {$ele_name}|{$ele_ns} missing");
+                                throw new WSFault("Sender", "Requried header {$ele_name}|{$ele_ns} missing");
                             }
                         }
 

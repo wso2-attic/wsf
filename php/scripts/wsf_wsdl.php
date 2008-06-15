@@ -33,7 +33,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     require_once('dynamic_invocation/wsf_wsdl_util.php');
     require_once('dynamic_invocation/wsf_wsdl_client.php');
     
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_INFO, "wsf_process_wsdl called");
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "wsf_process_wsdl called");
 
     global $is_wsdl_11;
     global $wsdl_11_dom;
@@ -90,7 +90,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     $wsdl_dom->preserveWhiteSpace = FALSE;
        
     if(!$wsdl_location) {
-        ws_log_write(__FILE__, __LINE__, WSF_LOG_INFO, "WSDL location uri is not found");
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "WSDL location uri is not found");
         return "WSDL locaiton uri is not found";
     }
     $is_multiple_interfaces = FALSE;
@@ -98,7 +98,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     // Load WSDL as DOM
     $wsdl_dom = new DOMDocument();
     if(!$wsdl_dom->load($wsdl_location)) {
-        ws_log_write(__FILE__, __LINE__, WSF_LOG_INFO, "WSDL {$wsdl_location}could not be loaded");
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "WSDL {$wsdl_location}could not be loaded");
         return "WSDL {$wsdl_location} could not be loaded.";
     }
    
@@ -111,7 +111,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
         $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location);
         
         if(!$wsdl_dom) {
-            ws_log_write(__FILE__, __LINE__, WSF_LOG_INFO, "Error creating WSDL Dom Document,".
+            ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Error creating WSDL Dom Document,".
                     "Please check whether the wsdl is an valid XML");
             return "Error creating WSDL Dom Document".
                     "Please check whether the wsdl is an valid XML";
@@ -125,7 +125,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     }
     
     if(!$sig_model_dom) {
-        ws_log_write(__FILE__, __LINE__, WSF_LOG_INFO, "Error creating intermediate sig model");
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Error creating intermediate sig model");
         return "Error creating intermediate model";
     }
 
@@ -145,7 +145,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     if ($is_wsdl_11 &&  $wsdl_11_dom != NULL) {
         $binding_node = wsf_get_binding($wsdl_11_dom, $service, $port, TRUE);
         if(!$binding_node) {
-            error_log("binding node not found");
+            ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "binding node not found");
             return  NULL;
         }
         $policy_array = wsf_get_all_policies($wsdl_11_dom, $binding_node, $operation_name, $is_wsdl_11);
@@ -155,7 +155,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     else{
         $binding_node = wsf_get_binding($wsdl_dom, $service, $port);
         if(!$binding_node) {
-            error_log("binding node not found");
+            ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "binding node not found");
             return  NULL;
         }
         $policy_array = wsf_get_all_policies($wsdl_dom, $binding_node, $operation_name);
@@ -164,7 +164,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     $operation = wsf_find_operation($sig_model_dom, $operation_name, $service, $port, $is_multiple_interfaces);
 
     if(!$operation) {
-        error_log("operation node not found");
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "operation node not found");
         return;
     }
 
@@ -238,7 +238,7 @@ function wsf_process_response($response_payload_string,
     require_once('dynamic_invocation/wsf_wsdl_util.php');
     require_once('dynamic_invocation/wsf_wsdl_client.php');
     
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_INFO, "wsf_process_resonse is called");
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "wsf_process_resonse is called");
 
     $payload_dom = new DomDocument(); 
     $sig_model_dom = new DomDocument();
@@ -275,7 +275,7 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
     global $is_wsdl_11;
     global $wsdl_11_dom;
     
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_INFO, "wsf_process_wsdl_for_service called");
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "wsf_process_wsdl_for_service called");
     
     $wsdl_dom = new DomDocument();
     $sig_model_dom  = new DOMDocument();
@@ -299,6 +299,7 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
     $wsdl_dom->preserveWhiteSpace = FALSE;
 
     if(!$wsdl_location) {
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "wsdl is not found");
         return "WSDL is not found";
     }
     $is_multiple_interfaces = FALSE;
@@ -306,6 +307,7 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
     // Load WSDL as DOM
     $wsdl_dom = new DOMDocument();
     if(!$wsdl_dom->load($wsdl_location)) {
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "WSDL {$wsdl_location} could not be loaded.");
         return "WSDL {$wsdl_location} could not be loaded.";
     }
 
@@ -316,6 +318,7 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
         $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location);
         
         if(!$wsdl_dom) {
+            ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "error creating WSDL Dom Document.");
             return "error creating WSDL Dom Document";
         }
         
@@ -327,6 +330,7 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
     }
 
     if(!$sig_model_dom) {
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "error creating intermediate model.");
         return "error creating intermediate model";
     }
     
@@ -356,8 +360,8 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
     }
     
     $return_array = array();
-    $return_array["sig_model_string"] = $sig_model_string;
-    $return_array["policies"] = $policy_array;
+    $return_array[WSF_SIG_MODEL_STRING] = $sig_model_string;
+    $return_array[WSF_POLICIES] = $policy_array;
     
     return $return_array;
 }
@@ -367,6 +371,8 @@ function wsf_wsdl_process_in_msg($parameters)
     require_once('dynamic_invocation/wsf_wsdl_consts.php');
     require_once('dynamic_invocation/wsf_wsdl_util.php');
     require_once('dynamic_invocation/wsf_wsdl_service.php');
+
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "wsf_wsdl_process_in_msg is called");
 
     $payload_dom = new DomDocument();
     $sig_model_dom = new DomDocument();
@@ -400,49 +406,47 @@ function wsf_wsdl_process_in_msg($parameters)
         $port_name = $parameters[WSF_PORT_NAME];
     }
   
-    if(array_key_exists("sig_model_string", $parameters)) {
-        $sig_model_string = $parameters["sig_model_string"];
+    if(array_key_exists(WSF_SIG_MODEL_STRING, $parameters)) {
+        $sig_model_string = $parameters[WSF_SIG_MODEL_STRING];
     }
-    if(array_key_exists("payload_string", $parameters)) {
-        $payload_string = $parameters["payload_string"];
+    if(array_key_exists(WSF_PAYLOAD_STRING, $parameters)) {
+        $payload_string = $parameters[WSF_PAYLOAD_STRING];
     }
-    if(array_key_exists("operation_name", $parameters)) {
-        $operation_name = $parameters["operation_name"];
+    if(array_key_exists(WSF_OPERATION_NAME, $parameters)) {
+        $operation_name = $parameters[WSF_OPERATION_NAME];
     }
-    if(array_key_exists("function_name", $parameters)) {
-        $function_name = $parameters["function_name"];
+    if(array_key_exists(WSF_FUNCTION_NAME, $parameters)) {
+        $function_name = $parameters[WSF_FUNCTION_NAME];
     }
-    if(array_key_exists("class_name", $parameters)) {
-        $class_name = $parameters["class_name"];
+    if(array_key_exists(WSF_CLASS_NAME, $parameters)) {
+        $class_name = $parameters[WSF_CLASS_NAME];
     }
-    if(array_key_exists("classmap", $parameters)) {
-        $class_map = $parameters["classmap"];
+    if(array_key_exists(WSF_CLASSMAP, $parameters)) {
+        $class_map = $parameters[WSF_CLASSMAP];
     }
-    if(array_key_exists("class_args", $parameters)) {
-        $class_args = $parameters["class_args"];
+    if(array_key_exists(WSF_CLASS_ARGS, $parameters)) {
+        $class_args = $parameters[WSF_CLASS_ARGS];
     }
 
-    if(array_key_exists("attachments", $parameters)) {
-        $cid2attachments = $parameters["attachments"];
+    if(array_key_exists(WSF_ATTACHMENTS, $parameters)) {
+        $cid2attachments = $parameters[WSF_ATTACHMENTS];
     }
-    if(array_key_exists("cid2contentType", $parameters)) {
-        $cid2cont_type = $parameters["cid2contentType"];
+    if(array_key_exists(WSF_CID2CONTENT_TYPE, $parameters)) {
+        $cid2cont_type = $parameters[WSF_CID2CONTENT_TYPE];
     }
-    if(array_key_exists("useMTOM", $parameters)) {
-        $mtom_on = $parameters["useMTOM"];
+    if(array_key_exists(WSF_USE_MTOM, $parameters)) {
+        $mtom_on = $parameters[WSF_USE_MTOM];
     }
 
     $header_element = NULL;
-    if(array_key_exists("header_string", $parameters)) {
-        $header_string = $parameters["header_string"];
+    if(array_key_exists(WSF_HEADER_STRING, $parameters)) {
+        $header_string = $parameters[WSF_HEADER_STRING];
     
         if($header_string && !empty($header_string)) {
             $header_dom = new DomDocument(); 
             $header_dom->preserveWhiteSpace = FALSE;
 
-            ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "header string :".$header_string);
             $header_dom->loadXML($header_string);
-
             $header_element = $header_dom->documentElement;
         }
     }
@@ -456,7 +460,8 @@ function wsf_wsdl_process_in_msg($parameters)
             $service_name, $port_name, $is_multiple_interfaces);
 
     if(!$operation_node) {
-        return "operation not found";
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "$operation_name operaiton not found");
+        throw new WSFault("Sender","$operation_name operation not found");
     }
 
     $payload_element = $payload_dom->documentElement;
