@@ -1245,19 +1245,25 @@ static void generate_wsdl_for_service(zval *svc_zval,
         INIT_PZVAL (params[5]);
         ZVAL_ZVAL (params[6], op_val, NULL, NULL);
         INIT_PZVAL (params[6]);
-        args_count = 7;
         if(class_map)
 		{
             ZVAL_ZVAL (params[7], *class_map, NULL, NULL);
-            INIT_PZVAL (params[7]);
-            args_count ++;
         }
+        else 
+        {
+            ZVAL_NULL (params[7]);
+        }
+        INIT_PZVAL (params[7]);
         if(svc_info->wsdl_gen_annotations) 
 		{
             ZVAL_ZVAL (params[8], svc_info->wsdl_gen_annotations, NULL, NULL);
-            INIT_PZVAL (params[8]);
-            args_count ++;
         }
+        else 
+        {
+            ZVAL_NULL (params[8]);
+        }
+        INIT_PZVAL (params[8]);
+        args_count = 9;
 
         script.type = ZEND_HANDLE_FP;
         

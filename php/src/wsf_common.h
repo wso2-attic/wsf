@@ -64,8 +64,8 @@ typedef enum ws_input_types
 #define WSF_MESSAGE_STR "str"
 
 #define WSF_ACTIONS      "actions"
-#define WSF_OPERATIONS  "operations"
-#define WSF_OP_MEP      "opMEP"
+#define WSF_OPERATIONS   "operations"
+#define WSF_OP_MEP       "opMEP"
 #define WSF_OP_PARAMS    "opParams"
 #define WSF_WSDL         "wsdl"
 #define WSF_CLASSMAP     "classmap"
@@ -90,13 +90,13 @@ typedef enum ws_input_types
 #define WSF_TO				"to"    /** endpoint uri */
 
 #define WSF_SWA     		"swa"
-#define WSF_USE_WSA     		"useWSA"
+#define WSF_USE_WSA         "useWSA"
 #define WSF_ACTION			"action"        /** addressing options */
-#define WSF_FROM				"from"
-#define WSF_REPLY_TO			"replyTo"
-#define WSF_FAULT_TO			"faultTo"
+#define WSF_FROM		    "from"
+#define WSF_REPLY_TO	    "replyTo"
+#define WSF_FAULT_TO	    "faultTo"
 
-#define WSF_SOAP_ACTION      "SOAPAction"
+#define WSF_SOAP_ACTION     "SOAPAction"
 
 #define WSF_USES_XOP			"usesXOP"      /** MTOM XOP */
 #define WSF_DEFAULT_ATTACHEMENT_CONTENT_TYPE "defaultAttachmentContentType"
