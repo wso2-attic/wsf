@@ -5,7 +5,7 @@ WSDL Generation - return type is an array, no classmapped service
 
 
 $client = new WSClient(array ("wsdl" => "http://localhost/services/wsdl_generation/return_type_array.php?wsdl",
-                              "to" => "http://localhost:8080/services/wsdl_generation/return_type_array.php"));
+                              "to" => "http://localhost/services/wsdl_generation/return_type_array.php"));
 
 
 $proxy = $client->getProxy();
