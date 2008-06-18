@@ -93,6 +93,7 @@ class WS_WSDL_Const
     const WS_WSDL_PART_ATTR_NAME = 'part';
     const WS_WSDL_TAG_ATTR_NAME = 'tag';
     const WS_WSDL_ELEMENT_ATTR_NAME = 'element';
+    const WS_WSDL_ATTRIBUTE_ATTR_NAME = 'attribute';
 
     const WS_WSDL_STYLE_ATTR_NAME = 'style';
     const WS_WSDL_RPC_ATTR_NAME = 'rpc';
@@ -126,7 +127,6 @@ class WS_WSDL_Const
     const WS_WSDL_COMPLXTYPE_ATTR_NAME = 'complexType';
     const WS_WSDL_COMPLXCONTENT_ATTR_NAME = 'compleContent';
     const WS_WSDL_RESTRICTION_ATTR_NAME = 'restriction';
-    const WS_WSDL_ATTRIBUTE_ATTR_NAME = 'attribute';
     const WS_WSDL_BASE_ATTR_NAME = 'base';
     const WS_WSDL_REF_ATTR_NAME = 'ref';
     const WS_WSDL_SOAPENCARRAY_ATTR_NAME = 'soapenc:array';
@@ -141,11 +141,24 @@ class WS_WSDL_Const
     const WS_WSDL_OUT_ATTR_NAME = 'Out';
     const WS_WSDL_ELEMENTFORMDEFAULT_ATTR_NAME = 'elementFormDefault';
     const WS_WSDL_QUALIFIED_ATTR_NAME = 'qualified';
+    
+    const WS_WSDL_INPUT = 'input';
+    const WS_WSDL_OUTPUT = 'output';
 
     const WS_WSDL_ATTR_MAX_OCCURS = "maxOccurs";
     const WS_WSDL_ATTR_VALUE_UNBOUNDED = "unbounded";
 
     const WS_WSDL_SCHEMA_TYPE_DEFAULT_NS = "http://www.wso2.org/php/xsd";
+    const WS_WSDL_DEFAULT_NS = "http://www.wso2.org/php";
+
+    const WSF_WSDL_VERSION2_0 = "wsdl2.0";
+    const WSF_WSDL_VERSION1_1 = "wsdl1.1";
+
+    const WSF_WSDL_WSDL11_2_2_CONVERTORS = "dynamic_invocation/xslt/wsdl11to20.xsl10.xsl";
+
+    const WSF_WSDL_RPC_ENCODED = "rpc-enc";
+    const WSF_WSDL_RPC = "rpc";
+    const WSF_WSDL_DOCLIT = "doclit";
 
     static public $defaultTypes = array(
                                       'string'    => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,

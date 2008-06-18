@@ -24,9 +24,7 @@
 class WS_WSDL_Type
 {
     public $cmplxTypes;
-    public $schemaTypes;
     private $ns;
-    private $createdTypes;
     private $fun_mapping;
     private $classmap;
     private $namespace_array;
@@ -34,14 +32,10 @@ class WS_WSDL_Type
     /**
      * Constructor of the class
      * @param string $ns namespace
-     * @param Array $createTypes Mapping table of types
-     * @param Array $schemaTypes xsd mapping table
      */
-    function __construct($ns, $createTypes, $schemaTypes, $mapping_array, $classmap)
+    function __construct($ns, $mapping_array, $classmap)
     {
         $this->ns = $ns.WS_WSDL_Const::WS_WSDL_DEF_ELEMENT_NS_POSTFIX;
-        $this->createdTypes = $createTypes;
-        $this->schemaTypes = $schemaTypes;
         $this->fun_mapping = $mapping_array;
         $this->classmap = $classmap;
         $this->namespace_array = array();
@@ -70,9 +64,12 @@ class WS_WSDL_Type
 
         $xsd_types = $annotations[WS_WSDL_Const::WS_WSDL_TYPES_ATTR_NAME];
         foreach($annotations as $function_name => $param_value) {
+            if($function_name == WS_WSDL_Const::WS_WSDL_TYPES_ATTR_NAME) {
+                continue;
+            }
             $return_array[$function_name] = array();
-            if(array_key_exists(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME, $param_value)) {
-                $input_element = $param_value[WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME];
+            if(array_key_exists(WS_WSDL_Const::WS_WSDL_INPUT, $param_value)) {
+                $input_element = $param_value[WS_WSDL_Const::WS_WSDL_INPUT];
 
                 $element_name = $input_element["name"];
                 $element_namespace = $input_element["namespace"];
@@ -125,10 +122,10 @@ class WS_WSDL_Type
                     $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME, $type_attribute_value);
                 }
                 $element_name_prefix = $created_namespace["prefix"];
-                $return_array[$function_name]["in"] = $element_name_prefix.":".$element_name;
+                $return_array[$function_name][WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME] = $element_name_prefix.":".$element_name;
             }
-            if(array_key_exists(WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME, $param_value)) {
-                $output_element = $param_value[WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME];
+            if(array_key_exists(WS_WSDL_Const::WS_WSDL_OUTPUT, $param_value)) {
+                $output_element = $param_value[WS_WSDL_Const::WS_WSDL_OUTPUT];
 
                 $element_name = $output_element["name"];
                 $element_namespace = $output_element["namespace"];
@@ -181,7 +178,7 @@ class WS_WSDL_Type
                     $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME, $type_attribute_value);
                 }
                 $element_name_prefix = $created_namespace["prefix"];
-                $return_array[$function_name]["out"] = $element_name_prefix.":".$element_name;
+                $return_array[$function_name][WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME] = $element_name_prefix.":".$element_name;
             }
         }
         
@@ -214,63 +211,103 @@ class WS_WSDL_Type
                 $comtype->appendChild($seq);
 
                 $type_sequence = $xsd_type["sequence"];
-                if(is_array($type_sequence)) {
+                if($type_sequence && is_array($type_sequence)) {
                     foreach($type_sequence as $element) {
-                        $element_name = $element["name"];
-                        $element_type = $element["type"];
+                        if($element) {
+                            $element_name = $element["name"];
+                            $element_type = $element["type"];
 
-                        //element
-                        $element_ele = $wsdl_doc->createElementNS(WS_WSDL_Const::WS_SOAP_XML_SCHEMA_NAMESPACE,
-                                            WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME);
-                        $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $element_name);
+                            //element
+                            $element_ele = $wsdl_doc->createElementNS(WS_WSDL_Const::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME);
+                            $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $element_name);
 
-                        if(array_key_exists("minOccurs", $element)) {
-                            $element_min_occurs = $element["minOccurs"];
-                            if($element_min_occurs !== NULL) {
-                                $element_ele->setAttribute("minOccurs", $element_min_occurs);
-                            }
-                        }
-                        if(array_key_exists("maxOccurs", $element)) {
-                            $element_max_occurs = $element["maxOccurs"];
-                            if($element_max_occurs !== NULL) {
-                                $element_ele->setAttribute("maxOccurs", $element_max_occurs);
-                            }
-                        }
-
-                        $seq->appendChild($element_ele);
-                        
-                        $type_attribute = NULL;
-                        if(strstr($element_type, "xsd:") !== FALSE) {
-                            $type_attribute_value = $element_type;
-                        }
-                        else {
-                            //finding the type with the name..
-                            $type_entry = NULL;
-                            foreach($xsd_types as $xsd_type_inner) {
-                                if($xsd_type_inner["name"] == $element_type) {
-                                    $type_entry = $xsd_type_inner;
-                                    break;
+                            if(array_key_exists("minOccurs", $element)) {
+                                $element_min_occurs = $element["minOccurs"];
+                                if($element_min_occurs !== NULL) {
+                                    $element_ele->setAttribute("minOccurs", $element_min_occurs);
                                 }
                             }
-                      
-                            $type_ns = $type_entry["namespace"];
-                            if($type_ns == NULL) {
-                                $type_ns = $this->ns;
+                            if(array_key_exists("maxOccurs", $element)) {
+                                $element_max_occurs = $element["maxOccurs"];
+                                if($element_max_occurs !== NULL) {
+                                    $element_ele->setAttribute("maxOccurs", $element_max_occurs);
+                                }
                             }
+                            if(array_key_exists("nillable", $element)) {
+                                $element_max_occurs = $element["nillable"];
+                                if($element_max_occurs !== NULL) {
+                                    $element_ele->setAttribute("nillable", $element_max_occurs);
+                                }
+                            }
+
+                            $seq->appendChild($element_ele);
                             
-                            $created_type_namespace = $this->createNamespace($type_ns, $wsdl_doc, $types_ele, $public_ns_map,
-                                            $public_schema_map, $public_ns_index);
-                            $type_prefix = $created_type_namespace["prefix"];
-                      
-                            $type_attribute_value = $type_prefix.":".$element_type;
+                            $type_attribute = NULL;
+                            if(strstr($element_type, "xsd:") !== FALSE) {
+                                $type_attribute_value = $element_type;
+                            }
+                            else {
+                                //finding the type with the name..
+                                $type_entry = NULL;
+                                foreach($xsd_types as $xsd_type_inner) {
+                                    if($xsd_type_inner["name"] == $element_type) {
+                                        $type_entry = $xsd_type_inner;
+                                        break;
+                                    }
+                                }
+                          
+                                $type_ns = $type_entry["namespace"];
+                                if($type_ns == NULL) {
+                                    $type_ns = $this->ns;
+                                }
+                                
+                                $created_type_namespace = $this->createNamespace($type_ns, $wsdl_doc, $types_ele, $public_ns_map,
+                                                $public_schema_map, $public_ns_index);
+                                $type_prefix = $created_type_namespace["prefix"];
+                          
+                                $type_attribute_value = $type_prefix.":".$element_type;
+                            }
+                            if($type_attribute_value) {
+                                $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME, $type_attribute_value);
+                            }
                         }
-                        if($type_attribute_value) {
-                            $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME, $type_attribute_value);
+                    }
+                }
+            }
+            
+            if(is_array($xsd_type) && array_key_exists("attributes", $xsd_type)) {
+
+                //create the sequnce element
+                $seq = $wsdl_doc->createElementNS(WS_WSDL_Const::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                      WS_WSDL_Const::WS_WSDL_SEQUENCE_ATTR_NAME);
+
+                $attributes = $xsd_type["attributes"];
+                if($attributes && is_array($attributes)) {
+                    foreach($attributes as $attribute) {
+                        if($attribute) {
+                            $attribute_name = $attribute["name"];
+                            $attribute_type = $attribute["type"];
+
+                            //attribute
+                            $attribute_ele = $wsdl_doc->createElementNS(WS_WSDL_Const::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                WS_WSDL_Const::WS_WSDL_ATTRIBUTE_ATTR_NAME);
+                            $attribute_ele->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $attribute_name);
+                            
+                            //currently only simple types are possible
+                            if(strstr($attribute_type, "xsd:") !== FALSE) {
+                                $type_attribute_value = $attribute_type;
+                                if($type_attribute_value) {
+                                    $attribute_ele->setAttribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME, $type_attribute_value);
+                                }
+                            }
+                            $comtype->appendChild($attribute_ele);
                         }
                     }
                 }
             }
         }
+        return $return_array;
     }
 
     /**
@@ -318,8 +355,9 @@ class WS_WSDL_Type
      * doc-lit style 
      * @param DomDocument $wsdl_doc DomDocument element of the wsdl document
      * @param DomElement $wsdl_root service dom element
+     * @param array $schemaTypes array of schema types
      */
-    public function createDocLitType(DomDocument $wsdl_doc, DomElement $wsdl_root)
+    public function createDocLitType(DomDocument $wsdl_doc, DomElement $wsdl_root, $schemaTypes)
     {
 
         $return_array = array();
@@ -363,14 +401,19 @@ class WS_WSDL_Type
                 )
          */
 
-        foreach ($this->schemaTypes as $function_name => $params)
+        foreach ($schemaTypes as $function_name => $params)
         {
-            $ret_array[$function_name] = array();
-            if(array_key_exists(WS_WSDL_Const::WS_WSDL_IN_ATTR_NAME, $params)) {
+            $return_array[$function_name] = array();
+            if(array_key_exists(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME, $params)) {
 
-                $params2 = $params[WS_WSDL_Const::WS_WSDL_IN_ATTR_NAME];
+                $params_in_out = $params[WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME];
                 if($this->classmap) {
-                    foreach ($params2 as $paramName => $paramValue)
+                    if($params_in_out == NULL || !is_array($params_in_out)) {
+                        ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "with classmap provided, you should have the input param for the $function_name");
+                        echo "Error in generating the WSDL\n";
+                        exit(0);
+                    }
+                    foreach ($params_in_out as $paramName => $paramValue)
                     {
                         $xsd_type =  $paramValue["type"];
                         $element_ele = $wsdl_doc->createElementNS(WS_WSDL_Const::WS_SOAP_XML_SCHEMA_NAMESPACE,
@@ -391,7 +434,7 @@ class WS_WSDL_Type
                             $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME, WS_WSDL_Const::WS_WSDL_XSD_ATTR_NAME.$xsd_type);
                         }
                         $schema_ele->appendChild($element_ele);
-                        $return_array[$function_name]["in"] = WS_WSDL_Const::WS_WSDL_DEFAULT_SCHEMA_ATTR_NAME.":".$paramName;
+                        $return_array[$function_name][WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME] = WS_WSDL_Const::WS_WSDL_DEFAULT_SCHEMA_ATTR_NAME.":".$paramName;
                     }
                 }
                 else {
@@ -410,7 +453,7 @@ class WS_WSDL_Type
                                                       WS_WSDL_Const::WS_WSDL_SEQUENCE_ATTR_NAME);
 
                     $comtype->appendChild($seq);
-                    foreach ($params2 as $paramName => $paramValue)
+                    foreach ($params_in_out as $paramName => $paramValue)
                     {
                         $xsd_type =  $paramValue["type"];
                         $element_ele = $wsdl_doc->createElementNS(WS_WSDL_Const::WS_SOAP_XML_SCHEMA_NAMESPACE,
@@ -440,10 +483,17 @@ class WS_WSDL_Type
                         $seq->appendChild($element_ele);
 
                     }
+                    $return_array[$function_name][WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME] = TRUE;
                 }
             }
             else {
                 //just create an empty schema type
+
+                if($this->classmap) {
+                   ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "with classmap provided, you should have the input param for the $function_name");
+                   echo "Error in generating the WSDL\n";
+                   exit(0);
+                }
                 $ct = $wsdl_doc->createElementNS(WS_WSDL_Const::WS_SOAP_XML_SCHEMA_NAMESPACE,
                                                   WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME);
                 $ct->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $function_name);
@@ -457,11 +507,11 @@ class WS_WSDL_Type
                 $comtype->appendChild($seq);
             }
 
-            if(array_key_exists(WS_WSDL_Const::WS_WSDL_OUT_ATTR_NAME, $params)) {
+            if(array_key_exists(WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME, $params)) {
 
-                $params2 = $params[WS_WSDL_Const::WS_WSDL_OUT_ATTR_NAME];
+                $params_in_out = $params[WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME];
                 if($this->classmap) {
-                    foreach ($params2 as $paramName => $paramValue)
+                    foreach ($params_in_out as $paramName => $paramValue)
                     {
                         $xsd_type =  $paramValue["type"];
                         $element_ele = $wsdl_doc->createElementNS(WS_WSDL_Const::WS_SOAP_XML_SCHEMA_NAMESPACE,
@@ -484,7 +534,7 @@ class WS_WSDL_Type
                             $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME, WS_WSDL_Const::WS_WSDL_XSD_ATTR_NAME.$xsd_type);
                         }
                         $schema_ele->appendChild($element_ele);
-                        $return_array[$function_name]["out"] = WS_WSDL_Const::WS_WSDL_DEFAULT_SCHEMA_ATTR_NAME.":".$paramName;
+                        $return_array[$function_name][WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME] = WS_WSDL_Const::WS_WSDL_DEFAULT_SCHEMA_ATTR_NAME.":".$paramName;
                     }
                 }
                 else {
@@ -504,7 +554,7 @@ class WS_WSDL_Type
 
                     $comtype->appendChild($seq);
 
-                    foreach ($params2 as $paramName => $paramValue)
+                    foreach ($params_in_out as $paramName => $paramValue)
                     {
                         $xsd_type =  $paramValue["type"];
                         $element_ele = $wsdl_doc->createElementNS(WS_WSDL_Const::WS_SOAP_XML_SCHEMA_NAMESPACE,
@@ -533,6 +583,7 @@ class WS_WSDL_Type
                         
                         $seq->appendChild($element_ele);
                     }
+                    $return_array[$function_name][WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME] = TRUE;
                 }
             }
             else {
@@ -557,60 +608,65 @@ class WS_WSDL_Type
      * Function that creates types elements(schema) for WSDL1.1 in  rpc style
      * @param DomDocument $wsdl_doc DomDocument element of the wsdl document
      * @param DomElement $wsdl_root service dom element
+     * @param array $class_to_prefix reference to class name to prefix array
+     * @param array $schemaType 
      */
 
-    public function createRPCType(DomDocument $wsdl_doc, DomElement $wsdl_root)
+    public function createRPCType(DomDocument $wsdl_doc, DomElement $wsdl_root,
+            &$class_to_prefix, $schemaTypes)
     {
-    
-        $class_to_prefix = array();
+        // this will guide whether the given function is in-out or in only
 
+        $return_array = array();
         $types = $wsdl_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                             WS_WSDL_Const::WS_WSDL_TYPES_ATTR_NAME);
         $wsdl_root->appendChild($types);
 
-        foreach ($this->schemaTypes as $function_name => $params)
+        foreach ($schemaTypes as $function_name => $params)
         {
-            foreach ($params as $requestType => $params2)
+            $return_array[$function_name] = array();
+            if(array_key_exists(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME, $params))
             {
-                if ($requestType == WS_WSDL_Const::WS_WSDL_IN_ATTR_NAME)
+                $return_array[$function_name][WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME] = TRUE;
+                $params_in_out = $params[WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME];
+                foreach ($params_in_out as $paramName => $paramValue)
                 {
-                    foreach ($params2 as $paramName => $paramValue)
+                    $xsd_type =  $paramValue["type"];
+                    
+                    if($paramValue["object"] == "object")
                     {
-                        $xsd_type =  $paramValue["type"];
+                        $object_return = $this->createSchemaType($wsdl_doc, $types, $xsd_type);
                         
-                        if($paramValue["object"] == "object")
-                        {
-                            $object_return = $this->createSchemaType($wsdl_doc, $types, $xsd_type);
-                            
-                            $object_prefix = $object_return["prefix"];
-                            $object_namespace = $object_return["namespace"];
+                        $object_prefix = $object_return["prefix"];
+                        $object_namespace = $object_return["namespace"];
 
-                            $wsdl_root->setAttribute("xmlns:".$object_prefix, $object_namespace);
-                            $class_to_prefix[$xsd_type] = $object_prefix;
-                        }
+                        $wsdl_root->setAttribute("xmlns:".$object_prefix, $object_namespace);
+                        $class_to_prefix[$xsd_type] = $object_prefix;
                     }
                 }
-                if ($requestType == WS_WSDL_Const::WS_WSDL_OUT_ATTR_NAME)
+            }
+            if(array_key_exists(WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME, $params))
+            {
+                $return_array[$function_name][WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME] = TRUE;
+                $params_in_out = $params[WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME];
+                foreach ($params_in_out as $paramName => $paramValue)
                 {
-                    foreach ($params2 as $paramName => $paramValue)
+                    $xsd_type =  $paramValue["type"];
+                   
+                    if($paramValue["object"] == "object")
                     {
-                        $xsd_type =  $paramValue["type"];
-                       
-                        if($paramValue["object"] == "object")
-                        {
-                            $object_return = $this->createSchemaType($wsdl_doc, $types, $xsd_type);
-                            
-                            $object_prefix = $object_return["prefix"];
-                            $object_namespace = $object_return["namespace"];
+                        $object_return = $this->createSchemaType($wsdl_doc, $types, $xsd_type);
+                        
+                        $object_prefix = $object_return["prefix"];
+                        $object_namespace = $object_return["namespace"];
 
-                            $wsdl_root->setAttribute("xmlns:".$object_prefix, $object_namespace);
-                            $class_to_prefix[$xsd_type] = $object_prefix;
-                        }
+                        $wsdl_root->setAttribute("xmlns:".$object_prefix, $object_namespace);
+                        $class_to_prefix[$xsd_type] = $object_prefix;
                     }
                 }
             }
         }
-        return $class_to_prefix;
+        return $return_array;
     }
 
     /**
@@ -620,7 +676,7 @@ class WS_WSDL_Type
      * @param DomElement $wsdl_root service dom element
      */
 
-    public function createWsdl2Type(DomDocument $wsdl_doc, DomElement $wsdl_root)
+    public function createWsdl2Type(DomDocument $wsdl_doc, DomElement $wsdl_root, $schemaTypes)
     {
         $types = $wsdl_doc->createElementNS(WS_WSDL_Const::WS_WSDL2_NAMESPACE,
                                             WS_WSDL_Const::WS_WSDL_TYPES_ATTR_NAME);
@@ -633,13 +689,13 @@ class WS_WSDL_Type
         $types->appendChild($el);
 
 
-        foreach ($this->schemaTypes as $function_name => $params)
+        foreach ($schemaTypes as $function_name => $params)
         {
-            foreach ($params as $requestType => $params2)
+            foreach ($params as $requestType => $params_in_out)
             {
                 $ct = $wsdl_doc->createElementNS(WS_WSDL_Const::WS_WSDL2_NAMESPACE,
                                                  WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME);
-                if ($requestType == WS_WSDL_Const::WS_WSDL_IN_ATTR_NAME)
+                if ($requestType == WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME)
                 {
                     $ct->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME,
                                       $function_name);
@@ -651,7 +707,7 @@ class WS_WSDL_Type
                                                       WS_WSDL_Const::WS_WSDL_SEQUENCE_ATTR_NAME);
 
                     $comtype->appendChild($seq);
-                    foreach ($params2 as $paramName => $xsType)
+                    foreach ($params_in_out as $paramName => $xsType)
                     {
                         $element_ele = $wsdl_doc->createElementNS(WS_WSDL_Const::WS_WSDL2_NAMESPACE,
                                                           WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME);
@@ -660,7 +716,7 @@ class WS_WSDL_Type
                         $seq->appendChild($element_ele);
                     }
                 }
-                if ($requestType == WS_WSDL_Const::WS_WSDL_OUT_ATTR_NAME)
+                if ($requestType == WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME)
                 {
                     $ct->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME,
                                       $function_name.WS_WSDL_Const::WS_WSDL_RESPONSE_ATTR_NAME);
@@ -673,7 +729,7 @@ class WS_WSDL_Type
 
                     $comtype->appendChild($seq);
 
-                    foreach ($params2 as $paramName => $xsType)
+                    foreach ($params_in_out as $paramName => $xsType)
                     {
                         $element_ele = $wsdl_doc->createElementNS(WS_WSDL_Const::WS_WSDL2_NAMESPACE,
                                                           WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME);

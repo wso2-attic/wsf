@@ -24,8 +24,8 @@
 class WS_WSDL_Operations
 {
 
-    const WS_OPERATION_INPUT_TAG = 'input';
-    const WS_OPERATION_OUTPUT_TAG = 'output';
+    const WS_OPERATION_INPUT_TAG = WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME;
+    const WS_OPERATION_OUTPUT_TAG = WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME;
     const WS_OPERATION_TYPE_TAG = 'type';
     const WS_OPERATION_RET_TAG = 'return';
     const WS_OPERATION_NAME_TAG = 'name';
@@ -83,6 +83,7 @@ class WS_WSDL_Operations
     public $operationName;
 
     public $xsdTypes = array();
+    public $className = NULL;
 
     /*
      * constructor of the class
@@ -100,7 +101,8 @@ class WS_WSDL_Operations
                     {
                         $this->operationName = $value;
                         $this->xsdMapArry[$this->operationName] = array();
-                        $this->setOperations($this->operationName, $name);
+                        $this->className = $name;
+                        $this->setOperations($this->operationName, $this->className);
                     }
                 }
             }
@@ -111,9 +113,17 @@ class WS_WSDL_Operations
             {
                 $this->operationName = $value;
                 $this->xsdMapArry[$this->operationName] = array();
-                $this->setOperations($this->operationName);
+                $this->setOperations($this->operationName, NULL);
             }
         }
+    }
+
+    public function getOperations() {
+        return $this->operations;
+    }
+
+    public function getSchemaTypes() {
+        return $this->xsdTypes;
     }
 
     private function setOperations($operationName, $classname = NULL)
@@ -137,13 +147,13 @@ class WS_WSDL_Operations
 
         if (!$doc_comment)
         {
-            $this->xsdTypes[$operationName]["In"] = array();
+            $this->xsdTypes[$operationName][self::WS_OPERATION_INPUT_TAG] = array();
 
             foreach($operation->getParameters() as $i => $param)
             {
                 $match[2] = $param->getName();
                 $match[1] = "anyType";
-                $this->xsdTypes[$operationName]["In"][$match[2]] = array("type"=>"anyType",
+                $this->xsdTypes[$operationName][self::WS_OPERATION_INPUT_TAG][$match[2]] = array("type"=>"anyType",
                                                                          "array" => NULL,
                                                                          "object" => NULL);
 
@@ -155,7 +165,7 @@ class WS_WSDL_Operations
             }
 
 
-            $this->xsdTypes[$operationName]["Out"]["returnVal"] = array("type"=> "anyType",
+            $this->xsdTypes[$operationName][self::WS_OPERATION_OUTPUT_TAG]["returnVal"] = array("type"=> "anyType",
                                                                             "array" => NULL,
                                                                             "object" => NULL);
 
@@ -182,7 +192,7 @@ class WS_WSDL_Operations
             if(preg_match_all('|@param\s+(?:(array)\s+of\s+)?(?:(object)\s+)?(\w+)\s+\$(\w+)\s+(.*)|', $doc_comment,
                               $matches, PREG_SET_ORDER))
             {
-                $this->xsdTypes[$operationName]["In"] = array();
+                $this->xsdTypes[$operationName][self::WS_OPERATION_INPUT_TAG] = array();
                 foreach($matches as $match)
                 {
                     $j++;
@@ -198,7 +208,7 @@ class WS_WSDL_Operations
                         $k++;
                         $releventType = $this->checkValidTypes($j, $k);
                     } 
-                    $this->xsdTypes[$operationName]["In"][$match[4]] = array("type"=>$releventType,
+                    $this->xsdTypes[$operationName][self::WS_OPERATION_INPUT_TAG][$match[4]] = array("type"=>$releventType,
                                                                              "array" => $match[1],
                                                                              "object"=> $match[2]);
 
@@ -228,7 +238,7 @@ class WS_WSDL_Operations
                     $returnType = $this->checkValidTypes($j, $k);
                 } 
 
-                $this->xsdTypes[$operationName]["Out"][$match_r[4]] = array("type"=>$returnType,
+                $this->xsdTypes[$operationName][self::WS_OPERATION_OUTPUT_TAG][$match_r[4]] = array("type"=>$returnType,
                                                                              "array" => $match_r[1],
                                                                              "object"=> $match_r[2]);
 

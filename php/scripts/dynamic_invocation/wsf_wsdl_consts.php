@@ -25,6 +25,8 @@ define("WSF_SIGNATURE", "signature");
 define("WSF_METHOD", "method");
 define("WSF_INFERENCE", "inference");
 define("WSF_RPC", "rpc");
+define("WSF_RPC_ENCODED", "rpc-enc");
+define("WSF_DOCLIT", "doclit");
 define("WSF_ENDPOINT_URI", "endpoint_uri");
 define("WSF_BINDING_DETAILS", "binding_details");
 define("WSF_W2P_BINDING_DETAILS", "binding-details");

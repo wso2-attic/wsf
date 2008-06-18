@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) 2005-2008 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,7 @@
  */
 
 /** The version of this WSO2 WSF for PHP file */
-define('WSF_VERSION', '1.2.1');
+define('WSF_VERSION', '1.3.2');
 
 function ws_request($payload, $options = array(NULL))
 {
@@ -92,33 +92,24 @@ function ws_generate_wsdl($service_name, $fn_arry, $class_arry, $binding_style,
                           $classmap = NULL, $annotations = NULL)
 {
     require_once("wsdl/WS_WSDL_Creator.php");
-
+    require_once("wsdl/WS_WSDL_Consts.php");
     require_once('dynamic_invocation/wsf_wsdl_consts.php');
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "class map:".print_r($classmap, TRUE));
+
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "class arry:".print_r($class_arry, TRUE));
 
-    $Binding_style = NULL;
-
-    if ($binding_style == "rpc-enc")
-    {
-        $Binding_style = "rpc";
+    if ($binding_style == WS_WSDL_Const::WSF_WSDL_RPC_ENCODED) {
+        $binding_style = WS_WSDL_Const::WSF_WSDL_RPC;
     }
-    else if ($binding_style == "rpc")
-    {
-        $Binding_style = "rpc";
+    else if($binding_style == NULL) {
+        $binding_style = WS_WSDL_Const::WSF_WSDL_DOCLIT;
     }
-
-    else if ($binding_style == "doclit")
-    {
-        $Binding_style = "doclit";
-    }
-    else
-    {
-        echo "Wrong binding style\n";
+    if ($binding_style != WS_WSDL_Const::WSF_WSDL_RPC && $binding_style != WS_WSDL_Const::WSF_WSDL_DOCLIT) {
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Wrong binding style $binding_style");
+        echo "Error in generating the WSDL\n";
         exit(0);
     }
 
-    $namespace = "http://www.wso2.org/php";
+    $namespace = WS_WSDL_Const::WS_WSDL_DEFAULT_NS;
 
     /* obtain the namespace form the first class name */
     $first_class_name = "";
@@ -133,8 +124,7 @@ function ws_generate_wsdl($service_name, $fn_arry, $class_arry, $binding_style,
             $class = new ReflectionClass($first_class_name);
             $class_comment = $class->getDocComment();
     
-            if(preg_match_all('|@namespace\s+([^\s]+).*|', $class_comment, $matches, PREG_SET_ORDER))
-            {
+            if(preg_match_all('|@namespace\s+([^\s]+).*|', $class_comment, $matches, PREG_SET_ORDER)) {
                 $namespace = $matches[0][1];
             }
 
@@ -144,51 +134,52 @@ function ws_generate_wsdl($service_name, $fn_arry, $class_arry, $binding_style,
         }
     }
 
+    $wsdl = new WS_WSDL_Creator($fn_arry, $class_arry, $service_name, $request_uri,
+              $binding_style,$namespace, $wsdl_version, $op_arry, $classmap, $annotations);
+    $wsdl_out = $wsdl->WS_WSDL_Out();
 
-    /* Since WSDL 2.0 logic seems very buggy, better to use WSDL converter, should move this code to C level */
-    if(strcmp($wsdl_version ,"wsdl2.0") == 0) {
-      $wsdl_version = "wsdl1.1";
-      $wsdl = new WS_WSDL_Creator($fn_arry, $class_arry, $service_name, $request_uri,
-				  $Binding_style,$namespace, $wsdl_version, $op_arry, $classmap, $annotations);
-      $wsdl_out = $wsdl->WS_WSDL_Out();
-      $converted_wsdl = convert_to_wsdl20($wsdl_out);
-      return $converted_wsdl;
+
+    /* converting wsdl1.1 to 2 */
+    if(strcmp($wsdl_version , WS_WSDL_Const::WSF_WSDL_VERSION2_0) == 0) {
+        $converted_wsdl = convert_to_wsdl20($wsdl_out);
+        return $converted_wsdl;
     }
     else
     {
-      $wsdl = new WS_WSDL_Creator($fn_arry, $class_arry, $service_name, $request_uri,
-				  $Binding_style,$namespace, $wsdl_version, $op_arry, $classmap, $annotations);
-      $wsdl_out = $wsdl->WS_WSDL_Out();
-      return $wsdl_out;
+        return $wsdl_out;
     }
 }
 
 
 function convert_to_wsdl20($wsdl_out)
 {
-  $wsdl_dom = new DomDocument();
-  $xslt_wsdl_20_dom = new DOMDocument();
-  $xslt_11_to_20_dom = new DOMDocument();
-  $xslt_11_to_20_dom->preserveWhiteSpace = false;
-  $xslt = new XSLTProcessor();
+    $wsdl_dom = new DomDocument();
+    $xslt_wsdl_20_dom = new DOMDocument();
+    $xslt_11_to_20_dom = new DOMDocument();
+    $xslt_11_to_20_dom->preserveWhiteSpace = false;
+    $xslt = new XSLTProcessor();
+ 
+    
+    $xslt_str = file_get_contents(WSF_WSDL_WSDL11_2_2_CONVERTORS, TRUE);
+    if(!($xslt_wsdl_20_dom->loadXML($xslt_str))) {
 
-  
-  $xslt_str = file_get_contents("dynamic_invocation/xslt/wsdl11to20.xsl10.xsl", TRUE);
-  if(!($xslt_wsdl_20_dom->loadXML($xslt_str)))
-    error_log("WSDL can not be converted", 0);
-  
-  $xslt->importStyleSheet($xslt_wsdl_20_dom);
-  $wsdl_dom->loadXML($wsdl_out);
-  $xslt_11_to_20_dom->loadXML($xslt->transformToXML($wsdl_dom));
-  $doc_ele = $xslt_11_to_20_dom->documentElement;
-  foreach($doc_ele->childNodes as $child) {
-      if($child->nodeType == XML_COMMENT_NODE ) {
-         $old_child = $doc_ele->removeChild($child); 
-          //echo "asdasd";
-      }
-  }
-  
-  return $xslt_11_to_20_dom->saveXML();
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Error loading the wsdl11towsdl2 convertor script");
+        echo "Error in generating the WSDL\n";
+        exit(0);
+    }
+    
+    $xslt->importStyleSheet($xslt_wsdl_20_dom);
+    $wsdl_dom->loadXML($wsdl_out);
+    $xslt_11_to_20_dom->loadXML($xslt->transformToXML($wsdl_dom));
+    $doc_ele = $xslt_11_to_20_dom->documentElement;
+    foreach($doc_ele->childNodes as $child) {
+        if($child->nodeType == XML_COMMENT_NODE ) {
+           $old_child = $doc_ele->removeChild($child); 
+            //echo "asdasd";
+        }
+    }
+    
+    return $xslt_11_to_20_dom->saveXML();
 }
 
 

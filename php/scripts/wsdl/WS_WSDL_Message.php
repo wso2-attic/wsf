@@ -42,24 +42,58 @@ class WS_WSDL_Message
      * Function that creates Message elements for WSDL1.1 in doc-lit style
      * @param DomDocument $svr_name DomDocument element of the wsdl  document
      * @param DomElement $svr_root service dom element
+     * @param array $msg_ele_names_info 
+        "op =>  Array
+                (
+                    [In] => Array
+                        (
+                            [matrix_add] => Array
+                                (
+                                    [type] => MatrixAdd
+                                    [array] =>
+                                    [object] => object
+                                )
+                        )
+                    [Out] => Array
+                        (
+                            [matrix_add_response] => Array
+                                (
+                                    [type] => MatrixAddResponse
+                                    [array] =>
+                                    [object] => object
+                                )
+                        )
+                )
      */
 
 
-    public function createDocLitMessage(DomDocument $msg_doc, DomElement $msg_root, $ele_names_info)
+    public function createDocLitMessage(DomDocument $msg_doc, DomElement $msg_root, $msg_ele_names_info)
     {
-       $attr_name_to_postfix_map = array(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME => WS_WSDL_Const::WS_WSDL_OPERTION_INPUT_TAG,
+        $attr_name_to_postfix_map = array(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME => WS_WSDL_Const::WS_WSDL_OPERTION_INPUT_TAG,
                                          WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME => WS_WSDL_Const::WS_WSDL_OPERTION_OUTPUT_TAG);
-        foreach(array(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME,
-                      WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME) as $type)
+        
+        foreach($this->operations as $name => $op_params)
         {
+            // in only flag
+            $in_only = !array_key_exists(WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME, $msg_ele_names_info[$name]) ||
+                        $msg_ele_names_info[$name][WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME] == NULL;
 
-            foreach($this->operations as $name => $params)
+            if($in_only) {
+                $mep_patterns = array(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME);
+            }
+            else {
+                $mep_patterns = array(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME,
+                          WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME);
+            }
+            foreach($mep_patterns as $type)
             {
-                $el = $msg_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
+
+                // message element flag
+                $msg_ele = $msg_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                                 WS_WSDL_Const::WS_WSDL_MESSAGE_ATTR_NAME);
                 foreach($this->fun_mapping as $key => $value) {
                     if($value == $name) {
-                        $el->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME,
+                        $msg_ele->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME,
                                           "$key".ucfirst($attr_name_to_postfix_map[$type]));
                     }
                 }
@@ -74,7 +108,7 @@ class WS_WSDL_Message
                         if($value == $name) {
                             if($this->classmap) {
                                 $part->setAttribute(WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME,
-                                                $ele_names_info[$name]["in"]);
+                                                $msg_ele_names_info[$name][WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME]);
                             }
                             else {
                                 $part->setAttribute(WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME,
@@ -89,7 +123,7 @@ class WS_WSDL_Message
                         if($value == $name) {
                             if($this->classmap) {
                                 $part->setAttribute(WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME,
-                                               $ele_names_info[$name]["out"]);
+                                               $msg_ele_names_info[$name][WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME]);
                             }
                             else {
                                 $part->setAttribute(WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME,
@@ -99,9 +133,9 @@ class WS_WSDL_Message
                     }
                 }
 
-                $el->appendChild($part);
+                $msg_ele->appendChild($part);
 
-                $msg_root->appendChild($el);
+                $msg_root->appendChild($msg_ele);
             }
         }
     }
@@ -112,30 +146,38 @@ class WS_WSDL_Message
      * @param DomElement $svr_root service dom element
      */
 
-    public function createRPCMessage(DomDocument $msg_doc, DomElement $msg_root, $class_to_prefix)
+    public function createRPCMessage(DomDocument $msg_doc, DomElement $msg_root, $class_to_prefix, $msg_ele_names_info)
     {
-       $attr_name_to_postfix_map = array(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME => WS_WSDL_Const::WS_WSDL_OPERTION_INPUT_TAG,
+        $attr_name_to_postfix_map = array(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME => WS_WSDL_Const::WS_WSDL_OPERTION_INPUT_TAG,
                                          WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME => WS_WSDL_Const::WS_WSDL_OPERTION_OUTPUT_TAG);
-        foreach($this->operations as $name1 => $params)
+        foreach($this->operations as $op_name => $op_params)
         {
-            foreach($params as $name2 => $params3)
-            {
+            $in_only = !array_key_exists(WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME, $msg_ele_names_info[$op_name]) ||
+                        $msg_ele_names_info[$op_name][WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME] == NULL;
+            if($in_only) {
+                $mep_patterns = array(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME);
+            }
+            else {
+                $mep_patterns = array(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME,
+                          WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME);
+            }
+            foreach($mep_patterns as $in_or_out) {
+                $op_params3 = $op_params[$in_or_out];
                 $el = $msg_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                                 WS_WSDL_Const::WS_WSDL_MESSAGE_ATTR_NAME);
-                foreach($this->fun_mapping as $key => $value){
-                    if ($name1 == $value)
-                    {
+                foreach($this->fun_mapping as $key => $value) {
+                    if ($op_name == $value) {
                         $el->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME,
-                                          "$key".ucfirst($attr_name_to_postfix_map[$name2]));
+                                          "$key".ucfirst($attr_name_to_postfix_map[$in_or_out]));
                     }
                 }
-                if($name2 == WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME)
+                if($in_or_out == WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME)
                 {
-                    foreach($params3 as $name3 => $params4)
+                    foreach($op_params3 as $name3 => $op_params4)
                     {
                         $part = $msg_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                                           WS_WSDL_Const::WS_WSDL_PART_ATTR_NAME);
-                        foreach ($params4 as $name4 => $param5)
+                        foreach ($op_params4 as $name4 => $param5)
                         {
                             if ($name4 == WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME)
                                 $part->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME,
@@ -143,7 +185,7 @@ class WS_WSDL_Message
                             if ($name4 == WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME)
                             {
                                 $xsd_type = $param5;
-                                if($params4["object"] == "object")
+                                if($op_params4["object"] == "object")
                                 {
                                     $prefix = $class_to_prefix[$xsd_type];
                                     $part->setAttribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME,
@@ -160,13 +202,13 @@ class WS_WSDL_Message
                         }
                     }
                 }
-                if($name2 == WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME)
+                if($in_or_out == WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME)
                 {
-                    foreach($params3 as $name3 => $params4)
+                    foreach($op_params3 as $name3 => $op_params4)
                     {
                         $part = $msg_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                                           WS_WSDL_Const::WS_WSDL_PART_ATTR_NAME);
-                        foreach ($params4 as $name4 => $param5)
+                        foreach ($op_params4 as $name4 => $param5)
                         {
                             if ($name4 == WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME)
                                 $part->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME,
@@ -174,7 +216,7 @@ class WS_WSDL_Message
                             if ($name4 == WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME)
                             {
                                 $xsd_type = $param5;
-                                if($params4["object"] == "object")
+                                if($op_params4["object"] == "object")
                                 {
                                     $prefix = $class_to_prefix[$xsd_type];
                                     $part->setAttribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME,
