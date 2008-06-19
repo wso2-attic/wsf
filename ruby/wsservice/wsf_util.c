@@ -294,9 +294,6 @@ wsf_svc_info_free (
         if (svc_info->class_to_args) {
             axutil_hash_free (svc_info->class_to_args, env);
         }
-        if (svc_info->modules_to_engage) {
-            axutil_array_list_free (svc_info->modules_to_engage, env);
-        }
         if (svc_info->op_name != NULL) {
             AXIS2_FREE (env->allocator, svc_info->op_name);
         }
