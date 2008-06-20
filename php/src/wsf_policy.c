@@ -802,7 +802,7 @@ wsf_set_security_policy_options (
                 add_property_stringl (policy_obj, WSF_IN_POLICY,
                     Z_STRVAL_PP (sec_prop), Z_STRLEN_PP (sec_prop), 1);
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
-					"In policy xml file is enabled");
+					"In policy XML file is enabled");
             }
 
         }
@@ -822,7 +822,7 @@ wsf_set_security_policy_options (
                 add_property_stringl (policy_obj, WSF_OUT_POLICY,
                     Z_STRVAL_PP (sec_prop), Z_STRLEN_PP (sec_prop), 1);
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
-					"Out policy xml file is enabled");
+					"Out policy XML file is enabled");
             }
         }
     }
@@ -856,6 +856,7 @@ wsf_password_provider_function (
     }
     return NULL;
 }
+
 
 char *wsf_get_rampart_token_value(char *token_ref)
 {

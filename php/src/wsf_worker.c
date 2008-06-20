@@ -664,29 +664,23 @@ wsf_worker_process_request (
 		{
 			/** error occurred while processing rest */
 			int msg_ctx_status_code = axis2_msg_ctx_get_status_code(msg_ctx, env);
-			if(!svc_info->loc_str)
+			if(env->error->error_number == AXIS2_ERROR_SVC_OR_OP_NOT_FOUND)
 			{
-				/** if location str is not present, it cannot be a rest request, so serve the 
-				services html */
-				response->content_type = axutil_strdup(env,AXIS2_HTTP_HEADER_ACCEPT_TEXT_HTML);
-				response->http_status_code = AXIS2_HTTP_RESPONSE_OK_CODE_VAL;
-				response->http_status_code_name = AXIS2_HTTP_RESPONSE_OK_CODE_NAME;
-				body_string = axis2_http_transport_utils_get_services_html(env, conf_ctx);
-				
-			}else if(env->error->error_number == AXIS2_ERROR_SVC_OR_OP_NOT_FOUND){
 				axutil_array_list_t *method_list = NULL;
                 int size = 0;
                 method_list = axis2_msg_ctx_get_supported_rest_http_methods(msg_ctx, env);
                 size = axutil_array_list_size(method_list, env);
 				
-				if (method_list && size){
+				if (method_list && size)
+				{
 					/** 405 */
 					body_string = axis2_http_transport_utils_get_method_not_allowed(env, conf_ctx);
 					response->http_status_code = AXIS2_HTTP_RESPONSE_METHOD_NOT_ALLOWED_CODE_VAL;
 					response->http_status_code_name = AXIS2_HTTP_RESPONSE_METHOD_NOT_ALLOWED_CODE_NAME;
 
 					/** TODO add the method list and additional header */
-				}else {
+				}else 
+				{
 					/** 404  */
 					body_string = axis2_http_transport_utils_get_not_found(env, conf_ctx);
 					response->http_status_code = AXIS2_HTTP_RESPONSE_NOT_FOUND_CODE_VAL;
