@@ -160,7 +160,7 @@ function convert_to_wsdl20($wsdl_out)
     $xslt = new XSLTProcessor();
  
     
-    $xslt_str = file_get_contents(WSF_WSDL_WSDL11_2_2_CONVERTORS, TRUE);
+    $xslt_str = file_get_contents(WS_WSDL_Const::WSF_WSDL_WSDL11_2_2_CONVERTORS, TRUE);
     if(!($xslt_wsdl_20_dom->loadXML($xslt_str))) {
 
         ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Error loading the wsdl11towsdl2 convertor script");
