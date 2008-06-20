@@ -66,17 +66,20 @@ c. Run deploy_samples.rb by executing the following command
    Then you will have a rails application created in a directory called
    'your_rails_application' relative to the currrent directory.
 
+NOTE: If you are using rails 2.0.0 or above you may need to configure the 
+      database information in your rails application.
+      i. your_rails_application/conf/database.yml should be configured accordingly.
+      ii. create required databases according to your configuration, execute the following. 
+          rake db:create
+      
+      You can find a guide on how to configure the database from the following link.
+	http://wiki.rubyonrails.com/rails/pages/TutorialStepOne
+	
 d. Go to the directory 'your_rails_application'
         cd your_rails_application
 
 e. Then start the server executing the following command,
         run the ruby script/server
-
-NOTE: If you are using rails 2.0.0 or above you may need to configure the 
-      database information in your rails application. You can find a guide
-      on how to configure the database from the following link.
-
-      http://wiki.rubyonrails.com/rails/pages/TutorialStepOne
 
 f. Now you are done deploying the provider samples . 
 

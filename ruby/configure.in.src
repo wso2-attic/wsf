@@ -4,9 +4,7 @@
 # To build with debug symbols set DEBUG = 1
 DEBUG = 1
 #CRUNTIME Library ( Use /MD or /MT)
-CRUNTIME=/MD
-# Visual Studio version
-VC_VERSION_2005_OR_ABOVE=1
+CRUNTIME=/MT
 
 #############################################################################
 ### WSO2 Commons WSDLC Build Configuration Parameters

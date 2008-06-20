@@ -21,7 +21,7 @@ a. Requirements
    You need to download following dependency libraries:
 
    libxml2 binary distribution    - (Libxml2 2.6.30)
-   libxslt binary distribution    - (Libxslt 1.1.22)
+   libxslt binary distribution    - (Libxslt 1.1.23)
    iconv binary distribution      - (Iconv   1.9.2)
    OpenSSL binary distribution    - (openssl 0.98d, MSI distribution)
    Ruby Binary                    - (Ruby    1.8.6, One click installer is prefereble)
@@ -47,7 +47,7 @@ a. Requirements
     2. Libxml2 2.6.30
     3. Iconv   1.9.2 
     4. openssl .98d (MSI)   
-    5. Libxslt 1.1.22
+    5. Libxslt 1.1.23
         
 b. Installing WSO2 WSF/Ruby as a Ruby extension.
 
@@ -93,6 +93,8 @@ b. Installing WSO2 WSF/Ruby as a Ruby extension.
                   "5" - TRACE
     
     4. Now proceed to RUN SAMPLES section for a guide on how to run samples in WSO2 WSF/Ruby.
+        NOTE: User should set the database directory in module.xml found under wsf_c\modules\sandesha2\ 
+              for proper execution of Reliable Messaging Samples.
                
 
 2. How to build WSO2 WSF/Ruby under Windows from source
@@ -163,17 +165,20 @@ c. Run deploy_samples.rb by executing the following command
    Then you will have a rails application created in a directory called
    'your_rails_application' relative to the currrent directory.
 
+NOTE: If you are using rails 2.0.0 or above you may need to configure the 
+      database information in your rails application.
+      i. your_rails_application/conf/database.yml should be configured accordingly.
+      ii. create required databases according to your configuration, execute the following. 
+          rake db:create
+      
+      You can find a guide on how to configure the database from the following link.
+	http://wiki.rubyonrails.com/rails/pages/TutorialStepOne
+
 d. Go to the directory 'your_rails_application'
         cd your_rails_application
 
 e. Then start the server executing the following command,
         run the ruby script/server
-
-NOTE: If you are using rails 2.0.0 or above you may need to configure the 
-      database information in your rails application. You can find a guide
-      on how to configure the database from the following link.
-
-      http://wiki.rubyonrails.com/rails/pages/TutorialStepOne
 
 f. Now you are done deploying the provider samples . 
 
