@@ -79,7 +79,9 @@
 #define WSF_DIGEST "Digest"
 #define WSF_PLAINTEXT "plainText"
 #define WSF_PASSWORD_CALL_BACK "passwordCallback"
-#define WSF_REPLAY_DETECTION_CALLBACK "replayDetectionCallback"
+#define WSF_REPLAY_DETECT_FUNCTION "replayDetectionCallback"
+#define WSF_REPLAY_DETECT "enableReplayDetect"
+#define WSF_REPLAY_DETECT_NUMBER "5"
 
 #define WSF_BASIC256 "Basic256"
 #define WSF_BASIC192 "Basic192"

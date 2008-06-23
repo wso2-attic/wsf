@@ -30,6 +30,9 @@
 #include <neethi_options.h>
 #include <axis2_policy_include.h>
 #include <neethi_engine.h>
+#include <php/TSRM/TSRM.h>
+#include <php/ext/libxml/php_libxml.h>
+#include <php/Zend/zend.h>
 
 int 
 wsf_set_security_policy_options (
@@ -48,6 +51,13 @@ wsf_password_provider_function (
     const axutil_env_t * env,
     const axis2_char_t * username,
     void *ctx);
+
+axis2_status_t AXIS2_CALL
+wsf_is_replayed_function(
+    const axutil_env_t *env,
+    axis2_msg_ctx_t *msg_ctx,
+    rampart_context_t *rampart_context,
+    void *user_params);
 
 char*
 wsf_get_rampart_token_value(
@@ -426,28 +436,28 @@ wsf_set_rampart_options (
     if (zend_hash_find (ht_token, WSF_CERTIFICATE, sizeof (WSF_CERTIFICATE),
             (void **) &token_val) == SUCCESS
         && Z_TYPE_PP (token_val) == IS_STRING)
-	{
-			rampart_context_set_certificate(rampart_context, env, Z_STRVAL_PP (token_val)); 
+    {
+        rampart_context_set_certificate(rampart_context, env, Z_STRVAL_PP (token_val)); 
     }
-	if (rampart_context_set_certificate_type (rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS)
-	{
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Setting certificate type");
-	}
+    if (rampart_context_set_certificate_type (rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS)
+    {
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Setting certificate type");
+    }
 
     if (zend_hash_find (ht_token, WSF_RECEIVER_CERTIFICATE,
             sizeof (WSF_RECEIVER_CERTIFICATE), (void **) &token_val) == SUCCESS
         && Z_TYPE_PP (token_val) == IS_STRING) 
-	{
-			rampart_context_set_receiver_certificate(rampart_context, env, Z_STRVAL_PP(token_val));
+    {
+        rampart_context_set_receiver_certificate(rampart_context, env, Z_STRVAL_PP(token_val));
     }
-	if (rampart_context_set_receiver_certificate_type (rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS)
-	{
+    if (rampart_context_set_receiver_certificate_type (rampart_context, env, AXIS2_KEY_TYPE_PEM) == AXIS2_SUCCESS)
+    {
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Setting receiver certificate type");
-	}
+    }
     if (zend_hash_find (ht_token, WSF_PRIVATE_KEY, sizeof (WSF_PRIVATE_KEY),
             (void **) &token_val) == SUCCESS
         && Z_TYPE_PP (token_val) == IS_STRING)
-	{
+    {
 		rampart_context_set_prv_key(rampart_context, env, Z_STRVAL_PP(token_val));
 		AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,WSF_PHP_LOG_PREFIX "Setting pvt key ");	
     }
@@ -458,35 +468,44 @@ wsf_set_rampart_options (
     if (zend_hash_find (ht_token, WSF_PASSWORD_TYPE, sizeof (WSF_PASSWORD_TYPE),
             (void **) &token_val) == SUCCESS
         && Z_TYPE_PP (token_val) == IS_STRING) 
-	{
-			rampart_context_set_password_type(rampart_context, env, Z_STRVAL_PP(token_val));
+    {
+        rampart_context_set_password_type(rampart_context, env, Z_STRVAL_PP(token_val));
     }
     if (zend_hash_find (ht_token, WSF_PASSWORD, sizeof (WSF_PASSWORD),
             (void **) &token_val) == SUCCESS
         && Z_TYPE_PP (token_val) == IS_STRING) 
-	{
-			rampart_context_set_password(rampart_context, env, Z_STRVAL_PP(token_val));
+    {
+        rampart_context_set_password(rampart_context, env, Z_STRVAL_PP(token_val));
     }
     if (zend_hash_find (ht_token, WSF_PASSWORD_CALL_BACK,
             sizeof (WSF_PASSWORD_CALL_BACK), (void **) &token_val) == SUCCESS
         && Z_TYPE_PP (token_val) == IS_STRING) 
-	{
-			rampart_context_set_pwcb_function(rampart_context, env, wsf_password_provider_function, Z_STRVAL_PP(token_val));
+    {
+        rampart_context_set_pwcb_function(rampart_context, env, wsf_password_provider_function, Z_STRVAL_PP(token_val));
     }
-	if (zend_hash_find (ht_token, WSF_PKCS12_KEYSTORE, sizeof (WSF_PKCS12_KEYSTORE), 
-                (void **) &token_val) == SUCCESS && Z_TYPE_PP (token_val) == IS_STRING) 
-	{
-		rampart_context_set_key_store_buff(rampart_context, env, Z_STRVAL_PP(token_val), Z_STRLEN_PP(token_val));
-	}
-
+    if (zend_hash_find (ht_token, WSF_PKCS12_KEYSTORE, sizeof (WSF_PKCS12_KEYSTORE), 
+            (void **) &token_val) == SUCCESS && Z_TYPE_PP (token_val) == IS_STRING) 
+    {
+        rampart_context_set_key_store_buff(rampart_context, env, Z_STRVAL_PP(token_val), Z_STRLEN_PP(token_val));
+    }
+    if (zend_hash_find(ht_token, WSF_REPLAY_DETECT_FUNCTION, sizeof(WSF_REPLAY_DETECT_FUNCTION),
+            (void **)&token_val) == SUCCESS && Z_TYPE_PP(token_val) == IS_STRING)
+    {
+        rampart_context_set_replay_detect_function(rampart_context, env, wsf_is_replayed_function, Z_STRVAL_PP(token_val));
+    }
+    if (zend_hash_find(ht_token, WSF_REPLAY_DETECT, sizeof(WSF_REPLAY_DETECT),
+            (void **)&token_val) == SUCCESS && Z_TYPE_PP(token_val) == IS_BOOL)
+    {
+        rampart_context_set_rd_val(rampart_context, env, axutil_strdup(env, WSF_REPLAY_DETECT_NUMBER));
+    }
     if (zend_hash_find (ht_token, WSF_CUSTOM_TOKENS, sizeof (WSF_CUSTOM_TOKENS), 
                 (void **) &token_val) == SUCCESS  && Z_TYPE_PP (token_val) == IS_ARRAY) 
     {
        
-			zval **tmp = NULL;
-			HashPosition pos;
-			axutil_array_list_t *custom_tokens = NULL;
-			HashTable *ht_custom_tokens = NULL;
+        zval **tmp = NULL;
+        HashPosition pos;
+        axutil_array_list_t *custom_tokens = NULL;
+        HashTable *ht_custom_tokens = NULL;
 
         /* custom token hash */
         ht_custom_tokens = Z_ARRVAL_PP(token_val);
@@ -857,6 +876,53 @@ wsf_password_provider_function (
     return NULL;
 }
 
+
+axis2_status_t AXIS2_CALL
+wsf_is_replayed_function(
+    const axutil_env_t *env,
+    axis2_msg_ctx_t *msg_ctx,
+    rampart_context_t *rampart_context,
+    void *user_params)
+{
+    zval func, param1, param2, retval;
+    zval *params[2];
+    
+    axis2_char_t *msg_id = NULL;
+    axis2_char_t *time_stamp = NULL;
+    axutil_hash_t *hash = NULL;
+    zend_bool ret_bool;
+    
+    TSRMLS_FETCH();
+    params[0] = &param1;
+    params[1] = &param2;
+    
+    
+    msg_id = (axis2_char_t*)axis2_msg_ctx_get_wsa_message_id(msg_ctx, env);
+    
+    /*Get timestamp from security processed results*/
+    hash = (axutil_hash_t*)rampart_get_all_security_processed_results(env, msg_ctx);
+    time_stamp = axutil_hash_get(hash, RAMPART_SPR_TS_CREATED, AXIS2_HASH_KEY_STRING);
+    
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[milinda][replay] Time Stamp: %s", time_stamp);
+    
+    ZVAL_STRING (&func, (char*)user_params, 1);
+    ZVAL_STRING (params[0], (char*)msg_id, 1);
+    ZVAL_STRING (params[1], (char*)time_stamp, 1);
+        
+    if (call_user_function (EG (function_table), (zval **) NULL,
+            &func, &retval, 1, params TSRMLS_CC) == SUCCESS) 
+    {
+        if (Z_TYPE_P (&retval) == IS_BOOL && Z_TYPE_P (&retval) != IS_NULL) 
+	{
+            ret_bool = (Z_BVAL (retval));
+            if(ret_bool)
+            {
+                return AXIS2_SUCCESS;
+            }
+        }
+    }
+    return AXIS2_FAILURE;    
+}
 
 char *wsf_get_rampart_token_value(char *token_ref)
 {

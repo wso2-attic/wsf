@@ -1747,22 +1747,33 @@ PHP_METHOD (ws_security_token, __construct)
                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_LONG) {
             add_property_long (object, WSF_TTL, Z_LVAL_PP (tmp));
         }
-        if (zend_hash_find (ht, WSF_PASSWORD_CALL_BACK, sizeof (WSF_PASSWORD_CALL_BACK), 
-			(void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) 
-		{
+        if (zend_hash_find (ht, WSF_PASSWORD_CALL_BACK,
+                sizeof (WSF_PASSWORD_CALL_BACK), (void **) &tmp) == SUCCESS
+            && Z_TYPE_PP (tmp) == IS_STRING) 
+        {
             add_property_string (object, WSF_PASSWORD_CALL_BACK, Z_STRVAL_PP (tmp), 1);
         }
-		if(zend_hash_find(ht, WSF_PKCS12_KEYSTORE,sizeof(WSF_PKCS12_KEYSTORE), 
-			(void **)&tmp)== SUCCESS && Z_TYPE_PP (tmp) == IS_STRING)
-		{
-			add_property_stringl(object, WSF_PKCS12_KEYSTORE, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp),1);
-		}
-		if (zend_hash_find (ht, WSF_REPLAY_DETECTION_CALLBACK, 
-			sizeof (WSF_REPLAY_DETECTION_CALLBACK), (void **) &tmp) == SUCCESS  
-				&& Z_TYPE_PP (tmp) == IS_STRING) 
-		{
-				add_property_string (object, WSF_REPLAY_DETECTION_CALLBACK, Z_STRVAL_PP (tmp), 1);
-		}
+        if(zend_hash_find(ht, WSF_PKCS12_KEYSTORE,sizeof(WSF_PKCS12_KEYSTORE), 
+                (void **)&tmp)== SUCCESS && Z_TYPE_PP (tmp) == IS_STRING)
+        {
+            add_property_stringl(object, WSF_PKCS12_KEYSTORE, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+        }
+        if(zend_hash_find(ht, WSF_REPLAY_DETECT_FUNCTION, sizeof(WSF_REPLAY_DETECT_FUNCTION),
+                (void **)&tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING)
+        {
+            add_property_stringl(object, WSF_REPLAY_DETECT_FUNCTION, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+        }
+        if(zend_hash_find(ht, WSF_REPLAY_DETECT, sizeof(WSF_REPLAY_DETECT),
+                (void **)&tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_BOOL)
+        {
+            add_property_bool(object, WSF_REPLAY_DETECT, Z_BVAL_PP(tmp));
+        }
+        if (zend_hash_find (ht, WSF_REPLAY_DETECTION_CALLBACK, 
+                sizeof (WSF_REPLAY_DETECTION_CALLBACK), (void **) &tmp) == SUCCESS  
+                        && Z_TYPE_PP (tmp) == IS_STRING) 
+        {
+                        add_property_string (object, WSF_REPLAY_DETECTION_CALLBACK, Z_STRVAL_PP (tmp), 1);
+        }
     }
 } 
 
