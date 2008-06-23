@@ -40,7 +40,7 @@ function replay_detect_callback($msg_id, $time_created) {
     } while(file_exists($lock_file));
 
 	/* Aquiring the lock to replay.content file */
-	$fp = fopen2($lock_file, "wb");
+	$fp = fopen($lock_file, "wb");
  	fwrite($fp, "replay.content lock aquired.");
 	fclose($fp);
 	
@@ -59,12 +59,12 @@ function replay_detect_callback($msg_id, $time_created) {
 		fwrite($fp_to_write, $msg_id.$time_created."@");
 		fclose($fp_to_write);
 		unlink($lock_file); /* Releasing the lock */
-		return FALSE;
+		return TRUE;
 	}
 
 	if (array_key_exists($msg_id.$time_created, $list_of_records)) {
 		unlink($lock_file); /* Releasing the lock */
-		return TRUE;
+		return FALSE;
 	} else {
 		$elements = count($list_of_records);
 		if($elements == $max_duration) {
@@ -87,7 +87,7 @@ function replay_detect_callback($msg_id, $time_created) {
 	
 	/* Releasing the lock */
 	unlink($lock_file);
-	return FALSE;	
+	return TRUE;	
 }
 
 $operations = array("echoString" => "echoFunction");

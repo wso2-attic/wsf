@@ -23,7 +23,7 @@ XML;
 try {
 
     $reqMessage = new WSMessage($reqPayloadString,
-                                array("to"=>"http://localhost/samples/security/replay_detect/service.php",
+                                array("to"=>"http://localhost:8080/samples/security/replay_detect/service.php",
                                       "action" => "http://php.axis2.org/samples/echoString"));
     
     $sec_array = array("includeTimeStamp" => TRUE );
