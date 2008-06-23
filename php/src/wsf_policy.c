@@ -24,15 +24,12 @@
 #include <axiom_util.h>
 #include "wsf_policy.h"
 #include <axiom.h>
-
 #include <rampart_context.h>
+#include <rampart_sec_processed_result.h>
 #include <axis2_key_type.h>
 #include <neethi_options.h>
 #include <axis2_policy_include.h>
 #include <neethi_engine.h>
-#include <php/TSRM/TSRM.h>
-#include <php/ext/libxml/php_libxml.h>
-#include <php/Zend/zend.h>
 
 int 
 wsf_set_security_policy_options (
@@ -903,7 +900,7 @@ wsf_is_replayed_function(
     hash = (axutil_hash_t*)rampart_get_all_security_processed_results(env, msg_ctx);
     time_stamp = axutil_hash_get(hash, RAMPART_SPR_TS_CREATED, AXIS2_HASH_KEY_STRING);
     
-    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[milinda][replay] Time Stamp: %s", time_stamp);
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Time Stamp: %s", time_stamp);
     
     ZVAL_STRING (&func, (char*)user_params, 1);
     ZVAL_STRING (params[0], (char*)msg_id, 1);

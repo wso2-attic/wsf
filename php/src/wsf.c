@@ -1768,12 +1768,7 @@ PHP_METHOD (ws_security_token, __construct)
         {
             add_property_bool(object, WSF_REPLAY_DETECT, Z_BVAL_PP(tmp));
         }
-        if (zend_hash_find (ht, WSF_REPLAY_DETECTION_CALLBACK, 
-                sizeof (WSF_REPLAY_DETECTION_CALLBACK), (void **) &tmp) == SUCCESS  
-                        && Z_TYPE_PP (tmp) == IS_STRING) 
-        {
-                        add_property_string (object, WSF_REPLAY_DETECTION_CALLBACK, Z_STRVAL_PP (tmp), 1);
-        }
+       
     }
 } 
 
