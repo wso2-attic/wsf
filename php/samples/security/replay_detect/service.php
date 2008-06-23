@@ -24,9 +24,13 @@ function echoFunction($inMessage) {
 
 function replay_detect_callback($msg_id, $time_created) {
 	$max_duration = 5;
-	$lock_file = "/tmp/indicator";
-	$replay_file = "/tmp/replay.content";
-
+	if (stristr(PHP_OS, 'WIN')) {
+		$lock_file = "indicator";
+		$replay_file = "replay.content";
+	}else{
+		$lock_file = "/tmp/indicator";
+		$replay_file = "/tmp/replay.content";
+	}
 	$list_of_records = array();	
 
 	/* Wait till other process who aquired the lock to releasing it */
@@ -37,8 +41,8 @@ function replay_detect_callback($msg_id, $time_created) {
 
 	/* Aquiring the lock to replay.content file */
 	$fp = fopen2($lock_file, "wb");
-    fwrite($fp, "/tmp/replay.content lock aquired.");
-    fclose($fp);
+ 	fwrite($fp, "replay.content lock aquired.");
+	fclose($fp);
 	
 	/* Reading the content of replay.content file 
 	 * Check for replays.
