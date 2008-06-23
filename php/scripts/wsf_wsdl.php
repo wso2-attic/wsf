@@ -27,16 +27,15 @@
  * @param array $function_parameters details of the invoked function
  * @return array $return_value array of details to be passed to C level
  */
-function wsf_process_wsdl($user_parameters, $function_parameters)
-{
+
+function wsf_extract_wsdl_info($user_parameters) {
     require_once('dynamic_invocation/wsf_wsdl_consts.php');
     require_once('dynamic_invocation/wsf_wsdl_util.php');
-    require_once('dynamic_invocation/wsf_wsdl_client.php');
     
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "wsf_process_wsdl called");
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "calling for the wsdl info");
 
-    global $is_wsdl_11;
-    global $wsdl_11_dom;
+    $is_wsdl_11 = TRUE;
+    $wsdl_11_dom = NULL;
 
     $return_value = array();
     $policy_array = array();
@@ -46,8 +45,153 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     $is_rpc_enc = FALSE;
     $use_mtom = TRUE; //default to on
 
+    /* retrieving the user parameters */
+    $service = NULL;
+    $port = NULL;
+    if(array_key_exists(WSF_SERVICE_NAME, $user_parameters)) {
+        $service = $user_parameters[WSF_SERVICE_NAME];
+    }
+    if(array_key_exists(WSF_PORT_NAME, $user_parameters)) {
+        $port = $user_parameters[WSF_PORT_NAME];
+    }
+    if(array_key_exists(WSF_USE_MTOM, $user_parameters)) {
+        $use_mtom = $user_parameters[WSF_USE_MTOM];
+    }
+
+    $wsdl_location = $user_parameters[WSF_WSDL];
+
+    /* wsf endpoint is an optional parameter */
+    if(array_key_exists(WSF_ENDPOINT, $user_parameters) &&
+            isset($user_parameters[WSF_ENDPOINT])) {
+        $endpoint_address = $user_parameters[WSF_ENDPOINT];
+    }
+    else {
+        $endpoint_address = NULL;
+    }
+
     $wsdl_dom = new DomDocument();
     $sig_model_dom  = new DOMDocument();
+
+    $sig_model_dom->preserveWhiteSpace = FALSE;
+    $wsdl_dom->preserveWhiteSpace = FALSE;
+       
+    if(!$wsdl_location) {
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "WSDL location uri is not found");
+        return "WSDL location uri is not found";
+    }
+    $is_multiple_interfaces = FALSE;
+
+    // Load WSDL as DOM
+    $wsdl_dom = new DOMDocument();
+    if(!$wsdl_dom->load($wsdl_location)) {
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "WSDL {$wsdl_location} could not be loaded");
+        return "WSDL {$wsdl_location} could not be loaded.";
+    }
+   
+
+    $wsdl_dom->preserveWhiteSpace = FALSE;
+    /* changing code for processing mutiple port types in wsdl 1.1 */
+    $is_multiple_interfaces = wsf_is_mutiple_port_types($wsdl_dom);
+
+    if ($is_multiple_interfaces == FALSE) {
+        // this will return the wsdl2.0 dom and the information
+        // about is_wsdl_11 and wsdl_11_dom
+        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location, $is_wsdl_11, $wsdl_11_dom);
+        
+        if(!$wsdl_dom) {
+            ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Error creating WSDL Dom Document,".
+                    "Please check whether the wsdl is an valid XML");
+            return "Error creating WSDL Dom Document".
+                    "Please check whether the wsdl is an valid XML";
+        }
+        
+        $sig_model_dom = wsf_get_sig_model_dom($wsdl_dom);
+    }
+    else {
+        // this will return the wsdl2.0 dom and the information
+        // about is_wsdl_11 and wsdl_11_dom
+        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location, $is_wsdl_11, $wsdl_11_dom);
+        $sig_model_dom = wsf_process_multiple_interfaces($wsdl_dom);
+    }
+    
+    if(!$sig_model_dom) {
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Error creating intermediate sig model");
+        return "Error creating intermediate model";
+    }
+
+    /* endpoint_address is used for just to pass back to the c code: */
+    if(!$endpoint_address) {
+        $endpoint_address = wsf_get_endpoint_address($sig_model_dom);
+    }
+    else {
+        $multiple_ep = TRUE;
+        $multiple_ep = wsf_is_multiple_endpoints($sig_model_dom);
+        if(!$multiple_ep) {
+            $endpoint_address = wsf_get_endpoint_address($sig_model_dom);
+        }
+    }
+    
+    /* for retrieve binding we have to go to the old WSDL */
+    if($is_wsdl_11 &&  $wsdl_11_dom != NULL) {
+        $binding_node = wsf_get_binding($wsdl_11_dom, $service, $port, TRUE);
+        if(!$binding_node) {
+            ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "binding node not found");
+            return  NULL;
+        }
+        $policy_array = wsf_get_all_policies($wsdl_11_dom, $binding_node, $operation_name, $is_wsdl_11);
+        $is_rpc_enc =  wsf_is_rpc_enc_wsdl($binding_node, $operation_name);
+        /* rpc literal not supported */
+    }
+    else {
+        $binding_node = wsf_get_binding($wsdl_dom, $service, $port, FALSE);
+        if(!$binding_node) {
+            ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "binding node not found");
+            return  NULL;
+        }
+        $policy_array = wsf_get_all_policies($wsdl_dom, $binding_node, $operation_name);
+    }
+
+    $sig_model_string = $sig_model_dom->saveXML($operation);
+
+    if($is_wsdl_11 == TRUE && $wsdl_11_dom) {
+        $wsdl_dom = $wsdl_11_dom;
+    }
+
+    if(is_array($attachment_map) && count($attachment_map) == 0) {
+        $attachment_map = NULL;
+    }
+
+    $wsdl_dom_string = $wsdl_dom->saveXML();
+    $return_value = array(WSF_ENDPOINT_URI=> $endpoint_address,
+                          WSF_BINDING_DETAILS=> $binding_array,
+                          WSF_REQUEST_PAYLOAD=> $payload,
+                          WSF_INPUT_HEADERS=> $headers,
+                          WSF_POLICY_NODE=> $policy_array,
+                          WSF_RESPONSE_SIG_MODEL => $sig_model_string,
+                          WSF_WSDL_DOM => $wsdl_dom_string,
+                          WSF_ATTACHMENT_MAP => $attachment_map);
+    return $return_value;
+
+}
+
+function wsf_process_wsdl($user_parameters, $function_parameters)
+{
+    require_once('dynamic_invocation/wsf_wsdl_consts.php');
+    require_once('dynamic_invocation/wsf_wsdl_util.php');
+    require_once('dynamic_invocation/wsf_wsdl_client.php');
+    
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "wsf_process_wsdl called");
+
+    $is_wsdl_11 = TRUE;
+    $wsdl_11_dom = NULL;
+
+    $return_value = array();
+    $policy_array = array();
+    $binding_array = array();
+
+    $is_doc_lit = FALSE;
+    $is_rpc_enc = FALSE;
+    $use_mtom = TRUE; //default to on
 
     /* retrieving the user parameters */
     $service = NULL;
@@ -86,6 +230,9 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     $arg_count = $function_parameters[WSF_ARG_COUNT];
     $arguments = $function_parameters[WSF_ARG_ARRAY];
 
+    $wsdl_dom = new DomDocument();
+    $sig_model_dom  = new DOMDocument();
+
     $sig_model_dom->preserveWhiteSpace = FALSE;
     $wsdl_dom->preserveWhiteSpace = FALSE;
        
@@ -108,7 +255,9 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     $is_multiple_interfaces = wsf_is_mutiple_port_types($wsdl_dom);
 
     if ($is_multiple_interfaces == FALSE) {
-        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location);
+        // this will return the wsdl2.0 dom and the information
+        // about is_wsdl_11 and wsdl_11_dom
+        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location, $is_wsdl_11, $wsdl_11_dom);
         
         if(!$wsdl_dom) {
             ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Error creating WSDL Dom Document,".
@@ -120,7 +269,9 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
         $sig_model_dom = wsf_get_sig_model_dom($wsdl_dom);
     }
     else {
-        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location);
+        // this will return the wsdl2.0 dom and the information
+        // about is_wsdl_11 and wsdl_11_dom
+        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location, $is_wsdl_11, $wsdl_11_dom);
         $sig_model_dom = wsf_process_multiple_interfaces($wsdl_dom);
     }
     
@@ -149,7 +300,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
             return  NULL;
         }
         $policy_array = wsf_get_all_policies($wsdl_11_dom, $binding_node, $operation_name, $is_wsdl_11);
-        $is_rpc_enc =  wsf_is_rpc_enc_wsdl($wsdl_11_dom, $binding_node, $operation_name);
+        $is_rpc_enc =  wsf_is_rpc_enc_wsdl($binding_node, $operation_name);
         /* rpc literal not supported */
     }
     else{
@@ -272,8 +423,8 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
     require_once('dynamic_invocation/wsf_wsdl_util.php');
     require_once('dynamic_invocation/wsf_wsdl_service.php');
 
-    global $is_wsdl_11;
-    global $wsdl_11_dom;
+    $is_wsdl_11 = TRUE;
+    $wsdl_11_dom = NULL;
     
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "wsf_process_wsdl_for_service called");
     
@@ -315,7 +466,9 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
     $is_multiple_interfaces = wsf_is_mutiple_port_types($wsdl_dom);
     
     if ($is_multiple_interfaces == FALSE) {
-        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location);
+        // this will return the wsdl2.0 dom and the information
+        // about is_wsdl_11 and wsdl_11_dom
+        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location, $is_wsdl_11, $wsdl_11_dom);
         
         if(!$wsdl_dom) {
             ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "error creating WSDL Dom Document.");
@@ -325,7 +478,9 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
         $sig_model_dom = wsf_get_sig_model_dom($wsdl_dom);
     }
     else {
-        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location);
+        // this will return the wsdl2.0 dom and the information
+        // about is_wsdl_11 and wsdl_11_dom
+        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location, $is_wsdl_11, $wsdl_11_dom);
         $sig_model_dom = wsf_process_multiple_interfaces($wsdl_dom);
     }
 
@@ -351,7 +506,7 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
                 
     }
     else{
-        $binding_node = wsf_get_binding($wsdl_dom, $service_name, $port_name);
+        $binding_node = wsf_get_binding($wsdl_dom, $service_name, $port_name, FALSE);
         if(!$binding_node)
             return  NULL;
         foreach($operation_array as $value) {
@@ -362,7 +517,8 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
     $return_array = array();
     $return_array[WSF_SIG_MODEL_STRING] = $sig_model_string;
     $return_array[WSF_POLICIES] = $policy_array;
-    
+
+
     return $return_array;
 }
 

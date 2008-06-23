@@ -140,7 +140,7 @@ function wsf_process_multiple_interfaces($wsdl_dom) {
  * @param string $wsdl_location
  * @return DomDocument $wsdl_dom DomDocument of WSDL2.0
  */
-function wsf_get_wsdl_dom($wsdl_dom, $wsdl_location) {
+function wsf_get_wsdl_dom($wsdl_dom, $wsdl_location, &$is_wsdl_11, &$wsdl_11_dom) {
     require_once('wsf_wsdl_consts.php');
 
     $xslt_wsdl_20_dom = new DOMDocument();
@@ -148,7 +148,6 @@ function wsf_get_wsdl_dom($wsdl_dom, $wsdl_location) {
 
     $xslt_11_to_20_dom->preserveWhiteSpace = false;
     $xslt = new XSLTProcessor();
-    global $wsdl_11_dom, $is_wsdl_11;
      
     if($wsdl_dom) {
         $child_list = $wsdl_dom->childNodes;
@@ -170,13 +169,14 @@ function wsf_get_wsdl_dom($wsdl_dom, $wsdl_location) {
                 $wsdl_dom = wsf_clear_xsd_imports($wsdl_dom, $wsdl_location);
     
                 $xslt_11_to_20_dom->loadXML($xslt->transformToXML($wsdl_dom));
-                $is_wsdl_11 = TRUE;
                 $wsdl_11_dom = $wsdl_dom;
+                $is_wsdl_11 = TRUE;
                 return $xslt_11_to_20_dom;
             }
             else if ($child->localName == WSF_DESCRIPTION) {
                 /* first element local name is description, so this is a
                   version 2.0 WSDL */
+                $is_wsdl_11 = FALSE;
                 return $wsdl_dom;
             }
             else{
@@ -371,7 +371,7 @@ function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $servic
  * @param Bool $$is_wsdl_11 true is WSDL version 1.1, else false
  * @return DomNode binding DomNode
  */
-function wsf_get_binding(DomDocument $wsdl_dom, $service_name, $port_name, $is_wsdl_11 = FALSE) {
+function wsf_get_binding(DomDocument $wsdl_dom, $service_name, $port_name, $is_wsdl_11) {
     require_once('wsf_wsdl_consts.php');
 
     if($is_wsdl_11 == FALSE) {
@@ -532,7 +532,7 @@ function wsf_get_binding(DomDocument $wsdl_dom, $service_name, $port_name, $is_w
  * @param Bool $$is_wsdl_11 true is WSDL version 1.1, else false
  * @return array of policies
  */
-function wsf_get_all_policies(DomDocument $wsdl_dom, DomNode $binding_node, $operation_name, $is_wsdl_11 = FALSE) {
+function wsf_get_all_policies(DomDocument $wsdl_dom, DomNode $binding_node, $operation_name, $is_wsdl_11) {
     require_once('wsf_wsdl_consts.php');
 
     $policy_array = array();
@@ -556,7 +556,7 @@ function wsf_get_all_policies(DomDocument $wsdl_dom, DomNode $binding_node, $ope
             $policy_array["operation_policy"] = $binding_policy;
         }
 
-        if($binding_child->localName == WSF_OPERATION && $is_wsdl_11 = FALSE) {
+        if($binding_child->localName == WSF_OPERATION && $is_wsdl_11 == FALSE) {
             $operation_attr = $binding_child->attributes;
             $operation_ref = $operation_attr->getNamedItem(WSF_REF)->value;
             if(substr(strstr($operation_ref, ":"), 1) == $operation_name && $binding_child->hasChildNodes()) {
@@ -572,7 +572,7 @@ function wsf_get_all_policies(DomDocument $wsdl_dom, DomNode $binding_node, $ope
             }
         }
 
-        if($binding_child->localName == WSF_OPERATION && $is_wsdl_11 = TRUE) {
+        if($binding_child->localName == WSF_OPERATION && $is_wsdl_11 == TRUE) {
             $op_name = NULL;
             $operation_attr = $binding_child->attributes;
             if($operation_attr->getNamedItem(WSF_NAME))
@@ -950,7 +950,7 @@ function wsf_wsdl_util_convert_value($xsd_type, $data_value) {
     return $converted_value;
 }
 
-function wsf_is_rpc_enc_wsdl($wsdl_11_dom, $binding_node, $operation_name) {
+function wsf_is_rpc_enc_wsdl($binding_node, $operation_name) {
     if(!$binding_node) {
         return FALSE;
     }
@@ -976,10 +976,12 @@ function wsf_is_rpc_enc_wsdl($wsdl_11_dom, $binding_node, $operation_name) {
                         $body_attr = $input_output->firstChild->attributes;
                         $enc =  $body_attr->getNamedItem("use")->value;
                         $enc_style = $body_attr->getNamedItem("encodingStyle")->value;
-                        if($enc =="encoded")
+                        if($enc =="encoded") {
                             return TRUE;
-                        else
+                        }
+                        else {
                             return FALSE;
+                        }
                     }
                 }
             }
