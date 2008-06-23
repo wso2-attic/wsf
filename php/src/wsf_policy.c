@@ -411,8 +411,13 @@ wsf_set_rampart_options (
 		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX " rampart context null");
 		return -1;
 	}
-
-    ht_token = Z_OBJPROP_P (sec_token);
+	if(sec_token)
+	{
+		ht_token = Z_OBJPROP_P (sec_token);
+	}else
+	{
+		return AXIS2_FAILURE;
+	}
     
     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,WSF_PHP_LOG_PREFIX "Setting values to rampart context ");
     
@@ -902,12 +907,21 @@ wsf_is_replayed_function(
     
     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Time Stamp: %s", time_stamp);
     
+
     ZVAL_STRING (&func, (char*)user_params, 1);
     ZVAL_STRING (params[0], (char*)msg_id, 1);
-    ZVAL_STRING (params[1], (char*)time_stamp, 1);
-        
+	INIT_PZVAL(params[0]);
+	if(time_stamp)
+	{
+		ZVAL_STRING (params[1], (char*)time_stamp, 1);
+	}
+	else
+	{
+		ZVAL_NULL(params[1]);
+	}
+	INIT_PZVAL(params[1]);
     if (call_user_function (EG (function_table), (zval **) NULL,
-            &func, &retval, 1, params TSRMLS_CC) == SUCCESS) 
+            &func, &retval, 2, params TSRMLS_CC) == SUCCESS) 
     {
         if (Z_TYPE_P (&retval) == IS_BOOL && Z_TYPE_P (&retval) != IS_NULL) 
 	{
