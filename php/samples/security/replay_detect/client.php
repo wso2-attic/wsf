@@ -26,13 +26,15 @@ try {
                                 array("to"=>"http://localhost:8080/samples/security/replay_detect/service.php",
                                       "action" => "http://php.axis2.org/samples/echoString"));
     
-    $sec_array = array("includeTimeStamp" => TRUE );
-    $policy = new WSPolicy(array("security" => $sec_array));
-    $sec_token = new WSSecurityToken(array("ttl" => 60));
+    $security_options = array("useUsernameToken" => TRUE );
+    $policy = new WSPolicy(array("security" => $security_options));
+    $security_token = new WSSecurityToken(array("user" => "Raigama",
+                                                "password" => "RaigamaPW",
+                                                "passwordType" => "Digest"));
     
     $client = new WSClient(array("useWSA" => TRUE,
-                                 "policy" => $policy,
-                                 "securityToken" => $sec_token));
+                                "policy" => $policy,
+                                "securityToken" => $security_token));
 				
     $resMessage = $client->request($reqMessage);
     

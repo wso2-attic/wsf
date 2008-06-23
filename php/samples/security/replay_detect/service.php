@@ -38,15 +38,14 @@ function replay_detect_callback($msg_id, $time_created) {
     	clearstatcache();
         usleep(rand(5,70));
     } while(file_exists($lock_file));
-
 	/* Aquiring the lock to replay.content file */
+
 	$fp = fopen($lock_file, "wb");
  	fwrite($fp, "replay.content lock aquired.");
 	fclose($fp);
 	
 	/* Reading the content of replay.content file 
-	 * Check for replays.
-	 */
+	 * Check for replays. */
 	if(file_exists($replay_file)) {
 		$content = file_get_contents($replay_file);
 		$tok_rec = strtok($content, "@");
@@ -58,12 +57,11 @@ function replay_detect_callback($msg_id, $time_created) {
 		$fp_to_write = fopen($replay_file, "w" ) or die ("Cannot open the file");
 		fwrite($fp_to_write, $msg_id.$time_created."@");
 		fclose($fp_to_write);
-		unlink($lock_file); /* Releasing the lock */
+		unlink($lock_file); 
 		return TRUE;
 	}
-
 	if (array_key_exists($msg_id.$time_created, $list_of_records)) {
-		unlink($lock_file); /* Releasing the lock */
+		unlink($lock_file); 
 		return FALSE;
 	} else {
 		$elements = count($list_of_records);
@@ -71,6 +69,7 @@ function replay_detect_callback($msg_id, $time_created) {
 			$new_rcd_list = array_splice($list_of_records, 1);
 			$new_rcd_list[] = $msg_id.$time_created;
 			$fp_to_write = fopen($replay_file, "w") or die ("Cannot open the file");
+
 			foreach($new_rcd_list as $value) {
 				fwrite($fp_to_write, $value."@");
 			}
@@ -84,25 +83,28 @@ function replay_detect_callback($msg_id, $time_created) {
 			fclose($fp_to_write);
 		}
 	}	
-	
 	/* Releasing the lock */
-	unlink($lock_file);
-	return TRUE;	
+	unlink($lock_file); 
+	return FALSE;	
 }
 
 $operations = array("echoString" => "echoFunction");
 $actions = array("http://php.axis2.org/samples/echoString" => "echoString");
-$sec_array = array("includeTimeStamp" => TRUE);
 
-$policy = new WSPolicy(array("security"=> $sec_array));
-$sec_token = new WSSecurityToken(array("ttl" => 100,
-		"replayDetectionCallback" => "replay_detect_callback",
-		"enableReplayDetect" => TRUE));
+$security_options = array("useUsernameToken" => TRUE);
+$policy = new WSPolicy(array("security"=>$security_options));
+
+$security_token = new WSSecurityToken(array("user" => "Raigama",
+                                            "password" => "RaigamaPW",
+					    "passwordType" => "Digest",
+		   		   	    "replayDetectionCallback" => "replay_detect_callback",
+					    "enableReplayDetect" => TRUE));
+
 
 $svr = new WSService(array("operations" => $operations,
                            "actions" => $actions,
                            "policy" => $policy,
-                           "securityToken" => $sec_token));
+                           "securityToken" => $security_token));
         
 $svr->reply();
 
