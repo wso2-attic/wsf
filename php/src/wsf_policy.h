@@ -28,9 +28,10 @@
 #include "ext/libxml/php_libxml.h"
 #include <rampart_context.h>
 
-
+/** Identifier for a policy object */
 #define WSF_POLICY "Policy"
 
+/** Input policy and output policy in case where the inpolicy and out policy are different */
 #define WSF_IN_POLICY "inpolicy"
 #define WSF_OUT_POLICY "outpolicy"
 
@@ -108,10 +109,9 @@
 #define WSF_PKCS12_KEYSTORE "PKCS12KeyStore"
 
 /**
-* 
-* @param this_ptr, 
-* @param property, 
-* @param TSRMLS_DC, 
+* @param this_ptr, This ptr is the WSPolicy instance
+* @param property, The options array extracted from the constructor function
+* @param env, axutil_env_t instance
 * @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
 */
 int 
@@ -122,10 +122,9 @@ wsf_policy_set_policy_options (
 
 /**
 * 
-* @param sec_token, 
-* @param policy, 
-* @param env, 
-* @param TSRMLS_DC, 
+* @param sec_token, An instance of WSSecurityToken
+* @param policy, An instance of WSPolicy 
+* @param env, environment 
 * @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
 */
 int 
@@ -136,12 +135,13 @@ wsf_policy_handle_client_security (
     axis2_svc_client_t * svc_client TSRMLS_DC);
 
 /**
-* 
-* @param sec_token, 
-* @param policy, 
-* @param env, 
-* @param svc, 
-* @param TSRMLS_DC, 
+* Handle service side security.. Basically sets the options
+* to the rampart context and engage to rampart module
+* @param sec_token, An instance of WSSecurityToken
+* @param policy, An instance of WSPolicy
+* @param env, axutil_env_t environment
+* @param svc, The service instance
+* @param conf, The configuration context
 * @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
 */
 int 
@@ -153,11 +153,11 @@ wsf_policy_handle_server_security (
     axis2_conf_t * conf TSRMLS_DC);
 
 /**
-* 
-* @param rampart_ctx, 
-* @param sec_token, 
-* @param policy, 
-* @param TSRMLS_DC, 
+* Set the processed options to the rampart context
+* @param rampart_ctx, Rampart context
+* @param sec_token, an instance WSSecurityToken instance
+* @param policy, an instance of WSPolicy instance
+* @param env, axutil_env_t environment
 * @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
 */
 int
@@ -170,10 +170,9 @@ wsf_set_rampart_options (
 
 /**
 * 
-* @param sec_token, 
-* @param policy, 
-* @param is_server_side, 
-* @param TSRMLS_DC, 
+* @param sec_token, An instance of WSSecurityToken object
+* @param policy, An instance of WSPolicy object
+* @param is_server_side, Here
 * @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
 */
 axiom_node_t *
