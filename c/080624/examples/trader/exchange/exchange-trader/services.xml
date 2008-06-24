@@ -1,8 +1,0 @@
-<service name="exchangetrader">
-    <parameter name="ServiceClass" locked="xsd:false">exchangetrader</parameter>
-    <operation name="buy"/>
-    <operation name="login"/>
-    <operation name="registerClient"/>
-    <operation name="registerFeedTarget"/>
-    <operation name="sell"/>
-</service>

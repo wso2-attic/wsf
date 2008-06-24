@@ -1,1 +1,0 @@
-SUBDIRS = sender receiver server

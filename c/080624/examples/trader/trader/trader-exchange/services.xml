@@ -1,4 +1,0 @@
-<service name="traderexchange">
-    <parameter name="ServiceClass" locked="xsd:false">traderexchange</parameter>
-    <operation name="update"/>
-</service>

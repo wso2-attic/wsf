@@ -1,3 +1,0 @@
-<ns1:echoString xmlns:ns1="http://ws.apache.org/axis2/c/samples">
-  <text>Hello World !</text>
-</ns1:echoString>
