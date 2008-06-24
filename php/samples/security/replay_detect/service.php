@@ -22,70 +22,86 @@ function echoFunction($inMessage) {
     return $returnMessage;
 }
 
+function array_contains($array_of_string, $str) {
+	foreach ($array_of_string as $value) {
+		if(strcmp($value, $str) == 0) {
+			return TRUE;			
+		}
+	}
+	return FALSE;
+}
+
 function replay_detect_callback($msg_id, $time_created) {
 	$max_duration = 5;
 	if (stristr(PHP_OS, 'WIN')) {
-		$lock_file = "indicator";
 		$replay_file = "replay.content";
 	}else{
-		$lock_file = "/tmp/indicator";
 		$replay_file = "/tmp/replay.content";
 	}
 	$list_of_records = array();	
-
-	/* Wait till other process who aquired the lock to releasing it */
-	do {
-    	clearstatcache();
-        usleep(rand(5,70));
-    } while(file_exists($lock_file));
-	/* Aquiring the lock to replay.content file */
-
-	$fp = fopen($lock_file, "wb");
- 	fwrite($fp, "replay.content lock aquired.");
-	fclose($fp);
 	
-	/* Reading the content of replay.content file 
-	 * Check for replays. */
-	if(file_exists($replay_file)) {
-		$content = file_get_contents($replay_file);
-		$tok_rec = strtok($content, "@");
-		while($tok_rec) {
-			$list_of_records[] = $tok_rec;
-			$tok_rec = strtok($content, "@");
+	if(file_exists($replay_file))
+	{
+		$length = filesize($replay_file);
+		$fp_rf = fopen($replay_file, "r");
+		if(flock($fp_rf, LOCK_SH)) {
+			$content = fread($fp_rf, $length);
+			flock($fp_rf, LOCK_UN);
+			$tok_rec = strtok($content, '@');
+			while($tok_rec) {
+				$list_of_records[] = $tok_rec;
+				$tok_rec = strtok('@');
+			}
+		} else {
+			echo "Couldn't lock the ".$replay_file." for reading!";
 		}
-	} else {
-		$fp_to_write = fopen($replay_file, "w" ) or die ("Cannot open the file");
-		fwrite($fp_to_write, $msg_id.$time_created."@");
-		fclose($fp_to_write);
-		unlink($lock_file); 
+		fclose($fp_rf);
+	}else {
+		$fp_rf_w = fopen($replay_file, "w");
+		if(flock($fp_rf_w, LOCK_EX)) {
+			fwrite($fp_rf_w, $msg_id.$time_created.'@');
+			flock($fp_rf_w, LOCK_UN);
+		} else {
+			echo "Couldn't lock the ".$replay_file." for writing!";
+		}
+		fclose($fp_rf_w);
 		return TRUE;
 	}
-	if (array_key_exists($msg_id.$time_created, $list_of_records)) {
-		unlink($lock_file); 
+
+	if(array_contains($list_of_records, $msg_id.$time_created)) {
 		return FALSE;
 	} else {
 		$elements = count($list_of_records);
 		if($elements == $max_duration) {
 			$new_rcd_list = array_splice($list_of_records, 1);
 			$new_rcd_list[] = $msg_id.$time_created;
-			$fp_to_write = fopen($replay_file, "w") or die ("Cannot open the file");
-
-			foreach($new_rcd_list as $value) {
-				fwrite($fp_to_write, $value."@");
+			$fp_rf_w = fopen($replay_file, "w");
+			if(flock($fp_rf_w, LOCK_EX)) {
+				foreach($new_rcd_list as $value) {
+					fwrite($fp_rf_w, $value.'@');
+				}
+				flock($fp_rf_w, LOCK_UN);
+			} else {
+				echo "Couldn't lock the file for writing!";
 			}
-			fclose($fp_to_write);
+			fclose($fp_rf_w);
 		} else {
 			$list_of_records[] = $msg_id.$time_created;
-			$fp_to_write = fopen($replay_file, "w") or die ("Cannot open the file");
-			foreach($list_of_records as $value) {
-				fwrite($fp_to_write, $value."@");
+			$fp_rf_w = fopen($replay_file, "w");
+			if(flock($fp_rf_w, LOCK_EX)) {
+				foreach($list_of_records as $value) {
+					fwrite($fp_rf_w, $value.'@');
+				}
+				flock($fp_rf_w, LOCK_UN);
+			} else {
+				echo "Couldn't lock the file for writing!";
 			}
-			fclose($fp_to_write);
+
+			fclose($fp_rf_w);
 		}
-	}	
-	/* Releasing the lock */
-	unlink($lock_file); 
-	return FALSE;	
+	}
+
+	return TRUE;
 }
 
 $operations = array("echoString" => "echoFunction");
@@ -93,10 +109,9 @@ $actions = array("http://php.axis2.org/samples/echoString" => "echoString");
 
 $security_options = array("useUsernameToken" => TRUE);
 $policy = new WSPolicy(array("security"=>$security_options));
-
 $security_token = new WSSecurityToken(array("user" => "Raigama",
                                             "password" => "RaigamaPW",
-					    "passwordType" => "Digest",
+                                            "passwordType" => "Digest",
 		   		   	    "replayDetectionCallback" => "replay_detect_callback",
 					    "enableReplayDetect" => TRUE));
 
