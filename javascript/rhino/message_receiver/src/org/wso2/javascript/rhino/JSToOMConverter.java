@@ -256,7 +256,6 @@ public class JSToOMConverter {
             Calendar calendar = Calendar.getInstance();
             calendar.clear();
             calendar.setTime(date);
-            calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
             return ConverterUtil.convertToString(calendar);
         } catch (EvaluatorException e) {
             throw new AxisFault("Unable to convert the return value to date");
