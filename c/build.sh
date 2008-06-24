@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -e 
 
 export AXIS2C_HOME=`pwd`/deploy
