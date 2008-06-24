@@ -79,10 +79,6 @@
 #define WSF_RAMPART_CONFIGURATION "RampartConfiguration"
 #define WSF_DIGEST "Digest"
 #define WSF_PLAINTEXT "plainText"
-#define WSF_PASSWORD_CALL_BACK "passwordCallback"
-#define WSF_REPLAY_DETECT_FUNCTION "replayDetectionCallback"
-#define WSF_REPLAY_DETECT "enableReplayDetect"
-#define WSF_REPLAY_DETECT_NUMBER "5"
 
 #define WSF_BASIC256 "Basic256"
 #define WSF_BASIC192 "Basic192"
@@ -107,6 +103,49 @@
 #define WSF_ENCRYPT_BEFORE "EncryptBeforeSigning"
 
 #define WSF_PKCS12_KEYSTORE "PKCS12KeyStore"
+
+/** Callback functions */
+
+/** Password callback function */
+#define WSF_PASSWORD_CALLBACK "passwordCallback"
+/** Password callback context data */
+#define WSF_PASSWORD_CALLBACK_ARGS "passwordCallbackData"
+
+/** Replay detection functionality */
+#define WSF_REPLAY_DETECT_CALLBACK "replayDetectionCallback"
+/**  Enable Replay detection option */
+#define WSF_ENABLE_REPLAY_DETECT "enableReplayDetect"
+/** Replay detect rampart parameter */
+#define WSF_REPLAY_DETECT_NUMBER "5"
+/** Replay detect context data */
+#define WSF_REPLAY_DETECT_CALLBACK_ARGS "replayDetectionCallbackData"
+/** This is the callback function for storing the security context data at PHP level */
+#define WSF_STORE_SCT_CALLBACK		"storeSCTCallback"
+/** user specific data to be passed to the callback */
+#define WSF_STORE_SCT_CALLBACK_ARGS "storeSCTCallbackData"
+/** This is the callback function for returning the security context data at PHP level */
+#define WSF_GET_SCT_CALLBACK		"getSCTCallback"
+/** user specific data to be passed to the callback */
+#define WSF_GET_SCT_CALLBACK_ARGS   "getSCTCallbackData"
+/** This is the deleting the security context data at PHP level */
+#define WSF_DELETE_SCT_CALLBACK		"deleteSCTCallback"
+/** user specific callback data to be passed to the callback */
+#define WSF_DELETE_SCT_CALLBACK_ARGS "deleteSCTCallbackData"
+
+/** This struct will be used to pass data to the callbacks */
+typedef struct wsf_callback_args
+{
+/** callback function name */
+	char *callback_function;
+/** callback function args zval */
+	zval *callback_data;
+}wsf_callback_args_t;
+
+/** returns a pointer to an allocated callback args struct */
+wsf_callback_args_t* wsf_callback_args_create(axutil_env_t *env);
+/** free callback args struct instance */
+void wsf_callback_args_free(wsf_callback_args_t *callback_args,axutil_env_t *env);
+
 
 /**
 * @param this_ptr, This ptr is the WSPolicy instance

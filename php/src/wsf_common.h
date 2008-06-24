@@ -226,6 +226,7 @@ typedef enum ws_input_types
 #define WSF_MODULE_ADDRESSING "addressing"
 #define WSF_MODULE_SECURITY   "rampart"
 #define WSF_MODULE_RM         "sandesha2"
+#define WSF_MODULE_SC         "rahas"
 
 #define WSF_SVC_INFO "WSFPHPSvcInfo"
 
@@ -249,6 +250,10 @@ typedef enum ws_input_types
 #define WSF_SCRIPT_FILENAME "wsf.php"
 #define WSF_DEFAULT_PORT 80
 #define WSF_SWA "swa"
+
+/** this option is read from the WSService constructor to engage rahas*/
+#define WSF_USE_WON_STS "useOwnSTS"
+/** security policy */
 
 typedef struct wsf_svc_info
 {

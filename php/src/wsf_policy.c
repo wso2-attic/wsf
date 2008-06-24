@@ -44,13 +44,13 @@ wsf_create_policy_node (
 
 
 axis2_char_t* AXIS2_CALL
-wsf_password_provider_function (
+wsf_password_callback_function (
     const axutil_env_t * env,
     const axis2_char_t * username,
     void *ctx);
 
 axis2_status_t AXIS2_CALL
-wsf_is_replayed_function(
+wsf_replay_detection_callback_function(
     const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx,
     rampart_context_t *rampart_context,
@@ -479,23 +479,25 @@ wsf_set_rampart_options (
     {
         rampart_context_set_password(rampart_context, env, Z_STRVAL_PP(token_val));
     }
-    if (zend_hash_find (ht_token, WSF_PASSWORD_CALL_BACK,
-            sizeof (WSF_PASSWORD_CALL_BACK), (void **) &token_val) == SUCCESS
+    if (zend_hash_find (ht_token, WSF_PASSWORD_CALLBACK,
+            sizeof (WSF_PASSWORD_CALLBACK), (void **) &token_val) == SUCCESS
         && Z_TYPE_PP (token_val) == IS_STRING) 
     {
-        rampart_context_set_pwcb_function(rampart_context, env, wsf_password_provider_function, Z_STRVAL_PP(token_val));
+        rampart_context_set_pwcb_function(rampart_context, env, wsf_password_callback_function, 
+			Z_STRVAL_PP(token_val));
     }
     if (zend_hash_find (ht_token, WSF_PKCS12_KEYSTORE, sizeof (WSF_PKCS12_KEYSTORE), 
             (void **) &token_val) == SUCCESS && Z_TYPE_PP (token_val) == IS_STRING) 
     {
         rampart_context_set_key_store_buff(rampart_context, env, Z_STRVAL_PP(token_val), Z_STRLEN_PP(token_val));
     }
-    if (zend_hash_find(ht_token, WSF_REPLAY_DETECT_FUNCTION, sizeof(WSF_REPLAY_DETECT_FUNCTION),
+    if (zend_hash_find(ht_token, WSF_REPLAY_DETECT_CALLBACK, sizeof(WSF_REPLAY_DETECT_CALLBACK),
             (void **)&token_val) == SUCCESS && Z_TYPE_PP(token_val) == IS_STRING)
     {
-        rampart_context_set_replay_detect_function(rampart_context, env, wsf_is_replayed_function, Z_STRVAL_PP(token_val));
+        rampart_context_set_replay_detect_function(rampart_context, env, 
+			wsf_replay_detection_callback_function, Z_STRVAL_PP(token_val));
     }
-    if (zend_hash_find(ht_token, WSF_REPLAY_DETECT, sizeof(WSF_REPLAY_DETECT),
+    if (zend_hash_find(ht_token, WSF_ENABLE_REPLAY_DETECT, sizeof(WSF_ENABLE_REPLAY_DETECT),
             (void **)&token_val) == SUCCESS && Z_TYPE_PP(token_val) == IS_BOOL)
     {
         rampart_context_set_rd_val(rampart_context, env, axutil_strdup(env, WSF_REPLAY_DETECT_NUMBER));
@@ -704,11 +706,9 @@ wsf_set_security_policy_options (
 
     if (Z_TYPE_PP (sec_options) == IS_ARRAY)
 	{
-
         ht_sec = Z_ARRVAL_PP (sec_options);
         if (!ht_sec)
             return AXIS2_FAILURE;
-
 
         if (zend_hash_find (ht_sec, WSF_SIGN, sizeof (WSF_SIGN),
                 (void **) &sec_prop) == SUCCESS && (Z_TYPE_PP (sec_prop) == IS_STRING
@@ -724,17 +724,13 @@ wsf_set_security_policy_options (
 		{
             add_property_zval (policy_obj, WSF_ENCRYPT, *sec_prop);
             AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX " Encryption is enabled ");
-
         }
 
         if (zend_hash_find (ht_sec, WSF_ALGORITHM, sizeof (WSF_ALGORITHM),
                 (void **) &sec_prop) == SUCCESS && (Z_TYPE_PP (sec_prop) == IS_STRING)) {
-            
 			add_property_stringl (policy_obj, WSF_ALGORITHM, 
 				Z_STRVAL_PP (sec_prop), Z_STRLEN_PP (sec_prop), 1);
-
             AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "AlgorithmSuite is enabled ");
-
         }
 
         if (zend_hash_find (ht_sec, WSF_LAYOUT, sizeof (WSF_LAYOUT),
@@ -743,15 +739,13 @@ wsf_set_security_policy_options (
 		{
             add_property_stringl (policy_obj, WSF_LAYOUT, Z_STRVAL_PP (sec_prop), Z_STRLEN_PP (sec_prop), 1);
             AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Layout is enabled ");
-
         }
 
         if (zend_hash_find (ht_sec, WSF_TIMESTAMP, sizeof (WSF_TIMESTAMP),
                 (void **) &sec_prop) == SUCCESS
             && (Z_TYPE_PP (sec_prop) == IS_BOOL)) 
 		{
-            add_property_bool (policy_obj, WSF_TIMESTAMP,
-                Z_BVAL_PP (sec_prop));
+            add_property_bool (policy_obj, WSF_TIMESTAMP, Z_BVAL_PP (sec_prop));
             AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Timestamp is enabled ");
 
         }
@@ -786,12 +780,12 @@ wsf_set_security_policy_options (
 
         }
 
-        if (zend_hash_find (ht_sec, WSF_PASSWORD_CALL_BACK,
-                sizeof (WSF_PASSWORD_CALL_BACK),
+        if (zend_hash_find (ht_sec, WSF_PASSWORD_CALLBACK,
+                sizeof (WSF_PASSWORD_CALLBACK),
                 (void **) &sec_prop) == SUCCESS
             && Z_TYPE_PP (sec_prop) == IS_STRING) 
 		{
-            add_property_stringl (policy_obj, WSF_PASSWORD_CALL_BACK,
+            add_property_stringl (policy_obj, WSF_PASSWORD_CALLBACK,
                 Z_STRVAL_PP (sec_prop), Z_STRLEN_PP (sec_prop), 1);
             AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Callback is enabled");
         }
@@ -851,7 +845,7 @@ wsf_set_security_policy_options (
 }
 
 axis2_char_t *AXIS2_CALL
-wsf_password_provider_function (
+wsf_password_callback_function (
     const axutil_env_t * env,
     const axis2_char_t * username,
     void *ctx)
@@ -880,7 +874,7 @@ wsf_password_provider_function (
 
 
 axis2_status_t AXIS2_CALL
-wsf_is_replayed_function(
+wsf_replay_detection_callback_function(
     const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx,
     rampart_context_t *rampart_context,
@@ -947,4 +941,23 @@ char *wsf_get_rampart_token_value(char *token_ref)
         return RP_REQUIRE_THUMBPRINT_REFERENCE;
     else
         return NULL;
+}
+
+
+/** returns a pointer to an allocated callback args struct */
+wsf_callback_args_t* wsf_callback_args_create(axutil_env_t *env)
+{
+	wsf_callback_args_t *args = NULL;
+	args = AXIS2_MALLOC(env->allocator, sizeof(wsf_callback_args_t));
+	args->callback_data = NULL;
+	args->callback_function = NULL;
+	return args;
+}
+/** free callback args struct instance */
+void wsf_callback_args_free(wsf_callback_args_t *callback_args,axutil_env_t *env)
+{
+	if(callback_args)
+	{
+		AXIS2_FREE(env->allocator, callback_args);
+	}
 }
