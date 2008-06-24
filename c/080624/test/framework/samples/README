@@ -1,0 +1,36 @@
+Running the Samples
+-------------------
+- The samples for WSFC_Unit will be found in,
+  {WSFC_HOME}/bin/test/framework/samples/. You can execute it
+  from that location.
+
+
+Sample
+------
+- The sample named sample, will have two test sets, having five
+  test cases altogether. In the first test set, one test case 
+  should fail.
+
+- Listing all available test cases can be done by, running
+  ./sample -l on Linux, or sample.exe -h on MS Windows. As you
+  can see, the {executable} as in the README for the framework
+  has been substituted by, 'sample'.
+
+- For help on other options, you can run, ./sample -h on Linux,
+  or sample.exe -h on MS Windows.
+
+- You can optionally log the test result to a file, by using the 
+  -f flag followed by the log_file name. A quiet mode operation
+  can be achieved by using the -q flag.
+
+- To omit a specific test you can use the -x flag. All ommited
+  test names should appear as parameters. Therefore, to see a 
+  successful invocation of the sample that we provide, run,
+  ./sample -x test_sample1 on Linux or sample.exe -x test_sample1
+  on MS Windows.
+
+
+Contacting Us
+-------------
+- For more information please read the README provided for the 
+  WSFC_UNIT framework.

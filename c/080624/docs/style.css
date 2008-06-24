@@ -1,0 +1,75 @@
+body {
+font-family: Verdana, Arial, Helvetica;
+font-size: .75em;
+font-weight: normal;
+line-height: 1.5em;
+margin-left: 20px;
+margin-top: 20px;
+}
+
+frameset {
+border: solid 1px #4C721D;
+}
+
+h1 {
+color: #4C721D;
+font-size: 200%;
+font-weight: bold;
+border-bottom: solid 2px #4C721D;
+padding-bottom: 5px;
+}
+
+h2 {
+color: #4C721D;
+font-size: 150%;
+font-weight: bold;
+border-bottom: dotted 1px #4C721D;
+padding-bottom: 5px;
+}
+
+table {
+border-left: solid 1px #4C721D;
+border-top: solid 1px #4C721D;
+border-right: solid 0px #4C721D;
+border-bottom: solid 0px #4C721D;
+}
+tr td {
+font-family: Verdana, Arial, Helvetica;
+font-size: .75em;
+font-weight: normal;
+line-height: 1.5em;
+border-right: solid 1px #4C721D;
+border-bottom: solid 1px #4C721D;
+border-left: solid 0px #4C721D;
+border-top: solid 0px #4C721D;
+}
+
+thead tr th{
+font-family: Verdana, Arial, Helvetica;
+font-size: .75em;
+font-weight: bold;
+line-height: 1.5em;
+border-right: solid 1px #4C721D;
+border-bottom: solid 1px #4C721D;
+border-left: solid 0px #4C721D;
+border-top: solid 0px #4C721D;
+}
+
+ul {
+margin-left: 15px;
+padding: 0px;
+}
+
+li {
+margin-left: 15px;
+padding: 0px;
+}
+
+ul li a {
+color: #4C721D;
+text-decoration: none;
+}
+ul li a:hover {
+color: #4C721D;
+text-decoration: underline;
+}

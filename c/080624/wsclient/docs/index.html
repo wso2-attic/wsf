@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xml:lang="en" lang="en" dir="ltr">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <title>wsclient</title>
+</head>
+
+<body>
+
+<h1><a name="wsclient"
+id="specification_for_wsclient">wsclient</a></h1>
+
+<h3>Table of Contents</h3>
+
+<div id="toc__inside">
+<!--ul class="toc">
+  <li class="level1">
+    <div class="li">
+    <span class="li"><a href="#specification_for_wsclient"
+    class="toc">Specification for wsclient</a></span></div-->
+    <ul class="toc">
+      <li class="level2">
+        <div class="li">
+        <span class="li"><a href="#introduction" class="toc">Introduction
+        </a></span></div>
+      </li>
+      <li class="level2">
+        <div class="li">
+        <span class="li"><a href="#http_binding_options" class="toc">HTTP
+        binding options</a></span></div>
+      </li>
+      <li class="level2">
+        <div class="li">
+        <span class="li"><a href="#soap_binding_options" class="toc">SOAP
+        binding options</a></span></div>
+        <ul class="toc">
+          <li class="level3">
+            <div class="li">
+            <span class="li"><a href="#ws-addressing_options"
+            class="toc">WS-Addressing options</a></span></div>
+          </li>
+          <li class="level3">
+            <div class="li">
+            <span class="li"><a href="#security_options" class="toc">Security
+            options</a></span></div>
+          </li>
+        </ul>
+      </li>
+      <li class="level2">
+        <div class="li">
+        <span class="li"><a href="#mtom_options" class="toc">MTOM
+        options</a></span></div>
+      </li>
+      <li class="level2">
+        <div class="li">
+        <span class="li"><a href="#general_http_options" class="toc">General
+        HTTP options</a></span></div>
+      </li>
+      <li class="level2">
+        <div class="li">
+        <span class="li"><a href="#other_options" class="toc">Other
+        options</a></span></div>
+      </li>
+      <li class="level2">
+        <div class="li">
+        <span class="li"><a href="#exit_codes" class="toc">Exit
+        codes</a></span></div>
+      </li>
+    </ul>
+  <!--/li>
+</ul-->
+</div>
+
+<h2><a name="introduction" id="introduction">Introduction</a></h2>
+
+<div class="level1">
+<p><strong>wsclient</strong> acts as a Web Service client. Normally, wsclient
+uses a request/response pattern. The <acronym
+title="Extensible Markup Language">XML</acronym> payload of the request is
+read from stdin and the <acronym
+title="Extensible Markup Language">XML</acronym> payload of the received
+reply is written to stdout. wsclient supports two different bindings:</p>
+<ul>
+  <li class="level1">
+    <div class="li">
+    <acronym title="Simple Object Access Protocol">SOAP</acronym>. The
+    <acronym title="Extensible Markup Language">XML</acronym> payload is
+    wrapped in a <acronym
+    title="Simple Object Access Protocol">SOAP</acronym> body element and
+    then in a <acronym title="Simple Object Access Protocol">SOAP</acronym>
+    envelope element. With this binding, wsclient will act as a <acronym
+    title="Simple Object Access Protocol">SOAP</acronym>-compliant client.
+    Any transport supported by the underlying <acronym
+    title="Simple Object Access Protocol">SOAP</acronym> engine can be used;
+    the transport will be inferred from the <acronym
+    title="Uniform Resource Identifier">URI</acronym> scheme.</div>
+  </li>
+</ul>
+<ul>
+  <li class="level1">
+    <div class="li">
+    <acronym title="Hyper Text Transfer Protocol">HTTP</acronym>. The
+    <acronym title="Extensible Markup Language">XML</acronym> payload is sent
+    as the entity-body of an <acronym
+    title="Hyper Text Transfer Protocol">HTTP</acronym> message. With this
+    binding, wsclient will act as an <acronym
+    title="Hyper Text Transfer Protocol">HTTP</acronym>-compliant client.
+    Only <acronym title="Hyper Text Transfer Protocol">HTTP</acronym> can be
+    used. By default, the POST method will be used.</div>
+  </li>
+</ul>
+
+<p>The payload is conceptually an <acronym
+title="Extensible Markup Language">XML</acronym> infoset rather than a
+byte-stream. By default, the <acronym
+title="Extensible Markup Language">XML</acronym> infoset is serialized as a
+plain <acronym title="Extensible Markup Language">XML</acronym> document on
+input and output, but wsclient also supports the use of XOP to allow the
+input and output to refer to external binary resources. When using the
+<acronym title="Simple Object Access Protocol">SOAP</acronym> binding,
+wsclient can also use MTOM for sending and receiving the payload. Note that
+the serialization of the <acronym
+title="Extensible Markup Language">XML</acronym> payload for input and output
+is independent of the serialization of the payload for sending and
+receiving.</p>
+
+<p>Instead of being an <acronym
+title="Extensible Markup Language">XML</acronym> infoset, the payload can be
+empty. This is represented on input and output as an empty file (0 bytes).
+With the <acronym title="Simple Object Access Protocol">SOAP</acronym>
+binding, this corresponds to a <acronym
+title="Simple Object Access Protocol">SOAP</acronym> body element with no
+children. With the <acronym
+title="Hyper Text Transfer Protocol">HTTP</acronym> binding, it corresponds
+to an <acronym title="Hyper Text Transfer Protocol">HTTP</acronym> message
+with no entity body.</p>
+
+<p>By default, wsclient uses the <acronym
+title="Hyper Text Transfer Protocol">HTTP</acronym> binding. The <acronym
+title="Simple Object Access Protocol">SOAP</acronym> binding may be used for
+just the reply or for both the request and the reply. The general form of the
+command is:<br />
+<code>wsclient</code> [<em>options</em>] [<em>destURI</em>].</p>
+
+<p>The <em>destURI</em> argument is required unlesss the
+<code>–in-reply-to-message</code> option is used.</p>
+
+<p>With the <acronym title="Simple Object Access Protocol">SOAP</acronym>
+binding, if a fault message is recevied as the reply, the fault is output as
+normal, but the exit code will be 1 rather than 0.</p>
+
+<p>[Options marked with * are suggested for 1.0.]</p>
+</div>
+
+<h2><a name="http_binding_options" id="http_binding_options">HTTP binding
+options</a></h2>
+
+<div class="level2">
+<p>The options in this section require the use of the <acronym
+title="Hyper Text Transfer Protocol">HTTP</acronym> binding for the
+request.</p>
+
+<p><code>–get</code>*</p>
+
+<p>Uses GET as the <acronym
+title="Hyper Text Transfer Protocol">HTTP</acronym> method. Nothing will be
+read from the input.</p>
+
+<p><code>–put</code></p>
+
+<p>Uses PUT as the <acronym
+title="Hyper Text Transfer Protocol">HTTP</acronym> method.</p>
+
+<p><code>–content-type=<em>content-type</em></code>*</p>
+
+<p>The payload has content-type <em>content-type</em>. By default, with the
+<acronym title="Hyper Text Transfer Protocol">HTTP</acronym> binding,
+wsclient will use a content-type of application/xml. No content-type will be
+specified for the empty payload.</p>
+</div>
+
+<h2><a name="soap_binding_options" id="soap_binding_options">SOAP binding
+options</a></h2>
+
+<div class="level2">
+<p>The use of any option in this section implies <code>–soap</code>.</p>
+
+<p><code>–soap</code>*</p>
+
+<p>Use the <acronym title="Simple Object Access Protocol">SOAP</acronym>
+binding. This always enables the <acronym
+title="Simple Object Access Protocol">SOAP</acronym> binding for the reply.
+It also enables the <acronym
+title="Simple Object Access Protocol">SOAP</acronym> binding for the request,
+unless an option such as <code>–get</code> is used that requires the
+<acronym title="Hyper Text Transfer Protocol">HTTP</acronym> binding for the
+request. In the normal case, you will not need to specify the
+<code>–soap</code> option, because you will need to specify the
+<code>–action</code> option, which implies the use of the <acronym
+title="Simple Object Access Protocol">SOAP</acronym> binding. It’s useful
+mainly in conjunction with <code>–get</code>.</p>
+
+<p><code>–soap1.1</code></p>
+
+<p>Use version 1.1 of <acronym
+title="Simple Object Access Protocol">SOAP</acronym>.</p>
+
+<p><code>–send-only</code>*</p>
+
+<p>Normally, wsclient uses a request/response pattern. With the <acronym
+title="Simple Object Access Protocol">SOAP</acronym> binding, it will
+normally expect to get a <acronym
+title="Simple Object Access Protocol">SOAP</acronym> message back and will
+exit with an exit code of 2, if it does not. With <code>–send-only</code>,
+it will not expect to get a <acronym
+title="Simple Object Access Protocol">SOAP</acronym> message back (other than
+a fault); if it does get a <acronym
+title="Simple Object Access Protocol">SOAP</acronym> message back, it will
+exit with an exit code of 2.</p>
+
+<p><code>-a</code>*<br />
+<code>–action=</code><em>uri</em>*</p>
+
+<p>Use <em>uri</em> as the <acronym
+title="Simple Object Access Protocol">SOAP</acronym> action. This implies the
+use of WS-Addressing unless <code>–no-wsa</code> is used.</p>
+
+<p><code>–soap-header=</code><em>filename</em></p>
+
+<p>Add the contents of <em>filename</em> as a <acronym
+title="Simple Object Access Protocol">SOAP</acronym> header block.
+<em>filename</em> is parsed as an <acronym
+title="Extensible Markup Language">XML</acronym> document. The document
+element of the resulting element is added as a <acronym
+title="Simple Object Access Protocol">SOAP</acronym> header block. This
+option can be specified multiple times.</p>
+
+<p><code>–soap-out</code>*</p>
+
+<p>Output the entire <acronym
+title="Simple Object Access Protocol">SOAP</acronym> reply instead of just
+its <acronym title="Extensible Markup Language">XML</acronym> payload.</p>
+
+<p><code>–soap-dump</code>*</p>
+
+<p>Output the <acronym title="Simple Object Access Protocol">SOAP</acronym>
+request to stdout instead of sending it.</p>
+
+<p><code>–soap-in</code></p>
+
+</div>
+
+<h3><a name="ws-addressing_options" id="ws-addressing_options">WS-Addressing
+options</a></h3>
+
+<div class="level3">
+<p><code>–no-wsa</code>*</p>
+
+<p>Don’t add WS-Addressing headers. </p>
+
+<p><code>–to=</code><em>uri</em>*</p>
+
+<p>Uses <em>uri</em> as the To address instead of <em>destURI</em>. A wsa:To
+header will always be added unless <code>–no-wsa</code> is specified.</p>
+
+<p><code>–from=</code><em>uri</em>*</p>
+
+<p>Inserts a wsa:From header with an address of <em>uri</em>.</p>
+
+<p><code>–reply-to=</code><em>uri</em>*</p>
+
+<p>Uses <em>uri</em> as the ReplyTo address. If <code>–reply-to</code> is
+not specified and <code>–send-only</code> is specified, then <code><a
+href="http://www.w3.org/2005/08/addressing/none" class="urlextern"
+target="_blank" title="http://www.w3.org/2005/08/addressing/none"
+rel="nofollow">http://www.w3.org/2005/08/addressing/none</a></code> will be
+used as the wsa:ReplyTo address. If neither <code>–reply-to</code> nor
+<code>–send-only</code> is specified, then no wsa:ReplyTo address will be
+added.</p>
+
+<p><code>–fault-to=</code><em>uri</em>*</p>
+
+<p>Uses <em>uri</em> as the FaultTo address.</p>
+
+<p><code>–in-reply-to=</code><em>uri</em>*</p>
+
+<p>Inserts a wsa:RelatesTo header with a relationship of <code><a
+href="http://www.w3.org/2005/08/addressing/reply" class="urlextern"
+target="_blank" title="http://www.w3.org/2005/08/addressing/reply"
+rel="nofollow">http://www.w3.org/2005/08/addressing/reply</a></code>.</p>
+
+<p><code>–in-reply-to-message=</code><em>file</em></p>
+
+<p>Inserts addressing headers appropriate for a message that is in reply to
+the <acronym title="Simple Object Access Protocol">SOAP</acronym> message
+contained in <em>file</em>. <em>destURI</em> is optional in this case.</p>
+
+<p><code>–wsa-submission</code></p>
+
+<p>Use the WS-Addressing Submission rather the WS-Addressing 1.0
+Recommendation.</p>
+</div>
+
+<h3><a name="security_options" id="security_options">Security options</a></h3>
+
+<div class="level3">
+<p><code>–timestamp</code>*</p>
+
+<p>Generates a timestamp element in the security header.</p>
+
+<p><code>–ttl=</code><em>duration</em></p>
+
+<p>Makes the timestamp expire after an interval of <em>duration</em>.
+<em>duration</em> must be non-empty and match the regexp:</p>
+
+<p>([0-9]+d)?([0-9]+h)?([0-9]+m)?(([0-9]+(\.[0-9]*)|\.[0-9]+?)s)?</p>
+
+<p>A number followed by d, h, m or s specifies a duration in days, hours,
+minutes or seconds respectively. Implies –timestamp. </p>
+
+<p><code>–sign-body</code></p>
+
+<p>Signs the <acronym title="Simple Object Access Protocol">SOAP</acronym>
+body.</p>
+
+<p><code>–sign-header=</code><em>QName</em></p>
+
+<p>Signs any <acronym title="Simple Object Access Protocol">SOAP</acronym>
+headers whose element name is the specified <acronym
+title="Uniform Resource Identifier">URI</acronym> and local-name; local-name
+may be * to indicate all <acronym
+title="Simple Object Access Protocol">SOAP</acronym> headers in that
+namespace; may be used multiple times.</p>
+
+<p>The binding of any prefix in the <em>QName</em> to a namespace <acronym
+title="Uniform Resource Identifier">URI</acronym> is controlled by the
+<code>–xmlns</code> option.</p>
+
+<p><code>–sign-element=</code><em>QName</em></p>
+
+<p>Signs any elements in the message whose element name is the specified
+<acronym title="Uniform Resource Identifier">URI</acronym> and local-name and
+that is not within any other element that is to be signed ; without this
+option, cipher data will automatically be identified as eligible for binary
+optimization.</p>
+
+<p>The binding of any prefix in the <em>QName</em> to a namespace <acronym
+title="Uniform Resource Identifier">URI</acronym> is controlled by the
+<code>–xmlns</code> option.</p>
+
+<p><code>–sign-timestamp</code></p>
+
+<p>Signs the timestamp. The timestamp must either already be present or
+–timestamp must be used to add one. </p>
+
+<p><code>–protect-tokens</code></p>
+
+<p>[Same as sp:ProtectTokens. Is this needed?]</p>
+
+<p><code>–certificate=</code><em>file</em></p>
+
+<p>Includes an X509 security token from <em>file</em>, which is an X509
+certificate in PEM format. This is a certificate for the sender which can be
+used for signing or supporting according to other options.</p>
+
+<p><code>–key=</code><em>file</em></p>
+
+<p>Signs using the private key <em>file</em>, which must be the private key
+in PEM format. The certificate corresponding to the key must be specified
+using –certificate. </p>
+
+<p><code>–key-password=</code><em>passwd</em></p>
+
+<p>Password for accessing the private key (needed if the private key is
+password-protected). This is not secure on a multi-user machine since
+passwords on the command-line are accessible to other users via utilities
+such as ps.</p>
+
+<p><code>–key-password-file=</code><em>file</em></p>
+
+<p>File containing password for accessing the private key (needed if the
+private key is password-protected).</p>
+
+<p><code>–encrypt-payload</code></p>
+
+<p>Encrypts the contents of the <acronym
+title="Simple Object Access Protocol">SOAP</acronym> body.</p>
+
+<p><code>–encrypt-element=</code><em>QName</em></p>
+
+<p>Encrypts any elements in the message whose element name is the specified
+<acronym title="Uniform Resource Identifier">URI</acronym> and local-name and
+that are not within any other element that is to be encrypted. May be
+specified multiple times.</p>
+
+<p>The binding of any prefix in the <em>QName</em> to a namespace <acronym
+title="Uniform Resource Identifier">URI</acronym> is controlled by the
+<code>–xmlns</code> option.</p>
+
+<p><code>–no-binary-optimize-cipher-data</code></p>
+
+<p>Prohibits cipher data from being binary-optimized.</p>
+
+<p><code>–encrypt-before-signing</code></p>
+
+<p>Encrypts before signing, in other words the signature is computed over the
+ciphertext; by default, when there a message is to be protected with both
+signing and encryption, wsclient will sign before encrypting, in other words,
+the signature will be computed over the plaintext.</p>
+
+<p><code>–encrypt-signature</code></p>
+
+<p>Encrypts the signature (when signing before encryption).</p>
+
+<p><code>–recipient-certificate=</code><em>file</em></p>
+
+<p>Encrypts using the public key associated with <em>file</em>, which should
+be an X509 certificate in PEM format.</p>
+
+<p><code>–algorithmsuite=</code><em>algorithmsuite</em></p>
+
+<p>Use the corresponding algorithmsuite for signature and encryption. The
+value is one from Web Services Security Policy language July-2005 [section
+7.1 Algoruthmsuite Property]</p>
+
+<p>eg:- –algorithmsuite=Basic256Rsa15 </p>
+
+<p><code>–user=</code><em>user</em>*</p>
+
+<p>Includes a username token with <em>user</em> as the username.</p>
+
+<p><code>–password=</code><em>passwd</em>*</p>
+
+<p>Uses <em>passwd</em> as the password for the username token. This is not
+secure on a multi-user machine since passwords on the command-line are
+accessible to other users via utilities such as ps.</p>
+
+<p><code>–password-file=</code><em>file</em>*</p>
+
+<p>Uses the password from <em>file</em>. Leading and trailing whitespace are
+stripped.</p>
+
+<p><code>–netrc</code></p>
+
+<p>Includes a username token using .netrc to select the username and
+password. The .netrc file is used by a number of client programs such as ftp
+and curl to map machine names to user/password pairs. See netrc(5). The
+machine name used to lookup the user/password in .netrc comes from the
+destination <acronym title="Uniform Resource Identifier">URI</acronym> of the
+<acronym title="Simple Object Access Protocol">SOAP</acronym> message.</p>
+
+<p><code>–digest</code></p>
+
+<p>Uses a password digest for the username token. This requires that there be
+options specifying the password (such as –user-password). </p>
+
+<p><code>–force-insecure</code></p>
+
+<p>By default, a plain text password will only be sent over a secure
+transport (https). This option will force a plain text password to be sent
+over an insecure transport. <strong>This option is insecure.</strong></p>
+</div>
+
+<h4><a name="complex_soap_security_operations"
+id="complex_soap_security_operations">Complex SOAP security
+operations</a></h4>
+
+<div class="level4">
+<p>WS-Security is very general and allows for multiple security tokens of
+multiple types which can separately be used to protect the message in complex
+interdependent ways. In order to support this, we allow each security token
+to be distinguished by an index, which can be any <acronym
+title="American Standard Code for Information Interchange">ASCII</acronym>
+alphanumeric string. All of the options in the previous section (apart from
+<code>–timestamp</code> and <code>–ttl</code>) can optionally specify a
+token index. For options that take an argument, the token index is specified
+following a comma after the required argument. For options that don’t take
+an argument, the token index becomes an optional argument. </p>
+
+<p>In addition there are two additional options:</p>
+
+<p><code>–sign-token=</code>[<em>token
+index</em>][<code>,</code><em>signing token index</em>]</p>
+
+<p>Signs token <em>token index</em> using token <em>signing token index</em>.
+If <em>token index</em> is omitted, all pre-existing tokens in the input
+message are signed.</p>
+
+<p><code>–sign-signature=</code>[<em>signature token
+index</em>][<code>,</code><em>signing token index</em>]</p>
+
+<p>Signs signature done using token <em>signature token index</em> using
+token <em>signing token index</em>. If <em>signature token index</em> is
+omitted, all pre-existing signatures in the input message are signed.</p>
+
+<p>Example of SignedEndorsingSupportingTokens from 9.4 of Security Policy.</p>
+<pre class="code">wsclient --certificate=1.pem,1 --certificate=2.pem,2 \
+  --sign-timestamp=1 --sign-token=2,1  --sign-signature=1,2</pre>
+</div>
+
+<h2><a name="mtom_options" id="mtom_options">MTOM options</a></h2>
+
+<div class="level2">
+<p><code>–no-mtom</code>*</p>
+
+<p>Don’t use MTOM to optimize the sending of the <acronym
+title="Extensible Markup Language">XML</acronym> infoset. This works with
+both the <acronym title="Simple Object Access Protocol">SOAP</acronym> and
+the <acronym title="Hyper Text Transfer Protocol">HTTP</acronym> binding.
+MTOM is always supported for receiving. By default, MTOM is used for sending
+if there are any elements that are binary-optimized. When
+<code>–xop-in</code> is used, elements whose content was specified with
+xop:Include are binary optimized.</p>
+
+<p><code>–xop-in</code>[=<em>dir</em>]*</p>
+
+<p>When constructing the logical <acronym
+title="Extensible Markup Language">XML</acronym> infoset of the payload from
+the input <acronym title="Extensible Markup Language">XML</acronym>,
+recognize xop:Include elements and resolve them. Resolving an xop:Include
+element means replacing the element by the base64 encoding of the resource
+referenced by the <acronym title="Uniform Resource Identifier">URI</acronym>
+in the href attribute. The XOP specification restricts the <acronym
+title="Uniform Resource Identifier">URI</acronym> to be a cid <acronym
+title="Uniform Resource Identifier">URI</acronym>, but this restriction is
+not applied here. If <code>–no-mtom</code> has not been specified, then the
+net result is a <acronym
+title="Multipurpose Internet Mail Extension">MIME</acronym> XOP package will
+be transmitted and the <acronym
+title="Uniform Resource Identifier">URI</acronym> in each xop:Include element
+will be replaced by a cid <acronym
+title="Uniform Resource Identifier">URI</acronym>.</p>
+
+<p>The <acronym title="Uniform Resource Identifier">URI</acronym> in the href
+attribute may be a relative <acronym
+title="Uniform Resource Identifier">URI</acronym>. If it is, then it is
+resolved into an absolute <acronym
+title="Uniform Resource Identifier">URI</acronym> using the absolute file
+<acronym title="Uniform Resource Identifier">URI</acronym> corresponding to
+the directory <em>dir</em> as the base <acronym
+title="Uniform Resource Identifier">URI</acronym>. Note that <em>dir</em> may
+be a relative path name (which is resolved relative to the current directory
+as usual). The <em>dir</em> option argument is optional. It defaults to
+<code>.</code> (the current directory).</p>
+
+<p><code>–xop-out</code>[=<em>dir</em>]*</p>
+
+<p>Serialize the received reply by creating an XOP package, writing the
+extracted content as files in <em>dir</em>, and serializing the XOP document
+to stdout with the URIs in the xop:Include href attributes being relative
+URIs relative to <em>dir</em> referencing the extracted content. The elements
+whose content is extracted will be those that were binary optimized in the
+received reply. Thus the net result of <code>–xop-out</code> is to write
+the non-root parts to files in <em>dir</em>, and write the root part to
+stdout, replacing cid URIs by relative URIs referencing the files. The
+<em>dir</em> option argument is optional. It defaults to <code>.</code> (the
+current directory). The names of the output file will be chosen so as not to
+overwrite any existing files in <em>dir</em>.</p>
+</div>
+
+<h2><a name="general_http_options" id="general_http_options">General HTTP
+options</a></h2>
+
+<div class="level2">
+<p>These can be used with the <acronym
+title="Simple Object Access Protocol">SOAP</acronym> binding only if the
+transport is <acronym title="Hyper Text Transfer Protocol">HTTP</acronym>.</p>
+
+<p><code>–http-header=<em>line</em></code>*</p>
+
+<p>Add <em>line</em> as an <acronym
+title="Hyper Text Transfer Protocol">HTTP</acronym> header.</p>
+
+<p><code>–output-http-headers=<em>file</em></code>*</p>
+
+<p>Output the <acronym title="Hyper Text Transfer Protocol">HTTP</acronym>
+headers in the response to <em>file</em>.</p>
+</div>
+
+<h2><a name="other_options" id="other_options">Other options</a></h2>
+
+<div class="level2">
+<p><code>–xmlns=</code><em>prefix</em>,<em>namespace</em></p>
+
+<p>A prefix of <em>prefix</em> in a QName on the command-line is interpreted
+as referring to the <acronym
+title="Uniform Resource Identifier">URI</acronym> <em>namespace</em>. This is
+used by the <code>–sign-header</code>, <code>–sign-element</code> and
+<code>–encrypt-element</code> options.</p>
+</div>
+
+<h2><a name="exit_codes" id="exit_codes">Exit codes</a></h2>
+
+<div class="level2">
+<ul>
+  <li class="level1">
+    <div class="li">
+    0 everything OK</div>
+  </li>
+  <li class="level1">
+    <div class="li">
+    1 response is a fault message</div>
+  </li>
+  <li class="level1">
+    <div class="li">
+    2 problem receiving a response</div>
+  </li>
+  <li class="level1">
+    <div class="li">
+    3 problem sending the message</div>
+  </li>
+  <li class="level1">
+    <div class="li">
+    4 problem in the input or options</div>
+  </li>
+</ul>
+</div>
+
+
+</body>
+</html>

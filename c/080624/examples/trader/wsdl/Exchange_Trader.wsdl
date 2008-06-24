@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.wso2.org" xmlns:types="http://www.wso2.org/types" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.wso2.org">
+	<types/>
+	<types/>
+	<types/>
+	<types/>
+	<types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.wso2.org/types" targetNamespace="http://www.wso2.org/types">
+			<element name="loginRequest">
+				<complexType>
+					<sequence>
+						<element name="username" type="xsd:string"/>
+						<element name="password" type="xsd:string"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="registerClientRequest">
+				<complexType>
+					<sequence>
+						<element name="ClientInfo" type="tns:ClientInfo"/>
+					</sequence>
+				</complexType>
+			</element>
+			<complexType name="ClientInfo">
+				<sequence>
+					<element name="name" type="xsd:string"/>
+					<element name="ssn" type="xsd:string"/>
+				</sequence>
+			</complexType>
+			<element name="registerClientResponse">
+				<complexType>
+					<sequence>
+						<element name="userid" type="xsd:string"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="buyRequest_ex">
+				<complexType>
+					<sequence>
+						<element name="userid" type="xsd:string"/>
+						<element name="symbol" type="xsd:string"/>
+						<element name="qty" type="xsd:int"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="sellRequest_ex">
+				<complexType>
+					<sequence>
+						<element name="userid" type="xsd:string"/>
+						<element name="symbol" type="xsd:string"/>
+						<element name="qty" type="xsd:int"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="registerFeedTargetRequest">
+				<complexType>
+					<sequence>
+						<element name="EPR" type="xsd:string"/>
+					</sequence>
+				</complexType>
+			</element>
+		</schema>
+	</types>
+	<message name="loginRequestMessage">
+		<part name="part1" element="types:loginRequest"/>
+	</message>
+	
+	<message name="registerClientRequestMessage">
+		<part name="part1" element="types:registerClientRequest"/>
+	</message>
+	<message name="registerClientResponseMessage">
+		<part name="part1" element="types:registerClientResponse"/>
+	</message>
+	<message name="buyRequestMessage">
+		<part name="part1" element="types:buyRequest_ex"/>
+	</message>
+	<message name="sellRequestMessage">
+		<part name="part1" element="types:sellRequest_ex"/>
+	</message>
+	<message name="registerFeedTargetRequestMessage">
+		<part name="part1" element="types:registerFeedTargetRequest"/>
+	</message>
+	<portType name="TradePortType">
+		<!-- Login -->
+		<operation name="login">
+			<input message="tns:loginRequestMessage"/>
+		</operation>
+		<!-- Register Client -->
+		<operation name="registerClient">
+			<input message="tns:registerClientRequestMessage"/>
+			<output message="tns:registerClientResponseMessage"/>
+		</operation>
+		<!--Buy-->
+		<operation name="buy">
+			<input message="tns:buyRequestMessage"/>
+		</operation>
+		<!--Sell-->
+		<operation name="sell">
+			<input message="tns:sellRequestMessage"/>
+		</operation>
+		<!--Register AbstractFeed Target-->
+		<operation name="registerFeedTarget">
+			<input message="tns:registerFeedTargetRequestMessage"/>
+		</operation>
+	</portType>
+	<binding name="TradeBinding" type="tns:TradePortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="login">
+		 	<soap:operation style="document" soapAction="login"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+		</operation>
+		<operation name="registerClient">
+			<soap:operation style="document" soapAction="registerClient"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="buy">
+			<soap:operation style="document" soapAction="buy"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+		</operation>
+		<operation name="sell">
+			<soap:operation style="document" soapAction="sell"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+		</operation>
+		<operation name="registerFeedTarget">
+			<soap:operation style="document" soapAction="registerFeedTarget"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+		</operation>
+	</binding>
+	<service name="ExchangeTrader">
+		<port name="TradePort" binding="tns:TradeBinding">
+			<soap:address location="http://nagoya.apache.org:5049/axis/services/echo"/>
+		</port>
+	</service>
+</definitions>

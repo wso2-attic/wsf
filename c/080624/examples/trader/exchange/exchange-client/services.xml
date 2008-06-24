@@ -1,0 +1,4 @@
+<service name="exchangeclient">
+    <parameter name="ServiceClass" locked="xsd:false">exchangeclient</parameter>
+    <operation name="getInfo"/>
+</service>

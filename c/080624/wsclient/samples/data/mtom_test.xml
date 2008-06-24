@@ -1,0 +1,1 @@
+<ns1:mtomSample xmlns:ns1="http://ws.apache.org/axis2/c/samples/mtom"><ns1:fileName>test.jpg</ns1:fileName><ns1:image><xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="/axis2c/deploy/bin/samples/resources/axis2.jpg"></xop:Include></ns1:image></ns1:mtomSample>

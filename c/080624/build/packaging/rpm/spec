@@ -1,0 +1,25 @@
+Summary: WSO2 WSF/C
+Name: wso2-wsf-c
+Vendor: WSO2 Inc.
+Version: 1.1.0
+Release: 1
+Source0: wso2-wsf-c-src-1.1.0.tar.gz
+License: Apache License V2.0
+Group: Development/Tools
+%description
+WSO2 Web Services Framework for C. WSO2 WSF/C is a standards compliant, enterprise grade, open source, C library for providing and consuming Web services in C. WSO2 WSF/C is a complete solution for building and deploying Web services, and is the C library with the widest range of WS-* specification implementations, including MTOM, WS-Addressing, WS-Policy, WS-Security, WS-SecurityPolicy, WS-Reliable Messaging and WS-eventing.
+%prep
+%setup -q
+%build
+export CFLAGS="-O2"
+./configure --enable-openssl=no --with-apache2=/usr/local/apache2/include --enable-xmpp=yes --with-axis2=`pwd`/axis2c/include 
+make
+%install
+make install
+strip -g /opt/wso2/wsf_c/lib/*.so
+make samples
+%files
+%defattr(-,root,root)
+/opt/wso2/wsf_c
+%doc COPYING AUTHORS README NEWS
+

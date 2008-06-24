@@ -1,0 +1,87 @@
+        Web Services Framework for C  (WSO2 WSF/C)
+
+  What is it?
+  -----------
+
+  WSO2 Web Services Framework for C (WSO2 WSF/C)is a fully open source framework for 
+  providing and consuming web services. WSO2 WSF/C is a collection of 
+  libraries and tools, supporting basic web services technologies such as XML, 
+  SOAP, WSDL. REST as well as the Web Services specifications such as 
+  WS-Addressing, MTOM, WS-Security and WS-Reliable Messaging. It comes with 
+  both HTTP and XMPP transport support.
+
+  WSO2 WSF/C is equipped with the wsclient tool that acts as a Web Service 
+  client. wsclient can be given an XML payload as input, along with the service 
+  endpoint and would output the the XML payload of the received reply. Various 
+  options of wsclient allows the user to leverage the full Web services stack, 
+  including WS-* specifications as well as raw REST like invocations.
+
+  WSO2 WSF/C provides the basic framework on which other scripting language 
+  bindings could be built; WSO2 WSF/PHP, WSO2 WSF/RUBY are based on 
+  WSO2 WSF/C. It could also be embeded in other software where the full 
+  Web services stack support is required. It is based on Apache Axis2/C.
+  It also includes Apache Sandesha2/C, Apache Rampart/C and Apache Savan/C.
+
+  The Latest Version
+  ------------------
+
+  Details of the latest version can be found on the WSO2 WSF/C
+  project page under http://wso2.org/projects/wsf/c.
+
+  Installation 
+  ------------
+
+  Please see the file called INSTALL. You can also have a look at
+  docs/installationguide.html.
+
+  Licensing
+  ---------
+
+  WSO2 WSF/C is released under Apache License Version 2.0.
+  Please see the file called LICENSE.
+
+
+  Contacts
+  --------
+
+     o If you want freely available support for using WSO2 WSF/C please
+       join the WSO2 WSF/C user community by subscribing to users mailing
+       list, wsf-c-user@wso2.org by sending an email to 
+       'wsf-c-user-request@wso2.org' with the subject 'subscribe'.
+
+     o If you have a bug report for WSO2 WSF/C please go log a Jira issue
+       at https://wso2.org/jira/browse/WSFC
+
+     o If you want to participate in actively developing WSO2 WSF/C please
+       subscribe to the 'wsf-c-dev@wso2.org' by sending and email to 
+       wsf-c-dev-request@wso2.org with the subject 'subscribe'.
+
+
+  Training
+  --------
+
+  WSO2 Inc. offers a variety of professional Training Programs, including
+  training on general Web services as well as WSO2 WSF/C.
+
+  For additional support information please refer to
+  http://wso2.com/training/course-catalog/
+
+
+  Support
+  -------
+
+  WSO2 Inc. offers a variety of development and production support
+  programs, ranging from Web-based support up through normal business
+  hours, to premium 24x7 phone support.
+
+  For additional support information please refer to http://wso2.com/support/
+
+
+  Acknowledgements
+  ----------------
+
+  WSO2 WSF/C is based on Apache Axis2/C. It also uses autoconf and 
+  libtool to provide a build environment. WSO2 WSF/C uses openssl as the 
+  basis for security implementation.
+
+

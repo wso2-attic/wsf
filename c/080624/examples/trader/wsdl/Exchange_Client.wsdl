@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.wso2.org" xmlns:types="http://www.wso2.org/types" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.wso2.org">
+	<types/>
+	<types/>
+	<types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.wso2.org/types" targetNamespace="http://www.wso2.org/types">
+			<element name="getInfoRequest">
+				<complexType/>
+			</element>
+			<element name="getInfoResponse">
+				<complexType>
+					<sequence>
+						<element name="marketInfo" type="tns:MarketInfo"/>
+					</sequence>
+				</complexType>
+			</element>
+			<complexType name="MarketInfo">
+				<sequence>
+					<element name="totalTraded" type="xsd:float"/>
+					<element name="avgPrice" type="xsd:float"/>
+					<element name="avgPriceOfTrade" type="xsd:float"/>
+					<element name="marketCap" type="xsd:float"/>
+				</sequence>
+			</complexType>
+		</schema>
+	</types>
+	<message name="getInfoRequestMessage">
+		<part name="part1" element="types:getInfoRequest"/>
+	</message>
+	<message name="getInfoResponseMessage">
+		<part name="part1" element="types:getInfoResponse"/>
+	</message>
+	<portType name="MarketInfoPortType">
+		<!-- Get info -->
+		<operation name="getInfo">
+			<input message="tns:getInfoRequestMessage"/>
+			<output message="tns:getInfoResponseMessage"/>
+		</operation>
+	</portType>
+	<binding name="MarketInfoBinding" type="tns:MarketInfoPortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="getInfo">
+			<soap:operation style="document" soapAction="getInfo"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+	</binding>
+	<service name="ExchangeClient">
+		<port name="MarketInfoPort" binding="tns:MarketInfoBinding">
+			<soap:address location="http://nagoya.apache.org:5049/axis/services/echo"/>
+		</port>
+	</service>
+</definitions>

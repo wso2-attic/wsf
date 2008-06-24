@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>WSO2 Web Services Framework/C</title>
+  <meta name="CREATED" content="20070518;12321300">
+  <meta name="CHANGED" content="20070611;14181900">
+  <link href="style.css" rel="stylesheet" type="text/css" media="all">
+</head>
+
+<body lang="en-US" dir="ltr">
+<h1>WSO2 Web Services Framework/C</h1>
+<p><a id="wsf_intro">WSO2 Web Services Framework/C (WSO2 WSF/C) is a
+standards compliant, enterprise grade, open source, C library for providing
+and consuming Web services in C. WSO2 WSF/C is a complete solution for
+building and deploying Web services, and is the C library with the widest
+range of WS-* specification implementations, including MTOM, WS-Addressing,
+WS-Policy, WS-Security, WS-SecurityPolicy, WS-Reliable Messaging and
+WS-eventing. It provides the best interoperability- all the Web services
+specification implementations are tested for interoperability with Microsoft
+.NET, WSO2 WSAS and other J2EE implementations.</a></p>
+
+<p>WSO2 WSF/C is released with <a
+href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License
+V2.0</a>, and is based on the family of <a
+href="http://www.apache.org/">Apache</a> open source projects, including <a
+href="http://ws.apache.org/axis2/c/">Apache Axis2/C</a>, <a
+href="http://ws.apache.org/rampart/c/">Apache Rampart/C</a>, <a
+href="http://ws.apache.org/sandesha/sandesha2/c/">Apache Sandesha2/C</a> and
+<a href="http://ws.apache.org/savan/c/">Apache Savan/C</a>. The key advantage
+of using WSO2 WSF/C is that it seamlessly integrates the multiple Apache
+Axis2/C projects together, which is tested and ready to be used. It also
+comes with additional features such as XMPP transport and a command line tool
+for consuming Web services, named wsclient.</p>
+
+
+<h2>Why Use WSO2 WSF/C?</h2>
+
+<p>WSO2 WSF/C relives you of the burden of looking for and integrating
+multiple software elements to build a comprehensive Web services stack. It
+also provides you with the luxury of using a well tested software framework,
+both for functionality as well as for interoperability, for embedding in your
+C or C++ software stacks to enable the software Web services. Comprehensive
+coverage of WS-* specifications allows you to use WSO2 WSF/C for enterprise
+grade applications.</p>
+
+<p>WSO2 WSF/C is an open source project. Thus you have all the benefits that
+you can gain with an open source project, such as no worries of vendor
+locking and support from the user community.</p>
+
+<p>WSO2 WSF/C is ready to be embedded. This has been proven with WSO2
+WSF/PHP, an open source PHP Web services extension based on WSO2 WSF/C.</p>
+<h2><a id="wsf_features">WSO2 WSF/C Features</a></h2>
+
+<table width="665" cellpadding="4" cellspacing="0">
+  <col width="145"><col width="502"><thead>
+    <tr valign="top">
+      <th width="145"><p>Feature</p>
+      </th>
+      <th width="502"><p>Description</p>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr valign="top">
+      <td width="145"><p>Comprehensive Support for Web Services Standards</p>
+      </td>
+      <td width="502"><p>WSO2 WSF/C supports the basic Web services standards
+        including SOAP 1.1, SOAP 1.2 and MTOM.</p>
+
+        <p>WSF/C also supports the following WS-* specifications:</p>
+        <ul>
+          <li><p>WS-Addressing</p>
+          </li>
+          <li><p>WS-Policy</p>
+          </li>
+          <li><p>WS-Security</p>
+          </li>
+          <li><p>WS-SecurityPolicy</p>
+          </li>
+          <li><p>WS-ReliableMessaging</p>
+          </li>
+          <li><p>WS-Eventing</p>
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="145"><p>Proven Interoperability</p>
+      </td>
+      <td width="502"><p>WSO2 WSF/C features proven interoperability with
+        Microsoft .NET, WSO2 WSAS (Apache Axis2/Java based Web services
+        application server) and other J2EE implementations. The basic SOAP
+        level interoperability as well as WS-* specification implementations
+        have been tested and proven to interoperate.</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="145"><p>Portability and Platform Support</p>
+      </td>
+      <td width="502"><p>WSO2 WSF/C has been tested on:</p>
+        <ul>
+          <li><p>Windows XP - Microsoft Visual C++ 7.1</p>
+          </li>
+          <li><p>Windows XP - Microsoft Visual C++ 8.0</p>
+          </li>
+          <li><p>Linux – gcc 4.1.1</p>
+          </li>
+          <li><p>Red Hat Enterprise Linux ES release 4 (Nahant) - gcc
+            3.4.3</p>
+          </li>
+          <li><p>Sun Solaris 2.10 x86 - gcc 3.</p>
+          </li>
+          <li><p>MacOS 10.4.10 - gcc 4.0.1</p>
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="145"><p>Web Server Extensions</p>
+      </td>
+      <td width="502"><p>WSO2 WSF/C can be deployed as a server-side
+        extension within a Web server, such as Apache Web Server or Microsoft
+        IIS. It also includes an HTTP server and can be deployed as a
+        stand-alone server.</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="145"><p>Transport Abstraction</p>
+      </td>
+      <td width="502"><p>With the design characteristics of Axis2/C, server
+        and client transports can be plugged in as desired. It comes with an
+        XMPP transport implementation, and one can extend the number of
+        supported transports using the abstraction APIs.</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="145"><p>XML Parser Abstraction</p>
+      </td>
+      <td width="502"><p>With the design characteristics of Axis2/C, like in
+        the case of transports, any XML parser can be plugged in as
+        desired.</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="145"><p>WSDL2C Code Generation</p>
+      </td>
+      <td width="502"><p>Using the Axis2/Java code generation tool, one can
+        generate code for both WSDL 1.1 and WSDL 2.0. Data binding support is
+        also available with Axis Data Binding (ADB).</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<a id="wsf_oss"></a>
+
+<h2>Open Source Components Included in WSO2 WSF/C</h2>
+<ul>
+  <li><p>Apache Axis2/C (The Web services engine)</p>
+  </li>
+  <li><p>WS-Addressing implementation in Axis2/C</p>
+  </li>
+  <li><p>WS-Policy implementation in Axis2/C</p>
+  </li>
+  <li><p>Apache Rampart/C (WS-Security)</p>
+  </li>
+  <li><p>WS-SecurityPolicy implementation in Axis2/C</p>
+  </li>
+  <li><p>Apache Sandesha2/C (WS-ReliableMessaging)</p>
+  </li>
+  <li><p>Apache Savan/C (WS-Eventing)</p>
+  </li>
+  <li><p>Libxml2</p>
+  </li>
+  <li><p>OpenSSL</p>
+  </li>
+</ul>
+<h2><a id="wsf_issues">Known Issues</a></h2>
+<ol>
+  <li><p>There can be memory leaks when using WS-ReliableMessaging. Please
+    refer to the Apache Sandesha2/C README file located in the sandesha2
+    folder.</p>
+  </li>
+  <li><p>WS-ReliableMessaging and WS-Security does not work with the
+    Guththila parser.</p>
+  </li>
+</ol>
+</body>
+</html>

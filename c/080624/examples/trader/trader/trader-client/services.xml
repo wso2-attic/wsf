@@ -1,0 +1,10 @@
+<service name="traderclient">
+    <parameter name="ServiceClass" locked="xsd:false">traderclient</parameter>
+    <operation name="buy"/>
+    <operation name="getPortfolio"/>
+    <operation name="deposit"/>
+    <operation name="getSymbols"/>
+    <operation name="getQuote"/>
+    <operation name="createAccount"/>
+    <operation name="sell"/>
+</service>

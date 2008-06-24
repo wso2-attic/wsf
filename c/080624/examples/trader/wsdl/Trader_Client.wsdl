@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.wso2.org" xmlns:types="http://www.wso2.org/types" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.wso2.org">
+	<types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.wso2.org/types" targetNamespace="http://www.wso2.org/types">
+			<element name="createAccountRequest">
+				<complexType>
+					<sequence>
+						<element name="clientinfo" type="tns:ClientInfo"/>
+						<element name="password" type="xsd:string"/>
+					</sequence>
+				</complexType>
+			</element>
+			<complexType name="ClientInfo">
+				<sequence>
+					<element name="name" type="xsd:string"/>
+					<element name="ssn" type="xsd:string"/>
+				</sequence>
+			</complexType>
+			<element name="createAccountResponse">
+				<complexType>
+					<sequence>
+						<element name="userid" type="xsd:string"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="getQuoteRequest">
+				<complexType>
+					<sequence>
+						<element name="symbol" type="xsd:string"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="getQuoteResponse">
+				<complexType>
+					<sequence>
+						<element name="stock_quote" type="tns:StockQuote"/>
+					</sequence>
+				</complexType>
+			</element>
+			<complexType name="StockQuote">
+				<sequence>
+					<element name="name" type="xsd:string"/>
+					<element name="symbol" type="xsd:string"/>
+					<element name="price" type="xsd:float"/>
+					<element name="high" type="xsd:float"/>
+					<element name="low" type="xsd:float"/>
+				</sequence>
+			</complexType>
+			<element name="getSymbolsRequest">
+				<complexType/>
+			</element>
+			<element name="getSymbolsResponse">
+				<complexType>
+					<sequence>
+						<element name="return" type="tns:ArrayOfString"/>
+					</sequence>
+				</complexType>
+			</element>
+			<complexType name="ArrayOfString">
+				<sequence>
+					<element name="value" minOccurs="0" maxOccurs="unbounded" type="xsd:string"/>
+				</sequence>
+			</complexType>
+			<element name="depositRequest">
+				<complexType>
+					<sequence>
+						<element name="useridr" type="xsd:string"/>
+						<element name="password" type="xsd:string"/>
+						<element name="amount" type="xsd:float"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="depositResponse">
+				<complexType>
+					<sequence>
+						<element name="depositStatus" type="xsd:string"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="buyRequest">
+				<complexType>
+					<sequence>
+						<element name="userid" type="xsd:string"/>
+						<element name="password" type="xsd:string"/>
+						<element name="symbol" type="xsd:string"/>
+						<element name="qty" type="xsd:int"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="buyResponse">
+				<complexType>
+					<sequence>
+						<element name="trade_status" type="tns:TradeStatus"/>
+					</sequence>
+				</complexType>
+			</element>
+			<complexType name="TradeStatus">
+				<sequence>
+					<element name="status" type="xsd:boolean"/>
+					<element name="reason" type="xsd:string"/>
+				</sequence>
+			</complexType>
+			<element name="sellRequest">
+				<complexType>
+					<sequence>
+						<element name="userid" type="xsd:string"/>
+						<element name="password" type="xsd:string"/>
+						<element name="symbol" type="xsd:string"/>
+						<element name="qty" type="xsd:integer"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="sellResponse">
+				<complexType>
+					<sequence>
+						<element name="trade_status" type="tns:TradeStatus"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="getPortfolioRequest">
+				<complexType>
+					<sequence>
+						<element name="userid" type="xsd:string"/>
+						<element name="password" type="xsd:string"/>
+					</sequence>
+				</complexType>
+			</element>
+			
+				<complexType name="PortFolio">
+					<sequence>
+						<element name="portFolioItem" minOccurs="0" maxOccurs="unbounded" type="tns:PortFolioItem"/>
+					</sequence>
+				</complexType>
+			
+			
+				<complexType name="PortFolioItem">
+					<sequence>
+						<element name="symbol" type="xsd:string"/>
+						<element name="amount" type="xsd:int"/>
+					</sequence>
+				</complexType>
+			
+			<element name="getPortfolioResponse">
+				<complexType>
+					<sequence>
+						<element name="portFolio" type="tns:PortFolio"/>
+					</sequence>
+				</complexType>
+			</element>
+		</schema>
+	</types>
+	<message name="createAccountRequestMessage">
+		<part name="part1" element="types:createAccountRequest"/>
+	</message>
+	<message name="createAccountResponseMessage">
+		<part name="part1" element="types:createAccountResponse"/>
+	</message>
+	<message name="getQuoteRequestMessage">
+		<part name="part1" element="types:getQuoteRequest"/>
+	</message>
+	<message name="getQuoteResponseMessage">
+		<part name="part1" element="types:getQuoteResponse"/>
+	</message>
+	<message name="getSymbolsRequestMessage">
+		<part name="part1" element="types:getSymbolsRequest"/>
+	</message>
+	<message name="getSymbolsResponseMessage">
+		<part name="part1" element="types:getSymbolsResponse"/>
+	</message>
+	<message name="depositRequestMessage">
+		<part name="part1" element="types:depositRequest"/>
+	</message>
+	<message name="depositResponseMessage">
+		<part name="part1" element="types:depositResponse"/>
+	</message>
+	<message name="buyRequestMessage">
+		<part name="part1" element="types:buyRequest"/>
+	</message>
+	<message name="buyResponseMessage">
+		<part name="part1" element="types:buyResponse"/>
+	</message>
+	<message name="sellRequestMessage">
+		<part name="part1" element="types:sellRequest"/>
+	</message>
+	<message name="sellResponseMessage">
+		<part name="part1" element="types:sellResponse"/>
+	</message>
+	<message name="getPortfolioRequestMessage">
+		<part name="part1" element="types:getPortfolioRequest"/>
+	</message>
+	<message name="getPortfolioResponseMessage">
+		<part name="part1" element="types:getPortfolioResponse"/>
+	</message>
+	<portType name="TraderPortType">
+		<!-- Create account -->
+		<operation name="createAccount">
+			<input message="tns:createAccountRequestMessage"/>
+			<output message="tns:createAccountResponseMessage"/>
+		</operation>
+		<!-- Get Quote -->
+		<operation name="getQuote">
+			<input message="tns:getQuoteRequestMessage"/>
+			<output message="tns:getQuoteResponseMessage"/>
+		</operation>
+		<!-- Get Symbols -->
+		<operation name="getSymbols">
+			<input message="tns:getSymbolsRequestMessage"/>
+			<output message="tns:getSymbolsResponseMessage"/>
+		</operation>
+		<!-- Deposit -->
+		<operation name="deposit">
+			<input message="tns:depositRequestMessage"/>
+			<output message="tns:depositResponseMessage"/>
+		</operation>
+		<!--Buy-->
+		<operation name="buy">
+			<input message="tns:buyRequestMessage"/>
+			<output message="tns:buyResponseMessage"/>
+		</operation>
+		<!--Sell-->
+		<operation name="sell">
+			<input message="tns:sellRequestMessage"/>
+			<output message="tns:sellResponseMessage"/>
+		</operation>
+		<!-- Portfolio -->
+		<operation name="getPortfolio">
+			<input message="tns:getPortfolioRequestMessage"/>
+			<output message="tns:getPortfolioResponseMessage"/>
+		</operation>
+	</portType>
+	<binding name="TraderBinding" type="tns:TraderPortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="createAccount">
+			<soap:operation soapAction="createAccount" style="document"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="getQuote">
+			<soap:operation soapAction="getQuote" style="document"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="getSymbols">
+			<soap:operation soapAction="getSymbols" style="document"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="deposit">
+			<soap:operation soapAction="deposit" style="document"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="buy">
+			<soap:operation soapAction="buy" style="document"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="sell">
+			<soap:operation soapAction="sell" style="document"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="getPortfolio">
+			<soap:operation soapAction="getPortfolio" style="document"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+	</binding>
+	<service name="TraderClient">
+		<port name="TraderPort" binding="tns:TraderBinding">
+			<soap:address location="http://nagoya.apache.org:5049/axis/services/echo"/>
+		</port>
+	</service>
+</definitions>
