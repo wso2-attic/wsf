@@ -16,6 +16,9 @@
 
 // This file introduces two classes: WSRequest for invoking a Web Service, and WebServiceError to encapsulate failure information.
 
+var WSRequestInaccessibleDomains = new Array();  // Assume all domains can be accessed without restrictions.  Once this fails, we'll try alternate means.
+var WSRequestActiveRequests = new Array();
+
 var WSRequest = function() {
     // properties and usage mirror XMLHTTPRequest
     this.readyState = 0;
@@ -31,6 +34,7 @@ var WSRequest = function() {
     this._uri = null;
     this._username = null;
     this._password = null;
+    this._accessibleDomain = true;
 };
 
 var WebServiceError = function(reason, detail, code) {
@@ -94,86 +98,95 @@ WSRequest.prototype.send = function(payload) {
         throw new WebServiceError("Invalid input argument.", "WSRequest.send() only accepts a single argument, " + arguments.length + " were specified.");
     }
 
-    // request body formatted as a string
-    var req = null;
-
-    var method;
-    if (this._optionSet["HTTPMethod"] != null)
-        method = this._optionSet["HTTPMethod"];
-    else
-        method = "POST";
+    var accessibleDomain = true;
+    for (var d in WSRequestInaccessibleDomains) {
+        if (this._uri.indexOf(WSRequestInaccessibleDomains[d]) == 0) {
+            accessibleDomain = false;
+            break;
+        }
+    }
 
     this._soapVer = WSRequest.util._bindingVersion(this._optionSet);
 
-    if (payload != null)
-    {
-        // seralize the dom to string
-        var content = WSRequest.util._serializeToString(payload);
-        if (typeof(content) == "boolean" && content == false) {
-            throw new WebServiceError("Invalid input argument.", "WSRequest.send() unable to serialize XML payload.");
-        }
-
-    }
-
-    // formulate the message envelope
-    if (this._soapVer == 0) {
-        var processed = WSRequest.util._buildHTTPpayload(this._optionSet, this._uri, content);
-        req = processed["body"];
-        this._uri = processed["url"];
-    } else {
-        req = WSRequest.util._buildSOAPEnvelope(this._soapVer, this._optionSet, this._uri, content, this._username, this._password);
-    }
-
-    // Note that we infer soapAction from the "action" parameter - also used for wsa:Action.
-    //  WS-A recommends keeping these two items in sync.
-    var soapAction = this._optionSet["action"];
-
-    try {
-        netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead");
-    } catch(e) {
-    }
-
-    var accessibleDomain = true;  // assume so for now
-    try {
-        this._xmlhttp.open(method, this._uri, this._async, this._username, this._password);
-
-        // Process protocol-specific details
-        switch (this._soapVer) {
-            case 1.1:
-                soapAction = (soapAction == undefined ? '""' : '"' + soapAction + '"');
-                this._xmlhttp.setRequestHeader("SOAPAction", soapAction);
-                this._xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=UTF-8");
-                break;
-            case 1.2:
-                this._xmlhttp.setRequestHeader("Content-Type", "application/soap+xml;charset=UTF-8" + (soapAction == undefined ? "" : ";action=" + soapAction));
-                break;
-            case 0:
-                var contentType;
-                if (this._optionSet["HTTPInputSerialization"] != null) {
-                    contentType = this._optionSet["HTTPInputSerialization"]
-                } else {
-                    if (method == "GET" | method == "DELETE") {
-                        contentType = "application/x-www-form-urlencoded";
-                    } else {
-                        contentType = "application/xml";
-                    }
-                }
-                this._xmlhttp.setRequestHeader("Content-Type", contentType);
-                break;
-        }
-    } catch (e) {
-        // If we received an error, see if it's an XSS error, if so don't fail - there still might be hope!
-        if (e.description == "Access is denied.\r\n" || e.toString() == "Permission denied to call method XMLHttpRequest.open") {
-            try {
-                // Are we in the context of a Google Gadget?
-                accessibleDomain = _IG_FetchXmlContent == undefined;
-            } catch (d) {
-                throw e;
-            }
-        } else throw e;
-    }
-
     if (accessibleDomain) {
+        // request body formatted as a string
+        var req = null;
+
+        var method;
+        if (this._optionSet["HTTPMethod"] != null)
+            method = this._optionSet["HTTPMethod"];
+        else
+            method = "POST";
+
+        if (payload != null)
+        {
+            // seralize the dom to string
+            var content = WSRequest.util._serializeToString(payload);
+            if (typeof(content) == "boolean" && content == false) {
+                throw new WebServiceError("Invalid input argument.", "WSRequest.send() unable to serialize XML payload.");
+            }
+
+        }
+
+        // formulate the message envelope
+        if (this._soapVer == 0) {
+            var processed = WSRequest.util._buildHTTPpayload(this._optionSet, this._uri, content);
+            req = processed["body"];
+            this._uri = processed["url"];
+        } else {
+            req = WSRequest.util._buildSOAPEnvelope(this._soapVer, this._optionSet, this._uri, content, this._username, this._password);
+        }
+
+        // Note that we infer soapAction from the "action" parameter - also used for wsa:Action.
+        //  WS-A recommends keeping these two items in sync.
+        var soapAction = this._optionSet["action"];
+
+        try {
+            netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead");
+        } catch(e) {
+        }
+
+        try {
+            this._xmlhttp.open(method, this._uri, this._async, this._username, this._password);
+
+            // Process protocol-specific details
+            switch (this._soapVer) {
+                case 1.1:
+                    soapAction = (soapAction == undefined ? '""' : '"' + soapAction + '"');
+                    this._xmlhttp.setRequestHeader("SOAPAction", soapAction);
+                    this._xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=UTF-8");
+                    break;
+                case 1.2:
+                    this._xmlhttp.setRequestHeader("Content-Type", "application/soap+xml;charset=UTF-8" + (soapAction == undefined ? "" : ";action=" + soapAction));
+                    break;
+                case 0:
+                    var contentType;
+                    if (this._optionSet["HTTPInputSerialization"] != null) {
+                        contentType = this._optionSet["HTTPInputSerialization"]
+                    } else {
+                        if (method == "GET" | method == "DELETE") {
+                            contentType = "application/x-www-form-urlencoded";
+                        } else {
+                            contentType = "application/xml";
+                        }
+                    }
+                    this._xmlhttp.setRequestHeader("Content-Type", contentType);
+                    break;
+            }
+        } catch (e) {
+            // If we received an error, see if it's an XSS error, if so don't fail - there still might be hope!
+            if (e.description == "Access is denied.\r\n" || e.toString() == "Permission denied to call method XMLHttpRequest.open") {
+                try {
+                    var thisDomain = this._uri.substring(0, this._uri.substring(9).indexOf("/") + 10);
+                    WSRequestInaccessibleDomains.push(thisDomain);
+                    this.send(payload);
+                    return;
+                } catch (e) {
+                    throw e;
+                }
+            } else throw e;
+        }
+
         if (this._async) {
             // async call
             this._xmlhttp.onreadystatechange = WSRequest.util._bind(this._handleReadyState, this);
@@ -195,46 +208,181 @@ WSRequest.prototype.send = function(payload) {
                 this.onreadystatechange();
         }
     } else {
-        // Fallback to a Google Gadget, if we're able too.
-        if (!this._async)
-            throw ("Can only access Web service from within a Google Gadget when a callback is defined.");
-        if (this._soapVer != 0 || method.toUpperCase() != "GET")
-            throw ("Can only access Web service from within a Google Gadget through the HTTP binding, using the GET method.");
+
+        if (!this._async) {
+            throw new WebServiceError("Synchronous requests not supported.", "Request tunnelled through a URL requires asynchronous invocation.  Synchronous requests are not yet implemented.");
+        }
+
+        var scriptId = Math.random().toString().substring(3);
+
+        var tunnelDomain = this._uri.substring(0,this._uri.indexOf("/services/"));
+        var tunnelEndpoint = tunnelDomain + "/WSRequestXSSproxy.jsp";
+        var response = scriptId + "," +
+                       this._async.toString() + "," +
+                       this._base64(this._uri) + "," +
+                       this._base64(this._username) + "," +
+                       this._base64(this._password) + "," +
+                       this._base64(WSRequest.util._serializeToString(payload));
+        for (var option in this._optionSet) {
+            if (this._optionSet[option] != null)
+                response += "," + this._base64(option + ":" + this._optionSet[option]);
+        }
+
+        var tunnelURL = tunnelEndpoint + "?" + response;
+        if (tunnelURL.length > 4000)
+            throw new WebServiceError("Request too big.", "Request tunnelled through a URL exceeds the 4000 char limit.  Batched requests not yet implemented.");
+
+        var head = document.getElementsByTagName("head").item(0);
+
+        var script = document.createElement("script");
+        script.setAttribute("id", "WSRequestXSS_tunnel_script_" + scriptId);
+        script.setAttribute("type", "text/javascript");
+        script.setAttribute("src", tunnelURL);
 
         this.readyState = 2;
         if (this.onreadystatechange != null)
             this.onreadystatechange();
 
-        _IG_FetchXmlContent(this._uri,  WSRequest.util._bind(this._FetchXMLContentCallback, this));
+        WSRequestActiveRequests.push(new Array(scriptId, this));
+
+        head.appendChild(script);
+
     }
 }
 
-/**
- * @description Google Gadget request callback - simulate an XMLHttp callback and return to normal processing.
- * @method _FetchXMLContentCallback
- * @private
- * @static
- * @param {dom} response xml payload
- */
-WSRequest.prototype._FetchXMLContentCallback = function (response) {
-    if (response != null && typeof(response) == "object") {
-        this._xmlhttp = {
-            "responseXML" : response,
-            "responseText" : WSRequest.util._serializeToString(response),
-            "status" : "200",
-            "readyState" : 4
-         };
-    } else {
-         this._xmlhttp = {
-            "responseXML" : null,
-            "responseText" : response,
-            "status" : "",
-            "statusText" : "_IG_FetchXMLContent failed to return valid XML.",
-            "readyState" : 4
-         };
+WSRequest._tunnelcallback = function (scriptId, responseText) {
+
+    var thisRequest = null;
+    for (var i=0; i<WSRequestActiveRequests.length; i++) {
+        if (WSRequestActiveRequests[i][0] == scriptId) {
+            thisRequest = WSRequestActiveRequests[i][1];
+            WSRequestActiveRequests = WSRequestActiveRequests.slice(0,i).concat( WSRequestActiveRequests.slice(i+1) );
+            break;
+        }
     }
-    this._handleReadyState();
+    if (thisRequest == null) throw ("unable to correlate response.");
+
+    var head = document.getElementsByTagName("head").item(0);
+    var tunnelScript = document.getElementById("WSRequestXSS_tunnel_script_" + scriptId);
+    if (tunnelScript) head.removeChild(tunnelScript);
+    else throw ("unable to remove tunnel script");
+
+    var browser = WSRequest.util._getBrowser();
+
+    var responseXMLdoc = null;
+    var response = null;
+    if (responseText != "") {
+        if (browser == "ie" || browser == "ie7") {
+            try {
+                responseXMLdoc = new ActiveXObject("Microsoft.XMLDOM");
+                responseXMLdoc.loadXML(responseText);
+                response = responseXMLdoc;
+            } catch (e) {
+                thisRequest.error = new WebServiceError("XML Parsing Error.", e);
+            }
+        } else {
+            var parser = new DOMParser();
+            responseXMLdoc = parser.parseFromString(responseText,"text/xml");
+            response = responseXMLdoc;
+            response.normalize();  //fixes data getting truncated at 4096 characters
+            if (response.documentElement.localName == "parsererror" && response.documentElement.namespaceURI == "http://www.mozilla.org/newlayout/xml/parsererror.xml") {
+                thisRequest.error = new WebServiceError("XML Parsing Error.", responseText);
+            }
+        }
+    }
+
+    var httpstatus;
+    if (thisRequest.error == null) {
+        thisRequest.responseText = responseText;
+        thisRequest.responseXML = response;
+
+        if (thisRequest._soapVer == 0) {
+            if (response != null) {
+                var httpStatus = response.documentElement.getAttributeNS("http://wso2.org/ns/WSRequestXSS", "status");
+                if (httpStatus != '200' && httpStatus != '202') {
+                    thisRequest.error = new WebServiceError("HTTP " + httpStatus, responseText);
+                }
+            }
+        } else {
+
+            if (response != null) {
+                var soapNamespace;
+                if (thisRequest._soapVer == 1.1)
+                    soapNamespace = "http://schemas.xmlsoap.org/soap/envelope/";
+                else
+                    soapNamespace = "http://www.w3.org/2003/05/soap-envelope";
+
+                var fault = response.documentElement;
+                if (fault.localName == "Fault" && fault.namespaceURI == soapNamespace) {
+                    thisRequest.error = new WebServiceError();
+                    if (thisRequest._soapVer == 1.2) {
+                        thisRequest.error.code = WSRequest.util._stringValue(WSRequest.util._firstElement(fault, soapNamespace, "Value"));
+                        thisRequest.error.reason = WSRequest.util._stringValue(WSRequest.util._firstElement(fault, soapNamespace, "Text"));
+                        thisRequest.error.detail = WSRequest.util._firstElement(fault, soapNamespace, "Detail");
+                    } else {
+                        thisRequest.error.code = WSRequest.util._stringValue(fault.getElementsByTagName("faultcode")[0]);
+                        thisRequest.error.reason = WSRequest.util._stringValue(fault.getElementsByTagName("faultstring")[0]);
+                        thisRequest.error.detail = fault.getElementsByTagName("detail")[0];
+                    }
+                }
+            }
+        }
+    }
+    thisRequest.readyState = 4;
+    if (thisRequest.onreadystatechange != null)
+        thisRequest.onreadystatechange();
 }
+
+WSRequest.prototype._base64 = function (input) {
+
+    // Not strictly base64 returns - nulls represented as "~"
+    if (input == null) return "~";
+
+    var base64Map = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+    var length = input.length;
+    var output = "";
+    var p = [];
+    var charCode;
+    var i = 0;
+    var padding = 0;
+
+    while (charCode = input.charCodeAt(i++)) {
+        // convert to utf-8 as we fill the buffer
+        if (charCode < 0x80) {
+            p[p.length] = charCode;
+        } else if (charCode < 0x800) {
+            p[p.length] = 0xc0 | (charCode >> 6);
+            p[p.length] = 0x80 | (charCode & 0x3f);
+        } else if (charCode < 0x10000){
+            p[p.length] = 0xe0 | (charCode >> 12);
+            p[p.length] = 0x80 | ((charCode >> 6) & 0x3f);
+            p[p.length] = 0x80 | (charCode & 0x3f);
+        } else {
+            p[p.length] = 0xf0 | (charCode >> 18);
+            p[p.length] = 0x80 | ((charCode >> 12) & 0x3f);
+            p[p.length] = 0x80 | ((charCode >> 6) & 0x3f);
+            p[p.length] = 0x80 | (charCode & 0x3f);
+        }
+
+        if (i == length) {
+            while (p.length % 3)
+            {
+                p[p.length] = 0;
+                padding++;
+            }
+        }
+
+        if (p.length > 2) {
+            output += base64Map[p[0] >> 2];
+            output += base64Map[((p.shift() & 3) << 4) | (p[0] >> 4)];
+            output += (padding > 1) ? "=" : base64Map[((p.shift() & 0xf) << 2) | (p[0] >> 6)];
+            output += (padding > 0) ? "=" : base64Map[p.shift() & 0x3f];
+        }
+    }
+    return output;
+}
+
 
 /**
  * @description Set responseText, responseXML, and error of WSRequest.
@@ -829,13 +977,13 @@ WSRequest.util = {
         // wsa:From (optional)
         // Note: reference parameters and metadata aren't supported.
         if (options['from'] != null)
-            headers += "<wsa:From><wsa:Address>" + options['From'] + "</wsa:Address></wsa:From>\n";
+            headers += "<wsa:From><wsa:Address>" + options['from'] + "</wsa:Address></wsa:From>\n";
 
         // wsa:ReplyTo (optional)
         // Note: reference parameters and metadata aren't supported.
         // Note: No way to specify that wsa:ReplyTo should be omitted (e.g., only in-out MEPs are supported).
         if (options['replyto'] != null) {
-            headers += "<wsa:ReplyTo><wsa:Address>" + options['ReplyTo'] + "</wsa:Address></wsa:ReplyTo>\n";
+            headers += "<wsa:ReplyTo><wsa:Address>" + options['replyto'] + "</wsa:Address></wsa:ReplyTo>\n";
         } else {
             // Note: although wsa:ReplyTo is optional on in-out MEPs in the standard version, we put it in
             //  explicitly for convenience.
@@ -863,7 +1011,7 @@ WSRequest.util = {
         // wsa:FaultTo (optional)
         // Note: reference parameters and metadata aren't supported.
         if (options['faultto'] != null)
-            headers += "<wsa:FaultTo><wsa:Address>" + options['FaultTo'] + "</wsa:Address></wsa:FaultTo>\n";
+            headers += "<wsa:FaultTo><wsa:Address>" + options['faultto'] + "</wsa:Address></wsa:FaultTo>\n";
 
         // wsa:Action (required)
         headers += "<wsa:Action>" + options['action'] + "</wsa:Action>\n"
