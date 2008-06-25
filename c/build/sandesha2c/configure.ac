@@ -65,63 +65,6 @@ AC_ARG_WITH(axis2,
   AC_MSG_RESULT(no)
 )
 
-AC_MSG_CHECKING(path to use sqlite storage .)
-AC_ARG_WITH(sqlite,
-[  --with-sqlite[=PATH]      use sqlite storage.],
-[ case "$withval" in
-  no)
-    AC_MSG_RESULT(no)
-    WRAPPER_DIR=""
-    ;;
-  *)
-    AC_MSG_RESULT($withval)
-    WRAPPER_DIR="sqlite"
-    dnl Find sqlite include dir in the path
-    if test -d $withval; then
-        sqliteinc="-I$withval"
-    dnl else find the sqliteinc include dir in /usr/include
-    elif test -d '/usr/include'; then
-        sqliteinc="-I/usr/include"
-    else
-        AC_MSG_ERROR(could not find sqliteinc. stop)
-    fi
-    WRAPPER_DIR="sqlite"
-    LDFLAGS="$LDFLAGS -lsqlite3"
-    ;;
-  esac ],
-  AC_MSG_RESULT(yes)
-  WRAPPER_DIR="sqlite"
-  sqliteinc="-I/usr/include"
-  LDFLAGS="$LDFLAGS -lsqlite3"
-)
-
-AC_MSG_CHECKING(path to use mysql storage .)
-AC_ARG_WITH(mysql,
-[  --with-mysql[=PATH]      use mysql storage.],
-[ case "$withval" in
-  no)
-    AC_MSG_RESULT(no)
-    WRAPPER_DIR=""
-    ;;
-  *)
-    AC_MSG_RESULT($withval)
-    WRAPPER_DIR="mysql"
-    dnl Find mysql include dir in the path
-    if test -d $withval; then
-        mysqlinc="-I$withval"
-    dnl else find the mysqlinc include dir in /usr/include/mysql
-    elif test -d '/usr/include/mysql'; then
-        mysqlinc="-I/usr/include/mysql"
-    else
-        AC_MSG_ERROR(could not find mysqlinc. stop)
-    fi
-    WRAPPER_DIR="mysql"
-    LDFLAGS="$LDFLAGS -lmysqlclient -lnsl -lm -lz"
-    ;;
-  esac ],
-  AC_MSG_RESULT(no)
-)
-
 
 AXIOMINC="-I$abs_top_builddir/../axis2c/axiom/include"
 UTILINC="-I$abs_top_builddir/../axis2c/util/include"
@@ -130,11 +73,7 @@ AC_SUBST(AXIS2INC)
 AC_SUBST(AXIOMINC)
 AC_SUBST(UTILINC)
 AC_SUBST(NEETHIINC)
-MYSQLINC=$mysqlinc
-SQLITEINC=$sqliteinc
 
-AC_SUBST(MYSQLINC)
-AC_SUBST(SQLITEINC)
 AC_SUBST(WRAPPER_DIR)
 
 AC_CONFIG_FILES([Makefile \
