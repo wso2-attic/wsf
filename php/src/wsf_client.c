@@ -1637,8 +1637,13 @@ wsf_client_enable_ssl (
     axis2_options_set_property (options, env, AXIS2_SSL_PASSPHRASE, passphrase_prop);
 
     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
-		"setting SSL options %s -- %s -- %s ", 
-			ssl_server_key_filename, ssl_client_key_filename, passphrase);
+		"setting SSL options %s -- %s ", 
+			ssl_server_key_filename, ssl_client_key_filename);
+	if(env->log->level == AXIS2_LOG_LEVEL_DEBUG && passphrase)
+	{
+			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+				"passphrase found");
+	}
 }
 
 void
