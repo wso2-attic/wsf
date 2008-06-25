@@ -243,6 +243,40 @@ following table.</p>
         callback function, which is a user defined function that accepts a
         username and returns the corresponding password.</td>
     </tr>
+     <tr>
+      <td class="confluenceTd">
+        passwordCallbackData</td>
+      <td class="confluenceTd">
+        mixed</td>
+      <td class="confluenceTd">
+        mixed</td>
+      <td class="confluenceTd">none</td>
+      <td class="confluenceTd" style="width: 415px">
+        Any optional arguements that must be available in the passwordCallback function
+        can be set using this option.</td>
+    </tr>
+     <tr>
+      <td class="confluenceTd">
+      replayDetectionCallback</td>
+      <td class="confluenceTd">string</td>
+      <td class="confluenceTd">string</td>
+      <td class="confluenceTd">none</td>
+      <td class="confluenceTd" style="width: 415px">Name of the replay detection callback function, which is a user defined function
+      that accepts a message_id, time stamp and any optional arguments set using replayDectionCallbackData.
+      The functions implementation should be such that it should store all received unique
+      message ids and timestemps. If an existing message id + timestamp is encountered,
+      it should return false, indicating a replay, otherwise it should return true. The
+          time stamp comes to the callback only if the message contains timestamps.</td>
+    </tr>
+     <tr>
+      <td class="confluenceTd">
+      replayDetectionCallbackData</td>
+      <td class="confluenceTd">mixed</td>
+      <td class="confluenceTd">mixed</td>
+      <td class="confluenceTd">none</td>
+      <td class="confluenceTd" style="width: 415px">Any optional values that is needed in callback
+      function can be provided using this option. </td>
+    </tr>
   </tbody>
 </table>
 <br />
