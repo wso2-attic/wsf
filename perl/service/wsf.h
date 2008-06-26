@@ -48,8 +48,7 @@
 #include "wsf_constants.h"
 
 /* To create WSFC environment */
-void
-wsf_init (const axis2_char_t* path_to_log,
-          int log_level);
+
+axutil_env_t *wsf_env_create(axis2_char_t *path_to_log, int log_level);
 
 #endif
