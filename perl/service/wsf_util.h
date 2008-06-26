@@ -32,8 +32,8 @@
 #include "wsf_defs.h"
 #include "wsf_constants.h"
 
-axutil_env_t*
-wsf_env_create (const axis2_char_t *log_path);
+/* axutil_env_t*
+   wsf_env_create (const axis2_char_t *log_path); */
 
 axutil_env_t*
 wsf_env_create_svr (const axis2_char_t *log_path);
