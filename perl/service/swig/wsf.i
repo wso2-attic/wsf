@@ -27,10 +27,6 @@ typedef char axis2_byte_t;
     }
 %}
 
-void 
-wsf_init (axis2_char_t* path_to_log,
-          int log_level);
-
 axutil_env_t*
 wsf_env_create (axis2_char_t* path_to_log,
                 int log_level);
@@ -45,9 +41,6 @@ wsf_worker_t*
 wsf_worker_create (const axutil_env_t* env,
                    axis2_char_t* repo_path);
 
-wsf_worker_t *
-wsf_get_worker();
-
 axis2_conf_ctx_t* 
 wsf_worker_get_conf_ctx (wsf_worker_t* worker,
                          const axutil_env_t* env);
@@ -57,12 +50,6 @@ wsf_worker_process_request (wsf_worker_t* worker,
                             axutil_env_t* env,
                             wsf_req_info_t* request,
                             wsf_svc_info_t* svc_info);
-
-axutil_env_t *
-wsf_get_env ();
-
-axis2_msg_recv_t *
-wsf_get_msg_recv ();
 
 void
 wsf_util_create_svc_from_svc_info (wsf_svc_info_t * svc_info,
