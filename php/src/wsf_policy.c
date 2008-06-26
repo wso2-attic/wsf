@@ -30,6 +30,8 @@
 #include <neethi_options.h>
 #include <axis2_policy_include.h>
 #include <neethi_engine.h>
+#include <secconv_security_context_token.h>
+
 
 int 
 wsf_set_security_policy_options (
@@ -60,7 +62,6 @@ wsf_replay_detection_callback_function(
 axis2_status_t AXIS2_CALL
 wsf_store_sct_callback_function(
 	const axutil_env_t *env,
-	axis2_bool_t is_encription,
 	axis2_msg_ctx_t* msg_ctx, 
 	axis2_char_t *sct_global_id, 
 	axis2_char_t *sct_local_id, 
@@ -83,6 +84,13 @@ wsf_delete_sct_callback_function(
 	axis2_char_t *sct_id, 
 	int sct_id_type,
 	void* user_params);
+
+void
+wsf_set_rampart_sct_options (
+	rampart_context_t *rampart_context,
+	HashTable * ht_token,
+	axutil_env_t * env TSRMLS_DC);
+
 
 char*
 wsf_get_rampart_token_value(
@@ -548,6 +556,7 @@ wsf_set_rampart_options (
     {
         rampart_context_set_rd_val(rampart_context, env, axutil_strdup(env, WSF_REPLAY_DETECT_NUMBER));
     }
+	
     if (zend_hash_find (ht_token, WSF_CUSTOM_TOKENS, sizeof (WSF_CUSTOM_TOKENS), 
                 (void **) &token_val) == SUCCESS  && Z_TYPE_PP (token_val) == IS_ARRAY) 
     {
@@ -587,6 +596,8 @@ wsf_set_rampart_options (
         
 		rampart_context_set_custom_tokens(rampart_context, env, custom_tokens);
     }
+
+	wsf_set_rampart_sct_options(rampart_context, ht_token, env TSRMLS_CC);
     return 0;
 }
 
@@ -918,7 +929,7 @@ wsf_password_callback_function (
     if (call_user_function (EG (function_table), (zval **) NULL,
             &func, &retval, 2, params TSRMLS_CC) == SUCCESS) 
 	{
-        if (Z_TYPE_P (&retval) == IS_STRING && Z_TYPE_P (&retval) != IS_NULL) 
+        if (Z_TYPE_P (&retval) == IS_STRING) 
 		{
             val = estrdup (Z_STRVAL (retval));
         }
@@ -961,7 +972,8 @@ wsf_replay_detection_callback_function(
     hash = (axutil_hash_t*)rampart_get_all_security_processed_results(env, msg_ctx);
     time_stamp = axutil_hash_get(hash, RAMPART_SPR_TS_CREATED, AXIS2_HASH_KEY_STRING);
     
-    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Time Stamp: %s", time_stamp);
+    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+		"replay callback received time Stamp: %s", time_stamp);
     
 
     ZVAL_STRING (&func, callback_args->callback_function, 1);
@@ -989,12 +1001,10 @@ wsf_replay_detection_callback_function(
 	}
 	INIT_PZVAL(params[2]);
 
-
-
 	if (call_user_function (EG (function_table), (zval **) NULL,
             &func, &retval, 3, params TSRMLS_CC) == SUCCESS) 
     {
-        if (Z_TYPE_P (&retval) == IS_BOOL && Z_TYPE_P (&retval) != IS_NULL) 
+        if (Z_TYPE (retval) == IS_BOOL) 
 		{
             ret_bool = (Z_BVAL (retval));
             if(ret_bool)
@@ -1010,37 +1020,227 @@ wsf_replay_detection_callback_function(
 axis2_status_t AXIS2_CALL
 wsf_store_sct_callback_function(
 	const axutil_env_t *env,
-	axis2_bool_t is_encription,
 	axis2_msg_ctx_t* msg_ctx, 
 	axis2_char_t *sct_global_id, 
 	axis2_char_t *sct_local_id, 
 	void *sct, 
 	void *user_params)
 {
-	return AXIS2_SUCCESS;
+	zval func, param1, param2, param3, param4, retval;
+	zval *params[4];
+	int status = AXIS2_FAILURE;
+	axis2_char_t *sct_str = NULL;
+	zend_bool ret_bool;
+	wsf_callback_args_t *callback_args = NULL;
+	TSRMLS_FETCH();
+	params[0] = &param1;
+	params[1] = &param2;
+	params[2] = &param3;
+	params[3] = &param4;
+
+	callback_args = (wsf_callback_args_t*)user_params;
+
+	ZVAL_STRING (&func, callback_args->store_sct_callback_fn, 1);
+
+	if(sct)
+	{
+		sct_str = security_context_token_serialize(sct, env);
+	}
+	else
+	{
+		return AXIS2_FAILURE;
+	}
+	ZVAL_STRING (params[0], (char*)sct_str, 1);
+	INIT_PZVAL(params[0]);
+
+	if(sct_global_id)
+	{
+		ZVAL_STRING (params[1], (char*)sct_global_id, 1);
+	}
+	else
+	{
+		ZVAL_NULL(params[1]);
+	}
+	INIT_PZVAL(params[1]);
+
+	if(sct_global_id)
+	{
+		ZVAL_STRING (params[2], (char*)sct_local_id, 1);
+	}
+	else
+	{
+		ZVAL_NULL(params[2]);
+	}
+	INIT_PZVAL(params[2]);
+
+	if(callback_args->callback_data)
+	{
+		ZVAL_ZVAL(params[3], callback_args->callback_data, 0, 1);
+	}
+	else
+	{
+		ZVAL_NULL(params[3]);
+	}
+	INIT_PZVAL(params[3]);
+
+
+
+	if (call_user_function (EG (function_table), (zval **) NULL,
+		&func, &retval, 4, params TSRMLS_CC) == SUCCESS) 
+		{
+			if (Z_TYPE (retval) == IS_BOOL) 
+			{
+				ret_bool = (Z_BVAL (retval));
+				if(ret_bool)
+				{
+					status = AXIS2_SUCCESS;
+				}
+			}
+		}
+	AXIS2_FREE(env->allocator, sct_str);
+	wsf_callback_args_free(callback_args, env);
+	return status;    
 }
 
 void* AXIS2_CALL
 wsf_get_sct_callback_function(
-const axutil_env_t *env, 
-axis2_bool_t is_encryption, 
-axis2_msg_ctx_t* msg_ctx, 
-axis2_char_t *sct_id, 
-int sct_id_type,
-void* user_params)
+	const axutil_env_t *env, 
+	axis2_bool_t is_encryption, 
+	axis2_msg_ctx_t* msg_ctx, 
+	axis2_char_t *sct_id, 
+	int sct_id_type,
+	void* user_params)
 {
-	return NULL;
+	zval func, param1, param2, param3, param4, retval;
+	zval *params[4];
+	wsf_callback_args_t *callback_args = NULL;
+	security_context_token_t *sct = NULL;
+
+	TSRMLS_FETCH();
+	params[0] = &param1;
+	params[1] = &param2;
+	params[2] = &param3;
+	params[3] = &param4;
+
+	callback_args = (wsf_callback_args_t*)user_params;
+
+	ZVAL_STRING (&func, callback_args->get_sct_callback_fn, 1);
+	if(sct_id)
+	{
+		ZVAL_STRING (params[0], (char*)sct_id, 1);
+		INIT_PZVAL(params[0]);
+	}
+	else
+	{
+		return NULL;
+	}
+	
+	if(sct_id_type)
+	{
+		ZVAL_BOOL (params[1], sct_id_type);
+	}
+	else
+	{
+		ZVAL_NULL(params[1]);
+	}
+	INIT_PZVAL(params[1]);
+
+	if(is_encryption)
+	{
+		ZVAL_BOOL (params[2], is_encryption);
+	}
+	else
+	{
+		ZVAL_NULL(params[2]);
+	}
+	INIT_PZVAL(params[2]);
+
+	if(callback_args->callback_data)
+	{
+		ZVAL_ZVAL(params[3], callback_args->callback_data, 0, 1);
+	}
+	else
+	{
+		ZVAL_NULL(params[3]);
+	}
+	INIT_PZVAL(params[3]);
+
+	if (call_user_function (EG (function_table), (zval **) NULL,
+		&func, &retval, 4, params TSRMLS_CC) == SUCCESS) 
+	{
+		if (Z_TYPE(retval) == IS_STRING) 
+		{
+			sct = security_context_token_create(env);
+			security_context_token_deserialize(sct, env, Z_STRVAL(retval));		
+		}
+	}
+	wsf_callback_args_free(callback_args, env);
+	return sct;
 }
 
 axis2_status_t AXIS2_CALL
 wsf_delete_sct_callback_function(
-const axutil_env_t *env,
-axis2_msg_ctx_t* msg_ctx, 
-axis2_char_t *sct_id, 
-int sct_id_type,
-void* user_params)
+	const axutil_env_t *env,
+	axis2_msg_ctx_t* msg_ctx, 
+	axis2_char_t *sct_id, 
+	int sct_id_type,
+	void* user_params)
 {
-	return AXIS2_SUCCESS;
+
+	zval func, param1, param2, param3, retval;
+	zval *params[3];
+	wsf_callback_args_t *callback_args = NULL;
+	axis2_status_t status = AXIS2_FAILURE;
+	
+	TSRMLS_FETCH();
+	params[0] = &param1;
+	params[1] = &param2;
+	params[2] = &param3;
+
+	callback_args = (wsf_callback_args_t*)user_params;
+	
+	ZVAL_STRING (&func, callback_args->delete_sct_callback_fn, 1);
+	if(sct_id)
+	{
+		ZVAL_STRING (params[0], (char*)sct_id, 1);
+		INIT_PZVAL(params[0]);
+	}
+	else
+	{
+		return AXIS2_FAILURE;
+	}
+
+	if(sct_id_type)
+	{
+		ZVAL_BOOL (params[1], sct_id_type);
+	}
+	else
+	{
+		ZVAL_NULL(params[1]);
+	}
+	INIT_PZVAL(params[1]);
+
+
+	if(callback_args->callback_data)
+	{
+		ZVAL_ZVAL(params[2], callback_args->callback_data, 0, 1);
+	}
+	else
+	{
+		ZVAL_NULL(params[2]);
+	}
+	INIT_PZVAL(params[2]);
+
+	if (call_user_function (EG (function_table), (zval **) NULL,
+		&func, &retval, 3, params TSRMLS_CC) == SUCCESS) 
+	{
+		if (Z_TYPE (retval) == IS_BOOL) 
+		{
+			status = Z_BVAL(retval);
+		}
+	}
+	wsf_callback_args_free(callback_args, env);
+	return status;
 }
 
 /** compares and returns the token reference */
@@ -1058,7 +1258,67 @@ wsf_get_rampart_token_value(char *token_ref)
     else
         return NULL;
 }
+/**
+* This function handles security context token related callback function setting to rampart.
+* @param rampart_context, rampart context
+* @param sec_token, WSSecurityToken instance
+* @param policy,  WSPolicy instance
+* @param env, axutil_environment
+* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
+*/
+void
+wsf_set_rampart_sct_options (
+	rampart_context_t *rampart_context,
+	HashTable *ht_token,
+	axutil_env_t * env TSRMLS_DC)
+{
+	wsf_callback_args_t *callback_args = NULL;
+	zval **token_val = NULL;
+	char *store_cb_fn = NULL;
+	char *get_cb_fn = NULL;
+	char *delete_cb_fn = NULL;
 
+	if (zend_hash_find(ht_token, WSF_STORE_SCT_CALLBACK, sizeof(WSF_STORE_SCT_CALLBACK),
+		(void **)&token_val) == SUCCESS && Z_TYPE_PP(token_val) == IS_STRING)
+	{
+		store_cb_fn = Z_STRVAL_PP(token_val);
+		rampart_context_set_store_security_context_token_fn(rampart_context, env, 
+			wsf_store_sct_callback_function);
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "store callback function name %s"
+			, store_cb_fn);
+	}
+	if (zend_hash_find(ht_token, WSF_GET_SCT_CALLBACK, sizeof(WSF_GET_SCT_CALLBACK),
+		(void **)&token_val) == SUCCESS && Z_TYPE_PP(token_val) == IS_STRING)
+	{
+		get_cb_fn = Z_STRVAL_PP(token_val);
+		rampart_context_set_obtain_security_context_token_fn(rampart_context, env, 
+			wsf_get_sct_callback_function);
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "get callback function name %s"
+			, get_cb_fn);
+	}
+	if (zend_hash_find(ht_token, WSF_DELETE_SCT_CALLBACK, sizeof(WSF_DELETE_SCT_CALLBACK),
+		(void **)&token_val) == SUCCESS && Z_TYPE_PP(token_val) == IS_STRING)
+	{
+		delete_cb_fn = Z_STRVAL_PP(token_val);
+		rampart_context_set_delete_security_context_token_fn(rampart_context,env,
+			wsf_delete_sct_callback_function);
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "delete callback function name %s"
+			, delete_cb_fn);
+	}
+	if(store_cb_fn || get_cb_fn || delete_cb_fn)
+	{
+		callback_args = wsf_callback_args_create(env);
+		callback_args->delete_sct_callback_fn = delete_cb_fn;
+		callback_args->get_sct_callback_fn = get_cb_fn;
+		callback_args->store_sct_callback_fn = store_cb_fn;
+		if(zend_hash_find(ht_token, WSF_SCT_CALLBACK_ARGS, sizeof(WSF_SCT_CALLBACK_ARGS),
+			(void**)&token_val) == SUCCESS)
+		{
+			callback_args->callback_data = *token_val;
+		}
+		rampart_context_set_security_context_token_user_params(rampart_context, env, callback_args);
+	}
+}
 
 /** returns a pointer to an allocated callback args struct */
 wsf_callback_args_t* 
@@ -1067,6 +1327,9 @@ wsf_callback_args_create(axutil_env_t *env)
 	wsf_callback_args_t *args = NULL;
 	args = AXIS2_MALLOC(env->allocator, sizeof(wsf_callback_args_t));
 	args->callback_data = NULL;
+	args->get_sct_callback_fn = NULL;
+	args->store_sct_callback_fn = NULL;
+	args->delete_sct_callback_fn = NULL;
 	args->callback_function = NULL;
 	return args;
 }
@@ -1074,7 +1337,7 @@ wsf_callback_args_create(axutil_env_t *env)
 void 
 wsf_callback_args_free(
 	wsf_callback_args_t *callback_args,
-	axutil_env_t *env)
+	const axutil_env_t *env)
 {
 	if(callback_args)
 	{

@@ -859,30 +859,30 @@ PHP_METHOD (ws_service, __construct)
             if (zend_hash_find (ht_options, WSF_ACTIONS , sizeof (WSF_ACTIONS), 
                 (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
 					ht_actions = Z_ARRVAL_PP (tmp);
-					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
-						"[wsf_service] setting actions ");
+					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+						" setting actions ");
             }
             if (zend_hash_find (ht_options, WSF_OPERATIONS, sizeof (WSF_OPERATIONS), 
 				(void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
 
 					ht_ops_to_funcs = Z_ARRVAL_PP (tmp);
-					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
-						"[wsf_service] setting operations");
+					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+						"setting operations");
 			}
             if (zend_hash_find (ht_options, WSF_OP_MEP, sizeof (WSF_OP_MEP), 
                (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
 
 					ht_ops_to_mep = Z_ARRVAL_PP (tmp);
-					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
-						"[wsf_service] setting message exchange pattern");
+					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+						" setting message exchange pattern");
             }
             if (zend_hash_find (ht_options, WSF_OP_PARAMS, sizeof (WSF_OP_PARAMS),
                (void **) & tmp) == SUCCESS  && Z_TYPE_PP (tmp) == IS_ARRAY) {
 
 	                ht_opParams = Z_ARRVAL_PP (tmp);
 					svc_info->ht_op_params = ht_opParams;
-					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
-						"[wsf_service] setting message operation parameters");
+					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+						" setting message operation parameters");
 			}
 			if(zend_hash_find(ht_options, WSF_OP_TO_URL_MAP, sizeof(WSF_OP_TO_URL_MAP),
 				(void **)&tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY){
@@ -910,19 +910,17 @@ PHP_METHOD (ws_service, __construct)
                     if(Z_TYPE_PP (tmp) == IS_STRING) {
                         char *value = NULL;
                         value = Z_STRVAL_PP (tmp);
-                        if (value && (strcmp (value, "swa") == 0 || strcmp (value, "SWA") == 0
-                                || strcmp (value, "SwA") == 0)) {
+                        if (value && (stricmp (value, WSF_SWA) == 0)) {
 
-                            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                                "[wsf_client] SwA enabled");
+                            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                                " SwA enabled");
                             svc_info->use_mtom = 1; /* mtom */
                             svc_info->enable_swa = 1;  /* mtom swa*/
                         }
 
                     }
-                    AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
-                        "[wsf_service] setting mtom property %d",
-                            svc_info->use_mtom);
+                    AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                        " setting mtom property %d", svc_info->use_mtom);
             }else {
                 svc_info->use_mtom = 0;
             }
@@ -934,32 +932,41 @@ PHP_METHOD (ws_service, __construct)
                 svc_info->request_xop = 0;
             }
             
-            AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
-                "[wsf_service] request xop %d", svc_info->request_xop);
+            AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                " request xop %d", svc_info->request_xop);
             
             if (zend_hash_find (ht_options, WSF_POLICY_NAME, sizeof (WSF_POLICY_NAME), 
 				(void **) &tmp) == SUCCESS) {
 
 					svc_info->policy = *tmp;
-					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
-						"[wsf_service] policy object present");
+					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+						" policy object present");
             }
             if (zend_hash_find (ht_options, WSF_SECURITY_TOKEN, sizeof (WSF_SECURITY_TOKEN), 
 				(void **) &tmp) == SUCCESS) {
             
 					svc_info->security_token = *tmp;
-					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI,
-						"[wsf_service] security token object present ");
+					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+						" security token object present ");
             }
             if (zend_hash_find (ht_options, WSF_RELIABLE, sizeof (WSF_RELIABLE), 
-				(void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_BOOL) {
+				(void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_BOOL && Z_BVAL_PP(tmp) == 1) {
                 
 					if (!svc_info->modules_to_engage){
 						svc_info->modules_to_engage =  axutil_array_list_create (ws_env_svr, 3);
 					}
 					axutil_array_list_add (svc_info->modules_to_engage, 
-						ws_env_svr, axutil_strdup (ws_env_svr, "sandesha2"));
+						ws_env_svr, axutil_strdup (ws_env_svr, WSF_MODULE_RM));
             }
+			if (zend_hash_find (ht_options, WSF_USE_OWN_STS, sizeof (WSF_USE_OWN_STS), 
+				(void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_BOOL && Z_BVAL_PP(tmp) == 1) {
+
+					if (!svc_info->modules_to_engage){
+						svc_info->modules_to_engage =  axutil_array_list_create (ws_env_svr, 3);
+					}
+					axutil_array_list_add (svc_info->modules_to_engage, 
+						ws_env_svr, axutil_strdup (ws_env_svr, WSF_MODULE_SC));
+			}
             if (zend_hash_find (ht_options, WSF_BINDING_STYLE, sizeof (WSF_BINDING_STYLE), 
 				(void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
 					add_property_stringl (obj, WSF_BINDING_STYLE,
@@ -988,6 +995,7 @@ PHP_METHOD (ws_service, __construct)
                  svc_info->wsdl_gen_annotations = *tmp;
                  zval_add_ref(&(svc_info->wsdl_gen_annotations));
             }
+
         }
     }
     
@@ -1784,31 +1792,23 @@ PHP_METHOD (ws_security_token, __construct)
 		{
 			add_property_stringl(object, WSF_STORE_SCT_CALLBACK, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp),1);
 		}
-		if(zend_hash_find(ht, WSF_STORE_SCT_CALLBACK_ARGS, sizeof(WSF_STORE_SCT_CALLBACK_ARGS), 
+		if(zend_hash_find(ht, WSF_SCT_CALLBACK_ARGS, sizeof(WSF_SCT_CALLBACK_ARGS), 
 			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING)
 		{
-			add_property_zval(object, WSF_STORE_SCT_CALLBACK_ARGS, *tmp);
+			add_property_zval(object, WSF_SCT_CALLBACK_ARGS, *tmp);
 		}
 		if(zend_hash_find(ht, WSF_GET_SCT_CALLBACK, sizeof(WSF_GET_SCT_CALLBACK), 
 			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING)
 		{
 			add_property_stringl(object, WSF_GET_SCT_CALLBACK, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp),1);
 		}
-		if(zend_hash_find(ht, WSF_GET_SCT_CALLBACK_ARGS, sizeof(WSF_GET_SCT_CALLBACK_ARGS), 
-			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING)
-		{
-			add_property_zval(object, WSF_GET_SCT_CALLBACK_ARGS, *tmp);
-		}
+		
 		if(zend_hash_find(ht, WSF_DELETE_SCT_CALLBACK, sizeof(WSF_DELETE_SCT_CALLBACK), 
 			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING)
 		{
 			add_property_stringl(object, WSF_DELETE_SCT_CALLBACK, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp),1);
 		}
-		if(zend_hash_find(ht, WSF_DELETE_SCT_CALLBACK_ARGS, sizeof(WSF_DELETE_SCT_CALLBACK_ARGS), 
-			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING)
-		{
-			add_property_zval(object, WSF_DELETE_SCT_CALLBACK_ARGS, *tmp);
-		}
+		
     }
 } 
 

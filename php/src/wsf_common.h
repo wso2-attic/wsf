@@ -252,7 +252,7 @@ typedef enum ws_input_types
 #define WSF_SWA "swa"
 
 /** this option is read from the WSService constructor to engage rahas*/
-#define WSF_USE_WON_STS "useOwnSTS"
+#define WSF_USE_OWN_STS "useOwnSTS"
 /** security policy */
 
 typedef struct wsf_svc_info

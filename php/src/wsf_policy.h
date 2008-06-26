@@ -122,21 +122,23 @@
 /** This is the callback function for storing the security context data at PHP level */
 #define WSF_STORE_SCT_CALLBACK		"storeSCTCallback"
 /** user specific data to be passed to the callback */
-#define WSF_STORE_SCT_CALLBACK_ARGS "storeSCTCallbackData"
-/** This is the callback function for returning the security context data at PHP level */
 #define WSF_GET_SCT_CALLBACK		"getSCTCallback"
 /** user specific data to be passed to the callback */
-#define WSF_GET_SCT_CALLBACK_ARGS   "getSCTCallbackData"
-/** This is the deleting the security context data at PHP level */
 #define WSF_DELETE_SCT_CALLBACK		"deleteSCTCallback"
 /** user specific callback data to be passed to the callback */
-#define WSF_DELETE_SCT_CALLBACK_ARGS "deleteSCTCallbackData"
+#define WSF_SCT_CALLBACK_ARGS "SCTCallbackData"
 
 /** This struct will be used to pass data to the callbacks */
 typedef struct wsf_callback_args
 {
 /** callback function name */
 	char *callback_function;
+/** callback function name for store sct */
+	char *store_sct_callback_fn;
+/** callback function name for get sct */
+	char *get_sct_callback_fn;
+/** callback function name for delete sct */
+	char *delete_sct_callback_fn;
 /** callback function args zval */
 	zval *callback_data;
 }wsf_callback_args_t;
@@ -144,7 +146,7 @@ typedef struct wsf_callback_args
 /** returns a pointer to an allocated callback args struct */
 wsf_callback_args_t* wsf_callback_args_create(axutil_env_t *env);
 /** free callback args struct instance */
-void wsf_callback_args_free(wsf_callback_args_t *callback_args,axutil_env_t *env);
+void wsf_callback_args_free(wsf_callback_args_t *callback_args,const axutil_env_t *env);
 
 
 /**

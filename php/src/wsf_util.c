@@ -710,24 +710,24 @@ wsf_util_create_op_and_add_to_svc (
                     char *mep = NULL;
                     mep = Z_STRVAL_PP (tmp);
                     if (mep) {
-                        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                            "[wsf_service] op mep %s", mep);
+                        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                            "op mep %s", mep);
                         if (strcmp (mep, WSF_IN_ONLY) == 0) {
                             axis2_op_set_msg_exchange_pattern (op, env,
                                 AXIS2_MEP_URI_IN_ONLY);
-                            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                                "[wsf_service] AXIS2_MEP_URI_IN_ONLY");
+                            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                                "AXIS2_MEP_URI_IN_ONLY");
 
                         } else if (strcmp (mep, WSF_IN_OUT) == 0) {
                             axis2_op_set_msg_exchange_pattern (op, env,
                                 AXIS2_MEP_URI_IN_OUT);
-                            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                                "[wsf_service] AXIS2_MEP_URI_IN_OUT");
+                            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                                " AXIS2_MEP_URI_IN_OUT");
                         }
                     }
                 } else {
-                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                        "[wsf service] message exchange pattern for %s not found",
+                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                        " message exchange pattern for %s not found",
                         op_name);
                 }
             }
@@ -753,8 +753,8 @@ void wsf_util_set_addr_action_to_op(
     if (NULL != svc_info->svc && NULL != op_name) {
         op = axis2_svc_get_op_with_name (svc_info->svc, env, op_name);
         if (!op) {
-                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                        "[wsf service] %s operation not found when trying to set the action ",
+                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                        " %s operation not found when trying to set the action ",
                         op_name);
        }
        if (action) {
