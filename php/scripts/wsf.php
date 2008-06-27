@@ -113,9 +113,16 @@ function ws_generate_wsdl($service_name, $fn_arry, $class_arry, $binding_style,
 
     /* obtain the namespace form the first class name */
     $first_class_name = "";
+    $first_op_name = "";
     if($class_arry && is_array($class_arry)) {
         foreach($class_arry as $class_name => $value) {
             $first_class_name = $class_name;
+            break;
+        }
+    }
+    else {
+        foreach($op_arry as $op_name => $value) {
+            $first_op_name = $op_name;
         }
     }
 
@@ -130,6 +137,17 @@ function ws_generate_wsdl($service_name, $fn_arry, $class_arry, $binding_style,
 
         }
         catch(Exception $e) {
+            //if the class doesn't exist, we just continue to use the default namespace
+        }
+    }
+    else if($first_op_name) {
+        try {
+            $op_comment = new ReflectionFunction($first_op_name);
+            if(preg_match_all('|@namespace\s+([^\s]+).*|', $op_comment, $matches, PREG_SET_ORDER)) {
+                $namespace = $matches[0][1];
+            }
+        }
+        catch (Exception $e) {
             //if the class doesn't exist, we just continue to use the default namespace
         }
     }
