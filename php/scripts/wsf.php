@@ -121,7 +121,7 @@ function ws_generate_wsdl($service_name, $fn_arry, $class_arry, $binding_style,
         }
     }
     else {
-        foreach($op_arry as $op_name => $value) {
+        foreach($op_arry as $svc_op_name => $op_name) {
             $first_op_name = $op_name;
         }
     }
