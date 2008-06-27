@@ -1280,6 +1280,7 @@ function wsf_get_wsdl_imports($wsdl_dom, $relative_url, &$already_imported_wsdls
     }
     return $imports;
 }
+
 /* normalize_url */
 function wsf_normalize_url($url) {
     $tokens = split("/", $url);

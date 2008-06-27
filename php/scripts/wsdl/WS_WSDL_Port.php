@@ -57,12 +57,18 @@ class WS_WSDL_Port
             $operation = $port_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                                     WS_WSDL_Const::WS_WSDL_OPERATION_ATTR_NAME);
             foreach ($this->fun_mapping as $key => $value){
-                if ($value == $name)
+                if ($value == $name) {
                     $operation->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $key);
+                }
             }
-            foreach(array(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME, WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME)
-                    as $type)
-            {
+            // be sensitive to the available directions
+            $directions_arr = array();
+            // we anyway have the input message
+            $directions_arr []= WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME;
+            if(array_key_exists("output", $params)) {
+                $directions_arr []= WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME;
+            }
+            foreach($directions_arr as $type) {
                 $sel = $port_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                                   $type);
                 foreach($this->fun_mapping as $key => $value){

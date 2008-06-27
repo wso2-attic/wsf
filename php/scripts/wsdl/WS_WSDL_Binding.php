@@ -72,8 +72,9 @@ class WS_WSDL_Binding
             $op = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                                 WS_WSDL_Const::WS_WSDL_OPERATION_ATTR_NAME);
             foreach($this->fun_mapping as $key => $value) {
-                if ($value == $name)
-                $op->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $key);
+                if ($value == $name) {
+                    $op->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $key);
+                }
             }
             $action_ele = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_SOAP_NAMESPACE,
                           WS_WSDL_Const::WS_WSDL_OPERATION_ATTR_NAME);
@@ -84,9 +85,16 @@ class WS_WSDL_Binding
                                       WS_WSDL_Const::WS_WSDL_DOCUMENT_ATTR_NAME);
             $op->appendChild($action_ele);
 
+            // be sensitive to the available directions
+            $directions_arr = array();
+            // we anyway have the input part
+            $directions_arr []= WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME;
+            if(array_key_exists("output", $params)) {
+                $directions_arr []= WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME;
+            }
 
-            foreach(array(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME,
-                          WS_WSDL_Const::WS_WSDL_OUTPUT_ATTR_NAME) as $type) {
+            foreach($directions_arr as $type) {
+
                 $sbinding_ele = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                 $type);
                 $s_body = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_SOAP_NAMESPACE,
