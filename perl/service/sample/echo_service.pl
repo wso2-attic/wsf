@@ -1,7 +1,10 @@
 #!/usr/bin/perl
+
 use strict;
 use WSO2::WSF;
 use WSO2::WSF::WSService;
+use Apache2::RequestUtil ();
+
 my ($payload, $service);
 my %operations;
 $payload =<<E;
@@ -13,7 +16,7 @@ E
 sub echoFunction {
     my $message; 
     my $arg = $_[0];
-    print "invoking echoFunction\n";	
+    print "[INSIDE USER FUNC] i iz echoFunction";
     $message = new WSO2::WSF::WSMessage ({'payload' => $arg});
     return $message;
 }
@@ -26,6 +29,15 @@ sub print_this {
                 'echoAdd' => 'addTwoIntegers',
                 'echoSub' => 'subTwoIntegers');
 
-$service = new WSO2::WSF::WSService({'operations' => \%operations,
-                                     'action' => 'testAction'});
-$service->reply ();
+
+if (defined $ENV{MOD_PERL}) {
+    my $r = Apache2::RequestUtil->request();
+
+    $service = new WSO2::WSF::WSService({'operations' => \%operations,
+                                         'action' => 'testAction'});
+
+    $service->reply( $r );
+}
+
+
+
