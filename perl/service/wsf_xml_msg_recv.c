@@ -205,7 +205,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (axis2_msg_recv_t* msg_recv,
         }
     }
     result_node = wsf_xml_msg_recv_invoke_other (msg_recv, env, svc_info, in_msg_ctx,
-                                                 out_msg_ctx, operation_name, classname);
+      out_msg_ctx, operation_name, classname);
 
     if (!result_node) 
     {
@@ -239,8 +239,6 @@ wsf_xml_msg_recv_invoke_business_logic_sync (axis2_msg_recv_t* msg_recv,
             body_content_node = result_node;
         }
     }
-
-
 
     if (axis2_msg_ctx_get_soap_envelope (out_msg_ctx, env)) 
     {
@@ -401,14 +399,32 @@ wsf_xml_msg_recv_invoke_other (axis2_msg_recv_t* msg_recv,
     axiom_soap_envelope_t *envelope = NULL;
 	axiom_soap_body_t *body = NULL;
     axis2_char_t *retstr = NULL;
+    axiom_node_t *soap_body_node = NULL;
 
     /* extracting payload from the soap message */
     envelope = axis2_msg_ctx_get_soap_envelope (in_msg_ctx, env);
-    body = axiom_soap_envelope_get_body (envelope, env);
-    om_node = axiom_soap_body_get_base_node (body, env);
-    om_node = axiom_node_get_first_child (om_node, env);
+    if(!envelope){
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "[wsf-perl-service] soap envelope not found");
+        return NULL;
+    }
 
-    axis2_char_t *embedding[] = {"", NULL};
+    body = axiom_soap_envelope_get_body (envelope, env);
+    if(!body){
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "[wsf-perl-service] soap body not found");
+        return NULL;
+    }
+
+    soap_body_node = axiom_soap_body_get_base_node(body, env);
+    if(!soap_body_node){
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "[wsf-perl-service] soap body base node not found");
+        return NULL;
+    }
+
+    om_node = axiom_node_get_first_child (soap_body_node, env);
+    if (!om_node)
+        return NULL;
+
+    axis2_char_t *embedding[] = {"-M'WSO2::WSF::C; WSO2::WSF::Service;'", ""};
     if (!svc_info->script_filename)
     {
         AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, 
@@ -420,10 +436,9 @@ service %s", svc_info->svc_name);
     embedding[1] = svc_info->script_filename;
 
     my_perl = perl_alloc();
+    PL_perl_destruct_level = 1;
     perl_construct (my_perl);
-    /* loading WSO2::WSF::C and WSO2::WSF::Server using dynamic loader */
-    eval_pv("use WSO2::WSF::C", FALSE);
-    eval_pv("use WSO2::WSF::Server", FALSE);
+
     PL_origalen = 1;
     if (perl_parse (my_perl, xs_init, 2, embedding, NULL))
     {
@@ -448,6 +463,7 @@ service %s", svc_info->svc_name);
     perl_destruct(my_perl);
     perl_free(my_perl);
     PERL_SYS_TERM();
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, axiom_node_to_string(node, env));
     return node;
 }
 
@@ -457,13 +473,17 @@ invoke_perl_function(const axutil_env_t *env, axiom_node_t *om_node,
 {
     int count = 0;
     axis2_char_t *inmsg = NULL;
-    axis2_char_t *ret = NULL;
+    SV **wsmsg_str = NULL; /* hold the value for the key 'payload' in WSMessage */
+    SV *wsmsg_ref = NULL; /* reference to a WSMessage object */
+    HV *wsmsg = NULL; /* WSMessage object */
+    char *tmp_str = NULL;
+    axis2_char_t *res_payload_str = NULL;
 
     if (!operation)
     {
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, 
                          "invoking perl function failed, operation not available");
-        return;
+        return NULL;
     }
 
     if (om_node)
@@ -471,17 +491,26 @@ invoke_perl_function(const axutil_env_t *env, axiom_node_t *om_node,
         inmsg = axiom_node_to_string (om_node, env);
     }
 
+    /* declare and init a local copy of the Perl stack pointer */
     dSP;
+
+    /* mortal SVs for the stack */
     ENTER;
     SAVETMPS;
 
+    /* "record" the current stack pointer */
     PUSHMARK(SP);
+
+    /* push parameters to the stack */
     XPUSHs(sv_2mortal(newSVpv(inmsg, 0)));
+
+    /* make the global copy of the stack pointer same as the local copy */
     PUTBACK;
 
-    /* calling user perl function which returns a scaler value */
-    /* count = perl_call_pv(operation, G_SCALAR); */
+    /* call the Perl function, expecting a scalar to be returned */
     count = call_pv(operation, G_SCALAR);
+
+    /* refreshing the local copy of the stack pointer, call_pv might have reallocated it */
     SPAGAIN;
 
     if (count != 1)
@@ -489,18 +518,29 @@ invoke_perl_function(const axutil_env_t *env, axiom_node_t *om_node,
         croak("perl function invocation failed") ;
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
                         "perl function %s invocation failed", operation);
-
     }
 
-    /* we pop string from the stack and doing strdup on it */
-    ret = savepv(POPpx);
+    /* get the scalar reference from the stack */
+    wsmsg_ref = (SV *) POPs;
+
+    /* getting the object from the reference */
+    wsmsg = SvRV(wsmsg_ref);
+
+    /* fetching the value of the member variable 'payload' from WSMessage */
+    wsmsg_str = hv_fetch(wsmsg, "payload", 7, FALSE);
+
+    /* perl scalar to c string */
+    tmp_str = SvPVutf8_nolen(*wsmsg_str);
+    res_payload_str = (axis2_char_t *) savepvn(tmp_str, strlen(tmp_str));
 
     PUTBACK;
-    FREETMPS;
-    LEAVE ;
-    return ret;
-}
 
+    /* cleaning up mortal SVs */
+    FREETMPS;
+    LEAVE;
+
+    return res_payload_str;
+}
 
 /* xs_init is for support dynamic loading of modules */
 static void
