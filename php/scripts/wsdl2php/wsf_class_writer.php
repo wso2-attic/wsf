@@ -62,7 +62,7 @@ function wsf_write_sub_classes($node) {
             $child_array = array();
             $code .= wsf_write_content_model($node, $child_array);
 
-            $code = $code . "}\n\n";
+            $code = $code . "\n}\n\n";
             // done writing the current class, now go and write the sub classes
             foreach($child_array as $child) {
                 $code = $code . wsf_write_sub_classes($child);
@@ -120,7 +120,9 @@ function wsf_write_content_model($parent_node, &$child_array) {
             }
 
             if($param_child->getAttribute("simple") == "yes"){
-                $code .= wsf_comment_on_simple_type($param_child, $param_name, $param_type);
+                $comments = wsf_comment_on_simple_type_wrapper($param_child, $param_name, $param_type);
+            } else {
+                $comments = '';
             }
 
             $min_occurs = $max_occurs = 1;
@@ -179,13 +181,13 @@ function wsf_write_content_model($parent_node, &$child_array) {
                 $code .= "\n";
                 $code .= "    // You need to set only one from the following two vars\n";
 
-                $code = $code . "    public $" . $param_name . "; // " . $array_type . "Plain Binary" . "\n";
-                $code = $code . "    public $" . $param_name .WSF_POSTFIX_BASE64. "; // " . $array_type . $param_type . "\n";
+                $code = $code . "\n    /**\n     * @var " . $array_type . "Plain Binary\n$comments     */\n" . "    public $" . $param_name . ";\n";
+                $code = $code . "\n    /**\n     * @var " . $array_type . $param_type . "\n$comments     */\n" . "    public $" . $param_name .WSF_POSTFIX_BASE64. ";\n";
 
                 $code .= "\n";
             }
             else {
-                $code = $code . "    public $" . $param_name . "; // " . $array_type . $object_of .$param_type . "\n";
+                $code = $code . "\n    /**\n     * @var " . $array_type . $object_of .$param_type . "\n$comments     */\n" . "    public $" . $param_name . ";\n";
             }
 
             // if it is not s simple type, we have to keep track of it to write a corresponding class
@@ -212,18 +214,18 @@ function wsf_write_content_model($parent_node, &$child_array) {
         $code .= "\n";
         $code .= "    // The \"value\" represents the element '$param_name' value..\n";
         $ele_name = WSF_SIMPLE_CONTENT_VALUE;
-        $code .= wsf_comment_on_simple_type($parent_node, $ele_name, $extension_type);
+        $comments = wsf_comment_on_simple_type_wrapper($parent_node, $ele_name, $extension_type);
         
         // we generate the code for base 64 type differently
         if($extension_type == WSF_XSD_BASE64) { // this should be anyway a simple type..
             $code .= "\n";
             $code .= "    // You need to set only one from the following two vars\n";
-            $code = $code . "    public $" . $ele_name . "; // " . "Plain Binary" . "\n";
-            $code = $code . "    public $" . $ele_name . WSF_POSTFIX_BASE64 . "; // " . $extension_type . "\n";
+            $code = $code . "\n    /**\n     * @var " . "Plain Binary" . "\n$comments     */\n" . "    public $" . $ele_name . ";\n";
+            $code = $code . "\n    /**\n     * @var " . $extension_type . "\n$comments     */\n" . "    public $" . $ele_name . WSF_POSTFIX_BASE64 . ";\n";
             $code .= "\n";
         }
         else {
-            $code = $code . "    public $" . $ele_name . "; // " . $extension_type . "\n";
+            $code = $code . "\n    /**\n     * @var " . $extension_type . "\n$comments     */\n" . "    public $" . $ele_name . ";\n";
         }
     }
 
@@ -274,9 +276,10 @@ function wsf_wsdl2php($wsdl_location) {
     // changing code for processing mutiple port types in wsdl 1.1 
     $is_multiple_interfaces = wsf_is_mutiple_port_types($wsdl_dom);
 
+    $is_wsdl_11 = $wsdl_11_dom = NULL;
     if ($is_multiple_interfaces == FALSE) {
         //wsdl1.1 to wsdl2 conversion
-        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location);
+        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location, $is_wsdl_11, $wsdl_11_dom);
         if (!$wsdl_dom) {
             echo "Error creating WSDL DOM document";
             return NULL;
@@ -284,7 +287,7 @@ function wsf_wsdl2php($wsdl_location) {
         $sig_model_dom = wsf_get_sig_model_dom($wsdl_dom);
     } else {
         //wsdl1.1 to wsdl2 conversion
-        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location);
+        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location, $is_wsdl_11, $wsdl_11_dom);
         $sig_model_dom = wsf_process_multiple_interfaces($wsdl_dom, $sig_model_dom);
     }
 
@@ -456,9 +459,14 @@ function wsf_wsdl2php($wsdl_location) {
 
                             foreach ($param_child_list as $param_child) {
                                 $param_attr = $param_child->attributes;
-
-                                $ele_name = $param_attr->getNamedItem(WSF_NAME)->value;
-                                $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
+                                
+                                $ele_name = $param_type = "";
+                                if($param_attr->getNamedItem(WSF_NAME)) {
+                                    $ele_name = $param_attr->getNamedItem(WSF_NAME)->value;
+                                }
+                                if($param_attr->getNamedItem(WSF_TYPE)) {
+                                    $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
+                                }
 
                                 $content_model = "";
                                 if($param_attr->getNamedItem(WSF_CONTENT_MODEL)) {
@@ -573,7 +581,7 @@ function wsf_wsdl2php($wsdl_location) {
                                 $child_array = array();
                                 $code .= wsf_write_content_model($param_node, $child_array);
                                 
-                                $code = $code . "}\n\n";
+                                $code = $code . "\n}\n\n";
                                 // done writing the current class, now go and write the sub classes
                                 foreach($child_array as $child) {
                                     $code = $code . wsf_write_sub_classes($child);
@@ -629,7 +637,7 @@ function wsf_wsdl2php($wsdl_location) {
                                             $code = $code . "class " . $ele_name.  " {\n";
 
                                             $code .= wsf_write_content_model($param_child, $child_array);
-                                            $code = $code . "}\n\n";
+                                            $code = $code . "\n}\n\n";
                                         }
 
                                         if ($param_node->nodeName == WSF_PARAMS) {
@@ -651,7 +659,7 @@ function wsf_wsdl2php($wsdl_location) {
                                         // shows how to create the input and receive the response
 
                                         if ($param_node->nodeName == WSF_PARAMS) {
-                                            $simple_type_comment = wsf_comment_on_simple_type($param_child, "\$input", $param_type);
+                                            $simple_type_comment = wsf_comment_on_simple_type_wrapper($param_child, "\$input", $param_type);
                                             $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "    //TODO: fill \$input with (data type: {$type_prefix}{$param_type}) data to match your business logic\n";
                                             if($param_child->getAttribute("simple") == "yes"){
                                                 $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . $simple_type_comment."\n";
@@ -666,7 +674,7 @@ function wsf_wsdl2php($wsdl_location) {
 
                                         }
                                         if ($param_node->nodeName == WSF_RETURNS) {
-                                            $simple_type_comment = wsf_comment_on_simple_type($param_child, "output ", $param_type);
+                                            $simple_type_comment = wsf_comment_on_simple_type_wrapper($param_child, "output ", $param_type);
                                             $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "\n    // call the operation\n    \$response = \$proxy->" . $op_node->attributes->getNamedItem('name')->value . "(\$input{$header_function_call});\n    //TODO: Implement business logic to consume \$response, which is of type {$type_prefix}{$param_type}\n";
                                             $operations[$op_name][WSF_CLIENT] .= $out_header_objects[WSF_CLIENT];
                                             $operations[$op_name][WSF_SERVICE] .= $out_header_objects[WSF_SERVICE];
@@ -700,9 +708,20 @@ function wsf_wsdl2php($wsdl_location) {
                 }
             }
         }
-        $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "}\n\n";
+        $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "\n}\n\n";
     }
     return $code;
+}
+
+function wsf_comment_on_simple_type_wrapper($param_node, $param_name, $param_type, $from_union = FALSE) {
+    $comment = wsf_comment_on_simple_type($param_node, $param_name, $param_type, $from_union);
+    if(!empty($comment)) {
+         $wrapped = "    /**\n";
+         $wrapped .= $comment;
+         $wrapped .= "     */\n";
+         return $wrapped;
+    }
+    return $comment;
 }
 
 function wsf_comment_on_simple_type($param_node, $param_name, $param_type, $from_union = FALSE)
@@ -722,7 +741,7 @@ function wsf_comment_on_simple_type($param_node, $param_name, $param_type, $from
             if($restriction->nodeName == "param") {
             }
             else{
-                $comment = "    //NOTE: ${param_name} should follow the following restrictions\n";
+                $comment = "     *     NOTE: ${param_name} should follow the following restrictions\n";
                 break;
             }
         }
@@ -733,7 +752,7 @@ function wsf_comment_on_simple_type($param_node, $param_name, $param_type, $from
         if($restriction->nodeName == "union") {
             $restriction_type = $restriction->attributes->getNamedItem(WSF_TYPE)->value;
             if($restriction->hasChildNodes()) {
-                $comment .= "    // type {$restriction_type} hold the following restrictions\n";
+                $comment .= "     * type {$restriction_type} hold the following restrictions\n";
                 $comment .= wsf_comment_on_simple_type($restriction, $param_name, $param_type, TRUE);
             }
         }
@@ -744,16 +763,12 @@ function wsf_comment_on_simple_type($param_node, $param_name, $param_type, $from
     foreach($restrictions as $restriction){
         if($restriction->nodeName == "enumeration"){
             if($i == 0){
-                $comment .= "    /* You can have one of the following value\n";
+                $comment .= "     *     You can have one of the following value\n";
                 $i ++;
             }
             $value = $restriction->getAttribute("value");
-            $comment .= "     * {$value}\n";
+            $comment .= "     *     {$value}\n";
         }
-    }
-
-    if($i != 0){
-        $comment .= "     */\n";
     }
 
     $min_value = -1;
@@ -816,22 +831,21 @@ function wsf_comment_on_simple_type($param_node, $param_name, $param_type, $from
     else
     {
         //print out the max/min information
-        $comment .= "    /* Your value should be \n";
+        $comment .= "     *     Your value should be \n";
         if($min_value != -1){
-            $comment .= "       Greater than ";
+            $comment .= "     *     Greater than ";
             if($min_inclusive){
                 $comment .= "or equal to ";
             }
             $comment .= $min_value."\n";
         }
         if($max_value != -1){
-            $comment .= "       Less than ";
+            $comment .= "     *     Less than ";
             if($max_inclusive){
                 $comment .= "or equal to ";
             }
             $comment .= $max_value."\n";
         }
-        $comment .= "     */\n";
     }
   
     $min_len = -1;
@@ -865,35 +879,34 @@ function wsf_comment_on_simple_type($param_node, $param_name, $param_type, $from
     else
     {
         //print out the max/min information
-        $comment .= "    /* Your length of the value should be \n";
+        $comment .= "     *     Your length of the value should be \n";
         if($min_len != -1){
-            $comment .= "       Greater than ";
+            $comment .= "     *     Greater than ";
             $comment .= $min_len."\n";
         }
         if($max_len != -1){
-            $comment .= "       Less than ";
+            $comment .= "     *     Less than ";
             $comment .= $max_len."\n";
         }
-        $comment .= "     */\n";
     }
 
     //Iterate throught the total digits and length facets
     foreach($restrictions as $facet) {
         if($facet->nodeName == "pattern") {
             $pattern =  $facet->getAttribute("value");
-            $comment .= "    /* The pattern should be \n       {$pattern} \n    */\n";
+            $comment .= "     *     The pattern should be \n     * {$pattern} \n";
         }
         else if($facet->nodeName == "length") {
             $length =  $facet->getAttribute("value");
-            $comment .= "    /* The value length should be \n       {$length} \n    */\n";
+            $comment .= "     *     The value length should be \n     * {$length} \n";
         }
         else if($facet->nodeName == "totalDigits") {
             $digits =  $facet->getAttribute("value");
-            $comment .= "    /* The number of digits should be \n       {$digits} \n    */\n";
+            $comment .= "     *     The number of digits should be \n     * {$digits} \n";
         }
         else if($facet->nodeName == "fractionDigits") {
             $digits =  $facet->getAttribute("value");
-            $comment .= "    /* The number of fraction digits should be \n       {$digits} \n    */\n";
+            $comment .= "     *     The number of fraction digits should be \n     * {$digits} \n";
         }
     }
   
