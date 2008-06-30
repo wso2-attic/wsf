@@ -465,8 +465,8 @@ wsf_worker_process_request (
         /**  call security function here */ 
         axis2_conf_t * conf = NULL;
         conf = axis2_conf_ctx_get_conf (worker->conf_ctx, env);
-        wsf_policy_handle_server_security (svc_info->security_token,
-            svc_info->policy, env, svc_info->svc, conf TSRMLS_CC);
+        wsf_policy_handle_server_security (svc_info,
+            env, conf TSRMLS_CC);
     }
     
 	if (request->soap_action)

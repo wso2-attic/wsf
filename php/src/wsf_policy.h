@@ -31,9 +31,12 @@
 /** Identifier for a policy object */
 #define WSF_POLICY "Policy"
 
-/** Input policy and output policy in case where the inpolicy and out policy are different */
-#define WSF_IN_POLICY "inpolicy"
-#define WSF_OUT_POLICY "outpolicy"
+/** Input policy and output policy in case where the in policy and out policy are different */
+#define WSF_IN_POLICY "inMessagePolicy"
+#define WSF_OUT_POLICY "outMessagePolicy"
+
+#define WSF_POLICY_MSG_LABEL_IN "in"
+#define WSF_POLICY_MSG_LABEL_OUT "out"
 
 #define WSF_POLICY_XML "policyXML"
 #define WSF_POLICY_SECURITY "security"
@@ -178,19 +181,15 @@ wsf_policy_handle_client_security (
 /**
 * Handle service side security.. Basically sets the options
 * to the rampart context and engage to rampart module
-* @param sec_token, An instance of WSSecurityToken
-* @param policy, An instance of WSPolicy
+* @param svc_info, wsf_svc_info_t instance
 * @param env, axutil_env_t environment
-* @param svc, The service instance
 * @param conf, The configuration context
 * @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
 */
 int 
 wsf_policy_handle_server_security (
-    zval * sec_token,
-    zval * policy,
+    wsf_svc_info_t *svc_info,
     axutil_env_t * env,
-    axis2_svc_t * svc,
     axis2_conf_t * conf TSRMLS_DC);
 
 /**
@@ -218,10 +217,22 @@ wsf_set_rampart_options (
 */
 axiom_node_t *
 wsf_do_create_policy (
-    zval * sec_token,
-    zval * policy,
+    zval *policy,
 	axis2_bool_t is_server_side,
     axutil_env_t * env TSRMLS_DC);
+
+/**
+* This method handle operation level policies 
+* @param ht_policies, 
+* @param env, 
+* @param svc, 
+* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
+*/
+axis2_status_t 
+wsf_policy_handle_op_policies(
+	HashTable *ht_policies,
+	axutil_env_t *env,
+	axis2_svc_t *svc TSRMLS_DC);
 
 
 

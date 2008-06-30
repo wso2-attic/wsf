@@ -31,6 +31,7 @@
 #include <axis2_policy_include.h>
 #include <neethi_engine.h>
 #include <secconv_security_context_token.h>
+#include <axis2_msg.h>
 
 
 int 
@@ -103,12 +104,10 @@ wsf_policy_handle_client_security (
     axutil_env_t * env,
     axis2_svc_client_t * svc_client TSRMLS_DC)
 {
-    axiom_node_t *outgoing_policy_node = NULL;
-    axiom_node_t *incoming_policy_node = NULL;
+	axiom_node_t *policy_node = NULL;
+
     HashTable *ht = NULL;
-    zval *policy_type = NULL;
-    zval **tmp_type = NULL;
-    int is_multiple_flow = AXIS2_FALSE;
+    zval **tmp = NULL;
 
     rampart_context_t *rampart_ctx = NULL;
 
@@ -131,56 +130,19 @@ wsf_policy_handle_client_security (
         return AXIS2_FAILURE;
     }
 
-    /* if incoming policy and outgoing policy are different from each  other */
     if (policy && Z_TYPE_P (policy) == IS_OBJECT) {
         ht = Z_OBJPROP_P (policy);
-        if (zend_hash_find (ht, WSF_IN_POLICY, sizeof (WSF_IN_POLICY),
-                (void **) &tmp_type) == SUCCESS) {
-            if (Z_TYPE_PP (tmp_type) == IS_ARRAY) {
-                policy_type = *tmp_type;
-                incoming_policy_node = wsf_do_create_policy (sec_token, policy_type, AXIS2_FAILURE,
-                    env TSRMLS_CC);
-            }
-            if (Z_TYPE_PP (tmp_type) == IS_STRING) {
-                policy_xml = Z_STRVAL_PP (tmp_type);
-                incoming_policy_node = wsf_util_deserialize_buffer (env, policy_xml);
-            }
-            policy_type = NULL;
-            tmp_type = NULL;
-        }
-        if (zend_hash_find (ht, WSF_OUT_POLICY, sizeof (WSF_OUT_POLICY),
-                (void *) &tmp_type) == SUCCESS) {
-            if (Z_TYPE_PP (tmp_type) == IS_ARRAY) {
-                policy_type = *tmp_type;
-                outgoing_policy_node =
-                    wsf_do_create_policy (sec_token, policy_type, AXIS2_FAILURE,
-                    env TSRMLS_CC);
-                is_multiple_flow = AXIS2_SUCCESS;
-            }
-            if (Z_TYPE_PP (tmp_type) == IS_STRING) {
-                policy_xml = Z_STRVAL_PP (tmp_type);
-                outgoing_policy_node =
-                    wsf_util_deserialize_buffer (env, policy_xml);
-                is_multiple_flow = AXIS2_SUCCESS;
-            }
-        }
         if (zend_hash_find (ht, WSF_POLICY_XML, sizeof (WSF_POLICY_XML),
-                (void **) & tmp_type) == SUCCESS
-            && (Z_TYPE_PP (tmp_type) == IS_STRING)) {
-            policy_xml = Z_STRVAL_PP (tmp_type);
-            outgoing_policy_node =
-                wsf_util_deserialize_buffer (env, policy_xml);
-            incoming_policy_node =
-                wsf_util_deserialize_buffer (env, policy_xml);
-            is_multiple_flow = AXIS2_SUCCESS;
+                (void **) & tmp) == SUCCESS && (Z_TYPE_PP (tmp) == IS_STRING)) 
+		{
+            policy_xml = Z_STRVAL_PP (tmp);
+            policy_node = wsf_util_deserialize_buffer (env, policy_xml);
         }
+		else
+		{
+			policy_node = wsf_do_create_policy (policy, AXIS2_FAILURE, env TSRMLS_CC);
+		}
     }
-    /* since creating policy XML is the same procedure use one function */
-    if (policy && Z_TYPE_P (policy) == IS_OBJECT && is_multiple_flow == AXIS2_FALSE) {
-        outgoing_policy_node = wsf_do_create_policy (sec_token, policy, AXIS2_FAILURE, env TSRMLS_CC);
-        incoming_policy_node = wsf_do_create_policy (sec_token, policy, AXIS2_FAILURE, env TSRMLS_CC);
-    }
-
     rampart_ctx = rampart_context_create (env);
 
     wsf_set_rampart_options (rampart_ctx, sec_token, policy, env TSRMLS_CC);
@@ -194,34 +156,34 @@ wsf_policy_handle_client_security (
         neethi_options_t *neethi_options = NULL;
 
         neethi_options = neethi_options_create (env); 
-        incoming_policy_node = neethi_options_get_root_node (neethi_options, env);
+        policy_node = neethi_options_get_root_node (neethi_options, env);
     }
 
+    if (policy_node) {
+        if (axiom_node_get_node_type (policy_node, env) == AXIOM_ELEMENT) 
+		{
+            root_ele = (axiom_element_t *)axiom_node_get_data_element (policy_node, env);
 
-    if (incoming_policy_node) {
-        if (axiom_node_get_node_type (incoming_policy_node,
-                env) == AXIOM_ELEMENT) {
-            root_ele =
-                (axiom_element_t *)
-                axiom_node_get_data_element (incoming_policy_node, env);
-
-            if (root_ele) {
-                neethi_policy =
-                    neethi_engine_get_policy (env, incoming_policy_node,
-                    root_ele);
-                if (!neethi_policy) {
+            if (root_ele) 
+			{
+                neethi_policy = neethi_engine_get_policy (env, policy_node, root_ele);
+                if (!neethi_policy) 
+				{
                     return AXIS2_FAILURE;
                 }
                 svc = axis2_svc_client_get_svc (svc_client, env);
-                if (!svc) {
+                if (!svc) 
+				{
                     return AXIS2_FAILURE;
                 }
                 desc = axis2_svc_get_base (svc, env);
-                if (!desc) {
+                if (!desc) 
+				{
                     return AXIS2_FAILURE;
                 }
                 policy_include = axis2_desc_get_policy_include (desc, env);
-                if (!policy_include) {
+                if (!policy_include) 
+				{
                     return AXIS2_FAILURE;
                 }
                 axis2_policy_include_add_policy_element (policy_include, env,
@@ -242,13 +204,12 @@ wsf_policy_handle_client_security (
     /** Used for Debugging */
 	if(env->log->level == AXIS2_LOG_LEVEL_DEBUG)
 	{
-		if (outgoing_policy_node) 
+		if (policy_node) 
 		{
 			axis2_char_t *om_str_in = NULL;
 			axis2_char_t *om_str_out = NULL;
 			
-			om_str_out = axiom_node_to_string (outgoing_policy_node, env);
-			om_str_in = axiom_node_to_string (incoming_policy_node, env);
+			om_str_out = axiom_node_to_string (policy_node, env);
 
 			AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, 
 			WSF_PHP_LOG_PREFIX "creating rampart client outgoing policy node \n\t %s \n", om_str_out);
@@ -256,13 +217,6 @@ wsf_policy_handle_client_security (
 			AXIS2_FREE(env->allocator, om_str_out);
 			om_str_out = NULL;
 
-			AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, 
-			WSF_PHP_LOG_PREFIX "creating rampart client incoming policy node \n\t %s \n",
-				om_str_in);
-
-			AXIS2_FREE(env->allocator, om_str_in);
-
-			om_str_in = NULL;
 		}
 	}
     return AXIS2_SUCCESS;
@@ -270,155 +224,278 @@ wsf_policy_handle_client_security (
 
 int
 wsf_policy_handle_server_security (
-    zval * sec_token,
-    zval * policy,
+	wsf_svc_info_t *svc_info,
     axutil_env_t * env,
-    axis2_svc_t * svc,
     axis2_conf_t * conf TSRMLS_DC)
 {
-    axiom_node_t *outgoing_policy_node = NULL;
-    axiom_node_t *incoming_policy_node = NULL;
-    HashTable *ht = NULL;
-    zval *policy_type = NULL;
-    zval **tmp_type = NULL;
-    int is_multiple_flow = AXIS2_FALSE;
-
+	axiom_node_t *policy_node = NULL;
+	HashTable *policy_ht = NULL;
     rampart_context_t *rampart_ctx = NULL;
-
     axutil_param_t *security_param = NULL;
-
     char *policy_xml = NULL;
-
     axiom_element_t *root_ele = NULL;
     axis2_desc_t *desc = NULL;
     axis2_policy_include_t *policy_include = NULL;
 
-    if (!sec_token && !policy && !svc && !conf)
+    if (!svc_info->security_token && !svc_info->policy && !svc_info->svc && !conf)
         return AXIS2_FAILURE;
 
-    /* if incoming policy and outgoing policy are different from each other */
-    if (Z_TYPE_P (policy) == IS_OBJECT) {
-        ht = Z_OBJPROP_P (policy);
-        if (zend_hash_find (ht, WSF_IN_POLICY, sizeof (WSF_IN_POLICY),
-                (void **) &tmp_type) == SUCCESS) {
-            if (Z_TYPE_PP (tmp_type) == IS_ARRAY) {
-                policy_type = *tmp_type;
-                incoming_policy_node =
-					wsf_do_create_policy (sec_token, policy_type, AXIS2_SUCCESS,
-                    env TSRMLS_CC);
-                is_multiple_flow = AXIS2_SUCCESS;
-            }
-            if (Z_TYPE_PP (tmp_type) == IS_STRING) {
-                policy_xml = Z_STRVAL_PP (tmp_type);
-                incoming_policy_node =
-                    wsf_util_deserialize_buffer (env, policy_xml);
-                is_multiple_flow = AXIS2_SUCCESS;
-            }
-            policy_type = NULL;
-            tmp_type = NULL;
+    if (Z_TYPE_P (svc_info->policy) == IS_OBJECT) 
+	{
+		zval **tmp = NULL;
+		policy_ht = Z_OBJPROP_P (svc_info->policy);
+		
+        if (zend_hash_find (policy_ht, WSF_POLICY_XML, sizeof (WSF_POLICY_XML), 
+			(void **) &tmp) == SUCCESS && (Z_TYPE_PP (tmp) == IS_STRING)) {
+            policy_xml = Z_STRVAL_PP (tmp);
+            policy_node = wsf_util_deserialize_buffer(env, policy_xml);
         }
-        if (zend_hash_find (ht, WSF_OUT_POLICY, sizeof (WSF_OUT_POLICY),
-                (void *) &tmp_type) == SUCCESS) {
-            if (Z_TYPE_PP (tmp_type) == IS_ARRAY) {
-                policy_type = *tmp_type;
-                outgoing_policy_node =
-                    wsf_do_create_policy (sec_token, policy_type, AXIS2_SUCCESS,
-                    env TSRMLS_CC);
-                is_multiple_flow = AXIS2_SUCCESS;
-            }
-            if (Z_TYPE_PP (tmp_type) == IS_STRING) {
-                policy_xml = Z_STRVAL_PP (tmp_type);
-                outgoing_policy_node =
-                    wsf_util_deserialize_buffer (env, policy_xml);
-                is_multiple_flow = AXIS2_SUCCESS;
-            }
-        }
-        if (zend_hash_find (ht, WSF_POLICY_XML, sizeof (WSF_POLICY_XML),
-                (void **) & tmp_type) == SUCCESS
-            && (Z_TYPE_PP (tmp_type) == IS_STRING)) {
-            policy_xml = Z_STRVAL_PP (tmp_type);
-            outgoing_policy_node =
-                wsf_util_deserialize_buffer (env, policy_xml);
-            incoming_policy_node =
-                wsf_util_deserialize_buffer (env, policy_xml);
-            is_multiple_flow = AXIS2_SUCCESS;
-        }
-
+		else
+		{
+			policy_node  = wsf_do_create_policy (svc_info->policy, AXIS2_TRUE, env TSRMLS_CC);
+		}
     }
-    /* since creating policy XML is the same procedure use one function */
-    if (Z_TYPE_P (policy) == IS_OBJECT && is_multiple_flow == AXIS2_FALSE) {
-        outgoing_policy_node =
-            wsf_do_create_policy (sec_token, policy, AXIS2_SUCCESS, env TSRMLS_CC);
-        incoming_policy_node =
-            wsf_do_create_policy (sec_token, policy, AXIS2_SUCCESS, env TSRMLS_CC);
-    }
+   
+    if (policy_node) 
+	{
+		rampart_ctx = rampart_context_create (env);
+		wsf_set_rampart_options (rampart_ctx, svc_info->security_token, svc_info->policy, env TSRMLS_CC);
 
-    rampart_ctx = rampart_context_create (env);
-    wsf_set_rampart_options (rampart_ctx, sec_token, policy,
-        env TSRMLS_CC);
-
-    if (incoming_policy_node) {
-        if (axiom_node_get_node_type (incoming_policy_node,
-                env) == AXIOM_ELEMENT) {
-            root_ele =
-                (axiom_element_t *)
-                axiom_node_get_data_element (incoming_policy_node, env);
-            if (root_ele) {
+        if (axiom_node_get_node_type (policy_node, env) == AXIOM_ELEMENT) 
+		{
+            root_ele = (axiom_element_t *)axiom_node_get_data_element (policy_node, env);
+            if (root_ele) 
+			{
                 neethi_policy_t *neethi_policy = NULL;
-                neethi_policy =
-                    neethi_engine_get_policy (env, incoming_policy_node,
-                    root_ele);
-                if (!neethi_policy) {
+                neethi_policy = neethi_engine_get_policy (env, policy_node, root_ele);
+                if (!neethi_policy) 
+				{
                     return AXIS2_FAILURE;
                 }
-                if (!svc) {
-                    return AXIS2_FAILURE;
-                }
-                desc = axis2_svc_get_base (svc, env);
-                if (!desc) {
+                
+                desc = axis2_svc_get_base (svc_info->svc, env);
+                if (!desc) 
+				{
                     return AXIS2_FAILURE;
                 }
                 policy_include = axis2_desc_get_policy_include (desc, env);
-                if (!policy_include) {
+                if (!policy_include) 
+				{
                     return AXIS2_FAILURE;
                 }
                 axis2_policy_include_add_policy_element (policy_include, env,
-                    AXIS2_SERVICE_POLICY, neethi_policy);
-                security_param =
-                    axutil_param_create (env, WSF_RAMPART_CONFIGURATION,
+					AXIS2_SERVICE_POLICY, neethi_policy);
+                security_param = axutil_param_create (env, WSF_RAMPART_CONFIGURATION,
                     (void *) rampart_ctx);
-                axis2_svc_add_param (svc, env, security_param);
+                axis2_svc_add_param (svc_info->svc, env, security_param);
 
             }
         }
     }
 
+	if(svc_info->ht_op_policies)
+	{
+		wsf_policy_handle_op_policies(svc_info->ht_op_policies, env, svc_info->svc TSRMLS_CC);
+			
+	}
+
     /** engage module rampart */
-    wsf_util_engage_module (conf, WSF_MODULE_SECURITY, env, svc);
+    wsf_util_engage_module (conf, WSF_MODULE_SECURITY, env, svc_info->svc);
 
 	if(env->log->level == AXIS2_LOG_LEVEL_DEBUG)
 	{
-		if (outgoing_policy_node && incoming_policy_node) 
+		if (policy_node) 
 		{
-			axis2_char_t *om_str_in = NULL;
-			axis2_char_t *om_str_out = NULL;
+			axis2_char_t *policy_string = NULL;
 
-			om_str_out = axiom_node_to_string (outgoing_policy_node, env);
-			om_str_in = axiom_node_to_string (incoming_policy_node, env);
+			policy_string = axiom_node_to_string (policy_node, env);
 
 			AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
-				"creating rampart service outgoing policy node \n\t %s \n", om_str_out);
-			AXIS2_FREE(env->allocator, om_str_out);
-			om_str_out = NULL;
-
-			AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
-				"creating rampart service incoming policy node \n\t %s \n", om_str_in);
-			AXIS2_FREE(env->allocator, om_str_in);
-			om_str_in = NULL;
+				"creating rampart service policy node \n\t %s \n", policy_string);
+			AXIS2_FREE(env->allocator, policy_string);
 		}
 	}
     return AXIS2_SUCCESS;
 }
+/** 
+* Set policy include for each of the policy operations
+*/
+void
+wsf_policy_handle_op_policy(
+	zval *policy,
+	axutil_env_t *env,
+	axis2_svc_t *svc,
+	axis2_char_t *op_name TSRMLS_DC)
+{
+	axiom_node_t *policy_node = NULL;
+	axiom_node_t *in_msg_policy_node = NULL;
+	axiom_node_t *out_msg_policy_node = NULL;
+	HashTable *policy_ht = NULL;
+
+	
+	axis2_op_t *op = NULL;
+
+	if (Z_OBJCE_P(policy) == ws_policy_class_entry) 
+	{
+		zval **tmp = NULL;
+		policy_ht = Z_OBJPROP_P (policy);
+		if(zend_hash_find(policy_ht, WSF_IN_POLICY, sizeof(WSF_IN_POLICY), (void **)&tmp) == SUCCESS)
+		{
+			if(Z_TYPE_PP(tmp) == IS_ARRAY)
+			{
+				in_msg_policy_node = wsf_do_create_policy(*tmp, AXIS2_TRUE, env TSRMLS_CC);
+			}
+			else if(Z_TYPE_PP(tmp) == IS_STRING)
+			{
+				in_msg_policy_node = wsf_util_deserialize_buffer(env, Z_STRVAL_PP(tmp));
+			}
+		}
+		if(zend_hash_find(policy_ht, WSF_OUT_POLICY, sizeof(WSF_OUT_POLICY), (void **)&tmp) == SUCCESS)
+		{
+			if(Z_TYPE_PP(tmp) == IS_ARRAY)
+			{
+				out_msg_policy_node = wsf_do_create_policy(*tmp, AXIS2_TRUE, env TSRMLS_CC);
+			}
+			else if(Z_TYPE_PP(tmp) == IS_STRING)
+			{
+				out_msg_policy_node = wsf_util_deserialize_buffer(env, Z_STRVAL_PP(tmp));
+			}
+		}
+		if (zend_hash_find (policy_ht, WSF_POLICY_XML, sizeof (WSF_POLICY_XML), 
+			(void **) &tmp) == SUCCESS && (Z_TYPE_PP (tmp) == IS_STRING))
+		{
+				
+				policy_node = wsf_util_deserialize_buffer(env, Z_STRVAL_PP (tmp));
+		}
+		else
+		{
+				policy_node  = wsf_do_create_policy (policy, AXIS2_TRUE, env TSRMLS_CC);
+		}
+	}
+	if(in_msg_policy_node || out_msg_policy_node || policy_node)
+	{
+		axis2_desc_t *desc = NULL;
+		axis2_policy_include_t *policy_include = NULL;
+		op = axis2_svc_get_op_with_name(svc, env, op_name);
+		if (policy_node) 
+		{
+			axiom_element_t *policy_element = NULL;	
+			if (axiom_node_get_node_type (policy_node, env) == AXIOM_ELEMENT) 
+			{
+				policy_element = (axiom_element_t *)axiom_node_get_data_element (policy_node, env);
+				if (policy_element) 
+				{
+					neethi_policy_t *op_policy = NULL;
+					op_policy = neethi_engine_get_policy (env, policy_node, policy_element);
+					if (!op_policy) 
+					{
+						return;
+					}
+					
+					desc = axis2_op_get_base (op, env);
+					if (!desc) 
+					{
+						return;
+					}
+					policy_include = axis2_desc_get_policy_include (desc, env);
+					if (!policy_include) 
+					{
+						return ;
+					}
+					axis2_policy_include_add_policy_element (policy_include, env,
+						AXIS2_SERVICE_POLICY, op_policy);
+				}
+			}
+		}	
+		if(in_msg_policy_node)
+		{
+			axis2_msg_t *msg = NULL;
+			
+			msg = axis2_op_get_msg(op, env, WSF_POLICY_MSG_LABEL_IN);
+			if(msg)
+			{
+				desc = axis2_msg_get_base(msg, env);
+				if(desc)
+				{
+					policy_include = axis2_desc_get_policy_include(desc, env);
+					if(axiom_node_get_node_type(in_msg_policy_node, env) == AXIOM_ELEMENT)
+					{
+						axiom_element_t *policy_element = NULL;
+						neethi_policy_t *op_in_msg_policy = NULL;
+						policy_element = axiom_node_get_data_element(in_msg_policy_node, env);
+						op_in_msg_policy = neethi_engine_get_policy(env, 
+							in_msg_policy_node, policy_element);
+						axis2_policy_include_add_policy_element(policy_include, env, 
+							AXIS2_SERVICE_POLICY, op_in_msg_policy);
+					}
+				}
+				
+			}
+		}
+		if(out_msg_policy_node)
+		{
+			axis2_msg_t *msg = NULL;
+
+			msg = axis2_op_get_msg(op, env, WSF_POLICY_MSG_LABEL_IN);
+			if(msg)
+			{
+				desc = axis2_msg_get_base(msg, env);
+				if(desc)
+				{
+					policy_include = axis2_desc_get_policy_include(desc, env);
+					if(axiom_node_get_node_type(out_msg_policy_node, env) == AXIOM_ELEMENT)
+					{
+						axiom_element_t *policy_element = NULL;
+						neethi_policy_t *op_out_msg_policy = NULL;
+						policy_element = axiom_node_get_data_element(out_msg_policy_node, env);
+						op_out_msg_policy = neethi_engine_get_policy(env, 
+							in_msg_policy_node, policy_element);
+						axis2_policy_include_add_policy_element(policy_include, env, 
+						AXIS2_SERVICE_POLICY, op_out_msg_policy);
+					}
+				}
+			}
+		}
+	}
+}
+
+
+axis2_status_t 
+wsf_policy_handle_op_policies(
+  HashTable *ht_policies,
+  axutil_env_t *env,
+  axis2_svc_t *svc TSRMLS_DC)
+{
+			
+	HashPosition pos;
+	zval ** tmp = NULL;
+	int i = 0;
+
+	if (!ht_policies) 
+	{
+		return AXIS2_FAILURE;
+	}
+
+	zend_hash_internal_pointer_reset_ex (ht_policies, &pos);
+	while (zend_hash_get_current_data_ex (ht_policies, (void **) &tmp, &pos) != FAILURE) 
+	{
+		char *op_name = NULL;
+		unsigned int op_name_len = 0;
+		unsigned long index = i;
+
+		zend_hash_get_current_key_ex (ht_policies, &op_name, &op_name_len, &index, 0, &pos);
+		zend_hash_get_current_data_ex(ht_policies,(void**)&tmp, &pos);
+		if(Z_OBJCE_PP(tmp) == ws_policy_class_entry)
+		{
+			wsf_policy_handle_op_policy(*tmp, env, svc, op_name TSRMLS_CC);
+
+		}
+		zend_hash_move_forward_ex (ht_policies, &pos);
+		i++;
+	}
+	return AXIS2_SUCCESS;
+}
+
 
 
 int
@@ -603,25 +680,29 @@ wsf_set_rampart_options (
 
 axiom_node_t *
 wsf_do_create_policy (
-    zval * sec_token,
-    zval * policy,
+    zval *policy,
 	axis2_bool_t is_server_side,
     axutil_env_t * env TSRMLS_DC)
 {
+	HashTable *ht_policy = NULL;
     neethi_options_t *neethi_options = NULL;
-    HashTable *ht_policy = NULL;
     axiom_node_t *return_node = NULL;
     zval **tmp = NULL;
     char *algo_suite = NULL;
     char *token_ref = NULL;
     char *protection_order = NULL;
 
-    if (!policy)
-        return NULL;
-    if (Z_TYPE_P (policy) == IS_OBJECT)
-        ht_policy = Z_OBJPROP_P (policy);
-    else
-        ht_policy = Z_ARRVAL_P (policy);
+	if(!policy)
+		return NULL;
+
+	if(Z_TYPE_P(policy) == IS_OBJECT)
+	{
+		ht_policy = Z_OBJPROP_P(policy);
+	}
+	else if(Z_TYPE_P(policy) == IS_ARRAY)
+	{
+		ht_policy = Z_ARRVAL_P(policy);
+	}
 
     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Creating the policy node");
 
@@ -853,15 +934,13 @@ wsf_set_security_policy_options (
 				"Signature encryption is enabled ");
         }
 
-        /* if inflow security and outflow security exits in the array */
+        /* This is only useful for operation level policies In policy maps to inMsgPolicy */
         if (zend_hash_find (ht_sec, WSF_IN_POLICY, sizeof (WSF_IN_POLICY),
                 (void **) &sec_prop) == SUCCESS) 
 		{
             if (Z_TYPE_PP (sec_prop) == IS_ARRAY) 
 			{
                 add_property_zval (policy_obj, WSF_IN_POLICY, *sec_prop);
-                wsf_set_security_policy_options (policy_obj, sec_prop,
-                    env TSRMLS_CC);
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
 					" In policy array is enabled");
             }
@@ -879,7 +958,6 @@ wsf_set_security_policy_options (
             if (Z_TYPE_PP (sec_prop) == IS_ARRAY) 
 			{
                 add_property_zval (policy_obj, WSF_OUT_POLICY, *sec_prop);
-                wsf_set_security_policy_options (policy_obj, sec_prop, env TSRMLS_CC);
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
 					"Out policy array is enabled");
 			}

@@ -349,6 +349,7 @@ wsf_svc_info_create (
     svc_info->wsdl_gen_annotations = NULL;
     svc_info->wsdl = NULL;
 	svc_info->loc_str = NULL;
+	svc_info->ht_op_policies = NULL;
 
     return svc_info;
 }

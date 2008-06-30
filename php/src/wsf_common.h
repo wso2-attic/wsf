@@ -166,8 +166,9 @@ typedef enum ws_input_types
 #define WSF_HEADER_PREFIX        "prefix"
 
 /** security policy */
-#define WSF_POLICY_NAME 			"policy"
+#define WSF_POLICY_NAME			"policy"
 #define WSF_SECURITY_TOKEN 		"securityToken"
+#define WSF_OP_POLICIES         "opPolicies"
 
 #define WSF_PROXY_HOST           "proxyHost"
 #define WSF_PROXY_PORT           "proxyPort"
@@ -257,55 +258,54 @@ typedef enum ws_input_types
 
 typedef struct wsf_svc_info
 {
-
+	/** corresponding axis2 service*/
   axis2_svc_t *svc;
-  
+  /** message receiver object state less and commnon to all */
   axis2_msg_recv_t *msg_recv;
-  
+  /** php worker object */
   struct wsf_worker_t *php_worker;
-  
+  /** operations to actions mapping */
   axutil_hash_t *ops_to_actions;
-
+  /** operations to functions mapping */
   axutil_hash_t *ops_to_functions;
-  
+  /** modules to be enaged */
   axutil_array_list_t *modules_to_engage;
-  
+  /** class operations */
   axutil_hash_t *ops_to_classes;
-  
+  /** class arguments */
   zval *class_args;
-  
+  /** op params */
   HashTable *ht_op_params;
-  
+  /** request xop value */
   int request_xop;
- 
+  /** use mtom value */
   int use_mtom;
-
+  /** enable swa value */
   int enable_swa;
-  
+  /** ws policy object for service level */
   zval *policy;
-  
+  /** ws operations to policy array */
+  HashTable *ht_op_policies;
+  /** ws security token object */
   zval *security_token;
-  
+  /** service name ( this can be a user generated one or a provided one */
   char *svc_name;
-
+  /** port name */
   char *port_name;
-
+  /** flag to indicate whether the svc name is a generates one or not */ 
   int generated_svc_name;
-
+  /** sig model string */
   char *sig_model_string;
-
+  /** class map for wsdl generation */	
   zval *class_map;
-
+  /** class map for wsdl generation */
   zval *wsdl_gen_class_map;
-
+  /** wsdl annotations */
   zval *wsdl_gen_annotations;
-
+  /** wsdl string */
   char *wsdl;
-
   /**http://<domain>/<..*.php>/<loc_str>/ */
   char *loc_str;	
-
-
 }
 wsf_svc_info_t;
 

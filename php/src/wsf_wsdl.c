@@ -812,8 +812,9 @@ void wsf_wsdl_handle_client_security(
             	policy_xml = Z_STRVAL_PP (tmp);
               	input_policy_node = wsf_util_deserialize_buffer (env, policy_xml);
             }
-            else
-	      input_policy_node = wsf_do_create_policy (NULL, policy, AXIS2_FALSE, env TSRMLS_CC);
+			else{
+			input_policy_node = wsf_do_create_policy (policy, AXIS2_FALSE, env TSRMLS_CC);
+			}
         }
 	
     }

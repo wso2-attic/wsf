@@ -936,12 +936,19 @@ PHP_METHOD (ws_service, __construct)
                 " request xop %d", svc_info->request_xop);
             
             if (zend_hash_find (ht_options, WSF_POLICY_NAME, sizeof (WSF_POLICY_NAME), 
-				(void **) &tmp) == SUCCESS) {
-
+				(void **) &tmp) == SUCCESS && Z_OBJCE_PP(tmp) == ws_policy_class_entry) {
 					svc_info->policy = *tmp;
 					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
 						" policy object present");
             }
+
+			if (zend_hash_find (ht_options, WSF_OP_POLICIES, sizeof (WSF_OP_POLICIES), 
+				(void **) &tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY) {
+
+					svc_info->ht_op_policies = Z_ARRVAL_PP(tmp);
+					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+						" policy object present");
+				}
             if (zend_hash_find (ht_options, WSF_SECURITY_TOKEN, sizeof (WSF_SECURITY_TOKEN), 
 				(void **) &tmp) == SUCCESS) {
             
