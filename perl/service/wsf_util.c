@@ -306,9 +306,8 @@ wsf_util_deserialize_buffer (const axutil_env_t * env,
     axiom_document_t *document = NULL;
     axiom_node_t *payload = NULL;
 
-    reader =
-        axiom_xml_reader_create_for_memory (env, buffer,
-        axutil_strlen (buffer), "utf-8", AXIS2_XML_PARSER_TYPE_BUFFER);
+    reader = axiom_xml_reader_create_for_memory (env, buffer, axutil_strlen (buffer), 
+                                                 AXIS2_UTF_8, AXIS2_XML_PARSER_TYPE_BUFFER);
     if (!reader) {
         return NULL;
     }
@@ -331,8 +330,8 @@ wsf_util_deserialize_buffer (const axutil_env_t * env,
         return NULL;
     }
     axiom_document_build_all (document, env);
-  
-	  axiom_stax_builder_free_self (builder, env);
+    
+    axiom_stax_builder_free_self (builder, env);
 
     return payload;
 }
