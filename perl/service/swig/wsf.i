@@ -25,6 +25,11 @@ typedef char axis2_byte_t;
     {
         return (char*)axutil_strdup (env, (void*)ptr);
     }
+
+    char *wsf_get_request_info_payload(wsf_req_info_t *t)
+    {
+        return t->result_payload;
+    }
 %}
 
 axutil_env_t*
