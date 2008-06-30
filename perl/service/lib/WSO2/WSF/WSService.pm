@@ -50,39 +50,36 @@ sub new {
 
 sub fill_svc_info {
     my $self = shift;
-    my $svc_info = shift;
     my $request = shift;
-    my $env = shift;
-    my $worker = shift;
 
-    my $h_ops_to_function = WSO2::WSF::C::axutil_hash_make($env);
-    my $h_ops_to_action = WSO2::WSF::C::axutil_hash_make($env);
+    my $h_ops_to_function = WSO2::WSF::C::axutil_hash_make($self->{-env});
+    my $h_ops_to_action = WSO2::WSF::C::axutil_hash_make($self->{-env});
 
     foreach (keys %{$self->{-rh}}){
         WSO2::WSF::C::axutil_hash_set($h_ops_to_function, $_, -1, $self->{-rh}->{$_});
     }
 
-    #populating svc_info
-    WSO2::WSF::Serverc::wsf_svc_info_t_ops_to_functions_set($svc_info, $h_ops_to_function);
-    WSO2::WSF::Serverc::wsf_svc_info_t_ops_to_actions_set($svc_info, $h_ops_to_action);
+    # populating svc_info
+    WSO2::WSF::Serverc::wsf_svc_info_t_ops_to_functions_set($self->{-svc_info}, $h_ops_to_function);
+    WSO2::WSF::Serverc::wsf_svc_info_t_ops_to_actions_set($self->{-svc_info}, $h_ops_to_action);
 
-    #generating svc_name replacing / with |
-    #for example /axis2/services/echo_services.pl becomes
-    #|axis2|services|echo_services.pl
+    # generating svc_name replacing / with |
+    # for example /axis2/services/echo_services.pl becomes
+    # |axis2|services|echo_services.pl
     my $svc_name = $request->uri();
     $svc_name =~ s#/#|#g;
-    WSO2::WSF::Serverc::wsf_svc_info_t_svc_name_set($svc_info, $svc_name);
-    WSO2::WSF::Serverc::wsf_svc_info_t_msg_recv_set($svc_info, $self->{-msg_recv});
+    WSO2::WSF::Serverc::wsf_svc_info_t_svc_name_set($self->{-svc_info}, $svc_name);
+    WSO2::WSF::Serverc::wsf_svc_info_t_msg_recv_set($self->{-svc_info}, $self->{-msg_recv});
 
-    WSO2::WSF::Serverc::wsf_svc_info_t_script_filename_set($svc_info, $request->filename());
+    WSO2::WSF::Serverc::wsf_svc_info_t_script_filename_set($self->{-svc_info}, $request->filename());
 
-    #setting perl worker for svc_info structure because that is essential
-    #for creating svc from svc_info.
-    WSO2::WSF::Serverc::wsf_svc_info_t_perl_worker_set($svc_info, $worker);
+    # setting perl worker for svc_info structure because that is essential
+    # for creating svc from svc_info.
+    WSO2::WSF::Serverc::wsf_svc_info_t_perl_worker_set($self->{-svc_info}, $self->{-worker});
 
-    WSO2::WSF::Serverc::wsf_util_create_svc_from_svc_info($svc_info, $env);
-    WSO2::WSF::Serverc::wsf_util_process_ws_service_operations_and_actions ($svc_info, $env);
-    WSO2::WSF::Serverc::wsf_util_conf_add_svc($svc_info, $env);
+    WSO2::WSF::Serverc::wsf_util_create_svc_from_svc_info($self->{-svc_info}, $self->{-env});
+    WSO2::WSF::Serverc::wsf_util_process_ws_service_operations_and_actions($self->{-svc_info}, $self->{-env});
+    WSO2::WSF::Serverc::wsf_util_conf_add_svc($self->{-svc_info}, $self->{-env});
 
 }
 
@@ -102,15 +99,10 @@ sub reply {
     my $self = shift;
     my $request = shift;
 
-    #get global env and worker
-    my $env = $self->{-env};
-    my $worker = $self->{-worker};
-    my $svc_info = $self->{-svc_info};
-
     #request infor structure
-    my $req_info = WSO2::WSF::Server::wsf_req_info_t->new();
+    my $req_info = WSO2::WSF::Serverc::new_wsf_req_info_t();
 
-    fill_svc_info($self, $svc_info, $request, $env, $worker);
+    fill_svc_info($self, $request);
 
     #populating wsf_request_info structure
 
@@ -143,11 +135,12 @@ sub reply {
     WSO2::WSF::Serverc::wsf_req_info_t_req_data_length_set($req_info, $request->headers_in->{'content-length'});
 
     #invoking worker
-    my $status = WSO2::WSF::Serverc::wsf_worker_process_request($worker, $env, $req_info, $svc_info);
+    my $status = WSO2::WSF::Serverc::wsf_worker_process_request($self->{-worker}, $self->{-env}, $req_info, $self->{-svc_info});
 
     # WSO2::WSF::C::axis2_log_debug( $env, "****** $status" );
     # $request->status($status);
-    my $respayload = WSO2::WSF::Serverc::wsf_req_info_t_result_payload_get($req_info);
+    # my $respayload = WSO2::WSF::Serverc::wsf_req_info_t_result_payload_get($req_info);
+    my $respayload = WSO2::WSF::Server::wsf_get_request_info_payload($req_info);
 
     $request->content_type( 'application/soap+xml;charset=UTF-8' );
     print $respayload;
