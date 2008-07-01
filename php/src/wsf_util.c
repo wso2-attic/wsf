@@ -570,12 +570,14 @@ wsf_util_engage_module (
     module = axis2_conf_get_module (conf, env, mod_qname);
     if (module) {
         status = axis2_svc_engage_module (svc, env, module, conf);
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+			"Engaging module %s to service ", module_name);
         if (!status) {
             phase_resolver =
                 axis2_phase_resolver_create_with_config (env, conf);
             if (!phase_resolver) {
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                    " [wsf-log] PHASE RESLOVER NULL");
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                    "Enaging module, PHASE RESLOVER NULL");
                 return AXIS2_FAILURE;
             }
             status =
@@ -1505,10 +1507,13 @@ void wsf_util_engage_modules_to_svc(
 {
     axis2_conf_t *conf = NULL;
     conf = axis2_conf_ctx_get_conf (conf_ctx, env);
-    if (conf && !axis2_conf_get_svc (conf, env, svc_info->svc_name))
+    if (conf && svc_info->svc)
 	{
-        axis2_conf_add_svc (conf, env, svc_info->svc);
-        if (NULL != svc_info->modules_to_engage)
+		if(!axis2_conf_get_svc (conf, env, svc_info->svc_name))
+		{
+			axis2_conf_add_svc (conf, env, svc_info->svc);
+		}
+		if (NULL != svc_info->modules_to_engage)
 		{
             int i = 0;
             int size = axutil_array_list_size (svc_info->modules_to_engage, env);

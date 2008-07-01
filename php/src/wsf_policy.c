@@ -240,7 +240,7 @@ wsf_policy_handle_server_security (
     if (!svc_info->security_token && !svc_info->policy && !svc_info->svc && !conf)
         return AXIS2_FAILURE;
 
-    if (Z_TYPE_P (svc_info->policy) == IS_OBJECT) 
+    if (svc_info->policy && Z_TYPE_P (svc_info->policy) == IS_OBJECT) 
 	{
 		zval **tmp = NULL;
 		policy_ht = Z_OBJPROP_P (svc_info->policy);
@@ -255,12 +255,9 @@ wsf_policy_handle_server_security (
 			policy_node  = wsf_do_create_policy (svc_info->policy, AXIS2_TRUE, env TSRMLS_CC);
 		}
     }
-   
-    if (policy_node) 
+   if (policy_node) 
 	{
-		rampart_ctx = rampart_context_create (env);
-		wsf_set_rampart_options (rampart_ctx, svc_info->security_token, svc_info->policy, env TSRMLS_CC);
-
+		
         if (axiom_node_get_node_type (policy_node, env) == AXIOM_ELEMENT) 
 		{
             root_ele = (axiom_element_t *)axiom_node_get_data_element (policy_node, env);
@@ -285,20 +282,21 @@ wsf_policy_handle_server_security (
                 }
                 axis2_policy_include_add_policy_element (policy_include, env,
 					AXIS2_SERVICE_POLICY, neethi_policy);
-                security_param = axutil_param_create (env, WSF_RAMPART_CONFIGURATION,
-                    (void *) rampart_ctx);
-                axis2_svc_add_param (svc_info->svc, env, security_param);
-
             }
         }
     }
 
 	if(svc_info->ht_op_policies)
 	{
-		wsf_policy_handle_op_policies(svc_info->ht_op_policies, env, svc_info->svc TSRMLS_CC);
-			
+		if(!wsf_policy_handle_op_policies(svc_info->ht_op_policies, env, svc_info->svc TSRMLS_CC))
+			return AXIS2_FAILURE;
 	}
 
+	rampart_ctx = rampart_context_create (env);
+	wsf_set_rampart_options (rampart_ctx, svc_info->security_token, svc_info->policy, env TSRMLS_CC);
+
+	security_param = axutil_param_create (env, WSF_RAMPART_CONFIGURATION, (void *) rampart_ctx);
+	axis2_svc_add_param (svc_info->svc, env, security_param);
     /** engage module rampart */
     wsf_util_engage_module (conf, WSF_MODULE_SECURITY, env, svc_info->svc);
 
@@ -460,6 +458,13 @@ wsf_policy_handle_op_policy(
 }
 
 
+/**
+* 
+* @param ht_policies, 
+* @param env, 
+* @param TSRMLS_DC, 
+* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
+*/
 axis2_status_t 
 wsf_policy_handle_op_policies(
   HashTable *ht_policies,
@@ -498,6 +503,14 @@ wsf_policy_handle_op_policies(
 
 
 
+/**
+* 
+* @param rampart_context, 
+* @param sec_token, 
+* @param policy, 
+* @param TSRMLS_DC, 
+* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
+*/
 int
 wsf_set_rampart_options (
     rampart_context_t *rampart_context,
@@ -973,6 +986,13 @@ wsf_set_security_policy_options (
     return AXIS2_SUCCESS;
 }
 
+/**
+* 
+* @param env, 
+* @param username, 
+* @param ctx, 
+* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
+*/
 axis2_char_t *AXIS2_CALL
 wsf_password_callback_function (
     const axutil_env_t * env,
@@ -1078,7 +1098,7 @@ wsf_replay_detection_callback_function(
 		ZVAL_NULL(params[2]);
 	}
 	INIT_PZVAL(params[2]);
-
+/** Parameter order is (msg id, timestamp, callback data) */
 	if (call_user_function (EG (function_table), (zval **) NULL,
             &func, &retval, 3, params TSRMLS_CC) == SUCCESS) 
     {
@@ -1095,6 +1115,16 @@ wsf_replay_detection_callback_function(
     return status;    
 
 }
+/**
+* 
+* @param env, 
+* @param msg_ctx, 
+* @param sct_global_id, 
+* @param sct_local_id, 
+* @param sct, 
+* @param user_params, 
+* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
+*/
 axis2_status_t AXIS2_CALL
 wsf_store_sct_callback_function(
 	const axutil_env_t *env,
@@ -1161,7 +1191,7 @@ wsf_store_sct_callback_function(
 	}
 	INIT_PZVAL(params[3]);
 
-
+/** Store callback function arguments order (sct str,global id, local id, user args ) */
 
 	if (call_user_function (EG (function_table), (zval **) NULL,
 		&func, &retval, 4, params TSRMLS_CC) == SUCCESS) 
@@ -1180,6 +1210,16 @@ wsf_store_sct_callback_function(
 	return status;    
 }
 
+/**
+* This is the extension level callback function registered in rampart for getting security token 
+* @param env, 
+* @param is_encryption, 
+* @param msg_ctx, 
+* @param sct_id, 
+* @param sct_id_type, 
+* @param user_params, 
+* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
+*/
 void* AXIS2_CALL
 wsf_get_sct_callback_function(
 	const axutil_env_t *env, 
@@ -1242,7 +1282,7 @@ wsf_get_sct_callback_function(
 		ZVAL_NULL(params[3]);
 	}
 	INIT_PZVAL(params[3]);
-
+/** Parameter order (sct_id,sct_id_type,is_encryption, user_args) */
 	if (call_user_function (EG (function_table), (zval **) NULL,
 		&func, &retval, 4, params TSRMLS_CC) == SUCCESS) 
 	{
@@ -1256,6 +1296,15 @@ wsf_get_sct_callback_function(
 	return sct;
 }
 
+/**
+* 
+* @param env, 
+* @param msg_ctx, 
+* @param sct_id, 
+* @param sct_id_type, 
+* @param user_params, 
+* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
+*/
 axis2_status_t AXIS2_CALL
 wsf_delete_sct_callback_function(
 	const axutil_env_t *env,
@@ -1308,7 +1357,7 @@ wsf_delete_sct_callback_function(
 		ZVAL_NULL(params[2]);
 	}
 	INIT_PZVAL(params[2]);
-
+/** Parameter order (sct_id,sct_id_type, userargs) */
 	if (call_user_function (EG (function_table), (zval **) NULL,
 		&func, &retval, 3, params TSRMLS_CC) == SUCCESS) 
 	{
