@@ -1,4 +1,5 @@
 #include "wsf_util.h"
+#include "wsf_worker.h"
 #include <stdlib.h>
 
 
@@ -86,8 +87,8 @@ wsf_env_create_svr (const axis2_char_t *path_to_log)
     axis2_char_t log_path[256];
     axutil_thread_pool_t *thread_pool = NULL;
     const axis2_char_t *LOG_NAME = "wsf_perl_server_svr.log";
-    allocator = malloc (sizeof (axutil_allocator_t));
-    axis2_char_t *repo_path = "/opt/wso2/wsf_c";
+    allocator = malloc (sizeof (axutil_allocator_t *));
+    /* axis2_char_t *repo_path = "/opt/wso2/wsf_c"; */
 
     allocator->free_fn = wsf_free_wrapper;
     allocator->malloc_fn = wsf_malloc_wrapper;
@@ -171,8 +172,8 @@ wsf_util_process_ws_service_operations_and_actions(wsf_svc_info_t * svc_info,
             const void *k = NULL;
             char *key = NULL;
             char *val = NULL;
-            char *function_name = NULL;
-            int key_len = 0;
+            /* char *function_name = NULL; */
+            /* int key_len = 0; */
 
             axutil_hash_this (hi, &k, NULL, &v);
             key = (axis2_char_t *) k;
