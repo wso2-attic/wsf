@@ -12,9 +12,9 @@ cd ..
 
 ruby extconf.rb
 make
-sudo make install
+make install
 
 cd wsservice
 ruby extconf.rb 
 make
-sudo make install
+make install
