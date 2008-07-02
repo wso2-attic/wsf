@@ -1712,54 +1712,63 @@ PHP_METHOD (ws_security_token, __construct)
     zval * object = NULL;
     zval * options = NULL;
     zval ** tmp = NULL;
-    if (zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "a",
-            &options) == FAILURE) {
-        php_error_docref (NULL TSRMLS_CC, E_ERROR,
-            "An array should be passed here");
+    if (zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "a", &options) == FAILURE) 
+	{
+        php_error_docref (NULL TSRMLS_CC, E_ERROR, "An array should be passed here");
     }
     
     WSF_GET_THIS (object);
-    if (options) {
+    if (options) 
+	{
         HashTable * ht = Z_ARRVAL_P (options);
         if (zend_hash_find (ht, WSF_CUSTOM_TOKENS, sizeof (WSF_CUSTOM_TOKENS),
-                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
+                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) 
+		{
 		    add_property_zval (object, WSF_CUSTOM_TOKENS, *tmp);
         }
         if (zend_hash_find (ht, WSF_USER, sizeof (WSF_USER),
-                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
+                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) 
+		{
             add_property_stringl (object, WSF_USER, Z_STRVAL_PP (tmp),
                 Z_STRLEN_PP (tmp), 1);
         }
         if (zend_hash_find (ht, WSF_CERTIFICATE, sizeof (WSF_CERTIFICATE),
-                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
+                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) 
+		{
             add_property_stringl (object, WSF_CERTIFICATE, Z_STRVAL_PP (tmp),
                 Z_STRLEN_PP (tmp), 1);
         }
         if (zend_hash_find (ht, WSF_PASSWORD_TYPE, sizeof (WSF_PASSWORD_TYPE),
-                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
+                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING)
+		{
             add_property_stringl (object, WSF_PASSWORD_TYPE,
                 Z_STRVAL_PP (tmp), Z_STRLEN_PP (tmp), 1);
         }
         if (zend_hash_find (ht, WSF_PASSWORD, sizeof (WSF_PASSWORD),
-                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
+                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) 
+		{
             add_property_string (object, WSF_PASSWORD, Z_STRVAL_PP (tmp), 1);
         }
         if (zend_hash_find (ht, WSF_PRIVATE_KEY, sizeof (WSF_PRIVATE_KEY),
-                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
+                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) 
+		{
             add_property_string (object, WSF_PRIVATE_KEY, Z_STRVAL_PP (tmp), 1);
         }
         if (zend_hash_find (ht, WSF_CERTIFICATE, sizeof (WSF_CERTIFICATE),
-                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
+                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) 
+		{
             add_property_string (object, WSF_CERTIFICATE, Z_STRVAL_PP (tmp), 1);
         }
         if (zend_hash_find (ht, WSF_RECEIVER_CERTIFICATE,
                 sizeof (WSF_RECEIVER_CERTIFICATE), (void **) &tmp) == SUCCESS
-            && Z_TYPE_PP (tmp) == IS_STRING)  {
+            && Z_TYPE_PP (tmp) == IS_STRING)  
+		{
             add_property_string (object, WSF_RECEIVER_CERTIFICATE,
                 Z_STRVAL_PP (tmp), 1);
         }
         if (zend_hash_find (ht, WSF_TTL, sizeof (WSF_TTL),
-                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_LONG) {
+                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_LONG) 
+		{
             add_property_long (object, WSF_TTL, Z_LVAL_PP (tmp));
         }
         
@@ -1789,11 +1798,7 @@ PHP_METHOD (ws_security_token, __construct)
         {
             add_property_bool(object, WSF_ENABLE_REPLAY_DETECT, Z_BVAL_PP(tmp));
         }
-		if(zend_hash_find(ht, WSF_REPLAY_DETECT_CALLBACK_ARGS, sizeof(WSF_REPLAY_DETECT_CALLBACK_ARGS),
-			(void **)&tmp) == SUCCESS)
-		{
-			add_property_zval(object, WSF_REPLAY_DETECT_CALLBACK_ARGS, *tmp);
-		}
+
 		if(zend_hash_find(ht, WSF_STORE_SCT_CALLBACK, sizeof(WSF_STORE_SCT_CALLBACK), 
 			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING)
 		{
@@ -1809,13 +1814,11 @@ PHP_METHOD (ws_security_token, __construct)
 		{
 			add_property_stringl(object, WSF_GET_SCT_CALLBACK, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp),1);
 		}
-		
 		if(zend_hash_find(ht, WSF_DELETE_SCT_CALLBACK, sizeof(WSF_DELETE_SCT_CALLBACK), 
 			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING)
 		{
 			add_property_stringl(object, WSF_DELETE_SCT_CALLBACK, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp),1);
 		}
-		
     }
 } 
 

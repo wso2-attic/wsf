@@ -1153,6 +1153,8 @@ wsf_store_sct_callback_function(
 	if(sct)
 	{
 		sct_str = security_context_token_serialize(sct, env);
+		if(!sct_str)
+			return AXIS2_FAILURE;
 	}
 	else
 	{
@@ -1206,7 +1208,6 @@ wsf_store_sct_callback_function(
 			}
 		}
 	AXIS2_FREE(env->allocator, sct_str);
-	wsf_callback_args_free(callback_args, env);
 	return status;    
 }
 
@@ -1241,6 +1242,9 @@ wsf_get_sct_callback_function(
 	params[3] = &param4;
 
 	callback_args = (wsf_callback_args_t*)user_params;
+	/** return if the callback values are null */
+	if(!callback_args || !callback_args->get_sct_callback_fn)
+		return NULL;
 
 	ZVAL_STRING (&func, callback_args->get_sct_callback_fn, 1);
 	if(sct_id)
@@ -1292,7 +1296,6 @@ wsf_get_sct_callback_function(
 			security_context_token_deserialize(sct, env, Z_STRVAL(retval));		
 		}
 	}
-	wsf_callback_args_free(callback_args, env);
 	return sct;
 }
 
@@ -1366,7 +1369,6 @@ wsf_delete_sct_callback_function(
 			status = Z_BVAL(retval);
 		}
 	}
-	wsf_callback_args_free(callback_args, env);
 	return status;
 }
 
@@ -1443,7 +1445,7 @@ wsf_set_rampart_sct_options (
 		{
 			callback_args->callback_data = *token_val;
 		}
-		rampart_context_set_security_context_token_user_params(rampart_context, env, callback_args);
+		rampart_context_set_security_context_token_user_params(rampart_context, env,(void *)callback_args);
 	}
 }
 
