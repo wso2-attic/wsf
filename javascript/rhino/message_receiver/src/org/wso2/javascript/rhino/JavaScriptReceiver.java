@@ -1201,6 +1201,15 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             OMNode[] omNodes = list.getAxiomFromXML();
             if (omNodes.length == 0) {
                 return element;
+            } else if (omNodes.length == 1) {
+
+                // If the XMLList returned has only one child we annotate it as XML
+                element.addChild(omNodes[0]);
+                if (addTypeInfo) {
+                    element.addAttribute("type", "xml", namespace);
+                    element.declareNamespace(xsNamespace);
+                    element.addAttribute("type", "xs:anyType", xsiNamespace);
+                }
             } else {
                 for (int i = 0; i < omNodes.length; i++) {
                     element.addChild(omNodes[i]);
