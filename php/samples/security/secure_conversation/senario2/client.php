@@ -102,7 +102,7 @@ try {
 
     $reqMessage = new WSMessage($reqPayloadString,
         array(
-    	    "to"=>"http://localhost:8080/samples/security/secure_conversation/encrypt_sign/service.php",
+    	    "to"=>"http://localhost/samples/security/secure_conversation/senario2/service.php",
             "action" => "http://php.axis2.org/samples/echoString")
               );
     $policy_xml = file_get_contents("policy.xml");
