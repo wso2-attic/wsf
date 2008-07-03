@@ -1,0 +1,186 @@
+<wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
+  <wsp:ExactlyOne>
+    <wsp:All>
+      <sp:SymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+        <wsp:Policy>
+          <sp:EncryptionToken>
+            <wsp:Policy>
+              <sp:SecureConversationToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never">
+                <wsp:Policy>
+                  <sp:BootstrapPolicy>
+                    <wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
+                      <wsp:ExactlyOne>
+                        <wsp:All>
+                          <sp:SymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                            <wsp:Policy>
+                              <sp:ProtectionToken>
+                                <wsp:Policy>
+                                  <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never">
+                                    <wsp:Policy>
+                                      <sp:RequireDerivedKeys/>
+                                      <sp:RequireThumbprintReference/>
+                                      <sp:WssX509V3Token10/>
+                                    </wsp:Policy>
+                                  </sp:X509Token>
+                                </wsp:Policy>
+                              </sp:ProtectionToken>
+                              <sp:AlgorithmSuite>
+                                <wsp:Policy>
+                                  <sp:Basic256/>
+                                </wsp:Policy>
+                              </sp:AlgorithmSuite>
+                              <sp:Layout>
+                                <wsp:Policy>
+                                  <sp:Strict/>
+                                </wsp:Policy>
+                              </sp:Layout>
+                              <sp:IncludeTimestamp/>
+							  <sp:EncryptSignature/>
+                              <sp:OnlySignEntireHeadersAndBody/>
+                            </wsp:Policy>
+                          </sp:SymmetricBinding>
+                          <sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                            <wsp:Policy>
+                              <sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+                                <wsp:Policy>
+                                  <sp:WssUsernameToken10/>
+                                </wsp:Policy>
+                              </sp:UsernameToken>
+                            </wsp:Policy>
+                          </sp:SignedSupportingTokens>
+                          <sp:Wss11 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                            <wsp:Policy>
+                              <sp:MustSupportRefKeyIdentifier/>
+                              <sp:MustSupportRefIssuerSerial/>
+                              <sp:MustSupportRefThumbprint/>
+                              <sp:MustSupportRefEncryptedKey/>
+                            </wsp:Policy>
+                          </sp:Wss11>
+                          <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                            <sp:Body/>
+                          </sp:EncryptedParts>
+                          <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                            <sp:Body/>
+                            <sp:Header Namespace="http://www.w3.org/2005/08/addressing"/>
+                          </sp:SignedParts>
+                        </wsp:All>
+                      </wsp:ExactlyOne>
+                    </wsp:Policy>
+                  </sp:BootstrapPolicy>
+                </wsp:Policy>
+              </sp:SecureConversationToken>
+            </wsp:Policy>
+          </sp:EncryptionToken>
+          <sp:SignatureToken>
+            <wsp:Policy>
+              <sp:SecureConversationToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never">
+                <wsp:Policy>
+                  <sp:BootstrapPolicy>
+                    <wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
+                      <wsp:ExactlyOne>
+                        <wsp:All>
+                          <sp:SymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                            <wsp:Policy>
+                              <sp:ProtectionToken>
+                                <wsp:Policy>
+                                  <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never">
+                                    <wsp:Policy>
+                                      <sp:RequireDerivedKeys/>
+                                      <sp:RequireThumbprintReference/>
+                                      <sp:WssX509V3Token10/>
+                                    </wsp:Policy>
+                                  </sp:X509Token>
+                                </wsp:Policy>
+                              </sp:ProtectionToken>
+                              <sp:AlgorithmSuite>
+                                <wsp:Policy>
+                                  <sp:Basic256/>
+                                </wsp:Policy>
+                              </sp:AlgorithmSuite>
+                              <sp:Layout>
+                                <wsp:Policy>
+                                  <sp:Strict/>
+                                </wsp:Policy>
+                              </sp:Layout>
+                              <sp:IncludeTimestamp/>
+							  <sp:EncryptSignature/>
+                              <sp:OnlySignEntireHeadersAndBody/>
+                            </wsp:Policy>
+                          </sp:SymmetricBinding>
+                          <sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                            <wsp:Policy>
+                              <sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+                                <wsp:Policy>
+                                  <sp:WssUsernameToken10/>
+                                </wsp:Policy>
+                              </sp:UsernameToken>
+                            </wsp:Policy>
+                          </sp:SignedSupportingTokens>
+                          <sp:Wss11 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                            <wsp:Policy>
+                              <sp:MustSupportRefKeyIdentifier/>
+                              <sp:MustSupportRefIssuerSerial/>
+                              <sp:MustSupportRefThumbprint/>
+                              <sp:MustSupportRefEncryptedKey/>
+                            </wsp:Policy>
+                          </sp:Wss11>
+                          <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                            <sp:Body/>
+                          </sp:EncryptedParts>
+                          <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                            <sp:Body/>
+                            <sp:Header Namespace="http://www.w3.org/2005/08/addressing"/>
+                          </sp:SignedParts>
+
+                        </wsp:All>
+                      </wsp:ExactlyOne>
+                    </wsp:Policy>
+
+                  </sp:BootstrapPolicy>
+                </wsp:Policy>
+              </sp:SecureConversationToken>
+            </wsp:Policy>
+          </sp:SignatureToken>
+          <sp:AlgorithmSuite>
+            <wsp:Policy>
+              <sp:Basic256/>
+            </wsp:Policy>
+          </sp:AlgorithmSuite>
+          <sp:Layout>
+            <wsp:Policy>
+              <sp:Strict/>
+            </wsp:Policy>
+          </sp:Layout>
+          <sp:IncludeTimestamp/>
+          <sp:OnlySignEntireHeadersAndBody/>
+          <sp:EncryptSignature/>
+        </wsp:Policy>
+      </sp:SymmetricBinding>
+      <sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+        <wsp:Policy>
+          <sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+            <wsp:Policy>
+              <sp:WssUsernameToken10/>
+            </wsp:Policy>
+          </sp:UsernameToken>
+        </wsp:Policy>
+      </sp:SignedSupportingTokens>
+      <sp:Wss11 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+        <wsp:Policy>
+          <sp:MustSupportRefKeyIdentifier/>
+          <sp:MustSupportRefIssuerSerial/>
+          <sp:MustSupportRefThumbprint/>
+          <sp:MustSupportRefEncryptedKey/>
+        </wsp:Policy>
+      </sp:Wss11>
+      <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+        <sp:Body/>
+        <sp:Header Namespace="http://www.w3.org/2005/08/addressing"/>
+      </sp:SignedParts>
+      <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+        <sp:Body/>
+      </sp:EncryptedParts>
+
+    </wsp:All>
+  </wsp:ExactlyOne>
+</wsp:Policy>
