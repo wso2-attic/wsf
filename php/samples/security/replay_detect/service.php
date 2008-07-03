@@ -32,6 +32,7 @@ function array_contains($array_of_string, $str) {
 }
 
 function replay_detect_callback($msg_id, $time_created) {
+	
 	$max_duration = 5;
 	if (stristr(PHP_OS, 'WIN')) {
 		$replay_file = "replay.content";
@@ -39,7 +40,7 @@ function replay_detect_callback($msg_id, $time_created) {
 		$replay_file = "/tmp/replay.content";
 	}
 	$list_of_records = array();	
-	
+	clearstatcache();	
 	if(file_exists($replay_file))
 	{
 		$length = filesize($replay_file);
@@ -112,7 +113,7 @@ $policy = new WSPolicy(array("security"=>$security_options));
 $security_token = new WSSecurityToken(array("user" => "Raigama",
                                             "password" => "RaigamaPW",
                                             "passwordType" => "Digest",
-		   		   	    "replayDetectionCallback" => "replay_detect_callback",
+					    "replayDetectionCallback" => "replay_detect_callback",
 					    "enableReplayDetect" => TRUE));
 
 
