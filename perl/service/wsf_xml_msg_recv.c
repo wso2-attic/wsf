@@ -423,11 +423,13 @@ wsf_xml_msg_recv_invoke_other(axis2_msg_recv_t* msg_recv,
     embedding[1] = svc_info->script_filename;
 
     my_perl = perl_alloc();
-    PL_perl_destruct_level = 1;
-    PL_use_safe_putenv = 1;
+    PL_perl_destruct_level = 0;
+/*    PL_use_safe_putenv = 1; */
+    PERL_SET_CONTEXT(my_perl);
     perl_construct(my_perl);
 
     PL_origalen = 1;
+    PERL_SET_CONTEXT(my_perl);
     if (perl_parse(my_perl, xs_init, 2, embedding, NULL))
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "perl_parse method failed");
@@ -448,7 +450,9 @@ wsf_xml_msg_recv_invoke_other(axis2_msg_recv_t* msg_recv,
         node = wsf_util_deserialize_buffer(env, retstr);
     }
 
+    PERL_SET_CONTEXT(my_perl);
     perl_destruct(my_perl);
+    PERL_SET_CONTEXT(my_perl);
     perl_free(my_perl);
     PERL_SYS_TERM();
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, axiom_node_to_string(node, env));
