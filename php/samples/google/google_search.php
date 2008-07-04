@@ -24,11 +24,34 @@
   * You can control the number of results through maxResults parameter
   * in the request payload.
   * Google search uses SOAP 1.1.
-  */
+ */
+session_start();
+$apikey = "";
+$apikey = $_POST['apikey'];
 
+?>
+
+
+<html>
+<head>
+	<title>Google Search Sample</title>
+</head>
+<body>
+<h2>Google Search</h2>
+<form method="post" action="<?php echo $PHP_SELF;?>">
+Enter your google api key :<input type="text" size="60" maxlength="60" name="apikey"/><br />
+<input type="submit" value="submit" name="submit"/>
+</form>
+
+
+
+<?php
+
+if(isset($_POST['apikey']))
+{
 $requestPayloadString = <<<XML
 <ns1:doGoogleSearch x:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns1="urn:GoogleSearch" xmlns:x="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance" xmlns:xsd="http://www.w3.org/1999/XMLSchema">
-    <key xsi:type="xsd:string">your_key_here</key>
+    <key xsi:type="xsd:string">.$apikey.</key>
     <q xsi:type="xsd:string">temperature</q>
     <start xsi:type="xsd:int">0</start>
     <maxResults xsi:type="xsd:int">10</maxResults>
@@ -53,5 +76,6 @@ try {
     } else {
         printf("Message = %s\n",$e->getMessage());
     }
+}
 }
 ?>
