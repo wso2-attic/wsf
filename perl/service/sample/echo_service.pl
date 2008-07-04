@@ -3,7 +3,9 @@
 use strict;
 use WSO2::WSF;
 use WSO2::WSF::WSService;
-use Apache2::RequestUtil ();
+# use Apache2::RequestUtil ();
+use CGI;
+use CGI::Carp qw(fatalsToBrowser);
 
 my ($payload, $service);
 my %operations;
@@ -30,14 +32,13 @@ sub print_this {
                 'echoSub' => 'subTwoIntegers');
 
 
-if (defined $ENV{MOD_PERL}) {
-    my $r = Apache2::RequestUtil->request();
+# if (defined $ENV{MOD_PERL}) {
+#  my $r = Apache2::RequestUtil->request();
+    my $r = new CGI;
 
     $service = new WSO2::WSF::WSService({'operations' => \%operations,
                                          'action' => 'testAction'});
 
-    $service->reply( $r );
-}
+    my $result = $service->reply( $r );
 
-
-
+# }
