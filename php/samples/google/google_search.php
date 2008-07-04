@@ -52,8 +52,8 @@ if(isset($_POST['apikey']))
 {
 $requestPayloadString = <<<XML
 <ns1:doGoogleSearch x:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns1="urn:GoogleSearch" xmlns:x="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance" xmlns:xsd="http://www.w3.org/1999/XMLSchema">
-    <key xsi:type="xsd:string">.$apikey.</key>
-    <q xsi:type="xsd:string">.$search.</q>
+    <key xsi:type="xsd:string">$apikey</key>
+    <q xsi:type="xsd:string">$search</q>
     <start xsi:type="xsd:int">0</start>
     <maxResults xsi:type="xsd:int">10</maxResults>
     <filter xsi:type="xsd:boolean">true</filter>

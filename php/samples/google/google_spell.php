@@ -48,8 +48,8 @@ if(isset($_POST['apikey']))
 {
 $requestPayloadString = <<<XML
 <ns1:doSpellingSuggestion x:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns1="urn:GoogleSearch" xmlns:x="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance" xmlns:xsd="http://www.w3.org/1999/XMLSchema">
-    <key xsi:type="xsd:string">.$apikey.</key>
-    <phrase xsi:type="xsd:string">.$spell_word.</phrase>
+    <key xsi:type="xsd:string">$apikey</key>
+    <phrase xsi:type="xsd:string">$spell_word</phrase>
 </ns1:doSpellingSuggestion>
 XML;
 
