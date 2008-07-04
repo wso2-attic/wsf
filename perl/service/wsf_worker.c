@@ -180,11 +180,11 @@ wsf_worker_process_request(wsf_worker_t* worker,
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "url %s", req_url);
 
     content_length = request->content_length;
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "content length %d", content_length);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "content length - %d", content_length);
     http_version = request->http_protocol;
 
     content_type = (axis2_char_t *) request->content_type;
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "content type xxx%s", content_type);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "content type - %s", content_type);
     if (NULL == http_version)
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NULL_HTTP_VERSION,
@@ -197,7 +197,7 @@ wsf_worker_process_request(wsf_worker_t* worker,
 
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Client HTTP version %s",
             http_version);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "content type %s", encoding_header_value);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "content encoding %s", encoding_header_value);
 
     out_desc = axis2_conf_get_transport_out(axis2_conf_ctx_get_conf
             (worker->conf_ctx, env), env, AXIS2_TRANSPORT_ENUM_HTTP);
@@ -336,6 +336,7 @@ wsf_worker_process_request(wsf_worker_t* worker,
             {
                 request->result_payload = body_string;
                 request->result_length = strlen(body_string);
+                request->out_content_type = axutil_strdup(env, request->content_type);
             }
         }
     }
