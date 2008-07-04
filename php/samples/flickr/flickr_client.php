@@ -42,8 +42,8 @@ if(isset($_POST['apikey']))
 $requestPayloadString = <<<XML
 <x:FlickrRequest xmlns:x="urn:flickr">
 <method>flickr.test.echo</method>
-<api_key>.$apikey.</api_key>
-<name>.$search.</name>
+<api_key>$apikey</api_key>
+<name>$search</name>
 </x:FlickrRequest>
 XML;
 
