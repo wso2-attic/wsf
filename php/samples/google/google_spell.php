@@ -22,12 +22,33 @@
   * If everyting goes right, it returns a spell corrected version of 
   * the prase you submit.
   * Google spell uses SOAP 1.1.
-  */
+ */
+$apikey = "";
+$spell_word ="temparatue";
+$apikey = $_POST['apikey'];
+$spell_word = $_POST['spell_word'];
+?>
+<html>
+<head>
+<title>Google Spell</title>
+</head>
+<body>
+<h2>Google Spell Service</h2>
+<form method="post" action="<?php echo $PHP_SELF;?>">
+Your Google api key :<input type="text" size="60" maxlength="60" name="apikey"/><br/><br/>
+Word to Spell :<input type="text" size="60" maxlength="60" name="spell_word"/><br/><br/>
 
+<input style="margin-left:200px;" type="submit" value="submit" name="submit"/>
+</form>
+
+<?php
+
+if(isset($_POST['apikey']))
+{
 $requestPayloadString = <<<XML
 <ns1:doSpellingSuggestion x:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns1="urn:GoogleSearch" xmlns:x="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance" xmlns:xsd="http://www.w3.org/1999/XMLSchema">
-    <key xsi:type="xsd:string">your_key_here</key>
-    <phrase xsi:type="xsd:string">tamperature</phrase>
+    <key xsi:type="xsd:string">.$apikey.</key>
+    <phrase xsi:type="xsd:string">.$spell_word.</phrase>
 </ns1:doSpellingSuggestion>
 XML;
 
@@ -46,6 +67,6 @@ try {
     }
     
 }
-
+}
 
 ?>

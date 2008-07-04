@@ -25,10 +25,11 @@
   * in the request payload.
   * Google search uses SOAP 1.1.
  */
-session_start();
-$apikey = "";
-$apikey = $_POST['apikey'];
 
+$apikey = "";
+$search = 'WSO2';
+$apikey = $_POST['apikey'];
+$search = $_POST['search'];
 ?>
 
 
@@ -39,12 +40,10 @@ $apikey = $_POST['apikey'];
 <body>
 <h2>Google Search</h2>
 <form method="post" action="<?php echo $PHP_SELF;?>">
-Enter your google api key :<input type="text" size="60" maxlength="60" name="apikey"/><br />
-<input type="submit" value="submit" name="submit"/>
-</form>
-
-
-
+Your Google api key :<input type="text" size="60" maxlength="60" name="apikey"/><br/><br/>
+Keywords for searching :<input type="text" size="60" maxlength="60" name="search"/><br/><br/>
+<input style="margin-left:200px;" type="submit" value="submit" name="submit"/>
+</form> 
 <?php
 
 if(isset($_POST['apikey']))
@@ -52,7 +51,7 @@ if(isset($_POST['apikey']))
 $requestPayloadString = <<<XML
 <ns1:doGoogleSearch x:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns1="urn:GoogleSearch" xmlns:x="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance" xmlns:xsd="http://www.w3.org/1999/XMLSchema">
     <key xsi:type="xsd:string">.$apikey.</key>
-    <q xsi:type="xsd:string">temperature</q>
+    <q xsi:type="xsd:string">.$search.</q>
     <start xsi:type="xsd:int">0</start>
     <maxResults xsi:type="xsd:int">10</maxResults>
     <filter xsi:type="xsd:boolean">true</filter>
