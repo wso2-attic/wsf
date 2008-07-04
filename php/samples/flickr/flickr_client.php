@@ -15,12 +15,35 @@
  * limitations under the License.
  */
 
+$apikey = "";
+$search = "cars";
+$apikey = $_POST['apikey'];
+
+?>
+
+<html>
+<head>
+	<title>Flickr Search</title>
+</head>
+<body>
+<h2>Flickr Search</h2>
+<form method="post" action="<?php echo $PHP_SELF;?>">
+Your Flickr api key :<input type="text" size="60" maxlength="60" name="apikey"/><br/><br/>
+Keyword for searching :<input type="text" size="60" maxlength="60" name="search"/><br/><br/>
+<input style="margin-left:200px;" type="submit" value="submit" name="submit"/>
+</form>
+</body>
+</html>
+
+<?
+if(isset($_POST['apikey']))
+{
 
 $requestPayloadString = <<<XML
 <x:FlickrRequest xmlns:x="urn:flickr">
 <method>flickr.test.echo</method>
-<api_key>your key</api_key>
-<name>cars</name>
+<api_key>.$apikey.</api_key>
+<name>.$search.</name>
 </x:FlickrRequest>
 XML;
 
@@ -41,7 +64,7 @@ try {
     } else {
         printf("Message = %s\n",$e->getMessage());
     }
-
+}
 }
 ?>
 
