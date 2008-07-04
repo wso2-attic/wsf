@@ -43,7 +43,9 @@ $search = $_POST['search'];
 Your Google api key :<input type="text" size="60" maxlength="60" name="apikey"/><br/><br/>
 Keywords for searching :<input type="text" size="60" maxlength="60" name="search"/><br/><br/>
 <input style="margin-left:200px;" type="submit" value="submit" name="submit"/>
-</form> 
+</form>
+</body>
+</html> 
 <?php
 
 if(isset($_POST['apikey']))

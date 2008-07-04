@@ -40,7 +40,8 @@ Word to Spell :<input type="text" size="60" maxlength="60" name="spell_word"/><b
 
 <input style="margin-left:200px;" type="submit" value="submit" name="submit"/>
 </form>
-
+</body>
+</html>
 <?php
 
 if(isset($_POST['apikey']))
