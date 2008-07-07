@@ -565,10 +565,10 @@ PHP_METHOD (ws_message, __construct)
 			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
 				add_property_stringl(object, WSF_FROM, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
 		}
-		if(zend_hash_find(ht, WSF_RESPONSE_CONTENT_TYPE, sizeof(WSF_RESPONSE_CONTENT_TYPE),
+		if(zend_hash_find(ht, WSF_REST_CONTENT_TYPE, sizeof(WSF_REST_CONTENT_TYPE),
 			(void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
 				add_property_stringl(object, 
-					WSF_RESPONSE_CONTENT_TYPE, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp),1);
+					WSF_REST_CONTENT_TYPE, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp),1);
 		
 		}
         if (zend_hash_find (ht, WSF_INPUT_HEADERS, sizeof (WSF_INPUT_HEADERS),

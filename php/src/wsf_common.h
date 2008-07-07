@@ -80,7 +80,7 @@ typedef enum ws_input_types
 /** REST */
 #define WSF_OP_TO_URL_MAP "RESTMapping"
 #define WSF_REST_LOCATION "RESTLocation"
-#define WSF_RESPONSE_CONTENT_TYPE "contentType"
+#define WSF_REST_CONTENT_TYPE "contentType"
 
 /** Options array options */
 

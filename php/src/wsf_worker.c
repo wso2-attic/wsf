@@ -965,7 +965,7 @@ wsf_worker_process_request (
 				{
 					/** Set user defined response content type */
 					response_content_type = axis2_msg_ctx_get_property_value(out_msg_ctx, env, 
-						WSF_RESPONSE_CONTENT_TYPE);
+						WSF_REST_CONTENT_TYPE);
 					if(response_content_type)
 					{
 						if(response->content_type)

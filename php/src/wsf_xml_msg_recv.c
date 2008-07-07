@@ -62,7 +62,8 @@ static axiom_node_t *wsf_xml_msg_recv_invoke_wsmsg (
     axis2_msg_ctx_t * out_msg_ctx,
 	axis2_msg_ctx_t * in_msg_ctx,
 	wsf_svc_info_t *svc_info,
-	axis2_char_t *classname TSRMLS_DC);
+	axis2_char_t *classname,
+	axis2_char_t *content_type TSRMLS_DC);
 
 
 static axiom_node_t *wsf_xml_msg_recv_invoke_mixed (
@@ -291,7 +292,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
      	    } else if (strcmp (function_type, WSF_WSMESSAGE) == 0) 
 			{
                 result_node = wsf_xml_msg_recv_invoke_wsmsg (env, operation_name,
-								in_msg_ctx, out_msg_ctx, svc_info, classname TSRMLS_CC);
+					in_msg_ctx, out_msg_ctx, svc_info, classname, req_info->content_type TSRMLS_CC);
             }
         }
     } else 
@@ -301,7 +302,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
         if(svc_info->wsdl == NULL)
         {
             result_node = wsf_xml_msg_recv_invoke_wsmsg (env, operation_name,
-							in_msg_ctx,out_msg_ctx, svc_info, classname TSRMLS_CC);
+				in_msg_ctx,out_msg_ctx, svc_info, classname, req_info->content_type TSRMLS_CC);
         }
         else
         {
@@ -782,7 +783,8 @@ wsf_xml_msg_recv_invoke_wsmsg (
 	axis2_msg_ctx_t *in_msg_ctx,
 	axis2_msg_ctx_t * out_msg_ctx,
 	wsf_svc_info_t *svc_info,
-	axis2_char_t *class_name TSRMLS_DC)
+	axis2_char_t *class_name,
+	axis2_char_t *content_type TSRMLS_DC)
 {
 
     char *req_payload = NULL, *res_payload = NULL;
@@ -877,6 +879,7 @@ wsf_xml_msg_recv_invoke_wsmsg (
 		/** this should be after mtom processing */
 		req_payload = wsf_util_serialize_om (env, om_node);
 		add_property_string (msg, WSF_MESSAGE_STR , req_payload, 1);
+		add_property_string (msg, WSF_REST_CONTENT_TYPE, content_type, 1);
 
         ZVAL_STRING (&func, op_name, 0);
         params[0] = &param;
@@ -1014,14 +1017,14 @@ wsf_xml_msg_recv_invoke_wsmsg (
 						res_om_node = wsf_util_deserialize_buffer (env, res_payload);
 					}
             }
-			if(zend_hash_find(Z_OBJPROP(retval), WSF_RESPONSE_CONTENT_TYPE, 
-				sizeof(WSF_RESPONSE_CONTENT_TYPE), (void **)&msg_tmp)== SUCCESS && 
+			if(zend_hash_find(Z_OBJPROP(retval), WSF_REST_CONTENT_TYPE, 
+				sizeof(WSF_REST_CONTENT_TYPE), (void **)&msg_tmp)== SUCCESS && 
 					Z_TYPE_PP(msg_tmp) == IS_STRING)
 			{
 					axutil_property_t *cnt_property = NULL;
 					cnt_property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
 						AXIS2_TRUE, NULL, axutil_strdup(env, Z_STRVAL_PP(msg_tmp)));
-					axis2_msg_ctx_set_property(out_msg_ctx, env, WSF_RESPONSE_CONTENT_TYPE, cnt_property);
+					axis2_msg_ctx_set_property(out_msg_ctx, env, WSF_REST_CONTENT_TYPE, cnt_property);
 			}
 
 			if (zend_hash_find (Z_OBJPROP (retval), WSF_ATTACHMENTS, sizeof (WSF_ATTACHMENTS),
