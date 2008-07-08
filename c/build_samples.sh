@@ -23,16 +23,16 @@ fi
 
 find $1/samples -name "*.o"| xargs rm -rf
 
-cd axis2c/samples; ./configure --prefix=$1 --with-axis2=$1/include/axis2-1.4.0; make; make install ;
+cd axis2c/samples; ./configure --prefix=$1 --with-axis2=$1/include/axis2-1.5.0; make; make install ;
 if test -e ../../sandesha2c/Makefile; then
-cd ../../sandesha2c/samples; ./configure --prefix=$1 --with-axis2=$1/include/axis2-1.4.0; make; make install; 
+cd ../../sandesha2c/samples; ./configure --prefix=$1 --with-axis2=$1/include/axis2-1.5.0; make; make install; 
 fi
 if test -e ../../rampartc/Makefile; then
-cd ../../rampartc/samples; ./configure --prefix=$1  --with-axis2=$1/include/axis2-1.4.0; make; make install;
+cd ../../rampartc/samples; ./configure --prefix=$1  --with-axis2=$1/include/axis2-1.5.0; make; make install;
 cd client/sec_echo; sh deploy_client_repo.sh; cd ../../secpolicy; sh deploy.sh scenario5; cd ../
 fi
 if test -e ../../savanc/Makefile; then
-cd ../../savanc/samples; ./configure --prefix=$1  --with-axis2=$1/include/axis2-1.4.0 --with-savan=$1/include/savan-0.90; make; make install;
+cd ../../savanc/samples; ./configure --prefix=$1  --with-axis2=$1/include/axis2-1.5.0 --with-savan=$1/include/savan-0.90; make; make install;
 fi
 cd ../../examples; ./configure --prefix=$1  --with-wsfc=$1/include; make; make install
 
