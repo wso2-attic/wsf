@@ -33,7 +33,6 @@ extern "C"
 {
 #endif
 
-
     typedef struct neethi_options_t neethi_options_t;
 
     AXIS2_EXTERN neethi_options_t *AXIS2_CALL
@@ -43,6 +42,17 @@ extern "C"
     neethi_options_free(
         neethi_options_t *options,
         const axutil_env_t *env);
+
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+    neethi_options_get_binding(
+        neethi_options_t *options,
+        const axutil_env_t *env);
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL 
+    neethi_options_set_binding(
+        neethi_options_t *options,
+        const axutil_env_t *env,
+        axis2_char_t *binding);
 
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     neethi_options_get_include_timestamp(
@@ -167,6 +177,12 @@ extern "C"
 
 	AXIS2_EXTERN axis2_status_t AXIS2_CALL
 	neethi_options_create_asym_node(
+        neethi_options_t *options,
+        const axutil_env_t *env,
+        axiom_node_t *parent_node);
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	neethi_options_create_sym_node(
         neethi_options_t *options,
         const axutil_env_t *env,
         axiom_node_t *parent_node);

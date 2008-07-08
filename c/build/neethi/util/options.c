@@ -37,6 +37,7 @@ struct neethi_options_t
     axis2_char_t *algorithmsuite;
     axis2_char_t *keyidentifier;
     axis2_bool_t server_side;
+    axis2_char_t *binding;
     /*Sign and encrypt headers need to be added.*/
 };
 
@@ -71,6 +72,12 @@ create_wss10_node(neethi_options_t *options,
                const axutil_env_t *env,
                axiom_node_t *parent_node);
 
+axis2_status_t 
+create_protection_node(
+    neethi_options_t *options,
+    const axutil_env_t *env,
+    axiom_node_t *parent_node);
+
 
 
 AXIS2_EXTERN neethi_options_t *AXIS2_CALL 
@@ -98,6 +105,7 @@ neethi_options_create(const axutil_env_t *env)
     options->algorithmsuite = RP_ALGO_SUITE_BASIC256_RSA15;
     options->keyidentifier = NULL;
     options->server_side = AXIS2_FALSE;
+    options->binding = RP_ASYMMETRIC_BINDING;
 
     return options;
 }
@@ -119,6 +127,28 @@ neethi_options_free(
 
 
 /* Implementations */
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+neethi_options_get_binding(
+    neethi_options_t *options,
+    const axutil_env_t *env)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    
+    return options->binding;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL 
+neethi_options_set_binding(
+    neethi_options_t *options,
+    const axutil_env_t *env,
+    axis2_char_t *binding)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    
+    options->binding = binding; 
+    return AXIS2_SUCCESS;
+}
+
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 neethi_options_get_include_timestamp(
     neethi_options_t *options,
@@ -376,7 +406,14 @@ neethi_options_get_root_node(
 
     if(all_om_ele)
     {
-        status = neethi_options_create_asym_node(options, env, all_om_node);
+        if(!axutil_strcmp(options->binding, RP_ASYMMETRIC_BINDING))
+        {
+            status = neethi_options_create_asym_node(options, env, all_om_node);
+        }
+        else
+        {
+            status = neethi_options_create_sym_node(options, env, all_om_node);
+        }
         if(status != AXIS2_SUCCESS)
         {
             return NULL;
@@ -501,6 +538,96 @@ neethi_options_create_asym_node(
 
         /*sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);*/
         tokpro_ele = axiom_element_create(env, policy_asym_node, RP_PROTECT_TOKENS, sp_ns, &tokpro_node);
+        if(!tokpro_ele)
+        {
+            return AXIS2_FAILURE;
+        }
+    }
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+neethi_options_create_sym_node(
+    neethi_options_t *options,
+    const axutil_env_t *env,
+    axiom_node_t *parent_node)
+{
+    axiom_node_t *symmetric_om_node = NULL;
+    axiom_node_t *policy_sym_node = NULL;
+
+    axiom_element_t *symmetric_om_ele = NULL;
+
+    axis2_status_t status = AXIS2_FAILURE;
+
+    symmetric_om_ele = axiom_element_create(env, parent_node, RP_SYMMETRIC_BINDING, sp_ns, &symmetric_om_node);
+    if(!symmetric_om_ele)
+    {
+        return AXIS2_FAILURE;
+    }
+    policy_sym_node = neethi_options_create_policy_node(env, symmetric_om_node);
+    if(!policy_sym_node)
+    {
+        return AXIS2_FAILURE;
+    }
+    status = create_protection_node(options, env, policy_sym_node);      
+    if(status != AXIS2_SUCCESS)
+    {
+        return AXIS2_FAILURE;
+    }
+
+    status = create_algo_node(options, env, policy_sym_node);
+    if(status != AXIS2_SUCCESS)
+    {
+        return AXIS2_FAILURE;
+    }
+    status = create_layout_node(options, env, policy_sym_node);
+    if(status != AXIS2_SUCCESS)
+    {
+        return AXIS2_FAILURE;
+    }
+    if(options->include_timestamp)
+    {
+        axiom_node_t *ts_node = NULL;
+        axiom_element_t *ts_ele = NULL;
+
+        /*sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);*/
+        ts_ele = axiom_element_create(env, policy_sym_node, RP_INCLUDE_TIMESTAMP, sp_ns, &ts_node);
+        if(!ts_ele)
+        {
+            return AXIS2_FAILURE;
+        }
+    }
+    if(options->encrypt_before_sign)
+    {
+        axiom_node_t *ebs_node = NULL;
+        axiom_element_t *ebs_ele = NULL;
+
+        /*sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);*/
+        ebs_ele = axiom_element_create(env, policy_sym_node, RP_ENCRYPT_BEFORE_SIGNING, sp_ns, &ebs_node);
+        if(!ebs_ele)
+        {
+            return AXIS2_FAILURE;
+        }
+    }
+    if(options->signature_protection)
+    {
+        axiom_node_t *sigpro_node = NULL;
+        axiom_element_t *sigpro_ele = NULL;
+
+        /*sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);*/
+        sigpro_ele = axiom_element_create(env, policy_sym_node, RP_ENCRYPT_SIGNATURE, sp_ns, &sigpro_node);
+        if(!sigpro_ele)
+        {
+            return AXIS2_FAILURE;
+        }
+    }
+    if(options->token_protection)
+    {
+        axiom_node_t *tokpro_node = NULL;
+        axiom_element_t *tokpro_ele = NULL;
+
+        /*sp_ns = axiom_namespace_create(env, RP_SP_NS, RP_SP_PREFIX);*/
+        tokpro_ele = axiom_element_create(env, policy_sym_node, RP_PROTECT_TOKENS, sp_ns, &tokpro_node);
         if(!tokpro_ele)
         {
             return AXIS2_FAILURE;
@@ -652,6 +779,62 @@ create_recipient_node(neethi_options_t *options,
     else return AXIS2_FAILURE;
 }
 
+axis2_status_t 
+create_protection_node(
+    neethi_options_t *options,
+    const axutil_env_t *env,
+    axiom_node_t *parent_node)
+{
+    axiom_node_t *in_token_node = NULL;
+    axiom_node_t *in_policy_node = NULL;
+    axiom_node_t *x509_node = NULL;
+    axiom_node_t *x509_policy_node = NULL;
+    axiom_node_t *x509_type_node = NULL;
+    axiom_element_t *parent_ele = NULL;
+
+    axiom_element_t *in_token_ele = NULL;
+    axiom_element_t *x509_ele = NULL;
+
+    axiom_attribute_t *attr = NULL;
+
+    parent_ele = axiom_node_get_data_element(parent_node, env);
+    if(!parent_ele)
+    {
+        return AXIS2_FAILURE;
+    }    
+
+    in_token_ele = axiom_element_create(env, parent_node, RP_PROTECTION_TOKEN, sp_ns, &in_token_node);
+    if(!in_token_ele)
+    {
+        return AXIS2_FAILURE;
+    }
+    
+    in_policy_node = neethi_options_create_policy_node(env, in_token_node);
+
+    x509_ele = axiom_element_create(env, in_policy_node, RP_X509_TOKEN, sp_ns, &x509_node);
+
+    if(!x509_ele)
+    {
+        return AXIS2_FAILURE;
+    }
+
+    attr = axiom_attribute_create(env, RP_INCLUDE_TOKEN,  RP_INCLUDE_ALWAYS_TO_RECIPIENT,
+                                  sp_ns);
+    axiom_element_add_attribute(x509_ele, env, attr, x509_node);
+    x509_policy_node = neethi_options_create_policy_node(env, x509_node);
+
+    if(x509_policy_node)
+    {
+        if(options->keyidentifier && options->server_side)
+        {
+            axiom_node_t *key_identifier_node = NULL;
+            axiom_element_create(env, x509_policy_node, options->keyidentifier, sp_ns, &key_identifier_node);
+        }
+    }
+
+    axiom_element_create(env, x509_policy_node, RP_WSS_X509_V3_TOKEN_10, sp_ns, &x509_type_node);
+    return AXIS2_SUCCESS;
+}
 
 axis2_status_t 
 create_algo_node(neethi_options_t *options,
