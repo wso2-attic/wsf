@@ -22,7 +22,7 @@ XML;
 try {
     
     $reqMessage = new WSMessage($reqPayloadString,
-                                array("to" => "http://localhost:8080/samples/security/encryption/service.php",
+                                array("to" => "http://localhost/samples/security/encryption/service_using_keystore.php",
                                       "action" => "http://php.axis2.org/samples/echoString"));
     
     $sec_array = array("encrypt" => TRUE,
