@@ -22,6 +22,19 @@ from wso2 import Logger
 
 __all__ = ['WSClient']
 
+class WSFault(Exception):
+    
+    def __init__(self, code, reason, role='', detail='', xml=''):
+        self.code = code
+        self.reason = reason
+        self.role = role
+        self.detail = detail
+        self.xml = xml
+    
+    def __str__(self):
+        return '[' + self.code + ']' + self.reason + '|' + self.role + '|' + self.detail
+    
+
 class WSClient:
    
     def __init__(self, options, log_file_name=WSFC.WSF_DEFAULT_LOG_FILE_NAME):
