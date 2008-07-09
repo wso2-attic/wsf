@@ -137,6 +137,8 @@ class WSClient:
     def request(self, message):
         to = None
         use_soap = None
+        last_fault_e = None
+        
         if self.service_client is None:
             WSFC.axis2_log_error(self.env, "[wsf-python] Service client is null.")
             return None
@@ -171,16 +173,24 @@ class WSClient:
             if self.options.has_key(WSFC.WSF_MP_ACTION):
                 action = self.options[WSFC.WSF_MP_ACTION]
                 soap_action  = WSFC.axutil_string_create(self.env, action)
-                WSFC.axis2_options_set_soap_action(client_options, self.env, soap_action)
+                WSFC.axis2_options_set_soap_action(client_options, self.env,\
+                                soap_action)
                 
-        response_axiom = WSFC.axis2_svc_client_send_receive(self.service_client, self.env, request_axiom)
+        response_axiom = WSFC.axis2_svc_client_send_receive(self.service_client,\
+                                self.env, request_axiom)
         
-        if response_axiom is None:
-            WSFC.axis2_log_error(self.env, "[wsf-python] No response.")
-            return None
+        if WSFC.axis2_svc_client_get_last_response_has_fault(self.service_client,\
+                                self.env) == WSFC.AXIS2_TRUE:
+            last_fault_e = self.last_fault_exception() 
+            if last_fault_e is None:
+                raise WSFault("SOAP-FAULT-ERROR", "Malformatted SOAP fault message")
+            else:
+                raise last_fault_e
         else:
-            return self.axiom_to_str(response_axiom)
-            
+            if response_axiom is None:
+                raise WSFault("NULL-REPLY", "No response from the server")
+            else:
+                return self.axiom_to_str(response_axiom)         
         pass
     
     def message_to_axiom(self, message):
@@ -203,6 +213,13 @@ class WSClient:
             return str
         
         pass
+    
+    # This method is used to create a WSFault object when a SOAP fault occurs
+    # It is required to throw a WSFault instance when a SOAP fault happens while
+    # sending or requesting
+    def last_fault_exception(self):
+        fault = WSFC.wsf_last_soap_fault_exception(self.service_client, self.env)
+        return WSFault(fault.code, fault.reason, fault.role, fault.detail, fault.xml)
     
         
         
