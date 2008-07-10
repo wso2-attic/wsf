@@ -20,7 +20,7 @@ import sys
 import WSFC
 from wso2 import Logger
 
-__all__ = ['WSClient']
+__all__ = ['WSClient', 'WSFault']
 
 class WSFault(Exception):
     
