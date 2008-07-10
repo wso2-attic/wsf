@@ -12,7 +12,7 @@ XML;
 try {
 
     $client = new WSClient(
-        array("to"=>"http://localhost/samples/echo_service.php/echoString",
+        array("to"=>"http://localhost/samples/echo_service_with_rest.php/echoString",
 	      "useSOAP"=>FALSE,
               "HTTPMethod"=>"post"));
 
