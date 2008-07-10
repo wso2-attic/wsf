@@ -22,8 +22,7 @@ XML;
 try {
 
     $client = new WSClient(array("to"=>"http://localhost/samples/echo_service.php",
-                                 "useSOAP"=>1.1, 
-                                 "action"=>"http://localhost/samples/echo_service.php/echoString"));
+                                 "useSOAP"=>1.1));
 
     $responseMessage = $client->request($requestPayloadString);
     
