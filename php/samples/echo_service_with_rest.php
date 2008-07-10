@@ -23,8 +23,7 @@ function echoFunction($inMessage) {
 }
 
 $operations = array("echoString" => "echoFunction","echoString1"=>"echoFunction");
-$restmap = array ("echoString"=>array("HTTPMethod"=>"GET","RESTLocation"=> "a/{b}"),
-		  "echoString1"=>array("HTTPMethod"=>"POST","RESTLocation"=> "c"));
+$restmap = array ("echoString"=>array("HTTPMethod"=>"GET","RESTLocation"=> "echoString"));
 $service = new WSService(array("operations" => $operations, "RESTMapping"=>$restmap));
 $service->reply($requestPayloadString);
 
