@@ -20,7 +20,7 @@ import sys
 import WSFC
 from wso2 import Logger
 
-__all__ = ['WSClient', 'WSFault']
+__all__ = ['WSClient', 'WSFault', 'WSFMethodMissingMixin']
 
 class WSFault(Exception):
     
@@ -33,6 +33,28 @@ class WSFault(Exception):
     
     def __str__(self):
         return '[' + self.code + ']' + self.reason + '|' + self.role + '|' + self.detail
+    
+class WSFMethodMissingMixin(object):
+    """ A Mixin' to implement the 'method_mising' Ruby-likr protocol.
+    """
+    
+    def __getattribute__(self, attr):
+        try:
+            return object.__getattribute__(self, attr)
+        except:
+            class WSFMethodMissing(object):
+                def __init__(self, wrapped, method):
+                    self.__wrapped__ = wrapped
+                    self.__method__ = method
+                
+                def __call__(self, *args, **kwargs):
+                    self.__wrapped__.method_missing(self.__method__, *args, **kwargs)
+                    
+            return WSFMethodMissing(self, attr)
+        
+    def method_missing(self, *args, **kwargs):
+        """ This method should be overridden in the derived class. """
+        raise NotImplementedError(str(self.__wrapped__) + " 'method_missing' method has not been implemented.")
     
 
 class WSClient:
