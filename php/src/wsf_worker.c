@@ -83,7 +83,7 @@ wsf_worker_find_op_and_params_with_location_and_method(
 		http_method = axis2_msg_ctx_get_rest_http_method(msg_ctx, env);
 		if (!http_method)
 		{
-			AXIS2_LOG_WARNING (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+			AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
 				"Unable to find HTTPMethod for location: %s", svc_info->loc_str);
 			return NULL;
 		}
@@ -278,13 +278,13 @@ wsf_worker_process_request (
     
 	op = wsf_worker_find_op_and_params_with_location_and_method(env, 
 					request->request_method, svc_info,request,msg_ctx);
-	
+
 	if(op)
 	{
 		axis2_msg_ctx_set_op(msg_ctx, env, op);
 	}
-
 	
+	transport_in.request_url_prefix = request->request_uri;
     
     /** store svc_info, req_info struct as a property */ 
     {
@@ -306,7 +306,6 @@ wsf_worker_process_request (
 
 	transport_in.out_transport_info = out_transport_info;
 	transport_in.transfer_encoding = request->transfer_encoding;
-	transport_in.request_url_prefix = NULL;
 	transport_in.remote_ip = request->remote_address;
     
     /** use MTOM property */ 
@@ -385,7 +384,7 @@ wsf_worker_process_request (
 
 	if(!response->content_type)
 	{
-		response->content_type = transport_out.content_type;
+		response->content_type = axutil_strdup(env, transport_out.content_type);
 	}
 	
 	response->response_data = AXIS2_MALLOC(env->allocator, sizeof(char) *(transport_out.response_data_length));
