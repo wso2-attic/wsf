@@ -102,6 +102,11 @@
 #define WSF_EMBEDDEDTOKEN_VAL "MustSupportRefEmbeddedToken"
 #define WSF_THUMBPRINT_VAL "MustSupportRefThumbprint"
 
+
+#define WSF_SECURITY_BINDING "binding"
+#define WSF_SECURITY_BINDING_ASYMETRIC "Asymmetric"
+#define WSF_SECURITY_BINDING_SYMETRIC "Symmetric"
+
 #define WSF_SIGN_BEFORE "SignBeforeEncrypt"
 #define WSF_ENCRYPT_BEFORE "EncryptBeforeSigning"
 

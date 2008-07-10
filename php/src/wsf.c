@@ -1819,6 +1819,7 @@ PHP_METHOD (ws_security_token, __construct)
 		{
 			add_property_stringl(object, WSF_DELETE_SCT_CALLBACK, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp),1);
 		}
+
     }
 } 
 

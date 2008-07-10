@@ -32,6 +32,7 @@
 #include <neethi_engine.h>
 #include <secconv_security_context_token.h>
 #include <axis2_msg.h>
+#include <rp_defines.h>
 
 
 int 
@@ -727,80 +728,93 @@ wsf_do_create_policy (
 		{
             if (neethi_options_set_include_timestamp (neethi_options, env, AXIS2_TRUE))
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Timestamp_enabled ");
-    }
-    if (zend_hash_find (ht_policy, WSF_UT, sizeof (WSF_UT),
-            (void **) &tmp) == SUCCESS) 
-	{
-        if (neethi_options_set_is_username_token (neethi_options, env, AXIS2_TRUE))
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Token reference_enabled ");
-    }
-    if (zend_hash_find (ht_policy, WSF_ENCRYPT, sizeof (WSF_ENCRYPT),
-            (void **) &tmp) == SUCCESS) 
-	{
-        if (neethi_options_set_encrypt_body (neethi_options, env, AXIS2_TRUE))
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Encrypt body option enabled ");
-    }
-    if (zend_hash_find (ht_policy, WSF_ALGORITHM, sizeof (WSF_ALGORITHM),
-            (void **) &tmp) == SUCCESS && tmp != NULL && Z_TYPE_PP (tmp) == IS_STRING)
-	{
-        algo_suite = Z_STRVAL_PP (tmp);
-        if (neethi_options_set_algorithmsuite (neethi_options, env, algo_suite))
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "AlgorithmSuite enabled ");
-    }
-    if (zend_hash_find (ht_policy, WSF_SIGN, sizeof (WSF_SIGN),
-            (void **) &tmp) == SUCCESS)
-	{
-        if (neethi_options_set_sign_body (neethi_options, env, AXIS2_TRUE))
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Sign_enabled ");
-    }
-    if (zend_hash_find (ht_policy, WSF_TOKEN_REFERENCE, sizeof (WSF_TOKEN_REFERENCE),
-                        (void **) &tmp) == SUCCESS && tmp != NULL
-        && Z_TYPE_PP (tmp) == IS_STRING)
-	{
-        token_ref = wsf_get_rampart_token_value(Z_STRVAL_PP (tmp));
-		if (neethi_options_set_keyidentifier (neethi_options, env, token_ref))
-		{
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Token_ref_enabled ");
 		}
-		if(is_server_side == AXIS2_SUCCESS)
+		if (zend_hash_find (ht_policy, WSF_UT, sizeof (WSF_UT),
+				(void **) &tmp) == SUCCESS) 
 		{
-			neethi_options_set_server_side(neethi_options, env, is_server_side);
+			if (neethi_options_set_is_username_token (neethi_options, env, AXIS2_TRUE))
+				AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Token reference_enabled ");
 		}
-    }
-    
-    if (zend_hash_find (ht_policy, WSF_ENCRYPT_SIGNATURE,
-                        sizeof (WSF_ENCRYPT_SIGNATURE), (void **) &tmp) == SUCCESS) 
-	{
-        if (neethi_options_set_signature_protection(neethi_options, env, AXIS2_TRUE))
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Encrypt_sign_enabled ");
-    }
+		if (zend_hash_find (ht_policy, WSF_ENCRYPT, sizeof (WSF_ENCRYPT),
+				(void **) &tmp) == SUCCESS) 
+		{
+			if (neethi_options_set_encrypt_body (neethi_options, env, AXIS2_TRUE))
+				AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Encrypt body option enabled ");
+		}
+		if (zend_hash_find (ht_policy, WSF_ALGORITHM, sizeof (WSF_ALGORITHM),
+				(void **) &tmp) == SUCCESS && tmp != NULL && Z_TYPE_PP (tmp) == IS_STRING)
+		{
+			algo_suite = Z_STRVAL_PP (tmp);
+			if (neethi_options_set_algorithmsuite (neethi_options, env, algo_suite))
+				AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "AlgorithmSuite enabled ");
+		}
+		if (zend_hash_find (ht_policy, WSF_SIGN, sizeof (WSF_SIGN),
+				(void **) &tmp) == SUCCESS)
+		{
+			if (neethi_options_set_sign_body (neethi_options, env, AXIS2_TRUE))
+				AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Sign_enabled ");
+		}
+		if (zend_hash_find (ht_policy, WSF_TOKEN_REFERENCE, sizeof (WSF_TOKEN_REFERENCE),
+							(void **) &tmp) == SUCCESS && tmp != NULL
+			&& Z_TYPE_PP (tmp) == IS_STRING)
+		{
+			token_ref = wsf_get_rampart_token_value(Z_STRVAL_PP (tmp));
+			if (neethi_options_set_keyidentifier (neethi_options, env, token_ref))
+			{
+				AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Token_ref_enabled ");
+			}
+			if(is_server_side == AXIS2_SUCCESS)
+			{
+				neethi_options_set_server_side(neethi_options, env, is_server_side);
+			}
+		}
+	    
+		if (zend_hash_find (ht_policy, WSF_ENCRYPT_SIGNATURE,
+							sizeof (WSF_ENCRYPT_SIGNATURE), (void **) &tmp) == SUCCESS) 
+		{
+			if (neethi_options_set_signature_protection(neethi_options, env, AXIS2_TRUE))
+				AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Encrypt_sign_enabled ");
+		}
 
-    if (zend_hash_find (ht_policy, WSF_PROTECTION_ORDER, 
-        sizeof (WSF_PROTECTION_ORDER), (void **) &tmp) == SUCCESS && tmp != NULL 
-		&& Z_TYPE_PP (tmp) == IS_STRING)
-	{
-        protection_order = Z_STRVAL_PP (tmp);
-        if(strcmp(protection_order, WSF_ENCRYPT_BEFORE) == 0)
+		if (zend_hash_find (ht_policy, WSF_PROTECTION_ORDER, 
+			sizeof (WSF_PROTECTION_ORDER), (void **) &tmp) == SUCCESS && tmp != NULL 
+			&& Z_TYPE_PP (tmp) == IS_STRING)
 		{
-             if (neethi_options_set_encrypt_before_sign (neethi_options, env, AXIS2_TRUE))
-			 {
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Encrypt_before_sign_enabled");
-		     }
-        }
-        else if(strcmp(protection_order, WSF_SIGN_BEFORE) == 0)
-		{
-            if (neethi_options_set_encrypt_before_sign (neethi_options, env, AXIS2_FALSE))
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,WSF_PHP_LOG_PREFIX "Sign_before_encrption_enabled");
-        }
-        else 
-		{
-			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Wrong Protection Order ");
-            php_error_docref (NULL TSRMLS_CC, E_ERROR, "Wrong option given for protection order");
+			protection_order = Z_STRVAL_PP (tmp);
+			if(strcmp(protection_order, WSF_ENCRYPT_BEFORE) == 0)
+			{
+				 if (neethi_options_set_encrypt_before_sign (neethi_options, env, AXIS2_TRUE))
+				 {
+					AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Encrypt_before_sign_enabled");
+				 }
+			}
+			else if(strcmp(protection_order, WSF_SIGN_BEFORE) == 0)
+			{
+				if (neethi_options_set_encrypt_before_sign (neethi_options, env, AXIS2_FALSE))
+					AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,WSF_PHP_LOG_PREFIX "Sign_before_encrption_enabled");
+			}
+			else 
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Wrong Protection Order ");
+				php_error_docref (NULL TSRMLS_CC, E_ERROR, "Wrong option given for protection order");
+			}
 		}
+
+		if(zend_hash_find(ht_policy, WSF_SECURITY_BINDING, sizeof(WSF_SECURITY_BINDING), 
+			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING)
+		{
+			if(strcmp(Z_STRVAL_PP(tmp),WSF_SECURITY_BINDING_ASYMETRIC) == 0)
+			{
+				neethi_options_set_binding(neethi_options, env, RP_ASYMMETRIC_BINDING);
+			}else
+			{
+				neethi_options_set_binding(neethi_options, env, RP_SYMMETRIC_BINDING);
+			}
+		}
+
+
 	}
-    
-   }
-
+		
     if (neethi_options)
 	{
         return_node = neethi_options_get_root_node (neethi_options, env);
@@ -860,7 +874,11 @@ wsf_set_security_policy_options (
         ht_sec = Z_ARRVAL_PP (sec_options);
         if (!ht_sec)
             return AXIS2_FAILURE;
-
+		if(zend_hash_find(ht_sec, WSF_SECURITY_BINDING, sizeof(WSF_SECURITY_BINDING), 
+			(void**)&sec_prop) == SUCCESS && Z_TYPE_PP(sec_prop) == IS_STRING)
+		{
+			add_property_stringl(policy_obj, WSF_SECURITY_BINDING, Z_STRVAL_PP(sec_prop), Z_STRLEN_PP(sec_prop),1);
+		}
         if (zend_hash_find (ht_sec, WSF_SIGN, sizeof (WSF_SIGN),
                 (void **) &sec_prop) == SUCCESS && (Z_TYPE_PP (sec_prop) == IS_STRING
                 || Z_TYPE_PP (sec_prop) == IS_BOOL)) 

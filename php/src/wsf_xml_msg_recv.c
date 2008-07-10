@@ -879,8 +879,10 @@ wsf_xml_msg_recv_invoke_wsmsg (
 		/** this should be after mtom processing */
 		req_payload = wsf_util_serialize_om (env, om_node);
 		add_property_string (msg, WSF_MESSAGE_STR , req_payload, 1);
-		add_property_string (msg, WSF_REST_CONTENT_TYPE, content_type, 1);
-
+		if(content_type)
+		{
+			add_property_string (msg, WSF_REST_CONTENT_TYPE, content_type, 1);
+		}
         ZVAL_STRING (&func, op_name, 0);
         params[0] = &param;
         ZVAL_ZVAL (params[0], msg, NULL, NULL);
