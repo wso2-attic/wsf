@@ -174,6 +174,7 @@ border="1">
     <tr valign="top">
       <td colspan="1" style="height: 20px; width: 96px;">"policy"</td>
       <td colspan="1" style="height: 20px"> &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp;
           WSPolicy object</td>
       <td colspan="1" style="height: 20px">WSPolicy object</td>
       <td colspan="1" style="height: 20px">None</td>
@@ -629,15 +630,38 @@ border="1">
       </td>
       <td style="height: 38px"><p>None</p>
       </td>
-      <td style="height: 38px">WSPolicy object</td>
+      <td style="height: 38px">WSPolicy object which respresents Service or client Policy.
+        </td>
     </tr>
     <tr valign="top">
       <td>"securityToken"</td>
       <td>WSSecurityToken Object</td>
       <td>WSSecurityToken</td>
       <td>None</td>
-      <td>WSSecurityToken object which contains the security related
-      options</td>
+      <td>WSSecurityToken object which contains the security related options.</td>
+    </tr>
+        <tr>
+      <td colspan="5" valign="top"><p>WS-Security Related options</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td style="height: 38px"><p>"policy"</p>
+      </td>
+      <td style="height: 38px"><p>WSPolicy Object</p>
+      </td>
+      <td style="height: 38px"><p>WSPolicy Object</p>
+      </td>
+      <td style="height: 38px"><p>None</p>
+      </td>
+      <td style="height: 38px">WSPolicy object which respresents Service or client Policy.
+        </td>
+    </tr>
+    <tr valign="top">
+      <td>"securityToken"</td>
+      <td>WSSecurityToken Object</td>
+      <td>WSSecurityToken</td>
+      <td>None</td>
+      <td>WSSecurityToken object which contains the security related options.</td>
     </tr>
   </tbody>
 </table>
@@ -873,12 +897,30 @@ border="1">
     When an array of WSHeader objects is set to the options array, these headers will
     be present on the outgoing SOAP Envelope.</td>
     </tr>
+    <tr>
+      <td colspan="5" valign="top"><p>REST</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td><p>"contentType"</p>
+      </td>
+      <td><p>
+        string</p>
+      </td>
+      <td><p>
+        string</p>
+      </td>
+      <td style="width: 109px"><p>NONE</p>
+      </td>
+      <td style="width: 465px">
+    When exposing an operation in REST Style,you can get/set media type of the content
+        using this attribute of WSMessage</td>
+    </tr>
   </tbody>
 </table>
 
 <p><br>
-<br>
-</p>
+          &nbsp;</p>
 <a id="method3"></a>
 
 <h3><b>Methods</b></h3>
@@ -911,6 +953,7 @@ representation of the binary content to be sent or being received.</p>
 
 <p>An associative array, containing the mapping of cid (content ID) to its
 corresponding  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          &nbsp; &nbsp;
         attachment. When an attachment is received, this property
 will be present in the WSMessage object.</p>
 <ul>

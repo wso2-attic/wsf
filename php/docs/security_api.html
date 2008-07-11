@@ -50,14 +50,14 @@ later in this document.</p>
       <th id="policy_options">Option</th>
       <th>Data Type</th>
       <th style="width: 195px">Value Domain</th>
-      <th>Default Value</th>
+      <th style="width: 139px">Default Value</th>
       <th>Description</th>
     </tr>
     <tr>
       <td>sign</td>
       <td>string | boolean</td>
       <td style="width: 195px">TRUE | "X509"</td>
-      <td>FALSE</td>
+      <td style="width: 139px">FALSE</td>
       <td>Whether to sign the XML message or not. By default signing is not
         enabled. <br clear="all" />
         If specified "sign"=&gt;TRUE, the body part of the SOAP message will
@@ -70,7 +70,7 @@ later in this document.</p>
       <td>string | boolean</td>
       <td style="width: 195px">TRUE | "X509" <br clear="all" />
       </td>
-      <td>FALSE</td>
+      <td style="width: 139px">FALSE</td>
       <td>Whether to encrypt the XML message or not. By default encryption is
         not enabled. <br clear="all" />
         If specified "encrypt"=&gt;TRUE, the body part of the SOAP message
@@ -84,7 +84,7 @@ later in this document.</p>
       <td style="width: 195px">corresponds to Security Policy spec 7.1
         [Algorithm Suite] definitions <br clear="all" />
       </td>
-      <td>"Basic256Rsa15"</td>
+      <td style="width: 139px">"Basic256Rsa15"</td>
       <td>The symmetric algorithm and asymmetric algorithm will be derived
         from the algorithmSuite string. </td>
     </tr>
@@ -92,7 +92,7 @@ later in this document.</p>
       <td>layout</td>
       <td>string</td>
       <td style="width: 195px">"Strict" | "Lax"</td>
-      <td>"Strict"</td>
+      <td style="width: 139px">"Strict"</td>
       <td>Defines the element order in the security header. These are defined
         in the WS Security Policy Specification 1.1 section 7.7</td>
     </tr>
@@ -100,7 +100,7 @@ later in this document.</p>
       <td>includeTimeStamp</td>
       <td>bool</td>
       <td style="width: 195px">TRUE</td>
-      <td>FALSE</td>
+      <td style="width: 139px">FALSE</td>
       <td>If specified TRUE and the user provided the ttl (time to live )
         value when providing the security token object, the timestamp will be
         used.</td>
@@ -110,7 +110,7 @@ later in this document.</p>
       <td>string</td>
       <td style="width: 195px">"EncryptBeforeSigning" |
       "SignBeforeEncrypt"</td>
-      <td>"EncryptBeforeSigning"</td>
+      <td style="width: 139px">"EncryptBeforeSigning"</td>
       <td>The order in which integrity and confidentiality are applied to the
         message in cases where both integrity and confidentiality are
         required.</td>
@@ -119,7 +119,7 @@ later in this document.</p>
       <td>useUsernameToken</td>
       <td>boolean</td>
       <td style="width: 195px">TRUE</td>
-      <td>FALSE</td>
+      <td style="width: 139px">FALSE</td>
       <td>If the necessary options are provided with the WSSecurityToken
         object, and if "useUsernameToken"=&gt;TRUE , then the UsernameToken
         will be enabled.</td>
@@ -131,7 +131,7 @@ later in this document.</p>
         "KeyIdentifier"|"EmbeddedToken" <br clear="all" />
         |"Thumbprint"| "Direct" <br clear="all" />
       </td>
-      <td>"KeyIdentifier" <br clear="all" />
+      <td style="width: 139px">"KeyIdentifier" <br clear="all" />
       </td>
       <td>Defines how the security tokens are sent when using encryption. <br
         clear="all" />
@@ -143,9 +143,61 @@ later in this document.</p>
       <td>encryptSignature</td>
       <td>boolean</td>
       <td style="width: 195px">TRUE</td>
-      <td>FALSE</td>
+      <td style="width: 139px">FALSE</td>
       <td>If specified TRUE the message signature (the primary signayure) must be encrypted.
       </td>
+    </tr>
+    <tr>
+      <td>
+    binding</td>
+      <td>
+    string</td>
+      <td style="width: 195px">
+    "Asymmetric" | "Symmetric"</td>
+      <td style="width: 139px">
+    "Asymmetric"</td>
+      <td>
+    By default, all security bindings will be Asymmetric meaning that public key security
+    options will be used. By setting the binding option to "Symmetric" symmetric key
+    usage can be enforced.
+      </td>
+    </tr>
+    <tr>
+      <td style="height: 64px">
+          inMessagePolicy</td>
+      <td style="height: 64px">
+          mixed<br />
+          array or string</td>
+      <td style="width: 195px; height: 64px;">
+          NONE</td>
+      <td style="width: 139px; height: 64px">
+          NONE</td>
+      <td style="height: 64px">
+          This option is only usefull in specifying operation level policies. When considering
+          an operation, the policies can be specified for the incomming message as well as
+          for the outgoing message. In this case the policy object can be constructed by specifying
+          an array as follows.<br />
+          $policy = new WSPolicy(<br />
+          array("inMessagePolicy"=&gt;$sec_array,<br />
+          "outMessagePolicy"=&gt;$sec_array));</td>
+    </tr>
+    <tr>
+      <td>
+          outMessagePolicy</td>
+      <td>
+          mixed<br />
+          array or string</td>
+      <td style="width: 195px">
+          NONE</td>
+      <td style="width: 139px">
+          NONE</td>
+      <td>
+          This is exactly the same as the option "inMessagePolicy". Another code snippet using
+          a policy xml strings.<br />
+          <br />
+          $policy = new WSPolicy(<br />
+          array("inMessagePolicy"=&gt;$in_policy_str,<br />
+          "outMessagePolicy"=&gt;$out_policy_str));</td>
     </tr>
   </tbody>
 </table>
@@ -183,16 +235,17 @@ following table.</p>
       <td class="confluenceTd" style="height: 21px">string</td>
       <td class="confluenceTd" style="height: 21px">string</td>
       <td class="confluenceTd" style="height: 21px">none</td>
-      <td class="confluenceTd" style="width: 415px; height: 21px">User's
-        certificate to be used for signing, loaded from the function
-        ws_get_cert_from_file()</td>
+      <td class="confluenceTd" style="width: 415px; height: 21px">
+    producer's certificate (public key). This should be loaded using the function <strong>
+        ws_get_cert_from_file(). </strong>This key is send to the receiver with security
+    headers.</td>
     </tr>
     <tr>
       <td class="confluenceTd">passwordType</td>
       <td class="confluenceTd">string</td>
       <td class="confluenceTd">"PlainText" |"Digest"</td>
       <td class="confluenceTd">Digest</td>
-      <td class="confluenceTd" style="width: 415px">Password type used in
+      <td class="confluenceTd" style="width: 415px">Password type to be used in
         UsernameToken</td>
     </tr>
     <tr>
@@ -200,7 +253,8 @@ following table.</p>
       <td class="confluenceTd">string</td>
       <td class="confluenceTd">string</td>
       <td class="confluenceTd">none</td>
-      <td class="confluenceTd" style="width: 415px">User's password used for
+      <td class="confluenceTd" style="width: 415px">
+          Producer's password to be used for
         UsernameToken</td>
     </tr>
     <tr>
@@ -208,8 +262,9 @@ following table.</p>
       <td class="confluenceTd" style="height: 21px">string</td>
       <td class="confluenceTd" style="height: 21px">string</td>
       <td class="confluenceTd" style="height: 21px">none</td>
-      <td class="confluenceTd" style="width: 415px; height: 21px">User's
-        private key, loaded from the function ws_get_key_from_file()</td>
+      <td class="confluenceTd" style="width: 415px; height: 21px">
+          Producer's
+        private key. Should be loaded using the function <strong>ws_get_key_from_file()</strong></td>
     </tr>
     <tr>
       <td class="confluenceTd">receiverCertificate</td>
@@ -217,9 +272,7 @@ following table.</p>
       <td class="confluenceTd">string<br clear="all" />
       </td>
       <td class="confluenceTd">none</td>
-      <td class="confluenceTd" style="width: 415px">Receiver's certificate to
-        be used for encryption, loaded from the function
-      ws_get_cert_from_file()</td>
+      <td class="confluenceTd" style="width: 415px">Receiver's certificate. Should be loaded from the function <strong>ws_get_cert_from_file()</strong></td>
     </tr>
     <tr>
       <td class="confluenceTd">ttl <br clear="all" />
@@ -230,7 +283,8 @@ following table.</p>
       </td>
       <td class="confluenceTd">360</td>
       <td class="confluenceTd" style="width: 415px">The time period within
-        which the message would be valid in seconds <br clear="all" />
+        which the message would be valid (<strong>time to live</strong>)
+          in seconds <br clear="all" />
       </td>
     </tr>
     <tr>
@@ -241,7 +295,11 @@ following table.</p>
       <td class="confluenceTd">none</td>
       <td class="confluenceTd" style="width: 415px">Name of the password
         callback function, which is a user defined function that accepts a
-        username and returns the corresponding password.</td>
+        username and returns the corresponding password. The signature of this function
+        should be like<br />
+        <strong>string function_name(string username[,mixed args]). </strong>The args is
+        an optional argument in case the user was to pass additional data to the fuction
+        that would be necessary to obtain the password.</td>
     </tr>
      <tr>
       <td class="confluenceTd">
@@ -266,16 +324,78 @@ following table.</p>
       The functions implementation should be such that it should store all received unique
       message ids and timestemps. If an existing message id + timestamp is encountered,
       it should return false, indicating a replay, otherwise it should return true. The
-          time stamp comes to the callback only if the message contains timestamps.</td>
+          time stamp comes to the callback only if the message contains timestamps. Example
+          function signature for a replyDetectionCallback would be like<br />
+          <strong>bool function_name(string message_id, string timestamp [,mixed args]). args
+          </strong>is an optional arguement.</td>
     </tr>
      <tr>
-      <td class="confluenceTd">
+      <td class="confluenceTd" style="height: 38px">
       replayDetectionCallbackData</td>
+      <td class="confluenceTd" style="height: 38px">mixed</td>
+      <td class="confluenceTd" style="height: 38px">mixed</td>
+      <td class="confluenceTd" style="height: 38px">none</td>
+      <td class="confluenceTd" style="width: 415px; height: 38px;">Any optional values that is needed in callback
+      function can be provided using this option. </td>
+    </tr>
+    <tr>
+      <td class="confluenceTd" style="height: 55px">
+          storeSCTCallback</td>
+      <td class="confluenceTd" style="height: 55px">
+          string</td>
+      <td class="confluenceTd" style="height: 55px">
+          string</td>
+      <td class="confluenceTd" style="height: 55px">none</td>
+      <td class="confluenceTd" style="width: 415px; height: 55px;">
+          This is a callback function that should be specified for using secure conversation.
+          This function is called from the WSF/PHP inorder to store the SecurityContextToken
+          values. The callback function signature should be as follows.<br />
+          <strong>bool function_name(string security_context_token, string global_id,string local_id
+              [,mixed args])<br />
+              <br />
+              security_context_token </strong>string will always be avaliable. The <strong>gloabl_id
+              </strong>or the <strong>local_id </strong>should be used as the key in storing
+          the security context string. Only one of global_id or local_id will be available.
+          args is used specified args using the "SCTCallbackData" option.If the presisting
+          of the security context token is successfull, the fuction should return <strong>true,
+              false </strong>otherwise.
+      </td>
+    </tr><tr>
+      <td class="confluenceTd">
+          getSCTCallback</td>
       <td class="confluenceTd">mixed</td>
       <td class="confluenceTd">mixed</td>
       <td class="confluenceTd">none</td>
-      <td class="confluenceTd" style="width: 415px">Any optional values that is needed in callback
-      function can be provided using this option. </td>
+      <td class="confluenceTd" style="width: 415px">
+          This callback function is called from WSF/PHP to obtain the presisted security context
+          token string. The callback function signature should be as follows.&nbsp;<br />
+              <strong>string function(string sct_id, int sct_id_type, bool is_encryption[.mixed args])<br />
+                  sct_id </strong>contains<strong> </strong>the value that was used as the key
+              in storing the security context token string. The second variable specifies whether
+              the provided key is a global id or a local id.<br />
+          </td>
+    </tr><tr>
+      <td class="confluenceTd">
+          deleteSCTCallback</td>
+      <td class="confluenceTd">mixed</td>
+      <td class="confluenceTd">mixed</td>
+      <td class="confluenceTd">none</td>
+      <td class="confluenceTd" style="width: 415px">
+          This callback function is called from WSF/PHP to delete persisted security context
+          token strings with a given id. The function signature<br />
+              should be as follows.<br />
+              <strong>bool function_name(string sct_id, int sct_id_type)<br />
+              </strong>Here the sct_id is key used to store the security context token string
+              and sct_id_type is the id_type of the provided sct_id which can be either global
+              id or local id.</td>
+    </tr><tr>
+      <td class="confluenceTd">
+        SCTCallbackData</td>
+      <td class="confluenceTd">mixed</td>
+      <td class="confluenceTd">mixed</td>
+      <td class="confluenceTd">none</td>
+      <td class="confluenceTd" style="width: 415px">Any optional values that is required with the secure conversation callback functions
+        can be specified using this option.</td>
     </tr>
   </tbody>
 </table>
@@ -308,6 +428,21 @@ Security</h2>
       <td>none</td>
       <td>User specific security parameters to be used when using
       WS-Security.</td>
+    </tr>
+      <tr>
+      <td>
+            opPolicies
+        </td>
+      <td>
+            array</td>
+      <td style="width: 195px">
+            mixed</td>
+      <td>none</td>
+      <td>
+            This option can be used to specify operation level policies. For example consider
+            we wanted to set the policy for an operation foo. Then it would be like<br />
+            "opPolicies"=&gt;array("foo"=&gt;$policy);<br />
+            $policy is a WSPolicy object.</td>
     </tr>
   </tbody>
 </table>
