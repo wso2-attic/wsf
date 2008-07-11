@@ -955,15 +955,20 @@ void wsf_util_engage_modules_to_svc(
 }
 
 static int
-wsf_util_hash_each_ops_to_funcs(VALUE key, VALUE value, VALUE arg)
+wsf_util_hash_each_ops_to_funcs(VALUE key_val_array, VALUE arg)
 {
     char *op_name_to_store = NULL;
     char *op_name = NULL;
     unsigned int op_name_len = 0;
     char *func_name = NULL;
     wsservice_t *wsservice;
+	VALUE key;
+	VALUE value;
 
     wsf_svc_info_t *svc_info;
+
+    key = rb_ary_entry(key_val_array, 0);               
+    value = rb_ary_entry(key_val_array, 1);
 
     Data_Get_Struct(arg, wsservice_t, wsservice);
 
@@ -989,7 +994,7 @@ wsf_util_hash_each_ops_to_funcs(VALUE key, VALUE value, VALUE arg)
 }
 
 static int
-wsf_util_hash_each_action(VALUE key, VALUE value, VALUE arg)
+wsf_util_hash_each_action(VALUE key_val_array, VALUE arg)
 {
     char *func_name = NULL;
     char *wsa_action = NULL;
@@ -997,8 +1002,13 @@ wsf_util_hash_each_action(VALUE key, VALUE value, VALUE arg)
     char *operation_name = NULL;
     VALUE f;
     wsservice_t *wsservice;
+	VALUE key, value;
 
     wsf_svc_info_t *svc_info;
+
+	
+    key = rb_ary_entry(key_val_array, 0);               
+    value = rb_ary_entry(key_val_array, 1);  
 
     Data_Get_Struct(arg, wsservice_t, wsservice);
 
@@ -1039,6 +1049,8 @@ wsf_util_hash_each_action(VALUE key, VALUE value, VALUE arg)
         wsf_util_create_op_and_add_to_svc (svc_info, NULL,
                     wsservice->ws_env_svr, operation_name, wsservice->ht_ops_to_mep);
     }
+
+	/* printf("key: %s, value: %s\n", operation_name, wsa_action); */
 }
 
 void wsf_util_process_ws_service_operations_and_actions(VALUE self)
@@ -1068,7 +1080,7 @@ void wsf_util_process_ws_service_operations_and_actions(VALUE self)
 
     if(ht_ops_to_funcs != Qnil)
     {
-        rb_hash_foreach(ht_ops_to_funcs, wsf_util_hash_each_ops_to_funcs, self);
+        rb_iterate(rb_each, ht_ops_to_funcs, wsf_util_hash_each_ops_to_funcs, self);
     }
 
     if(ht_classes != Qnil)
@@ -1078,7 +1090,7 @@ void wsf_util_process_ws_service_operations_and_actions(VALUE self)
 
     if(ht_actions != Qnil)
     {
-        rb_hash_foreach(ht_actions, wsf_util_hash_each_action, self);
+        rb_iterate(rb_each, ht_actions, wsf_util_hash_each_action, self);
     }
 
     if (svc_info->ops_to_functions) 
@@ -1097,6 +1109,7 @@ void wsf_util_process_ws_service_operations_and_actions(VALUE self)
             key = (axis2_char_t *) k;
             val = (axis2_char_t *) v;
             if (key && val) {
+
 
                 /* function is there, add the operation to service */
                 if (strcmp (key, val) == 0) {

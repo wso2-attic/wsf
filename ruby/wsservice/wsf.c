@@ -644,6 +644,7 @@ wsservice_reply(VALUE self, VALUE request, VALUE response)
         sprintf (status_line, "%s 202 Accepted", req_info.http_protocol);
         wsf_ruby_res_info_fill(response, (axis2_char_t *) "Content-Length", (axis2_char_t *) "0");
         wsf_ruby_res_info_fill(response, (axis2_char_t *) "Content-Type", (axis2_char_t *) req_info.content_type);
+
     }
     else if (status == WS_HTTP_OK) 
     {

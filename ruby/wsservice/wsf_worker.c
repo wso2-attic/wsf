@@ -351,6 +351,7 @@ wsf_worker_process_request (
             rlen = axutil_stream_get_len (out_stream, env);
             val = AXIS2_MALLOC (env->allocator, sizeof (char) * (rlen + 1));
             readlen = axutil_stream_read (out_stream, env, val, rlen + 1);
+
             if (val) {
 				request->result_payload = val;
 				request->result_length = rlen;
