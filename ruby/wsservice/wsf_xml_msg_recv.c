@@ -90,7 +90,7 @@ static void wsf_xml_msg_recv_set_soap_fault (
     VALUE zval_soap_fault);
 
 VALUE
-wsf_wsdl_convert_wsdl_data_to_hash(axutil_env_t* env, wsf_wsdl_data_t* request);
+wsf_wsdl_convert_wsdl_data_to_hash(const axutil_env_t* env, wsf_wsdl_data_t* request);
 
 /************************** End of function prototypes ************************/
 
@@ -512,7 +512,7 @@ wsf_xml_msg_recv_invoke_mixed (
 
 
 axis2_bool_t
-wsf_wsdl_convert_wsdl_data_to_value_array(axutil_env_t* env, wsf_wsdl_data_t* request, VALUE** value_array, int* value_count)
+wsf_wsdl_convert_wsdl_data_to_value_array(const axutil_env_t* env, wsf_wsdl_data_t* request, VALUE** value_array, int* value_count)
 {
 	VALUE element = Qnil;
 	wsf_wsdl_data_iterator_t* iterator = NULL;
@@ -605,7 +605,7 @@ wsf_wsdl_convert_wsdl_data_to_value_array(axutil_env_t* env, wsf_wsdl_data_t* re
 }
 
 VALUE
-wsf_wsdl_convert_wsdl_data_to_hash(axutil_env_t* env, wsf_wsdl_data_t* request)
+wsf_wsdl_convert_wsdl_data_to_hash(const axutil_env_t* env, wsf_wsdl_data_t* request)
 {
 	VALUE element = Qnil;
 	wsf_wsdl_data_iterator_t* iterator = NULL;
@@ -679,7 +679,7 @@ wsf_wsdl_convert_wsdl_data_to_hash(axutil_env_t* env, wsf_wsdl_data_t* request)
 
 
 wsf_wsdl_data_t*
-wsf_wsdl_convert_params_to_wsdl_data(axutil_env_t* env, VALUE params);
+wsf_wsdl_convert_params_to_wsdl_data(const axutil_env_t* env, VALUE params);
 
 static VALUE
 hash_callback (VALUE key_val_array, void** callback_data)
@@ -744,11 +744,11 @@ hash_callback (VALUE key_val_array, void** callback_data)
 }
 
 wsf_wsdl_data_t*
-wsf_wsdl_convert_params_to_wsdl_data(axutil_env_t* env, VALUE params)
+wsf_wsdl_convert_params_to_wsdl_data(const axutil_env_t* env, VALUE params)
 {
 	wsf_wsdl_data_t* data = NULL;
 	void** callback_data = AXIS2_MALLOC(env->allocator, sizeof(void*) * 2);
-	callback_data[0] = env;
+	callback_data[0] = (void*)env;
 
 	data = wsdl_data_create_object(env);
 	callback_data[1] = data;
@@ -923,7 +923,7 @@ wsf_xml_msg_recv_invoke_other (
 				wsf_wsdl_mode_create_response_node(env, resp, &res_om_node);
 			}
 		}
-		/*else if /* for class map support */
+		/*else if for class map support */
 	}
 
     return res_om_node;

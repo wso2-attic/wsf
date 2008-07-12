@@ -954,7 +954,7 @@ void wsf_util_engage_modules_to_svc(
     }
 }
 
-static int
+VALUE
 wsf_util_hash_each_ops_to_funcs(VALUE key_val_array, VALUE arg)
 {
     char *op_name_to_store = NULL;
@@ -962,8 +962,8 @@ wsf_util_hash_each_ops_to_funcs(VALUE key_val_array, VALUE arg)
     unsigned int op_name_len = 0;
     char *func_name = NULL;
     wsservice_t *wsservice;
-	VALUE key;
-	VALUE value;
+    VALUE key;
+    VALUE value;
 
     wsf_svc_info_t *svc_info;
 
@@ -991,9 +991,10 @@ wsf_util_hash_each_ops_to_funcs(VALUE key_val_array, VALUE arg)
         AXIS2_HASH_KEY_STRING,
         (void*)func_name);
 
+    return Qnil;
 }
 
-static int
+VALUE
 wsf_util_hash_each_action(VALUE key_val_array, VALUE arg)
 {
     char *func_name = NULL;
@@ -1002,7 +1003,7 @@ wsf_util_hash_each_action(VALUE key_val_array, VALUE arg)
     char *operation_name = NULL;
     VALUE f;
     wsservice_t *wsservice;
-	VALUE key, value;
+	  VALUE key, value;
 
     wsf_svc_info_t *svc_info;
 
@@ -1049,7 +1050,8 @@ wsf_util_hash_each_action(VALUE key_val_array, VALUE arg)
         wsf_util_create_op_and_add_to_svc (svc_info, NULL,
                     wsservice->ws_env_svr, operation_name, wsservice->ht_ops_to_mep);
     }
-
+    
+    return Qnil;
 	/* printf("key: %s, value: %s\n", operation_name, wsa_action); */
 }
 
@@ -1428,7 +1430,7 @@ wsf_evaluate_security_token_and_insert_to_hash(axutil_env_t* env,
             axutil_hash_set(hash, 
                 WSF_WSDL_HK_TTL, 
                 AXIS2_HASH_KEY_STRING, 
-                ttl);
+                (void*)ttl);
         }
     }
 }
