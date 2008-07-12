@@ -175,7 +175,7 @@ WSRequest.prototype.send = function(payload) {
             }
         } catch (e) {
             // If we received an error, see if it's an XSS error, if so don't fail - there still might be hope!
-            if (e.description == "Access is denied.\r\n" || e.toString() == "Permission denied to call method XMLHttpRequest.open") {
+            if (e.description == "Access is denied.\r\n" || e.toString() == "Permission denied to call method XMLHttpRequest.open" || e.name == "NS_ERROR_DOM_BAD_URI") {
                 try {
                     var thisDomain = this._uri.substring(0, this._uri.substring(9).indexOf("/") + 10);
                     WSRequestInaccessibleDomains.push(thisDomain);
@@ -251,7 +251,6 @@ WSRequest.prototype.send = function(payload) {
 }
 
 WSRequest._tunnelcallback = function (scriptId, responseText) {
-
     var thisRequest = null;
     for (var i=0; i<WSRequestActiveRequests.length; i++) {
         if (WSRequestActiveRequests[i][0] == scriptId) {
@@ -298,8 +297,13 @@ WSRequest._tunnelcallback = function (scriptId, responseText) {
 
         if (thisRequest._soapVer == 0) {
             if (response != null) {
-                var httpStatus = response.documentElement.getAttributeNS("http://wso2.org/ns/WSRequestXSS", "status");
-                if (httpStatus != '200' && httpStatus != '202') {
+                var httpStatus;
+                if (browser == "ie" || browser == "ie7") {
+                    httpStatus = response.documentElement.getAttribute("h:status");
+                } else {
+                    httpStatus = response.documentElement.getAttributeNS("http://wso2.org/ns/WSRequestXSS", "status");
+                }
+                if (httpStatus != null && httpStatus != '') {
                     thisRequest.error = new WebServiceError("HTTP " + httpStatus, responseText);
                 }
             }
@@ -334,7 +338,6 @@ WSRequest._tunnelcallback = function (scriptId, responseText) {
 }
 
 WSRequest.prototype._base64 = function (input) {
-
     // Not strictly base64 returns - nulls represented as "~"
     if (input == null) return "~";
 
@@ -346,7 +349,6 @@ WSRequest.prototype._base64 = function (input) {
     var charCode;
     var i = 0;
     var padding = 0;
-
     while (charCode = input.charCodeAt(i++)) {
         // convert to utf-8 as we fill the buffer
         if (charCode < 0x80) {
@@ -374,12 +376,14 @@ WSRequest.prototype._base64 = function (input) {
         }
 
         if (p.length > 2) {
-            output += base64Map[p[0] >> 2];
-            output += base64Map[((p.shift() & 3) << 4) | (p[0] >> 4)];
-            output += (padding > 1) ? "=" : base64Map[((p.shift() & 0xf) << 2) | (p[0] >> 6)];
-            output += (padding > 0) ? "=" : base64Map[p.shift() & 0x3f];
+            output += base64Map.charAt(p[0] >> 2);
+            output += base64Map.charAt(((p.shift() & 3) << 4) | (p[0] >> 4));
+            output += (padding > 1) ? "=" : base64Map.charAt(((p.shift() & 0xf) << 2) | (p[0] >> 6));
+            output += (padding > 0) ? "=" : base64Map.charAt(p.shift() & 0x3f);
         }
+
     }
+
     return output;
 }
 
