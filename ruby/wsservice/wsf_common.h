@@ -61,6 +61,7 @@ typedef enum ws_input_types
 #define WS_OP_MEP      "opMEP"
 #define WS_OP_PARAMS    "opParams"
 #define WS_WSDL         "wsdl"
+#define WS_TO           "to"
 #define WS_CLASSMAP     "classmap"
 #define WS_CLASSES      "classes"
 #define WS_CONS_ARGS    "args"

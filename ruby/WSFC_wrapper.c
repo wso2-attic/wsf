@@ -2633,6 +2633,7 @@ SWIG_AsVal_int (VALUE obj, int *val)
 #include "wsf_wsdl_mode.h"
 
 #define WS_USE_SOAP         "use_soap"
+#define WS_TO               "to"
 #define WS_RESPONSE_XOP     "response_xop"
 #define WS_HTTP_METHOD      "http_method"
 #define WS_USE_MTOM         "use_mtom"
@@ -3286,7 +3287,7 @@ wsf_set_security_token_data_to_rampart_context(const axutil_env_t * env,
         }
     }
 
-        static void
+    static void
     wsf_evaluate_client_options_and_insert_to_hash(axutil_env_t* env, 
                                                    axis2_char_t* key,
                                                    VALUE value,
@@ -3332,8 +3333,36 @@ wsf_set_security_token_data_to_rampart_context(const axutil_env_t * env,
         else if (!strcmp(key, WS_RESPONSE_XOP))
         {
         }
+        else if (!strcmp(key, WS_TO))
+        {
+            VALUE val;
+            axis2_char_t* value_str = NULL;
+
+            val = rb_funcall(value, rb_intern("to_s"), 0, 0);
+            if (!NIL_P(val) && (TYPE(val) == T_STRING))
+            {
+                value_str = axutil_strdup(env, StringValuePtr(val));
+                axutil_hash_set(hash, 
+                                  WSF_WSDL_ENDPOINT, 
+                                  AXIS2_HASH_KEY_STRING, 
+                                  value_str);
+            } 
+        }
         else if (!strcmp(key, WS_USE_WSA))
         {
+            VALUE val;
+            axis2_char_t* value_str = NULL;
+
+            val = rb_funcall(value, rb_intern("to_s"), 0, 0);
+            if (!NIL_P(val) && (TYPE(val) == T_STRING))
+            {
+                value_str = axutil_strdup(env, StringValuePtr(val));
+                axutil_hash_set(hash, 
+                                  WS_USE_WSA, 
+                                  AXIS2_HASH_KEY_STRING, 
+                                  value_str);
+              
+            }
         }
         else if (!strcmp(key, WS_POLICY))
         {
