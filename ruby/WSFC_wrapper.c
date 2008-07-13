@@ -3097,7 +3097,7 @@ wsf_set_security_token_data_to_rampart_context(const axutil_env_t * env,
                 axutil_hash_set(hash, 
                                 WSF_WSDL_HK_TTL, 
                                 AXIS2_HASH_KEY_STRING, 
-                                ttl);
+                                (void*)ttl);
             }
         }
     }
@@ -3524,6 +3524,10 @@ wsf_set_security_token_data_to_rampart_context(const axutil_env_t * env,
     {
         VALUE element = Qnil;
         wsf_wsdl_data_iterator_t* iterator = NULL;
+
+        if(response == NULL) {
+          return Qnil;
+        }
         
         if (response->children_type == CHILDREN_TYPE_NONE)
         {
