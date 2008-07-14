@@ -397,18 +397,26 @@ wsf_worker_process_request (
     if (op_ctx) 
     {
         axis2_msg_ctx_t  *in_msg_ctx = NULL;
+        axis2_msg_ctx_t *out_msg_ctx = NULL;
         axis2_msg_ctx_t **msg_ctx_map = NULL;
         axis2_char_t *msg_id = NULL;
         axis2_conf_ctx_t *conf_ctx = NULL;
         msg_ctx_map =  axis2_op_ctx_get_msg_ctx_map(op_ctx, env);
 
         in_msg_ctx = msg_ctx_map[AXIS2_WSDL_MESSAGE_LABEL_IN];
+        out_msg_ctx = msg_ctx_map[AXIS2_WSDL_MESSAGE_LABEL_OUT];
 
+        if (out_msg_ctx)
+        {
+            axis2_msg_ctx_free(out_msg_ctx, env);
+            msg_ctx_map[AXIS2_WSDL_MESSAGE_LABEL_OUT] = NULL;
+        }
 
         if (in_msg_ctx)
         {
             msg_id = axutil_strdup(env, axis2_msg_ctx_get_msg_id(in_msg_ctx, env));
             msg_ctx_map[AXIS2_WSDL_MESSAGE_LABEL_IN] = NULL;
+            axis2_msg_ctx_free(in_msg_ctx, env);
         }
 
         if(!axis2_op_ctx_is_in_use(op_ctx, env))
@@ -422,12 +430,8 @@ wsf_worker_process_request (
             axis2_op_ctx_free(op_ctx, env);
         }
         
+        
     }
-
-	axis2_http_transport_utils_transport_in_uninit(&transport_in, env);
-	axis2_http_transport_utils_transport_out_uninit(&transport_out, env);
-
-
 
     if(in_stream)
 	{
