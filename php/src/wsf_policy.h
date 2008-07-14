@@ -136,6 +136,10 @@
 /** user specific callback data to be passed to the callback */
 #define WSF_SCT_CALLBACK_ARGS "SCTCallbackData"
 
+#define WS_SCT_ID_GLOBAL 2
+#define WS_SCT_ID_LOCAL  1
+
+
 /** This struct will be used to pass data to the callbacks */
 typedef struct wsf_callback_args
 {
