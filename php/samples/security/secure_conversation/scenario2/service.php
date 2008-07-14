@@ -34,16 +34,14 @@ function sct_store_callback($sct_str, $global_id,$local_id) {
 	}else{
 		$store_file = "/tmp/sct.content";
 	}
-	
 	$fp_store_file_w = fopen($store_file, "a");
 	if(flock($fp_store_file_w, LOCK_EX)) {
 		if(!is_null($global_id)){
 			fwrite($fp_store_file_w, $global_id.'|'.$sct_str.'!');
-			flock($fp_store_file_w, LOCK_UN);
 		}else if(!is_null($local_id)){
 			fwrite($fp_store_file_w,$local_id.'|'.$sct_str.'!');
-			flock($fp_store_file_w, LOCK_UN);	
-		}
+        }
+		flock($fp_store_file_w, LOCK_UN);
 	} else {
 		echo "Couldn't lock the ".$store_file." for writing!";
 	}
@@ -107,7 +105,7 @@ $security_token = new WSSecurityToken(array("user" => "Raigama",
                                             "passwordType" => "Digest",
 					    "storeSCTCallback" => "sct_store_callback",
 					    "getSCTCallback" => "sct_get_callback",
-				    	    "deleteSCTCallback"=>"sct_delete_callback"));
+			    	    "deleteSCTCallback"=>"sct_delete_callback"));
 
 
 $svr = new WSService(array("operations" => $operations,
