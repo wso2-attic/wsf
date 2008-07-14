@@ -174,7 +174,7 @@ border="1">
     <tr valign="top">
       <td colspan="1" style="height: 20px; width: 96px;">"policy"</td>
       <td colspan="1" style="height: 20px"> &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-    &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp;
           WSPolicy object</td>
       <td colspan="1" style="height: 20px">WSPolicy object</td>
       <td colspan="1" style="height: 20px">None</td>
@@ -916,6 +916,34 @@ border="1">
     When exposing an operation in REST Style,you can get/set media type of the content
         using this attribute of WSMessage</td>
     </tr>
+    <tr valign="top">
+      <td><p>
+            "RESTMapping"</p>
+      </td>
+      <td><p>array</p>
+      </td>
+      <td><p>Array mapping of operations to HTTPMethod and Location</p>
+      </td>
+      <td><p>None</p>
+      </td>
+      <td><p>Array mapping of Operations to its corresponding HTTPMethod and Location.
+      </p>
+                <p>
+              When exposing an operation as a REST stype operation, it is required to map an operation
+              to an HTTPMethod. Also a uniue url that maps to the operation should be sepcifed.
+              Here the first portion of the url will be same for all operations defined for a
+              given operations and it will be the service url. The last protion of it will be
+              the string specifed in RESTLocation attribute. This string can be a string as well
+              as a maching patter.
+                </p>
+                <p>
+              Consider we have an operation foo defined in our web service which we want to expose
+              as a REST operation with the url http://test.org/foo_service.php/fooOp and with
+              HTTPMethod POST.Assume that the service url is ttp://test.org/foo_service.php.</p>
+          <p>
+              e.g. ("RESTMapping" =&gt; array("foo"=&gt;array( "HTTPMethod" =&gt;"POST", "RESTLocation"=&gt;"fooOp")));</p>
+      </td>
+    </tr>
   </tbody>
 </table>
 
@@ -953,7 +981,7 @@ representation of the binary content to be sent or being received.</p>
 
 <p>An associative array, containing the mapping of cid (content ID) to its
 corresponding  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-          &nbsp; &nbsp;
+          &nbsp; &nbsp; &nbsp; &nbsp;
         attachment. When an attachment is received, this property
 will be present in the WSMessage object.</p>
 <ul>

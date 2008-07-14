@@ -348,16 +348,16 @@ following table.</p>
       <td class="confluenceTd" style="height: 55px">none</td>
       <td class="confluenceTd" style="width: 415px; height: 55px;">
           This is a callback function that should be specified for using secure conversation.
-          This function is called from the WSF/PHP inorder to store the SecurityContextToken
-          values. The callback function signature should be as follows.<br />
-          <strong>bool function_name(string security_context_token, string global_id,string local_id
+          This function is called from the WSF/PHP inorder to store the {SecurityContextToken/SecureConversationToekn}
+              values. The callback function signature should be as follows.<br />
+          <strong>bool function_name(string security_token, string global_id,string local_id
               [,mixed args])<br />
               <br />
-              security_context_token </strong>string will always be avaliable. The <strong>gloabl_id
+              security_token </strong>string will always be avaliable. The <strong>gloabl_id
               </strong>or the <strong>local_id </strong>should be used as the key in storing
-          the security context string. Only one of global_id or local_id will be available.
-          args is used specified args using the "SCTCallbackData" option.If the presisting
-          of the security context token is successfull, the fuction should return <strong>true,
+          the security token string. Only one of global_id or local_id or both ids may be available
+              depending on the scenario. args parameter will contain the data specified using the "SCTCallbackData" option.If the presisting
+          of the security&nbsp; token is successfull, the fuction should return <strong>true,
               false </strong>otherwise.
       </td>
     </tr><tr>
@@ -367,12 +367,18 @@ following table.</p>
       <td class="confluenceTd">mixed</td>
       <td class="confluenceTd">none</td>
       <td class="confluenceTd" style="width: 415px">
-          This callback function is called from WSF/PHP to obtain the presisted security context
-          token string. The callback function signature should be as follows.&nbsp;<br />
+          This callback function is called from WSF/PHP to obtain the presisted security token string. The callback function signature should be as follows.&nbsp;<br />
               <strong>string function(string sct_id, int sct_id_type, bool is_encryption[.mixed args])<br />
                   sct_id </strong>contains<strong> </strong>the value that was used as the key
-              in storing the security context token string. The second variable specifies whether
-              the provided key is a global id or a local id.<br />
+              in storing the security token string. The second variable specifies whether
+              the provided key is a global id or a local id. If the provided sct_id is a global id,
+              the sct_id_type value will be 2 and if the sct_id is local_id then it will be 1.
+              <br />
+              However, if security context token (pre-agreed and established offline) is refered,
+              then sct_id might be NULL. Such a sutuation can be handled by refering to is_encryption
+              value, so that if the pre-agreed sct is different for encryption and signature,
+              then it could be accessed based on is_encryption_value.
+              <br />
           </td>
     </tr><tr>
       <td class="confluenceTd">
@@ -381,7 +387,7 @@ following table.</p>
       <td class="confluenceTd">mixed</td>
       <td class="confluenceTd">none</td>
       <td class="confluenceTd" style="width: 415px">
-          This callback function is called from WSF/PHP to delete persisted security context
+          This callback function is called from WSF/PHP to delete persisted security 
           token strings with a given id. The function signature<br />
               should be as follows.<br />
               <strong>bool function_name(string sct_id, int sct_id_type)<br />
