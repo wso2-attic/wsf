@@ -39,11 +39,11 @@ function sct_store_callback($sct_str, $global_id,$local_id) {
 	if(flock($fp_store_file_w, LOCK_EX)) {
 		if(!is_null($global_id)){
 			fwrite($fp_store_file_w, $global_id.'|'.$sct_str.'!');
-			flock($fp_store_file_w, LOCK_UN);
-		}else if(!is_null($local_id)){
+        }
+        if(!is_null($local_id)){
 			fwrite($fp_store_file_w,$local_id.'|'.$sct_str.'!');
-			flock($fp_store_file_w, LOCK_UN);	
-		}
+        }
+		flock($fp_store_file_w, LOCK_UN);
 	} else {
 		echo "Couldn't lock the ".$store_file." for writing!";
 	}

@@ -26,7 +26,6 @@ function sct_delete_callback($sct_id,$sct_id_type)
 }
 
 function sct_store_callback($sct_str, $global_id,$local_id) {
-
     if (stristr(PHP_OS, 'WIN')) {
         $store_file = "sct_client.content";
     }else{
@@ -37,11 +36,11 @@ function sct_store_callback($sct_str, $global_id,$local_id) {
     if(flock($fp_store_file_w, LOCK_EX)) {
         if(!is_null($global_id)){
             fwrite($fp_store_file_w, $global_id.'|'.$sct_str.'!');
-            flock($fp_store_file_w, LOCK_UN);
-        }else if(!is_null($local_id)){
-            fwrite($fp_store_file_w,$local_id.'|'.$sct_str.'!');
-            flock($fp_store_file_w, LOCK_UN);    
         }
+        if(!is_null($local_id)){
+            fwrite($fp_store_file_w,$local_id.'|'.$sct_str.'!');
+        }
+        flock($fp_store_file_w, LOCK_UN);    
     } else {
         echo "Couldn't lock the ".$store_file." for writing!";
     }
@@ -68,7 +67,6 @@ function sct_get_callback($sct_id,$sct_id_type, $is_encryption)
         $fp_rf = fopen($sct_file, "r");
         if(flock($fp_rf, LOCK_EX)) {
 		$content = fread($fp_rf, $length);
-
             flock($fp_rf, LOCK_UN);
             $tok_rec = strtok($content, '!');
             $i = 0;
