@@ -20,6 +20,7 @@ cp -rf build/axis2c/util/src/stomp  axis2c/util/src/
 cp build/rampartc/Makefile.am rampartc
 cp build/rampartc/src/core/Makefile.am rampartc/src/core
 cp build/rampartc/src/omxmlsec/Makefile.am rampartc/src/omxmlsec
+cp build/rampartc/src/rahas/Makefile.am rampartc/src/rahas
 cp build/rampartc/src/omxmlsec/saml/Makefile.am rampartc/src/omxmlsec/saml
 cp build/rampartc/src/omxmlsec/openssl/Makefile.am rampartc/src/omxmlsec/openssl
 cp build/rampartc/src/omxmlsec/tokens/Makefile.am rampartc/src/omxmlsec/tokens
