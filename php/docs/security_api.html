@@ -326,7 +326,7 @@ following table.</p>
       it should return false, indicating a replay, otherwise it should return true. The
           time stamp comes to the callback only if the message contains timestamps. Example
           function signature for a replyDetectionCallback would be like<br />
-          <strong>bool function_name(string message_id, string timestamp [,mixed args]). args
+          <strong>boolean function_name(string message_id, string timestamp [,mixed args]). args
           </strong>is an optional arguement.</td>
     </tr>
      <tr>
@@ -350,7 +350,7 @@ following table.</p>
           This is a callback function that should be specified for using secure conversation.
           This function is called from the WSF/PHP inorder to store the {SecurityContextToken/SecureConversationToekn}
               values. The callback function signature should be as follows.<br />
-          <strong>bool function_name(string security_token, string global_id,string local_id
+          <strong>boolean function_name(string security_token, string global_id,string local_id
               [,mixed args])<br />
               <br />
               security_token </strong>string will always be avaliable. The <strong>gloabl_id
@@ -390,7 +390,7 @@ following table.</p>
           This callback function is called from WSF/PHP to delete persisted security 
           token strings with a given id. The function signature<br />
               should be as follows.<br />
-              <strong>bool function_name(string sct_id, int sct_id_type)<br />
+              <strong>boolean function_name(string sct_id, int sct_id_type)<br />
               </strong>Here the sct_id is key used to store the security context token string
               and sct_id_type is the id_type of the provided sct_id which can be either global
               id or local id.</td>
@@ -435,20 +435,18 @@ Security</h2>
       <td>User specific security parameters to be used when using
       WS-Security.</td>
     </tr>
-      <tr>
+    <tr>
       <td>
-            opPolicies
-        </td>
+                useOwnSTS</td>
       <td>
-            array</td>
+                boolean</td>
       <td style="width: 195px">
-            mixed</td>
-      <td>none</td>
+                boolean</td>
       <td>
-            This option can be used to specify operation level policies. For example consider
-            we wanted to set the policy for an operation foo. Then it would be like<br />
-            "opPolicies"=&gt;array("foo"=&gt;$policy);<br />
-            $policy is a WSPolicy object.</td>
+                FALSE</td>
+      <td>
+                When this option is set to true, a security enabled service can act as a security
+                token service in addition to providing the service functionality.</td>
     </tr>
   </tbody>
 </table>
