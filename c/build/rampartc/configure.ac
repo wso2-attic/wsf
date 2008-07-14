@@ -142,6 +142,7 @@ AC_CONFIG_FILES([Makefile \
     src/trust/Makefile \
     src/util/Makefile \
     src/secconv/Makefile 
+	src/rahas/Makefile 
     ])
     
 AC_OUTPUT
