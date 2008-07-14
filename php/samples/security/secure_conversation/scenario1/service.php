@@ -112,11 +112,11 @@ $pvt_key = ws_get_key_from_file("../../keys/bob_key.pem");
 $security_token = new WSSecurityToken(array("user" => "Raigama",
                                             "password" => "RaigamaPW",
                                             "passwordType" => "Digest",
-					    					"storeSCTCallback" => "sct_store_callback",
-					    					"getSCTCallback" => "sct_get_callback",
-											"privateKey" => $pvt_key, 
-											"receiverCertificate" => $rec_cert,
-				    	    				"deleteSCTCallback"=>"sct_delete_callback"));
+					    "storeSCTCallback" => "sct_store_callback",
+					    "getSCTCallback" => "sct_get_callback",
+					    "privateKey" => $pvt_key, 
+					    "receiverCertificate" => $rec_cert,
+				    	    "deleteSCTCallback"=>"sct_delete_callback"));
 
 
 $svr = new WSService(array("operations" => $operations,
