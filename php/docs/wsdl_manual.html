@@ -108,7 +108,7 @@ After creating the array, pass it to the operation that you are going to invoke.
     <span style="font-size: 9pt; font-family: Verdana"><span style="font-size: 10pt"></span>
    </span><span style="font-size: 9pt; font-family: Verdana"><span style="font-size: 10pt"> $proxy-&gt;</span><strong>QueryPurchaseOrder</strong>($input_array); 
 </span>
-<span><span style="font-family: Verdana">Since you have passed the array type arrguments to the function, the return value will also be an associative array. The schema
+<span><span style="font-family: Verdana">Since you have passed the array type arguments to the function, the return value will also be an associative array. The schema
     for the return message in the sample wsdl is as follows.</span></span></span>
             	<span style="color: #990000">&lt;xsd:element name="orderDetails"&gt;
 		&lt;xsd:complexType&gt;
@@ -242,7 +242,7 @@ $quan_obj = new quantityTypeWrapper();
 $quan_obj-&gt;amount = 23232;
 $quan_obj-&gt;weight_kg = 2323.24;
 
-Now the qunatity variable in $input_obj object will be
+Now the quantity variable in $input_obj object will be
 $input_obj-&gt;quantity = $quan_obj;
 
 Since you passed an object to the operation, the returned value will
@@ -358,7 +358,7 @@ function with mixed arguments.<br />
     
 
 <p>
-Simmilar to the client you can use the class map API for implementing services as well.
+Similar to the client you can use the class map API for implementing services as well.
 For the above service you can use the classmap API in the following way. 
 </p>
 <p>
@@ -417,8 +417,8 @@ You can use the <a href="wsdl_manual.html#4">wsdl2php.php script</a> to generate
 &nbsp;
     <span style="color: rgb(0, 0, 255);">$shipTo</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> address<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(102, 204, 102);">)</span>;
     <span style="color: rgb(0, 0, 255);">$shipTo</span>-&gt;<span style="color: rgb(0, 102, 0);">name</span> = <span style="color: rgb(255, 0, 0);">"Jane Smith"</span>;
-    <span style="color: rgb(0, 0, 255);">$shipTo</span>-&gt;<span style="color: rgb(0, 102, 0);">street</span> = <span style="color: rgb(255, 0, 0);">"York Streat"</span>;
-    <span style="color: rgb(0, 0, 255);">$shipTo</span>-&gt;<span style="color: rgb(0, 102, 0);">city</span> = <span style="color: rgb(255, 0, 0);">"colombo"</span>;
+    <span style="color: rgb(0, 0, 255);">$shipTo</span>-&gt;<span style="color: rgb(0, 102, 0);">street</span> = <span style="color: rgb(255, 0, 0);">"York street"</span>;
+    <span style="color: rgb(0, 0, 255);">$shipTo</span>-&gt;<span style="color: rgb(0, 102, 0);">city</span> = <span style="color: rgb(255, 0, 0);">"Colombo"</span>;
     <span style="color: rgb(0, 0, 255);">$shipTo</span>-&gt;<span style="color: rgb(0, 102, 0);">zip</span> = <span style="color: rgb(255, 0, 0);">"32234"</span>;
     <span style="color: rgb(0, 0, 255);">$shipTo</span>-&gt;<span style="color: rgb(0, 102, 0);">state</span> = <span style="color: rgb(255, 0, 0);">"-"</span>;
 

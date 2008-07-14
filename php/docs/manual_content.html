@@ -78,7 +78,7 @@ are required.</p>
     0 -&gt; CRITICAL&nbsp; ( Only critical errors will be logged )<br />
     1 -&gt; ERROR &nbsp; &nbsp;&nbsp; ( Errors will be logged)<br />
     2 -&gt; WARNING&nbsp; ( Errors and Warnings will be logged)<br />
-    3 -&gt; INFO &nbsp; &nbsp; &nbsp; ( Errors , Warnings and Infomation will be logged)<br />
+    3 -&gt; INFO &nbsp; &nbsp; &nbsp; ( Errors , Warnings and Information will be logged)<br />
     4 -&gt; DEBUG &nbsp; ( All log messages including debug messages will be logged)</td>
       <td style="width: 78px">PHP_INI_ALL</td>
     </tr>
@@ -103,7 +103,7 @@ are required.</p>
 php.ini.</p>
     <p>
         WSO2 WSF/PHP has a dependency on php_xsl extension. So enable the php_xsl extension
-        by puting the entry
+        by putting the entry
     </p>
     <p>
         extension=php_xsl.so in php.ini.</p>
@@ -1002,7 +1002,7 @@ as operations of the Web Service. Lets take an example 'Foo' class which impleme
     </p>
     <p>
         Here we are implementing the bar method that would take a WSMessage object and return
-        a response WSMessage object.You need to specify to the WSService constuctor that, class Foo's bar method should
+        a response WSMessage object.You need to specify to the WSService constructor that, class Foo's bar method should
         be exposed as an operation of the service.</p>
     <p>
         Following is how to do it.</p>
@@ -1015,7 +1015,7 @@ as operations of the Web Service. Lets take an example 'Foo' class which impleme
             style="color: #ff6666">foo</span>"=&gt;array("<span style="color: #ff6666">operations</span>"=&gt;$ops,
         "<span style="color: #ff6666">args</span>"=&gt;$constructor_args))));</p>
     <p>
-        You can implement mutiple classes and expose methods of those classes as operations
+        You can implement multiple classes and expose methods of those classes as operations
         of the same service. To facilitate this
         WSService constructor options array takes an argument "classes" as an array.With
         in this array you can specify the operations and the constructor arguments as an

@@ -239,16 +239,16 @@ $sec_token = new WSSecurityToken(array("privateKey" =&gt; $pvt_key,
 <h3>8.3.5 Secure conversation</h3>
 
 <p>
-Secure conversation is supported using a set of callback functins and configured using the policy
+Secure conversation is supported using a set of callback functions and configured using the policy
 files. At service, you can specify operation level policies using
-        the "opPolicies" array. In the default configuration, the estabilishment of the
+        the "opPolicies" array. In the default configuration, the establishment of the
         secure conversation token / security context token happens when first message is
         sent. By using the option "UseOwnSTS" you can configure a service to act as a security
         token service in addition to providing the service functionality.
 </p>
     <p>
         It is users responsibility to implement the persisting of the security tokens (
-        Secure conversation token/Security Context Token ) accross mulitple messages. The
+        Secure conversation token/Security Context Token ) across multiple messages. The
         tokens are provided in string from to the service or client using callback functions.&nbsp;
     </p>
     <p>
@@ -269,7 +269,7 @@ files. At service, you can specify operation level policies using
         "<strong>sct_delete_callback</strong>" are callback function names.
     </p>
     <p>
-        <strong>Following code sample demostrate how to configure a service.</strong></p>
+        <strong>Following code sample demonstrate how to configure a service.</strong></p>
     <p>
         $security_token = new WSSecurityToken(array("user" =&gt; "Raigama", "password" =&gt;
         "RaigamaPW", "passwordType" =&gt; "Digest", "storeSCTCallback" =&gt; "sct_store_callback",
