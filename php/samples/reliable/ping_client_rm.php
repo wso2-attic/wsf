@@ -16,7 +16,7 @@
  */
 
 $requestPayloadString = <<<XML
-	<ns1:pingString xmlns:ns1="http://php.axis2.org/samples">
+	<ns1:pingString xmlns:ns1="http://wso2.org/wsfphp/samples">
 		<text>Hello World!</text>
 	</ns1:pingString>
 XML;
@@ -25,7 +25,7 @@ try {
 
     $requestMessage = new WSMessage($requestPayloadString,
 			array( "to" => "http://localhost/samples/reliable/ping_service_rm.php",
-                   "action" => "http://php.axis2.org/samples/pingString"));
+                   "action" => "http://wso2.org/wsfphp/samples/pingString"));
 
     $client = new WSClient(array( "reliable" => TRUE , "useWSA" => TRUE));
     

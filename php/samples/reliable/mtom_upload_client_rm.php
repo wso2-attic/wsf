@@ -16,7 +16,7 @@
  */
 
 $requestPayloadString = <<<XML
-<ns1:upload xmlns:ns1="http://php.axis2.org/samples/mtom">
+<ns1:upload xmlns:ns1="http://wso2.org/wsfphp/samples/mtom">
     <ns1:fileName>test.jpg</ns1:fileName>
     <ns1:image xmlmime:contentType="image/jpeg" xmlns:xmlmime="http://www.w3.org/2004/06/xmlmime">
         <xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="cid:myid1"></xop:Include>
@@ -28,7 +28,7 @@ try {
 
     $requestMessage = new WSMessage($requestPayloadString,
                                array( "to" => "http://localhost/samples/reliable/mtom_upload_service_rm.php",
-                                      "action" => "http://php.axis2.org/samples/mtom",
+                                      "action" => "http://wso2.org/wsfphp/samples/mtom",
                                       "attachments" => array("myid1" => $f)));
 
     $client = new WSClient(array( "useMTOM" => TRUE,

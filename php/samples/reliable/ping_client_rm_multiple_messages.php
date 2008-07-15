@@ -16,7 +16,7 @@
  */
 
 $requestPayloadString = <<<XML
-    <ns1:pingString xmlns:ns1="http://php.axis2.org/samples/reliable">
+    <ns1:pingString xmlns:ns1="http://wso2.org/wsfphp/samples/reliable">
         <text>Hello World!</text>
     </ns1:pingString>
 XML;
@@ -25,7 +25,7 @@ try {
 
     $message = new WSMessage($requestPayloadString,
             array( "to" => "http://localhost/samples/reliable/ping_service_rm.php",
-                   "action" => "http://php.axis2.org/samples/pingString"));
+                   "action" => "http://wso2.org/wsfphp/samples/pingString"));
 
     $client = new WSClient(array( "reliable" => TRUE, "useWSA" => TRUE, "willContinueSequence" => TRUE));
 
@@ -33,14 +33,14 @@ try {
 
     $message1 = new WSMessage($requestPayloadString,
             array( "to" => "http://localhost/samples/reliable/ping_service_rm.php",
-                   "action" => "http://php.axis2.org/samples/pingString"));
+                   "action" => "http://wso2.org/wsfphp/samples/pingString"));
 
     $client->send($message1);
 
 
     $message2 = new WSMessage($requestPayloadString,
         array( "to" => "http://localhost/samples/reliable/ping_service_rm.php",
-               "action" => "http://php.axis2.org/samples/pingString",
+               "action" => "http://wso2.org/wsfphp/samples/pingString",
                "lastMessage" => TRUE));
     
     $client->send($message2);

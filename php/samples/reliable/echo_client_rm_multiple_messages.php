@@ -16,7 +16,7 @@
  */
 
 $reqPayloadString = <<<XML
-    <ns1:echoString xmlns:ns1="http://php.axis2.org/samples/reliable">
+    <ns1:echoString xmlns:ns1="http://wso2.org/wsfphp/samples/reliable">
         <text>Hello World!</text>
     </ns1:echoString>
 XML;
@@ -25,29 +25,28 @@ try {
 
     $message = new WSMessage($reqPayloadString,
             array("to" => "http://localhost/samples/reliable/echo_service_rm.php",
-                  "action" => "http://php.axis2.org/samples/echoString"));
+                  "action" => "http://wso2.org/wsfphp/samples/echoString"));
 
     $client = new WSClient(array( "reliable" => TRUE , "useWSA" => TRUE, "willContinueSequence" => TRUE));
 
-    $client->request($message);
+    $responseMsg = $client->request($message);
+    echo "First Message Response => ";
+    echo $responseMsg->str;
+    
+
 
     $message1 = new WSMessage($reqPayloadString,
-            array( "to" => "http://localhost/samples/reliable/echo_service_rm.php",
-                   "action" => "http://php.axis2.org/samples/echoString"));
-
-    $client->request($message1);
-
-
-    $message2 = new WSMessage($reqPayloadString,
         array( "to" => "http://localhost/samples/reliable/echo_service_rm.php",
-               "action" => "http://php.axis2.org/samples/echoString",
+               "action" => "http://wso2.org/wsfphp/samples/echoString",
                "lastMessage" => TRUE));
     
-    $client->request($message2);
+    $responseMsg1 = $client->request($message1);
 
     /** wait 10 seconds for the operation to complete */
     $client->wait(10);
-    
+	
+    echo "Second Message Response =>";
+    echo $responseMsg1->str;
     
 } catch (Exception $e) {
 

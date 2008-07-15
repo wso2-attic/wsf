@@ -20,7 +20,7 @@ function pingFunction($inMessage) {
 }
 
 $operations = array( "pingString" => "pingFunction" );
-$actions = array( "http://php.axis2.org/samples/pingString" => "pingString");
+$actions = array( "http://wso2.org/wsfphp/samples/pingString" => "pingString");
 $meps = array( "pingString" => "IN_ONLY" );
 
 $svr = new WSService(array( "operations" => $operations,

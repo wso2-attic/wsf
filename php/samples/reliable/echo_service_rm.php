@@ -16,7 +16,7 @@
  */
 
 $reqPayloadString = <<<XML
-    <ns1:echoString xmlns:ns1="http://php.axis2.org/samples">
+    <ns1:echoString xmlns:ns1="http://wso2.org/wsfphp/samples">
         <text>Hello World!</text>
     </ns1:echoString>
 XML;
@@ -26,7 +26,7 @@ function echoFunction($inMessage) {
 }
 
 $operations = array( "echoString" => "echoFunction");
-$actions = array( "http://php.axis2.org/samples/echoString" => "echoString");
+$actions = array( "http://wso2.org/wsfphp/samples/echoString" => "echoString");
 
 $service = new WSService(array( "operations" => $operations,
                             "reliable"=>TRUE));

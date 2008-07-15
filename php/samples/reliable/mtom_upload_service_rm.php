@@ -35,7 +35,7 @@ function getAttachment($inMessage) {
     }
 
 $responsePayload = <<<XML
-<ns1:response xmlns:ns1="http://php.axis2.org/samples/mtom">Image Saved</ns1:response>
+<ns1:response xmlns:ns1="http://wso2.org/wsfphp/samples/mtom">Image Saved</ns1:response>
 XML;
 
     $responseMessage = new WSMessage($responsePayload);
@@ -44,7 +44,7 @@ XML;
 }
 
 $operations = array("upload" => "getAttachment");
-$actions = array("http://php.axis2.org/samples/mtom" => "upload");
+$actions = array("http://wso2.org/wsfphp/samples/mtom" => "upload");
 
 $server = new WSService(array( "operations" => $operations,
                                "actions" => $actions,
