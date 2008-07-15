@@ -1,3 +1,14 @@
+WSO2 WSF/PHP 2.0.0beta
+======================
+* Improved REST Support with cababilities to map uri to operations and support
+for HTTP Verbs POST,GET,PUT and DELETE.
+* Replay Delection support for secured services.
+* PKCS12 Key Store support.
+* WS-Secure conversation support.
+* MTOM Support with contract first Web Services.
+* Many bug fixes.
+
+
 WSO2 WSF/PHP 1.3.2
 ======================
 * Added HTTP Authentication support in WSDL mode
