@@ -23,7 +23,7 @@ function echoFunction($inMessage) {
 }
 
 $operations = array("echoString" => "echoFunction");
-$actions = array("http://php.axis2.org/samples/echoString" => "echoString");
+$actions = array("http://wso2.org/wsfphp/samples/echoString" => "echoString");
 
 $service = new WSService(array( "operations" => $operations, 
                                 "actions" => $actions));

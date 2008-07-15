@@ -548,7 +548,7 @@ window.addEvent('domready', function() {
  */
 
 $requestPayloadString = &lt;&lt;&lt;XML
-&lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echoString&gt;
+&lt;ns1:echoString xmlns:ns1=&quot;http://wso2.org/wsfphp/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echoString&gt;
 XML;
 
 try {
@@ -596,7 +596,7 @@ $requestPayloadString = &lt;&lt;&lt;XML
 &lt;soapenv:Envelope xmlns:soapenv=&quot;http://www.w3.org/2003/05/soap-envelope&quot;&gt;
    &lt;soapenv:Header/&gt;
    &lt;soapenv:Body&gt;
-     &lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;
+     &lt;ns1:echoString xmlns:ns1=&quot;http://wso2.org/wsfphp/samples&quot;&gt;
          &lt;text&gt;Hello World!&lt;/text&gt;
      &lt;/ns1:echoString&gt;
     &lt;/soapenv:Body&gt;
@@ -650,14 +650,14 @@ $service-&gt;reply($requestPayloadString);
  */
 
 $requestPayloadString = &lt;&lt;&lt;XML
-&lt;ns1:echo xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
+&lt;ns1:echo xmlns:ns1=&quot;http://wso2.org/wsfphp/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
 XML;
 
 try {
 
     $reqMessage = new WSMessage($requestPayloadString,
         array( &quot;to&quot; =&gt; &quot;http://localhost/samples/echo_service_addr.php&quot;,
-               &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/echoString&quot;));
+               &quot;action&quot; =&gt; &quot;http://wso2.org/wsfphp/samples/echoString&quot;));
               
     $client = new WSClient(array(&quot;useWSA&quot; =&gt; TRUE));
                 
@@ -705,7 +705,7 @@ function echoFunction($inMessage) {
 }
 
 $operations = array(&quot;echoString&quot; =&gt; &quot;echoFunction&quot;);
-$actions = array(&quot;http://php.axis2.org/samples/echoString&quot; =&gt; &quot;echoString&quot;);
+$actions = array(&quot;http://wso2.org/wsfphp/samples/echoString&quot; =&gt; &quot;echoString&quot;);
 
 $service = new WSService(array( &quot;operations&quot; =&gt; $operations, 
                                 &quot;actions&quot; =&gt; $actions));
@@ -745,7 +745,7 @@ $service-&gt;reply();
  */
 
 $requestPayloadString = &lt;&lt;&lt;XML
-&lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echoString&gt;
+&lt;ns1:echoString xmlns:ns1=&quot;http://wso2.org/wsfphp/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echoString&gt;
 XML;
 
 try {
@@ -874,7 +874,7 @@ try
  */
 
 $requestPayloadString = &lt;&lt;&lt;XML
-&lt;ns1:notifyString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:notifyString&gt;
+&lt;ns1:notifyString xmlns:ns1=&quot;http://wso2.org/wsfphp/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:notifyString&gt;
 XML;
 
 try {
@@ -998,7 +998,7 @@ $service-&gt;reply();
  */
 
 $requestPayloadString = &lt;&lt;&lt;XML
-&lt;ns1:getFault xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:getFault&gt;
+&lt;ns1:getFault xmlns:ns1=&quot;http://wso2.org/wsfphp/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:getFault&gt;
 XML;
 
 try {
@@ -1309,7 +1309,7 @@ XML;
  */
 
 $requestPayloadString = &lt;&lt;&lt;XML
-    &lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;
+    &lt;ns1:echoString xmlns:ns1=&quot;http://wso2.org/wsfphp/samples&quot;&gt;
         &lt;text&gt;Hello World!&lt;/text&gt;
     &lt;/ns1:echoString&gt;
 XML;
@@ -1366,7 +1366,7 @@ try {
  */
 
 $requestPayloadString = &lt;&lt;&lt;XML
-    &lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;
+    &lt;ns1:echoString xmlns:ns1=&quot;http://wso2.org/wsfphp/samples&quot;&gt;
         &lt;text&gt;Hello World!&lt;/text&gt;
     &lt;/ns1:echoString&gt;
 XML;
@@ -1483,7 +1483,7 @@ ws_reply(array(&quot;operations&quot; =&gt; $operations));
 include_once('wsf.php');
 
 $requestPayloadString = &lt;&lt;&lt;XML
-    &lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;
+    &lt;ns1:echoString xmlns:ns1=&quot;http://wso2.org/wsfphp/samples&quot;&gt;
         &lt;text&gt;Hello World!&lt;/text&gt;
     &lt;/ns1:echoString&gt;
 XML;
@@ -1542,7 +1542,7 @@ try {
 include_once('wsf.php');
 
 $requestPayloadString = &lt;&lt;&lt;XML
-    &lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;
+    &lt;ns1:echoString xmlns:ns1=&quot;http://wso2.org/wsfphp/samples&quot;&gt;
         &lt;text&gt;Hello World!&lt;/text&gt;
     &lt;/ns1:echoString&gt;
 XML;
@@ -1599,7 +1599,7 @@ try {
 include_once('wsf.php');
 
 $requestPayloadString = &lt;&lt;&lt;XML
-    &lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;
+    &lt;ns1:echoString xmlns:ns1=&quot;http://wso2.org/wsfphp/samples&quot;&gt;
         &lt;text&gt;Hello World!&lt;/text&gt;
     &lt;/ns1:echoString&gt;
 XML;
@@ -1921,7 +1921,7 @@ try {
 function sendAttachment($msg)
 {
 $responsePayloadString = &lt;&lt;&lt;XML
-        &lt;ns1:download xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;
+        &lt;ns1:download xmlns:ns1=&quot;http://wso2.org/wsfphp/samples/mtom&quot;&gt;
             &lt;ns1:fileName&gt;test.jpg&lt;/ns1:fileName&gt;
                 &lt;ns1:image xmlmime:contentType=&quot;image/jpeg&quot; xmlns:xmlmime=&quot;http://www.w3.org/2004/06/xmlmime&quot;&gt;
                     &lt;xop:Include xmlns:xop=&quot;http://www.w3.org/2004/08/xop/include&quot; href=&quot;cid:myid1&quot;&gt;&lt;/xop:Include&gt;
@@ -1976,7 +1976,7 @@ $service-&gt;reply();
  */
 
 $requestPayloadString = &lt;&lt;&lt;XML
-&lt;ns1:upload xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;
+&lt;ns1:upload xmlns:ns1=&quot;http://wso2.org/wsfphp/samples/mtom&quot;&gt;
                &lt;ns1:fileName&gt;test.jpg&lt;/ns1:fileName&gt;
                &lt;ns1:image xmlmime:contentType=&quot;image/jpeg&quot; xmlns:xmlmime=&quot;http://www.w3.org/2004/06/xmlmime&quot;&gt;
                   &lt;xop:Include xmlns:xop=&quot;http://www.w3.org/2004/08/xop/include&quot; href=&quot;cid:myid1&quot;&gt;&lt;/xop:Include&gt;
@@ -2049,12 +2049,12 @@ function getAttachment($inMessage) {
     
 if($file_saved){
 $responsePayload = &lt;&lt;&lt;XML
-&lt;ns1:response xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;Image Saved&lt;/ns1:response&gt;
+&lt;ns1:response xmlns:ns1=&quot;http://wso2.org/wsfphp/samples/mtom&quot;&gt;Image Saved&lt;/ns1:response&gt;
 XML;
 }
 else{
 $responsePayload = &lt;&lt;&lt;XML
-&lt;ns1:response xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;Image Saving Failed&lt;/ns1:response&gt;
+&lt;ns1:response xmlns:ns1=&quot;http://wso2.org/wsfphp/samples/mtom&quot;&gt;Image Saving Failed&lt;/ns1:response&gt;
 XML;
 }
 
@@ -2105,7 +2105,7 @@ $service-&gt;reply();
  */
 
 $requestPayloadString = &lt;&lt;&lt;XML
-&lt;ns1:upload xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;
+&lt;ns1:upload xmlns:ns1=&quot;http://wso2.org/wsfphp/samples/mtom&quot;&gt;
                &lt;ns1:fileName&gt;test.jpg&lt;/ns1:fileName&gt;
                &lt;ns1:image xmlmime:contentType=&quot;image/jpeg&quot; xmlns:xmlmime=&quot;http://www.w3.org/2004/06/xmlmime&quot;&gt;
                   &lt;xop:Include xmlns:xop=&quot;http://www.w3.org/2004/08/xop/include&quot; href=&quot;cid:myid1&quot;&gt;&lt;/xop:Include&gt;
@@ -2180,7 +2180,7 @@ function getAttachment($inMessage) {
     }
 
 $responsePayload = &lt;&lt;&lt;XML
-&lt;ns1:response xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;Image Saved&lt;/ns1:response&gt;
+&lt;ns1:response xmlns:ns1=&quot;http://wso2.org/wsfphp/samples/mtom&quot;&gt;Image Saved&lt;/ns1:response&gt;
 XML;
 
     $returnMessage = new WSMessage($responsePayload);
@@ -2439,7 +2439,7 @@ function echoFunction($inMessage) {
 
 // Operations and associated options
 $operations = array(&quot;echoString&quot; =&gt; &quot;echoFunction&quot;);
-$actions = array(&quot;http://php.axis2.org/samples/echoString&quot; =&gt; &quot;echoString&quot;);
+$actions = array(&quot;http://wso2.org/wsfphp/samples/echoString&quot; =&gt; &quot;echoString&quot;);
 
 // Security options
 $security_options = array(&quot;useUsernameToken&quot; =&gt; TRUE);
@@ -2482,14 +2482,14 @@ $service-&gt;reply();
 
 // Request payload string 
 $reqPayloadString = &lt;&lt;&lt;XML
-&lt;ns1:echo xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
+&lt;ns1:echo xmlns:ns1=&quot;http://wso2.org/wsfphp/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
 XML;
 
 try {
     // Create message with request payload and options
     $reqMessage = new WSMessage($reqPayloadString,
                          array(&quot;to&quot; =&gt; &quot;http://localhost/samples/security/username_token/service.php&quot;,
-                               &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/echoString&quot;));
+                               &quot;action&quot; =&gt; &quot;http://wso2.org/wsfphp/samples/echoString&quot;));
    
     // Set up security options
     $security_options = array(&quot;useUsernameToken&quot; =&gt; TRUE );
@@ -2559,7 +2559,7 @@ function echoFunction($inMessage) {
 
 // Operations and associated options
 $operations = array(&quot;echoString&quot; =&gt; &quot;echoFunction&quot;);
-$actions = array(&quot;http://php.axis2.org/samples/echoString&quot; =&gt; &quot;echoString&quot;);
+$actions = array(&quot;http://wso2.org/wsfphp/samples/echoString&quot; =&gt; &quot;echoString&quot;);
 
 // Security options
 $policy_xml = file_get_contents(&quot;policy.xml&quot;);
@@ -2602,14 +2602,14 @@ $service-&gt;reply();
 
 // Request payload string 
 $reqPayloadString = &lt;&lt;&lt;XML
-&lt;ns1:echo xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
+&lt;ns1:echo xmlns:ns1=&quot;http://wso2.org/wsfphp/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
 XML;
 
 try {
     // Create message with request payload and options
     $reqMessage = new WSMessage($reqPayloadString,
                          array(&quot;to&quot; =&gt; &quot;http://localhost/samples/security/username_token/policy_file_based/service.php&quot;,
-                               &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/echoString&quot;));
+                               &quot;action&quot; =&gt; &quot;http://wso2.org/wsfphp/samples/echoString&quot;));
    
     // Set up security options
     $policy_xml = file_get_contents(&quot;policy.xml&quot;);
@@ -2700,7 +2700,7 @@ function get_my_password_function($username)
 }
 
 $operations = array(&quot;echoString&quot; =&gt; &quot;echoFunction&quot;);
-$actions = array(&quot;http://php.axis2.org/samples/echoString&quot; =&gt; &quot;echoString&quot;);
+$actions = array(&quot;http://wso2.org/wsfphp/samples/echoString&quot; =&gt; &quot;echoString&quot;);
 $sec_array = array(&quot;useUsernameToken&quot; =&gt; TRUE);
 
 $policy = new WSPolicy(array(&quot;security&quot;=&gt;$sec_array));
@@ -2738,14 +2738,14 @@ $svr-&gt;reply();
  */
 
 $reqPayloadString = &lt;&lt;&lt;XML
-&lt;ns1:echo xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
+&lt;ns1:echo xmlns:ns1=&quot;http://wso2.org/wsfphp/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
 XML;
 
 try {
 
     $reqMessage = new WSMessage($reqPayloadString,
                                 array(&quot;to&quot; =&gt; &quot;http://localhost/samples/security/username_token/call_back/service.php&quot;,
-                                      &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/echoString&quot;));
+                                      &quot;action&quot; =&gt; &quot;http://wso2.org/wsfphp/samples/echoString&quot;));
     
     $sec_array = array(&quot;useUsernameToken&quot; =&gt; TRUE );
     $policy = new WSPolicy(array(&quot;security&quot; =&gt; $sec_array));
@@ -2812,7 +2812,7 @@ function echoFunction($inMessage) {
 }
 
 $operations = array(&quot;echoString&quot; =&gt; &quot;echoFunction&quot;);
-$actions = array(&quot;http://php.axis2.org/samples/echoString&quot; =&gt; &quot;echoString&quot;);
+$actions = array(&quot;http://wso2.org/wsfphp/samples/echoString&quot; =&gt; &quot;echoString&quot;);
 $sec_array = array(&quot;includeTimeStamp&quot; =&gt; TRUE);
 
 $policy = new WSPolicy(array(&quot;security&quot;=&gt; $sec_array));
@@ -2851,14 +2851,14 @@ $svr-&gt;reply();
  */
 
 $reqPayloadString = &lt;&lt;&lt;XML
-&lt;ns1:echo xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
+&lt;ns1:echo xmlns:ns1=&quot;http://wso2.org/wsfphp/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
 XML;
 
 try {
 
     $reqMessage = new WSMessage($reqPayloadString,
                                 array(&quot;to&quot;=&gt;&quot;http://localhost/samples/security/timestamp/service.php&quot;,
-                                      &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/echoString&quot;));
+                                      &quot;action&quot; =&gt; &quot;http://wso2.org/wsfphp/samples/echoString&quot;));
     
     $sec_array = array(&quot;includeTimeStamp&quot; =&gt; TRUE );
     $policy = new WSPolicy(array(&quot;security&quot; =&gt; $sec_array));
@@ -2924,7 +2924,7 @@ function echoFunction($inMessage) {
 }
 
 $operations = array(&quot;echoString&quot; =&gt; &quot;echoFunction&quot;);
-$actions = array(&quot;http://php.axis2.org/samples/echoString&quot; =&gt; &quot;echoString&quot;);
+$actions = array(&quot;http://wso2.org/wsfphp/samples/echoString&quot; =&gt; &quot;echoString&quot;);
 
 $policy_xml = file_get_contents(&quot;policy.xml&quot;);
 $policy = new WSPolicy($policy_xml);
@@ -2963,14 +2963,14 @@ $svr-&gt;reply();
  */
 
 $reqPayloadString = &lt;&lt;&lt;XML
-&lt;ns1:echo xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
+&lt;ns1:echo xmlns:ns1=&quot;http://wso2.org/wsfphp/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
 XML;
 
 try {
 
     $reqMessage = new WSMessage($reqPayloadString,
                                 array(&quot;to&quot;=&gt;&quot;http://localhost/samples/security/timestamp/policy_file_based/service.php&quot;,
-                                      &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/echoString&quot;));
+                                      &quot;action&quot; =&gt; &quot;http://wso2.org/wsfphp/samples/echoString&quot;));
     
     $policy_xml = file_get_contents(&quot;policy.xml&quot;);
     $policy = new WSPolicy($policy_xml);
@@ -3042,7 +3042,7 @@ $sec_array = array(&quot;encrypt&quot; =&gt; TRUE,
                     &quot;algorithmSuite&quot; =&gt; &quot;Basic256Rsa15&quot;,
                     &quot;securityTokenReference&quot; =&gt; &quot;IssuerSerial&quot;);
 
-$actions = array(&quot;http://php.axis2.org/samples/echoString&quot; =&gt; &quot;echoString&quot;);
+$actions = array(&quot;http://wso2.org/wsfphp/samples/echoString&quot; =&gt; &quot;echoString&quot;);
  
 $policy = new WSPolicy(array(&quot;security&quot;=&gt; $sec_array));
 $sec_token = new WSSecurityToken(array(&quot;privateKey&quot; =&gt; $pvt_key,
@@ -3079,7 +3079,7 @@ $svr-&gt;reply();
  */
 
 $reqPayloadString = &lt;&lt;&lt;XML
-&lt;ns1:echo xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
+&lt;ns1:echo xmlns:ns1=&quot;http://wso2.org/wsfphp/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
 XML;
 
 try {
@@ -3088,7 +3088,7 @@ try {
     
     $reqMessage = new WSMessage($reqPayloadString,
                                 array(&quot;to&quot; =&gt; &quot;http://localhost/samples/security/encryption/service.php&quot;,
-                                      &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/echoString&quot;));
+                                      &quot;action&quot; =&gt; &quot;http://wso2.org/wsfphp/samples/echoString&quot;));
     
     $sec_array = array(&quot;encrypt&quot; =&gt; TRUE,
                        &quot;algorithmSuite&quot; =&gt; &quot;Basic256Rsa15&quot;,
@@ -3162,7 +3162,7 @@ $pvt_key = ws_get_key_from_file(&quot;../../keys/bob_key.pem&quot;);
 
 $operations = array(&quot;echoString&quot; =&gt; &quot;echoFunction&quot;);
 
-$actions = array(&quot;http://php.axis2.org/samples/echoString&quot; =&gt; &quot;echoString&quot;);
+$actions = array(&quot;http://wso2.org/wsfphp/samples/echoString&quot; =&gt; &quot;echoString&quot;);
 
 $policy_xml = file_get_contents(&quot;policy.xml&quot;);
 $policy = new WSPolicy($policy_xml);
@@ -3200,7 +3200,7 @@ $svr-&gt;reply();
  */
 
 $reqPayloadString = &lt;&lt;&lt;XML
-&lt;ns1:echo xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
+&lt;ns1:echo xmlns:ns1=&quot;http://wso2.org/wsfphp/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
 XML;
 
 try {
@@ -3209,7 +3209,7 @@ try {
     
     $reqMessage = new WSMessage($reqPayloadString,
                                 array(&quot;to&quot; =&gt; &quot;http://localhost/samples/security/encryption/policy_file_based/service.php&quot;,
-                                      &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/echoString&quot;));
+                                      &quot;action&quot; =&gt; &quot;http://wso2.org/wsfphp/samples/echoString&quot;));
     
     $policy_xml = file_get_contents(&quot;policy.xml&quot;); 
     $policy = new WSPolicy($policy_xml);
@@ -3289,7 +3289,7 @@ $policy = new WSPolicy(array(&quot;security&quot;=&gt;$sec_array));
 $sec_token = new WSSecurityToken(array(&quot;privateKey&quot; =&gt; $pvt_key,
                                        &quot;certificate&quot; =&gt; $cert));
 
-$actions = array(&quot;http://php.axis2.org/samples/echoString&quot; =&gt; &quot;echoString&quot;);
+$actions = array(&quot;http://wso2.org/wsfphp/samples/echoString&quot; =&gt; &quot;echoString&quot;);
 
 $svr = new WSService(array(&quot;operations&quot; =&gt; $operations,
                            &quot;actions&quot; =&gt; $actions,
@@ -3322,7 +3322,7 @@ $svr-&gt;reply();
  */
 
 $reqPayloadString = &lt;&lt;&lt;XML
-&lt;ns1:echo xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
+&lt;ns1:echo xmlns:ns1=&quot;http://wso2.org/wsfphp/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
 XML;
 
 try {
@@ -3332,7 +3332,7 @@ try {
     
     $reqMessage = new WSMessage($reqPayloadString,
                                 array(&quot;to&quot; =&gt; &quot;http://localhost/samples/security/signing/service.php&quot;,
-                                      &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/echoString&quot;));
+                                      &quot;action&quot; =&gt; &quot;http://wso2.org/wsfphp/samples/echoString&quot;));
     
     $sec_array = array(&quot;sign&quot;=&gt;TRUE,
                        &quot;algorithmSuite&quot; =&gt; &quot;Basic256Rsa15&quot;,
@@ -3413,7 +3413,7 @@ $policy = new WSPolicy($policy_xml);
 $sec_token = new WSSecurityToken(array(&quot;privateKey&quot; =&gt; $pvt_key,
                                        &quot;certificate&quot; =&gt; $cert));
 
-$actions = array(&quot;http://php.axis2.org/samples/echoString&quot; =&gt; &quot;echoString&quot;);
+$actions = array(&quot;http://wso2.org/wsfphp/samples/echoString&quot; =&gt; &quot;echoString&quot;);
 
 $svr = new WSService(array(&quot;operations&quot; =&gt; $operations,
                            &quot;actions&quot; =&gt; $actions,
@@ -3446,7 +3446,7 @@ $svr-&gt;reply();
  */
 
 $reqPayloadString = &lt;&lt;&lt;XML
-&lt;ns1:echo xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
+&lt;ns1:echo xmlns:ns1=&quot;http://wso2.org/wsfphp/samples&quot;&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
 XML;
 
 try {
@@ -3456,7 +3456,7 @@ try {
     
     $reqMessage = new WSMessage($reqPayloadString,
                                 array(&quot;to&quot; =&gt; &quot;http://localhost/samples/security/signing/policy_file_based/service.php&quot;,
-                                      &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/echoString&quot;));
+                                      &quot;action&quot; =&gt; &quot;http://wso2.org/wsfphp/samples/echoString&quot;));
     
     $policy_xml = file_get_contents(&quot;policy.xml&quot;); 
     $policy = new WSPolicy($policy_xml);
@@ -3543,7 +3543,7 @@ function getAttachment($inMessage) {
     }
 
 $resPayload = &lt;&lt;&lt;XML
-&lt;ns1:response xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;Image Saved&lt;/ns1:response&gt;
+&lt;ns1:response xmlns:ns1=&quot;http://wso2.org/wsfphp/samples/mtom&quot;&gt;Image Saved&lt;/ns1:response&gt;
 XML;
 
     $returnMessage = new WSMessage($resPayload);
@@ -3598,7 +3598,7 @@ $svr-&gt;reply();
  */
 
 $reqPayloadString = &lt;&lt;&lt;XML
-&lt;ns1:upload xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;
+&lt;ns1:upload xmlns:ns1=&quot;http://wso2.org/wsfphp/samples/mtom&quot;&gt;
                &lt;ns1:fileName&gt;test.jpg&lt;/ns1:fileName&gt;
                &lt;ns1:image xmlmime:contentType=&quot;image/jpeg&quot; xmlns:xmlmime=&quot;http://www.w3.org/2004/06/xmlmime&quot;&gt;
                   &lt;xop:Include xmlns:xop=&quot;http://www.w3.org/2004/08/xop/include&quot; href=&quot;cid:myid1&quot;&gt;&lt;/xop:Include&gt;
@@ -3696,12 +3696,12 @@ function getAttachment($inMessage) {
 
 	if($file_saved){
 		$resPayload = &lt;&lt;&lt;XML
-&lt;ns1:response xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;Image Saved&lt;/ns1:response&gt;
+&lt;ns1:response xmlns:ns1=&quot;http://wso2.org/wsfphp/samples/mtom&quot;&gt;Image Saved&lt;/ns1:response&gt;
 XML;
 	}
 	else{
 		$resPayload = &lt;&lt;&lt;XML
-&lt;ns1:response xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;Image Saving Failed&lt;/ns1:response&gt;
+&lt;ns1:response xmlns:ns1=&quot;http://wso2.org/wsfphp/samples/mtom&quot;&gt;Image Saving Failed&lt;/ns1:response&gt;
 XML;
 	}
 
@@ -3756,7 +3756,7 @@ $server-&gt;reply();
  */
 
 $reqPayloadString = &lt;&lt;&lt;XML
-&lt;ns1:upload xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;
+&lt;ns1:upload xmlns:ns1=&quot;http://wso2.org/wsfphp/samples/mtom&quot;&gt;
                &lt;ns1:fileName&gt;test.jpg&lt;/ns1:fileName&gt;
                &lt;ns1:image xmlmime:contentType=&quot;image/jpeg&quot; xmlns:xmlmime=&quot;http://www.w3.org/2004/06/xmlmime&quot;&gt;
                   &lt;xop:Include xmlns:xop=&quot;http://www.w3.org/2004/08/xop/include&quot; href=&quot;cid:myid1&quot;&gt;&lt;/xop:Include&gt;
@@ -3858,7 +3858,7 @@ function getAttachment($inMessage) {
     }
 
 $responsePayload = &lt;&lt;&lt;XML
-&lt;ns1:response xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;Image Saved&lt;/ns1:response&gt;
+&lt;ns1:response xmlns:ns1=&quot;http://wso2.org/wsfphp/samples/mtom&quot;&gt;Image Saved&lt;/ns1:response&gt;
 XML;
 
     $responseMessage = new WSMessage($responsePayload);
@@ -3867,7 +3867,7 @@ XML;
 }
 
 $operations = array(&quot;upload&quot; =&gt; &quot;getAttachment&quot;);
-$actions = array(&quot;http://php.axis2.org/samples/mtom&quot; =&gt; &quot;upload&quot;);
+$actions = array(&quot;http://wso2.org/wsfphp/samples/mtom&quot; =&gt; &quot;upload&quot;);
 
 $server = new WSService(array( &quot;operations&quot; =&gt; $operations,
                                &quot;actions&quot; =&gt; $actions,
@@ -3899,7 +3899,7 @@ $server-&gt;reply();
  */
 
 $requestPayloadString = &lt;&lt;&lt;XML
-    &lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;
+    &lt;ns1:echoString xmlns:ns1=&quot;http://wso2.org/wsfphp/samples&quot;&gt;
         &lt;text&gt;Hello World!&lt;/text&gt;
     &lt;/ns1:echoString&gt;
 XML;
@@ -3907,7 +3907,7 @@ XML;
 try {
 
     $requestMessage = new WSMessage($requestPayloadString,
-            array( &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/echoString&quot;));
+            array( &quot;action&quot; =&gt; &quot;http://wso2.org/wsfphp/samples/echoString&quot;));
 
     $client = new WSClient(array( &quot;to&quot; =&gt; &quot;http://localhost/samples/reliable/echo_service_rm.php&quot;,
                                   &quot;reliable&quot; =&gt; TRUE));
@@ -3959,7 +3959,7 @@ try {
  */
 
 $reqPayloadString = &lt;&lt;&lt;XML
-    &lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;
+    &lt;ns1:echoString xmlns:ns1=&quot;http://wso2.org/wsfphp/samples&quot;&gt;
         &lt;text&gt;Hello World!&lt;/text&gt;
     &lt;/ns1:echoString&gt;
 XML;
@@ -3969,7 +3969,7 @@ function echoFunction($inMessage) {
 }
 
 $operations = array( &quot;echoString&quot; =&gt; &quot;echoFunction&quot;);
-$actions = array( &quot;http://php.axis2.org/samples/echoString&quot; =&gt; &quot;echoString&quot;);
+$actions = array( &quot;http://wso2.org/wsfphp/samples/echoString&quot; =&gt; &quot;echoString&quot;);
 
 $service = new WSService(array( &quot;operations&quot; =&gt; $operations,
                             &quot;reliable&quot;=&gt;TRUE));
@@ -4007,7 +4007,7 @@ $service-&gt;reply();
  */
 
 $requestPayloadString = &lt;&lt;&lt;XML
-&lt;ns1:upload xmlns:ns1=&quot;http://php.axis2.org/samples/mtom&quot;&gt;
+&lt;ns1:upload xmlns:ns1=&quot;http://wso2.org/wsfphp/samples/mtom&quot;&gt;
     &lt;ns1:fileName&gt;test.jpg&lt;/ns1:fileName&gt;
     &lt;ns1:image xmlmime:contentType=&quot;image/jpeg&quot; xmlns:xmlmime=&quot;http://www.w3.org/2004/06/xmlmime&quot;&gt;
         &lt;xop:Include xmlns:xop=&quot;http://www.w3.org/2004/08/xop/include&quot; href=&quot;cid:myid1&quot;&gt;&lt;/xop:Include&gt;
@@ -4019,7 +4019,7 @@ try {
 
     $requestMessage = new WSMessage($requestPayloadString,
                                array( &quot;to&quot; =&gt; &quot;http://localhost/samples/reliable/mtom_upload_service_rm.php&quot;,
-                                      &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/mtom&quot;,
+                                      &quot;action&quot; =&gt; &quot;http://wso2.org/wsfphp/samples/mtom&quot;,
                                       &quot;attachments&quot; =&gt; array(&quot;myid1&quot; =&gt; $f)));
 
     $client = new WSClient(array( &quot;useMTOM&quot; =&gt; TRUE,
@@ -4079,7 +4079,7 @@ function pingFunction($inMessage) {
 }
 
 $operations = array( &quot;pingString&quot; =&gt; &quot;pingFunction&quot; );
-$actions = array( &quot;http://php.axis2.org/samples/pingString&quot; =&gt; &quot;pingString&quot;);
+$actions = array( &quot;http://wso2.org/wsfphp/samples/pingString&quot; =&gt; &quot;pingString&quot;);
 $meps = array( &quot;pingString&quot; =&gt; &quot;IN_ONLY&quot; );
 
 $svr = new WSService(array( &quot;operations&quot; =&gt; $operations,
@@ -4111,7 +4111,7 @@ $svr-&gt;reply();
  */
 
 $requestPayloadString = &lt;&lt;&lt;XML
-	&lt;ns1:pingString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;
+	&lt;ns1:pingString xmlns:ns1=&quot;http://wso2.org/wsfphp/samples&quot;&gt;
 		&lt;text&gt;Hello World!&lt;/text&gt;
 	&lt;/ns1:pingString&gt;
 XML;
@@ -4120,7 +4120,7 @@ try {
 
     $requestMessage = new WSMessage($requestPayloadString,
 			array( &quot;to&quot; =&gt; &quot;http://localhost/samples/reliable/ping_service_rm.php&quot;,
-                   &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/pingString&quot;));
+                   &quot;action&quot; =&gt; &quot;http://wso2.org/wsfphp/samples/pingString&quot;));
 
     $client = new WSClient(array( &quot;reliable&quot; =&gt; TRUE , &quot;useWSA&quot; =&gt; TRUE));
     
@@ -4173,7 +4173,7 @@ try {
  */
 
 $requestPayloadString = &lt;&lt;&lt;XML
-    &lt;ns1:pingString xmlns:ns1=&quot;http://php.axis2.org/samples/reliable&quot;&gt;
+    &lt;ns1:pingString xmlns:ns1=&quot;http://wso2.org/wsfphp/samples/reliable&quot;&gt;
         &lt;text&gt;Hello World!&lt;/text&gt;
     &lt;/ns1:pingString&gt;
 XML;
@@ -4182,7 +4182,7 @@ try {
 
     $message = new WSMessage($requestPayloadString,
             array( &quot;to&quot; =&gt; &quot;http://localhost/samples/reliable/ping_service_rm.php&quot;,
-                   &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/pingString&quot;));
+                   &quot;action&quot; =&gt; &quot;http://wso2.org/wsfphp/samples/pingString&quot;));
 
     $client = new WSClient(array( &quot;reliable&quot; =&gt; TRUE, &quot;useWSA&quot; =&gt; TRUE, &quot;willContinueSequence&quot; =&gt; TRUE));
 
@@ -4190,14 +4190,14 @@ try {
 
     $message1 = new WSMessage($requestPayloadString,
             array( &quot;to&quot; =&gt; &quot;http://localhost/samples/reliable/ping_service_rm.php&quot;,
-                   &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/pingString&quot;));
+                   &quot;action&quot; =&gt; &quot;http://wso2.org/wsfphp/samples/pingString&quot;));
 
     $client-&gt;send($message1);
 
 
     $message2 = new WSMessage($requestPayloadString,
         array( &quot;to&quot; =&gt; &quot;http://localhost/samples/reliable/ping_service_rm.php&quot;,
-               &quot;action&quot; =&gt; &quot;http://php.axis2.org/samples/pingString&quot;,
+               &quot;action&quot; =&gt; &quot;http://wso2.org/wsfphp/samples/pingString&quot;,
                &quot;lastMessage&quot; =&gt; TRUE));
     
     $client-&gt;send($message2);
@@ -4702,7 +4702,7 @@ $_SESSION['message'] = $message;
  */
 
 $requestPayloadString = &lt;&lt;&lt;XML
-    &lt;ns1:echoString xmlns:ns1=&quot;http://php.axis2.org/samples&quot;&gt;
+    &lt;ns1:echoString xmlns:ns1=&quot;http://wso2.org/wsfphp/samples&quot;&gt;
         &lt;text&gt;Hello World!&lt;/text&gt;
     &lt;/ns1:echoString&gt;
 XML;

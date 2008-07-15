@@ -16,7 +16,7 @@
  */
 
 $requestPayloadString = <<<XML
-    <ns1:echoString xmlns:ns1="http://php.axis2.org/samples">
+    <ns1:echoString xmlns:ns1="http://wso2.org/wsfphp/samples">
         <text>Hello World!</text>
     </ns1:echoString>
 XML;
