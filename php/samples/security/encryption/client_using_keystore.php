@@ -16,14 +16,14 @@
  */
 
 $reqPayloadString = <<<XML
-<ns1:echo xmlns:ns1="http://php.axis2.org/samples"><text>Hello World!</text></ns1:echo>
+<ns1:echo xmlns:ns1="http://wso2.org/wsfphp/samples"><text>Hello World!</text></ns1:echo>
 XML;
 
 try {
     
     $reqMessage = new WSMessage($reqPayloadString,
                                 array("to" => "http://localhost/samples/security/encryption/service_using_keystore.php",
-                                      "action" => "http://php.axis2.org/samples/echoString"));
+                                      "action" => "http://wso2.org/wsfphp/samples/echoString"));
     
     $sec_array = array("encrypt" => TRUE,
                        "algorithmSuite" => "Basic256Rsa15",

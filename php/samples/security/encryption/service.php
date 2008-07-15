@@ -30,7 +30,7 @@ $sec_array = array("encrypt" => TRUE,
                     "algorithmSuite" => "Basic256Rsa15",
                     "securityTokenReference" => "IssuerSerial");
 
-$actions = array("http://php.axis2.org/samples/echoString" => "echoString");
+$actions = array("http://wso2.org/wsfphp/samples/echoString" => "echoString");
  
 $policy = new WSPolicy(array("security"=> $sec_array));
 $sec_token = new WSSecurityToken(array("privateKey" => $pvt_key,
