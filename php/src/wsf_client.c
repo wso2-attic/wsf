@@ -710,6 +710,9 @@ wsf_client_set_headers (
     zval * msg TSRMLS_DC)
 {
     HashTable *ht = NULL;
+    axis2_options_t *options = NULL;
+    axis2_char_t *soap_version_uri = NULL;
+    int soap_version = AXIOM_SOAP12; 
     if (!svc_client || !msg) 
 	{
         return 0;
@@ -719,6 +722,11 @@ wsf_client_set_headers (
 
         zval **tmp = NULL;
         ht = Z_OBJPROP_P (msg);
+        options = (axis2_options_t *) axis2_svc_client_get_options (svc_client, env); 
+        if(!options)
+            return 0;
+        soap_version_uri = axis2_options_get_soap_version_uri(options, env);
+        soap_version = axis2_options_get_soap_version(options, env);
 
         if (zend_hash_find (ht, WSF_INPUT_HEADERS, sizeof (WSF_INPUT_HEADERS),
                 (void **) &tmp) == SUCCESS) 
@@ -741,7 +749,7 @@ wsf_client_set_headers (
 					zval *header = *val;
 					axiom_node_t *header_node = NULL;
 					header_node = wsf_util_construct_header_node (env, 
-						NULL, WSF_GLOBAL(soap_uri) , WSF_GLOBAL(soap_version) ,header TSRMLS_CC);
+						NULL, soap_version_uri , soap_version ,header TSRMLS_CC);
 					if (header_node) 
 					{
 						AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
