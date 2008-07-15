@@ -17,20 +17,20 @@
 
 // Request payload string 
 $reqPayloadString = <<<XML
-<ns1:echo xmlns:ns1="http://php.axis2.org/samples"><text>Hello World!</text></ns1:echo>
+<ns1:echo xmlns:ns1="http://echo.services.wsas.wso2.org"><text>Hello World!</text></ns1:echo>
 XML;
 
 try {
     // Create message with request payload and options
     $reqMessage = new WSMessage($reqPayloadString,
-                         array("to" => "http://localhost/samples/security/username_token/service.php",
-                               "action" => "http://php.axis2.org/samples/echoString"));
+                         array("to" => "http://localhost:8080/services/echo",
+                               "action" => "urn:echoString"));
    
     // Set up security options
     $security_options = array("useUsernameToken" => TRUE );
     $policy = new WSPolicy(array("security" => $security_options));
-    $security_token = new WSSecurityToken(array("user" => "Raigama",
-                                                "password" => "RaigamaPW",
+    $security_token = new WSSecurityToken(array("user" => "user",
+                                                "password" => "user",
                                                 "passwordType" => "Digest"));
     
     // Create client with options

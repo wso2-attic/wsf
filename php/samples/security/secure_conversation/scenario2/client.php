@@ -17,7 +17,7 @@
 
 
 $reqPayloadString = <<<XML
-<ns1:echo xmlns:ns1="http://php.axis2.org/samples"><text>Hello World!</text></ns1:echo>
+<ns1:echo xmlns:ns1="http://wso2.org/wsfphp/samples"><text>Hello World!</text></ns1:echo>
 XML;
 
 function sct_delete_callback($sct_id,$sct_id_type)
@@ -37,8 +37,7 @@ function sct_store_callback($sct_str, $global_id,$local_id) {
     if(flock($fp_store_file_w, LOCK_EX)) {
         if(!is_null($global_id)){
             fwrite($fp_store_file_w, $global_id.'|'.$sct_str.'!');
-        }
-        if(!is_null($local_id)){
+        }else if(!is_null($local_id)){
             fwrite($fp_store_file_w,$local_id.'|'.$sct_str.'!');
         }
         flock($fp_store_file_w, LOCK_UN);
@@ -103,7 +102,7 @@ try {
     $reqMessage = new WSMessage($reqPayloadString,
         array(
     	    "to"=>"http://localhost/samples/security/secure_conversation/scenario2/service.php",
-            "action" => "http://php.axis2.org/samples/echoString")
+            "action" => "http://wso2.org/wsfphp/samples/echoString")
               );
     $policy_xml = file_get_contents("policy.xml");
     $policy = new WSPolicy($policy_xml);

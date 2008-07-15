@@ -39,12 +39,12 @@ function getAttachment($inMessage) {
 
 	if($file_saved){
 		$resPayload = <<<XML
-<ns1:response xmlns:ns1="http://php.axis2.org/samples/mtom">Image Saved</ns1:response>
+<ns1:response xmlns:ns1="http://wso2.org/wsfphp/samples/mtom">Image Saved</ns1:response>
 XML;
 	}
 	else{
 		$resPayload = <<<XML
-<ns1:response xmlns:ns1="http://php.axis2.org/samples/mtom">Image Saving Failed</ns1:response>
+<ns1:response xmlns:ns1="http://wso2.org/wsfphp/samples/mtom">Image Saving Failed</ns1:response>
 XML;
 	}
 

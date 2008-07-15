@@ -38,9 +38,10 @@ function sct_store_callback($sct_str, $global_id,$local_id) {
 	if(flock($fp_store_file_w, LOCK_EX)) {
 		if(!is_null($global_id)){
 			fwrite($fp_store_file_w, $global_id.'|'.$sct_str.'!');
-		}else if(!is_null($local_id)){
+		}
+		if(!is_null($local_id)){
 			fwrite($fp_store_file_w,$local_id.'|'.$sct_str.'!');
-        }
+                }  
 		flock($fp_store_file_w, LOCK_UN);
 	} else {
 		echo "Couldn't lock the ".$store_file." for writing!";
@@ -96,7 +97,7 @@ function sct_get_callback($sct_id,$sct_id_type, $is_encryption)
 }
 
 $operations = array("echoString" => "echoFunction");
-$actions = array("http://php.axis2.org/samples/echoString" => "echoString");
+$actions = array("http://wso2.org/wsfphp/samples/echoString" => "echoString");
 $policy_xml = file_get_contents("policy.xml");
 $policy = new WSPolicy($policy_xml);
 
@@ -105,7 +106,7 @@ $security_token = new WSSecurityToken(array("user" => "Raigama",
                                             "passwordType" => "Digest",
 					    "storeSCTCallback" => "sct_store_callback",
 					    "getSCTCallback" => "sct_get_callback",
-			    	    "deleteSCTCallback"=>"sct_delete_callback"));
+               			    	    "deleteSCTCallback"=>"sct_delete_callback"));
 
 
 $svr = new WSService(array("operations" => $operations,
