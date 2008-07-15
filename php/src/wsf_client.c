@@ -725,7 +725,7 @@ wsf_client_set_headers (
         options = (axis2_options_t *) axis2_svc_client_get_options (svc_client, env); 
         if(!options)
             return 0;
-        soap_version_uri = axis2_options_get_soap_version_uri(options, env);
+        soap_version_uri = (axis2_char_t*)axis2_options_get_soap_version_uri(options, env);
         soap_version = axis2_options_get_soap_version(options, env);
 
         if (zend_hash_find (ht, WSF_INPUT_HEADERS, sizeof (WSF_INPUT_HEADERS),

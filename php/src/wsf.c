@@ -261,11 +261,11 @@ STANDARD_MODULE_PROPERTIES };
 PHP_INI_BEGIN () 
 STD_PHP_INI_ENTRY ("wsf.home", NULL, PHP_INI_ALL, 
         OnUpdateString, home, zend_wsf_globals, wsf_globals)
-STD_PHP_INI_ENTRY ("wsf.log_path", "/tmp", PHP_INI_ALL, 
+STD_PHP_INI_ENTRY ("wsf.log_path", WSF_TMP, PHP_INI_ALL, 
         OnUpdateString, log_path, zend_wsf_globals,wsf_globals)
 STD_PHP_INI_ENTRY ("wsf.log_level", "4", PHP_INI_ALL, 
         OnUpdateLong, log_level, zend_wsf_globals, wsf_globals)
-STD_PHP_INI_ENTRY ("wsf.rm_db_dir", "/tmp", PHP_INI_ALL,
+STD_PHP_INI_ENTRY ("wsf.rm_db_dir", WSF_TMP, PHP_INI_ALL,
     OnUpdateString, rm_db_dir, zend_wsf_globals, wsf_globals)  
 PHP_INI_END () 
 /* }}} */ 

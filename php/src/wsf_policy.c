@@ -207,7 +207,6 @@ wsf_policy_handle_client_security (
 	{
 		if (policy_node) 
 		{
-			axis2_char_t *om_str_in = NULL;
 			axis2_char_t *om_str_out = NULL;
 			
 			om_str_out = axiom_node_to_string (policy_node, env);

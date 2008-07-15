@@ -36,10 +36,14 @@
 #include "wsf_worker.h"
 
 #ifndef PHP_WIN32
-# define TRUE 1
-# define FALSE 0
-# define stricmp strcasecmp
+#define TRUE 1
+#define FALSE 0
+#define stricmp strcasecmp
+#define WSF_TMP "/tmp"
+#else
+#define WSF_TMP "C:\\Windows\\temp"
 #endif
+
 
 
 #ifdef ZTS
