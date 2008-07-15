@@ -53,8 +53,8 @@ $class_map = array(
 try {
 
     // create client in WSDL mode
-    $client = new WSClient(array ("wsdl" =>"http://localhost/services/wsdl_mode/MimeService.php?wsdl",
-        "to" =>"http://localhost:80/services/wsdl_mode/MimeService.php",
+    $client = new WSClient(array ("wsdl" =>"http://localhost/samples/wsdl_mode/MimeService.php?wsdl",
+        "to" =>"http://localhost/samples/wsdl_mode/MimeService.php",
         "classmap" => $class_map,
         "useMTOM" => FALSE,
                             ));
