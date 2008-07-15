@@ -41,5 +41,4 @@ src/wsf_wsdl.c"
 	PHP_NEW_EXTENSION(wsf, $wsf_srcs , $ext_shared)
 	PHP_ADD_BUILD_DIR($ext_builddir/src)
 	PHP_ADD_EXTENSION_DEP(wsf, libxml)
-	PHP_ADD_EXTENSION_DEP(wsf, dom)
 fi

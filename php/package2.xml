@@ -40,8 +40,8 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
 
 <date>2008-07-21</date>
 <version>
-    <release>2.0</release>
-    <api>2.0</api>
+    <release>2.0.0beta</release>
+    <api>2.0.0beta</api>
 </version>
 <stability>
     <release>beta</release>
