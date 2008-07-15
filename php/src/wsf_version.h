@@ -20,16 +20,16 @@
 #define WSF_VERSION_H
 
 /** major version */
-#define WSF_MAJOR_VERSION 1
+#define WSF_MAJOR_VERSION 2
 
 /** minor version */
-#define WSF_MINOR_VERSION 3
+#define WSF_MINOR_VERSION 0
 
 /** patch level */ 
-#define WSF_PATCH_VERSION 2
+#define WSF_PATCH_VERSION 0
 
 /** The formatted string of WSF version */
-#define WSF_VERSION_STRING "1.3.2"
+#define WSF_VERSION_STRING "2.0.0"
 
 /* macro for Win32 .rc files using numeric csv representation */
 #define WSF_VERSION_STRING_CSV WSF_MAJOR_VERSION ##, \
