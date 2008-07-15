@@ -25,6 +25,7 @@ import org.apache.axis2.description.Parameter;
 import org.apache.axis2.description.TransportInDescription;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.util.Loader;
+import org.apache.axis2.util.Utils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.Scriptable;
@@ -171,7 +172,7 @@ public class JavaScriptEngineUtils {
                         }
                         if (inDescription != null) {
                             try {
-                                String requestIP = HttpUtils.getIpAddress(configuration);
+                                String requestIP = Utils.getIpAddress(configuration);
                                 EndpointReference endpointReference = inDescription.getReceiver()
                                         .getEPRForService(serviceName, requestIP);
 
