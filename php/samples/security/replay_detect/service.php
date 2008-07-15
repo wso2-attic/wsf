@@ -106,7 +106,7 @@ function replay_detect_callback($msg_id, $time_created) {
 }
 
 $operations = array("echoString" => "echoFunction");
-$actions = array("http://php.axis2.org/samples/echoString" => "echoString");
+$actions = array("http://wso2.org/wsfphp/samples/echoString" => "echoString");
 
 $security_options = array("useUsernameToken" => TRUE);
 $policy = new WSPolicy(array("security"=>$security_options));
