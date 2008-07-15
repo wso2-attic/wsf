@@ -35,7 +35,7 @@ $sec_token = new WSSecurityToken(array("privateKey" => $pvt_key,
                                        "certificate" => $cert,
                                        "receiverCertificate" => $pub_key));
 
-$actions = array("http://php.axis2.org/samples/echoString" => "echoString");
+$actions = array("http://wso2.org/wsfphp/samples/echoString" => "echoString");
 
 $svr = new WSService(array("operations" => $operations,
                            "actions" => $actions,

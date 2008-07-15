@@ -16,7 +16,7 @@
  */
 
 $reqPayloadString = <<<XML
-<ns1:echo xmlns:ns1="http://php.axis2.org/samples"><text>Hello World!</text></ns1:echo>
+<ns1:echo xmlns:ns1="http://wso2.org/wsfphp/samples"><text>Hello World!</text></ns1:echo>
 XML;
 
 try {
@@ -25,8 +25,8 @@ try {
     $rec_cert = ws_get_cert_from_file("../keys/bob_cert.cert");
     
     $reqMessage = new WSMessage($reqPayloadString,
-                                array("to" => "http://localhost/samples/security/complete/service.php",
-                                      "action" => "http://php.axis2.org/samples/echoString"));
+                                array("to" => "http://localhost:8080/samples/security/complete/service.php",
+                                      "action" => "http://wso2.org/wsfphp/samples/echoString"));
     
     
     $policy_xml = file_get_contents("policy.xml");
