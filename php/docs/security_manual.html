@@ -29,7 +29,7 @@ WS-Addressing</p>
 style="color:#ff6666">http://localhost/samples/security_service.php</span>",<br>
 <span style="color: #ff6666">                 &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;action</span>" =&gt;"<span
-style="color:#ff6666">http://php.axis2.org/samples/echoString</span>"));</p>
+style="color:#ff6666">http://wso2.org/wsfphp/samples/echoString</span>"));</p>
 
 <p>Then create a WSPolicy object with the security options to match your
 requirements.</p>
@@ -104,7 +104,7 @@ $sec_token));<br>
 "<span style="color: #ff3333">echoFunction</span>");</p>
 
 <p>$actions = array("<span
-style="color: #ff3333">http://php.axis2.org/samples/echoString</span>" =&gt;
+style="color: #ff3333">http://wso2.org/wsfphp/samples/echoString</span>" =&gt;
 "<span style="color: #ff3333">echoString</span>");</p>
 
 <p></p>
@@ -290,7 +290,7 @@ files. At service, you can specify operation level policies using
 
 <h3>Client Code:</h3>
 <pre>$reqPayloadString = &lt;&lt;&lt;XML
-&lt;ns1:echo xmlns:ns1="http://php.axis2.org/samples"&gt;&lt;text&gt;Hello
+&lt;ns1:echo xmlns:ns1="http://wso2.org/wsfphp/samples"&gt;&lt;text&gt;Hello
 World!&lt;/text&gt;&lt;/ns1:echo&gt;
 XML;
 
@@ -301,7 +301,7 @@ try {
 
     $reqMessage = new WSMessage($reqPayloadString,
         array("to"=&gt;"http://localhost/samples/security/encryption/encrypt_service.php",
-              "action" =&gt; "http://php.axis2.org/samples/echoString"));
+              "action" =&gt; "http://wso2.org/wsfphp/samples/echoString"));
 
     $sec_array = array("encrypt"=&gt;TRUE, "algorithmSuite" =&gt; "Basic256Rsa15",
                        "securityTokenReference" =&gt; "IssuerSerial");
@@ -340,7 +340,7 @@ try {
     $sec_array = array("encrypt" =&gt; TRUE, "algorithmSuite" =&gt; "Basic256Rsa15",
                        "securityTokenReference" =&gt; "IssuerSerial");
 
-    $actions = array("http://php.axis2.org/samples/echoString" =&gt; "echoString");
+    $actions = array("http://wso2.org/wsfphp/samples/echoString" =&gt; "echoString");
 
     $policy = new WSPolicy(array("security"=&gt;$sec_array));
     $sec_token = new WSSecurityToken(array("privateKey" =&gt; $pvt_key, 

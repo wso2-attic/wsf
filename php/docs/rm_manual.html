@@ -44,7 +44,7 @@ RM!&lt;/text&gt;&lt;/ns1:echoString&gt;XML;</p>
 <p>          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $msg =   new WSMessage($reqPayloadString,  &nbsp;
     &nbsp;array("<span
 style="color: #ff6666">action</span>" =&gt; "<span
-style="color: #ff6666">http://php.axis2.org/samples/echoString</span>") );</p>
+style="color: #ff6666">http://wso2.org/wsfphp/samples/echoString</span>") );</p>
 
 <p>          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $client = new WSClient(array( "<span
 style="color: #ff6666">to</span>"=&gt;"<span
@@ -80,15 +80,15 @@ follows.</p>
 <p>          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $msg0 =   new WSMessage($reqPayloadString,  &nbsp;
     &nbsp;array("<span
 style="color: #ff6666">action</span>" =&gt; "<span
-style="color: #ff6666">http://php.axis2.org/samples/echoString</span>") );</p>
+style="color: #ff6666">http://wso2.org/wsfphp/samples/echoString</span>") );</p>
 
 <p>          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $msg1 = new WSMessage($reqPayloadString, array("<span
 style="color: #ff6666">action</span>"=&gt;"<span
-style="color: #ff6666">http://php.axis2.org/samples/echoString</span>"));</p>
+style="color: #ff6666">http://wso2.org/wsfphp/samples/echoString</span>"));</p>
 
 <p>          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $msg2 = new WSMessage($reqPayloadString, array("<span
 style="color: #ff6666">action</span>"=&gt;"<span
-style="color: #ff6666">http://php.axis2.org/samples/echoString</span>",      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+style="color: #ff6666">http://wso2.org/wsfphp/samples/echoString</span>",      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
@@ -144,7 +144,7 @@ echo_service_rm.php was used as the above client's receiving endpoint.</p>
 "<span style="color: #ff6666">echoFunction</span>");</p>
 
 <p>$actions      &nbsp; &nbsp;&nbsp; = array("<span
-style="color: #ff6666">http://php.axis2.org/samples/echoString</span>"=&gt;"<span
+style="color: #ff6666">http://wso2.org/wsfphp/samples/echoString</span>"=&gt;"<span
 style="color: #ff6666">echoString</span>");</p>
 
 <p>$service = new WSService(array("<span
@@ -159,7 +159,7 @@ style="color: #ff6666">reliable</span>"=&gt;TRUE));</p>
 <p>$service-&gt;reply();</p>
 
 <p>Note how we map "echoString" operation to
-"http://php.axis2.org/samples/echoString"&nbsp;
+"http://wso2.org/wsfphp/samples/echoString"&nbsp;
     which is the same action URI used
 in the above example client.</p>
 

@@ -380,7 +380,7 @@ None
 
 <h3><b>Example</b></h3>
 <pre><span style="color: rgb(0, 0, 255);">$reqPayloadString</span> = &lt;&lt;&lt;XML
-        &lt;ns1:echoString xmlns:ns1=<span style="color: rgb(255, 0, 0);">"http://php.axis2.org/samples"</span>&gt;
+        &lt;ns1:echoString xmlns:ns1=<span style="color: rgb(255, 0, 0);">"http://wso2.org/wsfphp/samples"</span>&gt;
                 &lt;text&gt;Hello World!&lt;/text&gt;
         &lt;/ns1:echoString&gt;
 XML;
@@ -1023,14 +1023,14 @@ will be present in the WSMessage object.</p>
 
 <h3><b>Example</b></h3>
 <pre><span style="color: rgb(0, 0, 255);">$reqPayloadString</span> = &lt;&lt;&lt;XML
-        &lt;ns1:<a href="http://www.php.net/echo"><span style="color: rgb(0, 0, 102);">echo</span></a> xmlns:ns1=<span style="color: rgb(255, 0, 0);">"http://php.axis2.org/samples"</span>&gt;
+        &lt;ns1:<a href="http://www.php.net/echo"><span style="color: rgb(0, 0, 102);">echo</span></a> xmlns:ns1=<span style="color: rgb(255, 0, 0);">"http://wso2.org/wsfphp/samples"</span>&gt;
                 &lt;text&gt;Hello World!&lt;/text&gt;
         &lt;/ns1:echo&gt;
 XML;
 
     <span style="color: rgb(0, 0, 255);">$reqMessage</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSMessage<span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$reqPayloadString</span>,
         <a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"to"</span>=&gt;<span style="color: rgb(255, 0, 0);">"http://localhost/echo_service_addr.php"</span>,
-              <span style="color: rgb(255, 0, 0);">"action"</span> =&gt; <span style="color: rgb(255, 0, 0);">"http://php.axis2.org/samples/echoString"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
+              <span style="color: rgb(255, 0, 0);">"action"</span> =&gt; <span style="color: rgb(255, 0, 0);">"http://wso2.org/wsfphp/samples/echoString"</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
               
     <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSClient<span style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span style="color: rgb(0, 0, 102);">array</span></a><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">"useWSA"</span> =&gt; <span style="color: rgb(0, 0, 0); font-weight: bold;">TRUE</span><span style="color: rgb(102, 204, 102);">)</span><span style="color: rgb(102, 204, 102);">)</span>;
                                 
