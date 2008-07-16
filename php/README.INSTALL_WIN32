@@ -5,7 +5,6 @@ Contents:
 1. How to build WSF/PHP under Windows from source
     a. Prerequisites
     b. Building.
-    c. Building using PHP Win32 build system.
 2. Installing WSO2 WSF/PHP Binary.
 3. Binary dependency version numbers.
 
@@ -67,33 +66,7 @@ Contents:
        ( Before running the build.bat file, add your vcvars32.bat file location to PATH environment variable. 
 	    If you are using vc2005, it is located in C:\Program Files\Microsoft Visual Studio 8\VC\bin)
 
-     c. Building using PHP win32 build system
- 
-       There is another way of building the WSF/PHP extension. For this you will first need to build php
-       from source under windows.please refer README.WIN32-BUILD-SYSTEM
-       file in PHP source distribution and build PHP source under Windows.
-
-       You will also need wso2-wsf-c binary in order to build using this technique.
-                
-       Copy wsf_php folder to php_source/ext directory.
-
-       Run "buildconf.bat" to rebuild the configure.js file.
-
-
-       "cscript /nologo configure.js --help" will give the configuration options.
-       You will find the option --with-wsf.
-
-       Add following entries to config.nice.bat file.
-	"--with-extra-includes=<Libxml2 bin dir>\include;<Iconv bin dir>\include;<wsf-c>\include;
-		<wsf-c-bin>\include;"
-	"--with-extra-libs=<Libxml2 bin dir>\lib;<Iconv bin dir>\lib;<wsf-c>\lib;<wsf-c-bin>\lib"
-	--with-wsf=shared"
-
-	Now run config.nice.bat file to generate the makefile.
-   
-	"nmake" will build wsf extension.
-
-2. Installing WSO2 WSF as a PHP extension.
+ 2. Installing WSO2 WSF as a PHP extension.
 
     1.If you built the extension from the source, you will find the wso2-wsf-php-bin-x.y.z-win32 (binary pack) 
       located in your source directory.
