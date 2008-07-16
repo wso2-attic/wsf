@@ -1,3 +1,4 @@
+@echo off
 @call wsf_c\build\init.bat
 set WSFPHP_VERSION=2.0.0beta
 
