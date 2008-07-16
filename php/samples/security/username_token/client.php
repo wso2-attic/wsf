@@ -23,7 +23,7 @@ XML;
 try {
     // Create message with request payload and options
     $reqMessage = new WSMessage($reqPayloadString,
-                         array("to" => "http://localhost:8080/services/echo",
+                         array("to" => "http://localhost/services/echo",
                                "action" => "urn:echoString"));
    
     // Set up security options
