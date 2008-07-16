@@ -569,14 +569,17 @@ PHP_METHOD (ws_message, __construct)
 				add_property_stringl(object, WSF_FROM, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
 		}
 		if(zend_hash_find(ht, WSF_REST_CONTENT_TYPE, sizeof(WSF_REST_CONTENT_TYPE),
-			(void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
+			(void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING)
+        {
 				add_property_stringl(object, 
 					WSF_REST_CONTENT_TYPE, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp),1);
 		
 		}
         if (zend_hash_find (ht, WSF_INPUT_HEADERS, sizeof (WSF_INPUT_HEADERS),
-            (void **) &tmp) == SUCCESS) {
-				if (Z_TYPE_PP (tmp) == IS_ARRAY) {
+            (void **) &tmp) == SUCCESS) 
+        {
+				if (Z_TYPE_PP (tmp) == IS_ARRAY) 
+                {
 					add_property_zval (object, WSF_INPUT_HEADERS, *tmp);
 				}
         }
@@ -947,11 +950,10 @@ PHP_METHOD (ws_service, __construct)
 
 			if (zend_hash_find (ht_options, WSF_OP_POLICIES, sizeof (WSF_OP_POLICIES), 
 				(void **) &tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY) {
-
 					svc_info->ht_op_policies = Z_ARRVAL_PP(tmp);
 					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
-						" policy object present");
-				}
+						"operation policy object present");
+			}
             if (zend_hash_find (ht_options, WSF_SECURITY_TOKEN, sizeof (WSF_SECURITY_TOKEN), 
 				(void **) &tmp) == SUCCESS) {
             
@@ -1054,6 +1056,13 @@ PHP_METHOD (ws_service, __construct)
     if(zend_hash_find(Z_OBJPROP_P(this_ptr), WSF_WSDL,
                       sizeof(WSF_WSDL), (void **)&wsdl_tmp) == SUCCESS){
         wsf_wsdl_process_service(this_ptr, NULL, svc_info, ws_env_svr TSRMLS_CC);
+    }
+
+    if (svc_info->security_token && (svc_info->policy || svc_info->ht_op_policies))
+    {
+        axis2_conf_t * conf = NULL;
+        conf = axis2_conf_ctx_get_conf (wsf_worker_get_conf_ctx(worker, ws_env_svr), env);
+        wsf_policy_handle_server_security (svc_info, env, conf TSRMLS_CC);
     }
 }
 

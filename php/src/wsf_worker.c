@@ -313,15 +313,14 @@ wsf_worker_process_request (
 	{
         axis2_msg_ctx_set_doing_mtom (msg_ctx, env, AXIS2_TRUE);
     }
-
-    if (svc_info->security_token && (svc_info->policy || svc_info->ht_op_policies)) 
+/*
+    if (svc_info->security_token && (svc_info->policy || svc_info->op_policies)) 
 	{
-        /**  call security function here */ 
         axis2_conf_t * conf = NULL;
         conf = axis2_conf_ctx_get_conf (worker->conf_ctx, env);
         wsf_policy_handle_server_security (svc_info, env, conf TSRMLS_CC);
     }
-    
+  */  
 	transport_in.soap_action = request->soap_action;
 
 	in_stream = wsf_stream_create (env, request TSRMLS_CC);
