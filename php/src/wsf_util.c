@@ -501,15 +501,14 @@ wsf_util_get_soap_msg_from_op_client (
 axis2_char_t *
 wsf_util_get_http_headers_from_op_client (
     axis2_op_client_t * op_client,
-    axutil_env_t * env,
+    const axutil_env_t * env,
     axis2_wsdl_msg_labels_t msg_label)
 {
     if (op_client) {
         const axis2_msg_ctx_t *msg_ctx = NULL;
-        axutil_property_t *client_property = NULL;
-        axis2_http_client_t *client = NULL;
-        axis2_http_simple_response_t *response = NULL;
-        axutil_array_list_t *list = NULL;
+        
+
+		axutil_array_list_t *list = NULL;
         axis2_http_header_t *header = NULL;
         int i;
         char *header_buf = NULL;
@@ -517,24 +516,7 @@ wsf_util_get_http_headers_from_op_client (
         msg_ctx = axis2_op_client_get_msg_ctx (op_client, env, msg_label);
         if (!msg_ctx)
             return NULL;
-        client_property =
-            (axutil_property_t *) axis2_msg_ctx_get_property (msg_ctx, env,
-            AXIS2_HTTP_CLIENT);
-
-        if (client_property)
-            client =
-                (axis2_http_client_t *)
-                axutil_property_get_value (client_property, env);
-        else
-            return NULL;
-
-        if (client && (msg_label == AXIS2_WSDL_MESSAGE_LABEL_OUT)) {
-            response = axis2_http_client_get_response (client, env);
-            if (response)
-                list = axis2_http_simple_response_get_headers (response, env);
-            else
-                return NULL;
-        }
+        list = axis2_msg_ctx_get_http_output_headers(msg_ctx, env);
 
         if (list) {
             header_buf = pemalloc (500,1);
