@@ -226,7 +226,7 @@
     </wsdl:binding>
     <wsdl:service name="Calendar">
         <wsdl:port name="CalendarSOAP12port_http" binding="ns1:CalendarSOAP12Binding">
-            <soap12:address location="https://localhost:8080/axis2/services/Calendar"/>
+            <soap12:address location="https://localhost/axis2/services/Calendar"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

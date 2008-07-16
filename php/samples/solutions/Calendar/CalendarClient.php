@@ -17,7 +17,7 @@
 
 class CalendarClient extends WSClient
 {
-    const ENDPOINT = "http://localhost:8080/samples/solutions/calendar/CalendarService.php";
+    const ENDPOINT = "http://localhost/samples/solutions/calendar/CalendarService.php";
     const ADDEVENT_METHOD = "addEvent";
     const DELETE_METHOD = "deleteEvents";
     const SOAP_FAULT = "soap-fault";
@@ -55,7 +55,7 @@ class CalendarClient extends WSClient
         
 		$client = new WSClient(array("wsdl"=> "Calendar.wsdl",
                                      "useSOAP" => 1.2,
-                                     "to" => "http://localhost:8080/samples/solutions/calendar/CalendarService.php"));
+                                     "to" => "http://localhost/samples/solutions/calendar/CalendarService.php"));
  
                 $proxy = $client->getProxy();
 
@@ -95,7 +95,7 @@ XML;
 
             try {
                     $reqMessage = new WSMessage($addEventRequest,
-                         array("to" => "http://localhost:8080/samples/solutions/calendar/CalendarService.php",
+                         array("to" => "http://localhost/samples/solutions/calendar/CalendarService.php",
                                 "action"=>"urn:addEvent"));
  
                   // Send request and capture response
@@ -142,7 +142,7 @@ XML;
 
    try {
            $reqMessage = new WSMessage($getEventRequest,
-                         array("to" => "http://localhost:8080/samples/solutions/calendar/CalendarService.php",
+                         array("to" => "http://localhost/samples/solutions/calendar/CalendarService.php",
                                 "action"=>"urn:getEvents"));
 
           // Send request and capture response
