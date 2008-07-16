@@ -263,9 +263,9 @@
         <javamail.version>1.4</javamail.version>
         <activation.version>1.1</activation.version>
         <junit.version>3.8.2</junit.version>
-		<axis2.version>SNAPSHOT</axis2.version>
+		<axis2.version>1.401</axis2.version>
 		<js.core.version>1.6R7</js.core.version>
-		<neethi.version>SNAPSHOT</neethi.version>
+		<neethi.version>2.0.4</neethi.version>
 		<wsdl4j.version>1.6.2</wsdl4j.version>
 		<jaxen.version>1.1-beta-10</jaxen.version>
 		<stax.impl.groupid>woodstox</stax.impl.groupid>
@@ -278,7 +278,7 @@
 		<backport.util.concurrent.version>2.1</backport.util.concurrent.version>
 		<junit.version>3.8.2</junit.version>
 		<jakarta.httpcore.version>4.0-alpha5</jakarta.httpcore.version>
-		<XmlSchema.version>SNAPSHOT</XmlSchema.version>
+		<XmlSchema.version>1.4.2</XmlSchema.version>
 		<commons.io.version>1.1</commons.io.version>
 		<jettison.version>1.0-beta-1</jettison.version>
     </properties>

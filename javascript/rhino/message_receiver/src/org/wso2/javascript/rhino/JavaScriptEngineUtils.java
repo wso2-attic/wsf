@@ -172,7 +172,7 @@ public class JavaScriptEngineUtils {
                         }
                         if (inDescription != null) {
                             try {
-                                String requestIP = Utils.getIpAddress(configuration);
+                                String requestIP = HttpUtils.getIpAddress(configuration);
                                 EndpointReference endpointReference = inDescription.getReceiver()
                                         .getEPRForService(serviceName, requestIP);
 
