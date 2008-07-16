@@ -73,10 +73,12 @@ print wsfc_prefix
 print sysconfig.get_config_vars()["CFLAGS"]
 print os.path.join(wsfc_prefix, AXIS2C_INCLUDES)
 
+current_wd = os.getcwd()
+wsdlc_includes = os.path.join(current_wd, 'wsdlc/include')
 
 if wsfc_prefix:
 	wsfc_incdirs = [
-		os.path.join(wsfc_prefix, AXIS2C_INCLUDES),] 
+		os.path.join(wsfc_prefix, AXIS2C_INCLUDES), wsdlc_includes, os.path.join(wsfc_prefix, RAMPARTC_INCLUDES), ] 
 		#os.path.join(wsfc_prefix, RAMPARTC_INCLUDES)]
 	wsfc_libdirs = [
 		os.path.join(wsfc_prefix, AXIS2C_LIBS),] 
@@ -114,7 +116,7 @@ setup(name='WSFC',
 						include_dirs=wsfc_incdirs,
 						library_dirs=wsfc_libdirs,
 						libraries=wsfc_libs,
-						extra_compile_args=['-Wno-strict-prototypes', ],
+						extra_compile_args=['-Wno-strict-prototypes', '-fno-strict-aliasing', ],
 						extra_link_args=[extra_l_args,],
 						)],
       py_modules=['WSFC'],
@@ -122,6 +124,7 @@ setup(name='WSFC',
 	  description='Python binding for WSFC',
       packages=['wso2',],
       package_dir={'wso2': 'lib/wso2'},
+      package_data={'wso2': ['wsdlc/conf/*.xml', 'wsdlc/xslt/*.*'], }
       )
 
 # If the operation is install, we have to run 'ldconfig' to add WSFC libraries

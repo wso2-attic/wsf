@@ -57,6 +57,22 @@ class WSFMethodMissingMixin(object):
         raise NotImplementedError(str(self.__wrapped__) + " 'method_missing' method has not been implemented.")
     
 
+class WSMessage:
+    
+    def __init__(self, str_payload, xml_dom_payload=None, properties=None):
+        self.properties = {}
+        self.str_payload = ''
+        self.dom_payload = None
+        
+        self.properties = properties.copy()
+        
+        if str_payload is not None and isinstance(str_payload, str):
+            self.str_payload = str_payload
+        
+        
+        
+    
+
 class WSClient:
    
     def __init__(self, options, log_file_name=WSFC.WSF_DEFAULT_LOG_FILE_NAME):

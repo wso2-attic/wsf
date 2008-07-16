@@ -63,9 +63,11 @@ typedef char         axis2_byte_t;
 
 %include wsf_constants.i
 %include wsf_inlines.i
+/*%include wsf_python.i*/
 
 %include "cpointer.i"
 %include "typemaps.i"
+
 
 %pointer_functions(axiom_node_t *, axiom_node_t_pp);
 
