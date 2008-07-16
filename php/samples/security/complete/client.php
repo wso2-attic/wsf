@@ -25,7 +25,7 @@ try {
     $rec_cert = ws_get_cert_from_file("../keys/bob_cert.cert");
     
     $reqMessage = new WSMessage($reqPayloadString,
-                                array("to" => "http://localhost:8080/samples/security/complete/service.php",
+                                array("to" => "http://localhost/samples/security/complete/service.php",
                                       "action" => "http://wso2.org/wsfphp/samples/echoString"));
     
     
