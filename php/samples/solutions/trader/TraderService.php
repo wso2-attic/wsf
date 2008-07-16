@@ -190,7 +190,7 @@ XML;
             $doc =DOMDocument::load("/tmp/members.xml");
     }
 
-    $epr = "http://127.0.0.1:8080/ExchangeTrader.php";
+    $epr = "http://localhost/ExchangeTrader.php";
     $operation = "buy";
 
     $clients = $doc->getElementsByTagName( "client" );
