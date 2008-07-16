@@ -35,8 +35,7 @@ href="mailto:wsf-c-dev-request@wso2.org?subject=subscribe">subcribe</a></p>
     <ol>
       <li><a href="#Prerequisites_win32">Prerequisites</a></li>
       <li><a href="#Building">Building </a></li>
-       <li><a href="#Building_with_PHP_WIN32_Build_System">Building with PHP WIN32 Build System</a></li>
-      <li><a href="#Installing_WSO2_WSF/PHP_Binary">Installing WSO2 WSF/PHP Binary</a></li>
+       <li><a href="#Installing_WSO2_WSF/PHP_Binary">Installing WSO2 WSF/PHP Binary</a></li>
   </ol>
    </li>
    <li><a href="#2.Installing_using_pecl_tool">Installing using pecl tool</a></li>
@@ -50,7 +49,7 @@ href="mailto:wsf-c-dev-request@wso2.org?subject=subscribe">subcribe</a></p>
 <a id="1.Installing_and_Running_on_Linux"></a><h2>1. Installing and Running on Linux</h2>
 <a id="Prerequisites"></a><h3>1.1 &nbsp;Prerequisites</h3>
     <p>
-        &nbsp; &nbsp; &nbsp;Inorder to build and run the WSF/PHP Linux source distribution, you
+        &nbsp; &nbsp; &nbsp;In order to build and run the WSF/PHP Linux source distribution, you
         need to have the following software installed on&nbsp; your system.</p>
     <ol>
     <li>PHP 5.1.1 or later, which can be downloaded from the <a
@@ -191,36 +190,8 @@ add the following line to the php.ini<br />
         ( Before running the build.bat file, add your vcvars32.bat&nbsp; file location to
         PATH environment variable. IF you are using vc2005, it is located in C:\Program
         Files\Microsoft Visual Studio 8\VC\bin )</p>
-<a id="Building_with_PHP_WIN32_Build_System"></a>
 
-<h3>
-            2.3 Building with PHP WIN32 Build System</h3>
-
-<p>1. Before trying this, please refer to the README.WIN32-BUILD-SYSTEM file
-in the PHP source distribution, and build the PHP source under MS Windows.</p>
-
-<p>2. Copy wsf_php folder to php_source/ext directory.</p>
-
-<p>3. Run buildconf.bat file to rebuild the configure.js file.</p>
-
-<p>4. "cscript /nologo configure.js --help" will give the configuration
-options. You will find the option --with-wsf.<br />
-</p>
-
-<p>5. Add the following entries to config.nice.bat file.</p>
-
-<p>"--with-extra-includes=&lt;Libxml2 bin dir&gt;\include;&lt;iconv bin directory&gt;\include;&lt;wsf-c
-dir&gt;\include" </p>
-
-<p> "-- with-extra-libs=&lt;Libxml2 bin dir&gt;\lib;&lt;iconv bin dir&gt;\lib;&lt;wsf-c dir&gt;\lib"</p>
-
-<p> "--with-wsf=shared"</p>
-
-<p>6. Run the above config.nice.bat file to configure the wsf extension as a
-dll.</p>
-
-<p>7. "nmake" will build the wsf extension.<br />
-</p>
+           
 <a id="Installing_WSO2_WSF/PHP_Binary"></a>
 
 <h3>
@@ -318,8 +289,8 @@ document root. If you want to run samples</p>
     You can use the pecl tool to install WSO2 WSF/PHP.<br />
     <br />
     1. First you need to download and install<a href="http://dist.wso2.org/products/wsf/c/1.2.0/"> WSO2 WSF/C Web Services framework</a>
-    1.2.0 version. You
-    can use either the source distribution, rpm or deb.<br />
+    latest version. You
+    can use the source distribution.<br />
     <br />
     2. Download the WSO2 WSF/PHP pecl package. Next use pecl tool to install package.<br />
     <strong>&nbsp; &nbsp; pecl install</strong> wso2_wsf_php_x.y.z.tgz<br />
