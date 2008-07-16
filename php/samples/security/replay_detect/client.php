@@ -23,7 +23,7 @@ XML;
 try {
 
     $reqMessage = new WSMessage($reqPayloadString,
-                                array("to"=>"http://localhost:8080/samples/security/replay_detect/service.php",
+                                array("to"=>"http://localhost/samples/security/replay_detect/service.php",
                                       "action" => "http://wso2.org/wsfphp/samples/echoString"));
     
     $security_options = array("useUsernameToken" => TRUE );
