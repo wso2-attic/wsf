@@ -151,7 +151,7 @@ zend_function_entry php_ws_client_class_functions[] = {
     PHP_MALIAS (ws_client, getProxy, get_proxy, NULL, ZEND_ACC_PUBLIC)
     PHP_MALIAS (ws_client, terminateOutgoingRM, terminate_outgoing_rm, NULL, ZEND_ACC_PUBLIC)
     PHP_MALIAS (ws_client, getLastResponseHeaders,get_last_response_headers, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME (ws_client, __construct, NULL, ZEND_ACC_PUBLIC)
+	PHP_ME (ws_client, __construct, NULL, ZEND_ACC_PUBLIC)
     PHP_ME (ws_client, __destruct,  NULL, ZEND_ACC_PUBLIC)
     { NULL, NULL, NULL} 
 };
@@ -772,21 +772,18 @@ PHP_METHOD (ws_client, get_last_response_headers)
     WSF_GET_THIS (obj);
     WSF_GET_OBJ (svc_client, obj, axis2_svc_client_t, intern);
     if (svc_client) {
-        axis2_op_client_t * op_client = NULL;
+	    axis2_op_client_t * op_client = NULL;
         op_client = axis2_svc_client_get_op_client (svc_client, env);
         if (op_client) {
-            axis2_char_t * msg =
-                wsf_util_get_http_headers_from_op_client (op_client, env,
+                wsf_util_get_http_headers_from_op_client (op_client, env, return_value,
                 AXIS2_WSDL_MESSAGE_LABEL_OUT);
-            if (msg){
-                RETURN_STRING (msg, 1);
-            }
+           return;
         }
     }
     RETURN_NULL();
 }
 /* }}} */ 
-    
+
 /* }}} end call */ 
 PHP_METHOD (ws_client, get_proxy) 
 {

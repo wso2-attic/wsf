@@ -62,10 +62,11 @@ wsf_util_get_soap_msg_from_op_client (
 * @param message_label, 
 * @returns HTTP Headers string on success, NULL Otherwise
 */
-axis2_char_t *
+axis2_status_t
 wsf_util_get_http_headers_from_op_client (
     axis2_op_client_t * op_client,
     const axutil_env_t * env,
+	zval *return_val,
     axis2_wsdl_msg_labels_t message_label);
 
 /**

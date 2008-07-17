@@ -505,42 +505,45 @@ wsf_util_get_soap_msg_from_op_client (
     return NULL;
 }
 
-axis2_char_t *
+axis2_status_t
 wsf_util_get_http_headers_from_op_client (
     axis2_op_client_t * op_client,
     const axutil_env_t * env,
+	zval* return_val,
     axis2_wsdl_msg_labels_t msg_label)
 {
     if (op_client) {
         const axis2_msg_ctx_t *msg_ctx = NULL;
-        
-
-		    axutil_array_list_t *list = NULL;
+		axutil_array_list_t *list = NULL;
         axis2_http_header_t *header = NULL;
-        int i;
-        char *header_buf = NULL;
-
-        msg_ctx = axis2_op_client_get_msg_ctx (op_client, env, msg_label);
+        int i = 0;
+		msg_ctx = axis2_op_client_get_msg_ctx (op_client, env, msg_label);
         if (!msg_ctx)
-            return NULL;
+            return AXIS2_FAILURE;
         list = axis2_msg_ctx_get_http_output_headers((axis2_msg_ctx_t *)msg_ctx, env);
 
         if (list) {
-            header_buf = pemalloc (500,1);
+			array_init(return_val);
             if (!axutil_array_list_is_empty (list, env)) {
                 for (i = 0; i < axutil_array_list_size (list, env); i++) {
-                    header =
-                        (axis2_http_header_t *) axutil_array_list_get (list,
-                        env, i);
-                    strcat (header_buf,
-                        axis2_http_header_to_external_form (header, env));
+					axis2_char_t *header_val = NULL;
+                    header = (axis2_http_header_t *) axutil_array_list_get (list, env, i);
+					if(header && (header_val  = axis2_http_header_to_external_form (header, env)))
+					{
+						axis2_char_t *name = NULL;
+						axis2_char_t *value = NULL;
+						name = axis2_http_header_get_name(header, env);
+						value = axis2_http_header_get_value(header, env);
+						if(name && value)
+						{
+							add_assoc_string_ex(return_val, name, strlen(name)+1, value, 1);
+						}
+					}
                 }
-                return header_buf;
             }
         }
-
     }
-    return NULL;
+	return AXIS2_SUCCESS;
 }
 
 int
