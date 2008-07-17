@@ -88,7 +88,6 @@ AC_CONFIG_FILES([Makefile \
     src/storage/beans/Makefile\
     src/storage/common/Makefile \
     src/storage/sqlite/Makefile\
-    src/storage/mysql/Makefile\
     src/client/Makefile \
     src/core/Makefile \
     src/polling/Makefile 
