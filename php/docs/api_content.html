@@ -174,7 +174,7 @@ border="1">
     <tr valign="top">
       <td colspan="1" style="height: 20px; width: 96px;">"policy"</td>
       <td colspan="1" style="height: 20px"> &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
           WSPolicy object</td>
       <td colspan="1" style="height: 20px">WSPolicy object</td>
       <td colspan="1" style="height: 20px">None</td>
@@ -304,17 +304,10 @@ border="1">
 
 <p>The response will be returned as a WSMessage object instance.</p>
 
-<p>Throws WSFault on error.</p>
+<p>Throws <strong>WSFault</strong> on error.</p>
 
-<p><br>
-<br>
-</p>
-<a id="pre_void_WSClient"></a>
-<ul>
-  <li><p><b>void WSClient -&gt; send(string payload | 
+<p><b>void WSClient -&gt; send(string payload | 
     WSMessage message)</b></p>
-  </li>
-</ul>
 
 <p>Sends a request message payload in XML. The invocation model is one way,
 hence no response will be expected.</p>
@@ -356,25 +349,30 @@ border="1">
 <br>
 </p>
 
-<p>Return Values:</p>
-
-<p>void</p>
-
-<p>Throws <strong>WSFault</strong> on error.</p>
-    <ul>
-
-<li><strong>&nbsp;string WSClient-&gt;getLastResponse() </strong>
+<p>Return Values: void </p>
+<p>throws <strong>WSFault</strong> on error.</p>
+    
+<ul>
+<li><strong>&nbsp;string WSClient-&gt;getLastRequest() </strong>
+<p>
+        This function returns the last requested soap message as a string</p>
 </li>
-    </ul>
-    <p>
-        This function returns the last received soap message as a string</p>
-        <ul>
+</ul>
+<ul>
     <li><strong>&nbsp; string WSClient-&gt;getLastResponse() </strong>
         <p>
             This function returns the last received soap message as a string<br />
         </p>
     </li>
 </ul>
+<ul>
+    <li><strong>&nbsp; string WSClient-&gt;getLastResponseHeaders() </strong>
+        <p>
+            This function returns an associative array of received http headers with header name as the key and header value as the value<br />
+        </p>
+    </li>
+</ul>
+
 <h3><b>Member Variables</b></h3>
 None
 
@@ -1010,7 +1008,7 @@ representation of the binary content to be sent or being received.</p>
 
 <p>An associative array, containing the mapping of cid (content ID) to its
 corresponding  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
         attachment. When an attachment is received, this property
 will be present in the WSMessage object.</p>
 <ul>
