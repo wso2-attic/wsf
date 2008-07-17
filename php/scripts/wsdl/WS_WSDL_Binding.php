@@ -30,6 +30,7 @@ class WS_WSDL_Binding
     public  $operations;
     private $wsdl_location;
     private $fun_mapping;
+    private $r_actions;
 
     /**
      * The constructor of the WS_WSDL_Binding class                    
@@ -38,11 +39,12 @@ class WS_WSDL_Binding
      * @param Array $operations Array of operations defined in the service
      */
 
-    function __construct($service_name, $wsdl_ep, $operations = false, $ops_to_functions) {
+    function __construct($service_name, $wsdl_ep, $operations = false, $ops_to_functions, $r_actions) {
         $this->svr_name = $service_name;
         $this->operations = $operations;
         $this->wsdl_location = $wsdl_ep;
         $this->fun_mapping = $ops_to_functions;
+        $this->r_actions = $r_actions;
     }
 
     /**
@@ -74,13 +76,26 @@ class WS_WSDL_Binding
             foreach($this->fun_mapping as $key => $value) {
                 if ($value == $name) {
                     $op->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $key);
+
+                    
+                    $action_value = NULL;
+                    if($this->r_actions != NULL && array_key_exists($key, $this->r_actions)) {
+                        $action_value = $this->r_actions[$key];
+                    }
+                    else {
+                        $action_value = WS_WSDL_Const::WS_WSDL_HTTP_ATTR_NAME.$this->wsdl_location."/".$key;
+                    }
                 }
             }
+
             $action_ele = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_SOAP_NAMESPACE,
-                          WS_WSDL_Const::WS_WSDL_OPERATION_ATTR_NAME);
-            $action_ele->setAttribute(WS_WSDL_Const::WS_WSDL_SOAP_ACTION_ATTR_NAME,
-                                      WS_WSDL_Const::WS_WSDL_HTTP_ATTR_NAME.
-                                      $this->wsdl_location."/".$name);
+                                  WS_WSDL_Const::WS_WSDL_OPERATION_ATTR_NAME);
+            
+            if($action_value) {
+                $action_ele->setAttribute(WS_WSDL_Const::WS_WSDL_SOAP_ACTION_ATTR_NAME,
+                                        $action_value);
+            }
+
             $action_ele->setAttribute(WS_WSDL_Const::WS_WSDL_STYLE_ATTR_NAME,
                                       WS_WSDL_Const::WS_WSDL_DOCUMENT_ATTR_NAME);
             $op->appendChild($action_ele);
@@ -136,18 +151,27 @@ class WS_WSDL_Binding
             $op = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                                 WS_WSDL_Const::WS_WSDL_OPERATION_ATTR_NAME);
             foreach($this->fun_mapping as $key => $value) {
-                if ($value == $name)
-                $op->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $key);
-            }
-            $action_ele = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_SOAP_NAMESPACE,
-                          WS_WSDL_Const::WS_WSDL_OPERATION_ATTR_NAME);
-            $action_ele->setAttribute(WS_WSDL_Const::WS_WSDL_SOAP_ACTION_ATTR_NAME,
-                                      WS_WSDL_Const::WS_WSDL_HTTP_ATTR_NAME.
-                                      $this->wsdl_location."/".$name);
-            $action_ele->setAttribute(WS_WSDL_Const::WS_WSDL_STYLE_ATTR_NAME,
-                                      WS_WSDL_Const::WS_WSDL_RPC_ATTR_NAME);
-            $op->appendChild($action_ele);
+                if ($value == $name) {
+                    $op->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $key);
 
+                    $action_value = NULL;
+                    if($this->r_actions != NULL && array_key_exists($key, $this->r_actions)) {
+                        $action_value = $this->r_actions[$key];
+                    }
+                    else {
+                        $action_value = WS_WSDL_Const::WS_WSDL_HTTP_ATTR_NAME.$this->wsdl_location."/".$key;
+                    }
+                }
+            }
+
+            $action_ele = $binding_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_SOAP_NAMESPACE,
+                                  WS_WSDL_Const::WS_WSDL_OPERATION_ATTR_NAME);
+            
+            if($action_value) {
+                $action_ele->setAttribute(WS_WSDL_Const::WS_WSDL_SOAP_ACTION_ATTR_NAME,
+                                        $action_value);
+            }
+            $op->appendChild($action_ele);
 
 
             foreach(array(WS_WSDL_Const::WS_WSDL_INPUT_ATTR_NAME,

@@ -91,7 +91,7 @@ void
 wsf_set_rampart_sct_options (
 	rampart_context_t *rampart_context,
 	HashTable * ht_token,
-	axutil_env_t * env TSRMLS_DC);
+	const axutil_env_t * env TSRMLS_DC);
 
 
 char*
@@ -516,7 +516,7 @@ wsf_set_rampart_options (
     rampart_context_t *rampart_context,
     zval * sec_token,
     zval * policy,
-    axutil_env_t * env TSRMLS_DC)
+    const axutil_env_t * env TSRMLS_DC)
 {
     HashTable *ht_policy = NULL;
     HashTable *ht_token = NULL;
@@ -1416,7 +1416,7 @@ void
 wsf_set_rampart_sct_options (
 	rampart_context_t *rampart_context,
 	HashTable *ht_token,
-	axutil_env_t * env TSRMLS_DC)
+	const axutil_env_t * env TSRMLS_DC)
 {
 	wsf_callback_args_t *callback_args = NULL;
 	zval **token_val = NULL;
@@ -1468,7 +1468,7 @@ wsf_set_rampart_sct_options (
 
 /** returns a pointer to an allocated callback args struct */
 wsf_callback_args_t* 
-wsf_callback_args_create(axutil_env_t *env)
+wsf_callback_args_create(const axutil_env_t *env)
 {
 	wsf_callback_args_t *args = NULL;
 	args = AXIS2_MALLOC(env->allocator, sizeof(wsf_callback_args_t));

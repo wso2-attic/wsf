@@ -118,7 +118,7 @@ int
 wsf_util_engage_module (
     axis2_conf_t * conf,
     axis2_char_t * module_name,
-    axutil_env_t * env,
+    const axutil_env_t * env,
     axis2_svc_t * svc);
 
 /**
@@ -417,6 +417,19 @@ wsf_util_process_rest_params(
 int
 wsf_util_add_svc_to_conf(
 	axutil_env_t *env,
+	wsf_svc_info_t *svc_info,
+	axis2_conf_ctx_t *conf_ctx);
+
+/**
+* 
+* @param env, 
+* @param svc_info, 
+* @param conf_ctx, 
+* @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
+*/
+int
+wsf_util_find_and_set_svc_ctx(
+	const axutil_env_t *env,
 	wsf_svc_info_t *svc_info,
 	axis2_conf_ctx_t *conf_ctx);
 

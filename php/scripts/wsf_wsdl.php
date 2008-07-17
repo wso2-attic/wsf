@@ -529,6 +529,7 @@ function wsf_wsdl_process_in_msg($parameters)
     require_once('dynamic_invocation/wsf_wsdl_service.php');
 
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "wsf_wsdl_process_in_msg is called");
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, print_r($parameters, TRUE));
 
     $payload_dom = new DomDocument();
     $sig_model_dom = new DomDocument();

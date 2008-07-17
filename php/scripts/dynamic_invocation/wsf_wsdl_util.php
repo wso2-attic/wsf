@@ -1167,11 +1167,12 @@ function wsf_clear_wsdl_imports($wsdl_dom, $relative_url = "") {
                             if($strpos !== FALSE) {
                                 $local_name = substr($type_name, $strpos + 1);
                                 $prefix = substr($type_name, 0, $strpos);
+                                $type_namespace = $wsdl_root->getAttribute("xmlns:".$prefix);
                             }
                             else {
                                 $local_name = $type_name;
+                                $type_namespace = $wsdl_root->getAttribute("xmlns");
                             }
-                            $type_namespace = $wsdl_root->getAttribute("xmlns:".$prefix);
                             if(array_key_exists($type_namespace, $namespace_map)) {
                                 $new_prefix = $namespace_map[$type_namespace];
                             }
@@ -1194,11 +1195,12 @@ function wsf_clear_wsdl_imports($wsdl_dom, $relative_url = "") {
                             if($strpos !== FALSE) {
                                 $local_name = substr($element_name, $strpos + 1);
                                 $prefix = substr($element_name, 0, $strpos);
+                                $element_namespace = $wsdl_root->getAttribute("xmlns:".$prefix);
                             }
                             else {
                                 $local_name = $element_name;
+                                $element_namespace = $wsdl_root->getAttribute("xmlns");
                             }
-                            $element_namespace = $wsdl_root->getAttribute("xmlns:".$prefix);
                             if(array_key_exists($element_namespace, $namespace_map)) {
                                 $new_prefix = $namespace_map[$element_namespace];
                             }
@@ -1287,9 +1289,8 @@ function wsf_normalize_url($url) {
 
     $state = 0;
     /**
-     * here 0 is for before finding the end of ../../ series
-     * 1 is for after finding some ../../
-     * 2 after finding one some/..
+     * here 0 is for before finding any named component
+     * 1 is for after finding some named component
      */
     for($i = 0; $i < count($tokens); $i ++) {
         $token = $tokens[$i];

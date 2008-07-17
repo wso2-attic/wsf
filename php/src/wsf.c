@@ -832,7 +832,6 @@ PHP_METHOD (ws_service, __construct)
 	HashTable * ht_classes = NULL;
 	HashTable * ht_annotations = NULL;
 	HashTable * ht_rest_map = NULL;
-	zval **wsdl_tmp = NULL;
     char *service_name = NULL;
     char *port_name = NULL;
     ws_is_svr = 1;
@@ -864,9 +863,12 @@ PHP_METHOD (ws_service, __construct)
         if (ht_options) {
             if (zend_hash_find (ht_options, WSF_ACTIONS , sizeof (WSF_ACTIONS), 
                 (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
-					ht_actions = Z_ARRVAL_PP (tmp);
-					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
-						" setting actions ");
+					      ht_actions = Z_ARRVAL_PP (tmp);
+					      AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+						      " setting actions ");
+
+                svc_info->wsdl_gen_actions = *tmp;
+                zval_add_ref(&(svc_info->wsdl_gen_actions));
             }
             if (zend_hash_find (ht_options, WSF_OPERATIONS, sizeof (WSF_OPERATIONS), 
 				(void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
@@ -894,10 +896,13 @@ PHP_METHOD (ws_service, __construct)
 				(void **)&tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY){
 					ht_rest_map = Z_ARRVAL_PP(tmp);
 			}
-            
+            if (zend_hash_find (ht_options, WSF_CACHE_WSDL, sizeof (WSF_CACHE_WSDL),
+                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_BOOL) {
+                    svc_info->cache_wsdl = Z_BVAL_PP (tmp);
+            }
             if (zend_hash_find (ht_options, WSF_WSDL, sizeof (WSF_WSDL),
                (void **) & tmp) == SUCCESS  &&Z_TYPE_PP (tmp) == IS_STRING) {
-				    svc_info->wsdl = Z_STRVAL_PP (tmp);
+				            svc_info->wsdl = axutil_strdup(ws_env_svr, Z_STRVAL_PP (tmp));
                     add_property_stringl (this_ptr, WSF_WSDL, Z_STRVAL_PP (tmp),
                                                       Z_STRLEN_PP (tmp), 1);
             }
@@ -1048,15 +1053,16 @@ PHP_METHOD (ws_service, __construct)
     wsf_util_process_ws_service_op_actions(ht_actions, svc_info, ws_env_svr TSRMLS_CC);
  
 	wsf_util_add_svc_to_conf(ws_env_svr, svc_info, wsf_worker_get_conf_ctx(worker, ws_env_svr));
+	
 
     wsf_util_engage_modules_to_svc(ws_env_svr, wsf_worker_get_conf_ctx(worker, ws_env_svr), svc_info);
     
 	wsf_util_process_rest_params(ws_env_svr, svc_info, ht_rest_map TSRMLS_CC);
 
-    if(zend_hash_find(Z_OBJPROP_P(this_ptr), WSF_WSDL,
+    /*if(zend_hash_find(Z_OBJPROP_P(this_ptr), WSF_WSDL,
                       sizeof(WSF_WSDL), (void **)&wsdl_tmp) == SUCCESS){
         wsf_wsdl_process_service(this_ptr, NULL, svc_info, ws_env_svr TSRMLS_CC);
-    }
+    } */
 
     if (svc_info->security_token && (svc_info->policy || svc_info->ht_op_policies))
     {
@@ -1097,7 +1103,8 @@ static void generate_wsdl_for_service(zval *svc_zval,
         int in_cmd TSRMLS_DC)
 {
     char *service_name = NULL;
-    zval func, retval, param1, param2, param3, param4, param5, param6, param7, param8, param9;
+    zval func, retval, param1, param2, param3,
+        param4, param5, param6, param7, param8, param9, param10;
     zval * params[9];
     axutil_hash_index_t * hi = NULL;
 	zval * functions = NULL;
@@ -1207,6 +1214,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
         params[6] = &param7;
         params[7] = &param8;
         params[8] = &param9;
+        params[9] = &param10;
         
         /** for WSDL version. default is wsdl 1.1*/ 
 		if ((stricmp (wsdl_ver_str , WSF_WSDL)) == 0)
@@ -1273,7 +1281,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
         ZVAL_ZVAL (params[6], op_val, NULL, NULL);
         INIT_PZVAL (params[6]);
         if(class_map)
-		{
+		    {
             ZVAL_ZVAL (params[7], *class_map, NULL, NULL);
         }
         else 
@@ -1282,7 +1290,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
         }
         INIT_PZVAL (params[7]);
         if(svc_info->wsdl_gen_annotations) 
-		{
+		    {
             ZVAL_ZVAL (params[8], svc_info->wsdl_gen_annotations, NULL, NULL);
         }
         else 
@@ -1290,7 +1298,17 @@ static void generate_wsdl_for_service(zval *svc_zval,
             ZVAL_NULL (params[8]);
         }
         INIT_PZVAL (params[8]);
-        args_count = 9;
+
+        if(svc_info->wsdl_gen_actions) 
+		    {
+            ZVAL_ZVAL (params[9], svc_info->wsdl_gen_actions, NULL, NULL);
+        }
+        else 
+        {
+            ZVAL_NULL (params[9]);
+        }
+        INIT_PZVAL (params[9]);
+        args_count = 10;
 
         script.type = ZEND_HANDLE_FP;
         
@@ -1301,12 +1319,12 @@ static void generate_wsdl_for_service(zval *svc_zval,
         script.free_filename = 0;
        
         stream  = php_stream_open_wrapper(WSF_SCRIPT_FILENAME, "rb", 
-			USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
+			  USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
         
         if(!stream)
-		{
-            return;
-		}
+        {
+                return;
+        }
         
 		if (php_stream_cast(stream, PHP_STREAM_AS_STDIO|PHP_STREAM_CAST_RELEASE, 
 			(void*)&new_fp, REPORT_ERRORS) == FAILURE)    

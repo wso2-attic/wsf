@@ -325,6 +325,7 @@ wsf_svc_info_create (
     svc_info = AXIS2_MALLOC (env->allocator, sizeof (wsf_svc_info_t));
 
     svc_info->svc = NULL;
+    svc_info->svc_ctx = NULL;
     svc_info->svc_name = NULL;
     svc_info->generated_svc_name = 0;
     svc_info->port_name = NULL;
@@ -336,6 +337,8 @@ wsf_svc_info_create (
     svc_info->enable_swa = 0;
     svc_info->policy = NULL;
     svc_info->security_token = NULL;
+    /* caching wsdl is default to 1 */
+    svc_info->cache_wsdl = 1;
 
     svc_info->ops_to_functions = NULL;
     svc_info->ops_to_actions = NULL;
@@ -347,6 +350,7 @@ wsf_svc_info_create (
     svc_info->class_map = NULL;
     svc_info->wsdl_gen_class_map = NULL;
     svc_info->wsdl_gen_annotations = NULL;
+    svc_info->wsdl_gen_actions = NULL;
     svc_info->wsdl = NULL;
 	svc_info->loc_str = NULL;
 	svc_info->ht_op_policies = NULL;
@@ -377,6 +381,9 @@ wsf_svc_info_free (
         }
         if (svc_info->modules_to_engage) {
             axutil_array_list_free (svc_info->modules_to_engage, env);
+        }
+        if( svc_info->wsdl) {
+            AXIS2_FREE(env->allocator, svc_info->wsdl);
         }
       
         AXIS2_FREE (env->allocator, svc_info);
@@ -508,7 +515,7 @@ wsf_util_get_http_headers_from_op_client (
         const axis2_msg_ctx_t *msg_ctx = NULL;
         
 
-		axutil_array_list_t *list = NULL;
+		    axutil_array_list_t *list = NULL;
         axis2_http_header_t *header = NULL;
         int i;
         char *header_buf = NULL;
@@ -516,7 +523,7 @@ wsf_util_get_http_headers_from_op_client (
         msg_ctx = axis2_op_client_get_msg_ctx (op_client, env, msg_label);
         if (!msg_ctx)
             return NULL;
-        list = axis2_msg_ctx_get_http_output_headers(msg_ctx, env);
+        list = axis2_msg_ctx_get_http_output_headers((axis2_msg_ctx_t *)msg_ctx, env);
 
         if (list) {
             header_buf = pemalloc (500,1);
@@ -540,7 +547,7 @@ int
 wsf_util_engage_module (
     axis2_conf_t * conf,
     axis2_char_t * module_name,
-    axutil_env_t * env,
+    const axutil_env_t * env,
     axis2_svc_t * svc)
 {
     axis2_module_desc_t *module = NULL;
@@ -1480,6 +1487,27 @@ wsf_util_add_svc_to_conf(
 		return AXIS2_SUCCESS;
 	}
 	return AXIS2_FAILURE;
+}
+
+int wsf_util_find_and_set_svc_ctx(
+	const axutil_env_t *env,
+	wsf_svc_info_t *svc_info,
+	axis2_conf_ctx_t *conf_ctx) {
+
+    axutil_hash_t *svc_ctx_map = NULL;
+    axis2_char_t *svc_name = NULL;
+    axis2_svc_ctx_t *svc_ctx = NULL;
+
+    svc_ctx_map = axis2_conf_ctx_get_svc_ctx_map(conf_ctx, env);
+    svc_name = svc_info->svc_name;
+
+    svc_ctx = axutil_hash_get(svc_ctx_map, svc_name, AXIS2_HASH_KEY_STRING);
+
+    if(svc_ctx) {
+        svc_info->svc_ctx = svc_ctx;
+        return AXIS2_SUCCESS;
+    }
+    return AXIS2_FAILURE;
 }
 
 void wsf_util_engage_modules_to_svc(

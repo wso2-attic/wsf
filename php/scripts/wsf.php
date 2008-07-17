@@ -89,14 +89,21 @@ function ws_reply($options)
 
 function ws_generate_wsdl($service_name, $fn_arry, $class_arry, $binding_style, 
                           $wsdl_version, $request_uri, $op_arry,
-                          $classmap = NULL, $annotations = NULL)
+                          $classmap = NULL, $annotations = NULL, $actions = NULL)
 {
     require_once("wsdl/WS_WSDL_Creator.php");
     require_once("wsdl/WS_WSDL_Consts.php");
     require_once('dynamic_invocation/wsf_wsdl_consts.php');
 
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "class arry:".print_r($class_arry, TRUE));
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "actions arry:".print_r($actions, TRUE));
 
+    $r_actions = NULL;
+    if($actions) {
+        foreach($actions as $act => $op) {
+          $r_actions[$op] = $act;
+        }
+    }
     if ($binding_style == WS_WSDL_Const::WSF_WSDL_RPC_ENCODED) {
         $binding_style = WS_WSDL_Const::WSF_WSDL_RPC;
     }
@@ -152,8 +159,8 @@ function ws_generate_wsdl($service_name, $fn_arry, $class_arry, $binding_style,
         }
     }
 
-    $wsdl = new WS_WSDL_Creator($fn_arry, $class_arry, $service_name, $request_uri,
-              $binding_style,$namespace, $wsdl_version, $op_arry, $classmap, $annotations);
+    $wsdl = new WS_WSDL_Creator($fn_arry, $class_arry, $service_name, $request_uri, $binding_style,
+                $namespace, $wsdl_version, $op_arry, $classmap, $annotations, $r_actions);
     $wsdl_out = $wsdl->WS_WSDL_Out();
 
 

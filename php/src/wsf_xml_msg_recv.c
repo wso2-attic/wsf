@@ -278,7 +278,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
 		zval **tmp;
         char *function_type = NULL;
         if (zend_hash_find (svc_info->ht_op_params, 
-				operation_name, strlen (operation_name) + 1,
+                operation_name, strlen (operation_name) + 1,
                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) 
 		{
 			function_type = Z_STRVAL_PP (tmp);
@@ -295,8 +295,8 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
 					in_msg_ctx, out_msg_ctx, svc_info, classname, req_info->content_type TSRMLS_CC);
             }
         }
-    } else 
-	{
+    }
+    else {
         /* this is where the default value for opParam is set,
            If the wsdl option is set go for the MIXED mode by default */
         if(svc_info->wsdl == NULL)
@@ -534,29 +534,37 @@ wsf_xml_msg_recv_invoke_mixed (
     zval *cid2str = NULL;
     zval *cid2contentType = NULL;
 
-	int use_mtom = AXIS2_TRUE;
-	int enable_swa = AXIS2_FALSE;
+   	int use_mtom = AXIS2_TRUE;
+	  int enable_swa = AXIS2_FALSE;
 
     zval **output_headers = NULL;
 
-    if (!in_msg_ctx || !function_name)
-		return NULL;
+    if (!in_msg_ctx || !function_name) 
+    {
+		    return NULL;
+    }
+
+    /* load the sig model form cache if exist */
+    if(svc_info->wsdl)
+    {
+        wsf_wsdl_process_service(svc_info->wsdl, svc_info, env TSRMLS_CC);
+    }
 
     use_mtom = svc_info->use_mtom;
     enable_swa = svc_info->enable_swa;
 
     soap_envelope = axis2_msg_ctx_get_soap_envelope (in_msg_ctx, env);
     if(!soap_envelope)
-	{
+  	{
         AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "[wsf_wsdl] soap envelope not found");
-		return NULL;
+		    return NULL;
     }
     
     soap_body = axiom_soap_envelope_get_body(soap_envelope, env);
     if(!soap_body)
-	{
+  	{
         AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "[wsf_wsdl] soap body not found");
-		return NULL;
+  		  return NULL;
     }
     soap_body_node = axiom_soap_body_get_base_node(soap_body, env);
     if(!soap_body_node)

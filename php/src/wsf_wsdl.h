@@ -51,16 +51,14 @@ void wsf_wsdl_create_dynamic_client(
 
 /**
 * 
-* @param this_ptr, 
-* @param reqinfo, 
+* @param wsdl
 * @param svc_info, 
 * @param TSRMLS_DC, 
 * @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
 */
-void wsf_wsdl_process_service(zval *this_ptr, 
-                              wsf_request_info_t * reqinfo, 
+void wsf_wsdl_process_service(axis2_char_t *wsdl,
                               wsf_svc_info_t *svc_info, 
-                              axutil_env_t *env TSRMLS_DC);
+                              const axutil_env_t *env TSRMLS_DC);
 
 /**
 * 

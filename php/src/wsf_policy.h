@@ -156,7 +156,7 @@ typedef struct wsf_callback_args
 }wsf_callback_args_t;
 
 /** returns a pointer to an allocated callback args struct */
-wsf_callback_args_t* wsf_callback_args_create(axutil_env_t *env);
+wsf_callback_args_t* wsf_callback_args_create(const axutil_env_t *env);
 /** free callback args struct instance */
 void wsf_callback_args_free(wsf_callback_args_t *callback_args,const axutil_env_t *env);
 
@@ -214,7 +214,7 @@ wsf_set_rampart_options (
     rampart_context_t* rampart_ctx,
     zval * sec_token,
     zval * policy,
-    axutil_env_t * env TSRMLS_DC);
+    const axutil_env_t * env TSRMLS_DC);
 
 
 /**

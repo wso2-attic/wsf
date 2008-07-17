@@ -127,7 +127,7 @@ typedef enum ws_input_types
 /** wsdl mode */
 #define WSF_BINDING_STYLE 		"bindingStyle"
 #define WSF_WSDL          		"wsdl"
-#define WSF_CACHE_WSDL           "cache_wsdl"
+#define WSF_CACHE_WSDL           "cacheWSDL"
 #define WSF_CLASSMAP             "classmap"
 
 /** http authentication */
@@ -252,6 +252,10 @@ typedef enum ws_input_types
 #define WSF_DEFAULT_PORT 80
 #define WSF_SWA "swa"
 
+/** service context properties */
+#define WSF_SVC_PROP_SIG_MODEL_STR "sig_model_string"
+#define WSF_SVC_PROP_POLICY_ARRAY "policy_array"
+
 /** this option is read from the WSService constructor to engage rahas*/
 #define WSF_USE_OWN_STS "useOwnSTS"
 /** security policy */
@@ -260,6 +264,9 @@ typedef struct wsf_svc_info
 {
 	/** corresponding axis2 service*/
   axis2_svc_t *svc;
+  /** service context */
+  axis2_svc_ctx_t *svc_ctx;
+  
   /** message receiver object state less and commnon to all */
   axis2_msg_recv_t *msg_recv;
   /** php worker object */
@@ -302,10 +309,15 @@ typedef struct wsf_svc_info
   zval *wsdl_gen_class_map;
   /** wsdl annotations */
   zval *wsdl_gen_annotations;
+  /** actions to wsdl generation*/
+  zval *wsdl_gen_actions;
   /** wsdl string */
   char *wsdl;
   /**http://<domain>/<..*.php>/<loc_str>/ */
   char *loc_str;	
+  /** caceh the wsdl */
+  int cache_wsdl;
+
 }
 wsf_svc_info_t;
 

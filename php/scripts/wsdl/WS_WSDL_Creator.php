@@ -43,6 +43,7 @@ class WS_WSDL_Creator
     public $ops_to_functions;
     private $classmap;
     private $annotations;
+    private $r_actions;
 
     /**
      * Constructor of the class
@@ -56,7 +57,7 @@ class WS_WSDL_Creator
      */
     function __construct($f_arry, $class_arry, $service, $endpoints,
                          $binding_style,  $ns , $wsdl_ver,
-                         $op_arry, $classmap, $annotations)
+                         $op_arry, $classmap, $annotations, $r_actions)
     {
         if(!$ns) {
             $this->namespace = $endpoints;
@@ -74,6 +75,7 @@ class WS_WSDL_Creator
         $this->classmap = $classmap;
         
         $this->annotations = $annotations;
+        $this->r_actions = $r_actions;
     }
 
     /**
@@ -167,13 +169,15 @@ class WS_WSDL_Creator
 
         if ($this->Binding_style == WS_WSDL_Const::WSF_WSDL_DOCLIT) {
             $bind_obj = new WS_WSDL_Binding($this->service_name,
-                                           $this->endpoint, $ele_names_info, $this->ops_to_functions);
+                                           $this->endpoint, $ele_names_info,
+                                           $this->ops_to_functions, $this->r_actions);
             $bind_obj->createDocLitBinding($wsdl_dom, $wsdl_root_ele, $ele_names_info);
         }
 
         if ($this->Binding_style == WS_WSDL_Const::WSF_WSDL_RPC) {
             $bind_obj = new WS_WSDL_Binding($this->service_name, $this->endpoint,
-                                           $ele_names_info, $this->ops_to_functions);
+                                           $ele_names_info, $this->ops_to_functions,
+                                           $this->r_actions);
             $bind_obj->createRPCBinding($wsdl_dom, $wsdl_root_ele);
 
         }

@@ -432,7 +432,6 @@ wsf_client_add_properties (
     HashTable * ht TSRMLS_DC)
 {
     zval **tmp = NULL;
-    int cache_wsdl = 0;
     /** use soap */
     if (zend_hash_find (ht, WSF_USE_SOAP, sizeof (WSF_USE_SOAP),
             (void **) &tmp) == SUCCESS) {
@@ -615,10 +614,6 @@ wsf_client_add_properties (
         add_property_long(this_ptr, WSF_TIMEOUT, Z_LVAL_PP(tmp));
     }
 
-    if (zend_hash_find (ht, WSF_CACHE_WSDL, sizeof (WSF_CACHE_WSDL),
-        (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_LONG) {
-            cache_wsdl = Z_LVAL_PP (tmp);
-    }
 
     if (zend_hash_find (ht, WSF_WSDL, sizeof (WSF_WSDL), 
         (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
