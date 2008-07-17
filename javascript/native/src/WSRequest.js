@@ -295,19 +295,18 @@ WSRequest._tunnelcallback = function (scriptId, responseText) {
         thisRequest.responseText = responseText;
         thisRequest.responseXML = response;
 
-        if (thisRequest._soapVer == 0) {
-            if (response != null) {
-                var httpStatus;
-                if (browser == "ie" || browser == "ie7") {
-                    httpStatus = response.documentElement.getAttribute("h:status");
-                } else {
-                    httpStatus = response.documentElement.getAttributeNS("http://wso2.org/ns/WSRequestXSS", "status");
-                }
-                if (httpStatus != null && httpStatus != '') {
-                    thisRequest.error = new WebServiceError("HTTP " + httpStatus, responseText);
-                }
+        if (response != null) {
+            var httpStatus;
+            if (browser == "ie" || browser == "ie7") {
+                httpStatus = response.documentElement.getAttribute("h:status");
+            } else {
+                httpStatus = response.documentElement.getAttributeNS("http://wso2.org/ns/WSRequestXSS", "status");
             }
-        } else {
+            if (httpStatus != null && httpStatus != '') {
+                thisRequest.error = new WebServiceError(httpStatus, responseText);
+            }
+        }
+        if (thisRequest._soapVer != 0) {
 
             if (response != null) {
                 var soapNamespace;
