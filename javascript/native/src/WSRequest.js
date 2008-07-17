@@ -1021,8 +1021,7 @@ WSRequest.util = {
         headers += "<wsa:Action>" + options['action'] + "</wsa:Action>\n"
 
         return headers;
-    }
-    ,
+    },
 
     /**
      * @description Set scope for callbacks.
