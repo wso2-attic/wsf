@@ -93,6 +93,9 @@ class WS_WSDL_Type
                 
                 $schema->appendChild($element_ele);
 
+                //append the imported namespace to the schema
+                $this->delcare_namespace_import($wsdl_doc, $schema, $element_namespace);
+
                 $type_attribute = NULL;
                 if(strstr($element_type, "xsd:") !== FALSE) {
                     $type_attribute_value = $element_type;
@@ -117,6 +120,9 @@ class WS_WSDL_Type
                     $type_prefix = $created_type_namespace["prefix"];
 
                     $type_attribute_value = $type_prefix.":".$element_type;
+               
+                    // delclare the imported namespace
+                    $this->delcare_namespace_import($wsdl_doc, $schema, $type_ns);
                 }
                 if($type_attribute_value) {
                     $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME, $type_attribute_value);
@@ -148,6 +154,8 @@ class WS_WSDL_Type
                 $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $element_name);
 
                 $schema->appendChild($element_ele);
+                    
+                $this->delcare_namespace_import($wsdl_doc, $schema, $element_namespace);
 
                 $type_attribute = NULL;
                 if(strstr($element_type, "xsd:") !== FALSE) {
@@ -173,6 +181,7 @@ class WS_WSDL_Type
                     $type_prefix = $created_type_namespace["prefix"];
 
                     $type_attribute_value = $type_prefix.":".$element_type;
+                    $this->delcare_namespace_import($wsdl_doc, $schema, $type_ns);
                 }
                 if($type_attribute_value) {
                     $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME, $type_attribute_value);
@@ -189,12 +198,15 @@ class WS_WSDL_Type
             if($element_namespace) {
                 $created_namespace = $this->createNamespace($type_namespace, $wsdl_doc, $types_ele, $public_ns_map,
                                 $public_schema_map, $public_ns_index);
+                $type_schema = $created_namespace["schema"];
+                $this->delcare_namespace_import($wsdl_doc, $type_schema, $type_namespace);
             }
             else {
                 $created_namespace = $this->createNamespace($this->ns, $wsdl_doc, $types_ele, $public_ns_map,
                                 $public_schema_map, $public_ns_index);
+                $type_schema = $created_namespace["schema"];
+                $this->delcare_namespace_import($wsdl_doc, $type_schema, $this->ns);
             }
-            $type_schema = $created_namespace["schema"];
 
 
             //create the complex type element 
@@ -359,7 +371,6 @@ class WS_WSDL_Type
      */
     public function createDocLitType(DomDocument $wsdl_doc, DomElement $wsdl_root, $schemaTypes)
     {
-
         $return_array = array();
         $types_ele = $wsdl_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                             WS_WSDL_Const::WS_WSDL_TYPES_ATTR_NAME);
@@ -428,6 +439,8 @@ class WS_WSDL_Type
 
                             $schema_root->setAttribute("xmlns:".$object_prefix, $object_namespace);
                             $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME, $object_prefix.":".$xsd_type);
+                            $this->delcare_namespace_import($wsdl_doc, $schema_root, $object_namespace);
+
                         }
                         else
                         {
@@ -473,6 +486,7 @@ class WS_WSDL_Type
 
                             $schema_root->setAttribute("xmlns:".$object_prefix, $object_namespace);
                             $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME, $object_prefix.":".$xsd_type);
+                            $this->delcare_namespace_import($wsdl_doc, $schema_root, $object_namespace);
                         }
                         else
                         {
@@ -528,6 +542,7 @@ class WS_WSDL_Type
                             $schema_root->setAttribute("xmlns:".$object_prefix, $object_namespace);
 
                             $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME, $object_prefix.":".$xsd_type);
+                            $this->delcare_namespace_import($wsdl_doc, $schema_root, $object_namespace);
                         }
                         else
                         {
@@ -575,6 +590,7 @@ class WS_WSDL_Type
                             $schema_root->setAttribute("xmlns:".$object_prefix, $object_namespace);
 
                             $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME, $object_prefix.":".$xsd_type);
+                            $this->delcare_namespace_import($wsdl_doc, $schema_root, $object_namespace);
                         }
                         else
                         {
@@ -882,6 +898,7 @@ class WS_WSDL_Type
                     $schema_root->setAttribute("xmlns:".$object_prefix, $object_namespace);
 
                     $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_TYPE_ATTR_NAME, $object_prefix.":".$xsd_type);
+                    $this->delcare_namespace_import($wsdl_doc, $schema_root, $object_namespace);
                 }
                 else
                 {
@@ -891,6 +908,34 @@ class WS_WSDL_Type
             }
         }
         return array("prefix"=> $prefix, "namespace" => $namespace);
+    }
+
+    private function delcare_namespace_import($wsdl_doc, $schema_root, $namespace) {
+      
+        if($schema_root->getAttribute(WS_WSDL_Const::WS_WSDL_DEF_TARGET_NS) == $namespace) {
+            /* no need to import the current namespace */
+            return;
+        }
+        foreach($schema_root->childNodes as $schema_child) {
+            if($schema_child->localName == WS_WSDL_Const::WSF_WSDL_IMPORT) {
+                if($schema_child->getAttribute(WS_WSDL_Const::WSF_WSDL_NAMESPACE) == $namespace) {
+                    /* the namespace already exists, no need to reimport */
+                    return;
+                }
+            }
+        }
+        $import_node = $wsdl_doc->createElementNS(WS_WSDL_Const::WS_SOAP_XML_SCHEMA_NAMESPACE,
+                                                  WS_WSDL_Const::WSF_WSDL_IMPORT);
+        $import_node->setAttribute(WS_WSDL_Const::WSF_WSDL_NAMESPACE, $namespace);
+
+        $schema_first_child = $schema_root->firstChild;
+
+        if($schema_first_child) {
+            $schema_root->insertBefore($import_node, $schema_first_child);
+        }
+        else {
+            $schema_root->appendChild($import_node);
+        }
     }
 }
 

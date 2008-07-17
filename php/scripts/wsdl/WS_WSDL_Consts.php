@@ -159,6 +159,8 @@ class WS_WSDL_Const
     const WSF_WSDL_RPC_ENCODED = "rpc-enc";
     const WSF_WSDL_RPC = "rpc";
     const WSF_WSDL_DOCLIT = "doclit";
+    const WSF_WSDL_IMPORT = "import";
+    const WSF_WSDL_NAMESPACE = "namespace";
 
     static public $defaultTypes = array(
                                       'string'    => array('ns'   => self::WS_SOAP_XML_SCHEMA_NAMESPACE,
