@@ -31,12 +31,12 @@ BEGIN
       VALUE "Comments", WSF_LICENSE_RCSTR "\0"
       VALUE "CompanyName", "WSO2 \r\n www.wso2.com" "\0"
       VALUE "FileDescription", "WSO2 WSF/PHP\0"
-      VALUE "FileVersion", "2.0.0beta\0"
+      VALUE "FileVersion", "2.0.0alpha\0"
       VALUE "InternalName", "wsf.dll\0"
       VALUE "LegalCopyright", "Copyright 2005,2008 WSO2, Inc. http://wso2.com\0"
       VALUE "OriginalFilename", "wsf.dll\0"
       VALUE "ProductName", "WSO2 WSF/PHP\0"
-      VALUE "ProductVersion", "2.0.0beta\0"
+      VALUE "ProductVersion", "2.0.0alpha\0"
     END
   END
   BLOCK "VarFileInfo"
