@@ -35,10 +35,11 @@ module WSO2
       def initialize(options, log_file_name = WSFC::WSF_DEFAULT_LOG_FILE_NAME)
         @svc_client = nil
         @options = nil
+
         
         # Init WSLogger
-        log_file = WSConfig.read_dir(WSFC::WSF_CONF_LOG_DIR)
-        log_file << log_file_name
+        log_path = WSConfig.read_dir(WSFC::WSF_CONF_LOG_DIR)
+        log_file = log_path + log_file_name
         log_level = WSConfig.read_int(WSFC::WSF_CONF_LOG_LEVEL)
         
         WSLogger.init(log_file, log_level)
