@@ -1,4 +1,4 @@
-WSO2 Web Services Framework for PHP v2.0.0beta Released
+WSO2 Web Services Framework for PHP v2.0.0 Released
 =====================================================
 
 We are pleased to announce the release of WSO2 WSF/PHP 2.0.0beta.
@@ -69,6 +69,10 @@ Key Features
 11. wsdl2php.php script. This script can generate PHP classes for services 
     and clients for a given WSDL to be used with WSDL Mode .
 
+12. Data Services API
+    PHP Data Services API that enables exposing database queries as web services.
+    
+
 --------------------------------
 Major Changes Since Last Release
 ================================
@@ -78,6 +82,7 @@ Major Changes Since Last Release
 * Contract First Web Services support for MTOM
 * SWA ( Soap With Attachments ) Support added
 * REST API Improved to support HTTP GET,DELETE,PUT and POST
+* New PHP Data Services Solution
 * Many Bug Fixes
 
 -------------------
