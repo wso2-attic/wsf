@@ -64,6 +64,7 @@ WSRequest.prototype.open = function(options, URL, asnycFlag, username, password)
     if (typeof(options) == "string") {
         this._optionSet = new Array();
         this._optionSet["HTTPMethod"] = options;
+        this._optionSet["useSOAP"] = false;
     } else {
         this._optionSet = options;
     }
@@ -769,7 +770,10 @@ WSRequest.util = {
             resultValues["url"] = options[HTTPLocation];
 
             // If templates are specified and a valid payload is available, process, else just return original URI.
-            if (options[HTTPLocation] != null && xmlDoc != null && xmlDoc.hasChildNodes()) {
+            if (options[HTTPLocation] == null) {
+                resultValues["url"] = "";
+            } else if (xmlDoc != null && xmlDoc.hasChildNodes()) {
+
                 // Ideally .documentElement should be used instead of .firstChild, but this does not work.
                 var rootNode = xmlDoc.firstChild;
 
