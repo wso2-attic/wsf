@@ -359,46 +359,58 @@ wsf_client_set_addressing_options_to_options (
 
     }
     if (zend_hash_find (ht, WSF_REPLY_TO, sizeof (WSF_REPLY_TO),
-            (void **) &tmp) == SUCCESS) {
+            (void **) &tmp) == SUCCESS) 
+	{
 
         axis2_endpoint_ref_t *replyto_epr = NULL;
-        char *replyto = Z_STRVAL_PP (tmp);
-
-        replyto_epr = axis2_endpoint_ref_create (env, replyto);
-
+		if(Z_TYPE_PP(tmp) == IS_STRING)
+		{
+			char *replyto = Z_STRVAL_PP (tmp);
+		    replyto_epr = axis2_endpoint_ref_create (env, replyto);
+			AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+				"Addressing replyTo is :- %s", replyto);
+		}
+		else if(Z_TYPE_PP(tmp) == IS_ARRAY)
+		{
+			replyto_epr = wsf_util_set_values_to_endpoint_ref(env, Z_ARRVAL_PP(tmp) TSRMLS_CC);
+		}
         axis2_options_set_reply_to (client_options, env, replyto_epr);
-
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
-            "Addressing replyTo is :- %s", replyto);
     }
 
     if (zend_hash_find (ht, WSF_FAULT_TO, sizeof (WSF_FAULT_TO),
             (void **) &tmp) == SUCCESS) {
 
         axis2_endpoint_ref_t *faultto_epr = NULL;
+		if(Z_TYPE_PP(tmp) == IS_STRING)
+		{
+			char *faultto = Z_STRVAL_PP (tmp);
 
-        char *faultto = Z_STRVAL_PP (tmp);
-
-        faultto_epr = axis2_endpoint_ref_create (env, faultto);
-
-        axis2_options_set_fault_to (client_options, env, faultto_epr);
-
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
-            "faultTo is %s", faultto);
+			faultto_epr = axis2_endpoint_ref_create (env, faultto);
+		
+			AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+				"faultTo is %s", faultto);
+		}else if(Z_TYPE_PP(tmp) == IS_ARRAY)
+		{
+			faultto_epr = wsf_util_set_values_to_endpoint_ref(env, Z_ARRVAL_PP(tmp)  TSRMLS_CC);
+		}
+		axis2_options_set_fault_to (client_options, env, faultto_epr);
 
     }
     if (zend_hash_find (ht, WSF_FROM, sizeof (WSF_FROM),
-            (void **) &tmp) == SUCCESS) {
+            (void **) &tmp) == SUCCESS) 
+	{
         axis2_endpoint_ref_t *from_epr = NULL;
-
-        char *from = Z_STRVAL_PP (tmp);
-
-        from_epr = axis2_endpoint_ref_create (env, from);
-
+		if(Z_TYPE_PP(tmp) == IS_STRING)
+		{
+			char *from = Z_STRVAL_PP (tmp);
+			from_epr = axis2_endpoint_ref_create (env, from);
+			AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,WSF_PHP_LOG_PREFIX \
+				"from is  %s", from);
+		}else if(Z_TYPE_PP(tmp) == IS_ARRAY)
+		{
+			from_epr = wsf_util_set_values_to_endpoint_ref(env, Z_ARRVAL_PP(tmp) TSRMLS_CC);
+		}
         axis2_options_set_from (client_options, env, from_epr);
-
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,WSF_PHP_LOG_PREFIX \
-            "from is  %s", from);
     }
     return addr_action_present;
 }
@@ -434,59 +446,79 @@ wsf_client_add_properties (
     zval **tmp = NULL;
     /** use soap */
     if (zend_hash_find (ht, WSF_USE_SOAP, sizeof (WSF_USE_SOAP),
-            (void **) &tmp) == SUCCESS) {
-        if (Z_TYPE_PP (tmp) == IS_STRING) {
+            (void **) &tmp) == SUCCESS) 
+	{
+        if (Z_TYPE_PP (tmp) == IS_STRING) 
+		{
             add_property_stringl (this_ptr, WSF_USE_SOAP, Z_STRVAL_PP (tmp),
                 Z_STRLEN_PP (tmp), 1);
-        } else if (Z_TYPE_PP (tmp) == IS_DOUBLE) {
+        } else if (Z_TYPE_PP (tmp) == IS_DOUBLE) 
+		{
             add_property_double (this_ptr, WSF_USE_SOAP, Z_DVAL_PP (tmp));
-        } else if (Z_TYPE_PP (tmp) == IS_BOOL) {
+        } else if (Z_TYPE_PP (tmp) == IS_BOOL) 
+		{
             add_property_bool (this_ptr, WSF_USE_SOAP, Z_BVAL_PP (tmp));
         }
     }
     /** HTTP Method */
     if (zend_hash_find (ht, WSF_HTTP_METHOD, sizeof (WSF_HTTP_METHOD),
-            (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
+            (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) 
+	{
         add_property_stringl (this_ptr, WSF_HTTP_METHOD, Z_STRVAL_PP (tmp),
             Z_STRLEN_PP (tmp), 1);
     }
     /** endpoint address */
-    if (zend_hash_find (ht, WSF_TO, sizeof (WSF_TO), (void **) &tmp) == SUCCESS
-        && Z_TYPE_PP (tmp) == IS_STRING) {
-        add_property_stringl (this_ptr, WSF_TO, Z_STRVAL_PP (tmp),
-            Z_STRLEN_PP (tmp), 1);
-    }
-
-    /** WS-A action , ALSO SOAP Action */
-    if (zend_hash_find (ht, WSF_ACTION, sizeof (WSF_ACTION),
-            (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-        add_property_stringl (this_ptr, WSF_ACTION, Z_STRVAL_PP (tmp),
-            Z_STRLEN_PP (tmp), 1);
+    if (zend_hash_find (ht, WSF_TO, sizeof (WSF_TO), (void **) &tmp) == SUCCESS) 
+	{
+		if(Z_TYPE_PP(tmp) == IS_STRING)
+		{
+			add_property_stringl (this_ptr, WSF_TO, Z_STRVAL_PP (tmp), Z_STRLEN_PP (tmp), 1);
+		}else if(Z_TYPE_PP(tmp) == IS_ARRAY)
+		{
+			add_property_zval(this_ptr, WSF_TO, *tmp);
+		}
     }
 
     /** addressing properties */
     if (zend_hash_find (ht, WSF_ACTION, sizeof (WSF_ACTION),
-            (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
+            (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) 
+	{
         add_property_stringl (this_ptr, WSF_ACTION, Z_STRVAL_PP (tmp),
             Z_STRLEN_PP (tmp), 1);
     }
     if (zend_hash_find (ht, WSF_FROM, sizeof (WSF_FROM),
-            (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-        add_property_stringl (this_ptr, WSF_FROM, Z_STRVAL_PP (tmp),
-            Z_STRLEN_PP (tmp), 1);
+            (void **) &tmp) == SUCCESS ) 
+	{	
+		if(Z_TYPE_PP(tmp) == IS_STRING)
+		{
+			add_property_stringl (this_ptr, WSF_FROM, Z_STRVAL_PP (tmp), Z_STRLEN_PP (tmp), 1);
+		}else if(Z_TYPE_PP(tmp) == IS_ARRAY)
+		{
+			add_property_zval(this_ptr, WSF_FROM, *tmp);
+		}
     }
     if (zend_hash_find (ht, WSF_REPLY_TO, sizeof (WSF_REPLY_TO),
-            (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-        add_property_stringl (this_ptr, WSF_REPLY_TO, Z_STRVAL_PP (tmp),
-            Z_STRLEN_PP (tmp), 1);
+            (void **) &tmp) == SUCCESS ) 
+	{
+		if(Z_TYPE_PP (tmp) == IS_STRING)
+		{
+			add_property_stringl (this_ptr, WSF_REPLY_TO, Z_STRVAL_PP (tmp), Z_STRLEN_PP (tmp), 1);
+		}else if(Z_TYPE_PP(tmp) == IS_ARRAY)
+		{
+			add_property_zval(this_ptr, WSF_REPLY_TO, *tmp);
+		}
     }
     if (zend_hash_find (ht, WSF_FAULT_TO, sizeof (WSF_FAULT_TO),
-            (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-        add_property_stringl (this_ptr, WSF_FAULT_TO, Z_STRVAL_PP (tmp),
-            Z_STRLEN_PP (tmp), 1);
-    }
-
-
+            (void **) &tmp) == SUCCESS ) 
+	{
+		if(Z_TYPE_PP (tmp) == IS_STRING)
+		{
+			add_property_stringl (this_ptr, WSF_FAULT_TO, Z_STRVAL_PP (tmp), Z_STRLEN_PP (tmp), 1);
+		}else if(Z_TYPE_PP(tmp) == IS_ARRAY)
+		{
+			add_property_zval(this_ptr, WSF_FAULT_TO, *tmp);
+		}
+    }	
     /** SSL And proxy properties */
     if (zend_hash_find (ht, WSF_SERVER_CERT, sizeof (WSF_SERVER_CERT),
             (void **) &tmp) == SUCCESS) {
@@ -875,21 +907,32 @@ wsf_client_set_endpoint_and_soap_action (
     zval **msg_tmp = NULL;
 
     if (msg_ht && zend_hash_find (msg_ht, WSF_TO, sizeof (WSF_TO),
-            (void **) &msg_tmp) == SUCCESS) 
+            (void **) &msg_tmp) == SUCCESS ) 
 	{
-        axis2_endpoint_ref_t *to_epr = NULL;
-        char *to = Z_STRVAL_PP (msg_tmp);
-        to_epr = axis2_endpoint_ref_create (env, to);
-        axis2_options_set_to (client_options, env, to_epr);
+		axis2_endpoint_ref_t *to_epr = NULL;
 
+		if(Z_TYPE_PP(msg_tmp) == IS_STRING)
+		{
+			char *to = Z_STRVAL_PP (msg_tmp);
+			to_epr = axis2_endpoint_ref_create (env, to);
+		}else if(Z_TYPE_PP(msg_tmp) == IS_ARRAY)
+		{
+			to_epr = wsf_util_set_values_to_endpoint_ref(env, Z_ARRVAL_PP(msg_tmp) TSRMLS_CC);
+		}
+		axis2_options_set_to (client_options, env, to_epr);
     } else if (client_ht && zend_hash_find (client_ht, WSF_TO, sizeof (WSF_TO), 
-		(void **) &msg_tmp) == SUCCESS) 
+		(void **) &msg_tmp) == SUCCESS && Z_TYPE_PP(msg_tmp) == IS_STRING) 
 	{
-        axis2_endpoint_ref_t *to_epr = NULL;
-        char *to = Z_STRVAL_PP (msg_tmp);
-        to_epr = axis2_endpoint_ref_create (env, to);
+		axis2_endpoint_ref_t *to_epr = NULL;
+		if(Z_TYPE_PP(msg_tmp) == IS_STRING)
+		{
+			char *to = Z_STRVAL_PP (msg_tmp);
+			to_epr = axis2_endpoint_ref_create (env, to);
+		}else if(Z_TYPE_PP(msg_tmp) == IS_ARRAY)
+		{
+			to_epr = wsf_util_set_values_to_endpoint_ref(env, client_ht TSRMLS_CC);
+		}
         axis2_options_set_to (client_options, env, to_epr);
-
     } else 
 	{
         return AXIS2_FAILURE;

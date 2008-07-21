@@ -434,6 +434,17 @@ wsf_util_find_and_set_svc_ctx(
 	wsf_svc_info_t *svc_info,
 	axis2_conf_ctx_t *conf_ctx);
 
+/**
+* Set Values obtained using the array("address"=>,"referencePrameters"=> .. to endpoint ref 
+* @param env, environment struct 
+* @param ht HashTable containing the endpoint ref information
+* @returns axis2_endpoint_ref_t on SUCCESS, NULL otherwise
+*/
+axis2_endpoint_ref_t *
+wsf_util_set_values_to_endpoint_ref(
+	const axutil_env_t *env,
+	HashTable *ht TSRMLS_DC);
+
 #ifdef __cplusplus
 }
 #endif

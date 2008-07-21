@@ -549,24 +549,53 @@ PHP_METHOD (ws_message, __construct)
 		}
 
 		if(zend_hash_find(ht, WSF_TO, sizeof(WSF_TO), 
-			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
+			(void**)&tmp) == SUCCESS ){
+				if(Z_TYPE_PP(tmp) == IS_STRING)
+			{
 				add_property_stringl(object, WSF_TO, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
-		}
+			}else if(Z_TYPE_PP(tmp) == IS_ARRAY)
+			{
+				add_property_zval(object, WSF_TO, *tmp);
+			}
+		}		
 		if(zend_hash_find(ht, WSF_ACTION, sizeof(WSF_ACTION), 
-			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
+			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING)
+		{
 				add_property_stringl(object, WSF_ACTION, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);	
 		}
 		if(zend_hash_find(ht, WSF_REPLY_TO, sizeof(WSF_REPLY_TO), 
-			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
+			(void**)&tmp) == SUCCESS )
+		{
+			if(Z_TYPE_PP(tmp) == IS_STRING)
+			{
 				add_property_stringl(object, WSF_REPLY_TO, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+			}else if(Z_TYPE_PP(tmp) == IS_ARRAY)
+			{
+				add_property_zval(object, WSF_REPLY_TO, *tmp);
+			}
 		}
 		if(zend_hash_find(ht, WSF_FAULT_TO, sizeof(WSF_FAULT_TO), 
-			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
+			(void**)&tmp) == SUCCESS)
+		{
+			if(Z_TYPE_PP(tmp) == IS_STRING)
+			{
 				add_property_stringl(object, WSF_FAULT_TO, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+			}else if(Z_TYPE_PP(tmp) == IS_ARRAY)
+			{
+				add_property_zval(object, WSF_FAULT_TO, *tmp);
+			}
 		}
 		if(zend_hash_find(ht, WSF_FROM, sizeof(WSF_FROM), 
-			(void**)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING){
+			(void**)&tmp) == SUCCESS)
+		{
+			if(Z_TYPE_PP(tmp) == IS_STRING)
+			{
 				add_property_stringl(object, WSF_FROM, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+			}else if(Z_TYPE_PP(tmp) == IS_ARRAY)
+			{
+				add_property_zval(object, WSF_FROM, *tmp);
+			}
+				
 		}
 		if(zend_hash_find(ht, WSF_REST_CONTENT_TYPE, sizeof(WSF_REST_CONTENT_TYPE),
 			(void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING)

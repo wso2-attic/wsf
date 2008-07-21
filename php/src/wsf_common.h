@@ -95,6 +95,10 @@ typedef enum ws_input_types
 #define WSF_FROM		    "from"
 #define WSF_REPLY_TO	    "replyTo"
 #define WSF_FAULT_TO	    "faultTo"
+/** additional endpoint reference properties */
+#define WSF_WSA_ADDRESS "address"
+#define WSF_WSA_REFERENCE_PARAMETERS "referenceParameters"
+#define WSF_WSA_METADATA "metadata"
 
 #define WSF_SOAP_ACTION     "SOAPAction"
 

@@ -1850,8 +1850,67 @@ void wsf_util_process_rest_params(axutil_env_t *env,
 		}
 		zend_hash_move_forward_ex (ht_rest_map, &pos);
 	}
+}
 
-
-
-
+axis2_endpoint_ref_t *
+wsf_util_set_values_to_endpoint_ref(
+	const axutil_env_t *env,
+	HashTable *ht TSRMLS_DC)
+{
+	axis2_endpoint_ref_t *endpoint_ref = NULL;
+	zval **tmp = NULL;
+	
+	if(!ht)
+	{
+		return NULL;
+	}
+	if(zend_hash_find(ht, WSF_WSA_ADDRESS, sizeof(WSF_WSA_ADDRESS), (void**)&tmp) == SUCCESS
+		&& Z_TYPE_PP(tmp) == IS_STRING)
+	{
+		endpoint_ref = axis2_endpoint_ref_create(env, Z_STRVAL_PP(tmp));
+	}else
+	{
+		return NULL;
+	}
+	if(zend_hash_find(ht, WSF_WSA_REFERENCE_PARAMETERS, sizeof(WSF_WSA_REFERENCE_PARAMETERS), (void **)&tmp)
+		== SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY)
+	{
+		HashTable *ref_params = Z_ARRVAL_PP(tmp);
+		HashPosition pos;
+		zval **data = NULL;
+		zend_hash_internal_pointer_reset_ex (ref_params, &pos);
+		while(zend_hash_get_current_data_ex(ref_params, (void**)&data, &pos) != FAILURE)
+		{
+			zval **tmpval = NULL;		
+			if(Z_TYPE_PP(data) == IS_STRING)
+			{
+				axiom_node_t *ref_param_node = NULL;
+				axis2_char_t *xml_str = Z_STRVAL_PP(data);
+				ref_param_node = wsf_util_deserialize_buffer(env, xml_str);
+				axis2_endpoint_ref_add_ref_param(endpoint_ref, env, ref_param_node);
+			}
+			zend_hash_move_forward_ex (ref_params, &pos);
+		}
+	}
+	if(zend_hash_find(ht, WSF_WSA_METADATA, sizeof(WSF_WSA_METADATA), (void **)&tmp)
+		== SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY)
+	{
+		HashTable *meta_params = Z_ARRVAL_PP(tmp);
+		HashPosition pos;
+		zval **data = NULL;
+		zend_hash_internal_pointer_reset_ex (meta_params, &pos);
+		while(zend_hash_get_current_data_ex(meta_params, (void**)&data, &pos) != FAILURE)
+		{
+			zval **tmpval = NULL;		
+			if(Z_TYPE_PP(data) == IS_STRING)
+			{
+				axiom_node_t *metadata_node = NULL;
+				axis2_char_t *xml_str = Z_STRVAL_PP(data);
+				metadata_node = wsf_util_deserialize_buffer(env, xml_str);
+				axis2_endpoint_ref_add_metadata(endpoint_ref, env, metadata_node);
+			}
+			zend_hash_move_forward_ex (meta_params, &pos);
+		}
+	}
+	return endpoint_ref;
 }
