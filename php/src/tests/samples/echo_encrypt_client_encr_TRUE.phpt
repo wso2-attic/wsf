@@ -13,7 +13,7 @@ try {
     
     $reqMessage = new WSMessage($reqPayloadString,
                                 array("to"=>"http://localhost/samples/security/encryption/service.php",
-                                      "action" => "http://php.axis2.org/samples/echoString"));
+                                      "action" => "http://wso2.org/wsfphp/samples/echoString"));
     
     $sec_array = array("encrypt"=>TRUE,
                        "algorithmSuite" => "Basic256Rsa15",

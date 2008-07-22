@@ -3,34 +3,35 @@ Test for echo_client_rest_GET sample
 --FILE--
 <?php
 
-$reqPayloadString = <<<XML
-    <ns1:echoString xmlns:ns1="http://php.axis2.org/samples">
+$requestPayloadString = <<<XML
+    <ns1:echoString xmlns:ns1="http://wso2.org/wsfphp/samples">
         <text>Hello World!</text>
     </ns1:echoString>
 XML;
 
 try {
 
-    $client = new WSClient(
-        array("to"=>"http://localhost/samples/echo_service_with_rest.php/echoString",
-	      "useSOAP"=>FALSE,
-              "HTTPMethod"=>"GET"));
+    $client = new WSClient( array("to" => "http://localhost/samples/echo_service_with_rest.php/echoString",
+                                  "useSOAP" => FALSE,
+                                  "HTTPMethod" => "GET"));
 
-				
-    $resMessage = $client->request($reqPayloadString);
+                
+    $responseMessage = $client->request($requestPayloadString);
     
-    printf("Response = %s <br>", htmlspecialchars($resMessage->str));
+    printf("Response = %s <br>", htmlspecialchars($responseMessage->str));
 
 } catch (Exception $e) {
 
-	if ($e instanceof WSFault) {
-		printf("Error Code: %s\n", $e->httpStatusCode);
-	} else {
-		printf("Message = %s\n",$e->getMessage());
-	}
+    if ($e instanceof WSFault) {
+	    printf("Error String: %s\n", $e->str);
+	    printf("HTTP Code   : %s\n", $e->httpStatusCode);
+    } else {
+        printf("Message = %s\n",$e->getMessage());
+    }
 
 }
+
 ?>
 
 --EXPECT--
-Response = &lt;echoString&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;b&gt;b&lt;/b&gt;&lt;/echoString&gt; <br>
+Response = &lt;echoString&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/echoString&gt; <br>

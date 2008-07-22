@@ -12,7 +12,7 @@ try {
 
     $reqMessage = new WSMessage($reqPayloadString,
         array("to"=>"http://localhost/samples/echo_service_addr.php",
-              "action" => "http://php.axis2.org/samples/echoString"));
+              "action" => "http://wso2.org/wsfphp/samples/echoString"));
               
     $client = new WSClient(array("useWSA" => FALSE));
 				
