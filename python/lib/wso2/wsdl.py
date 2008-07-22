@@ -32,4 +32,22 @@ class WSProxy(WSFMethodMissingMixin):
         self.port_name = port_name
     
     def method_missing(self, method, *args, **kwargs):
-        pass
+        if len(args) == 1:
+            arg = args[0]
+            if isinstance(arg, dict):
+                result = WSFC.wsf_wsdl_request_function(
+                        self.env,
+                        self.svc_client,
+                        self.client_options,
+                        self.wsdl,
+                        str(method),
+                        arg,
+                        self.service_name,
+                        self.port_name,
+                        wso2.wsf.WSF_PYTHON_HOME)
+                return result
+            else:
+                print "Argument to Web Service operation must be a dictionary."
+        else:
+            print "Dynamic function only support one argument."
+        

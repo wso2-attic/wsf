@@ -178,6 +178,78 @@ wsf_wsdl_convert_user_params_to_wsdl_data(
     }
 }
 
+static PyObject * 
+wsf_wsdl_convert_wsdl_data_to_python_dict(
+    axutil_env_t *env,
+    wsf_wsdl_data_t *response)
+{
+    PyObject *element = NULL;
+    wsf_wsdl_data_iterator_t *iterator = NULL;
+    
+    if(response->children_type == CHILDREN_TYPE_NONE)
+    {
+        axis2_char_t* data_type = response->data_type;
+        axis2_char_t* data = (axis2_char_t *)(response->data);
+        if (strcmp(data_type, "str") == 0)
+        {
+            element = PyString_FromString(data);            
+        }
+        else if(strcmp(data_type, "int") == 0)
+        {
+            element = PyInt_FromString(data, NULL, 10);
+        }
+        else if(strcmp(data_type, "long") == 0)
+        {
+            element = PyLong_FromString(data, NULL, 10);
+        }
+        else if(strcmp(data_type, "float") == 0)
+        {
+            PyObject *float_str = PyString_FromString(data);
+            element = PyFloat_FromString(float_str, NULL);
+        }
+        else
+        {
+            element = PyString_FromString(data);
+        }
+        return element;
+    }
+
+    iterator = wsdl_data_iterator_create(env, response);
+    if(!wsdl_data_iterator_first(env, &iterator))
+        return Py_None;
+
+    if(iterator->type == CHILDREN_TYPE_ARRAY_ELEMENTS)
+    {   
+        element = PyList_New(0);
+        do
+        {
+            PyObject *sub_element;
+            wsf_wsdl_data_t *data = iterator->this;
+
+            sub_element = wsf_wsdl_convert_wsdl_data_to_python_dict(env, data);
+            
+            PyList_Append(element, sub_element);            
+        }while(wsdl_data_iterator_next(env, &iterator));
+    } 
+    else if(iterator->type == CHILDREN_TYPE_ATTRIBUTES)
+    {
+        element = PyDict_New();
+        do
+        {
+            PyObject *sub_element;
+            PyObject *key;
+            wsf_wsdl_data_t *data = iterator->this;
+            sub_element = wsf_wsdl_convert_wsdl_data_to_python_dict(env, data);
+            key = PyString_FromString(iterator->name);
+            PyDict_SetItem(element, key, sub_element);
+        }while(wsdl_data_iterator_next(env, &iterator));
+    }
+
+    wsdl_data_iterator_free(env, iterator);
+
+    return element;
+}
+
 static PyObject*
 wsf_wsdl_request_function(
     axutil_env_t *env,
@@ -190,9 +262,9 @@ wsf_wsdl_request_function(
     PyObject *port,             /* Port name*/
     PyObject *python_home)         /* Location to find xslt templates and type map*/
 {
-    /*wsf_wsdl_data_t *response = NULL;*/
-    /* wsf_wsdl_data_t *user_params = NULL;*/
-    /* axis2_bool_t wsdl_request_success = AXIS2_FALSE; */
+    wsf_wsdl_data_t *response = NULL;
+    wsf_wsdl_data_t *user_params = NULL;
+    axis2_bool_t wsdl_request_success = AXIS2_FALSE; 
     axis2_char_t *wsdl_file_name = NULL;
     axis2_char_t *operation_name = NULL;
     axis2_char_t *location_of_python_home = NULL;
@@ -320,7 +392,55 @@ wsf_wsdl_request_function(
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf-python][wsdl_mode] Service client options should be a Python dictionary.");
         return NULL;
     }
+    
+    if(PyDict_Check(arg))
+    {
+        PyObject *d_key, *d_value;
+        int pos = 0;
+        char *key_string = NULL;
+        while(PyDict_Next(arg, &pos, &d_key, &d_value))
+        {
+            if(PyString_Check(d_key))
+            {
+                key_string = PyString_AsString(d_key);
+                wsf_wsdl_convert_user_params_to_wsdl_data(env, key_string, d_value, user_params);
+            }
+        }
+    }
+    else
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf-python][wsdl_mode] Arguments to web service operations should be a Python Dictionary.");
+        return NULL;
+    }
+    
+    wsdl_request_success = wsf_wsdl_request(env,
+                                wsdl_file_name,
+                                operation_name,
+                                user_params,
+                                location_of_python_home,
+                                svc_client,
+                                svc_client_options, 
+                                service_name,
+                                port_name,
+                                &response);
 
+    if (wsdl_request_success == AXIS2_FAILURE)
+    {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf-python][wsdl_mode] wsf_wsdl_request returned fault.");
+        return NULL;
+    }
+
+    if(response)
+    {
+        PyObject *reponse_python;
+        reponse_python = wsf_wsdl_convert_wsdl_data_to_python_dict(env, response);
+        return reponse_python;
+    }
+    else
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf-python][wsdl_mode] wsf_wsdl_request response is null.");
+        return NULL;
+    }
     return NULL;
 }
 

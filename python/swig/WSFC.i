@@ -63,7 +63,7 @@ typedef char         axis2_byte_t;
 
 %include wsf_constants.i
 %include wsf_inlines.i
-/*%include wsf_python.i*/
+%include wsf_python.i
 
 %include "cpointer.i"
 %include "typemaps.i"
