@@ -570,16 +570,19 @@ wsf_util_engage_module (
 
     mod_qname = axutil_qname_create (env, module_name, NULL, NULL);
     module = axis2_conf_get_module (conf, env, mod_qname);
-    if (module) {
+    if (module) 
+	{
         status = axis2_svc_engage_module (svc, env, module, conf);
 		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
 			"Engaging module %s to service ", module_name);
-        if (!status) {
+        if (!status) 
+		{
             phase_resolver =
                 axis2_phase_resolver_create_with_config (env, conf);
-            if (!phase_resolver) {
+            if (!phase_resolver) 
+			{
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
-                    "Enaging module, PHASE RESLOVER NULL");
+                    "Engaging module, PHASE RESLOVER NULL");
                 return AXIS2_FAILURE;
             }
             status =
@@ -590,7 +593,7 @@ wsf_util_engage_module (
     return status;
 }
 
-/* genarate service name from uri */
+/* generate service name from uri */
 char *
 wsf_util_generate_svc_name_from_uri_and_set_loc_str (
     char *req_uri,
@@ -752,9 +755,7 @@ void wsf_util_set_addr_action_to_op(
     char *op_name TSRMLS_DC)
 {
     axis2_op_t *op = NULL;
-    axutil_qname_t *op_qname = NULL;
-    op_qname = axutil_qname_create (env, op_name, NULL, NULL);
-
+    
     if (NULL != svc_info->svc && NULL != op_name) {
         op = axis2_svc_get_op_with_name (svc_info->svc, env, op_name);
         if (!op) {
@@ -765,9 +766,6 @@ void wsf_util_set_addr_action_to_op(
        if (action) {
                 axis2_svc_add_mapping (svc_info->svc, env, action, op);
        }
-    }
-    if(op_qname){
-        axutil_qname_free(op_qname, env);
     }
     return;
 }
@@ -1595,7 +1593,7 @@ void wsf_util_process_ws_service_operations(
         function_name = emalloc (key_len + 1);
         zend_str_tolower_copy (function_name, func_name, key_len);
 
-        if (zend_hash_find (EG (function_table), function_name, key_len + 1, (void **) &f) == FAILURE) 
+		if (zend_hash_find (EG (function_table), function_name, key_len + 1, (void **) &f) == FAILURE) 
 		{
             efree(function_name);
             php_error_docref (NULL TSRMLS_CC, E_ERROR, "Named function not in function table");
@@ -1609,7 +1607,7 @@ void wsf_util_process_ws_service_operations(
 
      	    wsf_util_create_op_and_add_to_svc (svc_info, ws_env_svr,
                 op_name_to_store, ht_ops_to_mep TSRMLS_CC);
-		}
+		 } 
         zend_hash_move_forward_ex (ht_ops_to_funcs, &pos);
         i++;
     }
@@ -1668,18 +1666,21 @@ void wsf_util_process_ws_service_op_actions(
             key = emalloc (key_len + 1);
 
             zend_str_tolower_copy (key, operation_name , key_len);
-
+			
             if (zend_hash_find (EG (function_table), key, key_len + 1, (void **) &f) == FAILURE)
 			{
-                /* php_error_docref (NULL TSRMLS_CC, E_ERROR, "Named function not in function table"); */
                 AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
 					"%s The function does not exist in function table ", operation_name);
             }
 			else
 			{
-            	axutil_hash_set (svc_info->ops_to_functions, axutil_strdup (ws_env_svr, Z_STRVAL_PP (tmp)),
+				axutil_hash_set (svc_info->ops_to_functions, axutil_strdup (ws_env_svr, Z_STRVAL_PP (tmp)),
                     AXIS2_HASH_KEY_STRING, axutil_strdup (ws_env_svr, Z_STRVAL_PP (tmp)));
-			}
+				/*
+				wsf_util_create_op_and_add_to_svc (svc_info, ws_env_svr, 
+					Z_STRVAL_PP(tmp), NULL TSRMLS_CC);
+				*/
+			 } 
             efree(key);
 		}
         if (wsa_action) 

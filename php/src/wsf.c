@@ -1112,13 +1112,12 @@ PHP_METHOD (ws_service, __construct)
 		wsf_util_process_ws_service_classes(ht_classes, ht_ops_to_mep,svc_info, ws_env_svr TSRMLS_CC);
 	}
 
-    wsf_util_process_ws_service_op_actions(ht_actions, svc_info, ws_env_svr TSRMLS_CC);
- 
 	wsf_util_add_svc_to_conf(ws_env_svr, svc_info, wsf_worker_get_conf_ctx(worker, ws_env_svr));
 	
-
     wsf_util_engage_modules_to_svc(ws_env_svr, wsf_worker_get_conf_ctx(worker, ws_env_svr), svc_info);
     
+	wsf_util_process_ws_service_op_actions(ht_actions, svc_info, ws_env_svr TSRMLS_CC);
+
 	wsf_util_process_rest_params(ws_env_svr, svc_info, ht_rest_map TSRMLS_CC);
 
     /*if(zend_hash_find(Z_OBJPROP_P(this_ptr), WSF_WSDL,
