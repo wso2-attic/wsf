@@ -148,7 +148,7 @@ function wsf_extract_wsdl_info($user_parameters) {
             ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "binding node not found");
             return  NULL;
         }
-        $policy_array = wsf_get_all_policies($wsdl_dom, $binding_node, $operation_name);
+        $policy_array = wsf_get_all_policies($wsdl_dom, $binding_node, $operation_name, FALSE);
     }
 
     $sig_model_string = $sig_model_dom->saveXML($operation);
@@ -304,12 +304,12 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
         /* rpc literal not supported */
     }
     else{
-        $binding_node = wsf_get_binding($wsdl_dom, $service, $port);
+        $binding_node = wsf_get_binding($wsdl_dom, $service, $port, FALSE);
         if(!$binding_node) {
             ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "binding node not found");
             return  NULL;
         }
-        $policy_array = wsf_get_all_policies($wsdl_dom, $binding_node, $operation_name);
+        $policy_array = wsf_get_all_policies($wsdl_dom, $binding_node, $operation_name, FALSE);
     }
 
     $operation = wsf_find_operation($sig_model_dom, $operation_name, $service, $port, $is_multiple_interfaces);
@@ -510,7 +510,7 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
         if(!$binding_node)
             return  NULL;
         foreach($operation_array as $value) {
-            $policy_array[$value] = wsf_get_all_policies($wsdl_dom, $binding_node, $value);
+            $policy_array[$value] = wsf_get_all_policies($wsdl_dom, $binding_node, $value, FALSE);
         }
     }
     
