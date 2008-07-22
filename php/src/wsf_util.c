@@ -354,6 +354,9 @@ wsf_svc_info_create (
     svc_info->wsdl = NULL;
 	svc_info->loc_str = NULL;
 	svc_info->ht_op_policies = NULL;
+	svc_info->auth_type = WSF_PHP_AUTH_TYPE_BASIC;
+	svc_info->auth_user = NULL;
+	svc_info->auth_password = NULL;
 
     return svc_info;
 }
@@ -385,8 +388,15 @@ wsf_svc_info_free (
         if( svc_info->wsdl) {
             AXIS2_FREE(env->allocator, svc_info->wsdl);
         }
-      
-        AXIS2_FREE (env->allocator, svc_info);
+		if(svc_info->auth_password)
+		{
+			AXIS2_FREE(env->allocator, svc_info->auth_password);
+		}
+		if(svc_info->auth_user)
+		{
+			AXIS2_FREE(env->allocator, svc_info->auth_user);
+		}
+		AXIS2_FREE (env->allocator, svc_info);
     }
 }
 

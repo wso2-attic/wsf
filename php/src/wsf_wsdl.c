@@ -94,125 +94,167 @@ void wsf_wsdl_create_dynamic_client(
 	zval *classmap = NULL; 
 
 
-    if (instanceof_function (Z_OBJCE_P (this_ptr),
-                             ws_client_proxy_class_entry TSRMLS_CC)) {
-        if (zend_hash_find (Z_OBJPROP_P (this_ptr), WSF_WSDL_WSCLIENT,
-                            sizeof (WSF_WSDL_WSCLIENT), 
-                            (void **) & tmp) == SUCCESS) {
+    if (instanceof_function (Z_OBJCE_P (this_ptr), ws_client_proxy_class_entry TSRMLS_CC)) 
+	{
+        if (zend_hash_find (Z_OBJPROP_P (this_ptr), WSF_WSDL_WSCLIENT, sizeof (WSF_WSDL_WSCLIENT), 
+                            (void **) & tmp) == SUCCESS) 
+		{
             client_zval = *tmp;
-        } else {
-            php_error_docref (NULL TSRMLS_CC, E_ERROR,
-                              " proxy created without wsclient");
+        } else 
+		{
+            php_error_docref (NULL TSRMLS_CC, E_ERROR, " proxy created without wsclient");
             return;
         }
-    } else if (instanceof_function (Z_OBJCE_P (this_ptr),
-                                    ws_client_class_entry TSRMLS_CC)) {
+    } else if (instanceof_function (Z_OBJCE_P (this_ptr), ws_client_class_entry TSRMLS_CC)) 
+	{
         client_zval = this_ptr;
     }
     if ( zend_hash_find ( Z_OBJPROP_P (client_zval), WSF_WSDL, sizeof (WSF_WSDL),
-                          (void **) &wsdl_location) == SUCCESS
-         && Z_TYPE_PP (wsdl_location) == IS_STRING){
-           
-        params[0] = &param1;
-        params[1] = &param2;
-        
-        MAKE_STD_ZVAL(user_parameters);
-        array_init(user_parameters);
-        add_assoc_string(user_parameters, WSF_WSDL, 
-                         Z_STRVAL_PP(wsdl_location), 1);
-        
-        if ( zend_hash_find ( Z_OBJPROP_P (client_zval), WSF_TO, sizeof (WSF_TO),
-                              (void **) &end_point) == SUCCESS
-             && Z_TYPE_PP (end_point) == IS_STRING){
-            add_assoc_string(user_parameters, WSF_WSDL_ENDPOINT, 
-                             Z_STRVAL_PP(end_point), 1);
-        }
-        
-        if ( zend_hash_find ( Z_OBJPROP_P (client_zval), WSF_WSDL_CLASSMAP, 
-                              sizeof (WSF_WSDL_CLASSMAP),
-                            (void **) &class_map) == SUCCESS
-             && Z_TYPE_PP (class_map) == IS_ARRAY){
+		(void **) &wsdl_location) == SUCCESS )
+	{
+		params[0] = &param1;
+		params[1] = &param2;
+		MAKE_STD_ZVAL(user_parameters);
+		array_init(user_parameters);
+		if(Z_TYPE_PP (wsdl_location) == IS_STRING)
+		{
+			add_assoc_string(user_parameters, WSF_WSDL,  Z_STRVAL_PP(wsdl_location), 1);
+		}else if(Z_TYPE_PP(wsdl_location) == IS_ARRAY)
+		{
+			zval **tmpval = NULL;
+			HashTable *ht = Z_ARRVAL_PP(wsdl_location);
+			if(zend_hash_find(ht, WSF_WSDL, sizeof(WSF_WSDL), (void **)&tmpval) == SUCCESS &&
+				Z_TYPE_PP(tmpval) == IS_STRING)
+			{
+				add_assoc_string(user_parameters, WSF_WSDL, Z_STRVAL_PP(tmpval), 1);
+			}else
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "WSDL file name not specified ");
+				return;
+			}
+			if(zend_hash_find(ht, WSF_HTTP_AUTH_USERNAME, sizeof(WSF_HTTP_AUTH_USERNAME), (void **)&tmpval) == SUCCESS &&
+				Z_TYPE_PP(tmpval) == IS_STRING)
+			{
+				add_assoc_string(user_parameters, WSF_HTTP_AUTH_USERNAME, Z_STRVAL_PP(tmpval), 1);
+			}
+			if(zend_hash_find(ht, WSF_HTTP_AUTH_PASSWORD, sizeof(WSF_HTTP_AUTH_PASSWORD), (void **)&tmpval) == SUCCESS &&
+				Z_TYPE_PP(tmpval) == IS_STRING)
+			{
+				add_assoc_string(user_parameters, WSF_HTTP_AUTH_PASSWORD, Z_STRVAL_PP(tmpval), 1);
+			}
+			if(zend_hash_find(ht, WSF_HTTP_AUTH_TYPE, sizeof(WSF_HTTP_AUTH_TYPE), (void **)&tmpval) == SUCCESS &&
+				Z_TYPE_PP(tmpval) == IS_STRING)
+			{
+				add_assoc_string(user_parameters, WSF_HTTP_AUTH_TYPE, Z_STRVAL_PP(tmpval), 1);
+			}
+		}
+	}else 
+	{
+		return;    
+	}
+    if ( zend_hash_find ( Z_OBJPROP_P (client_zval), WSF_TO, sizeof (WSF_TO),
+		(void **) &end_point) == SUCCESS)
+	{
+		if(Z_TYPE_PP(end_point) == IS_STRING)
+		{
+			add_assoc_string(user_parameters, WSF_WSDL_ENDPOINT,  Z_STRVAL_PP(end_point), 1);
+		}else if(Z_TYPE_PP(end_point) == IS_ARRAY)
+		{	
+			zval **tmpval = NULL;
+			HashTable *ht = Z_ARRVAL_PP(end_point);
+			if(zend_hash_find(ht, WSF_WSA_ADDRESS, sizeof(WSF_WSA_ADDRESS), 
+				(void **)&tmpval) == SUCCESS && Z_TYPE_PP(tmpval) == IS_STRING)
+			{
+				add_assoc_string(user_parameters, WSF_WSDL_ENDPOINT, Z_STRVAL_PP(end_point), 1);
+			}
+		}
+
+    }
+    if ( zend_hash_find ( Z_OBJPROP_P (client_zval), WSF_WSDL_CLASSMAP,  sizeof (WSF_WSDL_CLASSMAP),
+		(void **) &class_map) == SUCCESS && Z_TYPE_PP (class_map) == IS_ARRAY)
+	{
             add_assoc_zval(user_parameters, WSF_WSDL_CLASSMAP, *class_map);
             classmap = *class_map;
             arguments = args;
-        }
+    }
 
-        if ( zend_hash_find ( Z_OBJPROP_P (this_ptr), WSF_SERVICE_NAME, sizeof (WSF_SERVICE_NAME),
-                              (void **) &service_name) == SUCCESS
-             && Z_TYPE_PP (service_name) == IS_STRING){
-            add_assoc_string(user_parameters, WSF_SERVICE_NAME,
-                             Z_STRVAL_PP(service_name), 1);
-        }
+    if ( zend_hash_find ( Z_OBJPROP_P (this_ptr), WSF_SERVICE_NAME, sizeof (WSF_SERVICE_NAME),
+		(void **) &service_name) == SUCCESS && Z_TYPE_PP (service_name) == IS_STRING)
+	{
+            add_assoc_string(user_parameters, WSF_SERVICE_NAME, Z_STRVAL_PP(service_name), 1);
+    }
 
-        if ( zend_hash_find ( Z_OBJPROP_P (this_ptr), WSF_PORT_NAME, sizeof (WSF_PORT_NAME),
-                              (void **) &port_name) == SUCCESS
-             && Z_TYPE_PP (port_name) == IS_STRING){
-            add_assoc_string(user_parameters, WSF_PORT_NAME,
-                             Z_STRVAL_PP(port_name), 1);
-        }
+    if (zend_hash_find(Z_OBJPROP_P (this_ptr), WSF_PORT_NAME, sizeof (WSF_PORT_NAME),
+        (void **) &port_name) == SUCCESS && Z_TYPE_PP (port_name) == IS_STRING)
+	{
+        add_assoc_string(user_parameters, WSF_PORT_NAME, Z_STRVAL_PP(port_name), 1);
+    }
 
-        if ( client_zval && zend_hash_find ( Z_OBJPROP_P (client_zval), WSF_USE_MTOM, sizeof (WSF_USE_MTOM),
-                              (void **) &use_mtom) == SUCCESS){
+    if (client_zval && zend_hash_find ( Z_OBJPROP_P (client_zval), WSF_USE_MTOM, 
+		sizeof (WSF_USE_MTOM), (void **) &use_mtom) == SUCCESS)
+	{
             add_assoc_zval(user_parameters, WSF_USE_MTOM, *use_mtom);
-        }
+    }
         
-        MAKE_STD_ZVAL(function_parameters);
-        array_init(function_parameters);
-        add_assoc_string(function_parameters, WSF_WSDL_INVOKE_FUNCTION, 
-                         function, 1);
-        add_assoc_long(function_parameters, WSF_WSDL_ARG_COUNT, arg_count);
-        add_assoc_zval(function_parameters, WSF_WSDL_ARG_ARRAY, args);
-        
-        ZVAL_STRING(&request_function, WSF_WSDL_REQ_FUNCTION, 0);
-        ZVAL_ZVAL(params[0], user_parameters, NULL, NULL);
-        INIT_PZVAL(params[0]);
-        ZVAL_ZVAL(params[1], function_parameters, NULL, NULL);
-        INIT_PZVAL(params[1]);
+    MAKE_STD_ZVAL(function_parameters);
+    array_init(function_parameters);
+    add_assoc_string(function_parameters, WSF_WSDL_INVOKE_FUNCTION,  function, 1);
+    add_assoc_long(function_parameters, WSF_WSDL_ARG_COUNT, arg_count);
+    add_assoc_zval(function_parameters, WSF_WSDL_ARG_ARRAY, args);
+    
+    ZVAL_STRING(&request_function, WSF_WSDL_REQ_FUNCTION, 0);
+    ZVAL_ZVAL(params[0], user_parameters, NULL, NULL);
+    INIT_PZVAL(params[0]);
+    ZVAL_ZVAL(params[1], function_parameters, NULL, NULL);
+    INIT_PZVAL(params[1]);
 
-		script.type = ZEND_HANDLE_FP;
-		script.filename = WSF_WSDL_DYNAMIC_INVOC_SCRIPT;
-		script.opened_path = NULL;
-		script.free_filename = 0;
+	script.type = ZEND_HANDLE_FP;
+	script.filename = WSF_WSDL_DYNAMIC_INVOC_SCRIPT;
+	script.opened_path = NULL;
+	script.free_filename = 0;
 
 
-		stream  = php_stream_open_wrapper(WSF_WSDL_DYNAMIC_INVOC_SCRIPT, "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
-		if(!stream)
-				return;
+	stream  = php_stream_open_wrapper(WSF_WSDL_DYNAMIC_INVOC_SCRIPT, "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
+	if(!stream)
+		return;
 
-		if (php_stream_cast(stream, PHP_STREAM_AS_STDIO|PHP_STREAM_CAST_RELEASE, (void*)&new_fp, REPORT_ERRORS) == FAILURE)    {
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                         "[wsf_wsdl] Unable to open script file or file not found");
-		}
-		script.handle.fp =  new_fp;
-		if(script.handle.fp){
-			int lint_script = 1;
+	if (php_stream_cast(stream, PHP_STREAM_AS_STDIO|PHP_STREAM_CAST_RELEASE, (void*)&new_fp, REPORT_ERRORS) == FAILURE)    {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                     "[wsf_wsdl] Unable to open script file or file not found");
+	}
+	script.handle.fp =  new_fp;
+	if(script.handle.fp)
+	{
+		int lint_script = 1;
+		{
+			zval check_function, retval1;
+			ZVAL_STRING(&check_function, WSF_WSDL_CHECK_FUNCTION, 0);
+			if (call_user_function (EG (function_table), (zval **) NULL, 
+				&check_function, &retval1, 0,NULL TSRMLS_CC) == SUCCESS)
 			{
-				zval check_function, retval1;
-				ZVAL_STRING(&check_function, WSF_WSDL_CHECK_FUNCTION, 0);
-				if (call_user_function (EG (function_table), (zval **) NULL, 
-					&check_function, &retval1, 0,NULL TSRMLS_CC) == SUCCESS){
-						if(Z_TYPE(retval1) == IS_LONG && Z_LVAL(retval1) == 1){
-							lint_script = 0;							
-						}
-				}
+					if(Z_TYPE(retval1) == IS_LONG && Z_LVAL(retval1) == 1)
+					{
+						lint_script = 0;							
+					}
 			}
-				if(lint_script){
-					php_lint_script (&script TSRMLS_CC); 
-				}
-			}
-            if (call_user_function (EG (function_table), (zval **) NULL,
-                                    &request_function, &retval, 2,
-                                    params TSRMLS_CC) == SUCCESS ){
-                if (Z_TYPE(retval) == IS_ARRAY && Z_ARRVAL (retval) != IS_NULL)
-                    wsf_wsdl_do_request(client_zval, &retval, return_value, arguments,classmap,
-					env TSRMLS_CC);
-                else if (Z_TYPE_P(&retval) == IS_STRING){
-                    php_error_docref(NULL TSRMLS_CC, E_ERROR, 
-                                     "Error occurred in script: %s",
-                                     Z_STRVAL_P(&retval));
-                }
-            }
 		}
+		if(lint_script)
+		{
+			php_lint_script (&script TSRMLS_CC); 
+		}
+	}
+	if (call_user_function (EG (function_table), (zval **) NULL, &request_function, &retval, 2,
+                params TSRMLS_CC) == SUCCESS )
+	{
+        if (Z_TYPE(retval) == IS_ARRAY && Z_ARRVAL (retval) != IS_NULL)
+		{
+			wsf_wsdl_do_request(client_zval, &retval, return_value, arguments,classmap, env TSRMLS_CC);
+
+		}else if (Z_TYPE_P(&retval) == IS_STRING)
+		{
+			php_error_docref(NULL TSRMLS_CC, E_ERROR, "Error occurred in script: %s",Z_STRVAL_P(&retval));
+        }
+    }
 }
 
 
@@ -1030,6 +1072,12 @@ void wsf_wsdl_process_service(axis2_char_t *wsdl_location, wsf_svc_info_t *svc_i
         array_init(param_array);
         add_assoc_string(param_array, WSF_WSDL, wsdl_location, 1);
         
+		if(svc_info->auth_user && svc_info->auth_password && svc_info->auth_type)
+		{
+			add_assoc_string(param_array, WSF_HTTP_AUTH_PASSWORD, svc_info->auth_password, 1);
+			add_assoc_string(param_array, WSF_HTTP_AUTH_USERNAME, svc_info->auth_user, 1);
+			add_assoc_string(param_array, WSF_HTTP_AUTH_TYPE, svc_info->auth_type, 1);
+		}
                
         MAKE_STD_ZVAL (operations);
         array_init (operations);

@@ -648,9 +648,17 @@ wsf_client_add_properties (
 
 
     if (zend_hash_find (ht, WSF_WSDL, sizeof (WSF_WSDL), 
-        (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) {
-        add_property_stringl (this_ptr, WSF_WSDL, Z_STRVAL_PP (tmp),
+        (void **) &tmp) == SUCCESS) 
+	{
+		if(Z_TYPE_PP (tmp) == IS_STRING)
+		{
+			add_property_stringl (this_ptr, WSF_WSDL, Z_STRVAL_PP (tmp),
                               Z_STRLEN_PP (tmp), 1);
+		}else if(Z_TYPE_PP(tmp) == IS_ARRAY)
+		{
+			zval_add_ref(tmp);
+			add_property_zval(this_ptr, WSF_WSDL, *tmp);
+		}
     }
     
     if (zend_hash_find (ht, WSF_CLASSMAP, sizeof (WSF_CLASSMAP),

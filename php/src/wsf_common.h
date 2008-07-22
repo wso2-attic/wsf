@@ -138,6 +138,7 @@ typedef enum ws_input_types
 #define WSF_HTTP_AUTH_USERNAME      "httpAuthUsername"
 #define WSF_HTTP_AUTH_PASSWORD      "httpAuthPassword"
 #define WSF_HTTP_AUTH_TYPE          "httpAuthType"
+#define WSF_PHP_AUTH_TYPE_BASIC			"Basic"
 
 /** proxy authentication */
 #define WSF_PROXY_AUTH_USERNAME      "proxyAuthUsername"
@@ -270,8 +271,7 @@ typedef struct wsf_svc_info
   axis2_svc_t *svc;
   /** service context */
   axis2_svc_ctx_t *svc_ctx;
-  
-  /** message receiver object state less and commnon to all */
+  /** message receiver object state less and common to all */
   axis2_msg_recv_t *msg_recv;
   /** php worker object */
   struct wsf_worker_t *php_worker;
@@ -319,9 +319,14 @@ typedef struct wsf_svc_info
   char *wsdl;
   /**http://<domain>/<..*.php>/<loc_str>/ */
   char *loc_str;	
-  /** caceh the wsdl */
+  /** cache the wsdl */
   int cache_wsdl;
-
+  /** http_auth_username */
+  char *auth_user;
+  /** http_auth_password */
+  char *auth_password;
+  /** http_auth_type */
+  char* auth_type;
 }
 wsf_svc_info_t;
 

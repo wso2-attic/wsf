@@ -670,7 +670,7 @@ PHP_METHOD (ws_client, __construct)
     if (NULL != options) {
         HashTable * ht = Z_ARRVAL_P (options);
         if (!ht) return;
-	/** add properties defined in api doc */
+	/** add properties defined in API doc */
         wsf_client_add_properties (obj, ht TSRMLS_CC);
 
 
@@ -914,6 +914,7 @@ PHP_METHOD (ws_service, __construct)
                (void **) & tmp) == SUCCESS  && Z_TYPE_PP (tmp) == IS_ARRAY) {
 
 	                ht_opParams = Z_ARRVAL_PP (tmp);
+					zval_add_ref(tmp);
 					svc_info->ht_op_params = ht_opParams;
 					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
 						" setting message operation parameters");
@@ -927,10 +928,45 @@ PHP_METHOD (ws_service, __construct)
                     svc_info->cache_wsdl = Z_BVAL_PP (tmp);
             }
             if (zend_hash_find (ht_options, WSF_WSDL, sizeof (WSF_WSDL),
-               (void **) & tmp) == SUCCESS  &&Z_TYPE_PP (tmp) == IS_STRING) {
-				            svc_info->wsdl = axutil_strdup(ws_env_svr, Z_STRVAL_PP (tmp));
-                    add_property_stringl (this_ptr, WSF_WSDL, Z_STRVAL_PP (tmp),
-                                                      Z_STRLEN_PP (tmp), 1);
+               (void **) & tmp) == SUCCESS)
+			{
+				axis2_char_t *wsdl_path = NULL, *auth_username = NULL, 
+					*auth_password= NULL,*auth_type = NULL;
+				int wsdl_path_length = 0;
+				if(Z_TYPE_PP (tmp) == IS_STRING)
+				{
+						wsdl_path = Z_STRVAL_PP(tmp);
+						wsdl_path_length = Z_STRLEN_PP(tmp);
+				}
+				else if(Z_TYPE_PP(tmp) == IS_ARRAY)
+				{
+					zval **tmpval = NULL;
+					HashTable *ht = Z_ARRVAL_PP(tmp);
+
+					if(zend_hash_find(ht, WSF_WSA_ADDRESS, sizeof(WSF_WSA_ADDRESS), 
+						(void **)&tmpval) == SUCCESS && Z_TYPE_PP(tmpval) == IS_STRING)
+					{
+						wsdl_path = Z_STRVAL_PP(tmpval);
+						wsdl_path_length = Z_STRLEN_PP(tmpval);
+					}
+					if(zend_hash_find(ht, WSF_HTTP_AUTH_USERNAME, sizeof(WSF_HTTP_AUTH_USERNAME), 
+						(void **)&tmpval) == SUCCESS && Z_TYPE_PP(tmpval) == IS_STRING)
+					{
+						svc_info->auth_user = axutil_strdup(env, Z_STRVAL_PP(tmpval));
+					}
+					if(zend_hash_find(ht, WSF_HTTP_AUTH_PASSWORD, sizeof(WSF_HTTP_AUTH_PASSWORD), 
+						(void **)&tmpval) == SUCCESS && Z_TYPE_PP(tmpval) == IS_STRING)
+					{
+						svc_info->auth_password = axutil_strdup(env, Z_STRVAL_PP(tmpval));
+					}
+					if(zend_hash_find(ht, WSF_HTTP_AUTH_TYPE, sizeof(WSF_HTTP_AUTH_TYPE), 
+						(void **)&tmpval) == SUCCESS && Z_TYPE_PP(tmpval) == IS_STRING)
+					{
+						svc_info->auth_type = axutil_strdup(env, Z_STRVAL_PP(tmpval));
+					}
+				}
+				svc_info->wsdl = axutil_strdup(ws_env_svr, wsdl_path);
+				add_property_stringl (this_ptr, WSF_WSDL, wsdl_path, wsdl_path_length, 1);
             }
             if (zend_hash_find (ht_options , WSF_CLASSMAP, sizeof (WSF_CLASSMAP),
                    (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
@@ -1129,19 +1165,20 @@ static void generate_wsdl_for_service(zval *svc_zval,
         int in_cmd TSRMLS_DC)
 {
     char *service_name = NULL;
-    zval func, retval, param1, param2, param3,
-        param4, param5, param6, param7, param8, param9, param10;
-    zval * params[9];
+    zval func, retval, param1, param2, param3, param4, param5, param6, 
+		param7, param8, param9, param10;
+
+    zval *params[10];
     axutil_hash_index_t * hi = NULL;
-	zval * functions = NULL;
+	zval *functions = NULL;
     zend_file_handle script;
     char *val = NULL;
     int len = 0;
-	zval ** tmpval = NULL;
+	zval **tmpval = NULL;
     char *binding_name = NULL;
     char *wsdl_version = NULL;
     smart_str full_path = {0};
-	zval * op_val = NULL;
+	zval *op_val = NULL;
 	FILE *new_fp = NULL;
     zval **class_map = NULL;
 
@@ -1160,45 +1197,47 @@ static void generate_wsdl_for_service(zval *svc_zval,
 	if ((zend_hash_find (Z_OBJPROP_P (svc_zval), WSF_WSDL, sizeof(WSF_WSDL), 
 		(void **)&wsdl_location) == SUCCESS && Z_TYPE_PP (wsdl_location) == IS_STRING)) 
 	{
-        zval f_get_conts, f_get_conts_ret, *param;
+	/** WSDL is specified, so load and display from there */
+        zval function, retval , *param = NULL;
         int new_len = 0;
-        char *new_val = NULL;
-        char *new_val1 = NULL;
         
-        INIT_ZVAL(f_get_conts);
-        INIT_ZVAL(f_get_conts_ret);
+        INIT_ZVAL(func);
+        INIT_ZVAL(retval);
         MAKE_STD_ZVAL(param);
         
         sapi_add_header ("Content-Type:application/xml", sizeof ("Content-Type:application/xml"), 1);
         ZVAL_STRING(param, Z_STRVAL_PP(wsdl_location), 1);
-        ZVAL_STRING(&f_get_conts, "file_get_contents", 1);
-        if (call_user_function(EG(function_table), NULL, &f_get_conts, 
-			&f_get_conts_ret, 1, &param  TSRMLS_CC) == SUCCESS) 
+        ZVAL_STRING(&function, "file_get_contents", 1);
+        if (call_user_function(EG(function_table), NULL, &function, 
+			&retval, 1, &param  TSRMLS_CC) == SUCCESS) 
 		{
-			if (Z_TYPE_P (&f_get_conts_ret) == IS_STRING)
+			char *wsdl_string = NULL;
+			char *wsdl_string1 = NULL;
+
+			if (Z_TYPE_P (&retval) == IS_STRING)
 			{
-                val = estrdup (Z_STRVAL(f_get_conts_ret));
-                len = Z_STRLEN (f_get_conts_ret);
-                if(strstr(val, "<?xml version=\"1.0\""))
+                wsdl_string = estrdup (Z_STRVAL(retval));
+                len = Z_STRLEN (retval);
+                if(strstr(wsdl_string, "<?xml version=\"1.0\""))
 				{
                     new_len = strlen("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-                    new_val = (val + new_len);
-                    new_val1 = estrdup(strstr(new_val, "<"));
-                    len = strlen(new_val1);
-                    php_write(new_val1, len TSRMLS_CC);
+                    wsdl_string = (wsdl_string + new_len);
+                    wsdl_string1 = estrdup(strstr(wsdl_string, "<"));
+                    len = strlen(wsdl_string1);
+                    php_write(wsdl_string1, len TSRMLS_CC);
                 }
 				else
 				{
-                    php_write (val, len TSRMLS_CC);
+                    php_write (wsdl_string, len TSRMLS_CC);
 				}
-                if(val)
+                if(wsdl_string)
 				{
                     efree(val);
                 }
-                if(new_val1){
-                    efree(new_val1);
+                if(wsdl_string1)
+				{
+                    efree(wsdl_string1);
                 }
-                
 			}
 			else
 			{
@@ -1207,9 +1246,8 @@ static void generate_wsdl_for_service(zval *svc_zval,
 		}
             
         zval_ptr_dtor(&param);
-        zval_dtor(&f_get_conts);
-        zval_dtor(&f_get_conts_ret);
-                
+        zval_dtor(&function);
+        zval_dtor(&retval);
     }
     else
 	{
@@ -1260,7 +1298,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
             binding_name =WSF_STYLE_DOCLIT;
         }
         
-            /** find the functions in the service.php file */ 
+           /** find the functions in the service.php file */ 
         MAKE_STD_ZVAL (functions);
         array_init (functions);
         MAKE_STD_ZVAL (op_val);
@@ -1270,15 +1308,11 @@ static void generate_wsdl_for_service(zval *svc_zval,
             for (hi = axutil_hash_first (svc_info->ops_to_functions, ws_env_svr); hi; 
 				hi = axutil_hash_next (ws_env_svr, hi)) 
 			{
-                void *v = NULL;
-                const void *k = NULL;
-                axis2_char_t * f_key = NULL;
-                axis2_char_t * f_name = NULL;
-                axutil_hash_this (hi, &k, NULL, &v);
-                f_key = (axis2_char_t *) k;
-                f_name = (axis2_char_t *) v;
-                add_next_index_string (functions, (char *) f_name, 1);
-                add_assoc_string (op_val, (char *) f_key, (char *) f_name, 1);
+                void *value = NULL;
+                const void *key = NULL;
+                axutil_hash_this (hi, &key, NULL, &value);
+                add_next_index_string (functions, (char *) value, 1);
+                add_assoc_string (op_val, (char *) key, (char *) value, 1);
             } 
         }
 
@@ -1297,17 +1331,25 @@ static void generate_wsdl_for_service(zval *svc_zval,
             ZVAL_NULL (params[2]);
         }
         INIT_PZVAL (params[2]);
-
-        ZVAL_STRING (params[3], binding_name, 0);
-        INIT_PZVAL (params[3]);
-        ZVAL_STRING (params[4], wsdl_version, 0);
-        INIT_PZVAL (params[4]);
+		if(binding_name)
+		{
+			ZVAL_STRING (params[3], binding_name, 0);
+			INIT_PZVAL (params[3]);
+		}
+		if(wsdl_version)
+		{
+			ZVAL_STRING (params[4], wsdl_version, 0);
+			INIT_PZVAL (params[4]);
+		}
+		
         ZVAL_STRING (params[5], full_path.c , 0);
         INIT_PZVAL (params[5]);
-        ZVAL_ZVAL (params[6], op_val, NULL, NULL);
+        
+		ZVAL_ZVAL (params[6], op_val, NULL, NULL);
         INIT_PZVAL (params[6]);
-        if(class_map)
-		    {
+        
+		if(class_map)
+		{
             ZVAL_ZVAL (params[7], *class_map, NULL, NULL);
         }
         else 
@@ -1315,8 +1357,9 @@ static void generate_wsdl_for_service(zval *svc_zval,
             ZVAL_NULL (params[7]);
         }
         INIT_PZVAL (params[7]);
+
         if(svc_info->wsdl_gen_annotations) 
-		    {
+		{
             ZVAL_ZVAL (params[8], svc_info->wsdl_gen_annotations, NULL, NULL);
         }
         else 
@@ -1326,7 +1369,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
         INIT_PZVAL (params[8]);
 
         if(svc_info->wsdl_gen_actions) 
-		    {
+		{
             ZVAL_ZVAL (params[9], svc_info->wsdl_gen_actions, NULL, NULL);
         }
         else 
@@ -1334,6 +1377,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
             ZVAL_NULL (params[9]);
         }
         INIT_PZVAL (params[9]);
+
         args_count = 10;
 
         script.type = ZEND_HANDLE_FP;
@@ -1367,7 +1411,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
                                     &func, &retval, args_count, params TSRMLS_CC) == SUCCESS)
 			{
                 
-                if (Z_TYPE_P (&retval) == IS_STRING && Z_TYPE_P (&retval) != IS_NULL)
+                if (Z_TYPE(retval) == IS_STRING)
 				{
                     val = estrdup (Z_STRVAL (retval));
                     len = Z_STRLEN (retval);
@@ -1388,7 +1432,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
         smart_str_free(&full_path);
         zval_ptr_dtor(&op_val);
         zval_ptr_dtor(&functions);
-        /** end WSDL generation stuff */ 
+        /** end WSDL generation*/ 
     }
 }  
 
