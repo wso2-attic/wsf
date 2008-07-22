@@ -17,6 +17,11 @@
  */
 
 define("WSF_WSDL", "wsdl");
+define("WSF_HTTP_AUTH_USERNAME","httpAuthUsername");
+define ("WSF_HTTP_AUTH_PASSWORD","httpAuthPassword");
+define ("WSF_HTTP_AUTH_DIGEST","Digest");
+define ("WSF_HTTP_AUTH_BASIC","Basic");
+define ("WSF_HTTP_AUTH_TYPE","httpAuthType");
 define("WSF_ENDPOINT", "endpoint");
 define("WSF_INVOKE_FUNCTION", "invoke_function");
 define("WSF_ARG_COUNT", "arg_count");

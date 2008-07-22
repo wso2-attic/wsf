@@ -28,6 +28,46 @@
  * @return array $return_value array of details to be passed to C level
  */
 
+function wsf_get_stream_context($user_parameters)
+{
+	require_once('dynamic_invocation/wsf_wsdl_consts.php');
+	$username = NULL;
+	$password  = NULL;
+	$password_type = NULL;
+	$options = NULL;
+	if(array_key_exists(WSF_HTTP_AUTH_USERNAME,$user_parameters))
+	{
+		 $username= $user_parameters[WSF_HTTP_AUTH_USERNAME];
+		
+	}
+	if(array_key_exists(WSF_HTTP_AUTH_PASSWORD, $user_parameters))
+	{
+		$password = $user_parameters[WSF_HTTP_AUTH_PASSWORD];
+			
+	}
+	if(is_null($username) || is_null($password))
+	{
+		return NULL;	
+	}
+	if(array_key_exists(WSF_HTTP_AUTH_TYPE, $user_parameters))
+	{
+		$password_type = $user_parameters[WSF_HTTP_AUTH_TYPE];	
+	}
+	
+	if(!is_null($password_type) && strcmp($password_type,"Basic") == 0)
+	{
+			$cred = sprintf('Authorization: Basic %s', base64_encode($username.':'.$password));
+		$options = array(
+    		'http'=>array(
+    		'method'=>'GET',
+    		'header'=>$cred));
+    	$ctx = stream_context_create($options);
+    	return $ctx;
+    }    	
+	return NULL;	
+}
+
+
 function wsf_extract_wsdl_info($user_parameters) {
     require_once('dynamic_invocation/wsf_wsdl_consts.php');
     require_once('dynamic_invocation/wsf_wsdl_util.php');
@@ -79,11 +119,21 @@ function wsf_extract_wsdl_info($user_parameters) {
         ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "WSDL location uri is not found");
         return "WSDL location uri is not found";
     }
+    
     $is_multiple_interfaces = FALSE;
-
+    
+    $ctx = wsf_get_stream_context($user_parameters);
+    
     // Load WSDL as DOM
     $wsdl_dom = new DOMDocument();
-    if(!$wsdl_dom->load($wsdl_location)) {
+    
+    $wsdl_str = file_get_contents($wsdl_location, false, $ctx);
+    if(is_null($wsdl_str))
+    {
+    	ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Reading WSDL from {$wsdl_location} failed ");
+        return "Reading WSDL from {$wsdl_location} failed.";
+    }
+    if(!$wsdl_dom->loadXML($wsdl_str)) {
         ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "WSDL {$wsdl_location} could not be loaded");
         return "WSDL {$wsdl_location} could not be loaded.";
     }
@@ -242,9 +292,18 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     }
     $is_multiple_interfaces = FALSE;
 
+	$ctx = wsf_get_stream_context($user_parameters);
+	
     // Load WSDL as DOM
     $wsdl_dom = new DOMDocument();
-    if(!$wsdl_dom->load($wsdl_location)) {
+    $wsdl_str = file_get_contents($wsdl_location, false, $ctx);
+   if(is_null($wsdl_str))
+   {
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Reading WSDL from {$wsdl_location} failed");
+        return "reading WSDL from {$wsdl_location} failed";
+   
+   } 
+    if(!$wsdl_dom->loadXML($wsdl_str)) {
         ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "WSDL {$wsdl_location}could not be loaded");
         return "WSDL {$wsdl_location} could not be loaded.";
     }
@@ -454,10 +513,18 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
         return "WSDL is not found";
     }
     $is_multiple_interfaces = FALSE;
+	
+    $ctx = wsf_get_stream_context($parameters);
 
+    $wsdl_str = file_get_contents($wsdl_location, false, $ctx);
+    if(is_null($wsdl_str))
+    {
+	ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Reading WSDL from  {$wsdl_location} failed.");
+        return "Reading WSDL from {$wsdl_location} failed";
+    }
     // Load WSDL as DOM
     $wsdl_dom = new DOMDocument();
-    if(!$wsdl_dom->load($wsdl_location)) {
+    if(!$wsdl_dom->loadXML($wsdl_str)) {
         ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "WSDL {$wsdl_location} could not be loaded.");
         return "WSDL {$wsdl_location} could not be loaded.";
     }
