@@ -28,7 +28,7 @@ try {
 
     $message = new WSMessage($reqPayloadString,
             array("to" => "http://localhost/samples/reliable/echo_service_rm.php",
-                  "action" => "http://php.axis2.org/samples/echoString"));
+                  "action" => "http://wso2.org/wsfphp/samples/echoString"));
 
     $client = new WSClient(array( "reliable" => TRUE , "useWSA" => TRUE, "willContinueSequence" => TRUE));
 
@@ -36,7 +36,7 @@ try {
 
     $message1 = new WSMessage($reqPayloadString,
             array( "to" => "http://localhost/samples/reliable/echo_service_rm.php",
-                   "action" => "http://php.axis2.org/samples/echoString"));
+                   "action" => "http://wso2.org/wsfphp/samples/echoString"));
 
     $responseMessage = $client->request($message1 );
     if($responseMessage){
@@ -48,7 +48,7 @@ try {
 
     $message2 = new WSMessage($reqPayloadString,
         array( "to" => "http://localhost/samples/reliable/echo_service_rm.php",
-               "action" => "http://php.axis2.org/samples/echoString",
+               "action" => "http://wso2.org/wsfphp/samples/echoString",
                "lastMessage" => TRUE));
     
     $responseMessage = $client->request($message2);

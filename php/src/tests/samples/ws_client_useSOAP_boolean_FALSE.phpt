@@ -9,7 +9,7 @@ XML;
 try {
 
     $client = new WSClient(
-        array("to"=>"http://localhost/samples/echo_service_with_rest.php/c",
+        array("to"=>"http://localhost/samples/echo_service_with_rest.php/echoString",
                "useSOAP"=>FALSE));
 
     $resMessage = $client->request($reqPayloadString);
