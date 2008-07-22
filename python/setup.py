@@ -92,6 +92,7 @@ if wsfc_prefix:
 		'axis2_http_receiver',
 		'neethi',
 		'neethi_util',
+        'wsdlc',
 		])
 else:
 	print 'WSFC_HOME not found. Please specify the WSFC_HOME using --with-wsfc=$path_to_wsfc'

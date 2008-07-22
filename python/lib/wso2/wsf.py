@@ -19,8 +19,11 @@ import sys
 
 import WSFC
 from wso2 import Logger
+from wso2.wsdl import WSProxy 
 
 __all__ = ['WSClient', 'WSFault', 'WSFMethodMissingMixin']
+
+WSF_PYTHON_HOME = os.path.dirname(__file__)
 
 class WSFault(Exception):
     
@@ -230,7 +233,21 @@ class WSClient:
             else:
                 return self.axiom_to_str(response_axiom)         
         pass
-    
+
+    def get_proxy(self, service_name=None, port_name=None):
+        if self.options is None:
+            WSFC.axis2_log_error(self.env, "[wsf-python] Options to client cannot be NULL.")
+            return None
+
+        if self.options.has_key(WSFC.WSF_CP_WSDL):
+            wsdl = self.options[WSFC.WSF_CP_WSDL]
+            proxy = WSProxy(self.env, self.svc_client, self.options, str(wsdl), service_name, port_name) 
+            return proxy
+        else
+            WSFC.axis2_log_error(self.env, "[wsf-python] WSDL is not specified.")
+            return None
+
+
     def message_to_axiom(self, message):
         str_to_om = None
         if isinstance(message, str):
