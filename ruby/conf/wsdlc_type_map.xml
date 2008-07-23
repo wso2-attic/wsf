@@ -1,6 +1,7 @@
 <type-map>
 	<forward>
 		<!-- <script-type>xsd type</script-type> -->
+    <Float>double</Float>
     <Float>float</Float>
     <Float>decimal</Float>
     <TrueClass>boolean</TrueClass>

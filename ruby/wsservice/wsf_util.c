@@ -205,7 +205,7 @@ wsf_env_create_svr (
     axutil_allocator_t *allocator = NULL;
     axutil_error_t *error = NULL;
     axutil_log_t *log = NULL;
-    axis2_char_t log_path[256];
+    axis2_char_t log_path[1024];
     axutil_env_t *env = NULL;
     axutil_thread_pool_t *thread_pool = NULL;
     const axis2_char_t *LOG_NAME = "wsf_ruby_server.log";
@@ -220,9 +220,9 @@ wsf_env_create_svr (
             (0 == strcmp (path_tolog, "")) ||
             (0 == strcmp (path_tolog, ".")) ||
             (0 == strcmp (path_tolog, "./")))) {
-        snprintf (log_path, 256, "%s", LOG_NAME);
+        snprintf (log_path, sizeof(log_path), "%s", LOG_NAME);
     } else {
-        snprintf (log_path, 256, "%s/%s", path_tolog, LOG_NAME);
+        snprintf (log_path, sizeof(log_path), "%s/%s", path_tolog, LOG_NAME);
     }
 
     thread_pool = axutil_thread_pool_init (allocator);
@@ -621,7 +621,7 @@ wsf_util_create_op_and_add_to_svc (
 
                   AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                     "[wsf_service] ht mep not null, %s", op_name);
-                  sprintf (operation, "%s", op_name);
+                  snprintf (operation, sizeof(operation), "%s", op_name);
                   if(TYPE(ht_mep) == T_HASH)
                   {
                     mep_value = rb_hash_aref(ht_mep, ID2SYM(rb_intern(operation)));
