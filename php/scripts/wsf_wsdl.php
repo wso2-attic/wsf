@@ -16,19 +16,124 @@
  * limitations under the License.
  */
 
-
 /**
- * This function is called from call_user_function in C level.
- * Once this function is called, it will fill in the WSDL information, 
- * such as payload, service endpoint, SOAP version, policies etc,
- * into an array and return that array.
- * @param array $user_parameters the details of WSDL endpoint, service address
- * and class map
- * @param array $function_parameters details of the invoked function
- * @return array $return_value array of details to be passed to C level
+ * This function is used to load a wsdl from a url requiring HTTP Digest authentication.
+ * @param wsdl_url  WSDL url
+ * @param username username for the digest authentication
+ * @param password password for the digest authentication
+ * @returns On success returns the obtained wsdl string. otherwise NULL 
  */
 
-function wsf_get_stream_context($user_parameters)
+function wsf_get_wsdl_with_http_auth_digest($wsdl_url, $username, $password)
+{
+	preg_match('@^(?:http://)?([^/]+)@i', $wsdl_url, $matches);
+    $host = $matches[1];
+    $file = strstr($wsdl_url, $host);
+
+    if (!$fp=fsockopen($host,80, $errno, $errstr, 15))
+        return false;
+        
+    //first do the non-authenticated header so that the server
+    //sends back a 401 error containing its nonce and opaque
+    $out = "GET /$file HTTP/1.1\r\n";
+       $out .= "Host: $host\r\n";
+       $out .= "Connection: Close\r\n\r\n";
+
+     fwrite($fp, $out);
+
+    //read the reply and look for the WWW-Authenticate element
+    while (!feof($fp))
+    {
+        $line=fgets($fp, 512);
+        
+        if (strpos($line,"WWW-Authenticate:")!==false)
+            $authline=trim(substr($line,18));
+    }
+    
+    fclose($fp);
+       
+    //split up the WWW-Authenticate string to find digest-realm,nonce and opaque values
+    //if qop value is presented as a comma-seperated list (e.g auth,auth-int) then it won't be retrieved correctly
+    //but that doesn't matter because going to use 'auth' anyway
+    $authlinearr=explode(",",$authline);
+    $autharr=array();
+    
+    foreach ($authlinearr as $el)
+    {
+        $elarr=explode("=",$el);
+        //the substr here is used to remove the double quotes from the values
+        $autharr[trim($elarr[0])]=substr($elarr[1],1,strlen($elarr[1])-2);
+    }
+    
+    foreach ($autharr as $k=>$v)
+        echo("$k ==> $v\r\n");
+    
+    //these are all the vals required from the server
+    $nonce=$autharr['nonce'];
+    $opaque=$autharr['opaque'];
+    $drealm=$autharr['Digest realm'];
+    
+    //client nonce can be anything since this authentication session is not going to be persistent
+    $cnonce="wso2wsfphp123456789";
+    
+    //calculate the hashes of A1 and A2 as described in RFC 2617
+    $a1="$username:$drealm:$password";$a2="GET:/$file";
+    $ha1=md5($a1);$ha2=md5($a2);
+    
+    //calculate the response hash as described in RFC 2617
+    $concat = $ha1.':'.$nonce.':00000001:'.$cnonce.':auth:'.$ha2;
+    $response=md5($concat);
+    
+    //put together the Authorization Request Header
+    $out = "GET /$file HTTP/1.1\r\n";
+    $out .= "Host: $host\r\n";
+    $out .= "Connection: Close\r\n";
+    $out .= "Authorization: Digest username=\"$username\", realm=\"$drealm\", qop=\"auth\", algorithm=\"MD5\", uri=\"/$file\", nonce=\"$nonce\", nc=00000001, cnonce=\"$cnonce\", opaque=\"$opaque\", response=\"$response\"\r\n\r\n";
+    
+    if (!$fp=fsockopen($host,80, $errno, $errstr, 15))
+        return false;
+    
+    fwrite($fp, $out);
+    
+    while (!feof($fp))
+    {
+        $str.=fgets($fp, 512);
+    }
+    
+    fclose($fp);
+    return $str;
+}
+/**
+ * This function is used to load a wsdl from a url requiring HTTP Basic authentication.
+ * @param wsdl_url  WSDL url
+ * @param username username for the digest authentication
+ * @param password password for the digest authentication
+ * @returns On success returns the obtained wsdl string. otherwise NULL 
+ */
+
+function wsf_get_wsdl_with_http_auth_basic($wsdl_url, $username, $password)
+{
+	$cred = sprintf('Authorization: Basic %s', base64_encode($username.':'.$password));
+	$options = array(
+		'http'=>array(
+		'method'=>'GET',
+		'header'=>$cred));
+	$ctx = stream_context_create($options);
+	$str = file_get_contents($wsdl_url, false, $ctx);
+	return $str;
+ }
+
+/**
+ * This function is used to load a wsdl from a url, It handles the http authentication scenarios 
+ * if necessary.
+ * @param wsdl_url  WSDL url
+ * @param username username for the digest authentication
+ * @param password password for the digest authentication
+ * @returns On success returns the obtained wsdl string. otherwise NULL 
+ */
+
+
+function wsf_get_wsdl_str_from_url($wsdl_url,$user_parameters)
 {
 	require_once('dynamic_invocation/wsf_wsdl_consts.php');
 	$username = NULL;
@@ -45,28 +150,39 @@ function wsf_get_stream_context($user_parameters)
 		$password = $user_parameters[WSF_HTTP_AUTH_PASSWORD];
 			
 	}
-	if(is_null($username) || is_null($password))
-	{
-		return NULL;	
-	}
 	if(array_key_exists(WSF_HTTP_AUTH_TYPE, $user_parameters))
 	{
 		$password_type = $user_parameters[WSF_HTTP_AUTH_TYPE];	
 	}
 	
-	if(!is_null($password_type) && strcmp($password_type,"Basic") == 0)
+	if(!is_null($username) && !is_null($password) && !is_null($password_type))
 	{
-			$cred = sprintf('Authorization: Basic %s', base64_encode($username.':'.$password));
-		$options = array(
-    		'http'=>array(
-    		'method'=>'GET',
-    		'header'=>$cred));
-    	$ctx = stream_context_create($options);
-    	return $ctx;
-    }    	
+		
+		if(strcmp($password_type,"Basic") == 0)
+		{
+			return wsf_get_wsdl_with_http_auth_basic($wsdl_url, $username, $password);
+		}
+		else if(strcmp($password_type,"Digest") == 0)
+		{
+			return wsf_get_wsdl_with_http_auth_digest($wsdl_url, $username, $password);
+		}
+	}else
+	{
+		return file_get_contents($wsdl_url);	
+	}    	
 	return NULL;	
 }
 
+/**
+ * This function is called from call_user_function in C level.
+ * Once this function is called, it will fill in the WSDL information, 
+ * such as payload, service endpoint, SOAP version, policies etc,
+ * into an array and return that array.
+ * @param array $user_parameters the details of WSDL endpoint, service address
+ * and class map
+ * @param array $function_parameters details of the invoked function
+ * @return array $return_value array of details to be passed to C level
+ */
 
 function wsf_extract_wsdl_info($user_parameters) {
     require_once('dynamic_invocation/wsf_wsdl_consts.php');
@@ -122,12 +238,13 @@ function wsf_extract_wsdl_info($user_parameters) {
     
     $is_multiple_interfaces = FALSE;
     
-    $ctx = wsf_get_stream_context($user_parameters);
+  
     
     // Load WSDL as DOM
     $wsdl_dom = new DOMDocument();
     
-    $wsdl_str = file_get_contents($wsdl_location, false, $ctx);
+    $wsdl_str = wsf_get_wsdl_str_from_url($wsdl_location ,$user_parameters);
+    
     if(is_null($wsdl_str))
     {
     	ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Reading WSDL from {$wsdl_location} failed ");
@@ -292,11 +409,10 @@ function wsf_process_wsdl($user_parameters, $function_parameters)
     }
     $is_multiple_interfaces = FALSE;
 
-	$ctx = wsf_get_stream_context($user_parameters);
 	
     // Load WSDL as DOM
     $wsdl_dom = new DOMDocument();
-    $wsdl_str = file_get_contents($wsdl_location, false, $ctx);
+    $wsdl_str = wsf_get_wsdl_str_from_url($wsdl_location ,$user_parameters);
    if(is_null($wsdl_str))
    {
         ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Reading WSDL from {$wsdl_location} failed");
@@ -514,9 +630,8 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
     }
     $is_multiple_interfaces = FALSE;
 	
-    $ctx = wsf_get_stream_context($parameters);
-
-    $wsdl_str = file_get_contents($wsdl_location, false, $ctx);
+	
+    $wsdl_str = wsf_get_wsdl_str_from_url($wsdl_location, $parameters);
     if(is_null($wsdl_str))
     {
 	ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Reading WSDL from  {$wsdl_location} failed.");
