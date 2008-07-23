@@ -25,8 +25,7 @@ use the WSDL mode.WSO2
 <p>
     There are two WSDL(WSDL 1.1 and WSDL 2.0) files provided in the samples\wsdl_mode folder and sample_wsdl_11.wsdl will be
 used for the example in this manual. Please have a look at the samples\wsdl_mode\sample_wsdl_11.wsdl.</p>
-<pre style="text-align: left">
-<strong>1.<span style="font-family: Verdana">create a WSClient object as follows </span>
+<pre style="text-align: left"><strong>1.<span style="font-family: Verdana">create a WSClient object as follows </span>
 </strong> 
 $client = new WSClient(array("<span style="color: #ff3333">wsdl</span>"=&gt;"<span style="color: #ff0000">sample_wsdl_11<span>.wsdl</span></span>"));
        
@@ -41,8 +40,7 @@ $proxy = $client-&gt;getProxy();</pre>
 
 <p>Now you can call any operation defined in the WSDL. For example,you can invoke the <strong>
          QueryPurchaseOrder</strong> operation defined in the wsdl, as follows. </p>
-<pre style="text-align: justify">
- $return_value = $proxy-&gt;<strong>QueryPurchaseOrder</strong>($input);
+<pre style="text-align: justify"> $return_value = $proxy-&gt;<strong>QueryPurchaseOrder</strong>($input);
 
 <span style="font-family: Verdana">The arguments  for the function will be either an
     object defined in the class map or an associative array of arguments which can be constructed in the following two ways. First you should have understood the values
@@ -494,6 +492,21 @@ Usage: <i>php wsdl2php.php [-s] &lt;wsdl&gt; </i>
     Options:
         -s        Generate code for service.
                   By default this is false, meaning code for client will be generated.
+
+Eg
+Consider you have a wsdl named purchaseOrder.wsdl and you want to code generate for that. 
+
+The following command will generate your client code to a file named purchase_client.php.
+
+php wsdl2php.php purchaseOrder.wsdl &gt; purchase_client.php
+
+To generate the service  use
+
+php wsdl2php.php -s purchaseOrder.wsdl &gt; purchase_service.php
+
+
+
+
 </pre>
 </body>
 </html>
