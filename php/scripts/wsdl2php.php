@@ -86,7 +86,7 @@ if($class_code) {
     echo ");\n\n";
 }
 
-    if (array_key_exists('s', $args) && $args['s']) { 
+if (array_key_exists('s', $args) && $args['s']) {
 	// generate server side code
 	echo "// define PHP functions that maps to WSDL operations \n";
 	foreach ($operations as $op_name => $value) {

@@ -120,7 +120,7 @@ function wsf_write_content_model($parent_node, &$child_array) {
             }
 
             if($param_child->getAttribute("simple") == "yes"){
-                $comments = wsf_comment_on_simple_type_wrapper($param_child, $param_name, $param_type);
+                $comments = wsf_comment_on_simple_type($param_child, $param_name, $param_type);
             } else {
                 $comments = '';
             }
@@ -214,7 +214,7 @@ function wsf_write_content_model($parent_node, &$child_array) {
         $code .= "\n";
         $code .= "    // The \"value\" represents the element '$param_name' value..\n";
         $ele_name = WSF_SIMPLE_CONTENT_VALUE;
-        $comments = wsf_comment_on_simple_type_wrapper($parent_node, $ele_name, $extension_type);
+        $comments = wsf_comment_on_simple_type($parent_node, $ele_name, $extension_type);
         
         // we generate the code for base 64 type differently
         if($extension_type == WSF_XSD_BASE64) { // this should be anyway a simple type..
