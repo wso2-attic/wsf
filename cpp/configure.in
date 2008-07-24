@@ -1,67 +1,74 @@
 #############################################################################
-### General Build Configuration Parameters
-
-# To build with debug symbols set DEBUG = 1
-DEBUG = 0
-#CRUNTIME Library ( Use /MD or /MT)
-CRUNTIME = /MD
-# embed manifest files or not
-EMBED_MANIFEST = 1
-
+### Build Details ###
 #############################################################################
-### Apache Axis2/C Build Configuration Parameters
-
-# Path to libxml2 installation
-LIBXML2_BIN_DIR = "C:\libxml2-2.6.27.win32"
-
-# Path to iconv installation
-ICONV_BIN_DIR = "C:\iconv-1.9.2.win32"
-
-# Path to zlib installation
-ZLIB_BIN_DIR = "C:\zlib-1.2.3.win32"
-
-# Path to Apache2 installation
-APACHE_BIN_DIR = "C:\Program Files\Apache Software Foundation\Apache2.2"
-# Apache httpd version, to use apache 2.0.x famlity set APACHE_VERSION_IS_2_0_X = 1
-# Replace 'x' with appropriate revison
-APACHE_VERSION_IS_2_0_X = 0
-
-# Enable/disable LibCurl client transport, to enable set ENABLE_LIBCURL = 1
+#
+# enables https support 
+ENABLE_SSL = 0          
+#
+# build libcurl transport 
 ENABLE_LIBCURL = 0
-# Path to LibCurl installation, required if LibCurl transport is enabled
-#LIBCURL_BIN_DIR = "C:\libcurl-7.15.1-msvc-win32-ssl-0.9.8a-zlib-1.2.3"
-
-# Enable/disable SSL client transport, to enable set ENABLE_SSL = 1
-ENABLE_SSL = 0
-
-# Enable/disable Guththila parser, to enable set ENABLE_GUTHTHILA = 1
-ENABLE_GUTHTHILA = 0
-
-# Build TCP server in addition to HTTP server
+#
+# build WSF/C++ with Libxml2 Parser. WSF/C++ will be built with embeded guththila 
+# parser by Default. 
+ENABLE_LIBXML2= 0
+#
+# build tcp server in addition to http server
 WITH_TCP = 1
-
-# build with archive based deployment support
-WITH_ARCHIVE = 1
-
+#
+# build with archive based deployment
+WITH_ARCHIVE = 0
+#
+#
 #############################################################################
-### Apache Rampart/C Build Configuration Parameters
-
-# Path to OpenSSL installation
-OPENSSL_BIN_DIR = "C:\OpenSSL"
-
+### Dependant Binary Locations (Required) ###
 #############################################################################
-### Apache Sandesha2/C Build Configuration Parameters
+#
+# libxml2 binary location ( WSF/C++ is built with libxml2 )
+LIBXML2_BIN_DIR = C:\xml\libxml2-2.6.30.win32
 
-# Build with SQLite support for permenent storage, to disable set WITH_SQLITE = 0
-WITH_SQLITE = 0
-# Path to SQLite installation
-SQLITE_BIN_DIR = "C:\sqlite-source-3_3_8"
-# Path to SQLite source
-SQLITE_SRC_DIR = "C:\sqlite-source-3_3_8"
-
-# Build with MySQL support for permenent storage, to enable set WITH_MYSQL = 1
-WITH_MYSQL = 1
-# Path to MySQL installation
-MYSQL_BIN_DIR = "C:\Program Files\MySQL\MySQL Server 5.0"
-
-
+#
+# iconv binary location
+ICONV_BIN_DIR = C:\xml\iconv-1.9.1.win32
+#
+# zlib binary location
+ZLIB_BIN_DIR= C:\xml\zlib-1.2.3.win32
+#
+#
+#############################################################################
+### Dependant Binary Locations (Optional) ###
+#############################################################################
+#
+# openssl  binary location
+# required if ENABLE_SSL = 1
+OPENSSL_BIN_DIR = c:\OpenSSL
+#
+# libcurl binary location, only required if libcurl transport is enabled
+LIBCURL_BIN_DIR = E:\libcurl-7.15.1-msvc-win32-ssl-0.9.8a-zlib-1.2.3
+#
+#
+#############################################################################
+### Apache Server module (required when building Axis2/C Apache Module) ###
+#############################################################################
+#
+# apache binary location
+APACHE_BIN_DIR = "C:\Program Files\Apache Software Foundation\Apache2.2"
+#
+# apache 2 server family
+# To use apache 2.2 family, use  APACHE_VERSION_IS_2_0_X = 0
+APACHE_VERSION_2_0_X = 0
+#
+#
+#############################################################################
+### Compiler Options ###
+#############################################################################
+#
+# C runtime LIBRARY OPTION ( Use /MD or /MT )
+CRUNTIME = /MD 
+#
+# Embed Manifest Files
+EMBED_MANIFEST = 1
+#
+# debug symbols
+# To build with debug symbols use DEBUG = 1
+DEBUG = 1
+#

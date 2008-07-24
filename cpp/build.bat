@@ -1,26 +1,26 @@
 @echo off
 @call vcvars32.bat /nologo
 
+@call clean.bat
+
 rem Build WSO2 WSF/C
 @copy configure.in wsf_c\configure.in
+@copy wsf_c_build.bat wsf_c\build.bat
 @cd wsf_c
-@if exist wso2-wsf-c-bin-1.2.0-win32 rmdir /s /q wso2-wsf-c-bin-1.2.0-win32
 @call build.bat
 
 rem Un-comment line below for Fail-safe Install
 rem @if not %ERRORLEVEL% EQU 0 goto end
 
-@if not exist wso2-wsf-c-bin-1.2.0-win32 goto end
-
 rem Pack WSO2 WSF/C++
 :pack_wsfcpp
 @cd ..
 @set WSFCPP_SOURCE=%CD%
-@if not exist "%WSFCPP_HOME%" set WSFCPP_HOME=%CD%\wso2-wsf-cpp-bin-1.0.0-win32
+@if not exist "%WSFCPP_HOME%" set WSFCPP_HOME=%CD%\wso2-wsf-cpp-bin-%WSFCPP_VERSION%-win32
 @if exist "%WSFCPP_HOME%" rmdir /s /q "%WSFCPP_HOME%"
 @mkdir "%WSFCPP_HOME%"
 @cd "%WSFCPP_HOME%"
-@xcopy /E /Q /I /Y "%WSFCPP_SOURCE%\wsf_c\wso2-wsf-c-bin-1.2.0-win32" .
+@xcopy /E /Q /I /Y "%WSFCPP_SOURCE%\wsf_c\wso2-wsf-c-bin-%WSFC_VERSION%" .
 @copy /Y "%WSFCPP_SOURCE%\INSTALL" .
 @copy /Y "%WSFCPP_SOURCE%\README.INSTALL.WINDOWS" .
 @copy /Y "%WSFCPP_SOURCE%\README.SAMPLES" .
