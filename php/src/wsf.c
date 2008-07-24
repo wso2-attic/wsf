@@ -360,7 +360,6 @@ PHP_MINIT_FUNCTION (wsf)
     wsf_msg_recv = wsf_xml_msg_recv_create (ws_env_svr);
 
 	axiom_xml_reader_init ();
-    
     worker = wsf_worker_create (ws_env_svr, home_folder,
                     axutil_strdup(ws_env_svr, WSF_GLOBAL (rm_db_dir)));
 
@@ -930,8 +929,7 @@ PHP_METHOD (ws_service, __construct)
             if (zend_hash_find (ht_options, WSF_WSDL, sizeof (WSF_WSDL),
                (void **) & tmp) == SUCCESS)
 			{
-				axis2_char_t *wsdl_path = NULL, *auth_username = NULL, 
-					*auth_password= NULL,*auth_type = NULL;
+				axis2_char_t *wsdl_path = NULL;
 				int wsdl_path_length = 0;
 				if(Z_TYPE_PP (tmp) == IS_STRING)
 				{
