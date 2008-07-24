@@ -69,7 +69,7 @@ border="1">
       </th>
       <th><p>Default Value</p>
       </th>
-      <th><p>Description</p>
+      <th style="width: 424px"><p>Description</p>
       </th>
     </tr>
     <tr>
@@ -78,17 +78,17 @@ border="1">
       </td>
     </tr>
     <tr valign="top">
-      <td style="width: 96px"><p>"useSOAP"</p>
+      <td style="width: 96px; height: 123px;"><p>"useSOAP"</p>
       </td>
-      <td><p>boolean | double | string</p>
+      <td style="height: 123px"><p>boolean | double | string</p>
       </td>
-      <td><p>TRUE | FALSE | <br>
+      <td style="height: 123px"><p>TRUE | FALSE | <br>
         1.1 | 1.2 | <br>
         "1.1" | "1.2"</p>
       </td>
-      <td><p>TRUE</p>
+      <td style="height: 123px"><p>TRUE</p>
       </td>
-      <td><p>Specifies whether to use SOAP bindings, or not. If FALSE, a REST
+      <td style="width: 424px; height: 123px"><p>Specifies whether to use SOAP bindings, or not. If FALSE, a REST
         style invocation will take place with the given HTTP method as
         specified by the "HTTPMethod" option. 1.1 or "1.1" would make the
         message use SOAP 1.1. 1.2 or "1.2" would make the message use SOAP
@@ -105,7 +105,7 @@ border="1">
       </td>
       <td style="height: 55px"><p>"POST"</p>
       </td>
-      <td style="height: 55px"><p>Specifies which HTTP method to be used.</p>
+      <td style="height: 55px; width: 424px;"><p>Specifies which HTTP method to be used.</p>
       </td>
     </tr>
     <tr>
@@ -121,7 +121,7 @@ border="1">
       </td>
       <td style="height: 51px"><p>TRUE</p>
       </td>
-      <td style="height: 51px"><p>Indicates whether the attachments should be
+      <td style="height: 51px; width: 424px;"><p>Indicates whether the attachments should be
         sent MTOM optimized or not. If TRUE, the attachments will be sent out of the
         SOAP message, optimized, with MIME headers in place. If
         FALSE, attachments will be sent within the SOAP payload, as base64
@@ -138,7 +138,7 @@ border="1">
       </td>
       <td><p>FALSE</p>
       </td>
-      <td><p style="margin-bottom: 0in">Controls whether XOP elements in a
+      <td style="width: 424px"><p style="margin-bottom: 0in">Controls whether XOP elements in a
         response with MTOM are resolved into the logically equivalent
         straight XML infoset or not. If TRUE, the member variable
         "attachments" of the message returned as a result of the calling request
@@ -161,7 +161,7 @@ border="1">
       </td>
       <td><p>"1.0"</p>
       </td>
-      <td><p>Indicates whether to use WS-Addressing. If TRUE, 1.0 or "1.0", the
+      <td style="width: 424px"><p>Indicates whether to use WS-Addressing. If TRUE, 1.0 or "1.0", the
         WS-Addressing 1.0 version will be used, if "submission" the
         WS-Addressing submission version will be used. When 1.0, "1.0" or
         "submission" is specified, the "action" must be present. If FALSE, no
@@ -178,14 +178,14 @@ border="1">
           WSPolicy object</td>
       <td colspan="1" style="height: 20px">WSPolicy object</td>
       <td colspan="1" style="height: 20px">None</td>
-      <td colspan="1" style="height: 20px">WSPolicy Object</td>
+      <td colspan="1" style="height: 20px; width: 424px;">WSPolicy Object</td>
     </tr>
     <tr valign="top">
       <td colspan="1" style="height: 21px; width: 96px;">"securityToken"</td>
       <td colspan="1" style="height: 21px">WSSecurityToken</td>
       <td colspan="1" style="height: 21px"></td>
       <td colspan="1" style="height: 21px">None</td>
-      <td colspan="1" style="height: 21px">WSSecurityToken object which
+      <td colspan="1" style="height: 21px; width: 424px;">WSSecurityToken object which
         contain the security related options</td>
     </tr>
     <tr valign="top">
@@ -196,14 +196,14 @@ border="1">
       <td colspan="1" style="height: 20px">string</td>
       <td colspan="1" style="height: 20px">string</td>
       <td colspan="1" style="height: 20px">None</td>
-      <td colspan="1" style="height: 20px">proxy host to be used.</td>
+      <td colspan="1" style="height: 20px; width: 424px;">proxy host to be used.</td>
     </tr>
     <tr valign="top">
       <td colspan="1" style="height: 21px; width: 96px;">"proxyPort"</td>
       <td colspan="1" style="height: 21px">string</td>
       <td colspan="1" style="height: 21px">string</td>
       <td colspan="1" style="height: 21px">None</td>
-      <td colspan="1" style="height: 21px">proxy port to use.</td>
+      <td colspan="1" style="height: 21px; width: 424px;">proxy port to use.</td>
     </tr>
     <tr valign="top">
       <td colspan="5">WSDL Mode</td>
@@ -214,8 +214,15 @@ border="1">
       file</td>
       <td colspan="1" style="height: 20px">FILE| URL</td>
       <td colspan="1" style="height: 20px">None</td>
-      <td colspan="1" style="height: 20px">WSDL file can be used to invoke a
-        Web service using dynamic invocation</td>
+      <td colspan="1" style="height: 20px; width: 424px;">WSDL file can be used to invoke a
+        Web service using dynamic invocation. In case
+    the wsdl requiring http authentication you can set the options as an array using
+    as follows.<br />
+    array("wsdl"=&gt;"&lt;wsdl url&gt;",<br />
+    "httpAuthUsername"=&gt;"&lt;Username&gt;",<br />
+    "httpAuthPassword"=&gt;"&lt;Password&gt;",<br />
+    "httpAuthType"=&gt;Basic | Digest)<br />
+    These authentication options are same as below listed http authentication options.</td>
     </tr>
 
     <tr valign="top">
@@ -226,21 +233,21 @@ border="1">
       <td colspan="1" style="height: 20px">string</td>
       <td colspan="1" style="height: 20px">string</td>
       <td colspan="1" style="height: 20px">None</td>
-      <td colspan="1" style="height: 20px">Http Authentication Information: UserName</td>
+      <td colspan="1" style="height: 20px; width: 424px;">Http Authentication Information: UserName</td>
     </tr>
     <tr valign="top">
       <td colspan="1" style="height: 20px; width: 96px;">"httpAuthPassword"</td>
       <td colspan="1" style="height: 20px">string</td>
       <td colspan="1" style="height: 20px">string</td>
       <td colspan="1" style="height: 20px">None</td>
-      <td colspan="1" style="height: 20px">Http Authentication Information: Password</td>
+      <td colspan="1" style="height: 20px; width: 424px;">Http Authentication Information: Password</td>
     </tr>
     <tr valign="top">
       <td colspan="1" style="height: 20px; width: 96px;">"httpAuthType"</td>
       <td colspan="1" style="height: 20px">string</td>
       <td colspan="1" style="height: 20px">"Basic" | "Digest"</td>
       <td colspan="1" style="height: 20px">None</td>
-      <td colspan="1" style="height: 20px">Http Authentication Information: Authentication type,
+      <td colspan="1" style="height: 20px; width: 424px;">Http Authentication Information: Authentication type,
             use "Basic" to force basic authentication
             and "Digest" to force digest authentication or NULL for not
             forcing authentication</td>
@@ -253,7 +260,7 @@ border="1">
       <td colspan="1" style="height: 20px">
     seconds</td>
       <td colspan="1" style="height: 20px">None</td>
-      <td colspan="1" style="height: 20px">
+      <td colspan="1" style="height: 20px; width: 424px;">
     Set the WSClient timeout time. This value in seconds. &nbsp;</td>
     </tr>
   </tbody>
