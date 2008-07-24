@@ -174,7 +174,7 @@ border="1">
     <tr valign="top">
       <td colspan="1" style="height: 20px; width: 96px;">"policy"</td>
       <td colspan="1" style="height: 20px"> &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
           WSPolicy object</td>
       <td colspan="1" style="height: 20px">WSPolicy object</td>
       <td colspan="1" style="height: 20px">None</td>
@@ -244,6 +244,17 @@ border="1">
             use "Basic" to force basic authentication
             and "Digest" to force digest authentication or NULL for not
             forcing authentication</td>
+    </tr>
+    <tr valign="top">
+      <td colspan="1" style="height: 20px; width: 96px;">
+    "timeout"</td>
+      <td colspan="1" style="height: 20px">
+    int</td>
+      <td colspan="1" style="height: 20px">
+    seconds</td>
+      <td colspan="1" style="height: 20px">None</td>
+      <td colspan="1" style="height: 20px">
+    Set the WSClient timeout time. This value in seconds. &nbsp;</td>
     </tr>
   </tbody>
 </table>
@@ -817,15 +828,15 @@ border="1">
       </td>
     </tr>
     <tr valign="top">
-      <th><p>Option</p>
+      <th style="height: 44px"><p>Option</p>
       </th>
-      <th><p>Data Type</p>
+      <th style="height: 44px"><p>Data Type</p>
       </th>
-      <th><p>Value Domain</p>
+      <th style="height: 44px"><p>Value Domain</p>
       </th>
-      <th style="width: 109px"><p>Default Value</p>
+      <th style="width: 109px; height: 44px;"><p>Default Value</p>
       </th>
-      <th style="width: 465px"><p>Description</p>
+      <th style="width: 465px; height: 44px;"><p>Description</p>
       </th>
     </tr>
     <tr>
@@ -835,19 +846,26 @@ border="1">
     <tr valign="top">
       <td><p>"to"</p>
       </td>
-      <td><p>string</p>
+      <td><p>
+    Mixed</p>
       </td>
-      <td><p>A URI</p>
+      <td><p>
+    String or an array</p>
       </td>
       <td style="width: 109px"><p>None</p>
       </td>
       <td style="width: 465px"><p>A URI representing the endpoint URI of the
         service to be consumed. This must be present on the client side. In case
-        WS-Addressing is in use, this will be used as the WSA To header</p>
+        WS-Addressing is in use, this will be used as the WSA To header. Additionaly in case of addressing, you can set reference parameters
+    using the following array of options as following sample code.</p>
+    <p>
+        array("address"=&gt;"to URL", "referenceParameters"=&gt;array of xml strings)</p>
+    <p>
+        "referenceParameters"&nbsp; are addressing options.</p>
       </td>
     </tr>
     <tr>
-      <td colspan="5" valign="top"><p>WS-Addressing Related Properties:</p>
+      <td colspan="5" valign="top" style="height: 21px"><p>WS-Addressing Related Properties:</p>
       </td>
     </tr>
     <tr valign="top">
@@ -869,17 +887,21 @@ border="1">
     <tr valign="top">
       <td><p>"from"</p>
       </td>
-      <td><p>string</p>
+      <td><p>
+            Mixed</p>
       </td>
-      <td><p>A URI</p>
+      <td><p>
+            String or an array</p>
       </td>
       <td style="width: 109px"><p>None</p>
       </td>
-      <td style="width: 465px"><p>xs:anyURI</p>
+      <td style="width: 465px">
 
         <p>WS-Addressing From. A URI indicating where the response or request
-        came from.&nbsp;
-    (Note: This doesn't support reference parameters.) </p>
+        came from (xs:anyURI).
+            You can set reference parameters using the following array of options.</p>
+            <p>
+                array("address"=&gt;"from URL", "referenceParameters"=&gt;array of xml strings)</p>
       </td>
     </tr>
     <tr valign="top">
@@ -891,11 +913,14 @@ border="1">
       </td>
       <td style="width: 109px"><p>None</p>
       </td>
-      <td style="width: 465px"><p>xs:anyURI</p>
+      <td style="width: 465px">
 
         <p>WS-Addressing ReplyTo. A URI indicating where the response should
-        be sent to. The default value is the anonymous URI (depending on the version).
-        (Note: This doesn't support reference parameters.)</p>
+        be sent to. The default value is the anonymous URI (depending on the version). You can set reference
+          parameters using the following array of options.
+      </p>
+          <p>
+              array("address"=&gt;"replyTo URL", "referenceParameters"=&gt;array of xml strings)</p>
       </td>
     </tr>
     <tr valign="top">
@@ -907,11 +932,11 @@ border="1">
       </td>
       <td style="width: 109px"><p>None</p>
       </td>
-      <td style="width: 465px"><p>xs:anyURI</p>
-
-        <p>WS-Addressing FaultTo. A URI indicating where the fault should be
-        sent to in case of an error. (Note: This doesn't support reference
-        parameters.)</p>
+      <td style="width: 465px"><p>WS-Addressing FaultTo. A URI indicating where the fault should be
+        sent to in case of an error. You can set reference parameters using the following array of options.
+      </p>
+          <p>
+              array("address"=&gt;"faultTo URL", "referenceParameters"=&gt;array of xml strings)</p>
       </td>
     </tr>
     <tr>
@@ -1008,7 +1033,7 @@ representation of the binary content to be sent or being received.</p>
 
 <p>An associative array, containing the mapping of cid (content ID) to its
 corresponding  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
         attachment. When an attachment is received, this property
 will be present in the WSMessage object.</p>
 <ul>
