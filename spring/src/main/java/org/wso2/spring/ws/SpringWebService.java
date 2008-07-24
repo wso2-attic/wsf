@@ -39,7 +39,9 @@ public class SpringWebService {
 	private String targetNameSpace;
 	private String sessionScope;
 	private ArrayList<String> modules;
+	private ArrayList<OperationBean> operations;
     private ArrayList<OperationBean> excludeOperations;
+    private ArrayList<String>policies;
 
 
     public ArrayList<MessageReceiverBean> getMessageReceivers() {
@@ -90,12 +92,22 @@ public class SpringWebService {
 	public void setServiceBean(Object serviceBean) {
 		this.serviceBean = serviceBean;
 	}
+	public ArrayList<OperationBean> getOperations() {
+		return operations;
+	}
+	public void setOperations(ArrayList<OperationBean> operations) {
+		this.operations = operations;
+	}
 	public ArrayList<OperationBean> getExcludeOperations() {
 		return excludeOperations;
 	}
 	public void setExcludeOperations(ArrayList<OperationBean> excludeOperations) {
 		this.excludeOperations = excludeOperations;
 	}
-
-	
+	public ArrayList<String> getPolicies() {
+		return policies;
+	}
+	public void setPolicies(ArrayList<String> policies) {
+		this.policies = policies;
+	}
 }

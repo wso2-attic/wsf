@@ -22,13 +22,49 @@ package org.wso2.spring.ws.beans;
  */
 public class OperationBean {
     private String name;
+    private String namespace;
+    private String mep;
+    private String actionMapping;
+    private String outputActionMapping;
     //TODO: Implement other attributes
-
-    public String getName() {
-        return name;
-    }
 
     public void setName(String name) {
         this.name = name;
     }
+    
+	public String getName() {
+		return name;
+	}
+	
+	public String getNamespace() {
+		return namespace;
+	}
+
+	public void setNamespace(String namespace) {
+		this.namespace = namespace;
+	}
+
+	public String getActionMapping() {
+		return actionMapping;
+	}
+
+	public void setActionMapping(String actionMapping) {
+		this.actionMapping = actionMapping;
+	}
+
+	public String getOutputActionMapping() {
+		return outputActionMapping;
+	}
+
+	public void setOutputActionMapping(String outputActionMapping) {
+		this.outputActionMapping = outputActionMapping;
+	}
+
+	public String getMep() {
+		return mep;
+	}
+
+	public void setMep(String mep) {
+		this.mep = mep;
+	}
 }
