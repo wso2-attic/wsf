@@ -15,7 +15,7 @@ echo_LDADD   = $(LDFLAGS) \
 		../../wsf_c/axis2c/util/src/libaxutil.la \
 		../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
 		../../wsf_c/axis2c/src/core/engine/libaxis2_engine.la \
-		../../wsf_c/axis2c/axiom/src/parser/libxml2/libaxis2_parser.la \
+		../../wsf_c/axis2c/axiom/src/parser/guththila/libaxis2_parser.la \
 			../../wsf_c/axis2c/src/core/transport/http/sender/libaxis2_http_sender.la \
 			../../wsf_c/axis2c/src/core/transport/http/receiver/libaxis2_http_receiver.la \
                     -lpthread \
@@ -28,7 +28,7 @@ echo_rest_LDADD   = $(LDFLAGS) \
 		../../wsf_c/axis2c/util/src/libaxutil.la \
 		../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
 		../../wsf_c/axis2c/src/core/engine/libaxis2_engine.la \
-		../../wsf_c/axis2c/axiom/src/parser/libxml2/libaxis2_parser.la \
+		../../wsf_c/axis2c/axiom/src/parser/guththila/libaxis2_parser.la \
 			../../wsf_c/axis2c/src/core/transport/http/sender/libaxis2_http_sender.la \
 			../../wsf_c/axis2c/src/core/transport/http/receiver/libaxis2_http_receiver.la \
                     -lpthread \
@@ -41,7 +41,7 @@ echo_blocking_LDADD   = $(LDFLAGS) \
 		../../wsf_c/axis2c/util/src/libaxutil.la \
 		../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
 		../../wsf_c/axis2c/src/core/engine/libaxis2_engine.la \
-		../../wsf_c/axis2c/axiom/src/parser/libxml2/libaxis2_parser.la \
+		../../wsf_c/axis2c/axiom/src/parser/guththila/libaxis2_parser.la \
 			../../wsf_c/axis2c/src/core/transport/http/sender/libaxis2_http_sender.la \
 			../../wsf_c/axis2c/src/core/transport/http/receiver/libaxis2_http_receiver.la \
                     -lpthread \
@@ -54,7 +54,7 @@ echo_blocking_addr_LDADD   = $(LDFLAGS) \
 		../../wsf_c/axis2c/util/src/libaxutil.la \
 		../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
 		../../wsf_c/axis2c/src/core/engine/libaxis2_engine.la \
-		../../wsf_c/axis2c/axiom/src/parser/libxml2/libaxis2_parser.la \
+		../../wsf_c/axis2c/axiom/src/parser/guththila/libaxis2_parser.la \
 			../../wsf_c/axis2c/src/core/transport/http/sender/libaxis2_http_sender.la \
 			../../wsf_c/axis2c/src/core/transport/http/receiver/libaxis2_http_receiver.la \
                     -lpthread \
@@ -67,7 +67,7 @@ echo_blocking_soap11_LDADD   = $(LDFLAGS) \
 		../../wsf_c/axis2c/util/src/libaxutil.la \
 		../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
 		../../wsf_c/axis2c/src/core/engine/libaxis2_engine.la \
-		../../wsf_c/axis2c/axiom/src/parser/libxml2/libaxis2_parser.la \
+		../../wsf_c/axis2c/axiom/src/parser/guththila/libaxis2_parser.la \
 			../../wsf_c/axis2c/src/core/transport/http/sender/libaxis2_http_sender.la \
 			../../wsf_c/axis2c/src/core/transport/http/receiver/libaxis2_http_receiver.la \
                     -lpthread \
@@ -80,7 +80,7 @@ echo_blocking_dual_LDADD   = $(LDFLAGS) \
 		../../wsf_c/axis2c/util/src/libaxutil.la \
 		../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
 		../../wsf_c/axis2c/src/core/engine/libaxis2_engine.la \
-		../../wsf_c/axis2c/axiom/src/parser/libxml2/libaxis2_parser.la \
+		../../wsf_c/axis2c/axiom/src/parser/guththila/libaxis2_parser.la \
 			../../wsf_c/axis2c/src/core/transport/http/sender/libaxis2_http_sender.la \
 			../../wsf_c/axis2c/src/core/transport/http/receiver/libaxis2_http_receiver.la \
                     -lpthread \
@@ -93,7 +93,7 @@ echo_non_blocking_LDADD   = $(LDFLAGS) \
 		../../wsf_c/axis2c/util/src/libaxutil.la \
 		../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
 		../../wsf_c/axis2c/src/core/engine/libaxis2_engine.la \
-		../../wsf_c/axis2c/axiom/src/parser/libxml2/libaxis2_parser.la \
+		../../wsf_c/axis2c/axiom/src/parser/guththila/libaxis2_parser.la \
 			../../wsf_c/axis2c/src/core/transport/http/sender/libaxis2_http_sender.la \
 			../../wsf_c/axis2c/src/core/transport/http/receiver/libaxis2_http_receiver.la \
                     -lpthread \
@@ -106,7 +106,7 @@ echo_non_blocking_dual_LDADD   = $(LDFLAGS) \
 		../../wsf_c/axis2c/util/src/libaxutil.la \
 		../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
 		../../wsf_c/axis2c/src/core/engine/libaxis2_engine.la \
-		../../wsf_c/axis2c/axiom/src/parser/libxml2/libaxis2_parser.la \
+		../../wsf_c/axis2c/axiom/src/parser/guththila/libaxis2_parser.la \
 			../../wsf_c/axis2c/src/core/transport/http/sender/libaxis2_http_sender.la \
 			../../wsf_c/axis2c/src/core/transport/http/receiver/libaxis2_http_receiver.la \
                     -lpthread \
@@ -119,7 +119,7 @@ echo_security_LDADD   = $(LDFLAGS) \
 		../../wsf_c/axis2c/util/src/libaxutil.la \
 		../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
 		../../wsf_c/axis2c/src/core/engine/libaxis2_engine.la \
-		../../wsf_c/axis2c/axiom/src/parser/libxml2/libaxis2_parser.la \
+		../../wsf_c/axis2c/axiom/src/parser/guththila/libaxis2_parser.la \
 			../../wsf_c/axis2c/src/core/transport/http/sender/libaxis2_http_sender.la \
 			../../wsf_c/axis2c/src/core/transport/http/receiver/libaxis2_http_receiver.la \
                     -lpthread \
