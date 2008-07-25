@@ -11,7 +11,6 @@ dist-hook:
 
 samples:
 	sh build_samples.sh $(prefix)
-	sh link_samples.sh $(prefix)
 
 install-data-hook:
 	cp -rf docs/* $(docsdir)
