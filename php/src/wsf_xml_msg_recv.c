@@ -573,6 +573,10 @@ wsf_xml_msg_recv_invoke_mixed (
 		return NULL;
     }
     payload_node = axiom_node_get_first_child(soap_body_node, env);
+    while(payload_node && axiom_node_get_node_type(payload_node, env) != AXIOM_ELEMENT)
+    {
+        payload_node = axiom_node_get_next_sibling(payload_node, env);
+    }
     if(!payload_node) 
 	{
         return NULL;

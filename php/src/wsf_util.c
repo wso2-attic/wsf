@@ -1892,7 +1892,6 @@ wsf_util_set_values_to_endpoint_ref(
 		zend_hash_internal_pointer_reset_ex (ref_params, &pos);
 		while(zend_hash_get_current_data_ex(ref_params, (void**)&data, &pos) != FAILURE)
 		{
-			zval **tmpval = NULL;		
 			if(Z_TYPE_PP(data) == IS_STRING)
 			{
 				axiom_node_t *ref_param_node = NULL;
@@ -1912,7 +1911,6 @@ wsf_util_set_values_to_endpoint_ref(
 		zend_hash_internal_pointer_reset_ex (meta_params, &pos);
 		while(zend_hash_get_current_data_ex(meta_params, (void**)&data, &pos) != FAILURE)
 		{
-			zval **tmpval = NULL;		
 			if(Z_TYPE_PP(data) == IS_STRING)
 			{
 				axiom_node_t *metadata_node = NULL;
