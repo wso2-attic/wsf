@@ -217,9 +217,10 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
     $attachment_map = array();
 
     $response_payload_string = wsf_wsdl_create_response_payload($response_value, $sig_node, $mtom_on,
-                                    $attachment_map);
+                                    $attachment_map, $classmap);
     $output_header_string =
-            wsf_wsdl_create_response_headers($binding_details_node, $output_headers, $mtom_on, $attachment_map);
+            wsf_wsdl_create_response_headers($binding_details_node, $output_headers, $mtom_on,
+                                    $attachment_map, $classmap);
 
 
 	return array(WSF_RESPONSE_PAYLOAD => $response_payload_string, 
@@ -227,7 +228,7 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
                 WSF_ATTACHMENT_MAP => $attachment_map);
 }
 
-function wsf_wsdl_create_response_headers($binding_details_node, $arguments, $mtom_on, $attachment_map) {
+function wsf_wsdl_create_response_headers($binding_details_node, $arguments, $mtom_on, $attachment_map, $classmap) {
 
     $output_headers = array();
     $argument_index = 0;
@@ -266,7 +267,7 @@ function wsf_wsdl_create_response_headers($binding_details_node, $arguments, $mt
                     }
                     else if($argument && is_object($argument)) {
 
-                        wsf_create_payload_for_class_map($header_dom, $header_sig, $element, $element, $argument,
+                        wsf_create_payload_for_class_map($header_dom, $header_sig, $element, $element, $argument, $classmap,
                                                   $prefix_i, $namespace_map, $mtom_on, $attachment_map);
                     }
 
@@ -289,7 +290,7 @@ function wsf_wsdl_create_response_headers($binding_details_node, $arguments, $mt
     return $output_headers;
 }
 
-function wsf_wsdl_create_response_payload($return_val, $sig_node, $mtom_on, &$attachment_map) {
+function wsf_wsdl_create_response_payload($return_val, $sig_node, $mtom_on, &$attachment_map, $classmap) {
     require_once('wsf_wsdl_consts.php');
     require_once('wsf_wsdl_util.php');
     require_once('wsf_wsdl_serialization.php');
@@ -363,7 +364,7 @@ function wsf_wsdl_create_response_payload($return_val, $sig_node, $mtom_on, &$at
             /* this is class map support */
             $new_obj = $arguments;
             $namespace_map = array($ele_ns => WSF_STARTING_NS_PREFIX);
-            wsf_create_payload_for_class_map($payload_dom, $returns_node, $element, $element, $new_obj,
+            wsf_create_payload_for_class_map($payload_dom, $returns_node, $element, $element, $new_obj, $classmap,
                                              $prefix_i, $namespace_map, $mtom_on, $attachment_map);
             $payload_dom->appendChild($element);
             $payload_node = $payload_dom->firstChild;
@@ -392,7 +393,7 @@ function wsf_wsdl_create_response_payload($return_val, $sig_node, $mtom_on, &$at
         if(is_object($arguments)) {
             $new_obj = $arguments;
             $namespace_map = array($ele_ns => WSF_STARTING_NS_PREFIX);
-            wsf_create_payload_for_class_map($payload_dom, $returns_node, $element, $element, $new_obj,
+            wsf_create_payload_for_class_map($payload_dom, $returns_node, $element, $element, $new_obj, $classmap,
                                              $prefix_i, $namespace_map, $mtom_on, $attachment_map);
             $payload_dom->appendChild($element);
             $payload_node = $payload_dom->firstChild;

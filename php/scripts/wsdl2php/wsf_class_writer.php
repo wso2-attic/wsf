@@ -23,7 +23,10 @@ $written_classes = array ();
 // array to hold information on operations to help generate demo code 
 $operations = array ();
 
+// hold the actions array
 $actions = NULL;
+
+// hold the derive types per a perticular classes;
 
 /**
  * Function to write sub classes.  
@@ -44,6 +47,9 @@ function wsf_write_sub_classes($node) {
             else if($attrs->getNamedItem(WSF_EXTENSION)) {
                 $type_name = $attrs->getNamedItem(WSF_EXTENSION)->value;
             }
+            else if($attrs->getNamedItem(WSF_XSI_TYPE)) {
+                $type_name = $attrs->getNamedItem(WSF_XSI_TYPE)->value;
+            }
 
             // array to hold child elements corresponding to sub classes
             $child_array = array ();
@@ -60,15 +66,18 @@ function wsf_write_sub_classes($node) {
             $written_classes[$type_name] = TRUE;
 
             $child_array = array();
-            $code .= wsf_write_content_model($node, $child_array);
+            $derived_classes_code = "";
+            $code .= wsf_write_content_model($node, $child_array, $derived_classes_code);
 
             $code = $code . "\n}\n\n";
             // done writing the current class, now go and write the sub classes
             foreach($child_array as $child) {
                 $code = $code . wsf_write_sub_classes($child);
             }
+
+            $code .= $derived_classes_code;
         }
-        // TODO: What about arrays?
+        // TODO: What about arrays?, ok this is for array api, not class api
     }
     return $code;
 }
@@ -95,7 +104,27 @@ function wsf_write_extension(DomNode $sig_node, &$code) {
 }
 
 
-function wsf_write_content_model($parent_node, &$child_array) {
+function wsf_write_derives(DomNode $sig_node, &$code) {
+    $sig_childs = $sig_node->childNodes;
+    $types_arr = array();
+  
+    foreach($sig_childs as $sig_child) {
+        if($sig_child != NULL && $sig_child->nodeName == WSF_INHERITING_TYPE) {
+
+            $attrs = $sig_child->attributes;
+            if($attrs->getNamedItem(WSF_XSI_TYPE)) {
+                $type_name = $attrs->getNamedItem(WSF_XSI_TYPE)->value;
+                $types_arr[] = $type_name;
+            }
+            $code = $code . wsf_write_sub_classes($sig_child);
+        }
+    }
+    return $types_arr;
+}
+
+
+function wsf_write_content_model($parent_node, &$child_array, &$derived_classes_code) {
+
     $code = "";
     $param_child_list = $parent_node->childNodes;
     $content_model = "";
@@ -187,7 +216,17 @@ function wsf_write_content_model($parent_node, &$child_array) {
                 $code .= "\n";
             }
             else {
-                $code = $code . "\n    /**\n     * @var " . $array_type . $object_of .$param_type . "\n$comments     */\n" . "    public $" . $param_name . ";\n";
+                $derived_info = "\n";
+               
+                $derives_arr = wsf_write_derives($param_child, $derived_classes_code);
+
+                if(count($derives_arr) > 0) {
+                    $derived_info .= "     *    Or one of following derived class(es)\n";
+                    foreach($derives_arr as $derived_type) {
+                        $derived_info .= "     *       $derived_type\n";
+                    }
+                }
+                $code = $code . "\n    /**\n     * @var " . $array_type . $object_of .$param_type . $derived_info. "$comments     */\n" . "    public $" . $param_name . ";\n";
             }
 
             // if it is not s simple type, we have to keep track of it to write a corresponding class
@@ -200,7 +239,7 @@ function wsf_write_content_model($parent_node, &$child_array) {
         }
         else if($param_child->nodeName == WSF_INNER_CONTENT) {
             // in place of inner content recursively call the wsf_write_content_model
-            $code .= wsf_write_content_model($param_child, $child_array);
+            $code .= wsf_write_content_model($param_child, $child_array, $derived_classes_code);
         }
     }
     if($content_model == "choice") {
@@ -358,29 +397,29 @@ function wsf_wsdl2php($wsdl_location) {
             
                                 $service_function_doc_comment .= " * @param object of $ele_name \$input \n";
                             }
-                        }
-                        else {
-                            // No wrapper element, there won't be any class generated for this 
+                            else {
+                                // No wrapper element, there won't be any class generated for this 
 
-                            $child_array = array ();
-                            $param_child_list = $param_node->childNodes;
+                                $child_array = array ();
+                                $param_child_list = $param_node->childNodes;
 
-                            foreach ($param_child_list as $param_child) {
-                                $param_attr = $param_child->attributes;
+                                foreach ($param_child_list as $param_child) {
+                                    $param_attr = $param_child->attributes;
 
-                                $ele_name = $param_attr->getNamedItem(WSF_NAME)->value;
+                                    $ele_name = $param_attr->getNamedItem(WSF_NAME)->value;
 
-                                $content_model = "";
-                                if($param_attr->getNamedItem(WSF_CONTENT_MODEL)) {
-                                    $content_model = $param_attr->getNamedItem(WSF_CONTENT_MODEL)->value;
-                                }
-                                $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
-                                
-                                if($content_model == WSF_SIMPLE_CONTENT) {
-                                    $service_function_doc_comment .= " * @param object of $ele_name \$input \n";
-                                }
-                                else {
-                                    $service_function_doc_comment .= " * @param $param_type \$input \n";
+                                    $content_model = "";
+                                    if($param_attr->getNamedItem(WSF_CONTENT_MODEL)) {
+                                        $content_model = $param_attr->getNamedItem(WSF_CONTENT_MODEL)->value;
+                                    }
+                                    $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
+                                    
+                                    if($content_model == WSF_SIMPLE_CONTENT) {
+                                        $service_function_doc_comment .= " * @param object of $ele_name \$input \n";
+                                    }
+                                    else {
+                                        $service_function_doc_comment .= " * @param $param_type \$input \n";
+                                    }
                                 }
                             }
                         }
@@ -450,34 +489,35 @@ function wsf_wsdl2php($wsdl_location) {
             
                                 $service_function_doc_comment .= " * @return object of $ele_name \n";
                             }
-                        }
-                        else {
-                            // No wrapper element, there won't be any class generated for this 
+                            else {
 
-                            $child_array = array ();
-                            $param_child_list = $param_node->childNodes;
+                                // No wrapper element, there won't be any class generated for this 
 
-                            foreach ($param_child_list as $param_child) {
-                                $param_attr = $param_child->attributes;
-                                
-                                $ele_name = $param_type = "";
-                                if($param_attr->getNamedItem(WSF_NAME)) {
-                                    $ele_name = $param_attr->getNamedItem(WSF_NAME)->value;
-                                }
-                                if($param_attr->getNamedItem(WSF_TYPE)) {
-                                    $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
-                                }
+                                $child_array = array ();
+                                $param_child_list = $param_node->childNodes;
 
-                                $content_model = "";
-                                if($param_attr->getNamedItem(WSF_CONTENT_MODEL)) {
-                                    $content_model = $param_attr->getNamedItem(WSF_CONTENT_MODEL)->value;
-                                }
-                                
-                                if($content_model == WSF_SIMPLE_CONTENT) {
-                                    $service_function_doc_comment .= " * @return object of $ele_name \n";
-                                }
-                                else {
-                                    $service_function_doc_comment .= " * @return $param_type \n";
+                                foreach ($param_child_list as $param_child) {
+                                    $param_attr = $param_child->attributes;
+                                    
+                                    $ele_name = $param_type = "";
+                                    if($param_attr->getNamedItem(WSF_NAME)) {
+                                        $ele_name = $param_attr->getNamedItem(WSF_NAME)->value;
+                                    }
+                                    if($param_attr->getNamedItem(WSF_TYPE)) {
+                                        $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
+                                    }
+
+                                    $content_model = "";
+                                    if($param_attr->getNamedItem(WSF_CONTENT_MODEL)) {
+                                        $content_model = $param_attr->getNamedItem(WSF_CONTENT_MODEL)->value;
+                                    }
+                                    
+                                    if($content_model == WSF_SIMPLE_CONTENT) {
+                                        $service_function_doc_comment .= " * @return object of $ele_name \n";
+                                    }
+                                    else {
+                                        $service_function_doc_comment .= " * @return $param_type \n";
+                                    }
                                 }
                             }
                         }
@@ -557,6 +597,8 @@ function wsf_wsdl2php($wsdl_location) {
 
                                 // write the extension code..
                                 $extension_code = wsf_write_extension($param_node, $code);
+                                $derives_arr = wsf_write_derives($param_node, $code);
+
 
                                 // start writing class    
                                 $code = $code . "class " . $ele_name . $extension_code. " {\n";
@@ -566,26 +608,58 @@ function wsf_wsdl2php($wsdl_location) {
                                 // shows how to create the input and receive the response
 
                                 if ($param_node->nodeName == WSF_PARAMS) {
-                                    $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "    \$input = new $ele_name();\n    //TODO: fill in the class fields of \$input to match your business logic\n";
+                                    $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "    \$input = new $ele_name();\n";
+                                    if(count($derives_arr) > 0) {
+                                        $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "    /**\n     * Here you can replace $ele_name with a following class(es)\n";
+                                        foreach($derives_arr as $derive) {
+                                            $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "     * $derive\n";
+                                        }
+                                        $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "     */\n";
+                                    } 
+                                    $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "    //TODO: fill in the class fields of \$input to match your business logic\n";
                                     $operations[$op_name][WSF_CLIENT] .= $in_header_objects[WSF_CLIENT];
+
                                     $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // TODO: fill in the business logic\n    // NOTE: \$input is of type $ele_name\n";
+                                    if(count($derives_arr) > 0) {
+                                        $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    /**\n     * You can expect \$input to be an instance of following class(es) in addition to $ele_name\n";
+                                        foreach($derives_arr as $derive) {
+                                            $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "     * $derive\n";
+                                        }
+                                        $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "     */\n";
+                                    }
                                     $operations[$op_name][WSF_SERVICE] .= $in_header_objects[WSF_SERVICE];
                                 }
                                 if ($param_node->nodeName == WSF_RETURNS) {
                                     $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "\n    // call the operation\n    \$response = \$proxy->" . $op_node->attributes->getNamedItem('name')->value . "(\$input{$header_function_call});\n    //TODO: Implement business logic to consume \$response, which is of type $ele_name\n";
+                                    if(count($derives_arr) > 0) {
+                                        $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "    /**\n     * You can expect \$response to be an instance of following class(es) in addition to $ele_name\n";
+                                        foreach($derives_arr as $derive) {
+                                            $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "     * $derive\n";
+                                        }
+                                        $operations[$op_name][WSF_CLIENT] = $operations[$op_name][WSF_CLIENT] . "     */\n";
+                                    }
                                     $operations[$op_name][WSF_CLIENT] .= $out_header_objects[WSF_CLIENT];
                                     $operations[$op_name][WSF_SERVICE] .= $out_header_objects[WSF_SERVICE];
                                     $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    // NOTE: should return an object of type $ele_name\n";
+                                    if(count($derives_arr) > 0) {
+                                        $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "    /**\n     * Here you can replace $ele_name with a following class(es)\n";
+                                        foreach($derives_arr as $derive) {
+                                            $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "     * $derive\n";
+                                        }
+                                        $operations[$op_name][WSF_SERVICE] = $operations[$op_name][WSF_SERVICE] . "     */\n";
+                                    } 
                                 }
 
                                 $child_array = array();
-                                $code .= wsf_write_content_model($param_node, $child_array);
+                                $derived_classes_code = "";
+                                $code .= wsf_write_content_model($param_node, $child_array, $derived_classes_code);
                                 
                                 $code = $code . "\n}\n\n";
                                 // done writing the current class, now go and write the sub classes
                                 foreach($child_array as $child) {
                                     $code = $code . wsf_write_sub_classes($child);
                                 }
+                                $code .= $derived_classes_code;
                             } else {
                                 // TODO: No wrapper element, there won't be any class generated for this 
 
@@ -636,8 +710,11 @@ function wsf_wsdl2php($wsdl_location) {
                                             $written_classes[$ele_name] = TRUE;
                                             $code = $code . "class " . $ele_name.  " {\n";
 
-                                            $code .= wsf_write_content_model($param_child, $child_array);
+                                            $derived_classes_code = "";
+                                            $code .= wsf_write_content_model($param_child, $child_array, $derived_classes_code);
                                             $code = $code . "\n}\n\n";
+
+                                            $code .= $derived_classes_code;
                                         }
 
                                         if ($param_node->nodeName == WSF_PARAMS) {

@@ -178,22 +178,14 @@ function wsf_parse_payload_for_class_map(DomNode $payload, DomNode $sig_node, $e
         ($the_only_node && $the_only_node->attributes->getNamedItem(WSF_CONTENT_MODEL) &&
          $the_only_node->attributes->getNamedItem(WSF_CONTENT_MODEL)->value == WSF_SIMPLE_CONTENT)) {
 
-        if(is_array($classmap) && array_key_exists($element_type, $classmap)) {
-            $class_name = $classmap[$element_type];
-        }
-        if(!isset($class_name) || $class_name == NULL) {
-            $class_name = $element_type;
-        }
 
-        try {
-            $ref_class = new ReflectionClass($class_name);
-            if ($ref_class->isInstantiable()) {
-                $object = $ref_class->newInstance();
+        //this will be assigned a value inside wsf_infer_sig_node_from_xml passing by references..
+        $object = NULL;
 
-            }
-        } catch(Exception $e) {
-            $object = new WSFUnknownSchemaConstruct();
-        }
+        $changed_sig_node = wsf_infer_sig_node_from_xml($sig_node, $payload, $object, $element_type, $classmap);
+
+        // here on we consider our sig node is the changed one 
+        $sig_node = $changed_sig_node;
 
         if($object == NULL) {
             return NULL;
@@ -1087,6 +1079,84 @@ function wsf_deserialize_type_info($param_type, &$parse_tree, $param_name, $para
     }
 }
 
+/**
+ * Extract the sig node looking at the incomming xml type
+ * @param array $sig_model as a DomNode
+ * @param DomNode $parent_node - The parent node to check for the content 
+ * @param $object mixed relevent object instance(passed by reference)
+ * @param $original_type the type in the first place
+ * @param $classmap - the type name to class map
+ */
+function wsf_infer_sig_node_from_xml($sig_node, $parent_node, &$object, $original_type, $classmap) {
+
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "Calling infer sig mode from xml");
+
+    // first it is to be safte to keep the element type as the original type and the sig node too
+    $the_element_type = $original_type;
+    $the_sig_node = $sig_node;
+
+
+    // second we have to find whether there is xsi:type in the xml.
+    $xml_type = NULL;
+    $xsi_type_attri_node =  $parent_node->getAttributeNodeNS(WSF_XSI_NAMESPACE, "type");
+    if($xsi_type_attri_node) {
+        $xml_type = $xsi_type_attri_node->value;
+    }
+    
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "xml type $xml_type");
+
+    if($xml_type) {
+        //looks like there is a type declared in the xml, so find possible types..
+      
+        $inheriting_type_found = FALSE;
+        
+        $xml_type_local_value = $xml_type;
+        $pos = strpos($xml_type, ":");
+        if($pos !== FALSE) {
+            $xml_type_local_value = substr($xml_type, $pos + 1);
+        }
+        $sig_child_nodes = $sig_node->childNodes;
+        foreach($sig_child_nodes as $sig_child_node) {
+            
+            if($sig_child_node->localName == WSF_INHERITING_TYPE) {
+
+                $sig_child_attris = $sig_child_node->attributes;
+                $type_name = $type_ns = "";
+                if($sig_child_attris->getNamedItem(WSF_XSI_TYPE)) {
+                     $type_name = $sig_child_attris->getNamedItem(WSF_XSI_TYPE)->value;
+                }
+                
+                if($xml_type_local_value == $type_name) {
+                    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "type name $type_name found ");
+                    $the_element_type = $type_name;
+                    $the_sig_node = $sig_child_node;
+                    $inheriting_type_found = TRUE;
+                    break;
+                }
+            }
+        }
+    }
+
+
+    if(is_array($classmap) && array_key_exists($the_element_type, $classmap)) {
+        $class_name = $classmap[$the_element_type];
+    }
+    if(!isset($class_name) || $class_name == NULL) {
+        $class_name = $the_element_type;
+    }
+
+    try {
+        $ref_class = new ReflectionClass($class_name);
+        if ($ref_class->isInstantiable()) {
+            $object = $ref_class->newInstance();
+
+        }
+    } catch(Exception $e) {
+        $object = new WSFUnknownSchemaConstruct();
+    }
+    
+    return $the_sig_node;
+}
 //-----------------------------------------------------------------------------
 
 

@@ -118,7 +118,7 @@ function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name,
             /* this is class map support */
             $new_obj = $arguments[0];
             $namespace_map = array($ele_ns => WSF_STARTING_NS_PREFIX);
-            wsf_create_payload_for_class_map($payload_dom, $params_node, $element, $element, $new_obj,
+            wsf_create_payload_for_class_map($payload_dom, $params_node, $element, $element, $new_obj, $classmap,
                                                   $prefix_i, $namespace_map, $mtom_on, $attachment_map);
             $payload_dom->appendChild($element);
             $payload_node = $payload_dom->firstChild;
@@ -151,7 +151,7 @@ function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name,
             
             $namespace_map = array($ele_ns => WSF_STARTING_NS_PREFIX);
             // currently we handle both rpc and doc lit sameway
-            wsf_create_payload_for_class_map($payload_dom, $params_node, $element, $element, $new_obj,
+            wsf_create_payload_for_class_map($payload_dom, $params_node, $element, $element, $new_obj, $classmap,
                                                            $prefix_i, $namespace_map, $mtom_on, $attachment_map);
             $payload_dom->appendChild($element);
             $payload_node = $payload_dom->firstChild;
@@ -221,7 +221,7 @@ function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name,
                     }
                     else if($argument && is_object($argument)) {
 
-                        wsf_create_payload_for_class_map($header_dom, $header_sig, $element, $element, $argument,
+                        wsf_create_payload_for_class_map($header_dom, $header_sig, $element, $element, $argument, $classmap,
                                                   $prefix_i, $namespace_map, $mtom_on, $attachment_map);
                     }
 

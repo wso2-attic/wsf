@@ -130,6 +130,10 @@ define("WSF_XSD_NILLABLE", "nillable");
 define("WSF_CONTENT_MODEL", "contentModel");
 define("WSF_INNER_CONTENT", "inner-content");
 define("WSF_INHERITED_CONTENT", "inherited-content");
+define("WSF_INHERITING_TYPE", "inheriting-type");
+define("WSF_XSI_TYPE", "xsi-type");
+define("WSF_XSI_TYPE_NS", "xsi-type-ns");
+define("WSF_XSI_NAMESPACE", "http://www.w3.org/2001/XMLSchema-instance");
 define("WSF_EXTENSION", "extension");
 define("WSF_ATTRIBUTE", "attribute");
 

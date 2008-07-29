@@ -43,6 +43,7 @@
  * @param DomNode $parent_node - The parent node to add the content 
  * @param DomNode $root_node - The top most of parent
  * @param mixed $user_obj - class object to pass
+ * @param array $classmap, the classmap user entered
  * @param $prefix_i - next available prefix index 
  * @param $namespace_map - Just make sure the unique namespace is used.
     Newly added (passed by reference)
@@ -53,7 +54,8 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
                                             DomNode $sig_node, 
                                             DomNode $parent_node, 
                                             DomNode $root_node, 
-                                            $user_obj, 
+                                            $user_obj,
+                                            $classmap,
                                             &$prefix_i, 
                                             array &$namespace_map,
                                             $mtom_on,
@@ -78,10 +80,14 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
 
     if($sig_node->hasAttributes()) {
         // filling user class information to the array..
-        $user_arguments = wsf_convert_classobj_to_array($sig_node, $user_obj);
 
-        wsf_build_content_model($sig_node, $user_arguments, $parent_node, $payload_dom,
-                $root_node, $prefix_i, $namespace_map, $mtom_on, $attachment_map);
+        $changed_sig_node = wsf_infer_sig_node_from_user_obj($sig_node, $parent_node, $root_node,
+                    $user_obj, $classmap, $prefix_i, $namespace_map);
+
+        $user_arguments = wsf_convert_classobj_to_array($changed_sig_node, $user_obj);
+
+        wsf_build_content_model($changed_sig_node, $user_arguments, $parent_node, $payload_dom,
+                $root_node, $classmap, $prefix_i, $namespace_map, $mtom_on, $attachment_map);
     }
     else {
         // this situation meets only for non-wrapped mode as doclit-bare wsdls
@@ -97,7 +103,7 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
             $user_arguments = wsf_convert_classobj_to_array($the_only_node, $user_obj);
 
             wsf_build_content_model($the_only_node, $user_arguments, $parent_node,
-                $payload_dom, $root_node, $prefix_i, $namespace_map, $mtom_on, $attachement_map);
+                $payload_dom, $root_node, $classmap, $prefix_i, $namespace_map, $mtom_on, $attachement_map);
         }
     }
 }
@@ -139,7 +145,7 @@ function wsf_create_payload_for_array(DomDocument $payload_dom,
 
     if($sig_node->hasAttributes()) {
         wsf_build_content_model($sig_node, $user_arguments, $parent_node,
-            $payload_dom,  $root_node, $prefix_i, $namespace_map, $mtom_on, $attachement_map);
+            $payload_dom,  $root_node, $classmap, $prefix_i, $namespace_map, $mtom_on, $attachement_map);
     }
     else {
         // this situation meets only for non-wrapped mode as doclit-bare wsdls
@@ -149,7 +155,7 @@ function wsf_create_payload_for_array(DomDocument $payload_dom,
         if($the_only_node->attributes->getNamedItem(WSF_CONTENT_MODEL) &&
                 $the_only_node->attributes->getNamedItem(WSF_CONTENT_MODEL)->value == WSF_SIMPLE_CONTENT) {
             wsf_build_content_model($the_only_node, $user_arguments, $parent_node,
-                    $payload_dom, $root_node, $prefix_i, $namespace_map, $mtom_on, $attachement_map);
+                    $payload_dom, $root_node, $classmap, $prefix_i, $namespace_map, $mtom_on, $attachement_map);
         }
         else {
             $is_simple = FALSE;
@@ -325,12 +331,13 @@ function wsf_create_payload_for_unknown_array(DomDocument $payload_dom,
  * @param $parant_ele just root element of the element
  * @param $payload_dom  payload dom document
  * @param $root_node root element of the document, in order to add namespace 
+ * @param $classmap array of classemap
  * @param $prefix_i - next available prefix index 
  * @param $namespace_map, array, map to the namespace to prefix
  * @param $user_val_encoded, encoded value of the user val, hm! use only for base64
  */
 function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
-                    $parent_node, $payload_dom, $root_node, &$prefix_i,
+                    $parent_node, $payload_dom, $root_node, $classmap, &$prefix_i,
                     &$namespace_map, $mtom_on, &$attachment_map, $user_val_encoded = NULL, $content_type = NULL) {
 
     $target_namespace = NULL;
@@ -434,7 +441,8 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
                         $parent_node->appendChild($ele);
                         if(is_object($user_val_item)) {
                             wsf_create_payload_for_class_map($payload_dom, $sig_param_node,
-                                $ele, $root_node, $user_val_item, $prefix_i, $namespace_map, $mtom_on, $attachment_map);
+                                $ele, $root_node, $user_val_item, $classmap,
+                                $prefix_i, $namespace_map, $mtom_on, $attachment_map);
                         }
                         else {
                             wsf_create_payload_for_array($payload_dom, $sig_param_node,
@@ -474,7 +482,8 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
                     $parent_node->appendChild($ele);
                     if(is_object($user_val)) {
                         wsf_create_payload_for_class_map($payload_dom, $sig_param_node,
-                            $ele, $root_node, $user_val, $prefix_i, $namespace_map, $mtom_on, $attachment_map);
+                            $ele, $root_node, $user_val, $classmap,
+                            $prefix_i, $namespace_map, $mtom_on, $attachment_map);
                     }
                     else {
                         wsf_create_payload_for_array($payload_dom, $sig_param_node,
@@ -500,7 +509,8 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
                     $parent_node->appendChild($ele);
                     if(is_object($user_val)) {
                         wsf_create_payload_for_class_map($payload_dom, $sig_param_node,
-                         $ele, $root_node, $user_val, $prefix_i, $namespace_map, $mtom_on, $attachment_map);
+                         $ele, $root_node, $user_val, $classmap,
+                         $prefix_i, $namespace_map, $mtom_on, $attachment_map);
                     }
                     else {
                         wsf_create_payload_for_array($payload_dom, $sig_param_node,
@@ -530,12 +540,13 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
  * @param $user_val the user value given to the type
  * @param $parant_ele just root element of the element
  * @param $payload_dom  payload dom document
+ * @param $classmap (array) users classmap
  * @param $root_node root element of the document, in order to add namespace 
  * @param $prefix_i - next available prefix index 
  * @param namespace_map, array, map to the namespace to prefix
  */
 function wsf_serialize_complex_types(DomNode $sig_param_node, $user_val,
-                                $parent_node, $payload_dom, $root_node,
+                                $parent_node, $payload_dom, $root_node, $classmap,
                                 &$prefix_i, &$namespace_map, $mtom_on, &$attachment_map) {
 
     $target_namespace = NULL;
@@ -598,7 +609,8 @@ function wsf_serialize_complex_types(DomNode $sig_param_node, $user_val,
                     if($sig_param_node->hasChildNodes()) {
                         wsf_create_payload_for_class_map($payload_dom, 
                                     $sig_param_node, $param_node, $root_node,
-                                    $user_val_item, $prefix_i, $namespace_map, $mtom_on, $attachment_map);
+                                    $user_val_item, $classmap, $prefix_i,
+                                    $namespace_map, $mtom_on, $attachment_map);
                     }
                     else
                     {
@@ -630,7 +642,8 @@ function wsf_serialize_complex_types(DomNode $sig_param_node, $user_val,
                 if($sig_param_node->hasChildNodes()) {
                     wsf_create_payload_for_class_map($payload_dom, 
                                 $sig_param_node, $param_node, $root_node,
-                                $user_val, $prefix_i, $namespace_map, $mtom_on, $attachment_map);
+                                $user_val, $classmap, $prefix_i,
+                                $namespace_map, $mtom_on, $attachment_map);
                 }
                 else
                 {
@@ -662,7 +675,8 @@ function wsf_serialize_complex_types(DomNode $sig_param_node, $user_val,
             if($sig_param_node->hasChildNodes()) {
                 wsf_create_payload_for_class_map($payload_dom, 
                             $sig_param_node, $param_node, $root_node,
-                            $user_val, $prefix_i, $namespace_map, $mtom_on, $attachment_map);
+                            $user_val, $classmap, $prefix_i,
+                            $namespace_map, $mtom_on, $attachment_map);
             }
             else
             {
@@ -697,7 +711,7 @@ function wsf_serialize_complex_types(DomNode $sig_param_node, $user_val,
  * @param $root_node the root element of the dom
  */
 function wsf_build_content_model(DomNode $sig_node, array $user_arguments,
-            DomNode $parent_node, DomNode $payload_dom, $root_node, &$prefix_i,
+            DomNode $parent_node, DomNode $payload_dom, $root_node, $classmap, &$prefix_i,
             &$namespace_map, $mtom_on, &$attachment_map) {
 
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "building the content model");
@@ -770,12 +784,14 @@ function wsf_build_content_model(DomNode $sig_node, array $user_arguments,
                         // default simple type
                         wsf_serialize_simple_types($sig_param_node,
                                     $user_val, $parent_node, $payload_dom, 
-                                    $root_node, $prefix_i, $namespace_map, $mtom_on, $attachment_map, $user_val_encoded);
+                                    $root_node, $classmap, $prefix_i, $namespace_map,
+                                    $mtom_on, $attachment_map, $user_val_encoded);
                     }
                     else {
                         wsf_serialize_complex_types($sig_param_node, 
                                         $user_val, $parent_node, $payload_dom,
-                                        $root_node, $prefix_i, $namespace_map, $mtom_on, $attachment_map);
+                                        $root_node, $classmap, $prefix_i, 
+                                        $namespace_map, $mtom_on, $attachment_map);
                     }
                     if($user_val !== NULL) {
                         $just_found_once = TRUE;
@@ -790,11 +806,13 @@ function wsf_build_content_model(DomNode $sig_node, array $user_arguments,
         }
         else if($sig_param_node->nodeName == WSF_INNER_CONTENT) {
             wsf_build_content_model($sig_param_node, $user_arguments, $parent_node,
-                    $payload_dom, $root_node, $prefix_i, $namespace_map, $mtom_on, $attachment_map);
+                    $payload_dom, $root_node, $classmap, $prefix_i,
+                    $namespace_map, $mtom_on, $attachment_map);
         }
         else if($sig_param_node->nodeName == WSF_INHERITED_CONTENT) {
             wsf_build_content_model($sig_param_node, $user_arguments, $parent_node,
-                    $payload_dom, $root_node, $prefix_i, $namespace_map, $mtom_on, $attachment_map);
+                    $payload_dom, $root_node, $classmap, $prefix_i,
+                    $namespace_map, $mtom_on, $attachment_map);
         }
     }
 }
@@ -1057,6 +1075,119 @@ function wsf_serialize_type_info($param_type, $user_val, $sig_node, $payload_dom
         $ele = $payload_dom->createTextNode($serialized_value);
         $parent_node->appendChild($ele);
     }
+}
+
+/**
+ * Extract the sig node looking at the user object type
+ * @param array $sig_model as a DomNode
+ * @param DomNode $parent_node - The parent node to add the content 
+ * @param DomNode $root_node - The top most of parent
+ * @param mixed $user_obj - class object to pass
+ * @param $prefix_i - next available prefix index 
+ * @param $namespace_map - Just make sure the unique namespace is used.
+    Newly added (passed by reference)
+ */
+
+
+function wsf_infer_sig_node_from_user_obj($sig_node, $parent_node, $root_node, 
+            $user_obj, $classmap, &$prefix_i, array &$namespace_map) {
+
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "Calling infer sig mode from user obj");
+
+    // first loop the through sig child whther there is is inheriting-types in there
+    $inheriting_type_sigs = array();
+    $inheriting_type_namespaces = array();
+
+    $sig_child_nodes = $sig_node->childNodes;
+    foreach($sig_child_nodes as $sig_child_node) {
+        
+        if($sig_child_node->localName == WSF_INHERITING_TYPE) {
+
+            $sig_child_attris = $sig_child_node->attributes;
+            $type_name = $type_ns = "";
+            if($sig_child_attris->getNamedItem(WSF_XSI_TYPE)) {
+                 $type_name = $sig_child_attris->getNamedItem(WSF_XSI_TYPE)->value;
+            }
+            if($sig_child_attris->getNamedItem(WSF_XSI_TYPE_NS)) {
+                 $type_ns = $sig_child_attris->getNamedItem(WSF_XSI_TYPE_NS)->value;
+            }
+
+            ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "type name $type_name ; $type_ns ");
+            $inheriting_type_sigs[$type_name] = $sig_child_node;
+            $inheriting_type_namespaces[$type_name] = $type_ns;
+        }
+    }
+    
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, print_r($inheriting_type_namespaces, TRUE));
+
+    // if not inheriting types just let the sig_node to be the sig node
+    if(count($inheriting_type_sigs) == 0) {
+        return $sig_node;
+    }
+      
+    $reflex_obj = new ReflectionObject($user_obj);
+    if(!$reflex_obj) {
+        return $sig_node;
+    }
+
+    $class_name = $reflex_obj->getName();
+    
+    // find the type name
+    $type_name = $class_name;
+
+    // if the classmap is present we need to check the type name from the map
+    if($classmap && is_array($classmap)) {
+        foreach($classmap as $type_name_key => $class_name_value ) {
+            if($class_name_value == $class_name) {
+                $type_name = $type_name_key;
+                break;
+            }
+        }
+    }
+
+    // so we found the type, check with the collected inherited_types
+    $the_sig_node = NULL;
+    $the_type_name = NULL;
+    $the_type_namespace = NULL;
+    if(array_key_exists($type_name, $inheriting_type_sigs)) {
+        $the_type_name = $type_name;
+        $the_type_namespace = $inheriting_type_namespaces[$type_name];
+        $the_sig_node = $inheriting_type_sigs[$type_name];
+    }
+    else {
+        // not in inherited map, so should be the same sig,
+        return $sig_node;
+    }
+
+    //now retrieve the namespace or declare it if it is not present
+    $the_type_ns_prefix = NULL;
+    if(array_key_exists($the_type_namespace, $namespace_map)) {
+        $the_type_ns_prefix = $namespace_map[$the_type_namespace];
+    }
+    else {
+        $the_type_ns_prefix = "ns".$prefix_i;
+        $prefix_i ++;
+        $root_node->setAttribute("xmlns:".$the_type_ns_prefix, $the_type_namespace);
+        $namespace_map[$the_type_namespace] = $the_type_ns_prefix;
+    }
+
+    $xsi_namespace_prefix = NULL;
+    if(array_key_exists(WSF_XSI_NAMESPACE, $namespace_map)) {
+        $xsi_namespace_prefix = $namespace_map[WSF_XSI_NAMESPACE];
+    }
+    else {
+        $xsi_namespace_prefix = "xsi";
+        $root_node->setAttribute("xmlns:".$xsi_namespace_prefix, WSF_XSI_NAMESPACE);
+        $namespace_map[WSF_XSI_NAMESPACE] = $xsi_namespace_prefix;
+    }
+    
+    $attribute_name = $xsi_namespace_prefix.":"."type";
+    $attribute_value = $the_type_ns_prefix.":".$the_type_name;
+
+    $parent_node->setAttribute($attribute_name, $attribute_value);
+
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, wsf_test_serialize_node($the_sig_node));
+    return $the_sig_node;
 }
 
 //-------------------------------------------------------------------------------------------
