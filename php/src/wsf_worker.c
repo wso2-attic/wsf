@@ -29,6 +29,7 @@
 #include <axutil_url.h>
 #include <axiom_soap_const.h>
 #include <axiom_soap.h>
+#include <axiom_mime_part.h>
 #include <axis2_core_utils.h>
 #include "wsf_out_transport_info.h"
 #include "wsf_stream.h"
@@ -181,6 +182,70 @@ wsf_worker_free (
     AXIS2_FREE (env->allocator, worker);
 }
 
+static void wsf_worker_send_mtom_message(
+	wsf_response_info_t *response,
+	const axutil_env_t * env,
+	axutil_array_list_t *mime_parts TSRMLS_DC)
+{
+	int i = 0;
+	axiom_mime_part_t *mime_part = NULL;
+	axis2_status_t status = AXIS2_SUCCESS;
+	/*int written = 0;*/
+	int len = 0;    
+	if(response && response->http_status_code_name)
+	{
+		char status_line[100];
+		char *content_type = NULL; 
+		sprintf(status_line, "%s %d %s" , response->http_protocol,response->http_status_code, 
+			response->http_status_code_name );
+		sapi_add_header(status_line, strlen(status_line), 1);
+		if(response->content_type)
+		{
+			content_type = emalloc(strlen (response->content_type) * sizeof (char) + 20);
+			sprintf (content_type, "Content-Type: %s", response->content_type);
+			sapi_add_header (content_type, strlen (content_type), 1);
+		}
+	}
+	if(mime_parts)
+	{
+		for(i = 0; i < axutil_array_list_size(mime_parts, env); i++)
+		{
+			mime_part = (axiom_mime_part_t *)axutil_array_list_get(mime_parts, env, i);
+			if((mime_part->type) == AXIOM_MIME_PART_BUFFER)
+			{
+				php_write(mime_part->part, mime_part->part_size TSRMLS_CC);
+			}    
+		}
+	}
+}
+
+static void 
+wsf_worker_write_response(wsf_response_info_t *response TSRMLS_DC)
+	{
+	if(response && response->http_status_code_name)
+		{
+		char status_line[100];
+		char *content_type = NULL; 
+		sprintf(status_line, "%s %d %s" , response->http_protocol,response->http_status_code, 
+			response->http_status_code_name );
+		sapi_add_header(status_line, strlen(status_line), 1);
+		if(response->http_status_code == AXIS2_HTTP_RESPONSE_ACK_CODE_VAL)
+			{
+			sapi_add_header ("Content-Length: 0", sizeof ("Content-Length: 0") - 1, 1);
+			}
+		if(response->content_type)
+			{
+			content_type = emalloc(strlen (response->content_type) * sizeof (char) + 20);
+			sprintf (content_type, "Content-Type: %s", response->content_type);
+			sapi_add_header (content_type, strlen (content_type), 1);
+			if(response->response_data)
+				{
+				php_write (response->response_data, response->response_length TSRMLS_CC);
+				}
+			}
+		}
+	}
+
 int
 wsf_worker_process_request (
     wsf_worker_t * worker,
@@ -203,7 +268,7 @@ wsf_worker_process_request (
     axis2_bool_t doing_rest = AXIS2_FALSE;
     axis2_http_transport_in_t transport_in;
     axis2_http_transport_out_t transport_out;
-
+	int do_mtom = 0;
     if (!request)
 		return -1;
 
@@ -407,10 +472,23 @@ wsf_worker_process_request (
 
         if (out_msg_ctx)
         {
+			
+			do_mtom = axis2_msg_ctx_get_doing_mtom(out_msg_ctx, env);
+			if(do_mtom)
+			{
+				axutil_array_list_t *mime_parts = NULL;
+				mime_parts = axis2_msg_ctx_get_mime_parts(out_msg_ctx, env);
+				if(!mime_parts)
+				{
+					do_mtom = 0;
+				}
+				wsf_worker_send_mtom_message(response, env, mime_parts TSRMLS_CC);
+			}
+
             axis2_msg_ctx_free(out_msg_ctx, env);
             msg_ctx_map[AXIS2_WSDL_MESSAGE_LABEL_OUT] = NULL;
         }
-
+	/*
         if (in_msg_ctx)
         {
             msg_id = axutil_strdup(env, axis2_msg_ctx_get_msg_id(in_msg_ctx, env));
@@ -428,7 +506,7 @@ wsf_worker_process_request (
             }
             axis2_op_ctx_free(op_ctx, env);
         }
-        
+      */  
         
     }
 
@@ -439,6 +517,12 @@ wsf_worker_process_request (
     if(request_url){
        AXIS2_FREE(env->allocator, request_url);
     }
+
+	if(!do_mtom)
+		{
+			wsf_worker_write_response(response TSRMLS_CC);
+		}
+
     return 1;
 }
 

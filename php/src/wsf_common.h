@@ -357,6 +357,7 @@ typedef struct wsf_request_info
 	int param_count;
 	/** parameters array */
 	char ***params;
+
 } wsf_request_info_t;
 
 typedef struct wsf_response_info

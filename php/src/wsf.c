@@ -1433,32 +1433,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
     }
 }  
 
-static void 
-wsf_service_write_response(wsf_response_info_t *response TSRMLS_DC)
-{
-	if(response && response->http_status_code_name)
-	{
-		char status_line[100];
-		char *content_type = NULL; 
-		sprintf(status_line, "%s %d %s" , response->http_protocol,response->http_status_code, 
-			response->http_status_code_name );
-		sapi_add_header(status_line, strlen(status_line), 1);
-		if(response->http_status_code == AXIS2_HTTP_RESPONSE_ACK_CODE_VAL)
-		{
-			sapi_add_header ("Content-Length: 0", sizeof ("Content-Length: 0") - 1, 1);
-		}
-		if(response->content_type)
-		{
-			content_type = emalloc(strlen (response->content_type) * sizeof (char) + 20);
-			sprintf (content_type, "Content-Type: %s", response->content_type);
-			sapi_add_header (content_type, strlen (content_type), 1);
-			if(response->response_data)
-			{
-				php_write (response->response_data, response->response_length TSRMLS_CC);
-			}
-		}
-	}
-}
+
 
 
 /* {{{ proto long reply([long style]) reply the SOAP request */ 
@@ -1572,8 +1547,10 @@ PHP_METHOD (ws_service, reply)
     	
 		if (zend_hash_find (&EG(symbol_table), "HTTP_RAW_POST_DATA", sizeof ("HTTP_RAW_POST_DATA"), 
                     (void **)&raw_post) != FAILURE  && ((*raw_post)->type ==  IS_STRING)){
+			char *value = NULL;
 			req_info.request_data = Z_STRVAL_PP (raw_post);
 			req_info.request_data_length = Z_STRLEN_PP (raw_post);
+			value = (char*)Z_STRVAL_PP(raw_post);
 		}else {
 			AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
 				"raw post data not found");
@@ -1622,9 +1599,8 @@ PHP_METHOD (ws_service, reply)
    }else 
    {
 		wsf_worker_process_request (php_worker, ws_env_svr, &req_info, &res_info, svc_info TSRMLS_CC);
-		wsf_service_write_response(&res_info TSRMLS_CC);
 		wsf_response_info_cleanup(&res_info, ws_env_svr);
-    }
+   }
 }
 /* }}} end reply */ 
     

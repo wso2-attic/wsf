@@ -247,8 +247,6 @@ wsf_env_create (
     allocator->free_fn = wsf_free_wrapper_cli;
     allocator->malloc_fn = wsf_malloc_wrapper_cli;
     allocator->realloc = wsf_realloc_warpper_cli;
-	allocator->pool_allocator = NULL;
-	allocator->ref_pool_allocator = 0;
 
     error = axutil_error_create (allocator);
     if (path_tolog && (
@@ -286,8 +284,6 @@ wsf_env_create_svr (
     allocator->free_fn = wsf_free_wrapper;
     allocator->malloc_fn = wsf_malloc_wrapper;
     allocator->realloc = wsf_realloc_warpper;
-	allocator->pool_allocator = NULL;
-	allocator->ref_pool_allocator = 0;
 
 
     error = axutil_error_create (allocator);
@@ -422,6 +418,8 @@ wsf_request_info_init (wsf_request_info_t *req_info)
     req_info->request_data_length = 0;
 	req_info->transfer_encoding = NULL;
     req_info->query_string = NULL;
+	req_info->param_count = 0;
+	req_info->params = NULL;
 
     return;
 }
