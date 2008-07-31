@@ -106,6 +106,21 @@ using the following syntax.</p>
  */
 </pre>
 
+<p>
+In a case you want to specify minOccurs and maxOccurs explicitly
+you can use the following syntax..
+</p>
+
+<p>Syntax:</p>
+<pre>
+ @param [minOccurs, maxOccurs] PHP_parameter_type $paramterName
+ ( xs:XSDType )
+</pre>
+
+<p>Here minOccurs can only be digits, maxOccurs can be either digits or the string "unbounded"</p>
+
+
+
 <h3>1.5. Types, maps to PHP Classes</h3>
 <p>Syntax:</p>
 <pre>
