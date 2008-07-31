@@ -32,11 +32,11 @@ using namespace wso2wsf;
   *
   * @todo: document this function
   */
- OMException::OMException(char const * reason, OMObject * sender)
+ /*OMException::OMException(char const * reason, OMObject * sender)
     : Exception(reason)
 {
     _sender = sender;
-}
+}*/
 
 /** @brief process
   *
@@ -55,6 +55,6 @@ OMException::~OMException()
 {
     if (_sender)
     {
-        delete _sender;
+        _sender = NULL;
     }
 }

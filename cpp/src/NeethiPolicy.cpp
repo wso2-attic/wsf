@@ -25,7 +25,12 @@ using namespace wso2wsf;
   * @todo: document this function
   */
  NeethiPolicy::~NeethiPolicy()
-{}
+ {
+	 if ( _wsf_neethi_policy)
+	 {
+		 delete _wsf_neethi_policy;
+	 }
+ }
 
 /** @brief NeethiPolicy
   *
@@ -40,7 +45,7 @@ using namespace wso2wsf;
     }
     if (!_wsf_neethi_policy)
     {
-        throw NeethiException(CREATION_OF_NEETHI_POLICY_OBJECT_FAILED, this);
+        throw NeethiException(CREATION_OF_NEETHI_POLICY_OBJECT_FAILED);
     }
 }
 
@@ -58,7 +63,7 @@ using namespace wso2wsf;
     }
     if (!_wsf_neethi_policy)
     {
-        throw NeethiException(CREATION_OF_NEETHI_POLICY_OBJECT_FAILED, this);
+        throw NeethiException(CREATION_OF_NEETHI_POLICY_OBJECT_FAILED);
     }
 }
 

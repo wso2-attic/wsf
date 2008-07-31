@@ -170,7 +170,7 @@ bool OMElement::declareDefaultNamespace(std::string uri)
     }
     else
     {
-        throw OMException(CREATION_OF_OM_ELEMENT_OBJECT_FAILED, this);
+        throw OMException(CREATION_OF_OM_ELEMENT_OBJECT_FAILED);
     }
     axiom_node_t * node_new = NULL;
     axiom_children_iterator_t * children_iterator = NULL;
@@ -248,7 +248,7 @@ bool OMElement::declareDefaultNamespace(std::string uri)
     }
     else
     {
-        throw OMException(CREATION_OF_OM_ELEMENT_OBJECT_FAILED, this);
+        throw OMException(CREATION_OF_OM_ELEMENT_OBJECT_FAILED);
     }
 }
 
@@ -513,7 +513,7 @@ bool OMElement::setNamespace(OMNamespace * ns, bool no_find)
     }
     else
     {
-        throw OMException(CREATION_OF_OM_ELEMENT_OBJECT_FAILED, this);
+        throw OMException(CREATION_OF_OM_ELEMENT_OBJECT_FAILED);
     }
 }
 
@@ -542,7 +542,7 @@ bool OMElement::setNamespace(OMNamespace * ns, bool no_find)
     }
     else
     {
-        throw OMException(CREATION_OF_OM_ELEMENT_OBJECT_FAILED, this);
+        throw OMException(CREATION_OF_OM_ELEMENT_OBJECT_FAILED);
     }
 }
 
@@ -703,7 +703,7 @@ OMElement * OMElement::getChildElement(std::string localname, OMNamespace * ns)
     }
     else
     {
-        throw OMException(CREATION_OF_OM_ELEMENT_OBJECT_FAILED, this);
+        throw OMException(CREATION_OF_OM_ELEMENT_OBJECT_FAILED);
     }
 }
 

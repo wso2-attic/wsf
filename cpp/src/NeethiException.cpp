@@ -32,11 +32,11 @@ using namespace wso2wsf;
   *
   * @todo: document this function
   */
- NeethiException::NeethiException(char const * reason, NeethiObject * sender)
+ /*NeethiException::NeethiException(char const * reason, NeethiObject * sender)
     : Exception(reason)
 {
     _sender = sender;
-}
+}*/
 
 /** @brief process
   *
@@ -55,6 +55,6 @@ NeethiException::~NeethiException()
 {
     if (_sender)
     {
-        delete _sender;
+        _sender = NULL;
     }
 }
