@@ -100,6 +100,8 @@ ZEND_BEGIN_MODULE_GLOBALS (wsf)
     char *rm_db_dir;
     int curr_ns_index;
     int soap_version;
+	char *attachment_cache_dir;
+	int enable_attachment_caching;
 ZEND_END_MODULE_GLOBALS (wsf)
 
 ZEND_EXTERN_MODULE_GLOBALS (wsf)

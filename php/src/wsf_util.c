@@ -353,6 +353,8 @@ wsf_svc_info_create (
 	svc_info->auth_type = WSF_PHP_AUTH_TYPE_BASIC;
 	svc_info->auth_user = NULL;
 	svc_info->auth_password = NULL;
+	svc_info->attachment_cache_dir = NULL;
+	svc_info->enable_attachment_caching =0;
 
     return svc_info;
 }
@@ -862,52 +864,62 @@ wsf_util_set_attachments_with_cids (
                             if (zend_hash_find (attach_ht, cid, strlen (cid) + 1, 
 								(void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) 
 							{
+                                /** detach this node */
+                                axiom_node_t *text_node = NULL;
+                                axiom_text_t *text = NULL;
+                                axiom_data_handler_t *data_handler = NULL;
+                                axiom_node_detach (node, env);
 
-                                void *binary_data = NULL;
-                                int binary_data_len = 0;
-
-                                binary_data_len = Z_STRLEN_PP (tmp);
-                                binary_data = AXIS2_MALLOC (env->allocator, 
-									sizeof (char) * binary_data_len);
-
-                                memcpy (binary_data, Z_STRVAL_PP (tmp), binary_data_len);
-                                if (binary_data) 
+                                tmp_node = axiom_node_get_first_child (payload_node, env);
+                                while (tmp_node) 
 								{
-                                    /** detach this node */
-                                    axiom_node_t *text_node = NULL;
-                                    axiom_text_t *text = NULL;
-                                    axiom_data_handler_t *data_handler = NULL;
-                                    axiom_node_detach (node, env);
+                                    axiom_node_t *next_tmp_node = NULL;
+                                    next_tmp_node = axiom_node_get_next_sibling (tmp_node, env);
 
-                                    tmp_node = axiom_node_get_first_child (payload_node, env);
-                                    while (tmp_node) 
-									{
-                                        axiom_node_t *next_tmp_node = NULL;
-                                        next_tmp_node = axiom_node_get_next_sibling (tmp_node, env);
+                                    axiom_node_free_tree(tmp_node, env);
 
-                                        axiom_node_free_tree(tmp_node, env);
-
-                                        tmp_node = next_tmp_node;
-                                    }
-
-                                    data_handler = axiom_data_handler_create (env, NULL, cnt_type);
-                                    axiom_data_handler_set_binary_data (data_handler, env, binary_data,
-                                        binary_data_len);
-                                    text = axiom_text_create_with_data_handler
-                                        (env, payload_node, data_handler, &text_node);
-
-                                    if (enable_swa) 
-									{
-                                        axiom_text_set_is_swa(text, env, AXIS2_TRUE);
-                                    }
-
-                                    if (enable_mtom == AXIS2_FALSE) 
-									{
-                                        axiom_text_set_optimize (text, env,
-                                            AXIS2_FALSE);
-                                    }
-                                    return;
+                                    tmp_node = next_tmp_node;
                                 }
+								if(WSF_GLOBAL(enable_attachment_caching))
+								{	/** If attachment caching is enabled, user will set the file name
+									instead of the binary data */
+									axis2_char_t *filename = Z_STRVAL_PP(tmp);
+									if(axutil_file_handler_access(filename, AXIS2_R_OK))
+									{
+											data_handler = axiom_data_handler_create(env, filename, cnt_type);
+									}
+								}else
+								{
+									void *binary_data = NULL;
+									int binary_data_len = 0;
+
+									binary_data_len = Z_STRLEN_PP (tmp);
+									binary_data = AXIS2_MALLOC (env->allocator, sizeof (char) * binary_data_len);
+
+									memcpy (binary_data, Z_STRVAL_PP (tmp), binary_data_len);
+									if(binary_data)
+									{
+									/** attachment caching is not enabled, user provides binary data directly */
+										data_handler = axiom_data_handler_create (env, NULL, cnt_type);
+
+										axiom_data_handler_set_binary_data (data_handler, env, binary_data,
+											binary_data_len);
+									}
+								}
+                                text = axiom_text_create_with_data_handler
+                                    (env, payload_node, data_handler, &text_node);
+
+                                if (enable_swa) 
+								{
+                                    axiom_text_set_is_swa(text, env, AXIS2_TRUE);
+                                }
+
+                                if (enable_mtom == AXIS2_FALSE) 
+								{
+                                    axiom_text_set_optimize (text, env,
+                                        AXIS2_FALSE);
+                                }
+                                return;
                             }
                         }
                     }
@@ -952,11 +964,22 @@ int wsf_util_get_attachments_from_soap_envelope (
                     char *cnt_type = NULL;
                     char *data = NULL;
                     int data_len = 0;
+					if(!axiom_data_handler_get_cached(data_handler, env))
+					{
+						axiom_data_handler_read_from (data_handler, env, &data, &data_len);
+	                    add_assoc_stringl (cid2str, cid, data, data_len, 1);
+					}else
+					{
+						data = axiom_data_handler_get_file_name(data_handler, env);
+						if(data)
+						{
+							data_len = strlen(data);
+						}
+						add_assoc_stringl(cid2str, cid, data, data_len, 1);
+					}
 
-                    axiom_data_handler_read_from (data_handler, env, &data, &data_len);
-                    cnt_type = axiom_data_handler_get_content_type(data_handler, env);
-                    add_assoc_stringl (cid2str, cid, data, data_len, 1);
-                    attachments_found = 1;
+					cnt_type = axiom_data_handler_get_content_type(data_handler, env);
+					attachments_found = 1;
                     if (cnt_type) {
                         add_assoc_stringl (cid2contentType, cid,
                             cnt_type, strlen (cnt_type), 1);

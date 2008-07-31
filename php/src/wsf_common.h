@@ -327,6 +327,9 @@ typedef struct wsf_svc_info
   char *auth_password;
   /** http_auth_type */
   char* auth_type;
+
+  char *attachment_cache_dir;
+  int enable_attachment_caching;
 }
 wsf_svc_info_t;
 

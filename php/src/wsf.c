@@ -34,6 +34,7 @@
 #include <axiom_soap.h>
 #include <axis2_http_transport.h>
 #include <axis2_addr.h>
+#include <axis2_const.h>
 #include <axiom_util.h>
 #include "wsf_client.h"
 #include "wsf_policy.h"
@@ -266,7 +267,12 @@ STD_PHP_INI_ENTRY ("wsf.log_path", WSF_TMP, PHP_INI_ALL,
 STD_PHP_INI_ENTRY ("wsf.log_level", "4", PHP_INI_ALL, 
         OnUpdateLong, log_level, zend_wsf_globals, wsf_globals)
 STD_PHP_INI_ENTRY ("wsf.rm_db_dir", WSF_TMP, PHP_INI_ALL,
-    OnUpdateString, rm_db_dir, zend_wsf_globals, wsf_globals)  
+	    OnUpdateString, rm_db_dir, zend_wsf_globals, wsf_globals)  
+STD_PHP_INI_ENTRY ("wsf.attachment_cache_dir", WSF_TMP, PHP_INI_ALL,
+		OnUpdateString, attachment_cache_dir, zend_wsf_globals, wsf_globals)  
+STD_PHP_INI_ENTRY ("wsf.enable_attachment_caching", "0", PHP_INI_ALL, 
+	   OnUpdateLong, enable_attachment_caching, zend_wsf_globals, wsf_globals)
+
 PHP_INI_END () 
 /* }}} */ 
     
@@ -281,6 +287,8 @@ static void ws_init_globals (zend_wsf_globals * wsf_globals)
     wsf_globals->soap_uri = AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
     wsf_globals->rm_db_dir = NULL;
     wsf_globals->curr_ns_index = 0;
+	wsf_globals->attachment_cache_dir = NULL;
+	wsf_globals->enable_attachment_caching = 0;
 } 
 
 /* }}} */ 
@@ -671,9 +679,21 @@ PHP_METHOD (ws_client, __construct)
         if (!ht) return;
 	/** add properties defined in API doc */
         wsf_client_add_properties (obj, ht TSRMLS_CC);
-
-
     }
+	if(WSF_GLOBAL(enable_attachment_caching))
+	{
+		axis2_svc_ctx_t *svc_ctx = NULL;
+		axis2_conf_ctx_t *conf_ctx = NULL;
+		axutil_param_t *cache_dir = NULL;
+		axis2_conf_t *conf = NULL;
+		svc_ctx = axis2_svc_client_get_svc_ctx (svc_client, env);
+		conf_ctx = axis2_svc_ctx_get_conf_ctx (svc_ctx, env);
+		conf = axis2_conf_ctx_get_conf (conf_ctx, env);
+
+		cache_dir = axutil_param_create (env, AXIS2_ATTACHMENT_DIR, 
+			axutil_strdup(env, WSF_GLOBAL(attachment_cache_dir)));
+		axis2_conf_add_param (conf, env, cache_dir);
+	}
 }
 /* }}} */ 
     
@@ -1461,6 +1481,8 @@ PHP_METHOD (ws_service, reply)
     
     svc_info = (wsf_svc_info_t *) (intern->ptr);
     
+	svc_info->attachment_cache_dir = WSF_GLOBAL(attachment_cache_dir);
+	svc_info->enable_attachment_caching = WSF_GLOBAL(enable_attachment_caching);
     php_worker = svc_info->php_worker;
     
     conf_ctx = wsf_worker_get_conf_ctx (php_worker, ws_env_svr);
@@ -1471,6 +1493,8 @@ PHP_METHOD (ws_service, reply)
 			"Error building the configuration, please check your php.ini entries");
         return;
     }
+
+	
 
     zend_is_auto_global ("_SERVER", sizeof ("_SERVER") - 1 TSRMLS_CC);
     

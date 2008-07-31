@@ -214,7 +214,71 @@ static void wsf_worker_send_mtom_message(
 			if((mime_part->type) == AXIOM_MIME_PART_BUFFER)
 			{
 				php_write(mime_part->part, mime_part->part_size TSRMLS_CC);
-			}    
+			}
+			if((mime_part->type) == AXIOM_MIME_PART_FILE)
+			{
+				int count = 0;     
+				int len = 0;
+				FILE *f = NULL;
+				axis2_byte_t *output_buffer = NULL;                
+				int output_buffer_size = 0;
+
+				f = fopen(mime_part->file_name, "rb");
+				if (!f)
+				{
+					AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Error opening file %s for reading",
+						mime_part->file_name);
+					return ;
+				}
+				if(mime_part->part_size > AXIS2_MTOM_OUTPUT_BUFFER_SIZE)
+				{
+					output_buffer_size = AXIS2_MTOM_OUTPUT_BUFFER_SIZE;
+				}
+				else
+				{
+					output_buffer_size = mime_part->part_size;
+				}
+				output_buffer =  AXIS2_MALLOC(env->allocator, 
+					(output_buffer_size + 1) * sizeof(axis2_char_t));
+
+				do
+				{
+					count = (int)fread(output_buffer, 1, output_buffer_size + 1, f);
+					if (ferror(f))
+					{
+						AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Error in reading file containing the attachment");
+						if (output_buffer)
+						{
+							AXIS2_FREE(env->allocator, output_buffer);
+							output_buffer = NULL;
+						}
+						fclose(f);
+						return;
+					}
+
+					if(count > 0)
+					{
+						php_write(output_buffer, count TSRMLS_CC);
+						
+					}
+					else
+					{
+						if (output_buffer)
+						{
+							AXIS2_FREE(env->allocator, output_buffer);
+							output_buffer = NULL;
+						}
+						fclose(f);
+						return;
+					}   
+					memset(output_buffer, 0, output_buffer_size);    
+				}
+				while(!feof(f));
+
+				fclose(f);
+				AXIS2_FREE(env->allocator, output_buffer);
+
+			}
 		}
 	}
 }
@@ -343,6 +407,14 @@ wsf_worker_process_request (
     
 	op = wsf_worker_find_op_and_params_with_location_and_method(env, 
 					request->request_method, svc_info,request,msg_ctx);
+
+	if(svc_info->enable_attachment_caching)
+	{
+		axutil_param_t *cache_dir = NULL;
+		cache_dir = axutil_param_create(env, AXIS2_ATTACHMENT_DIR, 
+			axutil_strdup(env, svc_info->attachment_cache_dir));
+		axis2_svc_add_param(svc_info->svc, env, cache_dir);
+	}
 
 	if(op)
 	{
