@@ -398,6 +398,8 @@ class WS_WSDL_Type
                                     [type] => MatrixAdd
                                     [array] =>
                                     [object] => object
+                                    [min] => 1
+                                    [max] => 3
                                 )
                         )
                     [Out] => Array
@@ -407,6 +409,8 @@ class WS_WSDL_Type
                                     [type] => MatrixAddResponse
                                     [array] =>
                                     [object] => object
+                                    [min] => 1
+                                    [max] => 3
                                 )
                         )
                 )
@@ -472,13 +476,27 @@ class WS_WSDL_Type
                         $element_ele = $wsdl_doc->createElementNS(WS_WSDL_Const::WS_SOAP_XML_SCHEMA_NAMESPACE,
                                                           WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME);
                         $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $paramName);
-                        if($paramValue["array"] == "array")
+                        
+                        // listen to the min and max settings
+                        if($paramValue["min"] && is_numeric($paramValue["min"]) && $paramValue["min"] != 1) {
+                            $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_ATTR_MIN_OCCURS, $paramValue["min"]);
+                        }
+
+                        if($paramValue["max"]) {
+                            // listen to the min and max settings
+                            if(is_numeric($paramValue["max"]) && $paramValue["max"] != 1) {
+                                $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_ATTR_MAX_OCCURS, $paramValue["max"]);
+                            }
+                            else if($paramValue["max"] == WS_WSDL_Const::WS_WSDL_ATTR_VALUE_UNBOUNDED){
+                                $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_ATTR_MAX_OCCURS, WS_WSDL_Const::WS_WSDL_ATTR_VALUE_UNBOUNDED);
+                            }
+                        }
+                        else if($paramValue["array"] == "array")
                         {
                             $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_ATTR_MAX_OCCURS, WS_WSDL_Const::WS_WSDL_ATTR_VALUE_UNBOUNDED);
                         }
                         
-                        if($paramValue["object"] == "object")
-                        {
+                        if($paramValue["object"] == "object") {
                             $object_return = $this->createSchemaType($wsdl_doc, $types_ele, $xsd_type);
                             
                             $object_prefix = $object_return["prefix"];
@@ -575,7 +593,22 @@ class WS_WSDL_Type
                         $element_ele = $wsdl_doc->createElementNS(WS_WSDL_Const::WS_SOAP_XML_SCHEMA_NAMESPACE,
                                                           WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME);
                         $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $paramName);
-                        if($paramValue["array"] == "array")
+
+                        // listen to the min and max settings
+                        if($paramValue["min"] && is_numeric($paramValue["min"]) && $paramValue["min"] != 1) {
+                            $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_ATTR_MIN_OCCURS, $paramValue["min"]);
+                        }
+                        
+                        if($paramValue["max"]) {
+                            // listen to the min and max settings
+                            if(is_numeric($paramValue["max"]) && $paramValue["max"] != 1) {
+                                $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_ATTR_MAX_OCCURS, $paramValue["max"]);
+                            }
+                            else if($paramValue["max"] == WS_WSDL_Const::WS_WSDL_ATTR_VALUE_UNBOUNDED){
+                                $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_ATTR_MAX_OCCURS, WS_WSDL_Const::WS_WSDL_ATTR_VALUE_UNBOUNDED);
+                            }
+                        }
+                        else if($paramValue["array"] == "array")
                         {
                             $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_ATTR_MAX_OCCURS, WS_WSDL_Const::WS_WSDL_ATTR_VALUE_UNBOUNDED);
                         }
@@ -862,14 +895,17 @@ class WS_WSDL_Type
                 $object = FALSE;
                 $php_type = "string"; //default to string
                 $xsd_type = "string";
+                $min_max_occurs = NULL;
 
-                if(preg_match_all('|@var\s+(?:(array)\s+of\s+)?(?:(object)\s+)?(\w+)\s+(.*)|', $property_comment,
+                if(preg_match_all('|@var\s+(?:(\[\s*\d*\s*,\s*[^\]]*\s*\])\s+)?(?:(array)\s+of\s+)?(?:(object)\s+)?(\w+)\s+(.*)|', $property_comment,
                                               $matches, PREG_SET_ORDER))
                 {
-                    $array = $matches[0][1];
-                    $object = $matches[0][2];
-                    $php_type = $matches[0][3];
+                    $min_max_occurs = $matches[0][1];
+                    $array = $matches[0][2];
+                    $object = $matches[0][3];
+                    $php_type = $matches[0][4];
                 }
+
                 /* xsd type is optional */
                 if(preg_match_all('|xs:?(\w+).*|', $property_comment, $matches, PREG_SET_ORDER))
                 {
@@ -884,7 +920,35 @@ class WS_WSDL_Type
                 $element_ele = $wsdl_doc->createElementNS(WS_WSDL_Const::WS_SOAP_XML_SCHEMA_NAMESPACE,
                                                   WS_WSDL_Const::WS_WSDL_ELEMENT_ATTR_NAME);
                 $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $name);
-                if($array == "array")
+
+                // listen to the min and max settings
+
+                // the default is set to 1
+                $min_value = NULL;
+                $max_value = NULL;
+                if($min_max_occurs && !empty($min_max_occurs)) {
+                    $result = NULL;
+                    preg_match_all("|\[\s*(\d*)\s*,\s*([^\]]*)\s*\]|", $min_max_occurs,
+                            $result, PREG_PATTERN_ORDER);
+
+                    $min_value = $result[1][0];
+                    $max_value = $result[2][0];
+
+                }
+                if($min_value && is_numeric($min_value) && $min_value != 1) {
+                    $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_ATTR_MIN_OCCURS, $min_value);
+                }
+
+                if($max_value) {
+                    // listen to the min and max settings
+                    if(is_numeric($max_value) && $max_value != 1) {
+                        $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_ATTR_MAX_OCCURS, $max_value);
+                    }
+                    else if($max_value == WS_WSDL_Const::WS_WSDL_ATTR_VALUE_UNBOUNDED){
+                        $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_ATTR_MAX_OCCURS, WS_WSDL_Const::WS_WSDL_ATTR_VALUE_UNBOUNDED);
+                    }
+                }
+                else if($array == "array")
                 {
                     $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_ATTR_MAX_OCCURS, WS_WSDL_Const::WS_WSDL_ATTR_VALUE_UNBOUNDED);
                 }

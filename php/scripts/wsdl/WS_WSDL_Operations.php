@@ -189,48 +189,93 @@ class WS_WSDL_Operations
             }
             $j = 0;
             $k = 0;
-            if(preg_match_all('|@param\s+(?:(array)\s+of\s+)?(?:(object)\s+)?(\w+)\s+\$(\w+)\s+(.*)|', $doc_comment,
-                              $matches, PREG_SET_ORDER))
+            if(preg_match_all(
+                    '|@param\s+(?:(\[\s*\d*\s*,[^\]]*\])\s+)?(?:(array)\s+of\s+)?(?:(object)\s+)?(\w+)\s+\$(\w+)\s+(.*)|',
+                    $doc_comment,
+                    $matches, PREG_SET_ORDER))
             {
                 $this->xsdTypes[$operationName][self::WS_OPERATION_INPUT_TAG] = array();
                 foreach($matches as $match)
                 {
-                    $j++;
-                    $this->createdTypes[$match[3]] = 1;
-                    $this->phpMapArry[$j] = $match[3];
+                    $min_max_occurs = $match[1];
+                    $is_array = $match[2];
+                    $is_object = $match[3];
+                    $type_name = $match[4];
+                    $element_name = $match[5];
 
-                    if($match[2] == "object")
+                    // the default is set to NULL
+                    $min = NULL;
+                    $max = NULL;
+                    if($min_max_occurs && !empty($min_max_occurs)) {
+                        $result = NULL;
+                        preg_match_all("|\[\s*(\d*)\s*,\s*([^\]]*)\s*\]|", $min_max_occurs,
+                                $result, PREG_PATTERN_ORDER);
+
+                        $min = $result[1][0];
+                        $max = $result[2][0];
+
+                    }
+
+                    $j++;
+                    $this->createdTypes[$type_name] = 1;
+                    $this->phpMapArry[$j] = $type_name;
+
+                    if($is_object == "object")
                     {
-                        $releventType = $match[3];
+                        $releventType = $type_name;
                     }
                     else
                     {
                         $k++;
                         $releventType = $this->checkValidTypes($j, $k);
                     } 
-                    $this->xsdTypes[$operationName][self::WS_OPERATION_INPUT_TAG][$match[4]] = array("type"=>$releventType,
-                                                                             "array" => $match[1],
-                                                                             "object"=> $match[2]);
+                    $this->xsdTypes[$operationName][self::WS_OPERATION_INPUT_TAG][$element_name] = array("type"=>$releventType,
+                                                                             "array" => $is_array,
+                                                                             "object"=> $is_object,
+                                                                             "min" => $min,
+                                                                             "max" => $max);
 
                     
+                    // the following information is used in building the message element
                     $this->operations[$operationName][self::WS_OPERATION_INPUT_TAG][] =
-                        array(self::WS_OPERATION_NAME_TAG => $match[4],
+                        array(self::WS_OPERATION_NAME_TAG => $element_name,
                               self::WS_OPERATION_TYPE_TAG => $releventType,
-                              "array" => $match[1],
-                              "object"=> $match[2]);
+                              "object"=> $is_object);
+
+                }
+            }
+
+            if(preg_match(
+                '|@return\s+(?:(\[\s*\d*\s*,\s*[^\]]*\])\s+)?(?:(array)\s+of\s+)?(?:(object)\s+)?(\w+)\s+\$(\w+)\s+(.*)|',
+                $doc_comment, $match_r))
+            {
+
+                $min_max_occurs = $match_r[1];
+                $is_array = $match_r[2];
+                $is_object = $match_r[3];
+                $type_name = $match_r[4];
+                $element_name = $match_r[5];
+
+                // the default is set to NULL
+                $min = NULL;
+                $max = NULL;
+
+                if($min_max_occurs && !empty($min_max_occurs)) {
+                    $result = NULL;
+                    preg_match_all("|\[\s*(\d*)\s*,\s*([^\]]*)\s*\]|", $min_max_occurs,
+                            $result, PREG_PATTERN_ORDER);
+
+                    $min = $result[1][0];
+                    $max = $result[2][0];
 
                 }
 
-            }
-
-            if(preg_match('|@return\s+(?:(array)\s+of\s+)?(?:(object)\s+)?(\w+)\s+\$(\w+)\s+(.*)|', $doc_comment, $match_r))
-            {
                 $j++;
-                $this->phpMapArry[$j] = $match_r[3];
+                $this->phpMapArry[$j] = $type_name;
 
-                if($match_r[2] == "object")
+                if($is_object == "object")
                 {
-                    $returnType = $match_r[3];
+                    $returnType = $type_name;
                 }
                 else
                 {
@@ -238,18 +283,20 @@ class WS_WSDL_Operations
                     $returnType = $this->checkValidTypes($j, $k);
                 } 
 
-                $this->xsdTypes[$operationName][self::WS_OPERATION_OUTPUT_TAG][$match_r[4]] = array("type"=>$returnType,
-                                                                             "array" => $match_r[1],
-                                                                             "object"=> $match_r[2]);
+                $this->xsdTypes[$operationName][self::WS_OPERATION_OUTPUT_TAG][$element_name] = array("type"=>$returnType,
+                                                                             "array" => $is_array,
+                                                                             "object"=> $is_object,
+                                                                             "min" => $min,
+                                                                             "max" => $max);
 
-                $this->createdTypes[$match_r[3]] = 1;
+                $this->createdTypes[$type_name] = 1;
 
 
+                // the following information is used in building the message element
                 $this->operations[$operationName][self::WS_OPERATION_OUTPUT_TAG][] =
                     array(self::WS_OPERATION_NAME_TAG => self::WS_OPERATION_RET_TAG,
                           self::WS_OPERATION_TYPE_TAG => $returnType,
-                          "array" => $match_r[1],
-                          "object"=> $match_r[2]);
+                          "object"=> $is_object);
 
             }
         }

@@ -143,6 +143,7 @@ function wsf_create_payload_for_array(DomDocument $payload_dom,
     }
 
 
+    $classmap = NULL;
     if($sig_node->hasAttributes()) {
         wsf_build_content_model($sig_node, $user_arguments, $parent_node,
             $payload_dom,  $root_node, $classmap, $prefix_i, $namespace_map, $mtom_on, $attachement_map);

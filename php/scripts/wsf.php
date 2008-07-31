@@ -166,7 +166,7 @@ function ws_generate_wsdl($service_name, $fn_arry, $class_arry, $binding_style,
 
     /* converting wsdl1.1 to 2 */
     if(strcmp($wsdl_version , WS_WSDL_Const::WSF_WSDL_VERSION2_0) == 0) {
-        $converted_wsdl = convert_to_wsdl20($wsdl_out);
+        $converted_wsdl = ws_convert_to_wsdl20($wsdl_out);
         return $converted_wsdl;
     }
     else
@@ -176,7 +176,7 @@ function ws_generate_wsdl($service_name, $fn_arry, $class_arry, $binding_style,
 }
 
 
-function convert_to_wsdl20($wsdl_out)
+function ws_convert_to_wsdl20($wsdl_out)
 {
     $wsdl_dom = new DomDocument();
     $xslt_wsdl_20_dom = new DOMDocument();
@@ -200,7 +200,6 @@ function convert_to_wsdl20($wsdl_out)
     foreach($doc_ele->childNodes as $child) {
         if($child->nodeType == XML_COMMENT_NODE ) {
            $old_child = $doc_ele->removeChild($child); 
-            //echo "asdasd";
         }
     }
     

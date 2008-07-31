@@ -146,6 +146,7 @@ class WS_WSDL_Const
     const WS_WSDL_OUTPUT = 'output';
 
     const WS_WSDL_ATTR_MAX_OCCURS = "maxOccurs";
+    const WS_WSDL_ATTR_MIN_OCCURS = "minOccurs";
     const WS_WSDL_ATTR_VALUE_UNBOUNDED = "unbounded";
 
     const WS_WSDL_SCHEMA_TYPE_DEFAULT_NS = "http://www.wso2.org/php/xsd";
