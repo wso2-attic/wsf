@@ -280,6 +280,7 @@ static void wsf_worker_send_mtom_message(
 
 			}
 		}
+		axis2_http_transport_utils_destroy_mime_parts(mime_parts, env);
 	}
 }
 
