@@ -199,7 +199,11 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-transports</artifactId>
+			<version>${axis2.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>annogen</groupId>
 			<artifactId>annogen</artifactId>
