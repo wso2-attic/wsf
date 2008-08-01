@@ -442,7 +442,10 @@ wsf_worker_process_request (
 	out_transport_info = wsf_out_transport_info_create (env, response);
 
 	transport_in.out_transport_info = out_transport_info;
-	transport_in.transfer_encoding = request->transfer_encoding;
+	if(request->transfer_encoding)
+		{
+			transport_in.transfer_encoding = axutil_strdup(env,request->transfer_encoding);
+		}
 	transport_in.remote_ip = request->remote_address;
     
     /** use MTOM property */ 
@@ -450,14 +453,7 @@ wsf_worker_process_request (
 	{
         axis2_msg_ctx_set_doing_mtom (msg_ctx, env, AXIS2_TRUE);
     }
-/*
-    if (svc_info->security_token && (svc_info->policy || svc_info->op_policies)) 
-	{
-        axis2_conf_t * conf = NULL;
-        conf = axis2_conf_ctx_get_conf (worker->conf_ctx, env);
-        wsf_policy_handle_server_security (svc_info, env, conf TSRMLS_CC);
-    }
-  */  
+
 	transport_in.soap_action = request->soap_action;
 
 	in_stream = wsf_stream_create (env, request TSRMLS_CC);
@@ -560,7 +556,6 @@ wsf_worker_process_request (
             axis2_msg_ctx_free(out_msg_ctx, env);
             msg_ctx_map[AXIS2_WSDL_MESSAGE_LABEL_OUT] = NULL;
         }
-	/*
         if (in_msg_ctx)
         {
             msg_id = axutil_strdup(env, axis2_msg_ctx_get_msg_id(in_msg_ctx, env));
@@ -578,8 +573,6 @@ wsf_worker_process_request (
             }
             axis2_op_ctx_free(op_ctx, env);
         }
-      */  
-        
     }
 
     if(in_stream)
