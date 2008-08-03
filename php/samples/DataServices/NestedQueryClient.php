@@ -21,7 +21,7 @@ $requestPayloadString = <<<XML
 XML;
 
 try {
-    $client = new WSClient(array( "to" => "http://localhost/solutions/DataServices/samples/NestedQueryService.php"));
+    $client = new WSClient(array( "to" => "http://localhost/samples/DataServices/NestedQueryService.php"));
     $responseMessage = $client->request( $requestPayloadString );
     printf("Response = %s <br>", htmlspecialchars($responseMessage->str));
 
