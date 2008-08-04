@@ -1,0 +1,52 @@
+
+==============
+Listen Port: 9090
+Target Host: 127.0.0.1
+Target Port: 8080
+==== Request ====
+POST /axis2/services/sec_echo/echoString HTTP/1.1
+User-Agent: Axis2/C
+Content-Length: 1105
+Content-Type: application/soap+xml;charset=UTF-8
+Host: 127.0.0.1:9090
+
+<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope">
+   <soapenv:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+      <wsa:To>http://localhost:9090/axis2/services/sec_echo/echoString</wsa:To>
+      <wsa:Action>http://example.com/ws/2004/09/policy/Test/EchoRequest</wsa:Action>
+      <wsa:MessageID>6ca9b846-5909-1dc1-227e-000000000000</wsa:MessageID>
+      <wsse:Security soapenv:mustUnderstand="1" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+         <wsse:UsernameToken xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+            <wsse:Username>Alice</wsse:Username>
+            <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest">YOzgvuwW5n44c6QBdScsoVZO7i0=</wsse:Password>
+            <wsse:Nonce>2HYF0Rf8D2ZNnNywaHQnRg==</wsse:Nonce>
+            <wsu:Created>2007-09-02T04:03:12.723Z</wsu:Created>
+         </wsse:UsernameToken>
+      </wsse:Security>
+   </soapenv:Header>
+   <soapenv:Body>
+      <ns1:echoIn xmlns:ns1="http://ws.apache.org/rampart/c/samples">
+         <text>Hello</text>
+      </ns1:echoIn>
+   </soapenv:Body></soapenv:Envelope>==== Response ====
+HTTP/1.1 200 OK
+Content-Type: application/soap+xml;charset=UTF-8
+Content-Length: 845
+
+<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope">
+   <soapenv:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+      <wsa:Action>http://example.com/ws/2004/09/policy/Test/EchoRequest</wsa:Action>
+      <wsa:From>
+         <wsa:Address>http://localhost:9090/axis2/services/sec_echo/echoString</wsa:Address>
+      </wsa:From>
+      <wsa:MessageID>6cb86f3a-5909-1dc1-2cfd-000000000000</wsa:MessageID>
+      <wsa:RelatesTo wsa:RelationshipType="http://www.w3.org/2005/08/addressing/reply">6ca9b846-5909-1dc1-227e-000000000000</wsa:RelatesTo>
+      <wsse:Security soapenv:mustUnderstand="1" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"/>
+   </soapenv:Header>
+   <soapenv:Body>
+      <ns1:RecievedNode xmlns:ns1="http://ws.apache.org/axis2/rampart/samples">
+         <LocalName>echoIn</LocalName>
+      </ns1:RecievedNode>
+   </soapenv:Body></soapenv:Envelope>
+
+==============

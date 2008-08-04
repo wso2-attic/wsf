@@ -1,0 +1,181 @@
+
+==============
+Listen Port: 9090
+Target Host: 127.0.0.1
+Target Port: 8080
+==== Request ====
+POST /axis2/services/sec_echo/echoString HTTP/1.1
+User-Agent: Axis2/C
+Content-Length: 9410
+Content-Type: application/soap+xml;charset=UTF-8
+Host: 127.0.0.1:9090
+
+<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope">
+   <soapenv:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+      <wsa:To wsu:Id="SigID-af4e25e0-980d-1dc1" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">http://localhost:9090/axis2/services/sec_echo/echoString</wsa:To>
+      <wsa:Action wsu:Id="SigID-af4e2702-980d-1dc1" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">http://example.com/ws/2004/09/policy/Test/EchoRequest</wsa:Action>
+      <wsa:MessageID wsu:Id="SigID-af4e2798-980d-1dc1" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">af4dbcea-980d-1dc1-2a52-0013ce8f2fc7</wsa:MessageID>
+      <wsse:Security soapenv:mustUnderstand="1" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+         <wsu:Timestamp wsu:Id="SigID-af4e2892-980d-1dc1" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+            <wsu:Created>2007-11-21T08:42:25.738Z</wsu:Created>
+            <wsu:Expires>2007-11-21T08:48:25.738Z</wsu:Expires>
+         </wsu:Timestamp>
+         <wsse:UsernameToken wsu:Id="SigID-af4e2914-980d-1dc1" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+            <wsse:Username>Alice</wsse:Username>
+            <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest">y4yi17MbbHOodmewIBmy9XUy7y4=</wsse:Password>
+            <wsse:Nonce>0hJCqTv3qvc9YdgEYPzlCeQLxU2Qe+uI</wsse:Nonce>
+            <wsu:Created>2007-11-21T08:42:25.738Z</wsu:Created>
+         </wsse:UsernameToken>
+         <xenc:EncryptedKey Id="EncKeyID-af4e1d20-980d-1dc1" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
+            <xenc:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p"/>
+            <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+               <wsse:SecurityTokenReference xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+                  <wsse:KeyIdentifier EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary" ValueType="http://docs.oasis-open.org/wss/oasis-wss-soap-message-security-1.1#ThumbprintSHA1">NQM0IBvuplAtETQvk+6gn8C13wE=</wsse:KeyIdentifier>
+               </wsse:SecurityTokenReference>
+            </ds:KeyInfo>
+            <xenc:CipherData>
+               <xenc:CipherValue>k3ZHhUwedU7GvVFGeZY6mfs8kNzxI1UjQayfPLA6xMAFkbEs/s/dYkz034rTPATF6RVKW9rHB68sq9st3EsoY0xH/VGL7oThYBjaKuAHrAFYwXRrzSARJn5xIP4ugfr+iBUTdlOu9DnyQhFIcz5JE2hlb0DCgq1RV43hDjJyZHw=</xenc:CipherValue>
+            </xenc:CipherData>
+         </xenc:EncryptedKey>
+         <wsc:DerivedKeyToken wsu:Id="DKID-af4e8210-980d-1dc1" xmlns:wsc="http://schemas.xmlsoap.org/ws/2005/02/sc" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+            <wsse:SecurityTokenReference xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+               <wsse:Reference URI="#EncKeyID-af4e1d20-980d-1dc1" ValueType="http://docs.oasis-open.org/wss/oasis-wss-soap-message-security-1.1#EncryptedKey"/>
+            </wsse:SecurityTokenReference>
+            <wsc:Offset>0</wsc:Offset>
+            <wsc:Length>32</wsc:Length>
+            <wsc:Nonce>MRT0fr/s9l8VX2W29yNyPQ==</wsc:Nonce>
+         </wsc:DerivedKeyToken>
+         <wsc:DerivedKeyToken wsu:Id="DKID-af4e2ae0-980d-1dc1" xmlns:wsc="http://schemas.xmlsoap.org/ws/2005/02/sc" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+            <wsse:SecurityTokenReference xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+               <wsse:Reference URI="#EncKeyID-af4e1d20-980d-1dc1" ValueType="http://docs.oasis-open.org/wss/oasis-wss-soap-message-security-1.1#EncryptedKey"/>
+            </wsse:SecurityTokenReference>
+            <wsc:Offset>0</wsc:Offset>
+            <wsc:Length>32</wsc:Length>
+            <wsc:Nonce>JiVQPVi+ZLTup4FXj+09nQ==</wsc:Nonce>
+         </wsc:DerivedKeyToken>
+         <wsc:DerivedKeyToken wsu:Id="DKID-af4de8be-980d-1dc1" xmlns:wsc="http://schemas.xmlsoap.org/ws/2005/02/sc" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+            <wsse:SecurityTokenReference xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+               <wsse:Reference URI="#EncKeyID-af4e1d20-980d-1dc1" ValueType="http://docs.oasis-open.org/wss/oasis-wss-soap-message-security-1.1#EncryptedKey"/>
+            </wsse:SecurityTokenReference>
+            <wsc:Offset>0</wsc:Offset>
+            <wsc:Length>32</wsc:Length>
+            <wsc:Nonce>Boh4PrB9KV+W2jRru5Vd0g==</wsc:Nonce>
+         </wsc:DerivedKeyToken>
+         <xenc:ReferenceList xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
+            <xenc:DataReference URI="#EncDataID-af4e8274-980d-1dc1"/>
+         </xenc:ReferenceList>
+         <xenc:EncryptedData Type="http://www.w3.org/2001/04/xmlenc#Element" Id="EncDataID-af4e8274-980d-1dc1" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
+            <xenc:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes256-cbc"/>
+            <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+               <wsse:SecurityTokenReference xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+                  <wsse:Reference URI="#DKID-af4e8210-980d-1dc1"/>
+               </wsse:SecurityTokenReference>
+            </ds:KeyInfo>
+            <xenc:CipherData>
+               <xenc:CipherValue>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</xenc:CipherValue>
+            </xenc:CipherData>
+         </xenc:EncryptedData>
+         <xenc:ReferenceList xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
+            <xenc:DataReference URI="#EncDataID-af4de99a-980d-1dc1"/>
+         </xenc:ReferenceList>
+      </wsse:Security>
+   </soapenv:Header>
+   <soapenv:Body wsu:Id="SigID-af4e281a-980d-1dc1" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+      <xenc:EncryptedData Type="http://www.w3.org/2001/04/xmlenc#Element" Id="EncDataID-af4de99a-980d-1dc1" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
+         <xenc:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes256-cbc"/>
+         <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+            <wsse:SecurityTokenReference xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+               <wsse:Reference URI="#DKID-af4de8be-980d-1dc1"/>
+            </wsse:SecurityTokenReference>
+         </ds:KeyInfo>
+         <xenc:CipherData>
+            <xenc:CipherValue>94jgp4pEtBpN8Fb4NXNIjlXfb2N0XEedEJnp/8CztQ6B6lVOVQ/gh6ol70N6GUOyf8Zke1AwOhKIuQCP+Qsuf3d6/ynxmDtVtrP5GVb3ZXfxDzwqVh3KC5gMRKy3HVn98FpfLPnsVAk5aofxcpCfkg==</xenc:CipherValue>
+         </xenc:CipherData>
+      </xenc:EncryptedData>
+   </soapenv:Body></soapenv:Envelope>==== Response ====
+HTTP/1.1 200 OK
+Content-Type: application/soap+xml;charset=UTF-8
+Content-Length: 7193
+
+<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope">
+   <soapenv:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+      <wsa:Action>http://example.com/ws/2004/09/policy/Test/EchoRequest</wsa:Action>
+      <wsa:From>
+         <wsa:Address>http://localhost:9090/axis2/services/sec_echo/echoString</wsa:Address>
+      </wsa:From>
+      <wsa:MessageID>af5e1612-980d-1dc1-395c-0013ce8f2fc7</wsa:MessageID>
+      <wsa:RelatesTo wsa:RelationshipType="http://www.w3.org/2005/08/addressing/reply">af4dbcea-980d-1dc1-2a52-0013ce8f2fc7</wsa:RelatesTo>
+      <wsse:Security soapenv:mustUnderstand="1" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+         <wsu:Timestamp wsu:Id="SigID-af5e6cde-980d-1dc1" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+            <wsu:Created>2007-11-21T08:42:25.845Z</wsu:Created>
+            <wsu:Expires>2007-11-21T08:48:25.846Z</wsu:Expires>
+         </wsu:Timestamp>
+         <xenc:EncryptedKey Id="EncKeyID-af5e6676-980d-1dc1" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
+            <xenc:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p"/>
+            <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+               <wsse:SecurityTokenReference xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+                  <wsse:KeyIdentifier EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary" ValueType="http://docs.oasis-open.org/wss/oasis-wss-soap-message-security-1.1#ThumbprintSHA1">bg6I8267h0TUcPYvYE0D6k6+UJQ=</wsse:KeyIdentifier>
+               </wsse:SecurityTokenReference>
+            </ds:KeyInfo>
+            <xenc:CipherData>
+               <xenc:CipherValue>FQz70p3X//WBYirVCHWvYRmF8YP1I+537fbQmnUPc4b7fB1Vr9zGgzhhqr6UY9KjvTV70vlfnSWVjElWFDWIgMgWCiw5ImFuLeV0JnajUU0rSKGKwTAyvhmNofX+W/jrYCIO7EtAKKvJg165DGynK66SxFoMxz9mHESsovPD8KY=</xenc:CipherValue>
+            </xenc:CipherData>
+         </xenc:EncryptedKey>
+         <wsc:DerivedKeyToken wsu:Id="DKID-af5e9ede-980d-1dc1" xmlns:wsc="http://schemas.xmlsoap.org/ws/2005/02/sc" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+            <wsse:SecurityTokenReference xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+               <wsse:Reference URI="#EncKeyID-af5e6676-980d-1dc1" ValueType="http://docs.oasis-open.org/wss/oasis-wss-soap-message-security-1.1#EncryptedKey"/>
+            </wsse:SecurityTokenReference>
+            <wsc:Offset>0</wsc:Offset>
+            <wsc:Length>32</wsc:Length>
+            <wsc:Nonce>k8HJANdmMuCMdwj8SiORuA==</wsc:Nonce>
+         </wsc:DerivedKeyToken>
+         <wsc:DerivedKeyToken wsu:Id="DKID-af5e6f68-980d-1dc1" xmlns:wsc="http://schemas.xmlsoap.org/ws/2005/02/sc" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+            <wsse:SecurityTokenReference xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+               <wsse:Reference URI="#EncKeyID-af5e6676-980d-1dc1" ValueType="http://docs.oasis-open.org/wss/oasis-wss-soap-message-security-1.1#EncryptedKey"/>
+            </wsse:SecurityTokenReference>
+            <wsc:Offset>0</wsc:Offset>
+            <wsc:Length>32</wsc:Length>
+            <wsc:Nonce>Auh2Zu6U8y6f17XObQlp4Q==</wsc:Nonce>
+         </wsc:DerivedKeyToken>
+         <wsc:DerivedKeyToken wsu:Id="DKID-af5e3764-980d-1dc1" xmlns:wsc="http://schemas.xmlsoap.org/ws/2005/02/sc" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+            <wsse:SecurityTokenReference xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+               <wsse:Reference URI="#EncKeyID-af5e6676-980d-1dc1" ValueType="http://docs.oasis-open.org/wss/oasis-wss-soap-message-security-1.1#EncryptedKey"/>
+            </wsse:SecurityTokenReference>
+            <wsc:Offset>0</wsc:Offset>
+            <wsc:Length>32</wsc:Length>
+            <wsc:Nonce>C8+imM5I87+aPxYKGpvTVQ==</wsc:Nonce>
+         </wsc:DerivedKeyToken>
+         <xenc:ReferenceList xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
+            <xenc:DataReference URI="#EncDataID-af5e9f4c-980d-1dc1"/>
+         </xenc:ReferenceList>
+         <xenc:EncryptedData Type="http://www.w3.org/2001/04/xmlenc#Element" Id="EncDataID-af5e9f4c-980d-1dc1" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
+            <xenc:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes256-cbc"/>
+            <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+               <wsse:SecurityTokenReference xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+                  <wsse:Reference URI="#DKID-af5e9ede-980d-1dc1"/>
+               </wsse:SecurityTokenReference>
+            </ds:KeyInfo>
+            <xenc:CipherData>
+               <xenc:CipherValue>zdK04Va4UvqqGbEx+0oHHUYweD7WDv745Xi847wCQYBgx4p+Yh6jnZHGMWQDXmbTbSSnUT9DRwQgoh8AmviMZqES7/UzQeCVcqE/tipCiuRacUPgvTK6SOIgWXMO9bbA5pCXmn2yI7xmfdbLqx2ID16VhmTAzq+VvPlbSEP5p6DIHVD6tAQ002tdj50Vl9XFaoGdCTk7zs/sjjyY+r9RZNlHeqCCIkq/4l1J57e4xzYS1IGSxGS7vB1sGeBljc9GVHqOsPgD43LQoKNzzU4nHJb89MUDlmEjCQZuWcdHmoDSHGad3s1xYZkJm8zBmfghBcxXESszIfjD9fi82MeogE5aqy3L1kflwInpV/fXtb1RWQ71o1nQfmPb5lFr4aG5CTpgio9zmoqClT45f29/LShs6D4KV3UaedtFWhJRVtkL07Zb8zvUI2ByOwq+Vnhc7RfihCUodHB1BO79CZ5I8KGJgwLuYrj1IPO0DKkRCleTJxH3UR0vZv8YgA8FghlrX4r1ZDep4GHSGFH5wBu+IKtC8Os0fue3hp/kovzuXYepgIxBGHSc8AC+/8lWJ3lBkiagSIjPaC+dvFR5uXh31WbSoTQIFFYzzQD5HEDFb45vDViZeuf02UomvaHUJJxU+vbeflp5SMj1Fpc2OnTXosj/GmaX+4qL6lTtG8tSue/t01OZwURCn2WMyK3BkoYMnT/En6+Vz/JsHHKSPIS/ve4i+7oursBbw+9c9eDn1+XX2JzUbjHj6faIgCUl0F7CLUFqjA+XJW/c+Nm2EAyWdunx8RXgMnPVGZ6D9I22DMX2KNCoDWzEHzI0m9cPQ6yYgf1b54dDUTCJ6ptrGVjPkFCVD6nGC3umeckbpaK4uFGs6T4KIp85nzsu2nW81nsDd4ZT+W3wq2bQl3b9Wr+XXNrenlaaqU5ixJkI7BUS9WfhH9XcCT0FbQq3QTtF57NCHHVDKmpDfjmF5RMfcySTROnndgK1oUTkmaqdyllFJMk7MkfZg44//Scvmlh8gRqUgwLvD19t/bG3bQ9CG/a72UbI37h8WkwGn9dph63uKQ9B0XheJgGT8R1lXuUMsuTOtxP6I077lvLV1//If51HqpGoAgGK06fheL71vfataKEpTSgnRZ72GoM2ilc7Mwk0ltwb9VFIarnD3OBYToi+aSDgxx/TGizdzpHn6Lb0A1vR5JrdXc2wj6mU0OT+uxnCQ+2gR+n4/S97ERKVSiLQ2HuVKQS/aXrdS0CCW6N1cwrHXDzwxDiYZM73RlfyKAWWGTifvJDZPnrP9OlgJZhrkoZ8UHPgQHt2bvBw6MicN5v6FhT5fcrlMji9RwBhYm70SaQRgmFd2R0frTNzSlRZE5TPSb7UWSbq6GyZZ9jC9yCqwNj+qqbBtlC8vLbUHhYioP8qePS7AcpYrhcS72PV/HfeSEXKkDBJqEUhR1OgKr08+RxDUJ2ZlyAZRE0H3yW3e5MG5tm0NKEaAgt9URB9sgVrXBGWGYwNw+oL3vGOlKXms0U6sVMUWqRtcGxklgkAJ5CkuXz7HTMX0Q5oWJhNnf2UShlLvy3K8NAqjqq3P6M=</xenc:CipherValue>
+            </xenc:CipherData>
+         </xenc:EncryptedData>
+         <xenc:ReferenceList xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
+            <xenc:DataReference URI="#EncDataID-af5e37fa-980d-1dc1"/>
+         </xenc:ReferenceList>
+      </wsse:Security>
+   </soapenv:Header>
+   <soapenv:Body wsu:Id="SigID-af5e6be4-980d-1dc1" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+      <xenc:EncryptedData Type="http://www.w3.org/2001/04/xmlenc#Element" Id="EncDataID-af5e37fa-980d-1dc1" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
+         <xenc:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes256-cbc"/>
+         <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+            <wsse:SecurityTokenReference xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+               <wsse:Reference URI="#DKID-af5e3764-980d-1dc1"/>
+            </wsse:SecurityTokenReference>
+         </ds:KeyInfo>
+         <xenc:CipherData>
+            <xenc:CipherValue>fA4LR6Q7cWuMMf5/333luL2dDeYZX19bYqARxMOBgAYj+dsZEmuw/sebODr8Qs8zz3RSOgT5DPK8hG/QkMPPyJ89h/fUd0M7yasd4UVkMHhEqe0uFxflBONvOCjE2ieRWLXrRaEcEmPIju5kQVdKb/kh+FITSZIifetlBfY4e6XtSFAC8YazLNyafYZ7uZh5</xenc:CipherValue>
+         </xenc:CipherData>
+      </xenc:EncryptedData>
+   </soapenv:Body></soapenv:Envelope>
+
+==============

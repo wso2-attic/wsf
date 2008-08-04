@@ -1,0 +1,43 @@
+<wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
+    <wsp:ExactlyOne>
+        <wsp:All>
+            <sp:AsymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                <wsp:Policy>
+                    <sp:InitiatorToken>
+                        <wsp:Policy>
+                            <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+                                <wsp:Policy>
+                                    <sp:WssX509V3Token10/>
+                                </wsp:Policy>
+                            </sp:X509Token>
+                        </wsp:Policy>
+                    </sp:InitiatorToken>
+                    <sp:RecipientToken>
+                        <wsp:Policy>
+                            <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never">
+                                <wsp:Policy>
+                                    <sp:WssX509V3Token10/>
+                                </wsp:Policy>
+                            </sp:X509Token>
+                        </wsp:Policy>
+                    </sp:RecipientToken>
+                    <sp:Layout>
+                        <wsp:Policy>
+                            <sp:Strict/>
+                        </wsp:Policy>
+                    </sp:Layout>
+                </wsp:Policy>
+            </sp:AsymmetricBinding>
+            <sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+            <wsp:Policy>
+                <sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always"/>
+            </wsp:Policy>
+            </sp:SignedSupportingTokens>
+            <rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy">
+                <rampc:User>Alice</rampc:User>
+                <rampc:PasswordType>Digest</rampc:PasswordType>
+                <rampc:PasswordCallbackClass>AXIS2C_HOME/bin/samples/cpp/security/callback/libpwcb.so</rampc:PasswordCallbackClass>
+            </rampc:RampartConfig>
+        </wsp:All>
+    </wsp:ExactlyOne>
+</wsp:Policy>
