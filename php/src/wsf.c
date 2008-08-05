@@ -670,6 +670,7 @@ PHP_METHOD (ws_client, __construct)
     if (!svc_client) {
         zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C), 1 TSRMLS_CC, "ws client create failed");
     }
+
     
     intern->ptr = svc_client;
     intern->obj_type = WSF_SVC_CLIENT;
@@ -677,7 +678,7 @@ PHP_METHOD (ws_client, __construct)
     if (NULL != options) {
         HashTable * ht = Z_ARRVAL_P (options);
         if (!ht) return;
-	/** add properties defined in API doc */
+	/* add properties defined in API doc */
         wsf_client_add_properties (obj, ht TSRMLS_CC);
     }
 	if(WSF_GLOBAL(enable_attachment_caching))
@@ -857,6 +858,9 @@ PHP_METHOD (ws_client, get_proxy)
     }
     
     add_property_zval (client_proxy_zval, "wsclient", this_ptr);
+
+    /* load the wsdl information if available */
+    wsf_wsdl_extract_wsdl_information(client_proxy_zval, env TSRMLS_CC);
 
     RETURN_ZVAL (client_proxy_zval, 0, 1);
 }
@@ -2082,6 +2086,7 @@ PHP_METHOD (ws_client_proxy, __call)
     }
     arg_count = zend_hash_num_elements (Z_ARRVAL_P (args));
    
+
     wsf_wsdl_create_dynamic_client(this_ptr, fn_name, fn_name_len, arg_count,
         args, return_value, env TSRMLS_CC);
 

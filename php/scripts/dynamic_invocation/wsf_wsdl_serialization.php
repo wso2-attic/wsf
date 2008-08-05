@@ -48,8 +48,6 @@
  * @param $namespace_map - Just make sure the unique namespace is used.
     Newly added (passed by reference)
  */
-
-
 function wsf_create_payload_for_class_map(DomDocument $payload_dom,
                                             DomNode $sig_node, 
                                             DomNode $parent_node, 

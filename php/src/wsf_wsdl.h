@@ -70,7 +70,14 @@ void wsf_wsdl_process_service(axis2_char_t *wsdl,
 void wsf_wsdl_set_sig_model(char* wsdl_path,
                             wsf_svc_info_t *svc_info,
                             const axutil_env_t *env TSRMLS_DC);
-
+/**
+ * extract the wsdl information to the current pointer
+ * @param this_zval can be ether WSClient or WSServie
+ * @parm env axis2 environment
+ */
+void wsf_wsdl_extract_wsdl_information(
+    zval *this_zval,
+        axutil_env_t * env TSRMLS_DC);
 
 #define WSF_WSDL_FILE_PATH       "/scripts/dynamic_invocation/wsf_wsdl.php"
 #define WSF_WSDL_XSLT_PATH            "/scripts/dynamic_invocation/xslt"
@@ -84,7 +91,9 @@ void wsf_wsdl_set_sig_model(char* wsdl_path,
 #define WSF_WSDL_INVOKE_FUNCTION "invoke_function"
 
 #define WSF_WSDL_REQ_FUNCTION    "wsf_process_wsdl"
+#define WSF_WSDL_EXTRACT_WSDL    "wsf_extract_wsdl_info"
 #define WSF_WSDL_RES_FUNCTION    "wsf_process_response"
+#define WSF_WSDL_MULTI_INTERFACES "is_multiple_interfaces"
 
 #define WSF_WSDL_SERVICE_REQ_FUNCTION "wsf_process_wsdl_for_service"
 
@@ -100,6 +109,7 @@ void wsf_wsdl_set_sig_model(char* wsdl_path,
 #define WSF_WSDL_POLICIES        "policies"
 #define WSF_WSDL_SIG_MODEL       "sig_model_string"
 #define WSF_WSDL_RES_SIG_MODEL   "response_sig_model"
+#define WSF_WSDL_IS_WSDL_11      "is_wsdl_11"
 #define WSF_WSDL_ARGS            "args"
 #define WSF_WSDL_ATTACHMENT_MAP  "attachment_map"
 #define WSF_WSDL_RES_PAYLOAD     "response_payload"

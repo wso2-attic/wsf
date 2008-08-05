@@ -189,9 +189,7 @@ static void wsf_worker_send_mtom_message(
 {
 	int i = 0;
 	axiom_mime_part_t *mime_part = NULL;
-	axis2_status_t status = AXIS2_SUCCESS;
 	/*int written = 0;*/
-	int len = 0;    
 	if(response && response->http_status_code_name)
 	{
 		char status_line[100];
@@ -218,7 +216,6 @@ static void wsf_worker_send_mtom_message(
 			if((mime_part->type) == AXIOM_MIME_PART_FILE)
 			{
 				int count = 0;     
-				int len = 0;
 				FILE *f = NULL;
 				axis2_byte_t *output_buffer = NULL;                
 				int output_buffer_size = 0;

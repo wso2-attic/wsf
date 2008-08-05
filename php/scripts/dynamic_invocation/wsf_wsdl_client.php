@@ -43,7 +43,6 @@ function wsf_get_response_parameters(DomNode $sig_node)
  * @param array $classmap array of class mappings for complex types 
  * @param DomNode $schema_node schema for the given WSDL
  */
-
 function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name,
             $arg_count, $arguments, array $classmap = NULL, $mtom_on, &$attachment_map)
 {

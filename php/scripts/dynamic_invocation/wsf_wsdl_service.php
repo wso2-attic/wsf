@@ -16,7 +16,9 @@
  * limitations under the License.
  */
 
-
+/**
+ * service invoke function
+ */
 function wsf_serivce_invoke_function($operation_node, $function_name, $class_name,
     $class_args, $soap_body_node, $header_node, $classmap, $mtom_on,
                 $cid2cont_type, $cid2attachments) {
@@ -228,6 +230,9 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
                 WSF_ATTACHMENT_MAP => $attachment_map);
 }
 
+/**
+ * Generate the response headers
+ */
 function wsf_wsdl_create_response_headers($binding_details_node, $arguments, $mtom_on, $attachment_map, $classmap) {
 
     $output_headers = array();
@@ -290,6 +295,9 @@ function wsf_wsdl_create_response_headers($binding_details_node, $arguments, $mt
     return $output_headers;
 }
 
+/**
+ * Generate the payload
+ */
 function wsf_wsdl_create_response_payload($return_val, $sig_node, $mtom_on, &$attachment_map, $classmap) {
     require_once('wsf_wsdl_consts.php');
     require_once('wsf_wsdl_util.php');
