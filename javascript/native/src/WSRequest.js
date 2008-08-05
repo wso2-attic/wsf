@@ -26,6 +26,9 @@ var WSRequest = function() {
     this.responseXML = null;
     this.error = null;
     this.onreadystatechange = null;
+    this.proxyAddress = null;
+    this.proxyEngagedCallback = null;
+
     // Some internal properties
     this._xmlhttp = WSRequest.util._createXMLHttpRequestObject();
     this._soapVer = null;
@@ -216,7 +219,14 @@ WSRequest.prototype.send = function(payload) {
 
         var scriptId = Math.random().toString().substring(3);
 
-        var tunnelDomain = this._uri.substring(0,this._uri.indexOf("/services/"));
+        var tunnelDomain;
+        if (this.proxyAddress == null) {
+            if (this._uri.indexOf("http") == 0)
+                tunnelDomain = this._uri.substring(0,this._uri.indexOf("/services/"));
+            else throw new WebServiceError("Unspecified WSRequest.proxyAddress property - must specify when using script-injection fallback when endpoint is not http or https.")
+        } else {
+            tunnelDomain = this.proxyAddress;
+        }
         var tunnelEndpoint = tunnelDomain + "/WSRequestXSSproxy.jsp";
         var response = scriptId + "," +
                        this._async.toString() + "," +
@@ -249,6 +259,11 @@ WSRequest.prototype.send = function(payload) {
         head.appendChild(script);
 
     }
+
+    // Execute a simple callback enabling UI to reflect whether the call was normal or through the proxy.
+    if (this.proxyEngagedCallback != null)
+        this.proxyEngagedCallback(!accessibleDomain);
+
 }
 
 WSRequest._tunnelcallback = function (scriptId, responseText) {
