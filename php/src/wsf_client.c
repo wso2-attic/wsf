@@ -1567,7 +1567,7 @@ wsf_client_do_request (
 			MAKE_STD_ZVAL(rfault);
 			INIT_PZVAL(rfault);
 			object_init_ex(rfault, ws_fault_class_entry);
-			add_property_long(rfault,WSF_FAULT_HTTP_STATUS_CODE  , status_code);
+			add_property_long(rfault,WSF_HTTP_STATUS_CODE  , status_code);
 			if(response_payload)
 			{
 				res_text = axiom_node_to_string(response_payload, env);
@@ -1603,7 +1603,7 @@ wsf_client_do_request (
 					INIT_PZVAL(rfault);
 					object_init_ex (rfault, ws_fault_class_entry);
 					add_property_stringl (rfault, WSF_FAULT_STR , res_text, strlen (res_text), 1);
-					add_property_long(rfault,WSF_FAULT_HTTP_STATUS_CODE  , status_code);
+					add_property_long(rfault,WSF_HTTP_STATUS_CODE  , status_code);
 					wsf_util_handle_soap_fault(rfault, env, fault_node, soap_version TSRMLS_CC);
 					zend_throw_exception_object(rfault TSRMLS_CC);
 					return ;

@@ -153,9 +153,12 @@ typedef enum ws_input_types
 #define WSF_FAULT_CODE_NS        "codens"
 #define WSF_FAULT_SUBCODE 		"Subcode"
 #define WSF_FAULT_DETAIL 		"Detail"
-#define WSF_FAULT_HTTP_STATUS_CODE "httpStatusCode"
 #define WSF_FAULT_STR "str"
 #define WSF_FAULT_NAME "_name"
+
+/** http status code, required when handling rest style messages */
+#define WSF_HTTP_STATUS_CODE "httpStatusCode"
+
 
 /** header options */
 #define WSF_INPUT_HEADERS        "inputHeaders"
@@ -279,7 +282,7 @@ typedef struct wsf_svc_info
   axutil_hash_t *ops_to_actions;
   /** operations to functions mapping */
   axutil_hash_t *ops_to_functions;
-  /** modules to be enaged */
+  /** modules to be engaged */
   axutil_array_list_t *modules_to_engage;
   /** class operations */
   axutil_hash_t *ops_to_classes;

@@ -315,7 +315,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
 	{
         status = AXIS2_ERROR_GET_STATUS_CODE (env->error);
     } else {
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[WSFLOG] response node is not null");
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Response node is not null");
     }
 
     if (result_node) 
@@ -346,7 +346,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
 	{
         /* service implementation has set the envelope, useful when setting a SOAP fault.
            No need to further process */
-        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[wsfphp] soap fault is set");
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "soap fault is set");
         return AXIS2_SUCCESS;
     }
 
@@ -361,14 +361,14 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
 
     if (!default_envelope) 
 	{
-        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "[wsfphp] failed in creating the response soap envelope");
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "failed in creating the response soap envelope");
         return AXIS2_FAILURE;
     }
 
     out_header = axiom_soap_header_create_with_parent (env, default_envelope);
     if (!out_header) 
     {
-        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "[wsfphp] failed in creating the response soap headers");
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "failed in creating the response soap headers");
         return AXIS2_FAILURE;
     }
 
@@ -1040,6 +1040,12 @@ wsf_xml_msg_recv_invoke_wsmsg (
 						AXIS2_TRUE, NULL, axutil_strdup(env, Z_STRVAL_PP(msg_tmp)));
 					axis2_msg_ctx_set_property(out_msg_ctx, env, WSF_REST_CONTENT_TYPE, cnt_property);
 			}
+			if(zend_hash_find(Z_OBJPROP(retval), WSF_HTTP_STATUS_CODE, 
+				sizeof(WSF_HTTP_STATUS_CODE), (void **)&msg_tmp)== SUCCESS && 
+				Z_TYPE_PP(msg_tmp) == IS_LONG)
+			{
+				axis2_msg_ctx_set_status_code(out_msg_ctx, env, Z_LVAL_PP(msg_tmp));
+			}
 
 			if (zend_hash_find (Z_OBJPROP (retval), WSF_ATTACHMENTS, sizeof (WSF_ATTACHMENTS),
                (void **) & msg_tmp) == SUCCESS && Z_TYPE_PP (msg_tmp) == IS_ARRAY) 
@@ -1093,7 +1099,12 @@ wsf_xml_msg_recv_invoke_wsmsg (
 
     if (!res_payload) 
 	{
-        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Response Payload is NULL");
+		if(axis2_msg_ctx_get_doing_rest(in_msg_ctx, env))
+		{
+			axis2_msg_ctx_set_no_content(in_msg_ctx, env, AXIS2_TRUE);
+		}
+
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Response Payload is NULL");
         return NULL;
     }
     return res_om_node;
