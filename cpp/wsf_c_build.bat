@@ -11,7 +11,7 @@ rem Build Apache Axis2/C
 
 rem Build Apache Rampart/C
 @cd ..\..\..\rampartc\build\win32
-@nmake /nologo dist_no_samples AUTOCONF=..\..\..\configure.in AXIS2_BIN_DIR=.\..\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32
+@nmake /nologo dist AUTOCONF=..\..\..\configure.in AXIS2_BIN_DIR=.\..\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32
 
 @if not %ERRORLEVEL% EQU 0 goto rampart_error
 
@@ -21,6 +21,10 @@ rem Build Apache Rampart/C
 @copy /Y rampartc-%RAMPARTC_VERSION%\modules\rampart\mod_rampart.lib .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\lib\
 @copy /Y rampartc-%RAMPARTC_VERSION%\modules\rampart\mod_rampart.dll .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\lib\
 @xcopy /E /Q /I /Y rampartc-%RAMPARTC_VERSION%\modules\rahas .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\modules\rahas
+@xcopy /E /Q /I /Y rampartc-%RAMPARTC_VERSION%\bin\samples .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\bin\samples\security
+@xcopy /E /Q /I /Y rampartc-%RAMPARTC_VERSION%\bin\samples\services\sec_echo .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\services\sec_echo
+@rmdir /s /q .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\bin\samples\security\client
+@rmdir /s /q .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\bin\samples\security\secpolicy
 
 @goto build_sandesha2
 

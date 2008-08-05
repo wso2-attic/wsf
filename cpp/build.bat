@@ -61,12 +61,12 @@ rem Remove WSF/C Client Samples
 :strip_c_client_samples
 @set WSFCPP_SOURCE=%CD%
 @cd "%WSFCPP_HOME%\bin\samples"
-@if exist rampart xcopy /E /Q /I /Y rampart ..\rampart
+@if exist security xcopy /E /Q /I /Y security ..\security
 @cd ..\
 @rmdir /s /q samples
 @mkdir samples
-@if exist rampart xcopy /E /Q /I /Y rampart samples\rampart
-@if exist rampart rmdir /s /q rampart
+@if exist security xcopy /E /Q /I /Y security samples\security
+@if exist security rmdir /s /q security
 @cd "%WSFCPP_SOURCE%"
 
 rem Clean bin Folder
@@ -96,7 +96,6 @@ rem Build Client Samples
 @cd samples
 @nmake dist -f samples.mk AUTOCONF=..\configure.in
 @if not %ERRORLEVEL% EQU 0 goto end
-@xcopy /E /I /Q /Y secpolicy "%WSFCPP_HOME%\bin\samples\cpp\secpolicy"
 @cd "%WSFCPP_HOME%\bin\samples\cpp"
 @if not exist .svn mkdir .svn
 @for /F "tokens=*" %%G in ('dir /B /AD /S *.svn*') do rmdir /S /Q "%%G"
@@ -106,6 +105,28 @@ rem Build Client Samples
 @for /F "tokens=*" %%G in ('dir /B /S *.am*') do del "%%G"
 @cd "%WSFCPP_SOURCE%"
 
+rem Build security Samples
+@set WSFCPP_SOURCE=%CD%
+@cd "%WSFCPP_HOME%\bin\samples"
+@if exist security xcopy /E /Q /I /Y security cpp\security
+@if exist security rmdir /S /Q security 
+@cd cpp\security
+@mkdir client
+@cd "%WSFCPP_SOURCE%"
+@cd samples
+@cd security
+@xcopy /E /Q /I /Y secpolicy %WSFCPP_HOME%\bin\samples\cpp\security\secpolisy
+@nmake dist -f sec_samples.mk AUTOCONF=..\..\configure.in
+@if not %ERRORLEVEL% EQU 0 goto end
+@cd "%WSFCPP_HOME%\bin\samples\cpp\security"
+@if not exist .svn mkdir .svn
+@for /F "tokens=*" %%G in ('dir /B /AD /S *.svn*') do rmdir /S /Q "%%G"
+@if not exist *.sh echo > #.sh
+@for /F "tokens=*" %%G in ('dir /B /S *.sh*') do del "%%G"
+@if not exist *.am echo > #.am
+@for /F "tokens=*" %%G in ('dir /B /S *.am*') do del "%%G"
+@cd "%WSFCPP_SOURCE%"
+ 
 rem Deploy Sample Source
 :dep_sample_source
 @if exist "%WSFCPP_HOME%\samples" rmdir /s /q "%WSFCPP_HOME%\samples"
