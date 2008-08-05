@@ -18,7 +18,30 @@ import os
 import sys
 
 import WSFC
-from wso2.wsf import WSFMethodMissingMixin
+
+WSF_PYTHON_HOME = os.path.dirname(__file__)
+
+class WSFMethodMissingMixin(object):
+    """ A Mixin' to implement the 'method_mising' Ruby-likr protocol.
+    """
+    
+    def __getattribute__(self, attr):
+        try:
+            return object.__getattribute__(self, attr)
+        except:
+            class WSFMethodMissing(object):
+                def __init__(self, wrapped, method):
+                    self.__wrapped__ = wrapped
+                    self.__method__ = method
+                
+                def __call__(self, *args, **kwargs):
+                    self.__wrapped__.method_missing(self.__method__, *args, **kwargs)
+                    
+            return WSFMethodMissing(self, attr)
+        
+    def method_missing(self, *args, **kwargs):
+        """ This method should be overridden in the derived class. """
+        raise NotImplementedError(str(self.__wrapped__) + " 'method_missing' method has not been implemented.")
 
 
 class WSProxy(WSFMethodMissingMixin):
@@ -44,8 +67,12 @@ class WSProxy(WSFMethodMissingMixin):
                         arg,
                         self.service_name,
                         self.port_name,
-                        wso2.wsf.WSF_PYTHON_HOME)
-                return result
+                        WSF_PYTHON_HOME)
+                if result:
+                    return result
+                else:
+                    return 
+                return None
             else:
                 print "Argument to Web Service operation must be a dictionary."
         else:

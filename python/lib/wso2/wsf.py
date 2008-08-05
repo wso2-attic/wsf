@@ -21,7 +21,7 @@ import WSFC
 from wso2 import Logger
 from wso2.wsdl import WSProxy 
 
-__all__ = ['WSClient', 'WSFault', 'WSFMethodMissingMixin']
+__all__ = ['WSClient', 'WSFault']
 
 WSF_PYTHON_HOME = os.path.dirname(__file__)
 
@@ -37,29 +37,6 @@ class WSFault(Exception):
     def __str__(self):
         return '[' + self.code + ']' + self.reason + '|' + self.role + '|' + self.detail
     
-class WSFMethodMissingMixin(object):
-    """ A Mixin' to implement the 'method_mising' Ruby-likr protocol.
-    """
-    
-    def __getattribute__(self, attr):
-        try:
-            return object.__getattribute__(self, attr)
-        except:
-            class WSFMethodMissing(object):
-                def __init__(self, wrapped, method):
-                    self.__wrapped__ = wrapped
-                    self.__method__ = method
-                
-                def __call__(self, *args, **kwargs):
-                    self.__wrapped__.method_missing(self.__method__, *args, **kwargs)
-                    
-            return WSFMethodMissing(self, attr)
-        
-    def method_missing(self, *args, **kwargs):
-        """ This method should be overridden in the derived class. """
-        raise NotImplementedError(str(self.__wrapped__) + " 'method_missing' method has not been implemented.")
-    
-
 class WSMessage:
     
     def __init__(self, str_payload, xml_dom_payload=None, properties=None):
@@ -72,9 +49,6 @@ class WSMessage:
         if str_payload is not None and isinstance(str_payload, str):
             self.str_payload = str_payload
         
-        
-        
-    
 
 class WSClient:
    
@@ -241,9 +215,9 @@ class WSClient:
 
         if self.options.has_key(WSFC.WSF_CP_WSDL):
             wsdl = self.options[WSFC.WSF_CP_WSDL]
-            proxy = WSProxy(self.env, self.svc_client, self.options, str(wsdl), service_name, port_name) 
+            proxy = WSProxy(self.env, self.service_client, self.options, str(wsdl), service_name, port_name) 
             return proxy
-        else
+        else:
             WSFC.axis2_log_error(self.env, "[wsf-python] WSDL is not specified.")
             return None
 
