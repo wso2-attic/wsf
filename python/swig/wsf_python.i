@@ -85,15 +85,16 @@ wsf_wsdl_convert_user_params_to_wsdl_data(
         wsf_wsdl_data_t *sub_data = NULL;
         PyObject *d_key, *d_value = NULL;
         int pos = 0;
-        char *sub_key_str = NULL;
+        axis2_char_t *sub_key_str = NULL;
+        sub_data = wsdl_data_create_object(env);
         while(PyDict_Next(value, &pos, &d_key, &d_value))
         {
             if(PyString_Check(d_key))
             { 
-                sub_key_str = PyString_AsString(d_key);
+                sub_key_str = axutil_strdup(env, PyString_AsString(d_key));
                 wsf_wsdl_convert_user_params_to_wsdl_data(
                                             env,
-                                            (axis2_char_t*)sub_key_str,
+                                            sub_key_str,
                                             d_value,
                                             sub_data);                                                  
             }
@@ -155,18 +156,21 @@ wsf_wsdl_convert_user_params_to_wsdl_data(
             type_str = axutil_strdup(env, "long");
             val_str = axutil_strdup(env, PyString_AsString(val_str_object));
         }
-        /*else if(PyFloat_CheckExact(value))
+        else if(PyFloat_CheckExact(value))
         {
-            
+            double from_float = 0;
+            char double_str[32];    
             type_str = axutil_strdup(env, "float");
-        }*/
-        /* Float type is not supported. TODO: Fix float */
+            from_float = PyFloat_AsDouble(value);
+            sprintf(double_str, "%f", from_float);
+            val_str = axutil_strdup(env, double_str); 
+        }
         else if(PyString_CheckExact(value))
         {
             type_str = axutil_strdup(env, "str");
             val_str = axutil_strdup(env, PyString_AsString(value));
         }
-
+    
         wsdl_data_add_simple_element(
             env,    
             wsdl_data, 
@@ -177,6 +181,7 @@ wsf_wsdl_convert_user_params_to_wsdl_data(
             "http://www.example.org/sample/"); 
     }
 }
+
 
 static PyObject * 
 wsf_wsdl_convert_wsdl_data_to_python_dict(
@@ -192,18 +197,22 @@ wsf_wsdl_convert_wsdl_data_to_python_dict(
         axis2_char_t* data = (axis2_char_t *)(response->data);
         if (strcmp(data_type, "str") == 0)
         {
+            /* Convert C string to Python String*/
             element = PyString_FromString(data);            
         }
         else if(strcmp(data_type, "int") == 0)
         {
+            /* Convert C string to python int */
             element = PyInt_FromString(data, NULL, 10);
         }
         else if(strcmp(data_type, "long") == 0)
         {
+            /* Create Python long from C string. */
             element = PyLong_FromString(data, NULL, 10);
         }
         else if(strcmp(data_type, "float") == 0)
         {
+            /* Create Python Float from string */
             PyObject *float_str = PyString_FromString(data);
             element = PyFloat_FromString(float_str, NULL);
         }
@@ -215,11 +224,15 @@ wsf_wsdl_convert_wsdl_data_to_python_dict(
     }
 
     iterator = wsdl_data_iterator_create(env, response);
+    /* Handle there is no return data in respose wsdl_data_t */
     if(!wsdl_data_iterator_first(env, &iterator))
         return Py_None;
 
     if(iterator->type == CHILDREN_TYPE_ARRAY_ELEMENTS)
     {   
+        /* When XML schema support array of elements, text value of those elements will
+         * return as Python list.
+         */
         element = PyList_New(0);
         do
         {
@@ -233,6 +246,7 @@ wsf_wsdl_convert_wsdl_data_to_python_dict(
     } 
     else if(iterator->type == CHILDREN_TYPE_ATTRIBUTES)
     {
+        /* XML element attributes will return as python dictionary. */
         element = PyDict_New();
         do
         {
@@ -377,12 +391,13 @@ wsf_wsdl_request_function(
     {
         PyObject *d_key, *d_value;
         int pos = 0;
-        char *key_string = NULL;
+        axis2_char_t *key_string = NULL;
         while(PyDict_Next(options, &pos, &d_key, &d_value))
         {
             if(PyString_Check(d_key))
             {
-                key_string = PyString_AsString(d_key);
+                key_string = axutil_strdup(env, PyString_AsString(d_key));
+                svc_client_options = axutil_hash_make(env);
                 wsf_evaluate_client_options_and_insert_to_hash(env, key_string, d_value, svc_client_options);       
             }
         }
@@ -393,6 +408,9 @@ wsf_wsdl_request_function(
         return NULL;
     }
     
+    /* Convert input to the Web service opration from python dictionary to 
+     * wsdl_data_t structure.
+     */
     if(PyDict_Check(arg))
     {
         PyObject *d_key, *d_value;
@@ -402,7 +420,8 @@ wsf_wsdl_request_function(
         {
             if(PyString_Check(d_key))
             {
-                key_string = PyString_AsString(d_key);
+                key_string = axutil_strdup(env, PyString_AsString(d_key));
+                user_params = wsdl_data_create_object(env);
                 wsf_wsdl_convert_user_params_to_wsdl_data(env, key_string, d_value, user_params);
             }
         }
@@ -413,6 +432,7 @@ wsf_wsdl_request_function(
         return NULL;
     }
     
+    /* call wsdl request by giving required parameters get from user */
     wsdl_request_success = wsf_wsdl_request(env,
                                 wsdl_file_name,
                                 operation_name,
@@ -427,18 +447,21 @@ wsf_wsdl_request_function(
     if (wsdl_request_success == AXIS2_FAILURE)
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf-python][wsdl_mode] wsf_wsdl_request returned fault.");
+        PyErr_SetFromErrno(PyExc_SystemError);
         return NULL;
     }
 
     if(response)
     {
         PyObject *reponse_python;
+        /* Convert wsdl_data_t to Python dictionary and return. */
         reponse_python = wsf_wsdl_convert_wsdl_data_to_python_dict(env, response);
         return reponse_python;
     }
     else
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf-python][wsdl_mode] wsf_wsdl_request response is null.");
+        PyErr_SetFromErrno(PyExc_SystemError);
         return NULL;
     }
     return NULL;
