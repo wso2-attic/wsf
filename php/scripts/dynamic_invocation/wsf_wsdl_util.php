@@ -1064,7 +1064,7 @@ function wsf_clear_wsdl_imports($wsdl_dom, $relative_url = "") {
         }
     }
     if($new_wsdl_types_node === NULL) {
-        $new_wsdl_types_node = createElementNS(WSF_WSDL_NAMESPACE, WSF_TYPES);
+        $new_wsdl_types_node = $new_wsdl_dom->createElementNS(WSF_WSDL_NAMESPACE, WSF_TYPES);
         $new_wsdl_root->appendChild($new_wsdl_types_node);
     }
 
