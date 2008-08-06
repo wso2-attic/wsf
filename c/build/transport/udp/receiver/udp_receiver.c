@@ -1,0 +1,567 @@
+
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#include <axis2_udp_transport.h>
+#include <axis2_udp_receiver.h>
+#include <axis2_transport_receiver.h>
+#include <axis2_transport_in_desc.h>
+#include <axutil_param_container.h>
+#include <axutil_url.h>
+#include <axis2_conf_init.h>
+#include <stdlib.h>
+#include <axutil_network_handler.h>
+#include <axiom.h>
+#include <axiom_soap_envelope.h>
+#include <axiom_soap.h>
+#include <axis2_engine.h>
+
+
+typedef struct axis2_udp_receiver_impl
+{
+    axis2_transport_receiver_t udp_receiver;    
+	axis2_bool_t stop;
+    axis2_conf_ctx_t *conf_ctx;
+    axis2_conf_ctx_t *conf_ctx_private;
+	int port;
+	axis2_socket_t socket;
+
+	/* multicast properties */
+	axis2_bool_t is_multicast;
+	axis2_char_t *multicast_group;
+} axis2_udp_receiver_impl_t;
+
+/* This structure is used to hold information about a udp request */
+typedef struct 
+{
+	axis2_char_t * buff;
+	int buf_size;
+} axis2_udp_request_t;
+
+/* This structure is used to hold information about a udp response */
+typedef struct 
+{
+	axis2_char_t *buff;
+	int buf_size;
+} axis2_udp_response_t;
+
+typedef struct axis2_udp_recv_thd_args
+{
+    axutil_env_t *env;
+    axis2_socket_t socket;
+	axis2_conf_ctx_t *conf_ctx;
+	axis2_char_t *req_addr;
+	int req_port;
+	axis2_udp_request_t request;
+} axis2_udp_recv_thd_args_t;
+
+#define AXIS2_INTF_TO_IMPL(udp_receiver) ((axis2_udp_receiver_impl_t *)(udp_receiver))
+
+void AXIS2_CALL
+axis2_udp_receiver_free(
+    axis2_transport_receiver_t * trn_receiver,
+    const axutil_env_t * env);
+
+axis2_status_t AXIS2_CALL
+axis2_udp_receiver_init(
+    axis2_transport_receiver_t * tr_receiver,
+    const axutil_env_t * env,
+    axis2_conf_ctx_t * conf_ctx,
+    axis2_transport_in_desc_t * in_desc);
+
+axis2_status_t AXIS2_CALL
+axis2_udp_receiver_start(
+    axis2_transport_receiver_t *tr_receiver,
+    const axutil_env_t * env);
+
+axis2_conf_ctx_t *AXIS2_CALL
+axis2_udp_receiver_get_conf_ctx(
+	axis2_transport_receiver_t * tr_receiver, 
+	const axutil_env_t * env);
+
+axis2_endpoint_ref_t *AXIS2_CALL
+axis2_udp_receiver_get_reply_to_epr(
+    axis2_transport_receiver_t * receiver,
+    const axutil_env_t * env,
+    const axis2_char_t * svc_name);
+
+axis2_bool_t AXIS2_CALL
+axis2_udp_receiver_is_running(
+    axis2_transport_receiver_t * tr_receiver,
+    const axutil_env_t * env);
+
+void *AXIS2_THREAD_FUNC
+axis2_udp_receiver_thread_worker_func(
+    axutil_thread_t * thd,
+    void *data);
+
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+axis2_udp_receiver_process_request(
+	const axutil_env_t * env,
+	axis2_conf_ctx_t *conf_ctx,    
+    axis2_udp_request_t * request,
+	axis2_udp_response_t * responce);
+
+void *AXIS2_THREAD_FUNC
+axis2_udp_receiver_thread_worker_func(
+    axutil_thread_t * thd,
+    void *data);
+
+static const axis2_transport_receiver_ops_t udp_transport_recvr_ops = {
+    axis2_udp_receiver_init,
+    axis2_udp_receiver_start,
+    axis2_udp_receiver_get_reply_to_epr,
+    axis2_udp_receiver_get_conf_ctx,
+    axis2_udp_receiver_is_running,
+    axis2_udp_receiver_stop,
+    axis2_udp_receiver_free
+};
+
+
+AXIS2_EXTERN axis2_transport_receiver_t *AXIS2_CALL
+axis2_udp_receiver_create(
+    const axutil_env_t * env,
+    const axis2_char_t * repo,
+    const int port,
+	axis2_char_t *multicast_group)
+{
+	axis2_udp_receiver_impl_t *receiver = NULL;
+
+	receiver = (axis2_udp_receiver_impl_t *) AXIS2_MALLOC(env->allocator, sizeof(axis2_udp_receiver_impl_t));
+	if (!receiver)
+	{
+		AXIS2_HANDLE_ERROR(env, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
+		return NULL;
+	}
+
+	receiver->conf_ctx = NULL;
+	receiver->conf_ctx_private = NULL;
+	receiver->port = port;
+	receiver->udp_receiver.ops = &udp_transport_recvr_ops;
+	receiver->multicast_group = multicast_group; 
+	receiver->is_multicast = AXIS2_TRUE;
+	/* 
+	 * We are creating the receiver in two instances. When we create the receiver from the server 
+	 * we create the conf context. If we are creating the receiver while creating the conf we are 
+	 * not creating the conf as conf is already there.
+	 */
+	if (repo)
+	{
+		receiver->conf_ctx_private = axis2_build_conf_ctx(env, repo);
+		if (!receiver->conf_ctx_private)
+		{
+			AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, 
+                             "unable to create private configuration context for repo path %s", repo);
+            axis2_udp_receiver_free((axis2_transport_receiver_t *) receiver,
+                                   env);
+            return NULL;
+		}
+		receiver->conf_ctx = receiver->conf_ctx_private;
+	}
+	return &(receiver->udp_receiver);
+}
+
+AXIS2_EXTERN axis2_transport_receiver_t *AXIS2_CALL
+axis2_udp_receiver_create_with_file(
+	const axutil_env_t * env,
+	const axis2_char_t * file,
+	const int port)
+{
+	axis2_udp_receiver_impl_t *receiver = NULL;
+
+	receiver = (axis2_udp_receiver_impl_t *) AXIS2_MALLOC(env->allocator, sizeof(axis2_udp_receiver_impl_t));
+	if (!receiver)
+	{
+		AXIS2_HANDLE_ERROR(env, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
+		return NULL;
+	}
+
+	receiver->conf_ctx = NULL;
+	receiver->conf_ctx_private = NULL;
+	receiver->port = port;
+	receiver->udp_receiver.ops = &udp_transport_recvr_ops;
+
+	/* 
+	 * We are creating the receiver in two instances. When we create the receiver from the server 
+	 * we create the conf context. If we are creating the receiver while creating the conf we are 
+	 * not creating the conf as conf is already there.
+	 */
+	if (file)
+	{
+		receiver->conf_ctx_private = axis2_build_conf_ctx_with_file(env, file);
+		if (!receiver->conf_ctx_private)
+		{
+			AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, 
+                             "unable to create private configuration context for repo path %s", file);
+            axis2_udp_receiver_free((axis2_transport_receiver_t *) receiver,
+                                   env);
+            return NULL;
+		}
+		receiver->conf_ctx = receiver->conf_ctx_private;
+	}
+	return &(receiver->udp_receiver);
+}
+
+void AXIS2_CALL
+axis2_udp_receiver_free(
+    axis2_transport_receiver_t * trn_receiver,
+    const axutil_env_t * env)
+{
+	axis2_udp_receiver_impl_t * receiver = NULL;
+	receiver = AXIS2_INTF_TO_IMPL(trn_receiver);
+	if (!receiver)
+	{
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, 
+                         "failure, receiver value is null , nothing to free");
+        return;
+	}	
+	if (!receiver->stop)
+	{
+		receiver->stop = AXIS2_TRUE;
+	}
+	/* We do not free the conf_ctx as this is not the right place to do it */
+	receiver->conf_ctx = NULL;
+	AXIS2_FREE(env->allocator, receiver);
+}
+
+
+axis2_status_t AXIS2_CALL
+axis2_udp_receiver_init(
+    axis2_transport_receiver_t * tr_receiver,
+    const axutil_env_t * env,
+    axis2_conf_ctx_t * conf_ctx,
+    axis2_transport_in_desc_t * in_desc)
+{
+	axis2_udp_receiver_impl_t *receiver = NULL;
+	axis2_char_t *port_str = NULL;
+	axutil_param_t *param = NULL;
+	axutil_param_container_t *container = NULL;
+
+	receiver = AXIS2_INTF_TO_IMPL(tr_receiver);
+	receiver->conf_ctx = conf_ctx;
+
+	container = axis2_transport_in_desc_param_container(in_desc, env);
+	param = (axutil_param_t *) axutil_param_container_get_param(container, env, AXIS2_PORT_STRING);	
+	if (param)
+	{
+		port_str = (axis2_char_t *)axutil_param_get_value(param, env);
+	}
+	if (port_str)
+	{
+		receiver->port = atoi(port_str);
+	}
+	
+	param = (axutil_param_t *) axutil_param_container_get_param(container, env, AXIS2_UDP_TRANSPORT_MULTICAST_GROUP);
+	if (param)
+	{
+		receiver->multicast_group = (axis2_char_t *)axutil_param_get_value(param, env);
+		receiver->is_multicast = AXIS2_TRUE;
+	}
+	return AXIS2_SUCCESS;
+}
+
+axis2_status_t AXIS2_CALL
+axis2_udp_receiver_start(
+    axis2_transport_receiver_t *tr_receiver,
+    const axutil_env_t * env)
+{
+	axis2_status_t status;
+	axis2_udp_receiver_impl_t *receiver = NULL;
+
+	receiver = AXIS2_INTF_TO_IMPL(tr_receiver);
+	receiver->stop =  AXIS2_FALSE;
+
+	AXIS2_LOG_INFO(env->log, "Started the UDP server");
+	if (receiver->is_multicast && receiver->multicast_group)
+	{
+		/* Setup a socket to receive multicast packets */
+		receiver->socket = axutil_network_hadler_create_multicast_svr_socket(env, receiver->port, 
+																	receiver->multicast_group);		
+	}
+	else
+	{
+		/* Setup a socket to receive unicast packets */
+		receiver->socket = axutil_network_handler_create_dgram_svr_socket(env, receiver->port);
+	}
+	if (receiver->socket == AXIS2_INVALID_SOCKET)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Socket creation faild on socket %d", receiver->socket);
+		return AXIS2_FAILURE;
+	}
+	while (!receiver->stop)
+	{
+		axis2_udp_recv_thd_args_t *args = NULL;
+		axutil_thread_t *worker_thread = NULL;
+		axis2_char_t *addr = NULL;
+		int port = receiver->port;		
+		int buf_len = AXIS2_UDP_PACKET_MAX_SIZE;
+		axis2_char_t *in_buff = NULL;
+
+		in_buff = AXIS2_MALLOC(env->allocator, sizeof(char) * AXIS2_UDP_PACKET_MAX_SIZE);
+		/* This is a blocking call. This will block until data is available in the socket */
+		status = axutil_network_handler_read_dgram(env, receiver->socket, in_buff, &buf_len, &addr, &port);   
+		if (status == AXIS2_FAILURE)
+		{
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Error in reading data from the datagram.");
+			return AXIS2_FAILURE;
+		}	
+
+		args = (axis2_udp_recv_thd_args_t *)AXIS2_MALLOC(env->allocator, sizeof(axis2_udp_recv_thd_args_t));		
+		if (!args)
+		{
+			AXIS2_HANDLE_ERROR(env, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
+			return AXIS2_FAILURE;
+		}
+		/* Set the data required by the thread */
+		args->env = (axutil_env_t *)env;
+		args->socket = receiver->socket;
+		args->conf_ctx = receiver->conf_ctx;
+		args->req_addr = addr;
+		args->req_port = port;
+		args->request.buff = in_buff;
+		args->request.buf_size = buf_len;
+#ifdef AXIS2_SVR_MULTI_THREADED
+		worker_thread = axutil_thread_pool_get_thread(env->thread_pool,
+													axis2_udp_receiver_thread_worker_func,
+													(void *) args);
+		if (!worker_thread)
+		{
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Thread creation failed"
+							"server thread loop");
+			continue;
+		}
+		axutil_thread_pool_thread_detach(env->thread_pool, worker_thread);
+#else
+		axis2_udp_receiver_thread_worker_func(NULL, (void *)args);
+#endif
+	}
+	return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+axis2_udp_receiver_stop(
+    axis2_transport_receiver_t * tr_receiver,
+    const axutil_env_t * env)
+{
+	axis2_udp_receiver_impl_t *receiver = NULL;
+	receiver = AXIS2_INTF_TO_IMPL(tr_receiver);	
+	receiver->stop = AXIS2_TRUE;
+	return AXIS2_SUCCESS;
+}
+
+axis2_conf_ctx_t *AXIS2_CALL
+axis2_udp_receiver_get_conf_ctx(axis2_transport_receiver_t * tr_receiver, 
+								const axutil_env_t * env)
+{
+	axis2_udp_receiver_impl_t *receiver = NULL;
+	receiver = AXIS2_INTF_TO_IMPL(tr_receiver);	
+	return receiver->conf_ctx;
+}
+
+axis2_endpoint_ref_t *AXIS2_CALL
+axis2_udp_receiver_get_reply_to_epr(
+    axis2_transport_receiver_t * receiver,
+    const axutil_env_t * env,
+    const axis2_char_t * svc_name)
+{
+	return NULL;
+}
+
+axis2_bool_t AXIS2_CALL
+axis2_udp_receiver_is_running(
+    axis2_transport_receiver_t * tr_receiver,
+    const axutil_env_t * env)
+{
+	axis2_udp_receiver_impl_t *receiver = NULL;
+	receiver = AXIS2_INTF_TO_IMPL(tr_receiver);	
+	return !receiver->stop;
+}
+
+/* This is the function where threads start running */
+void *AXIS2_THREAD_FUNC
+axis2_udp_receiver_thread_worker_func(
+    axutil_thread_t * thd,
+    void *data)
+{
+	axutil_env_t *env = NULL;
+	axis2_conf_ctx_t *conf = NULL;
+	axis2_socket_t sock;
+	axis2_status_t status = AXIS2_FAILURE;
+
+	axis2_udp_recv_thd_args_t *args = NULL;
+	axis2_udp_response_t response;
+
+	axis2_char_t *addr = NULL;
+	int port = 0;
+	args = (axis2_udp_recv_thd_args_t *) data;
+
+	env = (axutil_env_t *) args->env;
+	conf = args->conf_ctx;	
+	addr = args->req_addr;
+	port = args->req_port;
+
+	/* We are using a seperate socket to send the request */
+	sock = axutil_network_handler_open_dgram_socket(env);
+	response.buf_size = 0;
+	response.buff = NULL;
+
+	/* Process the request */
+	status = axis2_udp_receiver_process_request(args->env, args->conf_ctx, &args->request, &response);
+	if (status == AXIS2_FAILURE)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Error processing the request.");
+		return NULL;
+	}
+
+	/* If we have a response send it */
+	if (response.buff)
+	{
+		status = axutil_network_handler_send_dgram(env, sock, response.buff, &response.buf_size, addr, port, NULL);
+		if (status == AXIS2_FAILURE)
+		{
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Error sending the response.");
+			return NULL;
+		}
+	}
+	/* Close the sending socket */
+	axutil_network_handler_close_socket(env, sock);
+	return NULL;
+}
+
+
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+axis2_udp_receiver_process_request(
+	const axutil_env_t * env,
+	axis2_conf_ctx_t *conf_ctx,    
+    axis2_udp_request_t * request,
+	axis2_udp_response_t * responce)
+{   
+    axis2_transport_out_desc_t *out_desc = NULL;
+    axis2_transport_in_desc_t *in_desc = NULL;
+    axis2_msg_ctx_t *msg_ctx = NULL;
+    axiom_xml_reader_t *reader = NULL;
+    axiom_stax_builder_t *builder = NULL;
+    axiom_soap_builder_t *soap_builder = NULL;
+    axiom_soap_envelope_t *soap_envelope = NULL;
+    axis2_engine_t *engine = NULL;
+    axis2_status_t status = AXIS2_FALSE;
+    axutil_stream_t *svr_stream = NULL;
+    axis2_char_t *buffer = NULL;
+    int len = 0;
+    int write = -1;
+    axutil_stream_t *out_stream = NULL;
+
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
+                    "start:axis2_udp_worker_process_request");
+
+    if (!conf_ctx)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "conf ctx not available");
+        return AXIS2_FAILURE;
+    }
+
+    out_stream = axutil_stream_create_basic(env);
+    reader = axiom_xml_reader_create_for_memory(env, request->buff,
+                                                request->buf_size,
+                                                NULL,
+                                                AXIS2_XML_PARSER_TYPE_BUFFER);
+    if (!reader)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Failed to create XML reader");
+        return AXIS2_FAILURE;
+    }
+
+    builder = axiom_stax_builder_create(env, reader);
+    if (!builder)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "Failed to create Stax builder");
+        return AXIS2_FAILURE;
+    }
+
+    soap_builder = axiom_soap_builder_create(env, builder,
+                                             AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI);
+
+    if (!soap_builder)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "Failed to create SOAP builder");
+        return AXIS2_FAILURE;
+    }    
+
+    out_desc =
+        axis2_conf_get_transport_out(axis2_conf_ctx_get_conf(conf_ctx, env),
+                                     env, AXIS2_TRANSPORT_ENUM_UDP);
+    if (!out_desc)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Transport out not set");
+        return AXIS2_FAILURE;
+    }
+
+    in_desc =
+        axis2_conf_get_transport_in(axis2_conf_ctx_get_conf(conf_ctx, env), env,
+                                    AXIS2_TRANSPORT_ENUM_UDP);
+
+    msg_ctx = axis2_msg_ctx_create(env, conf_ctx, in_desc, out_desc);
+    axis2_msg_ctx_set_server_side(msg_ctx, env, AXIS2_TRUE);
+    axis2_msg_ctx_set_transport_out_stream(msg_ctx, env, out_stream);
+
+    soap_envelope = axiom_soap_builder_get_soap_envelope(soap_builder, env);
+    axis2_msg_ctx_set_soap_envelope(msg_ctx, env, soap_envelope);
+
+    engine = axis2_engine_create(env, conf_ctx);
+    status = axis2_engine_receive(engine, env, msg_ctx);
+
+    responce->buff = axutil_stream_get_buffer(out_stream, env);
+	responce->buf_size = axutil_stream_get_len(out_stream, env);
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
+                    "end:axis2_udp_worker_process_request");
+    return AXIS2_SUCCESS;
+}
+
+
+/**
+ * Following block distinguish the exposed part of the dll.
+ */
+AXIS2_EXPORT int
+axis2_get_instance(
+    struct axis2_transport_receiver **inst,
+    const axutil_env_t * env)
+{
+    *inst = axis2_udp_receiver_create(env, NULL, -1, NULL);
+    if (!(*inst))
+    {
+        return AXIS2_FAILURE;
+    }
+
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXPORT int
+axis2_remove_instance(
+    axis2_transport_receiver_t * inst,
+    const axutil_env_t * env)
+{
+    if (inst)
+    {
+        axis2_transport_receiver_free(inst, env);
+    }
+    return AXIS2_SUCCESS;
+}
+
+
+
