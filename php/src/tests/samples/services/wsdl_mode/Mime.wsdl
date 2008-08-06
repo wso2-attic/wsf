@@ -48,7 +48,7 @@
         <xs:schema xmlns:ax21="http://ws.apache.org/axis2/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://ws.apache.org/axis2/xsd">
 		
 			<xs:import namespace="http://www.w3.org/2005/05/xmlmime"
-				schemaLocation="http://localhost/services/wsdl_mode/xmime.xsd"/>
+				schemaLocation="xmime.xsd"/>
 		
             <xs:complexType name="Person">
                 <xs:sequence>
