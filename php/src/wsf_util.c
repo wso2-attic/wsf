@@ -343,6 +343,9 @@ wsf_svc_info_create (
     svc_info->ht_op_params = NULL;
     svc_info->class_args = NULL;
     svc_info->sig_model_string = NULL;
+    svc_info->wsdl_string = NULL;
+    svc_info->is_wsdl_11 = 0;
+    svc_info->is_multi_interfaces = 0;
     svc_info->class_map = NULL;
     svc_info->wsdl_gen_class_map = NULL;
     svc_info->wsdl_gen_annotations = NULL;
@@ -1526,20 +1529,26 @@ int wsf_util_find_and_set_svc_ctx(
 	wsf_svc_info_t *svc_info,
 	axis2_conf_ctx_t *conf_ctx) {
 
-    axutil_hash_t *svc_ctx_map = NULL;
-    axis2_char_t *svc_name = NULL;
+
     axis2_svc_ctx_t *svc_ctx = NULL;
-
-    svc_ctx_map = axis2_conf_ctx_get_svc_ctx_map(conf_ctx, env);
-    svc_name = svc_info->svc_name;
-
-    svc_ctx = axutil_hash_get(svc_ctx_map, svc_name, AXIS2_HASH_KEY_STRING);
+    axis2_svc_grp_t *svc_grp = NULL;
+    axis2_svc_grp_ctx_t *svc_grp_ctx = NULL;
+    const axis2_char_t *svc_grp_id = NULL;
+    svc_grp = axis2_svc_get_parent(svc_info->svc, env);
+    svc_grp_id = axis2_svc_grp_get_name(svc_grp, env);
+    if(svc_grp_id) {
+        svc_grp_ctx = axis2_conf_ctx_get_svc_grp_ctx(conf_ctx, env, svc_grp_id);
+    }
+    if(svc_grp_ctx) {
+        svc_ctx = axis2_svc_grp_ctx_get_svc_ctx(svc_grp_ctx, env, svc_info->svc_name);
+    }
 
     if(svc_ctx) {
         svc_info->svc_ctx = svc_ctx;
         return AXIS2_SUCCESS;
     }
     return AXIS2_FAILURE;
+
 }
 
 void wsf_util_engage_modules_to_svc(

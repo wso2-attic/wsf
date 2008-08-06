@@ -64,11 +64,182 @@ wsf_wsdl_handle_server_security(
 	zval **policy_options,
 	const axutil_env_t *env TSRMLS_DC);
 
-void wsf_wsdl_extract_wsdl_information(
-	zval *this_zval, 
-	axutil_env_t * env TSRMLS_DC) {
+void wsf_wsdl_extract_wsdl_information_for_service(
+	wsf_svc_info_t *svc_info, 
+	const axutil_env_t * env TSRMLS_DC) {
 
-    zval *client_zval = NULL;
+    zval request_function, retval, param1;
+    zend_file_handle script;
+    zval *params[1];
+    zval *user_parameters = NULL;
+    php_stream *stream = NULL;
+    FILE *new_fp = NULL;
+
+    /* handles caching wsdl */
+    int cache_wsdl;
+    axis2_svc_ctx_t *svc_ctx = NULL;
+    axis2_ctx_t *base_ctx = NULL;
+
+    if (!svc_info->wsdl)
+	{
+        /* if wsdl is not given we are no longer continue in getting wsdl information */
+        return;
+    }
+	
+    script.type = ZEND_HANDLE_FP;
+	script.filename = WSF_WSDL_DYNAMIC_INVOC_SCRIPT;
+	script.opened_path = NULL;
+	script.free_filename = 0;
+
+
+	stream  = php_stream_open_wrapper(WSF_WSDL_DYNAMIC_INVOC_SCRIPT, "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
+	if(!stream)
+		return;
+
+	if (php_stream_cast(stream, PHP_STREAM_AS_STDIO|PHP_STREAM_CAST_RELEASE, (void*)&new_fp, REPORT_ERRORS) == FAILURE)    {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                     "[wsf_wsdl] Unable to open script file or file not found");
+	}
+	script.handle.fp =  new_fp;
+	if(script.handle.fp)
+	{
+		int lint_script = 1;
+		{
+			zval check_function, retval1;
+			ZVAL_STRING(&check_function, WSF_WSDL_CHECK_FUNCTION, 0);
+			if (call_user_function (EG (function_table), (zval **) NULL, 
+				&check_function, &retval1, 0,NULL TSRMLS_CC) == SUCCESS)
+			{
+					if(Z_TYPE(retval1) == IS_LONG && Z_LVAL(retval1) == 1)
+					{
+						lint_script = 0;							
+					}
+			}
+		}
+		if(lint_script)
+		{
+			php_lint_script (&script TSRMLS_CC); 
+		}
+	}
+
+    wsf_util_find_and_set_svc_ctx(env, svc_info, wsf_worker_get_conf_ctx(svc_info->php_worker, env));
+
+    svc_ctx = svc_info->svc_ctx;
+    cache_wsdl = svc_info->cache_wsdl;
+
+
+    if(cache_wsdl && svc_ctx) {
+        base_ctx = axis2_svc_ctx_get_base(svc_ctx, env);
+        if(base_ctx) {
+            axutil_property_t *sig_model_prop = NULL;
+            axutil_property_t *wsdl_prop = NULL;
+            axutil_property_t *is_wsdl_11_prop = NULL;
+            axutil_property_t *is_multi_interfaces_prop = NULL;
+
+            sig_model_prop = axis2_ctx_get_property(base_ctx, env, WSF_SVC_PROP_SIG_MODEL_STR);
+            wsdl_prop = axis2_ctx_get_property(base_ctx, env, WSF_SVC_PROP_WSDL_STR);
+            is_wsdl_11_prop = axis2_ctx_get_property(base_ctx, env, WSF_SVC_PROP_IS_WSDL_11);
+            is_multi_interfaces_prop = axis2_ctx_get_property(base_ctx, env, WSF_SVC_PROP_IS_MULTI_INTERFACES);
+            if(sig_model_prop && wsdl_prop && is_wsdl_11_prop && is_multi_interfaces_prop)
+            {
+                /* everything is in caceh. we will just restore it */
+                svc_info->sig_model_string = axutil_property_get_value(sig_model_prop, env);
+                svc_info->wsdl_string = axutil_property_get_value(wsdl_prop, env);
+                svc_info->is_wsdl_11 = (int)axutil_property_get_value(is_wsdl_11_prop, env);
+                svc_info->is_multi_interfaces = (int)axutil_property_get_value(is_multi_interfaces_prop, env);
+                return;
+            }
+        }
+    }
+
+	params[0] = &param1;
+	MAKE_STD_ZVAL(user_parameters);
+	array_init(user_parameters);
+	
+    add_assoc_string(user_parameters, WSF_WSDL, svc_info->wsdl, 1);
+
+    if(svc_info->auth_user && svc_info->auth_password && svc_info->auth_type)
+    {
+        add_assoc_string(user_parameters, WSF_HTTP_AUTH_PASSWORD, svc_info->auth_password, 1);
+        add_assoc_string(user_parameters, WSF_HTTP_AUTH_USERNAME, svc_info->auth_user, 1);
+        add_assoc_string(user_parameters, WSF_HTTP_AUTH_TYPE, svc_info->auth_type, 1);
+    }
+
+    if(svc_info->svc_name) {
+        add_assoc_string(user_parameters, WSF_SERVICE_NAME, svc_info->svc_name, 1);
+    }
+
+    if(svc_info->port_name)
+	{
+        add_assoc_string(user_parameters, WSF_PORT_NAME, svc_info->port_name, 1);
+    }
+ 
+    ZVAL_STRING(&request_function, WSF_WSDL_EXTRACT_WSDL, 0);
+    ZVAL_ZVAL(params[0], user_parameters, NULL, NULL);
+    INIT_PZVAL(params[0]);
+
+
+	if (call_user_function (EG (function_table), (zval **) NULL, &request_function, &retval, 1,
+                params TSRMLS_CC) == SUCCESS )
+	{
+        if (Z_TYPE(retval) == IS_ARRAY && Z_ARRVAL (retval) != IS_NULL)
+		{
+            HashTable *ht_return = NULL;
+            axis2_char_t *sig_model_string = NULL, *wsdl_dom_string = NULL;
+            int is_wsdl_11 = 0;
+            int is_multi_interfaces = 0;
+
+            zval **tmp_options = NULL;
+            
+            ht_return = Z_ARRVAL_P(&retval);
+
+            if(zend_hash_find(ht_return, WSF_WSDL_SIG_MODEL, sizeof(WSF_WSDL_SIG_MODEL),
+                (void **)&tmp_options) == SUCCESS && Z_TYPE_PP(tmp_options) == IS_STRING )
+            {
+                sig_model_string = Z_STRVAL_PP(tmp_options);
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                    "sig model retrieved:- %s", sig_model_string);
+                svc_info->sig_model_string = sig_model_string;
+            }
+            
+            if(zend_hash_find(ht_return, WSF_WSDL_DOM, sizeof(WSF_WSDL_DOM),
+                (void **)&tmp_options) == SUCCESS && Z_TYPE_PP(tmp_options) == IS_STRING )
+            {
+                wsdl_dom_string = Z_STRVAL_PP(tmp_options);
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "WSDL DOM string found");
+                svc_info->wsdl_string = wsdl_dom_string;
+            }
+
+            if(zend_hash_find(ht_return, WSF_WSDL_IS_WSDL_11, sizeof(WSF_WSDL_IS_WSDL_11),
+                (void **)&tmp_options) == SUCCESS && Z_TYPE_PP(tmp_options) == IS_BOOL)
+            {
+                is_wsdl_11 = Z_BVAL_PP(tmp_options);
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "WSDL version is found");
+                svc_info->is_wsdl_11 = is_wsdl_11;
+            }
+
+            if(zend_hash_find(ht_return, WSF_WSDL_MULTI_INTERFACES, sizeof(WSF_WSDL_MULTI_INTERFACES),
+                (void **)&tmp_options) == SUCCESS && Z_TYPE_PP(tmp_options) == IS_BOOL)
+            {
+                is_multi_interfaces = Z_BVAL_PP(tmp_options);
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "WSDL version is found");
+                svc_info->is_multi_interfaces = is_multi_interfaces;
+            }
+
+		}else if (Z_TYPE_P(&retval) == IS_STRING)
+		{
+			php_error_docref(NULL TSRMLS_CC, E_ERROR, "Error occurred in script: %s",Z_STRVAL_P(&retval));
+        }
+    }
+}
+
+
+
+void wsf_wsdl_extract_wsdl_information_for_client(
+	zval *this_zval, 
+	const axutil_env_t * env TSRMLS_DC) {
+
+    zval *obj_zval = NULL;
     zval **tmp = NULL;
     zval **wsdl_location = NULL;
     zval request_function, retval, param1;
@@ -87,18 +258,20 @@ void wsf_wsdl_extract_wsdl_information(
         if (zend_hash_find (Z_OBJPROP_P (this_zval), WSF_WSDL_WSCLIENT, sizeof (WSF_WSDL_WSCLIENT), 
                             (void **) & tmp) == SUCCESS) 
 		{
-            client_zval = *tmp;
+            obj_zval = *tmp;
         } else 
 		{
             php_error_docref (NULL TSRMLS_CC, E_ERROR, " proxy created without wsclient");
             return;
         }
-    } else if (instanceof_function (Z_OBJCE_P (this_zval), ws_client_class_entry TSRMLS_CC)) 
+    } else if (instanceof_function (Z_OBJCE_P (this_zval), ws_client_class_entry TSRMLS_CC) &&
+        instanceof_function (Z_OBJCE_P (this_zval), ws_service_class_entry TSRMLS_CC)) 
 	{
-        client_zval = this_zval;
+        /* this_zval can be either service or client */
+        obj_zval = this_zval;
     }
 
-    if ( zend_hash_find ( Z_OBJPROP_P (client_zval), WSF_WSDL, sizeof (WSF_WSDL),
+    if ( zend_hash_find ( Z_OBJPROP_P (obj_zval), WSF_WSDL, sizeof (WSF_WSDL),
 		(void **) &wsdl_location) == SUCCESS )
 	{
 		params[0] = &param1;
@@ -1232,27 +1405,13 @@ void wsf_wsdl_handle_client_security(
     
 }
 
-void wsf_wsdl_process_service(axis2_char_t *wsdl_location, wsf_svc_info_t *svc_info, const axutil_env_t *env TSRMLS_DC)
+void wsf_wsdl_cache_wsdl_info(wsf_svc_info_t *svc_info, const axutil_env_t *env TSRMLS_DC)
 {
-    zval *params[2];
-    zval retval, param1, param2;
-    zval *param_array;
-    zend_file_handle script;
-    zval request_function;
-    zval *operations;
-    axutil_hash_index_t *hi = NULL;
-
-    zval **policy_options = NULL;
-    axis2_char_t *sig_model_string = NULL;
-   
-    FILE *new_fp;
-    php_stream *stream;
-
     /* handles caching wsdl */
     int cache_wsdl;
     axis2_svc_ctx_t *svc_ctx = NULL;
     axis2_ctx_t *base_ctx = NULL;
- 
+
     wsf_util_find_and_set_svc_ctx(env, svc_info, wsf_worker_get_conf_ctx(svc_info->php_worker, env));
    
     svc_ctx = svc_info->svc_ctx;
@@ -1261,152 +1420,163 @@ void wsf_wsdl_process_service(axis2_char_t *wsdl_location, wsf_svc_info_t *svc_i
     if(cache_wsdl && svc_ctx) {
         base_ctx = axis2_svc_ctx_get_base(svc_ctx, env);
         if(base_ctx) {
-            sig_model_string = (axis2_char_t*)axis2_ctx_get_property(base_ctx, env, WSF_SVC_PROP_SIG_MODEL_STR);
-            policy_options = (zval**)axis2_ctx_get_property(base_ctx, env, WSF_SVC_PROP_POLICY_ARRAY);
+            axutil_property_t *sig_model_prop = NULL;
+            axutil_property_t *wsdl_prop = NULL;
+            axutil_property_t *is_wsdl_11_prop = NULL;
+            axutil_property_t *is_multi_interfaces_prop = NULL;
+
+            sig_model_prop = axutil_property_create(env);
+            wsdl_prop = axutil_property_create(env);
+            is_wsdl_11_prop = axutil_property_create(env);
+            is_multi_interfaces_prop = axutil_property_create(env);
+
+            sig_model_prop = 
+              axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
+                            AXIS2_FALSE, 0, axutil_strdup(env, svc_info->sig_model_string));
+            axis2_ctx_set_property(base_ctx, env, 
+                            WSF_SVC_PROP_SIG_MODEL_STR, sig_model_prop);
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                                "[wsf_wsdl]sig model string is cached");
+
+            wsdl_prop = 
+              axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
+                            AXIS2_TRUE, 0, axutil_strdup(env, svc_info->wsdl_string));
+            axis2_ctx_set_property(base_ctx, env, 
+                            WSF_SVC_PROP_WSDL_STR, wsdl_prop);
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                                "[wsf_wsdl]wsdl string is cached");
+
+            is_wsdl_11_prop = 
+              axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
+                            AXIS2_TRUE, 0, (void*)svc_info->is_wsdl_11);
+            axis2_ctx_set_property(base_ctx, env, 
+                            WSF_SVC_PROP_IS_WSDL_11, is_wsdl_11_prop);
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                                "[wsf_is_wsdl] is_wsdl_11 is cached");
+
+            is_multi_interfaces_prop = 
+              axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
+                            AXIS2_FALSE, 0, (void*)svc_info->is_multi_interfaces);
+            axis2_ctx_set_property(base_ctx, env, 
+                            WSF_SVC_PROP_IS_MULTI_INTERFACES, is_multi_interfaces_prop);
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                                "[wsf_is_wsdl] is_multi_interfaces is cached");
         }
     }
+}
+
+void wsf_wsdl_process_service(wsf_svc_info_t *svc_info, const axutil_env_t *env TSRMLS_DC)
+{
+    zval *params[6];
+    zval retval, param1, param2,
+        param3, param4, param5, param6;
+    zval *param_array;
+    zval request_function;
+    zval *operations;
+    axutil_hash_index_t *hi = NULL;
+
+    zval **policy_options = NULL;
+   
+    axis2_char_t *wsdl_location = NULL;
+
+    wsdl_location = svc_info->wsdl;
+
 
     /* if it is already exists in the service context just use them */
-    if(sig_model_string && policy_options) {
+    wsf_wsdl_extract_wsdl_information_for_service(svc_info, env TSRMLS_CC);
 
-        /* NOTE: if the cache exist, it pulled from the cache */
-        svc_info->sig_model_string = sig_model_string;
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
-                        "[wsf_wsdl]using cached sig model string");
-        wsf_wsdl_handle_server_security(svc_info, policy_options,
-                                                        env TSRMLS_CC);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
-                        "[wsf_wsdl]using cached policy_options");
+    /* NOTE: if not cached, it execute the default path */ 
+    params[0] = &param1;
+    params[1] = &param2;
+    params[2] = &param3;
+    params[3] = &param4;
+    params[4] = &param5;
+    params[5] = &param6;
+    
+    MAKE_STD_ZVAL(param_array);
+    array_init(param_array);
+    add_assoc_string(param_array, WSF_WSDL, wsdl_location, 1);
+    
+    if(svc_info->auth_user && svc_info->auth_password && svc_info->auth_type)
+    {
+        add_assoc_string(param_array, WSF_HTTP_AUTH_PASSWORD, svc_info->auth_password, 1);
+        add_assoc_string(param_array, WSF_HTTP_AUTH_USERNAME, svc_info->auth_user, 1);
+        add_assoc_string(param_array, WSF_HTTP_AUTH_TYPE, svc_info->auth_type, 1);
     }
-    else {
-        
-        /* NOTE: if not cached, it execute the default path */ 
-        svc_info->sig_model_string = sig_model_string;
-        params[0] = &param1;
-        params[1] = &param2;
-        
-        MAKE_STD_ZVAL(param_array);
-        array_init(param_array);
-        add_assoc_string(param_array, WSF_WSDL, wsdl_location, 1);
-        
-		if(svc_info->auth_user && svc_info->auth_password && svc_info->auth_type)
-		{
-			add_assoc_string(param_array, WSF_HTTP_AUTH_PASSWORD, svc_info->auth_password, 1);
-			add_assoc_string(param_array, WSF_HTTP_AUTH_USERNAME, svc_info->auth_user, 1);
-			add_assoc_string(param_array, WSF_HTTP_AUTH_TYPE, svc_info->auth_type, 1);
-		}
-               
-        MAKE_STD_ZVAL (operations);
-        array_init (operations);
-        if (svc_info->ops_to_functions) {
-            for (hi =
-                     axutil_hash_first (svc_info->ops_to_functions, env);
-                 hi; hi = axutil_hash_next (env, hi)) {
-                void *v = NULL;
-                const void *k = NULL;
-                axis2_char_t * f_key = NULL;
-                axutil_hash_this (hi, &k, NULL, &v);
-                f_key = (axis2_char_t *) k;
-                add_next_index_string (operations, (char *)f_key , 1);
-            } 
-        }	
-        
-        
-        ZVAL_STRING(&request_function, WSF_WSDL_SERVICE_REQ_FUNCTION, 0);
-        
-        if(!svc_info->generated_svc_name){
-            add_assoc_string(param_array, WSF_SERVICE_NAME, svc_info->svc_name, 1);
+           
+    MAKE_STD_ZVAL (operations);
+    array_init (operations);
+    if (svc_info->ops_to_functions) {
+        for (hi =
+                 axutil_hash_first (svc_info->ops_to_functions, env);
+             hi; hi = axutil_hash_next (env, hi)) {
+            void *v = NULL;
+            const void *k = NULL;
+            axis2_char_t * f_key = NULL;
+            axutil_hash_this (hi, &k, NULL, &v);
+            f_key = (axis2_char_t *) k;
+            add_next_index_string (operations, (char *)f_key , 1);
+        } 
+    }	
+    
+    
+    ZVAL_STRING(&request_function, WSF_WSDL_SERVICE_REQ_FUNCTION, 0);
+    
+    if(!svc_info->generated_svc_name){
+        add_assoc_string(param_array, WSF_SERVICE_NAME, svc_info->svc_name, 1);
+    }
+    if(svc_info->port_name){
+        add_assoc_string(param_array, WSF_PORT_NAME, svc_info->port_name, 1);
+    }
+    
+    ZVAL_ZVAL(params[0], param_array, NULL, NULL);
+    INIT_PZVAL(params[0]);
+    ZVAL_ZVAL(params[1], operations, NULL, NULL);
+    INIT_PZVAL(params[1]);
+
+    /* getting the stored wsdl dom, wsdl version and the sig model information */
+    ZVAL_STRING(params[2], svc_info->wsdl_string, 1);
+    INIT_PZVAL(params[2]);
+    ZVAL_BOOL(params[3], svc_info->is_wsdl_11);
+    INIT_PZVAL(params[3]);
+    ZVAL_STRING(params[4], svc_info->sig_model_string, 1);
+    INIT_PZVAL(params[4]);
+    ZVAL_BOOL(params[5], svc_info->is_multi_interfaces);
+    INIT_PZVAL(params[5]);
+
+    if (call_user_function (EG (function_table), (zval **) NULL,
+                            &request_function, &retval, 6, 
+                            params TSRMLS_CC) == SUCCESS ){
+        if (Z_TYPE_P(&retval) == IS_STRING){
+            svc_info->sig_model_string = Z_STRVAL_P(&retval);
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                             "[wsf_wsdl]received data from scripts");
         }
-        if(svc_info->port_name){
-            add_assoc_string(param_array, WSF_PORT_NAME, svc_info->port_name, 1);
-        }
-        
-        ZVAL_ZVAL(params[0], param_array, NULL, NULL);
-        INIT_PZVAL(params[0]);
-        ZVAL_ZVAL(params[1], operations, NULL, NULL);
-        INIT_PZVAL(params[1]);
-        
-        script.type = ZEND_HANDLE_FP;
-        script.filename = WSF_WSDL_DYNAMIC_INVOC_SCRIPT;
-        script.opened_path = NULL;
-        script.free_filename = 0;
-
-
-        stream  = php_stream_open_wrapper(WSF_WSDL_DYNAMIC_INVOC_SCRIPT, "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
-        if(!stream)
-            return;
-
-        if (php_stream_cast(stream, PHP_STREAM_AS_STDIO|PHP_STREAM_CAST_RELEASE, (void*)&new_fp, REPORT_ERRORS) == FAILURE)    {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                             "[wsf_wsdl] Unable to open script file or file not found");
-        }
-        script.handle.fp =  new_fp;
-
-        if(script.handle.fp){
-            php_lint_script (&script TSRMLS_CC);
-            if (call_user_function (EG (function_table), (zval **) NULL,
-                                    &request_function, &retval, 2, 
-                                    params TSRMLS_CC) == SUCCESS ){
-                if (Z_TYPE_P(&retval) == IS_STRING){
-                    svc_info->sig_model_string = Z_STRVAL_P(&retval);
-                    AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                                     "[wsf_wsdl]received data from scripts");
-                }
-                else if(Z_TYPE_P(&retval) == IS_ARRAY){
-                    zval **tmp = NULL;
-                    HashTable *ht_return = Z_ARRVAL_P(&retval);
-                    
-                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
-                                    "[wsf_wsdl]received array from scripts");
-                    if(zend_hash_find(ht_return, WSF_WSDL_SIG_MODEL, 
-                                      sizeof(WSF_WSDL_SIG_MODEL), (void **)&tmp) == SUCCESS &&
-                       Z_TYPE_PP(tmp) == IS_STRING){
-                        svc_info->sig_model_string = Z_STRVAL_PP(tmp);
-                        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
-                                        "[wsf_wsdl]received sig model string");
-                    }
-                    if(zend_hash_find(ht_return, WSF_WSDL_POLICIES, sizeof(WSF_WSDL_POLICIES), 
-                                      (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY){
-                        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
-                                        "[wsf_wsdl]policies found");
-                        policy_options = tmp;
-                        wsf_wsdl_handle_server_security(svc_info, policy_options,
-                                                        env TSRMLS_CC);
-                    }
-                                    
-                }
-            }
-        }
-
-        if(cache_wsdl && svc_ctx) {
-            base_ctx = axis2_svc_ctx_get_base(svc_ctx, env);
-            if(base_ctx) {
-                axutil_property_t *sig_model_prop = NULL;
-                axutil_property_t *policy_options_prop = NULL;
-                
-
-                sig_model_prop = axutil_property_create(env);
-                policy_options_prop = axutil_property_create(env);
-
-                sig_model_prop = 
-                  axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
-                                AXIS2_FALSE, 0, svc_info->sig_model_string);
-
-                policy_options_prop = 
-                  axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
-                                AXIS2_FALSE, 0, policy_options);
-
-                axis2_ctx_set_property(base_ctx, env, 
-                    WSF_SVC_PROP_SIG_MODEL_STR, sig_model_prop);
+        else if(Z_TYPE_P(&retval) == IS_ARRAY){
+            zval **tmp = NULL;
+            HashTable *ht_return = Z_ARRVAL_P(&retval);
+            
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                            "[wsf_wsdl]received array from scripts");
+            if(zend_hash_find(ht_return, WSF_WSDL_SIG_MODEL, 
+                              sizeof(WSF_WSDL_SIG_MODEL), (void **)&tmp) == SUCCESS &&
+               Z_TYPE_PP(tmp) == IS_STRING){
+                svc_info->sig_model_string = Z_STRVAL_PP(tmp);
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
-                                    "[wsf_wsdl]sig model string is cached");
-                axis2_ctx_set_property(base_ctx, env, WSF_SVC_PROP_POLICY_ARRAY,
-                                        policy_options_prop);
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
-                                    "[wsf_wsdl]policy options array is cached");
+                                "[wsf_wsdl]received sig model string");
             }
+            if(zend_hash_find(ht_return, WSF_WSDL_POLICIES, sizeof(WSF_WSDL_POLICIES), 
+                              (void **)&tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_ARRAY){
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                                "[wsf_wsdl]policies found");
+                policy_options = tmp;
+                wsf_wsdl_handle_server_security(svc_info, policy_options,
+                                                env TSRMLS_CC);
+            }
+                            
         }
     }
+
 }
 
 void wsf_wsdl_handle_server_security(wsf_svc_info_t *svc_info,
@@ -1604,8 +1774,9 @@ void wsf_wsdl_handle_server_security(wsf_svc_info_t *svc_info,
 
 void wsf_wsdl_set_sig_model(char *wsdl_path, wsf_svc_info_t *svc_info, const axutil_env_t *env TSRMLS_DC)
 {
-    zval *params[2];
-    zval retval, param1, param2;
+    zval *params[6];
+    zval retval, param1, param2,
+        param3, param4, param5, param6;
     zval *param_array;
     zend_file_handle script;
     zval request_function;
@@ -1617,11 +1788,20 @@ void wsf_wsdl_set_sig_model(char *wsdl_path, wsf_svc_info_t *svc_info, const axu
  
     params[0] = &param1;
     params[1] = &param2;
+    params[2] = &param3;
+    params[3] = &param4;
+    params[4] = &param5;
+    params[5] = &param6;
+        
     
     MAKE_STD_ZVAL(param_array);
     array_init(param_array);
     add_assoc_string(param_array, WSF_WSDL, wsdl_path, 1);
     
+    /* test */
+    svc_info->wsdl = wsdl_path;
+    wsf_wsdl_extract_wsdl_information_for_service(svc_info, env TSRMLS_CC);
+    wsf_wsdl_cache_wsdl_info(svc_info, env TSRMLS_CC);
     
     MAKE_STD_ZVAL (operations);
     array_init (operations);
@@ -1647,11 +1827,28 @@ void wsf_wsdl_set_sig_model(char *wsdl_path, wsf_svc_info_t *svc_info, const axu
     if(svc_info->port_name){
         add_assoc_string(param_array, WSF_PORT_NAME, svc_info->port_name, 1);
     }
+
+    if(svc_info->auth_user && svc_info->auth_password && svc_info->auth_type)
+    {
+        add_assoc_string(param_array, WSF_HTTP_AUTH_PASSWORD, svc_info->auth_password, 1);
+        add_assoc_string(param_array, WSF_HTTP_AUTH_USERNAME, svc_info->auth_user, 1);
+        add_assoc_string(param_array, WSF_HTTP_AUTH_TYPE, svc_info->auth_type, 1);
+    }
     
     ZVAL_ZVAL(params[0], param_array, NULL, NULL);
     INIT_PZVAL(params[0]);
     ZVAL_ZVAL(params[1], operations, NULL, NULL);
     INIT_PZVAL(params[1]);
+
+    /* getting the stored wsdl dom, wsdl version and the sig model information */
+    ZVAL_STRING(params[2], svc_info->wsdl_string, 1);
+    INIT_PZVAL(params[2]);
+    ZVAL_BOOL(params[3], svc_info->is_wsdl_11);
+    INIT_PZVAL(params[3]);
+    ZVAL_STRING(params[4], svc_info->sig_model_string, 1);
+    INIT_PZVAL(params[4]);
+    ZVAL_BOOL(params[5], svc_info->is_multi_interfaces);
+    INIT_PZVAL(params[5]);
     
     script.type = ZEND_HANDLE_FP;
     script.filename = WSF_WSDL_DYNAMIC_INVOC_SCRIPT;
@@ -1670,13 +1867,29 @@ void wsf_wsdl_set_sig_model(char *wsdl_path, wsf_svc_info_t *svc_info, const axu
     script.handle.fp =  new_fp;
 
     if(script.handle.fp){
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+		int lint_script = 1;
+		{
+			zval check_function, retval1;
+			ZVAL_STRING(&check_function, WSF_WSDL_CHECK_FUNCTION, 0);
+			if (call_user_function (EG (function_table), (zval **) NULL, 
+				&check_function, &retval1, 0,NULL TSRMLS_CC) == SUCCESS)
+			{
+					if(Z_TYPE(retval1) == IS_LONG && Z_LVAL(retval1) == 1)
+					{
+						lint_script = 0;							
+					}
+			}
+		}
+		if(lint_script)
+		{
+			php_lint_script (&script TSRMLS_CC); 
+		}
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                                  "[wsf_wsdl]start linting");
-        php_lint_script (&script TSRMLS_CC);
-                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                                  "[wsf_wsdl]finished linting");
         if (call_user_function (EG (function_table), (zval **) NULL,
-                                &request_function, &retval, 2, 
+                                &request_function, &retval, 6, 
                                 params TSRMLS_CC) == SUCCESS ){
             if (Z_TYPE_P(&retval) == IS_STRING){
                 svc_info->sig_model_string = Z_STRVAL_P(&retval);

@@ -56,9 +56,10 @@ void wsf_wsdl_create_dynamic_client(
 * @param TSRMLS_DC, 
 * @returns AXIS2_SUCCESS on success, AXIS2_FAILURE Otherwise
 */
-void wsf_wsdl_process_service(axis2_char_t *wsdl,
-                              wsf_svc_info_t *svc_info, 
-                              const axutil_env_t *env TSRMLS_DC);
+
+void wsf_wsdl_process_service(
+                wsf_svc_info_t *svc_info,
+                const axutil_env_t *env TSRMLS_DC);
 
 /**
 * 
@@ -75,9 +76,26 @@ void wsf_wsdl_set_sig_model(char* wsdl_path,
  * @param this_zval can be ether WSClient or WSServie
  * @parm env axis2 environment
  */
-void wsf_wsdl_extract_wsdl_information(
+void wsf_wsdl_extract_wsdl_information_for_client(
     zval *this_zval,
-        axutil_env_t * env TSRMLS_DC);
+        const axutil_env_t * env TSRMLS_DC);
+
+/**
+ * extract the wsdl information to the service
+ * @param svc_info the wsf_svc_info_t instance
+ * @parm env axis2 environment
+ */
+void wsf_wsdl_extract_wsdl_information_for_service(
+        wsf_svc_info_t *svc_info,
+        const axutil_env_t * env TSRMLS_DC);
+
+/**
+ * caching the wsdl info
+ * @param svc_info the wsf_svc_info_t instance
+ * @parm env axis2 environment
+ */
+void wsf_wsdl_cache_wsdl_info(wsf_svc_info_t *svc_info,
+            const axutil_env_t *env TSRMLS_DC);
 
 #define WSF_WSDL_FILE_PATH       "/scripts/dynamic_invocation/wsf_wsdl.php"
 #define WSF_WSDL_XSLT_PATH            "/scripts/dynamic_invocation/xslt"

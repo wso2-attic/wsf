@@ -262,7 +262,9 @@ typedef enum ws_input_types
 
 /** service context properties */
 #define WSF_SVC_PROP_SIG_MODEL_STR "sig_model_string"
-#define WSF_SVC_PROP_POLICY_ARRAY "policy_array"
+#define WSF_SVC_PROP_WSDL_STR "wsf_wsdl_string"
+#define WSF_SVC_PROP_IS_WSDL_11 "wsf_is_wsdl_11"
+#define WSF_SVC_PROP_IS_MULTI_INTERFACES "wsf_is_multi_interfaces"
 
 /** this option is read from the WSService constructor to engage rahas*/
 #define WSF_USE_OWN_STS "useOwnSTS"
@@ -310,6 +312,12 @@ typedef struct wsf_svc_info
   int generated_svc_name;
   /** sig model string */
   char *sig_model_string;
+  /** wsdl string */
+  char *wsdl_string;
+  /** is wsdl version 11 */
+  int is_wsdl_11;
+  /** is multi interfaces */
+  int is_multi_interfaces;
   /** class map for wsdl generation */	
   zval *class_map;
   /** class map for wsdl generation */
@@ -318,7 +326,7 @@ typedef struct wsf_svc_info
   zval *wsdl_gen_annotations;
   /** actions to wsdl generation*/
   zval *wsdl_gen_actions;
-  /** wsdl string */
+  /** wsdl endpoint */
   char *wsdl;
   /**http://<domain>/<..*.php>/<loc_str>/ */
   char *loc_str;	

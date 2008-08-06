@@ -860,7 +860,7 @@ PHP_METHOD (ws_client, get_proxy)
     add_property_zval (client_proxy_zval, "wsclient", this_ptr);
 
     /* load the wsdl information if available */
-    wsf_wsdl_extract_wsdl_information(client_proxy_zval, env TSRMLS_CC);
+    wsf_wsdl_extract_wsdl_information_for_client(client_proxy_zval, env TSRMLS_CC);
 
     RETURN_ZVAL (client_proxy_zval, 0, 1);
 }
@@ -884,6 +884,8 @@ PHP_METHOD (ws_service, __construct)
     char *service_name = NULL;
     char *port_name = NULL;
     ws_is_svr = 1;
+    zval ** wsdl_tmp = NULL;
+
 
     if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "|a",
             &options)) {
@@ -1142,10 +1144,10 @@ PHP_METHOD (ws_service, __construct)
 
 	wsf_util_process_rest_params(ws_env_svr, svc_info, ht_rest_map TSRMLS_CC);
 
-    /*if(zend_hash_find(Z_OBJPROP_P(this_ptr), WSF_WSDL,
+    if(zend_hash_find(Z_OBJPROP_P(this_ptr), WSF_WSDL,
                       sizeof(WSF_WSDL), (void **)&wsdl_tmp) == SUCCESS){
-        wsf_wsdl_process_service(this_ptr, NULL, svc_info, ws_env_svr TSRMLS_CC);
-    } */
+        wsf_wsdl_process_service(svc_info, ws_env_svr TSRMLS_CC);
+    }
 
     if (svc_info->security_token && (svc_info->policy || svc_info->ht_op_policies))
     {
@@ -1627,6 +1629,8 @@ PHP_METHOD (ws_service, reply)
    }else 
    {
 		wsf_worker_process_request (php_worker, ws_env_svr, &req_info, &res_info, svc_info TSRMLS_CC);
+
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "we are here too");
 		wsf_response_info_cleanup(&res_info, ws_env_svr);
    }
 }

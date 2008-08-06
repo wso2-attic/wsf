@@ -354,6 +354,8 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
     env_ns = axiom_namespace_create (env, soap_ns, AXIOM_SOAP_DEFAULT_NAMESPACE_PREFIX);
     if (!env_ns) 
 	{
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "[wsfphp] error seting the namespces for the "
+                    AXIOM_SOAP_DEFAULT_NAMESPACE_PREFIX);
         return AXIS2_FAILURE;
     }
 
@@ -371,6 +373,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
         AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "failed in creating the response soap headers");
         return AXIS2_FAILURE;
     }
+        
 
     if(output_headers_zval) {
         axiom_node_t *header_base_node = NULL;
@@ -541,13 +544,13 @@ wsf_xml_msg_recv_invoke_mixed (
 
     if (!in_msg_ctx || !function_name) 
     {
-		    return NULL;
+	    return NULL;
     }
 
     /* load the sig model form cache if exist */
     if(svc_info->wsdl)
     {
-        wsf_wsdl_process_service(svc_info->wsdl, svc_info, env TSRMLS_CC);
+        wsf_wsdl_cache_wsdl_info(svc_info, env TSRMLS_CC);
     }
 
     use_mtom = svc_info->use_mtom;
@@ -741,14 +744,20 @@ wsf_xml_msg_recv_invoke_mixed (
                 Z_TYPE_PP(tmp) == IS_STRING ){
                 res_payload_str = Z_STRVAL_PP(tmp);
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
-                             "[wsf_wsdl]return payload string is\t %s", res_payload_str);
+                             "[wsf_wsdl]return payload string is\n %s", res_payload_str);
     
                 if(!res_payload_str) {
                     AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
                                      "[wsf_wsdl] response payload string not found");
                 }
                 else {
+
                     res_om_node = wsf_util_deserialize_buffer(env, res_payload_str);
+
+                    if(!res_om_node) {
+                        AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI,
+                                     "[wsf_wsdl] error deserializing the res payload");
+                    }
 
                     if(zend_hash_find(ht_return, WSF_WSDL_ATTACHMENT_MAP,
                                     sizeof(WSF_WSDL_ATTACHMENT_MAP),

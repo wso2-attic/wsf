@@ -511,15 +511,14 @@ function wsf_process_response($response_payload_string,
     return $response_class;
 }
 
-function wsf_process_wsdl_for_service($parameters, $operation_array)
+function wsf_process_wsdl_for_service($parameters, $operation_array,
+                            $wsdl_dom_string, $is_wsdl_11, $sig_model_string,
+                            $is_multiple_interfaces)
 {
     require_once('dynamic_invocation/wsf_wsdl_consts.php');
     require_once('dynamic_invocation/wsf_wsdl_util.php');
     require_once('dynamic_invocation/wsf_wsdl_service.php');
 
-    $is_wsdl_11 = TRUE;
-    $wsdl_11_dom = NULL;
-    
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "wsf_process_wsdl_for_service called");
     
     $wsdl_dom = new DomDocument();
@@ -530,9 +529,6 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
     $service_name = NULL;
     $port_name = NULL;
 
-    if(array_key_exists(WSF_WSDL, $parameters)) { 
-        $wsdl_location = $parameters[WSF_WSDL];
-    }
     if(array_key_exists(WSF_SERVICE_NAME, $parameters)) {
         $service_name = $parameters[WSF_SERVICE_NAME];
     }
@@ -543,55 +539,23 @@ function wsf_process_wsdl_for_service($parameters, $operation_array)
     $sig_model_dom->preserveWhiteSpace = FALSE;
     $wsdl_dom->preserveWhiteSpace = FALSE;
 
-    if(!$wsdl_location) {
-        ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "wsdl is not found");
-        return "WSDL is not found";
-    }
-    $is_multiple_interfaces = FALSE;
-	
-	
-    $wsdl_str = wsf_get_wsdl_str_from_url($wsdl_location, $parameters);
-    if(is_null($wsdl_str))
-    {
-	    ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Reading WSDL from  {$wsdl_location} failed.");
-        return "Reading WSDL from {$wsdl_location} failed";
-    }
-    // Load WSDL as DOM
-    $wsdl_dom = new DOMDocument();
-    if(!$wsdl_dom->loadXML($wsdl_str)) {
-        ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "WSDL {$wsdl_location} could not be loaded.");
-        return "WSDL {$wsdl_location} could not be loaded.";
-    }
-
-    /* changing code for processing mutiple port types in wsdl 1.1 */
-    $is_multiple_interfaces = wsf_is_mutiple_port_types($wsdl_dom);
-    
-    if ($is_multiple_interfaces == FALSE) {
-        // this will return the wsdl2.0 dom and the information
-        // about is_wsdl_11 and wsdl_11_dom
-        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location, $is_wsdl_11, $wsdl_11_dom);
-        
-        if(!$wsdl_dom) {
-            ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "error creating WSDL Dom Document.");
-            return "error creating WSDL Dom Document";
-        }
-        
-        $sig_model_dom = wsf_get_sig_model_dom($wsdl_dom);
-    }
-    else {
-        // this will return the wsdl2.0 dom and the information
-        // about is_wsdl_11 and wsdl_11_dom
-        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location, $is_wsdl_11, $wsdl_11_dom);
-        $sig_model_dom = wsf_process_multiple_interfaces($wsdl_dom);
-    }
-
+    $sig_model_dom->loadXML($sig_model_string);
     if(!$sig_model_dom) {
-        ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "error creating intermediate model.");
-        return "error creating intermediate model";
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR,
+                "Error retrieving the intermediate sig model");
+        return "Error retrieving the intermediate model";
+    }
+    $wsdl_dom->loadXML($wsdl_dom_string);
+    if(!$wsdl_dom) {
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, 
+            "Error retrieving the wsdl string to process the request message");
+        return "Error retrieving the wsdl string to process the request message";
     }
     
-    $sig_model_string = $sig_model_dom->saveXML();
-    
+    if($is_wsdl_11) {
+        $wsdl_11_dom = $wsdl_dom;
+    }
+	
     /* creating policy array */
     $policy_array = array();
     /* this will no longer need for the service */
