@@ -883,9 +883,8 @@ PHP_METHOD (ws_service, __construct)
 	HashTable * ht_rest_map = NULL;
     char *service_name = NULL;
     char *port_name = NULL;
-    ws_is_svr = 1;
     zval ** wsdl_tmp = NULL;
-
+	ws_is_svr = 1;
 
     if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "|a",
             &options)) {

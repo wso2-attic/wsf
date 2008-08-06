@@ -672,7 +672,8 @@ wsf_xml_msg_recv_invoke_mixed (
             smart_str_appends(&req_uri, SG(request_info).request_uri);
             smart_str_appends(&req_uri, "?wsdl");
             smart_str_0(&req_uri);
-            wsf_wsdl_set_sig_model(req_uri.c, svc_info, env TSRMLS_CC);
+            wsf_wsdl_set_sig_model(axutil_strdup(env, req_uri.c), svc_info, env TSRMLS_CC);
+			smart_str_free(&req_uri);
         }
     }
 
