@@ -432,9 +432,9 @@ wsf_client_get_reader_from_zval (
 
     }
     if (!reader) {
-        zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C),
-            1 TSRMLS_CC, "Xml Reader Creation Failed");
-    }
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+			"XML Reader creation failed The input string payload is either null or malformed");
+	}
     return reader;
 }
 
@@ -1025,18 +1025,19 @@ wsf_client_set_options (
                 "useSOAP TRUE setting soap version %d", soap_version);
         } else 
 		{
-
+			/*
             axutil_property_t *rest_property = NULL;
 
             AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
                 "useSOAP FALSE enabling rest ");
 
             rest_property = axutil_property_create (env);
-
+			axis2_options_set_enable_rest()
             axutil_property_set_value (rest_property, env, axutil_strdup (env, AXIS2_VALUE_TRUE));
 
             axis2_options_set_property (client_options, env, AXIS2_ENABLE_REST, rest_property);
-
+			*/
+			axis2_options_set_enable_rest(client_options,env, AXIS2_TRUE);
 			*rest_enabled = AXIS2_TRUE;
         }
 
@@ -1269,26 +1270,38 @@ wsf_client_do_request (
         input_type = WSF_USING_STRING;
     }
 
+	client_options = (axis2_options_t *) axis2_svc_client_get_options (svc_client, env);
+
+	/** Reset XML Parser free option. This is necessary to avoid the crash problem with libxml2 */
+	axis2_options_set_xml_parser_reset (client_options, env, AXIS2_FALSE);
+
+	client_ht = Z_OBJPROP_P (this_ptr);
+
     /** convert payload to an axiom node */
     request_payload = wsf_util_read_payload (reader, env);
 
-
     if (!request_payload) 
 	{
+		int throw_execption = AXIS2_TRUE;
+		zval **tmp = NULL;
 		AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
-			"wsf_client_request_do_request payload node is null");
-
-        zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C),
+			"request payload node is null");
+		
+		if (zend_hash_find (client_ht, WSF_USE_SOAP, sizeof (WSF_USE_SOAP), 
+			(void **) &tmp) == SUCCESS)
+		{
+			if (Z_TYPE_PP (tmp) == IS_BOOL && (Z_BVAL_PP (tmp) == 0)) 
+			{
+					throw_execption = AXIS2_FALSE;
+			}
+		}
+		if(throw_execption)
+		{
+		    zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C),
             1 TSRMLS_CC, "request payload should not be null");
-        
-    }
-
-    client_options = (axis2_options_t *) axis2_svc_client_get_options (svc_client, env);
-
-	/** Reset XML Parser free option. This is necessary to avoid the crash problem with libxml2 */
-    axis2_options_set_xml_parser_reset (client_options, env, AXIS2_FALSE);
-
-    client_ht = Z_OBJPROP_P (this_ptr);
+		}
+	}
+    
 
     /** add proxy settings */
     wsf_client_enable_proxy (client_ht, env, svc_client TSRMLS_CC);
