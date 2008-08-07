@@ -192,6 +192,24 @@ AC_ARG_ENABLE(tcp, [  --enable-tcp
   AC_MSG_RESULT(no)
 )
 
+AC_MSG_CHECKING(whether to build udp transport)
+AC_ARG_ENABLE(tcp, [  --enable-udp
+                          build udp transport (default=no)],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    TCP_DIR="udp"
+
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+)
+
+
+
 AC_MSG_CHECKING(whether to use apache2 as server transport)
 AC_ARG_WITH(apache2,
 [  --with-apache2[=PATH]      Find the Apache2 HTTP Web server header files in 'PATH'.
@@ -431,6 +449,7 @@ AC_SUBST(PARSER_DIR)
 AC_SUBST(WRAPPER_DIR)
 AC_SUBST(XMPP_DIR)
 AC_SUBST(TCP_DIR)
+AC_SUBST(UDP_DIR)
 AC_SUBST(GUTHTHILA_DIR)
 AC_SUBST(GUTHTHILA_LIBS)
 AC_SUBST(ZLIBBUILD)
@@ -472,6 +491,10 @@ AC_CONFIG_FILES([Makefile \
     src/core/transport/xmpp/receiver/Makefile \
     src/core/transport/xmpp/server/Makefile \
     src/core/transport/xmpp/server/simple_xmpp_server/Makefile \
+    src/core/transport/udp/Makefile \
+    src/core/transport/udp/sender/Makefile \
+    src/core/transport/udp/receiver/Makefile \
+    src/core/transport/udp/server/Makefile \
     src/core/deployment/Makefile \
     src/core/clientapi/Makefile \
     src/core/receivers/Makefile \
