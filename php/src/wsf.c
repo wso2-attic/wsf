@@ -1227,8 +1227,16 @@ static void generate_wsdl_for_service(zval *svc_zval,
         INIT_ZVAL(retval);
         MAKE_STD_ZVAL(param);
         
-        sapi_add_header ("Content-Type:application/xml", sizeof ("Content-Type:application/xml"), 1);
-        ZVAL_STRING(param, Z_STRVAL_PP(wsdl_location), 1);
+		if (sapi_module.pretty_name && strcmp(sapi_module.pretty_name,"CGI/FastCGI") == 0) {
+			sapi_add_header ("Content-Type:application/xml\n",
+				sizeof ("Content-Type:application/xml\n"), 1);
+		}else
+		{
+			sapi_add_header ("Content-Type:application/xml",
+				sizeof ("Content-Type:application/xml"), 1);
+		}
+		
+		ZVAL_STRING(param, Z_STRVAL_PP(wsdl_location), 1);
         ZVAL_STRING(&function, "file_get_contents", 1);
         if (call_user_function(EG(function_table), NULL, &function, 
 			&retval, 1, &param  TSRMLS_CC) == SUCCESS) 
@@ -1437,8 +1445,14 @@ static void generate_wsdl_for_service(zval *svc_zval,
 				{
                     val = estrdup (Z_STRVAL (retval));
                     len = Z_STRLEN (retval);
-                    sapi_add_header ("Content-Type:application/xml",
+					if (sapi_module.pretty_name && strcmp(sapi_module.pretty_name,"CGI/FastCGI") == 0) {
+						sapi_add_header ("Content-Type:application/xml\n",
+							sizeof ("Content-Type:application/xml\n"), 1);
+					}else
+					{
+						sapi_add_header ("Content-Type:application/xml",
                                      sizeof ("Content-Type:application/xml"), 1);
+					}
                     php_write (val, len TSRMLS_CC);
                     if(val)
 					{
