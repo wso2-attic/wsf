@@ -440,7 +440,6 @@ AC_CONFIG_FILES([Makefile \
     src/core/transport/http/receiver/Makefile \
     src/core/transport/http/server/simple_axis2_server/Makefile \
     src/core/transport/http/server/Makefile \
-    src/core/transport/http/server/apache2/Makefile \
     src/core/transport/tcp/Makefile \
     src/core/transport/tcp/sender/Makefile \
     src/core/transport/tcp/receiver/Makefile \
