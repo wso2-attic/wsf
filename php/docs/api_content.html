@@ -174,7 +174,7 @@ border="1">
     <tr valign="top">
       <td colspan="1" style="height: 20px; width: 96px;">"policy"</td>
       <td colspan="1" style="height: 20px"> &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
           WSPolicy object</td>
       <td colspan="1" style="height: 20px">WSPolicy object</td>
       <td colspan="1" style="height: 20px">None</td>
@@ -965,6 +965,25 @@ border="1">
         will override this setting.</p>
       </td>
     </tr>
+     <tr valign="top">
+      <td><p>
+                  "attachments"</p>
+      </td>
+      <td><p>
+                  array</p>
+      </td>
+      <td><p>
+                  array</p>
+      </td>
+      <td style="width: 109px"><p>
+                  NONE</p>
+      </td>
+      <td style="width: 465px">
+                  This is an associative array which maps the string value specified in the xml to
+                  the matching binary string. If attachment caching is enabled, you can set file name
+                  instead of the binary string.</td>
+    </tr>
+   
      <tr>
       <td colspan="5" valign="top"><p>Custom SOAP Headers</p>
       </td>
@@ -1040,7 +1059,7 @@ representation of the binary content to be sent or being received.</p>
 
 <p>An associative array, containing the mapping of cid (content ID) to its
 corresponding  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
         attachment. When an attachment is received, this property
 will be present in the WSMessage object.</p>
 <ul>
