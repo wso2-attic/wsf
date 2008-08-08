@@ -174,7 +174,7 @@ border="1">
     <tr valign="top">
       <td colspan="1" style="height: 20px; width: 96px;">"policy"</td>
       <td colspan="1" style="height: 20px"> &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
           WSPolicy object</td>
       <td colspan="1" style="height: 20px">WSPolicy object</td>
       <td colspan="1" style="height: 20px">None</td>
@@ -980,7 +980,7 @@ border="1">
       </td>
       <td style="width: 465px">
                   This is an associative array which maps the string value specified in the xml to
-                  the matching binary string. If attachment caching is enabled, you can set file name
+                  the matching binary string. If attachment caching is enabled, you can set the file name
                   instead of the binary string.</td>
     </tr>
    
@@ -1049,7 +1049,10 @@ as an XML string.</p>
 <p>An associative array, containing the information on the binary
 attachments, e.g., array("cid1" =&gt; $image)) Here "cid1" is the ID mentioned
 in the &lt;XOP:Include&gt; element, and $image contains the string
-representation of the binary content to be sent or being received.</p>
+representation of the binary content to be sent or being received. If attachment caching is enabled, and the received attachment
+                      is larger that 1 Mb, then it will be saved to the location defined in wsf.attachment_cache_dir
+                      and in the value stored will be the filename.
+                  </p>
 <br>
 
 <ul>
@@ -1058,14 +1061,9 @@ representation of the binary content to be sent or being received.</p>
 </ul>
 
 <p>An associative array, containing the mapping of cid (content ID) to its
-corresponding  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+corresponding  &nbsp;
         attachment. When an attachment is received, this property
-will be present in the WSMessage object.</p>
-<ul>
-  <li><p><b>array inputHeaders</b></p>
-  </li>
-</ul>
+will be present in the WSMessage object. <b>array inputHeaders</b></p>
 
 <p>An array of WSHeader objects (corresponds to Soap Headers ) being sent.
 </p>
