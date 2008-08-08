@@ -40,15 +40,15 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
 
 <date>2008-07-21</date>
 <version>
-    <release>2.0.0alpha</release>
-    <api>2.0.0alpha</api>
+    <release>2.0.0</release>
+    <api>2.0.0</api>
 </version>
 <stability>
-    <release>alpha</release>
-    <api>alpha</api>
+    <release>2.0.0</release>
+    <api>2.0.0</api>
 </stability>
 <license uri="http://apache.org/licenses/LICENSE-2.0">Apache2</license>
-<notes>2.0-alpha release </notes>
+<notes>2.0-0 release </notes>
 
 <contents>
     <dir name="/">
