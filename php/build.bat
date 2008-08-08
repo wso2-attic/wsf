@@ -5,7 +5,7 @@
 @copy configure.in wsf_c\configure.in
 @copy wsf_c_build.bat wsf_c\build.bat
 
-set WSFPHP_VERSION=2.0.0alpha
+set WSFPHP_VERSION=2.0.0beta
 
 @cd wsf_c
 
