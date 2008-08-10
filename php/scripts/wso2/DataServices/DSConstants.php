@@ -16,6 +16,7 @@
  	define("DS_USERNAME","username");
  	define("DS_PASSWORD","password");
  	define("DS_DBHOST","dbhost");
+ 	define("DS_HOST","host");
  	define("DS_DBNAME","dbname");
 
  	define("DS_SOCKET","socket");

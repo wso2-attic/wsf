@@ -38,7 +38,7 @@ class DSDBExecutor {
             // setting db name
             if(array_key_exists(DS_DBHOST, $config) &&
                 $config[DS_DBHOST] != NULL) {
-                $dns .= DS_DBHOST. "=". $config[DS_DBHOST];
+                $dns .= DS_HOST. "=". $config[DS_DBHOST];
             }
             else {
                 DSUtils::error_log(__FILE__, __LINE__, 
