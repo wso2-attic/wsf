@@ -27,6 +27,8 @@ class DSWSDLGenerator {
         "BOOL" => "xsd:boolean",
         "LONG" =>"xsd:long",
         "DATE" =>"xsd:dateTime",
+        "DATETIME" =>"xsd:dateTime",
+        "BLOB" => "xsd:string",
         "DOUBLE" => "xsd:double");
 
     /**
