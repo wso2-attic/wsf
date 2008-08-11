@@ -445,6 +445,17 @@ wsf_util_set_values_to_endpoint_ref(
 	const axutil_env_t *env,
 	HashTable *ht TSRMLS_DC);
 
+/**
+* obtains the real path from a relative path
+* @param env, environment struct 
+* @returns real path
+*/
+char *
+wsf_util_get_real_path(
+	const axutil_env_t *env,
+	char *path TSRMLS_DC);
+
+
 #ifdef __cplusplus
 }
 #endif

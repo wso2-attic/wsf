@@ -1677,12 +1677,12 @@ wsf_client_enable_ssl (
     if (zend_hash_find (ht, WSF_SERVER_CERT, sizeof (WSF_SERVER_CERT),
             (void **) &tmp) == SUCCESS) 
 	{
-        ssl_server_key_filename = Z_STRVAL_PP (tmp);
+        ssl_server_key_filename = wsf_util_get_real_path(env, Z_STRVAL_PP (tmp) TSRMLS_CC);
     }
     if (zend_hash_find (ht, WSF_CLIENT_CERT, sizeof (WSF_CLIENT_CERT),
             (void **) &tmp) == SUCCESS) 
 	{
-        ssl_client_key_filename = Z_STRVAL_PP (tmp);
+        ssl_client_key_filename = wsf_util_get_real_path(env, Z_STRVAL_PP (tmp) TSRMLS_CC);
     }
     if (zend_hash_find (ht, WSF_PASSPHRASE, sizeof (WSF_PASSPHRASE),
             (void **) &tmp) == SUCCESS) 

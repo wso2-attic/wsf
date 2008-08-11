@@ -887,7 +887,11 @@ wsf_util_set_attachments_with_cids (
 								{	/** If attachment caching is enabled, user will set the file name
 									instead of the binary data */
 									axis2_char_t *filename = Z_STRVAL_PP(tmp);
-									if(axutil_file_handler_access(filename, AXIS2_R_OK))
+									filename = wsf_util_get_real_path(env,filename  TSRMLS_CC);
+									AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+										WSF_PHP_LOG_PREFIX "Real path is %s", filename);
+
+									if(filename && axutil_file_handler_access(filename, AXIS2_R_OK))
 									{
 											data_handler = axiom_data_handler_create(env, filename, cnt_type);
 									}
@@ -1952,4 +1956,39 @@ wsf_util_set_values_to_endpoint_ref(
 		}
 	}
 	return endpoint_ref;
+}
+
+/**
+* obtains the real path from a relative path
+*/
+char *
+wsf_util_get_real_path(
+   const axutil_env_t *env,
+   char *path TSRMLS_DC)
+{
+	char resolved_path_buff[MAXPATHLEN];
+
+	if (VCWD_REALPATH(path, resolved_path_buff)) 
+	{
+		if (PG(safe_mode) && (!php_checkuid(resolved_path_buff, NULL, CHECKUID_CHECK_FILE_AND_DIR))) 
+		{
+			return NULL;
+		}
+
+		if (php_check_open_basedir(resolved_path_buff TSRMLS_CC)) 
+		{
+			return NULL;
+		}
+
+#ifdef ZTS
+	if (VCWD_ACCESS(resolved_path_buff, F_OK))
+	{
+		return NULL;
+	}
+#endif
+		return axutil_strdup(env, resolved_path_buff);
+	} else 
+	{
+		return NULL;
+	}
 }
