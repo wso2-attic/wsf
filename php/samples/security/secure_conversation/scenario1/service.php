@@ -97,7 +97,7 @@ function sct_get_callback($sct_id,$sct_id_type, $is_encryption)
 	return NULL;
 }
 
-$operations = array("echoString" => "echoFunction");
+$operations = array("echoString" => "echoFunction","SecConv10Issue"=>"echoFunction");
 $actions = array("http://wso2.org/wsfphp/samples/echoString" => "echoString",
 				"http://schemas.xmlsoap.org/ws/2005/02/trust/RST/SCT" => "SecConv10Issue");
 $policy_xml = file_get_contents("policy.xml");
