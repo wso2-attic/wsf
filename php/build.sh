@@ -16,5 +16,5 @@ do
     sed  's/-Werror//' $i > configure.ac.back;
     mv configure.ac.back $i;
 done
-./autogen.sh && ./configure --with-wsf --enable-openssl --with-axis2=`pwd`/wsf_c/axis2c/include --enable-tests=no --enable-wsclient=no  --enable-savan=no --prefix=`php-config --extension-dir`/wsf_c && make -j 10
+./autogen.sh && ./configure --with-wsf --enable-openssl --with-apache2=/usr/include/apache2 --with-apr=/usr/include/apr-1.0 --with-axis2=`pwd`/wsf_c/axis2c/include --enable-tests=no --enable-wsclient=no  --enable-savan=no --prefix=`php-config --extension-dir`/wsf_c && make -j 100 
 
