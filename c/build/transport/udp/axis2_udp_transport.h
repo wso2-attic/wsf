@@ -63,14 +63,6 @@ typedef struct axis2_udp_transport_params
 	int udp_upper_delay;
 } axis2_udp_transport_params_t;
 
-/* properties */
-/* Property value: Integer */
-#define AXIS2_UDP_TRANSPORT_RECEIVER_PORT		"AXIS2_UDP_TRANSPORT_RECEIVER_PORT"
-/* Property value: A string */
-#define AXIS2_UDP_TRANSPORT_RECEIVER_ADDRESS	"AXIS2_UDP_TRANSPORT_RECEIVER_ADDRESS"
-/* Property value: a integer */
-#define AXIS2_UDP_TRANSPORT_IS_MULTICAST		"AXIS2_UDP_TRANPORT_IS_MULTICAST"
-
 #define AXIS2_UDP_TRANSPORT_MULTICAST_GROUP		"multicastGroup"
 
 #ifdef __cpluspluss
