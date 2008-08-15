@@ -1992,3 +1992,4 @@ wsf_util_get_real_path(
 		return NULL;
 	}
 }
+

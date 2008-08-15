@@ -87,6 +87,13 @@ wsf_delete_sct_callback_function(
 	int sct_id_type,
 	void* user_params);
 
+axis2_status_t AXIS2_CALL
+wsf_validate_sct_callback_function(
+    const axutil_env_t *env,
+    axiom_node_t *sct_node,
+    axis2_msg_ctx_t *msg_ctx,
+    void *user_params);
+
 void
 wsf_set_rampart_sct_options (
 	rampart_context_t *rampart_context,
@@ -1389,6 +1396,17 @@ wsf_delete_sct_callback_function(
 	return status;
 }
 
+axis2_status_t AXIS2_CALL
+wsf_validate_sct_callback_function(
+    const axutil_env_t *env,
+    axiom_node_t *sct_node,
+    axis2_msg_ctx_t *msg_ctx,
+    void *user_params)
+{
+    return AXIS2_SUCCESS;
+}
+
+
 /** compares and returns the token reference */
 char *
 wsf_get_rampart_token_value(char *token_ref)
@@ -1451,6 +1469,9 @@ wsf_set_rampart_sct_options (
 		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "delete callback function name %s"
 			, delete_cb_fn);
 	}
+    rampart_context_set_validate_security_context_token_fn(rampart_context, env, 
+            wsf_validate_sct_callback_function);
+
 	if(store_cb_fn || get_cb_fn || delete_cb_fn)
 	{
 		callback_args = wsf_callback_args_create(env);
