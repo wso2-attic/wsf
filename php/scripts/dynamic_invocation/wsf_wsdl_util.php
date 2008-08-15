@@ -166,7 +166,7 @@ function wsf_get_wsdl_dom($wsdl_dom, $wsdl_location, &$is_wsdl_11, &$wsdl_11_dom
 
                 //clear out the wsdl imports
                 $wsdl_dom = wsf_clear_wsdl_imports($wsdl_dom, $wsdl_location);
-                $wsdl_dom = wsf_clear_xsd_imports($wsdl_dom, $wsdl_location);
+                #$wsdl_dom = wsf_clear_xsd_imports($wsdl_dom, $wsdl_location);
     
                 $xslt_11_to_20_dom->loadXML($xslt->transformToXML($wsdl_dom));
                 $wsdl_11_dom = $wsdl_dom;
