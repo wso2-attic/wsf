@@ -1,13 +1,8 @@
 #!/bin/bash
-#if $LIBTOOLIZE --force > /dev/null 2>&1; then
-#
-#	echo 'done.'
-#else
-#	echo 'failed.'
-#	exit 1
-#fi
 cd wsf_c
 echo 'Running autogen.sh in wsf_c'
+./autogen.sh
+cd ../examples
 ./autogen.sh
 cd ..
 echo -n 'Running libtoolize...'
