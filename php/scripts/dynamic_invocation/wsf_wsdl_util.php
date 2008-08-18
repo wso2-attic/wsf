@@ -178,7 +178,6 @@ function wsf_get_wsdl_dom($wsdl_dom, $wsdl_location, &$is_wsdl_11, &$wsdl_11_dom
                 $xslt_11_to_20_str = $xslt->transformToXML($wsdl_dom);
                 $xslt_11_to_20_dom->loadXML($xslt_11_to_20_str);
 
-                $xslt_11_to_20_dom->save("/tmp/wsdl2.xml");
                 $wsdl_11_dom = $wsdl_dom;
                 
                 $is_wsdl_11 = TRUE;
