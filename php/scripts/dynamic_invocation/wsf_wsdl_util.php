@@ -1249,7 +1249,7 @@ function wsf_clear_wsdl_imports($wsdl_dom, $relative_url = "") {
  */
 function wsf_get_wsdl_imports($wsdl_dom, $relative_url, &$already_imported_wsdls){
     
-    $wsdl_dom = wsf_clear_xsd_imports($wsdl_dom, $wsdl_location);
+    $wsdl_dom = wsf_clear_xsd_imports($wsdl_dom, $relative_url);
     $root = $wsdl_dom->documentElement;
     $root_childs = $root->childNodes;
 
