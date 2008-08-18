@@ -22,6 +22,5 @@ INCLUDES =	-I ../../../include \
                 -I ../../../wsf_c/axis2c/util/include \
                 -I ../../../wsf_c/rampartc/include \
                 -I ../../../wsf_c/sandesha2c/include \
-                -I ../../../wsf_c/savanc/include \
-		@AXIS2INC@
+                -I ../../../wsf_c/savanc/include 
 

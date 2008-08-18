@@ -1,0 +1,47 @@
+
+                          WSO2 WSF/CPP Samples
+                         ------------------------
+
+  What Is It?
+  -----------
+
+  This package consists the samples of WSO2 WSF/CPP.
+  
+  The Latest Version
+  ------------------
+
+  You can get the latest svn checkout of WSO2 WSF/CPP samples from
+
+  https://wso2.org/repos/wso2/trunk/wsf/cpp/examples
+
+  Installation
+  ------------
+
+  Please see the file called INSTALL.
+
+  Licensing
+  ---------
+
+  Please see the file called LICENSE.
+
+  Contacts
+  --------
+
+     o If you want freely available support for using WSO2 WSF/CPP samples please
+       join the WSO2 WSF/CPP user community by subscribing to users mailing
+       list, wsf-c-user@wso2.org by sending an email to
+       'wsf-c-user-request@wso2.org' with the subject 'subscribe'.
+
+     o If you have a bug report for WSO2 WSF/CPP samples please go log a Jira issue
+       at https://wso2.org/jira/browse/WSFCPP
+
+     o If you want to participate in actively developing WSO2 WSF/CPP samples please
+       subscribe to the 'wsf-c-dev@wso2.org' by sending and email to
+       wsf-c-dev-request@wso2.org with the subject 'subscribe'.
+
+  Acknowledgements
+  ----------------
+
+  WSO2 WSF/CPP samples relies heavily on the use of autoconf and libtool to provide
+  a build environment.
+ 
