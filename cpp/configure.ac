@@ -138,18 +138,7 @@ AC_SUBST(NEETIHINC)
 export prefix 
 
 AC_CONFIG_FILES([Makefile \
-	src/Makefile \
-	samples/Makefile \
-	samples/echo/Makefile \
-	samples/google/Makefile \
-	samples/math/Makefile \
-	samples/mtom/Makefile \
-	samples/mtom/resources/Makefile \
-	samples/notify/Makefile \
-	samples/yahoo/Makefile \
-	samples/flickr/Makefile \
-	samples/security/Makefile \
-	samples/security/sec_echo/Makefile 
+	src/Makefile 
     ])
     
 AC_OUTPUT
