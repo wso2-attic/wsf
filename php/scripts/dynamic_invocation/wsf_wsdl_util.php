@@ -146,7 +146,8 @@ function wsf_get_wsdl_dom($wsdl_dom, $wsdl_location, &$is_wsdl_11, &$wsdl_11_dom
     $xslt_wsdl_20_dom = new DOMDocument();
     $xslt_11_to_20_dom = new DOMDocument();
 
-    $xslt_11_to_20_dom->preserveWhiteSpace = false;
+    $xslt_wsdl_20_dom->preserveWhiteSpace = FALSE;
+    $xslt_11_to_20_dom->preserveWhiteSpace = FALSE;
     $xslt = new XSLTProcessor();
      
     if($wsdl_dom) {
@@ -158,18 +159,28 @@ function wsf_get_wsdl_dom($wsdl_dom, $wsdl_location, &$is_wsdl_11, &$wsdl_11_dom
             if($child->localName == WSF_DEFINITION) {
                 /* first element local name is definitions, so this is a
                  version 1.1 WSDL */
-                $xslt_str = file_get_contents(WSF_WSDL1TO2_XSL_LOCATION, TRUE);
-                if(!($xslt_wsdl_20_dom->loadXML($xslt_str)))
-                  return "WSDL 1.1 to 2.0 converting stylesheet not found";
+-               $xslt_str = file_get_contents(WSF_WSDL1TO2_XSL_LOCATION, TRUE);
+
+                $xslt_wsdl_20_dom->loadXML($xslt_str);
                 
                 $xslt->importStyleSheet($xslt_wsdl_20_dom);
 
                 //clear out the wsdl imports
                 $wsdl_dom = wsf_clear_wsdl_imports($wsdl_dom, $wsdl_location);
-                #$wsdl_dom = wsf_clear_xsd_imports($wsdl_dom, $wsdl_location);
+                $wsdl_dom = wsf_clear_xsd_imports($wsdl_dom, $wsdl_location);
+                //$wsdl_dom->preserveWhiteSpace = FALSE;
+
+                // we are serialized the dom to a string and convert it back as a string 
+                // to make sure we give xslt a fresh copy of dom tree
+                $wsdl_str = $wsdl_dom->saveXML();
+                $wsdl_dom->loadXML($wsdl_str);
     
-                $xslt_11_to_20_dom->loadXML($xslt->transformToXML($wsdl_dom));
+                $xslt_11_to_20_str = $xslt->transformToXML($wsdl_dom);
+                $xslt_11_to_20_dom->loadXML($xslt_11_to_20_str);
+
+                $xslt_11_to_20_dom->save("/tmp/wsdl2.xml");
                 $wsdl_11_dom = $wsdl_dom;
+                
                 $is_wsdl_11 = TRUE;
                 return $xslt_11_to_20_dom;
             }
@@ -1238,6 +1249,8 @@ function wsf_clear_wsdl_imports($wsdl_dom, $relative_url = "") {
  * given wsdl
  */
 function wsf_get_wsdl_imports($wsdl_dom, $relative_url, &$already_imported_wsdls){
+    
+    $wsdl_dom = wsf_clear_xsd_imports($wsdl_dom, $wsdl_location);
     $root = $wsdl_dom->documentElement;
     $root_childs = $root->childNodes;
 

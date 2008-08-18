@@ -58,6 +58,10 @@ function wsf_write_sub_classes($node) {
             if(array_key_exists($type_name, $written_classes) && $written_classes[$type_name] == TRUE) {
                 return;
             }
+            
+            if($type_name == WSF_XSD_BASE64 && !$node->hasChildNodes()) {
+                return;
+            }
 
             // write the extension code..
             $extension_code = wsf_write_extension($node, $code);

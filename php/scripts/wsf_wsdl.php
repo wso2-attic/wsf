@@ -373,6 +373,8 @@ function wsf_process_wsdl($user_parameters, $function_parameters,
         return "Error retrieving the wsdl string to process the request message";
     }
 
+    $is_multiple_interfaces = wsf_is_mutiple_port_types($wsdl_dom);
+
     if($is_wsdl_11) {
         $wsdl_11_dom = $wsdl_dom;
     }
