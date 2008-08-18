@@ -147,15 +147,9 @@ AC_CONFIG_FILES([Makefile \
 	samples/mtom/resources/Makefile \
 	samples/notify/Makefile \
 	samples/yahoo/Makefile \
-	samples/secpolicy/Makefile  \
-	samples/secpolicy/scenario1/Makefile  \
-	samples/secpolicy/scenario2/Makefile  \
-	samples/secpolicy/scenario3/Makefile  \
-	samples/secpolicy/scenario4/Makefile  \
-	samples/secpolicy/scenario5/Makefile  \
-	samples/secpolicy/scenario6/Makefile  \
-	samples/secpolicy/scenario7/Makefile  \
-	samples/flickr/Makefile 
+	samples/flickr/Makefile \
+	samples/security/Makefile \
+	samples/security/sec_echo/Makefile 
     ])
     
 AC_OUTPUT
