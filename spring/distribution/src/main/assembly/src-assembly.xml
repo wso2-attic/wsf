@@ -1,0 +1,31 @@
+<assembly>
+	<id>src</id>
+	<includeBaseDirectory>true</includeBaseDirectory>
+	<baseDirectory>wsf-spring-${wsf-spring.version}-src</baseDirectory>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<fileSets>
+		<fileSet>
+	        <directory>../</directory>
+			<outputDirectory>/</outputDirectory>
+	        <includes>
+	            <include>*.txt</include>
+				<include>release-notes.html</include>
+				<include>pom.xml</include>
+	        </includes>
+	    </fileSet>
+		<fileSet>
+			<directory>../</directory>
+			<outputDirectory>/</outputDirectory>
+			<includes>
+				<include>**/core/**</include>
+				<include>**/samples/**</include>
+				<include>**/distribution/**</include>
+			</includes>
+			<excludes>
+				<exclude>**/target/**</exclude>
+			</excludes>
+		</fileSet>
+	</fileSets>
+</assembly>

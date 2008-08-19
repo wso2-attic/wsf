@@ -16,57 +16,46 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.wso2.spring.ws</groupId>
-    	<artifactId>wsf-spring-main</artifactId>
-        <version>${wsf-spring.version}</version>
-        <relativePath>../pom.xml</relativePath>
+    	<artifactId>wsf-spring-parent</artifactId>
+        <version>SNAPSHOT</version>
     </parent>
-    
     <artifactId>wsf-spring-sample</artifactId>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>WSO2 Spring Web Services - Sample Web Application</name>
-
-    <dependencies>
-    	<dependency>
-    		<groupId>org.wso2.spring.ws</groupId>
-		<artifactId>wsf-spring</artifactId>
-		<version>${wsf-spring.version}</version>
-    	</dependency>
 	
-    </dependencies>
     <build>
-    	<finalName>wsf-spring-${version}</finalName>
     	<plugins>
-    		<plugin>
-    			<groupId>org.apache.maven.plugins</groupId>
-    			<artifactId>maven-war-plugin</artifactId>
-    			<version>2.0.2</version>
-    			<configuration>
-    				<warName>wsf-spring</warName>
-    				<archive>
-    					<addMavenDescriptor>false</addMavenDescriptor>
-    				</archive>
-    				<webResources>
-    					<!-- Need a better war to add the MAR -->
-    					<resource>
-    						<directory>${basedir}/axis2-web</directory>
-    						<targetPath>axis2-web</targetPath>
-    						
-    					</resource>
-					<resource>
-		                            <directory>${basedir}/mar</directory>
-		                            <targetPath>WEB-INF/lib</targetPath>
-		                            <includes>
-		                                <include>*.mar</include>
-		                            </includes>
-		                        </resource>
-
-    				</webResources>
-    			</configuration>
-    		</plugin>
-    	</plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0</version>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2-beta-1</version>
+                <executions>
+                    <execution>
+                        <id>distribution-package</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attached</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/main/assembly/bin-assembly.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+		</plugins>
     </build>
 </project>
