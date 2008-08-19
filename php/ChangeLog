@@ -1,4 +1,4 @@
-WSO2 WSF/PHP 2.0.0alpha
+WSO2 WSF/PHP 2.0.0beta
 ======================
 * Improved REST Support with cababilities to map uri to operations and support
 for HTTP Verbs POST,GET,PUT and DELETE.

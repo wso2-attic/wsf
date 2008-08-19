@@ -1,6 +1,6 @@
 @echo off
 @call wsf_c\build\init.bat
-set WSFPHP_VERSION=2.0.0alpha
+set WSFPHP_VERSION=2.0.0beta
 
 @if exist wsf_c\wso2-wsf-c-bin-%WSFC_VERSION% rmdir /S /Q wsf_c\wso2-wsf-c-bin-%WSFC_VERSION%
 
