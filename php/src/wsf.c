@@ -1643,7 +1643,6 @@ PHP_METHOD (ws_service, reply)
    {
 		wsf_worker_process_request (php_worker, ws_env_svr, &req_info, &res_info, svc_info TSRMLS_CC);
 
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "we are here too");
 		wsf_response_info_cleanup(&res_info, ws_env_svr);
    }
 }

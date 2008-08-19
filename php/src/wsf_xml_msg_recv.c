@@ -582,7 +582,7 @@ wsf_xml_msg_recv_invoke_mixed (
     }
     if(!payload_node) 
 	{
-        return NULL;
+        /* return NULL;*/
     }
 
     req_soap_header = axiom_soap_envelope_get_header(soap_envelope, env);

@@ -586,7 +586,6 @@ wsf_worker_process_request (
 			wsf_worker_write_response(response TSRMLS_CC);
 		}
 
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "we are here safely 2");
     return 1;
 }
 

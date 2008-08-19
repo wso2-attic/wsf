@@ -708,13 +708,24 @@ wsf_wsdl_do_request(zval *client_zval,
 	{
         HashTable *ht_binding = Z_ARRVAL_PP(tmp_options);
         zval **binding_options = NULL;
+        int permit_addressing = 1;/* wsdl option can be overidden by client option */
+        zval **tmp_use_wsa = NULL;
         
-        if(zend_hash_find(ht_binding, WSF_WSDL_WSA, sizeof(WSF_WSDL_WSA), 
-			(void **)&binding_options) == SUCCESS && Z_TYPE_PP(binding_options) == IS_STRING)
-		{
-            wsa_action = Z_STRVAL_PP(binding_options);
-            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, 
-				WSF_PHP_LOG_PREFIX "WSA action is :- %s", wsa_action);
+        if (client_zval && zend_hash_find ( Z_OBJPROP_P (client_zval), WSF_USE_WSA, 
+            sizeof (WSF_USE_WSA), (void **) &tmp_use_wsa) == SUCCESS) 
+        {
+            if(Z_TYPE_PP(tmp_use_wsa) == IS_BOOL) {
+                permit_addressing = Z_BVAL_PP(tmp_use_wsa);
+            }
+        }
+        if(permit_addressing) {
+            if(zend_hash_find(ht_binding, WSF_WSDL_WSA, sizeof(WSF_WSDL_WSA), 
+                (void **)&binding_options) == SUCCESS && Z_TYPE_PP(binding_options) == IS_STRING)
+            {
+                wsa_action = Z_STRVAL_PP(binding_options);
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, 
+                    WSF_PHP_LOG_PREFIX "WSA action is :- %s", wsa_action);
+            }
         }
         if(zend_hash_find(ht_binding, WSF_WSDL_SOAP, sizeof(WSF_WSDL_SOAP), 
 			(void **)&binding_options) == SUCCESS && Z_TYPE_PP(binding_options) == IS_STRING)
@@ -910,8 +921,7 @@ wsf_wsdl_do_request(zval *client_zval,
     if(!request_node) 
 	{
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
-                         " Error in creating request payload dom");
-        return;
+                         " payload dom is NULL");
     }
     
     if(zend_hash_find(ht_return, WSF_WSDL_ATTACHMENT_MAP, sizeof(WSF_WSDL_ATTACHMENT_MAP),
