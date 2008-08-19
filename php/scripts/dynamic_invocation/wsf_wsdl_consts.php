@@ -150,6 +150,7 @@ define("WSF_SIMPLE_CONTENT_VALUE", "value");
 define("WSF_SIMPLE_CONTENT", "simpleContent");
 
 define("WSF_XSD_ANYTYPE", "anyType");
+define("WSF_ANY_ELEMENT", "any#");
 define("WSF_VALUE", "value");
 
 define("WSF_XSD_BASE64", "base64Binary");

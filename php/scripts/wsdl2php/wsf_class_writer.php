@@ -60,7 +60,7 @@ function wsf_write_sub_classes($node) {
             }
             
             if($type_name == WSF_XSD_BASE64 && !$node->hasChildNodes()) {
-                return;
+                //return;
             }
 
             // write the extension code..
@@ -334,6 +334,7 @@ function wsf_wsdl2php($wsdl_location) {
         $sig_model_dom = wsf_process_multiple_interfaces($wsdl_dom, $sig_model_dom);
     }
 
+
     if (!$sig_model_dom) {
         echo "Error creating intermediate service operations signature model";
         return NULL;
@@ -450,29 +451,65 @@ function wsf_wsdl2php($wsdl_location) {
                     }
                     
                     if($op_binding_child->attributes->getNamedItem(WSF_TYPE)) {
-                        $class_name = $op_binding_child->attributes->getNamedItem(WSF_TYPE)->value;
+                        $param_node = $op_binding_child->firstChild;
+                        $class_name = $param_node->attributes->getNamedItem(WSF_TYPE)->value;
                         if($direction == WSF_WSDL_INPUT) {
-                            $in_header_objects[WSF_CLIENT] .= "    \$header_in{$in_headers} = new $class_name();\n    // TODO: fill in the class fields of \$header_in{$in_headers} header to match your business logic\n\n";
-                            $in_header_objects[WSF_SERVICE] .= "    // NOTE: \$header_in{$in_headers} header is of type $class_name\n";
+                            if (($param_node->attributes && $param_node->attributes->getNamedItem(WSF_WSDL_SIMPLE) && 
+                                 $param_node->attributes->getNamedItem(WSF_WSDL_SIMPLE)->value == 'no') ||
+                                    ($param_node->attributes->getNamedItem(WSF_CONTENT_MODEL) && 
+                                     $param_node->attributes->getNamedItem(WSF_CONTENT_MODEL)->value == WSF_SIMPLE_CONTENT)) {
+                                // for the complex types and simple contnet
+                                $in_header_objects[WSF_CLIENT] .= "    \$header_in{$in_headers} = new $class_name();\n    // TODO: fill in the class fields of \$header_in{$in_headers} object which is of type $class_name to match your business logic\n\n";
+                                $in_header_objects[WSF_SERVICE] .= "    // NOTE: \$header_in{$in_headers} object is of type $class_name\n";
 
-                            $service_function_doc_comment .= " * @param object of $class_name \$header_in{$in_headers} input header\n";
+                                $service_function_doc_comment .= " * @param object of $class_name \$header_in{$in_headers} input header\n";
+                            }
+                            else {
+                                // for the simple types
+                                $in_header_objects[WSF_CLIENT] .= "    // TODO: fill in the \$header_in{$in_headers} which is of type $class_name to match your business logic\n\n";
+                                $in_header_objects[WSF_SERVICE] .= "    // NOTE: \$header_in{$in_headers} header is of type $class_name\n";
+
+                                $service_function_doc_comment .= " * @param $class_name \$header_in{$in_headers} input header\n";
+                            }
 
                             $in_headers ++;
                         }
                         else {
-                            $out_header_objects[WSF_CLIENT] .= "\n    // TODO: Implement business logic to consume \$header_out{$out_headers}, which is of type $class_name\n";
-                            $out_header_objects[WSF_SERVICE] .= "    // NOTE: you should assign an object of type $class_name to \$header_out{$out_headers}\n";
-                            
-                            $service_function_doc_comment .= " * @param reference object of $class_name \$header_out{$out_headers} output header\n";
+
+                            if (($param_node->attributes && $param_node->attributes->getNamedItem(WSF_WSDL_SIMPLE) && 
+                                 $param_node->attributes->getNamedItem(WSF_WSDL_SIMPLE)->value == 'no') ||
+                                    ($param_node->attributes->getNamedItem(WSF_CONTENT_MODEL) && 
+                                     $param_node->attributes->getNamedItem(WSF_CONTENT_MODEL)->value == WSF_SIMPLE_CONTENT)) {
+                                // for the complex types and simple contnet
+
+                                $out_header_objects[WSF_CLIENT] .= "\n    // TODO: Implement business logic to consume \$header_out{$out_headers} object, which is of type class $class_name\n";
+                                $out_header_objects[WSF_SERVICE] .= "    // NOTE: you should assign an object of type $class_name to \$header_out{$out_headers}\n";
+                                
+                                $service_function_doc_comment .= " * @param reference object of $class_name \$header_out{$out_headers} object output header\n";
+                            }
+                            else {
+                                // for the simple types
+                                $out_header_objects[WSF_CLIENT] .= "\n    // TODO: Implement business logic to consume \$header_out{$out_headers}, which is of type $class_name\n";
+                                $out_header_objects[WSF_SERVICE] .= "    // NOTE: you should assign an object of type $class_name to \$header_out{$out_headers}\n";
+                                
+                                $service_function_doc_comment .= " * @param reference $class_name \$header_out{$out_headers} output header\n";
+                            }
 
                             $out_headers ++;
                         }
                     }
-                    $param_node = $op_binding_child->firstChild;
-                    $code .= wsf_write_sub_classes($param_node);
+
+                    if (($param_node->attributes && $param_node->attributes->getNamedItem(WSF_WSDL_SIMPLE) && 
+                         $param_node->attributes->getNamedItem(WSF_WSDL_SIMPLE)->value == 'no') ||
+                            ($param_node->attributes->getNamedItem(WSF_CONTENT_MODEL) && 
+                             $param_node->attributes->getNamedItem(WSF_CONTENT_MODEL)->value == WSF_SIMPLE_CONTENT)) {
+                        $code_for_header = wsf_write_sub_classes($param_node);
+                        $code .= $code_for_header;
+                    }
                 }
             }
         }
+
 
         // doc comments for the return type
         foreach ($op_child_list as $op_child) {

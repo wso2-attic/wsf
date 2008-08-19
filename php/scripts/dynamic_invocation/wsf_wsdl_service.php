@@ -87,10 +87,11 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
         ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "soap_body not found");
 	}
 
+    // parsing input headers
     $header_params = array();
     $output_headers = array();
     if($header_node) {
-        $header_child = $header_node->firstChild;
+        $header_first_child = $header_node->firstChild;
         $output_index = 0;
 
         if($binding_details_node) {
@@ -113,12 +114,24 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
                             $ele_ns = $sig_attrs->getNamedItem(WSF_TYPE_NAMESPACE)->value;
                         }
 
+                        // for the starting sig we have to go for the header node name we want
+
+                        //go to the next header
+                        if($header_first_child) {
+                            $header_child = $header_first_child;
+                            while($header_child  && ($header_child->nodeType == XML_TEXT_NODE ||
+                                    !($header_child->localName == $ele_name && $header_child->namespaceURI == $ele_ns))) {
+                                $header_child = $header_child->nextSibling;
+                            }
+                        }
+
                         if($header_child) {
                             $header_sig = $binding_details_child->firstChild;
                             if($classmap != NULL && !empty($classmap)) {
                                 ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "starting to parse header $ele_name as a classmap");
                                 $new_param = wsf_parse_payload_for_class_map($header_child, $header_sig, $ele_name, $classmap,
                                                                                $cid2cont_type, $cid2attachments);
+                                ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "parsed_pram ".print_r($new_param, TRUE)." as a classmap");
                             }
                             else
                             {
@@ -130,18 +143,12 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
                         }
                         else {
                             //if header child doesn't exist better check whether it is an requeired header
-                            if($sig_attrs->geNamedItem(WSF_REQUIRED) && $sig_attrs->geNamedItem(WSF_REQUIRED)->value == "true") {
+                            if($sig_attrs && $sig_attrs->getNamedItem(WSF_REQUIRED) && $sig_attrs->getNamedItem(WSF_REQUIRED)->value == "true") {
                                 //throwing faults saying it is required
                                 throw new WSFault("Sender", "Requried header {$ele_name}|{$ele_ns} missing");
                             }
                         }
 
-                        //go to the next header
-                        if($header_child) {
-                            do {
-                                $header_child = $header_child->nextSibling;
-                            } while($header_child && $header_child->nextSibling);
-                        }
                     }
                     else if($binding_details_child->attributes->getNamedItem(WSF_HEADER_FOR_ATTRIBUTE)->value == WSF_WSDL_OUTPUT){
                         $output_headers[$output_index] = array(); //to retrive later
@@ -154,23 +161,28 @@ function wsf_serivce_invoke_function($operation_node, $function_name, $class_nam
         }
     }
 
-
+    //parsing the pyalod
     $op_param_values = array();
     if($classmap != NULL && !empty($classmap)) {
-        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "starting to parse payload as a classmap");
-        $op_param_values = wsf_parse_payload_for_class_map($soap_body_node, $params_node, $ele_name, $classmap,
-                                                       $cid2cont_type, $cid2attachments);
-
+        if($soap_body_node)
+        {
+            ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "starting to parse payload as a classmap");
+            $op_param_values = wsf_parse_payload_for_class_map($soap_body_node, $params_node, $ele_name, $classmap,
+                                                           $cid2cont_type, $cid2attachments);
+        }
         $arg_array = array_merge(array($op_param_values), $header_params); 
     }
     else
     {
-        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "starting to parse payload as an array");
-        $op_param_values = wsf_parse_payload_for_array($soap_body_node, $params_node,
-                                                       $cid2cont_type, $cid2attachments);
-        if(!is_array($op_param_values) || $is_direct_list) {
-            // this can happens when returning simple types
-            $op_param_values = array($op_param_values);
+        if($soap_body_node)
+        {
+            ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "starting to parse payload as an array");
+            $op_param_values = wsf_parse_payload_for_array($soap_body_node, $params_node,
+                                                           $cid2cont_type, $cid2attachments);
+            if(!is_array($op_param_values) || $is_direct_list) {
+                // this can happens when returning simple types
+                $op_param_values = array($op_param_values);
+            }
         }
         $arg_array = array_merge($op_param_values, $header_params); 
     }
@@ -274,6 +286,11 @@ function wsf_wsdl_create_response_headers($binding_details_node, $arguments, $mt
 
                         wsf_create_payload_for_class_map($header_dom, $header_sig, $element, $element, $argument, $classmap,
                                                   $prefix_i, $namespace_map, $mtom_on, $attachment_map);
+                    }
+                    else if($argument) {
+                        // this can be tiny little simple type
+                        $text_node = new DOMText($argument);
+                        $element->appendChild($text_node);
                     }
 
                     $header_dom->appendChild($element);

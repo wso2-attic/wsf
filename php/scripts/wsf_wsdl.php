@@ -463,6 +463,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters,
                           WSF_INPUT_HEADERS=> $headers,
                           WSF_POLICY_NODE=> $policy_array,
                           WSF_ATTACHMENT_MAP => $attachment_map);
+
     return $return_value;
 }
 
@@ -676,7 +677,14 @@ function wsf_wsdl_process_in_msg($parameters)
         }
     }
 
-    $payload_dom->loadXML($payload_string);
+    // payload can be NULL
+    if(!empty($payload_string)) {
+        $payload_dom->loadXML($payload_string);
+        $payload_element = $payload_dom->documentElement;
+    } else {
+        $payload_dom = NULL;
+        $payload_element = NULL;
+    }
     $sig_model_dom->loadXML($sig_model_string);
 
     $endpoint_address = wsf_get_endpoint_address($sig_model_dom);
@@ -688,8 +696,6 @@ function wsf_wsdl_process_in_msg($parameters)
         ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "$operation_name operaiton not found");
         throw new WSFault("Sender","$operation_name operation not found");
     }
-
-    $payload_element = $payload_dom->documentElement;
 
     $return_payload_info = wsf_serivce_invoke_function($operation_node, $function_name,
                 $class_name, $class_args, $payload_element, $header_element, $class_map,

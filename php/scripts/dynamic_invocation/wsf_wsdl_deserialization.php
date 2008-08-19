@@ -43,10 +43,15 @@
 function wsf_parse_payload_for_array(DomNode $payload, DomNode $sig_node,
                     $cid2cont_type, $cid2attachments) {
 
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "Loading in to parsing array");
 
     while($payload != NULL && $payload->nodeType != XML_ELEMENT_NODE) {
         $payload = $payload->nextSibling;
+    }
+
+    $is_simple_header = FALSE;
+    if($sig_node->attributes->getNamedItem(WSF_WSDL_SIMPLE) &&
+            $sig_node->attributes->getNamedItem(WSF_WSDL_SIMPLE)->value == "yes") {
+        $is_simple_header = TRUE;
     }
 
     $parse_tree = array();
@@ -55,7 +60,7 @@ function wsf_parse_payload_for_array(DomNode $payload, DomNode $sig_node,
         return $parse_tree; //the empty array
     }
 
-    if($sig_node->hasAttributes()) {
+    if($sig_node->hasAttributes() && !$is_simple_header) {
         //wrapped situations..    
 
         //again simple content should parsed differently
@@ -88,8 +93,13 @@ function wsf_parse_payload_for_array(DomNode $payload, DomNode $sig_node,
         return $parse_tree;
     }
     else {
-        // this situation meets only for non-wrapped mode as doclit-bare wsdls
-        $the_only_node = $sig_node->firstChild;
+        if($is_simple_header) {
+            $the_only_node = $sig_node;
+        }
+        else {
+            // this situation meets only for non-wrapped mode as doclit-bare wsdls
+            $the_only_node = $sig_node->firstChild;
+        }
 
         //  handle simple content extension seperatly
         if($the_only_node->attributes->getNamedItem(WSF_CONTENT_MODEL) &&
@@ -171,8 +181,20 @@ function wsf_parse_payload_for_class_map(DomNode $payload, DomNode $sig_node, $e
         $payload = $payload->nextSibling;
     }
 
+    // valid for headers
+    $is_simple_header = FALSE;
+    if($sig_node->attributes->getNamedItem(WSF_WSDL_SIMPLE) &&
+            $sig_node->attributes->getNamedItem(WSF_WSDL_SIMPLE)->value == "yes") {
+        $is_simple_header = TRUE;
+    }
+
     // this situation meets only for non-wrapped mode as doclit-bare wsdls
-    $the_only_node = $sig_node->firstChild;
+    if($is_simple_header) {
+        $the_only_node = $sig_node;
+    }
+    else {
+        $the_only_node = $sig_node->firstChild;
+    }
 
     if($sig_node->hasAttributes() || 
         ($the_only_node && $the_only_node->attributes->getNamedItem(WSF_CONTENT_MODEL) &&
@@ -197,7 +219,7 @@ function wsf_parse_payload_for_class_map(DomNode $payload, DomNode $sig_node, $e
         }
     }
 
-    if($sig_node->hasAttributes()) {
+    if($sig_node->hasAttributes() && !$is_simple_header) {
         //wrapped situations..    
 
         // this situation gotta use the object..
@@ -237,7 +259,6 @@ function wsf_parse_payload_for_class_map(DomNode $payload, DomNode $sig_node, $e
     }
     else {
         // this situation meets only for non-wrapped mode as doclit-bare wsdls
-        $the_only_node = $sig_node->firstChild;
 
         //  handle simple content extension seperatly
         if($the_only_node && $the_only_node->attributes->getNamedItem(WSF_CONTENT_MODEL) &&

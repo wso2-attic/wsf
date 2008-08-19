@@ -101,8 +101,12 @@ function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name,
 
     // the returning payload..
     $payload_str = NULL;
- 
-    if($is_doc == TRUE) {
+
+    if(array_key_exists(0, $arguments) && $arguments[0] == NULL) {
+        $payload_str = NULL;
+    }
+    else if($is_doc == TRUE) {
+
         $payload_dom = new DOMDocument('1.0', 'iso-8859-1');
         $element = $payload_dom->createElementNS($ele_ns, WSF_STARTING_NS_PREFIX.":".$ele_name);
         if(!array_key_exists(0, $arguments)) {
@@ -194,6 +198,7 @@ function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name,
                 
                 //so this is the next input element..
 
+
                 $header_name = "";
                 $header_ns = "";
                 if($binding_details_child->attributes->getNamedItem(WSF_TYPE)) {
@@ -222,6 +227,11 @@ function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name,
 
                         wsf_create_payload_for_class_map($header_dom, $header_sig, $element, $element, $argument, $classmap,
                                                   $prefix_i, $namespace_map, $mtom_on, $attachment_map);
+                    }
+                    else if($argument) {
+                        // this can be tiny little simple type
+                        $text_node = new DOMText($argument);
+                        $element->appendChild($text_node);
                     }
 
                     $header_dom->appendChild($element);
@@ -360,7 +370,7 @@ function wsf_client_response_and_validate(DomDocument $payload_dom,
 
     $header_params = array();
     if($header_node) {
-        $header_child = $header_node->firstChild;
+        $header_first_child = $header_node->firstChild;
         $output_index = 0;
 
         if($binding_details_node) {
@@ -383,6 +393,15 @@ function wsf_client_response_and_validate(DomDocument $payload_dom,
                             $ele_ns = $sig_attrs->getNamedItem(WSF_TYPE_NAMESPACE)->value;
                         }
 
+                        //go to the next header
+                        if($header_first_child) {
+                            $header_child = $header_first_child;
+                            while($header_child  && ($header_child->nodeType == XML_TEXT_NODE ||
+                                    !($header_child->localName == $ele_name && $header_child->namespaceURI == $ele_ns))) {
+                                $header_child = $header_child->nextSibling;
+                            }
+                        }
+
                         if($header_child) {
                             $header_sig = $binding_details_child->firstChild;
                             if($classmap != NULL && !empty($classmap)) {
@@ -397,12 +416,6 @@ function wsf_client_response_and_validate(DomDocument $payload_dom,
                                                                                $cid2cont_type, $cid2attachments);
                             }
                             $header_params[] = $new_param;
-                        }
-                        //go to the next header
-                        if($header_child) {
-                            do {
-                                $header_child = $header_child->nextSibling;
-                            } while($header_child && $header_child->nextSibling);
                         }
                     }
                 }
