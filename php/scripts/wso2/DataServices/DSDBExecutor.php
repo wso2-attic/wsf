@@ -108,7 +108,7 @@ class DSDBExecutor {
         }
         catch (PDOException $e) {
             DSUtils::error_log(__FILE__, __LINE__, "Database connection failed: ".$e->getMessage()."");
-            throw new WSFault("Sender", $e->getMessage());
+            throw new WSFault("Sender", $e->getMessage().$this->dns. ", ".$this->username. ", ". $this->password);
   
         }
         return $dbh;

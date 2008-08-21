@@ -174,12 +174,13 @@ function wsf_get_wsdl_dom($wsdl_dom, $wsdl_location, &$is_wsdl_11, &$wsdl_11_dom
                 // to make sure we give xslt a fresh copy of dom tree
                 $wsdl_str = $wsdl_dom->saveXML();
                 $wsdl_dom->loadXML($wsdl_str);
+
     
                 $xslt_11_to_20_str = $xslt->transformToXML($wsdl_dom);
                 $xslt_11_to_20_dom->loadXML($xslt_11_to_20_str);
 
                 $wsdl_11_dom = $wsdl_dom;
-                
+
                 $is_wsdl_11 = TRUE;
                 return $xslt_11_to_20_dom;
             }
@@ -218,7 +219,8 @@ function wsf_get_sig_model_dom(DomDocument $wsdl_dom) {
     
     if($xslt_str && $xslt_dom->loadXML($xslt_str)) {
         $xsl->importStyleSheet($xslt_dom);
-        return $xsl->transformToDoc($wsdl_dom);
+        $sig = $xsl->transformToDoc($wsdl_dom);
+        return $sig;
     }
     else {
         return NULL;

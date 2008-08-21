@@ -28,6 +28,8 @@ $actions = NULL;
 
 // hold the derive types per a perticular classes;
 
+$anonymous_count = 0;
+
 /**
  * Function to write sub classes.  
  * $nodes array of nodes corresponding to the classes to be written
@@ -128,7 +130,7 @@ function wsf_write_derives(DomNode $sig_node, &$code) {
 
 
 function wsf_write_content_model($parent_node, &$child_array, &$derived_classes_code) {
-
+    global $anonymous_count;
     $code = "";
     $param_child_list = $parent_node->childNodes;
     $content_model = "";
@@ -144,13 +146,20 @@ function wsf_write_content_model($parent_node, &$child_array, &$derived_classes_
     foreach ($param_child_list as $param_child) {
         if($param_child->nodeName == WSF_PARAM) {
             $param_attr = $param_child->attributes;
-            $param_type = $param_name = "";
+            $param_name = "";
+            $parm_type = NULL;
             if($param_attr->getNamedItem(WSF_NAME)) {
                 $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
             }
             if($param_attr->getNamedItem(WSF_TYPE)) {
                 $param_type = $param_attr->getNamedItem(WSF_TYPE)->value;
             }
+            if($param_type == NULL) {
+                $param_type = "anonymous" . $anonymous_count;
+                $anonymous_count ++;
+                $param_child->setAttribute(WSF_TYPE, $param_type);
+            }
+
 
             if($param_child->getAttribute("simple") == "yes"){
                 $comments = wsf_comment_on_simple_type($param_child, $param_name, $param_type);
