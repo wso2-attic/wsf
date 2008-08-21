@@ -1849,12 +1849,6 @@ PHP_METHOD (ws_security_token, __construct)
             add_property_stringl (object, WSF_USER, Z_STRVAL_PP (tmp),
                 Z_STRLEN_PP (tmp), 1);
         }
-        if (zend_hash_find (ht, WSF_CERTIFICATE, sizeof (WSF_CERTIFICATE),
-                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) 
-		{
-            add_property_stringl (object, WSF_CERTIFICATE, Z_STRVAL_PP (tmp),
-                Z_STRLEN_PP (tmp), 1);
-        }
         if (zend_hash_find (ht, WSF_PASSWORD_TYPE, sizeof (WSF_PASSWORD_TYPE),
                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING)
 		{
@@ -1874,8 +1868,10 @@ PHP_METHOD (ws_security_token, __construct)
         if (zend_hash_find (ht, WSF_CERTIFICATE, sizeof (WSF_CERTIFICATE),
                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) 
 		{
-            add_property_string (object, WSF_CERTIFICATE, Z_STRVAL_PP (tmp), 1);
+            add_property_stringl (object, WSF_CERTIFICATE, Z_STRVAL_PP (tmp),
+                Z_STRLEN_PP (tmp), 1);
         }
+
         if (zend_hash_find (ht, WSF_RECEIVER_CERTIFICATE,
                 sizeof (WSF_RECEIVER_CERTIFICATE), (void **) &tmp) == SUCCESS
             && Z_TYPE_PP (tmp) == IS_STRING)  
