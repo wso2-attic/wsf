@@ -36,5 +36,12 @@
 				<include>*:jar:*</include>
 			</includes>
 		</dependencySet>
+		<dependencySet>
+            <outputDirectory>WEB-INF/lib</outputDirectory>
+            <outputFileNameMapping>${artifactId}-${addressing.version}.${extension}</outputFileNameMapping>
+            <includes>
+                <include>org.apache.axis2:addressing:mar</include>
+            </includes>
+        </dependencySet>
 	</dependencySets>
 </assembly>
