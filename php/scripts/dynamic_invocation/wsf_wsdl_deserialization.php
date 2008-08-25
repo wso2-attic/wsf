@@ -133,7 +133,7 @@ function wsf_parse_payload_for_array(DomNode $payload, DomNode $sig_node,
                         $the_only_node->attributes->getNamedItem(WSF_LIST)->value == "yes") {
                          $is_list = TRUE;
                     }
-                    $converted_value = wsf_wsdl_deserialize_string_value($param_type, $original_value, $the_only_node);
+                    $converted_value = wsf_wsdl_deserialize_string_value($param_type, $original_value, $the_only_node, $payload);
 
                     return $converted_value;
                 }
@@ -297,7 +297,7 @@ function wsf_parse_payload_for_class_map(DomNode $payload, DomNode $sig_node, $e
                         $the_only_node->attributes->getNamedItem(WSF_LIST)->value == "yes") {
                          $is_list = TRUE;
                     }
-                    $converted_value = wsf_wsdl_deserialize_string_value($param_type, $original_value, $the_only_node);
+                    $converted_value = wsf_wsdl_deserialize_string_value($param_type, $original_value, $the_only_node, $payload);
 
                     return $converted_value;
                 }
@@ -533,7 +533,7 @@ function wsf_deserialize_simple_types(&$current_child, DomNode $sig_param_node, 
             }
             else if($current_child->firstChild) {
                 $converted_value =  wsf_wsdl_deserialize_string_value($param_type,
-                        $current_child->firstChild->wholeText, $sig_param_node);
+                        $current_child->firstChild->wholeText, $sig_param_node, $current_child);
             }
             else{
                 if(!isset($param_value["nillable"])) {
@@ -581,7 +581,7 @@ function wsf_deserialize_simple_types(&$current_child, DomNode $sig_param_node, 
         }
         else if($current_child->firstChild) {
             $converted_value =  wsf_wsdl_deserialize_string_value($param_type,
-                    $current_child->firstChild->wholeText, $sig_param_node);
+                    $current_child->firstChild->wholeText, $sig_param_node, $current_child);
         }
         else
         {
@@ -766,7 +766,7 @@ function wsf_infer_content_model(DomNode &$current_child, DomNode $sig_node, $cl
                  $is_list = TRUE;
             }
 
-            $converted_value =  wsf_wsdl_deserialize_string_value($param_type, $text_value, $sig_node);
+            $converted_value =  wsf_wsdl_deserialize_string_value($param_type, $text_value, $sig_node, $current_child);
             
             // we let the deserialize_type_info to extract out the mtom information
             wsf_deserialize_type_info($param_type, $parse_tree, WSF_SIMPLE_CONTENT_VALUE, $converted_value,
@@ -978,7 +978,7 @@ function wsf_infer_attributes(DomNode $parent_node, DomNode $sig_node) {
                             $sig_param_node->attributes->getNamedItem(WSF_LIST)->value == "yes") {
                              $is_list = TRUE;
                         }
-                        $converted_value =  wsf_wsdl_deserialize_string_value($param_type, $original_value, $sig_param_node);
+                        $converted_value =  wsf_wsdl_deserialize_string_value($param_type, $original_value, $sig_param_node, NULL);
                         $parse_tree[$param_name] = $converted_value;
                     }
                 }
@@ -993,11 +993,20 @@ function wsf_infer_attributes(DomNode $parent_node, DomNode $sig_node) {
  * @param $xsd_type, xsd type the value hold
  * @param $data_value, the data_value with the string type
  * @param $sig_param_node, whether the type is a list or not..
+ * @param $value_parent_node, used to check whether the value is nil, if available
  * @return deserialized to given php type value
  */
-function wsf_wsdl_deserialize_string_value($xsd_type, $data_value, $sig_param_node) {
+function wsf_wsdl_deserialize_string_value($xsd_type, $data_value, $sig_param_node, $value_parent_node) {
 
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "deserializing ".$data_value);
+
+    if($value_parent_node && $value_parent_node == XML_ELEMENT_NODE) {
+       $is_nil = $value_parent_node->getAttributeNS(WSF_XSI_NAMESPACE, "nil");
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "xsi:nil = ".$is_nil);
+       if($is_nil && ($is_nil == "1" || $is_nil == "true" || $is_nil == "TRUE")) {
+            return NULL;
+       }
+    }
 
     $is_list = FALSE;
     if($sig_param_node->attributes->getNamedItem(WSF_LIST) &&

@@ -588,8 +588,22 @@ wsf_xml_msg_recv_invoke_mixed (
     req_soap_header = axiom_soap_envelope_get_header(soap_envelope, env);
     /* this is not an mandatory */
     if(req_soap_header) {
-        req_soap_header_node = axiom_soap_header_get_base_node(req_soap_header, env);
-        if(axiom_node_get_first_child(req_soap_header_node, env) != NULL) {
+        axiom_node_t * envelope_node = NULL;
+        axis2_char_t *envelope_string = NULL;
+        axiom_node_t *envelope_dup = NULL;
+
+        envelope_node = axiom_soap_envelope_get_base_node(soap_envelope, env);
+        envelope_string = axiom_node_to_string(envelope_node, env);
+        envelope_dup = wsf_util_deserialize_buffer(env, envelope_string);
+        req_soap_header_node = axiom_node_get_first_child(envelope_node, env);
+
+        while(req_soap_header_node && axiom_node_get_node_type(req_soap_header_node, env) != AXIOM_ELEMENT) {
+            req_soap_header_node = axiom_node_get_next_sibling(req_soap_header_node, env);
+        }
+
+        /* req_soap_header_node = axiom_soap_header_get_base_node(req_soap_header, env); */
+        
+        if(req_soap_header_node && axiom_node_get_first_child(req_soap_header_node, env) != NULL) {
             header_string = axiom_node_sub_tree_to_string(req_soap_header_node, env);
         }
     

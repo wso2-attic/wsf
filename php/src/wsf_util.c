@@ -335,6 +335,7 @@ wsf_svc_info_create (
     svc_info->security_token = NULL;
     /* caching wsdl is default to 1 */
     svc_info->cache_wsdl = 1;
+    svc_info->omit_wsdl = 0;
 
     svc_info->ops_to_functions = NULL;
     svc_info->ops_to_actions = NULL;

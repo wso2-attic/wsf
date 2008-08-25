@@ -68,6 +68,7 @@ typedef enum ws_input_types
 #define WSF_OP_MEP       "opMEP"
 #define WSF_OP_PARAMS    "opParams"
 #define WSF_WSDL         "wsdl"
+#define WSF_OMIT_WSDL    "omitProcesswsdl"
 #define WSF_CLASSMAP     "classmap"
 #define WSF_CLASSES      "classes"
 #define WSF_CONS_ARGS    "args"
@@ -332,6 +333,8 @@ typedef struct wsf_svc_info
   char *loc_str;	
   /** cache the wsdl */
   int cache_wsdl;
+  /** omit the wsdl */
+  int omit_wsdl;
   /** http_auth_username */
   char *auth_user;
   /** http_auth_password */

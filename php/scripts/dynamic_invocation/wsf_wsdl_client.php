@@ -102,10 +102,10 @@ function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name,
     // the returning payload..
     $payload_str = NULL;
 
-    if(array_key_exists(0, $arguments) && $arguments[0] == NULL) {
+    /*if(array_key_exists(0, $arguments) && $arguments[0] === NULL) {
         $payload_str = NULL;
-    }
-    else if($is_doc == TRUE) {
+    } 
+    else */if($is_doc == TRUE) {
 
         $payload_dom = new DOMDocument('1.0', 'iso-8859-1');
         $element = $payload_dom->createElementNS($ele_ns, WSF_STARTING_NS_PREFIX.":".$ele_name);

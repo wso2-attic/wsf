@@ -883,7 +883,6 @@ PHP_METHOD (ws_service, __construct)
 	HashTable * ht_rest_map = NULL;
     char *service_name = NULL;
     char *port_name = NULL;
-    zval ** wsdl_tmp = NULL;
 	ws_is_svr = 1;
 
     if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "|a",
@@ -950,6 +949,10 @@ PHP_METHOD (ws_service, __construct)
             if (zend_hash_find (ht_options, WSF_CACHE_WSDL, sizeof (WSF_CACHE_WSDL),
                 (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_BOOL) {
                     svc_info->cache_wsdl = Z_BVAL_PP (tmp);
+            }
+            if (zend_hash_find (ht_options, WSF_OMIT_WSDL, sizeof (WSF_OMIT_WSDL),
+                (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_BOOL) {
+                    svc_info->omit_wsdl = Z_BVAL_PP (tmp);
             }
             if (zend_hash_find (ht_options, WSF_WSDL, sizeof (WSF_WSDL),
                (void **) & tmp) == SUCCESS)
@@ -1143,10 +1146,12 @@ PHP_METHOD (ws_service, __construct)
 
 	wsf_util_process_rest_params(ws_env_svr, svc_info, ht_rest_map TSRMLS_CC);
 
+    /*
     if(zend_hash_find(Z_OBJPROP_P(this_ptr), WSF_WSDL,
                       sizeof(WSF_WSDL), (void **)&wsdl_tmp) == SUCCESS){
         wsf_wsdl_process_service(svc_info, ws_env_svr TSRMLS_CC);
     }
+    */
 
     if (svc_info->security_token && (svc_info->policy || svc_info->ht_op_policies))
     {
@@ -1486,7 +1491,8 @@ PHP_METHOD (ws_service, reply)
 	wsf_response_info_t  res_info;
     zval ** server_vars, **data;
     wsf_worker_t * php_worker = NULL;
-    zval ** raw_post;
+    zval ** raw_post = NULL;
+    zval ** wsdl_tmp = NULL;
 
     char *arg_data = NULL;
     int arg_data_len = 0;
@@ -1641,6 +1647,12 @@ PHP_METHOD (ws_service, reply)
 
    }else 
    {
+        
+        if(!svc_info->omit_wsdl && zend_hash_find(Z_OBJPROP_P(this_ptr), WSF_WSDL,
+                          sizeof(WSF_WSDL), (void **)&wsdl_tmp) == SUCCESS){
+            wsf_wsdl_process_service(svc_info, ws_env_svr TSRMLS_CC);
+        }
+
 		wsf_worker_process_request (php_worker, ws_env_svr, &req_info, &res_info, svc_info TSRMLS_CC);
 
 		wsf_response_info_cleanup(&res_info, ws_env_svr);

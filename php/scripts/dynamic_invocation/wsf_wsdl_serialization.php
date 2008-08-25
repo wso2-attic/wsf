@@ -61,6 +61,8 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
 
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "Loading in to creating payload from classmap");
 
+    wsf_set_nil_element($user_obj, $parent_node, $root_node, $prefix_i, $namespace_map);
+
     // This is not expected in the class map mode to have params with no childs
     // So mark it as an unknown schema
 
@@ -129,6 +131,8 @@ function wsf_create_payload_for_array(DomDocument $payload_dom,
 
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "Loading in to creating payload from arrays");
 
+    wsf_set_nil_element($user_arguments, $parent_node, $root_node, $prefix_i, $namespace_map);
+
     // here we always expect structures with childs
     if(!$sig_node->hasChildNodes()) {
         
@@ -184,6 +188,7 @@ function wsf_create_payload_for_array(DomDocument $payload_dom,
                 else if(is_array($user_arguments)) {
                     ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Array is specified when non-array is expected for the root node\n");
                 }
+                wsf_set_nil_element($user_arguments, $parent_node, $root_node, $prefix_i, $namespace_map);
             }
         }
     }
@@ -421,6 +426,7 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
     
             $serialized_value = wsf_wsdl_serialize_php_value(
                                 $param_type, $user_val, $sig_param_node);
+
             $parent_node->setAttribute($attri_name, $serialized_value);
         }
         else {
@@ -600,9 +606,16 @@ function wsf_serialize_complex_types(DomNode $sig_param_node, $user_val,
 
 
     if($max_occurs > 1 || $max_occurs == "unbounded") {
-        if(is_array($user_val)) {
+        if($user_val === NULL) {
+            wsf_set_nil_element(NULL, $parent_node, $root_node, $prefix_i, $namespace_map);
+        }
+        else if(is_array($user_val)) {
             foreach($user_val as $user_val_item) {
                 /* type conversion is needed */
+                if($user_val_item == NULL) {
+                    wsf_set_nil_element(NULL, $parent_node, $root_node, $prefix_i, $namespace_map);
+                    continue;
+                }
                 $param_node = $payload_dom->createElement($node_name);
                 if(is_object($user_val_item)) {
                     if($sig_param_node->hasChildNodes()) {
@@ -720,6 +733,7 @@ function wsf_build_content_model(DomNode $sig_node, array $user_arguments,
         $content_model = $sig_node->attributes->getNamedItem(WSF_CONTENT_MODEL)->value;
     }
 
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, print_r($user_arguments, TRUE));
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, $content_model);
     // simple content extension should be treated differently
     if($content_model == WSF_SIMPLE_CONTENT) {
@@ -745,6 +759,9 @@ function wsf_build_content_model(DomNode $sig_node, array $user_arguments,
                 $user_val_encoded = $user_arguments[WSF_SIMPLE_CONTENT_VALUE. WSF_POSTFIX_BASE64];
             }
         }
+        if($user_val_encoded === NULL  && $user_val === NULL) {
+            wsf_set_nil_element(NULL, $parent_node, $root_node, $prefix_i, $namespace_map);
+        }
         $content_type = NULL;
         if(array_key_exists(WSF_CONTENT_TYPE, $user_arguments)) {
             $content_type = $user_arguments[WSF_CONTENT_TYPE];
@@ -765,6 +782,30 @@ function wsf_build_content_model(DomNode $sig_node, array $user_arguments,
             // for choice we pick the first non-null value in the group, when it is in the order defined in the schema
             foreach($user_arguments as $user_key => $user_val) {
                 if($param_name == $user_key) {
+                    if($user_val === NULL) {
+                        if($sig_param_node->attributes->getNamedItem(WSF_MIN_OCCURS) &&
+                                $sig_param_node->attributes->getNamedItem(WSF_MIN_OCCURS) == 0) {
+                            ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, 
+                                "minOccurs=0 element $user_key is nil");
+                            break; //will not render the min occured 0 nil elements
+                        }
+                        else if($content_model == WSF_WSDL_SEQUENCE &&
+                                $sig_param_node->attributes->getNamedItem(WSF_XSD_NILLABLE) &&
+                                $sig_param_node->attributes->getNamedItem(WSF_XSD_NILLABLE) == "true") {
+                            // this too ok, somehow we would render an nill element here
+                            ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, 
+                                "nillable element $user_key is nil");
+                        }
+                        else {
+                            // not allow to be NIL section
+                            ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, 
+                                "non nillable and minOccurs!=0 element $user_key is nil");
+                            // right now we dont throw excpetion here..
+                            //TODO: exit as validation fails
+                            break;
+                        }
+                            
+                    }
                     if ($sig_param_node->attributes->getNamedItem(WSF_WSDL_SIMPLE) &&
                             $sig_param_node->attributes->getNamedItem(WSF_WSDL_SIMPLE)->value == "yes") {
                         $user_val_encoded = NULL;
@@ -887,7 +928,7 @@ function wsf_convert_classobj_to_array($sig_node, $user_obj) {
                 }
             }
             else {
-                if($reflex_object->hasProperty($param_name) && $user_obj->$param_name !== NULL) {
+                if($reflex_object->hasProperty($param_name)) {
                     $user_arguments[$param_name] = $user_obj->$param_name;
                 }
             }
@@ -956,9 +997,12 @@ function wsf_wsdl_serialize_php_value($xsd_type, $data_value, $sig_param_node) {
  * @return string serialized to string
  */
 function wsf_convert_php_type_to_string($xsd_type, $data_value) {
+    $serialized_value = $data_value;
+    if($serialized_value === NULL) {
+        return "";
+    }
     $xsd_php_mapping_table = wsf_wsdl_util_xsd_to_php_type_map();
 
-    $serialized_value = $data_value;
     if(array_key_exists($xsd_type, $xsd_php_mapping_table)) {
         //retrieve the php type
         $type = $xsd_php_mapping_table[$xsd_type];
@@ -973,7 +1017,6 @@ function wsf_convert_php_type_to_string($xsd_type, $data_value) {
             }
         }
     }
-    if($serialized_value === NULL) return "";
     return $serialized_value."";
 }
 
@@ -1063,6 +1106,8 @@ function wsf_serialize_type_info($param_type, $user_val, $sig_node, $payload_dom
             if($user_val_encoded) {
                 $serialized_value = wsf_wsdl_serialize_php_value(
                         $param_type, $user_val_encoded, $sig_node);
+
+                wsf_set_nil_element($serialized_value, $parent_node, $root_node, $prefix_i, $namespace_map);
                 $ele = $payload_dom->createTextNode($serialized_value);
                 $parent_node->appendChild($ele);
             }
@@ -1071,6 +1116,8 @@ function wsf_serialize_type_info($param_type, $user_val, $sig_node, $payload_dom
     else {
         $serialized_value = wsf_wsdl_serialize_php_value(
                  $param_type, $user_val, $sig_node);
+
+        wsf_set_nil_element($serialized_value, $parent_node, $root_node, $prefix_i, $namespace_map);
         $ele = $payload_dom->createTextNode($serialized_value);
         $parent_node->appendChild($ele);
     }
@@ -1187,6 +1234,30 @@ function wsf_infer_sig_node_from_user_obj($sig_node, $parent_node, $root_node,
 
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, wsf_test_serialize_node($the_sig_node));
     return $the_sig_node;
+}
+
+function wsf_set_nil_element($value, $parent_node, $root_node, &$prefix_i, array &$namespace_map) {
+    if($value !== NULL) {
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, $parent_node->localName. " is not nil\n value is: ".print_r($value, TRUE));
+        return FALSE;
+    }
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, $parent_node->localName. " is not nil\n");
+    if(array_key_exists(WSF_XSI_NAMESPACE, $namespace_map)) {
+        $prefix = $namespace_map[WSF_XSI_NAMESPACE];
+    }
+    else {
+        $prefix = "xsi";
+        $root_node->setAttribute("xmlns:".$prefix, WSF_XSI_NAMESPACE);
+        $namespace_map[WSF_XSI_NAMESPACE] = $prefix;
+    }
+
+    $attribute_name = $prefix.":"."nil";
+    $attribute_value = "1";
+
+    $parent_node->setAttribute($attribute_name, $attribute_value);
+
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, $parent_node->localName. " is nil");
+    return TRUE;
 }
 
 //-------------------------------------------------------------------------------------------

@@ -614,7 +614,8 @@ function wsf_get_all_policies(DomDocument $wsdl_dom, DomNode $binding_node, $ope
 
 function get_policy_node(DomDocument $wsdl_dom, $policy_uri) {
     require_once('wsf_wsdl_consts.php');
-
+    
+    $policy_node = NULL;
     $root_node = $wsdl_dom->firstChild;
     $root_child_list = $root_node->childNodes;
     foreach($root_child_list as $child) {
