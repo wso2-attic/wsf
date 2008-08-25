@@ -77,7 +77,7 @@
 	WSF-Spring modules set.
 	-->
 	<modules>
-		<module>core</module> 
+		<module>core</module> 	
 		<module>samples/webapp</module>
 	</modules>
 
@@ -106,7 +106,7 @@
 				</property>
 			</activation>
 			<modules>
-				<module>modules/distribution</module>
+				<module>distribution</module>
 			</modules>
 		</profile>
 	</profiles>
