@@ -29,9 +29,45 @@
 					</list>
 				</property>
 			</bean>
+			<bean id="secureProductManService" class="org.wso2.spring.ws.SpringWebService">
+				<property name="serviceBean" ref="secureProductManager"></property>
+				<property name="serviceName" value="SecureTestProductManager"></property>
+				<property name="serviceDescription" value="This is the test webservice for Spring/Axis2 Integration with WS-Security" ></property>
+				<property name="targetNameSpace" value="www.springtest.com"></property>
+				<property name="excludeOperations">
+					<list>
+						<bean id="secureTest" class="org.wso2.spring.ws.beans.OperationBean">
+							<property name="name" value="increasePrice"></property>
+						</bean>
+					</list>
+				</property>
+				<property name="sessionScope" value="request"></property>
+				<property name="modules">
+					<list>
+						<value>addressing</value>
+						<value>rampart</value>
+					</list>
+				</property>
+				<property name="policyFiles">
+					<list>
+						<value>secureProductManagerPolicy.xml</value>
+					</list>
+				</property>
+			</bean>
 		</list>
 	</property>
 	</bean>
+	
+	<bean id="secureProductManager" class="com.hello.sample.service.SimpleProductManager">
+        <property name="products">
+            <list>
+                <ref bean="product1"/>
+                <ref bean="product2"/>
+            </list>
+        </property>
+    </bean>
+	
+	
 	
 	<bean id="productManager" class="com.hello.sample.service.SimpleProductManager">
         <property name="products">
@@ -57,6 +93,10 @@
         <property name="description" value="Chair"/>
         <property name="price" value="22.79"/>
     </bean>
+	
+	
+	
+	
 		
 	
 	

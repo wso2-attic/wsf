@@ -7,16 +7,7 @@ NOTE: The following instrutions will be relative your webapp present in the serv
 
 1. Copy the jars in the WEB-INF/lib directory to your classpath (WEB-INF/lib directory in a web application)
 
-2. Copy the axis2-web/ directory to the Web Application directory (Same level as the WEB-INF directory). The following project tree illustrates
-
-    YourWebApp
-	.
-	|-- WEB-INF
-	|   `-- lib
-	`-- axis2-web
-
-
-3. Insert the following entries in your web.xml
+2. Insert the following entries in your web.xml
 
   <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -48,18 +39,12 @@ NOTE: The following instrutions will be relative your webapp present in the serv
   </servlet-mapping>
 
 
-NOTE : Insert the following xml snippet only if you want to view the axis2 services in your start page (Useful in development time)
 
-  <welcome-file-list>
-  	<!-- <welcome-file>index.jsp</welcome-file> -->
-  	<welcome-file>/axis2-web/index.jsp</welcome-file>
-  </welcome-file-list>
-
-4. Add the following line in your application context (WEB-INF/ in this case) and copy the axisConfig.xml to the relevant location
+3. Add the following line in your application context (WEB-INF/ in this case) and copy the axisConfig.xml to the relevant location
 
 <import resource="axis2Config.xml"/>
 
-5. Declare a service bean and add your Spring beans to expose them as web services.
+4. Declare a service bean and add your Spring beans to expose them as web services.
 
 Ex :- If you have a Spring bean with id "productManager", it can be exposed as follows:
 
@@ -73,3 +58,36 @@ Ex :- If you have a Spring bean with id "productManager", it can be exposed as f
 			</list>
 		</property>
 	</bean>
+	
+5.To include WS-Security
+
+Ex :- If you have a Spring bean with id "secureProductManager", it can be exposed as follows:
+
+	<bean id="services" class="org.wso2.spring.ws.WebServices">
+		<property name="services">
+			<list>
+				<bean id="bookService" class="org.wso2.spring.ws.SpringWebService">
+					<property name="serviceBean" ref="secureProductManager"></property>
+					<property name="serviceName" value="SecureTestProductManager"></property>
+					<property name="modules">
+						<list>
+							<value>rampart</value>
+						</list>
+					</property>
+					<property name="policyFiles">
+						<list>
+							<value>policyFileName.xml</value>
+						<list>
+					<property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+NOTE: policyFileName.xml and key file(keyFileName.jks) should be put in
+			WEB-INF/classes of your web application
+		
+6.See the wsdl of your service by targeting your brouser to
+		http://{host}:{port}/{webapp}/services/{serviceName}?wsdl
+			
+

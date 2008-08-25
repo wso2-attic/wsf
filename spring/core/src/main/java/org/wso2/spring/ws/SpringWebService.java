@@ -42,6 +42,7 @@ public class SpringWebService {
 	private ArrayList<OperationBean> operations;
     private ArrayList<OperationBean> excludeOperations;
     private ArrayList<String>policies;
+	private String policyFileName;
 
 
     public ArrayList<MessageReceiverBean> getMessageReceivers() {
@@ -109,5 +110,13 @@ public class SpringWebService {
 	}
 	public void setPolicies(ArrayList<String> policies) {
 		this.policies = policies;
+	}
+	
+	public void setPolicyFileName(String policyFileName){
+		this.policyFileName=policyFileName;
+	}
+	
+	public String getPolicyFileName(){
+		return policyFileName;
 	}
 }

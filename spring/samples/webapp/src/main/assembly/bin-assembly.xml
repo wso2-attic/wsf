@@ -1,9 +1,11 @@
 <assembly>
-	<includeBaseDirectory>true</includeBaseDirectory>
-	<baseDirectory>wsf-spring</baseDirectory>
+	<!--<includeBaseDirectory>true</includeBaseDirectory>-->
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<!-- <baseDirectory>wsf-spring</baseDirectory> -->
 	<formats>
 		<format>war</format>
 	</formats>
+	<artifactId>wsf-spring</artifactId>
 	<fileSets>
 		<fileSet>
 			<directory>src/main/webapp/WEB-INF</directory>
@@ -13,6 +15,14 @@
 				<include>axis2Config.xml</include>
 				<include>web.xml</include>
 			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>src/main/resources</directory>
+			<outputDirectory>WEB-INF/classes</outputDirectory>
+			<includes>
+				<include>secureProductManagerPolicy.xml</include>
+				<include>service.jks</include>
+				</includes>
 		</fileSet>
 		<fileSet>
 			<directory>target</directory>
@@ -41,6 +51,13 @@
             <outputFileNameMapping>${artifactId}-${addressing.version}.${extension}</outputFileNameMapping>
             <includes>
                 <include>org.apache.axis2:addressing:mar</include>
+            </includes>
+        </dependencySet>
+		<dependencySet>
+            <outputDirectory>WEB-INF/lib</outputDirectory>
+            <outputFileNameMapping>${artifactId}-${rampart.version}.${extension}</outputFileNameMapping>
+            <includes>
+                <include>org.apache.rampart:rampart:mar</include>
             </includes>
         </dependencySet>
 	</dependencySets>
