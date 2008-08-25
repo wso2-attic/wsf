@@ -17,6 +17,7 @@
 package org.wso2.spring.ws.axis2;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -25,16 +26,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
-
-import java.io.File;
-import java.io.InputStream;
-import java.io.FileInputStream;
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.impl.llom.factory.OMXMLBuilderFactory;
-import javax.xml.stream.XMLInputFactory;
-import java.net.URL;
-
 
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
@@ -293,29 +284,33 @@ public class SpringWebServiceBuilder {
 					excludeops.add(operationBean.getName());
 				}
 			}
-			
-		
-		try {
-		
-			String policyFileName =(String)springService.getPolicyFileName();
-			OMElement element=null;
-			
-			URL url=getClass().getClassLoader().getResource(policyFileName);
-			
-		    FileInputStream fis = new FileInputStream(url.getFile());
-			element = OMXMLBuilderFactory.createStAXOMBuilder(
-                    OMAbstractFactory.getOMFactory(),
-                    XMLInputFactory.newInstance().createXMLStreamReader(fis)).getDocumentElement();
-			
-            Policy p=PolicyEngine.getPolicy(element);
-			
-			service.getPolicySubject().attachPolicy(p);
 
-        } catch (Exception e) {
-            //fail("Cannot get resource: " + e.getMessage());
-           // throw new RuntimeException();
-        }
-		
+			ArrayList<String> policies = springService.getPolicies();
+			if (policies != null && policies.size() > 0) {
+				for (int i = 0; i < policies.size(); i++) {
+					String value = policies.get(i);
+					ByteArrayInputStream bais = new ByteArrayInputStream(value
+							.getBytes());
+					Policy policy = PolicyEngine.getPolicy(bais);
+					service.getPolicySubject().attachPolicy(policy);
+				}
+			}
+			
+			ArrayList<String> policyFiles = springService.getPolicyFiles();
+			if (policyFiles != null && policyFiles.size() > 0) {
+				for (int i = 0; i < policyFiles.size(); i++) {
+					String policyFile = policyFiles.get(i);
+					ClassLoader classloader = Thread.currentThread()
+							.getContextClassLoader();
+					InputStream is = classloader
+							.getResourceAsStream(policyFile);
+					Policy policy = PolicyEngine.getPolicy(is);
+					service.getPolicySubject().attachPolicy(policy);
+				}
+			}
+
+			// generate schema
+
 			if (!service.isUseUserWSDL()) {
 				// Generating schema for the service if the impl class is Java
 				if (!service.isWsdlFound()) {

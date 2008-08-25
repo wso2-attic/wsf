@@ -29,6 +29,7 @@
 					</list>
 				</property>
 			</bean>
+
 			<bean id="secureProductManService" class="org.wso2.spring.ws.SpringWebService">
 				<property name="serviceBean" ref="secureProductManager"></property>
 				<property name="serviceName" value="SecureTestProductManager"></property>
