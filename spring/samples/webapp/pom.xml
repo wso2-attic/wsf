@@ -17,15 +17,16 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
+	<groupId>org.wso2.spring.ws</groupId>
+	<artifactId>wsf-spring-sample</artifactId>
+	<version>SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<parent>
         <groupId>org.wso2.spring.ws</groupId>
     	<artifactId>wsf-spring-parent</artifactId>
         <version>SNAPSHOT</version>
     </parent>
-    <artifactId>wsf-spring-sample</artifactId>
-    <packaging>jar</packaging>
-    <name>WSO2 Spring Web Services - Sample Web Application</name>
-	
+	<!-- Build Settings -->
     <build>
     	<plugins>
 			<plugin>
@@ -67,4 +68,6 @@
 			</resource>
 		</resources>
     </build>
+	<!-- Project Info -->
+	<name>WSO2 Spring Web Services - Sample Web Application</name>
 </project>
