@@ -17,27 +17,27 @@
 
 // Request payload string 
 $reqPayloadString = <<<XML
-<ns1:echo xmlns:ns1="http://echo.services.wsas.wso2.org"><text>Hello World!</text></ns1:echo>
+<ns1:echo xmlns:ns1="http://wso2.org/wsfphp/samples"><text>Hello World!</text></ns1:echo>
 XML;
 
 try {
     // Create message with request payload and options
     $reqMessage = new WSMessage($reqPayloadString,
-                         array("to" => "http://localhost/services/echo",
-                               "action" => "urn:echoString"));
+                         array("to" => "http://localhost/samples/security/username_token/service.php",
+                               "action" => "http://php.axis2.org/samples/echoString"));
    
     // Set up security options
     $security_options = array("useUsernameToken" => TRUE );
     $policy = new WSPolicy(array("security" => $security_options));
-    $security_token = new WSSecurityToken(array("user" => "user",
-                                                "password" => "user",
+    $security_token = new WSSecurityToken(array("user" => "Raigama",
+                                                "password" => "RaigamaPW",
                                                 "passwordType" => "Digest"));
     
     // Create client with options
     $client = new WSClient(array("useWSA" => TRUE,
                                  "policy" => $policy,
                                  "securityToken" => $security_token));
-	
+        
     // Send request and capture response
     $resMessage = $client->request($reqMessage);
     
@@ -45,10 +45,11 @@ try {
 
 } catch (Exception $e) {
 
-	if ($e instanceof WSFault) {
-		printf("Soap Fault: %s\n", $e->Reason);
-	} else {
-		printf("Message = %s\n",$e->getMessage());
-	}
+        if ($e instanceof WSFault) {
+                printf("Soap Fault: %s\n", $e->Reason);
+        } else {
+                printf("Message = %s\n",$e->getMessage());
+        }
 }
 ?>
+
