@@ -71,7 +71,7 @@ axis2_udp_transport_sender_init(
     axis2_conf_ctx_t * conf_ctx,
     axis2_transport_out_desc_t * out_desc);
 
-void AXIS2_CALL
+static void AXIS2_CALL
 axis2_udp_transport_set_param_value(
 	const axutil_env_t *env, axutil_param_container_t *container, 
 	axis2_char_t *name, int *value);
@@ -581,7 +581,7 @@ axis2_udp_transport_sender_init(
 }
 
 /* Utility method for retrieving a parameter from a param container */
-void AXIS2_CALL
+static void AXIS2_CALL
 axis2_udp_transport_set_param_value(const axutil_env_t *env, axutil_param_container_t *container, 
 									axis2_char_t *name, int *value)
 {
