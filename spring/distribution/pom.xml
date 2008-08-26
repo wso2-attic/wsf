@@ -33,7 +33,7 @@
                     <configuration>
 						<finalName>wsf-spring-${wsf-spring.version}</finalName>
                         <descriptors>
-                            <!--<descriptor>src/main/assembly/bin-assembly.xml</descriptor>-->
+                            <descriptor>src/main/assembly/bin-assembly.xml</descriptor>
 							<descriptor>src/main/assembly/src-assembly.xml</descriptor>
                         </descriptors>
                     </configuration>
