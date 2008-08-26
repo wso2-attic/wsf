@@ -21,12 +21,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.wso2.spring.ws</groupId>
 	<artifactId>wsf-spring</artifactId>
-	<version>SNAPSHOT</version>
+	<version>1.5</version>
 	<packaging>jar</packaging>
 	<parent>
 		<groupId>org.wso2.spring.ws</groupId>
 		<artifactId>wsf-spring-parent</artifactId>
-		<version>SNAPSHOT</version>
+		<version>1.5</version>
 	</parent>
 	<!-- Build Settings -->
 	<build>
