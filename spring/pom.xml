@@ -367,6 +367,24 @@
 			</url>
 		</repository>
 	</repositories>
+	
+	<build>
+		<plugins>
+			<plugin>
+                <inherited>false</inherited>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>distribution/target</directory>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 	<properties>
 		<!-- TODO trying with the latest Axis2 -->
@@ -405,5 +423,4 @@
 		<spring.version>2.0.7</spring.version>
 
 	</properties>
-
 </project>
