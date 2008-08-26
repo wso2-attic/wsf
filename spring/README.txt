@@ -1,6 +1,6 @@
-24th March 2008
+27th August 2008
 
-WSO2 Web Services Framework for Spring 1.0
+WSO2 Web Services Framework for Spring 1.5
 -------------------------------------------
 
 Building with the binary distribution
