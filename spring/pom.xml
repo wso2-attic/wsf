@@ -108,6 +108,47 @@
 			<modules>
 				<module>distribution</module>
 			</modules>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>${maven.gpg.version}</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+						<version>${maven.antrun.version}</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <configuration>
+                                    <tasks>
+                                        <checksum forceOverwrite="yes" algorithm="MD5" fileext=".md5">
+											<fileset dir="target">
+												<include name="*.jar" />
+												<include name="*.zip" />
+											</fileset>
+										</checksum>
+                                    </tasks>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+				</plugins>
+			</build>
 		</profile>
 	</profiles>
 	
@@ -373,7 +414,7 @@
 			<plugin>
                 <inherited>false</inherited>
                 <artifactId>maven-clean-plugin</artifactId>
-                <version>2.1</version>
+                <version>${maven.clean.version}</version>
                 <configuration>
                     <filesets>
                         <fileset>
@@ -389,6 +430,7 @@
 	<properties>
 		<!-- TODO trying with the latest Axis2 -->
 		<wsf-spring.version>SNAPSHOT</wsf-spring.version>
+		<ant.version>1.7.0</ant.version>
 		<axis2.version>SNAPSHOT</axis2.version>
 		<axiom.version>SNAPSHOT</axiom.version>
 		<addressing.version>1.4</addressing.version>
@@ -421,6 +463,11 @@
 		<tomcat.version>5.5.15</tomcat.version>
 		<xalan.version>2.7.0</xalan.version>
 		<spring.version>2.0.7</spring.version>
+		
+		<!-- -maven plugin versions -->
+		<maven.clean.version>2.1</maven.clean.version>
+		<maven.gpg.version>1.0-alpha-3</maven.gpg.version>
+		<maven.antrun.version>1.2</maven.antrun.version>
 
 	</properties>
 </project>
