@@ -30,6 +30,7 @@
 #include <axutil_url.h>
 #include <axutil_network_handler.h>
 #include <time.h>
+#include <axis2_options.h>
 
 #define RES_BUFF 50
 
@@ -170,7 +171,6 @@ axis2_udp_transport_sender_invoke(
         xml_writer = NULL;
         return AXIS2_FAILURE;
     }
-	sender->is_multicast = AXIS2_FALSE;
     conf_ctx = axis2_msg_ctx_get_conf_ctx (msg_ctx, env);
     if (conf_ctx)
     {
@@ -253,43 +253,94 @@ axis2_udp_transport_sender_invoke(
         axiom_soap_builder_t *soap_builder = NULL;
         axiom_soap_envelope_t *soap_envelope = NULL;
 		axis2_socket_t send_socket, recv_socket;
+		axutil_property_t *prop = NULL;
+		axis2_char_t *prop_val = NULL;
+		axis2_options_t *options = NULL;
 		axis2_char_t *res_buffer = (axis2_char_t *)AXIS2_MALLOC(env->allocator, RES_BUFF);
 
-		to = axis2_msg_ctx_get_to(msg_ctx, env);
-		if (!to)
+		options = axis2_msg_ctx_get_options(msg_ctx, env);
+		/* Check weather this is for multicast */
+		prop = axis2_options_get_property(options, env, AXIS2_UDP_TRANSPORT_IS_MULTICAT);
+		
+		if (prop)
 		{
-			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "To epr not presant");
-			return AXIS2_FAILURE;
+			prop_val = axutil_property_get_value(prop, env);
+			if (prop_val && !axutil_strcmp(prop_val, "true"))
+			{
+				sender->is_multicast = AXIS2_TRUE;
+			} 
+			else if (prop_val && !axutil_strcmp(prop_val, "false"))
+			{
+				sender->is_multicast = AXIS2_FALSE;
+			}
+			else
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Invalid value for %s", 
+					AXIS2_UDP_TRANSPORT_IS_MULTICAT);
+				return AXIS2_FAILURE;
+			}
 		}
 
-		to_str = axis2_endpoint_ref_get_address(to, env);
-		if (!to_str)
+		prop = axis2_options_get_property(options, env,
+                                              AXIS2_UDP_TRANSPORT_ADDRESS);
+		if (prop)
 		{
-			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-							"Unable to convert epr to string");
-			return AXIS2_FAILURE;
+			prop_val = axutil_property_get_value(prop, env);
+			if (prop_val)
+			{
+				host = prop_val;
+			}
 		}
 
-		to_url = axutil_url_parse_string(env, to_str);
-		if (!to_url)
+		prop = axis2_options_get_property(options, env,
+                                              AXIS2_UDP_TRANSPORT_PORT);
+		if (prop)
 		{
-			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-							"Unable to parser string to url");
-			return AXIS2_FAILURE;
+			prop_val = axutil_property_get_value(prop, env);
+			if (prop_val)
+			{
+				port = atoi(prop_val);
+			}
 		}
-
-		host = axutil_url_get_host(to_url, env);
+		
 		if (!host)
 		{
-			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Retrieving host failed");
-			return AXIS2_FAILURE;
-		}
+			to = axis2_msg_ctx_get_to(msg_ctx, env);
+			if (!to)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "To epr not presant");
+				return AXIS2_FAILURE;
+			}
 
-		port = axutil_url_get_port(to_url, env);
-		if (!port)
-		{
-			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Retrieving port failed");
-			return AXIS2_FAILURE;
+			to_str = axis2_endpoint_ref_get_address(to, env);
+			if (!to_str)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+								"Unable to convert epr to string");
+				return AXIS2_FAILURE;
+			}
+
+			to_url = axutil_url_parse_string(env, to_str);
+			if (!to_url)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+								"Unable to parser string to url");
+				return AXIS2_FAILURE;
+			}
+
+			host = axutil_url_get_host(to_url, env);
+			if (!host)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Retrieving host failed");
+				return AXIS2_FAILURE;
+			}
+
+			port = axutil_url_get_port(to_url, env);
+			if (!port)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Retrieving port failed");
+				return AXIS2_FAILURE;
+			}
 		}
 		
 		send_socket = (int)axutil_network_handler_open_dgram_socket(env);

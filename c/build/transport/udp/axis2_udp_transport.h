@@ -54,6 +54,10 @@ extern "C"
 #define AXIS2_UDP_PACKET_MAX_SIZE		16384
 #define AXIS2_UDP_TRANSPORT_DEFAULT_RECV_PORT	13000
 
+/* These are properties names set by client */
+#define AXIS2_UDP_TRANSPORT_IS_MULTICAT				"udp_is_multicast"
+#define AXIS2_UDP_TRANSPORT_PORT					"udp_port"
+#define AXIS2_UDP_TRANSPORT_ADDRESS					"udp_address"
 
 typedef struct axis2_udp_transport_params
 {
