@@ -61,7 +61,9 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
 
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "Loading in to creating payload from classmap");
 
-    wsf_set_nil_element($user_obj, $parent_node, $root_node, $prefix_i, $namespace_map);
+    if(wsf_set_nil_element($user_obj, $parent_node, $root_node, $prefix_i, $namespace_map)) {
+        return TRUE;
+    }
 
     // This is not expected in the class map mode to have params with no childs
     // So mark it as an unknown schema
@@ -131,7 +133,9 @@ function wsf_create_payload_for_array(DomDocument $payload_dom,
 
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "Loading in to creating payload from arrays");
 
-    wsf_set_nil_element($user_arguments, $parent_node, $root_node, $prefix_i, $namespace_map);
+    if(wsf_set_nil_element($user_arguments, $parent_node, $root_node, $prefix_i, $namespace_map)) {
+        return TRUE;
+    }
 
     // here we always expect structures with childs
     if(!$sig_node->hasChildNodes()) {
@@ -147,6 +151,12 @@ function wsf_create_payload_for_array(DomDocument $payload_dom,
 
     $classmap = NULL;
     if($sig_node->hasAttributes()) {
+        if(!is_array($user_arguments)) {
+            ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, $payload_node->localName. 
+                " can not be empty, note: just set to NULL to make it as NULL");
+            wsf_set_nil_element(NULL, $parent_node, $root_node, $prefix_i, $namespace_map);
+            return;
+        }
         wsf_build_content_model($sig_node, $user_arguments, $parent_node,
             $payload_dom,  $root_node, $classmap, $prefix_i, $namespace_map, $mtom_on, $attachement_map);
     }
@@ -180,7 +190,9 @@ function wsf_create_payload_for_array(DomDocument $payload_dom,
 
                 if($user_arguments === NULL || !is_array($user_arguments) || $is_list) {
 
-                    $serialized_value = wsf_wsdl_serialize_php_value($param_type, $user_arguments, $the_only_node);
+                    $serialized_value = wsf_wsdl_serialize_php_value($param_type,
+                        $user_arguments, $the_only_node, $parent_node, 
+                        $parent_node, $prefix_i, $namespace_map, $root_node);
                     $text_node = $payload_dom->createTextNode($serialized_value);
                     $parent_node->appendChild($text_node);
 
@@ -353,6 +365,7 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
     $is_attribute = FALSE;
     $is_list = FALSE;
     $content_model = NULL;
+    $nillable = FALSE;
 
 
     if($sig_param_attris->getNamedItem(WSF_NAME)) {
@@ -373,6 +386,11 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
     if($sig_param_attris->getNamedItem(WSF_MAX_OCCURS)) {
          $max_occurs = 
             $sig_param_attris->getNamedItem(WSF_MAX_OCCURS)->value;
+    }
+
+    if($sig_param_attris->getNamedItem(WSF_XSD_NILLABLE)) {
+         $nillable = 
+            $sig_param_attris->getNamedItem(WSF_XSD_NILLABLE)->value;
     }
     
     if($sig_param_attris->getNamedItem(WSF_TYPE)) {
@@ -425,7 +443,8 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
             ($user_val_encoded && !is_array($user_val_encoded) && !is_object($user_val_encoded))) {
     
             $serialized_value = wsf_wsdl_serialize_php_value(
-                                $param_type, $user_val, $sig_param_node);
+                                $param_type, $user_val, $sig_param_node,
+                                NULL, $prefix_i, $namespace_map, $root_node);
 
             $parent_node->setAttribute($attri_name, $serialized_value);
         }
@@ -612,7 +631,7 @@ function wsf_serialize_complex_types(DomNode $sig_param_node, $user_val,
         else if(is_array($user_val)) {
             foreach($user_val as $user_val_item) {
                 /* type conversion is needed */
-                if($user_val_item == NULL) {
+                if($user_val_item === NULL) {
                     wsf_set_nil_element(NULL, $parent_node, $root_node, $prefix_i, $namespace_map);
                     continue;
                 }
@@ -784,15 +803,16 @@ function wsf_build_content_model(DomNode $sig_node, array $user_arguments,
                 if($param_name == $user_key) {
                     if($user_val === NULL) {
                         if($sig_param_node->attributes->getNamedItem(WSF_MIN_OCCURS) &&
-                                $sig_param_node->attributes->getNamedItem(WSF_MIN_OCCURS) == 0) {
+                                $sig_param_node->attributes->getNamedItem(WSF_MIN_OCCURS)->value == 0) {
                             ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, 
                                 "minOccurs=0 element $user_key is nil");
                             break; //will not render the min occured 0 nil elements
                         }
                         else if($content_model == WSF_WSDL_SEQUENCE &&
                                 $sig_param_node->attributes->getNamedItem(WSF_XSD_NILLABLE) &&
-                                $sig_param_node->attributes->getNamedItem(WSF_XSD_NILLABLE) == "true") {
-                            // this too ok, somehow we would render an nill element here
+                                $sig_param_node->attributes->getNamedItem(WSF_XSD_NILLABLE)->value == "true") {
+                            // this too ok, somehow we would render an nill element here,
+                            // we are not handling it here concerning the array elements
                             ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, 
                                 "nillable element $user_key is nil");
                         }
@@ -806,8 +826,10 @@ function wsf_build_content_model(DomNode $sig_node, array $user_arguments,
                         }
                             
                     }
-                    if ($sig_param_node->attributes->getNamedItem(WSF_WSDL_SIMPLE) &&
-                            $sig_param_node->attributes->getNamedItem(WSF_WSDL_SIMPLE)->value == "yes") {
+                    if (($sig_param_node->attributes->getNamedItem(WSF_WSDL_SIMPLE) &&
+                            $sig_param_node->attributes->getNamedItem(WSF_WSDL_SIMPLE)->value == "yes") ||
+                            ($sig_param_node->attributes->getNamedItem(WSF_TYPE) &&
+                             $sig_param_node->attributes->getNamedItem(WSF_TYPE)->value == "anyType")) {
                         $user_val_encoded = NULL;
                         $param_type = NULL;
 
@@ -821,6 +843,8 @@ function wsf_build_content_model(DomNode $sig_node, array $user_arguments,
                                 $user_val_encoded = $user_arguments[$user_key. WSF_POSTFIX_BASE64];
                             }
                         }
+                        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, 
+                                "calling serialize simple types");
                         // default simple type
                         wsf_serialize_simple_types($sig_param_node,
                                     $user_val, $parent_node, $payload_dom, 
@@ -828,6 +852,8 @@ function wsf_build_content_model(DomNode $sig_node, array $user_arguments,
                                     $mtom_on, $attachment_map, $user_val_encoded);
                     }
                     else {
+                        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, 
+                                "calling serialize complex types");
                         wsf_serialize_complex_types($sig_param_node, 
                                         $user_val, $parent_node, $payload_dom,
                                         $root_node, $classmap, $prefix_i, 
@@ -951,9 +977,11 @@ function wsf_convert_classobj_to_array($sig_node, $user_obj) {
  * @param $xsd_type, xsd type the value hold
  * @param $data_value, the data_value with php type
  * @param $is_list, whether the given map is a list
+ * @param $parent_node, for put xsi:type in a case of a need..
  * @return string serialized to string
  */
-function wsf_wsdl_serialize_php_value($xsd_type, $data_value, $sig_param_node) {
+function wsf_wsdl_serialize_php_value($xsd_type, $data_value, 
+            $sig_param_node, $parent_node, &$prefix_i, &$namespace_map, $root_node) {
 
     $is_list = FALSE;
     $is_union = FALSE;
@@ -976,6 +1004,7 @@ function wsf_wsdl_serialize_php_value($xsd_type, $data_value, $sig_param_node) {
 
         $new_data_value = array();
         foreach($tmp_data_values as $tmp_data_value) {
+            //this can't be anytype, since we can't put xsi:type in parent node there..
             $new_data_value[] = wsf_convert_php_type_to_string($xsd_type, $tmp_data_value);
         }
 
@@ -983,6 +1012,33 @@ function wsf_wsdl_serialize_php_value($xsd_type, $data_value, $sig_param_node) {
     }
     else {
         $serialized_value = wsf_convert_php_type_to_string($xsd_type, $data_value);
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "xsd type info ".$xsd_type);
+        if($xsd_type == "anyType") {
+
+            if(array_key_exists(WSF_XSI_NAMESPACE, $namespace_map)) {
+                $xsi_prefix = $namespace_map[WSF_XSI_NAMESPACE];
+            }
+            else {
+                $xsi_prefix = "xsi";
+                $root_node->setAttribute("xmlns:".$xsi_prefix, WSF_XSI_NAMESPACE);
+                $namespace_map[WSF_XSI_NAMESPACE] = $xsi_prefix;
+            }
+            if(array_key_exists(WSF_XSD_NAMESPACE, $namespace_map)) {
+                $xsd_prefix = $namespace_map[WSF_XSD_NAMESPACE];
+            }
+            else {
+                $xsd_prefix = "xsd";
+                $root_node->setAttribute("xmlns:".$xsd_prefix, WSF_XSD_NAMESPACE);
+                $namespace_map[WSF_XSD_NAMESPACE] = $xsd_prefix;
+            }
+
+            $attribute_name = $xsi_prefix.":"."type";
+            $php_type = $xsd_prefix.":".gettype($data_value);
+            $attribute_value = $php_type;
+
+            $parent_node->setAttribute($attribute_name, $attribute_value);
+                
+        }
     }
 
 
@@ -1104,22 +1160,27 @@ function wsf_serialize_type_info($param_type, $user_val, $sig_node, $payload_dom
             }
 
             if($user_val_encoded) {
-                $serialized_value = wsf_wsdl_serialize_php_value(
-                        $param_type, $user_val_encoded, $sig_node);
-
-                wsf_set_nil_element($serialized_value, $parent_node, $root_node, $prefix_i, $namespace_map);
-                $ele = $payload_dom->createTextNode($serialized_value);
-                $parent_node->appendChild($ele);
+                if(!wsf_set_nil_element($user_val_encoded, $parent_node, $root_node, $prefix_i, $namespace_map)) {
+                    $serialized_value = wsf_wsdl_serialize_php_value(
+                        $param_type, $user_val_encoded, 
+                        $sig_node, $parent_node, $prefix_i, $namespace_map, $root_node);
+                    $ele = $payload_dom->createTextNode($serialized_value);
+                    $parent_node->appendChild($ele);
+                }
             }
         }
     }
     else {
-        $serialized_value = wsf_wsdl_serialize_php_value(
-                 $param_type, $user_val, $sig_node);
+        
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "setting the value after a null check");
 
-        wsf_set_nil_element($serialized_value, $parent_node, $root_node, $prefix_i, $namespace_map);
-        $ele = $payload_dom->createTextNode($serialized_value);
-        $parent_node->appendChild($ele);
+        if(!wsf_set_nil_element($user_val, $parent_node, $root_node, $prefix_i, $namespace_map)) {
+            $serialized_value = wsf_wsdl_serialize_php_value(
+                 $param_type, $user_val, $sig_node,
+                 $parent_node, $prefix_i, $namespace_map, $root_node);
+            $ele = $payload_dom->createTextNode($serialized_value);
+            $parent_node->appendChild($ele);
+        }
     }
 }
 
@@ -1241,7 +1302,7 @@ function wsf_set_nil_element($value, $parent_node, $root_node, &$prefix_i, array
         ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, $parent_node->localName. " is not nil\n value is: ".print_r($value, TRUE));
         return FALSE;
     }
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, $parent_node->localName. " is not nil\n");
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, $parent_node->localName. " is nil\n");
     if(array_key_exists(WSF_XSI_NAMESPACE, $namespace_map)) {
         $prefix = $namespace_map[WSF_XSI_NAMESPACE];
     }

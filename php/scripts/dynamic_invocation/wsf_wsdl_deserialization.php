@@ -536,10 +536,8 @@ function wsf_deserialize_simple_types(&$current_child, DomNode $sig_param_node, 
                         $current_child->firstChild->wholeText, $sig_param_node, $current_child);
             }
             else{
-                if(!isset($param_value["nillable"])) {
-                    ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Non nillable element". $param_name ."is nil. ");
-                }
-                $converted_value = "";
+                // handling nil element 
+                $converted_value = wsf_wsdl_deserialize_string_value($param_type, "", $sig_param_node, $current_child);
             }
             $tmp_array[$i++] = $converted_value;
             $current_child = $current_child->nextSibling;
@@ -585,10 +583,8 @@ function wsf_deserialize_simple_types(&$current_child, DomNode $sig_param_node, 
         }
         else
         {
-            if(!isset($param_value["nillable"])) {
-                ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Non nillable element". $param_name ."is nil. ");
-            }
-            $converted_value = "";
+            // handling nil element 
+            $converted_value = wsf_wsdl_deserialize_string_value($param_type, "", $sig_param_node, $current_child);
         }
         $ret_val = $converted_value;
         $current_child = $current_child->nextSibling;
@@ -679,10 +675,9 @@ function wsf_deserialize_complex_types(&$current_child, DomNode $sig_param_node,
                 }
             }
             if(!$current_child->firstChild && !$current_child->hasAttributes()) {
-                if(!$nillable) {
-                    ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Non nillable element ". $param_name ." is nil. ");
-                }
-                $converted_value = "";
+                
+                // handling nil element 
+                $converted_value = wsf_wsdl_deserialize_string_value($param_type, "", $sig_param_node, $current_child);
             }
             $tmp_array[$i++] = $converted_value;
             $current_child = $current_child->nextSibling;
@@ -712,10 +707,8 @@ function wsf_deserialize_complex_types(&$current_child, DomNode $sig_param_node,
             }
         }
         if(!$current_child->firstChild && !$current_child->hasAttributes()) {
-            if(!$nillable) {
-                ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Non nillable element ". $param_name ." is nil. ");
-            }
-            $converted_value = "";
+            // handling nil element 
+            $converted_value = wsf_wsdl_deserialize_string_value($param_type, "", $sig_param_node, $current_child);
         }
         $ret_val = $converted_value;
         $current_child = $current_child->nextSibling;
@@ -998,9 +991,7 @@ function wsf_infer_attributes(DomNode $parent_node, DomNode $sig_node) {
  */
 function wsf_wsdl_deserialize_string_value($xsd_type, $data_value, $sig_param_node, $value_parent_node) {
 
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "deserializing ".$data_value);
-
-    if($value_parent_node && $value_parent_node == XML_ELEMENT_NODE) {
+    if($value_parent_node && $value_parent_node->nodeType == XML_ELEMENT_NODE) {
        $is_nil = $value_parent_node->getAttributeNS(WSF_XSI_NAMESPACE, "nil");
         ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "xsi:nil = ".$is_nil);
        if($is_nil && ($is_nil == "1" || $is_nil == "true" || $is_nil == "TRUE")) {

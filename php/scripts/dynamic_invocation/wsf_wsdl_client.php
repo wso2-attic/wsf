@@ -98,14 +98,21 @@ function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name,
     if($params_node == NULL) {
         return NULL;
     }
+                                
+    
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "element name: $ele_name");
 
     // the returning payload..
     $payload_str = NULL;
 
     /*if(array_key_exists(0, $arguments) && $arguments[0] === NULL) {
         $payload_str = NULL;
-    } 
-    else */if($is_doc == TRUE) {
+    }*/ 
+    if(
+        ($ele_name == NULL || $ele_name == "#any")) {
+        $payload_str = NULL;
+    }
+    else if($is_doc == TRUE) {
 
         $payload_dom = new DOMDocument('1.0', 'iso-8859-1');
         $element = $payload_dom->createElementNS($ele_ns, WSF_STARTING_NS_PREFIX.":".$ele_name);
@@ -113,6 +120,7 @@ function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name,
             $payload_dom->appendChild($element);
             $payload_node = $payload_dom->firstChild;
             $clone_node = $payload_node->cloneNode(TRUE);
+
 
             $payload_str = $payload_dom->saveXML($clone_node);
         }
@@ -175,6 +183,8 @@ function wsf_create_payload(DomNode $sig_node, $is_doc, $operation_name,
             $payload_str = $payload_dom->saveXML($clone_node);
         }
     }
+    
+    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "test: ".$payload_str);
 
     $binding_details_node = NULL;
     $binding_details_node = $sig_node->nextSibling;
