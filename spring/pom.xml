@@ -88,11 +88,6 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.axis2</groupId>
-			<artifactId>axis2-transports</artifactId>
-			<version>${axis2.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>annogen</groupId>
 			<artifactId>annogen</artifactId>
 			<version>${annogen.version}</version>
@@ -159,11 +154,13 @@
 			<artifactId>log4j</artifactId>
 			<version>${log4j.version}</version>
 		</dependency>
+<!--
 		<dependency>
 			<groupId>org.apache.woden</groupId>
 			<artifactId>woden</artifactId>
 			<version>${woden.version}</version>
 		</dependency>
+-->
 		<dependency>
 			<groupId>wsdl4j</groupId>
 			<artifactId>wsdl4j</artifactId>
