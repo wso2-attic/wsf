@@ -243,7 +243,7 @@
 			<version>${rampart.version}</version>
 		</dependency>
 	</dependencies>
-	<version>SNAPSHOT</version>
+	<version>1.5</version>
 		<!--
 	WSF-Spring modules set.
 	-->
@@ -252,10 +252,10 @@
 		<module>samples/webapp</module>
 	</modules>
 	<properties>
-		<wsf-spring.version>SNAPSHOT</wsf-spring.version>
+		<wsf-spring.version>1.5</wsf-spring.version>
 		<ant.version>1.7.0</ant.version>
-		<axis2.version>SNAPSHOT</axis2.version>
-		<axiom.version>SNAPSHOT</axiom.version>
+		<axis2.version>1.4.1</axis2.version>
+		<axiom.version>1.2.7</axiom.version>
 		<addressing.version>1.4</addressing.version>
 		<rampart.version>1.4</rampart.version>
 		<sandesha2.version>1.3</sandesha2.version>
