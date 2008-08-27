@@ -278,7 +278,7 @@
 		<commons.fileupload.version>1.2</commons.fileupload.version>
 		<xerces.version>2.8.1</xerces.version>
 		<!--<clover.license.file>TODO</clover.license.file>-->
-		<tomcat.version>5.5.15</tomcat.version>
+		<tomcat.version>6.0.14</tomcat.version>
 		<xalan.version>2.7.0</xalan.version>
 		<spring.version>2.0.7</spring.version>
 		<!-- -maven plugin versions -->
