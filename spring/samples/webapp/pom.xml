@@ -26,6 +26,19 @@
     	<artifactId>wsf-spring-parent</artifactId>
         <version>1.5</version>
     </parent>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-adb-codegen</artifactId>
+			<version>${axis2.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-mtompolicy</artifactId>
+			<version>${axis2.version}</version>
+		</dependency>
+	</dependencies>
+
 	<!-- Build Settings -->
     <build>
     	<plugins>

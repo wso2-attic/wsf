@@ -248,6 +248,44 @@
 			<groupId>org.apache.rampart</groupId>
 			<artifactId>rampart-core</artifactId>
 			<version>${rampart.version}</version>
+			<exclusions>
+                <exclusion>
+                    <groupId>org.apache.axis2</groupId>
+                    <artifactId>axis2-kernel</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.axis2</groupId>
+                    <artifactId>axis2-codegen</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.axis2</groupId>
+                    <artifactId>axis2-xmlbeans</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.axis2</groupId>
+                    <artifactId>axis2-adb-codegen</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.axis2</groupId>
+                    <artifactId>axis2-adb</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.axis2</groupId>
+                    <artifactId>axis2-mtompolicy</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>httpcomponents-httpcore</groupId>
+                    <artifactId>jakarta-httpcore</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.neethi</groupId>
+                    <artifactId>neethi</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.woden</groupId>
+                    <artifactId>woden</artifactId>
+                </exclusion>
+            </exclusions>
 		</dependency>
 	</dependencies>
 	<version>1.5</version>
