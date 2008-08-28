@@ -23,7 +23,7 @@
 		</fileSet>
 		<fileSet>
 			<directory>../samples/webapp/target</directory>
-			<outputDirectory>samples/WEB-INF</outputDirectory>
+			<outputDirectory>samples/webapp</outputDirectory>
 			<includes>
 				<include>wsf-spring-sample-${wsf-spring.version}.war</include>
 			</includes>
