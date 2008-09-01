@@ -56,7 +56,7 @@ ENABLE_RAMPARTC = 1
 ### Apache Sandesha2/C Build Configuration Parameters
 
 # Whether Sandesha2/C is built or not
-#ENABLE_SANDESHA2C = 1
+ENABLE_SANDESHA2C = 1
 
 #############################################################################
 ### Apache Savan/C Build Configuration Parameters
