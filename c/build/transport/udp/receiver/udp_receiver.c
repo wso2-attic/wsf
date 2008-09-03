@@ -39,6 +39,7 @@ typedef struct axis2_udp_receiver_impl
     axis2_conf_ctx_t *conf_ctx_private;
 	int port;
 	axis2_socket_t socket;
+	axis2_socket_t send_socket;
 
 	/* multicast properties */
 	axis2_bool_t is_multicast;
@@ -50,6 +51,7 @@ typedef struct
 {
 	axis2_char_t * buff;
 	int buf_size;
+	axis2_svc_t *svc;
 } axis2_udp_request_t;
 
 /* This structure is used to hold information about a udp response */
@@ -63,10 +65,12 @@ typedef struct axis2_udp_recv_thd_args
 {
     axutil_env_t *env;
     axis2_socket_t socket;
+	axis2_socket_t send_socket;
 	axis2_conf_ctx_t *conf_ctx;
 	axis2_char_t *req_addr;
 	int req_port;
 	axis2_udp_request_t request;
+	axis2_bool_t is_multicast;
 } axis2_udp_recv_thd_args_t;
 
 #define AXIS2_INTF_TO_IMPL(udp_receiver) ((axis2_udp_receiver_impl_t *)(udp_receiver))
@@ -147,13 +151,18 @@ axis2_udp_receiver_create(
 		AXIS2_HANDLE_ERROR(env, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
 		return NULL;
 	}
-
+	receiver->is_multicast = AXIS2_FALSE;
 	receiver->conf_ctx = NULL;
 	receiver->conf_ctx_private = NULL;
 	receiver->port = port;
 	receiver->udp_receiver.ops = &udp_transport_recvr_ops;
 	receiver->multicast_group = multicast_group; 
-	receiver->is_multicast = AXIS2_TRUE;
+	receiver->socket = AXIS2_INVALID_SOCKET;
+	receiver->send_socket = AXIS2_INVALID_SOCKET;
+	if (multicast_group)
+	{
+		receiver->is_multicast = AXIS2_TRUE;
+	}
 	/* 
 	 * We are creating the receiver in two instances. When we create the receiver from the server 
 	 * we create the conf context. If we are creating the receiver while creating the conf we are 
@@ -194,7 +203,9 @@ axis2_udp_receiver_create_with_file(
 	receiver->conf_ctx_private = NULL;
 	receiver->port = port;
 	receiver->udp_receiver.ops = &udp_transport_recvr_ops;
-
+	receiver->multicast_group = NULL; 
+	receiver->socket = AXIS2_INVALID_SOCKET;
+	receiver->send_socket = AXIS2_INVALID_SOCKET;
 	/* 
 	 * We are creating the receiver in two instances. When we create the receiver from the server 
 	 * we create the conf context. If we are creating the receiver while creating the conf we are 
@@ -299,9 +310,18 @@ axis2_udp_receiver_start(
 	}
 	if (receiver->socket == AXIS2_INVALID_SOCKET)
 	{
-		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Socket creation faild on socket %d", receiver->socket);
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Socket creation faild on socket");
 		return AXIS2_FAILURE;
 	}
+
+	/* We are using a seperate socket to send the request */
+	receiver->send_socket = axutil_network_handler_open_dgram_socket(env);
+	if (receiver->send_socket == AXIS2_INVALID_SOCKET)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Socket creation faild on socket");
+		return AXIS2_FAILURE;
+	}
+
 	while (!receiver->stop)
 	{
 		axis2_udp_recv_thd_args_t *args = NULL;
@@ -329,11 +349,13 @@ axis2_udp_receiver_start(
 		/* Set the data required by the thread */
 		args->env = (axutil_env_t *)env;
 		args->socket = receiver->socket;
+		args->send_socket = receiver->send_socket;
 		args->conf_ctx = receiver->conf_ctx;
 		args->req_addr = addr;
 		args->req_port = port;
 		args->request.buff = in_buff;
 		args->request.buf_size = buf_len;
+		args->is_multicast = receiver->is_multicast;
 #ifdef AXIS2_SVR_MULTI_THREADED
 		worker_thread = axutil_thread_pool_get_thread(env->thread_pool,
 													axis2_udp_receiver_thread_worker_func,
@@ -397,48 +419,109 @@ axis2_udp_receiver_thread_worker_func(
     axutil_thread_t * thd,
     void *data)
 {
-	axutil_env_t *env = NULL;
-	axis2_conf_ctx_t *conf = NULL;
-	axis2_socket_t sock;
+	const axutil_env_t *env = NULL;
 	axis2_status_t status = AXIS2_FAILURE;
-
+	axis2_conf_t *conf = NULL;
+	axis2_svc_t *svc = NULL;
 	axis2_udp_recv_thd_args_t *args = NULL;
 	axis2_udp_response_t response;
-
+	axutil_hash_index_t *hi = NULL;
+	axutil_hash_t *all_svcs = NULL;
 	axis2_char_t *addr = NULL;
 	int port = 0;
+	void *val = NULL;
+	int i = 0;
+
 	args = (axis2_udp_recv_thd_args_t *) data;
+	env = (axutil_env_t *) args->env;	
 
-	env = (axutil_env_t *) args->env;
-	conf = args->conf_ctx;	
-	addr = args->req_addr;
-	port = args->req_port;
-
-	/* We are using a seperate socket to send the request */
-	sock = axutil_network_handler_open_dgram_socket(env);
-	response.buf_size = 0;
-	response.buff = NULL;
-
-	/* Process the request */
-	status = axis2_udp_receiver_process_request(args->env, args->conf_ctx, &args->request, &response);
-	if (status == AXIS2_FAILURE)
+	conf = axis2_conf_ctx_get_conf(args->conf_ctx, env);
+	/* Get all the service discriptions */
+	all_svcs = axis2_conf_get_all_svcs(conf, env);
+	if (!all_svcs)
 	{
-		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Error processing the request.");
 		return NULL;
 	}
-
-	/* If we have a response send it */
-	if (response.buff)
+	if (args->is_multicast)
 	{
-		status = axutil_network_handler_send_dgram(env, sock, response.buff, &response.buf_size, addr, port, NULL);
-		if (status == AXIS2_FAILURE)
-		{
-			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Error sending the response.");
-			return NULL;
+    for (hi = axutil_hash_first(all_svcs, env); hi;
+         hi = axutil_hash_next(env, hi))
+    {		
+        axutil_hash_this(hi, NULL, NULL, &val);
+        svc = (axis2_svc_t *) val;
+        if (svc)
+        {
+			axutil_param_t *param = NULL;
+			axis2_char_t *param_val = NULL;
+			/* Get the Multicast accept parameter from the services.xml */
+            param = axis2_svc_get_param(svc, env, AXIS2_UDP_MULTICAST_ACCEPT);
+			if (!param) 
+			{
+				continue;
+			}
+			/* check weather this service accepts multicast requests */
+			param_val = axutil_param_get_value(param, env);
+			if (!param_val || !axutil_strcmp(param_val, "false") || axutil_strcmp(param_val, "true"))
+			{
+				continue;
+			}
+			
+			response.buf_size = 0;
+			response.buff = NULL;
+
+			/* set the service to the request */
+			args->request.svc = svc;
+			/* Process the request */
+			status = axis2_udp_receiver_process_request(args->env, args->conf_ctx, 
+															&args->request, &response);
+			if (status == AXIS2_FAILURE)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Error processing the request.");
+				return NULL;
+			}
+
+			/* If we have a response send it */
+			if (response.buff)
+			{
+				status = axutil_network_handler_send_dgram(env, args->send_socket, 
+													response.buff, &response.buf_size, 
+													args->req_addr, args->req_port, NULL);
+				if (status == AXIS2_FAILURE)
+				{
+					AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Error sending the response.");
+					return NULL;
+				}
+			}
 		}
 	}
-	/* Close the sending socket */
-	axutil_network_handler_close_socket(env, sock);
+	}
+	else
+	{
+		response.buf_size = 0;
+		response.buff = NULL;
+		args->request.svc = NULL;
+		/* Process the request */
+		status = axis2_udp_receiver_process_request(args->env, args->conf_ctx, 
+														&args->request, &response);
+		if (status == AXIS2_FAILURE)
+		{
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Error processing the request.");
+			return NULL;
+		}
+
+		/* If we have a response send it */
+		if (response.buff)
+		{
+			status = axutil_network_handler_send_dgram(env, args->send_socket, 
+												response.buff, &response.buf_size, 
+												args->req_addr, args->req_port, NULL);
+			if (status == AXIS2_FAILURE)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Error sending the response.");
+				return NULL;
+			}
+		}
+	}
 	return NULL;
 }
 
@@ -522,6 +605,10 @@ axis2_udp_receiver_process_request(
 
     soap_envelope = axiom_soap_builder_get_soap_envelope(soap_builder, env);
     axis2_msg_ctx_set_soap_envelope(msg_ctx, env, soap_envelope);
+	if (request->svc)
+	{
+		axis2_msg_ctx_set_svc(msg_ctx, env, request->svc);
+	}
 
     engine = axis2_engine_create(env, conf_ctx);
     status = axis2_engine_receive(engine, env, msg_ctx);

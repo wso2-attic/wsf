@@ -47,17 +47,16 @@ extern "C"
 #define AXIS2_UDP_TRANSPORT_MUL_MAX_DELAY_STR	"mulMaxDelay"
 #define AXIS2_UDP_TRANSPORT_MUL_UPPER_DELAY_STR	"mulUpperDelay"
 
-#define AXIS2_UDP_TRANSPORT_MULTICAST			"multicast"
-
 #define AXIS2_PORT_STRING "port"
 
 #define AXIS2_UDP_PACKET_MAX_SIZE		16384
 #define AXIS2_UDP_TRANSPORT_DEFAULT_RECV_PORT	13000
 
 /* These are properties names set by client */
-#define AXIS2_UDP_TRANSPORT_IS_MULTICAT				"udp_is_multicast"
-#define AXIS2_UDP_TRANSPORT_PORT					"udp_port"
-#define AXIS2_UDP_TRANSPORT_ADDRESS					"udp_address"
+#define AXIS2_UDP_TRANSPORT_IS_MULTICAT				"UDPIsMulticast"
+#define AXIS2_UDP_TRANSPORT_PORT					"UDPPort"
+#define AXIS2_UDP_TRANSPORT_ADDRESS					"UDPAddress"
+#define AXIS2_UDP_MULTICAST_ACCEPT					"UDPMulticastAccept"
 
 typedef struct axis2_udp_transport_params
 {

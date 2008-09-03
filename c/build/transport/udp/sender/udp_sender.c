@@ -296,10 +296,11 @@ axis2_udp_transport_sender_invoke(
                                               AXIS2_UDP_TRANSPORT_PORT);
 		if (prop)
 		{
-			prop_val = axutil_property_get_value(prop, env);
-			if (prop_val)
+			int *int_val = NULL;
+			int_val = axutil_property_get_value(prop, env);
+			if (int_val)
 			{
-				port = atoi(prop_val);
+				port = *int_val;
 			}
 		}
 		
@@ -398,7 +399,8 @@ axis2_udp_transport_sender_invoke(
 			axis2_char_t *addr = (axis2_char_t *)host;
 			int source_port = 0;
 			message_received = AXIS2_FALSE;
-			if (axutil_network_handler_send_dgram(env, send_socket, buffer, &buffer_size, addr, port, &source_port) == AXIS2_FAILURE)
+			if (axutil_network_handler_send_dgram(env, send_socket, buffer, 
+				&buffer_size, addr, port, &source_port) == AXIS2_FAILURE)
 			{
 				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "UDP packet sending failed.");
 				return AXIS2_FAILURE;			
@@ -416,7 +418,8 @@ axis2_udp_transport_sender_invoke(
 				{
 					/* The recieve will happen on the same port as the send */
 					axutil_network_handler_set_sock_option(env, send_socket, SO_RCVTIMEO, T);
-					if (axutil_network_handler_read_dgram(env, send_socket, recv_buffer, &recv_buff_len, NULL, NULL) != AXIS2_FAILURE)
+					if (axutil_network_handler_read_dgram(env, send_socket, recv_buffer, 
+						&recv_buff_len, NULL, NULL) != AXIS2_FAILURE)
 					{
 						message_received = AXIS2_TRUE;
 						break;			
@@ -426,7 +429,8 @@ axis2_udp_transport_sender_invoke(
 				{
 					/* The receive will happen in a different port on the same port */
 					axutil_network_handler_set_sock_option(env, recv_socket, SO_RCVTIMEO, T);
-					if (axutil_network_handler_read_dgram(env, recv_socket, recv_buffer, &recv_buff_len, NULL, NULL) != AXIS2_FAILURE)
+					if (axutil_network_handler_read_dgram(env, recv_socket, recv_buffer, 
+						&recv_buff_len, NULL, NULL) != AXIS2_FAILURE)
 					{
 						message_received = AXIS2_TRUE;
 						break;			
@@ -434,7 +438,8 @@ axis2_udp_transport_sender_invoke(
 				}
 				if (--udp_repeat <= 0)
 					break;
-				if (axutil_network_handler_send_dgram(env, send_socket, buffer, &buffer_size, addr, port, &source_port) == AXIS2_FAILURE)
+				if (axutil_network_handler_send_dgram(env, send_socket, buffer, 
+					&buffer_size, addr, port, &source_port) == AXIS2_FAILURE)
 				{
 					AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "UDP packet sending failed.");
 					return AXIS2_FAILURE;			
@@ -536,7 +541,7 @@ axis2_udp_transport_sender_init(
 
 	udp_sender->is_multicast = AXIS2_FALSE;
 	container = axis2_transport_out_desc_param_container(out_desc, env);
-    temp_param = axutil_param_container_get_param(container, env, AXIS2_UDP_TRANSPORT_MULTICAST);
+    temp_param = axutil_param_container_get_param(container, env, AXIS2_UDP_TRANSPORT_IS_MULTICAT);
 	if (temp_param)
 	{
 		temp = axutil_param_get_value(temp_param, env);
