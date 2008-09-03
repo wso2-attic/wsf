@@ -81,7 +81,6 @@ AC_CONFIG_FILES([Makefile \
     src/util/Makefile \
     src/wsrm/Makefile\
     src/transport/Makefile\
-    src/workers/Makefile\
     src/handlers/Makefile\
     src/msgprocessors/Makefile\
     src/storage/Makefile\
