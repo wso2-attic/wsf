@@ -26,16 +26,22 @@ class WS_WSDL_Port
     private $service_name;
     private $operations;
     private $fun_mapping;
+    private $use_wsa;
+    private $r_actions;
+
     /**
      * The constructor of the class
      * @param string $service Name of the service
      * @param Array $array1 Array of operations defined in the service
      */
-    function __construct($service, $array1, $ops_to_functions)
+    function __construct($service, $array1, $ops_to_functions, $use_wsa, $r_actions)
     {
         $this->service_name = $service;
         $this->operations = $array1;
         $this->fun_mapping = $ops_to_functions;
+
+        $this->use_wsa = $use_wsa;
+        $this->r_actions = $r_actions;
     }
 
     /**
@@ -72,9 +78,22 @@ class WS_WSDL_Port
                 $sel = $port_doc->createElementNS(WS_WSDL_Const::WS_SCHEMA_WSDL_NAMESPACE,
                                                   $type);
                 foreach($this->fun_mapping as $key => $value){
-                    if ($value == $name)
+                    if ($value == $name) {
                         $sel->setAttribute(WS_WSDL_Const::WS_WSDL_MESSAGE_ATTR_NAME,
                                            WS_WSDL_Const::WS_WSDL_TNS_ATTR_NAME.":"."$key".ucfirst($attr_name_to_postfix_map[$type]));
+
+                        if($this->use_wsa) {
+                            $action = NULL;
+                            if($this->r_actions && is_array($this->r_actions) && 
+                                array_key_exists($key, $this->r_actions)) {
+                                
+                                $action = $this->r_actions[$key];
+                                $sel->setAttributeNS(WS_WSDL_Const::WS_WSDL_WSAW_NAMESPACE,
+                                           WS_WSDL_Const::WS_WSDL_WSAW_PREFIX.":".WS_WSDL_CONST::WS_WSDL_ACTION,
+                                           $action);
+                            }
+                        }
+                    }
                 }
                 $operation->appendChild($sel);
             }

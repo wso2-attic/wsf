@@ -297,6 +297,8 @@ typedef struct wsf_svc_info
   int request_xop;
   /** use mtom value */
   int use_mtom;
+  /** use wsa - for wsdl generation*/
+  int use_wsa;
   /** enable swa value */
   int enable_swa;
   /** ws policy object for service level */

@@ -70,11 +70,14 @@ class WS_WSDL_Const
 
     const WS_WSDL_DEF_SCHEMA_URI = 'http://www.w3.org/2000/xmlns/';
 
+    const WS_WSDL_WSAW_NAMESPACE = "http://www.w3.org/2006/05/addressing/wsdl";
+    const WS_WSDL_WSAW_PREFIX = "wsaw";
 
     const WS_WSDL_OPERTION_INPUT_TAG = '';
     const WS_WSDL_OPERTION_OUTPUT_TAG = 'response';
 
 
+    const WS_WSDL_ACTION = "Action";
     const WS_WSDL_SERVICE_ATTR_NAME = "service";
     const WS_WSDL_NAME_ATTR_NAME = "name";
     const WS_WSDL_PORT_ATTR_NAME = "port";

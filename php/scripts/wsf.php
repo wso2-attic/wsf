@@ -89,7 +89,7 @@ function ws_reply($options)
 
 function ws_generate_wsdl($service_name, $fn_arry, $class_arry, $binding_style, 
                           $wsdl_version, $request_uri, $op_arry,
-                          $classmap = NULL, $annotations = NULL, $actions = NULL)
+                          $classmap = NULL, $annotations = NULL, $actions = NULL, $use_wsa = NULL)
 {
     require_once("wsdl/WS_WSDL_Creator.php");
     require_once("wsdl/WS_WSDL_Consts.php");
@@ -160,7 +160,7 @@ function ws_generate_wsdl($service_name, $fn_arry, $class_arry, $binding_style,
     }
 
     $wsdl = new WS_WSDL_Creator($fn_arry, $class_arry, $service_name, $request_uri, $binding_style,
-                $namespace, $wsdl_version, $op_arry, $classmap, $annotations, $r_actions);
+                $namespace, $wsdl_version, $op_arry, $classmap, $annotations, $r_actions, $use_wsa);
     $wsdl_out = $wsdl->WS_WSDL_Out();
 
 

@@ -44,6 +44,7 @@ class WS_WSDL_Creator
     private $classmap;
     private $annotations;
     private $r_actions;
+    private $use_wsa;
 
     /**
      * Constructor of the class
@@ -57,7 +58,7 @@ class WS_WSDL_Creator
      */
     function __construct($f_arry, $class_arry, $service, $endpoints,
                          $binding_style,  $ns , $wsdl_ver,
-                         $op_arry, $classmap, $annotations, $r_actions)
+                         $op_arry, $classmap, $annotations, $r_actions, $use_wsa)
     {
         if(!$ns) {
             $this->namespace = $endpoints;
@@ -76,6 +77,8 @@ class WS_WSDL_Creator
         
         $this->annotations = $annotations;
         $this->r_actions = $r_actions;
+
+        $this->use_wsa = $use_wsa;
     }
 
     /**
@@ -118,6 +121,8 @@ class WS_WSDL_Creator
                                        WS_WSDL_const::WS_WSDL_DEF_HTTP_QN,
                                        WS_WSDL_const::WS_WSDL_HTTP12_NAMESPACE);
 
+        $wsdl_root_ele->setAttribute("xmlns:".WS_WSDL_Const::WS_WSDL_WSAW_PREFIX,
+                            WS_WSDL_Const::WS_WSDL_WSAW_NAMESPACE);
         
         $wsdl_root_ele->setAttribute(WS_WSDL_const::WS_WSDL_DEF_TARGET_NS,
                                      $this->namespace);
@@ -164,7 +169,8 @@ class WS_WSDL_Creator
 
         }
 
-        $port_obj = new WS_WSDL_Port($this->service_name, $ele_names_info, $this->ops_to_functions);
+        $port_obj = new WS_WSDL_Port($this->service_name, $ele_names_info, $this->ops_to_functions, 
+                                            $this->use_wsa, $this->r_actions);
         $port_obj->createPortType($wsdl_dom, $wsdl_root_ele, $ele_names_info);
 
         if ($this->Binding_style == WS_WSDL_Const::WSF_WSDL_DOCLIT) {

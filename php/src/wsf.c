@@ -926,6 +926,7 @@ PHP_METHOD (ws_service, __construct)
 					AXIS2_LOG_DEBUG (ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
 						"setting operations");
 			}
+
             if (zend_hash_find (ht_options, WSF_OP_MEP, sizeof (WSF_OP_MEP), 
                (void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
 
@@ -1023,6 +1024,14 @@ PHP_METHOD (ws_service, __construct)
             }else {
                 svc_info->use_mtom = 0;
             }
+            
+            if (zend_hash_find (ht_options, WSF_USE_WSA, sizeof (WSF_USE_WSA), 
+				(void **) &tmp) == SUCCESS) {
+                    if(Z_TYPE_PP (tmp) == IS_BOOL) {
+                        svc_info->use_wsa = Z_BVAL_PP (tmp);
+                    }
+            }
+            
             if (zend_hash_find (ht_options, WSF_REQUEST_XOP, sizeof (WSF_REQUEST_XOP), 
 				(void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_BOOL) {
                 
@@ -1153,11 +1162,19 @@ PHP_METHOD (ws_service, __construct)
     }
     */
 
-    if (svc_info->security_token && (svc_info->policy || svc_info->ht_op_policies))
+    if (SG (request_info).query_string && 
+	   ((stricmp (SG (request_info).query_string, WSF_WSDL) == 0)
+       || (stricmp (SG (request_info).query_string, WSF_WSDL2) == 0))) {
+		/** skip for WSDL Generation */ 
+
+    }else 
     {
-        axis2_conf_t * conf = NULL;
-        conf = axis2_conf_ctx_get_conf (wsf_worker_get_conf_ctx(worker, ws_env_svr), env);
-        wsf_policy_handle_server_security (svc_info, env, conf TSRMLS_CC);
+        if (svc_info->security_token && (svc_info->policy || svc_info->ht_op_policies))
+        {
+            axis2_conf_t * conf = NULL;
+            conf = axis2_conf_ctx_get_conf (wsf_worker_get_conf_ctx(worker, ws_env_svr), env);
+            wsf_policy_handle_server_security (svc_info, env, conf TSRMLS_CC);
+        }
     }
 }
 
@@ -1193,9 +1210,9 @@ static void generate_wsdl_for_service(zval *svc_zval,
 {
     char *service_name = NULL;
     zval func, retval, param1, param2, param3, param4, param5, param6, 
-		param7, param8, param9, param10;
+		param7, param8, param9, param10, param11;
 
-    zval *params[10];
+    zval *params[11];
     axutil_hash_index_t * hi = NULL;
 	zval *functions = NULL;
     zend_file_handle script;
@@ -1314,6 +1331,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
         params[7] = &param8;
         params[8] = &param9;
         params[9] = &param10;
+        params[10] = &param11;
         
         /** for WSDL version. default is wsdl 1.1*/ 
 		if ((stricmp (wsdl_ver_str , WSF_WSDL)) == 0)
@@ -1366,6 +1384,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
             ZVAL_NULL (params[2]);
         }
         INIT_PZVAL (params[2]);
+
 		if(binding_name)
 		{
 			ZVAL_STRING (params[3], binding_name, 0);
@@ -1413,7 +1432,19 @@ static void generate_wsdl_for_service(zval *svc_zval,
         }
         INIT_PZVAL (params[9]);
 
-        args_count = 10;
+
+        /*  the useWSA option */
+        if (svc_info->use_wsa)
+        {
+            ZVAL_BOOL (params[10], svc_info->use_wsa);
+        }
+        else
+        {
+            ZVAL_NULL (params[10]);
+        }
+        INIT_PZVAL (params[10]);
+
+        args_count = 11;
 
         script.type = ZEND_HANDLE_FP;
         
