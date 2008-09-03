@@ -222,6 +222,15 @@ function wsf_parse_payload_for_class_map(DomNode $payload, DomNode $sig_node, $e
     if($sig_node->hasAttributes() && !$is_simple_header) {
         //wrapped situations..    
 
+        //initializing parse tree handling the nil situation
+        $is_nil = $payload->getAttributeNS(WSF_XSI_NAMESPACE, "nil");
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "xsi:nil = ".$is_nil);
+        if($is_nil && ($is_nil == "1" || $is_nil == "true" || $is_nil == "TRUE")) {
+             $parse_tree = NULL;
+        }
+        else {
+            $parse_tree = "";
+        }
         // this situation gotta use the object..
 
 
@@ -235,7 +244,9 @@ function wsf_parse_payload_for_class_map(DomNode $payload, DomNode $sig_node, $e
         }
         else {
             // first parse the attributes
+            ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "payload: ".wsf_test_serialize_node($payload));
             $parse_tree = wsf_infer_attributes($payload, $sig_node);
+            
 
             $current_child = $payload->firstChild;
             while($current_child != NULL && $current_child->nodeType != XML_ELEMENT_NODE) {
@@ -247,12 +258,18 @@ function wsf_parse_payload_for_class_map(DomNode $payload, DomNode $sig_node, $e
                 $parse_tree = array_merge($content_parse_tree, $parse_tree);
             }
         }
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "parsed tree: ".print_r($parse_tree, TRUE));
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "parsed tree: "."\$parse_tree === NULL".($parse_tree === NULL));
 
         // all the above part of the story we were handling non-wrap types like in doclit-bare
 
+        if($parse_tree === NULL) {
+            return NULL;
+        }
         foreach($parse_tree as $parsed_key => $parsed_value) {
             $object->$parsed_key = $parsed_value;
         }
+        ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "parsed object: ".print_r($object, TRUE));
 
         return $object;
 
@@ -992,11 +1009,11 @@ function wsf_infer_attributes(DomNode $parent_node, DomNode $sig_node) {
 function wsf_wsdl_deserialize_string_value($xsd_type, $data_value, $sig_param_node, $value_parent_node) {
 
     if($value_parent_node && $value_parent_node->nodeType == XML_ELEMENT_NODE) {
-       $is_nil = $value_parent_node->getAttributeNS(WSF_XSI_NAMESPACE, "nil");
+        $is_nil = $value_parent_node->getAttributeNS(WSF_XSI_NAMESPACE, "nil");
         ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "xsi:nil = ".$is_nil);
-       if($is_nil && ($is_nil == "1" || $is_nil == "true" || $is_nil == "TRUE")) {
-            return NULL;
-       }
+        if($is_nil && ($is_nil == "1" || $is_nil == "true" || $is_nil == "TRUE")) {
+             return NULL;
+        }
     }
 
     $is_list = FALSE;

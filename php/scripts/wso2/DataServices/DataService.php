@@ -82,7 +82,6 @@ class DataService extends WSService
             $wsdl_generator = new DSWSDLGenerator();
             $annotations = $wsdl_generator->generate_wsdl($op_args, $config_args);
             
-            file_put_contents("/tmp/test", print_r($annotations, TRUE));
     	}
         return $annotations;
     }

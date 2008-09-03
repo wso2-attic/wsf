@@ -27,6 +27,7 @@ class WS_WSDL_Type
     private $ns;
     private $fun_mapping;
     private $classmap;
+    private $rev_classmap;
     private $namespace_array;
 
     /**
@@ -38,6 +39,12 @@ class WS_WSDL_Type
         $this->ns = $ns.WS_WSDL_Const::WS_WSDL_DEF_ELEMENT_NS_POSTFIX;
         $this->fun_mapping = $mapping_array;
         $this->classmap = $classmap;
+        if(is_array($this->classmap)) {
+            $this->rev_classmap = array();
+            foreach($this->classmap as $schema_name => $php_name) {
+                $this->rev_classmap[$php_name] = $schema_name;
+            }
+        }
         $this->namespace_array = array();
     }
 
@@ -437,6 +444,11 @@ class WS_WSDL_Type
                         if($paramValue["object"] == "object")
                         {
                             $object_return = $this->createSchemaType($wsdl_doc, $types_ele, $xsd_type);
+
+                            if($this->rev_classmap && is_array($this->rev_classmap) 
+                                    && array_key_exists($xsd_type, $this->rev_classmap)) {
+                                $xsd_type = $this->rev_classmap[$xsd_type];
+                            }
                             
                             $object_prefix = $object_return["prefix"];
                             $object_namespace = $object_return["namespace"];
@@ -498,6 +510,10 @@ class WS_WSDL_Type
                         
                         if($paramValue["object"] == "object") {
                             $object_return = $this->createSchemaType($wsdl_doc, $types_ele, $xsd_type);
+                            if($this->rev_classmap && is_array($this->rev_classmap) 
+                                    && array_key_exists($xsd_type, $this->rev_classmap)) {
+                                $xsd_type = $this->rev_classmap[$xsd_type];
+                            }
                             
                             $object_prefix = $object_return["prefix"];
                             $object_namespace = $object_return["namespace"];
@@ -553,6 +569,10 @@ class WS_WSDL_Type
                         if($paramValue["object"] == "object")
                         {
                             $object_return = $this->createSchemaType($wsdl_doc, $types_ele, $xsd_type);
+                            if($this->rev_classmap && is_array($this->rev_classmap) 
+                                    && array_key_exists($xsd_type, $this->rev_classmap)) {
+                                $xsd_type = $this->rev_classmap[$xsd_type];
+                            }
                             
                             $object_prefix = $object_return["prefix"];
                             $object_namespace = $object_return["namespace"];
@@ -616,6 +636,10 @@ class WS_WSDL_Type
                         if($paramValue["object"] == "object")
                         {
                             $object_return = $this->createSchemaType($wsdl_doc, $types_ele, $xsd_type);
+                            if($this->rev_classmap && is_array($this->rev_classmap) 
+                                    && array_key_exists($xsd_type, $this->rev_classmap)) {
+                                $xsd_type = $this->rev_classmap[$xsd_type];
+                            }
                             
                             $object_prefix = $object_return["prefix"];
                             $object_namespace = $object_return["namespace"];
@@ -685,6 +709,10 @@ class WS_WSDL_Type
                     if($paramValue["object"] == "object")
                     {
                         $object_return = $this->createSchemaType($wsdl_doc, $types, $xsd_type);
+                        if($this->rev_classmap && is_array($this->rev_classmap) 
+                                && array_key_exists($xsd_type, $this->rev_classmap)) {
+                            $xsd_type = $this->rev_classmap[$xsd_type];
+                        }
                         
                         $object_prefix = $object_return["prefix"];
                         $object_namespace = $object_return["namespace"];
@@ -704,7 +732,12 @@ class WS_WSDL_Type
                    
                     if($paramValue["object"] == "object")
                     {
+                        
                         $object_return = $this->createSchemaType($wsdl_doc, $types, $xsd_type);
+                        if($this->rev_classmap && is_array($this->rev_classmap) 
+                                && array_key_exists($xsd_type, $this->rev_classmap)) {
+                            $xsd_type = $this->rev_classmap[$xsd_type];
+                        }
                         
                         $object_prefix = $object_return["prefix"];
                         $object_namespace = $object_return["namespace"];
@@ -801,6 +834,7 @@ class WS_WSDL_Type
 
         if($class == NULL)
         {
+           error_log("$classname doesn't exists, so unable to generate the wsdl");
            return;
         }
 
@@ -816,6 +850,15 @@ class WS_WSDL_Type
 
         $schema_root = NULL;
 
+        // deriving the xsd type
+        if($this->rev_classmap && is_array($this->rev_classmap) 
+                && array_key_exists($classname, $this->rev_classmap)) {
+            $xsd_type = $this->rev_classmap[$classname];
+        }
+        else {
+            $xsd_type = $classname;
+        }
+
         foreach($wsdl_root->childNodes as $child)
         {
             if($child->nodeType == XML_ELEMENT_NODE)
@@ -830,7 +873,7 @@ class WS_WSDL_Type
                         if($types->nodeType == XML_ELEMENT_NODE)
                         {
                             $types_name = $types->getAttribute("name");
-                            if($types_name == $classname)
+                            if($types_name == $xsd_type)
                             {
                                 /* no need to create additional, just use this one */
                                 $prefix = "ns".$i;
@@ -862,7 +905,8 @@ class WS_WSDL_Type
 
         $comtype = $wsdl_doc->createElementNS(WS_WSDL_Const::WS_SOAP_XML_SCHEMA_NAMESPACE,
                                                       WS_WSDL_Const::WS_WSDL_COMPLXTYPE_ATTR_NAME);
-        $comtype->setAttribute("name", $classname);
+
+        $comtype->setAttribute("name", $xsd_type);
         $schema_root->appendChild($comtype);
         $seq = $wsdl_doc->createElementNS(WS_WSDL_Const::WS_SOAP_XML_SCHEMA_NAMESPACE,
                                                   WS_WSDL_Const::WS_WSDL_SEQUENCE_ATTR_NAME);
@@ -955,6 +999,11 @@ class WS_WSDL_Type
                 if($object == "object")
                 {
                     $object_return = $this->createSchemaType($wsdl_doc, $wsdl_root, $xsd_type);
+                    
+                    if($this->rev_classmap && is_array($this->rev_classmap) 
+                            && array_key_exists($xsd_type, $this->rev_classmap)) {
+                        $xsd_type = $this->rev_classmap[$xsd_type];
+                    }
 
                     $object_prefix = $object_return["prefix"];
                     $object_namespace = $object_return["namespace"];
