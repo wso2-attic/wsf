@@ -6,6 +6,8 @@ libsandesha2_client_la_SOURCES = \
 							report.c \
 							client.c
 
+libsandesha2_client_la_LIBADD = ../core/libsandesha2.la
+
 INCLUDES = -I$(top_builddir)/include \
 		-I ../../../axis2c/util/include \
 		-I ../../../axis2c/axiom/include \
