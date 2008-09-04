@@ -147,8 +147,8 @@ wsf_client_send_terminate_sequence (
     if (!will_continue_sequence && rm_spec_version == WSF_RM_VERSION_1_1) 
 	{
         {
-            sandesha2_client_terminate_seq_with_svc_client_and_seq_key (env, 
-				svc_client, sequence_key);
+			sandesha2_client_close_seq_with_svc_client(env, svc_client, NULL);
+            sandesha2_client_terminate_seq_with_svc_client(env, svc_client, NULL);
         }
     }
 }
