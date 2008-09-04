@@ -1481,14 +1481,20 @@ static void generate_wsdl_for_service(zval *svc_zval,
 				{
                     val = estrdup (Z_STRVAL (retval));
                     len = Z_STRLEN (retval);
+					/** 
+					*  Deploying in cgi mode in IIS will cause problems without that /n"
+					*  If you are using this in IIS with php deployed as cgi, uncomment the following 
+					*/
+					/*
 					if (sapi_module.pretty_name && strcmp(sapi_module.pretty_name,"CGI/FastCGI") == 0) {
 						sapi_add_header ("Content-Type:application/xml\n",
 							sizeof ("Content-Type:application/xml\n"), 1);
 					}else
 					{
+					*/
 						sapi_add_header ("Content-Type:application/xml",
                                      sizeof ("Content-Type:application/xml"), 1);
-					}
+					/* } */
                     php_write (val, len TSRMLS_CC);
                     if(val)
 					{
