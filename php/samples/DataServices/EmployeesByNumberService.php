@@ -22,10 +22,10 @@ require_once("constants.php");
 // database configurations
 $config = array(
 	  "db" => "mysql",
-	  "username"=>DB_USERNAME,
-	  "password"=> DB_PASSWORD,
-	  "dbname"=>"ds",
-	  "dbhost"=>"localhost");
+	  "username" =>DB_USERNAME,
+	  "password" => DB_PASSWORD,
+	  "dbname" =>"ds",
+	  "dbhost" =>"localhost");
 
 // input format param_name=> SQL_TYPE map
 $inputFormat = array("employeeByNumber" => "INT");
@@ -41,8 +41,8 @@ $outputFormat = array("resultElement" => "employees",
 $sql = "select lastName,firstName,email from Employees where employeeNumber=?";
 
 // operations array
-$operations = array("employeesByNumber"=>array("inputFormat"=>$inputFormat, "outputFormat"=>$outputFormat, "sql"=>$sql));
+$operations = array("employeesByNumber" =>array("inputFormat" => $inputFormat, "outputFormat" => $outputFormat, "sql" => $sql));
 
-$my_data_service = new DataService(array("config"=>$config,"operations"=>$operations));
+$my_data_service = new DataService(array("config" => $config,"operations" => $operations));
 $my_data_service->reply();
 ?>

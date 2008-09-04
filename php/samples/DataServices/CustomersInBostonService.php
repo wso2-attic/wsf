@@ -21,10 +21,10 @@ require_once("constants.php");
 // database configurations
 $config = array(
 	  "db" => "mysql",
-	  "username"=>DB_USERNAME,
-	  "password"=> DB_PASSWORD,
-	  "dbname"=>"ds",
-	  "dbhost"=>"localhost");
+	  "username" => DB_USERNAME,
+	  "password" => DB_PASSWORD,
+	  "dbname" => "ds",
+	  "dbhost" => "localhost");
 
 // output format, refer to the API from http://wso2.org/wiki/display/wsfphp/API+for+Data+Services+Revised
 $outputFormat = array("resultElement" => "customers",
@@ -41,9 +41,9 @@ $outputFormat = array("resultElement" => "customers",
 $sql = "select  customerName,contactLastName, contactFirstName,phone,city,country from Customers where city = 'Boston' and country = 'USA'";
 
 // operations is consist of inputFormat (optional), outputFormat(required), sql(sql), input_mapping(optional)
-$operations = array("customersInBoston"=>array("outputFormat"=>$outputFormat, "sql"=>$sql));
+$operations = array("customersInBoston" =>array("outputFormat" => $outputFormat, "sql" => $sql));
 
-$my_data_service = new DataService(array("config"=>$config,"operations"=>$operations));
+$my_data_service = new DataService(array("config" => $config,"operations" => $operations));
 
 $my_data_service->reply();
 ?>

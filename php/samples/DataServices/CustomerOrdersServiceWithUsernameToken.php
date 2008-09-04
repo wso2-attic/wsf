@@ -39,8 +39,23 @@ $outputFormat = array("resultElement" => "Orders",
 $sql="select o.OrderNumber, o.OrderDate, o.status from Customers c, Orders o where c.customerNumber=o.customerNumber and c.customerNumber=?";
 
 // operations is consist of inputFormat (optional), outputFormat(required), sql(sql), input_mapping(optional)
-$operations = array("customerOrders" =>array("inputFormat" => $inputFormat, "outputFormat" => $outputFormat, "sql" => $sql));
+$operations = array("customerOrders" => array("inputFormat" => $inputFormat, "outputFormat" => $outputFormat, "sql" => $sql));
 
-$my_data_service = new DataService(array("config" => $config,"operations" => $operations));
+// actions
+$actions = array("http://wso2.org/samples/dataservices/customerOrders" => "customerOrders");
+
+// Set up security options
+$security_options = array("useUsernameToken" => TRUE );
+$policy = new WSPolicy(array("security" => $security_options));
+$security_token = new WSSecurityToken(array("user" => "Raigama",
+                                            "password" => "RaigamaPW",
+                                            "passwordType" => "Digest"));
+
+$my_data_service = new DataService(array("config" => $config,
+                                         "operations" => $operations,
+                                         "actions" => $actions,
+                                         "useWSA" => TRUE,
+                                         "policy" => $policy,
+                                         "securityToken" => $security_token));
 $my_data_service->reply();
 ?>

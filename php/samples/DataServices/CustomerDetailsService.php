@@ -21,28 +21,28 @@ require_once("constants.php");
 // database configuration
 $config = array(
 	"db" => "mysql",
-	"username"=>DB_USERNAME,
-    "password"=>DB_PASSWORD,
-    "dbname"=>"ds",
-    "dbhost"=>"localhost");
+	"username" => DB_USERNAME,
+    "password" => DB_PASSWORD,
+    "dbname" => "ds",
+    "dbhost" => "localhost");
 
 // the input format array(param_name => SQL_type)
 $inputFormat = array("lastName" => "STRING", "firstName" => "STRING");
 
 // the output format (visit the API from http://wso2.org/wiki/display/wsfphp/API+for+Data+Services+Revised)
-$outputFormat = array("resultElement"=> "customer-addresse",
+$outputFormat = array("resultElement" => "customer-addresse",
 					  "rowElement" => "customer-address",
 					  "elements" => array(
-                            "contactlastname"=> "CONTACTLASTNAME",
-                            "contactfirstname"=> "CONTACTFIRSTNAME",
-                            "addressline1"=> "ADDRESSLINE1",
-                            "addressline2"=> "ADDRESSLINE2",
-                            "city"=> "CITY",
-                            "state"=> "STATE",
-                            "postalcode"=> "POSTALCODE",
-                            "country"=> "COUNTRY"),
+                            "contactlastname" => "CONTACTLASTNAME",
+                            "contactfirstname" => "CONTACTFIRSTNAME",
+                            "addressline1" => "ADDRESSLINE1",
+                            "addressline2" => "ADDRESSLINE2",
+                            "city" => "CITY",
+                            "state" => "STATE",
+                            "postalcode" => "POSTALCODE",
+                            "country" => "COUNTRY"),
                         "attributes" => array(
-                            "customernumber"=> "CUSTOMERNUMBER"),
+                            "customernumber" => "CUSTOMERNUMBER"),
                         "elementsOrder" => array("customernumber", "contactfirstname", "contactlastname",
                                         "addressline1", "addressline2", "city", "state", "postalcode", "country")
                         );
@@ -51,8 +51,8 @@ $outputFormat = array("resultElement"=> "customer-addresse",
 $sql = "select CUSTOMERNUMBER, CONTACTLASTNAME, CONTACTFIRSTNAME, ADDRESSLINE1, ADDRESSLINE2, CITY, STATE, POSTALCODE, COUNTRY from Customers where CONTACTLASTNAME = ? and CONTACTFIRSTNAME = ?";
 
 // operations is consists of inputFormat (optional), outputFormat(required), sql(sql), input_mapping(optional)
-$operations = array("customerAddress"=>array("inputFormat"=>$inputFormat, "outputFormat"=>$outputFormat, "sql"=>$sql));
-$my_data_service = new DataService(array("config"=>$config,"operations"=>$operations, "serviceName" => "CustomerAddress"));
+$operations = array("customerAddress" =>array("inputFormat" => $inputFormat, "outputFormat" => $outputFormat, "sql" => $sql));
+$my_data_service = new DataService(array("config" => $config,"operations" => $operations, "serviceName" => "CustomerAddress"));
 
 $my_data_service->reply();
 ?>
