@@ -1248,15 +1248,16 @@ static void generate_wsdl_for_service(zval *svc_zval,
         INIT_ZVAL(func);
         INIT_ZVAL(retval);
         MAKE_STD_ZVAL(param);
-        
+        /*
 		if (sapi_module.pretty_name && strcmp(sapi_module.pretty_name,"CGI/FastCGI") == 0) {
 			sapi_add_header ("Content-Type:application/xml\n",
 				sizeof ("Content-Type:application/xml\n"), 1);
 		}else
 		{
+		*/
 			sapi_add_header ("Content-Type:application/xml",
 				sizeof ("Content-Type:application/xml"), 1);
-		}
+		/*} */
 		
 		ZVAL_STRING(param, Z_STRVAL_PP(wsdl_location), 1);
         ZVAL_STRING(&function, "file_get_contents", 1);
