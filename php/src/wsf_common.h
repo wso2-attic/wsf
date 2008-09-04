@@ -31,6 +31,7 @@
 #include <axis2_svc.h>
 #include <axis2_msg_recv.h>
 #include <axiom.h>
+#include <sandesha2_constants.h>
 #include <php.h>
 
 
@@ -212,9 +213,9 @@ typedef enum ws_input_types
 #define WSF_SANDHSHA2_LAST_MESSAGE "Sandesha2LastMessage"
 #define WSF_SANDHSHA2_SANDESHA2_OFFERED_SEQUENCE_ID "Sandesha2OfferedSequenceId"
 
-#define WSF_RM_VERSION_1_0_STR "Spec_2005_02"
+#define WSF_RM_VERSION_1_0_STR SANDESHA2_SPEC_VERSION_1_0
 #define WSF_RM_VERSION_1_0  1
-#define WSF_RM_VERSION_1_1_STR "Spec_2006_08"
+#define WSF_RM_VERSION_1_1_STR SANDESHA2_SPEC_VERSION_1_1
 #define WSF_RM_VERSION_1_1  2
 
 #define WSF_RM_RESPONSE_TIMEOUT "responseTimeout"

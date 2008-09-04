@@ -148,7 +148,7 @@ wsf_client_send_terminate_sequence (
 	{
         {
             sandesha2_client_terminate_seq_with_svc_client_and_seq_key (env, 
-				svc_client, sequence_key, 0);
+				svc_client, sequence_key);
         }
     }
 }
