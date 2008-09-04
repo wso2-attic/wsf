@@ -36,6 +36,7 @@
 #include <axis2_addr.h>
 #include <axis2_const.h>
 #include <axiom_util.h>
+#include <sandesha2_client.h>
 #include "wsf_client.h"
 #include "wsf_policy.h"
 #include "wsf_xml_msg_recv.h"
@@ -43,6 +44,7 @@
 #include "php_version.h"
 #include <php_main.h>
 #include "wsf_wsdl.h"
+
 
 ZEND_DECLARE_MODULE_GLOBALS (wsf) 
 
@@ -807,8 +809,14 @@ PHP_METHOD (ws_client, get_last_request)
 /* {{{ proto public WSClient::terminateOutgoingRM() */ 
 PHP_METHOD (ws_client, terminate_outgoing_rm) 
 {
-    zval * object = NULL;
-    WSF_GET_THIS (object);
+	axis2_svc_client_t * svc_client = NULL;
+	ws_object_ptr intern = NULL;
+	zval * obj = NULL;
+	WSF_GET_THIS (obj);
+	WSF_GET_OBJ (svc_client, obj, axis2_svc_client_t, intern);
+
+	sandesha2_client_close_seq_with_svc_client(env, svc_client, NULL);
+	sandesha2_client_terminate_seq_with_svc_client(env, svc_client, NULL);
 }
 /* }}} */ 
     
@@ -873,6 +881,8 @@ PHP_METHOD (ws_service, __construct)
     zval * obj = NULL;
     wsf_svc_info_t * svc_info = NULL;
     zval * options = NULL;
+	zval **server_vars = NULL;
+	zval **data = NULL;
     HashTable * ht_options = NULL;
     HashTable * ht_actions = NULL;
     HashTable * ht_ops_to_funcs = NULL;
@@ -883,6 +893,7 @@ PHP_METHOD (ws_service, __construct)
 	HashTable * ht_rest_map = NULL;
     char *service_name = NULL;
     char *port_name = NULL;
+	char *request_uri = NULL;
 	ws_is_svr = 1;
 
     if (FAILURE == zend_parse_parameters (ZEND_NUM_ARGS ()TSRMLS_CC, "|a",
@@ -1112,14 +1123,25 @@ PHP_METHOD (ws_service, __construct)
 
         }
     }
-    
-    if (SG (request_info).request_uri) {
+	if (zend_hash_find (&EG (symbol_table), "_SERVER", sizeof ("_SERVER"),
+		(void **) & server_vars) == SUCCESS && (Z_TYPE_PP (server_vars) == IS_ARRAY)) 
+	{
+			if ((zend_hash_find (Z_ARRVAL_PP (server_vars),
+				"PHP_SELF", sizeof ("PHP_SELF"),
+				(void **) & data) == SUCCESS)  && Z_TYPE_PP (data) == IS_STRING) {
+					request_uri = Z_STRVAL_PP (data);
+				}
+	}
+	if (request_uri) 
+	{	/** SG(request_info).request_uri */
         svc_info->svc_name = 
 			wsf_util_generate_svc_name_from_uri_and_set_loc_str (SG (request_info).request_uri, svc_info, ws_env_svr);
-        if(service_name){
+        if(service_name)
+		{
             svc_info->svc_name = strdup(service_name);
         }
-        else{
+        else
+		{
             svc_info->generated_svc_name = 1;
         }
         svc_info->msg_recv = wsf_msg_recv;
@@ -1624,9 +1646,17 @@ PHP_METHOD (ws_service, reply)
 			{
 				req_info.accept_charset = Z_STRVAL_PP(data);
 			}
+			if ((zend_hash_find (Z_ARRVAL_PP (server_vars), "PHP_SELF",
+				sizeof ("PHP_SELF"), (void **)&data) == SUCCESS) && 
+				Z_TYPE_PP(data) == IS_STRING)
+			{
+				req_info.request_uri = Z_STRVAL_PP(data);
+			}
 		}
-		
-		req_info.request_uri = SG (request_info).request_uri;
+		if(!req_info.request_uri)
+		{
+			req_info.request_uri = SG (request_info).request_uri;
+		}
 		req_info.content_length = SG (request_info).content_length;
 		req_info.content_type = (char *) SG (request_info).content_type;
 		req_info.request_method = (char *) SG (request_info).request_method;
