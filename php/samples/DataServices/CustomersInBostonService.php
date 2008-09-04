@@ -40,7 +40,7 @@ $outputFormat = array("resultElement" => "customers",
 // sql
 $sql = "select  customerName,contactLastName, contactFirstName,phone,city,country from Customers where city = 'Boston' and country = 'USA'";
 
-// operations is consist of inputFormat (optional), outputFormat(required), sql(sql), input_mapping(optional)
+// operations are consist of inputFormat (optional), outputFormat(required), sql(sql), input_mapping(optional)
 $operations = array("customersInBoston" =>array("outputFormat" => $outputFormat, "sql" => $sql));
 
 $my_data_service = new DataService(array("config" => $config,"operations" => $operations));

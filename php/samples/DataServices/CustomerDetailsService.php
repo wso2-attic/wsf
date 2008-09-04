@@ -50,7 +50,7 @@ $outputFormat = array("resultElement" => "customer-addresse",
 // the sql to execute
 $sql = "select CUSTOMERNUMBER, CONTACTLASTNAME, CONTACTFIRSTNAME, ADDRESSLINE1, ADDRESSLINE2, CITY, STATE, POSTALCODE, COUNTRY from Customers where CONTACTLASTNAME = ? and CONTACTFIRSTNAME = ?";
 
-// operations is consists of inputFormat (optional), outputFormat(required), sql(sql), input_mapping(optional)
+// operations are consists of inputFormat (optional), outputFormat(required), sql(sql), input_mapping(optional)
 $operations = array("customerAddress" =>array("inputFormat" => $inputFormat, "outputFormat" => $outputFormat, "sql" => $sql));
 $my_data_service = new DataService(array("config" => $config,"operations" => $operations, "serviceName" => "CustomerAddress"));
 

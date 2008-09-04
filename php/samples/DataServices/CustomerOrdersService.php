@@ -38,7 +38,7 @@ $outputFormat = array("resultElement" => "Orders",
 // sql statment to execute
 $sql="select o.OrderNumber, o.OrderDate, o.status from Customers c, Orders o where c.customerNumber=o.customerNumber and c.customerNumber=?";
 
-// operations is consist of inputFormat (optional), outputFormat(required), sql(sql), input_mapping(optional)
+// operations are consist of inputFormat (optional), outputFormat(required), sql(sql), input_mapping(optional)
 $operations = array("customerOrders" =>array("inputFormat" => $inputFormat, "outputFormat" => $outputFormat, "sql" => $sql));
 
 $my_data_service = new DataService(array("config" => $config,"operations" => $operations));
