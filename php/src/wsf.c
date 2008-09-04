@@ -1271,7 +1271,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
 			{
                 wsdl_string = estrdup (Z_STRVAL(retval));
                 len = Z_STRLEN (retval);
-                if(strstr(wsdl_string, "<?xml version=\"1.0\""))
+                if(!strstr(wsdl_string, "<?xml version=\"1.0\""))
 				{
                     new_len = strlen("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
                     wsdl_string = (wsdl_string + new_len);
