@@ -1135,7 +1135,7 @@ PHP_METHOD (ws_service, __construct)
 	if (request_uri) 
 	{	/** SG(request_info).request_uri */
         svc_info->svc_name = 
-			wsf_util_generate_svc_name_from_uri_and_set_loc_str (SG (request_info).request_uri, svc_info, ws_env_svr);
+			wsf_util_generate_svc_name_from_uri_and_set_loc_str (request_uri, svc_info, ws_env_svr);
         if(service_name)
 		{
             svc_info->svc_name = strdup(service_name);
