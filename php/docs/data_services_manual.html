@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <title>WS02 WSF DATA SERVICES MANUAL</title>
+  <link href="style/api_style.css" rel="stylesheet" type="text/css"
+  media="all" />
+  <link href="style/api_style.css" media="all" rel="stylesheet"
+  type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+<h1>11. DataServices Manual</h1>
+
+<p>WSF/PHP comes with a DataService Library. It allows you to expose your
+Database as a Web Service with Full WS-* support.
+
+
+<h2 id="1">11.1. Writing a Simple DataService</h2>
+
+<pre style="text-align: left"><strong>1.<span style="font-family: Verdana">Prepare the Database</span></strong></pre>
+<p>
+Before configuring your database you need to install the PDO extension corresponding to your Database engine. 
+For an example if you select to use "mysql" you have to install the pdo_mysql extension. PDO extensions are
+available for many popular databases like mysql, pgdql, sqlite, odbc, oci, firebird 
+</p>
+
+<p>
+Now we will first prepare a Database to use in our DataService. Here is my Database Format.</p>
+
+<p>
+Database Name: ds
+</p>
+
+<p>
+Tables
+</p>
+
+<p>
+Customers:
+
+<table border="1px">
+<tr>
+<td>
+    customerNumber
+</td>
+<td>
+    customerName
+</td>
+<td>
+    contactLastName
+</td>
+<td>
+    contactFirstName
+</td>
+<td>
+    phone
+</td>
+<td>
+    addressLine1
+</td>
+<td>
+    addressLine2
+</td>
+<td>
+    city
+</td>
+<td>
+    state
+</td>
+<td>
+    postalCode
+</td>
+<td>
+    countdy
+</td>
+<td>
+    salesRepEmployeeNumber
+</td>
+<td>
+    creditLimit
+</td>
+</tr>
+</table>
+
+</p>
+
+<p>
+Orders
+<table border="1px">
+<tr>
+<td>
+    orderNumber
+</td>
+<td>
+    orderDate
+</td>
+<td>
+    requiredDate
+</td>
+<td>
+    shippedDate
+</td>
+<td>
+    status
+</td>
+<td>
+    comments
+</td>
+<td>
+    customerNumber
+</td>
+</tr>
+</table>
+</p>
+
+<p>
+You can use the following commands to create the database and tables.
+Or you can use the sql scripts inside samples/DataServices/sql in the
+wsf/php pack to create these tables and fill sample data</p>
+
+<pre>
+
+create database ds;
+
+use ds;
+
+CREATE TABLE Customers(
+    customerNumber INTEGER,
+    customerName VARCHAR(50),
+    contactLastName VARCHAR(50),
+    contactFirstName VARCHAR(50),
+    phone VARCHAR(50),
+    addressLine1 VARCHAR(50),
+    addressLine2 VARCHAR(50),
+    city VARCHAR(50),
+    state VARCHAR(50),
+    postalCode VARCHAR(15),
+    country VARCHAR(50),
+    salesRepEmployeeNumber INTEGER,
+    creditLimit DOUBLE
+);
+
+
+CREATE TABLE Orders(
+    orderNumber INTEGER,
+    orderDate DATE,
+    requiredDate DATE,
+    shippedDate DATE,
+    status VARCHAR(15),
+    comments LONG VARCHAR,
+    customerNumber INTEGER
+);
+
+</pre>
+
+<p>
+In this service we will list all the orders done by a perticular customer.
+</p>
+
+<pre style="text-align: left"><strong>2.<span style="font-family: Verdana">Writing the Dataservices Script</span></strong></pre>
+<p>
+We will straight away look in to the complete code. Plea's continue reading for the explations.
+</p>
+
+<pre>
+require_once("<span style="color: #ff0033">wso2/DataServices/DataService.php</span>");
+
+// database configurations
+$config = array(
+      "<span style="color: #ff0033">db</span>" =&gt; "<span style="color: #ff0000">mysql</span>",
+      "<span style="color: #ff0033">username</span>"=&gt;"<span style="color: #ff0000">your_db_username</span>",
+      "<span style="color: #ff0033">password</span>"=&gt; "<span style="color: #ff0000">your_db_password</span>",
+      "<span style="color: #ff0033">dbname</span>"=&gt;"<span style="color: #ff0000">ds</span>",
+      "<span style="color: #ff0033">dbhost</span>"=&gt;"<span style="color: #ff0000">localhost</span>");
+
+// input format array(param_name =&gt; SQL_TYPE)
+$inputFormat = array("<span style="color: #ff0033">customerNumber</span>" =&gt; "<span style="color: #ff0000">INT</span>");
+
+// output format, please check the API from http://wso2.org/wiki/display/wsfphp/API+for+Data+Services+Revised
+$outputFormat = array("<span style="color: #ff0033">resultElement</span>" =&gt; "<span style="color: #ff0000">Orders</span>",
+                      "<span style="color: #ff0033">rowElement</span>" =&gt; "<span style="color: #ff0000">Order</span>",
+                      "<span style="color: #ff0033">elements</span>" =&gt; array( "<span style="color: #ff0033">order-number</span>" =&gt; "<span style="color: #ff0000">OrderNumber</span>",
+                                           "<span style="color: #ff0033">order-date</span>" =&gt; "<span style="color: #ff0000">OrderDate</span>",
+                                           "<span style="color: #ff0033">status</span>" =&gt; "<span style="color: #ff0000">status</span>"));
+// sql statement to execute
+$sql="select o.OrderNumber, o.OrderDate, o.status from Customers c, Orders o where c.customerNumber=o.customerNumber and c.customerNumber=?";
+
+// operations are consist of inputFormat (optional), outputFormat(required), sql(sql), input_mapping(optional)
+$operations = array("<span style="color: #ff0033">customerOrders</span>"=&gt;array("<span style="color: #ff0033">inputFormat</span>"=&gt;$inputFormat, 
+                                "<span style="color: #ff0033">outputFormat</span>"=&gt;$outputFormat,
+                                "<span style="color: #ff0033">sql</span>"=&gt;$sql));
+
+$my_data_service = new DataService(array("<span style="color: #ff0033">config</span>"=&gt;$config,
+                            "<span style="color: #ff0033">operations</span>"=&gt;$operations));
+$my_data_service-&gt;reply();
+?&gt;
+
+</pre>
+
+<pre><strong>Database configurations</strong></pre>
+<pre>
+$config = array(
+      "<span style="color: #ff0033">db</span>" =&gt; "<span style="color: #ff0000">mysql</span>",
+      "<span style="color: #ff0033">username</span>"=&gt;"<span style="color: #ff0000">your_db_username</span>",
+      "<span style="color: #ff0033">password</span>"=&gt; "<span style="color: #ff0000">your_db_password</span>",
+      "<span style="color: #ff0033">dbname</span>"=&gt;"<span style="color: #ff0000">ds</span>",
+      "<span style="color: #ff0033">dbhost</span>"=&gt;"<span style="color: #ff0000">localhost</span>");
+</pre>
+<p>
+Here you need to give the database engine as the "db" option. Note that in
+order to run 'mysql' you need to have the pdo_mysql extension as explained above. Simmilarly you can use pdo_pgsql, pdo_sqlite, and etc to run
+the data service with the corresponding database engines.
+</p>
+<p>
+The rest of the configuration are the hostname, username and the password of the your database connection.
+</p>
+
+<pre><strong>Prepare the operation/ Query</strong></pre>
+<pre>
+// input format array(param_name =&gt; SQL_TYPE)
+$inputFormat = array("<span style="color: #ff0033">customerNumber</span>" =&gt; "<span style="color: #ff0000">INT</span>");
+
+// output format, please check the API from http://wso2.org/wiki/display/wsfphp/API+for+Data+Services+Revised
+$outputFormat = array("<span style="color: #ff0033">resultElement</span>" =&gt; "<span style="color: #ff0000">Orders</span>",
+                      "<span style="color: #ff0033">rowElement</span>" =&gt; "<span style="color: #ff0000">Order</span>",
+                      "<span style="color: #ff0033">elements</span>" =&gt; array( "<span style="color: #ff0033">order-number</span>" =&gt; "<span style="color: #ff0000">OrderNumber</span>",
+                                           "<span style="color: #ff0033">order-date</span>" =&gt; "<span style="color: #ff0000">OrderDate</span>",
+                                           "<span style="color: #ff0033">status</span>" =&gt; "<span style="color: #ff0000">status</span>"));
+// sql statement to execute
+$sql="select o.OrderNumber, o.OrderDate, o.status from Customers c, Orders o where c.customerNumber=o.customerNumber and c.customerNumber=?";
+
+// operations are consist of inputFormat (optional), outputFormat(required), sql(sql), input_mapping(optional)
+$operations = array("<span style="color: #ff0033">customerOrders</span>"=&gt;array("<span style="color: #ff0033">inputFormat</span>"=&gt;$inputFormat, 
+                                "<span style="color: #ff0033">outputFormat</span>"=&gt;$outputFormat,
+                                "<span style="color: #ff0033">sql</span>"=&gt;$sql));
+</pre>
+<p>
+In the WSF/PHP DataServices, terms operation and query refers to the same set of properties. They both contain the "inputFormat", "outputFormat", "sql", "inputMapping".
+</p>
+<p>
+<ul>
+<li>
+inputFormat - This is a map of Input value to its type, 
+</li>
+<li>
+outputFormat - This is a description of what will be the output from the query, it can contain elements, attributes, and even results from other queries (in nested query scenarios)
+</li>
+<li>
+sql - The sql query to execute to provide you the results - This is prepared statement and you are allowed to set input parameters in the order you specify them in 'inputFormat' option
+</li>
+</ul>
+</p>
+
+<p>
+There is an another option "inputMapping" which enable you to select the name of the element name and map
+it in to the names you used in inputFormat option, outputFormat and other inner queries. Please see the API Documentation of DataService for more details.
+</p>
+
+
+<pre><strong>Calling the DataService</strong></pre>
+<pre>
+require_once("<span style="color: #ff0033">wso2/DataServices/DataService.php</span>");
+
+$my_data_service = new DataService(array("<span style="color: #ff0033">config</span>"=&gt;$config,
+                            "<span style="color: #ff0033">operations</span>"=&gt;$operations));
+$my_data_service-&gt;reply();
+?&gt;
+
+</pre>
+
+<p>
+After you prepared the operations/queries you need to create an instance of DataService  class which is declared in "wso2/DataServices/DataService.php"
+relative to the 'scripts' directory packed with WSO2 WSF/PHP. Note that You need to set the include_path directory of php.ini to the 'scripts' directory in order to run DataServices
+(and  WSDL mode and WSDL generation). Please see the installation manual for more details.
+</p>
+
+<p>
+DataService class is inherited from WSService class. So you can give all the option available in the WSService class constructor to the DataService class constructor as well. For an example
+you can enable the security features here by providing valid values for 'policy' and 'securityToken' options.
+</p>
+
+<h2 id="2">11.2. Deploying the DataService</h2>
+<p>
+You can deploy the DataService easily by putting your dataservice script in to your web documents directory. This is similar to how you deploy a normal Webservice with WSF/PHP.
+</p>
+<h2 id="3">11.3. Writing a Test Client</h2>
+<p>
+You can use the WSF/PHP WSDL Mode to generate a client using your DataService. You can retrieve the WSDL of the service adding '?wsdl' ( or '?wsdl2' for wsdl verison 2.0) to the dataservice
+endpoint.
+</p>
+<p>
+For this manual I will be writing a simple client which uses XML API.
+</p>
+<pre>
+&lt;?
+$requestPayloadString = &lt;&lt;&lt;XML
+&lt;customerOrders&gt;
+&lt;customerNumber&gt;406&lt;/customerNumber&gt;
+&lt;/customerOrders&gt;
+XML;
+try {
+    $client = new WSClient(array("<span style="color: #ff0033">to</span>" =&gt; "<span style="color: #ff0000">http://localhost/my_data_service.php</span>"));
+    $responseMessage = $client-&gt;request( $requestPayloadString );
+    printf("<span style="color: #ff0033">Response = %s &lt;br&gt;</span>", htmlspecialchars($responseMessage-&gt;str));
+
+} catch (Exception $e) {
+
+    if ($e instanceof WSFault) {
+        printf("<span style="color: #ff0033">Soap Fault: %s\n</span>", $e-&gt;Reason);
+    } else {
+        printf("<span style="color: #ff0033">Message = %s\n</span>",$e-&gt;getMessage());
+    }
+}
+?&gt;
+
+</pre>
+</body>
+</html>
