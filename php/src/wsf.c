@@ -1123,6 +1123,9 @@ PHP_METHOD (ws_service, __construct)
 
         }
     }
+
+    zend_is_auto_global ("_SERVER", sizeof ("_SERVER") - 1 TSRMLS_CC);
+
 	if (zend_hash_find (&EG (symbol_table), "_SERVER", sizeof ("_SERVER"),
 		(void **) & server_vars) == SUCCESS && (Z_TYPE_PP (server_vars) == IS_ARRAY)) 
 	{
@@ -1132,7 +1135,6 @@ PHP_METHOD (ws_service, __construct)
 					request_uri = Z_STRVAL_PP (data);
 				}
 	}
-    zend_is_auto_global ("_SERVER", sizeof ("_SERVER") - 1 TSRMLS_CC);
 	
     if (request_uri) 
 	{	/** SG(request_info).request_uri */
