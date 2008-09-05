@@ -16,7 +16,8 @@
 
 <p>WSO2 Web Services Framework/PHP is a PHP extension that can be used to
 provide and consume Web services. It supports SOAP 1.1, SOAP 1.2, MTOM,
-WS-Addressing, WS-Security UsernameToken as well as REST style invocation.</p>
+WS-Addressing, WS-Security
+    as well as REST style invocation.</p>
 
 <h2><a name="Requirements">2. Requirements</a></h2>
 
@@ -479,9 +480,9 @@ XML;
                                 
     <span style="color: rgb(0, 0, 255);">$resMessage</span> = <span style="color: rgb(0, 0, 255);">$client</span>-&gt;<span style="color: rgb(0, 102, 0);">request</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$reqMessage</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
 
-<p>The WSO2 WSF/PHP extension only supports the XML in/out model for
-consuming services currently. Data binding for PHP will be supported in a
-future release. <br>
+<p>The WSO2 WSF/PHP extension supports the XML in/out model and <a href="wsdl_manual.html#1" target="mainFrame">WSDL mode</a> for
+consuming services currently. 
+ <br>
 </p>
 
 <h3><a name="6.4.">6.4. Attachments with MTOM/XOP</a></h3>
@@ -609,7 +610,7 @@ Or else, you can use the password call back mechanism by using a callback
 function. <br>
 <br>
 <span style="color: #0000ff">  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                  &nbsp;
+                  &nbsp; &nbsp; &nbsp;
                   function
 <em>passwordFunction</em>($username)<br>
 {<br>
@@ -619,7 +620,8 @@ function. <br>
 <br>
 Then WSSecurityToken object would be<br>
 <span style="color: #0000ff">      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;$security_obj</span> = <span
+                  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;$security_obj</span> = <span
 style="color: rgb(0, 0, 0); font-weight: bold;">new</span>
 WSSecurityToken<span style="color: rgb(102, 204, 102);">(</span><span
 style="color: rgb(0, 0, 102);">array</span><span
@@ -631,13 +633,15 @@ style="color: rgb(102, 204, 102);">(</span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &n
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
               <span style="color: rgb(255, 0, 0);"> "user"</span>
 =&gt; <span style="color: rgb(255, 0, 0);">"john"</span>,<br>
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
               <span style="color: rgb(255, 0, 0);">
 "password_callback"</span> =&gt; <span
 style="color: rgb(255, 0, 0);">"passwordFunction"</span><span
@@ -648,6 +652,7 @@ If you want the timetoLive and timestamp , those options also can be
 specified.<br>
 <span style="color: rgb(0, 0, 255);">     &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp;
         &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp;
+    &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp;
         $policy_obj</span> =<span
 style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSPolicy<span
 style="color: rgb(102, 204, 102);">(</span><a href="http://www.php.net/array"><span
@@ -664,7 +669,7 @@ style="color: rgb(102, 204, 102);">)</span><span
 style="color: rgb(102, 204, 102);">)</span>;<br>
 <br>
 <span style="color: #0000ff">    &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
-        &nbsp;&nbsp; &nbsp;&nbsp;
+        &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
     $security_obj</span> = <span
 style="color: rgb(0, 0, 0); font-weight: bold;">new</span>
 WSSecurityToken<span style="color: rgb(102, 204, 102);">(</span><span
@@ -674,14 +679,15 @@ style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">
     <span style="color: rgb(255, 0, 0);"> "password"</span>
 =&gt; <span style="color: rgb(255, 0, 0);">"fred",&nbsp;</span><span style="color: rgb(102, 204, 102);">              &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-        &nbsp; &nbsp; &nbsp; &nbsp;
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
     <span
 style="color: #ff0000">"ttl"</span><span style="color: #111111"> =&gt;
 300</span>)</span><span style="color: rgb(102, 204, 102);">)</span>;<br>
 <br>
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-    &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
     
 
 <h3><a name="6.7.">6.7. One-Way Clients</a></h3>
@@ -710,11 +716,6 @@ send() is void. In case of errors, it would throw a fault.</p>
 oriented API that you have already seen, to provide and consume services.
 There are two functions that you can use on the client side, ws_request() and
 ws_send().</p>
-
-<p>In order to use these functions, you have to copy the wsf.php file that is
-located in the scripts sub folder of the distribution to your Web server's
-document root. Once that is done, you have to include that script in your
-source, before using the API.</p>
 <pre><span style="color: rgb(177, 177, 0);">include_once</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">'./wsf.php'</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
 
 <p>Once that file is included, you are ready to use the functions.<br>
@@ -1101,11 +1102,7 @@ client and consumes it, and does not send any response.</p>
 <p>The function based API has a function, ws_reply() that you can use on a
 service script to reply to client requests.</p>
 
-<p>In order to use the function, you have to copy the wsf.php file that is
-located in the scripts sub folder of the distribution to your Web server's
-document root. Once that is done, you have to include that script in your
-source, before using the API.</p>
-<pre><span style="color: rgb(177, 177, 0);">include_once</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">'./wsf.php'</span><span style="color: rgb(102, 204, 102);">)</span>;</pre>
+<p><span style="color: rgb(177, 177, 0);">include_once</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(255, 0, 0);">'./wsf.php'</span><span style="color: rgb(102, 204, 102);">)</span>;</p>
 
 <p>Once that file is included, you are ready to use the reply function.<br>
 The following code fragment shows how you can specify the operation mapping

@@ -364,8 +364,7 @@ For the above service you can use the classmap API in the following way.
 You can use the <a href="wsdl_manual.html#4">wsdl2php.php script</a> to generate the classes for the WSDL.
 </p>
 
-<pre class="php">
-<span style="color: rgb(0, 0, 0); font-weight: bold;">class</span> orderInfo <span style="color: rgb(102, 204, 102);">{</span> 
+<pre class="php"><span style="color: rgb(0, 0, 0); font-weight: bold;">class</span> orderInfo <span style="color: rgb(102, 204, 102);">{</span> 
     <span style="color: rgb(0, 0, 0); font-weight: bold;">public</span> <span style="color: rgb(0, 0, 255);">$productName</span>; <span style="color: rgb(128, 128, 128); font-style: italic;">// string</span>
     <span style="color: rgb(0, 0, 0); font-weight: bold;">public</span> <span style="color: rgb(0, 0, 255);">$quantity</span>; <span style="color: rgb(128, 128, 128); font-style: italic;">// float</span>
 
@@ -487,15 +486,6 @@ echoService.php, a request should be sent as,</p>
 <p>For more information on the annotation syntax, please have a look at the
 <a href="wsdl_generation_api.html">WSDL generation API document</a>.</p>
 
-<p>http://localhost/echoService.php?wsdl</p>
-
-<p>or</p>
-
-<p>http://localhost/echoService.php?wsdl2</p>
-
-<p>For more information on the annotation syntax, please have a look at the
-<a href="wsdl_generation_api.html">WSDL generation API document</a>.</p>
-
 
 <h3 id="4">10.4. WSDL to PHP Code Generation</h3>
 
@@ -509,8 +499,7 @@ with the WSO2 WSF/PHP distribution. You can find the wsdl2php.php script inside 
 Here is how you can use this script.
 </p>
 
-<pre>
-Usage: <i>php wsdl2php.php [-s] &lt;wsdl&gt; </i>
+<pre>Usage: <i>php wsdl2php.php [-s] &lt;wsdl&gt; </i>
     wsdl - URL or path to WSDL file
 
     Options:

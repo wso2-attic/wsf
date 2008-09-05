@@ -174,7 +174,7 @@ border="1">
     <tr valign="top">
       <td colspan="1" style="height: 20px; width: 96px;">"policy"</td>
       <td colspan="1" style="height: 20px"> &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
           WSPolicy object</td>
       <td colspan="1" style="height: 20px">WSPolicy object</td>
       <td colspan="1" style="height: 20px">None</td>
@@ -589,7 +589,7 @@ border="1">
               Here the first portion of the url will be same for all operations defined for a
               given operations and it will be the service url. The last portion of it will be
               the string specified in RESTLocation attribute. This string can be a string as well
-              as a matching patter.
+              as a matching pattern.
                 </p>
                 <p>
               Consider we have an operation foo defined in our web service which we want to expose
@@ -660,29 +660,6 @@ border="1">
         will be set. If FALSE, the binary content will be present in the
         response payload in base64 format.</p>
       </td>
-    </tr>
-    <tr>
-      <td colspan="5" valign="top"><p>WS-Security Related options</p>
-      </td>
-    </tr>
-    <tr valign="top">
-      <td style="height: 38px"><p>"policy"</p>
-      </td>
-      <td style="height: 38px"><p>WSPolicy Object</p>
-      </td>
-      <td style="height: 38px"><p>WSPolicy Object</p>
-      </td>
-      <td style="height: 38px"><p>None</p>
-      </td>
-      <td style="height: 38px">WSPolicy object which represents Service or client Policy.
-        </td>
-    </tr>
-    <tr valign="top">
-      <td>"securityToken"</td>
-      <td>WSSecurityToken Object</td>
-      <td>WSSecurityToken</td>
-      <td>None</td>
-      <td>WSSecurityToken object which contains the security related options.</td>
     </tr>
         <tr>
       <td colspan="5" valign="top"><p>WS-Security Related options</p>
@@ -1061,7 +1038,7 @@ representation of the binary content to be sent or being received. If attachment
 </ul>
 
 <p>An associative array, containing the mapping of cid (content ID) to its
-corresponding  &nbsp;
+corresponding  &nbsp;&nbsp;
         attachment. When an attachment is received, this property
 will be present in the WSMessage object. <b>array inputHeaders</b></p>
 
