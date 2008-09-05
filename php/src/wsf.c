@@ -1132,7 +1132,9 @@ PHP_METHOD (ws_service, __construct)
 					request_uri = Z_STRVAL_PP (data);
 				}
 	}
-	if (request_uri) 
+    zend_is_auto_global ("_SERVER", sizeof ("_SERVER") - 1 TSRMLS_CC);
+	
+    if (request_uri) 
 	{	/** SG(request_info).request_uri */
         svc_info->svc_name = 
 			wsf_util_generate_svc_name_from_uri_and_set_loc_str (request_uri, svc_info, ws_env_svr);
