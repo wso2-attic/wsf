@@ -812,11 +812,16 @@ PHP_METHOD (ws_client, terminate_outgoing_rm)
 	axis2_svc_client_t * svc_client = NULL;
 	ws_object_ptr intern = NULL;
 	zval * obj = NULL;
+	HashTable *client_ht = NULL;
+	int rm_spec_version = -1;
 	WSF_GET_THIS (obj);
+	
 	WSF_GET_OBJ (svc_client, obj, axis2_svc_client_t, intern);
-
-	sandesha2_client_close_seq_with_svc_client(env, svc_client, NULL);
-	sandesha2_client_terminate_seq_with_svc_client(env, svc_client, NULL);
+	client_ht = Z_OBJPROP_P (this_ptr);
+	if(svc_client && rm_spec_version == WSF_RM_VERSION_1_1){
+		sandesha2_client_close_seq_with_svc_client(env, svc_client, NULL);
+		sandesha2_client_terminate_seq_with_svc_client(env, svc_client, NULL);
+	}
 }
 /* }}} */ 
     
