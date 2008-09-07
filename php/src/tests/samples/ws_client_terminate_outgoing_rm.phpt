@@ -15,14 +15,15 @@ try {
 			array("action" => "http://php.axis2.org/samples/echoString"));
 
     $client = new WSClient(array( "to"=>"http://localhost/samples/reliable/echo_service_rm.php",
-					    "reliable"=>TRUE));
+					    "reliable"=>"1.1",
+					    "willContinueSequence" => TRUE));
     $result = $client->request($msg);
 
     if($result){
 	echo $result->str;
     }
     $client->terminateOutgoingRM();
-    sleep(10);  
+    $client->wait(10);  
     
 } catch (Exception $e) {
 
