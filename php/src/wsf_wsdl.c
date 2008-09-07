@@ -1777,7 +1777,7 @@ void wsf_wsdl_handle_server_security(wsf_svc_info_t *svc_info,
     worker = svc_info->php_worker;
 				
     conf = axis2_conf_ctx_get_conf (wsf_worker_get_conf_ctx(worker, env), env);
-    wsf_util_engage_module (conf, "rampart", env, svc_info->svc);
+    wsf_util_engage_module (conf, WSF_MODULE_SECURITY, env, svc_info->svc);
 }
 
 
