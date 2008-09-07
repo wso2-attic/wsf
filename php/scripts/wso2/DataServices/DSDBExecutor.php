@@ -51,6 +51,13 @@ class DSDBExecutor {
                 $dns .= ":". $config[DS_DBPORT];
             }
 
+            
+            // user can give the dsn directly
+            if(array_key_exists(DS_DSN, $config) &&
+                $config[DS_DSN] != NULL) {
+                $dns = $config[DS_DSN];
+            }
+
             $this->dns = $dns;
 
             // setting username
