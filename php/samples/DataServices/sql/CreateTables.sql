@@ -1,5 +1,3 @@
-drop database ds;
-
 create database ds;
 
 use ds;
