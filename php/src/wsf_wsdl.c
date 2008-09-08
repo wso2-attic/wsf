@@ -715,11 +715,14 @@ wsf_wsdl_do_request(zval *client_zval,
         if (client_zval && zend_hash_find ( Z_OBJPROP_P (client_zval), WSF_USE_WSA, 
             sizeof (WSF_USE_WSA), (void **) &tmp_use_wsa) == SUCCESS) 
         {
-            if(Z_TYPE_PP(tmp_use_wsa) == IS_BOOL) {
+            if(Z_TYPE_PP(tmp_use_wsa) == IS_BOOL) 
+            {
                 permit_addressing = Z_BVAL_PP(tmp_use_wsa);
             }
-            else if(Z_TYPE_PP_(tmp_use_wsa == IS_STRING)) {
-                if(strcmp(Z_STRVAL_PP(tmp_use_wsa), WSF_ADDRESSING_SUBMISSION)) {
+            else if(Z_TYPE_PP(tmp_use_wsa) == IS_STRING) 
+            {
+                if(strcmp(Z_STRVAL_PP(tmp_use_wsa), WSF_ADDRESSING_SUBMISSION) == 0) 
+                {
                     is_wsa_submission = 1;
                 }
             }
