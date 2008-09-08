@@ -163,7 +163,7 @@ In this service we will list all the orders done by a perticular customer.
 
 <pre style="text-align: left"><strong>2.<span style="font-family: Verdana">Writing the Dataservices Script</span></strong></pre>
 <p>
-We will straight away look in to the complete code. Please continue reading for the explations.
+We will straight away look in to the complete code. Please continue reading for the explanations.
 </p>
 
 <pre>
@@ -186,7 +186,7 @@ $outputFormat = array("<span style="color: #ff0033">resultElement</span>" =&gt; 
                       "<span style="color: #ff0033">elements</span>" =&gt; array( "<span style="color: #ff0033">order-number</span>" =&gt; "<span style="color: #ff0000">OrderNumber</span>",
                                            "<span style="color: #ff0033">order-date</span>" =&gt; "<span style="color: #ff0000">OrderDate</span>",
                                            "<span style="color: #ff0033">status</span>" =&gt; "<span style="color: #ff0000">status</span>"));
-// sql statement to execute
+// SQL statement to execute
 $sql="select o.OrderNumber, o.OrderDate, o.status from Customers c, Orders o where c.customerNumber=o.customerNumber and c.customerNumber=?";
 
 // operations are consist of inputFormat (optional), outputFormat(required), sql(sql), input_mapping(optional)
