@@ -24,7 +24,8 @@ Database as a Web Service with Full WS-* support.
 <p>
 Before configuring your database you need to install the PDO extension corresponding to your Database engine. 
 For an example if you select to use "mysql" you have to install the pdo_mysql extension. PDO extensions are
-available for many popular databases like mysql, pgdql, sqlite, odbc, oci, firebird 
+available for many popular databases like mysql, pgdql, sqlite, odbc, oci, firebird. For this manual I m using 'mysql'
+to demonstrate the use of basic DataServices.
 </p>
 
 <p>
@@ -162,7 +163,7 @@ In this service we will list all the orders done by a perticular customer.
 
 <pre style="text-align: left"><strong>2.<span style="font-family: Verdana">Writing the Dataservices Script</span></strong></pre>
 <p>
-We will straight away look in to the complete code. Plea's continue reading for the explations.
+We will straight away look in to the complete code. Please continue reading for the explations.
 </p>
 
 <pre>
@@ -216,6 +217,12 @@ the data service with the corresponding database engines.
 </p>
 <p>
 The rest of the configuration are the hostname, username and the password of the your database connection.
+</p>
+
+<p>
+If you are running on a file or memory based database like 'sqlite' you may need to give the DSN(Data Source Name) directory instead of providing
+the value for 'db', 'dbname' and 'dbhost' seperately. For that you can use the 'dsn' option. For more information about how 'dsn' should be provided
+please see the section correspond to your database engine in <a href="http://www.php.net/manual/en/pdo.drivers.php">PHP PDO Manual</a>
 </p>
 
 <pre><strong>Prepare the operation/ Query</strong></pre>
