@@ -58,11 +58,11 @@ $matrix_add_response_element = array("name" => "matrix_add_response",
 
 $simple_add_element = array("name" => "simple_add",
                             "namespace" => "http://labs.wso2.org/simple_add",
-                            "type" => "SimpleAdd");
+                            "type" => "simpleAdd");
 
 $simple_add_response_element = array("name" => "simple_add_response",
                             "namespace" => "http://labs.wso2.org/simple_add",
-                            "type" => "SimpleAddResponse");
+                            "type" => "simpleAddResponse");
 
 // types
 /* matrix add type */
@@ -98,7 +98,6 @@ $simple_add_response_type = array(
                     "name" => "simpleAddResponse",
                     "sequence" => array($return_element),
                     "namespace" => "http://labs.wso2.org/simple_add/types");
-
 
 
 /* matrix type */
