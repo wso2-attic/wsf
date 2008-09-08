@@ -79,52 +79,48 @@ void wsf_wsdl_extract_wsdl_information_for_service(
     int cache_wsdl;
     axis2_svc_ctx_t *svc_ctx = NULL;
     axis2_ctx_t *base_ctx = NULL;
+	int lint_script = 1;
+	zval check_function, retval1;
 
-    if (!svc_info->wsdl)
+	if (!svc_info->wsdl)
 	{
         /* if wsdl is not given we are no longer continue in getting wsdl information */
         return;
     }
 	
-    script.type = ZEND_HANDLE_FP;
-	script.filename = WSF_WSDL_DYNAMIC_INVOC_SCRIPT;
-	script.opened_path = NULL;
-	script.free_filename = 0;
+    
 
-
+	ZVAL_STRING(&check_function, WSF_WSDL_CHECK_FUNCTION, 0);
+	if (call_user_function (EG (function_table), (zval **) NULL, 
+		&check_function, &retval1, 0,NULL TSRMLS_CC) == SUCCESS)
 	{
-		int lint_script = 1;
-		{
-			zval check_function, retval1;
-			ZVAL_STRING(&check_function, WSF_WSDL_CHECK_FUNCTION, 0);
-			if (call_user_function (EG (function_table), (zval **) NULL, 
-				&check_function, &retval1, 0,NULL TSRMLS_CC) == SUCCESS)
+			if(Z_TYPE(retval1) == IS_LONG && Z_LVAL(retval1) == 1)
 			{
-					if(Z_TYPE(retval1) == IS_LONG && Z_LVAL(retval1) == 1)
-					{
-						lint_script = 0;							
-					}
+				lint_script = 0;							
 			}
-		}
-		if(lint_script)
-		{
-
-			stream  = php_stream_open_wrapper(WSF_WSDL_DYNAMIC_INVOC_SCRIPT, "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
-			if(!stream)
-				return;
-        
-			if (php_stream_cast(stream, PHP_STREAM_AS_STDIO|PHP_STREAM_CAST_RELEASE, (void*)&new_fp, REPORT_ERRORS) == FAILURE)    {
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                             "[wsf_wsdl] Unable to open script file or file not found");
-			}
-			script.handle.fp =  new_fp;
-			if(script.handle.fp)
-            {
-			    php_lint_script (&script TSRMLS_CC);
-            }
-		}
 	}
-    php_stream_close(stream); 
+
+	if(lint_script)
+	{
+		script.type = ZEND_HANDLE_FP;
+		script.filename = WSF_WSDL_DYNAMIC_INVOC_SCRIPT;
+		script.opened_path = NULL;
+		script.free_filename = 0;
+
+		stream  = php_stream_open_wrapper(WSF_WSDL_DYNAMIC_INVOC_SCRIPT, "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
+		if(!stream)
+			return;
+    
+		if (php_stream_cast(stream, PHP_STREAM_AS_STDIO|PHP_STREAM_CAST_RELEASE, (void*)&new_fp, REPORT_ERRORS) == FAILURE)    {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                         "[wsf_wsdl] Unable to open script file or file not found");
+		}
+		script.handle.fp =  new_fp;
+		if(script.handle.fp)
+        {
+		    php_lint_script (&script TSRMLS_CC);
+        }
+	}
 
     wsf_util_find_and_set_svc_ctx(env, svc_info, wsf_worker_get_conf_ctx(svc_info->php_worker, env));
 
@@ -335,12 +331,6 @@ void wsf_wsdl_extract_wsdl_information_for_client(
     ZVAL_ZVAL(params[0], user_parameters, NULL, NULL);
     INIT_PZVAL(params[0]);
 
-	script.type = ZEND_HANDLE_FP;
-	script.filename = WSF_WSDL_DYNAMIC_INVOC_SCRIPT;
-	script.opened_path = NULL;
-	script.free_filename = 0;
-
-
     {
 		int lint_script = 1;
 		{
@@ -349,14 +339,18 @@ void wsf_wsdl_extract_wsdl_information_for_client(
 			if (call_user_function (EG (function_table), (zval **) NULL, 
 				&check_function, &retval1, 0,NULL TSRMLS_CC) == SUCCESS)
 			{
-					if(Z_TYPE(retval1) == IS_LONG && Z_LVAL(retval1) == 1)
-					{
-						lint_script = 0;							
-					}
+				if(Z_TYPE(retval1) == IS_LONG && Z_LVAL(retval1) == 1)
+				{
+					lint_script = 0;							
+				}
 			}
 		}
 		if(lint_script)
 		{
+			script.type = ZEND_HANDLE_FP;
+			script.filename = WSF_WSDL_DYNAMIC_INVOC_SCRIPT;
+			script.opened_path = NULL;
+			script.free_filename = 0;
 
 			stream  = php_stream_open_wrapper(WSF_WSDL_DYNAMIC_INVOC_SCRIPT, "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
 			if(!stream)
@@ -606,12 +600,6 @@ void wsf_wsdl_create_dynamic_client(
         INIT_PZVAL(params[5]);
     }
 
-	script.type = ZEND_HANDLE_FP;
-	script.filename = WSF_WSDL_DYNAMIC_INVOC_SCRIPT;
-	script.opened_path = NULL;
-	script.free_filename = 0;
-
-
 	{
 		int lint_script = 1;
 		{
@@ -628,6 +616,10 @@ void wsf_wsdl_create_dynamic_client(
 		}
 		if(lint_script)
 		{
+			script.type = ZEND_HANDLE_FP;
+			script.filename = WSF_WSDL_DYNAMIC_INVOC_SCRIPT;
+			script.opened_path = NULL;
+			script.free_filename = 0;
 
 			stream  = php_stream_open_wrapper(WSF_WSDL_DYNAMIC_INVOC_SCRIPT, "rb", USE_PATH|REPORT_ERRORS|ENFORCE_SAFE_MODE, NULL);
 			if(!stream)
@@ -644,7 +636,6 @@ void wsf_wsdl_create_dynamic_client(
             }
 		}
 	}
-    php_stream_close(stream);
 	if (call_user_function (EG (function_table), (zval **) NULL, &request_function, &retval, 6,
                 params TSRMLS_CC) == SUCCESS )
 	{
@@ -1958,7 +1949,4 @@ void wsf_wsdl_set_sig_model(char *wsdl_path, wsf_svc_info_t *svc_info, const axu
             }
         }
     }
-    
-    
-    php_stream_close(stream);
 }
