@@ -1,7 +1,3 @@
-create database ds;
-
-use ds;
-
 CREATE TABLE Customers(
 	customerNumber INTEGER,
 	customerName VARCHAR(50),

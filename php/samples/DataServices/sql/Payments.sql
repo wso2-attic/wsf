@@ -1,5 +1,3 @@
-use ds;
-
 insert into Payments values (103,'HQ336336','2004-10-19',6066.78);
 insert into Payments values (103,'JM555205','2003-06-05',14571.44);
 insert into Payments values (103,'OM314933','2004-12-18',1676.14);

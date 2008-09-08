@@ -1,5 +1,3 @@
-use ds;
-
 insert into Orders values (10100,'2003-01-06','2003-01-13','2003-01-10','Shipped', null, 363);
 insert into Orders values (10101,'2003-01-09','2003-01-18','2003-01-11','Shipped','Check on availability.',128);
 insert into Orders values (10102,'2003-01-10','2003-01-18','2003-01-14','Shipped', null, 181);

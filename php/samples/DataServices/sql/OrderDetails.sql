@@ -1,5 +1,3 @@
-use ds;
-
 insert into OrderDetails values (10100,'S18_1749',30,136.0,3);
 insert into OrderDetails values (10100,'S18_2248',50,55.09,2);
 insert into OrderDetails values (10100,'S18_4409',22,75.46,4);
