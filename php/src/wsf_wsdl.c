@@ -665,6 +665,7 @@ wsf_wsdl_do_request(zval *client_zval,
     axis2_endpoint_ref_t *to_epr = NULL;
     char *soap_action = NULL;
     char *wsa_action = NULL;
+    int is_wsa_submission = 0;
     int soap_version = 2; 
     zval **policy_options = NULL;
     zval **input_headers = NULL;
@@ -716,6 +717,11 @@ wsf_wsdl_do_request(zval *client_zval,
         {
             if(Z_TYPE_PP(tmp_use_wsa) == IS_BOOL) {
                 permit_addressing = Z_BVAL_PP(tmp_use_wsa);
+            }
+            else if(Z_TYPE_PP_(tmp_use_wsa == IS_STRING)) {
+                if(strcmp(Z_STRVAL_PP(tmp_use_wsa), WSF_ADDRESSING_SUBMISSION)) {
+                    is_wsa_submission = 1;
+                }
             }
         }
         if(permit_addressing) {
@@ -872,6 +878,17 @@ wsf_wsdl_do_request(zval *client_zval,
                          "[wsf_wsdl] addressing action present :- %s",
                          wsa_action);
         axis2_svc_client_engage_module (svc_client, env, WSF_MODULE_ADDRESSING);
+
+        if(is_wsa_submission) 
+        {
+            axutil_property_t *prop = axutil_property_create_with_args (env, 0, AXIS2_TRUE, 
+				0, axutil_strdup (env, AXIS2_WSA_NAMESPACE_SUBMISSION));
+
+            axis2_options_set_property (client_options, env, AXIS2_WSA_VERSION, prop);
+
+            AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+                         " addressing version is submission");
+        }
     }
     
     
