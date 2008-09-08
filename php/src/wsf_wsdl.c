@@ -731,15 +731,10 @@ wsf_wsdl_do_request(zval *client_zval,
             {
                 permit_addressing = Z_BVAL_PP(tmp_use_wsa);
             }
-<<<<<<< .mine
-            else if(Z_TYPE_PP_(tmp_use_wsa) == IS_STRING) {
-                if(strcmp(Z_STRVAL_PP(tmp_use_wsa), WSF_ADDRESSING_SUBMISSION)) {
-=======
             else if(Z_TYPE_PP(tmp_use_wsa) == IS_STRING) 
             {
                 if(strcmp(Z_STRVAL_PP(tmp_use_wsa), WSF_ADDRESSING_SUBMISSION) == 0) 
                 {
->>>>>>> .r21581
                     is_wsa_submission = 1;
                 }
             }
