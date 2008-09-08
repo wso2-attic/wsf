@@ -7,9 +7,20 @@ Prerequisites
 
 How to Run Samples
 ==================
-1. You should set the script directory in the wsf/php package root directory to your include_path directives of the php.ini.
-2. Set your database username password in the DB_USERNAME and DB_PASSWORD constants in the constants.php file that you put in the php.ini include_path
-3. Create database 'ds' and run the sql scripts inside the lib/sql directory
+1. You should set the script directory in the wsf/php package root directory to your include_path directives of the php.ini. Please see the README.INSTALL or README.INSTALL_WIN32 for more details.
+2. Set your database username password in the DB_USERNAME and DB_PASSWORD constants in a file called 'constants.php' and put it in to the same directory that the services are.
+3. Create database 'ds' and run the sql scripts inside the lib/sql directory. If you run sql client in command line here is how you can run the scripts with mysql.
+
+  i. fist create the database 'ds'
+       shell#mysql -u 'username' -p
+       mysql#create database 'ds';
+       mysql#quit;
+       shell#
+
+  ii. Then run the "sql/CreateTables.sql" script
+       shell#mysql -u 'username' -p -D ds < sql/CreateTables.sql
+
+  iii. Run the other sql scripts similar to step ii.
 
 Convert WSAS Java Data Services to PHP
 ======================================
