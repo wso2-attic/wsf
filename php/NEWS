@@ -81,8 +81,11 @@ Major Changes Since Last Release
 * Added Replay Detection Support
 * Contract First Web Services support for MTOM
 * SWA ( Soap With Attachments ) Support added
+* MTOM Attachment caching support added
+* HTTP Chunking support added
 * REST API Improved to support HTTP GET,DELETE,PUT and POST
 * New PHP Data Services Solution
+* WS-RM 1.1 added
 * Many Bug Fixes
 
 -------------------
