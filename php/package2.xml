@@ -38,7 +38,7 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
     <active>yes</active>
 </lead>
 
-<date>2008-07-21</date>
+<date>2008-09-12</date>
 <version>
     <release>2.0.0</release>
     <api>2.0.0</api>
@@ -213,6 +213,9 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
             <file name="ping_client_rm_multiple_messages.php"  role="php"/>
             <file name="ping_client_rm.php"  role="php"/>
             <file name="ping_service_rm.php"  role="php"/>
+            <file name="ping_client_rm_11.php"  role="php"/>
+            <file name="echo_client_terminate_outgoing_rm.php"  role="php"/>
+            <file name="echo_client_rm_multiple_messages.php"  role="php"/>
         </dir>
         <dir name="google">
             <file name="google_search.php" role="php"/>
@@ -344,7 +347,6 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
                 <file name="6.jpg" role="php"/>
             </dir>
         </dir>
-    </dir>
     <dir name="docs">
         <file name="api_content.html" role="doc"/>
         <file name="api.html" role="doc"/>
@@ -372,7 +374,7 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
             <file name="api_style.css" role="doc"/>
         </dir>
     </dir>
-  </dir>
+</dir>
 </contents>
 <dependencies>
   <required>
@@ -389,14 +391,14 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
 
  <changelog>
   <release>
-   <date>2007-10-10</date>
+   <date>2008-06-5</date>
    <version>
-    <release>1.1.0</release>
-    <api>1.1.0</api>
+    <release>1.3.2</release>
+    <api>1.3.2</api>
    </version>
    <stability>
-    <release>1.1</release>
-    <api>1.1</api>
+    <release>1.3</release>
+    <api>1.3</api>
    </stability>
    <license uri="http://apache.org/licenses/LICENSE-2.0">Apache2</license>
    <notes>1.3 release of wso2-wsf/php. 
@@ -429,7 +431,7 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
       * WS-SecurityPolicy based configuration  
          
 6. WS-Reliable Messaging
-      * Single channel two way reliable messaging
+      * Single channel one way and two way reliable messaging
 
 7. WSDL Generation for Server Side
       * WSDL generation based on annotations and function signatures, and 
