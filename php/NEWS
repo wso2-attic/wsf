@@ -48,7 +48,7 @@ Key Features
       * WS-Secure Conversation
 
 6. WS-Reliable Messaging
-      * Single channel two way reliable messaging
+      * Single channel one way and two way reliable messaging
 
 7. WSDL Generation for Server Side
       * WSDL generation based on annotations and function signatures, and 
