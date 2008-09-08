@@ -248,6 +248,7 @@ typedef enum ws_input_types
 /** HTTP Methods */
 #define WSF_HTTP_POST "POST"
 #define WSF_HTTP_GET  "GET"
+#define WSF_HTTP_PUT  "PUT"
 #define WSF_WSDL "wsdl"
 #define WSF_WSDL2 "wsdl2"
 #define WSF_LOCALHOST "localhost"
