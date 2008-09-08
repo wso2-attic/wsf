@@ -22,22 +22,19 @@ Contents:
 	PHP Source
 	PHP Binary
 	Win32build [ win32 buildtools for PHP ]
-	Mysql Server 5 [When using Reliable Messaging With MySql Database ]
 
 	In addition you need to have visual studio installed on your system.
 	
 	obtain libxml2 and iconv win32 binaries from [1].
 	obtain OpenSSL binary from [2] [the build system assumes that you install openssl from msi].
-	obtain MySql Server from [3].
-	obtain PHP Source and Bianry from [4].
-	obtain Win32Build from [5].
+	obtain PHP Source and Bianry from [3].
+	obtain Win32Build from [4].
 
 
 	[1] http://www.zlatkovic.com/pub/libxml/
 	[2] http://www.slproweb.com/products/Win32OpenSSL.html
-	[3] http://dev.mysql.com/downloads/
-	[4] http://www.php.net/downloads.php
-	[5] http://www.php.net/extra/win32build.zip 
+	[3] http://www.php.net/downloads.php
+	[4] http://www.php.net/extra/win32build.zip 
 
         
     b. WSF/PHP extension is build on top of WSF/C Web Services Framework. The extension source code
