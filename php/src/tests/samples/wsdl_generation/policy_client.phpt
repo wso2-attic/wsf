@@ -1,5 +1,5 @@
 --TEST--
-class_based - class map provided case
+class_based - class map with policy case
 --FILE--
 <?php
 
@@ -134,7 +134,7 @@ $hello->param2 = $param2;
 $classmap = array("HelloWorldResponse" => "HelloWorldResponse");
 
 // Set up security options
-$policy_xml = file_get_contents("policy.xml");
+$policy_xml = file_get_contents("samples/wsdl_generation/policy.xml");
 $policy = new WSPolicy($policy_xml);
 $security_token = new WSSecurityToken(array("user" => "Alice",
                                             "password" => "abcd!123",
