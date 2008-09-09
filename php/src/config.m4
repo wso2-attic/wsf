@@ -29,6 +29,7 @@ if test "$PHP_WSF" = "yes"; then
 	PHP_ADD_LIBRARY_WITH_PATH(mod_rampart, ../wsf_c/rampartc/src/core/.libs, WSF_SHARED_LIBADD)	
 	PHP_ADD_LIBRARY_WITH_PATH(neethi, ../wsf_c/axis2c/neethi/src/.libs, WSF_SHARED_LIBADD)	
 	PHP_ADD_LIBRARY_WITH_PATH(neethi_util, ../wsf_c/axis2c/neethi/src/util/.libs, WSF_SHARED_LIBADD)
+	PHP_ADD_LIBRARY_WITH_PATH(sandesha2_client, ../wsf_c/sandesha2c/src/client/.libs, WSF_SHARED_LIBADD)
 
   	PHP_SUBST(WSF_SHARED_LIBADD)
 
