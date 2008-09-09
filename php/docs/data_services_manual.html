@@ -12,24 +12,24 @@
 </head>
 
 <body xml:lang="en" lang="en">
-<h1>11. DataServices Manual</h1>
+<h1>11. Data Services Manual</h1>
 
-<p>WSF/PHP comes with a DataService Library. It allows you to expose your
+<p>WSF/PHP comes with a Data Service Library. It allows you to expose your
 Database as a Web Service with Full WS-* support.
 
 
-<h2 id="1">11.1. Writing a Simple DataService</h2>
+<h2 id="1">11.1. Writing a Simple Data Service</h2>
 
 <pre style="text-align: left"><strong>1.<span style="font-family: Verdana">Prepare the Database</span></strong></pre>
 <p>
 Before configuring your database you need to install the PDO extension corresponding to your Database engine. 
 For an example if you select to use "mysql" you have to install the pdo_mysql extension. PDO extensions are
 available for many popular databases like mysql, pgdql, sqlite, odbc, oci, firebird. For this manual I m using 'mysql'
-to demonstrate the use of basic DataServices.
+to demonstrate the use of basic Data Services.
 </p>
 
 <p>
-Now we will first prepare a Database to use in our DataService. Here is my Database Format.</p>
+Now we will first prepare a Database to use in our Data Service. Here is my Database Format.</p>
 
 <p>
 Database Name: ds
@@ -119,7 +119,7 @@ Orders
 
 <p>
 You can use the following commands to create the database and tables.
-Or you can use the sql scripts inside samples/DataServices/sql in the
+Or you can use the sql scripts inside samples/Data Services/sql in the
 wsf/php pack to create these tables and fill sample data</p>
 
 <pre>
@@ -167,7 +167,7 @@ We will straight away look in to the complete code. Please continue reading for 
 </p>
 
 <pre>
-require_once("<span style="color: #ff0033">wso2/DataServices/DataService.php</span>");
+require_once("<span style="color: #ff0033">wso2/Data Services/Data Service.php</span>");
 
 // database configurations
 $config = array(
@@ -194,7 +194,7 @@ $operations = array("<span style="color: #ff0033">customerOrders</span>"=&gt;arr
                                 "<span style="color: #ff0033">outputFormat</span>"=&gt;$outputFormat,
                                 "<span style="color: #ff0033">sql</span>"=&gt;$sql));
 
-$my_data_service = new DataService(array("<span style="color: #ff0033">config</span>"=&gt;$config,
+$my_data_service = new Data Service(array("<span style="color: #ff0033">config</span>"=&gt;$config,
                             "<span style="color: #ff0033">operations</span>"=&gt;$operations));
 $my_data_service-&gt;reply();
 ?&gt;
@@ -213,7 +213,7 @@ $config = array(
 <p>
 Here you need to give the database engine as the "db" option. Note that in
 order to run 'mysql' you need to have the pdo_mysql extension as explained above. Simmilarly you can use pdo_pgsql, pdo_sqlite, and etc to run
-the data service with the corresponding database engines.
+the Data Service with the corresponding database engines.
 </p>
 <p>
 The rest of the configuration are the hostname, username and the password of the your database connection.
@@ -245,7 +245,7 @@ $operations = array("<span style="color: #ff0033">customerOrders</span>"=&gt;arr
                                 "<span style="color: #ff0033">sql</span>"=&gt;$sql));
 </pre>
 <p>
-In the WSF/PHP DataServices, terms operation and query refers to the same set of properties. They both contain the "inputFormat", "outputFormat", "sql", "inputMapping".
+In the WSF/PHP Data Services, terms operation and query refers to the same set of properties. They both contain the "inputFormat", "outputFormat", "sql", "inputMapping".
 </p>
 <p>
 <ul>
@@ -263,15 +263,15 @@ sql - The sql query to execute to provide you the results - This is prepared sta
 
 <p>
 There is an another option "inputMapping" which enable you to select the name of the element name and map
-it in to the names you used in inputFormat option, outputFormat and other inner queries. Please see the API Documentation of DataService for more details.
+it in to the names you used in inputFormat option, outputFormat and other inner queries. Please see the <a href="http://wso2.org/wiki/display/wsfphp/API+for+Data+Services+Revised">Data Services API Documentation</a> for more details.
 </p>
 
 
-<pre><strong>Calling the DataService</strong></pre>
+<pre><strong>Calling the Data Service</strong></pre>
 <pre>
-require_once("<span style="color: #ff0033">wso2/DataServices/DataService.php</span>");
+require_once("<span style="color: #ff0033">wso2/Data Services/Data Service.php</span>");
 
-$my_data_service = new DataService(array("<span style="color: #ff0033">config</span>"=&gt;$config,
+$my_data_service = new Data Service(array("<span style="color: #ff0033">config</span>"=&gt;$config,
                             "<span style="color: #ff0033">operations</span>"=&gt;$operations));
 $my_data_service-&gt;reply();
 ?&gt;
@@ -279,23 +279,23 @@ $my_data_service-&gt;reply();
 </pre>
 
 <p>
-After you prepared the operations/queries you need to create an instance of DataService  class which is declared in "wso2/DataServices/DataService.php"
-relative to the 'scripts' directory packed with WSO2 WSF/PHP. Note that You need to set the include_path directory of php.ini to the 'scripts' directory in order to run DataServices
+After you prepared the operations/queries you need to create an instance of Data Service  class which is declared in "wso2/Data Services/Data Service.php"
+relative to the 'scripts' directory packed with WSO2 WSF/PHP. Note that You need to set the include_path directory of php.ini to the 'scripts' directory in order to run Data Services
 (and  WSDL mode and WSDL generation). Please see the installation manual for more details.
 </p>
 
 <p>
-DataService class is inherited from WSService class. So you can give all the option available in the WSService class constructor to the DataService class constructor as well. For an example
+Data Service class is inherited from WSService class. So you can give all the option available in the WSService class constructor to the Data Service class constructor as well. For an example
 you can enable the security features here by providing valid values for 'policy' and 'securityToken' options.
 </p>
 
-<h2 id="2">11.2. Deploying the DataService</h2>
+<h2 id="2">11.2. Deploying the Data Service</h2>
 <p>
-You can deploy the DataService easily by putting your dataservice script in to your web documents directory. This is similar to how you deploy a normal Webservice with WSF/PHP.
+You can deploy the Data Service easily by putting your dataservice script in to your web documents directory. This is similar to how you deploy a normal Webservice with WSF/PHP.
 </p>
 <h2 id="3">11.3. Writing a Test Client</h2>
 <p>
-You can use the WSF/PHP WSDL Mode to generate a client using your DataService. You can retrieve the WSDL of the service adding '?wsdl' ( or '?wsdl2' for wsdl verison 2.0) to the dataservice
+You can use the WSF/PHP WSDL Mode to generate a client using your Data Service. You can retrieve the WSDL of the service adding '?wsdl' ( or '?wsdl2' for wsdl verison 2.0) to the dataservice
 endpoint.
 </p>
 <p>
