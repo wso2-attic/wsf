@@ -5,7 +5,8 @@ for HTTP Verbs POST,GET,PUT and DELETE.
 * Replay Delection support for secured services.
 * PKCS12 Key Store support.
 * WS-Secure conversation support.
-* MTOM Support with contract first Web Services.
+* MTOM, Custom Headers Support with contract first Web Services.
+* Bundled Data Services library
 * Many bug fixes.
 
 
