@@ -270,6 +270,13 @@ window.addEvent('domready', function() {
         securityusernametokenpolicyfilebasedservice.toggle();
         e.stop();
     });
+    var securityusernametokenpolicyfilebasedpolicy = new Fx.Slide('code-security-username-token-policy-file-based-policy');
+    securityusernametokenpolicyfilebasedpolicy.hide()
+    $('toggle-security-username-token-policy-file-based-policy').addEvent('click', function(e) {
+        e = new Event(e);
+        securityusernametokenpolicyfilebasedpolicy.toggle();
+        e.stop();
+    });
     var securityusernametokencallbackclient = new Fx.Slide('code-security-username-token-call-back-client');
     securityusernametokencallbackclient.hide()
     $('toggle-security-username-token-call-back-client').addEvent('click', function(e) {
@@ -312,6 +319,13 @@ window.addEvent('domready', function() {
         securitytimestamppolicyfilebasedservice.toggle();
         e.stop();
     });
+    var securitytimestamppolicyfilebasedpolicy = new Fx.Slide('code-security-timestamp-policy-file-based-policy');
+    securitytimestamppolicyfilebasedpolicy.hide()
+    $('toggle-security-timestamp-policy-file-based-policy').addEvent('click', function(e) {
+        e = new Event(e);
+        securitytimestamppolicyfilebasedpolicy.toggle();
+        e.stop();
+    });
     var securityencryptionclient = new Fx.Slide('code-security-encryption-client');
     securityencryptionclient.hide()
     $('toggle-security-encryption-client').addEvent('click', function(e) {
@@ -340,6 +354,13 @@ window.addEvent('domready', function() {
         securityencryptionpolicyfilebasedservice.toggle();
         e.stop();
     });
+    var securityencryptionpolicyfilebasedpolicy = new Fx.Slide('code-security-encryption-policy-file-based-policy');
+    securityencryptionpolicyfilebasedpolicy.hide()
+    $('toggle-security-encryption-policy-file-based-policy').addEvent('click', function(e) {
+        e = new Event(e);
+        securityencryptionpolicyfilebasedpolicy.toggle();
+        e.stop();
+    });
     var securitysigningclient = new Fx.Slide('code-security-signing-client');
     securitysigningclient.hide()
     $('toggle-security-signing-client').addEvent('click', function(e) {
@@ -354,6 +375,24 @@ window.addEvent('domready', function() {
         securitysigningservice.toggle();
         e.stop();
     });
+
+    <!-- replay detect -->
+
+    var securityreplaydetectclient = new Fx.Slide('code-security-replay-detect-client');
+    securityreplaydetectclient.hide()
+    $('toggle-security-replay-detect-client').addEvent('click', function(e) {
+        e = new Event(e);
+        securityreplaydetectclient.toggle();
+        e.stop();
+    });
+    var securityreplaydetectservice = new Fx.Slide('code-security-replay-detect-service');
+    securityreplaydetectservice.hide()
+    $('toggle-security-replay-detect-service').addEvent('click', function(e) {
+        e = new Event(e);
+        securityreplaydetectservice.toggle();
+        e.stop();
+    });
+
     var securitysigningpolicyfilebasedclient = new Fx.Slide('code-security-signing-policy-file-based-client');
     securitysigningpolicyfilebasedclient.hide()
     $('toggle-security-signing-policy-file-based-client').addEvent('click', function(e) {
@@ -368,6 +407,91 @@ window.addEvent('domready', function() {
         securitysigningpolicyfilebasedservice.toggle();
         e.stop();
     });
+    var securitysigningpolicyfilebasedpolicy = new Fx.Slide('code-security-signing-policy-file-based-policy');
+    securitysigningpolicyfilebasedpolicy.hide()
+    $('toggle-security-signing-policy-file-based-policy').addEvent('click', function(e) {
+        e = new Event(e);
+        securitysigningpolicyfilebasedpolicy.toggle();
+        e.stop();
+    });
+
+    var securitycompletepolicyfilebasedclient = new Fx.Slide('code-security-complete-policy-file-based-client');
+    securitycompletepolicyfilebasedclient.hide()
+    $('toggle-security-complete-policy-file-based-client').addEvent('click', function(e) {
+        e = new Event(e);
+        securitycompletepolicyfilebasedclient.toggle();
+        e.stop();
+    });
+    var securitycompletepolicyfilebasedservice = new Fx.Slide('code-security-complete-policy-file-based-service');
+    securitycompletepolicyfilebasedservice.hide()
+    $('toggle-security-complete-policy-file-based-service').addEvent('click', function(e) {
+        e = new Event(e);
+        securitycompletepolicyfilebasedservice.toggle();
+        e.stop();
+    });
+    var securitycompletepolicyfilebasedpolicy = new Fx.Slide('code-security-complete-policy-file-based-policy');
+    securitycompletepolicyfilebasedpolicy.hide()
+    $('toggle-security-complete-policy-file-based-policy').addEvent('click', function(e) {
+        e = new Event(e);
+        securitycompletepolicyfilebasedpolicy.toggle();
+        e.stop();
+    });
+
+    var securitysecconv1policyfilebasedclient = new Fx.Slide('code-security-secconv1-policy-file-based-client');
+    securitysecconv1policyfilebasedclient.hide()
+    $('toggle-security-secconv1-policy-file-based-client').addEvent('click', function(e) {
+        e = new Event(e);
+        securitysecconv1policyfilebasedclient.toggle();
+        e.stop();
+    });
+    var securitysecconv1policyfilebasedservice = new Fx.Slide('code-security-secconv1-policy-file-based-service');
+    securitysecconv1policyfilebasedservice.hide()
+    $('toggle-security-secconv1-policy-file-based-service').addEvent('click', function(e) {
+        e = new Event(e);
+        securitysecconv1policyfilebasedservice.toggle();
+        e.stop();
+    });
+    var securitysecconv1policyfilebasedpolicy = new Fx.Slide('code-security-secconv1-policy-file-based-policy');
+    securitysecconv1policyfilebasedpolicy.hide()
+    $('toggle-security-secconv1-policy-file-based-policy').addEvent('click', function(e) {
+        e = new Event(e);
+        securitysecconv1policyfilebasedpolicy.toggle();
+        e.stop();
+    });
+
+    var securitysecconv1stspolicyfilebasedpolicy = new Fx.Slide('code-security-secconv1-sts-policy-file-based-policy');
+    securitysecconv1stspolicyfilebasedpolicy.hide()
+    $('toggle-security-secconv1-sts-policy-file-based-policy').addEvent('click', function(e) {
+        e = new Event(e);
+        securitysecconv1stspolicyfilebasedpolicy.toggle();
+        e.stop();
+    });
+
+
+    var securitysecconv2policyfilebasedclient = new Fx.Slide('code-security-secconv2-policy-file-based-client');
+    securitysecconv2policyfilebasedclient.hide()
+    $('toggle-security-secconv2-policy-file-based-client').addEvent('click', function(e) {
+        e = new Event(e);
+        securitysecconv2policyfilebasedclient.toggle();
+        e.stop();
+    });
+    var securitysecconv2policyfilebasedservice = new Fx.Slide('code-security-secconv2-policy-file-based-service');
+    securitysecconv2policyfilebasedservice.hide()
+    $('toggle-security-secconv2-policy-file-based-service').addEvent('click', function(e) {
+        e = new Event(e);
+        securitysecconv2policyfilebasedservice.toggle();
+        e.stop();
+    });
+    var securitysecconv2policyfilebasedpolicy = new Fx.Slide('code-security-secconv2-policy-file-based-policy');
+    securitysecconv2policyfilebasedpolicy.hide()
+    $('toggle-security-secconv2-policy-file-based-policy').addEvent('click', function(e) {
+        e = new Event(e);
+        securitysecconv2policyfilebasedpolicy.toggle();
+        e.stop();
+    });
+
+
+
     var securitysecuremtomencryptionclient = new Fx.Slide('code-security-secure-mtom-encryption-client');
     securitysecuremtomencryptionclient.hide()
     $('toggle-security-secure-mtom-encryption-client').addEvent('click', function(e) {
@@ -2411,7 +2535,7 @@ $svr-&gt;reply();
   <td colspan="2">
 <a href="security/username_token/client.php">Run client</a> | <a href="security/username_token/service.php?wsdl">WSDL</a> |
 <a href="#" id="toggle-security-username-token-client">show client code</a> |
-<a href="#" id="toggle-security-username-token-service">show code</a>
+<a href="#" id="toggle-security-username-token-service">show server code</a>
 
 <div id="code-security-username-token-service"><br />
 <pre class="prettyprint">&lt;?php
@@ -2531,7 +2655,54 @@ try {
   <td colspan="2">
 <a href="security/username_token/policy_file_based/client.php">Run client</a> | <a href="security/username_token/policy_file_based/service.php?wsdl">WSDL</a> |
 <a href="#" id="toggle-security-username-token-policy-file-based-client">show client code</a> |
-<a href="#" id="toggle-security-username-token-policy-file-based-service">show server code</a>
+<a href="#" id="toggle-security-username-token-policy-file-based-service">show server code</a> |
+<a href="#" id="toggle-security-username-token-policy-file-based-policy">show policy code</a>
+
+<div id="code-security-username-token-policy-file-based-policy"><br />
+<pre class="prettyprint">
+&lt;wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"&gt;
+    &lt;wsp:ExactlyOne&gt;
+        &lt;wsp:All&gt;
+            &lt;sp:AsymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;wsp:Policy&gt;
+                    &lt;sp:InitiatorToken&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient"&gt;
+                                &lt;wsp:Policy&gt;
+                                    &lt;sp:WssX509V3Token10/&gt;
+                                &lt;/wsp:Policy&gt;
+                            &lt;/sp:X509Token&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:InitiatorToken&gt;
+                    &lt;sp:RecipientToken&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never"&gt;
+                                &lt;wsp:Policy&gt;
+                                    &lt;sp:WssX509V3Token10/&gt;
+                                &lt;/wsp:Policy&gt;
+                            &lt;/sp:X509Token&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:RecipientToken&gt;
+                    &lt;sp:Layout&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:Strict/&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:Layout&gt;
+                &lt;/wsp:Policy&gt;
+            &lt;/sp:AsymmetricBinding&gt;
+            &lt;sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+            &lt;wsp:Policy&gt;
+                &lt;sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always"/&gt;
+            &lt;/wsp:Policy&gt;
+            &lt;/sp:SignedSupportingTokens&gt;
+        &lt;/wsp:All&gt;
+    &lt;/wsp:ExactlyOne&gt;
+&lt;/wsp:Policy&gt;
+
+</pre><br />
+</div>
+
+
 
 <div id="code-security-username-token-policy-file-based-service"><br />
 <pre class="prettyprint">&lt;?php
@@ -2896,7 +3067,49 @@ try {
   <td colspan="2">
 <a href="security/timestamp/policy_file_based/client.php">Run client</a> | <a href="security/timestamp/policy_file_based/service.php?wsdl">WSDL</a> |
 <a href="#" id="toggle-security-timestamp-policy-file-based-client">show client code</a> |
-<a href="#" id="toggle-security-timestamp-policy-file-based-service">show server code</a>
+<a href="#" id="toggle-security-timestamp-policy-file-based-service">show server code</a> |
+<a href="#" id="toggle-security-timestamp-policy-file-based-policy">show policy code</a>
+
+<div id="code-security-timestamp-policy-file-based-policy"><br />
+<pre class="prettyprint">
+&lt;wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"&gt;
+    &lt;wsp:ExactlyOne&gt;
+        &lt;wsp:All&gt;
+            &lt;sp:AsymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;wsp:Policy&gt;
+                    &lt;sp:InitiatorToken&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient"&gt;
+                                &lt;wsp:Policy&gt;
+                                    &lt;sp:WssX509V3Token10/&gt;
+                                &lt;/wsp:Policy&gt;
+                            &lt;/sp:X509Token&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:InitiatorToken&gt;
+                    &lt;sp:RecipientToken&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never"&gt;
+                                &lt;wsp:Policy&gt;
+                                    &lt;sp:WssX509V3Token10/&gt;
+                                &lt;/wsp:Policy&gt;
+                            &lt;/sp:X509Token&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:RecipientToken&gt;
+                    &lt;sp:Layout&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:Strict/&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:Layout&gt;
+                    &lt;sp:IncludeTimestamp/&gt;
+                &lt;/wsp:Policy&gt;
+            &lt;/sp:AsymmetricBinding&gt;
+        &lt;/wsp:All&gt;
+    &lt;/wsp:ExactlyOne&gt;
+&lt;/wsp:Policy&gt;
+</pre><br />
+</div>
+
+
 
 <div id="code-security-timestamp-policy-file-based-service"><br />
 <pre class="prettyprint">&lt;?php
@@ -3130,7 +3343,64 @@ try {
   <td colspan="2">
 <a href="security/encryption/policy_file_based/client.php">Run client</a> | <a href="security/encryption/policy_file_based/service.php?wsdl">WSDL</a> |
 <a href="#" id="toggle-security-encryption-policy-file-based-client">show client code</a> |
-<a href="#" id="toggle-security-encryption-policy-file-based-service">show server code</a>
+<a href="#" id="toggle-security-encryption-policy-file-based-service">show server code</a> |
+<a href="#" id="toggle-security-encryption-policy-file-based-policy">show policy code</a>
+
+<div id="code-security-encryption-policy-file-based-policy"><br />
+<pre class="prettyprint">
+&lt;wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"&gt;
+    &lt;wsp:ExactlyOne&gt;
+        &lt;wsp:All&gt;
+            &lt;sp:AsymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;wsp:Policy&gt;
+                    &lt;sp:InitiatorToken&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient"&gt;
+                                &lt;wsp:Policy&gt;
+                                    &lt;sp:WssX509V3Token10/&gt;
+                                &lt;/wsp:Policy&gt;
+                            &lt;/sp:X509Token&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:InitiatorToken&gt;
+                    &lt;sp:RecipientToken&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never"&gt;
+                                &lt;wsp:Policy&gt;
+                                    &lt;sp:WssX509V3Token10/&gt;
+                                &lt;/wsp:Policy&gt;
+                            &lt;/sp:X509Token&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:RecipientToken&gt;
+                    &lt;sp:AlgorithmSuite&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:Basic256Rsa15/&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:AlgorithmSuite&gt;
+                    &lt;sp:Layout&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:Strict/&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:Layout&gt;
+                &lt;/wsp:Policy&gt;
+            &lt;/sp:AsymmetricBinding&gt;
+            &lt;sp:Wss10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;wsp:Policy&gt;
+                    &lt;sp:MustSupportRefKeyIdentifier/&gt;
+                    &lt;sp:MustSupportRefEmbeddedToken/&gt;
+                    &lt;sp:MustSupportRefIssuerSerial/&gt;
+                &lt;/wsp:Policy&gt;
+            &lt;/sp:Wss10&gt;
+            &lt;sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;sp:Body/&gt;
+            &lt;/sp:EncryptedParts&gt;
+        &lt;/wsp:All&gt;
+    &lt;/wsp:ExactlyOne&gt;
+&lt;/wsp:Policy&gt;
+
+</pre><br />
+</div>
+
+
 
 <div id="code-security-encryption-policy-file-based-service"><br />
 <pre class="prettyprint">&lt;?php
@@ -3371,11 +3641,70 @@ try {
   <td colspan="2" class="desc">Signing Client based on a policy file
 </td>
 </tr>
+
 <tr class="odd">
   <td colspan="2">
 <a href="security/signing/policy_file_based/client.php">Run client</a> | <a href="security/signing/policy_file_based/service.php?wsdl">WSDL</a> |
 <a href="#" id="toggle-security-signing-policy-file-based-client">show client code</a> |
-<a href="#" id="toggle-security-signing-policy-file-based-service">show server code</a>
+<a href="#" id="toggle-security-signing-policy-file-based-service">show server code</a> |
+<a href="#" id="toggle-security-signing-policy-file-based-policy">show policy code</a>
+
+<div id="code-security-signing-policy-file-based-policy"><br />
+<pre class="prettyprint">
+&lt;wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"&gt;
+    &lt;wsp:ExactlyOne&gt;
+        &lt;wsp:All&gt;
+            &lt;sp:AsymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;wsp:Policy&gt;
+                    &lt;sp:InitiatorToken&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient"&gt;
+                                &lt;wsp:Policy&gt;
+                                    &lt;sp:WssX509V3Token10/&gt;
+                                &lt;/wsp:Policy&gt;
+                            &lt;/sp:X509Token&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:InitiatorToken&gt;
+                    &lt;sp:RecipientToken&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never"&gt;
+                                &lt;wsp:Policy&gt;
+                                    &lt;sp:WssX509V3Token10/&gt;
+                                &lt;/wsp:Policy&gt;
+                            &lt;/sp:X509Token&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:RecipientToken&gt;
+                    &lt;sp:AlgorithmSuite&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:Basic256Rsa15/&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:AlgorithmSuite&gt;
+                    &lt;sp:Layout&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:Strict/&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:Layout&gt;
+                &lt;/wsp:Policy&gt;
+            &lt;/sp:AsymmetricBinding&gt;
+            &lt;sp:Wss10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;wsp:Policy&gt;
+                    &lt;sp:MustSupportRefKeyIdentifier/&gt;
+                    &lt;sp:MustSupportRefEmbeddedToken/&gt;
+                    &lt;sp:MustSupportRefIssuerSerial/&gt;
+                &lt;/wsp:Policy&gt;
+            &lt;/sp:Wss10&gt;
+            &lt;sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;sp:Body/&gt;
+                &lt;sp:Header Namespace="http://www.w3.org/2005/08/addressing"/&gt;
+            &lt;/sp:SignedParts&gt;
+        &lt;/wsp:All&gt;
+    &lt;/wsp:ExactlyOne&gt;
+&lt;/wsp:Policy&gt;
+
+</pre><br />
+</div>
+
+
 
 <div id="code-security-signing-policy-file-based-service"><br />
 <pre class="prettyprint">&lt;?php
@@ -3487,6 +3816,420 @@ try {
 </div>
   </td>
 </tr>
+
+<!-- replay attack -->
+
+<tr class="odd">
+  <td colspan="2" class="desc">Replay Attack
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+<a href="security/replay_detect/client.php">Run client</a> | <a href="security/replay_detect/service.php?wsdl">WSDL</a> |
+<a href="#" id="toggle-security-replay-detect-client">show client code</a> |
+<a href="#" id="toggle-security-replay-detect-service">show server code</a>
+
+<div id="code-security-replay-detect-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+function echoFunction($inMessage) {
+
+    $returnMessage = new WSMessage($inMessage-&gt;str);
+
+    return $returnMessage;
+}
+
+function array_contains($array_of_string, $str) {
+    foreach ($array_of_string as $value) {
+        if(strcmp($value, $str) == 0) {
+            return TRUE;            
+        }
+    }
+    return FALSE;
+}
+
+function replay_detect_callback($msg_id, $time_created) {
+    
+    $max_duration = 5;
+    if (stristr(PHP_OS, 'WIN')) {
+        $replay_file = "replay.content";
+    }else{
+        $replay_file = "/tmp/replay.content";
+    }
+    $list_of_records = array(); 
+    clearstatcache();   
+    if(file_exists($replay_file))
+    {
+        $length = filesize($replay_file);
+        $fp_rf = fopen($replay_file, "r");
+        if(flock($fp_rf, LOCK_SH)) {
+            $content = fread($fp_rf, $length);
+            flock($fp_rf, LOCK_UN);
+            $tok_rec = strtok($content, '@');
+            while($tok_rec) {
+                $list_of_records[] = $tok_rec;
+                $tok_rec = strtok('@');
+            }
+        } else {
+            echo "Couldn't lock the ".$replay_file." for reading!";
+        }
+        fclose($fp_rf);
+    }else {
+        $fp_rf_w = fopen($replay_file, "w");
+        if(flock($fp_rf_w, LOCK_EX)) {
+            fwrite($fp_rf_w, $msg_id.$time_created.'@');
+            flock($fp_rf_w, LOCK_UN);
+        } else {
+            echo "Couldn't lock the ".$replay_file." for writing!";
+        }
+        fclose($fp_rf_w);
+        return TRUE;
+    }
+
+    if(array_contains($list_of_records, $msg_id.$time_created)) {
+        return FALSE;
+    } else {
+        $elements = count($list_of_records);
+        if($elements == $max_duration) {
+            $new_rcd_list = array_splice($list_of_records, 1);
+            $new_rcd_list[] = $msg_id.$time_created;
+            $fp_rf_w = fopen($replay_file, "w");
+            if(flock($fp_rf_w, LOCK_EX)) {
+                foreach($new_rcd_list as $value) {
+                    fwrite($fp_rf_w, $value.'@');
+                }
+                flock($fp_rf_w, LOCK_UN);
+            } else {
+                echo "Couldn't lock the file for writing!";
+            }
+            fclose($fp_rf_w);
+        } else {
+            $list_of_records[] = $msg_id.$time_created;
+            $fp_rf_w = fopen($replay_file, "w");
+            if(flock($fp_rf_w, LOCK_EX)) {
+                foreach($list_of_records as $value) {
+                    fwrite($fp_rf_w, $value.'@');
+                }
+                flock($fp_rf_w, LOCK_UN);
+            } else {
+                echo "Couldn't lock the file for writing!";
+            }
+
+            fclose($fp_rf_w);
+        }
+    }
+
+    return TRUE;
+}
+
+$operations = array("echoString" =&gt; "echoFunction");
+$actions = array("http://wso2.org/wsfphp/samples/echoString" =&gt; "echoString");
+
+$security_options = array("useUsernameToken" =&gt; TRUE);
+$policy = new WSPolicy(array("security"=&gt;$security_options));
+$security_token = new WSSecurityToken(array("user" =&gt; "Raigama",
+                                            "password" =&gt; "RaigamaPW",
+                                            "passwordType" =&gt; "Digest",
+                        "replayDetectionCallback" =&gt; "replay_detect_callback",
+                        "enableReplayDetect" =&gt; TRUE));
+
+
+$svr = new WSService(array("operations" =&gt; $operations,
+                           "actions" =&gt; $actions,
+                           "policy" =&gt; $policy,
+                           "securityToken" =&gt; $security_token));
+        
+$svr-&gt;reply();
+
+?&gt;
+
+
+</pre><br />
+</div>
+
+<div id="code-security-replay-detect-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+$reqPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:echo xmlns:ns1="http://wso2.org/wsfphp/samples"&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
+XML;
+
+try {
+
+    $reqMessage = new WSMessage($reqPayloadString,
+                                array("to"=&gt;"http://localhost/samples/security/replay_detect/service.php",
+                                      "action" =&gt; "http://wso2.org/wsfphp/samples/echoString"));
+
+    $security_options = array("useUsernameToken" =&gt; TRUE );
+    $policy = new WSPolicy(array("security" =&gt; $security_options));
+    $security_token = new WSSecurityToken(array("user" =&gt; "Raigama",
+                                                "password" =&gt; "RaigamaPW",
+                                                "passwordType" =&gt; "Digest"));
+
+    $client = new WSClient(array("useWSA" =&gt; TRUE,
+                                "policy" =&gt; $policy,
+                                "securityToken" =&gt; $security_token));
+
+    $resMessage = $client-&gt;request($reqMessage);
+
+    printf("Response = %s \n", $resMessage-&gt;str);
+
+} catch (Exception $e) {
+
+    if ($e instanceof WSFault) {
+        printf("Soap Fault: %s\n", $e-&gt;Reason);
+    } else {
+        printf("Message = %s\n",$e-&gt;getMessage());
+    }
+
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+
+
+
+<!--complete -->
+<tr class="odd">
+  <td colspan="2" class="desc">Signing Encryption Timestamp Together based on a policy file
+</td>
+</tr>
+
+
+<tr class="odd">
+  <td colspan="2">
+<a href="security/complete/policy_file_based/client.php">Run client</a> | <a href="security/complete/policy_file_based/service.php?wsdl">WSDL</a> |
+<a href="#" id="toggle-security-complete-policy-file-based-client">show client code</a> |
+<a href="#" id="toggle-security-complete-policy-file-based-service">show server code</a> |
+<a href="#" id="toggle-security-complete-policy-file-based-policy">show policy code</a>
+
+<div id="code-security-complete-policy-file-based-policy"><br />
+<pre class="prettyprint">
+&lt;wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"&gt;
+    &lt;wsp:ExactlyOne&gt;
+        &lt;wsp:All&gt;
+            
+            &lt;sp:AsymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;wsp:Policy&gt;
+                    
+                    &lt;sp:InitiatorToken&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient"&gt;
+                                &lt;wsp:Policy&gt;
+                                    &lt;sp:WssX509V3Token10 /&gt;
+                                &lt;/wsp:Policy&gt;
+                            &lt;/sp:X509Token&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:InitiatorToken&gt;
+                    
+                    &lt;sp:RecipientToken&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never"&gt;
+                                &lt;wsp:Policy&gt;
+                                    &lt;sp:WssX509V3Token10 /&gt;
+                                &lt;/wsp:Policy&gt;
+                            &lt;/sp:X509Token&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:RecipientToken&gt;
+                    
+                    &lt;sp:AlgorithmSuite&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:Basic256Rsa15 /&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:AlgorithmSuite&gt;
+                    
+                    &lt;sp:Layout&gt;
+                        &lt;wsp:Policy&gt;
+                            &lt;sp:Lax /&gt;
+                        &lt;/wsp:Policy&gt;
+                    &lt;/sp:Layout&gt;
+                    
+                    &lt;sp:IncludeTimestamp /&gt;
+                    &lt;sp:EncryptSignature /&gt;
+                    &lt;sp:OnlySignEntireHeadersAndBody /&gt;
+                    
+                &lt;/wsp:Policy&gt;
+            &lt;/sp:AsymmetricBinding&gt;
+                        
+            &lt;sp:Wss10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;wsp:Policy&gt;
+                    &lt;sp:MustSupportRefKeyIdentifier /&gt;                  
+                    &lt;sp:MustSupportRefIssuerSerial /&gt;
+                &lt;/wsp:Policy&gt;
+            &lt;/sp:Wss10&gt;
+
+            &lt;sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;sp:Body /&gt;
+            &lt;/sp:SignedParts&gt;
+
+            &lt;sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;sp:Body /&gt;
+            &lt;/sp:EncryptedParts&gt;
+            
+        &lt;/wsp:All&gt;
+    &lt;/wsp:ExactlyOne&gt;
+&lt;/wsp:Policy&gt;
+</pre><br />
+</div>
+
+
+
+<div id="code-security-complete-policy-file-based-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+function echoFunction($inMessage) {
+
+    $returnMessage = new WSMessage($inMessage-&gt;str);
+
+    return $returnMessage;
+}
+
+$cert = ws_get_cert_from_file("../keys/bob_cert.cert");
+$pvt_key = ws_get_key_from_file("../keys/bob_key.pem");
+$pub_key = ws_get_cert_from_file("../keys/alice_cert.cert");
+
+$operations = array("echoString" =&gt; "echoFunction");
+
+$policy_xml = file_get_contents("policy.xml");
+$policy = new WSPolicy($policy_xml);
+
+$sec_token = new WSSecurityToken(array("privateKey" =&gt; $pvt_key,
+                                       "certificate" =&gt; $cert,
+                                       "receiverCertificate" =&gt; $pub_key));
+
+$actions = array("http://wso2.org/wsfphp/samples/echoString" =&gt; "echoString");
+
+$svr = new WSService(array("operations" =&gt; $operations,
+                           "actions" =&gt; $actions,
+                           "policy" =&gt; $policy,
+                           "securityToken" =&gt; $sec_token));
+
+$svr-&gt;reply();
+
+?&gt;
+
+</pre><br />
+</div>
+
+<div id="code-security-complete-policy-file-based-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$reqPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:echo xmlns:ns1="http://wso2.org/wsfphp/samples"&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
+XML;
+
+try {
+    $my_cert = ws_get_cert_from_file("../keys/alice_cert.cert");
+    $my_key = ws_get_key_from_file("../keys/alice_key.pem");
+    $rec_cert = ws_get_cert_from_file("../keys/bob_cert.cert");
+    
+    $reqMessage = new WSMessage($reqPayloadString,
+                                array("to" =&gt; "http://localhost/samples/security/complete/service.php",
+                                      "action" =&gt; "http://wso2.org/wsfphp/samples/echoString"));
+    
+    
+    $policy_xml = file_get_contents("policy.xml");
+    $policy = new WSPolicy($policy_xml);
+    $sec_token = new WSSecurityToken(array("privateKey" =&gt; $my_key,
+                                           "certificate" =&gt; $my_cert,
+                                           "receiverCertificate" =&gt; $rec_cert));
+    
+    $client = new WSClient(array("useWSA" =&gt; TRUE,
+                                 "useSOAP" =&gt; "1.1",
+                                 "policy" =&gt; $policy,
+                                 "securityToken" =&gt; $sec_token));
+                
+    $resMessage = $client-&gt;request($reqMessage);
+    
+    printf("Response = %s \n", $resMessage-&gt;str);
+
+} catch (Exception $e) {
+
+    if ($e instanceof WSFault) {
+        printf("Soap Fault: %s\n", $e-&gt;Reason);
+    } else {
+        printf("Message = %s\n",$e-&gt;getMessage());
+    }
+}
+
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+
+
 
 <tr class="even">
   <td colspan="2" class="desc">MTOM upload client with encryption enabled
@@ -3806,6 +4549,943 @@ try {
 </div>
   </td>
 </tr>
+
+
+<!--sec-conv scenario1-->
+<tr class="odd">
+  <td colspan="2" class="desc">Secure Conversation - Scenario1
+</td>
+</tr>
+
+
+<tr class="odd">
+  <td colspan="2">
+<a href="security/secure_conversation/scenario1/client.php">Run client</a> | <a href="security/secure_conversation/scenario1/service.php?wsdl">WSDL</a> |
+<a href="#" id="toggle-security-secconv1-policy-file-based-client">show client code</a> |
+<a href="#" id="toggle-security-secconv1-policy-file-based-service">show server code</a> |
+<a href="#" id="toggle-security-secconv1-policy-file-based-policy">show policy code</a> |
+<a href="#" id="toggle-security-secconv1-sts-policy-file-based-policy">show sts policy code</a>
+
+<div id="code-security-secconv1-policy-file-based-policy"><br />
+<pre class="prettyprint">
+&lt;wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"&gt;
+  &lt;wsp:ExactlyOne&gt;
+    &lt;wsp:All&gt;
+      &lt;sp:SymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+        &lt;wsp:Policy&gt;
+          &lt;sp:EncryptionToken&gt;
+            &lt;wsp:Policy&gt;
+              &lt;sp:SecureConversationToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never"&gt;
+                &lt;wsp:Policy&gt;
+                  &lt;sp:SC10SecurityContextToken/&gt;
+                  &lt;sp:BootstrapPolicy&gt;
+                    &lt;wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"&gt;
+                      &lt;wsp:ExactlyOne&gt;
+                        &lt;wsp:All&gt;
+                          &lt;sp:AsymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                            &lt;wsp:Policy&gt;
+                              &lt;sp:InitiatorToken&gt;
+                                &lt;wsp:Policy&gt;
+                                  &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient"&gt;
+                                    &lt;wsp:Policy&gt;
+                                      &lt;sp:WssX509V3Token10/&gt;
+                                    &lt;/wsp:Policy&gt;
+                                  &lt;/sp:X509Token&gt;
+                                &lt;/wsp:Policy&gt;
+                              &lt;/sp:InitiatorToken&gt;
+                              &lt;sp:RecipientToken&gt;
+                                &lt;wsp:Policy&gt;
+                                  &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never"&gt;
+                                    &lt;wsp:Policy&gt;
+                                      &lt;sp:WssX509V3Token10/&gt;
+                                    &lt;/wsp:Policy&gt;
+                                  &lt;/sp:X509Token&gt;
+                                &lt;/wsp:Policy&gt;
+                              &lt;/sp:RecipientToken&gt;
+                              &lt;sp:Layout&gt;
+                                &lt;wsp:Policy&gt;
+                                  &lt;sp:Strict/&gt;
+                                &lt;/wsp:Policy&gt;
+                              &lt;/sp:Layout&gt;
+                              &lt;sp:IncludeTimestamp/&gt;
+                            &lt;/wsp:Policy&gt;
+                          &lt;/sp:AsymmetricBinding&gt;
+                          &lt;rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy"&gt;
+                            &lt;rampc:TimeToLive&gt;360&lt;/rampc:TimeToLive&gt;
+                          &lt;/rampc:RampartConfig&gt;
+                        &lt;/wsp:All&gt;
+                      &lt;/wsp:ExactlyOne&gt;
+                    &lt;/wsp:Policy&gt;
+
+                  &lt;/sp:BootstrapPolicy&gt;
+                &lt;/wsp:Policy&gt;
+              &lt;/sp:SecureConversationToken&gt;
+            &lt;/wsp:Policy&gt;
+          &lt;/sp:EncryptionToken&gt;
+          &lt;sp:SignatureToken&gt;
+            &lt;wsp:Policy&gt;
+              &lt;sp:SecureConversationToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never"&gt;
+                &lt;wsp:Policy&gt;
+                  &lt;sp:SC10SecurityContextToken/&gt;
+                  &lt;sp:BootstrapPolicy&gt;
+                    &lt;wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"&gt;
+                      &lt;wsp:ExactlyOne&gt;
+                        &lt;wsp:All&gt;
+                          &lt;sp:AsymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                            &lt;wsp:Policy&gt;
+                              &lt;sp:InitiatorToken&gt;
+                                &lt;wsp:Policy&gt;
+                                  &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient"&gt;
+                                    &lt;wsp:Policy&gt;
+                                      &lt;sp:WssX509V3Token10/&gt;
+                                    &lt;/wsp:Policy&gt;
+                                  &lt;/sp:X509Token&gt;
+                                &lt;/wsp:Policy&gt;
+                              &lt;/sp:InitiatorToken&gt;
+                              &lt;sp:RecipientToken&gt;
+                                &lt;wsp:Policy&gt;
+                                  &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never"&gt;
+                                    &lt;wsp:Policy&gt;
+                                      &lt;sp:WssX509V3Token10/&gt;
+                                    &lt;/wsp:Policy&gt;
+                                  &lt;/sp:X509Token&gt;
+                                &lt;/wsp:Policy&gt;
+                              &lt;/sp:RecipientToken&gt;
+                              &lt;sp:Layout&gt;
+                                &lt;wsp:Policy&gt;
+                                  &lt;sp:Strict/&gt;
+                                &lt;/wsp:Policy&gt;
+                              &lt;/sp:Layout&gt;
+                              &lt;sp:IncludeTimestamp/&gt;
+                            &lt;/wsp:Policy&gt;
+                          &lt;/sp:AsymmetricBinding&gt;
+                          &lt;rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy"&gt;
+                            &lt;rampc:TimeToLive&gt;360&lt;/rampc:TimeToLive&gt;
+                          &lt;/rampc:RampartConfig&gt;
+                        &lt;/wsp:All&gt;
+                      &lt;/wsp:ExactlyOne&gt;
+                    &lt;/wsp:Policy&gt;
+
+                  &lt;/sp:BootstrapPolicy&gt;
+                &lt;/wsp:Policy&gt;
+              &lt;/sp:SecureConversationToken&gt;
+            &lt;/wsp:Policy&gt;
+          &lt;/sp:SignatureToken&gt;
+          &lt;sp:AlgorithmSuite&gt;
+            &lt;wsp:Policy&gt;
+              &lt;sp:Basic256/&gt;
+            &lt;/wsp:Policy&gt;
+          &lt;/sp:AlgorithmSuite&gt;
+          &lt;sp:Layout&gt;
+            &lt;wsp:Policy&gt;
+              &lt;sp:Strict/&gt;
+            &lt;/wsp:Policy&gt;
+          &lt;/sp:Layout&gt;
+          &lt;sp:IncludeTimestamp/&gt;
+          &lt;sp:OnlySignEntireHeadersAndBody/&gt;
+          &lt;sp:EncryptSignature/&gt;
+        &lt;/wsp:Policy&gt;
+      &lt;/sp:SymmetricBinding&gt;
+      &lt;sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+        &lt;wsp:Policy&gt;
+          &lt;sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always"/&gt;
+        &lt;/wsp:Policy&gt;
+      &lt;/sp:SignedSupportingTokens&gt;
+      &lt;sp:Wss10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+        &lt;wsp:Policy&gt;
+          &lt;sp:MustSupportRefKeyIdentifier/&gt;
+          &lt;sp:MustSupportRefEmbeddedToken/&gt;
+          &lt;sp:MustSupportRefIssuerSerial/&gt;
+        &lt;/wsp:Policy&gt;
+      &lt;/sp:Wss10&gt;
+      &lt;sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+        &lt;sp:Body/&gt;
+        &lt;sp:Header Namespace="http://www.w3.org/2005/08/addressing"/&gt;
+      &lt;/sp:SignedParts&gt;
+      &lt;sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+        &lt;sp:Body/&gt;
+      &lt;/sp:EncryptedParts&gt;
+    &lt;/wsp:All&gt;
+  &lt;/wsp:ExactlyOne&gt;
+&lt;/wsp:Policy&gt;
+
+</pre><br />
+</div>
+
+<div id="code-security-secconv1-sts-policy-file-based-policy"><br />
+<pre class="prettyprint">
+&lt;wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"&gt;
+    &lt;wsp:ExactlyOne&gt;
+        &lt;wsp:All&gt;
+          &lt;sp:SymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+            &lt;wsp:Policy&gt;
+                &lt;sp:ProtectionToken&gt;
+                    &lt;wsp:Policy&gt;
+                        &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never"&gt;
+                            &lt;wsp:Policy&gt;
+                                &lt;sp:RequireDerivedKeys/&gt;
+                                &lt;sp:RequireThumbprintReference/&gt;
+                                &lt;sp:WssX509V3Token10/&gt;
+                            &lt;/wsp:Policy&gt;
+                        &lt;/sp:X509Token&gt;
+                    &lt;/wsp:Policy&gt;
+                &lt;/sp:ProtectionToken&gt;
+                &lt;sp:AlgorithmSuite&gt;
+                    &lt;wsp:Policy&gt;
+                        &lt;sp:Basic256/&gt;
+                    &lt;/wsp:Policy&gt;
+                &lt;/sp:AlgorithmSuite&gt;
+                &lt;sp:Layout&gt;
+                    &lt;wsp:Policy&gt;
+                        &lt;sp:Strict/&gt;
+                    &lt;/wsp:Policy&gt;
+                &lt;/sp:Layout&gt;
+                &lt;sp:IncludeTimestamp/&gt;
+                &lt;sp:EncryptSignature/&gt;
+                &lt;sp:OnlySignEntireHeadersAndBody/&gt;
+            &lt;/wsp:Policy&gt;
+        &lt;/sp:SymmetricBinding&gt; 
+            &lt;sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+            &lt;wsp:Policy&gt;
+                &lt;sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always"/&gt;
+            &lt;/wsp:Policy&gt;
+            &lt;/sp:SignedSupportingTokens&gt;
+            &lt;sp:Wss10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;wsp:Policy&gt;
+                    &lt;sp:MustSupportRefKeyIdentifier/&gt;
+                    &lt;sp:MustSupportRefEmbeddedToken/&gt;
+                    &lt;sp:MustSupportRefIssuerSerial/&gt;
+                &lt;/wsp:Policy&gt;
+            &lt;/sp:Wss10&gt;
+            &lt;sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;sp:Body/&gt;
+            &lt;/sp:EncryptedParts&gt;
+            &lt;sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                &lt;sp:Body/&gt;
+            &lt;/sp:SignedParts&gt;
+        &lt;/wsp:All&gt;
+    &lt;/wsp:ExactlyOne&gt;
+&lt;/wsp:Policy&gt;
+</pre><br />
+</div>
+
+
+<div id="code-security-secconv1-policy-file-based-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+function echoFunction($inMessage) {
+
+    $returnMessage = new WSMessage($inMessage-&gt;str);
+
+    return $returnMessage;
+}
+
+function sct_delete_callback($sct_id,$sct_id_type)
+{
+
+}
+
+function sct_store_callback($sct_str, $global_id,$local_id) {
+    
+    if (stristr(PHP_OS, 'WIN')) {
+        $store_file = "sct.content";
+    }else{
+        $store_file = "/tmp/sct.content";
+    }
+    
+    $fp_store_file_w = fopen($store_file, "a");
+    if(flock($fp_store_file_w, LOCK_EX)) {
+        if(!is_null($global_id)){
+            fwrite($fp_store_file_w, $global_id.'|'.$sct_str.'!');
+        }
+        if(!is_null($local_id)){
+            fwrite($fp_store_file_w,$local_id.'|'.$sct_str.'!');
+        }
+        flock($fp_store_file_w, LOCK_UN);
+    } else {
+        echo "Couldn't lock the ".$store_file." for writing!";
+    }
+    fclose($fp_store_file_w);
+    return TRUE;
+}
+
+function sct_get_callback($sct_id,$sct_id_type, $is_encryption)
+{
+    if (stristr(PHP_OS, 'WIN')) {
+        $sct_file = "sct.content";
+    }else{
+        $sct_file = "/tmp/sct.content";
+    }
+    $sct_array = array();   
+    $sct_id_array = array();    
+    
+    clearstatcache();
+
+    if(file_exists($sct_file))
+    {
+        $length = filesize($sct_file);
+        $fp_rf = fopen($sct_file, "r");
+        if(flock($fp_rf, LOCK_SH)) {
+            $content = fread($fp_rf, $length);
+            flock($fp_rf, LOCK_UN);
+            $tok_rec = strtok($content, '!');
+            $i = 0;
+            while($tok_rec) {
+                $msg_id_sct_str = $tok_rec;
+                $sct_array[$i] = $msg_id_sct_str;
+                $tok_rec = strtok('!');
+                $i++;
+            }
+        } else {
+            echo "Couldn't lock the ".$sct_file." for reading!";
+        }
+        fclose($fp_rf);
+    }
+    foreach($sct_array as $sctidvalue)
+    {
+        $tok1 = strtok($sctidvalue,'|');
+        $tok2 = strtok('|');
+        $sct_id_array[$tok1] = $tok2;
+    }
+
+    if(array_key_exists($sct_id, $sct_id_array))
+    {
+        return $sct_id_array[$sct_id];
+    }
+    return NULL;
+}
+
+$operations = array("echoString" =&gt; "echoFunction","SecConv10Issue"=&gt;"echoFunction");
+$actions = array("http://wso2.org/wsfphp/samples/echoString" =&gt; "echoString",
+                "http://schemas.xmlsoap.org/ws/2005/02/trust/RST/SCT" =&gt; "SecConv10Issue");
+$policy_xml = file_get_contents("policy.xml");
+$policy = new WSPolicy($policy_xml);
+
+$policy_xml = file_get_contents("sts_policy.xml");
+$sts_policy = new WSPolicy($policy_xml);
+
+$rec_cert = ws_get_cert_from_file("../../keys/alice_cert.cert");
+$pvt_key = ws_get_key_from_file("../../keys/bob_key.pem");
+
+$security_token = new WSSecurityToken(array("user" =&gt; "Raigama",
+                                            "password" =&gt; "RaigamaPW",
+                                            "passwordType" =&gt; "Digest",
+                        "storeSCTCallback" =&gt; "sct_store_callback",
+                        "getSCTCallback" =&gt; "sct_get_callback",
+                        "privateKey" =&gt; $pvt_key, 
+                        "receiverCertificate" =&gt; $rec_cert,
+                            "deleteSCTCallback"=&gt;"sct_delete_callback"));
+
+
+$svr = new WSService(array("operations" =&gt; $operations,
+                           "actions" =&gt; $actions,
+               "opPolicies"=&gt;array("echoString"=&gt;$policy, "SecConv10Issue"=&gt;$sts_policy),
+               "useOwnSTS"=&gt;true,
+                           "securityToken" =&gt; $security_token));
+        
+$svr-&gt;reply();
+
+?&gt;
+
+</pre><br />
+</div>
+
+<div id="code-security-secconv1-policy-file-based-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+$reqPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:echo xmlns:ns1="http://wso2.org/wsfphp/samples"&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
+XML;
+
+function sct_delete_callback($sct_id,$sct_id_type)
+{
+
+}
+
+function sct_store_callback($sct_str, $global_id,$local_id) {
+    if (stristr(PHP_OS, 'WIN')) {
+        $store_file = "sct_client.content";
+    }else{
+        $store_file = "/tmp/sct_client.content";
+    }
+       
+    $fp_store_file_w = fopen($store_file, "a");
+    if(flock($fp_store_file_w, LOCK_EX)) {
+        if(!is_null($global_id)){
+            fwrite($fp_store_file_w, $global_id.'|'.$sct_str.'!');
+        }
+        if(!is_null($local_id)){
+            fwrite($fp_store_file_w,$local_id.'|'.$sct_str.'!');
+        }
+        flock($fp_store_file_w, LOCK_UN);    
+    } else {
+        echo "Couldn't lock the ".$store_file." for writing!";
+    }
+    fclose($fp_store_file_w);
+    return TRUE;
+}
+
+function sct_get_callback($sct_id,$sct_id_type, $is_encryption)
+{
+
+    if (stristr(PHP_OS, 'WIN')) {
+        $sct_file = "sct_client.content";
+    }else{
+        $sct_file = "/tmp/sct_client.content";
+    }
+    $sct_array = array();    
+    $sct_id_array = array();    
+    
+    clearstatcache(); 
+        
+    if(file_exists($sct_file))
+    {
+        $length = filesize($sct_file);
+        $fp_rf = fopen($sct_file, "r");
+        if(flock($fp_rf, LOCK_EX)) {
+        $content = fread($fp_rf, $length);
+            flock($fp_rf, LOCK_UN);
+            $tok_rec = strtok($content, '!');
+            $i = 0;
+        while($tok_rec) {
+                $msg_id_sct_str = $tok_rec;
+                $sct_array[$i] = $msg_id_sct_str;
+                $tok_rec = strtok('!');
+                $i++;
+            }
+        } else {
+            echo "Couldn't lock the ".$sct_file." for reading!";
+        }
+        fclose($fp_rf);
+    }
+
+    foreach($sct_array as $sctidvalue)
+    {
+        $tok1 = strtok($sctidvalue,'|');
+        $tok2 = strtok('|');
+    $sct_id_array[$tok1] = $tok2;
+    }
+    
+    if(array_key_exists($sct_id, $sct_id_array))
+    {
+        return $sct_id_array[$sct_id];
+    }
+    return NULL;
+}
+
+try {
+    $rec_cert = ws_get_cert_from_file("../../keys/bob_cert.cert");
+    $pvt_key = ws_get_key_from_file("../../keys/alice_key.pem");
+
+    $reqMessage = new WSMessage($reqPayloadString,
+        array(
+            "to"=&gt;"http://localhost/samples/security/secure_conversation/scenario1/service.php",
+            "action" =&gt; "http://wso2.org/wsfphp/samples/echoString")
+              );
+    $policy_xml = file_get_contents("client_policy.xml");
+    $policy = new WSPolicy($policy_xml);
+    $security_token = new WSSecurityToken(array("user" =&gt; "Raigama",
+                                                "password" =&gt; "RaigamaPW",
+                                                "passwordType" =&gt; "Digest",
+                                                "storeSCTCallback" =&gt; "sct_store_callback",
+                                                "getSCTCallback" =&gt; "sct_get_callback",
+                                                "privateKey" =&gt; $pvt_key, 
+                                                "receiverCertificate" =&gt; $rec_cert,
+                                                "deleteSCTCallback"=&gt;"sct_delete_callback"));
+    
+    $client = new WSClient(array("useWSA" =&gt; TRUE,
+                                 "policy" =&gt; $policy,
+                                 "securityToken" =&gt; $security_token));
+                
+    $resMessage = $client-&gt;request($reqMessage);
+    
+    printf("Response = %s \n", $resMessage-&gt;str);
+
+} catch (Exception $e) {
+
+    if ($e instanceof WSFault) {
+        printf("Soap Fault: %s\n", $e-&gt;Reason);
+    } else {
+        printf("Message = %s\n",$e-&gt;getMessage());
+    }
+
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+
+
+
+
+
+<!--sec-conv scenario2-->
+<tr class="odd">
+  <td colspan="2" class="desc">Secure Conversation - Scenario2
+</td>
+</tr>
+
+
+<tr class="odd">
+  <td colspan="2">
+<a href="security/secure_conversation/scenario2/client.php">Run client</a> | <a href="security/secure_conversation/scenario2/service.php?wsdl">WSDL</a> |
+<a href="#" id="toggle-security-secconv2-policy-file-based-client">show client code</a> |
+<a href="#" id="toggle-security-secconv2-policy-file-based-service">show server code</a> |
+<a href="#" id="toggle-security-secconv2-policy-file-based-policy">show policy code</a>
+
+<div id="code-security-secconv2-policy-file-based-policy"><br />
+<pre class="prettyprint">
+&lt;wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"&gt;
+  &lt;wsp:ExactlyOne&gt;
+    &lt;wsp:All&gt;
+      &lt;sp:SymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+        &lt;wsp:Policy&gt;
+          &lt;sp:EncryptionToken&gt;
+            &lt;wsp:Policy&gt;
+              &lt;sp:SecureConversationToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never"&gt;
+                &lt;wsp:Policy&gt;
+                  &lt;sp:SC10SecurityContextToken/&gt;
+                  &lt;sp:BootstrapPolicy&gt;
+                    &lt;wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"&gt;
+                      &lt;wsp:ExactlyOne&gt;
+                        &lt;wsp:All&gt;
+                          &lt;sp:AsymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                            &lt;wsp:Policy&gt;
+                              &lt;sp:InitiatorToken&gt;
+                                &lt;wsp:Policy&gt;
+                                  &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient"&gt;
+                                    &lt;wsp:Policy&gt;
+                                      &lt;sp:WssX509V3Token10/&gt;
+                                    &lt;/wsp:Policy&gt;
+                                  &lt;/sp:X509Token&gt;
+                                &lt;/wsp:Policy&gt;
+                              &lt;/sp:InitiatorToken&gt;
+                              &lt;sp:RecipientToken&gt;
+                                &lt;wsp:Policy&gt;
+                                  &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never"&gt;
+                                    &lt;wsp:Policy&gt;
+                                      &lt;sp:WssX509V3Token10/&gt;
+                                    &lt;/wsp:Policy&gt;
+                                  &lt;/sp:X509Token&gt;
+                                &lt;/wsp:Policy&gt;
+                              &lt;/sp:RecipientToken&gt;
+                              &lt;sp:Layout&gt;
+                                &lt;wsp:Policy&gt;
+                                  &lt;sp:Strict/&gt;
+                                &lt;/wsp:Policy&gt;
+                              &lt;/sp:Layout&gt;
+                              &lt;sp:IncludeTimestamp/&gt;
+                            &lt;/wsp:Policy&gt;
+                          &lt;/sp:AsymmetricBinding&gt;
+                          &lt;rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy"&gt;
+                            &lt;rampc:TimeToLive&gt;360&lt;/rampc:TimeToLive&gt;
+                          &lt;/rampc:RampartConfig&gt;
+                        &lt;/wsp:All&gt;
+                      &lt;/wsp:ExactlyOne&gt;
+                    &lt;/wsp:Policy&gt;
+
+                  &lt;/sp:BootstrapPolicy&gt;
+                &lt;/wsp:Policy&gt;
+              &lt;/sp:SecureConversationToken&gt;
+            &lt;/wsp:Policy&gt;
+          &lt;/sp:EncryptionToken&gt;
+          &lt;sp:SignatureToken&gt;
+            &lt;wsp:Policy&gt;
+              &lt;sp:SecureConversationToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never"&gt;
+                &lt;wsp:Policy&gt;
+                  &lt;sp:SC10SecurityContextToken/&gt;
+                  &lt;sp:BootstrapPolicy&gt;
+                    &lt;wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"&gt;
+                      &lt;wsp:ExactlyOne&gt;
+                        &lt;wsp:All&gt;
+                          &lt;sp:AsymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+                            &lt;wsp:Policy&gt;
+                              &lt;sp:InitiatorToken&gt;
+                                &lt;wsp:Policy&gt;
+                                  &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient"&gt;
+                                    &lt;wsp:Policy&gt;
+                                      &lt;sp:WssX509V3Token10/&gt;
+                                    &lt;/wsp:Policy&gt;
+                                  &lt;/sp:X509Token&gt;
+                                &lt;/wsp:Policy&gt;
+                              &lt;/sp:InitiatorToken&gt;
+                              &lt;sp:RecipientToken&gt;
+                                &lt;wsp:Policy&gt;
+                                  &lt;sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never"&gt;
+                                    &lt;wsp:Policy&gt;
+                                      &lt;sp:WssX509V3Token10/&gt;
+                                    &lt;/wsp:Policy&gt;
+                                  &lt;/sp:X509Token&gt;
+                                &lt;/wsp:Policy&gt;
+                              &lt;/sp:RecipientToken&gt;
+                              &lt;sp:Layout&gt;
+                                &lt;wsp:Policy&gt;
+                                  &lt;sp:Strict/&gt;
+                                &lt;/wsp:Policy&gt;
+                              &lt;/sp:Layout&gt;
+                              &lt;sp:IncludeTimestamp/&gt;
+                            &lt;/wsp:Policy&gt;
+                          &lt;/sp:AsymmetricBinding&gt;
+                          &lt;rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy"&gt;
+                            &lt;rampc:TimeToLive&gt;360&lt;/rampc:TimeToLive&gt;
+                          &lt;/rampc:RampartConfig&gt;
+                        &lt;/wsp:All&gt;
+                      &lt;/wsp:ExactlyOne&gt;
+                    &lt;/wsp:Policy&gt;
+
+                  &lt;/sp:BootstrapPolicy&gt;
+                &lt;/wsp:Policy&gt;
+              &lt;/sp:SecureConversationToken&gt;
+            &lt;/wsp:Policy&gt;
+          &lt;/sp:SignatureToken&gt;
+          &lt;sp:AlgorithmSuite&gt;
+            &lt;wsp:Policy&gt;
+              &lt;sp:Basic256/&gt;
+            &lt;/wsp:Policy&gt;
+          &lt;/sp:AlgorithmSuite&gt;
+          &lt;sp:Layout&gt;
+            &lt;wsp:Policy&gt;
+              &lt;sp:Strict/&gt;
+            &lt;/wsp:Policy&gt;
+          &lt;/sp:Layout&gt;
+          &lt;sp:IncludeTimestamp/&gt;
+          &lt;sp:OnlySignEntireHeadersAndBody/&gt;
+          &lt;sp:EncryptSignature/&gt;
+        &lt;/wsp:Policy&gt;
+      &lt;/sp:SymmetricBinding&gt;
+      &lt;sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+        &lt;wsp:Policy&gt;
+          &lt;sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always"/&gt;
+        &lt;/wsp:Policy&gt;
+      &lt;/sp:SignedSupportingTokens&gt;
+      &lt;sp:Wss10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+        &lt;wsp:Policy&gt;
+          &lt;sp:MustSupportRefKeyIdentifier/&gt;
+          &lt;sp:MustSupportRefEmbeddedToken/&gt;
+          &lt;sp:MustSupportRefIssuerSerial/&gt;
+        &lt;/wsp:Policy&gt;
+      &lt;/sp:Wss10&gt;
+      &lt;sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+        &lt;sp:Body/&gt;
+        &lt;sp:Header Namespace="http://www.w3.org/2005/08/addressing"/&gt;
+      &lt;/sp:SignedParts&gt;
+      &lt;sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
+        &lt;sp:Body/&gt;
+      &lt;/sp:EncryptedParts&gt;
+    &lt;/wsp:All&gt;
+  &lt;/wsp:ExactlyOne&gt;
+&lt;/wsp:Policy&gt;
+
+</pre><br />
+</div>
+
+
+<div id="code-security-secconv2-policy-file-based-client"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+$reqPayloadString = &lt;&lt;&lt;XML
+&lt;ns1:echo xmlns:ns1="http://wso2.org/wsfphp/samples"&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;
+XML;
+
+function sct_delete_callback($sct_id,$sct_id_type)
+{
+
+}
+
+function sct_store_callback($sct_str, $global_id,$local_id) {
+
+    if (stristr(PHP_OS, 'WIN')) {
+        $store_file = "sct_client.content";
+    }else{
+        $store_file = "/tmp/sct_client.content";
+    }
+       
+    $fp_store_file_w = fopen($store_file, "a");
+    if(flock($fp_store_file_w, LOCK_EX)) {
+        if(!is_null($global_id)){
+            fwrite($fp_store_file_w, $global_id.'|'.$sct_str.'!');
+        }else if(!is_null($local_id)){
+            fwrite($fp_store_file_w,$local_id.'|'.$sct_str.'!');
+        }
+        flock($fp_store_file_w, LOCK_UN);
+    } else {
+        echo "Couldn't lock the ".$store_file." for writing!";
+    }
+    fclose($fp_store_file_w);
+    return TRUE;
+}
+
+function sct_get_callback($sct_id,$sct_id_type, $is_encryption)
+{
+
+    if (stristr(PHP_OS, 'WIN')) {
+        $sct_file = "sct_client.content";
+    }else{
+        $sct_file = "/tmp/sct_client.content";
+    }
+    $sct_array = array();    
+    $sct_id_array = array();    
+    
+    clearstatcache(); 
+        
+    if(file_exists($sct_file))
+    {
+        $length = filesize($sct_file);
+        $fp_rf = fopen($sct_file, "r");
+        if(flock($fp_rf, LOCK_EX)) {
+        $content = fread($fp_rf, $length);
+
+            flock($fp_rf, LOCK_UN);
+            $tok_rec = strtok($content, '!');
+            $i = 0;
+        while($tok_rec) {
+                $msg_id_sct_str = $tok_rec;
+                $sct_array[$i] = $msg_id_sct_str;
+                $tok_rec = strtok('!');
+                $i++;
+            }
+        } else {
+            echo "Couldn't lock the ".$sct_file." for reading!";
+        }
+        fclose($fp_rf);
+    }
+
+    foreach($sct_array as $sctidvalue)
+    {
+        $tok1 = strtok($sctidvalue,'|');
+        $tok2 = strtok('|');
+    $sct_id_array[$tok1] = $tok2;
+    }
+    
+    if(array_key_exists($sct_id, $sct_id_array))
+    {
+        return $sct_id_array[$sct_id];
+    }
+    return NULL;
+}
+
+try {
+
+    $reqMessage = new WSMessage($reqPayloadString,
+        array(
+            "to"=&gt;"http://localhost/samples/security/secure_conversation/scenario2/service.php",
+            "action" =&gt; "http://wso2.org/wsfphp/samples/echoString")
+              );
+    $policy_xml = file_get_contents("policy.xml");
+    $policy = new WSPolicy($policy_xml);
+    $security_token = new WSSecurityToken(array("user" =&gt; "Raigama",
+                                                "password" =&gt; "RaigamaPW",
+                                                "passwordType" =&gt; "Digest",
+                                                "storeSCTCallback" =&gt; "sct_store_callback",
+                                                "getSCTCallback" =&gt; "sct_get_callback",
+                                                "deleteSCTCallback"=&gt;"sct_delete_callback"));
+    
+    $client = new WSClient(array("useWSA" =&gt; TRUE,
+                                 "policy" =&gt; $policy,
+                                 "securityToken" =&gt; $security_token));
+                
+    $resMessage = $client-&gt;request($reqMessage);
+    
+    printf("Response = %s \n", $resMessage-&gt;str);
+
+} catch (Exception $e) {
+
+    if ($e instanceof WSFault) {
+        printf("Soap Fault: %s\n", $e-&gt;Reason);
+    } else {
+        printf("Message = %s\n",$e-&gt;getMessage());
+    }
+
+}
+?&gt;
+</pre><br />
+</div>
+
+<div id="code-security-secconv2-policy-file-based-service"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+function echoFunction($inMessage) {
+
+    $returnMessage = new WSMessage($inMessage-&gt;str);
+
+    return $returnMessage;
+}
+
+function sct_delete_callback($sct_id,$sct_id_type)
+{
+
+}
+
+function sct_store_callback($sct_str, $global_id,$local_id) {
+    
+    if (stristr(PHP_OS, 'WIN')) {
+        $store_file = "sct.content";
+    }else{
+        $store_file = "/tmp/sct.content";
+    }
+    $fp_store_file_w = fopen($store_file, "a");
+    if(flock($fp_store_file_w, LOCK_EX)) {
+        if(!is_null($global_id)){
+            fwrite($fp_store_file_w, $global_id.'|'.$sct_str.'!');
+        }
+        if(!is_null($local_id)){
+            fwrite($fp_store_file_w,$local_id.'|'.$sct_str.'!');
+                }  
+        flock($fp_store_file_w, LOCK_UN);
+    } else {
+        echo "Couldn't lock the ".$store_file." for writing!";
+    }
+    fclose($fp_store_file_w);
+    return TRUE;
+}
+
+function sct_get_callback($sct_id,$sct_id_type, $is_encryption)
+{
+    if (stristr(PHP_OS, 'WIN')) {
+        $sct_file = "sct.content";
+    }else{
+        $sct_file = "/tmp/sct.content";
+    }
+    $sct_array = array();   
+    $sct_id_array = array();    
+    
+    clearstatcache();
+
+    if(file_exists($sct_file))
+    {
+        $length = filesize($sct_file);
+        $fp_rf = fopen($sct_file, "r");
+        if(flock($fp_rf, LOCK_SH)) {
+            $content = fread($fp_rf, $length);
+            flock($fp_rf, LOCK_UN);
+            $tok_rec = strtok($content, '!');
+            $i = 0;
+            while($tok_rec) {
+                $msg_id_sct_str = $tok_rec;
+                $sct_array[$i] = $msg_id_sct_str;
+                $tok_rec = strtok('!');
+                $i++;
+            }
+        } else {
+            echo "Couldn't lock the ".$sct_file." for reading!";
+        }
+        fclose($fp_rf);
+    }
+    foreach($sct_array as $sctidvalue)
+    {
+        $tok1 = strtok($sctidvalue,'|');
+        $tok2 = strtok('|');
+        $sct_id_array[$tok1] = $tok2;
+    }
+
+    if(array_key_exists($sct_id, $sct_id_array))
+    {
+        return $sct_id_array[$sct_id];
+    }
+    return NULL;
+}
+
+$operations = array("echoString" =&gt; "echoFunction");
+$actions = array("http://wso2.org/wsfphp/samples/echoString" =&gt; "echoString");
+$policy_xml = file_get_contents("policy.xml");
+$policy = new WSPolicy($policy_xml);
+
+$security_token = new WSSecurityToken(array("user" =&gt; "Raigama",
+                                            "password" =&gt; "RaigamaPW",
+                                            "passwordType" =&gt; "Digest",
+                        "storeSCTCallback" =&gt; "sct_store_callback",
+                        "getSCTCallback" =&gt; "sct_get_callback",
+                                    "deleteSCTCallback"=&gt;"sct_delete_callback"));
+
+
+$svr = new WSService(array("operations" =&gt; $operations,
+                           "actions" =&gt; $actions,
+               "opPolicies"=&gt;array("echoString"=&gt;$policy),
+               "useOwnSTS"=&gt;true,
+                           "securityToken" =&gt; $security_token));
+        
+$svr-&gt;reply();
+
+?&gt;
+
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+
+
+
 
 <tr class="topic">
   <td colspan="2">Reliable Messaging Samples</td>
