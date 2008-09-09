@@ -484,6 +484,16 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
 
 9. WSDL mode support for both client and server side
       * Write services and client based on a given WSDL
+      
+10. Provide easy to use classes for common services
+      * Consume some well known services such as Yahoo search and Flickr 
+        and Amazon services using predefined classes
+
+11. wsdl2php.php script.
+    * This script can generate PHP classes for services and clients for a given WSDL to be used with WSDL Mode .
+
+12. Data Services API
+    * PHP Data Services API that enables exposing database queries as web services.
 
 </notes>
 </release>
