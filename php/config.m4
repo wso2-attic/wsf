@@ -25,6 +25,7 @@ if test "$PHP_WSF" = "yes"; then
 	PHP_ADD_LIBRARY_WITH_PATH(mod_rampart, /opt/wso2/wsf_c/modules/rampart/, WSF_SHARED_LIBADD)	
 	PHP_ADD_LIBRARY_WITH_PATH(neethi, /opt/wso2/wsf_c/lib/, WSF_SHARED_LIBADD)	
 	PHP_ADD_LIBRARY_WITH_PATH(neethi_util, /opt/wso2/wsf_c/lib/, WSF_SHARED_LIBADD)
+	PHP_ADD_LIBRARY_WITH_PATH(sandesha2_client, /opt/wso2/wsf_c/lib/, WSF_SHARED_LIBADD)
   	PHP_SUBST(WSF_SHARED_LIBADD)
 
 wsf_srcs="src/wsf.c \
