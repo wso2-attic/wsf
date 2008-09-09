@@ -82,6 +82,7 @@ class WS_WSDL_Type
                 $element_namespace = $input_element["namespace"];
                 $element_type = $input_element["type"];
 
+                
 
                 if($element_namespace) {
                     $created_namespace = $this->createNamespace($element_namespace, $wsdl_doc, $types_ele, $public_ns_map,
@@ -116,6 +117,7 @@ class WS_WSDL_Type
                             break;
                         }
                     }
+
 
                     $type_ns = $type_entry["namespace"];
                     if($type_ns == NULL) {
@@ -490,11 +492,12 @@ class WS_WSDL_Type
                         $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $paramName);
                         
                         // listen to the min and max settings
-                        if($paramValue["min"] && is_numeric($paramValue["min"]) && $paramValue["min"] != 1) {
+                        if(array_key_exists("min", $paramValue) &&
+                            $paramValue["min"] && is_numeric($paramValue["min"]) && $paramValue["min"] != 1) {
                             $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_ATTR_MIN_OCCURS, $paramValue["min"]);
                         }
 
-                        if($paramValue["max"]) {
+                        if(array_key_exists("max", $paramValue) && $paramValue["max"]) {
                             // listen to the min and max settings
                             if(is_numeric($paramValue["max"]) && $paramValue["max"] != 1) {
                                 $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_ATTR_MAX_OCCURS, $paramValue["max"]);
@@ -615,11 +618,12 @@ class WS_WSDL_Type
                         $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_NAME_ATTR_NAME, $paramName);
 
                         // listen to the min and max settings
-                        if($paramValue["min"] && is_numeric($paramValue["min"]) && $paramValue["min"] != 1) {
+                        if(array_key_exists("min", $paramValue) && 
+                            $paramValue["min"] && is_numeric($paramValue["min"]) && $paramValue["min"] != 1) {
                             $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_ATTR_MIN_OCCURS, $paramValue["min"]);
                         }
                         
-                        if($paramValue["max"]) {
+                        if(array_key_exists("max", $paramValue) && $paramValue["max"]) {
                             // listen to the min and max settings
                             if(is_numeric($paramValue["max"]) && $paramValue["max"] != 1) {
                                 $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_ATTR_MAX_OCCURS, $paramValue["max"]);
