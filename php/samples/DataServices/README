@@ -3,7 +3,8 @@ Prerequisites
 
 1. WSF/PHP should be Installed in your computer. You can download the latest version from http://wso2.org/projects/wsf/php
 2. You should have PDO PHP extension installed corrosponding to your database driver, for an example to use with mysql you 
-   have to use pdo_mysql extensions installed in your PHP
+   have to use pdo_mysql extensions installed in your PHP. In windows you may need 'pdo' extension to be enabled with 
+   pdo_mysql extension for proper operation.
 
 How to Run Samples
 ==================
