@@ -555,6 +555,25 @@ window.addEvent('domready', function() {
         reliablepingclientrm.toggle();
         e.stop();
     });
+
+    // rm 1.1. stuff
+    var terminateoutgoingclientrm = new Fx.Slide('code-terminate-outgoing-client-rm');
+    terminateoutgoingclientrm.hide()
+    $('toggle-terminate-outgoing-client-rm').addEvent('click', function(e) {
+        e = new Event(e);
+        terminateoutgoingclientrm.toggle();
+        e.stop();
+    });
+
+    var ping11clientrm = new Fx.Slide('code-ping-11-client-rm');
+    ping11clientrm.hide()
+    $('toggle-ping-11-client-rm').addEvent('click', function(e) {
+        e = new Event(e);
+        ping11clientrm.toggle();
+        e.stop();
+    });
+
+
     var reliablepingservicerm = new Fx.Slide('code-reliable-ping-service-rm');
     reliablepingservicerm.hide()
     $('toggle-reliable-ping-service-rm').addEvent('click', function(e) {
@@ -3819,11 +3838,11 @@ try {
 
 <!-- replay attack -->
 
-<tr class="odd">
+<tr class="even">
   <td colspan="2" class="desc">Replay Attack
 </td>
 </tr>
-<tr class="odd">
+<tr class="even">
   <td colspan="2">
 <a href="security/replay_detect/client.php">Run client</a> | <a href="security/replay_detect/service.php?wsdl">WSDL</a> |
 <a href="#" id="toggle-security-replay-detect-client">show client code</a> |
@@ -4552,13 +4571,13 @@ try {
 
 
 <!--sec-conv scenario1-->
-<tr class="odd">
+<tr class="even">
   <td colspan="2" class="desc">Secure Conversation - Scenario1
 </td>
 </tr>
 
 
-<tr class="odd">
+<tr class="even">
   <td colspan="2">
 <a href="security/secure_conversation/scenario1/client.php">Run client</a> | <a href="security/secure_conversation/scenario1/service.php?wsdl">WSDL</a> |
 <a href="#" id="toggle-security-secconv1-policy-file-based-client">show client code</a> |
@@ -5825,6 +5844,135 @@ try {
   </td>
 </tr>
 
+<tr class="odd">
+  <td colspan="2" class="desc">RM 1.1. Client - Terminating the message using terminateOutgoingRM function
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+<a href="reliable/echo_client_terminate_outgoing_rm.php">Run client</a> (<a href="#" id="toggle-terminate-outgoing-client-rm">show code</a>)<br />
+<div id="code-terminate-outgoing-client-rm"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+$reqPayloadString = &lt;&lt;&lt;XML
+    &lt;ns1:echoString xmlns:ns1="http://wso2.org/wsfphp/samples"&gt;
+        &lt;text&gt;Hello World!&lt;/text&gt;
+    &lt;/ns1:echoString&gt;
+XML;
+
+try {
+
+    $msg = new WSMessage($reqPayloadString,
+            array("action" =&gt; "http://wso2.org/wsfphp/samples/echoString"));
+
+    $client = new WSClient(array( "to"=&gt;"http://localhost/samples/reliable/echo_service_rm.php",
+                        "reliable"=&gt;"1.1",
+                        "willContinueSequence" =&gt; TRUE));
+    $result = $client-&gt;request($msg);
+
+    if($result){
+    echo $result-&gt;str;
+    }
+    /** Terminate outgong rm function can be used to terminate the sequence only when using RM 1.1 */
+    $client-&gt;terminateOutgoingRM();
+    $client-&gt;wait(10);
+
+} catch (Exception $e) {
+
+    if ($e instanceof WSFault) {
+        printf("Soap Fault: %s\n", $e-&gt;Reason);
+    } else {
+        printf("Message = %s\n",$e-&gt;getMessage());
+    }
+}
+?&gt;
+
+</pre><br />
+</div>
+  </td>
+</tr>
+
+
+<tr class="odd">
+  <td colspan="2" class="desc">RM 1.1. Client - Ping client
+</td>
+</tr>
+<tr class="odd">
+  <td colspan="2">
+<a href="reliable/ping_client_rm_11.php">Run client</a> (<a href="#" id="toggle-ping-11-client-rm">show code</a>)<br />
+<div id="code-ping-11-client-rm"><br />
+<pre class="prettyprint">
+&lt;?php
+/*
+ * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$requestPayloadString = &lt;&lt;&lt;XML
+    &lt;ns1:pingString xmlns:ns1="http://wso2.org/wsfphp/samples"&gt;
+        &lt;text&gt;Hello World!&lt;/text&gt;
+    &lt;/ns1:pingString&gt;
+XML;
+
+try {
+
+    $requestMessage = new WSMessage($requestPayloadString,
+            array( "to" =&gt; "http://localhost/samples/reliable/ping_service_rm.php",
+                   "action" =&gt; "http://wso2.org/wsfphp/samples/pingString"));
+
+    $client = new WSClient(array( "reliable" =&gt; "1.1" , "useWSA" =&gt; TRUE));
+
+    $client-&gt;send($requestMessage);
+
+    echo "Message Sent to the Endpoint";
+
+    $client-&gt;wait(10);
+
+} catch (Exception $e) {
+
+    if ($e instanceof WSFault) {
+        printf("Soap Fault: %s\n", $e-&gt;Reason);
+    } else {
+        printf("Message = %s\n",$e-&gt;getMessage());
+    }
+}
+?&gt;
+</pre><br />
+</div>
+  </td>
+</tr>
+
+
+
+
 <!--
 <tr class="odd">
   <td colspan="2" class="desc">Single Channel one way RM service with multiple messages
@@ -6027,11 +6175,11 @@ try {
 </div>
 </td>
 </tr>
-<tr class="even">
+<tr class="odd">
   <td colspan="2" class="desc">WSDL mode Client using WSDL 2.0 
 </td>
 </tr>
-<tr class="even">
+<tr class="odd">
   <td colspan="2">
 <a href="wsdl_mode/wsdl_20_client.php">Run client</a> | <a href="wsdl_mode/wsdl_20_service.php?wsdl">WSDL</a> |
 <a href="#" id="toggle-wsdl-mode-wsdl-20-client">show client code</a> |
