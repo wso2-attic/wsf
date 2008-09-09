@@ -27,6 +27,6 @@ $restmap = array ("echoString"=>array("HTTPMethod"=>"GET","RESTLocation"=> "echo
     "echoString1"=>array("HTTPMethod"=>"POST","RESTLocation"=> "echoString"));
 
 $service = new WSService(array("operations" => $operations, "RESTMapping"=>$restmap));
-$service->reply($requestPayloadString);
+$service->reply();
 
 ?>
