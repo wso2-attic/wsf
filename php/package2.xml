@@ -118,9 +118,21 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
             <file name="wsf_help.php" role="php"/>
             <file name="wsf_utils.php" role="php"/>
         </dir>
+       <dir name="dbs2php">
+         <file name="dbs2php.xslt" role="php"/>
+       </dir>
         <dir name="wso2">
+            <dir name="DataServices">
+              <file name="DataService.php" role="php"/>
+              <file name="DSConstants.php" role="php"/>
+              <file name="DSDBExecutor.php" role="php"/>
+              <file name="DSProcessorHandler.php" role="php"/>
+              <file name="DSQueryProcessor.php" role="php"/>
+              <file name="DSUtils.php" role="php"/>
+              <file name="DSWSDLGenerator.php" role="php"/>
+            </dir>
             <dir name="amazon">
-                <file name="AmazonClient.php" role="php"/>
+              <file name="AmazonClient.php" role="php"/>
             </dir>
             <dir name="flickr">
                 <file name="FlickrClient.php" role="php"/>
@@ -221,6 +233,36 @@ WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), a binding of WSO2 WSF/C into
             <file name="google_search.php" role="php"/>
             <file name="google_spell.php" role="php"/>
         </dir>
+       <dir name="DataServices">
+         <file name="CustomerDetailsClient.php" role="php"/>
+         <file name="CustomerDetailsService.php" role="php"/>
+         <file name="CustomerOrdersClient.php" role="php"/>
+         <file name="CustomerOrdersClientWithUsernameToken.php" role="php"/>
+         <file name="CustomerOrdersService.php" role="php"/>
+         <file name="CustomerOrdersServiceWithUsernameToken.php" role="php"/>
+         <file name="CustomersInBostonClient.php" role="php"/>
+         <file name="CustomersInBostonService.php" role="php"/>
+         <file name="demo.php" role="php"/>
+         <file name="EmployeesByNumberClient.php" role="php"/>
+         <file name="EmployeesByNumberService.php" role="php"/>
+         <file name="GeneratedNestedQuery.php" role="php"/>
+         <file name="NestedQueryClient.php" role="php"/>
+         <file name="NestedQueryService.php" role="php"/>
+         <file name="README" role="php"/>
+         <dir name="sql">
+           <file name="CreateTables.sql" role="php"/>
+             <file name="Customers.sql" role="php"/>
+             <file name="Employees.sql" role="php"/>
+             <file name="Offices.sql" role="php"/>
+             <file name="OrderDetails.sql" role="php"/>
+             <file name="Orders.sql" role="php"/>
+             <file name="Payments.sql" role="php"/>
+             <file name="Products.sql" role="php"/>
+         </dir>
+         <dir name="styles">
+           <file name="demo.css" role="php"/>
+         </dir>
+       </dir>
         <dir name="flickr">
             <file name="flickr_client.php" role="php"/>
         </dir>
