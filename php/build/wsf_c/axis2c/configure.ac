@@ -306,7 +306,7 @@ AC_ARG_ENABLE(multi-thread, [  --enable-multi-thread
 
 AC_MSG_CHECKING(whether to use openssl)
 AC_ARG_ENABLE(openssl, [  --enable-openssl  
-                          enable OpenSSL support in client transport (default=no)],
+                          enable OpenSSL support in client transport (default=yes)],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
@@ -319,8 +319,9 @@ AC_ARG_ENABLE(openssl, [  --enable-openssl
     ssl_enabled=true
     ;;
   esac ],
-  AC_MSG_RESULT(no)
-  CFLAGS="$CFLAGS"
+  AC_MSG_RESULT(yes)
+  CFLAGS="$CFLAGS -DAXIS2_SSL_ENABLED"
+  ssl_enabled=true
 )
 
 AC_MSG_CHECKING(whether to use libcurl)
