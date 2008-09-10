@@ -149,7 +149,8 @@ function ws_generate_wsdl($service_name, $fn_arry, $class_arry, $binding_style,
     }
     else if($first_op_name) {
         try {
-            $op_comment = new ReflectionFunction($first_op_name);
+            $op = new ReflectionFunction($first_op_name);
+            $op_comment = $op->getDocComment();
             if(preg_match_all('|@namespace\s+([^\s]+).*|', $op_comment, $matches, PREG_SET_ORDER)) {
                 $namespace = $matches[0][1];
             }
