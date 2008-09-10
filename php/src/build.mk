@@ -17,7 +17,7 @@ LIBS = axutil.lib axis2_engine.lib axis2_parser.lib \
 INCLUDE_PATH = /I$(PHP_SRC_DIR) /I$(PHP_SRC_DIR)\main /I$(PHP_SRC_DIR)\regex \
 	       /I$(PHP_SRC_DIR)\ext /I$(PHP_SRC_DIR)\sapi /I$(PHP_SRC_DIR)\Zend \
 	       /I$(PHP_SRC_DIR)\TSRM /I.\..\$(WSFPHP_BIN_DIR)\wsf_c\include \
-	       /I$(LIBXML2_BIN_DIR)\include /I$(WIN32BUILD_DIR)\include \
+	       /I$(LIBXML2_BIN_DIR)\include /I$(BINDLIB_DIR)\include \
 	       /I$(ICONV_BIN_DIR)\include /I$(OPENSSL_BIN_DIR)\include
 
 
