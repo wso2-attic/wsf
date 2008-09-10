@@ -129,11 +129,12 @@ Contents:
 
   WSO2-WSF-PHP-1.3.2 Win32 Binary Will be compiled using following version of dependency libraries.
 
-  1. PHP     5.2.5
+  1. PHP     5.2.6
   2. Libxml2 2.6.30
   3. Iconv   1.9.2 
   4. openssl .98e (MSI)
 
+Note:- By default, we compiled WSF/PHP with SSL enabled. For it to work properly, apache needs to have SSL configured.
 ===============================================================================================
 If you need any help with building or installation , send a 
 mail to wsf-php-user@wso2.org
