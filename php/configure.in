@@ -30,5 +30,4 @@ OPENSSL_BIN_DIR = E:\OpenSSL
 # Configuration for building wsf/php extension using its own build
 PHP_SRC_DIR = E:\php\php-5.2.5
 PHP_BIN_DIR = E:\php\php-5.2.5-Win32
-WIN32BUILD_DIR = E:\php\win32build
-
+BINDLIB_DIR = E:\php\bindlib-cvs-vc8
