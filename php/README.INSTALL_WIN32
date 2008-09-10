@@ -21,20 +21,20 @@ Contents:
 	OpenSSL binary distribution
 	PHP Source
 	PHP Binary
-	Win32build [ win32 buildtools for PHP ]
+	bindlib [ win32 buildtools for PHP ]
 
 	In addition you need to have visual studio installed on your system.
 	
 	obtain libxml2 and iconv win32 binaries from [1].
 	obtain OpenSSL binary from [2] [the build system assumes that you install openssl from msi].
 	obtain PHP Source and Bianry from [3].
-	obtain Win32Build from [4].
+	obtain bindlib from [4].
 
 
 	[1] http://www.zlatkovic.com/pub/libxml/
 	[2] http://www.slproweb.com/products/Win32OpenSSL.html
 	[3] http://www.php.net/downloads.php
-	[4] http://www.php.net/extra/win32build.zip 
+	[4] http://pecl2.php.net/downloads/php-windows-builds/php-libs/VC8/x86/bindlib-cvs-vc8.zip
 
         
     b. WSF/PHP extension is build on top of WSF/C Web Services Framework. The extension source code
