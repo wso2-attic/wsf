@@ -22,7 +22,7 @@ XML;
 try {
 
     $client = new WSClient(array( "to" => "https://2ec2.wso2.org/samples/echo_service.php",
-                                "CACert" => "./resources/cacert.crt"));
+                                "CACert" => "./resources/cacert.pem"));
                 
     $responseMessage = $client->request( $requestPayloadString );
     
