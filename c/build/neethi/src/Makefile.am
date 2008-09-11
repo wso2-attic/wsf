@@ -1,4 +1,4 @@
-SUBDIRS = secpolicy util
+SUBDIRS = secpolicy rmpolicy util
 lib_LTLIBRARIES=libneethi.la
 
 libneethi_la_SOURCES= all.c   \
@@ -15,6 +15,7 @@ libneethi_la_SOURCES= all.c   \
 libneethi_la_LIBADD  = ../../axiom/src/om/libaxis2_axiom.la \
 			../../util/src/libaxutil.la \
 			secpolicy/builder/librp_builder.la \
+			rmpolicy/librm_policy.la \
 			secpolicy/model/librp_model.la
 
 #libneethi_LIBADD=$(top_builddir)/src/core/description/libaxis2_description.la \
