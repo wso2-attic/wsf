@@ -16,23 +16,25 @@
  */
 
 $requestPayloadString = <<<XML
-    <ns1:echoString xmlns:ns1="http://wso2.org/wsfphp/samples">
-        <text>Hello World!</text>
-    </ns1:echoString>
+<ns1:echoString xmlns:ns1="http://wso2.org/wsfphp/samples"><text>Hello World!</text></ns1:echoString>
 XML;
 
 try {
 
-    $client = new WSClient(array( "to" => "https://localhost/samples/echo_service.php",
-                                  "CACert" => "./resources/cacert.pem"));
-    $responseMessage = $client->request($requestPayloadString);
-    echo $responseMessage->str;
-        
+    $client = new WSClient(array( "to" => "https://2ec2.wso2.org/samples/echo_service.php",
+                                "CACert" => "./resources/cacert.crt"));
+                
+    $responseMessage = $client->request( $requestPayloadString );
+    
+    printf("Response = %s <br>", htmlspecialchars($responseMessage->str));
+
 } catch (Exception $e) {
+
     if ($e instanceof WSFault) {
-        printf("Soap Fault: %s\n", $e->Code);
+        printf("Soap Fault: %s\n", $e->Reason);
     } else {
         printf("Message = %s\n",$e->getMessage());
     }
+
 }
 ?>
