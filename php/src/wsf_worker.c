@@ -35,6 +35,7 @@
 #include "wsf_stream.h"
 #include "wsf_util.h"
 #include "wsf_policy.h"
+#include "wsf.h"
     
 #define READ_SIZE 32
 
