@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:ns1="http://ws.apache.org/axis2/xsd"
+	xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+	xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+	xmlns:ns0="http://ws.apache.org/axis2"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+	targetNamespace="http://ws.apache.org/axis2"
+	
+	xmlns:xmime="http://www.w3.org/2005/05/xmlmime"
+	>
+    <wsdl:types>
+	
+        <xs:schema xmlns:ns="http://ws.apache.org/axis2" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://ws.apache.org/axis2">
+            <xs:element name="getPerson">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="param0" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPersonResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ns1:Person"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="setPerson">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="param0" nillable="true" type="ns1:Person"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="setPersonResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema xmlns:ax21="http://ws.apache.org/axis2/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://ws.apache.org/axis2/xsd">
+		
+			<xs:import namespace="http://www.w3.org/2005/05/xmlmime"
+				schemaLocation="xmime.xsd"/>
+		
+            <xs:complexType name="Person">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="age" type="xs:int"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="images" nillable="true" type="xmime:base64Binary"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="someInts" nillable="true" type="xs:int"/>
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="someStrings" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getPersonRequest">
+        <wsdl:part name="parameters" element="ns0:getPerson"/>
+    </wsdl:message>
+    <wsdl:message name="getPersonResponse">
+        <wsdl:part name="parameters" element="ns0:getPersonResponse"/>
+    </wsdl:message>
+    <wsdl:message name="setPersonRequest">
+        <wsdl:part name="parameters" element="ns0:setPerson"/>
+    </wsdl:message>
+    <wsdl:message name="setPersonResponse">
+        <wsdl:part name="parameters" element="ns0:setPersonResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="aServicePortType">
+        <wsdl:operation name="getPerson">
+            <wsdl:input message="ns0:getPersonRequest" wsaw:Action="urn:getPerson"/>
+            <wsdl:output message="ns0:getPersonResponse" wsaw:Action="urn:getPersonResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="setPerson">
+            <wsdl:input message="ns0:setPersonRequest" wsaw:Action="urn:setPerson"/>
+            <wsdl:output message="ns0:setPersonResponse" wsaw:Action="urn:setPersonResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="aServiceSOAP11Binding" type="ns0:aServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getPerson">
+            <soap:operation soapAction="urn:getPerson" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="setPerson">
+            <soap:operation soapAction="urn:setPerson" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="aServiceSOAP12Binding" type="ns0:aServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getPerson">
+            <soap12:operation soapAction="urn:getPerson" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="setPerson">
+            <soap12:operation soapAction="urn:setPerson" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="aServiceHttpBinding" type="ns0:aServicePortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="getPerson">
+            <http:operation location="aService/getPerson"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="getPerson"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getPerson"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="setPerson">
+            <http:operation location="aService/setPerson"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="setPerson"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="setPerson"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="aService">
+        <wsdl:port name="aServiceSOAP11port_http" binding="ns0:aServiceSOAP11Binding">
+		<soap:address location="http://localhost/samples/wsdl_mode/MtomService.php"/>
+        </wsdl:port>
+        <wsdl:port name="aServiceSOAP12port_http" binding="ns0:aServiceSOAP12Binding">
+		<soap12:address location="http://localhost/samples/wsdl_mode/MtomService.php"/>
+        </wsdl:port>
+        <wsdl:port name="aServiceHttpport" binding="ns0:aServiceHttpBinding">
+		<http:address location="http://localhost/samples/wsdl_mode/MtomService.php"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
