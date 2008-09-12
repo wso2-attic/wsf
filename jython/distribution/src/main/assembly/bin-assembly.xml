@@ -31,7 +31,7 @@
         </fileSet>
         <fileSet>
             <directory>../core/target</directory>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory>lib/jars</outputDirectory>
             <includes>
                 <include>wsf-jython-client-${wsf-jython.version}.jar</include>
             </includes>
@@ -44,4 +44,33 @@
             </includes>
         </fileSet>
     </fileSets>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>lib/jars</outputDirectory>
+            <includes>
+                <include>org.python:jython:jar</include>
+                <include>org.apache.axis2:axis2-kernel:jar</include>
+                <include>backport-util-concurrent:backport-util-concurrent:jar</include>
+                <include>org.apache.ws.commons.schema:XmlSchema:jar</include>
+                <include>org.apache.ws.commons.axiom:axiom-api:jar</include>
+                <include>org.apache.ws.commons.axiom:axiom-dom:jar</include>
+                <include>org.apache.ws.commons.axiom:axiom-impl:jar</include>
+                <include>commons-httpclient:commons-httpclient:jar</include>
+                <include>commons-logging:commons-logging:jar</include>
+                <include>log4j:log4j:jar</include>
+                <include>org.apache.woden:woden-api:jar</include>
+                <include>org.apache.woden:woden-impl-dom:jar</include>
+                <include>wsdl4j:wsdl4j:jar</include>
+                <include>org.apache.neethi:neethi:jar</include>
+                <include>org.apache.rampart:rampart-core:jar</include>
+            </includes>
+        </dependencySet>
+        <dependencySet>
+            <outputDirectory>lib/mars</outputDirectory>
+            <includes>
+                <include>org.apache.axis2:addressing:mar</include>
+                <include>org.apache.rampart:rampart:mar</include>
+            </includes>
+        </dependencySet>
+    </dependencySets>
 </assembly>
