@@ -14,46 +14,46 @@
 	~ limitations under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<!-- The Basics -->
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.wso2.wsf.jython</groupId>
-	<artifactId>jython-distribution</artifactId>
-	<version>SNAPSHOT</version>
-	<packaging>pom</packaging>
-        <name>WSO2 WSF Jython - Distribution</name>
-        <url>http://wso2.org</url>
-	<parent>
-	    <groupId>org.wso2.wsf.jython</groupId>
-	    <artifactId>org.wso2.wsf.jython.client</artifactId>
-	    <version>SNAPSHOT</version>
-	</parent>
-	<!-- Build Settings -->
-	<build>
-	  <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <version>2.2-beta-1</version>
-            <executions>
-                <execution>
-                    <id>distribution-package</id>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>single</goal>
-                    </goals>
-                    <configuration>
-						<finalName>wsf-jython-${wsf-jython.version}</finalName>
-                        <descriptors>
-                            <descriptor>src/main/assembly/bin-assembly.xml</descriptor>
-							<descriptor>src/main/assembly/src-assembly.xml</descriptor>
-                        </descriptors>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>     
-		</plugins>
-	</build>
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <!-- The Basics -->
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.wso2.wsf.jython</groupId>
+    <artifactId>jython-distribution</artifactId>
+    <version>SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>WSO2 WSF Jython - Distribution</name>
+    <url>http://wso2.org</url>
+    <parent>
+        <groupId>org.wso2.wsf.jython</groupId>
+        <artifactId>org.wso2.wsf.jython.client</artifactId>
+        <version>SNAPSHOT</version>
+    </parent>
+    <!-- Build Settings -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2-beta-1</version>
+                <executions>
+                    <execution>
+                        <id>distribution-package</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>wsf-jython-${wsf-jython.version}</finalName>
+                            <descriptors>
+                                <descriptor>src/main/assembly/bin-assembly.xml</descriptor>
+                                <descriptor>src/main/assembly/src-assembly.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
 
