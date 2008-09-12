@@ -25,14 +25,12 @@ Issues can be reported using the public JIRA available at http://wso2.org/jira/b
 Contact us
 ----------
 
-WSO2 WSAS developers can be contacted via mailing lists: 
+WSO2 WSF/Jython developers can be contacted via mailing lists: 
 
-For Users: wsf-jython-user@wso2.org 
-For Developers:wsf-jython-dev@wso2.org
+For Users: wsf-jython-user@wso2.org for subscription please send a mail to wsf-jython-user-request@wso2.org 
+For Developers:wsf-jython-dev@wso2.org for subscription please send a mail to wsf-jython-dev-request@wso2.org 
 
-For details on subscriptions see wsf-spring-dev-request@wso2.org
-
-Alternatively, questions can also be raised in the forums: http://wso2.org/forum/194
+Alternatively, questions can also be raised in the forums: http://wso2.org/forum/797
 Thank you for your interest in WSO2 WSF/Jython
 - The WSO2 WSF/Jython Development Team
 
