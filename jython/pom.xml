@@ -324,6 +324,27 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <dependency>
+            <groupId>stax</groupId>
+            <artifactId>stax-api</artifactId>
+            <version>${stax.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>${activation.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>woodstox</groupId>
+            <artifactId>woodstox-asl</artifactId>
+            <version>${woodstox.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${commons-codec.version}</version>
+        </dependency>
     </dependencies>
 
     <properties>
@@ -345,6 +366,10 @@
         <httpcore.version>4.0-beta1</httpcore.version>
         <commons.fileupload.version>1.2</commons.fileupload.version>
         <xerces.version>2.8.1</xerces.version>
+        <stax.version>1.0.1</stax.version>
+        <activation.version>1.1</activation.version>
+        <woodstox.version>3.2.1</woodstox.version>
+        <commons-codec.version>1.3</commons-codec.version>
         <!--<clover.license.file>TODO</clover.license.file>-->
         <xalan.version>2.7.0</xalan.version>
         <jython.version>2.2.1</jython.version>
