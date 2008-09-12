@@ -14,7 +14,9 @@
 # limitations under the License.
 #
 
-from org.wso2.wsf.jython.client import *
+from org.wso2.wsf.jython.client import WSClient
+from org.wso2.wsf.jython.client import WSFault
+from org.wso2.wsf.jython.client import WSMessage
 
 req_payload_string = "<deduct><var1>1.8</var1><var2>4.87594</var2></deduct>"
 LOG_FILE_NAME = "/home/heshan/IdeaProjects/MRclient/src/python_client.log"

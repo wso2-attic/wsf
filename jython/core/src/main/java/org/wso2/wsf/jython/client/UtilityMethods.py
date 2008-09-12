@@ -14,9 +14,10 @@
 # limitations under the License.
 #
 
+from java.util import HashMap
+
 def dictToJavaMap(dict):
-     import java
-     javaMap =java.util.HashMap()
+     javaMap = HashMap()
      for i in dict.items():
           javaMap[i[0]]=i[1]
      #print 'type conversion method invoked!'

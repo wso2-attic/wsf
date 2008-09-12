@@ -14,7 +14,9 @@
 # limitations under the License.
 #
 
-from org.wso2.wsf.jython.client import *
+from org.wso2.wsf.jython.client import WSClient
+from org.wso2.wsf.jython.client import WSFault
+from org.wso2.wsf.jython.client import WSMessage
 
 LOG_FILE_NAME = "/home/heshan/IdeaProjects/MRclient/src/python_client.log"
 POLICY_FILE_NAME = "/home/heshan/workspace/RampartCheckout/rampart/modules/rampart-samples/policy/sample01/policy.xml"

@@ -14,7 +14,9 @@
 # limitations under the License.
 #
 
-from org.wso2.wsf.jython.client import *
+from org.wso2.wsf.jython.client import WSClient
+from org.wso2.wsf.jython.client import WSFault
+from org.wso2.wsf.jython.client import WSMessage
 
 LOG_FILE_NAME = "/home/heshan/IdeaProjects/MRclient/src/python_client.log"
 END_POINT = "http://localhost:8070/axis2/services/annotationScript/deduct"

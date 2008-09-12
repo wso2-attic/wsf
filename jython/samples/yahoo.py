@@ -14,7 +14,9 @@
 # limitations under the License.
 #
 
-from org.wso2.wsf.jython.client import *
+from org.wso2.wsf.jython.client import WSClient
+from org.wso2.wsf.jython.client import WSFault
+from org.wso2.wsf.jython.client import WSMessage
 
 req_payload_string = "<webSearch><appid>ApacheRestDemo</appid><query>Sri Lanka</query><form/></webSearch>"
 LOG_FILE_NAME = "/home/heshan/IdeaProjects/MRclient/src/ruby_yahoo.log"

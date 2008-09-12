@@ -14,7 +14,9 @@
 # limitations under the License.
 #
 
-from org.wso2.wsf.jython.client import *
+from org.wso2.wsf.jython.client import WSClient
+from org.wso2.wsf.jython.client import WSFault
+from org.wso2.wsf.jython.client import WSMessage
 
 req_payload_string = "<ItemSearch><Service>AWSECommerceService</Service> <SearchIndex>Books</SearchIndex><AWSAccessKeyId>XXXXXXXXXXXXXXXXXXX</AWSAccessKeyId><Operation>ItemSearch</Operation><Keywords>sri lanka travel books</Keywords></ItemSearch>"
 LOG_FILE_NAME = "/home/heshan/IdeaProjects/MRclient/src/python_amazon.log"
