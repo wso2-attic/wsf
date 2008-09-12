@@ -337,7 +337,7 @@
         </dependency>
         <dependency>
             <groupId>woodstox</groupId>
-            <artifactId>woodstox-asl</artifactId>
+            <artifactId>wstx-asl</artifactId>
             <version>${woodstox.version}</version>
         </dependency>
         <dependency>

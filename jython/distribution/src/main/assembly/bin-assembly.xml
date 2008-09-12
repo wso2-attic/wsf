@@ -73,7 +73,7 @@
                 <include>org.apache.rampart:rampart-core:jar</include>
                 <include>stax:stax-api:jar</include>
                 <include>javax.activation:activation:jar</include>
-                <include>woodstox:woodstox-asl:jar</include>
+                <include>woodstox:wstx-asl:jar</include>
                 <include>commons-codec:commons-codec:jar</include>
             </includes>
         </dependencySet>
