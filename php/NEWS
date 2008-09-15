@@ -83,10 +83,9 @@ Major Changes Since Last Release
 * SWA ( Soap With Attachments ) Support added
 * MTOM Attachment caching support added
 * HTTP Chunking support added
-* REST API Improved to support HTTP GET,DELETE,PUT and POST
+* REST API Improved to support HTTP verbs GET,DELETE,PUT and POST
 * New PHP Data Services Solution
 * WS-RM 1.1 added
-* Data Services Solution
 * Many Bug Fixes
 
 -------------------
