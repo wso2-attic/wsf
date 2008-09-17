@@ -93,10 +93,6 @@
             <name>Apache Development Repository</name>
             <url>http://people.apache.org/repo/m2-snapshot-repository</url>
         </repository>
-        <repository>
-            <id>ibiblio repo</id>
-            <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
-        </repository>
     </repositories>
 
     <distributionManagement>
