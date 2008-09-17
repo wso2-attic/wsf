@@ -59,7 +59,9 @@ rem ----- update classpath -----------------------------------------------------
 
 setlocal EnableDelayedExpansion
 cd %WSFJYTHON_HOME%
-FOR %%C in (%WSFJYTHON_HOME%\lib\jars\*.jar) DO set WSFJYTHON_CLASSPATH=!WSFJYTHON_CLASSPATH!;./lib/%%~nC%%~xC
+FOR %%C in (%WSFJYTHON_HOME%\lib\jars\*.jar) DO set WSFJYTHON_CLASSPATH=!WSFJYTHON_CLASSPATH!;./lib/jars/%%~nC%%~xC
+
+FOR %%C in (%WSFJYTHON_HOME%\lib\mars\*.mar) DO set WSFJYTHON_CLASSPATH=!WSFJYTHON_CLASSPATH!;./lib/mars/%%~nC%%~xC
 
 set WSFJYTHON_CLASSPATH="%JAVA_HOME%\lib\tools.jar";"%WSFJYTHON_HOME%\lib\jars";%WSFJYTHON_CLASSPATH%;%CLASSPATH%
 
@@ -68,10 +70,8 @@ rem ----- Process the input command -------------------------------------------
 rem Slurp the command line arguments. This loop allows for an unlimited number
 rem of arguments (up to the command line limit, anyway).
 
-set CMD=RUN
-
 shift
-goto setupArgs
+rem goto setupArgs
 
 
 rem ----- doneStart ------------------------------------------------------------
@@ -121,10 +121,9 @@ rem ----------------- Execute The Requested Command ----------------------------
 :runServer
 cd %WSFJYTHON_HOME%
 
-
 set JAVA_ENDORSED="%JAVA_HOME%\jre\lib\endorsed";"%JAVA_HOME%\lib\endorsed"
 
-"%JAVA_HOME%\bin\java" -classpath %WSFJYTHON_CLASSPATH% %JAVA_OPTS% -Djava.endorsed.dirs=%JAVA_ENDORSED% org.python.util.jython %CMD%
+"%JAVA_HOME%\bin\java" -classpath %WSFJYTHON_CLASSPATH% %JAVA_OPTS% -Djava.endorsed.dirs=%JAVA_ENDORSED% org.python.util.jython %0
 
 :end
 goto endlocal
