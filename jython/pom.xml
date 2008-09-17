@@ -37,8 +37,8 @@
         Now, with just a few lines of code, Jython users can enjoy
         the benefits of Service Oriented Architecture using Web Services
         in their applications. Web Service clients written using WSF/Jython
-        framework could invoke enterprise web services which require WS-Security
-        and whll as support MTOM for sending binary attachments.
+        framework could invoke enterprise web services which require WS-Security.
+        Sending binary attachments as MTOM is also supported.
     </description>
 
     <licenses>

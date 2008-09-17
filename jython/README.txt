@@ -1,13 +1,12 @@
-12th September 2008
+17th September 2008
 
-WSO2 Web Services Framework for Jython alpha
+WSO2 Web Services Framework for Jython 1.0-alpha
 -------------------------------------------
 
-Building with the binary distribution
+Running a client written in Jython
 -------------------------------------
 
-Please follow instructions in the INSTALL file.
-
+Please follow the instrauction in this article http://wso2.org/library/invoking-enterprise-web-services-using-jython
 
 Building the source distribution
 --------------------------------
@@ -20,15 +19,13 @@ NOTE: JDK 1.5 and Maven 2 is required to build the source.
 Support
 -------
 
-Issues can be reported using the public JIRA available at http://wso2.org/jira/browse/WSFJYTHON
+Issues can be reported using the public JIRA available at http://wso2.org/jira/browse/WSFJython
 
 Contact us
 ----------
 
-WSO2 WSF/Jython developers can be contacted via mailing lists: 
-
-For Users: wsf-jython-user@wso2.org for subscription please send a mail to wsf-jython-user-request@wso2.org 
-For Developers:wsf-jython-dev@wso2.org for subscription please send a mail to wsf-jython-dev-request@wso2.org 
+WSO2 WSF/Jython developers can be contacted via the mailing list wsf-general@wso2.org
+To subscribe please send a message to wsf-general-request@wso2.org
 
 Alternatively, questions can also be raised in the forums: http://wso2.org/forum/797
 Thank you for your interest in WSO2 WSF/Jython
