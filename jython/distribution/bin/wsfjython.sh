@@ -129,6 +129,11 @@ do
   WSFJYTHON_CLASSPATH="$WSFJYTHON_CLASSPATH":$f
 done
 
+for g in "$WSFJYTHON_HOME"/lib/mars/*.mar
+do
+  WSFJYTHON_CLASSPATH="$WSFJYTHON_CLASSPATH":$g
+done
+
 WSFJYTHON_CLASSPATH="$JAVA_HOME/lib/tools.jar":"$WSFJYTHON_CLASSPATH":"$CLASSPATH":"$DARWIN_TOOLS"
 
 # For Cygwin, switch paths to Windows format before running java
