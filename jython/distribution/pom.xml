@@ -44,7 +44,7 @@
                             <goal>single</goal>
                         </goals>
                         <configuration>
-                            <finalName>wsf-jython-${wsf-jython.version}</finalName>
+                            <finalName>wsf-jython-client-${wsf-jython.version}</finalName>
                             <descriptors>
                                 <descriptor>src/main/assembly/bin-assembly.xml</descriptor>
                                 <descriptor>src/main/assembly/src-assembly.xml</descriptor>

@@ -16,7 +16,7 @@
 <assembly>
     <id>src</id>
     <includeBaseDirectory>true</includeBaseDirectory>
-    <baseDirectory>wsf-jython-${wsf-jython.version}-src</baseDirectory>
+    <baseDirectory>wsf-jython-client-${wsf-jython.version}-src</baseDirectory>
     <formats>
         <format>zip</format>
     </formats>
@@ -26,7 +26,7 @@
             <outputDirectory>/</outputDirectory>
             <includes>
                 <include>*.txt</include>
-                <include>release-notes.html</include>
+                <include>release-note.html</include>
                 <include>pom.xml</include>
             </includes>
         </fileSet>
