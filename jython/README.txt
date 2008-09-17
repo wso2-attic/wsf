@@ -6,7 +6,7 @@ WSO2 Web Services Framework for Jython 1.0-alpha
 Running a client written in Jython
 -------------------------------------
 
-Please follow the instrauction in this article http://wso2.org/library/invoking-enterprise-web-services-using-jython
+Please follow the instructions in this article http://wso2.org/library/invoking-enterprise-web-services-using-jython
 
 Building the source distribution
 --------------------------------
