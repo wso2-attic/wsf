@@ -347,7 +347,7 @@ axis2_udp_receiver_start(
 			return AXIS2_FAILURE;
 		}
 		/* Set the data required by the thread */
-		args->env = (axutil_env_t *)env;
+		args->env = axutil_init_thread_env(env);
 		args->socket = receiver->socket;
 		args->send_socket = receiver->send_socket;
 		args->conf_ctx = receiver->conf_ctx;
@@ -426,7 +426,7 @@ axis2_udp_receiver_thread_worker_func(
 	axis2_udp_recv_thd_args_t *args = NULL;
 	axis2_udp_response_t response;
 	axutil_hash_index_t *hi = NULL;
-	axutil_hash_t *all_svcs = NULL;
+	axutil_hash_t *ori_all_svcs = NULL, *all_svcs = NULL;
 	axis2_char_t *addr = NULL;
 	int port = 0;
 	void *val = NULL;
@@ -437,11 +437,12 @@ axis2_udp_receiver_thread_worker_func(
 
 	conf = axis2_conf_ctx_get_conf(args->conf_ctx, env);
 	/* Get all the service discriptions */
-	all_svcs = axis2_conf_get_all_svcs(conf, env);
-	if (!all_svcs)
+	ori_all_svcs = axis2_conf_get_all_svcs(conf, env);
+	if (!ori_all_svcs)
 	{
 		return NULL;
 	}
+	all_svcs = axutil_hash_copy(ori_all_svcs, env);	
 	if (args->is_multicast)
 	{
     for (hi = axutil_hash_first(all_svcs, env); hi;
@@ -469,7 +470,7 @@ axis2_udp_receiver_thread_worker_func(
 			response.buf_size = 0;
 			response.buff = NULL;
 
-			/* set the service to the request */
+			/* set the service to the request. This will bypass the dispatches */
 			args->request.svc = svc;
 			/* Process the request */
 			status = axis2_udp_receiver_process_request(args->env, args->conf_ctx, 
