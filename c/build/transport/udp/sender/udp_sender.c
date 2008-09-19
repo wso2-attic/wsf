@@ -35,24 +35,37 @@
 
 #define RES_BUFF 50
 
+/* UDP sender */
 typedef struct axis2_udp_transport_sender_impl
 {
+	/* axis2_transport sender. This struct provides the interface */
 	axis2_transport_sender_t transport_sender;
+	/* If the socket is set it will be used */
 	axis2_socket_t socket;
+	/* Unicast parameters */
 	axis2_udp_transport_params_t unicast;
+	/* Multicast parameters */
 	axis2_udp_transport_params_t multicast;
+	/* Flag to set the multicast sending */
 	axis2_bool_t is_multicast;
+	/* Time that the sender will wait for a response */
 	unsigned int time_out;
 } axis2_udp_transport_sender_impl_t;
 
 /* This structure is used for passsing information to the listner thread */
 typedef struct axis2_udp_transport_sender_args_s
 {
+	/* env is passed to the threa */
 	axutil_env_t *env;
+	/* Actual sender */
 	axis2_udp_transport_sender_impl_t *udp_sender;
+	/* mutex to synchronize the sending and receiving thread */
 	axutil_thread_mutex_t *mutex;	
+	/* Buffer to receive the data */
 	axis2_char_t recv_buffer[AXIS2_UDP_PACKET_MAX_SIZE];
+	/* Buffer length */
 	int recv_buff_len;
+	/* This flag is set when the receiving thread receives a message */
 	axis2_bool_t message_received;
 } axis2_udp_transport_sender_args_t;
 
@@ -63,25 +76,35 @@ axis2_udp_transport_sender_free(
     axis2_transport_sender_t * transport_sender,
     const axutil_env_t * env);
 
+/*
+ * This function will run on a seperate thread to listen for incoming messages 
+ */
 void *AXIS2_THREAD_FUNC
 axis2_udp_sender_thread_worker_func(
     axutil_thread_t * thd,
     void *data);
 
+ /* 
+  * Invoke function 
+  */
 axis2_status_t AXIS2_CALL
 axis2_udp_transport_sender_invoke(
     axis2_transport_sender_t * transport_sender,
     const axutil_env_t * env,
     axis2_msg_ctx_t * msg_ctx);
 
-
+/* 
+ * Clean up function.
+ */
 axis2_status_t AXIS2_CALL
 axis2_udp_transport_sender_clean_up(
     axis2_transport_sender_t * transport_sender,
     const axutil_env_t * env,
     axis2_msg_ctx_t * msg_ctx);
 
-
+/* 
+ * Initialization function. This function will initialize the sender from the axis2.xml conf values.
+ */
 axis2_status_t AXIS2_CALL
 axis2_udp_transport_sender_init(
     axis2_transport_sender_t * transport_sender,
@@ -89,11 +112,15 @@ axis2_udp_transport_sender_init(
     axis2_conf_ctx_t * conf_ctx,
     axis2_transport_out_desc_t * out_desc);
 
+/* 
+ * Utility funtion to retrieve param values from the conf.
+ */ 
 static void AXIS2_CALL
 axis2_udp_transport_set_param_value(
 	const axutil_env_t *env, axutil_param_container_t *container, 
 	axis2_char_t *name, int *value);
 
+/* These are the operations for the sender */
 static const axis2_transport_sender_ops_t udp_transport_sender_ops = {
     axis2_udp_transport_sender_init,
     axis2_udp_transport_sender_invoke,
