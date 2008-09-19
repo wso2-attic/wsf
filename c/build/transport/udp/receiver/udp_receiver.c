@@ -30,7 +30,7 @@
 #include <axiom_soap.h>
 #include <axis2_engine.h>
 
-
+/* UDP Receiver */
 typedef struct axis2_udp_receiver_impl
 {
     axis2_transport_receiver_t udp_receiver;    
@@ -43,6 +43,7 @@ typedef struct axis2_udp_receiver_impl
 
 	/* multicast properties */
 	axis2_bool_t is_multicast;
+	/* multicast group that this receiver listen */
 	axis2_char_t *multicast_group;
 } axis2_udp_receiver_impl_t;
 
@@ -445,6 +446,11 @@ axis2_udp_receiver_thread_worker_func(
 	all_svcs = axutil_hash_copy(ori_all_svcs, env);	
 	if (args->is_multicast)
 	{
+	/* If multicast we go through every service and try to figure out weather they are 
+	   accepting multicast messages. If a service accepts a multicast message we send the 
+	   request to that service bypassing the normal dispatchers. Dispatchers cannot be 
+	   used since no dispatching information is found in the multicast messages 
+	*/
     for (hi = axutil_hash_first(all_svcs, env); hi;
          hi = axutil_hash_next(env, hi))
     {		
@@ -498,6 +504,9 @@ axis2_udp_receiver_thread_worker_func(
 	}
 	else
 	{
+		/* Unicast case. In this case message contais dispatching information. 
+		 * So we send the request in the normal way 
+		 */
 		response.buf_size = 0;
 		response.buff = NULL;
 		args->request.svc = NULL;
@@ -526,7 +535,7 @@ axis2_udp_receiver_thread_worker_func(
 	return NULL;
 }
 
-
+/* Process a request. If the request has a response the response structure will be populated */
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 axis2_udp_receiver_process_request(
 	const axutil_env_t * env,
