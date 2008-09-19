@@ -618,7 +618,10 @@ axis2_udp_transport_sender_init(
 	axis2_udp_transport_set_param_value(env, container, 
 		AXIS2_UDP_TRANSPORT_UNI_UPPER_DELAY_STR, &(udp_sender->unicast.udp_upper_delay));
 
-	
+	/* Set the time out */
+	axis2_udp_transport_set_param_value(env, container, 
+		AXIS2_UDP_TRANSPORT_TIMEOUT, &(udp_sender->time_out));
+
     return AXIS2_SUCCESS;
 }
 

@@ -47,6 +47,8 @@ extern "C"
 #define AXIS2_UDP_TRANSPORT_MUL_MAX_DELAY_STR	"mulMaxDelay"
 #define AXIS2_UDP_TRANSPORT_MUL_UPPER_DELAY_STR	"mulUpperDelay"
 
+#define AXIS2_UDP_TRANSPORT_TIMEOUT				"timeOut"
+
 #define AXIS2_PORT_STRING "port"
 
 #define AXIS2_UDP_PACKET_MAX_SIZE		16384
