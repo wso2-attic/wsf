@@ -247,6 +247,15 @@ axis2_udp_receiver_free(
 	}
 	/* We do not free the conf_ctx as this is not the right place to do it */
 	receiver->conf_ctx = NULL;
+	/* Close the sockets */
+	if (receiver->send_socket != AXIS2_INVALID_SOCKET)
+	{
+		axutil_network_handler_close_socket(env, receiver->send_socket);
+	}
+	if (receiver->socket != AXIS2_INVALID_SOCKET)
+	{
+		axutil_network_handler_close_socket(env, receiver->socket);
+	}
 	AXIS2_FREE(env->allocator, receiver);
 }
 
