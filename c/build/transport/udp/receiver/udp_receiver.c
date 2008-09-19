@@ -265,8 +265,9 @@ axis2_udp_receiver_init(
 
 	receiver = AXIS2_INTF_TO_IMPL(tr_receiver);
 	receiver->conf_ctx = conf_ctx;
-
 	container = axis2_transport_in_desc_param_container(in_desc, env);
+
+	/* Get the port */
 	param = (axutil_param_t *) axutil_param_container_get_param(container, env, AXIS2_PORT_STRING);	
 	if (param)
 	{
@@ -276,7 +277,7 @@ axis2_udp_receiver_init(
 	{
 		receiver->port = atoi(port_str);
 	}
-	
+	/* Get the multicast group */
 	param = (axutil_param_t *) axutil_param_container_get_param(container, env, AXIS2_UDP_TRANSPORT_MULTICAST_GROUP);
 	if (param)
 	{
