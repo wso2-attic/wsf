@@ -25,12 +25,14 @@
 #include <axutil_env.h>
 #include <axis2_conf_ctx.h>
 #include <axis2_transport_receiver.h>
+#include <axutil_network_handler.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
-
+	
+	typedef struct axis2_udp_receiver_impl axis2_udp_receiver_impl_t;
 	/* 
 	 * Create the receiver.
 	 * @param env pointer to axutil_env struct
@@ -66,7 +68,18 @@ extern "C"
 	axis2_udp_receiver_stop(
 		axis2_transport_receiver_t * receiver,
 		const axutil_env_t * env);
-
+	
+	/* Set the receiving socket. Receiver will directly use this socket for listening. 
+	 * A binding to specific port won't happen. 
+	 * @param receiver axis2_transport receiver
+	 * @param env pointer to axutil_env struct
+	 * @param socket datagram socket
+	 */
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	axis2_udp_receiver_set_socket(
+		axis2_transport_receiver_t * receiver,
+		const axutil_env_t * env,
+		axis2_socket_t socket);
 #ifdef __cplusplus
 }
 #endif

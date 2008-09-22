@@ -28,7 +28,6 @@
 #include <axutil_generic_obj.h>
 #include <axutil_types.h>
 #include <axutil_url.h>
-#include <axutil_network_handler.h>
 #include <time.h>
 #include <axis2_options.h>
 #include <axutil_thread.h>
@@ -42,6 +41,8 @@ typedef struct axis2_udp_transport_sender_impl
 	axis2_transport_sender_t transport_sender;
 	/* If the socket is set it will be used */
 	axis2_socket_t socket;
+	/* if true sender should free the socket */
+	axis2_bool_t owns_socket;
 	/* Unicast parameters */
 	axis2_udp_transport_params_t unicast;
 	/* Multicast parameters */
@@ -130,7 +131,7 @@ static const axis2_transport_sender_ops_t udp_transport_sender_ops = {
 
 
 AXIS2_EXTERN axis2_transport_sender_t *AXIS2_CALL
-axis2_udp_transport_sender_create(const axutil_env_t * env)
+axis2_udp_ender_create(const axutil_env_t * env)
 {
 	axis2_udp_transport_sender_impl_t *udp_sender = NULL;
 
@@ -141,7 +142,8 @@ axis2_udp_transport_sender_create(const axutil_env_t * env)
 		return NULL;
 	}	
 	udp_sender->transport_sender.ops = &udp_transport_sender_ops;
-	udp_sender->socket = INVALID_SOCKET;
+	udp_sender->socket = AXIS2_INVALID_SOCKET;
+	udp_sender->owns_socket = AXIS2_TRUE;
 	udp_sender->time_out = 5000;
 	udp_sender->is_multicast = AXIS2_FALSE;
 	return &(udp_sender->transport_sender);
@@ -152,10 +154,116 @@ axis2_udp_transport_sender_free(
     axis2_transport_sender_t * transport_sender,
     const axutil_env_t * env)
 {
-    axis2_udp_transport_sender_impl_t *transport_sender_impl = NULL;    
-    transport_sender_impl = AXIS2_INTF_TO_IMPL(transport_sender);
-    AXIS2_FREE(env->allocator, transport_sender_impl);
+    axis2_udp_transport_sender_impl_t *sender = NULL;    
+    sender = AXIS2_INTF_TO_IMPL(transport_sender);
+	
+	if (sender->owns_socket && sender->socket != AXIS2_INVALID_SOCKET)
+	{
+		axutil_network_handler_close_socket(env, sender->socket);
+	}
+    AXIS2_FREE(env->allocator, sender);
     return;		
+}
+
+axis2_status_t AXIS2_CALL
+axis2_udp_transport_sender_clean_up(
+    axis2_transport_sender_t * transport_sender,
+    const axutil_env_t * env,
+    axis2_msg_ctx_t * msg_ctx)
+{
+	/* We do not have anything to clean */
+	return AXIS2_SUCCESS;
+}
+
+axis2_status_t AXIS2_CALL
+axis2_udp_transport_sender_init(
+    axis2_transport_sender_t * transport_sender,
+    const axutil_env_t * env,
+    axis2_conf_ctx_t * conf_ctx,
+    axis2_transport_out_desc_t * out_desc)
+{
+	axutil_param_container_t *container = NULL;
+	axis2_udp_transport_sender_impl_t *udp_sender = NULL;   
+	axutil_param_t *temp_param = NULL;
+	axis2_char_t *temp = NULL;
+	
+	udp_sender = AXIS2_INTF_TO_IMPL(transport_sender);
+	/* Setting the default values */
+	udp_sender->multicast.udp_max_delay = AXIS2_UDP_TRANSPORT_MUL_MAX_DELAY;
+	udp_sender->multicast.udp_min_delay = AXIS2_UDP_TRANSPORT_MUL_MIN_DELAY;
+	udp_sender->multicast.udp_repeat = AXIS2_UDP_TRANSPORT_MUL_REPEAT;
+	udp_sender->multicast.udp_upper_delay = AXIS2_UDP_TRANSPORT_MUL_UPPER_DELAY;
+
+	udp_sender->unicast.udp_max_delay = AXIS2_UDP_TRANSPORT_UNI_MAX_DELAY;
+	udp_sender->unicast.udp_min_delay = AXIS2_UDP_TRANSPORT_UNI_MIN_DELAY;
+	udp_sender->unicast.udp_repeat = AXIS2_UDP_TRANSPORT_UNI_REPEAT;
+	udp_sender->unicast.udp_upper_delay = AXIS2_UDP_TRANSPORT_UNI_UPPER_DELAY;
+
+	udp_sender->is_multicast = AXIS2_FALSE;
+	container = axis2_transport_out_desc_param_container(out_desc, env);
+    temp_param = axutil_param_container_get_param(container, env, AXIS2_UDP_TRANSPORT_IS_MULTICAT);
+	if (temp_param)
+	{
+		temp = axutil_param_get_value(temp_param, env);
+		if (axutil_strcmp(temp, "true"))
+		{
+			udp_sender->is_multicast = AXIS2_TRUE;
+		}
+		else if (axutil_strcmp(temp, "false"))
+		{
+			udp_sender->is_multicast = AXIS2_FALSE;	
+		}
+		else
+		{
+			/* Here we quit */
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+				"Invalid configuration for multicast parameter");
+			return AXIS2_FAILURE;
+		}
+	}
+	
+	/* Setting the user defined values */
+	axis2_udp_transport_set_param_value(env, container, 
+		AXIS2_UDP_TRANSPORT_MUL_MAX_DELAY_STR, &(udp_sender->multicast.udp_max_delay));
+	axis2_udp_transport_set_param_value(env, container, 
+		AXIS2_UDP_TRANSPORT_MUL_MIN_DELAY_STR, &(udp_sender->multicast.udp_min_delay));
+	axis2_udp_transport_set_param_value(env, container, 
+		AXIS2_UDP_TRANSPORT_MUL_REPEAT_STR, &(udp_sender->multicast.udp_repeat));
+	axis2_udp_transport_set_param_value(env, container, 
+		AXIS2_UDP_TRANSPORT_MUL_UPPER_DELAY_STR, &(udp_sender->multicast.udp_upper_delay));
+
+	axis2_udp_transport_set_param_value(env, container, 
+		AXIS2_UDP_TRANSPORT_UNI_MAX_DELAY_STR, &(udp_sender->unicast.udp_max_delay));
+	axis2_udp_transport_set_param_value(env, container, 
+		AXIS2_UDP_TRANSPORT_UNI_MIN_DELAY_STR, &(udp_sender->unicast.udp_min_delay));
+	axis2_udp_transport_set_param_value(env, container, 
+		AXIS2_UDP_TRANSPORT_UNI_REPEAT_STR, &(udp_sender->unicast.udp_repeat));
+	axis2_udp_transport_set_param_value(env, container, 
+		AXIS2_UDP_TRANSPORT_UNI_UPPER_DELAY_STR, &(udp_sender->unicast.udp_upper_delay));
+
+	/* Set the time out */
+	axis2_udp_transport_set_param_value(env, container, 
+		AXIS2_UDP_TRANSPORT_TIMEOUT, &(udp_sender->time_out));
+
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+axis2_udp_sender_set_socket(
+    axis2_transport_sender_t * transport_sender,
+    const axutil_env_t * env,
+	axis2_socket_t socket)
+{
+	axis2_udp_transport_sender_impl_t *udp_sender = NULL;   
+	udp_sender = AXIS2_INTF_TO_IMPL(transport_sender);		
+	/* We only let a socket to be set only if there is no socket set */
+	if (udp_sender->socket == AXIS2_INVALID_SOCKET)
+	{
+		udp_sender->socket = socket;
+		udp_sender->owns_socket = AXIS2_FALSE;
+		return AXIS2_SUCCESS;
+	}
+	return AXIS2_SUCCESS;
 }
 
 axis2_status_t AXIS2_CALL
@@ -186,9 +294,6 @@ axis2_udp_transport_sender_invoke(
 	int udp_max_delay;
 	int udp_upper_delay;
 	int T;
-	/*axis2_bool_t message_received = AXIS2_FALSE;*/
-	/*axis2_char_t recv_buffer[AXIS2_UDP_PACKET_MAX_SIZE];
-	int recv_buff_len = AXIS2_UDP_PACKET_MAX_SIZE;*/
 	axis2_bool_t is_oneway = AXIS2_FALSE;
 
 	
@@ -300,7 +405,6 @@ axis2_udp_transport_sender_invoke(
         axiom_stax_builder_t *builder = NULL;
         axiom_soap_builder_t *soap_builder = NULL;
         axiom_soap_envelope_t *soap_envelope = NULL;
-		/*axis2_socket_t send_socket;*/
 		axutil_property_t *prop = NULL;
 		axis2_char_t *prop_val = NULL;
 		axis2_options_t *options = NULL;
@@ -392,14 +496,17 @@ axis2_udp_transport_sender_invoke(
 				return AXIS2_FAILURE;
 			}
 		}
+		if (sender->socket == AXIS2_INVALID_SOCKET)
+		{
+			sender->socket = (int)axutil_network_handler_open_dgram_socket(env);
+		}
 		
-		sender->socket = (int)axutil_network_handler_open_dgram_socket(env);
-		if (!sender->socket)
+		if (sender->socket == AXIS2_INVALID_SOCKET)
 		{
 			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Socket creation failed");
 			return AXIS2_FAILURE;
 		}		
-		
+		/* retreive the back-off algorithm values */
 		if (sender->is_multicast)
 		{
 			udp_repeat = sender->multicast.udp_repeat;
@@ -414,7 +521,7 @@ axis2_udp_transport_sender_invoke(
 			udp_min_delay = sender->unicast.udp_min_delay;
 			udp_upper_delay = sender->unicast.udp_upper_delay;
 		}	
-
+		/* Check weather we want to send a response */
 	    op = axis2_msg_ctx_get_op(msg_ctx, env);	
 		if (op)
 		{	
@@ -470,7 +577,7 @@ axis2_udp_transport_sender_invoke(
 			axutil_thread_pool_thread_detach(env->thread_pool, thread);
 			/* Sleep */
 			AXIS2_USLEEP(T);
-			while (udp_repeat > 0)
+			while (udp_repeat > 0 && !args->message_received)
 			{								
 				/* The recieve will happen on the same port as the send */			
 				if (axutil_network_handler_send_dgram(env, sender->socket, buffer, 
@@ -542,88 +649,7 @@ axis2_udp_transport_sender_invoke(
     return AXIS2_SUCCESS;	
 }
 
-axis2_status_t AXIS2_CALL
-axis2_udp_transport_sender_clean_up(
-    axis2_transport_sender_t * transport_sender,
-    const axutil_env_t * env,
-    axis2_msg_ctx_t * msg_ctx)
-{
-	/* We do not have anything to clean */
-	return AXIS2_SUCCESS;
-}
 
-axis2_status_t AXIS2_CALL
-axis2_udp_transport_sender_init(
-    axis2_transport_sender_t * transport_sender,
-    const axutil_env_t * env,
-    axis2_conf_ctx_t * conf_ctx,
-    axis2_transport_out_desc_t * out_desc)
-{
-	axutil_param_container_t *container = NULL;
-	axis2_udp_transport_sender_impl_t *udp_sender = NULL;   
-	axutil_param_t *temp_param = NULL;
-	axis2_char_t *temp = NULL;
-	
-	udp_sender = AXIS2_INTF_TO_IMPL(transport_sender);
-	/* Setting the default values */
-	udp_sender->multicast.udp_max_delay = AXIS2_UDP_TRANSPORT_MUL_MAX_DELAY;
-	udp_sender->multicast.udp_min_delay = AXIS2_UDP_TRANSPORT_MUL_MIN_DELAY;
-	udp_sender->multicast.udp_repeat = AXIS2_UDP_TRANSPORT_MUL_REPEAT;
-	udp_sender->multicast.udp_upper_delay = AXIS2_UDP_TRANSPORT_MUL_UPPER_DELAY;
-
-	udp_sender->unicast.udp_max_delay = AXIS2_UDP_TRANSPORT_UNI_MAX_DELAY;
-	udp_sender->unicast.udp_min_delay = AXIS2_UDP_TRANSPORT_UNI_MIN_DELAY;
-	udp_sender->unicast.udp_repeat = AXIS2_UDP_TRANSPORT_UNI_REPEAT;
-	udp_sender->unicast.udp_upper_delay = AXIS2_UDP_TRANSPORT_UNI_UPPER_DELAY;
-
-	udp_sender->is_multicast = AXIS2_FALSE;
-	container = axis2_transport_out_desc_param_container(out_desc, env);
-    temp_param = axutil_param_container_get_param(container, env, AXIS2_UDP_TRANSPORT_IS_MULTICAT);
-	if (temp_param)
-	{
-		temp = axutil_param_get_value(temp_param, env);
-		if (axutil_strcmp(temp, "true"))
-		{
-			udp_sender->is_multicast = AXIS2_TRUE;
-		}
-		else if (axutil_strcmp(temp, "false"))
-		{
-			udp_sender->is_multicast = AXIS2_FALSE;	
-		}
-		else
-		{
-			/* Here we quit */
-			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-				"Invalid configuration for multicast parameter");
-			return AXIS2_FAILURE;
-		}
-	}
-	
-	/* Setting the user defined values */
-	axis2_udp_transport_set_param_value(env, container, 
-		AXIS2_UDP_TRANSPORT_MUL_MAX_DELAY_STR, &(udp_sender->multicast.udp_max_delay));
-	axis2_udp_transport_set_param_value(env, container, 
-		AXIS2_UDP_TRANSPORT_MUL_MIN_DELAY_STR, &(udp_sender->multicast.udp_min_delay));
-	axis2_udp_transport_set_param_value(env, container, 
-		AXIS2_UDP_TRANSPORT_MUL_REPEAT_STR, &(udp_sender->multicast.udp_repeat));
-	axis2_udp_transport_set_param_value(env, container, 
-		AXIS2_UDP_TRANSPORT_MUL_UPPER_DELAY_STR, &(udp_sender->multicast.udp_upper_delay));
-
-	axis2_udp_transport_set_param_value(env, container, 
-		AXIS2_UDP_TRANSPORT_UNI_MAX_DELAY_STR, &(udp_sender->unicast.udp_max_delay));
-	axis2_udp_transport_set_param_value(env, container, 
-		AXIS2_UDP_TRANSPORT_UNI_MIN_DELAY_STR, &(udp_sender->unicast.udp_min_delay));
-	axis2_udp_transport_set_param_value(env, container, 
-		AXIS2_UDP_TRANSPORT_UNI_REPEAT_STR, &(udp_sender->unicast.udp_repeat));
-	axis2_udp_transport_set_param_value(env, container, 
-		AXIS2_UDP_TRANSPORT_UNI_UPPER_DELAY_STR, &(udp_sender->unicast.udp_upper_delay));
-
-	/* Set the time out */
-	axis2_udp_transport_set_param_value(env, container, 
-		AXIS2_UDP_TRANSPORT_TIMEOUT, &(udp_sender->time_out));
-
-    return AXIS2_SUCCESS;
-}
 
 /* Utility method for retrieving a parameter from a param container */
 static void AXIS2_CALL
@@ -657,7 +683,7 @@ axis2_udp_sender_thread_worker_func(
 	sender = args->udp_sender;
 	env = args->env;
 	axutil_network_handler_set_sock_option(env, sender->socket, SO_RCVTIMEO, sender->time_out);
-	if (axutil_network_handler_read_dgram(env, sender->socket, args->recv_buffer, 
+	/*if (axutil_network_handler_read_dgram(env, sender->socket, args->recv_buffer, 
 		&args->recv_buff_len, NULL, NULL) != AXIS2_FAILURE)
 	{
 		args->message_received = AXIS2_TRUE;
@@ -665,7 +691,7 @@ axis2_udp_sender_thread_worker_func(
 	else
 	{
 		args->message_received = AXIS2_FALSE;
-	}
+	}*/
 	/* Unlock the thread mutex */
 	axutil_thread_mutex_unlock(args->mutex);
 	return NULL;
@@ -689,7 +715,7 @@ axis2_udp_transport_sender_get_instance(
     struct axis2_transport_sender **inst,
     const axutil_env_t * env)
 {
-    *inst = axis2_udp_transport_sender_create(env);
+    *inst = axis2_udp_ender_create(env);
     if (!(*inst))
     {
         return AXIS2_FAILURE;

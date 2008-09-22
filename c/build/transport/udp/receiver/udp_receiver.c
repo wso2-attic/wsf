@@ -24,7 +24,6 @@
 #include <axutil_url.h>
 #include <axis2_conf_init.h>
 #include <stdlib.h>
-#include <axutil_network_handler.h>
 #include <axiom.h>
 #include <axiom_soap_envelope.h>
 #include <axiom_soap.h>
@@ -41,6 +40,8 @@ typedef struct axis2_udp_receiver_impl
 	axis2_socket_t socket;
 	axis2_socket_t send_socket;
 
+	/* if this is true receiver should close the socket */
+	axis2_bool_t owns_socket;
 	/* multicast properties */
 	axis2_bool_t is_multicast;
 	/* multicast group that this receiver listen */
@@ -160,6 +161,7 @@ axis2_udp_receiver_create(
 	receiver->multicast_group = multicast_group; 
 	receiver->socket = AXIS2_INVALID_SOCKET;
 	receiver->send_socket = AXIS2_INVALID_SOCKET;
+	receiver->owns_socket = AXIS2_TRUE;
 	if (multicast_group)
 	{
 		receiver->is_multicast = AXIS2_TRUE;
@@ -207,6 +209,7 @@ axis2_udp_receiver_create_with_file(
 	receiver->multicast_group = NULL; 
 	receiver->socket = AXIS2_INVALID_SOCKET;
 	receiver->send_socket = AXIS2_INVALID_SOCKET;
+	receiver->owns_socket = AXIS2_TRUE;
 	/* 
 	 * We are creating the receiver in two instances. When we create the receiver from the server 
 	 * we create the conf context. If we are creating the receiver while creating the conf we are 
@@ -252,7 +255,8 @@ axis2_udp_receiver_free(
 	{
 		axutil_network_handler_close_socket(env, receiver->send_socket);
 	}
-	if (receiver->socket != AXIS2_INVALID_SOCKET)
+	/* we free this socket only if we owns it */
+	if (receiver->owns_socket && receiver->socket != AXIS2_INVALID_SOCKET)
 	{
 		axutil_network_handler_close_socket(env, receiver->socket);
 	}
@@ -308,16 +312,22 @@ axis2_udp_receiver_start(
 	receiver->stop =  AXIS2_FALSE;
 
 	AXIS2_LOG_INFO(env->log, "Started the UDP server");
-	if (receiver->is_multicast && receiver->multicast_group)
+	if (receiver->socket == AXIS2_INVALID_SOCKET)
 	{
-		/* Setup a socket to receive multicast packets */
-		receiver->socket = axutil_network_hadler_create_multicast_svr_socket(env, receiver->port, 
-																	receiver->multicast_group);		
-	}
-	else
-	{
-		/* Setup a socket to receive unicast packets */
-		receiver->socket = axutil_network_handler_create_dgram_svr_socket(env, receiver->port);
+		/* socket not set, we should create one */
+		if (receiver->is_multicast && receiver->multicast_group)
+		{
+			/* Setup a socket to receive multicast packets */
+			receiver->socket = axutil_network_hadler_create_multicast_svr_socket(
+				env, receiver->port, receiver->multicast_group);		
+		}
+		else
+		{
+			/* Setup a socket to receive unicast packets */
+			receiver->socket = axutil_network_handler_create_dgram_svr_socket(
+				env, receiver->port);
+		}
+		receiver->owns_socket = AXIS2_TRUE;
 	}
 	if (receiver->socket == AXIS2_INVALID_SOCKET)
 	{
@@ -422,6 +432,24 @@ axis2_udp_receiver_is_running(
 	axis2_udp_receiver_impl_t *receiver = NULL;
 	receiver = AXIS2_INTF_TO_IMPL(tr_receiver);	
 	return !receiver->stop;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+axis2_udp_receiver_set_socket(
+    axis2_transport_receiver_t * tr_receiver,
+    const axutil_env_t * env,
+	axis2_socket_t socket)
+{
+	axis2_udp_receiver_impl_t *receiver = NULL;
+	receiver = AXIS2_INTF_TO_IMPL(tr_receiver);	
+	/* If we already have a socket free it */
+	if (receiver->socket== AXIS2_INVALID_SOCKET)
+	{
+		receiver->socket = socket;
+		receiver->owns_socket = AXIS2_FALSE;
+		return AXIS2_SUCCESS;
+	}	
+	return AXIS2_FAILURE;	
 }
 
 /* This is the function where threads start running */

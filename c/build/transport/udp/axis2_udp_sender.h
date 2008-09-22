@@ -28,19 +28,27 @@
 #include <axis2_transport_sender.h>
 #include <axiom.h>
 #include <axiom_soap_envelope.h>
+#include <axutil_network_handler.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
+	typedef struct axis2_udp_transport_sender_impl axis2_udp_transport_sender_impl_t;
     /**
 	 * Creates a udp transport sender. 
      * @param env pointer to environment struct 
      */
     AXIS2_EXTERN axis2_transport_sender_t *AXIS2_CALL
-    axis2_udp_transport_sender_create(
+    axis2_udp_ender_create(
         const axutil_env_t * env);
+
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	axis2_udp_sender_set_socket(
+		axis2_transport_sender_t * transport_sender,
+		const axutil_env_t * env,
+		axis2_socket_t socket);
 
 #ifdef __cplusplus
 }
