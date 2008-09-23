@@ -35,7 +35,6 @@ extern "C"
 {
 #endif
 
-	typedef struct axis2_udp_transport_sender_impl axis2_udp_transport_sender_impl_t;
     /**
 	 * Creates a udp transport sender. 
      * @param env pointer to environment struct 

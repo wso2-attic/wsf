@@ -32,7 +32,6 @@ extern "C"
 {
 #endif
 	
-	typedef struct axis2_udp_receiver_impl axis2_udp_receiver_impl_t;
 	/* 
 	 * Create the receiver.
 	 * @param env pointer to axutil_env struct
