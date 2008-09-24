@@ -19,6 +19,8 @@
 #define AXIS2_UDP_TRANSPORT_H
 
 #include <axutil_utils.h>
+#include <axis2_svc.h>
+#include <axis2_op.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -60,6 +62,8 @@ extern "C"
 #define AXIS2_UDP_TRANSPORT_ADDRESS					"UDPAddress"
 #define AXIS2_UDP_MULTICAST_ACCEPT					"UDPMulticastAccept"
 
+#define AXIS2_UDP_BACKCHANNEL_INFO					"UDPBackChannelInfo"
+		
 typedef struct axis2_udp_transport_params
 {
 	int udp_repeat;
@@ -67,6 +71,12 @@ typedef struct axis2_udp_transport_params
 	int udp_max_delay;
 	int udp_upper_delay;
 } axis2_udp_transport_params_t;
+
+typedef struct axis2_udp_backchannel_info
+{
+	axis2_svc_t *svc;
+	axis2_op_t *op;
+} axis2_udp_backchannel_info_t;
 
 #define AXIS2_UDP_TRANSPORT_MULTICAST_GROUP		"multicastGroup"
 

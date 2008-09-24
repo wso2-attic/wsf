@@ -29,6 +29,9 @@
 #include <axiom_soap.h>
 #include <axis2_engine.h>
 
+#define AXIS2_DEFAULT_HOST_ADDRESS "127.0.0.1"
+#define AXIS2_DEFAULT_SVC_PATH "/axis2/services/"
+
 /* UDP Receiver */
 typedef struct axis2_udp_receiver_impl
 {
@@ -54,6 +57,7 @@ typedef struct
 	axis2_char_t * buff;
 	int buf_size;
 	axis2_svc_t *svc;
+	axis2_op_t *op;
 } axis2_udp_request_t;
 
 /* This structure is used to hold information about a udp response */
@@ -376,6 +380,8 @@ axis2_udp_receiver_start(
 		args->req_port = port;
 		args->request.buff = in_buff;
 		args->request.buf_size = buf_len;
+		args->request.op = NULL;
+		args->request.svc = NULL;
 		args->is_multicast = receiver->is_multicast;
 #ifdef AXIS2_SVR_MULTI_THREADED
 		worker_thread = axutil_thread_pool_get_thread(env->thread_pool,
@@ -421,7 +427,26 @@ axis2_udp_receiver_get_reply_to_epr(
     const axutil_env_t * env,
     const axis2_char_t * svc_name)
 {
-	return NULL;
+	axis2_endpoint_ref_t *epr = NULL;
+    const axis2_char_t *host_address = NULL;
+    axis2_char_t *svc_path = NULL;
+    axutil_url_t *url = NULL;
+
+    AXIS2_PARAM_CHECK(env->error, svc_name, NULL);
+    AXIS2_PARAM_CHECK(env->error, receiver, NULL);
+
+    host_address = AXIS2_DEFAULT_HOST_ADDRESS; /* TODO : get from axis2.xml */
+    svc_path = axutil_stracat(env, AXIS2_DEFAULT_SVC_PATH, svc_name);
+    url = axutil_url_create(env, "soap.udp", host_address,
+                            AXIS2_INTF_TO_IMPL(receiver)->port, svc_path);
+    AXIS2_FREE(env->allocator, svc_path);
+    if (!url)
+    {
+        return NULL;
+    }
+    epr = axis2_endpoint_ref_create(env, axutil_url_to_external_form(url, env));
+    axutil_url_free(url, env);
+    return epr;
 }
 
 axis2_bool_t AXIS2_CALL
@@ -466,10 +491,7 @@ axis2_udp_receiver_thread_worker_func(
 	axis2_udp_response_t response;
 	axutil_hash_index_t *hi = NULL;
 	axutil_hash_t *ori_all_svcs = NULL, *all_svcs = NULL;
-	axis2_char_t *addr = NULL;
-	int port = 0;
 	void *val = NULL;
-	int i = 0;
 
 	args = (axis2_udp_recv_thd_args_t *) data;
 	env = (axutil_env_t *) args->env;	
@@ -542,11 +564,25 @@ axis2_udp_receiver_thread_worker_func(
 	}
 	else
 	{
-		/* Unicast case. In this case message contais dispatching information. 
+		axutil_param_t *param = NULL;
+		axis2_char_t *temp = NULL;
+		axis2_udp_backchannel_info_t *binfo = NULL;
+		param = axis2_conf_get_param(conf, env, AXIS2_UDP_BACKCHANNEL_INFO);
+		if (param)
+		{
+			binfo = axutil_param_get_value(param, env);
+		}
+		/* Unicast case. In this case message contains dispatching information. 
 		 * So we send the request in the normal way 
 		 */
 		response.buf_size = 0;
 		response.buff = NULL;
+		if (binfo)
+		{
+			args->request.svc = binfo->svc;
+			args->request.op = binfo->op;
+		}
+		
 		args->request.svc = NULL;
 		/* Process the request */
 		status = axis2_udp_receiver_process_request(args->env, args->conf_ctx, 
@@ -590,10 +626,6 @@ axis2_udp_receiver_process_request(
     axiom_soap_envelope_t *soap_envelope = NULL;
     axis2_engine_t *engine = NULL;
     axis2_status_t status = AXIS2_FALSE;
-    axutil_stream_t *svr_stream = NULL;
-    axis2_char_t *buffer = NULL;
-    int len = 0;
-    int write = -1;
     axutil_stream_t *out_stream = NULL;
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
@@ -657,7 +689,10 @@ axis2_udp_receiver_process_request(
 	{
 		axis2_msg_ctx_set_svc(msg_ctx, env, request->svc);
 	}
-
+	if (request->op)
+	{
+		axis2_msg_ctx_set_op(msg_ctx, env, request->op);	
+	}
     engine = axis2_engine_create(env, conf_ctx);
     status = axis2_engine_receive(engine, env, msg_ctx);
 

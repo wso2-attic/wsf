@@ -85,6 +85,14 @@ axis2_udp_sender_thread_worker_func(
     axutil_thread_t * thd,
     void *data);
 
+/* adds information to the axis2_conf so that the receiver can pick up and start 
+ * from where sender left off. 
+ */
+static axis2_status_t AXIS2_CALL
+axis2_udp_transport_add_backchannel_info(
+	const axutil_env_t *env, 
+	axis2_msg_ctx_t *msg_ctx);
+
  /* 
   * Invoke function 
   */
@@ -408,6 +416,7 @@ axis2_udp_transport_sender_invoke(
 		axutil_property_t *prop = NULL;
 		axis2_char_t *prop_val = NULL;
 		axis2_options_t *options = NULL;
+		axis2_bool_t use_seperate_listnener = AXIS2_FALSE;
 		axis2_udp_transport_sender_args_t *args = NULL;
 		axis2_char_t *res_buffer = (axis2_char_t *)AXIS2_MALLOC(env->allocator, RES_BUFF);
 
@@ -433,7 +442,7 @@ axis2_udp_transport_sender_invoke(
 				return AXIS2_FAILURE;
 			}
 		}
-
+		/* Retrieve the transport address */
 		prop = axis2_options_get_property(options, env,
                                               AXIS2_UDP_TRANSPORT_ADDRESS);
 		if (prop)
@@ -444,7 +453,7 @@ axis2_udp_transport_sender_invoke(
 				host = prop_val;
 			}
 		}
-
+		/* Retrieve the port */
 		prop = axis2_options_get_property(options, env,
                                               AXIS2_UDP_TRANSPORT_PORT);
 		if (prop)
@@ -496,17 +505,38 @@ axis2_udp_transport_sender_invoke(
 				return AXIS2_FAILURE;
 			}
 		}
+		/* Determine weather we are using a seperate listener */
+		prop = axis2_options_get_property(options, env, AXIS2_USE_SEPARATE_LISTENER);
+		if (prop)
+		{
+			prop_val = axutil_property_get_value(prop, env);
+			if (prop_val && !axutil_strcmp(prop_val, AXIS2_VALUE_TRUE))
+			{
+				use_seperate_listnener = AXIS2_TRUE;
+			} 
+			else if (prop_val && !axutil_strcmp(prop_val, AXIS2_VALUE_FALSE))
+			{
+				use_seperate_listnener = AXIS2_FALSE;
+			}
+			else
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Invalid value for %s", 
+					AXIS2_UDP_TRANSPORT_IS_MULTICAT);
+				return AXIS2_FAILURE;
+			}
+		}
+		/* If a socket is not set, create one. */
 		if (sender->socket == AXIS2_INVALID_SOCKET)
 		{
 			sender->socket = (int)axutil_network_handler_open_dgram_socket(env);
 		}
-		
+		/* If a socket is not set and socket creation failed quit sender. */
 		if (sender->socket == AXIS2_INVALID_SOCKET)
 		{
 			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Socket creation failed");
 			return AXIS2_FAILURE;
 		}		
-		/* retreive the back-off algorithm values */
+		/* retreive the back-off algorithm config values */
 		if (sender->is_multicast)
 		{
 			udp_repeat = sender->multicast.udp_repeat;
@@ -526,8 +556,7 @@ axis2_udp_transport_sender_invoke(
 		if (op)
 		{	
 			mep_uri = axis2_op_get_msg_exchange_pattern(op, env);
-			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
-							"OP name axutil_qname_get_localpart = %s", mep_uri);
+			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "OP name axutil_qname_get_localpart = %s", mep_uri);
 			if (axutil_strcmp(mep_uri, AXIS2_MEP_URI_OUT_ONLY) == 0 ||
 				axutil_strcmp(mep_uri, AXIS2_MEP_URI_ROBUST_OUT_ONLY) == 0 ||
 				axutil_strcmp(mep_uri, AXIS2_MEP_URI_IN_ONLY) == 0)
@@ -535,6 +564,7 @@ axis2_udp_transport_sender_invoke(
 				is_oneway = AXIS2_TRUE;
 			}
 		}
+		axis2_udp_transport_add_backchannel_info(env, msg_ctx);
 		/* Retry and backoff algorithm as defined by the spec */
 		if (udp_repeat > 0)
 		{			
@@ -554,32 +584,42 @@ axis2_udp_transport_sender_invoke(
 			T = (rand() % (udp_max_delay - udp_min_delay)) + udp_min_delay;
 			/* Start the receiving thread */
 			args = AXIS2_MALLOC(env->allocator, sizeof(axis2_udp_transport_sender_args_t));
+			if (!args)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "out of memory");
+				return AXIS2_FAILURE;
+			}
 			args->env = axutil_init_thread_env(env);
 			args->message_received = AXIS2_FALSE;
-			args->mutex = axutil_thread_mutex_create(env->allocator, AXIS2_THREAD_MUTEX_DEFAULT);
-			/* We do a lock which is unlocked by the receiving thread. Unloack happens after it get the response */
-			axutil_thread_mutex_lock(args->mutex);
-			if (!args->mutex)
-			{
-				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Mutex creation failed");
-				return AXIS2_FAILURE;
-			}
 			args->recv_buff_len = AXIS2_UDP_PACKET_MAX_SIZE;
 			args->udp_sender = sender;
-			thread = axutil_thread_pool_get_thread(env->thread_pool,
-													axis2_udp_sender_thread_worker_func,
-													(void *) args);
-			if (!thread)
+			args->mutex = NULL;	
+			/* we are creating the listening thread only if use seperate listener is false */
+			if (!use_seperate_listnener)
 			{
-				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Thread creation failed");
-				return AXIS2_FAILURE;
+				args->mutex = axutil_thread_mutex_create(env->allocator, AXIS2_THREAD_MUTEX_DEFAULT);
+				/* We do a lock which is unlocked by the receiving thread. Unloack happens after it get the response */
+				axutil_thread_mutex_lock(args->mutex);
+				if (!args->mutex)
+				{
+					AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Mutex creation failed");
+					return AXIS2_FAILURE;
+				}			
+				thread = axutil_thread_pool_get_thread(env->thread_pool,
+														axis2_udp_sender_thread_worker_func,
+														(void *) args);
+				if (!thread)
+				{
+					AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Thread creation failed");
+					return AXIS2_FAILURE;
+				}
+				axutil_thread_pool_thread_detach(env->thread_pool, thread);
 			}
-			axutil_thread_pool_thread_detach(env->thread_pool, thread);
 			/* Sleep */
 			AXIS2_USLEEP(T);
 			while (udp_repeat > 0 && !args->message_received)
 			{								
-				/* The recieve will happen on the same port as the send */			
+				/* send */			
 				if (axutil_network_handler_send_dgram(env, sender->socket, buffer, 
 					&buffer_size, addr, port, &source_port) == AXIS2_FAILURE)
 				{
@@ -596,11 +636,17 @@ axis2_udp_transport_sender_invoke(
 				AXIS2_USLEEP(T);	
 			}			
 		}
-		/* We should wait until the receiver finishes */
-		axutil_thread_mutex_lock(args->mutex);
-		axutil_thread_mutex_unlock(args->mutex);
-		/* Close the sockets */
-		axutil_network_handler_close_socket(env, sender->socket);
+		if (!use_seperate_listnener)
+		{
+			/* We should wait until the receiver finishes */
+			axutil_thread_mutex_lock(args->mutex);
+			axutil_thread_mutex_unlock(args->mutex);
+		}
+		/* If we owns the socket, Close */
+		if (sender->owns_socket)
+		{
+			axutil_network_handler_close_socket(env, sender->socket);
+		}
 		if (args->message_received && !is_oneway)
 		{
 			reader = axiom_xml_reader_create_for_memory(env, args->recv_buffer, args->recv_buff_len,
@@ -640,16 +686,40 @@ axis2_udp_transport_sender_invoke(
 		{
 			return AXIS2_SUCCESS;					
 		}
-		else
-		{
-			return AXIS2_FAILURE;
-		}
     }
 	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "end: udp transport sender invoke");
     return AXIS2_SUCCESS;	
 }
 
+static axis2_status_t AXIS2_CALL
+axis2_udp_transport_add_backchannel_info(const axutil_env_t *env, axis2_msg_ctx_t *msg_ctx)
+{
+	axis2_conf_ctx_t *conf_ctx = NULL;
+	axis2_conf_t *conf = NULL;
+	axutil_param_t *param = NULL;
+	axis2_udp_backchannel_info_t *binfo = NULL;
+	axis2_svc_t *svc = NULL;
+	axis2_op_t *op = NULL;
 
+	binfo = AXIS2_MALLOC(env->allocator, sizeof(axis2_udp_backchannel_info_t));
+	if (!binfo)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Out of memory");
+		return AXIS2_FAILURE;
+	}
+	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+	conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+	/* We set the axis2_svc and oparation. When the response comes it will bypass the dispatchers 
+	   and will directly go the service and operation 
+	   */
+	svc = axis2_msg_ctx_get_svc(msg_ctx, env);
+	op = axis2_msg_ctx_get_op(msg_ctx, env);
+	binfo->op = op;
+	binfo->svc = svc;
+	param = axutil_param_create(env, AXIS2_UDP_BACKCHANNEL_INFO, binfo);
+	axis2_conf_add_param(conf, env, param);
+	return AXIS2_SUCCESS;
+}
 
 /* Utility method for retrieving a parameter from a param container */
 static void AXIS2_CALL
@@ -683,7 +753,7 @@ axis2_udp_sender_thread_worker_func(
 	sender = args->udp_sender;
 	env = args->env;
 	axutil_network_handler_set_sock_option(env, sender->socket, SO_RCVTIMEO, sender->time_out);
-	/*if (axutil_network_handler_read_dgram(env, sender->socket, args->recv_buffer, 
+	if (axutil_network_handler_read_dgram(env, sender->socket, args->recv_buffer, 
 		&args->recv_buff_len, NULL, NULL) != AXIS2_FAILURE)
 	{
 		args->message_received = AXIS2_TRUE;
@@ -691,7 +761,7 @@ axis2_udp_sender_thread_worker_func(
 	else
 	{
 		args->message_received = AXIS2_FALSE;
-	}*/
+	}
 	/* Unlock the thread mutex */
 	axutil_thread_mutex_unlock(args->mutex);
 	return NULL;
