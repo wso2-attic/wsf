@@ -1336,44 +1336,52 @@ void wsf_wsdl_handle_client_security(
 	rampart_ctx = rampart_context_create (env);
     wsf_set_rampart_options (rampart_ctx, sec_token, NULL, env TSRMLS_CC);
     
-    if (binding_policy_node) {
+    if (binding_policy_node) 
+	{
         if (axiom_node_get_node_type (binding_policy_node,
-                                      env) == AXIOM_ELEMENT) {
+                                      env) == AXIOM_ELEMENT) 
+		{
             binding_policy_root_ele =
                 (axiom_element_t *)
                 axiom_node_get_data_element (binding_policy_node, env);
             
-            if (binding_policy_root_ele) {
+            if (binding_policy_root_ele) 
+			{
                 binding_neethi_policy =
                     neethi_engine_get_policy (env, binding_policy_node,
                                               binding_policy_root_ele);
-                normalized_binding_neethi_policy = 
-                    neethi_engine_get_normalize(env, AXIS2_FALSE,binding_neethi_policy);
-                neethi_policy_free(binding_neethi_policy, env);
-                binding_neethi_policy = NULL;
+				if(binding_neethi_policy)
+				{
+					normalized_binding_neethi_policy = 
+			            neethi_engine_get_normalize(env, AXIS2_FALSE,binding_neethi_policy);
+					neethi_policy_free(binding_neethi_policy, env);
+					binding_neethi_policy = NULL;
+				}
             }
         }
     }
     
-    if (input_policy_node) {
-        if (axiom_node_get_node_type (input_policy_node,
-                                      env) == AXIOM_ELEMENT) {
-            input_policy_root_ele =
-                (axiom_element_t *)
-                axiom_node_get_data_element (input_policy_node, env);
+	if (input_policy_node) 
+	{
+		if (axiom_node_get_node_type (input_policy_node,
+                                  env) == AXIOM_ELEMENT) 
+		{
+			input_policy_root_ele =(axiom_element_t *)axiom_node_get_data_element (input_policy_node, env);
 
-            if (input_policy_root_ele) {
-                input_neethi_policy =
-                    neethi_engine_get_policy (env, input_policy_node,
-                                              input_policy_root_ele);
-                normalized_input_neethi_policy = 
-                    neethi_engine_get_normalize(env, AXIS2_FALSE, 
-                                                input_neethi_policy);
-                neethi_policy_free(input_neethi_policy, env);
-                input_neethi_policy = NULL;
-            } 
-        }
-    }
+        if (input_policy_root_ele) 
+		{
+            input_neethi_policy =	neethi_engine_get_policy (env, input_policy_node,
+										      input_policy_root_ele);
+			if(input_neethi_policy)
+			{
+            normalized_input_neethi_policy = neethi_engine_get_normalize(env, AXIS2_FALSE, 
+                                            input_neethi_policy);
+            neethi_policy_free(input_neethi_policy, env);
+            input_neethi_policy = NULL;
+			}
+        } 
+	}
+  }
     
     if(normalized_input_neethi_policy && normalized_binding_neethi_policy ){
         merged_input_neethi_policy = 
