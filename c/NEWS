@@ -25,6 +25,9 @@ Key Features
         * UsernameToken
         * Signing
         * Encryption        
+   		* WS-Secure Conversation
+   		* WS-Trust
+   		* SAML support 
 	* Signature confirmation support
 	* HMAC-SHA1 support
 	* Key derivation module
