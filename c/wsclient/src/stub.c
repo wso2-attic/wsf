@@ -357,7 +357,7 @@ wsclient_svc_option (axis2_svc_client_t *svc_client,
 					{
 						is_password = 1;
 						is_soap_enabled = 1;
-                        password_buffer = (axis2_char_t *) wsclient_options->value;
+                        password_buffer = axutil_strdup(env,  wsclient_options->value);
 						AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 										"[wsclient] security password block ");
 					}
