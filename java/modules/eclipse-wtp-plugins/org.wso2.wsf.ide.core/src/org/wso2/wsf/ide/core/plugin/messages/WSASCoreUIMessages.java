@@ -25,6 +25,9 @@ public final class WSASCoreUIMessages extends NLS {
 	public static final String WSAS_START_BAT = "startup.bat" ; 	//$NON-NLS-1$
 	public static final String WSAS_DEBUG_BAT = "wso2wsas.bat" ; 	//$NON-NLS-1$
 	public static final String WSAS_START_SH = "wso2wsas.sh" ;      //$NON-NLS-1$
+	public static final String WSAS_START_BAT_NEW = "wso2server.bat" ; 	//$NON-NLS-1$
+	public static final String WSAS_DEBUG_BAT_NEW = "wso2server.bat" ; 	//$NON-NLS-1$
+	public static final String WSAS_START_SH_NEW = "wso2server.sh" ;      //$NON-NLS-1$
 	public static final String WSAS_STOP_BAT = "shutdown.bat" ; 	//$NON-NLS-1$
 	public static final String WSAS_STOP_SH = "shutdown.sh" ; 		//$NON-NLS-1$
 	

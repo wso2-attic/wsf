@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <!--
+   <extension
+         point="org.eclipse.ui.popupMenus">
+         <objectContribution
+            objectClass="org.eclipse.core.resources.IProject"
+            id="WSO2BpelPopupHandler.contribution">
+         <menu 
+               label="bpelDeploy"
+               path="additions"
+               id="BpelPopupHandler.menu.deploy">
+         </menu>
+         <action
+               label="Deploy Bpel in WSAS"
+               class="org.wso2.wsf.bpel.ide.popup.WSO2BpelPopupHandler"
+               menubarPath="BpelPopupHandler.menu.deploy"
+               enablesFor="1"
+               id="Bpel.deploy">
+         </action>
+      </objectContribution> 
+   </extension>
+   -->
+   <extension point="org.eclipse.ui.exportWizards">
+        <wizard id="org.wso2.wsf.bpel.export" name="BPel Artifact" class="org.wso2.wsf.bpel.ide.export.BpelExportWizard"
+            category="org.wso2.exportcategory"
+            icon="./icons/export_bpel.gif">
+
+            <description>
+                    Create a deployable bpel zip archive.  
+            </description>
+            <selection class="org.eclipse.core.resources.IProject"/>
+        </wizard>
+        <category
+                 id="org.wso2.exportcategory"
+                 name="WSO2 Exporter"/>
+    </extension>
+</plugin>

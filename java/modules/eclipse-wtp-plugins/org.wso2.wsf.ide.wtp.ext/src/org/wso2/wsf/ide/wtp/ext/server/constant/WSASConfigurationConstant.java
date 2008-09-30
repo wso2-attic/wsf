@@ -35,6 +35,7 @@ public class WSASConfigurationConstant {
     //wsas
     public static final String WSO2WSAS_HOME = "wso2wsas.home";
     public static final String WSO2WSAS_SERVER_XML = "server.xml";
+    public static final String WSO2WSAS_TRANSPORT_XML = "transports.xml";
     public static final String WSO2WSAS_START_TIME = "wso2wsas.start.time";
     public static final String WSO2WSAS_ADMIN_PASSWORD = "wso2wsas.admin.password";
     public static final String AXIS2_HOME = "axis2.home";
@@ -42,7 +43,7 @@ public class WSASConfigurationConstant {
     public static final String WSO2WSAS_SERVER_XML_PROP = "wso2.wsas.server.xml";
     public static final String WSO2WSAS_HTTP_PORT = "9762";
     public static final String WSO2WSAS_HTTPS_PORT = "9443";
-    public static final String WSO2WSAS_VERSION_SUFFIX = "9762/services/version";
+    public static final String WSO2WSAS_VERSION_SUFFIX = "/services/version";
 
     //files and folders
     public static final String LOG4J_CONFIGURATION = "log4j.configuration";

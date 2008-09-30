@@ -15,6 +15,7 @@
  */
 package org.wso2.wsf.ide.wtp.ext.server.command;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.IStatus;
@@ -51,8 +52,11 @@ public class WSASStartCommand {
 	
 	private static void startWSAS(){
 		Process wsasProcess = null;
+		WSASUtils.setTrustStoreDetails();
 		String pathNodesStopWin[] = {WSASCoreUIMessages.DIR_BIN, WSASCoreUIMessages.WSAS_START_BAT};
 		String pathNodesStopIx[] = {WSASCoreUIMessages.DIR_BIN, WSASCoreUIMessages.WSAS_START_SH};
+		String pathNodesStopWinNew[] = {WSASCoreUIMessages.DIR_BIN, WSASCoreUIMessages.WSAS_START_BAT_NEW};
+		String pathNodesStopIxNew[] = {WSASCoreUIMessages.DIR_BIN, WSASCoreUIMessages.WSAS_START_SH_NEW};		
 		String wsasInstallationLocation = WSASConfigurationBean.getWsasInstallationPath();
 		try {
 			Runtime runtime = Runtime.getRuntime();
@@ -62,12 +66,22 @@ public class WSASStartCommand {
 					|| (OS.indexOf(WSASCoreUIMessages.OS_WIN_2000) > -1)
 					|| (OS.indexOf(WSASCoreUIMessages.OS_WIN_VISTA) > -1)
 					|| (OS.indexOf(WSASCoreUIMessages.OS_WIN_XP) > -1)) {
-				wsasProcess = runtime.exec(FileUtils.addNodesToPath(wsasInstallationLocation, 
+				if ((new File(FileUtils.addNodesToPath(wsasInstallationLocation, 
+						pathNodesStopWin))).exists())
+					wsasProcess = runtime.exec(FileUtils.addNodesToPath(wsasInstallationLocation, 
 																	pathNodesStopWin));
+				else
+					wsasProcess = runtime.exec(FileUtils.addNodesToPath(wsasInstallationLocation, 
+							pathNodesStopWinNew));
 				wsasProcess.waitFor();
 			} else {
-				wsasProcess = runtime.exec(WSASCoreUIMessages.XTERM_EXEC + 
-					FileUtils.addNodesToPath(wsasInstallationLocation, pathNodesStopIx));
+				if ((new File(FileUtils.addNodesToPath(wsasInstallationLocation, 
+						pathNodesStopIx))).exists())
+					wsasProcess = runtime.exec(WSASCoreUIMessages.XTERM_EXEC + 
+							FileUtils.addNodesToPath(wsasInstallationLocation, pathNodesStopIx));
+				else
+					wsasProcess = runtime.exec(WSASCoreUIMessages.XTERM_EXEC + 
+							FileUtils.addNodesToPath(wsasInstallationLocation, pathNodesStopIxNew));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
