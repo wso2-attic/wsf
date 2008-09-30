@@ -37,8 +37,9 @@ ENABLE_LIBCURL = 0
 ENABLE_SSL = 0
 # Path to OpenSSL installation, required if SSL transport is enabled
 
-# Enable/disable Guththila parser, to enable set ENABLE_GUTHTHILA = 1
-ENABLE_GUTHTHILA = 1
+# build axis2 with Libxml2 Parser. Axis2/C will be built with embeded guththila 
+# parser by Default.
+ENABLE_LIBXML2=0
 
 # Build TCP server in addition to HTTP server
 WITH_TCP = 1
