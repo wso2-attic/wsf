@@ -104,12 +104,12 @@
     <phaseOrder type="INfaultflow">
         <!-- User defined phases could be added here -->
         <!--phase name="userphase1"/-->
-        <!--phase name="RMPhase"/-->
+        <phase name="RMPhase"/>
 		<phase name="SavanPhase"/>
     </phaseOrder>
     <phaseOrder type="Outfaultflow">
         <!-- User defined phases could be added here -->
-        <!--phase name="RMPhase"/-->
+        <phase name="RMPhase"/>
         <!--phase name="userphase1"/-->
         <phase name="SavanPhase"/>
         <phase name="MessageOut"/>
