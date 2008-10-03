@@ -36,6 +36,8 @@
 #include "rampart_constants.h"
 #endif
 #include <neethi_options.h>
+#include <neethi_util.h>
+#include <neethi_policy.h>
 
 #include "constants.h"
 #include "util.h"
@@ -80,6 +82,7 @@ static axis2_bool_t enable_rampart;
 static axis2_bool_t enable_signature;
 static axis2_bool_t enable_encryption;
 static neethi_options_t *neethi_options;
+static axis2_char_t *policy_file;
 
 extern wsclient_cmd_options_t cmd_options_data[];
 extern int array_size;
@@ -455,6 +458,14 @@ wsclient_svc_option (axis2_svc_client_t *svc_client,
 										"[wsclient] security digest block ");
 					}
 					break;
+                    case POLICY_FILE:
+                    {
+                        enable_rampart = AXIS2_TRUE;
+                        policy_file = (axis2_char_t *)wsclient_options->value;
+                        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                                        "[wsclient] Set policy file:%s", policy_file);
+                    }
+                    break;
 					case XOP_IN:
 					{
 						axis2_char_t *dir = NULL;
@@ -757,6 +768,7 @@ else
             axis2_conf_t *conf = NULL;
             axutil_param_t *security_param = NULL;
             int defualt_ttl = 300;
+            neethi_policy_t *policy = NULL;
 
             rampart_context = rampart_context_create(env);
 
@@ -771,23 +783,43 @@ else
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
                             "[wsclient] addressing module engaged");
 
-            root_om_node = neethi_options_get_root_node(neethi_options, env);
-
-            if(!root_om_node)
+            /*Create the policy, from file*/
+            policy = neethi_util_create_policy_from_file(env, policy_file);
+            if(policy)
             {
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
-                           "[wsclient] Policy Creation failed");
-                return WSCLIENT_FAILURE;
-            }
+                if(!policy)
+                {
+                    printf("\nPolicy creation failed from the file. %s\n", policy_file);
+                }
 
-            status = axis2_svc_client_set_policy_from_om(svc_client, env, root_om_node);            
-            if(status != AXIS2_SUCCESS)
-            {
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
-                           "[wsclient] Policy Creation failed");
-                return WSCLIENT_FAILURE;
+                status = axis2_svc_client_set_policy(svc_client, env, policy);
+                printf("\nPolicy set for the file. %s\n", policy_file);
+
+                if(status == AXIS2_FAILURE)
+                {
+                    printf("Policy setting failed\n");
+                }
             }
-            
+            else
+            {
+                root_om_node = neethi_options_get_root_node(neethi_options, env);
+
+                if(!root_om_node)
+                {
+                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                               "[wsclient] Policy Creation failed");
+                    return WSCLIENT_FAILURE;
+                }
+
+                status = axis2_svc_client_set_policy_from_om(svc_client, env, root_om_node);            
+                if(status != AXIS2_SUCCESS)
+                {
+                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                               "[wsclient] Policy Creation failed");
+                    return WSCLIENT_FAILURE;
+                }
+            }
+ 
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting creating policy node ");
 
             if (rampart_context_set_user(rampart_context, env,

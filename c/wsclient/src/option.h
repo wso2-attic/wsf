@@ -77,6 +77,7 @@ enum cmd_options_em
       KEY, /*{"key", 0, required_argument}*/
       CERTIFICATE, /*{"certificate", 0, required_argument}*/
       RECIPIENT_CERTIFICATE, /*{"recipient-certificate", 0, required_argument}*/
+      POLICY_FILE, /*{"policy-file", 0, required_argument}*/
       ALGORITHMSUITE, /*{"algorithmsuite", 0, required_argument}*/
 };
 

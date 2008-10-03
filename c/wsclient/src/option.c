@@ -65,6 +65,7 @@ wsclient_cmd_options_t cmd_options_data [] =
       {"key", 0, required_argument},
       {"certificate", 0, required_argument},
       {"recipient-certificate", 0, required_argument},
+      {"policy-file", 0, required_argument},
       {"algorithmsuite", 0, required_argument}
 };
 
