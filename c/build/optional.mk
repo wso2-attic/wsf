@@ -19,5 +19,12 @@ OPFLAGS = $(OPFLAGS) "yes"
 OPFLAGS = $(OPFLAGS) "no" 
 !endif
 
+!if "$(WITH_UDP)" == "1"
+OPFLAGS = $(OPFLAGS) "yes" 
+!else
+OPFLAGS = $(OPFLAGS) "no" 
+!endif
+
+
 dist :
 	build_optional.bat $(OPFLAGS)

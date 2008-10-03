@@ -55,7 +55,7 @@ cd ..\..\..
 
 rem Build Apache Savan/C
 :build_savan
-if %3 == "no" goto end
+if %3 == "no" goto build_udp_transport
 cd savanc\build\win32
 nmake dist AUTOCONF=..\..\..\configure.in AXIS2_BIN_DIR=.\..\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32
 
@@ -74,10 +74,18 @@ copy /Y savanc\lib\savan_client.lib .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERS
 
 mkdir .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\bin\samples\savan
 copy /Y savanc\bin\samples\savan\*.exe .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\bin\samples\savan
-cd ..\..
-goto end
+cd ..\..\
+goto build_udp_transport
 
 :savan_error
 cd ..\..\..
+
+rem Buil UDP transport
+:build_udp_transport
+if %4 == "no" goto end
+cd axis2c\src\core\transport\udp
+nmake all -f udp_transport.mk AXIS2_BIN_DIR=..\..\..\..\build\axis2c-bin-%AXIS2C_VERSION%-win32 AUTOCONF=..\..\..\..\..\configure.in
+cd ..\..\..\..\..\
+goto end
 
 :end
