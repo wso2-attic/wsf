@@ -564,7 +564,11 @@ axis2_udp_transport_sender_invoke(
 				is_oneway = AXIS2_TRUE;
 			}
 		}
-		axis2_udp_transport_add_backchannel_info(env, msg_ctx);
+		if (use_seperate_listnener)
+		{
+			axis2_udp_transport_add_backchannel_info(env, msg_ctx);
+		}
+		/*udp_repeat = 1;*/
 		/* Retry and backoff algorithm as defined by the spec */
 		if (udp_repeat > 0)
 		{			
@@ -643,10 +647,10 @@ axis2_udp_transport_sender_invoke(
 			axutil_thread_mutex_unlock(args->mutex);
 		}
 		/* If we owns the socket, Close */
-		if (sender->owns_socket)
+		/*if (sender->owns_socket)
 		{
 			axutil_network_handler_close_socket(env, sender->socket);
-		}
+		}*/
 		if (args->message_received && !is_oneway)
 		{
 			reader = axiom_xml_reader_create_for_memory(env, args->recv_buffer, args->recv_buff_len,
