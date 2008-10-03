@@ -583,7 +583,6 @@ axis2_udp_receiver_thread_worker_func(
 			args->request.op = binfo->op;
 		}
 		
-		args->request.svc = NULL;
 		/* Process the request */
 		status = axis2_udp_receiver_process_request(args->env, args->conf_ctx, 
 														&args->request, &response);
