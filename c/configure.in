@@ -44,6 +44,9 @@ ENABLE_LIBXML2=0
 # Build TCP server in addition to HTTP server
 WITH_TCP = 1
 
+# Build UDP transport sender, receiver and server 
+WITH_UDP = 1
+
 # build with archive based deployment support
 WITH_ARCHIVE = 0
 
