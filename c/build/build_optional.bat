@@ -39,7 +39,9 @@ xcopy /E /Q /I /Y sandesha2\lib\sandesha2_client.lib  .\..\..\axis2c\build\axis2
 xcopy /E /Q /I /Y sandesha2\lib\sandesha2_client.dll  .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\lib\
 mkdir .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\bin\samples\sandesha2
 copy /Y sandesha2\bin\samples\sandesha2\*.exe .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\bin\samples\sandesha2
-xcopy /E /Q /I /Y sandesha2\services\RMSampleService .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\services\RMSampleService
+xcopy /E /Q /I /Y sandesha2\samples\policy .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\bin\samples\sandesha2\policy
+xcopy /E /Q /I /Y sandesha2\services\RM10SampleService .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\services\RM10SampleService
+xcopy /E /Q /I /Y sandesha2\services\RM11SampleService .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\services\RM11SampleService
 xcopy /E /Q /I /Y sandesha2\samples .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\samples\sandesha2
 copy /Y sandesha2\include\*.h  .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\include\
 xcopy /E /Q /I /Y  sandesha2\bin\samples\sandesha2 .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\bin\samples\sandesha2
