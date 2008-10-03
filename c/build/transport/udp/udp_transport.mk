@@ -56,7 +56,7 @@ axis2_udp_server:
 
 	link.exe $(LDFLAGS) /LIBPATH:$(AXIS2_BIN_DIR)\lib int.msvc\*.obj axutil.lib  axis2_engine.lib \
 	axis2_parser.lib axiom.lib axis2_udp_sender.lib axis2_udp_receiver.lib $(OPFLAGS) \
-	/OUT:$(AXIS2_BIN_DIR)\lib\axis2_udp_server.exe 
+	/OUT:$(AXIS2_BIN_DIR)\bin\axis2_udp_server.exe 
 	-@$(_VC_MANIFEST_EMBED_DLL)
 
 	if exist int.msvc rmdir /s /q int.msvc	
