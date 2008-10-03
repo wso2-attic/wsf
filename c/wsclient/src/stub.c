@@ -820,11 +820,11 @@ else
                 }
             }
  
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting creating policy node ");
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsclient] setting creating policy node ");
 
             if (rampart_context_set_user(rampart_context, env,
                                      (axis2_char_t *)username_value) == AXIS2_SUCCESS)
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting username ");
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsclient] setting username ");
 
             /*We set the default ttl now. This needs to be changed when we process the user given
             ttl*/
@@ -852,73 +852,46 @@ else
                             "[wsclient] adding digest password property");
                 if(rampart_context_set_password_type(rampart_context, env,
                                                  (axis2_char_t *)"Digest") == AXIS2_SUCCESS)
-                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting passwordType ");
+                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsclient] setting passwordType ");
             }
 
             if (password_buffer)
             {
                 if(rampart_context_set_password(rampart_context, env,
                                             (axis2_char_t *)password_buffer) == AXIS2_SUCCESS)
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] setting password ");
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsclient] setting password ");
 
             }
 
-            if(enable_signature)
+            if(private_key_file)
             {
-                if(private_key_file)
-                {
-                    rampart_context_set_private_key_file(
-                                rampart_context, env, private_key_file);   
-                }
-                else
-                {
-                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] Private key file not specified. ");
-                    return WSCLIENT_FAILURE;
-                }
-                if(certificate_file)
-                {
-                    rampart_context_set_certificate_file(
-                                rampart_context, env, certificate_file);
-                }
-                else
-                {    
-                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] Certificate file not specified. ");
-                    return WSCLIENT_FAILURE;
-                }
-                if(recipient_certificate_file)
-                {
-                    rampart_context_set_receiver_certificate_file(
-                                rampart_context, env, recipient_certificate_file);
-                }
-                else
-                {
-                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] Reciever Certificate not specified. ");
-                    return WSCLIENT_FAILURE;
-                }
+                rampart_context_set_private_key_file(
+                            rampart_context, env, private_key_file);   
             }
-
-            if(enable_encryption)
+            else
             {
-                if(private_key_file)
-                {
-                    rampart_context_set_private_key_file(
-                                rampart_context, env, private_key_file);
-                }
-                else
-                {    
-                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] Private Key file not specified. ");
-                    return WSCLIENT_FAILURE;
-                }    
-                if(recipient_certificate_file)
-                {
-                    rampart_context_set_receiver_certificate_file(
-                                rampart_context, env, recipient_certificate_file);
-                }
-                else
-                {    
-                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsf_sec_policy] Reciever Certificate not specified. ");
-                    return WSCLIENT_FAILURE;
-                }    
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsclient] Private key file not specified. ");
+                return WSCLIENT_FAILURE;
+            }
+            if(certificate_file)
+            {
+                rampart_context_set_certificate_file(
+                            rampart_context, env, certificate_file);
+            }
+            else
+            {    
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsclient] Certificate file not specified. ");
+                return WSCLIENT_FAILURE;
+            }
+            if(recipient_certificate_file)
+            {
+                rampart_context_set_receiver_certificate_file(
+                            rampart_context, env, recipient_certificate_file);
+            }
+            else
+            {
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsclient] Reciever Certificate not specified. ");
+                return WSCLIENT_FAILURE;
             }
 
             svc_ctx = axis2_svc_client_get_svc_ctx(svc_client, env);
