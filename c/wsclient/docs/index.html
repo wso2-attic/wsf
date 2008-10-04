@@ -426,6 +426,15 @@ value is one from Web Services Security Policy language July-2005 [section
 
 <p>eg:- –algorithmsuite=Basic256Rsa15 </p>
 
+<p><code>–policy-file=</code><em>policy-file</em></p>
+
+<p>This option is used to provide a security policy file for wsclient. When you
+give this option you can avoid using options like –timestamp, –sign-body,
+ –encrypt-signature and –encrypt-payload because these could be specified in policy
+ xml file.</p>
+
+<p>eg:- -policy-file $WSFC_HOME/bin/samples/wsclient/data/policy.xml </p>
+
 <p><code>–user=</code><em>user</em>*</p>
 
 <p>Includes a username token with <em>user</em> as the username.</p>
