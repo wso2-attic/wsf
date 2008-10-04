@@ -3,7 +3,7 @@ if test -z $WSFC_HOME; then
     WSFC_HOME=$PWD/../../..
 fi
 
-INST_DIR=$AXIS2C_HOME
+INST_DIR=$WSFC_HOME
 SERVICE_HOME="$INST_DIR/services/sec_echo"
 
 _SMPL_DIR="$PWD"
@@ -27,7 +27,7 @@ fi
     fi
 
     killall axis2_http_server
-    cd $AXIS2C_HOME/bin
+    cd $WSFC_HOME/bin
     echo "Start server @ $_PORT"
     ./axis2_http_server -p$_PORT &
     sleep 2
