@@ -55,5 +55,6 @@ copy /Y COPYING wso2-wsf-c-bin-%WSFC_VERSION%-win32
 copy /Y AUTHORS wso2-wsf-c-bin-%WSFC_VERSION%-win32
 copy /Y NOTICE wso2-wsf-c-bin-%WSFC_VERSION%-win32
 xcopy /E /I /Q /Y docs  wso2-wsf-c-bin-%WSFC_VERSION%-win32\docs
+xcopy /E /I /Q /Y wsclient\docs wso2-wsf-c-bin-%WSFC_VERSION%-win32\wsclient\docs
 
 :end
