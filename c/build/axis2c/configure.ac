@@ -193,7 +193,7 @@ AC_ARG_ENABLE(tcp, [  --enable-tcp
 )
 
 AC_MSG_CHECKING(whether to build udp transport)
-AC_ARG_ENABLE(tcp, [  --enable-udp
+AC_ARG_ENABLE(udp, [  --enable-udp
                           build udp transport (default=no)],
 [ case "${enableval}" in
   no)
@@ -201,14 +201,12 @@ AC_ARG_ENABLE(tcp, [  --enable-udp
     ;;
   *)
     AC_MSG_RESULT(yes)
-    TCP_DIR="udp"
+    UDP_DIR="udp"
 
     ;;
   esac ],
   AC_MSG_RESULT(no)
 )
-
-
 
 AC_MSG_CHECKING(whether to use apache2 as server transport)
 AC_ARG_WITH(apache2,
