@@ -66,44 +66,60 @@ public class FileManagementUtil {
 		}
 	}
 	
-	static public void zipFolder(String srcFolder, String destZipFile) {
+	static public void zipFolder(String srcFolder, String destZipFile)throws Exception {
 		ZipOutputStream zip = null;
 		FileOutputStream fileWriter = null;
-		try{
-			fileWriter = new FileOutputStream(destZipFile);
-			zip = new ZipOutputStream(fileWriter);
-		}catch (Exception ex){
-			ex.printStackTrace();
-			return;
-		}
-
+		fileWriter = new FileOutputStream(destZipFile);
+		zip = new ZipOutputStream(fileWriter);	
 		addFolderContentsToZip( srcFolder, zip);
-		try {
-			zip.flush();
-			zip.close();
-		}catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		zip.flush();
+		zip.close();
 	}
 
+	private static void s(String a){
+		//System.out.println("Adding to zip "+a);
+	}
+	
 	static private void addToZip(String path, String srcFile, ZipOutputStream zip) {
 
 		File folder = new File(srcFile);
 		if (folder.isDirectory()) {
+			s(folder.getAbsolutePath() + " is a folder");
+			String changedPath = path +"/"+ folder.getName();
+			if (File.separatorChar != '/') 
+				changedPath=changedPath.replace('\\', '/');
+			if (changedPath.startsWith("/")) changedPath=changedPath.substring(1);
+			try {
+				ZipEntry zipEntry = new ZipEntry(changedPath+"/");
+				zip.putNextEntry(zipEntry);
+				zip.closeEntry();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			addFolderToZip(path, srcFile, zip);
 		}else {
+			s(folder.getAbsolutePath() + " is a file");
+
 		// Transfer bytes from in to out
 			byte[] buf = new byte[1024];
 			int len;
 			try {
 				FileInputStream in = new FileInputStream(srcFile);
-				zip.putNextEntry(new ZipEntry(path +"/"+ folder.getName()));
+				String changedPath = path +"/"+ folder.getName();
+				if (File.separatorChar != '/') 
+					changedPath=changedPath.replace('\\', '/');
+				s("In the zip path"+changedPath);
+				if (changedPath.startsWith("/")) changedPath=changedPath.substring(1);
+				zip.putNextEntry(new ZipEntry(changedPath));
 				while ((len = in.read(buf)) > 0) {
 					zip.write(buf, 0, len);
 				}
+				zip.closeEntry();
 			}catch (Exception ex){
 				ex.printStackTrace();
 			}
+			s(folder.getAbsolutePath() + " copied the file");
+
 		}
 	}
 	
@@ -113,7 +129,8 @@ public class FileManagementUtil {
 		try {
 			int i = 0;
 			while (true) {
-				addToZip("", srcFolder+"/"+fileListe[i], zip);
+				s(srcFolder+File.separator+fileListe[i]);
+				addToZip("", srcFolder+File.separator+fileListe[i], zip);
 				i++;
 			}
 		}catch (Exception ex) {
@@ -126,7 +143,7 @@ public class FileManagementUtil {
 		try {
 			int i = 0;
 			while (true) {
-				addToZip(path+"/"+ folder.getName(), srcFolder+"/"+fileListe[i], zip);
+				addToZip(path+"/"+ folder.getName(), srcFolder+File.separator+fileListe[i], zip);
 				i++;
 			}
 		}catch (Exception ex) {

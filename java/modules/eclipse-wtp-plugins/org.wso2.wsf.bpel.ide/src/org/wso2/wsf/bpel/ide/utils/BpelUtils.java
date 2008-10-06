@@ -23,8 +23,7 @@ public class BpelUtils {
 		File prjFolder = new File(prjPath);
 		String[] fileList = prjFolder.list();
 		for (String filename : fileList) {
-			String ext = filename.substring(filename.length()-5);
-			if (ext.equalsIgnoreCase(".bpel"))
+			if (filename.toLowerCase().endsWith(".bpel"))
 				return true;
 		}
 		return false;

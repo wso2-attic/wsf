@@ -12,6 +12,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
@@ -20,11 +21,13 @@ import org.eclipse.swt.widgets.Text;
 public class BpelExportWizardPage extends WizardPage {
 	private String fileLocation;
 	private Text deployInWorkspaceText;
+	private String archiveName;
 	
-	protected BpelExportWizardPage(String pageName) {
+	protected BpelExportWizardPage(String pageName,String archiveName) {
 		super(pageName);
 		setTitle("Bpel export path");
 		setDescription("Path to export the bpel artifact");
+		this.archiveName=archiveName;
 	}
 
 	public void createControl(Composite parent) {
@@ -32,7 +35,7 @@ public class BpelExportWizardPage extends WizardPage {
 		GridLayout layout = new GridLayout();
 		container.setLayout(layout);
 		layout.numColumns = 3;
-		layout.verticalSpacing = 9;
+		layout.verticalSpacing = 5;
 		GridData gd;
 		Label label;	
 		
@@ -65,7 +68,7 @@ public class BpelExportWizardPage extends WizardPage {
 	}
 
 	protected void handledeployInWorkspaceBrowseButton() {
-		String fileName=getSavePath();
+		String fileName=getSavePath(archiveName);
 		if (fileName!=null)
 			deployInWorkspaceText.setText(fileName);		
 	}
@@ -74,46 +77,43 @@ public class BpelExportWizardPage extends WizardPage {
 		this.setFileLocation(deployInWorkspaceText.getText());
 		String msg=null;
 		File file = new File(getFileLocation());
-		if ((file.getParentFile()==null)||(!file.getParentFile().exists()))
-			msg="Invalid path specified";
+		if ((!file.exists())||(file.isFile()))
+			msg="Invalid path specified.";
 		if (msg==null){
-			if (!getFileLocation().substring(getFileLocation().length()-4).toLowerCase().endsWith(".zip"))
-				msg="Invalid file extension. File extension should be zip.";
+			File bpelArchive = new File(file,archiveName);
+        	if (bpelArchive.exists()) {
+        		setDescription(archiveName+" already exists in the path specified. If you continue the file will be overwritten.");
+        	}else
+        		setDescription("Path to export the bpel artifact");
 		}
 		setErrorMessage(msg);
 		setPageComplete(msg==null);
 	}
 
-	private String getSavePath(){
+	private String getSavePath(String archive){
 		String fileName = null;
-		FileDialog dlg = new FileDialog(getShell());
-		dlg.setFilterExtensions(new String[]{".zip"});
+		DirectoryDialog dlg = new DirectoryDialog(getShell());
+		
 	    boolean done = false;
 
 	    while (!done) {
-	      // Open the File Dialog
 	      fileName = dlg.open();
 	      if (fileName == null) {
-	        // User has cancelled, so quit and return
 	        done = true;
 	      } else {
-	        // User has selected a file; see if it already exists
 	        File file = new File(fileName);
-	        if (file.exists()) {
-	          // The file already exists; asks for confirmation
-	          MessageBox mb = new MessageBox(dlg.getParent(), SWT.ICON_WARNING
-	              | SWT.YES | SWT.NO);
-
-	          // We really should read this string from a
-	          // resource bundle
-	          mb.setMessage(fileName + " already exists. Do you want to replace it?");
-
-	          // If they click Yes, we're done and we drop out. If
-	          // they click No, we redisplay the File Dialog
-	          done = mb.open() == SWT.YES;
+	        if (!file.exists()) {
+	          MessageBox mb = new MessageBox(dlg.getParent(), SWT.ICON_ERROR);
+	          mb.setMessage(fileName + " does not exists.");
 	        } else {
-	          // File does not exist, so drop out
-	          done = true;
+	        	File bpelArchive = new File(file,archive);
+	        	if (bpelArchive.exists()) {
+	                MessageBox mb = new MessageBox(dlg.getParent(), SWT.ICON_WARNING
+	                    | SWT.YES | SWT.NO);
+	                mb.setMessage(archive + " already exists. Do you want to replace it?");
+	        	    done = mb.open() == SWT.YES;
+	        	}else
+	        		done = true;
 	        }
 	      }
 	    }
@@ -126,5 +126,9 @@ public class BpelExportWizardPage extends WizardPage {
 
 	public String getFileLocation() {
 		return fileLocation;
+	}
+	
+	public String getArchiveFileName(){
+		return (new File(fileLocation,archiveName)).getAbsolutePath();
 	}
 }
