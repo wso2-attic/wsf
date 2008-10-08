@@ -161,6 +161,24 @@ AC_ARG_ENABLE(udp, [  --enable-udp
   AC_MSG_RESULT(no)
 )
 
+AC_MSG_CHECKING(whether to use libcurl)
+AC_ARG_ENABLE(libcurl, [  --enable-libcurl
+                          enable libcurl based client transport (default=no)],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    CFLAGS="$CFLAGS"
+    libcurl_enabled=false
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    CFLAGS="$CFLAGS -DAXIS2_LIBCURL_ENABLED"
+    libcurl_enabled=true
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+  CFLAGS="$CFLAGS"
+)
 
 AC_MSG_CHECKING(whether to build rampart)
 AC_ARG_ENABLE(rampart, [  --enable-rampart	build rampart. default=yes],
