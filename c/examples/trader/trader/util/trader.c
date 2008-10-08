@@ -117,6 +117,7 @@ wsf_trader_create_account(wsf_trader_t *wsf_trader,
     axis2_registerClientRequest_t *reg_client_request = NULL;
     axis2_registerClientResponse_t *reg_client_response = NULL;
 
+	AXIS2_PARAM_CHECK(env->error, wsf_trader, NULL);
 
     client_details = wsf_client_details_create(env,
                 ssn, name, password);
@@ -167,6 +168,8 @@ wsf_trader_buy(wsf_trader_t *wsf_trader,
     axutil_hash_t *stock_holdings = NULL;
     axis2_stub_t *exchange_trader_stub = NULL;
     axis2_buyRequest_ex_t *buy_request = NULL;
+
+	AXIS2_PARAM_CHECK(env->error, wsf_trader, AXIS2_FAILURE);
 
     client_details = wsf_trader_get_client_details(wsf_trader,
             env, user_name, password);
@@ -253,6 +256,8 @@ wsf_trader_sell(wsf_trader_t *wsf_trader,
     axis2_stub_t *exchange_trader_stub = NULL;
     axis2_sellRequest_ex_t *sell_request = NULL;
 
+	AXIS2_PARAM_CHECK(env->error, wsf_trader, AXIS2_FAILURE);
+
     client_details = wsf_trader_get_client_details(wsf_trader,
             env, user_name, password);
 
@@ -318,6 +323,8 @@ wsf_trader_get_client_details(wsf_trader_t *wsf_trader,
 
     wsf_client_details_t *client_details = NULL;
     axis2_char_t *pass = NULL;
+
+	AXIS2_PARAM_CHECK(env->error, wsf_trader, AXIS2_FAILURE);
 
     if(!user_name && !password)
     {
