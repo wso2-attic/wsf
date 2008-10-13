@@ -211,17 +211,33 @@ void wsf_wsdl_extract_wsdl_information_for_service(
             }
 
             if(zend_hash_find(ht_return, WSF_WSDL_IS_WSDL_11, sizeof(WSF_WSDL_IS_WSDL_11),
-                (void **)&tmp_options) == SUCCESS && Z_TYPE_PP(tmp_options) == IS_BOOL)
+                (void **)&tmp_options) == SUCCESS
+				&& (Z_TYPE_PP(tmp_options) == IS_BOOL || Z_TYPE_PP(tmp_options) == IS_LONG))
             {
-                is_wsdl_11 = Z_BVAL_PP(tmp_options);
+				if(Z_TYPE_PP(tmp_options) == IS_BOOL)
+				{
+					is_wsdl_11 = Z_BVAL_PP(tmp_options);
+				}
+				else 
+				{
+					is_wsdl_11 = Z_LVAL_PP(tmp_options);
+				}
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "WSDL version is found");
                 svc_info->is_wsdl_11 = is_wsdl_11;
             }
 
             if(zend_hash_find(ht_return, WSF_WSDL_MULTI_INTERFACES, sizeof(WSF_WSDL_MULTI_INTERFACES),
-                (void **)&tmp_options) == SUCCESS && Z_TYPE_PP(tmp_options) == IS_BOOL)
+                (void **)&tmp_options) == SUCCESS
+				&& (Z_TYPE_PP(tmp_options) == IS_BOOL || Z_TYPE_PP(tmp_options) == IS_LONG))
             {
-                is_multi_interfaces = Z_BVAL_PP(tmp_options);
+				if(Z_TYPE_PP(tmp_options) == IS_BOOL)
+				{
+					is_multi_interfaces = Z_BVAL_PP(tmp_options);
+				}
+				else 
+				{
+					is_multi_interfaces = Z_LVAL_PP(tmp_options);
+				}
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "WSDL version is found");
                 svc_info->is_multi_interfaces = is_multi_interfaces;
             }
@@ -392,7 +408,7 @@ void wsf_wsdl_extract_wsdl_information_for_client(
             }
             
             if(zend_hash_find(ht_return, WSF_WSDL_DOM, sizeof(WSF_WSDL_DOM),
-                (void **)&tmp_options) == SUCCESS && Z_TYPE_PP(tmp_options) == IS_STRING )
+                (void **)&tmp_options) == SUCCESS || Z_TYPE_PP(tmp_options) == IS_STRING )
             {
                 wsdl_dom_string = Z_STRVAL_PP(tmp_options);
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "WSDL DOM string found");
@@ -401,17 +417,31 @@ void wsf_wsdl_extract_wsdl_information_for_client(
             }
 
             if(zend_hash_find(ht_return, WSF_WSDL_IS_WSDL_11, sizeof(WSF_WSDL_IS_WSDL_11),
-                (void **)&tmp_options) == SUCCESS && Z_TYPE_PP(tmp_options) == IS_BOOL)
+                (void **)&tmp_options) == SUCCESS
+				&& (Z_TYPE_PP(tmp_options) == IS_BOOL ||Z_TYPE_PP(tmp_options) == IS_LONG))
             {
-                is_wsdl_11 = Z_BVAL_PP(tmp_options);
+				if( Z_TYPE_PP(tmp_options) == IS_BOOL)
+				{
+					is_wsdl_11 = Z_BVAL_PP(tmp_options);
+				}
+				else {
+					is_wsdl_11 = Z_LVAL_PP(tmp_options);
+				}
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "WSDL version is found");
                 add_property_bool(this_zval, WSF_WSDL_IS_WSDL_11, Z_BVAL_PP(tmp_options));
             }
 
             if(zend_hash_find(ht_return, WSF_WSDL_MULTI_INTERFACES, sizeof(WSF_WSDL_MULTI_INTERFACES),
-                (void **)&tmp_options) == SUCCESS && Z_TYPE_PP(tmp_options) == IS_BOOL)
+                (void **)&tmp_options) == SUCCESS
+				&& (Z_TYPE_PP(tmp_options) == IS_BOOL || Z_TYPE_PP(tmp_options) == IS_LONG))
             {
-                is_multi_interfaces = Z_BVAL_PP(tmp_options);
+				if( Z_TYPE_PP(tmp_options) == IS_BOOL)
+				{
+					is_multi_interfaces = Z_BVAL_PP(tmp_options);
+				}
+				else {
+					is_multi_interfaces = Z_LVAL_PP(tmp_options);
+				}
                 AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "WSDL version is found");
                 add_property_bool(this_zval, WSF_WSDL_MULTI_INTERFACES, Z_BVAL_PP(tmp_options));
             }
