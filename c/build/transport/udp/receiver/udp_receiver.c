@@ -761,7 +761,7 @@ axis2_get_instance(
     struct axis2_transport_receiver **inst,
     const axutil_env_t * env)
 {
-    *inst = axis2_udp_receiver_create(env, NULL, -1, NULL);
+    *inst = axis2_udp_receiver_create(env, NULL, 0, NULL);
     if (!(*inst))
     {
         return AXIS2_FAILURE;
