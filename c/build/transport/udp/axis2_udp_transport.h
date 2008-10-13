@@ -76,7 +76,6 @@ typedef struct axis2_udp_transport_params
 typedef struct axis2_udp_backchannel_info
 {
 	axis2_socket_t socket;
-	axutil_thread_mutex_t *mutex;
 	axis2_svc_t *svc;
 	axis2_op_t *op;
 } axis2_udp_backchannel_info_t;
