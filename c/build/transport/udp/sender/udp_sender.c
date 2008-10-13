@@ -525,10 +525,54 @@ axis2_udp_transport_sender_invoke(
 				return AXIS2_FAILURE;
 			}
 		}
-		/* If a socket is not set, create one. */
-		if (sender->socket == AXIS2_INVALID_SOCKET)
+		/* if we use a seperate listener we need to make sure that the listener is up 
+		before sending. So we call the receiver_is_running method to make sure that 
+		it is running 
+		*/
+		if (use_seperate_listnener)
 		{
-			sender->socket = (int)axutil_network_handler_open_dgram_socket(env);
+			axis2_transport_in_desc_t *in_desc = NULL;
+			axis2_transport_receiver_t *receiver = NULL;
+			/*AXIS2_TRANSPORT_ENUMS transport_in_protocol;
+			transport_in_protocol = AXIS2_TRANSPORT_ENUM_UDP;*/
+			/*axis2_options_get_transport_in_protocol(options, env);*/
+			/*in_desc = axis2_conf_get_transport_in(conf, env, transport_in_protocol);*/
+			in_desc = axis2_msg_ctx_get_transport_in_desc(msg_ctx, env);
+			if (!in_desc)
+			{	
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Transport in protocol cannot be found");
+				return AXIS2_FAILURE;
+			}
+			receiver = axis2_transport_in_desc_get_recv(in_desc, env);
+			if (!axis2_transport_receiver_is_running(receiver, env))
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Receiver is not running");
+				return AXIS2_FAILURE;
+			}
+		}
+		/* If a socket is not set, create one or get the one set by the receiver. */
+		if (sender->socket == AXIS2_INVALID_SOCKET)
+		{	
+			if (use_seperate_listnener)
+			{
+				/* if we use a seperate listener, fetch the UDP socket set by the receiver */
+				axis2_ctx_t *ctx = NULL;
+				axutil_property_t *prop = NULL;
+				axis2_udp_backchannel_info_t *binfo = NULL;
+				ctx = axis2_conf_ctx_get_base(conf_ctx, env);
+				prop = axis2_ctx_get_property(ctx, env, AXIS2_UDP_BACKCHANNEL_INFO);
+				if (prop)
+				{
+					binfo = axutil_property_get_value(prop, env);	
+					sender->socket = binfo->socket;		
+					sender->owns_socket = AXIS2_FALSE;
+					axis2_udp_transport_add_backchannel_info(env, msg_ctx);
+				}				
+			}
+			else
+			{
+				sender->socket = (int)axutil_network_handler_open_dgram_socket(env);		
+			}
 		}
 		/* If a socket is not set and socket creation failed quit sender. */
 		if (sender->socket == AXIS2_INVALID_SOCKET)
@@ -563,12 +607,7 @@ axis2_udp_transport_sender_invoke(
 			{
 				is_oneway = AXIS2_TRUE;
 			}
-		}
-		if (use_seperate_listnener)
-		{
-			axis2_udp_transport_add_backchannel_info(env, msg_ctx);
-		}
-		/*udp_repeat = 1;*/
+		}		
 		/* Retry and backoff algorithm as defined by the spec */
 		if (udp_repeat > 0)
 		{			
@@ -646,11 +685,6 @@ axis2_udp_transport_sender_invoke(
 			axutil_thread_mutex_lock(args->mutex);
 			axutil_thread_mutex_unlock(args->mutex);
 		}
-		/* If we owns the socket, Close */
-		/*if (sender->owns_socket)
-		{
-			axutil_network_handler_close_socket(env, sender->socket);
-		}*/
 		if (args->message_received && !is_oneway)
 		{
 			reader = axiom_xml_reader_create_for_memory(env, args->recv_buffer, args->recv_buff_len,
@@ -699,12 +733,11 @@ static axis2_status_t AXIS2_CALL
 axis2_udp_transport_add_backchannel_info(const axutil_env_t *env, axis2_msg_ctx_t *msg_ctx)
 {
 	axis2_conf_ctx_t *conf_ctx = NULL;
-	axis2_conf_t *conf = NULL;
-	axutil_param_t *param = NULL;
 	axis2_udp_backchannel_info_t *binfo = NULL;
 	axis2_svc_t *svc = NULL;
 	axis2_op_t *op = NULL;
-
+	axutil_property_t *prop = NULL;
+	axis2_ctx_t *ctx = NULL;
 	binfo = AXIS2_MALLOC(env->allocator, sizeof(axis2_udp_backchannel_info_t));
 	if (!binfo)
 	{
@@ -712,16 +745,19 @@ axis2_udp_transport_add_backchannel_info(const axutil_env_t *env, axis2_msg_ctx_
 		return AXIS2_FAILURE;
 	}
 	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
-	conf = axis2_conf_ctx_get_conf(conf_ctx, env);
 	/* We set the axis2_svc and oparation. When the response comes it will bypass the dispatchers 
 	   and will directly go the service and operation 
 	   */
-	svc = axis2_msg_ctx_get_svc(msg_ctx, env);
-	op = axis2_msg_ctx_get_op(msg_ctx, env);
-	binfo->op = op;
-	binfo->svc = svc;
-	param = axutil_param_create(env, AXIS2_UDP_BACKCHANNEL_INFO, binfo);
-	axis2_conf_add_param(conf, env, param);
+	ctx = axis2_conf_ctx_get_base(conf_ctx, env);
+	prop = axis2_ctx_get_property(ctx, env, AXIS2_UDP_BACKCHANNEL_INFO);
+	if (prop)
+	{
+		binfo = axutil_property_get_value(prop, env);	
+		svc = axis2_msg_ctx_get_svc(msg_ctx, env);
+		op = axis2_msg_ctx_get_op(msg_ctx, env);
+		binfo->op = op;
+		binfo->svc = svc;
+	}
 	return AXIS2_SUCCESS;
 }
 

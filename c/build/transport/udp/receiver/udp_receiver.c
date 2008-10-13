@@ -28,6 +28,7 @@
 #include <axiom_soap_envelope.h>
 #include <axiom_soap.h>
 #include <axis2_engine.h>
+#include <axutil_thread.h>
 
 #define AXIS2_DEFAULT_HOST_ADDRESS "127.0.0.1"
 #define AXIS2_DEFAULT_SVC_PATH "/axis2/services/"
@@ -42,7 +43,7 @@ typedef struct axis2_udp_receiver_impl
 	int port;
 	axis2_socket_t socket;
 	axis2_socket_t send_socket;
-
+	axutil_thread_mutex_t *mutex;
 	/* if this is true receiver should close the socket */
 	axis2_bool_t owns_socket;
 	/* multicast properties */
@@ -131,6 +132,12 @@ axis2_udp_receiver_thread_worker_func(
     axutil_thread_t * thd,
     void *data);
 
+static axis2_status_t AXIS2_CALL
+axis2_udp_transport_add_backchannel_info(
+	const axutil_env_t *env, 
+	axis2_ctx_t *ctx, 
+	axis2_socket_t socket);
+
 static const axis2_transport_receiver_ops_t udp_transport_recvr_ops = {
     axis2_udp_receiver_init,
     axis2_udp_receiver_start,
@@ -170,6 +177,8 @@ axis2_udp_receiver_create(
 	{
 		receiver->is_multicast = AXIS2_TRUE;
 	}
+	receiver->mutex = axutil_thread_mutex_create(env->allocator,
+                                                 AXIS2_THREAD_MUTEX_DEFAULT);
 	/* 
 	 * We are creating the receiver in two instances. When we create the receiver from the server 
 	 * we create the conf context. If we are creating the receiver while creating the conf we are 
@@ -188,6 +197,7 @@ axis2_udp_receiver_create(
 		}
 		receiver->conf_ctx = receiver->conf_ctx_private;
 	}
+	axutil_thread_mutex_lock(receiver->mutex);
 	return &(receiver->udp_receiver);
 }
 
@@ -214,6 +224,8 @@ axis2_udp_receiver_create_with_file(
 	receiver->socket = AXIS2_INVALID_SOCKET;
 	receiver->send_socket = AXIS2_INVALID_SOCKET;
 	receiver->owns_socket = AXIS2_TRUE;
+	receiver->mutex = axutil_thread_mutex_create(env->allocator,
+                                                 AXIS2_THREAD_MUTEX_DEFAULT);
 	/* 
 	 * We are creating the receiver in two instances. When we create the receiver from the server 
 	 * we create the conf context. If we are creating the receiver while creating the conf we are 
@@ -264,6 +276,10 @@ axis2_udp_receiver_free(
 	{
 		axutil_network_handler_close_socket(env, receiver->socket);
 	}
+	if (receiver->mutex)
+	{
+		axutil_thread_mutex_destroy(receiver->mutex);
+	}
 	AXIS2_FREE(env->allocator, receiver);
 }
 
@@ -313,7 +329,6 @@ axis2_udp_receiver_start(
 	axis2_udp_receiver_impl_t *receiver = NULL;
 
 	receiver = AXIS2_INTF_TO_IMPL(tr_receiver);
-	receiver->stop =  AXIS2_FALSE;
 
 	AXIS2_LOG_INFO(env->log, "Started the UDP server");
 	if (receiver->socket == AXIS2_INVALID_SOCKET)
@@ -327,9 +342,14 @@ axis2_udp_receiver_start(
 		}
 		else
 		{
+			axis2_ctx_t *ctx = NULL;
 			/* Setup a socket to receive unicast packets */
 			receiver->socket = axutil_network_handler_create_dgram_svr_socket(
 				env, receiver->port);
+			/* bind the socket to a unique address */
+			/*axutil_network_handler_bind_socket(env, receiver->socket, 0);*/
+			ctx = axis2_conf_ctx_get_base(receiver->conf_ctx, env);
+			axis2_udp_transport_add_backchannel_info(env, ctx, receiver->socket);
 		}
 		receiver->owns_socket = AXIS2_TRUE;
 	}
@@ -346,7 +366,8 @@ axis2_udp_receiver_start(
 		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Socket creation faild on socket");
 		return AXIS2_FAILURE;
 	}
-
+	receiver->stop =  AXIS2_FALSE;
+	axutil_thread_mutex_unlock(receiver->mutex);
 	while (!receiver->stop)
 	{
 		axis2_udp_recv_thd_args_t *args = NULL;
@@ -454,9 +475,13 @@ axis2_udp_receiver_is_running(
     axis2_transport_receiver_t * tr_receiver,
     const axutil_env_t * env)
 {
+	axis2_bool_t running = AXIS2_FALSE;
 	axis2_udp_receiver_impl_t *receiver = NULL;
 	receiver = AXIS2_INTF_TO_IMPL(tr_receiver);	
-	return !receiver->stop;
+	axutil_thread_mutex_lock(receiver->mutex);
+	running = !receiver->stop;
+	axutil_thread_mutex_unlock(receiver->mutex);
+	return running;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -492,7 +517,7 @@ axis2_udp_receiver_thread_worker_func(
 	axutil_hash_index_t *hi = NULL;
 	axutil_hash_t *ori_all_svcs = NULL, *all_svcs = NULL;
 	void *val = NULL;
-
+	
 	args = (axis2_udp_recv_thd_args_t *) data;
 	env = (axutil_env_t *) args->env;	
 
@@ -564,13 +589,15 @@ axis2_udp_receiver_thread_worker_func(
 	}
 	else
 	{
-		axutil_param_t *param = NULL;
-		axis2_char_t *temp = NULL;
+		axis2_ctx_t *ctx = NULL;
+		axutil_property_t *prop = NULL;
 		axis2_udp_backchannel_info_t *binfo = NULL;
-		param = axis2_conf_get_param(conf, env, AXIS2_UDP_BACKCHANNEL_INFO);
-		if (param)
+
+		ctx = axis2_conf_ctx_get_base(args->conf_ctx, env);
+		prop = axis2_ctx_get_property(ctx, env, AXIS2_UDP_BACKCHANNEL_INFO);
+		if (prop)
 		{
-			binfo = axutil_param_get_value(param, env);
+			binfo = axutil_property_get_value(prop, env);
 		}
 		/* Unicast case. In this case message contains dispatching information. 
 		 * So we send the request in the normal way 
@@ -700,6 +727,29 @@ axis2_udp_receiver_process_request(
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
                     "end:axis2_udp_worker_process_request");
     return AXIS2_SUCCESS;
+}
+
+static axis2_status_t AXIS2_CALL
+axis2_udp_transport_add_backchannel_info(const axutil_env_t *env, axis2_ctx_t *ctx, axis2_socket_t socket)
+{
+	axis2_udp_backchannel_info_t *binfo = NULL;
+	axutil_property_t *prop = NULL;
+	binfo = AXIS2_MALLOC(env->allocator, sizeof(axis2_udp_backchannel_info_t));
+	if (!binfo)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Out of memory");
+		return AXIS2_FAILURE;
+	}
+	/* We set the axis2_svc and oparation. When the response comes it will bypass the dispatchers 
+	   and will directly go the service and operation 
+	   */
+	binfo->op = NULL;
+	binfo->svc = NULL;
+	binfo->socket = socket;
+	prop = axutil_property_create(env);
+	axutil_property_set_value(prop, env, binfo);
+	axis2_ctx_set_property(ctx, env, AXIS2_UDP_BACKCHANNEL_INFO, prop);
+	return AXIS2_SUCCESS;
 }
 
 
