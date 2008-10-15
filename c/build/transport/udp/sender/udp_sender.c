@@ -51,6 +51,8 @@ typedef struct axis2_udp_transport_sender_impl
 	axis2_bool_t is_multicast;
 	/* Time that the sender will wait for a response */
 	unsigned int time_out;
+	/* Max packet size */
+	unsigned int max_packet_size;
 } axis2_udp_transport_sender_impl_t;
 
 /* This structure is used for passsing information to the listner thread */
@@ -63,7 +65,7 @@ typedef struct axis2_udp_transport_sender_args_s
 	/* mutex to synchronize the sending and receiving thread */
 	axutil_thread_mutex_t *mutex;	
 	/* Buffer to receive the data */
-	axis2_char_t recv_buffer[AXIS2_UDP_PACKET_MAX_SIZE];
+	axis2_char_t *recv_buffer;
 	/* Buffer length */
 	int recv_buff_len;
 	/* This flag is set when the receiving thread receives a message */
@@ -154,6 +156,7 @@ axis2_udp_ender_create(const axutil_env_t * env)
 	udp_sender->owns_socket = AXIS2_TRUE;
 	udp_sender->time_out = 5000;
 	udp_sender->is_multicast = AXIS2_FALSE;
+	udp_sender->max_packet_size = AXIS2_UDP_PACKET_MAX_SIZE;
 	return &(udp_sender->transport_sender);
 }
 
@@ -248,6 +251,10 @@ axis2_udp_transport_sender_init(
 		AXIS2_UDP_TRANSPORT_UNI_REPEAT_STR, &(udp_sender->unicast.udp_repeat));
 	axis2_udp_transport_set_param_value(env, container, 
 		AXIS2_UDP_TRANSPORT_UNI_UPPER_DELAY_STR, &(udp_sender->unicast.udp_upper_delay));
+
+	/* set the max packet size */
+	axis2_udp_transport_set_param_value(env, container, 
+		AXIS2_UDP_TRANSPORT_MAX_PACKET_SIZE_STR, &(udp_sender->max_packet_size));
 
 	/* Set the time out */
 	axis2_udp_transport_set_param_value(env, container, 
@@ -391,6 +398,12 @@ axis2_udp_transport_sender_invoke(
         return AXIS2_FAILURE;
     }
     buffer_size = axiom_xml_writer_get_xml_size(xml_writer, env);
+	if (buffer_size > AXIS2_UDP_PACKET_MAX_SIZE)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+			"Message exceeds Maximum UDP packet limit:%d ", AXIS2_UDP_PACKET_MAX_SIZE);
+		return AXIS2_FAILURE;
+	}
     buffer[buffer_size] = 0;
     if (is_server)
     {
@@ -533,10 +546,6 @@ axis2_udp_transport_sender_invoke(
 		{
 			axis2_transport_in_desc_t *in_desc = NULL;
 			axis2_transport_receiver_t *receiver = NULL;
-			/*AXIS2_TRANSPORT_ENUMS transport_in_protocol;
-			transport_in_protocol = AXIS2_TRANSPORT_ENUM_UDP;*/
-			/*axis2_options_get_transport_in_protocol(options, env);*/
-			/*in_desc = axis2_conf_get_transport_in(conf, env, transport_in_protocol);*/
 			in_desc = axis2_msg_ctx_get_transport_in_desc(msg_ctx, env);
 			if (!in_desc)
 			{	
@@ -634,20 +643,29 @@ axis2_udp_transport_sender_invoke(
 			}
 			args->env = axutil_init_thread_env(env);
 			args->message_received = AXIS2_FALSE;
+			args->recv_buffer = AXIS2_MALLOC(env->allocator, 
+				sizeof(axis2_char_t) * sender->max_packet_size);
+			if (!args->recv_buffer)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "out of memory");
+				return AXIS2_FAILURE;
+			}
 			args->recv_buff_len = AXIS2_UDP_PACKET_MAX_SIZE;
 			args->udp_sender = sender;
 			args->mutex = NULL;	
 			/* we are creating the listening thread only if use seperate listener is false */
 			if (!use_seperate_listnener)
 			{
-				args->mutex = axutil_thread_mutex_create(env->allocator, AXIS2_THREAD_MUTEX_DEFAULT);
-				/* We do a lock which is unlocked by the receiving thread. Unloack happens after it get the response */
-				axutil_thread_mutex_lock(args->mutex);
+				args->mutex = axutil_thread_mutex_create(env->allocator, 
+					AXIS2_THREAD_MUTEX_DEFAULT);
 				if (!args->mutex)
 				{
 					AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Mutex creation failed");
 					return AXIS2_FAILURE;
-				}			
+				}
+				/* We do a lock which is unlocked by the receiving thread. 
+				Unloack happens after it get the response */
+				axutil_thread_mutex_lock(args->mutex);							
 				thread = axutil_thread_pool_get_thread(env->thread_pool,
 														axis2_udp_sender_thread_worker_func,
 														(void *) args);
@@ -659,7 +677,7 @@ axis2_udp_transport_sender_invoke(
 				axutil_thread_pool_thread_detach(env->thread_pool, thread);
 			}
 			/* Sleep */
-			AXIS2_USLEEP(T);
+			AXIS2_USLEEP(T * 1000);
 			while (udp_repeat > 0 && !args->message_received)
 			{								
 				/* send */			

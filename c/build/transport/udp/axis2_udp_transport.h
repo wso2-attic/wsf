@@ -62,8 +62,10 @@ extern "C"
 #define AXIS2_UDP_TRANSPORT_PORT					"UDPPort"
 #define AXIS2_UDP_TRANSPORT_ADDRESS					"UDPAddress"
 #define AXIS2_UDP_MULTICAST_ACCEPT					"UDPMulticastAccept"
+#define AXIS2_UDP_TRANSPORT_MAX_PACKET_SIZE_STR		"UDPMaxPacketSize"
 
 #define AXIS2_UDP_BACKCHANNEL_INFO					"UDPBackChannelInfo"
+
 		
 typedef struct axis2_udp_transport_params
 {

@@ -50,6 +50,7 @@ typedef struct axis2_udp_receiver_impl
 	axis2_bool_t is_multicast;
 	/* multicast group that this receiver listen */
 	axis2_char_t *multicast_group;
+	axis2_bool_t max_packet_size;
 } axis2_udp_receiver_impl_t;
 
 /* This structure is used to hold information about a udp request */
@@ -173,6 +174,7 @@ axis2_udp_receiver_create(
 	receiver->socket = AXIS2_INVALID_SOCKET;
 	receiver->send_socket = AXIS2_INVALID_SOCKET;
 	receiver->owns_socket = AXIS2_TRUE;
+	receiver->max_packet_size = AXIS2_UDP_PACKET_MAX_SIZE;
 	if (multicast_group)
 	{
 		receiver->is_multicast = AXIS2_TRUE;
@@ -226,6 +228,7 @@ axis2_udp_receiver_create_with_file(
 	receiver->owns_socket = AXIS2_TRUE;
 	receiver->mutex = axutil_thread_mutex_create(env->allocator,
                                                  AXIS2_THREAD_MUTEX_DEFAULT);
+	receiver->max_packet_size = AXIS2_UDP_PACKET_MAX_SIZE;
 	/* 
 	 * We are creating the receiver in two instances. When we create the receiver from the server 
 	 * we create the conf context. If we are creating the receiver while creating the conf we are 
@@ -292,7 +295,7 @@ axis2_udp_receiver_init(
     axis2_transport_in_desc_t * in_desc)
 {
 	axis2_udp_receiver_impl_t *receiver = NULL;
-	axis2_char_t *port_str = NULL;
+	axis2_char_t *str = NULL;
 	axutil_param_t *param = NULL;
 	axutil_param_container_t *container = NULL;
 
@@ -304,18 +307,31 @@ axis2_udp_receiver_init(
 	param = (axutil_param_t *) axutil_param_container_get_param(container, env, AXIS2_PORT_STRING);	
 	if (param)
 	{
-		port_str = (axis2_char_t *)axutil_param_get_value(param, env);
+		str = (axis2_char_t *)axutil_param_get_value(param, env);
+		if (str)
+		{
+			receiver->port = atoi(str);
+		}
 	}
-	if (port_str)
-	{
-		receiver->port = atoi(port_str);
-	}
+	
 	/* Get the multicast group */
-	param = (axutil_param_t *) axutil_param_container_get_param(container, env, AXIS2_UDP_TRANSPORT_MULTICAST_GROUP);
+	param = (axutil_param_t *) axutil_param_container_get_param(container, env, 
+		AXIS2_UDP_TRANSPORT_MULTICAST_GROUP);
 	if (param)
 	{
 		receiver->multicast_group = (axis2_char_t *)axutil_param_get_value(param, env);
 		receiver->is_multicast = AXIS2_TRUE;
+	}
+	/* Get the max packet size */
+	param = (axutil_param_t *) axutil_param_container_get_param(container, env, 
+		AXIS2_UDP_TRANSPORT_MAX_PACKET_SIZE_STR);
+	if (param)
+	{
+		str = (axis2_char_t *)axutil_param_get_value(param, env);
+		if (str)
+		{
+			receiver->max_packet_size = atoi(str);
+		} 	
 	}
 	return AXIS2_SUCCESS;
 }
@@ -346,6 +362,7 @@ axis2_udp_receiver_start(
 			/* Setup a socket to receive unicast packets */
 			receiver->socket = axutil_network_handler_create_dgram_svr_socket(
 				env, receiver->port);
+			receiver->owns_socket = AXIS2_TRUE; 
 			/* bind the socket to a unique address */
 			/*axutil_network_handler_bind_socket(env, receiver->socket, 0);*/
 			ctx = axis2_conf_ctx_get_base(receiver->conf_ctx, env);
@@ -377,7 +394,7 @@ axis2_udp_receiver_start(
 		int buf_len = AXIS2_UDP_PACKET_MAX_SIZE;
 		axis2_char_t *in_buff = NULL;
 
-		in_buff = AXIS2_MALLOC(env->allocator, sizeof(char) * AXIS2_UDP_PACKET_MAX_SIZE);
+		in_buff = AXIS2_MALLOC(env->allocator, sizeof(char) * receiver->max_packet_size);
 		/* This is a blocking call. This will block until data is available in the socket */
 		status = axutil_network_handler_read_dgram(env, receiver->socket, in_buff, &buf_len, &addr, &port);   
 		if (status == AXIS2_FAILURE)
