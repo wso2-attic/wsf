@@ -41,7 +41,14 @@
     <parameter name="port" locked="false">6060</parameter>
     </transportReceiver-->
 
-
+    <!--<transportReceiver name="soap.udp" class="axis2_udp_receiver">-->
+      <!--<parameter name="port" locked="false">6060</parameter>-->
+      <!--Maximum UDP packet that can be received-->
+      <!--<parameter name="UDPMaxPacketSize">16384</parameter>-->
+      <!--If specified, receiver will join this multicast group-->
+      <!--<parameter name="multicastGroup">239.255.255.250</parameter>-->
+    <!--</transportReceiver>-->
+    
     <!-- ================================================= -->
     <!-- Transport Outs -->
     <!-- ================================================= -->
@@ -57,6 +64,23 @@
       <parameter name="PROTOCOL" locked="false">HTTP/1.1</parameter>
       <parameter name="xml-declaration" insert="false"/>
     </transportSender>
+  
+    <!--<transportSender name="soap.udp" class="axis2_udp_sender">-->
+      <!--Following parameters are specified in the SOAP over UDP spec. User can change the values to suite their needs-->
+      <!--<parameter name="uniRepeat">2</parameter>-->
+      <!--<parameter name="uniMinDelay">50</parameter>-->
+      <!--<parameter name="uniMaxDelay">250</parameter>-->
+      <!--<parameter name="uniUpperDelay">500</parameter>-->
+      <!--<parameter name="mulRepeat">4</parameter>-->
+      <!--<parameter name="mulMinDelay">50</parameter>-->
+      <!--<parameter name="mulMaxDelay">250</parameter>-->
+      <!--<parameter name="mulUpperDelay">500</parameter>-->
+      <!--Timeout for the single channel blocking case-->
+      <!--<parameter name="timeOut">30</parameter>-->
+      <!--Set the maximum packet size to be sent-->
+      <!--<parameter name="UDPMaxPacketSize">16384</parameter>-->
+    <!--</transportSender>-->
+  
     <!--
     <parameter name="SERVER_CERT">/path/to/ca/certificate</parameter>
     <parameter name="KEY_FILE">/path/to/client/certificate/chain/file</parameter>
