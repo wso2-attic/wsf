@@ -220,7 +220,7 @@ WSRequest.prototype.send = function(payload) {
         var scriptId = Math.random().toString().substring(3);
 
         var tunnelDomain;
-        if (this.proxyAddress == null) {
+        if (this.proxyAddress == null || this.proxyAddress == "") {
             if (this._uri.indexOf("http") == 0)
                 tunnelDomain = this._uri.substring(0,this._uri.indexOf("/services/"));
             else throw new WebServiceError("Unspecified WSRequest.proxyAddress property - must specify when using script-injection fallback when endpoint is not http or https.")
