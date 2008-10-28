@@ -13,5 +13,5 @@ INCLUDES = -I$(top_builddir)/include \
             -I$(top_builddir)/axiom/include \
 	    	@IKSEMELINC@
 
-EXTRA_DIST=axis2_xmpp_server.h axis2_xmpp_transport.h axis2_xmpp_transport_utils.h axis2_xmpp_svr_thread.h axis2_xmpp_transport_sender.h axis2_xmpp_worker.h axis2_xmpp_session.h samples
+EXTRA_DIST=axis2_xmpp_server.h axis2_xmpp_transport.h axis2_xmpp_transport_utils.h axis2_xmpp_svr_thread.h axis2_xmpp_transport_sender.h axis2_xmpp_worker.h axis2_xmpp_session.h 
 
