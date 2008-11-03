@@ -1055,27 +1055,34 @@ function wsf_wsdl_deserialize_string_value($xsd_type, $data_value, $sig_param_no
  * @return cast type
  */
 function wsf_convert_string_to_php_type($xsd_type, $data_value) {
-    $xsd_php_mapping_table = wsf_wsdl_util_xsd_to_php_type_map();
-
-    $converted_value = $data_value;
-    if(array_key_exists($xsd_type, $xsd_php_mapping_table)) {
-        $type = $xsd_php_mapping_table[$xsd_type];
-        if($type == 'integer') {
-            $converted_value = (int)($data_value);
-        }
-        else if ($type == 'float') {
-            $converted_value = (float)($data_value);
-        }
-        else if ($type == 'boolean') {
-            $converted_value = ($data_value === "true");
-        }
-        else if ($type == 'string') {
-            $converted_value = $data_value;
-        }
-        else {
-            $converted_value = $data_value;
-        }
-    }
+	// we treat dateTime value differently
+	if($xsd_type == "dateTime" || $xsd_type == "date" || $xsd_type == "time") {
+		$date_value = str_replace("T", " ", $data_value);
+		$converted_value = strtotime($date_value);
+	}
+	else {
+		$xsd_php_mapping_table = wsf_wsdl_util_xsd_to_php_type_map();
+		
+		$converted_value = $data_value;
+		if(array_key_exists($xsd_type, $xsd_php_mapping_table)) {
+			$type = $xsd_php_mapping_table[$xsd_type];
+			if($type == 'integer') {
+				$converted_value = (int)($data_value);
+			}
+			else if ($type == 'float') {
+				$converted_value = (float)($data_value);
+			}
+			else if ($type == 'boolean') {
+				$converted_value = ($data_value === "true");
+			}
+			else if ($type == 'string') {
+					$converted_value = $data_value;
+				}
+				else {
+					$converted_value = $data_value;
+				}
+		}
+	}
     return $converted_value;
 }
 

@@ -908,61 +908,6 @@ function wsf_wsdl_util_xsd_to_php_type_map() {
     return $map;
 }
 
-function wsf_wsdl_util_serialize_php_value($xsd_type, $data_value) {
-    $xsd_php_mapping_table = wsf_wsdl_util_xsd_to_php_type_map();
-    $serialized_value = $data_value;
-
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "serializing ".$data_value);
-    
-    if(array_key_exists($xsd_type, $xsd_php_mapping_table)) {
-        $type = $xsd_php_mapping_table[$xsd_type];
-
-        if($type == "boolean") {
-            if($data_value == FALSE) {
-                $serialized_value = "false";
-            }
-            else
-            {
-                $serialized_value = "true";
-            }
-        }
-    }
-
-    if($serialized_value === NULL) return "";
-    return $serialized_value."";
-}
-
-
-function wsf_wsdl_util_convert_value($xsd_type, $data_value) {
-    $xsd_php_mapping_table = wsf_wsdl_util_xsd_to_php_type_map();
-
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "deserializing ".$data_value);
-
-    $converted_value = $data_value;
-    if(array_key_exists($xsd_type, $xsd_php_mapping_table)) {
-        $type = $xsd_php_mapping_table[$xsd_type];
-        if($type == 'integer') {
-            $converted_value = (int)($data_value);
-        }
-        else if ($type == 'float') {
-            $converted_value = (float)($data_value);
-        }
-        else if ($type == 'boolean') {
-            $converted_value = ($data_value === "true");
-        }
-        else if ($type == 'string') {
-            $converted_value = $data_value;
-        }
-        else {
-            $converted_value = $data_value;
-        }
-    }
-    
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "deserialized to ".$converted_value);
-
-    return $converted_value;
-}
-
 function wsf_is_rpc_enc_wsdl($binding_node, $operation_name) {
     if(!$binding_node) {
         return FALSE;

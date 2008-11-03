@@ -1053,26 +1053,49 @@ function wsf_wsdl_serialize_php_value($xsd_type, $data_value,
  * @return string serialized to string
  */
 function wsf_convert_php_type_to_string($xsd_type, $data_value) {
-    $serialized_value = $data_value;
-    if($serialized_value === NULL) {
-        return "";
-    }
-    $xsd_php_mapping_table = wsf_wsdl_util_xsd_to_php_type_map();
-
-    if(array_key_exists($xsd_type, $xsd_php_mapping_table)) {
-        //retrieve the php type
-        $type = $xsd_php_mapping_table[$xsd_type];
-
-        if($type == "boolean") {
-            if($data_value == FALSE) {
-                $serialized_value = "false";
-            }
-            else
-            {
-                $serialized_value = "true";
-            }
-        }
-    }
+	
+	$serialized_value = $data_value;
+	if($serialized_value === NULL) {
+		return "";
+	}
+	
+	// we treat dateTime value differently
+	if($xsd_type == "dateTime" || $xsd_type == "date" || $xsd_type == "time") {
+		
+		if(gettype($data_value) == "integer") {
+			if($xsd_type == "dateTime") {
+				$serialized_value = date("Y-m-d", $data_value)."T".date("H:i:s", $data_value)."Z";
+			}
+			else if($xsd_type == "date") {
+				$serialized_value = date("Y-m-d", $data_value);
+			}
+			else if($xsd_type == "time") {
+					$serialized_value = date("H:i:s", $data_value)."Z";
+				}
+		}
+		else {
+			// hope the other type is the string as it is
+			$serialized_value = (string)$data_value;
+		}
+	}
+	else {
+		$xsd_php_mapping_table = wsf_wsdl_util_xsd_to_php_type_map();
+		
+		if(array_key_exists($xsd_type, $xsd_php_mapping_table)) {
+			//retrieve the php type
+			$type = $xsd_php_mapping_table[$xsd_type];
+			
+			if($type == "boolean") {
+				if($data_value == FALSE) {
+					$serialized_value = "false";
+				}
+				else
+				{
+					$serialized_value = "true";
+				}
+			}
+		}
+	}
     return $serialized_value."";
 }
 
