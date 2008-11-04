@@ -36,13 +36,19 @@
 /* UDP Receiver */
 typedef struct axis2_udp_receiver_impl
 {
-    axis2_transport_receiver_t udp_receiver;    
+    axis2_transport_receiver_t udp_receiver; 
+	/* receiver will run until this is false */
 	axis2_bool_t stop;
+	/* configuration context */
     axis2_conf_ctx_t *conf_ctx;
     axis2_conf_ctx_t *conf_ctx_private;
+	/* listening port */
 	int port;
+	/* socket to receive */
 	axis2_socket_t socket;
+	/* socket to send */
 	axis2_socket_t send_socket;
+	/* mutex to control sequential execution in dual channel */
 	axutil_thread_mutex_t *mutex;
 	/* if this is true receiver should close the socket */
 	axis2_bool_t owns_socket;
@@ -50,6 +56,7 @@ typedef struct axis2_udp_receiver_impl
 	axis2_bool_t is_multicast;
 	/* multicast group that this receiver listen */
 	axis2_char_t *multicast_group;
+	/* maximum packet size */
 	axis2_bool_t max_packet_size;
 } axis2_udp_receiver_impl_t;
 
