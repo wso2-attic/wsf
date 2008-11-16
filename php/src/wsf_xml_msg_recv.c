@@ -257,18 +257,30 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
 					axiom_soap_body_add_child(body, env, body_child_node);
 				}
 			}
-			for (i = 0; i < req_info->param_count; i++)
-			{
-				axiom_node_t *node = NULL;
-				axiom_element_t *element = NULL;
+            if(req_info->param_keys && req_info->param_values)
+            {
+                int i = 0;
+                for(i = 0; i < axutil_array_list_size(req_info->param_keys, env); i ++)
+                {
+                    axiom_node_t *node = NULL;
+                    axiom_element_t *element = NULL;
 
-				element = axiom_element_create(env, NULL, req_info->params[i][0],
-											   NULL, &node);
-				axiom_element_set_text(element, env, req_info->params[i][1], node);
-				axiom_node_add_child(body_child_node, env, node);
-				AXIS2_FREE (env->allocator, req_info->params[i][0]);
-				AXIS2_FREE (env->allocator, req_info->params[i][1]);
-				AXIS2_FREE (env->allocator, req_info->params[i]);
+                    axis2_char_t *param_key = NULL;
+                    axis2_char_t *param_value = NULL;
+
+                    param_key = axutil_array_list_get(req_info->param_keys, env, i);
+                    param_value = axutil_array_list_get(req_info->param_values, env, i);
+
+                    element = axiom_element_create(env, NULL, param_key,
+                                                   NULL, &node);
+                    axiom_element_set_text(element, env, param_value, node);
+                    axiom_node_add_child(body_child_node, env, node);
+
+                    AXIS2_FREE (env->allocator, param_key);
+                    AXIS2_FREE (env->allocator, param_value);
+			    }
+                axutil_array_list_free(req_info->param_keys, env);
+                axutil_array_list_free(req_info->param_values, env);
 			}
 		}
 	}

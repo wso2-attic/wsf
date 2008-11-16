@@ -59,21 +59,28 @@ wsf_worker_find_op_and_params_with_location_and_method(
 	axis2_msg_ctx_t *msg_ctx)
 {
 	axis2_op_t *op = NULL;
-	int param_count = 0;
-	char ***params = NULL;
+    
+    axutil_array_list_t *param_keys = NULL;
+    axutil_array_list_t *param_values = NULL;
+
+
 	if(svc_info->loc_str)
 	{
+        param_keys = axutil_array_list_create(env, 10);
+        param_values = axutil_array_list_create(env, 10);
 		op = axis2_core_utils_get_rest_op_with_method_and_location(svc_info->svc,
-			env, method, svc_info->loc_str, &param_count, &params);
+			env, method, svc_info->loc_str, param_keys, param_values);
 	}
-	req_info->param_count = param_count;
-	req_info->params = params;
+	req_info->param_keys = param_keys;
+	req_info->param_values = param_values;
 
    if (op)
    {
 		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
 			"Operation found using target endpoint uri fragment");
-   }else
+   }
+   /*
+   else
    {
 		int i = 0;
 		int j = 0;
@@ -113,7 +120,8 @@ wsf_worker_find_op_and_params_with_location_and_method(
 			}
 		}
 		axis2_msg_ctx_set_supported_rest_http_methods(msg_ctx, env, supported_rest_methods);
-	}	
+	
+    */
 	return op;
 }
 

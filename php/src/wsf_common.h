@@ -375,10 +375,9 @@ typedef struct wsf_request_info
     
 	char *transfer_encoding;
 	
-	/** REST parameter count */
-	int param_count;
-	/** parameters array */
-	char ***params;
+	/** REST parameters */
+	axutil_array_list_t *param_keys;
+	axutil_array_list_t *param_values;
 
 } wsf_request_info_t;
 

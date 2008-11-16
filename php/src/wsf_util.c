@@ -425,8 +425,9 @@ wsf_request_info_init (wsf_request_info_t *req_info)
     req_info->request_data_length = 0;
 	req_info->transfer_encoding = NULL;
     req_info->query_string = NULL;
-	req_info->param_count = 0;
-	req_info->params = NULL;
+
+	req_info->param_keys = NULL;
+	req_info->param_values = NULL;
 
     return;
 }
