@@ -379,6 +379,14 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
         return AXIS2_FAILURE;
     }
 
+
+    out_body = axiom_soap_body_create_with_parent (env, default_envelope);
+    if (!out_body) 
+	{
+        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "[wsfphp] failed in creating the response soap body");
+        return AXIS2_FAILURE;
+    }
+
     out_header = axiom_soap_header_create_with_parent (env, default_envelope);
     if (!out_header) 
     {
@@ -386,7 +394,6 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
         return AXIS2_FAILURE;
     }
         
-
     if(output_headers_zval) {
         axiom_node_t *header_base_node = NULL;
 
@@ -415,13 +422,6 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
             AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "[wsfphp] failed in retrieving the response soap headers node");
             return AXIS2_FAILURE;
         }
-    }
-
-    out_body = axiom_soap_body_create_with_parent (env, default_envelope);
-    if (!out_body) 
-	{
-        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "[wsfphp] failed in creating the response soap body");
-        return AXIS2_FAILURE;
     }
 
     out_node = axiom_soap_body_get_base_node (out_body, env);
