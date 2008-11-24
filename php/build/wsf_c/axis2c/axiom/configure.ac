@@ -2,7 +2,7 @@ dnl run autogen.sh to generate the configure script.
 
 AC_PREREQ(2.59)
 
-AC_INIT(axis2_axiom-src, 1.4.0)
+AC_INIT(axis2_axiom-src, 1.5.0)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE
@@ -114,6 +114,22 @@ AC_ARG_ENABLE(guththila, [  --enable-guththila    build guththila xml parser lib
   AC_MSG_RESULT(no)
 )
 
+AC_MSG_CHECKING(whether to build xpath)
+AC_ARG_ENABLE(xpath, [  --enable-xpath    build xpath. default=yes],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    XPATH_DIR="xpath"
+
+    ;;
+  esac ],
+  AC_MSG_RESULT(yes)
+  XPATH_DIR="xpath"
+)
+
 AC_MSG_CHECKING(whether to build tests)
 AC_ARG_ENABLE(tests, [  --enable-tests    build tests. default=no],
 [ case "${enableval}" in
@@ -142,6 +158,7 @@ AC_SUBST(LIBXML2_LIBS)
 AC_SUBST(WRAPPER_DIR)
 AC_SUBST(GUTHTHILA_LIBS)
 AC_SUBST(TESTDIR)
+AC_SUBST(XPATH_DIR)
 
 AC_CONFIG_FILES([Makefile \
     src/Makefile \
@@ -152,10 +169,12 @@ AC_CONFIG_FILES([Makefile \
     src/om/Makefile \
     src/util/Makefile \
     src/attachments/Makefile \
+    src/xpath/Makefile \
     test/Makefile \
     test/om/Makefile \
     test/soap/Makefile \
     test/util/Makefile \
+    test/xpath/Makefile \
     include/Makefile
     ])
     
