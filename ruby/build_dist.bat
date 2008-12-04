@@ -1,6 +1,6 @@
 @echo off
 
-@call clean.bat
+@call clean_dist.bat
 
 @call init.bat
 @call .\wsf_c\build\init.bat
