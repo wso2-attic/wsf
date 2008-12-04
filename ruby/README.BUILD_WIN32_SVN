@@ -1,0 +1,88 @@
+Building svn source of WSO2 WSF/Ruby on Win32.
+
+===========================================================
+
+Contents:
+
+1. How to build WSO2 WSF/Ruby under Windows from source
+      1.1 Requirements
+      1.2 Building svn source
+
+===========================================================
+1. How to build WSO2 WSF/Ruby under Windows from source
+
+1.1 Requirements
+
+   You need to download following dependency libraries:
+
+   libxml2 binary distribution    - (Libxml2 2.6.30)
+   libxslt binary distribution    - (Libxslt 1.1.23)
+   iconv binary distribution      - (Iconv   1.9.2)
+   OpenSSL binary distribution    - (openssl 0.98d, MSI distribution)
+   Ruby Binary                    - (Ruby    1.8.6, One click installer is prefereble)
+   Mysql Server [When using Reliable Messaging With MySql Database ]
+                                  - (MySql    5.0 or above)
+
+   In addition you need to have visual studio installed on your system.
+
+   obtain libxml2, libxslt and iconv win32 binaries from [1].
+   obtain OpenSSL binary from [2] [the build system assumes that you install openssl from msi].
+   obtain MySql Server from [3].
+   obtain Ruby Bianry from [4].
+
+   [1] http://www.zlatkovic.com/pub/libxml/
+   [2] http://www.slproweb.com/products/Win32OpenSSL.html
+   [3] http://dev.mysql.com/downloads/
+   [4] http://www.ruby-lang.org/en/downloads/
+
+
+1.2 How to build WSO2 WSF/Ruby under Windows from svn source
+
+    1. Comment the following 3 lines at the top of config.h file. 
+     
+       #if _MSC_VER != 1200
+       #error MSC version unmatch
+       #endif
+
+       NOTE : run "ruby find_config_h.rb" in a console to find where this file is.
+
+    2. Add the following entries to your rbconfig.rb file which is in your Ruby installation location.
+       
+        NOTE : run "ruby find_rbconfig.rb" in a console to find where this 'rbconfig.rb' file is.
+
+        (use '/' to seperate directories.                                          |
+         e.g. "E:/install/wsfc" )
+     
+	Since you are building the svn source, this directory will be <your svn source>/wsf_c/<wso2-wsf-c-bin-'versionnumber'>
+
+       #---------------------------------------------------------------------------------
+       CONFIG["WSFC_HOME"] = "<wso2-wsf-ruby-bin-1.0.0-win32 extracted directory>\\wsf_c"
+       CONFIG["WSF_LOG_DIR"] = "where\\you\\wish\\log\\files\\should\\be"
+       CONFIG["WSF_LOG_LEVEL"] = "3"
+       CONFIG["WSF_RUBY_HOME"] = "your\\wsf\\ruby\\home\\dir"
+       #---------------------------------------------------------------------------------
+       
+        NOTE: Above WSF_LOG_LEVEL entry can have one of the following values- 
+                  "0" - CRITICAL
+                  "1" - ERROR
+                  "2" - WARNING
+                  "3" - INFO
+                  "4" - DEBUG
+                  "5" - TRACE
+    
+    3. Do necessary changes to "configure.in" and "configure.in.dist" files found under WSF/Ruby source directory.
+
+    4. If you have the Visual Studio command prompt installed on your computer, 
+       open it.
+
+    5. If you don't have the Visual Studio command prompt installed on your computer, 
+       open a command prompt and run vcvars32.bat.
+
+    7. Go to the WSO2 WSF/Ruby source directory
+
+    8. Run build_dist.bat file in the WSO2 WSF/Ruby svn checkout source directory.
+ 
+    9. This should build the wsf ruby binary distribution to the same directory.
+
+
+
