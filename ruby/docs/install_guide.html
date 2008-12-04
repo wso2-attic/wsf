@@ -23,6 +23,7 @@ page</a> for subscription.</p>
 
             <li><a href=""></a>
 <h2><a name="">Contents</a></h2>
+
 <ul>
   <li><a href="#Installing WSO2 WSF/Ruby from Source on Linux">Installing WSO2 WSF/Ruby from Source on Linux</a>
     <ul>
@@ -53,8 +54,6 @@ page</a> for subscription.</p>
     </ul>
   </li>
   <li><a href="#Run Samples">Run Samples</a></li>
-</ol>
-
 </ul>
 <h2>
 <a name="Installing WSO2 WSF/Ruby from Source on Linux">
@@ -99,7 +98,6 @@ Before Install WSO2 WSF/RUBY, following configuration entries have to be added
    to the 'rbconfig.rb' that ship with ruby package.
 
 <pre>
-
      NOTE : run "ruby find_rbconfig.rb" in a console to find where this 'rbconfig.rb' file is.
 
     #---------------------------------------------------------------------------------
@@ -213,8 +211,7 @@ Requirements
  </p>
 
 <p>
-   NOTE:
-    WSO2-WSF-Ruby-1.0.0 Win32 Binary Will be compiled using following version of dependency libraries.
+   NOTE: WSO2-WSF-Ruby-x.y.z Win32 Binary Will be compiled using following version of dependency libraries.
 </p>
     
 <ol>
@@ -249,8 +246,9 @@ Installing WSO2 WSF/Ruby extension as a Ruby extension
 
 
 <p>
+</p>                  
 <pre>
-    wso2-wsf-ruby-bin-1.0.0-win32
+    wso2-wsf-ruby-bin-x.y.z-win32
                 |  
                 +-- wsf_c
                 |
@@ -261,7 +259,6 @@ Installing WSO2 WSF/Ruby extension as a Ruby extension
                 +-- lib
 
 </pre>
-</p>                  
 
 
 <ol>
@@ -320,8 +317,7 @@ How to build WSO2 WSF/Ruby under Windows from source
     Comment the following 3 lines at the top of config.h file. 
 
      
-<pre>
-       #if _MSC_VER != 1200
+<pre>       #if _MSC_VER != 1200
 
        #error MSC version unmatch
 
@@ -333,8 +329,7 @@ How to build WSO2 WSF/Ruby under Windows from source
     </li>
 
     <li>
-<pre>
-    Add the following entries to your rbconfig.rb file which is in your Ruby installation location.
+<pre>    Add the following entries to your rbconfig.rb file which is in your Ruby installation location.
 
         NOTE : run "ruby find_rbconfig.rb" in a console to find where this 'rbconfig.rb' file is.
 
@@ -403,7 +398,7 @@ Run Samples
 </h2>
 
 
-<ol>
+
 <li>
 It is required to have Rails Framework installed in your machine to run 
 
@@ -426,8 +421,7 @@ It is required to have Rails Framework installed in your machine to run
 Go to the samples/provider directory in the WSO2 WSF/Ruby binary/source
    distribution.
 
-<pre>
-<i>
+<pre><i>
         cd samples/provider
 </i>
 </pre>
@@ -439,8 +433,7 @@ Go to the samples/provider directory in the WSO2 WSF/Ruby binary/source
 Run deploy_samples.rb by executing the following command
 
 
-<pre>
-<i>
+<pre><i>
         ruby deploy_samples.rb your_rails_application
 </i>
 </pre>
@@ -454,8 +447,7 @@ Run deploy_samples.rb by executing the following command
 
 <li>
 Go to the directory 'your_rails_application'
-<pre>
-<i>
+<pre><i>
         cd your_rails_application
 </i>
 </pre>
@@ -464,8 +456,7 @@ Go to the directory 'your_rails_application'
 
 <li>
 Then start the server executing the following command,
-<pre>
-<i>
+<pre><i>
         run the ruby script/server
 </i>
 </pre>
@@ -496,8 +487,7 @@ Start a new shell or command prompt and go to the samples/consumer directory
    shell/command prompt as well.
 
        
-<pre>
-<i>
+<pre><i>
        cd wsfc_ruby_source_installation/samples/consumer
 </i>
 </pre>
@@ -517,7 +507,6 @@ Then run the echo sample by typing "ruby echo_client.rb" in command line or
  
 <li>
 To run other samples please read the guide on README.SAMPLES file.
-</li>
 
 
 <hr/>
@@ -526,6 +515,7 @@ If you need any help with building or installation , send a
 
 mail to wsf-ruby-user@lists.wso2.org
 </b>
+</li>
 
 
 
