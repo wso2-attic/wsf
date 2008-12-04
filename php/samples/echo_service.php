@@ -17,14 +17,7 @@
 
 /* sample test payload */
 $requestPayloadString = <<<XML
-<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope">
-   <soapenv:Header/>
-   <soapenv:Body>
-     <ns1:echoString xmlns:ns1="http://wso2.org/wsfphp/samples">
-         <text>Hello World!</text>
-     </ns1:echoString>
-    </soapenv:Body>
-</soapenv:Envelope>
+<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope"><soapenv:Header/><soapenv:Body><ns1:echoString xmlns:ns1="http://wso2.org/wsfphp/samples"><text>Hello World!</text></ns1:echoString></soapenv:Body></soapenv:Envelope>
 XML;
 
 function echoFunction($inMessage) {
