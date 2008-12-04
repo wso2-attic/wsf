@@ -1,6 +1,6 @@
 @echo off
 
-rem @call clean.bat
+@call clean.bat
 
 @call init.bat
 @call .\wsf_c\build\init.bat
@@ -139,12 +139,4 @@ rem @if exist wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsdlc\conf rmdir /S /Q w
 @del /f /q /s wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsf_c\*.ilk
 @del /f /q /s wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsf_c\*.exp
 @del /f /q /s wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsf_c\*.manifest
-
-@if exist sqlite-3_3_81 cd sqlite-3_3_81
-
-@if exist sqlite3.dll copy /Y sqlite3.dll ..\wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsf_c\lib
-
-@if exist sqlite3.exe copy /Y sqlite3.exe ..\wso2-wsf-ruby-bin-%WSFRUBY_VERSION%-win32\wsf_c\lib
-
-@if exist sqlite3.exe cd ..
 
