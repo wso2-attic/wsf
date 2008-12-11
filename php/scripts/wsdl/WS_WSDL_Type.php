@@ -493,7 +493,7 @@ class WS_WSDL_Type
                         
                         // listen to the min and max settings
                         if(array_key_exists("min", $paramValue) &&
-                            $paramValue["min"] && is_numeric($paramValue["min"]) && $paramValue["min"] != 1) {
+                            isset($paramValue["min"]) && is_numeric($paramValue["min"]) && $paramValue["min"] != 1) {
                             $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_ATTR_MIN_OCCURS, $paramValue["min"]);
                         }
 
@@ -619,7 +619,7 @@ class WS_WSDL_Type
 
                         // listen to the min and max settings
                         if(array_key_exists("min", $paramValue) && 
-                            $paramValue["min"] && is_numeric($paramValue["min"]) && $paramValue["min"] != 1) {
+                            isset($paramValue["min"]) && is_numeric($paramValue["min"]) && $paramValue["min"] != 1) {
                             $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_ATTR_MIN_OCCURS, $paramValue["min"]);
                         }
                         
@@ -983,7 +983,7 @@ class WS_WSDL_Type
                     $max_value = $result[2][0];
 
                 }
-                if($min_value && is_numeric($min_value) && $min_value != 1) {
+                if(isset($min_value) && is_numeric($min_value) && $min_value != 1) {
                     $element_ele->setAttribute(WS_WSDL_Const::WS_WSDL_ATTR_MIN_OCCURS, $min_value);
                 }
 
