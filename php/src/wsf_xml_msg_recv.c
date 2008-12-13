@@ -397,30 +397,30 @@ wsf_xml_msg_recv_invoke_business_logic_sync (
     if(output_headers_zval) {
         axiom_node_t *header_base_node = NULL;
 
+        HashPosition pos;
+        zval **param;
+        char *header_str;
+        axiom_node_t *header_node;
 
-        header_base_node = axiom_soap_header_get_base_node(out_header, env);
-        
-        if(header_base_node) {
-            HashPosition pos;
-            zval **param;
-            char *header_str;
-            axiom_node_t *header_node;
-
-            for (zend_hash_internal_pointer_reset_ex (Z_ARRVAL_PP(output_headers_zval), &pos);
-                    zend_hash_get_current_data_ex (Z_ARRVAL_PP(output_headers_zval),
-                                            (void **) &param, &pos) == SUCCESS;
-                    zend_hash_move_forward_ex (Z_ARRVAL_PP(output_headers_zval), &pos)) {
+        for (zend_hash_internal_pointer_reset_ex (Z_ARRVAL_PP(output_headers_zval), &pos);
+                zend_hash_get_current_data_ex (Z_ARRVAL_PP(output_headers_zval),
+                                        (void **) &param, &pos) == SUCCESS;
+                zend_hash_move_forward_ex (Z_ARRVAL_PP(output_headers_zval), &pos)) {
 
                 if(Z_TYPE_PP(param) == IS_STRING) {
-                    header_str = Z_STRVAL_PP(param);
-                    header_node = wsf_util_deserialize_buffer(env, header_str);
-                    axiom_node_add_child(header_base_node, env, header_node);
-                }
+
+                    header_base_node = axiom_soap_header_get_base_node(out_header, env);
+                    
+                    if(header_base_node) {
+                        header_str = Z_STRVAL_PP(param);
+                        header_node = wsf_util_deserialize_buffer(env, header_str);
+                        axiom_node_add_child(header_base_node, env, header_node);
+                    }
+                    else {
+                        AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "[wsfphp] failed in retrieving the response soap headers node");
+                        return AXIS2_FAILURE;
+                    }
             }
-        }
-        else {
-            AXIS2_LOG_ERROR (env->log, AXIS2_LOG_SI, "[wsfphp] failed in retrieving the response soap headers node");
-            return AXIS2_FAILURE;
         }
     }
 
