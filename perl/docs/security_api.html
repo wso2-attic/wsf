@@ -3,7 +3,6 @@
   <meta http-equiv="content-type" content="" />
   
   <title>WS Security API</title><link href="style/api_style.css" rel="stylesheet" type="text/css" media="all" /></head>
-
 <body xml:lang="en" lang="en">
 <h2><a name="">WS Security API</a></h2>
 
@@ -53,7 +52,7 @@ later in this document.</p>
       <td>false</td>
       <td>Whether to sign the XML message or not. By default signing is not
         enabled. <br clear="all" />
-        If specified "sign"=&gt; "true", the body part of the SOAP message will
+        If&nbsp;"sign" option is set to "true", the body part of the SOAP message will
         be signed using the X509 standard. <br clear="all" />
         Signing will be done on the body part of the message. To sign other
         parts of the message, a policy file should be used.</td>
@@ -66,7 +65,7 @@ later in this document.</p>
       <td>false</td>
       <td>Whether to encrypt the XML message or not. By default encryption is
         not enabled. <br clear="all" />
-        If specified "encrypt"=&gt; "true", the body part of the SOAP message
+        If&nbsp;"encrypt" option is set to "true", the body part of the SOAP message
         will be encrypted using the X509 standard. <br clear="all" />
         Encrypting will be done on the body part of the message. To encrypt
         headers, a policy file should be used.</td>
@@ -79,7 +78,7 @@ later in this document.</p>
       </td>
       <td>"Basic256Rsa15"</td>
       <td>The symmetric algorithm and asymmetric algorithm will be derived
-        from the algorithm_suite string. </td>
+        from the algorithmSuite string. </td>
     </tr>
     
     <tr>
@@ -107,7 +106,7 @@ later in this document.</p>
       <td style="width: 195px;">"TRUE" | "true"</td>
       <td>false</td>
       <td>If the necessary options are provided with the WSSecurityToken
-        object, and if "use_username_token"=&gt;true , then the UsernameToken
+        object, and if "useUsernameToken" option is set to "true" , then the UsernameToken
         will be enabled.</td>
     </tr>
     <tr>
@@ -168,8 +167,7 @@ following table.</p>
       <td class="confluenceTd" style="height: 21px;">String</td>
       <td class="confluenceTd" style="height: 21px;">none</td>
       <td class="confluenceTd" style="width: 415px; height: 21px;">User's
-        certificate to be used for signing, loaded from the function
-        WSUtil::get_cert_from_file()</td>
+        certificate to be used for signing</td>
     </tr>
     <tr>
       <td class="confluenceTd">"passwordType"</td>
@@ -193,7 +191,7 @@ following table.</p>
       <td class="confluenceTd" style="height: 21px;">String</td>
       <td class="confluenceTd" style="height: 21px;">none</td>
       <td class="confluenceTd" style="width: 415px; height: 21px;">User's
-        private key, loaded from the function WSUtil::get_key_from_file()</td>
+        private key</td>
     </tr>
     <tr>
       <td class="confluenceTd">"receiverCertificate"</td>
@@ -202,8 +200,7 @@ following table.</p>
       </td>
       <td class="confluenceTd">none</td>
       <td class="confluenceTd" style="width: 415px;">Receiver's certificate to
-        be used for encryption, loaded from the function
-      WSUtil::get_cert_from_file()</td>
+        be used for encryption</td>
     </tr>
     <tr>
       <td class="confluenceTd">ttl <br clear="all" />

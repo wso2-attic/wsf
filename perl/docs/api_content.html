@@ -124,10 +124,10 @@ would get logged into.</td>
 </td>
 <td>
 <p>Specifies whether to use SOAP bindings, or not. If
-FALSE, a REST style invocation will take place with the given HTTP
+"FALSE", a REST style invocation will take place with the given HTTP
 method as specified by the "HTTPMethod" option.&nbsp;"1.1" would
 make the message use SOAP 1.1.&nbsp;"1.2" would make the message
-use SOAP 1.2. TRUE means use SOAP 1.2.</p>
+use SOAP 1.2. "TRUE" means use SOAP 1.2.</p>
 </td>
 </tr>
 <tr valign="top">
@@ -167,8 +167,8 @@ use SOAP 1.2. TRUE means use SOAP 1.2.</p>
 </td>
 <td style="height: 51px;">
 <p>Indicates whether the attachments should be sent MTOM
-optimized or not. If TRUE, the attachments will be sent out of the SOAP
-message, optimized, with MIME headers in place. If FALSE, attachments
+optimized or not. If "TRUE", the attachments will be sent out of the SOAP
+message, optimized, with MIME headers in place. If "FALSE", attachments
 will be sent within the SOAP payload, as base64 binary.</p>
 </td>
 </tr>
@@ -188,9 +188,9 @@ will be sent within the SOAP payload, as base64 binary.</p>
 <td>
 <p style="margin-bottom: 0in;">Controls whether XOP
 elements in a response with MTOM are resolved into the logically
-equivalent straight XML infoset or not. If TRUE, the options
+equivalent straight XML infoset or not. If "TRUE", the options
 "attachments" and "cid_2_content_type" of the message returned as a
-result of the calling request method would be set. If FALSE, the binary
+result of the calling request method would be set. If "FALSE", the binary
 content will be present in the response payload in base64 format.</p>
 </td>
 </tr>

@@ -1,11 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
-<head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>WS02 WSF/Perl SECURITY MANUAL</title>
-  <link href="style/api_style.css" rel="stylesheet" type="text/css" media="all">
-</head>
-
+<html><head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  
+  <title>WS02 WSF/Perl SECURITY MANUAL</title><link href="style/api_style.css" rel="stylesheet" type="text/css" media="all" /></head>
 
 <body lang="en">
 
@@ -16,11 +13,11 @@
 <p>First create a suitable payload to be sent to the echo service.</p>
 
 <p>
-<code><span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$request_payload</span> = <span style="color: rgb(255, 0, 0);">'<br>
-&nbsp; &nbsp; &nbsp; &nbsp; &lt;ns1:echoString xmlns="http://www.wsf.org/echo/echoString"&gt;<br>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;text&gt;Hello RM!&lt;/text&gt;<br>
+<code><span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$request_payload</span> = <span style="color: rgb(255, 0, 0);">'<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;ns1:echoString xmlns="http://www.wsf.org/echo/echoString"&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;text&gt;Hello RM!&lt;/text&gt;<br />
 
-&nbsp; &nbsp; &nbsp; &nbsp; &lt;/ns1:echoString&gt;<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;/ns1:echoString&gt;<br />
 '</span>;
 </code>
 </p>
@@ -30,13 +27,15 @@
 <p>Note that in order to run security clients or services, you should engage WS-Addressing</p>
 
 <p>
-<code><span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$message</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSMessage</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'payload'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$request_payload</span>,<br>
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'to'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'http://localhost/samples/security_service/callback'</span>,<br>
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'action'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'http://perl.axis2.org/samples/echoString'</span><br>
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;</code>
+<code><span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$message</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSMessage</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'payload'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$request_payload</span>,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; <span style="color: rgb(255, 0, 0);">'to'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'http://localhost/samples/security_service/callback'</span>,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; <span style="color: rgb(255, 0, 0);">'action'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'http://perl.axis2.org/samples/echoString'</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;</code>
 </p>
 
 <p>Then create a WSPolicy object with the security options to match your requirements.</p>
@@ -44,64 +43,68 @@
 <p>For example, if you want to include TimeStamp and UsernameToken you can do as follows.</p>
 
 <p>
-<code><span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$security_options</span> = <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'useUsernameToken'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'TRUE'</span>,<br>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 0, 0);">'includeTimeStamp'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'TRUE'</span> <span style="color: rgb(102, 204, 102);">}</span>;<br>
+<code><span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$security_options</span> = <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'useUsernameToken'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'TRUE'</span>,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 0, 0);">'includeTimeStamp'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'TRUE'</span> <span style="color: rgb(102, 204, 102);">}</span>;<br />
 
-<br>
+<br />
 <span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$policy</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSPolicy</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'security'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$security_options</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;</code>
 </p>
 
 <p><strong>Note: If you wish to use a policy file instead of an options array you can directly set a policy XML file.</strong></p>
 
 <p>
-<code><span style="color: rgb(0, 0, 102);">open</span> XML, <span style="color: rgb(255, 0, 0);">"&lt; policy.xml"</span>;<br>
-<span style="color: rgb(0, 0, 102);">undef</span> $<span style="color: rgb(102, 204, 102);">/</span>;<br>
-<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$policy_xml</span> = <span style="color: rgb(0, 153, 153);">&lt;XML&gt;</span>;<br>
+<code><span style="color: rgb(0, 0, 102);">open</span> XML, <span style="color: rgb(255, 0, 0);">"&lt; policy.xml"</span>;<br />
+<span style="color: rgb(0, 0, 102);">undef</span> $<span style="color: rgb(102, 204, 102);">/</span>;<br />
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$policy_xml</span> = <span style="color: rgb(0, 153, 153);">&lt;XML&gt;</span>;<br />
 
-<br>
+<br />
 <span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$policy</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSPolicy</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(0, 0, 255);">$policy_xml</span><span style="color: rgb(102, 204, 102);">)</span>;
 </code>
 </p>
 
 <p>Next create a SecurityToken object with appropriate security properties.</p>
 
-<p>If you want to have the UsernameToken, then the user, password and password_type (optional) options must be set. For TimeStamp, the ttl
+<p>If you want to have the UsernameToken, then the user, password and
+passwordType (optional) options must be set. For TimeStamp, the ttl
 option must be set. Hence the SecurityToken object is created as</p>
 
 <p>
-<code><span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$security_token</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSSecurityToken</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'user'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'frodo'</span>,<br>
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 0, 0);">'password'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'icannothasring'</span>,<br>
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 0, 0);">'passwordType'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'Digest'</span>,<br>
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 0, 0);">'ttl'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(204, 102, 204);">300</span> <br>
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;</code>
+<code><span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$security_token</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSSecurityToken</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'user'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'frodo'</span>,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 0, 0);">'password'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'icannothasring'</span>,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 0, 0);">'passwordType'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'Digest'</span>,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 0, 0);">'ttl'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(204, 102, 204);">300</span> <br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;</code>
 </p>
 
 <p>Then create the client using the policy object and security token object.</p>
 
 <p>
-<code><span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'useWSA'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'TRUE'</span>,<br>
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'policy'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$policy</span>,<br>
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'security_token'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$security_token</span> <br>
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+<code><span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'useWSA'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'TRUE'</span>,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'policy'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$policy</span>,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'security_token'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$security_token</span> <br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br />
 
 &nbsp;</code>
 </p>
 
 <h2 id="2"><a name="2">8.2. Encryption and Signing</a></h2>
 
-<p>For encryption and signing, keys and certificates must be provided using the two functions:</p>
+<p>For encryption and signing, content of keys and certificates files
+should be loaded into Perl scalar variables as strings. You can do this
+easily using the slurp mode in Perl.</p>
 
-<pre>
-    <span style="color: orange;">WSUtil</span>::ws_get_cert_from_file(<i>file_name</i>)
-    <span style="color: orange;">WSUtil</span>::ws_get_key_from_file(<i>file_name</i>)
-</pre>
+
 
 <h3><a name="2.1">8.2.1. Encryption on the Client Side</a></h3>
 
@@ -113,34 +116,38 @@ object instance.</p>
 <p>First load the certificates:</p>
 
 <p>
-<code><span style="color: rgb(0, 0, 102);">open</span> MYC, <span style="color: rgb(255, 0, 0);">"../keys/alice_cert.cert"</span>;<br>
-<span style="color: rgb(0, 0, 102);">undef</span> $<span style="color: rgb(102, 204, 102);">/</span>;<br>
-<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$mycert</span> = <span style="color: rgb(0, 153, 153);">&lt;MYC&gt;</span>;<br>
+<code><span style="color: rgb(0, 0, 102);">open</span> MYC, <span style="color: rgb(255, 0, 0);">"../keys/alice_cert.cert"</span>;<br />
+<span style="color: rgb(0, 0, 102);">undef</span> $<span style="color: rgb(102, 204, 102);">/</span>;<br />
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$mycert</span> = <span style="color: rgb(0, 153, 153);">&lt;MYC&gt;</span>;<br />
 
-<br>
-<span style="color: rgb(0, 0, 102);">open</span> MYK, <span style="color: rgb(255, 0, 0);">"../keys/alice_key.pem"</span>;<br>
-<span style="color: rgb(0, 0, 102);">undef</span> $<span style="color: rgb(102, 204, 102);">/</span>;<br>
+<br />
+<span style="color: rgb(0, 0, 102);">open</span> MYK, <span style="color: rgb(255, 0, 0);">"../keys/alice_key.pem"</span>;<br />
+<span style="color: rgb(0, 0, 102);">undef</span> $<span style="color: rgb(102, 204, 102);">/</span>;<br />
 <span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$mykey</span> = <span style="color: rgb(0, 153, 153);">&lt;MYK&gt;</span>;</code>
 </p>
 
-<p>Then the Policy object and the SecurityToken object have to be created.When creating the Policy object, you can also specify the algorithm
+<p>Then the Policy object and the SecurityToken object have to be
+created.When creating the Policy object, you can also specify the
+algorithm
 suite to be used.</p>
 
 <p>
-<code><span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$sec_arr</span> = <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'encrypt'</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;=<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'TRUE'</span>,<br>
+<code><span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$sec_arr</span> = <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'encrypt'</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;=<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'TRUE'</span>,<br />
 
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'algorithmSuite'</span> &nbsp; &nbsp; &nbsp; &nbsp; =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'Basic256Rsa15'</span><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'algorithmSuite'</span> &nbsp; &nbsp; &nbsp; &nbsp; =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'Basic256Rsa15'</span><br />
 
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(102, 204, 102);">}</span>;<br>
-<br>
-<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$policy</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSPolicy</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'security'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$sec_arr</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(102, 204, 102);">}</span>;<br />
+<br />
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$policy</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSPolicy</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'security'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$sec_arr</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br />
 
-<br>
-<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$sec_token</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSSecurityToken</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'privateKey'</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;=<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$pvt_key</span>,<br>
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'receiverCertificate'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$rec_cert</span> <br>
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;</code>
+<br />
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$sec_token</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSSecurityToken</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'privateKey'</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;=<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$pvt_key</span>,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'receiverCertificate'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$rec_cert</span> <br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;</code>
 </p>
 
 <h3><a name="2.2">8.2.2. Signing on the Client Side</a></h3>
@@ -148,42 +155,45 @@ suite to be used.</p>
 <p>For signing, the certificate and the key of the client and the certificate of the server must be set.</p>
 
 <p>
-<code><span style="color: rgb(0, 0, 102);">open</span> MYC, <span style="color: rgb(255, 0, 0);">"../keys/alice_cert.cert"</span>;<br>
-<span style="color: rgb(0, 0, 102);">undef</span> $<span style="color: rgb(102, 204, 102);">/</span>;<br>
-<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$mycert</span> = <span style="color: rgb(0, 153, 153);">&lt;MYC&gt;</span>;<br>
+<code><span style="color: rgb(0, 0, 102);">open</span> MYC, <span style="color: rgb(255, 0, 0);">"../keys/alice_cert.cert"</span>;<br />
+<span style="color: rgb(0, 0, 102);">undef</span> $<span style="color: rgb(102, 204, 102);">/</span>;<br />
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$mycert</span> = <span style="color: rgb(0, 153, 153);">&lt;MYC&gt;</span>;<br />
 
-<br>
-<span style="color: rgb(0, 0, 102);">open</span> MYK, <span style="color: rgb(255, 0, 0);">"../keys/alice_key.pem"</span>;<br>
-<span style="color: rgb(0, 0, 102);">undef</span> $<span style="color: rgb(102, 204, 102);">/</span>;<br>
-<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$mykey</span> = <span style="color: rgb(0, 153, 153);">&lt;MYK&gt;</span>;<br>
+<br />
+<span style="color: rgb(0, 0, 102);">open</span> MYK, <span style="color: rgb(255, 0, 0);">"../keys/alice_key.pem"</span>;<br />
+<span style="color: rgb(0, 0, 102);">undef</span> $<span style="color: rgb(102, 204, 102);">/</span>;<br />
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$mykey</span> = <span style="color: rgb(0, 153, 153);">&lt;MYK&gt;</span>;<br />
 
-<br>
-<span style="color: rgb(0, 0, 102);">open</span> REC, <span style="color: rgb(255, 0, 0);">"../keys/bob_cert.cert"</span>;<br>
-<span style="color: rgb(0, 0, 102);">undef</span> $<span style="color: rgb(102, 204, 102);">/</span>;<br>
+<br />
+<span style="color: rgb(0, 0, 102);">open</span> REC, <span style="color: rgb(255, 0, 0);">"../keys/bob_cert.cert"</span>;<br />
+<span style="color: rgb(0, 0, 102);">undef</span> $<span style="color: rgb(102, 204, 102);">/</span>;<br />
 <span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$reccert</span> = <span style="color: rgb(0, 153, 153);">&lt;REC&gt;</span>;</code>
 </p>
 
 <p>Then the Policy object and the SecurityToken object can be created:</p>
 
 <p>
-<code><span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$sec_arr</span> = <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'sign'</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'TRUE'</span>,<br>
+<code><span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$sec_arr</span> = <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'sign'</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'TRUE'</span>,<br />
 
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'algorithmSuite'</span> &nbsp; &nbsp; &nbsp; &nbsp; =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'Basic256Rsa15'</span>,<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'algorithmSuite'</span> &nbsp; &nbsp; &nbsp; &nbsp; =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'Basic256Rsa15'</span>,<br />
 
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'securityTokenReference'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'IssuerSerial'</span> <br>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(102, 204, 102);">}</span>;<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'securityTokenReference'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'IssuerSerial'</span> <br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(102, 204, 102);">}</span>;<br />
 
-<br>
-<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$policy</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSPolicy</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'security'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$sec_arr</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+<br />
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$policy</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSPolicy</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'security'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$sec_arr</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br />
 
-<br>
-<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$sec_token</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSSecurityToken</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'privateKey'</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;=<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$mykey</span>,<br>
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'certificate'</span> &nbsp; &nbsp; &nbsp; &nbsp; =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$mycert</span>,<br>
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'receiverCertificate'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$reccert</span> <br>
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;</code>
+<br />
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$sec_token</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSSecurityToken</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'privateKey'</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;=<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$mykey</span>,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'certificate'</span> &nbsp; &nbsp; &nbsp; &nbsp; =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$mycert</span>,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'receiverCertificate'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$reccert</span> <br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;</code>
 </p>
 
 <h2 id="3"><a name="3">8.3. Code Sample on Encryption</a></h2>
@@ -194,5 +204,4 @@ You can view the full source of an encryption client here : [<a href="../samples
 
 <!--<pre>req_payload = &lt;&lt;XML<br />&lt;ns1:echo xmlns:ns1="http://php.axis2.org/samples"&gt;&lt;text&gt;Hello World!&lt;/text&gt;&lt;/ns1:echo&gt;<br />XML<br /><br />begin<br /> WSFC_HOME = "/your/path/to/wsfc/home"<br /> LOG_FILE = "/tmp/security_sample.log"<br /> ACTION = "http://php.axis2.org/samples/echoString"<br /> END_POINT = "http://localhost:9090/axis2/services/sec_echo/echoString"<br /><br /> message_properties = {"to" =&gt; END_POINT,<br /> "action" =&gt; ACTION}<br /><br /> rec_cert = WSUtil::ws_get_cert_from_file("../keys/bob_cert.cert")<br /> pvt_key = WSUtil::ws_get_key_from_file("../keys/alice_key.pem")<br /> <br /> payload = WSMessage.new(req_payload, <br /> nil, <br /> message_properties)<br /><br /> policy_content = {"encrypt"=&gt; true,<br /> "algorithm_suite" =&gt; "Basic256Rsa15",<br /> "security_token_reference" =&gt; "IssuerSerial"}<br /><br /> policy = WSPolicy.new({"security" =&gt; policy_content})<br /><br /> security_options = {"private_key" =&gt; pvt_key,<br /> "receiver_certificate" =&gt; rec_cert}<br /> <br /> security_token = WSSecurityToken.new(security_options)<br /><br /> options = {"use_wsa" =&gt; true,<br /> "policy" =&gt; policy,<br /> "security_token" =&gt; security_token}<br /><br /> client = WSClient.new(options, WSFC_HOME, LOG_FILE)<br /><br /> res_message = client.request(payload)<br /><br /> if not res_message.nil? then<br /> puts "Received OM: "&lt;&lt; "\n" &lt;&lt; res_message.payload_to_s &lt;&lt; "\n\n"<br /> puts "Client invocation SUCCESSFUL !!!"<br /> else<br /> puts "Client invocation FAILED !!!"<br /> end<br /><br />rescue WSFault =&gt; wsfault<br /> puts "Client invocation FAILED !!!\n"<br /> puts "WSFault : "<br /> puts wsfault.xml<br /> puts "----"<br /> puts wsfault.code<br /> puts "--------"<br /> puts wsfault.reason<br /> puts "--------"<br /> puts wsfault.role<br /> puts "--------"<br /> puts wsfault.detail<br /> puts "--------"<br /><br />rescue =&gt; exception<br /> puts "Client invocation FAILED !!!\n"<br /> puts "Exception : " &lt;&lt; exception<br />end<br /><br /></pre>-->
 
-</body>
-</html>
+</body></html>

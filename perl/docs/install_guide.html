@@ -1,12 +1,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
-<meta http-equiv="content-type" content="text/html; charset=iso-8859-1"><title>WSO2 WSF/Ruby Installation Guide</title>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1"><title>WSO2 WSF/Perl Installation Guide</title>
 
 <link href="style/api_style.css" rel="stylesheet" type="text/css" media="all">
 </head>
-
-
 <body xml:lang="en">
 <h1><a name="">WSO2 WSF/Perl Installation Guide</a></h1>
 <p>This document guides you on how to install the WSO2 Web
@@ -19,18 +17,19 @@ page</a> for subscription.</p>
 <li>
 <h2><a name="">Contents</a></h2>
 <ul>
-<li><a href="#Installing%20WSO2%20WSF/Ruby%20from%20Source%20on%20Linux">Installing
-WSO2 WSF/Ruby from Source on Linux</a>
+<li><a href="#Installing%20WSO2%20WSF/Perl%20from%20Source%20on%20Linux">Installing
+WSO2 WSF/Perl from Source on Linux</a>
 <ul>
 <li> <a href="#Prerequisites">Prerequisites</a>
 </li>
 <li> <a href="#Installation">Installation</a>
 </li>
 </ul>
-</li></ul>
+</li>
+</ul>
 <h2>
-<a name="Installing WSO2 WSF/Ruby from Source on Linux">Installing
-WSO2 WSF/Ruby from Source on Linux
+<a name="Installing WSO2 WSF/Perl from Source on Linux">Installing
+WSO2 WSF/Perl from Source on Linux
 </a></h2>
 <h3>
 <a name="Prerequisites">Prerequisites
@@ -38,78 +37,75 @@ WSO2 WSF/Ruby from Source on Linux
 <ul>
 <li>
 WSO2 WSF/C [<a href="http://dist.wso2.org/products/wsf/c">http://dist.wso2.org/products/wsf/c</a>]
-Please see the INSTALL file of the WSO2 WSF/C to install WSO2 WSF/C.</li><li>Error.pm [<a href="http://search.cpan.org/%7Eshlomif/Error-0.17015/lib/Error.pm">http://search.cpan.org/~shlomif/Error-0.17015/lib/Error.pm</a>]</li>
-
+Please see the INSTALL file of the WSO2 WSF/C to install WSO2 WSF/C.</li>
+<li>Error.pm [<a href="http://search.cpan.org/%7Eshlomif/Error-0.17015/lib/Error.pm">http://search.cpan.org/~shlomif/Error-0.17015/lib/Error.pm</a>]</li>
 </ul>
 <h2>
 <a name="Installation">Installation
-</a></h2>You have to have <a href="http://wso2.org/projects/wsf/c">WSF/C</a>
+</a></h2>
+You have to have <a href="http://wso2.org/projects/wsf/c">WSF/C</a>
 installed. If you have WSF/C installed on the standard installation
 location which is /opt/wso2/wsf_c you can proceed directly to the
 WSF/Perl installation step. If you have WSF/C installed into a
 non-standard directory, you have to set WSFC_HOME environment variable
 before proceeding with the WSF/Perl installation.
-
-
-<p>
-WSF/Perl depends on the Error.pm module for providing errors and
+<p>WSF/Perl depends on the Error.pm module for providing errors
+and
 exceptions. You have to install that before proceeding with the
 WSF/Perl installation. You can install Error.pm from CPAN as follows,
-
-</p><pre># perl -MCPAN -e 'install Error'</pre></li><h3><a name="Downloading">Downloading</a></h3>
-
+</p>
+<pre># perl -MCPAN -e 'install Error'</pre>
+</li>
+<h3><a name="Downloading">Downloading</a></h3>
 <p>
 You can download WSF/Perl 1.1 either from
-the <a href="http://wso2.org/projects/wsf/perl">WSF/Perl home page</a>
+the <a href="http://wso2.org/projects/wsf/perl">WSF/Perl
+home page</a>
 or by going
 to <a href="http://search.cpan.org/%7Echintana/WSO2-WSF-Perl-1.1/">WSF/Perl
 1.1 release on CPAN</a>.
 </p>
-
-<h3><a name="Installing from CPAN">Installing from CPAN</a></h3>
-
+<h3><a name="Installing from CPAN">Installing from
+CPAN</a></h3>
 <p>
 The easiest method to install WSF/Perl is from CPAN. Just do,
-
-</p><pre># perl -MCPAN -e 'install WSO2::WSF' </pre><li><h3><a name="Compiling manually">Compiling manually</a></h3>
-
-<p>
-Another method of getting WSF/Perl installed is to compile it manually. Unzip <code>WSO2-WSF-Perl-1.1.tar.gz</code> to a temporary directory.
 </p>
-
+<pre># perl -MCPAN -e 'install WSO2::WSF' </pre>
+<li>
+<h3><a name="Compiling manually">Compiling manually</a></h3>
 <p>
-Then create the make file by typing <code>tar -xzvf WSO2-WSF-Perl-1.1.tar.gz</code>
+Another method of getting WSF/Perl installed is to compile it manually.
+Unzip <code>WSO2-WSF-Perl-1.1.tar.gz</code> to a temporary
+directory.
 </p>
-
 <p>
-<img src="images/unzipping.png" alt="">
+Then create the make file by typing <code>tar -xzvf
+WSO2-WSF-Perl-1.1.tar.gz</code>
 </p>
-
 <p>
-After that go to the new directory and create the makefile by typing <code>perl Makefile.PL</code>. You can safely ignore the "No library found" warnings.
-</p>
-
+<img src="images/unzipping.png" alt=""></p>
 <p>
-<img src="images/create-makefile.png" alt="">
+After that go to the new directory and create the makefile by typing <code>perl
+Makefile.PL</code>. You can safely ignore the "No library found"
+warnings.
 </p>
-
+<p>
+<img src="images/create-makefile.png" alt=""></p>
 <p>
 Compile the code by typing <code>make</code>
 </p>
-
 <p>
-<img src="images/compile.png" alt="">
-</p>
-
+<img src="images/compile.png" alt=""></p>
 <p>
 Install the extension with <code>make install</code>
 </p>
-
 <p>
-<img src="images/installing.png" alt="">
-</p><pre></pre><ol><hr>
-<b>If you need any help with building or installation , send
-a mail to wsf-ruby-user@lists.wso2.org
+<img src="images/installing.png" alt=""></p>
+<pre></pre>
+<ol>
+<hr><b>If you need any help with building or
+installation , send
+a mail to wsf-perl-user@lists.wso2.org
 </b>
 </ol>
 </li>

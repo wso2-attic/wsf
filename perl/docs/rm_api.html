@@ -3,8 +3,6 @@
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   
   <title>Reliable Messaging API</title><link href="style/api_style.css" rel="stylesheet" type="text/css" media="all" /></head>
-
-
 <body>
 	<h2><a name="">Reliable Messaging API</a></h2>
      <p>The WSO2 WSF/Perl extension supports WS-ReliableMessaging protocol versions 1.0 and 1.1. 
@@ -40,7 +38,7 @@
                     1.0</td>
                 <td style="width: 373px; height: 21px;">
                     Defines whether to enable reliable messaging (RM) or not. 
-                    If specified TRUE, then RM
+                    If specified "TRUE", then RM
                     will be enabled with RM version as 1.0. For RM to be
                     enabled, you must also set the addressing action.</td>
             </tr>
@@ -79,8 +77,8 @@
                     FALSE</td>
                 <td style="width: 373px; height: 4px;">
                     Whether to continue the sequence. The sequence will be terminated by default
-                    if the user does not specify
-                    "willContinueSequence" =&gt; "TRUE".</td>
+                    if the user does not set
+                    "willContinueSequence" option to "TRUE".</td>
             </tr>
         </tbody></table>
     
@@ -111,11 +109,11 @@
                 If the user wants to create multiple requests using the same sequence, this option can
                 be used.
                 <br />
-The client will check its "will_continue_sequence" option. If it is
-FALSE (default value) , it will send a message and terminate the
-sequence. If the client's&nbsp; "willContinueSequence" property is
-TRUE, it will check the "lastMessage" property of WSMessage. If the
-"lastMessage" is TRUE (default is FALSE) it will add the last message
+The client will check its "willContinueSequence" option. If it is
+"FALSE" (default value) , it will send a message and terminate the
+sequence. If the client's&nbsp; "willContinueSequence" option is
+"TRUE", it will check the "lastMessage" property of WSMessage. If the
+"lastMessage" is "TRUE" (default is "FALSE") it will add the last message
 and terminate the sequence.</td>
         </tr>
     </tbody></table><h2><br /></h2></body></html>
