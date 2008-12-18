@@ -1,0 +1,555 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title></title>
+  <meta name="CREATED" content="20061009;17484000">
+  <meta name="CHANGED" content="20061011;10243100">
+  <link href="style/api_style.css" rel="stylesheet" type="text/css"
+  media="all">
+</head>
+
+<body lang="en-US" dir="ltr">
+<h1><a name="">WSO2 WSF/Perl Manual</a></h1>
+
+<h2><a name="Introduction">1. Introduction</a></h2>
+
+<p><a href="http://wso2.com/" target="wso2_home">WSO2</a> Web Services
+Framework/Perl (WSO2 WSF/Perl) is the Perl extension to the WSO2 Web
+Services Framework/C (<a href="http://www.wso2.org/projects/wsf/c"
+target="wsfc_home">WSF/C</a>). Using this Perl extension, you can
+write applications that consume Web services. WSF/Perl
+supports SOAP 1.1, SOAP 1.2, SOAP MTOM, WS-Addressing, WS-Security
+UsernameToken, WS-ReliableMessaging as well as REST style
+invocation. WSF/Perl distinguishes itself being <b>the first and the
+only</b> Web Services Framework for Perl to support this stack of WS
+specifications.</p>
+
+<h2><a name="Requirements">2. Requirements</a></h2> You should have
+the WSO2 WSF/C installed on your computer as a prerequisties to
+install and make use of WSF/Perl.
+
+<h2><a name="Installation">3. Installation</a></h2>
+
+<p>Please see
+the <a href="install_guide.html">Installation Guide</a> for more
+information.</p>
+
+<h2><a name="Quick">4. Quick Start Guide</a></h2>
+
+<p>This section is aimed to help you get a Web Service up quickly
+using WSO2 WSF/Perl consumer API.</p>
+
+<p>First follow the installation guide and get WSO2 WSF/Perl working
+on your machine [<a href="install_guide.html">Installation
+Guide</a>]. <br>
+</p>
+
+<p>To start simple, let's see how to write a simple client to consume
+the
+<a href="http://flickr.com/services/api/">Flickr photo search service.</a></p>
+
+<i>Step 1:</i><br>
+<br>
+First we need to prepare the payload, as expected by the service:
+
+<p>
+<code><span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$req_payload_string</span> = <span style="color: rgb(255, 0, 0);">'<br>
+&nbsp; &nbsp; &lt;x:FlickrRequest xmlns:x="urn:flickr"&gt;<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;method&gt;flickr.photos.search&lt;/method&gt;<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;api_key&gt;#{key}&lt;/api_key&gt;<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;text&gt;Sri Lanka&lt;/text&gt;<br>
+&nbsp; &nbsp; &lt;/x:FlickrRequest&gt;<br>
+
+'</span>;<br>
+&nbsp;</code></p>
+
+<p>In the above payload, you have to enter your flickr key in the
+"key" element. The "text" element contains the words that we want to
+search for.</p>
+
+<p>
+NOTE: You can create a flickr key <a href="http://flickr.com/services/api/"> here</a>
+</p>
+
+<i>Step 2:</i><br>
+
+<p>
+Next we need to create a WSClient, with the options to be used by the
+client. For the Flickr photo service, we have to use only one option, i.e the endpoint
+reference of the Flickr service.
+</p>
+
+<p>
+<code><span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'wsfc_home'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'/opt/wso2/wsf_c'</span>,<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'to'</span> &nbsp; &nbsp; &nbsp; &nbsp;=<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'http://api.flickr.com/services/soap/'</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+<br>
+&nbsp;</code>
+</p>
+
+<p>
+Here is the complete source code for the Flickr photo search [<a href="samples/flickr.html">flickr.pl</a>]. Please remember to replace "key" string with a valid Flickr key.
+</p>
+
+<p>
+<code><span style="color: rgb(0, 0, 0); font-weight: bold;">use</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>;<br>
+<br>
+<span style="color: rgb(0, 0, 255);">$payload</span> =<span style="color: rgb(102, 204, 102);">&lt;&lt;</span>E;<br>
+<span style="color: rgb(102, 204, 102);">&lt;</span>x:FlickrRequest xmlns:x=<span style="color: rgb(255, 0, 0);">"urn:flickr"</span><span style="color: rgb(102, 204, 102);">&gt;</span><br>
+&nbsp; <span style="color: rgb(0, 153, 153);">&lt;method&gt;</span>flickr.test.echo<span style="color: rgb(102, 204, 102);">&lt;/</span>method<span style="color: rgb(102, 204, 102);">&gt;</span><br>
+
+&nbsp; <span style="color: rgb(0, 153, 153);">&lt;api_key&gt;</span>your_api_key<span style="color: rgb(102, 204, 102);">&lt;/</span>api_key<span style="color: rgb(102, 204, 102);">&gt;</span><br>
+&nbsp; <span style="color: rgb(0, 153, 153);">&lt;name&gt;</span>vacation<span style="color: rgb(102, 204, 102);">&lt;/</span>name<span style="color: rgb(102, 204, 102);">&gt;</span><br>
+<span style="color: rgb(102, 204, 102);">&lt;/</span>x:FlickrRequest<span style="color: rgb(102, 204, 102);">&gt;</span><br>
+E<br>
+
+<br>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'wsfc_home'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'/opt/wso2/wsf_c'</span>,<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'to'</span> &nbsp; &nbsp; &nbsp; &nbsp;=<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'http://api.flickr.com/services/soap/'</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+<br>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$response</span> = <span style="color: rgb(0, 0, 255);">$client</span>-<span style="color: rgb(102, 204, 102);">&gt;</span><span style="color: rgb(0, 102, 0);">request</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'payload'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$payload</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+<br>
+<span style="color: rgb(0, 0, 102);">print</span> <span style="color: rgb(0, 0, 255);">$response</span>-<span style="color: rgb(102, 204, 102);">&gt;</span><span style="color: rgb(102, 204, 102);">{</span>str<span style="color: rgb(102, 204, 102);">}</span>;<br>
+<br>
+&nbsp;</code>
+</p>
+
+<i>Step 3:</i><br>
+
+<p>
+To run the script just execute the following command in a terminal.
+</p>
+
+<pre>
+    perl flickr.pl
+</pre>
+
+
+<h2 class="western" style="margin-top: 0in; margin-bottom: 0in"><a name="4.1.">4.1. Hello Client</a></h2>
+
+<p>Now that you know how to write a client with WSO2 WSF/Perl, let's see the
+steps in detail.</p>
+
+<p>The steps to be followed when implementing a client with WSO2 WSF/Perl
+include:</p>
+<ol>
+  <li><b>Set the desired request payload and options.</b> <br>
+    You can set the desired payload either in plain text form or as a WSMessage.
+    Here we will demonstrate a simple consumer of the web service using request
+    as a text.<br>
+  </li>
+  <li><b>Create a WSClient instance.</b><br>
+    You can use the WSClient instance to consume the service. There we set options
+    as arguments to the constructor.</li>
+  <li><b>Send the request and receive the response.</b><br>
+    Invoke the request() method passing the message as a parameter. This
+    method returns a WSMessage instance, representing the response message.
+    You can use member variables of the returned message instance to access
+    the response in XML format. <br>
+  </li>
+  <li><b>Consume the response.</b><br>
+    Process the response in line with the client business logic.</li>
+</ol>
+
+<h3><a name="4.1.1.">4.1.1. Preparing the Request Message</a></h3>
+
+<p>
+<code><span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$message</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSMessage</span><span style="color: rgb(102, 204, 102);">(</span><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'payload'</span>&nbsp; &nbsp; &nbsp;=<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$payload</span>,<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'wsfc_home'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'/opt/wso2/wsf_c/'</span>,<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'to'</span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'http://localhost:8585/axis2/services/echo'</span>&nbsp; &nbsp; <br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+&nbsp;</code>
+</p>
+
+<p>In the above code fragment, a WSMessage instance is created with a payload
+to be sent in the request and the service endpoint. The "to" element of the
+options hash is mapped to the address of the location of the service. In
+other words, the "to" address indicates where the request should be sent
+to.</p>
+
+<h3><a name="4.1.2.">4.1.2. Sending a Request and Receiving a
+Response</a></h3>
+
+<p>
+<code><span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(102, 204, 102);">)</span>;<br>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$response</span> = <span style="color: rgb(0, 0, 255);">$client</span>-<span style="color: rgb(102, 204, 102);">&gt;</span><span style="color: rgb(0, 102, 0);">request</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(0, 0, 255);">$message</span> <span style="color: rgb(102, 204, 102);">)</span>;</code>
+</p>
+
+<p>For sending a request with the output message created earlier, we need a
+WSClient instance. We pass the message to be sent to the service to the
+request() method. This will send the payload contained in the given message
+and receive the response and return a message instance with the response
+payload.</p>
+
+<p>
+<code><span style="color: rgb(0, 0, 102);">print</span> <span style="color: rgb(0, 0, 255);">$response</span>-<span style="color: rgb(102, 204, 102);">&gt;</span><span style="color: rgb(102, 204, 102);">{</span>str<span style="color: rgb(102, 204, 102);">}</span>;</code>
+</p>
+
+<p>In our client sample, we access the response payload as a string from the
+returned message instance and display it.</p>
+
+<h3><a name="4.1.3.">4.1.3. Full Source</a></h3>
+
+<p>Here is the complete source code for the client : <a
+href="samples/hello_client.html">hello_client.pl</a></p>
+
+<h3><a name="4.1.4.">4.1.4. Running the Client</a></h3>
+
+<p>To run the client, execute the following command on a terminal.</p>
+
+<pre>
+    perl hello_client.pl
+</pre>
+
+<h2><a name="Consuming">5. Consuming Web Services</a></h2>
+
+<p>For consuming Web services with WSO2 WSF/Perl, using the XML in/out model,
+you need to first find out the request payload format and the response
+payload format. You also need to know the service endpoint URI.<br>
+Once this information is available, you can construct a WSMessage instance
+with the payload and service endpoint URI information. These are the minimum
+requirements for consuming a Web Service. These basics were explained in the
+quick start guide.
+</p>
+
+<p>The advantage of using the WSO2 WSF extension is that it supports more
+than just SOAP. You can use WS-Addressing, XOP/MTOM and WS-Security
+UsernameToken when providing and consuming Web services. You can also invoke
+services using REST style calls.</p>
+
+<p>The following sections explain how you can achieve more with the options
+available for WSMessage and WSClient.</p>
+
+<h3><a name="5.1.">5.1. Using SOAP</a></h3>
+
+<p>You can use the "use_soap" option at client level to specify the SOAP
+version to be used. If this option is not set, the default SOAP version used
+is SOAP 1.2. <br>
+</p>
+
+<p>There are multiple ways of setting the SOAP version, you can use any one
+of them.</p>
+
+<p>
+<code><span style="color: rgb(128, 128, 128); font-style: italic;"># use SOAP 1.2</span><br>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span><span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'useSOAP'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'1.2'</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'useSOAP'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'true'</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+<br>
+<span style="color: rgb(128, 128, 128); font-style: italic;"># use SOAP 1.1</span><br>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'useSOAP'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'1.1'</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'useSOAP'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'false'</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;</code>
+</p>
+
+<p>There is another option named "http_method", that you can use to specify
+the HTTP method to be used. When SOAP is in use, the default HTTP method used
+will be "POST" all the time. If you specify "GET" when SOAP is in use, then
+no request will be sent, because WSO2 WSF/Perl does not support SOAP with HTTP
+GET.</p>
+
+<h3><a name="5.2.">5.2. Using REST</a></h3>
+
+<p>If you want to consume Web services using REST style calls, that can be
+done by setting the "use_soap" option to "false". In case of REST style of
+invocation, you can use either the HTTP POST method or the HTTP GET method.
+<br>
+</p>
+
+<p>The following example shows how to enable a REST style invocation using
+different HTTP methods.</p>
+
+<p>
+<code><span style="color: rgb(128, 128, 128); font-style: italic;"># REST with HTTP POST</span><br>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'useSOAP'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'false'</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'useSOAP'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'false'</span>, <span style="color: rgb(255, 0, 0);">'HTTPMethod'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'POST'</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'useSOAP'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'false'</span>, <span style="color: rgb(255, 0, 0);">'HTTPMethod'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'post'</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+<br>
+<span style="color: rgb(128, 128, 128); font-style: italic;"># REST with HTTP GET</span><br>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'useSOAP'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'false'</span>, <span style="color: rgb(255, 0, 0);">'HTTPMethod'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'GET'</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'useSOAP'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'false'</span>, <span style="color: rgb(255, 0, 0);">'HTTPMethod'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'get'</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;</code>
+</p>
+
+<h3><a name="5.3.">5.3. Payload Formats</a></h3>
+
+<p>When invoking Web Services, the WSO2 WSF/Perl extension allows you
+to provide the message payload as an XML string or as a WSMessage
+object.</p>
+
+<p>Using a string as the request payload:</p>
+<p>
+<code>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$request_payload</span> = <span style="color: rgb(255, 0, 0);">'<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;ns1:echoString xmlns:ns1="http://perl.wsf.wso2.net/samples"&gt;<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;text&gt;Hello World!&lt;/text&gt;<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;/ns1:echoString&gt;<br>
+'</span>;<br>
+<br>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'wsfc_home'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'/opt/wso2/wsf_c'</span>,<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'to'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'http://localhost:9090/axis2/services/echo'</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+<br>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$response</span> = <span style="color: rgb(0, 0, 255);">$client</span>-<span style="color: rgb(102, 204, 102);">&gt;</span><span style="color: rgb(0, 102, 0);">request</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'payload'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$request_payload</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+<br>
+<span style="color: rgb(0, 0, 102);">print</span> <span style="color: rgb(0, 0, 255);">$response</span>-<span style="color: rgb(102, 204, 102);">&gt;</span><span style="color: rgb(102, 204, 102);">{</span>str<span style="color: rgb(102, 204, 102);">}</span>;
+</code>
+</p>
+
+<p>Using a WSMessage instance as the request payload:</p>
+<p>
+<code>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$request_payload</span> = <span style="color: rgb(255, 0, 0);">'<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;ns1:echoString xmlns:ns1="http://perl.wsf.wso2.net/samples"&gt;<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;text&gt;Hello World!&lt;/text&gt;<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;/ns1:echoString&gt;<br>
+'</span>;<br>
+<br>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$message</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSMessage</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'wsfc_home'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'/opt/wso2/wsf_c'</span>,<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'to'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'http://localhost:9090/axis2/services/echo'</span>,<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'payload'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$request_payload</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+<br>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span><span style="color: rgb(102, 204, 102);">)</span>;<br>
+<br>
+
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$response</span> = <span style="color: rgb(0, 0, 255);">$client</span>-<span style="color: rgb(102, 204, 102);">&gt;</span><span style="color: rgb(0, 102, 0);">request</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(0, 0, 255);">$message</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+<br>
+<span style="color: rgb(0, 0, 102);">print</span> <span style="color: rgb(0, 0, 255);">$response</span>-<span style="color: rgb(102, 204, 102);">&gt;</span><span style="color: rgb(102, 204, 102);">{</span>str<span style="color: rgb(102, 204, 102);">}</span>;
+</code>
+</p>
+
+<h3><a name="5.4.">5.4. Attachments with MTOM/XOP</a></h3>
+
+<p>WSO2 WSF/Perl allows you to send and receive binary data with SOAP messages
+using MTOM/XOP conventions. When sending attachments, you have to use a
+WSMessage instance to represent the payload, and give the binary data as an
+array. When receiving attachments, you can get the attachments received from
+the attachments array of the WSMessage instance returned.</p>
+
+<p>
+For sending an attachment, you need to specify the element where the
+attachment reference should be included in the payload.</p>
+
+<p>
+<code><span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$request_payload</span> = <span style="color: rgb(255, 0, 0);">'<br>
+&lt;ns1:upload xmlns:ns1="http://php.axis2.org/samples/mtom"&gt;<br>
+&nbsp; &lt;ns1:fileName&gt;test.jpg&lt;/ns1:fileName&gt;<br>
+&nbsp; &lt;ns1:image xmlmime:contentType="image/jpeg" xmlns:xmlmime="http://www.w3.org/2004/06/xmlmime"&gt;<br>
+
+&nbsp; &nbsp; &lt;xop:Include href="cid:myid1" xmlns:xop="http://www.w3.org/2004/08/xop/include" /&gt;<br>
+&nbsp; &lt;/ns1:image&gt;<br>
+&lt;/ns1:upload&gt;<br>
+'</span>;</code>
+</p>
+
+<p>In the above sample payload shown, by placing the "Include" element within
+the "image" element, we specify that the attachment reference should be
+included in the "image" element. The "href" attribute of the "Include"
+element gives the ID of the attachment element in the attachments array of
+the outgoing WSMessage instance. Once the payload is prepared, you have to
+create the message with the attachment data array containing the binary data
+to be attached.</p>
+
+<p>
+<code><span style="color: rgb(0, 0, 102);">open</span> FILE, <span style="color: rgb(255, 0, 0);">"&lt; axis2.jpg"</span>;<br>
+<span style="color: rgb(0, 0, 102);">undef</span> $<span style="color: rgb(102, 204, 102);">/</span>;<br>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$contents</span> = <span style="color: rgb(0, 153, 153);">&lt;FILE&gt;</span>;<br>
+
+<br>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$msg</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSMessage</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'payload'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$payload</span>,<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'attachments'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(102, 204, 102);">{</span><span style="color: rgb(255, 0, 0);">"myid1"</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$contents</span><span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;</code>
+</p>
+
+<p>In the above sample code fragment, we load the image contents to the "content"
+variable and pass the variable to the attachments option when creating the
+message. In the attachments associative array, you have to give the same ID
+as was given in the "Include" element's "href" attribute in the payload. In
+this sample, we use "myid1" as the ID.</p>
+
+<p>When sending attachments, you can configure the client either to send the
+attachment in the optimized format or in non-optimized format. If the
+attachment is sent in binary optimized format, the file content will be sent
+as it is, out of the SOAP body, using MIME headers and the payload would have
+an XOP:Include element, referring to the MIME part that contains the binary
+attachment.<br>
+In case of binary non-optimized format, the attachment content will be sent
+in the payload itself, as a base64 encoded string.</p>
+
+<p>
+<code><span style="color: rgb(128, 128, 128); font-style: italic;"># send attachments binary optimized</span><br>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'useMTOM'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'true'</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+<br>
+<span style="color: rgb(128, 128, 128); font-style: italic;"># send attachments binary non-optimized</span><br>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'useMTOM'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'false'</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;</code>
+</p>
+
+
+
+<h3><a name="5.5.">5.5. Using WS-Addressing</a></h3>
+
+<p><a href="http://www.w3.org/2002/ws/addr/">WS-Addressing</a> provides
+mechanisms to address Web Services and messages. With WSO2 WSF/Perl, you can
+use both WS-Addressing <a href="http://www.w3.org/TR/ws-addr-core/">version
+1.0</a> as well as the <a href="http://www.w3.org/Submission/ws-addressing/">submission version</a>.</p>
+
+<p>There are two basic requirements that you have to specify when using WS-Addressing on the client
+side with WSO2 WSF/Perl. One is that you have to provide a WS-Addressing
+action at message level. The other is that you have to enable the use of
+WS-Addressing at client level.</p>
+
+<p>
+<code><span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$message</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSMessage</span><span style="color: rgb(102, 204, 102);">(</span><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'payload'</span>&nbsp; &nbsp; &nbsp;=<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$payload</span>,<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'wsfc_home'</span> &nbsp; =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'/opt/wso2/wsf_c/'</span>,<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'to'</span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'http://localhost/samples/echo_service_addr.php'</span>,<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'action'</span>&nbsp; &nbsp; &nbsp; =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'http://php.axis2.org/samples/echoString'</span><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+<br>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'useWSA'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'TRUE'</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;</code>
+</p>
+
+<p>In the above sample code fragment, the WS-Addressing action is set
+using the "action" array element of the options array passed to the WSMessage
+constructor. WS-Addressing is enabled with the "use_wsa" option passed to the
+WSClient constructor.</p>
+
+<p>You can choose to use different addressing versions. For that you
+have to use one of the possible options shown below.</p>
+
+<p>
+<code><span style="color: rgb(128, 128, 128); font-style: italic;"># Setting WS-Addressing 1.0</span><br>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'useWSA'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'TRUE'</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'useWSA'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'1.0'</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+<br>
+<span style="color: rgb(128, 128, 128); font-style: italic;"># Setting WS-Addressing submission</span><br>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'useWSA'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'submission'</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;</code>
+</p>
+
+<p>In addition to the action, there are other WS-Addressing related SOAP
+headers that can be sent in a message. WSO2 WSF/Perl has support to set those
+headers as properties at the message level or as options at the client level.
+An example is shown below.</p>
+
+<p>
+<code><span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$message</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSMessage</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'payload'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$request_payload</span>,<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'to'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'http://www.company_foo.com/order_processing/process'</span>,<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'action'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'http://perl.wsf.wso2.net/samples/order'</span>,<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'from'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'http://www.company_bar.com/order_placing/place'</span>,<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'replyTo'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'http://www.company_bar.com/billing/bill'</span>,<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'faultTo'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'http://www.company_bar.com/re_odering/order'</span><br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;</code>
+</p>
+
+<p>In the above example, company "bar" sends a purchase order to company
+"foo" from the place order client. If the service invocation is successful,
+company foo would send the bill to the billing service of company bar; if the
+order failed, re-ordering service of company bar would be sent the fault details
+which would decide how to place the order again. WS-Addressing helps us to
+manage the order process, with replies and faults being directed to
+different endpoints.</p>
+
+<h3><a name="5.6.">5.6. WS-Security</a></h3>
+
+<p>With WSPolicy and WSSecurityToken, you can use WS-Security usernameTokens,
+encryption, signing, along with timestamp, time-to-live and digest support.
+The simplest form of using usernameToken is to provide a username and a
+password.</p>
+
+<p>
+<code><span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$security_options</span> = <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'useUsernameToken'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'TRUE'</span> <span style="color: rgb(102, 204, 102);">}</span>;<br>
+
+<br>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$policy</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSPolicy</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'security'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$security_options</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+<br>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$security_token</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSSecurityToken</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'user'</span> &nbsp; &nbsp; &nbsp; &nbsp; =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'frodo'</span>,<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 0, 0);">'password'</span> &nbsp; &nbsp; =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'icannothasring'</span><br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+&nbsp;</code>
+</p>
+
+If you want the timetoLive and timestamp , those options also can be
+specified.<br>
+
+<p>
+<code><span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$security_options</span> = <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'useUsernameToken'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'TRUE'</span>,<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 0, 0);">'includeTimeStamp'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'TRUE'</span> <span style="color: rgb(102, 204, 102);">}</span>;<br>
+
+<br>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$policy</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSPolicy</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'security'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$security_options</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+<br>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$security_token</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSSecurityToken</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'user'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'frodo'</span>,<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 0, 0);">'password'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'icannothasring'</span>,<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 0, 0);">'ttl'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(204, 102, 204);">300</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+<br>
+&nbsp;</code>
+</p>
+
+<h3><a name="5.7.">5.7. One-Way Clients</a></h3>
+
+<p>The request() method of WSClient that you have seen in the samples so far
+adheres to the out-in message exchange patterns. That means, when the client
+sends a request, it expects a response back.<br>
+Out-only message exchange pattern is another popular pattern when consuming
+services. In the out-only model, the client sends a request but does not
+expect a response back. The send_message() method of WSClient supports this message
+exchange pattern.</p>
+
+<p>
+<code><span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'to'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'http://localhost/notify_service/notify'</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+<br>
+<span style="color: rgb(0, 0, 255);">$client</span>-<span style="color: rgb(102, 204, 102);">&gt;</span><span style="color: rgb(0, 102, 0);">send_message</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'payload'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$request_payload</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+<br>
+<span style="color: rgb(0, 0, 102);">print</span> <span style="color: rgb(255, 0, 0);">"Request sent<span style="color: rgb(0, 0, 153); font-weight: bold;">\n</span>"</span>;</code>
+</p>
+
+<p>In the above sample, the notify service accepts the payload sent by the
+client and consumes it, and will not send any response. The return type of
+send_message() is void. In case of errors, it would throw a fault.</p>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+<html>
+<head>
+  <meta http-equiv="content-type" content="">
+  <title></title>
+</head>
+
+<body>
+
+<p>
+<code><span style="color: rgb(0, 0, 0); font-weight: bold;">use</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>;<br>
+<br>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$payload</span> = <span style="color: rgb(255, 0, 0);">'<br>
+&lt;ns1:echoString xmlns:ns1="http://ws.apache.org/axis2/c/samples"&gt;<br>
+
+&nbsp; &lt;text&gt;Hello World!&lt;/text&gt;<br>
+&lt;/ns1:echoString&gt;<br>
+'</span>;<br>
+<br>
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$client</span> = <span style="color: rgb(0, 0, 0); font-weight: bold;">new</span> WSO2::<span style="color: rgb(0, 102, 0);">WSF</span>::<span style="color: rgb(0, 102, 0);">WSClient</span><span style="color: rgb(102, 204, 102);">(</span><br>
+
+&nbsp; &nbsp; <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'to'</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;=<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'http://localhost/samples/echo_service.php'</span>,<br>
+&nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'log_file'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(255, 0, 0);">'/tmp/thislogfile'</span>,<br>
+
+&nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">'log_level'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(204, 102, 204);">4</span><br>
+&nbsp; &nbsp; <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+<br>
+
+<span style="color: rgb(177, 177, 0);">my</span> <span style="color: rgb(0, 0, 255);">$response</span> = <span style="color: rgb(0, 0, 255);">$client</span>-<span style="color: rgb(102, 204, 102);">&gt;</span><span style="color: rgb(0, 102, 0);">request</span><span style="color: rgb(102, 204, 102);">(</span> <span style="color: rgb(102, 204, 102);">{</span> <span style="color: rgb(255, 0, 0);">'payload'</span> =<span style="color: rgb(102, 204, 102);">&gt;</span> <span style="color: rgb(0, 0, 255);">$payload</span> <span style="color: rgb(102, 204, 102);">}</span> <span style="color: rgb(102, 204, 102);">)</span>;<br>
+
+<br>
+<span style="color: rgb(0, 0, 102);">print</span> <span style="color: rgb(0, 0, 255);">$response</span>-<span style="color: rgb(102, 204, 102);">&gt;</span><span style="color: rgb(102, 204, 102);">{</span>str<span style="color: rgb(102, 204, 102);">}</span>;</code>
+</p>
+
+</body>
+</html>

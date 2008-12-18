@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  
+  <title>Reliable Messaging API</title><link href="style/api_style.css" rel="stylesheet" type="text/css" media="all" /></head>
+
+
+<body>
+	<h2><a name="">Reliable Messaging API</a></h2>
+     <p>The WSO2 WSF/Perl extension supports WS-ReliableMessaging protocol versions 1.0 and 1.1. 
+        One way messages as well as two way messages can be sent reliably.
+     </p>
+    <p>
+        You can use the following options to configure
+        clients and services to use reliable messaging protocol.</p>
+    <p>
+    </p><h2 id="ws_client_options"><a name="">WSClient Options</a></h2>
+    
+    <p>
+        </p><table border="1" width="100%">
+            <tbody><tr>
+                <td style="width: 100px; height: 15px;">
+                    <strong>Option </strong>
+                </td>
+                <td style="width: 100px; height: 15px;">
+                    <strong>Data Type</strong></td>
+                <td style="width: 100px; height: 15px;">
+                    <strong>Value Domain</strong></td>
+                <td style="width: 100px; height: 15px;">
+                    <strong>Default Value</strong></td>
+                <td style="width: 373px; height: 15px;">
+                    <strong>Description</strong></td>
+            </tr>
+            <tr>
+                <td style="width: 100px; height: 21px;">
+                    reliable</td>
+                <td style="width: 100px; height: 21px;">scalar</td>
+                <td style="width: 100px; height: 21px;">"TRUE" | "true" | "1.0" | "1.1" </td>
+                <td style="width: 100px; height: 21px;">
+                    1.0</td>
+                <td style="width: 373px; height: 21px;">
+                    Defines whether to enable reliable messaging (RM) or not. 
+                    If specified TRUE, then RM
+                    will be enabled with RM version as 1.0. For RM to be
+                    enabled, you must also set the addressing action.</td>
+            </tr>
+            <tr>
+                <td style="width: 100px; height: 4px;">
+                    sequenceExpiryTime</td>
+                <td style="width: 100px; height: 4px;">
+                    scalar</td>
+                <td style="width: 100px; height: 4px;">
+                    int</td>
+                <td style="width: 100px; height: 4px;">
+                    60 seconds</td>
+                <td style="width: 373px; height: 4px;">
+                    The current sequence will expire in "sequenceExpiryTime" seconds from the current
+                    time.</td>
+            </tr>
+              <tr>
+                <td style="width: 100px; height: 4px;">
+                    sequenceKey</td>
+                <td style="width: 100px; height: 4px;">
+                    scalar</td>
+                <td style="width: 100px; height: 4px;">
+                    string</td>
+                <td style="width: 100px; height: 4px;">
+                    None</td>
+                <td style="width: 373px; height: 4px;">
+                    The sequence key property </td>
+            </tr>
+            <tr>
+                <td style="width: 100px; height: 4px;">
+                    "willContinueSequence"</td>
+                <td style="width: 100px; height: 4px;">
+                    scalar</td>
+                <td style="width: 100px; height: 4px;">"TRUE" | "true"</td>
+                <td style="width: 100px; height: 4px;">
+                    FALSE</td>
+                <td style="width: 373px; height: 4px;">
+                    Whether to continue the sequence. The sequence will be terminated by default
+                    if the user does not specify
+                    "willContinueSequence" =&gt; "TRUE".</td>
+            </tr>
+        </tbody></table>
+    
+    <h2 id="ws_message_options"><a name="">WSMessage Options</a></h2>
+    <table border="1" width="100%">
+        <tbody><tr style="font-weight: bold;">
+            <td style="width: 100px;">
+                Option</td>
+            <td style="width: 100px;">
+                Data Type</td>
+            <td style="width: 100px;">
+                Value Domain</td>
+            <td style="width: 100px;">
+                Default Value</td>
+            <td style="width: 389px;">
+                Description</td>
+        </tr>
+        <tr>
+            <td style="width: 100px;">
+                lastMessage</td>
+            <td style="width: 100px;">
+                scalar</td>
+            <td style="width: 100px;">
+                "TRUE"&nbsp;</td>
+            <td style="width: 100px;">
+                FALSE</td>
+            <td style="width: 389px;">
+                If the user wants to create multiple requests using the same sequence, this option can
+                be used.
+                <br />
+The client will check its "will_continue_sequence" option. If it is
+FALSE (default value) , it will send a message and terminate the
+sequence. If the client's&nbsp; "willContinueSequence" property is
+TRUE, it will check the "lastMessage" property of WSMessage. If the
+"lastMessage" is TRUE (default is FALSE) it will add the last message
+and terminate the sequence.</td>
+        </tr>
+    </tbody></table><h2><br /></h2></body></html>
