@@ -167,7 +167,7 @@ c. Run deploy_samples.rb by executing the following command
 
 NOTE: If you are using rails 2.0.0 or above you may need to configure the 
       database information in your rails application.
-      i. your_rails_application/conf/database.yml should be configured accordingly.
+      i. your_rails_application/config/database.yml should be configured accordingly.
       ii. create required databases according to your configuration, execute the following. 
           rake db:create
       
