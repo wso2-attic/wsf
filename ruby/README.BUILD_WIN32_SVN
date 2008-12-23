@@ -71,6 +71,7 @@ Contents:
                   "5" - TRACE
     
     3. Do necessary changes to "configure.in" and "configure.in.dist" files found under WSF/Ruby source directory.
+	Make sure the setting CRUNTIME to MD and EMBED_MANIFEST option to 1.
 
     4. If you have the Visual Studio command prompt installed on your computer, 
        open it.
