@@ -4,7 +4,7 @@
 # To build with debug symbols set DEBUG = 1
 DEBUG = 1
 #CRUNTIME Library ( Use /MD or /MT)
-CRUNTIME=/MT
+CRUNTIME=/MD
 # Visual Studio version
 EMBED_MANIFEST=1
 
