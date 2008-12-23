@@ -5,7 +5,7 @@
 DEBUG = 1
 
 #CRUNTIME Library ( Use /MD or /MT)
-CRUNTIME=/MD
+CRUNTIME=/MT
 
 # Visual Studio version
 EMBED_MANIFEST=1
