@@ -626,7 +626,7 @@ wsf_util_create_op_and_add_to_svc (
                   {
                     mep_value = rb_hash_aref(ht_mep, ID2SYM(rb_intern(operation)));
                   }
-                  if(mep_value == Qnil)
+                  if(mep_value != Qnil)
                   {
                      mep = RSTRING(mep_value)->ptr;
                      if (mep) {
