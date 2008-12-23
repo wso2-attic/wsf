@@ -2,13 +2,32 @@
 
 require 'mkmf'
 require 'rbconfig'
+require 'fileutils'
 
 # Check the configurations
-WSFC_HOME = Config::CONFIG['WSFC_HOME']
-if(WSFC_HOME == nil)
-  puts "Error in retrieving the WSFC_HOME from configuration, Add the WSFC_HOME in rbconfig.rb\n"
-  exit(-1)
+WSFC_HOME = '/opt/wso2/wsf_c'
+
+# recording the dir we're at
+pwd = FileUtils.pwd()
+
+# check for the environment variable
+if not ENV['WSFC_HOME'].nil?
+  WSFC_HOME = ENV['WSFC_HOME']
+else
+  begin
+    FileUtils.cd(WSFC_HOME)
+    # ah, we came here, so the standard directory exists
+    # let's go back then
+    FileUtils.cd(pwd)
+  rescue Exception => e
+    puts <<E
+WSF/C not found. If you have installed WSF/C into a non standard location
+please set WSFC_HOME environment variable to where you have installed it.
+E
+    exit -1
+  end
 end
+puts "Using WSF/C installed in #{WSFC_HOME}"
 
 dir_config('wsdlc', './wsdlc/include', './wsdlc/lib')
 
