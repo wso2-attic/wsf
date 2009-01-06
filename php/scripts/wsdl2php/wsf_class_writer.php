@@ -146,7 +146,7 @@ function wsf_write_content_model($parent_node, &$child_array, &$derived_classes_
     foreach ($param_child_list as $param_child) {
         if($param_child->nodeName == WSF_PARAM) {
             $param_attr = $param_child->attributes;
-            $param_name = "";
+            $param_name = $param_type = "";
             $parm_type = NULL;
             if($param_attr->getNamedItem(WSF_NAME)) {
                 $param_name = $param_attr->getNamedItem(WSF_NAME)->value;
