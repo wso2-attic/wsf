@@ -57,7 +57,7 @@ namespace wso2wsf
         virtual void WSF_CALL onFault(OMElement* message) = 0;
 
         /**
-         * desctructor that can be overriden.
+         * destructor that can be overridden.
          */
         virtual WSF_CALL ~ICallback();
     };
