@@ -140,7 +140,7 @@ namespace wso2wsf
         /**
          * Creates an om element struct.
          * @param parent parent element.
-         * @param localname local name of the elment. cannot be NULL.
+         * @param localname local name of the element. cannot be NULL.
          * @param ns namespace of the element. can be NULL.
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
@@ -150,7 +150,7 @@ namespace wso2wsf
         /**
          * Creates an om element struct.
          * @param parent parent element.
-         * @param localname local name of the elment. cannot be NULL.
+         * @param localname local name of the element. cannot be NULL.
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
