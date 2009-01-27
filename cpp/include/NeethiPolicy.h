@@ -83,7 +83,7 @@ namespace wso2wsf
         WSF_EXTERN WSF_CALL NeethiPolicy(OMElement * element) throw (NeethiException);
 
         /**
-         * desctructor that frees resources.
+         * destructor that frees resources.
          */
         virtual WSF_CALL ~NeethiPolicy();
 
