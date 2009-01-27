@@ -54,8 +54,8 @@ namespace wso2wsf
      * interface for consuming services. The Service Client is
      * derived either from the repository, or by using a configuration
      * context. Optionally, you can pass options during the
-     * initilization. You also can explicitly set options. Advanced
-     * features such as engaging and disengaing modules, adding and
+     * initialization. You also can explicitly set options. Advanced
+     * features such as engaging and disengaging modules, adding and
      * removing headers are supported. Some methods in the client may
      * throw exceptions identified as Axis Faults. There are several
      * ways of invoking a service operation, which are based on the
