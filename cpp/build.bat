@@ -93,7 +93,7 @@ rem Build Client Samples
 @if exist cpp rmdir /s /q cpp
 @mkdir cpp
 @cd "%WSFCPP_SOURCE%"
-@cd samples
+@cd examples
 @nmake dist -f samples.mk AUTOCONF=..\configure.in
 @if not %ERRORLEVEL% EQU 0 goto end
 @cd "%WSFCPP_HOME%\bin\samples\cpp"
