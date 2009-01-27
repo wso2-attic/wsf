@@ -54,14 +54,14 @@ OMNamespace * OMElement::findNamespace(std::string uri, std::string prefix)
   */
 OMAttribute * OMElement::getAttribute(std::string name, OMNamespace * ns)
 {
-    axutil_qname_t * qn;
+    axutil_qname_t * qn = NULL;
     if (ns)
     {
-        axutil_qname_create(getEnv(), name.c_str(), ns->getURI().c_str(), ns->getPrefix().c_str());
+        qn = axutil_qname_create(getEnv(), name.c_str(), ns->getURI().c_str(), ns->getPrefix().c_str());
     }
     else
     {
-        axutil_qname_create(getEnv(), name.c_str(), NULL, NULL);
+        qn = axutil_qname_create(getEnv(), name.c_str(), NULL, NULL);
     }
     axiom_attribute_t * at = axiom_element_get_attribute(_wsf_axiom_element, getEnv(), qn);
     axutil_qname_free(qn, getEnv());
