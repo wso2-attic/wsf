@@ -25,7 +25,7 @@
  */
 
 /**
- * @brief namespace wso2wsf Namespace of WSO2 Web Services Framework.
+ * @brief namespace wso2wsf namespace of WSO2 Web Services Framework.
  */
 namespace wso2wsf
 {
