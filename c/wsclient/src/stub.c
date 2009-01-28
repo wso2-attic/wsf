@@ -105,6 +105,65 @@ create_username_token(const axutil_env_t *env,
                       axiom_node_t *parent_node);
 
 
+void* wsclient_sct = NULL;
+AXIS2_EXTERN void* AXIS2_CALL
+wsclient_obtain_sct_default(
+    const axutil_env_t *env, 
+    axis2_bool_t is_encryption, 
+    axis2_msg_ctx_t* msg_ctx, 
+    axis2_char_t *sct_id, 
+    int sct_id_type,
+    void* user_params)
+{
+    
+    return wsclient_sct;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+wsclient_store_sct_default(
+    const axutil_env_t *env, 
+    axis2_msg_ctx_t* msg_ctx, 
+    axis2_char_t *sct_global_id, 
+    axis2_char_t *sct_local_id, 
+    void *sct, 
+    void *user_params)
+{
+	wsclient_sct = sct;
+	return AXIS2_SUCCESS;
+
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+wsclient_delete_sct_default(
+    const axutil_env_t *env, 
+    axis2_msg_ctx_t* msg_ctx, 
+    axis2_char_t *sct_id, 
+    int sct_id_type,
+    void* user_params)
+{
+    /* delete method is not implemented, because we are still not supporting sct cancel function */
+
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart]Using default sct provider delete function.");
+
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+wsclient_validate_sct_default(
+    const axutil_env_t *env, 
+    axiom_node_t *sct_node, 
+    axis2_msg_ctx_t *msg_ctx,
+    void *user_params)
+{
+    /* default implementation does not need to validate anything. We haven't extended the 
+     * functionality of sct */
+
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart]Using default sct provider validate function.");
+
+    return AXIS2_SUCCESS;
+}
+
+
 static axis2_options_t *
 wsclient_svc_option (axis2_svc_client_t *svc_client,
                      const axutil_env_t *env,
@@ -893,6 +952,16 @@ else
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsclient] Reciever Certificate not specified. ");
                 return WSCLIENT_FAILURE;
             }
+
+			rampart_context_set_obtain_security_context_token_fn(
+                rampart_context, env, wsclient_obtain_sct_default);
+            rampart_context_set_store_security_context_token_fn(
+                rampart_context, env, wsclient_store_sct_default);
+            rampart_context_set_delete_security_context_token_fn(
+                rampart_context, env, wsclient_delete_sct_default);
+            rampart_context_set_validate_security_context_token_fn(
+                rampart_context, env, wsclient_validate_sct_default);
+
 
             svc_ctx = axis2_svc_client_get_svc_ctx(svc_client, env);
             conf_ctx = axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
