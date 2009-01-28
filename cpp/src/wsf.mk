@@ -1,7 +1,7 @@
 AUTOCONF = .\..\configure.in
 !include $(AUTOCONF)
 
-WSFCPP_HOME_DIR="%WSFCPP_HOME%"
+WSFCPP_HOME_DIR=.\..\wso2-wsf-cpp-bin-$(WSFCPP_VERSION)-win32
 
 CFLAGS = /nologo /w /D "WIN32" /D "_WINDOWS" /D "USE_SANDESHA2" /D "_MBCS" /D "AXIS2_DECLARE_EXPORT" /EHsc
 
@@ -35,9 +35,9 @@ _VC_MANIFEST_EMBED_DLL= if exist $@.manifest mt.exe -nologo -manifest $@.manifes
 
 wso2_wsf_dll :
 	@if not exist int.msvc mkdir int.msvc
-	@cl.exe $(CFLAGS) $(INCLUDE_PATH) *.cpp /Foint.msvc\ /c
-	@rc.exe /r /fo "int.msvc\wsf.res" wsf.rc
-	@link.exe $(LDFLAGS) int.msvc\*.obj int.msvc\wsf.res $(LIBS) /DLL  /OUT:$(WSFCPP_HOME_DIR)\lib\wso2_wsf.dll /IMPLIB:$(WSFCPP_HOME_DIR)\lib\wso2_wsf.lib
+	cl.exe $(CFLAGS) $(INCLUDE_PATH) *.cpp /Foint.msvc\ /c
+	rc.exe /r /fo "int.msvc\wsf.res" wsf.rc
+	link.exe $(LDFLAGS) int.msvc\*.obj int.msvc\wsf.res $(LIBS) /DLL  /OUT:$(WSFCPP_HOME_DIR)\lib\wso2_wsf.dll /IMPLIB:$(WSFCPP_HOME_DIR)\lib\wso2_wsf.lib
 	-@$(_VC_MANIFEST_EMBED_DLL)
 
 wsfcpp: wso2_wsf_dll
@@ -48,8 +48,4 @@ cleanint:
 clean: 
 	@if exist int.msvc rmdir /s /q int.msvc
 		
-copy_sqlite:
-	@if exist $(SQLITE_BIN_DIR)\sqlite3.dll copy /Y  $(SQLITE_BIN_DIR)\sqlite3.dll $(WSFCPP_HOME_DIR)\lib
-	@if exist $(SQLITE_BIN_DIR)\sqlite3.exe copy /Y  $(SQLITE_BIN_DIR)\sqlite3.exe $(WSFCPP_HOME_DIR)\lib
-
-dist: clean copy_sqlite wsfcpp cleanint
+dist: clean wsfcpp cleanint
