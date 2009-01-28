@@ -1,5 +1,5 @@
 @echo off
-set WSFCPP_VERSION=1.1.0
+call init.bat
 call wsf_c\build\init.bat
 @if exist wsf_c\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32 rmdir /S /Q wsf_c\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32
 @if exist wsf_c\sandesha2c\build\sandesha2 rmdir /S /Q wsf_c\sandesha2c\build\sandesha2
