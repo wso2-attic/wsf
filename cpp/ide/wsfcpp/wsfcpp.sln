@@ -189,6 +189,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "security", "security", "{4A
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sec_echo", "samples\sec_echo\sec_echo.vcproj", "{101DC893-FEAB-45F9-BEFA-93A5CCE58B67}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "buildfiles", "buildfiles", "{68459F8C-C2A1-4FDF-AA2B-CB16B8F20DAF}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\AUTHORS = ..\..\AUTHORS
+		..\..\build.bat = ..\..\build.bat
+		..\..\ChangeLog = ..\..\ChangeLog
+		..\..\clean.bat = ..\..\clean.bat
+		..\..\configure.in = ..\..\configure.in
+		..\..\COPYING = ..\..\COPYING
+		..\..\init.bat = ..\..\init.bat
+		..\..\INSTALL = ..\..\INSTALL
+		..\..\NEWS = ..\..\NEWS
+		..\..\NOTICE = ..\..\NOTICE
+		..\..\README = ..\..\README
+		..\..\README.INSTALL.WINDOWS = ..\..\README.INSTALL.WINDOWS
+		..\..\README.SAMPLES = ..\..\README.SAMPLES
+		..\..\wsf_c_build.bat = ..\..\wsf_c_build.bat
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
