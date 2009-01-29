@@ -117,14 +117,14 @@ namespace wso2wsf
 
         /**
          * Method to retrieve children of this node.
-         * @return childern of this node.
+         * @return children of this node.
          */
         WSF_EXTERN virtual std::vector<OMNode *> WSF_CALL getChilderen();
 
         /**
          * Method to set children of this node.
          * @param children child node array.
-         * @return childern of this node.
+         * @return children of this node.
          */
         WSF_EXTERN virtual void WSF_CALL setChilderen(std::vector<OMNode *> children);
 
@@ -158,7 +158,7 @@ namespace wso2wsf
 
         /**
          * Creates an om element struct.
-         * @param localname local name of the elment. cannot be NULL.
+         * @param localname local name of the element. cannot be NULL.
          * @param ns namespace of the element. can be NULL.
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
@@ -167,7 +167,7 @@ namespace wso2wsf
 
         /**
          * Creates an om element struct.
-         * @param localname local name of the elment. cannot be NULL.
+         * @param localname local name of the element. cannot be NULL.
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */

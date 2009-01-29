@@ -1,4 +1,4 @@
-#ifndef OMEXCEPTION_H
+b#ifndef OMEXCEPTION_H
 #define OMEXCEPTION_H
 
 #include <WSFDefines.h>

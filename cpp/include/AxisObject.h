@@ -51,8 +51,7 @@ namespace wso2wsf
         static axutil_env_t * _env;
 
         /**
-         * @var _refCount stores the number of references to
-         * this object.
+         * @var _refCount stores the number of references to axutil_env.
          */
         static unsigned int _refCount;
 

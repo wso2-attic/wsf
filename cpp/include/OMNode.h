@@ -76,7 +76,7 @@ namespace wso2wsf
         /**
          * Indicates whether parser has parsed this information item completely or not
          * @param node node struct.
-         * @return true if node is completly build
+         * @return true if node is completely build
          * false if node is not completed.
          */
         bool WSF_CALL isComplete();
@@ -102,7 +102,7 @@ namespace wso2wsf
         WSF_CALL OMNode();
 
         /**
-         * desctructor that can be overriden.
+         * destructor that can be overridden.
          */
         virtual WSF_CALL ~OMNode();
 

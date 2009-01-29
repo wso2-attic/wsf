@@ -54,7 +54,7 @@ namespace wso2wsf
         WSF_EXTERN void WSF_CALL process() const;
 
         /**
-         * desctructor that can be overriden.
+         * destructor that can be overridden.
          */
         virtual WSF_CALL ~NeethiException();
     };

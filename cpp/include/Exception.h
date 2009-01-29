@@ -38,9 +38,9 @@ namespace wso2wsf
 
     /**
      * @brief class Exception The Exception Class is an abstract base class that can be used
-     * to impliment any type of exception. All exception classes used in this
+     * to implement any type of exception. All exception classes used in this
      * project are derived from this class. The process method is what does the
-     * neccessary processing of the exception that was generated. The others
+     * necessary processing of the exception that was generated. The others
      * are methods used for string manipulation.
      */
     class Exception
@@ -69,20 +69,20 @@ namespace wso2wsf
 
     public:
         /**
-         * desctructor that can be overriden.
+         * destructor that can be overridden.
          */
         virtual WSF_CALL ~Exception();
 
         /**
          * Method for doing the required processing.
-         * Must be overriden, for an class that can be constructed.
+         * Must be overridden, for an class that can be constructed.
          */
         virtual void WSF_CALL process() const = 0;
 
         /**
          * Operation for obtaining string representation of the exception
          * object. No member fields can be modified within this function.
-         * The derived class has the option to override the behaviour.
+         * The derived class has the option to override the behavior.
          */
         virtual WSF_CALL operator std::string() const;
 
