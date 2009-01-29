@@ -18,6 +18,7 @@
 #include <WSFError.h>
 #include <OMElement.h>
 #include <OMText.h>
+#include <typeinfo>
 using namespace std;
 using namespace wso2wsf;
 
