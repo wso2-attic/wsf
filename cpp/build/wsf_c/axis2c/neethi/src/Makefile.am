@@ -10,12 +10,14 @@ libneethi_la_SOURCES= all.c   \
 				reference.c \
 				registry.c \
 				assertion_builder.c \
+				mtom_assertion_checker.c \
 				util.c
 
 libneethi_la_LIBADD  = ../../axiom/src/om/libaxis2_axiom.la \
 			../../util/src/libaxutil.la \
 			secpolicy/builder/librp_builder.la \
-			secpolicy/model/librp_model.la
+			secpolicy/model/librp_model.la \
+		 	rmpolicy/librm_policy.la 	
 
 #libneethi_LIBADD=$(top_builddir)/src/core/description/libaxis2_description.la \
 #                    $(top_builddir)/src/core/receivers/libaxis2_receivers.la \
