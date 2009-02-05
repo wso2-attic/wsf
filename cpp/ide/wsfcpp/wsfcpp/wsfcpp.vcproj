@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="wsfcpp"
+	Name="wso2_wsf"
 	ProjectGUID="{CE366ECF-5420-4B6F-8C10-0AC014031117}"
 	RootNamespace="wsfcpp"
 	Keyword="Win32Proj"
@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="..\..\..\wso2-wsf-cpp-bin-1.1.0-win32\lib\"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -40,13 +40,13 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="E:\svnwork\cpp\include"
+				AdditionalIncludeDirectories="E:\svnwork\cpp\include;&quot;E:\svnwork\cpp\wso2-wsf-cpp-bin-1.1.0-win32\include&quot;;&quot;E:\svnwork\cpp\wso2-wsf-cpp-bin-1.1.0-win32\include\platforms&quot;;&quot;E:\svnwork\cpp\wso2-wsf-cpp-bin-1.1.0-win32\include\platforms\windows&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;WSFCPP_EXPORTS;AXIS2_DECLARE_EXPORT;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
-				WarningLevel="4"
+				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
 			/>
@@ -63,6 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="axis2_engine.lib axis2_parser.lib axutil.lib axiom.lib neethi.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;E:\svnwork\cpp\wso2-wsf-cpp-bin-1.1.0-win32\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -189,6 +190,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\MessageContext.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\NeethiException.cpp"
 				>
 			</File>
@@ -237,6 +242,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\Parameter.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\Process.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\Property.cpp"
 				>
 			</File>
@@ -272,6 +285,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\ICallback.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\MessageContext.h"
 				>
 			</File>
 			<File
@@ -323,11 +340,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\Process.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\Property.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\include\ServiceClient.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\ServiceSkeleton.h"
 				>
 			</File>
 			<File
