@@ -66,7 +66,7 @@ namespace wso2wsf
         /**
          * Creates an om text struct.
          * @param parent parent element.
-         * @param value Text value. Optinal, can be NULL.
+         * @param value Text value. Optional, can be NULL.
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
@@ -74,7 +74,7 @@ namespace wso2wsf
 
         /**
          * Creates an om text struct.
-         * @param value Text value. Optinal, can be NULL.
+         * @param value Text value. Optional, can be NULL.
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
@@ -83,7 +83,7 @@ namespace wso2wsf
         /**
          * Creates an om text struct.
          * @param parent parent element.
-         * @param value Text value. Optinal, can be NULL.
+         * @param value Text value. Optional, can be NULL.
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
@@ -91,7 +91,7 @@ namespace wso2wsf
 
         /**
          * Creates an om text struct.
-         * @param data_handler the data handler. Optinal, can be NULL.
+         * @param data_handler the data handler. Optional, can be NULL.
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
@@ -114,7 +114,7 @@ namespace wso2wsf
         WSF_CALL OMText(OMNode * parent, axiom_node_t * node) throw (OMException);
 
         /**
-         * Desctructor that frees resources.
+         * Destructor that frees resources.
          */
         WSF_CALL ~OMText();
 

@@ -41,7 +41,7 @@ namespace wso2wsf
     /**
      * @brief class OMAttribute Defines the base class used to represent attributes in
      * the Axis Object Model. Attributes are typically composed of a name and value pair.
-     * This class provides an abstraction to occurances of attributes associated
+     * This class provides an abstraction to occurences of attributes associated
      * with the XML model.
      */
     class OMAttribute : public OMObject
@@ -116,7 +116,7 @@ namespace wso2wsf
         WSF_EXTERN WSF_CALL OMAttribute(OMAttribute & attribute) throw (OMException);
 
         /**
-         * desctructor that frees resources.
+         * destructor that frees resources.
          */
         virtual WSF_CALL ~OMAttribute();
 

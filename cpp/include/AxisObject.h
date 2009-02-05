@@ -16,11 +16,12 @@
 
 #ifndef AXISOBJECT_H
 #define AXISOBJECT_H
-
+#include <Process.h>
 #include <WSFDefines.h>
 #include <axutil_env.h>
 #include <string>
 #include <AxisFault.h>
+
 
 /**
  * @file AxisObject.h
@@ -41,20 +42,20 @@ namespace wso2wsf
      * @brief class AxisObject This creates a base object that serves as the
      * building block for other components of the Axis Framework.
      */
+	class Process;
+
     class AxisObject
     {
     private:
-        /**
-         * @var _env private variable holds reference for
-         * axutil_env struct.
-         */
-        static axutil_env_t * _env;
+       
+		static Process *_envPro;
 
         /**
          * @var _refCount stores the number of references to axutil_env.
          */
         static unsigned int _refCount;
 
+		
         /**
          * Increments reference count.
          */
@@ -70,7 +71,7 @@ namespace wso2wsf
          * Method to get the reference to the axutil_env struct.
          * @return reference to the axutil_env struct.
          */
-        axutil_env_t * WSF_CALL getEnv();
+        const axutil_env_t * WSF_CALL getEnv();
 
         /**
          * Constructor setting up the AxisObject.

@@ -337,14 +337,14 @@ namespace wso2wsf
         WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, std::string operation, std::string action) throw (AxisFault);
 
         /**
-         * Gets the last respose SOAP envelope.
+         * Gets the last response SOAP envelope.
          * @return pointer to SOAP envelope that was returned as a result
          * when request was called last time.
          */
         WSF_EXTERN OMElement * WSF_CALL getLastResponseSoapEnvelope();
 
         /**
-         * Gets the last respose SOAP envelope.
+         * Gets the last response SOAP envelope.
          * @return SOAP envelope that was returned as a result
          * when request was called last time, as a String.
          */

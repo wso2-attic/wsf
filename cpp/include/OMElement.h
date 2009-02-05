@@ -135,7 +135,7 @@ namespace wso2wsf
          * @exception OMException an exception is thrown if something goes wrong
          * while creating the object.
          */
-        WSF_CALL OMElement(OMNode * parent, axiom_node_t * node) throw (OMException);
+        WSF_EXTERN WSF_CALL OMElement(OMNode * parent, axiom_node_t * node) throw (OMException);
 
         /**
          * Creates an om element struct.
@@ -174,7 +174,7 @@ namespace wso2wsf
         WSF_EXTERN WSF_CALL OMElement(std::string localname) throw (OMException);
 
         /**
-         * desctructor that frees resources. Please note that all associated attributes,
+         * destructor that frees resources. Please note that all associated attributes,
          * namespaces, and child nodes will also be removed.
          */
         virtual WSF_CALL ~OMElement();
@@ -207,7 +207,7 @@ namespace wso2wsf
          * to the element.
          * @param ns pointer to the namespace struct to be declared.
          * @param no_find true for no-find mode.
-         * @return satus of the op. true on success else false.
+         * @return status of the op. true on success else false.
          */
         WSF_EXTERN bool WSF_CALL setNamespace(OMNamespace * ns, bool no_find);
 
@@ -229,7 +229,7 @@ namespace wso2wsf
         /**
          * Adds an attribute to current element
          * @param attribute attribute to be added.
-         * @return satus of the op. true on success else false.
+         * @return status of the op. true on success else false.
          */
         WSF_EXTERN bool WSF_CALL addAttribute(OMAttribute * attribute);
 
@@ -293,8 +293,8 @@ namespace wso2wsf
 
         /**
          * select all the text children and concat them to a single string.
-         * @return the contanated text of all text childrens text values
-         * return null if no text children is avilable or on error.
+         * @return the contaminated text of all text children text values
+         * return null if no text children is available or on error.
          */
         WSF_EXTERN std::string WSF_CALL getText();
 
@@ -308,7 +308,7 @@ namespace wso2wsf
 
         /**
          * returns the first child om element of this om element node.
-         * @return om element if one is availble otherwise return NULL.
+         * @return om element if one is available otherwise return NULL.
          */
         WSF_EXTERN OMElement * WSF_CALL getFirstElement();
 

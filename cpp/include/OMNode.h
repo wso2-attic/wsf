@@ -86,13 +86,13 @@ namespace wso2wsf
          * Method to set the reference to the axiom_node struct.
          * @param node axiom_node reference.
          */
-        void WSF_CALL setAxiomNode(axiom_node_t * node);
+        WSF_EXTERN void WSF_CALL setAxiomNode(axiom_node_t * node);
 
         /**
          * Method to get the reference to the axiom_node struct.
          * @return reference to the axiom_node struct.
          */
-        axiom_node_t * WSF_CALL getAxiomNode();
+       WSF_EXTERN  axiom_node_t * WSF_CALL getAxiomNode();
 
         /**
          * Creates a node struct.
@@ -142,7 +142,7 @@ namespace wso2wsf
         /**
          * get parent of node.
          * @return pointer to parent node of node, return NULL if no parent exists or
-         * when an error occured.
+         * when an error occurred.
          */
         virtual OMNode * WSF_CALL getParent() = 0;
 

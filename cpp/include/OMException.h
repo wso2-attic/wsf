@@ -1,4 +1,4 @@
-b#ifndef OMEXCEPTION_H
+#ifndef OMEXCEPTION_H
 #define OMEXCEPTION_H
 
 #include <WSFDefines.h>
@@ -54,7 +54,7 @@ namespace wso2wsf
         WSF_EXTERN void WSF_CALL process() const;
 
         /**
-         * desctructor that can be overriden.
+         * destructor that can be overridden.
          */
         virtual WSF_CALL ~OMException();
     };

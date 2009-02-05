@@ -79,7 +79,7 @@ namespace wso2wsf
         WSF_EXTERN WSF_CALL OMDataHandler() throw (OMException);
 
         /**
-         * Desctructor that frees resources.
+         * Destructor that frees resources.
          */
         WSF_CALL ~OMDataHandler();
 
