@@ -113,7 +113,7 @@ rem Build security Samples
 @cd cpp\security
 @mkdir client
 @cd "%WSFCPP_SOURCE%"
-@cd samples
+@cd examples
 @cd security
 @xcopy /E /Q /I /Y secpolicy %WSFCPP_HOME%\bin\samples\cpp\security\secpolisy
 @nmake dist -f sec_samples.mk AUTOCONF=..\..\configure.in
