@@ -26,6 +26,7 @@ using namespace wso2wsf;
   */
  AxisObject::~AxisObject()
 {
+	/*
     if (_refCount == 0)
     {
         if (_env)
@@ -37,6 +38,7 @@ using namespace wso2wsf;
     {
         decrementRef();
     }
+	*/
 }
 
 /** @brief enableLogging
@@ -45,8 +47,10 @@ using namespace wso2wsf;
   */
 void AxisObject::enableLogging(bool enable)
 {
+	axutil_env_t *_env = NULL;
     if (enable)
     {
+		
         axutil_env_enable_log(_env, AXIS2_TRUE);
     }
     else
@@ -61,6 +65,8 @@ void AxisObject::enableLogging(bool enable)
   */
 void AxisObject::initialize(std::string log_file, axutil_log_levels_t log_level) throw (AxisFault)
 {
+	axutil_env_t* _env = NULL;
+	_envPro	 = Process::getInstance();
     if (_refCount == 0 && !_env)
     {
         _env = axutil_env_create_all(log_file.c_str(), log_level);
@@ -72,6 +78,10 @@ void AxisObject::initialize(std::string log_file, axutil_log_levels_t log_level)
         {
             _refCount = 1;
         }
+		if(_env)
+		{
+			_envPro->setEnv(_env);
+		}
     }
 }
 
@@ -91,9 +101,9 @@ void AxisObject::initialize(std::string log_file, axutil_log_levels_t log_level)
   *
   * @todo: document this function
   */
-axutil_env_t * AxisObject::getEnv()
+const axutil_env_t * AxisObject::getEnv()
 {
-    return _env;
+	return _envPro->getEnv();
 }
 
 /** @brief incrementRef
@@ -118,14 +128,13 @@ void AxisObject::decrementRef()
 }
 
 /** @brief _env
-  *
-  * @todo: document this var
-  */
-axutil_env_t * AxisObject::_env = NULL;
+*
+* @todo: document this var
+*/
+Process * AxisObject::_envPro = NULL;
 
 /** @brief _refCount
-  *
-  * @todo: document this var
-  */
+*
+* @todo: document this var
+*/
 unsigned int AxisObject::_refCount = 0;
-
