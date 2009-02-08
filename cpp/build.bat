@@ -16,7 +16,7 @@ rem Pack WSO2 WSF/C++
 :pack_wsfcpp
 @cd ..
 @set WSFCPP_SOURCE=%CD%
-@if not exist "%WSFCPP_HOME%" set WSFCPP_HOME=%CD%\wso2-wsf-cpp-bin-%WSFCPP_VERSION%-win32
+@set WSFCPP_HOME=%CD%\wso2-wsf-cpp-bin-%WSFCPP_VERSION%-win32
 @if exist "%WSFCPP_HOME%" rmdir /s /q "%WSFCPP_HOME%"
 @mkdir "%WSFCPP_HOME%"
 @cd "%WSFCPP_HOME%"
