@@ -4,8 +4,12 @@ AUTOCONF = .\..\configure.in
 WSFCPP_HOME_DIR=.\..\wso2-wsf-cpp-bin-$(WSFCPP_VERSION)-win32
 
 CFLAGS = /nologo /w /D "WIN32" /D "_WINDOWS" /D "USE_SANDESHA2" /D "_MBCS" /D "AXIS2_DECLARE_EXPORT" /EHsc
+CC=cl.exe
 
 LDFLAGS = /nologo /LIBPATH:$(WSFCPP_HOME_DIR)\lib /LIBPATH:$(LIBXML2_BIN_DIR)\lib
+LD=link.exe
+
+RC=rc.exe
 
 !if "$(ENABLE_LIBXML2)" == "1"
 LIBS = axutil.lib axis2_engine.lib axis2_parser.lib \
@@ -35,13 +39,20 @@ _VC_MANIFEST_EMBED_DLL= if exist $@.manifest mt.exe -nologo -manifest $@.manifes
 
 wso2_wsf_dll :
 	@if not exist int.msvc mkdir int.msvc
-	cl.exe $(CFLAGS) $(INCLUDE_PATH) *.cpp /Foint.msvc\ /c
-	rc.exe /r /fo "int.msvc\wsf.res" wsf.rc
-	link.exe $(LDFLAGS) int.msvc\*.obj int.msvc\wsf.res $(LIBS) /DLL  /OUT:$(WSFCPP_HOME_DIR)\lib\wso2_wsf.dll /IMPLIB:$(WSFCPP_HOME_DIR)\lib\wso2_wsf.lib
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) *.cpp /Foint.msvc\ /c
+	$(RC) /r /fo "int.msvc\wsf.res" wsf.rc
+	$(LD) $(LDFLAGS) int.msvc\*.obj int.msvc\wsf.res $(LIBS) /DLL  /OUT:$(WSFCPP_HOME_DIR)\lib\wso2_wsf.dll /IMPLIB:$(WSFCPP_HOME_DIR)\lib\wso2_wsf.lib
 	-@$(_VC_MANIFEST_EMBED_DLL)
 
-wsfcpp: wso2_wsf_dll
+wsf_cpp_msg_recv_dll:
+	@if not exist int.msvc\msg_recv mkdir int.msvc\msg_recv
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) msg_recv\wsf_cpp_msg_recv.cpp /Foint.msvc\msg_recv\ /c
+	$(LD) $(LDFLAGS) int.msvc\msg_recv\wsf_cpp_msg_recv.obj $(LIBS) wso2_wsf.lib /DLL /OUT:$(WSFCPP_HOME_DIR)\lib\wsf_cpp_msg_recv.dll
+	-@$(_VC_MANIFEST_EMBED_DLL)
 
+
+wsfcpp: wso2_wsf_dll wsf_cpp_msg_recv_dll
+	
 cleanint:
 	@if exist $(WSFCPP_HOME_DIR)\lib\wso2_wsf.ilk del $(WSFCPP_HOME_DIR)\lib\wso2_wsf.ilk
 

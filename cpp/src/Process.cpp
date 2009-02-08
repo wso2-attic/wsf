@@ -40,8 +40,15 @@ Process* WSF_CALL Process::getInstance()
 */
 void WSF_CALL Process::setEnv(const axutil_env_t *env)
 {
-	int threadId = AXIS2_PLATFORM_GET_THREAD_ID;
-	_envmap[threadId] = env;
+	axutil_thread_mutex_t *mutex = axutil_thread_mutex_create(env->allocator, AXIS2_THREAD_MUTEX_DEFAULT);
+	if(mutex)
+	{
+		axutil_thread_mutex_lock(mutex);
+		int threadId = AXIS2_PLATFORM_GET_THREAD_ID();
+		_envmap[threadId] = env;
+		axutil_thread_mutex_unlock(mutex);
+		axutil_thread_mutex_destroy(mutex);
+	}
 }
 
 /**
@@ -49,13 +56,28 @@ void WSF_CALL Process::setEnv(const axutil_env_t *env)
 */
 const axutil_env_t* WSF_CALL Process::getEnv() 
 {
-	int threadId = AXIS2_PLATFORM_GET_THREAD_ID;
+	int threadId = AXIS2_PLATFORM_GET_THREAD_ID();
+	std::map<int, const axutil_env_t*>::iterator _it;
 	_it = _envmap.find(threadId);
 	if(_it != _envmap.end())
 	{
 		return _it->second;
 	}
 	return NULL;
+}
+
+WSF_EXTERN void WSF_CALL Process::removeEnv()
+{
+	const axutil_env_t *env = getEnv();
+	axutil_thread_mutex_t *mutex = axutil_thread_mutex_create(env->allocator, AXIS2_THREAD_MUTEX_DEFAULT);
+	if(mutex)
+	{
+		axutil_thread_mutex_lock(mutex);
+		int threadId = AXIS2_PLATFORM_GET_THREAD_ID();
+		_envmap.erase(threadId);
+		axutil_thread_mutex_unlock(mutex);
+		axutil_thread_mutex_destroy(mutex);
+	}
 }
 
 /**
@@ -67,7 +89,8 @@ WSF_CALL Process::~Process()
 
 void WSF_CALL Process::switchToGlobalPool()
 {
-	int threadId = AXIS2_PLATFORM_GET_THREAD_ID;
+	std::map<int, const axutil_env_t*>::const_iterator _it;
+	int threadId = AXIS2_PLATFORM_GET_THREAD_ID();
 	_it = _envmap.find(threadId);
 	if(_it != _envmap.end())
 	{
@@ -77,7 +100,9 @@ void WSF_CALL Process::switchToGlobalPool()
 
 void WSF_CALL Process::switchToLocalPool()
 {
-	int threadId = AXIS2_PLATFORM_GET_THREAD_ID;
+
+	std::map<int, const axutil_env_t*>::const_iterator _it;
+	int threadId = AXIS2_PLATFORM_GET_THREAD_ID();
 	_it = _envmap.find(threadId);
 	if(_it != _envmap.end())
 	{
@@ -88,5 +113,4 @@ void WSF_CALL Process::switchToLocalPool()
 
 Process* Process::_processObj = NULL;
 
-map<int,const axutil_env_t *> Process::_envmap;
-map<int,const axutil_env_t *>::const_iterator Process::_it;
+std::map<int, const axutil_env_t*> Process::_envmap;
