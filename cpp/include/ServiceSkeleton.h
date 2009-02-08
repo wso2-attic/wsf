@@ -23,7 +23,7 @@
 #include <MessageContext.h>
 
 /**
- * @file ICallback.h
+ * @file ServiceSkeleton.h
  */
 
 /**
@@ -38,32 +38,38 @@ namespace wso2wsf
      */
 
     /**
-     * @brief class ICallback Represents an interface needed to be implemented by
-     * an object that is used for passing callbacks for the request
-     * method in the ServiceClient Class, in a non-blocking scenario.
+     * @brief class ServiceSkeleton represents the Interface that should be implemented by
+	 * any CPP service to be deployed. This class defines 3 virtual methods which should be overridden
+	 * by the implementation class of any service. 
      */
 	class WSF_EXTERN ServiceSkeleton
     {
     public:
         /**
          * This method is called for handling the business logic of the service
-		 * Any service should 
+		 * Services should implement this method in order to process the soap meesage's content.
+		 * @param omEle is the first child of the SOAP Body element. The msgCtx is the message context of the
+		 * out going message. The MessageContext object carries all the contextual details related to the soap message.
+		 * Various details of the SOAP Message can be accessed using the MessageContext.
+		 * This function should return the resultant OMElement which would be sent back to the message sender.
          * @param message Reference to message that is passed in.
          */
-		virtual OMElement* WSF_CALL invoke(OMElement* message, MessageContext *msgCtx){ return NULL;};
+		virtual OMElement* WSF_CALL invoke(OMElement* omEle, MessageContext *msgCtx){ return NULL;};
 
         /**
-         * Handler to be invoked in a Fault Event.
+         * This is the handler to be invoked when a Fault occurs. The Service implementor should implement any service specific fault
+		 * handling here.
+		 * @param omEle Fault OMElement
          * @param message Reference to message that is passed in.
          */
-		virtual OMElement* WSF_CALL onFault(OMElement* message){return NULL;};
+		virtual OMElement* WSF_CALL onFault(OMElement* omEle){return NULL;};
 
-        /**
-         * destructor that can be overridden.
-         */
-
+		/**
+		*	Initialization method. Any service specific initialization can be done here.                                                    
+		*
+		*/
 		virtual void WSF_CALL init() throw (AxisFault){};
-
+		
         virtual WSF_CALL ~ServiceSkeleton();
     };
     /** @} */
@@ -72,4 +78,4 @@ namespace wso2wsf
     inline WSF_CALL ServiceSkeleton::~ServiceSkeleton()
     {}
 }
-#endif // ICALLBACK_H
+#endif // SERVICESKELETON_H

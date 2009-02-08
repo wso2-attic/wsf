@@ -38,7 +38,6 @@ namespace wso2wsf
 	* @ingroup wso2wsf
 	* @{
 	*/
-
 	/**
 	* @brief class Process. This keeps track of axis2_env_t when running with threads.
 	*/
@@ -51,28 +50,32 @@ namespace wso2wsf
 		* axutil_env struct.
 		*/
 		static Process *_processObj;
-
+		
 		static std::map<int, const axutil_env_t*> _envmap;
-		static std::map<int, int> _refCount;
-		static std::map<int, const axutil_env_t*>::const_iterator _it;
-		static std::map<int, int>::const_iterator _refit;
+		
 		/**
 		* @var _refCount stores the number of references to axutil_env.
 		*/
 
 	public:
 		/**
-		* Return an instance of Process Object
+		* Return an instance of the Static Process Object
+		*
 		*/
-
 		static WSF_EXTERN Process* WSF_CALL getInstance();
 		/**
 		*	Method to store the current thread specific environment. 
 		*  @param env Pointer to the axutil_env
 		*/
 		static WSF_EXTERN void WSF_CALL setEnv(const axutil_env_t *env);
-
+		/**
+		* Get the envrionment related to current thread context                                                   
+		*/
 		static WSF_EXTERN const axutil_env_t* WSF_CALL getEnv();
+		/**
+		* Remove the environment related to current thread context.                                                   
+		*/
+		static WSF_EXTERN void WSF_CALL removeEnv();
 		/**
 		* Switch to global memory pool
 		*/
