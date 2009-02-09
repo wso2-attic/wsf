@@ -545,7 +545,7 @@ namespace wso2wsf
 		* false if SOAP 1.2 is being used
 		* @return true on success, else false
 		*/
-		WSF_EXTERN bool WSF_CALL setIsSOAP11();
+		WSF_EXTERN bool WSF_CALL setIsSOAP11(bool isSOAP11);
 
 		/**
 		* Gets the options to be used in invocation.
