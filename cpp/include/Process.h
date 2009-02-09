@@ -69,7 +69,7 @@ namespace wso2wsf
 		*/
 		static WSF_EXTERN void WSF_CALL setEnv(const axutil_env_t *env);
 		/**
-		* Get the envrionment related to current thread context                                                   
+		* Get the environment related to current thread context                                                   
 		*/
 		static WSF_EXTERN const axutil_env_t* WSF_CALL getEnv();
 		/**
