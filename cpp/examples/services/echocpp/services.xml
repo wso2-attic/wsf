@@ -1,0 +1,34 @@
+<service name="echocpp">
+    <parameter name="ServiceClass" locked="xsd:false">echocpp</parameter>
+
+    <!--Uncomment to specify static WSDL path-->
+    <!--parameter name="wsdl_path">PATH</parameter-->
+
+    <!--Uncomment to include defaul method with REST as GET-->
+    <!--parameter name="defaultRESTMethod">GET</parameter-->
+
+    <description>
+        This is a testing service, to test whether the system is working or not
+    </description>
+
+    <operation name="echoString">
+            <messageReceiver class="wsf_cpp_msg_recv" />
+            <parameter name="wsamapping">http://ws.apache.org/axis2/c/samples/echoString</parameter>
+            <!--Please note that you can only have one RESTMethod and one RESTLocation-->
+            <!--Uncomment for POST method with REST-->
+            <parameter name="RESTMethod">POST</parameter>
+            <parameter name="RESTLocation">echoString</parameter>
+            <!--Uncomment for GET method -->
+            <!--parameter name="RESTMethod">GET</parameter>
+            <parameter name="RESTLocation">get_echo/{param}</parameter-->
+            <!--Uncomment for PUT method -->
+            <!--parameter name="RESTMethod">PUT</parameter>
+            <parameter name="RESTLocation">put_echo/{param}</parameter-->
+            <!--Uncomment for DELETE method -->
+            <!--parameter name="RESTMethod">DELETE</parameter>
+            <parameter name="RESTLocation">delete_echo/{param}</parameter-->
+            <!--Uncomment for HEAD method -->
+            <!--parameter name="RESTMethod">HEAD</parameter>
+            <parameter name="RESTLocation">get_echo/{param}</parameter-->
+    </operation>
+</service>

@@ -15,13 +15,13 @@ LDFLAGS = /nologo /LIBPATH:$(WSFCPP_HOME_DIR)\lib
 
 LIBS = axutil.lib axis2_engine.lib axis2_parser.lib axiom.lib wso2_wsf.lib
 
-INCLUDE_PATH = /I$(WSFCPP_HOME_DIR)\include /I$(WSFCPP_HOME_DIR)\include\platforms
+INCLUDE_PATH = /I$(WSFCPP_HOME_DIR)\include /I.\..\include /I$(WSFCPP_HOME_DIR)\include\platforms
 
 !if "$(DEBUG)" == "1"
-CFLAGS = $(CFLAGS) /D "_DEBUG" /Od /Z7 $(CRUNTIME)d
+CFLAGS = $(CFLAGS) /D "_DEBUG" /Od /Z7 $(CRUNTIME)d /D "AXIS2_DECLARE_EXPORT"
 LDFLAGS = $(LDFLAGS) /DEBUG
 !else
-CFLAGS = $(CFLAGS) /D "NDEBUG" /O2 $(CRUNTIME)
+CFLAGS = $(CFLAGS) /D "NDEBUG" /O2 $(CRUNTIME) /D "AXIS2_DECLARE_EXPORT"
 LDFLAGS = $(LDFLAGS)
 !endif
 
@@ -143,7 +143,16 @@ mtom_exe:
 	@xcopy /E /I /Q /Y $(SAMPLES_HOME_DIR)\mtom\resources $(WSFCPP_HOME_DIR)\bin\samples\cpp\mtom\resources
 	@if exist $(WSFCPP_HOME_DIR)\bin\samples\cpp\mtom\resources\*.am del $(WSFCPP_HOME_DIR)\bin\samples\cpp\mtom\resources\*.am
 
-wsfcpp_samples: int_dir echo_samples flickr_exe google_exe math_exe notify_exe yahoo_exe mtom_exe
+echo_service:
+	@if not exist int.msvc\services\echocpp mkdir int.msvc\services\echocpp
+	@if not exist $(WSFCPP_HOME_DIR)\services\echocpp mkdir $(WSFCPP_HOME_DIR)\services\echocpp
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\services\echocpp\Echo.cpp /Foint.msvc\services\echocpp\ /c
+	$(LD) $(LDFLAGS) int.msvc\services\echocpp\*.obj /DLL /OUT:$(WSFCPP_HOME_DIR)\services\echocpp\echocpp.dll
+	-@$(_VC_MANIFEST_EMBED_EXE)
+	@xcopy /Q /Y /F  $(SAMPLES_HOME_DIR)\services\echocpp\services.xml $(WSFCPP_HOME_DIR)\services\echocpp\services.xml
+
+
+wsfcpp_samples: int_dir echo_samples flickr_exe google_exe math_exe notify_exe yahoo_exe mtom_exe echo_service
 
 clean: 
 	@if exist int.msvc rmdir /s /q int.msvc
