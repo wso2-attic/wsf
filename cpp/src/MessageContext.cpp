@@ -23,15 +23,9 @@
 #include <axis2_endpoint_ref.h>
 #include <axiom_soap.h>
 #include <axiom.h>
+#include <axutil_param.h>
 using namespace wso2wsf;
 using namespace std;
-
-/**
-* Create a message context
-
-MessageContext::MessageContext(axis2_conf_ctx_t *conf, axis2_transport_in_desc_t *trans_in, axis2_transport_out_desc_t *trans_out)
-{}
-*/
 
 /**
 * Create message Context using the axis2_msg_ctx object                                                                     
@@ -175,7 +169,9 @@ WSF_EXTERN std::string WSF_CALL MessageContext::getReplyTo()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::getProcessFault()
 {
-	return true;
+	if(axis2_msg_ctx_get_process_fault(_msg_ctx, getEnv()))
+		return true;
+	return false;
 }
 
 /**
@@ -202,8 +198,6 @@ WSF_EXTERN std::string WSF_CALL MessageContext::getTo()
 	if(endpoint)
 		return axis2_endpoint_ref_get_address(endpoint, getEnv());
 	return NULL;
-
-	return NULL;
 }
 
 /**
@@ -212,10 +206,16 @@ WSF_EXTERN std::string WSF_CALL MessageContext::getTo()
 * @param toUri To uri
 * @return true if successful, false otherwise.
 */
-WSF_EXTERN bool WSF_CALL MessageContext::setFaultTo(std::string toUri)
+WSF_EXTERN bool WSF_CALL MessageContext::setFaultTo(std::string faultToUri)
 {
-
-	return true;
+	axis2_endpoint_ref_t *endpoint = NULL;
+	if(!faultToUri.empty())
+	{
+		endpoint = axis2_endpoint_ref_create(getEnv(), faultToUri.c_str());
+		if(axis2_msg_ctx_set_fault_to(_msg_ctx, getEnv(), endpoint))
+			return true;
+	}
+	return false;
 }
 
 /**
@@ -223,9 +223,16 @@ WSF_EXTERN bool WSF_CALL MessageContext::setFaultTo(std::string toUri)
 * the message came from.
 * @return true on success, false otherwise
 */
-WSF_EXTERN bool WSF_CALL setFrom(std::string toUri)
+WSF_EXTERN bool WSF_CALL MessageContext::setFrom(std::string fromUri)
 {
-	return true;
+	axis2_endpoint_ref_t *endpoint = NULL;
+	if(fromUri.c_str())
+	{
+		endpoint = axis2_endpoint_ref_create(getEnv(), fromUri.c_str());
+		if(axis2_msg_ctx_set_from(_msg_ctx, getEnv(), endpoint))
+			return true;
+	}
+	return false;
 }
 
 /**
@@ -235,7 +242,9 @@ WSF_EXTERN bool WSF_CALL setFrom(std::string toUri)
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setInFaultFlow(bool infault)
 {
-	return true;
+	if(axis2_msg_ctx_set_in_fault_flow(_msg_ctx,getEnv(), infault))
+		return true;
+	return false;
 }
 
 
@@ -247,7 +256,15 @@ WSF_EXTERN bool WSF_CALL MessageContext::setInFaultFlow(bool infault)
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setReplyTo(std::string replyToUri)
 {
-	return true;
+
+	axis2_endpoint_ref_t *endpoint = NULL;
+	if(!replyToUri.empty())
+	{
+		endpoint = axis2_endpoint_ref_create(getEnv(), replyToUri.c_str());
+		if(axis2_msg_ctx_set_from(_msg_ctx, getEnv(), endpoint))
+			return true;
+	}
+	return false;
 }
 
 /**
@@ -274,7 +291,15 @@ WSF_EXTERN bool WSF_CALL MessageContext::setServerSide(bool serverSide)
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setTo(std::string toUri)
 {
-	return true;
+	axis2_endpoint_ref_t *endpoint = NULL;
+	if(!toUri.empty())
+	{
+		endpoint = axis2_endpoint_ref_create(getEnv(), toUri.c_str());
+		if(axis2_msg_ctx_set_to(_msg_ctx, getEnv(), endpoint))
+			return true;
+
+	}
+	return false;
 }
 
 /**
@@ -379,7 +404,9 @@ WSF_EXTERN bool WSF_CALL MessageContext::isPaused()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setPaused(bool paused)
 {
-	return true;
+	if(axis2_msg_ctx_set_paused(_msg_ctx, getEnv(), paused ? AXIS2_TRUE: AXIS2_FALSE))
+		return true;
+	return false;
 }
 
 /**
@@ -393,7 +420,9 @@ WSF_EXTERN bool WSF_CALL MessageContext::setPaused(bool paused)
 
 WSF_EXTERN bool WSF_CALL MessageContext::isKeepAlive()
 {
-	return true;
+	if(axis2_msg_ctx_is_keep_alive(_msg_ctx, getEnv()))
+		return true;
+	return false;
 }
 
 /**
@@ -407,6 +436,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::isKeepAlive()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setKeepAlive(bool keepAlive)
 {
+	if(axis2_msg_ctx_set_keep_alive(_msg_ctx, getEnv(), keepAlive ? AXIS2_TRUE: AXIS2_FALSE))
 	return true;
 }
 
@@ -417,7 +447,9 @@ WSF_EXTERN bool WSF_CALL MessageContext::setKeepAlive(bool keepAlive)
 */
 WSF_EXTERN bool WSF_CALL MessageContext::getOutputWritten()
 {
-	return true;
+	if(axis2_msg_ctx_get_output_written(_msg_ctx, getEnv()))
+		return true;
+	return false;
 }
 
 /**
@@ -428,7 +460,9 @@ WSF_EXTERN bool WSF_CALL MessageContext::getOutputWritten()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setOutputWritten(bool outputWritten)
 {
-	return true;
+	if(axis2_msg_ctx_set_output_written(_msg_ctx, getEnv(), outputWritten ? AXIS2_TRUE : AXIS2_FALSE))
+		return true;
+	return false;
 }
 
 /**
@@ -441,7 +475,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setOutputWritten(bool outputWritten)
 */
 WSF_EXTERN std::string WSF_CALL MessageContext::getRestHTTPMethod()
 {
-	return NULL;
+	return axis2_msg_ctx_get_rest_http_method(_msg_ctx, getEnv());
 }
 
 /**
@@ -454,7 +488,9 @@ WSF_EXTERN std::string WSF_CALL MessageContext::getRestHTTPMethod()
 */
 WSF_EXTERN axis2_status_t WSF_CALL MessageContext::setRESTHTTPMethod(std::string HTTPMethod)
 {
-	return true;
+	if(!HTTPMethod.empty() && axis2_msg_ctx_set_rest_http_method(_msg_ctx, getEnv(), HTTPMethod.c_str()))
+		return true;
+	return false;
 }
 
 /**
@@ -477,6 +513,16 @@ WSF_EXTERN axis2_status_t WSF_CALL MessageContext::setRESTHTTPMethod(std::string
 */
 WSF_EXTERN Parameter *WSF_CALL MessageContext::getParameter(std::string key)
 {
+	if(!key.empty())
+	{
+		axutil_param_t *param = axis2_msg_ctx_get_parameter(_msg_ctx, getEnv(), key.c_str());
+		if(param)
+		{
+			return new Parameter(axutil_param_get_name(param, getEnv()), 
+								 axutil_param_get_value(param, getEnv()),
+								 axutil_param_get_param_type(param, getEnv()));
+		}
+	}
 	return NULL;
 }
 
@@ -525,6 +571,19 @@ axis2_handler_desc_t * handler_desc){}
 */
 WSF_EXTERN Property *WSF_CALL MessageContext::getProperty(std::string key)
 {
+
+	axutil_property_t *prop = NULL;
+	if(!key.empty())
+	{
+		prop = axis2_msg_ctx_get_property(_msg_ctx, getEnv(),key.c_str());
+		if(prop)
+		{
+			void *value = NULL;
+			value = axutil_property_get_value(prop,getEnv());
+			/** Add method to get the scope of property */
+			return new Property(key, value, AXIS2_SCOPE_REQUEST);
+		}
+	}
 	return NULL;
 }
 
@@ -535,6 +594,7 @@ WSF_EXTERN Property *WSF_CALL MessageContext::getProperty(std::string key)
 */
 WSF_EXTERN void* WSF_CALL MessageContext::getPropertyValue(std::string propStr)
 {
+	/** TODO, is this method needed ? */
 	return NULL;
 }
 
@@ -548,6 +608,7 @@ WSF_EXTERN void* WSF_CALL MessageContext::getPropertyValue(std::string propStr)
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setProperty(std::string key, std::string value)
 {
+	/** TODO */
 	return true;
 }
 
@@ -557,6 +618,10 @@ WSF_EXTERN bool WSF_CALL MessageContext::setProperty(std::string key, std::strin
 */
 WSF_EXTERN std::string WSF_CALL MessageContext::getPausedHandlerName()
 {
+	const axutil_string_t *str = NULL;
+	str =  axis2_msg_ctx_get_paused_handler_name(_msg_ctx, getEnv());
+	if(str)
+		return axutil_string_get_buffer(str,getEnv());
 	return NULL;
 }
 
@@ -566,7 +631,7 @@ WSF_EXTERN std::string WSF_CALL MessageContext::getPausedHandlerName()
 */
 WSF_EXTERN std::string WSF_CALL MessageContext::getPausedPhaseName()
 {
-	return NULL;
+	return axis2_msg_ctx_get_paused_phase_name(_msg_ctx, getEnv());
 }
 
 /**
@@ -576,7 +641,12 @@ WSF_EXTERN std::string WSF_CALL MessageContext::getPausedPhaseName()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setPausedPhaseName(std::string pausedPhaseName)
 {
-	return NULL;
+	if(!pausedPhaseName.empty())
+	{
+		if(axis2_msg_ctx_set_paused_phase_name(_msg_ctx, getEnv(),pausedPhaseName.c_str()))
+			return true;
+	}
+	return false;
 
 }
 
@@ -600,33 +670,60 @@ WSF_EXTERN std::string WSF_CALL MessageContext::getSOAPAction()
 * @param soap_action SOAP action string
 * @return true on success, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::setSOAPAction(std::string action){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::setSOAPAction(std::string action)
+{
+	if(!action.empty())
+		if(axis2_msg_ctx_set_soap_action(_msg_ctx, getEnv(), 
+			axutil_string_create(getEnv(), action.c_str())))
+		return true;
+	return false;
+}
 
 /**
 * Gets the boolean value indicating if MTOM is enabled or not.
 * @return true if MTOM is enabled, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::getDoingMTOM(){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::getDoingMTOM()
+{
+	if(axis2_msg_ctx_get_doing_mtom(_msg_ctx, getEnv()))
+		return true;
+	return false;
+}
 
 /**
 * Sets the boolean value indicating if MTOM is enabled or not.
 * @param doing_mtom true if MTOM is enabled, else false
 * @return true on success, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::setDoingMTOM(bool doingMTOM){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::setDoingMTOM(bool doingMTOM)
+{
+	if(axis2_msg_ctx_set_doing_mtom(_msg_ctx, getEnv(), doingMTOM ? AXIS2_TRUE : AXIS2_FALSE))
+		return true;
+	return false;
+}
 
 /**
 * Gets the boolean value indicating if REST is enabled or not.
 * @return true if REST is enabled, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::getDoingREST(){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::getDoingREST()
+{ 
+	if(axis2_msg_ctx_get_doing_rest(_msg_ctx,getEnv()))
+		return true;
+	return false;
+}
 
 /**
 * Sets the boolean value indicating if REST is enabled or not.
 * @param doing_rest true if REST is enabled, else false
 * @return true on success, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::setDoingREST(bool doingREST){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::setDoingREST(bool doingREST)
+{
+	if(axis2_msg_ctx_set_doing_rest(_msg_ctx,getEnv(),doingREST ? AXIS2_TRUE : AXIS2_FALSE))
+		return true;
+	return false;
+}
 
 /**
 * Sets the boolean value indicating if REST should be done through 
@@ -635,7 +732,12 @@ WSF_EXTERN bool WSF_CALL MessageContext::setDoingREST(bool doingREST){ return tr
 * HTTP POST, else false if REST is not to be done with HTTP POST
 * @return true on success, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::setDoRESTThroughPOST(bool doREST){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::setDoRESTThroughPOST(bool doREST)
+{
+	if(axis2_msg_ctx_set_do_rest_through_post(_msg_ctx,getEnv(),doREST ? AXIS2_TRUE : AXIS2_FALSE))
+		return true;
+	return false;
+}
 
 /**
 * Sets the boolean value indicating if REST should be done through 
@@ -643,20 +745,35 @@ WSF_EXTERN bool WSF_CALL MessageContext::setDoRESTThroughPOST(bool doREST){ retu
 * @return true if REST is to be done with HTTP POST, else 
 * false if REST is not to be done with HTTP POST
 */
-WSF_EXTERN bool WSF_CALL MessageContext::getDoRESTThroughPOST(){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::getDoRESTThroughPOST()
+{ 
+	if(axis2_msg_ctx_get_do_rest_through_post(_msg_ctx,getEnv()))
+		return true;
+	return false;
+}
 
 /**
 * Gets manage session bool value.
 * @return true if session is managed, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::getManageSession(){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::getManageSession()
+{
+	if(axis2_msg_ctx_get_manage_session(_msg_ctx,getEnv()))
+		return true;
+	return false;
+}
 
 /**
 * Sets manage session bool value.
 * @param manage_session manage session bool value
 * @return true on success, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::setManageSession(bool manageSession){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::setManageSession(bool manageSession)
+{
+	if(axis2_msg_ctx_set_manage_session(_msg_ctx,getEnv(),manageSession ? AXIS2_TRUE : AXIS2_FALSE))
+		return true;
+	return false;
+}
 
 /**
 * Gets the bool value indicating the SOAP version being used either
@@ -665,7 +782,12 @@ WSF_EXTERN bool WSF_CALL MessageContext::setManageSession(bool manageSession){ r
 * SOAP 1.2 is being used
 */
 
-WSF_EXTERN bool WSF_CALL MessageContext::getIsSOAP11(){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::getIsSOAP11()
+{
+	if(axis2_msg_ctx_get_is_soap_11(_msg_ctx,getEnv()))
+		return true;
+	return false;
+}
 
 /**
 * Sets the bool value indicating the SOAP version being used either
@@ -674,14 +796,23 @@ WSF_EXTERN bool WSF_CALL MessageContext::getIsSOAP11(){ return true;}
 * false if SOAP 1.2 is being used
 * @return true on success, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::setIsSOAP11(){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::setIsSOAP11(bool isSOAP11)
+{
+	if(axis2_msg_ctx_set_is_soap_11(_msg_ctx, getEnv(),isSOAP11? AXIS2_TRUE : AXIS2_FALSE))
+		return true;
+	return false;
+}
 
 /**
 * Gets the options to be used in invocation.
 * @return options pointer to options struct, message context does not 
 * assume the ownership of the struct
 */
-WSF_EXTERN Options* WSF_CALL MessageContext::getOptions(){ return NULL;}
+WSF_EXTERN Options* WSF_CALL MessageContext::getOptions()
+{
+	/** TODO Is this required ? */
+	return NULL;
+}
 
 
 
@@ -691,20 +822,32 @@ WSF_EXTERN Options* WSF_CALL MessageContext::getOptions(){ return NULL;}
 * assume the ownership of the struct
 * @return true on success, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::setOptions(Options options){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::setOptions(Options options)
+{
+	/* TODO is this required */
+	return true;
+}
 
 /**
 * Sets the flow to be invoked.
 * @param flow int value indicating the flow
 * @return true on success, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::setFlow(int flow){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::setFlow(int flow)
+{
+	if(axis2_msg_ctx_set_flow(_msg_ctx,getEnv(),flow))
+		return true;
+	return false;
+}
 
 /**
 * Gets the flow to be invoked.
 * @return int value indicating the flow
 */
-WSF_EXTERN int WSF_CALL MessageContext::getFlow(){ return 0;}
+WSF_EXTERN int WSF_CALL MessageContext::getFlow()
+{
+	return axis2_msg_ctx_get_flow(_msg_ctx, getEnv());
+}
 
 
 /**
@@ -715,7 +858,22 @@ WSF_EXTERN int WSF_CALL MessageContext::getFlow(){ return 0;}
 * array list will be freed by the msg_ctx
 * @return true on success, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::setSupportedRESTHTTPMethods(std::vector<std::string> *methods){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::setSupportedRESTHTTPMethods(std::vector<std::string> *methods)
+{
+	if(methods)
+	{
+		axutil_array_list_t *methods_list = NULL;
+		for(std::vector<std::string>::iterator strIt = methods->begin();strIt != methods->end(); strIt++)
+		{
+			axutil_array_list_add(methods_list, getEnv(), (*strIt).c_str());
+		}
+		if(axis2_msg_ctx_set_supported_rest_http_methods(_msg_ctx, getEnv(), methods_list))
+		{
+			return true;
+		}
+	}
+	return false;
+}
 
 /**
 * Gets the list of supported REST HTTP Methods 
@@ -723,7 +881,24 @@ WSF_EXTERN bool WSF_CALL MessageContext::setSupportedRESTHTTPMethods(std::vector
 * the list of HTTP Methods supported. Message context does
 * assumes the ownership of the array list
 */
-WSF_EXTERN  std::vector<std::string>* WSF_CALL MessageContext::getSupportedRESTHTTPMethods(){ return NULL;}
+WSF_EXTERN  std::vector<std::string>* WSF_CALL MessageContext::getSupportedRESTHTTPMethods()
+{
+	axutil_array_list_t *methods_list = NULL;
+	methods_list = axis2_msg_ctx_get_supported_rest_http_methods(_msg_ctx, getEnv());
+	if(methods_list)
+	{
+		int size =0;
+		std::vector<std::string> *methods = new std::vector<std::string>;
+		size = axutil_array_list_size(methods_list, getEnv());
+		for(int i =0; i< size; i++)
+		{
+			char * value = (char*)axutil_array_list_get(methods_list, getEnv(),i);
+			methods->push_back(value);
+		}
+		return methods;
+	}
+	return NULL;
+}
 
 /**
 * Sets current handler index, indicating which handler is currently 
@@ -731,83 +906,169 @@ WSF_EXTERN  std::vector<std::string>* WSF_CALL MessageContext::getSupportedRESTH
 * @param index index of currently executed handler
 * @return true on success, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::setCurrentHandlerIndex(int index){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::setCurrentHandlerIndex(int index)
+{
+	if(axis2_msg_ctx_set_current_handler_index(_msg_ctx,getEnv(),index))
+	{
+		return true;
+	}
+	return false;
+}
 
 /**
 * Gets current handler index, indicating which handler is currently 
 * being invoked in the execution chain    
 * @return index of currently executed handler
 */
-WSF_EXTERN int WSF_CALL MessageContext::getCurrentHandlerIndex(){ return 0;}
+WSF_EXTERN int WSF_CALL MessageContext::getCurrentHandlerIndex()
+{
+	return axis2_msg_ctx_get_current_handler_index(_msg_ctx,getEnv());
+}
 
 /**
 * Gets paused handler index, indicating at which handler the execution 
 * chain was paused.
 * @return index of handler at which invocation was paused
 */
-WSF_EXTERN int WSF_CALL MessageContext::getPausedHandlerIndex(){ return 0;}
+WSF_EXTERN int WSF_CALL MessageContext::getPausedHandlerIndex()
+{
+	return axis2_msg_ctx_get_paused_handler_index(_msg_ctx,getEnv());
+}
 
 /**
 * Sets index of the current phase being invoked.    
 * @param index index of current phase
 * @return true on success, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::setCurrentPhaseIndex(int index){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::setCurrentPhaseIndex(int index)
+{
+	if(axis2_msg_ctx_set_current_phase_index(_msg_ctx,getEnv(), index))
+	{
+		return true;
+	}
+	return false;
+}
 
 /**
 * Gets index of the current phase being invoked.    
 * @return index of current phase
 */
-WSF_EXTERN int WSF_CALL MessageContext::getCurrentPhaseIndex(){ return 0;}
+WSF_EXTERN int WSF_CALL MessageContext::getCurrentPhaseIndex()
+{
+	return axis2_msg_ctx_get_current_phase_index(_msg_ctx,getEnv());
+}
 
 /**
 * Gets the phase at which the invocation was paused.
 * @return index of paused phase
 */
-WSF_EXTERN int WSF_CALL MessageContext::getPausedPhaseIndex(){ return 0;}
+WSF_EXTERN int WSF_CALL MessageContext::getPausedPhaseIndex()
+{
+	return axis2_msg_ctx_get_paused_phase_index(_msg_ctx,getEnv());
+}
 
 /**
 * Gets character set encoding to be used.
 * @return true on success, else false
 */
-WSF_EXTERN std::string WSF_CALL MessageContext::getCharsetEncoding(){ return NULL;}
+WSF_EXTERN std::string WSF_CALL MessageContext::getCharsetEncoding()
+{
+	axutil_string_t *str = NULL;
+	str = axis2_msg_ctx_get_charset_encoding(_msg_ctx,getEnv());
+	if(str)
+		return axutil_string_get_buffer(str, getEnv());
+	return NULL;
+}
 
 /**
 * Sets character set encoding to be used.
 * @param str pointer to string struct representing encoding
 * @return true on success, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::setCharsetEncodingStng(std::string str){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::setCharsetEncodingStng(std::string str)
+{
+	if(!str.empty())
+	{
+		if(axis2_msg_ctx_set_charset_encoding(_msg_ctx,getEnv(), 
+			axutil_string_create(getEnv(), str.c_str())))
+		{
+			return true;
+		}
+	}
+	return false;
+}
 
 
 /**
-* Gets the integer value indicating http status_code.
+* Gets the integer value indicating HTTP status_code.
 * @return status value
 */
 
-WSF_EXTERN int WSF_CALL MessageContext::getStatusCode(){ return 0;}
+WSF_EXTERN int WSF_CALL MessageContext::getStatusCode()
+{
+	return axis2_msg_ctx_get_status_code(_msg_ctx,getEnv());
+}
 
 
 /**
-* Sets the int value indicating http status code
-* @param status_code of the http response
+* Sets the int value indicating HTTP status code
+* @param status_code of the HTTP response
 * @return true on success, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::setStatusCode(int statusCode){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::setStatusCode(int statusCode)
+{
+	if(axis2_msg_ctx_set_status_code(_msg_ctx,getEnv(), statusCode))
+		return true;
+	return false;
+}
 
 
 /**
 * Retrieves HTTP Accept-Charset records.
 * @return HTTP Accept-Charset records associated.
 */
-WSF_EXTERN std::vector<std::string>* WSF_CALL MessageContext::getHTTPAcceptCharsetRecordList(){ return NULL;}
+WSF_EXTERN std::vector<std::string>* WSF_CALL MessageContext::getHTTPAcceptCharsetRecordList()
+{ 
+	axutil_array_list_t *record_list = NULL;
+	record_list = axis2_msg_ctx_get_http_accept_charset_record_list(_msg_ctx, getEnv());
+	if(record_list)
+	{
+		int size =0;
+		std::vector<std::string> *methods = new std::vector<std::string>;
+		size = axutil_array_list_size(record_list, getEnv());
+		for(int i =0; i< size; i++)
+		{
+			char * value = (char*)axutil_array_list_get(record_list, getEnv(),i);
+			methods->push_back(value);
+		}
+		return methods;
+	}
+	return NULL;
+}
 
 /**
 * Retrieves HTTP Accept-Charset records, and removes them
 * from the message context
 * @return HTTP Accept-Charset records associated.
 */
-WSF_EXTERN std::vector<std::string>* WSF_CALL MessageContext::extractHTTPAcceptCharsetRecordList(){ return NULL;}
+WSF_EXTERN std::vector<std::string>* WSF_CALL MessageContext::extractHTTPAcceptCharsetRecordList()
+{ 
+	axutil_array_list_t *record_list = NULL;
+	record_list = axis2_msg_ctx_extract_http_accept_charset_record_list(_msg_ctx, getEnv());
+	if(record_list)
+	{
+		int size =0;
+		std::vector<std::string> *methods = new std::vector<std::string>;
+		size = axutil_array_list_size(record_list, getEnv());
+		for(int i =0; i< size; i++)
+		{
+			char * value = (char*)axutil_array_list_get(record_list, getEnv(),i);
+			methods->push_back(value);
+		}
+		return methods;
+	}
+	return NULL;
+}
 
 /**
 * Sets the HTTP Accept-Charset records
@@ -815,20 +1076,69 @@ WSF_EXTERN std::vector<std::string>* WSF_CALL MessageContext::extractHTTPAcceptC
 * HTTP Accept-Charset records
 * @return true on success, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::setHTTPAcceptCharsetRecordList(std::vector<std::string> *recordList){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::setHTTPAcceptCharsetRecordList(std::vector<std::string> *recordList)
+{
+	if(recordList)
+	{
+		axutil_array_list_t *methods_list = NULL;
+		for(std::vector<std::string>::iterator strIt = recordList->begin();strIt != recordList->end(); strIt++)
+		{
+			axutil_array_list_add(methods_list, getEnv(), (*strIt).c_str());
+		}
+		if(axis2_msg_ctx_set_http_accept_charset_record_list(_msg_ctx, getEnv(), methods_list))
+		{
+			return true;
+		}
+	}
+	return false;
+}
 
 /**
 * Retrieves HTTP Accept-Language records.
 * @return HTTP Accept-Language records associated.
 */
-WSF_EXTERN std::vector<std::string>* WSF_CALL MessageContext::getHTTPAcceptLanguageRecordList(){ return NULL;}
+WSF_EXTERN std::vector<std::string>* WSF_CALL MessageContext::getHTTPAcceptLanguageRecordList()
+{ 
+	axutil_array_list_t *record_list = NULL;
+	record_list = axis2_msg_ctx_get_http_accept_language_record_list(_msg_ctx, getEnv());
+	if(record_list)
+	{
+		int size =0;
+		std::vector<std::string> *records = new std::vector<std::string>;
+		size = axutil_array_list_size(record_list, getEnv());
+		for(int i =0; i< size; i++)
+		{
+			char * value = (char*)axutil_array_list_get(record_list, getEnv(),i);
+			records->push_back(value);
+		}
+		return records;
+	}
+	return NULL;
+}
 
 /**
 * Retrieves HTTP Accept-Language records, and removes them
 * from the message context
 * @return HTTP Accept-Language records associated.
 */
-WSF_EXTERN std::vector<std::string>* WSF_CALL MessageContext::extractHTTPAcceptLanguageRecordList(){ return NULL;}
+WSF_EXTERN std::vector<std::string>* WSF_CALL MessageContext::extractHTTPAcceptLanguageRecordList()
+{ 
+	axutil_array_list_t *record_list = NULL;
+	record_list = axis2_msg_ctx_extract_http_accept_language_record_list(_msg_ctx, getEnv());
+	if(record_list)
+	{
+		int size =0;
+		std::vector<std::string> *records = new std::vector<std::string>;
+		size = axutil_array_list_size(record_list, getEnv());
+		for(int i =0; i< size; i++)
+		{
+			char * value = (char*)axutil_array_list_get(record_list, getEnv(),i);
+			records->push_back(value);
+		}
+		return records;
+	}
+	return NULL;
+}
 
 /**
 * Sets the HTTP Accept-Language records
@@ -836,13 +1146,31 @@ WSF_EXTERN std::vector<std::string>* WSF_CALL MessageContext::extractHTTPAcceptL
 * HTTP Accept-Language records
 * @return true on success, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::setHTTPAcceptLanguageRecordList(std::vector<std::string> *acceptLanguageRecordList){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::setHTTPAcceptLanguageRecordList(std::vector<std::string> *acceptLanguageRecordList)
+{
+	if(acceptLanguageRecordList)
+	{
+		axutil_array_list_t *methods_list = NULL;
+		for(std::vector<std::string>::iterator strIt = acceptLanguageRecordList->begin();strIt != acceptLanguageRecordList->end(); strIt++)
+		{
+			axutil_array_list_add(methods_list, getEnv(), (*strIt).c_str());
+		}
+		if(axis2_msg_ctx_set_http_accept_language_record_list(_msg_ctx, getEnv(), methods_list))
+		{
+			return true;
+		}
+	}
+	return false;
+}
 
 /**
 * Gets the Content Language used
 * @return Content Language string
 */
-WSF_EXTERN std::string WSF_CALL MessageContext::getContentLanguage(){ return NULL;}
+WSF_EXTERN std::string WSF_CALL MessageContext::getContentLanguage()
+{ 
+	return axis2_msg_ctx_get_content_language(_msg_ctx,getEnv());
+}
 
 /**
 * Sets the Content Language used
@@ -850,20 +1178,59 @@ WSF_EXTERN std::string WSF_CALL MessageContext::getContentLanguage(){ return NUL
 * @return true on success, else false
 */
 
-WSF_EXTERN bool WSF_CALL MessageContext::setContentLanguage(std::string langauge){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::setContentLanguage(std::string langauge)
+{ 
+	if(axis2_msg_ctx_set_content_language(_msg_ctx,getEnv(),langauge))
+		return true;
+	return false;
+}
 
 /**
 * Retrieves HTTP Accept records.
 * @return HTTP Accept records associated.
 */
-WSF_EXTERN std::vector<std::string>* WSF_CALL MessageContext::getHTTPAcceptRecordList(){ return NULL;}
+WSF_EXTERN std::vector<std::string>* WSF_CALL MessageContext::getHTTPAcceptRecordList()
+{ 
+	axutil_array_list_t *record_list = NULL;
+	record_list = axis2_msg_ctx_get_http_accept_record_list(_msg_ctx, getEnv());
+	if(record_list)
+	{
+		int size =0;
+		std::vector<std::string> *records = new std::vector<std::string>;
+		size = axutil_array_list_size(record_list, getEnv());
+		for(int i =0; i< size; i++)
+		{
+			char * value = (char*)axutil_array_list_get(record_list, getEnv(),i);
+			records->push_back(value);
+		}
+		return records;
+	}
+	return NULL;
+}
 
 /**
 * Retrieves HTTP Accept records, and removes them
 * from the message context
 * @return HTTP Accept records associated.
 */
-WSF_EXTERN std::vector<std::string>* WSF_CALL MessageContext::extractHTTPAcceptRecordList(){ return NULL;}
+WSF_EXTERN std::vector<std::string>* WSF_CALL MessageContext::extractHTTPAcceptRecordList()
+{ 
+	axutil_array_list_t *record_list = NULL;
+	record_list = axis2_msg_ctx_extract_http_accept_record_list(_msg_ctx, getEnv());
+	if(record_list)
+	{
+		int size =0;
+		std::vector<std::string> *records = new std::vector<std::string>;
+		size = axutil_array_list_size(record_list, getEnv());
+		for(int i =0; i< size; i++)
+		{
+			char * value = (char*)axutil_array_list_get(record_list, getEnv(),i);
+			records->push_back(value);
+		}
+		return records;
+	}
+	return NULL;
+}
 
 /**
 * Sets the HTTP Accept records
@@ -871,33 +1238,67 @@ WSF_EXTERN std::vector<std::string>* WSF_CALL MessageContext::extractHTTPAcceptR
 * HTTP Accept records
 * @return true on success, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::setHTTPAcceptRecordList(std::vector<std::string>* recordList){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::setHTTPAcceptRecordList(std::vector<std::string>* recordList)
+{ 
+	if(recordList)
+	{
+		axutil_array_list_t *methods_list = NULL;
+		for(std::vector<std::string>::iterator strIt = recordList->begin();strIt != recordList->end(); strIt++)
+		{
+			axutil_array_list_add(methods_list, getEnv(), (*strIt).c_str());
+		}
+		if(axis2_msg_ctx_set_http_accept_language_record_list(_msg_ctx, getEnv(), methods_list))
+		{
+			return true;
+		}
+	}
+	return false;
+}
 
 /**
 * Gets the transfer encoding used
 * @return Transfer encoding string
 */
-WSF_EXTERN std::string WSF_CALL MessageContext::getTransferEncoding(){ return NULL;}
+WSF_EXTERN std::string WSF_CALL MessageContext::getTransferEncoding()
+{ 
+	return axis2_msg_ctx_get_transfer_encoding(_msg_ctx,getEnv());
+}
 
 /**
 * Sets the transfer encoding used
 * @param str Transfer encoding string
 * @return true on success, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::setTransferEncoding(std::string encoding){ return NULL;}
+WSF_EXTERN bool WSF_CALL MessageContext::setTransferEncoding(std::string encoding)
+{ 
+	if(axis2_msg_ctx_set_transfer_encoding(_msg_ctx,getEnv(), encoding.c_str()))
+		return true;
+	return false;
+}
 
 /**
 * Gets the Transport URL
 * @return Transport URL string
 */
-WSF_EXTERN std::string WSF_CALL MessageContext::getTransportURL(){ return NULL;}
+WSF_EXTERN std::string WSF_CALL MessageContext::getTransportURL()
+{ 
+	return axis2_msg_ctx_get_transport_url(_msg_ctx,getEnv());
+}
 
 /**
 * Sets the Transport URL
 * @param str Transport URL string
 * @return true on success, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::setTransportURL(std::string transportURL){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::setTransportURL(std::string transportURL)
+{ 
+	if(!transportURL.empty())
+	{
+		if(axis2_msg_ctx_set_transport_url(_msg_ctx,getEnv(), transportURL.c_str()))
+			return true;
+	}
+	return false;
+}
 
 /**
 * Gets whether there was no content in the response.
@@ -907,7 +1308,12 @@ WSF_EXTERN bool WSF_CALL MessageContext::setTransportURL(std::string transportUR
 * @return returns true if there was no content
 * occurred or false otherwise
 */
-WSF_EXTERN bool WSF_CALL MessageContext::getNoContent(){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::getNoContent()
+{
+	if(axis2_msg_ctx_get_no_content(_msg_ctx,getEnv()))
+		return true;
+	return false;
+}
 
 /**
 * Sets that there was no content in the response.
@@ -915,14 +1321,24 @@ WSF_EXTERN bool WSF_CALL MessageContext::getNoContent(){ return true;}
 * content in the response or false otherwise
 * @return true on success, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::setNoContent(bool noContent){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::setNoContent(bool noContent)
+{
+	if(axis2_msg_ctx_set_no_content(_msg_ctx,getEnv(), noContent ? AXIS2_TRUE : AXIS2_FALSE))
+		return true;
+	return false;
+}
 
 /**
 * Gets whether an authentication failure occurred
 * @return returns true if an authentication failure
 * occurred or false if not
 */
-WSF_EXTERN bool WSF_CALL MessageContext::getAuthFailed(){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::getAuthFailed()
+{
+	if(axis2_msg_ctx_get_auth_failed(_msg_ctx,getEnv()))
+		return true;
+	return false;
+}
 
 
 /**
@@ -933,7 +1349,12 @@ WSF_EXTERN bool WSF_CALL MessageContext::getAuthFailed(){ return true;}
 * occurred or false if not
 * @return true on success, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::setAuthFailed(bool status){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::setAuthFailed(bool status)
+{
+	if(axis2_msg_ctx_set_auth_failed(_msg_ctx,getEnv(), status ? AXIS2_TRUE : AXIS2_FALSE ))
+		return true;
+	return false;
+}
 
 /**
 * Gets whether HTTP Authentication is required or
@@ -943,7 +1364,14 @@ WSF_EXTERN bool WSF_CALL MessageContext::setAuthFailed(bool status){ return true
 * @return returns true for HTTP Authentication
 * and false for Proxy Authentication
 */
-WSF_EXTERN bool WSF_CALL MessageContext::getRequiredAuthIsHTTP(){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::getRequiredAuthIsHTTP()
+{ 
+	if(axis2_msg_ctx_get_required_auth_is_http(_msg_ctx, getEnv()))
+	{
+		return true;
+	}
+	return false;
+}
 
 /**
 * Sets whether HTTP Authentication is required or
@@ -952,7 +1380,14 @@ WSF_EXTERN bool WSF_CALL MessageContext::getRequiredAuthIsHTTP(){ return true;}
 * and false for Proxy Authentication
 * @return true on success, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::setRequiredAuthIsHTTP(bool isHTTP){ return true;}
+WSF_EXTERN bool WSF_CALL MessageContext::setRequiredAuthIsHTTP(bool isHTTP)
+{ 
+	if(axis2_msg_ctx_set_required_auth_is_http(_msg_ctx, getEnv(), isHTTP ? AXIS2_TRUE : AXIS2_FALSE))
+	{
+		return true
+	}
+	return false;
+}
 
 /**
 * Sets the authentication type
