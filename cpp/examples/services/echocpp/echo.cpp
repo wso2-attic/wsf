@@ -27,7 +27,8 @@ using namespace wso2wsf;
 
 OMElement* Echo::invoke(OMElement *ele, MessageContext *msgCtx)
 {
-
+	OMElement *echoEle = new OMElement(ele->getLocalname());
+	return echoEle;
 }
 
 OMElement* Echo::onFault(OMElement *ele)

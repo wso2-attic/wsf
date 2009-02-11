@@ -20,7 +20,7 @@
 #include <axutil_platform_auto_sense.h>
 #include <WSFDefines.h>
 #include <axutil_env.h>
-
+#include <RWLock.h>
 #include <string>
 #include <map>
 
@@ -53,6 +53,11 @@ namespace wso2wsf
 		
 		static std::map<int, const axutil_env_t*> _envmap;
 		
+#ifdef WIN32
+		static RWLock lock;		
+#else 
+		pthread_rwlock_t       rwlock; 
+#endif
 		/**
 		* @var _refCount stores the number of references to axutil_env.
 		*/

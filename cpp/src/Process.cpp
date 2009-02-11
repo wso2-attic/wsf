@@ -30,7 +30,9 @@ Process* WSF_CALL Process::getInstance()
 	}
 	else
 	{
-		return new Process();
+		_processObj =  new Process();
+		_processObj->lock.init();
+		return _processObj;
 	}
 }
 
@@ -40,15 +42,21 @@ Process* WSF_CALL Process::getInstance()
 */
 void WSF_CALL Process::setEnv(const axutil_env_t *env)
 {
-	axutil_thread_mutex_t *mutex = axutil_thread_mutex_create(env->allocator, AXIS2_THREAD_MUTEX_DEFAULT);
-	if(mutex)
-	{
-		axutil_thread_mutex_lock(mutex);
-		int threadId = AXIS2_PLATFORM_GET_THREAD_ID();
-		_envmap[threadId] = env;
-		axutil_thread_mutex_unlock(mutex);
-		axutil_thread_mutex_destroy(mutex);
-	}
+#ifdef WIN32
+	lock.writeLock();
+#else 
+	int rc;
+	 rc = pthread_rwlock_wrlock(&rwlock);
+#endif
+
+	int threadId = AXIS2_PLATFORM_GET_THREAD_ID();
+	_envmap[threadId] = env;
+#ifdef WIN32
+	lock.unlock();
+#else
+	 rc = pthread_rwlock_unlock(&rwlock);
+#endif
+
 }
 
 /**
@@ -56,6 +64,12 @@ void WSF_CALL Process::setEnv(const axutil_env_t *env)
 */
 const axutil_env_t* WSF_CALL Process::getEnv() 
 {
+#ifdef WIN32
+	lock.readLock();
+#else
+	pthread_rwlock_rdlock(&rwlock);
+#endif
+
 	int threadId = AXIS2_PLATFORM_GET_THREAD_ID();
 	std::map<int, const axutil_env_t*>::iterator _it;
 	_it = _envmap.find(threadId);
@@ -63,21 +77,33 @@ const axutil_env_t* WSF_CALL Process::getEnv()
 	{
 		return _it->second;
 	}
+#ifdef WIN32
+	lock.unlock();
+#else
+	pthread_rwlock_unlock(&rwlock);
+#endif
 	return NULL;
 }
 
 WSF_EXTERN void WSF_CALL Process::removeEnv()
 {
 	const axutil_env_t *env = getEnv();
-	axutil_thread_mutex_t *mutex = axutil_thread_mutex_create(env->allocator, AXIS2_THREAD_MUTEX_DEFAULT);
-	if(mutex)
-	{
-		axutil_thread_mutex_lock(mutex);
-		int threadId = AXIS2_PLATFORM_GET_THREAD_ID();
+#ifdef WIN32
+	lock.writeLock();
+#else 
+     int rc;
+	 rc =  pthread_rwlock_wrlock(&rwlock);
+#endif
+
+	 int threadId = AXIS2_PLATFORM_GET_THREAD_ID();
 		_envmap.erase(threadId);
-		axutil_thread_mutex_unlock(mutex);
-		axutil_thread_mutex_destroy(mutex);
-	}
+
+#ifdef WIN32
+	lock.unlock();
+#else
+	rc = pthread_rwlock_unlock(&rwlock);
+#endif
+
 }
 
 /**
@@ -114,3 +140,13 @@ void WSF_CALL Process::switchToLocalPool()
 Process* Process::_processObj = NULL;
 
 std::map<int, const axutil_env_t*> Process::_envmap;
+
+#ifdef WIN32
+
+RWLock Process::lock;
+
+#else 
+
+static Process:rwlock = PTHREAD_RWLOCK_INITIALIZER;
+
+#endif

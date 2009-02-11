@@ -437,7 +437,8 @@ WSF_EXTERN bool WSF_CALL MessageContext::isKeepAlive()
 WSF_EXTERN bool WSF_CALL MessageContext::setKeepAlive(bool keepAlive)
 {
 	if(axis2_msg_ctx_set_keep_alive(_msg_ctx, getEnv(), keepAlive ? AXIS2_TRUE: AXIS2_FALSE))
-	return true;
+		return true;
+	return false;
 }
 
 /**
@@ -1180,7 +1181,7 @@ WSF_EXTERN std::string WSF_CALL MessageContext::getContentLanguage()
 
 WSF_EXTERN bool WSF_CALL MessageContext::setContentLanguage(std::string langauge)
 { 
-	if(axis2_msg_ctx_set_content_language(_msg_ctx,getEnv(),langauge))
+	if(axis2_msg_ctx_set_content_language(_msg_ctx,getEnv(),(axis2_char_t*)langauge.c_str()))
 		return true;
 	return false;
 }
@@ -1271,7 +1272,7 @@ WSF_EXTERN std::string WSF_CALL MessageContext::getTransferEncoding()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setTransferEncoding(std::string encoding)
 { 
-	if(axis2_msg_ctx_set_transfer_encoding(_msg_ctx,getEnv(), encoding.c_str()))
+	if(axis2_msg_ctx_set_transfer_encoding(_msg_ctx,getEnv(), (axis2_char_t*)encoding.c_str()))
 		return true;
 	return false;
 }
@@ -1294,7 +1295,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setTransportURL(std::string transportUR
 { 
 	if(!transportURL.empty())
 	{
-		if(axis2_msg_ctx_set_transport_url(_msg_ctx,getEnv(), transportURL.c_str()))
+		if(axis2_msg_ctx_set_transport_url(_msg_ctx,getEnv(), (axis2_char_t*)transportURL.c_str()))
 			return true;
 	}
 	return false;
@@ -1384,7 +1385,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setRequiredAuthIsHTTP(bool isHTTP)
 { 
 	if(axis2_msg_ctx_set_required_auth_is_http(_msg_ctx, getEnv(), isHTTP ? AXIS2_TRUE : AXIS2_FALSE))
 	{
-		return true
+		return true;
 	}
 	return false;
 }

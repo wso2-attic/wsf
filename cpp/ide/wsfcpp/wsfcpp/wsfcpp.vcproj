@@ -254,6 +254,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\RWLock.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\ServiceClient.cpp"
 				>
 			</File>
@@ -345,6 +349,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\Property.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\RWLock.h"
 				>
 			</File>
 			<File
