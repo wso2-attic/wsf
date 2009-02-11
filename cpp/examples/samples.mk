@@ -147,7 +147,7 @@ echo_service:
 	@if not exist int.msvc\services\echocpp mkdir int.msvc\services\echocpp
 	@if not exist $(WSFCPP_HOME_DIR)\services\echocpp mkdir $(WSFCPP_HOME_DIR)\services\echocpp
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\services\echocpp\Echo.cpp /Foint.msvc\services\echocpp\ /c
-	$(LD) $(LDFLAGS) int.msvc\services\echocpp\*.obj /DLL /OUT:$(WSFCPP_HOME_DIR)\services\echocpp\echocpp.dll
+	$(LD) $(LDFLAGS) int.msvc\services\echocpp\*.obj $(LIBS) /DLL /OUT:$(WSFCPP_HOME_DIR)\services\echocpp\echocpp.dll
 	-@$(_VC_MANIFEST_EMBED_EXE)
 	@xcopy /Q /Y /F  $(SAMPLES_HOME_DIR)\services\echocpp\services.xml $(WSFCPP_HOME_DIR)\services\echocpp\services.xml
 
