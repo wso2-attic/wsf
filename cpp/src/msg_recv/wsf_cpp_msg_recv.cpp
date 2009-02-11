@@ -179,7 +179,9 @@ wsf_cpp_msg_recv_invoke_business_logic_sync(
 			OMElement *ele = new OMElement(NULL, om_node);
 			MessageContext *outCtx = new MessageContext(new_msg_ctx);
 			OMElement *resultEle = skel->invoke(ele, outCtx);
-			result_node = resultEle->getAxiomNode();
+			if(resultEle){
+				result_node = resultEle->getAxiomNode();
+			}
 		}
 
 		if (result_node)
@@ -380,7 +382,7 @@ wsf_cpp_msg_recv_invoke_business_logic_sync(
 	AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
 		"[axis2]Exit:wsf_cpp_msg_recv_invoke_business_logic_sync");
 	p->removeEnv();
-	return 0;
+	return AXIS2_SUCCESS;
 }
 
 WSF_EXTERN ServiceSkeleton* WSF_CALL
