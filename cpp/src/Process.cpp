@@ -31,7 +31,10 @@ Process* WSF_CALL Process::getInstance()
 	else
 	{
 		_processObj =  new Process();
-		_processObj->lock.init();
+#ifdef WIN32
+		lock = new RWLock();
+		lock->init();
+#endif
 		return _processObj;
 	}
 }
@@ -43,7 +46,7 @@ Process* WSF_CALL Process::getInstance()
 void WSF_CALL Process::setEnv(const axutil_env_t *env)
 {
 #ifdef WIN32
-	lock.writeLock();
+	lock->writeLock();
 #else 
 	int rc;
 	 rc = pthread_rwlock_wrlock(&rwlock);
@@ -52,7 +55,7 @@ void WSF_CALL Process::setEnv(const axutil_env_t *env)
 	int threadId = AXIS2_PLATFORM_GET_THREAD_ID();
 	_envmap[threadId] = env;
 #ifdef WIN32
-	lock.unlock();
+	lock->unlock();
 #else
 	 rc = pthread_rwlock_unlock(&rwlock);
 #endif
@@ -64,8 +67,9 @@ void WSF_CALL Process::setEnv(const axutil_env_t *env)
 */
 const axutil_env_t* WSF_CALL Process::getEnv() 
 {
+	const axutil_env_t *env = NULL;
 #ifdef WIN32
-	lock.readLock();
+	lock->readLock();
 #else
 	pthread_rwlock_rdlock(&rwlock);
 #endif
@@ -75,21 +79,21 @@ const axutil_env_t* WSF_CALL Process::getEnv()
 	_it = _envmap.find(threadId);
 	if(_it != _envmap.end())
 	{
-		return _it->second;
+		env = _it->second;
 	}
 #ifdef WIN32
-	lock.unlock();
+	lock->unlock();
 #else
 	pthread_rwlock_unlock(&rwlock);
 #endif
-	return NULL;
+
+	return env;
 }
 
 WSF_EXTERN void WSF_CALL Process::removeEnv()
 {
-	const axutil_env_t *env = getEnv();
 #ifdef WIN32
-	lock.writeLock();
+	lock->writeLock();
 #else 
      int rc;
 	 rc =  pthread_rwlock_wrlock(&rwlock);
@@ -99,7 +103,7 @@ WSF_EXTERN void WSF_CALL Process::removeEnv()
 		_envmap.erase(threadId);
 
 #ifdef WIN32
-	lock.unlock();
+	lock->unlock();
 #else
 	rc = pthread_rwlock_unlock(&rwlock);
 #endif
@@ -143,7 +147,7 @@ std::map<int, const axutil_env_t*> Process::_envmap;
 
 #ifdef WIN32
 
-RWLock Process::lock;
+RWLock* Process::lock;
 
 #else 
 
