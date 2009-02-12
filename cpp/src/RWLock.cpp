@@ -13,14 +13,13 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-#include <RWLock.h>
+#include "RWLock.h"
 
 using namespace wso2wsf;
 
 RWLock::RWLock()
 {
 	_readers = 0;
-	
 }
 
 int RWLock::init()
@@ -107,14 +106,14 @@ int RWLock::unlock()
 	int rv =0;
 
 	/* First, guess that we're unlocking a writer */
-	if (! ReleaseMutex(_writeMutex))
+	if (!ReleaseMutex(_writeMutex))
 		rv = GetLastError();
 		/**  Attempt to release mutex not owned by caller error code is 288L */
-	if (rv == 288L) {
+	if (rv == ERROR_NOT_OWNER) {
 		/* Nope, we must have a read lock */
 		if (_readers &&
-			! InterlockedDecrement(&_readers) &&
-			! SetEvent(_readEvent)) {
+			!InterlockedDecrement(&_readers) &&
+			!SetEvent(_readEvent)) {
 				rv = GetLastError();
 		}
 		else {
