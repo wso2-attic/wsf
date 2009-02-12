@@ -17,24 +17,19 @@
 #ifndef RWLOCK_H
 #define RWLOCK_H
 
-#ifdef WIN32
+#include <WSFDefines.h>
 #include <Windows.h>
 
-
-namespace wso2wsf{
-
+namespace wso2wsf
+{
 	class RWLock{
-
 	private:
-
 		HANDLE _writeMutex;
 		HANDLE _readEvent;
 		LONG _readers;
-
 		int readLockCore(DWORD milliseconds);
 		int writeLockCore(DWORD milliseconds);
 	public:
-			
 			RWLock();
 
 			int init();
@@ -75,5 +70,4 @@ namespace wso2wsf{
 			~RWLock();
 	};
 }
-#endif
 #endif //RWLOCK_H
