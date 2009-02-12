@@ -54,7 +54,7 @@ namespace wso2wsf
 		static std::map<int, const axutil_env_t*> _envmap;
 		
 #ifdef WIN32
-		static RWLock lock;		
+		static RWLock *lock;		
 #else 
 		pthread_rwlock_t       rwlock; 
 #endif
