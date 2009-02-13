@@ -50,6 +50,54 @@ axis2_msg_recv_t * msg_recv,
 const axutil_env_t * env,
 struct axis2_msg_ctx * msg_ctx);
 
+static axis2_status_t WSF_CALL
+wsf_cpp_msg_recv_load_and_init_svc(
+	axis2_msg_recv_t * msg_recv,
+	const axutil_env_t * env,
+	struct axis2_svc *svc)
+{
+	ServiceSkeleton *impl_class = NULL;
+	axutil_param_t *impl_info_param = NULL;
+	AXIS2_ENV_CHECK(env, NULL);
+	if (!svc)
+	{
+		return AXIS2_FAILURE;
+	}
+
+	axutil_thread_mutex_lock(axis2_svc_get_mutex(svc, env));
+	impl_class = (ServiceSkeleton*)axis2_svc_get_impl_class(svc, env);
+	if (impl_class)
+	{
+		axutil_thread_mutex_unlock(axis2_svc_get_mutex(svc, env));
+		return AXIS2_SUCCESS;
+	}
+	impl_info_param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_CLASS);
+	if (!impl_info_param)
+	{
+		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_INVALID_STATE_SVC,
+			AXIS2_FAILURE);
+		axutil_thread_mutex_unlock(axis2_svc_get_mutex(svc, env));
+		return AXIS2_FAILURE;
+	}
+
+	axutil_allocator_switch_to_global_pool(env->allocator);
+
+	axutil_class_loader_init(env);
+
+	impl_class = (ServiceSkeleton*)axutil_class_loader_create_dll(env, impl_info_param);
+
+
+	if (impl_class)
+	{
+		impl_class->init();
+	}
+
+	axis2_svc_set_impl_class(svc, env, impl_class);
+	axutil_allocator_switch_to_local_pool(env->allocator);
+	axutil_thread_mutex_unlock(axis2_svc_get_mutex(svc, env));
+	return AXIS2_SUCCESS;
+}
+
 
 WSF_EXTERN axis2_msg_recv_t *WSF_CALL
 wsf_cpp_msg_recv_create(
@@ -73,6 +121,8 @@ wsf_cpp_msg_recv_create(
 
     axis2_msg_recv_set_invoke_business_logic(msg_recv, env,
         wsf_cpp_msg_recv_invoke_business_logic_sync);
+	axis2_msg_recv_set_load_and_init_svc(msg_recv, env, 
+		wsf_cpp_msg_recv_load_and_init_svc);
     return msg_recv;
 }
 
