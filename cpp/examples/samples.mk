@@ -149,7 +149,7 @@ echo_service:
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\services\echocpp\Echo.cpp /Foint.msvc\services\echocpp\ /c
 	$(LD) $(LDFLAGS) int.msvc\services\echocpp\*.obj $(LIBS) /DLL /OUT:$(WSFCPP_HOME_DIR)\services\echocpp\echocpp.dll
 	-@$(_VC_MANIFEST_EMBED_EXE)
-	@xcopy /Q /Y /F  $(SAMPLES_HOME_DIR)\services\echocpp\services.xml $(WSFCPP_HOME_DIR)\services\echocpp\services.xml
+	@copy  /Y $(SAMPLES_HOME_DIR)\services\echocpp\services.xml $(WSFCPP_HOME_DIR)\services\echocpp\services.xml
 
 
 wsfcpp_samples: int_dir echo_samples flickr_exe google_exe math_exe notify_exe yahoo_exe mtom_exe echo_service
