@@ -138,7 +138,8 @@ AC_SUBST(NEETIHINC)
 export prefix 
 
 AC_CONFIG_FILES([Makefile \
-	src/Makefile 
+	src/main/Makefile \
+	src/msg_recv/Makefile 
     ])
     
 AC_OUTPUT
