@@ -27,7 +27,10 @@ using namespace wso2wsf;
 
 OMElement* Echo::invoke(OMElement *ele, MessageContext *msgCtx)
 {
-	OMElement *echoEle = new OMElement(ele->getLocalname());
+	OMElement *echoEle = new OMElement(ele->getLocalname(), new OMNamespace(ele->getNamespace(false)->getURI(),ele->getNamespace(false)->getPrefix()));
+	OMElement *text = new OMElement("text");
+	echoEle->addChild(text);
+	text->setText("Hello World");
 	return echoEle;
 }
 
