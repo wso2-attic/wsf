@@ -33,7 +33,7 @@ LIBXML2_BIN_DIR = E:\libxml2-2.6.30.win32
 
 #
 # iconv binary location
-ICONV_BIN_DIR = E:\iconv-1.9.1.win32
+ICONV_BIN_DIR = E:\iconv-1.9.2.win32
 #
 # zlib binary location
 ZLIB_BIN_DIR= E:\zlib-1.2.3.win32
