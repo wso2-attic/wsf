@@ -178,95 +178,95 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\..\src\AxisFault.cpp"
+				RelativePath="..\..\..\src\main\AxisFault.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\AxisObject.cpp"
+				RelativePath="..\..\..\src\main\AxisObject.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\Exception.cpp"
+				RelativePath="..\..\..\src\main\Exception.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\MessageContext.cpp"
+				RelativePath="..\..\..\src\main\MessageContext.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\NeethiException.cpp"
+				RelativePath="..\..\..\src\main\NeethiException.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\NeethiObject.cpp"
+				RelativePath="..\..\..\src\main\NeethiObject.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\NeethiPolicy.cpp"
+				RelativePath="..\..\..\src\main\NeethiPolicy.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\OMAttribute.cpp"
+				RelativePath="..\..\..\src\main\OMAttribute.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\OMDataHandler.cpp"
+				RelativePath="..\..\..\src\main\OMDataHandler.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\OMElement.cpp"
+				RelativePath="..\..\..\src\main\OMElement.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\OMException.cpp"
+				RelativePath="..\..\..\src\main\OMException.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\OMNamespace.cpp"
+				RelativePath="..\..\..\src\main\OMNamespace.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\OMNode.cpp"
+				RelativePath="..\..\..\src\main\OMNode.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\OMObject.cpp"
+				RelativePath="..\..\..\src\main\OMObject.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\OMText.cpp"
+				RelativePath="..\..\..\src\main\OMText.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\Options.cpp"
+				RelativePath="..\..\..\src\main\Options.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\Parameter.cpp"
+				RelativePath="..\..\..\src\main\Parameter.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\Process.cpp"
+				RelativePath="..\..\..\src\main\Process.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\Property.cpp"
+				RelativePath="..\..\..\src\main\Property.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\RWLock.cpp"
+				RelativePath="..\..\..\src\main\RWLock.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\ServiceClient.cpp"
+				RelativePath="..\..\..\src\main\ServiceClient.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\WSRESTClient.cpp"
+				RelativePath="..\..\..\src\main\WSRESTClient.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\WSSOAPClient.cpp"
+				RelativePath="..\..\..\src\main\WSSOAPClient.cpp"
 				>
 			</File>
 		</Filter>
@@ -386,7 +386,7 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath="..\..\..\src\wsf.rc"
+				RelativePath="..\..\..\src\main\wsf.rc"
 				>
 			</File>
 		</Filter>
