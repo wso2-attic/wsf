@@ -151,6 +151,6 @@ RWLock* Process::lock;
 
 #else 
 
-static Process:rwlock = PTHREAD_RWLOCK_INITIALIZER;
+pthread_rwlock_t Process::rwlock = PTHREAD_RWLOCK_INITIALIZER;
 
 #endif

@@ -58,7 +58,7 @@ namespace wso2wsf
 #ifdef WIN32
 		static RWLock *lock;		
 #else 
-		pthread_rwlock_t       rwlock; 
+		static pthread_rwlock_t       rwlock; 
 #endif
 		/**
 		* @var _refCount stores the number of references to axutil_env.

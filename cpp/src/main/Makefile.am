@@ -13,6 +13,7 @@ libwso2_wsf_la_SOURCES= AxisFault.cpp \
 			OMNamespace.cpp \
 			OMText.cpp \
 			Property.cpp \
+			Process.cpp \
 			WSRESTClient.cpp \
 			NeethiPolicy.cpp \
 			NeethiException.cpp \
