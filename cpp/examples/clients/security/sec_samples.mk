@@ -1,4 +1,4 @@
-AUTOCONF = .\..\..\configure.in
+AUTOCONF = .\..\..\..\configure.in
 !include $(AUTOCONF)
 
 WSFCPP_HOME_DIR="%WSFCPP_HOME%"
@@ -10,7 +10,7 @@ LDFLAGS = /nologo /LIBPATH:$(WSFCPP_HOME_DIR)\lib
 
 LIBS = axutil.lib axis2_engine.lib axis2_parser.lib axiom.lib wso2_wsf.lib
 
-INCLUDE_PATH = /I$(WSFCPP_HOME_DIR)\include /I$(WSFCPP_HOME_DIR)\include\platfroms
+INCLUDE_PATH = /I$(WSFCPP_HOME_DIR)\include /I$(WSFCPP_HOME_DIR)\include\platforms
 
 !if "$(DEBUG)" == "1"
 CFLAGS = $(CFLAGS) /D "_DEBUG" /Od /Z7 $(CRUNTIME)d
