@@ -34,16 +34,19 @@ AC_CHECK_HEADERS([sys/socket.h])
 
 
 AC_CONFIG_FILES([Makefile \
-    echo/Makefile \
-    flickr/Makefile \
-    math/Makefile \
-    mtom/Makefile \
-    mtom/resources/Makefile \
-    notify/Makefile \
-    security/Makefile \
-    security/sec_echo/Makefile \
-    yahoo/Makefile \
-    google/Makefile 
+    clients/Makefile \
+    clients/echo/Makefile \
+    clients/flickr/Makefile \
+    clients/math/Makefile \
+    clients/mtom/Makefile \
+    clients/mtom/resources/Makefile \
+    clients/notify/Makefile \
+    clients/security/Makefile \
+    clients/security/sec_echo/Makefile \
+    clients/yahoo/Makefile \
+    clients/google/Makefile \
+    services/Makefile \
+    services/echocpp/Makefile
     ])
     
 AC_OUTPUT

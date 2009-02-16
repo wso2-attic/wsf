@@ -20,7 +20,9 @@
 #include <axutil_platform_auto_sense.h>
 #include <WSFDefines.h>
 #include <axutil_env.h>
+#ifdef WIN32
 #include <RWLock.h>
+#endif
 #include <string>
 #include <map>
 

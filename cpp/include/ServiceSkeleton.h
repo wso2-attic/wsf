@@ -68,7 +68,7 @@ namespace wso2wsf
 		*	Initialization method. Any service specific initialization can be done here.                                                    
 		*
 		*/
-		virtual void WSF_CALL init() throw (AxisFault){};
+		virtual void WSF_CALL init();
 		
         virtual WSF_CALL ~ServiceSkeleton();
     };

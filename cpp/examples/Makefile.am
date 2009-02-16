@@ -1,2 +1,2 @@
-SUBDIRS=echo flickr google math mtom notify yahoo security
+SUBDIRS=clients services
 EXTRA_DIST=secpolicy samples.mk
