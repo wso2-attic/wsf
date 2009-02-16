@@ -1,6 +1,7 @@
 prglibdir=$(prefix)/services/echocpp
-EXTRA_DIST=services.xml 
 prglib_LTLIBRARIES=libechocpp.la
+prglib_DATA=services.xml
+EXTRA_DIST=services.xml 
 libechocpp_la_SOURCES= echo.cpp
 
 libechocpp_la_LIBADD=../../../wsf_c/axis2c/src/core/description/libaxis2_description.la \
