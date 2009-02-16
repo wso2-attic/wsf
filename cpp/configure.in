@@ -15,7 +15,7 @@ ENABLE_LIBCURL = 0
 #
 # build WSF/C++ with Libxml2 Parser. WSF/C++ will be built with embeded guththila 
 # parser by Default. 
-ENABLE_LIBXML2= 0
+ENABLE_LIBXML2= 1
 #
 # build tcp server in addition to http server
 WITH_TCP = 1
