@@ -4,7 +4,9 @@ AUTOCONF = .\..\configure.in
 # WSFCPP_HOME_DIR="%WSFCPP_HOME%"
 
 WSFCPP_HOME_DIR=.\..\wso2-wsf-cpp-bin-$(WSFCPP_VERSION)-win32
-SAMPLES_HOME_DIR=.\
+
+CLIENT_SAMPLES_HOME_DIR=.\clients
+SERVICES_SAMPLES_HOME_DIR=.\services
 
 CFLAGS = /nologo /w /D "WIN32" /D "_WINDOWS" /D "_MBCS" /EHsc
 
@@ -42,55 +44,55 @@ echo_dir:
              
 echo_exe:
 	@if not exist int.msvc\echo\echo mkdir int.msvc\echo\echo
-	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\echo\echo.cpp /Foint.msvc\echo\echo\ /c
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\echo\echo.cpp /Foint.msvc\echo\echo\ /c
 	$(LD) $(LDFLAGS) int.msvc\echo\echo\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\cpp\echo\echo.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
 echo_blocking_exe:
 	@if not exist int.msvc\echo\echo_blocking mkdir int.msvc\echo\echo_blocking
-	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\echo\echo_blocking.cpp /Foint.msvc\echo\echo_blocking\ /c
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\echo\echo_blocking.cpp /Foint.msvc\echo\echo_blocking\ /c
 	$(LD) $(LDFLAGS) int.msvc\echo\echo_blocking\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\cpp\echo\echo_blocking.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
 echo_blocking_addr_exe:
 	@if not exist int.msvc\echo\echo_blocking_addr mkdir int.msvc\echo\echo_blocking_addr
-	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\echo\echo_blocking_addr.cpp /Foint.msvc\echo\echo_blocking_addr\ /c
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\echo\echo_blocking_addr.cpp /Foint.msvc\echo\echo_blocking_addr\ /c
 	$(LD) $(LDFLAGS) int.msvc\echo\echo_blocking_addr\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\cpp\echo\echo_blocking_addr.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
 echo_blocking_dual_exe:
 	@if not exist int.msvc\echo\echo_blocking_dual mkdir int.msvc\echo\echo_blocking_dual
-	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\echo\echo_blocking_dual.cpp /Foint.msvc\echo\echo_blocking_dual\ /c
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\echo\echo_blocking_dual.cpp /Foint.msvc\echo\echo_blocking_dual\ /c
 	$(LD) $(LDFLAGS) int.msvc\echo\echo_blocking_dual\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\cpp\echo\echo_blocking_dual.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
 echo_blocking_soap11_exe:
 	@if not exist int.msvc\echo\echo_blocking_soap11 mkdir int.msvc\echo\echo_blocking_soap11
-	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\echo\echo_blocking_soap11.cpp /Foint.msvc\echo\echo_blocking_soap11\ /c
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\echo\echo_blocking_soap11.cpp /Foint.msvc\echo\echo_blocking_soap11\ /c
 	$(LD) $(LDFLAGS) int.msvc\echo\echo_blocking_soap11\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\cpp\echo\echo_blocking_soap11.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
 echo_non_blocking_exe:
 	@if not exist int.msvc\echo\echo_non_blocking mkdir int.msvc\echo\echo_non_blocking
-	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\echo\echo_non_blocking.cpp /Foint.msvc\echo\echo_non_blocking\ /c
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\echo\echo_non_blocking.cpp /Foint.msvc\echo\echo_non_blocking\ /c
 	$(LD) $(LDFLAGS) int.msvc\echo\echo_non_blocking\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\cpp\echo\echo_non_blocking.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
 echo_non_blocking_dual_exe:
 	@if not exist int.msvc\echo\echo_non_blocking_dual mkdir int.msvc\echo\echo_non_blocking_dual
-	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\echo\echo_non_blocking_dual.cpp /Foint.msvc\echo\echo_non_blocking_dual\ /c
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\echo\echo_non_blocking_dual.cpp /Foint.msvc\echo\echo_non_blocking_dual\ /c
 	$(LD) $(LDFLAGS) int.msvc\echo\echo_non_blocking_dual\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\cpp\echo\echo_non_blocking_dual.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
 echo_rest_exe:
 	@if not exist int.msvc\echo\echo_rest mkdir int.msvc\echo\echo_rest
-	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\echo\echo_rest.cpp /Foint.msvc\echo\echo_rest\ /c
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\echo\echo_rest.cpp /Foint.msvc\echo\echo_rest\ /c
 	$(LD) $(LDFLAGS) int.msvc\echo\echo_rest\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\cpp\echo\echo_rest.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
 echo_security_exe:
 	@if not exist int.msvc\echo\echo_security mkdir int.msvc\echo\echo_security
-	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\echo\echo_security.cpp /Foint.msvc\echo\echo_security\ /c
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\echo\echo_security.cpp /Foint.msvc\echo\echo_security\ /c
 	$(LD) $(LDFLAGS) int.msvc\echo\echo_security\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\cpp\echo\echo_security.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 	
@@ -102,54 +104,54 @@ flickr_exe:
 	if not exist int.msvc\flickr mkdir int.msvc\flickr
 	if not exist $(WSFCPP_HOME_DIR)\bin\samples\cpp\flickr mkdir $(WSFCPP_HOME_DIR)\bin\samples\cpp\flickr
 
-	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\flickr\flickr.cpp /Foint.msvc\flickr\ /c
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\flickr\flickr.cpp /Foint.msvc\flickr\ /c
 	$(LD) $(LDFLAGS) int.msvc\flickr\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\cpp\flickr\flickr.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
 google_exe:
 	@if not exist int.msvc\google mkdir int.msvc\google
 	@if not exist $(WSFCPP_HOME_DIR)\bin\samples\cpp\google mkdir $(WSFCPP_HOME_DIR)\bin\samples\cpp\google
-	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\google\google.cpp /Foint.msvc\google\ /c
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\google\google.cpp /Foint.msvc\google\ /c
 	$(LD) $(LDFLAGS) int.msvc\google\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\cpp\google\google.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
 math_exe:
 	@if not exist int.msvc\math mkdir int.msvc\math
 	@if not exist $(WSFCPP_HOME_DIR)\bin\samples\cpp\math mkdir $(WSFCPP_HOME_DIR)\bin\samples\cpp\math
-	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\math\math.cpp /Foint.msvc\math\ /c
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\math\math.cpp /Foint.msvc\math\ /c
 	$(LD) $(LDFLAGS) int.msvc\math\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\cpp\math\math.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
 notify_exe:
 	@if not exist int.msvc\notify mkdir int.msvc\notify
 	@if not exist $(WSFCPP_HOME_DIR)\bin\samples\cpp\notify mkdir $(WSFCPP_HOME_DIR)\bin\samples\cpp\notify
-	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\notify\notify.cpp /Foint.msvc\notify\ /c
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\notify\notify.cpp /Foint.msvc\notify\ /c
 	$(LD) $(LDFLAGS) int.msvc\notify\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\cpp\notify\notify.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
 yahoo_exe:
 	@if not exist int.msvc\yahoo mkdir int.msvc\yahoo
 	@if not exist $(WSFCPP_HOME_DIR)\bin\samples\cpp\yahoo mkdir $(WSFCPP_HOME_DIR)\bin\samples\cpp\yahoo
-	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\yahoo\yahoo.cpp /Foint.msvc\yahoo\ /c
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\yahoo\yahoo.cpp /Foint.msvc\yahoo\ /c
 	$(LD) $(LDFLAGS) int.msvc\yahoo\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\cpp\yahoo\yahoo.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
 mtom_exe:
 	@if not exist int.msvc\mtom mkdir int.msvc\mtom
 	@if not exist $(WSFCPP_HOME_DIR)\bin\samples\cpp\mtom mkdir $(WSFCPP_HOME_DIR)\bin\samples\cpp\mtom
-	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\mtom\mtom.cpp /Foint.msvc\mtom\ /c
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\mtom\mtom.cpp /Foint.msvc\mtom\ /c
 	$(LD) $(LDFLAGS) int.msvc\mtom\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\cpp\mtom\mtom.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
-	@xcopy /E /I /Q /Y $(SAMPLES_HOME_DIR)\mtom\resources $(WSFCPP_HOME_DIR)\bin\samples\cpp\mtom\resources
+	@xcopy /E /I /Q /Y $(CLIENT_SAMPLES_HOME_DIR)\mtom\resources $(WSFCPP_HOME_DIR)\bin\samples\cpp\mtom\resources
 	@if exist $(WSFCPP_HOME_DIR)\bin\samples\cpp\mtom\resources\*.am del $(WSFCPP_HOME_DIR)\bin\samples\cpp\mtom\resources\*.am
 
 echo_service:
 	@if not exist int.msvc\services\echocpp mkdir int.msvc\services\echocpp
 	@if not exist $(WSFCPP_HOME_DIR)\services\echocpp mkdir $(WSFCPP_HOME_DIR)\services\echocpp
-	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\services\echocpp\Echo.cpp /Foint.msvc\services\echocpp\ /c
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SERVICES_SAMPLES_HOME_DIR)\echocpp\Echo.cpp /Foint.msvc\services\echocpp\ /c
 	$(LD) $(LDFLAGS) int.msvc\services\echocpp\*.obj $(LIBS) /DLL /OUT:$(WSFCPP_HOME_DIR)\services\echocpp\echocpp.dll
 	-@$(_VC_MANIFEST_EMBED_EXE)
-	@copy  /Y $(SAMPLES_HOME_DIR)\services\echocpp\services.xml $(WSFCPP_HOME_DIR)\services\echocpp\services.xml
+	@copy  /Y $(SERVICES_SAMPLES_HOME_DIR)\echocpp\services.xml $(WSFCPP_HOME_DIR)\services\echocpp\services.xml
 
 
 wsfcpp_samples: int_dir echo_samples flickr_exe google_exe math_exe notify_exe yahoo_exe mtom_exe echo_service
