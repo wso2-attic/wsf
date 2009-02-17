@@ -13,13 +13,24 @@ libwso2_wsf_la_SOURCES= AxisFault.cpp \
 			OMNamespace.cpp \
 			OMText.cpp \
 			Property.cpp \
+			Parameter.cpp \
 			Process.cpp \
 			WSRESTClient.cpp \
 			NeethiPolicy.cpp \
 			NeethiException.cpp \
 			NeethiObject.cpp \
 			OMException.cpp \
-			OMObject.cpp
+			OMObject.cpp \
+			MessageContext.cpp
+
+libwso2_wsf_la_LIBADD =	../../wsf_c/axis2c/src/core/engine/libaxis2_engine.la \
+                        ../../wsf_c/axis2c/util/src/libaxutil.la \
+                        ../../wsf_c/axis2c/neethi/src/libneethi.la \
+                        ../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
+			-lpthread
+
+
+
 
 INCLUDES = -I ../../include \
 		-I ../../wsf_c/axis2c/include \
