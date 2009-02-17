@@ -10,7 +10,7 @@ rem Build WSO2 WSF/C
 @call build.bat
 
 rem Un-comment line below for Fail-safe Install
-rem @if not %ERRORLEVEL% EQU 0 goto end
+@if not %ERRORLEVEL% EQU 0 goto end
 
 rem Pack WSO2 WSF/C++
 :pack_wsfcpp
@@ -36,13 +36,11 @@ rem Add HTML Documentation
 @set WSFCPP_SOURCE=%CD%
 @cd "%WSFCPP_HOME%"
 @mkdir docs_temp
-@xcopy /E /I /Q /Y docs  docs_temp
-@rmdir /S /Q docs
-@mkdir docs
-@mkdir docs\wsf_c
+move docs docs_temp
+mkdir docs\wsf_c
+xcopy /E /I /Q /Y docs_temp  docs\wsf_c\docs
+rmdir /S /Q docs_temp
 @xcopy /E /I /Q /Y "%WSFCPP_SOURCE%\docs"  docs\cpp
-@xcopy /E /I /Q /Y docs_temp  docs\wsf_c\docs
-@rmdir /S /Q docs_temp
 @if exist wsclient\docs\index.html mkdir docs\wsf_c\wsclient
 @if exist docs\wsf_c\wsclient mkdir docs\wsf_c\wsclient\docs
 @if exist docs\wsf_c\wsclient\docs copy /Y wsclient\docs\index.html docs\wsf_c\wsclient\docs\
@@ -63,7 +61,7 @@ rem Remove WSF/C Client Samples
 @cd "%WSFCPP_HOME%\bin\samples"
 @if exist security xcopy /E /Q /I /Y security ..\security
 @cd ..\
-@rmdir /s /q samples
+rem @rmdir /s /q samples
 @mkdir samples
 @if exist security xcopy /E /Q /I /Y security samples\security
 @if exist security rmdir /s /q security
@@ -113,10 +111,10 @@ rem Build security Samples
 @cd cpp\security
 @mkdir client
 @cd "%WSFCPP_SOURCE%"
-@cd examples
+@cd examples\clients
 @cd security
-@xcopy /E /Q /I /Y secpolicy %WSFCPP_HOME%\bin\samples\cpp\security\secpolisy
-@nmake dist -f sec_samples.mk AUTOCONF=..\..\configure.in
+@xcopy /E /Q /I /Y secpolicy %WSFCPP_HOME%\bin\samples\cpp\security\secpolicy
+@nmake dist -f sec_samples.mk AUTOCONF=..\..\..\configure.in
 @if not %ERRORLEVEL% EQU 0 goto end
 @cd "%WSFCPP_HOME%\bin\samples\cpp\security"
 @if not exist .svn mkdir .svn
@@ -130,7 +128,7 @@ rem Build security Samples
 rem Deploy Sample Source
 :dep_sample_source
 @if exist "%WSFCPP_HOME%\samples" rmdir /s /q "%WSFCPP_HOME%\samples"
-@xcopy /E /I /Q /Y samples "%WSFCPP_HOME%\samples"
+@xcopy /E /I /Q /Y examples "%WSFCPP_HOME%\samples"
 @copy /Y configure.in "%WSFCPP_HOME%"
 @set WSFCPP_SOURCE=%CD%
 @cd "%WSFCPP_HOME%\samples"
