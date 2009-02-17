@@ -10,8 +10,8 @@ SERVICES_SAMPLES_HOME_DIR=.\services
 
 CFLAGS = /nologo /w /D "WIN32" /D "_WINDOWS" /D "_MBCS" /EHsc
 
-CC=cl.exe
-LD=link.exe
+CC=@cl.exe
+LD=@link.exe
 
 LDFLAGS = /nologo /LIBPATH:$(WSFCPP_HOME_DIR)\lib
 
