@@ -37,7 +37,7 @@ sec_echo_dir:
              
 sec_echo_exe:
 	@if not exist int.msvc\sec_echo\sec_echo mkdir int.msvc\sec_echo\sec_echo
-	cl.exe $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\sec_echo\echo.cpp /Foint.msvc\sec_echo\sec_echo\ /c
+	@cl.exe $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\sec_echo\echo.cpp /Foint.msvc\sec_echo\sec_echo\ /c
 	@link.exe $(LDFLAGS) int.msvc\sec_echo\sec_echo\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\cpp\security\client\sec_echo\echo.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 	@copy /Y $(SAMPLES_HOME_DIR)\sec_echo\deploy_client_repo.bat $(WSFCPP_HOME_DIR)\bin\samples\cpp\security\client\sec_echo
