@@ -4,6 +4,6 @@ export LD_LIBRARY_PATH=$1/lib;
 
 
 cd examples
-./configure
+./configure --prefix=$1
 make
 cd ..
