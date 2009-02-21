@@ -26,7 +26,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>axiom-e4x</artifactId>
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
     <version>SNAPSHOT</version>
     <name>WSO2 Javascript Web Service Framework- Rhino - AXIOM E4X implementation</name>
     <build>
@@ -48,6 +48,28 @@
                 <configuration>
                     <source>1.4</source>
                     <target>1.4</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>1.4.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${pom.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Name>${pom.artifactId}</Bundle-Name>
+                        <Bundle-Version>1.0.0</Bundle-Version>
+                        <Export-Package>
+                            org.wso2.javascript.xmlimpl.*,
+                        </Export-Package>
+                        <Import-Package>
+                            !org.wso2.javascript.xmlimpl.*,
+                            org.apache.axiom.*; version="[1.2.7, 1.3.0)",
+                            javax.xml.stream.*; version="1.0.1",
+                            *;resolution:=optional
+                        </Import-Package>
+                    </instructions>
                 </configuration>
             </plugin>
             <plugin>
