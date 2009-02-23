@@ -156,7 +156,7 @@ namespace wso2wsf
         /**
          * destructor frees resources.
          */
-        virtual WSF_CALL ~ServiceClient();
+        WSF_EXTERN virtual WSF_CALL ~ServiceClient();
 
         /**
          * initializes service client.
