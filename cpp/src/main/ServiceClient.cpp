@@ -117,7 +117,7 @@ axis2_status_t AXIS2_CALL callbackOnFault(axis2_callback_t * callback, const axu
   *
   * @todo: document this function
   */
- ServiceClient::~ServiceClient()
+ServiceClient::~ServiceClient()
 {
     if (_last_response_soap_envelope_element)
     {
