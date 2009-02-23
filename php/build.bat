@@ -71,7 +71,9 @@ set WSFPHP_VERSION=2.0.0
 @del /Q  wso2-wsf-php-bin-%WSFPHP_VERSION%-win32\wsf_c\lib\*.lib
 
 @if "%WSFPHP_SNAPSHOT%"=="1" goto :snapshot
-exit
+goto :end
 
 :snapshot
 move wso2-wsf-php-bin-%WSFPHP_VERSION%-win32 wso2-wsf-php-bin-snapshot-win32
+
+:end
