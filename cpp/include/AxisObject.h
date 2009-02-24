@@ -47,24 +47,6 @@ namespace wso2wsf
     class AxisObject
     {
     private:
-       
-		static Process *_envPro;
-
-        /**
-         * @var _refCount stores the number of references to axutil_env.
-         */
-        static unsigned int _refCount;
-
-		
-        /**
-         * Increments reference count.
-         */
-        void WSF_CALL incrementRef();
-
-        /**
-         * Decrements reference count.
-         */
-        void WSF_CALL decrementRef();
 
 		/**
 		* Method for initializing the Axis Object.
@@ -87,8 +69,6 @@ namespace wso2wsf
          * Constructor setting up the AxisObject.
          */
         WSF_CALL AxisObject();
-
-       
 
         /**
          * Enables or Disables logging,

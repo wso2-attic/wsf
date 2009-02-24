@@ -22,6 +22,41 @@
 #include <string>
 #include <MessageContext.h>
 
+
+#define WSF_SERVICE_INIT(class_name) \
+extern "C" \
+{\		
+\
+	WSF_EXTERN int \
+		axis2_get_instance( \
+		ServiceSkeleton ** inst, \
+		const axutil_env_t * env) \
+	{ \
+		*inst = new class_name(); \
+		if (!(*inst)) \
+		{ \
+			return AXIS2_FAILURE; \
+		} \
+\
+		return AXIS2_SUCCESS; \
+	} \
+\
+	WSF_EXTERN int \
+		axis2_remove_instance( \
+		ServiceSkeleton * inst, \
+		const axutil_env_t * env) \
+	{ \
+		axis2_status_t status = AXIS2_SUCCESS; \
+		if (inst) \
+		{ \
+			delete  inst; \
+		} \
+		return status; \
+	} \
+\
+} \
+
+
 /**
  * @file ServiceSkeleton.h
  */
