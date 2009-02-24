@@ -63,25 +63,16 @@ void AxisObject::enableLogging(bool enable)
   *
   * @todo: document this function
   */
-void AxisObject::initialize(std::string log_file, axutil_log_levels_t log_level) throw (AxisFault)
+void AxisObject::initialize()
 {
-	axutil_env_t* _env = NULL;
+	const axutil_env_t* env = NULL;
 	_envPro	 = Process::getInstance();
-    if (_refCount == 0 && !_env)
-    {
-        _env = axutil_env_create_all(log_file.c_str(), log_level);
-        if (!_env)
-        {
-            throw AxisFault(CREATION_OF_EXECUTION_ENVIRONMENT_FAILED);
-        }
-        else
-        {
-            _refCount = 1;
-        }
-		if(_env)
-		{
-			_envPro->setEnv(_env);
-		}
+
+	env = _envPro->getEnv();
+	if(!env)
+	{   
+		env = axutil_env_create_all(Process::_logFileName.c_str(), Process::_logLevel);
+    	_envPro->setEnv(env);
     }
 }
 
@@ -95,6 +86,7 @@ void AxisObject::initialize(std::string log_file, axutil_log_levels_t log_level)
     {
         incrementRef();
     }
+	initialize();
 }
 
 /** @brief getEnv

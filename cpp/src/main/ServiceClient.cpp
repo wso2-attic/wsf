@@ -210,40 +210,39 @@ ServiceClient::~ServiceClient()
   */
 void ServiceClient::initializeClient(std::string log_file, axutil_log_levels_t log_level) throw (AxisFault)
 {
-    initialize(log_file, log_level);
-    if (_conf_ctx)
-    {
-        if (_repo_home == "")
-        {
-            axis2_conf_t * conf = axis2_conf_ctx_get_conf(_conf_ctx, getEnv());
-            _repo_home = axis2_conf_get_repo(conf, getEnv());
-        }
-        _wsf_service_client = axis2_svc_client_create_with_conf_ctx_and_svc(getEnv(), _repo_home.c_str(),
-            const_cast<axis2_conf_ctx_t *>(_conf_ctx), NULL);
-    }
-    _wsf_service_client = axis2_svc_client_create(getEnv(), _repo_home.c_str());
-    if (!_wsf_service_client)
-    {
-        throw AxisFault(CREATION_OF_SERVICE_CLIENT_FAILED);
-    }
-    _options = new Options();
-    if (!_options->_wsf_options)
-    {
-        delete _options;
-        throw AxisFault(CREATION_OF_SERVICE_CLIENT_OPTIONS_FAILED);
-    }
-    else
-    {
-        _options->setXMLParserReset(true);
-        _options->setUseSeparateListener(false);
-        _options->setTo(_endpoint_address);
-        axis2_status_t status = axis2_svc_client_set_options(_wsf_service_client, getEnv(), _options->_wsf_options);
-        if (status != AXIS2_TRUE)
-        {
-            throw AxisFault(SETTING_UP_SERVICE_CLIENT_OPTIONS_FAILED);
-        }
-    }
-    _last_soap_fault = NULL;
+	if (_conf_ctx)
+	{
+		if (_repo_home == "")
+		{
+			axis2_conf_t * conf = axis2_conf_ctx_get_conf(_conf_ctx, getEnv());
+			_repo_home = axis2_conf_get_repo(conf, getEnv());
+		}
+		_wsf_service_client = axis2_svc_client_create_with_conf_ctx_and_svc(getEnv(), _repo_home.c_str(),
+			const_cast<axis2_conf_ctx_t *>(_conf_ctx), NULL);
+	}
+	_wsf_service_client = axis2_svc_client_create(getEnv(), _repo_home.c_str());
+	if (!_wsf_service_client)
+	{
+		throw AxisFault(CREATION_OF_SERVICE_CLIENT_FAILED);
+	}
+	_options = new Options();
+	if (!_options->_wsf_options)
+	{
+		delete _options;
+		throw AxisFault(CREATION_OF_SERVICE_CLIENT_OPTIONS_FAILED);
+	}
+	else
+	{
+		_options->setXMLParserReset(true);
+		_options->setUseSeparateListener(false);
+		_options->setTo(_endpoint_address);
+		axis2_status_t status = axis2_svc_client_set_options(_wsf_service_client, getEnv(), _options->_wsf_options);
+		if (status != AXIS2_TRUE)
+		{
+			throw AxisFault(SETTING_UP_SERVICE_CLIENT_OPTIONS_FAILED);
+		}
+	}
+	_last_soap_fault = NULL;
 }
 
 /** @brief setOptions

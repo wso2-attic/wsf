@@ -115,6 +115,11 @@ WSF_EXTERN void WSF_CALL Process::removeEnv()
 */
 WSF_CALL Process::~Process()
 {
+	std::map<int, const axutil_env_t*>::iterator _it;
+	for(_it = _envmap.begin(); _it != _envmap.end(); ++_it)
+	{
+		axutil_env_free(_it->second);
+	}
 }
 
 void WSF_CALL Process::switchToGlobalPool()
@@ -140,6 +145,15 @@ void WSF_CALL Process::switchToLocalPool()
 	}
 }
 
+void WSF_CALL Process::initialize(std::string logFileName, axutil_log_levels_t logLevel)
+{
+	_logFileName = logFileName;
+	_logLevel = logLevel;
+}
+
+std::string Process::_logFileName;
+
+axutil_log_levels_t Process::_logLevel;
 
 Process* Process::_processObj = NULL;
 

@@ -163,3 +163,21 @@ void OMDataHandler::setAxiomDataHandler(axiom_data_handler_t * data_handler)
     _wsf_axiom_data_handler = data_handler;
 }
 
+bool OMDataHandler::isCached()
+{
+	if(axiom_data_handler_get_cached(_wsf_axiom_data_handler, getEnv()))
+	{
+		return true;
+	}
+	return false;
+}
+
+bool OMDataHandler::writeTo()
+{
+	if(axiom_data_handler_write_to(_wsf_axiom_data_handler, getEnv()))
+	{
+		return true;
+	}
+	return false;
+}
+
