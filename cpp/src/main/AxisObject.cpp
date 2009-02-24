@@ -26,19 +26,7 @@ using namespace wso2wsf;
   */
  AxisObject::~AxisObject()
 {
-	/*
-    if (_refCount == 0)
-    {
-        if (_env)
-        {
-            axutil_env_free(_env);
-        }
-    }
-    else
-    {
-        decrementRef();
-    }
-	*/
+	
 }
 
 /** @brief enableLogging
@@ -48,6 +36,7 @@ using namespace wso2wsf;
 void AxisObject::enableLogging(bool enable)
 {
 	axutil_env_t *_env = NULL;
+	_env = (axutil_env_t*)Process::getEnv();
     if (enable)
     {
 		
@@ -66,13 +55,14 @@ void AxisObject::enableLogging(bool enable)
 void AxisObject::initialize()
 {
 	const axutil_env_t* env = NULL;
-	_envPro	 = Process::getInstance();
+	/** Initialize the Process Object which keeps the system thread safe */
+	Process::getInstance();
 
-	env = _envPro->getEnv();
+	env = Process::getEnv();
 	if(!env)
 	{   
 		env = axutil_env_create_all(Process::_logFileName.c_str(), Process::_logLevel);
-    	_envPro->setEnv(env);
+		Process::setEnv(env);
     }
 }
 
@@ -82,10 +72,6 @@ void AxisObject::initialize()
   */
  AxisObject::AxisObject()
 {
-    if (_refCount > 0)
-    {
-        incrementRef();
-    }
 	initialize();
 }
 
@@ -95,38 +81,7 @@ void AxisObject::initialize()
   */
 const axutil_env_t * AxisObject::getEnv()
 {
-	return _envPro->getEnv();
+	return Process::getEnv();
 }
 
-/** @brief incrementRef
-  *
-  * @todo: document this function
-  */
-void AxisObject::incrementRef()
-{
-    _refCount++;
-}
-
-/** @brief decrementRef
-  *
-  * @todo: document this function
-  */
-void AxisObject::decrementRef()
-{
-    if (_refCount > 0)
-    {
-        _refCount--;
-    }
-}
-
-/** @brief _env
-*
-* @todo: document this var
-*/
-Process * AxisObject::_envPro = NULL;
-
-/** @brief _refCount
-*
-* @todo: document this var
-*/
-unsigned int AxisObject::_refCount = 0;
+ 

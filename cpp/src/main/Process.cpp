@@ -118,7 +118,7 @@ WSF_CALL Process::~Process()
 	std::map<int, const axutil_env_t*>::iterator _it;
 	for(_it = _envmap.begin(); _it != _envmap.end(); ++_it)
 	{
-		axutil_env_free(_it->second);
+		axutil_env_free((axutil_env_t*)_it->second);
 	}
 }
 
