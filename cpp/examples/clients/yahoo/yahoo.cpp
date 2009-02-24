@@ -11,7 +11,7 @@ int main()
     WSRESTClient * sc = new WSRESTClient("http://search.yahooapis.com/WebSearchService/V1/webSearch");
     try 
     {   
-        sc->initializeClient("yahoo_rest_search.log", AXIS2_LOG_LEVEL_TRACE);
+        //sc->initializeClient("yahoo_rest_search.log", AXIS2_LOG_LEVEL_TRACE);
     }   
     catch (AxisFault & e)
     {   
