@@ -135,6 +135,18 @@ namespace wso2wsf
          * @return true if operation was successful, false otherwise.
          */
         WSF_EXTERN bool WSF_CALL setFileName(std::string file_name);
+		/**
+		* Returns whether the attachment is cached or not                                                   
+		* @returns true if attachment is cached and false otherwise 
+		*/
+		WSF_EXTERN bool WSF_CALL isCached();
+		/**
+		* Write to a file                  
+		* Returns the true if the operation is successful, false otherwise
+		*/
+		WSF_EXTERN bool WSF_CALL writeTo();
+
+		
     };
     /** @} */
 }

@@ -66,6 +66,16 @@ namespace wso2wsf
          */
         void WSF_CALL decrementRef();
 
+		/**
+		* Method for initializing the Axis Object.
+		* @param log_file name of the log file. If NULL, a default log would be created.
+		* @param log_level log level to be used. If not valid, debug would be
+		* used as the default log level.
+		* @exception AxisFault an exception is thrown if something goes wrong
+		* while setting up the environment.
+		*/
+		void WSF_CALL initialize();
+
     protected:
         /**
          * Method to get the reference to the axutil_env struct.
@@ -78,15 +88,7 @@ namespace wso2wsf
          */
         WSF_CALL AxisObject();
 
-        /**
-         * Method for initializing the Axis Object.
-         * @param log_file name of the log file. If NULL, a default log would be created.
-         * @param log_level log level to be used. If not valid, debug would be
-         * used as the default log level.
-         * @exception AxisFault an exception is thrown if something goes wrong
-         * while setting up the environment.
-         */
-        void WSF_CALL initialize(std::string log_file, axutil_log_levels_t log_level) throw (AxisFault);
+       
 
         /**
          * Enables or Disables logging,

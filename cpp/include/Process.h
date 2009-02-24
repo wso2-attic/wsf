@@ -54,6 +54,7 @@ namespace wso2wsf
 		static Process *_processObj;
 		
 		static std::map<int, const axutil_env_t*> _envmap;
+
 		
 #ifdef WIN32
 		static RWLock *lock;		
@@ -65,6 +66,10 @@ namespace wso2wsf
 		*/
 
 	public:
+		/** keeps the log file name */
+		static std::string _logFileName;
+		/** keeps the log level */
+		static axutil_log_levels_t _logLevel;
 		/**
 		* Return an instance of the Static Process Object
 		*
@@ -91,6 +96,11 @@ namespace wso2wsf
 		 * Switch to local memory pool                                                                  
 		 */
 		static WSF_EXTERN void WSF_CALL switchToLocalPool();
+		/**
+		* Initialize with log file and log level                                                   
+		*
+		*/
+		static WSF_EXTERN void WSF_CALL initialize(std::string logFileName,  axutil_log_levels_t logLevel);
 	
 		WSF_CALL ~Process();
 	};

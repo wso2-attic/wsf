@@ -16,10 +16,22 @@
 
 #ifndef WSFERROR_H
 #define WSFERROR_H
-
+#include <Process.h>
 /**
  * @file WSFError.h
  */
+
+#define WSF_LOG_PROJECT_PREFIX "[WSFCPP]"
+
+#define WSF_LOG_USER_MSG(msg) AXIS2_LOG_USER(Process::getEnv()->log, AXIS2_LOG_SI, "%s %s", WSF_LOG_PROJECT_PREFIX, msg)
+
+#define WSF_LOG_DEBUG_MSG( msg) AXIS2_LOG_DEBUG (Process::getEnv()->log, AXIS2_LOG_SI, "%s %s", WSF_LOG_PROJECT_PREFIX, msg)
+#define WSF_LOG_INFO_MSG( msg) AXIS2_LOG_INFO (Process::getEnv()->log, AXIS2_LOG_SI, "%s %s", WSF_LOG_PROJECT_PREFIX, msg)
+#define WSF_LOG_WARNING_MSG( msg) AXIS2_LOG_WARNING (Process::getEnv()->log, AXIS2_LOG_SI, "%s %s", WSF_LOG_PROJECT_PREFIX, msg)
+#define WSF_LOG_ERROR_MSG( msg) AXIS2_LOG_ERROR (Process::getEnv()->log, AXIS2_LOG_SI, "%s %s", WSF_LOG_PROJECT_PREFIX, msg)
+#define WSF_LOG_CRITICAL_MSG( msg) AXIS2_LOG_CRITICAL (Process::getEnv()->log, AXIS2_LOG_SI, "%s %s", WSF_LOG_PROJECT_PREFIX, msg)
+#define WSF_LOG_TRACE_MSG( msg) AXIS2_LOG_TRACE (Process::getEnv()->log, AXIS2_LOG_SI, "%s %s", WSF_LOG_PROJECT_PREFIX, msg)
+
 
 #define CREATION_OF_EXECUTION_ENVIRONMENT_FAILED "Creation of Execution Environment Failed"
 #define CREATION_OF_NEETHI_POLICY_OBJECT_FAILED "Unable to create NeethiPolicy object"
