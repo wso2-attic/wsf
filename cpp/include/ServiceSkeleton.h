@@ -25,7 +25,7 @@
 
 #define WSF_SERVICE_INIT(class_name) \
 extern "C" \
-{\		
+{\
 \
 	WSF_EXTERN int \
 		axis2_get_instance( \
