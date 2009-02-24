@@ -141,10 +141,10 @@ namespace wso2wsf
 		*/
 		WSF_EXTERN bool WSF_CALL isCached();
 		/**
-		* Write to a file                  
+		* Write to a file.The filename is the file to be written.                  
 		* Returns the true if the operation is successful, false otherwise
 		*/
-		WSF_EXTERN bool WSF_CALL writeTo();
+		WSF_EXTERN bool WSF_CALL writeTo(std::string filename);
 
 		
     };
