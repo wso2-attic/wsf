@@ -30,45 +30,52 @@ OMElement* MTOMService::invoke(OMElement *ele, MessageContext *msgCtx)
 {
 	/* Expected request format is :-
 	* <ns1:mtomSample xmlns:ns1="http://ws.apache.org/axis2/c/samples">
-	<ns1:fileName>test.jpg</ns1:fileName>
-	<ns1:image>
-	<xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="cid:1.dd5183d4-d58a-1da1-2578-001125b4c063@apache.org"></xop:Include>
-	</ns1:image>
+		<ns1:fileName>test.jpg</ns1:fileName>
+		<ns1:image>
+			<xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="cid:1.dd5183d4-d58a-1da1-2578-001125b4c063@apache.org"></xop:Include>
+		</ns1:image>
 	</ns1:mtomSample>
 	*/
 	if(ele)
 	{	
-		OMNode *node1, *node2, *node3;
-		OMElement *ele1,*ele2,*ele3;
+		OMElement *fileNameEle,*imageEle;
 		OMText *text = NULL;
+		OMDataHandler *dh = NULL;
 		try
 		{	
-		    node1 =ele->getFirstChild();
-			ele1 = dynamic_cast<OMElement *>(node1);
-		}catch (bad_cast) {}
+			fileNameEle = dynamic_cast<OMElement *>(ele->getFirstChild());
 
-			node2 = ele1->getFirstChild();
-			if(node2->nodeType() == AXIOM_TEXT)
+			if(fileNameEle && fileNameEle->getFirstChild() && fileNameEle->getFirstChild()->nodeType() == AXIOM_TEXT)
 			{
-				text = dynamic_cast<OMText*>(node2);
+				text = dynamic_cast<OMText*>(fileNameEle->getFirstChild());
 				string filename = text->getValue();
 
-				OMNode *binary_node = node2->getNextSibling();
-				if(binary_node)
+				imageEle = dynamic_cast<OMElement*>(fileNameEle->getNextSibling());
+				if(imageEle)
 				{
-					OMDataHandler *dh = NULL;
-					dh = text->getDataHandler();
-					if(dh && !(dh->isCached()))
+					
+					OMText *imageText = dynamic_cast<OMText*>(imageEle->getFirstChild());
+					if(imageText)
 					{
-						dh->setFileName(filename);
-						dh->writeTo();
+						dh = imageText->getDataHandler();
+						if(dh && !(dh->isCached()))
+						{
+							dh->setFileName(filename);
+							dh->writeTo();
+						}
+						dh->getInputStream()
 					}
 				}
 			}
-		
+		}catch (bad_cast) 
+		{
 
-					
+		}
+		OMElement *resultEle = new OMElement("response", new OMNamespace("http://ws.apache.org/wsf/cpp/samples","ns1"));
+		OMDataHandler *reponseDh = new OMDataHandler();
+
 	}
+	
 	return NULL;
 }
 

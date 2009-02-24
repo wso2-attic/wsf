@@ -153,8 +153,16 @@ echo_service:
 	-@$(_VC_MANIFEST_EMBED_EXE)
 	@copy  /Y $(SERVICES_SAMPLES_HOME_DIR)\echocpp\services.xml $(WSFCPP_HOME_DIR)\services\echocpp\services.xml
 
+mtom_service:
+	@if not exist int.msvc\services\mtomcpp mkdir int.msvc\services\mtomcpp
+	@if not exist $(WSFCPP_HOME_DIR)\services\mtomcpp mkdir $(WSFCPP_HOME_DIR)\services\mtomcpp
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SERVICES_SAMPLES_HOME_DIR)\mtomcpp\*.cpp /Foint.msvc\services\mtomcpp\ /c
+	$(LD) $(LDFLAGS) int.msvc\services\mtomcpp\*.obj $(LIBS) /DLL /OUT:$(WSFCPP_HOME_DIR)\services\mtomcpp\mtomcpp.dll
+	-@$(_VC_MANIFEST_EMBED_EXE)
+	@copy  /Y $(SERVICES_SAMPLES_HOME_DIR)\mtomcpp\services.xml $(WSFCPP_HOME_DIR)\services\mtomcpp\services.xml
 
-wsfcpp_samples: int_dir echo_samples flickr_exe google_exe math_exe notify_exe yahoo_exe mtom_exe echo_service
+wsfcpp_samples: int_dir echo_samples flickr_exe google_exe math_exe notify_exe yahoo_exe mtom_exe echo_service mtom_service
+
 
 clean: 
 	@if exist int.msvc rmdir /s /q int.msvc
