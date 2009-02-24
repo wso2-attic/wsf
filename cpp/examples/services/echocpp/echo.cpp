@@ -24,7 +24,7 @@
 #include "Echo.h"
 
 using namespace wso2wsf;
-
+/** Load the service into axis2 engine */
 WSF_SERVICE_INIT(Echo)
 
 OMElement* Echo::invoke(OMElement *ele, MessageContext *msgCtx)
