@@ -1,5 +1,5 @@
 /*
- * Copyright 2005,2006 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2009 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,6 @@ bool OMDataHandler::write(axis2_byte_t * input_stream, int input_stream_length)
     {
         return false;
     }
-    status = axiom_data_handler_write_to(_wsf_axiom_data_handler, getEnv());
     return (status == AXIS2_SUCCESS);
 }
 
