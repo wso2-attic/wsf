@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
     sc = new WSSOAPClient(end_point);
     try 
     {   
-        sc->initializeClient("mtom.log", AXIS2_LOG_LEVEL_TRACE);
+        //sc->initializeClient("mtom.log", AXIS2_LOG_LEVEL_TRACE);
     }   
     catch (AxisFault & e)
     {   

@@ -11,7 +11,7 @@ int main()
     WSSOAPClient * sc = new WSSOAPClient("http://api.flickr.com/services/soap/");
     try 
     {   
-        sc->initializeClient("flickr_client.log", AXIS2_LOG_LEVEL_TRACE);
+        //sc->initializeClient("flickr_client.log", AXIS2_LOG_LEVEL_TRACE);
     }   
     catch (AxisFault & e)
     {   

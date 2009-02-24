@@ -9,7 +9,7 @@ using namespace wso2wsf;
 int main()
 {
     WSSOAPClient * sc = new WSSOAPClient("http://localhost:9090/axis2/services/echo");
-    sc->initializeClient("echo_blocking.log", AXIS2_LOG_LEVEL_TRACE);
+    //sc->initializeClient("echo_blocking.log", AXIS2_LOG_LEVEL_TRACE);
     {
         OMNamespace * ns = new OMNamespace("http://ws.apache.org/axis2/services/echo", "ns1");
         OMElement * payload = new OMElement(NULL,"echoString", ns);

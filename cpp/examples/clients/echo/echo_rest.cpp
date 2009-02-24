@@ -11,7 +11,7 @@ int main()
     WSRESTClient * sc = new WSRESTClient("http://localhost:9090/axis2/services/echo/echoString");
     try 
     {   
-        sc->initializeClient("echo_rest.log", AXIS2_LOG_LEVEL_TRACE);
+        //sc->initializeClient("echo_rest.log", AXIS2_LOG_LEVEL_TRACE);
     }   
     catch (AxisFault & e)
     {   

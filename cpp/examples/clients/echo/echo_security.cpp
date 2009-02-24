@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     sc = new WSSOAPClient(client_repo, end_point);
     try 
     {   
-        sc->initializeClient("echo_security.log", AXIS2_LOG_LEVEL_TRACE);
+        //sc->initializeClient("echo_security.log", AXIS2_LOG_LEVEL_TRACE);
     }   
     catch (AxisFault & e)
     {   

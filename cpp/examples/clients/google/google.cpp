@@ -11,7 +11,7 @@ int main()
     WSSOAPClient * sc = new WSSOAPClient("http://api.google.com/search/beta2");
     try 
     {   
-        sc->initializeClient("google_client.log", AXIS2_LOG_LEVEL_TRACE);
+        //sc->initializeClient("google_client.log", AXIS2_LOG_LEVEL_TRACE);
     }   
     catch (AxisFault & e)
     {   

@@ -11,7 +11,7 @@ int main()
     WSSOAPClient * sc = new WSSOAPClient("http://localhost:9090/axis2/services/notify");
     try 
     {   
-        sc->initializeClient("notify.log", AXIS2_LOG_LEVEL_TRACE);
+        //sc->initializeClient("notify.log", AXIS2_LOG_LEVEL_TRACE);
     }   
     catch (AxisFault & e)
     {   
