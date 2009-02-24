@@ -172,8 +172,9 @@ bool OMDataHandler::isCached()
 	return false;
 }
 
-bool OMDataHandler::writeTo()
+bool OMDataHandler::writeTo(std::string filename)
 {
+	axiom_data_handler_set_file_name (_wsf_axiom_data_handler, getEnv(),(char *)filename.c_str());
 	if(axiom_data_handler_write_to(_wsf_axiom_data_handler, getEnv()))
 	{
 		return true;
