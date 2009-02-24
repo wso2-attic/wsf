@@ -21,6 +21,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "echo_security", "echo_secur
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "flickr", "flickr\flickr.vcproj", "{AEEE4D37-BB4D-4B39-B9C9-201A6A2CBA56}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "google", "google\google.vcproj", "{D30AB8C9-3641-4C2D-8A7A-4EF7B0FFBA44}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sec_echo", "sec_echo\sec_echo.vcproj", "{101DC893-FEAB-45F9-BEFA-93A5CCE58B67}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "math", "math\math.vcproj", "{50B43942-3DEF-46BE-969E-3CC7722B8FE9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mtom", "mtom\mtom.vcproj", "{A905741C-7DE2-457A-B6DF-0825E72C9335}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "yahoo", "yahoo\yahoo.vcproj", "{6544D985-6384-41D1-931E-BD5481049690}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "notify", "notify\notify.vcproj", "{4A2BE15D-A5D5-4E52-8394-7B1798A390FA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -67,6 +79,30 @@ Global
 		{AEEE4D37-BB4D-4B39-B9C9-201A6A2CBA56}.Debug|Win32.Build.0 = Debug|Win32
 		{AEEE4D37-BB4D-4B39-B9C9-201A6A2CBA56}.Release|Win32.ActiveCfg = Release|Win32
 		{AEEE4D37-BB4D-4B39-B9C9-201A6A2CBA56}.Release|Win32.Build.0 = Release|Win32
+		{D30AB8C9-3641-4C2D-8A7A-4EF7B0FFBA44}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D30AB8C9-3641-4C2D-8A7A-4EF7B0FFBA44}.Debug|Win32.Build.0 = Debug|Win32
+		{D30AB8C9-3641-4C2D-8A7A-4EF7B0FFBA44}.Release|Win32.ActiveCfg = Release|Win32
+		{D30AB8C9-3641-4C2D-8A7A-4EF7B0FFBA44}.Release|Win32.Build.0 = Release|Win32
+		{101DC893-FEAB-45F9-BEFA-93A5CCE58B67}.Debug|Win32.ActiveCfg = Debug|Win32
+		{101DC893-FEAB-45F9-BEFA-93A5CCE58B67}.Debug|Win32.Build.0 = Debug|Win32
+		{101DC893-FEAB-45F9-BEFA-93A5CCE58B67}.Release|Win32.ActiveCfg = Release|Win32
+		{101DC893-FEAB-45F9-BEFA-93A5CCE58B67}.Release|Win32.Build.0 = Release|Win32
+		{50B43942-3DEF-46BE-969E-3CC7722B8FE9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{50B43942-3DEF-46BE-969E-3CC7722B8FE9}.Debug|Win32.Build.0 = Debug|Win32
+		{50B43942-3DEF-46BE-969E-3CC7722B8FE9}.Release|Win32.ActiveCfg = Release|Win32
+		{50B43942-3DEF-46BE-969E-3CC7722B8FE9}.Release|Win32.Build.0 = Release|Win32
+		{A905741C-7DE2-457A-B6DF-0825E72C9335}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A905741C-7DE2-457A-B6DF-0825E72C9335}.Debug|Win32.Build.0 = Debug|Win32
+		{A905741C-7DE2-457A-B6DF-0825E72C9335}.Release|Win32.ActiveCfg = Release|Win32
+		{A905741C-7DE2-457A-B6DF-0825E72C9335}.Release|Win32.Build.0 = Release|Win32
+		{6544D985-6384-41D1-931E-BD5481049690}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6544D985-6384-41D1-931E-BD5481049690}.Debug|Win32.Build.0 = Debug|Win32
+		{6544D985-6384-41D1-931E-BD5481049690}.Release|Win32.ActiveCfg = Release|Win32
+		{6544D985-6384-41D1-931E-BD5481049690}.Release|Win32.Build.0 = Release|Win32
+		{4A2BE15D-A5D5-4E52-8394-7B1798A390FA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4A2BE15D-A5D5-4E52-8394-7B1798A390FA}.Debug|Win32.Build.0 = Debug|Win32
+		{4A2BE15D-A5D5-4E52-8394-7B1798A390FA}.Release|Win32.ActiveCfg = Release|Win32
+		{4A2BE15D-A5D5-4E52-8394-7B1798A390FA}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
