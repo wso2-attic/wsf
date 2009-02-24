@@ -26,6 +26,8 @@
 using namespace std;
 using namespace wso2wsf;
 
+WSF_SERVICE_INIT(MTOMService)
+
 OMElement* MTOMService::invoke(OMElement *ele, MessageContext *msgCtx)
 {
 	/* Expected request format is :-
@@ -41,6 +43,8 @@ OMElement* MTOMService::invoke(OMElement *ele, MessageContext *msgCtx)
 		OMElement *fileNameEle,*imageEle;
 		OMText *text = NULL;
 		OMDataHandler *dh = NULL;
+		int length = 0;
+		axis2_byte_t *data = NULL;
 		try
 		{	
 			fileNameEle = dynamic_cast<OMElement *>(ele->getFirstChild());
@@ -60,10 +64,10 @@ OMElement* MTOMService::invoke(OMElement *ele, MessageContext *msgCtx)
 						dh = imageText->getDataHandler();
 						if(dh && !(dh->isCached()))
 						{
-							dh->setFileName(filename);
-							dh->writeTo();
+							dh->writeTo(filename);
+							length = dh->getInputStreamLength();
+							data = dh->getInputStream();
 						}
-						dh->getInputStream()
 					}
 				}
 			}
@@ -72,11 +76,18 @@ OMElement* MTOMService::invoke(OMElement *ele, MessageContext *msgCtx)
 
 		}
 		OMElement *resultEle = new OMElement("response", new OMNamespace("http://ws.apache.org/wsf/cpp/samples","ns1"));
-		OMDataHandler *reponseDh = new OMDataHandler();
+		OMDataHandler *responseDh = new OMDataHandler();
+		char *buffer = new char[length]	;
+		memcpy(buffer,data, length);
+		responseDh->write(buffer, length);
+		OMText *dhText = new OMText(responseDh);
+		resultEle->addChild(dhText);
+		msgCtx->setDoingMTOM(true);
+		return resultEle;
 
 	}
-	
 	return NULL;
+	
 }
 
 OMElement* MTOMService::onFault(OMElement *ele)
@@ -84,38 +95,3 @@ OMElement* MTOMService::onFault(OMElement *ele)
 	return NULL;
 }
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-	WSF_EXTERN int
-		axis2_get_instance(
-		ServiceSkeleton ** inst,
-		const axutil_env_t * env)
-	{
-		*inst = new MTOMService();
-		if (!(*inst))
-		{
-			return AXIS2_FAILURE;
-		}
-
-		return AXIS2_SUCCESS;
-	}
-
-	WSF_EXTERN int
-		axis2_remove_instance(
-		axis2_svc_skeleton_t * inst,
-		const axutil_env_t * env)
-	{
-		axis2_status_t status = AXIS2_FAILURE;
-		if (inst)
-		{
-			status = AXIS2_SVC_SKELETON_FREE(inst, env);
-		}
-		return status;
-	}
-
-#ifdef __cplusplus
-}
-#endif

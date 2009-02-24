@@ -17,12 +17,15 @@
  */
 
 
-#include <ServiceSkeleton.h>
+
 #include <stdio.h>
 #include <axutil_env.h>
 #include "Version.h"
+#include <ServiceSkeleton.h>
 
 using namespace wso2wsf;
+
+WSF_SERVICE_INIT(Version)
 
 OMElement* Version::invoke(OMElement *ele, MessageContext *msgCtx)
 {
@@ -36,39 +39,3 @@ OMElement* Version::onFault(OMElement *ele)
 {
 	return NULL;
 }
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-WSF_EXTERN int
-axis2_get_instance(
-				   ServiceSkeleton ** inst,
-				   const axutil_env_t * env)
-{
-	*inst = new Version();
-	if (!(*inst))
-	{
-		return AXIS2_FAILURE;
-	}
-
-	return AXIS2_SUCCESS;
-}
-
-WSF_EXTERN int
-axis2_remove_instance(
-axis2_svc_skeleton_t * inst,
-const axutil_env_t * env)
-{
-	axis2_status_t status = AXIS2_FAILURE;
-	if (inst)
-	{
-		status = AXIS2_SVC_SKELETON_FREE(inst, env);
-	}
-	return status;
-}
-
-#ifdef __cplusplus
-}
-#endif
