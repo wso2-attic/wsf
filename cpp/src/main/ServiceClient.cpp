@@ -168,6 +168,8 @@ ServiceClient::~ServiceClient()
     _last_response_soap_envelope = NULL;
     _options = NULL;
     _policy = NULL;
+
+    initializeClient();
 }
 
 /** @brief ServiceClient
@@ -185,6 +187,8 @@ ServiceClient::~ServiceClient()
     _last_response_soap_envelope = NULL;
     _options = NULL;
     _policy = NULL;
+
+    initializeClient();
 }
 
 /** @brief ServiceClient
@@ -202,13 +206,15 @@ ServiceClient::~ServiceClient()
     _last_response_soap_envelope = NULL;
     _options = NULL;
     _policy = NULL;
+
+    initializeClient();
 }
 
 /** @brief InitializeClient
   *
   * @todo: document this function
   */
-void ServiceClient::initializeClient(std::string log_file, axutil_log_levels_t log_level) throw (AxisFault)
+bool ServiceClient::initializeClient()
 {
 	if (_conf_ctx)
 	{
@@ -220,29 +226,35 @@ void ServiceClient::initializeClient(std::string log_file, axutil_log_levels_t l
 		_wsf_service_client = axis2_svc_client_create_with_conf_ctx_and_svc(getEnv(), _repo_home.c_str(),
 			const_cast<axis2_conf_ctx_t *>(_conf_ctx), NULL);
 	}
-	_wsf_service_client = axis2_svc_client_create(getEnv(), _repo_home.c_str());
+    else
+    {
+	    _wsf_service_client = axis2_svc_client_create(getEnv(), _repo_home.c_str());
+    }
+
 	if (!_wsf_service_client)
 	{
-		throw AxisFault(CREATION_OF_SERVICE_CLIENT_FAILED);
+		return false;
 	}
+
 	_options = new Options();
 	if (!_options->_wsf_options)
 	{
 		delete _options;
-		throw AxisFault(CREATION_OF_SERVICE_CLIENT_OPTIONS_FAILED);
+		return false;
 	}
 	else
 	{
 		_options->setXMLParserReset(true);
 		_options->setUseSeparateListener(false);
 		_options->setTo(_endpoint_address);
-		axis2_status_t status = axis2_svc_client_set_options(_wsf_service_client, getEnv(), _options->_wsf_options);
-		if (status != AXIS2_TRUE)
+		axis2_status_t status = axis2_svc_client_set_options(
+            _wsf_service_client, getEnv(), _options->_wsf_options);
+		if (status != AXIS2_SUCCESS)
 		{
-			throw AxisFault(SETTING_UP_SERVICE_CLIENT_OPTIONS_FAILED);
+			return false;
 		}
 	}
-	_last_soap_fault = NULL;
+    return true;
 }
 
 /** @brief setOptions
@@ -261,7 +273,7 @@ bool ServiceClient::setOptions(Options * options)
         _options = options;
         status = axis2_svc_client_set_options(_wsf_service_client, getEnv(), _options->_wsf_options);
     }
-    return (status == AXIS2_TRUE);
+    return (status == AXIS2_SUCCESS);
 }
 
 /** @brief getLastResponseSoapEnvelopeString
@@ -667,7 +679,7 @@ bool ServiceClient::setPolicy(NeethiPolicy * policy)
   *
   * @todo: document this function
   */
-void ServiceClient::removeAllHeaders() throw (AxisFault)
+void ServiceClient::removeAllHeaders()
 {
     axis2_svc_client_remove_all_headers(_wsf_service_client, getEnv());
 }

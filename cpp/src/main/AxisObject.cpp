@@ -26,7 +26,6 @@ using namespace wso2wsf;
   */
  AxisObject::~AxisObject()
 {
-	
 }
 
 /** @brief enableLogging
@@ -35,34 +34,14 @@ using namespace wso2wsf;
   */
 void AxisObject::enableLogging(bool enable)
 {
-	axutil_env_t *_env = NULL;
-	_env = (axutil_env_t*)Process::getEnv();
+	axutil_env_t *_env = (axutil_env_t*)Process::getEnv();
     if (enable)
     {
-		
         axutil_env_enable_log(_env, AXIS2_TRUE);
     }
     else
     {
         axutil_env_enable_log(_env, AXIS2_FALSE);
-    }
-}
-
-/** @brief initialize
-  *
-  * @todo: document this function
-  */
-void AxisObject::initialize()
-{
-	const axutil_env_t* env = NULL;
-	/** Initialize the Process Object which keeps the system thread safe */
-	Process::getInstance();
-
-	env = Process::getEnv();
-	if(!env)
-	{   
-		env = axutil_env_create_all(Process::_logFileName.c_str(), Process::_logLevel);
-		Process::setEnv(env);
     }
 }
 
@@ -72,7 +51,14 @@ void AxisObject::initialize()
   */
  AxisObject::AxisObject()
 {
-	initialize();
+	/** Initialize the Process Object which keeps the system thread safe */
+	Process::getInstance();
+
+	if(!Process::getEnv())
+	{
+		axutil_env_t* env = axutil_env_create_all(Process::_logFileName.c_str(), Process::_logLevel);
+		Process::setEnv(env);
+    }
 }
 
 /** @brief getEnv

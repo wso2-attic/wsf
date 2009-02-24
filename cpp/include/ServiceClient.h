@@ -124,6 +124,12 @@ namespace wso2wsf
          */
         const axis2_conf_ctx_t * _conf_ctx;
 
+        /**
+         * initializes service client.
+         * @return boolean result of the operation
+         */
+        bool WSF_CALL initializeClient();
+
     protected:
         /**
          * Sets the options to be used by service client.
@@ -157,16 +163,6 @@ namespace wso2wsf
          * destructor frees resources.
          */
         WSF_EXTERN virtual WSF_CALL ~ServiceClient();
-
-        /**
-         * initializes service client.
-         * @param log_file name of the log file. If NULL, a default log would be created.
-         * @param log_level log level to be used. If not valid, debug would be
-         * used as the default log level.
-         * @exception AxisFault an exception is thrown if something goes wrong
-         * while creating a config context.
-         */
-        WSF_EXTERN void WSF_CALL initializeClient(std::string log_file, axutil_log_levels_t log_level) throw (AxisFault);
 
         /**
          * Method to retrieve the last SOAP fault that resulted after invoking
@@ -217,7 +213,7 @@ namespace wso2wsf
          * @exception AxisFault an exception is thrown if something goes wrong
          * while removing headers.
          */
-        WSF_EXTERN void WSF_CALL removeAllHeaders() throw (AxisFault);
+        WSF_EXTERN void WSF_CALL removeAllHeaders();
 
         /**
          * Set the given policy object to the description hierarchy.

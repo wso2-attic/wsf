@@ -42,21 +42,9 @@ namespace wso2wsf
      * @brief class AxisObject This creates a base object that serves as the
      * building block for other components of the Axis Framework.
      */
-	class Process;
 
     class AxisObject
     {
-    private:
-
-		/**
-		* Method for initializing the Axis Object.
-		* @param log_file name of the log file. If NULL, a default log would be created.
-		* @param log_level log level to be used. If not valid, debug would be
-		* used as the default log level.
-		* @exception AxisFault an exception is thrown if something goes wrong
-		* while setting up the environment.
-		*/
-		void WSF_CALL initialize();
 
     protected:
         /**
