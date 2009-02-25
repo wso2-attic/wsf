@@ -17,10 +17,6 @@ libwso2_wsf_la_SOURCES= AxisFault.cpp \
 			Process.cpp \
 			WSRESTClient.cpp \
 			NeethiPolicy.cpp \
-			NeethiException.cpp \
-			NeethiObject.cpp \
-			OMException.cpp \
-			OMObject.cpp \
 			MessageContext.cpp
 
 libwso2_wsf_la_LIBADD =	../../wsf_c/axis2c/src/core/engine/libaxis2_engine.la \
