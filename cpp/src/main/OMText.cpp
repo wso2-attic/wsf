@@ -109,10 +109,6 @@ OMNode * OMText::detach()
     }
 }
 
-/** @brief setContentId
-  *
-  * @todo: document this function
-  */
 bool OMText::setContentId(std::string content_id)
 {
     axis2_status_t status =
@@ -120,19 +116,11 @@ bool OMText::setContentId(std::string content_id)
     return (status == AXIS2_SUCCESS);
 }
 
-/** @brief getContentId
-  *
-  * @todo: document this function
-  */
 string OMText::getContentId()
 {
     return axiom_text_get_content_id(_wsf_axiom_text, getEnv());
 }
 
-/** @brief getDataHandler
-  *
-  * @todo: document this function
-  */
 OMDataHandler * OMText::getDataHandler()
 {
     if (_data_handler != NULL)
@@ -145,46 +133,26 @@ OMDataHandler * OMText::getDataHandler()
     return _data_handler;
 }
 
-/** @brief isBinary
-  *
-  * @todo: document this function
-  */
 void OMText::isBinary(bool is_binary)
 {
     axiom_text_set_is_binary(_wsf_axiom_text, getEnv(), is_binary ? AXIS2_TRUE : AXIS2_FALSE);
 }
 
-/** @brief optimize
-  *
-  * @todo: document this function
-  */
 void OMText::optimize(bool optimize)
 {
     axiom_text_set_optimize(_wsf_axiom_text, getEnv(), optimize ? AXIS2_TRUE : AXIS2_FALSE);
 }
 
-/** @brief getText
-  *
-  * @todo: document this function
-  */
 string OMText::getText()
 {
     return axiom_text_get_text(_wsf_axiom_text, getEnv());
 }
 
-/** @brief getValue
-  *
-  * @todo: document this function
-  */
 string OMText::getValue()
 {
     return axiom_text_get_value(_wsf_axiom_text, getEnv());
 }
 
-/** @brief setValue
-  *
-  * @todo: document this function
-  */
 bool OMText::setValue(std::string value)
 {
     axis2_status_t status =
@@ -192,11 +160,7 @@ bool OMText::setValue(std::string value)
     return (status == AXIS2_SUCCESS);
 }
 
-/** @brief ~OMText
-  *
-  * @todo: document this function
-  */
- OMText::~OMText()
+OMText::~OMText()
 {
     if (_data_handler)
     {
@@ -205,11 +169,7 @@ bool OMText::setValue(std::string value)
     }
 }
 
-/** @brief OMText
-  *
-  * @todo: document this function
-  */
- OMText::OMText(OMNode * parent, axiom_node_t * node)
+OMText::OMText(OMNode * parent, axiom_node_t * node)
 {
     _wsf_axiom_text = NULL;
     _data_handler = NULL;
@@ -236,11 +196,7 @@ bool OMText::setValue(std::string value)
     }
 }
 
-/** @brief OMText
-  *
-  * @todo: document this function
-  */
- OMText::OMText()
+OMText::OMText()
 {
     axiom_node_t * node;
     
@@ -254,11 +210,7 @@ bool OMText::setValue(std::string value)
     }
 }
 
-/** @brief OMText
-  *
-  * @todo: document this function
-  */
- OMText::OMText(OMDataHandler * data_handler)
+OMText::OMText(OMDataHandler * data_handler)
 {
     axiom_node_t * node;
     axiom_data_handler_t * data_handler_c = NULL;
@@ -277,11 +229,7 @@ bool OMText::setValue(std::string value)
     }
 }
 
-/** @brief OMText
-  *
-  * @todo: document this function
-  */
- OMText::OMText(OMNode * parent, OMDataHandler * data_handler)
+OMText::OMText(OMNode * parent, OMDataHandler * data_handler)
 {
     axiom_node_t * node;
     axiom_node_t * parent_c = NULL;
@@ -315,11 +263,7 @@ bool OMText::setValue(std::string value)
     }
 }
 
-/** @brief OMText
-  *
-  * @todo: document this function
-  */
- OMText::OMText(std::string value)
+OMText::OMText(std::string value)
 {
     axiom_node_t * node;
 
@@ -340,11 +284,7 @@ bool OMText::setValue(std::string value)
     }
 }
 
-/** @brief OMText
-  *
-  * @todo: document this function
-  */
- OMText::OMText(OMNode * parent, std::string value)
+OMText::OMText(OMNode * parent, std::string value)
 {
     axiom_node_t * node;
     axiom_node_t * parent_c = NULL;
@@ -380,10 +320,6 @@ bool OMText::setValue(std::string value)
     }
 }
 
-/** @brief nodeType
-  *
-  * @todo: document this function
-  */
 axiom_types_t OMText::nodeType()
 {
     return AXIOM_TEXT;

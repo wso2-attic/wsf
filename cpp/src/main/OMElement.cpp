@@ -155,19 +155,17 @@ OMElement::OMElement(OMNode * parent, axiom_node_t * node)
 
 OMElement::~OMElement()
 {
-    if (_added_attributes.size() > 0)
+    for(vector<OMAttribute *>::iterator ite = _added_attributes.begin(); 
+        ite != _added_attributes.end(); ++ite)
     {
-        for (vector<OMAttribute *>::iterator i = _added_attributes.begin();
-            i < _added_attributes.end(); ++i)
+        if (getAxiomNode())
         {
-            if (getAxiomNode())
-            {
-                (*i)->setAxiomAttribute(NULL);
-            }
-            delete *i;
+            (*ite)->setAxiomAttribute(NULL);
         }
-        _added_attributes.clear();
+        delete *ite;
     }
+    _added_attributes.clear();
+   
     if (_default_namespace)
     {
         if (getAxiomNode())
@@ -180,35 +178,28 @@ OMElement::~OMElement()
     {
         delete _namespace;
     }
-    if (_added_namespaces.size() > 0)
+   for (vector<OMNamespace *>::iterator ite = _added_namespaces.begin();
+            ite != _added_namespaces.end(); ++ite)
     {
-        for (vector<OMNamespace *>::iterator i = _added_namespaces.begin();
-            i < _added_namespaces.end(); i++)
+        if (getAxiomNode())
         {
-            if (getAxiomNode())
-            {
-                (*i)->setAxiomNamespace(NULL);
-            }
-            delete *i;
+            (*ite)->setAxiomNamespace(NULL);
         }
-        _added_namespaces.clear();
+        delete *ite;
     }
+    _added_namespaces.clear();
 }
 
-/** @brief findNamespace
-  *
-  * @todo: document this function
-  */
 OMNamespace * OMElement::findNamespace(std::string uri, std::string prefix)
 {
-    axiom_namespace_t * ns =
-        axiom_element_find_namespace(_wsf_axiom_element, getEnv(), getAxiomNode(), uri.c_str(), prefix.c_str());
-    if (!ns)
+    axiom_namespace_t * ns =axiom_element_find_namespace(
+        _wsf_axiom_element, getEnv(), getAxiomNode(), uri.c_str(), prefix.c_str());
+    if(!ns)
     {
         return NULL;
     }
     for (vector<OMNamespace *>::iterator i = _added_namespaces.begin();
-        i < _added_namespaces.end(); i++)
+        i != _added_namespaces.end(); ++i)
     {
         /* Compare Prefix first as it is generally smaller in size */
         if ((strcmp((*i)->getPrefix().c_str(), prefix.c_str()) == 0)
@@ -222,10 +213,6 @@ OMNamespace * OMElement::findNamespace(std::string uri, std::string prefix)
     return ns_cpp;
 }
 
-/** @brief getAttribute
-  *
-  * @todo: document this function
-  */
 OMAttribute * OMElement::getAttribute(std::string name, OMNamespace * ns)
 {
     axutil_qname_t * qn = NULL;
@@ -248,7 +235,7 @@ OMAttribute * OMElement::getAttribute(std::string name, OMNamespace * ns)
     {
         /* Compare ns first as it is smaller in size */
         if (((*i)->getNamespace() == ns)
-            && (strcmp((*i)->getName().c_str(), name.c_str()) == 0))
+            && ((*i)->getName() == name))
         {
             return *i;
         }
@@ -258,19 +245,11 @@ OMAttribute * OMElement::getAttribute(std::string name, OMNamespace * ns)
     return at_cpp;
 }
 
-/** @brief getAttribute
-  *
-  * @todo: document this function
-  */
 OMAttribute * OMElement::getAttribute(std::string name)
 {
     return getAttribute(name, NULL);
 }
 
-/** @brief addAttribute
-  *
-  * @todo: document this function
-  */
 bool OMElement::addAttribute(OMAttribute * attribute)
 {
     axis2_status_t status = axiom_element_add_attribute(_wsf_axiom_element, getEnv(),
@@ -283,13 +262,8 @@ bool OMElement::addAttribute(OMAttribute * attribute)
     return false;
 }
 
-/** @brief declareDefaultNamespace
-  *
-  * @todo: document this function
-  */
 bool OMElement::declareDefaultNamespace(std::string uri)
 {
-// TODO (senaka#4#): report bug 2 axis and remove const_cast
     axiom_namespace_t * ns =
         axiom_element_declare_default_namespace(_wsf_axiom_element, getEnv(), const_cast<char *>(uri.c_str()));
     if (ns)
@@ -308,19 +282,11 @@ bool OMElement::declareDefaultNamespace(std::string uri)
 
 
 
-/** @brief nodeType
-  *
-  * @todo: document this function
-  */
 axiom_types_t OMElement::nodeType()
 {
     return AXIOM_ELEMENT;
 }
 
-/** @brief getNextSibling
-  *
-  * @todo: document this function
-  */
 OMNode * OMElement::getPreviousSibling()
 {
     OMElement * dp;
@@ -349,10 +315,6 @@ OMNode * OMElement::getPreviousSibling()
     return *(i - 1);
 }
 
-/** @brief getPreviousSibling
-  *jruby
-  * @todo: document this function
-  */
 OMNode * OMElement::getNextSibling()
 {
     OMElement * dp;
@@ -381,10 +343,6 @@ OMNode * OMElement::getNextSibling()
     return *(i + 1);
 }
 
-/** @brief getLastChild
-  *
-  * @todo: document this function
-  */
 OMNode * OMElement::getLastChild()
 {
     if (_child_nodes.size() <= 0)
@@ -394,10 +352,6 @@ OMNode * OMElement::getLastChild()
     return *(_child_nodes.end() - 1);
 }
 
-/** @brief getFirstElement
-  *
-  * @todo: document this function
-  */
 OMElement * OMElement::getFirstElement()
 {
     for (vector<OMNode *>::iterator i = _child_nodes.begin();
@@ -414,10 +368,6 @@ OMElement * OMElement::getFirstElement()
     return NULL;
 }
 
-/** @brief getFirstChild
-  *
-  * @todo: document this function
-  */
 OMNode * OMElement::getFirstChild()
 {
     if (_child_nodes.size() <= 0)
@@ -427,19 +377,11 @@ OMNode * OMElement::getFirstChild()
     return *_child_nodes.begin();
 }
 
-/** @brief getParent
-  *
-  * @todo: document this function
-  */
 OMNode * OMElement::getParent()
 {
     return _parent;
 }
 
-/** @brief getNamespace
-  *
-  * @todo: document this function
-  */
 OMNamespace * OMElement::getNamespace(bool is_default)
 {
     if (is_default)
@@ -472,17 +414,13 @@ OMNamespace * OMElement::getNamespace(bool is_default)
     return _namespace;
 }
 
-/** @brief setNamespace
-  *
-  * @todo: document this function
-  */
 bool OMElement::setNamespace(OMNamespace * ns, bool no_find)
 {
     axis2_status_t status = AXIS2_FAILURE;
     if (no_find)
     {
-        status =
-            axiom_element_set_namespace_with_no_find_in_current_scope(_wsf_axiom_element, getEnv(), ns->getAxiomNamespace());
+        status = axiom_element_set_namespace_with_no_find_in_current_scope(
+            _wsf_axiom_element, getEnv(), ns->getAxiomNamespace());
         if (status == AXIS2_SUCCESS)
         {
             _namespace = ns;
@@ -491,8 +429,8 @@ bool OMElement::setNamespace(OMNamespace * ns, bool no_find)
     }
     else
     {
-        status =
-            axiom_element_declare_namespace(_wsf_axiom_element, getEnv(), getAxiomNode(), ns->getAxiomNamespace());
+        status = axiom_element_declare_namespace(
+            _wsf_axiom_element, getEnv(), getAxiomNode(), ns->getAxiomNamespace());
     }
     if (status == AXIS2_SUCCESS)
     {
@@ -502,11 +440,6 @@ bool OMElement::setNamespace(OMNamespace * ns, bool no_find)
     return false;
 }
 
-
-/** @brief detach
-  *
-  * @todo: document this function
-  */
 OMNode * OMElement::detach()
 {
     axiom_node_t * node = NULL;
@@ -533,10 +466,6 @@ OMNode * OMElement::detach()
     }
 }
 
-/** @brief freeTree
-  *
-  * @todo: document this function
-  */
 void OMElement::freeTree()
 {
     if (_parent)
@@ -553,10 +482,6 @@ void OMElement::freeTree()
     setChilderen(empty_child_node_array);
 }
 
-/** @brief insertSiblingAfter
-  *
-  * @todo: document this function
-  */
 bool OMElement::insertSiblingAfter(OMNode * to_insert)
 {
     for (vector<OMNode *>::iterator i = _child_nodes.begin();
@@ -571,10 +496,6 @@ bool OMElement::insertSiblingAfter(OMNode * to_insert)
     return false;
 }
 
-/** @brief insertSiblingBefore
-  *
-  * @todo: document this function
-  */
 bool OMElement::insertSiblingBefore(OMNode * to_insert)
 {
     for (vector<OMNode *>::iterator i = _child_nodes.begin();
@@ -589,10 +510,6 @@ bool OMElement::insertSiblingBefore(OMNode * to_insert)
     return false;
 }
 
-/** @brief build
-  *
-  * @todo: document this function
-  */
 bool OMElement::build()
 {
     axis2_status_t status =
@@ -600,10 +517,6 @@ bool OMElement::build()
     return (status == AXIS2_SUCCESS);
 }
 
-/** @brief getChildElement
-  *
-  * @todo: document this function
-  */
 OMElement * OMElement::getChildElement(std::string localname, OMNamespace * ns)
 {
     for (vector<OMNode *>::iterator i = _child_nodes.begin();
@@ -626,10 +539,6 @@ OMElement * OMElement::getChildElement(std::string localname, OMNamespace * ns)
 
 
 
-/** @brief addChild
-  *
-  * @todo: document this function
-  */
 bool OMElement::addChild(OMNode * child)
 {
     for (vector<OMNode *>::iterator i = _child_nodes.begin();
@@ -663,10 +572,6 @@ bool OMElement::addChild(OMNode * child)
     return false;
 }
 
-/** @brief addChild
-  *
-  * @todo: document this function
-  */
 bool OMElement::removeChildLocal(OMNode * child)
 {
     for (vector<OMNode *>::iterator i = _child_nodes.begin();
@@ -689,28 +594,16 @@ bool OMElement::removeChildLocal(OMNode * child)
     return false;
 }
 
-/** @brief addChild
-  *
-  * @todo: document this function
-  */
 void OMElement::addChildLocal(OMNode * child)
 {
     _child_nodes.push_back(child);
 }
 
-/** @brief getText
-  *
-  * @todo: document this function
-  */
 string OMElement::getText()
 {
     return axiom_element_get_text(_wsf_axiom_element, getEnv(), getAxiomNode());
 }
 
-/** @brief setText
-  *
-  * @todo: document this function
-  */
 bool OMElement::setText(std::string text)
 {
     axis2_status_t status =
@@ -718,19 +611,11 @@ bool OMElement::setText(std::string text)
     return (status == AXIS2_SUCCESS);
 }
 
-/** @brief getLocalname
-  *
-  * @todo: document this function
-  */
 string OMElement::getLocalname()
 {
     return axiom_element_get_localname(_wsf_axiom_element, getEnv());
 }
 
-/** @brief removeAttribute
-  *
-  * @todo: document this function
-  */
 bool OMElement::removeAttribute(OMAttribute * attribute)
 {
     for (vector<OMAttribute *>::iterator i = _added_attributes.begin();
@@ -753,19 +638,11 @@ bool OMElement::removeAttribute(OMAttribute * attribute)
     return false;
 }
 
-/** @brief getAttributeValue
-  *
-  * @todo: document this function
-  */
 string OMElement::getAttributeValue(std::string name, OMNamespace * ns)
 {
     return getAttribute(name, ns)->getValue();
 }
 
-/** @brief getAttributeValue
-  *
-  * @todo: document this function
-  */
 string OMElement::getAttributeValue(std::string name)
 {
     return getAttributeValue(name, NULL);
@@ -793,7 +670,6 @@ void OMElement::setChilderen(std::vector<OMNode *> children)
 
             (*i)->setAxiomNode(NULL);
             delete (*i);
-            continue;
         }
         _child_nodes.clear();
     }

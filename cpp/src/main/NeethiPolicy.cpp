@@ -20,11 +20,7 @@
 using namespace std;
 using namespace wso2wsf;
 
-/** @brief ~NeethiPolicy
-  *
-  * @todo: document this function
-  */
- NeethiPolicy::~NeethiPolicy()
+NeethiPolicy::~NeethiPolicy()
  {
 	 if ( _wsf_neethi_policy)
 	 {
@@ -32,96 +28,54 @@ using namespace wso2wsf;
 	 }
  }
 
-/** @brief NeethiPolicy
-  *
-  * @todo: document this function
-  */
- NeethiPolicy::NeethiPolicy(OMElement * element) throw (NeethiException)
+NeethiPolicy::NeethiPolicy(OMElement * element)
 {
     _wsf_neethi_policy = NULL;
     if (element && (element->getAxiomNode()))
     {
         _wsf_neethi_policy = neethi_util_create_policy_from_om(getEnv(), element->getAxiomNode());
     }
-    if (!_wsf_neethi_policy)
-    {
-        throw NeethiException(CREATION_OF_NEETHI_POLICY_OBJECT_FAILED);
-    }
 }
 
-/** @brief NeethiPolicy
-  *
-  * @todo: document this function
-  */
- NeethiPolicy::NeethiPolicy(std::string file_name) throw (NeethiException)
+NeethiPolicy::NeethiPolicy(std::string file_name)
 {
     _wsf_neethi_policy = NULL;
     if (file_name != "")
     {
-// TODO (senaka#4#): report bug 2 axis and remove const_cast
-        _wsf_neethi_policy = neethi_util_create_policy_from_file(getEnv(), const_cast<char *>(file_name.c_str()));
-    }
-    if (!_wsf_neethi_policy)
-    {
-        throw NeethiException(CREATION_OF_NEETHI_POLICY_OBJECT_FAILED);
+        _wsf_neethi_policy = neethi_util_create_policy_from_file(
+            getEnv(), const_cast<char *>(file_name.c_str()));
     }
 }
 
-/** @brief setNeethiPolicy
-  *
-  * @todo: document this function
-  */
 void NeethiPolicy::setNeethiPolicy(neethi_policy_t * policy)
 {
     _wsf_neethi_policy = policy;
 }
 
-/** @brief getNeethiPolicy
-  *
-  * @todo: document this function
-  */
 neethi_policy_t * NeethiPolicy::getNeethiPolicy()
 {
     return _wsf_neethi_policy;
 }
 
-/** @brief setName
-  *
-  * @todo: document this function
-  */
 bool NeethiPolicy::setName(std::string name)
 {
-// TODO (senaka#4#): report bug 2 axis and remove const_cast
     axis2_status_t status =
         neethi_policy_set_name(_wsf_neethi_policy, getEnv(), const_cast<char *>(name.c_str()));
     return (status == AXIS2_SUCCESS);
 }
 
-/** @brief getName
-  *
-  * @todo: document this function
-  */
 std::string NeethiPolicy::getName()
 {
     return neethi_policy_get_name(_wsf_neethi_policy, getEnv());
 }
 
-/** @brief setId
-  *
-  * @todo: document this function
-  */
 bool NeethiPolicy::setId(std::string id)
 {
-// TODO (senaka#4#): report bug 2 axis and remove const_cast
     axis2_status_t status =
         neethi_policy_set_id(_wsf_neethi_policy, getEnv(), const_cast<char *>(id.c_str()));
     return (status == AXIS2_SUCCESS);
 }
 
-/** @brief getId
-  *
-  * @todo: document this function
-  */
 std::string NeethiPolicy::getId()
 {
     return neethi_policy_get_id(_wsf_neethi_policy, getEnv());

@@ -76,22 +76,13 @@ int main(int argc, char *argv[])
 	
 	/*creating apolicy from the the file
 	*/
-	try
-	{
 		cout << "Create policy from the file" << policy_file <<endl;
 		policy = new NeethiPolicy(policy_file);
 		if (policy)
 		{	
 			sc->setPolicy(policy);
 		}
-	}
-	catch (NeethiException & e)
-	{
-		cout << endl << "Error: " << e << endl; 
 
-		getchar();
-		return 0;
-	}
 	
 	
 	

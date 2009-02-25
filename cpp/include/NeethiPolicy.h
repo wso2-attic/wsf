@@ -18,11 +18,10 @@
 #define NEETHIPOLICY_H
 
 #include <WSFDefines.h>
-#include <NeethiObject.h>
+#include <AxisObject.h>
 #include <OMElement.h>
 #include <neethi_policy.h>
 #include <neethi_util.h>
-#include <NeethiException.h>
 
 /**
  * @file NeethiPolicy.h
@@ -69,18 +68,14 @@ namespace wso2wsf
         /**
          * Creates a neethi_policy struct.
          * @param file_name file name.
-         * @exception NeethiException an exception is thrown if something goes wrong
-         * while creating the object.
          */
-        WSF_EXTERN WSF_CALL NeethiPolicy(std::string file_name) throw (NeethiException);
+        WSF_EXTERN WSF_CALL NeethiPolicy(std::string file_name);
 
         /**
          * Creates a neethi_policy struct.
          * @param element OM element which is the root of WS-Policy XML.
-         * @exception NeethiException an exception is thrown if something goes wrong
-         * while creating the object.
          */
-        WSF_EXTERN WSF_CALL NeethiPolicy(OMElement * element) throw (NeethiException);
+        WSF_EXTERN WSF_CALL NeethiPolicy(OMElement * element);
 
         /**
          * destructor that frees resources.
