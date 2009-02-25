@@ -422,9 +422,9 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
         }
         if (!node)
         {
-            if (payload->getNamespace(false))
+            if (payload->getNamespaceLocal(false))
             {
-                (payload->getNamespace(false))->setAxiomNamespace(NULL);
+                (payload->getNamespaceLocal(false))->setAxiomNamespace(NULL);
             }
             payload->setAxiomNode(NULL);
             throw AxisFault(SEND_RECIEVE_OPERATION_FAILED);

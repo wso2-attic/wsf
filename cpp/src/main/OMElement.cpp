@@ -414,6 +414,15 @@ OMNamespace * OMElement::getNamespace(bool is_default)
     return _namespace;
 }
 
+OMNamespace * OMElement::getNamespaceLocal(bool is_default)
+{
+    if (is_default)
+    {
+        return _default_namespace;
+    }
+    return _namespace;
+}
+
 bool OMElement::setNamespace(OMNamespace * ns, bool no_find)
 {
     axis2_status_t status = AXIS2_FAILURE;

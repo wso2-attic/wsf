@@ -212,12 +212,22 @@ namespace wso2wsf
         WSF_EXTERN bool WSF_CALL setNamespace(OMNamespace * ns, bool no_find);
 
         /**
-         * get the namespace of om_element.
+         * get the OMNamespace of om_element. If the object is not yet built, it will be built and 
+         * returned. 
          * @param is_default whether the retrieved namespace is default.
          * @return pointer to Namespace. NULL if there is no namespace.
          * associated with the element.
          */
         WSF_EXTERN OMNamespace * WSF_CALL getNamespace(bool is_default);
+
+        /**
+         * get the existing OMNamespace of om_element. If this is not yet build, NULL will be 
+         * returned
+         * @param is_default whether the retrieved namespace is default.
+         * @return pointer to Namespace. NULL if there is no namespace.
+         * associated with the element.
+         */
+        WSF_EXTERN OMNamespace * WSF_CALL getNamespaceLocal(bool is_default);
 
         /**
          * declared a default namespace explicitly.
