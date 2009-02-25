@@ -44,7 +44,7 @@ namespace wso2wsf
      * provide WS-Policy information. This is a wrapper to the XML policy
      * advertisement used in security, QoS etc.
      */
-    class NeethiPolicy : public NeethiObject
+    class NeethiPolicy : public AxisObject
     {
     private:
         /**

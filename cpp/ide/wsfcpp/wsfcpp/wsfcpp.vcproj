@@ -296,10 +296,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\NeethiObject.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\include\NeethiPolicy.h"
 				>
 			</File>

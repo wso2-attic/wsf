@@ -164,49 +164,6 @@ namespace wso2wsf
 		*/
 		WSF_EXTERN bool WSF_CALL setInFaultFlow(bool infault);
 
-		/**
-		* Sets SOAP envelope. The fact that if it is the request SOAP envelope
-		* or that of response depends on the current status represented by 
-		* message context.
-		* @param 
-		* assumes ownership of SOAP envelope
-		* @return true on success, else false
-		WSF_EXTERN axis2_status_t WSF_CALL
-			axis2_msg_ctx_set_soap_envelope(
-			axis2_msg_ctx_t * msg_ctx,
-			const axutil_env_t * env,
-		struct axiom_soap_envelope *soap_envelope);
-		*/
-
-		/**
-		* Sets response SOAP envelope.
-		*
-		
-		* @param soap_envelope pointer to SOAP envelope, message context
-		* assumes ownership of SOAP envelope
-		* @return true on success, else false
-		WSF_EXTERN axis2_status_t WSF_CALL
-			axis2_msg_ctx_set_response_soap_envelope(
-			axis2_msg_ctx_t * msg_ctx,
-			const axutil_env_t * env,
-		struct axiom_soap_envelope *soap_envelope);
-		*/
-
-		/**
-		* Sets fault SOAP envelope.
-		*
-		
-		* @param soap_envelope pointer to SOAP envelope, message context
-		* assumes ownership of SOAP envelope
-		* @return true on success, else false
-		
-		WSF_EXTERN axis2_status_t WSF_CALL
-			axis2_msg_ctx_set_fault_soap_envelope(
-			axis2_msg_ctx_t * msg_ctx,
-			const axutil_env_t * env,
-		struct axiom_soap_envelope *soap_envelope);
-		*/
-	
     	/**
 		* Sets WS-Addressing reply to address indicating the location to which
 		* the reply would be sent.
@@ -256,8 +213,6 @@ namespace wso2wsf
 			
 		/**
 		* Sets WS-Addressing action. 
-		*
-		
 		* @param action_uri WSA action URI string
 		* @return true on success, else false
 		*/
@@ -265,16 +220,12 @@ namespace wso2wsf
 
 		/**
 		* Gets WS-Addressing action.
-		*
-		
 		* @return pointer to WSA action URI string
 		*/
 		WSF_EXTERN std::string WSF_CALL getWSAAction();
 
 		/**
 		* Sets WS-Addressing message ID.
-		*
-		
 		* @param message_id pointer to message ID string
 		* @return true on success, else false
 		*/
@@ -282,8 +233,6 @@ namespace wso2wsf
 
 		/**
 		* Gets WS-Addressing message ID. 
-		*
-		
 		* @return WSA message ID string
 		*/
 		WSF_EXTERN std::string WSF_CALL getWSAMessageId();
@@ -292,14 +241,12 @@ namespace wso2wsf
 		* Gets the bool value indicating the paused status. It is possible 
 		* to pause the engine invocation by any handler. By calling this method
 		* one can find out if some handler has paused the invocation.
-		*
 		* @return true if message context is paused, else false
 		*/
 		WSF_EXTERN bool WSF_CALL getPaused();
 
 		/**
 		* Sets the bool value indicating the paused status of invocation.
-		*
 		* @param paused paused
 		* @return true on success, else false
 		*/
@@ -309,8 +256,6 @@ namespace wso2wsf
 		* Gets the bool value indicating the keep alive status. It is possible 
 		* to keep alive the message context by any handler. By calling this method
 		* one can see whether it is possible to clean the message context.
-		*
-		
 		* @return true if message context is keep alive, else false
 		*/
 
@@ -327,14 +272,12 @@ namespace wso2wsf
 
 		/**
 		* Gets the bool value indicating the output written status. 
-		*
 		* @return true if output is written, else false
 		*/
 		WSF_EXTERN bool WSF_CALL getOutputWritten();
 
 		/**
 		* Sets the bool value indicating the output written status. 
-		*
 		* @param output_written true if output is written, else false
 		* @return true on success, else false
 		*/
@@ -343,8 +286,6 @@ namespace wso2wsf
 		/**
 		* Gets the HTTP Method that relates to the service that is 
 		* related to the message context.
-		*
-		
 		* @return HTTP Method string, returns a reference,
 		* not a cloned copy
 		*/
@@ -353,7 +294,6 @@ namespace wso2wsf
 		/**
 		* Sets the HTTP Method that relates to the service that is 
 		* related to the message context.
-		*
 		* @param rest_http_method HTTP Method string, msg_ctx does not assume
 		* ownership of rest_http_method.
 		* @return true on success, else false
@@ -373,49 +313,10 @@ namespace wso2wsf
 		* \n
 		* 3. if the parameter is not found in service or service is NULL search 
 		* in configuration
-		*
-		
 		* @param key parameter key  
 		* @return pointer to parameter struct corresponding to the given key
 		*/
 		WSF_EXTERN Parameter* WSF_CALL getParameter(std::string key);
-
-		/**
-		* Gets parameters related to a named module and a given handler 
-		* description. The order of searching for parameter is as follows:
-		* \n
-		* 1. search in module configuration stored inside corresponding operation 
-		* description if its there
-		* \n
-		* 2. search in corresponding operation if its there
-		* \n
-		* 3. search in module configurations stored inside corresponding 
-		* service description if its there
-		* \n
-		* 4. search in corresponding service description if its there
-		* \n
-		* 5. search in module configurations stored inside configuration
-		* \n
-		* 6. search in configuration for parameters
-		* \n
-		* 7. get the corresponding module and search for the parameters
-		* \n
-		* 8. search in handler description for the parameter
-		
-		
-		* @param key parameter key
-		* @param module_name name of the module
-		* @param handler_desc pointer to handler description
-		* @return pointer to parameter 
-		
-		WSF_EXTERN axutil_param_t *WSF_CALL
-			axis2_msg_ctx_get_module_parameter(
-			const axis2_msg_ctx_t * msg_ctx,
-			const axutil_env_t * env,
-			const axis2_char_t * key,
-			const axis2_char_t * module_name,
-			axis2_handler_desc_t * handler_desc);
-		*/
 
 		/**
 		* Gets property corresponding to the given key.
@@ -799,11 +700,8 @@ namespace wso2wsf
 		*/
 		WSF_EXTERN bool WSF_CALL getAuthFailed();
 
-
 		/**
 		* Sets whether an authentication failure occurred
-		*
-		
 		* @param status expects true if an authentication failure
 		* occurred or false if not
 		* @return true on success, else false
@@ -842,20 +740,6 @@ namespace wso2wsf
 		*/
 		WSF_EXTERN std::string WSF_CALL getAuthType();
 		
-		/*
-		WSF_EXTERN axutil_array_list_t *WSF_CALL
-			axis2_msg_ctx_get_mime_parts(
-			axis2_msg_ctx_t * msg_ctx,
-			const axutil_env_t * env);
-
-
-		WSF_EXTERN void WSF_CALL
-			axis2_msg_ctx_set_mime_parts(
-			axis2_msg_ctx_t * msg_ctx,
-			const axutil_env_t * env,
-			axutil_array_list_t *mime_parts);
-		*/
-
 		/**
 		* Incrementing the msg_ctx ref count. This is necessary when 
 		* prevent freeing msg_ctx through op_client when it is in use 

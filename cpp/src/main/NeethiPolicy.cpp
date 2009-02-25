@@ -28,7 +28,7 @@ using namespace wso2wsf;
  {
 	 if ( _wsf_neethi_policy)
 	 {
-		 delete _wsf_neethi_policy;
+		 neethi_policy_free(_wsf_neethi_policy,getEnv());
 	 }
  }
 
