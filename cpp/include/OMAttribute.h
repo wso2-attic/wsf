@@ -93,27 +93,21 @@ namespace wso2wsf
          * @param name attribute Name.
          * @param value attribute Value.
          * @param ns namespace.
-         * @exception OMException an exception is thrown if something goes wrong
-         * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMAttribute(std::string name, std::string value, OMNamespace * ns) throw (OMException);
+        WSF_EXTERN WSF_CALL OMAttribute(std::string name, std::string value, OMNamespace * ns);
 
         /**
          * Creates a attribute struct.
          * @param name attribute Name.
          * @param value attribute Value.
-         * @exception OMException an exception is thrown if something goes wrong
-         * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMAttribute(std::string name, std::string value) throw (OMException);
+        WSF_EXTERN WSF_CALL OMAttribute(std::string name, std::string value);
 
         /**
          * Copy Constructor.
          * @param attribute attribute to be cloned.
-         * @exception OMException an exception is thrown if something goes wrong
-         * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMAttribute(OMAttribute & attribute) throw (OMException);
+        WSF_EXTERN WSF_CALL OMAttribute(OMAttribute & attribute);
 
         /**
          * destructor that frees resources.
