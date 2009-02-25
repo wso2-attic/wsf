@@ -24,7 +24,6 @@
 #include <axiom_element.h>
 #include <string>
 #include <vector>
-#include <OMException.h>
 
 /**
  * @brief namespace wso2wsf Namespace of WSO2 Web Services Framework.
@@ -77,7 +76,7 @@ namespace wso2wsf
         std::vector<OMNode *> _child_nodes;
 
         /**
-         * @var _wsf_axiom_node private variable holds reference for
+         * @var _wsf_axiom_element private variable holds reference for
          * axiom_element struct.
          */
         axiom_element_t * _wsf_axiom_element;
@@ -97,7 +96,57 @@ namespace wso2wsf
          */
         OMNamespace * WSF_CALL findNamespace(std::string uri, std::string prefix);
 
+        /**
+         * creates and Initialises om element.
+         * @param parent parent element.
+         * @param localname local name of the element. cannot be NULL.
+         * @param ns namespace of the element. can be NULL.
+         */
+        void WSF_CALL init(OMNode * parent, std::string localname, OMNamespace * ns);
+
     public:
+        /**
+         * Creates an om element struct.
+         * @param localname local name of the element. cannot be empty.
+         */
+        WSF_EXTERN WSF_CALL OMElement(std::string localname);
+
+        /**
+         * Creates an om element struct.
+         * @param localname local name of the element. cannot be NULL.
+         * @param ns namespace of the element. can be NULL.
+         */
+        WSF_EXTERN WSF_CALL OMElement(std::string localname, OMNamespace * ns);
+
+        /**
+         * Creates an om element struct.
+         * @param parent parent element.
+         * @param localname local name of the element. cannot be NULL.
+         */
+        WSF_EXTERN WSF_CALL OMElement(OMNode * parent, std::string localname);
+        
+        /**
+         * Creates an om element struct.
+         * @param parent parent element.
+         * @param localname local name of the element. cannot be NULL.
+         * @param ns namespace of the element. can be NULL.
+         */
+        WSF_EXTERN WSF_CALL OMElement(OMNode * parent, std::string localname, OMNamespace * ns);
+
+        /**
+         * Creates an om element struct.
+         * @param parent parent element.
+         * @param node node used to build the element. cannot be NULL.
+         */
+        WSF_EXTERN WSF_CALL OMElement(OMNode * parent, axiom_node_t * node);
+
+        /**
+         * destructor that frees resources. Please note that all associated attributes,
+         * namespaces, and child nodes will also be removed.
+         */
+        virtual WSF_CALL ~OMElement();
+
+
         /**
          * Removes the given node from parent in C++ Level. child should have a parent
          * and the parent must be this node. If you want to remove a child globally, use
@@ -128,56 +177,7 @@ namespace wso2wsf
          */
         WSF_EXTERN virtual void WSF_CALL setChilderen(std::vector<OMNode *> children);
 
-        /**
-         * Creates an om element struct.
-         * @param parent parent element.
-         * @param node node used to build the element. cannot be NULL.
-         * @exception OMException an exception is thrown if something goes wrong
-         * while creating the object.
-         */
-        WSF_EXTERN WSF_CALL OMElement(OMNode * parent, axiom_node_t * node) throw (OMException);
 
-        /**
-         * Creates an om element struct.
-         * @param parent parent element.
-         * @param localname local name of the element. cannot be NULL.
-         * @param ns namespace of the element. can be NULL.
-         * @exception OMException an exception is thrown if something goes wrong
-         * while creating the object.
-         */
-        WSF_EXTERN WSF_CALL OMElement(OMNode * parent, std::string localname, OMNamespace * ns) throw (OMException);
-
-        /**
-         * Creates an om element struct.
-         * @param parent parent element.
-         * @param localname local name of the element. cannot be NULL.
-         * @exception OMException an exception is thrown if something goes wrong
-         * while creating the object.
-         */
-        WSF_EXTERN WSF_CALL OMElement(OMNode * parent, std::string localname) throw (OMException);
-
-        /**
-         * Creates an om element struct.
-         * @param localname local name of the element. cannot be NULL.
-         * @param ns namespace of the element. can be NULL.
-         * @exception OMException an exception is thrown if something goes wrong
-         * while creating the object.
-         */
-        WSF_EXTERN WSF_CALL OMElement(std::string localname, OMNamespace * ns) throw (OMException);
-
-        /**
-         * Creates an om element struct.
-         * @param localname local name of the element. cannot be NULL.
-         * @exception OMException an exception is thrown if something goes wrong
-         * while creating the object.
-         */
-        WSF_EXTERN WSF_CALL OMElement(std::string localname) throw (OMException);
-
-        /**
-         * destructor that frees resources. Please note that all associated attributes,
-         * namespaces, and child nodes will also be removed.
-         */
-        virtual WSF_CALL ~OMElement();
 
         /**
          * Frees an om node and all of its children.

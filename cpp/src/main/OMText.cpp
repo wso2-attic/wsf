@@ -22,10 +22,6 @@
 using namespace std;
 using namespace wso2wsf;
 
-/** @brief getNextSibling
-  *
-  * @todo: document this function
-  */
 OMNode * OMText::getPreviousSibling()
 {
     OMElement * dp;
@@ -54,10 +50,6 @@ OMNode * OMText::getPreviousSibling()
     return *(i - 1);
 }
 
-/** @brief getPreviousSibling
-  *jruby
-  * @todo: document this function
-  */
 OMNode * OMText::getNextSibling()
 {
     OMElement * dp;
@@ -86,19 +78,11 @@ OMNode * OMText::getNextSibling()
     return *(i + 1);
 }
 
-/** @brief getParent
-  *
-  * @todo: document this function
-  */
 OMNode * OMText::getParent()
 {
     return _parent;
 }
 
-/** @brief detach
-  *
-  * @todo: document this function
-  */
 OMNode * OMText::detach()
 {
     axiom_node_t * node = NULL;
@@ -225,7 +209,7 @@ bool OMText::setValue(std::string value)
   *
   * @todo: document this function
   */
- OMText::OMText(OMNode * parent, axiom_node_t * node) throw (OMException)
+ OMText::OMText(OMNode * parent, axiom_node_t * node)
 {
     _wsf_axiom_text = NULL;
     _data_handler = NULL;
@@ -250,17 +234,13 @@ bool OMText::setValue(std::string value)
             {}
         }
     }
-    else
-    {
-        throw OMException(CREATION_OF_OM_TEXT_OBJECT_FAILED);
-    }
 }
 
 /** @brief OMText
   *
   * @todo: document this function
   */
- OMText::OMText() throw (OMException)
+ OMText::OMText()
 {
     axiom_node_t * node;
     
@@ -272,17 +252,13 @@ bool OMText::setValue(std::string value)
         setAxiomNode(node);
         _parent = NULL;
     }
-    else
-    {
-        throw OMException(CREATION_OF_OM_TEXT_OBJECT_FAILED);
-    }
 }
 
 /** @brief OMText
   *
   * @todo: document this function
   */
- OMText::OMText(OMDataHandler * data_handler) throw (OMException)
+ OMText::OMText(OMDataHandler * data_handler)
 {
     axiom_node_t * node;
     axiom_data_handler_t * data_handler_c = NULL;
@@ -299,17 +275,13 @@ bool OMText::setValue(std::string value)
         setAxiomNode(node);
         _parent = NULL;
     }
-    else
-    {
-        throw OMException(CREATION_OF_OM_TEXT_OBJECT_FAILED);
-    }
 }
 
 /** @brief OMText
   *
   * @todo: document this function
   */
- OMText::OMText(OMNode * parent, OMDataHandler * data_handler) throw (OMException)
+ OMText::OMText(OMNode * parent, OMDataHandler * data_handler)
 {
     axiom_node_t * node;
     axiom_node_t * parent_c = NULL;
@@ -341,17 +313,13 @@ bool OMText::setValue(std::string value)
             {}
         }
     }
-    else
-    {
-        throw OMException(CREATION_OF_OM_TEXT_OBJECT_FAILED);
-    }
 }
 
 /** @brief OMText
   *
   * @todo: document this function
   */
- OMText::OMText(std::string value) throw (OMException)
+ OMText::OMText(std::string value)
 {
     axiom_node_t * node;
 
@@ -370,17 +338,13 @@ bool OMText::setValue(std::string value)
         setAxiomNode(node);
         _parent = NULL;
     }
-    else
-    {
-        throw OMException(CREATION_OF_OM_TEXT_OBJECT_FAILED);
-    }
 }
 
 /** @brief OMText
   *
   * @todo: document this function
   */
- OMText::OMText(OMNode * parent, std::string value) throw (OMException)
+ OMText::OMText(OMNode * parent, std::string value)
 {
     axiom_node_t * node;
     axiom_node_t * parent_c = NULL;
@@ -413,10 +377,6 @@ bool OMText::setValue(std::string value)
             catch(bad_cast)
             {}
         }
-    }
-    else
-    {
-        throw OMException(CREATION_OF_OM_TEXT_OBJECT_FAILED);
     }
 }
 

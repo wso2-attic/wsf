@@ -20,18 +20,10 @@
 using namespace std;
 using namespace wso2wsf;
 
-/** @brief ~AxisObject
-  *
-  * @todo: document this function
-  */
  AxisObject::~AxisObject()
 {
 }
 
-/** @brief enableLogging
-  *
-  * @todo: document this function
-  */
 void AxisObject::enableLogging(bool enable)
 {
 	axutil_env_t *_env = (axutil_env_t*)Process::getEnv();
@@ -45,11 +37,7 @@ void AxisObject::enableLogging(bool enable)
     }
 }
 
-/** @brief AxisObject
-  *
-  * @todo: document this function
-  */
- AxisObject::AxisObject()
+AxisObject::AxisObject()
 {
 	/** Initialize the Process Object which keeps the system thread safe */
 	Process::getInstance();
@@ -61,10 +49,6 @@ void AxisObject::enableLogging(bool enable)
     }
 }
 
-/** @brief getEnv
-  *
-  * @todo: document this function
-  */
 const axutil_env_t * AxisObject::getEnv()
 {
 	return Process::getEnv();

@@ -19,8 +19,7 @@
 
 #include <WSFDefines.h>
 #include <axiom_data_handler.h>
-#include <OMObject.h>
-#include <OMException.h>
+#include <AxisObject.h>
 
 /**
  * @file OMDataHandler.h
@@ -57,26 +56,20 @@ namespace wso2wsf
          * Creates data_handler struct.
          * @param file_name associated file name.
          * @param mime_type mime type.
-         * @exception OMException an exception is thrown if something goes wrong
-         * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMDataHandler(std::string file_name, std::string mime_type) throw (OMException);
+        WSF_EXTERN WSF_CALL OMDataHandler(std::string file_name, std::string mime_type);
 
         /**
          * Creates data_handler struct.
          * @param mime_type mime type.
-         * @exception OMException an exception is thrown if something goes wrong
-         * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMDataHandler(std::string mime_type) throw (OMException);
+        WSF_EXTERN WSF_CALL OMDataHandler(std::string mime_type);
 
         /**
          * Creates data_handler struct.
          * @param mime_type mime type.
-         * @exception OMException an exception is thrown if something goes wrong
-         * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMDataHandler() throw (OMException);
+        WSF_EXTERN WSF_CALL OMDataHandler();
 
         /**
          * Destructor that frees resources.

@@ -20,20 +20,12 @@
 using namespace std;
 using namespace wso2wsf;
 
-/** @brief getAxiomAttribute
-  *
-  * @todo: document this function
-  */
 axiom_attribute_t * OMAttribute::getAxiomAttribute()
 {
     return _wsf_axiom_attribute;
 }
 
-/** @brief OMAttribute
-  *
-  * @todo: document this function
-  */
- OMAttribute::OMAttribute(std::string name, std::string value, OMNamespace * ns)
+OMAttribute::OMAttribute(std::string name, std::string value, OMNamespace * ns)
 {
     _namespace = NULL;
     
@@ -51,36 +43,21 @@ axiom_attribute_t * OMAttribute::getAxiomAttribute()
     }
 }
 
-/** @brief OMAttribute
-  *
-  * @todo: document this function
-  */
- OMAttribute::OMAttribute(std::string name, std::string value)
+OMAttribute::OMAttribute(std::string name, std::string value)
 {
     _namespace = NULL;
 
     _wsf_axiom_attribute = axiom_attribute_create(getEnv(), name.c_str(), value.c_str(), NULL);
-  
 }
 
-/** @brief OMAttribute
-  *
-  * @todo: document this function
-  */
- OMAttribute::OMAttribute(OMAttribute & attribute)
+OMAttribute::OMAttribute(OMAttribute & attribute)
 {
-    _namespace = NULL;
-
     _wsf_axiom_attribute = axiom_attribute_create(getEnv(), (attribute.getName()).c_str(),
         (attribute.getValue()).c_str(), (attribute.getNamespace())->getAxiomNamespace());
-    
+    _namespace = new OMNamespace(*attribute.getNamespace());
 }
 
-/** @brief ~OMAttribute
-  *
-  * @todo: document this function
-  */
- OMAttribute::~OMAttribute()
+OMAttribute::~OMAttribute()
 {
     if (_wsf_axiom_attribute)
     {
@@ -97,65 +74,58 @@ axiom_attribute_t * OMAttribute::getAxiomAttribute()
     }
 }
 
-/** @brief ~OMAttribute
-  *
-  * @todo: document this function
-  */
 void OMAttribute::setAxiomAttribute(axiom_attribute_t * attribute)
 {
     _wsf_axiom_attribute = attribute;
 }
 
-/** @brief equals
-  *
-  * @todo: document this function
-  */
 bool OMAttribute::equals(OMAttribute * attribute)
 {
-    return ((attribute->getName() == getName()) && (attribute->getValue() == getValue())
-        && (attribute->getNamespace() == getNamespace()));
+    bool is_same_attribute = 
+        ((attribute->getName() == getName()) && (attribute->getValue() == getValue()));
+    bool is_same_namespace = false;
+    
+    if(attribute->_namespace == _namespace)
+    {
+        /* pointer values are equal */
+        is_same_namespace = true;
+    }
+    else
+    {
+        if((attribute->_namespace) && (_namespace))
+        {
+            /* they are not null, so can check whether content is equal */
+            is_same_namespace = _namespace->equals(attribute->_namespace);
+        }
+        else
+        {
+            /* one is NULL */
+            is_same_namespace = false;
+         }
+    }
+    return is_same_attribute && is_same_namespace;
 }
 
-/** @brief getValue
-  *
-  * @todo: document this function
-  */
 string OMAttribute::getValue()
 {
     return axiom_attribute_get_value(_wsf_axiom_attribute, getEnv());
 }
 
-/** @brief getName
-  *
-  * @todo: document this function
-  */
 string OMAttribute::getName()
 {
     return axiom_attribute_get_localname(_wsf_axiom_attribute, getEnv());
 }
 
-/** @brief getNamespace
-  *
-  * @todo: document this function
-  */
 OMNamespace * OMAttribute::getNamespace()
 {
     return _namespace;
 }
 
-/** @brief setValue
-  *
-  * @todo: document this function
-  */
 void OMAttribute::setValue(std::string value)
 {
     axiom_attribute_set_value(_wsf_axiom_attribute, getEnv(), value.c_str());
 }
 
-/** @brief toString
-  *
-  * @todo: document this function
-  */
 string OMAttribute::toString()
 {
     axutil_qname_t * qname =

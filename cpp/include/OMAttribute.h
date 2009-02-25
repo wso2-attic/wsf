@@ -19,9 +19,8 @@
 
 #include <WSFDefines.h>
 #include <OMNamespace.h>
-#include <OMObject.h>
 #include <axiom_attribute.h>
-#include <OMException.h>
+#include <AxisObject.h>
 
 /**
  * @file OMAttribute.h

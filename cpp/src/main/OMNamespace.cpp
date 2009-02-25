@@ -20,46 +20,23 @@
 using namespace std;
 using namespace wso2wsf;
 
-/** @brief getAxiomNamespace
-  *
-  * @todo: document this function
-  */
 axiom_namespace_t * OMNamespace::getAxiomNamespace()
 {
     return _wsf_axiom_namespace;
 }
 
-/** @brief OMNamespace
-  *
-  * @todo: document this function
-  */
- OMNamespace::OMNamespace(std::string uri, std::string prefix) throw (OMException)
+OMNamespace::OMNamespace(std::string uri, std::string prefix)
 {
     _wsf_axiom_namespace = axiom_namespace_create(getEnv(), uri.c_str(), prefix.c_str());
-    if (!_wsf_axiom_namespace)
-    {
-        throw OMException(CREATION_OF_OM_NAMESPACE_OBJECT_FAILED);
-    }
 }
 
-/** @brief OMNamespace
-  *
-  * @todo: document this function
-  */
- OMNamespace::OMNamespace(OMNamespace & ns) throw (OMException)
+OMNamespace::OMNamespace(OMNamespace & ns)
 {
-    _wsf_axiom_namespace = axiom_namespace_create(getEnv(), (ns.getURI()).c_str(), (ns.getPrefix()).c_str());
-    if (!_wsf_axiom_namespace)
-    {
-        throw OMException(CREATION_OF_OM_NAMESPACE_OBJECT_FAILED);
-    }
+    _wsf_axiom_namespace = axiom_namespace_create(
+        getEnv(), (ns.getURI()).c_str(), (ns.getPrefix()).c_str());
 }
 
-/** @brief ~OMNamespace
-  *
-  * @todo: document this function
-  */
- OMNamespace::~OMNamespace()
+OMNamespace::~OMNamespace()
 {
     if (_wsf_axiom_namespace)
     {
@@ -67,46 +44,30 @@ axiom_namespace_t * OMNamespace::getAxiomNamespace()
     }
 }
 
-/** @brief ~OMNamespace
-  *
-  * @todo: document this function
-  */
 void OMNamespace::setAxiomNamespace(axiom_namespace_t * ns)
 {
+    if (_wsf_axiom_namespace)
+    {
+        axiom_namespace_free(_wsf_axiom_namespace, getEnv());
+    }
     _wsf_axiom_namespace = ns;
 }
 
-/** @brief equals
-  *
-  * @todo: document this function
-  */
 bool OMNamespace::equals(OMNamespace * ns)
 {
     return ((ns->getURI() == getURI()) && (ns->getPrefix() == getPrefix()));
 }
 
-/** @brief getURI
-  *
-  * @todo: document this function
-  */
 string OMNamespace::getURI()
 {
     return axiom_namespace_get_uri(_wsf_axiom_namespace, getEnv());
 }
 
-/** @brief getPrefix
-  *
-  * @todo: document this function
-  */
 string OMNamespace::getPrefix()
 {
     return axiom_namespace_get_prefix(_wsf_axiom_namespace, getEnv());
 }
 
-/** @brief toString
-  *
-  * @todo: document this function
-  */
 string OMNamespace::toString()
 {
     return axiom_namespace_to_string(_wsf_axiom_namespace, getEnv());

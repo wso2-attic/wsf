@@ -19,40 +19,36 @@
 using namespace std;
 using namespace wso2wsf;
 
-/** @brief subTreeToString
-  *
-  * @todo: document this function
-  */
+OMNode::OMNode()
+{
+    _wsf_axiom_node = NULL;
+}
+
+OMNode::~OMNode()
+{
+    freeTree();
+}
+
+void OMNode::setAxiomNode(axiom_node_t * node)
+{
+    _wsf_axiom_node = node;
+}
+
+axiom_node_t * OMNode::getAxiomNode()
+{
+    return _wsf_axiom_node;
+}
+
+string OMNode::toString()
+{
+    return axiom_node_to_string(_wsf_axiom_node, getEnv());
+}
+
 string OMNode::subTreeToString()
 {
     return axiom_node_sub_tree_to_string(_wsf_axiom_node, getEnv());
 }
 
-
-/** @brief insertSiblingBefore
-  *
-  * @todo: document this function
-  */
-bool OMNode::insertSiblingBefore(OMNode * to_insert)
-{
-    axis2_status_t status = axiom_node_insert_sibling_before(_wsf_axiom_node, getEnv(), to_insert->getAxiomNode());
-    return (status == AXIS2_SUCCESS);
-}
-
-/** @brief insertSiblingAfter
-  *
-  * @todo: document this function
-  */
-bool OMNode::insertSiblingAfter(OMNode * to_insert)
-{
-    axis2_status_t status = axiom_node_insert_sibling_after(_wsf_axiom_node, getEnv(), to_insert->getAxiomNode());
-    return (status == AXIS2_SUCCESS);
-}
-
-/** @brief freeTree
-  *
-  * @todo: document this function
-  */
 void OMNode::freeTree()
 {
     if (!_wsf_axiom_node)
@@ -60,57 +56,23 @@ void OMNode::freeTree()
         return;
     }
     axiom_node_free_tree(_wsf_axiom_node, getEnv());
-}
-
-/** @brief toString
-  *
-  * @todo: document this function
-  */
-string OMNode::toString()
-{
-    return axiom_node_to_string(_wsf_axiom_node, getEnv());
-}
-
-/** @brief ~OMNode
-  *
-  * @todo: document this function
-  */
- OMNode::~OMNode()
-{
-    freeTree();
-}
-
-/** @brief getAxiomNode
-  *
-  * @todo: document this function
-  */
-axiom_node_t * OMNode::getAxiomNode()
-{
-    return _wsf_axiom_node;
-}
-
-/** @brief OMNode
-  *
-  * @todo: document this function
-  */
-OMNode::OMNode()
-{
     _wsf_axiom_node = NULL;
 }
 
-/** @brief OMNode
-  *
-  * @todo: document this function
-  */
-void OMNode::setAxiomNode(axiom_node_t * node)
+bool OMNode::insertSiblingAfter(OMNode * to_insert)
 {
-    _wsf_axiom_node = node;
+    axis2_status_t status = axiom_node_insert_sibling_after(
+        _wsf_axiom_node, getEnv(), to_insert->_wsf_axiom_node);
+    return (status == AXIS2_SUCCESS);
 }
 
-/** @brief isComplete
-  *
-  * @todo: document this function
-  */
+bool OMNode::insertSiblingBefore(OMNode * to_insert)
+{
+    axis2_status_t status = axiom_node_insert_sibling_before(
+        _wsf_axiom_node, getEnv(), to_insert->_wsf_axiom_node);
+    return (status == AXIS2_SUCCESS);
+}
+
 bool OMNode::isComplete()
 {
     axis2_bool_t complete = axiom_node_is_complete(_wsf_axiom_node, getEnv());

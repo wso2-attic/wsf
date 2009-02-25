@@ -20,10 +20,8 @@
 #include <WSFDefines.h>
 #include <stdio.h>
 #include <string>
-#include <OMObject.h>
 #include <axiom_namespace.h>
-#include <AxisFault.h>
-#include <OMException.h>
+#include <AxisObject.h>
 
 /**
  * @file OMNamespace.h
@@ -88,18 +86,14 @@ namespace wso2wsf
          * Creates a namespace struct.
          * @param uri namespace URI.
          * @param prefix namespace prefix.
-         * @exception OMException an exception is thrown if something goes wrong
-         * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMNamespace(std::string uri, std::string prefix) throw (OMException);
+        WSF_EXTERN WSF_CALL OMNamespace(std::string uri, std::string prefix);
 
         /**
          * Copy Constructor.
          * @param om_namespace namespace to be cloned.
-         * @exception OMException an exception is thrown if something goes wrong
-         * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMNamespace(OMNamespace & om_namespace) throw (OMException);
+        WSF_EXTERN WSF_CALL OMNamespace(OMNamespace & om_namespace);
 
         /**
          * destructor that frees resources.

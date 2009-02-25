@@ -19,12 +19,11 @@
 
 #include <WSFDefines.h>
 #include <stdio.h>
-#include <OMObject.h>
 #include <axutil_utils.h>
 #include <axiom_node.h>
 #include <AxisFault.h>
 #include <string>
-#include <OMException.h>
+#include <AxisObject.h>
 
 /**
  * @file OMNode.h
@@ -68,20 +67,28 @@ namespace wso2wsf
 
     private:
         /**
-         * @var _wsf_axiom_node protected variable holds reference for
-         * axiom_node struct.
+         * @var _wsf_axiom_node variable holds reference for axiom_node struct.
          */
         axiom_node_t * _wsf_axiom_node;
 
         /**
          * Indicates whether parser has parsed this information item completely or not
          * @param node node struct.
-         * @return true if node is completely build
-         * false if node is not completed.
+         * @return true if node is completely build, false if node is not completed.
          */
         bool WSF_CALL isComplete();
 
     public:
+        /**
+         * Creates a node object.
+         */
+        WSF_CALL OMNode();
+
+        /**
+         * destructor that can be overridden.
+         */
+        virtual WSF_CALL ~OMNode();
+
         /**
          * Method to set the reference to the axiom_node struct.
          * @param node axiom_node reference.
@@ -95,22 +102,16 @@ namespace wso2wsf
        WSF_EXTERN  axiom_node_t * WSF_CALL getAxiomNode();
 
         /**
-         * Creates a node struct.
-         * @exception OMException an exception is thrown if something goes wrong
-         * while creating the object.
-         */
-        WSF_CALL OMNode();
-
-        /**
-         * destructor that can be overridden.
-         */
-        virtual WSF_CALL ~OMNode();
-
-        /**
          * Converts this node to a string.
          * @return converted node as string.
          */
         WSF_EXTERN virtual std::string WSF_CALL toString();
+
+        /**
+         * Converts sub tree starting from given node to string.
+         * @return converted node as string.
+         */
+        virtual std::string WSF_CALL subTreeToString();
 
         /**
          * Frees an om node and all of its children.
@@ -119,16 +120,16 @@ namespace wso2wsf
         virtual void WSF_CALL freeTree();
 
         /**
-         * Inserts a sibling node after the given node.
+         * Inserts a sibling node after this node.
          * @param to_insert the node to be inserted. Cannot be NULL.
          * @return status of the op, true on success else false.
          */
         virtual bool WSF_CALL insertSiblingAfter(OMNode * to_insert);
 
         /**
-         * Inserts a sibling node before the given current node.
+         * Inserts a sibling node before this current node.
          * @param to_insert the node to be inserted. Cannot be NULL.
-         * @return status of the op, AXIS2_SUCCESS on success else AXIS2_FAILURE.
+         * @return status of the op, true on success else false.
          */
         virtual bool WSF_CALL insertSiblingBefore(OMNode * to_insert);
 
@@ -167,11 +168,6 @@ namespace wso2wsf
          */
         virtual axiom_types_t WSF_CALL nodeType() = 0;
 
-        /**
-         * Converts sub tree starting from given node to string.
-         * @return converted node as string.
-         */
-        virtual std::string WSF_CALL subTreeToString();
     };
     /** @} */
 

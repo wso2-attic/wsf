@@ -22,7 +22,6 @@
 #include <OMNode.h>
 #include <OMElement.h>
 #include <OMDataHandler.h>
-#include <OMException.h>
 
 /**
  * @file OMText.h
@@ -67,51 +66,39 @@ namespace wso2wsf
          * Creates an om text struct.
          * @param parent parent element.
          * @param value Text value. Optional, can be NULL.
-         * @exception OMException an exception is thrown if something goes wrong
-         * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMText(OMNode * parent, std::string value) throw (OMException);
+        WSF_EXTERN WSF_CALL OMText(OMNode * parent, std::string value);
 
         /**
          * Creates an om text struct.
          * @param value Text value. Optional, can be NULL.
-         * @exception OMException an exception is thrown if something goes wrong
-         * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMText(std::string value) throw (OMException);
+        WSF_EXTERN WSF_CALL OMText(std::string value);
 
         /**
          * Creates an om text struct.
          * @param parent parent element.
          * @param value Text value. Optional, can be NULL.
-         * @exception OMException an exception is thrown if something goes wrong
-         * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMText(OMNode * parent, OMDataHandler * data_handler) throw (OMException);
+        WSF_EXTERN WSF_CALL OMText(OMNode * parent, OMDataHandler * data_handler);
 
         /**
          * Creates an om text struct.
          * @param data_handler the data handler. Optional, can be NULL.
-         * @exception OMException an exception is thrown if something goes wrong
-         * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMText(OMDataHandler * data_handler) throw (OMException);
+        WSF_EXTERN WSF_CALL OMText(OMDataHandler * data_handler);
 
         /**
          * Creates an om text struct.
-         * @exception OMException an exception is thrown if something goes wrong
-         * while creating the object.
          */
-        WSF_EXTERN WSF_CALL OMText() throw (OMException);
+        WSF_EXTERN WSF_CALL OMText();
 
         /**
          * Creates an om text struct.
          * @param parent parent element.
          * @param node node used to build the element. cannot be NULL.
-         * @exception OMException an exception is thrown if something goes wrong
-         * while creating the object.
          */
-        WSF_CALL OMText(OMNode * parent, axiom_node_t * node) throw (OMException);
+        WSF_CALL OMText(OMNode * parent, axiom_node_t * node);
 
         /**
          * Destructor that frees resources.
