@@ -230,10 +230,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\main\OMObject.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\main\OMText.cpp"
 				>
 			</File>
@@ -329,10 +325,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\OMNode.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\OMObject.h"
 				>
 			</File>
 			<File
