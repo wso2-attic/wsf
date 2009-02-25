@@ -43,10 +43,10 @@ namespace wso2wsf
     /**
      * @brief class OMNamespace Defines the base class used to represent namespaces in
      * the Axis Object Model. Namespaces are typically composed of a prefix and URI pair
-     * which identifies the particular occurence. This class provides an abstraction to
+     * which identifies the particular occurrence. This class provides an abstraction to
      * namespace associated with the XML model.
      */
-    class OMNamespace : public OMObject
+    class OMNamespace : public AxisObject
     {
         /**
          * Overloaded insertion operator, is used for printing the namespace onto a console.

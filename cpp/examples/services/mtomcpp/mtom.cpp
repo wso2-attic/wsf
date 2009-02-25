@@ -26,8 +26,11 @@
 using namespace std;
 using namespace wso2wsf;
 
+
+/** This macro is used to load the service to WSF Framework */
 WSF_SERVICE_INIT(MTOMService)
 
+/** Service invocation function. Overriding method */
 OMElement* MTOMService::invoke(OMElement *ele, MessageContext *msgCtx)
 {
 	/* Expected request format is :-
@@ -73,13 +76,19 @@ OMElement* MTOMService::invoke(OMElement *ele, MessageContext *msgCtx)
 			}
 		}catch (bad_cast) 
 		{
-
+			return NULL;
 		}
+
+		/** Build the response payload */
 		OMElement *resultEle = new OMElement("response", new OMNamespace("http://ws.apache.org/wsf/cpp/samples","ns1"));
+		/** construct a datahandler with the received binary content */
 		OMDataHandler *responseDh = new OMDataHandler();
+		
+		/** Binary data should be copied since the received binary content is owned by the engine */
 		char *buffer = new char[length]	;
 		memcpy(buffer,data, length);
 		responseDh->write(buffer, length);
+		
 		OMText *dhText = new OMText(responseDh);
 		resultEle->addChild(dhText);
 		msgCtx->setDoingMTOM(true);
