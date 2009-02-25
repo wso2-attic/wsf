@@ -59,7 +59,7 @@ AC_ARG_WITH(wsfc,
 )
 
 WSFCINC=$wsfcinc
-AXIS2INC="$wsfcinc/axis2-1.5.0"
+AXIS2INC="$wsfcinc/axis2-1.6.0"
 SANDESHA2INC="$wsfcinc/sandesha2-0.90"
 RAMPARTINC="$wsfcinc/rampart-0.90"
 
