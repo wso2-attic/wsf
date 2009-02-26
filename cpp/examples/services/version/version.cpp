@@ -1,5 +1,5 @@
 /*
-* Copyright 2005,2009 WSO2, Inc. http://wso2.com
+* Copyright 2005-2009 WSO2, Inc. http://wso2.com
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -27,10 +27,16 @@ WSF_SERVICE_INIT(Version)
 
 OMElement* Version::invoke(OMElement *ele, MessageContext *msgCtx)
 {
-	OMNamespace *ns = new OMNamespace("urn:WSFCPPWebServices","ns1");
-	OMElement *resultEle = new OMElement("Result",ns);
-	resultEle->setText("Version 1.1");
-	return resultEle;
+	string localname = ele->getLocalname();
+	if(localname.compare("GetVersion"))
+	{
+		OMNamespace *ns = new OMNamespace("urn:WSFCPPWebServices","ns1");
+		OMElement *resultEle = new OMElement("Result",ns);
+		resultEle->setText("Version 1.1");
+		return resultEle;
+	}
+	return NULL;
+	
 }
 
 OMElement* Version::onFault(OMElement *ele)
