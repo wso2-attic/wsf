@@ -27,11 +27,8 @@ using namespace wso2wsf;
 
 int main(int argc, char *argv[])
 {
-    string end_point, file_name;
-    WSSOAPClient * sc;
-
-    end_point = "http://localhost:9090/axis2/services/mtom";
-    file_name = "resources/axis2.jpg";
+    string end_point = "http://localhost:9090/axis2/services/mtom";
+    string file_name = "resources/axis2.jpg";
 
     if (argc > 1)
     {
@@ -50,46 +47,35 @@ int main(int argc, char *argv[])
     if (argc > 2)
         file_name = argv[2];
 
-    sc = new WSSOAPClient(end_point);
-    try 
-    {   
-        //sc->initializeClient("mtom.log", AXIS2_LOG_LEVEL_TRACE);
-    }   
-    catch (AxisFault & e)
-    {   
-        cout << endl << "Error: " << e << endl;
-        return 0;
-    }
-    sc->engageModule(AXIS2_MODULE_ADDRESSING);
-    Options * op = sc->getOptions();
+    WSSOAPClient sc(end_point);
+    sc.engageModule(AXIS2_MODULE_ADDRESSING);
+    
+    Options * op = sc.getOptions();
     op->setSoapVersion(AXIOM_SOAP11);
     op->setEnableMTOM(true);
-    sc->setOptions(op);
+
+    OMNamespace * ns1 = new OMNamespace("http://ws.apache.org/axis2/c/samples/mtom", "ns1");
+    OMElement * payload = new OMElement(NULL,"mtomSample", ns1);
+    OMElement * child1 = new OMElement(payload,"fileName", ns1);
+    child1->setText("test.jpg");
+    OMElement * child2 = new OMElement(payload,"image", ns1);
+    OMDataHandler * data_handler = new OMDataHandler(file_name, "image/jpeg");
+    OMText * child3 = new OMText(child2, data_handler);
+    child3->optimize(true);
+    cout << endl << "Request: " << payload << endl;
+
+    try
     {
-        OMNamespace * ns1 = new OMNamespace("http://ws.apache.org/axis2/c/samples/mtom", "ns1");
-        OMElement * payload = new OMElement(NULL,"mtomSample", ns1);
-        OMElement * child1 = new OMElement(payload,"fileName", ns1);
-        child1->setText("test.jpg");
-        OMElement * child2 = new OMElement(payload,"image", ns1);
-        OMDataHandler * data_handler = new OMDataHandler(file_name, "image/jpeg");
-        OMText * child3 = new OMText(child2, data_handler);
-        child3->optimize(true);
-        cout << endl << "Request: " << payload << endl;
-        OMElement * response;
-        try
+        OMElement * response = sc.request(payload, "http://ws.apache.org/axis2/c/samples/mtomSample");
+        if (response)
         {
-            response = sc->request(payload, "http://ws.apache.org/axis2/c/samples/mtomSample");
-            if (response)
-            {
-                cout << endl << "Response: " << response << endl;
-            }
+            cout << endl << "Response: " << response << endl;
         }
-        catch (AxisFault & e)
-        {
-            cout << endl << "Error: " << e << endl;
-        }
-        delete payload;
     }
-    delete sc;
+    catch (AxisFault & e)
+    {
+        cout << endl << "Error: " << e << endl;
+    }
+    delete payload;
 }
 
