@@ -43,28 +43,24 @@ OMElement* MTOMService::invoke(OMElement *ele, MessageContext *msgCtx)
 	*/
 	if(ele)
 	{	
-		OMElement *fileNameEle,*imageEle;
-		OMText *text = NULL;
-		OMDataHandler *dh = NULL;
 		int length = 0;
 		axis2_byte_t *data = NULL;
 		try
 		{	
-			fileNameEle = dynamic_cast<OMElement *>(ele->getFirstChild());
+			OMElement *fileNameEle = dynamic_cast<OMElement *>(ele->getFirstChild());
 
 			if(fileNameEle && fileNameEle->getFirstChild() && fileNameEle->getFirstChild()->nodeType() == AXIOM_TEXT)
 			{
-				text = dynamic_cast<OMText*>(fileNameEle->getFirstChild());
+				OMText *text = dynamic_cast<OMText*>(fileNameEle->getFirstChild());
 				string filename = text->getValue();
 
-				imageEle = dynamic_cast<OMElement*>(fileNameEle->getNextSibling());
+				OMElement *imageEle = dynamic_cast<OMElement*>(fileNameEle->getNextSibling());
 				if(imageEle)
 				{
-					
 					OMText *imageText = dynamic_cast<OMText*>(imageEle->getFirstChild());
 					if(imageText)
 					{
-						dh = imageText->getDataHandler();
+						OMDataHandler *dh = imageText->getDataHandler();
 						if(dh && !(dh->isCached()))
 						{
 							dh->writeTo(filename);
@@ -96,7 +92,6 @@ OMElement* MTOMService::invoke(OMElement *ele, MessageContext *msgCtx)
 
 	}
 	return NULL;
-	
 }
 
 OMElement* MTOMService::onFault(OMElement *ele)
