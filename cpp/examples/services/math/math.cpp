@@ -25,6 +25,8 @@
 using namespace std;
 using namespace wso2wsf;
 
+WSF_SERVICE_INIT(MathService)
+
 OMElement* MathService::add(OMElement *ele)
 {
 	try{
