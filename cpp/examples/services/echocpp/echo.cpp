@@ -38,6 +38,8 @@ OMElement* Echo::invoke(OMElement *ele, MessageContext *msgCtx)
 
 OMElement* Echo::onFault(OMElement *ele)
 {
-	return NULL;
+	OMElement *responseEle = new OMElement("EchoServiceErrorResponse");
+	responseEle->setText("Echo Service Failed");
+	return responseEle;
 }
 
