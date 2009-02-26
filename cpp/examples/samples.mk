@@ -147,20 +147,20 @@ mtom_exe:
 	@if exist $(WSFCPP_SAMPLES_DIR)\mtom\resources\*.am del $(WSFCPP_SAMPLES_DIR)\mtom\resources\*.am
 
 echo_service:
-	@if not exist int.msvc\services\echocpp mkdir int.msvc\services\echocpp
-	@if not exist $(WSFCPP_HOME_DIR)\services\echocpp mkdir $(WSFCPP_HOME_DIR)\services\echocpp
-	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SERVICES_SAMPLES_HOME_DIR)\echocpp\Echo.cpp /Foint.msvc\services\echocpp\ /c
-	$(LD) $(LDFLAGS) int.msvc\services\echocpp\*.obj $(LIBS) /DLL /OUT:$(WSFCPP_HOME_DIR)\services\echocpp\echocpp.dll
+	@if not exist int.msvc\services\echo mkdir int.msvc\services\echo
+	@if not exist $(WSFCPP_HOME_DIR)\services\echo mkdir $(WSFCPP_HOME_DIR)\services\echo
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SERVICES_SAMPLES_HOME_DIR)\echo\Echo.cpp /Foint.msvc\services\echo\ /c
+	$(LD) $(LDFLAGS) int.msvc\services\echo\*.obj $(LIBS) /DLL /OUT:$(WSFCPP_HOME_DIR)\services\echo\echo.dll
 	-@$(_VC_MANIFEST_EMBED_EXE)
-	@copy  /Y $(SERVICES_SAMPLES_HOME_DIR)\echocpp\services.xml $(WSFCPP_HOME_DIR)\services\echocpp\services.xml
+	@copy  /Y $(SERVICES_SAMPLES_HOME_DIR)\echo\services.xml $(WSFCPP_HOME_DIR)\services\echo\services.xml
 
 mtom_service:
-	@if not exist int.msvc\services\mtomcpp mkdir int.msvc\services\mtomcpp
-	@if not exist $(WSFCPP_HOME_DIR)\services\mtomcpp mkdir $(WSFCPP_HOME_DIR)\services\mtomcpp
-	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SERVICES_SAMPLES_HOME_DIR)\mtomcpp\*.cpp /Foint.msvc\services\mtomcpp\ /c
-	$(LD) $(LDFLAGS) int.msvc\services\mtomcpp\*.obj $(LIBS) /DLL /OUT:$(WSFCPP_HOME_DIR)\services\mtomcpp\mtomcpp.dll
+	@if not exist int.msvc\services\mtom mkdir int.msvc\services\mtom
+	@if not exist $(WSFCPP_HOME_DIR)\services\mtom mkdir $(WSFCPP_HOME_DIR)\services\mtom
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SERVICES_SAMPLES_HOME_DIR)\mtom\*.cpp /Foint.msvc\services\mtom\ /c
+	$(LD) $(LDFLAGS) int.msvc\services\mtom\*.obj $(LIBS) /DLL /OUT:$(WSFCPP_HOME_DIR)\services\mtom\mtom.dll
 	-@$(_VC_MANIFEST_EMBED_EXE)
-	@copy  /Y $(SERVICES_SAMPLES_HOME_DIR)\mtomcpp\services.xml $(WSFCPP_HOME_DIR)\services\mtomcpp\services.xml
+	@copy  /Y $(SERVICES_SAMPLES_HOME_DIR)\mtom\services.xml $(WSFCPP_HOME_DIR)\services\mtom\services.xml
 
 wsfcpp_samples: int_dir echo_samples flickr_exe google_exe math_exe notify_exe yahoo_exe mtom_exe echo_service mtom_service
 
