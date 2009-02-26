@@ -162,7 +162,35 @@ mtom_service:
 	-@$(_VC_MANIFEST_EMBED_EXE)
 	@copy  /Y $(SERVICES_SAMPLES_HOME_DIR)\mtom\services.xml $(WSFCPP_HOME_DIR)\services\mtom\services.xml
 
-wsfcpp_samples: int_dir echo_samples flickr_exe google_exe math_exe notify_exe yahoo_exe mtom_exe echo_service mtom_service
+
+version_service:
+	@if not exist int.msvc\services\version mkdir int.msvc\services\version
+	@if not exist $(WSFCPP_HOME_DIR)\services\version mkdir $(WSFCPP_HOME_DIR)\services\version
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SERVICES_SAMPLES_HOME_DIR)\version\*.cpp /Foint.msvc\services\version\ /c
+	$(LD) $(LDFLAGS) int.msvc\services\version\*.obj $(LIBS) /DLL /OUT:$(WSFCPP_HOME_DIR)\services\version\version.dll
+	-@$(_VC_MANIFEST_EMBED_EXE)
+	@copy  /Y $(SERVICES_SAMPLES_HOME_DIR)\version\services.xml $(WSFCPP_HOME_DIR)\services\version\services.xml
+
+
+notify_service:
+	@if not exist int.msvc\services\notify mkdir int.msvc\services\notify
+	@if not exist $(WSFCPP_HOME_DIR)\services\notify mkdir $(WSFCPP_HOME_DIR)\services\notify
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SERVICES_SAMPLES_HOME_DIR)\notify\*.cpp /Foint.msvc\services\notify\ /c
+	$(LD) $(LDFLAGS) int.msvc\services\notify\*.obj $(LIBS) /DLL /OUT:$(WSFCPP_HOME_DIR)\services\notify\notify.dll
+	-@$(_VC_MANIFEST_EMBED_EXE)
+	@copy  /Y $(SERVICES_SAMPLES_HOME_DIR)\notify\services.xml $(WSFCPP_HOME_DIR)\services\notify\services.xml
+
+
+math_service:
+	@if not exist int.msvc\services\math mkdir int.msvc\services\math
+	@if not exist $(WSFCPP_HOME_DIR)\services\math mkdir $(WSFCPP_HOME_DIR)\services\math
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SERVICES_SAMPLES_HOME_DIR)\math\*.cpp /Foint.msvc\services\math\ /c
+	$(LD) $(LDFLAGS) int.msvc\services\math\*.obj $(LIBS) /DLL /OUT:$(WSFCPP_HOME_DIR)\services\math\math.dll
+	-@$(_VC_MANIFEST_EMBED_EXE)
+	@copy  /Y $(SERVICES_SAMPLES_HOME_DIR)\math\services.xml $(WSFCPP_HOME_DIR)\services\math\services.xml
+
+
+wsfcpp_samples: int_dir echo_samples flickr_exe google_exe math_exe notify_exe yahoo_exe mtom_exe echo_service mtom_service version_service notify_service math_service
 
 
 clean: 
