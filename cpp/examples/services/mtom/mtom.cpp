@@ -101,8 +101,8 @@ OMElement* MTOMService::invoke(OMElement *ele, MessageContext *msgCtx)
 
 OMElement* MTOMService::onFault(OMElement *ele)
 {
-	OMElement *responseEle = new OMElement("MTOMServiceErrorResponse");
-	responseEle->setText("MTOM Service Failed");
+	OMElement *responseEle = new OMElement("MathServiceErrorResponse");
+	responseEle->setText("Math Service Failed");
 	return responseEle;
 }
 

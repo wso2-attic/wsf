@@ -15,24 +15,33 @@
 */
 
 
-#ifndef  ECHO_H
-#define ECHO_H
+#ifndef  MATHSERVICE_H
+#define  MATHSERVICE_H
 
 #include <ServiceSkeleton.h>
+#include <axutil_env.h>
 
 using namespace wso2wsf;
 
-class Echo: public ServiceSkeleton 
+class MathService: public ServiceSkeleton 
 {
 public:
-	WSF_EXTERN WSF_CALL Echo(){};
+	WSF_EXTERN WSF_CALL MathService(){};
 
 	OMElement* WSF_CALL invoke(OMElement *message, MessageContext *msgCtx);
-	
+
 	OMElement* WSF_CALL onFault(OMElement *message);
-	
+
 	void WSF_CALL init(){};
+
+	OMElement* add(OMElement *ele);
+
+	OMElement* mul(OMElement *ele);
+
+	OMElement* sub(OMElement *ele);
+
+	OMElement* div(OMElement *ele);
 };
 
 
-#endif // ECHO_H
+#endif // MATHSERVICE_H
