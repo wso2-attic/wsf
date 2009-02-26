@@ -1,5 +1,5 @@
-prglibdir=$(prefix)/services/echocpp
-prglib_LTLIBRARIES=libechocpp.la
+prglibdir=$(prefix)/services/echo
+prglib_LTLIBRARIES=libecho.la
 prglib_DATA=services.xml
 EXTRA_DIST=services.xml 
 libechocpp_la_SOURCES= echo.cpp

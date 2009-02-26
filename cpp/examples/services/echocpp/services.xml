@@ -1,5 +1,5 @@
-<service name="echocpp">
-    <parameter name="ServiceClass" locked="xsd:false">echocpp</parameter>
+<service name="echo">
+    <parameter name="ServiceClass" locked="xsd:false">echo</parameter>
 
     <!--Uncomment to specify static WSDL path-->
     <!--parameter name="wsdl_path">PATH</parameter-->
