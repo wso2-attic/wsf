@@ -9,7 +9,7 @@ rem Build WSO2 WSF/C
 @cd wsf_c
 @call build.bat
 
-rem Un-comment line below for Fail-safe Install
+rem Uncomment line below for Fail-safe Install
 @if not %ERRORLEVEL% EQU 0 goto end
 
 rem Pack WSO2 WSF/C++
@@ -33,7 +33,6 @@ rem Pack WSO2 WSF/C++
 
 rem Add HTML Documentation
 :add_html_docs
-@set WSFCPP_SOURCE=%CD%
 @cd "%WSFCPP_HOME%"
 @mkdir docs_temp
 move docs docs_temp
@@ -53,15 +52,13 @@ rmdir /S /Q docs_temp
 @if exist docs\wsf_c\docs\axis2c rmdir /S /Q docs\wsf_c\docs\axis2c
 @if exist docs\wsf_c\docs\rampartc rmdir /S /Q docs\wsf_c\docs\rampartc
 @if exist docs\wsf_c\docs\sandesha2c rmdir /S /Q docs\wsf_c\docs\sandesha2c
-@cd "%WSFCPP_SOURCE%"
 
 rem Remove WSF/C Client Samples
 :strip_c_client_samples
-@set WSFCPP_SOURCE=%CD%
 @cd "%WSFCPP_HOME%\bin\samples"
 @if exist security xcopy /E /Q /I /Y security ..\security
 @cd ..\
-rem @rmdir /s /q samples
+@rmdir /s /q samples
 @mkdir samples
 @if exist security xcopy /E /Q /I /Y security samples\security
 @if exist security rmdir /s /q security
@@ -69,7 +66,6 @@ rem @rmdir /s /q samples
 
 rem Clean bin Folder
 :clean_bin_dir
-@set WSFCPP_SOURCE=%CD%
 @cd "%WSFCPP_HOME%\bin"
 @del *.exp
 @del *.lib
@@ -86,37 +82,23 @@ rem Build Source
 
 rem Build Client Samples
 :build_client_samples
-@set WSFCPP_SOURCE=%CD%
 @cd "%WSFCPP_HOME%\bin\samples"
-@if exist cpp rmdir /s /q cpp
-@mkdir cpp
 @cd "%WSFCPP_SOURCE%"
 @cd examples
 @nmake dist -f samples.mk AUTOCONF=..\configure.in
 @if not %ERRORLEVEL% EQU 0 goto end
-@cd "%WSFCPP_HOME%\bin\samples\cpp"
-@if not exist .svn mkdir .svn
-@for /F "tokens=*" %%G in ('dir /B /AD /S *.svn*') do rmdir /S /Q "%%G"
-@if not exist *.sh echo > #.sh
-@for /F "tokens=*" %%G in ('dir /B /S *.sh*') do del "%%G"
-@if not exist *.am echo > #.am
-@for /F "tokens=*" %%G in ('dir /B /S *.am*') do del "%%G"
-@cd "%WSFCPP_SOURCE%"
+@cd "%WSFCPP_HOME%\bin\samples\"
 
 rem Build security Samples
-@set WSFCPP_SOURCE=%CD%
-@cd "%WSFCPP_HOME%\bin\samples"
-@if exist security xcopy /E /Q /I /Y security cpp\security
-@if exist security rmdir /S /Q security 
-@cd cpp\security
+@cd "%WSFCPP_HOME%\bin\samples\security"
 @mkdir client
 @cd "%WSFCPP_SOURCE%"
 @cd examples\clients
 @cd security
-@xcopy /E /Q /I /Y secpolicy %WSFCPP_HOME%\bin\samples\cpp\security\secpolicy
+@xcopy /E /Q /I /Y secpolicy %WSFCPP_HOME%\bin\samples\security\secpolicy
 @nmake dist -f sec_samples.mk AUTOCONF=..\..\..\configure.in
 @if not %ERRORLEVEL% EQU 0 goto end
-@cd "%WSFCPP_HOME%\bin\samples\cpp\security"
+@cd "%WSFCPP_HOME%\bin\samples\security"
 @if not exist .svn mkdir .svn
 @for /F "tokens=*" %%G in ('dir /B /AD /S *.svn*') do rmdir /S /Q "%%G"
 @if not exist *.sh echo > #.sh
