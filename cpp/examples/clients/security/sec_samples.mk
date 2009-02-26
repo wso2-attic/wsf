@@ -33,16 +33,16 @@ int_dir:
 
 sec_echo_dir:
 	@if not exist int.msvc\echo mkdir int.msvc\sec_echo
-	@if not exist $(WSFCPP_HOME_DIR)\bin\samples\cpp\security\client\sec_echo mkdir $(WSFCPP_HOME_DIR)\bin\samples\cpp\security\client\sec_echo
+	@if not exist $(WSFCPP_HOME_DIR)\bin\samples\security\client\sec_echo mkdir $(WSFCPP_HOME_DIR)\bin\samples\security\client\sec_echo
              
 sec_echo_exe:
 	@if not exist int.msvc\sec_echo\sec_echo mkdir int.msvc\sec_echo\sec_echo
 	@cl.exe $(CFLAGS) $(INCLUDE_PATH) $(SAMPLES_HOME_DIR)\sec_echo\echo.cpp /Foint.msvc\sec_echo\sec_echo\ /c
-	@link.exe $(LDFLAGS) int.msvc\sec_echo\sec_echo\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\cpp\security\client\sec_echo\echo.exe
+	@link.exe $(LDFLAGS) int.msvc\sec_echo\sec_echo\*.obj $(LIBS) /OUT:$(WSFCPP_HOME_DIR)\bin\samples\security\client\sec_echo\echo.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
-	@copy /Y $(SAMPLES_HOME_DIR)\sec_echo\deploy_client_repo.bat $(WSFCPP_HOME_DIR)\bin\samples\cpp\security\client\sec_echo
-	@copy /Y $(SAMPLES_HOME_DIR)\sec_echo\update_n_run.bat $(WSFCPP_HOME_DIR)\bin\samples\cpp\security\client\sec_echo
-	@xcopy /S/I/Q/Y $(SAMPLES_HOME_DIR)\sec_echo\data $(WSFCPP_HOME_DIR)\bin\samples\cpp\security\client\sec_echo\data
+	@copy /Y $(SAMPLES_HOME_DIR)\sec_echo\deploy_client_repo.bat $(WSFCPP_HOME_DIR)\bin\samples\security\client\sec_echo
+	@copy /Y $(SAMPLES_HOME_DIR)\sec_echo\update_n_run.bat $(WSFCPP_HOME_DIR)\bin\samples\security\client\sec_echo
+	@xcopy /S/I/Q/Y $(SAMPLES_HOME_DIR)\sec_echo\data $(WSFCPP_HOME_DIR)\bin\samples\security\client\sec_echo\data
 	
 sec_samples: int_dir sec_echo_dir sec_echo_exe
 
