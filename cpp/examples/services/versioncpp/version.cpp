@@ -38,5 +38,6 @@ OMElement* Version::invoke(OMElement *ele, MessageContext *msgCtx)
 OMElement* Version::onFault(OMElement *ele)
 {
 	OMElement *responseEle = new OMElement("VersionServiceErrorResponse");
-	return respnseEle->setText("Version Service Failed");
+	responseEle->setText("Version Service Failed");
+	return responseEle;
 }
