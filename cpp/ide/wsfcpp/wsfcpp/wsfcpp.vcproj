@@ -194,14 +194,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\main\NeethiException.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\main\NeethiObject.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\main\NeethiPolicy.cpp"
 				>
 			</File>
@@ -215,10 +207,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\main\OMElement.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\main\OMException.cpp"
 				>
 			</File>
 			<File
@@ -292,10 +280,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\NeethiException.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\include\NeethiPolicy.h"
 				>
 			</File>
@@ -309,10 +293,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\OMElement.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\OMException.h"
 				>
 			</File>
 			<File

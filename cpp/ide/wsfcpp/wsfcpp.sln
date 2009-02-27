@@ -202,6 +202,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "buildfiles", "buildfiles", 
 		..\..\README = ..\..\README
 		..\..\README.INSTALL.WINDOWS = ..\..\README.INSTALL.WINDOWS
 		..\..\README.SAMPLES = ..\..\README.SAMPLES
+		..\..\examples\samples.mk = ..\..\examples\samples.mk
 		..\..\wsf_c_build.bat = ..\..\wsf_c_build.bat
 	EndProjectSection
 EndProject
@@ -216,6 +217,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "versioncpp", "samples\services\versioncpp\versioncpp.vcproj", "{7D70D9F9-D3A9-41DD-B2A9-E9A8FF621C31}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "yahoo", "samples\yahoo\yahoo.vcproj", "{6544D985-6384-41D1-931E-BD5481049690}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mathservice", "samples\services\mathservice\mathservice.vcproj", "{D22933D7-ADF4-4C22-B29E-4415951AB701}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "notify", "samples\services\notify\notify.vcproj", "{53AAA392-CC79-43BC-9D86-15EAD57824E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -363,6 +368,14 @@ Global
 		{6544D985-6384-41D1-931E-BD5481049690}.Debug|Win32.Build.0 = Debug|Win32
 		{6544D985-6384-41D1-931E-BD5481049690}.Release|Win32.ActiveCfg = Release|Win32
 		{6544D985-6384-41D1-931E-BD5481049690}.Release|Win32.Build.0 = Release|Win32
+		{D22933D7-ADF4-4C22-B29E-4415951AB701}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D22933D7-ADF4-4C22-B29E-4415951AB701}.Debug|Win32.Build.0 = Debug|Win32
+		{D22933D7-ADF4-4C22-B29E-4415951AB701}.Release|Win32.ActiveCfg = Release|Win32
+		{D22933D7-ADF4-4C22-B29E-4415951AB701}.Release|Win32.Build.0 = Release|Win32
+		{53AAA392-CC79-43BC-9D86-15EAD57824E5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{53AAA392-CC79-43BC-9D86-15EAD57824E5}.Debug|Win32.Build.0 = Debug|Win32
+		{53AAA392-CC79-43BC-9D86-15EAD57824E5}.Release|Win32.ActiveCfg = Release|Win32
+		{53AAA392-CC79-43BC-9D86-15EAD57824E5}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -404,5 +417,7 @@ Global
 		{4A199764-3912-40B8-8F4B-1CBC85F9CF9C} = {B73BE2C9-9A9F-49ED-9692-608C15A5B6AA}
 		{93195C62-8396-4599-8BE6-A6B183134F28} = {B73BE2C9-9A9F-49ED-9692-608C15A5B6AA}
 		{7D70D9F9-D3A9-41DD-B2A9-E9A8FF621C31} = {B73BE2C9-9A9F-49ED-9692-608C15A5B6AA}
+		{D22933D7-ADF4-4C22-B29E-4415951AB701} = {B73BE2C9-9A9F-49ED-9692-608C15A5B6AA}
+		{53AAA392-CC79-43BC-9D86-15EAD57824E5} = {B73BE2C9-9A9F-49ED-9692-608C15A5B6AA}
 	EndGlobalSection
 EndGlobal
