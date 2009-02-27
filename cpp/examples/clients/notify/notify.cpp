@@ -25,6 +25,9 @@ using namespace wso2wsf;
 
 int main()
 {
+
+	Process::initialize("notify.log", AXIS2_LOG_LEVEL_TRACE);
+
     WSSOAPClient sc("http://localhost:9090/axis2/services/notify");
     sc.engageModule(AXIS2_MODULE_ADDRESSING);
 

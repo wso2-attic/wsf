@@ -25,6 +25,8 @@ using namespace wso2wsf;
 
 int main()
 {
+	Process::initialize("echo_rest.log", AXIS2_LOG_LEVEL_TRACE);
+
     WSRESTClient sc("http://localhost:9090/axis2/services/echo/echoString");
     Options * op = sc.getOptions();
     op->setHTTPMethod(AXIS2_HTTP_GET);

@@ -53,6 +53,7 @@ public:
 
 int main(int argc, char *argv[])
 {
+	Process::initialize("echo_non_blocking.log", AXIS2_LOG_LEVEL_TRACE);
     string end_point = "http://localhost:9090/axis2/services/echo";;
     int timeout = 10000;;
 

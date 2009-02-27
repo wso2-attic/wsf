@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     WSSOAPClient sc(end_point);
     cout << endl << "Using end_point: " << end_point << endl;
 
-    int iterations = 2;
+    int iterations = 1;
     sc.engageModule(AXIS2_MODULE_ADDRESSING);
     for (int i = 0; i < iterations; i++)
     {

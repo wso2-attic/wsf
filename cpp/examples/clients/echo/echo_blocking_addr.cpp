@@ -25,6 +25,8 @@ using namespace wso2wsf;
 
 int main()
 {
+	Process::initialize("echo_blocking_addr.log", AXIS2_LOG_LEVEL_TRACE);
+
     WSSOAPClient * sc = new WSSOAPClient("http://localhost:9090/axis2/services/echo");
     sc->engageModule(AXIS2_MODULE_ADDRESSING);
 

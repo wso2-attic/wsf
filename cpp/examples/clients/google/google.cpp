@@ -25,6 +25,9 @@ using namespace wso2wsf;
 
 int main()
 {
+
+	Process::initialize("google.log", AXIS2_LOG_LEVEL_TRACE);
+
     WSSOAPClient sc("http://api.google.com/search/beta2");
     sc.engageModule(AXIS2_MODULE_ADDRESSING);
     

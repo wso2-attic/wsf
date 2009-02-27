@@ -25,7 +25,9 @@ using namespace wso2wsf;
 
 int main()
 {
-    WSSOAPClient sc("http://localhost:9090/axis2/services/echo");
+	Process::initialize("echo_blocking.log", AXIS2_LOG_LEVEL_TRACE);
+
+	WSSOAPClient sc("http://localhost:9090/axis2/services/echo");
     
     OMNamespace * ns = new OMNamespace("http://ws.apache.org/axis2/services/echo", "ns1");
     OMElement * payload = new OMElement(NULL,"echoString", ns);

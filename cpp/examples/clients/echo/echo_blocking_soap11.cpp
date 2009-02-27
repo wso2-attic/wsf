@@ -25,6 +25,8 @@ using namespace wso2wsf;
 
 int main()
 {
+	Process::initialize("echo_blocking_soap11.log", AXIS2_LOG_LEVEL_TRACE);
+
     WSSOAPClient sc("http://localhost:9090/axis2/services/echo");
     Options * op = sc.getOptions();
     op->setSoapVersion(AXIOM_SOAP11);
