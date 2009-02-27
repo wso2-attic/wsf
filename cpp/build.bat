@@ -17,7 +17,7 @@ rem Pack WSO2 WSF/C++
 @cd ..
 @set WSFCPP_SOURCE=%CD%
 @set WSFCPP_HOME=%CD%\wso2-wsf-cpp-bin-%WSFCPP_VERSION%-win32
-@if exist "%WSFCPP_HOME%" rmdir /s /q "%WSFCPP_HOME%"
+rem @if exist "%WSFCPP_HOME%" rmdir /s /q "%WSFCPP_HOME%"
 @mkdir "%WSFCPP_HOME%"
 @cd "%WSFCPP_HOME%"
 @xcopy /E /Q /I /Y "%WSFCPP_SOURCE%\wsf_c\wso2-wsf-c-bin-%WSFC_VERSION%" .
@@ -63,6 +63,12 @@ rem Remove WSF/C Client Samples
 @if exist security xcopy /E /Q /I /Y security samples\security
 @if exist security rmdir /s /q security
 @cd "%WSFCPP_SOURCE%"
+
+:remove_wsf_c_services
+@cd %WSFCPP_HOME%
+@rmdir /s /q services
+@mkdir services
+@cd %WSFCPP_SOURCE%
 
 rem Clean bin Folder
 :clean_bin_dir
