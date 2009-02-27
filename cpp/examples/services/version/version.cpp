@@ -22,6 +22,7 @@
 #include <ServiceSkeleton.h>
 
 using namespace wso2wsf;
+using namespace std;
 
 WSF_SERVICE_INIT(Version)
 
