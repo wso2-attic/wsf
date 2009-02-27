@@ -19,28 +19,29 @@
 
 
 #include <stdio.h>
-#include <axutil_env.h>
-#include "Version.h"
+#include "NotifyService.h"
 #include <ServiceSkeleton.h>
+#include <OMText.h>
 
 using namespace wso2wsf;
+using namespace std;
 
-WSF_SERVICE_INIT(Version)
+WSF_SERVICE_INIT(NotifyService)
 
 OMElement* NotifyService::invoke(OMElement *ele, MessageContext *msgCtx)
 {
 	try
 	{
-		OMText *text = dynamic_cast<OMText*>ele->getFirstChild();
+		OMText *text = dynamic_cast<OMText*>(ele->getFirstChild());
 		string notifyMessage = text->getValue();
-		WSF_LOG_DEBUG_MSG(notifyMessage);
+		//WSF_LOG_DEBUG_MSG(notifyMessage);
 	}
-	catch (CException* e)
+	catch (bad_cast)
 	{
 		
 	}
 	
-	return;
+	return NULL;
 }
 
 OMElement* NotifyService::onFault(OMElement *ele)

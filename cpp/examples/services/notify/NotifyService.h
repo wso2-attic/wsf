@@ -15,8 +15,8 @@
 */
 
 
-#ifndef  VERSION_H
-#define VERSION_H
+#ifndef  NOTIFY_H
+#define NOTIFY_H
 
 #include <ServiceSkeleton.h>
 #include <axutil_env.h>
@@ -36,4 +36,4 @@ public:
 };
 
 
-#endif // ECHO_H
+#endif // NOTIFY_H
