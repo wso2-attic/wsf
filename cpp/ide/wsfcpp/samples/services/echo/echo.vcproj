@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="E:\svnwork\cpp\include;&quot;E:\axis2c\build\axis2c-bin-1.5.0-win32\include&quot;;&quot;E:\axis2c\build\axis2c-bin-1.5.0-win32\include\platforms&quot;;&quot;E:\svnwork\cpp\wso2-wsf-cpp-bin-1.1.0-win32\include\platforms\windows&quot;"
+				AdditionalIncludeDirectories="E:\svnwork\cpp\include;&quot;E:\svnwork\cpp\wso2-wsf-cpp-bin-1.1.0-win32\include&quot;;&quot;E:\svnwork\cpp\wso2-wsf-cpp-bin-1.1.0-win32\include\platforms&quot;;E:\svnwork\cpp\examples\services\versioncpp"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;ECHO_EXPORTS;AXIS2_DECLARE_EXPORT;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -178,7 +178,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\..\..\..\examples\services\echocpp\echo.cpp"
+				RelativePath="..\..\..\..\..\examples\services\echo\echo.cpp"
 				>
 			</File>
 		</Filter>
@@ -188,7 +188,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\..\..\..\examples\services\echocpp\Echo.h"
+				RelativePath="..\..\..\..\..\examples\services\echo\Echo.h"
 				>
 			</File>
 		</Filter>
