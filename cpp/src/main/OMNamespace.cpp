@@ -46,10 +46,6 @@ OMNamespace::~OMNamespace()
 
 void OMNamespace::setAxiomNamespace(axiom_namespace_t * ns)
 {
-    if (_wsf_axiom_namespace)
-    {
-        axiom_namespace_free(_wsf_axiom_namespace, getEnv());
-    }
     _wsf_axiom_namespace = ns;
 }
 
