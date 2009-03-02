@@ -146,11 +146,10 @@ ServiceClient::~ServiceClient()
         _options->_wsf_options = NULL;
         delete _options;
     }
-    if (_conf_ctx)
-    {
-        axis2_conf_ctx_free(const_cast<axis2_conf_ctx_t *>(_conf_ctx), getEnv());
-    }
+	/** Freeing conf context is not done since it is freed by service client free */    
     axis2_svc_client_free(_wsf_service_client, getEnv());
+
+	_conf_ctx = NULL;
 }
 
 /** @brief ServiceClient
