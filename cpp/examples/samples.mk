@@ -7,8 +7,12 @@ WSFCPP_HOME_DIR=.\..\wso2-wsf-cpp-bin-$(WSFCPP_VERSION)-win32
 
 CLIENT_SAMPLES_HOME_DIR=.\clients
 SERVICES_SAMPLES_HOME_DIR=.\services
-WSFCPP_SAMPLES_DIR=$(WSFCPP_HOME_DIR)\bin\samples
+CALLBACK_SAMPLES_HOME_DIR=.\callbacks
 
+WSFCPP_SAMPLES_DIR=$(WSFCPP_HOME_DIR)\bin\samples
+WSFCPP_SAMPLES_LIB_DIR=$(WSFCPP_HOME_DIR)\samples\lib
+
+CFLAGS = /nologo /w /D "WIN32" /D "_WINDOWS" /D "_MBCS" /EHsc
 CFLAGS = /nologo /w /D "WIN32" /D "_WINDOWS" /D "_MBCS" /EHsc
 
 CC=@cl.exe
@@ -193,7 +197,16 @@ math_service:
 wsfcpp_samples: int_dir echo_samples flickr_exe google_exe math_exe notify_exe yahoo_exe mtom_exe echo_service mtom_service version_service notify_service math_service
 
 
+password_callback:
+	@if not exist int.msvc\callbacks\password_callback mkdir int.msvc\callbacks\password_callback
+	@if not exist $(WSFCPP_SAMPLES_LIB_DIR) mkdir $(WSFCPP_SAMPLES_LIB_DIR)
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CALLBACK_SAMPLES_HOME_DIR)\password_callback\*.cpp /Foint.msvc\callbacks\password_callback\ /c
+	$(LD) $(LDFLAGS) int.msvc\callbacks\password_callback\*.obj $(LIBS) /DLL /OUT:$(WSFCPP_SAMPLES_LIB_DIR)\pwcb.dll
+	-@$(_VC_MANIFEST_EMBED_EXE)
+
+wsfcpp_callback: password_callback
+
 clean: 
 	@if exist int.msvc rmdir /s /q int.msvc
 		
-dist: clean wsfcpp_samples
+dist: clean wsfcpp_samples wsfcpp_callback
