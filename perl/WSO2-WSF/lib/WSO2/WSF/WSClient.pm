@@ -364,11 +364,6 @@ sub wsf_util_construct_header_node {
 sub wsf_client_set_addressing_options_to_options {
     my $this = shift;
 
-    if ( defined $this->{action} ) {
-	WSO2::WSF::C::axis2_options_set_action( $main::client_options, $this->{env}, $this->{action} );
-	WSO2::WSF::C::axis2_log_debug( $this->{env}, "[wsf-perl] addressing action present - $this->{action}" );
-    }
-
     if ( defined $this->{replyTo} ) {
 	my $rep_epr = WSO2::WSF::C::axis2_endpoint_ref_create( $this->{env}, $this->{replyTo} );
 	WSO2::WSF::C::axis2_options_set_reply_to( $main::client_options, $this->{env}, $rep_epr );
@@ -805,6 +800,11 @@ sub wsf_set_addressing_options {
 	    $this->{env},
 	    "[wsf-perl] useWSA is specified, value = $this->{useWSA}" );
 
+	if( defined $this->{action} ) {
+	    WSO2::WSF::C::axis2_options_set_action($this->{env}, $this->{action});
+	    WSO2::WSF::C::axis2_log_debug( $this->{env}, "[wsf-perl] addressing action present - $this->{action}" );
+	}
+
 	if( defined $this->{replyTo} ) {
 	    my $replyto_epr = WSO2::WSF::C::axis2_endpoint_ref_create(
 		$this->{env},
@@ -867,10 +867,11 @@ sub wsf_set_soap_action {
 
     # setting the SOAP action
     if( defined $this->{action} ) {
-	WSO2::WSF::C::axis2_options_set_action(
+	my $str = WSO2::WSF::C::axutil_string_create($this->{env}, $this->{action});
+	WSO2::WSF::C::axis2_options_set_soap_action(
 	    $main::client_options, 
 	    $this->{env}, 
-	    $this->{action} );
+	    $str );
     }
 }
 
